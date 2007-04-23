@@ -1,0 +1,14 @@
+
+API changes
+===========
+
+- Added level parameter to logging:new so that a default starting level can
+  be set by caller. For example:
+    
+    local log = logging.my_appender(logging.INFO)
+    
+
+Bug fixes
+=========
+
+- tonumber added to "import" list on top of logging.lua; it's used by tostring()

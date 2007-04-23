@@ -1,0 +1,4 @@
+# OS dependent
+LIB_OPTION= -shared -L${PREFIX}/lib
+# Expat includes directory
+EXPAT_INC= ${PREFIX}/include

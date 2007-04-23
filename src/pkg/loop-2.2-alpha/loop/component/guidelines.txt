@@ -1,0 +1,58 @@
+Introspection
+	type,home
+Interception
+	port,container(handler)
+Port addition
+	container(handler)
+Distribution (CCM)
+	home,container(handler)
+
+================================================================================
+	
+type
+	home
+		container
+			ports
+			component
+
+================================================================================
+
+Type:simple|contained|dynamic
+Port:simple|intercepted
+
+================================================================================
+
+DynamicPort = oo.class()
+
+function DynamicPort:__call(port, comp, ...)
+	if self.class then port = self.class(port, comp) end
+	return self.port(port, comp, ...)
+end
+
+MyCompType = comp.Type{
+	[<portname>] = <PortClass>,
+	[<portname>] = DynamicPort{
+	               	port = <PortClass>,
+	               	class = <ImplClass>,
+	               },
+}
+
+MyContainer = WeakTable{
+	__home       = <componenthome>    ,
+	__comp       = <componentinstance>,
+	[<portname>] = <portinstance>     ,
+	[<dynport>]  = <portinstance>     ,
+}
+
+
+--[[----------------------------------------------------------------------------
+EMPTY       Comp     Self      |   EMPTY       Comp     Self   
+Facet       nil      wrapper   |   Facet       nil      nil
+Receptacle  nil      wrapper   |   Receptacle  nil      nil
+Multiple    multiple wrapper   |   Multiple    multiple nil
+                               |                              
+FILLED      Comp     Self      |   FILLED      Comp     Self   
+Facet       port     wrapper   |   Facet       port     nil
+Receptacle  wrapper  wrapper   |   Receptacle  port     nil
+Multiple    multiple wrapper   |   Multiple    multiple nil
+----------------------------------------------------------------------------]]--

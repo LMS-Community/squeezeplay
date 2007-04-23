@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<title>LOOP: Lua Object-Oriented Programming</title>
+<style type="text/css" media="all"><!--
+@import "loop.css";
+@import "layout1.css";
+--></style>
+</head>
+
+<body>
+
+<div id="Header"><h3>Class Models for Lua</h3></div>
+<div id="Logo"><img alt="small (1K)" src="small.gif" height="70" /></div>
+
+<div id="Menu">
+	<h3>Menu</h3>
+	<hr>
+	<p>
+		<a href="index.html" title="LOOP site main page">Home</a><br>
+		<a href="install.html" title="Installation instructions">Install</a><br>
+		<a href="docs.html" title="Class models">Manual</a><br>
+		<a href="classlib.html" title="Class library">Library</a><br>
+		<a href="credits.html" title="Who does develop LOOP?">Credits</a><br>
+		<a href="http://luaforge.net/projects/loop/" title="LuaForge Project Page">LuaForge</a><br>
+	</p>
+</div>
+
+<div class="content">
+	<a name="download"><h1>Download</h1></a>
+	
+	<p>You can download the LOOP package from the following link. See below for installation instructions.</p>
+	
+  <ul>
+    <li>
+		LOOP 2.2 alpha
+		[<a href="http://luaforge.net/frs/download.php/2135/loop-2.2-alpha.tar.gz">tar.gz</a>]
+		[<a href="http://luaforge.net/frs/download.php/2136/loop-2.2-alpha.zip">zip</a>]
+	</li>
+  </ul>
+	
+	<a name="download"><h1>Installation</h1></a>
+	
+	<p>To make the LOOP packages available for any Lua application you may simply execute it in the folder you unpacked LOOP.
+	Therefore, to give it a try, just execute the Lua stand-alone interpreter in the directory you unpacked LOOP.
+	However, to properly install LOOP in your environment you must unpack it in the Lua package directory, which is defined by the <code>luaconf.h</code> file during the compilation of Lua. The default values for this directory are listed below:</p>
+	
+  <dl>
+    <dt><strong>Unix</strong></dt>
+    <dd>/usr/local/share/lua/5.1/</dd>
+    <dt><strong>Windows</strong></dt>
+    <dd>Directory where the application (<i>e.g.</i> stand-alone interpreter) is installed.
+    Therefore, to use LOOP in Windows you may simply unpack the <code>loop</code> package in the same folder the Lua stand-alone interpreter (or other Lua application) is installed.</dd>
+  </dl>
+
+	<p>You can also define the directories Lua searches for packages by setting the <code>LUA_PATH</code> environment variable.
+	For further information check the <a href="http://www.lua.org/manual/5.1/manual.html#pdf-package.path">Lua manual</a>.</p>
+
+	<h2>Pre-compilation</h2>
+	
+	<p>If you plan to embed LOOP in a C/C++ application you may prefer to generate a C library with LOOP already pre-compiled.
+	To do so, you may use the scripts <code>precompiler.lua</code> and <code>preloader.lua</code> provided in the LOOP package.
+	Such scripts work as a sort of replacement for the old <code>bin2c</code> application that used to be included in the Lua distribution, however these scripts make use of the facilities provided by the Lua 5.1 package model.
+	These scripts are very general and may be used to generate pre-compiled libraries for any set of Lua scripts.</p>
+
+	<p>To generate pre-compiled libraries, first select the script files that should be included in the library.
+	Next, use the <code>precompiler.lua</code> script to generate the C source file that includes the pre-compiled scripts.
+	This script receives a list of optional parameters and the path of all the script files that should be pre-compiled.
+	The path to these script files must follow the same hierarchy of the packages that they implement so the package name shall be correctly inferred from the script path.
+	The options <code>precompiler.lua</code> script accepts are the following:</p>
+	
+	<dl>
+		<dt>-d, -directory</dt>
+		<dd>
+			Directory where the output files should be generated. Its default is the current directory.
+		</dd>
+			
+		<dt>-f, -filename</dt>
+		<dd>
+			Name used to form the name of the files generated.
+			Two files are generated: a source code file with the sufix '.c' with the pre-compiled scripts and a header file with the suffix '.h' with function signatures. Its default is 'precompiled'.
+		</dd>
+			
+		<dt>-l, -luapath</dt>
+		<dd>
+			Root directory of the script files to be compiled.
+			The script files must follow the same hierarchy of the packages they implement, similarly to the hierarchy imposed by the value of the 'package.path' defined in the standard Lua distribution. Its default is the current directory.
+		</dd>
+
+		<dt>-p, -prefix</dt>
+		<dd>
+			Prefix added to the signature of the functions generated.
+			Its default is LUAOPEN_API.
+		</dd>
+	</dl>
+	
+	<h3>Example</h3>
+	<pre>> lua precompiler.lua -f loop -l /usr/local/share/lua/5.1/   \
+                      loop/base.lua                          \
+                      loop/cached.lua                        \
+                      loop/multiple.lua                      \
+                      loop/scoped.lua                        \
+                      loop/simple.lua                        \
+                      loop/table.lua                         \
+                      loop/collection/MapWithArrayOfKeys.lua \
+                      loop/collection/ObjectCache.lua        \
+                      loop/collection/OrderedSet.lua         \
+                      loop/collection/PriorityQueue.lua      \
+                      loop/collection/UnorderedArray.lua     \
+                      loop/collection/UnorderedArraySet.lua  \
+                      loop/compiler/Conditional.lua          \
+                      loop/compiler/Expression.lua           \
+                      loop/debug/Inspector.lua               \
+                      loop/debug/Matcher.lua                 \
+                      loop/debug/Verbose.lua                 \
+                      loop/debug/Viewer.lua                  \
+                      loop/object/Exception.lua              \
+                      loop/object/Wrapper.lua                \
+                      loop/serial/FileStream.lua             \
+                      loop/serial/Serializer.lua             \
+                      loop/serial/SocketStream.lua           \
+                      loop/serial/StringStream.lua           \
+                      loop/thread/CoSocket.lua               \
+                      loop/thread/IOScheduler.lua            \
+                      loop/thread/Scheduler.lua              \
+                      loop/thread/SocketScheduler.lua        \
+                      loop/thread/Timer.lua</pre>
+
+	<p>As a result you will get the files <code>loop.c</code> and <code>loop.h</code> that can be compiled to produce a library that offers functions that load each one of the scripts pre-compiled.
+	Such functions follow the pattern defined by the Lua package model.
+	Examples are:</p>
+
+	<pre>int luaopen_loop_base(lua_State*);
+int luaopen_loop_simple(lua_State*);
+int luaopen_loop_collection_ObjectCache(lua_State*);
+int luaopen_loop_collection_OrderedSet(lua_State*);</pre>
+
+	<p><strong>Note:</strong> Since these function signatures comply with the standard defined by Lua package model then <code>loop.c</code> can be used to generate a dynamic C library that exports all functions defined in <code>loop.h</code> and is able to load all LOOP packages if properly installed in the  directory for C packages (see field <code><a href="http://www.lua.org/manual/5.1/manual.html#pdf-package.cpath">package.cpath</a></code>).</p>
+
+	<h2>Pre-loading</h2>
+	
+	<p>However, to effectively load such scripts in an application, you have to call these operations provided by the library in the right loading sequence that respects each package dependencies.
+	Alternatively, you may pre-load such scripts by registering these functions in the <code>package.preload</code> table so they are executed when each package is first required.
+	This can be automatically done by the code generated with script <code>preloader.lua</code>.
+	This script receives a list of optional parameters and the path of the headers of pre-compiled libraries that should be pre-loaded.
+	The options <code>preloader.lua</code> script accepts are the following:</p>
+	
+	<dl>
+		<dt>-d, -directory</dt>
+		<dd>
+			Directory where the output files should be generated. Its default is the current directory.
+		</dd>
+			
+		<dt>-f, -filename</dt>
+		<dd>
+			Name used to form the name of the files generated.
+			Two files are generated: a source code file with the sufix '.c' with the pre-loading code and a header file with the suffix '.h' with the function that pre-loads the scripts.
+			Its default is 'preload'.
+		</dd>
+			
+		<dt>-I, -includes</dt>
+		<dd>
+			Adds a directory to the list of paths where the header files of pre-compiled libraries are searched.
+		</dd>
+		
+		<dt>-p, -prefix</dt>
+		<dd>
+			Prefix added to the signature of the functions generated.
+			Its default is LUAPRELOAD_API.
+		</dd>
+	</dl>
+
+	<h3>Example</h3>
+	<pre>> lua preloader.lua -f looplib loop.h</pre>
+
+<p>As a result you will get the files <code>looplib.c</code> and <code>looplib.h</code> that can be compiled with the files <code>loop.c</code> and <code>loop.h</code> to produce a library that offers a function with the following signature:</p>
+
+<pre>int luapreload_looplib(lua_State*);</pre>
+
+<p>This function registers all the functions defined by <code>loop.h</code> header with the names of the corresponding packages.
+This way, function <code>luapreload_looplib</code> can be used to preload all scripts previously compiled in <code>loop.c</code> so they are automatically loaded when required.</p>
+
+</div>
+
+<div class="content">
+	<h3><small>Copyright (C) 2004-2005 Tecgraf, PUC-Rio</small></h3>
+	<small>This project is currently being maintained by <a href="http://www.tecgraf.puc-rio.br">Tecgraf</a> at <a href="http://www.puc-rio.br">PUC-Rio</a>.</small>
+</div>
+
+<div id="Board">
+</div>
+
+<!-- BlueRobot was here. -->
+
+</body>
+
+</html>

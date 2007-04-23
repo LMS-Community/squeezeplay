@@ -1,0 +1,217 @@
+#!lua
+
+-- LuaProfiler 2.0
+-- Copyright Kepler Project 2005 (http://www.keplerproject.org/luaprofiler)
+-- $Id: summary.lua,v 1.3 2005/06/13 19:34:58 mascarenhas Exp $
+
+
+
+function PrettyFunction(file, func, line)
+	if string.find(func, '^@') then
+		return func -- closure
+	elseif tonumber(line) > 0 then
+		return file .. ":" .. func .. ":" .. line
+	else
+		return file .. ":" .. func
+	end
+end
+
+function CountFunction(table, func, count, local_time, total_time)
+	if table[func] == nil then
+		table[func] = {};
+		table[func]["info"] = {}
+		table[func]["caller"] = {}
+		table[func]["subroutine"] = {}
+
+		table[func]["info"]["calls"] = count
+		table[func]["info"]["local"] = local_time
+		table[func]["info"]["total"] = total_time
+		table[func]["info"]["func"] = func
+	else
+		table[func]["info"]["calls"] = table[func]["info"]["calls"] + count
+		table[func]["info"]["local"] = table[func]["info"]["local"] + local_time;
+		table[func]["info"]["total"] = table[func]["info"]["total"] + total_time;
+	end	
+end
+
+
+-- Function that creates the summary info
+function CreateSummary(file, summary)
+	local global_time = 0
+
+	local profile
+	if io.type(file) == "file" then
+		profile = file
+	else
+		profile = io.open(file)
+	end
+
+
+	for line in profile:lines() do
+		_, _, stack_level, word_file, word_func, word_line, caller_file, caller_func, caller_line, local_time, total_time = string.find(line, "([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t[^\t]+\t([^\t]+)\t([^\t]+)\t([^\t]+)\t[^\t]+\t([^\t]+)\t([^\t]+)")
+
+		if stack_level ~= "stack_level" then
+			word = PrettyFunction(word_file, word_func, word_line)
+			caller = PrettyFunction(caller_file, caller_func, caller_line)
+
+			-- function summary
+			CountFunction(summary, word, 1, local_time, total_time)
+
+			-- function caller
+			CountFunction(summary[word]["caller"], caller, 1, local_time, total_time)
+
+			-- function subroutines
+			CountFunction(summary, caller, 0, 0, 0)
+			CountFunction(summary[caller]["subroutine"], word, 1, local_time, total_time)
+
+			global_time = global_time + local_time;
+		end
+	end
+
+	profile:close()
+
+	return global_time
+end
+
+function SortFunction(info)
+	local sorted = {}
+	for k, v in pairs(info) do
+		table.insert(sorted, v)
+	end
+
+	table.sort(sorted,
+		   function (a, b)
+			   return tonumber(a["info"]["local"]) > tonumber(b["info"]["local"])
+		   end)
+
+	return sorted
+end
+
+
+-- Global time
+global_t = 0
+
+-- Summary table
+profile_info = {}
+
+-- Check file type
+local verbose = false
+local filename
+if arg[1] == "-v" or arg[1] == "-V" then
+  verbose = true
+  filename = arg[2]
+else
+  filename = arg[1]
+end
+if filename then
+  file = io.open(filename)
+else
+  print("Usage")
+  print("-----")
+  print("lua summary.lua [-v] <profile_log>")
+  os.exit()
+end
+if not file then
+  print("File " .. filename .. " does not exist!")
+  os.exit()
+end
+firstline = file:read(11)
+
+-- File is single profile
+if firstline == "stack_level" then
+	file:close()
+
+	-- Single profile
+	global_t = CreateSummary(filename, profile_info)
+
+else
+
+	-- File is list of profiles
+	-- Reset position in file
+	file:seek("set")
+
+	-- Loop through profiles and create summary table
+	for line in file:lines() do
+
+		local profile_lines
+
+		-- Build a table with profile info
+		global_t = global_t + CreateSummary(line, profile_info)
+		end
+
+	file:close()
+end
+
+-- Sort table by local time
+sorted = SortFunction(profile_info)
+
+-- Output function summary
+print(" %    cumulative self\t\tself\ttotal")
+print("time\tseconds\tseconds\tcalls\tms/call\tms/call\tname")
+
+for k, v in pairs(sorted) do
+	if v["info"]["func"] ~= "(null)" then
+		local local_average = v["info"]["local"] / v["info"]["calls"]
+		local total_average = v["info"]["total"] / v["info"]["calls"]
+		local percent = 100 * v["info"]["local"] / global_t
+
+		print(table.concat({
+					   string.format('%5.2f', percent),
+					   string.format('%0.4f', v["info"]["total"]),
+					   string.format('%0.4f', v["info"]["local"]),
+					   string.format('%6d', v["info"]["calls"]),
+					   string.format('%0.4f', local_average),
+					   string.format('%0.4f', total_average),
+					   v["info"]["func"]
+				   }, "\t"))
+	end
+end
+
+
+print("\n\n")
+
+
+-- Output call graph
+print("% time\tself\tchildren\tcalled\tname");
+for k, v in pairs(sorted) do
+	if v["info"]["func"] ~= "(null)" then
+		local percent = 100 * v["info"]["local"] / global_t
+
+		-- caller
+
+		local sorted_caller = SortFunction(v["caller"])
+		for i, j in pairs(sorted_caller) do
+			print(table.concat({
+						   "",
+						   string.format('%0.4f', j["info"]["local"]),
+						   string.format('%0.4f', j["info"]["total"] - j["info"]["local"]),
+						   string.format('%12s', j["info"]["calls"] .. "/" .. v["info"]["calls"]),
+						   "    " .. j["info"]["func"]
+					   }, "\t"))
+		end
+
+		-- function
+		print(table.concat({ 
+					   string.format('%5.2f', percent),
+					   string.format('%0.4f', v["info"]["local"]),
+					   string.format('%0.4f', v["info"]["total"] - v["info"]["local"]),
+					   string.format('%12s', v["info"]["calls"]),
+					   v["info"]["func"],
+				   }, "\t"))
+
+		-- subroutine
+		local sorted_subroutine = SortFunction(v["subroutine"])
+		for i, j in pairs(sorted_subroutine) do
+			print(table.concat({
+						   "",
+						   string.format('%0.4f', j["info"]["local"]),
+						   string.format('%0.4f', j["info"]["total"] - j["info"]["local"]),
+						   string.format('%12s', j["info"]["calls"] .. "/" .. profile_info[j["info"]["func"]]["info"]["calls"]),
+						   "    " .. j["info"]["func"]
+					   }, "\t"))
+		end
+
+		print("---------------------------------------")
+	end
+end
+

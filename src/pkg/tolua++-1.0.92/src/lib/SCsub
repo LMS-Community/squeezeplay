@@ -1,0 +1,13 @@
+Import('env')
+
+
+sources = [
+	'tolua_event.c',
+	'tolua_is.c',
+	'tolua_map.c',
+	'tolua_push.c',
+	'tolua_to.c',
+	]
+
+env.lib_target = env.Library('#/lib/'+env['tolua_lib'], sources)
+
