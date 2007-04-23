@@ -134,7 +134,7 @@ tolua++: lua
 #
 
 .PHONY: app jive freefont
-app: jivebrowser freefont
+app: jive freefont
 
 # jive
 jive/Makefile:
