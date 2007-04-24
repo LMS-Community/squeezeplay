@@ -13,14 +13,14 @@ BASE_DIR = $(dir ${SRC_DIR})
 export BUILD_TOP=$(BASE_DIR)/build/linux
 
 DESTDIR=${BUILD_TOP}
-export PREFIX=${DESTDIR}/usr
+export PREFIX=${DESTDIR}
 
 export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -g
 export LDFLAGS=-L${PREFIX}/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
 
-export SDL_CONFIG = sdl-config
+export SDL_CONFIG = ${BUILD_TOP}/bin/sdl-config
 
 #
 # Top level targets
@@ -42,7 +42,7 @@ freetype-2.1.10/config.mk:
 	cd freetype-2.1.10; ./configure --enable-shared --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
 
 freetype: freetype-2.1.10/config.mk
-	cd freetype-2.1.10; make; make DESTDIR= install
+	cd freetype-2.1.10; make; make install
 
 # sdl
 SDL-1.2.11/Makefile:
@@ -93,7 +93,7 @@ slnunicode: lua
 	cd slnunicode-1.1; make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=linux
 
 luajson/Makefile:
-	cd luajson; ./configure --prefix=/usr
+	cd luajson; ./configure --prefix=${PREFIX}
 
 luajson: luajson/Makefile
 	cd luajson; make && cp .libs/json.so ${PREFIX}/lib/lua/5.1/json.so
@@ -138,10 +138,10 @@ app: jive freefont
 
 # jive
 jive/Makefile:
-	cd jive; SDL_CONFIG=sdl-config ./configure --prefix=/usr
+	cd jive; SDL_CONFIG=${SDL_CONFIG} ./configure --prefix=${PREFIX}
 
 jive: jive/Makefile
-	cd jive; make && make DESTDIR=${DESTDIR} install
+	cd jive; make && make install
 
 # freefont
 freefont:
@@ -156,6 +156,7 @@ freefont:
 
 .PHONY: clean
 clean:
+	-cd freetype-2.1.10; make distclean
 	-cd SDL-1.2.11; make distclean; rm -f include/SDL_config.h;
 	-cd SDL_image-1.2.5; make distclean
 	-cd SDL_ttf-2.0.8; make distclean
@@ -165,5 +166,6 @@ clean:
 	-cd slnunicode-1.1; make clean PLATFORM=linux
 	-cd luaexpat-1.0.2; make clean PLATFORM=linux
 	-cd luafilesystem-1.2; make clean PLATFORM=linux
+	-cd luajson; make distclean
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
 	-cd jive; make distclean
