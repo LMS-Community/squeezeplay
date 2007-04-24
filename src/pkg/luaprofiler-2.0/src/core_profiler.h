@@ -18,6 +18,10 @@ Design (using the Lua callhook mechanism) :
 
 #include "stack.h"
 
+#ifndef LUAPROFILER_API
+#define LUAPROFILER_API extern
+#endif
+
 /* computes new stack and new timer */
 void lprofP_callhookIN(lprofP_STATE* S, char *source, char *func_name, char *file, int linedefined, int currentline);
 
