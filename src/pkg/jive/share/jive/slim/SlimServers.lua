@@ -6,7 +6,8 @@ jive.slim.SlimServers - Slimservers.
 
 =head1 DESCRIPTION
 
-Manages a list of Slimservers discovered using UDP.
+Manages a list of Slimservers discovered using UDP. This class is used
+by the SlimDiscovery applet to discover and cache servers found on the network.
 
 =head1 SYNOPSIS
 
@@ -134,8 +135,14 @@ local function _cacheCleanup(self)
 end
 
 
--- init
--- creates a new SlimServers object
+--[[
+
+=head2 jive.slim.SlimServers(jnt)
+
+Create a SlimServers object.
+
+=cut
+--]]
 function __init(self, jnt)
 	log:debug("SlimServers:__init()")
 	
@@ -158,8 +165,15 @@ function __init(self, jnt)
 end
 
 
--- discover
--- posts a message to discover servers
+--[[
+
+=head2 jive.slim.SlimServers:discover()
+
+Sends the necessary broadcast message to discover slimservers on the network.
+Called repeatedly by SlimDiscovery applet while in home.
+
+=cut
+--]]
 function discover(self)
 	log:debug("SlimServers:discover()")
 

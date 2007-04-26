@@ -66,7 +66,7 @@ function __init(self, slimServer, jnt, jpool, playerinfo)
 
 	
 	local menuReq = RequestJsonRpc(obj:_getSink(), '/plugins/Jive/jive.js', 'slim.playermenu', nil)
-	local playerReq = RequestStatus(obj:_getSink(), obj, '-', 10, nil, {tags = 'alj'})
+	local playerReq = RequestStatus(obj:_getSink(), obj, '-', 10, nil, {tags = 'aljJ'})
 	
 	obj:queue(menuReq)
 	obj:queue(playerReq)
@@ -129,10 +129,11 @@ function onStage(self, sink)
 	self.statusSink = sink
 	
 	-- our socket for long term connections
-	self.jsp = SocketHttp(self.jnt, self.slimServer:getIp(), self.slimServer:getHttpPort(), "playerLT")
+	local ip, port = self.slimServer:getIpPort()
+	self.jsp = SocketHttp(self.jnt, ip, port, "playerLT")
 	
 	-- our long term request
-	local reqcli = RequestStatus(self:_getSink(), self, '-', 10, 30, {tags = 'alj'})
+	local reqcli = RequestStatus(self:_getSink(), self, '-', 10, 30, {tags = 'aljJ'})
 	
 	self.jsp:fetch(reqcli)
 

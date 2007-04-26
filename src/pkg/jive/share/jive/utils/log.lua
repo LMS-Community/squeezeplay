@@ -130,6 +130,7 @@ Categories are strings. The following are the default categories:
  -- screensavers
 
  -- slimserver
+ -- slimserver.cache
  -- player
 
  -- net.cli
@@ -143,19 +144,20 @@ Categories are strings. The following are the default categories:
 
 -- table to contain all the loggers indexed by category
 local categories = {
-	["browser"]      = jiveLogger(logging.WARN),
-	["applets"]      = jiveLogger(logging.WARN),
-	["screensavers"] = jiveLogger(logging.WARN),
+	["browser"]          = jiveLogger(logging.WARN),
+	["applets"]          = jiveLogger(logging.WARN),
+	["screensavers"]     = jiveLogger(logging.WARN),
 
-	["slimserver"]   = jiveLogger(logging.WARN),
-	["player"]       = jiveLogger(logging.WARN),
-
-	["net.cli"]      = jiveLogger(logging.WARN),
-	["net.thread"]   = jiveLogger(logging.WARN),
-	["net.socket"]   = jiveLogger(logging.WARN),
-	["net.http"]     = jiveLogger(logging.WARN),
+	["slimserver"]       = jiveLogger(logging.WARN),
+	["slimserver.cache"] = jiveLogger(logging.DEBUG),
+	["player"]           = jiveLogger(logging.WARN),
+                         
+	["net.cli"]          = jiveLogger(logging.WARN),
+	["net.thread"]       = jiveLogger(logging.WARN),
+	["net.socket"]       = jiveLogger(logging.WARN),
+	["net.http"]         = jiveLogger(logging.WARN),
 	
-	["ui"]           = jiveLogger(logging.WARN),
+	["ui"]               = jiveLogger(logging.WARN),
 }
 
 --[[
@@ -229,6 +231,27 @@ Utility functions that call log(<level>, message, ...), for example
 
 This are defined dynamically depending on the current log level, so
 are faster than log(level, messsage).
+=cut
+--]]
+
+
+--[[
+
+=head2 logger:getLevel()
+
+Returns the level of the logger (one of jive.log.DEBUG, etc.)
+
+=cut
+--]]
+
+
+--[[
+
+=head2 logger:isDebug()
+
+Returns true if the level of the logger is DEBUG, this enables diagnostic code
+to be run only when in debug. Particularly useful if the code is expensive.
+
 =cut
 --]]
 

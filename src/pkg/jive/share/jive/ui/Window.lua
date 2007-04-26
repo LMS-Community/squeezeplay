@@ -52,36 +52,36 @@ B<popup> : true if this is a popup window that includes transparency.
 -- stuff we use
 local assert, ipairs, require, tostring, type = assert, ipairs, require, tostring, type
 
-local debug		= require("debug")
-local oo		= require("loop.simple")
-local table		= require("jive.utils.table")
-local Menu		= require("jive.ui.Menu")
-local Label		= require("jive.ui.Label")
-local Timer		= require("jive.ui.Timer")
-local Widget		= require("jive.ui.Widget")
+local debug                   = require("debug")
+local oo                      = require("loop.simple")
+local table                   = require("jive.utils.table")
+local Menu                    = require("jive.ui.Menu")
+local Label                   = require("jive.ui.Label")
+local Timer                   = require("jive.ui.Timer")
+local Widget                  = require("jive.ui.Widget")
 
+local log                     = require("jive.utils.log").logger("ui")
 
-local EVENT_ALL		= jive.ui.EVENT_ALL
-local EVENT_ACTION	= jive.ui.EVENT_ACTION
-local EVENT_SCROLL	= jive.ui.EVENT_SCROLL
-local EVENT_KEY_PRESS	= jive.ui.EVENT_KEY_PRESS
-local EVENT_WINDOW_PUSH	= jive.ui.EVENT_WINDOW_PUSH
-local EVENT_WINDOW_POP	= jive.ui.EVENT_WINDOW_POP
-local EVENT_WINDOW_ACTIVE = jive.ui.EVENT_WINDOW_ACTIVE
-local EVENT_WINDOW_INACTIVE = jive.ui.EVENT_WINDOW_INACTIVE
-local EVENT_SHOW	= jive.ui.EVENT_SHOW
-local EVENT_HIDE	= jive.ui.EVENT_HIDE
-local EVENT_CONSUME	= jive.ui.EVENT_CONSUME
-local EVENT_UNUSED	= jive.ui.EVENT_UNUSED
+local EVENT_ALL               = jive.ui.EVENT_ALL
+local EVENT_ACTION            = jive.ui.EVENT_ACTION
+local EVENT_SCROLL            = jive.ui.EVENT_SCROLL
+local EVENT_KEY_PRESS         = jive.ui.EVENT_KEY_PRESS
+local EVENT_WINDOW_PUSH       = jive.ui.EVENT_WINDOW_PUSH
+local EVENT_WINDOW_POP        = jive.ui.EVENT_WINDOW_POP
+local EVENT_WINDOW_ACTIVE     = jive.ui.EVENT_WINDOW_ACTIVE
+local EVENT_WINDOW_INACTIVE   = jive.ui.EVENT_WINDOW_INACTIVE
+local EVENT_SHOW              = jive.ui.EVENT_SHOW
+local EVENT_HIDE              = jive.ui.EVENT_HIDE
+local EVENT_CONSUME           = jive.ui.EVENT_CONSUME
+local EVENT_UNUSED            = jive.ui.EVENT_UNUSED
 
-local FRAME_RATE	= jive.ui.FRAME_RATE
-local LAYER_ALL		= jive.ui.LAYER_ALL
-local LAYER_CONTENT	= jive.ui.LAYER_CONTENT
+local FRAME_RATE              = jive.ui.FRAME_RATE
+local LAYER_ALL               = jive.ui.LAYER_ALL
+local LAYER_CONTENT           = jive.ui.LAYER_CONTENT
 local LAYER_CONTENT_OFF_STAGE = jive.ui.LAYER_CONTENT_OFF_STAGE
-local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
-local LAYER_FRAME	= jive.ui.LAYER_FRAME
+local LAYER_CONTENT_ON_STAGE  = jive.ui.LAYER_CONTENT_ON_STAGE
+local LAYER_FRAME             = jive.ui.LAYER_FRAME
 
-local log = require("jive.utils.log").logger("ui")
 
 -- our class
 module(...)
@@ -109,10 +109,10 @@ function newMenuWindow(class, style, title, items)
 			local item = Label("label", j[1], j[2])
 			if j[3] then
 				item:addListener(EVENT_ACTION, 
-						function(event)
---							log:debug("nMW:function - ", debug.traceback())
-							return j[3](event, item)
-						end)
+					function(event)
+						return j[3](event, item)
+					end
+				)
 			end
 			menu:addItem(item)
 		end

@@ -25,17 +25,20 @@ Represents and interfaces with a real SlimServer on the network.
 
 -- our stuff
 local assert, tostring, type = assert, tostring, type
-local pairs, ipairs = pairs, ipairs
+local pairs, ipairs, setmetatable = pairs, ipairs, setmetatable
 
 local os          = require("os")
+local table       = require("table")
 
 local oo          = require("loop.base")
 
 local SocketHttp  = require("jive.net.SocketHttp")
 local HttpPool    = require("jive.net.HttpPool")
 local Player      = require("jive.slim.Player")
+local RequestHttp = require("jive.net.RequestHttp")
 
 local log         = require("jive.utils.log").logger("slimserver")
+local logcache    = require("jive.utils.log").logger("slimserver.cache")
 
 require("jive.slim.RequestsCli")
 local RequestServerstatus = jive.slim.RequestServerstatus
@@ -51,135 +54,50 @@ local HTTPPORT = 9000                -- Slimserver HTTP port
 local RETRY_UNREACHABLE = 120        -- Min delay (in s) before retrying a server unreachable
 
 
--- init
--- creates a SlimServer object
-function __init(self, jnt, ip, name)
-	log:debug("SlimServer:__init(", tostring(ip), ", ", tostring(name), ")")
+-- _setPlumbingState
+-- set the validity status of the server, i.e. can we talk to it
+local function _setPlumbingState(self, state)
 
-	assert(ip, "Cannot create SlimServer without ip address")
-
-	local obj = oo.rawnew(self, {
-
-		name = name,
-		jnt = jnt,
-
-		-- connection stuff
-		plumbing = {
-			state = 'init',
-			lastSeen = os.time(),
-			ip = ip,
-		},
-
-		-- data from SS
-		state = {},
-
-		-- players
-		players = {},
-
-		-- our pool
-		jpool = HttpPool(jnt, ip, HTTPPORT, 4, 2, name),
-
-		-- our socket for long term connections
-		jsp = SocketHttp(jnt, ip, HTTPPORT, name .. "LT"),
+	if state ~= self.plumbing.state then
 		
-	})
+		log:debug(tostring(self), ":_setPlumbingState(", state, ")")
 
-	obj.id = obj:idFor(ip, port, name)
-	
-	-- our long term request
-	obj:_establishConnection()
-	
-	-- We're here!
-	obj.jnt:notify('serverNew', obj)
-	
-	return obj
-end
+		if self.plumbing.state == 'init' and state == 'connected' then
+			self.jnt:notify('serverConnected', self)
+		end
 
-
--- free
--- delete data and closes connections
-function free(self)
-	log:debug(tostring(self), ":free()")
-	
-	-- notify we're going away
-	self.jnt:notify("serverDelete", self)
-
-	-- delete players
-	for id, player in pairs(self.players) do
-		player:free()
-	end
-	self.players = nil
-
-	-- delete connections
-	if self.jpool then
-		self.jpool:free()
-		self.jpool = nil
-	end
-	if self.jsp then
-		self.jsp:free()
-		self.jsp = nil
+		self.plumbing.state = state
 	end
 end
 
 
--- idFor
--- returns the id for a server based on ip, port and name
--- NOTE: call as SlimServer.static.idFor(nil, ip, ...) wo an object...
-function idFor(self, ip, port, name)
-	return tostring(ip) .. ":" .. tostring(port)
-end
+-- forward declaration
+local _establishConnection
 
+-- _errSink
+-- manages connection errors
+local function _errSink(self, name, err)
 
--- updateFromUdp
--- the server answers the discovery request sent regularly when in home
-function updateFromUdp(self, name)
-	log:debug(tostring(self), ":updateFromUdp()")
-
-	-- update the name in all cases
-	if self.name ~= name then
+	if err then
+		log:error(tostring(self), ": ", err, " during ", name)
 	
-		log:info(tostring(self), ": Renamed to ", tostring(name))
-		self.name = name
+		-- give peace a chance and retry immediately, unless that's what we were already doing
+		if self.plumbing.state == 'retry' then
+			_setPlumbingState(self, 'unreachable')
+		else
+			_setPlumbingState(self, 'retry')
+			_establishConnection(self)
+		end
 	end
-
-	-- manage retries
-	local now = os.time()
 	
-	if self.plumbing.state == 'unreachable' and now - self.plumbing.lastSeen > RETRY_UNREACHABLE then
-		self:_setPlumbingState('retry')
-		self:_establishConnection()
-	end
-
-	self.plumbing.lastSeen = now
-end
-
-
--- _establishConnection
--- sends our long term request
-function _establishConnection(self)
-	log:debug(tostring(self), ":_establishConnection()")
-
-	-- try to get a long term connection with the server, timeout at 60 seconds.
-	-- get 50 players
-	-- FIXME: what if the server has more than 50 players?
-	
-	self.jsp:fetch(
-		RequestServerstatus(
-			self:_getSink("_serverstatusSink"), 
-			0, 
-			50, 
-			60, 
-			{
-				["playerprefs"] = 'menuItem'
-			}
-		)
-	)
+	-- always return false so data (probably bogus) is not sent for processing
+	return false
 end
 
 
 -- _getSink
 -- returns a sink
-function _getSink(self, name)
+local function _getSink(self, name)
 
 	local func = self[name]
 	if func and type(func) == "function" then
@@ -187,7 +105,7 @@ function _getSink(self, name)
 		return function(chunk, err)
 			
 			-- be smart and don't call errSink if not necessary
-			if not err or self:_errSink(name, err) then
+			if not err or _errSink(self, name, err) then
 			
 				func(self, chunk)
 			end
@@ -199,24 +117,26 @@ function _getSink(self, name)
 end
 
 
--- _errSink
--- manages connection errors
-function _errSink(self, name, err)
+-- _establishConnection
+-- sends our long term request
+_establishConnection = function(self)
+	log:debug(tostring(self), ":_establishConnection()")
 
-	if err then
-		log:error(tostring(self), ": ", err, " during ", name)
+	-- try to get a long term connection with the server, timeout at 60 seconds.
+	-- get 50 players
+	-- FIXME: what if the server has more than 50 players?
 	
-		-- give peace a chance and retry immediately, unless that's what we were already doing
-		if self.plumbing.state == 'retry' then
-			self:_setPlumbingState('unreachable')
-		else
-			self:_setPlumbingState('retry')
-			self:_establishConnection()
-		end
-	end
-	
-	-- always return false so data (probably bogus) is not sent for processing
-	return false
+	self.jsp:fetch(
+		RequestServerstatus(
+			_getSink(self, "_serverstatusSink"), 
+			0, 
+			50, 
+			60, 
+			{
+				["playerprefs"] = 'menuItem'
+			}
+		)
+	)
 end
 
 
@@ -234,7 +154,7 @@ function _serverstatusSink(self, data, err)
 	end
 
 	-- if we get here we're connected
-	self:_setPlumbingState('connected')
+	_setPlumbingState(self, 'connected')
 	
 	-- remember players from server
 	local serverPlayers = data.result["@players"]
@@ -291,47 +211,315 @@ function _serverstatusSink(self, data, err)
 end
 
 
--- _setPlumbingState
--- set the validity status of the server, i.e. can we talk to it
-function _setPlumbingState(self, state)
+--[[
 
-	if state ~= self.plumbing.state then
+=head2 jive.slim.SlimServer(jnt, ip, name)
+
+Create a SlimServer object at IP address I<ip> with name I<name>. Once created, the
+object will immediately connect to slimserver to discover players and other attributes
+of the server.
+
+=cut
+--]]
+function __init(self, jnt, ip, name)
+	log:debug("SlimServer:__init(", tostring(ip), ", ", tostring(name), ")")
+
+	assert(ip, "Cannot create SlimServer without ip address")
+
+	local obj = oo.rawnew(self, {
+
+		name = name,
+		jnt = jnt,
+
+		-- connection stuff
+		plumbing = {
+			state = 'init',
+			lastSeen = os.time(),
+			ip = ip,
+		},
+
+		-- data from SS
+		state = {},
+
+		-- players
+		players = {},
+
+		-- our pool
+		jpool = HttpPool(jnt, ip, HTTPPORT, 4, 2, name),
+
+		-- our socket for long term connections
+		jsp = SocketHttp(jnt, ip, HTTPPORT, name .. "LT"),
 		
-		log:debug(tostring(self), ":_setPlumbingState(", state, ")")
+	})
 
-		if self.plumbing.state == 'init' and state == 'connected' then
-			self.jnt:notify('serverConnected', self)
-		end
+	obj.id = obj:idFor(ip, port, name)
+	
+	-- our long term request
+	_establishConnection(obj)
+	
+	-- We're here!
+	obj.jnt:notify('serverNew', obj)
+	
+	return obj
+end
 
-		self.plumbing.state = state
+
+--[[
+
+=head2 jive.slim.SlimServer:free()
+
+Deletes a SlimServer object, frees memory and closes connections with the server.
+
+=cut
+--]]
+function free(self)
+	log:debug(tostring(self), ":free()")
+	
+	-- notify we're going away
+	self.jnt:notify("serverDelete", self)
+
+	-- delete players
+	for id, player in pairs(self.players) do
+		player:free()
+	end
+	self.players = nil
+
+	-- delete connections
+	if self.jpool then
+		self.jpool:free()
+		self.jpool = nil
+	end
+	if self.jsp then
+		self.jsp:free()
+		self.jsp = nil
 	end
 end
 
 
--- __tostring
--- returns human readable identifier of self
+--[[
+
+=head2 jive.slim.SlimServer:idFor(ip, port, name)
+
+Returns an identifier for a server named I<name> at IP address I<ip>:I<port>.
+
+=cut
+--]]
+function idFor(self, ip, port, name)
+	return tostring(ip) .. ":" .. tostring(port)
+end
+
+
+--[[
+
+=head2 jive.slim.SlimServer:updateFromUdp(name)
+
+The L<jive.slim.SlimServers> cache calls this method every time the server
+answers the discovery request. This method updates the server name if it has changed
+and manages retries of the server long term connection.
+
+=cut
+--]]
+function updateFromUdp(self, name)
+	log:debug(tostring(self), ":updateFromUdp()")
+
+	-- update the name in all cases
+	if self.name ~= name then
+	
+		log:info(tostring(self), ": Renamed to ", tostring(name))
+		self.name = name
+	end
+
+	-- manage retries
+	local now = os.time()
+	
+	if self.plumbing.state == 'unreachable' and now - self.plumbing.lastSeen > RETRY_UNREACHABLE then
+		_setPlumbingState(self, 'retry')
+		_establishConnection(self)
+	end
+
+	self.plumbing.lastSeen = now
+end
+
+
+--[[
+
+=head2 jive.slim.SlimServer:fetchArtworkThumb(artworkId, sink, uriGenerator)
+
+Get the thumb for I<artworkId> and send it to I<sink>. I<uriGenerator> must be a function that
+computes the URI to request the artwork from the server from I<artworkId> (i.e. if needed, this
+method will call uriGenerator(artworkId) and use the result as URI).
+The SlimServer object maintains an artwork cache.
+
+=cut
+--]]
+
+-- FIXME: the CLI does not return a consistent ID per album.
+-- If we want to cache, we would need ONE id by album available everywhere.
+
+local _artworkThumbCache = setmetatable({}, { __mode="kv" })
+local _artworkThumbSinks = {}
+
+
+-- _dunpArtworkCache
+-- returns statistical data about our cache
+local function _dumpArtworkThumbCache()
+	local size = 0
+	local items = 0
+	for k, v in pairs(_artworkThumbCache) do
+		items = items + 1
+		size = size + #v
+	end
+	logcache:debug("_artworkThumbCache: ", tostring(items), " items, ", tostring(size), " bytes")
+end
+
+
+-- _getArworkThumbSink
+-- returns a sink for artwork so we can cache it before sending it forward
+local function _getArtworkThumbSink(artworkId)
+
+	return function(chunk, err)
+		-- on error, print something...
+		if err then
+			logcache:error("_getArtworkThumbSink(", tostring(artworkId), "):", err)
+		end
+		-- if we have data
+		if chunk then
+			logcache:debug("_getArtworkThumbSink(", tostring(artworkId), ")")
+			-- call all stored sinks
+			for i,sink in ipairs(_artworkThumbSinks[artworkId]) do
+				sink(chunk)
+				sink(nil)
+			end
+			-- store the artwork in the cache
+			_artworkThumbCache[artworkId] = chunk
+			
+			if logcache:isDebug() then
+				_dumpArtworkThumbCache()
+			end
+		end
+		-- in all cases, remove the sinks
+		_artworkThumbSinks[artworkId] = nil
+	end
+end
+
+
+function fetchArtworkThumb(self, artworkId, sink, uriGenerator)
+	logcache:debug(tostring(self), ":fetchArtworkThumb(", tostring(artworkId), ")")
+
+	if logcache:isDebug() then
+		_dumpArtworkThumbCache()
+	end
+
+	-- do we have the artwork in the cache
+	local artwork = _artworkThumbCache[artworkId]
+	if artwork then
+		logcache:debug("..artwork in cache")
+		sink(artwork)
+		sink(nil)
+		return
+	end
+	
+	-- are we requesting it already?
+	local sinks = _artworkThumbSinks[artworkId]
+	if sinks then
+		logcache:debug("..artwork already requested")
+		table.insert(sinks, sink)
+		return
+	end
+	
+	-- no luck, generate a request for the artwork
+	local req = RequestHttp(
+		_getArtworkThumbSink(artworkId), 
+		'GET', 
+		uriGenerator(artworkId)
+	)
+	-- remember the sink
+	_artworkThumbSinks[artworkId] = {sink}
+	logcache:debug("..fetching artwork")
+	self.jpool:queue(req)
+
+end
+
+
+--[[
+
+=head2 tostring(aSlimServer)
+
+if I<aSlimServer> is a L<jive.SlimServer>, prints
+ SlimServer {name}
+
+=cut
+--]]
 function __tostring(self)
-	return "SlimServer {" .. tostring(self:getName()) .. "}"
+	return "SlimServer {" .. tostring(self.name) .. "}"
 end
 
 
 -- Accessors
 
+--[[
+
+=head2 jive.slim.SlimServer:getVersion()
+
+Returns the server version
+
+=cut
+--]]
 function getVersion(self)
 	return self.version
 end
-function getIp(self)
-	return self.plumbing.ip
+
+
+--[[
+
+=head2 jive.slim.SlimServer:getIpPort()
+
+Returns the server IP address and HTTP port
+
+=cut
+--]]
+function getIpPort(self)
+	return self.plumbing.ip, HTTPPORT
 end
-function getHttpPort(self)
-	return HTTPPORT
-end
+
+
+--[[
+
+=head2 jive.slim.SlimServer:getName()
+
+Returns the server name
+
+=cut
+--]]
 function getName(self)
 	return self.name
 end
+
+
+--[[
+
+=head2 jive.slim.SlimServer:getLastSeen()
+
+Returns the time at which the last indication the server is alive happened,
+either data from the server or response to discovery. This is used by
+L<jive.slim.SlimServers> to delete old servers.
+
+=cut
+--]]
 function getLastSeen(self)
 	return self.plumbing.lastSeen
 end
+
+
+--[[
+
+=head2 jive.slim.SlimServer:isConnected()
+
+Returns the state of the long term connection with the server. This is used by
+L<jive.slim.SlimServers> to delete old servers.
+
+=cut
+--]]
 function isConnected(self)
 	return self.plumbing.state == "connected"
 end

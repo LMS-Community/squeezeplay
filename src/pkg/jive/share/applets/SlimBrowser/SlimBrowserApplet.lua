@@ -20,6 +20,7 @@ TODO
 
 -- stuff we use
 local tostring, ipairs, setmetatable, pairs, assert = tostring, ipairs, setmetatable, pairs, assert
+local type = type
 
 local oo               = require("loop.simple")
 local table            = require("table")
@@ -55,6 +56,8 @@ local Context          = require("applets.SlimBrowser.Context")
 local jnt              = jnt
 
 
+local debug = require("jive.utils.debug")
+
 module(...)
 oo.class(_M, Applet)
 
@@ -74,7 +77,7 @@ local _nowPlayingOldCurIdx = false
 
 -- metatable for menuItems "values"
 -- set a tostring handler to the items that uses a style function...
-local _menuItemValueMetatable = {
+local _nowPlayingMenuItemValueMetatable = {
 	__tostring = function(item)
 		return _nowPlayingMenu:styleValue("format", "unused", item)
 	end
@@ -85,8 +88,6 @@ local _menuItemValueMetatable = {
 local _browseMenu
 
 
--- FIXME: the CLI returns artwork_track_id only for albums.
--- If we want to cache, we would need ONE id by album available everywhere.
 
 
 
@@ -94,7 +95,8 @@ local _browseMenu
 -- Local functions
 ------------------
 
-
+-- _openVolumePopup
+-- manages the volume pop up window
 local function _openVolumePopup(vol)
 
 	local popup = Window("volume")
@@ -169,24 +171,26 @@ local function _openVolumePopup(vol)
 end
 
 
--- _createMenuItem
+-- artworkThumbUri
+-- returns a URI to fetch artwork on the server
+-- FIXME: should this be styled?
+local function _artworkThumbUri(artworkId)
+	return '/music/' .. artworkId .. '/cover_50x50_f_000000.jpg'
+end
+
+
+-- _createNowPlayingMenuItem
 -- Creates a new shiny menuItem (i.e. a Label)
-local function _createMenuItem(item, artworkId)
+local function _createNowPlayingMenuItem(item, artworkId)
 
 	local icon
 	
 	if artworkId then
 		icon = Icon("artwork")
-		local req = RequestHttp(
-			icon:sink(), 
-			'GET', 
-			'/music/' .. artworkId .. '/cover_50x50_f_000000.jpg'
-		)
-		log:debug("queuing artwork request for item.id ", tostring(item.id), " artworkID ", tostring(artworkId))
-		_server:queue(req)
+		_server:fetchArtworkThumb(artworkId, icon:sink(), _artworkThumbUri)
 	end
 	
-	return Label("label", setmetatable(item, _menuItemValueMetatable), icon)
+	return Label("label", setmetatable(item, _nowPlayingMenuItemValueMetatable), icon)
 end
 
 
@@ -202,7 +206,6 @@ local function _createNowPlayingWindow()
 	-- hide the window on back key
 	window:addListener(EVENT_KEY_PRESS,
 		function(evt)
-			log:debug("windowListener")
 			if evt:getKeycode() == KEY_BACK then
 				window:hide()
 			end
@@ -348,8 +351,21 @@ local function _statusSink(chunk, err)
 	local plOldCur -- old current item
 	local plNewCur
 	local plCount -- total items in playlist
-	
-	
+
+--[[
+	local holes = {}
+	local function _hole(index)
+		log:debug("_hole=", tostring(index))
+		for i,v in ipairs(holes) do
+			if index == v.to + 1 then
+				v.to = v.to+1
+				return
+			end
+		end
+		-- not in there, create
+		table.insert(holes, {from=index, to=index})
+	end
+--]]	
 	if chunk.power and chunk.power == 1 then
 	
 		log:debug("power is on")
@@ -414,7 +430,7 @@ local function _statusSink(chunk, err)
 			-- do we have the data
 			if curChItem then
 			
-				log:debug("..checking menuItem")
+				log:debug(".. checking menuItem")
 				
 				-- compare items based on the id
 				if curChItem.id != menuItem:getValue().id then
@@ -423,12 +439,12 @@ local function _statusSink(chunk, err)
 					log:debug("...id changed!")
 
 					--get artwork if we have it
-					local artworkId
-					if curChItem.coverart and curChItem.coverart == 1 then
+					local artworkId = curChItem.artwork_track_id
+					if not artworkId and curChItem.coverart and curChItem.coverart == 1 then
 						artworkId = curChItem.id
 					end
 
-					menuItem = _createMenuItem(curChItem, artworkId)
+					menuItem = _createNowPlayingMenuItem(curChItem, artworkId)
 					_nowPlayingMenu:replaceIndex(menuItem, plIdx)
 				end
 
@@ -446,23 +462,25 @@ local function _statusSink(chunk, err)
 			if curChItem then
 			
 				--get artwork if we have it
-				local artworkId
-				if curChItem.coverart and curChItem.coverart == 1 then
+				local artworkId = curChItem.artwork_track_id
+				if not artworkId and curChItem.coverart and curChItem.coverart == 1 then
 					artworkId = curChItem.id
 				end
 			
-				menuItem = _createMenuItem(curChItem, artworkId)
+				menuItem = _createNowPlayingMenuItem(curChItem, artworkId)
 				
 			else
 			
 				-- No data, we're "loading..."
-				menuItem = _createMenuItem(loadingItem)
+				menuItem = _createNowPlayingMenuItem(loadingItem)
+--				_hole(plIdx)
 			end
 			
 			-- add the menuItem!
 			_nowPlayingMenu:addItem(menuItem)
 		end
 	end
+--	debug.dump(holes)
 	
 	-- avoid crash if removing the selected item
 	if _nowPlayingMenu:getSelectedIndex() > plCount+1 then
@@ -500,7 +518,7 @@ local function _createWindow(title, titlek)
 	log:debug("_createWindow(", tostring(title), ", ", tostring(titlek), ")")
 	
 	-- create a window
-	local window = Window("slimbrowser." .. (titlek or "top"), title)
+	local window = Window("slimbrowser." .. (titlek or "top"), tostring(title))
 
 	-- create a menu
 	local menu = Menu("menu")
@@ -513,7 +531,7 @@ end
 
 -- _menuListener
 -- handles all keypresses on plugin_browe menus
-local function _menuListener(event, menuItem, context)
+local function _menuListener(event, menuItem, context, windowTitle)
 --	log:debug("_menuListener() " .. event:getType())
 
 	local evtType = event:getType()
@@ -523,7 +541,7 @@ local function _menuListener(event, menuItem, context)
 		log:debug("_menuListener(EVENT_ACTION, ", tostring(menuItem:getValue()), ")")
 
 		if context then
-			return _browseMenu(menuItem, context)
+			return _browseMenu(menuItem, context, windowTitle)
 		else
 			return EVENT_UNUSED
 		end
@@ -606,16 +624,16 @@ local function _browseSink(chunk, err, context)
 	-- FIXME: make sure we land safely...
 	
 	-- restore full context
-	local menuItem = context:restore()
+	local menuItem, windowTitle = context:restore()
 
 	-- stop our loading icon
 	menuItem:getParent():styleItem(menuItem, nil)
 	
-	
+	-- get the contextual keys to navigate our chunk
 	local loopk, titlek, idk, artworkk = context:getkeys()
 
 	-- create a new window
-	local window, menu = _createWindow(tostring(menuItem:getValue()), titlek)
+	local window, menu = _createWindow(windowTitle, titlek)
 
 	-- the string function used to format the menu item
 	local itemMetatable = {
@@ -637,11 +655,10 @@ local function _browseSink(chunk, err, context)
 			--get artwork if we have it
 			local menuIcon
 			if artworkk then
-				local artworkid = item[artworkk]
-				if artworkid then
+				local artworkId = item[artworkk]
+				if artworkId then
 					menuIcon = Icon("artwork")
-					req = RequestHttp(menuIcon:sink(), 'GET', '/music/' .. artworkid .. '/cover_50x50_f_000000.jpg')
-					_server:queue(req)
+					_server:fetchArtworkThumb(artworkId, menuIcon:sink(), _artworkThumbUri)
 				end
 			end
 
@@ -653,7 +670,7 @@ local function _browseSink(chunk, err, context)
 				EVENT_ACTION | EVENT_KEY_ALL,
 				function(event)
 					local context = context:down(item[idk])
-					return _menuListener(event, menuItem, context)
+					return _menuListener(event, menuItem, context, item[titlek])
 				end
 			)
 
@@ -691,11 +708,11 @@ end
 
 -- browseMenu
 -- creates a window with a menu browsing music for the player
-_browseMenu = function(menuItem, context)
-	log:debug("_browseMenu(", tostring(menuItem:getValue()), ")")
+_browseMenu = function(menuItem, context, windowTitle)
+	log:debug("_browseMenu(", windowTitle, ")")
 	
 	-- remember the window and the menu in the context
-	context:store(menuItem)
+	context:store(menuItem, windowTitle)
 	
 	-- give feedback to user by updating the icon
 	menuItem:getParent():styleItem(menuItem, "loading")
@@ -780,7 +797,7 @@ local function _playerMenu(menuItem, items)
 						menuItem:addListener(
 							EVENT_ACTION | EVENT_KEY_ALL,
 							function(event)
-								return _menuListener(event, menuItem, Context(_player, item.hierarchy))
+								return _menuListener(event, menuItem, Context(_player, item.hierarchy), item.title)
 							end
 						)
 					end

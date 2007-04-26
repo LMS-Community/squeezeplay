@@ -40,7 +40,7 @@ function registerApplet(self)
 	
 	-- SlimBrowser uses its own log category
 	-- defined here so that it can be changed using LogSettingsApplet before the applet is run.
-	jul.addCategory("player.browse", jul.DEBUG)
+	jul.addCategory("player.browse", jul.WARN)
 end
 
 

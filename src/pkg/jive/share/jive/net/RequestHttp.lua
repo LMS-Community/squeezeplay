@@ -238,7 +238,7 @@ function t_setResponseBody(self, data, safeSinkGen)
 	log:info("RequestHttp:t_setResponseBody(", tostring(self), ")")
 
 	-- transform our sink into a safe one using handy function
-	local safeSink = self:sinkToSafeSink(self:t_getResponseSink(), safeSinkGen)
+	local safeSink = self:sinkToSafeSink(self:t_getResponseSink(), safeSinkGen, true)
 	
 	-- abort if we have no sink
 	if safeSink then
@@ -266,9 +266,9 @@ end
 
 -- sinkToSafeSink
 --
-function sinkToSafeSink(self, sink, gen)
+function sinkToSafeSink(self, sink, gen, callNil)
 	if sink and gen then
-		local safeSink = gen(sink)
+		local safeSink = gen(sink, callNil)
 		if type(safeSink) == 'function' then
 			return safeSink
 		else

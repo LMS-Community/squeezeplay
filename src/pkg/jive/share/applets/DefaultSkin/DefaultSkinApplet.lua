@@ -38,6 +38,7 @@ local debug                  = require("jive.utils.debug")
 local autotable              = require("jive.utils.autotable")
 
 local EVENT_ACTION           = jive.ui.EVENT_ACTION
+local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
 local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
@@ -131,18 +132,21 @@ function wallpaperSetting(self, menu_item)
 
 	local credits = Label("label", "License")
 	credits:addListener(EVENT_ACTION,
-			    function()
-				    local window = Window("window", "License")
-				    window:addWidget(Textarea("textarea", backgroundLicense))
-				    window:show()
-			    end)
+		function()
+			local window = Window("window", "License")
+			window:addWidget(Textarea("textarea", backgroundLicense))
+			window:show()
+			return EVENT_CONSUME
+		end
+	)
 	menu:addItem(credits)
 
 	-- Store the applet settings when the window is closed
 	window:addListener(EVENT_WINDOW_POP,
-			   function()
-				   self:storeSettings()
-			   end)
+		function()
+			self:storeSettings()
+		end
+	)
 
 	return window
 end

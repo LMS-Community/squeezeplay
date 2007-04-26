@@ -67,18 +67,18 @@ Widgets in  the Content On Stage layer are only animated when moving on stage. T
 -- stuff we use
 local assert, ipairs, require, tostring, type = assert, ipairs, require, tostring, type
 
-local oo		= require("loop.base")
-local table 		= require("jive.utils.table")
-local Event 		= require("jive.ui.Event")
-local Timer 		= require("jive.ui.Timer")
+local oo            = require("loop.base")
+local table         = require("jive.utils.table")
+local Event         = require("jive.ui.Event")
+local Timer         = require("jive.ui.Timer")
 
-local log               = require("jive.utils.log").logger("ui")
+local log           = require("jive.utils.log").logger("ui")
 
-local FRAME_RATE	= jive.ui.FRAME_RATE
-local EVENT_SHOW	= jive.ui.EVENT_SHOW
-local EVENT_HIDE	= jive.ui.EVENT_HIDE
-local EVENT_UPDATE	= jive.ui.EVENT_UPDATE
-local EVENT_CONSUME	= jive.ui.EVENT_CONSUME
+local FRAME_RATE    = jive.ui.FRAME_RATE
+local EVENT_SHOW    = jive.ui.EVENT_SHOW
+local EVENT_HIDE    = jive.ui.EVENT_HIDE
+local EVENT_UPDATE  = jive.ui.EVENT_UPDATE
+local EVENT_CONSUME = jive.ui.EVENT_CONSUME
 
 
 -- our class

@@ -105,6 +105,9 @@ function new(append, level)
 	logger.getLevel = function (self)
 		return self.level
 	end
+	logger.isDebug = function(self)
+		return self.level == DEBUG
+	end
 
 	logger.setLevel(logger, level or DEBUG)
 

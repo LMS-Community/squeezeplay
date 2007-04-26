@@ -99,15 +99,25 @@ end
 =head2 jive.net.Socket:getSafeSinkGenerator()
 
 Returns a function that transforms a main thread sink in 
-a network thread sink.
+a network thread sink. The function accepts an optional boolean
+indicating if nil must be sent (i.e. standard source behaviour)
 
 =cut
 --]]
 function getSafeSinkGenerator(self)
-	return function (sink)
+
+	return function (sink, callNil)
+
 		return function(chunk, err)
 			if chunk ~= "" then
-				self.jnt:t_perform(function() sink(chunk, err) end)
+				self.jnt:t_perform(
+					function() 
+						sink(chunk, err) 
+						if callNil then 
+							sink(nil) 
+						end 
+					end
+				)
 			end
 			return 1
 		end

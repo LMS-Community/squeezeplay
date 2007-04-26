@@ -40,67 +40,8 @@ oo.class(_M, Applet)
 
 
 -- FIXME ui framework should perform double key press detection
--- FIXME rewrite with local functions, this does not need OO for any _ function
 
-function __init(self, ...)
-
-	-- init superclass
-	local obj = oo.rawnew(self, Applet(...))
-	
-	obj.locked = false
-	
-	Framework:addListener(EVENT_KEY_DOWN,
-				      function(...)
-					      return obj:_keyDown(...)
-				      end)
-	Framework:addListener(EVENT_KEY_PRESS,
-				      function(...)
-					      return obj:_keyPress(...)
-				      end)
-	Framework:addListener(EVENT_SCROLL,
-				      function(...)
-					      return obj:_scroll(...)
-				      end)
-	
-	return obj
-end
-
-
---[[
-
-=head2 applets.KeyLock.KeyLockApplet:free()
-
-Overridden to return always false, this ensure the applet is
-permanently loaded.
-
-=cut
---]]
-function free(self)
-	-- we cannot be unloaded
-	return false
-end
-
-
-function _keyDown(self, event)
-	return self:_locked()
-end
-
-
-function _keyPress(self, event)
-	if event:getKeycode() == (KEY_PLAY | KEY_PAUSE) then
-		self.locked = not self.locked
-	end
-
-	return self:_locked()
-end
-
-
-function _scroll(self, event)
-	return self:_locked()
-end
-
-
-function _locked(self)
+local function _locked(self)
 	if not self.locked then
 		if self.window then
 			self.window:hide()
@@ -120,12 +61,77 @@ function _locked(self)
 
 	local label = Label("text", "Locked!")
 	self.window:addWidget(label)
+
 	self.window:showBriefly(5000,
-				function()
-					self.window = nil
-				end)
+		function()
+			self.window = nil
+		end
+	)
 
 	return EVENT_CONSUME
+end
+
+
+local function _keyDown(self, event)
+	return _locked(self)
+end
+
+
+local function _keyPress(self, event)
+	if event:getKeycode() == (KEY_PLAY | KEY_PAUSE) then
+		self.locked = not self.locked
+	end
+
+	return _locked(self)
+end
+
+
+local function _scroll(self, event)
+	return _locked(self)
+end
+
+
+function __init(self, ...)
+
+	-- init superclass
+	local obj = oo.rawnew(self, Applet(...))
+	
+	obj.locked = false
+	
+	Framework:addListener(EVENT_KEY_DOWN,
+		function(...)
+			return _keyDown(obj, ...)
+		end
+	)
+	
+	Framework:addListener(EVENT_KEY_PRESS,
+		function(...)
+			return _keyPress(obj, ...)
+		end
+	)
+	
+	Framework:addListener(EVENT_SCROLL,
+		function(...)
+			return _scroll(obj, ...)
+		end
+	)
+	
+	return obj
+end
+
+
+--[[
+
+=head2 applets.KeyLock.KeyLockApplet:free()
+
+Overridden to return always false, this ensure the applet is
+permanently loaded.
+
+=cut
+--]]
+function free(self)
+	-- we cannot be unloaded
+	return false
 end
 
 
