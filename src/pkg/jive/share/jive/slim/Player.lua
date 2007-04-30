@@ -39,15 +39,53 @@ local iconbar        = iconbar
 module(..., oo.class)
 
 
--- init
--- creates a player object
+-- _getSink
+-- returns a sink with a closure to self
+-- this sink receives all the data from our JSON RPC interface
+local function _getSink(self)
+
+	return function(chunk, err)
+	
+		if err then
+			log:debug(err)
+			
+		elseif chunk then
+			log:info(chunk)
+			
+			if chunk.method == 'slim.request' then
+			
+				local proc = "_process_" .. chunk.params[2][1]
+				if self[proc] then
+					self[proc](self, chunk)
+				end
+				
+			elseif chunk.method == 'slim.playermenu' then
+			
+				log:debug("Loading menu for player ", tostring(self))
+				self.menuItems = chunk.result["@items"]
+			end
+		end
+	end
+end
+
+
+--[[
+
+=head2 jive.slim.Player(server, jnt, jpool, playerinfo)
+
+Create a Player object for server I<server>.
+
+=cut
+--]]
 function __init(self, slimServer, jnt, jpool, playerinfo)
 	log:debug("Player:__init(", tostring(playerinfo.playerid), ")")
 
 	assert(slimServer, "Cannot create Player without SlimServer object")
 	
 	local obj = oo.rawnew(self,{
+		
 		lastSeen = os.time(),
+		
 		slimServer = slimServer,
 		jnt = jnt,
 		jpool = jpool,
@@ -56,20 +94,36 @@ function __init(self, slimServer, jnt, jpool, playerinfo)
 		name = playerinfo.name,
 		model = playerinfo.model,
 
-		isOnStage = false,
-		menuItem = false,
+		-- menu item of home menu that represents this player
+		homeMenuItem = false,
+		
 		menuItems = false,
 		jsp = false,
 		
+		isOnStage = false,
 		statusSink = false,
 	})
 
 	
-	local menuReq = RequestJsonRpc(obj:_getSink(), '/plugins/Jive/jive.js', 'slim.playermenu', nil)
-	local playerReq = RequestStatus(obj:_getSink(), obj, '-', 10, nil, {tags = 'aljJ'})
-	
-	obj:queue(menuReq)
-	obj:queue(playerReq)
+	jpool:queue(
+		RequestJsonRpc(
+			_getSink(obj), 
+			'/plugins/Jive/jive.js', 
+			'slim.playermenu', 
+			nil
+		)
+	)
+
+	jpool:queue(
+		RequestStatus(
+			_getSink(obj), 
+			obj, 
+			'-', 
+			10, 
+			nil, 
+			{tags = 'aljJ'}
+		)
+	)
 	
 	-- notify we're here
 	obj.jnt:notify('playerNew', obj)
@@ -78,32 +132,83 @@ function __init(self, slimServer, jnt, jpool, playerinfo)
 end
 
 
--- free
--- deletes the player
+--[[
+
+=head2 jive.slim.Player:free()
+
+Deletes the player.
+
+=cut
+--]]
 function free(self)
+	self:offStage()
 	self.jnt:notify("playerDelete", self)
 end
 
 
--- queue
--- proxy function for the slimserver pool
-function queue(self, request)
-	self.jpool:queue(request)
+--[[
+
+=head2 jive.slim.Player:getHomeMenuItem()
+
+Returns the home menu menuItem that represents this player. This is
+used by L<jive.applet.SlimDiscovery> to remove the player from the menu
+if/when it disappears.
+
+=cut
+--]]
+function getHomeMenuItem(self)
+	-- return nil if self.homeMenuItem is false
+	if self.homeMenuItem then
+		return self.homeMenuItem
+	end
+	return nil
 end
 
 
--- queuePriority
--- proxy function for the slimserver pool
-function queuePriority(self, request)
-	self.jpool:queuePriority(request)
+--[[
+
+=head2 jive.slim.Player:setHomeMenuItem(homeMenuItem)
+
+Stores the main home menuItem that represents this player. This is
+used by L<jive.applet.SlimDiscovery> to manage the home menu item.
+
+=cut
+--]]
+function setHomeMenuItem(self, homeMenuItem)
+	-- set self.homeMenuItem to false if sent nil
+	if homeMenuItem then
+		self.homeMenuItem = homeMenuItem
+	else
+		self.homeMenuItem = false
+	end
 end
 
 
+--[[
+
+=head2 tostring(aPlayer)
+
+if I<aPlayer> is a L<jive.slim.Player>, prints
+ Player {name}
+
+=cut
+--]]
+function __tostring(self)
+	return "Player {" .. self.name .. "}"
+end
+
+
+
+
+
+
+-- call
+-- sends a command
 function call(self, cmd)
 	log:debug("Player:call():")
 	log:debug(cmd)
 	self:queuePriority(RequestCli(
-		self:_getSink(), --sink, 
+		_getSink(self), --sink, 
 		self, --player, 
 		cmd --cmdarray, 
 		--from, 
@@ -111,12 +216,6 @@ function call(self, cmd)
 		--tags, 
 		--options
 		))
-end
-
--- _tostring
--- makes human readable player string for debugging
-function __tostring(self)
-	return "Player {" .. self.name .. "}"
 end
 
 
@@ -133,7 +232,7 @@ function onStage(self, sink)
 	self.jsp = SocketHttp(self.jnt, ip, port, "playerLT")
 	
 	-- our long term request
-	local reqcli = RequestStatus(self:_getSink(), self, '-', 10, 30, {tags = 'aljJ'})
+	local reqcli = RequestStatus(_getSink(self), self, '-', 10, 30, {tags = 'aljJ'})
 	
 	self.jsp:fetch(reqcli)
 
@@ -183,38 +282,8 @@ function updateIconbar(self)
 end
 
 
-
-
--- _getSink
--- returns a sink with a closure to self
--- this sink receives all the data from our JSON RPC interface
-function _getSink(self)
-
-	return function(chunk, err)
-	
-		if err then
-			log:debug(err)
-			
-		elseif chunk then
-			log:info(chunk)
-			
-			if chunk.method == 'slim.request' then
-			
-				local proc = "_process_" .. chunk.params[2][1]
-				if self[proc] then
-					self[proc](self, chunk)
-				end
-				
-			elseif chunk.method == 'slim.playermenu' then
-			
-				log:debug("Loading menu for player ", tostring(self))
-				self.menuItems = chunk.result["@items"]
-			end
-		end
-	end
-end
-
-
+-- _process_status
+-- receives the status data
 function _process_status(self, data)
 	log:debug("Player:_process_status()")
 	
@@ -227,17 +296,8 @@ function _process_status(self, data)
 end
 
 
--- FIXME: can be removed
-function setStatusSink(self, sink)
-	if sink then
-		self.statusSink = sink
-		self:feedStatusSink()
-	else
-		self.statusSink = false
-	end
-end
-
-
+-- feedStatusSink
+--
 function feedStatusSink(self)
 	if self.state and self.statusSink then
 		self.statusSink(self.state)
@@ -297,25 +357,20 @@ function getSlimServer(self)
 	return self.slimServer
 end
 
-
--- get/setMenuItem
--- stores the main menu item we're on, if any
--- called/used by SlimDiscoveryApplet
--- false mgmt because of overriden subclasses
-function getMenuItem(self)
-	if self.menuItem then
-		return self.menuItem
-	end
-	return nil
+-- queue
+-- proxy function for the slimserver pool
+function queue(self, request)
+	self.jpool:queue(request)
 end
 
-function setMenuItem(self, menuItem)
-	if menuItem then
-		self.menuItem = menuItem
-	else
-		self.menuItem = false
-	end
+
+-- queuePriority
+-- proxy function for the slimserver pool
+function queuePriority(self, request)
+	self.jpool:queuePriority(request)
 end
+
+
 
 
 

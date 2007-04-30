@@ -33,6 +33,7 @@ local Slider           = require("jive.ui.Slider")
 local Timer            = require("jive.ui.Timer")
 local Window           = require("jive.ui.Window")
 local RequestHttp      = require("jive.net.RequestHttp")
+local debug = require("jive.utils.debug")
 
 local log              = require("jive.utils.log").logger("player.browse")
 
@@ -187,7 +188,7 @@ local function _createNowPlayingMenuItem(item, artworkId)
 	
 	if artworkId then
 		icon = Icon("artwork")
-		_server:fetchArtworkThumb(artworkId, icon:sink(), _artworkThumbUri)
+		_server:fetchArtworkThumb(artworkId, icon, _artworkThumbUri)
 	end
 	
 	return Label("label", setmetatable(item, _nowPlayingMenuItemValueMetatable), icon)
@@ -310,6 +311,175 @@ local function _nowPlayingMenuListener(event, menuItem)
 end
 
 
+local _emptyItem = {
+	title = "Empty playlist",
+	id = 0,
+	["playlist index"] = 0,
+}
+
+local _loadingItem = {
+	title = "Loading...",
+	id = 0,
+	["playlist index"] = 0,
+}
+
+
+-- _statusSink
+-- where the now playing data lands
+local function _statusSink2(chunk, err)
+	log:debug("_statusSink()")
+
+	local chItems -- items in the current chunk
+	local chItemsFirst -- first chunk item playlist index
+	local chItemsLast -- last chunk item playlist index
+
+	
+	local plCount -- total items in playlist
+
+
+	local plOldCur -- old current item
+	local plNewCur -- new current item
+
+	if chunk.power and chunk.power == 1 then
+	
+		log:debug("power is on")
+
+		-- if we have a playlist
+		if chunk.playlist_tracks and chunk.playlist_tracks > 0 then
+		
+			-- number of items in playlist
+			plCount = chunk.playlist_tracks
+			
+			-- our items
+			chItems = chunk["@playlist"]
+			-- playlist index of first playlist element
+			chItemsFirst = chItems[1]["playlist index"] + 1 -- CLI is 0 based
+			chItemsLast = chItemsFirst + #chItems - 1
+
+--[[			
+			-- if the current song has changed (or first time)
+			-- (we do not care here if playlist has changed. All we care about is the index in
+			-- the menu of the current element to style it)
+			if chunk.playlist_cur_index != _nowPlayingOldCurIdx then
+				-- figure out the menu index of the old current
+				if _nowPlayingOldCurIdx then
+					plOldCur = _nowPlayingOldCurIdx + 1
+				end
+				-- same for new current
+				plNewCur = chunk.playlist_cur_index + 1
+				-- remember old current (for next time)
+				_nowPlayingOldCurIdx = chunk.playlist_cur_index
+			end
+--]]
+		end
+	end
+	
+	-- if we did not receive a playlist, create a mock-up one with a single
+	-- "empty" item
+	-- assumption here is that it's new?
+	if not chItems then
+		plCount = 1
+		chItems = {_emptyItem}
+		chItemsFirst = 1
+		chItemsLast = 1
+--		_nowPlayingOldCurIdx = false
+	end
+	
+	log:debug("playlist has ", tostring(plCount), " tracks")
+	log:debug("chunk covers items ", tostring(chItemsFirst), " to ", tostring(chItemsLast))
+	log:debug("rawitems in chunk = ", tostring(#chItems))
+	
+	-- pointer to the current item in the data (versus the menu)
+	local curChItem
+	local curChIdx
+	
+	local numMenuItems = _nowPlayingMenu:numItems()	
+	local insertMenuIdx = false
+	local offsetMenuIdx
+	
+	if numMenuItems > 0 then
+
+		log:debug("menu has ", tostring(numMenuItems), " items")
+	
+		-- walk down the menu to figure out where we need to check/insert our stuff
+		for i=1, numMenuItems do
+
+			-- get menu item
+			local menuItem = _nowPlayingMenu:getItem(i)
+			
+			-- look at the playlist index of the item
+			local menuPlIdx = menuItem:getValue()["playlist index"] + 1
+			
+			log:debug("menuIdx = ", tostring(i), " menuPlIdx = ", menuPlIdx, " first chunkPlIdx = ", chItemsFirst)
+			
+			if menuPlIdx <= chItemsFirst then
+				insertMenuIdx = i
+--				offsetMenuIdx = i
+				break
+			end
+		end
+	end
+	
+	log:debug("insertMenuIdx = ", tostring(insertMenuIdx))
+	
+	local menuItem
+	
+	local function _getMenuItem(item)
+		--get artwork if we have it
+		local artworkId = item.artwork_track_id
+		if not artworkId and item.coverart and item.coverart == 1 then
+			artworkId = item.id
+		end
+	
+		return _createNowPlayingMenuItem(curChItem, artworkId)
+	end
+	
+	for i, item in ipairs(chItems) do
+	
+		log:debug("menuIdx = ", tostring(insertMenuIdx), " chunkIdx = ", tostring(i) )
+		curChItem = chItems[i]
+		
+		local menuItem
+		
+		if insertMenuIdx then
+		
+			-- get the menu item
+			menuItem = _nowPlayingMenu:getItem(insertMenuIdx)
+
+			if menuItem then
+
+				-- compare IDs
+				if curChItem.id != menuItem:getValue().id then
+			
+					-- not the same id, so update the menuItem
+					log:debug(".. replacing menu item ", tostring(insertMenuIdx))
+
+					_nowPlayingMenu:replaceIndex(_getMenuItem(curChItem), insertMenuIdx)
+				end
+			end
+			
+		end
+		
+		if not menuItem then
+			-- no menu item at all, we must add...
+			log:debug(".. creating item for chunk idx ", tostring(i))
+
+			-- add the menuItem!
+			_nowPlayingMenu:addItem(_getMenuItem(curChItem))
+			
+			-- the first time we add to an empty menu, this is false
+			if not insertMenuIdx then
+				insertMenuIdx = 1
+			end
+		end
+		
+		insertMenuIdx = insertMenuIdx + 1
+	end
+	
+	
+end
+
+
 
 -- _statusSink
 -- where the now playing data lands
@@ -349,7 +519,7 @@ local function _statusSink(chunk, err)
 	local chItemsFirst -- first item playlist index
 	local chItemsLast -- last item playlist index
 	local plOldCur -- old current item
-	local plNewCur
+	local plNewCur -- new current item
 	local plCount -- total items in playlist
 
 --[[
@@ -370,24 +540,36 @@ local function _statusSink(chunk, err)
 	
 		log:debug("power is on")
 
+		-- if we have a playlist
 		if chunk.playlist_tracks and chunk.playlist_tracks > 0 then
 		
+			-- number of items in playlist
 			plCount = chunk.playlist_tracks
 			
+			-- our items
 			chItems = chunk["@playlist"]
+			-- playlist index of first playlist element
 			chItemsFirst = chItems[1]["playlist index"] + 1 -- CLI is 0 based
 			chItemsLast = chItemsFirst + #chItems - 1
 			
+			-- if the current song has changed (or first time)
+			-- (we do not care here if playlist has changed. All we care about is the index in
+			-- the menu of the current element to style it)
 			if chunk.playlist_cur_index != _nowPlayingOldCurIdx then
+				-- figure out the menu index of the old current
 				if _nowPlayingOldCurIdx then
 					plOldCur = _nowPlayingOldCurIdx + 1
 				end
+				-- same for new current
 				plNewCur = chunk.playlist_cur_index + 1
+				-- remember old current (for next time)
 				_nowPlayingOldCurIdx = chunk.playlist_cur_index
 			end
 		end
 	end
 	
+	-- if we did not receive a playlist, create a mock-up one with a single
+	-- "empty" item
 	if not chItems then
 		plCount = 1
 		chItems = {emptyItem}
@@ -400,9 +582,10 @@ local function _statusSink(chunk, err)
 	log:debug("chunk covers items ", tostring(chItemsFirst), " to ", tostring(chItemsLast))
 	log:debug("rawitems in chunk = ", tostring(#chItems))
 	
-	
+	-- pointer to the current item in the data (versus the menu)
 	local curChItem
 	local curChIdx
+	
 	
 	-- for each item in the playlist
 	for plIdx = 1, plCount do
@@ -488,7 +671,7 @@ local function _statusSink(chunk, err)
 	end
 	
 	-- remove anything left in the menu
-	-- go downwards to avoid moving items...
+	-- go upwards to avoid moving items...
 	for i = _nowPlayingMenu:numItems(), plCount+1, -1 do
 		log:debug("deleting menuItem @ ", tostring(i))
 		_nowPlayingMenu:removeIndex(i)
@@ -658,7 +841,7 @@ local function _browseSink(chunk, err, context)
 				local artworkId = item[artworkk]
 				if artworkId then
 					menuIcon = Icon("artwork")
-					_server:fetchArtworkThumb(artworkId, menuIcon:sink(), _artworkThumbUri)
+					_server:fetchArtworkThumb(artworkId, menuIcon, _artworkThumbUri)
 				end
 			end
 

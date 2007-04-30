@@ -65,13 +65,13 @@ end
 function notify_playerNew(self, player)
 
 	-- add the player to the main menu if it is not there already
-	if not player:getMenuItem() then
+	if not player:getHomeMenuItem() then
 
 		local menuItem = appletManager:menuItem(player:getName(), "SlimBrowser", "openPlayer", player)
 
 		jiveMain:addItem(menuItem, 100)
 
-		player:setMenuItem(menuItem)
+		player:setHomeMenuItem(menuItem)
 	end
 end
 
@@ -81,11 +81,11 @@ end
 function notify_playerDelete(self, player)
 
 	-- remove the player from the menu if it has one
-	local menuItem = player:getMenuItem()
+	local menuItem = player:getHomeMenuItem()
 	if menuItem then
 	
 		jiveMain:removeItem(menuItem)
-		player:setMenuItem(nil)
+		player:setHomeMenuItem(nil)
 	end
 end
 

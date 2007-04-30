@@ -35,6 +35,7 @@ local oo          = require("loop.base")
 local SocketHttp  = require("jive.net.SocketHttp")
 local HttpPool    = require("jive.net.HttpPool")
 local Player      = require("jive.slim.Player")
+local Surface     = require("jive.ui.Surface")
 local RequestHttp = require("jive.net.RequestHttp")
 
 local log         = require("jive.utils.log").logger("slimserver")
@@ -73,6 +74,7 @@ end
 
 -- forward declaration
 local _establishConnection
+
 
 -- _errSink
 -- manages connection errors
@@ -250,6 +252,11 @@ function __init(self, jnt, ip, name)
 		-- our socket for long term connections
 		jsp = SocketHttp(jnt, ip, HTTPPORT, name .. "LT"),
 		
+		-- artwork cache: Weak table storing a surface by artworkId
+		artworkThumbCache = setmetatable({}, { __mode="kv" }),
+		-- Icons waiting for the given artworkId
+		artworkThumbIcons = {},
+		
 	})
 
 	obj.id = obj:idFor(ip, port, name)
@@ -277,6 +284,10 @@ function free(self)
 	
 	-- notify we're going away
 	self.jnt:notify("serverDelete", self)
+	
+	-- clear cache
+	self.artworkThumbCache = nil
+	self.artworkThumbIcons = nil
 
 	-- delete players
 	for id, player in pairs(self.players) do
@@ -341,41 +352,22 @@ function updateFromUdp(self, name)
 end
 
 
---[[
-
-=head2 jive.slim.SlimServer:fetchArtworkThumb(artworkId, sink, uriGenerator)
-
-Get the thumb for I<artworkId> and send it to I<sink>. I<uriGenerator> must be a function that
-computes the URI to request the artwork from the server from I<artworkId> (i.e. if needed, this
-method will call uriGenerator(artworkId) and use the result as URI).
-The SlimServer object maintains an artwork cache.
-
-=cut
---]]
-
--- FIXME: the CLI does not return a consistent ID per album.
--- If we want to cache, we would need ONE id by album available everywhere.
-
-local _artworkThumbCache = setmetatable({}, { __mode="kv" })
-local _artworkThumbSinks = {}
-
-
 -- _dunpArtworkCache
 -- returns statistical data about our cache
-local function _dumpArtworkThumbCache()
-	local size = 0
+local function _dumpArtworkThumbCache(self)
 	local items = 0
-	for k, v in pairs(_artworkThumbCache) do
+	for k, v in pairs(self.artworkThumbCache) do
 		items = items + 1
-		size = size + #v
 	end
-	logcache:debug("_artworkThumbCache: ", tostring(items), " items, ", tostring(size), " bytes")
+	logcache:debug("artworkThumbCache contains ", tostring(items), " items")
 end
 
 
 -- _getArworkThumbSink
--- returns a sink for artwork so we can cache it before sending it forward
-local function _getArtworkThumbSink(artworkId)
+-- returns a sink for artwork so we can cache it as Surface before sending it forward
+local function _getArtworkThumbSink(self, artworkId)
+
+	local icons = self.artworkThumbIcons
 
 	return function(chunk, err)
 		-- on error, print something...
@@ -385,59 +377,74 @@ local function _getArtworkThumbSink(artworkId)
 		-- if we have data
 		if chunk then
 			logcache:debug("_getArtworkThumbSink(", tostring(artworkId), ")")
-			-- call all stored sinks
-			for i,sink in ipairs(_artworkThumbSinks[artworkId]) do
-				sink(chunk)
-				sink(nil)
+			
+			-- create a surface
+			local artwork = Surface:loadImageData(chunk, #chunk)
+			
+			-- sets it to all icons waiting for it
+			for i,icon in ipairs(icons[artworkId]) do
+				icon:setImage(artwork)
 			end
+			
 			-- store the artwork in the cache
-			_artworkThumbCache[artworkId] = chunk
+			self.artworkThumbCache[artworkId] = artwork
 			
 			if logcache:isDebug() then
-				_dumpArtworkThumbCache()
+				_dumpArtworkThumbCache(self)
 			end
 		end
 		-- in all cases, remove the sinks
-		_artworkThumbSinks[artworkId] = nil
+		icons[artworkId] = nil
 	end
 end
 
 
-function fetchArtworkThumb(self, artworkId, sink, uriGenerator)
+--[[
+
+=head2 jive.slim.SlimServer:fetchArtworkThumb(artworkId, icon, uriGenerator)
+
+The SlimServer object maintains an artwork cache. This function either loads from the cache or
+gets from the network the thumb for I<artworkId>. A L<jive.ui.Surface> is used to perform
+I<icon>:setImage(). I<uriGenerator> must be a function that
+computes the URI to request the artwork from the server from I<artworkId> (i.e. if needed, this
+method will call uriGenerator(artworkId) and use the result as URI).
+
+
+=cut
+--]]
+function fetchArtworkThumb(self, artworkId, icon, uriGenerator)
 	logcache:debug(tostring(self), ":fetchArtworkThumb(", tostring(artworkId), ")")
 
 	if logcache:isDebug() then
-		_dumpArtworkThumbCache()
+		_dumpArtworkThumbCache(self)
 	end
 
 	-- do we have the artwork in the cache
-	local artwork = _artworkThumbCache[artworkId]
+	local artwork = self.artworkThumbCache[artworkId]
 	if artwork then
 		logcache:debug("..artwork in cache")
-		sink(artwork)
-		sink(nil)
+		icon:setImage(artwork)
 		return
 	end
 	
 	-- are we requesting it already?
-	local sinks = _artworkThumbSinks[artworkId]
-	if sinks then
+	local icons = self.artworkThumbIcons[artworkId]
+	if icons then
 		logcache:debug("..artwork already requested")
-		table.insert(sinks, sink)
+		table.insert(icons, icon)
 		return
 	end
 	
 	-- no luck, generate a request for the artwork
 	local req = RequestHttp(
-		_getArtworkThumbSink(artworkId), 
+		_getArtworkThumbSink(self, artworkId), 
 		'GET', 
 		uriGenerator(artworkId)
 	)
-	-- remember the sink
-	_artworkThumbSinks[artworkId] = {sink}
+	-- remember the icon
+	self.artworkThumbIcons[artworkId] = {icon}
 	logcache:debug("..fetching artwork")
 	self.jpool:queue(req)
-
 end
 
 
@@ -445,7 +452,7 @@ end
 
 =head2 tostring(aSlimServer)
 
-if I<aSlimServer> is a L<jive.SlimServer>, prints
+if I<aSlimServer> is a L<jive.slim.SlimServer>, prints
  SlimServer {name}
 
 =cut
