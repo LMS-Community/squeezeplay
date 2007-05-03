@@ -239,7 +239,7 @@ function t_sendHeaders(self)
 	local pump = function ()
 		log:debug(tostring(self), ":t_sendHeaders.pump()")
 		
-		local err = socket.skip(ltn12.pump.step(source, sink))
+		local ret, err = ltn12.pump.step(source, sink)
 		
 		if err then
 			log:error(tostring(self), ":t_sendHeaders.pump: ", err)
