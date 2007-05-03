@@ -33,6 +33,7 @@ local Slider           = require("jive.ui.Slider")
 local Timer            = require("jive.ui.Timer")
 local Window           = require("jive.ui.Window")
 local RequestHttp      = require("jive.net.RequestHttp")
+local Framework        = require("jive.ui.Framework")
 local debug = require("jive.utils.debug")
 
 local log              = require("jive.utils.log").logger("player.browse")
@@ -49,6 +50,8 @@ local KEY_PLAY         = jive.ui.KEY_PLAY
 local KEY_ADD          = jive.ui.KEY_ADD
 local KEY_BACK         = jive.ui.KEY_BACK
 local KEY_PAUSE        = jive.ui.KEY_PAUSE
+local KEY_FWD          = jive.ui.KEY_FWD
+local KEY_REW          = jive.ui.KEY_REW
 local KEY_VOLUME_DOWN  = jive.ui.KEY_VOLUME_DOWN
 local KEY_VOLUME_UP    = jive.ui.KEY_VOLUME_UP
 
@@ -75,6 +78,8 @@ local _nowPlayingWindow = false
 local _nowPlayingMenu = false
 local _nowPlayingOldCurIdx = false
 
+-- time stamp of last key press
+local _lastKeyPress = 0
 
 -- metatable for menuItems "values"
 -- set a tostring handler to the items that uses a style function...
@@ -180,43 +185,6 @@ local function _artworkThumbUri(artworkId)
 end
 
 
--- _createNowPlayingMenuItem
--- Creates a new shiny menuItem (i.e. a Label)
-local function _createNowPlayingMenuItem(item, artworkId)
-
-	local icon
-	
-	if artworkId then
-		icon = Icon("artwork")
-		_server:fetchArtworkThumb(artworkId, icon, _artworkThumbUri)
-	end
-	
-	return Label("label", setmetatable(item, _nowPlayingMenuItemValueMetatable), icon)
-end
-
-
--- _createNowPlayingWindow
--- Creates the now Playing window and associated paraphernalia
-local function _createNowPlayingWindow()
-	log:debug("_createNowPlayingWindow()")
-	
-	local window = Window("slimbrowser.status", "Now Playing")
-	local menu = Menu("menu")
-	window:addWidget(menu)
-
-	-- hide the window on back key
-	window:addListener(EVENT_KEY_PRESS,
-		function(evt)
-			if evt:getKeycode() == KEY_BACK then
-				window:hide()
-			end
-		end
-	)
-
-	return window, menu
-end
-
-
 -- _nowPlayingMenuListener
 -- handles all keypresses on now playing menus
 local function _nowPlayingMenuListener(event, menuItem)
@@ -245,6 +213,9 @@ local function _nowPlayingMenuListener(event, menuItem)
 	elseif evtType == EVENT_KEY_PRESS then
 		log:debug("_nowPlayingMenuListener(EVENT_KEY_PRESS, ", tostring(menuItem:getValue()), ")")
 
+		local oldlast = _lastKeyPress
+		_lastKeyPress = Framework:getTicks()
+
 		local evtCode = event:getKeycode()
 
 		if evtCode == KEY_PAUSE then
@@ -254,18 +225,30 @@ local function _nowPlayingMenuListener(event, menuItem)
 			return EVENT_CONSUME
 			
 		elseif evtCode == KEY_PLAY then
-
-			-- play ???
---			if context then
---				log:info('Play ', tostring(menuItem:getValue()))
+			log:info('Play selected')
+			
+			-- play selected item
+			local idx = menuItem:getValue()["playlist index"]
+			if idx then
+				log:info('Play ', tostring(idx))
 				
-				--local cmd = context2playcmd(context)
---				_player:call(context:getPlayCmd())
---			else
---				log:info('Cannot play ', tostring(menuItem:getValue()))
---			end
---			return EVENT_CONSUME
+				_player:playIndex(idx)
+				return EVENT_CONSUME
+			end
 
+		elseif evtCode == KEY_FWD then
+			log:info('FWD')
+			
+			_player:playIndex('+1')
+			return EVENT_CONSUME
+		elseif evtCode == KEY_REW then
+			log:info('REW')
+			if Framework:getTicks() - oldlast > 1000 then
+				_player:playIndex('+0')
+			else
+				_player:playIndex('-1')
+			end
+			return EVENT_CONSUME
 		elseif evtCode == KEY_ADD then
 
 			log:debug('Add in Now Playing ???')
@@ -309,6 +292,53 @@ local function _nowPlayingMenuListener(event, menuItem)
 	-- maybe someone else wants it ?
 	return EVENT_UNUSED
 end
+
+-- _createNowPlayingMenuItem
+-- Creates a new shiny menuItem (i.e. a Label)
+local function _createNowPlayingMenuItem(item, artworkId)
+
+	local icon
+	
+	if artworkId then
+		icon = Icon("artwork")
+		_server:fetchArtworkThumb(artworkId, icon, _artworkThumbUri)
+	end
+	
+	local menuItem = Label("label", setmetatable(item, _nowPlayingMenuItemValueMetatable), icon)
+	
+	menuItem:addListener(
+		EVENT_ACTION | EVENT_KEY_ALL,
+		function(event)
+			return _nowPlayingMenuListener(event, menuItem)
+		end
+	)
+
+	return menuItem
+end
+
+
+-- _createNowPlayingWindow
+-- Creates the now Playing window and associated paraphernalia
+local function _createNowPlayingWindow()
+	log:debug("_createNowPlayingWindow()")
+	
+	local window = Window("slimbrowser.status", "Now Playing")
+	local menu = Menu("menu")
+	window:addWidget(menu)
+
+	-- hide the window on back key
+	window:addListener(EVENT_KEY_PRESS,
+		function(evt)
+			if evt:getKeycode() == KEY_BACK then
+				window:hide()
+			end
+		end
+	)
+
+	return window, menu
+end
+
+
 
 
 local _emptyItem = {
@@ -719,6 +749,9 @@ local function _menuListener(event, menuItem, context, windowTitle)
 
 	local evtType = event:getType()
 
+	local oldlast = _lastKeyPress
+	_lastKeyPress = Framework:getTicks()
+
 	-- actions on enter
 	if evtType == EVENT_ACTION then
 		log:debug("_menuListener(EVENT_ACTION, ", tostring(menuItem:getValue()), ")")
@@ -755,6 +788,20 @@ local function _menuListener(event, menuItem, context, windowTitle)
 
 			return EVENT_CONSUME
 
+		elseif evtCode == KEY_FWD then
+			log:info('FWD')
+			
+			_player:playIndex('+1')
+			return EVENT_CONSUME
+		elseif evtCode == KEY_REW then
+			log:info('REW')
+			
+			if Framework:getTicks() - oldlast > 1000 then
+				_player:playIndex('+0')
+			else
+				_player:playIndex('-1')
+			end
+			return EVENT_CONSUME
 		elseif evtCode == KEY_ADD then
 
 			log:debug('Add')

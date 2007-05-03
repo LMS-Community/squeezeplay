@@ -344,6 +344,11 @@ function stop(self)
 	self:updateIconbar()
 end
 
+function playIndex(self, index)
+	log:debug("Player:playIndex(", index, ")")
+	self:call({'playlist', 'index', index})
+end
+
 -- (accessors)
 function getName(self)
 	return self.name
