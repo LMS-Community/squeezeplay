@@ -57,8 +57,6 @@ local EVENT_HIDE      = jive.ui.EVENT_HIDE
 local EVENT_CONSUME   = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED    = jive.ui.EVENT_UNUSED
 
-local KEY_FWD         = jive.ui.KEY_FWD
-local KEY_REW         = jive.ui.KEY_REW
 local KEY_GO          = jive.ui.KEY_GO
 local KEY_BACK        = jive.ui.KEY_BACK
 local KEY_UP          = jive.ui.KEY_UP
