@@ -53,7 +53,7 @@ all: sdl-all lua-all app
 #####
 
 .PHONY: sdl-all freetype sdl sdl-image sdl-ttf sdl-gfx
-sdl-all: sdl freetype sdl-image sdl-ttf sdl-gfx
+sdl-all: freetype sdl sdl-image sdl-ttf sdl-gfx
 
 # freetype
 freetype-2.1.10/config.mk:
@@ -78,10 +78,10 @@ sdl-image: SDL_image-1.2.5/Makefile
 
 # sdl_ttf
 SDL_ttf-2.0.8/Makefile:
-	cd SDL_ttf-2.0.8; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --prefix=${PREFIX}
+	cd SDL_ttf-2.0.8; SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config ./configure --prefix=${PREFIX}
 
 sdl-ttf: SDL_ttf-2.0.8/Makefile
-	cd SDL_ttf-2.0.8; make SDL_CONFIG=${PREFIX}/bin/sdl-config && make install
+	cd SDL_ttf-2.0.8; make SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config && make install
 
 # sdl_gfx
 SDL_gfx-2.0.15/Makefile:
