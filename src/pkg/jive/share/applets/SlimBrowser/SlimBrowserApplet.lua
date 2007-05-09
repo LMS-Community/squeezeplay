@@ -381,7 +381,7 @@ local function _statusSink2(chunk, err)
 			plCount = chunk.playlist_tracks
 			
 			-- our items
-			chItems = chunk["@playlist"]
+			chItems = chunk["playlist_loop"]
 			-- playlist index of first playlist element
 			chItemsFirst = chItems[1]["playlist index"] + 1 -- CLI is 0 based
 			chItemsLast = chItemsFirst + #chItems - 1
@@ -577,7 +577,7 @@ local function _statusSink(chunk, err)
 			plCount = chunk.playlist_tracks
 			
 			-- our items
-			chItems = chunk["@playlist"]
+			chItems = chunk["playlist_loop"]
 			-- playlist index of first playlist element
 			chItemsFirst = chItems[1]["playlist index"] + 1 -- CLI is 0 based
 			chItemsLast = chItemsFirst + #chItems - 1

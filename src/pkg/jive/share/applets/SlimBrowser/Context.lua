@@ -211,16 +211,16 @@ function getPlayCmd(self)
 end
 
 local level2keys = { -- loop, title, id, artwork
-	["contributor"]      = {"@artists", "artist", "id"},
-	["album"]            = {"@albums", "album", "id", "artwork_track_id"},
-	["track"]            = {"@titles", "title", "id"},
-	["year"]             = {"@years", "year", "year"},
-	["genre"]            = {"@genres", "genre", "id"},
-	["age"]              = {"@albums", "album", "id", "artwork_track_id"},
-	["playlist"]         = {"@playlists", "playlist", "id"},
-	["playlisttrack"]    = {"@playlisttracks", "title", "id"},
-	["radios"]           = {"@radioss", "name", "cmd"},
-	["status"]           = {"@playlist", "title", "id", "coverart"},
+	["contributor"]      = {"artists_loop", "artist", "id"},
+	["album"]            = {"albums_loop", "album", "id", "artwork_track_id"},
+	["track"]            = {"titles_loop", "title", "id"},
+	["year"]             = {"years_loop", "year", "year"},
+	["genre"]            = {"genres_loop", "genre", "id"},
+	["age"]              = {"albums_loop", "album", "id", "artwork_track_id"},
+	["playlist"]         = {"playlists_loop", "playlist", "id"},
+	["playlisttrack"]    = {"playlisttracks_loop", "title", "id"},
+	["radios"]           = {"radioss_loop", "name", "cmd"},
+	["status"]           = {"playlist_loop", "title", "id", "coverart"},
 	["info"]             = {}
 }
 

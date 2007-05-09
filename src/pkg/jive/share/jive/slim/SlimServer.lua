@@ -159,8 +159,8 @@ function _serverstatusSink(self, data, err)
 	_setPlumbingState(self, 'connected')
 	
 	-- remember players from server
-	local serverPlayers = data.result["@players"]
-	data.result["@players"] = nil
+	local serverPlayers = data.result["players_loop"]
+	data.result["players_loop"] = nil
 	
 	-- remember our state
 	local selfState = self.state
