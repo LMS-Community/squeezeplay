@@ -18,7 +18,7 @@ $ make -f Makefile.osx
 
 * Developer tools (Xcode, from http://www.apple.com/developer)
 * Libraries (see below for list)
-* Darwin ports (to install the libs) (http://darwinports.opendarwin.org/)
+* MacPorts (to install the libs) (http://www.macports.org/)
 
 ## Libraries:
 
@@ -33,5 +33,5 @@ $ sudo port install tiff libpng jpeg expat gettext
 
 ## OSXLIBS
 
-This is set in Makefile.osx to /opt/local, the darwin ports default. Change
+This is set in Makefile.osx to /opt/local, the MacPorts default. Change
 it to /sw if you prefer Fink.

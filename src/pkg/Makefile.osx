@@ -7,7 +7,7 @@
 # User specific stuff
 #
 
-# This indicates where to find the libs on OS X. /opt/local is the Darwin Ports
+# This indicates where to find the libs on OS X. /opt/local is the MacPorts
 # default. Use /sw if you prefer to use Fink.
 export OSXPORTS =/opt/local
 
