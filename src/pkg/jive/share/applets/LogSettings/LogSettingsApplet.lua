@@ -94,7 +94,10 @@ function logSettings(self, menuItem)
 
 	local logCategories = _gatherLogCategories()
 	local window = Window(self:displayName(), menuItem.text)
-	window:addWidget(SimpleMenu("menu", logCategories))
+	local menu = SimpleMenu("menu", logCategories)
+	menu:setComparator(menu.itemComparatorAlpha)
+
+	window:addWidget(menu)
 
 	return window
 end

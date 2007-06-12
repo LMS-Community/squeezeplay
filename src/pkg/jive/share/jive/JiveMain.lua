@@ -77,6 +77,7 @@ function Menu:__init(name)
 		menus = {},
 	})
 	
+	obj.menu:setComparator(jive.ui.SimpleMenu.itemComparatorWeightAlpha)
 	obj.window:addWidget(obj.menu)
 
 	return obj
@@ -93,7 +94,7 @@ function Menu:subMenu(name, weight)
 			text = name,
 			callback = function()
 					   menu.window:show()
-				   end
+				   end,
 		}
 
 		self:addItem(item, weight)
@@ -106,31 +107,11 @@ end
 -- add an item to a menu. the menu is ordered by weight, then item name
 function Menu:addItem(item, weight)
 
-	weight = weight or 5
-	item.weight = weight
+	item.weight = weight or 5
 
-	local menu = self.menu
-	local numItems = menu:numItems()
-
-	for i=1,numItems do
-		local j = menu:getItem(i)
-
-		-- insert item if weight is lower
-		if weight < j.weight then
-			self.menu:insertItem(item, i)
-			return
-		end
-
-		-- insert item if weight is same, and name is lower
-		if weight == j.weight and tostring(item.text) < tostring(j.text) then
-			self.menu:insertItem(item, i)
-			return
-		end
-	end
-
-	-- add item to the end
 	self.menu:addItem(item)
 end
+
 
 -- remove an item from a menu
 function Menu:removeItem(item)

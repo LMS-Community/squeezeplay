@@ -24,6 +24,9 @@ A simple menu widget, extends L<jive.ui.Menu>.
 			   ),
 		   })
 
+ -- Sort the menu alphabetically
+ menu:setComparator(SimpleMenu.itemComparatorAlpha)
+
 =head1 STYLE
 
 The Label includes the following style parameters in addition to the widgets basic parameters.
@@ -134,6 +137,54 @@ end
 
 --[[
 
+=head2 jive.ui.Menu:setComparator(comp)
+
+Sets the menu comparator to I<comp> used to sort the menu items. By default
+the menu is not sorted and elements will be displayed in the order they are
+added.
+
+--]]
+function setComparator(self, comp)
+	self.comparator = comp
+
+	if comp ~= nil then
+		table.sort(self.items, comp)
+	end
+end
+
+
+--[[
+
+=head2 jive.ui.Menu.itemComparatorAlpha
+
+Item comparator to sort items alphabetically.
+
+--]]
+function itemComparatorAlpha(a, b)
+	return a.text < b.text
+end
+
+
+--[[
+
+=head2 jive.ui.Menu.itemComparatorWeightAlpha
+
+Item comparator to sort items using item.weight as a primary key, and
+item.text as a secondary key.
+
+--]]
+function itemComparatorWeightAlpha(a, b)
+	local w = a.weight - b.weight
+
+	if w == 0 then
+		return a.text < b.text
+	end
+	return (w < 0)
+end
+
+
+--[[
+
 =head2 jive.ui.Menu:numItems()
 
 Returns the top number of items in the menu.
@@ -204,6 +255,16 @@ Add I<item> to the end of the menu. The item is a table with the following entri
 =cut
 --]]
 function addItem(self, item)
+	if self.comparator then
+		for i=1,#self.items do
+			local x = self.items[i]
+
+			if self.comparator(item, x) then
+				return self:insertItem(item, i)
+			end
+		end
+	end
+
 	return self:insertItem(item, nil)
 end
 
