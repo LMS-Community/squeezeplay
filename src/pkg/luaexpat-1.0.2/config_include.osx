@@ -1,0 +1,4 @@
+# OS dependent
+LIB_OPTION= -bundle -undefined dynamic_lookup ${LDFLAGS}
+# Expat includes directory
+EXPAT_INC=${CFLAGS}

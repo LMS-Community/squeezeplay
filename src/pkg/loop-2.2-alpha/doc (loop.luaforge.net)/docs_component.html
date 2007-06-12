@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<title>LOOP: Lua Object-Oriented Programming</title>
+<style type="text/css" media="all"><!--
+@import "loop.css";
+@import "layout1.css";
+--></style>
+</head>
+
+<body>
+
+<div id="Header"><h3>Class Models for Lua</h3></div>
+<div id="Logo"><img alt="small (1K)" src="small.gif" height="70" /></div>
+
+<div id="Menu">
+	<h3>Menu</h3>
+	<hr>
+	<p>
+		<a href="index.html" title="LOOP site main page">Home</a><br>
+		<a href="install.html" title="Installation instructions">Install</a><br>
+		<a href="docs.html" title="Class models">Manual</a><br>
+			<ul style="margin-top: -15px; margin-bottom: 0px;">
+				<li><a href="docs_basics.html" title="Commonalities between all models">Basics</a><br></li>
+				<li><a href="docs_models.html" title="LOOP class models">Models</a><br></li>                     
+				<li><a href="docs_classops.html" title="Advanced features of the class models">Classes</a><br></li>
+				<li><a href="docs_component.html" title="Component models">Components</a><br></li>
+			</ul>
+		<a href="classlib.html" title="Class library">Library</a><br>
+		<a href="credits.html" title="Who does develop LOOP?">Credits</a><br>
+		<a href="http://luaforge.net/projects/loop/" title="LuaForge Project Page">LuaForge</a><br>
+	</p>
+</div>
+
+<div class="content">
+
+<h1>Components <font color=#000>(work in progress)</font></h1>
+
+<p>The LOOP project extends the Lua programming language to support object-oriented programming combined with adaptive and reflection features. Additionally, it also supports other programming paradigms related to the object concept like component-based development. Similar to the class models, the component model also provides dynamic features like reflection support.</p>
+
+<h2><a name="general">General Model</a></h2> 
+
+<p>Similarly to the class model, the component model is also provided by a set of packages that present different features.
+Basically, the component model is implemented by two kinds of packages, component and port packages.
+A component package provides means to define and create components with different features and the port packages provides different implementations of ports used to link components together.
+In the examples below, we assume that a component package is loaded in variable <code>component</code> and a port package is loaded in variable <code>port</code>.</p>
+
+<h3>Ports</h3>
+
+<p>The LOOP component model defines only two kinds of ports, called facets and receptacles.
+Each port is identified by a unique name on the component.
+Component systems are assembled connecting facets to receptacles.</p>
+
+<p>A facet is a port that provides some functionality by means of an interface, <i>i.e.</i> values and methods.
+Facet represents the functionalities provided by the component.
+In LOOP, a facet is realized by an object that provides the values and methods of the facet.
+A component can have multiple facets and even facets providing the same service with different features, <i>e.g.</i> performance.</p>
+
+<p>On the other hand, a receptacle is a port that requires some functionality through an interface.
+Receptacles defines the explicit dependencies of the component.
+A receptacle is realized as a table field that holds a reference to the object that provides the required functionality, <i>i.e.</i> the object connected to the receptacle.
+LOOP also defines the concept of multiple receptacles, <i>i.e.</i> receptacles that can hold multiple references simultaneously.
+Multiple receptacles are realized as a table containing the references to all objects connected to the receptacle.
+Multiple receptacles provides the following operations that may be used to access the objects connected.</p>
+
+<dl>
+	<dt><code>receptacle:__bind(object, [id])</code></dt>
+	<dd>Binds <code>bind</code> to the receptacle using the optional parameter <code>id</code> as the connection identifier and returns the connection identifier used.</dd>
+	<dt><code>receptacle:__unbind(id)</code></dt>
+	<dd>Removes de connection identified by parameter <code>id</code>.</dd>
+	<dt><code>receptacle:__hasany()</code></dt>
+	<dd>Returns a non-nil value if there is any object connected to the receptacle.</dd>
+	<dt><code>receptacle:__get(id)</code></dt>
+	<dd>Returns the object connected to the receptacle with identifier <code>id</code>.</dd>
+	<dt><code>receptacle:__all()</code></dt>
+	<dd>Returns an iterator that can be used in a <code>for</code> statement to iterate over all objects connected to the receptacle with the following construction<br>
+	<code>for conn_id, object in receptacle:__all() do ... end</code></dd>
+</dl>
+
+<p>There are three diferent types of multiple receptacles, as described below.</p>
+
+<dl>
+	<dt><code>ListReceptacle</code></dt>
+	<dd>Accepts connections and automatically generates identifiers, therefore it ignores the identifier provided to <code>__bind</code> method.</dd>
+	<dt><code>HashReceptacle</code></dt>
+	<dd>Accepts connections with application-defined identifiers, therefore it is necessary to provide an identifier to the <code>__bind</code> method.</dd>
+	<dt><code>SetReceptacle</code></dt>
+	<dd>Accepts only one connection for each object and uses the object as the connection identifier, therefore it also ignores the identifier provided to <code>__bind</code> method.</dd>
+</dl>
+
+<h3>Types</h3>
+
+<p>A component is a computational element that provides a set of ports that can be connected to other components or objects in order to assemble a computational system.
+The set of ports provided by a component is defined by its type.
+A component type is realized as an object that maps port names to a specific port type.
+The code below ilustrates the definition of a component type.</p>
+
+<pre>
+local DispacherType = component.Type{
+  requester = port.Facet,
+  scheduler = port.Receptacle,
+  objectmap = port.HashReceptacle,
+}
+</pre>
+
+<p>Component types are responsible to create all de infrastructure necessary for the execution of a component implementation.</p>
+
+<h3>Implementation</h3>
+
+<p>Once a component type is defined we can create different implementations of that component type.
+For such, we must provide a callable object (<i>e.g.</i> function or class) that returns an implementation for each new component instance.
+For example, consider the following class that is used as the constructor of implementations of components of the type defined above.</p>
+
+<pre>
+Requester = oo.class{ context = false }
+
+function Requester:push(request)
+	local object = self.context.objectmap[request.object_key]
+	if object then
+		local operation = object[request.operation]
+		if operation then
+			self.context.scheduler:start(operation, object, unpack(request.params))
+		end
+	end
+end
+
+DispacherHome = Dispatcher{ requester = Requester }
+</pre>
+
+<p></p>
+
+<h3>Assembly</h3>
+
+<h2><a name="introspect">Introspection</a></h2>
+
+<p>Missing description.</p>
+
+<h3>Functions</h3>
+
+<dl>
+	<dt><code>function(...)</code></dt>
+	<dd>Missing description.</dd>
+</dl>
+
+<h3>Example</h3>
+
+<pre>
+-- missing example
+</pre>
+
+<h2><a name="intercept">Interception</a></h2>
+
+<p>Missing description.</p>
+
+<h3>Functions</h3>
+
+<dl>
+	<dt><code>function(...)</code></dt>
+	<dd>Missing description.</dd>
+</dl>
+
+<h3>Example</h3>
+
+<pre>
+-- missing example
+</pre>
+
+<h2><a name="dynamic">Dynamic Changes</a></h2>
+
+<p>Missing description.</p>
+
+<h3>Functions</h3>
+
+<dl>
+	<dt><code>function(...)</code></dt>
+	<dd>Missing description.</dd>
+</dl>
+
+<h3>Example</h3>
+
+<pre>
+-- missing example
+</pre>
+
+<h2><a name="reduced">Reduced Models</a></h2>
+
+<p>Missing description.</p>
+
+<h3>Functions</h3>
+
+<dl>
+	<dt><code>function(...)</code></dt>
+	<dd>Missing description.</dd>
+</dl>
+
+<h3>Example</h3>
+
+<pre>
+-- missing example
+</pre>
+
+</div>
+
+<div class="content">
+	<h3><small>Copyright (C) 2004-2005 Tecgraf, PUC-Rio</small></h3>
+	<small>This project is currently being maintained by <a href="http://www.tecgraf.puc-rio.br">Tecgraf</a> at <a href="http://www.puc-rio.br">PUC-Rio</a>.</small>
+</div>
+
+<div id="Board">
+</div>
+
+<!-- BlueRobot was here. -->
+
+</body>
+
+</html>

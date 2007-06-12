@@ -1,0 +1,182 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.ui.Window - The window widget.</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#style">STYLE</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<ul>
+
+		<li><a href="#jive_ui_window_newmenuwindow_style__title__items_">jive.ui.Window:newMenuWindow(style, title, items)</a></li>
+		<li><a href="#jive_ui_window_style__title_">jive.ui.Window(style, title)</a></li>
+		<li><a href="#jive_ui_window_show_transition_">jive.ui.Window:show(transition)</a></li>
+		<li><a href="#jive_ui_window_showinstead_transition_">jive.ui.Window:showInstead(transition)</a></li>
+		<li><a href="#jive_ui_window_showbriefly_msecs__closure__pushtransition__poptransition_">jive.ui.Window:showBriefly(msecs, closure, pushTransition, popTransition)</a></li>
+		<li><a href="#jive_ui_window_hide_transition_">jive.ui.Window:hide(transition)</a></li>
+		<li><a href="#jive_ui_window_bumpleft__">jive.ui.Window:bumpLeft()</a></li>
+		<li><a href="#jive_ui_window_bumpright__">jive.ui.Window:bumpRight()</a></li>
+		<li><a href="#jive_ui_window_hideall__">jive.ui.Window:hideAll()</a></li>
+		<li><a href="#jive_ui_window_settitle_title_">jive.ui.Window:setTitle(title)</a></li>
+		<li><a href="#jive_ui_window_getwindow__">jive.ui.Window:getWindow()</a></li>
+		<li><a href="#jive_ui_window_addwidget_widget_">jive.ui.Window:addWidget(widget)</a></li>
+		<li><a href="#jive_ui_window_removewidget_widget_">jive.ui.Window:removeWidget(widget)</a></li>
+		<li><a href="#jive_ui_window_transitionnone__">jive.ui.Window:transitionNone()</a></li>
+		<li><a href="#jive_ui_window_transitionbumpleft__">jive.ui.Window:transitionBumpLeft()</a></li>
+		<li><a href="#jive_ui_window_transitionbumpright__">jive.ui.Window:transitionBumpRight()</a></li>
+		<li><a href="#jive_ui_window_transitionpushleft_newwindow_">jive.ui.Window:transitionPushLeft(newWindow)</a></li>
+		<li><a href="#jive_ui_window_transitionpushright_newwindow_">jive.ui.Window:transitionPushRight(newWindow)</a></li>
+		<li><a href="#jive_ui_window_transitionpushpopupleft_newwindow_">jive.ui.Window:transitionPushPopupLeft(newWindow)</a></li>
+		<li><a href="#jive_ui_window_transitionpushpopupright_newwindow_">jive.ui.Window:transitionPushPopupRight(newWindow)</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The window widget, extends <em>jive.ui.Widget</em>. This is a container for other widgets on the screen.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- Create a new window with title &quot;Jive&quot;
+ local window = jive.ui.Window(&quot;window&quot;, &quot;Jive&quot;)</pre>
+<pre>
+ -- Show the window on the screen
+ window:show()</pre>
+<pre>
+ -- Hide the window from the screen
+ window:hide()</pre>
+<pre>
+ -- Create a window with menu items
+ jive.ui.Window:newMenuWindow(&quot;window&quot;, &quot;Jive&quot;,
+                {
+                        { &quot;Item 1&quot;, widget1,
+                                function()
+                                        print(&quot;item 1&quot;)
+                                        return jive.ui.EVENT_CONSUME
+                                end },
+                        { &quot;Item 2&quot;, nil,
+                                function()
+                                        print(&quot;item 2&quot;)
+                                        return jive.ui.EVENT_CONSUME
+                                end },
+                })</pre>
+<p>
+</p>
+<hr />
+<h1><a name="style">STYLE</a></h1>
+<p>The Window includes the following style parameters in addition to the widgets basic parameters.</p>
+<p><strong>popup</strong> : true if this is a popup window that includes transparency.</p>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>
+</p>
+<h2><a name="jive_ui_window_newmenuwindow_style__title__items_">jive.ui.Window:newMenuWindow(style, title, items)</a></h2>
+<p>A convenience class method to create a window with one or more items in a menu. See the example above.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_style__title_">jive.ui.Window(style, title)</a></h2>
+<p>Constructs a new window widget. <em>style</em> is the widgets style. The window can have an optional <em>title</em>.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_show_transition_">jive.ui.Window:show(transition)</a></h2>
+<p>Show this window, adding it to the top of the window stack. The <em>transition</em> is used to move the window on stage.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_showinstead_transition_">jive.ui.Window:showInstead(transition)</a></h2>
+<p>Shows this window as a replacement for the window at the top of the window stack. The <em>transition</em> is used to move the window on stage.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_showbriefly_msecs__closure__pushtransition__poptransition_">jive.ui.Window:showBriefly(msecs, closure, pushTransition, popTransition)</a></h2>
+<p>Shows this window briefly for <em>msecs</em> milliseconds. When the timeout occurs, or a key has been pressed then window is hidden and the <em>closure</em> is called. The <em>pushTransition</em> and <em>popTransition</em> transitions are used to move the window on and off stage.</p>
+<p>If the window has already been displayed with showBriefly then the timer is restarted with the new <em>msecs</em> value.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_hide_transition_">jive.ui.Window:hide(transition)</a></h2>
+<p>Hides this window. It it is currently at the top of the window stack then the <em>transition</em> is used to move the window off stage.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_bumpleft__">jive.ui.Window:bumpLeft()</a></h2>
+<p>Makes the window bump left.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_bumpright__">jive.ui.Window:bumpRight()</a></h2>
+<p>Makes the window bump right.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_hideall__">jive.ui.Window:hideAll()</a></h2>
+<p>Hides all windows, removing them from the window stack.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_settitle_title_">jive.ui.Window:setTitle(title)</a></h2>
+<p>Sets the windows title to <em>title</em>.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_getwindow__">jive.ui.Window:getWindow()</a></h2>
+<p>Returns <em>self</em>.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_addwidget_widget_">jive.ui.Window:addWidget(widget)</a></h2>
+<p>Add the widget <em>widget</em> to the window.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_removewidget_widget_">jive.ui.Window:removeWidget(widget)</a></h2>
+<p>Remove the widget <em>widget</em> from the window.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_transitionnone__">jive.ui.Window:transitionNone()</a></h2>
+<p>Returns an empty window transition. i.e. the window is just displayed without any animations.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_transitionbumpleft__">jive.ui.Window:transitionBumpLeft()</a></h2>
+<p>Returns a bump left window transition.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_transitionbumpright__">jive.ui.Window:transitionBumpRight()</a></h2>
+<p>Returns a bump right window transition.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_transitionpushleft_newwindow_">jive.ui.Window:transitionPushLeft(newWindow)</a></h2>
+<p>Returns a push left window transition.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_transitionpushright_newwindow_">jive.ui.Window:transitionPushRight(newWindow)</a></h2>
+<p>Returns a push right window transition.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_transitionpushpopupleft_newwindow_">jive.ui.Window:transitionPushPopupLeft(newWindow)</a></h2>
+<p>Returns a push left window transition for use with popup windows.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_transitionpushpopupright_newwindow_">jive.ui.Window:transitionPushPopupRight(newWindow)</a></h2>
+<p>Returns a push right window transition for use with popup windows.</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

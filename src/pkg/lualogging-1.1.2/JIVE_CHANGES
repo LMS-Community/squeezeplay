@@ -1,0 +1,21 @@
+
+API changes
+===========
+
+- Added level parameter to logging:new so that a default starting level can
+  be set by caller. For example:
+    
+    local log = logging.my_appender(logging.INFO)
+    
+- Added LEVEL_H and LEVEL_A arrays as global
+
+- Arranged so that level() functions are dummies for all levels below the above
+
+- Added getLevel function
+
+- Added isDebug function
+
+Bug fixes
+=========
+
+- tonumber added to "import" list on top of logging.lua; it's used by tostring()
