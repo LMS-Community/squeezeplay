@@ -111,7 +111,7 @@ end
 -- The meta hooks this function to allow the user to select
 -- a wallpaper
 function wallpaperSetting(self, menuItem)
-	local window = Window(self:displayName(), menuItem[1])
+	local window = Window(self:displayName(), menuItem.text)
 	local menu = SimpleMenu("menu")
 	window:addWidget(menu)
 
@@ -121,25 +121,24 @@ function wallpaperSetting(self, menuItem)
 	
 	for name, file in table.pairsByKeys(wallpapers) do
 		menu:addItem({
-				     name, 
-				     RadioButton("radio", 
-						 group, 
-						 function()
-							 self:_setBackground(file)
-						 end,
-						 wallpaper == file
-					 )
+				     text = name, 
+				     icon = RadioButton("radio", 
+							group, 
+							function()
+								self:_setBackground(file)
+							end,
+							wallpaper == file
+						)
 			     })
 	end
 
 	menu:addItem({
-			     "License",
-			     nil,
-			     function()
-				     local window = Window("window", "License")
-				     window:addWidget(Textarea("textarea", backgroundLicense))
-				     window:show()
-			     end
+			     text = "License",
+			     callback = function()
+						local window = Window("window", "License")
+						window:addWidget(Textarea("textarea", backgroundLicense))
+						window:show()
+					end
 		     })
 
 	-- Store the applet settings when the window is closed

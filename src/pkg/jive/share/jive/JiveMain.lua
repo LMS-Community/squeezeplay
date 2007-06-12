@@ -89,23 +89,14 @@ function Menu:subMenu(name, weight)
 	
 		local menu = Menu(name)
 
---		local item = jive.ui.Label("label", name)
---		item:addListener(jive.ui.EVENT_ACTION,
---				 function()
---					 menu.window:show()
---					 return jive.ui.EVENT_CONSUME
---				 end)
-
 		local item = {
-			name,
-			nil,
-			function()
-				menu.window:show()
-			end
+			text = name,
+			callback = function()
+					   menu.window:show()
+				   end
 		}
 
 		self:addItem(item, weight)
-
 		self.menus[name] = menu
 	end
 
@@ -131,7 +122,7 @@ function Menu:addItem(item, weight)
 		end
 
 		-- insert item if weight is same, and name is lower
-		if weight == j.weight and tostring(item[1]) < tostring(j[1]) then
+		if weight == j.weight and tostring(item.text) < tostring(j.text) then
 			self.menu:insertItem(item, i)
 			return
 		end

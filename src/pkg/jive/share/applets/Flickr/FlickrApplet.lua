@@ -112,24 +112,22 @@ end
 
 
 function openSettings(self, menuItem)
-	local window = Window(self:displayName(), menuItem[1])
+	local window = Window(self:displayName(), menuItem.text)
 	window:addWidget(SimpleMenu("menu",
 			{
 				{
-					"Display", 
-					nil,
-					function(event, menuItem)
-						self:displaySetting(menuItem):show()
-						return EVENT_CONSUME
-					end
+					text = "Display", 
+					callback = function(event, menuItem)
+							   self:displaySetting(menuItem):show()
+							   return EVENT_CONSUME
+						   end
 				},
 				{
-					"Speed", 
-					nil,
-					function(event, menuItem)
-						self:timeoutSetting(menuItem):show()
-						return EVENT_CONSUME
-					end
+					text = "Speed", 
+					callback = function(event, menuItem)
+							   self:timeoutSetting(menuItem):show()
+							   return EVENT_CONSUME
+						   end
 				},
 			}))
 
@@ -142,30 +140,30 @@ function displaySetting(self, menuItem)
 
 	local display= self:getSettings()["display"]
 	
-	local window = Window(self:displayName(), menuItem[1])
+	local window = Window(self:displayName(), menuItem.text)
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
-				"Interesting Photos", 
-				RadioButton(
-					"radio", 
-					group, 
-					function() 
-						self:setDisplay("interesting") 
-					end,
-					display == "interesting"
-				),
+				text = "Interesting Photos", 
+				icon = RadioButton(
+						   "radio", 
+						   group, 
+						   function() 
+							   self:setDisplay("interesting") 
+						   end,
+						   display == "interesting"
+					   ),
 			},
 			{ 
-				"Recent Photos", 
-				RadioButton(
-					"radio", 
-					group, 
-					function() 
-						self:setDisplay("recent") 
-					end,
-					display == "recent"
-				),
+				text = "Recent Photos", 
+				icon = RadioButton(
+						   "radio", 
+						   group, 
+						   function() 
+							   self:setDisplay("recent") 
+						   end,
+						   display == "recent"
+					   ),
 			},
 		}))
 
@@ -178,24 +176,24 @@ function timeoutSetting(self, menuItem)
 
 	local timeout = self:getSettings()["timeout"]
 
-	local window = Window(self:displayName(), menuItem[1])
+	local window = Window(self:displayName(), menuItem.text)
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
-				"10 Seconds", 
-				RadioButton("radio", group, function() self:setTimeout(10000) end, timeout == 10000),
+				text = "10 Seconds", 
+				icon = RadioButton("radio", group, function() self:setTimeout(10000) end, timeout == 10000),
 			},
 			{ 
-				"20 Seconds", 
-				RadioButton("radio", group, function() self:setTimeout(20000) end, timeout == 20000),
+				text = "20 Seconds", 
+				icon = RadioButton("radio", group, function() self:setTimeout(20000) end, timeout == 20000),
 			},
 			{ 
-				"30 Seconds",
-				RadioButton("radio", group, function() self:setTimeout(30000) end, timeout == 30000),
+				text = "30 Seconds",
+				icon = RadioButton("radio", group, function() self:setTimeout(30000) end, timeout == 30000),
 			},
 			{
-				"1 Minute", 
-				RadioButton("radio", group, function() self:setTimeout(60000) end, timeout == 60000),
+				text = "1 Minute", 
+				icon = RadioButton("radio", group, function() self:setTimeout(60000) end, timeout == 60000),
 			},
 		}))
 

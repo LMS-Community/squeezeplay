@@ -206,12 +206,12 @@ function screensaverSetting(self, menuItem, mode)
 		)
 
 		menu:addItem({
-				     displayName,
-				     button
+				     text = displayName,
+				     icon = button
 			     })
 	end
 
-	local window = Window("screensavers", menuItem[1])
+	local window = Window("screensavers", menuItem.text)
 	window:addWidget(Textarea("help", "Press Center to select screensaver or PLAY to preview"))
 	window:addWidget(menu)
 
@@ -224,28 +224,28 @@ function timeoutSetting(self, menuItem)
 
 	local timeout = self:getSettings()["timeout"]
 	
-	local window = Window(self:displayName(), menuItem[1])
+	local window = Window(self:displayName(), menuItem.text)
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
-				"30 Seconds", 
-				RadioButton("radio", group, function() self:setTimeout(30000) end, timeout == 30000),
+				text = "30 Seconds", 
+				icon = RadioButton("radio", group, function() self:setTimeout(30000) end, timeout == 30000),
 			},
 			{
-				"1 Minute", 
-				RadioButton("radio", group, function() self:setTimeout(60000) end, timeout == 60000),
+				text = "1 Minute", 
+				icon = RadioButton("radio", group, function() self:setTimeout(60000) end, timeout == 60000),
 			},
 			{ 
-				"2 Minutes", 
-				RadioButton("radio", group, function() self:setTimeout(120000) end, timeout == 120000),
+				text = "2 Minutes", 
+				icon = RadioButton("radio", group, function() self:setTimeout(120000) end, timeout == 120000),
 			},
 			{
-				"5 Minutes", 
-				RadioButton("radio", group, function() self:setTimeout(300000) end, timeout == 300000),
+				text = "5 Minutes", 
+				icon = RadioButton("radio", group, function() self:setTimeout(300000) end, timeout == 300000),
 			},
 			{ 
-				"10 Minutes", 
-				RadioButton("radio", group, function() self:setTimeout(600000) end, timeout == 600000),
+				text = "10 Minutes", 
+				icon = RadioButton("radio", group, function() self:setTimeout(600000) end, timeout == 600000),
 			},
 		}))
 
@@ -258,43 +258,40 @@ function openSettings(self, menuItem)
 	local menu = SimpleMenu("menu",
 		{
 			{ 
-				"When playing", 
-				nil,
-				function(event, menu_item)
-					self:screensaverSetting(menu_item, "whenPlaying"):show()
-				end
+				text = "When playing", 
+				callback = function(event, menu_item)
+						   self:screensaverSetting(menu_item, "whenPlaying"):show()
+					   end
 			},
 			{
-				"When stopped", 
-				nil,
-				function(event, menu_item)
-					self:screensaverSetting(menu_item, "whenStopped"):show()
-				end
+				text = "When stopped", 
+				callback = function(event, menu_item)
+						   self:screensaverSetting(menu_item, "whenStopped"):show()
+					   end
 			},
 			{
-				"Delay", 
-				nil,
-				function(event, menu_item)
-					self:timeoutSetting(menu_item):show()
-				end
+				text = "Delay", 
+				callback = function(event, menu_item)
+						   self:timeoutSetting(menu_item):show()
+					   end
 			},
 		})
 
 	for setting_name, screensaver in table.pairsByKeys(self.screensaver_settings) do
 		menu:addItem({
-				     setting_name,
-				     nil,
-				     function(event, menuItem)
-					     appletManager:openWindow(
-								      screensaver.applet, 
-								      screensaver.settings, 
-								      menuItem
-							      ):show()
-				     end
+				     text = setting_name,
+				     callback =
+					     function(event, menuItem)
+						     appletManager:openWindow(
+									      screensaver.applet, 
+									      screensaver.settings, 
+									      menuItem
+								      ):show()
+					     end
 			     })
 	end
 
-	local window = Window(self:displayName(), menuItem[1])
+	local window = Window(self:displayName(), menuItem.text)
 	window:addWidget(menu)
 
 	-- Store the applet settings when the window is closed

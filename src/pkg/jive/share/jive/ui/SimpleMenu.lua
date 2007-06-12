@@ -13,14 +13,14 @@ A simple menu widget, extends L<jive.ui.Menu>.
  local menu = jive.ui.Menu("menu",
 		   {
 			   {
-				   "Item 1",
-				   widget1,
-				   function1
+				   text = "Item 1",
+				   icon = widget1,
+				   callback = function1
 			   ),
 			   {
-				   "Item 2",
-				   widget2,
-				   function2
+				   text = "Item 2",
+				   icon = widget2,
+				   callback = function2
 			   ),
 		   })
 
@@ -43,7 +43,7 @@ local assert, ipairs, string, tostring, type = assert, ipairs, string, tostring,
 
 
 local oo              = require("loop.simple")
-local debug           = require("debug")
+local debug           = require("jive.utils.debug")
 
 local Label           = require("jive.ui.Label")
 local Menu            = require("jive.ui.Menu")
@@ -93,10 +93,10 @@ local function _itemRenderer(menu, widgetList, indexList, size, list)
 			local item = list[indexList[i]]
 
 			if widgetList[i] == nil then
-				widgetList[i] = Label("item", item[1], item[2])
+				widgetList[i] = Label("item", item.text, item.icon)
 			else
-				widgetList[i]:setValue(item[1])
-				widgetList[i]:setWidget(item[2])
+				widgetList[i]:setValue(item.text)
+				widgetList[i]:setWidget(item.icon)
 			end
 		end
 	end
@@ -107,8 +107,8 @@ end
 -- called for menu item events
 local function _itemListener(menu, menuItem, list, index, event)
 	local item = list[index]
-	if event:getType() == EVENT_ACTION and type(item[3]) == "function" then
-		local r = item[3](event, item)
+	if event:getType() == EVENT_ACTION and item.callback then
+		local r = item.callback(event, item)
 		if r == nil then
 			return EVENT_CONSUME
 		else
@@ -199,7 +199,7 @@ end
 
 =head2 jive.ui.Menu:addItem(item)
 
-Add I<item> to the end of the menu.
+Add I<item> to the end of the menu. The item is a table with the following entries: text, icon (optional), callback (optional).
 
 =cut
 --]]
@@ -212,7 +212,7 @@ end
 
 =head2 jive.ui.Menu:insertItem(item, index)
 
-Insert I<item> into the menu at I<index>. The item can be any type of widget.
+Insert I<item> into the menu at I<index>. The item can be any type of widget. The item is a table with the following entries: text, icon (optional), callback (optional).
 
 =cut
 --]]

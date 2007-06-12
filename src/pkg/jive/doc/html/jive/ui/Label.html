@@ -23,6 +23,8 @@
 		<li><a href="#jive_ui_label_style__value__widget_">jive.ui.Label(style, value, widget)</a></li>
 		<li><a href="#jive_ui_label_getvalue__">jive.ui.Label:getValue()</a></li>
 		<li><a href="#jive_ui_label_setvalue_value_">jive.ui.Label:setValue(value)</a></li>
+		<li><a href="#jive_ui_label_getwidget__">jive.ui.Label:getWidget()</a></li>
+		<li><a href="#jive_ui_label_setwidget_widget_">jive.ui.Label:setWidget(widget)</a></li>
 	</ul>
 
 	<li><a href="#license">LICENSE</a></li>
@@ -34,7 +36,7 @@
 </p>
 <h1><a name="description">DESCRIPTION</a></h1>
 <p>A label widget, extends <em>jive.ui.Widget</em>. A label displays multi-line text. Optionally in contains another widget, typically an <em>jive.ui.Icon</em>.</p>
-<p>Any lua value can be set in the lua, <code>tostring()</code> is used to convert the value to a string before it is displayed.</p>
+<p>Any lua value can be set as Label value, <code>tostring()</code> is used to convert the value to a string before it is displayed.</p>
 <p>
 </p>
 <hr />
@@ -74,6 +76,14 @@
 </p>
 <h2><a name="jive_ui_label_setvalue_value_">jive.ui.Label:setValue(value)</a></h2>
 <p>Sets the text displayed in the label.</p>
+<p>
+</p>
+<h2><a name="jive_ui_label_getwidget__">jive.ui.Label:getWidget()</a></h2>
+<p>Returns the widget displayed in this label, or nil for the skin's default widget.</p>
+<p>
+</p>
+<h2><a name="jive_ui_label_setwidget_widget_">jive.ui.Label:setWidget(widget)</a></h2>
+<p>Sets the widget displayed in this label to <em>widget</em>. If set to nil the skin's default widget is displayed.</p>
 <p>
 </p>
 <hr />

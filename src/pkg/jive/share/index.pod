@@ -75,6 +75,8 @@ L<jive.ui.RadioButton|jive::ui::RadioButton>
 
 L<jive.ui.RadioGroup|jive::ui::RadioGroup>
 
+L<jive.ui.SimpleMenu|jive::ui::SimpleMenu>
+
 L<jive.ui.Surface|jive::ui::Surface>
 
 L<jive.ui.Textarea|jive::ui::Textarea>

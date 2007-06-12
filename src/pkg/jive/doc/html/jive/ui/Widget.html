@@ -20,20 +20,26 @@
 	<li><a href="#methods">METHODS</a></li>
 	<ul>
 
+		<li><a href="#jive_ui_widget_iterate_closure_">jive.ui.Widget:iterate(closure)</a></li>
 		<li><a href="#jive_ui_widget_getposition__">jive.ui.Widget:getPosition()</a></li>
-		<li><a href="#jive_ui_widget_getposition__">jive.ui.Widget:getPosition()</a></li>
+		<li><a href="#jive_ui_widget_setbounds_x__y__w__h_">jive.ui.Widget:setBounds(x, y, w, h)</a></li>
 		<li><a href="#jive_ui_widget_getsize__">jive.ui.Widget:getSize()</a></li>
 		<li><a href="#jive_ui_widget_setsize_w__h_">jive.ui.Widget:setSize(w, h)</a></li>
-		<li><a href="#jive_ui_widget_setbounds_x__y__w__h_">jive.ui.Widget:setBounds(x, y, w, h)</a></li>
+		<li><a href="#jive_ui_widget_getposition__">jive.ui.Widget:getPosition()</a></li>
 		<li><a href="#jive_ui_widget_setposition_x__y_">jive.ui.Widget:setPosition(x, y)</a></li>
 		<li><a href="#jive_ui_widget_getstyle__">jive.ui.Widget:getStyle()</a></li>
 		<li><a href="#jive_ui_widget_setstyle_style_">jive.ui.Widget:setStyle(style)</a></li>
+		<li><a href="#jive_ui_widget_setstyle_stylemodifier_">jive.ui.Widget:setStyle(styleModifier)</a></li>
 		<li><a href="#jive_ui_widget_isvisible__">jive.ui.Widget:isVisible()</a></li>
 		<li><a href="#jive_ui_widget_hide__">jive.ui.Widget:hide()</a></li>
 		<li><a href="#jive_ui_widget_getparent__">jive.ui.Widget:getParent()</a></li>
 		<li><a href="#jive_ui_widget_getwindow__">jive.ui.Widget:getWindow()</a></li>
-		<li><a href="#jive_ui_widget_layout__">jive.ui.Widget:layout()</a></li>
-		<li><a href="#jive_ui_widget_dirty__">jive.ui.Widget:dirty()</a></li>
+		<li><a href="#jive_ui_widget_reskin__">jive.ui.Widget:reSkin()</a></li>
+		<li><a href="#jive_ui_widget_reprepare__">jive.ui.Widget:rePrepare()</a></li>
+		<li><a href="#jive_ui_widget_relayout__">jive.ui.Widget:reLayout()</a></li>
+		<li><a href="#jive_ui_widget_redraw__">jive.ui.Widget:reDraw()</a></li>
+		<li><a href="#jive_ui_widget_doskin__">jive.ui.Widget:doSkin()</a></li>
+		<li><a href="#jive_ui_widget_dolayout__">jive.ui.Widget:doLayout()</a></li>
 		<li><a href="#jive_ui_widget_addlistener_mask__listener_">jive.ui.Widget:addListener(mask, listener)</a></li>
 		<li><a href="#jive_ui_widget_removelistener_handle_">jive.ui.Widget:removeListener(handle)</a></li>
 		<li><a href="#jive_ui_widget_addanimation_animation__framerate_">jive.ui.Widget:addAnimation(animation, frameRate)</a></li>
@@ -104,12 +110,17 @@
 <h1><a name="methods">METHODS</a></h1>
 <p>
 </p>
-<h2><a name="jive_ui_widget_getposition__">jive.ui.Widget:getPosition()</a></h2>
-<p>Returns <em>x, y</em> the widgets position.</p>
+<h2><a name="jive_ui_widget_iterate_closure_">jive.ui.Widget:iterate(closure)</a></h2>
+<p>Calls the function closure for all widgets contained by this widget. This
+is overridden by subclasses.</p>
 <p>
 </p>
 <h2><a name="jive_ui_widget_getposition__">jive.ui.Widget:getPosition()</a></h2>
 <p>Returns <em>x, y</em> the widgets position.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_setbounds_x__y__w__h_">jive.ui.Widget:setBounds(x, y, w, h)</a></h2>
+<p>Sets the widgets bounds to <em>x, y, w, h</em></p>
 <p>
 </p>
 <h2><a name="jive_ui_widget_getsize__">jive.ui.Widget:getSize()</a></h2>
@@ -120,12 +131,12 @@
 <p>Sets the widgets size to <em>w, h</em></p>
 <p>
 </p>
-<h2><a name="jive_ui_widget_setbounds_x__y__w__h_">jive.ui.Widget:setBounds(x, y, w, h)</a></h2>
-<p>Sets the widgets bounds to <em>x, y, w, h</em></p>
+<h2><a name="jive_ui_widget_getposition__">jive.ui.Widget:getPosition()</a></h2>
+<p>Returns the widgets x,y position.</p>
 <p>
 </p>
 <h2><a name="jive_ui_widget_setposition_x__y_">jive.ui.Widget:setPosition(x, y)</a></h2>
-<p>Sets the widgets position to <em>x, y</em>.</p>
+<p>Sets the widgets x,y position.</p>
 <p>
 </p>
 <h2><a name="jive_ui_widget_getstyle__">jive.ui.Widget:getStyle()</a></h2>
@@ -134,6 +145,10 @@
 </p>
 <h2><a name="jive_ui_widget_setstyle_style_">jive.ui.Widget:setStyle(style)</a></h2>
 <p>Sets the widgets style.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_setstyle_stylemodifier_">jive.ui.Widget:setStyle(styleModifier)</a></h2>
+<p>Sets the widgets style modifier.</p>
 <p>
 </p>
 <h2><a name="jive_ui_widget_isvisible__">jive.ui.Widget:isVisible()</a></h2>
@@ -152,12 +167,32 @@
 <p>Returns the window containing this widget, or nil if the widget is not in a window.</p>
 <p>
 </p>
-<h2><a name="jive_ui_widget_layout__">jive.ui.Widget:layout()</a></h2>
-<p>Marks the widget as needing layout.</p>
+<h2><a name="jive_ui_widget_reskin__">jive.ui.Widget:reSkin()</a></h2>
+<p>Called when the widget content or appearence has changed. This will make sure the
+widget is packed and any layout updated before it is redrawn.</p>
 <p>
 </p>
-<h2><a name="jive_ui_widget_dirty__">jive.ui.Widget:dirty()</a></h2>
-<p>Marks the bounding box of this widget as dirty. It will be redrawn soon.</p>
+<h2><a name="jive_ui_widget_reprepare__">jive.ui.Widget:rePrepare()</a></h2>
+<p>Called when the widget content has changed. This will make sure the
+widget is packed and any layout updated before it is redrawn.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_relayout__">jive.ui.Widget:reLayout()</a></h2>
+<p>Called when the widget has change position or size. This will make sure the widget
+is layout is updated before it is redrawn.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_redraw__">jive.ui.Widget:reDraw()</a></h2>
+<p>Marks the bounding box of this widget for redrawing.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_doskin__">jive.ui.Widget:doSkin()</a></h2>
+<p>Updates the widgets skin if required.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_dolayout__">jive.ui.Widget:doLayout()</a></h2>
+<p>Prepares the widgets contents and performs layout if required. Also calls do
+layout on any child widgets.</p>
 <p>
 </p>
 <h2><a name="jive_ui_widget_addlistener_mask__listener_">jive.ui.Widget:addListener(mask, listener)</a></h2>

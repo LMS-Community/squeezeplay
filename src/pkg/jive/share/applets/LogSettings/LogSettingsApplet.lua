@@ -77,8 +77,8 @@ local function _gatherLogCategories()
 		-- insert suitable entry for Choice menu
 		table.insert(res, 
 			{
-				k,
-				choice,
+				text = k,
+				icon = choice,
 			}
 		)
 	end
@@ -93,9 +93,7 @@ end
 function logSettings(self, menuItem)
 
 	local logCategories = _gatherLogCategories()
-	table.sort(logCategories, function(a,b) return a[1]<b[1] end)
-
-	local window = Window(self:displayName(), menuItem[1])
+	local window = Window(self:displayName(), menuItem.text)
 	window:addWidget(SimpleMenu("menu", logCategories))
 
 	return window

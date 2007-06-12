@@ -105,8 +105,9 @@ local categories = {
 	[``screensavers'']     = jiveLogger(logging.WARN),</p>
 <pre>
         [&quot;slimserver&quot;]       = jiveLogger(logging.WARN),
-        [&quot;slimserver.cache&quot;] = jiveLogger(logging.DEBUG),
+        [&quot;slimserver.cache&quot;] = jiveLogger(logging.WARN),
         [&quot;player&quot;]           = jiveLogger(logging.WARN),
+        [&quot;player.browse.volume&quot;] = jiveLogger(logging.WARN),
                          
         [&quot;net.cli&quot;]          = jiveLogger(logging.WARN),
         [&quot;net.thread&quot;]       = jiveLogger(logging.WARN),
@@ -128,7 +129,8 @@ a default logger is returned in that case.</p>
 <p>
 </p>
 <h2><a name="addcategory_category__initiallevel_">addCategory(category, initialLevel)</a></h2>
-<p>Creates and returns a logger of the given category.</p>
+<p>Creates and returns a logger of the given category. Returns the category if
+it already exists.</p>
 <p>
 </p>
 <h2><a name="logger_log_level__message______">logger:log(level, message, ...)</a></h2>

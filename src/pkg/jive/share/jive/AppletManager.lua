@@ -371,12 +371,11 @@ function menuItem(self, menuName, appletName, method, ...)
 	local args = {...}
 
 	local menuItem = {
-		menuName,
-		nil,
-		function(event, menuItem)
-			local window, r = self:openWindow(appletName, method, menuItem, unpack(args))
-			return r
-		end
+		text = menuName,
+		callback = function(event, menuItem)
+				   local window, r = self:openWindow(appletName, method, menuItem, unpack(args))
+				   return r
+			   end
 	}
 
 	return menuItem

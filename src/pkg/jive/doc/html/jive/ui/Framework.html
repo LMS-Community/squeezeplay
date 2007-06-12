@@ -22,7 +22,7 @@
 		<li><a href="#jive_ui_framework_init__">jive.ui.Framework.init()</a></li>
 		<li><a href="#jive_ui_framework_quit__">jive.ui.Framework.quit()</a></li>
 		<li><a href="#jive_ui_framework_run__">jive.ui.Framework.run()</a></li>
-		<li><a href="#jive_ui_framework_dirty_r_">jive.ui.Framework.dirty(r)</a></li>
+		<li><a href="#jive_ui_framework_redraw_r_">jive.ui.Framework.reDraw(r)</a></li>
 		<li><a href="#jive_ui_framework_pushevent_event_">jive.ui.Framework.pushEvent(event)</a></li>
 		<li><a href="#jive_ui_framework_dispatchevent_widget__event_">jive.ui.Framework.dispatchEvent(widget, event)</a></li>
 		<li><a href="#jive_ui_framework_findfile_path_">jive.ui.Framework.findFile(path)</a></li>
@@ -34,8 +34,7 @@
 		<li><a href="#jive_ui_framework_getscreensize__">jive.ui.Framework:getScreenSize()</a></li>
 		<li><a href="#jive_ui_framework_addwidget_widget_">jive.ui.Framework:addWidget(widget)</a></li>
 		<li><a href="#jive_ui_framework_removewidget_widget_">jive.ui.Framework:removeWidget(widget)</a></li>
-		<li><a href="#jive_ui_framework_layoutdirty__">jive.ui.Framework:layoutDirty()</a></li>
-		<li><a href="#jive_ui_framework_addlistener_mask__listener_">jive.ui.Framework:addListener(mask, listener)</a></li>
+		<li><a href="#jive_ui_framework_addlistener_mask__listener__priority_">jive.ui.Framework:addListener(mask, listener, priority)</a></li>
 		<li><a href="#jive_ui_framework_removelistener_handle_">jive.ui.Framework:removeListener(handle)</a></li>
 	</ul>
 
@@ -81,8 +80,8 @@
 <p>The main display and event loop.</p>
 <p>
 </p>
-<h2><a name="jive_ui_framework_dirty_r_">jive.ui.Framework.dirty(r)</a></h2>
-<p>Mark an area of the screen as dirty, of the while screen if r is nil.</p>
+<h2><a name="jive_ui_framework_redraw_r_">jive.ui.Framework.reDraw(r)</a></h2>
+<p>Mark an area of the screen for redrawing, of the while screen if r is nil.</p>
 <p>
 </p>
 <h2><a name="jive_ui_framework_pushevent_event_">jive.ui.Framework.pushEvent(event)</a></h2>
@@ -129,12 +128,8 @@
 <p>Remove the global widget <em>widget</em> from the screen.</p>
 <p>
 </p>
-<h2><a name="jive_ui_framework_layoutdirty__">jive.ui.Framework:layoutDirty()</a></h2>
-<p>Mark the layout as dirty.</p>
-<p>
-</p>
-<h2><a name="jive_ui_framework_addlistener_mask__listener_">jive.ui.Framework:addListener(mask, listener)</a></h2>
-<p>Add a global event listener <em>listener</em>. The listener is called for events that match the event mask <em>mask</em>. The listener is called before any widget event listeners, and can stop event processing by returned EVENT_CONSUME. Returns a <em>handle</em> to use in removeEventListener().</p>
+<h2><a name="jive_ui_framework_addlistener_mask__listener__priority_">jive.ui.Framework:addListener(mask, listener, priority)</a></h2>
+<p>Add a global event listener <em>listener</em>. The listener is called for events that match the event mask <em>mask</em>. By default the listener is called before any widget event listeners, and can stop event processing by returned EVENT_CONSUME. If priority is false then the listener is only called if no other global or widget listeners have processed the event. Returns a <em>handle</em> to use in removeEventListener().</p>
 <p>
 </p>
 <h2><a name="jive_ui_framework_removelistener_handle_">jive.ui.Framework:removeListener(handle)</a></h2>

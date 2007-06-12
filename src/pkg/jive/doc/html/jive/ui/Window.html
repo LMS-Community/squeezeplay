@@ -20,7 +20,6 @@
 	<li><a href="#methods">METHODS</a></li>
 	<ul>
 
-		<li><a href="#jive_ui_window_newmenuwindow_style__title__items_">jive.ui.Window:newMenuWindow(style, title, items)</a></li>
 		<li><a href="#jive_ui_window_style__title_">jive.ui.Window(style, title)</a></li>
 		<li><a href="#jive_ui_window_show_transition_">jive.ui.Window:show(transition)</a></li>
 		<li><a href="#jive_ui_window_showinstead_transition_">jive.ui.Window:showInstead(transition)</a></li>
@@ -30,6 +29,7 @@
 		<li><a href="#jive_ui_window_bumpright__">jive.ui.Window:bumpRight()</a></li>
 		<li><a href="#jive_ui_window_hideall__">jive.ui.Window:hideAll()</a></li>
 		<li><a href="#jive_ui_window_settitle_title_">jive.ui.Window:setTitle(title)</a></li>
+		<li><a href="#jive_ui_window_settitlewidget_titlewidget_">jive.ui.Window:setTitleWidget(titleWidget)</a></li>
 		<li><a href="#jive_ui_window_getwindow__">jive.ui.Window:getWindow()</a></li>
 		<li><a href="#jive_ui_window_addwidget_widget_">jive.ui.Window:addWidget(widget)</a></li>
 		<li><a href="#jive_ui_window_removewidget_widget_">jive.ui.Window:removeWidget(widget)</a></li>
@@ -40,6 +40,8 @@
 		<li><a href="#jive_ui_window_transitionpushright_newwindow_">jive.ui.Window:transitionPushRight(newWindow)</a></li>
 		<li><a href="#jive_ui_window_transitionpushpopupleft_newwindow_">jive.ui.Window:transitionPushPopupLeft(newWindow)</a></li>
 		<li><a href="#jive_ui_window_transitionpushpopupright_newwindow_">jive.ui.Window:transitionPushPopupRight(newWindow)</a></li>
+		<li><a href="#jive_ui_window_nolayout__">jive.ui.Window:noLayout()</a></li>
+		<li><a href="#jive_ui_window_borderlayout_window_">jive.ui.Window:borderLayout(window)</a></li>
 	</ul>
 
 	<li><a href="#license">LICENSE</a></li>
@@ -64,21 +66,6 @@
 <pre>
  -- Hide the window from the screen
  window:hide()</pre>
-<pre>
- -- Create a window with menu items
- jive.ui.Window:newMenuWindow(&quot;window&quot;, &quot;Jive&quot;,
-                {
-                        { &quot;Item 1&quot;, widget1,
-                                function()
-                                        print(&quot;item 1&quot;)
-                                        return jive.ui.EVENT_CONSUME
-                                end },
-                        { &quot;Item 2&quot;, nil,
-                                function()
-                                        print(&quot;item 2&quot;)
-                                        return jive.ui.EVENT_CONSUME
-                                end },
-                })</pre>
 <p>
 </p>
 <hr />
@@ -89,10 +76,6 @@
 </p>
 <hr />
 <h1><a name="methods">METHODS</a></h1>
-<p>
-</p>
-<h2><a name="jive_ui_window_newmenuwindow_style__title__items_">jive.ui.Window:newMenuWindow(style, title, items)</a></h2>
-<p>A convenience class method to create a window with one or more items in a menu. See the example above.</p>
 <p>
 </p>
 <h2><a name="jive_ui_window_style__title_">jive.ui.Window(style, title)</a></h2>
@@ -130,6 +113,10 @@
 </p>
 <h2><a name="jive_ui_window_settitle_title_">jive.ui.Window:setTitle(title)</a></h2>
 <p>Sets the windows title to <em>title</em>.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_settitlewidget_titlewidget_">jive.ui.Window:setTitleWidget(titleWidget)</a></h2>
+<p>Sets the windows title to <em>titleWidget</em>.</p>
 <p>
 </p>
 <h2><a name="jive_ui_window_getwindow__">jive.ui.Window:getWindow()</a></h2>
@@ -170,6 +157,14 @@
 </p>
 <h2><a name="jive_ui_window_transitionpushpopupright_newwindow_">jive.ui.Window:transitionPushPopupRight(newWindow)</a></h2>
 <p>Returns a push right window transition for use with popup windows.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_nolayout__">jive.ui.Window:noLayout()</a></h2>
+<p>Layout function that does not modify the window layout</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_borderlayout_window_">jive.ui.Window:borderLayout(window)</a></h2>
+<p>Layout function similar to the Java Border Layout.</p>
 <p>
 </p>
 <hr />

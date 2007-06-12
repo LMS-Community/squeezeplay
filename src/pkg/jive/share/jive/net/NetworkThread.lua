@@ -30,6 +30,7 @@ FIXME: Subscribe description
 
 -- stuff we use
 local tostring, table, ipairs, pairs, type  = tostring, table, ipairs, pairs, type
+local require = require
 
 local thread            = require("thread")
 local socket            = require("socket")
@@ -138,7 +139,11 @@ local function _t_select(self)
 			log:error(e)
 		end
 	else
-	
+
+		log:warn("profiler is " .. tostring(profiler))
+
+		profiler.start("lprof.out")
+
 		-- call the write pumps
 		for i,v in ipairs(w) do
 			self.t_writeSocks[v]()
@@ -148,6 +153,8 @@ local function _t_select(self)
 		for i,v in ipairs(r) do
 			self.t_readSocks[v]()
 		end
+
+		profiler.stop()
 	end
 end
 
@@ -178,6 +185,8 @@ local function _t_thread(self)
 --	log:debug("_t_thread()")
 	
 --	log:info("NetworkThread starting...")
+
+	profiler = require("profiler")
 	
 	while self.running do
 		

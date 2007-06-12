@@ -21,23 +21,14 @@
 	<ul>
 
 		<li><a href="#jive_ui_menu_style_">jive.ui.Menu(style)</a></li>
+		<li><a href="#jive_ui_menu_setitems_list__listsize__min__max_">jive.ui.Menu:setItems(list, listSize, min, max)</a></li>
 		<li><a href="#jive_ui_menu_setcloseable_iscloseable_">jive.ui.Menu:setCloseable(isCloseable)</a></li>
-		<li><a href="#jive_ui_menu_numitems__">jive.ui.Menu:numItems()</a></li>
-		<li><a href="#jive_ui_menu_getvisibleitems__">jive.ui.Menu:getVisibleItems()</a></li>
+		<li><a href="#jive_ui_menu_getvisibleindices__">jive.ui.Menu:getVisibleIndices()</a></li>
 		<li><a href="#jive_ui_menu_isscrollable__">jive.ui.Menu:isScrollable()</a></li>
-		<li><a href="#jive_ui_menu_getindex_item_">jive.ui.Menu:getIndex(item)</a></li>
-		<li><a href="#jive_ui_menu_getitem_index_">jive.ui.Menu:getItem(index)</a></li>
 		<li><a href="#jive_ui_menu_getselectedindex__">jive.ui.Menu:getSelectedIndex()</a></li>
-		<li><a href="#jive_ui_menu_getselecteditem__">jive.ui.Menu:getSelectedItem()</a></li>
 		<li><a href="#jive_ui_menu_setselectedindex_index_">jive.ui.Menu:setSelectedIndex(index)</a></li>
-		<li><a href="#jive_ui_menu_setselecteditem_item_">jive.ui.Menu:setSelectedItem(item)</a></li>
-		<li><a href="#jive_ui_menu_additem_item_">jive.ui.Menu:addItem(item)</a></li>
-		<li><a href="#jive_ui_menu_insertitem_item__index_">jive.ui.Menu:insertItem(item, index)</a></li>
-		<li><a href="#jive_ui_menu_replaceindex_item__index_">jive.ui.Menu:replaceIndex(item, index)</a></li>
-		<li><a href="#jive_ui_menu_removeindex_index_">jive.ui.Menu:removeIndex(index)</a></li>
-		<li><a href="#jive_ui_menu_removeitem_item_">jive.ui.Menu:removeItem(item)</a></li>
-		<li><a href="#jive_ui_menu_styleindex_index__style_">jive.ui.Menu:styleIndex(index, style)</a></li>
-		<li><a href="#jive_ui_menu_styleitem_item__style_">jive.ui.Menu:styleItem(item, style)</a></li>
+		<li><a href="#jive_ui_menu_lock_self__cancel_">jive.ui.Menu:lock(self, cancel)</a></li>
+		<li><a href="#jive_ui_menu_lock_self__cancel_">jive.ui.Menu:lock(self, cancel)</a></li>
 		<li><a href="#jive_ui_menu_scrollby_scroll_">jive.ui.Menu:scrollBy(scroll)</a></li>
 	</ul>
 
@@ -78,73 +69,39 @@
 <p>Constructs a new Menu object. <em>style</em> is the widgets style.</p>
 <p>
 </p>
+<h2><a name="jive_ui_menu_setitems_list__listsize__min__max_">jive.ui.Menu:setItems(list, listSize, min, max)</a></h2>
+<p>Set the items in the menu. list is the data structure containing the menu data
+in a format suitable for the itemRenderer and itemListener. listSize is the
+total number of items in the menu. Optionally min and max indicate the range of
+menu items that have changed.</p>
+<p>
+</p>
 <h2><a name="jive_ui_menu_setcloseable_iscloseable_">jive.ui.Menu:setCloseable(isCloseable)</a></h2>
 <p>Sets if this menu is closeable. A closeable menu will pop from the window stack on the left button, if it is not closeable the menu will bump instead.</p>
 <p>
 </p>
-<h2><a name="jive_ui_menu_numitems__">jive.ui.Menu:numItems()</a></h2>
-<p>Returns the top number of items in the menu.</p>
-<p>
-</p>
-<h2><a name="jive_ui_menu_getvisibleitems__">jive.ui.Menu:getVisibleItems()</a></h2>
-<p>Returns the indexes of the top and bottom visible items.</p>
+<h2><a name="jive_ui_menu_getvisibleindices__">jive.ui.Menu:getVisibleIndices()</a></h2>
+<p>Returns the indicies of the top and bottom visible items.</p>
 <p>
 </p>
 <h2><a name="jive_ui_menu_isscrollable__">jive.ui.Menu:isScrollable()</a></h2>
 <p>Returns true if the menu is scrollable, otherwise it returns false.</p>
 <p>
 </p>
-<h2><a name="jive_ui_menu_getindex_item_">jive.ui.Menu:getIndex(item)</a></h2>
-<p>Returns the index of item <em>item</em>, or nil if it is not in this menu.</p>
-<p>
-</p>
-<h2><a name="jive_ui_menu_getitem_index_">jive.ui.Menu:getItem(index)</a></h2>
-<p>Returns the item at the index <em>index</em>.</p>
-<p>
-</p>
 <h2><a name="jive_ui_menu_getselectedindex__">jive.ui.Menu:getSelectedIndex()</a></h2>
 <p>Returns the index of the selected item.</p>
-<p>
-</p>
-<h2><a name="jive_ui_menu_getselecteditem__">jive.ui.Menu:getSelectedItem()</a></h2>
-<p>Returns the selected item.</p>
 <p>
 </p>
 <h2><a name="jive_ui_menu_setselectedindex_index_">jive.ui.Menu:setSelectedIndex(index)</a></h2>
 <p>Sets <em>index</em> as the selected menu item.</p>
 <p>
 </p>
-<h2><a name="jive_ui_menu_setselecteditem_item_">jive.ui.Menu:setSelectedItem(item)</a></h2>
-<p>Sets <em>item</em> as the selected item in the menu.</p>
+<h2><a name="jive_ui_menu_lock_self__cancel_">jive.ui.Menu:lock(self, cancel)</a></h2>
+<p>Lock the menu. Pressing back unlocks it and calls the <em>cancel</em> closure. The style of the selected menu item is changed. This can be used for a loading animation.</p>
 <p>
 </p>
-<h2><a name="jive_ui_menu_additem_item_">jive.ui.Menu:addItem(item)</a></h2>
-<p>Add <em>item</em> to the end of the menu.</p>
-<p>
-</p>
-<h2><a name="jive_ui_menu_insertitem_item__index_">jive.ui.Menu:insertItem(item, index)</a></h2>
-<p>Insert <em>item</em> into the menu at <em>index</em>. The item can be any type of widget.</p>
-<p>
-</p>
-<h2><a name="jive_ui_menu_replaceindex_item__index_">jive.ui.Menu:replaceIndex(item, index)</a></h2>
-<p>Replace the item at <em>index</em> with <em>item</em>.</p>
-<p>
-</p>
-<h2><a name="jive_ui_menu_removeindex_index_">jive.ui.Menu:removeIndex(index)</a></h2>
-<p>Remove the item at <em>index</em> from the menu. Returns the item removed from
-the menu.</p>
-<p>
-</p>
-<h2><a name="jive_ui_menu_removeitem_item_">jive.ui.Menu:removeItem(item)</a></h2>
-<p>Remove <em>item</em> from the menu. Returns the item removed from the menu.</p>
-<p>
-</p>
-<h2><a name="jive_ui_menu_styleindex_index__style_">jive.ui.Menu:styleIndex(index, style)</a></h2>
-<p>Override the style of the menu item at <em>index</em> using <em>style</em> instead.</p>
-<p>
-</p>
-<h2><a name="jive_ui_menu_styleitem_item__style_">jive.ui.Menu:styleItem(item, style)</a></h2>
-<p>Override the style of the menu <em>item</em> using <em>style</em> instead.</p>
+<h2><a name="jive_ui_menu_lock_self__cancel_">jive.ui.Menu:lock(self, cancel)</a></h2>
+<p>Unlock the menu.</p>
 <p>
 </p>
 <h2><a name="jive_ui_menu_scrollby_scroll_">jive.ui.Menu:scrollBy(scroll)</a></h2>
@@ -153,7 +110,9 @@ the menu.</p>
 </p>
 <hr />
 <h1><a name="license">LICENSE</a></h1>
-<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>Copyright 2007 Logitech. All Rights Reserved.
+
+</p>
 <p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 
 </p>

@@ -71,8 +71,8 @@ function menu(self, menuItem)
 	local menu = SimpleMenu("menu",
 		{
 			{ 
-				"Choice", 
-				Choice(
+				text = "Choice", 
+				icon = Choice(
 				       "choice", 
 				       { "Off", "Low", "Medium", "High" },
 				       function(obj, selectedIndex)
@@ -86,8 +86,8 @@ function menu(self, menuItem)
 			       )
 			},
 			{
-				"RadioButton 1", 
-				RadioButton(
+				text = "RadioButton 1", 
+				icon = RadioButton(
 					"radio", 
 					group, 
 					function()
@@ -97,8 +97,8 @@ function menu(self, menuItem)
 				),
 			},
 			{
-				"RadioButton 2", 
-				RadioButton(
+				text = "RadioButton 2", 
+				icon = RadioButton(
 					"radio", 
 					group, 
 					function()
@@ -107,8 +107,8 @@ function menu(self, menuItem)
 				),
 			},
 			{
-				"RadioButton 3", 
-				RadioButton(
+				text = "RadioButton 3", 
+				icon = RadioButton(
 					"radio", 
 					group, 
 					function()
@@ -117,8 +117,8 @@ function menu(self, menuItem)
 				),
 			},
 			{
-				"Checkbox", 
-				Checkbox(
+				text = "Checkbox", 
+				icon = Checkbox(
 					"checkbox",
 					function(object, isSelected)
 						log:info("checkbox updated: " .. tostring(isSelected))
@@ -126,37 +126,37 @@ function menu(self, menuItem)
 					true
 				)
 			},
-			{ "Menu", nil,
-				function(event, menuItem)
+			{ text = "Menu",
+				callback = function(event, menuItem)
 					self:menuWindow(menuItem):show()
 				end },
-			{ "Text UTF8", nil,
-				function(event, menuItem)
+			{ text = "Text UTF8",
+				callback = function(event, menuItem)
 					self:textWindow(menuItem, "applets/Test/test.txt"):show()
 				end },
-			{ "Slider", nil,
-				function(event, menuItem)
+			{ text = "Slider",
+				callback = function(event, menuItem)
 					self:sliderWindow(menuItem):show()
 				end },
-			{ "Text input", nil,
-				function(event, menuItem)
+			{ text = "Text input",
+				callback = function(event, menuItem)
 					self:textinputWindow(menuItem):show()
 				end },
-			{ "Image JPG", nil,
-				function(event, menuItem)
+			{ text = "Image JPG",
+				callback = function(event, menuItem)
 					self:imageWindow(menuItem, "applets/Test/test.jpg"):show()
 				end },
-			{ "Image PNG", nil,
-				function(event, menuItem)
+			{ text = "Image PNG",
+				callback = function(event, menuItem)
 					self:imageWindow(menuItem, "applets/Test/test.png"):show()
 				end },
-			{ "Image GIF", nil,
-				function(event, menuItem)
+			{ text = "Image GIF",
+				callback = function(event, menuItem)
 					self:imageWindow(menuItem, "applets/Test/test.gif"):show()
 				end },
 		})
 
-	local window = Window(self:displayName(), menuItem[1])
+	local window = Window(self:displayName(), menuItem.text)
 	window:addWidget(menu)
 
 	return window
@@ -164,7 +164,7 @@ end
 
 
 function menuWindow(self, menuItem)
-	local window = Window(self:displayName(), menuItem[1])
+	local window = Window(self:displayName(), menuItem.text)
 	local menu = SimpleMenu("menu")
 	window:addWidget(menu)
 
@@ -181,7 +181,7 @@ end
 
 function textWindow(self, menuItem, filename)
 
-	local window = Window(self:displayName(), menuItem[1])
+	local window = Window(self:displayName(), menuItem.text)
 
 	filename = Framework:findFile(filename)
 	local fh = io.open(filename, "rb")
@@ -204,7 +204,7 @@ end
 
 function sliderWindow(self, menuItem)
 
-	local window = Window(self:displayName(), menuItem[1])
+	local window = Window(self:displayName(), menuItem.text)
 
 	local slider = Slider("slider", 1, 20, 5,
 		function(slider, value)
@@ -222,7 +222,7 @@ end
 
 function textinputWindow(self, menuItem)
 
-	local window = Window(self:displayName(), menuItem[1])
+	local window = Window(self:displayName(), menuItem.text)
 
 	local input = Textinput("textinput", "A test string",
 				function(_, value)
