@@ -1,0 +1,88 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.ui.Icon - An icon widget</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#style">STYLE</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<ul>
+
+		<li><a href="#jive_ui_icon_style__image_">jive.ui.Icon(style, image)</a></li>
+		<li><a href="#jive_ui_icon_getimage__">jive.ui.Icon:getImage()</a></li>
+		<li><a href="#jive_ui_icon_setimage_image_">jive.ui.Icon:setImage(image)</a></li>
+		<li><a href="#jive_ui_icon_sink__">jive.ui.Icon:sink()</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>An icon widget, extends <em>jive.ui.Widget</em>. This widget displays an image.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- New 'play' icon
+ local right = jive.ui.Icon(&quot;icon_playmode_play&quot;)</pre>
+<pre>
+ -- Load icon from URL
+ local icon = jive.ui.Icon(&quot;image&quot;)
+ local http = SocketHttp(jnt, host, port, &quot;example&quot;)
+ local req = RequestHttp(icon:getSink())
+ <a href="http:fetch">http:fetch</a>(req)</pre>
+<p>
+</p>
+<hr />
+<h1><a name="style">STYLE</a></h1>
+<p>The Label includes the following style parameters in addition to the widgets basic parameters.</p>
+<p><strong>img</strong> : the icon image. This can be replaced by the image set in lua.</p>
+<p><strong>frameWidth</strong> : if this is an animated icon this is the width of each frame.</p>
+<p><strong>frameRate</strong> : if this is an animated icon this is the desired frame rate.</p>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>
+</p>
+<h2><a name="jive_ui_icon_style__image_">jive.ui.Icon(style, image)</a></h2>
+<p>Constructs a Icon widget. <em>style</em> is the Icon style. <em>image</em> is an option <em>jive.ui.Surface</em> to display, if not given the icon image is supplied by the active style.</p>
+<p>
+</p>
+<h2><a name="jive_ui_icon_getimage__">jive.ui.Icon:getImage()</a></h2>
+<p>Returns the <em>jive.ui.Surface</em> displayed by this icon, or nil if the style image is being used.</p>
+<p>
+</p>
+<h2><a name="jive_ui_icon_setimage_image_">jive.ui.Icon:setImage(image)</a></h2>
+<p>Sets the <em>jive.ui.Surface</em> displayed by the icon.</p>
+<p>
+</p>
+<h2><a name="jive_ui_icon_sink__">jive.ui.Icon:sink()</a></h2>
+<p>Returns a LTN12 sink that can be used with the jive.net classes for loading images from the network.</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

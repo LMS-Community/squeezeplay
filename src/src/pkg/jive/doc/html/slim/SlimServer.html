@@ -1,0 +1,127 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.slim.SlimServer - SlimServer object</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#jive_slim_slimserver_jnt__ip__name_">jive.slim.SlimServer(jnt, ip, name)</a></li>
+		<li><a href="#jive_slim_slimserver_free__">jive.slim.SlimServer:free()</a></li>
+		<li><a href="#jive_slim_slimserver_idfor_ip__port__name_">jive.slim.SlimServer:idFor(ip, port, name)</a></li>
+		<li><a href="#jive_slim_slimserver_updatefromudp_name_">jive.slim.SlimServer:updateFromUdp(name)</a></li>
+		<li><a href="#jive_slim_slimserver_fetchartworkthumb_artworkid__icon__urigenerator_">jive.slim.SlimServer:fetchArtworkThumb(artworkId, icon, uriGenerator)</a></li>
+		<li><a href="#tostring_aslimserver_"><code>tostring(aSlimServer)</code></a></li>
+		<li><a href="#jive_slim_slimserver_getversion__">jive.slim.SlimServer:getVersion()</a></li>
+		<li><a href="#jive_slim_slimserver_getipport__">jive.slim.SlimServer:getIpPort()</a></li>
+		<li><a href="#jive_slim_slimserver_getname__">jive.slim.SlimServer:getName()</a></li>
+		<li><a href="#jive_slim_slimserver_getlastseen__">jive.slim.SlimServer:getLastSeen()</a></li>
+		<li><a href="#jive_slim_slimserver_isconnected__">jive.slim.SlimServer:isConnected()</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>Represents and interfaces with a real SlimServer on the network.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- Create a SlimServer
+ local myServer = SlimServer(jnt, '192.168.1.1', 'Raoul')</pre>
+<pre>
+ -- Allow some time here for newtork IO to occur</pre>
+<pre>
+ -- Get the SlimServer version
+ local myServerVersion = myServer:getVersion()</pre>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="jive_slim_slimserver_jnt__ip__name_">jive.slim.SlimServer(jnt, ip, name)</a></h2>
+<p>Create a SlimServer object at IP address <em>ip</em> with name <em>name</em>. Once created, the
+object will immediately connect to slimserver to discover players and other attributes
+of the server.</p>
+<p>
+</p>
+<h2><a name="jive_slim_slimserver_free__">jive.slim.SlimServer:free()</a></h2>
+<p>Deletes a SlimServer object, frees memory and closes connections with the server.</p>
+<p>
+</p>
+<h2><a name="jive_slim_slimserver_idfor_ip__port__name_">jive.slim.SlimServer:idFor(ip, port, name)</a></h2>
+<p>Returns an identifier for a server named <em>name</em> at IP address <em>ip</em>:<em>port</em>.</p>
+<p>
+</p>
+<h2><a name="jive_slim_slimserver_updatefromudp_name_">jive.slim.SlimServer:updateFromUdp(name)</a></h2>
+<p>The <em>jive.slim.SlimServers</em> cache calls this method every time the server
+answers the discovery request. This method updates the server name if it has changed
+and manages retries of the server long term connection.</p>
+<p>
+</p>
+<h2><a name="jive_slim_slimserver_fetchartworkthumb_artworkid__icon__urigenerator_">jive.slim.SlimServer:fetchArtworkThumb(artworkId, icon, uriGenerator)</a></h2>
+<p>The SlimServer object maintains an artwork cache. This function either loads from the cache or
+gets from the network the thumb for <em>artworkId</em>. A <em>jive.ui.Surface</em> is used to perform
+<em>icon</em>:setImage(). <em>uriGenerator</em> must be a function that
+computes the URI to request the artwork from the server from <em>artworkId</em> (i.e. if needed, this
+method will call <code>uriGenerator(artworkId)</code> and use the result as URI).</p>
+<p>
+</p>
+<h2><a name="tostring_aslimserver_"><code>tostring(aSlimServer)</code></a></h2>
+<p>if <em>aSlimServer</em> is a <em>jive.slim.SlimServer</em>, prints
+ SlimServer {name}</p>
+<p>
+</p>
+<h2><a name="jive_slim_slimserver_getversion__">jive.slim.SlimServer:getVersion()</a></h2>
+<p>Returns the server version</p>
+<p>
+</p>
+<h2><a name="jive_slim_slimserver_getipport__">jive.slim.SlimServer:getIpPort()</a></h2>
+<p>Returns the server IP address and HTTP port</p>
+<p>
+</p>
+<h2><a name="jive_slim_slimserver_getname__">jive.slim.SlimServer:getName()</a></h2>
+<p>Returns the server name</p>
+<p>
+</p>
+<h2><a name="jive_slim_slimserver_getlastseen__">jive.slim.SlimServer:getLastSeen()</a></h2>
+<p>Returns the time at which the last indication the server is alive happened,
+either data from the server or response to discovery. This is used by
+<em>jive.slim.SlimServers</em> to delete old servers.</p>
+<p>
+</p>
+<h2><a name="jive_slim_slimserver_isconnected__">jive.slim.SlimServer:isConnected()</a></h2>
+<p>Returns the state of the long term connection with the server. This is used by
+<em>jive.slim.SlimServers</em> to delete old servers.</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+
+</p>
+
+</body>
+
+</html>

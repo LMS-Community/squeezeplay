@@ -1,0 +1,15 @@
+
+LUA_NG_INCLUDE= /usr/local/include
+LUA_32_INCLUDE= /usr/local/include
+LUA_40_INCLUDE= /usr/local/include
+LUA_50_INCLUDE= /usr/local/include
+
+LUA_50_OUTPUT= bin/libprofiler.so
+
+COMPAT_DIR = ../compat/src
+
+INCS= -I$(LUA_50_INCLUDE) -I$(COMPAT_DIR)
+CC= gcc
+WARN= -ansi -pedantic -W -Wall
+EXTRA_LIBS=
+CFLAGS= -O2 -DTESTS $(WARN) $(INCS) -I./src

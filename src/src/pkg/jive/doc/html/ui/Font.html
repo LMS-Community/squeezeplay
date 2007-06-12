@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.ui.Font - A truetype font.</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<ul>
+
+		<li><a href="#jive_ui_font_load_name__size_">jive.ui.Font:load(name, size)</a></li>
+		<li><a href="#jive_ui_font_width_str_">jive.ui.Font:width(str)</a></li>
+		<li><a href="#jive_ui_font_height__">jive.ui.Font:height()</a></li>
+		<li><a href="#jive_ui_font_ascend__">jive.ui.Font:ascend()</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>A font object. Fonts are used for drawing text on <em>jive.ui.Surface</em>'s.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- Load a 12pt font
+ local font = jive.ui.Font:load(&quot;FreeSans.ttf&quot;, 12)</pre>
+<pre>
+ -- Measure font width and height
+ local w = font:width(&quot;A string&quot;)
+ local h = font:height()</pre>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>
+</p>
+<h2><a name="jive_ui_font_load_name__size_">jive.ui.Font:load(name, size)</a></h2>
+<p>Load the font. <em>name</em> is the filename for the font, if this is a relative filename the lua path is searched for the font file. <em>size</em> is the size of the font.</p>
+<p>
+</p>
+<h2><a name="jive_ui_font_width_str_">jive.ui.Font:width(str)</a></h2>
+<p>Returns the number of pixels used to render <em>str</em> in this font.</p>
+<p>
+</p>
+<h2><a name="jive_ui_font_height__">jive.ui.Font:height()</a></h2>
+<p>Returns the height of the font.</p>
+<p>
+</p>
+<h2><a name="jive_ui_font_ascend__">jive.ui.Font:ascend()</a></h2>
+<p>Return the ascend height of the font.</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

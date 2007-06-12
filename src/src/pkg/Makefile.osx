@@ -1,0 +1,215 @@
+################################################################################
+# Jive makefile for OS X
+# Copyright 2007 Logitech
+################################################################################
+
+#
+# User specific stuff
+#
+
+# This indicates where to find the libs on OS X. /opt/local is the MacPorts
+# default. Use /sw if you prefer to use Fink.
+export OSXPORTS =/opt/local
+
+#
+# OS X specific stuff
+#
+
+export MACOSX_DEPLOYMENT_TARGET=10.3
+ARCH = $(shell uname -m | grep i386)
+#echo ${ARCH}
+
+
+#
+# Absolute path to top of JIVE directories
+#
+
+# OSX 10.4 has GNU Make 3.8, which does not support realpath (need Make 3.81).
+# Perl does...
+SRC_DIR=$(shell perl -e "use Cwd 'realpath'; print realpath('$(PWD)/..');")
+BASE_DIR = $(dir $(SRC_DIR))
+
+export BUILD_TOP=$(BASE_DIR)/build/osx
+
+export PREFIX=${BUILD_TOP}
+
+export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${OSXPORTS}/include -g
+export LDFLAGS=-L${PREFIX}/lib -L${OSXPORTS}/lib
+# make sure we include port directories for jpeg, png, etc..
+
+export TOOLPATH = $(shell dirname `which gcc`)
+
+export SDL_CONFIG = sdl-config
+
+#
+# Top level targets
+#
+.PHONY: all
+all: sdl-all lua-all app
+
+
+#####
+# SDL
+#####
+
+.PHONY: sdl-all freetype sdl sdl-image sdl-ttf sdl-gfx
+sdl-all: freetype sdl sdl-image sdl-ttf sdl-gfx
+
+# freetype
+freetype-2.1.10/config.mk:
+	cd freetype-2.1.10; ./configure --enable-shared --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+
+freetype: freetype-2.1.10/config.mk
+	cd freetype-2.1.10; make; make DESTDIR= install
+
+# sdl
+SDL-1.2.11/Makefile:
+	cd SDL-1.2.11; ./configure --prefix=${PREFIX} --disable-video-x11;
+
+sdl: SDL-1.2.11/Makefile
+	cd SDL-1.2.11; make && make install
+
+# sdl_image (requires jpeg tiff png)
+SDL_image-1.2.5/Makefile:
+	cd SDL_image-1.2.5; ./configure --disable-tif --prefix=${PREFIX} SDL_CONFIG=${PREFIX}/bin/sdl-config
+
+sdl-image: SDL_image-1.2.5/Makefile
+	cd SDL_image-1.2.5; make && make install
+
+# sdl_ttf
+SDL_ttf-2.0.8/Makefile:
+	cd SDL_ttf-2.0.8; SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config ./configure --prefix=${PREFIX}
+
+sdl-ttf: SDL_ttf-2.0.8/Makefile
+	cd SDL_ttf-2.0.8; make SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config && make install
+
+# sdl_gfx
+SDL_gfx-2.0.15/Makefile:
+	@if [ x$(ARCH) == xi386 ]; then cd SDL_gfx-2.0.15; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --prefix=${PREFIX}; fi
+	@if [ x$(ARCH) == x ]; then cd SDL_gfx-2.0.15; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --prefix=${PREFIX} --disable-mmx; fi
+
+sdl-gfx: SDL_gfx-2.0.15/Makefile
+	cd SDL_gfx-2.0.15; make SDL_CONFIG=${PREFIX}/bin/sdl-config && make install
+
+
+#####
+# lua
+#####
+
+.PHONY: lua-all tolua++ luasocket slnunicode luajson loop lualogging luaexpat luafilesystem luaprofiler
+
+lua-all: lua tolua++ luasocket slnunicode luajson loop lualogging luaexpat luafilesystem luaprofiler
+
+# lua (requires readline ncurses)
+lua:
+	cd lua-5.1.1; make macosx INSTALL_TOP=${PREFIX} && make install INSTALL_TOP=${PREFIX}
+	ranlib ${PREFIX}/lib/liblua.a
+
+# luasocket (requires lua)
+luasocket:
+	cd luasocket-2.0.1; make install INSTALL_TOP=${PREFIX} PLATFORM=osx
+
+slnunicode: lua
+	cd slnunicode-1.1; make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=osx
+
+luajson/Makefile:
+	cd luajson; ./configure --prefix=${PREFIX}
+
+luajson: luajson/Makefile
+	cd luajson; make && cp .libs/json.so ${PREFIX}/lib/lua/5.1/json.so
+
+loop:
+	-mkdir ${PREFIX}/share/lua/5.1/loop
+	-mkdir ${PREFIX}/share/lua/5.1/loop/collection
+	-mkdir ${PREFIX}/share/lua/5.1/loop/debug
+	cd loop-2.2-alpha; install loop/base.lua ${PREFIX}/share/lua/5.1/loop/.
+	cd loop-2.2-alpha; install loop/simple.lua ${PREFIX}/share/lua/5.1/loop/.
+	cd loop-2.2-alpha; install loop/table.lua ${PREFIX}/share/lua/5.1/loop/.
+	cd loop-2.2-alpha; install loop/collection/ObjectCache.lua ${PREFIX}/share/lua/5.1/loop/collection/.
+	cd loop-2.2-alpha; install loop/debug/Viewer.lua ${PREFIX}/share/lua/5.1/loop/debug/.
+
+lualogging:
+	cd lualogging-1.1.2; make install LUA_DIR=${PREFIX}/share/lua/5.1
+
+luaexpat: lua
+	cd luaexpat-1.0.2; make PREFIX=${PREFIX} PLATFORM=osx && make install PREFIX=${PREFIX} PLATFORM=osx
+
+luafilesystem:
+	cd luafilesystem-1.2; make install PREFIX=${PREFIX} PLATFORM=osx
+
+luaprofiler:
+	cd luaprofiler-2.0 && make -f Makefile.darwin install PREFIX=${PREFIX}
+
+# just compile the library for to tolua++
+tolua++:
+	cd tolua++-1.0.92/src/lib; cc -I../../include -pedantic -Wall -O2 -fno-common ${CFLAGS} -c *.c
+	cd tolua++-1.0.92/src/lib; ar -rcu libtolua++.a tolua_event.o tolua_is.o tolua_map.o tolua_push.o tolua_to.o 
+	mkdir -p ${PREFIX}/lib
+	install tolua++-1.0.92/include/tolua++.h ${PREFIX}/include
+	install tolua++-1.0.92/src/lib/libtolua++.a ${PREFIX}/lib
+	ranlib ${PREFIX}/lib/libtolua++.a
+
+
+#
+# jive
+#
+
+.PHONY: app jive freefont
+app: jive freefont
+
+# jive
+jive/Makefile:
+	cd jive; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --prefix=${PREFIX}
+
+jive: jive/Makefile
+	cd jive; make && make install
+
+# freefont
+freefont:
+	mkdir -p ${PREFIX}/share/jive/fonts
+	cp freefont-debian/FreeSans.ttf ${PREFIX}/share/jive/fonts
+	cp freefont-debian/FreeSansBold.ttf ${PREFIX}/share/jive/fonts
+
+
+#
+# clean
+#
+
+.PHONY: clean
+clean:
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: jive"
+	-cd jive; make clean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: SDL"
+	-cd SDL-1.2.11; make distclean; rm -f include/SDL_config.h;
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: SDL_image"
+	-cd SDL_image-1.2.5; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: SDL_ttf"
+	-cd SDL_ttf-2.0.8; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: SDL_gfx"
+	-cd SDL_gfx-2.0.15; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: lua"
+	-cd lua-5.1.1; make clean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: luasocket"
+	-cd luasocket-2.0.1; make clean PLATFORM=osx
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: luaprofiler"
+	-cd luaprofiler-2.0; make -f Makefile.darwin clean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: slnunicode"
+	-cd slnunicode-1.1; make clean PLATFORM=osx
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: luaexpat"
+	-cd luaexpat-1.0.2; make clean PLATFORM=osx
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: luafilesystem"
+	-cd luafilesystem-1.2; make clean PLATFORM=osx
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: tolua++"
+	-cd tolua++-1.0.92/src/lib; rm libtolua++.a; rm *.o

@@ -1,0 +1,116 @@
+/* GRAY #333 */
+/* LIGHT #09c */
+/* FORE #ccc */
+/* DARK #07a */
+/* BACK #eee */
+
+/* GRAY #333 */
+/* LIGHT #69f */
+/* FORE #ccf */
+/* DARK #039 */
+/* BACK #eef */
+
+/* GRAY #ff0 */
+/* LIGHT #ffc */
+/* FORE #900 */
+/* DARK #900 */
+/* BACK #ffe */
+
+#Logo {
+	margin:-62px 0px 0px 20px;
+}
+
+/* Commom header formatting */
+
+#Menu {
+	text-align: right;
+	border-right:1px solid #ccc;
+}
+
+#Header {
+	margin:50px 0px 10px 10px;
+	padding:13px 0px 0px 110px;
+	/* For IE5/Win's benefit height = [correct height] + [top padding] + [top and bottom border widths] */
+	height:33px; /* 19px + 13px + 2px = 33px */
+	border-style:solid;
+	border-color:#900;
+	border-width:1px 0px; /* top and bottom borders: 1px; left and right borders: 0px */
+	line-height:11px;
+	color:#900;
+	background-color:#ffc;
+
+/* Here is the ugly brilliant hack that protects IE5/Win from its own stupidity. 
+Thanks to Tantek Celik for the hack and to Eric Costello for publicizing it. 
+IE5/Win incorrectly parses the "\"}"" value, prematurely closing the style 
+declaration. The incorrect IE5/Win value is above, while the correct value is 
+below. See http://glish.com/css/hacks.asp for details. */
+	voice-family: "\"}\"";
+	voice-family:inherit;
+	height:19px; /* the correct height */
+	}
+/* I've heard this called the "be nice to Opera 5" rule. Basically, it feeds correct 
+length values to user agents that exhibit the parsing error exploited above yet get 
+the CSS box model right and understand the CSS2 parent-child selector. ALWAYS include
+a "be nice to Opera 5" rule every time you use the Tantek Celik hack (above). */
+body>#Header {height:19px;}
+
+/* Other elements formatting */
+
+body {
+	margin:0px;
+	padding:0px;
+	font:11px verdana, arial, helvetica, sans-serif;
+	color:black;
+	background-color:white;
+	}
+h1 {
+	margin:0px 0px 15px 0px;
+	padding:0px;
+	font-size:28px;
+	font-weight:900;
+	color:#dcc;
+	}
+h2 {
+	font:bold 18px/20px verdana, arial, helvetica, sans-serif;
+	margin:0px 0px 5px 0px;
+	padding:0px;
+	color:#a00;
+	}
+h3 {
+	font:bold 12px/14px verdana, arial, helvetica, sans-serif;
+	margin:0px 0px 5px 0px;
+	padding:0px;
+	}
+p {
+	font:11px/20px verdana, arial, helvetica, sans-serif;
+	margin:0px 0px 16px 0px;
+	padding:0px;
+	}
+
+.content {background-color:white;}
+.content>p {margin:0px;}
+.content>p+p {text-indent:30px;}
+
+a {
+	color:#900;
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-weight:600;
+	text-decoration:none;
+	}
+a:link {color:#900;}
+a:hover {color:#fa0;}
+
+dl.news dt {
+	margin-top: 5px;
+	font-weight: bold;
+}
+dl.news dd {
+	margin-left: 15px;
+}
+
+#Menu ul {
+	border-right:1px solid #fa0;
+	list-style-type:none;
+	padding:0pt 5pt 0pt 0pt;
+	margin: -12pt 5pt 5pt 0pt;
+}

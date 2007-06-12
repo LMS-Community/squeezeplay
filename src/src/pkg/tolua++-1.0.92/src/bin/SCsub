@@ -1,0 +1,17 @@
+Import('env')
+
+src = [
+	'tolua.c',
+	]
+
+
+if env['build_dev']:
+	env.LuaBinding('toluabind.c', 'tolua_scons.pkg', 'tolua')
+
+if env['build_failsafe']:
+	src+= ['toluabind_default.c']
+else:
+	src += ['toluabind.c']
+
+env.bin_target = env.Program('#/bin/'+env['tolua_bin'], src, LIBS = ['$tolua_lib'] + env['LIBS'])
+

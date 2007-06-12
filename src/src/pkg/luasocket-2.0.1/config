@@ -1,0 +1,43 @@
+#------
+# LuaSocket makefile configuration
+#
+
+#INSTALL_TOP= /usr/local
+
+#------
+# Output file names
+#
+EXT=so
+SOCKET_V=2.0.1
+MIME_V=1.0.1
+SOCKET_SO=socket.$(EXT).$(SOCKET_V) 
+MIME_SO=mime.$(EXT).$(MIME_V)
+UNIX_SO=unix.$(EXT)
+
+#------
+# Lua includes and libraries
+#
+LUAINC=-I$(INSTALL_TOP)/include
+
+#------
+# Compat-5.1 directory
+#
+COMPAT=compat-5.1r5
+
+#------
+# Top of your Lua installation
+# Relative paths will be inside the src tree
+#
+INSTALL_TOP_SHARE=$(INSTALL_TOP)/share/lua/5.1
+INSTALL_TOP_LIB=$(INSTALL_TOP)/lib/lua/5.1
+
+INSTALL_DATA=cp
+INSTALL_EXEC=cp
+
+#------
+# Compiler and linker settings
+
+
+#------
+# End of makefile configuration
+#
