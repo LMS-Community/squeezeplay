@@ -497,7 +497,13 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/scrollbar_bkground_t.png \
 	share/applets/DefaultSkin/images/scrollbar_bkground_b.png \
 	share/applets/DefaultSkin/images/helpbox_l.png \
-	share/applets/DefaultSkin/images/helpbox_r.png
+	share/applets/DefaultSkin/images/helpbox_r.png \
+	share/applets/DefaultSkin/images/slider_bkgrd_l.png \
+	share/applets/DefaultSkin/images/slider_bkgrd.png \
+	share/applets/DefaultSkin/images/slider_bkgrd_r.png \
+	share/applets/DefaultSkin/images/slider_fill_l.png \
+	share/applets/DefaultSkin/images/slider_fill.png \
+	share/applets/DefaultSkin/images/slider_fill_r.png
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am

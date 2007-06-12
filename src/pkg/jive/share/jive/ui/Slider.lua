@@ -136,12 +136,12 @@ function setValue(self, value)
 end
 
 
--- FIXME XXXX this works for a slider, maybe a scrollbar should be a
--- different class?
 function _adjustSlider(self, value)
+	local oldSize = self.size
+
 	self:setValue(self.size + value)
 
-	if self.closure then
+	if self.closure and self.size ~= oldSize then
 		self.closure(self, self.size)
 	end
 end

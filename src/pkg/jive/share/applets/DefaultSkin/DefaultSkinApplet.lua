@@ -257,11 +257,18 @@ function skin(self, s)
 					imgpath .. "scrollbar_bodybottom.png",
 			       })
 
+	local sliderBackground = 
+		Tile:loadHTiles({
+					imgpath .. "slider_bkgrd_l.png",
+					imgpath .. "slider_bkgrd.png",
+					imgpath .. "slider_bkgrd_r.png",
+			       })
+
 	local sliderBar = 
 		Tile:loadHTiles({
-					imgpath .. "popup_volume_leftbody.png",
-					imgpath .. "popup_volume_midbody.png",
-					imgpath .. "popup_volume_rightbody.png",
+					imgpath .. "slider_fill_l.png",
+					imgpath .. "slider_fill.png",
+					imgpath .. "slider_fill_r.png",
 			       })
 
 
@@ -380,9 +387,10 @@ function skin(self, s)
 	s.slider.x = 37
 	s.slider.y = 120
 	s.slider.w = screenWidth - 74
-	s.slider.h = 20
+	s.slider.h = 28
 	s.slider.position = LAYOUT_NONE
 	s.slider.horizontal = 1
+	s.slider.bgImg = sliderBackground
 	s.slider.img = sliderBar
 
 
@@ -390,7 +398,7 @@ function skin(self, s)
 	s.textinput.x = 37
 	s.textinput.y = 120
 	s.textinput.w = 161
-	s.textinput.h = 20
+	s.textinput.h = 10
 	s.textinput.position = LAYOUT_NONE
 	s.textinput.fg = { 0xff, 0xff, 0xff }
 	s.textinput.sh = { 0x00, 0x00, 0x00 }
