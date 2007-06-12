@@ -1,2 +1,0 @@
-# OS dependent
-LIB_OPTION= -shared #for Linux
