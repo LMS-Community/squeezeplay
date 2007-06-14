@@ -959,6 +959,7 @@ static const struct luaL_Reg menu_methods[] = {
 };
 
 static const struct luaL_Reg slider_methods[] = {
+	{ "getPreferredBounds", jiveL_slider_get_preferred_bounds },
 	{ "_skin", jiveL_slider_skin },
 	{ "_layout", jiveL_slider_layout },
 	{ "draw", jiveL_slider_draw },
@@ -995,6 +996,15 @@ static const struct luaL_Reg window_methods[] = {
 	{ "_prepare", jiveL_window_prepare },
 	{ "iterate", jiveL_window_iterate },
 	{ "draw", jiveL_window_draw },
+	{ "_eventHandler", jiveL_window_event_handler },
+	{ NULL, NULL }
+};
+
+static const struct luaL_Reg popup_methods[] = {
+	{ "_skin", jiveL_window_skin },
+	{ "_prepare", jiveL_window_prepare },
+	{ "iterate", jiveL_popup_iterate },
+	{ "draw", jiveL_popup_draw },
 	{ "_eventHandler", jiveL_window_event_handler },
 	{ NULL, NULL }
 };
@@ -1067,6 +1077,10 @@ static int jiveL_core_init(lua_State *L) {
 
 	lua_getfield(L, 2, "Window");
 	luaL_register(L, NULL, window_methods);
+	lua_pop(L, 1);
+
+	lua_getfield(L, 2, "Popup");
+	luaL_register(L, NULL, popup_methods);
 	lua_pop(L, 1);
 
 	lua_getfield(L, 2, "Slider");

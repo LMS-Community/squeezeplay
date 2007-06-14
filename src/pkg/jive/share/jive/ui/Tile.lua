@@ -69,6 +69,10 @@ Create a horizontal tile with three images:
 
 Blit the tile to surface at I<x, y>, the area I<w, h> is filled.
 
+=head2 tile:getMinSize()
+
+Returns the minimum I<width>,I<height> the tile can be painted.
+
 =cut
 --]]
 

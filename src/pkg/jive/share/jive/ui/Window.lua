@@ -26,7 +26,7 @@ The Window includes the following style parameters in addition to the widgets ba
 
 =over
 
-B<popup> : true if this is a popup window that includes transparency.
+B<bgImg> : the windows background image.
 
 =head1 METHODS
 
@@ -101,9 +101,8 @@ function __init(self, style, title)
 	obj.layoutRoot = true
 	obj.focus = nil
 
-	-- default window to screen size
-	local sw, sh = Framework:getScreenSize()
-	obj:setBounds(0, 0, sw, sh)
+	obj._DEFAULT_SHOW_TRANSITION = transitionPushLeft
+	obj._DEFAULT_HIDE_TRANSITION = transitionPushRight
 
 	if title then
 		obj:setTitle(title)
@@ -158,9 +157,7 @@ function show(self, transition)
 
 	if (topwindow) then
 		-- push transitions
-		if transition == nil then
-			transition = transitionPushLeft
-		end
+		transition = transition or self._DEFAULT_SHOW_TRANSITION
 		Framework:_startTransition(transition(topwindow, self))
 
 		-- the old window and widgets are no longer visible
@@ -268,9 +265,7 @@ function hide(self, transition)
 		topWindow:reDraw()
 
 		-- push transitions
-		if transition == nil then
-			transition = transitionPushRight
-		end
+		transition = transition or self._DEFAULT_HIDE_TRANSITION
 		Framework:_startTransition(transition(self, topWindow))
 
 		-- this window and widgets are now not visible
@@ -677,12 +672,26 @@ Layout function similar to the Java Border Layout.
 
 =cut
 --]]
-function borderLayout(self)
-	-- discover bounder dimensions
+function borderLayout(self, fitWindow)
+	-- maximum window size is bounded by screen
 	local sw, sh = Framework:getScreenSize()
-	local maxN, maxE, maxS, maxW = 0, 0, 0, 0
-	iterate(
-		self, 
+
+	-- prefered window size set in style
+	local _wx, _wy, _ww, _wh = self:getPreferredBounds()
+	local wlb,wtb,wrb,wbb = self:getBorder()
+	ww = (_ww or sw) - wlb - wrb
+	wh = (_wh or sh) - wtb - wbb
+
+	-- utility function to limit bounds to window size
+	local maxBounds = function(x, y, w, h)
+				  w = (w > ww) and ww or w
+				  h = (h > wh) and wh or h
+				  return x, y, w, h
+			  end
+
+	-- find prefered widget sizes
+	local maxN, maxE, maxS, maxW, maxX, maxY = 0, 0, 0, 0, 0, 0
+	self:iterate(
 		function(widget)
 			local x,y,w,h = widget:getPreferredBounds()
 			local lb,tb,rb,bb = widget:getBorder()
@@ -703,13 +712,38 @@ function borderLayout(self)
 			elseif position == LAYOUT_WEST then
 				w = w + lb + rb or lb + rb
 				maxW = (w > maxW) and w or maxW
+
+			elseif position == LAYOUT_CENTER then
+				if w then
+					w = w + lb + rb
+					maxX = (w > maxX) and w or maxX
+				end
+				if h then
+					h = h + tb + bb
+					maxY = (h > maxY) and h or maxY
+				end
+
 			end
 		end
 	)
 
 
+	-- adjust window bounds to fit content
+	if fitWindow then
+		if _wh == nil and maxY > 0 then
+			log:warn("*** ", wtb, ", ", maxN, ", ", maxY, ", ", maxS, ", ", wbb)
+			wh = wtb + maxN + maxY + maxS + wbb
+		end
+		if _ww == nil and maxX > 0 then
+			ww = wlb + maxE + maxX + maxW + wrb
+		end
+	end
+	wx = (_wx or (sw - ww) / 2)
+	wy = (_wy or (sh - wh) / 2)
+
+
 	-- set widget bounds
-	iterate(self,
+	self:iterate(
 		function(widget)
 			local x,y,w,h = widget:getPreferredBounds()
 			local lb,tb,rb,bb = widget:getBorder()
@@ -719,33 +753,37 @@ function borderLayout(self)
 			bb = bb + tb
 
 			if position == LAYOUT_NORTH then
-				widget:setBounds(x + lb, y + tb, w - rb, h)
+				widget:setBounds(maxBounds(wx + x + lb, wy + y + tb, ww - rb, h))
 
 			elseif position == LAYOUT_SOUTH then
 				x = x or 0
-				y = y or (sh - maxS)
-				widget:setBounds(x + lb, y + tb, w - rb, h)
+				y = y or (wh - maxS)
+				widget:setBounds(maxBounds(wx + x + lb, wy + y + tb, ww - rb, h))
 
 			elseif position == LAYOUT_EAST then
-				x = x or (sw - maxE)
+				x = x or (ww - maxE)
 				y = y or 0
-				widget:setBounds(x + lb, y + tb, w, h - bb)
+				widget:setBounds(maxBounds(wx + x + lb, wy + y + tb, w, wh - bb))
 
 			elseif position == LAYOUT_WEST then
 				x = x or 0
 				y = y or 0
-				widget:setBounds(x + lb, y + tb, w, h - bb)
+				widget:setBounds(maxBounds(wx + x + lb, wy + y + tb, w, wh - bb))
 
 			elseif position == LAYOUT_CENTER then
-				widget:setBounds(maxW + lb, maxN + tb, (sw - maxW - maxE) - rb, (sh - maxN - maxS) - bb)
+				widget:setBounds(maxBounds(wx + maxW + lb, wy + maxN + tb, (ww - maxW - maxE) - rb, (wh - maxN - maxS) - bb))
+
 
 			elseif position == LAYOUT_NONE then
-				widget:setBounds(x, y, w, h)
+				widget:setBounds(maxBounds(wx + x, wy + y, w, h))
 			end
 
 			widget:doLayout()
 		end
 	)
+
+	-- set window bounds
+	self:setBounds(wx, wy, ww, wh)
 end
 
 

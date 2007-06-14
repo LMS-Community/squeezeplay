@@ -29,6 +29,7 @@ local Player           = require("jive.slim.Player")
 local SlimServer       = require("jive.slim.SlimServer")
 local Framework        = require("jive.ui.Framework")
 local Window           = require("jive.ui.Window")
+local Popup            = require("jive.ui.Popup")
 local Menu             = require("jive.ui.Menu")
 local Label            = require("jive.ui.Label")
 local Icon             = require("jive.ui.Icon")
@@ -163,16 +164,16 @@ local function _openVolumePopup(vol)
 
 	logv:debug("_openVolumePopup START ------------------- (", tostring(vol), ")")
 
-	local popup = Window("volume")
-	local background = Icon("background")
-	popup:addWidget(background)
+	local popup = Popup("popup")
 
-	local label = Label("label", "Volume")
+	local label = Label("title", "Volume")
 	popup:addWidget(label)
 
-	local slider = Slider("slider")
+	local slider = Slider("volume")
 	slider:setRange(-1, 100, _player:getVolume())
 	popup:addWidget(slider)
+	popup:addWidget(Icon("iconVolumeMin"))
+	popup:addWidget(Icon("iconVolumeMax"))
 
 	local rate = vol
 	local cnt = 0
@@ -202,10 +203,6 @@ local function _openVolumePopup(vol)
 	popup:addListener(
 		EVENT_KEY_ALL,
 		function(event)
-			
-			-- if timer is gone, don't do anything => the window is closing
-			if not timer then return end
-			
 			local evtCode = event:getKeycode()
 
 			-- we're only interested in volume keys
@@ -221,6 +218,11 @@ local function _openVolumePopup(vol)
 				
 			else
 				return EVENT_UNUSED
+			end
+
+			-- if timer is gone, don't do anything => the window is closing
+			if not timer then
+				return EVENT_CONSUME
 			end
 
 			local evtType = event:getType()

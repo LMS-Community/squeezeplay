@@ -324,6 +324,7 @@ dist_jiveui_DATA = \
 	share/jive/ui/Icon.lua \
 	share/jive/ui/Label.lua \
 	share/jive/ui/Menu.lua \
+	share/jive/ui/Popup.lua \
 	share/jive/ui/RadioButton.lua \
 	share/jive/ui/RadioGroup.lua \
 	share/jive/ui/SimpleMenu.lua \
@@ -466,7 +467,6 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/menu_selection_box_t.png \
 	share/applets/DefaultSkin/images/menu_selection_box_tr.png \
 	share/applets/DefaultSkin/images/note.png \
-	share/applets/DefaultSkin/images/popup_volume_bkgrd.png \
 	share/applets/DefaultSkin/images/popup_volume_leftbody.png \
 	share/applets/DefaultSkin/images/popup_volume_midbody.png \
 	share/applets/DefaultSkin/images/popup_volume_rightbody.png \
@@ -503,7 +503,21 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/slider_bkgrd_r.png \
 	share/applets/DefaultSkin/images/slider_fill_l.png \
 	share/applets/DefaultSkin/images/slider_fill.png \
-	share/applets/DefaultSkin/images/slider_fill_r.png
+	share/applets/DefaultSkin/images/slider_fill_r.png \
+	share/applets/DefaultSkin/images/icon_volume_max.png \
+	share/applets/DefaultSkin/images/icon_volume_min.png \
+	share/applets/DefaultSkin/images/popupbox_bl.png \
+	share/applets/DefaultSkin/images/popupbox_b.png \
+	share/applets/DefaultSkin/images/popupbox_br.png \
+	share/applets/DefaultSkin/images/popupbox_l.png \
+	share/applets/DefaultSkin/images/popupbox.png \
+	share/applets/DefaultSkin/images/popupbox_r.png \
+	share/applets/DefaultSkin/images/popupbox_tl.png \
+	share/applets/DefaultSkin/images/popupbox_t.png \
+	share/applets/DefaultSkin/images/popupbox_tr.png \
+	share/applets/DefaultSkin/images/popup_volume_bkground_l.png \
+	share/applets/DefaultSkin/images/popup_volume_bkground.png \
+	share/applets/DefaultSkin/images/popup_volume_bkground_r.png
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am

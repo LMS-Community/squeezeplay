@@ -172,9 +172,11 @@ function _setBackground(self, wallpaper)
 				       imgpath .. "border_r.png",
 			       })
 
+	local iw,ih = iconBar:getMinSize()
+
 	srf:filledRectangle(0, 0, sw, sh, 0x000000FF);
 	bgImage:blit(srf, 0, 0, sw, sh)
-	iconBar:blit(srf, 0, 0, sw, sh)
+	iconBar:blit(srf, 0, sh-ih, sw, sh)
 
 	Framework:setBackground(srf)
 end
@@ -271,6 +273,35 @@ function skin(self, s)
 					imgpath .. "slider_fill_r.png",
 			       })
 
+	local volumeBar = 
+		Tile:loadHTiles({
+					imgpath .. "popup_volume_leftbody.png",
+					imgpath .. "popup_volume_midbody.png",
+					imgpath .. "popup_volume_rightbody.png",
+			       })
+
+	local volumeBackground = 
+		Tile:loadHTiles({
+					imgpath .. "popup_volume_bkground_l.png",
+					imgpath .. "popup_volume_bkground.png",
+					imgpath .. "popup_volume_bkground_r.png",
+			       })
+
+	local popupMask = Tile:fillColor(0x231f20cc)
+
+	local popupBox =
+		Tile:loadTiles({
+				       imgpath .. "popupbox.png",
+				       imgpath .. "popupbox_tl.png",
+				       imgpath .. "popupbox_t.png",
+				       imgpath .. "popupbox_tr.png",
+				       imgpath .. "popupbox_r.png",
+				       imgpath .. "popupbox_br.png",
+				       imgpath .. "popupbox_b.png",
+				       imgpath .. "popupbox_bl.png",
+				       imgpath .. "popupbox_l.png"
+			       })
+
 
 	-- Iconbar definitions, each icon needs an image and x,y
 
@@ -308,7 +339,6 @@ function skin(self, s)
 
 	-- Window title, this is a Label
 	-- black text with a background image
-	s.title.w = screenWidth
 	s.title.border = 4
 	s.title.padding = { 8, 7, 8, 9 }
 	s.title.layer = LAYER_FRAME
@@ -321,7 +351,6 @@ function skin(self, s)
 
 	-- Menu with three basic styles: normal, selected and locked
 	-- First define the dimesions of the menu
-	s.menu.w = screenWidth - 6
 	s.menu.padding = { 4, 0, 4, 4 }
 	s.menu.itemHeight = 27
 
@@ -361,6 +390,7 @@ function skin(self, s)
 	s.textarea.padding = 8
 	s.textarea.font = Font:load(fontpath .. "FreeSans.ttf", 16)
 	s.textarea.fg = { 0xFF, 0xFF, 0xFF }
+	s.textarea.sh = { 0x00, 0x00, 0x00 }
 	s.textarea.align = "left"
 	
 
@@ -384,11 +414,7 @@ function skin(self, s)
 
 
 	-- Slider
-	s.slider.x = 37
-	s.slider.y = 120
-	s.slider.w = screenWidth - 74
-	s.slider.h = 28
-	s.slider.position = LAYOUT_NONE
+	s.slider.border = 20
 	s.slider.horizontal = 1
 	s.slider.bgImg = sliderBackground
 	s.slider.img = sliderBar
@@ -416,6 +442,37 @@ function skin(self, s)
 	s.help.scrollbar.w = 0
 
 
+	s.window.w = screenWidth
+	s.window.h = screenHeight
+
+	-- Popup window
+	s.popup.border = { 13, 0, 13, 0 }
+	s.popup.popup = true
+	s.popup.bgImg = popupBox
+	s.popup.maskImg = popupMask
+
+	s.popup.title.border = 2
+	s.popup.title.padding = { 13, 13, 13, 13 }
+	s.popup.title.font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
+	s.popup.title.textAlign = "center"
+	s.popup.title.bgImg = false
+
+	s.popup.text.border = 10
+	s.popup.text.w = screenWidth - 60
+	s.popup.text.fg = { 0x00, 0x00, 0x00 }
+	s.popup.text.sh = { }
+	s.popup.text.textAlign = "center"
+
+	s.popup.textarea.w = screenWidth - 60
+	s.popup.textarea.fg = { 0x00, 0x00, 0x00 }
+	s.popup.textarea.sh = { }
+
+	s.popup.slider.border = { 15, 0, 15, 15 }
+	s.popup.slider.horizontal = 1
+	s.popup.slider.img = volumeBar
+	s.popup.slider.bgImg = volumeBackground
+
+
 	-- Special styles for specific window types
 
 	-- No layout for the splash screen
@@ -436,28 +493,24 @@ function skin(self, s)
 
 	-- SlimBrowser applet
 
-	-- Volume popup
-	s.volume.popup = true
-	s.volume.background.img = Surface:loadImage(imgpath .. "popup_volume_bkgrd.png");
+	s.iconVolumeMin.img = Surface:loadImage(imgpath .. "icon_volume_min.png")
+	s.iconVolumeMin.position = LAYOUT_NONE
+	s.iconVolumeMin.x = 10
+	s.iconVolumeMin.y = 40
 
-	s.volume.label.x = 39
-	s.volume.label.y = 142
-	s.volume.label.w = 150
-	s.volume.label.h = 20
-	s.volume.label.fg = { 0x00, 0x00, 0x00 }
-	s.volume.label.font = Font:load(fontpath .. "FreeSans.ttf", 15)
-	s.volume.label.textAlign = "center"
-	s.volume.label.position = LAYOUT_NONE
+	s.iconVolumeMax.img = Surface:loadImage(imgpath .. "icon_volume_max.png")
+	s.iconVolumeMax.position = LAYOUT_NONE
+	s.iconVolumeMax.x = 185
+	s.iconVolumeMax.y = 40
 
-	s.volume.slider.x = 36
-	s.volume.slider.y = 164
-	s.volume.slider.w = 161
-	s.volume.slider.h = 20
-	s.volume.slider.horizontal = 1
-	s.volume.slider.img = sliderBar
-	s.volume.slider.position = LAYOUT_NONE
+	s.volume.x = 25
+	s.volume.w = 156
+	s.volume.border = { 30, 0, 35, 25 }
+	s.volume.horizontal = 1
+	s.volume.img = volumeBar
+	s.volume.bgImg = volumeBackground
 
-	
+
 	-- titles with artwork and song info
 	s.albumtitle.w = screenWidth
 	s.albumtitle.h = 60

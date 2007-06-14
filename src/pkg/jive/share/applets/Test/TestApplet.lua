@@ -29,9 +29,10 @@ local Choice                 = require("jive.ui.Choice")
 local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
-local SimpleMenu             = require("jive.ui.SimpleMenu")
+local Popup                  = require("jive.ui.Popup")
 local RadioButton            = require("jive.ui.RadioButton")
 local RadioGroup             = require("jive.ui.RadioGroup")
+local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Slider                 = require("jive.ui.Slider")
 local Surface                = require("jive.ui.Surface")
 local Textarea               = require("jive.ui.Textarea")
@@ -142,6 +143,10 @@ function menu(self, menuItem)
 				callback = function(event, menuItem)
 					self:textinputWindow(menuItem):show()
 				end },
+			{ text = "Popup",
+				callback = function(event, menuItem)
+					self:popupWindow(menuItem):show()
+				end },
 			{ text = "Image JPG",
 				callback = function(event, menuItem)
 					self:imageWindow(menuItem, "applets/Test/test.jpg"):show()
@@ -170,7 +175,7 @@ function menuWindow(self, menuItem)
 
 	local items = {}
 	for i=1,2000 do
-		items[#items + 1] = { "Artist " .. i }
+		items[#items + 1] = { text = "Artist " .. i }
 	end
 
 	menu:setItems(items)
@@ -239,6 +244,17 @@ function textinputWindow(self, menuItem)
 end
 
 
+function popupWindow(self, menuItem)
+
+	local popup = Popup("popup", menuItem.text)
+
+	local text = Textarea("textarea", "This is a popup window.\n\nPressing any button should close this window.")
+	popup:addWidget(text)
+
+	return popup
+end
+
+
 function imageWindow(self, menuItem, filename)
 
 	local window = Window(self:displayName())
@@ -251,7 +267,7 @@ function imageWindow(self, menuItem, filename)
 	end
 
 	-- size the image to fit the window
-	local sw,sh = window:getSize()
+	local sw,sh = Framework:getScreenSize()
 	log:warn("window size " .. tostring(sw) .. " " .. tostring(sh))
 	local w,h = image:getSize()
 	if w > sw or h > sh then

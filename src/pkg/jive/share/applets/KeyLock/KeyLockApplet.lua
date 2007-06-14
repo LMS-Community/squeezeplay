@@ -22,6 +22,7 @@ local oo               = require("loop.simple")
 
 local Applet           = require("jive.Applet")
 local Framework        = require("jive.ui.Framework")
+local Popup            = require("jive.ui.Popup")
 local Window           = require("jive.ui.Window")
 local Label            = require("jive.ui.Label")
 
@@ -57,7 +58,7 @@ local function _locked(self)
 
 
 	-- locked popup
-	self.window = Window("keylock")
+	self.window = Popup("popup")
 
 	local label = Label("text", "Locked!")
 	self.window:addWidget(label)

@@ -27,6 +27,7 @@ local Applet           = require("jive.Applet")
 local Window           = require("jive.ui.Window")
 local Surface          = require("jive.ui.Surface")
 local Icon             = require("jive.ui.Icon")
+local Framework        = require("jive.ui.Framework")
 
 local log              = require("jive.utils.log").logger("screensaver.bounce")
 
@@ -95,7 +96,7 @@ end
 function bounce(self)
 
 	local window = Window("bounce")
-	local w, h = window:getSize()
+	local w, h = Framework:getScreenSize()
 
 	self.sprits = {}
 

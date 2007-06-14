@@ -142,6 +142,49 @@ int jiveL_slider_draw(lua_State *L) {
 	return 0;
 }
 
+int jiveL_slider_get_preferred_bounds(lua_State *L) {
+	SliderWidget *peer;
+	Uint16 w = 0;
+	Uint16 h = 0;
+
+	/* stack is:
+	 * 1: widget
+	 */
+
+	if (jive_getmethod(L, 1, "doLayout")) {
+		lua_pushvalue(L, 1);
+		lua_call(L, 1, 0);
+	}
+
+	peer = jive_getpeer(L, 1, &sliderPeerMeta);
+
+	if (peer->bg) {
+		jive_tile_get_min_size(peer->bg, &w, &h);
+	}
+
+	if (peer->w.preferred_bounds.x == JIVE_XY_NIL) {
+		lua_pushnil(L);
+	}
+	else {
+		lua_pushinteger(L, peer->w.preferred_bounds.x);
+	}
+	if (peer->w.preferred_bounds.y == JIVE_XY_NIL) {
+		lua_pushnil(L);
+	}
+	else {
+		lua_pushinteger(L, peer->w.preferred_bounds.y);
+	}
+
+	if (peer->horizontal) {
+		lua_pushnil(L);
+		lua_pushinteger(L, (peer->w.preferred_bounds.h == JIVE_WH_NIL) ? h : peer->w.preferred_bounds.h);
+	}
+	else {
+		lua_pushinteger(L, (peer->w.preferred_bounds.w == JIVE_WH_NIL) ? w : peer->w.preferred_bounds.w);
+		lua_pushnil(L);
+	}
+	return 4;
+}
 
 int jiveL_slider_gc(lua_State *L) {
 	SliderWidget *peer;

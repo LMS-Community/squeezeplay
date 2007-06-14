@@ -87,9 +87,7 @@ int jiveL_menu_layout(lua_State *L) {
 	listSize = lua_tointeger(L, -1);
 	lua_pop(L, 1);
 
-	if (listSize > numWidgets) {
-		peer->has_scrollbar = true;
-	}
+	peer->has_scrollbar = (listSize > numWidgets);
 
 	/* measure scrollbar */
 	sw = 0;

@@ -11,7 +11,8 @@
 typedef struct window_widget {
 	JiveWidget w;
 
-	bool is_popup;
+	JiveTile *bg_tile;
+	JiveTile *mask_tile;
 } WindowWidget;
 
 
@@ -24,6 +25,8 @@ static JivePeerMeta windowPeerMeta = {
 
 int jiveL_window_skin(lua_State *L) {
 	WindowWidget *peer;
+	JiveTile *bg_tile;
+	JiveTile *mask_tile;
 
 	/* stack is:
 	 * 1: widget
@@ -37,9 +40,6 @@ int jiveL_window_skin(lua_State *L) {
 
 	jive_widget_pack(L, 1, (JiveWidget *)peer);
 
-	peer->is_popup = jive_style_int(L, 1, "popup", 0);
-
-
 	/* set window layout function, defaults to borderLayout */
 	lua_pushcfunction(L, jiveL_style_rawvalue);
 	lua_pushvalue(L, 1); // widget
@@ -47,6 +47,22 @@ int jiveL_window_skin(lua_State *L) {
 	jive_getmethod(L, 1, "borderLayout"); // default
 	lua_call(L, 3, 1);
 	lua_setfield(L, 1, "_layout");
+
+	bg_tile = jive_style_tile(L, 1, "bgImg", NULL);
+	if (bg_tile != peer->bg_tile) {
+		if (peer->bg_tile) {
+			jive_tile_free(peer->bg_tile);
+		}
+		peer->bg_tile = jive_tile_ref(bg_tile);
+	}
+
+	mask_tile = jive_style_tile(L, 1, "maskImg", NULL);
+	if (mask_tile != peer->mask_tile) {
+		if (peer->mask_tile) {
+			jive_tile_free(peer->mask_tile);
+		}
+		peer->mask_tile = jive_tile_ref(mask_tile);
+	}
 
 
 	/* pack global widgets */
@@ -121,22 +137,37 @@ int jiveL_window_iterate(lua_State *L) {
 }
 
 
-static void do_array_draw(lua_State *L) {
-	if (lua_isnil(L, -1)) {
-		return;
-	}
+int jiveL_popup_iterate(lua_State *L) {
+	/* stack is:
+	 * 1: widget
+	 * 2: closure
+	 */
 
+	// window widgets
+	lua_getfield(L, 1, "widgets");
 	lua_pushnil(L);
 	while (lua_next(L, -2) != 0) {
-		if (jive_getmethod(L, -1, "draw")) {
-			lua_pushvalue(L, -2);	// widget
-			lua_pushvalue(L, 2);	// surface
-			lua_pushvalue(L, 3);	// layer
-			lua_call(L, 3, 0);
-		}
+		lua_pushvalue(L, 2);
+		lua_pushvalue(L, -2);
+		lua_call(L, 1, 0);
 
 		lua_pop(L, 1);
 	}
+	lua_pop(L, 1);
+
+	return 0;
+}
+
+
+static int draw_closure(lua_State *L) {
+	if (jive_getmethod(L, 1, "draw")) {
+		lua_pushvalue(L, 1); // widget
+		lua_pushvalue(L, lua_upvalueindex(1)); // surface
+		lua_pushvalue(L, lua_upvalueindex(2)); // layer
+		lua_call(L, 3, 0);
+	}
+
+	return 0;
 }
 
 
@@ -149,38 +180,70 @@ int jiveL_window_draw(lua_State *L) {
 	 */
 
 	WindowWidget *peer = jive_getpeer(L, 1, &windowPeerMeta);
+	JiveSurface *srf = tolua_tousertype(L, 2, 0);
 	Uint32 layer = luaL_optinteger(L, 3, JIVE_LAYER_ALL);
 
-	/* draw underneath a popup */
-	if (peer->is_popup && (layer & JIVE_LAYER_FRAME)) {
-		jiveL_getframework(L);
-		lua_getfield(L, -1, "windowStack");
-		lua_rawgeti(L, -1, 2);
-
-		if (jive_getmethod(L, -1, "draw")) {
-			lua_pushvalue(L, -2);
-			lua_pushvalue(L, 2);
-			lua_pushinteger(L, JIVE_LAYER_ALL);
-
-			lua_call(L, 3, 0);
-		}
-		lua_pop(L, 3);
+	/* window background */
+	if ((layer & peer->w.layer) && peer->bg_tile) {
+		jive_tile_blit(peer->bg_tile, srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.w, peer->w.bounds.h);
 	}
 
-	/* draw global widgets */
-	jiveL_getframework(L);
-	lua_getfield(L, -1, "widgets");
-	do_array_draw(L);
-	lua_pop(L, 2);
+	/* draw widgets */
+	if (jive_getmethod(L, 1, "iterate")) {
+		lua_pushvalue(L, 1); // widget
 
-	/* draw child widgets */
-	lua_getfield(L, 1, "widgets");
-	do_array_draw(L);
-	lua_pop(L, 1);
+		lua_pushvalue(L, 2); // surface
+		lua_pushvalue(L, 3); // layer
+		lua_pushcclosure(L, draw_closure, 2);
+
+		lua_call(L, 2, 0);
+	}
 
 	return 0;
 }
 
+
+int jiveL_popup_draw(lua_State *L) {
+
+	/* stack is:
+	 * 1: widget
+	 * 2: surface
+	 * 3: layer
+	 */
+
+	WindowWidget *peer = jive_getpeer(L, 1, &windowPeerMeta);
+	JiveSurface *srf = tolua_tousertype(L, 2, 0);
+	Uint32 layer = luaL_optinteger(L, 3, JIVE_LAYER_ALL);
+
+	/* draw underneath a popup */
+	if (layer & JIVE_LAYER_FRAME) {
+		if (jive_getmethod(L, 1, "getLowerWindow")) {
+			lua_pushvalue(L, 1);
+			lua_call(L, 1, 1);
+
+			if (jive_getmethod(L, -1, "draw")) {
+				lua_pushvalue(L, -2);
+				lua_pushvalue(L, 2);
+				lua_pushinteger(L, JIVE_LAYER_ALL);
+				
+				lua_call(L, 3, 0);
+			}
+
+			if (peer->mask_tile) {
+				lua_getfield(L, -1, "peer");
+				JiveWidget *peer2 = lua_touserdata(L, -1);
+
+				jive_tile_blit(peer->mask_tile, srf, peer2->bounds.x, peer2->bounds.y, peer2->bounds.w, peer2->bounds.h);
+				
+				lua_pop(L, 1);
+			}
+
+			lua_pop(L, 1);
+		}
+	}
+
+	return jiveL_window_draw(L);
+}
 
 static int do_array_event(lua_State *L) {
 	int r = 0;
@@ -286,9 +349,21 @@ int jiveL_window_event_handler(lua_State *L) {
 
 
 int jiveL_window_gc(lua_State *L) {
+	WindowWidget *peer;
+
 	printf("********************* WINDOW GC\n");
 
 	luaL_checkudata(L, 1, windowPeerMeta.magic);
+	peer = lua_touserdata(L, 1);
+
+	if (peer->bg_tile) {
+		jive_tile_free(peer->bg_tile);
+		peer->bg_tile = NULL;
+	}
+	if (peer->mask_tile) {
+		jive_tile_free(peer->mask_tile);
+		peer->mask_tile = NULL;
+	}
 
 	return 0;
 }

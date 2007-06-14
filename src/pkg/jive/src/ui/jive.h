@@ -358,13 +358,16 @@ int jiveL_textarea_gc(lua_State *L);
 int jiveL_window_skin(lua_State *L);
 int jiveL_window_prepare(lua_State *L);
 int jiveL_window_iterate(lua_State *L);
+int jiveL_popup_iterate(lua_State *L);
 int jiveL_window_draw(lua_State *L);
+int jiveL_popup_draw(lua_State *L);
 int jiveL_window_event_handler(lua_State *L);
 int jiveL_window_gc(lua_State *L);
 
 int jiveL_slider_skin(lua_State *L);
 int jiveL_slider_layout(lua_State *L);
 int jiveL_slider_draw(lua_State *L);
+int jiveL_slider_get_preferred_bounds(lua_State *L);
 int jiveL_slider_gc(lua_State *L);
 
 int jiveL_style_path(lua_State *L);

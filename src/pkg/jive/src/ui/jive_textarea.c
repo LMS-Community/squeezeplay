@@ -14,13 +14,14 @@ typedef struct textarea_widget {
 	// pointer to start of lines
 	Uint16 num_lines;
 	int *lines;
+	bool has_scrollbar;
 
 	// style
 	JiveFont *font;
 	Uint16 line_height;
 	JiveAlign align;
-	bool is_bg;
-	Uint32 bg;
+	bool is_sh;
+	Uint32 sh;
 	Uint32 fg;
 	JiveTile *bg_tile;
 } TextareaWidget;
@@ -34,7 +35,7 @@ static JivePeerMeta textareaPeerMeta = {
 
 
 static unsigned utf8decode(unsigned char **utf8);
-static void wordwrap(TextareaWidget *peer, unsigned char *text);
+static void wordwrap(TextareaWidget *peer, unsigned char *text, int visible_lines, Uint16 sw, bool has_scrollbar);
 
 
 int jiveL_textarea_skin(lua_State *L) {
@@ -55,7 +56,7 @@ int jiveL_textarea_skin(lua_State *L) {
 
 
 	peer->font = jive_font_ref(jive_style_font(L, 1, "font"));
-	peer->bg = jive_style_color(L, 1, "bg", JIVE_COLOR_WHITE, &(peer->is_bg));
+	peer->sh = jive_style_color(L, 1, "sh", JIVE_COLOR_WHITE, &(peer->is_sh));
 	peer->fg = jive_style_color(L, 1, "fg", JIVE_COLOR_BLACK, NULL);
 	bg_tile = jive_style_tile(L, 1, "bgImg", NULL);
 
@@ -113,20 +114,6 @@ int jiveL_textarea_get_preferred_bounds(lua_State *L) {
 
 
 int jiveL_textarea_prepare(lua_State *L) {
-	TextareaWidget *peer;
-	const char *text;
-
-	peer = jive_getpeer(L, 1, &textareaPeerMeta);
-
-	/* word wrap text */
-	lua_getfield(L, 1, "text");
-	text = lua_tostring(L, -1);
-
-	wordwrap(peer, (unsigned char*) text);
-
-	lua_pushinteger(L, peer->num_lines);
-	lua_setfield(L, 1, "numLines");
-
 	return 0;
 }
 
@@ -135,6 +122,7 @@ int jiveL_textarea_layout(lua_State *L) {
 	TextareaWidget *peer;
 	Uint16 sx, sy, sw, sh;
 	int top_line, visible_lines;
+	const char *text;
 
 	/* stack is:
 	 * 1: widget
@@ -160,7 +148,6 @@ int jiveL_textarea_layout(lua_State *L) {
 	lua_setfield(L, 1, "visibleLines");
 
 
-
 	sw = 0;
 	sh = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
 
@@ -184,6 +171,16 @@ int jiveL_textarea_layout(lua_State *L) {
 
 	sx = peer->w.bounds.x + peer->w.bounds.w - sw;
 	sy = peer->w.bounds.y + peer->w.padding.top;
+
+
+	/* word wrap text */
+	lua_getfield(L, 1, "text");
+	text = lua_tostring(L, -1);
+
+	wordwrap(peer, (unsigned char*) text, visible_lines, sw, false);
+
+	lua_pushinteger(L, peer->num_lines);
+	lua_setfield(L, 1, "numLines");
 
 
 	lua_getfield(L, 1, "scrollbar");
@@ -276,7 +273,14 @@ int jiveL_textarea_draw(lua_State *L) {
 			x = jive_widget_halign((JiveWidget *)peer, peer->align, line_width);
 		}
 
+		/* shadow text */
+		if (peer->is_sh) {
+			tsrf = jive_font_draw_text(peer->font, peer->sh, &text[line]);
+			jive_surface_blit(tsrf, srf, x + 1, y + 1);
+			jive_surface_free(tsrf);
+		}
 
+		/* foreground text */
 		tsrf = jive_font_draw_text(peer->font, peer->fg, &text[line]);
 		jive_surface_blit(tsrf, srf, x, y);
 		jive_surface_free(tsrf);
@@ -288,14 +292,16 @@ int jiveL_textarea_draw(lua_State *L) {
 	}
 
 	/* draw scrollbar */
-	lua_getfield(L, 1, "scrollbar");
-	if (!lua_isnil(L, -1) && jive_getmethod(L, -1, "draw")) {
-		lua_pushvalue(L, -2);
-		lua_pushvalue(L, 2);
-		lua_pushvalue(L, 3);
-		lua_call(L, 3, 0);
-	}	
-	lua_pop(L, 1);
+	if (peer->has_scrollbar) {
+		lua_getfield(L, 1, "scrollbar");
+		if (!lua_isnil(L, -1) && jive_getmethod(L, -1, "draw")) {
+			lua_pushvalue(L, -2);
+			lua_pushvalue(L, 2);
+			lua_pushvalue(L, 3);
+			lua_call(L, 3, 0);
+		}	
+		lua_pop(L, 1);
+	}
 
 	return 0;
 }
@@ -354,7 +360,7 @@ static unsigned utf8decode(unsigned char **utf8) {
 }
 
 
-static void wordwrap(TextareaWidget *peer, unsigned char *text) {
+static void wordwrap(TextareaWidget *peer, unsigned char *text, int visible_lines, Uint16 scrollbar_width, bool has_scrollbar) {
 
 	// maximum text width
 	Uint16 width = peer->w.preferred_bounds.w - peer->w.padding.left - peer->w.padding.right;
@@ -367,6 +373,12 @@ static void wordwrap(TextareaWidget *peer, unsigned char *text) {
 	unsigned char *ptr = text;
 	unsigned char *line_start = ptr;
 	unsigned char *word_break = NULL;
+	Uint16 line_width = 0;
+
+	peer->has_scrollbar = has_scrollbar;
+	if (has_scrollbar) {
+		width -= scrollbar_width;
+	}
 
 	lines[num_lines++] = (ptr - text);
 
@@ -374,7 +386,6 @@ static void wordwrap(TextareaWidget *peer, unsigned char *text) {
 		unsigned char c;
 		unsigned char *next = ptr;
 		unsigned code = utf8decode(&next);
-		Uint16 line_width;
 
 		switch (code) {
 		case '\n':
@@ -388,6 +399,7 @@ static void wordwrap(TextareaWidget *peer, unsigned char *text) {
 			}
 			line_start = ptr;
 			lines[num_lines++] = (ptr - text);
+			line_width = 0;
 			continue;
 
 		case ' ':
@@ -401,7 +413,7 @@ static void wordwrap(TextareaWidget *peer, unsigned char *text) {
 		// Calculate width of string to char
 		c = *next;
 		*next = '\0';
-		line_width = jive_font_width(peer->font, (char *)line_start);
+		line_width += jive_font_width(peer->font, (char *)ptr);
 		*next = c;
 
 		// Line is less than widget width
@@ -416,6 +428,13 @@ static void wordwrap(TextareaWidget *peer, unsigned char *text) {
 		}
 
 		// Next line
+		line_width = 0;
+
+		if (!has_scrollbar && num_lines > visible_lines) {
+			free(lines);
+			return wordwrap(peer, text, visible_lines, scrollbar_width, true);
+		}
+
 		if (word_break) {
 			line_start = word_break;
 			lines[num_lines++] = (word_break - text);

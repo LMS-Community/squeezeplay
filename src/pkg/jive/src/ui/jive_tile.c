@@ -154,9 +154,9 @@ JiveTile *jive_tile_load_htiles(char *path[3]) {
 	char *path2[9];
 
 	memset(path2, 0, sizeof(path2));
-	path2[7] = path[0];
-	path2[6] = path[1];
-	path2[5] = path[2];
+	path2[1] = path[0];
+	path2[2] = path[1];
+	path2[3] = path[2];
 
 	return jive_tile_load_tiles(path2);
 }
@@ -169,8 +169,8 @@ JiveTile *jive_tile_ref(JiveTile *tile) {
 }
 
 void jive_tile_get_min_size(JiveTile *tile, Uint16 *w, Uint16 *h) {
-	*w = tile->w[0] + tile->h[1];
-	*h = tile->w[0] + tile->h[1];
+	*w = tile->w[0] + tile->w[1];
+	*h = tile->h[0] + tile->h[1];
 }
 
 void jive_tile_free(JiveTile *tile) {
@@ -264,7 +264,7 @@ void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint
 
 	/* top */
 	if (tile->srf[2]) {
-		oy = MIN(tile->h[1], dh);
+		oy = MIN(tile->h[0], dh);
 		blit_area(tile->srf[2], dst->sdl, dx + ox, dy, dw - ox - ow, oy);
 	}
 

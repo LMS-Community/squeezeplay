@@ -71,6 +71,8 @@ L<jive.ui.Label|jive::ui::Label>
 
 L<jive.ui.Menu|jive::ui::Menu>
 
+L<jive.ui.Popup|jive::ui::Popup>
+
 L<jive.ui.RadioButton|jive::ui::RadioButton>
 
 L<jive.ui.RadioGroup|jive::ui::RadioGroup>

@@ -197,6 +197,7 @@ class Tile {
 	tolua_destroy void jive_tile_free @ free();
 
 	tolua_outside void jive_tile_blit @ blit(Surface* dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh);
+	tolua_outside void jive_tile_get_min_size @ getMinSize(Uint16 *w=0, Uint16 *h=0);
 };
 
 

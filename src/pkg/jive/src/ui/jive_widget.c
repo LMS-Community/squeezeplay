@@ -269,7 +269,7 @@ int jive_widget_halign(JiveWidget *this, JiveAlign align, Uint16 width) {
         case JIVE_ALIGN_CENTER:
         case JIVE_ALIGN_TOP:
         case JIVE_ALIGN_BOTTOM:
-		return ((this->bounds.w - this->padding.left - this->padding.right) - width) / 2;
+		return ((this->bounds.w - this->padding.left - this->padding.right - width) / 2) + this->padding.left;
 
         case JIVE_ALIGN_RIGHT:
         case JIVE_ALIGN_TOP_RIGHT:
