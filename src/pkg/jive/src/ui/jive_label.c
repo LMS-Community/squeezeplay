@@ -140,9 +140,7 @@ int jiveL_label_prepare(lua_State *L) {
 			max_width = MAX(max_width,
 					jive_font_width(peer->font, str));
 			
-			printf("TEXT: %s %d\n", str, max_width);
 			lua_pop(L, 1);
-
 		}
 		lua_pop(L, 1);
 

@@ -17,6 +17,13 @@ typedef struct icon_widget {
 	Uint32 anim_frame;
 	Uint32 anim_total;
 
+	Uint16 image_width;
+	Uint16 image_height;
+
+	JiveAlign align;
+	Uint32 offset_x;
+	Uint32 offset_y;
+
 	int frame_width;
 	int frame_rate;
 } IconWidget;
@@ -69,6 +76,7 @@ int jiveL_icon_skin(lua_State *L) {
 		peer->frame_width = jive_style_int(L, 1, "frameWidth", -1);
 	}
 
+	peer->align = jive_style_align(L, 1, "align", JIVE_ALIGN_LEFT);
 	return 0;
 }
 
@@ -112,12 +120,12 @@ int jiveL_icon_prepare(lua_State *L) {
 
 
 		if (peer->img) {
-			jive_surface_get_size(peer->img, &peer->w.bounds.w, &peer->w.bounds.h);
+			jive_surface_get_size(img, &peer->image_width, &peer->image_height);
 
 			/* add animation handler (if animated icon) */
 			if (peer->frame_rate) {
-				peer->anim_total = peer->w.bounds.w / peer->frame_width;
-				peer->w.bounds.w = peer->frame_width;
+				peer->anim_total = peer->image_width / peer->frame_width;
+				peer->image_width = peer->frame_width;
 
 				/* add animation handler */
 				jive_getmethod(L, 1, "addAnimation");
@@ -138,9 +146,18 @@ int jiveL_icon_prepare(lua_State *L) {
 
 
 int jiveL_icon_layout(lua_State *L) {
+	IconWidget *peer;
+
 	/* stack is:
 	 * 1: widget
 	 */
+
+	peer = jive_getpeer(L, 1, &iconPeerMeta);
+
+	if (peer->img) {
+		peer->offset_x = jive_widget_halign((JiveWidget *)peer, peer->align, peer->image_width);
+		peer->offset_y = jive_widget_valign((JiveWidget *)peer, peer->align, peer->image_height);
+	}
 
 	return 0;
 }
@@ -183,8 +200,8 @@ int jiveL_icon_draw(lua_State *L) {
 		return 0;
 	}
 
-	jive_surface_blit_clip(peer->img, peer->w.bounds.w * peer->anim_frame, 0, peer->w.bounds.w, peer->w.bounds.h,
-			       srf, peer->w.bounds.x, peer->w.bounds.y);
+	jive_surface_blit_clip(peer->img, peer->image_width * peer->anim_frame, 0, peer->image_width, peer->image_height,
+			       srf, peer->w.bounds.x + peer->offset_x, peer->w.bounds.y + peer->offset_y);
 
 	return 0;
 }
