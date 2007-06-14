@@ -230,8 +230,10 @@ int jiveL_popup_draw(lua_State *L) {
 			}
 
 			if (peer->mask_tile) {
+				JiveWidget *peer2;
+
 				lua_getfield(L, -1, "peer");
-				JiveWidget *peer2 = lua_touserdata(L, -1);
+				peer2 = lua_touserdata(L, -1);
 
 				jive_tile_blit(peer->mask_tile, srf, peer2->bounds.x, peer2->bounds.y, peer2->bounds.w, peer2->bounds.h);
 				
