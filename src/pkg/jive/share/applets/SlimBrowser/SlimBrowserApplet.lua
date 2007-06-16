@@ -1030,6 +1030,8 @@ _newDestination = function(origin, windowSpec, sink, data)
 					-- if we show now playing, it takes over _browsePath
 					-- reset statusPath.origin to false, we don't come from browsepath any longer
 					_statusPath.origin = false
+					
+					return EVENT_CONSUME 
 				end
 			end
 		end
