@@ -949,6 +949,15 @@ static const struct luaL_Reg label_methods[] = {
 	{ NULL, NULL }
 };
 
+static const struct luaL_Reg textinput_methods[] = {
+	{ "getPreferredBounds", jiveL_textinput_get_preferred_bounds },
+	{ "_skin", jiveL_textinput_skin },
+	{ "_prepare", jiveL_textinput_prepare },
+	{ "_layout", jiveL_textinput_layout },
+	{ "draw", jiveL_textinput_draw },
+	{ NULL, NULL }
+};
+
 static const struct luaL_Reg menu_methods[] = {
 	{ "_skin", jiveL_menu_skin },
 	{ "_prepare", jiveL_menu_prepare },
@@ -1061,6 +1070,10 @@ static int jiveL_core_init(lua_State *L) {
 
 	lua_getfield(L, 2, "Label");
 	luaL_register(L, NULL, label_methods);
+	lua_pop(L, 1);
+
+	lua_getfield(L, 2, "Textinput");
+	luaL_register(L, NULL, textinput_methods);
 	lua_pop(L, 1);
 
 	lua_getfield(L, 2, "Menu");

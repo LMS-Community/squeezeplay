@@ -276,6 +276,7 @@ JiveTile *jive_tile_ref(JiveTile *tile);
 void jive_tile_get_min_size(JiveTile *tile, Uint16 *w, Uint16 *h);
 void jive_tile_free(JiveTile *tile);
 void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh);
+void jive_tile_blit_centered(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh);
 
 
 /* Font functions */
@@ -340,6 +341,13 @@ int jiveL_label_prepare(lua_State *L);
 int jiveL_label_layout(lua_State *L);
 int jiveL_label_draw(lua_State *L);
 int jiveL_label_gc(lua_State *L);
+
+int jiveL_textinput_get_preferred_bounds(lua_State *L);
+int jiveL_textinput_skin(lua_State *L);
+int jiveL_textinput_prepare(lua_State *L);
+int jiveL_textinput_layout(lua_State *L);
+int jiveL_textinput_draw(lua_State *L);
+int jiveL_textinput_gc(lua_State *L);
 
 int jiveL_menu_skin(lua_State *L);
 int jiveL_menu_prepare(lua_State *L);

@@ -25,6 +25,7 @@ libjiveui_la_SOURCES = \
 	src/ui/jive_style.c \
 	src/ui/jive_surface.c \
 	src/ui/jive_textarea.c \
+	src/ui/jive_textinput.c \
 	src/ui/jive_tile.c \
 	src/ui/jive_timer.c \
 	src/ui/jive_utils.c \
@@ -274,5 +275,6 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/popupbox_tr.png \
 	share/applets/DefaultSkin/images/popup_volume_bkground_l.png \
 	share/applets/DefaultSkin/images/popup_volume_bkground.png \
-	share/applets/DefaultSkin/images/popup_volume_bkground_r.png
+	share/applets/DefaultSkin/images/popup_volume_bkground_r.png \
+	share/applets/DefaultSkin/images/input_cursor.png
 

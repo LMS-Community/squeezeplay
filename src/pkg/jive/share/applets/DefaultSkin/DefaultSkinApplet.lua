@@ -102,7 +102,7 @@ Overridden to return the default wallpaper selected.
 --]]
 function defaultSettings(self)
 	return { 
-		wallpaper = "Clearly-Ambiguous_6.jpg",
+		wallpaper = "Chapple_1.jpg",
 	}
 end
 
@@ -421,14 +421,16 @@ function skin(self, s)
 
 
 	-- Text input
-	s.textinput.x = 37
-	s.textinput.y = 120
-	s.textinput.w = 161
-	s.textinput.h = 10
-	s.textinput.position = LAYOUT_NONE
-	s.textinput.fg = { 0xff, 0xff, 0xff }
-	s.textinput.sh = { 0x00, 0x00, 0x00 }
-
+	s.textinput.padding = { 8, 0, 8, 0 }
+	s.textinput.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
+	s.textinput.charWidth = 19
+	s.textinput.charHeight = 26
+	s.textinput.fg = { 0x00, 0x00, 0x00 }
+	s.textinput.wh = { 0x44, 0x41, 0x42 }
+	s.textinput.bgImg = Tile:fillColor(0x7fffffff)
+	s.textinput.wheelImg = Tile:fillColor(0x7c7c7cff)
+	s.textinput.cursorImg = Tile:loadImage(imgpath .. "input_cursor.png")
+	s.textinput.enterImg = Tile:loadImage(imgpath .. "selection_right.png")
 
 	-- Help menu
 	s.help.x = 3

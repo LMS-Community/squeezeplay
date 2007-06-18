@@ -53,6 +53,10 @@ JiveTile *jive_tile_load_image(const char *path) {
 		fprintf(stderr, "Error in jive_file_load_image: %s\n", IMG_GetError());
 	}
 
+	/* tile sizes */
+	tile->w[0] = tile->srf[0]->w;
+	tile->h[0] = tile->srf[0]->h;
+
 	free(fullpath);
 
 	return tile;
@@ -224,7 +228,7 @@ static __inline__ void blit_area(SDL_Surface *src, SDL_Surface *dst, int dx, int
 }
 
 
-void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh) {
+static void _blit_tile(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh) {
 	int ox=0, oy=0, ow=0, oh=0;
 
 	if (tile->is_bg) {
@@ -293,3 +297,33 @@ void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint
 }
 
 
+void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh) {
+	Uint16 mw, mh;
+
+	jive_tile_get_min_size(tile, &mw, &mh);
+	if (dw < mw) {
+		dw = mw;
+	}
+	if (dh < mh) {
+		dh = mh;
+	}
+
+	_blit_tile(tile, dst, dx, dy, dw, dh);
+}
+
+
+void jive_tile_blit_centered(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh) {
+	Uint16 mw, mh;
+
+	jive_tile_get_min_size(tile, &mw, &mh);
+	if (dw < mw) {
+		dw = mw;
+	}
+	if (dh < mh) {
+		dh = mh;
+	}
+
+	printf("blit centered %d %d\n", dw, dh);
+
+	_blit_tile(tile, dst, dx - (dw/2), dy -  (dh/2), dw, dh);
+}

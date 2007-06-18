@@ -14,6 +14,7 @@ local EVENT_UNUSED      = jive.ui.EVENT_UNUSED
 
 local EVENT_KEY_PRESS   = jive.ui.EVENT_KEY_PRESS
 local EVENT_SCROLL      = jive.ui.EVENT_SCROLL
+local EVENT_WINDOW_RESIZE = jive.ui.EVENT_WINDOW_RESIZE
 
 local KEY_FWD           = jive.ui.KEY_FWD
 local KEY_REW           = jive.ui.KEY_REW
@@ -29,11 +30,42 @@ local KEY_ADD           = jive.ui.KEY_ADD
 
 -- our class
 module(...)
-oo.class(_M, Label)
+oo.class(_M, Widget)
 
 
 function _validchars(self)
 	return " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\\\"'<>?-=,./~`[];0123456789"
+end
+
+
+--[[
+
+=head2 jive.ui.Label:getValue()
+
+Returns the text displayed in the label.
+
+=cut
+--]]
+function getValue(self)
+	return self.value
+end
+
+
+--[[
+
+=head2 jive.ui.Label:setValue(value)
+
+Sets the text displayed in the label.
+
+=cut
+--]]
+function setValue(self, value)
+	assert(value ~= nil)
+
+	if self.value ~= value then
+		self.value = value
+		self:rePrepare()
+	end
 end
 
 
@@ -64,6 +96,31 @@ function _scroll(self, dir)
 end
 
 
+function _moveCursor(self, dir)
+	self.cursor = self.cursor + dir
+
+	if self.cursor < #self.value then
+		if self.cursor > self.indent + self._maxChars - 2 then
+			self.indent =  self.cursor - self._maxChars + 2
+		end
+	else
+		if self.cursor > self.indent + self._maxChars then
+			self.indent =  self.cursor - self._maxChars
+		end
+	end
+
+	if self.cursor > 2 then
+		if self.cursor < self.indent + 3 then
+			self.indent =  self.cursor - 3
+		end
+	else
+		if self.cursor < 2 then
+			self.indent =  self.cursor - 1
+		end
+	end
+end
+
+
 function _delete(self)
 	local cursor = self.cursor
 	local str = self.value
@@ -83,7 +140,7 @@ function _insert(self)
 	local s3 = string.sub(str, cursor + 1)
 
 	self:setValue(s1 .. " " .. s3)
-	self.cursor = cursor + 1
+	_moveCursor(self, 1)
 end
 
 
@@ -93,6 +150,9 @@ function _eventHandler(self, event)
 	if type == EVENT_SCROLL then
 		_scroll(self, -event:getScroll())
 		return EVENT_CONSUME
+
+	elseif type == EVENT_WINDOW_RESIZE then
+		_moveCursor(self, 0)
 
 	elseif type == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()
@@ -119,7 +179,6 @@ function _eventHandler(self, event)
 
 			log:warn("cursor=", self.cursor)
 			log:warn("#value=", #self.value)
-
 			if self.cursor > #self.value then
 				if self.closure then
 					self.closure(self, self.value)
@@ -127,7 +186,8 @@ function _eventHandler(self, event)
 					self:getWindow():bumpRight()
 				end
 			else
-				self.cursor = self.cursor + 1
+				_moveCursor(self, 1)
+				self:reDraw()
 			end
 			return EVENT_CONSUME
 
@@ -137,13 +197,15 @@ function _eventHandler(self, event)
 			if self.cursor == 1 then
 				self:hide()
 			else
-				self.cursor = self.cursor - 1
+				_moveCursor(self, -1)
+				self:reDraw()
 			end
 			return EVENT_CONSUME
 
 		elseif keycode == KEY_REW then
 			self:hide()
 			return EVENT_CONSUME
+
 		end
 	end
 
@@ -159,9 +221,11 @@ function __init(self, style, value, closure)
 	local obj = oo.rawnew(self, Label(style, value))
 
 	obj.cursor = 1
+	obj.indent = 0
+	obj.maxWidth = 0
 	obj.closure = closure
 
-	obj:addListener(EVENT_KEY_PRESS | EVENT_SCROLL,
+	obj:addListener(EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE,
 			function(event)
 				return _eventHandler(obj, event)
 			end)
