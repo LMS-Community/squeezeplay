@@ -114,6 +114,7 @@ int jiveL_textinput_prepare(lua_State *L) {
 
 int jiveL_textinput_layout(lua_State *L) {
 	TextinputWidget *peer;
+	Uint16 max_chars;
 
 	/* stack is:
 	 * 1: widget
@@ -121,7 +122,7 @@ int jiveL_textinput_layout(lua_State *L) {
 
 	peer = jive_getpeer(L, 1, &textinputPeerMeta);
 
-	Uint16 max_chars = (peer->w.bounds.w - peer->w.padding.left - peer->w.padding.right) / peer->char_width;
+	max_chars = (peer->w.bounds.w - peer->w.padding.left - peer->w.padding.right) / peer->char_width;
 	lua_pushinteger(L, max_chars);
 	lua_setfield(L, 1, "_maxChars");
 
@@ -145,33 +146,41 @@ int jiveL_textinput_draw(lua_State *L) {
 	JiveSurface *srf = tolua_tousertype(L, 2, 0);
 	bool drawLayer = luaL_optinteger(L, 3, JIVE_LAYER_ALL) & peer->w.layer;
 
+	const char *text;
+	char c[2] = "\0\0"; // FIXME utf8
+	int cursor;
+	int indent;
+	Uint16 text_h, text_x, text_y, text_w, cursor_x, cursor_w;
+	const char *validchars, *validchars_end, *ptr2;
+	int i;
+
+
 	/* get value as string */
 	lua_getfield(L, 1, "value");
 	lua_getglobal(L, "tostring");
 	lua_getfield(L, 1, "value");
 	lua_call(L, 1, 1);
 
-	const char *text = lua_tostring(L, -1);
-	char c[2] = "\0\0"; // FIXME utf8
+	text = lua_tostring(L, -1);
 
 	lua_getfield(L, 1, "cursor");
-	int cursor = lua_tointeger(L, -1);
+	cursor = lua_tointeger(L, -1);
 
 	lua_getfield(L, 1, "indent");
-	int indent = lua_tointeger(L, -1);
+	indent = lua_tointeger(L, -1);
 	text += indent;
 	cursor -= indent;
 
 	/* calculate positions */
-	Uint16 text_h = peer->char_height;
-	Uint16 text_x = peer->w.bounds.x + peer->w.padding.left;
-	Uint16 text_y = peer->w.bounds.y + peer->w.padding.top + ((peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom - text_h) / 2);
-	Uint16 text_w = peer->w.bounds.w - peer->w.padding.left - peer->w.padding.right;
+	text_h = peer->char_height;
+	text_x = peer->w.bounds.x + peer->w.padding.left;
+	text_y = peer->w.bounds.y + peer->w.padding.top + ((peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom - text_h) / 2);
+	text_w = peer->w.bounds.w - peer->w.padding.left - peer->w.padding.right;
 	text_x += (text_w % peer->char_width) / 2;
 	text_w = (text_w / peer->char_width) * peer->char_width;
 
-	Uint16 cursor_x = text_x + (peer->char_width * (cursor - 1));
-	Uint16 cursor_w = peer->char_width;
+	cursor_x = text_x + (peer->char_width * (cursor - 1));
+	cursor_w = peer->char_width;
 
 	offset_y = (peer->char_height - jive_font_height(peer->font)) / 2;
 
@@ -222,12 +231,9 @@ int jiveL_textinput_draw(lua_State *L) {
 	lua_pushvalue(L, 1);
 	lua_call(L, 1, 1);
 
-	const char *validchars = lua_tostring(L, -1);
-	const char *validchars_end = validchars + strlen(validchars) - 1;
+	validchars = lua_tostring(L, -1);
+	validchars_end = validchars + strlen(validchars) - 1;
 	ptr = strchr(validchars, text[cursor - 1]);
-
-	int i;
-	const char *ptr2;
 
 	/* Draw wheel up */
 	ptr2 = ptr - 1;
