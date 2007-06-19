@@ -241,6 +241,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\ui\jive_textinput.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\ui\jive_tile.c"
 				>
 			</File>
