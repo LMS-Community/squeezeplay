@@ -106,6 +106,7 @@ function t_connect(self)
 	self.t_sock = socket.tcp()
 
 	-- set a long timeout for connection
+	self.t_sock:settimeout(30)
 	local err = socket.skip(1, self.t_sock:connect(self.t_tcp.ip, self.t_tcp.port))
 
 	if err then

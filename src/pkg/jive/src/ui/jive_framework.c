@@ -36,11 +36,11 @@ static enum jive_key_state {
 	KEY_STATE_NONE,
 	KEY_STATE_DOWN,
 	KEY_STATE_SENT,
-} key_state;
+} key_state = KEY_STATE_NONE;
 
-static JiveKey key_mask;
+static JiveKey key_mask = 0;
 
-static SDL_TimerID key_timer;
+static SDL_TimerID key_timer = NULL;
 
 static struct jive_keymap keymap[] = {
 	{ SDLK_RIGHT,		JIVE_KEY_GO },
