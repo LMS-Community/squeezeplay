@@ -47,6 +47,7 @@ DIST_COMMON = $(am__configure_deps) $(dist_applets_bounce_DATA) \
 	$(dist_applets_flickr_DATA) $(dist_applets_keylock_DATA) \
 	$(dist_applets_log_DATA) $(dist_applets_quit_DATA) \
 	$(dist_applets_screensavers_DATA) \
+	$(dist_applets_screenshot_DATA) \
 	$(dist_applets_slimbrowser_DATA) \
 	$(dist_applets_slimdiscovery_DATA) $(dist_applets_test_DATA) \
 	$(dist_jive_DATA) $(dist_jiveui_DATA) $(dist_luanet_DATA) \
@@ -84,6 +85,7 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" \
 	"$(DESTDIR)$(applets_keylockdir)" \
 	"$(DESTDIR)$(applets_logdir)" "$(DESTDIR)$(applets_quitdir)" \
 	"$(DESTDIR)$(applets_screensaversdir)" \
+	"$(DESTDIR)$(applets_screenshotdir)" \
 	"$(DESTDIR)$(applets_slimbrowserdir)" \
 	"$(DESTDIR)$(applets_slimdiscoverydir)" \
 	"$(DESTDIR)$(applets_testdir)" "$(DESTDIR)$(jivedir)" \
@@ -127,6 +129,7 @@ dist_applets_keylockDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_logDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_quitDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_screensaversDATA_INSTALL = $(INSTALL_DATA)
+dist_applets_screenshotDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_slimbrowserDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_slimdiscoveryDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_testDATA_INSTALL = $(INSTALL_DATA)
@@ -141,6 +144,7 @@ DATA = $(dist_applets_bounce_DATA) $(dist_applets_defaultskin_DATA) \
 	$(dist_applets_flickr_DATA) $(dist_applets_keylock_DATA) \
 	$(dist_applets_log_DATA) $(dist_applets_quit_DATA) \
 	$(dist_applets_screensavers_DATA) \
+	$(dist_applets_screenshot_DATA) \
 	$(dist_applets_slimbrowser_DATA) \
 	$(dist_applets_slimdiscovery_DATA) $(dist_applets_test_DATA) \
 	$(dist_jive_DATA) $(dist_jiveui_DATA) $(dist_luanet_DATA) \
@@ -419,6 +423,11 @@ dist_applets_test_DATA = \
 	share/applets/Test/test.jpg \
 	share/applets/Test/test.png \
 	share/applets/Test/test.gif
+
+applets_screenshotdir = $(pkgdatadir)/applets/Screenshot
+dist_applets_screenshot_DATA = \
+	share/applets/Screenshot/ScreenshotApplet.lua \
+	share/applets/Screenshot/ScreenshotMeta.lua
 
 
 # Default skin
@@ -1006,6 +1015,23 @@ uninstall-dist_applets_screensaversDATA:
 	  echo " rm -f '$(DESTDIR)$(applets_screensaversdir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(applets_screensaversdir)/$$f"; \
 	done
+install-dist_applets_screenshotDATA: $(dist_applets_screenshot_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(applets_screenshotdir)" || $(mkdir_p) "$(DESTDIR)$(applets_screenshotdir)"
+	@list='$(dist_applets_screenshot_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(dist_applets_screenshotDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_screenshotdir)/$$f'"; \
+	  $(dist_applets_screenshotDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_screenshotdir)/$$f"; \
+	done
+
+uninstall-dist_applets_screenshotDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_applets_screenshot_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(applets_screenshotdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(applets_screenshotdir)/$$f"; \
+	done
 install-dist_applets_slimbrowserDATA: $(dist_applets_slimbrowser_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(applets_slimbrowserdir)" || $(mkdir_p) "$(DESTDIR)$(applets_slimbrowserdir)"
@@ -1194,7 +1220,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/Bounce $(distdir)/share/applets/DefaultSkin $(distdir)/share/applets/DefaultSkin/images $(distdir)/share/applets/DefaultSkin/wallpaper $(distdir)/share/applets/Flickr $(distdir)/share/applets/KeyLock $(distdir)/share/applets/LogSettings $(distdir)/share/applets/Quit $(distdir)/share/applets/ScreenSavers $(distdir)/share/applets/SlimBrowser $(distdir)/share/applets/SlimDiscovery $(distdir)/share/applets/Test $(distdir)/share/jive $(distdir)/share/jive/net $(distdir)/share/jive/slim $(distdir)/share/jive/ui $(distdir)/share/jive/utils $(distdir)/src
+	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/Bounce $(distdir)/share/applets/DefaultSkin $(distdir)/share/applets/DefaultSkin/images $(distdir)/share/applets/DefaultSkin/wallpaper $(distdir)/share/applets/Flickr $(distdir)/share/applets/KeyLock $(distdir)/share/applets/LogSettings $(distdir)/share/applets/Quit $(distdir)/share/applets/ScreenSavers $(distdir)/share/applets/Screenshot $(distdir)/share/applets/SlimBrowser $(distdir)/share/applets/SlimDiscovery $(distdir)/share/applets/Test $(distdir)/share/jive $(distdir)/share/jive/net $(distdir)/share/jive/slim $(distdir)/share/jive/ui $(distdir)/share/jive/utils $(distdir)/src
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -1323,7 +1349,7 @@ check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" "$(DESTDIR)$(applets_bouncedir)" "$(DESTDIR)$(applets_defaultskindir)" "$(DESTDIR)$(applets_defaultskin_imagesdir)" "$(DESTDIR)$(applets_defaultskin_wallpaperdir)" "$(DESTDIR)$(applets_flickrdir)" "$(DESTDIR)$(applets_keylockdir)" "$(DESTDIR)$(applets_logdir)" "$(DESTDIR)$(applets_quitdir)" "$(DESTDIR)$(applets_screensaversdir)" "$(DESTDIR)$(applets_slimbrowserdir)" "$(DESTDIR)$(applets_slimdiscoverydir)" "$(DESTDIR)$(applets_testdir)" "$(DESTDIR)$(jivedir)" "$(DESTDIR)$(jiveuidir)" "$(DESTDIR)$(luanetdir)" "$(DESTDIR)$(luaslimdir)" "$(DESTDIR)$(luautildir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" "$(DESTDIR)$(applets_bouncedir)" "$(DESTDIR)$(applets_defaultskindir)" "$(DESTDIR)$(applets_defaultskin_imagesdir)" "$(DESTDIR)$(applets_defaultskin_wallpaperdir)" "$(DESTDIR)$(applets_flickrdir)" "$(DESTDIR)$(applets_keylockdir)" "$(DESTDIR)$(applets_logdir)" "$(DESTDIR)$(applets_quitdir)" "$(DESTDIR)$(applets_screensaversdir)" "$(DESTDIR)$(applets_screenshotdir)" "$(DESTDIR)$(applets_slimbrowserdir)" "$(DESTDIR)$(applets_slimdiscoverydir)" "$(DESTDIR)$(applets_testdir)" "$(DESTDIR)$(jivedir)" "$(DESTDIR)$(jiveuidir)" "$(DESTDIR)$(luanetdir)" "$(DESTDIR)$(luaslimdir)" "$(DESTDIR)$(luautildir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -1382,6 +1408,7 @@ install-data-am: install-dist_applets_bounceDATA \
 	install-dist_applets_keylockDATA install-dist_applets_logDATA \
 	install-dist_applets_quitDATA \
 	install-dist_applets_screensaversDATA \
+	install-dist_applets_screenshotDATA \
 	install-dist_applets_slimbrowserDATA \
 	install-dist_applets_slimdiscoveryDATA \
 	install-dist_applets_testDATA install-dist_jiveDATA \
@@ -1425,6 +1452,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_applets_bounceDATA \
 	uninstall-dist_applets_keylockDATA \
 	uninstall-dist_applets_logDATA uninstall-dist_applets_quitDATA \
 	uninstall-dist_applets_screensaversDATA \
+	uninstall-dist_applets_screenshotDATA \
 	uninstall-dist_applets_slimbrowserDATA \
 	uninstall-dist_applets_slimdiscoveryDATA \
 	uninstall-dist_applets_testDATA uninstall-dist_jiveDATA \
@@ -1448,6 +1476,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_applets_bounceDATA \
 	install-dist_applets_keylockDATA install-dist_applets_logDATA \
 	install-dist_applets_quitDATA \
 	install-dist_applets_screensaversDATA \
+	install-dist_applets_screenshotDATA \
 	install-dist_applets_slimbrowserDATA \
 	install-dist_applets_slimdiscoveryDATA \
 	install-dist_applets_testDATA install-dist_jiveDATA \
@@ -1467,6 +1496,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_applets_bounceDATA \
 	uninstall-dist_applets_keylockDATA \
 	uninstall-dist_applets_logDATA uninstall-dist_applets_quitDATA \
 	uninstall-dist_applets_screensaversDATA \
+	uninstall-dist_applets_screenshotDATA \
 	uninstall-dist_applets_slimbrowserDATA \
 	uninstall-dist_applets_slimdiscoveryDATA \
 	uninstall-dist_applets_testDATA uninstall-dist_jiveDATA \

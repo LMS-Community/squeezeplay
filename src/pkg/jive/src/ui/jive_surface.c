@@ -9,7 +9,7 @@
 #include "jive.h"
 
 
-#define COLOR_CKEY 0xFF, 0xFF, 0xFF
+#define COLOR_CKEY 0xFF, 0x00, 0xFF
 
 
 JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp) {
@@ -157,6 +157,10 @@ JiveSurface *jive_surface_load_image_data(const char *data, size_t len) {
 	srf->sdl = sdl;
 
 	return jive_surface_display_format(srf, false);
+}
+
+int jive_surface_save_bmp(JiveSurface *srf, const char *file) {
+	return SDL_SaveBMP(srf->sdl, file);
 }
 
 void jive_surface_set_offset(JiveSurface *srf, Sint16 x, Sint16 y) {

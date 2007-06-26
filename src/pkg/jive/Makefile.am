@@ -177,6 +177,11 @@ dist_applets_test_DATA = \
 	share/applets/Test/test.png \
 	share/applets/Test/test.gif
 
+applets_screenshotdir = $(pkgdatadir)/applets/Screenshot
+dist_applets_screenshot_DATA = \
+	share/applets/Screenshot/ScreenshotApplet.lua \
+	share/applets/Screenshot/ScreenshotMeta.lua
+
 
 # Default skin
 applets_defaultskindir = $(pkgdatadir)/applets/DefaultSkin
