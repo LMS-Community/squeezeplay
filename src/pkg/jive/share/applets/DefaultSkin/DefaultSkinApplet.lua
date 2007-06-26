@@ -341,7 +341,6 @@ function skin(self, s)
 	-- black text with a background image
 	s.title.border = 4
 	s.title.padding = { 8, 7, 8, 9 }
-	s.title.layer = LAYER_FRAME
 	s.title.position = LAYOUT_NORTH
 
 	s.title.font = Font:load(fontpath .. "FreeSansBold.ttf", 20)
@@ -380,10 +379,20 @@ function skin(self, s)
 	-- menu item choice
 	s.item.choice.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
 	s.item.choice.fg = { 0xff, 0xff, 0xff }
+	s.item.choice.sh = { 0x00, 0x00, 0x00 }
 
 	-- selected menu item choice
 	s.selected.item.choice.fg = { 0x00, 0x00, 0x00 }
+	s.selected.item.choice.sh = { }
 
+	-- menu value choice
+	s.item.value.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
+	s.item.value.fg = { 0xff, 0xff, 0xff }
+	s.item.value.sh = { 0x00, 0x00, 0x00 }
+
+	-- selected menu item choice
+	s.selected.item.value.fg = { 0x00, 0x00, 0x00 }
+	s.selected.item.value.sh = { }
 
 	-- Text areas
 	s.textarea.w = screenWidth - 21
@@ -524,10 +533,8 @@ function skin(self, s)
 	s.albumtitle.bgImg = titleBox
 	s.albumtitle.textAlign = "top-right"
 	s.albumtitle.iconAlign = "left"
-	s.albumtitle.layer = LAYER_FRAME
 	s.albumtitle.position = LAYOUT_NORTH
 	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
-	s.albumtitle.icon.layer = LAYER_FRAME
 
 
 	-- menus with artwork and song info
