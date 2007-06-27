@@ -29,7 +29,7 @@ FIXME: Subscribe description
 
 
 -- stuff we use
-local tostring, table, ipairs, pairs, type  = tostring, table, ipairs, pairs, type
+local tostring, table, ipairs, pairs, pcall, type  = tostring, table, ipairs, pairs, pcall, type
 
 local thread            = require("thread")
 local socket            = require("socket")
@@ -174,15 +174,23 @@ end
 -- _thread
 -- the thread function with the endless loop
 local function _t_thread(self)
+	local ok, err
+
 --	log:debug("_t_thread()")
 	
 --	log:info("NetworkThread starting...")
 
 	while self.running do
-		
-		_t_select(self)
-		
-		_t_dequeue(self)
+
+		ok, err = pcall(_t_select, self)
+		if not ok then
+			log:warn("error in _t_select: " .. err)
+		end
+
+		ok, err = pcall(_t_dequeue, self)
+		if not ok then
+			log:warn("error in _t_dequeue: " .. err)
+		end
 	end
 	
 	-- clean up here
