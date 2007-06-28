@@ -151,7 +151,7 @@ function _eventHandler(self, event)
 	local type = event:getType()
 
 	if type == EVENT_SCROLL then
-		self:_adjustSlider(-event:getScroll())
+		self:_adjustSlider(event:getScroll())
 		return EVENT_CONSUME
 
 	elseif type == EVENT_KEY_PRESS then
