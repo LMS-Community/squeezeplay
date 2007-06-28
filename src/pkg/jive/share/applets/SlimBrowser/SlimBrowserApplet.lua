@@ -932,7 +932,7 @@ local function _browseMenuRenderer(menu, widgets, toRenderIndexes, toRenderSize,
 			local style = labelItemStyle
 			
 			if current then
-				style = "current"
+				style = "albumcurrent"
 			end
 			
 			if not widget then

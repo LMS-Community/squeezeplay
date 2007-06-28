@@ -96,8 +96,9 @@ local function _itemRenderer(menu, widgetList, indexList, size, list)
 			local item = list[indexList[i]]
 
 			if widgetList[i] == nil then
-				widgetList[i] = Label("item", item.text, item.icon)
+				widgetList[i] = Label(item.style or "item", item.text, item.icon)
 			else
+				widgetList[i]:setStyle(item.style or "item")
 				widgetList[i]:setValue(item.text)
 				widgetList[i]:setWidget(item.icon)
 			end

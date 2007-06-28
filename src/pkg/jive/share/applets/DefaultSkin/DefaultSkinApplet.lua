@@ -379,11 +379,22 @@ function skin(self, s)
 	s.item.sh = { 0x00, 0x00, 0x00 }
 	--s.item.bgImg = selectionBox
 
+	s.current.padding = 8
+	s.current.textW = screenWidth - 40
+	s.current.font = Font:load(fontpath .. "FreeSansBold.ttf", 18)
+	s.current.fg = { 0xff, 0xff, 0xff }
+	s.current.sh = { 0xaa, 0xaa, 0xaa }
+
 	-- selected menu item
 	s.selected.item.fg = { 0x00, 0x00, 0x00 }
 	s.selected.item.sh = { }
 	s.selected.item.bgImg = selectionBox
 	s.selected.item.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
+
+	s.selected.current.fg = { 0x00, 0x00, 0x00 }
+	s.selected.current.sh = { }
+	s.selected.current.bgImg = selectionBox
+	s.selected.current.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
 
 	-- locked menu item (with loading animation)
 	s.locked.item.fg = { 0x00, 0x00, 0x00 }
@@ -585,31 +596,31 @@ function skin(self, s)
 
 
 	-- now playing menu item
-	s.current.padding = 8
-	s.current.textW = screenWidth - 93
-	s.current.font = Font:load(fontpath .. "FreeSansBold.ttf", 13)
-	s.current.fg = { 0xff, 0xff, 0xff }
-	s.current.sh = { 0xaa, 0xaa, 0xaa }
-	s.current.textAlign = "top-right"
-	s.current.iconAlign = "left"
+	s.albumcurrent.padding = 8
+	s.albumcurrent.textW = screenWidth - 93
+	s.albumcurrent.font = Font:load(fontpath .. "FreeSansBold.ttf", 15)
+	s.albumcurrent.fg = { 0xff, 0xff, 0xff }
+	s.albumcurrent.sh = { 0xaa, 0xaa, 0xaa }
+	s.albumcurrent.textAlign = "top-right"
+	s.albumcurrent.iconAlign = "left"
 
 
 	-- selected now playing menu item
-	s.selected.current.fg = { 0x00, 0x00, 0x00 }
-	s.selected.current.sh = { 0x33, 0x33, 0x33 }
-	s.selected.current.sh = { }
-	s.selected.current.bgImg = selectionBox
-	s.selected.current.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
+	s.selected.albumcurrent.fg = { 0x00, 0x00, 0x00 }
+	s.selected.albumcurrent.sh = { 0x33, 0x33, 0x33 }
+	s.selected.albumcurrent.sh = { }
+	s.selected.albumcurrent.bgImg = selectionBox
+	s.selected.albumcurrent.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
 
 
 	-- locked now playing menu item (with loading animation)
-	s.locked.current.fg = { 0x00, 0x00, 0x00 }
-	s.locked.current.sh = { 0xaa, 0xaa, 0xaa }
-	s.locked.current.sh = { }
-	s.locked.current.bgImg = selectionBox
-	s.locked.current.icon.img = Surface:loadImage(imgpath .. "selection_wait.png")
-	s.locked.current.icon.frameRate = 5
-	s.locked.current.icon.frameWidth = 10
+	s.locked.albumcurrent.fg = { 0x00, 0x00, 0x00 }
+	s.locked.albumcurrent.sh = { 0xaa, 0xaa, 0xaa }
+	s.locked.albumcurrent.sh = { }
+	s.locked.albumcurrent.bgImg = selectionBox
+	s.locked.albumcurrent.icon.img = Surface:loadImage(imgpath .. "selection_wait.png")
+	s.locked.albumcurrent.icon.frameRate = 5
+	s.locked.albumcurrent.icon.frameWidth = 10
 
 
 
