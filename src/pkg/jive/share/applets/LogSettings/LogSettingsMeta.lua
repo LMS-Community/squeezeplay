@@ -36,7 +36,7 @@ end
 function registerApplet(self)
 	
 	-- add a menu to load us
-	jiveMain:subMenu("Settings"):addItem(
+	jiveMain:subMenu("Settings"):subMenu("Remote Settings"):addItem(
 		appletManager:menuItem("Debug log", "LogSettings", "logSettings")
 	)
 end

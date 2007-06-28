@@ -42,7 +42,7 @@ function registerApplet(self)
 	jiveMain:loadSkin("DefaultSkin", "skin")
 
 	-- add a menu item for configuration
-	jiveMain:subMenu("Settings"):subMenu("Skin"):addItem(
+	jiveMain:subMenu("Settings"):subMenu("Remote Settings"):addItem(
 		appletManager:menuItem("Wallpaper", "DefaultSkin", "wallpaperSetting")
 	)
 end

@@ -39,7 +39,7 @@ function registerApplet(self)
 	appletManager:load("ScreenSavers")
 	
 	-- Menu for configuration
-	jiveMain:subMenu("Settings"):addItem(
+	jiveMain:subMenu("Settings"):subMenu("Remote Settings"):addItem(
 		appletManager:menuItem("Screensavers", "ScreenSavers", "openSettings")
 	)
 end
