@@ -74,11 +74,6 @@ int jiveL_window_skin(lua_State *L) {
 		for (n = 1; n <= len; n++) {
 			lua_rawgeti(L, -1, n);
 
-			if (jive_getmethod(L, -1, "_pack")) {
-				lua_pushvalue(L, -2);	// widget
-				lua_call(L, 1, 0);
-			}
-
 			// reparent global widget
 			lua_pushvalue(L, 1);
 			lua_setfield(L, -2, "parent");
