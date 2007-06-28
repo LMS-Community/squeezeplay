@@ -323,7 +323,5 @@ void jive_tile_blit_centered(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16
 		dh = mh;
 	}
 
-	printf("blit centered %d %d\n", dw, dh);
-
 	_blit_tile(tile, dst, dx - (dw/2), dy -  (dh/2), dw, dh);
 }

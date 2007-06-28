@@ -186,12 +186,14 @@ int jiveL_textinput_draw(lua_State *L) {
 
 	/* draw wheel */
 	if (drawLayer && peer->wheel_tile) {
-		jive_tile_blit(peer->wheel_tile, srf, cursor_x, peer->w.bounds.y + peer->w.padding.top, cursor_w, peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom);
+		int w = cursor_w;
+		int h = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
+		jive_tile_blit_centered(peer->wheel_tile, srf, cursor_x + (w / 2), peer->w.bounds.y + peer->w.padding.top + (h / 2), w, h);
 	}
 
 	/* draw background */
 	if (drawLayer && peer->bg_tile) {
-		jive_tile_blit(peer->bg_tile, srf, text_x, text_y, text_w, text_h);
+		jive_tile_blit_centered(peer->bg_tile, srf, peer->w.bounds.x + (peer->w.bounds.w / 2), text_y + (text_h / 2), peer->w.bounds.w, text_h);
 	}
 
 	/* draw text label */
@@ -218,59 +220,59 @@ int jiveL_textinput_draw(lua_State *L) {
 			x += peer->char_width;
 		}
 
-		printf("*** %d %d %d\n", x, text_x, text_w);
 		if (x < text_x + text_w && peer->enter_tile) {
 			/* draw enter */
-		printf("*** %d %d %d\n", x, text_x, text_w);
 			jive_tile_blit_centered(peer->enter_tile, srf, x + (peer->char_width / 2), text_y + (peer->char_height / 2), 0, 0);
 		}
 	}
 
-	/* Valid characters */
-	jive_getmethod(L, 1, "_validchars");
-	lua_pushvalue(L, 1);
-	lua_call(L, 1, 1);
+	if (drawLayer) {
+		/* Valid characters */
+		jive_getmethod(L, 1, "_getChars");
+		lua_pushvalue(L, 1);
+		lua_call(L, 1, 1);
 
-	validchars = lua_tostring(L, -1);
-	validchars_end = validchars + strlen(validchars) - 1;
-	ptr = strchr(validchars, text[cursor - 1]);
+		validchars = lua_tostring(L, -1);
+		validchars_end = validchars + strlen(validchars) - 1;
+		ptr = strchr(validchars, text[cursor - 1]);
 
-	/* Draw wheel up */
-	ptr2 = ptr - 1;
-	for (i=1; i <= (peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom - peer->char_height) / 2 / peer->char_height; i++) {
-		if (ptr2 < validchars) {
-			ptr2 = validchars_end;
-		}
-		else if (ptr2 > validchars_end) {
-			ptr2 = validchars;
+		/* Draw wheel up */
+		ptr2 = ptr - 1;
+		for (i=1; i <= (peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom - peer->char_height) / 2 / peer->char_height; i++) {
+			if (ptr2 < validchars) {
+				ptr2 = validchars_end;
+			}
+			else if (ptr2 > validchars_end) {
+				ptr2 = validchars;
+			}
+		
+			*c = *ptr2--; // FIXME utf8
+
+			offset_x = (peer->char_width - jive_font_width(peer->font, c)) / 2;
+			
+			tsrf = jive_font_draw_text(peer->font, peer->wh, c);
+			jive_surface_blit(tsrf, srf, cursor_x + offset_x, text_y - (i * peer->char_height) + offset_y);
+			jive_surface_free(tsrf);
 		}
 		
-		*c = *ptr2--; // FIXME utf8
-
-		offset_x = (peer->char_width - jive_font_width(peer->font, c)) / 2;
-
-		tsrf = jive_font_draw_text(peer->font, peer->wh, c);
-		jive_surface_blit(tsrf, srf, cursor_x + offset_x, text_y - (i * peer->char_height) + offset_y);
-		jive_surface_free(tsrf);
-	}
-
-	/* Draw wheel down */
-	ptr2 = ptr + 1;
-	for (i=1; i <= (peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom - peer->char_height) / 2 / peer->char_height; i++) {
-		if (ptr2 < validchars) {
-			ptr2 = validchars_end;
+		/* Draw wheel down */
+		ptr2 = ptr + 1;
+		for (i=1; i <= (peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom - peer->char_height) / 2 / peer->char_height; i++) {
+			if (ptr2 < validchars) {
+				ptr2 = validchars_end;
+			}
+			else if (ptr2 > validchars_end) {
+				ptr2 = validchars;
+			}
+			
+			*c = *ptr2++; // FIXME utf8
+			
+			offset_x = (peer->char_width - jive_font_width(peer->font, c)) / 2;
+			
+			tsrf = jive_font_draw_text(peer->font, peer->wh, c);
+			jive_surface_blit(tsrf, srf, cursor_x + offset_x, text_y + (i * peer->char_height) + offset_y);
+			jive_surface_free(tsrf);
 		}
-		else if (ptr2 > validchars_end) {
-			ptr2 = validchars;
-		}
-		
-		*c = *ptr2++; // FIXME utf8
-
-		offset_x = (peer->char_width - jive_font_width(peer->font, c)) / 2;
-
-		tsrf = jive_font_draw_text(peer->font, peer->wh, c);
-		jive_surface_blit(tsrf, srf, cursor_x + offset_x, text_y + (i * peer->char_height) + offset_y);
-		jive_surface_free(tsrf);
 	}
 
 	/* draw cursor */
@@ -301,8 +303,6 @@ int jiveL_textinput_get_preferred_bounds(lua_State *L) {
 
 	w = peer->max_width + peer->w.padding.left + peer->w.padding.right;
 	h = (peer->char_height * 7) + peer->w.padding.top + peer->w.padding.bottom; // XXXX
-
-	printf("PREF BOUNDS %d,%d\n", w, h);
 
 	lua_pushinteger(L, (peer->w.preferred_bounds.x == JIVE_XY_NIL) ? 0 : peer->w.preferred_bounds.x);
 	lua_pushinteger(L, (peer->w.preferred_bounds.y == JIVE_XY_NIL) ? 0 : peer->w.preferred_bounds.y);

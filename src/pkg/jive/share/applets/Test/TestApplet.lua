@@ -18,10 +18,12 @@ TestApplet overrides the following methods:
 
 
 -- stuff we use
-local tostring = tostring
+local setmetatable, tostring = setmetatable, tostring
 
 local io                     = require("io")
 local oo                     = require("loop.simple")
+local string                 = require("string")
+local table                  = require("jive.utils.table")
 
 local Applet                 = require("jive.Applet")
 local Checkbox               = require("jive.ui.Checkbox")
@@ -143,6 +145,10 @@ function menu(self, menuItem)
 				callback = function(event, menuItem)
 					self:textinputWindow(menuItem):show()
 				end },
+			{ text = "Hex input",
+				callback = function(event, menuItem)
+					self:hexinputWindow(menuItem):show()
+				end },
 			{ text = "Popup",
 				callback = function(event, menuItem)
 					self:popupWindow(menuItem):show()
@@ -231,11 +237,76 @@ function textinputWindow(self, menuItem)
 
 	local input = Textinput("textinput", "A test string",
 				function(_, value)
+					if #value < 4 then
+						return false
+					end
+
 					log:warn("Input " .. value)
 					window:hide(Window.transitionPushLeft)
+					return true
 				end)
 
 	local help = Textarea("help", "A basic text input widget. Graphical improvements will come later.")
+
+	window:addWidget(help)
+	window:addWidget(input)
+
+	return window
+end
+
+
+function hexinputWindow(self, menuItem)
+
+	-- create an object to hold the hex value. the methods are used
+	-- by the text input widget.
+	local v = {}
+	setmetatable(v, {
+			     __tostring =
+				     function(e)
+					     return table.concat(e, " ")
+				     end,
+
+			     __index = {
+				     setValue =
+					     function(value, str)
+						     local i = 1
+						     for dd in string.gmatch(str, "%x%x") do
+							     value[i] = dd
+							     i = i + 1
+						     end
+						     
+					     end,
+
+				     getValue =
+					     function(value)
+						     return table.concat(value)
+					     end,
+
+				     getChars = 
+					     function(value, cursor)
+						     return "0123456789ABCDEF"
+					     end,
+
+				     isEntered =
+					     function(value, cursor)
+						     return cursor == (#value * 3) - 1
+					     end
+			     }
+		     })
+
+	-- set the initial value
+	v:setValue("000000000000")
+
+	local window = Window(self:displayName(), menuItem.text)
+
+	local input = Textinput("textinput", v,
+				function(_, value)
+					log:warn("Input " .. value:getValue())
+					window:hide(Window.transitionPushLeft)
+					return true
+				end)
+
+	local help = Textarea("help", "Input of HEX numbers.")
 
 	window:addWidget(help)
 	window:addWidget(input)

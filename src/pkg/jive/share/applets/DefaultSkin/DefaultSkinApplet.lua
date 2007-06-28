@@ -239,10 +239,16 @@ function skin(self, s)
 			       })
 
 	local helpBox = 
-		Tile:loadHTiles({
-					imgpath .. "helpbox_l.png",
-					imgpath .. "helpbox.png",
-					imgpath .. "helpbox_r.png",
+		Tile:loadTiles({
+				       imgpath .. "helpbox.png",
+				       imgpath .. "helpbox_tl.png",
+				       imgpath .. "helpbox_t.png",
+				       imgpath .. "helpbox_tr.png",
+				       imgpath .. "helpbox_r.png",
+				       nil,
+				       nil,
+				       nil,
+				       imgpath .. "helpbox_l.png",
 			       })
 
 	local scrollBackground =
@@ -287,7 +293,7 @@ function skin(self, s)
 					imgpath .. "popup_volume_bkground_r.png",
 			       })
 
-	local popupMask = Tile:fillColor(0x231f20cc)
+	local popupMask = Tile:fillColor(0x231f20e5)
 
 	local popupBox =
 		Tile:loadTiles({
@@ -301,6 +307,18 @@ function skin(self, s)
 				       imgpath .. "popupbox_bl.png",
 				       imgpath .. "popupbox_l.png"
 			       })
+
+
+	local textinputBackground =
+		Tile:loadHTiles({
+				       imgpath .. "text_entry_bkgrd_l.png",
+				       imgpath .. "text_entry_bkgrd.png",
+				       imgpath .. "text_entry_bkgrd_r.png",
+			       })
+
+	local textinputWheel = Tile:loadImage(imgpath .. "text_entry_select.png")
+
+	local textinputCursor = Tile:loadImage(imgpath .. "text_entry_letter.png")
 
 
 	-- Iconbar definitions, each icon needs an image and x,y
@@ -430,19 +448,19 @@ function skin(self, s)
 
 
 	-- Text input
-	s.textinput.padding = { 8, 0, 8, 0 }
+	s.textinput.border = { 8, -5, 8, 0 }
+	s.textinput.padding = { 6, 0, 6, 0 }
 	s.textinput.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
 	s.textinput.charWidth = 19
 	s.textinput.charHeight = 26
 	s.textinput.fg = { 0x00, 0x00, 0x00 }
-	s.textinput.wh = { 0x44, 0x41, 0x42 }
-	s.textinput.bgImg = Tile:fillColor(0x7fffffff)
-	s.textinput.wheelImg = Tile:fillColor(0x7c7c7cff)
-	s.textinput.cursorImg = Tile:loadImage(imgpath .. "input_cursor.png")
+	s.textinput.wh = { 0x55, 0x55, 0x55, 0xB2 }
+	s.textinput.bgImg = textinputBackground
+	s.textinput.wheelImg = textinputWheel
+	s.textinput.cursorImg = textinputCursor
 	s.textinput.enterImg = Tile:loadImage(imgpath .. "selection_right.png")
 
 	-- Help menu
-	s.help.x = 3
 	s.help.w = screenWidth - 6
 	s.help.position = LAYOUT_SOUTH
 	s.help.padding = 12

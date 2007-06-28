@@ -1,10 +1,9 @@
 
 -- stuff we use
-local assert, string, tostring, type, unpack = assert, string, tostring, type, unpack
+local assert, getmetatable, string, tostring, type, unpack = assert, getmetatable, string, tostring, type, unpack
 
 local oo                = require("loop.simple")
 local Widget            = require("jive.ui.Widget")
-local Label             = require("jive.ui.Label")
 
 local string            = require("string")
 local log               = require("jive.utils.log").logger("ui")
@@ -33,14 +32,29 @@ module(...)
 oo.class(_M, Widget)
 
 
-function _validchars(self)
+-- return valid characters at cursor position.
+function _getChars(self)
+	if self.value.getChars then
+		return self.value:getChars(self.cursor)
+	end
+
 	return " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\\\"'<>?-=,./~`[];0123456789"
 end
+
+-- returns true if text entry is completed.
+function _isEntered(self)
+	if self.value.isEntered then
+		return self.value:isEntered(self.cursor)
+	end
+
+	return self.cursor > #tostring(self.value)
+end
+
 
 
 --[[
 
-=head2 jive.ui.Label:getValue()
+=head2 jive.ui.Textinput:getValue()
 
 Returns the text displayed in the label.
 
@@ -53,7 +67,7 @@ end
 
 --[[
 
-=head2 jive.ui.Label:setValue(value)
+=head2 jive.ui.Textinput:setValue(value)
 
 Sets the text displayed in the label.
 
@@ -63,7 +77,12 @@ function setValue(self, value)
 	assert(value ~= nil)
 
 	if self.value ~= value then
-		self.value = value
+		if self.value.setValue  then
+			self.value:setValue(value)
+		else
+			self.value = value
+		end
+
 		self:rePrepare()
 	end
 end
@@ -71,9 +90,9 @@ end
 
 function _scroll(self, dir)
 	local cursor = self.cursor
-	local str = self.value
+	local str = tostring(self.value)
 
-	local v = self:_validchars()
+	local v = self:_getChars()
 
 	local s1 = string.sub(str, 1, cursor - 1)
 	local s2 = string.sub(str, cursor, cursor)
@@ -99,7 +118,19 @@ end
 function _moveCursor(self, dir)
 	self.cursor = self.cursor + dir
 
-	if self.cursor < #self.value then
+	-- check for a valid character at the cursor position, if
+	-- we don't find one then move again. this allows for 
+	-- formatted text entry, for example pairs of hex digits
+	local str = tostring(self.value)
+	local v = self:_getChars()
+	local s2 = string.sub(str, self.cursor, self.cursor)
+
+	if (not string.find(v, s2, 1, true)) then
+		return _moveCursor(self, dir)
+	end
+
+
+	if self.cursor < #tostring(self.value) then
 		if self.cursor > self.indent + self._maxChars - 2 then
 			self.indent =  self.cursor - self._maxChars + 2
 		end
@@ -177,12 +208,14 @@ function _eventHandler(self, event)
 			keycode == KEY_RIGHT or
 			keycode == KEY_FWD then
 
-			log:warn("cursor=", self.cursor)
-			log:warn("#value=", #self.value)
-			if self.cursor > #self.value then
+			if _isEntered(self) then
+				local valid = false
+
 				if self.closure then
-					self.closure(self, self.value)
-				else
+					valid = self.closure(self, self:getValue())
+				end
+
+				if not valid then
 					self:getWindow():bumpRight()
 				end
 			else
@@ -213,16 +246,27 @@ function _eventHandler(self, event)
 end
 
 
--- XXXX FIXME
+--[[
+
+=head2 jive.ui.Textinput:init(style, value, closure)
+
+Creates a new Textinput widget with initial value I<value>. The <closure>
+is a function that will be called at the end of the text input. This function
+should return false if the text is invalid (the window will then bump right)
+or return true when the text is valid.
+
+=cut
+--]]
 function __init(self, style, value, closure)
 	assert(type(style) == "string")
 	assert(value ~= nil)
 
-	local obj = oo.rawnew(self, Label(style, value))
+	local obj = oo.rawnew(self, Widget(style))
 
 	obj.cursor = 1
 	obj.indent = 0
 	obj.maxWidth = 0
+	obj.value = value
 	obj.closure = closure
 
 	obj:addListener(EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE,

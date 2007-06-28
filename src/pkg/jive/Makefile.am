@@ -210,7 +210,6 @@ applets_defaultskin_imagesdir = $(pkgdatadir)/applets/DefaultSkin/images
 dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/checkbox_off.png \
 	share/applets/DefaultSkin/images/checkbox_on.png \
-	share/applets/DefaultSkin/images/helpbox.png \
 	share/applets/DefaultSkin/images/icon_home.png \
 	share/applets/DefaultSkin/images/icon_mode_off.png \
 	share/applets/DefaultSkin/images/icon_mode_pause.png \
@@ -259,8 +258,12 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/border_l.png \
 	share/applets/DefaultSkin/images/scrollbar_bkground_t.png \
 	share/applets/DefaultSkin/images/scrollbar_bkground_b.png \
+	share/applets/DefaultSkin/images/helpbox.png \
 	share/applets/DefaultSkin/images/helpbox_l.png \
 	share/applets/DefaultSkin/images/helpbox_r.png \
+	share/applets/DefaultSkin/images/helpbox_t.png \
+	share/applets/DefaultSkin/images/helpbox_tl.png \
+	share/applets/DefaultSkin/images/helpbox_tr.png \
 	share/applets/DefaultSkin/images/slider_bkgrd_l.png \
 	share/applets/DefaultSkin/images/slider_bkgrd.png \
 	share/applets/DefaultSkin/images/slider_bkgrd_r.png \
@@ -281,5 +284,8 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/popup_volume_bkground_l.png \
 	share/applets/DefaultSkin/images/popup_volume_bkground.png \
 	share/applets/DefaultSkin/images/popup_volume_bkground_r.png \
-	share/applets/DefaultSkin/images/input_cursor.png
-
+	share/applets/DefaultSkin/images/text_entry_bkgrd.png \
+	share/applets/DefaultSkin/images/text_entry_bkgrd_l.png \
+	share/applets/DefaultSkin/images/text_entry_bkgrd_r.png \
+	share/applets/DefaultSkin/images/text_entry_letter.png \
+	share/applets/DefaultSkin/images/text_entry_select.png
