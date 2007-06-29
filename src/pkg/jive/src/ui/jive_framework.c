@@ -227,7 +227,9 @@ static int jiveL_process_events(lua_State *L) {
 		frameticks = frameepoch + (Uint32)(framecount * framerate);
 
 		if (ticks > frameticks) {
+#if 0
 			printf("Dropped frames. framerate=%dms delay=%dms\n", (Uint32)framerate, (ticks - frameticks));
+#endif
 			frameepoch = ticks;
 			framecount = 0;
 		}
@@ -362,7 +364,9 @@ int jiveL_update_screen(lua_State *L) {
 		jive_surface_flip(srf);
 	}
 	else if (jive_dirty_region.w) {
+#if 0
 		printf("REDRAW: %d,%d %dx%d\n", jive_dirty_region.x, jive_dirty_region.y, jive_dirty_region.w, jive_dirty_region.h);
+#endif
 
 		// FIXME using the clip area does not work with 
 		// double buffering
@@ -709,12 +713,14 @@ static int do_dispatch_event(lua_State *L, JiveEvent *jevent) {
 	lua_call(L, 3, 1);
 
 	t1 = SDL_GetTicks();
+#if 0
 	if (jevent->type & JIVE_EVENT_KEY_ALL) {
 		printf("%d: EVENT type=%x key_code=%d took=%0.4fs\n", SDL_GetTicks(), jevent->type, jevent->key_code, ((double)(t1-t0))/1000);
 	}
 	else {
 		printf("%d: EVENT type=%x took=%0.4fs\n", SDL_GetTicks(), jevent->type, ((double)(t1-t0))/1000);
 	}
+#endif
 
 	r = lua_tointeger(L, -1);
 	lua_pop(L, 1);

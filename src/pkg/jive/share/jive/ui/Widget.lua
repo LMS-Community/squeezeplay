@@ -355,8 +355,6 @@ function reLayout(self)
 
 	local reLayoutCount = Framework.layoutCount - 1
 
-	log:warn("in reLayout")
-
 	-- mark widgets for layout until we reach a layout root
 	local widget = self
 	while widget do
