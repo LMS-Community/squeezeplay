@@ -355,6 +355,8 @@ function reLayout(self)
 
 	local reLayoutCount = Framework.layoutCount - 1
 
+	log:warn("in reLayout")
+
 	-- mark widgets for layout until we reach a layout root
 	local widget = self
 	while widget do
@@ -447,8 +449,7 @@ Add a listener I<listener> to the widget. The listener is called for events that
 =cut
 --]]
 function addListener(self, mask, listener)
-	assert(type(mask) == "number", "Invalid event mask")
-	assert(type(listener) == "function", "Invalid listener")
+	assert(type(mask) == "number", "Invalid event mask")	assert(type(listener) == "function", "Invalid listener")
 
 	local handle = { mask, listener }
 	table.insert(self.listeners, 1, handle)
