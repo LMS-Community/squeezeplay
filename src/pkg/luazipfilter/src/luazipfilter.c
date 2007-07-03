@@ -231,7 +231,12 @@ static int zip_filter_func(lua_State *L) {
 
 			if (len == 0) {
 				/* need more input data */
-				lua_pushstring(L, "");
+				if (lua_isnil(L, 1)) {
+					lua_pushvalue(L, 1);
+				}
+				else {
+					lua_pushstring(L, "");
+				}
 				return 1;
 			}
 
