@@ -660,7 +660,18 @@ Layout function that does not modify the window layout
 =cut
 --]]
 function noLayout(self)
+	-- maximum window size is bounded by screen
+	local sw, sh = Framework:getScreenSize()
+
+	-- prefered window size set in style
+	local _wx, _wy, _ww, _wh = self:getPreferredBounds()
+	local wlb,wtb,wrb,wbb = self:getBorder()
+	ww = (_ww or sw) - wlb - wrb
+	wh = (_wh or sh) - wtb - wbb
+
 	iterate(self, function(widget) widget:doLayout() end)
+
+	self:setBounds(wx, wy, ww, wh)
 end
 
 

@@ -76,7 +76,7 @@ int jiveL_icon_skin(lua_State *L) {
 		peer->frame_width = jive_style_int(L, 1, "frameWidth", -1);
 	}
 
-	peer->align = jive_style_align(L, 1, "align", JIVE_ALIGN_LEFT);
+	peer->align = jive_style_align(L, 1, "align", JIVE_ALIGN_TOP_LEFT);
 	return 0;
 }
 
