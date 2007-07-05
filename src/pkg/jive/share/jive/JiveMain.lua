@@ -73,7 +73,7 @@ function Menu:__init(name)
 
 	local obj = oo.rawnew(self, {
 		menu = jive.ui.SimpleMenu("menu"),
-		window = jive.ui.Window("window", name),
+		window = jive.ui.Window("home.window", name),
 		menus = {},
 	})
 	

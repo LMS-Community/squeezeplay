@@ -348,7 +348,7 @@ function skin(self, s)
 	s.icon_time.layer = LAYER_FRAME
 	s.icon_time.position = LAYOUT_SOUTH
 	s.icon_time.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
-	s.icon_time.fg = { 0xff, 0xff, 0xff }
+	s.icon_time.fg = { 0xe7, 0xe7, 0xe7 }
 
 
 	-- Window background
@@ -358,11 +358,11 @@ function skin(self, s)
 	-- Window title, this is a Label
 	-- black text with a background image
 	s.title.border = 4
-	s.title.padding = { 8, 7, 8, 9 }
+	s.title.padding = { 10, 7, 8, 9 }
 	s.title.position = LAYOUT_NORTH
 
 	s.title.font = Font:load(fontpath .. "FreeSansBold.ttf", 20)
-	s.title.fg = { 0x00, 0x00, 0x00 }
+	s.title.fg = { 0x37, 0x37, 0x37 }
 	s.title.bgImg = titleBox
 
 
@@ -372,32 +372,32 @@ function skin(self, s)
 	s.menu.itemHeight = 27
 
 	-- menu item
-	s.item.padding = 8
+	s.item.padding = 10
 	s.item.textW = screenWidth - 40
 	s.item.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
-	s.item.fg = { 0xff, 0xff, 0xff }
-	s.item.sh = { 0x00, 0x00, 0x00 }
+	s.item.fg = { 0xe7, 0xe7, 0xe7 }
+	s.item.sh = { 0x37, 0x37, 0x37 }
 	--s.item.bgImg = selectionBox
 
-	s.current.padding = 8
+	s.current.padding = 10
 	s.current.textW = screenWidth - 40
 	s.current.font = Font:load(fontpath .. "FreeSansBold.ttf", 18)
-	s.current.fg = { 0xff, 0xff, 0xff }
+	s.current.fg = { 0xe7, 0xe7, 0xe7 }
 	s.current.sh = { 0xaa, 0xaa, 0xaa }
 
 	-- selected menu item
-	s.selected.item.fg = { 0x00, 0x00, 0x00 }
+	s.selected.item.fg = { 0x37, 0x37, 0x37 }
 	s.selected.item.sh = { }
 	s.selected.item.bgImg = selectionBox
 	s.selected.item.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
 
-	s.selected.current.fg = { 0x00, 0x00, 0x00 }
+	s.selected.current.fg = { 0x37, 0x37, 0x37 }
 	s.selected.current.sh = { }
 	s.selected.current.bgImg = selectionBox
 	s.selected.current.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
 
 	-- locked menu item (with loading animation)
-	s.locked.item.fg = { 0x00, 0x00, 0x00 }
+	s.locked.item.fg = { 0x37, 0x37, 0x37 }
 	s.locked.item.sh = { }
 	s.locked.item.bgImg = selectionBox
 	s.locked.item.icon.img = Surface:loadImage(imgpath .. "selection_wait.png")
@@ -407,28 +407,28 @@ function skin(self, s)
 
 	-- menu item choice
 	s.item.choice.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
-	s.item.choice.fg = { 0xff, 0xff, 0xff }
-	s.item.choice.sh = { 0x00, 0x00, 0x00 }
+	s.item.choice.fg = { 0xe7, 0xe7, 0xe7 }
+	s.item.choice.sh = { 0x37, 0x37, 0x37 }
 
 	-- selected menu item choice
-	s.selected.item.choice.fg = { 0x00, 0x00, 0x00 }
+	s.selected.item.choice.fg = { 0x37, 0x37, 0x37 }
 	s.selected.item.choice.sh = { }
 
 	-- menu value choice
 	s.item.value.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
-	s.item.value.fg = { 0xff, 0xff, 0xff }
-	s.item.value.sh = { 0x00, 0x00, 0x00 }
+	s.item.value.fg = { 0xe7, 0xe7, 0xe7 }
+	s.item.value.sh = { 0x37, 0x37, 0x37 }
 
 	-- selected menu item choice
-	s.selected.item.value.fg = { 0x00, 0x00, 0x00 }
+	s.selected.item.value.fg = { 0x37, 0x37, 0x37 }
 	s.selected.item.value.sh = { }
 
 	-- Text areas
 	s.textarea.w = screenWidth - 21
-	s.textarea.padding = 8
+	s.textarea.padding = { 13, 8, 8, 8 }
 	s.textarea.font = Font:load(fontpath .. "FreeSans.ttf", 16)
-	s.textarea.fg = { 0xFF, 0xFF, 0xFF }
-	s.textarea.sh = { 0x00, 0x00, 0x00 }
+	s.textarea.fg = { 0xe7, 0xe7, 0xe7 }
+	s.textarea.sh = { 0x37, 0x37, 0x37 }
 	s.textarea.align = "left"
 	
 
@@ -464,7 +464,7 @@ function skin(self, s)
 	s.textinput.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
 	s.textinput.charWidth = 19
 	s.textinput.charHeight = 26
-	s.textinput.fg = { 0x00, 0x00, 0x00 }
+	s.textinput.fg = { 0x37, 0x37, 0x37 }
 	s.textinput.wh = { 0x55, 0x55, 0x55, 0xB2 }
 	s.textinput.bgImg = textinputBackground
 	s.textinput.wheelImg = textinputWheel
@@ -476,7 +476,7 @@ function skin(self, s)
 	s.help.position = LAYOUT_SOUTH
 	s.help.padding = 12
 	s.help.font = Font:load(fontpath .. "FreeSans.ttf", 16)
-	s.help.fg = { 0xFF, 0xFF, 0xFF }
+	s.help.fg = { 0xe7, 0xe7, 0xe7 }
 	s.help.bgImg = helpBox
 	s.help.textAlign = "left"
 	s.help.scrollbar.w = 0
@@ -499,12 +499,12 @@ function skin(self, s)
 
 	s.popup.text.border = 10
 	s.popup.text.w = screenWidth - 60
-	s.popup.text.fg = { 0x00, 0x00, 0x00 }
+	s.popup.text.fg = { 0x37, 0x37, 0x37 }
 	s.popup.text.sh = { }
 	s.popup.text.textAlign = "center"
 
 	s.popup.textarea.w = screenWidth - 60
-	s.popup.textarea.fg = { 0x00, 0x00, 0x00 }
+	s.popup.textarea.fg = { 0x37, 0x37, 0x37 }
 	s.popup.textarea.sh = { }
 
 	s.popup.slider.border = { 15, 0, 15, 15 }
@@ -524,7 +524,7 @@ function skin(self, s)
 	-- Here we add an icon to the window title. This uses a function
 	-- that is called at runtime, so for example the icon could change
 	-- based on time of day
-	s["Jive Home"].title.icon.img = 
+	s.home.window.title.icon.img = 
 		function(widget)
 			return Surface:loadImage(imgpath .. "icon_home.png")
 		end
@@ -558,7 +558,7 @@ function skin(self, s)
 	s.albumtitle.padding = { 10, 8, 8, 9 }
 	s.albumtitle.textW = screenWidth - 86
 	s.albumtitle.font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
-	s.albumtitle.fg = { 0x00, 0x00, 0x00 }
+	s.albumtitle.fg = { 0x37, 0x37, 0x37 }
 	s.albumtitle.bgImg = titleBox
 	s.albumtitle.textAlign = "top-right"
 	s.albumtitle.iconAlign = "left"
@@ -573,40 +573,40 @@ function skin(self, s)
 
 	-- items with artwork and song info
 	s.albumitem.h = 60
-	s.albumitem.padding = 8
+	s.albumitem.padding = { 12, 8, 8, 8 }
 	s.albumitem.textW = screenWidth - 93
 	s.albumitem.font = Font:load(fontpath .. "FreeSansBold.ttf", 13)
-	s.albumitem.fg = { 0xff, 0xff, 0xff }
-	s.albumitem.sh = { 0x00, 0x00, 0x00 }
+	s.albumitem.fg = { 0xe7, 0xe7, 0xe7 }
+	s.albumitem.sh = { 0x37, 0x37, 0x37 }
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumitem.textAlign = "top-right"
 	s.albumitem.iconAlign = "left"
 
 
 	-- selected item with artwork and song info
-	s.selected.albumitem.fg = { 0x00, 0x00, 0x00 }
+	s.selected.albumitem.fg = { 0x37, 0x37, 0x37 }
 	s.selected.albumitem.sh = { }
 	s.selected.albumitem.bgImg = selectionBox
 
 
 	-- locked item with artwork and song info
-	s.locked.albumitem.fg = { 0x00, 0x00, 0x00 }
+	s.locked.albumitem.fg = { 0x37, 0x37, 0x37 }
 	s.locked.albumitem.sh = { }
 	s.locked.albumitem.bgImg = selectionBox
 
 
 	-- now playing menu item
-	s.albumcurrent.padding = 8
+	s.albumcurrent.padding = 10
 	s.albumcurrent.textW = screenWidth - 93
 	s.albumcurrent.font = Font:load(fontpath .. "FreeSansBold.ttf", 15)
-	s.albumcurrent.fg = { 0xff, 0xff, 0xff }
+	s.albumcurrent.fg = { 0xe7, 0xe7, 0xe7 }
 	s.albumcurrent.sh = { 0xaa, 0xaa, 0xaa }
 	s.albumcurrent.textAlign = "top-right"
 	s.albumcurrent.iconAlign = "left"
 
 
 	-- selected now playing menu item
-	s.selected.albumcurrent.fg = { 0x00, 0x00, 0x00 }
+	s.selected.albumcurrent.fg = { 0x37, 0x37, 0x37 }
 	s.selected.albumcurrent.sh = { 0x33, 0x33, 0x33 }
 	s.selected.albumcurrent.sh = { }
 	s.selected.albumcurrent.bgImg = selectionBox
@@ -614,7 +614,7 @@ function skin(self, s)
 
 
 	-- locked now playing menu item (with loading animation)
-	s.locked.albumcurrent.fg = { 0x00, 0x00, 0x00 }
+	s.locked.albumcurrent.fg = { 0x37, 0x37, 0x37 }
 	s.locked.albumcurrent.sh = { 0xaa, 0xaa, 0xaa }
 	s.locked.albumcurrent.sh = { }
 	s.locked.albumcurrent.bgImg = selectionBox
