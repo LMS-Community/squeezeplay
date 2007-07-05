@@ -69,11 +69,11 @@ local JiveMain = oo.class({}, Menu)
 -----------------------------------------------------------------------------
 
 -- create a new menu
-function Menu:__init(name)
+function Menu:__init(name, style)
 
 	local obj = oo.rawnew(self, {
 		menu = jive.ui.SimpleMenu("menu"),
-		window = jive.ui.Window("home.window", name),
+		window = jive.ui.Window(style or "window", name),
 		menus = {},
 	})
 	
@@ -144,7 +144,7 @@ function JiveMain:__init()
 --	jive.ui.Framework:setScreenSize(240, 320, 16)
 	jive.ui.Framework:init()
 
-	jiveMain = oo.rawnew(self, Menu("Jive Home"))
+	jiveMain = oo.rawnew(self, Menu("Jive Home", "home.window"))
 	jiveMain.menu:setCloseable(false)
 
 	-- Singleton instances (globals)
