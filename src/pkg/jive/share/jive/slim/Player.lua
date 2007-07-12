@@ -318,11 +318,11 @@ function _process_displaystatus(self, data)
 	debug.dump(data.result,10)
 
 	if data.result.display then 
-		if data.result.display.line then
+		if data.result.display then
 
 			local popup = Popup("popup", "showBriefly")
 
-			local text = Textarea("textarea", table.concat(data.result.display.line, "\n\n"))
+			local text = Textarea("textarea", table.concat(data.result.display, "\n\n"))
 			popup:addWidget(text)
 			popup:showBriefly(2000)
 		end
