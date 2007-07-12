@@ -236,7 +236,44 @@ function jive.slim.RequestStatus:__tostring()
 		return "RequestStatus {}"
 	end
 end
-	--[[
+
+
+-----------------------------------------------------------------------------
+-- RequestDisplaystatus
+-----------------------------------------------------------------------------
+jive.slim.RequestDisplaystatus = oo.class({}, jive.slim.RequestCliXJive)
+
+function jive.slim.RequestDisplaystatus:__init(sink, player, subscribe)
+	log:debug("RequestDisplaystatus:__init()")
+	
+	assert(player, "Cannot create RequestDisplaystatus without player")
+	
+	return oo.rawnew(self, jive.slim.RequestCliXJive(
+		sink, 
+		player, 
+		{'displaystatus'}, 
+		nil, 
+		nil, 
+		subscribe, 
+		nil, 
+		nil))
+end
+
+
+
+
+-- __tostring
+-- handy for debugging
+function jive.slim.RequestDisplaystatus:__tostring()
+	if self.cli.cmdArray then
+		return "RequestDisplaystatus {" .. table.concat(self.cli.cmdArray, " ") .. "}"
+	else
+		return "RequestDisplaystatus {}"
+	end
+end
+
+
+--[[
 
 =head1 LICENSE
 

@@ -17,11 +17,14 @@ TODO
 =cut
 --]]
 
+local debug = require("jive.utils.debug")
+
 -- stuff we need
 local assert, tostring = assert, tostring
 
 local os             = require("os")
 local string         = require("string")
+local table          = require("table")
 
 local oo             = require("loop.base")
 
@@ -29,6 +32,8 @@ local SocketHttp     = require("jive.net.SocketHttp")
 local RequestHttp    = require("jive.net.RequestHttp")
 local RequestJsonRpc = require("jive.net.RequestJsonRpc")
 local Framework      = require("jive.ui.Framework")
+local Popup          = require("jive.ui.Popup")
+local Textarea       = require("jive.ui.Textarea")
 
 local log            = require("jive.utils.log").logger("player")
 local logv           = require("jive.utils.log").logger("player.browse.volume")
@@ -36,6 +41,7 @@ local logv           = require("jive.utils.log").logger("player.browse.volume")
 require("jive.slim.RequestsCli")
 local RequestStatus  = jive.slim.RequestStatus
 local RequestCli     = jive.slim.RequestCli
+local RequestDisplaystatus = jive.slim.RequestDisplaystatus
 
 local iconbar        = iconbar
 
@@ -98,6 +104,7 @@ function __init(self, slimServer, jnt, jpool, playerinfo)
 		homeMenuItem = false,
 		
 		jsp = false,
+		jdsp = false,
 		
 		isOnStage = false,
 		statusSink = false,
@@ -220,6 +227,19 @@ function onStage(self, sink)
 			{menu = 'menu'}
 		)
 	)
+
+	-- 2nd long term request for displaystatus
+	local ip, port = self.slimServer:getIpPort()
+	self.jdsp = SocketHttp(self.jnt, ip, port, self.name .. "LT")
+
+	self.jdsp:fetch(
+		RequestDisplaystatus(
+			_getSink(self),
+			self,
+			'showbriefly'
+		)
+	)
+
 end
 
 
@@ -233,6 +253,11 @@ function offStage(self)
 	if self.jsp then
 		self.jsp:free()
 		self.jsp = false
+	end
+
+	if self.jdsp then
+		self.jdsp:free()
+		self.jdsp = false
 	end
 	
 	iconbar:setPlaymode(nil)
@@ -281,6 +306,26 @@ end
 function feedStatusSink(self)
 	if self.state and self.statusSink then
 		self.statusSink(self.state)
+	end
+end
+
+
+-- _process_displaystatus
+-- receives the display status data
+function _process_displaystatus(self, data)
+	log:debug("Player:_process_displaystatus()")
+
+	debug.dump(data.result,10)
+
+	if data.result.display then 
+		if data.result.display.line then
+
+			local popup = Popup("popup", "showBriefly")
+
+			local text = Textarea("textarea", table.concat(data.result.display.line, "\n\n"))
+			popup:addWidget(text)
+			popup:showBriefly(2000)
+		end
 	end
 end
 
