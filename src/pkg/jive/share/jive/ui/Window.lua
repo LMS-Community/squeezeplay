@@ -746,7 +746,6 @@ function borderLayout(self, fitWindow)
 	-- adjust window bounds to fit content
 	if fitWindow then
 		if _wh == nil and maxY > 0 then
-			log:warn("*** ", wtb, ", ", maxN, ", ", maxY, ", ", maxS, ", ", wbb)
 			wh = wtb + maxN + maxY + maxS + wbb
 		end
 		if _ww == nil and maxX > 0 then
@@ -787,7 +786,8 @@ function borderLayout(self, fitWindow)
 				widget:setBounds(maxBounds(wx + x + lb, wy + y + tb, w, wh - bb))
 
 			elseif position == LAYOUT_CENTER then
-				h = h or (wh - maxN - maxS) - bb
+				h = h or (wh - maxN - maxS)
+				h = min(wh - maxN - maxS, h) - bb
 				widget:setBounds(maxBounds(wx + maxW + lb, wy + maxN + tb + cy, (ww - maxW - maxE) - rb, h))
 				cy = cy + tb + h + bb
 
