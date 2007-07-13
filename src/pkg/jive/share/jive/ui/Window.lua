@@ -37,6 +37,7 @@ B<bgImg> : the windows background image.
 -- stuff we use
 local assert, ipairs, require, tostring, type, unpack = assert, ipairs, require, tostring, type, unpack
 
+local math                    = require("math")
 local debug                   = require("debug")
 local oo                      = require("loop.simple")
 local table                   = require("jive.utils.table")
@@ -46,6 +47,9 @@ local Timer                   = require("jive.ui.Timer")
 local Widget                  = require("jive.ui.Widget")
 
 local log                     = require("jive.utils.log").logger("ui")
+
+local max                     = math.max
+local min                     = math.min
 
 local EVENT_ALL               = jive.ui.EVENT_ALL
 local EVENT_ACTION            = jive.ui.EVENT_ACTION
@@ -695,8 +699,8 @@ function borderLayout(self, fitWindow)
 
 	-- utility function to limit bounds to window size
 	local maxBounds = function(x, y, w, h)
-				  w = (w > ww) and ww or w
-				  h = (h > wh) and wh or h
+				  w = min(ww, w)
+				  h = min(wh, h)
 				  return x, y, w, h
 			  end
 
@@ -710,28 +714,28 @@ function borderLayout(self, fitWindow)
 
 			if position == LAYOUT_NORTH then
 				h = h + tb + bb or tb + bb
-				maxN = (h > maxN) and h or maxN
+				maxN = max(h, maxN)
 
 			elseif position == LAYOUT_SOUTH then
 				h = h + tb + bb or tb + bb
-				maxS = (h > maxS) and h or maxS
+				maxS = max(h, maxS)
 
 			elseif position == LAYOUT_EAST then
 				w = w + lb + rb or lb + rb
-				maxE = (w > maxE) and w or maxE
+				maxE = max(w, maxE)
 
 			elseif position == LAYOUT_WEST then
 				w = w + lb + rb or lb + rb
-				maxW = (w > maxW) and w or maxW
+				maxW = max(w, maxW)
 
 			elseif position == LAYOUT_CENTER then
 				if w then
 					w = w + lb + rb
-					maxX = (w > maxX) and w or maxX
+					maxX = max(w, maxX)
 				end
 				if h then
 					h = h + tb + bb
-					maxY = (h > maxY) and h or maxY
+					maxY = max(h, maxY)
 				end
 
 			end
@@ -754,6 +758,7 @@ function borderLayout(self, fitWindow)
 
 
 	-- set widget bounds
+	local cy = 0
 	self:iterate(
 		function(widget)
 			local x,y,w,h = widget:getPreferredBounds()
@@ -782,8 +787,9 @@ function borderLayout(self, fitWindow)
 				widget:setBounds(maxBounds(wx + x + lb, wy + y + tb, w, wh - bb))
 
 			elseif position == LAYOUT_CENTER then
-				widget:setBounds(maxBounds(wx + maxW + lb, wy + maxN + tb, (ww - maxW - maxE) - rb, (wh - maxN - maxS) - bb))
-
+				h = h or (wh - maxN - maxS) - bb
+				widget:setBounds(maxBounds(wx + maxW + lb, wy + maxN + tb + cy, (ww - maxW - maxE) - rb, h))
+				cy = cy + tb + h + bb
 
 			elseif position == LAYOUT_NONE then
 				widget:setBounds(maxBounds(wx + x, wy + y, w, h))

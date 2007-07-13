@@ -452,7 +452,7 @@ function skin(self, s)
 
 
 	-- Slider
-	s.slider.border = 20
+	s.slider.border = 5
 	s.slider.horizontal = 1
 	s.slider.bgImg = sliderBackground
 	s.slider.img = sliderBar

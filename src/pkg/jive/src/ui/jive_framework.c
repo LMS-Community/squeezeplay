@@ -459,7 +459,7 @@ int jiveL_style_changed(lua_State *L) {
 }
 
 
-void jive_push_event(JiveEvent *evt) {
+void jive_queue_event(JiveEvent *evt) {
 	SDL_Event user_event;
 	user_event.type = SDL_USEREVENT;
 
@@ -562,7 +562,7 @@ int jiveL_push_event(lua_State *L) {
 	 */
 
 	JiveEvent *evt = lua_touserdata(L, 2);
-	jive_push_event(evt);
+	jive_queue_event(evt);
 
 	return 0;
 }
@@ -844,7 +844,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 				memset(&keyup, 0, sizeof(JiveEvent));
 				keyup.type = JIVE_EVENT_KEY_UP;
 				keyup.key_code = entry->keycode;
-				jive_push_event(&keyup);
+				jive_queue_event(&keyup);
 
 				key_state = KEY_STATE_SENT;
 				break;
