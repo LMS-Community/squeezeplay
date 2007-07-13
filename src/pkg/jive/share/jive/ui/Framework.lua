@@ -75,6 +75,7 @@ widgets = {} -- global widgets
 globalListeners = {} -- global listeners
 unusedListeners = {} -- unused listeners
 animations = {} -- active widget animations
+sound = {} -- sounds
 layoutCount = 1
 
 screen = {}
@@ -127,6 +128,10 @@ Sets the background image I<image>.
 =head2 jive.ui.Framework:styleChanged()
 
 Indicates the style parameters have changed, this clears any caching of the style values used.
+
+=head2 jive.ui.Framework:loadSound(file, channel)
+
+Load the wav file I<file> to play on the mixer channel I<channel>. Currently two channels are supported.
 
 =cut
 --]]
@@ -199,6 +204,20 @@ function removeWidget(self, widget)
 	widget:dispatchNewEvent(EVENT_HIDE)
 
 	self:reDraw(nil)
+end
+
+
+--[[
+=head2 jive.ui.Framework:playSound(name)
+
+Play sound.
+
+
+--]]
+function playSound(self, name)
+	if self.sound[name] ~= nil then
+		self.sound[name]:play()
+	end
 end
 
 

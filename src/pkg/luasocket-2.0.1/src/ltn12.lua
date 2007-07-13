@@ -8,6 +8,8 @@
 -----------------------------------------------------------------------------
 -- Declare module
 -----------------------------------------------------------------------------
+
+local print, tostring = print, tostring
 local string = require("string")
 local table = require("table")
 local base = _G

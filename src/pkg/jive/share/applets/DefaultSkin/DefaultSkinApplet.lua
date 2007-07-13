@@ -62,6 +62,7 @@ oo.class(_M, Applet)
 
 -- Define useful variables for this skin
 local imgpath = "applets/DefaultSkin/images/"
+local sndpath = "applets/DefaultSkin/sounds/"
 local fontpath = "fonts/"
 
 local wallpapers = {
@@ -203,6 +204,8 @@ function splash(self)
 				 splashWindow.transitionNone)
 	Framework:updateScreen()
 
+	Framework.sound["startup"] = Framework:loadSound(sndpath .. "startup.wav", 1)
+	Framework:playSound("startup");
 end
 
 
@@ -210,6 +213,10 @@ end
 -- The meta arranges for this to be called to skin Jive.
 function skin(self, s)
 	local screenWidth, screenHeight = Framework:getScreenSize()
+
+	-- Sounds
+	Framework.sound["click"] = Framework:loadSound(sndpath .. "click.wav", 0)
+	Framework.sound["shutdown"] = Framework:loadSound(sndpath .. "shutdown.wav", 1)
 
 	-- Images and Tiles
 	local titleBox =

@@ -15,6 +15,7 @@ noinst_LTLIBRARIES = libjiveui.la
 BUILT_SOURCES = src/ui/lua_jiveui.c
 
 libjiveui_la_SOURCES = \
+	src/ui/jive_audio.c \
 	src/ui/jive_event.c \
 	src/ui/jive_font.c \
 	src/ui/jive_framework.c \
@@ -289,3 +290,9 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/text_entry_bkgrd_r.png \
 	share/applets/DefaultSkin/images/text_entry_letter.png \
 	share/applets/DefaultSkin/images/text_entry_select.png
+
+applets_defaultskin_soundsdir = $(pkgdatadir)/applets/DefaultSkin/sounds
+dist_applets_defaultskin_sounds_DATA = \
+	share/applets/DefaultSkin/sounds/click.wav \
+	share/applets/DefaultSkin/sounds/shutdown.wav \
+	share/applets/DefaultSkin/sounds/startup.wav

@@ -71,7 +71,6 @@ static int process_event(lua_State *L, SDL_Event *event);
 int jiveL_update_screen(lua_State *L);
 
 
-
 static int jiveL_init(lua_State *L) {
 	SDL_Rect r;
 	JiveSurface *srf;
@@ -118,6 +117,10 @@ static int jiveL_init(lua_State *L) {
 
 	/* background image */
 	jive_background = jive_surface_newRGB(r.w, r.h);
+
+
+	/* init audio */
+	jiveL_init_audio(L);
 
 
 	/* jive.ui.style = {} */
@@ -172,12 +175,14 @@ static int jiveL_init(lua_State *L) {
 	*ptr = '\0';
 	
 	lua_pop(L, 2);
-
 	return 0;
 }
 
 
 static int jiveL_quit(lua_State *L) {
+
+	/* free audio */
+	jiveL_free_audio(L);
 
 	/* de-reference all windows */
 	jiveL_getframework(L);
@@ -629,7 +634,7 @@ int jiveL_find_file(lua_State *L) {
 	 */
 
 	const char *path = lua_tostring(L, 2);
-	char* fullpath = malloc(PATH_MAX);
+	char *fullpath = malloc(PATH_MAX);
 
 	if (jive_find_file(path, fullpath)) {
 		lua_pushstring(L, fullpath);
@@ -1053,6 +1058,7 @@ static const struct luaL_Reg core_methods[] = {
 	{ "getBackground", jiveL_get_background },
 	{ "setBackground", jiveL_set_background },
 	{ "styleChanged", jiveL_style_changed },
+	{ "loadSound", jiveL_load_sound },
 	{ "_event", jiveL_event },
 	{ NULL, NULL }
 };

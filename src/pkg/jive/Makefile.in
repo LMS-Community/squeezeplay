@@ -43,6 +43,7 @@ bin_PROGRAMS = jive$(EXEEXT)
 DIST_COMMON = $(am__configure_deps) $(dist_applets_bounce_DATA) \
 	$(dist_applets_defaultskin_DATA) \
 	$(dist_applets_defaultskin_images_DATA) \
+	$(dist_applets_defaultskin_sounds_DATA) \
 	$(dist_applets_defaultskin_wallpaper_DATA) \
 	$(dist_applets_flickr_DATA) $(dist_applets_keylock_DATA) \
 	$(dist_applets_log_DATA) $(dist_applets_quit_DATA) \
@@ -70,9 +71,9 @@ CONFIG_HEADER = $(top_builddir)/src/config.h
 CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
 libjiveui_la_DEPENDENCIES =
-am_libjiveui_la_OBJECTS = jive_event.lo jive_font.lo jive_framework.lo \
-	jive_icon.lo jive_label.lo jive_menu.lo jive_slider.lo \
-	jive_style.lo jive_surface.lo jive_textarea.lo \
+am_libjiveui_la_OBJECTS = jive_audio.lo jive_event.lo jive_font.lo \
+	jive_framework.lo jive_icon.lo jive_label.lo jive_menu.lo \
+	jive_slider.lo jive_style.lo jive_surface.lo jive_textarea.lo \
 	jive_textinput.lo jive_tile.lo jive_timer.lo jive_utils.lo \
 	jive_widget.lo jive_window.lo lua_jiveui.lo
 libjiveui_la_OBJECTS = $(am_libjiveui_la_OBJECTS)
@@ -80,6 +81,7 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" \
 	"$(DESTDIR)$(applets_bouncedir)" \
 	"$(DESTDIR)$(applets_defaultskindir)" \
 	"$(DESTDIR)$(applets_defaultskin_imagesdir)" \
+	"$(DESTDIR)$(applets_defaultskin_soundsdir)" \
 	"$(DESTDIR)$(applets_defaultskin_wallpaperdir)" \
 	"$(DESTDIR)$(applets_flickrdir)" \
 	"$(DESTDIR)$(applets_keylockdir)" \
@@ -123,6 +125,7 @@ am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
 dist_applets_bounceDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_defaultskinDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_defaultskin_imagesDATA_INSTALL = $(INSTALL_DATA)
+dist_applets_defaultskin_soundsDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_defaultskin_wallpaperDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_flickrDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_keylockDATA_INSTALL = $(INSTALL_DATA)
@@ -140,6 +143,7 @@ dist_luaslimDATA_INSTALL = $(INSTALL_DATA)
 dist_luautilDATA_INSTALL = $(INSTALL_DATA)
 DATA = $(dist_applets_bounce_DATA) $(dist_applets_defaultskin_DATA) \
 	$(dist_applets_defaultskin_images_DATA) \
+	$(dist_applets_defaultskin_sounds_DATA) \
 	$(dist_applets_defaultskin_wallpaper_DATA) \
 	$(dist_applets_flickr_DATA) $(dist_applets_keylock_DATA) \
 	$(dist_applets_log_DATA) $(dist_applets_quit_DATA) \
@@ -277,6 +281,7 @@ TOLUA = tolua++
 noinst_LTLIBRARIES = libjiveui.la
 BUILT_SOURCES = src/ui/lua_jiveui.c
 libjiveui_la_SOURCES = \
+	src/ui/jive_audio.c \
 	src/ui/jive_event.c \
 	src/ui/jive_font.c \
 	src/ui/jive_framework.c \
@@ -537,6 +542,12 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/text_entry_letter.png \
 	share/applets/DefaultSkin/images/text_entry_select.png
 
+applets_defaultskin_soundsdir = $(pkgdatadir)/applets/DefaultSkin/sounds
+dist_applets_defaultskin_sounds_DATA = \
+	share/applets/DefaultSkin/sounds/click.wav \
+	share/applets/DefaultSkin/sounds/shutdown.wav \
+	share/applets/DefaultSkin/sounds/startup.wav
+
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -673,6 +684,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_audio.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_event.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_font.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_framework.Plo@am__quote@
@@ -712,6 +724,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+jive_audio.lo: src/ui/jive_audio.c
+@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_audio.lo -MD -MP -MF "$(DEPDIR)/jive_audio.Tpo" -c -o jive_audio.lo `test -f 'src/ui/jive_audio.c' || echo '$(srcdir)/'`src/ui/jive_audio.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/jive_audio.Tpo" "$(DEPDIR)/jive_audio.Plo"; else rm -f "$(DEPDIR)/jive_audio.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ui/jive_audio.c' object='jive_audio.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_audio.lo `test -f 'src/ui/jive_audio.c' || echo '$(srcdir)/'`src/ui/jive_audio.c
 
 jive_event.lo: src/ui/jive_event.c
 @am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_event.lo -MD -MP -MF "$(DEPDIR)/jive_event.Tpo" -c -o jive_event.lo `test -f 'src/ui/jive_event.c' || echo '$(srcdir)/'`src/ui/jive_event.c; \
@@ -919,6 +938,23 @@ uninstall-dist_applets_defaultskin_imagesDATA:
 	  f=$(am__strip_dir) \
 	  echo " rm -f '$(DESTDIR)$(applets_defaultskin_imagesdir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(applets_defaultskin_imagesdir)/$$f"; \
+	done
+install-dist_applets_defaultskin_soundsDATA: $(dist_applets_defaultskin_sounds_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(applets_defaultskin_soundsdir)" || $(mkdir_p) "$(DESTDIR)$(applets_defaultskin_soundsdir)"
+	@list='$(dist_applets_defaultskin_sounds_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(dist_applets_defaultskin_soundsDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_defaultskin_soundsdir)/$$f'"; \
+	  $(dist_applets_defaultskin_soundsDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_defaultskin_soundsdir)/$$f"; \
+	done
+
+uninstall-dist_applets_defaultskin_soundsDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_applets_defaultskin_sounds_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(applets_defaultskin_soundsdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(applets_defaultskin_soundsdir)/$$f"; \
 	done
 install-dist_applets_defaultskin_wallpaperDATA: $(dist_applets_defaultskin_wallpaper_DATA)
 	@$(NORMAL_INSTALL)
@@ -1227,7 +1263,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/Bounce $(distdir)/share/applets/DefaultSkin $(distdir)/share/applets/DefaultSkin/images $(distdir)/share/applets/DefaultSkin/wallpaper $(distdir)/share/applets/Flickr $(distdir)/share/applets/KeyLock $(distdir)/share/applets/LogSettings $(distdir)/share/applets/Quit $(distdir)/share/applets/ScreenSavers $(distdir)/share/applets/Screenshot $(distdir)/share/applets/SlimBrowser $(distdir)/share/applets/SlimDiscovery $(distdir)/share/applets/Test $(distdir)/share/jive $(distdir)/share/jive/net $(distdir)/share/jive/slim $(distdir)/share/jive/ui $(distdir)/share/jive/utils $(distdir)/src
+	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/Bounce $(distdir)/share/applets/DefaultSkin $(distdir)/share/applets/DefaultSkin/images $(distdir)/share/applets/DefaultSkin/sounds $(distdir)/share/applets/DefaultSkin/wallpaper $(distdir)/share/applets/Flickr $(distdir)/share/applets/KeyLock $(distdir)/share/applets/LogSettings $(distdir)/share/applets/Quit $(distdir)/share/applets/ScreenSavers $(distdir)/share/applets/Screenshot $(distdir)/share/applets/SlimBrowser $(distdir)/share/applets/SlimDiscovery $(distdir)/share/applets/Test $(distdir)/share/jive $(distdir)/share/jive/net $(distdir)/share/jive/slim $(distdir)/share/jive/ui $(distdir)/share/jive/utils $(distdir)/src
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -1356,7 +1392,7 @@ check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" "$(DESTDIR)$(applets_bouncedir)" "$(DESTDIR)$(applets_defaultskindir)" "$(DESTDIR)$(applets_defaultskin_imagesdir)" "$(DESTDIR)$(applets_defaultskin_wallpaperdir)" "$(DESTDIR)$(applets_flickrdir)" "$(DESTDIR)$(applets_keylockdir)" "$(DESTDIR)$(applets_logdir)" "$(DESTDIR)$(applets_quitdir)" "$(DESTDIR)$(applets_screensaversdir)" "$(DESTDIR)$(applets_screenshotdir)" "$(DESTDIR)$(applets_slimbrowserdir)" "$(DESTDIR)$(applets_slimdiscoverydir)" "$(DESTDIR)$(applets_testdir)" "$(DESTDIR)$(jivedir)" "$(DESTDIR)$(jiveuidir)" "$(DESTDIR)$(luanetdir)" "$(DESTDIR)$(luaslimdir)" "$(DESTDIR)$(luautildir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" "$(DESTDIR)$(applets_bouncedir)" "$(DESTDIR)$(applets_defaultskindir)" "$(DESTDIR)$(applets_defaultskin_imagesdir)" "$(DESTDIR)$(applets_defaultskin_soundsdir)" "$(DESTDIR)$(applets_defaultskin_wallpaperdir)" "$(DESTDIR)$(applets_flickrdir)" "$(DESTDIR)$(applets_keylockdir)" "$(DESTDIR)$(applets_logdir)" "$(DESTDIR)$(applets_quitdir)" "$(DESTDIR)$(applets_screensaversdir)" "$(DESTDIR)$(applets_screenshotdir)" "$(DESTDIR)$(applets_slimbrowserdir)" "$(DESTDIR)$(applets_slimdiscoverydir)" "$(DESTDIR)$(applets_testdir)" "$(DESTDIR)$(jivedir)" "$(DESTDIR)$(jiveuidir)" "$(DESTDIR)$(luanetdir)" "$(DESTDIR)$(luaslimdir)" "$(DESTDIR)$(luautildir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -1410,6 +1446,7 @@ info-am:
 install-data-am: install-dist_applets_bounceDATA \
 	install-dist_applets_defaultskinDATA \
 	install-dist_applets_defaultskin_imagesDATA \
+	install-dist_applets_defaultskin_soundsDATA \
 	install-dist_applets_defaultskin_wallpaperDATA \
 	install-dist_applets_flickrDATA \
 	install-dist_applets_keylockDATA install-dist_applets_logDATA \
@@ -1454,6 +1491,7 @@ ps-am:
 uninstall-am: uninstall-binPROGRAMS uninstall-dist_applets_bounceDATA \
 	uninstall-dist_applets_defaultskinDATA \
 	uninstall-dist_applets_defaultskin_imagesDATA \
+	uninstall-dist_applets_defaultskin_soundsDATA \
 	uninstall-dist_applets_defaultskin_wallpaperDATA \
 	uninstall-dist_applets_flickrDATA \
 	uninstall-dist_applets_keylockDATA \
@@ -1478,6 +1516,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_applets_bounceDATA \
 	install-data-am install-dist_applets_bounceDATA \
 	install-dist_applets_defaultskinDATA \
 	install-dist_applets_defaultskin_imagesDATA \
+	install-dist_applets_defaultskin_soundsDATA \
 	install-dist_applets_defaultskin_wallpaperDATA \
 	install-dist_applets_flickrDATA \
 	install-dist_applets_keylockDATA install-dist_applets_logDATA \
@@ -1498,6 +1537,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_applets_bounceDATA \
 	uninstall-dist_applets_bounceDATA \
 	uninstall-dist_applets_defaultskinDATA \
 	uninstall-dist_applets_defaultskin_imagesDATA \
+	uninstall-dist_applets_defaultskin_soundsDATA \
 	uninstall-dist_applets_defaultskin_wallpaperDATA \
 	uninstall-dist_applets_flickrDATA \
 	uninstall-dist_applets_keylockDATA \
