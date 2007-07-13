@@ -201,6 +201,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\ui\jive_audio.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\ui\jive_event.c"
 				>
 			</File>
