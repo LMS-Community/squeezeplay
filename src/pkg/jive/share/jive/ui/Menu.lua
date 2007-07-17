@@ -420,7 +420,7 @@ function scrollBy(self, scroll)
 	end
 
 	if lastSelected ~= selected then
-		Framework:playSound("click")
+		self:playSound("click")
 	end
 
 	self.selected = selected

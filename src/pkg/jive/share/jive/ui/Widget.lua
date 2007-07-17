@@ -583,6 +583,20 @@ function removeTimer(self, timer)
 end
 
 
+--[[
+
+=head2 jive.ui.Widget:playSound(sound)
+
+Play the sound when the widget is visible.
+
+=cut
+--]]
+function playSound(self, sound)
+	if self.visible then
+		Framework:playSound(sound)
+	end
+end
+
 
 function _event(self, event)
 	local type = event:getType()
