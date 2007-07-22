@@ -285,6 +285,26 @@ end
 
 --[[
 
+=head2 jive.ui.Window:hideToTop()
+
+Hide from this window to the top if the window stack.
+
+=cut
+--]]
+function hideToTop(self, transition)
+	local stack = Framework.windowStack
+
+	for i=1,#stack do
+		if stack[i] == self then
+			for j=i,1,-1 do
+				stack[j]:hide(transition)
+			end
+		end
+	end
+end
+
+--[[
+
 =head2 jive.ui.Window:bumpLeft()
 
 Makes the window bump left.

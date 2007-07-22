@@ -60,11 +60,9 @@ int jiveL_widget_set_bounds(lua_State *L) {
 	}
 
 	// mark old widget bounds for redrawing
-	if (jive_getmethod(L, 1, "reDraw")) {
-		lua_pushvalue(L, 1);
-		lua_call(L, 1, 0);
-	}
-
+	lua_pushcfunction(L, jiveL_widget_redraw);
+	lua_pushvalue(L, 1);
+	lua_call(L, 1, 0);
 
 	// check if the widget has moved
 	if (memcmp(&peer->bounds, &bounds, sizeof(bounds)) == 0) {
@@ -79,6 +77,11 @@ int jiveL_widget_set_bounds(lua_State *L) {
 		lua_pushvalue(L, 1);
 		lua_call(L, 1, 0);
 	}
+
+	// mark new widget bounds for redrawing
+	lua_pushcfunction(L, jiveL_widget_redraw);
+	lua_pushvalue(L, 1);
+	lua_call(L, 1, 0);
 
 	//printf("## SET_BOUNDS %p %d,%d %dx%d\n", lua_topointer(L, 1), peer->bounds.x, peer->bounds.y, peer->bounds.w, peer->bounds.h);
 
