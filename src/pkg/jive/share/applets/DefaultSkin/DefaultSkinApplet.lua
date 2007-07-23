@@ -204,8 +204,8 @@ function splash(self)
 				 splashWindow.transitionNone)
 	Framework:updateScreen()
 
-	Framework.sound["startup"] = Framework:loadSound(sndpath .. "startup.wav", 1)
-	Framework:playSound("startup");
+	Framework.sound["STARTUP"] = Framework:loadSound(sndpath .. "startup.wav", 1)
+	Framework:playSound("STARTUP");
 end
 
 
@@ -215,8 +215,13 @@ function skin(self, s)
 	local screenWidth, screenHeight = Framework:getScreenSize()
 
 	-- Sounds
-	Framework.sound["click"] = Framework:loadSound(sndpath .. "click.wav", 0)
-	Framework.sound["shutdown"] = Framework:loadSound(sndpath .. "shutdown.wav", 1)
+	Framework.sound["BUMP"] = Framework:loadSound(sndpath .. "bump.wav", 1)
+	Framework.sound["CLICK"] = Framework:loadSound(sndpath .. "click.wav", 0)
+	Framework.sound["JUMP"] = Framework:loadSound(sndpath .. "jump.wav", 0)
+	Framework.sound["PUSHLEFT"] = Framework:loadSound(sndpath .. "pushleft.wav", 1)
+	Framework.sound["PUSHRIGHT"] = Framework:loadSound(sndpath .. "pushright.wav", 1)
+	Framework.sound["SELECT"] = Framework:loadSound(sndpath .. "select.wav", 0)
+	Framework.sound["SHUTDOWN"] = Framework:loadSound(sndpath .. "shutdown.wav", 1)
 
 	-- Images and Tiles
 	local titleBox =

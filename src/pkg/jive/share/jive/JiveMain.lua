@@ -194,9 +194,8 @@ function JiveMain:__init()
 				      function(event)
 					      if event:getKeycode() == jive.ui.KEY_HOME then
 						      while jive.ui.Framework.windowStack[1] ~= jiveMain.window do
-							      jive.ui.Framework.windowStack[1]:hide()
+							      jive.ui.Framework.windowStack[1]:hide(nil, "JUMP")
 						      end
-
 						      return jive.ui.EVENT_CONSUME
 					      end
 

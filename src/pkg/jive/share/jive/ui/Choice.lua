@@ -89,6 +89,7 @@ local function _keyPress(self, event)
 	if eventType == EVENT_ACTION then
 
 		self:setSelectedIndex(newSelectedIndex)
+		self:playSound("SELECT")
 
 	elseif eventType == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()
@@ -97,11 +98,7 @@ local function _keyPress(self, event)
 			or keycode == KEY_RIGHT then
 
 			self:setSelectedIndex(newSelectedIndex)
-
-		elseif keycode == KEY_LEFT then
-
-			self:setSelectedIndex(newSelectedIndex)
-
+			self:playSound("SELECT")
 		end
 	end
 end

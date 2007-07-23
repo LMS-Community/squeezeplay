@@ -593,7 +593,7 @@ local _defaultActions = {
 			while step do
 				if step.origin then
 					-- hide the window
-					step.window:hide()
+					step.window:hide(nil, "JUMP")
 					-- destroy scaffholding to data coming in is stopped
 					step.destination = false
 					step = step.origin

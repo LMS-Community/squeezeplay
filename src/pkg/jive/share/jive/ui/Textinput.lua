@@ -112,10 +112,14 @@ function _scroll(self, dir)
 	-- new string
 	s2 = string.sub(v, i, i)
 	self:setValue(s1 .. s2 .. s3)
+
+	self:playSound("CLICK")
 end
 
 
 function _moveCursor(self, dir)
+	local oldCursor = self.cursor
+
 	self.cursor = self.cursor + dir
 
 	-- check for a valid character at the cursor position, if
@@ -148,6 +152,10 @@ function _moveCursor(self, dir)
 		if self.cursor < 2 then
 			self.indent =  self.cursor - 1
 		end
+	end
+
+	if self.cursor ~= oldCursor then
+		self:playSound("SELECT")
 	end
 end
 

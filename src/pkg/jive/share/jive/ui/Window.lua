@@ -123,13 +123,13 @@ end
 
 --[[
 
-=head2 jive.ui.Window:show(transition)
+=head2 jive.ui.Window:show(transition, soundEffect)
 
 Show this window, adding it to the top of the window stack. The I<transition> is used to move the window on stage.
 
 =cut
 --]]
-function show(self, transition)
+function show(self, transition, soundEffect)
 	local stack = Framework.windowStack
 
 	-- make sure the window layout is done
@@ -162,7 +162,10 @@ function show(self, transition)
 	if (topwindow) then
 		-- push transitions
 		transition = transition or self._DEFAULT_SHOW_TRANSITION
-		Framework:_startTransition(transition(topwindow, self))
+		Framework:_startTransition(transition(topwindow, self, soundEffect))
+
+		-- sound effect
+		self:playSound(soundEffect or "PUSHLEFT")
 
 		-- the old window and widgets are no longer visible
 		topwindow:dispatchNewEvent(EVENT_HIDE)
@@ -177,16 +180,16 @@ end
 
 --[[
 
-=head2 jive.ui.Window:showInstead(transition)
+=head2 jive.ui.Window:showInstead(transition, soundEffect)
 
 Shows this window as a replacement for the window at the top of the window stack. The I<transition> is used to move the window on stage.
 
 =cut
 --]]
-function showInstead(self, transition)
+function showInstead(self, transition, soundEffect)
 	local last = Framework.windowStack[1]
 
-	self:show(transition)
+	self:show(transition, soundEffect)
 	last:hide()
 end
 
@@ -245,13 +248,13 @@ end
 
 --[[
 
-=head2 jive.ui.Window:hide(transition)
+=head2 jive.ui.Window:hide(transition, soundEffect)
 
 Hides this window. It it is currently at the top of the window stack then the I<transition> is used to move the window off stage.
 
 =cut
 --]]
-function hide(self, transition)
+function hide(self, transition, soundEffect)
 	local stack = Framework.windowStack
 
 	local wasVisible = (stack[1] == self)
@@ -270,7 +273,10 @@ function hide(self, transition)
 
 		-- push transitions
 		transition = transition or self._DEFAULT_HIDE_TRANSITION
-		Framework:_startTransition(transition(self, topWindow))
+		Framework:_startTransition(transition(self, topWindow, soundEffect))
+
+		-- sound effect
+		self:playSound(soundEffect or "PUSHRIGHT")
 
 		-- this window and widgets are now not visible
 		self:dispatchNewEvent(EVENT_HIDE)
@@ -285,19 +291,19 @@ end
 
 --[[
 
-=head2 jive.ui.Window:hideToTop()
+=head2 jive.ui.Window:hideToTop(transition, soundEffect)
 
 Hide from this window to the top if the window stack.
 
 =cut
 --]]
-function hideToTop(self, transition)
+function hideToTop(self, transition, soundEffect)
 	local stack = Framework.windowStack
 
 	for i=1,#stack do
 		if stack[i] == self then
 			for j=i,1,-1 do
-				stack[j]:hide(transition)
+				stack[j]:hide(transition, soundEffect)
 			end
 		end
 	end
@@ -313,6 +319,9 @@ Makes the window bump left.
 --]]
 function bumpLeft(self)
 	Framework:_startTransition(self:transitionBumpLeft(self))
+
+	-- sound effect
+	self:playSound("BUMP")
 end
 
 
@@ -326,6 +335,9 @@ Makes the window bump right.
 --]]
 function bumpRight(self)
 	Framework:_startTransition(self:transitionBumpRight(self))
+
+	-- sound effect
+	self:playSound("BUMP")
 end
 
 

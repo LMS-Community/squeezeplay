@@ -77,6 +77,7 @@ function __init(self, style, closure, isSelected)
 	obj:addListener(EVENT_ACTION | EVENT_KEY_PRESS,
 		 function(event)
 			 obj:setSelected(not obj.selected)
+			 obj:playSound("SELECT")
 			 return EVENT_CONSUME
 		 end)
 

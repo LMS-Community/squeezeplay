@@ -103,7 +103,11 @@ function __init(self, style, group, closure, selected)
 
 	obj:addListener(EVENT_ACTION,
 			 function(event)
+				 local oldSelected = group.selected
 				 group:setSelected(obj)
+				 if oldSelected ~= group.selected then
+				         obj:playSound("SELECT")
+				 end
 				 return EVENT_CONSUME
 			 end)
 

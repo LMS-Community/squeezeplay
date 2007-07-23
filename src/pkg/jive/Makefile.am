@@ -293,6 +293,12 @@ dist_applets_defaultskin_images_DATA = \
 
 applets_defaultskin_soundsdir = $(pkgdatadir)/applets/DefaultSkin/sounds
 dist_applets_defaultskin_sounds_DATA = \
+	share/applets/DefaultSkin/sounds/bump.wav \
 	share/applets/DefaultSkin/sounds/click.wav \
+	share/applets/DefaultSkin/sounds/jump.wav \
+	share/applets/DefaultSkin/sounds/pushleft.wav \
+	share/applets/DefaultSkin/sounds/pushright.wav \
+	share/applets/DefaultSkin/sounds/select.wav \
 	share/applets/DefaultSkin/sounds/shutdown.wav \
 	share/applets/DefaultSkin/sounds/startup.wav
+
