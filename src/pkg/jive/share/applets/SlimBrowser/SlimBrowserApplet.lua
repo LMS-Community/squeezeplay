@@ -507,25 +507,7 @@ local function _mainMenuSink(step, chunk, err)
 
 		-- call the regular sink
 		_browseSink(step, chunk, err)
-		
-		--[[
-		local data = {
-			timer = false,
-			count = 0,
-		}
-		
-		local timer = Timer(300, 
-			function()
-				data.count = data.count + 1
-				_player:indexhtml()
-				if data.count == 100 then
-					data.timer:stop()
-				end
-			end)
-		
-		timer:start()
-		data.timer = timer
-		--]]
+
 	else
 		log:error(err)
 		-- FIXME: Cancel opening plugin, bla bla bla

@@ -10,7 +10,12 @@ TODO
 
 =head1 SYNOPSIS
 
-TODO
+Notifications:
+
+ playerConnected:
+ playerDisconnected:
+ playerNew
+ playerDelete
 
 =head1 FUNCTIONS
 
@@ -75,16 +80,34 @@ local function _getSink(self)
 end
 
 
+-- _setConnected(connected)
+-- sets the connected state from the player
+-- sends an appropriate notification on change
+local function _setConnected(self, connected)
+	log:debug("_setConnected(", tostring(connected), ")")
+	
+	-- use tostring to handle nil case (in either)
+	if tostring(connected) != tostring(self.connected) then
+		if connected == 1 then
+			self.jnt:notify('playerConnected', self)
+		else
+			self.jnt:notify('playerDisconnected', self)
+		end
+		self.connected = connected
+	end
+end
+
+
 --[[
 
-=head2 jive.slim.Player(server, jnt, jpool, playerinfo)
+=head2 jive.slim.Player(server, jnt, jpool, playerInfo)
 
 Create a Player object for server I<server>.
 
 =cut
 --]]
-function __init(self, slimServer, jnt, jpool, playerinfo)
-	log:debug("Player:__init(", tostring(playerinfo.playerid), ")")
+function __init(self, slimServer, jnt, jpool, playerInfo)
+	log:debug("Player:__init(", tostring(playerInfo.playerid), ")")
 
 	assert(slimServer, "Cannot create Player without SlimServer object")
 	
@@ -96,9 +119,10 @@ function __init(self, slimServer, jnt, jpool, playerinfo)
 		jnt = jnt,
 		jpool = jpool,
 
-		id = playerinfo.playerid,
-		name = playerinfo.name,
-		model = playerinfo.model,
+		id = playerInfo.playerid,
+		name = playerInfo.name,
+		model = playerInfo.model,
+		connected = playerInfo.connected,
 
 		-- menu item of home menu that represents this player
 		homeMenuItem = false,
@@ -116,6 +140,21 @@ function __init(self, slimServer, jnt, jpool, playerinfo)
 	return obj
 end
 
+
+--[[
+
+=head2 jive.slim.Player:updateFromSS(playerInfo)
+
+Updates the player with fresh data from SS.
+
+=cut
+--]]
+function updateFromSS(self, playerInfo)
+	
+	self.name = playerInfo.name
+	self.model = playerInfo.model
+	_setConnected(self, playerInfo.connected)
+end
 
 --[[
 
@@ -292,8 +331,10 @@ function _process_status(self, data)
 		logv:debug("-------------------------Player:volume: ", tostring(self.state["mixer volume"]), " - " , tostring(data.result["mixer volume"]))
 	end
 	
-	-- cache result
+	-- update our cache in one go
 	self.state = data.result
+	
+	_setConnected(self, self.state["player_connected"])
 	
 	self:updateIconbar()
 	
@@ -509,54 +550,6 @@ function getVolume(self)
 end
 
 
-
-local function _getHtmlSink(self)
-
-	return function(chunk, err)
-	
-		if err then
-			log:debug(err)
-			
-		elseif chunk then
-			log:info(chunk)
-			
-			local proc = "_process_html"
-			if self[proc] then
-				self[proc](self, chunk)
-			end
-				
-		end
-	end
-end
-
-function _process_html(self, chunk)
-	self.htmltime = self.htmltime + (_t() - self.htmlT)
-	self.htmlcalls = self.htmlcalls + 1
-	log:error("HTML average round trip:", tostring(self.htmltime), "/", tostring(self.htmlcalls), " = ", tostring(self.htmltime/self.htmlcalls))
-end
-
-function indexhtml2(self)
-	log:error("Player:indexhtml2():")
-	log:error({whatevr='whatever'})
-	local req = RequestHttp(
-		_getHtmlSink(self), --sink, 
-		'GET', --player, 
-		"/index.html")
-	self:queuePriority(req)
-end
-
-function indexhtml(self)
-	if not 	self.htmlcalls then
-			self.htmlcalls = 0
-			self.htmltime = 0
-		end
-	self.htmlT = _t()
-	self:indexhtml2()
-end
-	
-
-
-
 -- (accessors)
 function getName(self)
 	return self.name
@@ -570,6 +563,9 @@ function getSlimServer(self)
 	return self.slimServer
 end
 
+function getConnected(self)
+	return self.connected
+end
 
 -- queue
 -- proxy function for the slimserver pool

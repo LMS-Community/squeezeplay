@@ -195,9 +195,14 @@ function _serverstatusSink(self, data, err)
 			-- remove the player from our list since it is reported by the server
 			selfPlayers[player_info.playerid] = nil
 	
+			-- create new players
 			if not self.players[player_info.playerid] then
 			
 				self.players[player_info.playerid] = Player(self, self.jnt, self.jpool, player_info)
+			
+			else
+				-- update existing players
+				self.players[player_info.playerid]:updateFromSS(player_info)
 			end
 		end
 	else
