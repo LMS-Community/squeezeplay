@@ -60,6 +60,13 @@ function __init(self, ...)
 end
 
 
+-- getSlimServers
+-- returns the slimServers object
+function getSlimServers(self)
+	return self.servers
+end
+
+
 -- notify_playerNew
 -- this is called by jnt when the playerNew message is sent
 function notify_playerNew(self, player)

@@ -73,17 +73,17 @@ local function _cacheServer(self, ss_ip, ss_port, ss_name)
 	local ss_id = SlimServer.idFor(nil, ss_ip, ss_port, ss_name)
 			
 	-- in the cache?			
-	if self.servers[ss_id] == nil then
+	if self._servers[ss_id] == nil then
 		log:info("Creating server ", ss_name, " (", ss_id, ")")
 		
 		-- drop the port info, we're not doing anything with it
-		self.servers[ss_id] = SlimServer(self.jnt, ss_ip, ss_name)
+		self._servers[ss_id] = SlimServer(self.jnt, ss_ip, ss_name)
 
 	else
 	
 		-- update the server with the name info, might have changed
 		-- also keeps track of the last time we've seen the server for deletion
-		self.servers[ss_id]:updateFromUdp(ss_name)
+		self._servers[ss_id]:updateFromUdp(ss_name)
 	end
 end
 
@@ -127,13 +127,13 @@ end
 local function _cacheCleanup(self)
 	log:debug("_cacheCleanup()")
 	
-	for ss_id, server in pairs(self.servers) do
+	for ss_id, server in pairs(self._servers) do
 	
 		if not server:isConnected() and
 			os.time() - server:getLastSeen() > TIMEOUT then
 		
 			log:info("Removing server ", server:getName(), " (", ss_id, ")")
-			self.servers[ss_id] = nil
+			self._servers[ss_id] = nil
 			server:free()
 		end
 	end
@@ -157,7 +157,7 @@ function __init(self, jnt)
 		jnt = jnt,
 		
 		-- servers cache
-		servers = {},
+		_servers = {},
 	})
 	
 	-- create a udp socket
@@ -184,6 +184,19 @@ function discover(self)
 
 	self.js:send(t_source, PORT)
 	_cacheCleanup(self)	
+end
+
+
+--[[
+
+=head2 jive.slim.SlimServers:servers()
+
+Returns an iterator over the discovered slimservers.
+
+=cut
+--]]
+function servers(self)
+	return pairs(self._servers)
 end
 
 

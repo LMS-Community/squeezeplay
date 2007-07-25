@@ -382,6 +382,13 @@ function menuItem(self, menuName, appletName, method, ...)
 end
 
 
+-- getApplet
+-- returns instance of the applet
+function getApplet(self, appletName)
+	return self:load(appletName)
+end
+
+
 -- openWindow
 -- opens a window for the applet
 function openWindow(self, appletName, method, ...)
