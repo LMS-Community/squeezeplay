@@ -32,7 +32,7 @@ local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Textarea         = require("jive.ui.Textarea")
 local table            = require("jive.utils.table")
 
-local log              = require("jive.utils.log").logger("screensavers")
+local log              = require("jive.utils.log").logger("applets.screensavers")
 
 local appletManager    = appletManager
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS

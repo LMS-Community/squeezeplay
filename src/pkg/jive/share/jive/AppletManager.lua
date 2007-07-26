@@ -29,7 +29,7 @@ local lfs              = require("lfs")
                        
 local Label            = require("jive.ui.Label")
                        
-local log              = require("jive.utils.log").logger("applets")
+local log              = require("jive.utils.log").logger("applets.misc")
 
 local JIVE_VERSION     = jive.JIVE_VERSION
 local EVENT_ACTION     = jive.ui.EVENT_ACTION

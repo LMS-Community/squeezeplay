@@ -53,7 +53,7 @@ local perfs         = require("jive.utils.perfs")
 local jud = require("jive.utils.debug")
 
 
-local log           = require("jive.utils.log").logger("browser")
+local log           = require("jive.utils.log").logger("jive.main")
 
 require("jive.ui.Framework")
 --require("profiler")

@@ -33,7 +33,7 @@ local SimpleMenu      = require("jive.ui.SimpleMenu")
 local Window          = require("jive.ui.Window")
 local jul             = require("jive.utils.log")
 
-local log             = jul.logger("browser")
+local log             = jul.logger("applets.browser")
 
 
 module(...)

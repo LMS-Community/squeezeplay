@@ -29,7 +29,7 @@ local Surface          = require("jive.ui.Surface")
 local Icon             = require("jive.ui.Icon")
 local Framework        = require("jive.ui.Framework")
 
-local log              = require("jive.utils.log").logger("screensaver.bounce")
+local log              = require("jive.utils.log").logger("applets.screensavers")
 
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
 local EVENT_WINDOW_RESIZE = jive.ui.EVENT_WINDOW_RESIZE

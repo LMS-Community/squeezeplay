@@ -42,7 +42,7 @@ local SocketHttp       = require("jive.net.SocketHttp")
 local RequestHttp      = require("jive.net.RequestHttp")
 local json             = require("json")
                        
-local log              = require("jive.utils.log").logger("screensaver.flickr")
+local log              = require("jive.utils.log").logger("applets.screensavers")
 
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
 local EVENT_WINDOW_RESIZE = jive.ui.EVENT_WINDOW_RESIZE

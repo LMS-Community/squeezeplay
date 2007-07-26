@@ -22,7 +22,7 @@ local oo             = require("loop.simple")
 
 local Applet         = require("jive.Applet")
 
-local log            = require("jive.utils.log").logger("browser")
+local log            = require("jive.utils.log").logger("applets.browser")
 
 local EVENT_CONSUME  = jive.ui.EVENT_CONSUME
 local EVENT_QUIT     = jive.ui.EVENT_QUIT
