@@ -125,9 +125,11 @@ local log = jiveLogger(logging.WARN)
 
 Categories are strings. The following are the default categories:
 
+ -- setup
  -- browser
- -- applets
+ -- games
  -- screensavers
+ -- utilities
 
  -- slimserver
  -- slimserver.cache
@@ -144,9 +146,11 @@ Categories are strings. The following are the default categories:
 
 -- table to contain all the loggers indexed by category
 local categories = {
+	["setup"]          = jiveLogger(logging.WARN),
 	["browser"]          = jiveLogger(logging.WARN),
-	["applets"]          = jiveLogger(logging.WARN),
+	["games"]          = jiveLogger(logging.WARN),
 	["screensavers"]     = jiveLogger(logging.WARN),
+	["utilities"]     = jiveLogger(logging.WARN),
 
 	["slimserver"]       = jiveLogger(logging.WARN),
 	["slimserver.cache"] = jiveLogger(logging.WARN),

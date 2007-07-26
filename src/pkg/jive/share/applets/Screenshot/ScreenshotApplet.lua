@@ -26,7 +26,7 @@ local Framework        = require("jive.ui.Framework")
 local Surface          = require("jive.ui.Surface")
 local Window           = require("jive.ui.Window")
 
-local log              = require("jive.utils.log").logger("applets")
+local log              = require("jive.utils.log").logger("utilities")
 
 
 local EVENT_KEY_HOLD   = jive.ui.EVENT_KEY_HOLD
