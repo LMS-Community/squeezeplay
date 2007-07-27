@@ -1,0 +1,1255 @@
+﻿#
+# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
+# 
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+
+POPUP_WARNING
+	DE	Warnung!
+	EN	Warning!
+	ES	Advertencia.
+	FR	Attention!
+	IT	Attenzione
+	NL	Waarschuwing!
+
+POPUP_BATTERY_LOW
+	DE	Batterie schwach
+	EN	Battery Low
+	ES	Pila con poca carga
+	FR	Niveau faible des piles
+	IT	Livello batteria insufficiente
+	NL	Batterij bijna leeg
+
+CHOOSE_LANGUAGE
+	DE	Sprache wählen
+	EN	Choose Language
+	ES	Elegir idioma
+	FR	Choisir une langue
+	IT	Scegliere la lingua
+	NL	Taal kiezen
+
+LANGUAGE
+	DE	Deutsch
+	EN	English
+	ES	Español
+	FR	Français
+	IT	Italiano
+	NL	Nederlands
+
+CHOOSE_LANGUAGE_HELP
+	DE	Wählen Sie Ihre Sprache mit dem Rad aus. Drücken Sie zum Fortfahren die Mitteltaste.
+	EN	Use the wheel to choose your language. Press the center button to go on.
+	ES	Use el botón rueda para elegir el idioma. Pulse el botón central para continuar.
+	FR	Utilisez la roulette pour choisir une langue. Appuyez sur le bouton central pour continuer.
+	IT	Utilizzare la ghiera per scegliere la lingua. Premere il pulsante centrale per continuare.
+	NL	Gebruik het wiel om je taal te kiezen. Druk op de middelste knop om verder te gaan.
+
+WELCOME
+	DE	Willkommen!
+	EN	Welcome
+	ES	Bienvenido.
+	FR	Bienvenue!
+	IT	Benvenuti
+	NL	Welkom!
+
+WELCOME_BODY
+	DE	Danke, dass Sie für eine Jive entschieden haben. Lassen Sie uns gleich die Verbindung zu Ihrem Netzwerk und Ihrer Musik herstellen!
+	EN	Thanks for buying a Jive. Let's get started by getting you connected to your network and music.
+	ES	Gracias por adquirir Jive. Comencemos por realizar la conexión a la red y música.
+	FR	Nous vous remercions d'avoir choisi la télcommande Jive. Nous allons dans un premier temps vous connecter à votre réseau et à votre musique.
+	IT	Grazie per avere acquistato Jive. Iniziamo con il collegamento alla rete e alla musica.
+	NL	Hartelijk dank voor de aanschaf van een Jive. We gaan je eerst met je netwerk en muziek verbinden.
+
+WELCOME_HELP
+	DE	Drücken Sie die Mitteltaste, wenn Sie so weit sind.
+	EN	Press the center button when you are ready to move on.
+	ES	Pulse el botón central cuando esté listo para continuar.
+	FR	Appuyez sur le bouton central lorsque vous êtes prêt à continuer.
+	IT	Premere il pulsante centrale per proseguire.
+	NL	Druk op de middelste knop wanneer je klaar bent om verder te gaan.
+
+NETWORK_REGION
+	DE	Wireless-Region
+	EN	Wireless Region
+	ES	Región inalámbrica
+	FR	Zone sans fil
+	IT	Area senza fili
+	NL	Draadloze regio
+
+NETWORK_UNITED_STATES
+	DE	USA und Mexiko
+	EN	United States & Mexico
+	ES	Estados Unidos y México
+	FR	Etats-Unis et Mexique
+	IT	Stati Uniti e Messico
+	NL	Verenigde Staten en Mexico
+
+NETWORK_CANADA
+	DE	Kanada
+	EN	Canada
+	ES	Canadá
+	FR	Canada
+	IT	Canada
+	NL	Canada
+
+NETWORK_EUROPE
+	DE	Europa
+	EN	Europe
+	ES	Europa
+	FR	Europe
+	IT	Europa
+	NL	Europa
+
+NETWORK_FRANCE
+	DE	Frankreich
+	EN	France
+	ES	Francia
+	FR	France
+	IT	Francia
+	NL	Frankrijk
+
+NETWORK_AUSTRALIA
+	DE	Australien
+	EN	Australia
+	ES	Australia
+	FR	Australie
+	IT	Australia
+	NL	Australië
+
+NETWORK_JAPAN
+	DE	Japan
+	EN	Japan
+	ES	Japón
+	FR	Japon
+	IT	Giappone
+	NL	Japan
+
+NETWORK_REGION_HELP
+	DE	Wählen Sie Region oder Land.
+	EN	Choose the local region or country.
+	ES	Elija la región o el país.
+	FR	Choisissez votre zone ou pays local.
+	IT	Scegliere il paese o l'area geografica.
+	NL	Kies de regio of het land.
+
+NETWORK_CONNECTION
+	DE	Kabellose Verbindung
+	EN	Wireless Connection
+	ES	Conexión inalámbrica
+	FR	Connexion sans fil
+	IT	Connessione senza fili
+	NL	Draadloze verbinding
+
+NETWORK_USING_SQUEEZEBOX
+	DE	Verbinden mit Squeezebox
+	EN	Connect using Squeezebox
+	ES	Conectar mediante Squeezebox
+	FR	Connexion à l'aide de la Squeezebox
+	IT	Connetti tramite Squeezebox
+	NL	Verbinding maken via Squeezebox
+
+NETWORK_USING_WIRELESS
+	DE	Mit anderem kabellosem Netz verbinden
+	EN	Connect to other wireless network
+	ES	Conectar a otra red inalámbrica
+	FR	Connexion à un autre réseau sans fil
+	IT	Connetti ad altre reti senza fili
+	NL	Verbinding maken met ander draadloos netwerk
+
+NETWORK_CONNECTION_HELP
+	DE	Stellen Sie mit der Squeezebox die Verbindung zu Ihrem Netz her oder benutzen Sie einen anderen kabellosen Zugriffspunkt.
+	EN	You can use your Squeezebox to connect to your network or use another wireless access point.
+	ES	Puede usar Squeezebox para conectarse a la red o usar otro punto de acceso inalámbrico.
+	FR	Vous pouvez utiliser votre Squeezebox pour vous connecter à votre réseau ou utiliser un autre point d'accès sans fil.
+	IT	È possibile utilizzare Squeezebox per collegarsi alla rete o a un altro punto di accesso senza fili.
+	NL	Je kunt via je Squeezebox een verbinding met je netwerk of een ander draadloos toegangspunt maken.
+
+NETWORK_WAIT
+	DE	Bitte warten...
+	EN	Please wait...
+	ES	Espere...
+	FR	Veuillez patienter...
+	IT	Attendere...
+	NL	Even wachten...
+
+NETWORK_FINDING_NETWORKS
+	DE	Netzwerksuche
+	EN	Finding Networks
+	ES	Buscando redes
+	FR	Recherche des réseaux en cours
+	IT	Rilevamento delle reti
+	NL	Bezig met zoeken naar netwerken
+
+NETWORK_WIRELESS_NETWORKS
+	DE	Kabellose Netzwerke
+	EN	Wireless Networks
+	ES	Redes inalámbricas
+	FR	Réseaux sans fil
+	IT	Reti senza fili
+	NL	Draadloze netwerken
+
+NETWORK_OTHER_NETWORK
+	DE	Anderes Netzwerk
+	EN	Other Network
+	ES	Otra red
+	FR	Autre réseau
+	IT	Altra rete
+	NL	Ander netwerk
+
+NETWORK_WIRELESS_NETWORKS_HELP
+	DE	Wählen Sie Ihr kabelloses Netzwerk. 
+	EN	Choose your wireless network. 
+	ES	Elija la red inalámbrica.
+	FR	Choisissez votre réseau sans fil. 
+	IT	Scegliere la rete senza fili. 
+	NL	Kies je draadloze netwerk. 
+
+NETWORK_NETWORK_NAME
+	DE	Netzwerkname
+	EN	Network Name
+	ES	Nombre de red
+	FR	Nom du réseau
+	IT	Nome della rete
+	NL	Netwerknaam
+
+NETWORK_NETWORK_NAME_HELP
+	DE	Geben Sie den Namen des kabellosen Netzwerks ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der Mitteltaste. Drücken Sie die Mitteltaste zweimal zum Beenden.
+	EN	Enter your wireless network name. Scroll to change letters, press the center button to choose that letter. Press center button twice to finish.
+	ES	Escriba el nombre de la red inalámbrica. Desplácese para cambiar de letra y pulse el botón central para elegir una letra. Pulse dos veces el botón central para terminar.
+	FR	Saisissez le nom de votre réseau sans fil. Faites défiler les lettres et appuyez sur le bouton central pour sélectionner la lettre souhaitée. Appuyez deux fois sur le bouton central pour terminer.
+	IT	Immettere il nome della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare la lettera. Premere il pulsante centrale due volte per completare l'operazione.
+	NL	Voer de naam van je draadloze netwerk in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
+
+NETWORK_WIRELESS_ENCRYPTION
+	DE	Kabellose Verschlüsselung
+	EN	Wireless Encryption
+	ES	Cifrado inalámbrico
+	FR	Chiffrement du réseau sans fil
+	IT	Crittografia senza fili
+	NL	Draadloze codering
+
+NETWORK_NO_ENCRYPTION
+	DE	Kein Kennwort/keine Verschlüsselung
+	EN	No password/no encryption
+	ES	Sin contraseña/sin cifrado
+	FR	Aucun mot de passe/chiffrement
+	IT	Nessuna password/crittografia
+	NL	Geen wachtwoord/geen codering
+
+NETWORK_WEP_64
+	DE	64-Bit-WEP
+	EN	64-bit WEP
+	ES	WEP de 64 bits
+	FR	WEP 64 bits
+	IT	WEP a 64 bit
+	NL	64-bits WEP
+
+NETWORK_WEP_128
+	DE	128-Bit-WEP
+	EN	128-bit WEP
+	ES	WEP de 128 bits
+	FR	WEP 128 bits
+	IT	WEP a 128 bit
+	NL	128-bits WEP
+
+NETWORK_WPA
+	DE	WPA-Personal
+	EN	WPA Personal
+	ES	WPA personal
+	FR	WPA personnel
+	IT	WPA Personal
+	NL	WPA (persoonlijk)
+
+NETWORK_WPA2
+	DE	WPA2-Personal
+	EN	WPA2 Personal
+	ES	WPA2 personal
+	FR	WPA2 personnel
+	IT	WPA2 Personal
+	NL	WPA2 (persoonlijk)
+
+NETWORK_WIRELESS_ENCRYPTION_HELP
+	DE	Wählen Sie die im Netzwerk verwendete Verschlüsselung.
+	EN	Choose the type of encryption that your network uses.
+	ES	Elija el tipo de cifrado que utiliza la red.
+	FR	Choisissez le type de chiffrement que votre réseau utilise.
+	IT	Scegliere il tipo di crittografia utilizzata dalla rete.
+	NL	Kies het type codering dat je netwerk gebruikt.
+
+NETWORK_WIRELESS_PASSWORD
+	DE	Netzwerkkennwort
+	EN	Wireless Password
+	ES	Contraseña para red inalámbrica
+	FR	Mot de passe du réseau sans fil
+	IT	Password senza fili
+	NL	Draadloos wachtwoord
+
+NETWORK_WIRELESS_PASSWORD_HELP
+	DE	Geben Sie Ihr Netzwerkkennwort ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der Mitteltaste. Drücken Sie die Mitteltaste zweimal zum Beenden.
+	EN	Enter your wireless password. Scroll to change letters, press the center button to choose that letter. Press center button twice to finish.
+	ES	Escriba la contraseña para red inalámbrica. Desplácese para cambiar de letra y pulse el botón central para elegir una letra. Pulse dos veces el botón central para terminar.
+	FR	Saisissez un mot de passe pour votre réseau sans fil. Faites défiler les lettres et appuyez sur le bouton central pour sélectionner la lettre souhaitée. Appuyez deux fois sur le bouton central pour terminer.
+	IT	Immettere la password della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare la lettera. Premere il pulsante centrale due volte per completare l'operazione.
+	NL	Voer je draadloze wachtwoord in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
+
+NETWORK_CONNECTING_TO
+	DE	Verbindung mit %s
+	EN	Connecting to %s
+	ES	Estableciendo conexión a %s
+	FR	Connexion à %s
+	IT	Connessione a %s in corso
+	NL	Bezig verbinding te maken met %s
+
+NETWORK_CONNECTED_TO
+	DE	Verbunden mit %s
+	EN	Connected to %s
+	ES	Conexión a %s establecida
+	FR	Connecté à %s
+	IT	Connesso a %s
+	NL	Verbonden met %s
+
+NETWORK_CONNECTION_PROBLEM
+	DE	Verbindungsproblem
+	EN	Connection Problem
+	ES	Problema de conexión
+	FR	Problème de connexion
+	IT	Problema di connessione
+	NL	Verbindingsprobleem
+
+NETWORK_TRY_AGAIN
+	DE	Erneut versuchen.
+	EN	Try again
+	ES	Vuelva a intentarlo
+	FR	Réessayer
+	IT	Riprova
+	NL	Opnieuw proberen
+
+NETWORK_TRY_DIFFERENT
+	DE	Anderes Netzwerk versuchen
+	EN	Try different network
+	ES	Pruebe con otra red
+	FR	Essayez avec un réseau différent
+	IT	Prova una rete diversa
+	NL	Ander netwerk proberen
+
+NETWORK_GO_BACK
+	DE	Zurück
+	EN	Go back
+	ES	Regresar
+	FR	Retour
+	IT	Indietro
+	NL	Terug
+
+NETWORK_CONNECTION_PROBLEM_HELP
+	DE	Problem beim Verbinden mit Ihrem kabellosen Netzwerk.
+	EN	There was a problem connecting to your wireless network.
+	ES	Problema al conectar a la red inalámbrica.
+	FR	Un problème est survenu lors de la connexion à votre réseau sans fil.
+	IT	Si è verificato un problema durante la connessione alla rete senza fili.
+	NL	Er is een probleem opgetreden tijdens het maken van een verbinding met je draadloze netwerk.
+
+NETWORK_PROBLEM_PASSWORD_INCORRECT
+	DE	Falsches Kennwort.
+	EN	Your password was incorrect.
+	ES	Contraseña incorrecta.
+	FR	Votre mot de passe est incorrect.
+	IT	Password errata.
+	NL	Verkeerd wachtwoord.
+
+NETWORK_PROBLEM_NETWORK_UNAVILABLE
+	DE	Ihr Netzwerk ist nicht verfügbar.
+	EN	Your network is unavailable.
+	ES	La red no está disponible.
+	FR	Vous réseau n'est pas disponible.
+	IT	La rete non è disponibile.
+	NL	Je netwerk is niet beschikbaar.
+
+NETWORK_ADDRESS_PROBLEM
+	DE	Adressenproblem
+	EN	Address Problem
+	ES	Problema de dirección
+	FR	Problème d'adresse
+	IT	Problema di indirizzo
+	NL	Adresprobleem
+
+NETWORK_AUTOIP
+	DE	IP-Adresse selbst zuweisen
+	EN	Self-assign address
+	ES	Dirección autoasignada
+	FR	Attribution automatique de l'adresse
+	IT	Indirizzo assegnato automaticamente
+	NL	Zelf-toewijzend adres
+
+NETWORK_STATIC_ADDRESS
+	DE	Statische Adresse verwenden
+	EN	Use a static address
+	ES	Usar una dirección estática
+	FR	Utiliser une adresse statique
+	IT	Usa un indirizzo statico
+	NL	Statisch adres gebruiken
+
+NETWORK_ADDRESS_PROBLEM_HELP
+	DE	Problem bei Abfrage einer DHCP-Adresse in Ihrem Netzwerk.
+	EN	There was a problem obtaining a DHCP address on your network.
+	ES	Problema al obtener una dirección DHCP en la red.
+	FR	Un problème est survenu lors de l'obtention d'une adresse DHCP sur votre réseau.
+	IT	Impossibile ottenere un indirizzo DHCP nella rete.
+	NL	Er is een probleem met het verkrijgen van een DHCP-adres op je netwerk.
+
+NETWORK_IP_ADDRESS
+	DE	IP-Adresse
+	EN	IP Address
+	ES	Dirección IP
+	FR	Adresse IP
+	IT	Indirizzo IP
+	NL	IP-adres
+
+NETWORK_IP_ADDRESS_HELP
+	DE	IP-Adresse für diese Fernbedienung eingeben
+	EN	Enter the IP address for this remote
+	ES	Escriba la dirección IP del mando
+	FR	Saisissez l'adresse IP de cette télécommande
+	IT	Immettere l'indirizzo IP del telecomando
+	NL	Het IP-adres voor deze afstandsbediening invoeren
+
+NETWORK_SUBNET
+	DE	Subnetz
+	EN	Subnet
+	ES	Subred
+	FR	Sous-réseau
+	IT	Subnet
+	NL	Subnet
+
+NETWORK_SUBNET_HELP
+	DE	Subnetzmaske für Netzwerk eingeben
+	EN	Enter the subnet mask for your network
+	ES	Escriba la máscara de subred de la red
+	FR	Saisissez le masque de sous-réseau de votre réseau
+	IT	Immettere la subnet mask per la rete
+	NL	Het subnetmasker voor je netwerk invoeren
+
+NETWORK_GATEWAY
+	DE	Gateway
+	EN	Gateway
+	ES	Puerta de enlace
+	FR	Passerelle
+	IT	Gateway
+	NL	Gateway
+
+NETWORK_GATEWAY_HELP
+	DE	IP-Adresse für den Router eingeben
+	EN	Enter the IP address of your router
+	ES	Escriba la dirección IP del enrutador
+	FR	Saisissez l'adresse IP de votre routeur
+	IT	Immettere l'indirizzo IP del router
+	NL	Het IP-adres van je router invoeren
+
+NETWORK_DNS_SERVER
+	DE	DNS-Server
+	EN	DNS Server
+	ES	Servidor DNS
+	FR	Serveur DNS
+	IT	Server DNS
+	NL	DNS-server
+
+NETWORK_DNS_SERVER_HELP
+	DE	IP-Adresse für DNS-Server eingeben
+	EN	Enter the IP address of your DNS server
+	ES	Escriba la dirección del servidor DNS
+	FR	Saisissez l'adresse IP de votre serveur DNS
+	IT	Immettere l'indirizzo IP del server DNS
+	NL	Het IP-adres van je DNS-server invoeren
+
+RECEIVER
+	DE	Empfänger einrichten
+	EN	Set Up Receiver 
+	ES	Configuración de receptor 
+	FR	Configuration du récepteur
+	IT	Configurazione ricevitore
+	NL	Ontvanger instellen 
+
+RECEIVER_HELP
+	DE	Squeezebox-Empfänger zum Einrichten auswählen. Wenn er hier nicht angezeigt wird, vergewissern Sie sich, dass er eingesteckt und in Reichweite ist. Halten Sie die Taste an Vorderseite gedrückt, bis sie blinkt.
+	EN	Choose the Squeezebox Receiver that is ready to be set up. If you don't see it here, make sure it is plugged in and within wireless range. Press and hold the button on the front until it flashes.
+	ES	Elija el receptor Squeezebox listo para la configuración. Si no lo ve aquí, compruebe que esté conectado y dentro del radio inalámbrico. Pulse el botón frontal hasta que parpadee.
+	FR	Choisissez le récepteur de Squeezebox à configurer. Si votre récepteur n'est pas répertorié, assurez-vous qu'il est branché et qu'il se trouve dans le rayon de communication du réseau sans fil. Appuyez sur le bouton situé à l'avant jusqu'à ce qu'il clignote.
+	IT	Scegliere il ricevitore Squeezebox da configurare. Se non è visualizzato, verificare che sia collegato ed entro la portata della rete senza fili. Tenere premuto il pulsante sulla parte anteriore finché non lampeggia.
+	NL	Kies de Squeezebox-ontvanger die klaar is om ingesteld te worden. Als je hem hier niet ziet, controleer dan of hij aangesloten en binnen draadloos bereik is. Houd de knop aan de voorkant ingedrukt totdat deze knippert.
+
+RECEIVER_CHOOSE
+	DE	Player auswählen
+	EN	Choose Player
+	ES	Elegir reproductor
+	FR	Sélection d'un lecteur
+	IT	Scegliere il lettore
+	NL	Speler kiezen
+
+RECEIVER_NEW
+	DE	Neuen Empfänger einrichten
+	EN	Set up new receiver
+	ES	Configurar receptor nuevo
+	FR	Configurer un autre récepteur
+	IT	Configura nuovo ricevitore
+	NL	Nieuwe ontvanger instellen
+
+RECEVIER_CHOOSE_HELP
+	DE	Player auswählen, den Sie steuern möchten. 
+	EN	Choose the player you'd like to control. 
+	ES	Elija el reproductor que desee controlar.
+	FR	Choisissez le lecteur que vous souhaitez contrôler. 
+	IT	Scegliere il lettore da controllare. 
+	NL	Kies de speler die je wilt bedienen. 
+
+RECEVIER_CONTINUE
+	DE	Weiter
+	EN	Continue
+	ES	Continuar
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+
+RECEVIER_CONTINUE_HELP
+	DE	Taste an Vorderseite des Squeezebox-Empfängers drücken, bis sie blinkt.
+	EN	Press the button on the front of the Squeezebox receiver until it flashes.
+	ES	Pulse el botón frontal del receptor Squeezebox hasta que parpadee.
+	FR	Appuyez sur le bouton situé à l'avant du récepteur de votre Squeezebox jusqu'à ce qu'il clignote.
+	IT	Premere il pulsante sulla parte anteriore di Squeezebox finché non lampeggia.
+	NL	Druk op de knop aan de voorkant van de Squeezebox-ontvanger tot de knop knippert.
+
+RECEVIER_CONNECTING
+	DE	Squeezebox wird mit dem kabellosen Netzwerk verbunden.
+	EN	Connecting Squeezebox to your wireless network.
+	ES	Conectando Squeezebox a la red inalámbrica.
+	FR	Connexion de la Squeezebox au réseau sans fil.
+	IT	Connessione di Squeezebox alla rete senza fili.
+	NL	De Squeezebox wordt met je draadloze netwerk verbonden.
+
+RECEVIER_CONNECTED
+	DE	Squeezebox verbunden mit %s
+	EN	Squeezebox connected to %s
+	ES	Squeezebox conectado a %s
+	FR	Squeezebox connectée à %s
+	IT	Squeezebox connesso a %s 
+	NL	Squeezebox verbonden met %s
+
+RECEIVER_PROBLEM
+	DE	Verbindungsproblem
+	EN	Problem Connecting
+	ES	Problema de conexión
+	FR	Problème de connexion
+	IT	Problema di connessione
+	NL	Probleem bij verbinden
+
+RECEIVER_PROBLEM_TRY_AGAIAN
+	DE	Erneut versuchen.
+	EN	Try again
+	ES	Vuelva a intentarlo
+	FR	Réessayer
+	IT	Riprova
+	NL	Opnieuw proberen
+
+RECEIVER_PROBLEM_SKIP
+	DE	Diesen Schritt überspringen
+	EN	Skip this step
+	ES	Omitir este paso
+	FR	Ignorer cette étape
+	IT	Salta questa operazione
+	NL	Deze stap overslaan
+
+RECEIVER_PROBLEM_HELP
+	DE	Squeezebox-Empfänger konnte nicht mit dem kabellosen Netzwerk verbunden werden. Vergewissern Sie sich, dass er sich in Reichweite befindet.
+	EN	Couldn't connect your Squeezebox receiver to your wireless network. Make sure it is within range of your wireless network.
+	ES	No se pudo conectar el receptor Squeezebox a la red inalámbrica. Compruebe que se encuentre dentro del radio de la red inalámbrica.
+	FR	Impossible de connecter le récepteur de votre Squeezebox au réseau sans fil. Assurez-vous que le récepteur se trouve dans le rayon de communication de votre réseau sans fil.
+	IT	Impossibile connettere il ricevitore di Squeezebox alla rete senza fili. Verificare che si trovi entro la portata della rete senza fili.
+	NL	Je Squeezebox kan niet met je draadloze netwerk worden verbonden. Zorg dat het apparaat zich binnen het bereik van je draadloze netwerk bevindt.
+
+RECEIVER_PROBLEM_LOST_CONNECTION
+	DE	Verbindung abgebrochen
+	EN	Lost connection
+	ES	Se ha perdido la conexión
+	FR	Connexion perdue
+	IT	Connessione perduta
+	NL	Verbinding is verloren gegaan
+
+RECEIVER_PROBLEM_ENCRYPTION_ERROR
+	DE	Verschlüsselungsfehler
+	EN	Encryption error
+	ES	Error de cifrado
+	FR	Erreur de chiffrement
+	IT	Errore di crittografia
+	NL	Coderingsfout
+
+RECEIVER_PROBLEM_DHCP_ERROR
+	DE	DHCP-Fehler
+	EN	DHCP error
+	ES	Error de DHCP
+	FR	Erreur de DHCP
+	IT	Errore DHCP
+	NL	DHCP-fout
+
+RECEIVER_MUSIC_SOURCE
+	DE	Musikquelle wählen
+	EN	Choose Music Source
+	ES	Elija fuente de música
+	FR	Sélection d'une source musicale
+	IT	Scegliere la sorgente musicale
+	NL	Muziekbron kiezen
+
+RECEIVER_SQUEEZENETWORK
+	DE	SqueezeNetwork
+	EN	SqueezeNetwork
+	ES	SqueezeNetwork
+	FR	SqueezeNetwork
+	IT	SqueezeNetwork
+	NL	SqueezeNetwork
+
+RECEIVER_MUSIC_SOURCE_HELP
+	DE	Squeezebox-Empfänger ist mit dem Netzwerk verbunden. Musikquelle wählen. 
+	EN	The Squeezebox receiver is connected to your network. Choose a music source. 
+	ES	El receptor Squeezebox está conectado a la red. Elija una fuente de música.
+	FR	Le récepteur de votre Squeezebox est connecté au réseau. Choisissez une source musicale. 
+	IT	Il ricevitore Squeezebox è connesso alla rete. Scegliere una sorgente musicale. 
+	NL	De Squeezebox-ontvanger is met je netwerk verbonden. Kies een muziekbron 
+
+RECEIVER_FINISH
+	DE	Fertig! 
+	EN	That's it! 
+	ES	Y esto es todo.
+	FR	Et voilà! 
+	IT	La configurazione è stata completata. 
+	NL	Klaar! 
+
+RECEIVER_FINISH_CONTINUE
+	DE	Weiter
+	EN	Continue
+	ES	Continuar
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+
+RECEIVER_FINISH_HELP
+	DE	Jetzt können Sie mit der Jive auf all Ihre Musik zugreifen. Zum Fortfahren Mitteltaste drücken.
+	EN	Now you can use your Jive to access all your music. Press the center button to continue.
+	ES	Ya puede usar Jive para acceder a toda su música. Pulse el botón central para continuar.
+	FR	Vous pouvez maintenant utiliser votre Jive pour accéder à votre musique. Appuyez sur le bouton central pour continuer.
+	IT	Ora è possibile utilizzare Jive per accedere alla musica. Premere il pulsante centrale per continuare.
+	NL	Nu heb je met je Jive toegang tot al je muziek. Druk op de middelste knop om verder te gaan.
+
+RECEIVER_PROBLEM_INTERNET
+	DE	Internet-Verbindungsproblem
+	EN	Internet Connection Problem
+	ES	Problema de conexión a Internet
+	FR	Problème de connexion à Internet
+	IT	Problema di connessione a Internet
+	NL	Probleem met internetverbinding
+
+RECEIVER_PROBLEM_INTERNET_HELP
+	DE	Problem beim Verbinden mit dem Internet. Vergewissern Sie sich, dass Ihr Netzwerk ordnungsgemäß konfiguriert ist. 
+	EN	There was a problem connecting to the Internet, please make sure your network is set up properly. 
+	ES	Se produjo un problema al conectar a Internet. Compruebe que la red se ha configurado correctamente.
+	FR	Un problème est survenu lors de la connexion à Internet. Veuillez vous assurer que votre réseau est correctement configuré. 
+	IT	Si è verificato un problema di connessione a Internet. Verificare che la rete sia configurata correttamente. 
+	NL	Er is een probleem opgetreden tijdens het maken van een internetverbinding. Controleer of je netwerk goed is ingesteld. 
+
+RECEIVER_PROBLEM_DNS_ERROR
+	DE	DNS-Fehler
+	EN	DNS error
+	ES	Error de DNS
+	FR	Erreur de DNS
+	IT	Errore DNS
+	NL	DNS-fout
+
+RECEIVER_PROBLEM_NO_INTERNET
+	DE	Keine Verbindung zum Internet
+	EN	No connection to Internet
+	ES	No hay conexión a Internet
+	FR	Aucune connexion à Internet
+	IT	Nessuna connessione a Internet
+	NL	Geen verbinding met internet
+
+RECEIVER_PROBLEM_WIRELESS_ERROR
+	DE	Fehler bei der kabellosen Verschlüsselung
+	EN	Wireless encryption error
+	ES	Error de cifrado inalámbrico
+	FR	Erreur de chiffrement du réseau sans fil
+	IT	Errore di crittografia senza fili
+	NL	Draadloze coderingsfout
+
+SETTINGS
+	DE	Einstellungen
+	EN	Settings
+	ES	Configuración
+	FR	Paramètres
+	IT	Impostazioni
+	NL	Instellingen
+
+REMOTE_SETTINGS
+	DE	Fernbedienungseinstellungen
+	EN	Remote Settings
+	ES	Configuración del mando
+	FR	Paramètres de la télécommande
+	IT	Impostazioni telecomando
+	NL	Afstandsbedieningsinstellingen
+
+BRIGHTNESS
+	DE	Helligkeit
+	EN	Brightness
+	ES	Brillo
+	FR	Luminosité
+	IT	Luminosità
+	NL	Helderheid
+
+BACKLIGHT_TIMER
+	DE	Hintergrundbeleuchtung
+	EN	Backlight Timer
+	ES	Temporizador de retroiluminación
+	FR	Minuteur du rétroéclairage
+	IT	Timer retroilluminazione
+	NL	Verlichtingstimer
+
+SLEEP_TIMER
+	DE	Schlafmodus
+	EN	Sleep Timer
+	ES	Temporizador de suspensión
+	FR	Minuteur de mise en veille
+	IT	Timer sospensione
+	NL	Sluimertimer
+
+STATUS_BAR
+	DE	Statusbalken
+	EN	Status Bar
+	ES	Barra de estado
+	FR	Barre d'état
+	IT	Barra di stato
+	NL	Statusbalk
+
+TIME
+	DE	Zeit
+	EN	Time
+	ES	Hora
+	FR	Heure
+	IT	Ora
+	NL	Tijd
+
+HOME_MENU
+	DE	Hauptmenü
+	EN	Home Menu
+	ES	Menú Inicio
+	FR	Menu d'accueil
+	IT	Menu iniziale
+	NL	Hoofdmenu
+
+SCREENSAVERS
+	DE	Bildschirmschoner
+	EN	Screensavers
+	ES	Protectores de pantalla
+	FR	Ecrans de veille
+	IT	Screen saver
+	NL	Schermbeveiligers
+
+WALLPAPER
+	DE	Hintergrundbild
+	EN	Wallpaper
+	ES	Papel tapiz
+	FR	Fond
+	IT	Sfondo
+	NL	Achtergrond
+
+SOUND_EFFECTS
+	DE	Soundeffekte
+	EN	Sound Effects
+	ES	Efectos de sonido
+	FR	Effets sonores
+	IT	Effetti sonori
+	NL	Geluidseffecten
+
+NETWORKS
+	DE	Netzwerke
+	EN	Networks
+	ES	Redes
+	FR	Réseaux
+	IT	Reti
+	NL	Netwerken
+
+APPLETS
+	DE	Applets
+	EN	Applets
+	ES	Subprogramas
+	FR	Applets
+	IT	Applet
+	NL	Applets
+
+ADVANCED
+	DE	Erweitert
+	EN	Advanced
+	ES	Avanzadas
+	FR	Avancé
+	IT	Avanzate
+	NL	Geavanceerd
+
+BACKLIGHT_HIGH
+	DE	Hoch
+	EN	High
+	ES	Alta
+	FR	Elevée
+	IT	Alta
+	NL	Hoog
+
+BACKLIGHT_MEDIUM
+	DE	Mittel
+	EN	Medium
+	ES	Media
+	FR	Moyenne
+	IT	Media
+	NL	Gemiddeld
+
+BACKLIGHT_LOW
+	DE	Niedrig
+	EN	Low
+	ES	Baja
+	FR	Faible
+	IT	Bassa
+	NL	Laag
+
+TIMER_OFF
+	DE	Aus
+	EN	Off
+	ES	Apagado
+	FR	Désactivé
+	IT	Disattivato
+	NL	Uit
+
+TIMER_ON
+	DE	Ein
+	EN	On
+	ES	Encendido
+	FR	Activé
+	IT	Attivato
+	NL	Aan
+
+TIMER_5_SEC
+	DE	5 Sek.
+	EN	5 sec
+	ES	5 s
+	FR	5 sec
+	IT	5 sec
+	NL	5 sec
+
+TIMER_10_SEC
+	DE	10 Sek.
+	EN	10 sec
+	ES	10 s
+	FR	10 sec
+	IT	10 sec
+	NL	10 sec
+
+TIMER_15_SEC
+	DE	15 Sek.
+	EN	15 sec
+	ES	15 s
+	FR	15 sec
+	IT	15 sec
+	NL	15 sec
+
+TIMER_20_SEC
+	DE	20 Sek.
+	EN	20 sec
+	ES	20 s
+	FR	20 sec
+	IT	20 sec
+	NL	20 sec
+
+TIMER_1_MIN
+	DE	1 Min.
+	EN	1 min
+	ES	1 m
+	FR	1 min
+	IT	1 min
+	NL	1 min
+
+TIMER_2_MIN
+	DE	2 Min.
+	EN	2 min
+	ES	2 m
+	FR	2 min
+	IT	2 min
+	NL	2 min
+
+TIMER_5_MIN
+	DE	5 Min.
+	EN	5 min
+	ES	5 m
+	FR	5 min
+	IT	5 min
+	NL	5 min
+
+SOUND_SCROLL
+	DE	Scroll
+	EN	Scroll
+	ES	Desplazarse
+	FR	Défiler
+	IT	Scorri
+	NL	Scrollen
+
+SOUND_SELECT
+	DE	Auswahl
+	EN	Select
+	ES	Seleccionar
+	FR	Sélectionner
+	IT	Seleziona
+	NL	Selecteren
+
+SOUND_BACK
+	DE	Zurück
+	EN	Back
+	ES	Atrás
+	FR	Précédent
+	IT	Indietro
+	NL	Terug
+
+SOUND_HOME
+	DE	Hauptmenü
+	EN	Home
+	ES	Inicio
+	FR	Accueil
+	IT	Pagina iniziale
+	NL	Hoofdmenu
+
+SOUND_STARTUP
+	DE	Start
+	EN	Startup
+	ES	Iniciar
+	FR	Démarrage
+	IT	Avvio
+	NL	Opstarten
+
+SOUND_SHUTDOWN
+	DE	Abschalten
+	EN	Shutdown
+	ES	Apagar
+	FR	Arrêt de l'ordinateur
+	IT	Chiusura
+	NL	Afsluiten
+
+SOUND_NONE
+	DE	Kein
+	EN	None
+	ES	Ninguno
+	FR	Aucun
+	IT	Nessuno
+	NL	Geen
+
+TIME_ZONE
+	DE	Zeitzone
+	EN	Time Zone
+	ES	Zona horaria
+	FR	Fuseau horaire:
+	IT	Fuso orario
+	NL	Tijdzone
+
+TIME_FORMAT
+	DE	Zeitformat
+	EN	Time Format
+	ES	Formato de hora
+	FR	Format de l'heure
+	IT	Formato ora
+	NL	Tijdnotatie
+
+NETWORK_STATUS
+	DE	Netzwerkstatus
+	EN	Network Status
+	ES	Estado de red
+	FR	Statut du réseau
+	IT	Stato della rete
+	NL	Netwerkstatus
+
+NETWORK_STATE
+	DE	Zustand
+	EN	State
+	ES	Estado
+	FR	Etat
+	IT	Stato
+	NL	Status
+
+NETWORK_SSID
+	DE	SSID
+	EN	SSID
+	ES	SSID
+	FR	SSID
+	IT	SSID
+	NL	SSID
+
+NETWORK_ENCRYPTION
+	DE	Verschlüsselung
+	EN	Encryption
+	ES	Cifrado
+	FR	Chiffrement
+	IT	Crittografia
+	NL	Codering
+
+NETWORK_IP_ADDRESS
+	DE	IP-Adresse
+	EN	IP Address
+	ES	Dirección IP
+	FR	Adresse IP
+	IT	Indirizzo IP
+	NL	IP-adres
+
+NETWORK_WIRELESS_COMPLETED
+	DE	Abgeschlossen
+	EN	Completed
+	ES	Finalizado
+	FR	Terminé
+	IT	Completato
+	NL	Voltooid
+
+NETWORK_WIRELESS_DISCONNECTED
+	DE	Getrennt
+	EN	Disconnected
+	ES	Desconectado
+	FR	Déconnecté
+	IT	Scollegato
+	NL	Verbinding verbroken
+
+NETWORK_WIRELESS_INACTIVE
+	DE	Nicht aktiv
+	EN	Inactive
+	ES	Inactivo
+	FR	Inactif
+	IT	Inattivo
+	NL	Inactief
+
+NETWORK_WIRELESS_SCANNING
+	DE	Suche...
+	EN	Scanning
+	ES	Examinando
+	FR	Analyse en cours
+	IT	Scansione in corso
+	NL	Bezig met scannen
+
+NETWORK_WIRELESS_ASSOCIATING
+	DE	Verknüpfen...
+	EN	Associating
+	ES	Asociando
+	FR	Association en cours
+	IT	Associazione in corso
+	NL	Bezig met koppelen
+
+NETWORK_WIRELESS_ASSOCIATED
+	DE	Verknüpft
+	EN	Associated
+	ES	Asociado
+	FR	Associé
+	IT	Associazione completata
+	NL	Gekoppeld
+
+NETWORK_WIRELESS_4WAY_HANDSHAKE
+	DE	Authentifizieren...
+	EN	Authenticating
+	ES	Autenticando
+	FR	Authentification
+	IT	Autenticazione in corso
+	NL	Bezig met verifiëren
+
+NETWORK_WIRELESS_GROUP_HANDSHAKE
+	DE	Authentifizieren...
+	EN	Authenticating
+	ES	Autenticando
+	FR	Authentification
+	IT	Autenticazione in corso
+	NL	Bezig met verifiëren
+
+NETWORK_WIRELESS_COMPLETED
+	DE	Abgeschlossen
+	EN	Completed
+	ES	Finalizado
+	FR	Terminé
+	IT	Completato
+	NL	Voltooid
+
+NETWORK_WIRELESS_UNKNOWN
+	DE	Unbekannt
+	EN	Unknown
+	ES	Desconocido
+	FR	Inconnu
+	IT	Sconosciuto
+	NL	Onbekend
+
+NETWORK_FORGET
+	DE	Netzwerk vergessen
+	EN	Forget Network
+	ES	Olvidar red
+	FR	Oublidf un réseau
+	IT	Ignora rete
+	NL	Netwerk vergeten
+
+NETWORK_FORGET_SSID
+	DE	%s vergessen
+	EN	Forget %s
+	ES	Olvidar %s
+	FR	Oublier %s
+	IT	Ignora %s
+	NL	%s vergeten
+
+NETWORK_FORGET_HELP
+	DE	"%s vergessen" wählen, um zu bestätigen, dass diese Einstellungen nicht mehr relevant sind.
+	EN	Choose Forget %s to confirm that you want to forget the settings for this network.
+	ES	Elija Olvidar %s para confirmar que desea olvidar la configuración para esta red.
+	FR	Choisissez Oublier %s pour confirmer que vous souhaitez oublier les paramètres de ce réseau.
+	IT	Scegliere Ignora %s per confermare che si desidera ignorare le impostazioni di questa rete.
+	NL	Kies '%s vergeten' om te bevestigen dat de instellingen voor dit netwerk vergeten moeten worden.
+
+SCREENSAVER_PLAYING
+	DE	Bei Wiedergabe
+	EN	When playing
+	ES	Al reproducir
+	FR	Pendant la lecture
+	IT	Durante la riproduzione
+	NL	Tijdens afspelen
+
+SCREENSAVER_STOPPED
+	DE	Bei Pause
+	EN	When stopped
+	ES	Al detener
+	FR	A l'arrêt
+	IT	Quando la riproduzione è interrotta
+	NL	Wanneer gestopt
+
+SCREENSAVER_DELAY
+	DE	Verzögerung
+	EN	Delay
+	ES	Retraso
+	FR	Retard
+	IT	Ritardo
+	NL	Vertraging
+
+SCREENSAVER_NOW_PLAYING
+	DE	Aktueller Titel
+	EN	Now Playing
+	ES	Reproduciendo
+	FR	Lecture en cours
+	IT	Riproduzione in corso
+	NL	Speelt nu
+
+SCREENSAVER_CLOCK
+	DE	Uhr
+	EN	Clock
+	ES	Reloj
+	FR	Horloge
+	IT	Orologio
+	NL	Klok
+
+SCREENSAVER_FLICKR
+	DE	Flickr
+	EN	Flickr
+	ES	Parpadeo
+	FR	Flickr
+	IT	Flickr 
+	NL	Flickr
+
+SCREENSAVER_NONE
+	DE	Keiner
+	EN	None
+	ES	Ninguno
+	FR	Aucun
+	IT	Nessuno
+	NL	Geen
+
+WALLPAPER_CREDITS
+	DE	Abspann
+	EN	Credits
+	ES	Créditos
+	FR	Remerciements
+	IT	Riconoscimenti
+	NL	Credits
+
+ADVANCED_SETTINGS
+	DE	Erweiterte Einstellungen
+	EN	Advanced Settings
+	ES	Configuración avanzada
+	FR	Paramètres avancés
+	IT	Impostazioni avanzate
+	NL	Geavanceerde instellingen
+
+APPLETS
+	DE	Applets
+	EN	Applets
+	ES	Subprogramas
+	FR	Applets
+	IT	Applet
+	NL	Applets
+
+SSH
+	DE	SSH
+	EN	SSH
+	ES	SSH
+	FR	SSH
+	IT	SSH
+	NL	SSH
+
+LANGUAGE
+	DE	Sprache
+	EN	Language
+	ES	Idioma
+	FR	Langue
+	IT	Lingua
+	NL	Taal
+
+UPDATE
+	DE	Software-Aktualisierung
+	EN	Software Update
+	ES	Actualización de software
+	FR	Mise à jour du logiciel
+	IT	Aggiornamento software 
+	NL	Software-update
+
+SSH_ENABLE
+	DE	SSH aktivieren
+	EN	Enable SSH
+	ES	Activar SSH
+	FR	Activer le SSH
+	IT	Attiva SSH
+	NL	SSH inschakelen
+
+SSH_ENABLE_HELP
+	DE	Root-Kennwort dieses Geräts ist %s, und Sie können sich über die Adresse %s damit verbinden.
+	EN	The root password for this device is %s and you can connect to it on address %s
+	ES	La contraseña de ruta para este dispositivo es %s y se puede conectar a la misma en la dirección %s
+	FR	Ce périphérique est associé au mot de passe racine %s et peut être connecté à partir de l'adresse %s
+	IT	La password principale per questo dispositivo è %s ed è possibile connettersi al dispositivo tramite l'indirizzo %s
+	NL	Het hoofdwachtwoord voor dit apparaat is %s, en u kunt er via het adres %s een verbinding mee maken
+
+UPDATE_CONTINUE
+	DE	Weiter
+	EN	Continue
+	ES	Continuar
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+
+UPDATE_CONTINUE_HELP
+	DE	Zum Aktualisieren der Software auf dieser Fernbedienung wählen Sie Weiter. Der Vorgang dauert nur wenige Minuten.
+	EN	To update the software on this remote, choose Continue. This process takes a few minutes.
+	ES	Para actualizar el software de este mando, elija Continuar. Este proceso tarda varios minutos.
+	FR	Pour mettre à jour le logiciel sur la télécommande, sélectionnez Continuer. Ce processus peut prendre quelques minutes.
+	IT	Per aggiornare il software di questo dispositivo, scegliere Continua. L'operazione richiede alcuni minuti.
+	NL	Kies 'Verdergaan' om de software op deze afstandsbediening bij te werken. Dit proces neemt enkele minuten in beslag.
+
+UPDATE_BATTERY
+	DE	Batterie aufladen
+	EN	Charge Battery
+	ES	Cambiar pila
+	FR	Charge de la batterie
+	IT	Carica batteria
+	NL	Batterij opladen
+
+UPDATE_BATTERY_HELP
+	DE	Legen Sie die Fernbedienung ins Ladegerät, um mit der Software-Aktualisierung fortzufahren.
+	EN	Please put this remote in the charger to continue with the software upgrade.
+	ES	Coloque este mando en el cargador para continuar con la actualización del software.
+	FR	Veuillez placer la télécommande sur son dispositif de charge afin de poursuivre la mise à niveau du logiciel.
+	IT	Collocare il telecomando nella base di ricarica per continuare l'aggiornamento del software.
+	NL	Zet deze afstandsbediening in de oplader om de software-upgrade voort te zetten.
+
