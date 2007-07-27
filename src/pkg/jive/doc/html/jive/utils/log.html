@@ -82,9 +82,13 @@ for example jive.utils.log.DEBUG.</p>
 <h1><a name="categories">CATEGORIES</a></h1>
 <p>Categories are strings. The following are the default categories:</p>
 <pre>
- -- browser
- -- applets
- -- screensavers</pre>
+ -- applets.setup
+ -- applets.browser
+ -- applets.games
+ -- applets.screensavers
+ -- applets.misc</pre>
+<pre>
+ -- jive.main</pre>
 <pre>
  -- slimserver
  -- slimserver.cache
@@ -100,9 +104,13 @@ for example jive.utils.log.DEBUG.</p>
 --]]</pre>
 <p>-- table to contain all the loggers indexed by category
 local categories = {
-	[``browser'']          = jiveLogger(logging.WARN),
-	[``applets'']          = jiveLogger(logging.WARN),
-	[``screensavers'']     = jiveLogger(logging.WARN),</p>
+	[``applets.setup'']            = jiveLogger(logging.WARN),
+	[``applets.browser'']          = jiveLogger(logging.WARN),
+	[``applets.games'']            = jiveLogger(logging.WARN),
+	[``applets.screensavers'']     = jiveLogger(logging.WARN),
+	[``applets.misc'']             = jiveLogger(logging.WARN),</p>
+<pre>
+        [&quot;jive.main&quot;]       = jiveLogger(logging.WARN),</pre>
 <pre>
         [&quot;slimserver&quot;]       = jiveLogger(logging.WARN),
         [&quot;slimserver.cache&quot;] = jiveLogger(logging.WARN),

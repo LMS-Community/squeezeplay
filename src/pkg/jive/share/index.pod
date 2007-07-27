@@ -55,6 +55,8 @@ L<jive.slim.SlimServers|jive::slim::SlimServers>
 
 =head2 Package jive.ui
 
+L<jive.ui.Audio|jive::ui::Audio>
+
 L<jive.ui.Checkbox|jive::ui::Checkbox>
 
 L<jive.ui.Choice|jive::ui::Choice>

@@ -19,7 +19,8 @@
 	<li><a href="#functions">FUNCTIONS</a></li>
 	<ul>
 
-		<li><a href="#jive_slim_player_server__jnt__jpool__playerinfo_">jive.slim.Player(server, jnt, jpool, playerinfo)</a></li>
+		<li><a href="#jive_slim_player_server__jnt__jpool__playerinfo_">jive.slim.Player(server, jnt, jpool, playerInfo)</a></li>
+		<li><a href="#jive_slim_player_updatefromss_playerinfo_">jive.slim.Player:updateFromSS(playerInfo)</a></li>
 		<li><a href="#jive_slim_player_free__">jive.slim.Player:free()</a></li>
 		<li><a href="#jive_slim_player_gethomemenuitem__">jive.slim.Player:getHomeMenuItem()</a></li>
 		<li><a href="#jive_slim_player_sethomemenuitem_homemenuitem_">jive.slim.Player:setHomeMenuItem(homeMenuItem)</a></li>
@@ -39,15 +40,24 @@
 </p>
 <hr />
 <h1><a name="synopsis">SYNOPSIS</a></h1>
-<p>TODO</p>
+<p>Notifications:</p>
+<pre>
+ playerConnected:
+ playerDisconnected:
+ playerNew
+ playerDelete</pre>
 <p>
 </p>
 <hr />
 <h1><a name="functions">FUNCTIONS</a></h1>
 <p>
 </p>
-<h2><a name="jive_slim_player_server__jnt__jpool__playerinfo_">jive.slim.Player(server, jnt, jpool, playerinfo)</a></h2>
+<h2><a name="jive_slim_player_server__jnt__jpool__playerinfo_">jive.slim.Player(server, jnt, jpool, playerInfo)</a></h2>
 <p>Create a Player object for server <em>server</em>.</p>
+<p>
+</p>
+<h2><a name="jive_slim_player_updatefromss_playerinfo_">jive.slim.Player:updateFromSS(playerInfo)</a></h2>
+<p>Updates the player with fresh data from SS.</p>
 <p>
 </p>
 <h2><a name="jive_slim_player_free__">jive.slim.Player:free()</a></h2>

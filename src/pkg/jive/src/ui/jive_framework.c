@@ -1058,7 +1058,6 @@ static const struct luaL_Reg core_methods[] = {
 	{ "getBackground", jiveL_get_background },
 	{ "setBackground", jiveL_set_background },
 	{ "styleChanged", jiveL_style_changed },
-	{ "loadSound", jiveL_load_sound },
 	{ "_event", jiveL_event },
 	{ NULL, NULL }
 };

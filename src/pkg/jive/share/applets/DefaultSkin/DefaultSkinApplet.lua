@@ -22,6 +22,7 @@ DefaultSkinApplet overrides the following methods:
 local oo                     = require("loop.simple")
 
 local Applet                 = require("jive.Applet")
+local Audio                  = require("jive.ui.Audio")
 local Font                   = require("jive.ui.Font")
 local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
@@ -204,8 +205,7 @@ function splash(self)
 				 splashWindow.transitionNone)
 	Framework:updateScreen()
 
-	Framework.sound["STARTUP"] = Framework:loadSound(sndpath .. "startup.wav", 1)
-	Framework:playSound("STARTUP");
+	Audio:loadSound(sndpath .. "startup.wav", 1):play()
 end
 
 
@@ -215,13 +215,12 @@ function skin(self, s)
 	local screenWidth, screenHeight = Framework:getScreenSize()
 
 	-- Sounds
-	Framework.sound["BUMP"] = Framework:loadSound(sndpath .. "bump.wav", 1)
-	Framework.sound["CLICK"] = Framework:loadSound(sndpath .. "click.wav", 0)
-	Framework.sound["JUMP"] = Framework:loadSound(sndpath .. "jump.wav", 0)
-	Framework.sound["PUSHLEFT"] = Framework:loadSound(sndpath .. "pushleft.wav", 1)
-	Framework.sound["PUSHRIGHT"] = Framework:loadSound(sndpath .. "pushright.wav", 1)
-	Framework.sound["SELECT"] = Framework:loadSound(sndpath .. "select.wav", 0)
-	Framework.sound["SHUTDOWN"] = Framework:loadSound(sndpath .. "shutdown.wav", 1)
+	Framework:loadSound("BUMP", sndpath .. "bump.wav", 1)
+	Framework:loadSound("CLICK", sndpath .. "click.wav", 0)
+	Framework:loadSound("JUMP", sndpath .. "jump.wav", 0)
+	Framework:loadSound("PUSHLEFT", sndpath .. "pushleft.wav", 1)
+	Framework:loadSound("PUSHRIGHT", sndpath .. "pushright.wav", 1)
+	Framework:loadSound("SELECT", sndpath .. "select.wav", 0)
 
 	-- Images and Tiles
 	local titleBox =

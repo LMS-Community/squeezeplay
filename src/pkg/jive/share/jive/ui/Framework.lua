@@ -43,6 +43,7 @@ local EVENT_UNUSED  = jive.ui.EVENT_UNUSED
 module(..., oo.class)
 
 
+local Audio         = require("jive.ui.Audio")
 local Checkbox      = require("jive.ui.Checkbox")
 local Choice        = require("jive.ui.Choice")
 local Event         = require("jive.ui.Event")
@@ -129,10 +130,6 @@ Sets the background image I<image>.
 
 Indicates the style parameters have changed, this clears any caching of the style values used.
 
-=head2 jive.ui.Framework:loadSound(file, channel)
-
-Load the wav file I<file> to play on the mixer channel I<channel>. Currently two channels are supported.
-
 =cut
 --]]
 
@@ -208,16 +205,40 @@ end
 
 
 --[[
+=head2 jive.ui.Framework:loadSound(file, name, channel)
+
+Load the wav file I<file> to play on the mixer channel I<channel>. Currently two channels are supported.
+
+=cut
+--]]
+function loadSound(self, name, file, channel)
+	self.sound[name] = Audio:loadSound(file, channel)
+end
+
+
+--[[
 =head2 jive.ui.Framework:playSound(name)
 
 Play sound.
 
-
+=cut
 --]]
 function playSound(self, name)
 	if self.sound[name] ~= nil then
 		self.sound[name]:play()
 	end
+end
+
+
+--[[
+=head2 jive.ui.Framework:getSounds()
+
+Returns the table of available sounds.
+
+=cut
+--]]
+function getSounds(self)
+	return self.sound
 end
 
 

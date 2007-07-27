@@ -15,13 +15,15 @@ struct jive_sample {
 	Uint32 pos;
 	Uint32 mixer;
 	Uint8 *data;
-
+	bool enabled;
 };
 
 
 // mixer channels
 #define MAX_SOUNDS 2
 struct jive_sample *mixsnd[MAX_SOUNDS];
+
+bool effects_enabled = true;
 
 
 static void free_sound(struct jive_sample *snd) {
@@ -70,6 +72,37 @@ static void mixaudio(void *unused, Uint8 *stream, int len) {
 }
 
 
+static void open_audio(void) {
+	SDL_AudioSpec fmt;
+
+	if (SDL_GetAudioStatus() != SDL_AUDIO_STOPPED) {
+		return;
+	}
+
+	/* SDL audio 44.1k 16 bit */
+	fmt.freq = 44100;
+	fmt.format = AUDIO_S16;
+	fmt.channels = 2;
+	fmt.samples = 512;
+	fmt.callback = mixaudio;
+	fmt.userdata = NULL;
+	
+	if (SDL_OpenAudio(&fmt, NULL) < 0) {
+		fprintf(stderr, "Unable to open audio: %s\n", SDL_GetError());
+	}
+	SDL_PauseAudio(0);
+}
+
+
+static void close_audio(void) {
+	if (SDL_GetAudioStatus() == SDL_AUDIO_STOPPED) {
+		return;
+	}
+
+	SDL_CloseAudio();
+}
+
+
 static struct jive_sample *load_sound(char *filename, Uint32 mixer) {
 	struct jive_sample *snd;
 	SDL_AudioSpec wave;
@@ -104,17 +137,18 @@ static struct jive_sample *load_sound(char *filename, Uint32 mixer) {
 	snd->data = cvt.buf;
 	snd->len = cvt.len_cvt;
 	snd->mixer = mixer;
+	snd->enabled = true;
 
 	return snd;
 }
 
 
-int jiveL_load_sound(lua_State *L) {
+static int jiveL_audio_load(lua_State *L) {
 	struct jive_sample **snd;
 	char fullpath[PATH_MAX];
 	
 	/* stack is:
-	 * 1: framework
+	 * 1: audio
 	 * 2: filename
 	 * 3: mixer
 	 */
@@ -151,7 +185,32 @@ int jiveL_load_sound(lua_State *L) {
 }
 
 
-int jiveL_sound_play(lua_State *L) {
+static int jiveL_audio_effects_enable(lua_State *L) {
+	/* stack is:
+	 * 1: sound
+	 * 2: enabled
+	 */
+
+	effects_enabled = lua_toboolean(L, 2);
+
+	if (effects_enabled) {
+		open_audio();
+	}
+	else {
+		close_audio();
+	}
+
+	return 0;
+}
+
+
+static int jiveL_audio_is_effects_enabled(lua_State *L) {
+	lua_pushboolean(L, effects_enabled);
+	return 1;
+}
+
+
+static int jiveL_sound_play(lua_State *L) {
 	struct jive_sample *snd;
 
 	/* stack is:
@@ -159,6 +218,9 @@ int jiveL_sound_play(lua_State *L) {
 	 */
 
 	snd = *(struct jive_sample **)lua_touserdata(L, -1);
+	if (!snd->enabled) {
+		return 0;
+	}
 
 	/* play sample */
 	SDL_LockAudio();
@@ -178,22 +240,59 @@ int jiveL_sound_play(lua_State *L) {
 }
 
 
-int jiveL_free_audio(lua_State *L) {
-	SDL_CloseAudio();
+static int jiveL_sound_enable(lua_State *L) {
+	struct jive_sample *snd;
+
+	/* stack is:
+	 * 1: sound
+	 * 2: enabled
+	 */
+
+	snd = *(struct jive_sample **)lua_touserdata(L, 1);
+	snd->enabled = lua_toboolean(L, 2);
 
 	return 0;
 }
 
 
+static int jiveL_sound_is_enabled(lua_State *L) {
+	struct jive_sample *snd;
+
+	/* stack is:
+	 * 1: sound
+	 */
+
+	snd = *(struct jive_sample **)lua_touserdata(L, 1);
+	lua_pushboolean(L, snd->enabled);
+
+	return 1;
+}
+
+
+int jiveL_free_audio(lua_State *L) {
+	close_audio();
+	return 0;
+}
+
+
+
 static const struct luaL_Reg sound_m[] = {
 	{ "__gc", jiveL_sound_gc },
 	{ "play", jiveL_sound_play },
+	{ "enable", jiveL_sound_enable },
+	{ "isEnabled", jiveL_sound_is_enabled },
+	{ NULL, NULL }
+};
+
+static const struct luaL_Reg audio_c[] = {
+	{ "loadSound", jiveL_audio_load },
+	{ "effectsEnable", jiveL_audio_effects_enable },
+	{ "isEffectsEnabled", jiveL_audio_is_effects_enabled },
 	{ NULL, NULL }
 };
 
 
 int jiveL_init_audio(lua_State *L) {
-	SDL_AudioSpec fmt;
 	int i;
 
 	JIVEL_STACK_CHECK_BEGIN(L);
@@ -202,18 +301,7 @@ int jiveL_init_audio(lua_State *L) {
 		mixsnd[i] = NULL;
 	}
 
-	/* SDL audio 44.1k 16 bit */
-	fmt.freq = 44100;
-	fmt.format = AUDIO_S16;
-	fmt.channels = 2;
-	fmt.samples = 512;
-	fmt.callback = mixaudio;
-	fmt.userdata = NULL;
-
-	if (SDL_OpenAudio(&fmt, NULL) < 0) {
-		fprintf(stderr, "Unable to open audio: %s\n", SDL_GetError());
-	}
-	SDL_PauseAudio(0);
+	open_audio();
 
 	/* sample cache */
 	lua_newtable(L);
@@ -227,7 +315,13 @@ int jiveL_init_audio(lua_State *L) {
 
 	luaL_register(L, NULL, sound_m);
 
-	lua_pop(L, 1);
+	/* sound class */
+	lua_getglobal(L, "jive");
+	lua_getfield(L, -1, "ui");
+	lua_getfield(L, -1, "Audio");
+	luaL_register(L, NULL, audio_c);
+
+	lua_pop(L, 4);
 
 	JIVEL_STACK_CHECK_END(L);
 

@@ -21,10 +21,11 @@
 	<ul>
 
 		<li><a href="#jive_ui_window_style__title_">jive.ui.Window(style, title)</a></li>
-		<li><a href="#jive_ui_window_show_transition_">jive.ui.Window:show(transition)</a></li>
-		<li><a href="#jive_ui_window_showinstead_transition_">jive.ui.Window:showInstead(transition)</a></li>
+		<li><a href="#jive_ui_window_show_transition__soundeffect_">jive.ui.Window:show(transition, soundEffect)</a></li>
+		<li><a href="#jive_ui_window_showinstead_transition__soundeffect_">jive.ui.Window:showInstead(transition, soundEffect)</a></li>
 		<li><a href="#jive_ui_window_showbriefly_msecs__closure__pushtransition__poptransition_">jive.ui.Window:showBriefly(msecs, closure, pushTransition, popTransition)</a></li>
-		<li><a href="#jive_ui_window_hide_transition_">jive.ui.Window:hide(transition)</a></li>
+		<li><a href="#jive_ui_window_hide_transition__soundeffect_">jive.ui.Window:hide(transition, soundEffect)</a></li>
+		<li><a href="#jive_ui_window_hidetotop_transition__soundeffect_">jive.ui.Window:hideToTop(transition, soundEffect)</a></li>
 		<li><a href="#jive_ui_window_bumpleft__">jive.ui.Window:bumpLeft()</a></li>
 		<li><a href="#jive_ui_window_bumpright__">jive.ui.Window:bumpRight()</a></li>
 		<li><a href="#jive_ui_window_hideall__">jive.ui.Window:hideAll()</a></li>
@@ -82,11 +83,11 @@
 <p>Constructs a new window widget. <em>style</em> is the widgets style. The window can have an optional <em>title</em>.</p>
 <p>
 </p>
-<h2><a name="jive_ui_window_show_transition_">jive.ui.Window:show(transition)</a></h2>
+<h2><a name="jive_ui_window_show_transition__soundeffect_">jive.ui.Window:show(transition, soundEffect)</a></h2>
 <p>Show this window, adding it to the top of the window stack. The <em>transition</em> is used to move the window on stage.</p>
 <p>
 </p>
-<h2><a name="jive_ui_window_showinstead_transition_">jive.ui.Window:showInstead(transition)</a></h2>
+<h2><a name="jive_ui_window_showinstead_transition__soundeffect_">jive.ui.Window:showInstead(transition, soundEffect)</a></h2>
 <p>Shows this window as a replacement for the window at the top of the window stack. The <em>transition</em> is used to move the window on stage.</p>
 <p>
 </p>
@@ -95,8 +96,12 @@
 <p>If the window has already been displayed with showBriefly then the timer is restarted with the new <em>msecs</em> value.</p>
 <p>
 </p>
-<h2><a name="jive_ui_window_hide_transition_">jive.ui.Window:hide(transition)</a></h2>
+<h2><a name="jive_ui_window_hide_transition__soundeffect_">jive.ui.Window:hide(transition, soundEffect)</a></h2>
 <p>Hides this window. It it is currently at the top of the window stack then the <em>transition</em> is used to move the window off stage.</p>
+<p>
+</p>
+<h2><a name="jive_ui_window_hidetotop_transition__soundeffect_">jive.ui.Window:hideToTop(transition, soundEffect)</a></h2>
+<p>Hide from this window to the top if the window stack.</p>
 <p>
 </p>
 <h2><a name="jive_ui_window_bumpleft__">jive.ui.Window:bumpLeft()</a></h2>

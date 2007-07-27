@@ -1,0 +1,89 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.utils.locale - Deliver strings based on locale and path</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>Parses strings.txt from appropriate directory and sends it back as a table</p>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>readStringsFile(thisLocale, thisPath)</p>
+<p>takes
+=cut
+--]]</p>
+<p>-- stuff we use
+local ipairs, pairs, assert, io, string = ipairs, pairs, assert, io, string
+local Framework        = <code>require(``jive.ui.Framework'')</code>
+local log              = <code>require(``jive.utils.log'').logger(``applets.setup'')</code>
+<code>module(...)</code></p>
+<p>-- parse strings.txt file and put all locale translations into a lua table that is returned
+function readStringsFile(thisLocale, thisPath)
+	local myLocale = thisLocale or ``EN''
+	local relativePath = ``applets/'' .. thisPath .. ``/strings.txt''
+	local fullPath = Framework:findFile(relativePath)
+	local stringsFile = <code>assert(io.open(fullPath))</code>
+	local stringsTable = {}</p>
+<pre>
+        local thisString 
+        while true do
+                local line = stringsFile:read()
+                if not line then
+                        break
+                end</pre>
+<pre>
+                -- remove one or more control chars from the end of line (newline and any stray tabs)
+                line = string.gsub(line, '%c+$', '')
+                -- lines that begin with an uppercase char are the strings to translate
+                if string.match(line, '^%u') then
+                        thisString = line
+                        log:debug(&quot;this is a string to be matched |&quot;, thisString, &quot;|&quot;)
+                else
+                        -- look for matching translation lines.
+                        -- defined here as one or more tabs
+                        -- followed by one or more non-spaces (lang)
+                        -- followed by one or more tabs
+                        -- followed by the rest (the translation)
+                        local locale, translatedString  = string.match(line, '^\t+([^%s]+)\t+(.+)')
+                        if (locale == myLocale and thisString and translatedString) then
+                                -- dump the translations to log:debug
+                                log:debug(&quot;strings.txt data\nlocale=&quot;, locale, &quot;\nthisString = &quot;, thisString, &quot;translatedString = &quot;, translatedString, &quot;\n\n&quot;)
+                                stringsTable[thisString] = translatedString
+                        end
+                end
+        end
+        stringsFile:close()
+        return stringsTable
+end</pre>
+<p>--[[</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

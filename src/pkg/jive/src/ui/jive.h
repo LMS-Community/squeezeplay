@@ -317,7 +317,6 @@ int jiveL_dirty(lua_State *L);
 
 int jiveL_init_audio(lua_State *L);
 int jiveL_free_audio(lua_State *L);
-int jiveL_load_sound(lua_State *L);
 
 int jiveL_event_new(lua_State *L);
 int jiveL_event_tostring(lua_State* L);

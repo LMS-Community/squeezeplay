@@ -74,6 +74,7 @@ dist_jive_DATA = \
 
 jiveuidir = $(pkgdatadir)/jive/ui
 dist_jiveui_DATA = \
+	share/jive/ui/Audio.lua \
 	share/jive/ui/Checkbox.lua \
 	share/jive/ui/Choice.lua \
 	share/jive/ui/Event.lua \
@@ -177,6 +178,11 @@ applets_screenshotdir = $(pkgdatadir)/applets/Screenshot
 dist_applets_screenshot_DATA = \
 	share/applets/Screenshot/ScreenshotApplet.lua \
 	share/applets/Screenshot/ScreenshotMeta.lua
+
+applets_setupsoundeffectsdir = $(pkgdatadir)/applets/SetupSoundEffects
+dist_applets_setupsoundeffects_DATA = \
+	share/applets/SetupSoundEffects/SetupSoundEffectsApplet.lua \
+	share/applets/SetupSoundEffects/SetupSoundEffectsMeta.lua
 
 
 # Default skin
