@@ -143,11 +143,6 @@ dist_applets_log_DATA = \
 	share/applets/LogSettings/LogSettingsApplet.lua \
 	share/applets/LogSettings/LogSettingsMeta.lua
 
-applets_keylockdir = $(pkgdatadir)/applets/KeyLock
-dist_applets_keylock_DATA = \
-	share/applets/KeyLock/KeyLockApplet.lua \
-	share/applets/KeyLock/KeyLockMeta.lua
-
 applets_screensaversdir = $(pkgdatadir)/applets/ScreenSavers
 dist_applets_screensavers_DATA = \
 	share/applets/ScreenSavers/ScreenSaversApplet.lua \

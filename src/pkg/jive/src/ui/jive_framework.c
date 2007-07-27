@@ -633,7 +633,7 @@ int jiveL_find_file(lua_State *L) {
 	 * 2: path
 	 */
 
-	const char *path = lua_tostring(L, 2);
+	const char *path = luaL_checkstring(L, 2);
 	char *fullpath = malloc(PATH_MAX);
 
 	if (jive_find_file(path, fullpath)) {
