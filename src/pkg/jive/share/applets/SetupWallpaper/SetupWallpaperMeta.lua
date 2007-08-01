@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.DefaultSkin.DefaultSkinMeta - DefaultSkin meta-info
+applets.SetupWallpaper.SetupWallpaperMeta - SetupWallpaper meta-info
 
 =head1 DESCRIPTION
 
-See L<applets.DefaultSkin.DefaultSkinApplet>.
+See L<applets.SetupWallpaper.SetupWallpaperApplet>.
 
 =head1 FUNCTIONS
 
@@ -34,11 +34,15 @@ end
 
 
 function registerApplet(self)
-	-- splash screen
-	appletManager:openWindow("DefaultSkin", "splash")
+	-- FIXME load default wallpaper
+	local obj = appletManager:load("SetupWallpaper")
+	obj:_setBackground("Chapple_1.jpg")
+	appletManager:freeApplet("SetupWallpaper")
 
-	-- load ourselves indirectly through jiveMain
-	jiveMain:loadSkin("DefaultSkin", "skin")
+
+	-- add a menu item for configuration
+	local remoteSettings = jiveMain:subMenu("Settings"):subMenu("Remote Settings")
+	remoteSettings:addItem(appletManager:menuItem("Wallpaper", "SetupWallpaper", "setup"))
 end
 
 

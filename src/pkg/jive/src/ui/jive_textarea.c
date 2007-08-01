@@ -131,23 +131,7 @@ int jiveL_textarea_layout(lua_State *L) {
 	peer = jive_getpeer(L, 1, &textareaPeerMeta);
 
 
-	lua_getfield(L, 1, "topLine");
-	top_line = lua_tointeger(L, -1);
-	lua_pop(L, 1);
-
-	visible_lines = peer->w.bounds.h / peer->line_height;
-	if (visible_lines > peer->num_lines) {
-		visible_lines = peer->num_lines;
-	}
-	if (top_line + visible_lines > peer->num_lines) {
-		lua_pushinteger(L, peer->num_lines - visible_lines);
-		lua_setfield(L, 1, "topLine");
-	}
-
-	lua_pushinteger(L, visible_lines);
-	lua_setfield(L, 1, "visibleLines");
-
-
+	/* scrollbar size */
 	sw = 0;
 	sh = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
 
@@ -177,12 +161,31 @@ int jiveL_textarea_layout(lua_State *L) {
 	lua_getfield(L, 1, "text");
 	text = lua_tostring(L, -1);
 
+	visible_lines = peer->w.bounds.h / peer->line_height;
 	wordwrap(peer, (unsigned char*) text, visible_lines, sw, false);
 
 	lua_pushinteger(L, peer->num_lines);
 	lua_setfield(L, 1, "numLines");
 
 
+	/* top and visible lines */
+	lua_getfield(L, 1, "topLine");
+	top_line = lua_tointeger(L, -1);
+	lua_pop(L, 1);
+
+	if (visible_lines > peer->num_lines) {
+		visible_lines = peer->num_lines;
+	}
+	if (top_line + visible_lines > peer->num_lines) {
+		lua_pushinteger(L, peer->num_lines - visible_lines);
+		lua_setfield(L, 1, "topLine");
+	}
+
+	lua_pushinteger(L, visible_lines);
+	lua_setfield(L, 1, "visibleLines");
+
+
+	/* scroll bar bounds */
 	lua_getfield(L, 1, "scrollbar");
 	if (!lua_isnil(L, -1)) {
 		if (jive_getmethod(L, -1, "setBounds")) {

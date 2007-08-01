@@ -55,8 +55,6 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 local appletManager          = appletManager
 
 
-local print = print
-
 module(...)
 oo.class(_M, Applet)
 
@@ -65,21 +63,6 @@ oo.class(_M, Applet)
 local imgpath = "applets/DefaultSkin/images/"
 local sndpath = "applets/DefaultSkin/sounds/"
 local fontpath = "fonts/"
-
-local wallpapers = {
-	["Chapple_1.jpg"] = "Chapple_1.jpg",
-	["Clearly-Ambiguous_1.jpg"] = "Clearly-Ambiguous_1.jpg",
-	["Clearly-Ambiguous_2.jpg"] = "Clearly-Ambiguous_2.jpg",
-	["Clearly-Ambiguous_3.jpg"] = "Clearly-Ambiguous_3.jpg",
-	["Clearly-Ambiguous_4.jpg"] = "Clearly-Ambiguous_4.jpg",
-	["Clearly-Ambiguous_5.jpg"] = "Clearly-Ambiguous_5.jpg",
-	["Clearly-Ambiguous_6.jpg"] = "Clearly-Ambiguous_6.jpg",
-	["dotDOTdot_1.jpg"] = "dotDOTdot_1.jpg",
-	["Los-Cardinalos_1.jpg"] = "Los-Cardinalos_1.jpg",
-	["Orin-Optiglot_1.jpg"] = "Orin-Optiglot_1.jpg",
-}
-
-local backgroundLicense = "The background images are under a Creative Commons Attribution license. See http://creativecommons.org/licenses/by/3.0/.\n\nThe Credits\n Chapple\n Scott Robinson\n dotDOTdot\n Los Cardinalos\n Orin Optiglot\n"
 
 --[[
 
@@ -91,96 +74,6 @@ Overridden to return the string "Default Skin"
 --]]
 function displayName(self)
 	return "Default Skin"
-end
-
-
---[[
-
-=head2 applets.DefaultSkin.DefaultSkinApplet:defaultSettings()
-
-Overridden to return the default wallpaper selected.
-
-=cut
---]]
-function defaultSettings(self)
-	return { 
-		wallpaper = "Chapple_1.jpg",
-	}
-end
-
-
--- wallpaperSettings
--- The meta hooks this function to allow the user to select
--- a wallpaper
-function wallpaperSetting(self, menuItem)
-	local window = Window(self:displayName(), menuItem.text)
-	local menu = SimpleMenu("menu")
-	window:addWidget(menu)
-
-	local wallpaper = self:getSettings()["wallpaper"]
-	
-	local group = RadioGroup()
-	
-	for name, file in table.pairsByKeys(wallpapers) do
-		menu:addItem({
-				     text = name, 
-				     icon = RadioButton("radio", 
-							group, 
-							function()
-								self:_setBackground(file)
-							end,
-							wallpaper == file
-						)
-			     })
-	end
-
-	menu:addItem({
-			     text = "License",
-			     callback = function()
-						local window = Window("window", "License")
-						window:addWidget(Textarea("textarea", backgroundLicense))
-						window:show()
-					end
-		     })
-
-	-- Store the applet settings when the window is closed
-	window:addListener(EVENT_WINDOW_POP,
-		function()
-			self:storeSettings()
-		end
-	)
-
-	return window
-end
-
-
-function _setBackground(self, wallpaper)
-	-- set the new wallpaper, or use the existing setting
-	if wallpaper then
-		self:getSettings()["wallpaper"] = wallpaper
-	else
-		wallpaper = self:getSettings()["wallpaper"]
-	end
-
-	-- In this skin the background is make up of multiple images, we compoiste
-	-- them here once instead of every time the screen is drawn
-	local sw, sh = Framework:getScreenSize()
-	srf = Surface:newRGB(sw, sh)
-	local bgImage = Tile:loadImage("applets/DefaultSkin/wallpaper/" .. wallpaper)
-	local iconBar =
-		Tile:loadHTiles({
-				       imgpath .. "border_l.png",
-				       imgpath .. "border.png",
-				       imgpath .. "border_r.png",
-			       })
-
-	local iw,ih = iconBar:getMinSize()
-
-	srf:filledRectangle(0, 0, sw, sh, 0x000000FF);
-	bgImage:blit(srf, 0, 0, sw, sh)
-	iconBar:blit(srf, 0, sh-ih, sw, sh)
-
-	Framework:setBackground(srf)
 end
 
 
@@ -223,6 +116,13 @@ function skin(self, s)
 	Framework:loadSound("SELECT", sndpath .. "select.wav", 0)
 
 	-- Images and Tiles
+	local iconBackground = 
+		Tile:loadHTiles({
+					imgpath .. "border_l.png",
+					imgpath .. "border.png",
+					imgpath .. "border_r.png",
+			       })
+
 	local titleBox =
 		Tile:loadTiles({
 				       imgpath .. "titlebox.png",
@@ -333,6 +233,13 @@ function skin(self, s)
 
 
 	-- Iconbar definitions, each icon needs an image and x,y
+	s.icon_background.x = 0
+	s.icon_background.y = screenHeight - 30
+	s.icon_background.w = screenWidth
+	s.icon_background.h = 30
+	s.icon_background.bgImg = iconBackground
+	s.icon_background.layer = LAYER_FRAME
+	s.icon_background.position = LAYOUT_SOUTH
 
 	-- play/stop/pause
 	_icon(s.icon_playmode_off, 9, screenHeight - 30, "icon_mode_off.png")
@@ -360,10 +267,6 @@ function skin(self, s)
 	s.icon_time.position = LAYOUT_SOUTH
 	s.icon_time.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
 	s.icon_time.fg = { 0xe7, 0xe7, 0xe7 }
-
-
-	-- Window background
-	self:_setBackground()
 
 
 	-- Window title, this is a Label

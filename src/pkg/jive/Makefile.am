@@ -185,26 +185,30 @@ dist_applets_setupsoundeffects_DATA = \
 	share/applets/SetupSoundEffects/SetupSoundEffectsMeta.lua
 
 
+
+# Wallpaper
+applets_setupwallpaperdir = $(pkgdatadir)/applets/SetupWallpaper
+dist_applets_setupwallpaper_DATA = \
+	share/applets/SetupWallpaper/SetupWallpaperApplet.lua \
+	share/applets/SetupWallpaper/SetupWallpaperMeta.lua
+
+applets_setupwallpaper_wallpaperdir = $(pkgdatadir)/applets/SetupWallpaper/wallpaper
+dist_applets_setupwallpaper_wallpaper_DATA = \
+	share/applets/SetupWallpaper/wallpaper/Chapple_1.jpg \
+	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_1.jpg \
+	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_2.jpg \
+	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_3.jpg \
+	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_4.jpg \
+	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_6.jpg \
+	share/applets/SetupWallpaper/wallpaper/Los-Cardinalos_1.jpg \
+	share/applets/SetupWallpaper/wallpaper/Orin-Optiglot_1.jpg
+
+
 # Default skin
 applets_defaultskindir = $(pkgdatadir)/applets/DefaultSkin
 dist_applets_defaultskin_DATA = \
 	share/applets/DefaultSkin/DefaultSkinApplet.lua \
 	share/applets/DefaultSkin/DefaultSkinMeta.lua
-
-
-# Data: wallpaper
-applets_defaultskin_wallpaperdir = $(pkgdatadir)/applets/DefaultSkin/wallpaper
-dist_applets_defaultskin_wallpaper_DATA = \
-	share/applets/DefaultSkin/wallpaper/Chapple_1.jpg \
-	share/applets/DefaultSkin/wallpaper/Clearly-Ambiguous_1.jpg \
-	share/applets/DefaultSkin/wallpaper/Clearly-Ambiguous_2.jpg \
-	share/applets/DefaultSkin/wallpaper/Clearly-Ambiguous_3.jpg \
-	share/applets/DefaultSkin/wallpaper/Clearly-Ambiguous_4.jpg \
-	share/applets/DefaultSkin/wallpaper/Clearly-Ambiguous_5.jpg \
-	share/applets/DefaultSkin/wallpaper/Clearly-Ambiguous_6.jpg \
-	share/applets/DefaultSkin/wallpaper/dotDOTdot_1.jpg \
-	share/applets/DefaultSkin/wallpaper/Los-Cardinalos_1.jpg \
-	share/applets/DefaultSkin/wallpaper/Orin-Optiglot_1.jpg
 
 
 # Data: default skin

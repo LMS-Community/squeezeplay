@@ -117,6 +117,8 @@ function __init(self)
 	log:debug("Iconbar:__init()")
 
 	local obj = oo.rawnew(self, {
+	        -- FIXME the background should be an icon, but icons use Surfaces not Tiles.
+		icon_background = Label("icon_background", ""),
 		icon_playmode = Icon("icon_playmode_off"),
 		icon_repeat = Icon("icon_repeat_off"),
 		icon_shuffle = Icon("icon_shuffle_off"),
@@ -126,6 +128,7 @@ function __init(self)
 
 	obj:update()
 
+	Framework:addWidget(obj.icon_background)
 	Framework:addWidget(obj.icon_playmode)
 	Framework:addWidget(obj.icon_repeat)
 	Framework:addWidget(obj.icon_shuffle)

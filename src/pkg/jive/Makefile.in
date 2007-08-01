@@ -44,11 +44,12 @@ DIST_COMMON = $(am__configure_deps) $(dist_applets_bounce_DATA) \
 	$(dist_applets_defaultskin_DATA) \
 	$(dist_applets_defaultskin_images_DATA) \
 	$(dist_applets_defaultskin_sounds_DATA) \
-	$(dist_applets_defaultskin_wallpaper_DATA) \
 	$(dist_applets_flickr_DATA) $(dist_applets_log_DATA) \
 	$(dist_applets_quit_DATA) $(dist_applets_screensavers_DATA) \
 	$(dist_applets_screenshot_DATA) \
 	$(dist_applets_setupsoundeffects_DATA) \
+	$(dist_applets_setupwallpaper_DATA) \
+	$(dist_applets_setupwallpaper_wallpaper_DATA) \
 	$(dist_applets_slimbrowser_DATA) \
 	$(dist_applets_slimdiscovery_DATA) $(dist_applets_test_DATA) \
 	$(dist_jive_DATA) $(dist_jiveui_DATA) $(dist_luanet_DATA) \
@@ -82,12 +83,13 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" \
 	"$(DESTDIR)$(applets_defaultskindir)" \
 	"$(DESTDIR)$(applets_defaultskin_imagesdir)" \
 	"$(DESTDIR)$(applets_defaultskin_soundsdir)" \
-	"$(DESTDIR)$(applets_defaultskin_wallpaperdir)" \
 	"$(DESTDIR)$(applets_flickrdir)" "$(DESTDIR)$(applets_logdir)" \
 	"$(DESTDIR)$(applets_quitdir)" \
 	"$(DESTDIR)$(applets_screensaversdir)" \
 	"$(DESTDIR)$(applets_screenshotdir)" \
 	"$(DESTDIR)$(applets_setupsoundeffectsdir)" \
+	"$(DESTDIR)$(applets_setupwallpaperdir)" \
+	"$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)" \
 	"$(DESTDIR)$(applets_slimbrowserdir)" \
 	"$(DESTDIR)$(applets_slimdiscoverydir)" \
 	"$(DESTDIR)$(applets_testdir)" "$(DESTDIR)$(jivedir)" \
@@ -126,13 +128,14 @@ dist_applets_bounceDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_defaultskinDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_defaultskin_imagesDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_defaultskin_soundsDATA_INSTALL = $(INSTALL_DATA)
-dist_applets_defaultskin_wallpaperDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_flickrDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_logDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_quitDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_screensaversDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_screenshotDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupsoundeffectsDATA_INSTALL = $(INSTALL_DATA)
+dist_applets_setupwallpaperDATA_INSTALL = $(INSTALL_DATA)
+dist_applets_setupwallpaper_wallpaperDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_slimbrowserDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_slimdiscoveryDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_testDATA_INSTALL = $(INSTALL_DATA)
@@ -144,11 +147,12 @@ dist_luautilDATA_INSTALL = $(INSTALL_DATA)
 DATA = $(dist_applets_bounce_DATA) $(dist_applets_defaultskin_DATA) \
 	$(dist_applets_defaultskin_images_DATA) \
 	$(dist_applets_defaultskin_sounds_DATA) \
-	$(dist_applets_defaultskin_wallpaper_DATA) \
 	$(dist_applets_flickr_DATA) $(dist_applets_log_DATA) \
 	$(dist_applets_quit_DATA) $(dist_applets_screensavers_DATA) \
 	$(dist_applets_screenshot_DATA) \
 	$(dist_applets_setupsoundeffects_DATA) \
+	$(dist_applets_setupwallpaper_DATA) \
+	$(dist_applets_setupwallpaper_wallpaper_DATA) \
 	$(dist_applets_slimbrowser_DATA) \
 	$(dist_applets_slimdiscovery_DATA) $(dist_applets_test_DATA) \
 	$(dist_jive_DATA) $(dist_jiveui_DATA) $(dist_luanet_DATA) \
@@ -436,26 +440,29 @@ dist_applets_setupsoundeffects_DATA = \
 	share/applets/SetupSoundEffects/SetupSoundEffectsMeta.lua
 
 
+# Wallpaper
+applets_setupwallpaperdir = $(pkgdatadir)/applets/SetupWallpaper
+dist_applets_setupwallpaper_DATA = \
+	share/applets/SetupWallpaper/SetupWallpaperApplet.lua \
+	share/applets/SetupWallpaper/SetupWallpaperMeta.lua
+
+applets_setupwallpaper_wallpaperdir = $(pkgdatadir)/applets/SetupWallpaper/wallpaper
+dist_applets_setupwallpaper_wallpaper_DATA = \
+	share/applets/SetupWallpaper/wallpaper/Chapple_1.jpg \
+	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_1.jpg \
+	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_2.jpg \
+	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_3.jpg \
+	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_4.jpg \
+	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_6.jpg \
+	share/applets/SetupWallpaper/wallpaper/Los-Cardinalos_1.jpg \
+	share/applets/SetupWallpaper/wallpaper/Orin-Optiglot_1.jpg
+
+
 # Default skin
 applets_defaultskindir = $(pkgdatadir)/applets/DefaultSkin
 dist_applets_defaultskin_DATA = \
 	share/applets/DefaultSkin/DefaultSkinApplet.lua \
 	share/applets/DefaultSkin/DefaultSkinMeta.lua
-
-
-# Data: wallpaper
-applets_defaultskin_wallpaperdir = $(pkgdatadir)/applets/DefaultSkin/wallpaper
-dist_applets_defaultskin_wallpaper_DATA = \
-	share/applets/DefaultSkin/wallpaper/Chapple_1.jpg \
-	share/applets/DefaultSkin/wallpaper/Clearly-Ambiguous_1.jpg \
-	share/applets/DefaultSkin/wallpaper/Clearly-Ambiguous_2.jpg \
-	share/applets/DefaultSkin/wallpaper/Clearly-Ambiguous_3.jpg \
-	share/applets/DefaultSkin/wallpaper/Clearly-Ambiguous_4.jpg \
-	share/applets/DefaultSkin/wallpaper/Clearly-Ambiguous_5.jpg \
-	share/applets/DefaultSkin/wallpaper/Clearly-Ambiguous_6.jpg \
-	share/applets/DefaultSkin/wallpaper/dotDOTdot_1.jpg \
-	share/applets/DefaultSkin/wallpaper/Los-Cardinalos_1.jpg \
-	share/applets/DefaultSkin/wallpaper/Orin-Optiglot_1.jpg
 
 
 # Data: default skin
@@ -962,23 +969,6 @@ uninstall-dist_applets_defaultskin_soundsDATA:
 	  echo " rm -f '$(DESTDIR)$(applets_defaultskin_soundsdir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(applets_defaultskin_soundsdir)/$$f"; \
 	done
-install-dist_applets_defaultskin_wallpaperDATA: $(dist_applets_defaultskin_wallpaper_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(applets_defaultskin_wallpaperdir)" || $(mkdir_p) "$(DESTDIR)$(applets_defaultskin_wallpaperdir)"
-	@list='$(dist_applets_defaultskin_wallpaper_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_applets_defaultskin_wallpaperDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_defaultskin_wallpaperdir)/$$f'"; \
-	  $(dist_applets_defaultskin_wallpaperDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_defaultskin_wallpaperdir)/$$f"; \
-	done
-
-uninstall-dist_applets_defaultskin_wallpaperDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_applets_defaultskin_wallpaper_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(applets_defaultskin_wallpaperdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(applets_defaultskin_wallpaperdir)/$$f"; \
-	done
 install-dist_applets_flickrDATA: $(dist_applets_flickr_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(applets_flickrdir)" || $(mkdir_p) "$(DESTDIR)$(applets_flickrdir)"
@@ -1080,6 +1070,40 @@ uninstall-dist_applets_setupsoundeffectsDATA:
 	  f=$(am__strip_dir) \
 	  echo " rm -f '$(DESTDIR)$(applets_setupsoundeffectsdir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(applets_setupsoundeffectsdir)/$$f"; \
+	done
+install-dist_applets_setupwallpaperDATA: $(dist_applets_setupwallpaper_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(applets_setupwallpaperdir)" || $(mkdir_p) "$(DESTDIR)$(applets_setupwallpaperdir)"
+	@list='$(dist_applets_setupwallpaper_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(dist_applets_setupwallpaperDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_setupwallpaperdir)/$$f'"; \
+	  $(dist_applets_setupwallpaperDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_setupwallpaperdir)/$$f"; \
+	done
+
+uninstall-dist_applets_setupwallpaperDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_applets_setupwallpaper_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(applets_setupwallpaperdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(applets_setupwallpaperdir)/$$f"; \
+	done
+install-dist_applets_setupwallpaper_wallpaperDATA: $(dist_applets_setupwallpaper_wallpaper_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(applets_setupwallpaper_wallpaperdir)" || $(mkdir_p) "$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)"
+	@list='$(dist_applets_setupwallpaper_wallpaper_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(dist_applets_setupwallpaper_wallpaperDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)/$$f'"; \
+	  $(dist_applets_setupwallpaper_wallpaperDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)/$$f"; \
+	done
+
+uninstall-dist_applets_setupwallpaper_wallpaperDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_applets_setupwallpaper_wallpaper_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)/$$f"; \
 	done
 install-dist_applets_slimbrowserDATA: $(dist_applets_slimbrowser_DATA)
 	@$(NORMAL_INSTALL)
@@ -1269,7 +1293,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/Bounce $(distdir)/share/applets/DefaultSkin $(distdir)/share/applets/DefaultSkin/images $(distdir)/share/applets/DefaultSkin/sounds $(distdir)/share/applets/DefaultSkin/wallpaper $(distdir)/share/applets/Flickr $(distdir)/share/applets/LogSettings $(distdir)/share/applets/Quit $(distdir)/share/applets/ScreenSavers $(distdir)/share/applets/Screenshot $(distdir)/share/applets/SetupSoundEffects $(distdir)/share/applets/SlimBrowser $(distdir)/share/applets/SlimDiscovery $(distdir)/share/applets/Test $(distdir)/share/jive $(distdir)/share/jive/net $(distdir)/share/jive/slim $(distdir)/share/jive/ui $(distdir)/share/jive/utils $(distdir)/src
+	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/Bounce $(distdir)/share/applets/DefaultSkin $(distdir)/share/applets/DefaultSkin/images $(distdir)/share/applets/DefaultSkin/sounds $(distdir)/share/applets/Flickr $(distdir)/share/applets/LogSettings $(distdir)/share/applets/Quit $(distdir)/share/applets/ScreenSavers $(distdir)/share/applets/Screenshot $(distdir)/share/applets/SetupSoundEffects $(distdir)/share/applets/SetupWallpaper $(distdir)/share/applets/SetupWallpaper/wallpaper $(distdir)/share/applets/SlimBrowser $(distdir)/share/applets/SlimDiscovery $(distdir)/share/applets/Test $(distdir)/share/jive $(distdir)/share/jive/net $(distdir)/share/jive/slim $(distdir)/share/jive/ui $(distdir)/share/jive/utils $(distdir)/src
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -1398,7 +1422,7 @@ check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" "$(DESTDIR)$(applets_bouncedir)" "$(DESTDIR)$(applets_defaultskindir)" "$(DESTDIR)$(applets_defaultskin_imagesdir)" "$(DESTDIR)$(applets_defaultskin_soundsdir)" "$(DESTDIR)$(applets_defaultskin_wallpaperdir)" "$(DESTDIR)$(applets_flickrdir)" "$(DESTDIR)$(applets_logdir)" "$(DESTDIR)$(applets_quitdir)" "$(DESTDIR)$(applets_screensaversdir)" "$(DESTDIR)$(applets_screenshotdir)" "$(DESTDIR)$(applets_setupsoundeffectsdir)" "$(DESTDIR)$(applets_slimbrowserdir)" "$(DESTDIR)$(applets_slimdiscoverydir)" "$(DESTDIR)$(applets_testdir)" "$(DESTDIR)$(jivedir)" "$(DESTDIR)$(jiveuidir)" "$(DESTDIR)$(luanetdir)" "$(DESTDIR)$(luaslimdir)" "$(DESTDIR)$(luautildir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" "$(DESTDIR)$(applets_bouncedir)" "$(DESTDIR)$(applets_defaultskindir)" "$(DESTDIR)$(applets_defaultskin_imagesdir)" "$(DESTDIR)$(applets_defaultskin_soundsdir)" "$(DESTDIR)$(applets_flickrdir)" "$(DESTDIR)$(applets_logdir)" "$(DESTDIR)$(applets_quitdir)" "$(DESTDIR)$(applets_screensaversdir)" "$(DESTDIR)$(applets_screenshotdir)" "$(DESTDIR)$(applets_setupsoundeffectsdir)" "$(DESTDIR)$(applets_setupwallpaperdir)" "$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)" "$(DESTDIR)$(applets_slimbrowserdir)" "$(DESTDIR)$(applets_slimdiscoverydir)" "$(DESTDIR)$(applets_testdir)" "$(DESTDIR)$(jivedir)" "$(DESTDIR)$(jiveuidir)" "$(DESTDIR)$(luanetdir)" "$(DESTDIR)$(luaslimdir)" "$(DESTDIR)$(luautildir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -1453,12 +1477,13 @@ install-data-am: install-dist_applets_bounceDATA \
 	install-dist_applets_defaultskinDATA \
 	install-dist_applets_defaultskin_imagesDATA \
 	install-dist_applets_defaultskin_soundsDATA \
-	install-dist_applets_defaultskin_wallpaperDATA \
 	install-dist_applets_flickrDATA install-dist_applets_logDATA \
 	install-dist_applets_quitDATA \
 	install-dist_applets_screensaversDATA \
 	install-dist_applets_screenshotDATA \
 	install-dist_applets_setupsoundeffectsDATA \
+	install-dist_applets_setupwallpaperDATA \
+	install-dist_applets_setupwallpaper_wallpaperDATA \
 	install-dist_applets_slimbrowserDATA \
 	install-dist_applets_slimdiscoveryDATA \
 	install-dist_applets_testDATA install-dist_jiveDATA \
@@ -1498,12 +1523,13 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_applets_bounceDATA \
 	uninstall-dist_applets_defaultskinDATA \
 	uninstall-dist_applets_defaultskin_imagesDATA \
 	uninstall-dist_applets_defaultskin_soundsDATA \
-	uninstall-dist_applets_defaultskin_wallpaperDATA \
 	uninstall-dist_applets_flickrDATA \
 	uninstall-dist_applets_logDATA uninstall-dist_applets_quitDATA \
 	uninstall-dist_applets_screensaversDATA \
 	uninstall-dist_applets_screenshotDATA \
 	uninstall-dist_applets_setupsoundeffectsDATA \
+	uninstall-dist_applets_setupwallpaperDATA \
+	uninstall-dist_applets_setupwallpaper_wallpaperDATA \
 	uninstall-dist_applets_slimbrowserDATA \
 	uninstall-dist_applets_slimdiscoveryDATA \
 	uninstall-dist_applets_testDATA uninstall-dist_jiveDATA \
@@ -1523,12 +1549,13 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_applets_bounceDATA \
 	install-dist_applets_defaultskinDATA \
 	install-dist_applets_defaultskin_imagesDATA \
 	install-dist_applets_defaultskin_soundsDATA \
-	install-dist_applets_defaultskin_wallpaperDATA \
 	install-dist_applets_flickrDATA install-dist_applets_logDATA \
 	install-dist_applets_quitDATA \
 	install-dist_applets_screensaversDATA \
 	install-dist_applets_screenshotDATA \
 	install-dist_applets_setupsoundeffectsDATA \
+	install-dist_applets_setupwallpaperDATA \
+	install-dist_applets_setupwallpaper_wallpaperDATA \
 	install-dist_applets_slimbrowserDATA \
 	install-dist_applets_slimdiscoveryDATA \
 	install-dist_applets_testDATA install-dist_jiveDATA \
@@ -1544,12 +1571,13 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_applets_bounceDATA \
 	uninstall-dist_applets_defaultskinDATA \
 	uninstall-dist_applets_defaultskin_imagesDATA \
 	uninstall-dist_applets_defaultskin_soundsDATA \
-	uninstall-dist_applets_defaultskin_wallpaperDATA \
 	uninstall-dist_applets_flickrDATA \
 	uninstall-dist_applets_logDATA uninstall-dist_applets_quitDATA \
 	uninstall-dist_applets_screensaversDATA \
 	uninstall-dist_applets_screenshotDATA \
 	uninstall-dist_applets_setupsoundeffectsDATA \
+	uninstall-dist_applets_setupwallpaperDATA \
+	uninstall-dist_applets_setupwallpaper_wallpaperDATA \
 	uninstall-dist_applets_slimbrowserDATA \
 	uninstall-dist_applets_slimdiscoveryDATA \
 	uninstall-dist_applets_testDATA uninstall-dist_jiveDATA \

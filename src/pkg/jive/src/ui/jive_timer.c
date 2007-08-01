@@ -40,7 +40,7 @@ void jive_timer_dispatch_event(lua_State *L, void *param) {
 	JIVEL_STACK_CHECK_BEGIN(L);
 
 	lua_rawgeti(L, LUA_REGISTRYINDEX, (lua_Integer) param);
-	if (lua_isnil(L, -1)) {
+	if (lua_isnil(L, -1) || lua_type(L, -1) != LUA_TTABLE) {
 		lua_pop(L, 1);
 
 		JIVEL_STACK_CHECK_ASSERT(L);

@@ -117,6 +117,7 @@ static int jiveL_init(lua_State *L) {
 
 	/* background image */
 	jive_background = jive_surface_newRGB(r.w, r.h);
+	jive_surface_boxColor(jive_background, 0, 0, r.w, r.h, 0x000000FF);
 
 
 	/* init audio */
