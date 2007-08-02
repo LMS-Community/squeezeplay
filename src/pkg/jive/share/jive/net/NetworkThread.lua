@@ -56,7 +56,7 @@ local QUEUE_PROCESS     = 5    -- number of queue items processed by loop (netwo
 -- _add
 -- adds a socket to the read or write list
 local function _add(sock, pump, sockList)
---	log:debug("_add(", tostring(sock), ", ", tostring(pump), ")")
+--	log:debug("_add(", sock, ", ", pump, ")")
 	
 	if not sock then 
 		return
@@ -77,7 +77,7 @@ end
 -- _remove
 -- removes a socket from the read or write list
 local function _remove(sock, sockList)
---	log:debug("_remove(", tostring(sock), ")")
+--	log:debug("_remove(", sock, ")")
 	
 	if not sock then 
 		return 
@@ -128,7 +128,7 @@ end
 -- _t_select
 -- runs our sockets through select
 local function _t_select(self)
---	log:debug("_t_select(r", tostring(#self.t_readSocks), " w", tostring(#self.t_writeSocks), ")")
+--	log:debug("_t_select(r", #self.t_readSocks, " w", #self.t_writeSocks, ")")
 	
 	local r,w,e = socket.select(self.t_readSocks, self.t_writeSocks, TIMEOUT)
 	
@@ -281,7 +281,7 @@ end
 
 -- notify
 function notify(self, event, ...)
---	log:info("NetworkThread:notify(", tostring(event), ")")
+--	log:info("NetworkThread:notify(", event, ")")
 	
 	local method = "notify_" .. event
 	

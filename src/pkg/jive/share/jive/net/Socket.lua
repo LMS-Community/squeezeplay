@@ -20,7 +20,7 @@ convenient proxy functions.
  local t_Sink = mySocket:safeSink(sink)
 
  -- information about the socket
- log:debug("Freeing: ", tostring(mySocket))
+ log:debug("Freeing: ", mySocket)
  -- print
  Freeing: Socket {mySocket}
 
@@ -63,7 +63,7 @@ Must be called by subclasses.
 =cut
 --]]
 function __init(self, jnt, name)
---	log:debug("Socket:__init(", tostring(name), ")")
+--	log:debug("Socket:__init(", name, ")")
 
 --	assert(
 --		jnt and oo.instanceof(jnt, NetworkThread), 
@@ -88,7 +88,7 @@ Must be called by subclasses.
 =cut
 --]]
 function free(self)
---	log:debug(tostring(self), ":free()")
+--	log:debug(self, ":free()")
 
 	self:perform(function() self:t_free() end)
 end
@@ -140,7 +140,7 @@ end
 -- t_free
 -- frees (and closes) the socket
 function t_free(self)
---	log:debug(tostring(self), ":t_free()")
+--	log:debug(self, ":t_free()")
 
 	-- we store nothing so closing is all we need
 	self:t_close()
@@ -150,7 +150,7 @@ end
 -- t_close
 -- closes the socket
 function t_close(self)
---	log:debug(tostring(self), ":t_close()")
+--	log:debug(self, ":t_close()")
 
 	if self.t_sock then
 		self:t_removeRead()

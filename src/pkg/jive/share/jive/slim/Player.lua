@@ -84,7 +84,7 @@ end
 -- sets the connected state from the player
 -- sends an appropriate notification on change
 local function _setConnected(self, connected)
-	log:debug("_setConnected(", tostring(connected), ")")
+	log:debug("_setConnected(", connected, ")")
 	
 	-- use tostring to handle nil case (in either)
 	if tostring(connected) != tostring(self.connected) then
@@ -107,7 +107,7 @@ Create a Player object for server I<server>.
 =cut
 --]]
 function __init(self, slimServer, jnt, jpool, playerInfo)
-	log:debug("Player:__init(", tostring(playerInfo.playerid), ")")
+	log:debug("Player:__init(", playerInfo.playerid, ")")
 
 	assert(slimServer, "Cannot create Player without SlimServer object")
 	
@@ -328,7 +328,7 @@ end
 function _process_status(self, data)
 	log:debug("Player:_process_status()")
 	if self.state then
-		logv:debug("-------------------------Player:volume: ", tostring(self.state["mixer volume"]), " - " , tostring(data.result["mixer volume"]))
+		logv:debug("-------------------------Player:volume: ", self.state["mixer volume"], " - " , data.result["mixer volume"])
 	end
 	
 	-- update our cache in one go
@@ -452,7 +452,7 @@ end
 
 function _process_button(self, data)
 	log:debug("_process_button()")
-	log:debug("id:", tostring(data["id"]), " waiting on:", tostring(self.buttonId))
+	log:debug("id:", data["id"], " waiting on:", self.buttonId)
 	if data["id"] == self.buttonId then
 		log:debug("cleared")
 		self.buttonId = false
@@ -477,11 +477,11 @@ end
 --[[
 function _process_ir(self, data)
 --	log:debug("_process_ir()")
---	log:debug("id:", tostring(data["id"]), " waiting on:", tostring(self.irId))
+--	log:debug("id:", data["id"], " waiting on:", self.irId)
 	if data["id"] == self.irId then
 --		log:debug("cleared")
 		self.irId = false
-		log:warn("round trip:", tostring(_t() - self.irT))
+		log:warn("round trip:", _t() - self.irT)
 	end
 end
 
@@ -513,11 +513,11 @@ end
 
 function _process_mixer(self, data)
 --	log:debug("_process_ir()")
---	log:debug("id:", tostring(data["id"]), " waiting on:", tostring(self.irId))
+--	log:debug("id:", data["id"], " waiting on:", self.irId)
 	if data["id"] == self.mixerId then
 --		log:debug("cleared")
 		self.mixerId = false
-		log:warn("Mixer round trip:", tostring(_t() - self.mixerT))
+		log:warn("Mixer round trip:", _t() - self.mixerT)
 	end
 end
 
@@ -526,7 +526,7 @@ function volume(self, amount)
 	local vol = self.state["mixer volume"]
 	
 	if not self.mixerId then
-		logv:debug("Player:volume(", tostring(amount), ")")
+		logv:debug("Player:volume(", amount, ")")
 		
 		self.mixerT = _t()
 		self.mixerId = self:call({'mixer', 'volume', fmt("%+d", amount)})
@@ -536,7 +536,7 @@ function volume(self, amount)
 		self.state["mixer volume"] = vol
 		
 	else
-		logv:debug("(Player:volume(", tostring(amount), "))")
+		logv:debug("(Player:volume(", amount, "))")
 	end
 	
 	return vol

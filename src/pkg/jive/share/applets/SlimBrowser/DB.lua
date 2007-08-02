@@ -84,17 +84,17 @@ function dump(self)
 		return
 	end
 	
-	log:debug("-------------------------------- ", tostring(self), ":")
+	log:debug("-------------------------------- ", self, ":")
 
 	local txt = ""
 	if self.complete then txt="complete" end
 
-	log:debug(" ", tostring(self.count), " items / ", tostring(self.ts), " / ", tostring(self.head), " / ", txt)
+	log:debug(" ", self.count, " items / ", self.ts, " / ", self.head, " / ", txt)
 	
 	local next = self.head
 	local chIdx = 1
 	while next do
-		log:debug("  ", tostring(chIdx), ": ", tostring(next["_from"]), " - ", tostring(next["_to"]))
+		log:debug("  ", chIdx, ": ", next["_from"], " - ", next["_to"])
 		next = next["_next"]
 	end
 	log:debug("--------------------------------")
@@ -104,7 +104,7 @@ end
 -- menuItems
 -- Stores the chunk in the DB and returns data suitable for the menu:setItems call
 function menuItems(self, chunk)
-	log:debug(tostring(self), " menuItems()")
+	log:debug(self, " menuItems()")
 
 	-- we may be called with no chunk, f.e. when building the window
 	if not chunk then
@@ -396,7 +396,7 @@ function menuItems(self, chunk)
 	
 	self.last_indexed_chunk = false
 	self:dump()
---	log:debug("..returning ", tostring(self.count), ", ", tostring(cFrom), ", ", tostring(cTo))
+--	log:debug("..returning ", self.count, ", ", cFrom, ", ", cTo)
 	return self, self.count, cFrom, cTo
 
 end
@@ -408,11 +408,11 @@ end
 
 
 function item(self, index)
---	log:debug("item(", tostring(index), ")")
+--	log:debug("item(", index, ")")
 	
 	-- avoid a wild chase...
 	if index > self.count then
-		log:debug("item ", tostring(index), " larger than count ", tostring(self.cont))
+		log:debug("item ", index, " larger than count ", self.cont)
 		return
 	end
 	
@@ -426,16 +426,16 @@ function item(self, index)
 	if last then
 		
 		local sTo = last["_to"]
---		log:debug("last to:", tostring(sTo))
+--		log:debug("last to:", sTo)
 		if index > sTo then
 --			log:debug("next = last")
 			next = last
 		else
 			local sFrom = last["_from"]
---			log:debug("last from:", tostring(sFrom))
+--			log:debug("last from:", sFrom)
 			if index >= sFrom then
 				local itemIndex = index - sFrom + 1
---				log:debug("item ", tostring(index), " found in last_indexed_chunk")
+--				log:debug("item ", index, " found in last_indexed_chunk")
 				return last["item_loop"][itemIndex], current
 			end
 		end
@@ -450,14 +450,14 @@ function item(self, index)
 			if index >= sFrom then
 				local itemIndex = index - sFrom + 1
 				self.last_indexed_chunk = next
---				log:debug("item ", tostring(index), " found")
+--				log:debug("item ", index, " found")
 				return next["item_loop"][itemIndex], current
 			end
 		end
 		next = next["_next"]
 	end
 
---	log:debug("item ", tostring(index), " NOT found")
+--	log:debug("item ", index, " NOT found")
 end
 
 
@@ -465,7 +465,7 @@ function missing(self, maxQty)
 
 	-- use our cached result
 	if self.complete then
-		log:debug(tostring(self), " complete (cached)")
+		log:debug(self, " complete (cached)")
 		return
 	end
 	
@@ -491,7 +491,7 @@ function missing(self, maxQty)
 				return
 			end
 			-- outside world is 0 based!
-			log:debug(tostring(self), " missing ", tostring(qty), " items from pos ", tostring(from))
+			log:debug(self, " missing ", qty, " items from pos ", from)
 			return from - 1, qty
 		end
 		pTo = sTo
@@ -511,12 +511,12 @@ function missing(self, maxQty)
 			return
 		end
 		-- outside world is 0 based!
-		log:debug(tostring(self), " missing ", tostring(qty), " items from pos ", tostring(from))
+		log:debug(self, " missing ", qty, " items from pos ", from)
 		return from - 1, qty
 	end
 	
 	-- if we reach here we're complete (for next time)
-	log:debug(tostring(self), " complete (calculated)")
+	log:debug(self, " complete (calculated)")
 	self.complete = true
 end
 

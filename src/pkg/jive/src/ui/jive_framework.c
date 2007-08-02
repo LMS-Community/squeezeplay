@@ -477,6 +477,24 @@ void jive_queue_event(JiveEvent *evt) {
 }
 
 
+static int traceback (lua_State *L) {
+	lua_getfield(L, LUA_GLOBALSINDEX, "debug");
+	if (!lua_istable(L, -1)) {
+		lua_pop(L, 1);
+		return 1;
+	}
+	lua_getfield(L, -1, "traceback");
+	if (!lua_isfunction(L, -1)) {
+		lua_pop(L, 2);
+		return 1;
+	}
+	lua_pushvalue(L, 1);  /* pass error message */
+	lua_pushinteger(L, 2);  /* skip this function and traceback */
+	lua_call(L, 2, 1);  /* call debug.traceback */
+	return 1;
+}
+
+
 int jiveL_dispatch_event(lua_State *L) {
 	Uint32 r = 0;
 
@@ -486,13 +504,15 @@ int jiveL_dispatch_event(lua_State *L) {
 	 * 3: event
 	 */
 
+	lua_pushcfunction(L, traceback);  /* push traceback function */
+
 	// call global event listeners
 	if (jive_getmethod(L, 1, "_event")) {
 		lua_pushvalue(L, 1); // framework
 		lua_pushvalue(L, 3); // event
 		lua_pushboolean(L, 1); // global listeners
 
-		if (lua_pcall(L, 3, 1, 0) != 0) {
+		if (lua_pcall(L, 3, 1, 4) != 0) {
 			fprintf(stderr, "error in event function:\n\t%s\n", lua_tostring(L, -1));
 			return 0;
 		}
@@ -506,7 +526,7 @@ int jiveL_dispatch_event(lua_State *L) {
 		lua_pushvalue(L, 2); // widget
 		lua_pushvalue(L, 3); // event
 
-		if (lua_pcall(L, 2, 1, 0) != 0) {
+		if (lua_pcall(L, 2, 1, 4) != 0) {
 			fprintf(stderr, "error in event function:\n\t%s\n", lua_tostring(L, -1));
 
 
@@ -523,7 +543,7 @@ int jiveL_dispatch_event(lua_State *L) {
 		lua_pushvalue(L, 3); // event
 		lua_pushboolean(L, 0); // unused listeners
 
-		if (lua_pcall(L, 3, 1, 0) != 0) {
+		if (lua_pcall(L, 3, 1, 4) != 0) {
 			fprintf(stderr, "error in event function:\n\t%s\n", lua_tostring(L, -1));
 			return 0;
 		}

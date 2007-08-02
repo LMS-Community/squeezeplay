@@ -121,7 +121,7 @@ function jive.slim.RequestCliXJive:__init(sink, player, cmdArray, from, qty, tim
 	log:debug("RequestCliXJive:__init()")
 	
 	if timeout then
-		log:debug("RequestCliXJive:__init: timeout: ", tostring(timeout))
+		log:debug("RequestCliXJive:__init: timeout: ", timeout)
 		if not params then
 			params = {}
 		end

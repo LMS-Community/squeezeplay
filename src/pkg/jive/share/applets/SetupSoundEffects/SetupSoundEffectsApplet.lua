@@ -23,7 +23,6 @@ local pairs, tostring = pairs, tostring
 local table           = require("table")
 
 local oo              = require("loop.simple")
-local logging         = require("logging")
 
 local Applet          = require("jive.Applet")
 local Audio           = require("jive.ui.Audio")

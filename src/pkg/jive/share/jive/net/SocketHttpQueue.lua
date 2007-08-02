@@ -49,7 +49,7 @@ the connection must close.
 =cut
 --]]
 function __init(self, jnt, ip, port, queueObj, name)
---	log:debug("SocketHttpQueue:__init(", tostring(name), ", ".. tostring(ip), ", ", tostring(port), ")")
+--	log:debug("SocketHttpQueue:__init(", name, ", ".. ip, ", ", port, ")")
 
 --	assert(queueObj)
 
@@ -65,13 +65,13 @@ end
 -- t_sendDequeue
 --
 function t_sendDequeue(self)
---	log:debug(tostring(self), ":t_sendDequeue()")
+--	log:debug(self, ":t_sendDequeue()")
 	
 	local request, close = self.httpqueue:t_dequeue(self)
 	
 	if request then
 		self.t_httpSending = request
---		log:info(tostring(self), " processing ", tostring(self.t_httpSending))
+--		log:info(self, " processing ", self.t_httpSending)
 		self:t_sendNext(true, 't_sendConnect')
 	end
 	

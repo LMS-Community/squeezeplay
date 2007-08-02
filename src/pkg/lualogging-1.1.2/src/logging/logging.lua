@@ -83,9 +83,9 @@ function new(append, level)
 		end
 		-- check the type of the first argument, if not string then
 		-- use our tostring function to convert it to a string...
-		if type(message) ~= "string" then
-			return logger:append(level, tostring(message), ...)
-		end
+		--if type(message) ~= "string" then
+		--	return logger:append(level, tostring(message), ...)
+		--end
 		return logger:append(level, message, ...)
 	end
 
@@ -149,7 +149,7 @@ function tostring(value)
       if (tonumber(i) ~= i) then
         table.insert(auxTable, i)
       else
-        table.insert(auxTable, tostring(i))
+        table.insert(auxTable, _tostring(i))
       end
     end)
     table.sort(auxTable)
@@ -161,7 +161,7 @@ function tostring(value)
       if ((tonumber(fieldName)) and (tonumber(fieldName) > 0)) then
         entry = tostring(value[tonumber(fieldName)])
       else
-        entry = fieldName.." = "..tostring(value[fieldName])
+        entry = _tostring(fieldName).." = "..tostring(value[fieldName])
       end
       str = str..separator..entry
       separator = ", "

@@ -70,7 +70,7 @@ will be opened as soon as the number of queued requests reaches 6.
 =cut
 --]]
 function __init(self, jnt, ip, port, quantity, threshold, name)
---	log:debug("HttpPool:__init(", tostring(name), ", ", tostring(ip), ", ", tostring(port), ", ", tostring(quantity), ")")
+--	log:debug("HttpPool:__init(", name, ", ", ip, ", ", port, ", ", quantity, ")")
 
 	-- let used classes worry about ip, port existence
 --	assert(jnt)
@@ -125,7 +125,7 @@ queued requests will be serviced before this one.
 --]]
 function queue(self, request)
 	perfs.check('Pool Queue', request, 1)
---	log:warn(tostring(self), " enqueues ", tostring(request))
+--	log:warn(self, " enqueues ", request)
 	self.jnt:perform(function() self:t_queue(request, 1) end)
 end
 
@@ -142,7 +142,7 @@ will be serviced before normal requests.
 --]]
 function queuePriority(self, request)
 	perfs.check('Pool Priority Queue', request, 1)
---	log:warn(tostring(self), " priority enqueues ", tostring(request))
+--	log:warn(self, " priority enqueues ", request)
 	self.jnt:perform(function() self:t_queue(request, 0) end)
 end
 
@@ -150,7 +150,7 @@ end
 -- t_queue
 -- queues a request
 function t_queue(self, request, priority )
---	log:debug(tostring(self), ":t_queue()")
+--	log:debug(self, ":t_queue()")
 	
 	if not self.reqQueue[priority] then
 		self.reqQueue[priority] = {}
@@ -165,7 +165,7 @@ function t_queue(self, request, priority )
 		active = #self.pool.jshq
 	end
 	self.pool.active = active
---	log:info(tostring(self), ":", self.reqQueueCount, " requests, ", self.pool.active, " connections")
+--	log:info(self, ":", self.reqQueueCount, " requests, ", self.pool.active, " connections")
 
 	perfs.check('', request, 2)
 
@@ -180,7 +180,7 @@ end
 -- returns a request if there is any
 -- called by SocketHttpQueue
 function t_dequeue(self, socket)
---	log:debug(tostring(self), ":t_dequeue()")
+--	log:debug(self, ":t_dequeue()")
 		
 	for i=0,10 do
 		-- anything with priority i ?
@@ -188,7 +188,7 @@ function t_dequeue(self, socket)
 			local request = table.remove(self.reqQueue[i], 1)
 			if request then
 				self.reqQueueCount = self.reqQueueCount - 1
---				log:warn(tostring(self), " dequeues ", tostring(request))
+--				log:warn(self, " dequeues ", request)
 				perfs.check('', request, 3)
 				return request, false
 			end

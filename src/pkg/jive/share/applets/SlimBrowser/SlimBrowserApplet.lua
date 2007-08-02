@@ -137,7 +137,7 @@ end
 -- returns the first non nil value of table1[key], table2[key], etc.
 -- if no table match, defaultValue is returned
 local function _priorityAssign(key, defaultValue, ...)
---	log:debug("_priorityAssign(", tostring(key), ")")
+--	log:debug("_priorityAssign(", key, ")")
 	for i=1, select('#', ...) do
 		local v = select(i, ...)
 --		log:debug(v)
@@ -162,7 +162,7 @@ end
 -- manages the volume pop up window
 local function _openVolumePopup(vol)
 
-	logv:debug("_openVolumePopup START ------------------- (", tostring(vol), ")")
+	logv:debug("_openVolumePopup START ------------------- (", vol, ")")
 
 	local popup = Popup("popup")
 
@@ -181,7 +181,7 @@ local function _openVolumePopup(vol)
 	-- timer to change volume
 	local timer = Timer(200,
 		function()
-			logv:debug("_openVolumePopup - timer ", tostring(timer))
+			logv:debug("_openVolumePopup - timer ", timer)
 
 			if vol > 0 or vol < 0 then
 				slider:setValue(_player:volume(rate))
@@ -228,11 +228,11 @@ local function _openVolumePopup(vol)
 			local evtType = event:getType()
 			if evtType == EVENT_KEY_UP then
 				-- stop volume timer
-				logv:debug("stop timer (listener) ", tostring(timer))
+				logv:debug("stop timer (listener) ", timer)
 				timer:stop()
 			elseif evtType == EVENT_KEY_DOWN then
 				-- start volume timer
-				logv:debug("start timer (listener) ", tostring(timer))
+				logv:debug("start timer (listener) ", timer)
 				timer:start()
 			end
 
@@ -244,7 +244,7 @@ local function _openVolumePopup(vol)
 	popup:showBriefly(2000,
 		function()
 			if timer then
-				logv:debug("stop timer (showBriefly timeout), ", tostring(timer))
+				logv:debug("stop timer (showBriefly timeout), ", timer)
 				timer:stop()
 				-- make sure it cannot ever be started again
 				timer = nil
@@ -259,13 +259,13 @@ local function _openVolumePopup(vol)
 --		_player:button('volume_up')
 --		_player:volumeUp()
 		_player:volume(1)
-		logv:debug("start timer ", tostring(timer))
+		logv:debug("start timer ", timer)
 		timer:start()
 	elseif vol < 0 then
 --		_player:button('volume_down')
 --		_player:volumeDown()
 		_player:volume(-1)
-		logv:debug("start timer ", tostring(timer))
+		logv:debug("start timer ", timer)
 		timer:start()
 	end
 	logv:debug("_openVolumePopup END --------------------------")
@@ -425,8 +425,8 @@ local function _browseSink(step, chunk, err)
 	end
 	
 	-- we're relevant
-	log:debug("step: ", tostring(step))
-	log:debug("_browsePath: ", tostring(_browsePath))
+	log:debug("step: ", step)
+	log:debug("_browsePath: ", _browsePath)
 	if _browsePath != step and not step.destination then
 		-- install us as the new top of the world, unless we went somewhere from there
 		_browsePath = step
@@ -809,12 +809,12 @@ local _keycodeActionName = {
 -- _browseMenuListener
 -- called 
 local function _browseMenuListener(menu, menuItem, db, dbIndex, event)
-	log:debug("_browseMenuListener(", event:tostring(), ", " , tostring(index), ")")
+	log:debug("_browseMenuListener(", event:tostring(), ", " , index, ")")
 	
 	-- we don't care about events not on the current window
 	-- assumption for event handling code: _browsePath corresponds to current window!
 	if _browsePath.menu != menu then
-		log:debug("_browsePath: " , tostring(_browsePath))
+		log:debug("_browsePath: ", _browsePath)
 
 		log:debug("Ignoring, not visible")
 		return
@@ -891,7 +891,7 @@ end
 -- _browseMenuRenderer
 -- renders a basic menu
 local function _browseMenuRenderer(menu, widgets, toRenderIndexes, toRenderSize, db)
---	log:debug("_browseMenuRenderer(", toRenderSize, ", ", tostring(db), ")")
+--	log:debug("_browseMenuRenderer(", toRenderSize, ", ", db, ")")
 
 	-- we must create or update the widgets for the indexes in toRenderIndexes.
 	-- this last list can contain null, so we iterate from 1 to toRenderSize
@@ -906,7 +906,7 @@ local function _browseMenuRenderer(menu, widgets, toRenderIndexes, toRenderSize,
 			-- the widget in widgets[widgetIndex] shall correspond to data[dataIndex]
 --			log:debug(
 --				"_browseMenuRenderer: rendering widgetIndex:", 
---				tostring(widgetIndex), ", dataIndex:", tostring(dbIndex), ")"
+--				widgetIndex, ", dataIndex:", dbIndex, ")"
 --			)
 			
 			local widget = widgets[widgetIndex]
@@ -972,7 +972,7 @@ _newDestination = function(origin, windowSpec, sink, data)
 		actionModifier  = false,    -- modifier
 	}
 	
-	log:debug("new step: " , tostring(step))
+	log:debug("new step: " , step)
 	
 	-- indicate where we're going
 	if origin then
@@ -1007,7 +1007,7 @@ _newDestination = function(origin, windowSpec, sink, data)
 					_browsePath = _browsePath.origin
 					_browsePath.destination = false
 					
-					log:debug("back, browsePath: " , tostring(_browsePath))
+					log:debug("back, browsePath: ", _browsePath)
 
 					-- if we show now playing, it takes over _browsePath
 					-- reset statusPath.origin to false, we don't come from browsepath any longer
@@ -1038,7 +1038,7 @@ end
 function openPlayer (self, menuItem, player)
 	log:debug(
 		"SlimBrowserApplet:openPlayer(", 
-		tostring(player), 
+		player, 
 		")"
 	)
 	

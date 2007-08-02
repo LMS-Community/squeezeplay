@@ -422,7 +422,7 @@ function openWindow(self, appletName, method, ...)
 
 			if applet then
 				window, r = applet[method](applet, ...)
-				log:debug("WINDOW=", tostring(window), " R=", tostring(r))
+				log:debug("WINDOW=", window, " R=", r)
 
 				if window then
 					window:addListener(EVENT_WINDOW_POP,

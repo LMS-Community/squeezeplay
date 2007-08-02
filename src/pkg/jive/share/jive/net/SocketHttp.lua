@@ -66,7 +66,7 @@ defaults to "". I<ip> and I<port> are the IP address and port of the HTTP server
 =cut
 --]]
 function __init(self, jnt, ip, port, name)
-	--log:debug("SocketHttp:__init(", tostring(name), ", ", tostring(ip), ", ", tostring(port), ")")
+	--log:debug("SocketHttp:__init(", name, ", ", ip, ", ", port, ")")
 
 	-- init superclass
 	local obj = oo.rawnew(self, SocketTcp(jnt, ip, port, name))
@@ -110,7 +110,7 @@ function t_fetch(self, request)
 	-- push the request
 	table.insert(self.t_httpSendRequests, request)
 
---	log:info(tostring(self), " queuing ", tostring(request), " - ", #self.t_httpSendRequests, " requests in queue")
+--	log:info(self, " queuing ", request, " - ", #self.t_httpSendRequests, " requests in queue")
 		
 	-- start the state machine if it is idle
 	self:t_sendDequeueIfIdle()
@@ -120,7 +120,7 @@ end
 -- t_sendNext
 -- manages the http state machine for sending stuff to the server
 function t_sendNext(self, go, newState)
---	log:debug(tostring(self), ":t_sendNext(", tostring(go), ", ", tostring(newState), ")")
+--	log:debug(self, ":t_sendNext(", go, ", ", newState, ")")
 	
 	if newState then
 --		assert(self[newState] and type(self[newState]) == 'function')
@@ -138,18 +138,18 @@ end
 -- t_sendDequeue
 -- removes a request from the queue
 function t_sendDequeue(self)
---	log:debug(tostring(self), ":t_sendDequeue()")
+--	log:debug(self, ":t_sendDequeue()")
 	
 	if #self.t_httpSendRequests > 0 then
 	
 		self.t_httpSending = table.remove(self.t_httpSendRequests, 1)
---		log:info(tostring(self), " processing ", tostring(self.t_httpSending))
+--		log:info(self, " processing ", self.t_httpSending)
 		self:t_sendNext(true, 't_sendConnect')
 		return
 	end
 	
 	-- back to idle
---	log:info(tostring(self), ": no request in queue")
+--	log:info(self, ": no request in queue")
 end
 
 
@@ -165,7 +165,7 @@ end
 -- t_sendConnect
 -- open our socket
 function t_sendConnect(self)
---	log:debug(tostring(self), ":t_sendConnect()")
+--	log:debug(self, ":t_sendConnect()")
 	
 	if not self:connected() then
 	
@@ -173,7 +173,7 @@ function t_sendConnect(self)
 	
 		if err then
 	
-			log:error(tostring(self), ":t_sendConnect: ", err)
+			log:error(self, ":t_sendConnect: ", err)
 			self:t_close(err)
 			return
 		end
@@ -186,7 +186,7 @@ end
 -- t_getSendHeaders
 -- calculates the headers to send from a socket perspective
 function t_getSendHeaders(self)
---	log:debug(tostring(self), ":t_getSendHeaders()")
+--	log:debug(self, ":t_getSendHeaders()")
 
 	-- default set
 	local headers = {
@@ -212,7 +212,7 @@ end
 -- t_sendHeaders
 -- send the headers, aggregates request and socket headers
 function t_sendHeaders(self)
---	log:debug(tostring(self), ":t_sendHeaders()")
+--	log:debug(self, ":t_sendHeaders()")
 	
 	local source = function()
 	
@@ -239,12 +239,12 @@ function t_sendHeaders(self)
 	
 	local pump = function ()
 
---		log:debug(tostring(self), ":t_sendHeaders.pump()")
+--		log:debug(self, ":t_sendHeaders.pump()")
 		perfs.check('Pool Queue', self.t_httpSending, 4)
 		local ret, err = ltn12.pump.step(source, sink)
 		
 		if err then
-			log:error(tostring(self), ":t_sendHeaders.pump: ", err)
+			log:error(self, ":t_sendHeaders.pump: ", err)
 			self:t_close(err)
 			return
 		end
@@ -265,19 +265,19 @@ end
 -- t_sendBody
 -- sends the body
 function t_sendBody(self)
---	log:debug(tostring(self), ":t_sendBody()")
+--	log:debug(self, ":t_sendBody()")
 	
 	local source = self.t_httpSending:t_getBodySource()
 	
 	local sink = socket.sink('http-chunked', self.t_sock)
 
 	local pump = function ()
---		log:debug(tostring(self), ":t_sendBody.pump()")
+--		log:debug(self, ":t_sendBody.pump()")
 		
 		local ret, err = ltn12.pump.step(source, sink)
 		
 		if err then
-			log:error(tostring(self), ":t_sendBody.pump: ", err)
+			log:error(self, ":t_sendBody.pump: ", err)
 			self:t_close(err)
 			return
 			
@@ -296,7 +296,7 @@ end
 -- t_sendReceive
 --
 function t_sendReceive(self)
---	log:debug(tostring(self), ":t_sendReceive()")
+--	log:debug(self, ":t_sendReceive()")
 	
 	-- we're done sending request, add it to receive queue
 	if self.t_httpSending then
@@ -317,7 +317,7 @@ end
 -- t_rcvNext
 -- manages the http state machine for receiving server data
 function t_rcvNext(self, go, newState)
---	log:debug(tostring(self), ":t_rcvNext(", tostring(go), ", ", tostring(newState), ")")
+--	log:debug(self, ":t_rcvNext(", go, ", ", newState, ")")
 
 	if newState then
 --		assert(self[newState] and type(self[newState]) == 'function')
@@ -335,7 +335,7 @@ end
 -- t_rcvDequeue
 --
 function t_rcvDequeue(self)
---	log:debug(tostring(self), ":t_rcvDequeue()")
+--	log:debug(self, ":t_rcvDequeue()")
 	
 	if #self.t_httpRcvRequests > 0 then
 		self.t_httpReceiving = table.remove(self.t_httpRcvRequests, 1)
@@ -347,7 +347,7 @@ end
 -- t_rcvHeaders
 --
 function t_rcvHeaders(self)
---	log:debug(tostring(self), ":t_rcvHeaders()")
+--	log:debug(self, ":t_rcvHeaders()")
 	
 	local first = true
 	
@@ -356,7 +356,7 @@ function t_rcvHeaders(self)
 		local line, err = self.t_sock:receive()
 		
 		if err then
---			log:debug(tostring(self), ":t_rcvHeaders.source:", err)
+--			log:debug(self, ":t_rcvHeaders.source:", err)
 			return nil, err
 		end
 		
@@ -372,7 +372,7 @@ function t_rcvHeaders(self)
 	local statusCode = false
 	local statusLine = false
 	local sink = function(chunk, err)
---		log:debug(tostring(self), ":t_rcvHeaders.sink: ", tostring(chunk))
+--		log:debug(self, ":t_rcvHeaders.sink: ", chunk)
 		
 		if chunk then
 			
@@ -396,7 +396,7 @@ function t_rcvHeaders(self)
 					return false, "malformed reponse headers"
 				else
 					headers[name] = value
---					log:error(tostring(self), ":t_rcvHeaders.sink header: ", name, ":", value)
+--					log:error(self, ":t_rcvHeaders.sink header: ", name, ":", value)
 				end
 			end
 		end
@@ -404,7 +404,7 @@ function t_rcvHeaders(self)
 	end
 
 	local pump = function ()
---		log:debug(tostring(self), ":t_rcvHeaders.pump()")
+--		log:debug(self, ":t_rcvHeaders.pump()")
 		if first then
 			perfs.check('Pool Queue', self.t_httpReceiving, 6)
 			first =false
@@ -413,7 +413,7 @@ function t_rcvHeaders(self)
 	
 		if err then
 		
-			log:error(tostring(self), ":t_rcvHeaders.pump:", err)
+			log:error(self, ":t_rcvHeaders.pump:", err)
 			self:t_removeRead()
 			self:t_close(err)
 			return
@@ -528,7 +528,7 @@ local sinkt = {}
 sinkt["jive-concat"] = function(request, safeSinkGen)
 	local data = {}
 	return function(chunk, src_err)
---		log:debug("SocketHttp.jive-concat.sink(", tostring(chunk and #chunk), ", ", tostring(src_err), ")")
+--		log:debug("SocketHttp.jive-concat.sink(", chunk and #chunk, ", ", src_err, ")")
 		
 		if src_err and src_err != "done" then
 			-- let the pump handle errors
@@ -544,7 +544,7 @@ sinkt["jive-concat"] = function(request, safeSinkGen)
 			local blob = table.concat(data)
 			-- let request decide what to do with data
 			request:t_setResponseBody(blob, safeSinkGen)
---			log:debug("SocketHttp.jive-concat.sink: done ", tostring(#blob))
+--			log:debug("SocketHttp.jive-concat.sink: done ", #blob)
 			return nil
 		end
 		
@@ -557,7 +557,7 @@ end
 -- a sink that forwards each received chunk as complete data to the request
 sinkt["jive-by-chunk"] = function(request, safeSinkGen)
 	return function(chunk, src_err)
---		log:debug("SocketHttp.jive-by-chunk.sink(", tostring(chunk and #chunk), ", ", tostring(src_err), ")")
+--		log:debug("SocketHttp.jive-by-chunk.sink(", chunk and #chunk, ", ", src_err, ")")
 	
 		if src_err and src_err != "done" then
 			-- let the pump handle errors
@@ -568,7 +568,7 @@ sinkt["jive-by-chunk"] = function(request, safeSinkGen)
 		if chunk and chunk != "" then
 			-- let request decide what to do with data
 			request:t_setResponseBody(chunk, safeSinkGen)
---			log:debug("SocketHttp.jive-by-chunk.sink: chunk bytes: ", tostring(#chunk))
+--			log:debug("SocketHttp.jive-by-chunk.sink: chunk bytes: ", #chunk)
 		end
 
 		if not chunk or src_err == "done" then
@@ -626,13 +626,13 @@ function t_rcvResponse(self)
 	local sink = _getSink(sinkMode, self.t_httpReceiving, self:getSafeSinkGenerator())
 
 	local pump = function ()
---		log:debug(tostring(self), ":t_rcvResponse.pump(", mode, ")")
+--		log:debug(self, ":t_rcvResponse.pump(", mode, ")")
 		
 		local continue, err = ltn12.pump.step(source, sink)
 		
 		if not continue then
 			-- we're done
---			log:debug(tostring(self), ":t_rcvResponse.pump: done (", tostring(err), ")")
+--			log:debug(self, ":t_rcvResponse.pump: done (", err, ")")
 			
 			-- remove read handler
 			self:t_removeRead()
@@ -662,12 +662,12 @@ end
 -- t_rcvSend
 --
 function t_rcvSend(self)
---	log:debug(tostring(self), ":t_rcvSend()")
+--	log:debug(self, ":t_rcvSend()")
 	
 	-- we're done receiving request, drop it
 	if self.t_httpReceiving then
 	
---		log:debug(tostring(self), " done with ", tostring(self.t_httpReceiving))
+--		log:debug(self, " done with ", self.t_httpReceiving)
 
 		self.t_httpReceiving = nil
 		
@@ -683,7 +683,7 @@ end
 -- t_free
 -- frees our socket
 function t_free(self)
---	log:debug(tostring(self), ":t_free()")
+--	log:debug(self, ":t_free()")
 
 	-- dump queues
 	-- FIXME: should it free requests?
@@ -699,7 +699,7 @@ end
 -- t_close
 -- close our socket
 function t_close(self, err)
---	log:info(tostring(self), " closing with err: ", tostring(err), ")")
+--	log:info(self, " closing with err: ", err, ")")
 
 	-- assumption is sending and receiving queries are never the same
 	if self.t_httpSending then

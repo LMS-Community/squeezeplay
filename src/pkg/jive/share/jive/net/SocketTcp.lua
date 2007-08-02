@@ -77,7 +77,7 @@ Must be called by subclasses.
 =cut
 --]]
 function __init(self, jnt, ip, port, name)
-	--log:debug("SocketTcp:__init(", tostring(name), ", ", tostring(ip), ", ", tostring(port), ")")
+	--log:debug("SocketTcp:__init(", name, ", ", ip, ", ", port, ")")
 
 --	assert(ip, "Cannot create SocketTcp without ip address - " .. debug.traceback())
 --	assert(port, "Cannot create SocketTcp without port")
@@ -98,7 +98,7 @@ end
 -- t_connect
 -- connects our socket
 function t_connect(self)
-	--log:debug(tostring(self), ":t_connect()")
+	--log:debug(self, ":t_connect()")
 	
 	-- create a tcp socket
 	local sock, err = _createTcpSocket()
@@ -127,7 +127,7 @@ end
 -- t_setConnected
 -- changes the connected state. Mutexed because main thread clients might care about this status
 function t_setConnected(self, state)
-	--log:debug(tostring(self), ":t_setConnected(", tostring(state), ")")
+	--log:debug(self, ":t_setConnected(", state, ")")
 
 	self.t_tcp.mutex:lock()
 	self.t_tcp.connected = state
@@ -145,7 +145,7 @@ end
 -- t_free
 -- frees our socket
 function t_free(self)
-	--log:debug(tostring(self), ":t_free()")
+	--log:debug(self, ":t_free()")
 	
 	-- we store nothing, just call superclass
 	Socket.t_free(self)
@@ -155,7 +155,7 @@ end
 -- t_close
 -- closes our socket
 function t_close(self)
-	--log:debug(tostring(self), ":t_close()")
+	--log:debug(self, ":t_close()")
 	
 	self:t_setConnected(false)
 	
@@ -186,7 +186,7 @@ function connected(self)
 	local connected = self.t_tcp.connected
 	self.t_tcp.mutex:unlock()
 	
-	--log:debug(tostring(self), ":connected() = ", tostring(connected))
+	--log:debug(self, ":connected() = ", connected)
 	return connected
 end
 

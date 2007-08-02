@@ -180,11 +180,11 @@ end
 function t_setResponseHeaders(self, statusCode, statusLine, headers, safeSinkGen)
 --	log:debug(
 --		"RequestHttp:t_setResponseHeaders(", 
---		tostring(self), 
+--		self, 
 --		": ", 
---		tostring(statusCode), 
+--		statusCode, 
 --		", ", 
---		tostring(statusLine), 
+--		statusLine, 
 --		")"
 --	)
 
@@ -237,7 +237,7 @@ end
 -- t_setResponseBody
 -- HTTP socket data to process, along with a safe sink to send it to customer
 function t_setResponseBody(self, data, safeSinkGen)
---	log:info("RequestHttp:t_setResponseBody(", tostring(self), ")")
+--	log:info("RequestHttp:t_setResponseBody(", self, ")")
 
 	-- transform our sink into a safe one using handy function
 	local safeSink = self:sinkToSafeSink(self:t_getResponseSink(), safeSinkGen, true)

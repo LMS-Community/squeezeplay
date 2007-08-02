@@ -124,7 +124,7 @@ function menu(self, menuItem)
 				icon = Checkbox(
 					"checkbox",
 					function(object, isSelected)
-						log:info("checkbox updated: " .. tostring(isSelected))
+						log:info("checkbox updated: ", isSelected)
 					end,
 					true
 				)
@@ -339,7 +339,7 @@ function imageWindow(self, menuItem, filename)
 
 	-- size the image to fit the window
 	local sw,sh = Framework:getScreenSize()
-	log:warn("window size " .. tostring(sw) .. " " .. tostring(sh))
+	log:warn("window size ", sw, " ", sh)
 	local w,h = image:getSize()
 	if w > sw or h > sh then
 		local fw = sw / w

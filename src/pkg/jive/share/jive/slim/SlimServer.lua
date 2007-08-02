@@ -62,13 +62,13 @@ local function _setPlumbingState(self, state)
 
 	if state ~= self.plumbing.state then
 		
-		log:debug(tostring(self), ":_setPlumbingState(", state, ")")
+		log:debug(self, ":_setPlumbingState(", state, ")")
 
 		if self.plumbing.state == 'init' and state == 'connected' then
 			self.jnt:notify('serverConnected', self)
 		end
 		
-		log:warn(tostring(self), ' is ', state)
+		log:warn(self, ' is ', state)
 
 		self.plumbing.state = state
 	end
@@ -84,7 +84,7 @@ local _establishConnection
 local function _errSink(self, name, err)
 
 	if err then
-		log:error(tostring(self), ": ", err, " during ", name)
+		log:error(self, ": ", err, " during ", name)
 	
 		-- give peace a chance and retry immediately, unless that's what we were already doing
 		if self.plumbing.state == 'retry' then
@@ -117,7 +117,7 @@ local function _getSink(self, name)
 		end
 
 	else
-		log:error(tostring(self), ": no function called [", name .."]")
+		log:error(self, ": no function called [", name .."]")
 	end
 end
 
@@ -125,7 +125,7 @@ end
 -- _establishConnection
 -- sends our long term request
 _establishConnection = function(self)
-	log:debug(tostring(self), ":_establishConnection()")
+	log:debug(self, ":_establishConnection()")
 
 	-- try to get a long term connection with the server, timeout at 60 seconds.
 	-- get 50 players
@@ -145,12 +145,12 @@ end
 -- _serverstatusSink
 -- processes the result of the serverstatus call
 function _serverstatusSink(self, data, err)
-	log:debug(tostring(self), ":_serverstatusSink()")
+	log:debug(self, ":_serverstatusSink()")
 --	log:info(data)
 
 	-- check we have a result 
 	if not data.result then
-		log:error(tostring(self), ": chunk with no result ??!")
+		log:error(self, ": chunk with no result ??!")
 		log:error(data)
 		return
 	end
@@ -206,7 +206,7 @@ function _serverstatusSink(self, data, err)
 			end
 		end
 	else
-		log:warn(tostring(self), ": has no players!")
+		log:warn(self, ": has no players!")
 	end
 	
 	-- any players still in the list are gone...
@@ -229,7 +229,7 @@ of the server.
 =cut
 --]]
 function __init(self, jnt, ip, name)
-	log:debug("SlimServer:__init(", tostring(ip), ", ", tostring(name), ")")
+	log:debug("SlimServer:__init(", ip, ", ", name, ")")
 
 	assert(ip, "Cannot create SlimServer without ip address")
 
@@ -285,7 +285,7 @@ Deletes a SlimServer object, frees memory and closes connections with the server
 =cut
 --]]
 function free(self)
-	log:debug(tostring(self), ":free()")
+	log:debug(self, ":free()")
 	
 	-- notify we're going away
 	self.jnt:notify("serverDelete", self)
@@ -336,12 +336,12 @@ and manages retries of the server long term connection.
 =cut
 --]]
 function updateFromUdp(self, name)
-	log:debug(tostring(self), ":updateFromUdp()")
+	log:debug(self, ":updateFromUdp()")
 
 	-- update the name in all cases
 	if self.name ~= name then
 	
-		log:info(tostring(self), ": Renamed to ", tostring(name))
+		log:info(self, ": Renamed to ", name)
 		self.name = name
 	end
 
@@ -364,7 +364,7 @@ local function _dumpArtworkThumbCache(self)
 	for k, v in pairs(self.artworkThumbCache) do
 		items = items + 1
 	end
-	logcache:debug("artworkThumbCache contains ", tostring(items), " items")
+	logcache:debug("artworkThumbCache contains ", items, " items")
 end
 
 
@@ -377,11 +377,11 @@ local function _getArtworkThumbSink(self, iconId)
 	return function(chunk, err)
 		-- on error, print something...
 		if err then
-			logcache:error("_getArtworkThumbSink(", tostring(iconId), "):", err)
+			logcache:error("_getArtworkThumbSink(", iconId, "):", err)
 		end
 		-- if we have data
 		if chunk then
-			logcache:debug("_getArtworkThumbSink(", tostring(iconId), ")")
+			logcache:debug("_getArtworkThumbSink(", iconId, ")")
 			
 			-- create a surface
 			local artwork = Surface:loadImageData(chunk, #chunk)
@@ -418,7 +418,7 @@ method will call uriGenerator(iconId) and use the result as URI).
 =cut
 --]]
 function fetchArtworkThumb(self, iconId, icon, uriGenerator)
-	logcache:debug(tostring(self), ":fetchArtworkThumb(", tostring(iconId), ")")
+	logcache:debug(self, ":fetchArtworkThumb(", iconId, ")")
 
 	if logcache:isDebug() then
 		_dumpArtworkThumbCache(self)

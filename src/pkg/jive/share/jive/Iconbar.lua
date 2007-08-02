@@ -53,7 +53,7 @@ Set the playmode icon of the iconbar. Values are nil (off), "stop", "play" or "p
 =cut
 --]]
 function setPlaymode(self, val)
-	log:debug("Iconbar:setPlaymode(", tostring(val), ")")
+	log:debug("Iconbar:setPlaymode(", val, ")")
 	
 	self.icon_playmode:setStyle("icon_playmode_" .. (val or "off"))
 end
@@ -68,7 +68,7 @@ Set the repeat icon of the iconbar. Values are nil (no repeat), 1 for repeat sin
 =cut
 --]]
 function setRepeat(self, val)
-	log:debug("Iconbar:setRepeat(", tostring(val), ")")
+	log:debug("Iconbar:setRepeat(", val, ")")
 
 	self.icon_repeat:setStyle("icon_repeat_" .. (val or "off"))
 end
@@ -83,7 +83,7 @@ Set the shuffle icon of the iconbar. Values are nil (no shuffle), 1 for shuffle 
 =cut
 --]]
 function setShuffle(self, val)
-	log:debug("Iconbar:setShuffle(", tostring(val), ")")
+	log:debug("Iconbar:setShuffle(", val, ")")
 
 	self.icon_shuffle:setStyle("icon_shuffle_" .. (val or "off"))
 end

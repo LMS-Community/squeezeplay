@@ -54,7 +54,7 @@ local logging   = require("logging")
 local Framework = require("jive.ui.Framework")
 
 local find, sub, format = string.find, string.sub, string.format
-local ipairs, print, assert, type = ipairs, print, assert, type
+local ipairs, print, assert, select, type = ipairs, print, assert, select, type
 local concat = table.concat
 local getinfo = debug.getinfo
 local date = os.date
@@ -97,9 +97,9 @@ local function jiveLogger(level)
 			local source = sub(info.short_src, where+1)
 
 			-- cast all arguments to strings
-			local text = {...}
-			for i, v in ipairs(text) do
-				text[i] = tostring(v)
+			local text = {}
+			for i=1, select('#', ...) do
+				text[i] = tostring(select(i, ...))
 			end
 			
 			-- print the message
