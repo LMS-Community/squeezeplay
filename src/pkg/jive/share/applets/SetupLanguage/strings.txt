@@ -13,12 +13,52 @@ CHOOSE_LANGUAGE
 	IT	Scegliere la lingua
 	NL	Taal kiezen
 
-LANGUAGE
+LANGUAGE_DE
 	DE	Deutsch
+	EN	Deutsch
+	ES	Deutsch
+	FR	Deutsch
+	IT	Deutsch
+	NL	Deutsch
+
+LANGUAGE_EN
+	DE	English
 	EN	English
+	ES	English
+	FR	English
+	IT	English
+	NL	English
+
+LANGUAGE_ES
+	DE	Español
+	EN	Español
 	ES	Español
+	FR	Español
+	IT	Español
+	NL	Español
+
+LANGUAGE_FR
+	DE	Français
+	EN	Français
+	ES	Français
 	FR	Français
+	IT	Français
+	NL	Français
+
+LANGUAGE_IT
+	DE	Italiano
+	EN	Italiano
+	ES	Italiano
+	FR	Italiano
 	IT	Italiano
+	NL	Italiano
+
+LANGUAGE_NL
+	DE	Nederlands
+	EN	Nederlands
+	ES	Nederlands
+	FR	Nederlands
+	IT	Nederlands
 	NL	Nederlands
 
 CHOOSE_LANGUAGE_HELP

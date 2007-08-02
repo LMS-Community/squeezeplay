@@ -66,11 +66,11 @@ function open(self, menuItem)
 						   b:setSelected(not isSelected)
 					   end
 				   end,
-				   Audio:isEffectsEnabled()
+				   not Audio:isEffectsEnabled()
 			   )
 
 	menu:addItem({
-			     text = "SOUND_NONE",
+			     text = self:string("SOUND_NONE"),
 			     icon = offButton,
 			     weight = 1
 		     })
@@ -106,7 +106,7 @@ function open(self, menuItem)
 
 		-- insert suitable entry for Choice menu
 		menu:addItem({
-				     text = "SOUND_" .. k,
+				     text = self:string("SOUND_" .. k),
 				     icon = button,
 				     weight = 10
 			     })

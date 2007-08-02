@@ -53,6 +53,12 @@ function registerApplet(self)
 end
 
 
+function string(self, token, ...)
+	-- FIXME ...
+	return self._stringsTable[token] or token
+end
+
+
 --[[
 
 =head1 LICENSE

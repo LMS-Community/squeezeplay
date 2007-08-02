@@ -18,18 +18,21 @@ Applet related methods are described in L<jive.Applet>.
 
 -- stuff we use
 local ipairs, pairs, assert, io, string = ipairs, pairs, assert, io, string
+
 local oo               = require("loop.simple")
+
 local Applet           = require("jive.Applet")
 local RadioGroup       = require("jive.ui.RadioGroup")
 local RadioButton      = require("jive.ui.RadioButton")
 local Framework        = require("jive.ui.Framework")
 local Label            = require("jive.ui.Label")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
-local table            = require("jive.utils.table")
+local Textarea         = require("jive.ui.Textarea")
 local Window           = require("jive.ui.Window")
 
 local log              = require("jive.utils.log").logger("applets.setup")
 local locale           = require("jive.utils.locale")
+local table            = require("jive.utils.table")
 
 local appletManager    = appletManager
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
@@ -42,35 +45,17 @@ local KEY_PLAY         = jive.ui.KEY_PLAY
 module(...)
 oo.class(_M, Applet)
 
-function displayName(self)
-	-- this should be changed to a localized string
-	--return "Setup Language"
-	return "Setup Language"
-end
 
 function setupLanguage(self, menuItem)
-	local currentLocale = self:getSettings()["locale"]
-	if currentLocale == nil then
-		currentLocale = "EN"
-	end
-	self:setLang(currentLocale)
+	local currentLocale = locale:getLocale()
 	log:info("locale currently is ", currentLocale)
-	log:info("setupLanguage invoked...")
+
 	-- setup menu
+	local window = Window("window", menuItem.text)
+	local menu = SimpleMenu("menu")
+
 	local group = RadioGroup()
-	local window = Window(self:displayName(), menuItem.text)
-	local menu = SimpleMenu("Menu")
-
-	local availableLanguages = { 
-				["EN"] = "English", 
-				["DE"] = "Deutsch", 
-				["ES"] = "Espanol",
-				["FR"] = "Francais",
-				["IT"] = "Italiano",
-				["NL"] = "Nederlands",
-				}
-
-	for locale, languageChoice in pairs(availableLanguages) do 
+	for _, locale in ipairs(locale.getAllLocales()) do 
 		local button = RadioButton(
 			"radio", 
 			group, 
@@ -78,13 +63,15 @@ function setupLanguage(self, menuItem)
 			locale == currentLocale
 		)
 		menu:addItem({
-			text = languageChoice,
+		        text = self:string("LANGUAGE_" .. locale),
 			icon = button,
 		})
 	end
+
+	window:addWidget(Textarea("help", self:string("CHOOSE_LANGUAGE_HELP")))
 	window:addWidget(menu)
 
-       -- Store the selected language when the menu is exited
+	-- Store the selected language when the menu is exited
         window:addListener(EVENT_WINDOW_POP,
                 function()
                         self:storeSettings()
@@ -93,12 +80,14 @@ function setupLanguage(self, menuItem)
 	return window
 end
 
+
 function setLang(self, choice)
 	log:info("Locale choice set to ", choice)
-	self:getSettings()['locale'] = choice
-	local stringsTable = locale.readStringsFile(choice, 'SetupLanguage')
-	self:getSettings()['localeStrings'] = stringsTable
+	locale.setLocale(choice)
+
+	Framework:styleChanged()
 end
+
 
 --[[
 

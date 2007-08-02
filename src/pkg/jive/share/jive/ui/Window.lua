@@ -97,7 +97,6 @@ Constructs a new window widget. I<style> is the widgets style. The window can ha
 --]]
 function __init(self, style, title)
 	assert(type(style) == "string", "style parameter is " .. type(style) .. " expected string - " .. debug.traceback())
-	assert(title == nil or type(title) == "string", "title is not nil and not string - " .. debug.traceback())
 
 	local obj = oo.rawnew(self, Widget(style))
 
@@ -370,7 +369,7 @@ Sets the windows title to I<title>.
 =cut
 --]]
 function setTitle(self, title)
-	assert(type(title) == "string")
+	assert(type(title) ~= nil)
 
 	if self.title then
 		self:removeWidget(self.title)
@@ -461,7 +460,7 @@ end
 
 function __tostring(self)
 	if self.title then
-		return "Window(" .. self.title:getValue() .. ")"
+		return "Window(" .. tostring(self.title:getValue()) .. ")"
 	else
 		return "Window()"
 	end

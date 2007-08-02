@@ -54,10 +54,11 @@ local logging   = require("logging")
 local Framework = require("jive.ui.Framework")
 
 local find, sub, format = string.find, string.sub, string.format
-local print, assert, type = print, assert, type
+local ipairs, print, assert, type = ipairs, print, assert, type
 local concat = table.concat
 local getinfo = debug.getinfo
 local date = os.date
+local tostring = tostring
 
 module(...)
 
@@ -94,6 +95,12 @@ local function jiveLogger(level)
 				where = 0
 			end
 			local source = sub(info.short_src, where+1)
+
+			-- cast all arguments to strings
+			local text = {...}
+			for i, v in ipairs(text) do
+				text[i] = tostring(v)
+			end
 			
 			-- print the message
 			print(
@@ -104,7 +111,7 @@ local function jiveLogger(level)
 					level,
 					source, 
 					info.currentline or "?",
-					concat({...})
+					concat(text)
 				)
 			)
 			return true
@@ -167,6 +174,8 @@ local categories = {
 	["net.http"]         = jiveLogger(logging.WARN),
 	
 	["ui"]               = jiveLogger(logging.WARN),
+
+	["utils"]            = jiveLogger(logging.WARN),
 }
 
 --[[

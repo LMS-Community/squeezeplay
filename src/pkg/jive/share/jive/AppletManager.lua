@@ -18,7 +18,7 @@ TODO
 --]]
 
 -- stuff we use
-local package, pairs, error, loadfile = package, pairs, error, loadfile
+local package, pairs, error, loadfile, io, assert = package, pairs, error, loadfile, io, assert
 local setfenv, getfenv, require, pcall, unpack = setfenv, getfenv, require, pcall, unpack
 local tostring, tonumber, collectgarbage = tostring, tonumber, collectgarbage
 
@@ -30,6 +30,7 @@ local lfs              = require("lfs")
 local Label            = require("jive.ui.Label")
                        
 local log              = require("jive.utils.log").logger("applets.misc")
+local locale           = require("jive.utils.locale")
 
 local JIVE_VERSION     = jive.JIVE_VERSION
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
@@ -64,6 +65,7 @@ local function _saveApplet(name, dir)
 			metaFilepath = dir .. "/" .. name .. "/" .. name .. "Meta.lua",
 			appletModule = "applets." .. name .. "." .. name .. "Applet",
 			metaModule = "applets." .. name .. "." .. name .. "Meta",
+			stringsFilepath = dir .. "/" .. name .. "/" .. "strings.txt",
 			settings = false,
 			metaLoaded = false,
 			metaEvaluated = false,
@@ -98,6 +100,15 @@ local function _findApplets()
 end
 
 
+-- _loadLocaleStrings
+function _loadLocaleStrings(entry)
+	-- load the strings into a table
+	if entry.stringsTable == nil then
+		entry.stringsTable = locale.readStringsFile(entry.stringsFilepath)
+	end
+end
+
+
 -- _loadMeta
 -- loads the meta information of applet entry
 local function _loadMeta(entry)
@@ -114,6 +125,9 @@ local function _loadMeta(entry)
 	if not f then
 		error (string.format ("error loading meta `%s' (%s)", entry.appletName, err))
 	end
+
+	-- get the strings
+	_loadLocaleStrings(entry)
 	
 	entry.metaLoaded = _sentinel
 	
@@ -177,6 +191,8 @@ local function _evalMeta(entry)
 		error("Incompatible applet " .. entry.appletName)
 	end
 
+	obj._stringsTable = entry.stringsTable
+
 	-- we're good to go, the meta should now hook the applet
 	-- so it can be loaded on demand.
 	log:info("Registering applet ", entry.appletName)
@@ -234,6 +250,7 @@ end
 local function _loadApplet(entry)
 	log:debug("_loadApplet(", entry.appletName, ")")
 
+	-- check to see if Applet is already loaded
 	local p = entry.appletLoaded
 	if p then
 		if p == _sentinel then
@@ -245,7 +262,10 @@ local function _loadApplet(entry)
 	if not f then
 		error (string.format ("error loading applet `%s' (%s)", entry.appletName, err))
 	end
-	
+
+	-- get the strings
+	_loadLocaleStrings(entry)
+
 	entry.appletLoaded = _sentinel
 	
 	-- give the function the global environment
@@ -294,6 +314,8 @@ local function _evalApplet(entry)
 			entry.settings = obj:defaultSettings()
 		end
 		obj:setSettings(entry.settings)
+
+		obj._stringsTable = entry.stringsTable
 	end
 
 	entry.appletEvaluated = obj

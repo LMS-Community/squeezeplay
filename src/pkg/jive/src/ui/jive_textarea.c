@@ -158,7 +158,10 @@ int jiveL_textarea_layout(lua_State *L) {
 
 
 	/* word wrap text */
+	lua_getglobal(L, "tostring");
 	lua_getfield(L, 1, "text");
+	lua_call(L, 1, 1);
+
 	text = lua_tostring(L, -1);
 
 	visible_lines = peer->w.bounds.h / peer->line_height;
@@ -235,11 +238,13 @@ int jiveL_textarea_draw(lua_State *L) {
 		jive_tile_blit(peer->bg_tile, srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.w, peer->w.bounds.h);
 	}
 
+	lua_getglobal(L, "tostring");
 	lua_getfield(L, 1, "text");
 	if (lua_isnil(L, -1) && !peer->font) {
-		lua_pop(L, 1);
+		lua_pop(L, 2);
 		return 0;
 	}
+	lua_call(L, 1, 1);
 
 	text = (char *) lua_tostring(L, -1);
 

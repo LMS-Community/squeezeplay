@@ -178,7 +178,7 @@ function itemComparatorWeightAlpha(a, b)
 	local w = a.weight - b.weight
 
 	if w == 0 then
-		return a.text < b.text
+		return tostring(a.text) < tostring(b.text)
 	end
 	return (w < 0)
 end
@@ -379,6 +379,16 @@ function updatedItem(self, item)
 	if index ~= nil then
 		self:updatedIndex(index)
 	end
+end
+
+
+function _skin(self)
+	-- re-sort in case the locale has changed
+	if self.comparator ~= nil then
+		table.sort(self.items, self.comparator)
+	end
+
+	Menu._skin(self)
 end
 
 

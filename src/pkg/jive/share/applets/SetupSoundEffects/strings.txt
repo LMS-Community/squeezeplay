@@ -1,0 +1,69 @@
+#
+# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
+# 
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+SOUND_EFFECTS
+	DE	Soundeffekte
+	EN	Sound Effects
+	ES	Efectos de sonido
+	FR	Effets sonores
+	IT	Effetti sonori
+	NL	Geluidseffecten
+
+SOUND_CLICK
+	DE	Scroll
+	EN	Scroll
+	ES	Desplazarse
+	FR	Défiler
+	IT	Scorri
+	NL	Scrollen
+
+SOUND_SELECT
+	DE	Auswahl
+	EN	Select
+	ES	Seleccionar
+	FR	Sélectionner
+	IT	Seleziona
+	NL	Selecteren
+
+SOUND_PUSHLEFT
+	DE	Zurück
+	EN	Back
+	ES	Atrás
+	FR	Précédent
+	IT	Indietro
+	NL	Terug
+
+SOUND_JUMP
+	DE	Hauptmenü
+	EN	Home
+	ES	Inicio
+	FR	Accueil
+	IT	Pagina iniziale
+	NL	Hoofdmenu
+
+SOUND_STARTUP
+	DE	Start
+	EN	Startup
+	ES	Iniciar
+	FR	Démarrage
+	IT	Avvio
+	NL	Opstarten
+
+SOUND_SHUTDOWN
+	DE	Abschalten
+	EN	Shutdown
+	ES	Apagar
+	FR	Arrêt de l'ordinateur
+	IT	Chiusura
+	NL	Afsluiten
+
+SOUND_NONE
+	DE	Kein
+	EN	None
+	ES	Ninguno
+	FR	Aucun
+	IT	Nessuno
+	NL	Geen

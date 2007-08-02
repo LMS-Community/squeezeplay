@@ -119,6 +119,7 @@ dist_luaslim_DATA = \
 luautildir = $(pkgdatadir)/jive/utils
 dist_luautil_DATA = \
 	share/jive/utils/debug.lua \
+	share/jive/utils/locale.lua \
 	share/jive/utils/log.lua \
 	share/jive/utils/queue.lua \
 	share/jive/utils/strings.lua \
@@ -182,7 +183,14 @@ dist_applets_screenshot_DATA = \
 applets_setupsoundeffectsdir = $(pkgdatadir)/applets/SetupSoundEffects
 dist_applets_setupsoundeffects_DATA = \
 	share/applets/SetupSoundEffects/SetupSoundEffectsApplet.lua \
-	share/applets/SetupSoundEffects/SetupSoundEffectsMeta.lua
+	share/applets/SetupSoundEffects/SetupSoundEffectsMeta.lua \
+	share/applets/SetupSoundEffects/strings.txt
+
+applets_setuplanguagedir = $(pkgdatadir)/applets/SetupLanguage
+dist_applets_setuplanguage_DATA = \
+	share/applets/SetupLanguage/SetupLanguageApplet.lua \
+	share/applets/SetupLanguage/SetupLanguageMeta.lua \
+	share/applets/SetupLanguage/strings.txt
 
 
 

@@ -110,8 +110,9 @@ Returns a localised version of token
 
 =cut
 --]]
-function string(self, token)
-	return token
+function string(self, token, ...)
+	-- FIXME ...
+	return self._stringsTable[token] or token
 end
 
 

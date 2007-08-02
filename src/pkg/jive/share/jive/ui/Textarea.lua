@@ -83,7 +83,7 @@ Construct a new Textarea widget. I<style> is the widgets style. I<text> is the i
 --]]
 function __init(self, style, text)
 	assert(type(style) == "string")
-	assert(type(text) == "string")
+	assert(type(text) ~= nil)
 
 	local obj = oo.rawnew(self, Widget(style))
 	obj.scrollbar = Scrollbar("scrollbar")
