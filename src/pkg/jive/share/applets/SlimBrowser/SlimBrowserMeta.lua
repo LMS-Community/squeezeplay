@@ -36,7 +36,7 @@ end
 function registerApplet(self)
 	
 	-- SlimBrowser requires SlimDiscovery
-	appletManager:load("SlimDiscovery")
+	appletManager:loadApplet("SlimDiscovery")
 	
 	-- SlimBrowser uses its own log categories
 	-- defined here so that it can be changed using LogSettingsApplet before the applet is run.

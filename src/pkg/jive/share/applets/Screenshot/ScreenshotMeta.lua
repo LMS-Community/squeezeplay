@@ -36,7 +36,7 @@ end
 function registerApplet(self)
 
 	-- Screenshot is a resident Applet
-	appletManager:load("Screenshot")
+	appletManager:loadApplet("Screenshot")
 end
 
 

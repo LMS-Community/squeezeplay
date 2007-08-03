@@ -33,10 +33,17 @@ function jiveVersion(self)
 end
 
 
+function defaultSettings(self)
+	return { 
+		wallpaper = "Chapple_1.jpg",
+	}
+end
+
+
 function registerApplet(self)
-	-- FIXME load default wallpaper
-	local obj = appletManager:load("SetupWallpaper")
-	obj:_setBackground("Chapple_1.jpg")
+	-- load default wallpaper
+	local obj = appletManager:loadApplet("SetupWallpaper")
+	obj:_setBackground(nil) -- nil is default from settings
 	appletManager:freeApplet("SetupWallpaper")
 
 

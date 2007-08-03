@@ -85,6 +85,8 @@ function setLang(self, choice)
 	log:info("Locale choice set to ", choice)
 	locale.setLocale(choice)
 
+	self:getSettings().locale = choice
+
 	Framework:styleChanged()
 end
 

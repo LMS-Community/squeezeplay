@@ -48,46 +48,24 @@ module(...)
 oo.class(_M, Applet)
 
 
---[[
+function init(self, ...)
 
-=head2 applets.ScreenSavers.ScreenSaversApplet:defaultSettings()
+	self.screensavers = {}
+	self.screensaver_settings = {}
+	self:addScreenSaver("None", nil, nil)
 
-Overridden to return the appropriate default settings.
-
-=cut
---]]
-function defaultSettings(self)
-	return {
-		whenStopped = "None",
-		whenPlaying = "None",
-		whenDocked = "None",
-		timeout = 60000,
-	}
-end
-
-
-function __init(self, ...)
-
-	local obj = oo.rawnew(self, Applet(...))
-
-
-	obj.screensavers = {}
-	obj.screensaver_settings = {}
-	obj:addScreenSaver("None", nil, nil)
-
-	-- FIXME can't access settings in constructor
-	local timeout = 20000 --self:getSettings()["timeout"]
-	obj.timer = Timer(timeout, function() obj:_activate() end, true)
-	obj.timer:start()
+	local timeout = self:getSettings()["timeout"]
+	self.timer = Timer(timeout, function() self:_activate() end, true)
+	self.timer:start()
 
 	Framework:addListener(
 		EVENT_KEY_PRESS | EVENT_SCROLL,
 		function()
-			obj:_event()
+			self:_event()
 		end
 	)
 
-	return obj
+	return self
 end
 
 

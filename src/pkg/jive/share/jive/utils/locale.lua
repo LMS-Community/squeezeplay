@@ -51,11 +51,10 @@ function setLocale(newLocale)
 		return
 	end
 
-	globalLocale = newLocale
+	globalLocale = newLocale or "EN"
 
 	-- reload existing strings files
 	for k, v in pairs(loadedFiles) do
-		log:warn("reloaded strings from ", k)
 		readStringsFile(k, v)
 	end
 end
@@ -98,6 +97,8 @@ that is returned. The strings are for the current locale.
 =cut
 --]]
 function readStringsFile(fullPath, stringsTable)
+	log:debug("loading strings from ", fullPath)
+
 	stringsTable = stringsTable or {}
 
 	local myLocale = globalLocale

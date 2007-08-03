@@ -63,22 +63,6 @@ local apiKey           = "18d9e492ca288b453a9cc6065c440d0c"
 local transitionBoxOut
 
 
---[[
-
-=head2 applets.Flickr.FlickrApplet:defaultSettings()
-
-Overridden to set default settings
-
-=cut
---]]
-function defaultSettings(self)
-	return {
-		timeout = 30000,
-		display = "interesting"
-	}
-end
-
-
 function openScreensaver(self, menuItem)
 
 	self.photoQueue = {}

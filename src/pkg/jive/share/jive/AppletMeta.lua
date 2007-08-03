@@ -53,6 +53,17 @@ function registerApplet(self)
 end
 
 
+function defaultSettings(self)
+	return {}
+end
+
+
+function getSettings(self)
+	return self._entry.settings or {}
+end
+
+
+
 function string(self, token, ...)
 	-- FIXME ...
 	return self._stringsTable[token] or token

@@ -34,10 +34,18 @@ function jiveVersion(self)
 end
 
 
+function defaultSettings(self)
+	return {
+		timeout = 30000,
+		display = "interesting"
+	}
+end
+
+
 function registerApplet(self)
 
 	-- Flickr implements a screensaver
-	local ssMgr = appletManager:load("ScreenSavers")
+	local ssMgr = appletManager:loadApplet("ScreenSavers")
 
 	if ssMgr ~= nil then
 		-- Flickr uses its own log category

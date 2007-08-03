@@ -57,20 +57,6 @@ local wallpapers = {
 local backgroundLicense = "The background images are under a Creative Commons Attribution license. See http://creativecommons.org/licenses/by/3.0/.\n\nThe Credits\n Chapple\n Scott Robinson\n Los Cardinalos\n Orin Optiglot\n"
 
 
---[[
-
-=head2 applets.DefaultSkin.DefaultSkinApplet:defaultSettings()
-
-Overridden to return the default wallpaper selected.
-
-=cut
---]]
-function defaultSettings(self)
-	return { 
-		wallpaper = "Chapple_1.jpg",
-	}
-end
-
 
 -- wallpaperSettings
 -- The meta hooks this function to allow the user to select

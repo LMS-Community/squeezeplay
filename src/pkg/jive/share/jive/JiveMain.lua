@@ -261,7 +261,7 @@ end
 function JiveMain:loadSkin(appletName, method)
 	log:debug("JiveMain:loadSkin(", appletName, ")")
 	
-	local obj = appletManager:load(appletName)
+	local obj = appletManager:loadApplet(appletName)
 	assert(obj, "Cannot load skin " .. appletName)
 
 	obj[method](obj, jive.ui.style)

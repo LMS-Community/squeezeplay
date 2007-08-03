@@ -33,10 +33,20 @@ function jiveVersion(self)
 end
 
 
+function defaultSettings(self)
+	return {
+		whenStopped = "None",
+		whenPlaying = "None",
+		whenDocked = "None",
+		timeout = 60000,
+	}
+end
+
+
 function registerApplet(self)
 	
 	-- ScreenSaver is a resident Applet
-	appletManager:load("ScreenSavers")
+	appletManager:loadApplet("ScreenSavers")
 	
 	-- Menu for configuration
 	jiveMain:subMenu("Settings"):subMenu("Remote Settings"):addItem(

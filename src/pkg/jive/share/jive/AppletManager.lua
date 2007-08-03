@@ -18,19 +18,21 @@ TODO
 --]]
 
 -- stuff we use
-local package, pairs, error, loadfile, io, assert = package, pairs, error, loadfile, io, assert
+local package, pairs, error, load, loadfile, io, assert = package, pairs, error, load, loadfile, io, assert
 local setfenv, getfenv, require, pcall, unpack = setfenv, getfenv, require, pcall, unpack
 local tostring, tonumber, collectgarbage = tostring, tonumber, collectgarbage
 
 local string           = require("string")
                        
 local oo               = require("loop.simple")
+local io               = require("io")
 local lfs              = require("lfs")
                        
 local Label            = require("jive.ui.Label")
                        
 local log              = require("jive.utils.log").logger("applets.misc")
 local locale           = require("jive.utils.locale")
+local serialize        = require("jive.utils.serialize")
 
 local JIVE_VERSION     = jive.JIVE_VERSION
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
@@ -60,12 +62,17 @@ local function _saveApplet(name, dir)
 	
 		local newEntry = {
 			appletName = name,
-			appletPath = dir,
-			appletFilepath = dir .. "/" .. name .. "/" .. name .. "Applet.lua",
+
+			-- file paths
 			metaFilepath = dir .. "/" .. name .. "/" .. name .. "Meta.lua",
+			appletFilepath = dir .. "/" .. name .. "/" .. name .. "Applet.lua",
+			stringsFilepath = dir .. "/" .. name .. "/" .. "strings.txt",
+			settingsFilepath = dir .. "/" .. name .. "/" .. "settings.lua",
+
+			-- lua paths
 			appletModule = "applets." .. name .. "." .. name .. "Applet",
 			metaModule = "applets." .. name .. "." .. name .. "Meta",
-			stringsFilepath = dir .. "/" .. name .. "/" .. "strings.txt",
+
 			settings = false,
 			metaLoaded = false,
 			metaEvaluated = false,
@@ -100,15 +107,6 @@ local function _findApplets()
 end
 
 
--- _loadLocaleStrings
-function _loadLocaleStrings(entry)
-	-- load the strings into a table
-	if entry.stringsTable == nil then
-		entry.stringsTable = locale.readStringsFile(entry.stringsFilepath)
-	end
-end
-
-
 -- _loadMeta
 -- loads the meta information of applet entry
 local function _loadMeta(entry)
@@ -126,8 +124,9 @@ local function _loadMeta(entry)
 		error (string.format ("error loading meta `%s' (%s)", entry.appletName, err))
 	end
 
-	-- get the strings
+	-- load applet resources
 	_loadLocaleStrings(entry)
+	_loadSettings(entry)
 	
 	entry.metaLoaded = _sentinel
 	
@@ -191,6 +190,11 @@ local function _evalMeta(entry)
 		error("Incompatible applet " .. entry.appletName)
 	end
 
+	if not entry.settings then
+		entry.settings = obj:defaultSettings()
+	end
+
+	obj._entry = entry
 	obj._stringsTable = entry.stringsTable
 
 	-- we're good to go, the meta should now hook the applet
@@ -263,8 +267,9 @@ local function _loadApplet(entry)
 		error (string.format ("error loading applet `%s' (%s)", entry.appletName, err))
 	end
 
-	-- get the strings
+	-- load applet resources
 	_loadLocaleStrings(entry)
+	_loadSettings(entry)
 
 	entry.appletLoaded = _sentinel
 	
@@ -308,14 +313,12 @@ local function _evalApplet(entry)
 	local class = require(entry.appletModule)
 	local obj = class()
 
-	-- FIXME the setting should be loaded on demand
 	if obj then
-		if not entry.settings then
-			entry.settings = obj:defaultSettings()
-		end
-		obj:setSettings(entry.settings)
-
+		obj._entry = entry
+		obj._settings = entry.settings
 		obj._stringsTable = entry.stringsTable
+
+		obj:init()
 	end
 
 	entry.appletEvaluated = obj
@@ -343,8 +346,8 @@ end
 
 -- load
 -- loads an applet. returns an instance of the applet
-function load(self, appletName)
-	log:debug("AppletManager:load(", appletName, ")")
+function loadApplet(self, appletName)
+	log:debug("AppletManager:loadApplet(", appletName, ")")
 
 	local entry = _appletsDb[appletName]
 	
@@ -385,6 +388,25 @@ function load(self, appletName)
 end
 
 
+-- getApplet
+-- returns instance of the applet, only if it is already loaded
+function getApplet(self, appletName)
+	local entry = _appletsDb[appletName]
+
+	-- exists?
+	if not entry then
+		return nil
+	end
+	
+	-- already loaded?
+	if entry.appletEvaluated then
+		return entry.appletEvaluated
+	end
+
+	return nil
+end
+
+
 -- menuItem
 -- creates a menuItem for an applet
 function menuItem(self, menuName, appletName, method, ...)
@@ -404,13 +426,6 @@ function menuItem(self, menuName, appletName, method, ...)
 end
 
 
--- getApplet
--- returns instance of the applet
-function getApplet(self, appletName)
-	return self:load(appletName)
-end
-
-
 -- openWindow
 -- opens a window for the applet
 function openWindow(self, appletName, method, ...)
@@ -418,7 +433,7 @@ function openWindow(self, appletName, method, ...)
 
 	local status, err = pcall(
 		function(...)
-			local applet = self:load(appletName)
+			local applet = self:loadApplet(appletName)
 
 			if applet then
 				window, r = applet[method](applet, ...)
@@ -444,6 +459,58 @@ function openWindow(self, appletName, method, ...)
 		self:freeApplet(appletName)
 		return nil, EVENT_UNUSED
 	end
+end
+
+
+-- _loadLocaleStrings
+function _loadLocaleStrings(entry)
+	if entry.stringsTable then
+		return
+	end
+
+	log:debug("_loadLocaleStrings(", entry.appletName, ")")
+	entry.stringsTable = locale.readStringsFile(entry.stringsFilepath)
+end
+
+
+function _loadSettings(entry)
+	if entry.settings then
+		-- already loaded
+		return
+	end
+
+	log:debug("_loadSettings(", entry.appletName, ")")
+
+	local fh = io.open(entry.settingsFilepath)
+	if fh == nil then
+		-- no settings file
+		return
+	end
+
+	local f, err = load(function() return fh:read() end)
+	fh:close()
+
+	if not f then
+		log:warn("Error reading ", entry.appletName, " settings: ", err)
+	else
+		-- evalulate the settings in a sandbox
+		local env = {}
+		setfenv(f, env)
+		f()
+
+		entry.settings = env.settings
+	end
+end
+
+
+function _storeSettings(entry)
+	assert(entry)
+
+	log:warn("storing settings at ", entry.settingsFilepath)
+
+	local file = assert(io.open(entry.settingsFilepath, "w"))
+	serialize.save(file, "settings", entry.settings)
+	file:close()
 end
 
 

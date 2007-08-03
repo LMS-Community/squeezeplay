@@ -6,8 +6,6 @@ jive.Applet - The applet base class.
 
 =head1 DESCRIPTION
 
-B<!! WORK IN PROGRESS. THIS API IS NOT FINAL !!>
-
 jive.Applet is the base class for all Jive applets. In Jive,
 applets are very flexible in the methods they implement; this
 class implements a very simple framework to manage localization,
@@ -21,8 +19,25 @@ settings and memory management.
 
 local oo = require("loop.base")
 
+local AppletManager = require("jive.AppletManager")
+
 
 module(..., oo.class)
+
+
+--[[
+
+=head2 jive.Applet:init()
+
+Called to initialize the Applet.
+
+In the object __init method the applet settings and localized strings
+are not available.
+
+=cut
+--]]
+function init(self)
+end
 
 
 --[[
@@ -51,20 +66,7 @@ Sets the applet settings to I<settings>.
 =cut
 --]]
 function setSettings(self, settings)
-	self.settings = settings
-end
-
-
---[[
-
-=head2 jive.Applet:defaultSettings()
-
-Should return the applet default settings.
-
-=cut
---]]
-function defaultSettings(self)
-	return {}
+	self._settings = settings
 end
 
 
@@ -77,14 +79,14 @@ Returns a table with the applet settings
 =cut
 --]]
 function getSettings(self)
-	return self.settings
+	return self._settings
 end
 
 
 -- storeSettings
 -- used by jive.AppletManager to persist the applet settings
 function storeSettings(self)
-	-- FIXME: store applet settings
+	AppletManager._storeSettings(self._entry)
 end
 
 

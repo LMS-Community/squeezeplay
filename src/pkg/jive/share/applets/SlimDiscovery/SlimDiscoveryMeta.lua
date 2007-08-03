@@ -35,7 +35,7 @@ end
 function registerApplet(self)
 	
 	-- SlimDiscovery is a resident Applet
-	appletManager:load("SlimDiscovery")
+	appletManager:loadApplet("SlimDiscovery")
 end
 
 
