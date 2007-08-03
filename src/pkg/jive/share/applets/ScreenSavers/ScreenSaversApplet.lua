@@ -19,6 +19,7 @@ ScreenSaversApplet overrides the following methods:
 
 
 -- stuff we use
+local ipairs, pairs           = ipairs, pairs
 local oo               = require("loop.simple")
 
 local Applet           = require("jive.Applet")
@@ -167,12 +168,12 @@ end
 
 function screensaverSetting(self, menuItem, mode)
 	local menu = SimpleMenu("menu")
+        menu:setComparator(menu.itemComparatorAlpha)
 
 	local activeScreensaver = self:getSettings()[mode]
 
 	local group = RadioGroup()
-	for displayName, screensaver in table.pairsByKeys(self.screensavers) do
-	
+	for displayName, screensaver in pairs(self.screensavers) do
 		local button = RadioButton(
 			"radio", 
 			group, 
