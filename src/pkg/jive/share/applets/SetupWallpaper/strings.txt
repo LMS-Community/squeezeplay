@@ -1,0 +1,8 @@
+﻿#
+# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
+# 
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+WALLPAPER
+	EN	Wallpaper
