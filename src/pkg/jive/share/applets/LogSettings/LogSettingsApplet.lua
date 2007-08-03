@@ -40,19 +40,6 @@ module(...)
 oo.class(_M, Applet)
 
 
---[[
-
-=head2 applets.LogSettings.LogSettingsApplet:displayName()
-
-Overridden to return the string "Log Settings"
-
-=cut
---]]
-function displayName(self)
-	return "Log Settings"
-end
-
-
 -- _gatherLogCategories
 -- workhouse that discovers the log categories and for each, creates a suitable
 -- table entry to please SimpleMenu
@@ -93,7 +80,7 @@ end
 function logSettings(self, menuItem)
 
 	local logCategories = _gatherLogCategories()
-	local window = Window(self:displayName(), menuItem.text)
+	local window = Window("window", menuItem.text)
 	local menu = SimpleMenu("menu", logCategories)
 	menu:setComparator(menu.itemComparatorAlpha)
 

@@ -51,19 +51,6 @@ module(...)
 oo.class(_M, Applet)
 
 
---[[
-
-=head2 applets.Test.TestApplet:displayName()
-
-Overridden to return the string "Test Applet".
-
-=cut
---]]
-function displayName(self)
-	return "Test Applet"
-end
-
-
 function menu(self, menuItem)
 
 	log:info("menu")
@@ -167,7 +154,7 @@ function menu(self, menuItem)
 				end },
 		})
 
-	local window = Window(self:displayName(), menuItem.text)
+	local window = Window("window", menuItem.text)
 	window:addWidget(menu)
 
 	return window
@@ -175,7 +162,7 @@ end
 
 
 function menuWindow(self, menuItem)
-	local window = Window(self:displayName(), menuItem.text)
+	local window = Window("window", menuItem.text)
 	local menu = SimpleMenu("menu")
 	window:addWidget(menu)
 
@@ -192,7 +179,7 @@ end
 
 function textWindow(self, menuItem, filename)
 
-	local window = Window(self:displayName(), menuItem.text)
+	local window = Window("window", menuItem.text)
 
 	filename = Framework:findFile(filename)
 	local fh = io.open(filename, "rb")
@@ -215,7 +202,7 @@ end
 
 function sliderWindow(self, menuItem)
 
-	local window = Window(self:displayName(), menuItem.text)
+	local window = Window("window", menuItem.text)
 
 	local slider = Slider("slider", 1, 20, 5,
 		function(slider, value)
@@ -233,7 +220,7 @@ end
 
 function textinputWindow(self, menuItem)
 
-	local window = Window(self:displayName(), menuItem.text)
+	local window = Window("window", menuItem.text)
 
 	local input = Textinput("textinput", "A test string",
 				function(_, value)
@@ -297,7 +284,7 @@ function hexinputWindow(self, menuItem)
 	-- set the initial value
 	v:setValue("000000000000")
 
-	local window = Window(self:displayName(), menuItem.text)
+	local window = Window("window", menuItem.text)
 
 	local input = Textinput("textinput", v,
 				function(_, value)
@@ -328,7 +315,7 @@ end
 
 function imageWindow(self, menuItem, filename)
 
-	local window = Window(self:displayName())
+	local window = Window("window")
 
 	local image = Surface:loadImage(filename)
 	if image == nil then

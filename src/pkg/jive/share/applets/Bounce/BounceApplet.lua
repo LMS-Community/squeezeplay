@@ -164,20 +164,6 @@ end
 
 --[[
 
-=head2 applets.Bounce.BounceApplet:displayName()
-
-Overridden to return the string "Bounce"
-
-=cut
---]]
-function displayName(self)
-	return "Bounce"
-	-- return self:string('BOUNCE')
-end
-
-
---[[
-
 =head1 LICENSE
 
 Copyright 2007 Logitech. All Rights Reserved.

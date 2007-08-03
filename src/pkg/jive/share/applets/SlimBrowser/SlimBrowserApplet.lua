@@ -1113,19 +1113,6 @@ end
 
 --[[
 
-=head2 applets.SlimBrowser.SlimBrowserApplet:displayName()
-
-Overridden to return the string "SlimBrowser".
-
-=cut
---]]
-function displayName(self)
-	return "SlimBrowser"
-end
-
-
---[[
-
 =head2 applets.SlimBrowser.SlimBrowserApplet:free()
 
 Overridden to dispose of our stuff.

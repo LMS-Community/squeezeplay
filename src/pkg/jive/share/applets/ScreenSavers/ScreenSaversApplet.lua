@@ -49,19 +49,6 @@ oo.class(_M, Applet)
 
 --[[
 
-=head2 applets.ScreenSavers.ScreenSaversApplet:displayName()
-
-Overridden to return the string "Screensavers".
-
-=cut
---]]
-function displayName(self)
-	return "Screensavers"
-end
-
-
---[[
-
 =head2 applets.ScreenSavers.ScreenSaversApplet:defaultSettings()
 
 Overridden to return the appropriate default settings.
@@ -224,7 +211,7 @@ function timeoutSetting(self, menuItem)
 
 	local timeout = self:getSettings()["timeout"]
 	
-	local window = Window(self:displayName(), menuItem.text)
+	local window = Window("window", menuItem.text)
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
@@ -295,7 +282,7 @@ function openSettings(self, menuItem)
 			     })
 	end
 
-	local window = Window(self:displayName(), menuItem.text)
+	local window = Window("window", menuItem.text)
 	window:addWidget(menu)
 
 	-- Store the applet settings when the window is closed

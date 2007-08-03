@@ -44,20 +44,6 @@ end
 
 --[[
 
-=head2 jive.Applet:displayName()
-
-Should be overridden by applets to return the applet name.
-Required.
-
-=cut
---]]
-function displayName(self)
-	return nil
-end
-
-
---[[
-
 =head2 jive.Applet:setSettings(settings)
 
 Sets the applet settings to I<settings>.

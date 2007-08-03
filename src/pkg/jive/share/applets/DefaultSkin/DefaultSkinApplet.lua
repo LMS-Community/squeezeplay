@@ -64,18 +64,6 @@ local imgpath = "applets/DefaultSkin/images/"
 local sndpath = "applets/DefaultSkin/sounds/"
 local fontpath = "fonts/"
 
---[[
-
-=head2 applets.DefaultSkin.DefaultSkinApplet:displayName()
-
-Overridden to return the string "Default Skin"
-
-=cut
---]]
-function displayName(self)
-	return "Default Skin"
-end
-
 
 -- define a local function to make it easier to create icons.
 local function _icon(var, x, y, img)

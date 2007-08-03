@@ -291,7 +291,7 @@ int jiveL_update_screen(lua_State *L) {
 	 * the window stack */
 	lua_getfield(L, 1, "windowStack");
 	if (lua_objlen(L, -1) == 0) {
-		lua_pop(L, 1);
+		lua_pop(L, 2);
 
 		JIVEL_STACK_CHECK_ASSERT(L);
 		return 0;

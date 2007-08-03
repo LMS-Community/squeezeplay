@@ -65,20 +65,6 @@ local transitionBoxOut
 
 --[[
 
-=head2 applets.Flickr.FlickrApplet:displayName()
-
-Overridden to return the string "Flickr"
-
-=cut
---]]
-function displayName(self)
-	return "Flickr"
-	--return self:string("SCREENSAVER_FLICKR")
-end
-
-
---[[
-
 =head2 applets.Flickr.FlickrApplet:defaultSettings()
 
 Overridden to set default settings
@@ -113,7 +99,7 @@ end
 
 
 function openSettings(self, menuItem)
-	local window = Window(self:displayName(), menuItem.text)
+	local window = Window("window", menuItem.text)
 	window:addWidget(SimpleMenu("menu",
 			{
 				{
@@ -141,7 +127,7 @@ function displaySetting(self, menuItem)
 
 	local display= self:getSettings()["display"]
 	
-	local window = Window(self:displayName(), menuItem.text)
+	local window = Window("window", menuItem.text)
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
@@ -177,7 +163,7 @@ function timeoutSetting(self, menuItem)
 
 	local timeout = self:getSettings()["timeout"]
 
-	local window = Window(self:displayName(), menuItem.text)
+	local window = Window("window", menuItem.text)
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
