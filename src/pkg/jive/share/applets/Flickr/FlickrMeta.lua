@@ -49,8 +49,7 @@ function registerApplet(self)
 		ssMgr:addScreenSaver(self:string("SCREENSAVER_FLICKR"), "Flickr", "openScreensaver", self:string("SCREENSAVER_FLICKR"), "openSettings")
 
 		-- load our skin
-		-- jiveMain:loadSkin("Flickr", "skin")
-		jiveMain:loadSkin(self:string("SCREENSAVER_FLICKR"), "skin")
+		jiveMain:loadSkin("Flickr", "skin")
 	end
 end
 
