@@ -228,23 +228,27 @@ function timeoutSetting(self, menuItem)
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
-				text = "30 Seconds", 
+				text = self:string('DELAY_10_SEC'),
+				icon = RadioButton("radio", group, function() self:setTimeout(10000) end, timeout == 10000),
+			},
+			{
+				text = self:string('DELAY_30_SEC'),
 				icon = RadioButton("radio", group, function() self:setTimeout(30000) end, timeout == 30000),
 			},
 			{
-				text = "1 Minute", 
+				text = self:string('DELAY_1_MIN'),
 				icon = RadioButton("radio", group, function() self:setTimeout(60000) end, timeout == 60000),
 			},
 			{ 
-				text = "2 Minutes", 
+				text = self:string('DELAY_2_MIN'),
 				icon = RadioButton("radio", group, function() self:setTimeout(120000) end, timeout == 120000),
 			},
 			{
-				text = "5 Minutes", 
+				text = self:string('DELAY_5_MIN'),
 				icon = RadioButton("radio", group, function() self:setTimeout(300000) end, timeout == 300000),
 			},
 			{ 
-				text = "10 Minutes", 
+				text = self:string('DELAY_10_MIN'),
 				icon = RadioButton("radio", group, function() self:setTimeout(600000) end, timeout == 600000),
 			},
 		}))
@@ -258,19 +262,19 @@ function openSettings(self, menuItem)
 	local menu = SimpleMenu("menu",
 		{
 			{ 
-				text = "When playing", 
+				text = self:string('SCREENSAVER_PLAYING'),
 				callback = function(event, menu_item)
 						   self:screensaverSetting(menu_item, "whenPlaying"):show()
 					   end
 			},
 			{
-				text = "When stopped", 
+				text = self:string("SCREENSAVER_STOPPED"),
 				callback = function(event, menu_item)
 						   self:screensaverSetting(menu_item, "whenStopped"):show()
 					   end
 			},
 			{
-				text = "Delay", 
+				text = self:string("SCREENSAVER_DELAY"),
 				callback = function(event, menu_item)
 						   self:timeoutSetting(menu_item):show()
 					   end

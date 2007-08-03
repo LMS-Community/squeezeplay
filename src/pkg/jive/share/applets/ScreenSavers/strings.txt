@@ -1,0 +1,85 @@
+﻿#
+# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
+# 
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+SCREENSAVERS
+	DE	Bildschirmschoner
+	EN	Screensavers
+	ES	Protectores de pantalla
+	FR	Ecrans de veille
+	IT	Screen saver
+	NL	Schermbeveiligers
+
+SCREENSAVER_PLAYING
+	DE	Bei Wiedergabe
+	EN	When playing
+	ES	Al reproducir
+	FR	Pendant la lecture
+	IT	Durante la riproduzione
+	NL	Tijdens afspelen
+
+SCREENSAVER_STOPPED
+	DE	Bei Pause
+	EN	When stopped
+	ES	Al detener
+	FR	A l'arrêt
+	IT	Quando la riproduzione è interrotta
+	NL	Wanneer gestopt
+
+SCREENSAVER_DELAY
+	DE	Verzögerung
+	EN	Delay
+	ES	Retraso
+	FR	Retard
+	IT	Ritardo
+	NL	Vertraging
+
+DELAY_10_SEC
+	DE	10 Sek.
+	EN	10 sec
+	ES	10 s
+	FR	10 sec
+	IT	10 sec
+	NL	10 sec
+
+DELAY_30_SEC
+	DE	30 Sek.
+	EN	30 sec
+	ES	30 s
+	FR	30 sec
+	IT	30 sec
+	NL	30 sec
+
+DELAY_1_MIN
+	DE	1 Min.
+	EN	1 min
+	ES	1 m
+	FR	1 min
+	IT	1 min
+	NL	1 min
+
+DELAY_2_MIN
+	DE	2 Min.
+	EN	2 min
+	ES	2 m
+	FR	2 min
+	IT	2 min
+	NL	2 min
+
+DELAY_5_MIN
+	DE	5 Min.
+	EN	5 min
+	ES	5 m
+	FR	5 min
+	IT	5 min
+	NL	5 min
+
+DELAY_10_MIN
+	DE	10 Min.
+	EN	10 min
+	ES	10 m
+	FR	10 min
+	IT	10 min
+	NL	10 min
