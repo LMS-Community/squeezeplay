@@ -298,6 +298,8 @@ local function _newWindowSpec(db, item)
 		["text"]             = _priorityAssign('text',       item["text"],    iWindow, bWindow),
 		["icon-id"]          = _priorityAssign('icon-id',    item["icon-id"], iWindow, bWindow),
 		["icon"]             = _priorityAssign('icon',       item["icon"],    iWindow, bWindow),
+		
+		["textareaStyle"]    = _priorityAssign('textareaStyle', nil, iWindow, bWindow)
 	} 
 end
 
@@ -499,7 +501,7 @@ local function _mainMenuSink(step, chunk, err)
 			table.insert(results["item_loop"], 
 				1,
 				{
-					text = _string("NOW PLAYING"),
+					text = _string("NOW_PLAYING"),
 					_go = _goNowPlaying
 				}
 			)
@@ -955,13 +957,35 @@ _newDestination = function(origin, windowSpec, sink, data)
 	local window = Window(windowSpec.windowStyle)
 	window:setTitleWidget(_newArtworkLabel(windowSpec.labelTitleStyle, windowSpec))
 	
-	-- a menu. We manage closing ourselves to guide our path
-	local menu = Menu(windowSpec.menuStyle, _browseMenuRenderer, _browseMenuListener)
-	menu:setCloseable(false)
+	local menu
 	
-	-- alltogether now
-	menu:setItems(db:menuItems())
-	window:addWidget(menu)
+	if windowSpec.textareaStyle then
+	
+		local input = Textinput("textinput", "",
+			function(_, value)
+				if #value < 4 then
+					return false
+				end
+
+				log:warn("Input " .. value)
+			--	window:hide(Window.transitionPushLeft)
+				return true
+			end)
+
+		window:addWidget(input)
+	
+	else
+	
+		-- a menu. We manage closing ourselves to guide our path
+		menu = Menu(windowSpec.menuStyle, _browseMenuRenderer, _browseMenuListener)
+		menu:setCloseable(false)
+
+		-- alltogether now
+		menu:setItems(db:menuItems())
+		window:addWidget(menu)
+	
+	end
+	
 	
 	-- a step for our enlightenment path
 	local step = {
@@ -1059,7 +1083,7 @@ function openPlayer (self, menuItem, player)
 	local path, sink = _newDestination(
 		nil,
 		_newWindowSpec(nil, {
-			text = _string("NOW PLAYING"),
+			text = _string("NOW_PLAYING"),
 			window = { ["menuStyle"] = "album", },
 		}),
 		_statusSink
