@@ -194,7 +194,7 @@ local function _evalMeta(entry)
 		entry.settings = obj:defaultSettings()
 	end
 
-	obj._entry = entry
+	obj._settings = entry.settings
 	obj._stringsTable = entry.stringsTable
 
 	-- we're good to go, the meta should now hook the applet
@@ -202,9 +202,9 @@ local function _evalMeta(entry)
 	log:info("Registering applet ", entry.appletName)
 	obj:registerApplet()
 
-	entry.metaEvaluated = obj
-
-	return obj
+	-- get rid of us
+	obj._stringsTable = nil
+	obj = nil
 end
 
 
@@ -214,13 +214,28 @@ local function _pevalMeta(entry)
 --	log:debug("_pevalMeta(", entry.appletName, ")")
 	
 	local ok, resOrErr = pcall(_evalMeta, entry)
+	
+	-- trash the meta in all cases, it's done it's job
+	package.loaded[entry.metaModule] = nil
+	
+	-- remove strings eating up mucho valuable memory
+	entry.stringsTable = nil
+	
 	if not ok then
 		entry.metaEvaluated = false
 		entry.metaLoaded = false
-		package.loaded[entry.metaModule] = nil
 		log:error("Error while evaluating meta for ", entry.appletName, ":", resOrErr)
 		return nil
 	end
+	
+	-- at this point, we have loaded the meta, the applet strings and settings
+	-- performed the applet registration and we try to remove all traces of the 
+	-- meta but removing it from package.loaded, deleting the string table, etc.
+	
+	-- we keep settings around to that we minimize writing to flash. If we wanted to
+	-- trash them , we would need to store them here (to reload them if the applet ever runs)
+	-- because the meta might have changed them.
+	
 	return resOrErr
 end
 
@@ -313,13 +328,14 @@ local function _evalApplet(entry)
 	local class = require(entry.appletModule)
 	local obj = class()
 
-	if obj then
-		obj._entry = entry
-		obj._settings = entry.settings
-		obj._stringsTable = entry.stringsTable
+	-- we're run protected
+	-- if something breaks, the pcall will catch it
 
-		obj:init()
-	end
+	obj._entry = entry
+	obj._settings = entry.settings
+	obj._stringsTable = entry.stringsTable
+
+	obj:init()
 
 	entry.appletEvaluated = obj
 

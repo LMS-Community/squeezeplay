@@ -54,18 +54,17 @@ end
 
 
 function defaultSettings(self)
-	return {}
+	return nil
 end
 
 
 function getSettings(self)
-	return self._entry.settings or {}
+	return self._settings
 end
 
 
 
 function string(self, token, ...)
-	-- FIXME ...
 	return self._stringsTable[token] or token
 end
 
