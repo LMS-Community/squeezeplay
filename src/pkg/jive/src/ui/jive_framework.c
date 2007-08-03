@@ -245,11 +245,14 @@ static int jiveL_process_events(lua_State *L) {
 			if (SDL_PollEvent(&event)) {
 				r |= process_event(L, &event);
 			}
+			else {
+				ticks = SDL_GetTicks();
+				if (ticks < frameticks) {
+					SDL_Delay(10);
+				}
+			}
 
 			ticks = SDL_GetTicks();
-			if (ticks < frameticks) {
-				SDL_Delay(10);
-			}
 		} while (ticks < frameticks);
 		
 		lua_pop(L, 2);
