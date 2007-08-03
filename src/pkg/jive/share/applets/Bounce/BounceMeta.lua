@@ -43,7 +43,7 @@ function registerApplet(self)
 		-- defined here so that it can be changed using LogSettingsApplet before the applet is run.
 		jul.addCategory("screensaver.bounce", jul.DEBUG)
 
-		ssMgr:addScreenSaver("Bounce", "Bounce", "bounce")
+		ssMgr:addScreenSaver(self:string('Bounce'), "Bounce", "bounce")
 
 		-- load our skin
 		jiveMain:loadSkin("Bounce", "skin")

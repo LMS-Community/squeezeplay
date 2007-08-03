@@ -101,7 +101,7 @@ function bounce(self)
 	self.sprits = {}
 
 	-- squeezebox string
-	local str = "squeezebox"
+	local str = self:string('SQUEEZEBOX')
 	local font = window:styleFont(str)
 	local txt = Surface:drawText(font, 0xFFFFFF80, str)
 	self.sprits[1] = Sprite(w, h, txt, -2)
@@ -172,6 +172,7 @@ Overridden to return the string "Bounce"
 --]]
 function displayName(self)
 	return "Bounce"
+	-- return self:string('BOUNCE')
 end
 
 
