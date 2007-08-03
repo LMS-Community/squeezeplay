@@ -162,7 +162,7 @@ Item comparator to sort items alphabetically.
 
 --]]
 function itemComparatorAlpha(a, b)
-	return a.text < b.text
+	return tostring(a.text) < tostring(b.text)
 end
 
 
