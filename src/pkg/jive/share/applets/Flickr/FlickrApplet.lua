@@ -181,16 +181,15 @@ function timeoutSetting(self, menuItem)
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
-				text = self:string("DELAY_10_SECS"),
+				text = self:string("DELAY_10_SEC"),
 				icon = RadioButton("radio", group, function() self:setTimeout(10000) end, timeout == 10000),
 			},
 			{ 
-				text = self:string("DELAY_20_SECS"),
-				text = "20 Seconds", 
+				text = self:string("DELAY_20_SEC"),
 				icon = RadioButton("radio", group, function() self:setTimeout(20000) end, timeout == 20000),
 			},
 			{ 
-				text = self:string("DELAY_30_SECS"),
+				text = self:string("DELAY_30_SEC"),
 				icon = RadioButton("radio", group, function() self:setTimeout(30000) end, timeout == 30000),
 			},
 			{
