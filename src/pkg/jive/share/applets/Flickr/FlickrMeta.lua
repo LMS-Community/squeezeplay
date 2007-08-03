@@ -44,9 +44,7 @@ function registerApplet(self)
 		-- defined here so that it can be changed using LogSettingsApplet before the applet is run.		
 		jul.addCategory("screensaver.flickr", jul.DEBUG)
 
-		-- second string translation should be SCREENSAVER_FLICKR_SETTINGS, but that isn't translated yet
-		-- ssMgr:addScreenSaver(self:string("SCREENSAVER_FLICKR"), "Flickr", "openScreensaver", self:string("SCREENSAVER_FLICKR"), "openSettings")
-		ssMgr:addScreenSaver(self:string("SCREENSAVER_FLICKR"), "Flickr", "openScreensaver", self:string("SCREENSAVER_FLICKR"), "openSettings")
+		ssMgr:addScreenSaver(self:string("SCREENSAVER_FLICKR"), "Flickr", "openScreensaver", self:string("SCREENSAVER_FLICKR_SETTINGS"), "openSettings")
 
 		-- load our skin
 		jiveMain:loadSkin("Flickr", "skin")

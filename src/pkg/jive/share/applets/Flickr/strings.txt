@@ -12,6 +12,9 @@ SCREENSAVER_FLICKR
 	IT	Flickr 
 	NL	Flickr
 
+SCREENSAVER_FLICKR_SETTINGS
+	EN	Flickr Settings
+
 FLICKR_LOADING_PHOTO
 	EN	Flickr loading photo...
 
