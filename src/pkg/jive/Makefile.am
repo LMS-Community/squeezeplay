@@ -134,12 +134,14 @@ applets_bouncedir = $(pkgdatadir)/applets/Bounce
 dist_applets_bounce_DATA = \
 	share/applets/Bounce/BounceApplet.lua \
 	share/applets/Bounce/BounceMeta.lua \
+	share/applets/Bounce/strings.txt
 	share/applets/Bounce/squeezebox.png
 
 applets_quitdir = $(pkgdatadir)/applets/Quit
 dist_applets_quit_DATA = \
 	share/applets/Quit/QuitApplet.lua \
-	share/applets/Quit/QuitMeta.lua
+	share/applets/Quit/QuitMeta.lua \
+	share/applets/Quit/strings.txt
 
 applets_logdir = $(pkgdatadir)/applets/LogSettings
 dist_applets_log_DATA = \
@@ -149,12 +151,14 @@ dist_applets_log_DATA = \
 applets_screensaversdir = $(pkgdatadir)/applets/ScreenSavers
 dist_applets_screensavers_DATA = \
 	share/applets/ScreenSavers/ScreenSaversApplet.lua \
-	share/applets/ScreenSavers/ScreenSaversMeta.lua
+	share/applets/ScreenSavers/ScreenSaversMeta.lua \
+	share/applets/ScreenSavers/strings.txt
 
 applets_slimbrowserdir = $(pkgdatadir)/applets/SlimBrowser
 dist_applets_slimbrowser_DATA = \
 	share/applets/SlimBrowser/SlimBrowserApplet.lua \
 	share/applets/SlimBrowser/SlimBrowserMeta.lua \
+	share/applets/SlimBrowser/strings.txt \
 	share/applets/SlimBrowser/DB.lua
 
 applets_slimdiscoverydir = $(pkgdatadir)/applets/SlimDiscovery
@@ -165,7 +169,8 @@ dist_applets_slimdiscovery_DATA = \
 applets_flickrdir = $(pkgdatadir)/applets/Flickr
 dist_applets_flickr_DATA = \
 	share/applets/Flickr/FlickrApplet.lua \
-	share/applets/Flickr/FlickrMeta.lua
+	share/applets/Flickr/FlickrMeta.lua \
+	share/applets/Flickr/strings.txt
 
 applets_testdir = $(pkgdatadir)/applets/Test
 dist_applets_test_DATA = \
@@ -199,7 +204,8 @@ dist_applets_setuplanguage_DATA = \
 applets_setupwallpaperdir = $(pkgdatadir)/applets/SetupWallpaper
 dist_applets_setupwallpaper_DATA = \
 	share/applets/SetupWallpaper/SetupWallpaperApplet.lua \
-	share/applets/SetupWallpaper/SetupWallpaperMeta.lua
+	share/applets/SetupWallpaper/SetupWallpaperMeta.lua \
+	share/applets/SetupWallpaper/strings.txt
 
 applets_setupwallpaper_wallpaperdir = $(pkgdatadir)/applets/SetupWallpaper/wallpaper
 dist_applets_setupwallpaper_wallpaper_DATA = \
