@@ -73,6 +73,7 @@ Overridden to return the string "Flickr"
 --]]
 function displayName(self)
 	return "Flickr"
+	--return self:string("SCREENSAVER_FLICKR")
 end
 
 
@@ -100,9 +101,9 @@ function openScreensaver(self, menuItem)
 
 	local label
 	if ok then
-		label = Label("label", "Flickr loading photo...")
+		label = Label("label", self:string("FLICKR_LOADING_PHOTO"))
 	else
-		label = Label("label", "Flickr error:" .. err)
+		label = Label("label", self:string("FLICKR_ERROR") .. err)
 	end
 	
 	self.window = self:_window(label)
@@ -180,19 +181,20 @@ function timeoutSetting(self, menuItem)
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
-				text = "10 Seconds", 
+				text = self:string("DELAY_10_SECS"),
 				icon = RadioButton("radio", group, function() self:setTimeout(10000) end, timeout == 10000),
 			},
 			{ 
+				text = self:string("DELAY_20_SECS"),
 				text = "20 Seconds", 
 				icon = RadioButton("radio", group, function() self:setTimeout(20000) end, timeout == 20000),
 			},
 			{ 
-				text = "30 Seconds",
+				text = self:string("DELAY_30_SECS"),
 				icon = RadioButton("radio", group, function() self:setTimeout(30000) end, timeout == 30000),
 			},
 			{
-				text = "1 Minute", 
+				text = self:string("DELAY_1_MIN"),
 				icon = RadioButton("radio", group, function() self:setTimeout(60000) end, timeout == 60000),
 			},
 		}))
