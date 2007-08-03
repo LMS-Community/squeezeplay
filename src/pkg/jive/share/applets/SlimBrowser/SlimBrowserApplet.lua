@@ -101,6 +101,9 @@ local _server = false
 local _browsePath = false
 local _statusPath = false
 
+-- The string function, for easy reference
+local _string
+
 --==============================================================================
 -- Local functions
 --==============================================================================
@@ -479,10 +482,9 @@ local function _mainMenuSink(step, chunk, err)
 			-- FIXME: set step.origin
 		
 			-- we want to add an exit item (at the bottom)
-			-- text = self:string('EXIT')
 			table.insert(results["item_loop"], 
 				{
-					text = "Exit",
+					text = _string('EXIT'),
 					_go = function()
 						if _browsePath then
 							-- FIXME: This is really closing the plugin...
@@ -494,11 +496,10 @@ local function _mainMenuSink(step, chunk, err)
 			)
 
 			-- we want to add a Now playing item (at the top)
-					--text = self:string('NOW_PLAYING'),
 			table.insert(results["item_loop"], 
 				1,
 				{
-					text = "Now Playing",
+					text = _string("NOW PLAYING"),
 					_go = _goNowPlaying
 				}
 			)
@@ -609,12 +610,12 @@ local _defaultActions = {
 	end,
 
 	["rew"] = function()
-		_player:button('jump_rew')
+		_player:rew()
 		return EVENT_CONSUME
 	end,
 
 	["fwd"] = function()
-		_player:button('jump_fwd')
+		_player:fwd()
 		return EVENT_CONSUME
 	end,
 
@@ -1049,6 +1050,7 @@ function openPlayer (self, menuItem, player)
 	-- assign our locals
 	_player = player
 	_server = player:getSlimServer()
+	_string = function(token) return self:string(token) end
 	
 	-- get notified if the player goes away!
 	jnt:subscribe(self)
@@ -1056,9 +1058,8 @@ function openPlayer (self, menuItem, player)
 	-- create a window for Now Playing
 	local path, sink = _newDestination(
 		nil,
-			--text = self:string('NOW_PLAYING'),
 		_newWindowSpec(nil, {
-			text = "Now Playing",
+			text = _string("NOW PLAYING"),
 			window = { ["menuStyle"] = "album", },
 		}),
 		_statusSink
@@ -1127,6 +1128,7 @@ function free(self)
 		
 	_player = nil
 	_server = nil
+	_string = nil
 	
 	-- walk down our path and close...
 	local step = _browsePath

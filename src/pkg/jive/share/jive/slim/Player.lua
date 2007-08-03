@@ -449,7 +449,8 @@ end
 
 
 
-
+-- _process_button
+--
 function _process_button(self, data)
 	log:debug("_process_button()")
 	log:debug("id:", data["id"], " waiting on:", self.buttonId)
@@ -459,6 +460,9 @@ function _process_button(self, data)
 	end
 end
 
+
+-- button
+-- 
 function button(self, buttonName)
 	log:debug("Player:button(", buttonName, ")")
 	if not self.buttonId then
@@ -469,12 +473,35 @@ function button(self, buttonName)
 	end
 end
 
+
+-- rew
+-- what to do for the rew button
+-- use button so that the logic of SS (skip to start of current or previous song) is used
+function rew(self)
+	log:debug("Player:rew()")
+	self:button('jump_rew')
+end
+
+
+-- fwd
+-- what to do for the fwd button
+-- use button so that the logic of SS (skip to start of current or previous song) is used
+function rew(self)
+	log:debug("Player:fwd()")
+	self:button('jump_fwd')
+end
+
+
+
+
+
+
+--[[
 local function _t()
 	return Framework:getTicks() / 1000
 end
 
 
---[[
 function _process_ir(self, data)
 --	log:debug("_process_ir()")
 --	log:debug("id:", data["id"], " waiting on:", self.irId)
@@ -517,7 +544,7 @@ function _process_mixer(self, data)
 	if data["id"] == self.mixerId then
 --		log:debug("cleared")
 		self.mixerId = false
-		log:warn("Mixer round trip:", _t() - self.mixerT)
+--		log:warn("Mixer round trip:", _t() - self.mixerT)
 	end
 end
 
@@ -528,7 +555,7 @@ function volume(self, amount)
 	if not self.mixerId then
 		logv:debug("Player:volume(", amount, ")")
 		
-		self.mixerT = _t()
+--		self.mixerT = _t()
 		self.mixerId = self:call({'mixer', 'volume', fmt("%+d", amount)})
 		
 		vol = vol + amount
