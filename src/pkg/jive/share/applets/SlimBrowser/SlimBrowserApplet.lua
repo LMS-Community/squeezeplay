@@ -479,9 +479,10 @@ local function _mainMenuSink(step, chunk, err)
 			-- FIXME: set step.origin
 		
 			-- we want to add an exit item (at the bottom)
+			-- text = self:string('EXIT')
 			table.insert(results["item_loop"], 
 				{
-					text = self:string('EXIT'),
+					text = "Exit",
 					_go = function()
 						if _browsePath then
 							-- FIXME: This is really closing the plugin...
@@ -493,10 +494,11 @@ local function _mainMenuSink(step, chunk, err)
 			)
 
 			-- we want to add a Now playing item (at the top)
+					--text = self:string('NOW_PLAYING'),
 			table.insert(results["item_loop"], 
 				1,
 				{
-					text = self:string('NOW_PLAYING'),
+					text = "Now Playing",
 					_go = _goNowPlaying
 				}
 			)
@@ -1054,8 +1056,9 @@ function openPlayer (self, menuItem, player)
 	-- create a window for Now Playing
 	local path, sink = _newDestination(
 		nil,
+			--text = self:string('NOW_PLAYING'),
 		_newWindowSpec(nil, {
-			text = self:string('NOW_PLAYING'),
+			text = "Now Playing",
 			window = { ["menuStyle"] = "album", },
 		}),
 		_statusSink
