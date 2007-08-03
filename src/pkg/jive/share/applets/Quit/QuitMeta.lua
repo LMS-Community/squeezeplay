@@ -36,7 +36,7 @@ end
 function registerApplet(self)
 	
 	-- add ourselves to the main menu
-	jiveMain:addItem(appletManager:menuItem("Quit", "Quit", "openWindow"), 1000)
+	jiveMain:addItem(appletManager:menuItem(self:string('QUIT'), "Quit", "openWindow"), 1000)
 end
 
 
