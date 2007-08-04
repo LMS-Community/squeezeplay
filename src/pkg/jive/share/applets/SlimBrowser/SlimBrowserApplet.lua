@@ -37,6 +37,7 @@ local Icon             = require("jive.ui.Icon")
 local Slider           = require("jive.ui.Slider")
 local Timer            = require("jive.ui.Timer")
 local Textinput        = require("jive.ui.Textinput")
+local Textarea         = require("jive.ui.Textarea")
 
 require("jive.slim.RequestsCli")
 local RequestCli       = jive.slim.RequestCli
@@ -1044,6 +1045,9 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 			end
 		)
 
+		local help = Textarea("help", _string("SEARCH_HELP"))
+
+		window:addWidget(help)
 		window:addWidget(input)
 	
 	else
