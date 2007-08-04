@@ -10,7 +10,7 @@
 
 	<p>Interface specifications for browsing using Jive</p>
 
-	<p>Version 0.8</p>
+	<p>Version 0.9</p>
 
 	<h2>Introduction</h2>
 
@@ -98,6 +98,7 @@
     text = "..."
     icon-id = ...
     icon = "..."
+    input = "..."
     window = {
         &lt;window_fields&gt;
     }
@@ -120,6 +121,10 @@
 
 		<p><code>icon</code><br>
 		Full or partial URL of some image to display.</p>
+
+		<p><code>input</code><br>
+		If present, indicates user input is required before proceeding with the actions. The value consists of the min number of characters
+		to request before proceeding.</p>
 
 		<p><code>window</code><br>
 		Allows specifying the elements to use for a window opened from this menu. See <a href="#window_fields">&lt;window_fields&gt;</a>.</p>

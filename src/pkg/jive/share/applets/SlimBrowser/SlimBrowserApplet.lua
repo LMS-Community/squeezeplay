@@ -18,7 +18,8 @@ TODO
 --]]
 
 -- stuff we use
-local tostring, pairs, ipairs, select, type, assert = tostring, pairs, ipairs, select, type, assert
+local tostring, tonumber, type = tostring, tonumber, type
+local pairs, ipairs, select, assert = pairs, ipairs, select, assert
 
 local oo               = require("loop.simple")
 local table            = require("table")
@@ -35,6 +36,7 @@ local Label            = require("jive.ui.Label")
 local Icon             = require("jive.ui.Icon")
 local Slider           = require("jive.ui.Slider")
 local Timer            = require("jive.ui.Timer")
+local Textinput        = require("jive.ui.Textinput")
 
 require("jive.slim.RequestsCli")
 local RequestCli       = jive.slim.RequestCli
@@ -92,6 +94,8 @@ local BROWSE_MISSING_FETCH = 100
 -- Global variables
 --==============================================================================
 
+-- The string function, for easy reference
+local _string
 
 -- The player we're browsing and it's server
 local _player = false
@@ -101,8 +105,8 @@ local _server = false
 local _browsePath = false
 local _statusPath = false
 
--- The string function, for easy reference
-local _string
+-- The last entered text
+local _lastInput = ""
 
 --==============================================================================
 -- Local functions
@@ -298,8 +302,6 @@ local function _newWindowSpec(db, item)
 		["text"]             = _priorityAssign('text',       item["text"],    iWindow, bWindow),
 		["icon-id"]          = _priorityAssign('icon-id',    item["icon-id"], iWindow, bWindow),
 		["icon"]             = _priorityAssign('icon',       item["icon"],    iWindow, bWindow),
-		
-		["textareaStyle"]    = _priorityAssign('textareaStyle', nil, iWindow, bWindow)
 	} 
 end
 
@@ -362,6 +364,20 @@ local function _performJSONAction(jsonAction, from, qty, sink)
 		player = _player
 	end
 	
+	-- look for __INPUT__ as a param value
+	local params = jsonAction["params"]
+	local newparams
+	if params then
+		newparams = {}
+		for k, v in pairs(params) do
+			if v == '__INPUT__' then
+				newparams[k] = _lastInput
+			else
+				newparams[k] = v
+			end
+		end
+	end
+	
 	-- send the command
 	 _player:queuePriority(RequestCli(
 		sink,                   --sink, 
@@ -369,7 +385,7 @@ local function _performJSONAction(jsonAction, from, qty, sink)
 		cmdArray,               --cmdArray, 
 		from,                   --from, 
 		qty,                    --to, 
-		jsonAction["params"]    --params, 
+		newparams               --params, 
 		                        --options
 		)
 	)
@@ -436,7 +452,7 @@ local function _browseSink(step, chunk, err)
 		-- install us as the new top of the world, unless we went somewhere from there
 		_browsePath = step
 		step.window:show()
-		if step.origin then
+		if step.origin and step.origin.menu then
 			step.origin.menu:unlock()
 		end
 	end
@@ -450,15 +466,18 @@ local function _browseSink(step, chunk, err)
 		-- the data we care about is in chunk.result
 		local data = chunk["result"]
 		
-		step.menu:setItems(step.db:menuItems(data))
+		-- if our window has a menu - some windows don't :(
+		if step.menu then
+			step.menu:setItems(step.db:menuItems(data))
 
-		-- what's missing?
-		local from, qty = step.db:missing(BROWSE_MISSING_FETCH)
+			-- what's missing?
+			local from, qty = step.db:missing(BROWSE_MISSING_FETCH)
 		
-		if from then
-			_performJSONAction(step.data, from, qty, step.sink)
+			if from then
+				_performJSONAction(step.data, from, qty, step.sink)
+			end
 		end
-
+		
 	else
 		log:error(err)
 	end
@@ -654,7 +673,29 @@ local function _actionHandler(menu, menuItem, db, dbIndex, event, actionName, it
 		debug.dump(item, 4)
 	end
 
+	-- some actions work (f.e. pause) event with no item around
 	if item then
+	
+		-- check first for a input box or hierarchical menu
+		if actionName == 'go' and (item['input'] or item['count']) and not item['_inputDone'] then
+			
+			-- make a new window
+			local step, sink = _newDestination(_browsePath, item, _newWindowSpec(db, item), _browseSink)
+
+			-- the item is the data, wrapped into a result hash
+			local res = {
+				["result"] = item,
+			}
+			_browseSink(step, res)
+			return EVENT_CONSUME
+		end
+	
+		-- fix actionName once input is done
+--		if actionName == "inputDone" and item['input'] then
+--			actionName = 'go'
+--		end
+	
+		-- then check for a run-of-the mill action
 	
 		local bAction = _safeDeref(db:chunk(), 'base', 'actions', actionName)
 		local iAction = _safeDeref(item, 'actions', actionName)
@@ -735,7 +776,7 @@ local function _actionHandler(menu, menuItem, db, dbIndex, event, actionName, it
 					local step
 					from = 0
 					to = BROWSE_FIRST_FETCH
-					step, sink = _newDestination(_browsePath, _newWindowSpec(db, item), _browseSink, jsonAction)
+					step, sink = _newDestination(_browsePath, item, _newWindowSpec(db, item), _browseSink, jsonAction)
 				end
 			
 				-- send the command
@@ -743,9 +784,13 @@ local function _actionHandler(menu, menuItem, db, dbIndex, event, actionName, it
 			
 				return EVENT_CONSUME
 			end
+		end
 		
-		-- hierarchical menu!
-		elseif actionName == 'go' and item["count"] then
+		
+--[[
+		-- check for a hierarchical menu
+		-- it's only for go and if there is an item.count
+		if actionName == 'go' and item["count"] then
 	
 			-- make a new window
 			local step, sink = _newDestination(_browsePath, _newWindowSpec(db, item), _browseSink)
@@ -756,11 +801,14 @@ local function _actionHandler(menu, menuItem, db, dbIndex, event, actionName, it
 			}
 			_browseSink(step, res)
 			return EVENT_CONSUME
-	
 		end
+--]]
+
 	end
 	
 	-- fallback to built-in
+	-- these may work without an item
+	
 	-- Note the assumption here: event handling happens for front window only
 	if _browsePath.actionModifier then
 		local builtInAction = actionName .. _browsePath.actionModifier
@@ -810,6 +858,8 @@ local _keycodeActionName = {
 	[KEY_REW]   = 'rew',
 	[KEY_ADD]   = 'add',
 }
+-- internal actionNames:
+--				  'inputDone'
 
 -- _browseMenuListener
 -- called 
@@ -944,37 +994,62 @@ end
 
 
 -- _newDestination
-_newDestination = function(origin, windowSpec, sink, data)
+-- origin is the step we are coming from
+-- item is the source item
+-- windowSpec is the window spec, generally computed by _newWindowSpec to aggregate base and item
+-- sink is the sink this destination will use: we must create a closure so that on receiving the data
+--  the destination can be retrieved (i.e. reunite data and window)
+-- data is generic data that is stored in the step; it is used f.e. to keep the json action between the
+--  first incantation and the subsequent ones needed to capture all data (see _browseSink).
+_newDestination = function(origin, item, windowSpec, sink, data)
 	log:debug("_newDestination():")
 	log:debug(windowSpec)
 	
-	-- create a cozy place for our items...
 	
-	-- a DB (empty...)
-	local db = DB(windowSpec)
-	
-	-- a window
+	-- create a window in all cases
 	local window = Window(windowSpec.windowStyle)
 	window:setTitleWidget(_newArtworkLabel(windowSpec.labelTitleStyle, windowSpec))
 	
+	-- a DB (empty...) 
+	local db = DB(windowSpec)
+
 	local menu
 	
-	if windowSpec.textareaStyle then
+	-- if the item has an input field, we must ask for it
+	if item and item['input'] and not item['_inputDone'] then
+		
+		-- make sure it's a number for the comparison below
+		-- Lua insists on checking type while Perl couldn't care less :(
+		item.input = tonumber(item.input)
 	
-		local input = Textinput("textinput", "",
+		-- create a text input
+		local input = Textinput(
+			"textinput", 
+			"",
 			function(_, value)
-				if #value < 4 then
+			
+				-- check for min number of chars
+				if #value < item.input then
 					return false
 				end
 
-				log:warn("Input " .. value)
-			--	window:hide(Window.transitionPushLeft)
+				
+				log:debug("Input: " .. value)
+				_lastInput = value
+				item['_inputDone'] = value
+				
+				-- now we should perform the action !
+				_actionHandler(nil, nil, db, nil, nil, 'go', item)
 				return true
-			end)
+			end
+		)
 
 		window:addWidget(input)
 	
 	else
+	
+		-- create a cozy place for our items...
+		-- a db above
 	
 		-- a menu. We manage closing ourselves to guide our path
 		menu = Menu(windowSpec.menuStyle, _browseMenuRenderer, _browseMenuListener)
@@ -1010,13 +1085,15 @@ _newDestination = function(origin, windowSpec, sink, data)
 		origin.destination = step
 		
 		-- so please wait dear user...
-		origin.menu:lock(
-			function()
-				-- huh, no, we're no longer going...
-				log:info("_newDestination(): cancelling action...")
-				origin.destination = false
-			end
-		)
+		if origin.menu then
+			origin.menu:lock(
+				function()
+					-- huh, no, we're no longer going...
+					log:info("_newDestination(): cancelling action...")
+					origin.destination = false
+				end
+			)
+		end
 	end
 	
 	-- hide the window on back key and restore paths
@@ -1028,6 +1105,9 @@ _newDestination = function(origin, windowSpec, sink, data)
 				
 				-- if there's no origin to go back to, don't go :)
 				if _browsePath.origin then
+				
+					-- clear it if present
+					item['_inputDone'] = nil
 				
 					window:hide()
 				
@@ -1082,6 +1162,7 @@ function openPlayer (self, menuItem, player)
 	-- create a window for Now Playing
 	local path, sink = _newDestination(
 		nil,
+		nil,
 		_newWindowSpec(nil, {
 			text = _string("NOW_PLAYING"),
 			window = { ["menuStyle"] = "album", },
@@ -1100,6 +1181,7 @@ function openPlayer (self, menuItem, player)
 	-- prepare the window
 	path, sink = _newDestination(
 		nil, -- FIXME the menu should be passed in here
+		nil,
 		_newWindowSpec(nil, {
 			["text"] = player:getName(),
 		}),
