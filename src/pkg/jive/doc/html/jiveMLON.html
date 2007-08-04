@@ -124,7 +124,7 @@
 
 		<p><code>input</code><br>
 		If present, indicates user input is required before proceeding with the actions. The value consists of the min number of characters
-		to request before proceeding.</p>
+		to request before proceeding. See <a href="#action_fields">&lt;actions_fields&gt;</a> for usage of the entered value.</p>
 
 		<p><code>window</code><br>
 		Allows specifying the elements to use for a window opened from this menu. See <a href="#window_fields">&lt;window_fields&gt;</a>.</p>
@@ -228,7 +228,7 @@
 		Array of command terms, f.e. <code>['playlist', 'jump']</code></p>
 
 		<p><code>params</code><br>
-		Hash of parameters, f.e. <code>{sort = new}</code>.</p>
+		Hash of parameters, f.e. <code>{sort = new}</code>. The value &quot;__INPUT__&quot; is replaced by any user entered data.</p>
 
 		<p><code>itemParams</code><br>
 		In base level commands, this defines the name of the field in the item <a href="#action_fields">&lt;actions_fields&gt;</a> that must be used to complete the command for a particular item. See the example below.</p>
@@ -327,6 +327,22 @@
             item_loop = [
                 ...
             ]
+        },
+        {
+            text = 'Search',
+            // ask user for at least 3 chars before firing the action
+            input = 3,
+            actions = {
+                go = {
+                    cmd = ['search'],
+                    params = {
+                        // __INPUT__ will be replaced by the entered text
+                        what = '__INPUT__',
+                        tags = 'blabla',
+                        menu = 'tracks',
+                    }
+                }
+            }            
         },
     ]
 }
