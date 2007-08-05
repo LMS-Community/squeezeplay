@@ -674,32 +674,47 @@ local function _actionHandler(menu, menuItem, db, dbIndex, event, actionName, it
 		debug.dump(item, 4)
 	end
 
-	-- some actions work (f.e. pause) event with no item around
+	-- some actions work (f.e. pause) even with no item around
 	if item then
 	
-		-- check first for a input box or hierarchical menu
-		if actionName == 'go' and (item['input'] or item['count']) and not item['_inputDone'] then
+		local chunk = db:chunk()
+		local bAction
+		local iAction
+		
+		-- special cases for go action:
+		if actionName == 'go' then
 			
-			-- make a new window
-			local step, sink = _newDestination(_browsePath, item, _newWindowSpec(db, item), _browseSink)
+			-- check first for a hierarchical menu or a input to perform 
+			if item['count'] or (item['input'] and not item['_inputDone']) then
+				log:debug("_actionHandler(", actionName, "): hierachical or input")
 
-			-- the item is the data, wrapped into a result hash
-			local res = {
-				["result"] = item,
-			}
-			_browseSink(step, res)
-			return EVENT_CONSUME
+				-- make a new window
+				local step, sink = _newDestination(_browsePath, item, _newWindowSpec(db, item), _browseSink)
+
+				-- the item is the data, wrapped into a result hash
+				local res = {
+					["result"] = item,
+				}
+				_browseSink(step, res)
+				return EVENT_CONSUME
+			end
+			
+			-- check for a 'do' action (overrides a straight 'go')
+			-- actionName is corrected below!!
+			bAction = _safeDeref(chunk, 'base', 'actions', 'do')
+			iAction = _safeDeref(item, 'actions', 'do')
 		end
 	
-		-- fix actionName once input is done
---		if actionName == "inputDone" and item['input'] then
---			actionName = 'go'
---		end
-	
-		-- then check for a run-of-the mill action
-	
-		local bAction = _safeDeref(db:chunk(), 'base', 'actions', actionName)
-		local iAction = _safeDeref(item, 'actions', actionName)
+		
+		-- now check for a run-of-the mill action
+		if not (iAction or bAction) then
+			bAction = _safeDeref(chunk, 'base', 'actions', actionName)
+			iAction = _safeDeref(item, 'actions', actionName)
+		else
+			-- if we reach here, it's a DO action...
+			actionName = 'do'
+		end
+		
 	
 		if iAction or bAction then
 	
@@ -708,8 +723,7 @@ local function _actionHandler(menu, menuItem, db, dbIndex, event, actionName, it
 	
 			-- process an item action first
 			if iAction then
-				log:debug("..item action:")
-				log:debug(iAction)
+				log:debug("_actionHandler(", actionName, "): item action")
 			
 				-- found a json command
 				if type(iAction) == 'table' then
@@ -718,8 +732,7 @@ local function _actionHandler(menu, menuItem, db, dbIndex, event, actionName, it
 			
 			-- not item action, look for a base one
 			elseif bAction then
-				log:debug("..base action:")
-				log:debug(bAction)
+				log:debug("_actionHandler(", actionName, "): base action")
 			
 				-- found a json command
 				if type(bAction) == 'table' then
@@ -786,25 +799,6 @@ local function _actionHandler(menu, menuItem, db, dbIndex, event, actionName, it
 				return EVENT_CONSUME
 			end
 		end
-		
-		
---[[
-		-- check for a hierarchical menu
-		-- it's only for go and if there is an item.count
-		if actionName == 'go' and item["count"] then
-	
-			-- make a new window
-			local step, sink = _newDestination(_browsePath, _newWindowSpec(db, item), _browseSink)
-
-			-- the item is the data, wrapped into a result hash
-			local res = {
-				["result"] = item,
-			}
-			_browseSink(step, res)
-			return EVENT_CONSUME
-		end
---]]
-
 	end
 	
 	-- fallback to built-in
@@ -1111,8 +1105,10 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 				if _browsePath.origin then
 				
 					-- clear it if present
-					item['_inputDone'] = nil
-				
+					if item then
+						item['_inputDone'] = nil
+					end
+					
 					window:hide()
 				
 					_browsePath = _browsePath.origin

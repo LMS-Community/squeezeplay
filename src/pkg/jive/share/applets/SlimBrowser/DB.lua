@@ -523,7 +523,7 @@ end
 
 
 function __tostring(self)
-	return "DB {" .. self.windowSpec.text .. "}"
+	return "DB {" .. tostring(self.windowSpec.text) .. "}"
 end
 --[[
 

@@ -2,15 +2,15 @@
 
 <html>
 <head>
-	<title></title>
+	<title>JiveMLON</title>
 </head>
 
 <body>
 	<h1>JiveMLON</h1>
 
-	<p>Interface specifications for browsing using Jive</p>
+	<p>Interface specifications for browsing using Jive.</p>
 
-	<p>Version 0.9</p>
+	<p>Version 1.0 (<a href="#rev">revision history</a>)</p>
 
 	<h2>Introduction</h2>
 
@@ -123,8 +123,7 @@
 		Full or partial URL of some image to display.</p>
 
 		<p><code>input</code><br>
-		If present, indicates user input is required before proceeding with the actions. The value consists of the min number of characters
-		to request before proceeding. See <a href="#action_fields">&lt;actions_fields&gt;</a> for usage of the entered value.</p>
+		If present, indicates user input is required before proceeding with the actions. The value consists of the min number of characters to request before proceeding. See <a href="#action_fields">&lt;actions_fields&gt;</a> for usage of the entered value.</p>
 
 		<p><code>window</code><br>
 		Allows specifying the elements to use for a window opened from this menu. See <a href="#window_fields">&lt;window_fields&gt;</a>.</p>
@@ -135,7 +134,7 @@
 
 	<h2 id="window_fields"><code>&lt;window_fields&gt;</code></h2>
 
-	<p>If selecting an item results in opening a new window, the window fields, if present, will be used instead of the item fields for the window title and style. Fields defined in an item override any field defined in &lt;base_fields&gt;.&lt;window_fields&gt;.</p>
+	<p>If selecting an item results in opening a new window (i.e. the &quot;go&quot; action), the window fields, if present, will be used instead of the item fields for the window title and style. Fields defined in an item override any field defined in &lt;base_fields&gt;.&lt;window_fields&gt;.</p>
 
 	<blockquote>
 		<pre>
@@ -190,10 +189,10 @@
 
 	<blockquote>
 		<p><strong>keys</strong><br>
-		One of "go", "back", "play", "add", "rew", "fwd" or "pause".</p>
+		One of "go"/"do", "back", "play", "add", "rew", "fwd" or "pause".</p>
 
 		<p><strong>holding state</strong><br>
-		"" or "-hold" (not for "go" and "back")</p>
+		"" or "-hold" (not for "go"/"do" and "back")</p>
 	</blockquote>
 
 	<p>For example, field <code>play-hold</code> defines the command to send when the play key is held. It can be defined at the item level (applies to the item only), or at the base level. In this last case, it can be complemented by params defined at the item level.</p>
@@ -228,21 +227,24 @@
 		Array of command terms, f.e. <code>['playlist', 'jump']</code></p>
 
 		<p><code>params</code><br>
-		Hash of parameters, f.e. <code>{sort = new}</code>. The value &quot;__INPUT__&quot; is replaced by any user entered data.</p>
+		Hash of parameters, f.e. <code>{sort = new}</code>. The value "__INPUT__" is replaced by any user entered data.</p>
 
 		<p><code>itemParams</code><br>
 		In base level commands, this defines the name of the field in the item <a href="#action_fields">&lt;actions_fields&gt;</a> that must be used to complete the command for a particular item. See the example below.</p>
 	</blockquote>
+
+	<h3 id="go-do">Go and Do actions</h3>
+	
+	<p>Both action names refer to the same key. &quot;go&quot; refers to a command that opens a new window (i.e. returns results to browse), 
+		while &quot;do&quot; refers to an action to perform that does not return browsable data. &quot;do&quot; takes precedence over &quot;go&quot;.</p>
+	<p>Paging parameters (json: _index and _qty, url: TBD) are added automatically by Jive for &quot;go&quot;.</p>
 
 	<h3 id="pre-defined actions">Pre-defined actions</h3>
 
 	<p>Some actions have "built in" defaults: the presence of a new action overrides Jive's standard (built in) behavior.</p>
 
 	<blockquote>
-		<p><code>go</code><br>
-		Paging parameters (json: _index and _qty, url: TBD) are added automatically by Jive. This is the only command that expects results back and allows "browsing".</p>
-
-		<p><code>back</code><br>
+				<p><code>back</code><br>
 		Goes up one level in the browsing, closing the current window. Override not supported.</p>
 
 		<p><code>rew</code><br>
@@ -380,6 +382,12 @@
 
     item_loop = [
         {
+            text = "Play all",
+            actions = {
+                do = {...} // overrides go in base
+            },
+        },
+        {
             text = "Rock",
             icon = "rock.jpg", // a partial URL, combined with the above
             anyParams = {
@@ -407,7 +415,7 @@
 
 		<li>Now Playing and Exit items are added by Jive to the menu and fully handled by Jive.</li>
 
-		<li>Search and Settings are not supported by the above syntax.</li>
+		<li>Settings are not supported by the above syntax.</li>
 
 		<li>Paging and stacking is controlled by Jive (no "redirect")</li>
 
@@ -427,5 +435,19 @@
 	</ul>
 
 	<p>For example, the hierarchy [genres, artist, album] is done using a top level menu with command "genres menu:artist", that generates items with commands "artists menu:albums", etc... This is done in order to re-use the code of these queries. Experience shows they are high maintenance.</p>
+
+	<h2 id="rev">Revision history</h2>
+
+	<h3>1.0</h3>
+
+	<ul>
+		<li>Added the ability to have a "go" action that goes nowhere.</li>
+	</ul>
+
+	<h3>0.9</h3>
+
+	<ul>
+		<li>Added the necessary plumbing to allow expressing an action containing user entered data on the client side. JSON parameters containing "__INPUT__" are replaced by the user entered value. User input is triggered by the "input" item_field.</li>
+	</ul>
 </body>
 </html>
