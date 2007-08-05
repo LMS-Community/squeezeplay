@@ -99,8 +99,7 @@ Returns a localised version of token
 =cut
 --]]
 function string(self, token, ...)
-	-- FIXME ...
-	return self._stringsTable[token] or token
+	return self._stringsTable:str(token, ...)
 end
 
 

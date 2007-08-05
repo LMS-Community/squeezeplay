@@ -485,7 +485,7 @@ function _loadLocaleStrings(entry)
 	end
 
 	log:debug("_loadLocaleStrings(", entry.appletName, ")")
-	entry.stringsTable = locale.readStringsFile(entry.stringsFilepath)
+	entry.stringsTable = locale:readStringsFile(entry.stringsFilepath)
 end
 
 

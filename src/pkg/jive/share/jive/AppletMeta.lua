@@ -19,7 +19,6 @@ be accessed and loaded on demand.
 
 local oo = require("loop.base")
 
-
 module(..., oo.class)
 
 
@@ -63,9 +62,8 @@ function getSettings(self)
 end
 
 
-
 function string(self, token, ...)
-	return self._stringsTable[token] or token
+	return self._stringsTable:str(token, ...)
 end
 
 

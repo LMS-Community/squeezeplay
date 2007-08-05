@@ -18,7 +18,7 @@ readStringsFile(thisPath)
 --]]
 
 -- stuff we use
-local ipairs, pairs, assert, io, setmetatable, string = ipairs, pairs, assert, io, setmetatable, string
+local ipairs, pairs, assert, io, select, setmetatable, string = ipairs, pairs, assert, io, select, setmetatable, string
 
 local log              = require("jive.utils.log").logger("utils")
 
@@ -37,7 +37,6 @@ local loadedFiles = {}
 setmetatable(loadedFiles, { __mode = "v" })
 
 
-
 --[[
 =head 2 setLocale(newLocale)
 
@@ -46,7 +45,7 @@ file for the new locale.
 
 =cut
 --]]
-function setLocale(newLocale)
+function setLocale(self, newLocale)
 	if newLocale == globalLocale then
 		return
 	end
@@ -55,7 +54,7 @@ function setLocale(newLocale)
 
 	-- reload existing strings files
 	for k, v in pairs(loadedFiles) do
-		readStringsFile(k, v)
+		readStringsFile(self, k, v)
 	end
 end
 
@@ -67,7 +66,7 @@ Returns the current locale.
 
 =cut
 --]]
-function getLocale()
+function getLocale(self)
 	return globalLocale
 end
 
@@ -79,7 +78,7 @@ Returns all locales.
 
 =cut
 --]]
-function getAllLocales()
+function getAllLocales(self)
 	local array = {}
 	for locale, _ in pairs(allLocales) do
 		array[#array + 1] = locale
@@ -96,10 +95,11 @@ that is returned. The strings are for the current locale.
 
 =cut
 --]]
-function readStringsFile(fullPath, stringsTable)
+function readStringsFile(self, fullPath, stringsTable)
 	log:debug("loading strings from ", fullPath)
 
 	stringsTable = stringsTable or {}
+	setmetatable(stringsTable, { __index = self })
 
 	local myLocale = globalLocale
 
@@ -111,7 +111,7 @@ function readStringsFile(fullPath, stringsTable)
 	loadedFiles[fullPath] = stringsTable
 
 	-- meta table for strings
-	local mt = {
+	local strmt = {
 		__tostring = function(e)
 				     return e.str .. "{" .. myLocale .. "}"
 			     end
@@ -152,13 +152,23 @@ function readStringsFile(fullPath, stringsTable)
 				-- locale is loaded.
 				local str = stringsTable[thisString] or {}
 				str.str = translatedString
-				setmetatable(str, mt)
+				setmetatable(str, strmt)
 				stringsTable[thisString] = str
 			end
 		end
 	end
 	stringsFile:close()
+
 	return stringsTable
+end
+
+
+function str(self, token, ...)
+	if select('#', ...) == 0 then
+		return self[token] or token
+	else
+		return string.format(self[token].str or token, ...)
+	end
 end
 
 

@@ -55,7 +55,7 @@ function setupLanguage(self, menuItem)
 	local menu = SimpleMenu("menu")
 
 	local group = RadioGroup()
-	for _, locale in ipairs(locale.getAllLocales()) do 
+	for _, locale in ipairs(locale:getAllLocales()) do 
 		local button = RadioButton(
 			"radio", 
 			group, 
@@ -83,7 +83,7 @@ end
 
 function setLang(self, choice)
 	log:info("Locale choice set to ", choice)
-	locale.setLocale(choice)
+	locale:setLocale(choice)
 
 	self:getSettings().locale = choice
 
