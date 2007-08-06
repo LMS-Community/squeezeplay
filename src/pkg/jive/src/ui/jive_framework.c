@@ -254,7 +254,39 @@ static int jiveL_process_events(lua_State *L) {
 
 			ticks = SDL_GetTicks();
 		} while (ticks < frameticks);
-		
+
+		/* debug code - check for un-processed events */
+		if (1) {
+			SDL_Event eventList[128];
+			JiveEvent *jive_event;
+
+			int events = SDL_PeepEvents(eventList, 128, SDL_PEEKEVENT, SDL_ALLEVENTS);
+
+			if (events > 5) {
+				printf("event queue: %i\n", events);
+				int i;
+				for (i = 0; i < events; i++) {
+					if (eventList[i].type == SDL_USEREVENT) {
+						switch (eventList[i].user.code) {
+						case JIVE_USER_EVENT_TIMER:
+							printf("\t%d: type timer\n", i);
+							break;
+						case JIVE_USER_EVENT_KEY_HOLD:
+							printf("\t%d: key_hold\n", i);
+							break;
+						case JIVE_USER_EVENT_EVENT: {
+							jive_event = (JiveEvent *) eventList[i].user.data1;
+							printf("\t%d: jive_event %x\n", i, jive_event->type);
+							break;
+						}
+						}
+					} else {
+						printf("\t%d: sdl_event %d\n", i, eventList[i].type);
+					}
+				}
+			}
+		}
+
 		lua_pop(L, 2);
 
 		JIVEL_STACK_CHECK_END(L);
