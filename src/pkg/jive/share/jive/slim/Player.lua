@@ -542,7 +542,7 @@ end
 -- fwd
 -- what to do for the fwd button
 -- use button so that the logic of SS (skip to start of current or previous song) is used
-function rew(self)
+function fwd(self)
 	log:debug("Player:fwd()")
 	self:button('jump_fwd')
 end
