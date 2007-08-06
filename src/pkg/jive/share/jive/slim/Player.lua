@@ -38,7 +38,9 @@ local RequestHttp    = require("jive.net.RequestHttp")
 local RequestJsonRpc = require("jive.net.RequestJsonRpc")
 local Framework      = require("jive.ui.Framework")
 local Popup          = require("jive.ui.Popup")
+local Icon           = require("jive.ui.Icon")
 local Textarea       = require("jive.ui.Textarea")
+local Window         = require("jive.ui.Window")
 
 local log            = require("jive.utils.log").logger("player")
 local logv           = require("jive.utils.log").logger("player.browse.volume")
@@ -47,6 +49,10 @@ require("jive.slim.RequestsCli")
 local RequestStatus  = jive.slim.RequestStatus
 local RequestCli     = jive.slim.RequestCli
 local RequestDisplaystatus = jive.slim.RequestDisplaystatus
+
+local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
+local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
+local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 
 local iconbar        = iconbar
 
@@ -132,6 +138,9 @@ function __init(self, slimServer, jnt, jpool, playerInfo)
 		
 		isOnStage = false,
 		statusSink = false,
+
+		-- current song info
+		currentSong = {}
 	})
 	
 	-- notify we're here
@@ -279,6 +288,21 @@ function onStage(self, sink)
 		)
 	)
 
+	-- create window to display current song info
+	self.currentSong.window = Popup("popupIcon")
+	self.currentSong.artIcon = Icon("icon")
+	self.currentSong.text = Textarea("text")
+	self.currentSong.window:addWidget(self.currentSong.artIcon)
+	self.currentSong.window:addWidget(self.currentSong.text)
+	self.currentSong.window:addListener(EVENT_KEY_PRESS | EVENT_SCROLL,
+		function(event)
+			local prev = self.currentSong.window:getLowerWindow()
+			if prev then
+				Framework:dispatchEvent(prev, event)
+			end
+			return EVENT_CONSUME
+		end)
+
 end
 
 
@@ -302,6 +326,8 @@ function offStage(self)
 	iconbar:setPlaymode(nil)
 	iconbar:setRepeat(nil)
 	iconbar:setShuffle(nil)
+
+	self.currentSong = {}
 end
 
 
@@ -351,20 +377,50 @@ function feedStatusSink(self)
 end
 
 
+function _largeArtworkUri (iconId)
+	return '/music/' .. iconId .. '/cover_200x200_f_000000.jpg'
+end
+
+
+function _showCurrentSong(self, stateIcon, iconId, text)
+	log:debug("Player:showCurrentSong()")
+
+	local s = self.currentSong
+
+	if iconId then
+		s.window:removeWidget(s.artIcon)
+		s.artIcon = Icon("icon")
+		s.window:addWidget(s.artIcon)
+		self.slimServer:fetchArtworkThumb(iconId, s.artIcon, _largeArtworkUri, 'L', true)
+	end
+
+	if stateIcon then
+		text = text .. "\nICON " .. stateIcon
+	end
+
+	s.text:setText(text)
+	
+	s.window:showBriefly(3000)
+end
+
+
 -- _process_displaystatus
 -- receives the display status data
 function _process_displaystatus(self, data)
 	log:debug("Player:_process_displaystatus()")
 
-	debug.dump(data.result,10)
-
-	if data.result.display then 
-		if data.result.display then
-
-			local popup = Popup("popup", "showBriefly")
-
-			local text = Textarea("textarea", table.concat(data.result.display, "\n\n"))
-			popup:addWidget(text)
+	if data.result.display then
+		local icon   = data.result.display.icon
+		local iconId = data.result.display["icon-id"]
+		local text   = table.concat(data.result.display.text, "\n")
+		
+		if iconId then
+			-- new song display from server
+			self:_showCurrentSong(icon, iconId, text)
+		else
+			-- other message from server
+			local popup = Popup("popup")
+			popup:addWidget(Textarea("textarea", text))
 			popup:showBriefly(2000)
 		end
 	end

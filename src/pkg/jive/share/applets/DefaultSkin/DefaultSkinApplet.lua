@@ -414,6 +414,18 @@ function skin(self, s)
 	s.popup.slider.img = volumeBar
 	s.popup.slider.bgImg = volumeBackground
 
+	-- Popup window with Icon
+	s.popupIcon.border = { 13, 0, 13, 0 }
+	s.popupIcon.maskImg = Tile:fillColor(0x231f20cc)
+
+	s.popupIcon.text.border = 10
+	s.popupIcon.text.w = screenWidth - 60
+	s.popupIcon.text.font = Font:load(fontpath .. "FreeSans.ttf", 16)
+	s.popupIcon.text.fg = { 0xff, 0xff, 0xff }
+	s.popupIcon.text.sh = { }
+	s.popupIcon.text.textAlign = "center"
+	s.popupIcon.text.position = LAYOUT_SOUTH
+
 
 	-- Special styles for specific window types
 

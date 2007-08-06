@@ -406,7 +406,7 @@ end
 
 --[[
 
-=head2 jive.slim.SlimServer:fetchArtworkThumb(iconId, icon, uriGenerator)
+=head2 jive.slim.SlimServer:fetchArtworkThumb(iconId, icon, uriGenerator, size)
 
 The SlimServer object maintains an artwork cache. This function either loads from the cache or
 gets from the network the thumb for I<iconId>. A L<jive.ui.Surface> is used to perform
@@ -417,11 +417,16 @@ method will call uriGenerator(iconId) and use the result as URI).
 
 =cut
 --]]
-function fetchArtworkThumb(self, iconId, icon, uriGenerator)
+function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, priority)
 	logcache:debug(self, ":fetchArtworkThumb(", iconId, ")")
 
 	if logcache:isDebug() then
 		_dumpArtworkThumbCache(self)
+	end
+
+	-- cache non default sizes with their own key
+	if size then
+		iconId = iconId .. size
 	end
 
 	-- do we have the artwork in the cache
@@ -449,7 +454,12 @@ function fetchArtworkThumb(self, iconId, icon, uriGenerator)
 	-- remember the icon
 	self.artworkThumbIcons[iconId] = {icon}
 	logcache:debug("..fetching artwork")
-	self.jpool:queue(req)
+
+	if priority then
+		self.jpool:queuePriority(req)
+	else
+		self.jpool:queue(req)
+	end
 end
 
 
