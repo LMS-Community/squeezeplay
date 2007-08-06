@@ -247,7 +247,8 @@ function openSettings(self, menuItem)
 			},
 		})
 
-	for setting_name, screensaver in table.pairsByKeys(self.screensaver_settings) do
+	menu:setComparator(menu.itemComparatorAlpha)
+	for setting_name, screensaver in pairs(self.screensaver_settings) do
 		menu:addItem({
 				     text = setting_name,
 				     callback =
