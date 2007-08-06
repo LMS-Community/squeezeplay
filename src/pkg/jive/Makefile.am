@@ -103,7 +103,7 @@ dist_luanet_DATA = \
 	share/jive/net/SocketHttp.lua \
 	share/jive/net/SocketHttpQueue.lua \
 	share/jive/net/Socket.lua \
-	share/jive/net/SocketUdpBcast.lua \
+	share/jive/net/SocketUdp.lua \
 	share/jive/net/SocketTcp.lua \
 	share/jive/net/RequestHttp.lua \
 	share/jive/net/RequestJsonRpc.lua \
@@ -197,6 +197,12 @@ dist_applets_setuplanguage_DATA = \
 	share/applets/SetupLanguage/SetupLanguageApplet.lua \
 	share/applets/SetupLanguage/SetupLanguageMeta.lua \
 	share/applets/SetupLanguage/strings.txt
+
+applets_setupslimserversdir = $(pkgdatadir)/applets/SetupSlimServers
+dist_applets_setupslimservers_DATA = \
+	share/applets/SetupSlimServers/SetupSlimServersApplet.lua \
+	share/applets/SetupSlimServers/SetupSlimServersMeta.lua \
+	share/applets/SetupSlimServers/strings.txt
 
 
 

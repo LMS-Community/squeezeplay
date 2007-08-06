@@ -20,13 +20,16 @@ by the SlimDiscovery applet to discover and cache servers found on the network.
  -- discover servers (to call regularly)
  servers:discover()
 
+ -- set addresses to poll (bcast address in this case)
+ servers:pollList( { ["255.255.255.255"] = "255.255.255.255" } )
+
 =head1 FUNCTIONS
 
 =cut
 --]]
 
 -- stuff we use
-local assert, tostring, pairs = assert, tostring, pairs
+local assert, tostring, pairs, type = assert, tostring, pairs, type
 
 local table          = require("table")
 local string         = require("string")
@@ -34,7 +37,7 @@ local os             = require("os")
 
 local oo             = require("loop.base")
 
-local SocketUdpBcast = require("jive.net.SocketUdpBcast")
+local SocketUdp      = require("jive.net.SocketUdp")
 local SlimServer     = require("jive.slim.SlimServer")
 local strings        = require("jive.utils.strings")
 
@@ -161,7 +164,10 @@ function __init(self, jnt)
 	})
 	
 	-- create a udp socket
-	obj.js = SocketUdpBcast(jnt, _getSink(obj))
+	obj.js = SocketUdp(jnt, _getSink(obj))
+
+	-- list of addresses to poll, updated by applet.SlimServers
+	obj.poll = {}
 			
 	-- make us start
 	obj:discover()
@@ -182,7 +188,9 @@ Called repeatedly by SlimDiscovery applet while in home.
 function discover(self)
 	log:debug("SlimServers:discover()")
 
-	self.js:send(t_source, PORT)
+	for _, address in pairs(self.poll) do
+		self.js:send(t_source, address, PORT)
+	end
 	_cacheCleanup(self)	
 end
 
@@ -199,6 +207,27 @@ function servers(self)
 	return pairs(self._servers)
 end
 
+
+--[[
+
+=head2 jive.slim.SlimServers:pollList()
+
+Get/set the list of addresses which are polled with discovery packets.
+List is a table with IP address strings as both key and value.
+The broadcast address is represented as : { ["255.255.255.255"] = "255.255.255.255" }
+
+=cut
+--]]
+function pollList(self, list)
+	log:debug("SlimServers:pollList()")
+
+	if type(list) == "table" then
+		log:info("updated poll list")
+		self.poll = list
+	end
+
+	return self.poll
+end
 
 --[[
 

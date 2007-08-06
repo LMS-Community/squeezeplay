@@ -48,6 +48,7 @@ DIST_COMMON = $(am__configure_deps) $(dist_applets_bounce_DATA) \
 	$(dist_applets_quit_DATA) $(dist_applets_screensavers_DATA) \
 	$(dist_applets_screenshot_DATA) \
 	$(dist_applets_setuplanguage_DATA) \
+	$(dist_applets_setupslimservers_DATA) \
 	$(dist_applets_setupsoundeffects_DATA) \
 	$(dist_applets_setupwallpaper_DATA) \
 	$(dist_applets_setupwallpaper_wallpaper_DATA) \
@@ -89,6 +90,7 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" \
 	"$(DESTDIR)$(applets_screensaversdir)" \
 	"$(DESTDIR)$(applets_screenshotdir)" \
 	"$(DESTDIR)$(applets_setuplanguagedir)" \
+	"$(DESTDIR)$(applets_setupslimserversdir)" \
 	"$(DESTDIR)$(applets_setupsoundeffectsdir)" \
 	"$(DESTDIR)$(applets_setupwallpaperdir)" \
 	"$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)" \
@@ -136,6 +138,7 @@ dist_applets_quitDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_screensaversDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_screenshotDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setuplanguageDATA_INSTALL = $(INSTALL_DATA)
+dist_applets_setupslimserversDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupsoundeffectsDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupwallpaperDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupwallpaper_wallpaperDATA_INSTALL = $(INSTALL_DATA)
@@ -154,6 +157,7 @@ DATA = $(dist_applets_bounce_DATA) $(dist_applets_defaultskin_DATA) \
 	$(dist_applets_quit_DATA) $(dist_applets_screensavers_DATA) \
 	$(dist_applets_screenshot_DATA) \
 	$(dist_applets_setuplanguage_DATA) \
+	$(dist_applets_setupslimservers_DATA) \
 	$(dist_applets_setupsoundeffects_DATA) \
 	$(dist_applets_setupwallpaper_DATA) \
 	$(dist_applets_setupwallpaper_wallpaper_DATA) \
@@ -363,7 +367,7 @@ dist_luanet_DATA = \
 	share/jive/net/SocketHttp.lua \
 	share/jive/net/SocketHttpQueue.lua \
 	share/jive/net/Socket.lua \
-	share/jive/net/SocketUdpBcast.lua \
+	share/jive/net/SocketUdp.lua \
 	share/jive/net/SocketTcp.lua \
 	share/jive/net/RequestHttp.lua \
 	share/jive/net/RequestJsonRpc.lua \
@@ -455,6 +459,12 @@ dist_applets_setuplanguage_DATA = \
 	share/applets/SetupLanguage/SetupLanguageApplet.lua \
 	share/applets/SetupLanguage/SetupLanguageMeta.lua \
 	share/applets/SetupLanguage/strings.txt
+
+applets_setupslimserversdir = $(pkgdatadir)/applets/SetupSlimServers
+dist_applets_setupslimservers_DATA = \
+	share/applets/SetupSlimServers/SetupSlimServersApplet.lua \
+	share/applets/SetupSlimServers/SetupSlimServersMeta.lua \
+	share/applets/SetupSlimServers/strings.txt
 
 
 # Wallpaper
@@ -1089,6 +1099,23 @@ uninstall-dist_applets_setuplanguageDATA:
 	  echo " rm -f '$(DESTDIR)$(applets_setuplanguagedir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(applets_setuplanguagedir)/$$f"; \
 	done
+install-dist_applets_setupslimserversDATA: $(dist_applets_setupslimservers_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(applets_setupslimserversdir)" || $(mkdir_p) "$(DESTDIR)$(applets_setupslimserversdir)"
+	@list='$(dist_applets_setupslimservers_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(dist_applets_setupslimserversDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_setupslimserversdir)/$$f'"; \
+	  $(dist_applets_setupslimserversDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_setupslimserversdir)/$$f"; \
+	done
+
+uninstall-dist_applets_setupslimserversDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_applets_setupslimservers_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(applets_setupslimserversdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(applets_setupslimserversdir)/$$f"; \
+	done
 install-dist_applets_setupsoundeffectsDATA: $(dist_applets_setupsoundeffects_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(applets_setupsoundeffectsdir)" || $(mkdir_p) "$(DESTDIR)$(applets_setupsoundeffectsdir)"
@@ -1328,7 +1355,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/Bounce $(distdir)/share/applets/DefaultSkin $(distdir)/share/applets/DefaultSkin/images $(distdir)/share/applets/DefaultSkin/sounds $(distdir)/share/applets/Flickr $(distdir)/share/applets/LogSettings $(distdir)/share/applets/Quit $(distdir)/share/applets/ScreenSavers $(distdir)/share/applets/Screenshot $(distdir)/share/applets/SetupLanguage $(distdir)/share/applets/SetupSoundEffects $(distdir)/share/applets/SetupWallpaper $(distdir)/share/applets/SetupWallpaper/wallpaper $(distdir)/share/applets/SlimBrowser $(distdir)/share/applets/SlimDiscovery $(distdir)/share/applets/Test $(distdir)/share/jive $(distdir)/share/jive/net $(distdir)/share/jive/slim $(distdir)/share/jive/ui $(distdir)/share/jive/utils $(distdir)/src
+	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/Bounce $(distdir)/share/applets/DefaultSkin $(distdir)/share/applets/DefaultSkin/images $(distdir)/share/applets/DefaultSkin/sounds $(distdir)/share/applets/Flickr $(distdir)/share/applets/LogSettings $(distdir)/share/applets/Quit $(distdir)/share/applets/ScreenSavers $(distdir)/share/applets/Screenshot $(distdir)/share/applets/SetupLanguage $(distdir)/share/applets/SetupSlimServers $(distdir)/share/applets/SetupSoundEffects $(distdir)/share/applets/SetupWallpaper $(distdir)/share/applets/SetupWallpaper/wallpaper $(distdir)/share/applets/SlimBrowser $(distdir)/share/applets/SlimDiscovery $(distdir)/share/applets/Test $(distdir)/share/jive $(distdir)/share/jive/net $(distdir)/share/jive/slim $(distdir)/share/jive/ui $(distdir)/share/jive/utils $(distdir)/src
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -1457,7 +1484,7 @@ check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" "$(DESTDIR)$(applets_bouncedir)" "$(DESTDIR)$(applets_defaultskindir)" "$(DESTDIR)$(applets_defaultskin_imagesdir)" "$(DESTDIR)$(applets_defaultskin_soundsdir)" "$(DESTDIR)$(applets_flickrdir)" "$(DESTDIR)$(applets_logdir)" "$(DESTDIR)$(applets_quitdir)" "$(DESTDIR)$(applets_screensaversdir)" "$(DESTDIR)$(applets_screenshotdir)" "$(DESTDIR)$(applets_setuplanguagedir)" "$(DESTDIR)$(applets_setupsoundeffectsdir)" "$(DESTDIR)$(applets_setupwallpaperdir)" "$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)" "$(DESTDIR)$(applets_slimbrowserdir)" "$(DESTDIR)$(applets_slimdiscoverydir)" "$(DESTDIR)$(applets_testdir)" "$(DESTDIR)$(jivedir)" "$(DESTDIR)$(jiveuidir)" "$(DESTDIR)$(luanetdir)" "$(DESTDIR)$(luaslimdir)" "$(DESTDIR)$(luautildir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" "$(DESTDIR)$(applets_bouncedir)" "$(DESTDIR)$(applets_defaultskindir)" "$(DESTDIR)$(applets_defaultskin_imagesdir)" "$(DESTDIR)$(applets_defaultskin_soundsdir)" "$(DESTDIR)$(applets_flickrdir)" "$(DESTDIR)$(applets_logdir)" "$(DESTDIR)$(applets_quitdir)" "$(DESTDIR)$(applets_screensaversdir)" "$(DESTDIR)$(applets_screenshotdir)" "$(DESTDIR)$(applets_setuplanguagedir)" "$(DESTDIR)$(applets_setupslimserversdir)" "$(DESTDIR)$(applets_setupsoundeffectsdir)" "$(DESTDIR)$(applets_setupwallpaperdir)" "$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)" "$(DESTDIR)$(applets_slimbrowserdir)" "$(DESTDIR)$(applets_slimdiscoverydir)" "$(DESTDIR)$(applets_testdir)" "$(DESTDIR)$(jivedir)" "$(DESTDIR)$(jiveuidir)" "$(DESTDIR)$(luanetdir)" "$(DESTDIR)$(luaslimdir)" "$(DESTDIR)$(luautildir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -1517,6 +1544,7 @@ install-data-am: install-dist_applets_bounceDATA \
 	install-dist_applets_screensaversDATA \
 	install-dist_applets_screenshotDATA \
 	install-dist_applets_setuplanguageDATA \
+	install-dist_applets_setupslimserversDATA \
 	install-dist_applets_setupsoundeffectsDATA \
 	install-dist_applets_setupwallpaperDATA \
 	install-dist_applets_setupwallpaper_wallpaperDATA \
@@ -1564,6 +1592,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_applets_bounceDATA \
 	uninstall-dist_applets_screensaversDATA \
 	uninstall-dist_applets_screenshotDATA \
 	uninstall-dist_applets_setuplanguageDATA \
+	uninstall-dist_applets_setupslimserversDATA \
 	uninstall-dist_applets_setupsoundeffectsDATA \
 	uninstall-dist_applets_setupwallpaperDATA \
 	uninstall-dist_applets_setupwallpaper_wallpaperDATA \
@@ -1591,6 +1620,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_applets_bounceDATA \
 	install-dist_applets_screensaversDATA \
 	install-dist_applets_screenshotDATA \
 	install-dist_applets_setuplanguageDATA \
+	install-dist_applets_setupslimserversDATA \
 	install-dist_applets_setupsoundeffectsDATA \
 	install-dist_applets_setupwallpaperDATA \
 	install-dist_applets_setupwallpaper_wallpaperDATA \
@@ -1614,6 +1644,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_applets_bounceDATA \
 	uninstall-dist_applets_screensaversDATA \
 	uninstall-dist_applets_screenshotDATA \
 	uninstall-dist_applets_setuplanguageDATA \
+	uninstall-dist_applets_setupslimserversDATA \
 	uninstall-dist_applets_setupsoundeffectsDATA \
 	uninstall-dist_applets_setupwallpaperDATA \
 	uninstall-dist_applets_setupwallpaper_wallpaperDATA \

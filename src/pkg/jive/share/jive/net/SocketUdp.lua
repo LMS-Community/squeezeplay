@@ -2,13 +2,13 @@
 --[[
 =head1 NAME
 
-jive.net.SocketUdpBcast - A socket for UDP broadcast.
+jive.net.SocketUdp - A socket for UDP.
 
 =head1 DESCRIPTION
 
-Implements a socket that performs some udp broadcast and returns packets
+Implements a socket that sends udp packets and returns packets
 obtained in response. This is used to discover slimservers on the network.
-jive.net.SocketUdbBcast is a subclass of L<jive.net.Socket> to be used with a
+jive.net.SocketUdb is a subclass of L<jive.net.Socket> to be used with a
 L<jive.net.NetworkSocket>.
 
 Note the implementation uses the source and sink concept of luasocket.
@@ -29,11 +29,11 @@ Note the implementation uses the source and sink concept of luasocket.
    end
  end
 
- -- create a SocketUdpBcast
- local mySocket = jive.net.SocketUdpBcast(jnt, mySink)
+ -- create a SocketUdp
+ local mySocket = jive.net.SocketUdp(jnt, mySink)
 
- -- broadcast some data on port 3333
- mySocket:send(mySource, 3333)
+ -- send some data to address 10.0.0.1 on port 3333
+ mySocket:send(mySource, "10.0.0.1", 3333)
 
 =head1 FUNCTIONS
 
@@ -45,7 +45,7 @@ Note the implementation uses the source and sink concept of luasocket.
 
 
 -- stuff we use
-local assert = assert
+local assert,tostring = assert,tostring
 
 local socket  = require("socket")
 local ltn12   = require("ltn12")
@@ -56,7 +56,7 @@ local Socket  = require("jive.net.Socket")
 
 local log     = require("jive.utils.log").logger("net.socket")
 
--- jive.net.SocketUdpBcast is a subclass of jive.net.Socket
+-- jive.net.SocketUdp is a subclass of jive.net.Socket
 module(...)
 oo.class(_M, Socket)
 
@@ -79,9 +79,9 @@ end)
 
 --[[
 
-=head2 jive.net.SocketUdpBcast(jnt, sink, name)
+=head2 jive.net.SocketUdp(jnt, sink, name)
 
-Creates a UDP broadcast socket named I<name> to interface with the given I<jnt> 
+Creates a UDP socket named I<name> to interface with the given I<jnt> 
 (a L<jive.net.NetworkThread> instance). I<name> is used for debugging and
 defaults to "". I<sink> is the main thread ltn12 sink that will receive the data.
 Must be called by subclasses.
@@ -100,7 +100,7 @@ B<port> : the source port
 =cut
 --]]
 function __init(self, jnt, sink, name)
-	--log:debug("SocketUdpBcast:__init()")
+	--log:debug("SocketUdp:__init()")
 
 --	assert(sink)
 	
@@ -145,13 +145,13 @@ function t_getReadPump(self, sink)
 	end
 
 	return function()
-		--log:debug("SocketUdpBcast:readPump()")
+		--log:debug("SocketUdp:readPump()")
 
 		local err = socket.skip(1, ltn12.pump.step(source, sink))
 
 		if err then
 			-- do something
-			log:error("SocketUdpBcast:readPump:", err)
+			log:error("SocketUdp:readPump:", err)
 		end
 	end
 end
@@ -159,25 +159,25 @@ end
 
 -- t_getWritePump
 -- returns a pump to write out bcast data. It removes itself after each pump
-function t_getWritePump(self, t_source, port)
+function t_getWritePump(self, t_source, address, port)
 
 	-- a ltn12 sink than sends udp bcast datagrams
 	local sink = function(chunk, err)
 		if chunk and chunk ~= "" then
-			return self.t_sock:sendto(chunk, "255.255.255.255", port)
+			return self.t_sock:sendto(chunk, address, port)
 		else
 			return 1
 		end
 	end
 
 	return function()
-		--log:debug("SocketUdpBcast:writePump()")
+		--log:debug("SocketUdp:writePump()")
 		
 		-- pump data once
 		local err = socket.skip(1, ltn12.pump.step(t_source, sink))
 		
 		if err then
-			log:error("SocketUdpBcast:writePump:", err)
+			log:error("SocketUdp:writePump:", err)
 		end
 		
 		-- stop the pumping...
@@ -188,22 +188,23 @@ end
 
 --[[
 
-=head2 jive.net.SocketUdpBcast:send(t_source, port)
+=head2 jive.net.SocketUdp:send(t_source, address, port)
 
-Broadcasts the data obtained through I<t_source> to the 
-given I<port>. I<t_source> is a ltn12 source called from 
+Sends the data obtained through I<t_source> to the 
+given I<address> and I<port>. I<t_source> is a ltn12 source called from 
 the network thread.
 
 =cut
 --]]
-function send(self, t_source, port)
-	--log:debug("SocketUdpBcast:send()")
+function send(self, t_source, address, port)
+	--log:debug("SocketUdp:send()")
 
 --	assert(t_source)
+--  assert(address)
 --	assert(port)
 
 	if self.t_sock then
-		self:perform(function() self:t_addWrite(self:t_getWritePump(t_source, port)) end)	
+		self:perform(function() self:t_addWrite(self:t_getWritePump(t_source, address, port)) end)	
 	end
 end
 
@@ -212,13 +213,13 @@ end
 
 =head2 tostring(aSocket)
 
-if I<aSocket> is a L<jive.net.SocketUdpBcast>, prints
- SocketUdpBcast {name}
+if I<aSocket> is a L<jive.net.SocketUdp>, prints
+ SocketUdp {name}
 
 =cut
 --]]
 function __tostring(self)
-	return "SocketUdpBcast {" .. tostring(self.jsName) .. "}"
+	return "SocketUdp {" .. tostring(self.jsName) .. "}"
 end
 
 

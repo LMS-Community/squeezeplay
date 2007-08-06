@@ -1,0 +1,24 @@
+﻿#
+# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
+# 
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+SERVERS
+	EN	Slimservers	
+
+AUTO_MODE
+	EN	Using Auto Discovery
+
+DELETE
+	EN	Delete
+
+EDIT
+	EN	Edit
+
+ADD_SERVER
+	EN	Add Server
+
+HELP
+	EN	Enter the IP address of the computer running SlimServer
+
