@@ -157,7 +157,10 @@ freefont:
 	mkdir -p ${PREFIX}/share/jive/fonts
 	cp freefont-debian/FreeSans.ttf ${PREFIX}/share/jive/fonts
 	cp freefont-debian/FreeSansBold.ttf ${PREFIX}/share/jive/fonts
-
+# fonts for clock screensaver
+	cp fonts-clock/04B_24__.TTF ${PREFIX}/share/jive/fonts
+	cp fonts-clock/Digital.ttf ${PREFIX}/share/jive/fonts
+	cp fonts-clock/DigitalItalic.ttf ${PREFIX}/share/jive/fonts
 
 #
 # clean
