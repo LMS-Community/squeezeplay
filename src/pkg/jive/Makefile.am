@@ -70,7 +70,8 @@ dist_jive_DATA = \
 	share/jive/Applet.lua \
 	share/jive/AppletManager.lua \
 	share/jive/AppletMeta.lua \
-	share/jive/Iconbar.lua
+	share/jive/Iconbar.lua \
+	share/jive/global_strings.txt
 
 jiveuidir = $(pkgdatadir)/jive/ui
 dist_jiveui_DATA = \
