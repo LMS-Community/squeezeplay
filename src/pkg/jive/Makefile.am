@@ -180,7 +180,8 @@ dist_applets_test_DATA = \
 	share/applets/Test/test.txt \
 	share/applets/Test/test.jpg \
 	share/applets/Test/test.png \
-	share/applets/Test/test.gif
+	share/applets/Test/test.gif \
+	share/applets/Test/strings.txt
 
 applets_screenshotdir = $(pkgdatadir)/applets/Screenshot
 dist_applets_screenshot_DATA = \
