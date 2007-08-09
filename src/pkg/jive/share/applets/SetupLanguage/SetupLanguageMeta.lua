@@ -48,7 +48,7 @@ function registerApplet(meta)
 	
 	-- add ourselves to the main menu
 	-- setupLanguage is the function that gets called from SetupLanguageApplet.lua when the menu item is selected
-	local remoteSettings = jiveMain:subMenu("Settings"):subMenu("Remote Settings")
+	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))
 	remoteSettings:addItem(appletManager:menuItem(meta:string("CHOOSE_LANGUAGE"), "SetupLanguage", "setupLanguage")
         )
 end

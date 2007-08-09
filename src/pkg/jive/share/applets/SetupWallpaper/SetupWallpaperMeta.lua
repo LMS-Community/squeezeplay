@@ -28,19 +28,19 @@ module(...)
 oo.class(_M, AppletMeta)
 
 
-function jiveVersion(self)
+function jiveVersion(meta)
 	return 0.1, 0.1
 end
 
 
-function defaultSettings(self)
+function defaultSettings(meta)
 	return { 
 		wallpaper = "Chapple_1.jpg",
 	}
 end
 
 
-function registerApplet(self)
+function registerApplet(meta)
 	-- load default wallpaper
 	local obj = appletManager:loadApplet("SetupWallpaper")
 	obj:_setBackground(nil) -- nil is default from settings
@@ -48,8 +48,8 @@ function registerApplet(self)
 
 
 	-- add a menu item for configuration
-	local remoteSettings = jiveMain:subMenu("Settings"):subMenu("Remote Settings")
-	remoteSettings:addItem(appletManager:menuItem(self:string('WALLPAPER'), "SetupWallpaper", "setup"))
+	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))
+	remoteSettings:addItem(appletManager:menuItem(meta:string('WALLPAPER'), "SetupWallpaper", "setup"))
 end
 
 

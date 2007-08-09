@@ -28,14 +28,14 @@ module(...)
 oo.class(_M, AppletMeta)
 
 
-function jiveVersion(self)
+function jiveVersion(meta)
 	return 0.1, 0.1
 end
 
 
-function registerApplet(self)
+function registerApplet(meta)
 	
-	jiveMain:addItem(appletManager:menuItem("Test", "Test", "menu"), 900)
+	jiveMain:addItem(appletManager:menuItem(meta:string("TEST"), "Test", "menu"), 900)
 end
 
 

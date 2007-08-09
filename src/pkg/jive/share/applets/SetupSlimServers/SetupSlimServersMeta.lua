@@ -28,29 +28,29 @@ module(...)
 oo.class(_M, AppletMeta)
 
 
-function jiveVersion(self)
+function jiveVersion(meta)
 	return 0.1, 0.1
 end
 
 
-function defaultSettings(self)
+function defaultSettings(meta)
 	return {
 		poll = { ["255.255.255.255"] = "255.255.255.255" }
 	}
 end
 
 
-function registerApplet(self)
+function registerApplet(meta)
 
 	-- set the poll list for discovery of slimservers based on our settings
 	appletManager:loadApplet("SlimDiscovery")
 	SlimServers = appletManager:getApplet("SlimDiscovery"):getSlimServers()
-	SlimServers:pollList(self:getSettings().poll)
+	SlimServers:pollList(meta:getSettings().poll)
 	
-	local remoteSettings = jiveMain:subMenu("Settings"):subMenu("Remote Settings")
-	local advancedSettings = remoteSettings:subMenu("Advanced Settings")
+	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))
+	local advancedSettings = remoteSettings:subMenu(meta:string("ADVANCED_SETTINGS"))
 
-	advancedSettings:addItem(appletManager:menuItem(self:string("SERVERS"), "SetupSlimServers", "menu"))
+	advancedSettings:addItem(appletManager:menuItem(meta:string("SERVERS"), "SetupSlimServers", "menu"))
 end
 
 

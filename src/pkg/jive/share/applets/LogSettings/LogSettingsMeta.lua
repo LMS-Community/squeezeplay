@@ -28,16 +28,16 @@ module(...)
 oo.class(_M, AppletMeta)
 
 
-function jiveVersion(self)
+function jiveVersion(meta)
 	return 0.1, 0.1
 end
 
 
-function registerApplet(self)
+function registerApplet(meta)
 	
 	-- add a menu to load us
-	jiveMain:subMenu("Settings"):subMenu("Remote Settings"):addItem(
-		appletManager:menuItem("Debug log", "LogSettings", "logSettings")
+	jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS")):addItem(
+		appletManager:menuItem(meta:string("DEBUG_LOG"), "LogSettings", "logSettings")
 	)
 end
 

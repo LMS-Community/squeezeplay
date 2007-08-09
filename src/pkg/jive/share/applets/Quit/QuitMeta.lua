@@ -28,15 +28,15 @@ module(...)
 oo.class(_M, AppletMeta)
 
 
-function jiveVersion(self)
+function jiveVersion(meta)
 	return 0.1, 0.1
 end
 
 
-function registerApplet(self)
+function registerApplet(meta)
 	
 	-- add ourselves to the main menu
-	jiveMain:addItem(appletManager:menuItem(self:string('QUIT'), "Quit", "openWindow"), 1000)
+	jiveMain:addItem(appletManager:menuItem(meta:string('QUIT'), "Quit", "openWindow"), 1000)
 end
 
 

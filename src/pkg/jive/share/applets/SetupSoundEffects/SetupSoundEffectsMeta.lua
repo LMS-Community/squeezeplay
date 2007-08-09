@@ -28,17 +28,17 @@ module(...)
 oo.class(_M, AppletMeta)
 
 
-function jiveVersion(self)
+function jiveVersion(meta)
 	return 0.1, 0.1
 end
 
 
-function registerApplet(self)
+function registerApplet(meta)
 	
 	-- add a menu to load us
-	local remoteSettings = jiveMain:subMenu("Settings"):subMenu("Remote Settings")
+	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))
 
-	remoteSettings:addItem(	appletManager:menuItem(self:string("SOUND_EFFECTS"), "SetupSoundEffects", "open")
+	remoteSettings:addItem(	appletManager:menuItem(meta:string("SOUND_EFFECTS"), "SetupSoundEffects", "open")
 	)
 end
 

@@ -69,18 +69,3 @@ CHOOSE_LANGUAGE_HELP
 	IT	Utilizzare la ghiera per scegliere la lingua. Premere il pulsante centrale per continuare.
 	NL	Gebruik het wiel om je taal te kiezen. Druk op de middelste knop om verder te gaan.
 
-WELCOME
-	DE	Willkommen!
-	EN	Welcome
-	ES	Bienvenido.
-	FR	Bienvenue!
-	IT	Benvenuti
-	NL	Welkom!
-
-SETTINGS
-	DE	Einstellungen
-	EN	Settings
-	ES	Configuración
-	FR	Paramètres
-	IT	Impostazioni
-	NL	Instellingen
