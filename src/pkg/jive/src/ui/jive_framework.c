@@ -263,8 +263,8 @@ static int jiveL_process_events(lua_State *L) {
 			int events = SDL_PeepEvents(eventList, 128, SDL_PEEKEVENT, SDL_ALLEVENTS);
 
 			if (events > 5) {
-				printf("event queue: %i\n", events);
 				int i;
+				printf("event queue: %i\n", events);
 				for (i = 0; i < events; i++) {
 					if (eventList[i].type == SDL_USEREVENT) {
 						switch (eventList[i].user.code) {
