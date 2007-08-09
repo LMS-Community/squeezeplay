@@ -125,6 +125,7 @@ local function _loadMeta(entry)
 	end
 
 	-- load applet resources
+	_loadGlobalStrings()
 	_loadLocaleStrings(entry)
 	_loadSettings(entry)
 	
@@ -182,7 +183,7 @@ local function _evalMeta(entry)
 
 	local class = require(entry.metaModule)
 	local obj = class()
-
+ 
 	-- check Applet version
 	local ver = tonumber(JIVE_VERSION)
 	local min, max = obj:jiveVersion()
@@ -203,7 +204,7 @@ local function _evalMeta(entry)
 	obj:registerApplet()
 
 	-- get rid of us
-	obj._stringsTable = nil
+--	obj._stringsTable = nil
 	obj = nil
 end
 
@@ -219,7 +220,7 @@ local function _pevalMeta(entry)
 	package.loaded[entry.metaModule] = nil
 	
 	-- remove strings eating up mucho valuable memory
-	entry.stringsTable = nil
+--	entry.stringsTable = nil
 	
 	if not ok then
 		entry.metaEvaluated = false
@@ -283,6 +284,7 @@ local function _loadApplet(entry)
 	end
 
 	-- load applet resources
+	_loadGlobalStrings()
 	_loadLocaleStrings(entry)
 	_loadSettings(entry)
 
@@ -478,11 +480,21 @@ function openWindow(self, appletName, method, ...)
 end
 
 
+-- _loadGlobalStrings
+function _loadGlobalStrings()
+	if locale.globalStrings then
+		return
+	end
+	log:warn("LOADING GLOBAL LOCALIZED STRINGS")
+	locale.globalStrings = locale:readGlobalStringsFile()
+end
+
 -- _loadLocaleStrings
 function _loadLocaleStrings(entry)
 	if entry.stringsTable then
 		return
 	end
+	log:warn("LOADING LOCALIZED STRINGS FOR ", entry.appletName)
 
 	log:debug("_loadLocaleStrings(", entry.appletName, ")")
 	entry.stringsTable = locale:readStringsFile(entry.stringsFilepath)

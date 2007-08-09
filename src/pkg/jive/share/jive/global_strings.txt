@@ -1,0 +1,39 @@
+﻿#
+# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
+# 
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+WELCOME
+	DE	Willkommen!
+	EN	Welcome
+	ES	Bienvenido.
+	FR	Bienvenue!
+	IT	Benvenuti
+	NL	Welkom!
+
+SETTINGS
+	DE	Einstellungen
+	EN	Settings
+	ES	Configuración
+	FR	Paramètres
+	IT	Impostazioni
+	NL	Instellingen
+
+REMOTE_SETTINGS 
+	DE	Fernbedienungseinstellungen
+	EN	Remote Settings
+	ES	Configuracion del mando
+	FR	Parametres de la telecommande
+	IT	Impostazioni telecomando
+	NL	Afstandsbedieningsinstellingen
+
+JIVE_HOME
+	EN	Jive Home
+
+ADVANCED_SETTINGS
+	EN	Advanced Settings
+
+DEBUG_LOG
+	EN	Debug log
+

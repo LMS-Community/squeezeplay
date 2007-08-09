@@ -21,7 +21,7 @@ readStringsFile(thisPath)
 local ipairs, pairs, assert, io, select, setmetatable, string = ipairs, pairs, assert, io, select, setmetatable, string
 
 local log              = require("jive.utils.log").logger("utils")
-
+local Framework        = require("jive.ui.Framework")
 
 module(...)
 
@@ -36,6 +36,8 @@ local allLocales = {}
 local loadedFiles = {}
 setmetatable(loadedFiles, { __mode = "v" })
 
+-- weak table containing global strings
+local globalStrings = {}
 
 --[[
 =head 2 setLocale(newLocale)
@@ -54,7 +56,8 @@ function setLocale(self, newLocale)
 
 	-- reload existing strings files
 	for k, v in pairs(loadedFiles) do
-		readStringsFile(self, k, v)
+		readGlobalStringsFile(self)
+		parseStringsFile(self, k, v)
 	end
 end
 
@@ -86,37 +89,52 @@ function getAllLocales(self)
 	return array
 end
 
-
 --[[
-=head2 readStringsFile(path)
+
+=head2 readStringsFile(self, fullPath, stringsTable)
 
 Parse strings.txt file and put all locale translations into a lua table
 that is returned. The strings are for the current locale.
 
 =cut
 --]]
+
+function readGlobalStringsFile(self)
+	local globalStringsPath = Framework:findFile("jive/global_strings.txt")
+	if globalStringsPath == nil then
+		return globalStrings
+	end
+	globalStrings = parseStringsFile(self, globalStringsPath, globalStrings)
+	setmetatable(globalStrings, { __index = self , mode = "_v" })
+	return globalStrings
+end
+
 function readStringsFile(self, fullPath, stringsTable)
 	log:debug("loading strings from ", fullPath)
+	--local defaults = getDefaultStrings(self)
 
 	stringsTable = stringsTable or {}
-	setmetatable(stringsTable, { __index = self })
+	loadedFiles[fullPath] = stringsTable
+	setmetatable(stringsTable, { __index = globalStrings })
+	stringsTable = parseStringsFile(self, fullPath, stringsTable)
 
+	return stringsTable
+end
+
+function parseStringsFile(self, myFilePath, stringsTable)
+	local stringsFile = io.open(myFilePath)
 	local myLocale = globalLocale
-
-	local stringsFile = io.open(fullPath)
 	if stringsFile == nil then
 		return stringsTable
 	end
-
-	loadedFiles[fullPath] = stringsTable
+	stringsTable = stringsTable or {}
 
 	-- meta table for strings
 	local strmt = {
 		__tostring = function(e)
 				     return e.str .. "{" .. myLocale .. "}"
-			     end
+			     end,
 	}
-
 	local thisString 
 	while true do
 		local line = stringsFile:read()
@@ -124,8 +142,8 @@ function readStringsFile(self, fullPath, stringsTable)
 			break
 		end
 
-		-- remove one or more control chars from the end of line (newline and any stray tabs)
-		line = string.gsub(line, '%c+$', '')
+		-- remove trailing spaces and/or control chars
+		line = string.gsub(line, "[%c ]+$", '')
 		-- lines that begin with an uppercase char are the strings to translate
 		if string.match(line, '^%u') then
 			thisString = line
@@ -154,11 +172,11 @@ function readStringsFile(self, fullPath, stringsTable)
 				str.str = translatedString
 				setmetatable(str, strmt)
 				stringsTable[thisString] = str
+				log:debug("translated string: |", thisString, "|", stringsTable[thisString].str, "|")
 			end
 		end
 	end
 	stringsFile:close()
-
 	return stringsTable
 end
 
