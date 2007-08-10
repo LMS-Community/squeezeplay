@@ -145,7 +145,7 @@ function JiveMain:__init()
 	jive.ui.Framework:init()
 
 	_loadGlobalStrings()
-	jiveMain = oo.rawnew(self, Menu(locale.globalStrings["JIVE_HOME"], "home.window"))
+	jiveMain = oo.rawnew(self, Menu(_globalStrings:str("JIVE_HOME"), "home.window"))
 	jiveMain.menu:setCloseable(false)
 
 	-- Singleton instances (globals)
@@ -156,7 +156,7 @@ function JiveMain:__init()
 --	profiler.start()
 
 	-- Top level menu
-	jiveMain:subMenu(locale.globalStrings["SETTINGS"], 900)
+	jiveMain:subMenu(_globalStrings:str("SETTINGS"), 900)
 
 	-- init our listeners
 	jiveMain.skins = {}
@@ -286,11 +286,7 @@ end
 
 -- _loadGlobalStrings
 function _loadGlobalStrings()
-        if locale.globalStrings then
-                return
-        end
-        log:warn("LOADING GLOBAL LOCALIZED STRINGS")
-        locale.globalStrings = locale:readGlobalStringsFile()
+	_globalStrings = locale:readGlobalStringsFile()
 end
 
 -----------------------------------------------------------------------------
