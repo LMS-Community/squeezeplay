@@ -16,8 +16,7 @@ distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
 EXPRESS OR IMPLIED, AND LOGITECH HEREBY DISCLAIMS ALL SUCH WARRANTIES, 
 INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY, FITNESS
 FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  Please see the License for
-the specific language governing rights and limitations under the License.
-
+the specific language governing rights and limitations under the License.  
 --]]
 
 --[[
@@ -49,6 +48,7 @@ local Iconbar       = require("jive.Iconbar")
 local autotable     = require("jive.utils.autotable")
 local AppletManager = require("jive.AppletManager")
 local perfs         = require("jive.utils.perfs")
+local locale        = require("jive.utils.locale")
 
 local jud = require("jive.utils.debug")
 
@@ -144,7 +144,8 @@ function JiveMain:__init()
 --	jive.ui.Framework:setScreenSize(240, 320, 16)
 	jive.ui.Framework:init()
 
-	jiveMain = oo.rawnew(self, Menu("Jive Home", "home.window"))
+	_loadGlobalStrings()
+	jiveMain = oo.rawnew(self, Menu(locale.globalStrings["JIVE_HOME"], "home.window"))
 	jiveMain.menu:setCloseable(false)
 
 	-- Singleton instances (globals)
@@ -155,7 +156,7 @@ function JiveMain:__init()
 --	profiler.start()
 
 	-- Top level menu
-	jiveMain:subMenu("Settings", 900)
+	jiveMain:subMenu(locale.globalStrings["SETTINGS"], 900)
 
 	-- init our listeners
 	jiveMain.skins = {}
@@ -282,6 +283,15 @@ function JiveMain:reloadSkin()
 	jive.ui.Framework:styleChanged()
 end
 
+
+-- _loadGlobalStrings
+function _loadGlobalStrings()
+        if locale.globalStrings then
+                return
+        end
+        log:warn("LOADING GLOBAL LOCALIZED STRINGS")
+        locale.globalStrings = locale:readGlobalStringsFile()
+end
 
 -----------------------------------------------------------------------------
 -- main()

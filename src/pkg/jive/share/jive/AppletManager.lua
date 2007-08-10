@@ -125,7 +125,6 @@ local function _loadMeta(entry)
 	end
 
 	-- load applet resources
-	_loadGlobalStrings()
 	_loadLocaleStrings(entry)
 	_loadSettings(entry)
 	
@@ -284,7 +283,6 @@ local function _loadApplet(entry)
 	end
 
 	-- load applet resources
-	_loadGlobalStrings()
 	_loadLocaleStrings(entry)
 	_loadSettings(entry)
 
@@ -479,15 +477,6 @@ function openWindow(self, appletName, method, ...)
 	end
 end
 
-
--- _loadGlobalStrings
-function _loadGlobalStrings()
-	if locale.globalStrings then
-		return
-	end
-	log:warn("LOADING GLOBAL LOCALIZED STRINGS")
-	locale.globalStrings = locale:readGlobalStringsFile()
-end
 
 -- _loadLocaleStrings
 function _loadLocaleStrings(entry)
