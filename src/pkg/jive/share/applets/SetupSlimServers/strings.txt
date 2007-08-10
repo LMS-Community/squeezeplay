@@ -4,21 +4,21 @@
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
-SERVERS
+SLIMSERVER_SERVERS
 	EN	Slimservers	
 
-AUTO_MODE
+SLIMSERVER_AUTO_MODE
 	EN	Using Auto Discovery
 
-DELETE
+SLIMSERVER_DELETE
 	EN	Delete
 
-EDIT
+SLIMSERVER_EDIT
 	EN	Edit
 
-ADD_SERVER
+SLIMSERVER_ADD_SERVER
 	EN	Add Server
 
-HELP
+SLIMSERVER_HELP
 	EN	Enter the IP address of the computer running SlimServer
 

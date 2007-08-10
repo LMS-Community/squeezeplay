@@ -57,7 +57,7 @@ function menu(self, menuItem)
 
 	if poll["255.255.255.255"] then
 		items[#items + 1] = {
-			text = self:string("AUTO_MODE"), 
+			text = self:string("SLIMSERVER_AUTO_MODE"), 
 		}
 	end
 
@@ -69,7 +69,7 @@ function menu(self, menuItem)
 					local subwindow = Window("window", k)
 					local submenu = SimpleMenu("menu", {
 						{
-							text = self:string("DELETE"),
+							text = self:string("SLIMSERVER_DELETE"),
 							callback = function(event, menuItem)
 										   self:_del(k)
 										   subwindow:hide()
@@ -77,7 +77,7 @@ function menu(self, menuItem)
 									   end,
 						},
 						{
-							text = self:string("EDIT"),
+							text = self:string("SLIMSERVER_EDIT"),
 							callback = function(event, menuItem)
 										   self:_ipInput(menuItem, function (addr) self:_add(addr) end, k):show()
 										   self:_del(k)
@@ -94,7 +94,7 @@ function menu(self, menuItem)
 	end
 
 	items[#items + 1] = {
-		text = self:string("ADD_SERVER"), 
+		text = self:string("SLIMSERVER_ADD_SERVER"), 
 		callback = function(event, menuItem)
 					   self:_ipInput(menuItem, function (addr) self:_add(addr) end):show()
 					   window:hide()
@@ -200,7 +200,7 @@ function _ipInput(self, menuItem, callback, init)
 					return true
 				end)
 
-	local help = Textarea("help", self:string("HELP"))
+	local help = Textarea("help", self:string("SLIMSERVER_HELP"))
 
 	window:addWidget(help)
 	window:addWidget(input)
@@ -210,7 +210,7 @@ end
 
 
 function displayName(self)
-	return self:string("SERVERS")
+	return self:string("SLIMSERVER_SERVERS")
 end
 
 

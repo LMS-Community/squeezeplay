@@ -506,7 +506,7 @@ local function _mainMenuSink(step, chunk, err)
 			-- we want to add an exit item (at the bottom)
 			table.insert(results["item_loop"], 
 				{
-					text = _string('EXIT'),
+					text = _string('SLIMBROWSER_EXIT'),
 					_go = function()
 						if _browsePath then
 							-- FIXME: This is really closing the plugin...
@@ -521,7 +521,7 @@ local function _mainMenuSink(step, chunk, err)
 			table.insert(results["item_loop"], 
 				1,
 				{
-					text = _string("NOW_PLAYING"),
+					text = _string("SLIMBROWSER_NOW_PLAYING"),
 					_go = _goNowPlaying
 				}
 			)
@@ -1039,7 +1039,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 			end
 		)
 
-		local help = Textarea("help", _string("SEARCH_HELP"))
+		local help = Textarea("help", _string("SLIMBROWSER_SEARCH_HELP"))
 
 		window:addWidget(help)
 		window:addWidget(input)
@@ -1164,7 +1164,7 @@ function openPlayer (self, menuItem, player)
 		nil,
 		nil,
 		_newWindowSpec(nil, {
-			text = _string("NOW_PLAYING"),
+			text = _string("SLIMBROWSER_NOW_PLAYING"),
 			window = { ["menuStyle"] = "album", },
 		}),
 		_statusSink

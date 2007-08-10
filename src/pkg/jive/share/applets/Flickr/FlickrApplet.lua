@@ -71,9 +71,9 @@ function openScreensaver(self, menuItem)
 
 	local label
 	if ok then
-		label = Label("label", self:string("FLICKR_LOADING_PHOTO"))
+		label = Label("label", self:string("SCREENSAVER_FLICKR_LOADING_PHOTO"))
 	else
-		label = Label("label", self:string("FLICKR_ERROR") .. err)
+		label = Label("label", self:string("SCREENSAVER_FLICKR_ERROR") .. err)
 	end
 	
 	self.window = self:_window(label)
@@ -151,19 +151,19 @@ function timeoutSetting(self, menuItem)
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
-				text = self:string("DELAY_10_SEC"),
+				text = self:string("SCREENSAVER_FLICKR_DELAY_10_SEC"),
 				icon = RadioButton("radio", group, function() self:setTimeout(10000) end, timeout == 10000),
 			},
 			{ 
-				text = self:string("DELAY_20_SEC"),
+				text = self:string("SCREENSAVER_FLICKR_DELAY_20_SEC"),
 				icon = RadioButton("radio", group, function() self:setTimeout(20000) end, timeout == 20000),
 			},
 			{ 
-				text = self:string("DELAY_30_SEC"),
+				text = self:string("SCREENSAVER_FLICKR_DELAY_30_SEC"),
 				icon = RadioButton("radio", group, function() self:setTimeout(30000) end, timeout == 30000),
 			},
 			{
-				text = self:string("DELAY_1_MIN"),
+				text = self:string("SCREENSAVER_FLICKR_DELAY_1_MIN"),
 				icon = RadioButton("radio", group, function() self:setTimeout(60000) end, timeout == 60000),
 			},
 		}))
