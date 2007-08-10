@@ -19,10 +19,6 @@ function defaultSettings(self)
 	return {
 		clocktype = "analog:simple",
 		digital_italic = true,
-		hours = "24",
-		weekstart = "Sunday",
-		dateformat = "%a, %B %d %Y",
-
 		digitalsimple_preset = "White",
 		digitalstyled_preset = "White"
 	}

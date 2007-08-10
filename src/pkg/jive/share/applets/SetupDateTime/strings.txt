@@ -1,0 +1,41 @@
+﻿# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
+# 
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+DATETIME_TITLE
+	EN	Date/Time
+	DE	Datum/Zeit
+
+DATETIME_TIMEZONE
+	EN	Time Zone
+	DE	Zeit Zone
+
+DATETIME_TIMEFORMAT
+	EN	Time Format
+	DE	Zeit Format
+
+DATETIME_TIMEFORMAT_12H
+	EN	12 hours
+	DE	12 Stunden
+
+DATETIME_TIMEFORMAT_24H
+	EN	24 hours
+	DE	24 Stunden
+
+DATETIME_DATEFORMAT
+	EN	Date Format
+	DE	Datums Format
+
+DATETIME_WEEKSTART
+	EN	Week Start
+	DE	Wochenstart
+
+DATETIME_MONDAY
+	EN	Monday
+	DE	Montag
+
+DATETIME_SUNDAY
+	EN	Sunday
+	DE	Sonntag
+

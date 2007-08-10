@@ -119,6 +119,7 @@ dist_luaslim_DATA = \
 
 luautildir = $(pkgdatadir)/jive/utils
 dist_luautil_DATA = \
+	share/jive/utils/datetime.lua \
 	share/jive/utils/debug.lua \
 	share/jive/utils/locale.lua \
 	share/jive/utils/log.lua \
@@ -187,6 +188,12 @@ applets_screenshotdir = $(pkgdatadir)/applets/Screenshot
 dist_applets_screenshot_DATA = \
 	share/applets/Screenshot/ScreenshotApplet.lua \
 	share/applets/Screenshot/ScreenshotMeta.lua
+
+applets_setupdatetimedir = $(pkgdatadir)/applets/SetupDateTime
+dist_applets_setupdatetime_DATA = \
+	share/applets/SetupDateTime/SetupDateTimeApplet.lua \
+	share/applets/SetupDateTime/SetupDateTimeMeta.lua \
+	share/applets/SetupDateTime/strings.txt
 
 applets_setupsoundeffectsdir = $(pkgdatadir)/applets/SetupSoundEffects
 dist_applets_setupsoundeffects_DATA = \

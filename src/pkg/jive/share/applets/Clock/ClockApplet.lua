@@ -21,6 +21,7 @@ local Surface          = require("jive.ui.Surface")
 local Window           = require("jive.ui.Window")
                        
 local log              = require("jive.utils.log").logger("applets.screensavers")
+local datetime         = require("jive.utils.datetime")
 
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
 local EVENT_WINDOW_RESIZE = jive.ui.EVENT_WINDOW_RESIZE
@@ -32,6 +33,8 @@ local LAYER_CONTENT    = jive.ui.LAYER_CONTENT
 local LAYER_ALL	       = jive.ui.JIVE_LAYER_ALL
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
 local KEY_BACK         = jive.ui.KEY_BACK
+
+local appletManager	= appletManager
 
 module(...)
 oo.class(_M, Applet)
@@ -113,12 +116,6 @@ local DigitalDetailed_Presets = {
 	}
 }
 
-local DateFormats = {
-	"%a, %B %d %Y",
-	"%a, %d. %B %Y",
-	"%D"
-}
-
 function openSettings(self, menuItem)
 	local window = Window(self:displayName(), menuItem.text)
 
@@ -142,13 +139,6 @@ function openSettings(self, menuItem)
 						end
 				},
 				{
-					text = self:string("SCREENSAVER_CLOCK_DATETIMEFORMAT"),
-					callback = function(event, menuItem)
-							self:timeFormatSetting(menuItem):show()
-							return EVENT_CONSUME
-						end
-				},
-				{
 					text = self:string("SCREENSAVER_CLOCK_FONTSTYLE"),
 					icon = Choice("choice", { "Plain", "Italic" },
 						function(obj, selectedIndex) 
@@ -166,56 +156,6 @@ function openSettings(self, menuItem)
 		end
 	)
         
-	return window
-end
-
-function timeFormatSetting(self, menuItem)
-	local window = Window(self:displayName(), menuItem.text)
-
-	local curHours = ""
-	if self:getSettings()["hours"] == 12 then
-		curHours = 1
-	else
-		curHours = 2
-	end
-
-	local curWeekStart
-	if self:getSettings()["weekstart"] == "Monday" then
-		curWeekStart = 2
-	else
-		curWeekStart = 1
-	end
-
-	window:addWidget(SimpleMenu("menu",
-		{
-			{	
-				text = self:string("SCREENSAVER_CLOCK_AMPM24"),
-				icon = Choice("choice", { "AM/PM", "24h" },
-					function(obj, selectedIndex)
-						self:setHours(selectedIndex)
-					end,
-					curHours
-				)
-			},
-			{
-				text = self:string("SCREENSAVER_CLOCK_DATEFORMAT"),
-				callback = function(event, menuItem)
-						self:dateFormatSetting(menuItem):show()
-						return EVENT_CONSUME
-					end
-			},
-			{
-				text = self:string("SCREENSAVER_CLOCK_WEEKSTART"),
-				icon = Choice("choice", { self:string("SCREENSAVER_CLOCK_SUNDAY"), self:string("SCREENSAVER_CLOCK_MONDAY") },
-					function(event, menuItem)
-						self:setWeekStart(selectedIndex)
-					end,
-					curWeekStart
-				)
-			},
-		}
-	))
-
 	return window
 end
 
@@ -262,64 +202,8 @@ function clockTypeSetting(self, menuItem)
 	return window
 end
 
-function dateFormatSetting(self, menuItem)
-	local window = Window(self:displayName(), menuItem.text)
-	local group = RadioGroup()
-
-	local current = self:getSettings()["dateformat"]
-	log:info(current)
-
-	window:addWidget(SimpleMenu("menu",
-		{
-			{
-				text = os.date(DateFormats[1]),
-				icon = RadioButton("radio", group, function(event, menuItem)
-						self:setDateFormat(DateFormats[1])
-					end,
-				current == DateFormats[1])
-			},
-			{
-				text = os.date(DateFormats[2]),
-				icon = RadioButton("radio", group, function(event, menuItem)
-						self:setDateFormat(DateFormats[2])
-					end,
-				current == DateFormats[2])
-			},
-			{
-				text = os.date(DateFormats[3]),
-				icon = RadioButton("radio", group, function(event, menuItem)
-						self:setDateFormat(DateFormats[3])
-					end,
-				current == DateFormats[3])
-			}
-		}
-	))
-
-	return window
-end
-
-function setDateFormat(self, format)
-	self:getSettings()["dateformat"] = format
-end
-
 function setClockType(self, type)
 	self:getSettings()["clocktype"] = type
-end
-
-function setWeekStart(self, index)
-	if index == 1 then
-		self:getSettings()["weekstart"] = "Sunday"
-	else 
-		self:getSettings()["weekstart"] = "Monday"
-	end
-end
-
-function setHours(self, index)
-	if index == 1 then
-		self:getSettings()["hours"] = "12"
-	else 
-		self:getSettings()["hours"] = "24"
-	end
 end
 
 function setFontStyle(self, index)
@@ -346,7 +230,7 @@ function Clock:__init(window)
 	obj.screen_height = h
 
 	-- Default Date Format
-	obj.date_format = DateFormats[1]
+	obj.date_format = "%a, %B %d %Y"
 
 	obj:_createSurface()
 
@@ -846,11 +730,16 @@ end
 function openScreensaver(self, menuItem)
 	local window = Window("Clock")
 
+	-- Own Settings
 	local type       = self:getSettings()["clocktype"]
 	local italic     = self:getSettings()["digital_italic"]
-	local hours      = self:getSettings()["hours"]
-	local dateformat = self:getSettings()["dateformat"] 
-	local weekstart  = self:getSettings()["weekstart"]
+	
+	-- Global Date/Time Settings
+	local dt = datetime
+
+	local hours      = dt:getHours() 
+	local dateformat = dt:getDateFormat()
+	local weekstart  = dt:getWeekstart()
 
 	local preset = self:getPreset(type)
 
