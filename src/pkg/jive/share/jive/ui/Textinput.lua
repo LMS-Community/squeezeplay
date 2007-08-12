@@ -187,7 +187,7 @@ function _eventHandler(self, event)
 	local type = event:getType()
 
 	if type == EVENT_SCROLL then
-		_scroll(self, -event:getScroll())
+		_scroll(self, event:getScroll())
 		return EVENT_CONSUME
 
 	elseif type == EVENT_WINDOW_RESIZE then
