@@ -136,7 +136,7 @@ applets_bouncedir = $(pkgdatadir)/applets/Bounce
 dist_applets_bounce_DATA = \
 	share/applets/Bounce/BounceApplet.lua \
 	share/applets/Bounce/BounceMeta.lua \
-	share/applets/Bounce/strings.txt
+	share/applets/Bounce/strings.txt \
 	share/applets/Bounce/squeezebox.png
 
 applets_quitdir = $(pkgdatadir)/applets/Quit
