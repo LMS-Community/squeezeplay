@@ -132,7 +132,7 @@ function parseStringsFile(self, myFilePath, stringsTable)
 	-- meta table for strings
 	local strmt = {
 		__tostring = function(e)
-				     return e.str .. "{" .. myLocale .. "}"
+				     return e.str -- .. "{" .. myLocale .. "}"
 			     end,
 	}
 	local thisString 
