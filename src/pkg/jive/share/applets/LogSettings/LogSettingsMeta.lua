@@ -37,7 +37,7 @@ function registerApplet(meta)
 	
 	-- add a menu to load us
 	jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS")):addItem(
-		appletManager:menuItem(meta:string("DEBUG_LOG"), "LogSettings", "logSettings")
+		meta:menuItem("DEBUG_LOG", function(applet, ...) applet:logSettings(...) end)
 	)
 end
 

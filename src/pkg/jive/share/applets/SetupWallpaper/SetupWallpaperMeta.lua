@@ -46,10 +46,9 @@ function registerApplet(meta)
 	obj:_setBackground(nil) -- nil is default from settings
 	appletManager:freeApplet("SetupWallpaper")
 
-
 	-- add a menu item for configuration
 	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))
-	remoteSettings:addItem(appletManager:menuItem(meta:string('WALLPAPER'), "SetupWallpaper", "setup"))
+	remoteSettings:addItem(meta:menuItem('WALLPAPER', function(applet, ...) applet:settingsShow(...) end))
 end
 
 

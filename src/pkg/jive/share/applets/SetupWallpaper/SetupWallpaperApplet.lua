@@ -57,12 +57,43 @@ local wallpapers = {
 local backgroundLicense = "The background images are under a Creative Commons Attribution license. See http://creativecommons.org/licenses/by/3.0/.\n\nThe Credits\n Chapple\n Scott Robinson\n Los Cardinalos\n Orin Optiglot\n"
 
 
+function setupShow(self, setupNext)
+	local window = Window("window", self:string('WALLPAPER'))
+	local menu = SimpleMenu("menu")
+	window:addWidget(menu)
 
--- wallpaperSettings
--- The meta hooks this function to allow the user to select
--- a wallpaper
-function setup(self, menuItem)
-	local window = Window("window", menuItem.text)
+	local wallpaper = self:getSettings()["wallpaper"]
+
+	local selectedIndex = 1	
+	for name, file in table.pairsByKeys(wallpapers) do
+		menu:addItem({
+				     text = name, 
+				     callback = function()
+							self:_setBackground(file)
+							setupNext()
+						end
+			     })
+		if wallpaper == file then
+			selectedIndex = menu:numItems()
+		end
+	end
+	menu:addItem(self:_licenseMenuItem())
+	menu:setSelectedIndex(selectedIndex)
+
+	-- Store the applet settings when the window is closed
+	window:addListener(EVENT_WINDOW_POP,
+		function()
+			self:storeSettings()
+		end
+	)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+function settingsShow(self)
+	local window = Window("window", self:string('WALLPAPER'))
 	local menu = SimpleMenu("menu")
 	window:addWidget(menu)
 
@@ -83,14 +114,7 @@ function setup(self, menuItem)
 			     })
 	end
 
-	menu:addItem({
-			     text = "License",
-			     callback = function()
-						local window = Window("window", "License")
-						window:addWidget(Textarea("textarea", backgroundLicense))
-						window:show()
-					end
-		     })
+	menu:addItem(self:_licenseMenuItem())
 
 	-- Store the applet settings when the window is closed
 	window:addListener(EVENT_WINDOW_POP,
@@ -99,7 +123,20 @@ function setup(self, menuItem)
 		end
 	)
 
+	self:tieAndShowWindow(window)
 	return window
+end
+
+
+function _licenseMenuItem(self)
+	return {
+		text = "License",
+		callback = function()
+			local window = Window("window", "License")
+			window:addWidget(Textarea("textarea", backgroundLicense))
+			self:tieAndShowWindow(window)
+		end
+	}
 end
 
 

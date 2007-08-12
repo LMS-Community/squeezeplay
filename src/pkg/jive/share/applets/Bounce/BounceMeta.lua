@@ -39,10 +39,6 @@ function registerApplet(self)
 	-- Bounce implements a screensaver
 	local ssMgr = appletManager:loadApplet("ScreenSavers")
 	if ssMgr ~= nil then
-		-- Bounce uses its own log category
-		-- defined here so that it can be changed using LogSettingsApplet before the applet is run.
-		jul.addCategory("screensaver.bounce", jul.DEBUG)
-
 		ssMgr:addScreenSaver(self:string('SCREENSAVER_BOUNCE'), "Bounce", "bounce")
 
 		-- load our skin

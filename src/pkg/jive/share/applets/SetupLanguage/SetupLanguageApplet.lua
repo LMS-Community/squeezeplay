@@ -46,12 +46,48 @@ module(...)
 oo.class(_M, Applet)
 
 
-function setupLanguage(self, menuItem)
+function setupShow(self, setupNext)
 	local currentLocale = locale:getLocale()
 	log:info("locale currently is ", currentLocale)
 
 	-- setup menu
-	local window = Window("window", menuItem.text)
+	local window = Window("window", self:string("CHOOSE_LANGUAGE"))
+	local menu = SimpleMenu("menu")
+
+	local selectedIndex = 1
+	for _, locale in ipairs(locale:getAllLocales()) do 
+		menu:addItem({
+		        text = self:string("LANGUAGE_" .. locale),
+			callback = function() self:setLang(locale) setupNext() end, 
+		})
+
+		if locale == currentLocale then
+			selectedIndex = menu:numItems()
+		end
+	end
+	menu:setSelectedIndex(selectedIndex)
+
+	window:addWidget(Textarea("help", self:string("CHOOSE_LANGUAGE_HELP")))
+	window:addWidget(menu)
+
+	-- Store the selected language when the menu is exited
+        window:addListener(EVENT_WINDOW_POP,
+                function()
+                        self:storeSettings()
+                end
+        )
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+function settingsShow(self, menuItem)
+	local currentLocale = locale:getLocale()
+	log:info("locale currently is ", currentLocale)
+
+	-- setup menu
+	local window = Window("window", self:string("CHOOSE_LANGUAGE"))
 	local menu = SimpleMenu("menu")
 
 	local group = RadioGroup()
@@ -68,7 +104,6 @@ function setupLanguage(self, menuItem)
 		})
 	end
 
-	window:addWidget(Textarea("help", self:string("CHOOSE_LANGUAGE_HELP")))
 	window:addWidget(menu)
 
 	-- Store the selected language when the menu is exited
@@ -77,6 +112,8 @@ function setupLanguage(self, menuItem)
                         self:storeSettings()
                 end
         )
+
+	self:tieAndShowWindow(window)
 	return window
 end
 

@@ -29,7 +29,6 @@ function registerApplet(self)
 	-- Bounce implements a screensaver
 	local ssMgr = appletManager:loadApplet("ScreenSavers")
 	if ssMgr ~= nil then
-                jul.addCategory("screensaver.clock", jul.DEBUG)
 		ssMgr:addScreenSaver(
 			self:string("SCREENSAVER_CLOCK"), 
 			"Clock", 

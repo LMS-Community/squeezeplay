@@ -118,45 +118,46 @@ function menu(self, menuItem)
 			},
 			{ text = "Menu",
 				callback = function(event, menuItem)
-					self:menuWindow(menuItem):show()
+					self:menuWindow(menuItem)
 				end },
 			{ text = "Text UTF8",
 				callback = function(event, menuItem)
-					self:textWindow(menuItem, "applets/Test/test.txt"):show()
+					self:textWindow(menuItem, "applets/Test/test.txt")
 				end },
 			{ text = "Slider",
 				callback = function(event, menuItem)
-					self:sliderWindow(menuItem):show()
+					self:sliderWindow(menuItem)
 				end },
 			{ text = "Text input",
 				callback = function(event, menuItem)
-					self:textinputWindow(menuItem):show()
+					self:textinputWindow(menuItem)
 				end },
 			{ text = "Hex input",
 				callback = function(event, menuItem)
-					self:hexinputWindow(menuItem):show()
+					self:hexinputWindow(menuItem)
 				end },
 			{ text = "Popup",
 				callback = function(event, menuItem)
-					self:popupWindow(menuItem):show()
+					self:popupWindow(menuItem)
 				end },
 			{ text = "Image JPG",
 				callback = function(event, menuItem)
-					self:imageWindow(menuItem, "applets/Test/test.jpg"):show()
+					self:imageWindow(menuItem, "applets/Test/test.jpg")
 				end },
 			{ text = "Image PNG",
 				callback = function(event, menuItem)
-					self:imageWindow(menuItem, "applets/Test/test.png"):show()
+					self:imageWindow(menuItem, "applets/Test/test.png")
 				end },
 			{ text = "Image GIF",
 				callback = function(event, menuItem)
-					self:imageWindow(menuItem, "applets/Test/test.gif"):show()
+					self:imageWindow(menuItem, "applets/Test/test.gif")
 				end },
 		})
 
 	local window = Window("window", menuItem.text)
 	window:addWidget(menu)
 
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -173,6 +174,7 @@ function menuWindow(self, menuItem)
 
 	menu:setItems(items)
 
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -196,6 +198,7 @@ function textWindow(self, menuItem, filename)
 
 	window:addWidget(textarea)
 
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -214,6 +217,7 @@ function sliderWindow(self, menuItem)
 	window:addWidget(help)
 	window:addWidget(slider)
 
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -238,6 +242,7 @@ function textinputWindow(self, menuItem)
 	window:addWidget(help)
 	window:addWidget(input)
 
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -298,6 +303,7 @@ function hexinputWindow(self, menuItem)
 	window:addWidget(help)
 	window:addWidget(input)
 
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -309,6 +315,7 @@ function popupWindow(self, menuItem)
 	local text = Textarea("textarea", "This is a popup window.\n\nPressing any button should close this window.")
 	popup:addWidget(text)
 
+	self:tieAndShowWindow(popup)
 	return popup
 end
 
@@ -347,6 +354,7 @@ function imageWindow(self, menuItem, filename)
 		end
 	)
 
+	self:tieAndShowWindow(window)
 	return window
 end
 

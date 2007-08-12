@@ -60,9 +60,8 @@ function registerApplet(meta)
 
         -- Menu for configuration
         jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS")):addItem(
-		appletManager:menuItem(meta:string("DATETIME_TITLE"), "SetupDateTime", "setupDateTime")
-        )
-
+		meta:menuItem("DATETIME_TITLE", function(applet, ...) applet:settingsShow(...) end)
+	)
 end
 
 

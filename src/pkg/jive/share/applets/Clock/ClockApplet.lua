@@ -134,7 +134,7 @@ function openSettings(self, menuItem)
 				{
 					text = self:string("SCREENSAVER_CLOCK_TYPE"), 
 					callback = function(event, menuItem)
-							self:clockTypeSetting(menuItem):show()
+							self:clockTypeSetting(menuItem)
 							return EVENT_CONSUME
 						end
 				},
@@ -155,7 +155,8 @@ function openSettings(self, menuItem)
 			self:storeSettings()
 		end
 	)
-        
+
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -198,7 +199,7 @@ function clockTypeSetting(self, menuItem)
 		}
 	))
 	
-
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -789,6 +790,7 @@ function openScreensaver(self, menuItem)
 		end
 	)
 
+	self:tieAndShowWindow(window)
 	return window
 end
 

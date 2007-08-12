@@ -35,7 +35,7 @@ end
 
 function registerApplet(self)
 	-- splash screen
-	appletManager:openWindow("DefaultSkin", "splash")
+	appletManager:loadApplet("DefaultSkin"):splashShow()
 
 	-- load ourselves indirectly through jiveMain
 	jiveMain:loadSkin("DefaultSkin", "skin")

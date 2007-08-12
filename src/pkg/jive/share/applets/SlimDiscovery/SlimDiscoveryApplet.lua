@@ -74,7 +74,13 @@ function notify_playerNew(self, player)
 	-- add the player to the main menu if it is not there already
 	if not player:getHomeMenuItem() then
 
-		local menuItem = appletManager:menuItem(player:getName(), "SlimBrowser", "openPlayer", player)
+		local menuItem = {
+			text = player:getName(),
+			callback = function(_, menuItem)
+					appletManager:loadApplet("SlimBrowser"):openPlayer(menuItem, player)
+				   end
+		}
+
 
 		jiveMain:addItem(menuItem, 100)
 

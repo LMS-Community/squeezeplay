@@ -48,10 +48,6 @@ function registerApplet(self)
 	local ssMgr = appletManager:loadApplet("ScreenSavers")
 
 	if ssMgr ~= nil then
-		-- Flickr uses its own log category
-		-- defined here so that it can be changed using LogSettingsApplet before the applet is run.		
-		jul.addCategory("screensaver.flickr", jul.DEBUG)
-
 		ssMgr:addScreenSaver(self:string("SCREENSAVER_FLICKR"), "Flickr", "openScreensaver", self:string("SCREENSAVER_FLICKR_SETTINGS"), "openSettings")
 
 		-- load our skin

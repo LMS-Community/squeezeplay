@@ -152,6 +152,7 @@ function bounce(self)
 		window:addWidget(sprit.icon)
 	end
 
+	self:tieAndShowWindow(window)
 	return window
 end
 

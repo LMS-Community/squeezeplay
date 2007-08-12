@@ -1,10 +1,8 @@
-<?xml version="1.0" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>jive.ui.SimpleMenu - A simple menu widget.</title>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<link rev="made" href="mailto:root@localhost" />
+<link rev="made" href="mailto:root@b48.apple.com" />
 </head>
 
 <body style="background-color: white">
@@ -98,7 +96,7 @@ end</pre>
 <p>Item comparator to sort items alphabetically.</p>
 <p>--]]
 function itemComparatorAlpha(a, b)
-	return a.text &lt; b.text
+	return <code>tostring(a.text)</code> &lt; <code>tostring(b.text)</code>
 end</p>
 <p>--[[</p>
 <p>
@@ -111,7 +109,7 @@ function itemComparatorWeightAlpha(a, b)
 	local w = a.weight - b.weight</p>
 <pre>
         if w == 0 then
-                return a.text &lt; b.text
+                return tostring(a.text) &lt; tostring(b.text)
         end
         return (w &lt; 0)
 end</pre>

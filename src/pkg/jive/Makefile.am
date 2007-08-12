@@ -226,6 +226,11 @@ dist_applets_clock_DATA = \
 	share/applets/Clock/ClockFace.png \
 	share/applets/Clock/clock_watch_bkgrd_ruby.png
 
+applets_setupwelcomedir = $(pkgdatadir)/applets/SetupWelcome
+dist_applets_setupwelcome_DATA = \
+	share/applets/SetupWelcome/SetupWelcomeApplet.lua \
+	share/applets/SetupWelcome/SetupWelcomeMeta.lua \
+	share/applets/SetupWelcome/strings.txt
 
 # Wallpaper
 applets_setupwallpaperdir = $(pkgdatadir)/applets/SetupWallpaper

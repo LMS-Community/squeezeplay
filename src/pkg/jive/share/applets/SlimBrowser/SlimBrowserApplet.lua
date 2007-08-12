@@ -1201,7 +1201,8 @@ function openPlayer (self, menuItem, player)
 		)
 	)
 	
-	return _browsePath.window, EVENT_CONSUME
+	self:tieAndShowWindow(_browsePath.window)
+	return _browsePath.window
 end
 
 

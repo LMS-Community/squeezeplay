@@ -78,6 +78,7 @@ function openScreensaver(self, menuItem)
 	
 	self.window = self:_window(label)
 
+	self:tieAndShowWindow(self.window)
 	return self.window
 end
 
@@ -89,19 +90,20 @@ function openSettings(self, menuItem)
 				{
 					text = "Display", 
 					callback = function(event, menuItem)
-							   self:displaySetting(menuItem):show()
+							   self:displaySetting(menuItem)
 							   return EVENT_CONSUME
 						   end
 				},
 				{
 					text = "Speed", 
 					callback = function(event, menuItem)
-							   self:timeoutSetting(menuItem):show()
+							   self:timeoutSetting(menuItem)
 							   return EVENT_CONSUME
 						   end
 				},
 			}))
 
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -138,6 +140,7 @@ function displaySetting(self, menuItem)
 			},
 		}))
 
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -168,6 +171,7 @@ function timeoutSetting(self, menuItem)
 			},
 		}))
 
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -275,6 +279,7 @@ function _window(self, ...)
 				   self.window:addWidget(icon)
 			   end)
 
+	self:tieWindow(window)
 	return window
 end
 

@@ -38,8 +38,7 @@ function registerApplet(meta)
 	-- add a menu to load us
 	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))
 
-	remoteSettings:addItem(	appletManager:menuItem(meta:string("SOUND_EFFECTS"), "SetupSoundEffects", "open")
-	)
+	remoteSettings:addItem(meta:menuItem("SOUND_EFFECTS", function(applet, ...) applet:settingsShow(...) end))
 end
 
 

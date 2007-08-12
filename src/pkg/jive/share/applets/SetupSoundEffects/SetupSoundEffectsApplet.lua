@@ -42,7 +42,7 @@ oo.class(_M, Applet)
 -- logSettings
 -- returns a window with Choices to set the level of each log category
 -- the log category are discovered
-function open(self, menuItem)
+function settingsShow(self, menuItem)
 
 	local window = Window("window", menuItem.text)
 	local menu = SimpleMenu("menu")
@@ -113,6 +113,7 @@ function open(self, menuItem)
 
 	window:addWidget(menu)
 
+	self:tieAndShowWindow(window)
 	return window
 end
 

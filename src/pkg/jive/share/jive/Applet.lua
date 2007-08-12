@@ -17,9 +17,11 @@ settings and memory management.
 --]]
 
 
-local oo = require("loop.base")
+local oo               = require("loop.base")
 
-local AppletManager = require("jive.AppletManager")
+local AppletManager    = require("jive.AppletManager")
+
+local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
 
 
 module(..., oo.class)
@@ -27,7 +29,7 @@ module(..., oo.class)
 
 --[[
 
-=head2 jive.Applet:init()
+=head2 self:init()
 
 Called to initialize the Applet.
 
@@ -42,7 +44,7 @@ end
 
 --[[
 
-=head2 jive.Applet:free()
+=head2 self:free()
 
 This is called when the Applet will be freed. It must make sure all
 data is unreferenced to allow for garbage collection. The method
@@ -54,6 +56,45 @@ true.
 --]]
 function free(self)
 	return true
+end
+
+
+--[[
+
+=head2 self:tieWindow(window)
+
+Tie the I<window> to this applet. When all tied windows are poped 
+from the window stack then this applet is freed.
+
+=cut
+--]]
+function tieWindow(self, window)
+	self._tie = self._tie or {}
+	self._tie[window] = true
+
+	window:addListener(EVENT_WINDOW_POP,
+		function()
+			self._tie[window] = nil
+			if #self._tie == 0 then
+				AppletManager:_freeApplet(self._entry)
+			end
+		end)
+end
+
+
+--[[
+
+=head2 self:tieWindow(window, ...)
+
+Tie the I<window> to this applet, and then show the I<window>. When all 
+tied windows are poped from the window stack then this applet is freed.
+The varargs are passed to the windows show() method.
+
+=cut
+--]]
+function tieAndShowWindow(self, window, ...)
+	self:tieWindow(window)
+	window:show(...)
 end
 
 

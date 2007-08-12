@@ -76,11 +76,13 @@ end
 
 
 -- splash screen
-function splash(self)
+function splashShow(self)
 
 	local splashImage = Surface:loadImage(imgpath .. "splash_squeezebox_jive.png")
 	local splashWindow = Window("splash")
 	splashWindow:addWidget(Icon("splash", splashImage))
+
+	self:tieWindow(splashWindow)
 	splashWindow:showBriefly(5000, nil,
 				 splashWindow.transitionNone,
 				 splashWindow.transitionNone)

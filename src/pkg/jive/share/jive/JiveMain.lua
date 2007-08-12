@@ -150,7 +150,7 @@ function JiveMain:__init()
 
 	-- Singleton instances (globals)
 	jnt = NetworkThread()
-	appletManager = AppletManager({jnt = jnt})
+	appletManager = AppletManager(jnt)
 	iconbar = Iconbar()
 
 --	profiler.start()

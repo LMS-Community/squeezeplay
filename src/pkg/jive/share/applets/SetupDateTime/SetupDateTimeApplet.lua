@@ -48,7 +48,7 @@ local KEY_PLAY         = jive.ui.KEY_PLAY
 module(...)
 oo.class(_M, Applet)
 
-function setupDateTime(self, menuItem)
+function settingsShow(self, menuItem)
 	local window = Window("window", menuItem.text)
 
 	local curHours = ""
@@ -70,26 +70,26 @@ function setupDateTime(self, menuItem)
 			{
 				text = self:string("DATETIME_TIMEZONE"),
 				callback = function(obj, selectedIndex)
-						self:timezoneSetting(menuItem):show()
+						self:timezoneSetting(menuItem)
 					end
 			},
 			{	
 				text = self:string("DATETIME_TIMEFORMAT"),
 				callback = function(obj, selectedIndex)
-						self:timeSetting(menuItem):show()
+						self:timeSetting(menuItem)
 					end
 			},
 			{
 				text = self:string("DATETIME_DATEFORMAT"),
 				callback = function(event, menuItem)
-						self:dateFormatSetting(menuItem):show()
+						self:dateFormatSetting(menuItem)
 						return EVENT_CONSUME
 					end
 			},
 			{
 				text = self:string("DATETIME_WEEKSTART"),
 				callback = function(event, menuItem)
-						self:weekstartSetting(menuItem):show()
+						self:weekstartSetting(menuItem)
 					end
 			},
 		}
@@ -102,8 +102,8 @@ function setupDateTime(self, menuItem)
 		end
 	)
 
+	self:tieAndShowWindow(window)
 	return window
-
 end
 
 function timezoneSetting(self, menuItem)
@@ -126,6 +126,7 @@ function timezoneSetting(self, menuItem)
 
 	window:addWidget(menu)
 
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -154,6 +155,7 @@ function timeSetting(self, menuItem)
 
 	window:addWidget(menu)
 
+	self:tieAndShowWindow(window)
 	return window;
 end
 
@@ -177,6 +179,7 @@ function dateFormatSetting(self, menuItem)
 
 	window:addWidget(menu)
 
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -205,6 +208,7 @@ function weekstartSetting(self, menuItem)
 
 	window:addWidget(menu)
 
+	self:tieAndShowWindow(window)
 	return window;
 end
 

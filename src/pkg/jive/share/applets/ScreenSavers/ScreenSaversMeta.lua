@@ -37,7 +37,6 @@ function defaultSettings(self)
 	return {
 		whenStopped = "None",
 		whenPlaying = "None",
-		whenDocked = "None",
 		timeout = 60000,
 	}
 end
@@ -50,7 +49,7 @@ function registerApplet(self)
 	
 	-- Menu for configuration
 	jiveMain:subMenu(self:string("SETTINGS")):subMenu(self:string("REMOTE_SETTINGS")):addItem(
-		appletManager:menuItem(self:string('SCREENSAVERS'), "ScreenSavers", "openSettings")
+		self:menuItem("SCREENSAVERS", function(applet, ...) applet:openSettings(...) end)
 	)
 end
 

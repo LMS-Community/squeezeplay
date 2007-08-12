@@ -47,7 +47,7 @@ oo.class(_M, Applet)
 
 
 -- main setting menu
-function menu(self, menuItem)
+function settingsShow(self, menuItem)
 
 	self.SlimServers = appletManager:getApplet("SlimDiscovery"):getSlimServers()
 	
@@ -105,6 +105,7 @@ function menu(self, menuItem)
 	
 	window:addWidget(menu)
 
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -206,11 +207,6 @@ function _ipInput(self, menuItem, callback, init)
 	window:addWidget(input)
 
 	return window
-end
-
-
-function displayName(self)
-	return self:string("SLIMSERVER_SERVERS")
 end
 
 

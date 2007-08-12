@@ -28,8 +28,6 @@ local oo               = require("loop.simple")
 local io               = require("io")
 local lfs              = require("lfs")
                        
-local Label            = require("jive.ui.Label")
-                       
 local log              = require("jive.utils.log").logger("applets.misc")
 local locale           = require("jive.utils.locale")
 local serialize        = require("jive.utils.serialize")
@@ -40,8 +38,6 @@ local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
 
-local jnt              = jnt
-
 
 module(..., oo.class)
 
@@ -51,6 +47,14 @@ local _appletsDb = {}
 
 
 local _sentinel = function () end
+
+local jnt = nil
+
+
+function __init(self, thejnt)
+	jnt = thejnt
+	return oo.rawnew(self, {})
+end
 
 
 -- _saveApplet
@@ -194,6 +198,7 @@ local function _evalMeta(entry)
 		entry.settings = obj:defaultSettings()
 	end
 
+	obj._entry = entry
 	obj._settings = entry.settings
 	obj._stringsTable = entry.stringsTable
 
@@ -205,6 +210,8 @@ local function _evalMeta(entry)
 	-- get rid of us
 --	obj._stringsTable = nil
 	obj = nil
+
+	return true
 end
 
 
@@ -423,67 +430,11 @@ function getApplet(self, appletName)
 end
 
 
--- menuItem
--- creates a menuItem for an applet
-function menuItem(self, menuName, appletName, method, ...)
-	log:debug("AppletManager:menuItem(", menuName, ", ", appletName, ")")
-
-	local args = {...}
-
-	local menuItem = {
-		text = menuName,
-		callback = function(event, menuItem)
-				   local window, r = self:openWindow(appletName, method, menuItem, unpack(args))
-				   return r
-			   end
-	}
-
-	return menuItem
-end
-
-
--- openWindow
--- opens a window for the applet
-function openWindow(self, appletName, method, ...)
-	local window, r
-
-	local status, err = pcall(
-		function(...)
-			local applet = self:loadApplet(appletName)
-
-			if applet then
-				window, r = applet[method](applet, ...)
-				log:debug("WINDOW=", window, " R=", r)
-
-				if window then
-					window:addListener(EVENT_WINDOW_POP,
-						function() 
-							self:freeApplet(appletName) 
-						end
-					)
-					window:show()
-				end
-			end
-		end,
-		...)
-
-	if status == true then
-		return window, r or EVENT_CONSUME
-	else
-		-- FIXME create error dialog
-		log:error("Cannot open applet window: ", err)
-		self:freeApplet(appletName)
-		return nil, EVENT_UNUSED
-	end
-end
-
-
 -- _loadLocaleStrings
 function _loadLocaleStrings(entry)
 	if entry.stringsTable then
 		return
 	end
-	log:warn("LOADING LOCALIZED STRINGS FOR ", entry.appletName)
 
 	log:debug("_loadLocaleStrings(", entry.appletName, ")")
 	entry.stringsTable = locale:readStringsFile(entry.stringsFilepath)
@@ -534,8 +485,6 @@ end
 -- frees the applet and all resources used. returns true if the
 -- applet could be freed
 function freeApplet(self, appletName)
-	log:debug("AppletManager:freeApplet(", appletName, ")")
-
 	local entry = _appletsDb[appletName]
 	
 	-- exists?
@@ -543,6 +492,13 @@ function freeApplet(self, appletName)
 		log:error("Unknown applet: ", appletName)
 		return
 	end
+
+	_freeApplet(self, entry)
+end
+
+
+function _freeApplet(self, entry)
+	log:warn("AppletManager:_freeApplet(", entry.appletName, ")")
 
 	if entry.appletEvaluated then
 
@@ -570,8 +526,7 @@ function freeApplet(self, appletName)
 
 	-- run the garbage collector later, some garbage may be in scope
 	-- on the stack
-	-- FIXME should check the garbage collector in lua is thread safe
-	self.jnt:perform(
+	jnt:perform(
 		function()
 			log:debug("calling collectgarbage()")
 			collectgarbage()

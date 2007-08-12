@@ -86,6 +86,7 @@ function logSettings(self, menuItem)
 
 	window:addWidget(menu)
 
+	self:tieAndShowWindow(window)
 	return window
 end
 

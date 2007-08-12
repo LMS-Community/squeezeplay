@@ -1,10 +1,8 @@
-<?xml version="1.0" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>jive.slim.SlimServers - Slimservers.</title>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<link rev="made" href="mailto:root@localhost" />
+<link rev="made" href="mailto:root@b48.apple.com" />
 </head>
 
 <body style="background-color: white">
@@ -22,6 +20,7 @@
 		<li><a href="#jive_slim_slimservers_jnt_">jive.slim.SlimServers(jnt)</a></li>
 		<li><a href="#jive_slim_slimservers_discover__">jive.slim.SlimServers:discover()</a></li>
 		<li><a href="#jive_slim_slimservers_servers__">jive.slim.SlimServers:servers()</a></li>
+		<li><a href="#jive_slim_slimservers_polllist__">jive.slim.SlimServers:pollList()</a></li>
 	</ul>
 
 	<li><a href="#license">LICENSE</a></li>
@@ -47,6 +46,9 @@ by the SlimDiscovery applet to discover and cache servers found on the network.<
 <pre>
  -- discover servers (to call regularly)
  servers:discover()</pre>
+<pre>
+ -- set addresses to poll (bcast address in this case)
+ servers:pollList( { [&quot;255.255.255.255&quot;] = &quot;255.255.255.255&quot; } )</pre>
 <p>
 </p>
 <hr />
@@ -59,13 +61,17 @@ by the SlimDiscovery applet to discover and cache servers found on the network.<
 </p>
 <h2><a name="jive_slim_slimservers_discover__">jive.slim.SlimServers:discover()</a></h2>
 <p>Sends the necessary broadcast message to discover slimservers on the network.
-Called repeatedly by SlimDiscovery applet while in home.
-
-</p>
+Called repeatedly by SlimDiscovery applet while in home.</p>
 <p>
 </p>
 <h2><a name="jive_slim_slimservers_servers__">jive.slim.SlimServers:servers()</a></h2>
-<p>Returns an iterator over the discovered slimservers.
+<p>Returns an iterator over the discovered slimservers.</p>
+<p>
+</p>
+<h2><a name="jive_slim_slimservers_polllist__">jive.slim.SlimServers:pollList()</a></h2>
+<p>Get/set the list of addresses which are polled with discovery packets.
+List is a table with IP address strings as both key and value.
+The broadcast address is represented as : { [``255.255.255.255''] = ``255.255.255.255'' }
 
 </p>
 <p>

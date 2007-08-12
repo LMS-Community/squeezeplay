@@ -105,7 +105,7 @@ function _activate(self, the_screensaver)
 
 	if the_screensaver == nil then
 		-- TODO discover the play mode
-		the_screensaver = self:getSettings()["whenDocked"]
+		the_screensaver = self:getSettings()["whenStopped"]
 	end
 
 	local screensaver = self.screensavers[the_screensaver]
@@ -116,7 +116,8 @@ function _activate(self, the_screensaver)
 
 	-- activate the screensaver
 	self.timer:stop()
-	self.active = appletManager:openWindow(screensaver.applet, screensaver.method)
+	local instance = appletManager:loadApplet(screensaver.applet)
+	self.active = instance[screensaver.method](instance)
 end
 
 
@@ -181,6 +182,7 @@ function screensaverSetting(self, menuItem, mode)
 	window:addWidget(Textarea("help", "Press Center to select screensaver or PLAY to preview"))
 	window:addWidget(menu)
 
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -219,6 +221,7 @@ function timeoutSetting(self, menuItem)
 			},
 		}))
 
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -230,19 +233,19 @@ function openSettings(self, menuItem)
 			{ 
 				text = self:string('SCREENSAVER_PLAYING'),
 				callback = function(event, menu_item)
-						   self:screensaverSetting(menu_item, "whenPlaying"):show()
+						   self:screensaverSetting(menu_item, "whenPlaying")
 					   end
 			},
 			{
 				text = self:string("SCREENSAVER_STOPPED"),
 				callback = function(event, menu_item)
-						   self:screensaverSetting(menu_item, "whenStopped"):show()
+						   self:screensaverSetting(menu_item, "whenStopped")
 					   end
 			},
 			{
 				text = self:string("SCREENSAVER_DELAY"),
 				callback = function(event, menu_item)
-						   self:timeoutSetting(menu_item):show()
+						   self:timeoutSetting(menu_item)
 					   end
 			},
 		})
@@ -253,11 +256,8 @@ function openSettings(self, menuItem)
 				     text = setting_name,
 				     callback =
 					     function(event, menuItem)
-						     appletManager:openWindow(
-									      screensaver.applet, 
-									      screensaver.settings, 
-									      menuItem
-								      ):show()
+							local instance = appletManager:loadApplet(screensaver.applet)
+							instance[screensaver.settings](instance, menuItem)
 					     end
 			     })
 	end
@@ -272,6 +272,7 @@ function openSettings(self, menuItem)
 		end
 	)
 
+	self:tieAndShowWindow(window)
 	return window
 end
 

@@ -96,7 +96,7 @@ sdl-gfx: SDL_gfx-2.0.15/Makefile
 # lua
 #####
 
-.PHONY: lua-all tolua++ luasocket slnunicode luajson loop lualogging luaexpat luafilesystem luaprofiler
+.PHONY: lua-all tolua++ luasocket slnunicode luajson loop lualogging luaexpat luafilesystem luaprofiler luazipfilter
 
 lua-all: lua tolua++ luasocket slnunicode luajson loop lualogging luaexpat luafilesystem luaprofiler
 
@@ -117,6 +117,12 @@ luajson/Makefile:
 
 luajson: luajson/Makefile
 	cd luajson; make && cp .libs/json.so ${PREFIX}/lib/lua/5.1/json.so
+
+luazipfilter/Makefile:
+	cd luazipfilter; ./configure --prefix=${PREFIX}
+
+luazipfilter: luazipfilter/Makefile
+	cd luazipfilter; make && cp .libs/zipfilter.so ${PREFIX}/lib/lua/5.1/zipfiler.so
 
 loop:
 	-mkdir ${PREFIX}/share/lua/5.1/loop
