@@ -141,7 +141,6 @@ dist_applets_bounce_DATA = \
 
 applets_quitdir = $(pkgdatadir)/applets/Quit
 dist_applets_quit_DATA = \
-	share/applets/Quit/QuitApplet.lua \
 	share/applets/Quit/QuitMeta.lua \
 	share/applets/Quit/strings.txt
 

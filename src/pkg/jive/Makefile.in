@@ -410,11 +410,11 @@ applets_bouncedir = $(pkgdatadir)/applets/Bounce
 dist_applets_bounce_DATA = \
 	share/applets/Bounce/BounceApplet.lua \
 	share/applets/Bounce/BounceMeta.lua \
-	share/applets/Bounce/strings.txt
+	share/applets/Bounce/strings.txt \
+	share/applets/Bounce/squeezebox.png
 
 applets_quitdir = $(pkgdatadir)/applets/Quit
 dist_applets_quit_DATA = \
-	share/applets/Quit/QuitApplet.lua \
 	share/applets/Quit/QuitMeta.lua \
 	share/applets/Quit/strings.txt
 
@@ -1759,7 +1759,6 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_applets_bounceDATA \
 
 .pkg.c:
 	$(TOLUA) $(TOLUAFLAGS) $(AM_TOLUAFLAGS) -n jive -o $@ $^
-	share/applets/Bounce/squeezebox.png
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
