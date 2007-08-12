@@ -124,8 +124,6 @@ Sets the text in the Textarea to I<text>.
 =cut
 --]]
 function setText(self, text)
-	assert(type(text) == "string")
-
 	self.text = text
 	self:rePrepare()
 end
