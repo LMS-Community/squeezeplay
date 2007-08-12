@@ -538,6 +538,20 @@ function skin(self, s)
 	s.locked.albumcurrent.icon.frameRate = 5
 	s.locked.albumcurrent.icon.frameWidth = 10
 
+	-- Popup window for current song info
+	s.currentsong.x = 0
+	s.currentsong.y = screenHeight - 96
+	s.currentsong.w = screenWidth
+	s.currentsong.h = 96
+	s.currentsong.bgImg = helpBox
+	s.currentsong.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
+	s.currentsong.icon.padding = { 14, -60, 4, 4 }
+	s.currentsong.text.w = screenWidth
+	s.currentsong.text.h = 72
+	s.currentsong.text.padding = { 74, 12, 4, 4 }
+	s.currentsong.text.font = Font:load(fontpath .. "FreeSans.ttf", 16)
+	s.currentsong.text.fg = { 0xff, 0xff, 0xff }
+	s.currentsong.text.textAlign = "left"
 
 
 

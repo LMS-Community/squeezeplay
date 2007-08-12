@@ -288,7 +288,7 @@ function onStage(self, sink)
 	)
 
 	-- create window to display current song info
-	self.currentSong.window = Popup("popupIcon")
+	self.currentSong.window = Popup("currentsong")
 	self.currentSong.artIcon = Icon("icon")
 	self.currentSong.text = Textarea("text")
 	self.currentSong.window:addWidget(self.currentSong.artIcon)
@@ -301,7 +301,7 @@ function onStage(self, sink)
 			end
 			return EVENT_CONSUME
 		end)
-
+	self.currentSong.window.brieflyHandler = 1
 end
 
 
@@ -376,12 +376,12 @@ function feedStatusSink(self)
 end
 
 
-function _largeArtworkUri (iconId)
-	return '/music/' .. iconId .. '/cover_200x200_f_000000.jpg'
+function artworkThumbUri (iconId)
+	return '/music/' .. iconId .. '/cover_50x50_f_000000.jpg'
 end
 
 
-function _showCurrentSong(self, stateIcon, iconId, text)
+function _showCurrentSong(self, text, iconId)
 	log:debug("Player:showCurrentSong()")
 
 	local s = self.currentSong
@@ -390,15 +390,13 @@ function _showCurrentSong(self, stateIcon, iconId, text)
 		s.window:removeWidget(s.artIcon)
 		s.artIcon = Icon("icon")
 		s.window:addWidget(s.artIcon)
-		self.slimServer:fetchArtworkThumb(iconId, s.artIcon, _largeArtworkUri, 'L', true)
-	end
-
-	if stateIcon then
-		text = text .. "\nICON " .. stateIcon
+		if iconId ~= 0 then
+			self.slimServer:fetchArtworkThumb(iconId, s.artIcon, artworkThumbUri, nil, true)
+		end
 	end
 
 	s.text:setText(text)
-	
+
 	s.window:showBriefly(3000)
 end
 
@@ -409,17 +407,16 @@ function _process_displaystatus(self, data)
 	log:debug("Player:_process_displaystatus()")
 
 	if data.result.display then
-		local icon   = data.result.display.icon
-		local iconId = data.result.display["icon-id"]
-		local text   = table.concat(data.result.display.text, "\n")
-		
-		if iconId then
+		local display = data.result.display
+		local type    = display["type"] or 'text'
+
+		if type == 'song' then
 			-- new song display from server
-			self:_showCurrentSong(icon, iconId, text)
+			self:_showCurrentSong(table.concat(display["text"], "\n"), display["icon-id"])
 		else
 			-- other message from server
 			local popup = Popup("popup")
-			popup:addWidget(Textarea("textarea", text))
+			popup:addWidget(Textarea("textarea", table.concat(display["text"], "\n")))
 			popup:showBriefly(2000)
 		end
 	end
