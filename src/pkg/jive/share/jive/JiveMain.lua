@@ -64,8 +64,13 @@ require("jive.ui.Framework")
 local Menu = oo.class()
 local JiveMain = oo.class({}, Menu)
 
+
+-- strings
+local _globalStrings
+
 -----------------------------------------------------------------------------
 -- Menu
+-- This class abstracts some window/menu functions for the main menu
 -----------------------------------------------------------------------------
 
 -- create a new menu
@@ -93,8 +98,8 @@ function Menu:subMenu(name, weight)
 		local item = {
 			text = name,
 			callback = function()
-					   menu.window:show()
-				   end,
+				menu.window:show()
+			end,
 		}
 
 		self:addItem(item, weight)
@@ -107,7 +112,9 @@ end
 -- add an item to a menu. the menu is ordered by weight, then item name
 function Menu:addItem(item, weight)
 
-	item.weight = weight or 5
+	if not item.weight then 
+		item.weight = weight or 5
+	end
 
 	self.menu:addItem(item)
 end
@@ -122,8 +129,10 @@ end
 -- JiveMain
 -----------------------------------------------------------------------------
 
+
+-- _callListeners
+-- we have customers for background work
 local function _callListeners()
-	-- we have customers for background work
 	for i,v in ipairs(jiveMain.listeners) do
 		if type(v) == 'function' then
 			v()
@@ -141,17 +150,20 @@ function JiveMain:__init()
 	math.randomseed(os.time())
 
 	-- Initialise UI
---	jive.ui.Framework:setScreenSize(240, 320, 16)
 	jive.ui.Framework:init()
-
-	_loadGlobalStrings()
-	jiveMain = oo.rawnew(self, Menu(_globalStrings:str("JIVE_HOME"), "home.window"))
-	jiveMain.menu:setCloseable(false)
 
 	-- Singleton instances (globals)
 	jnt = NetworkThread()
 	appletManager = AppletManager(jnt)
 	iconbar = Iconbar()
+	
+	-- Singleton instances (locals)
+	_globalStrings = locale:readGlobalStringsFile()
+
+	-- create our object (a subclass of Menu)
+	jiveMain = oo.rawnew(self, Menu(_globalStrings:str("JIVE_HOME"), "home.window"))
+	jiveMain.menu:setCloseable(false)
+
 
 --	profiler.start()
 
@@ -163,7 +175,8 @@ function JiveMain:__init()
 	jiveMain.listeners = {}
 	jiveMain.timer = false
 
-	-- listen to ACTIVATE and INACTIVE events
+	-- our window listens to ACTIVATE and INACTIVE events
+	-- to implement inHomeListener functionality
 	jiveMain.window:addListener(
 		jive.ui.EVENT_WINDOW_ACTIVE, 
 		function(event) 
@@ -185,12 +198,14 @@ function JiveMain:__init()
 		end
 	)
 
+	-- global listener: resize window (only desktop versions)
 	jive.ui.Framework:addListener(jive.ui.EVENT_WINDOW_RESIZE,
 				      function(event)
 					      jiveMain:reloadSkin()
 					      return jive.ui.EVENT_UNUSED
 				      end)
 
+	-- global listener: home key
 	jive.ui.Framework:addListener(jive.ui.EVENT_KEY_PRESS | jive.ui.EVENT_KEY_HOLD,
 				      function(event)
 					      if event:getKeycode() == jive.ui.KEY_HOME then
@@ -207,10 +222,10 @@ function JiveMain:__init()
 	-- show our window!
 	jiveMain.window:show()
 	
-	-- manage applets
+	-- load style and applets
 	jiveMain:reload()
 
-	-- jive event loop
+	-- event loop
 	jive.ui.Framework:processEvents()
 
 	jnt:stop()
@@ -247,6 +262,8 @@ function JiveMain:addInHomeListener(closure)
 end
 
 
+-- reload
+-- 
 function JiveMain:reload()
 	log:debug("JiveMain:reload()")
 
@@ -255,10 +272,13 @@ function JiveMain:reload()
 
 	-- manage applets
 	appletManager:discover()
+	
 	jive.ui.Framework:styleChanged()
 end
 
 
+-- loadSkin
+-- 
 function JiveMain:loadSkin(appletName, method)
 	log:debug("JiveMain:loadSkin(", appletName, ")")
 	
@@ -271,6 +291,8 @@ function JiveMain:loadSkin(appletName, method)
 end
 
 
+-- reloadSkin
+-- 
 function JiveMain:reloadSkin()
 	-- reset the skin
 	jive.ui.style = autotable.new()
@@ -284,16 +306,11 @@ function JiveMain:reloadSkin()
 end
 
 
--- _loadGlobalStrings
-function _loadGlobalStrings()
-	_globalStrings = locale:readGlobalStringsFile()
-end
-
 -----------------------------------------------------------------------------
 -- main()
 -----------------------------------------------------------------------------
 
-
+-- we create an object
 JiveMain()
 
 

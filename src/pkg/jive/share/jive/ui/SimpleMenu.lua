@@ -112,12 +112,13 @@ end
 local function _itemListener(menu, menuItem, list, index, event)
 	local item = list[index]
 	if event:getType() == EVENT_ACTION and item.callback then
-		local r = item.callback(event, item)
-		if r == nil then
-			return EVENT_CONSUME
-		else
-			return r
-		end
+--		local r = item.callback(event, item)
+--		if r == nil then
+--			return EVENT_CONSUME
+--		else
+--			return r
+--		end
+		return item.callback(event, item) or EVENT_CONSUME
 	end
 
 	return EVENT_UNUSED
@@ -158,7 +159,7 @@ end
 
 =head2 jive.ui.Menu.itemComparatorAlpha
 
-Item comparator to sort items alphabetically.
+Item comparator to sort items alphabetically (i.e. using item.text).
 
 --]]
 function itemComparatorAlpha(a, b)
@@ -251,8 +252,16 @@ end
 
 =head2 jive.ui.Menu:addItem(item)
 
-Add I<item> to the end of the menu. The item is a table with the following entries: text, icon (optional), callback (optional).
+Add I<item> to the end of the menu. 
 
+I<item> is a table with the following keys: 
+- text, 
+- icon (optional), 
+- weight (optional), see jive.ui.Menu.itemComparatorWeightAlpha,
+- callback (optional), a function performing whatever the menu is supposed to do, having prototype:
+   function(event, item) returning nil/jive.ui.EVENT_CONSUME/QUIT/UNUSED
+
+For convenience, EVENT_CONSUME is assumed if the function returns nothing
 =cut
 --]]
 function addItem(self, item)
@@ -274,7 +283,7 @@ end
 
 =head2 jive.ui.Menu:insertItem(item, index)
 
-Insert I<item> into the menu at I<index>. The item can be any type of widget. The item is a table with the following entries: text, icon (optional), callback (optional).
+Insert I<item> into the menu at I<index>. See addItem for the definition of I<item>.
 
 =cut
 --]]

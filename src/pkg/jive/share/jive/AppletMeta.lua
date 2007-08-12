@@ -96,8 +96,8 @@ function menuItem(self, label, closure)
 		text = self:string(label),
 		callback = function(event, menuItem)
 				local applet = appletManager:loadApplet(self._entry.appletName)
-				closure(applet, menuItem)
-			   end
+				return closure(applet, menuItem)
+		end
 	}
 end
 

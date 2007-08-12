@@ -161,21 +161,21 @@ local categories = {
 	["applets.screensavers"]     = jiveLogger(logging.WARN),
 	["applets.misc"]             = jiveLogger(logging.WARN),
 
-	["jive.main"]       = jiveLogger(logging.WARN),
+	["jive.main"]                = jiveLogger(logging.WARN),
 
-	["slimserver"]       = jiveLogger(logging.WARN),
-	["slimserver.cache"] = jiveLogger(logging.WARN),
-	["player"]           = jiveLogger(logging.WARN),
-	["player.browse.volume"] = jiveLogger(logging.WARN),
+	["slimserver"]               = jiveLogger(logging.WARN),
+	["slimserver.cache"]         = jiveLogger(logging.WARN),
+	["player"]                   = jiveLogger(logging.WARN),
+--	["player.browse.volume"]     = jiveLogger(logging.WARN),
                          
-	["net.cli"]          = jiveLogger(logging.WARN),
-	["net.thread"]       = jiveLogger(logging.WARN),
-	["net.socket"]       = jiveLogger(logging.WARN),
-	["net.http"]         = jiveLogger(logging.WARN),
-	
-	["ui"]               = jiveLogger(logging.WARN),
-
-	["utils"]            = jiveLogger(logging.WARN),
+	["net.cli"]                  = jiveLogger(logging.WARN),
+	["net.thread"]               = jiveLogger(logging.WARN),
+	["net.socket"]               = jiveLogger(logging.WARN),
+	["net.http"]                 = jiveLogger(logging.WARN),
+	                             
+	["ui"]                       = jiveLogger(logging.WARN),
+                                 
+	["utils"]                    = jiveLogger(logging.WARN),
 }
 
 --[[

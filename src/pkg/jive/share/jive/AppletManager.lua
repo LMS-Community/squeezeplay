@@ -42,15 +42,21 @@ local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
 module(..., oo.class)
 
 
--- all the found applets, indexed by applet name
+-- all the known (found) applets, indexed by applet name
 local _appletsDb = {}
 
+-- the jnt
+-- note we cannot have a local jnt = jnt above because at the time AppletManager is loaded
+-- the global jnt value is nil!
+local jnt
 
+-- loop detection
 local _sentinel = function () end
 
-local jnt = nil
 
-
+-- _init
+-- creates an AppletManager object
+-- this just for the side effect of assigning our jnt local
 function __init(self, thejnt)
 	jnt = thejnt
 	return oo.rawnew(self, {})
@@ -431,6 +437,7 @@ end
 
 
 -- _loadLocaleStrings
+--
 function _loadLocaleStrings(entry)
 	if entry.stringsTable then
 		return
@@ -441,6 +448,8 @@ function _loadLocaleStrings(entry)
 end
 
 
+-- _loadSettings
+--
 function _loadSettings(entry)
 	if entry.settings then
 		-- already loaded
@@ -471,6 +480,8 @@ function _loadSettings(entry)
 end
 
 
+-- _storeSettings
+--
 function _storeSettings(entry)
 	assert(entry)
 
@@ -482,6 +493,7 @@ function _storeSettings(entry)
 end
 
 
+-- freeApplet
 -- frees the applet and all resources used. returns true if the
 -- applet could be freed
 function freeApplet(self, appletName)
@@ -489,7 +501,7 @@ function freeApplet(self, appletName)
 	
 	-- exists?
 	if not entry then
-		log:error("Unknown applet: ", appletName)
+		log:error("Cannot free unknown applet: ", appletName)
 		return
 	end
 
@@ -497,6 +509,8 @@ function freeApplet(self, appletName)
 end
 
 
+-- _freeApplet
+--
 function _freeApplet(self, entry)
 	log:warn("AppletManager:_freeApplet(", entry.appletName, ")")
 
@@ -511,9 +525,10 @@ function _freeApplet(self, entry)
 		)
 
 		-- swallow any error
-		-- the only way for continue to be false is to have the loaded applet have a free funtion
-		-- that successfully executes and returns false.
+		
 		if not continue then
+			-- the only way for continue to be false is to have the loaded applet have a free funtion
+			-- that successfully executes and returns false.
 			return
 		end
 	end

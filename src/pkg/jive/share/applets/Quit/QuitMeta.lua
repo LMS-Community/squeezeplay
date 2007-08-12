@@ -23,19 +23,28 @@ local AppletMeta    = require("jive.AppletMeta")
 local appletManager = appletManager
 local jiveMain      = jiveMain
 
+local EVENT_CONSUME = jive.ui.EVENT_CONSUME
+local EVENT_QUIT    = jive.ui.EVENT_QUIT
+
 
 module(...)
 oo.class(_M, AppletMeta)
 
 
-function jiveVersion(meta)
+function jiveVersion(self)
 	return 0.1, 0.1
 end
 
 
-function registerApplet(meta)
+function registerApplet(self)
 	-- add ourselves to the end of the main menu
-	jiveMain:addItem(meta:menuItem("QUIT", function(applet, ...) applet:openWindow() end), 1000)
+	jiveMain:addItem({
+		text = self:string("QUIT"),
+		callback = function() 
+			return (EVENT_CONSUME | EVENT_QUIT)
+		end,
+		weight = 1000,
+	})
 end
 
 
