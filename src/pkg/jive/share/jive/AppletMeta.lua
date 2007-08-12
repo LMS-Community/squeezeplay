@@ -86,7 +86,7 @@ end
 =head2 self:menuItem(label, closure)
 
 Convience method that returns a MenuItem to be used in the SimpleMenu
-to open an applet. I<label> is a localized string token, and closure
+to open an applet. I<label> is a string token, and I<closure>
 is the function executed when the MenuItem is selected. 
 
 =cut

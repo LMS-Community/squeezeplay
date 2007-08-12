@@ -30,10 +30,13 @@ REMOTE_SETTINGS
 
 JIVE_HOME
 	EN	Jive Home
+	FR	La maison de Jive
 
 ADVANCED_SETTINGS
 	EN	Advanced Settings
+	FR	Paramètres avancés
 
 DEBUG_LOG
 	EN	Debug log
+	FR	Messages de déverminage
 
