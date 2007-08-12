@@ -48,7 +48,6 @@ local DB               = require("applets.SlimBrowser.DB")
 local debug = require("jive.utils.debug")
 
 local log              = require("jive.utils.log").logger("player.browse")
-local logv             = require("jive.utils.log").logger("player.browse.volume")
 local logd             = require("jive.utils.log").logger("player.browse.data")
 
 local EVENT_KEY_ALL    = jive.ui.EVENT_KEY_ALL
@@ -170,7 +169,7 @@ end
 -- manages the volume pop up window
 local function _openVolumePopup(vol)
 
-	logv:debug("_openVolumePopup START ------------------- (", vol, ")")
+--	log:debug("_openVolumePopup START ------------------- (", vol, ")")
 
 	local popup = Popup("popup")
 
@@ -189,7 +188,7 @@ local function _openVolumePopup(vol)
 	-- timer to change volume
 	local timer = Timer(200,
 		function()
-			logv:debug("_openVolumePopup - timer ", timer)
+--			log:debug("_openVolumePopup - timer ", timer)
 
 			if vol > 0 or vol < 0 then
 				slider:setValue(_player:volume(rate))
@@ -216,12 +215,12 @@ local function _openVolumePopup(vol)
 			-- we're only interested in volume keys
 			if evtCode == KEY_VOLUME_UP then
 				if vol == -1 then cnt = 0 end
-				logv:debug("************* VOL +1")
+--				log:debug("************* VOL +1")
 				vol = 1
 				
 			elseif evtCode == KEY_VOLUME_DOWN then
 				if vol == 1 then cnt = 0 end
-				logv:debug("************* VOL -1")
+--				log:debug("************* VOL -1")
 				vol = -1
 				
 			else
@@ -236,11 +235,11 @@ local function _openVolumePopup(vol)
 			local evtType = event:getType()
 			if evtType == EVENT_KEY_UP then
 				-- stop volume timer
-				logv:debug("stop timer (listener) ", timer)
+--				log:debug("stop timer (listener) ", timer)
 				timer:stop()
 			elseif evtType == EVENT_KEY_DOWN then
 				-- start volume timer
-				logv:debug("start timer (listener) ", timer)
+--				log:debug("start timer (listener) ", timer)
 				timer:start()
 			end
 
@@ -252,7 +251,7 @@ local function _openVolumePopup(vol)
 	popup:showBriefly(2000,
 		function()
 			if timer then
-				logv:debug("stop timer (showBriefly timeout), ", timer)
+--				log:debug("stop timer (showBriefly timeout), ", timer)
 				timer:stop()
 				-- make sure it cannot ever be started again
 				timer = nil
@@ -267,16 +266,16 @@ local function _openVolumePopup(vol)
 --		_player:button('volume_up')
 --		_player:volumeUp()
 		_player:volume(1)
-		logv:debug("start timer ", timer)
+--		log:debug("start timer ", timer)
 		timer:start()
 	elseif vol < 0 then
 --		_player:button('volume_down')
 --		_player:volumeDown()
 		_player:volume(-1)
-		logv:debug("start timer ", timer)
+--		log:debug("start timer ", timer)
 		timer:start()
 	end
-	logv:debug("_openVolumePopup END --------------------------")
+--	log:debug("_openVolumePopup END --------------------------")
 end
 
 

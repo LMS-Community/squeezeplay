@@ -43,7 +43,6 @@ local Textarea       = require("jive.ui.Textarea")
 local Window         = require("jive.ui.Window")
 
 local log            = require("jive.utils.log").logger("player")
-local logv           = require("jive.utils.log").logger("player.browse.volume")
 
 require("jive.slim.RequestsCli")
 local RequestStatus  = jive.slim.RequestStatus
@@ -354,7 +353,7 @@ end
 function _process_status(self, data)
 	log:debug("Player:_process_status()")
 	if self.state then
-		logv:debug("-------------------------Player:volume: ", self.state["mixer volume"], " - " , data.result["mixer volume"])
+		log:debug("-------------------------Player:volume: ", self.state["mixer volume"], " - " , data.result["mixer volume"])
 	end
 	
 	-- update our cache in one go
@@ -609,7 +608,7 @@ function volume(self, amount)
 	local vol = self.state["mixer volume"]
 	
 	if not self.mixerId then
-		logv:debug("Player:volume(", amount, ")")
+		log:debug("Player:volume(", amount, ")")
 		
 --		self.mixerT = _t()
 		self.mixerId = self:call({'mixer', 'volume', fmt("%+d", amount)})
@@ -618,8 +617,8 @@ function volume(self, amount)
 		if vol > 100 then vol = 100 elseif vol < 0 then vol = 0 end
 		self.state["mixer volume"] = vol
 		
-	else
-		logv:debug("(Player:volume(", amount, "))")
+--	else
+--		log:debug("(Player:volume(", amount, "))")
 	end
 	
 	return vol

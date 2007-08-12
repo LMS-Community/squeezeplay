@@ -43,7 +43,6 @@ function registerApplet(self)
 	jul.addCategory("player.browse", jul.WARN)
 	jul.addCategory("player.browse.db", jul.WARN)
 	jul.addCategory("player.browse.data", jul.WARN)
---	jul.addCategory("player.browse.volume", jul.DEBUG)
 end
 
 
