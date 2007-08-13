@@ -446,6 +446,12 @@ dist_applets_setuplanguage_DATA = \
 	share/applets/SetupLanguage/SetupLanguageMeta.lua \
 	share/applets/SetupLanguage/strings.txt
 
+applets_selectplayerdir = $(pkgdatadir)/applets/SelectPlayer
+dist_applets_selectplayer_DATA = \
+	share/applets/SelectPlayer/SelectPlayerApplet.lua \
+	share/applets/SelectPlayer/SelectPlayerMeta.lua \
+	share/applets/SelectPlayer/strings.txt
+
 applets_setupslimserversdir = $(pkgdatadir)/applets/SetupSlimServers
 dist_applets_setupslimservers_DATA = \
 	share/applets/SetupSlimServers/SetupSlimServersApplet.lua \
