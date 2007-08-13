@@ -17,48 +17,15 @@ SCREENSAVER_CLOCK_TYPE
 	EN	Clock Type
 	DE	Uhr Typ
 
-SCREENSAVER_CLOCK_DATETIMEFORMAT
-	EN	Date/Time Format
-	DE	Datum/Zeit Format
-
-SCREENSAVER_CLOCK_FONTSTYLE
-	EN	Font Style
-	DE	Schrift Stil
-
-SCREENSAVER_CLOCK_AMPM24
-	EN	AM,PM / 24-Hours
-	DE	AM,PM / 24-Stunden
-
-
-SCREENSAVER_CLOCK_DATEFORMAT
-	EN	Date Format
-	DE	Datums Format
-
 SCREENSAVER_CLOCK_STYLE_ANALOG
-	EN	Analog
-	DE	Analog
+	EN	Analog Clock
 
 SCREENSAVER_CLOCK_STYLE_DIGITALSIMPLE
-	EN	Digital: Simple
-	DE	Digital: Einfach
+	EN	Digital Clock
 
 SCREENSAVER_CLOCK_STYLE_DIGITALSTYLED
-	EN	Digital: Styled
-	DE	Digital: Styled
+	EN	Styled Clock
 
 SCREENSAVER_CLOCK_STYLE_DIGITALDETAILED
-	EN	Digital: Detailed
-	DE	Digital: Detailiert
-
-SCREENSAVER_CLOCK_WEEKSTART
-	EN	1st Day
-	DE	1. Tag
-
-SCREENSAVER_CLOCK_MONDAY
-	EN	Monday
-	DE	Montag
-
-SCREENSAVER_CLOCK_SUNDAY
-	EN	Sunday
-	DE	Sonntag
+	EN	Detailed Clock
 

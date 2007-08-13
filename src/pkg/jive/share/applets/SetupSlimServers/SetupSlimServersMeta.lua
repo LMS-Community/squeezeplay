@@ -48,7 +48,7 @@ function registerApplet(meta)
 	SlimServers:pollList(meta:getSettings().poll)
 	
 	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))
-	local advancedSettings = remoteSettings:subMenu(meta:string("ADVANCED_SETTINGS"))
+	local advancedSettings = remoteSettings:subMenu(meta:string("ADVANCED_SETTINGS"), 1000)
 
 	advancedSettings:addItem(meta:menuItem("SLIMSERVER_SERVERS", function(applet, ...) applet:settingsShow(...) end))
 end

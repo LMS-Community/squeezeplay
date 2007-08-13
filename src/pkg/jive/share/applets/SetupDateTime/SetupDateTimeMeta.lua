@@ -41,7 +41,6 @@ function defaultSettings(meta)
 		weekstart = "Sunday",
 		dateformat = "%a, %B %d %Y",
 		hours = "24",
-		timezone = "GMT",
 	}
 end
 
@@ -50,7 +49,6 @@ function initDateTimeObject(meta)
 	dt:setWeekstart(meta:getSettings()["weekstart"])
 	dt:setDateFormat(meta:getSettings()["dateformat"])
 	dt:setHours(meta:getSettings()["hours"])
-	dt:setTimeZone(meta:getSettings()["timezone"])
 end
 
 function registerApplet(meta)

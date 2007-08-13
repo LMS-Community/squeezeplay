@@ -18,7 +18,6 @@ end
 function defaultSettings(self)
 	return {
 		clocktype = "analog:simple",
-		digital_italic = true,
 		digitalsimple_preset = "White",
 		digitalstyled_preset = "White"
 	}

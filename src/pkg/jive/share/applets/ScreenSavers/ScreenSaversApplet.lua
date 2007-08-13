@@ -232,28 +232,32 @@ function openSettings(self, menuItem)
 		{
 			{ 
 				text = self:string('SCREENSAVER_PLAYING'),
+				weight = 1,
 				callback = function(event, menu_item)
 						   self:screensaverSetting(menu_item, "whenPlaying")
 					   end
 			},
 			{
 				text = self:string("SCREENSAVER_STOPPED"),
+				weight = 1,
 				callback = function(event, menu_item)
 						   self:screensaverSetting(menu_item, "whenStopped")
 					   end
 			},
 			{
 				text = self:string("SCREENSAVER_DELAY"),
+				weight = 2,
 				callback = function(event, menu_item)
 						   self:timeoutSetting(menu_item)
 					   end
 			},
 		})
 
-	menu:setComparator(menu.itemComparatorAlpha)
+	menu:setComparator(menu.itemComparatorWeightAlpha)
 	for setting_name, screensaver in pairs(self.screensaver_settings) do
 		menu:addItem({
 				     text = setting_name,
+				     weight = 3,
 				     callback =
 					     function(event, menuItem)
 							local instance = appletManager:loadApplet(screensaver.applet)

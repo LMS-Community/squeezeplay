@@ -7,10 +7,6 @@ DATETIME_TITLE
 	EN	Date/Time
 	DE	Datum/Zeit
 
-DATETIME_TIMEZONE
-	EN	Time Zone
-	DE	Zeit Zone
-
 DATETIME_TIMEFORMAT
 	EN	Time Format
 	DE	Zeit Format

@@ -67,12 +67,6 @@ function settingsShow(self, menuItem)
 
 	window:addWidget(SimpleMenu("menu",
 		{
-			{
-				text = self:string("DATETIME_TIMEZONE"),
-				callback = function(obj, selectedIndex)
-						self:timezoneSetting(menuItem)
-					end
-			},
 			{	
 				text = self:string("DATETIME_TIMEFORMAT"),
 				callback = function(obj, selectedIndex)
@@ -101,30 +95,6 @@ function settingsShow(self, menuItem)
 			self:storeSettings()
 		end
 	)
-
-	self:tieAndShowWindow(window)
-	return window
-end
-
-function timezoneSetting(self, menuItem)
-	local window = Window("window", menuItem.text)
-	local group = RadioGroup()
-
-	local current = self:getSettings()["timezone"]
-
-	local menu = SimpleMenu("menu", {})
-
-	for k,v in pairs(datetime:getAllTimeZones()) do
-		menu:addItem({
-				text = v.text,
-				icon = RadioButton("radio", group, function(event, menuItem)
-						self:setTimeZone(k)
-					end,
-				current == k)
-		})
-	end
-
-	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -210,11 +180,6 @@ function weekstartSetting(self, menuItem)
 
 	self:tieAndShowWindow(window)
 	return window;
-end
-
-function setTimeZone(self, tz)
-	self:getSettings()["timezone"] = tz
-	datetime:setTimeZone(tz)
 end
 
 function setDateFormat(self, format)

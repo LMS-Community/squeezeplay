@@ -120,9 +120,6 @@ function openSettings(self, menuItem)
 	local window = Window(self:displayName(), menuItem.text)
 
 	local curFontStyle = 1 
-	if self:getSettings()["digital_italic"] then
-		curFontStyle = 2
-	end
 
 	local curHours = 1
 	if self:getSettings()["hours"] == "24" then
@@ -137,15 +134,6 @@ function openSettings(self, menuItem)
 							self:clockTypeSetting(menuItem)
 							return EVENT_CONSUME
 						end
-				},
-				{
-					text = self:string("SCREENSAVER_CLOCK_FONTSTYLE"),
-					icon = Choice("choice", { "Plain", "Italic" },
-						function(obj, selectedIndex) 
-							self:setFontStyle(selectedIndex)	
-						end,
-						curFontStyle
-					)
 				},
 			}))
 
@@ -207,13 +195,6 @@ function setClockType(self, type)
 	self:getSettings()["clocktype"] = type
 end
 
-function setFontStyle(self, index)
-	if index == 1 then
-		self:getSettings()["digital_italic"] = false
-	else
-		self:getSettings()["digital_italic"] = true
-	end
-end
 
 ----------------------------------------------------------------------------------------
 -- Screen Saver Display 
@@ -378,16 +359,10 @@ end
 
 DigitalSimple = oo.class({}, Clock)
 
-function DigitalSimple:__init(window, preset, ampm, italic)
+function DigitalSimple:__init(window, preset, ampm)
 	log:info("Init Digital Simple")
 	
 	local fontname = "fonts/Digital.ttf"
-
-	if italic != nil and italic == true then
-		fontname = "fonts/DigitalItalic.ttf"
-		--fontname = "/Users/bklaas/trunk/jive/build/osx/share/jive/fonts/DigitalItalic.ttf"
-		log:warn(fontname)
-	end
 
 	obj = oo.rawnew(self, Clock(window))
 
@@ -733,7 +708,6 @@ function openScreensaver(self, menuItem)
 
 	-- Own Settings
 	local type       = self:getSettings()["clocktype"]
-	local italic     = self:getSettings()["digital_italic"]
 	
 	-- Global Date/Time Settings
 	local dt = datetime
@@ -753,7 +727,7 @@ function openScreensaver(self, menuItem)
 	local clock = nil;	
 	log:info("Type: " .. type)
 	if type == "digital:simple" then
-		clock = DigitalSimple(window, preset, hours, italic)
+		clock = DigitalSimple(window, preset, hours)
 		clock:setDateFormat(dateformat)
 	elseif type == "digital:styled" then
 		-- This clock always uses 24 hours mode for now
