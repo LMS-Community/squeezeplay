@@ -142,8 +142,8 @@ tolua++: lua
 # jive
 #
 
-.PHONY: app jive freefont
-app: jive freefont
+.PHONY: app jive jive_desktop freefont
+app: jive jive_desktop freefont
 
 # jive
 jive/Makefile:
@@ -151,6 +151,9 @@ jive/Makefile:
 
 jive: jive/Makefile
 	cd jive; make && make install
+
+jive_desktop: jive/Makefile
+	cd jive_desktop; make PREFIX=${PREFIX}
 
 # freefont
 freefont:

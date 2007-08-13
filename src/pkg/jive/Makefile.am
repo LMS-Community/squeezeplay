@@ -132,18 +132,6 @@ dist_luautil_DATA = \
 	share/jive/utils/table.lua
 
 
-applets_bouncedir = $(pkgdatadir)/applets/Bounce
-dist_applets_bounce_DATA = \
-	share/applets/Bounce/BounceApplet.lua \
-	share/applets/Bounce/BounceMeta.lua \
-	share/applets/Bounce/strings.txt \
-	share/applets/Bounce/squeezebox.png
-
-applets_quitdir = $(pkgdatadir)/applets/Quit
-dist_applets_quit_DATA = \
-	share/applets/Quit/QuitMeta.lua \
-	share/applets/Quit/strings.txt
-
 applets_logdir = $(pkgdatadir)/applets/LogSettings
 dist_applets_log_DATA = \
 	share/applets/LogSettings/LogSettingsApplet.lua \
@@ -172,16 +160,6 @@ dist_applets_flickr_DATA = \
 	share/applets/Flickr/FlickrApplet.lua \
 	share/applets/Flickr/FlickrMeta.lua \
 	share/applets/Flickr/strings.txt
-
-applets_testdir = $(pkgdatadir)/applets/Test
-dist_applets_test_DATA = \
-	share/applets/Test/TestApplet.lua \
-	share/applets/Test/TestMeta.lua \
-	share/applets/Test/test.txt \
-	share/applets/Test/test.jpg \
-	share/applets/Test/test.png \
-	share/applets/Test/test.gif \
-	share/applets/Test/strings.txt
 
 applets_screenshotdir = $(pkgdatadir)/applets/Screenshot
 dist_applets_screenshot_DATA = \
@@ -224,12 +202,6 @@ dist_applets_clock_DATA = \
 	share/applets/Clock/clock_analog1_bkgrd.png \
 	share/applets/Clock/ClockFace.png \
 	share/applets/Clock/clock_watch_bkgrd_ruby.png
-
-applets_setupwelcomedir = $(pkgdatadir)/applets/SetupWelcome
-dist_applets_setupwelcome_DATA = \
-	share/applets/SetupWelcome/SetupWelcomeApplet.lua \
-	share/applets/SetupWelcome/SetupWelcomeMeta.lua \
-	share/applets/SetupWelcome/strings.txt
 
 # Wallpaper
 applets_setupwallpaperdir = $(pkgdatadir)/applets/SetupWallpaper
