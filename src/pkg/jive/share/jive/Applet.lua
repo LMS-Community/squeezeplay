@@ -16,6 +16,7 @@ settings and memory management.
 =cut
 --]]
 
+local pairs = pairs
 
 local oo               = require("loop.base")
 
@@ -75,7 +76,7 @@ function tieWindow(self, window)
 	window:addListener(EVENT_WINDOW_POP,
 		function()
 			self._tie[window] = nil
-			if #self._tie == 0 then
+			if pairs(self._tie) == nil then
 				AppletManager:_freeApplet(self._entry)
 			end
 		end)
