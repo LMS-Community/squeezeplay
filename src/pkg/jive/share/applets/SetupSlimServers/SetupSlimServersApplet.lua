@@ -122,6 +122,7 @@ function _add(self, address)
 
 	self.SlimServers:pollList(list)
 	self:setSettings({ poll = list })
+	self:storeSettings()
 end
 
 
@@ -139,6 +140,7 @@ function _del(self, address)
 
 	self.SlimServers:pollList(list)
 	self:setSettings({ poll = list })
+	self:storeSettings()
 end
 	
 
@@ -207,11 +209,6 @@ function _ipInput(self, menuItem, callback, init)
 	window:addWidget(input)
 
 	return window
-end
-
-
-function free(self)
-	self:storeSettings()
 end
 
 
