@@ -60,6 +60,8 @@ function __init(self, style, title)
 	obj._DEFAULT_SHOW_TRANSITION = Window.transitionNone
 	obj._DEFAULT_HIDE_TRANSITION = Window.transitionNone
 
+	obj:autoHide(true)
+
 	-- by default close popup on keypress
 	obj:addListener(EVENT_KEY_PRESS,
 			function(event)

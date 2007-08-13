@@ -158,7 +158,7 @@ function show(self, transition, soundEffect)
 	-- insert the window in the window stack
 	table.insert(stack, 1, self)
 
-	if (topwindow) then
+	if topwindow then
 		-- push transitions
 		transition = transition or self._DEFAULT_SHOW_TRANSITION
 		Framework:_startTransition(transition(topwindow, self, soundEffect))
@@ -171,6 +171,11 @@ function show(self, transition, soundEffect)
 
 		-- the old window is inactive
 		topwindow:dispatchNewEvent(EVENT_WINDOW_INACTIVE)
+	end
+
+	-- hide windows with autoHide enabled
+	while stack[2] ~= nil and stack[2]._autoHide do
+		stack[2]:hide()
 	end
 
 	Framework:reDraw(nil)
@@ -311,6 +316,23 @@ function hideToTop(self, transition, soundEffect)
 		end
 	end
 end
+
+
+--[[
+
+=head2 jive.ui.Window:autoHide(enabled)
+
+If autoHide is enabled then the window is automatically
+hidden when another window is shown above it. This is useful
+for hiding popup windows so they do not appear if the user
+moves back.
+
+==cut
+--]]
+function autoHide(self, enabled)
+	self._autoHide = enabled and true or nil
+end
+
 
 --[[
 
