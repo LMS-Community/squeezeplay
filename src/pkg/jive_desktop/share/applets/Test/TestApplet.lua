@@ -18,10 +18,11 @@ TestApplet overrides the following methods:
 
 
 -- stuff we use
-local setmetatable, tostring = setmetatable, tostring
+local setmetatable, tonumber, tostring = setmetatable, tonumber, tostring
 
 local io                     = require("io")
 local oo                     = require("loop.simple")
+local math                   = require("math")
 local string                 = require("string")
 local table                  = require("jive.utils.table")
 
@@ -136,6 +137,10 @@ function menu(self, menuItem)
 				callback = function(event, menuItem)
 					self:hexinputWindow(menuItem)
 				end },
+			{ text = "IP input",
+				callback = function(event, menuItem)
+					self:ipinputWindow(menuItem)
+				end },
 			{ text = "Popup",
 				callback = function(event, menuItem)
 					self:popupWindow(menuItem)
@@ -248,49 +253,9 @@ end
 
 
 function hexinputWindow(self, menuItem)
-
-	-- create an object to hold the hex value. the methods are used
-	-- by the text input widget.
-	local v = {}
-	setmetatable(v, {
-			     __tostring =
-				     function(e)
-					     return table.concat(e, " ")
-				     end,
-
-			     __index = {
-				     setValue =
-					     function(value, str)
-						     local i = 1
-						     for dd in string.gmatch(str, "%x%x") do
-							     value[i] = dd
-							     i = i + 1
-						     end
-						     
-					     end,
-
-				     getValue =
-					     function(value)
-						     return table.concat(value)
-					     end,
-
-				     getChars = 
-					     function(value, cursor)
-						     return "0123456789ABCDEF"
-					     end,
-
-				     isEntered =
-					     function(value, cursor)
-						     return cursor == (#value * 3) - 1
-					     end
-			     }
-		     })
-
-	-- set the initial value
-	v:setValue("000000000000")
-
 	local window = Window("window", menuItem.text)
 
+	local v = Textinput.hexValue("000000000000")
 	local input = Textinput("textinput", v,
 				function(_, value)
 					log:warn("Input " .. value:getValue())
@@ -299,6 +264,27 @@ function hexinputWindow(self, menuItem)
 				end)
 
 	local help = Textarea("help", "Input of HEX numbers.")
+
+	window:addWidget(help)
+	window:addWidget(input)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+function ipinputWindow(self, menuItem)
+	local window = Window("window", menuItem.text)
+
+	local v = Textinput.ipAddressValue("0.0.0.0")
+	local input = Textinput("textinput", v,
+				function(_, value)
+					log:warn("Input " .. value:getValue())
+					window:hide(Window.transitionPushLeft)
+					return true
+				end)
+
+	local help = Textarea("help", "Input of IP addresses.")
 
 	window:addWidget(help)
 	window:addWidget(input)

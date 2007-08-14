@@ -1,11 +1,13 @@
 
 -- stuff we use
-local assert, getmetatable, string, tostring, type, unpack = assert, getmetatable, string, tostring, type, unpack
+local assert, getmetatable, setmetatable, string, tonumber, tostring, type, unpack = assert, getmetatable, setmetatable, string, tonumber, tostring, type, unpack
 
 local oo                = require("loop.simple")
 local Widget            = require("jive.ui.Widget")
 
+local math              = require("math")
 local string            = require("string")
+local table             = require("jive.utils.table")
 local log               = require("jive.utils.log").logger("ui")
 
 local EVENT_ALL         = jive.ui.EVENT_ALL
@@ -281,6 +283,141 @@ function __init(self, style, value, closure)
 			function(event)
 				return _eventHandler(obj, event)
 			end)
+
+	return obj
+end
+
+
+--[[
+
+=head2 jive.ui.Textinput.hexValue(default)
+
+Returns a value that can be used for entring ip addresses.
+
+=cut
+--]]
+function hexValue(default)
+	local obj = {}
+	setmetatable(obj, {
+			     __tostring =
+				     function(e)
+					     return table.concat(e, " ")
+				     end,
+
+			     __index = {
+				     setValue =
+					     function(value, str)
+						     local i = 1
+						     for dd in string.gmatch(str, "%x%x") do
+							     value[i] = dd
+							     i = i + 1
+						     end
+						     
+					     end,
+
+				     getValue =
+					     function(value)
+						     return table.concat(value)
+					     end,
+
+				     getChars = 
+					     function(value, cursor)
+						     return "0123456789ABCDEF"
+					     end,
+
+				     isEntered =
+					     function(value, cursor)
+						     return cursor == (#value * 2) - 1
+					     end
+			     }
+		     })
+
+	if default then
+		obj:setValue(default)
+	end
+
+	return obj
+end
+
+
+--[[
+
+=head2 jive.ui.Textinput.ipAddressValue(default)
+
+Returns a value that can be used for entring ip addresses.
+
+=cut
+--]]
+function ipAddressValue(default)
+	local obj = {}
+	setmetatable(obj, {
+			     __tostring =
+				     function(e)
+					     return table.concat(e, ".")
+				     end,
+
+			     __index = {
+				     setValue =
+					     function(value, str)
+						     local i = 1
+						     for ddd in string.gmatch(str, "(%d+)") do
+							     local n = tonumber(ddd)
+							     if n > 255 then n = 255 end
+
+							     value[i] = string.format("%03d", n)
+							     i = i + 1
+							     if i > 4 then break end
+						     end
+					     end,
+
+				     getValue =
+					     function(value)
+						     return table.concat(value, ".")
+					     end,
+
+				     getChars = 
+					     function(value, cursor)
+						     local n = (cursor % 4)
+						     if n == 0 then return "" end
+
+						     local v = tonumber(value[math.floor(cursor/4)+1])
+						     local a = math.floor(v / 100)
+						     local b = math.floor(v % 100 / 10)
+						     local c = math.floor(v % 10)
+
+						     if n == 1 then
+							     if b > 6 or (b == 5 and c > 5) then
+								     return "01"
+							     else
+								     return "012"
+							     end
+						     elseif n == 2 then
+							     if a >= 2 and c > 5 then
+								     return "01234"
+							     elseif a >= 2 then
+								     return "012345"
+							     else
+								     return "0123456789"
+							     end
+						     elseif n == 3 then
+							     if a >= 2 and b >= 5 then
+								     return "012345"
+							     else
+								     return "0123456789"
+							     end
+						     end
+					     end,
+
+				     isEntered =
+					     function(value, cursor)
+						     return cursor == 16
+					     end
+			     }
+		     })
+
+	if default then
+		obj:setValue(default)
+	end
 
 	return obj
 end

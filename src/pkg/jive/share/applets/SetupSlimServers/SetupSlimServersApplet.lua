@@ -37,6 +37,8 @@ local Textinput     = require("jive.ui.Textinput")
 
 local log           = require("jive.utils.log").logger("applets.setup")
 
+local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
+
 local jnt           = jnt
 local jiveMain      = jiveMain
 local appletManager = appletManager
@@ -105,6 +107,13 @@ function settingsShow(self, menuItem)
 	
 	window:addWidget(menu)
 
+	-- Store the applet settings when the window is closed
+	window:addListener(EVENT_WINDOW_POP,
+		function()
+			self:storeSettings()
+		end
+	)
+
 	self:tieAndShowWindow(window)
 	return window
 end
@@ -122,7 +131,6 @@ function _add(self, address)
 
 	self.SlimServers:pollList(list)
 	self:setSettings({ poll = list })
-	self:storeSettings()
 end
 
 
@@ -140,62 +148,14 @@ function _del(self, address)
 
 	self.SlimServers:pollList(list)
 	self:setSettings({ poll = list })
-	self:storeSettings()
 end
 	
 
 -- ip address input window
 function _ipInput(self, menuItem, callback, init)
-
-	-- create an object to hold the ip address. the methods are used
-	-- by the text input widget.
-	local v = {}
-	setmetatable(v, {
-				 __tostring =
-				     function(value)
-						 return table.concat(value, ".")
-				     end,
-
-			     __index = {
-				     setValue =
-					     function(value, str)
-							 local i = 1
-						     for dd in string.gmatch(str, "([0-9]+)") do
-								 if (i <= 4) then
-									 value[i] = string.format("%03d", tonumber(dd))
-								 end
-								 i = i + 1
-							 end
-					     end,
-
-				     getValue =
-					     function(value)
-							 return tonumber(value[1]) .. "." .. tonumber(value[2]) .. "." .. tonumber(value[3]) .. "." .. tonumber(value[4])
-					     end,
-
-				     getChars = 
-					     function(value, cursor)
-							 if cursor == 4 or cursor == 8 or cursor == 12 then
-								 return "."
-							 elseif cursor == 1 or cursor == 5 or cursor == 9 or cursor == 13 then
-								 return "012"
-							 else
-								 return "0123456789"
-							 end
-					     end,
-
-				     isEntered =
-					     function(value, cursor)
-						     return cursor == 16
-					     end
-			     }
-		     })
-
-	-- set the initial value
-	v:setValue(init or "0.0.0.0")
-
 	local window = Window("window", menuItem.text)
 
+	local v = Textinput.ipAddressValue(init or "0.0.0.0")
 	local input = Textinput("textinput", v,
 				function(_, value)
 					callback(value:getValue())

@@ -8,7 +8,6 @@ all:
 	install -D share/applets/Bounce/strings.txt ${APPLETS}/Bounce/strings.txt
 	install -D share/applets/Quit/QuitMeta.lua ${APPLETS}/Quit/QuitMeta.lua
 	install -D share/applets/Quit/strings.txt ${APPLETS}/Quit/strings.txt
-	install -D share/applets/SetupWelcome/settings.lua ${APPLETS}/SetupWelcome/settings.lua
 	install -D share/applets/SetupWelcome/SetupWelcomeApplet.lua ${APPLETS}/SetupWelcome/SetupWelcomeApplet.lua
 	install -D share/applets/SetupWelcome/SetupWelcomeMeta.lua ${APPLETS}/SetupWelcome/SetupWelcomeMeta.lua
 	install -D share/applets/SetupWelcome/strings.txt ${APPLETS}/SetupWelcome/strings.txt

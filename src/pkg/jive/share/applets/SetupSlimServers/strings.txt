@@ -17,7 +17,7 @@ SLIMSERVER_EDIT
 	EN	Edit
 
 SLIMSERVER_ADD_SERVER
-	EN	Add Server
+	EN	Other Server...
 
 SLIMSERVER_HELP
 	EN	Enter the IP address of the computer running SlimServer
