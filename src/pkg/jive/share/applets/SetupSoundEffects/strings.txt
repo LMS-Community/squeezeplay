@@ -60,6 +60,15 @@ SOUND_SHUTDOWN
 	IT	Chiusura
 	NL	Afsluiten
 
+SOUND_BUMP
+	EN	Bump
+
+SOUND_DOCKING
+	EN	Charging
+
+SOUND_PUSHRIGHT
+	EN	Forward
+
 SOUND_NONE
 	DE	Kein
 	EN	None

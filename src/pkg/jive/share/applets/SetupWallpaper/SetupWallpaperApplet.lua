@@ -54,7 +54,7 @@ local wallpapers = {
 	["Orin-Optiglot_1.jpg"] = "Orin-Optiglot_1.jpg",
 }
 
-local backgroundLicense = "The background images are under a Creative Commons Attribution license. See http://creativecommons.org/licenses/by/3.0/.\n\nThe Credits\n Chapple\n Scott Robinson\n Los Cardinalos\n Orin Optiglot\n"
+local authors = { "Chapple", "Scott Robinson", "Los Cardinalos", "Orin Optiglot" }
 
 
 function setupShow(self, setupNext)
@@ -130,10 +130,18 @@ end
 
 function _licenseMenuItem(self)
 	return {
-		text = "License",
+		text = self:string("CREDITS"),
 		callback = function()
-			local window = Window("window", "License")
-			window:addWidget(Textarea("textarea", backgroundLicense))
+			local window = Window("window", self:string("CREDITS"))
+			
+			local text =
+				tostring(self:string("CREATIVE_COMMONS")) ..
+				"\n\n" ..
+				tostring(self:string("CREDITS_BY")) ..
+				"\n " ..
+				table.concat(authors, "\n ")
+
+			window:addWidget(Textarea("textarea", text))
 			self:tieAndShowWindow(window)
 		end
 	}

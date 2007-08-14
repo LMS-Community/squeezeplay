@@ -6,3 +6,12 @@
 
 WALLPAPER
 	EN	Wallpaper
+
+CREDITS
+	EN	Credits
+
+CREATIVE_COMMONS
+	EN	The background images are under a Creative Commons Attribution license. See http://creativecommons.org/licenses/by/3.0/.
+
+CREDITS_BY
+	EN	Pictures by:
