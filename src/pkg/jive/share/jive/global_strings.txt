@@ -43,7 +43,3 @@ DEBUG_LOG
 	EN	Debug log
 	FR	Messages de déverminage
 
-SELECT_PLAYER
-	EN	Select Player
-
-
