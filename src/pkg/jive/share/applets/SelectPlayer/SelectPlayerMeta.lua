@@ -30,7 +30,6 @@ oo.class(_M, AppletMeta)
 function defaultSettings(meta)
 	return {
 		selectedPlayer = '00:00:00:00:00:00',
-		selectedServer = 'no_server_selected',
 	}
 end
 
@@ -41,10 +40,10 @@ end
 
 function registerApplet(meta)
 	
-	-- add ourselves to the main menu
-	--[[ comment this until it's functional
-	jiveMain:addItem(meta:menuItem(meta:string("SELECT_PLAYER"), function(applet, ...) applet:getPlayers(...) end), 900)
-	--]]
+     -- SelectPlayer is a resident Applet, Applet loads all menus necessary
+	-- commented out until home menu is reworked
+--        appletManager:loadApplet("SelectPlayer")
+
 end
 
 --[[
