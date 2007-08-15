@@ -161,14 +161,14 @@ function __init(self, jnt)
 		
 		-- servers cache
 		_servers = {},
+		
+		-- list of addresses to poll, updated by applet.SlimServers
+		poll = {},
 	})
 	
 	-- create a udp socket
 	obj.js = SocketUdp(jnt, _getSink(obj))
 
-	-- list of addresses to poll, updated by applet.SlimServers
-	obj.poll = {}
-			
 	-- make us start
 	obj:discover()
 
@@ -197,13 +197,13 @@ end
 
 --[[
 
-=head2 jive.slim.SlimServers:servers()
+=head2 jive.slim.SlimServers:allServers()
 
 Returns an iterator over the discovered slimservers.
 
 =cut
 --]]
-function servers(self)
+function allServers(self)
 	return pairs(self._servers)
 end
 

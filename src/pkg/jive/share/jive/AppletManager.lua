@@ -6,7 +6,7 @@ jive.AppletManager - The applet manager.
 
 =head1 DESCRIPTION
 
-TODO
+The applet manager discovers applets and loads and unloads them from memory dynamically.
 
 =head1 SYNOPSIS
 
@@ -417,9 +417,15 @@ function loadApplet(self, appletName)
 end
 
 
--- getApplet
--- returns instance of the applet, only if it is already loaded
-function getApplet(self, appletName)
+--[[
+
+=head2 jive.AppletManager.getAppletInstance(appletName)
+
+Returns the loaded instance of applet I<appletName>, if any.
+
+=cut
+--]]
+function getAppletInstance(self, appletName)
 	local entry = _appletsDb[appletName]
 
 	-- exists?
@@ -428,7 +434,8 @@ function getApplet(self, appletName)
 	end
 	
 	-- already loaded?
-	if entry.appletEvaluated then
+	-- appletEvaluated is TRUE while the applet is being loaded
+	if entry.appletEvaluated and entry.appletEvaluated != true then
 		return entry.appletEvaluated
 	end
 

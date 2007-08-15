@@ -41,40 +41,50 @@ oo.class(_M, Applet)
 
 
 function getPlayers(self)
-	-- get list of slimservers
-	-- local slimServers = appletManager:getApplet("SlimDiscovery"):getSlimservers():servers()
+
 	local window = Window("window", self:string("SELECT_PLAYER"))
-        local menu = SimpleMenu("menu")
-        local group = RadioGroup()
-	local currentPlayer = self:getSettings()["selectedPlayer"]
-	for _, s in appletManager:getApplet("SlimDiscovery"):getSlimServers():servers() do
-		self.server = s
-		-- get list of players within each slimserver
-		for playerMac,playerName in pairs(self.server.players) do
-			log:debug('player:|', playerMac,'|',playerName)
-			local matchedTuple = self:selectedPlayerCheck(playerMac, self.server.name)
+
+	local sdApplet = appletManager:getAppletInstance("SlimDiscovery")
+	
+	if sdApplet then
+
+		local menu = SimpleMenu("menu")
+		local group = RadioGroup()
+
+		local currentPlayer = self:getSettings()["selectedPlayer"]
+
+		for playerMac, playerObj in sdApplet:allPlayers() do
+		
+			log:debug('player:|', playerMac, '|', playerObj)
+			
 			-- display as radio selections
-	                local button = RadioButton(
-	                        "radio", 
-	                        group, 
-	                        function() self:selectPlayer(playerMac, self.server.name) end,
-				matchedTuple == true
-	                )
-	                menu:addItem({
-	                        text = playerName:getName(),
-	                        icon = button,
-	                })
+			local button = RadioButton(
+				"radio", 
+				group, 
+				function() 
+					self:selectPlayer(playerMac, playerObj:getSlimServer():getName())
+					sdApplet:setCurrentPlayer(playerObj)
+				end,
+				self:selectedPlayerCheck(playerMac, playerObj:getSlimServer():getName())
+			)
+			menu:addItem({
+				text = playerObj:getName(),
+				icon = button,
+			})
 		end
+
+		window:addWidget(menu)
+
+		-- Store the selected player when the menu is exited
+		window:addListener(EVENT_WINDOW_POP,
+			function()
+				self:storeSettings()
+			end
+		)
+		
 	end
-	window:addWidget(menu)
-	-- Store the selected player when the menu is exited
-	window:addListener(EVENT_WINDOW_POP,
-		function()
-			self:storeSettings()
-		end
-	)
+	
 	self:tieAndShowWindow(window)
-	return window
 end
 
 function selectedPlayerCheck(self, playerMac, serverName)

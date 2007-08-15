@@ -9,6 +9,7 @@ applets.SlimDiscovery.SlimDiscoveryApplet - Discover Slimservers on the network
 This applet uses the L<jive.slim.SlimServers> class to discover Slimservers on the network
 using the SqueezeBox discovery protocol. Slimservers are then queried to retrieve available
 music players.
+This applet provides the plumbing as well an API to access the discovered servers and players.
 
 =head1 FUNCTIONS
 
@@ -47,12 +48,12 @@ function __init(self, ...)
 	jnt:subscribe(obj)
 
 	-- create a list of SlimServers
-	obj.servers = SlimServers(jnt)
+	obj.serversObj = SlimServers(jnt)
 
 	-- arrange so that discover is called when in home
 	jiveMain:addInHomeListener(
 		function()
-			obj.servers:discover()
+			obj.serversObj:discover()
 		end
 	)
 	
@@ -60,10 +61,128 @@ function __init(self, ...)
 end
 
 
--- getSlimServers
--- returns the slimServers object
-function getSlimServers(self)
-	return self.servers
+--[[
+
+=head2 applets.SlimDiscovery.SlimDiscoveryApplet:allServers()
+
+Returns an iterator over the discovered slimservers.
+Proxy for L<jive.slim.SlimServers:allServers>
+
+ for _, server in allServers() do
+    ...
+ end
+
+=cut
+--]]
+function allServers(self)
+	return self.serversObj:allServers()
+end
+
+
+--[[
+
+=head2 applets.SlimDiscovery.SlimDiscoveryApplet:allPlayers()
+
+Returns an iterator over the discovered players.
+
+ for id, player in allPlayers() do
+    ...
+ end
+
+=cut
+--]]
+-- this iterator respects the implementation privacy of the SlimServers and SlimServer
+-- classes. It only uses the fact allServers and allPlayers call respect the for
+-- generator logic of Lua.
+local function _playerIterator(invariant)
+	while true do
+	
+		-- if no current player, load next server
+		-- NB: true first time
+		if not invariant.pk then
+			invariant.sk, invariant.sv = invariant.sf(invariant.si, invariant.sk)
+			invariant.pk = nil
+			if invariant.sv then
+				invariant.pf, invariant.pi, invariant.pk = invariant.sv:allPlayers()
+			end
+		end
+	
+		-- if we have a server, use it to get players
+		if invariant.sv then
+			-- get the next/first player, depending on pk
+			local pv
+			invariant.pk, pv = invariant.pf(invariant.pi, invariant.pk)
+			if invariant.pk then
+				return invariant.pk, pv
+			end
+		else
+			-- no further servers, we're done
+			return nil
+		end
+	end
+end
+
+function allPlayers(self)
+	local i = {}
+	i.sf, i.si, i.sk = self:allServers()
+	return _playerIterator, i
+end
+
+
+--[[
+
+=head2 applets.SlimDiscovery.SlimDiscoveryApplet:countPlayers()
+
+Returns the number of discovered players.
+
+=cut
+--]]
+function countPlayers(self)
+	local count = 0
+	for i, _ in self:allPlayers() do
+		count = count + 1
+	end
+	return count
+end
+
+
+--[[
+
+=head2 applets.SlimDiscovery.SlimDiscoveryApplet:setCurrentPlayer()
+
+Sets the current player
+
+=cut
+--]]
+function setCurrentPlayer(self, player)
+	self.currentPlayer = player
+end
+
+
+--[[
+
+=head2 applets.SlimDiscovery.SlimDiscoveryApplet:getCurrentPlayer()
+
+Returns the current player
+
+=cut
+--]]
+function getCurrentPlayer(self)
+	return self.currentPlayer
+end
+
+
+--[[
+
+=head2 applets.SlimDiscovery.SlimDiscoveryApplet:pollList()
+
+Get/set the list of addresses which are polled with discovery packets.
+Proxy for L<jive.slim.SlimServers:pollList>
+
+=cut
+--]]
+function pollList(self, list)
+	return self.serversObj:pollList(list)
 end
 
 

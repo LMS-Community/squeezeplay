@@ -51,71 +51,77 @@ oo.class(_M, Applet)
 -- main setting menu
 function settingsShow(self, menuItem)
 
-	self.SlimServers = appletManager:getApplet("SlimDiscovery"):getSlimServers()
-	
 	local window = Window("window", menuItem.text)
-	local poll   = self.SlimServers:pollList()
-	local items  = {}
 
-	if poll["255.255.255.255"] then
-		items[#items + 1] = {
-			text = self:string("SLIMSERVER_AUTO_MODE"), 
-		}
-	end
+	local sdApplet = appletManager:getAppletInstance("SlimDiscovery")
+	
+	if sdApplet then
+		
+		self.sdApplet = sdApplet
 
-	for k, _ in pairs(poll) do
-		if k ~= "255.255.255.255" then
+		local poll   = sdApplet:pollList()
+		local items  = {}
+
+		if poll["255.255.255.255"] then
 			items[#items + 1] = {
-				text = k,
-				callback = function()
-					local subwindow = Window("window", k)
-					local submenu = SimpleMenu("menu", {
-						{
-							text = self:string("SLIMSERVER_DELETE"),
-							callback = function(event, menuItem)
-										   self:_del(k)
-										   subwindow:hide()
-										   window:hide()
-									   end,
-						},
-						{
-							text = self:string("SLIMSERVER_EDIT"),
-							callback = function(event, menuItem)
-										   self:_ipInput(menuItem, function (addr) self:_add(addr) end, k):show()
-										   self:_del(k)
-										   subwindow:hide()
-										   window:hide()
-									   end,
-						}
-					})
-					subwindow:addWidget(submenu)
-					subwindow:show()
-				end
+				text = self:string("SLIMSERVER_AUTO_MODE"), 
 			}
 		end
-	end
 
-	items[#items + 1] = {
-		text = self:string("SLIMSERVER_ADD_SERVER"), 
-		callback = function(event, menuItem)
-					   self:_ipInput(menuItem, function (addr) self:_add(addr) end):show()
-					   window:hide()
-				   end
-	}
-
-	local menu = SimpleMenu("menu", items)
-	
-	window:addWidget(menu)
-
-	-- Store the applet settings when the window is closed
-	window:addListener(EVENT_WINDOW_POP,
-		function()
-			self:storeSettings()
+		for k, _ in pairs(poll) do
+			if k ~= "255.255.255.255" then
+				items[#items + 1] = {
+					text = k,
+					callback = function()
+						local subwindow = Window("window", k)
+						local submenu = SimpleMenu("menu", {
+							{
+								text = self:string("SLIMSERVER_DELETE"),
+								callback = function(event, menuItem)
+											   self:_del(k)
+											   subwindow:hide()
+											   window:hide()
+										   end,
+							},
+							{
+								text = self:string("SLIMSERVER_EDIT"),
+								callback = function(event, menuItem)
+											   self:_ipInput(menuItem, function (addr) self:_add(addr) end, k):show()
+											   self:_del(k)
+											   subwindow:hide()
+											   window:hide()
+										   end,
+							}
+						})
+						subwindow:addWidget(submenu)
+						subwindow:show()
+					end
+				}
+			end
 		end
-	)
 
+		items[#items + 1] = {
+			text = self:string("SLIMSERVER_ADD_SERVER"), 
+			callback = function(event, menuItem)
+						   self:_ipInput(menuItem, function (addr) self:_add(addr) end):show()
+						   window:hide()
+					   end
+		}
+
+		local menu = SimpleMenu("menu", items)
+	
+		window:addWidget(menu)
+
+		-- Store the applet settings when the window is closed
+		window:addListener(EVENT_WINDOW_POP,
+			function()
+				self:storeSettings()
+			end
+		)
+		
+	end
+	
 	self:tieAndShowWindow(window)
-	return window
 end
 
 
@@ -123,13 +129,13 @@ end
 function _add(self, address)
 	log:debug("SlimServerApplet:_add: ", address)
 
-	local list = self.SlimServers:pollList()
+	local list = self.sdApplet:pollList()
 
 	list["255.255.255.255"] = nil
 
 	list[address] = address
 
-	self.SlimServers:pollList(list)
+	self.sdApplet:pollList(list)
 	self:setSettings({ poll = list })
 end
 
@@ -138,7 +144,7 @@ end
 function _del(self, address)
 	log:debug("SlimServerApplet:_del: ", address)
 
-	local list = self.SlimServers:pollList()
+	local list = self.sdApplet:pollList()
 
 	list[address] = nil
 
@@ -146,7 +152,7 @@ function _del(self, address)
 		list["255.255.255.255"] = "255.255.255.255"
 	end
 
-	self.SlimServers:pollList(list)
+	self.sdApplet:pollList(list)
 	self:setSettings({ poll = list })
 end
 	

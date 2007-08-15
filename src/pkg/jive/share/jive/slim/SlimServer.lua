@@ -547,6 +547,23 @@ function isConnected(self)
 end
 
 
+--[[
+
+=head2 jive.slim.SlimServer:allPlayers()
+
+Returns all players iterator
+
+ for id, player in allPlayers() do
+     xxx
+ end
+
+=cut
+--]]
+function allPlayers(self)
+	return pairs(self.players)
+end
+
+
 -- Proxies
 
 function queue(self, request)
