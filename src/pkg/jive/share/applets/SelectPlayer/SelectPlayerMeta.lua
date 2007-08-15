@@ -29,7 +29,7 @@ oo.class(_M, AppletMeta)
 
 function defaultSettings(meta)
 	return {
-		selectedPlayer = '00:00:00:00:00:00',
+		selectedPlayer = nil
 	}
 end
 

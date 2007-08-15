@@ -57,6 +57,10 @@ function notify_playerNew(self, playerObj)
 	local playerName = playerObj.name
 	self.playerList[playerMac] = playerName
 	self.numberOfPlayers = numberOfPlayers(self.playerList)
+	-- if there isn't a selected player, make this one the selected player
+	if (self.selectedPlayer == nil) then
+		self:selectPlayer(playerMac)
+	end
 	manageSelectPlayerMenu(self)
 end
 
