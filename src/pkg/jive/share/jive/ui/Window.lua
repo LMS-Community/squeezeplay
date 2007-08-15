@@ -395,14 +395,12 @@ Sets the windows title to I<title>.
 =cut
 --]]
 function setTitle(self, title)
-	assert(type(title) ~= nil)
-
 	if self.title then
-		self:removeWidget(self.title)
+		self.title:setValue(title)
+	else
+		self.title = Label("title", title)
+		self:addWidget(self.title)
 	end
-
-	self.title = Label("title", title)
-	self:addWidget(self.title)
 end
 
 
