@@ -16,7 +16,7 @@ $ make -f Makefile.osx
 
 ## Requirements:
 
-* Developer tools (Xcode, from http://www.apple.com/developer)
+* Developer tools (Xcode, at least version 2.4.1, from http://www.apple.com/developer)
 * Libraries (see below for list)
 * MacPorts (to install the libs) (http://www.macports.org/)
 * Subversion (to checkout the Jive code)
