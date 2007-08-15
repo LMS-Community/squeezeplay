@@ -90,7 +90,7 @@ function jive.slim.RequestCli:__init(sink, player, cmdArray, from, qty, params, 
 
 	local obj = oo.rawnew(self, RequestJsonRpc(
 		sink, 
-		'jsonrpc.js', 
+		'/jsonrpc.js',
 		'slim.request', 
 		_calcParams(cli), 
 		options))
