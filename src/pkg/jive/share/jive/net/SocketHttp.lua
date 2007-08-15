@@ -49,6 +49,7 @@ local perfs       = require("jive.utils.perfs")
 
 local log         = require("jive.utils.log").logger("net.http")
 
+local JIVE_VERSION = jive.JIVE_VERSION
 
 -- jive.net.SocketHttp is a subclass of jive.net.SocketTcp
 module(...)
@@ -190,10 +191,17 @@ function t_getSendHeaders(self)
 
 	-- default set
 	local headers = {
-		["Host"] = (self:t_getIpPort()),
-		["Connection"] = 'keep-open',
-		["User-Agent"] = 'Jive',
+		["User-Agent"] = 'Jive/' .. JIVE_VERSION,
 	}
+	
+	local req_headers = self.t_httpSending:t_getRequestHeaders()
+	if not req_headers["Host"] then
+		local ip, port = self:t_getIpPort()
+		headers["Host"] = ip
+		if port != 80 then
+			headers["Host"] = headers["Host"] .. ':' .. port
+		end
+	end
 	
 	if self.t_httpSending:t_hasBody() then
 	

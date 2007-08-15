@@ -24,7 +24,7 @@ by a L<jive.net.SocketHttp>.
  local http = jive.net.SocketHttp(jnt, "192.168.1.1", 9000, "slimserver")
 
  -- create a request to GET http://192.168.1.1:9000/xml/status.xml
- local req = RequestHttp(sink, 'GET', '/xml/status.xml')
+ local req = RequestHttp(sink, 'GET', 'http://192.168.1.1:9000/xml/status.xml')
 
  -- go get it!
  http:fetch(req)
@@ -42,6 +42,7 @@ by a L<jive.net.SocketHttp>.
 local assert, tostring, type, pairs = assert, tostring, type, pairs
 
 local oo  = require("loop.base")
+local url = require("socket.url")
 
 local log = require("jive.utils.log").logger("net.http")
 
@@ -84,10 +85,7 @@ function __init(self, sink, method, uri, options)
 --]]
 	
 	-- default set of request side headers
-	local defHeaders = {
-		["User-Agent"] = "Jive",
-	}
-
+	local defHeaders = {}
 	local t_bodySource, headersSink
 
 	-- handle the options table
@@ -116,23 +114,42 @@ function __init(self, sink, method, uri, options)
 		end
 	end
 	
+	-- Default URI settings
+	local defaults = {
+	    host   = "",
+	    port   = 80,
+	    path   = "/",
+	    scheme = "http"
+	}
+	
+	local parsed = url.parse(uri, defaults)
+	
+	-- Set the Host header based on the URI if possible
+	if parsed.host != "" then
+		defHeaders["Host"] = parsed.host
+		if parsed.port != 80 then
+			defHeaders["Host"] = defHeaders["Host"] .. ':' .. parsed.port
+		end
+	end
+	
 	return oo.rawnew(self, {
 		-- request params
 		t_httpRequest = {
-			["method"] = method,
-			["uri"] = uri,
-			["src"] = t_bodySource,
+			["method"]  = method,
+			["uri"]     = uri,
+			["path"]    = parsed.path,
+			["src"]     = t_bodySource,
 			["headers"] = defHeaders,
 		},
 		-- response
 		t_httpResponse = {
-			["statusCode"] = false,
-			["statusLine"] = false,
-			["headers"] = false,
+			["statusCode"]  = false,
+			["statusLine"]  = false,
+			["headers"]     = false,
 			["headersSink"] = headersSink,
-			["body"] = "",
-			["done"] = false,
-			["sink"] = sink,
+			["body"]        = "",
+			["done"]        = false,
+			["sink"]        = sink,
 		},
 	})
 end
@@ -148,7 +165,7 @@ end
 -- t_getRequestString
 -- returns the HTTP request string, i.e. "GET uri"
 function t_getRequestString(self)
-	return self.t_httpRequest.method .. " " .. self.t_httpRequest.uri
+	return self.t_httpRequest.method .. " " .. self.t_httpRequest.path
 end
 
 
