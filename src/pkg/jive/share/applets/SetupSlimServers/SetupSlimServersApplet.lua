@@ -30,6 +30,8 @@ local table         = require("jive.utils.table")
 local Applet        = require("jive.Applet")
 local SlimServers   = require("jive.slim.SlimServers")
 
+local Checkbox      = require("jive.ui.Checkbox")
+local Label         = require("jive.ui.Label")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
 local Textarea      = require("jive.ui.Textarea")
@@ -52,76 +54,158 @@ oo.class(_M, Applet)
 function settingsShow(self, menuItem)
 
 	local window = Window("window", menuItem.text)
+	local menu = SimpleMenu("menu", items)
+	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
+	window:addWidget(menu)
 
-	local sdApplet = appletManager:getAppletInstance("SlimDiscovery")
-	
-	if sdApplet then
-		
-		self.sdApplet = sdApplet
 
-		local poll   = sdApplet:pollList()
-		local items  = {}
-
-		if poll["255.255.255.255"] then
-			items[#items + 1] = {
-				text = self:string("SLIMSERVER_AUTO_MODE"), 
-			}
-		end
-
-		for k, _ in pairs(poll) do
-			if k ~= "255.255.255.255" then
-				items[#items + 1] = {
-					text = k,
-					callback = function()
-						local subwindow = Window("window", k)
-						local submenu = SimpleMenu("menu", {
-							{
-								text = self:string("SLIMSERVER_DELETE"),
-								callback = function(event, menuItem)
-											   self:_del(k)
-											   subwindow:hide()
-											   window:hide()
-										   end,
-							},
-							{
-								text = self:string("SLIMSERVER_EDIT"),
-								callback = function(event, menuItem)
-											   self:_ipInput(menuItem, function (addr) self:_add(addr) end, k):show()
-											   self:_del(k)
-											   subwindow:hide()
-											   window:hide()
-										   end,
-							}
-						})
-						subwindow:addWidget(submenu)
-						subwindow:show()
-					end
-				}
-			end
-		end
-
-		items[#items + 1] = {
-			text = self:string("SLIMSERVER_ADD_SERVER"), 
-			callback = function(event, menuItem)
-						   self:_ipInput(menuItem, function (addr) self:_add(addr) end):show()
-						   window:hide()
-					   end
-		}
-
-		local menu = SimpleMenu("menu", items)
-	
-		window:addWidget(menu)
-
-		-- Store the applet settings when the window is closed
-		window:addListener(EVENT_WINDOW_POP,
-			function()
-				self:storeSettings()
-			end
-		)
-		
+	self.sdApplet = appletManager:getAppletInstance("SlimDiscovery")
+	if not self.sdApplet then
+		return window:tieAndShowWindow()
 	end
-	
+
+	self.serverMenu = menu
+	self.serverList = {}
+
+	-- subscribe to the jnt so that we get notifications of servers added/removed
+	jnt:subscribe(self)
+
+
+	-- slimservers on the poll list
+	local poll = self.sdApplet:pollList()
+	for address,_ in pairs(poll) do
+		if address ~= "255.255.255.255" then
+			self:_addServerItem(address)
+		end
+	end
+
+
+	-- discovered slimservers
+	for _,server in self.sdApplet:allServers() do
+		local id = server:getIpPort()
+		self:_addServerItem(id, server)
+	end
+
+	local item = {
+		text = self:string("SLIMSERVER_ADD_SERVER"), 
+		callback = function(event, menuItem)
+				   self:_addServer(menuItem)
+			   end,
+		weight = 2
+	}
+	menu:addItem(item)
+
+
+	item = {
+		text = self:string("SLIMSERVER_AUTO_DISCOVERY"),
+		icon = Checkbox("checkbox",
+				function(object, isSelected)
+					if isSelected then
+						self:_add("255.255.255.255")
+					else
+						self:_del("255.255.255.255")
+					end
+				end,
+				poll["255.255.255.255"] ~= nil
+			),
+		weight = 3
+	}
+	menu:addItem(item)
+
+	-- Discover slimservers in this window
+	window:addTimer(1000, function() self.sdApplet:discover() end)
+
+	-- Store the applet settings when the window is closed
+	window:addListener(EVENT_WINDOW_POP,
+			   function()
+				   jnt:unsubscribe(self)
+				   self:storeSettings()
+			   end
+		   )
+
 	self:tieAndShowWindow(window)
+end
+
+
+function _addServerItem(self, id, server)
+	log:debug("_addServerItem ", id, " " ,server)
+
+	-- remove existing entry
+	if self.serverList[id] then
+		self.serverMenu:removeItem(self.serverList[id])
+	end
+
+	-- new entry
+	local item = {
+		text = server and server:getName() or id,
+		callback = function() self:_serverMenu(id, server) end,
+		weight = 1
+	}
+	self.serverMenu:addItem(item)
+	self.serverList[id] = item
+end
+
+
+function _delServerItem(self, id, server)
+	-- remove entry
+	if self.serverList[id] then
+		server.serverMenu:removeItem(self.serverList[id])
+		self.serverList[id] = nil
+	end
+
+	-- new entry if server is on poll list
+	local poll = self.sdApplet:pollList()
+	if poll[id] then
+		self:_addServerItem(id)
+	end
+end
+
+function _serverMenu(self, id, server)
+	local name = server and server:getName() or id
+
+	local window = Window("window", name)
+	local menu = SimpleMenu("menu", items)
+
+	if server then
+		menu:addItem({
+				     text = self:string("SLIMSERVER_ADDRESS"),
+				     icon = Label("value", table.concat({ server:getIpPort() }, ":"))
+			     })
+		menu:addItem({
+				     text = self:string("SLIMSERVER_VERSION"),
+				     icon = Label("value", server:getVersion() or "")
+			     })
+	end
+
+	local poll = self.sdApplet:pollList()
+	if poll[id] then
+		menu:addItem({
+				     text = self:string("SLIMSERVER_FORGET", name),
+				     callback = function() 
+							self:_del(id)
+							window:hide()
+						end
+			     })
+	end
+
+	window:addWidget(menu)
+	self:tieAndShowWindow(window)
+end
+
+
+function notify_serverNew(self, server)
+	log:debug("server new", server)
+
+	local id = server:getIpPort()
+	self:_addServerItem(id, server)
+end
+
+
+function notify_serverDelete(self, server)
+	log:debug("server delete", server)
+
+	local id = server:getIpPort()
+	self:_delServerItem(id, server)
 end
 
 
@@ -130,13 +214,10 @@ function _add(self, address)
 	log:debug("SlimServerApplet:_add: ", address)
 
 	local list = self.sdApplet:pollList()
-
-	list["255.255.255.255"] = nil
-
 	list[address] = address
 
 	self.sdApplet:pollList(list)
-	self:setSettings({ poll = list })
+	self:getSettings().poll = list
 end
 
 
@@ -145,36 +226,30 @@ function _del(self, address)
 	log:debug("SlimServerApplet:_del: ", address)
 
 	local list = self.sdApplet:pollList()
-
 	list[address] = nil
 
-	if #list == 0 then
-		list["255.255.255.255"] = "255.255.255.255"
-	end
-
 	self.sdApplet:pollList(list)
-	self:setSettings({ poll = list })
+	self:getSettings().poll = list
 end
 	
 
 -- ip address input window
-function _ipInput(self, menuItem, callback, init)
+function _addServer(self, menuItem)
 	local window = Window("window", menuItem.text)
 
-	local v = Textinput.ipAddressValue(init or "0.0.0.0")
+	local v = Textinput.ipAddressValue("0.0.0.0")
 	local input = Textinput("textinput", v,
 				function(_, value)
-					callback(value:getValue())
+					self:_add(value:getValue())
+					self:_addServerItem(value:getValue())
 					window:hide(Window.transitionPushLeft)
 					return true
 				end)
 
-	local help = Textarea("help", self:string("SLIMSERVER_HELP"))
-
-	window:addWidget(help)
+	window:addWidget(Textarea("help", self:string("SLIMSERVER_HELP")))
 	window:addWidget(input)
 
-	return window
+	self:tieAndShowWindow(window)
 end
 
 

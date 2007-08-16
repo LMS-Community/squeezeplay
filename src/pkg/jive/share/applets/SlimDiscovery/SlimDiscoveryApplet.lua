@@ -60,11 +60,24 @@ function __init(self, ...)
 	-- arrange so that discover is called when in home
 	jiveMain:addInHomeListener(
 		function()
-			obj.serversObj:discover()
+			obj:discover()
 		end
 	)
 	
 	return obj
+end
+
+
+--[[
+
+=head2 applets.SlimDiscovery.SlimDiscoveryApplet:discover()
+
+Send a discovery packet over the network looking for slimservers and players.
+
+=cut
+--]]
+function discover(self)
+	self.serversObj:discover()
 end
 
 

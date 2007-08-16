@@ -48,6 +48,7 @@ Note the implementation uses the source and sink concept of luasocket.
 local assert,tostring = assert,tostring
 
 local socket  = require("socket")
+local table   = require("table")
 local ltn12   = require("ltn12")
 local oo      = require("loop.simple")
 
@@ -116,6 +117,7 @@ function __init(self, jnt, sink, name)
 	
 		-- save the socket, we might need it later :)
 		obj.t_sock = sock
+		obj.queue = {}
 		
 		-- transform the main thread sink in something that can be called network thread side
 		local safeSink = obj:safeSink(sink)
@@ -157,31 +159,43 @@ function t_getReadPump(self, sink)
 end
 
 
--- t_getWritePump
--- returns a pump to write out bcast data. It removes itself after each pump
-function t_getWritePump(self, t_source, address, port)
+-- t_getSink
+-- returns a sink to write out udp data.
+function t_getSink(self, address, port)
 
 	-- a ltn12 sink than sends udp bcast datagrams
-	local sink = function(chunk, err)
+	return function(chunk, err)
 		if chunk and chunk ~= "" then
 			return self.t_sock:sendto(chunk, address, port)
 		else
 			return 1
 		end
 	end
+end
+
+
+-- t_getWritePump
+-- returns a pump to write out udp data. It removes itself when the 
+-- queue is empty after each pump
+function t_getWritePump(self, t_source)
 
 	return function()
 		--log:debug("SocketUdp:writePump()")
 		
+	        local sink = table.remove(self.queue, 1)
+
+		-- stop the pumping when queue is empty
+		if sink == nil then
+			self:t_removeWrite()
+			return
+		end
+
 		-- pump data once
 		local err = socket.skip(1, ltn12.pump.step(t_source, sink))
 		
 		if err then
 			log:error("SocketUdp:writePump:", err)
 		end
-		
-		-- stop the pumping...
-		self:t_removeWrite()
 	end
 end
 
@@ -200,11 +214,16 @@ function send(self, t_source, address, port)
 	--log:debug("SocketUdp:send()")
 
 --	assert(t_source)
---  assert(address)
+--      assert(address)
 --	assert(port)
 
 	if self.t_sock then
-		self:perform(function() self:t_addWrite(self:t_getWritePump(t_source, address, port)) end)	
+		self:perform(function() 
+				     if #self.queue == 0 then
+					     self:t_addWrite(self:t_getWritePump(t_source))
+				     end
+				     table.insert(self.queue, self:t_getSink(address, port))
+			     end)	
 	end
 end
 
