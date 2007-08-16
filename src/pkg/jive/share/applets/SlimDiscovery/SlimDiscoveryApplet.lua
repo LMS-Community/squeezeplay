@@ -9,7 +9,14 @@ applets.SlimDiscovery.SlimDiscoveryApplet - Discover Slimservers on the network
 This applet uses the L<jive.slim.SlimServers> class to discover Slimservers on the network
 using the SqueezeBox discovery protocol. Slimservers are then queried to retrieve available
 music players.
-This applet provides the plumbing as well an API to access the discovered servers and players.
+This applet provides the plumbing as well an API to access the discovered servers and players,
+including a notification to inform of a change in the "current" player.
+
+
+Notifications:
+
+ playerCurrent
+
 
 =head1 FUNCTIONS
 
@@ -92,7 +99,7 @@ Returns an iterator over the discovered players.
 =cut
 --]]
 -- this iterator respects the implementation privacy of the SlimServers and SlimServer
--- classes. It only uses the fact allServers and allPlayers call respect the for
+-- classes. It only uses the fact allServers and allPlayers calls respect the for
 -- generator logic of Lua.
 local function _playerIterator(invariant)
 	while true do
@@ -156,6 +163,7 @@ Sets the current player
 --]]
 function setCurrentPlayer(self, player)
 	self.currentPlayer = player
+	jnt:notify("playerCurrent", player)
 end
 
 

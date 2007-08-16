@@ -80,7 +80,13 @@ local function _cacheServer(self, ss_ip, ss_port, ss_name)
 		log:info("Creating server ", ss_name, " (", ss_id, ")")
 		
 		-- drop the port info, we're not doing anything with it
-		self._servers[ss_id] = SlimServer(self.jnt, ss_ip, ss_name)
+	 	local server = SlimServer(self.jnt, ss_ip, ss_name)
+	
+		-- add to DB
+		self._servers[ss_id] = server
+		
+		-- notify
+		self.jnt:notify('serverNew', server)	
 
 	else
 	
@@ -137,6 +143,7 @@ local function _cacheCleanup(self)
 		
 			log:info("Removing server ", server:getName(), " (", ss_id, ")")
 			self._servers[ss_id] = nil
+			self.jnt:notify("serverDelete", server)
 			server:free()
 		end
 	end

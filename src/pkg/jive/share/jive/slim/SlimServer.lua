@@ -18,6 +18,11 @@ Represents and interfaces with a real SlimServer on the network.
  -- Get the SlimServer version
  local myServerVersion = myServer:getVersion()
 
+Notifications:
+
+ serverNew (performed by SlimServers)
+ serverDelete (performed by SlimServers)
+
 =head1 FUNCTIONS
 
 =cut
@@ -184,6 +189,8 @@ function _serverstatusSink(self, data, err)
 	
 	-- copy all players we know about
 	local selfPlayers = {}
+	local player
+	
 	for k,v in pairs(self.players) do
 		selfPlayers[k] = k
 	end
@@ -198,8 +205,13 @@ function _serverstatusSink(self, data, err)
 			-- create new players
 			if not self.players[player_info.playerid] then
 			
-				self.players[player_info.playerid] = Player(self, self.jnt, self.jpool, player_info)
+				player = Player(self, self.jnt, self.jpool, player_info)
 			
+				self.players[player_info.playerid] = player
+				
+				-- notify of new player
+				self.jnt:notify('playerNew', player)
+
 			else
 				-- update existing players
 				self.players[player_info.playerid]:updateFromSS(player_info)
@@ -211,8 +223,11 @@ function _serverstatusSink(self, data, err)
 	
 	-- any players still in the list are gone...
 	for k,v in pairs(selfPlayers) do
-		self.players[k]:free()
+		player = self.players[k]
 		self.players[k] = nil
+		-- wave player bye bye
+		self.jnt:notify('playerDelete', player)
+		player:free()
 	end
 	
 end
@@ -269,8 +284,7 @@ function __init(self, jnt, ip, name)
 	-- our long term request
 	_establishConnection(obj)
 	
-	-- We're here!
-	obj.jnt:notify('serverNew', obj)
+	-- notify we're here by caller in SlimServers
 	
 	return obj
 end
@@ -287,9 +301,8 @@ Deletes a SlimServer object, frees memory and closes connections with the server
 function free(self)
 	log:debug(self, ":free()")
 	
-	-- notify we're going away
-	self.jnt:notify("serverDelete", self)
-	
+	-- notify we're gone by caller in SlimServers
+		
 	-- clear cache
 	self.artworkThumbCache = nil
 	self.artworkThumbIcons = nil

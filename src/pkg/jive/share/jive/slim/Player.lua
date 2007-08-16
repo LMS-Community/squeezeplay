@@ -14,8 +14,8 @@ Notifications:
 
  playerConnected:
  playerDisconnected:
- playerNew
- playerDelete
+ playerNew (performed by SlimServer)
+ playerDelete (performed by SlimServer)
 
 =head1 FUNCTIONS
 
@@ -142,8 +142,7 @@ function __init(self, slimServer, jnt, jpool, playerInfo)
 		currentSong = {}
 	})
 	
-	-- notify we're here
-	obj.jnt:notify('playerNew', obj)
+	-- SlimServer notifies of our arrival, so that listener see us in the SS db when notified, not before
 	
 	return obj
 end
@@ -174,7 +173,7 @@ Deletes the player.
 --]]
 function free(self)
 	self:offStage()
-	self.jnt:notify("playerDelete", self)
+	-- caller has to notify we're gone
 end
 
 
