@@ -1,6 +1,6 @@
 
 -- stuff we use
-local assert, getmetatable, setmetatable, string, tonumber, tostring, type, unpack = assert, getmetatable, setmetatable, string, tonumber, tostring, type, unpack
+local assert, getmetatable, ipairs, setmetatable, string, tonumber, tostring, type, unpack = assert, getmetatable, ipairs, setmetatable, string, tonumber, tostring, type, unpack
 
 local oo                = require("loop.simple")
 local Widget            = require("jive.ui.Widget")
@@ -372,7 +372,12 @@ function ipAddressValue(default)
 
 				     getValue =
 					     function(value)
-						     return table.concat(value, ".")
+						     -- remove leading zeros
+						     local norm = {}
+						     for i,v in ipairs(value) do
+							     norm[i] = tostring(tonumber(v))
+						     end
+						     return table.concat(norm, ".")
 					     end,
 
 				     getChars = 
