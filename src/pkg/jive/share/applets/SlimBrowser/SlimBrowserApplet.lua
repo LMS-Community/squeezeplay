@@ -1006,24 +1006,43 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	
 	-- a DB (empty...) 
 	local db = DB(windowSpec)
-
-	local menu
 	
+	local menu
+
 	-- if the item has an input field, we must ask for it
 	if item and item['input'] and not item['_inputDone'] then
+
+		local inputSpec
+		
+		-- legacy SS compatibility
+		-- FIXME: remove SS compatibility with legacy JiveMLON generation
+		if type(item['input']) != "table" then
+			inputSpec = {
+				len = item['input'],
+				help = {
+					token = "SLIMBROWSER_SEARCH_HELP",
+				},
+			}
+		else
+			inputSpec = item["input"]
+		end
 		
 		-- make sure it's a number for the comparison below
 		-- Lua insists on checking type while Perl couldn't care less :(
-		item.input = tonumber(item.input)
-	
+		inputSpec.len = tonumber(inputSpec.len)
+		
+		-- default allowedChars
+		if not inputSpec.allowedChars then
+			inputSpec.allowedChars = " abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:\\\"'<>?-=,./~`[];0123456789"
+		end
+
 		-- create a text input
 		local input = Textinput(
 			"textinput", 
 			"",
 			function(_, value)
-			
 				-- check for min number of chars
-				if #value < item.input then
+				if #value < inputSpec.len then
 					return false
 				end
 
@@ -1035,14 +1054,29 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 				-- now we should perform the action !
 				_actionHandler(nil, nil, db, nil, nil, 'go', item)
 				return true
-			end
+			end,
+			inputSpec.allowedChars
 		)
 
-		local help = Textarea("help", _string("SLIMBROWSER_SEARCH_HELP"))
-
-		window:addWidget(help)
+		-- fix up help
+		local helpText
+		if inputSpec.help then
+			local help = inputSpec.help
+			helpText = help.text
+			if not helpText then
+				if help.token then
+					helpText = _string(help.token)
+				end
+			end
+		end
+		
+		if helpText then
+			local help = Textarea("help", helpText)
+			window:addWidget(help)
+		end
+		
 		window:addWidget(input)
-	
+
 	else
 	
 		-- create a cozy place for our items...

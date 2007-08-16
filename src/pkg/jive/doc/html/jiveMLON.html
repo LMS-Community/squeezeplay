@@ -10,7 +10,7 @@
 
 	<p>Interface specifications for browsing using Jive.</p>
 
-	<p>Version 1.0 (<a href="#rev">revision history</a>)</p>
+	<p>Version 1.1 (<a href="#rev">revision history</a>)</p>
 
 	<h2>Introduction</h2>
 
@@ -98,7 +98,9 @@
     text = "..."
     icon-id = ...
     icon = "..."
-    input = "..."
+    input = {
+        &lt;input_fields&gt;
+    }
     window = {
         &lt;window_fields&gt;
     }
@@ -123,13 +125,45 @@
 		Full or partial URL of some image to display.</p>
 
 		<p><code>input</code><br>
-		If present, indicates user input is required before proceeding with the actions. The value consists of the min number of characters to request before proceeding. See <a href="#action_fields">&lt;actions_fields&gt;</a> for usage of the entered value.</p>
+		If present, indicates user input is required before proceeding with the actions. See <a href="#input_fields">&lt;input_fields&gt;</a>.</p>
 
 		<p><code>window</code><br>
 		Allows specifying the elements to use for a window opened from this menu. See <a href="#window_fields">&lt;window_fields&gt;</a>.</p>
 
 		<p><code>actions</code><br>
 		Allows specifying the command(s) to use for this menu. See <a href="#action_fields">&lt;actions_fields&gt;</a>.</p>
+	</blockquote>
+
+	<h2 id="input_fields"><code>&lt;input_fields&gt;</code></h2>
+
+	<p>Used if input is required before proceeding with the action. Specifies length to input, allowed chars and help text or token.</p>
+
+	<blockquote>
+		<pre>
+{
+    len = ...
+    allowedChars = "..."
+    help = {
+        text = "...",
+        token = "...",
+    }
+}
+        
+</pre>
+	</blockquote>
+
+	<p>where (items in bold are mandatory):</p>
+
+	<blockquote>
+		<p><strong><code>len</code></strong><br>
+		Min number of characters to request before proceeding.</p>
+
+		<p><code>allowedChars</code><br>
+		Overrides the set of characters allowed for input. The default value is &quot; abcdefghijklmnopqrstuvwxyz!@#$%^&amp;*()_+{}|:\\\&quot;&apos;&lt;&gt;?-=,./~`[];0123456789&quot;</p>
+
+		<p><code>help</code><br>
+		A help text, if any. Can be specified either using the localized text or a token (localized by Jive),</p>
+
 	</blockquote>
 
 	<h2 id="window_fields"><code>&lt;window_fields&gt;</code></h2>
@@ -437,6 +471,12 @@
 	<p>For example, the hierarchy [genres, artist, album] is done using a top level menu with command "genres menu:artist", that generates items with commands "artists menu:albums", etc... This is done in order to re-use the code of these queries. Experience shows they are high maintenance.</p>
 
 	<h2 id="rev">Revision history</h2>
+
+	<h3>1.1</h3>
+
+	<ul>
+		<li>Improved input description: now can specify allowed chars and help text or token.</li>
+	</ul>
 
 	<h3>1.0</h3>
 

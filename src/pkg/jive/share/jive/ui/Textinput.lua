@@ -40,8 +40,9 @@ function _getChars(self)
 		return self.value:getChars(self.cursor)
 	end
 
-	return " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\\\"'<>?-=,./~`[];0123456789"
+	return self.allowedChars
 end
+
 
 -- returns true if text entry is completed.
 function _isEntered(self)
@@ -258,18 +259,22 @@ end
 
 --[[
 
-=head2 jive.ui.Textinput:init(style, value, closure)
+=head2 jive.ui.Textinput:init(style, value, closure, allowedChars)
 
-Creates a new Textinput widget with initial value I<value>. The <closure>
+Creates a new Textinput widget with initial value I<value>. The I<closure>
 is a function that will be called at the end of the text input. This function
 should return false if the text is invalid (the window will then bump right)
 or return true when the text is valid.
+I<allowedChars> is an optional parameter containing the list of chars to propose.
 
 =cut
 --]]
-function __init(self, style, value, closure)
+function __init(self, style, value, closure, allowedChars)
 	assert(type(style) == "string")
 	assert(value ~= nil)
+	if allowedChars then
+		assert(type(allowedChars) == "string")
+	end
 
 	local obj = oo.rawnew(self, Widget(style))
 
@@ -278,6 +283,8 @@ function __init(self, style, value, closure)
 	obj.maxWidth = 0
 	obj.value = value
 	obj.closure = closure
+	obj.allowedChars = allowedChars or
+		 " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\\\"'<>?-=,./~`[];0123456789"
 
 	obj:addListener(EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE,
 			function(event)
@@ -292,7 +299,7 @@ end
 
 =head2 jive.ui.Textinput.hexValue(default)
 
-Returns a value that can be used for entring ip addresses.
+Returns a value that can be used for entering an hexadecimal value.
 
 =cut
 --]]
@@ -344,7 +351,7 @@ end
 
 =head2 jive.ui.Textinput.ipAddressValue(default)
 
-Returns a value that can be used for entring ip addresses.
+Returns a value that can be used for entering an ip address.
 
 =cut
 --]]
