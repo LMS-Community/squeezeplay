@@ -76,9 +76,8 @@ function tieWindow(self, window)
 	window:addListener(EVENT_WINDOW_POP,
 		function()
 			self._tie[window] = nil
-			if pairs(self._tie) == nil then
-				AppletManager:_freeApplet(self._entry)
-			end
+			for _ in pairs(self._tie) do return end
+			AppletManager:_freeApplet(self._entry)
 		end)
 end
 
