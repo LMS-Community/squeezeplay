@@ -28,9 +28,7 @@ module(...)
 oo.class(_M, AppletMeta)
 
 function defaultSettings(meta)
-	return {
-		selectedPlayer = nil
-	}
+	return {}
 end
 
 function jiveVersion(meta)

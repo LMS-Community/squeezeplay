@@ -26,6 +26,7 @@ local SimpleMenu         = require("jive.ui.SimpleMenu")
 local RadioGroup         = require("jive.ui.RadioGroup")
 local RadioButton        = require("jive.ui.RadioButton")
 local Window             = require("jive.ui.Window")
+local Label              = require("jive.ui.Label")
 local appletManager      = appletManager
 local jiveMain           = jiveMain
 local jnt                = jnt
@@ -39,16 +40,26 @@ module(...)
 oo.class(_M, Applet)
 
 function init(self, ...)
+--	jiveMain.window:setTitle('Testing')
+	-- TODO get currentPlayer from SlimDiscovery instead of from SelectPlayer
 	self.selectedPlayer = self:getSettings()["selectedPlayer"]
 	self.playerList = {}
 	jnt:subscribe(self)
 end
 
+-- TODO what to do when notification of currentPlayer has been issued
+function notify_playerCurrent(self, playerObj)
+	-- change hooks on home menu to currentPlayer
+end
+
 function notify_playerDelete(self, playerObj)
 	local playerMac = playerObj.id
 	self.playerList[playerMac] = nil
-	self.numberOfPlayers = self.numberOfPlayers - 1
 	manageSelectPlayerMenu(self)
+	if self.playerMenu and self.playerItem[playerMac] then
+		self.playerMenu:removeItem(self.playerItem[playerMac])
+		self.playerItem[playerMac] = nil
+	end
 end
 
 function notify_playerNew(self, playerObj)
@@ -56,17 +67,20 @@ function notify_playerNew(self, playerObj)
 	local playerMac = playerObj.id
 	local playerName = playerObj.name
 	self.playerList[playerMac] = playerName
-	self.numberOfPlayers = numberOfPlayers(self.playerList)
 	-- if there isn't a selected player, make this one the selected player
 	if (self.selectedPlayer == nil) then
 		self:selectPlayer(playerMac)
 	end
 	manageSelectPlayerMenu(self)
+	if self.playerMenu then
+		self:_addPlayerItem(playerObj)
+	end
 end
 
 function manageSelectPlayerMenu(self)
-	-- if numberOfPlayers is > 1 and selectPlayerMenuItem doesn't exist, create it
-	if (self.numberOfPlayers > 1 and self.selectPlayerMenuItem == nil) then
+	local _numberOfPlayers = numberOfPlayers(self.playerList)
+	-- if _numberOfPlayers is > 1 and selectPlayerMenuItem doesn't exist, create it
+	if (_numberOfPlayers > 1 and self.selectPlayerMenuItem == nil) then
 		local menuItem = {
 			text = self:string("SELECT_PLAYER"),
 			callback = function(_, ...) self:getPlayers(...) end,
@@ -75,7 +89,7 @@ function manageSelectPlayerMenu(self)
 		self.selectPlayerMenuItem = menuItem
 	end
 	-- if numberOfPlayers < 2 and selectPlayerMenuItem exists, get rid of it
-	if (self.numberOfPlayers < 2 and self.selectPlayerMenuItem) then
+	if (_numberOfPlayers < 2 and self.selectPlayerMenuItem) then
 		jiveMain:removeItem(self.selectPlayerMenuItem)
 		self.selectPlayerMenuItem = nil
 	end
@@ -89,27 +103,42 @@ function numberOfPlayers(playerList)
 	return numberOfPlayers
 end
 
+function _addPlayerItem(self, player)
+	local playerMac = player.id
+	local playerName = player.name
+	log:warn('player:|', playerMac, '|', playerName)
+	-- display as radio selections
+	local button = RadioButton(
+		"radio", 
+		self.radioGroup, 
+		function() self:selectPlayer(playerMac) end,
+		playerMac == self.selectedPlayer
+	)
+	local item = {
+		text = playerName,
+		icon = button,
+	}
+	self.playerMenu:addItem(item)
+	--self.playerItems[playerMac] = item
+end
+
 function getPlayers(self)
 	-- get list of slimservers
 	-- local slimServers = appletManager:getApplet("SlimDiscovery"):getSlimservers():servers()
 	local window = Window("window", self:string("SELECT_PLAYER"))
         local menu = SimpleMenu("menu")
         local group = RadioGroup()
+	self.playerMenu = menu
+	self.radioGroup = group
+	-- TODO, get the selectedPlayer from SlimDiscovery
 	self.selectedPlayer = self:getSettings()["selectedPlayer"]
-	local playerList, numberOfPlayers = populatePlayerList(self)
-	for playerMac, playerName in pairs(playerList) do
-		log:debug('player:|', playerMac,'|',playerName)
-		-- display as radio selections
-                local button = RadioButton(
-                        "radio", 
-                        group, 
-                        function() self:selectPlayer(playerMac) end,
-			playerMac == self.selectedPlayer
-                )
-                menu:addItem({
-                        text = playerName,
-                        icon = button,
-                })
+        local sdApplet = appletManager:getAppletInstance("SlimDiscovery")
+        if sdApplet then
+		for playerMac, playerObj in sdApplet:allPlayers() do
+			_addPlayerItem(self, playerObj)
+		end
+	else
+		return
 	end
 
 	window:addWidget(menu)
@@ -117,28 +146,16 @@ function getPlayers(self)
 	window:addListener(EVENT_WINDOW_POP,
 		function()
 			self:storeSettings()
+			self.playerMenu = nil
 		end
 	)
 	self:tieAndShowWindow(window)
 	return window
 end
 
-function populatePlayerList(self)
-	local playerList = {}
-	local numberOfPlayers = 0
-        local sdApplet = appletManager:getAppletInstance("SlimDiscovery")
-        if sdApplet then
-                for playerMac, playerObj in sdApplet:allPlayers() do
-			playerList[playerMac] = playerObj.name
-			numberOfPlayers = numberOfPlayers + 1
-		end
-	end
-	log:debug('size of playerList is ', numberOfPlayers)
-	return playerList, numberOfPlayers
-end
-
 function selectPlayer(self, playerMac)
 	log:warn("Selected player is now ", playerMac)
+	-- TODO set currentPlayer in SlimDiscovery
 	self:getSettings()["selectedPlayer"] = playerMac
 	return true
 end
