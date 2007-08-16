@@ -501,7 +501,9 @@ Returns the server version
 =cut
 --]]
 function getVersion(self)
-	return self.version
+	if self.state then 
+		return self.state.version
+	end
 end
 
 
