@@ -47,11 +47,6 @@ function init(self, ...)
 	jnt:subscribe(self)
 end
 
--- TODO what to do when notification of currentPlayer has been issued
-function notify_playerCurrent(self, playerObj)
-	-- change hooks on home menu to currentPlayer
-end
-
 function notify_playerDelete(self, playerObj)
 	local playerMac = playerObj.id
 	self.playerList[playerMac] = nil
@@ -157,6 +152,12 @@ function selectPlayer(self, playerMac)
 	log:warn("Selected player is now ", playerMac)
 	-- TODO set currentPlayer in SlimDiscovery
 	self:getSettings()["selectedPlayer"] = playerMac
+	return true
+end
+
+function free(self)
+        log:debug("SelectPlayer:free()")
+        jnt:unsubscribe(self)
 	return true
 end
 
