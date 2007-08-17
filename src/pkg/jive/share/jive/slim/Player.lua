@@ -229,6 +229,45 @@ function __tostring(self)
 end
 
 
+--[[
+
+=head2 jive.slim.Player:getName()
+
+Returns the player name
+
+=cut
+--]]
+function getName(self)
+	return self.name
+end
+
+
+--[[
+
+=head2 jive.slim.Player:getId()
+
+Returns the player id (in general the MAC address)
+
+=cut
+--]]
+function getId(self)
+	return self.id
+end
+
+
+--[[
+
+=head2 jive.slim.Player:getSlimServer()
+
+Returns the player SlimServer (a L<jive.slim.SlimServer>).
+
+=cut
+--]]
+function getSlimServer(self)
+	return self.slimServer
+end
+
+
 -- call
 -- sends a command
 function call(self, cmd)
@@ -426,7 +465,7 @@ end
 --
 function togglePause(self)
 
-	if not self.state then  return end
+	if not self.state then return end
 	
 	local paused = self.state["mode"]
 	log:debug("Player:togglePause(", paused, ")")
@@ -628,18 +667,7 @@ function getVolume(self)
 end
 
 
--- (accessors)
-function getName(self)
-	return self.name
-end
 
-function getId(self)
-	return self.id
-end
-
-function getSlimServer(self)
-	return self.slimServer
-end
 
 function getConnected(self)
 	return self.connected

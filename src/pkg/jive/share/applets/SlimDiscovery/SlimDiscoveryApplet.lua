@@ -217,8 +217,8 @@ function notify_playerNew(self, player)
 		local menuItem = {
 			text = player:getName(),
 			callback = function(_, menuItem)
-					appletManager:loadApplet("SlimBrowser"):openPlayer(menuItem, player)
-				   end
+				appletManager:loadApplet("SlimBrowser"):openPlayer(menuItem, player)
+			end
 		}
 
 
