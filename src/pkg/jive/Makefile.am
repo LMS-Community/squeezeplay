@@ -100,6 +100,8 @@ dist_jiveui_DATA = \
 
 luanetdir = $(pkgdatadir)/jive/net
 dist_luanet_DATA = \
+	share/jive/net/Comet.lua \
+	share/jive/net/CometRequest.lua \
 	share/jive/net/NetworkThread.lua \
 	share/jive/net/SocketHttp.lua \
 	share/jive/net/SocketHttpQueue.lua \
