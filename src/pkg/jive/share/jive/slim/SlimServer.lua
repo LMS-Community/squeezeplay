@@ -29,7 +29,7 @@ Notifications:
 --]]
 
 -- our stuff
-local assert, tostring, type = assert, tostring, type
+local assert, tonumber, tostring, type = assert, tonumber, tostring, type
 local pairs, ipairs, setmetatable = pairs, ipairs, setmetatable
 
 local os          = require("os")
@@ -37,7 +37,7 @@ local table       = require("table")
 
 local oo          = require("loop.base")
 
-local SocketHttp  = require("jive.net.SocketHttp")
+local Comet       = require("jive.net.Comet")
 local HttpPool    = require("jive.net.HttpPool")
 local Player      = require("jive.slim.Player")
 local Surface     = require("jive.ui.Surface")
@@ -46,17 +46,13 @@ local RequestHttp = require("jive.net.RequestHttp")
 local log         = require("jive.utils.log").logger("slimserver")
 local logcache    = require("jive.utils.log").logger("slimserver.cache")
 
-require("jive.slim.RequestsCli")
-local RequestServerstatus = jive.slim.RequestServerstatus
-
-local RequestCli = jive.slim.RequestCli
-
 -- FIXME: squeezenetwork behaviour
 
 -- jive.slim.SlimServer is a base class
 module(..., oo.class)
 
 -- our class constants
+-- XXX: What if user changes the web port?
 local HTTPPORT = 9000                -- Slimserver HTTP port
 local RETRY_UNREACHABLE = 120        -- Min delay (in s) before retrying a server unreachable
 
@@ -136,27 +132,28 @@ _establishConnection = function(self)
 	-- get 50 players
 	-- FIXME: what if the server has more than 50 players?
 	
-	self.jsp:fetch(
-		RequestServerstatus(
-			_getSink(self, "_serverstatusSink"), 
-			0, 
-			50, 
-			60
-		)
+	self.comet:subscribe(
+		'/slim/serverstatus',
+		_getSink(self, '_serverstatusSink'),
+		nil,
+		'serverstatus', 0, 50, 'subscribe:60'
 	)
+	
+	-- Start the Comet connection process
+	self.comet:start()
 end
 
 
 -- _serverstatusSink
 -- processes the result of the serverstatus call
-function _serverstatusSink(self, data, err)
+function _serverstatusSink(self, event, err)
 	log:debug(self, ":_serverstatusSink()")
---	log:info(data)
+--	log:info(event)
 
 	-- check we have a result 
-	if not data.result then
-		log:error(self, ": chunk with no result ??!")
-		log:error(data)
+	if not event.data then
+		log:error(self, ": chunk with no data ??!")
+		log:error(event)
 		return
 	end
 
@@ -164,14 +161,14 @@ function _serverstatusSink(self, data, err)
 	_setPlumbingState(self, 'connected')
 	
 	-- remember players from server
-	local serverPlayers = data.result["players_loop"]
-	data.result["players_loop"] = nil
+	local serverPlayers = event.data["players_loop"]
+	event.data["players_loop"] = nil
 	
 	-- remember our state
 	local selfState = self.state
 	
 	-- update in one shot
-	self.state = data.result
+	self.state = event.data
 	
 	-- manage rescan
 	-- use tostring to handle nil case (in either server of self data)
@@ -195,7 +192,8 @@ function _serverstatusSink(self, data, err)
 		selfPlayers[k] = k
 	end
 	
-	if data.result["player count"] > 0 then
+	-- JSON::XS on the Perl side may send this as a string
+	if tonumber( event.data["player count"] ) > 0 then
 
 		for i, player_info in ipairs(serverPlayers) do
 	
@@ -269,8 +267,9 @@ function __init(self, jnt, ip, name)
 		-- our pool
 		jpool = HttpPool(jnt, ip, HTTPPORT, 4, 2, name),
 
-		-- our socket for long term connections
-		jsp = SocketHttp(jnt, ip, HTTPPORT, name .. "LT"),
+		-- our socket for long term connections, this will not
+		-- actually connect yet
+		comet = Comet(jnt, ip, HTTPPORT, '/cometd', name),
 		
 		-- artwork cache: Weak table storing a surface by iconId
 		artworkThumbCache = setmetatable({}, { __mode="k" }),
@@ -318,9 +317,9 @@ function free(self)
 		self.jpool:free()
 		self.jpool = nil
 	end
-	if self.jsp then
-		self.jsp:free()
-		self.jsp = nil
+	if self.comet then
+		self.comet:free()
+		self.comet = nil
 	end
 end
 

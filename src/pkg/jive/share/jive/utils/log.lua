@@ -171,6 +171,7 @@ local categories = {
 	["net.thread"]               = jiveLogger(logging.WARN),
 	["net.socket"]               = jiveLogger(logging.WARN),
 	["net.http"]                 = jiveLogger(logging.WARN),
+	["net.comet"]                = jiveLogger(logging.WARN),
 	                             
 	["ui"]                       = jiveLogger(logging.WARN),
                                  
