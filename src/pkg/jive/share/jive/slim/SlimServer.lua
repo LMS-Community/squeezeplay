@@ -52,8 +52,6 @@ local logcache    = require("jive.utils.log").logger("slimserver.cache")
 module(..., oo.class)
 
 -- our class constants
--- XXX: What if user changes the web port?
-local HTTPPORT = 9000                -- Slimserver HTTP port
 local RETRY_UNREACHABLE = 120        -- Min delay (in s) before retrying a server unreachable
 
 
@@ -241,8 +239,8 @@ of the server.
 
 =cut
 --]]
-function __init(self, jnt, ip, name)
-	log:debug("SlimServer:__init(", ip, ", ", name, ")")
+function __init(self, jnt, ip, port, name)
+	log:debug("SlimServer:__init(", ip, ":", port, " ",name, ")")
 
 	assert(ip, "Cannot create SlimServer without ip address")
 
@@ -256,6 +254,7 @@ function __init(self, jnt, ip, name)
 			state = 'init',
 			lastSeen = os.time(),
 			ip = ip,
+			port = port,
 		},
 
 		-- data from SS
@@ -265,11 +264,11 @@ function __init(self, jnt, ip, name)
 		players = {},
 
 		-- our pool
-		jpool = HttpPool(jnt, ip, HTTPPORT, 4, 2, name),
+		jpool = HttpPool(jnt, ip, port, 4, 2, name),
 
 		-- our socket for long term connections, this will not
 		-- actually connect yet
-		comet = Comet(jnt, ip, HTTPPORT, '/cometd', name),
+		comet = Comet(jnt, ip, port, '/cometd', name),
 		
 		-- artwork cache: Weak table storing a surface by iconId
 		artworkThumbCache = setmetatable({}, { __mode="k" }),
@@ -515,7 +514,7 @@ Returns the server IP address and HTTP port
 =cut
 --]]
 function getIpPort(self)
-	return self.plumbing.ip, HTTPPORT
+	return self.plumbing.ip, self.plumbing.port
 end
 
 

@@ -57,12 +57,11 @@ local TIMEOUT = 300             -- timeout (in seconds) before removing servers
 -- NOTE: this is called in jnt thread
 local function t_source()
 	return table.concat {
-		"d",                                                 -- discovery
-		string.char(0),                                      -- reserved
-		string.char(4),                                      -- hardware id
-		string.char(67),                                     -- software id
-		string.char(0, 0, 0, 0, 0, 0, 0, 0),                 -- reserved
-		string.char(0x12, 0x34, 0x56, 0x78, 0x12, 0x34)      -- mac address
+		"e",                                                           -- new discovery packet
+		'IPAD', string.char(0x00),                                     -- request IP address of server
+		'NAME', string.char(0x00),                                     -- request Name of server
+		'JSON', string.char(0x00),                                     -- request JSONRPC port 
+		'JVID', string.char(0x06, 0x12, 0x34, 0x56, 0x78, 0x12, 0x34), -- My ID - FIXME mac of no use!
 	}
 end
 
@@ -77,10 +76,10 @@ local function _cacheServer(self, ss_ip, ss_port, ss_name)
 			
 	-- in the cache?			
 	if self._servers[ss_id] == nil then
-		log:info("Creating server ", ss_name, " (", ss_id, ")")
+		log:info("Creating server ", ss_name, " (", ss_id, ":", ss_port, ")")
 		
 		-- drop the port info, we're not doing anything with it
-	 	local server = SlimServer(self.jnt, ss_ip, ss_name)
+	 	local server = SlimServer(self.jnt, ss_ip, ss_port, ss_name)
 	
 		-- add to DB
 		self._servers[ss_id] = server
@@ -104,13 +103,33 @@ local function _processUdp(self, chunk, err)
 	log:debug("_processUdp()")
 	
 	if chunk.data then
-		if chunk.data:sub(1,1) == 'D' then
-	
-			local servername = strings.trim(chunk.data:sub(2))
-		
-			log:debug("Discovered server ", servername, " @", chunk.ip, ":", chunk.port)
-		
-			_cacheServer(self, chunk.ip, chunk.port, servername)
+
+		if chunk.data:sub(1,1) == 'E' then
+
+			local servername, ip, port = _, chunk.ip, _
+
+			local ptr = 2
+			while (ptr <= chunk.data:len() - 5) do
+				local t = chunk.data:sub(ptr, ptr + 3)
+				local l = string.byte(chunk.data:sub(ptr + 4, ptr + 4))
+				local v = chunk.data:sub(ptr + 5, ptr + 4 + l)
+				ptr = ptr + 5 + l
+
+				if t and l and v then
+					if     t == 'NAME' then servername = v
+					elseif t == 'IPAD' then ip = v
+					elseif t == 'JSON' then port = v
+					end
+				end
+			end
+
+			if servername and ip and port then
+
+				log:debug("Discovered server ", servername, " @ ", ip, ":", port)
+			
+				_cacheServer(self, ip, port, servername)
+			end
+
 		end
 	else
 		log:error("_processUdp: chunk has no data field ???")
