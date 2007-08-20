@@ -350,6 +350,10 @@ function offStage(self)
 	iconbar:setPlaymode(nil)
 	iconbar:setRepeat(nil)
 	iconbar:setShuffle(nil)
+	
+	-- unsubscribe from playerstatus and displaystatus events
+	self.slimServer.comet:unsubscribe('/slim/playerstatus/' .. self.id)
+	self.slimServer.comet:unsubscribe('/slim/displaystatus/' .. self.id)
 
 	self.currentSong = {}
 end

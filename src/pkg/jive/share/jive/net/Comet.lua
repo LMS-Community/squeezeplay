@@ -76,16 +76,17 @@ function __init(self, jnt, jpool, ip, port, path, name)
 	
 	obj.uri = 'http://' .. ip .. ':' .. port .. path
 	
-	obj.jpool         = jpool    -- HttpPool from SlimServer
-	obj.active        = false    -- whether or not we have an active connection
-	obj.clientId      = nil      -- clientId provided by server
-	obj.reqid         = 1        -- used to identify non-subscription requests
-	obj.advice        = {}       -- advice from server on how to handle reconnects
-	obj.failures      = 0        -- count of connection failures
+	obj.jpool          = jpool    -- HttpPool from SlimServer
+	obj.active         = false    -- whether or not we have an active connection
+	obj.clientId       = nil      -- clientId provided by server
+	obj.reqid          = 1        -- used to identify non-subscription requests
+	obj.advice         = {}       -- advice from server on how to handle reconnects
+	obj.failures       = 0        -- count of connection failures
 	
-	obj.subs          = {}       -- all subscriptions
-	obj.pending_reqs  = {}       -- pending requests to send with connect
-	obj.notify        = {}       -- callbacks to notify
+	obj.subs           = {}       -- all subscriptions
+	obj.pending_unsubs = {}      -- pending unsubscribe requests
+	obj.pending_reqs   = {}       -- pending requests to send with connect
+	obj.notify         = {}       -- callbacks to notify
 	
 	return obj
 end
@@ -98,6 +99,7 @@ local _handshake
 local _getHandshakeSink
 local _getRequestSink
 local _getSubscribeSink
+local _getUnsubscribeSink
 local _reconnect
 
 function start(self)
@@ -132,6 +134,20 @@ _connect = function(self)
 		
 		table.insert( data, sub )
 	end
+	
+	-- Add pending unsubscribe requests
+	for i, v in ipairs( self.pending_unsubs ) do
+		local unsub = {
+			channel      = '/meta/unsubscribe',
+			clientId     = self.clientId,
+			subscription = v,
+		}
+		
+		table.insert( data, unsub )
+	end
+	
+	-- Clear pending unsubs
+	self.pending_unsubs = {}
 	
 	-- Add pending non-subscription requests
 	for i, v in ipairs( self.pending_reqs ) do
@@ -251,6 +267,8 @@ _getConnectSink = function(self)
 							-- this was a one-time request, so remove the callback
 							self.notify[subscription] = nil
 						end
+					else
+						log:warn("Comet:_connect, got data for an event we aren't subscribed to! -> ", subscription)
 					end
 				else
 					log:warn("Comet:_connect, unknown error: ", event.error)
@@ -384,19 +402,82 @@ _getSubscribeSink = function(self)
 		-- if we have data
 		if chunk then
 			local data = chunk[1]
+			
+			if data.advice then
+				self.advice = data.advice
+			end
+			
 			if data.successful then
 				log:debug("Comet:subscribe OK for ", data.subscription)
 			else
 				log:warn("Comet:subscribe error: ", data.error)
-				if data.advice then
-					self.advice = data.advice
-				end
 			end
 		end
 	end
 end
 
--- XXX: unsubscribe support
+function unsubscribe(self, subscription)
+	log:debug("Comet:unsubscribe(", subscription, ")")
+	
+	-- Remove from notify list
+	self.notify[subscription] = nil
+	
+	-- Remove from subs list
+	for i, v in ipairs( self.subs ) do
+		if v.subscription == subscription then
+			table.remove( self.subs, i )
+			break
+		end
+	end
+	
+	if not self.active then
+		table.insert( self.pending_unsubs, subscription )
+	else
+		local data = { {
+			channel      = '/meta/unsubscribe',
+			clientId     = self.clientId,
+			subscription = subscription
+		} }
+	
+		local options = {
+			headers = {
+				['Content-Type'] = 'text/json',
+			}
+		}
+		
+		local req = CometRequest(
+			_getUnsubscribeSink(self),
+			self.uri,
+			data,
+			options
+		)
+	
+		self.jpool:queue(req)
+	end
+end
+
+_getUnsubscribeSink = function(self)
+	return function(chunk, err)
+		-- on error, print something...
+		if err then
+			log:warn("Comet:unsubscribe error: ", err)
+		end
+		-- if we have data
+		if chunk then
+			local data = chunk[1]
+			
+			if data.advice then
+				self.advice = data.advice
+			end
+			
+			if data.successful then
+				log:debug("Comet:unsubscribe OK for ", data.subscription)
+			else
+				log:warn("Comet:unsubscribe error: ", data.error)
+			end
+		end
+	end
+end
 
 function request(self, func, playerid, request)
 	if log:isDebug() then
@@ -467,7 +548,7 @@ _getRequestSink = function(self, func, reqid)
 					log:warn("Comet:request error: ", event.error)
 					func(nil, event.error)
 				elseif event.channel == '/slim/request' and event.successful then
-					log:debug("Comet:request OK for ", event.ext)
+					log:debug("Comet:request id ", reqid, " sent OK")
 				elseif event.id == reqid then
 					log:debug("Comet:request got result for request id ", reqid)
 					
