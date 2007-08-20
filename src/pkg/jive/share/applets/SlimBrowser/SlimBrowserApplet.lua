@@ -348,7 +348,7 @@ end
 -- performs the JSON action...
 local function _performJSONAction(jsonAction, from, qty, sink)
 	log:debug("_performJSONAction(from:", from, ", qty:", qty, "):")
-	debug.dump(jsonAction)
+--	debug.dump(jsonAction)
 	
 	local cmdArray = jsonAction["cmd"]
 	

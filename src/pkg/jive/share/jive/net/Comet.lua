@@ -16,7 +16,7 @@ This class implements a HTTP socket running in a L<jive.net.NetworkThread>.
  -- subscribe to an event
  -- will callback to func whenever there is an event
  -- playerid may be nil
- comet:subscribe('/slim/serverstatus', func, playerid, 'serverstatus', 0, 50, 'subscribe:60')
+ comet:subscribe('/slim/serverstatus', func, playerid, {'serverstatus', 0, 50, 'subscribe:60'})
 
  -- send a non-subscription request
  -- playerid may be nil
