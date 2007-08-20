@@ -45,9 +45,7 @@ local Window         = require("jive.ui.Window")
 local log            = require("jive.utils.log").logger("player")
 
 require("jive.slim.RequestsCli")
-local RequestStatus  = jive.slim.RequestStatus
 local RequestCli     = jive.slim.RequestCli
-local RequestDisplaystatus = jive.slim.RequestDisplaystatus
 
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
 local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
@@ -73,9 +71,11 @@ local function _getSink(self)
 			log:debug(err)
 			
 		elseif chunk then
-			log:info(chunk)
+			--log:info(chunk)
 			
-			local proc = "_process_" .. chunk.params[2][1]
+			local channel = string.match(chunk._channel, "/slim/(%a+)/")
+			
+			local proc = "_process_" .. channel
 			if self[proc] then
 				self[proc](self, chunk)
 			end
@@ -296,33 +296,20 @@ function onStage(self, sink)
 	self.isOnStage = true
 	self.statusSink = sink
 	
-	-- our socket for long term connections
-	local ip, port = self.slimServer:getIpPort()
-	self.jsp = SocketHttp(self.jnt, ip, port, self.name .. "LT")
-	
-	-- our long term request
-	-- FIXME: check it really sends data every so many seconds!
-	self.jsp:fetch(
-		RequestStatus(
-			_getSink(self), 
-			self, 
-			'-', 
-			10, 
-			30, 
-			{menu = 'menu'}
-		)
+	-- subscribe to player status updates
+	self.slimServer.comet:subscribe(
+		'/slim/playerstatus/' .. self.id,
+		_getSink(self),
+		self.id,
+		{ 'status', '-', 10, 'menu:menu', 'subscribe:30' }
 	)
 
-	-- 2nd long term request for displaystatus
-	local ip, port = self.slimServer:getIpPort()
-	self.jdsp = SocketHttp(self.jnt, ip, port, self.name .. "LT")
-
-	self.jdsp:fetch(
-		RequestDisplaystatus(
-			_getSink(self),
-			self,
-			'showbriefly'
-		)
+	-- subscribe to displaystatus
+	self.slimServer.comet:subscribe(
+		'/slim/displaystatus/' .. self.id,
+		_getSink(self),
+		self.id,
+		{ 'displaystatus', 'subscribe:showbriefly' }
 	)
 
 	-- create window to display current song info
@@ -388,14 +375,14 @@ end
 
 -- _process_status
 -- receives the status data
-function _process_status(self, data)
-	log:debug("Player:_process_status()")
+function _process_playerstatus(self, event)
+	log:debug("Player:_process_playerstatus()")
 	if self.state then
-		log:debug("-------------------------Player:volume: ", self.state["mixer volume"], " - " , data.result["mixer volume"])
+		log:debug("-------------------------Player:volume: ", self.state["mixer volume"], " - " , event["mixer volume"])
 	end
 	
 	-- update our cache in one go
-	self.state = data.result
+	self.state = event
 	
 	_setConnected(self, self.state["player_connected"])
 	
@@ -441,11 +428,11 @@ end
 
 -- _process_displaystatus
 -- receives the display status data
-function _process_displaystatus(self, data)
+function _process_displaystatus(self, event)
 	log:debug("Player:_process_displaystatus()")
 
-	if data.result.display then
-		local display = data.result.display
+	if event.display then
+		local display = event.display
 		local type    = display["type"] or 'text'
 
 		if type == 'song' then
@@ -541,10 +528,10 @@ end
 
 -- _process_button
 --
-function _process_button(self, data)
+function _process_button(self, event)
 	log:debug("_process_button()")
-	log:debug("id:", data["id"], " waiting on:", self.buttonId)
-	if data["id"] == self.buttonId then
+	log:debug("id:", event["id"], " waiting on:", self.buttonId)
+	if event["id"] == self.buttonId then
 		log:debug("cleared")
 		self.buttonId = false
 	end
@@ -628,10 +615,10 @@ end
 --]]
 
 
-function _process_mixer(self, data)
+function _process_mixer(self, event)
 --	log:debug("_process_ir()")
 --	log:debug("id:", data["id"], " waiting on:", self.irId)
-	if data["id"] == self.mixerId then
+	if event["id"] == self.mixerId then
 --		log:debug("cleared")
 		self.mixerId = false
 --		log:warn("Mixer round trip:", _t() - self.mixerT)

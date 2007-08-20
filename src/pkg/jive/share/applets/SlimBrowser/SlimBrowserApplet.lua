@@ -347,8 +347,8 @@ end
 -- _performJSONAction
 -- performs the JSON action...
 local function _performJSONAction(jsonAction, from, qty, sink)
-	log:debug("_performJSONAction():")
-	log:debug(jsonAction)
+	log:debug("_performJSONAction(from:", from, ", qty:", qty, "):")
+	debug.dump(jsonAction)
 	
 	local cmdArray = jsonAction["cmd"]
 	
@@ -359,9 +359,9 @@ local function _performJSONAction(jsonAction, from, qty, sink)
 	end
 	
 	-- replace player if needed
-	local player
-	if jsonAction["player"] == 0 then
-		player = _player
+	local playerid = jsonAction["player"]
+	if not playerid or playerid == 0 then
+		playerid = _player.id
 	end
 	
 	-- look for __INPUT__ as a param value
@@ -371,24 +371,30 @@ local function _performJSONAction(jsonAction, from, qty, sink)
 		newparams = {}
 		for k, v in pairs(params) do
 			if v == '__INPUT__' then
-				newparams[k] = _lastInput
+				table.insert( newparams, _lastInput )
 			else
-				newparams[k] = v
+				table.insert( newparams, k .. ":" .. v )
 			end
 		end
 	end
 	
+	local request = {}
+	
+	for i, v in ipairs(cmdArray) do
+		table.insert(request, v)
+	end
+	
+	table.insert(request, from)
+	table.insert(request, qty)
+	
+	if newparams then
+		for i, v in ipairs(newparams) do
+			table.insert(request, v)
+		end
+	end
+	
 	-- send the command
-	 _player:queuePriority(RequestCli(
-		sink,                   --sink, 
-		player,                 --player, 
-		cmdArray,               --cmdArray, 
-		from,                   --from, 
-		qty,                    --to, 
-		newparams               --params, 
-		                        --options
-		)
-	)
+	_server.comet:request(sink, playerid, request)
 end
 
 
@@ -458,17 +464,18 @@ local function _browseSink(step, chunk, err)
 	end
 
 	if chunk then
+		-- move result key up to top-level
+		if chunk.result then
+			chunk = chunk.result
+		end
+		
 		if logd:isDebug() then
 			debug.dump(chunk, 8)
 		end
 	
-		-- chunk is the whole JSON shebang
-		-- the data we care about is in chunk.result
-		local data = chunk["result"]
-		
 		-- if our window has a menu - some windows don't :(
 		if step.menu then
-			step.menu:setItems(step.db:menuItems(data))
+			step.menu:setItems(step.db:menuItems(chunk))
 
 			-- what's missing?
 			local from, qty = step.db:missing(BROWSE_MISSING_FETCH)
@@ -494,48 +501,42 @@ local function _mainMenuSink(step, chunk, err)
 	
 	if chunk then
 	
-		local results = chunk.result
+		-- FIXME: we probably want exit in all cases, even and above in case of error...
+		
+		-- FIXME: set step.origin
 	
-		if results then
-		
-			-- FIXME: we probably want exit in all cases, even and above in case of error...
-			
-			-- FIXME: set step.origin
-		
-			-- we want to add an exit item (at the bottom)
-			table.insert(results["item_loop"], 
-				{
-					text = _string('SLIMBROWSER_EXIT'),
-					_go = function()
-						if _browsePath then
-							-- FIXME: This is really closing the plugin...
-							_browsePath.window:hide()
-						end
-						return EVENT_CONSUME
+		-- we want to add an exit item (at the bottom)
+		table.insert(chunk["item_loop"], 
+			{
+				text = _string('SLIMBROWSER_EXIT'),
+				_go = function()
+					if _browsePath then
+						-- FIXME: This is really closing the plugin...
+						_browsePath.window:hide()
 					end
-				}
-			)
+					return EVENT_CONSUME
+				end
+			}
+		)
 
-			-- we want to add a Now playing item (at the top)
-			table.insert(results["item_loop"], 
-				1,
-				{
-					text = _string("SLIMBROWSER_NOW_PLAYING"),
-					_go = _goNowPlaying
-				}
-			)
+		-- we want to add a Now playing item (at the top)
+		table.insert(chunk["item_loop"], 
+			1,
+			{
+				text = _string("SLIMBROWSER_NOW_PLAYING"),
+				_go = _goNowPlaying
+			}
+		)
 
-			-- update count
-			results.count = results.count + 2
-		end
-
-		-- call the regular sink
-		_browseSink(step, chunk, err)
-
+		-- update count
+		chunk.count = chunk.count + 2
 	else
 		log:error(err)
 		-- FIXME: Cancel opening plugin, bla bla bla
 	end
+	
+	-- call the regular sink
+	_browseSink(step, chunk, err)
 end
 
 
@@ -1223,16 +1224,7 @@ function openPlayer (self, menuItem, player)
 	_browsePath = path
 	
 	-- fetch the menu, pronto...
-	_player:queuePriority(RequestCli(
-		sink,    --sink, 
-		nil,              --player, 
-		{'menu'},         --cmdarray, 
-		0,                --from, 
-		100               --to, 
-		                  --params, 
-		                  --options
-		)
-	)
+	_server.comet:request(sink, nil, { 'menu', 0, 100 })
 	
 	self:tieAndShowWindow(_browsePath.window)
 	return _browsePath.window

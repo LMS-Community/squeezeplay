@@ -29,7 +29,7 @@ Notifications:
 --]]
 
 -- our stuff
-local assert, tonumber, tostring, type = assert, tonumber, tostring, type
+local assert, tostring, type = assert, tostring, type
 local pairs, ipairs, setmetatable = pairs, ipairs, setmetatable
 
 local os          = require("os")
@@ -134,7 +134,7 @@ _establishConnection = function(self)
 		'/slim/serverstatus',
 		_getSink(self, '_serverstatusSink'),
 		nil,
-		'serverstatus', 0, 50, 'subscribe:60'
+		{ 'serverstatus', 0, 50, 'subscribe:60' }
 	)
 	
 	-- Start the Comet connection process
@@ -149,7 +149,7 @@ function _serverstatusSink(self, event, err)
 --	log:info(event)
 
 	-- check we have a result 
-	if not event.data then
+	if not event then
 		log:error(self, ": chunk with no data ??!")
 		log:error(event)
 		return
@@ -159,14 +159,14 @@ function _serverstatusSink(self, event, err)
 	_setPlumbingState(self, 'connected')
 	
 	-- remember players from server
-	local serverPlayers = event.data["players_loop"]
-	event.data["players_loop"] = nil
+	local serverPlayers = event["players_loop"]
+	event["players_loop"] = nil
 	
 	-- remember our state
 	local selfState = self.state
 	
 	-- update in one shot
-	self.state = event.data
+	self.state = event
 	
 	-- manage rescan
 	-- use tostring to handle nil case (in either server of self data)
@@ -190,8 +190,7 @@ function _serverstatusSink(self, event, err)
 		selfPlayers[k] = k
 	end
 	
-	-- JSON::XS on the Perl side may send this as a string
-	if tonumber( event.data["player count"] ) > 0 then
+	if event["player count"] > 0 then
 
 		for i, player_info in ipairs(serverPlayers) do
 	
@@ -243,6 +242,8 @@ function __init(self, jnt, ip, port, name)
 	log:debug("SlimServer:__init(", ip, ":", port, " ",name, ")")
 
 	assert(ip, "Cannot create SlimServer without ip address")
+	
+	local jpool = HttpPool(jnt, ip, port, 4, 2, name)
 
 	local obj = oo.rawnew(self, {
 
@@ -264,11 +265,11 @@ function __init(self, jnt, ip, port, name)
 		players = {},
 
 		-- our pool
-		jpool = HttpPool(jnt, ip, port, 4, 2, name),
+		jpool = jpool,
 
 		-- our socket for long term connections, this will not
 		-- actually connect yet
-		comet = Comet(jnt, ip, port, '/cometd', name),
+		comet = Comet(jnt, jpool, ip, port, '/cometd', name),
 		
 		-- artwork cache: Weak table storing a surface by iconId
 		artworkThumbCache = setmetatable({}, { __mode="k" }),
