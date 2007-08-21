@@ -36,7 +36,7 @@ requests are serviced before basic ones.
 
 
 -- stuff we use
-local assert, tostring = assert, tostring
+local assert, ipairs, tostring = assert, ipairs, tostring
 
 local table           = require("table")
 local math            = require("math")
@@ -44,9 +44,12 @@ local math            = require("math")
 local oo              = require("loop.base")
 
 local SocketHttpQueue = require("jive.net.SocketHttpQueue")
+local Timer           = require("jive.ui.Timer")
 local perfs           = require("jive.utils.perfs")
 
 local log             = require("jive.utils.log").logger("net.http")
+
+local KEEPALIVE_TIMEOUT = 300000 -- timeout idle connections after 300 seconds
 
 -- jive.net.HttpPool is a base class
 module(..., oo.class)
@@ -76,21 +79,22 @@ function __init(self, jnt, ip, port, quantity, threshold, name)
 --	assert(jnt)
 	
 	local obj = oo.rawnew(self, {
-		jnt = jnt,
-		poolName = name or "",
-		pool = {
-			active = 1,
-			threshold = threshold or 10
+		jnt           = jnt,
+		poolName      = name or "",
+		pool          = {
+			active    = 1,
+			threshold = threshold or 10,
+			jshq      = {}
 		},
-		reqQueue = {},
+		reqQueue      = {},
 		reqQueueCount = 0,
+		timeout_timer = nil,
 	})
 	
 	
 	-- init the pool
 	local q = quantity or 1
-	obj.pool["jshq"] = {}
-	for i=1,q do
+	for i = 1, q do
 		obj.pool.jshq[i] = SocketHttpQueue(jnt, ip, port, obj, obj.poolName .. i)
 	end
 	
@@ -165,12 +169,13 @@ function t_queue(self, request, priority )
 		active = #self.pool.jshq
 	end
 	self.pool.active = active
---	log:info(self, ":", self.reqQueueCount, " requests, ", self.pool.active, " connections")
+	
+--	log:debug(self, ":", self.reqQueueCount, " requests, ", self.pool.active, " connections")
 
 	perfs.check('', request, 2)
 
 	-- kick all active queues
-	for i = 1,self.pool.active do
+	for i = 1, self.pool.active do
 		self.pool.jshq[i]:t_sendDequeueIfIdle()
 	end
 end
@@ -180,22 +185,38 @@ end
 -- returns a request if there is any
 -- called by SocketHttpQueue
 function t_dequeue(self, socket)
---	log:debug(self, ":t_dequeue()")
+	log:debug(self, ":t_dequeue()")
 		
-	for i=0,10 do
-		-- anything with priority i ?
-		if self.reqQueue[i] then
-			local request = table.remove(self.reqQueue[i], 1)
-			if request then
-				self.reqQueueCount = self.reqQueueCount - 1
---				log:warn(self, " dequeues ", request)
-				perfs.check('', request, 3)
-				return request, false
+	for i, queue in ipairs(self.reqQueue) do
+		local request = table.remove(self.reqQueue[i], 1)
+		if request then
+			self.reqQueueCount = self.reqQueueCount - 1
+--			log:warn(self, " dequeues ", request)
+			perfs.check('', request, 3)
+			
+			if self.timeout_timer then
+				self.timeout_timer:stop()
+				self.timeout_timer = nil
 			end
+			
+			return request, false
 		end
 	end
 	
 	self.reqQueueCount = 0
+	
+	-- close the first connection after a timeout expires
+	if not self.timeout_timer then
+		self.timeout_timer = Timer(
+			KEEPALIVE_TIMEOUT,
+			function()
+				log:debug(self, ": closing idle connection")
+				self.pool.jshq[1]:t_close('keep-alive timeout')
+			end,
+			true -- run once
+		)
+		self.timeout_timer:start()
+	end			
 
 	-- close all but the first one (active = 1)
 	return nil, (socket != self.pool.jshq[1])
