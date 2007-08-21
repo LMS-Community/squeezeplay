@@ -39,10 +39,6 @@ local Timer            = require("jive.ui.Timer")
 local Textinput        = require("jive.ui.Textinput")
 local Textarea         = require("jive.ui.Textarea")
 
-require("jive.slim.RequestsCli")
-local RequestCli       = jive.slim.RequestCli
-local RequestStatus    = jive.slim.RequestStatus
-
 local DB               = require("applets.SlimBrowser.DB")
 
 local debug = require("jive.utils.debug")
@@ -566,15 +562,10 @@ local function _statusSink(step, chunk, err)
 		local from, qty = step.db:missing(STATUS_MISSING_FETCH)
 
 		if from then
-			_player:queuePriority(
-				RequestStatus(
-					step.sink, 
-					_player, 
-					from, 
-					qty, 
-					nil, 
-					{menu = 'menu'}
-				)
+			_server.comet:request(
+				step.sink,
+				_player.id,
+				{ 'status', from, qty, 'menu:menu' }
 			)
 		end
 
