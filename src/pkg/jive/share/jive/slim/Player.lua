@@ -73,13 +73,14 @@ local function _getSink(self)
 		elseif chunk then
 			--log:info(chunk)
 			
-			local channel = string.match(chunk._channel, "/slim/(%a+)/")
+			if chunk._channel then
+				local channel = string.match(chunk._channel, "/slim/(%a+)/")
 			
-			local proc = "_process_" .. channel
-			if self[proc] then
-				self[proc](self, chunk)
-			end
-				
+				local proc = "_process_" .. channel
+				if self[proc] then
+					self[proc](self, chunk)
+				end
+			end				
 		end
 	end
 end
@@ -272,19 +273,15 @@ end
 -- sends a command
 function call(self, cmd)
 	log:debug("Player:call():")
-	log:debug(cmd)
-	local req = RequestCli(
-		_getSink(self), --sink, 
-		self, --player, 
-		cmd --cmdarray, 
-		--from, 
-		--to, 
-		--params, 
-		--options
+--	log:debug(cmd)
+
+	self.slimServer.comet:request(
+		_getSink(self),
+		self.id,
+		cmd
 	)
-	local id = req:getJsonId()
-	self:queuePriority(req)
-	return id
+
+	return 1
 end
 
 
