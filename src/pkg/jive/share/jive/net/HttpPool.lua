@@ -130,7 +130,7 @@ queued requests will be serviced before this one.
 function queue(self, request)
 	perfs.check('Pool Queue', request, 1)
 --	log:warn(self, " enqueues ", request)
-	self.jnt:perform(function() self:t_queue(request, 1) end)
+	self.jnt:perform(function() self:t_queue(request, 2) end)
 end
 
 
@@ -147,7 +147,7 @@ will be serviced before normal requests.
 function queuePriority(self, request)
 	perfs.check('Pool Priority Queue', request, 1)
 --	log:warn(self, " priority enqueues ", request)
-	self.jnt:perform(function() self:t_queue(request, 0) end)
+	self.jnt:perform(function() self:t_queue(request, 1) end)
 end
 
 
@@ -155,6 +155,8 @@ end
 -- queues a request
 function t_queue(self, request, priority )
 --	log:debug(self, ":t_queue()")
+
+	assert(priority > 0, "queue priority must be at least 1")
 	
 	if not self.reqQueue[priority] then
 		self.reqQueue[priority] = {}

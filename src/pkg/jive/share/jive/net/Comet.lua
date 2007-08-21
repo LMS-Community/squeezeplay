@@ -18,6 +18,9 @@ This class implements a HTTP socket running in a L<jive.net.NetworkThread>.
  -- playerid may be nil
  comet:subscribe('/slim/serverstatus', func, playerid, {'serverstatus', 0, 50, 'subscribe:60'})
 
+ -- unsubscribe from an event
+ comet:unsubscribe('/slim/serverstatus')
+
  -- send a non-subscription request
  -- playerid may be nil
  -- request is a table (array) containing the raw request to pass to SlimServer
@@ -84,7 +87,7 @@ function __init(self, jnt, jpool, ip, port, path, name)
 	obj.failures       = 0        -- count of connection failures
 	
 	obj.subs           = {}       -- all subscriptions
-	obj.pending_unsubs = {}      -- pending unsubscribe requests
+	obj.pending_unsubs = {}       -- pending unsubscribe requests
 	obj.pending_reqs   = {}       -- pending requests to send with connect
 	obj.notify         = {}       -- callbacks to notify
 	
@@ -452,7 +455,7 @@ function unsubscribe(self, subscription)
 			options
 		)
 	
-		self.jpool:queue(req)
+		self.jpool:queuePriority(req)
 	end
 end
 
@@ -516,7 +519,7 @@ function request(self, func, playerid, request)
 			options
 		)
 	
-		self.jpool:queue(req)
+		self.jpool:queuePriority(req)
 	
 		-- If the request is async, we will get the response on the persistent
 		-- connection.  Store our callback until we know if it's async or not
@@ -564,6 +567,7 @@ _getRequestSink = function(self, func, reqid)
 end
 
 -- Decide what to do if we get disconnected or get an error while handshaking/connecting
+-- XXX: Need a way to propagate errors/retry notice up to the UI
 _handleAdvice = function(self)
 	-- make sure our connection is closed
 	if self.active then
