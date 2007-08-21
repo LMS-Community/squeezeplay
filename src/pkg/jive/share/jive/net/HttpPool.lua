@@ -185,7 +185,7 @@ end
 -- returns a request if there is any
 -- called by SocketHttpQueue
 function t_dequeue(self, socket)
-	log:debug(self, ":t_dequeue()")
+--	log:debug(self, ":t_dequeue()")
 		
 	for i, queue in ipairs(self.reqQueue) do
 		local request = table.remove(self.reqQueue[i], 1)
