@@ -458,13 +458,15 @@ local function _browseSink(step, chunk, err)
 			step.origin.menu:unlock()
 		end
 	end
-	
-	local data = chunk.data
 
-	if data then
+	if chunk then
+		local data
+		
 		-- move result key up to top-level
-		if data.result then
-			data = data.result
+		if chunk.result then
+			data = chunk.result
+		else
+			data = chunk.data
 		end
 		
 		if logd:isDebug() then
