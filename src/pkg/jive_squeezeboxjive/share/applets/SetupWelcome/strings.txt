@@ -1,0 +1,38 @@
+﻿#
+# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
+# 
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+SETUP_WELCOME
+	EN	Welcome
+
+WELCOME
+	EN	Welcome
+
+WELCOME_WALKTHROUGH
+	EN	Let's get started by getting you connected to your network and music.
+
+WELCOME_HELP
+	EN	Press the center button when you are ready to move on.
+
+WIRELESS_CONNECTION
+	EN	Wireless Connection
+
+CONNECT_USING_SQUEEZEBOX
+	EN	Connect using Squeezebox
+
+CONNECT_USING_NETWORK
+	EN	Connect to other wireless network
+
+CONNECT_HELP
+	EN	You can use your Squeezebox to connect to your network or use another wireless access point.
+
+DONE
+	EN	That's it!
+
+DONE_CONTINUE
+	EN	Continue
+
+DONE_HELP
+	EN	Now you can use your Jive to access all your music. Press the center button to continue.

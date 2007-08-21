@@ -1,0 +1,95 @@
+#
+# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
+# 
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+#
+
+SQUEEZEBOX_SETUP
+	EN	Set Up Squeezebox
+
+SQUEEZEBOX_NETWORK_CONNECTION
+	DE	Kabellose Verbindung
+	EN	Wireless Connection
+	ES	Conexión inalámbrica
+	FR	Connexion sans fil
+	IT	Connessione senza fili
+	NL	Draadloze verbinding
+
+SQUEEZEBOX_CONNECT_HELP
+	EN	Choose how your Squeezebox should connect to your network.
+
+SQUEEZEBOX_WIRELESS
+	EN	Wireless
+
+SQUEEZEBOX_ETHERNET
+	EN	Ethernet
+
+SQUEEZEBOX_HELP
+	EN	Choose the Squeezebox that is ready to be set up. If you don't see it here, make sure it is plugged in and within wireless range. Press and hold the button on the front until it flashes.
+
+SQUEEZEBOX_FINDING_SOURCES
+	EN	Finding music sources
+
+SQUEEZEBOX_CONNECTING_TO
+	EN	Connecting to %s
+
+SQUEEZEBOX_SETUP_COMPLETE
+	EN	Your squeezebox is now set up.
+
+SQUEEZEBOX_CONNECTING
+	EN	Connecting to your network.
+
+SQUEEZEBOX_PROBLEM
+	DE	Verbindungsproblem
+	EN	Problem Connecting
+	ES	Problema de conexión
+	FR	Problème de connexion
+	IT	Problema di connessione
+	NL	Probleem bij verbinden
+
+SQUEEZEBOX_PROBLEM_TRY_AGAIN
+	DE	Erneut versuchen.
+	EN	Try again
+	ES	Vuelva a intentarlo
+	FR	Réessayer
+	IT	Riprova
+	NL	Opnieuw proberen
+
+SQUEEZEBOX_PROBLEM_SKIP
+	DE	Diesen Schritt überspringen
+	EN	Skip this step
+	ES	Omitir este paso
+	FR	Ignorer cette étape
+	IT	Salta questa operazione
+	NL	Deze stap overslaan
+
+SQUEEZEBOX_PROBLEM_HELP
+	EN	Couldn't connect your Squeezebox to your wireless network. Make sure it is within range of your wireless network.
+
+SQUEEZEBOX_PROBLEM_LOST_CONNECTION
+	EN	(Lost connection).
+
+SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX
+	EN	(Lost Squeezebox).
+
+SQUEEZEBOX_PROBLEM_DHCP_ERROR
+	EN	(DHCP error).
+
+SQUEEZEBOX_PROBLEM_LOST_NETWORK
+	EN	(Lost network).
+
+SQUEEZEBOX_PROBLEM_CONNECTION_ERROR
+	EN	(Connection error).
+
+SQUEEZEBOX_MUSIC_SOURCE
+	DE	Musikquelle wählen
+	EN	Choose Music Source
+	ES	Elija fuente de música
+	FR	Sélection d'une source musicale
+	IT	Scegliere la sorgente musicale
+	NL	Muziekbron kiezen
+
+SQUEEZEBOX_MUSIC_SOURCE_HELP
+	EN	The Squeezebox is connected to your network. Choose a music source. 
+

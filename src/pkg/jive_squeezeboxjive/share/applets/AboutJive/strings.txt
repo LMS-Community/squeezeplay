@@ -1,0 +1,22 @@
+﻿#
+# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
+# 
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+
+ABOUT_JIVE
+	EN	About Jive
+
+ABOUT_COPYRIGHT
+	EN	Copyright 2007, Logitech.
+
+ABOUT_CREDITS
+	EN	Credits:
+
+ABOUT_VERSION
+	EN	Version:
+
+ABOUT_ALL_RIGHTS_RESERVED
+	EN	All Rights Reserved
+

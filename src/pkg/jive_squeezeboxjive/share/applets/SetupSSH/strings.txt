@@ -1,0 +1,14 @@
+﻿#
+# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
+# 
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+SSH
+	EN	SSH
+
+SSH_ENABLE
+	EN	Enable SSH
+
+SSH_HOWTO
+	EN	The root password for this device is %s and you can connect to it on address %s.
