@@ -148,8 +148,10 @@ function _serverstatusSink(self, event, err)
 	log:debug(self, ":_serverstatusSink()")
 --	log:info(event)
 
+	local data = event.data
+
 	-- check we have a result 
-	if not event then
+	if not data then
 		log:error(self, ": chunk with no data ??!")
 		log:error(event)
 		return
@@ -159,14 +161,14 @@ function _serverstatusSink(self, event, err)
 	_setPlumbingState(self, 'connected')
 	
 	-- remember players from server
-	local serverPlayers = event["players_loop"]
-	event["players_loop"] = nil
+	local serverPlayers = data.players_loop
+	data.players_loop = nil
 	
 	-- remember our state
 	local selfState = self.state
 	
 	-- update in one shot
-	self.state = event
+	self.state = data
 	
 	-- manage rescan
 	-- use tostring to handle nil case (in either server of self data)
@@ -190,7 +192,7 @@ function _serverstatusSink(self, event, err)
 		selfPlayers[k] = k
 	end
 	
-	if event["player count"] > 0 then
+	if data["player count"] > 0 then
 
 		for i, player_info in ipairs(serverPlayers) do
 	

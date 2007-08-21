@@ -161,7 +161,7 @@ _connect = function(self)
 		local req = { {
 			channel      = '/slim/request',
 			clientId     = self.clientId,
-			id           = self.reqid,
+			id           = v.reqid,
 			data         = cmd
 		} }
 		
@@ -173,8 +173,6 @@ _connect = function(self)
 			self.notify[subscription] = {}
 		end
 		table.insert( self.notify[subscription], v.func )
-		
-		self.reqid = self.reqid + 1
 	end
 	
 	-- Clear out pending requests
@@ -255,17 +253,13 @@ _getEventSink = function(self)
 						-- an async notification from a normal request
 						subscription = '/slim/request|' .. event.id
 						onetime_request = true
-					else
-						-- insert channel name into event data, this is used at least
-						-- by the player sink to determine what process method to call
-						event.data._channel = subscription
 					end
 					
 					log:debug("Comet:_getEventSink, notifiying callbacks for ", subscription)
 					
 					if self.notify[subscription] then
 						for i2, func in ipairs( self.notify[subscription] ) do
-							func(event.data)
+							func(event)
 						end
 						
 						if onetime_request then
@@ -469,6 +463,7 @@ function request(self, func, playerid, request)
 	if not self.active then
 		-- Add subscription to pending requets, to be sent during connect/reconnect
 		table.insert( self.pending_reqs, {
+			reqid    = self.reqid,
 			func     = func,
 			playerid = playerid,
 			request  = request,
@@ -507,10 +502,13 @@ function request(self, func, playerid, request)
 			self.notify[subscription] = {}
 		end
 		table.insert( self.notify[subscription], func )
-	
-		-- Bump reqid for the next request
-		self.reqid = self.reqid + 1
 	end
+	
+	-- Bump reqid for the next request
+	self.reqid = self.reqid + 1
+	
+	-- Return the request id to the caller
+	return self.reqid - 1
 end
 
 _getRequestSink = function(self, func, reqid)
@@ -537,8 +535,8 @@ _getRequestSink = function(self, func, reqid)
 					-- Remove subscription, we know this was not an async request
 					local subscription = '/slim/request|' .. reqid
 					self.notify[subscription] = nil
-						
-					func(event.data)
+					
+					func(event)
 				end
 			end
 		end

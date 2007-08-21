@@ -458,11 +458,13 @@ local function _browseSink(step, chunk, err)
 			step.origin.menu:unlock()
 		end
 	end
+	
+	local data = chunk.data
 
-	if chunk then
+	if data then
 		-- move result key up to top-level
-		if chunk.result then
-			chunk = chunk.result
+		if data.result then
+			data = data.result
 		end
 		
 		if logd:isDebug() then
@@ -471,7 +473,7 @@ local function _browseSink(step, chunk, err)
 	
 		-- if our window has a menu - some windows don't :(
 		if step.menu then
-			step.menu:setItems(step.db:menuItems(chunk))
+			step.menu:setItems(step.db:menuItems(data))
 
 			-- what's missing?
 			local from, qty = step.db:missing(BROWSE_MISSING_FETCH)
@@ -494,15 +496,17 @@ end
 local function _mainMenuSink(step, chunk, err)
 	log:debug("_mainMenuSink()")
 --	log:debug(chunk)
+
+	local data = chunk.data
 	
-	if chunk then
+	if data then
 	
 		-- FIXME: we probably want exit in all cases, even and above in case of error...
 		
 		-- FIXME: set step.origin
 	
 		-- we want to add an exit item (at the bottom)
-		table.insert(chunk["item_loop"], 
+		table.insert(data.item_loop, 
 			{
 				text = _string('SLIMBROWSER_EXIT'),
 				_go = function()
@@ -516,7 +520,7 @@ local function _mainMenuSink(step, chunk, err)
 		)
 
 		-- we want to add a Now playing item (at the top)
-		table.insert(chunk["item_loop"], 
+		table.insert(data.item_loop,
 			1,
 			{
 				text = _string("SLIMBROWSER_NOW_PLAYING"),
@@ -525,7 +529,7 @@ local function _mainMenuSink(step, chunk, err)
 		)
 
 		-- update count
-		chunk.count = chunk.count + 2
+		data.count = data.count + 2
 	else
 		log:error(err)
 		-- FIXME: Cancel opening plugin, bla bla bla
@@ -543,20 +547,27 @@ local function _statusSink(step, chunk, err)
 	
 	-- currently we're not going anywhere with Now Playing...
 	assert(step == _statusPath)
+
+	-- Just in case we get passed a full event
+	local data = chunk
+	if data.data then
+		data = data.data
+	end
 	
-	if chunk then
+	if data then
 		if logd:isDebug() then
-			debug.dump(chunk, 8)
+			debug.dump(data, 8)
 		end
 		
 		-- stuff from the player is just json.result
 		-- stuff from our completion calls below will be full json
 		-- adapt
-		if chunk.id and chunk.result then
-			chunk = chunk.result
+		-- XXX: still needed?
+		if data.id and data.result then
+			data = data.result
 		end
 		
-		step.menu:setItems(step.db:menuItems(chunk))
+		step.menu:setItems(step.db:menuItems(data))
 
 		-- what's missing?
 		local from, qty = step.db:missing(STATUS_MISSING_FETCH)

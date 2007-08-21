@@ -44,9 +44,6 @@ local Window         = require("jive.ui.Window")
 
 local log            = require("jive.utils.log").logger("player")
 
-require("jive.slim.RequestsCli")
-local RequestCli     = jive.slim.RequestCli
-
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
 local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
@@ -62,9 +59,9 @@ module(..., oo.class)
 
 -- _getSink
 -- returns a sink with a closure to self
--- this sink receives all the data from our JSON RPC interface
-local function _getSink(self)
-
+-- cmd is passed in so we know what process function to call
+-- this sink receives all the data from our Comet interface
+local function _getSink(self, cmd)
 	return function(chunk, err)
 	
 		if err then
@@ -73,14 +70,10 @@ local function _getSink(self)
 		elseif chunk then
 			--log:info(chunk)
 			
-			if chunk._channel then
-				local channel = string.match(chunk._channel, "/slim/(%a+)/")
-			
-				local proc = "_process_" .. channel
-				if self[proc] then
-					self[proc](self, chunk)
-				end
-			end				
+			local proc = "_process_" .. cmd[1]
+			if self[proc] then
+				self[proc](self, chunk)
+			end
 		end
 	end
 end
@@ -275,13 +268,13 @@ function call(self, cmd)
 	log:debug("Player:call():")
 --	log:debug(cmd)
 
-	self.slimServer.comet:request(
-		_getSink(self),
+	local reqid = self.slimServer.comet:request(
+		_getSink(self, cmd),
 		self.id,
 		cmd
 	)
 
-	return 1
+	return reqid
 end
 
 
@@ -294,19 +287,21 @@ function onStage(self, sink)
 	self.statusSink = sink
 	
 	-- subscribe to player status updates
+	local cmd = { 'status', '-', 10, 'menu:menu', 'subscribe:30' }
 	self.slimServer.comet:subscribe(
 		'/slim/playerstatus/' .. self.id,
-		_getSink(self),
+		_getSink(self, cmd),
 		self.id,
-		{ 'status', '-', 10, 'menu:menu', 'subscribe:30' }
+		cmd
 	)
 
 	-- subscribe to displaystatus
+	cmd = { 'displaystatus', 'subscribe:showbriefly' }
 	self.slimServer.comet:subscribe(
 		'/slim/displaystatus/' .. self.id,
-		_getSink(self),
+		_getSink(self, cmd),
 		self.id,
-		{ 'displaystatus', 'subscribe:showbriefly' }
+		cmd
 	)
 
 	-- create window to display current song info
@@ -376,14 +371,14 @@ end
 
 -- _process_status
 -- receives the status data
-function _process_playerstatus(self, event)
+function _process_status(self, event)
 	log:debug("Player:_process_playerstatus()")
 	if self.state then
 		log:debug("-------------------------Player:volume: ", self.state["mixer volume"], " - " , event["mixer volume"])
 	end
 	
 	-- update our cache in one go
-	self.state = event
+	self.state = event.data
 	
 	_setConnected(self, self.state["player_connected"])
 	
@@ -431,9 +426,11 @@ end
 -- receives the display status data
 function _process_displaystatus(self, event)
 	log:debug("Player:_process_displaystatus()")
+	
+	local data = event.data
 
-	if event.display then
-		local display = event.display
+	if data.display then
+		local display = data.display
 		local type    = display["type"] or 'text'
 
 		if type == 'song' then
@@ -531,8 +528,8 @@ end
 --
 function _process_button(self, event)
 	log:debug("_process_button()")
-	log:debug("id:", event["id"], " waiting on:", self.buttonId)
-	if event["id"] == self.buttonId then
+	log:debug("id:", event.id, " waiting on:", self.buttonId)
+	if event.id == self.buttonId then
 		log:debug("cleared")
 		self.buttonId = false
 	end
@@ -619,7 +616,7 @@ end
 function _process_mixer(self, event)
 --	log:debug("_process_ir()")
 --	log:debug("id:", data["id"], " waiting on:", self.irId)
-	if event["id"] == self.mixerId then
+	if event.id == self.mixerId then
 --		log:debug("cleared")
 		self.mixerId = false
 --		log:warn("Mixer round trip:", _t() - self.mixerT)
