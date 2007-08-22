@@ -158,12 +158,12 @@ _connect = function(self)
 		cmd[1] = v.playerid or ''
 		cmd[2] = v.request
 		
-		local req = { {
+		local req = {
 			channel      = '/slim/request',
 			clientId     = self.clientId,
 			id           = v.reqid,
 			data         = cmd
-		} }
+		}
 		
 		table.insert( data, req )
 		
