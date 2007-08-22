@@ -13,13 +13,16 @@ SCREENSAVER_FLICKR
 	NL	Flickr
 
 SCREENSAVER_FLICKR_SETTINGS
+	DE	Flickr Einstellungen
 	EN	Flickr Settings
 
 SCREENSAVER_FLICKR_LOADING_PHOTO
+	DE	Flickr lädt photo...
 	EN	Flickr loading photo...
 
 SCREENSAVER_FLICKR_ERROR
 	EN	Flickr error: 
+	DE	Flickr Fehler: 
 
 SCREENSAVER_FLICKR_DELAY_10_SEC
 	DE	10 Sek.

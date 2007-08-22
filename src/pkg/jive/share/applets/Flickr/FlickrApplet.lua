@@ -35,6 +35,8 @@ local Icon             = require("jive.ui.Icon")
 local Label            = require("jive.ui.Label")
 local RadioButton      = require("jive.ui.RadioButton")
 local RadioGroup       = require("jive.ui.RadioGroup")
+local Textinput        = require("jive.ui.Textinput")
+local Textarea         = require("jive.ui.Textarea")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Surface          = require("jive.ui.Surface")
 local Window           = require("jive.ui.Window")
@@ -61,11 +63,15 @@ oo.class(_M, Applet)
 
 local apiKey           = "18d9e492ca288b453a9cc6065c440d0c"
 local transitionBoxOut
-
+local transitionTopDown 
+local transitionBottomUp 
+local transitionLeftRight
+local transitionRightLeft
 
 function openScreensaver(self, menuItem)
 
 	self.photoQueue = {}
+	self.transitions = { transitionBoxOut, transitionTopDown, transitionBottomUp, transitionLeftRight, transitionRightLeft }
 
 	local ok, err = self:displayNextPhoto()
 
@@ -95,12 +101,28 @@ function openSettings(self, menuItem)
 						   end
 				},
 				{
-					text = "Speed", 
-					callback = function(event, menuItem)
-							   self:timeoutSetting(menuItem)
-							   return EVENT_CONSUME
-						   end
-				},
+                                        text = "Speed",
+                                        callback = function(event, menuItem)
+                                                           self:timeoutSetting(menuItem)
+                                                           return EVENT_CONSUME
+                                                   end
+                                },
+                                {
+                                        text = "Flickr ID",
+                                        callback = function(event, menuItem)
+                                                           self:defineFlickrId(menuItem)
+                                                           return EVENT_CONSUME
+                                                   end
+                                },
+--[[
+                                {
+                                        text = "Transitions",
+                                        callback = function(event, menuItem)
+                                                           self:defineTransition(menuItem)
+                                                           return EVENT_CONSUME
+                                                   end
+                                },
+--]]
 			}))
 
 	self:tieAndShowWindow(window)
@@ -108,15 +130,149 @@ function openSettings(self, menuItem)
 end
 
 
-function displaySetting(self, menuItem)
+function defineFlickrId(self, menuItem)
+
+        local window = Window("window", "Flickr ID")
+
+	local flickrid = self:getSettings()["flickr.id"]
+	if flickrid == nil then
+		flickrid = "Your ID"
+	end
+
+        local input = Textinput("textinput", flickrid,
+                                function(_, value)
+                                        if #value < 4 then
+                                                return false
+                                        end
+
+                                        log:warn("Input " .. value)
+					self:setFlickrId(value)
+                                        window:hide(Window.transitionPushLeft)
+                                        return true
+                                end)
+
+        local help = Textarea("help", "Please enter your Flickr User ID.")
+
+        window:addWidget(help)
+        window:addWidget(input)
+
+        self:tieAndShowWindow(window)
+        return window
+end
+
+
+
+function defineTransition(self, menuItem)
 	local group = RadioGroup()
 
-	local display= self:getSettings()["display"]
+	local trans = self:getSettings()["flickr.transition"]
 	
 	local window = Window("window", menuItem.text)
 	window:addWidget(SimpleMenu("menu",
 		{
-			{
+                         {
+                                text = "Random transition",
+                                icon = RadioButton(
+                                                   "radio",
+                                                   group,
+                                                   function()
+                                                           self:setTransition("random")
+                                                   end,
+                                                   trans == "random"
+                                           ),
+                         },
+                         {
+                                text = "Fade inside-out",
+                                icon = RadioButton(
+                                                   "radio",
+                                                   group,
+                                                   function()
+                                                           self:setTransition("boxout")
+                                                   end,
+                                                   trans == "boxout"
+                                           ),
+                        },
+ 			{
+				text = "Fade top-down", 
+				icon = RadioButton(
+						   "radio", 
+						   group, 
+						   function() 
+							   self:setTransition("topdown") 
+						   end,
+						   trans == "topdown"
+					   ),
+			},
+			{ 
+				text = "Fade bottom-up", 
+				icon = RadioButton(
+						   "radio", 
+						   group, 
+						   function() 
+							   self:setTransition("bottomup") 
+						   end,
+						   display == "bottomup"
+					   ),
+			},
+			{ 
+				text = "Fade left-right", 
+				icon = RadioButton(
+						   "radio", 
+						   group, 
+						   function() 
+							   self:setTransition("leftright") 
+						   end,
+						   trans == "leftright"
+					   ),
+			},
+			{ 
+				text = "Fade right-left", 
+				icon = RadioButton(
+						   "radio", 
+						   group, 
+						   function() 
+							   self:setTransition("rightleft") 
+						   end,
+						   trans == "rightleft"
+					   ),
+			},
+		}))
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+function displaySetting(self, menuItem)
+	local group = RadioGroup()
+
+	local display = self:getSettings()["flickr.display"]
+	
+	local window = Window("window", menuItem.text)
+	window:addWidget(SimpleMenu("menu",
+		{
+                         {
+                                text = "My Own Photos",
+                                icon = RadioButton(
+                                                   "radio",
+                                                   group,
+                                                   function()
+                                                           self:setDisplay("own")
+                                                   end,
+                                                   display == "own"
+                                           ),
+                         },
+                         {
+                                text = "My and My Contacts Photos",
+                                icon = RadioButton(
+                                                   "radio",
+                                                   group,
+                                                   function()
+                                                           self:setDisplay("contacts")
+                                                   end,
+                                                   display == "contacts"
+                                           ),
+                        },
+ 			{
 				text = "Interesting Photos", 
 				icon = RadioButton(
 						   "radio", 
@@ -148,7 +304,7 @@ end
 function timeoutSetting(self, menuItem)
 	local group = RadioGroup()
 
-	local timeout = self:getSettings()["timeout"]
+	local timeout = self:getSettings()["flickr.timeout"]
 
 	local window = Window("window", menuItem.text)
 	window:addWidget(SimpleMenu("menu",
@@ -177,12 +333,24 @@ end
 
 
 function setDisplay(self, display)
-	self:getSettings()["display"] = display
+	self:getSettings()["flickr.display"] = display
+	self:storeSettings()
 end
 
 
 function setTimeout(self, timeout)
-	self:getSettings()["timeout"] = timeout
+	self:getSettings()["flickr.timeout"] = timeout
+	self:storeSettings()
+end
+
+function setFlickrId(self, flickrid)
+        self:getSettings()["flickr.id"] = flickrid
+	self:storeSettings()
+end
+
+function setTransition(self, trans)
+        self:getSettings()["flickr.transition"] = trans
+	self:storeSettings()
 end
 
 
@@ -219,17 +387,28 @@ function _requestPhoto(self)
 
 	local method, args
 
-	if self:getSettings()["display"] == "recent" then
+	local displaysetting = self:getSettings()["flickr.display"]
+	if displaysetting == nil then
+		displaysetting = "interesting"
+	end
+
+	if displaysetting == "recent" then
 		method = "flickr.photos.getRecent"
 		args = { per_page = 1 }
-	else
-		method = "flickr.interestingness.getList"
-		args = { per_page = 100 }
+	elseif displaysetting == "contacts" then
+		method = "flickr.photos.getContactsPublicPhotos"
+		args = { per_page = 100, user_id = self:getSettings()["flickr.id"], include_self = 1 }
+	elseif displaysetting == "own" then
+		method = "flickr.people.getPublicPhotos"
+		args = { per_page = 100, user_id = self:getSettings()["flickr.id"] }
+	else 
+                method = "flickr.interestingness.getList"
+                args = { per_page = 100 }
 	end
 
 	local host, port, path = self:_getRest(method, args)
 	if host then
-		log:info("getRecent URL: ", host, ":", port, path)
+		log:warn("getRecent URL: ", host, ":", port, path)
 
 		local socket = SocketHttp(jnt, host, port, "flickr")
 		local req = RequestHttp(
@@ -289,7 +468,7 @@ function _getPhotoList(self, chunk, err)
 
 	if chunk then
 
-		log:debug("got chunk ", chunk)
+		log:warn("got chunk ", chunk)
 		local obj = json.decode(chunk)
 
 		-- add photos to queue
@@ -351,10 +530,27 @@ function _loaded(self, photo, srf)
 	local icon = self:_makeIcon(photo, srf)
 
 	self.window = self:_window(icon)
-	self.window:showInstead(transitionBoxOut)
+
+        local transition
+	local trans = self:getSettings()["flickr.transition"]
+	if trans == "random" then
+		transition = self.transitions[math.random(#self.transitions)]
+	elseif trans == "boxout" then
+		transition = transitionBoxOut
+	elseif trans == "topdown" then
+		transition = transitionTopDown
+	elseif trans == "bottomup" then
+		transition = transitionBottomUp
+	elseif trans == "leftright" then
+		transition = transitionLeftRight
+	elseif trans == "rightleft" then
+		transition = transitionRightLeft
+	end	
+
+	self.window:showInstead(transition)
 
 	-- start timer for next photo in timeout seconds
-	local timeout = self:getSettings()["timeout"]
+	local timeout = self:getSettings()["flickr.timeout"]
 	self.timer = self.window:addTimer(timeout,
 				     function()
 					     self:displayNextPhoto()
@@ -418,6 +614,94 @@ function transitionBoxOut(oldWindow, newWindow)
 			       Framework:_killTransition()
 		       end
 	       end
+end
+
+function transitionBottomUp(oldWindow, newWindow)
+        local frames = FRAME_RATE * 2 -- 2 secs
+        local screenWidth, screenHeight = Framework:getScreenSize()
+        local incY = screenHeight / frames
+        local i = 0
+
+        return function(widget, surface)
+                       local adjY = i * incY
+
+                       newWindow:draw(surface, LAYER_FRAME)
+                       oldWindow:draw(surface, LAYER_CONTENT)
+
+                       surface:setClip(0, screenHeight-adjY, screenWidth, screenHeight)
+                       newWindow:draw(surface, LAYER_CONTENT)
+
+                       i = i + 1
+                       if i == frames then
+                               Framework:_killTransition()
+                       end
+               end
+end
+
+function transitionTopDown(oldWindow, newWindow)
+        local frames = FRAME_RATE * 2 -- 2 secs
+        local screenWidth, screenHeight = Framework:getScreenSize()
+        local incY = screenHeight / frames
+        local i = 0
+
+        return function(widget, surface)
+                       local adjY = i * incY
+
+                       newWindow:draw(surface, LAYER_FRAME)
+                       oldWindow:draw(surface, LAYER_CONTENT)
+
+                       surface:setClip(0, 0, screenWidth, adjY)
+                       newWindow:draw(surface, LAYER_CONTENT)
+
+                       i = i + 1
+                       if i == frames then
+                               Framework:_killTransition()
+                       end
+               end
+end
+
+function transitionLeftRight(oldWindow, newWindow)
+        local frames = FRAME_RATE * 2 -- 2 secs
+        local screenWidth, screenHeight = Framework:getScreenSize()
+        local incX = screenWidth / frames
+        local i = 0
+
+        return function(widget, surface)
+                       local adjX = i * incX
+
+                       newWindow:draw(surface, LAYER_FRAME)
+                       oldWindow:draw(surface, LAYER_CONTENT)
+
+                       surface:setClip(0, 0, adjX, screenHeight)
+                       newWindow:draw(surface, LAYER_CONTENT)
+
+                       i = i + 1
+                       if i == frames then
+                               Framework:_killTransition()
+                       end
+               end
+end
+
+function transitionRightLeft(oldWindow, newWindow)
+        local frames = FRAME_RATE * 2 -- 2 secs
+        local screenWidth, screenHeight = Framework:getScreenSize()
+        local incX = screenWidth / frames
+        local i = 0
+
+        return function(widget, surface)
+                       local adjX = i * incX
+
+                       newWindow:draw(surface, LAYER_FRAME)
+                       oldWindow:draw(surface, LAYER_CONTENT)
+
+                       surface:setClip(screenWidth-adjX, 0, screenWidth, screenHeight)
+                       newWindow:draw(surface, LAYER_CONTENT)
+
+                       i = i + 1
+                       if i == frames then
+                               Framework:_killTransition()
+                       end
+               end
 end
 
 

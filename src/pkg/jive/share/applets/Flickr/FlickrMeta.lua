@@ -35,10 +35,12 @@ end
 
 
 function defaultSettings(self)
-	return {
-		timeout = 30000,
-		display = "interesting"
-	}
+	local defaultSetting = {}
+	defaultSetting["flickr.timeout"] = 30000
+	defaultSetting["flickr.display"] = "interesting"
+	defaultSetting["flickr.id"] = "Your ID"
+	defaultSetting["flickr.transition"] = "random"
+	return defaultSetting
 end
 
 
@@ -48,7 +50,8 @@ function registerApplet(self)
 	local ssMgr = appletManager:loadApplet("ScreenSavers")
 
 	if ssMgr ~= nil then
-		ssMgr:addScreenSaver(self:string("SCREENSAVER_FLICKR"), "Flickr", "openScreensaver", self:string("SCREENSAVER_FLICKR_SETTINGS"), "openSettings")
+		ssMgr:addScreenSaver(self:string("SCREENSAVER_FLICKR"), "Flickr", 
+"openScreensaver", self:string("SCREENSAVER_FLICKR_SETTINGS"), "openSettings")
 
 		-- load our skin
 		jiveMain:loadSkin("Flickr", "skin")

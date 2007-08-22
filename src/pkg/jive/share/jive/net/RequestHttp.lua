@@ -41,10 +41,11 @@ by a L<jive.net.SocketHttp>.
 -- stuff we use
 local assert, tostring, type, pairs = assert, tostring, type, pairs
 
-local oo  = require("loop.base")
-local url = require("socket.url")
+local oo    = require("loop.base")
+local url   = require("socket.url")
+local table = require("jive.utils.table")
 
-local log = require("jive.utils.log").logger("net.http")
+local log   = require("jive.utils.log").logger("net.http")
 
 
 -- our class
@@ -125,19 +126,18 @@ function __init(self, sink, method, uri, options)
 	local parsed = url.parse(uri, defaults)
 	
 	-- Set the Host header based on the URI if possible
-	if parsed.host != "" then
+	if parsed.host ~= "" then
 		defHeaders["Host"] = parsed.host
-		if parsed.port != 80 then
+		if parsed.port ~= 80 then
 			defHeaders["Host"] = defHeaders["Host"] .. ':' .. parsed.port
 		end
 	end
-	
+
 	return oo.rawnew(self, {
 		-- request params
 		t_httpRequest = {
 			["method"]  = method,
-			["uri"]     = uri,
-			["path"]    = parsed.path,
+			["uri"]     = parsed,
 			["src"]     = t_bodySource,
 			["headers"] = defHeaders,
 		},
@@ -165,7 +165,29 @@ end
 -- t_getRequestString
 -- returns the HTTP request string, i.e. "GET uri"
 function t_getRequestString(self)
-	return self.t_httpRequest.method .. " " .. self.t_httpRequest.path
+	local uri = self.t_httpRequest.uri
+	local str = {
+		self.t_httpRequest.method,
+		" ",
+		uri.path
+	}
+
+	if str[1] == "GET" then
+		if uri.params then
+			str[#str + 1] = ";"
+			str[#str + 1] = uri.params
+		end
+		if uri.query then
+			str[#str + 1] = "?"
+			str[#str + 1] = uri.query
+		end
+		if uri.fragment then
+			str[#str + 1] = "#"
+			str[#str + 1] = uri.fragment
+		end
+	end
+
+	return table.concat(str)
 end
 
 
