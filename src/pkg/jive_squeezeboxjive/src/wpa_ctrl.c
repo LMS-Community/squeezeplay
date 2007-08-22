@@ -14,6 +14,14 @@
 
 //#include "includes.h"
 
+
+#define CONFIG_CTRL_IFACE
+#define CONFIG_CTRL_IFACE_UNIX
+
+#include <sys/socket.h>
+#include "os.h"
+
+
 #ifdef CONFIG_CTRL_IFACE
 
 #ifdef CONFIG_CTRL_IFACE_UNIX

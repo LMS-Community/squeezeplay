@@ -39,7 +39,7 @@ MKDIR= mkdir
 # == END OF USER SETTINGS. NO NEED TO CHANGE ANYTHING BELOW THIS LINE =========
 
 # Convenience platforms targets.
-PLATS= aix ansi bsd generic linux macosx mingw posix solaris
+PLATS= aix ansi bsd generic linux squeezeboxjive macosx mingw posix solaris
 
 # What to install.
 TO_BIN= lua luac

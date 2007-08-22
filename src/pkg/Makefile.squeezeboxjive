@@ -55,7 +55,7 @@ sdl: SDL-1.2.11/Makefile
 
 # sdl_image (requires jpeg tiff png)
 SDL_image-1.2.5/Makefile:
-	cd SDL_image-1.2.5; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
+	cd SDL_image-1.2.5; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --disable-tif --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 sdl-image: SDL_image-1.2.5/Makefile
 	cd SDL_image-1.2.5; make && make DESTDIR= install
@@ -83,7 +83,7 @@ lua-all: lua tolua++ luasocket luajson loop lualogging luaexpat luafilesystem lu
 
 # lua (requires readline ncurses)
 lua:
-	cd lua-5.1.1; make linux CFLAGS='-I${PREFIX}/include' INSTALL_TOP=${PREFIX} TARGET=$(TARGET); make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET)
+	cd lua-5.1.1; make squeezeboxjive CFLAGS='-I${PREFIX}/include' INSTALL_TOP=${PREFIX} TARGET=$(TARGET); make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET)
 
 # luasocket (requires lua)
 luasocket: lua
@@ -152,9 +152,9 @@ jive_squeezeboxjive/Makefile:
 
 jive_squeezeboxjive: jive_squeezeboxjive/Makefile
 	cd jive_squeezeboxjive; make && make DESTDIR=${BUILDDIR} install
-	rm ${PREFIX}/lib/jiveBSP.a
+	rm ${PREFIX}/lib/jiveBSP.*
 	cp jive_squeezeboxjive/.libs/jiveBSP.so ${PREFIX}/lib/lua/5.1/jiveBSP.so
-	rm ${PREFIX}/lib/jiveWireless.a
+	rm ${PREFIX}/lib/jiveWireless.*
 	cp jive_squeezeboxjive/.libs/jiveWireless.so ${PREFIX}/lib/lua/5.1/jiveWireless.so
 
 
