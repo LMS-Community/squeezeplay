@@ -135,23 +135,21 @@ void SDL_ThreadedTimerCheck(void)
 				/* FIXME: what if ms was changed? */
 				break;
 			}
-			if ( ms != t->interval ) {
-				if ( ms ) {
-					t->interval = ROUND_RESOLUTION(ms);
-				} else {
-					/* Remove timer from the list */
+			if ( ms ) {
+				t->interval = ROUND_RESOLUTION(ms);
+			} else {
+				/* Remove timer from the list */
 #ifdef DEBUG_TIMERS
-					printf("SDL: Removing timer %p\n", t);
+				printf("SDL: Removing timer %p\n", t);
 #endif
-					if ( prev ) {
-						prev->next = next;
-					} else {
-						SDL_timers = next;
-					}
-					SDL_free(t);
-					--SDL_timer_running;
-					removed = SDL_TRUE;
+				if ( prev ) {
+					prev->next = next;
+				} else {
+					SDL_timers = next;
 				}
+				SDL_free(t);
+				--SDL_timer_running;
+				removed = SDL_TRUE;
 			}
 		}
 		/* Don't update prev if the timer has disappeared */
