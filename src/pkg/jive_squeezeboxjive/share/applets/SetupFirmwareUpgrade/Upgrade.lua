@@ -17,6 +17,7 @@ local ipairs, pairs, tonumber, tostring, type = ipairs, pairs, tonumber, tostrin
 local oo          = require("loop.base")
 local io          = require("io")
 local os          = require("os")
+local table       = require("jive.utils.table")
 local zip         = require("zipfilter")
 local ltn12       = require("ltn12")
 local string      = require("string")
@@ -89,7 +90,7 @@ function start(self, callback)
 	end
 
 	-- disable VOL+ on boot
-	t, err = self:fw_setenv({ sw7 = nil })
+	t, err = self:fw_setenv({ sw7 = "" })
 	if not t then
 		return nil, err
 	end
@@ -309,19 +310,25 @@ end
 
 -- update bootloader environment
 function fw_setenv(self, variables)
+	local cmd = { "/usr/sbin/fw_setenv" }
+
 	for k,v in pairs(variables) do
 		log:warn("k=", k, " v=", v)
 
-		local cmd = "/usr/sbin/fw_setenv " .. k
-		if v ~= nil then
-			cmd = cmd .. ' "' .. v .. '"'
-		end
+		cmd[#cmd + 1] = k
 
-		log:warn("fw_setenv: ", cmd)
-
-		if os.execute(cmd) ~= 0 then
-			return nil, "fw_setenv failed"
+		if v == nil then
+			cmd[#cmd + 1] = '""'
+		else
+			cmd[#cmd + 1] = '"' .. v .. '"'
 		end
+	end
+
+	local str = table.concat(cmd, " ")
+
+	log:warn("fw_setenv: ", str)	
+	if os.execute(str) ~= 0 then
+		return nil, "fw_setenv failed"
 	end
 
 	return 1
