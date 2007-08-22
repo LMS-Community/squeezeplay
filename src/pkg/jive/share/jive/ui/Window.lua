@@ -234,7 +234,7 @@ function showBriefly(self, msecs, callback,
 							 r = callback()
 						 end
 						 
-						 self:hide(popTransition)
+						 self:hide(popTransition, "NONE")
 						 return r
 					 end)
 	end
@@ -245,7 +245,7 @@ function showBriefly(self, msecs, callback,
 					  if callback then
 						  callback()
 					  end
-					  self:hide(popTransition)
+					  self:hide(popTransition, "NONE")
 				  end,
 				  true)
 	self.brieflyTimer:start()
