@@ -30,7 +30,7 @@ local Window             = require("jive.ui.Window")
 local Label              = require("jive.ui.Label")
 local Framework          = require("jive.ui.Framework")
 
-local log                = require("jive.utils.log").logger("applets.browser")
+local log                = require("jive.utils.log").logger("applets.setup")
 local debug              = require("jive.utils.debug")
 
 local jiveMain           = jiveMain
@@ -72,30 +72,32 @@ function notify_playerNew(self, playerObj)
 	end
 end
 
+function notify_playerCurrent(self, playerObj)
+	self.selectedPlayer = playerObj
+	self:manageSelectPlayerMenu()
+end
+
 function manageSelectPlayerMenu(self)
-	local _numberOfPlayers = numberOfPlayers(self.playerList)
+        local sdApplet = AppletManager:getAppletInstance("SlimDiscovery")
+	local _numberOfPlayers = sdApplet and sdApplet:countPlayers() or 0
+
+	-- FIXME always display this menu for now
 	-- if _numberOfPlayers is > 1 and selectPlayerMenuItem doesn't exist, create it
-	if (_numberOfPlayers ~= 1 and self.selectPlayerMenuItem == nil) then
-		local menuItem = {
-			text = self:string("SELECT_PLAYER"),
-			callback = function() self:setupShow() end,
+	if true or _numberOfPlayers > 1 or not self.selectedPlayer then
+		if not self.selectPlayerMenuItem then
+			local menuItem = {
+				text = self:string("SELECT_PLAYER"),
+				callback = function() self:setupShow() end,
 			}
-		jiveMain:addItem(menuItem, 900)
-		self.selectPlayerMenuItem = menuItem
-	end
+			jiveMain:addItem(menuItem, 900)
+			self.selectPlayerMenuItem = menuItem
+		end
+
 	-- if numberOfPlayers < 2 and selectPlayerMenuItem exists, get rid of it
-	if (_numberOfPlayers == 1 and self.selectPlayerMenuItem) then
+	elseif _numberOfPlayers < 2 and self.selectPlayerMenuItem then
 		jiveMain:removeItem(self.selectPlayerMenuItem)
 		self.selectPlayerMenuItem = nil
 	end
-end
-
-function numberOfPlayers(playerList)
-	local numberOfPlayers = 0
-	for k,v in pairs(playerList) do
-		numberOfPlayers = numberOfPlayers + 1
-	end
-	return numberOfPlayers
 end
 
 function _addPlayerItem(self, player)

@@ -523,22 +523,20 @@ local function _mainMenuSink(step, chunk, err)
 		)
 
 		-- and clone the home menu items (at the bottom)
-		local menu = jiveMain.menu
-		for i = 1,menu:numItems() do
-			local item = menu:getItem(i)
-
+		local count = 0
+		for _, item in jiveMain:iterator() do
+			count = count + 1
 			table.insert(data.item_loop, 
 				     {
 					     text = item.text,
 					     _go = function()
-							   item.callback()
-							   return EVENT_CONSUME
+							   return item.callback() or EVENT_CONSUME
 						   end
 				     }
 			     )
 		end
 
-		data.count = data.count + menu:numItems() + 1
+		data.count = data.count + count + 1
 	else
 		log:error(err)
 		-- FIXME: Cancel opening plugin, bla bla bla
@@ -1226,14 +1224,12 @@ function notify_playerCurrent(self, player)
 	end
 
 	-- free current player
-	log:warn("_PLAYER ", _player)
 	if _player then
 		self:free()
 	end
 
 	-- nothing to do if we don't have a player
 	if not player then
-		log:warn("NUFFING TO DO MATE")
 		return
 	end
 	

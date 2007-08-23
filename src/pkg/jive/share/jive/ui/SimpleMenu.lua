@@ -110,7 +110,6 @@ end
 -- _itemListener
 -- called for menu item events
 local function _itemListener(menu, menuItem, list, index, event)
-	log:warn("index=", index)
 	local item = list[index]
 	if event:getType() == EVENT_ACTION and item.callback then
 --		local r = item.callback(event, item)
@@ -211,6 +210,19 @@ function getItem(self, index)
 	assert(type(index) == "number")
 
 	return _safeIndex(self.items, index)
+end
+
+
+--[[
+
+=head2 jive.ui.Menu:iterator()
+
+Returns an interator over all items in the menu.
+
+=cut
+--]]
+function iterator(self)
+	return ipairs(self.items)
 end
 
 

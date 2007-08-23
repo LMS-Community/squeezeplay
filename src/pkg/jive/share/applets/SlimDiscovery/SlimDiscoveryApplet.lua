@@ -31,7 +31,10 @@ QuitApplet does not override any jive.Applet method.
 local oo            = require("loop.simple")
 
 local Applet        = require("jive.Applet")
+local Timer         = require("jive.ui.Timer")
 local SlimServers   = require("jive.slim.SlimServers")
+
+local log           = require("jive.utils.log").logger("applets.setup")
 
 local jnt           = jnt
 local jiveMain      = jiveMain
@@ -56,6 +59,12 @@ function __init(self, ...)
 
 	-- create a list of SlimServers
 	obj.serversObj = SlimServers(jnt)
+
+	-- timer to discover slimservers
+	obj.discoverTimer = Timer(1000, function()
+						obj:discover()
+					end)
+	obj.discoverTimer:start()
 
 	return obj
 end
@@ -168,13 +177,27 @@ Sets the current player
 =cut
 --]]
 function setCurrentPlayer(self, player)
+	if self.currentPlayer == player then
+		-- no change
+		return
+	end
+
 	local settings = self:getSettings()
 
-	settings.currentPlayer = player and player.id or false
-	self:storeSettings()
+	if settings.currentPlayer ~= player then
+		settings.currentPlayer = player and player.id or false
+		self:storeSettings()
+	end
 
 	self.currentPlayer = player
 	jnt:notify("playerCurrent", player)
+
+	-- only do discovery when we don't have a selected player
+	if self.currentPlayer then
+		self.discoverTimer:stop()
+	else
+		self.discoverTimer:start()
+	end
 end
 
 
@@ -208,6 +231,8 @@ end
 -- notify_playerNew
 -- this is called by jnt when the playerNew message is sent
 function notify_playerNew(self, player)
+	log:warn("playerNew ", player)
+
 	if not self.currentPlayer then
 		local settings = self:getSettings()
 
@@ -222,7 +247,7 @@ end
 -- this is called by jnt when the playerDelete message is sent
 function notify_playerDelete(self, player)
 	if self.currentPlayer == player then
-		setCurrentPlayer(nil)
+		self:setCurrentPlayer(nil)
 	end
 end
 

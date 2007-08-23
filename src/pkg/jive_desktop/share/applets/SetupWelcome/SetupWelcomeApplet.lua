@@ -63,8 +63,8 @@ function step2(self)
 end
 
 function step3(self)
-	local setupWallpaper = assert(appletManager:loadApplet("SetupWallpaper"))
-	return setupWallpaper:setupShow(function() self:step4() end)
+	local setupPlayer = assert(appletManager:loadApplet("SelectPlayer"))
+	return setupPlayer:setupShow(function() self:step4() end)
 end
 
 function step4(self)

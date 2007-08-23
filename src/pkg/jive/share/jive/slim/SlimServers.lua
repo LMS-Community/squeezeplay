@@ -154,9 +154,8 @@ end
 -- removes old servers
 local function _cacheCleanup(self)
 	log:debug("_cacheCleanup()")
-	
+
 	for ss_id, server in pairs(self._servers) do
-	
 		if not server:isConnected() and
 			os.time() - server:getLastSeen() > TIMEOUT then
 		
@@ -196,6 +195,7 @@ function __init(self, jnt)
 	obj.js = SocketUdp(jnt, _getSink(obj))
 
 	-- make us start
+	log:warn("calling discover")
 	obj:discover()
 
 	return obj
@@ -215,6 +215,7 @@ function discover(self)
 	log:debug("SlimServers:discover()")
 
 	for _, address in pairs(self.poll) do
+		log:warn("sending to address ", address)
 		self.js:send(t_source, address, PORT)
 	end
 	_cacheCleanup(self)	
@@ -250,6 +251,9 @@ function pollList(self, list)
 	if type(list) == "table" then
 		log:info("updated poll list")
 		self.poll = list
+
+		-- get going with the new poll list
+		self:discover()
 	end
 
 	return self.poll

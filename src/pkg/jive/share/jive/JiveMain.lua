@@ -125,6 +125,13 @@ function Menu:removeItem(item)
 	self.menu:removeItem(item)
 end
 
+
+-- iterator over items in menu
+function Menu:iterator()
+	return self.menu:iterator()
+end
+
+
 -----------------------------------------------------------------------------
 -- JiveMain
 -----------------------------------------------------------------------------
