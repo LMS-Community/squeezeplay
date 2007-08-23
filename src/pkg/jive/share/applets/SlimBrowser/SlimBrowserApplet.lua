@@ -38,6 +38,8 @@ local Slider           = require("jive.ui.Slider")
 local Timer            = require("jive.ui.Timer")
 local Textinput        = require("jive.ui.Textinput")
 local Textarea         = require("jive.ui.Textarea")
+local RadioGroup       = require("jive.ui.RadioGroup")
+local RadioButton      = require("jive.ui.RadioButton")
 
 local DB               = require("applets.SlimBrowser.DB")
 
@@ -68,6 +70,7 @@ local KEY_VOLUME_UP    = jive.ui.KEY_VOLUME_UP
 
 local jiveMain         = jiveMain
 local jnt              = jnt
+local jiveMain         = jiveMain
 
 
 module(...)
@@ -331,19 +334,34 @@ local function _artworkItem(item)
 	return icon
 end
 
+-- _radioItem
+-- returns a radio button for use on a given item
+local function _radioItem(item, db)
+	local radioFlag = item["radio"]
+	if radioFlag then
+		item["_jive_button"] = RadioButton(
+			"radio",
+			db:getRadioGroup(),
+			function() return nil end, -- callback TBD
+			radioFlag == 1
+		)
+	end
+	return item["_jive_button"]
+end
 
--- _newArtworkLabel
--- generates a label cum artwork in the given labelStyle
-local function _newArtworkLabel(labelStyle, item)
+-- _newDecoratedLabel
+-- generates a label cum decoration in the given labelStyle
+local function _newDecoratedLabel(labelStyle, item, db)
 	-- if item is a windowSpec, then the icon is kept in the spec for nothing (overhead)
 	-- however it guarantees the icon in the title is not shared with (the same) icon in the menu.
-	if item then
+	if item["radio"] then
+		return Label(labelStyle, item["text"], _radioItem(item, db))
+	elseif item then
 		return Label(labelStyle, item["text"], _artworkItem(item))
 	else
 		return Label(labelStyle, "")
 	end
 end
-
 
 -- _performJSONAction
 -- performs the JSON action...
@@ -917,8 +935,7 @@ end
 -- _browseMenuRenderer
 -- renders a basic menu
 local function _browseMenuRenderer(menu, widgets, toRenderIndexes, toRenderSize, db)
---	log:debug("_browseMenuRenderer(", toRenderSize, ", ", db, ")")
-
+	--	log:debug("_browseMenuRenderer(", toRenderSize, ", ", db, ")")
 	-- we must create or update the widgets for the indexes in toRenderIndexes.
 	-- this last list can contain null, so we iterate from 1 to toRenderSize
 	
@@ -944,14 +961,19 @@ local function _browseMenuRenderer(menu, widgets, toRenderIndexes, toRenderSize,
 			end
 			
 			if not widget then
-				widgets[widgetIndex] = _newArtworkLabel(style, item)
+				widgets[widgetIndex] = _newDecoratedLabel(style, item, db)
 			else
 				if item and type(item) == 'table' then
 					-- change the label text...
 					widget:setValue(item.text)
 
-					-- and change the icon!
-					widget:setWidget(_artworkItem(item))
+					if (item["radio"]) then
+						-- and change the radio button
+						widget:setWidget(_radioItem(item, db))
+					else 
+						-- and change the icon!
+						widget:setWidget(_artworkItem(item))
+					end
 					widget:setStyle(style)
 				else
 					widget:setValue("")
@@ -977,12 +999,12 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	log:debug(windowSpec)
 	
 	
-	-- create a window in all cases
-	local window = Window(windowSpec.windowStyle)
-	window:setTitleWidget(_newArtworkLabel(windowSpec.labelTitleStyle, windowSpec))
-	
 	-- a DB (empty...) 
 	local db = DB(windowSpec)
+	
+	-- create a window in all cases
+	local window = Window(windowSpec.windowStyle)
+	window:setTitleWidget(_newDecoratedLabel(windowSpec.labelTitleStyle, windowSpec, db))
 	
 	local menu
 
@@ -1352,7 +1374,6 @@ end
 function init(self)
 	jnt:subscribe(self)
 end
-
 
 --[[
 
