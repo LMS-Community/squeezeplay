@@ -5,6 +5,6 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SELECT_PLAYER
-	EN	Select Player
+	EN	Choose Player
 
 

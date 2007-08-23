@@ -35,14 +35,14 @@ end
 
 function registerApplet(self)
 	
-	-- SlimBrowser requires SlimDiscovery
-	appletManager:loadApplet("SlimDiscovery")
-	
 	-- SlimBrowser uses its own log categories
 	-- defined here so that it can be changed using LogSettingsApplet before the applet is run.
 	jul.addCategory("player.browse", jul.WARN)
 	jul.addCategory("player.browse.db", jul.WARN)
 	jul.addCategory("player.browse.data", jul.WARN)
+
+	appletManager:loadApplet("SlimBrowser")
+
 end
 
 

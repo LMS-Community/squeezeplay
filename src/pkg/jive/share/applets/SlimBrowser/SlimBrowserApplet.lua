@@ -66,6 +66,7 @@ local KEY_VOLUME_UP    = jive.ui.KEY_VOLUME_UP
 -- 
 -- local Context          = require("applets.SlimBrowser.Context")
 
+local jiveMain         = jiveMain
 local jnt              = jnt
 
 
@@ -100,6 +101,10 @@ local _server = false
 -- The path of enlightenment
 local _browsePath = false
 local _statusPath = false
+
+-- The system home menu
+local _homeWindow = false
+local _homeHandler = false
 
 -- The last entered text
 local _lastInput = ""
@@ -506,20 +511,7 @@ local function _mainMenuSink(step, chunk, err)
 		-- FIXME: we probably want exit in all cases, even and above in case of error...
 		
 		-- FIXME: set step.origin
-	
-		-- we want to add an exit item (at the bottom)
-		table.insert(data.item_loop, 
-			{
-				text = _string('SLIMBROWSER_EXIT'),
-				_go = function()
-					if _browsePath then
-						-- FIXME: This is really closing the plugin...
-						_browsePath.window:hide()
-					end
-					return EVENT_CONSUME
-				end
-			}
-		)
+
 
 		-- we want to add a Now playing item (at the top)
 		table.insert(data.item_loop,
@@ -530,8 +522,23 @@ local function _mainMenuSink(step, chunk, err)
 			}
 		)
 
-		-- update count
-		data.count = data.count + 2
+		-- and clone the home menu items (at the bottom)
+		local menu = jiveMain.menu
+		for i = 1,menu:numItems() do
+			local item = menu:getItem(i)
+
+			table.insert(data.item_loop, 
+				     {
+					     text = item.text,
+					     _go = function()
+							   item.callback()
+							   return EVENT_CONSUME
+						   end
+				     }
+			     )
+		end
+
+		data.count = data.count + menu:numItems() + 1
 	else
 		log:error(err)
 		-- FIXME: Cancel opening plugin, bla bla bla
@@ -593,38 +600,6 @@ end
 -- the function prototype is the same than _actionHandler (i.e. the whole shebang to cover all cases)
 local _defaultActions = {
 	
-	["home"] = function()
-
-		-- are we in home?
-		if _browsePath.origin then
-
-			-- no, unroll
-			local step = _browsePath
-			-- FIXME: loop looks weird, can probably be simplified.
-			while step do
-				if step.origin then
-					-- hide the window
-					step.window:hide(nil, "JUMP")
-					-- destroy scaffholding to data coming in is stopped
-					step.destination = false
-					step = step.origin
-				else
-					break
-				end
-			end
-
-			_browsePath = step
-			-- if we were going somewhere, we're no longer
-			_browsePath.destination = false
-			_browsePath.menu:unlock()
-
-			return EVENT_CONSUME
-		
-		else
-			return _goNowPlaying()
-		end
-	end,
-
 	["pause"] = function()
 		_player:togglePause()
 		return EVENT_CONSUME
@@ -852,7 +827,6 @@ end
 local _keycodeActionName = {
 	[KEY_PAUSE] = 'pause', 
 	[KEY_PLAY]  = 'play',
-	[KEY_HOME]  = 'home',
 	[KEY_FWD]   = 'fwd',
 	[KEY_REW]   = 'rew',
 	[KEY_ADD]   = 'add',
@@ -1172,31 +1146,103 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 end
 
 
+function _homeAction(self, homeWindow)
+	
+	while Framework.windowStack[1] ~= homeWindow do
+		Framework.windowStack[1]:hide(nil, "JUMP")
+	end
+
+
+--[[ FIXME what's this all about ...
+
+	["home"] = function()
+
+		-- are we in home?
+		if _browsePath.origin then
+
+			-- no, unroll
+			local step = _browsePath
+			-- FIXME: loop looks weird, can probably be simplified.
+			while step do
+				if step.origin then
+					-- hide the window
+					step.window:hide(nil, "JUMP")
+					-- destroy scaffholding to data coming in is stopped
+					step.destination = false
+					step = step.origin
+				else
+					break
+				end
+			end
+
+			_browsePath = step
+			-- if we were going somewhere, we're no longer
+			_browsePath.destination = false
+			_browsePath.menu:unlock()
+
+			return EVENT_CONSUME
+		
+		else
+			return _goNowPlaying()
+		end
+	end,
+	--]]
+
+end
+
+
 --==============================================================================
 -- SlimBrowserApplet public methods
 --==============================================================================
 
 
--- openPlayer
--- method attached to each player entry in the main menu by SlimDiscovery 
--- applet. Our meta ensures SlimDiscovery is loaded.
-function openPlayer (self, menuItem, player)
+
+
+-- notify_playerDelete
+-- this is called by jnt when the playerDelete message is sent
+function notify_playerDelete(self, player)
+
+	-- if this concerns our player
+	if player == _player then
+		-- panic!
+		log:warn("Player gone while browsing it ! -- packing home!")
+		self:free()
+	end
+end
+
+
+-- notify_playerCurrent
+-- this is called when the player changes
+function notify_playerCurrent(self, player)
 	log:debug(
-		"SlimBrowserApplet:openPlayer(", 
+		"SlimBrowserApplet:notify_playerCurrent(", 
 		player, 
 		")"
 	)
+
+	-- has the player actually changed?
+	if _player == player then
+		return
+	end
+
+	-- free current player
+	log:warn("_PLAYER ", _player)
+	if _player then
+		self:free()
+	end
+
+	-- nothing to do if we don't have a player
+	if not player then
+		log:warn("NUFFING TO DO MATE")
+		return
+	end
 	
-	-- !menuItem is an AppletManager menuItem...
 
 	-- assign our locals
 	_player = player
 	_server = player:getSlimServer()
 	_string = function(token) return self:string(token) end
 	
-	-- get notified if the player goes away!
-	jnt:subscribe(self)
-
 	-- create a window for Now Playing
 	local path, sink = _newDestination(
 		nil,
@@ -1230,21 +1276,24 @@ function openPlayer (self, menuItem, player)
 	-- fetch the menu, pronto...
 	_server.comet:request(sink, nil, { 'menu', 0, 100 })
 	
-	self:tieAndShowWindow(_browsePath.window)
-	return _browsePath.window
-end
+	-- implement the home button using a global handler, this will work even
+	-- when other applets/screensavers are displayed
+	_homeHandler = Framework:addListener(EVENT_KEY_PRESS,
+					     function(event)
+						     if event:getKeycode() == KEY_HOME then
+							     self:_homeAction(_browsePath.window)
+							     return EVENT_CONSUME
+						     end
 
+						     return EVENT_UNUSED
+					     end,
+					     false)
 
--- notify_playerDelete
--- this is called by jnt when the playerDelete message is sent
-function notify_playerDelete(self, player)
-
-	-- if this concerns our player
-	if player == _player then
-		-- panic!
-		log:warn("Player gone while browsing it ! -- packing home!")
-		self:free()
+	-- switch out the standard home menu, and replace with our window
+	if not _homeWindow then
+		_homeWindow = Framework.windowStack[#Framework.windowStack]
 	end
+	Framework.windowStack[#Framework.windowStack] = _browsePath.window
 end
 
 
@@ -1260,17 +1309,30 @@ function free(self)
 	log:debug("SlimBrowserApplet:free()")
 	
 	_player:offStage()
-	jnt:unsubscribe(self)
+
+	-- restore the system home menu
+	if _homeWindow then
+		log:warn("RESTORE HOME")
+		local window = Framework.windowStack[#Framework.windowStack]
+		Framework.windowStack[#Framework.windowStack] = _homeWindow
+		window:hide()
+	end
+
+	if _homeHander then
+		Framework:removeListener(_homeHandler)
+	end
 		
-	_player = nil
-	_server = nil
-	_string = nil
-	
+	_player = false
+	_server = false
+	_string = false
+	_homeWindow = false
+	_homeHandler = false
+
 	-- walk down our path and close...
 	local step = _browsePath
 	
 	while step do
-		step.window:hide()
+--		step.window:hide()
 		step.destination = false
 		local prev = step
 		step = step.origin
@@ -1280,7 +1342,7 @@ function free(self)
 	local step = _statusPath
 	
 	while step do
-		step.window:hide()
+--		step.window:hide()
 		step.destination = false
 		local prev = step
 		step = step.origin
@@ -1288,6 +1350,11 @@ function free(self)
 	end
 	
 	return true
+end
+
+
+function init(self)
+	jnt:subscribe(self)
 end
 
 

@@ -17,34 +17,37 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local oo                 = require("loop.simple")
 local pairs, ipairs, tostring      = pairs, ipairs, tostring
 
+local oo                 = require("loop.simple")
+
 local Applet             = require("jive.Applet")
-local AppletMeta         = require("jive.AppletMeta")
+local AppletManager      = require("jive.AppletManager")
 local SimpleMenu         = require("jive.ui.SimpleMenu")
 local RadioGroup         = require("jive.ui.RadioGroup")
 local RadioButton        = require("jive.ui.RadioButton")
 local Window             = require("jive.ui.Window")
 local Label              = require("jive.ui.Label")
-local appletManager      = appletManager
-local jiveMain           = jiveMain
-local jnt                = jnt
+local Framework          = require("jive.ui.Framework")
 
 local log                = require("jive.utils.log").logger("applets.browser")
 local debug              = require("jive.utils.debug")
 
+local jiveMain           = jiveMain
+local jnt                = jnt
+
 local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
+
 
 module(...)
 oo.class(_M, Applet)
 
+
 function init(self, ...)
---	jiveMain.window:setTitle('Testing')
-	-- TODO get currentPlayer from SlimDiscovery instead of from SelectPlayer
-	self.selectedPlayer = self:getSettings()["selectedPlayer"]
 	self.playerList = {}
 	jnt:subscribe(self)
+
+	self:manageSelectPlayerMenu()
 end
 
 function notify_playerDelete(self, playerObj)
@@ -62,10 +65,7 @@ function notify_playerNew(self, playerObj)
 	local playerMac = playerObj.id
 	local playerName = playerObj.name
 	self.playerList[playerMac] = playerName
-	-- if there isn't a selected player, make this one the selected player
-	if (self.selectedPlayer == nil) then
-		self:selectPlayer(playerMac)
-	end
+
 	manageSelectPlayerMenu(self)
 	if self.playerMenu then
 		self:_addPlayerItem(playerObj)
@@ -75,16 +75,16 @@ end
 function manageSelectPlayerMenu(self)
 	local _numberOfPlayers = numberOfPlayers(self.playerList)
 	-- if _numberOfPlayers is > 1 and selectPlayerMenuItem doesn't exist, create it
-	if (_numberOfPlayers > 1 and self.selectPlayerMenuItem == nil) then
+	if (_numberOfPlayers ~= 1 and self.selectPlayerMenuItem == nil) then
 		local menuItem = {
 			text = self:string("SELECT_PLAYER"),
-			callback = function(_, ...) self:getPlayers(...) end,
+			callback = function() self:setupShow() end,
 			}
 		jiveMain:addItem(menuItem, 900)
 		self.selectPlayerMenuItem = menuItem
 	end
 	-- if numberOfPlayers < 2 and selectPlayerMenuItem exists, get rid of it
-	if (_numberOfPlayers < 2 and self.selectPlayerMenuItem) then
+	if (_numberOfPlayers == 1 and self.selectPlayerMenuItem) then
 		jiveMain:removeItem(self.selectPlayerMenuItem)
 		self.selectPlayerMenuItem = nil
 	end
@@ -101,57 +101,70 @@ end
 function _addPlayerItem(self, player)
 	local playerMac = player.id
 	local playerName = player.name
-	log:warn('player:|', playerMac, '|', playerName)
-	-- display as radio selections
-	local button = RadioButton(
-		"radio", 
-		self.radioGroup, 
-		function() self:selectPlayer(playerMac) end,
-		playerMac == self.selectedPlayer
-	)
+
+	log:warn("_addPlayerItem")
 	local item = {
 		text = playerName,
-		icon = button,
+		callback = function()
+				   self:selectPlayer(player)
+				   self.setupNext()
+			   end,
 	}
 	self.playerMenu:addItem(item)
-	--self.playerItems[playerMac] = item
+	
+	if self.selectedPlayer == player then
+		self.playerMenu:setSelectedItem(item)
+	end
 end
 
-function getPlayers(self)
+function setupShow(self, setupNext)
 	-- get list of slimservers
-	-- local slimServers = appletManager:getApplet("SlimDiscovery"):getSlimservers():servers()
 	local window = Window("window", self:string("SELECT_PLAYER"))
         local menu = SimpleMenu("menu")
-        local group = RadioGroup()
+	menu:setComparator(SimpleMenu.itemComparatorAlpha)
+
 	self.playerMenu = menu
-	self.radioGroup = group
-	-- TODO, get the selectedPlayer from SlimDiscovery
-	self.selectedPlayer = self:getSettings()["selectedPlayer"]
-        local sdApplet = appletManager:getAppletInstance("SlimDiscovery")
-        if sdApplet then
-		for playerMac, playerObj in sdApplet:allPlayers() do
-			_addPlayerItem(self, playerObj)
+	self.setupNext = setupNext or 
+		function()
+			window:hide(Window.transitionPushLeft)
 		end
-	else
+
+        local sdApplet = AppletManager:getAppletInstance("SlimDiscovery")
+        if not sdApplet then
 		return
 	end
 
+	self.selectedPlayer = sdApplet:getCurrentPlayer()
+	for playerMac, playerObj in sdApplet:allPlayers() do
+		_addPlayerItem(self, playerObj)
+	end
+
+	-- jive for debugging
+	self.playerMenu:addItem({
+					text = "NO PLAYER (DEBUG)",
+					callback = function()
+							   self:selectPlayer(nil)
+							   self.setupNext()
+						   end
+				})
+
 	window:addWidget(menu)
-	-- Store the selected player when the menu is exited
-	window:addListener(EVENT_WINDOW_POP,
-		function()
-			self:storeSettings()
-			self.playerMenu = nil
-		end
-	)
+
+	sdApplet:discover()
+	window:addTimer(1000, function() sdApplet:discover() end)
+
 	self:tieAndShowWindow(window)
 	return window
 end
 
-function selectPlayer(self, playerMac)
-	log:warn("Selected player is now ", playerMac)
-	-- TODO set currentPlayer in SlimDiscovery
-	self:getSettings()["selectedPlayer"] = playerMac
+function selectPlayer(self, player)
+	log:warn("Selected player is now ", player)
+
+	local manager = AppletManager:getAppletInstance("SlimDiscovery")
+	if manager then
+		manager:setCurrentPlayer(player)
+	end
+
 	return true
 end
 

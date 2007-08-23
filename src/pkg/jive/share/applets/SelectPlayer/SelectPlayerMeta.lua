@@ -37,10 +37,9 @@ end
 
 
 function registerApplet(meta)
-	
-     -- SelectPlayer is a resident Applet, Applet loads all menus necessary
-	-- commented out until home menu is reworked
---        appletManager:loadApplet("SelectPlayer")
+
+	-- SelectPlayer is a resident Applet, Applet loads all menus necessary
+        appletManager:loadApplet("SelectPlayer")
 
 end
 

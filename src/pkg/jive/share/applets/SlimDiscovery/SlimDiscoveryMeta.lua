@@ -32,6 +32,13 @@ function jiveVersion(self)
 end
 
 
+function defaultSettings(self)
+	return {
+		currentPlayer = false
+	}
+end
+
+
 function registerApplet(self)
 	
 	-- SlimDiscovery is a resident Applet

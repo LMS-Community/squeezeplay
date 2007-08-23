@@ -57,13 +57,6 @@ function __init(self, ...)
 	-- create a list of SlimServers
 	obj.serversObj = SlimServers(jnt)
 
-	-- arrange so that discover is called when in home
-	jiveMain:addInHomeListener(
-		function()
-			obj:discover()
-		end
-	)
-	
 	return obj
 end
 
@@ -175,6 +168,11 @@ Sets the current player
 =cut
 --]]
 function setCurrentPlayer(self, player)
+	local settings = self:getSettings()
+
+	settings.currentPlayer = player and player.id or false
+	self:storeSettings()
+
 	self.currentPlayer = player
 	jnt:notify("playerCurrent", player)
 end
@@ -210,21 +208,12 @@ end
 -- notify_playerNew
 -- this is called by jnt when the playerNew message is sent
 function notify_playerNew(self, player)
+	if not self.currentPlayer then
+		local settings = self:getSettings()
 
-	-- add the player to the main menu if it is not there already
-	if not player:getHomeMenuItem() then
-
-		local menuItem = {
-			text = player:getName(),
-			callback = function(_, menuItem)
-				appletManager:loadApplet("SlimBrowser"):openPlayer(menuItem, player)
-			end
-		}
-
-
-		jiveMain:addItem(menuItem, 100)
-
-		player:setHomeMenuItem(menuItem)
+		if settings.currentPlayer == player.id then
+			self:setCurrentPlayer(player)
+		end
 	end
 end
 
@@ -232,13 +221,8 @@ end
 -- notify_playerDelete
 -- this is called by jnt when the playerDelete message is sent
 function notify_playerDelete(self, player)
-
-	-- remove the player from the menu if it has one
-	local menuItem = player:getHomeMenuItem()
-	if menuItem then
-	
-		jiveMain:removeItem(menuItem)
-		player:setHomeMenuItem(nil)
+	if self.currentPlayer == player then
+		setCurrentPlayer(nil)
 	end
 end
 

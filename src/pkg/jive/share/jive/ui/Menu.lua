@@ -411,7 +411,7 @@ function scrollBy(self, scroll)
 
 	-- show the last item if it is selected
 	elseif selected == self.listSize then
-		if self.listSize < self.numWidgets then
+		if self.listSize < self.numWidgets or self.numWidgets == 0 then
 			topItem = 1
 		else
 			topItem = self.listSize - self.numWidgets + 1
@@ -502,7 +502,6 @@ function _updateWidgets(self)
 			self._lastSelected:setStyleModifier("selected")
 		end
 	end
-
 
 	-- update scrollbar
 	self.scrollbar:setScrollbar(0, self.listSize, self.topItem, self.numWidgets)

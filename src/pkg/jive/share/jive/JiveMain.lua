@@ -130,17 +130,6 @@ end
 -----------------------------------------------------------------------------
 
 
--- _callListeners
--- we have customers for background work
-local function _callListeners()
-	for i,v in ipairs(jiveMain.listeners) do
-		if type(v) == 'function' then
-			v()
-		end
-	end
-end
-
-
 -- JiveMain:__init
 -- creates our JiveMain main object
 function JiveMain:__init()
@@ -172,31 +161,6 @@ function JiveMain:__init()
 
 	-- init our listeners
 	jiveMain.skins = {}
-	jiveMain.listeners = {}
-	jiveMain.timer = false
-
-	-- our window listens to ACTIVATE and INACTIVE events
-	-- to implement inHomeListener functionality
-	jiveMain.window:addListener(
-		jive.ui.EVENT_WINDOW_ACTIVE, 
-		function(event) 
-			-- start the timer
-			jiveMain.timer = jiveMain.window:addTimer(
-				3000, 
-				_callListeners
-			)
-
-			-- bootstrap the search
-			_callListeners()
-		end
-	)
-	
-	jiveMain.window:addListener(
-		jive.ui.EVENT_WINDOW_INACTIVE, 
-		function(event) 
-			jiveMain.window:removeTimer(jiveMain.timer)
-		end
-	)
 
 	-- global listener: resize window (only desktop versions)
 	jive.ui.Framework:addListener(jive.ui.EVENT_WINDOW_RESIZE,
@@ -205,20 +169,6 @@ function JiveMain:__init()
 					      return jive.ui.EVENT_UNUSED
 				      end)
 
-	-- global listener: home key
-	jive.ui.Framework:addListener(jive.ui.EVENT_KEY_PRESS | jive.ui.EVENT_KEY_HOLD,
-				      function(event)
-					      if event:getKeycode() == jive.ui.KEY_HOME then
-						      while jive.ui.Framework.windowStack[1] ~= jiveMain.window do
-							      jive.ui.Framework.windowStack[1]:hide(nil, "JUMP")
-						      end
-						      return jive.ui.EVENT_CONSUME
-					      end
-
-					      return jive.ui.EVENT_UNUSED
-				      end,
-				      false)
-	
 	-- show our window!
 	jiveMain.window:show()
 	
@@ -235,30 +185,6 @@ function JiveMain:__init()
 	perfs.dump('Pool Priority Queue')
 	perfs.dump('Anonymous')
 --	profiler.stop()
-end
-
-
--- addInHomeListener
--- registers a function to be called regularly whenever the main Jive menu is shown
-function JiveMain:addInHomeListener(closure)
-	log:debug("JiveMain:addInHomeListener()")
-	
-	-- we want a function
-	if type(closure) != 'function' then
-		log:error("JiveMain:addInHomeListener called with ", type(closure), ", expecting function")
-		return
-	end
-	
-	-- we don't want it twice
-	for i,v in ipairs(self.listeners) do
-		if v == closure then
-			log:warn("JiveMain:addInHomeListener called twice with same function")
-			return
-		end
-	end
-		
-	-- OK, insert it
-	table.insert(self.listeners, closure)
 end
 
 
