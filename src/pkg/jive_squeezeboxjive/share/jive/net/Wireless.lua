@@ -1,5 +1,5 @@
 
-local ipairs, tonumber, tostring = ipairs, tonumber, tostring
+local assert, ipairs, pairs, tonumber, tostring = assert, ipairs, pairs, tonumber, tostring
 
 local oo          = require("loop.simple")
 
@@ -37,6 +37,19 @@ local WIRELESS_SNR = {
 	35,
 }
 
+-- FIXME check this region mapping is correct for Marvell and Atheros
+local REGION_CODE_MAPPING = {
+	-- name, marvell code, atheros code
+	[ "US" ] = { 0x10, 4  }, -- ch 1-11
+	[ "CA" ] = { 0x20, 6  }, -- ch 1-11
+	[ "EU" ] = { 0x30, 14 }, -- ch 1-13
+	[ "FR" ] = { 0x32, 13 }, -- ch 10-13
+	[ "CH" ] = { 0x30, 23 }, -- ch 1-13
+	[ "TW" ] = { 0x30, 21 }, -- ch 1-13
+	[ "AU" ] = { 0x10, 7  }, -- ch 1-11
+	[ "JP" ] = { 0x40, 16 }, -- ch 1-13
+}
+
 
 -- global wireless network scan results
 local _scanResults = {}
@@ -49,6 +62,71 @@ function __init(self, jnt, interface, name)
 	obj.t_sock = wireless:open()
 
 	return obj
+end
+
+
+-- returns available region names
+function getRegionNames(self)
+	return pairs(REGION_CODE_MAPPING)
+end
+
+
+-- returns the current region
+function getRegion(self)
+	-- check config file
+	local fh = io.open("/etc/network/config")
+	if fh then
+		local file = fh:read("*a")
+		fh:close()
+
+		local region = string.match(file, "REGION=([^%s]+)")
+		if  region then
+			return region
+		end
+	end
+	
+	-- check marvell region
+	local fh = assert(io.popen("/usr/sbin/iwpriv eth0 getregioncode"))
+	local line = fh:read("*a")
+	fh:close()
+
+	local code = tonumber(string.match(line, "getregioncode:(%d+)"))
+
+	for name,mapping in pairs(REGION_CODE_MAPPING) do
+		log:warn("code=", code, " mapping[1]=", mapping[1])
+		if mapping[1] == code then
+			log:warn("retruning=", name)
+			return name
+		end
+	end
+	return nil
+end
+
+
+-- sets the current region
+function setRegion(self, region)
+	local mapping = REGION_CODE_MAPPING[region]
+	if not mapping then
+		return
+	end
+
+	-- save config file
+	local fh = assert(io.open("/etc/network/config", "w"))
+	fh:write("REGION=" .. region .. "\n")
+	fh:write("REGIONCODE=" .. mapping[1] .. "\n")
+	fh:close()
+
+	-- set new region
+	local cmd = "/usr/sbin/iwpriv eth0 setregioncode " .. mapping[1]
+	log:warn("setRegion: ", cmd)
+	os.execute(cmd)
+end
+
+
+-- returns the region code for Atheros on Squeezebox
+function getAtherosRegionCode(self)
+	local mapping = REGION_CODE_MAPPING[self:getRegion()]
+	return mapping and mapping[2] or 0
 end
 
 

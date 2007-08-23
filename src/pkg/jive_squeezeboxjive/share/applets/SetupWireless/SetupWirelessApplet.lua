@@ -15,6 +15,7 @@ local io                     = require("io")
 local os                     = require("os")
 local string                 = require("string")
 local table                  = require("jive.utils.table")
+local debug                  = require("jive.utils.debug")
 
 local Applet                 = require("jive.Applet")
 local Framework              = require("jive.ui.Framework")
@@ -50,6 +51,7 @@ local LAYOUT_CENTER          = jive.ui.LAYOUT_CENTER
 local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
 local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
+local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
 local EVENT_WINDOW_ACTIVE    = jive.ui.EVENT_WINDOW_ACTIVE
 local EVENT_WINDOW_INACTIVE  = jive.ui.EVENT_WINDOW_INACTIVE
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
@@ -70,20 +72,6 @@ local KEY_RIGHT       = jive.ui.KEY_RIGHT
 local CONNECT_TIMEOUT = 20
 
 
--- FIXME should this mapping match the squeezebox? the region codes for the
--- marvell chipset are different from the Atheros one.
-local regionCodeMapping = {
-	{ "NETWORK_UNITED_STATES", 0x10 },
-	{ "NETWORK_CANADA", 0x20 },
-	{ "NETWORK_EUROPE", 0x30 },
-	{ "NETWORK_FRANCE", 0x32 },
---	{ "NETWORK_CHINA", 0x10 },
---	{ "NETWORK_TAIWAN", 0x10 },
-	{ "NETWORK_AUSTRALIA", 0x30 },
-	{ "NETWORK_JAPAN", 0x40 },
-}
-
-
 module(...)
 oo.class(_M, Applet)
 
@@ -95,27 +83,34 @@ end
 
 
 function setupRegionShow(self, setupNext)
+	local wlan = self.t_ctrl
+
 	local window = Window("window", self:string("NETWORK_REGION"))
 
-	local regionCode = 0x10
+	local region = wlan:getRegion()
 
 	local menu = SimpleMenu("menu")
+	menu:setComparator(SimpleMenu.itemComparatorAlpha)
 
 	local selectedIndex = 1
-	for _,mapping in ipairs(regionCodeMapping) do
-		menu:addItem({
-				     text = self:string(mapping[1]),
-				     callback = function()
-							setRegion(self, mapping[2])
-							setupNext()
-						end
-			     })
+	for name in wlan:getRegionNames() do
+		local item = {
+			text = self:string("NETWORK_REGION_" .. name),
+			callback = function()
+					   if region ~= name then
+						   wlan:setRegion(name)
+					   end
+					   setupNext()
+				   end
+		}
 
-		if regionCode == mapping[2] then
-			selectedIndex = menu:numItems()
+		menu:addItem(item)
+		if region == name then
+			menu:setSelectedItem(item)
 		end
+		log:warn("region=", region, " name=", name, " selectedIndex=", selectedIndex)
 	end
-	menu:setSelectedIndex(selectedIndex)
+
 
 	window:addWidget(Textarea("help", self:string("NETWORK_REGION_HELP")))
 	window:addWidget(menu)
@@ -126,19 +121,23 @@ end
 
 
 function settingsRegionShow(self)
+	local wlan = self.t_ctrl
+
 	local window = Window("window", self:string("NETWORK_REGION"))
 
-	local regionCode = 0x10
+	local region = wlan:getRegion()
 
 	local menu = SimpleMenu("menu")
-	local group = RadioGroup()
+	menu:setComparator(SimpleMenu.itemComparatorAlpha)
 
-	for _,mapping in ipairs(regionCodeMapping) do
+	local group = RadioGroup()
+	for name in wlan:getRegionNames() do
+		log:warn("region=", region, " name=", name)
 		menu:addItem({
-				     text = self:string(mapping[1]),
+				     text = self:string("NETWORK_REGION_" .. name),
 				     icon = RadioButton("radio", group,
-							function() setRegion(self, mapping[2]) end,
-							regionCode == mapping[2]
+							function() wlan:setRegion(name) end,
+							region == name
 						)
 			     })
 	end
@@ -148,12 +147,6 @@ function settingsRegionShow(self)
 
 	self:tieAndShowWindow(window)
 	return window
-end
-
-
-function setRegion(self, regionCode)
-	log:warn("setRegion ", regionCode)
-	-- XXXX set the region code using iwpriv and also to file in /etc
 end
 
 
@@ -861,7 +854,7 @@ function t_connectFailed(self, id)
 	local request
 
 	-- Remove dhcp/static ip configuration for network
-	self:_editNetworkInterfaces(ssid)
+	self:_editNetworkInterfaces(self.ssid)
 
 	-- Stop trying to connect to the network
 	request = 'DISCONNECT'
@@ -1207,6 +1200,7 @@ end
 function _editNetworkInterfaces(self, ssid, method, ...)
 	-- the interfaces file uses " \t" as word breaks so munge the ssid
 	-- FIXME ssid's with \n are not supported
+	assert(ssid, debug.traceback())
 	ssid = string.gsub(ssid, "[ \t]", "_")
 	log:warn("munged ssid=", ssid)
 

@@ -106,7 +106,7 @@ NETWORK_REGION
 	IT	Area senza fili
 	NL	Draadloze regio
 
-NETWORK_UNITED_STATES
+NETWORK_REGION_US
 	DE	USA und Mexiko
 	EN	United States & Mexico
 	ES	Estados Unidos y México
@@ -114,7 +114,7 @@ NETWORK_UNITED_STATES
 	IT	Stati Uniti e Messico
 	NL	Verenigde Staten en Mexico
 
-NETWORK_CANADA
+NETWORK_REGION_CA
 	DE	Kanada
 	EN	Canada
 	ES	Canadá
@@ -122,7 +122,7 @@ NETWORK_CANADA
 	IT	Canada
 	NL	Canada
 
-NETWORK_EUROPE
+NETWORK_REGION_EU
 	DE	Europa
 	EN	Europe
 	ES	Europa
@@ -130,7 +130,7 @@ NETWORK_EUROPE
 	IT	Europa
 	NL	Europa
 
-NETWORK_FRANCE
+NETWORK_REGION_FR
 	DE	Frankreich
 	EN	France
 	ES	Francia
@@ -138,7 +138,7 @@ NETWORK_FRANCE
 	IT	Francia
 	NL	Frankrijk
 
-NETWORK_AUSTRALIA
+NETWORK_REGION_AU
 	DE	Australien
 	EN	Australia
 	ES	Australia
@@ -146,13 +146,19 @@ NETWORK_AUSTRALIA
 	IT	Australia
 	NL	Australië
 
-NETWORK_JAPAN
+NETWORK_REGION_JP
 	DE	Japan
 	EN	Japan
 	ES	Japón
 	FR	Japon
 	IT	Giappone
 	NL	Japan
+
+NETWORK_REGION_CH
+	EN	China
+
+NETWORK_REGION_TW
+	EN	Taiwan
 
 NETWORK_REGION_HELP
 	DE	Wählen Sie Region oder Land.
