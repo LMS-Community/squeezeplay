@@ -41,6 +41,7 @@ local Surface                = require("jive.ui.Surface")
 local Textarea               = require("jive.ui.Textarea")
 local Textinput              = require("jive.ui.Textinput")
 local Window                 = require("jive.ui.Window")
+local Timer                  = require("jive.ui.Timer")
 
 local log                    = require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
 
@@ -121,6 +122,10 @@ function menu(self, menuItem)
 				callback = function(event, menuItem)
 					self:menuWindow(menuItem)
 				end },
+			{ text = "Sorted Menu",
+				callback = function(event, menuItem)
+					self:sortedMenuWindow(menuItem)
+				end },
 			{ text = "Text UTF8",
 				callback = function(event, menuItem)
 					self:textWindow(menuItem, "applets/Test/test.txt")
@@ -147,7 +152,11 @@ function menu(self, menuItem)
 				end },
 			{ text = "Image JPG",
 				callback = function(event, menuItem)
-					self:imageWindow(menuItem, "applets/Test/test.jpg")
+						   local t = Timer(0, function()
+									      log:warn("timer fired")
+									      self:imageWindow(menuItem, "applets/Test/test.jpg")
+								      end, true)
+						   t:start()
 				end },
 			{ text = "Image PNG",
 				callback = function(event, menuItem)
@@ -162,6 +171,28 @@ function menu(self, menuItem)
 	local window = Window("window", menuItem.text)
 	window:addWidget(menu)
 
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+function sortedMenuWindow(self, menuItem)
+	local window = Window("window", menuItem.text)
+	local menu = SimpleMenu("menu")
+	menu:setComparator(menu.itemComparatorAlpha)
+
+	menu:addItem({ text = "United States" })
+	menu:setSelectedIndex(1)
+
+	menu:addItem({ text = "Australia" })
+	menu:addItem({ text = "France" })
+	menu:addItem({ text = "Japan" })
+	menu:addItem({ text = "Taiwan" })
+	menu:addItem({ text = "Europe" })
+	menu:addItem({ text = "Canada" })
+	menu:addItem({ text = "China" })
+
+	window:addWidget(menu)
 	self:tieAndShowWindow(window)
 	return window
 end

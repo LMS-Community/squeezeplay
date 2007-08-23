@@ -297,6 +297,10 @@ function insertItem(self, item, index)
 		table.insert(self.items, _coerce(index, #self.items), item)
 	end
 
+	if index <= self.selected then
+		self.selected = self.selected + 1
+	end
+
 	Menu.setItems(self, self.items, #self.items, index, index)
 end
 

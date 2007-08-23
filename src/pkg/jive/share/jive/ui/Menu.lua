@@ -404,10 +404,9 @@ function scrollBy(self, scroll)
 	elseif selected <= topItem then
 		-- if we land here, selected > 1 so topItem cannot become < 1
 		topItem = selected - 1
-	end
 
 	-- show the last item if it is selected
-	if selected == self.listSize then
+	elseif selected == self.listSize then
 		if self.listSize < self.numWidgets then
 			topItem = 1
 		else
