@@ -547,8 +547,8 @@ local function _mainMenuSink(step, chunk, err)
 			table.insert(data.item_loop, 
 				     {
 					     text = item.text,
-					     _go = function()
-							   return item.callback() or EVENT_CONSUME
+					     _go = function(event)
+							   return item.callback(event, item) or EVENT_CONSUME
 						   end
 				     }
 			     )

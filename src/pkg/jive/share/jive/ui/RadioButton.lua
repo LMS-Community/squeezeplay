@@ -64,6 +64,9 @@ local EVENT_ACTION     = jive.ui.EVENT_ACTION
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
 
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
+local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
+
+local KEY_PLAY         = jive.ui.KEY_PLAY
 
 
 -- our class
@@ -103,15 +106,29 @@ function __init(self, style, group, closure, selected)
 
 	obj:addListener(EVENT_ACTION,
 			 function(event)
-				 local oldSelected = group.selected
-				 group:setSelected(obj)
-				 if oldSelected ~= group.selected then
-				         obj:playSound("SELECT")
-				 end
-				 return EVENT_CONSUME
+				 return obj:_action()
 			 end)
 
+	obj:addListener(EVENT_KEY_PRESS,
+			function(event)
+				local keycode = event:getKeycode()
+				if keycode == KEY_PLAY then
+					return obj:_action()
+				end
+				return EVENT_UNUSED
+			end)
+
 	return obj
+end
+
+
+function _action(self)
+	local oldSelected = self.group.selected
+	self.group:setSelected(self)
+	if oldSelected ~= self.group.selected then
+		self:playSound("SELECT")
+	end
+	return EVENT_CONSUME
 end
 
 

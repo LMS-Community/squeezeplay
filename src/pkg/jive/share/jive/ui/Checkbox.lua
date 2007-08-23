@@ -43,9 +43,15 @@ local assert, tostring, type = assert, tostring, type
 local oo              = require("loop.simple")
 local Icon            = require("jive.ui.Icon")
 
+local log             = require("jive.utils.log").logger("ui")
+
 local EVENT_ACTION    = jive.ui.EVENT_ACTION
 local EVENT_KEY_PRESS = jive.ui.EVENT_KEY_PRESS
 local EVENT_CONSUME   = jive.ui.EVENT_CONSUME
+local EVENT_UNUSED    = jive.ui.EVENT_UNUSED
+
+local KEY_GO          = jive.ui.KEY_GO
+local KEY_PLAY        = jive.ui.KEY_PLAY
 
 
 -- our class
@@ -74,14 +80,28 @@ function __init(self, style, closure, isSelected)
 	obj:setSelected(isSelected)
 	obj.closure = closure
 
-	obj:addListener(EVENT_ACTION | EVENT_KEY_PRESS,
-		 function(event)
-			 obj:setSelected(not obj.selected)
-			 obj:playSound("SELECT")
-			 return EVENT_CONSUME
-		 end)
+	obj:addListener(EVENT_ACTION,
+			function()
+				return obj:_action()
+			end)
+
+	obj:addListener(EVENT_KEY_PRESS,
+			function(event)
+				local keycode = event:getKeycode()
+				if keycode == KEY_PLAY then
+					return obj:_action()
+				end
+				return EVENT_UNUSED
+			end)
 
 	return obj
+end
+
+
+function _action(self)
+	self:setSelected(not self.selected)
+	self:playSound("SELECT")
+	return EVENT_CONSUME
 end
 
 
