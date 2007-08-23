@@ -78,7 +78,11 @@ oo.class(_M, Widget)
 -- _selectedItem
 -- returns the selected Item or nil if off stage
 local function _selectedItem(self)
-	return self.widgets[self.selected - self.topItem + 1]
+	if self.selected then
+		return self.widgets[self.selected - self.topItem + 1]
+	else
+		return self.widgets[self.topItem]
+	end
 end
 
 
@@ -101,7 +105,7 @@ local function _itemListener(self, event, item)
 	local item = _selectedItem(self)
 
 	if item then
-		r = self.itemListener(self, item, self.list, self.selected, event)
+		r = self.itemListener(self, item, self.list, self.selected or 1, event)
 
 		if r == EVENT_UNUSED then
 			r = item:_event(event)
@@ -219,8 +223,8 @@ function __init(self, style, itemRenderer, itemListener)
 	obj.widgets = {}        -- array of widgets
 	obj.lastWidgets = {}    -- hash of widgets
 	obj.numWidgets = 0      -- number of visible widges
-	obj.topItem = 1       -- index of top widget
-	obj.selected = 1      -- index of selected widget
+	obj.topItem = 1         -- index of top widget
+	obj.selected = nil      -- index of selected widget
 
 	obj:addListener(EVENT_ALL,
 			 function (event)
@@ -262,7 +266,7 @@ function setItems(self, list, listSize, min, max)
 	end
 
 	-- check if the scrollbar position is out of range
-	if self.selected > listSize then
+	if self.selected and self.selected > listSize then
 		self.selected = listSize
 		self:scrollBy(0)
 		self:rePrepare()
@@ -388,7 +392,7 @@ Scroll the menu by I<scroll> items. If I<scroll> is negative the menu scrolls up
 function scrollBy(self, scroll)
 	assert(type(scroll) == "number")
 
-	local selected = self.selected
+	local selected = self.selected or 1
 	local topItem = self.topItem
 
 	local lastSelected = selected

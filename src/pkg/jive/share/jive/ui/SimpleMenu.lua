@@ -110,6 +110,7 @@ end
 -- _itemListener
 -- called for menu item events
 local function _itemListener(menu, menuItem, list, index, event)
+	log:warn("index=", index)
 	local item = list[index]
 	if event:getType() == EVENT_ACTION and item.callback then
 --		local r = item.callback(event, item)
@@ -298,11 +299,11 @@ function insertItem(self, item, index)
 		table.insert(self.items, _coerce(index, #self.items), item)
 	end
 
-	if index <= self.selected then
+	Menu.setItems(self, self.items, #self.items, index, index)
+
+	if self.selected and index <= self.selected then
 		self.selected = self.selected + 1
 	end
-
-	Menu.setItems(self, self.items, #self.items, index, index)
 
 	return index
 end
@@ -339,10 +340,13 @@ function removeIndex(self, index)
 	assert(type(index) == "number")
 
 	if _safeIndex(self.items, index) then
-
 		local item = table.remove(self.items, index)
 		if item ~= nil then
 			Menu.setItems(self, self.items, #self.items, index, #self.items)
+		end
+
+		if self.selected and index > self.selected then
+			self.selected = self.selected - 1
 		end
 	end
 	return nil
