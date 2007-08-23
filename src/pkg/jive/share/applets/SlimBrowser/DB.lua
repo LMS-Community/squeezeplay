@@ -35,6 +35,7 @@ TODO
 local assert, tostring, ipairs = assert, tostring, ipairs
 
 local oo = require("loop.base")
+local RadioGroup = require("jive.ui.RadioGroup")
 
 local log = require("jive.utils.log").logger("player.browse.db")
 
@@ -100,6 +101,14 @@ function dump(self)
 	log:debug("--------------------------------")
 end
 
+-- getRadioGroup
+-- either returns self.radioGroup or creates and returns it
+function getRadioGroup(self)
+	if not self.radioGroup then
+		self.radioGroup = RadioGroup()
+	end
+	return self.radioGroup
+end
 
 -- menuItems
 -- Stores the chunk in the DB and returns data suitable for the menu:setItems call
