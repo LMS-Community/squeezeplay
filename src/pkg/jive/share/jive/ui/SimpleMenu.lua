@@ -252,7 +252,7 @@ end
 
 =head2 jive.ui.Menu:addItem(item)
 
-Add I<item> to the end of the menu. 
+Add I<item> to the end of the menu. Returns the index of the item added.
 
 I<item> is a table with the following keys: 
 - text, 
@@ -283,7 +283,8 @@ end
 
 =head2 jive.ui.Menu:insertItem(item, index)
 
-Insert I<item> into the menu at I<index>. See addItem for the definition of I<item>.
+Insert I<item> into the menu at I<index>. Returns the index of the item added.
+See addItem for the definition of I<item>.
 
 =cut
 --]]
@@ -302,6 +303,8 @@ function insertItem(self, item, index)
 	end
 
 	Menu.setItems(self, self.items, #self.items, index, index)
+
+	return index
 end
 
 
@@ -394,6 +397,13 @@ function updatedItem(self, item)
 	end
 end
 
+
+function setSelectedItem(self, item)
+	local index = self:getIndex(item)
+	if index ~= nil then
+		self:setSelectedIndex(index)
+	end
+end
 
 function _skin(self)
 	-- re-sort in case the locale has changed

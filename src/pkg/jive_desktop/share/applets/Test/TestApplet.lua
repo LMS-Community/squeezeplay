@@ -182,11 +182,13 @@ function sortedMenuWindow(self, menuItem)
 	menu:setComparator(menu.itemComparatorAlpha)
 
 	menu:addItem({ text = "United States" })
-	menu:setSelectedIndex(1)
-
 	menu:addItem({ text = "Australia" })
 	menu:addItem({ text = "France" })
-	menu:addItem({ text = "Japan" })
+
+	local item = { text = "Japan" }
+	menu:addItem(item)
+	menu:setSelectedItem(item)
+
 	menu:addItem({ text = "Taiwan" })
 	menu:addItem({ text = "Europe" })
 	menu:addItem({ text = "Canada" })
