@@ -889,6 +889,9 @@ function connectOK(self)
 	self.psk = nil
 	self.key = nil
 
+	-- send notification we're on a new network
+	jnt:notify("networkConnected")
+
 	-- popup confirmation
 	local window = Popup("popupIcon")
 	window:addWidget(Icon("iconConnected"))

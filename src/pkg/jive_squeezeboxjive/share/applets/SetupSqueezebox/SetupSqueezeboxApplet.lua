@@ -464,37 +464,6 @@ function _bridgedConfig(self)
 			   self.networkId = self.t_ctrl:t_addNetwork(ssid, option)
 		   end)
 
-	
---[[
-
-	response = self.t_ctrl:request("ADD_NETWORK")
-	local id = string.match(response, "%d+")
-	assert(id, "wpa_cli failed: to add network")
-
-	request = 'SET_NETWORK ' .. id .. ' ssid "logitech*squeezebox*' .. self.mac .. '"'
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-	request = 'SET_NETWORK ' .. id .. ' mode 1' -- ad-hoc
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-	request = 'SET_NETWORK ' .. id .. ' key_mgmt NONE'
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
---	request = 'SET_NETWORK ' .. id .. ' frequency 2437' -- channel 6
---	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-	-- Save configuration
-	request = 'SELECT_NETWORK ' .. id
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-	request = 'SAVE_CONFIG'
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-	-- Save the network id, we'll connect to this later
-	self.networkId = id
-	--]]
-
-
 	-- Squeezebox config:
 
 	-- no slimserver
@@ -622,29 +591,6 @@ function t_connectJiveAdhoc(self)
 
 	local id = self.t_ctrl:t_addNetwork(ssid, option)
 
-
---[[
-	response = self.t_ctrl:request("ADD_NETWORK")
-	id = string.match(response, "%d+")
-	assert(id, "wpa_cli failed: to add network")
-
-	request = 'SET_NETWORK ' .. id .. ' ssid "logitech' .. self.ether .. 'squeezebox' .. self.ether .. self.mac .. '"'
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-	request = 'SET_NETWORK ' .. id .. ' mode 1' -- IBSS
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-	request = 'SET_NETWORK ' .. id .. ' key_mgmt NONE'
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-	-- FIXME wep and ad-hoc does not appear to work, the recevied packets vanish
-	--request = 'SET_NETWORK ' .. id .. ' wep_key0 ' .. '796a51706b6166753b35755731'
-	--assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-	request = 'SELECT_NETWORK ' .. id
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
---]]
-
 	self.adhoc_ssid = ssid
 	_setAction(self, t_waitJiveAdhoc)
 end
@@ -657,7 +603,6 @@ function t_waitJiveAdhoc(self)
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_CONNECTION"
 
 	local status = self.t_ctrl:t_wpaStatusRequest("STATUS")
-	debug.dump(status)
 
 	if status.wpa_state ~= "COMPLETED" or not status.ip_address then
 		return
@@ -674,15 +619,6 @@ function t_udapDiscover(self)
 	log:warn("udapDiscover")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
-
---[[
--- XXXX
-	-- we need to assign a link address, any will do on our private
-	-- ad-hoc network. instead of modifying /etc/network/interfaces
-	-- the address is set here.
-	os.execute("/sbin/ifconfig eth0 192.168.0.2 netmask 255.255.255.0")
-	os.execute("/sbin/route add default gw 192.168.0.1 eth0")
---]]
 
 	-- check squeezebox exists via udap
 	local packet = udap.createDiscover(self.mac, self.seqno)
@@ -801,13 +737,6 @@ function t_connectJiveNetwork(self)
 	if self.adhoc_ssid then
 		self.t_ctrl:t_removeNetwork(self.adhoc_ssid)
 		self.adhoc_ssid = nil
-
---[[
-		local request = 'REMOVE_NETWORK ' .. self.adhoc_id
-		assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-		self.adhoc_id = nil
---]]
 	end
 
 	_setAction(self, t_waitJiveNetwork)
