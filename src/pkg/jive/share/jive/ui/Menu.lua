@@ -392,6 +392,11 @@ Scroll the menu by I<scroll> items. If I<scroll> is negative the menu scrolls up
 function scrollBy(self, scroll)
 	assert(type(scroll) == "number")
 
+	-- empty list, nothing to do
+	if self.listSize == 0 then
+		return
+	end
+
 	local selected = self.selected or 1
 	local topItem = self.topItem
 
@@ -403,11 +408,13 @@ function scrollBy(self, scroll)
 	-- show the first item if the first item is selected
 	if selected == 1 then
 		topItem = 1
+		log:warn("a")
 		
 	-- otherwise, try to leave one item above the selected one (we've scrolled out of the view)
 	elseif selected <= topItem then
 		-- if we land here, selected > 1 so topItem cannot become < 1
 		topItem = selected - 1
+		log:warn("a")
 
 	-- show the last item if it is selected
 	elseif selected == self.listSize then
@@ -416,10 +423,12 @@ function scrollBy(self, scroll)
 		else
 			topItem = self.listSize - self.numWidgets + 1
 		end
+		log:warn("a")
 	
 	-- otherwise, try to leave one item below the selected one (we've scrolled out of the view)
 	elseif selected >= topItem + self.numWidgets - 1 then
 		topItem = _coerce(topItem + scroll, self.listSize - self.numWidgets + 1)
+		log:warn("a")
 	end
 
 	if lastSelected ~= selected then
