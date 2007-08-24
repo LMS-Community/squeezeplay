@@ -727,7 +727,7 @@ function _connectTimer(self)
 	-- network, and have an ip address. if dhcp failed this address
 	-- will be self assigned.
 	jnt:perform(function()
-			    local status = _wpaStatusRequest(self)
+			    local status = self.t_ctrl:t_wpaStatusRequest()
 
 			    log:warn("wpa_state=", status.wpa_state)
 			    log:warn("ip_address=", status.ip_address)
@@ -1186,6 +1186,7 @@ function setStaticIP(self)
 				    "address " .. self.ipAddress,
 				    "netmask " .. self.ipSubnet,
 				    "gateway " .. self.ipGateway,
+				    "dns " .. self.ipDNS,
 				    "up echo 'nameserver " .. self.ipDNS .. "' > /etc/resolv.conf"
 			    )
 
@@ -1344,20 +1345,8 @@ local stateTxt = {
 }
 
 
-function _wpaStatusRequest(self)
-	local statusStr = self.t_ctrl:request("STATUS")
-
-	local status = {}
-	for k,v in string.gmatch(statusStr, "([^=]+)=([^\n]+)\n") do
-		status[k] = v
-	end
-
-	return status
-end
-
-
 function t_networkStatusTimer(self, values)
-	local status = _wpaStatusRequest(self)
+	local status = self.t_ctrl:t_wpaStatusRequest()
 
 	local snr = self.t_ctrl:getSNR()
 	local rssi = self.t_ctrl:getRSSI()

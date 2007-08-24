@@ -128,6 +128,7 @@ function _chargeBattery(self)
 	window:addWidget(help)
 	window:addWidget(menu)
 
+	self:tieAndShowWindow(window)
 	return window
 end
 

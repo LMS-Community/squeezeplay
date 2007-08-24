@@ -86,7 +86,7 @@ function getRegion(self)
 	end
 	
 	-- check marvell region
-	local fh = assert(io.popen("/usr/sbin/iwpriv eth0 getregioncode"))
+	local fh = assert(io.popen("/usr/sbin/iwpriv " .. self.interface .. " getregioncode"))
 	local line = fh:read("*a")
 	fh:close()
 
@@ -117,15 +117,22 @@ function setRegion(self, region)
 	fh:close()
 
 	-- set new region
-	local cmd = "/usr/sbin/iwpriv eth0 setregioncode " .. mapping[1]
+	local cmd = "/usr/sbin/iwpriv " .. self.interface .. " setregioncode " .. mapping[1]
 	log:warn("setRegion: ", cmd)
 	os.execute(cmd)
 end
 
 
+-- returns the region code for Marvell on Jive
+function getMarvellRegionCode(self)
+	local mapping = REGION_CODE_MAPPING[region or self:getRegion()]
+	return mapping and mapping[1] or 0
+end
+
+
 -- returns the region code for Atheros on Squeezebox
 function getAtherosRegionCode(self)
-	local mapping = REGION_CODE_MAPPING[self:getRegion()]
+	local mapping = REGION_CODE_MAPPING[region or self:getRegion()]
 	return mapping and mapping[2] or 0
 end
 
@@ -189,6 +196,19 @@ function t_scan(self, callback)
 			callback(_scanResults)
 		end
 	end)
+end
+
+
+-- parse and return wpa status
+function t_wpaStatusRequest(self)
+	local statusStr = self:request("STATUS")
+
+	local status = {}
+	for k,v in string.gmatch(statusStr, "([^=]+)=([^\n]+)\n") do
+		status[k] = v
+	end
+
+	return status
 end
 
 

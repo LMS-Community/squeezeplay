@@ -10,6 +10,7 @@ local string                 = require("string")
 local io                     = require("io")
 local os                     = require("os")
 local table                  = require("jive.utils.table")
+local debug                  = require("jive.utils.debug")
 
 local Applet                 = require("jive.Applet")
 local AppletManager          = require("jive.AppletManager")
@@ -18,6 +19,7 @@ local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Textarea               = require("jive.ui.Textarea")
+local Textinput              = require("jive.ui.Textinput")
 local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
 
@@ -75,6 +77,11 @@ function settingsShow(self)
 	self.scanMenu:addTimer(5000, function()
 					     _scan(self)
 				     end)
+
+	-- find jive network configuration
+	jnt:perform(function()
+			    self:t_readJiveConfig()
+		    end)
 
 	local help = Textarea("help", self:string("SQUEEZEBOX_HELP"))
 	window:addWidget(help)
@@ -136,6 +143,7 @@ function _scanComplete(self, scanTable)
 
 			-- remove networks not seen for 20 seconds
 			if os.difftime(now, entry.lastScan) > 20 then
+				log:warn(mac, " not ssen for 20 seconds")
 				self.scanMenu:removeItem(self.scanResults[mac].item)
 				self.scanResults[mac] = nil
 			end
@@ -182,10 +190,75 @@ function _wiredOrWireless(self)
 end
 
 
+function _parseip(str)
+	local ip = 0
+	for w in string.gmatch(str, "%d+") do
+		ip = ip << 8
+		ip = ip | tonumber(w)
+	end
+	return ip
+end
+
+
+function _ipstring(ip)
+	local str = {}
+	for i = 4,1,-1 do
+		str[i] = string.format("%d", ip & 0xFF)
+		ip = ip >> 8
+	end
+	str = table.concat(str, ".")
+	return str
+end
+
+
+function _validip(str)
+	local ip = _parseip(str)
+	if ip == 0x00000000 or ip == 0xFFFFFFFF then
+		return false
+	else
+		return true
+	end
+end
+
+
+function _ipAndNetmask(self, address, netmask)
+	local ip = _parseip(address or "0.0.0.0")
+	local subnet = _parseip(netmask or "255.255.255.0")
+
+	return _ipstring(ip & subnet)
+end
+
+
+function _enterIP(self)
+	-- default using jive address
+	local address = self:_ipAndNetmask(self.networkOption.address, self.networkOption.netmask)
+
+	local v = Textinput.ipAddressValue(address)
+
+	local window = Window("window", self:string("SQUEEZEBOX_IP_ADDRESS"))
+
+	window:addWidget(Textarea("help", self:string("SQUEEZEBOX_IP_ADDRESS_HELP")))
+	window:addWidget(Textinput("textinput", v,
+				   function(_, value)
+					   value = value:getValue()
+					   if not _validip(value) then
+						   return false
+					   end
+
+					   self.ipAddress = value
+					   _setupConfig(self)
+					   return true
+				   end))
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
 -- initial connection state
 function _setupInit(self, mac, ether)
-	self.mac = mac
-	self.ether = ether
+	self.mac = mac or self.mac
+	self.ether = ether or self.ether
 
 	self.seqno = 1
 	_setAction(self, t_connectJiveAdhoc)
@@ -197,8 +270,6 @@ end
 
 -- fill in the Squeezebox configuration, based on the Jive network configuration.
 function _setupConfig(self)
-	-- FIXME allow for bridged Squeezebox-Jive
-
 	if self.interface == nil then
 		if self.ether == '-' then
 			-- wireless only
@@ -208,7 +279,9 @@ function _setupConfig(self)
 		end
 	end
 
-	-- FIXME allow for static ip
+	if self.networkMethod == 'static' and not self.ipAddress then
+		return _enterIP(self)
+	end
 
 	if self.interface ~= '' then
 		if self.interface  == 'wireless' then
@@ -248,21 +321,14 @@ function _wirelessConfig(self)
 	data.bridging = udap.packNumber(0, 1) -- off
 	data.wireless_mode = udap.packNumber(0, 1) -- infrastructure
 
-	-- FIXME static ip addresses
-	if true then
-		data.lan_ip_mode = udap.packNumber(1, 1) -- 1 dhcp
-	else
-		data.lan_ip_mode = udap.packNumber(0, 1) -- 0 static ip
-		-- data.lan_network_address
-		-- data.lan_subnet_mask
-		-- data.lan_gateway
-		-- data.primary_dns
-	end
+	self:_ipConfig(data) -- ip config
 
 	data.SSID = status.ssid
 
-	-- FIXME region
-	data.region_id = udap.packNumber(14, 1) -- europe
+	-- wireless region
+	local region = self.t_ctrl:getAtherosRegionCode()
+	log:warn("data.region_id=", data.region)
+	data.region_id = udap.packNumber(region, 1)
 
 	-- default to encryption disabled
 	data.wepon = udap.packNumber(0, 1)
@@ -377,16 +443,7 @@ function _wiredConfig(self)
 	data.interface = udap.packNumber(1, 1) -- wired
 	data.bridging = udap.packNumber(0, 1) -- off
 
-	-- FIXME static ip addresses
-	if true then
-		data.lan_ip_mode = udap.packNumber(1, 1) -- 1 dhcp
-	else
-		data.lan_ip_mode = udap.packNumber(0, 1) -- 0 static ip
-		-- data.lan_network_address
-		-- data.lan_subnet_mask
-		-- data.lan_gateway
-		-- data.primary_dns
-	end
+	self:_ipConfig(data) -- ip config
 end
 
 
@@ -423,7 +480,7 @@ function _bridgedConfig(self)
 	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
 	-- Save the network id, we'll connect to this later
-	self.network_id = id
+	self.networkId = id
 
 
 	-- Squeezebox config:
@@ -450,6 +507,84 @@ function _bridgedConfig(self)
 end
 
 
+function _ipConfig(self, data)
+	if self.networkMethod == 'static' then
+		log:warn("ipAddress=", self.ipAddress)
+		log:warn("netmask=", self.networkOption.netmask)
+		log:warn("gateway=", self.networkOption.gateway)
+		log:warn("dns=", self.networkOption.dns)
+
+		data.lan_ip_mode = udap.packNumber(0, 1) -- 0 static ip
+		data.lan_network_ddress = udap.packNumber(_parseip(self.ipAddress), 4)
+		data.lan_subnet_mask = udap.packNumber(_parseip(self.networkOption.netmask), 4)
+		data.lan_gateway = udap.packNumber(_parseip(self.networkOption.gateway), 4)
+		data.primary_dns = udap.packNumber(_parseip(self.networkOption.dns), 4)
+	else
+		data.lan_ip_mode = udap.packNumber(1, 1) -- 1 dhcp
+	end
+end
+
+
+-- reads the existing network configuraton on Jive, including ssid,
+-- network id, dhcp/static ip information.
+function t_readJiveConfig(self)
+	-- read the existing network configuration
+	local statusStr = self.t_ctrl:request("STATUS-VERBOSE")
+	local status = {}
+	for k,v in string.gmatch(statusStr, "([^=]+)=([^\n]+)\n") do
+		status[k] = v
+	end
+
+
+	self.networkId = status.id
+	self.networkSSID = status.ssid
+	self.networkMethod = nil
+	self.networkOption = {}
+
+
+	-- note if we are going to use the bridged mode id and ssid
+	-- will be nil here
+	if not status.ssid then
+		return
+	end
+
+
+	-- read dhcp/static from interfaces file
+	-- the interfaces file uses " \t" as word breaks so munge the ssid
+	-- FIXME ssid's with \n are not supported
+	local ssid = string.gsub(self.networkSSID, "[ \t]", "_")
+	log:warn("munged ssid=", ssid)
+
+	local fh = assert(io.open("/etc/network/interfaces", "r+"))
+
+	local network, method = ""
+	for line in fh:lines() do
+		if string.match(line, "^mapping%s") or string.match(line, "^auto%s") then
+			network = ""
+		elseif string.match(line, "^iface%s") then
+			network, method  = string.match(line, "^iface%s([^%s]+)%s+%a+%s+(%a+)")
+
+			if network == ssid then
+				self.networkMethod = method
+			end
+		else
+			if network == ssid then
+				local option, value = string.match(line, "%s*(%a+)%s+(.+)")
+				log:warn("option=", option, " value=", value)
+
+				self.networkOption[option] = value
+			end
+		end
+	end
+
+	log:warn("network_id=", self.networkId)
+	log:warn("network_ssid=", self.networkSSID)
+	log:warn("network_method=", self.networkMethod)
+
+	fh:close()
+end
+
+
 -- connects jive to the squeezebox adhoc network. we also capture the existing
 -- network id for later.
 function t_connectJiveAdhoc(self)
@@ -459,25 +594,16 @@ function t_connectJiveAdhoc(self)
 
 	local request, response, id
 
-	-- save existing config, unless bridging
-	if not self.network_id then
-		local statusStr = self.t_ctrl:request("STATUS-VERBOSE")
-		local status = {}
-		for k,v in string.gmatch(statusStr, "([^=]+)=([^\n]+)\n") do
-			status[k] = v
-		end
-
-		assert(status.id, "jive not connected to network")
-		self.network_id = status.id
-	end
-
+	-- we must have a network connection now, either to an
+	-- access point or bridged.
+	assert(self.networkId, "jive not connected to network")
 
 	-- connect to squeezebox ah-hoc network
 	response = self.t_ctrl:request("ADD_NETWORK")
 	id = string.match(response, "%d+")
 	assert(id, "wpa_cli failed: to add network")
 
-	request = 'SET_NETWORK ' .. id .. ' ssid "logitech-squeezebox-' .. self.mac .. '"'
+	request = 'SET_NETWORK ' .. id .. ' ssid "logitech' .. self.ether .. 'squeezebox' .. self.ether .. self.mac .. '"'
 	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
 	request = 'SET_NETWORK ' .. id .. ' mode 1' -- IBSS
@@ -504,16 +630,16 @@ function t_waitJiveAdhoc(self)
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_CONNECTION"
 
-	local status = self.t_ctrl:request("STATUS")
-	log:warn("STATUS ", status)
-	if string.match(status, "wpa_state=COMPLETED") then
-		-- we need to assign a link address, any will do
-		os.execute("/sbin/ifconfig eth0 192.168.0.2 netmask 255.255.255.0")
-		os.execute("/sbin/route add default gw 192.168.0.1 eth0")
+	local status = self.t_ctrl:t_wpaStatusRequest("STATUS")
+	debug.dump(status)
 
-		log:warn("completed")
-		_setAction(self, t_udapDiscover)
+	if status.wpa_state ~= "COMPLETED" then
+		return
 	end
+
+	-- we're connected
+	log:warn("completed")
+	_setAction(self, t_udapDiscover)
 end
 
 
@@ -522,6 +648,12 @@ function t_udapDiscover(self)
 	log:warn("udapDiscover")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
+
+	-- we need to assign a link address, any will do on our private
+	-- ad-hoc network. instead of modifying /etc/network/interfaces
+	-- the address is set here.
+	os.execute("/sbin/ifconfig eth0 192.168.0.2 netmask 255.255.255.0")
+	os.execute("/sbin/route add default gw 192.168.0.1 eth0")
 
 	-- check squeezebox exists via udap
 	local packet = udap.createDiscover(self.mac, self.seqno)
@@ -538,12 +670,6 @@ function t_udapSetData(self)
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
-	-- this is the point of no return, lets remove squeezbox from list in case the
-	-- user presses the back button. from here they will need to reset the squeezebox
-	-- to try again.
-	self.scanMenu:removeItem(self.scanResults[self.mac].item)
-
---[[
 	for k,v in pairs(self.data1) do
 		local hex = ""
 		for i = 1,#v do
@@ -552,7 +678,6 @@ function t_udapSetData(self)
 
 		log:warn("\tk=", k, " v=", hex)
 	end
---]]
 
 	-- configure squeezebox network
 	local packet = udap.createSetData(self.mac, self.seqno, self.data1)
@@ -641,7 +766,7 @@ function t_connectJiveNetwork(self)
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_NETWORK"
 
-	local request = 'SELECT_NETWORK ' .. self.network_id
+	local request = 'SELECT_NETWORK ' .. self.networkId
 	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
 	if self.adhoc_id ~= nil then
@@ -945,7 +1070,7 @@ function _setupFailed(self)
 					{
 						text = self:string("SQUEEZEBOX_PROBLEM_TRY_AGAIN"),
 						callback = function()
-								   _setupInit(self, self.mac)
+								   _setupInit(self)
 
 								   self.topWindow:hideToTop()
 								   _setupSqueezebox(self)
@@ -976,9 +1101,11 @@ end
 
 function _setupDone(self)
 	if self.setupNext then
+		log:warn("calling setupNext=", self.setupNext)
 		return self.setupNext()
 	end
 
+	log:warn("hideToTop window=", self.topWindow)
 	self.topWindow:hideToTop(Window.transitionPushLeft)
 end
 

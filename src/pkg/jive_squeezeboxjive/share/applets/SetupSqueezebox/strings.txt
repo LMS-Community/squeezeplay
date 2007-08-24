@@ -93,3 +93,8 @@ SQUEEZEBOX_MUSIC_SOURCE
 SQUEEZEBOX_MUSIC_SOURCE_HELP
 	EN	The Squeezebox is connected to your network. Choose a music source. 
 
+SQUEEZEBOX_IP_ADDRESS
+	EN	IP Address
+
+SQUEEZEBOX_IP_ADDRESS_HELP
+	EN	Enter the IP address for this Squeezebox to use.
