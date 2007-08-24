@@ -338,7 +338,7 @@ end
 -- returns a radio button for use on a given item
 local function _radioItem(item, db)
 	local radioFlag = item["radio"]
-	if radioFlag then
+	if radioFlag and not item["_jive_button"] then
 		item["_jive_button"] = RadioButton(
 			"radio",
 			db:getRadioGroup(),

@@ -60,6 +60,8 @@ local debug            = require("debug")
 local oo               = require("loop.simple")
 local Icon             = require("jive.ui.Icon")
 
+local log             = require("jive.utils.log").logger("ui")
+
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
 
@@ -87,6 +89,8 @@ is selected by the user; the function prototype is:
 =cut
 --]]
 function __init(self, style, group, closure, selected)
+	log:debug("RadioButton:_init()");
+
 	assert(type(style) == "string")
 	assert(oo.instanceof(group, RadioGroup), "group is not RadioGroup - " .. debug.traceback())
 	assert(type(closure) == "function")
@@ -123,6 +127,8 @@ end
 
 
 function _action(self)
+	log:debug("RadioButton:_action()");
+
 	local oldSelected = self.group.selected
 	self.group:setSelected(self)
 	if oldSelected ~= self.group.selected then
@@ -161,6 +167,8 @@ end
 -- _set
 -- used by RadioGroup to set us on or off
 function _set(self, selected)
+	log:debug("RadioButton:_set(", tostring(selected));
+
 	if selected then
 		self.imgStyleName = "imgOn"
 		if self.closure then 
