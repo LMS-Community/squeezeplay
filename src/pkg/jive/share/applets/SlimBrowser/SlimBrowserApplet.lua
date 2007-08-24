@@ -40,6 +40,7 @@ local Textinput        = require("jive.ui.Textinput")
 local Textarea         = require("jive.ui.Textarea")
 local RadioGroup       = require("jive.ui.RadioGroup")
 local RadioButton      = require("jive.ui.RadioButton")
+local Checkbox         = require("jive.ui.Checkbox")
 
 local DB               = require("applets.SlimBrowser.DB")
 
@@ -334,6 +335,29 @@ local function _artworkItem(item)
 	return icon
 end
 
+-- _checkboxItem
+-- returns a checkbox button for use on a given item
+local function _checkboxItem(item, db)
+	local checkboxFlag = item["checkbox"]
+	if checkboxFlag and not item["_jive_button"] then
+		item["_jive_button"] = Checkbox(
+			"checkbox",
+			function(_, checkboxFlag)
+				log:debug("checkbox updated: ", checkboxFlag)
+				if (checkboxFlag) then
+					log:debug("ON: ", checkboxFlag)
+					_actionHandler(nil, nil, db, nil, nil, 'on', item) 
+				else
+					log:debug("OFF: ", checkboxFlag)
+					_actionHandler(nil, nil, db, nil, nil, 'off', item) 
+				end
+			end,
+			checkboxFlag == 1
+		)
+	end
+	return item["_jive_button"]
+end
+
 -- _radioItem
 -- returns a radio button for use on a given item
 local function _radioItem(item, db)
@@ -359,6 +383,8 @@ local function _newDecoratedLabel(labelStyle, item, db)
 	-- however it guarantees the icon in the title is not shared with (the same) icon in the menu.
 	if item["radio"] then
 		return Label(labelStyle, item["text"], _radioItem(item, db))
+	elseif item["checkbox"] then
+		return Label(labelStyle, item["text"], _checkboxItem(item, db))
 	elseif item then
 		return Label(labelStyle, item["text"], _artworkItem(item))
 	else
@@ -979,6 +1005,9 @@ local function _browseMenuRenderer(menu, widgets, toRenderIndexes, toRenderSize,
 					if (item["radio"]) then
 						-- and change the radio button
 						widget:setWidget(_radioItem(item, db))
+					elseif (item["checkbox"]) then
+						-- and change the radio button
+						widget:setWidget(_checkboxItem(item, db))
 					else 
 						-- and change the icon!
 						widget:setWidget(_artworkItem(item))
