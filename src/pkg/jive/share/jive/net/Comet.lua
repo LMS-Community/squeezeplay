@@ -91,6 +91,9 @@ function __init(self, jnt, jpool, ip, port, path, name)
 	obj.pending_reqs   = {}       -- pending requests to send with connect
 	obj.notify         = {}       -- callbacks to notify
 	
+	-- Subscribe to networkConnected events, which happen if we change wireless networks
+	jnt:subscribe(obj)
+	
 	return obj
 end
 
@@ -107,6 +110,15 @@ local _reconnect
 function start(self)
 	-- Begin handshake
 	_handshake(self)
+end
+
+function notify_networkConnected(self)
+	if self.active then
+		log:warn("Comet: Got networkConnected event, will try to reconnect to ", self.uri)
+		_handleAdvice(self)
+	else
+		log:warn("Comet: Got networkConnected event, but not currently connected")
+	end
 end
 
 _connect = function(self)
