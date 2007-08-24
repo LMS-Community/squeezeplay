@@ -77,7 +77,11 @@ Constructs a new Label widget. I<style> is the widgets style. I<value> is the te
 function __init(self, style, value, widget)
 	assert(type(style) == "string")
 	assert(value ~= nil)
-	assert(widget == nil or (oo.instanceof(widget, Widget) and widget.parent == nil))
+	
+	-- ideally the widget is a new one. Re-using widgets may cause problems, as nothing really
+	-- manages the forward/backward(parent) relationships.
+	-- this used to assert about widget.parent == nil
+	assert(widget == nil or oo.instanceof(widget, Widget))
 
 	local obj = oo.rawnew(self, Widget(style))
 
@@ -164,7 +168,9 @@ Sets the widget displayed in this label to I<widget>. If set to nil the skin's d
 
 --]]
 function setWidget(self, widget)
-	assert(widget == nil or (oo.instanceof(widget, Widget)))
+	-- ideally the widget is a new one. Re-using widgets may cause problems, as nothing really
+	-- manages the forward/backward(parent) relationship.
+	assert(widget == nil or oo.instanceof(widget, Widget))
 
 	if widget == nil then
 		if self.icon == nil then
