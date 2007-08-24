@@ -182,11 +182,11 @@ function JiveMain:__init()
 	-- load style and applets
 	jiveMain:reload()
 
-	-- event loop
-	jive.ui.Framework:processEvents()
-
 	-- event loop warning [50ms]
 	jive.ui.Framework:perfwarn(50)
+
+	-- event loop
+	jive.ui.Framework:processEvents()
 
 	jnt:stop()
 	jive.ui.Framework:quit()
