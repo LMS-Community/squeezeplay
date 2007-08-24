@@ -16,6 +16,10 @@ char *jive_resource_path = NULL;
 SDL_Rect jive_dirty_region;
 
 
+/* performance warning threshold, 0 = disabled */
+Uint32 perfwarn = 0;
+
+
 /* Frame rate calculations */
 static Uint32 framecount = 0;
 static Uint32 frameepoch = 0;
@@ -240,6 +244,12 @@ static int jiveL_process_events(lua_State *L) {
 			framecount = 0;
 		}
 
+		if (perfwarn) {
+			if (SDL_EventQueueLength() > 5) {
+				printf("SDL_event_queue > 5  : %3d\n", SDL_EventQueueLength());
+			}
+		}
+
 		do {
 			SDL_Event event;
 			if (SDL_PollEvent(&event)) {
@@ -255,37 +265,6 @@ static int jiveL_process_events(lua_State *L) {
 			ticks = SDL_GetTicks();
 		} while (ticks < frameticks);
 
-		/* debug code - check for un-processed events */
-		if (1) {
-			SDL_Event eventList[128];
-			JiveEvent *jive_event;
-
-			int events = SDL_PeepEvents(eventList, 128, SDL_PEEKEVENT, SDL_ALLEVENTS);
-
-			if (events > 5) {
-				int i;
-				printf("event queue: %i\n", events);
-				for (i = 0; i < events; i++) {
-					if (eventList[i].type == SDL_USEREVENT) {
-						switch (eventList[i].user.code) {
-						case JIVE_USER_EVENT_TIMER:
-							printf("\t%d: type timer\n", i);
-							break;
-						case JIVE_USER_EVENT_KEY_HOLD:
-							printf("\t%d: key_hold\n", i);
-							break;
-						case JIVE_USER_EVENT_EVENT: {
-							jive_event = (JiveEvent *) eventList[i].user.data1;
-							printf("\t%d: jive_event %x\n", i, jive_event->type);
-							break;
-						}
-						}
-					} else {
-						printf("\t%d: sdl_event %d\n", i, eventList[i].type);
-					}
-				}
-			}
-		}
 
 		lua_pop(L, 2);
 
@@ -307,6 +286,7 @@ static int jiveL_process_events(lua_State *L) {
 
 int jiveL_update_screen(lua_State *L) {
 	JiveSurface *srf;
+	Uint32 t0 = 0, t1 = 0, t2 = 0, t3 = 0;
 
 	JIVEL_STACK_CHECK_BEGIN(L);
 
@@ -334,6 +314,8 @@ int jiveL_update_screen(lua_State *L) {
 	lua_rawgeti(L, -1, 1);
 
 
+	if (perfwarn) t0 = SDL_GetTicks();
+
 	/* Layout window and widgets */
 	lua_getfield(L, -1, "windowCount");
 	lua_getfield(L, 1, "layoutCount");
@@ -353,6 +335,8 @@ int jiveL_update_screen(lua_State *L) {
 	framecount++;
 
 
+	if (perfwarn) t1 = SDL_GetTicks();
+ 
 	/* Widget animations */
 	lua_getfield(L, 1, "animations");
 	lua_pushnil(L);
@@ -388,6 +372,7 @@ int jiveL_update_screen(lua_State *L) {
 	}
 	lua_pop(L, 1);
 
+	if (perfwarn) t2 = SDL_GetTicks();
 
 	/* Window transitions */
 	lua_getfield(L, 1, "transition");
@@ -428,6 +413,12 @@ int jiveL_update_screen(lua_State *L) {
 
 		/* Flip buffer */
 		jive_surface_flip(srf);
+	}
+
+	if (perfwarn) {
+		t3 = SDL_GetTicks();
+		if (t3-t0 > perfwarn) 
+			printf("update_screen > %dms: %4dms [layout:%dms animate:%dms transitions:%dms]\n", perfwarn, t3-t0, t1-t0, t2-t1, t3-t2);
 	}
 	
 	lua_pop(L, 4);
@@ -532,12 +523,15 @@ static int traceback (lua_State *L) {
 
 int jiveL_dispatch_event(lua_State *L) {
 	Uint32 r = 0;
+	Uint32 t0 = 0, t1 = 0;
 
 	/* stack is:
 	 * 1: framework
 	 * 2: widget
 	 * 3: event
 	 */
+
+	if (perfwarn) t0 = SDL_GetTicks();
 
 	lua_pushcfunction(L, traceback);  /* push traceback function */
 
@@ -563,8 +557,6 @@ int jiveL_dispatch_event(lua_State *L) {
 
 		if (lua_pcall(L, 2, 1, 4) != 0) {
 			fprintf(stderr, "error in event function:\n\t%s\n", lua_tostring(L, -1));
-
-
 			return 0;
 		}
 
@@ -585,6 +577,21 @@ int jiveL_dispatch_event(lua_State *L) {
 
 		r |= lua_tointeger(L, -1);
 		lua_pop(L, 1);
+	}
+
+	if (perfwarn) {
+		t1 = SDL_GetTicks();
+		if (t1-t0 > perfwarn) {
+			printf("process_event > %dms: %4dms ", perfwarn, t1-t0);
+			lua_getglobal(L, "tostring");
+			lua_pushvalue(L, 2);
+			lua_call(L, 1, 1);
+			lua_pushcfunction(L, jiveL_event_tostring);
+			lua_pushvalue(L, 3);
+			lua_call(L, 1, 1);
+			printf("[widget:%s event:%s]\n", lua_tostring(L, -2), lua_tostring(L, -1));
+			lua_pop(L, 2);
+		}
 	}
 
 	lua_pushinteger(L, r);
@@ -759,7 +766,6 @@ static Uint32 keyhold_callback(Uint32 interval, void *param) {
 
 
 static int do_dispatch_event(lua_State *L, JiveEvent *jevent) {
-	Uint32 t0, t1;
 	int r;
 
 	/* Send event to lua widgets */
@@ -768,21 +774,7 @@ static int do_dispatch_event(lua_State *L, JiveEvent *jevent) {
 	jiveL_getframework(L);
 	lua_pushvalue(L, -3);
 	jive_pushevent(L, jevent);
-		
-	t0 = SDL_GetTicks();
-
 	lua_call(L, 3, 1);
-
-	t1 = SDL_GetTicks();
-#if 0
-	if (jevent->type & JIVE_EVENT_KEY_ALL) {
-		printf("%d: EVENT type=%x key_code=%d took=%0.4fs\n", SDL_GetTicks(), jevent->type, jevent->key_code, ((double)(t1-t0))/1000);
-	}
-	else {
-		printf("%d: EVENT type=%x took=%0.4fs\n", SDL_GetTicks(), jevent->type, ((double)(t1-t0))/1000);
-	}
-#endif
-
 	r = lua_tointeger(L, -1);
 	lua_pop(L, 1);
 
@@ -997,6 +989,21 @@ static int process_event(lua_State *L, SDL_Event *event) {
 }
 
 
+int jiveL_perfwarn(lua_State *L) {
+	/* stack is:
+	 * 1: framework
+	 * 2: none or new perfwarn threshold (0 = disable)
+	 */
+
+	if (!lua_isnone(L, 2)) {
+		perfwarn = lua_tointeger(L, 2);
+	}
+
+	lua_pushinteger(L, perfwarn);
+	
+	return 1;
+}
+
 
 static const struct luaL_Reg icon_methods[] = {
 	{ "getPreferredBounds", jiveL_icon_get_preferred_bounds },
@@ -1114,6 +1121,7 @@ static const struct luaL_Reg core_methods[] = {
 	{ "getBackground", jiveL_get_background },
 	{ "setBackground", jiveL_set_background },
 	{ "styleChanged", jiveL_style_changed },
+	{ "perfwarn", jiveL_perfwarn },
 	{ "_event", jiveL_event },
 	{ NULL, NULL }
 };

@@ -185,6 +185,9 @@ function JiveMain:__init()
 	-- event loop
 	jive.ui.Framework:processEvents()
 
+	-- event loop warning [50ms]
+	jive.ui.Framework:perfwarn(50)
+
 	jnt:stop()
 	jive.ui.Framework:quit()
 
