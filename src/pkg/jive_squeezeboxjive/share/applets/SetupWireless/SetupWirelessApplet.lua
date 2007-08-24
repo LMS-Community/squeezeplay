@@ -631,119 +631,66 @@ end
 
 
 function t_addNetwork(self)
-	local request, response
-
 	assert(self.t_ctrl, "No WPA supplicant")
 
-	log:warn("Connect to ", self.ssid, " password ", self.psk, " key ", self.key)
-	local flags = self.scanResults[self.ssid].flags or ""
+	local option = {
+		encryption = self.encryption,
+		psk = self.psk,
+		key = self.key
+	}
 
-	-- Set to use dhcp by default
-	self:_editNetworkInterfaces(self.ssid, "dhcp", "script /etc/network/udhcpc_action")
-
-	response = self.t_ctrl:request("ADD_NETWORK")
-	local id = string.match(response, "%d+")
-	assert(id, "wpa_cli failed: to add network")
+	local id = self.t_ctrl:t_addNetwork(self.ssid, option)
 
 	self.addNetwork = true
 	self.scanResults[self.ssid].id = id
-
-	request = 'SET_NETWORK ' .. id .. ' ssid "' .. self.ssid .. '"'
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-	if string.find(flags, "IBSS") then
-		request = 'SET_NETWORK ' .. id .. ' mode 1 '
-		assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-	end
-
-	if self.encryption == "wpa" then
-		log:warn("encryption WPA")
-
-		request = 'SET_NETWORK ' .. id .. ' key_mgmt WPA-PSK'
-		assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-		request = 'SET_NETWORK ' .. id .. ' proto WPA'
-		assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-		-- Setting the PSK can timeout
-		pcall(function()
-			      request = 'SET_NETWORK ' .. id .. ' psk "' .. self.psk .. '"'
-			      assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-		      end)
-	elseif self.encryption == "wpa2" then
-		log:warn("encryption WPA2")
-
-		request = 'SET_NETWORK ' .. id .. ' key_mgmt WPA-PSK'
-		assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-		request = 'SET_NETWORK ' .. id .. ' proto WPA2'
-		assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-		-- Setting the PSK can timeout
-		pcall(function()
-			      request = 'SET_NETWORK ' .. id .. ' psk "' .. self.psk .. '"'
-			      assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-		      end)
-	else
-		request = 'SET_NETWORK ' .. id .. ' key_mgmt NONE'
-		assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-	end
-
-	if self.encryption == "wep40" or self.encryption == "wep104" then
-		log:warn("encryption WEP")
-
-		request = 'SET_NETWORK ' .. id .. ' wep_key0 ' .. self.key
-		assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-	end
-
-	-- If we have not scanned the ssid then enable scanning with ssid specific probe
-	-- requests. This allows us to find APs with hidden SSIDS
-	if self.scanResults[self.ssid].bssid == nil then
-		request = 'SET_NETWORK ' .. id .. ' scan_ssid 1'
-		assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-	end
-
-	-- Use select network to disable all other networks
-	request = 'SELECT_NETWORK ' .. id
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-	-- Allow reassociation
-	request = 'REASSOCIATE'
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
 end
 
 
 function _connectTimer(self)
-	local value = self.connectTimeout
-
-	log:warn("in connect timer ", value, " ", CONNECT_TIMEOUT)
-
-	if value == CONNECT_TIMEOUT then
-		self:connectFailed("timeout")
-		return
-	end
-
 	-- the connection is completed when we connected to the wireless
 	-- network, and have an ip address. if dhcp failed this address
 	-- will be self assigned.
 	jnt:perform(function()
+			    log:warn("connectTimeout=", self.connectTimeout, " dhcpTimeout=", self.dhcpTimeout)
+
 			    local status = self.t_ctrl:t_wpaStatusRequest()
 
 			    log:warn("wpa_state=", status.wpa_state)
 			    log:warn("ip_address=", status.ip_address)
 
-			    if status.wpa_state == "COMPLETED" and status.ip_address then
+			    if not (status.wpa_state == "COMPLETED" and status.ip_address) then
+				    -- not connected yet
+
+				    self.connectTimeout = self.connectTimeout + 1
+				    if self.connectTimeout < CONNECT_TIMEOUT then
+					    return
+				    end
+
+				    -- connection timed out
 				    jnt:t_perform(function()
-							  if string.match(status.ip_address, "^169.254.") then
-								  self:failedDHCP()
-							  else
-								  self:connectOK()
-							  end
+							  self:connectFailed("timeout")
+						  end)
+				    return
+			    end
+			    
+			    if string.match(status.ip_address, "^169.254.") then
+				    -- auto ip
+				    self.dhcpTimeout = self.dhcpTimeout + 1
+				    if self.dhcpTimeout <= CONNECT_TIMEOUT then
+					    return
+				    end
+
+				    -- dhcp timed out
+				    jnt:t_perform(function()
+							  self:failedDHCP()
+						  end)
+			    else
+				    -- dhcp completed
+				    jnt:t_perform(function()
+							  self:connectOK()
 						  end)
 			    end
 		    end)
-
-	self.connectTimeout = value + 1
 end
 
 
@@ -760,12 +707,15 @@ function _eventSink(self, chunk)
 end
 
 
-function t_connect(self, id)
+function t_connect(self, ssid)
 	local request
 
 	-- Force disconnect from existing network
 	request = 'DISCONNECT'
 	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+	local id = self.scanResults[ssid].id
+	log:warn("t_connect ssid=", ssid, " id=", id)
 
 	if id == nil then
 		-- Configuring the WLAN
@@ -773,18 +723,20 @@ function t_connect(self, id)
 	else
 		local request = 'SELECT_NETWORK ' .. id
 		assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-		-- Allow reassociation
-		request = 'REASSOCIATE'
-		assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
 	end
+
+	-- Allow reassociation
+	request = 'REASSOCIATE'
+	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
 end
 
 
 function connect(self, keepConfig)
 	local request
 
-	self.connectTimeout = 1
+	self.connectTimeout = 0
+	self.dhcpTimeout = 0
+
 	if not keepConfig then
 		self:_setCurrentSSID(nil)
 
@@ -793,9 +745,8 @@ function connect(self, keepConfig)
 			_addNetwork(self, self.ssid)
 		end
 
-		local id = self.scanResults[self.ssid].id
 		jnt:perform(function()
-				    self:t_connect(id)
+				    self:t_connect(self.ssid)
 			    end)
 	end
 
@@ -850,25 +801,21 @@ function connect(self, keepConfig)
 end
 
 
-function t_connectFailed(self, id)
+function t_connectFailed(self)
 	local request
-
-	-- Remove dhcp/static ip configuration for network
-	self:_editNetworkInterfaces(self.ssid)
 
 	-- Stop trying to connect to the network
 	request = 'DISCONNECT'
 	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
-	-- Remove failed network
-	if id then
-		request = 'REMOVE_NETWORK ' .. id
-		assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
+	log:warn("addNetwork=", self.addNetwork)
+	if self.addNetwork then
+		-- Remove failed network
+		self:t_removeNetwork(self.ssid)
 
 		-- Update state in main thread
 		jnt:t_perform(function()
-				      self.scanResults[self.ssid].id = nil
-				      self.addNetwork = nil
+				      self.addNetwork = false
 			      end)
 	end
 end
@@ -879,13 +826,8 @@ function connectFailed(self, reason)
 
 	-- Stop trying to connect to the network, if this network is
 	-- being added this will also remove the network configuration
-	local id = nil
-	if self.addNetwork then
-		id = self.scanResults[self.ssid].id
-	end
-
 	jnt:perform(function()
-			    self:t_connectFailed(id)
+			    self:t_connectFailed()
 		    end)
 
 
@@ -936,26 +878,12 @@ function connectFailed(self, reason)
 end
 
 
-function t_connectOK(self)
-	local request
-
-	-- Save configuration
-	request = 'SAVE_CONFIG'
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-end
-
-
 function connectOK(self)
 	log:warn("connection OK ", self.ssid)
 
 	self:_setCurrentSSID(self.ssid)
 
-	-- Save configuration
-	jnt:perform(function()
-			    self:t_connectOK()
-		    end)
-
-	-- Forget connection state
+	-- forget connection state
 	self.ssid = nil
 	self.encryption = nil
 	self.psk = nil
@@ -1040,6 +968,29 @@ function _gateway(self)
 end
 
 
+function _sigusr1(process)
+	local pid
+
+	local pattern = "%s*(%d+).*" .. process
+
+	log:warn("pattern is ", pattern)
+
+	local cmd = io.popen("/bin/ps")
+	for line in cmd:lines() do
+		pid = string.match(line, pattern)
+		if pid then break end
+	end
+	cmd:close()
+
+	if pid then
+		log:warn("kill -usr1 ", pid)
+		os.execute("kill -usr1 " .. pid)
+	else
+		log:error("cannot sigusr1 ", process)
+	end
+end
+
+
 function failedDHCP(self)
 	local window = Window("window", self:string("NETWORK_ADDRESS_PROBLEM"))
 
@@ -1048,7 +999,8 @@ function failedDHCP(self)
 					{
 						text = self:string("NETWORK_TRY_AGAIN"),
 						callback = function()
-								   -- udhcp keeps trying, just show the window again
+								   -- poke udhcpto try again
+								   _sigusr1("udhcpc")
 								   connect(self, true)
 								   window:hide()
 							   end
@@ -1094,8 +1046,6 @@ function enterIP(self)
 
 					   self.ipAddress = value
 					   self.ipSubnet = _subnet(self)
-					   self.ipGateway = _gateway(self)
-					   self.ipDNS = _gateway(self)
 
 					   self:enterSubnet()
 					   return true
@@ -1117,6 +1067,8 @@ function enterSubnet(self)
 					   value = value:getValue()
 
 					   self.ipSubnet = value
+					   self.ipGateway = _gateway(self)
+
 					   self:enterGateway()
 					   return true
 				   end))
@@ -1141,6 +1093,8 @@ function enterGateway(self)
 					   end
 
 					   self.ipGateway = value
+					   self.ipDNS = self.ipGateway
+
 					   self:enterDNS()
 					   return true
 				   end))
@@ -1177,75 +1131,17 @@ end
 function setStaticIP(self)
 	log:warn("setStaticIP addr=", self.ipAddress, " subnet=", self.ipSubnet, " gw=", self.ipGateway, " dns=", self.ipDNS)
 
-	-- Reset the network
-	os.execute("kill -TERM `cat /var/run/udhcpc.eth0.pid`")
-	os.execute("/sbin/ifconfig eth0 0.0.0.0")
-
-	-- Set static ip configuration for network
-	self:_editNetworkInterfaces(self.ssid, "static",
-				    "address " .. self.ipAddress,
-				    "netmask " .. self.ipSubnet,
-				    "gateway " .. self.ipGateway,
-				    "dns " .. self.ipDNS,
-				    "up echo 'nameserver " .. self.ipDNS .. "' > /etc/resolv.conf"
-			    )
-
-	-- Bring up the network
-	local status = os.execute("/sbin/ifup eth0")
-	log:warn("ifup status=", status)
-
-	return connectOK(self)
+	jnt:perform(function()
+			    self.t_ctrl:t_setStaticIP(self.ssid, self.ipAddress, self.ipSubnet, self.ipGateway, self.ipDNS)
+			    jnt:t_perform(function()
+						  connectOK(self)
+					  end)
+		    end)
 end
 
 
-function _editNetworkInterfaces(self, ssid, method, ...)
-	-- the interfaces file uses " \t" as word breaks so munge the ssid
-	-- FIXME ssid's with \n are not supported
-	assert(ssid, debug.traceback())
-	ssid = string.gsub(ssid, "[ \t]", "_")
-	log:warn("munged ssid=", ssid)
-
-	local fi = assert(io.open("/etc/network/interfaces", "r+"))
-	local fo = assert(io.open("/etc/network/interfaces.tmp", "w"))
-
-	local network = ""
-	for line in fi:lines() do
-		if string.match(line, "^mapping%s") or string.match(line, "^auto%s") then
-			network = ""
-		elseif string.match(line, "^iface%s") then
-			network = string.match(line, "^iface%s([^%s]+)%s")
-		end
-
-		if network ~= ssid then
-			fo:write(line .. "\n")
-		end
-	end
-
-	if method then
-		fo:write("iface " .. ssid .. " inet " .. method .. "\n")
-		for _,v in ipairs{...} do
-			fo:write("\t" .. v .. "\n")
-		end
-	end
-
-	fi:close()
-	fo:close()
-
-	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
-end
-
-
-function t_removeNetwork(self, ssid, id)
-	local request
-
-	request = 'REMOVE_NETWORK ' .. id
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-	request = 'SAVE_CONFIG'
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-	-- Remove dhcp/static ip configuration for network
-	self:_editNetworkInterfaces(ssid)
+function t_removeNetwork(self, ssid)
+	self.t_ctrl:t_removeNetwork(ssid)
 
 	-- Update state in main thread
 	jnt:t_perform(function()
@@ -1260,11 +1156,9 @@ end
 
 
 function removeNetwork(self, ssid)
-	local id = self.scanResults[ssid].id
-
 	-- forget the network
 	jnt:perform(function()
-			    self:t_removeNetwork(ssid, id)
+			    self:t_removeNetwork(ssid)
 		    end)
 
 	-- popup confirmation
@@ -1273,7 +1167,7 @@ function removeNetwork(self, ssid)
 	window:addWidget(text)
 
 	self:tieWindow(window)
-	window:showBriefly(2000)
+	window:showBriefly(2000, function() _hideToTop(self) end)
 
 	return window
 end

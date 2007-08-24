@@ -453,6 +453,19 @@ function _bridgedConfig(self)
 	local data = self.data1
 
 	-- Jive config:
+	local ssid = 'logitech*squeezebox*' .. self.mac
+	local option = {
+		ibss = true,
+		-- FIXME secure network
+		encryption = "none"
+	}
+
+	jnt:perform(function()
+			   self.networkId = self.t_ctrl:t_addNetwork(ssid, option)
+		   end)
+
+	
+--[[
 
 	response = self.t_ctrl:request("ADD_NETWORK")
 	local id = string.match(response, "%d+")
@@ -470,8 +483,6 @@ function _bridgedConfig(self)
 --	request = 'SET_NETWORK ' .. id .. ' frequency 2437' -- channel 6
 --	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
-	-- FIXME secure network
-
 	-- Save configuration
 	request = 'SELECT_NETWORK ' .. id
 	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
@@ -481,6 +492,7 @@ function _bridgedConfig(self)
 
 	-- Save the network id, we'll connect to this later
 	self.networkId = id
+	--]]
 
 
 	-- Squeezebox config:
@@ -496,10 +508,12 @@ function _bridgedConfig(self)
 
 	data.lan_ip_mode = udap.packNumber(1, 1) -- 1 dhcp
 
-	data.SSID = "logitech*squeezebox*" .. self.mac
+	data.SSID = ssid
 
-	-- FIXME region
-	data.region_id = udap.packNumber(14, 1) -- europe
+	-- wireless region
+	local region = self.t_ctrl:getAtherosRegionCode()
+	log:warn("data.region_id=", data.region)
+	data.region_id = udap.packNumber(region, 1)
 
 	-- FIXME secure network
 	data.wepon = udap.packNumber(0, 1)
@@ -515,7 +529,7 @@ function _ipConfig(self, data)
 		log:warn("dns=", self.networkOption.dns)
 
 		data.lan_ip_mode = udap.packNumber(0, 1) -- 0 static ip
-		data.lan_network_ddress = udap.packNumber(_parseip(self.ipAddress), 4)
+		data.lan_network_address = udap.packNumber(_parseip(self.ipAddress), 4)
 		data.lan_subnet_mask = udap.packNumber(_parseip(self.networkOption.netmask), 4)
 		data.lan_gateway = udap.packNumber(_parseip(self.networkOption.gateway), 4)
 		data.primary_dns = udap.packNumber(_parseip(self.networkOption.dns), 4)
@@ -599,6 +613,17 @@ function t_connectJiveAdhoc(self)
 	assert(self.networkId, "jive not connected to network")
 
 	-- connect to squeezebox ah-hoc network
+	local ssid = 'logitech' .. self.ether .. 'squeezebox' .. self.ether .. self.mac
+	local option = {
+		ibss = true,
+		-- FIXME secure network
+		encryption = "none"
+	}
+
+	local id = self.t_ctrl:t_addNetwork(ssid, option)
+
+
+--[[
 	response = self.t_ctrl:request("ADD_NETWORK")
 	id = string.match(response, "%d+")
 	assert(id, "wpa_cli failed: to add network")
@@ -618,8 +643,9 @@ function t_connectJiveAdhoc(self)
 
 	request = 'SELECT_NETWORK ' .. id
 	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
+--]]
 
-	self.adhoc_id = id
+	self.adhoc_ssid = ssid
 	_setAction(self, t_waitJiveAdhoc)
 end
 
@@ -633,7 +659,7 @@ function t_waitJiveAdhoc(self)
 	local status = self.t_ctrl:t_wpaStatusRequest("STATUS")
 	debug.dump(status)
 
-	if status.wpa_state ~= "COMPLETED" then
+	if status.wpa_state ~= "COMPLETED" or not status.ip_address then
 		return
 	end
 
@@ -649,11 +675,14 @@ function t_udapDiscover(self)
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
+--[[
+-- XXXX
 	-- we need to assign a link address, any will do on our private
 	-- ad-hoc network. instead of modifying /etc/network/interfaces
 	-- the address is set here.
 	os.execute("/sbin/ifconfig eth0 192.168.0.2 netmask 255.255.255.0")
 	os.execute("/sbin/route add default gw 192.168.0.1 eth0")
+--]]
 
 	-- check squeezebox exists via udap
 	local packet = udap.createDiscover(self.mac, self.seqno)
@@ -762,18 +791,23 @@ end
 -- reconnect Jive to it's network. we also remove the ad-hoc network from the
 -- wpa-supplicant configuration.
 function t_connectJiveNetwork(self)
-	log:warn("connectJiveNetwork")
+	log:warn("connectJiveNetwork adhoc_ssid=", self.adhoc_ssid)
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_NETWORK"
 
 	local request = 'SELECT_NETWORK ' .. self.networkId
 	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
-	if self.adhoc_id ~= nil then
+	if self.adhoc_ssid then
+		self.t_ctrl:t_removeNetwork(self.adhoc_ssid)
+		self.adhoc_ssid = nil
+
+--[[
 		local request = 'REMOVE_NETWORK ' .. self.adhoc_id
 		assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
 		self.adhoc_id = nil
+--]]
 	end
 
 	_setAction(self, t_waitJiveNetwork)
