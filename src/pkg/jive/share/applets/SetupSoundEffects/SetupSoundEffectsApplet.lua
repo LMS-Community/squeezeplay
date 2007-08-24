@@ -34,6 +34,8 @@ local jul             = require("jive.utils.log")
 
 local log             = jul.logger("applets.setup")
 
+local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
+
 
 module(...)
 oo.class(_M, Applet)
@@ -43,6 +45,8 @@ oo.class(_M, Applet)
 -- returns a window with Choices to set the level of each log category
 -- the log category are discovered
 function settingsShow(self, menuItem)
+
+	local settings = self:getSettings()
 
 	local window = Window("window", menuItem.text)
 	local menu = SimpleMenu("menu")
@@ -80,6 +84,7 @@ function settingsShow(self, menuItem)
 		local button = Checkbox(
 			"checkbox", 
 			function(obj, isSelected)
+				settings[k] = isSelected
 				v:enable(isSelected)
 
 				if isSelected then
@@ -110,6 +115,12 @@ function settingsShow(self, menuItem)
 				     weight = 10
 			     })
 	end
+
+	window:addListener(EVENT_WINDOW_POP,
+		function()
+			self:storeSettings()
+		end
+	)
 
 	window:addWidget(menu)
 
