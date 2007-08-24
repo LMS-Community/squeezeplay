@@ -119,7 +119,7 @@ local _lastInput = ""
 
 -- Forward declaration 
 local _newDestination
-
+local _actionHandler
 
 -- _safeDeref
 -- safely derefence a structure in depth
@@ -342,7 +342,10 @@ local function _radioItem(item, db)
 		item["_jive_button"] = RadioButton(
 			"radio",
 			db:getRadioGroup(),
-			function() return nil end, -- callback TBD
+			function() 
+				log:warn('Callback has been called') 
+				_actionHandler(nil, nil, db, nil, nil, 'do', item) 
+			end,
 			radioFlag == 1
 		)
 	end
@@ -662,8 +665,8 @@ local _defaultActions = {
 
 -- _actionHandler
 -- sorts out the action business: item action, base action, default action...
-local function _actionHandler(menu, menuItem, db, dbIndex, event, actionName, item)
-	log:debug("_actionHandler(", actionName, ")")
+_actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
+	log:warn("_actionHandler(", actionName, ")")
 
 	if logd:isDebug() then
 		debug.dump(item, 4)
@@ -864,6 +867,14 @@ local function _browseMenuListener(menu, menuItem, db, dbIndex, event)
 		return
 	end
 	
+	-- we don't want to do anything if this menu item involves an active decoration
+	-- like a radio, checkbox, or set of choices
+	-- further, we want the event to propagate to the active widget, so return EVENT_UNUSED
+	local item = db:item(dbIndex)
+	if item["_jive_button"] then
+		return EVENT_UNUSED
+	end
+
 	-- ok so joe did press a key while in our menu...
 	-- figure out the item action...
 	local evtType = event:getType()
@@ -889,8 +900,6 @@ local function _browseMenuListener(menu, menuItem, db, dbIndex, event)
 		
 	else
 	
-		-- the following events prefer to have an item...
-		local item = db:item(dbIndex)
 		
 		if evtType == EVENT_ACTION then
 			log:debug("_browseMenuListener: EVENT_ACTION")
