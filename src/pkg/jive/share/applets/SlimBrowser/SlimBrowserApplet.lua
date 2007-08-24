@@ -882,7 +882,7 @@ local _keycodeActionName = {
 -- _browseMenuListener
 -- called 
 local function _browseMenuListener(menu, menuItem, db, dbIndex, event)
-	log:debug("_browseMenuListener(", event:tostring(), ", " , index, ")")
+	log:warn("_browseMenuListener(", event:tostring(), ", " , index, ")")
 	
 	-- we don't care about events not on the current window
 	-- assumption for event handling code: _browsePath corresponds to current window!
@@ -1204,48 +1204,40 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 end
 
 
-function _homeAction(self, homeWindow)
-	
-	while Framework.windowStack[1] ~= homeWindow do
-		Framework.windowStack[1]:hide(nil, "JUMP")
-	end
+function _homeAction(self, homePath)
+	local windowStack = Framework.windowStack
 
+	-- are we in home?
+	if #windowStack > 1 then
 
---[[ FIXME what's this all about ...
-
-	["home"] = function()
-
-		-- are we in home?
-		if _browsePath.origin then
-
-			-- no, unroll
-			local step = _browsePath
-			-- FIXME: loop looks weird, can probably be simplified.
-			while step do
-				if step.origin then
-					-- hide the window
-					step.window:hide(nil, "JUMP")
-					-- destroy scaffholding to data coming in is stopped
-					step.destination = false
-					step = step.origin
-				else
-					break
-				end
+		-- no, unroll
+		local step = homePath.destination
+		-- FIXME: loop looks weird, can probably be simplified.
+		while step do
+			if step.destination then
+				-- hide the window
+				step.window:hide(nil, "JUMP")
+				-- destroy scaffholding to data coming in is stopped
+				step.origin = false
+				step = step.destination
+			else
+				break
 			end
-
-			_browsePath = step
-			-- if we were going somewhere, we're no longer
-			_browsePath.destination = false
-			_browsePath.menu:unlock()
-
-			return EVENT_CONSUME
-		
-		else
-			return _goNowPlaying()
 		end
-	end,
-	--]]
 
+		_browsePath = homePath
+		-- if we were going somewhere, we're no longer
+		_browsePath.destination = false
+		_browsePath.menu:unlock()
+
+		-- close any non SlimBrowser windows
+
+		while #windowStack > 1 do
+			windowStack[#windowStack - 1]:hide(nil, "JUMP")
+		end
+	else
+		_goNowPlaying()
+	end
 end
 
 
@@ -1337,7 +1329,7 @@ function notify_playerCurrent(self, player)
 	_homeHandler = Framework:addListener(EVENT_KEY_PRESS,
 					     function(event)
 						     if event:getKeycode() == KEY_HOME then
-							     self:_homeAction(_browsePath.window)
+							     self:_homeAction(path)
 							     return EVENT_CONSUME
 						     end
 
@@ -1368,13 +1360,12 @@ function free(self)
 
 	-- restore the system home menu
 	if _homeWindow then
-		log:warn("RESTORE HOME")
 		local window = Framework.windowStack[#Framework.windowStack]
 		Framework.windowStack[#Framework.windowStack] = _homeWindow
 		window:hide()
 	end
 
-	if _homeHander then
+	if _homeHandler then
 		Framework:removeListener(_homeHandler)
 	end
 		
@@ -1388,7 +1379,7 @@ function free(self)
 	local step = _browsePath
 	
 	while step do
---		step.window:hide()
+		step.window:hide()
 		step.destination = false
 		local prev = step
 		step = step.origin
@@ -1398,7 +1389,7 @@ function free(self)
 	local step = _statusPath
 	
 	while step do
---		step.window:hide()
+		step.window:hide()
 		step.destination = false
 		local prev = step
 		step = step.origin

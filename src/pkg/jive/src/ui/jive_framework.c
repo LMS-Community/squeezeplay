@@ -660,7 +660,7 @@ int jiveL_event(lua_State *L) {
 		lua_getfield(L, 1, "unusedListeners");
 	}
 	lua_pushnil(L);
-	while (lua_next(L, -2) != 0) {
+	while (r == 0 && lua_next(L, -2) != 0) {
 		int mask;
 
 		lua_rawgeti(L, -1, 1);

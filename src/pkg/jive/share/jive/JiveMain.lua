@@ -169,6 +169,22 @@ function JiveMain:__init()
 	-- init our listeners
 	jiveMain.skins = {}
 
+	-- home key handler
+	jive.ui.Framework:addListener(jive.ui.EVENT_KEY_PRESS,
+				      function(event)
+					      if event:getKeycode() == jive.ui.KEY_HOME then
+						      local windowStack = jive.ui.Framework.windowStack
+
+						      while #windowStack > 1 do
+							      windowStack[#windowStack - 1]:hide(nil, "JUMP")
+						      end
+						      return jive.ui.EVENT_CONSUME
+					      end
+					      
+					      return jive.ui.EVENT_UNUSED
+				      end,
+				      false)
+
 	-- global listener: resize window (only desktop versions)
 	jive.ui.Framework:addListener(jive.ui.EVENT_WINDOW_RESIZE,
 				      function(event)

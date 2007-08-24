@@ -256,9 +256,9 @@ function addListener(self, mask, listener, priority)
 
 	local handle = { mask, listener }
 	if priority == false then
-		table.insert(self.unusedListeners, handle)
+		table.insert(self.unusedListeners, 1, handle)
 	else
-		table.insert(self.globalListeners, handle)
+		table.insert(self.globalListeners, 1, handle)
 	end
 
 	return handle
