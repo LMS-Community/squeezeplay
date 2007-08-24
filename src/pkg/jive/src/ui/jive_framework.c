@@ -16,8 +16,12 @@ char *jive_resource_path = NULL;
 SDL_Rect jive_dirty_region;
 
 
-/* performance warning threshold, 0 = disabled */
-Uint32 perfwarn = 0;
+/* performance warning thresholds, 0 = disabled */
+struct {
+	Uint32 screen;
+	Uint32 event;
+	Uint32 queue;
+} perfwarn = { 0, 0, 0 };
 
 
 /* Frame rate calculations */
@@ -244,9 +248,9 @@ static int jiveL_process_events(lua_State *L) {
 			framecount = 0;
 		}
 
-		if (perfwarn) {
-			if (SDL_EventQueueLength() > 5) {
-				printf("SDL_event_queue > 5  : %3d\n", SDL_EventQueueLength());
+		if (perfwarn.queue) {
+			if (SDL_EventQueueLength() > perfwarn.queue) {
+				printf("SDL_event_queue > %2d : %3d\n", perfwarn.queue, SDL_EventQueueLength());
 			}
 		}
 
@@ -314,7 +318,7 @@ int jiveL_update_screen(lua_State *L) {
 	lua_rawgeti(L, -1, 1);
 
 
-	if (perfwarn) t0 = SDL_GetTicks();
+	if (perfwarn.screen) t0 = SDL_GetTicks();
 
 	/* Layout window and widgets */
 	lua_getfield(L, -1, "windowCount");
@@ -335,7 +339,7 @@ int jiveL_update_screen(lua_State *L) {
 	framecount++;
 
 
-	if (perfwarn) t1 = SDL_GetTicks();
+	if (perfwarn.screen) t1 = SDL_GetTicks();
  
 	/* Widget animations */
 	lua_getfield(L, 1, "animations");
@@ -372,7 +376,7 @@ int jiveL_update_screen(lua_State *L) {
 	}
 	lua_pop(L, 1);
 
-	if (perfwarn) t2 = SDL_GetTicks();
+	if (perfwarn.screen) t2 = SDL_GetTicks();
 
 	/* Window transitions */
 	lua_getfield(L, 1, "transition");
@@ -415,10 +419,10 @@ int jiveL_update_screen(lua_State *L) {
 		jive_surface_flip(srf);
 	}
 
-	if (perfwarn) {
+	if (perfwarn.screen) {
 		t3 = SDL_GetTicks();
-		if (t3-t0 > perfwarn) 
-			printf("update_screen > %dms: %4dms [layout:%dms animate:%dms transitions:%dms]\n", perfwarn, t3-t0, t1-t0, t2-t1, t3-t2);
+		if (t3-t0 > perfwarn.screen) 
+			printf("update_screen > %dms: %4dms [layout:%dms animate:%dms transitions:%dms]\n", perfwarn.screen, t3-t0, t1-t0, t2-t1, t3-t2);
 	}
 	
 	lua_pop(L, 4);
@@ -531,7 +535,7 @@ int jiveL_dispatch_event(lua_State *L) {
 	 * 3: event
 	 */
 
-	if (perfwarn) t0 = SDL_GetTicks();
+	if (perfwarn.event) t0 = SDL_GetTicks();
 
 	lua_pushcfunction(L, traceback);  /* push traceback function */
 
@@ -579,10 +583,10 @@ int jiveL_dispatch_event(lua_State *L) {
 		lua_pop(L, 1);
 	}
 
-	if (perfwarn) {
+	if (perfwarn.event) {
 		t1 = SDL_GetTicks();
-		if (t1-t0 > perfwarn) {
-			printf("process_event > %dms: %4dms ", perfwarn, t1-t0);
+		if (t1-t0 > perfwarn.event) {
+			printf("process_event > %dms: %4dms ", perfwarn.event, t1-t0);
 			lua_getglobal(L, "tostring");
 			lua_pushvalue(L, 2);
 			lua_call(L, 1, 1);
@@ -992,16 +996,20 @@ static int process_event(lua_State *L, SDL_Event *event) {
 int jiveL_perfwarn(lua_State *L) {
 	/* stack is:
 	 * 1: framework
-	 * 2: none or new perfwarn threshold (0 = disable)
+	 * 2: table of threshold values, if no entry or 0 warnings are disabled 
 	 */
 
-	if (!lua_isnone(L, 2)) {
-		perfwarn = lua_tointeger(L, 2);
+	if (lua_istable(L, 2)) {
+		lua_getfield(L, 2, "screen");
+		perfwarn.screen = lua_tointeger(L, -1);
+		lua_getfield(L, 2, "event");
+		perfwarn.event = lua_tointeger(L, -1);
+		lua_getfield(L, 2, "queue");
+		perfwarn.queue = lua_tointeger(L, -1);
+		lua_pop(L, 3);
 	}
-
-	lua_pushinteger(L, perfwarn);
 	
-	return 1;
+	return 0;
 }
 
 

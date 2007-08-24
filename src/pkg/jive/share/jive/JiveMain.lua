@@ -198,8 +198,8 @@ function JiveMain:__init()
 	-- load style and applets
 	jiveMain:reload()
 
-	-- event loop warning [50ms]
-	jive.ui.Framework:perfwarn(50)
+	-- debug: set event warning thresholds
+	jive.ui.Framework:perfwarn({ screen = 100, event = 50, queue = 5 })
 
 	-- event loop
 	jive.ui.Framework:processEvents()
