@@ -28,7 +28,6 @@ local Framework              = require("jive.ui.Framework")
 local RadioButton            = require("jive.ui.RadioButton")
 local RadioGroup             = require("jive.ui.RadioGroup")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
-local Surface                = require("jive.ui.Surface")
 local Textarea               = require("jive.ui.Textarea")
 local Tile                   = require("jive.ui.Tile")
 local Window                 = require("jive.ui.Window")
@@ -156,7 +155,7 @@ function _setBackground(self, wallpaper)
 		wallpaper = self:getSettings()["wallpaper"]
 	end
 
-	local srf = Surface:loadImage("applets/SetupWallpaper/wallpaper/" .. wallpaper)
+	local srf = Tile:loadImage("applets/SetupWallpaper/wallpaper/" .. wallpaper)
 	if srf ~= nil then
 		Framework:setBackground(srf)
 	end

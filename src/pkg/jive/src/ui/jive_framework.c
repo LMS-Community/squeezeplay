@@ -33,7 +33,9 @@ static float framerate = (1000.0f / JIVE_FRAME_RATE);
 /* button hold threshold 2 seconds */
 #define HOLD_TIMEOUT 2000
 
-static JiveSurface *jive_background = NULL;
+static JiveTile *jive_background = NULL;
+
+static Uint16 screen_w, screen_h;
 
 struct jive_keymap {
 	SDLKey keysym;
@@ -101,6 +103,9 @@ static int jiveL_init(lua_State *L) {
 	bpp = luaL_optint(L, -1, 16);
 	lua_pop(L, 1);
 
+	screen_w = r.w;
+	screen_h = r.h;
+
 	/* initialise SDL */
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
 		fprintf(stderr, "SDL_Init(V|T|A): %s\n", SDL_GetError());
@@ -110,7 +115,7 @@ static int jiveL_init(lua_State *L) {
 
 	SDL_WM_SetCaption("Jive", "Jive");
 
-	srf = jive_surface_set_video_mode(r.w, r.h, bpp);
+	srf = jive_surface_set_video_mode(screen_w, screen_h, bpp);
 	if (!srf) {
 		SDL_Quit();
 		exit(-1);
@@ -124,8 +129,7 @@ static int jiveL_init(lua_State *L) {
 
 
 	/* background image */
-	jive_background = jive_surface_newRGB(r.w, r.h);
-	jive_surface_boxColor(jive_background, 0, 0, r.w, r.h, 0x000000FF);
+	jive_background = jive_tile_fill_color(0x000000FF);
 
 
 	/* init audio */
@@ -383,7 +387,7 @@ int jiveL_update_screen(lua_State *L) {
 	if (!lua_isnil(L, -1)) {
 		/* Draw background */
 		jive_surface_set_clip(srf, NULL);
-		jive_surface_blit(jive_background, srf, 0, 0);
+		jive_tile_blit(jive_background, srf, 0, 0, screen_w, screen_h);
 		
 		/* Animate screen transition */
 		lua_pushvalue(L, -1);
@@ -404,7 +408,7 @@ int jiveL_update_screen(lua_State *L) {
 		jive_surface_set_clip(srf, NULL);
 
 		/* Draw background */
-		jive_surface_blit(jive_background, srf, 0, 0);
+		jive_tile_blit(jive_background, srf, 0, 0, screen_w, screen_h);
 
 		/* Draw screen */
 		if (jive_getmethod(L, -2, "draw")) {
@@ -454,14 +458,15 @@ int jiveL_redraw(lua_State *L) {
 	 */
 
 	if (lua_isnil(L, -1)) {
-		lua_getfield(L, -2, "screen");
-		lua_getfield(L, -1, "bounds");
-		jive_torect(L, -1, &r);
-		lua_pop(L, 2);
+		r.x = 0;
+		r.y = 0;
+		r.w = screen_w;
+		r.h = screen_h;
 	}
 	else {
 		jive_torect(L, 2, &r);
 	}
+	lua_pop(L, 1);
 
 	jive_redraw(&r);
 
@@ -611,12 +616,12 @@ int jiveL_get_background(lua_State *L) {
 int jiveL_set_background(lua_State *L) {
 	/* stack is:
 	 * 1: framework
-	 * 2: background image
+	 * 2: background image (tile)
 	 */
 	if (jive_background) {
-		jive_surface_free(jive_background);
+		jive_tile_free(jive_background);
 	}
-	jive_background = jive_surface_ref(tolua_tousertype(L, 2, 0));
+	jive_background = jive_tile_ref(tolua_tousertype(L, 2, 0));
 
 	lua_getfield(L, 1, "layoutCount");
 	lua_pushinteger(L, lua_tointeger(L, -1) + 1);
@@ -952,20 +957,19 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 	case SDL_VIDEORESIZE: {
 		JiveSurface *srf;
-		SDL_Rect r;
 		int bpp = 16;
 
-		r.w = event->resize.w;
-		r.h = event->resize.h;
+		screen_w = event->resize.w;
+		screen_h = event->resize.h;
 
-		srf = jive_surface_set_video_mode(r.w, r.h, bpp);
+		srf = jive_surface_set_video_mode(screen_w, screen_h, bpp);
 
 		lua_getfield(L, 1, "screen");
 
 		lua_getfield(L, -1, "bounds");
-		lua_pushinteger(L, r.w);
+		lua_pushinteger(L, screen_w);
 		lua_rawseti(L, -2, 3);
-		lua_pushinteger(L, r.h);
+		lua_pushinteger(L, screen_h);
 		lua_rawseti(L, -2, 4);
 		lua_pop(L, 1);
 
