@@ -704,6 +704,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 		local chunk = db:chunk()
 		local bAction
 		local iAction
+		local onAction
+		local offAction
 		
 		-- special cases for go action:
 		if actionName == 'go' then
@@ -727,15 +729,18 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 			-- actionName is corrected below!!
 			bAction = _safeDeref(chunk, 'base', 'actions', 'do')
 			iAction = _safeDeref(item, 'actions', 'do')
+			onAction = _safeDeref(item, 'actions', 'on')
+			offAction = _safeDeref(item, 'actions', 'off')
 		end
 	
 		
 		-- now check for a run-of-the mill action
-		if not (iAction or bAction) then
+		if not (iAction or bAction or onAction or offAction) then
 			bAction = _safeDeref(chunk, 'base', 'actions', actionName)
 			iAction = _safeDeref(item, 'actions', actionName)
 		else
 			-- if we reach here, it's a DO action...
+			-- okay to call on or off this, as they are just special cases of 'do'
 			actionName = 'do'
 		end
 		
