@@ -81,9 +81,13 @@ function manageSelectPlayerMenu(self)
         local sdApplet = AppletManager:getAppletInstance("SlimDiscovery")
 	local _numberOfPlayers = sdApplet and sdApplet:countPlayers() or 0
 
-	-- FIXME always display this menu for now
 	-- if _numberOfPlayers is > 1 and selectPlayerMenuItem doesn't exist, create it
-	if true or _numberOfPlayers > 1 or not self.selectedPlayer then
+--[[
+	-- FIXME alway display this menu for now, as slim browser can't dynamically
+	-- add and remove menu items
+
+	if _numberOfPlayers > 1 or not self.selectedPlayer then
+--]]
 		if not self.selectPlayerMenuItem then
 			local menuItem = {
 				text = self:string("SELECT_PLAYER"),
@@ -93,11 +97,13 @@ function manageSelectPlayerMenu(self)
 			self.selectPlayerMenuItem = menuItem
 		end
 
+--[[
 	-- if numberOfPlayers < 2 and selectPlayerMenuItem exists, get rid of it
 	elseif _numberOfPlayers < 2 and self.selectPlayerMenuItem then
 		jiveMain:removeItem(self.selectPlayerMenuItem)
 		self.selectPlayerMenuItem = nil
 	end
+--]]
 end
 
 function _addPlayerItem(self, player)
