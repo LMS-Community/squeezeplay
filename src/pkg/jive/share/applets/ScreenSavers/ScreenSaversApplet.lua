@@ -137,7 +137,7 @@ function addScreenSaver(self, displayName, applet, method, settingsName, setting
 		settings = settings
 	}
 
-	if settings_name then
+	if settingsName then
 		self.screensaverSettings[settingsName] = self.screensavers[key]
 	end
 end
