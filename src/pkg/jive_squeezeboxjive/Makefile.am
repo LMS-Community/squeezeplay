@@ -83,6 +83,21 @@ dist_applets_testMotion_DATA = \
 	share/applets/TestMotion/strings.txt
 
 
+applets_testDisplaydir = $(datadir)/jive/applets/TestDisplay
+dist_applets_testDisplay_DATA = \
+	share/applets/TestDisplay/TestDisplayApplet.lua \
+	share/applets/TestDisplay/TestDisplayMeta.lua \
+	share/applets/TestDisplay/strings.txt
+
+
+applets_testKeypaddir = $(datadir)/jive/applets/TestKeypad
+dist_applets_testKeypad_DATA = \
+	share/applets/TestKeypad/TestKeypadApplet.lua \
+	share/applets/TestKeypad/TestKeypadMeta.lua \
+	share/applets/TestKeypad/strings.txt \
+	share/applets/TestKeypad/Keypad.png
+
+
 applets_setupSqueezeboxdir = $(datadir)/jive/applets/SetupSqueezebox
 dist_applets_setupSqueezebox_DATA = \
 	share/applets/SetupSqueezebox/SetupSqueezeboxApplet.lua \
