@@ -18,7 +18,7 @@ local Textarea               = require("jive.ui.Textarea")
 local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
 
-
+local log                    = require("jive.utils.log").logger("applets.setup")
 
 module(...)
 oo.class(_M, Applet)
@@ -31,9 +31,20 @@ function settingsShow(self)
 	local version = fh:read("*a")
 	fh:close()
 
+	local fh = io.popen("/sbin/ifconfig eth0")
+	local ifconfig = fh:read("*a")
+	fh:close()
+
+	local hwaddr = string.match(ifconfig, "HWaddr%s+([%x:]+)")
+
+	log:warn("ifconfig=", ifconfig)
+	log:warn("hwaddr=", hwaddr)
+
 	local about = {
 		tostring(self:string("ABOUT_VERSION")),
 		version,
+		"",
+		tostring(self:string("ABOUT_MAC_ADDRESS", hwaddr)),
 		"",
 		tostring(self:string("ABOUT_CREDITS")),
 		"     Dean Blackketter",

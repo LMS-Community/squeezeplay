@@ -11,6 +11,9 @@ ABOUT_JIVE
 ABOUT_COPYRIGHT
 	EN	Copyright 2007, Logitech.
 
+ABOUT_MAC_ADDRESS
+	EN	MAC Address: %s
+
 ABOUT_CREDITS
 	EN	Credits:
 
