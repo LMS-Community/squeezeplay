@@ -40,6 +40,5 @@ FACTORY_TEST
 	EN	Factory Test
 
 DEBUG_LOG
-	EN	Debug log
-	FR	Messages de déverminage
+	EN	Logging
 
