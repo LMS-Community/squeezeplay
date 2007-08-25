@@ -58,9 +58,20 @@ function settingsShow(self, menuItem)
 	-- otherwise it turns everything back on again
 	local ignore = false
 
+	-- are sound effects enabled, or any individual sounds enabled?
+	local effectsEnabled = Audio:isEffectsEnabled()
+	local soundsEnabled = false
+	for k,v in pairs(Framework:getSounds()) do
+		if Framework:isSoundEnabled(k) then
+			soundsEnabled = true
+			break
+		end
+	end
+
 	-- off switch
 	local offButton = Checkbox("checkbox", 
 				   function(obj, isSelected)
+					   settings["_EFFECTS"] = not isSelected
 					   Audio:effectsEnable(not isSelected)
 
 					   if ignore then return end
@@ -69,7 +80,7 @@ function settingsShow(self, menuItem)
 						   b:setSelected(not isSelected)
 					   end
 				   end,
-				   not Audio:isEffectsEnabled()
+				   not soundsEnabled or not Audio:isEffectsEnabled()
 			   )
 
 	menu:addItem({
@@ -78,6 +89,7 @@ function settingsShow(self, menuItem)
 			     weight = 1
 		     })
 
+
 	-- add sounds
 	for k,v in pairs(Framework:getSounds()) do
 	
@@ -85,7 +97,7 @@ function settingsShow(self, menuItem)
 			"checkbox", 
 			function(obj, isSelected)
 				settings[k] = isSelected
-				v:enable(isSelected)
+				Framework:enableSound(k, isSelected)
 
 				if isSelected then
 					ignore = true
@@ -103,7 +115,7 @@ function settingsShow(self, menuItem)
 					offButton:setSelected(true)
 				end
 			end,
-			v:isEnabled()
+			effectsEnabled and Framework:isSoundEnabled(k)
 		)
 
 		allButtons[button] = v
@@ -115,6 +127,7 @@ function settingsShow(self, menuItem)
 				     weight = 10
 			     })
 	end
+
 
 	window:addListener(EVENT_WINDOW_POP,
 		function()

@@ -29,12 +29,7 @@ SOUND_SELECT
 	NL	Selecteren
 
 SOUND_PUSHLEFT
-	DE	Zurück
-	EN	Back
-	ES	Atrás
-	FR	Précédent
-	IT	Indietro
-	NL	Terug
+	EN	Forward
 
 SOUND_JUMP
 	DE	Hauptmenü
@@ -67,7 +62,12 @@ SOUND_DOCKING
 	EN	Charging
 
 SOUND_PUSHRIGHT
-	EN	Forward
+	DE	Zurück
+	EN	Back
+	ES	Atrás
+	FR	Précédent
+	IT	Indietro
+	NL	Terug
 
 SOUND_NONE
 	DE	Kein

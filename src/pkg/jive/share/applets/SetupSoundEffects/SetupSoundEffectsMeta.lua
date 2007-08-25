@@ -21,12 +21,10 @@ local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
 local Framework     = require("jive.ui.Framework")
-local Timer         = require("jive.ui.Timer")
+local Audio           = require("jive.ui.Audio")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
-
-local log             = require("jive.utils.log").logger("applets.setup")
 
 module(...)
 oo.class(_M, AppletMeta)
@@ -43,17 +41,14 @@ end
 
 function registerApplet(meta)
 	
-	Timer(1000, function()
-			    local settings = meta:getSettings()
-			    log:warn("FOO")
-			    for k,v in pairs(Framework:getSounds()) do
-				    log:warn("BAR")
-				    if settings[k] ~= nil then
-					    v:enable(settings[k])
-				    end
-			    end
-		    end,
-	      true):start()
+	local settings = meta:getSettings()
+	for k,v in pairs(settings) do
+		if k == "_EFFECTS" then
+			Audio:effectsEnable(v)
+		else
+			Framework:enableSound(k, v)
+		end
+	end
 
 	-- add a menu to load us
 	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))

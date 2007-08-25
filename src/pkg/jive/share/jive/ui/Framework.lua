@@ -65,6 +65,8 @@ local Timer         = require("jive.ui.Timer")
 local Widget        = require("jive.ui.Widget")
 local Window        = require("jive.ui.Window")
 
+local log             = require("jive.utils.log").logger("ui")
+
 
 -- import C functions
 jive.frameworkOpen()
@@ -77,6 +79,7 @@ globalListeners = {} -- global listeners
 unusedListeners = {} -- unused listeners
 animations = {} -- active widget animations
 sound = {} -- sounds
+soundEnabled = {} -- sound enabled state
 layoutCount = 1
 
 screen = {}
@@ -213,6 +216,42 @@ Load the wav file I<file> to play on the mixer channel I<channel>. Currently two
 --]]
 function loadSound(self, name, file, channel)
 	self.sound[name] = Audio:loadSound(file, channel)
+
+	if self.soundEnabled[name] ~= nil then
+		self.sound[name]:enable(self.soundEnabled[name])
+	end
+end
+
+
+--[[
+=head2 jive.ui.Framework:enableSound(name, enabled)
+
+Enables or disables the sound I<name>.
+
+=cut
+--]]
+function enableSound(self, name, enabled)
+	self.soundEnabled[name] = enabled
+
+	if self.sound[name] then
+		self.sound[name]:enable(enabled)
+	end
+end
+
+
+--[[
+=head2 jive.ui.Framework:isEnableSound(name)
+
+Returns true if the sound I<name> is enabled.
+
+=cut
+--]]
+function isSoundEnabled(self, name)
+	if self.soundEnabled[name] ~= nil then
+		return self.soundEnabled[name]
+	else
+		return true
+	end
 end
 
 
