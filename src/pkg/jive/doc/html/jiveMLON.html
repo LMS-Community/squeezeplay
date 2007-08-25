@@ -98,6 +98,8 @@
     text = "..."
     icon-id = ...
     icon = "..."
+    radio = val
+    checkbox = val
     input = {
         &lt;input_fields&gt;
     }
@@ -124,6 +126,12 @@
 		<p><code>icon</code><br>
 		Full or partial URL of some image to display.</p>
 
+		<p><code>radio</code><br>
+		If present, indicates a radio button is to be created on this base item. Radio buttons involve a do action, defined in <a href="#action_fields">&lt;action_fields&gt;</a>.</p>
+
+		<p><code>checkbox</code><br>
+		If present, indicates a checkbox is to be created on this base item. See checkbox-specific items "on" and "off" under <a href="#action_fields">&lt;action_fields&gt;</a>.</p>
+
 		<p><code>input</code><br>
 		If present, indicates user input is required before proceeding with the actions. See <a href="#input_fields">&lt;input_fields&gt;</a>.</p>
 
@@ -136,10 +144,6 @@
 
 	<h2 id="input_fields"><code>&lt;input_fields&gt;</code></h2>
 
-	<p>Used if input is required before proceeding with the action. Specifies length to input, allowed chars and help text or token.</p>
-
-	<blockquote>
-		<pre>
 {
     len = ...
     allowedChars = "..."
@@ -267,10 +271,11 @@
 		In base level commands, this defines the name of the field in the item <a href="#action_fields">&lt;actions_fields&gt;</a> that must be used to complete the command for a particular item. See the example below.</p>
 	</blockquote>
 
-	<h3 id="go-do">Go and Do actions</h3>
+	<h3 id="go-do">Go and Do, On and Off actions</h3>
 	
-	<p>Both action names refer to the same key. &quot;go&quot; refers to a command that opens a new window (i.e. returns results to browse), 
+	<p>&quot;go&quot; refers to a command that opens a new window (i.e. returns results to browse), 
 		while &quot;do&quot; refers to an action to perform that does not return browsable data. &quot;do&quot; takes precedence over &quot;go&quot;.</p>
+&quot;on&quot; and &quot;off&quot; are similar to &quot;do&quot;, but are used in the specific case of a checkbox item (i.e., one &quot;do&quot; action for when the checkbox is checked, one for when it is unchecked).
 	<p>Paging parameters (json: _index and _qty, url: TBD) are added automatically by Jive for &quot;go&quot;.</p>
 
 	<h3 id="pre-defined actions">Pre-defined actions</h3>
