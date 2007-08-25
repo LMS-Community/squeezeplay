@@ -426,7 +426,7 @@ int jiveL_update_screen(lua_State *L) {
 	if (perfwarn.screen) {
 		t3 = SDL_GetTicks();
 		if (t3-t0 > perfwarn.screen) 
-			printf("update_screen > %dms: %4dms [layout:%dms animate:%dms transitions:%dms]\n", perfwarn.screen, t3-t0, t1-t0, t2-t1, t3-t2);
+			printf("update_screen > %dms: %4dms [layout:%dms animate:%dms draw:%dms]\n", perfwarn.screen, t3-t0, t1-t0, t2-t1, t3-t2);
 	}
 	
 	lua_pop(L, 4);

@@ -135,8 +135,9 @@ function step61(self)
 end
 
 function step7(self)
-	-- FIXME player selection here...
-	return self:step8()
+	-- select player
+	self.setupPlayer = assert(appletManager:loadApplet("SelectPlayer"))
+	return self.setupPlayer:setupShow(function() self:step8() end)
 end
 
 function step8(self)

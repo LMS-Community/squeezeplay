@@ -30,6 +30,7 @@ QuitApplet does not override any jive.Applet method.
 -- stuff we use
 local oo            = require("loop.simple")
 
+local math          = require("math")
 local Applet        = require("jive.Applet")
 local Timer         = require("jive.ui.Timer")
 local SlimServers   = require("jive.slim.SlimServers")
@@ -61,12 +62,24 @@ function __init(self, ...)
 	obj.serversObj = SlimServers(jnt)
 
 	-- timer to discover slimservers
-	obj.discoverTimer = Timer(1000, function()
-						obj:discover()
-					end)
+	obj.discoverInterval = 1000
+	obj.discoverTimer = Timer(obj.discoverInterval,
+				  function() obj:_pollDiscover(false) end)
 	obj.discoverTimer:start()
 
 	return obj
+end
+
+
+function _pollDiscover(self, restart)
+	self:discover()
+	
+	if restart then
+		self.discoverInterval = 1000
+	else
+		self.discoverInterval = math.min(self.discoverInterval + 1000, 30000)
+	end
+	self.discoverTimer:setInterval(self.discoverInterval)
 end
 
 
@@ -196,6 +209,7 @@ function setCurrentPlayer(self, player)
 	if self.currentPlayer then
 		self.discoverTimer:stop()
 	else
+		self:_pollDiscover(true)
 		self.discoverTimer:start()
 	end
 end
@@ -250,6 +264,14 @@ function notify_playerDelete(self, player)
 		self:setCurrentPlayer(nil)
 	end
 end
+
+
+-- restart discovery on new network
+function notify_networkConnected(self)
+	log:warn("network connected")
+	self:_pollDiscover(true)
+end
+
 
 
 --[[

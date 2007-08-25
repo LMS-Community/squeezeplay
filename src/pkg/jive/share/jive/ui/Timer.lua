@@ -109,7 +109,7 @@ function setInterval(self, interval)
 	assert(type(interval) == "number")
 
 	self.interval = interval
-	if self.timer then
+	if self._timerData then
 		self:restart()
 	end
 end

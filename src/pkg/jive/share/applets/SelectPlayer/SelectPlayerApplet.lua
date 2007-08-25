@@ -147,7 +147,8 @@ function setupShow(self, setupNext)
 		_addPlayerItem(self, playerObj)
 	end
 
-	-- jive for debugging
+	--[[
+	-- no player for debugging
 	self.playerMenu:addItem({
 					text = "NO PLAYER (DEBUG)",
 					callback = function()
@@ -155,6 +156,7 @@ function setupShow(self, setupNext)
 							   self.setupNext()
 						   end
 				})
+	--]]
 
 	window:addWidget(menu)
 

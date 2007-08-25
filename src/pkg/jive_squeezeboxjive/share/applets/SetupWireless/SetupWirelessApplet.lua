@@ -662,7 +662,7 @@ function _connectTimer(self)
 				    -- not connected yet
 
 				    self.connectTimeout = self.connectTimeout + 1
-				    if self.connectTimeout < CONNECT_TIMEOUT then
+				    if self.connectTimeout ~= CONNECT_TIMEOUT then
 					    return
 				    end
 
@@ -676,7 +676,7 @@ function _connectTimer(self)
 			    if string.match(status.ip_address, "^169.254.") then
 				    -- auto ip
 				    self.dhcpTimeout = self.dhcpTimeout + 1
-				    if self.dhcpTimeout <= CONNECT_TIMEOUT then
+				    if self.dhcpTimeout ~= CONNECT_TIMEOUT then
 					    return
 				    end
 
@@ -1251,12 +1251,18 @@ function t_networkStatusTimer(self, values)
 
 	local wpa_state = stateTxt[status.wpa_state] or "NETWORK_STATE_UNKNOWN"
 
+	local encryption = status.key_mgmt
+	-- white lie :)
+	if string.match(status.pairwise_cipher, "WEP") then
+		encryption = "WEP"
+	end
+
 	-- update the ui in the main thread
 	jnt:t_perform(function()
 			      values[1]:setValue(self:string(wpa_state))
 			      values[2]:setValue(tostring(status.ssid))
 			      values[3]:setValue(tostring(status.bssid))
-			      values[4]:setValue(tostring(status.key_mgmt))
+			      values[4]:setValue(tostring(encryption))
 			      values[5]:setValue(tostring(status.ip_address))
 			      values[6]:setValue(tostring(snr))
 			      values[7]:setValue(tostring(rssi))
