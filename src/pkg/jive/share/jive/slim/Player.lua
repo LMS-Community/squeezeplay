@@ -477,6 +477,14 @@ function isPaused(self)
 end
 
 
+-- getPlayMode returns nil|stop|play|pause
+--
+function getPlayMode(self)
+	if self.state then
+		return self.state["mode"]
+	end
+end
+
 -- isCurrent
 --
 function isCurrent(self, index)

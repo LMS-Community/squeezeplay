@@ -43,7 +43,7 @@ end
 
 
 function registerApplet(self)
-	
+
 	-- ScreenSaver is a resident Applet
 	appletManager:loadApplet("ScreenSavers")
 	

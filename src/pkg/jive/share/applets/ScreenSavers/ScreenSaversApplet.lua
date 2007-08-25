@@ -19,10 +19,12 @@ ScreenSaversApplet overrides the following methods:
 
 
 -- stuff we use
-local ipairs, pairs           = ipairs, pairs
+local ipairs, pairs, tostring = ipairs, pairs, tostring
+
 local oo               = require("loop.simple")
 
 local Applet           = require("jive.Applet")
+local AppletManager    = require("jive.AppletManager")
 local Timer            = require("jive.ui.Timer")
 local Framework        = require("jive.ui.Framework")
 local Window           = require("jive.ui.Window")
@@ -51,7 +53,7 @@ oo.class(_M, Applet)
 function init(self, ...)
 
 	self.screensavers = {}
-	self.screensaver_settings = {}
+	self.screensaverSettings = {}
 	self:addScreenSaver("None", nil, nil)
 
 	local timeout = self:getSettings()["timeout"]
@@ -104,8 +106,13 @@ function _activate(self, the_screensaver)
 	log:debug("Screensaver activate")
 
 	if the_screensaver == nil then
-		-- TODO discover the play mode
-		the_screensaver = self:getSettings()["whenStopped"]
+		local sd = AppletManager:getAppletInstance("SlimDiscovery")
+		
+		if sd and sd:getCurrentPlayer():getPlayMode() == "play" then
+			the_screensaver = self:getSettings()["whenPlaying"]
+		else
+			the_screensaver = self:getSettings()["whenStopped"]
+		end
 	end
 
 	local screensaver = self.screensavers[the_screensaver]
@@ -121,21 +128,23 @@ function _activate(self, the_screensaver)
 end
 
 
-function addScreenSaver(self, display_name, applet, method, settings_name, settings)
-	self.screensavers[display_name] = {
+function addScreenSaver(self, displayName, applet, method, settingsName, settings)
+	local key = tostring(applet) .. ":" .. tostring(method)
+	self.screensavers[key] = {
 		applet = applet,
 		method = method,
+		displayName = displayName,
 		settings = settings
 	}
 
 	if settings_name then
-		self.screensaver_settings[settings_name] = self.screensavers[display_name]
+		self.screensaverSettings[settingsName] = self.screensavers[key]
 	end
 end
 
 
-function setScreenSaver(self, mode, display_name)
-	self:getSettings()[mode] = display_name
+function setScreenSaver(self, mode, key)
+	self:getSettings()[mode] = key
 end
 
 
@@ -152,28 +161,28 @@ function screensaverSetting(self, menuItem, mode)
 	local activeScreensaver = self:getSettings()[mode]
 
 	local group = RadioGroup()
-	for displayName, screensaver in pairs(self.screensavers) do
+	for key, screensaver in pairs(self.screensavers) do
 		local button = RadioButton(
 			"radio", 
 			group, 
 			function()
-				self:setScreenSaver(mode, displayName)
+				self:setScreenSaver(mode, key)
 			end,
-			displayName == activeScreensaver
+			key == activeScreensaver
 		)
 
 		-- pressing play should play the screensaver, so we need a handler
 		button:addListener(EVENT_KEY_PRESS,
 			function(evt)
 				if evt:getKeycode() == KEY_PLAY then
-					self:_activate(displayName)
+					self:_activate(key)
 					return EVENT_CONSUME
 				end
 			end
 		)
 
 		menu:addItem({
-				     text = displayName,
+				     text = screensaver.displayName,
 				     icon = button
 			     })
 	end
@@ -181,6 +190,8 @@ function screensaverSetting(self, menuItem, mode)
 	local window = Window("screensavers", menuItem.text)
 	window:addWidget(Textarea("help", "Press Center to select screensaver or PLAY to preview"))
 	window:addWidget(menu)
+
+	window:addListener(EVENT_WINDOW_POP, function() self:storeSettings() end)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -221,6 +232,8 @@ function timeoutSetting(self, menuItem)
 			},
 		}))
 
+	window:addListener(EVENT_WINDOW_POP, function() self:storeSettings() end)
+
 	self:tieAndShowWindow(window)
 	return window
 end
@@ -254,7 +267,7 @@ function openSettings(self, menuItem)
 		})
 
 	menu:setComparator(menu.itemComparatorWeightAlpha)
-	for setting_name, screensaver in pairs(self.screensaver_settings) do
+	for setting_name, screensaver in pairs(self.screensaverSettings) do
 		menu:addItem({
 				     text = setting_name,
 				     weight = 3,
