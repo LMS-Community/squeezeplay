@@ -504,7 +504,7 @@ int SDL_PrivateSysWMEvent(SDL_SysWMmsg *message)
 */
 int SDL_EventQueueLength(void)
 {
-	return (SDL_EventQ.tail - SDL_EventQ.head) % MAXEVENTS;
+	return (SDL_EventQ.tail - SDL_EventQ.head + MAXEVENTS) % MAXEVENTS;
 }
 
 
