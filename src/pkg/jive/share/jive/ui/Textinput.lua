@@ -104,8 +104,12 @@ function _scroll(self, dir)
 	-- find current character
 	local i = string.find(v, s2, 1, true)
 
-	-- move dir characters
-	i = i + dir
+	-- move dir characters, compensating for the initial nil value
+	if (not (dir > 0 and s2 == "")) then
+		i = i + dir
+	end
+
+	-- handle wrap around conditions
 	if i < 1 then
 		i = i + #v
 	elseif i > #v then
