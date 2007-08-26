@@ -1,7 +1,8 @@
 
 # Absolute path to top of source directories
 SRCDIR = $(realpath ${PWD})
-TOPDIR = $(dir ${SRCDIR})
+TOPSRCDIR = $(realpath ${PWD}/../../../squeezeboxJive/build)
+TOPDIR = $(dir ${TOPSRCDIR})
 
 export BUILDDIR=$(TOPDIR)build
 export PREFIX=${BUILDDIR}/usr
@@ -48,7 +49,7 @@ freetype: freetype-2.1.10/config.mk
 
 # sdl
 SDL-1.2.11/Makefile:
-	cd SDL-1.2.11; ./configure --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --enable-oss --disable-alsa --disable-esd --disable-arts --disable-video-x11 --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
+	cd SDL-1.2.11; ./configure --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --enable-oss --disable-alsa --disable-esd --disable-arts --disable-video-x11 --disable-video-directfb --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 sdl: SDL-1.2.11/Makefile
 	cd SDL-1.2.11; make; make DESTDIR= install
