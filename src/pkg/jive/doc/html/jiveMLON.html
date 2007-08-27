@@ -10,7 +10,7 @@
 
 	<p>Interface specifications for browsing using Jive.</p>
 
-	<p>Version 1.1 (<a href="#rev">revision history</a>)</p>
+	<p>Version 1.2 (<a href="#rev">revision history</a>)</p>
 
 	<h2>Introduction</h2>
 
@@ -143,6 +143,11 @@
 	</blockquote>
 
 	<h2 id="input_fields"><code>&lt;input_fields&gt;</code></h2>
+	<p>Used if input is required before proceeding with the action. Specifies length to input, allowed chars and help text or token.</p>
+
+    <blockquote>
+<pre>
+ { 
 
 {
     len = ...
@@ -476,6 +481,12 @@
 	<p>For example, the hierarchy [genres, artist, album] is done using a top level menu with command "genres menu:artist", that generates items with commands "artists menu:albums", etc... This is done in order to re-use the code of these queries. Experience shows they are high maintenance.</p>
 
 	<h2 id="rev">Revision history</h2>
+
+	<h3>1.2</h3>
+
+	<ul>
+		<li>Added radio and checkbox items. Added on/off actions to assist checkboxes</li>
+	</ul>
 
 	<h3>1.1</h3>
 
