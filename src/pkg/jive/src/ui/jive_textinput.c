@@ -184,8 +184,16 @@ int jiveL_textinput_draw(lua_State *L) {
 
 	offset_y = (peer->char_height - jive_font_height(peer->font)) / 2;
 
+	/* Valid characters */
+	jive_getmethod(L, 1, "_getChars");
+	lua_pushvalue(L, 1);
+	lua_call(L, 1, 1);
+
+	validchars = lua_tostring(L, -1);
+	validchars_end = validchars + strlen(validchars) - 1;
+
 	/* draw wheel */
-	if (drawLayer && peer->wheel_tile) {
+	if (drawLayer && peer->wheel_tile && strlen(validchars)) {
 		int w = cursor_w;
 		int h = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
 		jive_tile_blit_centered(peer->wheel_tile, srf, cursor_x + (w / 2), peer->w.bounds.y + peer->w.padding.top + (h / 2), w, h);
@@ -227,13 +235,6 @@ int jiveL_textinput_draw(lua_State *L) {
 	}
 
 	if (drawLayer) {
-		/* Valid characters */
-		jive_getmethod(L, 1, "_getChars");
-		lua_pushvalue(L, 1);
-		lua_call(L, 1, 1);
-
-		validchars = lua_tostring(L, -1);
-		validchars_end = validchars + strlen(validchars) - 1;
 		ptr = strchr(validchars, text[cursor - 1]);
 
 		/* Draw wheel up */
