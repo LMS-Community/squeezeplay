@@ -56,6 +56,8 @@ local table           = require("jive.utils.table")
 local log             = require("jive.utils.log").logger("ui")
 
 local EVENT_ACTION    = jive.ui.EVENT_ACTION
+local EVENT_FOCUS_GAINED = jive.ui.EVENT_FOCUS_GAINED
+local EVENT_FOCUS_LOST   = jive.ui.EVENT_FOCUS_LOST
 
 local EVENT_CONSUME   = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED    = jive.ui.EVENT_UNUSED
@@ -111,14 +113,16 @@ end
 -- called for menu item events
 local function _itemListener(menu, menuItem, list, index, event)
 	local item = list[index]
+
 	if event:getType() == EVENT_ACTION and item.callback then
---		local r = item.callback(event, item)
---		if r == nil then
---			return EVENT_CONSUME
---		else
---			return r
---		end
 		return item.callback(event, item) or EVENT_CONSUME
+	
+	elseif event:getType() == EVENT_FOCUS_GAINED and item.focusGained then
+		return item.focusGained(event, item) or EVENT_CONSUME
+
+	elseif event:getType() == EVENT_FOCUS_LOST and item.focusLost then
+		return item.focusLost(event, item) or EVENT_CONSUME
+
 	end
 
 	return EVENT_UNUSED

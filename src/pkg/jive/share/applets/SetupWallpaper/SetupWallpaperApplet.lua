@@ -32,6 +32,8 @@ local Textarea               = require("jive.ui.Textarea")
 local Tile                   = require("jive.ui.Tile")
 local Window                 = require("jive.ui.Window")
 
+local EVENT_FOCUS_GAINED     = jive.ui.EVENT_FOCUS_GAINED
+local EVENT_FOCUS_LOST       = jive.ui.EVENT_FOCUS_LOST
 local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
 
 
@@ -63,25 +65,29 @@ function setupShow(self, setupNext)
 
 	local wallpaper = self:getSettings()["wallpaper"]
 
-	local selectedIndex = 1	
 	for name, file in table.pairsByKeys(wallpapers) do
 		menu:addItem({
 				     text = name, 
 				     callback = function()
 							self:_setBackground(file)
 							setupNext()
+						end,
+				     focusGained = function(event)
+							self:_showBackground(file)
 						end
+
 			     })
+
 		if wallpaper == file then
-			selectedIndex = menu:numItems()
+			menu:setSelectedIndex(menu:numItems())
 		end
 	end
 	menu:addItem(self:_licenseMenuItem())
-	menu:setSelectedIndex(selectedIndex)
 
 	-- Store the applet settings when the window is closed
 	window:addListener(EVENT_WINDOW_POP,
 		function()
+			self:_showBackground(nil)
 			self:storeSettings()
 		end
 	)
@@ -109,8 +115,15 @@ function settingsShow(self)
 								self:_setBackground(file)
 							end,
 							wallpaper == file
-						)
+						),
+				     focusGained = function(event)
+							self:_showBackground(file)
+						end
 			     })
+
+		if wallpaper == file then
+			menu:setSelectedIndex(menu:numItems())
+		end
 	end
 
 	menu:addItem(self:_licenseMenuItem())
@@ -118,6 +131,7 @@ function settingsShow(self)
 	-- Store the applet settings when the window is closed
 	window:addListener(EVENT_WINDOW_POP,
 		function()
+			self:_showBackground(nil)
 			self:storeSettings()
 		end
 	)
@@ -142,16 +156,14 @@ function _licenseMenuItem(self)
 
 			window:addWidget(Textarea("textarea", text))
 			self:tieAndShowWindow(window)
-		end
+		end,
+		focusGained = function(event) self:_showBackground(nil) end
 	}
 end
 
 
-function _setBackground(self, wallpaper)
-	-- set the new wallpaper, or use the existing setting
-	if wallpaper then
-		self:getSettings()["wallpaper"] = wallpaper
-	else
+function _showBackground(self, wallpaper)
+	if not wallpaper then
 		wallpaper = self:getSettings()["wallpaper"]
 	end
 
@@ -159,6 +171,16 @@ function _setBackground(self, wallpaper)
 	if srf ~= nil then
 		Framework:setBackground(srf)
 	end
+end
+
+
+function _setBackground(self, wallpaper)
+	-- set the new wallpaper, or use the existing setting
+	if wallpaper then
+		self:getSettings()["wallpaper"] = wallpaper
+	end
+
+	self:_showBackground(wallpaper)
 end
 
 

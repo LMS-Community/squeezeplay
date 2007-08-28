@@ -55,6 +55,8 @@ local EVENT_KEY_PRESS      = jive.ui.EVENT_KEY_PRESS
 local EVENT_SHOW           = jive.ui.EVENT_SHOW
 local EVENT_HIDE           = jive.ui.EVENT_HIDE
 local EVENT_SERVICE_JNT    = jive.ui.EVENT_SERVICE_JNT
+local EVENT_FOCUS_GAINED = jive.ui.EVENT_FOCUS_GAINED
+local EVENT_FOCUS_LOST   = jive.ui.EVENT_FOCUS_LOST
 
 local EVENT_CONSUME        = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED         = jive.ui.EVENT_UNUSED
@@ -257,18 +259,19 @@ function setItems(self, list, listSize, min, max)
 		max = listSize
 	end
 
+	-- check if the scrollbar position is out of range
+	if self.selected and self.selected > listSize then
+		self.selected = listSize
+	end
+
+	-- update selection
+	self:scrollBy(0)
+
 	-- update if changed items are visible
 	local topItem, botItem = self:getVisibleIndicies()
 	if min >= topItem and min <= botItem
 		or max >= topItem and max <= botItem then
 
-		self:rePrepare()
-	end
-
-	-- check if the scrollbar position is out of range
-	if self.selected and self.selected > listSize then
-		self.selected = listSize
-		self:scrollBy(0)
 		self:rePrepare()
 	end
 end
@@ -347,8 +350,7 @@ function setSelectedIndex(self, index)
 	assert(type(index) == "number", "setSelectedIndex index is not a number")
 
 	if index <= self.listSize then
-		self.selected = index
-		self:scrollBy(0)
+		self:scrollBy(index - (self.selected or 1))
 	end
 end
 
@@ -429,9 +431,11 @@ function scrollBy(self, scroll)
 
 	if lastSelected ~= selected then
 		self:playSound("CLICK")
-	end
 
-	self.selected = selected
+		self:dispatchNewEvent(EVENT_FOCUS_LOST)
+		self.selected = selected
+		self:dispatchNewEvent(EVENT_FOCUS_GAINED)
+	end
 	self.topItem = topItem
 
 	self:reLayout()

@@ -54,18 +54,18 @@ function setupShow(self, setupNext)
 	local window = Window("window", self:string("CHOOSE_LANGUAGE"))
 	local menu = SimpleMenu("menu")
 
-	local selectedIndex = 1
 	for _, locale in ipairs(locale:getAllLocales()) do 
 		menu:addItem({
 		        text = self:string("LANGUAGE_" .. locale),
-			callback = function() self:setLang(locale) setupNext() end, 
+			callback = function() self:setLang(locale) setupNext() end,
+			focusGained = function() self:_showLang(locale) end
 		})
 
 		if locale == currentLocale then
-			selectedIndex = menu:numItems()
+			menu:setSelectedIndex(menu:numItems())
 		end
 	end
-	menu:setSelectedIndex(selectedIndex)
+
 
 	window:addWidget(Textarea("help", self:string("CHOOSE_LANGUAGE_HELP")))
 	window:addWidget(menu)
@@ -73,6 +73,7 @@ function setupShow(self, setupNext)
 	-- Store the selected language when the menu is exited
         window:addListener(EVENT_WINDOW_POP,
                 function()
+			self:_showLang(nil)
                         self:storeSettings()
                 end
         )
@@ -101,7 +102,12 @@ function settingsShow(self, menuItem)
 		menu:addItem({
 		        text = self:string("LANGUAGE_" .. locale),
 			icon = button,
+			focusGained = function() self:_showLang(locale) end
 		})
+
+		if locale == currentLocale then
+			menu:setSelectedIndex(menu:numItems())
+		end
 	end
 
 	window:addWidget(menu)
@@ -109,6 +115,7 @@ function settingsShow(self, menuItem)
 	-- Store the selected language when the menu is exited
         window:addListener(EVENT_WINDOW_POP,
                 function()
+			self:_showLang(nil)
                         self:storeSettings()
                 end
         )
@@ -118,13 +125,20 @@ function settingsShow(self, menuItem)
 end
 
 
+function _showLang(self, choice)
+	if not choice then
+		choice = self:getSettings().locale
+	end
+
+	locale:setLocale(choice)
+	Framework:styleChanged()
+end
+
 function setLang(self, choice)
 	log:info("Locale choice set to ", choice)
-	locale:setLocale(choice)
 
+	self:_showLang(choice)
 	self:getSettings().locale = choice
-
-	Framework:styleChanged()
 end
 
 
