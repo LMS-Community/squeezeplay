@@ -100,11 +100,11 @@ local function _coerce(value, max)
 end
 
 
-local function _itemListener(self, event, item)
+local function _itemListener(self, event)
 
 	local r = EVENT_UNUSED
 
-	local item = _selectedItem(self)
+	item = _selectedItem(self)
 
 	if item then
 		r = self.itemListener(self, item, self.list, self.selected or 1, event)
@@ -174,7 +174,7 @@ local function _eventHandler(self, event)
 
 			else
 				-- other keys to selected widgts
-				return _itemListener(self, event, item)
+				return _itemListener(self, event)
 			end
 		end
 
@@ -193,7 +193,7 @@ local function _eventHandler(self, event)
 	end
 
 	-- other events to selected widgets
-	return _itemListener(self, event, item)
+	return _itemListener(self, event)
 end
 
 
@@ -431,10 +431,7 @@ function scrollBy(self, scroll)
 
 	if lastSelected ~= selected then
 		self:playSound("CLICK")
-
-		self:dispatchNewEvent(EVENT_FOCUS_LOST)
 		self.selected = selected
-		self:dispatchNewEvent(EVENT_FOCUS_GAINED)
 	end
 	self.topItem = topItem
 
@@ -450,12 +447,6 @@ function _updateWidgets(self)
 		max = self.listSize
 	end
 	local indexSize = (max - min) + 1
-
-
-	-- clear selection
-	if self._lastSelected then
-		self._lastSelected:setStyleModifier(nil)
-	end
 
 
 	-- create index list
@@ -502,15 +493,29 @@ function _updateWidgets(self)
 	end
 
 
-	-- set selection
-	self._lastSelected = _selectedItem(self)
-	if self._lastSelected then
+	local lastSelected = self._lastSelected
+	local nextSelected = _selectedItem(self)
+
+	-- clear selection and focus
+	if lastSelected ~= nextSelected or lastSelectedIndex ~= self.selected then
+		if lastSelected then
+			lastSelected:setStyleModifier(nil)
+			lastSelected:dispatchNewEvent(EVENT_FOCUS_LOST)
+		end
+
+		nextSelected:dispatchNewEvent(EVENT_FOCUS_GAINED)
+	end
+
+	-- set selection and focus
+	if nextSelected then
 		if self.locked then
-			self._lastSelected:setStyleModifier("locked")
+			nextSelected:setStyleModifier("locked")
 		else
-			self._lastSelected:setStyleModifier("selected")
+			nextSelected:setStyleModifier("selected")
 		end
 	end
+	self._lastSelected = nextSelected
+	self._lastSelectedIndex = self.selected
 
 	-- update scrollbar
 	self.scrollbar:setScrollbar(0, self.listSize, self.topItem, self.numWidgets)

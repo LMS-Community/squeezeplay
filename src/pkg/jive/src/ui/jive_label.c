@@ -7,6 +7,10 @@
 #include "common.h"
 #include "jive.h"
 
+#define SCROLL_PAD_RIGHT  10
+#define SCROLL_PAD_LEFT   -20
+#define SCROLL_PAD_START  -10
+
 
 typedef struct label_widget {
 	JiveWidget w;
@@ -23,6 +27,12 @@ typedef struct label_widget {
 	Uint32 fg;
 	Uint32 sh;
 	JiveTile *bg_tile;
+
+	int scroll_offset;
+	Uint16 scroll_width;
+	Uint16 text_lines;
+	JiveSurface **text_sh;
+	JiveSurface **text_fg;
 } LabelWidget;
 
 
@@ -89,8 +99,9 @@ int jiveL_label_skin(lua_State *L) {
 
 int jiveL_label_prepare(lua_State *L) {
 	LabelWidget *peer;
+	Uint16 width;
 	int max_width = 0;
-	int lines = 1;
+	int i, lines = 1;
 	const char *str, *ptr;
 
 	peer = jive_getpeer(L, 1, &labelPeerMeta);
@@ -126,29 +137,48 @@ int jiveL_label_prepare(lua_State *L) {
 	lua_pop(L, 1);
 
 
-	/* text height */
-	// FIXME not all lines are the same height
-	peer->label_h = lines * peer->line_height;
-
-
-	/* measure text width */
-	if (peer->line_width == JIVE_WH_NIL) {
-		lua_getfield(L, 1, "text");
-		lua_pushnil(L);
-		while (lua_next(L, -2) != 0) {
-			str = lua_tostring(L, -1);
-			max_width = MAX(max_width,
-					jive_font_width(peer->font, str));
-			
-			lua_pop(L, 1);
+	/* render text to buffer */
+	if (peer->text_lines) {
+		for (i=0; i<peer->text_lines; i++) {
+			if (peer->text_sh[i]) {
+				jive_surface_free(peer->text_sh[i]);
+			}
+			if (peer->text_fg[i]) {
+				jive_surface_free(peer->text_fg[i]);
+			}
 		}
-		lua_pop(L, 1);
+		free(peer->text_sh);
+		free(peer->text_fg);
+	}
+	peer->text_sh = calloc(lines, sizeof(JiveSurface *));
+	peer->text_fg = calloc(lines, sizeof(JiveSurface *));
+	peer->text_lines = lines;
 
-		peer->label_w = max_width;
+	i = 0;
+	lua_getfield(L, 1, "text");
+	lua_pushnil(L);
+	for (i=0; lua_next(L, -2) != 0; i++) {
+		const char *label = lua_tostring(L, -1);
+
+		/* shadow text */
+		if (peer->is_sh) {
+			peer->text_sh[i] = jive_font_draw_text(peer->font, peer->sh, label);
+		}
+
+		/* foreground text */
+		peer->text_fg[i]  = jive_font_draw_text(peer->font, peer->fg, label);
+
+		jive_surface_get_size(peer->text_fg[i], &width, NULL);
+		max_width = MAX(max_width, width);
+
+		lua_pop(L, 1);
 	}
-	else {
-		peer->label_w = peer->line_width;
-	}
+
+	peer->scroll_width = max_width;
+
+	/* text width and height */
+	peer->label_h = lines * peer->line_height;
+	peer->label_w = (peer->line_width == JIVE_WH_NIL) ? max_width :peer->line_width;
 
 	return 0;
 }
@@ -213,8 +243,80 @@ int jiveL_label_layout(lua_State *L) {
 }
 
 
+int jiveL_label_do_animate(lua_State *L) {
+	/* stack is:
+	 * 1: widget
+	 */
+
+	LabelWidget *peer = jive_getpeer(L, 1, &labelPeerMeta);
+
+	/* scroll? */
+	if (peer->scroll_width < peer->label_w - peer->w.padding.right) {
+		return 0;
+	}
+
+	peer->scroll_offset++;
+
+	if (peer->scroll_offset > peer->scroll_width  + SCROLL_PAD_RIGHT) {
+		peer->scroll_offset = SCROLL_PAD_LEFT;
+	}
+
+	jive_getmethod(L, 1, "reDraw");
+	lua_pushvalue(L, 1);
+	lua_call(L, 1, 0);
+
+	return 0;
+}
+
+
+int jiveL_label_animate(lua_State *L) {
+	/* stack is:
+	 * 1: widget
+	 * 2: boolean
+	 */
+
+	LabelWidget *peer = jive_getpeer(L, 1, &labelPeerMeta);
+	if (lua_toboolean(L, 2)) {
+		peer->scroll_offset = SCROLL_PAD_START;
+
+		lua_getfield(L, 1, "_animationHandle");
+		if (!lua_isnil(L, -1)) {
+			return 0;
+		}
+
+		/* add animation handler */
+		jive_getmethod(L, 1, "addAnimation");
+		lua_pushvalue(L, 1);
+		lua_pushcfunction(L, &jiveL_label_do_animate);
+		lua_pushinteger(L, 15); // 15 fps
+		lua_call(L, 3, 1);
+		lua_setfield(L, 1, "_animationHandle");
+	}
+	else {
+		peer->scroll_offset = 0;
+
+		/* remove animation handler */
+		lua_getfield(L, 1, "_animationHandle");
+		if (lua_isnil(L, -1)) {
+			return 0;
+		}
+
+		jive_getmethod(L, 1, "removeAnimation");
+		lua_pushvalue(L, 1);
+		lua_pushvalue(L, -3);
+		lua_call(L, 2, 0);
+		
+		lua_pushnil(L);
+		lua_setfield(L, 1, "_animationHandle");
+	}
+
+	return 0;
+}
+
+
 int jiveL_label_draw(lua_State *L) {
 	Uint16 y;
+	int i;
 
 	/* stack is:
 	 * 1: widget
@@ -245,40 +347,39 @@ int jiveL_label_draw(lua_State *L) {
 	/* draw text label */
 	lua_getfield(L, 1, "text");
 	if (drawLayer && !lua_isnil(L, -1) && peer->font) {
-
-		// FIXME this label cropping is crude, we need "..."
-		// FIXME also scrolling when selected
-		SDL_Rect old_clip, new_clip;
-		jive_surface_get_clip(srf, &old_clip);
-		
-		new_clip.x = peer->w.bounds.x + peer->label_x;
-		new_clip.y = old_clip.y;
-		new_clip.w = peer->label_w;
-		new_clip.h = old_clip.h;
-
-		jive_rect_intersection(&old_clip, &new_clip, &new_clip);
-
-		jive_surface_set_clip(srf, &new_clip);
-
+		Uint16 w, h, o, s;
 
 		y = peer->w.bounds.y + peer->label_y;
 
 		lua_pushnil(L);
-		while (lua_next(L, -2) != 0) {
-			JiveSurface *tsrf;
-			const char *label = lua_tostring(L, -1);
+		for (i=0; lua_next(L, -2) != 0; i++) {
+			jive_surface_get_size(peer->text_fg[i], &w, &h);
+
+			/* second text when scrolling */
+			o = (peer->scroll_offset < 0) ? 0 : peer->scroll_offset;
+			s = peer->scroll_width - o + SCROLL_PAD_RIGHT;
 
 			/* shadow text */
-			if (peer->is_sh) {
-				tsrf = jive_font_draw_text(peer->font, peer->sh, label);
-				jive_surface_blit(tsrf, srf, peer->w.bounds.x + peer->label_x + 1, y + 1);
-				jive_surface_free(tsrf);
+			if (peer->text_sh[i]) {
+				jive_surface_blit_clip(peer->text_sh[i], o, 0, peer->label_w, h,
+						       srf, peer->w.bounds.x + peer->label_x + 1, y + 1);
+
+				if (o && s < peer->label_w) {
+					Uint16 len = MAX(0, peer->label_w - s);
+					jive_surface_blit_clip(peer->text_sh[i], 0, 0, len, h,
+							       srf, peer->w.bounds.x + peer->label_x + s + 1, y + 1);
+				} 
 			}
 
 			/* foreground text */
-			tsrf = jive_font_draw_text(peer->font, peer->fg, label);
-			jive_surface_blit(tsrf, srf, peer->w.bounds.x + peer->label_x, y);
-			jive_surface_free(tsrf);
+			jive_surface_blit_clip(peer->text_fg[i], o, 0, peer->label_w, h,
+					       srf, peer->w.bounds.x + peer->label_x, y);
+
+			if (o && s < peer->label_w) {
+				Uint16 len = MAX(0, peer->label_w - s);
+				jive_surface_blit_clip(peer->text_fg[i], 0, 0, len, h,
+						       srf, peer->w.bounds.x + peer->label_x + s, y);
+			} 
 
 			y += peer->line_height;
 
@@ -286,7 +387,7 @@ int jiveL_label_draw(lua_State *L) {
 		}
 
 
-		jive_surface_set_clip(srf, &old_clip);
+		//jive_surface_set_clip(srf, &old_clip);
 	}
 	lua_pop(L, 1);
 

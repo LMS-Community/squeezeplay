@@ -1031,6 +1031,7 @@ static const struct luaL_Reg label_methods[] = {
 	{ "_skin", jiveL_label_skin },
 	{ "_prepare", jiveL_label_prepare },
 	{ "_layout", jiveL_label_layout },
+	{ "animate", jiveL_label_animate },
 	{ "draw", jiveL_label_draw },
 	{ NULL, NULL }
 };

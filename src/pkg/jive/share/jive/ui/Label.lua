@@ -59,6 +59,8 @@ local EVENT_UNUSED = jive.ui.EVENT_UNUSED
 
 local EVENT_SHOW      = jive.ui.EVENT_SHOW
 local EVENT_HIDE      = jive.ui.EVENT_HIDE
+local EVENT_FOCUS_GAINED = jive.ui.EVENT_FOCUS_GAINED
+local EVENT_FOCUS_LOST   = jive.ui.EVENT_FOCUS_LOST
 
 
 -- our class
@@ -93,6 +95,9 @@ function __init(self, style, value, widget)
 		obj.widget = widget
 	end
 	obj.widget.parent = obj
+
+	obj:addListener(EVENT_FOCUS_GAINED, function() obj:animate(true) end)
+	obj:addListener(EVENT_FOCUS_LOST, function() obj:animate(false) end)
 
 	obj:addListener(EVENT_ALL,
 			 function(event)
