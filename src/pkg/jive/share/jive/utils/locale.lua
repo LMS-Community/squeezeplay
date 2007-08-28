@@ -57,7 +57,7 @@ function setLocale(self, newLocale)
 	-- reload existing strings files
 	for k, v in pairs(loadedFiles) do
 		readGlobalStringsFile(self)
-		parseStringsFile(self, k, v)
+		parseStringsFile(self, newLocale, k, v)
 	end
 end
 
@@ -104,7 +104,7 @@ function readGlobalStringsFile(self)
 	if globalStringsPath == nil then
 		return globalStrings
 	end
-	globalStrings = parseStringsFile(self, globalStringsPath, globalStrings)
+	globalStrings = parseStringsFile(self, globalLocale, globalStringsPath, globalStrings)
 	setmetatable(globalStrings, { __index = self , mode = "_v" })
 	return globalStrings
 end
@@ -116,14 +116,13 @@ function readStringsFile(self, fullPath, stringsTable)
 	stringsTable = stringsTable or {}
 	loadedFiles[fullPath] = stringsTable
 	setmetatable(stringsTable, { __index = globalStrings })
-	stringsTable = parseStringsFile(self, fullPath, stringsTable)
+	stringsTable = parseStringsFile(self, globalLocale, fullPath, stringsTable)
 
 	return stringsTable
 end
 
-function parseStringsFile(self, myFilePath, stringsTable)
+function parseStringsFile(self, myLocale, myFilePath, stringsTable)
 	local stringsFile = io.open(myFilePath)
-	local myLocale = globalLocale
 	if stringsFile == nil then
 		return stringsTable
 	end

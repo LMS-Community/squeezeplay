@@ -130,7 +130,8 @@ function _showLang(self, choice)
 		choice = self:getSettings().locale
 	end
 
-	locale:setLocale(choice)
+	-- this uses private data/methods from Applet and locale, but it's needed for speed
+	locale:parseStringsFile(choice, self._entry.stringsFilepath, self._stringsTable)
 	Framework:styleChanged()
 end
 
@@ -139,6 +140,9 @@ function setLang(self, choice)
 
 	self:_showLang(choice)
 	self:getSettings().locale = choice
+
+	locale:setLocale(choice)
+	Framework:styleChanged()
 end
 
 
