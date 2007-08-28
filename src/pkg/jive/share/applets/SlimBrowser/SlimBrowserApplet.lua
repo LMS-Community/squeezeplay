@@ -415,11 +415,14 @@ local function _performJSONAction(jsonAction, from, qty, sink)
 	-- look for __INPUT__ as a param value
 	local params = jsonAction["params"]
 	local newparams
+	local addFromQtyArgs = 1
 	if params then
 		newparams = {}
 		for k, v in pairs(params) do
 			if v == '__INPUT__' then
 				table.insert( newparams, _lastInput )
+			elseif k == 'noFromQtyArgs' then
+				addFromQtyArgs = nil
 			else
 				table.insert( newparams, k .. ":" .. v )
 			end
@@ -432,8 +435,10 @@ local function _performJSONAction(jsonAction, from, qty, sink)
 		table.insert(request, v)
 	end
 	
-	table.insert(request, from)
-	table.insert(request, qty)
+	if addFromQtyArgs then
+		table.insert(request, from)
+		table.insert(request, qty)
+	end
 	
 	if newparams then
 		for i, v in ipairs(newparams) do
