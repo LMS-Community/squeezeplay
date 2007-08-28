@@ -415,14 +415,11 @@ local function _performJSONAction(jsonAction, from, qty, sink)
 	-- look for __INPUT__ as a param value
 	local params = jsonAction["params"]
 	local newparams
-	local addFromQtyArgs = 1
 	if params then
 		newparams = {}
 		for k, v in pairs(params) do
 			if v == '__INPUT__' then
 				table.insert( newparams, _lastInput )
-			elseif k == 'noFromQtyArgs' then
-				addFromQtyArgs = nil
 			else
 				table.insert( newparams, k .. ":" .. v )
 			end
@@ -435,10 +432,8 @@ local function _performJSONAction(jsonAction, from, qty, sink)
 		table.insert(request, v)
 	end
 	
-	if addFromQtyArgs then
-		table.insert(request, from)
-		table.insert(request, qty)
-	end
+	table.insert(request, from)
+	table.insert(request, qty)
 	
 	if newparams then
 		for i, v in ipairs(newparams) do
@@ -1100,6 +1095,12 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 				
 				-- now we should perform the action !
 				_actionHandler(nil, nil, db, nil, nil, 'go', item)
+				-- close the text input if this is a "do"
+				local doAction = _safeDeref(item, 'actions', 'do')
+				if doAction then
+					-- close the window
+					window:hide()
+				end
 				return true
 			end,
 			inputSpec.allowedChars
