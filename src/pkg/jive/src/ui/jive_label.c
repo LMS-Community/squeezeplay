@@ -20,7 +20,8 @@ typedef struct label_widget {
 	Uint16 line_height;
 	Uint16 line_width;
 	Uint16 label_x, label_y; // label position
-	Uint16 label_w, label_h;
+	Uint16 label_w;
+	Uint16 icon_w;
 	JiveAlign text_align;
 	JiveAlign icon_align;
 	bool is_sh;
@@ -29,8 +30,9 @@ typedef struct label_widget {
 	JiveTile *bg_tile;
 
 	int scroll_offset;
-	Uint16 scroll_width;
+	Uint16 scroll_w;
 	Uint16 text_lines;
+	Uint16 text_w, text_h;
 	JiveSurface **text_sh;
 	JiveSurface **text_fg;
 } LabelWidget;
@@ -174,11 +176,10 @@ int jiveL_label_prepare(lua_State *L) {
 		lua_pop(L, 1);
 	}
 
-	peer->scroll_width = max_width;
-
 	/* text width and height */
-	peer->label_h = lines * peer->line_height;
-	peer->label_w = (peer->line_width == JIVE_WH_NIL) ? max_width :peer->line_width;
+	peer->text_h = lines * peer->line_height;
+	peer->text_w = (peer->line_width == JIVE_WH_NIL) ? max_width : peer->line_width;
+	peer->scroll_w = max_width;
 
 	return 0;
 }
@@ -186,6 +187,7 @@ int jiveL_label_prepare(lua_State *L) {
 
 int jiveL_label_layout(lua_State *L) {
 	LabelWidget *peer;
+	int wx = 0, wy = 0, ww = 0, wh = 0;
 
 	/* stack is:
 	 * 1: widget
@@ -193,50 +195,76 @@ int jiveL_label_layout(lua_State *L) {
 
 	peer = jive_getpeer(L, 1, &labelPeerMeta);
 
-	peer->label_x = jive_widget_halign((JiveWidget *)peer, peer->text_align, peer->label_w);
-	peer->label_y = jive_widget_valign((JiveWidget *)peer, peer->text_align, peer->label_h);
-
 	/* layout widget */
 	lua_getfield(L, 1, "widget");
 	if (!lua_isnil(L, -1)) {
-		int x, y, w, h;
-
-		x = peer->w.bounds.x;
-		y = peer->w.bounds.y;
-		w = 0;
-		h = 0;
+		wx = peer->w.bounds.x;
+		wy = peer->w.bounds.y;
+		ww = 0;
+		wh = 0;
 
 		if (jive_getmethod(L, -1, "getPreferredBounds")) {
 			lua_pushvalue(L, -2);
 			lua_call(L, 1, 4);
 
 			if (!lua_isnil(L, -4)) {
-				x = lua_tointeger(L, -4);
+				wx = lua_tointeger(L, -4);
 			}
 			if (!lua_isnil(L, -3)) {
-				y = lua_tointeger(L, -3);
+				wy = lua_tointeger(L, -3);
 			}
 			if (!lua_isnil(L, -2)) {
-				w = lua_tointeger(L, -2);
+				ww = lua_tointeger(L, -2);
 			}
 			if (!lua_isnil(L, -1)) {
-				h = lua_tointeger(L, -1);
+				wh = lua_tointeger(L, -1);
 			}
 
 			lua_pop(L, 4);
 		}
 
-		x = peer->w.bounds.x + jive_widget_halign((JiveWidget *)peer, peer->icon_align, w);
-		y = peer->w.bounds.y + jive_widget_valign((JiveWidget *)peer, peer->icon_align, h);
+		/* don't apply padding for the widget horizontal layout */
+		switch (peer->icon_align) {
+		default:
+		case JIVE_ALIGN_LEFT:
+		case JIVE_ALIGN_TOP_LEFT:
+		case JIVE_ALIGN_BOTTOM_LEFT:
+			wx = 0;
+			break;
+
+		case JIVE_ALIGN_CENTER:
+		case JIVE_ALIGN_TOP:
+		case JIVE_ALIGN_BOTTOM:
+			wx = (peer->w.bounds.w - ww) / 2;
+			break;
+
+		case JIVE_ALIGN_RIGHT:
+		case JIVE_ALIGN_TOP_RIGHT:
+		case JIVE_ALIGN_BOTTOM_RIGHT:
+			wx = peer->w.bounds.w - ww;
+			break;
+		}
+		wy = peer->w.bounds.y + jive_widget_valign((JiveWidget *)peer, peer->icon_align, wh);
 
 		if (jive_getmethod(L, -1, "setBounds")) {
 			lua_pushvalue(L, -2);
-			lua_pushinteger(L, x);
-			lua_pushinteger(L, y);
-			lua_pushinteger(L, w);
-			lua_pushinteger(L, h);
+			lua_pushinteger(L, wx);
+			lua_pushinteger(L, wy);
+			lua_pushinteger(L, ww);
+			lua_pushinteger(L, wh);
 			lua_call(L, 5, 0);
 		}
+	}
+
+	/* align the label, minus the widget width */
+	peer->w.bounds.w -= ww;
+	peer->label_x = jive_widget_halign((JiveWidget *)peer, peer->text_align, peer->text_w);
+	peer->label_y = jive_widget_valign((JiveWidget *)peer, peer->text_align, peer->text_h);
+	peer->label_w = peer->w.bounds.w - peer->w.padding.left - peer->w.padding.right;
+	peer->w.bounds.w += ww;
+
+	if (peer->icon_align == JIVE_ALIGN_LEFT) {
+		peer->label_x += ww;
 	}
 
 	return 0;
@@ -251,13 +279,13 @@ int jiveL_label_do_animate(lua_State *L) {
 	LabelWidget *peer = jive_getpeer(L, 1, &labelPeerMeta);
 
 	/* scroll? */
-	if (peer->scroll_width < peer->label_w - peer->w.padding.right) {
+	if (peer->scroll_w <= peer->label_w) {
 		return 0;
 	}
 
 	peer->scroll_offset++;
 
-	if (peer->scroll_offset > peer->scroll_width  + SCROLL_PAD_RIGHT) {
+	if (peer->scroll_offset > peer->scroll_w  + SCROLL_PAD_RIGHT) {
 		peer->scroll_offset = SCROLL_PAD_LEFT;
 	}
 
@@ -331,7 +359,7 @@ int jiveL_label_draw(lua_State *L) {
 	if (drawLayer && peer->bg_tile) {
 		jive_tile_blit(peer->bg_tile, srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.w, peer->w.bounds.h);
 
-		// jive_surface_boxColor(srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.x + peer->w.bounds.w-1, peer->w.bounds.y + peer->w.bounds.h-1, 0xFF00007F);
+		//jive_surface_boxColor(srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.x + peer->w.bounds.w-1, peer->w.bounds.y + peer->w.bounds.h-1, 0xFF00007F);
 	}
 
 	/* draw child widgets */
@@ -348,6 +376,7 @@ int jiveL_label_draw(lua_State *L) {
 	lua_getfield(L, 1, "text");
 	if (drawLayer && !lua_isnil(L, -1) && peer->font) {
 		Uint16 w, h, o, s;
+		Uint16 text_w;
 
 		y = peer->w.bounds.y + peer->label_y;
 
@@ -357,26 +386,28 @@ int jiveL_label_draw(lua_State *L) {
 
 			/* second text when scrolling */
 			o = (peer->scroll_offset < 0) ? 0 : peer->scroll_offset;
-			s = peer->scroll_width - o + SCROLL_PAD_RIGHT;
+			s = peer->scroll_w - o + SCROLL_PAD_RIGHT;
+
+			text_w = peer->label_w; // - peer->icon_w;
 
 			/* shadow text */
 			if (peer->text_sh[i]) {
-				jive_surface_blit_clip(peer->text_sh[i], o, 0, peer->label_w, h,
+				jive_surface_blit_clip(peer->text_sh[i], o, 0, text_w, h,
 						       srf, peer->w.bounds.x + peer->label_x + 1, y + 1);
 
-				if (o && s < peer->label_w) {
-					Uint16 len = MAX(0, peer->label_w - s);
+				if (o && s < text_w) {
+					Uint16 len = MAX(0, text_w - s);
 					jive_surface_blit_clip(peer->text_sh[i], 0, 0, len, h,
 							       srf, peer->w.bounds.x + peer->label_x + s + 1, y + 1);
 				} 
 			}
 
 			/* foreground text */
-			jive_surface_blit_clip(peer->text_fg[i], o, 0, peer->label_w, h,
+			jive_surface_blit_clip(peer->text_fg[i], o, 0, text_w, h,
 					       srf, peer->w.bounds.x + peer->label_x, y);
 
-			if (o && s < peer->label_w) {
-				Uint16 len = MAX(0, peer->label_w - s);
+			if (o && s < text_w) {
+				Uint16 len = MAX(0, text_w - s);
 				jive_surface_blit_clip(peer->text_fg[i], 0, 0, len, h,
 						       srf, peer->w.bounds.x + peer->label_x + s, y);
 			} 
@@ -385,9 +416,6 @@ int jiveL_label_draw(lua_State *L) {
 
 			lua_pop(L, 1);
 		}
-
-
-		//jive_surface_set_clip(srf, &old_clip);
 	}
 	lua_pop(L, 1);
 
@@ -410,8 +438,8 @@ int jiveL_label_get_preferred_bounds(lua_State *L) {
 
 	peer = jive_getpeer(L, 1, &labelPeerMeta);
 
-	w = peer->label_w + peer->w.padding.left + peer->w.padding.right;
-	h = peer->label_h + peer->w.padding.top + peer->w.padding.bottom;
+	w = peer->text_w + peer->w.padding.left + peer->w.padding.right;
+	h = peer->text_h + peer->w.padding.top + peer->w.padding.bottom;
 
 	lua_pushinteger(L, (peer->w.preferred_bounds.x == JIVE_XY_NIL) ? 0 : peer->w.preferred_bounds.x);
 	lua_pushinteger(L, (peer->w.preferred_bounds.y == JIVE_XY_NIL) ? 0 : peer->w.preferred_bounds.y);

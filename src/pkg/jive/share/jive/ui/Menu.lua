@@ -497,7 +497,7 @@ function _updateWidgets(self)
 	local nextSelected = _selectedItem(self)
 
 	-- clear selection and focus
-	if lastSelected ~= nextSelected or lastSelectedIndex ~= self.selected then
+	if lastSelected ~= nextSelected or self._lastSelectedIndex ~= self.selected then
 		if lastSelected then
 			lastSelected:setStyleModifier(nil)
 			lastSelected:dispatchNewEvent(EVENT_FOCUS_LOST)

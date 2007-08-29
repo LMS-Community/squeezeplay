@@ -600,7 +600,7 @@ end
 
 function _event(self, event)
 	local type = event:getType()
-	if type == EVENT_SHOW then
+	if type == EVENT_SHOW and not self.visible then
 		self.visible = true
 		if #self.animations > 0 then
 			Framework:_addAnimationWidget(self)
@@ -608,7 +608,7 @@ function _event(self, event)
 		for i,timer in ipairs(self.timers) do
 			timer:start()
 		end
-	elseif type == EVENT_HIDE then
+	elseif type == EVENT_HIDE and self.visible then
 		self.visible = false
 		if #self.animations > 0 then
 			Framework:_removeAnimationWidget(self)

@@ -155,8 +155,8 @@ int jiveL_icon_layout(lua_State *L) {
 	peer = jive_getpeer(L, 1, &iconPeerMeta);
 
 	if (peer->img) {
-		peer->offset_x = jive_widget_halign((JiveWidget *)peer, peer->align, peer->image_width);
-		peer->offset_y = jive_widget_valign((JiveWidget *)peer, peer->align, peer->image_height);
+		peer->offset_x = jive_widget_halign((JiveWidget *)peer, peer->align, peer->image_width) + peer->w.padding.left;
+		peer->offset_y = jive_widget_valign((JiveWidget *)peer, peer->align, peer->image_height) + peer->w.padding.top;
 	}
 
 	return 0;
@@ -226,6 +226,7 @@ int jiveL_icon_get_preferred_bounds(lua_State *L) {
 	if (peer->img) {
 		jive_surface_get_size(peer->img, &w, &h);
 		w /= peer->anim_total;
+		w += peer->w.padding.left + peer->w.padding.right;
 	}
 
 	if (peer->w.preferred_bounds.x == JIVE_XY_NIL) {

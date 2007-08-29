@@ -63,7 +63,7 @@ function menu(self, menuItem)
 	local menu = SimpleMenu("menu",
 		{
 			{ 
-				text = "Choice", 
+				text = "Choice, and some more text so that this item scrolls.", 
 				icon = Choice(
 				       "choice", 
 				       { "Off", "Low", "Medium", "High" },
@@ -78,7 +78,7 @@ function menu(self, menuItem)
 			       )
 			},
 			{
-				text = "RadioButton 1", 
+				text = "RadioButton 1, and some more text so that this item scrolls", 
 				icon = RadioButton(
 					"radio", 
 					group, 
@@ -172,7 +172,7 @@ function menu(self, menuItem)
 				end },
 		})
 
-	local window = Window("window", menuItem.text)
+	local window = Window("window", "This is a really long title to test the bounding box")
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

@@ -313,6 +313,7 @@ function skin(self, s)
 	s.item.choice.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
 	s.item.choice.fg = { 0xe7, 0xe7, 0xe7 }
 	s.item.choice.sh = { 0x37, 0x37, 0x37 }
+	s.item.choice.padding = { 0, 0, 10, 0 }
 
 	-- selected menu item choice
 	s.selected.item.choice.fg = { 0x37, 0x37, 0x37 }
@@ -348,11 +349,12 @@ function skin(self, s)
 	-- Checkbox
 	s.checkbox.imgOn = Surface:loadImage(imgpath .. "checkbox_on.png")
 	s.checkbox.imgOff = Surface:loadImage(imgpath .. "checkbox_off.png")
-
+	s.item.checkbox.padding = { 0, 0, 5, 0 }
 
 	-- Radio button
 	s.radio.imgOn = Surface:loadImage(imgpath .. "radiobutton_on.png")
 	s.radio.imgOff = Surface:loadImage(imgpath .. "radiobutton_off.png")
+	s.item.radio.padding = { 0, 0, 5, 0 }
 
 
 	-- Slider
@@ -480,6 +482,7 @@ function skin(self, s)
 	s.albumtitle.iconAlign = "left"
 	s.albumtitle.position = LAYOUT_NORTH
 	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
+	s.albumtitle.icon.padding = { 6, 0, 10, 0 }
 
 
 	-- menus with artwork and song info
@@ -491,10 +494,12 @@ function skin(self, s)
 	s.albumitem.h = 60
 	s.albumitem.padding = { 12, 8, 8, 8 }
 	s.albumitem.textW = screenWidth - 93
+	s.albumitem.lineHeight = 13
 	s.albumitem.font = Font:load(fontpath .. "FreeSansBold.ttf", 13)
 	s.albumitem.fg = { 0xe7, 0xe7, 0xe7 }
 	s.albumitem.sh = { 0x37, 0x37, 0x37 }
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
+	s.albumitem.icon.padding = { 6, 0, 10, 0 }
 	s.albumitem.textAlign = "top-right"
 	s.albumitem.iconAlign = "left"
 
@@ -512,31 +517,28 @@ function skin(self, s)
 
 
 	-- now playing menu item
-	s.albumcurrent.padding = 10
+	s.albumcurrent.padding = { 12, 8, 8, 8 }
 	s.albumcurrent.textW = screenWidth - 93
+	s.albumcurrent.lineHeight = 15
 	s.albumcurrent.font = Font:load(fontpath .. "FreeSansBold.ttf", 15)
 	s.albumcurrent.fg = { 0xe7, 0xe7, 0xe7 }
-	s.albumcurrent.sh = { 0xaa, 0xaa, 0xaa }
+	s.albumcurrent.sh = { 0x37, 0x37, 0x37 }
+	s.albumcurrent.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
+	s.albumcurrent.icon.padding = { 6, 0, 10, 0 }
 	s.albumcurrent.textAlign = "top-right"
 	s.albumcurrent.iconAlign = "left"
-
 
 	-- selected now playing menu item
 	s.selected.albumcurrent.fg = { 0x37, 0x37, 0x37 }
 	s.selected.albumcurrent.sh = { 0x33, 0x33, 0x33 }
 	s.selected.albumcurrent.sh = { }
 	s.selected.albumcurrent.bgImg = selectionBox
-	s.selected.albumcurrent.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
-
 
 	-- locked now playing menu item (with loading animation)
 	s.locked.albumcurrent.fg = { 0x37, 0x37, 0x37 }
 	s.locked.albumcurrent.sh = { 0xaa, 0xaa, 0xaa }
 	s.locked.albumcurrent.sh = { }
 	s.locked.albumcurrent.bgImg = selectionBox
-	s.locked.albumcurrent.icon.img = Surface:loadImage(imgpath .. "selection_wait.png")
-	s.locked.albumcurrent.icon.frameRate = 5
-	s.locked.albumcurrent.icon.frameWidth = 10
 
 	-- Popup window for current song info
 	s.currentsong.x = 0
@@ -545,7 +547,7 @@ function skin(self, s)
 	s.currentsong.h = 96
 	s.currentsong.bgImg = helpBox
 	s.currentsong.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
-	s.currentsong.icon.padding = { 14, -60, 4, 4 }
+	s.currentsong.icon.padding = { 6, -30, 4, 4 }
 	s.currentsong.text.w = screenWidth
 	s.currentsong.text.h = 72
 	s.currentsong.text.padding = { 74, 12, 4, 4 }
