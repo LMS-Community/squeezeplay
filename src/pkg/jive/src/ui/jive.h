@@ -16,10 +16,11 @@
 #include <SDL_rotozoom.h>
 
 
-/* target frame rate 20 fps - may be tuned per platform */
-#define JIVE_FRAME_RATE 20
+/* target frame rate 14 fps - may be tuned per platform, should be /2 */
+#define JIVE_FRAME_RATE 14
 
-
+/* print profile information for blit's */
+#undef JIVE_PROFILE_BLIT
 
 typedef unsigned int bool;
 #define true 1

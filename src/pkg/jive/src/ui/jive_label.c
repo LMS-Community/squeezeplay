@@ -288,7 +288,7 @@ int jiveL_label_animate(lua_State *L) {
 		jive_getmethod(L, 1, "addAnimation");
 		lua_pushvalue(L, 1);
 		lua_pushcfunction(L, &jiveL_label_do_animate);
-		lua_pushinteger(L, 15); // 15 fps
+		lua_pushinteger(L, 14); // 14 fps
 		lua_call(L, 3, 1);
 		lua_setfield(L, 1, "_animationHandle");
 	}

@@ -97,14 +97,14 @@ JiveSurface *jive_surface_ref(JiveSurface *srf) {
 /*
  * Convert image to best format for display on the screen
  */
-JiveSurface *jive_surface_display_format(JiveSurface *srf, bool is_alpha) {
+static JiveSurface *jive_surface_display_format(JiveSurface *srf) {
 	SDL_Surface *sdl;
 
 	if (srf->sdl == NULL) {
 		return srf;
 	}
 
-	if (is_alpha) {
+	if (srf->sdl->format->Amask) {
 		sdl = SDL_DisplayFormatAlpha(srf->sdl);
 	}
 	else {
@@ -144,7 +144,7 @@ JiveSurface *jive_surface_load_image(const char *path) {
 	srf->refcount = 1;
 	srf->sdl = sdl;
 
-	return jive_surface_display_format(srf, true);
+	return jive_surface_display_format(srf);
 }
 
 
@@ -156,7 +156,7 @@ JiveSurface *jive_surface_load_image_data(const char *data, size_t len) {
 	srf->refcount = 1;
 	srf->sdl = sdl;
 
-	return jive_surface_display_format(srf, false);
+	return jive_surface_display_format(srf);
 }
 
 int jive_surface_save_bmp(JiveSurface *srf, const char *file) {
@@ -221,19 +221,39 @@ void jive_surface_flip(JiveSurface *srf) {
 }
 
 void jive_surface_blit(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint16 dy) {
+#ifdef JIVE_PROFILE_BLIT
+	Uint32 t0 = SDL_GetTicks(), t1;
+#endif //JIVE_PROFILE_BLIT
+
 	SDL_Rect dr;
 	dr.x = dx + dst->offset_x;
 	dr.y = dy + dst->offset_y;
+
 	SDL_BlitSurface(src->sdl, 0, dst->sdl, &dr);
+
+#ifdef JIVE_PROFILE_BLIT
+	t1 = SDL_GetTicks();
+	printf("\tjive_surface_blit took=%d\n", t1-t0);
+#endif //JIVE_PROFILE_BLIT
 }
 
 
 void jive_surface_blit_clip(JiveSurface *src, Uint16 sx, Uint16 sy, Uint16 sw, Uint16 sh,
 			  JiveSurface* dst, Uint16 dx, Uint16 dy) {
+#ifdef JIVE_PROFILE_BLIT
+	Uint32 t0 = SDL_GetTicks(), t1;
+#endif //JIVE_PROFILE_BLIT
+
 	SDL_Rect sr, dr;
 	sr.x = sx; sr.y = sy; sr.w = sw; sr.h = sh;
 	dr.x = dx + dst->offset_x; dr.y = dy + dst->offset_y;
+
 	SDL_BlitSurface(src->sdl, &sr, dst->sdl, &dr);
+
+#ifdef JIVE_PROFILE_BLIT
+	t1 = SDL_GetTicks();
+	printf("\tjive_surface_blit took=%d\n", t1-t0);
+#endif //JIVE_PROFILE_BLIT
 }
 
 

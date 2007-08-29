@@ -294,7 +294,7 @@ static int jiveL_process_events(lua_State *L) {
 
 int jiveL_update_screen(lua_State *L) {
 	JiveSurface *srf;
-	Uint32 t0 = 0, t1 = 0, t2 = 0, t3 = 0;
+	Uint32 t0 = 0, t1 = 0, t2 = 0, t3 = 0, t4 = 0;
 
 	JIVEL_STACK_CHECK_BEGIN(L);
 
@@ -395,6 +395,7 @@ int jiveL_update_screen(lua_State *L) {
 		lua_pushvalue(L, 2);	// surface
 		lua_call(L, 2, 0);
 		
+		t3 = SDL_GetTicks();
 		jive_surface_flip(srf);
 	}
 	else if (jive_dirty_region.w) {
@@ -420,13 +421,14 @@ int jiveL_update_screen(lua_State *L) {
 		jive_dirty_region.w = 0;
 
 		/* Flip buffer */
+		t3 = SDL_GetTicks();
 		jive_surface_flip(srf);
 	}
 
 	if (perfwarn.screen) {
-		t3 = SDL_GetTicks();
-		if (t3-t0 > perfwarn.screen) 
-			printf("update_screen > %dms: %4dms [layout:%dms animate:%dms draw:%dms]\n", perfwarn.screen, t3-t0, t1-t0, t2-t1, t3-t2);
+		t4 = SDL_GetTicks();
+		if (t4-t0 > perfwarn.screen) 
+			printf("update_screen > %dms: %4dms [layout:%dms animate:%dms draw:%dms flip:%dms]\n", perfwarn.screen, t4-t0, t1-t0, t2-t1, t3-t2, t4-t3);
 	}
 	
 	lua_pop(L, 4);

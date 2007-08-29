@@ -199,7 +199,7 @@ function JiveMain:__init()
 	jiveMain:reload()
 
 	-- debug: set event warning thresholds
-	jive.ui.Framework:perfwarn({ screen = 100, event = 50, queue = 5 })
+	jive.ui.Framework:perfwarn({ screen = 50, event = 50, queue = 5 })
 
 	-- event loop
 	jive.ui.Framework:processEvents()

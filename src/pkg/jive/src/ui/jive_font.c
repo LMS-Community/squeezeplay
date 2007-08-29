@@ -163,13 +163,23 @@ static int width_ttf_font(JiveFont *font, const char *str) {
 }
 
 static SDL_Surface *draw_ttf_font(JiveFont *font, Uint32 color, const char *str) {
+#ifdef JIVE_PROFILE_BLIT
+	Uint32 t0 = SDL_GetTicks(), t1;
+#endif //JIVE_PROFILE_BLIT
 	SDL_Color clr;
 
 	clr.r = (color >> 24) & 0xFF;
 	clr.g = (color >> 16) & 0xFF;
 	clr.b = (color >> 8) & 0xFF;
 
-	return TTF_RenderUTF8_Blended(font->ttf, str, clr);
+	SDL_Surface *srf = TTF_RenderUTF8_Blended(font->ttf, str, clr);
+
+#ifdef JIVE_PROFILE_BLIT
+	t1 = SDL_GetTicks();
+	printf("\tdraw_ttf_font took=%d %s\n", t1-t0, str);
+#endif //JIVE_PROFILE_BLIT
+
+	return srf;
 }
 
 JiveSurface *jive_font_draw_text(JiveFont *font, Uint32 color, const char *str) {
