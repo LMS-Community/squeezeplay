@@ -270,7 +270,11 @@
 		Array of command terms, f.e. <code>['playlist', 'jump']</code></p>
 
 		<p><code>params</code><br>
-		Hash of parameters, f.e. <code>{sort = new}</code>. The value "__INPUT__" is replaced by any user entered data.</p>
+		Hash of parameters, f.e. <code>{sort = new}</code>. Passed to the server in the form "key:value", f.e. 'sort:new'. <p> 
+	<ul><li>The value "__INPUT__" is replaced by any user entered data.</li>
+	<li>The value "__TAGGEDINPUT__" is replaced by user entered data in a "key:value" format.
+		For example, the param foo = "__TAGGEDINPUT__" would be replaced by 'foo:&lt;user-entered input&gt;'</li>
+	</ul></p>
 
 		<p><code>itemParams</code><br>
 		In base level commands, this defines the name of the field in the item <a href="#action_fields">&lt;actions_fields&gt;</a> that must be used to complete the command for a particular item. See the example below.</p>
@@ -382,8 +386,8 @@
                 go = {
                     cmd = ['search'],
                     params = {
-                        // __INPUT__ will be replaced by the entered text
-                        what = '__INPUT__',
+                        // __TAGGEDINPUT__ will be replaced by the entered text in the form "search:<user-entered text>"
+                        search = '__TAGGEDINPUT__',
                         tags = 'blabla',
                         menu = 'tracks',
                     }
@@ -482,6 +486,11 @@
 
 	<h2 id="rev">Revision history</h2>
 
+	<h3>1.3</h3>
+
+	<ul>
+		<li>Added support for __TAGGEDINPUT__ param, sends data in 'k:v' format, where v is user-entered text</li>
+	</ul>
 	<h3>1.2</h3>
 
 	<ul>
