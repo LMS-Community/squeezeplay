@@ -142,6 +142,10 @@ function menu(self, menuItem)
 				callback = function(event, menuItem)
 					self:hexinputWindow(menuItem)
 				end },
+			{ text = "Time input",
+				callback = function(event, menuItem)
+					self:timeinputWindow(menuItem)
+				end },
 			{ text = "IP input",
 				callback = function(event, menuItem)
 					self:ipinputWindow(menuItem)
@@ -284,6 +288,26 @@ function textinputWindow(self, menuItem)
 	return window
 end
 
+
+function timeinputWindow(self, menuItem)
+	local window = Window("window", menuItem.text)
+
+	local v = Textinput.timeValue("00:00")
+	local input = Textinput("textinput", v,
+				function(_, value)
+					log:warn("Input " .. value:getValue())
+					window:hide(Window.transitionPushLeft)
+					return true
+				end)
+
+	local help = Textarea("help", "Input of Time (24h)")
+
+	window:addWidget(help)
+	window:addWidget(input)
+
+	self:tieAndShowWindow(window)
+	return window
+end
 
 function hexinputWindow(self, menuItem)
 	local window = Window("window", menuItem.text)

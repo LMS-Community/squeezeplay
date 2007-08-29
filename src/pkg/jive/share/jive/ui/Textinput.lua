@@ -301,6 +301,79 @@ end
 
 --[[
 
+=head2 jive.ui.Textinput.timeValue(default)
+
+Returns a value that can be used for entering time setting
+
+=cut
+--]]
+function timeValue(default)
+	local obj = {}
+	setmetatable(obj, {
+			     __tostring =
+				     function(e)
+					     return table.concat(e, ":")
+				     end,
+
+			     __index = {
+				     setValue =
+					     function(value, str)
+						     local i = 1
+						     for dd in string.gmatch(str, "(%d+)") do
+							     local n = tonumber(dd)
+							     if n > 23 and i == 1 then i = 0 end
+							     value[i] = string.format("%02d", n)
+							     i = i + 1
+							     if i > 2 then break end
+						     end
+					     end,
+
+				     getValue =
+					     function(value)
+						     -- remove leading zeros
+						     local norm = {}
+						     for i,v in ipairs(value) do
+							     norm[i] = tostring(tonumber(v))
+						     end
+						     return table.concat(norm, ":")
+					     end,
+
+                                     getChars = 
+                                             function(value, cursor)
+							local v = tonumber(value[math.floor(cursor/3)+1])
+							if cursor == 1 then
+								return "012"
+							elseif cursor == 2 then
+								if v > 19 then
+									return "0123"
+								else
+									return "0123456789"
+								end
+							elseif cursor == 3 then
+								return ""
+							elseif cursor == 4 then
+								return "012345"
+							elseif cursor == 5 then
+								return "0123456789"
+							end
+                                             end,
+
+				     isEntered =
+					     function(value, cursor)
+						     return cursor == 6
+					     end
+			     }
+		     })
+
+	if default then
+		obj:setValue(default)
+	end
+
+	return obj
+end
+
+--[[
+
 =head2 jive.ui.Textinput.hexValue(default)
 
 Returns a value that can be used for entering an hexadecimal value.
