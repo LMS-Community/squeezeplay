@@ -207,9 +207,9 @@ local function _openVolumePopup(vol)
 			end
 
 			if vol > 0 or vol < 0 then
-				volume = volume + rate
-				if volume > 100 then volume = 100 elseif volume < 0 then volume = 0 end
-				_player:volume(volume)
+				local new = volume + rate
+				if new > 100 then new = 100 elseif new < 0 then new = 0 end
+				volume = _player:volume(new) or volume
 				slider:setValue(volume)
 			end
 

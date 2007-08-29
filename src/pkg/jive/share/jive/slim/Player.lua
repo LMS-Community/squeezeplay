@@ -633,8 +633,10 @@ function volume(self, vol, send)
 		log:debug("Sending player:volume(", vol, ")")
 		self.mixerId = self:call({'mixer', 'volume', vol })
 		self.mixerTo = now + KEY_TIMEOUT
+		return vol
 	else
 		log:debug("Suppressing player:volume(", vol, ")")
+		return nil
 	end
 end
 
