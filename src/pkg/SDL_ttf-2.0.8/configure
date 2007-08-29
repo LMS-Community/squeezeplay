@@ -23541,7 +23541,7 @@ eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
 
-have_opengl=no
+have_opengl=yes_disabled
 
 else
   echo "$as_me: failed program was:" >&5

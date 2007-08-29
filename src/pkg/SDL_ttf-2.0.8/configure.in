@@ -152,7 +152,7 @@ AC_TRY_COMPILE([
 ],[
  GLuint texture;
 ],[
-have_opengl=yes
+have_opengl=yes_disabled
 ])
 AC_MSG_RESULT($have_opengl)
 if test x$have_opengl = xyes; then
