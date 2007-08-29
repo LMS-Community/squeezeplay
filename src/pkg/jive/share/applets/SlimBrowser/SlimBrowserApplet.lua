@@ -176,13 +176,15 @@ local function _openVolumePopup(vol)
 
 --	log:debug("_openVolumePopup START ------------------- (", vol, ")")
 
-	local popup = Popup("popup")
+	local volume = _player:getVolume()
+
+	local popup = Popup("volumePopup")
 
 	local label = Label("title", "Volume")
 	popup:addWidget(label)
 
 	local slider = Slider("volume")
-	slider:setRange(-1, 100, _player:getVolume())
+	slider:setRange(-1, 100, volume)
 	popup:addWidget(slider)
 	popup:addWidget(Icon("iconVolumeMin"))
 	popup:addWidget(Icon("iconVolumeMax"))
@@ -194,11 +196,6 @@ local function _openVolumePopup(vol)
 	local timer = Timer(200,
 		function()
 --			log:debug("_openVolumePopup - timer ", timer)
-
-			if vol > 0 or vol < 0 then
-				slider:setValue(_player:volume(rate))
-			end
-			popup:showBriefly()
 			
 			cnt = cnt + 1
 			if cnt > 10 then
@@ -208,6 +205,15 @@ local function _openVolumePopup(vol)
 			else
 				rate = 2 * vol
 			end
+
+			if vol > 0 or vol < 0 then
+				volume = volume + rate
+				if volume > 100 then volume = 100 elseif volume < 0 then volume = 0 end
+				_player:volume(volume)
+				slider:setValue(volume)
+			end
+
+			popup:showBriefly()
 		end
 	)
 
@@ -242,16 +248,22 @@ local function _openVolumePopup(vol)
 				-- stop volume timer
 --				log:debug("stop timer (listener) ", timer)
 				timer:stop()
+				-- ensure we send an update for the final volume setting
+				_player:volume(volume, true)
 			elseif evtType == EVENT_KEY_DOWN then
 				-- start volume timer
 --				log:debug("start timer (listener) ", timer)
-				timer:start()
+				timer.callback()
+				timer:restart()
 			end
 
 			-- make sure we don't hide popup
 			return EVENT_CONSUME
 		end
 	)
+
+	-- we handle events
+	popup.brieflyHandler = 1
 
 	popup:showBriefly(2000,
 		function()
@@ -266,20 +278,8 @@ local function _openVolumePopup(vol)
 		Window.transitionPushPopupLeft
 	)
 
-	-- start the timer
-	if vol > 0 then
---		_player:button('volume_up')
---		_player:volumeUp()
-		_player:volume(1)
---		log:debug("start timer ", timer)
-		timer:start()
-	elseif vol < 0 then
---		_player:button('volume_down')
---		_player:volumeDown()
-		_player:volume(-1)
---		log:debug("start timer ", timer)
-		timer:start()
-	end
+	timer:start()
+
 --	log:debug("_openVolumePopup END --------------------------")
 end
 

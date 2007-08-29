@@ -53,6 +53,8 @@ local iconbar        = iconbar
 
 local fmt = string.format
 
+local KEY_TIMEOUT    = 1000  -- send repeat keypresses every second when no responses received
+
 -- jive.slim.Player is a base class
 module(..., oo.class)
 
@@ -373,9 +375,6 @@ end
 -- receives the status data
 function _process_status(self, event)
 	log:debug("Player:_process_playerstatus()")
-	if self.state then
-		log:debug("-------------------------Player:volume: ", self.state["mixer volume"], " - " , event["mixer volume"])
-	end
 	
 	-- update our cache in one go
 	self.state = event.data
@@ -622,34 +621,21 @@ end
 
 
 function _process_mixer(self, event)
---	log:debug("_process_ir()")
---	log:debug("id:", data["id"], " waiting on:", self.irId)
 	if event.id == self.mixerId then
---		log:debug("cleared")
-		self.mixerId = false
---		log:warn("Mixer round trip:", _t() - self.mixerT)
+		self.mixerTo = nil
 	end
 end
 
-function volume(self, amount)
 
-	local vol = self.state["mixer volume"]
-	
-	if not self.mixerId then
-		log:debug("Player:volume(", amount, ")")
-		
---		self.mixerT = _t()
-		self.mixerId = self:call({'mixer', 'volume', fmt("%+d", amount)})
-		
-		vol = vol + amount
-		if vol > 100 then vol = 100 elseif vol < 0 then vol = 0 end
-		self.state["mixer volume"] = vol
-		
---	else
---		log:debug("(Player:volume(", amount, "))")
+function volume(self, vol, send)
+	local now = Framework:getTicks()
+	if self.mixerTo == nil or self.mixerTo < now or send then
+		log:debug("Sending player:volume(", vol, ")")
+		self.mixerId = self:call({'mixer', 'volume', vol })
+		self.mixerTo = now + KEY_TIMEOUT
+	else
+		log:debug("Suppressing player:volume(", vol, ")")
 	end
-	
-	return vol
 end
 
 
@@ -658,8 +644,6 @@ function getVolume(self)
 		return self.state["mixer volume"] or 0
 	end
 end
-
-
 
 
 function getConnected(self)

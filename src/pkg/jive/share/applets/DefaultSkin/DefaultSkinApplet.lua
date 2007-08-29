@@ -453,21 +453,28 @@ function skin(self, s)
 
 	s.iconVolumeMin.img = Surface:loadImage(imgpath .. "icon_volume_min.png")
 	s.iconVolumeMin.position = LAYOUT_NONE
-	s.iconVolumeMin.x = 10
-	s.iconVolumeMin.y = 40
+	s.iconVolumeMin.x = 16
+	s.iconVolumeMin.y = 34
 
 	s.iconVolumeMax.img = Surface:loadImage(imgpath .. "icon_volume_max.png")
 	s.iconVolumeMax.position = LAYOUT_NONE
-	s.iconVolumeMax.x = 185
-	s.iconVolumeMax.y = 40
+	s.iconVolumeMax.x = 208
+	s.iconVolumeMax.y = 33
 
-	s.volume.x = 25
-	s.volume.w = 156
-	s.volume.border = { 30, 0, 35, 25 }
+	s.volume.border = { 45, 0, 45, 25 }
 	s.volume.horizontal = 1
 	s.volume.img = volumeBar
 	s.volume.bgImg = volumeBackground
 
+	s.volumePopup.x = 0
+	s.volumePopup.y = screenHeight - 80
+	s.volumePopup.w = screenWidth
+	s.volumePopup.h = 80
+	s.volumePopup.bgImg = helpBox
+	s.volumePopup.title.fg = { 0xff, 0xff, 0xff }
+	s.volumePopup.title.font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
+	s.volumePopup.title.textAlign = "center"
+	s.volumePopup.title.bgImg = false
 
 	-- titles with artwork and song info
 	s.albumtitle.w = screenWidth
