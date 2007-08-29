@@ -420,6 +420,8 @@ local function _performJSONAction(jsonAction, from, qty, sink)
 		for k, v in pairs(params) do
 			if v == '__INPUT__' then
 				table.insert( newparams, _lastInput )
+			elseif v == '__TAGGEDINPUT__' then
+				table.insert( newparams, k .. ":" .. _lastInput )
 			else
 				table.insert( newparams, k .. ":" .. v )
 			end
