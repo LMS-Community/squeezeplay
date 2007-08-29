@@ -154,6 +154,10 @@ function __init(self, sink, method, uri, options)
 	})
 end
 
+-- return the parsed URI table
+function getURI(self)
+	return self.t_httpRequest.uri
+end
 
 -- t_hasBody
 -- returns if the request has a body to send, i.e. is POST

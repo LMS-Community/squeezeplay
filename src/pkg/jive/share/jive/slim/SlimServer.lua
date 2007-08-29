@@ -42,6 +42,7 @@ local HttpPool    = require("jive.net.HttpPool")
 local Player      = require("jive.slim.Player")
 local Surface     = require("jive.ui.Surface")
 local RequestHttp = require("jive.net.RequestHttp")
+local SocketHttp  = require("jive.net.SocketHttp")
 
 local log         = require("jive.utils.log").logger("slimserver")
 local logcache    = require("jive.utils.log").logger("slimserver.cache")
@@ -384,14 +385,14 @@ end
 
 -- _getArworkThumbSink
 -- returns a sink for artwork so we can cache it as Surface before sending it forward
-local function _getArtworkThumbSink(self, iconId)
+local function _getArtworkThumbSink(self, iconId, size)
 
 	local icons = self.artworkThumbIcons
 
 	return function(chunk, err)
 		-- on error, print something...
 		if err then
-			logcache:error("_getArtworkThumbSink(", iconId, "):", err)
+			logcache:error("_getArtworkThumbSink(", iconId, ") error: ", err)
 		end
 		-- if we have data
 		if chunk then
@@ -399,6 +400,18 @@ local function _getArtworkThumbSink(self, iconId)
 			
 			-- create a surface
 			local artwork = Surface:loadImageData(chunk, #chunk)
+			
+			-- Resize image if we have a size arg
+			if size then
+				local w, h = artwork:getSize()
+				if w > 0 then
+					artwork = artwork:rotozoom(0, size / w, 1)
+					if logcache:isDebug() then
+						local wnew, hnew = artwork:getSize()
+						logcache:debug("Resized artwork from ", w, "x", h, " to ", wnew, "x", hnew)
+					end
+				end
+			end
 			
 			-- set it to all icons waiting for it
 			for i, icon in ipairs(icons[iconId]) do
@@ -462,7 +475,7 @@ function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, priority)
 	-- no luck, generate a request for the artwork
 	local req = RequestHttp(
 		_getArtworkThumbSink(self, iconId), 
-		'GET', 
+		'GET',
 		uriGenerator(iconId)
 	)
 	-- remember the icon
@@ -474,6 +487,56 @@ function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, priority)
 	else
 		self.jpool:queue(req)
 	end
+end
+
+--[[
+
+=head2 jive.slim.SlimServer:fetchArtworkURL(url, icon, size)
+
+Same as fetchArtworkThumb except it fetches the artwork from a remote URL.
+This method is in the SlimServer class so it can reuse the other artwork code.
+
+=cut
+--]]
+function fetchArtworkURL(self, url, icon, size)
+	logcache:debug(self, ":fetchArtworkURL(", url, ")")
+
+	if logcache:isDebug() then
+		_dumpArtworkThumbCache(self)
+	end
+
+	-- do we have the artwork in the cache
+	local artwork = self.artworkThumbCache[url]
+	if artwork then
+		logcache:debug("..artwork in cache")
+		icon:setImage(artwork)
+		return
+	end
+	
+	-- are we requesting it already?
+	local icons = self.artworkThumbIcons[url]
+	if icons then
+		logcache:debug("..artwork already requested")
+		table.insert(icons, icon)
+		return
+	end
+	
+	-- no luck, generate a request for the artwork
+	local req = RequestHttp(
+		_getArtworkThumbSink(self, url, size), 
+		'GET',
+		url
+	)
+	
+	-- remember the icon
+	self.artworkThumbIcons[url] = {icon}
+	logcache:debug("..fetching artwork")
+
+	-- connect to the remote server
+	local uri  = req:getURI()
+	local http = SocketHttp(self.jnt, uri.host, uri.port, uri.host)
+	
+	http:fetch(req)
 end
 
 

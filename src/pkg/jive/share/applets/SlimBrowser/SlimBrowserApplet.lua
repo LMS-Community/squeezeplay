@@ -321,10 +321,15 @@ local function _artworkItem(item)
 		-- keep the icon, but be smart, remember if we have no artwork to display!
 		item["_jive_icon"] = false
 	
-		local iconId = item["icon-id"]
-		if iconId then
+		if item["icon-id"] then
+			-- Fetch an image from SlimServer
 			icon = Icon("icon")
-			_server:fetchArtworkThumb(iconId, icon, _artworkThumbUri)
+			_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri)
+			item["_jive_icon"] = icon
+		elseif item["icon"] then
+			-- Fetch a remote image URL, sized to 50x50
+			icon = Icon("icon")
+			_server:fetchArtworkURL(item["icon"], icon, 50)
 			item["_jive_icon"] = icon
 		end
 	
