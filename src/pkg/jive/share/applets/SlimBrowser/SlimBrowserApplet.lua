@@ -744,6 +744,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 			actionName = 'do'
 		end
 		
+		-- XXX: Fred: After an input box is used, chunk is nil, so base can't be used
 	
 		if iAction or bAction then
 	
