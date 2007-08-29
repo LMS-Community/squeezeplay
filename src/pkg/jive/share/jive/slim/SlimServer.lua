@@ -404,7 +404,7 @@ local function _getArtworkThumbSink(self, iconId, size)
 			-- Resize image if we have a size arg
 			if size then
 				local w, h = artwork:getSize()
-				if w > 0 then
+				if w > size then
 					artwork = artwork:rotozoom(0, size / w, 1)
 					if logcache:isDebug() then
 						local wnew, hnew = artwork:getSize()
