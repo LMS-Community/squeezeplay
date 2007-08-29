@@ -802,6 +802,9 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 							for k,v in pairs(iParams) do
 								params[k] = v
 							end
+						else
+							log:debug("No ", paramName, " entry in item, no action taken")
+							return EVENT_UNUSED
 						end
 					end
 				end
