@@ -167,12 +167,13 @@ static SDL_Surface *draw_ttf_font(JiveFont *font, Uint32 color, const char *str)
 	Uint32 t0 = SDL_GetTicks(), t1;
 #endif //JIVE_PROFILE_BLIT
 	SDL_Color clr;
+	SDL_Surface *srf;
 
 	clr.r = (color >> 24) & 0xFF;
 	clr.g = (color >> 16) & 0xFF;
 	clr.b = (color >> 8) & 0xFF;
 
-	SDL_Surface *srf = TTF_RenderUTF8_Blended(font->ttf, str, clr);
+	srf = TTF_RenderUTF8_Blended(font->ttf, str, clr);
 
 #ifdef JIVE_PROFILE_BLIT
 	t1 = SDL_GetTicks();
