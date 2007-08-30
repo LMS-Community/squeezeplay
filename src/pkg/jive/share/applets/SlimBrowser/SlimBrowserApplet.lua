@@ -41,6 +41,7 @@ local Textarea         = require("jive.ui.Textarea")
 local RadioGroup       = require("jive.ui.RadioGroup")
 local RadioButton      = require("jive.ui.RadioButton")
 local Checkbox         = require("jive.ui.Checkbox")
+local DateTime         = require("jive.utils.datetime")
 
 local DB               = require("applets.SlimBrowser.DB")
 
@@ -426,7 +427,13 @@ local function _performJSONAction(jsonAction, from, qty, sink)
 			if v == '__INPUT__' then
 				table.insert( newparams, _lastInput )
 			elseif v == '__TAGGEDINPUT__' then
-				table.insert( newparams, k .. ":" .. _lastInput )
+				if k == 'time' then
+					local _secondsFromMidnight = DateTime:secondsFromMidnight(_lastInput)
+					log:debug("SECONDS FROM MIDNIGHT", _secondsFromMidnight)
+					table.insert( newparams, k .. ":" .. _secondsFromMidnight )
+				else 
+					table.insert( newparams, k .. ":" .. _lastInput )
+				end
 			else
 				table.insert( newparams, k .. ":" .. v )
 			end
@@ -1088,11 +1095,15 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		if not inputSpec.allowedChars then
 			inputSpec.allowedChars = " abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:\\\"'<>?-=,./~`[];0123456789"
 		end
-
+		local v = ""
+		local inputType = _safeDeref(item, 'input', 'inputType')
+		if inputType == 'time' then
+			v = Textinput.timeValue("00:00")
+		end
 		-- create a text input
 		local input = Textinput(
 			"textinput", 
-			"",
+			v,
 			function(_, value)
 				-- check for min number of chars
 				if #value < inputSpec.len then
@@ -1100,7 +1111,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 				end
 
 				
-				log:debug("Input: " .. value)
+				log:debug("Input: " , value)
 				_lastInput = value
 				item['_inputDone'] = value
 				

@@ -22,13 +22,14 @@ getAllTimeZones(self)
 setTimeZone(self, timezone)
 setHours(self, hours)
 getHours(self)
+secondsFromMidnight(self, hhmm)
 
 =cut
 --]]
 
 
 -- stuff we use
-local ipairs, pairs, assert, io, select, setmetatable, string = ipairs, pairs, assert, io, select, setmetatable, string
+local ipairs, pairs, assert, io, select, setmetatable, string, tonumber, tostring = ipairs, pairs, assert, io, select, setmetatable, string, tonumber, tostring
 local type = type
 local os = os
 
@@ -225,3 +226,28 @@ function getHours(self)
 	return globalHours
 end
 
+--[[
+=head2 secondsFromMidnight()
+
+Takes hhmm format and returns seconds from midnight
+
+=cut
+--]]
+function secondsFromMidnight(self, hhmm)
+	local timeElements = {}
+	local i = 1
+	local secondsFromMidnight = 0
+	local _hhmm = tostring(hhmm)
+	for element in string.gmatch(_hhmm, "(%d%d)") do
+		-- element 1 is hh, element 2 is mm
+		timeElements[i] = tonumber(element)
+		i = i+1
+	end
+	-- punt if this isn't a valid hh mm array
+	if (timeElements[1] > 23 or timeElements[2] > 59) then
+		return secondsFromMidnight
+	end
+
+	secondsFromMidnight = (timeElements[1] * 3600) + (timeElements[2] * 60)
+	return secondsFromMidnight
+end

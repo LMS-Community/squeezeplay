@@ -340,6 +340,7 @@ function timeValue(default)
 
                                      getChars = 
                                              function(value, cursor)
+							if cursor == 6 then return "" end
 							local v = tonumber(value[math.floor(cursor/3)+1])
 							if cursor == 1 then
 								return "012"
@@ -360,7 +361,7 @@ function timeValue(default)
 
 				     isEntered =
 					     function(value, cursor)
-						     return cursor == 6
+						    return cursor == 5
 					     end
 			     }
 		     })
