@@ -491,15 +491,30 @@ function request(self, func, playerid, request)
 			id           = self.reqid,
 			data         = cmd
 		} }
+		
+		-- Requests can be sent that don't want a response
+		-- to save CPU time on Jive.  'no-response' tells the
+		-- server to send only a minimal HTTP response that we
+		-- will then ignore
+		if not func then
+			data[1]["ext"] = {
+				["no-response"] = 1
+			}
+		end
 	
 		local options = {
 			headers = {
 				['Content-Type'] = 'text/json',
 			}
-		}	
+		}
+		
+		local sink = nil
+		if func then
+			sink = _getRequestSink(self, func, self.reqid)
+		end
 	
 		local req = CometRequest(
-			_getRequestSink(self, func, self.reqid),
+			sink,
 			self.uri,
 			data,
 			options
@@ -507,13 +522,18 @@ function request(self, func, playerid, request)
 	
 		self.jpool:queuePriority(req)
 	
-		-- If the request is async, we will get the response on the persistent
-		-- connection.  Store our callback until we know if it's async or not
-		local subscription = '/slim/request|' .. self.reqid
-		if not self.notify[subscription] then
-			self.notify[subscription] = {}
+		-- If we expect a response, and the request is async, we will get the 
+		-- response on the persistent connection.  Store our callback until we
+		-- know if it's async or not
+		if func then
+			local subscription = '/slim/request|' .. self.reqid
+			if not self.notify[subscription] then
+				self.notify[subscription] = {}
+			end
+			table.insert( self.notify[subscription], func )
+		else
+			log:debug('  No sink defined for this request, no response will be received')
 		end
-		table.insert( self.notify[subscription], func )
 	end
 	
 	-- Bump reqid for the next request
