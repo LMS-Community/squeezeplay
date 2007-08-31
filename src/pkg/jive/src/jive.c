@@ -248,6 +248,14 @@ static void paths_setup(lua_State *L, char *app) {
 		luaL_addstring(&b, path);
 		luaL_addstring(&b, DIR_SEPARATOR_STR "?" DIR_SEPARATOR_STR "core." LIBRARY_EXT ";");
 
+		// cpath relative to executable
+		strcpy(temp, binpath);
+		strcat(temp, "/" LUA_DEFAULT_PATH);
+		realpath(temp, path);
+
+		luaL_addstring(&b, path);
+		luaL_addstring(&b, DIR_SEPARATOR_STR "?." LIBRARY_EXT ";");
+
 		// set lua cpath
 		luaL_pushresult(&b);
 
