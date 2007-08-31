@@ -13,6 +13,7 @@ TODO
 Notifications:
 
  playerConnected:
+ playerNewName:
  playerDisconnected:
  playerNew (performed by SlimServer)
  playerDelete (performed by SlimServer)
@@ -89,12 +90,25 @@ local function _setConnected(self, connected)
 	
 	-- use tostring to handle nil case (in either)
 	if tostring(connected) != tostring(self.connected) then
+		self.connected = connected
 		if connected == 1 then
 			self.jnt:notify('playerConnected', self)
 		else
 			self.jnt:notify('playerDisconnected', self)
 		end
-		self.connected = connected
+	end
+end
+
+-- _setPlayerName()
+-- sets the name of the player
+-- sends an appropriate notification on change
+local function _setPlayerName(self, playerName)
+	log:debug("_setPlayerName(", playerName, ")")
+
+	-- make sure this is a new name
+	if tostring(playerName) != tostring(self.name) then
+		self.name = playerName
+		self.jnt:notify('playerNewName', self, playerName)
 	end
 end
 
