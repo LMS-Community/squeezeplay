@@ -190,29 +190,15 @@ local function _openVolumePopup(vol)
 	popup:addWidget(Icon("iconVolumeMin"))
 	popup:addWidget(Icon("iconVolumeMax"))
 
-	local rate = vol
-	local cnt = 0
-	
 	-- timer to change volume
-	local timer = Timer(200,
+	local timer = Timer(300,
 		function()
 --			log:debug("_openVolumePopup - timer ", timer)
-			
-			cnt = cnt + 1
-			if cnt > 10 then
-				rate = 6 * vol
-			elseif cnt > 5 then
-				rate = 4 * vol
-			else
-				rate = 2 * vol
-			end
+			local new = volume + vol * 5
+			if new > 100 then new = 100 elseif new < 0 then new = 0 end
 
-			if vol > 0 or vol < 0 then
-				local new = volume + rate
-				if new > 100 then new = 100 elseif new < 0 then new = 0 end
-				volume = _player:volume(new) or volume
-				slider:setValue(volume)
-			end
+			volume = _player:volume(new) or volume
+			slider:setValue(volume)
 
 			popup:showBriefly()
 		end
@@ -226,15 +212,9 @@ local function _openVolumePopup(vol)
 
 			-- we're only interested in volume keys
 			if evtCode == KEY_VOLUME_UP then
-				if vol == -1 then cnt = 0 end
---				log:debug("************* VOL +1")
 				vol = 1
-				
 			elseif evtCode == KEY_VOLUME_DOWN then
-				if vol == 1 then cnt = 0 end
---				log:debug("************* VOL -1")
 				vol = -1
-				
 			else
 				return EVENT_UNUSED
 			end

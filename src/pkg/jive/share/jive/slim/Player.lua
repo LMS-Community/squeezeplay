@@ -53,7 +53,7 @@ local iconbar        = iconbar
 
 local fmt = string.format
 
-local KEY_TIMEOUT    = 1000  -- send repeat keypresses every second when no responses received
+local MIN_KEY_INT    = 150  -- sending key rate limit in ms
 
 -- jive.slim.Player is a base class
 module(..., oo.class)
@@ -634,19 +634,13 @@ end
 --]]
 
 
-function _process_mixer(self, event)
-	if event.id == self.mixerId then
-		self.mixerTo = nil
-	end
-end
-
-
 function volume(self, vol, send)
 	local now = Framework:getTicks()
 	if self.mixerTo == nil or self.mixerTo < now or send then
 		log:debug("Sending player:volume(", vol, ")")
-		self.mixerId = self:call({'mixer', 'volume', vol })
-		self.mixerTo = now + KEY_TIMEOUT
+		self:send({'mixer', 'volume', vol })
+		self.mixerTo = now + MIN_KEY_INT
+		self.state["mixer volume"] = vol
 		return vol
 	else
 		log:debug("Suppressing player:volume(", vol, ")")

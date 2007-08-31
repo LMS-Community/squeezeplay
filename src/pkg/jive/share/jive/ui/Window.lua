@@ -219,7 +219,6 @@ function showBriefly(self, msecs, callback,
 			self.brieflyTimer:restart()
 		end
 
-		self:show(pushTransition)
 		return
 
 	elseif msecs == nil then
