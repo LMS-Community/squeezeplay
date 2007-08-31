@@ -280,6 +280,20 @@ function call(self, cmd)
 end
 
 
+-- send
+-- sends a command but does not look for a response
+function send(self, cmd)
+	log:debug("Player:send():")
+--	log:debug(cmd)
+
+	self.slimServer.comet:request(
+		nil,
+		self.id,
+		cmd
+	)
+end
+
+
 -- onStage
 -- we're being browsed!
 function onStage(self, sink)
