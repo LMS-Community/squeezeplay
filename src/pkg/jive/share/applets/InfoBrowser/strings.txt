@@ -1,0 +1,7 @@
+#
+# InfoBrowser strings
+#
+
+INFOBROWSER
+	EN	Information Browser
+

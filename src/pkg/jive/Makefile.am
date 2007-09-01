@@ -211,6 +211,12 @@ dist_applets_clock_DATA = \
 	share/applets/Clock/ClockFace.png \
 	share/applets/Clock/clock_watch_bkgrd_ruby.png
 
+applets_infobrowserdir = $(pkgdatadir)/applets/InfoBrowser
+dist_applets_infobrowser_DATA = \
+	share/applets/InfoBrowser/InfoBrowserApplet.lua \
+	share/applets/InfoBrowser/InfoBrowserMeta.lua \
+	share/applets/InfoBrowser/strings.txt
+
 # Wallpaper
 applets_setupwallpaperdir = $(pkgdatadir)/applets/SetupWallpaper
 dist_applets_setupwallpaper_DATA = \

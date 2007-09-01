@@ -42,3 +42,6 @@ FACTORY_TEST
 DEBUG_LOG
 	EN	Logging
 
+EXTRAS
+	EN	Extras
+
