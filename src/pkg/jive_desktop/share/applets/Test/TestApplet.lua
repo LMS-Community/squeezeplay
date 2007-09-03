@@ -130,6 +130,10 @@ function menu(self, menuItem)
 				callback = function(event, menuItem)
 					self:textWindow(menuItem, "applets/Test/test.txt")
 				end },
+			{ text = "Connecting Popup",
+				callback = function(event, menuItem)
+					self:connectingPopup(menuItem)
+				end },
 			{ text = "Slider",
 				callback = function(event, menuItem)
 					self:sliderWindow(menuItem)
@@ -366,6 +370,32 @@ function popupWindow(self, menuItem)
 
 	local text = Textarea("textarea", "This is a popup window.\n\nPressing any button should close this window.")
 	popup:addWidget(text)
+
+	self:tieAndShowWindow(popup)
+	return popup
+end
+
+
+function connectingPopup(self, menuItem)
+
+	local popup = Popup("popupIcon")
+
+	local icon = Icon("iconConnecting")
+	local textarea = Textarea("text", "Connecting to\na test string!")
+
+	popup:addWidget(icon)
+	popup:addWidget(textarea)
+
+	local state = 1
+	popup:addTimer(10000, function()
+				       if state == 1 then
+					       icon:setStyle("iconConnected")
+					       textarea:setText("Connected to\na test string!")
+				       else
+					       popup:hide()
+				       end
+				       state = state + 1
+			       end)
 
 	self:tieAndShowWindow(popup)
 	return popup

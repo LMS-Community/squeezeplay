@@ -25,35 +25,6 @@ dist_applets_squeezeboxjive_DATA = \
 	share/applets/SqueezeboxJive/strings.txt
 
 
-applets_squeezeboxjive_imagesdir = $(datadir)/jive/applets/SqueezeboxJive/images
-dist_applets_squeezeboxjive_images_DATA = \
-	share/applets/SqueezeboxJive/images/icon_battery_0.png \
-	share/applets/SqueezeboxJive/images/icon_battery_1.png \
-	share/applets/SqueezeboxJive/images/icon_battery_2.png \
-	share/applets/SqueezeboxJive/images/icon_battery_3.png \
-	share/applets/SqueezeboxJive/images/icon_battery_4.png \
-	share/applets/SqueezeboxJive/images/icon_battery_ac.png \
-	share/applets/SqueezeboxJive/images/icon_battery_charging.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_0.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_1.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_2.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_3.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_4.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_off.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_0_shadow.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_1_shadow.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_2_shadow.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_3_shadow.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_4_shadow.png \
-	share/applets/SqueezeboxJive/images/icon_connecting.png \
-	share/applets/SqueezeboxJive/images/icon_connected.png
-
-
-applets_squeezeboxjive_soundsdir = $(datadir)/jive/applets/SqueezeboxJive/sounds
-dist_applets_squeezeboxjive_sounds_DATA = \
-	share/applets/SqueezeboxJive/sounds/docking.wav
-
-
 applets_setupWirelessdir = $(datadir)/jive/applets/SetupWireless
 dist_applets_setupWireless_DATA = \
 	share/applets/SetupWireless/SetupWirelessApplet.lua \

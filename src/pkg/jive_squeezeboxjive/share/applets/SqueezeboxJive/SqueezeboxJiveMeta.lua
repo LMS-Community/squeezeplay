@@ -37,8 +37,6 @@ function registerApplet(meta)
 
 	remoteSettings:addItem(meta:menuItem("BSP_BRIGHTNESS", function(applet, ...) applet:settingsBrightnessShow(...) end))
 	remoteSettings:addItem(meta:menuItem("BSP_BACKLIGHT_TIMER", function(applet, ...) applet:settingsBacklightTimerShow(...) end))
-
-	jiveMain:loadSkin("SqueezeboxJive", "skin")
 end
 
 

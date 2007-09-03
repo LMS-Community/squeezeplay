@@ -104,6 +104,7 @@ function skin(self, s)
 	Framework:loadSound("PUSHLEFT", sndpath .. "pushleft.wav", 1)
 	Framework:loadSound("PUSHRIGHT", sndpath .. "pushright.wav", 1)
 	Framework:loadSound("SELECT", sndpath .. "select.wav", 0)
+	Framework:loadSound("DOCKING", "applets/SqueezeboxJive/sounds/docking.wav", 1)
 
 	-- Images and Tiles
 	local iconBackground = 
@@ -248,6 +249,29 @@ function skin(self, s)
 	_icon(s.icon_shuffle_0, 75, screenHeight - 30, "icon_shuffle_off.png")
 	_icon(s.icon_shuffle_1, 75, screenHeight - 30, "icon_shuffle_1.png")
 	_icon(s.icon_shuffle_2, 75, screenHeight - 30, "icon_shuffle_1.png")
+
+
+	-- wireless status
+	_icon(s.iconWireless0, 107, screenHeight - 30, "icon_wireless_0.png")
+	_icon(s.iconWireless1, 107, screenHeight - 30, "icon_wireless_1.png")
+	_icon(s.iconWireless2, 107, screenHeight - 30, "icon_wireless_2.png")
+	_icon(s.iconWireless3, 107, screenHeight - 30, "icon_wireless_3.png")
+	_icon(s.iconWireless4, 107, screenHeight - 30, "icon_wireless_4.png")
+	_icon(s.iconWirelessOff, 107, screenHeight - 30, "icon_wireless_off.png")
+
+	-- battery status
+	_icon(s.iconBatteryAC, 137, screenHeight - 30, "icon_battery_ac.png")
+
+	_icon(s.iconBatteryCharging, 137, screenHeight - 30, "icon_battery_charging.png")
+	_icon(s.iconBattery0, 137, screenHeight - 30, "icon_battery_0.png")
+	_icon(s.iconBattery1, 137, screenHeight - 30, "icon_battery_1.png")
+	_icon(s.iconBattery2, 137, screenHeight - 30, "icon_battery_2.png")
+	_icon(s.iconBattery3, 137, screenHeight - 30, "icon_battery_3.png")
+	_icon(s.iconBattery4, 137, screenHeight - 30, "icon_battery_4.png")
+
+	s.iconBatteryCharging.frameRate = 1
+	s.iconBatteryCharging.frameWidth = 37
+
 
 	-- time
 	s.icon_time.x = screenWidth - 60
@@ -429,6 +453,24 @@ function skin(self, s)
 	s.popupIcon.text.sh = { }
 	s.popupIcon.text.textAlign = "center"
 	s.popupIcon.text.position = LAYOUT_SOUTH
+
+
+	-- connecting/connected popup icon
+	s.iconConnecting.img = Surface:loadImage(imgpath .. "icon_connecting.png")
+	s.iconConnecting.frameRate = 4
+	s.iconConnecting.frameWidth = 161
+	s.iconConnecting.align = "center"
+
+	s.iconConnected.img = Surface:loadImage(imgpath .. "icon_connected.png")
+	s.iconConnected.align = "center"
+
+
+	-- wireless icons for menus
+	s.wirelessLevel0.img = Surface:loadImage(imgpath .. "icon_wireless_0_shadow.png")
+	s.wirelessLevel1.img = Surface:loadImage(imgpath .. "icon_wireless_1_shadow.png")
+	s.wirelessLevel2.img = Surface:loadImage(imgpath .. "icon_wireless_2_shadow.png")
+	s.wirelessLevel3.img = Surface:loadImage(imgpath .. "icon_wireless_3_shadow.png")
+	s.wirelessLevel4.img = Surface:loadImage(imgpath .. "icon_wireless_4_shadow.png")
 
 
 	-- Special styles for specific window types

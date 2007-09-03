@@ -620,7 +620,27 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/volume_fill.png \
 	share/applets/DefaultSkin/images/volume_fill_r.png \
 	share/applets/DefaultSkin/images/volume_speaker_l.png \
-	share/applets/DefaultSkin/images/volume_speaker_r.png
+	share/applets/DefaultSkin/images/volume_speaker_r.png \
+	share/applets/DefaultSkin/images/icon_battery_0.png \
+	share/applets/DefaultSkin/images/icon_battery_1.png \
+	share/applets/DefaultSkin/images/icon_battery_2.png \
+	share/applets/DefaultSkin/images/icon_battery_3.png \
+	share/applets/DefaultSkin/images/icon_battery_4.png \
+	share/applets/DefaultSkin/images/icon_battery_ac.png \
+	share/applets/DefaultSkin/images/icon_battery_charging.png \
+	share/applets/DefaultSkin/images/icon_wireless_0.png \
+	share/applets/DefaultSkin/images/icon_wireless_1.png \
+	share/applets/DefaultSkin/images/icon_wireless_2.png \
+	share/applets/DefaultSkin/images/icon_wireless_3.png \
+	share/applets/DefaultSkin/images/icon_wireless_4.png \
+	share/applets/DefaultSkin/images/icon_wireless_off.png \
+	share/applets/DefaultSkin/images/icon_wireless_0_shadow.png \
+	share/applets/DefaultSkin/images/icon_wireless_1_shadow.png \
+	share/applets/DefaultSkin/images/icon_wireless_2_shadow.png \
+	share/applets/DefaultSkin/images/icon_wireless_3_shadow.png \
+	share/applets/DefaultSkin/images/icon_wireless_4_shadow.png \
+	share/applets/DefaultSkin/images/icon_connecting.png \
+	share/applets/DefaultSkin/images/icon_connected.png
 
 applets_defaultskin_soundsdir = $(pkgdatadir)/applets/DefaultSkin/sounds
 dist_applets_defaultskin_sounds_DATA = \
@@ -631,7 +651,8 @@ dist_applets_defaultskin_sounds_DATA = \
 	share/applets/DefaultSkin/sounds/pushright.wav \
 	share/applets/DefaultSkin/sounds/select.wav \
 	share/applets/DefaultSkin/sounds/shutdown.wav \
-	share/applets/DefaultSkin/sounds/startup.wav
+	share/applets/DefaultSkin/sounds/startup.wav \
+	share/applets/DefaultSkin/sounds/docking.wav
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am

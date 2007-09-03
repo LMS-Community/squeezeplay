@@ -491,49 +491,6 @@ local function _icon(var, x, y, img)
 	var.position = LAYOUT_SOUTH
 end
 
-function skin(self, s)
-	local screenWidth, screenHeight = Framework:getScreenSize()
-
-	Framework:loadSound("DOCKING", "applets/SqueezeboxJive/sounds/docking.wav", 1)
-
-	-- wireless status
-	_icon(s.iconWireless0, 107, screenHeight - 30, "icon_wireless_0.png")
-	_icon(s.iconWireless1, 107, screenHeight - 30, "icon_wireless_1.png")
-	_icon(s.iconWireless2, 107, screenHeight - 30, "icon_wireless_2.png")
-	_icon(s.iconWireless3, 107, screenHeight - 30, "icon_wireless_3.png")
-	_icon(s.iconWireless4, 107, screenHeight - 30, "icon_wireless_4.png")
-	_icon(s.iconWirelessOff, 107, screenHeight - 30, "icon_wireless_off.png")
-
-	-- battery status
-	_icon(s.iconBatteryAC, 137, screenHeight - 30, "icon_battery_ac.png")
-
-	_icon(s.iconBatteryCharging, 137, screenHeight - 30, "icon_battery_charging.png")
-	_icon(s.iconBattery0, 137, screenHeight - 30, "icon_battery_0.png")
-	_icon(s.iconBattery1, 137, screenHeight - 30, "icon_battery_1.png")
-	_icon(s.iconBattery2, 137, screenHeight - 30, "icon_battery_2.png")
-	_icon(s.iconBattery3, 137, screenHeight - 30, "icon_battery_3.png")
-	_icon(s.iconBattery4, 137, screenHeight - 30, "icon_battery_4.png")
-
-	s.iconBatteryCharging.frameRate = 1
-	s.iconBatteryCharging.frameWidth = 37
-
-
-	-- wireless icons for menus
-	s.wirelessLevel0.img = Surface:loadImage(imgpath .. "icon_wireless_0_shadow.png")
-	s.wirelessLevel1.img = Surface:loadImage(imgpath .. "icon_wireless_1_shadow.png")
-	s.wirelessLevel2.img = Surface:loadImage(imgpath .. "icon_wireless_2_shadow.png")
-	s.wirelessLevel3.img = Surface:loadImage(imgpath .. "icon_wireless_3_shadow.png")
-	s.wirelessLevel4.img = Surface:loadImage(imgpath .. "icon_wireless_4_shadow.png")
-
-	s.iconConnecting.img = Surface:loadImage(imgpath .. "icon_connecting.png")
-	s.iconConnecting.frameRate = 4
-	s.iconConnecting.frameWidth = 161
-	s.iconConnecting.align = "center"
-
-	s.iconConnected.img = Surface:loadImage(imgpath .. "icon_connected.png")
-	s.iconConnected.align = "center"
-end
-
 
 --[[
 
