@@ -43,6 +43,7 @@ local debug                = require("debug")
                            
 local table                = require("jive.utils.table")
 local Framework            = require("jive.ui.Framework")
+local Event                = require("jive.ui.Event")
 local Widget               = require("jive.ui.Widget")
 local Scrollbar            = require("jive.ui.Scrollbar")
 
@@ -100,11 +101,9 @@ local function _coerce(value, max)
 end
 
 
-local function _itemListener(self, event)
+local function _itemListener(self, item, event)
 
 	local r = EVENT_UNUSED
-
-	item = _selectedItem(self)
 
 	if item then
 		r = self.itemListener(self, item, self.list, self.selected or 1, event)
@@ -174,7 +173,7 @@ local function _eventHandler(self, event)
 
 			else
 				-- other keys to selected widgts
-				return _itemListener(self, event)
+				return _itemListener(self, _selectedItem(self), event)
 			end
 		end
 
@@ -193,7 +192,7 @@ local function _eventHandler(self, event)
 	end
 
 	-- other events to selected widgets
-	return _itemListener(self, event)
+	return _itemListener(self, _selectedItem(self), event)
 end
 
 
@@ -501,10 +500,12 @@ function _updateWidgets(self)
 	if lastSelected ~= nextSelected or self._lastSelectedIndex ~= self.selected then
 		if lastSelected then
 			lastSelected:setStyleModifier(nil)
-			lastSelected:dispatchNewEvent(EVENT_FOCUS_LOST)
+			_itemListener(self, lastSelected, Event:new(EVENT_FOCUS_LOST))
 		end
 
-		nextSelected:dispatchNewEvent(EVENT_FOCUS_GAINED)
+		if nextSelected then
+			_itemListener(self, nextSelected, Event:new(EVENT_FOCUS_GAINED))
+		end
 	end
 
 	-- set selection and focus

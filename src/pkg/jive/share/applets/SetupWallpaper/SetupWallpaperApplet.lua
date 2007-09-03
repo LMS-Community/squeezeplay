@@ -45,14 +45,22 @@ oo.class(_M, Applet)
 
 -- Wallpapers
 local wallpapers = {
-	["Chapple_1.jpg"] = "Chapple_1.jpg",
-	["Clearly-Ambiguous_1.jpg"] = "Clearly-Ambiguous_1.jpg",
-	["Clearly-Ambiguous_2.jpg"] = "Clearly-Ambiguous_2.jpg",
-	["Clearly-Ambiguous_3.jpg"] = "Clearly-Ambiguous_3.jpg",
-	["Clearly-Ambiguous_4.jpg"] = "Clearly-Ambiguous_4.jpg",
-	["Clearly-Ambiguous_6.jpg"] = "Clearly-Ambiguous_6.jpg",
-	["Los-Cardinalos_1.jpg"] = "Los-Cardinalos_1.jpg",
-	["Orin-Optiglot_1.jpg"] = "Orin-Optiglot_1.jpg",
+	["Eggplant"] = "eggplant.png",
+	["Concrete"] = "concrete.png",
+	["Midnight"] = "midnight.png",
+	["Pea"] = "pea.png",
+	["Slate"] = "slate.png",
+	["Black"] = "black.png",
+	["Camo"] = "camo.png",
+	["Stone"] = "stone.png",
+	["Chapple_1"] = "Chapple_1.jpg",
+	["Clearly-Ambiguous_1"] = "Clearly-Ambiguous_1.jpg",
+	["Clearly-Ambiguous_2"] = "Clearly-Ambiguous_2.jpg",
+	["Clearly-Ambiguous_3"] = "Clearly-Ambiguous_3.jpg",
+	["Clearly-Ambiguous_4"] = "Clearly-Ambiguous_4.jpg",
+	["Clearly-Ambiguous_6"] = "Clearly-Ambiguous_6.jpg",
+	["Los-Cardinalos_1"] = "Los-Cardinalos_1.jpg",
+	["Orin-Optiglot_1"] = "Orin-Optiglot_1.jpg",
 }
 
 local authors = { "Chapple", "Scott Robinson", "Los Cardinalos", "Orin Optiglot" }
