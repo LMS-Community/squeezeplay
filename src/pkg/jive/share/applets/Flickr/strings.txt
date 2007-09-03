@@ -24,6 +24,10 @@ SCREENSAVER_FLICKR_ERROR
 	EN	Flickr error: 
 	DE	Flickr Fehler: 
 
+SCREENSAVER_FLICKR_DELAY
+	DE	Geschwindigkeit
+	EN	Speed
+
 SCREENSAVER_FLICKR_DELAY_10_SEC
 	DE	10 Sek.
 	EN	10 sec
@@ -56,3 +60,58 @@ SCREENSAVER_FLICKR_DELAY_1_MIN
 	IT	1 min
 	NL	1 min
 
+SCREENSAVER_FLICKR_DISPLAY
+	DE	Anzeige
+	EN	Display
+
+SCREENSAVER_FLICKR_DISPLAY_OWN
+	DE	Meine eigenen Bilder
+	EN	My own pictures
+
+SCREENSAVER_FLICKR_DISPLAY_CONTACTS
+	DE	Bilder meiner Kontakte
+	EN	My contacts pictures
+
+SCREENSAVER_FLICKR_DISPLAY_INTERESTING
+	DE	Interessante Bilder
+	EN	Interesting pictures
+
+SCREENSAVER_FLICKR_DISPLAY_RECENT
+	DE	Neu hinzugefügte Bilder
+	EN	Recently added pictures
+
+SCREENSAVER_FLICKR_FLICKR_ID
+	DE	Flickr Benutzer
+	EN	Flickr User
+
+SCREENSAVER_FLICKR_FLICKR_ID_HELP
+	DE	Bitte geben Sie Ihren Flickr Benutzernamen oder Ihre Email-Adresse ein
+	EN	Please enter your Flickr Username or your Email address
+
+SCREENSAVER_FLICKR_TRANSITION
+	DE	Übergänge
+	EN	Transitions
+
+SCREENSAVER_FLICKR_TRANSITION_RANDOM
+	DE	Zufällige Übergänge
+	EN	Random transitions
+
+SCREENSAVER_FLICKR_TRANSITION_INSIDE_OUT
+	DE	von innen nach aussen
+	EN	Fade inside-out
+
+SCREENSAVER_FLICKR_TRANSITION_TOP_DOWN
+	DE	von oben nach unten
+	EN	Fade top-down
+
+SCREENSAVER_FLICKR_TRANSITION_BOTTOM_UP
+	DE	von unten nach oben
+	EN	Fade bottom-up
+
+SCREENSAVER_FLICKR_TRANSITION_LEFT_RIGHT
+	DE	von links nach rechts
+	EN	Fade left-right
+
+SCREENSAVER_FLICKR_TRANSITION_RIGHT_LEFT
+	DE	von rechts nach links
+	EN	Fade right-left

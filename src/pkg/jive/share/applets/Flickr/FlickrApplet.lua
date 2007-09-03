@@ -94,21 +94,21 @@ function openSettings(self, menuItem)
 	window:addWidget(SimpleMenu("menu",
 			{
 				{
-					text = "Display", 
+					text = self:string("SCREENSAVER_FLICKR_DISPLAY"), 
 					callback = function(event, menuItem)
 							   self:displaySetting(menuItem)
 							   return EVENT_CONSUME
 						   end
 				},
 				{
-                                        text = "Speed",
+                                        text = self:string("SCREENSAVER_FLICKR_DELAY"),
                                         callback = function(event, menuItem)
                                                            self:timeoutSetting(menuItem)
                                                            return EVENT_CONSUME
                                                    end
                                 },
                                 {
-                                        text = "Flickr ID",
+                                        text = self:string("SCREENSAVER_FLICKR_FLICKR_ID"),
                                         callback = function(event, menuItem)
                                                            self:defineFlickrId(menuItem)
                                                            return EVENT_CONSUME
@@ -116,7 +116,7 @@ function openSettings(self, menuItem)
                                 },
 --[[
                                 {
-                                        text = "Transitions",
+                                        text = self:string("SCREENSAVER_FLICKR_TRANSITION"),
                                         callback = function(event, menuItem)
                                                            self:defineTransition(menuItem)
                                                            return EVENT_CONSUME
@@ -132,9 +132,9 @@ end
 
 function defineFlickrId(self, menuItem)
 
-        local window = Window("window", "Flickr ID")
+        local window = Window("window", self:string("SCREENSAVER_FLICKR_FLICKR_ID"))
 
-	local flickrid = self:getSettings()["flickr.id"]
+	local flickrid = self:getSettings()["flickr.idstring"]
 	if flickrid == nil then
 		flickrid = "Your ID"
 	end
@@ -146,12 +146,12 @@ function defineFlickrId(self, menuItem)
                                         end
 
                                         log:warn("Input " .. value)
-					self:setFlickrId(value)
+					self:setFlickrIdString(value)
                                         window:hide(Window.transitionPushLeft)
                                         return true
                                 end)
 
-        local help = Textarea("help", "Please enter your Flickr User ID.")
+        local help = Textarea("help", self:string("SCREENSAVER_FLICKR_FLICKR_ID_HELP"))
 
         window:addWidget(help)
         window:addWidget(input)
@@ -159,7 +159,6 @@ function defineFlickrId(self, menuItem)
         self:tieAndShowWindow(window)
         return window
 end
-
 
 
 function defineTransition(self, menuItem)
@@ -171,7 +170,7 @@ function defineTransition(self, menuItem)
 	window:addWidget(SimpleMenu("menu",
 		{
                          {
-                                text = "Random transition",
+                                text = self:string("SCREENSAVER_FLICKR_TRANSITION_RANDOM"),
                                 icon = RadioButton(
                                                    "radio",
                                                    group,
@@ -182,7 +181,7 @@ function defineTransition(self, menuItem)
                                            ),
                          },
                          {
-                                text = "Fade inside-out",
+                                text = self:string("SCREENSAVER_FLICKR_TRANSITION_INSIDE_OUT"),
                                 icon = RadioButton(
                                                    "radio",
                                                    group,
@@ -193,7 +192,7 @@ function defineTransition(self, menuItem)
                                            ),
                         },
  			{
-				text = "Fade top-down", 
+                                text = self:string("SCREENSAVER_FLICKR_TRANSITION_TOP_DOWN"),
 				icon = RadioButton(
 						   "radio", 
 						   group, 
@@ -204,7 +203,7 @@ function defineTransition(self, menuItem)
 					   ),
 			},
 			{ 
-				text = "Fade bottom-up", 
+                                text = self:string("SCREENSAVER_FLICKR_TRANSITION_BOTTOM_UP"),
 				icon = RadioButton(
 						   "radio", 
 						   group, 
@@ -215,7 +214,7 @@ function defineTransition(self, menuItem)
 					   ),
 			},
 			{ 
-				text = "Fade left-right", 
+                                text = self:string("SCREENSAVER_FLICKR_TRANSITION_LEFT_RIGHT"),
 				icon = RadioButton(
 						   "radio", 
 						   group, 
@@ -226,7 +225,7 @@ function defineTransition(self, menuItem)
 					   ),
 			},
 			{ 
-				text = "Fade right-left", 
+                                text = self:string("SCREENSAVER_FLICKR_TRANSITION_RIGHT_LEFT"),
 				icon = RadioButton(
 						   "radio", 
 						   group, 
@@ -242,6 +241,7 @@ function defineTransition(self, menuItem)
 	return window
 end
 
+
 function displaySetting(self, menuItem)
 	local group = RadioGroup()
 
@@ -251,7 +251,7 @@ function displaySetting(self, menuItem)
 	window:addWidget(SimpleMenu("menu",
 		{
                          {
-                                text = "My Own Photos",
+                                text = self:string("SCREENSAVER_FLICKR_DISPLAY_OWN"),
                                 icon = RadioButton(
                                                    "radio",
                                                    group,
@@ -262,7 +262,7 @@ function displaySetting(self, menuItem)
                                            ),
                          },
                          {
-                                text = "My and My Contacts Photos",
+                                text = self:string("SCREENSAVER_FLICKR_DISPLAY_CONTACTS"),
                                 icon = RadioButton(
                                                    "radio",
                                                    group,
@@ -273,7 +273,7 @@ function displaySetting(self, menuItem)
                                            ),
                         },
  			{
-				text = "Interesting Photos", 
+				text = self:string("SCREENSAVER_FLICKR_DISPLAY_INTERESTING"), 
 				icon = RadioButton(
 						   "radio", 
 						   group, 
@@ -284,7 +284,7 @@ function displaySetting(self, menuItem)
 					   ),
 			},
 			{ 
-				text = "Recent Photos", 
+				text = self:string("SCREENSAVER_FLICKR_DISPLAY_RECENT"), 
 				icon = RadioButton(
 						   "radio", 
 						   group, 
@@ -346,6 +346,12 @@ end
 function setFlickrId(self, flickrid)
         self:getSettings()["flickr.id"] = flickrid
 	self:storeSettings()
+end
+
+function setFlickrIdString(self, flickridString)
+        self:getSettings()["flickr.idstring"] = flickridString
+	self:storeSettings()
+	self:resolveFlickrIdByEmail(flickridString)
 end
 
 function setTransition(self, trans)
@@ -579,6 +585,94 @@ function _getRest(self, method, args)
 		log:error(err)
 		return nil, err
 	end
+end
+
+
+function _findFlickrIdByEmail(self, searchText)
+	local url = "method=flickr.people.findByEmail"
+	url = url .. "&api_key=" .. apiKey
+	url = url .. "&format=json"
+	url = url .. "&nojsoncallback=1"
+	url = url .. "&find_email=" .. searchText
+
+	local ip, err = socket.dns.toip("api.flickr.com")
+
+	if ip then
+		return ip, 80, "/services/rest/?" .. url
+	else
+		log:error(err)
+		return nil, err
+	end
+end
+
+
+function _findFlickrIdByUserID(self, searchText)
+	local url = "method=flickr.people.findByUsername"
+	url = url .. "&api_key=" .. apiKey
+	url = url .. "&format=json"
+	url = url .. "&nojsoncallback=1"
+	url = url .. "&username=" .. searchText
+
+	local ip, err = socket.dns.toip("api.flickr.com")
+
+	if ip then
+		return ip, 80, "/services/rest/?" .. url
+	else
+		log:error(err)
+		return nil, err
+	end
+end
+
+
+
+function resolveFlickrIdByEmail(self, searchText)
+	-- check whether searchText is an email
+	local host, port, path = self:_findFlickrIdByEmail(searchText)
+	log:info("find by email: ", host, ":", port, path)
+
+	local http = SocketHttp(jnt, host, port, "flickr3")
+	local req = RequestHttp(function(chunk, err)
+			if chunk then
+				local obj = json.decode(chunk)
+				if obj.stat == "ok" then
+					log:info("flickr id found: " .. obj.user.nsid)
+					self:setFlickrId(obj.user.nsid)
+				else
+					log:warn("search by email failed")
+					log:warn(searchText)
+					self:resolveFlickrIdByUsername(searchText)
+				end
+			end
+		end,
+		'GET',
+		path)
+	http:fetch(req)
+
+	return true
+end
+
+
+function resolveFlickrIdByUsername(self, searchText)
+	-- check whether searchText is a username
+	local host, port, path = self:_findFlickrIdByUserID(searchText)
+	log:info("find by userid: ", host, ":", port, path)
+	local http = SocketHttp(jnt, host, port, "flickr4")
+	local req = RequestHttp(function(chunk, err)
+			if chunk then
+				local obj = json.decode(chunk)
+				if obj.stat == "ok" then
+					log:info("flickr id found: " .. obj.user.nsid)
+					self:setFlickrId(obj.user.nsid)
+				else
+					log:warn("search by userid failed")
+				end
+			end
+		end,
+		'GET',
+		path)
+	http:fetch(req)
+
+	return true
 end
 
 
