@@ -79,22 +79,22 @@ local iTrackLen = 0
 --
 
 local function _getSink(self, cmd)
-        return function(chunk, err)
+	return function(chunk, err)
 
-                if err then
-                        log:debug(err)
-                    
-                elseif chunk then
-                        --log:info(chunk)
-                        
-                        local proc = "_process_" .. cmd[1]
-                        if self[proc] then
-                                self[proc](self, chunk)
+		if err then
+			log:debug(err)
+					
+		elseif chunk then
+			--log:info(chunk)
+						
+			local proc = "_process_" .. cmd[1]
+			if self[proc] then
+				self[proc](self, chunk)
 			else
 				log:error("No Such Method: " .. proc)
-                        end
-                end
-        end
+			end
+		end
+	end
 end
 
 local function SecondsToString(seconds)
@@ -232,9 +232,9 @@ end
 local thePlayer = nil
 
 function free(self)
-	if thePlayer != nil then
-		thePlayer.slimServer.comet:unsubscribe('/slim/displaystatus/' .. thePlayer:getId())
-		thePlayer.slimServer.comet:unsubscribe('/slim/playerstatus/' .. thePlayer:getId())
+	if thePlayer then
+		thePlayer.slimServer.comet:unsubscribe( '/slim/displaystatus/' .. thePlayer:getId(), self.displaySink )
+		thePlayer.slimServer.comet:unsubscribe( '/slim/playerstatus/' .. thePlayer:getId(), self.statusSink )
 	end
 
 	tTimer:stop()
@@ -299,22 +299,27 @@ function openScreensaver(self, menuItem)
 	local window = _createUI()
 
 	local discovery = appletManager:getAppletInstance("SlimDiscovery")
-	local thePlayer = discovery:getCurrentPlayer()
+	thePlayer = discovery:getCurrentPlayer()
 
-	if thePlayer ~= nil then
+	if thePlayer then
+	
+		local playerid = thePlayer:getId()
 	
 		local cmd =  { 'status', '-', 10, 'menu:menu', 'subscribe:30' }
+		self.statusSink = _getSink(self, cmd)
 		thePlayer.slimServer.comet:subscribe(
-			'/slim/playerstatus/' .. thePlayer:getId(),
-			_getSink(self, cmd),
+			'/slim/playerstatus/' .. playerid,
+			self.statusSink,
+			playerid,
 			cmd
 		)
 
 		local cmd = { 'displaystatus', 'subscribe:showbriefly' }
+		self.displaySink = _getSink(self, cmd)
 		thePlayer.slimServer.comet:subscribe(
-			'/slim/displaystatus/' .. thePlayer:getId(),
-			_getSink(self, cmd),
-			thePlayer:getId(),
+			'/slim/displaystatus/' .. playerid,
+			self.displaySink,
+			playerid,
 			cmd
 		)
 

@@ -19,6 +19,9 @@ This class implements a HTTP socket running in a L<jive.net.NetworkThread>.
  comet:subscribe('/slim/serverstatus', func, playerid, {'serverstatus', 0, 50, 'subscribe:60'})
 
  -- unsubscribe from an event
+ comet:unsubscribe('/slim/serverstatus', func)
+
+ -- or unsubscribe all callbacks
  comet:unsubscribe('/slim/serverstatus')
 
  -- send a non-subscription request
@@ -404,43 +407,59 @@ function subscribe(self, subscription, func, playerid, request)
 	end
 end
 
-function unsubscribe(self, subscription)
-	log:debug("Comet:unsubscribe(", subscription, ")")
+function unsubscribe(self, subscription, func)
+	log:debug("Comet:unsubscribe(", subscription, ", ", func, ")")
 	
 	-- Remove from notify list
-	self.notify[subscription] = nil
-	
-	-- Remove from subs list
-	for i, v in ipairs( self.subs ) do
-		if v.subscription == subscription then
-			table.remove( self.subs, i )
-			break
+	if func then
+		-- Remove only the given callback
+		for i, v in ipairs( self.notify[subscription] ) do
+			if v == func then
+				self.notify[subscription][i] = nil
+				break
+			end
 		end
+	else
+		-- Remove all callbacks
+		self.notify[subscription] = nil
 	end
 	
-	if not self.active then
-		table.insert( self.pending_unsubs, subscription )
-	else
-		local data = { {
-			channel      = '/meta/unsubscribe',
-			clientId     = self.clientId,
-			subscription = subscription
-		} }
-	
-		local options = {
-			headers = {
-				['Content-Type'] = 'text/json',
-			}
-		}
+	-- If we unsubscribed the last one for this subscription, clear it out
+	if not self.notify[subscription] then
+		log:debug("No more callbacks for ", subscription, " unsubscribing at server")
 		
-		local req = CometRequest(
-			_getUnsubscribeSink(self),
-			self.uri,
-			data,
-			options
-		)
+		-- Remove from subs list
+		for i, v in ipairs( self.subs ) do
+			if v.subscription == subscription then
+				table.remove( self.subs, i )
+				break
+			end
+		end
 	
-		self.jpool:queuePriority(req)
+		if not self.active then
+			table.insert( self.pending_unsubs, subscription )
+		else
+			local data = { {
+				channel      = '/meta/unsubscribe',
+				clientId     = self.clientId,
+				subscription = subscription
+			} }
+	
+			local options = {
+				headers = {
+					['Content-Type'] = 'text/json',
+				}
+			}
+		
+			local req = CometRequest(
+				_getUnsubscribeSink(self),
+				self.uri,
+				data,
+				options
+			)
+	
+			self.jpool:queuePriority(req)
+		end
 	end
 end
 
