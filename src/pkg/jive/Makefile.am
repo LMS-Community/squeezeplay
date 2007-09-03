@@ -217,6 +217,12 @@ dist_applets_infobrowser_DATA = \
 	share/applets/InfoBrowser/InfoBrowserMeta.lua \
 	share/applets/InfoBrowser/strings.txt
 
+applets_nowplayingdir = $(pkgdatadir)/applets/NowPlaying
+dist_applets_nowplaying_DATA = \
+	share/applets/NowPlaying/NowPlayingApplet.lua \
+	share/applets/NowPlaying/NowPlayingMeta.lua \
+	share/applets/NowPlaying/strings.txt
+
 # Wallpaper
 applets_setupwallpaperdir = $(pkgdatadir)/applets/SetupWallpaper
 dist_applets_setupwallpaper_DATA = \
