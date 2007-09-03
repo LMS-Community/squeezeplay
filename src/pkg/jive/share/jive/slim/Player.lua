@@ -445,7 +445,10 @@ function _showCurrentSong(self, text, iconId)
 
 	s.text:setText(text)
 
-	s.window:showBriefly(3000)
+	s.window:showBriefly(3000, nil,
+			     Window.transitionPushPopupUp,
+			     Window.transitionPushPopupDown
+		     )
 end
 
 

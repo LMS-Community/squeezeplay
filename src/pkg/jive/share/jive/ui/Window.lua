@@ -640,28 +640,30 @@ end
 
 --[[
 
-=head2 jive.ui.Window:transitionPushPopupLeft(newWindow)
+=head2 jive.ui.Window:transitionPushPopupUp(newWindow)
 
-Returns a push left window transition for use with popup windows.
+Returns a push up window transition for use with popup windows.
 
 =cut
 --]]
-function transitionPushPopupLeft(oldWindow, newWindow)
+function transitionPushPopupUp(oldWindow, newWindow)
 	assert(oo.instanceof(oldWindow, Widget))
 	assert(oo.instanceof(newWindow, Widget))
 
-	local frames = FRAME_RATE / 2 -- 0.5 sec
-	local screenWidth = Framework:getScreenSize()
-	local scale = (frames * frames * frames) / screenWidth
+	local _, screenHeight = Framework:getScreenSize()
+
+	local frames = math.ceil(FRAME_RATE / 6)
+	local _,_,_,windowHeight = newWindow:getBounds()
+	local scale = (frames * frames * frames) / windowHeight
 
 	return function(widget, surface)
-			local x = screenWidth - ((frames * frames * frames) / scale)
+			local y = ((frames * frames * frames) / scale)
 
 			surface:setOffset(0, 0)
-			newWindow:draw(surface, LAYER_ALL)
+			oldWindow:draw(surface, LAYER_ALL)
 
-			surface:setOffset(-x, 0)
-			oldWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE)
+			surface:setOffset(0, y)
+			newWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE)
 
 			surface:setOffset(0, 0)
 
@@ -675,27 +677,29 @@ end
 
 --[[
 
-=head2 jive.ui.Window:transitionPushPopupRight(newWindow)
+=head2 jive.ui.Window:transitionPushPopupDown(newWindow)
 
-Returns a push right window transition for use with popup windows.
+Returns a push down window transition for use with popup windows.
 
 =cut
 --]]
-function transitionPushPopupRight(oldWindow, newWindow)
+function transitionPushPopupDown(oldWindow, newWindow)
 	assert(oo.instanceof(oldWindow, Widget))
 	assert(oo.instanceof(newWindow, Widget))
 
-	local frames = FRAME_RATE / 2 -- 0.5 sec
-	local screenWidth = Framework:getScreenSize()
-	local scale = (frames * frames * frames) / screenWidth
+	local _, screenHeight = Framework:getScreenSize()
+
+	local frames = math.ceil(FRAME_RATE / 6)
+	local _,_,_,windowHeight = oldWindow:getBounds()
+	local scale = (frames * frames * frames) / windowHeight
 
 	return function(widget, surface)
-			local x = screenWidth - ((frames * frames * frames) / scale)
+			local y = ((frames * frames * frames) / scale)
 
 			surface:setOffset(0, 0)
 			newWindow:draw(surface, LAYER_ALL)
 
-			surface:setOffset(x, 0)
+			surface:setOffset(0, windowHeight - y)
 			oldWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE)
 
 			surface:setOffset(0, 0)

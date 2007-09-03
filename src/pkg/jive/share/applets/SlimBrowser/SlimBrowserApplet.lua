@@ -55,6 +55,7 @@ local EVENT_KEY_DOWN   = jive.ui.EVENT_KEY_DOWN
 local EVENT_KEY_UP     = jive.ui.EVENT_KEY_UP
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
 local EVENT_KEY_HOLD   = jive.ui.EVENT_KEY_HOLD
+local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
@@ -91,6 +92,9 @@ local STATUS_MISSING_FETCH = 100
 local BROWSE_FIRST_FETCH = 100
 -- number of items to get for browse missing items
 local BROWSE_MISSING_FETCH = 100
+
+-- number of volume steps
+local VOLUME_STEPS = 20
 
 --==============================================================================
 -- Global variables
@@ -190,17 +194,25 @@ local function _openVolumePopup(vol)
 	popup:addWidget(Icon("iconVolumeMin"))
 	popup:addWidget(Icon("iconVolumeMax"))
 
+	local volumeStep = 100 / VOLUME_STEPS
+
+	local _updateVolume =
+		function(delta)
+			local new = volume + delta * volumeStep
+
+			if new > 100 then new = 100 elseif new < 0 then new = 0 end
+			
+			volume = _player:volume(new) or volume
+			slider:setValue(volume)
+			
+			popup:showBriefly()
+		end
+
 	-- timer to change volume
 	local timer = Timer(300,
 		function()
 --			log:debug("_openVolumePopup - timer ", timer)
-			local new = volume + vol * 5
-			if new > 100 then new = 100 elseif new < 0 then new = 0 end
-
-			volume = _player:volume(new) or volume
-			slider:setValue(volume)
-
-			popup:showBriefly()
+			_updateVolume(vol)
 		end
 	)
 
@@ -243,6 +255,13 @@ local function _openVolumePopup(vol)
 		end
 	)
 
+	-- scroll listener
+	popup:addListener(EVENT_SCROLL,
+			  function(event)
+				  _updateVolume(event:getScroll())
+			  end)
+
+
 	-- we handle events
 	popup.brieflyHandler = 1
 
@@ -255,11 +274,14 @@ local function _openVolumePopup(vol)
 				timer = nil
 			end
 		end,
-		Window.transitionNone,
-		Window.transitionPushPopupLeft
+		Window.transitionPushPopupUp,
+		Window.transitionPushPopupDown
 	)
 
 	timer:start()
+
+	-- update volume from initial key press
+	_updateVolume(vol)
 
 --	log:debug("_openVolumePopup END --------------------------")
 end
