@@ -381,16 +381,16 @@ function connectingPopup(self, menuItem)
 	local popup = Popup("popupIcon")
 
 	local icon = Icon("iconConnecting")
-	local textarea = Textarea("text", "Connecting to\na test string!")
+	local label = Label("text", "Connecting to\na test string!")
 
 	popup:addWidget(icon)
-	popup:addWidget(textarea)
+	popup:addWidget(label)
 
 	local state = 1
 	popup:addTimer(10000, function()
 				       if state == 1 then
 					       icon:setStyle("iconConnected")
-					       textarea:setText("Connected to\na test string!")
+					       label:setValue("Connected to\na test string!")
 				       else
 					       popup:hide()
 				       end

@@ -825,6 +825,8 @@ function borderLayout(self, fitWindow)
 			bb = bb + tb
 
 			if position == LAYOUT_NORTH then
+				x = x or 0
+				y = y or 0
 				widget:setBounds(maxBounds(wx + x + lb, wy + y + tb, ww - rb, h))
 
 			elseif position == LAYOUT_SOUTH then

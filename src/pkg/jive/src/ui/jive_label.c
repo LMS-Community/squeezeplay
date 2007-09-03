@@ -441,8 +441,18 @@ int jiveL_label_get_preferred_bounds(lua_State *L) {
 	w = peer->text_w + peer->w.padding.left + peer->w.padding.right;
 	h = peer->text_h + peer->w.padding.top + peer->w.padding.bottom;
 
-	lua_pushinteger(L, (peer->w.preferred_bounds.x == JIVE_XY_NIL) ? 0 : peer->w.preferred_bounds.x);
-	lua_pushinteger(L, (peer->w.preferred_bounds.y == JIVE_XY_NIL) ? 0 : peer->w.preferred_bounds.y);
+	if (peer->w.preferred_bounds.x == JIVE_XY_NIL) {
+		lua_pushnil(L);
+	}
+	else {
+		lua_pushinteger(L, peer->w.preferred_bounds.x);
+	}
+	if (peer->w.preferred_bounds.y == JIVE_XY_NIL) {
+		lua_pushnil(L);
+	}
+	else {
+		lua_pushinteger(L, peer->w.preferred_bounds.y);
+	}
 	lua_pushinteger(L, (peer->w.preferred_bounds.w == JIVE_WH_NIL) ? w : peer->w.preferred_bounds.w);
 	lua_pushinteger(L, (peer->w.preferred_bounds.h == JIVE_WH_NIL) ? h : peer->w.preferred_bounds.h);
 	return 4;
