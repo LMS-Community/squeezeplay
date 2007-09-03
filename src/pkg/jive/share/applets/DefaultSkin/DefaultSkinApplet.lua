@@ -180,18 +180,18 @@ function skin(self, s)
 					imgpath .. "slider_fill_r.png",
 			       })
 
-	local volumeBar = 
+	local volumeBar =
 		Tile:loadHTiles({
-					imgpath .. "popup_volume_leftbody.png",
-					imgpath .. "popup_volume_midbody.png",
-					imgpath .. "popup_volume_rightbody.png",
-			       })
+					imgpath .. "volume_fill_l.png",
+					imgpath .. "volume_fill.png",
+					imgpath .. "volume_fill_r.png",
+				})
 
-	local volumeBackground = 
+	local volumeBackground =
 		Tile:loadHTiles({
-					imgpath .. "popup_volume_bkground_l.png",
-					imgpath .. "popup_volume_bkground.png",
-					imgpath .. "popup_volume_bkground_r.png",
+					imgpath .. "volume_bkgrd_l.png",
+					imgpath .. "volume_bkgrd.png",
+					imgpath .. "volume_bkgrd_r.png",
 			       })
 
 	local popupMask = Tile:fillColor(0x231f20e5)
@@ -451,12 +451,12 @@ function skin(self, s)
 
 	-- SlimBrowser applet
 
-	s.iconVolumeMin.img = Surface:loadImage(imgpath .. "icon_volume_min.png")
+	s.iconVolumeMin.img = Surface:loadImage(imgpath .. "volume_speaker_l.png")
 	s.iconVolumeMin.position = LAYOUT_NONE
 	s.iconVolumeMin.x = 16
 	s.iconVolumeMin.y = 34
 
-	s.iconVolumeMax.img = Surface:loadImage(imgpath .. "icon_volume_max.png")
+	s.iconVolumeMax.img = Surface:loadImage(imgpath .. "volume_speaker_r.png")
 	s.iconVolumeMax.position = LAYOUT_NONE
 	s.iconVolumeMax.x = 208
 	s.iconVolumeMax.y = 33

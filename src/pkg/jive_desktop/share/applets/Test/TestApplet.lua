@@ -185,18 +185,27 @@ function sortedMenuWindow(self, menuItem)
 	local menu = SimpleMenu("menu")
 	menu:setComparator(menu.itemComparatorAlpha)
 
-	menu:addItem({ text = "United States" })
-	menu:addItem({ text = "Australia" })
-	menu:addItem({ text = "France" })
-
-	local item = { text = "Japan" }
+	local item = { text = "United States" }
 	menu:addItem(item)
 	menu:setSelectedItem(item)
 
+	menu:addItem({ text = "Australia" })
+	menu:addItem({ text = "France" })
+	menu:addItem({ text = "Japan" })
 	menu:addItem({ text = "Taiwan" })
 	menu:addItem({ text = "Europe" })
 	menu:addItem({ text = "Canada" })
 	menu:addItem({ text = "China" })
+
+
+	local interval = 1000
+	local foo = Timer(interval,
+			  function(self)
+				  interval = interval + 1000
+				  log:warn("self=", self, " interval=", interval)
+				  self:setInterval(interval)
+			  end)
+	foo:start()
 
 	window:addWidget(menu)
 	self:tieAndShowWindow(window)

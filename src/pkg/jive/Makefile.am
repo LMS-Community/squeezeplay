@@ -232,14 +232,23 @@ dist_applets_setupwallpaper_DATA = \
 
 applets_setupwallpaper_wallpaperdir = $(pkgdatadir)/applets/SetupWallpaper/wallpaper
 dist_applets_setupwallpaper_wallpaper_DATA = \
+	share/applets/SetupWallpaper/wallpaper/black.png \
+	share/applets/SetupWallpaper/wallpaper/camo.png \
 	share/applets/SetupWallpaper/wallpaper/Chapple_1.jpg \
 	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_1.jpg \
 	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_2.jpg \
 	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_3.jpg \
 	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_4.jpg \
 	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_6.jpg \
+	share/applets/SetupWallpaper/wallpaper/concrete.png \
+	share/applets/SetupWallpaper/wallpaper/eggplant.png \
 	share/applets/SetupWallpaper/wallpaper/Los-Cardinalos_1.jpg \
-	share/applets/SetupWallpaper/wallpaper/Orin-Optiglot_1.jpg
+	share/applets/SetupWallpaper/wallpaper/midnight.png \
+	share/applets/SetupWallpaper/wallpaper/Orin-Optiglot_1.jpg \
+	share/applets/SetupWallpaper/wallpaper/pea.png \
+	share/applets/SetupWallpaper/wallpaper/slate.png \
+	share/applets/SetupWallpaper/wallpaper/stone.png
+
 
 
 # Default skin
@@ -273,9 +282,6 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/menu_selection_box_t.png \
 	share/applets/DefaultSkin/images/menu_selection_box_tr.png \
 	share/applets/DefaultSkin/images/note.png \
-	share/applets/DefaultSkin/images/popup_volume_leftbody.png \
-	share/applets/DefaultSkin/images/popup_volume_midbody.png \
-	share/applets/DefaultSkin/images/popup_volume_rightbody.png \
 	share/applets/DefaultSkin/images/radiobutton_off.png \
 	share/applets/DefaultSkin/images/radiobutton_on.png \
 	share/applets/DefaultSkin/images/scrollbar_bkgroundbottom.png \
@@ -314,8 +320,6 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/slider_fill_l.png \
 	share/applets/DefaultSkin/images/slider_fill.png \
 	share/applets/DefaultSkin/images/slider_fill_r.png \
-	share/applets/DefaultSkin/images/icon_volume_max.png \
-	share/applets/DefaultSkin/images/icon_volume_min.png \
 	share/applets/DefaultSkin/images/popupbox_bl.png \
 	share/applets/DefaultSkin/images/popupbox_b.png \
 	share/applets/DefaultSkin/images/popupbox_br.png \
@@ -325,14 +329,25 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/popupbox_tl.png \
 	share/applets/DefaultSkin/images/popupbox_t.png \
 	share/applets/DefaultSkin/images/popupbox_tr.png \
-	share/applets/DefaultSkin/images/popup_volume_bkground_l.png \
-	share/applets/DefaultSkin/images/popup_volume_bkground.png \
-	share/applets/DefaultSkin/images/popup_volume_bkground_r.png \
 	share/applets/DefaultSkin/images/text_entry_bkgrd.png \
 	share/applets/DefaultSkin/images/text_entry_bkgrd_l.png \
 	share/applets/DefaultSkin/images/text_entry_bkgrd_r.png \
 	share/applets/DefaultSkin/images/text_entry_letter.png \
-	share/applets/DefaultSkin/images/text_entry_select.png
+	share/applets/DefaultSkin/images/text_entry_select.png \
+	share/applets/DefaultSkin/images/popup_alarm_icon.png \
+	share/applets/DefaultSkin/images/popup_battery_low_icon.png \
+	share/applets/DefaultSkin/images/popup_fav_heart_bkgrd.png \
+	share/applets/DefaultSkin/images/popup_locked_icon.png \
+	share/applets/DefaultSkin/images/slider_icon_negative.png \
+	share/applets/DefaultSkin/images/slider_icon_positive.png \
+	share/applets/DefaultSkin/images/volume_bkgrd_l.png \
+	share/applets/DefaultSkin/images/volume_bkgrd.png \
+	share/applets/DefaultSkin/images/volume_bkgrd_r.png \
+	share/applets/DefaultSkin/images/volume_fill_l.png \
+	share/applets/DefaultSkin/images/volume_fill.png \
+	share/applets/DefaultSkin/images/volume_fill_r.png \
+	share/applets/DefaultSkin/images/volume_speaker_l.png \
+	share/applets/DefaultSkin/images/volume_speaker_r.png
 
 applets_defaultskin_soundsdir = $(pkgdatadir)/applets/DefaultSkin/sounds
 dist_applets_defaultskin_sounds_DATA = \
