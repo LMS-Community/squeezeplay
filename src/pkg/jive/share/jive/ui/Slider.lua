@@ -124,6 +124,10 @@ Set the slider value to I<value>.
 =cut
 --]]
 function setValue(self, value)
+	if self.size == value then
+		return
+	end
+
 	self.size = value
 
 	if self.size < self.min then
