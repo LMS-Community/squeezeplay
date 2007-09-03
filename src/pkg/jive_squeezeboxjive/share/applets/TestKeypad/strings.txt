@@ -7,3 +7,6 @@
 
 TEST_KEYPAD
 	EN	Keypad
+
+TEST_KEYPAD_HELP
+	EN	Press all keys and scroll the wheel to complete.

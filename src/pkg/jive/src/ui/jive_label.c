@@ -283,7 +283,7 @@ int jiveL_label_do_animate(lua_State *L) {
 		return 0;
 	}
 
-	peer->scroll_offset++;
+	peer->scroll_offset += 6;
 
 	if (peer->scroll_offset > peer->scroll_w  + SCROLL_PAD_RIGHT) {
 		peer->scroll_offset = SCROLL_PAD_LEFT;
@@ -316,7 +316,7 @@ int jiveL_label_animate(lua_State *L) {
 		jive_getmethod(L, 1, "addAnimation");
 		lua_pushvalue(L, 1);
 		lua_pushcfunction(L, &jiveL_label_do_animate);
-		lua_pushinteger(L, 14); // 14 fps
+		lua_pushinteger(L, 7); // 7 fps
 		lua_call(L, 3, 1);
 		lua_setfield(L, 1, "_animationHandle");
 	}

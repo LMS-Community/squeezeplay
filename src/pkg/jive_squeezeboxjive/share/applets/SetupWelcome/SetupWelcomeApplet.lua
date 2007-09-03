@@ -22,6 +22,7 @@ local ipairs, pairs, assert, io, string = ipairs, pairs, assert, io, string
 local oo               = require("loop.simple")
 
 local Applet           = require("jive.Applet")
+local AppletManager    = require("jive.AppletManager")
 local RadioGroup       = require("jive.ui.RadioGroup")
 local RadioButton      = require("jive.ui.RadioButton")
 local Framework        = require("jive.ui.Framework")
@@ -130,11 +131,16 @@ function step61(self)
 	-- setup squeezebox
 	self.setupSqueezebox = assert(appletManager:loadApplet("SetupSqueezebox"))
 
-	-- FIXME set active player to squeezebox that has been setup
-	return self.setupSqueezebox:setupSqueezeboxShow(function() self:step8() end)
+	return self.setupSqueezebox:setupSqueezeboxShow(function() self:step7() end)
 end
 
 function step7(self)
+	-- skip this step if a player has been selected
+	local manager = AppletManager:getAppletInstance("SlimDiscovery")
+	if manager and manager:getCurrentPlayer() ~= nil then
+		return self:step8()
+	end
+
 	-- select player
 	self.setupPlayer = assert(appletManager:loadApplet("SelectPlayer"))
 	return self.setupPlayer:setupShow(function() self:step8() end)

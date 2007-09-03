@@ -376,6 +376,9 @@ function _readWpaConfig(self, ssid)
 
 	local param = {}
 
+	-- add quoted syntax for ssid
+	ssid = '"' .. ssid .. '"'
+
 	local state = 0
 	while true do
 		local line = conf:read()
@@ -389,11 +392,6 @@ function _readWpaConfig(self, ssid)
 			state = 0
 		else
 			local k, v = string.match(line, '%s?([^=]+)=(.+)')
-
-			-- remove quotes
-			if v ~= nil then
-				v = string.match(v, '^"(.*)"$') or v
-			end
 
 			log:warn("k=", k, " v=", v)
 			if state == 1 and k == "ssid" and v == ssid then
@@ -416,19 +414,32 @@ function _readWepKey(self, ssid)
 	local param = _readWpaConfig(self, ssid)
 	local key_str = assert(param["wep_key0"])
 
-	local key = {}
-	for d in string.gmatch(key_str, "(%x%x)") do
-		key[#key + 1] = string.char(tonumber(d, 16))
-	end
+	log:warn("key_str=", key_str)
 
-	return table.concat(key, "")
+	local ascii = string.match(key_str, '^"(.+)"$')
+	if ascii then
+		-- ascii key
+		return ascii
+	else
+		-- hex key
+		local key = {}
+		for d in string.gmatch(key_str, "(%x%x)") do
+			key[#key + 1] = string.char(tonumber(d, 16))
+		end
+
+		return table.concat(key, "")
+	end
 end
 
 
 -- the wpa supplicant won't tell you the keys, we need to parse them from the config file
 function _readPSK(self, ssid)
 	local param = _readWpaConfig(self, ssid)
-	return assert(param["psk"])
+	local psk = assert(param["psk"])
+
+	-- remove quotes
+	psk = string.match(psk, '^"(.*)"$') or psk
+	return psk
 end
 
 
@@ -893,7 +904,13 @@ function notify_playerNew(self, player)
 
 	log:warn("got new playerId ", playerId)
 	if string.lower(playerId) == string.lower(self.mac) then
-		-- player is connected to slimserver, we're done
+		-- player is connected to slimserver, set as current player
+		local manager = AppletManager:getAppletInstance("SlimDiscovery")
+		if manager then
+			manager:setCurrentPlayer(player)
+		end
+
+		-- and then we're done
 		_setupOK(self)
 	end
 end

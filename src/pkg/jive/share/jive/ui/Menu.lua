@@ -350,7 +350,8 @@ function setSelectedIndex(self, index)
 	assert(type(index) == "number", "setSelectedIndex index is not a number")
 
 	if index <= self.listSize then
-		self:scrollBy(index - (self.selected or 1))
+		self.selected = index
+		self:scrollBy(0)
 	end
 end
 

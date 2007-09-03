@@ -92,7 +92,6 @@ function setupRegionShow(self, setupNext)
 	local menu = SimpleMenu("menu")
 	menu:setComparator(SimpleMenu.itemComparatorAlpha)
 
-	local selectedIndex = 1
 	for name in wlan:getRegionNames() do
 		local item = {
 			text = self:string("NETWORK_REGION_" .. name),
@@ -106,9 +105,10 @@ function setupRegionShow(self, setupNext)
 
 		menu:addItem(item)
 		if region == name then
+			log:warn("setSelectedItem=", menu:numItems())
 			menu:setSelectedItem(item)
 		end
-		log:warn("region=", region, " name=", name, " selectedIndex=", selectedIndex)
+		log:warn("region=", region, " name=", name)
 	end
 
 
@@ -995,7 +995,7 @@ end
 
 
 function failedDHCP(self)
-	local window = Window("window", self:string("NETWORK_ADDRESS_PROBLEM"))
+	local window = Window("window", self:string("NETWORK_ADDRES_PROBLEM"))
 
 	local menu = SimpleMenu("menu",
 				{
@@ -1024,7 +1024,7 @@ function failedDHCP(self)
 				})
 
 
-	local help = Textarea("help", "NETWORK_ADDRESS_HELP")
+	local help = Textarea("help", self:string("NETWORK_ADDRESS_HELP"))
 
 	window:addWidget(help)
 	window:addWidget(menu)
