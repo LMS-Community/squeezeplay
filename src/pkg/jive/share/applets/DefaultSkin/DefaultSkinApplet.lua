@@ -604,7 +604,18 @@ function skin(self, s)
 	s.currentsong.text.fg = { 0xff, 0xff, 0xff }
 	s.currentsong.text.textAlign = "left"
 
-
+	-- Popup window for information display
+	s.popupinfo.x = 0
+	s.popupinfo.y = screenHeight - 96
+	s.popupinfo.w = screenWidth
+	s.popupinfo.h = 96
+	s.popupinfo.bgImg = helpBox
+	s.popupinfo.text.w = screenWidth
+	s.popupinfo.text.h = 72
+	s.popupinfo.text.padding = { 14, 24, 14, 14 }
+	s.popupinfo.text.font = Font:load(fontpath .. "FreeSans.ttf", 16)
+	s.popupinfo.text.fg = { 0xff, 0xff, 0xff }
+	s.popupinfo.text.textAlign = "left"
 
 	-- XXXX top and status styles defined using album and standard styles
 	-- are these style needed?

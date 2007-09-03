@@ -468,8 +468,8 @@ function _process_displaystatus(self, event)
 			self:_showCurrentSong(table.concat(display["text"], "\n"), display["icon-id"])
 		else
 			-- other message from server
-			local popup = Popup("popup")
-			popup:addWidget(Textarea("textarea", table.concat(display["text"], "\n")))
+			local popup = Popup("popupinfo")
+			popup:addWidget(Textarea("text", table.concat(display["text"], "\n")))
 			popup:showBriefly(2000)
 		end
 	end
