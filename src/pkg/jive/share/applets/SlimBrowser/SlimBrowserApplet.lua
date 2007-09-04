@@ -1290,6 +1290,15 @@ end
 --==============================================================================
 
 
+-- notify_playerNewName
+-- this is called when the player name changes
+function notify_playerNewName(self, player, newName)
+	if (_player == player) then
+		_pathSource.window:setTitle(newName)
+	end
+end
+
+
 -- notify_playerDelete
 -- this is called by jnt when the playerDelete message is sent
 function notify_playerDelete(self, player)
@@ -1302,13 +1311,6 @@ function notify_playerDelete(self, player)
 	end
 end
 
--- notify_playerNewName
--- this is called when the player name changes
-function notify_playerNewName(self, player, newName)
-	if (_player.id == player.id) then
-		_pathSource.window:setTitle(newName)
-	end
-end
 
 -- notify_playerCurrent
 -- this is called when the player changes
@@ -1335,8 +1337,28 @@ function notify_playerCurrent(self, player)
 	_server = player:getSlimServer()
 	_string = function(token) return self:string(token) end
 	
-	-- prepare the window
+	-- create a window for Now Playing
+	-- _browsePath is the origin, but we do not want to lock the menu
 	local path, sink = _newDestination(
+		nil,
+		nil,
+		_newWindowSpec(nil, {
+			text = _string("SLIMBROWSER_NOW_PLAYING"),
+			window = { ["menuStyle"] = "album", },
+		}),
+		_statusSink
+	)
+	_statusPath = path
+	
+	-- make sure it has our modifier (so that we use different default action in Now Playing)
+	_statusPath.actionModifier = "-status"
+
+	-- showtime for the player
+	-- FIXME: handle player off...
+	_player:onStage(sink)
+
+	-- prepare the window
+	path, sink = _newDestination(
 		nil, -- FIXME the menu should be passed in here
 		nil,
 		_newWindowSpec(nil, {
@@ -1369,31 +1391,6 @@ function notify_playerCurrent(self, player)
 		_jiveHomeWindow = Framework.windowStack[#Framework.windowStack]
 	end
 	Framework.windowStack[#Framework.windowStack] = _browsePath.window
-	
-	
-	-- create a window for Now Playing
-	-- _browsePath is the origin, but we do not want to lock the menu
-	local savedMenu = path.menu
-	path.menu = false
-	local pathNP, sinkNP = _newDestination(
-		path,
-		nil,
-		_newWindowSpec(nil, {
-			text = _string("SLIMBROWSER_NOW_PLAYING"),
-			window = { ["menuStyle"] = "album", },
-		}),
-		_statusSink
-	)
-	_statusPath = pathNP
-	path.menu = savedMenu
-	
-	-- make sure it has our modifier (so that we use different default action in Now Playing)
-	_statusPath.actionModifier = "-status"
-
-
-	-- showtime for the player
-	-- FIXME: handle player off...
-	_player:onStage(sinkNP)
 end
 
 
