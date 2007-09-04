@@ -168,7 +168,7 @@ Updates the player with fresh data from SS.
 --]]
 function updateFromSS(self, playerInfo)
 	
-	self.name = playerInfo.name
+	_setPlayerName(self, playerInfo.name)
 	self.model = playerInfo.model
 	_setConnected(self, playerInfo.connected)
 end
