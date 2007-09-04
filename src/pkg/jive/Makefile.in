@@ -640,7 +640,18 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/icon_wireless_3_shadow.png \
 	share/applets/DefaultSkin/images/icon_wireless_4_shadow.png \
 	share/applets/DefaultSkin/images/icon_connecting.png \
-	share/applets/DefaultSkin/images/icon_connected.png
+	share/applets/DefaultSkin/images/icon_connected.png \
+        share/applets/DefaultSkin/images/bghighlight_r.png \
+        share/applets/DefaultSkin/images/bghighlight_t.png \
+        share/applets/DefaultSkin/images/bghighlight.png \
+        share/applets/DefaultSkin/images/bghighlight_bl.png \
+        share/applets/DefaultSkin/images/bghighlight_br.png \
+        share/applets/DefaultSkin/images/titlebox_bl_bghighlight.png \
+        share/applets/DefaultSkin/images/titlebox_br_bghighlight.png \
+        share/applets/DefaultSkin/images/bghighlight_tl.png \
+        share/applets/DefaultSkin/images/bghighlight_b.png \
+        share/applets/DefaultSkin/images/bghighlight_tr.png \
+        share/applets/DefaultSkin/images/bghighlight_l.png
 
 applets_defaultskin_soundsdir = $(pkgdatadir)/applets/DefaultSkin/sounds
 dist_applets_defaultskin_sounds_DATA = \

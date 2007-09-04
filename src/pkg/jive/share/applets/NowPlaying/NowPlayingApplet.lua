@@ -59,6 +59,8 @@ end
 -- Globals
 --
 
+local ARTWORK_SIZE = 114
+
 local theWindow = nil
 local thePlayer = nil
 local theItem = nil
@@ -84,7 +86,7 @@ local iTrackLen = 0
 --
 
 local function _nowPlayingArtworkThumbUri(iconId)
-        return '/music/' .. iconId .. '/cover_100x100_f_000000.jpg'
+        return '/music/' .. iconId .. '/cover_' .. ARTWORK_SIZE .. 'x' .. ARTWORK_SIZE .. '_f_000000.jpg'
 end
 
 local function _getSink(self, cmd)
@@ -139,11 +141,11 @@ local function _getIcon(item)
 	if item["icon-id"] then
 		-- Fetch an image from SlimServer
 		icon = Icon("icon")
-		server:fetchArtworkThumb(item["icon-id"], icon, _nowPlayingArtworkThumbUri, 100)
+		server:fetchArtworkThumb(item["icon-id"], icon, _nowPlayingArtworkThumbUri, ARTWORK_SIZE) 
 	elseif item["icon"] then
-		-- Fetch a remote image URL, sized to 100x100
+		-- Fetch a remote image URL, sized to ARTWORK_SIZE x ARTWORK_SIZE
 		icon = Icon("icon")
-		server:fetchArtworkURL(item["icon"], icon, 100)
+		server:fetchArtworkURL(item["icon"], icon, ARTWORK_SIZE)
 	end
 	return icon
 end
@@ -196,14 +198,11 @@ local function setTime(trackpos, tracklen)
 end
 
 local function setArtwork(icon)
-	log:error("Set Artwork")
 	if icon ~= nil then
 		theWindow:removeWidget(iArt)
 
 		local sw, sh = iArt:getSize()
 		local x, y = iArt:getPosition()
-
-		log:error(sw .. " . " .. sh)
 
 		iArt = icon
 		iArt:setSize(sw, sh)
@@ -305,7 +304,7 @@ function _createUI(self)
 
 	local sw, sh = Framework:getScreenSize()
 
-	lWTitle = Label("title", "Now Playing")
+	lWTitle = Label("nptitle", "Now Playing")
 	lWTitle:setPosition(5, 5)
 	lWTitle:setSize(sw-10, 35)
 
@@ -314,31 +313,31 @@ function _createUI(self)
 	lTitle:setSize(sw-10, 20)
 
 	lAlbum = Label("label", "#ALBUM#")
-	lAlbum:setPosition(10, 65)
+	lAlbum:setPosition(10, 60)
 	lAlbum:setSize(sw-10, 20)
 
 	lArtist = Label("label", "#ARTIST#")
-	lArtist:setPosition(10, 85)
+	lArtist:setPosition(10, 75)
 	lArtist:setSize(sw-10, 20) 
 
-	lPos = Label("label", "n/a")
-	lPos:setPosition(10, sh-65)
+	lPos = Label("wlabel", "n/a")
+	lPos:setPosition(10, sh-60)
 	lPos:setSize(sw/2, 10)
 
-	lRemain = Label("rlabel", "n/a")
-	lRemain:setPosition(sw/2, sh-65)
+	lRemain = Label("wrlabel", "n/a")
+	lRemain:setPosition(sw/2, sh-60)
 	lRemain:setSize(sw/2-10, 10)
 
 	iArt = Icon("artwork")
-	iArt:setSize(100, 100)
-	iArt:setPosition(sw/2-50, 115)
+	iArt:setSize(ARTWORK_SIZE, ARTWORK_SIZE)
+	iArt:setPosition(sw/2-(ARTWORK_SIZE/2), 115)
 
 	local bg = Label("background", "")
-	bg:setSize(sw-10, 70)
-	bg:setPosition(5, 40)
+	bg:setSize(sw-11, 70)
+	bg:setPosition(6, 38)
 
 	sPos = Slider("slider", 0, 100, 0, function(slider, value) log:warn("slider: " .. value) end)
-	sPos:setPosition(10, sh-80)
+	sPos:setPosition(10, sh-75)
 	sPos:setSize(sw-20, 10)
 	
 	window:addWidget(bg)
@@ -399,6 +398,7 @@ end
 
 function skin(self, s)
 	local imgpath = "applets/DefaultSkin/images/"
+	local npimgpath = "applets/NowPlaying/images/"
 	local fontpath = "fonts/"
 
 	s.nowplaying.layout = Window.noLayout
@@ -410,30 +410,37 @@ function skin(self, s)
                                        imgpath .. "titlebox_t.png",
                                        imgpath .. "titlebox_tr.png",
                                        imgpath .. "titlebox_r.png",
-                                       imgpath .. "titlebox_br.png",
+                                       imgpath .. "titlebox_br_bghighlight.png",
                                        imgpath .. "titlebox_b.png",
-                                       imgpath .. "titlebox_bl.png",
+                                       imgpath .. "titlebox_bl_bghighlight.png",
                                        imgpath .. "titlebox_l.png"
                                })
 
         local highlightBox =
                 Tile:loadTiles({
-                                       imgpath .. "menu_selection_box.png",
-                                       imgpath .. "menu_selection_box_tl.png",
-                                       imgpath .. "menu_selection_box_t.png",
-                                       imgpath .. "menu_selection_box_tr.png",
-                                       imgpath .. "menu_selection_box_r.png",
-                                       imgpath .. "menu_selection_box_br.png",
-                                       imgpath .. "menu_selection_box_b.png",
-                                       imgpath .. "menu_selection_box_bl.png",
-                                       imgpath .. "menu_selection_box_l.png"
+                                       imgpath .. "bghighlight.png",
+                                       imgpath .. "bghighlight_tl.png",
+                                       imgpath .. "bghighlight_t.png",
+                                       imgpath .. "bghighlight_tr.png",
+                                       imgpath .. "bghighlight_r.png",
+                                       imgpath .. "bghighlight_br.png",
+                                       imgpath .. "bghighlight_b.png",
+                                       imgpath .. "bghighlight_bl.png",
+                                       imgpath .. "bghighlight_l.png"
                                })
 
-        s.title.font = Font:load(fontpath .. "FreeSansBold.ttf", 20)
-        s.title.fg = { 0x37, 0x37, 0x37 }
-        s.title.bgImg = titleBox
+        s.nptitle.font = Font:load(fontpath .. "FreeSansBold.ttf", 20)
+        s.nptitle.fg = { 0x37, 0x37, 0x37 }
+        s.nptitle.bgImg = titleBox
+        s.nptitle.padding = { 10, 7, 8, 9 }
+        s.nptitle.position = LAYOUT_NORTH
 
-	s.rlabel.textAlign = "top-right"
+        s.label.font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
+
+	s.wlabel.fg = { 0xFF, 0xFF, 0xFF }
+
+	s.wrlabel.fg = { 0xFF, 0xFF, 0xFF }
+	s.wrlabel.textAlign = "top-right"
 
 	s.artwork.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.artwork.x = 50
