@@ -1365,6 +1365,9 @@ function notify_playerCurrent(self, player)
 	
 	
 	-- create a window for Now Playing
+	-- _browsePath is the origin, but we do not want to lock the menu
+	local savedMenu = path.menu
+	path.menu = false
 	local pathNP, sinkNP = _newDestination(
 		path,
 		nil,
@@ -1375,6 +1378,7 @@ function notify_playerCurrent(self, player)
 		_statusSink
 	)
 	_statusPath = pathNP
+	path.menu = savedMenu
 	
 	-- make sure it has our modifier (so that we use different default action in Now Playing)
 	_statusPath.actionModifier = "-status"
