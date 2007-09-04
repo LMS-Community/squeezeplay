@@ -59,6 +59,11 @@ end
 -- Globals
 --
 
+local theWindow = nil
+local thePlayer = nil
+local theItem = nil
+local theIconId = nil
+
 local tTimer = nil
 
 local lWTitle = nil
@@ -77,6 +82,10 @@ local iTrackLen = 0
 ----------------------------------------------------------------------------------------
 -- Helper Functions
 --
+
+local function _nowPlayingArtworkThumbUri(iconId)
+        return '/music/' .. iconId .. '/cover_50x50_f_000000.jpg'
+end
 
 local function _getSink(self, cmd)
 	return function(chunk, err)
@@ -107,6 +116,36 @@ local function SecondsToString(seconds)
 	end
 
 	return min .. ":" .. sec
+end
+
+local function _getCurrentIconId()
+	if theItem == nil then
+		return nil 
+	end
+
+	if theItem["icon-id"] then
+		return "icon-id:" .. theItem["icon-id"]
+	elseif theItem["icon"] then
+		return "icon:" .. theItem["icon"]
+	end
+
+	return nil
+end
+
+local function _getIcon(item)
+	local icon = nil
+	local server = thePlayer:getSlimServer()
+
+	if item["icon-id"] then
+		-- Fetch an image from SlimServer
+		icon = Icon("icon")
+		server:fetchArtworkThumb(item["icon-id"], icon, _nowPlayingArtworkThumbUri)
+	elseif item["icon"] then
+		-- Fetch a remote image URL, sized to 100x100
+		icon = Icon("icon")
+		server:fetchArtworkURL(item["icon"], icon, 100)
+	end
+	return icon
 end
 
 local function updatePosition()
@@ -155,6 +194,24 @@ local function setTime(trackpos, tracklen)
 
 	updatePosition()
 end
+
+local function setArtwork(icon)
+	log:error("Set Artwork")
+	if icon ~= nil then
+		theWindow:removeWidget(iArt)
+
+		local sw, sh = iArt:getSize()
+		local x, y = iArt:getPosition()
+
+		iArt = icon
+		iArt:setSize(sw, sh)
+		iArt:setPosition(x,y)
+		theWindow:addWidget(iArt)
+	else
+		log:debug("No Icon")
+	end
+end
+
 
 local function updateTrack(album, artist, track, pos, length)
 	setAlbum(album)
@@ -206,6 +263,9 @@ function _process_status(self, event)
 	if data.item_loop ~= nil then
 
 		local text = data.item_loop[1].text
+		theItem = data.item_loop[1]
+
+		local icon = _getIcon(theItem)
 
 		-- Split Text Up into the three infos
 		--
@@ -220,16 +280,14 @@ function _process_status(self, event)
 		end
 
 		updateTrack(split[2], split[3], split[1], data.time, data.duration)
-
+		setArtwork(icon)
 	else
-
+		theItem = nil
 		updateTrack("", "(Nothing Playing)", "", 0, 0)
-		
+		setArtwork(nil)
 	end
 	
 end
-
-local thePlayer = nil
 
 function free(self)
 	if thePlayer then
@@ -290,6 +348,8 @@ function _createUI(self)
 	window:addWidget(lPos)
 	window:addWidget(lRemain)
 	window:addWidget(iArt)
+
+	theWindow = window
 
 	return window
 end
