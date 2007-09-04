@@ -459,7 +459,7 @@ local function _performJSONAction(jsonAction, from, qty, sink)
 	end
 	
 	-- send the command
-	_server.comet:request(sink, playerid, request)
+	_server:request(sink, playerid, request)
 end
 
 
@@ -615,7 +615,11 @@ end
 -- sink that sets the data for our status window(s)
 local function _statusSink(step, chunk, err)
 	log:debug("_statusSink()")
-	
+		
+	if logd:isDebug() then
+		debug.dump(chunk, 8)
+	end
+
 	-- currently we're not going anywhere with Now Playing...
 	assert(step == _statusPath)
 
@@ -644,7 +648,7 @@ local function _statusSink(step, chunk, err)
 		local from, qty = step.db:missing(STATUS_MISSING_FETCH)
 
 		if from then
-			_server.comet:request(
+			_server:request(
 				step.sink,
 				_player.id,
 				{ 'status', from, qty, 'menu:menu' }
@@ -1246,42 +1250,97 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 end
 
 
--- _homeAction
--- goes back to home menu or to now playing list
-function _homeAction(self, homePath)
-	local windowStack = Framework.windowStack
 
-	-- are we in home?
-	if #windowStack > 1 then
 
-		-- no, unroll
-		local step = homePath.destination
-		-- FIXME: loop looks weird, can probably be simplified.
-		while step do
-			if step.destination then
-				-- hide the window
-				step.window:hide(nil, "JUMP")
-				-- destroy scaffholding to data coming in is stopped
-				step.origin = false
-				step = step.destination
-			else
-				break
-			end
-		end
+-- _replaceJiveHome
+-- replaces the Jive main menu with our window.
+local function _replaceJiveHome(window)
 
-		_browsePath = homePath
-		-- if we were going somewhere, we're no longer
-		_browsePath.destination = false
-		_browsePath.menu:unlock()
+	-- switch out the standard home menu, and replace with our window
+	_jiveHomeWindow = Framework.windowStack[#Framework.windowStack]
+	Framework.windowStack[#Framework.windowStack] = window
+end
 
-		-- close any non SlimBrowser windows
 
-		while #windowStack > 1 do
-			windowStack[#windowStack - 1]:hide(nil, "JUMP")
-		end
-	else
-		_goNowPlaying()
+-- _restoreJiveHome
+-- restores the Jive main menu
+local function _restoreJiveHome()
+
+	-- restore the system home menu
+	if _jiveHomeWindow then
+		local window = Framework.windowStack[#Framework.windowStack]
+		Framework.windowStack[#Framework.windowStack] = _jiveHomeWindow
+		window:hide()
+		_jiveHomeWindow = false
 	end
+end
+
+
+-- _installHomeKeyHandler
+-- sets a global listener for the home key that shows our main menu
+local function _installHomeKeyHandler()
+
+	-- implement the home button using a global handler, this will work even
+	-- when other applets/screensavers are displayed
+	_globalHandler = Framework:addListener(
+		
+		EVENT_KEY_PRESS,
+		
+		function(event)
+
+			if event:getKeycode() == KEY_HOME then
+				
+				local windowStack = Framework.windowStack
+
+				-- are we in home?
+				if #windowStack > 1 then
+
+					-- no, unroll
+					local step = homePath.destination
+					-- FIXME: loop looks weird, can probably be simplified.
+					while step do
+						if step.destination then
+							-- hide the window
+							step.window:hide(nil, "JUMP")
+							-- destroy scaffholding to data coming in is stopped
+							step.origin = false
+							step = step.destination
+						else
+							break
+						end
+					end
+
+					_browsePath = homePath
+					-- if we were going somewhere, we're no longer
+					_browsePath.destination = false
+					_browsePath.menu:unlock()
+
+					-- close any non SlimBrowser windows
+
+					while #windowStack > 1 do
+						windowStack[#windowStack - 1]:hide(nil, "JUMP")
+					end
+				else
+					_goNowPlaying()
+				end
+				
+				return EVENT_CONSUME
+			end
+			return EVENT_UNUSED
+		end,
+		false
+	)
+end
+
+
+-- _removeHomeKeyHandler
+-- removes the global handler
+local function _removeHomeKeyHandler()
+
+	if _globalHandler then
+		Framework:removeListener(_globalHandler)
+		_globalHandler = false
+	end		
 end
 
 
@@ -1337,15 +1396,19 @@ function notify_playerCurrent(self, player)
 	_server = player:getSlimServer()
 	_string = function(token) return self:string(token) end
 	
-	-- create a window for Now Playing
-	-- _browsePath is the origin, but we do not want to lock the menu
+	-- create a window for Now Playing, this is our _statusPath
 	local path, sink = _newDestination(
 		nil,
 		nil,
-		_newWindowSpec(nil, {
-			text = _string("SLIMBROWSER_NOW_PLAYING"),
-			window = { ["menuStyle"] = "album", },
-		}),
+		_newWindowSpec(
+			nil, 
+			{
+				text = _string("SLIMBROWSER_NOW_PLAYING"),
+				window = { 
+					["menuStyle"] = "album", 
+				},
+			}
+		),
 		_statusSink
 	)
 	_statusPath = path
@@ -1357,40 +1420,26 @@ function notify_playerCurrent(self, player)
 	-- FIXME: handle player off...
 	_player:onStage(sink)
 
-	-- prepare the window
+
+	-- create our main menu
 	path, sink = _newDestination(
-		nil, -- FIXME the menu should be passed in here
 		nil,
-		_newWindowSpec(nil, {
-			["text"] = player:getName(),
-		}),
+		nil,
+		_newWindowSpec(
+			nil, 
+			{
+				["text"] = player:getName(),
+			}
+		),
 		_mainMenuSink
 	)
 	_browsePath = path
 	_pathSource = path
 	
 	-- fetch the menu, pronto...
-	_server.comet:request(sink, nil, { 'menu', 0, 100 })
-	
-	-- implement the home button using a global handler, this will work even
-	-- when other applets/screensavers are displayed
-	_globalHandler = Framework:addListener(
-		EVENT_KEY_PRESS,
-		function(event)
-			if event:getKeycode() == KEY_HOME then
-				self:_homeAction(path)
-				return EVENT_CONSUME
-			end
-			return EVENT_UNUSED
-		end,
-		false
-	)
+	_server:request(sink, nil, { 'menu', 0, 100 })
 
-	-- switch out the standard home menu, and replace with our window
-	if not _jiveHomeWindow then
-		_jiveHomeWindow = Framework.windowStack[#Framework.windowStack]
-	end
-	Framework.windowStack[#Framework.windowStack] = _browsePath.window
+	_replaceJiveHome(_browsePath.window)
 end
 
 
@@ -1407,22 +1456,13 @@ function free(self)
 	
 	_player:offStage()
 
-	-- restore the system home menu
-	if _jiveHomeWindow then
-		local window = Framework.windowStack[#Framework.windowStack]
-		Framework.windowStack[#Framework.windowStack] = _jiveHomeWindow
-		window:hide()
-	end
+	_restoreJiveHome()
+	
+	_removeHomeKeyHandler()
 
-	if _globalHandler then
-		Framework:removeListener(_globalHandler)
-	end
-		
 	_player = false
 	_server = false
 	_string = false
-	_jiveHomeWindow = false
-	_globalHandler = false
 
 	-- walk down our path and close...
 	local step = _browsePath

@@ -664,6 +664,9 @@ end
 function queuePriority(self, request)
 	self.jpool:queuePriority(request)
 end
+function request(self, ...)
+	self.comet:request(...)
+end
 
 --[[
 
