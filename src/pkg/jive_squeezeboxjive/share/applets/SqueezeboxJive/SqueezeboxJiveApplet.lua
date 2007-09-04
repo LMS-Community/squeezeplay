@@ -191,10 +191,10 @@ function _brightness(self, level)
 
 	level = level or settings.brightness
 
-	log:debug("brightness level=", level, " value=", (level * 128))
+	log:debug("brightness level=", level, " value=", (level * 2047))
 	self.brightnessLevel = level
-	jiveBSP.ioctl(11, level * 128)
-	jiveBSP.ioctl(13, level * 128)
+	jiveBSP.ioctl(11, level * 2047)
+	jiveBSP.ioctl(13, level * 2047)
 end
 
 
@@ -244,10 +244,10 @@ end
 function settingsBrightnessShow(self, menuItem)
 	local window = Window("window", menuItem.text)
 
-	local level = jiveBSP.ioctl(12) / 128
+	local level = jiveBSP.ioctl(12) / 2047
 	log:warn("level is ", level);
 
-	local slider = Slider("slider", 8, 32, level,
+	local slider = Slider("slider", 1, 32, level,
 			      function(slider, value)
 				      self:setBrightness(value)
 			      end)

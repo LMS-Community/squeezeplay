@@ -146,8 +146,6 @@ function _adjustSlider(self, value)
 	self:setValue(self.size + value)
 
 	if self.size ~= oldSize then
-		self:playSound("SELECT")
-
 		if self.closure then
 			self.closure(self, self.size)
 		end
