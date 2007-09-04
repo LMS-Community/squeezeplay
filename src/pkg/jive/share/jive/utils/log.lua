@@ -166,7 +166,7 @@ local categories = {
 	["slimserver"]               = jiveLogger(logging.WARN),
 	["slimserver.cache"]         = jiveLogger(logging.WARN),
 	["player"]                   = jiveLogger(logging.WARN),
-	["player.browse"]            = jiveLogger(logging.WARN),
+	["player.browse"]            = jiveLogger(logging.DEBUG),
 	["player.browse.data"]       = jiveLogger(logging.WARN),
                          
 	["net.cli"]                  = jiveLogger(logging.WARN),

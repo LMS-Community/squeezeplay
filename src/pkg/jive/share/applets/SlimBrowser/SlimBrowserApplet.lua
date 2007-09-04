@@ -1212,40 +1212,6 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		end
 	end
 
---[[
-	-- hide the window on back key and restore paths
-	window:addListener(
-		EVENT_KEY_PRESS,
-		function(evt)
-			if evt:getKeycode() == KEY_BACK then
-				
-				
-				-- if there's no origin to go back to, don't go :)
-				if _browsePath.origin then
-				
-					-- clear it if present
-					if item then
-						item['_inputDone'] = nil
-					end
-					
-					window:hide()
-				
-					_browsePath = _browsePath.origin
-					_browsePath.destination = false
-					
-					log:debug("back, browsePath: ", _browsePath)
-
-					-- if we show now playing, it takes over _browsePath
-					-- reset statusPath.origin to false, we don't come from browsepath any longer
-					--if _statusPath.origin = false
-					
-					return EVENT_CONSUME 
-				end
-			end
-		end
-	)
---]]
-
 	-- make sure closing our windows do keep the path alive!
 	window:addListener(
 		EVENT_WINDOW_POP,
@@ -1266,15 +1232,8 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 				_browsePath.destination = false
 				
 				log:warn("POP, browsePath: ", _browsePath)
-
-				-- if we show now playing, it takes over _browsePath
-				-- reset statusPath.origin to false, we don't come from browsepath any longer
-				--_statusPath.origin = false
-				
-				--return EVENT_CONSUME 
 			else
 				log:error("_browsePath.origin is nil in POP handler!")
-				--return EVENT_UNUSED
 			end
 		end
 	)
@@ -1289,7 +1248,7 @@ end
 
 -- _homeAction
 -- goes back to home menu or to now playing list
-local function _homeAction(self, homePath)
+function _homeAction(self, homePath)
 	local windowStack = Framework.windowStack
 
 	-- are we in home?
