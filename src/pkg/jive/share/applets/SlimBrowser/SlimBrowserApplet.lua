@@ -21,59 +21,58 @@ TODO
 local tostring, tonumber, type = tostring, tonumber, type
 local pairs, ipairs, select, assert = pairs, ipairs, select, assert
 
-local oo               = require("loop.simple")
-local table            = require("table")
-local string           = require("string")
-
-local Applet           = require("jive.Applet")
-local Player           = require("jive.slim.Player")
-local SlimServer       = require("jive.slim.SlimServer")
-local Framework        = require("jive.ui.Framework")
-local Window           = require("jive.ui.Window")
-local Popup            = require("jive.ui.Popup")
-local Menu             = require("jive.ui.Menu")
-local Label            = require("jive.ui.Label")
-local Icon             = require("jive.ui.Icon")
-local Slider           = require("jive.ui.Slider")
-local Timer            = require("jive.ui.Timer")
-local Textinput        = require("jive.ui.Textinput")
-local Textarea         = require("jive.ui.Textarea")
-local RadioGroup       = require("jive.ui.RadioGroup")
-local RadioButton      = require("jive.ui.RadioButton")
-local Checkbox         = require("jive.ui.Checkbox")
-local DateTime         = require("jive.utils.datetime")
-
-local DB               = require("applets.SlimBrowser.DB")
+local oo                     = require("loop.simple")
+local table                  = require("table")
+local string                 = require("string")
+                             
+local Applet                 = require("jive.Applet")
+local Player                 = require("jive.slim.Player")
+local SlimServer             = require("jive.slim.SlimServer")
+local Framework              = require("jive.ui.Framework")
+local Window                 = require("jive.ui.Window")
+local Popup                  = require("jive.ui.Popup")
+local Menu                   = require("jive.ui.Menu")
+local Label                  = require("jive.ui.Label")
+local Icon                   = require("jive.ui.Icon")
+local Slider                 = require("jive.ui.Slider")
+local Timer                  = require("jive.ui.Timer")
+local Textinput              = require("jive.ui.Textinput")
+local Textarea               = require("jive.ui.Textarea")
+local RadioGroup             = require("jive.ui.RadioGroup")
+local RadioButton            = require("jive.ui.RadioButton")
+local Checkbox               = require("jive.ui.Checkbox")
+local DateTime               = require("jive.utils.datetime")
+                             
+local DB                     = require("applets.SlimBrowser.DB")
 
 local debug = require("jive.utils.debug")
 
-local log              = require("jive.utils.log").logger("player.browse")
-local logd             = require("jive.utils.log").logger("player.browse.data")
+local log                    = require("jive.utils.log").logger("player.browse")
+local logd                   = require("jive.utils.log").logger("player.browse.data")
+                             
+local EVENT_KEY_ALL          = jive.ui.EVENT_KEY_ALL
+local EVENT_KEY_DOWN         = jive.ui.EVENT_KEY_DOWN
+local EVENT_KEY_UP           = jive.ui.EVENT_KEY_UP
+local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
+local EVENT_KEY_HOLD         = jive.ui.EVENT_KEY_HOLD
+local EVENT_SCROLL           = jive.ui.EVENT_SCROLL
+local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
+local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
+local EVENT_ACTION           = jive.ui.EVENT_ACTION
+local KEY_FWD                = jive.ui.KEY_FWD
+local KEY_REW                = jive.ui.KEY_REW
+local KEY_HOME               = jive.ui.KEY_HOME
+local KEY_PLAY               = jive.ui.KEY_PLAY
+local KEY_ADD                = jive.ui.KEY_ADD
+local KEY_BACK               = jive.ui.KEY_BACK
+local KEY_PAUSE              = jive.ui.KEY_PAUSE
+local KEY_VOLUME_DOWN        = jive.ui.KEY_VOLUME_DOWN
+local KEY_VOLUME_UP          = jive.ui.KEY_VOLUME_UP
+local EVENT_FOCUS_GAINED     = jive.ui.EVENT_FOCUS_GAINED
+local EVENT_FOCUS_LOST       = jive.ui.EVENT_FOCUS_LOST
 
-local EVENT_KEY_ALL    = jive.ui.EVENT_KEY_ALL
-local EVENT_KEY_DOWN   = jive.ui.EVENT_KEY_DOWN
-local EVENT_KEY_UP     = jive.ui.EVENT_KEY_UP
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local EVENT_KEY_HOLD   = jive.ui.EVENT_KEY_HOLD
-local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
-local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
-local EVENT_ACTION     = jive.ui.EVENT_ACTION
-local KEY_FWD          = jive.ui.KEY_FWD
-local KEY_REW          = jive.ui.KEY_REW
-local KEY_HOME         = jive.ui.KEY_HOME
-local KEY_PLAY         = jive.ui.KEY_PLAY
-local KEY_ADD          = jive.ui.KEY_ADD
-local KEY_BACK         = jive.ui.KEY_BACK
-local KEY_PAUSE        = jive.ui.KEY_PAUSE
-local KEY_VOLUME_DOWN  = jive.ui.KEY_VOLUME_DOWN
-local KEY_VOLUME_UP    = jive.ui.KEY_VOLUME_UP
--- 
--- local Context          = require("applets.SlimBrowser.Context")
-
-local jiveMain         = jiveMain
-local jnt              = jnt
-local jiveMain         = jiveMain
+local jiveMain               = jiveMain
+local jnt                    = jnt
 
 
 module(...)
@@ -737,6 +736,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 				local res = {
 					["result"] = item,
 				}
+				-- make base accessible
 				_browseSink(step, res)
 				return EVENT_CONSUME
 			end
@@ -907,7 +907,18 @@ local _keycodeActionName = {
 -- _browseMenuListener
 -- called 
 local function _browseMenuListener(menu, menuItem, db, dbIndex, event)
-	log:warn("_browseMenuListener(", event:tostring(), ", " , index, ")")
+
+	-- ok so joe did press a key while in our menu...
+	-- figure out the item action...
+	local evtType = event:getType()
+
+	-- we don't care about focus: we get one everytime we change current item
+	-- and it just pollutes our logging.
+	if evtType == EVENT_FOCUS_GAINED or evtType == EVENT_FOCUS_LOST then
+		return EVENT_UNUSED
+	end
+
+	log:debug("_browseMenuListener(", event:tostring(), ", " , index, ")")
 	
 	-- we don't care about events not on the current window
 	-- assumption for event handling code: _browsePath corresponds to current window!
@@ -915,7 +926,7 @@ local function _browseMenuListener(menu, menuItem, db, dbIndex, event)
 		log:debug("_browsePath: ", _browsePath)
 
 		log:debug("Ignoring, not visible")
-		return
+		return EVENT_UNUSED
 	end
 	
 	-- we don't want to do anything if this menu item involves an active decoration
@@ -926,9 +937,6 @@ local function _browseMenuListener(menu, menuItem, db, dbIndex, event)
 		return EVENT_UNUSED
 	end
 
-	-- ok so joe did press a key while in our menu...
-	-- figure out the item action...
-	local evtType = event:getType()
 	
 	-- actions on button down
 	if evtType == EVENT_KEY_DOWN then
@@ -1198,7 +1206,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 			)
 		end
 	end
-	
+
 	-- hide the window on back key and restore paths
 	window:addListener(
 		EVENT_KEY_PRESS,
@@ -1223,13 +1231,42 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 
 					-- if we show now playing, it takes over _browsePath
 					-- reset statusPath.origin to false, we don't come from browsepath any longer
-					_statusPath.origin = false
+					--if _statusPath.origin = false
 					
 					return EVENT_CONSUME 
 				end
 			end
 		end
 	)
+
+--[[
+	window:addListener(
+		EVENT_WINDOW_POP,
+		function(evt)
+			-- if there's no origin to go back to, don't go :)
+			if _browsePath.origin then
+			
+				-- clear it if present
+				if item then
+					item['_inputDone'] = nil
+				end
+				
+				window:hide()
+			
+				_browsePath = _browsePath.origin
+				_browsePath.destination = false
+				
+				log:debug("back, browsePath: ", _browsePath)
+
+				-- if we show now playing, it takes over _browsePath
+				-- reset statusPath.origin to false, we don't come from browsepath any longer
+				_statusPath.origin = false
+				
+				return EVENT_CONSUME 
+			end
+		end
+	)
+--]]
 		
 	-- manage sink
 	local stepSink = _getStepSink(step, sink)
