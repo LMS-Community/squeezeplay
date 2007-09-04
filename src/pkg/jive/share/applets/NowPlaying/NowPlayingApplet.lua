@@ -84,7 +84,7 @@ local iTrackLen = 0
 --
 
 local function _nowPlayingArtworkThumbUri(iconId)
-        return '/music/' .. iconId .. '/cover_50x50_f_000000.jpg'
+        return '/music/' .. iconId .. '/cover_100x100_f_000000.jpg'
 end
 
 local function _getSink(self, cmd)
@@ -139,7 +139,7 @@ local function _getIcon(item)
 	if item["icon-id"] then
 		-- Fetch an image from SlimServer
 		icon = Icon("icon")
-		server:fetchArtworkThumb(item["icon-id"], icon, _nowPlayingArtworkThumbUri)
+		server:fetchArtworkThumb(item["icon-id"], icon, _nowPlayingArtworkThumbUri, 100)
 	elseif item["icon"] then
 		-- Fetch a remote image URL, sized to 100x100
 		icon = Icon("icon")
@@ -202,6 +202,8 @@ local function setArtwork(icon)
 
 		local sw, sh = iArt:getSize()
 		local x, y = iArt:getPosition()
+
+		log:error(sw .. " . " .. sh)
 
 		iArt = icon
 		iArt:setSize(sw, sh)
