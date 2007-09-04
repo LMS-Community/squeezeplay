@@ -59,6 +59,9 @@ local EVENT_SCROLL           = jive.ui.EVENT_SCROLL
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
 local EVENT_ACTION           = jive.ui.EVENT_ACTION
+local EVENT_FOCUS_GAINED     = jive.ui.EVENT_FOCUS_GAINED
+local EVENT_FOCUS_LOST       = jive.ui.EVENT_FOCUS_LOST
+local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
 local KEY_FWD                = jive.ui.KEY_FWD
 local KEY_REW                = jive.ui.KEY_REW
 local KEY_HOME               = jive.ui.KEY_HOME
@@ -68,8 +71,6 @@ local KEY_BACK               = jive.ui.KEY_BACK
 local KEY_PAUSE              = jive.ui.KEY_PAUSE
 local KEY_VOLUME_DOWN        = jive.ui.KEY_VOLUME_DOWN
 local KEY_VOLUME_UP          = jive.ui.KEY_VOLUME_UP
-local EVENT_FOCUS_GAINED     = jive.ui.EVENT_FOCUS_GAINED
-local EVENT_FOCUS_LOST       = jive.ui.EVENT_FOCUS_LOST
 
 local jiveMain               = jiveMain
 local jnt                    = jnt
@@ -109,10 +110,11 @@ local _server = false
 -- The path of enlightenment
 local _browsePath = false
 local _statusPath = false
+local _pathSource = false
 
 -- The system home menu
-local _homeWindow = false
-local _homeHandler = false
+local _jiveHomeWindow = false
+local _globalHandler = false
 
 -- The last entered text
 local _lastInput = ""
@@ -1164,7 +1166,10 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	
 		-- a menu. We manage closing ourselves to guide our path
 		menu = Menu(windowSpec.menuStyle, _browseMenuRenderer, _browseMenuListener)
-		menu:setCloseable(false)
+		
+		if not origin then
+			menu:setCloseable(false)
+		end
 
 		-- alltogether now
 		menu:setItems(db:menuItems())
@@ -1207,6 +1212,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		end
 	end
 
+--[[
 	-- hide the window on back key and restore paths
 	window:addListener(
 		EVENT_KEY_PRESS,
@@ -1238,35 +1244,40 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 			end
 		end
 	)
+--]]
 
---[[
+	-- make sure closing our windows do keep the path alive!
 	window:addListener(
 		EVENT_WINDOW_POP,
 		function(evt)
-			-- if there's no origin to go back to, don't go :)
+
+			-- _browsePath should point/be the current window
+			-- we're stacking windows, so when we close one, we go one step back
+			-- i.e. we go to _browsePath.origin
+
 			if _browsePath.origin then
 			
-				-- clear it if present
+				-- clear it if present, so we can start again the textinput
 				if item then
 					item['_inputDone'] = nil
 				end
-				
-				window:hide()
 			
 				_browsePath = _browsePath.origin
 				_browsePath.destination = false
 				
-				log:debug("back, browsePath: ", _browsePath)
+				log:warn("POP, browsePath: ", _browsePath)
 
 				-- if we show now playing, it takes over _browsePath
 				-- reset statusPath.origin to false, we don't come from browsepath any longer
-				_statusPath.origin = false
+				--_statusPath.origin = false
 				
-				return EVENT_CONSUME 
+				--return EVENT_CONSUME 
+			else
+				log:error("_browsePath.origin is nil in POP handler!")
+				--return EVENT_UNUSED
 			end
 		end
 	)
---]]
 		
 	-- manage sink
 	local stepSink = _getStepSink(step, sink)
@@ -1276,7 +1287,9 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 end
 
 
-function _homeAction(self, homePath)
+-- _homeAction
+-- goes back to home menu or to now playing list
+local function _homeAction(self, homePath)
 	local windowStack = Framework.windowStack
 
 	-- are we in home?
@@ -1318,8 +1331,6 @@ end
 --==============================================================================
 
 
-
-
 -- notify_playerDelete
 -- this is called by jnt when the playerDelete message is sent
 function notify_playerDelete(self, player)
@@ -1336,11 +1347,7 @@ end
 -- notify_playerCurrent
 -- this is called when the player changes
 function notify_playerCurrent(self, player)
-	log:debug(
-		"SlimBrowserApplet:notify_playerCurrent(", 
-		player, 
-		")"
-	)
+	log:debug("SlimBrowserApplet:notify_playerCurrent(", player, ")")
 
 	-- has the player actually changed?
 	if _player == player then
@@ -1357,33 +1364,13 @@ function notify_playerCurrent(self, player)
 		return
 	end
 	
-
 	-- assign our locals
 	_player = player
 	_server = player:getSlimServer()
 	_string = function(token) return self:string(token) end
 	
-	-- create a window for Now Playing
-	local path, sink = _newDestination(
-		nil,
-		nil,
-		_newWindowSpec(nil, {
-			text = _string("SLIMBROWSER_NOW_PLAYING"),
-			window = { ["menuStyle"] = "album", },
-		}),
-		_statusSink
-	)
-	_statusPath = path
-	
-	-- make sure it has our modifier (so that we use different default action in Now Playing)
-	_statusPath.actionModifier = "-status"
-
-	-- showtime for the player
-	-- FIXME: handle player off...
-	_player:onStage(sink)
-	
 	-- prepare the window
-	path, sink = _newDestination(
+	local path, sink = _newDestination(
 		nil, -- FIXME the menu should be passed in here
 		nil,
 		_newWindowSpec(nil, {
@@ -1392,28 +1379,51 @@ function notify_playerCurrent(self, player)
 		_mainMenuSink
 	)
 	_browsePath = path
+	_pathSource = path
 	
 	-- fetch the menu, pronto...
 	_server.comet:request(sink, nil, { 'menu', 0, 100 })
 	
 	-- implement the home button using a global handler, this will work even
 	-- when other applets/screensavers are displayed
-	_homeHandler = Framework:addListener(EVENT_KEY_PRESS,
-					     function(event)
-						     if event:getKeycode() == KEY_HOME then
-							     self:_homeAction(path)
-							     return EVENT_CONSUME
-						     end
-
-						     return EVENT_UNUSED
-					     end,
-					     false)
+	_globalHandler = Framework:addListener(
+		EVENT_KEY_PRESS,
+		function(event)
+			if event:getKeycode() == KEY_HOME then
+				self:_homeAction(path)
+				return EVENT_CONSUME
+			end
+			return EVENT_UNUSED
+		end,
+		false
+	)
 
 	-- switch out the standard home menu, and replace with our window
-	if not _homeWindow then
-		_homeWindow = Framework.windowStack[#Framework.windowStack]
+	if not _jiveHomeWindow then
+		_jiveHomeWindow = Framework.windowStack[#Framework.windowStack]
 	end
 	Framework.windowStack[#Framework.windowStack] = _browsePath.window
+	
+	
+	-- create a window for Now Playing
+	local pathNP, sinkNP = _newDestination(
+		path,
+		nil,
+		_newWindowSpec(nil, {
+			text = _string("SLIMBROWSER_NOW_PLAYING"),
+			window = { ["menuStyle"] = "album", },
+		}),
+		_statusSink
+	)
+	_statusPath = pathNP
+	
+	-- make sure it has our modifier (so that we use different default action in Now Playing)
+	_statusPath.actionModifier = "-status"
+
+
+	-- showtime for the player
+	-- FIXME: handle player off...
+	_player:onStage(sinkNP)
 end
 
 
@@ -1431,21 +1441,21 @@ function free(self)
 	_player:offStage()
 
 	-- restore the system home menu
-	if _homeWindow then
+	if _jiveHomeWindow then
 		local window = Framework.windowStack[#Framework.windowStack]
-		Framework.windowStack[#Framework.windowStack] = _homeWindow
+		Framework.windowStack[#Framework.windowStack] = _jiveHomeWindow
 		window:hide()
 	end
 
-	if _homeHandler then
-		Framework:removeListener(_homeHandler)
+	if _globalHandler then
+		Framework:removeListener(_globalHandler)
 	end
 		
 	_player = false
 	_server = false
 	_string = false
-	_homeWindow = false
-	_homeHandler = false
+	_jiveHomeWindow = false
+	_globalHandler = false
 
 	-- walk down our path and close...
 	local step = _browsePath
@@ -1468,10 +1478,20 @@ function free(self)
 		prev.origin = nil
 	end
 	
+	_pathSource = false
+	
 	return true
 end
 
 
+--[[
+
+=head2 applets.SlimBrowser.SlimBrowserApplet:init()
+
+Overridden to subscribe to events about players
+
+=cut
+--]]
 function init(self)
 	jnt:subscribe(self)
 end
