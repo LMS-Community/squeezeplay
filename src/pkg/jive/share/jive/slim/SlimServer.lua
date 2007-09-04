@@ -389,10 +389,11 @@ local function _getArtworkThumbSink(self, iconId, size)
 
 	local icons = self.artworkThumbIcons
 	
-	local cacheKey = iconId
-	if size then
-		cacheKey = cacheKey .. size
+	if not size then
+		size = 50
 	end
+	
+	local cacheKey = iconId .. size
 
 	return function(chunk, err)
 		-- on error, print something...
