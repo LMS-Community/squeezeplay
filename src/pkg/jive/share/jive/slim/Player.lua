@@ -102,13 +102,13 @@ end
 -- _setPlayerName()
 -- sets the name of the player
 -- sends an appropriate notification on change
-local function _setPlayerName(self, playerName)
+local function _setPlayerName(self, playerName, playerId)
 	log:debug("_setPlayerName(", playerName, ")")
 
 	-- make sure this is a new name
 	if tostring(playerName) != tostring(self.name) then
 		self.name = playerName
-		self.jnt:notify('playerNewName', self, playerName)
+		self.jnt:notify('playerNewName', self, playerName, playerId)
 	end
 end
 
@@ -168,7 +168,7 @@ Updates the player with fresh data from SS.
 --]]
 function updateFromSS(self, playerInfo)
 	
-	_setPlayerName(self, playerInfo.name)
+	_setPlayerName(self, playerInfo.name, playerInfo.playerid)
 	self.model = playerInfo.model
 	_setConnected(self, playerInfo.connected)
 end

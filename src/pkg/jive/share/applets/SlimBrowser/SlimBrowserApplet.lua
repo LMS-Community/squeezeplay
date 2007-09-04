@@ -1302,6 +1302,13 @@ function notify_playerDelete(self, player)
 	end
 end
 
+-- notify_playerNewName
+-- this is called when the player name changes
+function notify_playerNewName(self, _, newName, playerId)
+	if (_player.id == playerId) then
+		_pathSource.window:setTitle(newName)
+	end
+end
 
 -- notify_playerCurrent
 -- this is called when the player changes
