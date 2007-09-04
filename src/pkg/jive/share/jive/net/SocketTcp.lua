@@ -116,8 +116,8 @@ function t_connect(self)
 	
 	else
 	
-		-- reduce timeout to make socket non blocking
-		self.t_sock:settimeout(0)
+		-- reduce timeout for further operations
+		self.t_sock:settimeout(1)
 		self:t_setConnected(true)
 		return 1
 	end
