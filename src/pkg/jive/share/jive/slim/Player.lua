@@ -424,8 +424,8 @@ function feedStatusSink(self)
 end
 
 
-function artworkThumbUri (iconId)
-	return '/music/' .. iconId .. '/cover_50x50_f_000000.jpg'
+function artworkThumbUri (iconId, size)
+	return '/music/' .. iconId .. '/cover_' .. size .. 'x' .. size .. '_f_000000.jpg'
 end
 
 

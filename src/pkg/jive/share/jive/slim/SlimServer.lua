@@ -388,15 +388,20 @@ end
 local function _getArtworkThumbSink(self, iconId, size)
 
 	local icons = self.artworkThumbIcons
+	
+	local cacheKey = iconId
+	if size then
+		cacheKey = cacheKey .. size
+	end
 
 	return function(chunk, err)
 		-- on error, print something...
 		if err then
-			logcache:error("_getArtworkThumbSink(", iconId, ") error: ", err)
+			logcache:error("_getArtworkThumbSink(", iconId, ", ", size, ") error: ", err)
 		end
 		-- if we have data
 		if chunk then
-			logcache:debug("_getArtworkThumbSink(", iconId, ")")
+			logcache:debug("_getArtworkThumbSink(", iconId, ", ", size, ")")
 			
 			-- create a surface
 			local artwork = Surface:loadImageData(chunk, #chunk)
@@ -414,19 +419,19 @@ local function _getArtworkThumbSink(self, iconId, size)
 			end
 			
 			-- set it to all icons waiting for it
-			for i, icon in ipairs(icons[iconId]) do
+			for i, icon in ipairs(icons[cacheKey]) do
 				icon:setImage(artwork)
 			end
 			
 			-- store the artwork in the cache
-			self.artworkThumbCache[iconId] = artwork
+			self.artworkThumbCache[cacheKey] = artwork
 			
 			if logcache:isDebug() then
 				_dumpArtworkThumbCache(self)
 			end
 		end
 		-- in all cases, remove the sinks
-		icons[iconId] = nil
+		icons[cacheKey] = nil
 	end
 end
 
@@ -451,13 +456,14 @@ function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, priority)
 		_dumpArtworkThumbCache(self)
 	end
 
-	-- cache non default sizes with their own key
-	if size then
-		iconId = iconId .. size
+	if not size then
+		size = 50
 	end
+	
+	local cacheKey = iconId .. size
 
 	-- do we have the artwork in the cache
-	local artwork = self.artworkThumbCache[iconId]
+	local artwork = self.artworkThumbCache[cacheKey]
 	if artwork then
 		logcache:debug("..artwork in cache")
 		icon:setImage(artwork)
@@ -465,7 +471,7 @@ function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, priority)
 	end
 	
 	-- are we requesting it already?
-	local icons = self.artworkThumbIcons[iconId]
+	local icons = self.artworkThumbIcons[cacheKey]
 	if icons then
 		logcache:debug("..artwork already requested")
 		table.insert(icons, icon)
@@ -474,12 +480,12 @@ function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, priority)
 	
 	-- no luck, generate a request for the artwork
 	local req = RequestHttp(
-		_getArtworkThumbSink(self, iconId), 
+		_getArtworkThumbSink(self, iconId, size), 
 		'GET',
-		uriGenerator(iconId)
+		uriGenerator(iconId, size)
 	)
 	-- remember the icon
-	self.artworkThumbIcons[iconId] = {icon}
+	self.artworkThumbIcons[cacheKey] = {icon}
 	logcache:debug("..fetching artwork")
 
 	if priority then
@@ -504,9 +510,15 @@ function fetchArtworkURL(self, url, icon, size)
 	if logcache:isDebug() then
 		_dumpArtworkThumbCache(self)
 	end
+	
+	if not size then
+		size = 50
+	end
+	
+	local cacheKey = url .. size
 
 	-- do we have the artwork in the cache
-	local artwork = self.artworkThumbCache[url]
+	local artwork = self.artworkThumbCache[cacheKey]
 	if artwork then
 		logcache:debug("..artwork in cache")
 		icon:setImage(artwork)
@@ -514,7 +526,7 @@ function fetchArtworkURL(self, url, icon, size)
 	end
 	
 	-- are we requesting it already?
-	local icons = self.artworkThumbIcons[url]
+	local icons = self.artworkThumbIcons[cacheKey]
 	if icons then
 		logcache:debug("..artwork already requested")
 		table.insert(icons, icon)
@@ -523,13 +535,13 @@ function fetchArtworkURL(self, url, icon, size)
 	
 	-- no luck, generate a request for the artwork
 	local req = RequestHttp(
-		_getArtworkThumbSink(self, url, size), 
+		_getArtworkThumbSink(self, url, size),
 		'GET',
 		url
 	)
 	
 	-- remember the icon
-	self.artworkThumbIcons[url] = {icon}
+	self.artworkThumbIcons[cacheKey] = {icon}
 	logcache:debug("..fetching artwork")
 
 	-- connect to the remote server
