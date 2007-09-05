@@ -46,8 +46,6 @@ DIST_COMMON = $(am__configure_deps) \
 	$(dist_applets_setupSqueezebox_DATA) \
 	$(dist_applets_setupWireless_DATA) \
 	$(dist_applets_squeezeboxjive_DATA) \
-	$(dist_applets_squeezeboxjive_images_DATA) \
-	$(dist_applets_squeezeboxjive_sounds_DATA) \
 	$(dist_applets_testDisplay_DATA) \
 	$(dist_applets_testKeypad_DATA) \
 	$(dist_applets_testMotion_DATA) $(dist_jive_net_DATA) \
@@ -81,8 +79,6 @@ am__installdirs = "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(applets_setupSqueezeboxdir)" \
 	"$(DESTDIR)$(applets_setupWirelessdir)" \
 	"$(DESTDIR)$(applets_squeezeboxjivedir)" \
-	"$(DESTDIR)$(applets_squeezeboxjive_imagesdir)" \
-	"$(DESTDIR)$(applets_squeezeboxjive_soundsdir)" \
 	"$(DESTDIR)$(applets_testDisplaydir)" \
 	"$(DESTDIR)$(applets_testKeypaddir)" \
 	"$(DESTDIR)$(applets_testMotiondir)" \
@@ -116,8 +112,6 @@ dist_applets_setupSetupFirmwareUpgradeDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupSqueezeboxDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupWirelessDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_squeezeboxjiveDATA_INSTALL = $(INSTALL_DATA)
-dist_applets_squeezeboxjive_imagesDATA_INSTALL = $(INSTALL_DATA)
-dist_applets_squeezeboxjive_soundsDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_testDisplayDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_testKeypadDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_testMotionDATA_INSTALL = $(INSTALL_DATA)
@@ -130,8 +124,6 @@ DATA = $(dist_applets_SetupFactoryReset_DATA) \
 	$(dist_applets_setupSqueezebox_DATA) \
 	$(dist_applets_setupWireless_DATA) \
 	$(dist_applets_squeezeboxjive_DATA) \
-	$(dist_applets_squeezeboxjive_images_DATA) \
-	$(dist_applets_squeezeboxjive_sounds_DATA) \
 	$(dist_applets_testDisplay_DATA) \
 	$(dist_applets_testKeypad_DATA) \
 	$(dist_applets_testMotion_DATA) $(dist_jive_net_DATA)
@@ -272,33 +264,6 @@ dist_applets_squeezeboxjive_DATA = \
 	share/applets/SqueezeboxJive/SqueezeboxJiveApplet.lua \
 	share/applets/SqueezeboxJive/SqueezeboxJiveMeta.lua \
 	share/applets/SqueezeboxJive/strings.txt
-
-applets_squeezeboxjive_imagesdir = $(datadir)/jive/applets/SqueezeboxJive/images
-dist_applets_squeezeboxjive_images_DATA = \
-	share/applets/SqueezeboxJive/images/icon_battery_0.png \
-	share/applets/SqueezeboxJive/images/icon_battery_1.png \
-	share/applets/SqueezeboxJive/images/icon_battery_2.png \
-	share/applets/SqueezeboxJive/images/icon_battery_3.png \
-	share/applets/SqueezeboxJive/images/icon_battery_4.png \
-	share/applets/SqueezeboxJive/images/icon_battery_ac.png \
-	share/applets/SqueezeboxJive/images/icon_battery_charging.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_0.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_1.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_2.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_3.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_4.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_off.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_0_shadow.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_1_shadow.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_2_shadow.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_3_shadow.png \
-	share/applets/SqueezeboxJive/images/icon_wireless_4_shadow.png \
-	share/applets/SqueezeboxJive/images/icon_connecting.png \
-	share/applets/SqueezeboxJive/images/icon_connected.png
-
-applets_squeezeboxjive_soundsdir = $(datadir)/jive/applets/SqueezeboxJive/sounds
-dist_applets_squeezeboxjive_sounds_DATA = \
-	share/applets/SqueezeboxJive/sounds/docking.wav
 
 applets_setupWirelessdir = $(datadir)/jive/applets/SetupWireless
 dist_applets_setupWireless_DATA = \
@@ -646,40 +611,6 @@ uninstall-dist_applets_squeezeboxjiveDATA:
 	  echo " rm -f '$(DESTDIR)$(applets_squeezeboxjivedir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(applets_squeezeboxjivedir)/$$f"; \
 	done
-install-dist_applets_squeezeboxjive_imagesDATA: $(dist_applets_squeezeboxjive_images_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(applets_squeezeboxjive_imagesdir)" || $(mkdir_p) "$(DESTDIR)$(applets_squeezeboxjive_imagesdir)"
-	@list='$(dist_applets_squeezeboxjive_images_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_applets_squeezeboxjive_imagesDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_squeezeboxjive_imagesdir)/$$f'"; \
-	  $(dist_applets_squeezeboxjive_imagesDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_squeezeboxjive_imagesdir)/$$f"; \
-	done
-
-uninstall-dist_applets_squeezeboxjive_imagesDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_applets_squeezeboxjive_images_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(applets_squeezeboxjive_imagesdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(applets_squeezeboxjive_imagesdir)/$$f"; \
-	done
-install-dist_applets_squeezeboxjive_soundsDATA: $(dist_applets_squeezeboxjive_sounds_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(applets_squeezeboxjive_soundsdir)" || $(mkdir_p) "$(DESTDIR)$(applets_squeezeboxjive_soundsdir)"
-	@list='$(dist_applets_squeezeboxjive_sounds_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_applets_squeezeboxjive_soundsDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_squeezeboxjive_soundsdir)/$$f'"; \
-	  $(dist_applets_squeezeboxjive_soundsDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_squeezeboxjive_soundsdir)/$$f"; \
-	done
-
-uninstall-dist_applets_squeezeboxjive_soundsDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_applets_squeezeboxjive_sounds_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(applets_squeezeboxjive_soundsdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(applets_squeezeboxjive_soundsdir)/$$f"; \
-	done
 install-dist_applets_testDisplayDATA: $(dist_applets_testDisplay_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(applets_testDisplaydir)" || $(mkdir_p) "$(DESTDIR)$(applets_testDisplaydir)"
@@ -800,7 +731,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/AboutJive $(distdir)/share/applets/SetupFactoryReset $(distdir)/share/applets/SetupFirmwareUpgrade $(distdir)/share/applets/SetupSSH $(distdir)/share/applets/SetupSqueezebox $(distdir)/share/applets/SetupWelcome $(distdir)/share/applets/SetupWireless $(distdir)/share/applets/SqueezeboxJive $(distdir)/share/applets/SqueezeboxJive/images $(distdir)/share/applets/SqueezeboxJive/sounds $(distdir)/share/applets/TestDisplay $(distdir)/share/applets/TestKeypad $(distdir)/share/applets/TestMotion $(distdir)/share/jive/net $(distdir)/src
+	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/AboutJive $(distdir)/share/applets/SetupFactoryReset $(distdir)/share/applets/SetupFirmwareUpgrade $(distdir)/share/applets/SetupSSH $(distdir)/share/applets/SetupSqueezebox $(distdir)/share/applets/SetupWelcome $(distdir)/share/applets/SetupWireless $(distdir)/share/applets/SqueezeboxJive $(distdir)/share/applets/TestDisplay $(distdir)/share/applets/TestKeypad $(distdir)/share/applets/TestMotion $(distdir)/share/jive/net $(distdir)/src
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -928,7 +859,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(LTLIBRARIES) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(applets_SetupFactoryResetdir)" "$(DESTDIR)$(applets_SetupSSHdir)" "$(DESTDIR)$(applets_SetupWelcomedir)" "$(DESTDIR)$(applets_aboutJivedir)" "$(DESTDIR)$(applets_setupSetupFirmwareUpgradedir)" "$(DESTDIR)$(applets_setupSqueezeboxdir)" "$(DESTDIR)$(applets_setupWirelessdir)" "$(DESTDIR)$(applets_squeezeboxjivedir)" "$(DESTDIR)$(applets_squeezeboxjive_imagesdir)" "$(DESTDIR)$(applets_squeezeboxjive_soundsdir)" "$(DESTDIR)$(applets_testDisplaydir)" "$(DESTDIR)$(applets_testKeypaddir)" "$(DESTDIR)$(applets_testMotiondir)" "$(DESTDIR)$(jive_netdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(applets_SetupFactoryResetdir)" "$(DESTDIR)$(applets_SetupSSHdir)" "$(DESTDIR)$(applets_SetupWelcomedir)" "$(DESTDIR)$(applets_aboutJivedir)" "$(DESTDIR)$(applets_setupSetupFirmwareUpgradedir)" "$(DESTDIR)$(applets_setupSqueezeboxdir)" "$(DESTDIR)$(applets_setupWirelessdir)" "$(DESTDIR)$(applets_squeezeboxjivedir)" "$(DESTDIR)$(applets_testDisplaydir)" "$(DESTDIR)$(applets_testKeypaddir)" "$(DESTDIR)$(applets_testMotiondir)" "$(DESTDIR)$(jive_netdir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: install-am
@@ -985,8 +916,6 @@ install-data-am: install-dist_applets_SetupFactoryResetDATA \
 	install-dist_applets_setupSqueezeboxDATA \
 	install-dist_applets_setupWirelessDATA \
 	install-dist_applets_squeezeboxjiveDATA \
-	install-dist_applets_squeezeboxjive_imagesDATA \
-	install-dist_applets_squeezeboxjive_soundsDATA \
 	install-dist_applets_testDisplayDATA \
 	install-dist_applets_testKeypadDATA \
 	install-dist_applets_testMotionDATA install-dist_jive_netDATA
@@ -1027,8 +956,6 @@ uninstall-am: uninstall-dist_applets_SetupFactoryResetDATA \
 	uninstall-dist_applets_setupSqueezeboxDATA \
 	uninstall-dist_applets_setupWirelessDATA \
 	uninstall-dist_applets_squeezeboxjiveDATA \
-	uninstall-dist_applets_squeezeboxjive_imagesDATA \
-	uninstall-dist_applets_squeezeboxjive_soundsDATA \
 	uninstall-dist_applets_testDisplayDATA \
 	uninstall-dist_applets_testKeypadDATA \
 	uninstall-dist_applets_testMotionDATA \
@@ -1050,8 +977,6 @@ uninstall-am: uninstall-dist_applets_SetupFactoryResetDATA \
 	install-dist_applets_setupSqueezeboxDATA \
 	install-dist_applets_setupWirelessDATA \
 	install-dist_applets_squeezeboxjiveDATA \
-	install-dist_applets_squeezeboxjive_imagesDATA \
-	install-dist_applets_squeezeboxjive_soundsDATA \
 	install-dist_applets_testDisplayDATA \
 	install-dist_applets_testKeypadDATA \
 	install-dist_applets_testMotionDATA install-dist_jive_netDATA \
@@ -1069,8 +994,6 @@ uninstall-am: uninstall-dist_applets_SetupFactoryResetDATA \
 	uninstall-dist_applets_setupSqueezeboxDATA \
 	uninstall-dist_applets_setupWirelessDATA \
 	uninstall-dist_applets_squeezeboxjiveDATA \
-	uninstall-dist_applets_squeezeboxjive_imagesDATA \
-	uninstall-dist_applets_squeezeboxjive_soundsDATA \
 	uninstall-dist_applets_testDisplayDATA \
 	uninstall-dist_applets_testKeypadDATA \
 	uninstall-dist_applets_testMotionDATA \
