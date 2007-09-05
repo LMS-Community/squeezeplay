@@ -399,19 +399,19 @@ function scrollBy(self, scroll)
 	elseif selected > self.listSize then
 		selected = self.listSize
 		if self.barrier == nil then
-			self.barrier = now
+			self.barrier = Framework:getTicks()
 		elseif Framework:getTicks() > self.barrier + 500 then
 			selected = 1
-			self.barrier = nil
+			self.barrier = Framework:getTicks()
 		end
 
 	elseif selected < 1 then
 		selected = 1
 		if self.barrier == nil then
-			self.barrier = now
+			self.barrier = Framework:getTicks()
 		elseif Framework:getTicks() > self.barrier + 500 then
 			selected = self.listSize
-			self.barrier = nil
+			self.barrier = Framework:getTicks()
 		end
 
 	else
