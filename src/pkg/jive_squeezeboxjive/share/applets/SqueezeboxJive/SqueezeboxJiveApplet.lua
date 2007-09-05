@@ -84,9 +84,11 @@ function init(self)
 				      local sw,val = event:getSwitch()
 
 				      if sw == SW_AC_POWER then
+					      self.acpower = (val == 0)
 					      self:update()
-					      if val == 0 then
-						      self:setPowerState("power")
+
+					      if self.acpower then
+						      self:setPowerState("ac_active")
 						      self.iconBattery:playSound("DOCKING")
 					      else
 						      self:setPowerState("active")
@@ -135,11 +137,22 @@ function init(self)
 				      return EVENT_UNUSED
 			      end)
 
-	local nACPR = jiveBSP.ioctl(23)
-	if nACPR == 0 then
-		self:setPowerState("power")
+	-- ac or battery
+	self.acpower = (jiveBSP.ioctl(23) == 0)
+	if self.acpower then
+		self:setPowerState("ac_active")
 	else
 		self:setPowerState("active")
+	end
+
+	-- headphone or speaker
+	local headphone = jiveBSP.ioctl(18)
+	if headphone == 1 then
+		jiveBSP.mixer(0, 97, 97)
+		jiveBSP.mixer(5, 0, 0)
+	else
+		jiveBSP.mixer(0, 0, 0)
+		jiveBSP.mixer(5, 97, 97)
 	end
 
 	-- set initial state
@@ -152,8 +165,7 @@ end
 function update(self)
 
 	-- ac power / battery
-	local nACPR = jiveBSP.ioctl(23)
-	if nACPR == 0 then
+	if self.acpower then
 		local nCHRG = jiveBSP.ioctl(25)
 		if nCHRG == 0 then
 			self.iconBattery:setStyle("iconBatteryCharging")
@@ -186,42 +198,63 @@ function update(self)
 end
 
 
-function _brightness(self, level)
+function _brightness(self, lcdLevel, keyLevel)
 	local settings = self:getSettings()
 
-	level = level or settings.brightness
+	if lcdLevel ~= nil then
+		self.lcdLevel = lcdLevel
+		jiveBSP.ioctl(11, lcdLevel * 2048)
+	end
 
-	log:debug("brightness level=", level, " value=", (level * 2047))
-	self.brightnessLevel = level
-	jiveBSP.ioctl(11, level * 2047)
-	jiveBSP.ioctl(13, level * 2047)
+	if keyLevel ~= nil then
+		self.keyLevel = keyLevel
+		jiveBSP.ioctl(13, keyLevel * 1024)
+	end
 end
 
 
-function _fadeBrightness(self, level)
-	local s = 20
-	local l = self.brightnessLevel
-	local i = (l - level) / s
+function _setBrightness(self, fade, lcdLevel, keyLevel)
+	-- stop existing fade
+	if self.fadeTimer then
+		self.fadeTimer:stop()
+		self.fadeTimer = nil
+	end
 
-	if l == level then
+	if not fade then
+		_brightness(self, lcdLevel, keyLevel)
+		return
+	end
+
+	-- FIXME implement smooth fade in kernel using pwm interrupts
+
+	local steps = 30
+	local lcdVal = self.lcdLevel
+	local lcdInc = (lcdVal - lcdLevel) / steps
+	local keyVal = self.keyLevel
+	local keyInc = (keyVal - keyLevel) / steps
+
+	if lcdVal == lcdLevel and keyVal == keyLevel then
 		-- already at level, nothing to do
 		return
 	end
 
-	self.fadeTimer = Timer(30, function()
-					    if s == 0 then
-						    if self.fadeTimer then
-							    self.fadeTimer:stop()
-							    self.fadeTimer = nil
-						    end
-						    return
-					    end
+	self.fadeTimer = Timer(20, function()
+					   if steps == 0 then
+						   if self.fadeTimer then
+							   self.fadeTimer:stop()
+							   self.fadeTimer = nil
+						   end
 
-					    s = s - 1
-					    l = l - i
-					    _brightness(self, math.ceil(l))
+						   -- ensure we hit the set value
+						   _brightness(self, lcdLevel, keyLevel)
+						   return
+					   end
 
-				    end)
+					   steps = steps - 1
+					   lcdVal = lcdVal - lcdInc
+					   keyVal = keyVal - keyInc
+					   _brightness(self, math.ceil(lcdVal), math.ceil(keyVal))
+				   end)
 	self.fadeTimer:start()
 end
 
@@ -229,15 +262,18 @@ end
 function setBrightness(self, level)
 	local settings = self:getSettings()
 
-	if self.fadeTimer then
-		self.fadeTimer:stop()
-		self.fadeTimer = nil
-	end
-
 	if level then
 		settings.brightness = level
 	end
-	self:_brightness()
+
+	local lcdLevel = level or settings.brightness
+	local keyLevel = 0
+
+	if self.powerState == "active" or self.powerState == "ac_active" then
+		keyLevel = level or settings.brightness
+	end
+
+	_setBrightness(self, false, lcdLevel, keyLevel)
 end
 
 
@@ -309,11 +345,18 @@ end
 
 -- called to wake up jive
 function wakeup(self)
-	if self.powerState == "power" then
-		-- do nothing
+	if self.lockedPopup then
+		-- we're locked do nothing
+		return
+	end
+
+	if self.powerState == "ac_active" then
+		self.powerTimer:restart()
+	elseif self.powerState == "ac_dimmed" then
+		self:setPowerState("ac_active")
 	elseif self.powerState == "active" then
 		self.powerTimer:restart()
-	elseif not self.lockedPopup then
+	else
 		self:setPowerState("active")
 	end
 end
@@ -321,8 +364,10 @@ end
 
 -- called to sleep jive
 function sleep(self)
-	if self.powerState == "power" then
-		log:warn("sleep should not be called in 'power' state")
+	if self.powerState == "ac_active" then
+		self:setPowerState("ac_dimmed")
+	elseif self.powerState == "ac_dimmed" then
+		-- do nothing
 	elseif self.powerState == "active" then
 		self:setPowerState("dimmed")
 	elseif self.powerState == "locked" then
@@ -348,9 +393,12 @@ function setPowerState(self, state)
 	self.powerTimer:stop()
 
 	local interval = 0
-	if state == "power" then
+	if state == "ac_active" then
 		self:setBrightness()
-		return
+		interval = settings.dimmedTimeout
+		
+	elseif state == "ac_dimmed" then
+		self:setBrightness()
 
 	elseif state == "active" then
 		self:setBrightness()
@@ -370,14 +418,14 @@ function setPowerState(self, state)
 		interval = settings.dimmedTimeout
 
 	elseif state == "dimmed" then
-		self:_fadeBrightness(8)
+		self:_setBrightness(true, 8, 0)
 		self.isAudioEnabled = Audio:isEffectsEnabled()
 		Audio:effectsEnable(false)
 
 		interval = settings.sleepTimeout
 
 	else
-		self:_fadeBrightness(0)
+		self:_setBrightness(true, 0, 0)
 
 		if state == "sleep" then
 			interval = settings.hibernateTimeout
@@ -413,25 +461,32 @@ function lockScreen(self)
 	-- lock
 	local popup = Popup("popupIcon")
 	-- FIXME change icon and text
-	popup:addWidget(Icon("iconConnected"))
-	popup:addWidget(Textarea("text", self:string("BSP_SCREEN_LOCKED")))
+	popup:addWidget(Icon("iconLocked"))
+	popup:addWidget(Label("text", self:string("BSP_SCREEN_LOCKED")))
+	popup:addWidget(Textarea("help", self:string("BSP_SCREEN_LOCKED_HELP")))
 	self:tieAndShowWindow(popup)
 
 	self.lockedPopup = popup
 	self.lockedTimer = Timer(2000,
 				 function()
-					 self:_fadeBrightness(0)
+					 self:_setBrightness(true, 0, 0)
 				 end,
 				 true)
 
 	self:setPowerState("locked")
 
-	self.lockedListener = Framework:addListener(EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_SCROLL,
-						    function()
-							    self:setPowerState("locked")
-							    return EVENT_CONSUME
-						    end,
-						    true)
+	self.lockedListener = 
+		Framework:addListener(EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_SCROLL,
+				      function(event)
+					      if event:getType() == EVENT_KEY_PRESS and event:getKeycode() == (KEY_ADD | KEY_PLAY) then
+						      lockScreen(self)
+						      return EVENT_CONSUME
+					      end
+
+					      self:setPowerState("locked")
+					      return EVENT_CONSUME
+				      end,
+				      true)
 end
 
 

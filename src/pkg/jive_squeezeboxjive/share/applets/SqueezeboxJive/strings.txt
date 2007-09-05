@@ -5,8 +5,12 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 #
 
+
 BSP_SCREEN_LOCKED
-	EN	Screen locked. Press ADD and PLAY to unlock.
+	EN	Locked
+
+BSP_SCREEN_LOCKED_HELP
+	EN	To unlock press the ADD and PLAY buttons at the same time.
 
 BSP_BRIGHTNESS
 	DE	Helligkeit

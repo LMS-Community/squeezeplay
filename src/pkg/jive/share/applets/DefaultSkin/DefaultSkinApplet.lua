@@ -464,6 +464,15 @@ function skin(self, s)
 	s.iconConnected.img = Surface:loadImage(imgpath .. "icon_connected.png")
 	s.iconConnected.align = "center"
 
+	s.iconLocked.img = Surface:loadImage(imgpath .. "popup_locked_icon.png")
+	s.iconLocked.align = "center"
+
+	s.iconBatteryLow.img = Surface:loadImage(imgpath .. "popup_battery_low_icon.png")
+	s.iconBatteryLow.align = "center"
+
+	s.iconAlarm.img = Surface:loadImage(imgpath .. "popup_alarm_icon.png")
+	s.iconAlarm.align = "center"
+
 
 	-- wireless icons for menus
 	s.wirelessLevel0.img = Surface:loadImage(imgpath .. "icon_wireless_0_shadow.png")
