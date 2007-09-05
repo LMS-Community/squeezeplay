@@ -116,85 +116,6 @@ local DigitalDetailed_Presets = {
 	}
 }
 
-function openSettings(self, menuItem)
-	local window = Window(self:displayName(), menuItem.text)
-
-	local curFontStyle = 1 
-
-	local curHours = 1
-	if self:getSettings()["hours"] == "24" then
-		curHours = 2
-	end
-
-	window:addWidget(SimpleMenu("menu",
-			{
-				{
-					text = self:string("SCREENSAVER_CLOCK_TYPE"), 
-					callback = function(event, menuItem)
-							self:clockTypeSetting(menuItem)
-							return EVENT_CONSUME
-						end
-				},
-			}))
-
-	-- Store the applet settings when the window is closed
-	window:addListener(EVENT_WINDOW_POP,
-		function()
-			self:storeSettings()
-		end
-	)
-
-	self:tieAndShowWindow(window)
-	return window
-end
-
-function clockTypeSetting(self, menuItem)
-	local window = Window(self:displayName(), menuItem.text)
-	local group = RadioGroup()
-
-	local type = self:getSettings()["clocktype"]
-
-	window:addWidget(SimpleMenu("menu",
-		{
-			{
-				text = self:string("SCREENSAVER_CLOCK_STYLE_ANALOG"),
-				icon = RadioButton("radio", group, function(event, menuItem) 
-						self:setClockType("analog:simple")
-					end, 
-				type == "analog:simple")
-			},
-			{
-				text = self:string("SCREENSAVER_CLOCK_STYLE_DIGITALSIMPLE"),
-				icon = RadioButton("radio", group, function(event, menuItem) 
-						self:setClockType("digital:simple")
-					end, 
-				type == "digital:simple")
-			},
-			{
-				text = self:string("SCREENSAVER_CLOCK_STYLE_DIGITALSTYLED"),
-				icon = RadioButton("radio", group, function(event, menuItem) 
-						self:setClockType("digital:styled")
-					end, 
-				type == "digital:styled")
-			},
-			{
-				text = self:string("SCREENSAVER_CLOCK_STYLE_DIGITALDETAILED"),
-				icon = RadioButton("radio", group, function(event, menuItem)
-						self:setClockType("digital:detailed")
-					end,
-				type == "digital:detailed")
-			}
-		}
-	))
-	
-	self:tieAndShowWindow(window)
-	return window
-end
-
-function setClockType(self, type)
-	self:getSettings()["clocktype"] = type
-end
-
 
 ----------------------------------------------------------------------------------------
 -- Screen Saver Display 
@@ -674,9 +595,9 @@ end
 function getPreset(self, type)
 	local pname = ""
 	
-	if type == "analog:simple" then
+	if type == "analog" then
 		return Analog_Presets.Default
-	elseif type == "digital:styled" then
+	elseif type == "styled" then
 
 		pname = self:getSettings()["digitalstyled_preset"]
 		if pname == "Green" then 
@@ -687,7 +608,7 @@ function getPreset(self, type)
 			return nil
 		end
 
-	elseif type == "digital:simple" then
+	elseif type == "simple" then
 
 		pname = self:getSettings()["digitalsimple_preset"]
 		if pname == "White" then
@@ -695,7 +616,7 @@ function getPreset(self, type)
 		else
 			return nil
 		end
-	elseif type == "digital:detailed" then
+	elseif type == "detailed" then
 		return DigitalDetailed_Presets.Default
 	else
 		return nil
@@ -703,12 +624,26 @@ function getPreset(self, type)
 
 end
 
-function openScreensaver(self, menuItem)
+function openAnalogClock(self)
+	self:_openScreensaver("analog")
+end
+
+function openDigitalClock(self)
+	self:_openScreensaver("simple")
+end
+
+function openStyledClock(self)
+	self:_openScreensaver("styled")
+end
+
+function openDetailedClock(self)
+	self:_openScreensaver("detailed")
+end
+
+
+function _openScreensaver(self, type)
 	local window = Window("Clock")
 
-	-- Own Settings
-	local type       = self:getSettings()["clocktype"]
-	
 	-- Global Date/Time Settings
 	local dt = datetime
 
@@ -726,15 +661,15 @@ function openScreensaver(self, menuItem)
 
 	local clock = nil;	
 	log:info("Type: " .. type)
-	if type == "digital:simple" then
+	if type == "simple" then
 		clock = DigitalSimple(window, preset, hours)
 		clock:setDateFormat(dateformat)
-	elseif type == "digital:styled" then
+	elseif type == "styled" then
 		-- This clock always uses 24 hours mode for now
 		clock = DigitalStyled(window, preset, false)
-	elseif type == "digital:detailed" then
+	elseif type == "detailed" then
 		clock = DigitalDetailed(window, preset, hours, weekstart)
-	elseif type == "analog:simple" then
+	elseif type == "analog" then
 		clock = Analog(window, preset)
 	end
 

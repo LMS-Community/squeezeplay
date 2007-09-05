@@ -17,7 +17,6 @@ end
 
 function defaultSettings(self)
 	return {
-		clocktype = "analog:simple",
 		digitalsimple_preset = "White",
 		digitalstyled_preset = "White"
 	}
@@ -29,11 +28,27 @@ function registerApplet(self)
 	local ssMgr = appletManager:loadApplet("ScreenSavers")
 	if ssMgr ~= nil then
 		ssMgr:addScreenSaver(
-			self:string("SCREENSAVER_CLOCK"), 
+			self:string("SCREENSAVER_CLOCK_STYLE_ANALOG"), 
 			"Clock", 
-			"openScreensaver",
-			self:string("SCREENSAVER_CLOCK_SETTINGS"), 
-			"openSettings"
+			"openAnalogClock"
+		)
+
+		ssMgr:addScreenSaver(
+			self:string("SCREENSAVER_CLOCK_STYLE_DIGITALSIMPLE"), 
+			"Clock", 
+			"openDigitalClock"
+		)
+
+		ssMgr:addScreenSaver(
+			self:string("SCREENSAVER_CLOCK_STYLE_DIGITALSTYLED"), 
+			"Clock", 
+			"openStyledClock"
+		)
+
+		ssMgr:addScreenSaver(
+			self:string("SCREENSAVER_CLOCK_STYLE_DIGITALDETAILED"), 
+			"Clock", 
+			"openDetailedClock"
 		)
 
 		jiveMain:loadSkin("Clock", "skin")
