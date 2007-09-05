@@ -183,13 +183,11 @@ function _sighup(process)
 end
 
 
--- FIXME this does not work...
 function _passwd(user, password)
-	local cmd = io.popen("/usr/bin/passwd " .. user, "w")
-
-	cmd:write(password .. "\n\n")
-	cmd:write(password .. "\n\n")
-	cmd:close()
+--	os.execute("/usr/bin/chpasswd " .. user .. ":" .. password, "w")
+	os.execute("echo " .. user .. ":" .. password .. "| /usr/sbin/chpasswd " , "w")
+-- A check of the return of the command should be done here
+-- Return is : Password for 'root' changed
 end
 
 
