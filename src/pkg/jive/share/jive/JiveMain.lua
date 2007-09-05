@@ -34,6 +34,8 @@ TODO
 
 =head1 FUNCTIONS
 
+JiveMainMenu notifies any change with mainMenuUpdate
+
 =cut
 --]]
 
@@ -61,25 +63,34 @@ require("jive.ui.Framework")
 
 
 -- Classes
-local Menu = oo.class()
-local JiveMain = oo.class({}, Menu)
+local JiveMainMenu = oo.class()
+local JiveMain = oo.class({}, JiveMainMenu)
 
 
 -- strings
 local _globalStrings
 
 -----------------------------------------------------------------------------
--- Menu
+-- JiveMainMenu
 -- This class abstracts some window/menu functions for the main menu
 -----------------------------------------------------------------------------
 
+-- changed
+local function _jiveMainMenuChanged(self)
+	if self.notify then
+		jnt:notify("jiveMainMenuChanged")
+	end
+end
+
+
 -- create a new menu
-function Menu:__init(name, style)
+function JiveMainMenu:__init(name, style)
 
 	local obj = oo.rawnew(self, {
 		menu = jive.ui.SimpleMenu("menu"),
 		window = jive.ui.Window(style or "window", name),
 		menus = {},
+		notify = false,
 	})
 	
 	obj.menu:setComparator(jive.ui.SimpleMenu.itemComparatorWeightAlpha)
@@ -89,11 +100,11 @@ function Menu:__init(name, style)
 end
 
 -- create a sub menu
-function Menu:subMenu(name, weight)
+function JiveMainMenu:subMenu(name, weight)
 
 	if self.menus[name] == nil then
 	
-		local menu = Menu(name)
+		local menu = JiveMainMenu(name)
 
 		local item = {
 			text = name,
@@ -104,33 +115,41 @@ function Menu:subMenu(name, weight)
 
 		self:addItem(item, weight)
 		self.menus[name] = menu
+		_jiveMainMenuChanged(self)
 	end
 
 	return self.menus[name]
 end
 
 -- add an item to a menu. the menu is ordered by weight, then item name
-function Menu:addItem(item, weight)
+function JiveMainMenu:addItem(item, weight)
 
 	if not item.weight then 
 		item.weight = weight or 5
 	end
 
 	self.menu:addItem(item)
+	_jiveMainMenuChanged(self)
 end
 
 
 -- remove an item from a menu
-function Menu:removeItem(item)
+function JiveMainMenu:removeItem(item)
 	self.menu:removeItem(item)
+	_jiveMainMenuChanged(self)
 end
 
 
 -- iterator over items in menu
-function Menu:iterator()
+function JiveMainMenu:iterator()
 	return self.menu:iterator()
 end
 
+
+-- startNotify
+function JiveMainMenu:startNotify()
+	self.notify = true
+end
 
 -----------------------------------------------------------------------------
 -- JiveMain
@@ -156,8 +175,8 @@ function JiveMain:__init()
 	-- Singleton instances (locals)
 	_globalStrings = locale:readGlobalStringsFile()
 
-	-- create our object (a subclass of Menu)
-	jiveMain = oo.rawnew(self, Menu(_globalStrings:str("JIVE_HOME"), "home.window"))
+	-- create our object (a subclass of JiveMainMenu)
+	jiveMain = oo.rawnew(self, JiveMainMenu(_globalStrings:str("JIVE_HOME"), "home.window"))
 	jiveMain.menu:setCloseable(false)
 
 

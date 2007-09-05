@@ -606,6 +606,9 @@ local function _mainMenuSink(step, chunk, err)
 		-- FIXME: Cancel opening plugin, bla bla bla
 	end
 	
+	-- get notified of changes in main menu from now on
+	jiveMain:startNotify()
+	
 	-- call the regular sink
 	_browseSink(step, chunk, err)
 end
@@ -1442,6 +1445,12 @@ function notify_playerCurrent(self, player)
 	_replaceJiveHome(_browsePath.window)
 end
 
+
+-- notify_jiveMainMenuChanged
+-- 
+function notify_jiveMainMenuChanged(self)
+	log:warn("notify_jiveMainMenuChanged")
+end
 
 --[[
 
