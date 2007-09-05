@@ -263,9 +263,6 @@ function setItems(self, list, listSize, min, max)
 		self.selected = listSize
 	end
 
-	-- update selection
-	self:scrollBy(0)
-
 	-- update if changed items are visible
 	local topItem, botItem = self:getVisibleIndicies()
 	if min >= topItem and min <= botItem
@@ -350,7 +347,6 @@ function setSelectedIndex(self, index)
 
 	if index <= self.listSize then
 		self.selected = index
-		self:scrollBy(0)
 	end
 end
 
@@ -394,18 +390,55 @@ Scroll the menu by I<scroll> items. If I<scroll> is negative the menu scrolls up
 function scrollBy(self, scroll)
 	assert(type(scroll) == "number")
 
+	local selected = (self.selected or 1) + scroll
+
+	-- virtual barrier when scrolling off the ends of the list
+	if selected == 1 or selected == self.listSize then
+		self.barrier = Framework:getTicks()
+
+	elseif selected > self.listSize then
+		selected = self.listSize
+		if self.barrier == nil then
+			self.barrier = now
+		elseif Framework:getTicks() > self.barrier + 500 then
+			selected = 1
+			self.barrier = nil
+		end
+
+	elseif selected < 1 then
+		selected = 1
+		if self.barrier == nil then
+			self.barrier = now
+		elseif Framework:getTicks() > self.barrier + 500 then
+			selected = self.listSize
+			self.barrier = nil
+		end
+
+	else
+		self.barrier = nil
+	end
+
+	-- if selection has change, play click and redraw
+	if selected ~= self.selected then
+		self:playSound("CLICK")
+		self.selected = selected
+
+		self:reLayout()
+	end
+end
+
+
+-- move the list to keep the selection in view, called during layout
+function _scrollList(self)
+
 	-- empty list, nothing to do
 	if self.listSize == 0 then
 		return
 	end
 
-	local selected = self.selected or 1
-	local topItem = self.topItem
-
-	local lastSelected = selected
-
 	-- make sure selected stays in bounds
-	selected = _coerce(selected + scroll, self.listSize)
+	local selected = _coerce(self.selected or 1, self.listSize)
+	local topItem = self.topItem
 
 	-- show the first item if the first item is selected
 	if selected == 1 then
@@ -426,20 +459,17 @@ function scrollBy(self, scroll)
 	
 	-- otherwise, try to leave one item below the selected one (we've scrolled out of the view)
 	elseif selected >= topItem + self.numWidgets - 1 then
-		topItem = _coerce(topItem + scroll, self.listSize - self.numWidgets + 1)
+		topItem = selected - self.numWidgets + 2
 	end
 
-	if lastSelected ~= selected then
-		self:playSound("CLICK")
-		self.selected = selected
-	end
 	self.topItem = topItem
-
-	self:reLayout()
 end
 
 
 function _updateWidgets(self)
+	-- update the list to keep the selection in view
+	_scrollList(self)
+
 	local indexSize = self.numWidgets
 	local min = self.topItem
 	local max = self.topItem + indexSize - 1
