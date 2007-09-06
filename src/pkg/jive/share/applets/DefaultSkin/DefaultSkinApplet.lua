@@ -541,7 +541,7 @@ function skin(self, s)
 	s.albumtitle.textAlign = "top-left"
 	s.albumtitle.iconAlign = "left"
 	s.albumtitle.position = LAYOUT_NORTH
-	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
+--	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumtitle.icon.padding = { 6, 0, 0, 0 }
 
 
@@ -557,7 +557,7 @@ function skin(self, s)
 	s.albumitem.font = Font:load(fontpath .. "FreeSansBold.ttf", 13)
 	s.albumitem.fg = { 0xe7, 0xe7, 0xe7 }
 	s.albumitem.sh = { 0x37, 0x37, 0x37 }
-	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
+--	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumitem.icon.padding = { 6, 0, 0, 0 }
 	s.albumitem.textAlign = "top-left"
 	s.albumitem.iconAlign = "left"
