@@ -1112,7 +1112,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		
 		-- default allowedChars
 		if not inputSpec.allowedChars then
-			inputSpec.allowedChars = " abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:\\\"'<>?-=,./~`[];0123456789"
+			inputSpec.allowedChars = _string("ALLOWEDCHARS_NOCAPS")
 		end
 		local v = ""
 		local inputType = _safeDeref(item, 'input', 'inputType')

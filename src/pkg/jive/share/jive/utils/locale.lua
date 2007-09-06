@@ -18,7 +18,7 @@ readStringsFile(thisPath)
 --]]
 
 -- stuff we use
-local ipairs, pairs, assert, io, select, setmetatable, string = ipairs, pairs, assert, io, select, setmetatable, string
+local ipairs, pairs, assert, io, select, setmetatable, string, tostring = ipairs, pairs, assert, io, select, setmetatable, string, tostring
 
 local log              = require("jive.utils.log").logger("utils")
 local Framework        = require("jive.ui.Framework")
@@ -170,7 +170,7 @@ function parseStringsFile(self, myLocale, myFilePath, stringsTable)
 				local str = stringsTable[thisString] or {}
 				str.str = translatedString
 				setmetatable(str, strmt)
-				stringsTable[thisString] = str
+				stringsTable[thisString] = tostring(str)
 				log:debug("translated string: |", thisString, "|", stringsTable[thisString].str, "|")
 			end
 		end
