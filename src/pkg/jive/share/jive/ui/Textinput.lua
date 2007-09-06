@@ -40,7 +40,7 @@ function _getChars(self)
 		return self.value:getChars(self.cursor)
 	end
 
-	return self.allowedChars
+	return tostring(self.allowedChars)
 end
 
 
@@ -276,9 +276,6 @@ I<allowedChars> is an optional parameter containing the list of chars to propose
 function __init(self, style, value, closure, allowedChars)
 	assert(type(style) == "string")
 	assert(value ~= nil)
-	if allowedChars then
-		allowedChars = tostring(allowedChars)
-	end
 
 	local obj = oo.rawnew(self, Widget(style))
 
