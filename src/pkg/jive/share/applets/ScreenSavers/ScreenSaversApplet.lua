@@ -168,7 +168,7 @@ function screensaverSetting(self, menuItem, mode)
 			function()
 				self:setScreenSaver(mode, key)
 			end,
-			key == activeScreensaver
+			screensaver.applet == activeScreensaver
 		)
 
 		-- pressing play should play the screensaver, so we need a handler

@@ -35,8 +35,8 @@ end
 
 function defaultSettings(self)
 	return {
-		whenStopped = "None",
-		whenPlaying = "None",
+		whenStopped = nil,
+		whenPlaying = "NowPlaying",
 		timeout = 60000,
 	}
 end
