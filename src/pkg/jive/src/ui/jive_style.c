@@ -223,6 +223,46 @@ int jiveL_style_value(lua_State *L) {
 }
 
 
+int jiveL_style_array_value(lua_State *L) {
+
+	/* stack is:
+	 * 1: widget
+	 * 2: array key
+	 * 3: array index
+	 * 4: value key
+	 * 5: default
+	 */
+
+	lua_pushnil(L);
+	lua_insert(L, 3);
+
+	/* fetch array */
+	jiveL_style_rawvalue(L);
+	if (lua_type(L, -1) != LUA_TTABLE) {
+		lua_pushvalue(L, 6);
+		return 1;
+	}
+
+	/* fetch index */
+	lua_pushvalue(L, 4);
+	lua_rawget(L, -2);
+	if (lua_isnil(L, -1)) {
+		lua_pushvalue(L, 6);
+		return 1;
+	}
+
+	/* fetch value */
+	lua_pushvalue(L, 5);
+	lua_rawget(L, -2);
+	if (lua_isnil(L, -1)) {
+		lua_pushvalue(L, 6);
+		return 1;
+	}
+
+	return 1;
+}
+
+
 int jiveL_style_path(lua_State *L) {
 	int numStrings = 0;
 
@@ -538,4 +578,87 @@ void jive_style_insets(lua_State *L, int index, char *key, JiveInset *inset) {
 	lua_pop(L, 1);
 
 	JIVEL_STACK_CHECK_END(L);
+}
+
+
+int jive_style_array_size(lua_State *L, int index, char *key) {
+	size_t size = 0;
+
+	JIVEL_STACK_CHECK_BEGIN(L);
+
+	lua_pushcfunction(L, jiveL_style_value);
+	lua_pushvalue(L, index);
+	lua_pushstring(L, key);
+	lua_pushnil(L);
+	lua_call(L, 3, 1);
+
+	if (lua_type(L, -1) != LUA_TTABLE) {
+		lua_pop(L, 1);
+
+		JIVEL_STACK_CHECK_ASSERT(L);
+		return 0;
+	}
+
+	/* the array should use integer indexes, but it may be sparse
+	 * so iterate over is to find the maximum index.
+	 */
+	lua_pushnil(L);
+	while (lua_next(L, -2) != 0) {
+		size = MAX(size, lua_tonumber(L, -2));
+		lua_pop(L, 1);
+	}
+	lua_pop(L, 1);
+
+	JIVEL_STACK_CHECK_END(L);
+
+	return size;
+}
+
+
+int jive_style_array_int(lua_State *L, int index, const char *array, int n, const char *key, int def) {
+	int value;
+
+	JIVEL_STACK_CHECK_BEGIN(L);
+
+	lua_pushcfunction(L, jiveL_style_array_value);
+	lua_pushvalue(L, index);
+	lua_pushstring(L, array);
+	lua_pushnumber(L, n);
+	lua_pushstring(L, key);
+	lua_pushinteger(L, def);
+	lua_call(L, 5, 1);
+
+	if (lua_isboolean(L, -1)) {
+		value = lua_toboolean(L, -1);
+	}
+	else {
+		value = lua_tointeger(L, -1);
+	}
+	lua_pop(L, 1);
+
+	JIVEL_STACK_CHECK_END(L);
+
+	return value;
+}
+
+
+JiveFont *jive_style_array_font(lua_State *L, int index, const char *array, int n, const char *key) {
+	JiveFont *value;
+
+	JIVEL_STACK_CHECK_BEGIN(L);
+
+	lua_pushcfunction(L, jiveL_style_array_value);
+	lua_pushvalue(L, index);
+	lua_pushstring(L, array);
+	lua_pushnumber(L, n);
+	lua_pushstring(L, key);
+	lua_pushnil(L);
+	lua_call(L, 5, 1);
+
+	value = (JiveFont *) tolua_tousertype(L, -1, NULL);
+	lua_pop(L, 1);
+
+	JIVEL_STACK_CHECK_END(L);
+
+	return value;
 }

@@ -45,6 +45,7 @@ local SimpleMenu              = require("jive.ui.SimpleMenu")
 local Label                   = require("jive.ui.Label")
 local Timer                   = require("jive.ui.Timer")
 local Widget                  = require("jive.ui.Widget")
+local Event                   = require("jive.ui.Event")
 
 local log                     = require("jive.utils.log").logger("ui")
 
@@ -59,6 +60,8 @@ local EVENT_WINDOW_PUSH       = jive.ui.EVENT_WINDOW_PUSH
 local EVENT_WINDOW_POP        = jive.ui.EVENT_WINDOW_POP
 local EVENT_WINDOW_ACTIVE     = jive.ui.EVENT_WINDOW_ACTIVE
 local EVENT_WINDOW_INACTIVE   = jive.ui.EVENT_WINDOW_INACTIVE
+local EVENT_FOCUS_LOST        = jive.ui.EVENT_FOCUS_LOST
+local EVENT_FOCUS_GAINED      = jive.ui.EVENT_FOCUS_GAINED
 local EVENT_SHOW              = jive.ui.EVENT_SHOW
 local EVENT_HIDE              = jive.ui.EVENT_HIDE
 local EVENT_CONSUME           = jive.ui.EVENT_CONSUME
@@ -450,12 +453,12 @@ function addWidget(self, widget)
 	self.widgets[#self.widgets + 1] = widget
 	widget.parent = self
 
-	-- FIXME last widget added always has focus
-	self.focus = widget
-
 	if self:isVisible() then
 		widget:dispatchNewEvent(EVENT_SHOW)
 	end
+
+	-- FIXME last widget added always has focus
+	self:focusWidget(widget)
 
 	widget:reSkin()
 end
@@ -479,6 +482,28 @@ function removeWidget(self, widget)
 	table.delete(self.widgets, widget)
 
 	self:reLayout()
+end
+
+
+--[[
+
+=head2 jive.ui.Window:focusWidget(widget)
+
+Make the I<widget> have the focus. This widget will be forwarded
+events from the window, and should animate (if applicable).
+
+=cut
+--]]
+function focusWidget(self, widget)
+	assert(oo.instanceof(widget, Widget))
+	assert(table.contains(self.widgets, widget))
+
+	if self.focus then
+		self.focus:_event(Event:new(EVENT_FOCUS_LOST))
+	end
+
+	self.focus = widget
+	self.focus:_event(Event:new(EVENT_FOCUS_GAINED))
 end
 
 
@@ -773,9 +798,19 @@ function borderLayout(self, fitWindow)
 				h = h + tb + bb or tb + bb
 				maxN = max(h, maxN)
 
+				if w then
+					w = w - lb - rb
+					maxX = max(w, maxX)
+				end
+
 			elseif position == LAYOUT_SOUTH then
 				h = h + tb + bb or tb + bb
 				maxS = max(h, maxS)
+
+				if w then
+					w = w - lb - rb
+					maxX = max(w, maxX)
+				end
 
 			elseif position == LAYOUT_EAST then
 				w = w + lb + rb or lb + rb
@@ -787,18 +822,17 @@ function borderLayout(self, fitWindow)
 
 			elseif position == LAYOUT_CENTER then
 				if w then
-					w = w + lb + rb
+					w = w - lb - rb
 					maxX = max(w, maxX)
 				end
 				if h then
-					h = h + tb + bb
+					h = h - tb - bb
 					maxY = max(h, maxY)
 				end
 
 			end
 		end
 	)
-
 
 	-- adjust window bounds to fit content
 	if fitWindow then

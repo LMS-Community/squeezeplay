@@ -62,9 +62,10 @@ JiveFont *jive_font_load(const char *name, Uint16 size) {
 }
 
 JiveFont *jive_font_ref(JiveFont *font) {
-	assert(font && font->magic == JIVE_FONT_MAGIC);
-
-	++font->refcount;
+	if (font) {
+		assert(font->magic == JIVE_FONT_MAGIC);
+		++font->refcount;
+	}
 	return font;
 }
 

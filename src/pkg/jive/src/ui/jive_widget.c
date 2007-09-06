@@ -262,6 +262,10 @@ int jiveL_widget_dolayout(lua_State *L) {
 
 
 int jive_widget_halign(JiveWidget *this, JiveAlign align, Uint16 width) {
+	if (this->bounds.w - this->padding.left - this->padding.right < width) {
+		return this->padding.left;
+	}
+
 	switch (align) {
 	default:
         case JIVE_ALIGN_LEFT:

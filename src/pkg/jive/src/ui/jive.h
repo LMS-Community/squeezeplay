@@ -306,6 +306,10 @@ JiveTile *jive_style_tile(lua_State *L, int index, const char *key, JiveTile *de
 JiveFont *jive_style_font(lua_State *L, int index, const char *key);
 JiveAlign jive_style_align(lua_State *L, int index, char *key, JiveAlign def);
 void jive_style_insets(lua_State *L, int index, char *key, JiveInset *inset);
+int jive_style_array_size(lua_State *L, int index, char *key);
+int jive_style_array_int(lua_State *L, int index, const char *array, int n, const char *key, int def);
+JiveFont *jive_style_array_font(lua_State *L, int index, const char *array, int n, const char *key);
+Uint32 jive_style_array_color(lua_State *L, int index, const char *array, int n, const char *key, Uint32 def, bool *is_set);
 
 void jive_timer_dispatch_event(lua_State *L, void *param);
 

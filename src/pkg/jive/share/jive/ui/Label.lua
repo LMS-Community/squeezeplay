@@ -39,6 +39,8 @@ B<textAlign> : the text alignment.
 
 B<iconAlign> : the icon alignment.
 
+B<line> : optionally an array of I<font>, I<lineHeight>, I<fg> and I<sh> attribtues foreach line in the Label.
+
 =head1 METHODS
 
 =cut

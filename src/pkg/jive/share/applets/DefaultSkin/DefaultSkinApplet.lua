@@ -19,6 +19,8 @@ DefaultSkinApplet overrides the following methods:
 
 
 -- stuff we use
+local ipairs, pairs = ipairs, pairs
+
 local oo                     = require("loop.simple")
 
 local Applet                 = require("jive.Applet")
@@ -38,6 +40,8 @@ local Window                 = require("jive.ui.Window")
 local table                  = require("jive.utils.table")
 local debug                  = require("jive.utils.debug")
 local autotable              = require("jive.utils.autotable")
+
+local log = require("jive.utils.log").logger("ui")
 
 local EVENT_ACTION           = jive.ui.EVENT_ACTION
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
@@ -301,14 +305,12 @@ function skin(self, s)
 
 	-- menu item
 	s.item.padding = 10
-	s.item.textW = screenWidth - 40
 	s.item.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
 	s.item.fg = { 0xe7, 0xe7, 0xe7 }
 	s.item.sh = { 0x37, 0x37, 0x37 }
 	--s.item.bgImg = selectionBox
 
 	s.current.padding = 10
-	s.current.textW = screenWidth - 40
 	s.current.font = Font:load(fontpath .. "FreeSansBold.ttf", 18)
 	s.current.fg = { 0xe7, 0xe7, 0xe7 }
 	s.current.sh = { 0xaa, 0xaa, 0xaa }
@@ -446,9 +448,10 @@ function skin(self, s)
 	s.popupIcon.border = { 13, 0, 13, 0 }
 	s.popupIcon.maskImg = Tile:fillColor(0x231f20cc)
 
-	s.popupIcon.text.border = 10
-	s.popupIcon.text.w = screenWidth - 60
-	s.popupIcon.text.font = Font:load(fontpath .. "FreeSans.ttf", 16)
+	s.popupIcon.text.border = 15
+	s.popupIcon.text.line[1].font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
+	s.popupIcon.text.line[1].height = 16
+	s.popupIcon.text.line[2].font = Font:load(fontpath .. "FreeSansBold.ttf", 22)
 	s.popupIcon.text.fg = { 0xff, 0xff, 0xff }
 	s.popupIcon.text.sh = { }
 	s.popupIcon.text.textAlign = "center"
@@ -532,15 +535,14 @@ function skin(self, s)
 	s.albumtitle.h = 60
 	s.albumtitle.border = 4
 	s.albumtitle.padding = { 10, 8, 8, 9 }
-	s.albumtitle.textW = screenWidth - 86
 	s.albumtitle.font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
 	s.albumtitle.fg = { 0x37, 0x37, 0x37 }
 	s.albumtitle.bgImg = titleBox
-	s.albumtitle.textAlign = "top-right"
+	s.albumtitle.textAlign = "top-left"
 	s.albumtitle.iconAlign = "left"
 	s.albumtitle.position = LAYOUT_NORTH
 	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
-	s.albumtitle.icon.padding = { 6, 0, 10, 0 }
+	s.albumtitle.icon.padding = { 6, 0, 0, 0 }
 
 
 	-- menus with artwork and song info
@@ -551,14 +553,13 @@ function skin(self, s)
 	-- items with artwork and song info
 	s.albumitem.h = 60
 	s.albumitem.padding = { 12, 8, 8, 8 }
-	s.albumitem.textW = screenWidth - 93
 	s.albumitem.lineHeight = 13
 	s.albumitem.font = Font:load(fontpath .. "FreeSansBold.ttf", 13)
 	s.albumitem.fg = { 0xe7, 0xe7, 0xe7 }
 	s.albumitem.sh = { 0x37, 0x37, 0x37 }
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
-	s.albumitem.icon.padding = { 6, 0, 10, 0 }
-	s.albumitem.textAlign = "top-right"
+	s.albumitem.icon.padding = { 6, 0, 0, 0 }
+	s.albumitem.textAlign = "top-left"
 	s.albumitem.iconAlign = "left"
 
 
@@ -576,14 +577,13 @@ function skin(self, s)
 
 	-- now playing menu item
 	s.albumcurrent.padding = { 12, 8, 8, 8 }
-	s.albumcurrent.textW = screenWidth - 93
 	s.albumcurrent.lineHeight = 15
 	s.albumcurrent.font = Font:load(fontpath .. "FreeSansBold.ttf", 15)
 	s.albumcurrent.fg = { 0xe7, 0xe7, 0xe7 }
 	s.albumcurrent.sh = { 0x37, 0x37, 0x37 }
 	s.albumcurrent.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
-	s.albumcurrent.icon.padding = { 6, 0, 10, 0 }
-	s.albumcurrent.textAlign = "top-right"
+	s.albumcurrent.icon.padding = { 6, 0, 0, 0 }
+	s.albumcurrent.textAlign = "top-left"
 	s.albumcurrent.iconAlign = "left"
 
 	-- selected now playing menu item

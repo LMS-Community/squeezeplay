@@ -25,8 +25,6 @@ local Timer	       = require("jive.ui.Timer")
 local log              = require("jive.utils.log").logger("applets.screensavers")
 local datetime         = require("jive.utils.datetime")
 
-local EVENT_FOCUS_GAINED  = jive.ui.EVENT_FOCUS_GAINED
-
 local appletManager	= appletManager
 
 module(...)
@@ -313,7 +311,7 @@ function _createUI(self)
 	window:addWidget(lRemain)
 	window:addWidget(iArt)
 
-	lTrackInfo:dispatchNewEvent(EVENT_FOCUS_GAINED)
+	window:focusWidget(lTrackInfo)
 
 	theWindow = window
 
