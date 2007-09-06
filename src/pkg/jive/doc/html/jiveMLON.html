@@ -10,7 +10,7 @@
 
 	<p>Interface specifications for browsing using Jive.</p>
 
-	<p>Version 1.2 (<a href="#rev">revision history</a>)</p>
+	<p>Version 1.4 (<a href="#rev">revision history</a>)</p>
 
 	<h2>Introduction</h2>
 
@@ -168,7 +168,10 @@
 		Min number of characters to request before proceeding.</p>
 
 		<p><code>allowedChars</code><br>
-		Overrides the set of characters allowed for input. The default value is &quot; abcdefghijklmnopqrstuvwxyz!@#$%^&amp;*()_+{}|:\\\&quot;&apos;&lt;&gt;?-=,./~`[];0123456789&quot;</p>
+		Overrides the set of characters allowed for input. The default value is given by the localized ALLOWEDCHARS_NOCAPS string in share/jive/global_strings.txt. In EN, this is &quot; abcdefghijklmnopqrstuvwxyz!@#$%^&amp;*()_+{}|:\\\&quot;&apos;&lt;&gt;?-=,./~`[];0123456789&quot;</p>
+
+		<p><code>initialText</code><br>
+		String that contains what should be filled into the text input entry as a default.</p>
 
 		<p><code>help</code><br>
 		A help text, if any. Can be specified either using the localized text or a token (localized by Jive),</p>
@@ -486,6 +489,11 @@
 
 	<h2 id="rev">Revision history</h2>
 
+	<h3>1.4</h3>
+
+	<ul>
+		<li>Localization of allowedChars charset. Addition of initialText &lt;input_fields&gt; parameter.</li>
+	</ul>
 	<h3>1.3</h3>
 
 	<ul>
