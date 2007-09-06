@@ -196,7 +196,11 @@ int jiveL_label_prepare(lua_State *L) {
 		line = &peer->line[num_lines++];
 
 		/* shadow and foreground text */
-		tmp = strndup(str, ptr - str);
+		//tmp = strndup(str, ptr - str);
+		tmp = malloc(ptr - str + 1);
+		strncpy(tmp, str, ptr - str + 1);
+		tmp[ptr - str] = '\0';
+
 		line->text_sh = is_sh ? jive_font_draw_text(font, sh, tmp) : NULL;
 		line->text_fg = jive_font_draw_text(font, fg, tmp);
 		free(tmp);
@@ -225,6 +229,7 @@ int jiveL_label_prepare(lua_State *L) {
 
 int jiveL_label_layout(lua_State *L) {
 	LabelWidget *peer;
+	Uint16 y;
 	int wx = 0, wy = 0, ww = 0, wh = 0;
 	int i;
 
@@ -296,7 +301,7 @@ int jiveL_label_layout(lua_State *L) {
 	}
 
 	/* align the label, minus the widget width */
-	Uint16 y = jive_widget_valign((JiveWidget *)peer, peer->text_align, peer->text_h);
+	y = jive_widget_valign((JiveWidget *)peer, peer->text_align, peer->text_h);
 
 	peer->w.bounds.w -= ww;
 	for (i=0; i<peer->num_lines; i++) {
