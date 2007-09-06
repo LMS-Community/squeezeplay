@@ -465,7 +465,7 @@ function chooseEncryption(self)
 						text = self:string("NETWORK_NO_ENCRYPTION"),
 						callback = function()
 								   self.encryption = "none"
-								   connect(self)
+								   createAndConnect(self)
 							   end
 					},
 					{
@@ -588,7 +588,7 @@ function enterWEPKey(self)
 	local textinput = Textinput("textinput", v,
 				    function(_, value)
 					    self.key = value:getValue()
-					    connect(self)
+					    createAndConnect(self)
 
 					    return true
 				    end
@@ -615,7 +615,7 @@ function enterPSK(self)
 					    end
 
 					    self.psk = value
-					    connect(self)
+					    createAndConnect(self)
 
 					    return true
 				    end
@@ -714,6 +714,9 @@ function t_connect(self, ssid)
 	request = 'DISCONNECT'
 	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
+	-- Force the interface down
+	os.execute("/sbin/ifdown -f eth0")
+
 	local id = self.scanResults[ssid].id
 	log:warn("t_connect ssid=", ssid, " id=", id)
 
@@ -728,6 +731,18 @@ function t_connect(self, ssid)
 	-- Allow reassociation
 	request = 'REASSOCIATE'
 	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
+end
+
+
+function createAndConnect(self)
+	log:warn("removing network")
+
+	jnt:perform(function()
+			    self:t_removeNetwork(self.ssid)
+			    jnt:t_perform(function()
+						  connect(self)
+					  end)
+		    end)
 end
 
 
@@ -807,6 +822,7 @@ function t_connectFailed(self)
 	-- Stop trying to connect to the network
 	request = 'DISCONNECT'
 	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
 
 	log:warn("addNetwork=", self.addNetwork)
 	if self.addNetwork then
@@ -995,7 +1011,7 @@ end
 
 
 function failedDHCP(self)
-	local window = Window("window", self:string("NETWORK_ADDRES_PROBLEM"))
+	local window = Window("window", self:string("NETWORK_ADDRESS_PROBLEM"))
 
 	local menu = SimpleMenu("menu",
 				{
