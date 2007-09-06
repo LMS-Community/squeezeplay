@@ -9,6 +9,7 @@ local math              = require("math")
 local string            = require("string")
 local table             = require("jive.utils.table")
 local log               = require("jive.utils.log").logger("ui")
+local locale            = require("jive.utils.locale")
 
 local EVENT_ALL         = jive.ui.EVENT_ALL
 local EVENT_UNUSED      = jive.ui.EVENT_UNUSED
@@ -278,6 +279,7 @@ function __init(self, style, value, closure, allowedChars)
 	assert(value ~= nil)
 
 	local obj = oo.rawnew(self, Widget(style))
+	 _globalStrings = locale:readGlobalStringsFile()
 
 	obj.cursor = 1
 	obj.indent = 0
@@ -285,7 +287,7 @@ function __init(self, style, value, closure, allowedChars)
 	obj.value = value
 	obj.closure = closure
 	obj.allowedChars = allowedChars or
-		 " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\\\"'<>?-=,./~`[];0123456789"
+		_globalStrings:str("ALLOWEDCHARS_WITHCAPS")
 
 	obj:addListener(EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE,
 			function(event)
