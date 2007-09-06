@@ -277,7 +277,7 @@ function __init(self, style, value, closure, allowedChars)
 	assert(type(style) == "string")
 	assert(value ~= nil)
 	if allowedChars then
-		assert(type(allowedChars) == "string")
+		allowedChars = tostring(allowedChars)
 	end
 
 	local obj = oo.rawnew(self, Widget(style))

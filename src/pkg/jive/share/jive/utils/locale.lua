@@ -170,7 +170,7 @@ function parseStringsFile(self, myLocale, myFilePath, stringsTable)
 				local str = stringsTable[thisString] or {}
 				str.str = translatedString
 				setmetatable(str, strmt)
-				stringsTable[thisString] = tostring(str)
+				stringsTable[thisString] = str
 				log:debug("translated string: |", thisString, "|", stringsTable[thisString].str, "|")
 			end
 		end
