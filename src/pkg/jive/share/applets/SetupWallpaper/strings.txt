@@ -15,3 +15,48 @@ CREATIVE_COMMONS
 
 CREDITS_BY
 	EN	Pictures by:
+
+EGGPLANT
+	EN	Eggplant
+
+CONCRETE
+	EN	Concrete
+
+MIDNIGHT
+	EN	Midnight
+
+PEA
+	EN	Pea
+
+SLATE
+	EN	Slate
+
+BLACK
+	EN	Black
+
+STONE
+	EN	Stone
+
+DUNES
+	EN	Dunes
+
+IRIS
+	EN	Iris
+
+YELLOW_ROSE
+	EN	Yellow Rose
+
+SMOKE
+	EN	Smoke
+
+AMBER
+	EN	Amber
+
+FLAME
+	EN	Flame
+
+LOS_CARDINALOS
+	EN	Los Cardinalos
+
+WEATHERED_WOOD
+	EN	Weathered Wood

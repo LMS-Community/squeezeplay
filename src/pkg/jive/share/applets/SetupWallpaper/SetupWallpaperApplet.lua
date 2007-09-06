@@ -19,6 +19,8 @@ SetupWallpaperApplet overrides the following methods:
 
 
 -- stuff we use
+local ipairs = ipairs
+
 local oo                     = require("loop.simple")
 
 local table                  = require("jive.utils.table")
@@ -45,22 +47,26 @@ oo.class(_M, Applet)
 
 -- Wallpapers
 local wallpapers = {
-	["Eggplant"] = "eggplant.png",
-	["Concrete"] = "concrete.png",
-	["Midnight"] = "midnight.png",
-	["Pea"] = "pea.png",
-	["Slate"] = "slate.png",
-	["Black"] = "black.png",
-	["Camo"] = "camo.png",
-	["Stone"] = "stone.png",
-	["Chapple_1"] = "Chapple_1.jpg",
-	["Clearly-Ambiguous_1"] = "Clearly-Ambiguous_1.jpg",
-	["Clearly-Ambiguous_2"] = "Clearly-Ambiguous_2.jpg",
-	["Clearly-Ambiguous_3"] = "Clearly-Ambiguous_3.jpg",
-	["Clearly-Ambiguous_4"] = "Clearly-Ambiguous_4.jpg",
-	["Clearly-Ambiguous_6"] = "Clearly-Ambiguous_6.jpg",
-	["Los-Cardinalos_1"] = "Los-Cardinalos_1.jpg",
-	["Orin-Optiglot_1"] = "Orin-Optiglot_1.jpg",
+	{
+		["EGGPLANT"] = "eggplant.png",
+		["CONCRETE"] = "concrete.png",
+		["MIDNIGHT"] = "midnight.png",
+		["PEA"] = "pea.png",
+		["SLATE"] = "slate.png",
+		["BLACK"] = "black.png",
+		["CAMO"] = "camo.png",
+		["STONE"] = "stone.png",
+	},
+	{
+		["DUNES"] = "Chapple_1.jpg",
+		["IRIS"] = "Clearly-Ambiguous_1.jpg",
+		["YELLOW_ROSE"] = "Clearly-Ambiguous_2.jpg",
+		["SMOKE"] = "Clearly-Ambiguous_3.jpg",
+		["AMBER"] = "Clearly-Ambiguous_4.jpg",
+		["FLAME"] = "Clearly-Ambiguous_6.jpg",
+		["LOS_CARDINALOS"] = "Los-Cardinalos_1.jpg",
+		["WEATHERED_WOOD"] = "Orin-Optiglot_1.jpg",
+	}
 }
 
 local authors = { "Chapple", "Scott Robinson", "Los Cardinalos", "Orin Optiglot" }
@@ -73,21 +79,24 @@ function setupShow(self, setupNext)
 
 	local wallpaper = self:getSettings()["wallpaper"]
 
-	for name, file in table.pairsByKeys(wallpapers) do
-		menu:addItem({
-				     text = name, 
-				     callback = function()
-							self:_setBackground(file)
-							setupNext()
-						end,
-				     focusGained = function(event)
-							self:_showBackground(file)
-						end
+        menu:setComparator(menu.itemComparatorAlphaWeight)
 
-			     })
+	for weight, section in ipairs(wallpapers) do
+		for name, file in table.pairsByKeys(section) do
+			menu:addItem({
+					     text = self:string(name), 
+					     callback = function()
+								self:_setBackground(file)
+								setupNext()
+							end,
+					     focusGained = function(event)
+								   self:_showBackground(file)
+							   end
+				     })
 
-		if wallpaper == file then
-			menu:setSelectedIndex(menu:numItems())
+			if wallpaper == file then
+				menu:setSelectedIndex(menu:numItems())
+			end
 		end
 	end
 	menu:addItem(self:_licenseMenuItem())
@@ -113,24 +122,28 @@ function settingsShow(self)
 	local wallpaper = self:getSettings()["wallpaper"]
 	
 	local group = RadioGroup()
-	
-	for name, file in table.pairsByKeys(wallpapers) do
-		menu:addItem({
-				     text = name, 
-				     icon = RadioButton("radio", 
-							group, 
-							function()
-								self:_setBackground(file)
-							end,
-							wallpaper == file
-						),
-				     focusGained = function(event)
-							self:_showBackground(file)
-						end
-			     })
 
-		if wallpaper == file then
-			menu:setSelectedIndex(menu:numItems())
+        menu:setComparator(menu.itemComparatorAlphaWeight)
+	
+	for weight, section in ipairs(wallpapers) do
+		for name, file in table.pairsByKeys(section) do
+			menu:addItem({
+					     text = self:string(name), 
+					     icon = RadioButton("radio", 
+								group, 
+								function()
+									self:_setBackground(file)
+								end,
+								wallpaper == file
+							),
+					     focusGained = function(event)
+								   self:_showBackground(file)
+							   end
+				     })
+
+			if wallpaper == file then
+				menu:setSelectedIndex(menu:numItems())
+			end
 		end
 	end
 
