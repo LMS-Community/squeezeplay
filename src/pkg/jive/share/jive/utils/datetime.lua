@@ -43,6 +43,9 @@ local globalDateFormat = "%a, %B %d %Y"
 local globalHours = "24"
 local globalTimeZone = "GMT"
 
+local TimeFormatAMPM = "%l:%M%p"
+local TimeFormat24 = "%H:%M"
+
 local DateFormats = {
 	"%a, %B %d %Y",
 	"%a, %d. %B %Y", 
@@ -250,4 +253,20 @@ function secondsFromMidnight(self, hhmm)
 
 	secondsFromMidnight = (timeElements[1] * 3600) + (timeElements[2] * 60)
 	return secondsFromMidnight
+end
+
+--[[
+=head2 getCurrentTime()
+
+Returns the current, formatted time.
+Example: 	21:57 (24h format)
+		09:57PM (AM/PM)
+=cut
+--]]
+function getCurrentTime()
+	if globalHours == "24" then
+		return os.date(TimeFormat24)		
+	else
+		return os.date(TimeFormatAMPM)
+	end	
 end
