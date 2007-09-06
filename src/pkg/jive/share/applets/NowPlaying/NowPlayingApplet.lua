@@ -3,7 +3,6 @@ local tonumber = tonumber
 
 local math             = require("math")
 local table            = require("table")
-local os	       = require("os")	
 local string	       = require("string")
 
 local oo               = require("loop.simple")
@@ -26,24 +25,7 @@ local Timer	       = require("jive.ui.Timer")
 local log              = require("jive.utils.log").logger("applets.screensavers")
 local datetime         = require("jive.utils.datetime")
 
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local EVENT_WINDOW_RESIZE = jive.ui.EVENT_WINDOW_RESIZE
-local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
-local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
-local FRAME_RATE       = jive.ui.FRAME_RATE
-local LAYER_FRAME      = jive.ui.LAYER_FRAME
-local LAYER_CONTENT    = jive.ui.LAYER_CONTENT
-local LAYER_ALL	       = jive.ui.JIVE_LAYER_ALL
-local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
-local KEY_BACK         = jive.ui.KEY_BACK
-
-local LAYOUT_NORTH            = jive.ui.LAYOUT_NORTH
-local LAYOUT_EAST             = jive.ui.LAYOUT_EAST
-local LAYOUT_SOUTH            = jive.ui.LAYOUT_SOUTH
-local LAYOUT_WEST             = jive.ui.LAYOUT_WEST
-local LAYOUT_CENTER           = jive.ui.LAYOUT_CENTER
-local LAYOUT_NONE             = jive.ui.LAYOUT_NONE
-
+local EVENT_FOCUS_GAINED  = jive.ui.EVENT_FOCUS_GAINED
 
 local appletManager	= appletManager
 
@@ -64,15 +46,11 @@ local ARTWORK_SIZE = 114
 local theWindow = nil
 local thePlayer = nil
 local theItem = nil
-local theIconId = nil
-
-local tTimer = nil
+local theTimer = nil
 
 local lWTitle = nil
 
-local lArtist = nil
-local lTitle = nil
-local lAlbum = nil
+local lTrackInfo = nil
 local iArt = nil
 local sPos = nil
 local lPos = nil
@@ -152,7 +130,7 @@ end
 
 local function updatePosition()
 
-	if iTrackLen > 0 then
+	if iTrackLen and iTrackLen > 0 then
 		local strPos = SecondsToString(iTrackPos)
 		local strRemain = "-" .. SecondsToString(iTrackLen - iTrackPos)
 		
@@ -162,32 +140,27 @@ local function updatePosition()
 		sPos:setValue(iTrackPos)
 
 	else 
+		if iTrackPos then 
+			lPos:setValue(SecondsToString(iTrackPos))
+		else 
+			lPos:setValue("n/a")
+		end
 	
-		lPos:setValue("n/a")
 		lRemain:setValue("n/a")
 		sPos:setValue(0)
-
 	end
 
 end
 
-local function setAlbum(value)
-	lAlbum:setValue(value)
-end
-
-local function setArtist(value)
-	lArtist:setValue(value)
-end
-
-local function setTitle(value)
-	lTitle:setValue(value)
+local function setTrackInfo(value)
+	lTrackInfo:setValue(value)
 end
 
 local function setTime(trackpos, tracklen)
 	iTrackPos = trackpos
 	iTrackLen = tracklen	
 
-	if tracklen > 0 then
+	if tracklen and tracklen > 0 then
 		sPos:setRange(0, tracklen, trackpos)
 	else 
 		-- If 0 just set it to 100
@@ -214,20 +187,19 @@ local function setArtwork(icon)
 end
 
 
-local function updateTrack(album, artist, track, pos, length)
-	setAlbum(album)
-	setArtist(artist)
-	setTitle(track)
+local function updateTrack(trackinfo, pos, length)
+	setTrackInfo(trackinfo)
 	setTime(pos, length)
 end
 
 local function tick()
-	if iTrackLen > 0 then
-		iTrackPos = iTrackPos + 1
-		if iTrackPos > iTrackLen then iTrackPos = iTrackLen end
+	iTrackPos = iTrackPos + 1
 
-		updatePosition()
+	if iTrackLen and iTrackLen > 0 then
+		if iTrackPos > iTrackLen then iTrackPos = iTrackLen end
 	end
+
+	updatePosition()
 end
 
 -----------------------------------------------------------------------------------------
@@ -261,33 +233,34 @@ function _process_status(self, event)
 
 	local data = event.data;
 
+	if data.mode == "play" then
+		theTimer:start()	
+	elseif data.mode == "pause" then
+		theTimer:stop()
+	else
+		log:debug("Unknown Mode: " .. data.mode)
+	end
+
+	log:error("Time: " .. data.mode)
+
 	if data.item_loop ~= nil then
 
 		local text = data.item_loop[1].text
+		if data.remote == 1 then 
+			text = text .. "\n" .. data.current_title
+		end
+			
 		theItem = data.item_loop[1]
 
 		local icon = _getIcon(theItem)
 
-		-- Split Text Up into the three infos
-		--
-		local x = string.gfind(text, "([^\n]*)")
-		local i = 0
-		local split = {}
-		for v in x do
-			if string.len(v) > 0 then
-				i = i + 1
-				split[i] = v
-			end
-		end
-
-		updateTrack(split[2], split[3], split[1], data.time, data.duration)
+		updateTrack(text, data.time, data.duration)
 		setArtwork(icon)
 	else
 		theItem = nil
-		updateTrack("", "(Nothing Playing)", "", 0, 0)
+		updateTrack("(Nothing Playing)", 0, 0)
 		setArtwork(nil)
 	end
-	
 end
 
 function free(self)
@@ -296,7 +269,7 @@ function free(self)
 		thePlayer.slimServer.comet:unsubscribe( '/slim/playerstatus/' .. thePlayer:getId(), self.statusSink )
 	end
 
-	tTimer:stop()
+	theTimer:stop()
 end
 
 function _createUI(self)
@@ -308,17 +281,9 @@ function _createUI(self)
 	lWTitle:setPosition(5, 5)
 	lWTitle:setSize(sw-10, 35)
 
-	lTitle = Label("label", "#TRACK NAME#")
-	lTitle:setPosition(10, 45)
-	lTitle:setSize(sw-10, 20)
-
-	lAlbum = Label("label", "#ALBUM#")
-	lAlbum:setPosition(10, 60)
-	lAlbum:setSize(sw-10, 20)
-
-	lArtist = Label("label", "#ARTIST#")
-	lArtist:setPosition(10, 75)
-	lArtist:setSize(sw-10, 20) 
+	lTrackInfo = Label("label", "#TRACK NAME#")
+	lTrackInfo:setPosition(10, 45)
+	lTrackInfo:setSize(sw-20, 60)
 
 	lPos = Label("wlabel", "n/a")
 	lPos:setPosition(10, sh-60)
@@ -342,13 +307,13 @@ function _createUI(self)
 	
 	window:addWidget(bg)
 	window:addWidget(lWTitle)
-	window:addWidget(lAlbum)
-	window:addWidget(lArtist)
-	window:addWidget(lTitle)
+	window:addWidget(lTrackInfo)
 	window:addWidget(sPos)
 	window:addWidget(lPos)
 	window:addWidget(lRemain)
 	window:addWidget(iArt)
+
+	lTrackInfo:dispatchNewEvent(EVENT_FOCUS_GAINED)
 
 	theWindow = window
 
@@ -384,8 +349,8 @@ function openScreensaver(self, menuItem)
 			cmd
 		)
 
-		tTimer = Timer(1000, function() tick() end)
-		tTimer:start()
+		theTimer = Timer(1000, function() tick() end)
+		theTimer:start()
 
 		self:tieAndShowWindow(window)
 		return window
