@@ -381,14 +381,19 @@ function connectingPopup(self, menuItem)
 	local popup = Popup("popupIcon")
 
 	local icon = Icon("iconConnecting")
-	local label = Label("text", "Connecting to\na test string!")
+	local label = Label("text", "")
 
 	popup:addWidget(icon)
 	popup:addWidget(label)
 
+
 	local state = 1
-	popup:addTimer(10000, function()
+	popup:addTimer(4000, function()
 				       if state == 1 then
+					       label:setValue("\na long test string!")
+				       elseif state == 2 then
+					       label:setValue("\na very very very long test string!")
+				       elseif state == 3 then
 					       icon:setStyle("iconConnected")
 					       label:setValue("Connected to\na test string!")
 				       else

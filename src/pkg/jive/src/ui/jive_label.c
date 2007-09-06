@@ -223,6 +223,9 @@ int jiveL_label_prepare(lua_State *L) {
 	peer->text_h = total_height;
 	peer->text_w = max_width;
 
+	/* reset scroll position */
+	peer->scroll_offset = 0;
+
 	return 0;
 }
 
@@ -302,8 +305,8 @@ int jiveL_label_layout(lua_State *L) {
 
 	/* align the label, minus the widget width */
 	y = jive_widget_valign((JiveWidget *)peer, peer->text_align, peer->text_h);
-
 	peer->w.bounds.w -= ww;
+
 	for (i=0; i<peer->num_lines; i++) {
 		LabelLine *line = &peer->line[i];
 		Uint16 w, h;

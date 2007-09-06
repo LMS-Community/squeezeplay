@@ -794,12 +794,15 @@ function borderLayout(self, fitWindow)
 			local lb,tb,rb,bb = widget:getBorder()
 			local position = widget:styleInt("position") or LAYOUT_CENTER
 
+			--log:debug("x=", x, " y=", y, " w=", w, " h=", h)
+
 			if position == LAYOUT_NORTH then
 				h = h + tb + bb or tb + bb
 				maxN = max(h, maxN)
 
 				if w then
-					w = w - lb - rb
+					w = w + lb + rb
+					w = min(w, sw - lb - rb)
 					maxX = max(w, maxX)
 				end
 
@@ -808,31 +811,37 @@ function borderLayout(self, fitWindow)
 				maxS = max(h, maxS)
 
 				if w then
-					w = w - lb - rb
+					w = w + lb + rb
+					w = min(w, sw - lb - rb)
 					maxX = max(w, maxX)
 				end
 
 			elseif position == LAYOUT_EAST then
 				w = w + lb + rb or lb + rb
+				w = min(w, sw - lb - rb)
 				maxE = max(w, maxE)
 
 			elseif position == LAYOUT_WEST then
 				w = w + lb + rb or lb + rb
+				w = min(w, sw - lb - rb)
 				maxW = max(w, maxW)
 
 			elseif position == LAYOUT_CENTER then
 				if w then
-					w = w - lb - rb
+					w = w + lb + rb
+					w = min(w, sw - lb - rb)
 					maxX = max(w, maxX)
 				end
 				if h then
-					h = h - tb - bb
+					h = h + tb + bb
 					maxY = max(h, maxY)
 				end
 
 			end
 		end
 	)
+
+	--log:debug(" maxN=", maxN, " maxE=", maxE, " maxS=", maxS, " maxW=", maxW, " maxX=", maxX, " maxY=", maxY)
 
 	-- adjust window bounds to fit content
 	if fitWindow then
