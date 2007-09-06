@@ -196,7 +196,7 @@ function setupScanShow(self, setupNext)
 	local window = Popup("popupIcon")
 
 	window:addWidget(Icon("iconConnecting"))
-	window:addWidget(Textarea("text", self:string("NETWORK_FINDING_NETWORKS")))
+	window:addWidget(Label("text", self:string("NETWORK_FINDING_NETWORKS")))
 
 	-- wait for network scan (in network thred)
 	self.t_ctrl:scan(setupNext)
@@ -759,7 +759,7 @@ function connect(self, keepConfig)
 			    end)
 	window:addWidget(icon)
 
-	window:addWidget(Textarea("text", self:string("NETWORK_CONNECTING_TO", self.ssid)))
+	window:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO", self.ssid)))
 
 	-- FIXME back handler...
 
@@ -896,7 +896,7 @@ function connectOK(self)
 	local window = Popup("popupIcon")
 	window:addWidget(Icon("iconConnected"))
 
-	local text = Textarea("text", self:string("NETWORK_CONNECTED_TO", self.currentSSID))
+	local text = Label("text", self:string("NETWORK_CONNECTED_TO", self.currentSSID))
 	window:addWidget(text)
 
 	window:addTimer(2000,

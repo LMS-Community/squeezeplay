@@ -28,16 +28,16 @@ UPDATE_TRY_AGAIN
 	EN	Try again...
 
 UPDATE_DOWNLOAD
-	EN	Copying Update
+	EN	\nCopying Update
 
 UPDATE_WRITE
-	EN	Installing Update
+	EN	\nInstalling Update
 
 UPDATE_VERIFY
-	EN	Verifying Update
+	EN	\nVerifying Update
 
 UPDATE_REBOOT
-	EN	Restarting
+	EN	\nRestarting
 
 UPDATE_CONTINUE_HELP
 	DE	Zum Aktualisieren der Software auf dieser Fernbedienung wählen Sie Weiter. Der Vorgang dauert nur wenige Minuten.

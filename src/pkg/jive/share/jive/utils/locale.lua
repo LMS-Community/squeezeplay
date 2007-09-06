@@ -164,6 +164,9 @@ function parseStringsFile(self, myLocale, myFilePath, stringsTable)
 				-- dump the translations to log:debug
 				log:debug("strings.txt data\nlocale=", locale, "\nthisString = ", thisString, "translatedString = ", translatedString, "\n\n")
 
+				-- convert \n to \n
+				translatedString = string.gsub(translatedString, "\\n", "\n")
+
 				-- wrap the string in a table to allow the
 				-- localized value to be changed if a different
 				-- locale is loaded.

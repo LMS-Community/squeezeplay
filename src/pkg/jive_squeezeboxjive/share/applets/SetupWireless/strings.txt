@@ -9,7 +9,7 @@ NETWORK
 	EN	Networks
 
 NETWORK_FINDING_NETWORKS
-	EN	Finding Networks
+	EN	\nFinding Networks
 
 NETWORK_BSSID
 	EN	BSSID:
@@ -260,20 +260,20 @@ NETWORK_WIRELESS_PASSWORD_HELP
 	NL	Voer je draadloze wachtwoord in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
 
 NETWORK_CONNECTING_TO
-	DE	Verbindung mit %s
-	EN	Connecting to %s
-	ES	Estableciendo conexión a %s
-	FR	Connexion à %s
-	IT	Connessione a %s in corso
-	NL	Bezig verbinding te maken met %s
+	DE	Verbindung mit\n%s
+	EN	Connecting to\n%s
+	ES	Estableciendo conexión a\n%s
+	FR	Connexion à\n%s
+	IT	Connessione a\n%s\nin corso
+	NL	Bezig verbinding te maken met\n%s
 
 NETWORK_CONNECTED_TO
-	DE	Verbunden mit %s
-	EN	Connected to %s
-	ES	Conexión a %s establecida
-	FR	Connecté à %s
-	IT	Connesso a %s
-	NL	Verbonden met %s
+	DE	Verbunden mit\n%s
+	EN	Connected to\n%s
+	ES	Conexión a\n%s\nestablecida
+	FR	Connecté à\n%s
+	IT	Connesso a\n%s
+	NL	Verbonden met\n%s
 
 NETWORK_CONNECTION_PROBLEM
 	DE	Verbindungsproblem

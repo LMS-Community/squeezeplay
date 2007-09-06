@@ -135,7 +135,7 @@ end
 
 function _t_setText(self, msg, done)
 	jnt:t_perform(function()
-			      self.textarea:setText(self:string(msg))
+			      self.textarea:setValue(self:string(msg))
 			      if done then
 				      self.icon:setStyle("iconConnected")
 			      end
@@ -176,7 +176,7 @@ function _upgrade(self)
 	self.icon = Icon("iconConnecting")
 	window:addWidget(self.icon)
 
-	self.textarea = Textarea("text", "")
+	self.textarea = Label("text", self:string("UPDATE_DOWNLOAD"))
 	window:addWidget(self.textarea)
 
 	-- no way to exit this window
