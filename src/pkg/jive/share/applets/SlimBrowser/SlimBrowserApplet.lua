@@ -1115,10 +1115,11 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 			inputSpec.allowedChars = _string("ALLOWEDCHARS_NOCAPS")
 		end
 		local v = ""
-		local inputType = _safeDeref(item, 'input', 'inputType')
-		if inputType == 'time' then
-			v = Textinput.timeValue("00:00")
+		local initialText = _safeDeref(item, 'input', 'initialText')
+		if initialText then
+			v = tostring(initialText)
 		end
+
 		-- create a text input
 		local input = Textinput(
 			"textinput", 
