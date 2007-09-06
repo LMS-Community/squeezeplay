@@ -146,7 +146,7 @@ local function updatePosition()
 			lPos:setValue("n/a")
 		end
 	
-		lRemain:setValue("n/a")
+		lRemain:setValue("")
 		sPos:setValue(0)
 	end
 
