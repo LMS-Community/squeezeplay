@@ -810,7 +810,7 @@ function _chooseSlimserver(self)
 		local popup = Popup("popupIcon")
 
 		popup:addWidget(Icon("iconConnecting"))
-		popup:addWidget(Textarea("text", self:string("SQUEEZEBOX_FINDING_SOURCES")))
+		popup:addWidget(Label("text", self:string("SQUEEZEBOX_FINDING_SOURCES")))
 
 		-- schedule slimserver scan 
 		popup:addTimer(1000, function() _scanSlimservers(self) end)
@@ -983,7 +983,11 @@ function _setupSqueezebox(self)
 
 	local help
 	if self._action == t_connectJiveAdhoc then
-		help = self:string("SQUEEZEBOX_CONNECTING")
+		if self.data1.SSID then
+			help = self:string("SQUEEZEBOX_CONNECTING_TO", self.data1.SSID)
+		else
+			help = self:string("SQUEEZEBOX_CONNECTING_TO", tostring(self:string("SQUEEZEBOX_ETHERNET")))
+		end
 	else
 		help = self:string("SQUEEZEBOX_CONNECTING_TO", tostring(self.slimserver))
 	end
@@ -991,7 +995,7 @@ function _setupSqueezebox(self)
 	local window = Popup("popupIcon")
 
 	window:addWidget(Icon("iconConnecting"))
-	window:addWidget(Textarea("text", help))
+	window:addWidget(Label("text", help))
 	window:addTimer(1000,
 			function()
 				_nextAction(self)
@@ -1022,7 +1026,7 @@ function _setupOK(self)
 	local window = Popup("popupIcon")
 	window:addWidget(Icon("iconConnected"))
 
-	local text = Textarea("text", self:string("SQUEEZEBOX_SETUP_COMPLETE"))
+	local text = Label("text", self:string("SQUEEZEBOX_SETUP_COMPLETE"))
 	window:addWidget(text)
 
 	window:addTimer(2000,

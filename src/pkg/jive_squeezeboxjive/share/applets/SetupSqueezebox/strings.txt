@@ -32,13 +32,10 @@ SQUEEZEBOX_FINDING_SOURCES
 	EN	Finding music sources
 
 SQUEEZEBOX_CONNECTING_TO
-	EN	Connecting to %s
+	EN	Connecting to\n%s
 
 SQUEEZEBOX_SETUP_COMPLETE
 	EN	Your squeezebox is now set up.
-
-SQUEEZEBOX_CONNECTING
-	EN	Connecting to your network.
 
 SQUEEZEBOX_PROBLEM
 	DE	Verbindungsproblem
