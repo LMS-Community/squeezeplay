@@ -1790,7 +1790,7 @@ src/version.h: FORCE
 	@echo -n '#define JIVE_VERSION "' >> src/version.h
 	@echo -n `cat ../jive.version` >> src/version.h
 	@echo -n '_r' >> src/version.h
-	@svnversion -n . >> src/version.h
+	@svnversion -n .. >> src/version.h
 	@echo '"' >> src/version.h
 
 FORCE:
