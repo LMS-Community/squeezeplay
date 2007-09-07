@@ -108,7 +108,7 @@ function skin(self, s)
 	Framework:loadSound("PUSHLEFT", sndpath .. "pushleft.wav", 1)
 	Framework:loadSound("PUSHRIGHT", sndpath .. "pushright.wav", 1)
 	Framework:loadSound("SELECT", sndpath .. "select.wav", 0)
-	Framework:loadSound("DOCKING", "applets/SqueezeboxJive/sounds/docking.wav", 1)
+	Framework:loadSound("DOCKING", sndpath .. "docking.wav", 1)
 
 	-- Images and Tiles
 	local iconBackground = 
