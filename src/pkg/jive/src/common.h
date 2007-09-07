@@ -6,7 +6,6 @@
 
 
 #include "config.h"
-#include "version.h"
 
 #include <assert.h>
 #include <errno.h>

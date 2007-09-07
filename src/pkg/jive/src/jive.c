@@ -21,6 +21,7 @@
 
 /* Standard includes */
 #include "common.h"
+#include "version.h"
 
 #if defined (_MSC_VER)
 #include <windows.h>
