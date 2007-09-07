@@ -158,7 +158,28 @@ function init(self)
 	-- set initial state
 	self:update()
 
+	-- find out when we connect to player
+	jnt:subscribe(self)
+
 	return self
+end
+
+
+function notify_playerCurrent(self, player)
+	local sink = function(chunk, err)
+			     if err then
+				     log:warn(err)
+				     return
+			     end
+
+			     local date = chunk.data.date
+			     log:warn("date=", date)
+		     end
+
+	player.slimServer.comet:request(sink,
+					player:getId(),
+					{ 'date' }
+				)
 end
 
 

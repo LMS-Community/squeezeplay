@@ -34,6 +34,7 @@ local Upgrade                = require("applets.SetupFirmwareUpgrade.Upgrade")
 local log                    = require("jive.utils.log").logger("applets.setup")
 
 local jnt                    = jnt
+local upgradeUrl             = upgradeUrl
 
 local EVENT_ACTION           = jive.ui.EVENT_ACTION
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
@@ -68,20 +69,23 @@ module(...)
 oo.class(_M, Applet)
 
 
-
-function settingsShow(self)
+-- if force is true you can't bump from the menu
+function settingsShow(self, force)
 	local window = Window("window", self:string("UPDATE"))
 
-	local menu = SimpleMenu("menu",
-				{
-					{
-						text = self:string("UPDATE_CONTINUE"),
-						callback = function()
-								   self.url = "http://www.slimdevices.com/update/firmware/7.0/jive.bin"
-								   self:_upgrade()
-							   end
-					},
-				})
+	local menu = SimpleMenu("menu")
+
+	log:warn("upgradeUrl=", upgradeUrl[1])
+
+	if upgradeUrl[1] then
+		menu:addItem({
+				     text = self:string("UPDATE_CONTINUE"),
+				     callback = function()
+							self.url = upgradeUrl[1]
+							self:_upgrade()
+						end
+			     })
+	end
 
 	if lfs.attributes("/mnt/mmc/jive.bin", "mode") == "file" then
 		menu:addItem({
@@ -91,6 +95,10 @@ function settingsShow(self)
 							self:_upgrade()
 						end
 			     })
+	end
+
+	if force then
+		menu:setCloseable(false)
 	end
 
 	local help = Textarea("help", self:string("UPDATE_CONTINUE_HELP"))
