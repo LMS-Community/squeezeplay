@@ -119,7 +119,7 @@ static void openlibs(lua_State *L) {
 
 	// jive version
 	lua_newtable(L);
-	lua_pushstring(L, PACKAGE_VERSION);
+	lua_pushstring(L, JIVE_VERSION);
 	lua_setfield(L, -2, "JIVE_VERSION");
 	lua_setglobal(L, "jive");
 
