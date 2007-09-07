@@ -32,7 +32,7 @@ function defaultSettings(meta)
 end
 
 function jiveVersion(meta)
-	return 0.1, 0.1
+	return 1, 1
 end
 
 

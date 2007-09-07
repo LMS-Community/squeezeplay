@@ -194,7 +194,7 @@ local function _evalMeta(entry)
 	local obj = class()
  
 	-- check Applet version
-	local ver = tonumber(JIVE_VERSION)
+	local ver = tonumber(string.match(JIVE_VERSION, "(%d+)"))
 	local min, max = obj:jiveVersion()
 	if min < ver or max > ver then
 		error("Incompatible applet " .. entry.appletName)
