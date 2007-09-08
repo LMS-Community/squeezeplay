@@ -505,7 +505,7 @@ int main (int argc, char **argv) {
 	lua_State *L;
 
 	// say hello
-	l_message(NULL, "\nJive " PACKAGE_VERSION);
+	l_message(NULL, "\nJive " JIVE_VERSION);
 	
 	// create state
 	L = lua_open();
