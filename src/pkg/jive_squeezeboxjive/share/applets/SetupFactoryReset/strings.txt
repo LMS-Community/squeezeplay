@@ -14,4 +14,4 @@ RESET_CONTINUE
 	EN	Continue
 
 RESET_RESETTING
-	EN	Restarting
+	EN	\nRestarting

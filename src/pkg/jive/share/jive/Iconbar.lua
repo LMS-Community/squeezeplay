@@ -32,13 +32,12 @@ local os        = require("os")
 local oo        = require("loop.base")
 
 local Framework = require("jive.ui.Framework")
+local Icon      = require("jive.ui.Icon")
+local Label     = require("jive.ui.Label")
 
+local datetime  = require("jive.utils.datetime")
 local log       = require("jive.utils.log").logger("ui")
 
-require("jive.ui.Icon")
-require("jive.ui.Label")
-local Icon      = jive.ui.Icon
-local Label     = jive.ui.Label
 
 -- our class
 module(..., oo.class)
@@ -100,8 +99,7 @@ Updates the iconbar.
 function update(self)
 	log:debug("Iconbar:update()")
 
-	local now = os.date("%I:%M%p")
-	self.icon_time:setValue(now)
+	self.icon_time:setValue(datetime:getCurrentTime())
 end
 
 

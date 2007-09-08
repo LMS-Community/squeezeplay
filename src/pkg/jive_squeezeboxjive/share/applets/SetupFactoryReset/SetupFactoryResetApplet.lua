@@ -48,7 +48,7 @@ end
 function _factoryReset(self)
 	local window = Popup("popupIcon")
 	window:addWidget(Icon("iconConnected"))
-	window:addWidget(Textarea("text", self:string("RESET_RESETTING")))
+	window:addWidget(Label("text", self:string("RESET_RESETTING")))
 
 	window:addTimer(2000, function()
 				      log:warn("Factory reset...")

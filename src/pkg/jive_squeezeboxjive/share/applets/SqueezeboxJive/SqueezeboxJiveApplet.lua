@@ -5,6 +5,7 @@ local pcall, tostring = pcall, tostring
 local oo                     = require("loop.simple")
 local string                 = require("string")
 local math                   = require("math")
+local os                     = require("os")
 
 local jiveBSP                = require("jiveBSP")
 local Wireless               = require("jive.net.Wireless")
@@ -29,6 +30,7 @@ local Window                 = require("jive.ui.Window")
 local log                    = require("jive.utils.log").logger("applets.setup")
 
 local jnt                    = jnt
+local iconbar                = iconbar
 
 local EVENT_ACTION           = jive.ui.EVENT_ACTION
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
@@ -172,14 +174,32 @@ function notify_playerCurrent(self, player)
 				     return
 			     end
 
-			     local date = chunk.data.date
-			     log:warn("date=", date)
+			     self:setDate(chunk.data.date)
+
+			     -- FIXME schedule updates from server
 		     end
 
 	player.slimServer.comet:request(sink,
 					player:getId(),
 					{ 'date' }
 				)
+end
+
+
+function setDate(self, date)
+	-- matches date format 2007-09-08T20:40:42+00:00
+	local CCYY, MM, DD, hh, mm, ss, TZ = string.match(date, "(%d%d%d%d)%-(%d%d)%-(%d%d)T(%d%d):(%d%d):(%d%d)%+(%d%d:%d%d)")
+
+	log:warn("date=", date)
+	log:warn("CCYY=", CCYY, " MM=", MM, " DD=", DD, " hh=", hh, " mm=", mm, " ss=", ss, " TZ=", TZ)
+
+	-- set system date
+	os.execute("date " .. MM..DD..hh..mm..CCYY.."."..ss)
+
+	-- set RTC to system time
+	os.execute("hwclock -w")
+
+	iconbar:update()
 end
 
 

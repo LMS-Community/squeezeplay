@@ -40,10 +40,12 @@ module(...)
 
 local globalWeekstart = "Sunday"
 local globalDateFormat = "%a, %B %d %Y"
-local globalHours = "24"
+local globalHours = "12"
 local globalTimeZone = "GMT"
 
-local TimeFormatAMPM = "%l:%M%p"
+local timeSet = false
+
+local TimeFormatAMPM = "%I:%M%p"
 local TimeFormat24 = "%H:%M"
 
 local DateFormats = {
@@ -259,14 +261,29 @@ end
 =head2 getCurrentTime()
 
 Returns the current, formatted time.
+
 Example: 	21:57 (24h format)
-		09:57PM (AM/PM)
+		 9:57PM (AM/PM)
 =cut
 --]]
 function getCurrentTime()
+	-- if the time has not been set, return an empty string
+	if not timeSet then
+		if tonumber(os.date("%Y")) < 2000 then
+			return ""
+		end
+
+		timeSet = true
+	end
+
 	if globalHours == "24" then
 		return os.date(TimeFormat24)		
 	else
-		return os.date(TimeFormatAMPM)
+		local str = os.date(TimeFormatAMPM)
+
+		-- replace leading 0 with space
+		str = string.gsub(str, "^0", " ", 1)
+
+		return str
 	end	
 end
