@@ -97,7 +97,7 @@ local BROWSE_MISSING_FETCH = 100
 local VOLUME_STEPS = 20
 
 --==============================================================================
--- Global variables
+-- Local variables (globals)
 --==============================================================================
 
 -- The string function, for easy reference
@@ -108,13 +108,16 @@ local _player = false
 local _server = false
 
 -- The path of enlightenment
-local _browsePath = false
-local _statusPath = false
-local _pathSource = false
+local _curStep = false
+local _statusStep = false
+
+-- Our main menu/handlers
+local _homeStep = false
+local _homeSink = false
+local _homeKeyHandler = false
 
 -- The system home menu
 local _jiveHomeWindow = false
-local _globalHandler = false
 
 -- The last entered text
 local _lastInput = ""
@@ -124,9 +127,10 @@ local _lastInput = ""
 --==============================================================================
 
 
--- Forward declaration 
+-- Forward declarations 
 local _newDestination
 local _actionHandler
+
 
 -- _safeDeref
 -- safely derefence a structure in depth
@@ -344,6 +348,7 @@ local function _artworkItem(item)
 	return icon
 end
 
+
 -- _checkboxItem
 -- returns a checkbox button for use on a given item
 local function _checkboxItem(item, db)
@@ -367,6 +372,7 @@ local function _checkboxItem(item, db)
 	return item["_jive_button"]
 end
 
+
 -- _radioItem
 -- returns a radio button for use on a given item
 local function _radioItem(item, db)
@@ -385,6 +391,7 @@ local function _radioItem(item, db)
 	return item["_jive_button"]
 end
 
+
 -- _newDecoratedLabel
 -- generates a label cum decoration in the given labelStyle
 local function _newDecoratedLabel(labelStyle, item, db)
@@ -400,6 +407,7 @@ local function _newDecoratedLabel(labelStyle, item, db)
 		return Label(labelStyle, "")
 	end
 end
+
 
 -- _performJSONAction
 -- performs the JSON action...
@@ -463,17 +471,19 @@ local function _performJSONAction(jsonAction, from, qty, sink)
 end
 
 
+-- _goNowPlaying
+--
 local function _goNowPlaying()
-	if _statusPath then
+	if _statusStep then
 		log:debug("_goNowPlaying()")
 	
 		-- show our NowPlaying window!
-		_statusPath.window:show()
+		_statusStep.window:show()
 		
 		-- arrange so that menuListener works
-		_statusPath.origin = _browsePath
-		_browsePath.destination = _statusPath
-		_browsePath = _statusPath
+		_statusStep.origin = _curStep
+		_curStep.destination = _statusStep
+		_curStep = _statusStep
 		
 		return EVENT_CONSUME
 	end
@@ -518,10 +528,10 @@ local function _browseSink(step, chunk, err)
 	
 	-- we're relevant
 	log:debug("step: ", step)
-	log:debug("_browsePath: ", _browsePath)
-	if _browsePath != step and not step.destination then
+	log:debug("_curStep: ", _curStep)
+	if _curStep != step and not step.destination then
 		-- install us as the new top of the world, unless we went somewhere from there
-		_browsePath = step
+		_curStep = step
 		step.window:show()
 		if step.origin and step.origin.menu then
 			step.origin.menu:unlock()
@@ -560,22 +570,61 @@ local function _browseSink(step, chunk, err)
 end
 
 
--- _mainMenuSink
--- Jive modifies the main menu to add Now Playing and Exit items
+local function _merge(mlData, mainMenu)
+	
+	if not mlData.item_loop then 
+		log:warn("SS menu data in merge not hierarchical for item ", mlData.text)
+		return 
+	end
+	
+	for _, menuItem in mainMenu:iterator() do
+	
+		local insert = true
+
+		-- try to find our item in the data
+		local menuLabel = menuItem.text
+		for _, dataItem in ipairs(mlData.item_loop) do
+			local dataLabel = dataItem.text
+			if tostring(dataLabel) == tostring(menuLabel) then
+				
+				-- found a match
+				-- recurse if the mainMenu item is a submenu
+				-- the top of this function takes care of a non recursive data item
+				log:debug("MATCH")
+				if mainMenu:isSubMenu(menuLabel) then
+					_merge(dataItem, mainMenu:subMenu(menuLabel))
+				end
+				insert = false
+			end
+		end
+		
+		if insert then
+			log:debug("Inserting main menu item ", menuLabel, " at the bottom")
+			table.insert(mlData.item_loop, 
+				{
+					text = menuLabel,
+					_go = function(event)
+						return menuItem.callback(event, menuItem) or EVENT_CONSUME
+					end
+				}
+			)
+			mlData.count = mlData.count + 1
+		end
+	end
+end
+
+
+-- _mergeSink
+-- SlimBrowser merges the menu coming from SS and the local Jive main menu
 -- FIXME: Modify for player off?
--- We set this sink instead of the main one (_browseSink) in openPlayer
-local function _mainMenuSink(step, chunk, err)
-	log:debug("_mainMenuSink()")
---	log:debug(chunk)
+-- We set this sink instead of the main one (_browseSink) in notify_jiveMainMenuChanged
+local function _mergeSink(step, chunk, err)
+	log:debug("_mergeSink()")
+--	debug.dump(chunk, 8)
 
 	local data = chunk.data
 	
 	if data then
-	
-		-- FIXME: we probably want exit in all cases, even and above in case of error...
-		
-		-- FIXME: set step.origin
-
 
 		-- we want to add a Now playing item (at the top)
 		table.insert(data.item_loop,
@@ -585,25 +634,14 @@ local function _mainMenuSink(step, chunk, err)
 				_go = _goNowPlaying
 			}
 		)
-
-		-- and clone the home menu items (at the bottom)
-		local count = 0
-		for _, item in jiveMain:iterator() do
-			count = count + 1
-			table.insert(data.item_loop, 
-				     {
-					     text = item.text,
-					     _go = function(event)
-							   return item.callback(event, item) or EVENT_CONSUME
-						   end
-				     }
-			     )
-		end
-
-		data.count = data.count + count + 1
+		data.count = data.count + 1
+		
+		-- and merge the main menu items
+		_merge(data, jiveMain)
+		
 	else
 		log:error(err)
-		-- FIXME: Cancel opening plugin, bla bla bla
+		-- FIXME: What to do if there is an error getting the menu for the player ?
 	end
 	
 	-- get notified of changes in main menu from now on
@@ -624,7 +662,7 @@ local function _statusSink(step, chunk, err)
 	end
 
 	-- currently we're not going anywhere with Now Playing...
-	assert(step == _statusPath)
+	assert(step == _statusStep)
 
 	-- Just in case we get passed a full event
 	local data = chunk
@@ -643,6 +681,13 @@ local function _statusSink(step, chunk, err)
 		-- XXX: still needed?
 		if data.id and data.result then
 			data = data.result
+		end
+		
+		-- handle the case where the player disappears
+		-- return silently
+		if data.error then
+			log:info("_statusSink() chunk has error: returning")
+			return
 		end
 		
 		step.menu:setItems(step.db:menuItems(data))
@@ -739,7 +784,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 				log:debug("_actionHandler(", actionName, "): hierachical or input")
 
 				-- make a new window
-				local step, sink = _newDestination(_browsePath, item, _newWindowSpec(db, item), _browseSink)
+				local step, sink = _newDestination(_curStep, item, _newWindowSpec(db, item), _browseSink)
 
 				-- the item is the data, wrapped into a result hash
 				local res = {
@@ -848,7 +893,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 					local step
 					from = 0
 					to = BROWSE_FIRST_FETCH
-					step, sink = _newDestination(_browsePath, item, _newWindowSpec(db, item), _browseSink, jsonAction)
+					step, sink = _newDestination(_curStep, item, _newWindowSpec(db, item), _browseSink, jsonAction)
 				end
 			
 				-- send the command
@@ -863,8 +908,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 	-- these may work without an item
 	
 	-- Note the assumption here: event handling happens for front window only
-	if _browsePath.actionModifier then
-		local builtInAction = actionName .. _browsePath.actionModifier
+	if _curStep.actionModifier then
+		local builtInAction = actionName .. _curStep.actionModifier
 
 		local func = _defaultActions[builtInAction]
 		if func then
@@ -930,9 +975,9 @@ local function _browseMenuListener(menu, menuItem, db, dbIndex, event)
 	log:debug("_browseMenuListener(", event:tostring(), ", " , index, ")")
 	
 	-- we don't care about events not on the current window
-	-- assumption for event handling code: _browsePath corresponds to current window!
-	if _browsePath.menu != menu then
-		log:debug("_browsePath: ", _browsePath)
+	-- assumption for event handling code: _curStep corresponds to current window!
+	if _curStep.menu != menu then
+		log:debug("_curStep: ", _curStep)
 
 		log:debug("Ignoring, not visible")
 		return EVENT_UNUSED
@@ -1225,23 +1270,23 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		EVENT_WINDOW_POP,
 		function(evt)
 
-			-- _browsePath should point/be the current window
+			-- _curStep should point/be the current window
 			-- we're stacking windows, so when we close one, we go one step back
-			-- i.e. we go to _browsePath.origin
+			-- i.e. we go to _curStep.origin
 
-			if _browsePath.origin then
+			if _curStep.origin then
 			
 				-- clear it if present, so we can start again the textinput
 				if item then
 					item['_inputDone'] = nil
 				end
 			
-				_browsePath = _browsePath.origin
-				_browsePath.destination = false
+				_curStep = _curStep.origin
+				_curStep.destination = false
 				
-				log:warn("POP, browsePath: ", _browsePath)
+				log:warn("POP, browsePath: ", _curStep)
 			else
-				log:error("_browsePath.origin is nil in POP handler!")
+				log:error("_curStep.origin is nil in POP handler!")
 			end
 		end
 	)
@@ -1286,7 +1331,7 @@ local function _installHomeKeyHandler()
 
 	-- implement the home button using a global handler, this will work even
 	-- when other applets/screensavers are displayed
-	_globalHandler = Framework:addListener(
+	_homeKeyHandler = Framework:addListener(
 		
 		EVENT_KEY_PRESS,
 		
@@ -1314,10 +1359,10 @@ local function _installHomeKeyHandler()
 						end
 					end
 
-					_browsePath = homePath
+					_curStep = homePath
 					-- if we were going somewhere, we're no longer
-					_browsePath.destination = false
-					_browsePath.menu:unlock()
+					_curStep.destination = false
+					_curStep.menu:unlock()
 
 					-- close any non SlimBrowser windows
 
@@ -1341,9 +1386,9 @@ end
 -- removes the global handler
 local function _removeHomeKeyHandler()
 
-	if _globalHandler then
-		Framework:removeListener(_globalHandler)
-		_globalHandler = false
+	if _homeKeyHandler then
+		Framework:removeListener(_homeKeyHandler)
+		_homeKeyHandler = false
 	end		
 end
 
@@ -1355,19 +1400,24 @@ end
 
 -- notify_playerNewName
 -- this is called when the player name changes
+-- we update our main window title
 function notify_playerNewName(self, player, newName)
-	if (_player == player) then
-		_pathSource.window:setTitle(newName)
+	log:debug("SlimBrowserApplet:notify_playerNewName(", player, ",", newName, ")")
+
+	-- if this concerns our player
+	if _player == player then
+		_homeStep.window:setTitle(newName)
 	end
 end
 
 
 -- notify_playerDelete
--- this is called by jnt when the playerDelete message is sent
+-- this is called when the player disappears
 function notify_playerDelete(self, player)
+	log:debug("SlimBrowserApplet:notify_playerDelete(", player, ")")
 
 	-- if this concerns our player
-	if player == _player then
+	if _player == player then
 		-- panic!
 		log:warn("Player gone while browsing it ! -- packing home!")
 		self:free()
@@ -1376,7 +1426,7 @@ end
 
 
 -- notify_playerCurrent
--- this is called when the player changes
+-- this is called when the current player changes (possibly from no player)
 function notify_playerCurrent(self, player)
 	log:debug("SlimBrowserApplet:notify_playerCurrent(", player, ")")
 
@@ -1400,8 +1450,8 @@ function notify_playerCurrent(self, player)
 	_server = player:getSlimServer()
 	_string = function(token) return self:string(token) end
 	
-	-- create a window for Now Playing, this is our _statusPath
-	local path, sink = _newDestination(
+	-- create a window for Now Playing, this is our _statusStep
+	local step, sink = _newDestination(
 		nil,
 		nil,
 		_newWindowSpec(
@@ -1415,10 +1465,13 @@ function notify_playerCurrent(self, player)
 		),
 		_statusSink
 	)
-	_statusPath = path
+	_statusStep = step
 	
 	-- make sure it has our modifier (so that we use different default action in Now Playing)
-	_statusPath.actionModifier = "-status"
+	_statusStep.actionModifier = "-status"
+	
+	-- fix the menu so that it's closable, we manage the origin business
+	step.menu:setCloseable(true)
 
 	-- showtime for the player
 	-- FIXME: handle player off...
@@ -1426,7 +1479,7 @@ function notify_playerCurrent(self, player)
 
 
 	-- create our main menu
-	path, sink = _newDestination(
+	step, sink = _newDestination(
 		nil,
 		nil,
 		_newWindowSpec(
@@ -1435,29 +1488,38 @@ function notify_playerCurrent(self, player)
 				["text"] = player:getName(),
 			}
 		),
-		_mainMenuSink
+		_mergeSink
 	)
-	_browsePath = path
-	_pathSource = path
-	
-	-- fetch the menu, pronto...
-	_server:request(sink, nil, { 'menu', 0, 100 })
+	_homeStep = step
+	_homeSink = sink
 
-	_replaceJiveHome(_browsePath.window)
+	-- we start at home
+	_curStep = _homeStep
+	
+	-- auto notify ourselves
+	self:notify_jiveMainMenuChanged()
+
+	_replaceJiveHome(_homeStep.window)
 end
 
 
 -- notify_jiveMainMenuChanged
--- 
+-- this is called whenever the Jive main menu (which we hide)
+-- gets changed (f.e. by an applet)
+-- we re-fetch the menu from SS and re-merge the items.
 function notify_jiveMainMenuChanged(self)
-	log:warn("notify_jiveMainMenuChanged")
+	log:debug("notify_jiveMainMenuChanged")
+	
+	-- fetch the menu, pronto...
+	_server:request(_homeSink, nil, { 'menu', 0, 100 })
 end
+
 
 --[[
 
 =head2 applets.SlimBrowser.SlimBrowserApplet:free()
 
-Overridden to dispose of our stuff.
+Overridden to close our player.
 
 =cut
 --]]
@@ -1475,7 +1537,7 @@ function free(self)
 	_string = false
 
 	-- walk down our path and close...
-	local step = _browsePath
+	local step = _curStep
 	
 	while step do
 		step.window:hide()
@@ -1485,7 +1547,7 @@ function free(self)
 		prev.origin = nil
 	end
 	
-	local step = _statusPath
+	local step = _statusStep
 	
 	while step do
 		step.window:hide()
@@ -1495,7 +1557,8 @@ function free(self)
 		prev.origin = nil
 	end
 	
-	_pathSource = false
+	_homeStep = false
+	_homeSink = false
 	
 	return true
 end

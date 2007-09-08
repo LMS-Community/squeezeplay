@@ -99,6 +99,13 @@ function JiveMainMenu:__init(name, style)
 	return obj
 end
 
+
+-- returns true if menu is submenu
+function JiveMainMenu:isSubMenu(name)
+	return (self.menus[name] != nil)
+end
+
+
 -- create a sub menu
 function JiveMainMenu:subMenu(name, weight)
 
@@ -120,6 +127,7 @@ function JiveMainMenu:subMenu(name, weight)
 
 	return self.menus[name]
 end
+
 
 -- add an item to a menu. the menu is ordered by weight, then item name
 function JiveMainMenu:addItem(item, weight)
