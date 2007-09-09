@@ -55,7 +55,7 @@ function registerApplet(meta)
 			end
 
 			-- are we forcing an upgrade
-			if chunk.data.firmwareUpgrade then
+			if chunk.data.firmwareUpgrade == 1 then
 				local applet = appletManager:loadApplet("SetupFirmwareUpgrade")
 				applet:settingsShow(true)
 			end
