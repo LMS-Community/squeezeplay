@@ -142,9 +142,6 @@ function __init(self, slimServer, jnt, jpool, playerInfo)
 		-- menu item of home menu that represents this player
 		homeMenuItem = false,
 		
-		jsp = false,
-		jdsp = false,
-		
 		isOnStage = false,
 		statusSink = false,
 
@@ -358,16 +355,6 @@ function offStage(self)
 	log:debug("Player:offStage()")
 
 	self.isOnStage = false
-	
-	if self.jsp then
-		self.jsp:free()
-		self.jsp = false
-	end
-
-	if self.jdsp then
-		self.jdsp:free()
-		self.jdsp = false
-	end
 	
 	iconbar:setPlaymode(nil)
 	iconbar:setRepeat(nil)
@@ -605,52 +592,8 @@ function fwd(self)
 end
 
 
-
-
-
-
---[[
-local function _t()
-	return Framework:getTicks() / 1000
-end
-
-
-function _process_ir(self, data)
---	log:debug("_process_ir()")
---	log:debug("id:", data["id"], " waiting on:", self.irId)
-	if data["id"] == self.irId then
---		log:debug("cleared")
-		self.irId = false
-		log:warn("round trip:", _t() - self.irT)
-	end
-end
-
-function volumeUp(self)
---	log:debug("Player:volumeUp()")
-	if not self.irId then
---		log:debug(".. sent")
-		local t = _t()
-		self.irT = t
-		self.irId = self:call({'ir', '7689807f', _t()})
---	else
---		log:debug(".. ignored")
-	end
-end
-
-function volumeDown(self)
---	log:debug("Player:volumeDown")
-	if not self.irId then
---		log:debug(".. sent")
-		local t = _t()
-		self.irT = t
-		self.irId = self:call({'ir', '768900ff', _t()})
---	else
---		log:debug(".. ignored")
-	end
-end
---]]
-
-
+-- volume
+-- send new volume value to SS
 function volume(self, vol, send)
 	local now = Framework:getTicks()
 	if self.mixerTo == nil or self.mixerTo < now or send then
@@ -665,7 +608,8 @@ function volume(self, vol, send)
 	end
 end
 
-
+-- getVolume
+-- returns current volume (from last status update)
 function getVolume(self)
 	if self.state then
 		return self.state["mixer volume"] or 0
