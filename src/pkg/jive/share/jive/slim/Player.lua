@@ -553,23 +553,20 @@ end
 --
 function _process_button(self, event)
 	log:debug("_process_button()")
-	log:debug("id:", event.id, " waiting on:", self.buttonId)
-	if event.id == self.buttonId then
-		log:debug("cleared")
-		self.buttonId = false
-	end
+	self.buttonTo = nil
 end
 
 
 -- button
 -- 
 function button(self, buttonName)
-	log:debug("Player:button(", buttonName, ")")
-	if not self.buttonId then
-		log:debug(".. sent")
-		self.buttonId = self:call({'button', buttonName})
+	local now = Framework:getTicks()
+	if self.buttonTo == nil or self.buttonTo < now then
+		log:debug("Sending button: ", buttonName)
+		self:call({'button', buttonName })
+		self.buttonTo = now + MIN_KEY_INT
 	else
-		log:debug(".. ignored")
+		log:debug("Suppressing button: ", buttonName)
 	end
 end
 
