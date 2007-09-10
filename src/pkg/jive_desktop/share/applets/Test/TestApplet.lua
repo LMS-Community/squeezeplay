@@ -281,7 +281,7 @@ function textinputWindow(self, menuItem)
 
 	local window = Window("window", menuItem.text)
 
-	local input = Textinput("textinput", "A test string",
+	local input = Textinput("textinput", "A test string which is so long it goes past the end of the window",
 				function(_, value)
 					if #value < 4 then
 						return false
@@ -292,9 +292,10 @@ function textinputWindow(self, menuItem)
 					return true
 				end)
 
-	local help = Textarea("help", "A basic text input widget. Graphical improvements will come later.")
+	window:addWidget(Textarea("softHelp", "A basic text input widget. Graphical improvements will come later."))
+	window:addWidget(Label("softButton1", "Insert"))
+	window:addWidget(Label("softButton2", "Delete"))
 
-	window:addWidget(help)
 	window:addWidget(input)
 
 	self:tieAndShowWindow(window)

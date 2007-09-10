@@ -141,27 +141,6 @@ function _moveCursor(self, dir)
 		return _moveCursor(self, dir)
 	end
 
-
-	if self.cursor < #tostring(self.value) then
-		if self.cursor > self.indent + self._maxChars - 2 then
-			self.indent =  self.cursor - self._maxChars + 2
-		end
-	else
-		if self.cursor > self.indent + self._maxChars then
-			self.indent =  self.cursor - self._maxChars
-		end
-	end
-
-	if self.cursor > 2 then
-		if self.cursor < self.indent + 3 then
-			self.indent =  self.cursor - 3
-		end
-	else
-		if self.cursor < 2 then
-			self.indent =  self.cursor - 1
-		end
-	end
-
 	if self.cursor ~= oldCursor then
 		self:playSound("SELECT")
 	end

@@ -34,6 +34,9 @@ SLATE
 BLACK
 	EN	Black
 
+CAMO
+	EN	Camo
+
 STONE
 	EN	Stone
 

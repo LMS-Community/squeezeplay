@@ -107,6 +107,24 @@ int jive_font_width(JiveFont *font, const char *str) {
 	return font->width(font, str);
 }
 
+int jive_font_nwidth(JiveFont *font, const char *str, int len) {
+	int w;
+	char *tmp;
+
+	assert(font && font->magic == JIVE_FONT_MAGIC);
+
+	// FIXME use utf8 len
+	tmp = malloc(len + 1);
+	strncpy(tmp, str, len);
+	*(tmp + len) = '\0';
+	
+	w = font->width(font, tmp);
+
+	free(tmp);
+
+	return w;
+}
+
 int jive_font_height(JiveFont *font) {
 	assert(font && font->magic == JIVE_FONT_MAGIC);
 
@@ -198,43 +216,19 @@ JiveSurface *jive_font_draw_text(JiveFont *font, Uint32 color, const char *str) 
 	return srf;
 }
 
+JiveSurface *jive_font_ndraw_text(JiveFont *font, Uint32 color, const char *str, size_t len) {
+	JiveSurface *srf;
+	char *tmp;
 
-#if 0
-void jive_font_draw_text_blended(JiveSurface *srf, JiveFont *font, Uint16 x, Uint16 y, Uint32 color, const char *str) {
-	JiveSurface *txt;
+	// FIXME use utf8 len
 
-	assert(font && font->magic == JIVE_FONT_MAGIC);
+	tmp = malloc(len + 1);
+	strncpy(tmp, str, len);
+	*(tmp + len) = '\0';
+	
+	srf = jive_font_draw_text(font, color, tmp);
 
-	if (!str) {
-		return;
-	}
+	free(tmp);
 
-	txt = font->draw(font, color, str);
-	if (!txt) {
-		return;
-	}
-
-	// SDL_SetAlpha(txt, SDL_SRCALPHA, 0); // FIXME
-	jive_surface_blit(txt, srf, x, y);
-	// SDL_FreeSurface(txt); // FIXME
+	return srf;
 }
-
-void jive_font_draw_text(JiveSurface *srf, JiveFont *font, Uint16 x, Uint16 y, Uint32 color, const char *str) {
-	JiveSurface *txt;
-
-	assert(font && font->magic == JIVE_FONT_MAGIC);
-
-	if (!str) {
-		return;
-	}
-
-	txt = font->draw(font, color, str);
-	if (!txt) {
-		return;
-	}
-
-	// SDL_SetAlpha(txt, 0, 0); // FIXME
-	jive_surface_blit(txt, srf, x, y);
-	// SDL_FreeSurface(txt); // FIXME
-}
-#endif

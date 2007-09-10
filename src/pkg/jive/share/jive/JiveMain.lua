@@ -170,7 +170,8 @@ function JiveMain:__init()
 	log:debug("JiveMain:__init()")
 
 	-- Seed the rng
-	math.randomseed(os.time())
+	local initTime = os.time()
+	math.randomseed(initTime)
 
 	-- Initialise UI
 	jive.ui.Framework:init()
@@ -219,14 +220,27 @@ function JiveMain:__init()
 					      return jive.ui.EVENT_UNUSED
 				      end)
 
-	-- show our window!
-	jiveMain.window:show()
-	
 	-- load style and applets
 	jiveMain:reload()
 
 	-- debug: set event warning thresholds
 	jive.ui.Framework:perfwarn({ screen = 50, event = 50, queue = 5 })
+
+	-- show our window!
+	jiveMain.window:show()
+
+	-- show splash screen for five seconds, or until key/scroll events
+	jive.ui.Framework:setUpdateScreen(false)
+	local splashHandler = jive.ui.Framework:addListener(jive.ui.EVENT_KEY_ALL | jive.ui.EVENT_SCROLL,
+							    function()
+								jive.ui.Framework:setUpdateScreen(true)
+								return jive.ui.EVENT_UNUSED
+							    end)
+	local splashTimer = jive.ui.Timer(5000 - (os.time() - initTime), function()
+				jive.ui.Framework:setUpdateScreen(true)
+				jive.ui.Framework:removeListener(splashHandler)
+			    end)
+	splashTimer:start()
 
 	-- event loop
 	jive.ui.Framework:processEvents()

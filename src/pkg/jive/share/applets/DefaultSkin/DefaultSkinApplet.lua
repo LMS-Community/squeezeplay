@@ -79,23 +79,6 @@ local function _icon(var, x, y, img)
 end
 
 
--- splash screen
-function splashShow(self)
-
-	local splashImage = Surface:loadImage(imgpath .. "splash_squeezebox_jive.png")
-	local splashWindow = Window("splash")
-	splashWindow:addWidget(Icon("splash", splashImage))
-
-	self:tieWindow(splashWindow)
-	splashWindow:showBriefly(5000, nil,
-				 splashWindow.transitionNone,
-				 splashWindow.transitionNone)
-	Framework:updateScreen()
-
-	Audio:loadSound(sndpath .. "startup.wav", 1):play()
-end
-
-
 -- skin
 -- The meta arranges for this to be called to skin Jive.
 function skin(self, s)
@@ -226,6 +209,7 @@ function skin(self, s)
 
 	local textinputCursor = Tile:loadImage(imgpath .. "text_entry_letter.png")
 
+	local softButtonBackground = Tile:fillColor(0x77e7e7ff)
 
 	-- Iconbar definitions, each icon needs an image and x,y
 	s.icon_background.x = 0
@@ -413,6 +397,35 @@ function skin(self, s)
 	s.help.textAlign = "left"
 	s.help.scrollbar.w = 0
 
+	-- Help with soft buttons
+	s.softHelp.w = screenWidth - 6
+	s.softHelp.position = LAYOUT_SOUTH
+	s.softHelp.padding = { 12, 12, 12, 35 }
+	s.softHelp.font = Font:load(fontpath .. "FreeSans.ttf", 16)
+	s.softHelp.fg = { 0xe7, 0xe7, 0xe7 }
+	s.softHelp.bgImg = helpBox
+	s.softHelp.textAlign = "left"
+	s.softHelp.scrollbar.w = 0
+
+	s.softButton1.x = 15
+	s.softButton1.y = screenHeight - 30
+	s.softButton1.w = (screenWidth / 2) - 20
+	s.softButton1.h = 20
+	s.softButton1.position = LAYOUT_NONE
+	s.softButton1.textAlign = "center"
+	s.softButton1.font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
+	s.softButton1.fg = { 0x37, 0x37, 0x37 }
+	s.softButton1.bgImg = softButtonBackground
+
+	s.softButton2.x = (screenWidth / 2) + 5
+	s.softButton2.y = screenHeight - 30
+	s.softButton2.w = (screenWidth / 2) - 20
+	s.softButton2.h = 20
+	s.softButton2.position = LAYOUT_NONE
+	s.softButton2.textAlign = "center"
+	s.softButton2.font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
+	s.softButton2.fg = { 0x37, 0x37, 0x37 }
+	s.softButton2.bgImg = softButtonBackground
 
 	s.window.w = screenWidth
 	s.window.h = screenHeight

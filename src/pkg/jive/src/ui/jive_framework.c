@@ -33,6 +33,8 @@ static float framerate = (1000.0f / JIVE_FRAME_RATE);
 /* button hold threshold 2 seconds */
 #define HOLD_TIMEOUT 2000
 
+static bool update_screen = true;
+
 static JiveTile *jive_background = NULL;
 
 static Uint16 screen_w, screen_h;
@@ -77,17 +79,18 @@ static struct jive_keymap keymap[] = {
 };
 
 
+static int init_path(lua_State *L);
 static int process_event(lua_State *L, SDL_Event *event);
 int jiveL_update_screen(lua_State *L);
 
 
 static int jiveL_init(lua_State *L) {
 	SDL_Rect r;
-	JiveSurface *srf;
+	JiveSurface *srf, *splash;
+	Uint16 splash_w, splash_h;
 	int bpp;
-	char *ptr;
-	const char *lua_path;
 
+	init_path(L);
 
 	/* screen properties */
 	lua_getfield(L, 1, "screen");
@@ -113,12 +116,20 @@ static int jiveL_init(lua_State *L) {
 		exit(-1);
 	}
 
+	/* open window */
 	SDL_WM_SetCaption("Jive", "Jive");
-
 	srf = jive_surface_set_video_mode(screen_w, screen_h, bpp);
 	if (!srf) {
 		SDL_Quit();
 		exit(-1);
+	}
+
+	/* show splash screen */
+	splash = jive_surface_load_image("jive/splash.png");
+	if (splash) {
+		jive_surface_get_size(splash, &splash_w, &splash_h);
+		jive_surface_blit(splash, srf, (screen_w - splash_w) / 2, (screen_h - splash_h) / 2);
+		jive_surface_flip(srf);
 	}
 
 //	SDL_ShowCursor (SDL_DISABLE);
@@ -127,14 +138,28 @@ static int jiveL_init(lua_State *L) {
 	tolua_pushusertype(L, srf, "Surface");
 	lua_setfield(L, -2, "surface");
 
-
-	/* background image */
-	jive_background = jive_tile_fill_color(0x000000FF);
-
-
 	/* init audio */
 	jiveL_init_audio(L);
 
+	/* play startup sound */
+	lua_getglobal(L, "jive");
+	lua_getfield(L, -1, "ui");
+	lua_getfield(L, -1, "Audio");
+	lua_getfield(L, -1, "loadSound");
+	lua_pushvalue(L, -2);
+	lua_pushstring(L, "jive/splash.wav");
+	lua_pushnumber(L, 1);
+	lua_call(L, 3, 1);
+
+	if (!lua_isnil(L, -1)) {
+		lua_getfield(L, -1, "play");
+		lua_pushvalue(L, -2);
+		lua_call(L, 1, 0);
+	}
+	lua_pop(L, 1);
+
+	/* background image */
+	jive_background = jive_tile_fill_color(0x000000FF);
 
 	/* jive.ui.style = {} */
 	lua_getglobal(L, "jive");
@@ -143,6 +168,12 @@ static int jiveL_init(lua_State *L) {
 	lua_setfield(L, -2, "style");
 	lua_pop(L, 2);
 
+	return 0;
+}
+
+static int init_path(lua_State *L) {
+	const char *lua_path;
+	char *ptr;
 
 	/* set jiveui_path from lua path */
 	lua_getglobal(L, "package");
@@ -280,7 +311,9 @@ static int jiveL_process_events(lua_State *L) {
 
 
 		/* Draw the top window. */
-		jiveL_update_screen(L);
+		if (update_screen) {
+			jiveL_update_screen(L);
+		}
 
 
 		if (r & JIVE_EVENT_QUIT) {
@@ -288,6 +321,17 @@ static int jiveL_process_events(lua_State *L) {
 		}
 	}
 
+	return 0;
+}
+
+
+int jiveL_set_update_screen(lua_State *L) {
+	/* stack is:
+	 * 1: framework
+	 * 2: eanble/disanle screen updates
+	 */
+
+	update_screen = lua_toboolean(L, 2);
 	return 0;
 }
 
@@ -1127,6 +1171,7 @@ static const struct luaL_Reg core_methods[] = {
 	{ "init", jiveL_init },
 	{ "quit", jiveL_quit },
 	{ "processEvents", jiveL_process_events },
+	{ "setUpdateScreen", jiveL_set_update_screen },
 	{ "updateScreen", jiveL_update_screen },
 	{ "reDraw", jiveL_redraw },
 	{ "pushEvent", jiveL_push_event },
