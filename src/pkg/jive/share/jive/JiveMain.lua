@@ -220,14 +220,14 @@ function JiveMain:__init()
 					      return jive.ui.EVENT_UNUSED
 				      end)
 
+	-- show our window!
+	jiveMain.window:show()
+
 	-- load style and applets
 	jiveMain:reload()
 
 	-- debug: set event warning thresholds
 	jive.ui.Framework:perfwarn({ screen = 50, event = 50, queue = 5 })
-
-	-- show our window!
-	jiveMain.window:show()
 
 	-- show splash screen for five seconds, or until key/scroll events
 	jive.ui.Framework:setUpdateScreen(false)
