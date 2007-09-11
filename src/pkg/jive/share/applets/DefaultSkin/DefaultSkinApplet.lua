@@ -378,7 +378,8 @@ function skin(self, s)
 	s.textinput.border = { 8, -5, 8, 0 }
 	s.textinput.padding = { 6, 0, 6, 0 }
 	s.textinput.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
-	s.textinput.charWidth = 19
+	s.textinput.cursorFont = Font:load(fontpath .. "FreeSansBold.ttf", 22)
+	s.textinput.charWidth = 26
 	s.textinput.charHeight = 26
 	s.textinput.fg = { 0x37, 0x37, 0x37 }
 	s.textinput.wh = { 0x55, 0x55, 0x55, 0xB2 }

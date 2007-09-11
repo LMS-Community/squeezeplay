@@ -97,6 +97,9 @@ function _scroll(self, dir)
 	local str = tostring(self.value)
 
 	local v = self:_getChars()
+	if #v == 0 then
+		return
+	end
 
 	local s1 = string.sub(str, 1, cursor - 1)
 	local s2 = string.sub(str, cursor, cursor)
@@ -118,9 +121,9 @@ function _scroll(self, dir)
 	end
 
 	-- new string
-	s2 = string.sub(v, i, i)
-	self:setValue(s1 .. s2 .. s3)
+	local s2 = string.sub(v, i, i)
 
+	self:setValue(s1 .. s2 .. s3)
 	self:playSound("CLICK")
 end
 
@@ -339,7 +342,7 @@ function timeValue(default)
 
 				     isEntered =
 					     function(value, cursor)
-						    return cursor == 5
+						    return cursor == 6
 					     end
 			     }
 		     })
@@ -390,7 +393,7 @@ function hexValue(default)
 
 				     isEntered =
 					     function(value, cursor)
-						     return cursor == (#value * 2) - 1
+						     return cursor == (#value * 3)
 					     end
 			     }
 		     })
