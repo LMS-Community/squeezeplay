@@ -655,7 +655,21 @@ dist_applets_defaultskin_images_DATA = \
         share/applets/DefaultSkin/images/bghighlight_tl.png \
         share/applets/DefaultSkin/images/bghighlight_b.png \
         share/applets/DefaultSkin/images/bghighlight_tr.png \
-        share/applets/DefaultSkin/images/bghighlight_l.png
+        share/applets/DefaultSkin/images/bghighlight_l.png \
+        share/applets/DefaultSkin/images/popup_shutdown_icon.png \
+        share/applets/DefaultSkin/images/popup_playlist_icon.png \
+        share/applets/DefaultSkin/images/icon_nowplaying.png \
+        share/applets/DefaultSkin/images/album_noartwork.png \
+        share/applets/DefaultSkin/images/icon_nowplaying_selected.png \
+        share/applets/DefaultSkin/images/button.png \
+        share/applets/DefaultSkin/images/button_b.png \
+        share/applets/DefaultSkin/images/button_l.png \
+        share/applets/DefaultSkin/images/button_r.png \
+        share/applets/DefaultSkin/images/button_t.png \
+        share/applets/DefaultSkin/images/button_br.png \
+        share/applets/DefaultSkin/images/button_bl.png \
+        share/applets/DefaultSkin/images/button_tl.png \
+        share/applets/DefaultSkin/images/button_tr.png
 
 applets_defaultskin_soundsdir = $(pkgdatadir)/applets/DefaultSkin/sounds
 dist_applets_defaultskin_sounds_DATA = \

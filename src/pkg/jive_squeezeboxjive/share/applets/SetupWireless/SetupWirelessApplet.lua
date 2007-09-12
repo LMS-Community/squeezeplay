@@ -390,8 +390,10 @@ function enterSSID(self)
 				    end
 			    )
 
-	local help = Textarea("help", self:string("NETWORK_NETWORK_NAME_HELP"))
-	window:addWidget(help)
+	window:addWidget(Textarea("softHelp", self:string("NETWORK_NETWORK_NAME_HELP")))
+	window:addWidget(Label("softButton1", self:string("INSERT")))
+	window:addWidget(Label("softButton2", self:string("DELETE")))
+
 	window:addWidget(textinput)
 
 	self:tieAndShowWindow(window)
@@ -594,9 +596,8 @@ function enterWEPKey(self)
 				    end
 			    )
 
-	local help = Textarea("help", self:string("NETWORK_WIRELESS_KEY_HELP"))
---"Enter your wireless key. Scroll to change letters, press the center button to choose that letter. Press the center button twice to finish.")
-	window:addWidget(help)
+	window:addWidget(Textarea("help", self:string("NETWORK_WIRELESS_KEY_HELP")))
+
 	window:addWidget(textinput)
 
 	self:tieAndShowWindow(window)
@@ -621,8 +622,10 @@ function enterPSK(self)
 				    end
 			    )
 
-	local help = Textarea("help", self:string("NETWORK_WIRELESS_PASSWORD_HELP"))
-	window:addWidget(help)
+	window:addWidget(Textarea("softHelp", self:string("NETWORK_WIRELESS_PASSWORD_HELP")))
+	window:addWidget(Label("softButton1", self:string("INSERT")))
+	window:addWidget(Label("softButton2", self:string("DELETE")))
+
 	window:addWidget(textinput)
 
 	self:tieAndShowWindow(window)
