@@ -45,6 +45,12 @@ DEBUG_LOG
 EXTRAS
 	EN	Extras
 
+INSERT
+	EN	Insert
+
+DELETE
+	EN	Delete
+
 ALLOWEDCHARS_NOCAPS
 	EN	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:\\\"'<>?-=,./~`[];0123456789
 

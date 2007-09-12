@@ -205,11 +205,22 @@ function skin(self, s)
 				       imgpath .. "text_entry_bkgrd_r.png",
 			       })
 
+	local softButtonBackground =
+		Tile:loadTiles({
+				       imgpath .. "button.png",
+				       imgpath .. "button_tl.png",
+				       imgpath .. "button_t.png",
+				       imgpath .. "button_tr.png",
+				       imgpath .. "button_r.png",
+				       imgpath .. "button_br.png",
+				       imgpath .. "button_b.png",
+				       imgpath .. "button_bl.png",
+				       imgpath .. "button_l.png"
+				})
+
 	local textinputWheel = Tile:loadImage(imgpath .. "text_entry_select.png")
 
 	local textinputCursor = Tile:loadImage(imgpath .. "text_entry_letter.png")
-
-	local softButtonBackground = Tile:fillColor(0x77e7e7ff)
 
 	-- Iconbar definitions, each icon needs an image and x,y
 	s.icon_background.x = 0
@@ -278,7 +289,7 @@ function skin(self, s)
 	s.title.position = LAYOUT_NORTH
 
 	s.title.font = Font:load(fontpath .. "FreeSansBold.ttf", 20)
-	s.title.fg = { 0x37, 0x37, 0x37 }
+	s.title.fg = { 0, 0, 0 }
 	s.title.bgImg = titleBox
 
 
@@ -401,30 +412,30 @@ function skin(self, s)
 	-- Help with soft buttons
 	s.softHelp.w = screenWidth - 6
 	s.softHelp.position = LAYOUT_SOUTH
-	s.softHelp.padding = { 12, 12, 12, 35 }
-	s.softHelp.font = Font:load(fontpath .. "FreeSans.ttf", 16)
+	s.softHelp.padding = { 12, 12, 12, 42 }
+	s.softHelp.font = Font:load(fontpath .. "FreeSans.ttf", 14)
 	s.softHelp.fg = { 0xe7, 0xe7, 0xe7 }
 	s.softHelp.bgImg = helpBox
 	s.softHelp.textAlign = "left"
 	s.softHelp.scrollbar.w = 0
 
 	s.softButton1.x = 15
-	s.softButton1.y = screenHeight - 30
+	s.softButton1.y = screenHeight - 33
 	s.softButton1.w = (screenWidth / 2) - 20
-	s.softButton1.h = 20
+	s.softButton1.h = 28
 	s.softButton1.position = LAYOUT_NONE
 	s.softButton1.textAlign = "center"
-	s.softButton1.font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
+	s.softButton1.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
 	s.softButton1.fg = { 0x37, 0x37, 0x37 }
 	s.softButton1.bgImg = softButtonBackground
 
 	s.softButton2.x = (screenWidth / 2) + 5
-	s.softButton2.y = screenHeight - 30
+	s.softButton2.y = screenHeight - 33
 	s.softButton2.w = (screenWidth / 2) - 20
-	s.softButton2.h = 20
+	s.softButton2.h = 28
 	s.softButton2.position = LAYOUT_NONE
 	s.softButton2.textAlign = "center"
-	s.softButton2.font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
+	s.softButton2.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
 	s.softButton2.fg = { 0x37, 0x37, 0x37 }
 	s.softButton2.bgImg = softButtonBackground
 
@@ -550,12 +561,12 @@ function skin(self, s)
 	s.albumtitle.border = 4
 	s.albumtitle.padding = { 10, 8, 8, 9 }
 	s.albumtitle.font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
-	s.albumtitle.fg = { 0x37, 0x37, 0x37 }
+	s.albumtitle.fg = { 0, 0, 0 }
 	s.albumtitle.bgImg = titleBox
 	s.albumtitle.textAlign = "top-left"
 	s.albumtitle.iconAlign = "left"
 	s.albumtitle.position = LAYOUT_NORTH
---	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
+	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumtitle.icon.padding = { 6, 0, 0, 0 }
 
 
@@ -571,7 +582,7 @@ function skin(self, s)
 	s.albumitem.font = Font:load(fontpath .. "FreeSansBold.ttf", 13)
 	s.albumitem.fg = { 0xe7, 0xe7, 0xe7 }
 	s.albumitem.sh = { 0x37, 0x37, 0x37 }
---	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
+	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumitem.icon.padding = { 6, 0, 0, 0 }
 	s.albumitem.textAlign = "top-left"
 	s.albumitem.iconAlign = "left"
