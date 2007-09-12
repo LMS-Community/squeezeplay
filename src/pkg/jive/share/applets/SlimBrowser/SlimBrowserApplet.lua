@@ -1161,8 +1161,17 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		end
 		local v = ""
 		local initialText = _safeDeref(item, 'input', 'initialText')
+                local inputStyle  = _safeDeref(item, 'input', '_inputStyle')
 		if initialText then
 			v = tostring(initialText)
+			if inputStyle == 'time' then
+				local _v = DateTime:timeFromSFM(v)
+				v = Textinput.timeValue(_v)
+			end
+		else 
+			if inputStyle == 'time' then
+				v = Textinput.timeValue("00:00")
+			end
 		end
 
 		-- create a text input

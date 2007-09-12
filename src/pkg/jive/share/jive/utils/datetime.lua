@@ -23,6 +23,7 @@ setTimeZone(self, timezone)
 setHours(self, hours)
 getHours(self)
 secondsFromMidnight(self, hhmm)
+timeFromSFM(self, secondsFromMidnight)
 
 =cut
 --]]
@@ -34,6 +35,7 @@ local type = type
 local os = os
 
 local log              = require("jive.utils.log").logger("utils")
+local math             = require("math")
 
 
 module(...)
@@ -255,6 +257,27 @@ function secondsFromMidnight(self, hhmm)
 
 	secondsFromMidnight = (timeElements[1] * 3600) + (timeElements[2] * 60)
 	return secondsFromMidnight
+end
+
+--[[
+=head2 timeFromSFM()
+
+Takes seconds from midnight and returns time format (24h for now)
+
+=cut
+--]]
+function timeFromSFM(self, secondsFromMidnight)
+
+	local sfm = tonumber(secondsFromMidnight)
+	if (sfm >= 86400 or sfm < 0) then
+		return "00:00"
+	end
+
+	local hours   = tonumber(math.floor(sfm/3600))
+	local minutes = tonumber(math.floor((sfm % 3600) / 60 ))
+
+	local formattedTime = string.format("%02d:%02d", hours, minutes)
+	return formattedTime
 end
 
 --[[
