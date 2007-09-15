@@ -45,7 +45,7 @@ This class implements a HTTP socket running in a L<jive.net.NetworkThread>.
 
 
 -- stuff we use
-local ipairs, table = ipairs, table
+local ipairs, table, pairs = ipairs, table, pairs
 
 local oo            = require("loop.simple")
 
@@ -187,7 +187,7 @@ _connect = function(self)
 		if not self.notify[subscription] then
 			self.notify[subscription] = {}
 		end
-		table.insert( self.notify[subscription], v.func )
+		self.notify[subscription][v.func] = v.func
 	end
 	
 	-- Clear out pending requests
@@ -273,7 +273,7 @@ _getEventSink = function(self)
 					log:debug("Comet:_getEventSink, notifiying callbacks for ", subscription)
 					
 					if self.notify[subscription] then
-						for i2, func in ipairs( self.notify[subscription] ) do
+						for _, func in pairs( self.notify[subscription] ) do
 							func(event)
 						end
 						
@@ -364,8 +364,7 @@ function subscribe(self, subscription, func, playerid, request)
 	if not self.notify[subscription] then
 		self.notify[subscription] = {}
 	end
-	
-	table.insert( self.notify[subscription], func )
+	self.notify[subscription][func] = func
 	
 	-- Remember subs to send during connect now, or if we get
 	-- disconnected
@@ -413,12 +412,7 @@ function unsubscribe(self, subscription, func)
 	-- Remove from notify list
 	if func then
 		-- Remove only the given callback
-		for i, v in ipairs( self.notify[subscription] ) do
-			if v == func then
-				self.notify[subscription][i] = nil
-				break
-			end
-		end
+		self.notify[subscription][func] = nil
 	else
 		-- Remove all callbacks
 		self.notify[subscription] = nil
@@ -549,7 +543,7 @@ function request(self, func, playerid, request)
 			if not self.notify[subscription] then
 				self.notify[subscription] = {}
 			end
-			table.insert( self.notify[subscription], func )
+			self.notify[subscription][func] = func
 		else
 			log:debug('  No sink defined for this request, no response will be received')
 		end
