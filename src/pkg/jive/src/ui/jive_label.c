@@ -12,7 +12,7 @@
 
 #define SCROLL_PAD_RIGHT  40
 #define SCROLL_PAD_LEFT   -20
-#define SCROLL_PAD_START  -40
+#define SCROLL_PAD_START  -60
 
 
 typedef struct label_line {
@@ -224,7 +224,7 @@ int jiveL_label_prepare(lua_State *L) {
 	peer->text_w = max_width;
 
 	/* reset scroll position */
-	peer->scroll_offset = 0;
+	peer->scroll_offset = SCROLL_PAD_START;
 
 	return 0;
 }

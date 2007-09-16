@@ -176,7 +176,7 @@ end
 -- returns a URI to fetch artwork on the server
 -- FIXME: should this be styled?
 local function _artworkThumbUri(iconId)
-	return '/music/' .. iconId .. '/cover_50x50_f_000000.jpg'
+	return '/music/' .. iconId .. '/cover_56x56_f_000000.jpg'
 end
 
 
@@ -335,9 +335,9 @@ local function _artworkItem(item)
 			_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri)
 			item["_jive_icon"] = icon
 		elseif item["icon"] then
-			-- Fetch a remote image URL, sized to 50x50
+			-- Fetch a remote image URL, sized to 56x56
 			icon = Icon("icon")
-			_server:fetchArtworkURL(item["icon"], icon, 50)
+			_server:fetchArtworkURL(item["icon"], icon, 56)
 			item["_jive_icon"] = icon
 		end
 	

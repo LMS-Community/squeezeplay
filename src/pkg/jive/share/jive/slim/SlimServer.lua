@@ -458,7 +458,7 @@ function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, priority)
 	end
 
 	if not size then
-		size = 50
+		size = 56
 	end
 	
 	local cacheKey = iconId .. size

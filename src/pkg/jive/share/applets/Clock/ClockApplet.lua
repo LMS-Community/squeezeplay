@@ -283,7 +283,7 @@ DigitalSimple = oo.class({}, Clock)
 function DigitalSimple:__init(window, preset, ampm)
 	log:info("Init Digital Simple")
 	
-	local fontname = "fonts/Digital.ttf"
+	local fontname = "fonts/DigitalItalic.ttf"
 
 	obj = oo.rawnew(self, Clock(window))
 

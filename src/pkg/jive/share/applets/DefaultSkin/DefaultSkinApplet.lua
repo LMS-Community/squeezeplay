@@ -560,7 +560,10 @@ function skin(self, s)
 	s.albumtitle.h = 60
 	s.albumtitle.border = 4
 	s.albumtitle.padding = { 10, 8, 8, 9 }
-	s.albumtitle.font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
+	s.albumtitle.font = Font:load(fontpath .. "FreeSans.ttf", 14)
+	s.albumtitle.lineHeight = 16
+	s.albumtitle.line[1].font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
+	s.albumtitle.line[1].height = 17
 	s.albumtitle.fg = { 0, 0, 0 }
 	s.albumtitle.bgImg = titleBox
 	s.albumtitle.textAlign = "top-left"
@@ -578,8 +581,10 @@ function skin(self, s)
 	-- items with artwork and song info
 	s.albumitem.h = 60
 	s.albumitem.padding = { 12, 8, 8, 8 }
-	s.albumitem.lineHeight = 13
-	s.albumitem.font = Font:load(fontpath .. "FreeSansBold.ttf", 13)
+	s.albumitem.font = Font:load(fontpath .. "FreeSans.ttf", 14)
+	s.albumitem.lineHeight = 16
+	s.albumitem.line[1].font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
+	s.albumitem.line[1].height = 17
 	s.albumitem.fg = { 0xe7, 0xe7, 0xe7 }
 	s.albumitem.sh = { 0x37, 0x37, 0x37 }
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
@@ -602,8 +607,10 @@ function skin(self, s)
 
 	-- now playing menu item
 	s.albumcurrent.padding = { 12, 8, 8, 8 }
-	s.albumcurrent.lineHeight = 15
-	s.albumcurrent.font = Font:load(fontpath .. "FreeSansBold.ttf", 15)
+	s.albumcurrent.font = Font:load(fontpath .. "FreeSans.ttf", 16)
+	s.albumcurrent.lineHeight = 16
+	s.albumcurrent.line[1].font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
+	s.albumcurrent.line[1].height = 17
 	s.albumcurrent.fg = { 0xe7, 0xe7, 0xe7 }
 	s.albumcurrent.sh = { 0x37, 0x37, 0x37 }
 	s.albumcurrent.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
