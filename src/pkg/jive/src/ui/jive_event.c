@@ -42,6 +42,32 @@ int jiveL_event_new(lua_State *L) {
 
 	/* send attributes */
 	event->type = lua_tointeger(L, 2);
+	if (!lua_isnil(L, 3)) {
+		switch (event->type) {
+		case JIVE_EVENT_SCROLL:
+			event->scroll_rel = lua_tointeger(L, 3);
+			break;
+		
+		case JIVE_EVENT_KEY_DOWN:
+		case JIVE_EVENT_KEY_UP:
+		case JIVE_EVENT_KEY_PRESS:
+		case JIVE_EVENT_KEY_HOLD:
+			event->key_code = lua_tointeger(L, 3);
+			break;
+		
+		case JIVE_EVENT_MOUSE_DOWN:
+		case JIVE_EVENT_MOUSE_UP:
+		case JIVE_EVENT_MOUSE_PRESS:
+		case JIVE_EVENT_MOUSE_HOLD:
+			event->mouse_x = lua_tointeger(L, 3);
+			event->mouse_y = lua_tointeger(L, 4);
+			break;
+    	
+		default:
+			break;
+		}
+	}
+
 	return 1;
 }
 
