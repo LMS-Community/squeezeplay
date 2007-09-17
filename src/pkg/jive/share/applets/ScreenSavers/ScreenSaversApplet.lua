@@ -75,7 +75,7 @@ function init(self, ...)
 				local r = self.active:_event(event)
 
 				if r == EVENT_UNUSED and self.active then
-					self.active:hide()
+					self.active:hide(Window.transitionNone)
 				end
 				return r
 			end
