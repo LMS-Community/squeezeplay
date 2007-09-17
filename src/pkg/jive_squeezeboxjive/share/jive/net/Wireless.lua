@@ -402,6 +402,10 @@ end
 
 function getSNR(self)
 	local f = io.popen("/usr/sbin/iwpriv " .. self.interface .. " getSNR 1")
+	if f == nil then
+		return 0
+	end
+
 	local t = f:read("*all")
 	f:close()
 
@@ -411,6 +415,10 @@ end
 
 function getRSSI(self)
 	local f = io.popen("/usr/sbin/iwpriv " .. self.interface .. " getRSSI 1")
+	if f == nil then
+		return 0
+	end
+
 	local t = f:read("*all")
 	f:close()
 
@@ -420,6 +428,10 @@ end
 
 function getNF(self)
 	local f = io.popen("/usr/sbin/iwpriv " .. self.interface .. " getNF 1")
+	if f == nil then
+		return 0
+	end
+
 	local t = f:read("*all")
 	f:close()
 
