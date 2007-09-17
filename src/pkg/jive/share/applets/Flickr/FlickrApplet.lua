@@ -455,6 +455,7 @@ function _window(self, ...)
 				   if evt:getKeycode() == KEY_BACK then
 					   window:hide()
 					   self.photoQueue = {}
+					   return EVENT_CONSUME
 				   end
 			   end)
 

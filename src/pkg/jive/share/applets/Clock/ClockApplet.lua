@@ -754,6 +754,7 @@ function _openScreensaver(self, type)
 			   function(evt)
 				   if evt:getKeycode() == KEY_BACK then
 					   window:hide()
+					   return EVENT_CONSUME
 				   end
 			   end)
 

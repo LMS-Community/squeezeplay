@@ -16,10 +16,6 @@
 #define EV_SW 0x05
 #endif
 
-// XXXX define in jive.h once the code is public 
-#define JIVE_EVENT_SWITCH		0x400000
-#define JIVE_EVENT_MOTION		0x800000
-
 
 static const char *bsp_devname = "/dev/misc/jive_mgmt";
 static const char *mixer_devname = "/dev/sound/mixer";

@@ -63,27 +63,24 @@ function init(self, ...)
 	self.timer = Timer(timeout, function() self:_activate() end, true)
 	self.timer:start()
 
-	-- priority listener to restart screensaver timer
+	-- listener to restart screensaver timer
 	Framework:addListener(
 		EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_MOTION,
-		function()
+		function(event)
 			self.timer:restart()
-			return EVENT_UNUSED
-		end,
-		true
-	)
 
-	-- listener to hide active screensaver
-	Framework:addListener(
-		EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_MOTION,
-		function()
-			if self.active then
-				self.active:hide()
-				self.active = nil
+			-- allow active screensaver to process events if
+			-- it is on top of the window stack
+			if self.active == Framework.windowStack[1] then
+				local r = self.active:_event(event)
+
+				if r == EVENT_UNUSED and self.active then
+					self.active:hide()
+				end
+				return r
 			end
 			return EVENT_UNUSED
-		end,
-		false
+		end
 	)
 
 	return self
@@ -131,6 +128,12 @@ function _activate(self, the_screensaver)
 	self.timer:stop()
 	local instance = appletManager:loadApplet(screensaver.applet)
 	self.active = instance[screensaver.method](instance)
+
+	self.active:addListener(EVENT_WINDOW_POP,
+				function()
+					log:warn("screensaver is inactive")
+					self.active = nil
+				end)
 end
 
 
