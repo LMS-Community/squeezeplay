@@ -282,6 +282,7 @@ function t_listNetworks(self)
 
 			      if string.match(flags, "%[CURRENT%]") then
 				      self:_setCurrentSSID(ssid)
+				      self.scanMenu:setSelectedItem(self.scanResults[ssid].item)
 			      end
 		      end
 	      end

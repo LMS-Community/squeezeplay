@@ -347,6 +347,7 @@ function setSelectedIndex(self, index)
 
 	if index <= self.listSize then
 		self.selected = index
+		self:rePrepare()
 	end
 end
 

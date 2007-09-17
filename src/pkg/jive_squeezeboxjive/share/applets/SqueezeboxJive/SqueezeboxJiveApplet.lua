@@ -90,7 +90,7 @@ function init(self)
 					      self:update()
 
 					      if self.acpower then
-						      self:setPowerState("ac_active")
+						      self:setPowerState("ac_dimmed")
 						      self.iconBattery:playSound("DOCKING")
 					      else
 						      self:setPowerState("active")
@@ -142,7 +142,7 @@ function init(self)
 	-- ac or battery
 	self.acpower = (jiveBSP.ioctl(23) == 0)
 	if self.acpower then
-		self:setPowerState("ac_active")
+		self:setPowerState("ac_dimmed")
 	else
 		self:setPowerState("active")
 	end
@@ -517,7 +517,7 @@ function lockScreen(self)
 	self:setPowerState("locked")
 
 	self.lockedListener = 
-		Framework:addListener(EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_SCROLL,
+		Framework:addListener(EVENT_KEY_DOWN | EVENT_KEY_PRESS,
 				      function(event)
 					      if event:getType() == EVENT_KEY_PRESS and event:getKeycode() == (KEY_ADD | KEY_PLAY) then
 						      lockScreen(self)

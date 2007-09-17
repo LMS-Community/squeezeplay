@@ -36,7 +36,7 @@ function registerApplet(meta)
 	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))
 	local advancedSettings = remoteSettings:subMenu(meta:string("ADVANCED_SETTINGS"), 1000)
 
-	advancedSettings:addItem(meta:menuItem("UPDATE", function(applet, ...) applet:settingsShow(...) end))
+	advancedSettings:addItem(meta:menuItem("UPDATE", function(applet) applet:settingsShow() end))
 
 
 	-- check for firmware upgrades when we connect to a new player

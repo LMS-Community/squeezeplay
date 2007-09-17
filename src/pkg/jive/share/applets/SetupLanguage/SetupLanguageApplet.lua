@@ -78,6 +78,9 @@ function setupShow(self, setupNext)
                 end
         )
 
+	-- You have to select your language, no way to close this menu
+	menu:setCloseable(false)
+
 	self:tieAndShowWindow(window)
 	return window
 end
