@@ -44,7 +44,7 @@ oo.class(_M, Applet)
 
 
 function init(self, ...)
-	self.playerList = {}
+	self.playerItem = {}
 	jnt:subscribe(self)
 
 	self:manageSelectPlayerMenu()
@@ -52,7 +52,6 @@ end
 
 function notify_playerDelete(self, playerObj)
 	local playerMac = playerObj.id
-	self.playerList[playerMac] = nil
 	manageSelectPlayerMenu(self)
 	if self.playerMenu and self.playerItem[playerMac] then
 		self.playerMenu:removeItem(self.playerItem[playerMac])
@@ -63,8 +62,6 @@ end
 function notify_playerNew(self, playerObj)
 	-- get number of players. if number of players is > 1, add menu item
 	local playerMac = playerObj.id
-	local playerName = playerObj.name
-	self.playerList[playerMac] = playerName
 
 	manageSelectPlayerMenu(self)
 	if self.playerMenu then
@@ -113,6 +110,7 @@ function _addPlayerItem(self, player)
 			   end,
 	}
 	self.playerMenu:addItem(item)
+	self.playerItem[playerMac] = item
 	
 	if self.selectedPlayer == player then
 		self.playerMenu:setSelectedItem(item)
@@ -173,9 +171,8 @@ function selectPlayer(self, player)
 end
 
 function free(self)
-        log:debug("SelectPlayer:free()")
-        jnt:unsubscribe(self)
-	return true
+	-- Never free this applet
+	return false
 end
 
 --[[
