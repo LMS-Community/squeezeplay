@@ -33,6 +33,7 @@ local RadioButton      = require("jive.ui.RadioButton")
 local Label            = require("jive.ui.Label")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Textarea         = require("jive.ui.Textarea")
+local string           = require("string")
 local table            = require("jive.utils.table")
 
 local log              = require("jive.utils.log").logger("applets.screensavers")
@@ -40,10 +41,12 @@ local log              = require("jive.utils.log").logger("applets.screensavers"
 local appletManager    = appletManager
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
 local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
+local EVENT_MOTION     = jive.ui.EVENT_MOTION
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
 local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
 local KEY_PLAY         = jive.ui.KEY_PLAY
+local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
 
 
 module(...)
@@ -60,11 +63,27 @@ function init(self, ...)
 	self.timer = Timer(timeout, function() self:_activate() end, true)
 	self.timer:start()
 
+	-- priority listener to restart screensaver timer
 	Framework:addListener(
-		EVENT_KEY_PRESS | EVENT_SCROLL,
+		EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_MOTION,
 		function()
-			self:_event()
-		end
+			self.timer:restart()
+			return EVENT_UNUSED
+		end,
+		true
+	)
+
+	-- listener to hide active screensaver
+	Framework:addListener(
+		EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_MOTION,
+		function()
+			if self.active then
+				self.active:hide()
+				self.active = nil
+			end
+			return EVENT_UNUSED
+		end,
+		false
 	)
 
 	return self
@@ -83,19 +102,6 @@ permanently loaded.
 function free(self)
 	-- ScreenSavers cannot be freed
 	return false
-end
-
-
---_event()
---Restart the screensaver timer on a key press or scroll event. Any active screensaver
---will be closed.
-function _event(self)
-	if self.active then
-		self.active:hide()
-		self.active = nil
-	end
-
-	self.timer:restart()
 end
 
 
@@ -168,7 +174,7 @@ function screensaverSetting(self, menuItem, mode)
 			function()
 				self:setScreenSaver(mode, key)
 			end,
-			screensaver.applet == activeScreensaver
+			key == activeScreensaver
 		)
 
 		-- pressing play should play the screensaver, so we need a handler

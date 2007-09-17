@@ -699,19 +699,19 @@ function getPreset(self, type)
 end
 
 function openAnalogClock(self)
-	self:_openScreensaver("analog")
+	return self:_openScreensaver("analog")
 end
 
 function openDigitalClock(self)
-	self:_openScreensaver("simple")
+	return self:_openScreensaver("simple")
 end
 
 function openStyledClock(self)
-	self:_openScreensaver("styled")
+	return self:_openScreensaver("styled")
 end
 
 function openDetailedClock(self)
-	self:_openScreensaver("detailed")
+	return self:_openScreensaver("detailed")
 end
 
 

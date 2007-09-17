@@ -111,7 +111,7 @@ Push an event onto the event queue for later processing. This can be called from
 
 =head2 jive.ui.Framework.dispatchEvent(widget, event)
 
-Dispatch an event I<event> to the listeners of the widget I<widget>. Any global event listeners are called first. This can only be called from the main thread.
+Dispatch an event I<event> to the listeners of the widget I<widget>. Any global event listeners are called first. If I<widget> is nil then the event will be sent to the top most window. This can only be called from the main thread.
 
 =head2 jive.ui.Framework.findFile(path)
 

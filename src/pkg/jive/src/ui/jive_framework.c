@@ -605,6 +605,20 @@ int jiveL_dispatch_event(lua_State *L) {
 		lua_pop(L, 1);
 	}
 
+	/* by default send the event to the top window. fetch that top
+	 * window here in case the global event handler has modified
+	 * the window stack.
+	 */
+	if (lua_isnil(L, 2)) {
+		lua_getfield(L, 1, "windowStack");
+		if (lua_objlen(L, -1) == 0) {
+			lua_pop(L, 1);
+			return 0;
+		}
+		lua_rawgeti(L, -1, 1);
+		lua_replace(L, 2);
+	}
+
 	// call widget event handler, unless the event is consumed
 	if (!(r & JIVE_EVENT_CONSUME) && jive_getmethod(L, 2, "_event")) {
 		lua_pushvalue(L, 2); // widget
@@ -827,7 +841,7 @@ static int do_dispatch_event(lua_State *L, JiveEvent *jevent) {
 	r = JIVE_EVENT_UNUSED;
 	lua_pushcfunction(L, jiveL_dispatch_event);
 	jiveL_getframework(L);
-	lua_pushvalue(L, -3);
+	lua_pushnil(L); // default to top window
 	jive_pushevent(L, jevent);
 	lua_call(L, 3, 1);
 	r = lua_tointeger(L, -1);
