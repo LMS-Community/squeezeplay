@@ -1,15 +1,29 @@
-﻿#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 
 TEST_MOTION
 	EN	Motion Detector
+	DE	Bewegungsmelder
+	ES	Detector de movimiento
+	IT	Sensore movimento
+	FR	Détecteur de mouvement
+	NL	Bewegingsdetector
 
 TEST_MOTION_VALUE
 	EN	Value
+	DE	Wert
+	ES	Valor
+	IT	Valore
+	FR	Valeur
+	NL	Waarde
 
 TEST_MOTION_MAX
 	EN	Max
+	DE	Max.
+	ES	Máx.
+	IT	Max
+	FR	Max
+	NL	Max

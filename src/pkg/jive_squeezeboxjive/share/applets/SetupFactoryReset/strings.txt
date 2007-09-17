@@ -1,17 +1,36 @@
-﻿#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 RESET_FACTORY_RESET
 	EN	Factory Reset
+	DE	Standardeinstellungen
+	ES	Configuración de fábrica
+	IT	Ripristino impostazioni fabbrica
+	FR	Réinitialisation réglages d'usine
+	NL	Fabrieksinstellingen
 
 RESET_CANCEL
 	EN	Cancel
+	DE	Abbrechen
+	ES	Cancelar
+	IT	Annulla
+	FR	Annuler
+	NL	Annuleren
 
 RESET_CONTINUE
 	EN	Continue
+	DE	Weiter
+	ES	Continuar
+	IT	Continua
+	FR	Continuer
+	NL	Verdergaan
 
 RESET_RESETTING
 	EN	\nRestarting
+	DE	\nNeustart
+	ES	\nReiniciando
+	IT	\nRiavvio
+	FR	\nRedémarrage
+	NL	\nBezig met opnieuw starten

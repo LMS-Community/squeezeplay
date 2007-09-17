@@ -1,25 +1,54 @@
-﻿#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 
 ABOUT_JIVE
 	EN	About Jive
+	DE	Infos zu Jive
+	ES	Acerca de Jive
+	IT	Info su Jive
+	FR	A propos de Jive
+	NL	Info
 
 ABOUT_COPYRIGHT
 	EN	Copyright 2007, Logitech.
+	DE	Copyright 2007, Logitech.
+	ES	Copyright 2007, Logitech.
+	IT	Copyright 2007, Logitech.
+	FR	Copyright 2007, Logitech.
+	NL	Copyright 2007, Logitech.
 
 ABOUT_MAC_ADDRESS
 	EN	MAC Address: %s
+	DE	MAC-Adresse: %s
+	ES	Dirección MAC: %s
+	IT	Indirizzo MAC: %s
+	FR	Adresse MAC: %s
+	NL	MAC-adres: %s
 
 ABOUT_CREDITS
 	EN	Credits:
+	DE	Mitwirkende:
+	ES	Créditos:
+	IT	Riconoscimenti:
+	FR	Crédits:
+	NL	Credits:
 
 ABOUT_VERSION
 	EN	Version:
+	DE	Version:
+	ES	Versión:
+	IT	Versione:
+	FR	Version:
+	NL	Versie:
 
 ABOUT_ALL_RIGHTS_RESERVED
 	EN	All Rights Reserved
+	DE	Alle Rechte vorbehalten
+	ES	Reservados todos los derechos
+	IT	Tutti i diritti riservati
+	FR	Tous droits réservés
+	NL	Alle rechten voorbehouden
 

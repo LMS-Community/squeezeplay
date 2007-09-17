@@ -1,6 +1,5 @@
-#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 #
@@ -8,132 +7,147 @@
 
 BSP_SCREEN_LOCKED
 	EN	Locked
+	DE	LCD gesperrt. Drücken Sie HINZUFÜGEN und WIEDERGABE.
+	ES	Pantalla bloqueada. Pulse AGREGAR y REPRODUCIR para desbloquear.
+	IT	Schermo bloccato. Premere AGGIUNGI e RIPRODUCI per sbloccarlo.
+	FR	Ecran verrouillé. Appuyez sur ADD et PLAY pour le déverrouiller.
+	NL	Scherm vergrendeld. Druk op TOEVOEGEN en AFSPELEN om het te ontgrendelen.
 
 BSP_SCREEN_LOCKED_HELP
 	EN	To unlock press the ADD and PLAY buttons at the same time.
 
 BSP_BRIGHTNESS
-	DE	Helligkeit
 	EN	Brightness
+	DE	Helligkeit
 	ES	Brillo
-	FR	Luminosité
 	IT	Luminosità
+	FR	Luminosité
 	NL	Helderheid
 
 BSP_BRIGHTNESS_ADJUST_HELP
 	EN	Use the wheel to adjust the brightness of the backlight
+	DE	Sie können die Helligkeit mit dem Rad anpassen
+	ES	Use la rueda para ajustar el brillo de la retroiluminación
+	IT	Usare la rotellina per regolare la luminosità della retroilluminazione.
+	FR	Utilisez la molette pour régler la luminosité et le rétroéclairage.
+	NL	Gebruik het wiel om de helderheid van de verlichting aan te passen.
 
 BSP_BACKLIGHT_TIMER
-	DE	Hintergrundbeleuchtung
 	EN	Backlight Timer
+	DE	Hintergrundbeleuchtung
 	ES	Temporizador de retroiluminación
-	FR	Minuteur du rétroéclairage
 	IT	Timer retroilluminazione
+	FR	Minuteur du rétroéclairage
 	NL	Verlichtingstimer
 
 BSP_BACKLIGHT_HIGH
-	DE	Hoch
 	EN	High
+	DE	Hoch
 	ES	Alta
-	FR	Elevée
 	IT	Alta
+	FR	Elevée
 	NL	Hoog
 
 BSP_BACKLIGHT_MEDIUM
-	DE	Mittel
 	EN	Medium
+	DE	Mittel
 	ES	Media
-	FR	Moyenne
 	IT	Media
+	FR	Moyenne
 	NL	Gemiddeld
 
 BSP_BACKLIGHT_LOW
-	DE	Niedrig
 	EN	Low
+	DE	Niedrig
 	ES	Baja
-	FR	Faible
 	IT	Bassa
+	FR	Faible
 	NL	Laag
 
 BSP_TIMER_OFF
-	DE	Aus
 	EN	Off
+	DE	Aus
 	ES	Apagado
-	FR	Désactivé
 	IT	Disattivato
+	FR	Désactivé
 	NL	Uit
 
 BSP_TIMER_ON
-	DE	Ein
 	EN	On
+	DE	Ein
 	ES	Encendido
-	FR	Activé
 	IT	Attivato
+	FR	Activé
 	NL	Aan
 
 BSP_TIMER_5_SEC
-	DE	5 Sek.
 	EN	5 sec
+	DE	5 Sek.
 	ES	5 s
-	FR	5 sec
 	IT	5 sec
+	FR	5 sec
 	NL	5 sec
 
 BSP_TIMER_10_SEC
-	DE	10 Sek.
 	EN	10 sec
+	DE	10 Sek.
 	ES	10 s
-	FR	10 sec
 	IT	10 sec
+	FR	10 sec
 	NL	10 sec
 
 BSP_TIMER_15_SEC
-	DE	15 Sek.
 	EN	15 sec
+	DE	15 Sek.
 	ES	15 s
-	FR	15 sec
 	IT	15 sec
+	FR	15 sec
 	NL	15 sec
 
 BSP_TIMER_20_SEC
-	DE	20 Sek.
 	EN	20 sec
+	DE	20 Sek.
 	ES	20 s
-	FR	20 sec
 	IT	20 sec
+	FR	20 sec
 	NL	20 sec
 
 BSP_TIMER_30_SEC
-	DE	30 Sek.
 	EN	30 sec
+	DE	30 Sek.
 	ES	30 s
-	FR	30 sec
 	IT	30 sec
+	FR	30 sec
 	NL	30 sec
 
 BSP_TIMER_1_MIN
-	DE	1 Min.
 	EN	1 min
+	DE	1 Min.
 	ES	1 m
-	FR	1 min
 	IT	1 min
+	FR	1 min
 	NL	1 min
 
 BSP_TIMER_2_MIN
-	DE	2 Min.
 	EN	2 min
+	DE	2 Min.
 	ES	2 m
-	FR	2 min
 	IT	2 min
+	FR	2 min
 	NL	2 min
 
 BSP_TIMER_5_MIN
-	DE	5 Min.
 	EN	5 min
+	DE	5 Min.
 	ES	5 m
-	FR	5 min
 	IT	5 min
+	FR	5 min
 	NL	5 min
 
 BSP_TIMER_NEVER
 	EN	Never
+	DE	Nie
+	ES	Nunca
+	IT	Mai
+	FR	Jamais
+	NL	Nooit

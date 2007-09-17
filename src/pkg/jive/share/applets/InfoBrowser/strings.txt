@@ -1,7 +1,11 @@
-#
 # InfoBrowser strings
 #
 
 INFOBROWSER
 	EN	Information Browser
+	DE	Informations-Browser
+	ES	Navegador de información
+	IT	Browser informazioni
+	FR	Navigateur d'informations
+	NL	Informatiebrowser
 

@@ -1,49 +1,71 @@
-﻿#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 WELCOME
-	DE	Willkommen!
 	EN	Welcome
+	DE	Willkommen!
 	ES	Bienvenido.
-	FR	Bienvenue!
 	IT	Benvenuti
+	FR	Bienvenue!
 	NL	Welkom!
 
 SETTINGS
-	DE	Einstellungen
 	EN	Settings
+	DE	Einstellungen
 	ES	Configuración
-	FR	Paramètres
 	IT	Impostazioni
+	FR	Paramètres
 	NL	Instellingen
 
-REMOTE_SETTINGS 
-	DE	Fernbedienungseinstellungen
+REMOTE_SETTINGS
 	EN	Remote Settings
+	DE	Fernbedienungseinstellungen
 	ES	Configuracion del mando
-	FR	Parametres de la telecommande
 	IT	Impostazioni telecomando
+	FR	Parametres de la telecommande
 	NL	Afstandsbedieningsinstellingen
 
 JIVE_HOME
 	EN	Jive Home
+	DE	Jive-Hauptmenü
+	ES	Página principal de Jive
+	IT	Home page Jive
 	FR	La maison de Jive
+	NL	Hoofdmenu van Jive
 
 ADVANCED_SETTINGS
 	EN	Advanced Settings
+	DE	Erweiterte Einstellungen
+	ES	Configuración avanzada
+	IT	Impostazioni avanzate
 	FR	Paramètres avancés
+	NL	Geavanceerde instellingen
 
 FACTORY_TEST
 	EN	Factory Test
+	DE	Fabriktest
+	ES	Prueba de fábrica
+	IT	Test di fabbrica
+	FR	Test d'usine
+	NL	Fabriekstest
 
 DEBUG_LOG
 	EN	Logging
+	DE	Protokoll
+	ES	Registrando
+	IT	Registrazione in corso
+	FR	Journalisation
+	NL	Loggen
 
 EXTRAS
 	EN	Extras
+	DE	Extras
+	ES	Extras
+	IT	Extra
+	FR	Extras
+	NL	Extra's
 
 INSERT
 	EN	Insert
@@ -52,8 +74,8 @@ DELETE
 	EN	Delete
 
 ALLOWEDCHARS_NOCAPS
-	EN	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:\\\"'<>?-=,./~`[];0123456789
+	EN	abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{} :\\\"'<>?-=,./~`[];0123456789
 
 ALLOWEDCHARS_WITHCAPS
-	EN	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789 
+	EN	abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{} :\"'<>?-=,./~`[];0123456789
 

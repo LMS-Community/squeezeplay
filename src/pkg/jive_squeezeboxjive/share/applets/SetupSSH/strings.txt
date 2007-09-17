@@ -1,14 +1,28 @@
-﻿#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SSH
 	EN	SSH
+	DE	SSH
+	ES	SSH
+	IT	SSH
+	FR	SSH
+	NL	SSH
 
 SSH_ENABLE
 	EN	Enable SSH
+	DE	SSH aktivieren
+	ES	Activar SSH
+	IT	Attiva SSH
+	FR	Activer SSH
+	NL	SSH inschakelen
 
 SSH_HOWTO
 	EN	The root password for this device is %s and you can connect to it on address %s.
+	DE	Root-Kennwort dieses Geräts ist %s und Sie über Adresse %s eine Verbindung herstellen.
+	ES	La contraseña de ruta para este dispositivo es %s y se puede conectar en %s.
+	IT	La password principale per questo dispositivo è %s ed è possibile connettersi al dispositivo tramite l'indirizzo %s.
+	FR	Le mot de passe racine pour le dispositif est %s et vous pouvez le connecter à l'adresse %s.
+	NL	Het hoofdwachtwoord voor dit apparaat is %s en je kunt er via het adres %s een verbinding mee maken.

@@ -1,12 +1,16 @@
-﻿#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 
 TEST_KEYPAD
 	EN	Keypad
+	DE	Tastenfeld
+	ES	Teclado
+	IT	Tastierino numerico
+	FR	Pavé numérique
+	NL	Toetsenblok
 
 TEST_KEYPAD_HELP
 	EN	Press all keys and scroll the wheel to complete.

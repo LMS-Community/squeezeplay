@@ -1,37 +1,68 @@
-﻿# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 DATETIME_TITLE
 	EN	Date/Time
 	DE	Datum/Zeit
+	ES	Fecha/Hora
+	IT	Data/ora
+	FR	Date/Heure
+	NL	Datum/tijd
 
 DATETIME_TIMEFORMAT
 	EN	Time Format
 	DE	Zeit Format
+	ES	Formato de hora
+	IT	Formato ora
+	FR	Format de l'heure
+	NL	Tijdnotatie
 
 DATETIME_TIMEFORMAT_12H
 	EN	12 hours
 	DE	12 Stunden
+	ES	12 horas
+	IT	12 ore
+	FR	12 heures
+	NL	12 uur
 
 DATETIME_TIMEFORMAT_24H
 	EN	24 hours
 	DE	24 Stunden
+	ES	24 horas
+	IT	24 ore
+	FR	24 heures
+	NL	24 uur
 
 DATETIME_DATEFORMAT
 	EN	Date Format
 	DE	Datums Format
+	ES	Formato de fecha
+	IT	Formato data
+	FR	Format de date
+	NL	Datumnotatie
 
 DATETIME_WEEKSTART
 	EN	Week Start
 	DE	Wochenstart
+	ES	La semana empieza el
+	IT	Inizio settimana
+	FR	Début de la semaine
+	NL	Begin van week
 
 DATETIME_MONDAY
 	EN	Monday
 	DE	Montag
+	ES	Lunes
+	IT	Lunedì
+	FR	Lundi
+	NL	Maandag
 
 DATETIME_SUNDAY
 	EN	Sunday
 	DE	Sonntag
+	ES	Domingo
+	IT	Domenica
+	FR	Dimanche
+	NL	Zondag
 

@@ -1,65 +1,109 @@
-#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 UPDATE
-	DE	Software-Aktualisierung
 	EN	Software Update
+	DE	Software-Aktualisierung
 	ES	Actualización de software
+	IT	Aggiornamento software
 	FR	Mise à jour du logiciel
-	IT	Aggiornamento software 
 	NL	Software-update
 
 UPDATE_CONTINUE
 	EN	Update from server
+	DE	Aktualisierung vom Server
+	ES	Actualizar desde servidor
+	IT	Aggiorna da server
+	FR	Mise à jour à partir du serveur
+	NL	Update van server
 
 UPDATE_CONTINUE_SDCARD
 	EN	Update from SD card
+	DE	Aktualisierung von SD-Karte
+	ES	Actualizar desde tarjeta SD
+	IT	Aggiorna da scheda SD
+	FR	Mise à jour à partir d'une carte SD
+	NL	Update van SD-kaart
 
 UPDATE_FAILURE
 	EN	Upgrade failed
+	DE	Aktualisierungsfehler
+	ES	Error de actualización
+	IT	Aggiornamento non riuscito
+	FR	Echec de la mise à niveau
+	NL	Upgrade mislukt
 
 UPDATE_FAILURE_HELP
 	EN	There was a problem upgrading this remote. Please try again, or contact support.
+	DE	Fehler beim Aktualisieren der Fernbedienung. Versuchen Sie es noch einmal oder wenden Sie sich an den Kundendienst.
+	ES	Hubo un problema al actualizar este mando. Vuelva a intentarlo o contacte con asistencia técnica.
+	IT	Si è verificato un problema durante l'aggiornamento del telecomando. Riprovare o contattare l'assistenza.
+	FR	Un problème est survenu lors de la mise à niveau. Veuillez réessayer ou contactez le service de support.
+	NL	Er is een probleem opgetreden tijdens het upgraden van deze afstandsbediening. Probeer het opnieuw, of neem contact op met ondersteuning.
 
 UPDATE_TRY_AGAIN
 	EN	Try again...
+	DE	Erneut versuchen...
+	ES	Vuelva a intentarlo...
+	IT	Riprova...
+	FR	Veuillez réessayer.
+	NL	Opnieuw proberen...
 
 UPDATE_DOWNLOAD
 	EN	\nCopying Update
+	DE	\nAktualisierung wird kopiert
+	ES	\nCopiando actualización
+	IT	\nCopia aggiornamento in corso
+	FR	\nCopie de la mise à jour
+	NL	\nUpdate wordt gekopieerd
 
 UPDATE_WRITE
 	EN	\nInstalling Update
+	DE	\nAktualisierung wird installiert
+	ES	\nInstalando actualización
+	IT	\nInstallazione aggiornamento in corso
+	FR	\nInstallation de la mise à jour
+	NL	\nUpdate wordt geïnstalleerd
 
 UPDATE_VERIFY
 	EN	\nVerifying Update
+	DE	\nAktualisierung wird geprüft
+	ES	\nComprobando actualización
+	IT	\nVerifica aggiornamento in corso
+	FR	\nVérification de la mise à jour
+	NL	\nUpdate wordt geverifieerd
 
 UPDATE_REBOOT
 	EN	\nRestarting
+	DE	\nNeustart
+	ES	\nReiniciando
+	IT	\nRiavvio
+	FR	\nRedémarrage
+	NL	\nBezig met opnieuw starten
 
 UPDATE_CONTINUE_HELP
-	DE	Zum Aktualisieren der Software auf dieser Fernbedienung wählen Sie Weiter. Der Vorgang dauert nur wenige Minuten.
 	EN	To update the software on this remote, choose Continue. This process takes a few minutes.
+	DE	Zum Aktualisieren der Software auf dieser Fernbedienung wählen Sie Weiter. Der Vorgang dauert nur wenige Minuten.
 	ES	Para actualizar el software de este mando, elija Continuar. Este proceso tarda varios minutos.
-	FR	Pour mettre à jour le logiciel sur la télécommande, sélectionnez Continuer. Ce processus peut prendre quelques minutes.
 	IT	Per aggiornare il software di questo dispositivo, scegliere Continua. L'operazione richiede alcuni minuti.
+	FR	Pour mettre à jour le logiciel sur la télécommande, sélectionnez Continuer. Ce processus peut prendre quelques minutes.
 	NL	Kies 'Verdergaan' om de software op deze afstandsbediening bij te werken. Dit proces neemt enkele minuten in beslag.
 
 UPDATE_BATTERY
-	DE	Batterie aufladen
 	EN	Charge Battery
+	DE	Batterie aufladen
 	ES	Cambiar pila
-	FR	Charge de la batterie
 	IT	Carica batteria
+	FR	Charge de la batterie
 	NL	Batterij opladen
 
 UPDATE_BATTERY_HELP
-	DE	Legen Sie die Fernbedienung ins Ladegerät, um mit der Software-Aktualisierung fortzufahren.
 	EN	Please put this remote in the charger to continue with the software upgrade.
+	DE	Legen Sie die Fernbedienung ins Ladegerät, um mit der Software-Aktualisierung fortzufahren.
 	ES	Coloque este mando en el cargador para continuar con la actualización del software.
-	FR	Veuillez placer la télécommande sur son dispositif de charge afin de poursuivre la mise à niveau du logiciel.
 	IT	Collocare il telecomando nella base di ricarica per continuare l'aggiornamento del software.
+	FR	Veuillez placer la télécommande sur son dispositif de charge afin de poursuivre la mise à niveau du logiciel.
 	NL	Zet deze afstandsbediening in de oplader om de software-upgrade voort te zetten.
 

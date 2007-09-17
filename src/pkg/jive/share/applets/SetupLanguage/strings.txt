@@ -1,71 +1,70 @@
-﻿#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 
 CHOOSE_LANGUAGE
-	DE	Sprache wählen
 	EN	Choose Language
+	DE	Sprache wählen
 	ES	Elegir idioma
-	FR	Choisir une langue
 	IT	Scegliere la lingua
+	FR	Choisir une langue
 	NL	Taal kiezen
 
 LANGUAGE_DE
-	DE	Deutsch
 	EN	Deutsch
+	DE	Deutsch
 	ES	Deutsch
-	FR	Deutsch
 	IT	Deutsch
+	FR	Deutsch
 	NL	Deutsch
 
 LANGUAGE_EN
-	DE	English
 	EN	English
+	DE	English
 	ES	English
-	FR	English
 	IT	English
+	FR	English
 	NL	English
 
 LANGUAGE_ES
-	DE	Español
 	EN	Español
+	DE	Español
 	ES	Español
-	FR	Español
 	IT	Español
+	FR	Español
 	NL	Español
 
 LANGUAGE_FR
-	DE	Français
 	EN	Français
+	DE	Français
 	ES	Français
-	FR	Français
 	IT	Français
+	FR	Français
 	NL	Français
 
 LANGUAGE_IT
-	DE	Italiano
 	EN	Italiano
+	DE	Italiano
 	ES	Italiano
-	FR	Italiano
 	IT	Italiano
+	FR	Italiano
 	NL	Italiano
 
 LANGUAGE_NL
-	DE	Nederlands
 	EN	Nederlands
+	DE	Nederlands
 	ES	Nederlands
-	FR	Nederlands
 	IT	Nederlands
+	FR	Nederlands
 	NL	Nederlands
 
 CHOOSE_LANGUAGE_HELP
-	DE	Wählen Sie Ihre Sprache mit dem Rad aus. Drücken Sie zum Fortfahren die Mitteltaste.
 	EN	Use the wheel to choose your language. Press the center button to go on.
+	DE	Wählen Sie Ihre Sprache mit dem Rad aus. Drücken Sie zum Fortfahren die Mitteltaste.
 	ES	Use el botón rueda para elegir el idioma. Pulse el botón central para continuar.
-	FR	Utilisez la roulette pour choisir une langue. Appuyez sur le bouton central pour continuer.
 	IT	Utilizzare la ghiera per scegliere la lingua. Premere il pulsante centrale per continuare.
+	FR	Utilisez la roulette pour choisir une langue. Appuyez sur le bouton central pour continuer.
 	NL	Gebruik het wiel om je taal te kiezen. Druk op de middelste knop om verder te gaan.
 

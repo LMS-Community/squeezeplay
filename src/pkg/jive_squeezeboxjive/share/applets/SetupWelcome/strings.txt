@@ -1,38 +1,92 @@
-﻿#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SETUP_WELCOME
 	EN	Welcome
+	DE	Willkommen
+	ES	Bienvenido
+	IT	Benvenuti
+	FR	Bienvenue
+	NL	Welkom
 
 WELCOME
 	EN	Welcome
+	DE	Willkommen
+	ES	Bienvenido
+	IT	Benvenuti
+	FR	Bienvenue
+	NL	Welkom
 
 WELCOME_WALKTHROUGH
 	EN	Let's get started by getting you connected to your network and music.
+	DE	Jetzt stellen wir die Verbindung zum Netzwerk und Ihrer Musik her.
+	ES	Comencemos por realizar la conexión a la red y música.
+	IT	Iniziamo con il collegamento alla rete e alla musica.
+	FR	Commençons par vous connecter au réseau.
+	NL	We gaan je eerst met je netwerk en muziek verbinden.
 
 WELCOME_HELP
 	EN	Press the center button when you are ready to move on.
+	DE	Drücken Sie die Mitteltaste, wenn Sie so weit sind.
+	ES	Pulse el botón central cuando esté listo para continuar.
+	IT	Premere il pulsante centrale per proseguire.
+	FR	Appuyez sur le bouton central pour continuer.
+	NL	Druk op de middelste knop wanneer je klaar bent om verder te gaan.
 
 WIRELESS_CONNECTION
 	EN	Wireless Connection
+	DE	Kabellose Verbindung
+	ES	Conexión inalámbrica
+	IT	Connessione senza fili
+	FR	Connexion sans fil
+	NL	Draadloze verbinding
 
 CONNECT_USING_SQUEEZEBOX
 	EN	Connect using Squeezebox
+	DE	Verbinden mit Squeezebox
+	ES	Conectar mediante Squeezebox
+	IT	Connetti tramite Squeezebox
+	FR	Connexion à l'aide de la Squeezebox
+	NL	Verbinding maken via Squeezebox
 
 CONNECT_USING_NETWORK
 	EN	Connect to other wireless network
+	DE	Mit anderem kabellosem Netz verbinden
+	ES	Conectar a otra red inalámbrica
+	IT	Connetti ad altre reti senza fili
+	FR	Se connecter à un autre réseau sans fil
+	NL	Verbinding maken met ander draadloos netwerk
 
 CONNECT_HELP
 	EN	You can use your Squeezebox to connect to your network or use another wireless access point.
+	DE	Sie können Squeezebox mit Ihrem Netzwerk oder einem anderen kabellosen Zugriffspunkt verbinden.
+	ES	Puede usar Squeezebox para conectarse a la red o usar otro punto de acceso inalámbrico.
+	IT	È possibile utilizzare Squeezebox per collegarsi alla rete o a un altro punto di accesso senza fili.
+	FR	Vous pouvez utiliser la Squeezebox pour vous connecter au réseau ou utiliser un autre point d'accès.
+	NL	Je kunt via je Squeezebox een verbinding met je netwerk of een ander draadloos toegangspunt maken.
 
 DONE
 	EN	That's it!
+	DE	Fertig!
+	ES	Y esto es todo.
+	IT	Fatto!
+	FR	La procédure est terminée.
+	NL	Klaar!
 
 DONE_CONTINUE
 	EN	Continue
+	DE	Weiter
+	ES	Continuar
+	IT	Continua
+	FR	Continuer
+	NL	Verdergaan
 
 DONE_HELP
 	EN	Now you can use your Jive to access all your music. Press the center button to continue.
+	DE	Jetzt können Sie mit der Jive auf Ihre Musik zugreifen. Drücken Sie zum Fortfahren die Mitteltaste.
+	ES	Ya puede usar Jive para acceder a toda su música. Pulse el botón central para continuar.
+	IT	Ora è possibile utilizzare Jive per accedere alla musica. Premere il pulsante centrale per continuare.
+	FR	Vous pouvez maintenant accéder à votre musique avec la Jive. Appuyez sur le bouton central pour continuer.
+	NL	Nu heb je met je Jive toegang tot al je muziek. Druk op de middelste knop om verder te gaan.

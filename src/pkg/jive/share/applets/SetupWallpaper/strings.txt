@@ -1,20 +1,39 @@
-﻿#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 WALLPAPER
 	EN	Wallpaper
+	DE	Hintergrundbild
+	ES	Papel tapiz
+	IT	Sfondo
+	FR	Arrière-plan
+	NL	Achtergrond
 
 CREDITS
 	EN	Credits
+	DE	Mitwirkende
+	ES	Créditos
+	IT	Riconoscimenti
+	FR	Crédits
+	NL	Credits
 
 CREATIVE_COMMONS
 	EN	The background images are under a Creative Commons Attribution license. See http://creativecommons.org/licenses/by/3.0/.
+	DE	Die Hintergrundbilder unterliegen einer "Creative Commons Attribution"-Lizenz (siehe http://creativecommons.org/licenses/by/3.0/).
+	ES	Imágenes de fondo con licencia Creative Commons Attribution. Consulte http://creativecommons.org/licenses/by/3.0/.
+	IT	Le immagini degli sfondi sono concesse in licenza da Creative Commons Attribution. Vedere http://creativecommons.org/licenses/by/3.0/.
+	FR	Les images d'arrière-plan sont sous licence Creative Commons. Voir http://creativecommons.org/licenses/by/3.0/.
+	NL	De achtergrondafbeeldingen zijn onderhevig aan een Creative Commons Attribution-licentie. Zie http://creativecommons.org/licenses/by/3.0/.
 
 CREDITS_BY
 	EN	Pictures by:
+	DE	Bilder von:
+	ES	Imágenes de:
+	IT	Immagini di:
+	FR	Images de:
+	NL	Foto's door:
 
 EGGPLANT
 	EN	Eggplant

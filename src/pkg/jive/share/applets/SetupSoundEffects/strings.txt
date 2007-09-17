@@ -1,78 +1,92 @@
-#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SOUND_EFFECTS
-	DE	Soundeffekte
 	EN	Sound Effects
+	DE	Soundeffekte
 	ES	Efectos de sonido
-	FR	Effets sonores
 	IT	Effetti sonori
+	FR	Effets sonores
 	NL	Geluidseffecten
 
 SOUND_CLICK
-	DE	Scroll
 	EN	Scroll
+	DE	Scroll
 	ES	Desplazarse
-	FR	Défiler
 	IT	Scorri
+	FR	Défiler
 	NL	Scrollen
 
 SOUND_SELECT
-	DE	Auswahl
 	EN	Select
+	DE	Auswahl
 	ES	Seleccionar
-	FR	Sélectionner
 	IT	Seleziona
+	FR	Sélectionner
 	NL	Selecteren
 
 SOUND_PUSHLEFT
 	EN	Forward
+	DE	Vorwärts
+	ES	Avance
+	IT	Avanti
+	FR	Suivant
+	NL	Vooruit
 
 SOUND_JUMP
-	DE	Hauptmenü
 	EN	Home
+	DE	Hauptmenü
 	ES	Inicio
-	FR	Accueil
 	IT	Pagina iniziale
+	FR	Accueil
 	NL	Hoofdmenu
 
 SOUND_STARTUP
-	DE	Start
 	EN	Startup
+	DE	Start
 	ES	Iniciar
-	FR	Démarrage
 	IT	Avvio
+	FR	Démarrage
 	NL	Opstarten
 
 SOUND_SHUTDOWN
-	DE	Abschalten
 	EN	Shutdown
+	DE	Abschalten
 	ES	Apagar
-	FR	Arrêt de l'ordinateur
 	IT	Chiusura
+	FR	Arrêt de l'ordinateur
 	NL	Afsluiten
 
 SOUND_BUMP
 	EN	Bump
+	DE	##Bump
+	ES	Choque
+	IT	Tonfo
+	FR	Bip
+	NL	Bump
 
 SOUND_DOCKING
 	EN	Charging
+	DE	Wird aufgeladen
+	ES	Cargando
+	IT	Caricamento
+	FR	Chargement en cours
+	NL	Bezig met opladen
 
 SOUND_PUSHRIGHT
-	DE	Zurück
 	EN	Back
+	DE	Zurück
 	ES	Atrás
-	FR	Précédent
 	IT	Indietro
+	FR	Précédent
 	NL	Terug
 
 SOUND_NONE
-	DE	Kein
 	EN	None
+	DE	Kein
 	ES	Ninguno
-	FR	Aucun
 	IT	Nessuno
+	FR	Aucun
 	NL	Geen

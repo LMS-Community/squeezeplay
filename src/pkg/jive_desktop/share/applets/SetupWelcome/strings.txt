@@ -1,26 +1,60 @@
-﻿#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SETUP_WELCOME
 	EN	Welcome
+	DE	Willkommen
+	ES	Bienvenido
+	IT	Benvenuti
+	FR	Bienvenue
+	NL	Welkom
 
 WELCOME
 	EN	Welcome
+	DE	Willkommen
+	ES	Bienvenido
+	IT	Benvenuti
+	FR	Bienvenue
+	NL	Welkom
 
 WELCOME_WALKTHROUGH
 	EN	Thanks for buying a Jive.\n\nLet's get started by getting you connected to your network and music.
+	DE	Vielen Dank, dass Sie einen Jive gekauft haben.\n\nJetzt stellen wir die Verbindung zum Netzwerk und Ihrer Musik her.
+	ES	Gracias por adquirir Jive.\n\nEl primer paso será la conexión a la red y a la música.
+	IT	Grazie per avere acquistato Jive.\n\nPer prima cosa impostiamo la connessione con la rete e la raccolta musicale.
+	FR	Merci d'avoir acheté une télécommande Jive.\n\nNous allons commencer par la connecter à votre réseau.
+	NL	Hartelijk dank voor de aanschaf van een Jive.\n\nWe gaan je eerst met je netwerk en muziek verbinden.
 
 WELCOME_HELP
 	EN	Press the center button when you are ready to move on.
+	DE	Drücken Sie die Mitteltaste, wenn Sie so weit sind.
+	ES	Pulse el botón central cuando esté listo para continuar.
+	IT	Premere il pulsante centrale per proseguire.
+	FR	Appuyez sur le bouton central pour continuer.
+	NL	Druk op de middelste knop wanneer je klaar bent om verder te gaan.
 
 DONE
 	EN	That's it!
+	DE	Fertig!
+	ES	Y esto es todo.
+	IT	Fatto!
+	FR	La procédure est terminée.
+	NL	Klaar!
 
 DONE_CONTINUE
 	EN	Continue
+	DE	Weiter
+	ES	Continuar
+	IT	Continua
+	FR	Continuer
+	NL	Verdergaan
 
 DONE_HELP
 	EN	Now you can use your Jive to access all your music. Press the center button to continue.
+	DE	Jetzt können Sie mit der Jive auf all Ihre Musik zugreifen. Zum Fortfahren Mitteltaste drücken.
+	ES	Ya puede usar Jive para acceder a toda su música. Pulse el botón central para continuar.
+	IT	Ora è possibile utilizzare Jive per accedere alla musica. Premere il pulsante centrale per continuare.
+	FR	Vous pouvez maintenant accéder à votre musique avec la Jive. Appuyez sur le bouton central pour continuer.
+	NL	Nu heb je met je Jive toegang tot al je muziek. Druk op de middelste knop om verder te gaan.

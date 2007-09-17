@@ -1,17 +1,20 @@
-﻿#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SLIMBROWSER_NOW_PLAYING
-	DE	Aktueller Titel
 	EN	Now Playing
+	DE	Aktueller Titel
 	ES	Reproduciendo
-	FR	Lecture en cours
 	IT	Riproduzione in corso
+	FR	Lecture en cours
 	NL	Speelt nu
 
 SLIMBROWSER_SEARCH_HELP
 	EN	Use the scroll wheel to change letters, then press the center button to select that letter. Press the center button again to start your search.
+	DE	Wählen Sie den gewünschten Buchstaben mit dem Rad und drücken Sie zum Bestätigen die Mitteltaste. Drücken Sie zum Starten der Suche die Mitteltaste erneut.
+	ES	Cambie de letra con la rueda de desplazamiento y pulse el botón central para seleccionarla. Pulse de nuevo el botón central para iniciar la búsqueda.
+	IT	Usa la rotellina per cambiare le lettere e premi il pulsante centrale per selezionarle. Premi nuovamente il pulsante centrale per avviare la ricerca.
 	FR	Utiliser le bidule pour choisir une lettre, plus appuyer sur le bouton central afin de la sélectionner. Appuyer à nouveau sur le bouton central pour démarrer la recherche.
+	NL	Gebruik het scrollwiel om letters te wijzigen. Druk dan op de middelste knop om die letter te selecteren. Druk nogmaals op de middelste knop om je zoekopdracht te starten.

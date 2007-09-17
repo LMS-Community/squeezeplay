@@ -1,117 +1,128 @@
-﻿#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SCREENSAVER_FLICKR
-	DE	Flickr
 	EN	Flickr
+	DE	Flickr
 	ES	Parpadeo
+	IT	Flickr
 	FR	Flickr
-	IT	Flickr 
 	NL	Flickr
 
 SCREENSAVER_FLICKR_SETTINGS
-	DE	Flickr Einstellungen
 	EN	Flickr Settings
+	DE	Flickr Einstellungen
+	ES	Configuración de parpadeo
+	IT	Impostazioni Flickr
+	FR	Paramètres Flickr
+	NL	Flickr-instellingen
 
 SCREENSAVER_FLICKR_LOADING_PHOTO
-	DE	Flickr lädt photo...
 	EN	Flickr loading photo...
+	DE	Flickr lädt photo...
+	ES	Parpadeo al cargar foto...
+	IT	Caricamento foto Flickr...
+	FR	Chargement de photo Flickr...
+	NL	Flickr is bezig met laden van foto...
 
 SCREENSAVER_FLICKR_ERROR
-	EN	Flickr error: 
-	DE	Flickr Fehler: 
+	EN	Flickr error:
+	DE	Flickr Fehler:
+	ES	Error de parpadeo:
+	IT	Errore Flickr:
+	FR	Erreur Flickr:
+	NL	Flickr-fout:
 
 SCREENSAVER_FLICKR_DELAY
-	DE	Geschwindigkeit
 	EN	Speed
+	DE	Geschwindigkeit
 
 SCREENSAVER_FLICKR_DELAY_10_SEC
-	DE	10 Sek.
 	EN	10 sec
+	DE	10 Sek.
 	ES	10 s
-	FR	10 sec
 	IT	10 sec
+	FR	10 sec
 	NL	10 sec
 
 SCREENSAVER_FLICKR_DELAY_20_SEC
-	DE	20 Sek.
 	EN	20 sec
+	DE	20 Sek.
 	ES	20 s
-	FR	20 sec
 	IT	20 sec
+	FR	20 sec
 	NL	20 sec
 
 SCREENSAVER_FLICKR_DELAY_30_SEC
-	DE	30 Sek.
 	EN	30 sec
+	DE	30 Sek.
 	ES	30 s
-	FR	30 sec
 	IT	30 sec
+	FR	30 sec
 	NL	30 sec
 
 SCREENSAVER_FLICKR_DELAY_1_MIN
-	DE	1 Min.
 	EN	1 min
+	DE	1 Min.
 	ES	1 m
-	FR	1 min
 	IT	1 min
+	FR	1 min
 	NL	1 min
 
 SCREENSAVER_FLICKR_DISPLAY
-	DE	Anzeige
 	EN	Display
+	DE	Anzeige
 
 SCREENSAVER_FLICKR_DISPLAY_OWN
-	DE	Meine eigenen Bilder
 	EN	My own pictures
+	DE	Meine eigenen Bilder
 
 SCREENSAVER_FLICKR_DISPLAY_CONTACTS
-	DE	Bilder meiner Kontakte
 	EN	My contacts pictures
+	DE	Bilder meiner Kontakte
 
 SCREENSAVER_FLICKR_DISPLAY_INTERESTING
-	DE	Interessante Bilder
 	EN	Interesting pictures
+	DE	Interessante Bilder
 
 SCREENSAVER_FLICKR_DISPLAY_RECENT
-	DE	Neu hinzugefügte Bilder
 	EN	Recently added pictures
+	DE	Neu hinzugefügte Bilder
 
 SCREENSAVER_FLICKR_FLICKR_ID
-	DE	Flickr Benutzer
 	EN	Flickr User
+	DE	Flickr Benutzer
 
 SCREENSAVER_FLICKR_FLICKR_ID_HELP
-	DE	Bitte geben Sie Ihren Flickr Benutzernamen oder Ihre Email-Adresse ein
 	EN	Please enter your Flickr Username or your Email address
+	DE	Bitte geben Sie Ihren Flickr Benutzernamen oder Ihre Email-Adresse ein
 
 SCREENSAVER_FLICKR_TRANSITION
-	DE	Übergänge
 	EN	Transitions
+	DE	Übergänge
 
 SCREENSAVER_FLICKR_TRANSITION_RANDOM
-	DE	Zufällige Übergänge
 	EN	Random transitions
+	DE	Zufällige Übergänge
 
 SCREENSAVER_FLICKR_TRANSITION_INSIDE_OUT
-	DE	von innen nach aussen
 	EN	Fade inside-out
+	DE	von innen nach aussen
 
 SCREENSAVER_FLICKR_TRANSITION_TOP_DOWN
-	DE	von oben nach unten
 	EN	Fade top-down
+	DE	von oben nach unten
 
 SCREENSAVER_FLICKR_TRANSITION_BOTTOM_UP
-	DE	von unten nach oben
 	EN	Fade bottom-up
+	DE	von unten nach oben
 
 SCREENSAVER_FLICKR_TRANSITION_LEFT_RIGHT
-	DE	von links nach rechts
 	EN	Fade left-right
+	DE	von links nach rechts
 
 SCREENSAVER_FLICKR_TRANSITION_RIGHT_LEFT
-	DE	von rechts nach links
 	EN	Fade right-left
+	DE	von rechts nach links

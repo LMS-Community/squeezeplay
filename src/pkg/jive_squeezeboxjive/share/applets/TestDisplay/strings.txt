@@ -1,12 +1,21 @@
-﻿#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 
 TEST_DISPLAY
 	EN	Display
+	DE	Anzeige
+	ES	Pantalla
+	IT	Visualizza
+	FR	Affichage
+	NL	Display
 
 TEST_COMPLETE
 	EN	Test Complete
+	DE	Test abgeschlossen
+	ES	Prueba completada
+	IT	Test completato
+	FR	Test terminé
+	NL	Test voltooid

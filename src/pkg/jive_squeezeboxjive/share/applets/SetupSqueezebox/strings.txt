@@ -1,97 +1,181 @@
-#
 # NOTE: Please keep the languages in alphabetical order by two-letter identifier.
-# 
+#
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 #
 
 SQUEEZEBOX_SETUP
 	EN	Set Up Squeezebox
+	DE	Squeezebox einrichten
+	ES	Configuración de Squeezebox
+	IT	Configura Squeezebox
+	FR	Configuration de la Squeezebox
+	NL	Squeezebox instellen
 
 SQUEEZEBOX_NETWORK_CONNECTION
-	DE	Kabellose Verbindung
 	EN	Wireless Connection
+	DE	Kabellose Verbindung
 	ES	Conexión inalámbrica
-	FR	Connexion sans fil
 	IT	Connessione senza fili
+	FR	Connexion sans fil
 	NL	Draadloze verbinding
 
 SQUEEZEBOX_CONNECT_HELP
 	EN	Choose how your Squeezebox should connect to your network.
+	DE	Bestimmen Sie, wie die Squeezebox mit dem Netzwerk verbunden werden soll.
+	ES	Elija cómo se conecta Squeezebox a la red.
+	IT	Scegliere in che modo Squeezebox verrà connesso alla rete.
+	FR	Sélectionnez le type de connexion de la Squeezebox au réseau.
+	NL	Kies hoe je Squeezebox verbinding met je netwerk moet maken.
 
 SQUEEZEBOX_WIRELESS
 	EN	Wireless
+	DE	Drahtlos
+	ES	Inalámbrica
+	IT	Rete senza fili
+	FR	Sans fil
+	NL	Draadloos
 
 SQUEEZEBOX_ETHERNET
 	EN	Ethernet
+	DE	Ethernet
+	ES	Ethernet
+	IT	Ethernet
+	FR	Ethernet
+	NL	Ethernet
 
 SQUEEZEBOX_HELP
 	EN	Choose the Squeezebox that is ready to be set up. If you don't see it here, make sure it is plugged in and within wireless range. Press and hold the button on the front until it flashes.
+	DE	Squeezebox zum Einrichten auswählen. Wird kein Gerät angezeigt, vergewissern Sie sich, dass es eingesteckt und in Reichweite ist. Halten Sie die Taste an der Vorderseite gedrückt, bis sie blinkt.
+	ES	Elija el Squeezebox listo para la configuración. Si no lo ve aquí, compruebe que esté conectado y dentro del radio inalámbrico. Pulse el botón frontal hasta que parpadee.
+	IT	Scegliere lo Squeezebox da configurare. Se non è visualizzato, verificare che sia collegato ed entro la portata della rete senza fili. Tenere premuto il pulsante sulla parte anteriore finché non lampeggia.
+	FR	Sélectionnez la Squeezebox à configurer. Si elle ne s'affiche pas, vérifiez qu'elle est branchée et à portée. Maintenez le bouton frontal enfoncé jusqu'à ce qu'il clignote.
+	NL	Kies de Squeezebox die klaar is om ingesteld te worden. Als je hem hier niet ziet, controleer dan of hij aangesloten en binnen draadloos bereik is. Houd de knop aan de voorkant ingedrukt totdat deze knippert.
 
 SQUEEZEBOX_FINDING_SOURCES
 	EN	Finding music sources
+	DE	Musikquellen werden gesucht
+	ES	Buscando fuentes de música
+	IT	Ricerca di sorgenti musicali
+	FR	Recherche de sources musicales
+	NL	Bezig met zoeken naar muziekbronnen
 
 SQUEEZEBOX_CONNECTING_TO
 	EN	Connecting to\n%s
+	DE	Verbindung mit %s
+	ES	Conectando a %s
+	IT	Connessione a %s
+	FR	Connexion à %s
+	NL	Er wordt een verbinding met %s gemaakt
 
 SQUEEZEBOX_SETUP_COMPLETE
 	EN	Your squeezebox is now set up.
+	DE	Die Squeezebox ist eingerichtet.
+	ES	Se ha configurado Squeezebox.
+	IT	Squeezebox è stato configurato.
+	FR	Votre Squeezebox est configurée.
+	NL	Je Squeezebox is nu ingesteld.
 
 SQUEEZEBOX_PROBLEM
-	DE	Verbindungsproblem
 	EN	Problem Connecting
+	DE	Verbindungsproblem
 	ES	Problema de conexión
-	FR	Problème de connexion
 	IT	Problema di connessione
+	FR	Problème de connexion
 	NL	Probleem bij verbinden
 
 SQUEEZEBOX_PROBLEM_TRY_AGAIN
-	DE	Erneut versuchen.
 	EN	Try again
+	DE	Erneut versuchen.
 	ES	Vuelva a intentarlo
-	FR	Réessayer
 	IT	Riprova
+	FR	Réessayer
 	NL	Opnieuw proberen
 
 SQUEEZEBOX_PROBLEM_SKIP
-	DE	Diesen Schritt überspringen
 	EN	Skip this step
+	DE	Diesen Schritt überspringen
 	ES	Omitir este paso
-	FR	Ignorer cette étape
 	IT	Salta questa operazione
+	FR	Ignorer cette étape
 	NL	Deze stap overslaan
 
 SQUEEZEBOX_PROBLEM_HELP
 	EN	Couldn't connect your Squeezebox to your wireless network. Make sure it is within range of your wireless network.
+	DE	Die Squeezebox konnte nicht mit dem kabellosen Netzwerk verbunden werden. Vergewissern Sie sich, dass sie sich in Reichweite befindet.
+	ES	No se pudo conectar Squeezebox a la red inalámbrica. Compruebe que se encuentre dentro del radio de la red inalámbrica.
+	IT	Impossibile connettere Squeezebox alla rete senza fili. Verificare che si trovi entro la portata della rete senza fili.
+	FR	Impossible de connecter la Squeezebox à un réseau sans fil. Vérifiez qu'elle est à portée du réseau.
+	NL	Je Squeezebox kan niet met je draadloze netwerk worden verbonden. Zorg dat het apparaat zich binnen het bereik van je draadloze netwerk bevindt.
 
 SQUEEZEBOX_PROBLEM_LOST_CONNECTION
 	EN	(Lost connection).
+	DE	(Verbindung unterbrochen)
+	ES	(Se ha perdido la conexión).
+	IT	Connessione persa.
+	FR	Perte de la connexion.
+	NL	(Verbinding is verloren gegaan).
 
 SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX
 	EN	(Lost Squeezebox).
+	DE	(Squeezebox nicht verbunden)
+	ES	(Squeezebox perdido).
+	IT	Squeezebox perso.
+	FR	Perte de la Squeezebox.
+	NL	(Squeezebox is verloren gegaan).
 
 SQUEEZEBOX_PROBLEM_DHCP_ERROR
 	EN	(DHCP error).
+	DE	(DHCP-Fehler)
+	ES	(Error de DHCP).
+	IT	Errore DHCP.
+	FR	Erreur DHCP.
+	NL	(DHCP-fout).
 
 SQUEEZEBOX_PROBLEM_LOST_NETWORK
 	EN	(Lost network).
+	DE	(Netzwerkverbindung unterbrochen)
+	ES	(Se ha perdido la red).
+	IT	Rete persa.
+	FR	Perte du réseau.
+	NL	(Netwerk is verloren gegaan).
 
 SQUEEZEBOX_PROBLEM_CONNECTION_ERROR
 	EN	(Connection error).
+	DE	(Verbindungsfehler)
+	ES	(Error de conexión).
+	IT	Errore di connessione.
+	FR	Erreur de connexion.
+	NL	(Verbindingsfout).
 
 SQUEEZEBOX_MUSIC_SOURCE
-	DE	Musikquelle wählen
 	EN	Choose Music Source
+	DE	Musikquelle wählen
 	ES	Elija fuente de música
-	FR	Sélection d'une source musicale
 	IT	Scegliere la sorgente musicale
+	FR	Sélection d'une source musicale
 	NL	Muziekbron kiezen
 
 SQUEEZEBOX_MUSIC_SOURCE_HELP
-	EN	The Squeezebox is connected to your network. Choose a music source. 
+	EN	The Squeezebox is connected to your network. Choose a music source.
+	DE	Die Squeezebox ist mit dem Netzwerk verbunden. Wählen Sie eine Musikquelle.
+	ES	Squeezebox está conectado a la red. Elija una fuente de música.
+	IT	Squeezebox è connesso alla rete. Scegliere una sorgente musicale.
+	FR	La Squeezebox est connectée au réseau. Sélectionnez une source musicale.
+	NL	De Squeezebox is met je netwerk verbonden. Kies een muziekbron.
 
 SQUEEZEBOX_IP_ADDRESS
 	EN	IP Address
+	DE	IP-Adresse
+	ES	Dirección IP
+	IT	Indirizzo IP
+	FR	Adresse IP
+	NL	IP-adres
 
 SQUEEZEBOX_IP_ADDRESS_HELP
 	EN	Enter the IP address for this Squeezebox to use.
+	DE	Geben Sie die IP-Adresse für diese Squeezebox ein.
+	ES	Escriba la dirección IP que debe usar este Squeezebox.
+	IT	Immettere l'indirizzo IP da utilizzare con questo Squeezebox.
+	FR	Spécifiez l'adresse IP à utiliser pour la Squeezebox.
+	NL	Voer het IP-adres in voor de Squeezebox die gebruikt moet worden.
