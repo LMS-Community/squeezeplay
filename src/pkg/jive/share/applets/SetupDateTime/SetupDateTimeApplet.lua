@@ -139,9 +139,14 @@ function dateFormatSetting(self, menuItem)
 
 	for k,v in pairs(datetime:getAllDateFormats()) do
 		local _text = os.date(v)
-		if tostring(v) == '%D' then
+		if string.match(v, '%%d') or string.match(v, '%%m') then
+			local _help = _getDateHelpString(v)
+			_text = _text .. " (" .. _help .. ")"
+		end
+--[[		if tostring(v) == '%D' then
 			_text = _text .. " (mm/dd/yy)"
 		end
+--]]
 		menu:addItem({
 				text = _text,
 				icon = RadioButton("radio", group, function(event, menuItem)
@@ -155,6 +160,18 @@ function dateFormatSetting(self, menuItem)
 
 	self:tieAndShowWindow(window)
 	return window
+end
+
+function _getDateHelpString(dateString)
+	dateString = string.gsub(dateString, '%%d', 'DD')
+	dateString = string.gsub(dateString, '%%m', 'MM')
+	dateString = string.gsub(dateString, '%%Y', 'YYYY')
+	dateString = string.gsub(dateString, '%%y', 'YY')
+	dateString = string.gsub(dateString, '%%a', 'WWW')
+	dateString = string.gsub(dateString, '%%A', 'WWWW')
+	dateString = string.gsub(dateString, '%%b', 'MMM')
+	dateString = string.gsub(dateString, '%%B', 'MMMM')
+	return dateString
 end
 
 function weekstartSetting(self, menuItem)

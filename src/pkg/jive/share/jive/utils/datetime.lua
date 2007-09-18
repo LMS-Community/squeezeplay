@@ -51,9 +51,33 @@ local TimeFormatAMPM = "%I:%M%p"
 local TimeFormat24 = "%H:%M"
 
 local DateFormats = {
-	"%a, %B %d %Y",
-	"%a, %d. %B %Y", 
-	"%D"
+	"%A %d %B %Y",
+	"%A %d. %B %Y",
+	"%A, %B %d, %Y",
+	"%A, %B. %d, %Y",
+	"%Y-%m-%d",
+	"%Y-%m-%d %A",
+	"%Y-%m-%d (%a)",
+	"%Y/%m/%d",
+	"%Y/%m/%d %A",
+	"%Y/%m/%d (%a)",
+	"%a %d %b %Y",
+	"%a %d. %b %Y",
+	"%a, %b %d, '%y",
+	"%a, %d %b, %Y",
+	"%a, %d. %b, %Y",
+	"%d-%m-%Y",
+	"%d-%m-%y",
+	"%d.%m.%Y",
+	"%d.%m.%y",
+	"%d/%m/%Y",
+	"%d/%m/%y",
+	"%m-%d-%Y",
+	"%m-%d-%y",
+	"%m.%d.%Y",
+	"%m.%d.%y",
+	"%m/%d/%Y",
+	"%m/%d/%y"
 }
 
 local TimeZones = {
