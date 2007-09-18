@@ -6,7 +6,7 @@
 SCREENSAVER_FLICKR
 	EN	Flickr
 	DE	Flickr
-	ES	Parpadeo
+	ES	Flickr
 	IT	Flickr
 	FR	Flickr
 	NL	Flickr
@@ -14,7 +14,7 @@ SCREENSAVER_FLICKR
 SCREENSAVER_FLICKR_SETTINGS
 	EN	Flickr Settings
 	DE	Flickr Einstellungen
-	ES	Configuración de parpadeo
+	ES	Configuración de Flickr
 	IT	Impostazioni Flickr
 	FR	Paramètres Flickr
 	NL	Flickr-instellingen
@@ -22,7 +22,7 @@ SCREENSAVER_FLICKR_SETTINGS
 SCREENSAVER_FLICKR_LOADING_PHOTO
 	EN	Flickr loading photo...
 	DE	Flickr lädt photo...
-	ES	Parpadeo al cargar foto...
+	ES	Flickr al cargar foto...
 	IT	Caricamento foto Flickr...
 	FR	Chargement de photo Flickr...
 	NL	Flickr is bezig met laden van foto...
@@ -30,7 +30,7 @@ SCREENSAVER_FLICKR_LOADING_PHOTO
 SCREENSAVER_FLICKR_ERROR
 	EN	Flickr error:
 	DE	Flickr Fehler:
-	ES	Error de parpadeo:
+	ES	Error de Flickr:
 	IT	Errore Flickr:
 	FR	Erreur Flickr:
 	NL	Flickr-fout:
