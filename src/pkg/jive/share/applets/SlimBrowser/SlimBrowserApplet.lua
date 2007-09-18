@@ -1407,6 +1407,17 @@ end
 --==============================================================================
 
 
+-- notify_playerstatus
+-- we refresh the main menu after playerstatus changes
+function notify_playerPower(self, player, power)
+	log:debug("SlimBrowserApplet:notify_playerPower(", player, ")")
+	-- only if this concerns our player
+	if _player == player then
+		-- refresh the main menu
+		self:notify_playerCurrent(player, 1)
+	end
+end
+
 -- notify_playerNewName
 -- this is called when the player name changes
 -- we update our main window title
@@ -1436,11 +1447,11 @@ end
 
 -- notify_playerCurrent
 -- this is called when the current player changes (possibly from no player)
-function notify_playerCurrent(self, player)
+function notify_playerCurrent(self, player, force)
 	log:debug("SlimBrowserApplet:notify_playerCurrent(", player, ")")
 
 	-- has the player actually changed?
-	if _player == player then
+	if _player == player and not force then
 		return
 	end
 

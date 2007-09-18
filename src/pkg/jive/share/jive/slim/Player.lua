@@ -15,6 +15,7 @@ Notifications:
  playerConnected:
  playerNewName:
  playerDisconnected:
+ playerPower:
  playerNew (performed by SlimServer)
  playerDelete (performed by SlimServer)
 
@@ -113,6 +114,15 @@ local function _setPlayerName(self, playerName)
 end
 
 
+local function _setPlayerPower(self, power)
+	log:debug("_setPlayerPower")
+	-- only kick off notification on state change
+	if power != self.power then
+		self.power = power
+		self.jnt:notify('playerPower', self, power)
+	end
+end
+
 --[[
 
 =head2 jive.slim.Player(server, jnt, jpool, playerInfo)
@@ -138,6 +148,7 @@ function __init(self, slimServer, jnt, jpool, playerInfo)
 		name = playerInfo.name,
 		model = playerInfo.model,
 		connected = playerInfo.connected,
+		power = playerInfo.power,
 
 		-- menu item of home menu that represents this player
 		homeMenuItem = false,
@@ -166,6 +177,7 @@ Updates the player with fresh data from SS.
 function updateFromSS(self, playerInfo)
 	
 	_setPlayerName(self, playerInfo.name)
+	_setPlayerPower(self, playerInfo.power)
 	self.model = playerInfo.model
 	_setConnected(self, playerInfo.connected)
 end
