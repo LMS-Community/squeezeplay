@@ -57,7 +57,7 @@ function registerApplet(meta)
 			-- are we forcing an upgrade
 			if chunk.data.firmwareUpgrade == 1 then
 				local applet = appletManager:loadApplet("SetupFirmwareUpgrade")
-				applet:settingsShow(true)
+				applet:forceUpgrade()
 			end
 
 			-- FIXME allow for applet install/upgrade here

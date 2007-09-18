@@ -45,12 +45,7 @@ SQUEEZEBOX_ETHERNET
 	NL	Ethernet
 
 SQUEEZEBOX_HELP
-	EN	Choose the Squeezebox that is ready to be set up. If you don't see it here, make sure it is plugged in and within wireless range. Press and hold the button on the front until it flashes.
-	DE	Squeezebox zum Einrichten auswählen. Wird kein Gerät angezeigt, vergewissern Sie sich, dass es eingesteckt und in Reichweite ist. Halten Sie die Taste an der Vorderseite gedrückt, bis sie blinkt.
-	ES	Elija el Squeezebox listo para la configuración. Si no lo ve aquí, compruebe que esté conectado y dentro del radio inalámbrico. Pulse el botón frontal hasta que parpadee.
-	IT	Scegliere lo Squeezebox da configurare. Se non è visualizzato, verificare che sia collegato ed entro la portata della rete senza fili. Tenere premuto il pulsante sulla parte anteriore finché non lampeggia.
-	FR	Sélectionnez la Squeezebox à configurer. Si elle ne s'affiche pas, vérifiez qu'elle est branchée et à portée. Maintenez le bouton frontal enfoncé jusqu'à ce qu'il clignote.
-	NL	Kies de Squeezebox die klaar is om ingesteld te worden. Als je hem hier niet ziet, controleer dan of hij aangesloten en binnen draadloos bereik is. Houd de knop aan de voorkant ingedrukt totdat deze knippert.
+	EN	Choose the Squeezebox you want to set up. If you don't see it here, press and hold the button on the front until it flashes.
 
 SQUEEZEBOX_FINDING_SOURCES
 	EN	Finding music sources

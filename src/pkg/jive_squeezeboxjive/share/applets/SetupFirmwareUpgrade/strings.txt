@@ -11,13 +11,14 @@ UPDATE
 	FR	Mise à jour du logiciel
 	NL	Software-update
 
-UPDATE_CONTINUE
-	EN	Update from server
-	DE	Aktualisierung vom Server
-	ES	Actualizar desde servidor
-	IT	Aggiorna da server
-	FR	Mise à jour à partir du serveur
-	NL	Update van server
+NETWORK_UPDATE
+	EN	Network update
+
+BEGIN_UPDATE
+	EN	Begin update
+
+CONTINUE
+	EN	Continue
 
 UPDATE_CONTINUE_SDCARD
 	EN	Update from SD card
@@ -90,6 +91,9 @@ UPDATE_CONTINUE_HELP
 	IT	Per aggiornare il software di questo dispositivo, scegliere Continua. L'operazione richiede alcuni minuti.
 	FR	Pour mettre à jour le logiciel sur la télécommande, sélectionnez Continuer. Ce processus peut prendre quelques minutes.
 	NL	Kies 'Verdergaan' om de software op deze afstandsbediening bij te werken. Dit proces neemt enkele minuten in beslag.
+
+UPDATE_BEGIN_HELP
+	EN	Updated software is availabe for this remote. This process may take a few minutes.
 
 UPDATE_BATTERY
 	EN	Charge Battery

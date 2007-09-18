@@ -5,12 +5,7 @@
 #
 
 NETWORK
-	EN	Networks
-	DE	Netzwerke
-	ES	Redes
-	IT	Reti
-	FR	Réseaux
-	NL	Netwerken
+	EN	Wireless Networks
 
 NETWORK_FINDING_NETWORKS
 	EN	\nFinding Networks
@@ -45,12 +40,12 @@ NETWORK_CONNECT_TO_NETWORK
 	NL	Verbinding met netwerk maken
 
 NETWORK_ENTER_ANOTHER_NETWORK
-	EN	Other Network...
-	DE	Anderes Netzwerk...
-	ES	Otra red...
-	IT	Altra rete...
-	FR	Autre réseau...
-	NL	Ander netwerk...
+	EN	Other Network
+	DE	Anderes Netzwerk
+	ES	Otra red
+	IT	Altra rete
+	FR	Autre réseau
+	NL	Ander netwerk
 
 NETWORK_FORGET_NETWORK
 	EN	Forget network

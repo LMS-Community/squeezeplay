@@ -215,13 +215,13 @@ function update(self)
 		end
 	else
 		local bat = jiveBSP.ioctl(17)
-		if bat < 190 then
+		if bat < 810 then
 			self.iconBattery:setStyle("iconBattery0")
-		elseif bat < 195 then
+		elseif bat < 820 then
 			self.iconBattery:setStyle("iconBattery1")
-		elseif bat < 200 then
+		elseif bat < 830 then
 			self.iconBattery:setStyle("iconBattery2")
-		elseif bat < 205 then
+		elseif bat < 840 then
 			self.iconBattery:setStyle("iconBattery3")
 		else
 			self.iconBattery:setStyle("iconBattery4")

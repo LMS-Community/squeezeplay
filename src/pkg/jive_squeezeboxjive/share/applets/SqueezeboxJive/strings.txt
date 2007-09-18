@@ -33,12 +33,7 @@ BSP_BRIGHTNESS_ADJUST_HELP
 	NL	Gebruik het wiel om de helderheid van de verlichting aan te passen.
 
 BSP_BACKLIGHT_TIMER
-	EN	Backlight Timer
-	DE	Hintergrundbeleuchtung
-	ES	Temporizador de retroiluminación
-	IT	Timer retroilluminazione
-	FR	Minuteur du rétroéclairage
-	NL	Verlichtingstimer
+	EN	Screen dimming
 
 BSP_BACKLIGHT_HIGH
 	EN	High
@@ -81,68 +76,28 @@ BSP_TIMER_ON
 	NL	Aan
 
 BSP_TIMER_5_SEC
-	EN	5 sec
-	DE	5 Sek.
-	ES	5 s
-	IT	5 sec
-	FR	5 sec
-	NL	5 sec
+	EN	5 seconds
 
 BSP_TIMER_10_SEC
-	EN	10 sec
-	DE	10 Sek.
-	ES	10 s
-	IT	10 sec
-	FR	10 sec
-	NL	10 sec
+	EN	10 seconds
 
 BSP_TIMER_15_SEC
-	EN	15 sec
-	DE	15 Sek.
-	ES	15 s
-	IT	15 sec
-	FR	15 sec
-	NL	15 sec
+	EN	15 seconds
 
 BSP_TIMER_20_SEC
-	EN	20 sec
-	DE	20 Sek.
-	ES	20 s
-	IT	20 sec
-	FR	20 sec
-	NL	20 sec
+	EN	20 seconds
 
 BSP_TIMER_30_SEC
-	EN	30 sec
-	DE	30 Sek.
-	ES	30 s
-	IT	30 sec
-	FR	30 sec
-	NL	30 sec
+	EN	30 seconds
 
 BSP_TIMER_1_MIN
-	EN	1 min
-	DE	1 Min.
-	ES	1 m
-	IT	1 min
-	FR	1 min
-	NL	1 min
+	EN	1 minute
 
 BSP_TIMER_2_MIN
-	EN	2 min
-	DE	2 Min.
-	ES	2 m
-	IT	2 min
-	FR	2 min
-	NL	2 min
+	EN	2 minute
 
 BSP_TIMER_5_MIN
-	EN	5 min
-	DE	5 Min.
-	ES	5 m
-	IT	5 min
-	FR	5 min
-	NL	5 min
+	EN	5 minute
 
 BSP_TIMER_NEVER
 	EN	Never

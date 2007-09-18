@@ -69,8 +69,35 @@ module(...)
 oo.class(_M, Applet)
 
 
--- if force is true you can't bump from the menu
-function settingsShow(self, force)
+function forceUpgrade(self)
+	local window = Window("window", self:string("UPDATE"))
+	window:setAllowScreensaver(false)
+
+	local menu = SimpleMenu("menu")
+	menu:setCloseable(false)
+
+	log:warn("upgradeUrl=", upgradeUrl[1])
+
+	if upgradeUrl[1] then
+		menu:addItem({
+				     text = self:string("BEGIN_UPDATE"),
+				     callback = function()
+							self.url = upgradeUrl[1]
+							self:_upgrade()
+						end
+			     })
+	end
+
+	local help = Textarea("help", self:string("UPDATE_BEGIN_HELP"))
+	window:addWidget(help)
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+function settingsShow(self)
 	local window = Window("window", self:string("UPDATE"))
 
 	local menu = SimpleMenu("menu")
@@ -79,7 +106,7 @@ function settingsShow(self, force)
 
 	if upgradeUrl[1] then
 		menu:addItem({
-				     text = self:string("UPDATE_CONTINUE"),
+				     text = self:string("NETWORK_UPDATE"),
 				     callback = function()
 							self.url = upgradeUrl[1]
 							self:_upgrade()
@@ -97,10 +124,6 @@ function settingsShow(self, force)
 			     })
 	end
 
-	if force then
-		menu:setCloseable(false)
-	end
-
 	local help = Textarea("help", self:string("UPDATE_CONTINUE_HELP"))
 	window:addWidget(help)
 	window:addWidget(menu)
@@ -111,7 +134,7 @@ end
 
 
 function _checkBattery()
-	return bsp.ioctl(23) == 0 or bsp.ioctl(17) > 200
+	return bsp.ioctl(23) == 0 or bsp.ioctl(17) > 830
 end
 
 
