@@ -1407,8 +1407,8 @@ end
 --==============================================================================
 
 
--- notify_playerstatus
--- we refresh the main menu after playerstatus changes
+-- notify_playerPower
+-- we refresh the main menu after playerPower changes
 function notify_playerPower(self, player, power)
 	log:debug("SlimBrowserApplet:notify_playerPower(", player, ")")
 	-- only if this concerns our player
