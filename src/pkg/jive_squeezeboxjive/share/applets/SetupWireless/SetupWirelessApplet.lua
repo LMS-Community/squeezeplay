@@ -69,7 +69,7 @@ local KEY_RIGHT       = jive.ui.KEY_RIGHT
 
 
 -- configuration
-local CONNECT_TIMEOUT = 20
+local CONNECT_TIMEOUT = 30
 
 
 module(...)
@@ -1168,12 +1168,14 @@ function t_removeNetwork(self, ssid)
 
 	-- Update state in main thread
 	jnt:t_perform(function()
-			      -- remove from menu
-			      local item = self.scanResults[ssid].item
-			      self.scanMenu:removeItem(item)
+			      if self.scanResults[ssid] then
+				      -- remove from menu
+				      local item = self.scanResults[ssid].item
+				      self.scanMenu:removeItem(item)
 
-			      -- clear entry
-			      self.scanResults[ssid] = nil
+				      -- clear entry
+				      self.scanResults[ssid] = nil
+			      end
 		      end)
 end
 

@@ -220,7 +220,7 @@ function t_addNetwork(self, ssid, option)
 	self:t_removeNetwork(ssid)
 
 	log:warn("Connect to ", ssid, " psk=", option.psk, " key=", option.key)
-	local flags = _scanResults[ssid].flags or ""
+	local flags = (_scanResults[ssid] and _scanResults[ssid].flags) or ""
 
 	-- Set to use dhcp by default
 	self:_editNetworkInterfaces(ssid, "dhcp", "script /etc/network/udhcpc_action")
