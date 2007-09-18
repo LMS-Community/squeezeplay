@@ -17,7 +17,7 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local ipairs, pairs, assert, io, string = ipairs, pairs, assert, io, string
+local ipairs, pairs, assert, io, string, tostring = ipairs, pairs, assert, io, string, tostring
 local os = os
 
 local oo               = require("loop.simple")
@@ -138,8 +138,12 @@ function dateFormatSetting(self, menuItem)
 	local menu = SimpleMenu("menu", {})
 
 	for k,v in pairs(datetime:getAllDateFormats()) do
+		local _text = os.date(v)
+		if tostring(v) == '%D' then
+			_text = _text .. " (mm/dd/yy)"
+		end
 		menu:addItem({
-				text = os.date(v),
+				text = _text,
 				icon = RadioButton("radio", group, function(event, menuItem)
 						self:setDateFormat(v)
 					end,
