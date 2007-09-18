@@ -112,7 +112,6 @@ local DigitalDetailed_Presets = {
 		},
 		Background = 0x000000FF,
 		FirstDayInWeek = "Sunday",
-		DateFormat = "%B %d, %Y"
 	}
 }
 
@@ -132,16 +131,9 @@ function Clock:__init(window)
 	obj.screen_width = w
 	obj.screen_height = h
 
-	-- Default Date Format
-	obj.date_format = "%a, %B %d %Y"
-
 	obj:_createSurface()
 
 	return obj
-end
-
-function Clock:setDateFormat(f)
-	obj.date_format = f
 end
 
 function Clock:_createSurface()
@@ -320,7 +312,7 @@ function DigitalSimple:Draw(force)
 			ampmWidth, ampmHeight = ampmSrf:getSize()
 		end
 
-		local dateSrf = Surface:drawText(self.datefont, self.color, os.date(self.date_format))
+		local dateSrf = Surface:drawText(self.datefont, self.color, os.date(datetime:getDateFormat()))
 
 		local tw, th = timeSrf:getSize()
 
@@ -458,8 +450,6 @@ function DigitalDetailed:__init(window, preset, ampm, firstday)
 	if firstday != nil then
 		obj.weekstart = firstday
 	end
-
-	obj.date_format = preset.DateFormat
 
 	obj.oldtime = ""
 	obj.show_ampm = ampm
@@ -617,7 +607,7 @@ function DigitalDetailed:Draw(force)
 		end
 
 		-- Draw Date
-		local theDate = os.date(self.date_format)
+		local theDate = os.date(datetime:getDateFormat())
 		local dateSrf = Surface:drawText(self.datefont, self.datefont_color, theDate)
 
 		local dw, dh = dateSrf:getSize()
@@ -722,7 +712,6 @@ function _openScreensaver(self, type)
 	local dt = datetime
 
 	local hours      = dt:getHours() 
-	local dateformat = dt:getDateFormat()
 	local weekstart  = dt:getWeekstart()
 
 	local preset = self:getPreset(type)
@@ -737,7 +726,6 @@ function _openScreensaver(self, type)
 	log:info("Type: " .. type)
 	if type == "simple" then
 		clock = DigitalSimple(window, preset, hours)
-		clock:setDateFormat(dateformat)
 	elseif type == "styled" then
 		-- This clock always uses 24 hours mode for now
 		clock = DigitalStyled(window, preset, false)
