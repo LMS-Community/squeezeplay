@@ -36,12 +36,7 @@ JIVE_HOME
 	NL	Hoofdmenu van Jive
 
 ADVANCED_SETTINGS
-	EN	Advanced Settings
-	DE	Erweiterte Einstellungen
-	ES	Configuración avanzada
-	IT	Impostazioni avanzate
-	FR	Paramètres avancés
-	NL	Geavanceerde instellingen
+	EN	Advanced
 
 FACTORY_TEST
 	EN	Factory Test

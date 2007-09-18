@@ -3,12 +3,12 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 DATETIME_TITLE
-	EN	Date/Time
-	DE	Datum/Zeit
-	ES	Fecha/Hora
-	IT	Data/ora
-	FR	Date/Heure
-	NL	Datum/tijd
+	EN	Date & Time
+	DE	Datum & Zeit
+	ES	Fecha & Hora
+	IT	Data & ora
+	FR	Date & Heure
+	NL	Datum & tijd
 
 DATETIME_TIMEFORMAT
 	EN	Time Format

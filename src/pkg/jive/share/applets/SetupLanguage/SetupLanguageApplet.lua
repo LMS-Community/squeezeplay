@@ -91,7 +91,7 @@ function settingsShow(self, menuItem)
 	log:info("locale currently is ", currentLocale)
 
 	-- setup menu
-	local window = Window("window", self:string("CHOOSE_LANGUAGE"))
+	local window = Window("window", self:string("LANGUAGE"))
 	local menu = SimpleMenu("menu")
 
 	local group = RadioGroup()

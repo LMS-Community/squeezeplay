@@ -12,6 +12,9 @@ CHOOSE_LANGUAGE
 	FR	Choisir une langue
 	NL	Taal kiezen
 
+LANGUAGE
+	EN	Language
+
 LANGUAGE_DE
 	EN	Deutsch
 	DE	Deutsch

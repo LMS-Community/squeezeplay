@@ -49,9 +49,8 @@ function registerApplet(self)
 		sdApplet:pollList(self:getSettings().poll)
 	
 		local remoteSettings = jiveMain:subMenu(self:string("SETTINGS")):subMenu(self:string("REMOTE_SETTINGS"))
-		local advancedSettings = remoteSettings:subMenu(self:string("ADVANCED_SETTINGS"), 1000)
 
-		advancedSettings:addItem(self:menuItem("SLIMSERVER_SERVERS", function(applet, ...) applet:settingsShow(...) end))
+		remoteSettings:addItem(self:menuItem("SLIMSERVER_SERVERS", function(applet, ...) applet:settingsShow(...) end))
 	end
 end
 

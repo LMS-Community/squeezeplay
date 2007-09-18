@@ -36,49 +36,26 @@ SCREENSAVER_DELAY
 	NL	Vertraging
 
 DELAY_10_SEC
-	EN	10 sec
-	DE	10 Sek.
-	ES	10 s
-	IT	10 sec
-	FR	10 sec
-	NL	10 sec
+	EN	10 seconds
+
+DELAY_20_SEC
+	EN	20 seconds
 
 DELAY_30_SEC
-	EN	30 sec
-	DE	30 Sek.
-	ES	30 s
-	IT	30 sec
-	FR	30 sec
-	NL	30 sec
+	EN	30 seconds
 
 DELAY_1_MIN
-	EN	1 min
-	DE	1 Min.
-	ES	1 m
-	IT	1 min
-	FR	1 min
-	NL	1 min
+	EN	1 minute
 
 DELAY_2_MIN
-	EN	2 min
-	DE	2 Min.
-	ES	2 m
-	IT	2 min
-	FR	2 min
-	NL	2 min
+	EN	2 minutes
 
 DELAY_5_MIN
-	EN	5 min
-	DE	5 Min.
-	ES	5 m
-	IT	5 min
-	FR	5 min
-	NL	5 min
+	EN	5 minutes
 
 DELAY_10_MIN
-	EN	10 min
-	DE	10 Min.
-	ES	10 m
-	IT	10 min
-	FR	10 min
-	NL	10 min
+	EN	10 minutes
+
+DELAY_30_MIN
+	EN	30 minutes
+

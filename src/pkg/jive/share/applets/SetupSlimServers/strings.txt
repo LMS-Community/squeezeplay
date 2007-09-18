@@ -4,12 +4,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SLIMSERVER_SERVERS
-	EN	Slimservers
-	DE	Slimservers
-	ES	Servidores SlimServer
-	IT	SlimServer
-	FR	Slimservers
-	NL	Slimservers
+	EN	Music Sources
 
 SLIMSERVER_AUTO_DISCOVERY
 	EN	Auto Discovery
@@ -44,12 +39,12 @@ SLIMSERVER_VERSION
 	NL	Versie:
 
 SLIMSERVER_ADD_SERVER
-	EN	Other Server...
+	EN	Other Server
 	DE	Anderer Server
-	ES	Otro servidor...
-	IT	Altro server...
-	FR	Autres services...
-	NL	Andere server...
+	ES	Otro servidor
+	IT	Altro server
+	FR	Autres services
+	NL	Andere server
 
 SLIMSERVER_HELP
 	EN	Enter the IP address of the computer running SlimServer
