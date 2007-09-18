@@ -1520,7 +1520,7 @@ function notify_jiveMainMenuChanged(self)
 	log:debug("notify_jiveMainMenuChanged")
 	
 	-- fetch the menu, pronto...
-	_server:request(_homeSink, nil, { 'menu', 0, 100 })
+	_server:request(_homeSink, _player.id, { 'menu', 0, 100 })
 end
 
 
