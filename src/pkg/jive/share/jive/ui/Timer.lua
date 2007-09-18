@@ -85,14 +85,20 @@ Stops the timer.
 
 --[[
 
-=head2 jive.ui.Timer:restart()
+=head2 jive.ui.Timer:restart(interval)
 
-Restarts the timer.
+Restarts the timer. Optionally the timer interval can be modified
+to I<interval>, otherwise the interval is unchanged.
 
 =cut
 --]]
-function restart(self)
+function restart(self, interval)
+	assert(interval == nil or type(interval) == "number")
+
 	self:stop()
+	if interval then
+		self.interval = interval
+	end
 	self:start()
 end
 
@@ -101,7 +107,8 @@ end
 
 =head2 jive.ui.Timer:setInterval(interval)
 
-Sets the timers interval to I<interval>.
+Sets the timers interval to I<interval> and restarts the timer if
+it is already running.
 
 =cut
 --]]
@@ -113,6 +120,20 @@ function setInterval(self, interval)
 		self:restart()
 	end
 end
+
+
+--[[
+
+=head2 jive.ui.Timer:isRunning()
+
+Returns true if the timer is running.
+
+=cut
+--]]
+function isRunning(self)
+	return self._timerData ~= nil
+end
+
 
 
 --[[

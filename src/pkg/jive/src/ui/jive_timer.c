@@ -56,7 +56,7 @@ void jive_timer_dispatch_event(lua_State *L, void *param) {
 		return;
 	}
 
-	lua_insert(L, -2);
+	lua_pushvalue(L, -2);
 
 	if (lua_pcall(L, 1, 0, 0) != 0) {
 		fprintf(stderr, "error in timer function:\n\t%s\n", lua_tostring(L, -1));
@@ -65,6 +65,14 @@ void jive_timer_dispatch_event(lua_State *L, void *param) {
 		JIVEL_STACK_CHECK_ASSERT(L);
 		return;
 	}
+
+	lua_getfield(L, -1, "once");
+	if (lua_toboolean(L, -1)) {
+	    lua_pushcfunction(L, &jiveL_timer_remove_timer);
+	    lua_pushvalue(L, -3);
+	    lua_call(L, 1, 0);
+	}
+	lua_pop(L, 2);
 
 	JIVEL_STACK_CHECK_END(L);
 }

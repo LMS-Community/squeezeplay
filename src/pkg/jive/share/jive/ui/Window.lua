@@ -507,6 +507,25 @@ function focusWidget(self, widget)
 end
 
 
+function setAllowScreensaver(self, allowScreensaver)
+	assert(type(allowScreensaver) == "boolean" or type(allowScreensaver) == "function")
+
+	self.allowScreensaver = allowScreensaver
+end
+
+
+function canActivateScreensaver(self)
+	log:warn("allowScreensaver=", self.allowScreensaver)
+	if self.allowScreensaver == nil then
+		return true
+	elseif self.allowScreensaver == "function" then
+		return self.allowScreensaver()
+	else
+		return self.allowScreensaver
+	end
+end
+
+
 function __tostring(self)
 	if self.title then
 		return "Window(" .. tostring(self.title:getValue()) .. ")"

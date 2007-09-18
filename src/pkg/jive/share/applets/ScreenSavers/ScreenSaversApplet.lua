@@ -45,8 +45,10 @@ local EVENT_MOTION     = jive.ui.EVENT_MOTION
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
 local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
-local KEY_PLAY         = jive.ui.KEY_PLAY
+local EVENT_WINDOW_INACTIVE = jive.ui.EVENT_WINDOW_INACTIVE
 local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
+local KEY_PLAY         = jive.ui.KEY_PLAY
+local KEY_GO           = jive.ui.KEY_GO
 
 
 module(...)
@@ -59,15 +61,16 @@ function init(self, ...)
 	self.screensaverSettings = {}
 	self:addScreenSaver("None", nil, nil)
 
-	local timeout = self:getSettings()["timeout"]
-	self.timer = Timer(timeout, function() self:_activate() end, true)
+	self.timeout = self:getSettings()["timeout"]
+
+	self.timer = Timer(self.timeout, function() self:_activate() end, true)
 	self.timer:start()
 
 	-- listener to restart screensaver timer
 	Framework:addListener(
 		EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_MOTION,
 		function(event)
-			self.timer:restart()
+			self.timer:restart(self.timeout)
 
 			-- allow active screensaver to process events if
 			-- it is on top of the window stack
@@ -76,6 +79,13 @@ function init(self, ...)
 
 				if r == EVENT_UNUSED and self.active then
 					self.active:hide(Window.transitionNone)
+				end
+
+				-- Go should close the screensaver, and not
+				-- perform an action
+				if event:getType() == EVENT_KEY_PRESS and
+					event:getKeycode() == KEY_GO then
+					return EVENT_CONSUME
 				end
 				return r
 			end
@@ -107,6 +117,20 @@ end
 --screensaver set for the current mode is activated.
 function _activate(self, the_screensaver)
 	log:debug("Screensaver activate")
+
+	-- check if the top window will allow screensavers, if not then
+	-- set the screensaver to activate 10 seconds after the window
+	-- is closed, assuming we still don't have any activity
+	if not Framework.windowStack[1]:canActivateScreensaver() then
+		Framework.windowStack[1]:addListener(
+			EVENT_WINDOW_INACTIVE,
+			function()
+				if not self.timer:isRunning() then
+					self.timer:restart(10000)
+				end
+			end)
+		return
+	end
 
 	if the_screensaver == nil then
 		local sd = AppletManager:getAppletInstance("SlimDiscovery")
@@ -159,7 +183,9 @@ end
 
 function setTimeout(self, timeout)
 	self:getSettings()["timeout"] = timeout
-	self.timer:setInterval(timeout)
+
+	self.timeout = timeout
+	self.timer:setInterval(self.timeout)
 end
 
 
