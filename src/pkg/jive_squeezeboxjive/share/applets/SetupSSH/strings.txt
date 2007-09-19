@@ -4,12 +4,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SSH
-	EN	SSH
-	DE	SSH
-	ES	SSH
-	IT	SSH
-	FR	SSH
-	NL	SSH
+	EN	Remote Login
 
 SSH_ENABLE
 	EN	Enable SSH
