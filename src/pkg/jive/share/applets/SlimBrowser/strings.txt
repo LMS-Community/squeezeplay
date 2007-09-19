@@ -11,6 +11,12 @@ SLIMBROWSER_NOW_PLAYING
 	FR	Lecture en cours
 	NL	Speelt nu
 
+SLIMBROWSER_PAUSED
+	EN	Paused
+
+SLIMBROWSER_STOPPED
+	EN	Stopped
+
 SLIMBROWSER_SEARCH_HELP
 	EN	Use the scroll wheel to change letters, then press the center button to select that letter. Press the center button again to start your search.
 	DE	Wählen Sie den gewünschten Buchstaben mit dem Rad und drücken Sie zum Bestätigen die Mitteltaste. Drücken Sie zum Starten der Suche die Mitteltaste erneut.

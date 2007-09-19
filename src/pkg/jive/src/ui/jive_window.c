@@ -96,6 +96,46 @@ int jiveL_window_prepare(lua_State *L) {
 	return 0;
 }
 
+int jiveL_window_dolayout(lua_State *L) {
+	/* stack is:
+	 * 1: widget
+	 * 2: layoutCount
+	 */
+
+	lua_getfield(L, 1, "windowCount");
+	if (lua_equal(L, -1, 2) == 0) {
+		lua_pushcfunction(L, jiveL_widget_dolayout);
+		lua_pushvalue(L, 1);
+		lua_call(L, 1, 0);
+
+		lua_pushvalue(L, 2);
+		lua_setfield(L, 1, "windowCount");
+	}
+
+	return 0;
+}
+
+int jiveL_popup_dolayout(lua_State *L) {
+	/* stack is:
+	 * 1: widget
+	 * 2: layoutCount
+	 */
+
+	if (jive_getmethod(L, 1, "getLowerWindow")) {
+		lua_pushvalue(L, 1);
+		lua_call(L, 1, 1);
+
+		if (!lua_isnil(L, -1)) {
+			lua_pushcfunction(L, jiveL_window_dolayout);
+			lua_pushvalue(L, -2);
+			lua_pushvalue(L, 2);
+			lua_call(L, 2, 0);
+		}
+	}
+
+	return jiveL_window_dolayout(L);
+}
+
 
 int jiveL_window_iterate(lua_State *L) {
 	/* stack is:

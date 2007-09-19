@@ -369,18 +369,11 @@ int jiveL_update_screen(lua_State *L) {
 	if (perfwarn.screen) t0 = SDL_GetTicks();
 
 	/* Layout window and widgets */
-	lua_getfield(L, -1, "windowCount");
-	lua_getfield(L, 1, "layoutCount");
-	if (lua_equal(L, -1, -2) == 0) {
-		if (jive_getmethod(L, -3, "doLayout")) {
-			lua_pushvalue(L, -4);
-			lua_call(L, 1, 0);
-		}
-
-		lua_pushvalue(L, -1);
-		lua_setfield(L, -4, "windowCount");
+	if (jive_getmethod(L, -1, "doLayout")) {
+		lua_pushvalue(L, -2);
+		lua_getfield(L, 1, "layoutCount");
+		lua_call(L, 2, 0);
 	}
-	lua_pop(L, 2);
 
 
 	/* Draw screen */
@@ -1150,6 +1143,7 @@ static const struct luaL_Reg widget_methods[] = {
 static const struct luaL_Reg window_methods[] = {
 	{ "_skin", jiveL_window_skin },
 	{ "_prepare", jiveL_window_prepare },
+	{ "doLayout", jiveL_widget_dolayout },
 	{ "iterate", jiveL_window_iterate },
 	{ "draw", jiveL_window_draw },
 	{ "_eventHandler", jiveL_window_event_handler },
@@ -1159,6 +1153,7 @@ static const struct luaL_Reg window_methods[] = {
 static const struct luaL_Reg popup_methods[] = {
 	{ "_skin", jiveL_window_skin },
 	{ "_prepare", jiveL_window_prepare },
+	{ "doLayout", jiveL_popup_dolayout },
 	{ "iterate", jiveL_popup_iterate },
 	{ "draw", jiveL_popup_draw },
 	{ "_eventHandler", jiveL_window_event_handler },

@@ -675,6 +675,14 @@ local function _statusSink(step, chunk, err)
 			debug.dump(data, 8)
 		end
 		
+		if data.mode == "play" then
+			step.window:setTitle(_string("SLIMBROWSER_NOW_PLAYING"))
+		elseif data.mode == "pause" then
+			step.window:setTitle(_string("SLIMBROWSER_PAUSED"))
+		elseif data.mode == "stop" then
+			step.window:setTitle(_string("SLIMBROWSER_STOPPED"))
+		end
+
 		-- stuff from the player is just json.result
 		-- stuff from our completion calls below will be full json
 		-- adapt
