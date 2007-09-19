@@ -1229,6 +1229,10 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		
 		window:addWidget(input)
 
+	-- special case for sending over textArea
+	elseif item and item['textArea'] then
+		local textArea = Textarea("textarea", item['textArea'])
+		window:addWidget(textArea)
 	else
 	
 		-- create a cozy place for our items...
