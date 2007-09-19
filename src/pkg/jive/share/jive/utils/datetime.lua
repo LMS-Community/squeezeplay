@@ -47,9 +47,6 @@ local globalTimeZone = "GMT"
 
 local timeSet = false
 
-local TimeFormatAMPM = "%I:%M%p"
-local TimeFormat24 = "%H:%M"
-
 local DateFormats = {
 	"%A %d %B %Y",
 	"%A %d. %B %Y",
@@ -324,9 +321,9 @@ function getCurrentTime()
 	end
 
 	if globalHours == "24" then
-		return os.date(TimeFormat24)		
+		return os.date("%I:%M%p")		
 	else
-		local str = os.date(TimeFormatAMPM)
+		local str = os.date("%H:%M")
 
 		-- replace leading 0 with space
 		str = string.gsub(str, "^0", " ", 1)

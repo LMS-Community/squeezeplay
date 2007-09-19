@@ -1,3 +1,5 @@
+
+local collectgarbage = collectgarbage
 local pairs, ipairs, tostring = pairs, ipairs, tostring
 local tonumber = tonumber
 
@@ -171,62 +173,20 @@ function Analog:__init(window, preset)
 	obj.clockhighlight = Surface:loadImage("applets/Clock/" .. preset.HighlightImage)
 	obj.bgcolor = preset.BackgroundColor
 
+	obj.clock_format = "%H:%M"
 	obj.oldtime = ""
-
-	--obj:_setupHighlight()
 
 	return obj
 end
-
---[[
--- Dynamic Highlight is replaced by images
---
-function Analog:_setupHighlight()
-
-	local w = 240
-	local h = 240
-	local hlbg = Surface:newRGBA(w, h)
-
-	-- Kill Alpha Channel
-	local c = self.color >> 1
-	c = c << 1
-	c = c + 0x30
-
-
-	local r = h/3
-	
-	local cycle  = (0xFF - 0x30) / (r - 5)
-
-	local STEP = 2 
-	while r > 5 do
-
-		hlbg:filledCircle(w/2, h/2, r, c)
-
-		log:info("R: " .. (c&0xFF000000) >> 24)
-		log:info("G: " .. (c&0x00FF0000) >> 16)
-		log:info("B: " .. (c&0x0000FF00) >> 8)
-		log:info("Alpha: " .. c & 0xFF)
-
-		r = r - STEP
-		c = c + (cycle*STEP) 
-		c = math.floor(c)
-	end
-
-	self.clockhighlight = hlbg	
-end
-]]--
 
 
 function Analog:Draw(force)
 
 	local theTime = os.date(self.clock_format)
-	if theTime != self.oldtime or (force != nil and force == true) then
-
+	if theTime != self.oldtime or force then
 		self.oldtime = theTime
 
 		-- Draw Background
-		local bgImage = Framework:getBackground()
-		bgImage:blit(self.bg, 0, 0)
 		self.bg:filledRectangle(0, 0, self.screen_width, self.screen_height, self.bgcolor)
 
 		local x, y
@@ -245,7 +205,7 @@ function Analog:Draw(force)
 
 		-- Setup Time Objects
 		local m = os.date("%M")
-		local h = os.date("%l")
+		local h = os.date("%I")
 
 		-- Minute Pointer
 		local angle = (360 / 60) * m
@@ -265,7 +225,7 @@ function Analog:Draw(force)
 		y = math.floor((self.screen_height/2) - (faceh/2))
 		tmp:blit(self.bg, x, y)
 
-		Framework:reDraw(nil)
+		self.bgicon:reDraw()
 	end
 
 end
@@ -288,7 +248,7 @@ function DigitalSimple:__init(window, preset, ampm)
 	obj.show_ampm = ampm
 
 	if ampm then 
-		obj.clock_format = "%l:%M"
+		obj.clock_format = "%I:%M"
 	else
 		obj.clock_format = "%H:%M"
 	end
@@ -299,8 +259,7 @@ end
 function DigitalSimple:Draw(force)
 	local theTime = os.date(self.clock_format)
 
-	if theTime != self.oldtime or (force != nil and force == true) then
-
+	if theTime != self.oldtime or force then
 		self.oldtime = theTime
 
 		local timeSrf = Surface:drawText(self.font, self.color, theTime)	
@@ -325,8 +284,7 @@ function DigitalSimple:Draw(force)
 
 		local y = math.floor((self.screen_height/2) - (th/2))
 
-		local bgImage = Framework:getBackground()
-		bgImage:blit(self.bg, 0, 0)
+		-- draw background
 		self.bg:filledRectangle(0, 0, self.screen_width, self.screen_height, self.bgcolor)
 		timeSrf:blit(self.bg, x, y)
 
@@ -344,7 +302,7 @@ function DigitalSimple:Draw(force)
 
 		dateSrf:blit(self.bg, x, self.screen_height - th*3)
 
-		Framework:reDraw(nil)
+		self.bgicon:reDraw()
 	end
 end
 
@@ -359,13 +317,11 @@ function DigitalStyled:__init(window, preset, ampm)
 	obj.bgcolor = preset.Background
 	obj.font = Font:load("fonts/04B_24__.TTF", preset.FontSize)
 
-	-- obj.smallfont = Font:load("fonts/Digital.ttf", 40)
-
 	obj.oldtime = ""
 	obj.show_ampm = ampm
 
 	if ampm then
-		obj.clock_format_hour = "%l"
+		obj.clock_format_hour = "%I"
 	else
 		obj.clock_format_hour = "%H"
 	end
@@ -377,8 +333,7 @@ end
 function DigitalStyled:Draw(force)
 	local theTime = os.date("%H:%M")
 
-	if theTime != self.oldtime or (force != nil and force == true) then
-
+	if theTime != self.oldtime or force then
 		self.oldtime = theTime
 
 		theTime = os.date(self.clock_format_hour)
@@ -401,8 +356,7 @@ function DigitalStyled:Draw(force)
 		local x = math.floor((self.screen_width/2) - (tw/2))
 		local y = math.floor((self.screen_height/2) - (th))
 
-		local bgImage = Framework:getBackground()
-		bgImage:blit(self.bg, 0, 0)
+		-- draw background
 		self.bg:filledRectangle(0, 0, self.screen_width, self.screen_height, self.bgcolor)
 		timeSrfHour:blit(self.bg, x, y)
 		timeSrfMin:blit(self.bg, x, y+th)
@@ -416,7 +370,7 @@ function DigitalStyled:Draw(force)
 			timeSrfAmPm:blit(self.bg, x+tw+5, y+th+offset)
 		end
 
-		Framework:reDraw(nil)
+		self.bgicon:reDraw()
 	end
 end
 
@@ -455,7 +409,7 @@ function DigitalDetailed:__init(window, preset, ampm, firstday)
 	obj.show_ampm = ampm
 
 	if ampm then 
-		obj.clock_format = "%l:%M"
+		obj.clock_format = "%I:%M"
 	else
 		obj.clock_format = "%H:%M"
 	end
@@ -511,7 +465,7 @@ function DigitalDetailed:DrawAMPMTime(x, y, bw, bh)
 		local colonSrf = Surface:drawText(self.mainfont, self.mainfont_color, ":")
 
 		-- Draw Hour
-		local theHour = os.date("%l")
+		local theHour = os.date("%I")
 
 		local hourSrf = Surface:drawText(self.mainfont, self.mainfont_color, theHour)
 		local hw, hh = hourSrf:getSize()
@@ -552,7 +506,7 @@ function DigitalDetailed:Draw24HTime(x, y, bw, bh)
 	local colonSrf = Surface:drawText(self.mainfont, self.mainfont_color, ":")
 
 	-- Draw Hour
-	local theHour = os.date("%H")
+	local theHour = string.gsub(os.date("%H"), "^0", " ", 1)
 
 	local hourSrf = Surface:drawText(self.mainfont, self.mainfont_color, theHour)
 	local hw, hh = hourSrf:getSize()
@@ -576,13 +530,10 @@ end
 function DigitalDetailed:Draw(force)
 	local theTime = os.date("%H:%M:%S")
 
-	if theTime != self.oldtime or (force != nil and force == true) then
-
+	if theTime != self.oldtime or force then
 		self.oldtime = theTime
 
 		-- Draw Background
-		local bgImage = Framework:getBackground()
-		bgImage:blit(self.bg, 0, 0)
 		self.bg:filledRectangle(0, 0, self.screen_width, self.screen_height, self.bgcolor)
 
 		local x,y
@@ -614,7 +565,7 @@ function DigitalDetailed:Draw(force)
 	
 		dateSrf:blit(self.bg, x + ((bw/2) - (dw/2)), y + DATEY)
 
-		Framework:reDraw(nil)
+		self.bgicon:reDraw()
 	end
 end
 	
