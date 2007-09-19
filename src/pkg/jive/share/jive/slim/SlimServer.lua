@@ -29,7 +29,7 @@ Notifications:
 --]]
 
 -- our stuff
-local assert, tostring, type = assert, tostring, type
+local assert, tostring, type, tonumber = assert, tostring, type, tonumber
 local pairs, ipairs, setmetatable = pairs, ipairs, setmetatable
 
 local os          = require("os")
@@ -193,7 +193,7 @@ function _serverstatusSink(self, event, err)
 		selfPlayers[k] = k
 	end
 	
-	if data["player count"] > 0 then
+	if tonumber(data["player count"]) > 0 then
 
 		for i, player_info in ipairs(serverPlayers) do
 	
