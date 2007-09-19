@@ -96,6 +96,7 @@
 		<pre>
 {
     text = "..."
+    textArea = "..."
     icon-id = ...
     icon = "..."
     radio = val
@@ -119,6 +120,9 @@
 	<blockquote>
 		<p><strong><code>text</code></strong><br>
 		Menu item text. May contain \n, in which case the item is displayed on multiple lines</p>
+
+		<p><code>textArea</code><br>
+		If the window is to contain a (fullscreen) textArea window, the string can be sent via this item. Title bar will be given by the 'text' item. All other item_fields are unused when using textArea.
 
 		<p><code>icon-id</code><br>
 		SlimServer artwork id. Will be fetched using a separate http request to SS using the well known URL. The size is defined by the style. <code>icon-id</code> has precedence over <code>icon</code> (defined below)</p>
@@ -488,6 +492,12 @@
 	<p>For example, the hierarchy [genres, artist, album] is done using a top level menu with command "genres menu:artist", that generates items with commands "artists menu:albums", etc... This is done in order to re-use the code of these queries. Experience shows they are high maintenance.</p>
 
 	<h2 id="rev">Revision history</h2>
+
+	<h3>1.5</h3>
+
+	<ul>
+		<li>Add textArea item_field option</li>
+	</ul>
 
 	<h3>1.4</h3>
 
