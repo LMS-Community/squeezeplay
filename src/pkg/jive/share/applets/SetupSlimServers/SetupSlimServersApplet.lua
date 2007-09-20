@@ -36,6 +36,7 @@ local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
 local Textarea      = require("jive.ui.Textarea")
 local Textinput     = require("jive.ui.Textinput")
+local Popup         = require("jive.ui.Popup")
 
 local log           = require("jive.utils.log").logger("applets.setup")
 
@@ -95,6 +96,14 @@ function settingsShow(self, menuItem)
 	}
 	menu:addItem(item)
 
+	item = {
+		text = self:string("SLIMSERVER_SQUEEZENETWORK"), 
+		callback = function(event, menuItem)
+				   self:_connectSqueezeNetwork(menuItem)
+			   end,
+		weight = 3
+	}
+	menu:addItem(item)
 
 	item = {
 		text = self:string("SLIMSERVER_AUTO_DISCOVERY"),
@@ -108,7 +117,7 @@ function settingsShow(self, menuItem)
 				end,
 				poll["255.255.255.255"] ~= nil
 			),
-		weight = 3
+		weight = 4 
 	}
 	menu:addItem(item)
 
@@ -252,6 +261,16 @@ function _addServer(self, menuItem)
 	self:tieAndShowWindow(window)
 end
 
+-- Connect to SqueezeNetwork
+function _connectSqueezeNetwork(self, menuItem)
+	local popup = Popup("popup", menuItem.text)
+
+        local text = Textarea("textarea", "          Coming Soon...\n\n")
+        popup:addWidget(text)
+
+        self:tieAndShowWindow(popup)
+        return popup	
+end
 
 --[[
 

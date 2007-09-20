@@ -46,6 +46,9 @@ SLIMSERVER_ADD_SERVER
 	FR	Autres services
 	NL	Andere server
 
+SLIMSERVER_SQUEEZENETWORK
+	EN	SqueezeNetwork
+
 SLIMSERVER_HELP
 	EN	Enter the IP address of the computer running SlimServer
 	DE	IP-Adresse des Computers mit SlimServer eingeben
