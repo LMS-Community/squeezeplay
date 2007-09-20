@@ -88,6 +88,16 @@ function forceUpgrade(self)
 			     })
 	end
 
+	if lfs.attributes("/mnt/mmc/jive.bin", "mode") == "file" then
+		menu:addItem({
+				     text = self:string("UPDATE_CONTINUE_SDCARD"),
+				     callback = function()
+							self.url = "file:/mnt/mmc/jive.bin"
+							self:_upgrade()
+						end
+			     })
+	end
+
 	local help = Textarea("help", self:string("UPDATE_BEGIN_HELP"))
 	window:addWidget(help)
 	window:addWidget(menu)
