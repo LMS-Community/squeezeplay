@@ -482,7 +482,7 @@ end
 
 function request(self, func, playerid, request)
 	if log:isDebug() then
-		log:debug("Comet:request(", func, ", ", playerid, ", ", table.concat(request, ","), ")")
+		log:debug("Comet:request(", func, ", reqid:", self.reqid, ", ", playerid, ", ", table.concat(request, ","), ")")
 	end
 	
 	if not self.active then
