@@ -255,7 +255,7 @@ _getEventSink = function(self)
 						self.active   = true
 						self.failures = 0
 					else
-						log:debug("Comet:_getEventSink, connect failed: ", event.error)
+						log:warn("Comet:_getEventSink, connect failed: ", event.error)
 						_handleAdvice(self)
 						break
 					end
@@ -265,7 +265,7 @@ _getEventSink = function(self)
 						self.active   = true
 						self.failures = 0
 					else
-						log:debug("Comet:_getEventSink, reconnect failed: ", event.error)
+						log:warn("Comet:_getEventSink, reconnect failed: ", event.error)
 						_handleAdvice(self)
 						break
 					end
