@@ -58,7 +58,7 @@ local log           = require("jive.utils.log").logger("net.comet")
 
 -- times are in ms
 local RETRY_DEFAULT = 5000  -- default delay time to retry connection
-local SUB_DELAY     = 100   -- how long to wait before sending subscription requests
+local SUB_DELAY     = 1000  -- how long to wait before sending subscription requests
 local UNSUB_DELAY   = 3000  -- how long to wait before sending unsubscription requests
 
 -- jive.net.Comet is a subclass of jive.net.SocketHttp
@@ -598,6 +598,8 @@ _getRequestSink = function(self, func, reqid)
 		-- on error, print something...
 		if err then
 			log:warn("Comet:request error: ", err)
+			
+			-- XXX: need to handle this error by retrying the failed request?
 		end
 		-- if we have data
 		if chunk then
