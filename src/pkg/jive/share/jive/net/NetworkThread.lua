@@ -29,10 +29,11 @@ FIXME: Subscribe description
 
 
 -- stuff we use
-local tostring, table, ipairs, pairs, pcall, type  = tostring, table, ipairs, pairs, pcall, type
+local assert, tostring, table, ipairs, pairs, pcall, type  = assert, tostring, table, ipairs, pairs, pcall, type
 
 local thread            = require("thread")
 local socket            = require("socket")
+local debug             = require("debug")
 local oo                = require("loop.base")
 
 local queue             = require("jive.utils.queue")
@@ -57,6 +58,8 @@ local QUEUE_PROCESS     = 5    -- number of queue items processed by loop (netwo
 -- adds a socket to the read or write list
 local function _add(sock, pump, sockList)
 --	log:debug("_add(", sock, ", ", pump, ")")
+
+	assert(pump, debug.traceback())
 	
 	if not sock then 
 		return
@@ -145,7 +148,16 @@ local function _t_select(self)
 		
 		-- call the read pumps
 		for i,v in ipairs(r) do
-			self.t_readSocks[v]()
+			-- debug to track pump error
+			if self.t_readSocks[v] == nil then
+				log:error("readSocks pump is nil for ", v)
+				log:error("readSocks is:")
+				for a,b in pairs(self.t_readSocks) do
+				log:error("\t", a, " = ", b)
+				end
+			else
+				self.t_readSocks[v]()
+			end
 		end
 	end
 end
