@@ -62,6 +62,10 @@ local EVENT_ACTION           = jive.ui.EVENT_ACTION
 local EVENT_FOCUS_GAINED     = jive.ui.EVENT_FOCUS_GAINED
 local EVENT_FOCUS_LOST       = jive.ui.EVENT_FOCUS_LOST
 local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
+local EVENT_WINDOW_INACTIVE  = jive.ui.EVENT_WINDOW_INACTIVE
+local EVENT_WINDOW_ACTIVE    = jive.ui.EVENT_WINDOW_ACTIVE
+local EVENT_HIDE             = jive.ui.EVENT_HIDE
+local EVENT_SHOW             = jive.ui.EVENT_SHOW
 local KEY_FWD                = jive.ui.KEY_FWD
 local KEY_REW                = jive.ui.KEY_REW
 local KEY_HOME               = jive.ui.KEY_HOME
@@ -1329,6 +1333,13 @@ local function _replaceJiveHome(window)
 	-- switch out the standard home menu, and replace with our window
 	_jiveHomeWindow = Framework.windowStack[#Framework.windowStack]
 	Framework.windowStack[#Framework.windowStack] = window
+
+	-- keep the window state updated
+	window:dispatchNewEvent(EVENT_WINDOW_ACTIVE)
+	window:dispatchNewEvent(EVENT_SHOW)
+
+	_jiveHomeWindow:dispatchNewEvent(EVENT_HIDE)
+	_jiveHomeWindow:dispatchNewEvent(EVENT_WINDOW_INACTIVE)
 end
 
 
@@ -1340,6 +1351,11 @@ local function _restoreJiveHome()
 	if _jiveHomeWindow then
 		local window = Framework.windowStack[#Framework.windowStack]
 		Framework.windowStack[#Framework.windowStack] = _jiveHomeWindow
+
+		-- keep the window state updated
+		_jiveHomeWindow:dispatchNewEvent(EVENT_WINDOW_ACTIVE)
+		_jiveHomeWindow:dispatchNewEvent(EVENT_SHOW)
+
 		window:hide()
 		_jiveHomeWindow = false
 	end
