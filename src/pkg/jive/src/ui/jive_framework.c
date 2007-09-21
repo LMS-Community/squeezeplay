@@ -10,6 +10,7 @@
 
 
 int (*jive_sdlevent_handler)(lua_State *L, SDL_Event *event, JiveEvent *jevent);
+int (*jive_sdlevent_pump)(lua_State *L);
 
 char *jive_resource_path = NULL;
 
@@ -311,9 +312,12 @@ static int jiveL_process_events(lua_State *L) {
 			}
 		}
 
+		/* only pump events once per frame */
+		SDL_PumpEvents();
+
 		do {
 			SDL_Event event;
-			if (SDL_PollEvent(&event)) {
+			if (SDL_PeepEvents(&event, 1, SDL_GETEVENT, SDL_ALLEVENTS) > 0 ) {
 				r |= process_event(L, &event);
 			}
 			else {
