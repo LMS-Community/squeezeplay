@@ -56,7 +56,10 @@ local Timer         = require("jive.ui.Timer")
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("net.comet")
 
-local RETRY_DEFAULT = 5000
+-- times are in ms
+local RETRY_DEFAULT = 5000  -- default delay time to retry connection
+local SUB_DELAY     = 100   -- how long to wait before sending subscription requests
+local UNSUB_DELAY   = 3000  -- how long to wait before sending unsubscription requests
 
 -- jive.net.Comet is a subclass of jive.net.SocketHttp
 module(...)
@@ -101,13 +104,13 @@ function __init(self, jnt, jpool, ip, port, path, name)
 end
 
 -- forward declarations
+local _addPendingRequests
 local _connect
 local _getEventSink
 local _handleAdvice
 local _handshake
 local _getHandshakeSink
 local _getRequestSink
-local _getUnsubscribeSink
 local _reconnect
 
 function start(self)
@@ -124,6 +127,75 @@ function notify_networkConnected(self)
 	end
 end
 
+_addPendingRequests = function(self, data)
+	-- Add any pending subscription requests
+	for i, v in ipairs( self.subs ) do
+		if v.pending then
+			-- really hating the lack of true arrays!
+			local cmd = {}
+			cmd[1] = v.playerid or ''
+			cmd[2] = v.request
+	
+			local sub = {
+				channel      = '/meta/subscribe',
+				clientId     = self.clientId,
+				subscription = v.subscription,
+				ext          = {
+					['slim.request'] = cmd
+				},
+			}
+			
+			-- remove pending status from this sub
+			v.pending = nil
+	
+			table.insert( data, sub )
+		end
+	end
+
+	-- Add pending unsubscribe requests
+	for i, v in ipairs( self.pending_unsubs ) do
+		local unsub = {
+			channel      = '/meta/unsubscribe',
+			clientId     = self.clientId,
+			subscription = v,
+		}
+	
+		table.insert( data, unsub )
+	end
+
+	-- Clear pending unsubs
+	self.pending_unsubs = {}
+
+	-- Add pending non-subscription requests
+	for i, v in ipairs( self.pending_reqs ) do
+		-- really hating the lack of true arrays!
+		local cmd = {}
+		cmd[1] = v.playerid or ''
+		cmd[2] = v.request
+	
+		local req = {
+			channel      = '/slim/request',
+			clientId     = self.clientId,
+			id           = v.reqid,
+			data         = cmd
+		}
+	
+		table.insert( data, req )
+	
+		-- Store this request's callback
+		local subscription = '/slim/request|' .. v.reqid
+		if not self.notify[subscription] then
+			self.notify[subscription] = {}
+		end
+		self.notify[subscription][v.func] = v.func
+	end
+
+	-- Clear out pending requests
+	self.pending_reqs = {}
+	
+	return
+end
+
 _connect = function(self)
 	log:debug('Comet:_connect()')
 	
@@ -133,65 +205,8 @@ _connect = function(self)
 		connectionType = 'streaming',
 	} }
 	
-	-- Add any pending subscription requests
-	for i, v in ipairs( self.subs ) do
-		-- really hating the lack of true arrays!
-		local cmd = {}
-		cmd[1] = v.playerid or ''
-		cmd[2] = v.request
-		
-		local sub = {
-			channel      = '/meta/subscribe',
-			clientId     = self.clientId,
-			subscription = v.subscription,
-			ext          = {
-				['slim.request'] = cmd
-			},
-		}
-		
-		table.insert( data, sub )
-	end
-	
-	-- Add pending unsubscribe requests
-	for i, v in ipairs( self.pending_unsubs ) do
-		local unsub = {
-			channel      = '/meta/unsubscribe',
-			clientId     = self.clientId,
-			subscription = v,
-		}
-		
-		table.insert( data, unsub )
-	end
-	
-	-- Clear pending unsubs
-	self.pending_unsubs = {}
-	
-	-- Add pending non-subscription requests
-	for i, v in ipairs( self.pending_reqs ) do
-		-- really hating the lack of true arrays!
-		local cmd = {}
-		cmd[1] = v.playerid or ''
-		cmd[2] = v.request
-		
-		local req = {
-			channel      = '/slim/request',
-			clientId     = self.clientId,
-			id           = v.reqid,
-			data         = cmd
-		}
-		
-		table.insert( data, req )
-		
-		-- Store this request's callback
-		local subscription = '/slim/request|' .. self.reqid
-		if not self.notify[subscription] then
-			self.notify[subscription] = {}
-		end
-		self.notify[subscription][v.func] = v.func
-	end
-	
-	-- Clear out pending requests
-	self.pending_reqs = {}
+	-- Add any other pending requests to the outgoing data
+	_addPendingRequests( self, data )
 	
 	local options = {
 		headers = {
@@ -260,6 +275,12 @@ _getEventSink = function(self)
 					else
 						log:warn("Comet:_getEventSink, subscription failed for ", event.subscription, ": ", event.error)
 					end
+				elseif event.channel == '/meta/unsubscribe' then
+					if event.successful then
+						log:debug("Comet:_getEventSink, unsubscribe OK for ", event.subscription)
+					else
+						log:warn("Comet:_getEventSink, unsubscribe error: ", event.error)
+					end
 				elseif event.channel then
 					local subscription    = event.channel
 					local onetime_request = false
@@ -282,7 +303,9 @@ _getEventSink = function(self)
 							self.notify[subscription] = nil
 						end
 					else
-						log:warn("Comet:_getEventSink, got data for an event we aren't subscribed to! -> ", subscription)
+						-- this is normal, since unsub's are delayed by a few seconds, we may receive events
+						-- after we unsubscribed but before the server is notified about it
+						log:debug("Comet:_getEventSink, got data for an event we aren't subscribed to, ignoring -> ", subscription)
 					end
 				else
 					log:warn("Comet:_getEventSink, unknown error: ", event.error)
@@ -372,37 +395,51 @@ function subscribe(self, subscription, func, playerid, request)
 		subscription = subscription,
 		playerid     = playerid,
 		request      = request,
+		pending      = true, -- pending means we haven't send this sub request yet
 	} )
 	
-	if self.active then
-		-- send subscription request on a pool connection
-		local cmd = {}
-		cmd[1] = playerid or ''
-		cmd[2] = request
-		
-		local data = { {
-			channel      = '/meta/subscribe',
-			clientId     = self.clientId,
-			subscription = subscription,
-			ext          = {
-				['slim.request'] = cmd
-			},
-		} }
+	if self.active and not self.sub_timer then
+		-- batch subscription requests on a short timer
+		self.sub_timer = Timer(
+			SUB_DELAY,
+			function()
+				self.sub_timer = nil
+				
+				if self.active then
+					-- add all pending unsub requests, and any others we need to send
+					local data = {}
+					_addPendingRequests(self, data)
+					
+					-- Only continue if we have some data to send
+					if data[1] then
+						if log:isDebug() then
+							log:debug("Sending pending subscribe request(s):")
+							debug.dump(data, 5)
+						end
+				
+						local options = {
+							headers = {
+								['Content-Type'] = 'text/json',
+							}
+						}
 
-		local options = {
-			headers = {
-				['Content-Type'] = 'text/json',
-			}
-		}
-		
-		local req = CometRequest(
-			_getEventSink(self),
-			self.uri,
-			data,
-			options
+						local req = CometRequest(
+							_getEventSink(self),
+							self.uri,
+							data,
+							options
+						)
+				
+						self.jpool:queuePriority(req)
+					end
+				end
+			end,
+			true -- run timer only once
 		)
 		
-		self.jpool:queuePriority(req)
+		log:debug("Comet:subscribe: delaying subscribe requests for ", SUB_DELAY / 1000, " seconds")
+		
+		self.sub_timer:start()
 	end
 end
 
@@ -429,53 +466,53 @@ function unsubscribe(self, subscription, func)
 				break
 			end
 		end
-	
-		if not self.active then
-			table.insert( self.pending_unsubs, subscription )
-		else
-			local data = { {
-				channel      = '/meta/unsubscribe',
-				clientId     = self.clientId,
-				subscription = subscription
-			} }
-	
-			local options = {
-				headers = {
-					['Content-Type'] = 'text/json',
-				}
-			}
 		
-			local req = CometRequest(
-				_getUnsubscribeSink(self),
-				self.uri,
-				data,
-				options
-			)
-	
-			self.jpool:queuePriority(req)
-		end
-	end
-end
+		-- Unsub requests are always batched and sent after a short delay
+		table.insert( self.pending_unsubs, subscription )
+		
+		if self.active and not self.unsub_timer then
+			-- Send unsub requests in 3 seconds
+			self.unsub_timer = Timer(
+				UNSUB_DELAY,
+				function()
+					self.unsub_timer = nil
+					
+					if self.active and self.pending_unsubs then
+						-- add all pending unsub requests, and any others we need to send
+						local data = {}
+						_addPendingRequests(self, data)
+						
+						-- Only continue if we have stuff to send
+						if data[1] then
+							if log:isDebug() then
+								log:debug("Sending pending unsubscribe request(s):")
+								debug.dump(data, 5)
+							end
+					
+							local options = {
+								headers = {
+									['Content-Type'] = 'text/json',
+								}
+							}
 
-_getUnsubscribeSink = function(self)
-	return function(chunk, err)
-		-- on error, print something...
-		if err then
-			log:warn("Comet:unsubscribe error: ", err)
-		end
-		-- if we have data
-		if chunk then
-			local data = chunk[1]
+							local req = CometRequest(
+								_getEventSink(self),
+								self.uri,
+								data,
+								options
+							)
+
+							-- unsubscribe doesn't need to be high priority						
+							self.jpool:queue(req)
+						end
+					end
+				end,
+				true -- run timer only once
+			)
 			
-			if data.advice then
-				self.advice = data.advice
-			end
+			log:debug("Comet:unsubscribe: delaying unsubscribe requests for ", UNSUB_DELAY / 1000, " seconds")
 			
-			if data.successful then
-				log:debug("Comet:unsubscribe OK for ", data.subscription)
-			else
-				log:warn("Comet:unsubscribe error: ", data.error)
-			end
+			self.unsub_timer:start()
 		end
 	end
 end
