@@ -368,7 +368,8 @@ int jiveL_set_update_screen(lua_State *L) {
 
 int jiveL_update_screen(lua_State *L) {
 	JiveSurface *srf;
-	Uint32 t0 = 0, t1 = 0, t2 = 0, t3 = 0, t4 = 0;
+	Uint32 t0 = 0, t1 = 0, t2 = 0, t3 = 0, t4 = 0, t5 = 0;
+	clock_t c0 = 0, c1 = 0;
 
 	JIVEL_STACK_CHECK_BEGIN(L);
 
@@ -396,7 +397,10 @@ int jiveL_update_screen(lua_State *L) {
 	lua_rawgeti(L, -1, 1);
 
 
-	if (perfwarn.screen) t0 = SDL_GetTicks();
+	if (perfwarn.screen) {
+		t0 = SDL_GetTicks();
+		c0 = clock();
+	}
 
 	/* Layout window and widgets */
 	if (jive_getmethod(L, -1, "doLayout")) {
@@ -450,6 +454,8 @@ int jiveL_update_screen(lua_State *L) {
 		/* Draw background */
 		jive_surface_set_clip(srf, NULL);
 		jive_tile_blit(jive_background, srf, 0, 0, screen_w, screen_h);
+
+		if (perfwarn.screen) t3 = SDL_GetTicks();
 		
 		/* Animate screen transition */
 		lua_pushvalue(L, -1);
@@ -457,7 +463,7 @@ int jiveL_update_screen(lua_State *L) {
 		lua_pushvalue(L, 2);	// surface
 		lua_call(L, 2, 0);
 		
-		if (perfwarn.screen) t3 = SDL_GetTicks();
+		if (perfwarn.screen) t4 = SDL_GetTicks();
 		jive_surface_flip(srf);
 	}
 	else if (jive_dirty_region.w) {
@@ -473,6 +479,8 @@ int jiveL_update_screen(lua_State *L) {
 		/* Draw background */
 		jive_tile_blit(jive_background, srf, 0, 0, screen_w, screen_h);
 
+		if (perfwarn.screen) t3 = SDL_GetTicks();
+
 		/* Draw screen */
 		if (jive_getmethod(L, -2, "draw")) {
 			lua_pushvalue(L, -3);	// widget
@@ -483,14 +491,20 @@ int jiveL_update_screen(lua_State *L) {
 		jive_dirty_region.w = 0;
 
 		/* Flip buffer */
-		if (perfwarn.screen) t3 = SDL_GetTicks();
+		if (perfwarn.screen) t4 = SDL_GetTicks();
 		jive_surface_flip(srf);
 	}
 
 	if (perfwarn.screen) {
-		if (perfwarn.screen) t4 = SDL_GetTicks();
-		if (t4-t0 > perfwarn.screen) 
-			printf("update_screen > %dms: %4dms [layout:%dms animate:%dms draw:%dms flip:%dms]\n", perfwarn.screen, t4-t0, t1-t0, t2-t1, t3-t2, t4-t3);
+		t5 = SDL_GetTicks();
+		c1 = clock();
+		if (t5-t0 > perfwarn.screen) {
+			if (!t3) {
+				t3 = t2; t4 = t2;
+			}
+			printf("update_screen > %dms: %4dms (%dms) [layout:%dms animate:%dms background:%dms draw:%dms flip:%dms]\n",
+				   perfwarn.screen, t5-t0, (int)((c1-c0) / (CLOCKS_PER_SEC / 1000)), t1-t0, t2-t1, t3-t2, t4-t3, t5-t4);
+		}
 	}
 	
 	lua_pop(L, 4);
@@ -597,6 +611,7 @@ static int traceback (lua_State *L) {
 int jiveL_dispatch_event(lua_State *L) {
 	Uint32 r = 0;
 	Uint32 t0 = 0, t1 = 0;
+	clock_t c0 = 0, c1 = 0;
 
 	/* stack is:
 	 * 1: framework
@@ -604,7 +619,10 @@ int jiveL_dispatch_event(lua_State *L) {
 	 * 3: event
 	 */
 
-	if (perfwarn.event) t0 = SDL_GetTicks();
+	if (perfwarn.event) {
+		t0 = SDL_GetTicks();
+		c0 = clock();
+	}
 
 	lua_pushcfunction(L, traceback);  /* push traceback function */
 
@@ -668,8 +686,9 @@ int jiveL_dispatch_event(lua_State *L) {
 
 	if (perfwarn.event) {
 		t1 = SDL_GetTicks();
+		c1 = clock();
 		if (t1-t0 > perfwarn.event) {
-			printf("process_event > %dms: %4dms ", perfwarn.event, t1-t0);
+			printf("process_event > %dms: %4dms (%dms) ", perfwarn.event, t1-t0, (int)((c1-c0) / (CLOCKS_PER_SEC / 1000)));
 			lua_getglobal(L, "tostring");
 			lua_pushvalue(L, 2);
 			lua_call(L, 1, 1);
