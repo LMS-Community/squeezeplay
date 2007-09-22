@@ -357,19 +357,19 @@ function setTimeout(self, timeout)
 end
 
 function setFlickrId(self, flickrid)
-    self:getSettings()["flickr.id"] = flickrid
+	self:getSettings()["flickr.id"] = flickrid
 	self:storeSettings()
 end
 
 function setFlickrIdString(self, flickridString)
-    self:getSettings()["flickr.idstring"] = flickridString
+	self:getSettings()["flickr.idstring"] = flickridString
 	self:getSettings()["flickr.id"] = ""
 	self:storeSettings()
 	self:resolveFlickrIdByEmail(flickridString)
 end
 
 function setTransition(self, trans)
-    self:getSettings()["flickr.transition"] = trans
+	self:getSettings()["flickr.transition"] = trans
 	self:storeSettings()
 end
 

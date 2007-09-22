@@ -741,8 +741,18 @@ local _defaultActions = {
 		return EVENT_CONSUME
 	end,
 
+	["rew-hold"] = function()
+		_player:scan_rew()
+		return EVENT_CONSUME
+	end,
+	
 	["fwd"] = function()
 		_player:fwd()
+		return EVENT_CONSUME
+	end,
+
+	["fwd-hold"] = function()
+		_player:scan_fwd()
 		return EVENT_CONSUME
 	end,
 
