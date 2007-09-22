@@ -8,6 +8,8 @@
 #include "common.h"
 #include "jive.h"
 
+#include <time.h>
+
 
 int (*jive_sdlevent_handler)(lua_State *L, SDL_Event *event, JiveEvent *jevent);
 int (*jive_sdlevent_pump)(lua_State *L);
