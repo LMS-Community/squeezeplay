@@ -33,6 +33,7 @@ local Font             = require("jive.ui.Font")
 local Framework        = require("jive.ui.Framework")
 local Icon             = require("jive.ui.Icon")
 local Label            = require("jive.ui.Label")
+local Popup            = require("jive.ui.Popup")
 local RadioButton      = require("jive.ui.RadioButton")
 local RadioGroup       = require("jive.ui.RadioGroup")
 local Textinput        = require("jive.ui.Textinput")
@@ -88,42 +89,50 @@ function openScreensaver(self, menuItem)
 	return self.window
 end
 
+function popupMessage(self, title, msg)
+	local popup = Popup("popup", title)
+	local text = Textarea("textarea", msg)
+	popup:addWidget(text)
+
+	self:tieAndShowWindow(popup)
+end
+
 
 function openSettings(self, menuItem)
 	local window = Window("window", menuItem.text)
 	window:addWidget(SimpleMenu("menu",
+		{
 			{
-				{
-					text = self:string("SCREENSAVER_FLICKR_DISPLAY"), 
-					callback = function(event, menuItem)
-							   self:displaySetting(menuItem)
-							   return EVENT_CONSUME
-						   end
-				},
-				{
-                                        text = self:string("SCREENSAVER_FLICKR_DELAY"),
-                                        callback = function(event, menuItem)
-                                                           self:timeoutSetting(menuItem)
-                                                           return EVENT_CONSUME
-                                                   end
-                                },
-                                {
-                                        text = self:string("SCREENSAVER_FLICKR_FLICKR_ID"),
-                                        callback = function(event, menuItem)
-                                                           self:defineFlickrId(menuItem)
-                                                           return EVENT_CONSUME
-                                                   end
-                                },
---[[
-                                {
-                                        text = self:string("SCREENSAVER_FLICKR_TRANSITION"),
-                                        callback = function(event, menuItem)
-                                                           self:defineTransition(menuItem)
-                                                           return EVENT_CONSUME
-                                                   end
-                                },
---]]
-			}))
+				text = self:string("SCREENSAVER_FLICKR_DISPLAY"), 
+				callback = function(event, menuItem)
+					self:displaySetting(menuItem)
+					return EVENT_CONSUME
+				end
+			},
+			{
+				text = self:string("SCREENSAVER_FLICKR_DELAY"),
+				callback = function(event, menuItem)
+					self:timeoutSetting(menuItem)
+					return EVENT_CONSUME
+			end
+			},
+			{
+				text = self:string("SCREENSAVER_FLICKR_FLICKR_ID"),
+				callback = function(event, menuItem)
+					self:defineFlickrId(menuItem)
+					return EVENT_CONSUME
+				end
+			},
+			--[[
+			{
+				text = self:string("SCREENSAVER_FLICKR_TRANSITION"),
+				callback = function(event, menuItem)
+					self:defineTransition(menuItem)
+					return EVENT_CONSUME
+				end
+			},
+			--]]
+		}))
 
 	self:tieAndShowWindow(window)
 	return window
@@ -132,32 +141,32 @@ end
 
 function defineFlickrId(self, menuItem)
 
-        local window = Window("window", self:string("SCREENSAVER_FLICKR_FLICKR_ID"))
+    local window = Window("window", self:string("SCREENSAVER_FLICKR_FLICKR_ID"))
 
 	local flickrid = self:getSettings()["flickr.idstring"]
 	if flickrid == nil then
 		flickrid = "Your ID"
 	end
 
-        local input = Textinput("textinput", flickrid,
-                                function(_, value)
-                                        if #value < 4 then
-                                                return false
-                                        end
+	local input = Textinput("textinput", flickrid,
+		function(_, value)
+			if #value < 4 then
+				return false
+			end
 
-                                        log:warn("Input " .. value)
-					self:setFlickrIdString(value)
-                                        window:hide(Window.transitionPushLeft)
-                                        return true
-                                end)
+			log:warn("Input " .. value)
+			self:setFlickrIdString(value)
+			window:hide(Window.transitionPushLeft)
+			return true
+		end)
 
-        local help = Textarea("help", self:string("SCREENSAVER_FLICKR_FLICKR_ID_HELP"))
+    local help = Textarea("help", self:string("SCREENSAVER_FLICKR_FLICKR_ID_HELP"))
 
-        window:addWidget(help)
-        window:addWidget(input)
+    window:addWidget(help)
+    window:addWidget(input)
 
-        self:tieAndShowWindow(window)
-        return window
+    self:tieAndShowWindow(window)
+    return window
 end
 
 
@@ -169,71 +178,71 @@ function defineTransition(self, menuItem)
 	local window = Window("window", menuItem.text)
 	window:addWidget(SimpleMenu("menu",
 		{
-                         {
-                                text = self:string("SCREENSAVER_FLICKR_TRANSITION_RANDOM"),
-                                icon = RadioButton(
-                                                   "radio",
-                                                   group,
-                                                   function()
-                                                           self:setTransition("random")
-                                                   end,
-                                                   trans == "random"
-                                           ),
-                         },
-                         {
-                                text = self:string("SCREENSAVER_FLICKR_TRANSITION_INSIDE_OUT"),
-                                icon = RadioButton(
-                                                   "radio",
-                                                   group,
-                                                   function()
-                                                           self:setTransition("boxout")
-                                                   end,
-                                                   trans == "boxout"
-                                           ),
-                        },
+            {
+                text = self:string("SCREENSAVER_FLICKR_TRANSITION_RANDOM"),
+                icon = RadioButton(
+                    "radio",
+                    group,
+                    function()
+                        self:setTransition("random")
+                    end,
+                    trans == "random"
+                ),
+            },
+            {
+                text = self:string("SCREENSAVER_FLICKR_TRANSITION_INSIDE_OUT"),
+                icon = RadioButton(
+                    "radio",
+                    group,
+                    function()
+                        self:setTransition("boxout")
+                    end,
+                    trans == "boxout"
+                ),
+	        },
  			{
-                                text = self:string("SCREENSAVER_FLICKR_TRANSITION_TOP_DOWN"),
+                text = self:string("SCREENSAVER_FLICKR_TRANSITION_TOP_DOWN"),
 				icon = RadioButton(
-						   "radio", 
-						   group, 
-						   function() 
-							   self:setTransition("topdown") 
-						   end,
-						   trans == "topdown"
-					   ),
+				   "radio", 
+				   group, 
+				   function() 
+					   self:setTransition("topdown") 
+				   end,
+				   trans == "topdown"
+				),
 			},
 			{ 
-                                text = self:string("SCREENSAVER_FLICKR_TRANSITION_BOTTOM_UP"),
+                text = self:string("SCREENSAVER_FLICKR_TRANSITION_BOTTOM_UP"),
 				icon = RadioButton(
-						   "radio", 
-						   group, 
-						   function() 
-							   self:setTransition("bottomup") 
-						   end,
-						   display == "bottomup"
-					   ),
+				   "radio", 
+				   group, 
+				   function() 
+					   self:setTransition("bottomup") 
+				   end,
+				   display == "bottomup"
+				),
 			},
 			{ 
-                                text = self:string("SCREENSAVER_FLICKR_TRANSITION_LEFT_RIGHT"),
+                text = self:string("SCREENSAVER_FLICKR_TRANSITION_LEFT_RIGHT"),
 				icon = RadioButton(
-						   "radio", 
-						   group, 
-						   function() 
-							   self:setTransition("leftright") 
-						   end,
-						   trans == "leftright"
-					   ),
+				   "radio", 
+				   group, 
+				   function() 
+					   self:setTransition("leftright") 
+				   end,
+				   trans == "leftright"
+				),
 			},
 			{ 
-                                text = self:string("SCREENSAVER_FLICKR_TRANSITION_RIGHT_LEFT"),
+                text = self:string("SCREENSAVER_FLICKR_TRANSITION_RIGHT_LEFT"),
 				icon = RadioButton(
-						   "radio", 
-						   group, 
-						   function() 
-							   self:setTransition("rightleft") 
-						   end,
-						   trans == "rightleft"
-					   ),
+				   "radio", 
+				   group, 
+				   function() 
+					   self:setTransition("rightleft") 
+				   end,
+				   trans == "rightleft"
+				),
 			},
 		}))
 
@@ -250,49 +259,49 @@ function displaySetting(self, menuItem)
 	local window = Window("window", menuItem.text)
 	window:addWidget(SimpleMenu("menu",
 		{
-                         {
-                                text = self:string("SCREENSAVER_FLICKR_DISPLAY_OWN"),
-                                icon = RadioButton(
-                                                   "radio",
-                                                   group,
-                                                   function()
-                                                           self:setDisplay("own")
-                                                   end,
-                                                   display == "own"
-                                           ),
-                         },
-                         {
-                                text = self:string("SCREENSAVER_FLICKR_DISPLAY_CONTACTS"),
-                                icon = RadioButton(
-                                                   "radio",
-                                                   group,
-                                                   function()
-                                                           self:setDisplay("contacts")
-                                                   end,
-                                                   display == "contacts"
-                                           ),
-                        },
+            {
+                text = self:string("SCREENSAVER_FLICKR_DISPLAY_OWN"),
+                icon = RadioButton(
+                    "radio",
+                    group,
+                    function()
+                        self:setDisplay("own")
+                    end,
+                    display == "own"
+	            ),
+            },
+            {
+                text = self:string("SCREENSAVER_FLICKR_DISPLAY_CONTACTS"),
+                icon = RadioButton(
+                    "radio",
+                    group,
+                    function()
+                        self:setDisplay("contacts")
+                    end,
+                    display == "contacts"
+                ),
+            },
  			{
 				text = self:string("SCREENSAVER_FLICKR_DISPLAY_INTERESTING"), 
 				icon = RadioButton(
-						   "radio", 
-						   group, 
-						   function() 
-							   self:setDisplay("interesting") 
-						   end,
-						   display == "interesting"
-					   ),
+				   "radio", 
+				   group, 
+				   function() 
+					   self:setDisplay("interesting") 
+				   end,
+				   display == "interesting"
+				),
 			},
 			{ 
 				text = self:string("SCREENSAVER_FLICKR_DISPLAY_RECENT"), 
 				icon = RadioButton(
-						   "radio", 
-						   group, 
-						   function() 
-							   self:setDisplay("recent") 
-						   end,
-						   display == "recent"
-					   ),
+				   "radio", 
+				   group, 
+				   function() 
+					   self:setDisplay("recent") 
+				   end,
+				   display == "recent"
+			   ),
 			},
 		}))
 
@@ -333,8 +342,12 @@ end
 
 
 function setDisplay(self, display)
-	self:getSettings()["flickr.display"] = display
-	self:storeSettings()
+	if self:getSettings()["flickr.id"] == "" and (display == "own" or display == "contacts") then
+		self:popupMessage(self:string("SCREENSAVER_FLICKR_ERROR"), self:string("SCREENSAVER_FLICKR_INVALID_DISPLAY_OPTION"))
+	else
+		self:getSettings()["flickr.display"] = display
+		self:storeSettings()
+	end
 end
 
 
@@ -344,18 +357,19 @@ function setTimeout(self, timeout)
 end
 
 function setFlickrId(self, flickrid)
-        self:getSettings()["flickr.id"] = flickrid
+    self:getSettings()["flickr.id"] = flickrid
 	self:storeSettings()
 end
 
 function setFlickrIdString(self, flickridString)
-        self:getSettings()["flickr.idstring"] = flickridString
+    self:getSettings()["flickr.idstring"] = flickridString
+	self:getSettings()["flickr.id"] = ""
 	self:storeSettings()
 	self:resolveFlickrIdByEmail(flickridString)
 end
 
 function setTransition(self, trans)
-        self:getSettings()["flickr.transition"] = trans
+    self:getSettings()["flickr.transition"] = trans
 	self:storeSettings()
 end
 
@@ -376,13 +390,13 @@ function displayNextPhoto(self)
 	-- request photo
 	local http = SocketHttp(jnt, host, port, "flickr2")
 	local req = RequestHttp(function(chunk, err)
-					if chunk then
-						local srf = Surface:loadImageData(chunk, #chunk)
-						self:_loaded(photo, srf)
-					end
-				end,
-				'GET',
-				path)
+			if chunk then
+				local srf = Surface:loadImageData(chunk, #chunk)
+				self:_loaded(photo, srf)
+			end
+		end,
+		'GET',
+		path)
 	http:fetch(req)
 
 	return true
@@ -408,8 +422,8 @@ function _requestPhoto(self)
 		method = "flickr.people.getPublicPhotos"
 		args = { per_page = 100, user_id = self:getSettings()["flickr.id"] }
 	else 
-                method = "flickr.interestingness.getList"
-                args = { per_page = 100 }
+        method = "flickr.interestingness.getList"
+        args = { per_page = 100 }
 	end
 
 	local host, port, path = self:_getRest(method, args)
@@ -451,19 +465,19 @@ function _window(self, ...)
 
 	-- close the window on left
 	window:addListener(EVENT_KEY_PRESS,
-			   function(evt)
-				   if evt:getKeycode() == KEY_BACK then
-					   window:hide()
-					   self.photoQueue = {}
-					   return EVENT_CONSUME
-				   end
-			   end)
+		function(evt)
+		   if evt:getKeycode() == KEY_BACK then
+			   window:hide()
+			   self.photoQueue = {}
+			   return EVENT_CONSUME
+		   end
+		end)
 
 	window:addListener(EVENT_WINDOW_RESIZE,
-			   function(evt)
-				   local icon = self:_makeIcon(self.photo, self.photoSrf)
-				   self.window:addWidget(icon)
-			   end)
+		function(evt)
+		   local icon = self:_makeIcon(self.photo, self.photoSrf)
+		   self.window:addWidget(icon)
+		end)
 
 	self:tieWindow(window)
 	return window
@@ -471,8 +485,6 @@ end
 
 
 function _getPhotoList(self, chunk, err)
-	-- FIXME error processing
-
 	if chunk then
 
 		log:warn("got chunk ", chunk)
@@ -502,27 +514,33 @@ function _makeIcon(self, photo, srf)
 	w,h = srf:getSize()
 	local x, y = (sw - w) / 2, (sh - h) / 2
 
-	local font = self.window:styleFont("font")
+	local fontBold = Font:load("fonts/FreeSansBold.ttf", 10)
+	local fontRegular = Font:load("fonts/FreeSans.ttf", 10)
 
-	-- draw 
-	local txt1 = Surface:drawText(font, 0x00000000, photo.ownername)
-	txt1:blit(srf, 5 - x, 5 - y)
+    -- empty image to draw onto
+	local totImg = Surface:newRGBA(sw, sh)
+        totImg:filledRectangle(0, 0, sw, sh, 0x000000FF)
 
-	local txt2 = Surface:drawText(font, 0xFFFFFFFF, photo.ownername)
-	txt2:blit(srf, 6 - x, 6 - y)
+	-- draw image
+	srf:blit(totImg, x, y)
 
+	-- draw black rectangle for text
+	totImg:filledRectangle(0,sh-20,sw,sh, 0x000000FF)
+
+	-- draw photo owner
+	local txt1 = Surface:drawText(fontBold, 0xFFFFFFFF, photo.ownername)
+	txt1:blit(totImg, 5, sh-15)
+
+	-- draw photo title
 	if photo.title then
-		local titleWidth = font:width(photo.title)
+		local titleWidth = fontRegular:width(photo.title)
 
-		local txt1 = Surface:drawText(font, 0x00000000, photo.title)
-		txt1:blit(srf, sw - 5 + x - titleWidth, 5 - y)
-
-		local txt2 = Surface:drawText(font, 0xFFFFFFFF, photo.title)
-		txt2:blit(srf, sw - 6 + x - titleWidth, 6 - y)
+		local txt2 = Surface:drawText(fontRegular, 0xFFFFFFFF, photo.title)
+		txt2:blit(totImg, sw - 5 - titleWidth, sh-15)
 	end
 
-	local icon = Icon("image", srf)
-	icon:setPosition(x, y)
+	local icon = Icon("image", totImg)
+	icon:setPosition(0, 0)
 
 	return icon
 end
@@ -538,7 +556,7 @@ function _loaded(self, photo, srf)
 
 	self.window = self:_window(icon)
 
-        local transition
+    local transition
 	local trans = self:getSettings()["flickr.transition"]
 	if trans == "random" then
 		transition = self.transitions[math.random(#self.transitions)]
@@ -559,9 +577,9 @@ function _loaded(self, photo, srf)
 	-- start timer for next photo in timeout seconds
 	local timeout = self:getSettings()["flickr.timeout"]
 	self.timer = self.window:addTimer(timeout,
-				     function()
-					     self:displayNextPhoto()
-				     end)
+		function()
+		     self:displayNextPhoto()
+		end)
 end
 
 
@@ -583,6 +601,7 @@ function _getRest(self, method, args)
 	if ip then
 		return ip, 80, "/services/rest/?" .. table.concat(url, "&")
 	else
+		self:popupMessage(self:string("SCREENSAVER_FLICKR_ERROR"), self:string("SCREENSAVER_FLICKR_NETWORK_ERROR"))
 		log:error(err)
 		return nil, err
 	end
@@ -601,6 +620,7 @@ function _findFlickrIdByEmail(self, searchText)
 	if ip then
 		return ip, 80, "/services/rest/?" .. url
 	else
+		self:popupMessage(self:string("SCREENSAVER_FLICKR_ERROR"), self:string("SCREENSAVER_FLICKR_NETWORK_ERROR"))
 		log:error(err)
 		return nil, err
 	end
@@ -619,6 +639,7 @@ function _findFlickrIdByUserID(self, searchText)
 	if ip then
 		return ip, 80, "/services/rest/?" .. url
 	else
+		self:popupMessage(self:string("SCREENSAVER_FLICKR_ERROR"), self:string("SCREENSAVER_FLICKR_NETWORK_ERROR"))
 		log:error(err)
 		return nil, err
 	end
@@ -652,7 +673,6 @@ function resolveFlickrIdByEmail(self, searchText)
 	return true
 end
 
-
 function resolveFlickrIdByUsername(self, searchText)
 	-- check whether searchText is a username
 	local host, port, path = self:_findFlickrIdByUserID(searchText)
@@ -666,6 +686,7 @@ function resolveFlickrIdByUsername(self, searchText)
 					self:setFlickrId(obj.user.nsid)
 				else
 					log:warn("search by userid failed")
+					self:popupMessage(self:string("SCREENSAVER_FLICKR_ERROR"), self:string("SCREENSAVER_FLICKR_USERID_ERROR"))
 				end
 			end
 		end,
@@ -695,108 +716,108 @@ function transitionBoxOut(oldWindow, newWindow)
 	local i = 0
 
 	return function(widget, surface)
-		       local adjX = i * incX
-		       local adjY = i * incY
+       local adjX = i * incX
+       local adjY = i * incY
 
-		       newWindow:draw(surface, LAYER_FRAME)
-		       oldWindow:draw(surface, LAYER_CONTENT)
+       newWindow:draw(surface, LAYER_FRAME)
+       oldWindow:draw(surface, LAYER_CONTENT)
 
-		       surface:setClip(x - adjX, y - adjY, adjX * 2, adjY * 2)
-		       newWindow:draw(surface, LAYER_CONTENT)
+       surface:setClip(x - adjX, y - adjY, adjX * 2, adjY * 2)
+       newWindow:draw(surface, LAYER_CONTENT)
 
-		       i = i + 1
-		       if i == frames then
-			       Framework:_killTransition()
-		       end
-	       end
+       i = i + 1
+       if i == frames then
+	       Framework:_killTransition()
+       end
+    end
 end
 
 function transitionBottomUp(oldWindow, newWindow)
-        local frames = FRAME_RATE * 2 -- 2 secs
-        local screenWidth, screenHeight = Framework:getScreenSize()
-        local incY = screenHeight / frames
-        local i = 0
+    local frames = FRAME_RATE * 2 -- 2 secs
+    local screenWidth, screenHeight = Framework:getScreenSize()
+    local incY = screenHeight / frames
+    local i = 0
 
-        return function(widget, surface)
-                       local adjY = i * incY
+    return function(widget, surface)
+        local adjY = i * incY
 
-                       newWindow:draw(surface, LAYER_FRAME)
-                       oldWindow:draw(surface, LAYER_CONTENT)
+        newWindow:draw(surface, LAYER_FRAME)
+        oldWindow:draw(surface, LAYER_CONTENT)
 
-                       surface:setClip(0, screenHeight-adjY, screenWidth, screenHeight)
-                       newWindow:draw(surface, LAYER_CONTENT)
+        surface:setClip(0, screenHeight-adjY, screenWidth, screenHeight)
+        newWindow:draw(surface, LAYER_CONTENT)
 
-                       i = i + 1
-                       if i == frames then
-                               Framework:_killTransition()
-                       end
-               end
+        i = i + 1
+        if i == frames then
+            Framework:_killTransition()
+        end
+    end
 end
 
 function transitionTopDown(oldWindow, newWindow)
-        local frames = FRAME_RATE * 2 -- 2 secs
-        local screenWidth, screenHeight = Framework:getScreenSize()
-        local incY = screenHeight / frames
-        local i = 0
+    local frames = FRAME_RATE * 2 -- 2 secs
+    local screenWidth, screenHeight = Framework:getScreenSize()
+    local incY = screenHeight / frames
+    local i = 0
 
-        return function(widget, surface)
-                       local adjY = i * incY
+    return function(widget, surface)
+        local adjY = i * incY
 
-                       newWindow:draw(surface, LAYER_FRAME)
-                       oldWindow:draw(surface, LAYER_CONTENT)
+        newWindow:draw(surface, LAYER_FRAME)
+        oldWindow:draw(surface, LAYER_CONTENT)
 
-                       surface:setClip(0, 0, screenWidth, adjY)
-                       newWindow:draw(surface, LAYER_CONTENT)
+        surface:setClip(0, 0, screenWidth, adjY)
+        newWindow:draw(surface, LAYER_CONTENT)
 
-                       i = i + 1
-                       if i == frames then
-                               Framework:_killTransition()
-                       end
-               end
+        i = i + 1
+        if i == frames then
+            Framework:_killTransition()
+        end
+    end
 end
 
 function transitionLeftRight(oldWindow, newWindow)
-        local frames = FRAME_RATE * 2 -- 2 secs
-        local screenWidth, screenHeight = Framework:getScreenSize()
-        local incX = screenWidth / frames
-        local i = 0
+    local frames = FRAME_RATE * 2 -- 2 secs
+    local screenWidth, screenHeight = Framework:getScreenSize()
+    local incX = screenWidth / frames
+    local i = 0
 
-        return function(widget, surface)
-                       local adjX = i * incX
+    return function(widget, surface)
+        local adjX = i * incX
 
-                       newWindow:draw(surface, LAYER_FRAME)
-                       oldWindow:draw(surface, LAYER_CONTENT)
+        newWindow:draw(surface, LAYER_FRAME)
+        oldWindow:draw(surface, LAYER_CONTENT)
 
-                       surface:setClip(0, 0, adjX, screenHeight)
-                       newWindow:draw(surface, LAYER_CONTENT)
+        surface:setClip(0, 0, adjX, screenHeight)
+        newWindow:draw(surface, LAYER_CONTENT)
 
-                       i = i + 1
-                       if i == frames then
-                               Framework:_killTransition()
-                       end
-               end
+        i = i + 1
+        if i == frames then
+                Framework:_killTransition()
+        end
+    end
 end
 
 function transitionRightLeft(oldWindow, newWindow)
-        local frames = FRAME_RATE * 2 -- 2 secs
-        local screenWidth, screenHeight = Framework:getScreenSize()
-        local incX = screenWidth / frames
-        local i = 0
+    local frames = FRAME_RATE * 2 -- 2 secs
+    local screenWidth, screenHeight = Framework:getScreenSize()
+    local incX = screenWidth / frames
+    local i = 0
 
-        return function(widget, surface)
-                       local adjX = i * incX
+    return function(widget, surface)
+        local adjX = i * incX
 
-                       newWindow:draw(surface, LAYER_FRAME)
-                       oldWindow:draw(surface, LAYER_CONTENT)
+        newWindow:draw(surface, LAYER_FRAME)
+        oldWindow:draw(surface, LAYER_CONTENT)
 
-                       surface:setClip(screenWidth-adjX, 0, screenWidth, screenHeight)
-                       newWindow:draw(surface, LAYER_CONTENT)
+        surface:setClip(screenWidth-adjX, 0, screenWidth, screenHeight)
+        newWindow:draw(surface, LAYER_CONTENT)
 
-                       i = i + 1
-                       if i == frames then
-                               Framework:_killTransition()
-                       end
-               end
+        i = i + 1
+        if i == frames then
+            Framework:_killTransition()
+        end
+    end
 end
 
 
