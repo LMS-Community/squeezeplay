@@ -481,11 +481,12 @@ dist_applets_clock_DATA = \
 	share/applets/Clock/ClockApplet.lua \
 	share/applets/Clock/ClockMeta.lua \
 	share/applets/Clock/strings.txt \
-	share/applets/Clock/HourPointer.png \
+	share/applets/Clock/HourHand.png \
 	share/applets/Clock/clock_watch_bkgrd_teal.png \
-	share/applets/Clock/MinutePointer.png \
+	share/applets/Clock/MinuteHand.png \
 	share/applets/Clock/weekday_frame.png \
-	share/applets/Clock/clock_analog1_bkgrd.png \
+	share/applets/Clock/clock_classic_bkgrd.png \
+	share/applets/Clock/clock_analog_bkgrd.png \
 	share/applets/Clock/ClockFace.png \
 	share/applets/Clock/clock_watch_bkgrd_ruby.png
 

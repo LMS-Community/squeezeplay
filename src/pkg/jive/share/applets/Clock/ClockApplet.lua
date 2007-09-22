@@ -58,7 +58,7 @@ local Analog_Presets = {
 	},
 	Teal = {
 		HighlightColor = 0x004444FF,
-		HighlightImage = "clock_watch_bkgrd_teal.png",
+		HighlightImage = "clock_analog_bkgrd.png",
 		BackgroundColor = 0x000000FF,
 	},
 	Default = nil,
@@ -95,21 +95,21 @@ local DigitalDetailed_Presets = {
 	Default = {
 		Fonts = {
 			Main = {
-				Size = 45,
+				Size = 60,
 				Color = 0xFFFFFFFF
 			},
 			Days = {
-				Size = 14,
-				SelectedColor = 0xFFFFFFFF,
-				Color = 0x373737FF
+				Size = 16,
+				SelectedColor = 0x909090FF,
+				Color = 0x909090FF
 			},
 			AMPM = {
 				Size = 14,
 				Color = 0xFFFFFFFF
 			},
 			Date = {
-				Size = 14,
-				Color = 0x373737FF
+				Size = 17,
+				Color = 0x555555FF
 			}
 		},
 		Background = 0x000000FF,
@@ -167,8 +167,8 @@ function Analog:__init(window, preset)
 	obj = oo.rawnew(self, Clock(window))
 
 	obj.clockface = Surface:loadImage("applets/Clock/ClockFace.png")
-	obj.pointer_hour = Surface:loadImage("applets/Clock/HourPointer.png")
-	obj.pointer_minute = Surface:loadImage("applets/Clock/MinutePointer.png")
+	obj.pointer_hour = Surface:loadImage("applets/Clock/HourHand.png")
+	obj.pointer_minute = Surface:loadImage("applets/Clock/MinuteHand.png")
 
 	obj.clockhighlight = Surface:loadImage("applets/Clock/" .. preset.HighlightImage)
 	obj.bgcolor = preset.BackgroundColor
@@ -181,7 +181,6 @@ end
 
 
 function Analog:Draw(force)
-
 	local theTime = os.date(self.clock_format)
 	if theTime != self.oldtime or force then
 		self.oldtime = theTime
@@ -207,19 +206,19 @@ function Analog:Draw(force)
 		local m = os.date("%M")
 		local h = os.date("%I")
 
-		-- Minute Pointer
-		local angle = (360 / 60) * m
-
-		local tmp = self.pointer_minute:rotozoom(-angle, 1, 5)
-		local facew, faceh = tmp:getSize()
-		x = math.floor((self.screen_width/2) - (facew/2))
-		y = math.floor((self.screen_height/2) - (faceh/2))
-		tmp:blit(self.bg, x, y)
-	
 		-- Hour Pointer
 		local angle = (360 / 12) * (h + (m/60))
 
 		local tmp = self.pointer_hour:rotozoom(-angle, 1, 5)
+		local facew, faceh = tmp:getSize()
+		x = math.floor((self.screen_width/2) - (facew/2))
+		y = math.floor((self.screen_height/2) - (faceh/2))
+		tmp:blit(self.bg, x, y)
+
+		-- Minute Pointer
+		local angle = (360 / 60) * m 
+
+		local tmp = self.pointer_minute:rotozoom(-angle, 1, 5)
 		local facew, faceh = tmp:getSize()
 		x = math.floor((self.screen_width/2) - (facew/2))
 		y = math.floor((self.screen_height/2) - (faceh/2))
@@ -397,7 +396,7 @@ function DigitalDetailed:__init(window, preset, ampm, firstday)
 	obj.ampmfont = Font:load(fontname, preset.Fonts.AMPM.Size)
 	obj.ampmfont_color = preset.Fonts.AMPM.Color
 
-	obj.mainborder = Surface:loadImage("applets/Clock/clock_analog1_bkgrd.png")
+	obj.mainborder = Surface:loadImage("applets/Clock/clock_classic_bkgrd.png")
 	obj.daysborder = Surface:loadImage("applets/Clock/weekday_frame.png")
 
 	obj.weekstart = preset.FirstDayInWeek
@@ -414,117 +413,86 @@ function DigitalDetailed:__init(window, preset, ampm, firstday)
 		obj.clock_format = "%H:%M"
 	end
 
-	obj:CalculatePositions()
+	obj:SetPositions()
 
 	return obj;
 end
 
-local CLOCKY = 45
-local DATEY = 90
-
-function DigitalDetailed:CalculatePositions()
+local CLOCKY = 48
+local DATEY = 10
+	
+function DigitalDetailed:SetPositions()
 	local testSrf  = Surface:drawText(self.mainfont, self.mainfont_color, "88")
-	local testSrf2 = Surface:drawText(self.mainfont, self.mainfont_color, ":")
-
 	local dw, dh = testSrf:getSize()
-	local cw, ch = testSrf2:getSize()
-
-	local x,y
-	local bw, bh = self.mainborder:getSize()
-	x = (self.screen_width/2) - (bw/2)
-	y = (self.screen_height/2) - (bh/2)
-
-	local ampmoffset = 0
-	if self.show_ampm then
-		testSrf = Surface:drawText(self.ampmfont, self.ampmfont_color, "AM")
-		local amw, amh = testSrf:getSize()
-
-		testSrf = Surface:drawText(self.ampmfont, self.ampmfont_color, "PM")
-		local pmw, pmh = testSrf:getSize()
-	
-		if amw > pmw then
-			ampmoffset = amw
-		else
-			ampmoffset = pmw
-		end
-	end
-	
 
 	self.measurements = {}
-	self.measurements.total_width = (dw*3) + (cw*2) + ampmoffset
-	self.measurements.hour = x + ((bw/2) - (self.measurements.total_width/2))
-	self.measurements.colon1 = self.measurements.hour + dw
-	self.measurements.minute = self.measurements.colon1 + cw
-	self.measurements.colon2  = self.measurements.minute + dw
-	self.measurements.second = self.measurements.colon2 + cw
-	self.measurements.ampm = self.measurements.second + dw + 2 
+	self.measurements.hour = 105 - dw
+	self.measurements.minute = 125
+	self.measurements.ampm = self.measurements.minute + dw + 2
+	self.measurements.digitwidth = dw / 2
 end
 
 function DigitalDetailed:DrawAMPMTime(x, y, bw, bh)
 
-		local colonSrf = Surface:drawText(self.mainfont, self.mainfont_color, ":")
-
-		-- Draw Hour
-		local theHour = os.date("%I")
-
-		local hourSrf = Surface:drawText(self.mainfont, self.mainfont_color, theHour)
-		local hw, hh = hourSrf:getSize()
-		hourSrf:blit(self.bg, self.measurements.hour, y + CLOCKY)			
-
-		colonSrf:blit(self.bg, self.measurements.colon1, y + CLOCKY)
-
-		-- Draw Minute
-		local theMinute = os.date("%M")
-		local minSrf = Surface:drawText(self.mainfont, self.mainfont_color, theMinute)
-		minSrf:blit(self.bg, self.measurements.minute, y + CLOCKY)
-
-		colonSrf:blit(self.bg, self.measurements.colon2, y + CLOCKY)
-
-		-- Draw Second
-		local theSecond = os.date("%S")
-		local secSrf = Surface:drawText(self.mainfont, self.mainfont_color, theSecond)
-		secSrf:blit(self.bg, self.measurements.second, y + CLOCKY)
-
-
-		-- Draw AM PM
-		if self.show_ampm == true then
-
-			local ampm = os.date("%p")
-			local ampmSrf = Surface:drawText(self.ampmfont, self.ampmfont_color, ampm)
-			local ampmw, ampmh = ampmSrf:getSize()
-			
-			local ampmy = y + CLOCKY + 5
-			if ampm == "PM" then
-				ampmy = ampmy + ampmh + 3
-			end
-
-			ampmSrf:blit(self.bg, self.measurements.ampm, ampmy)
-		end
-end
-
-function DigitalDetailed:Draw24HTime(x, y, bw, bh)
-	local colonSrf = Surface:drawText(self.mainfont, self.mainfont_color, ":")
-
 	-- Draw Hour
-	local theHour = string.gsub(os.date("%H"), "^0", " ", 1)
+
+	-- Snip of leading 0
+	local theHour = string.gsub(os.date("%I"), "^0", "", 1)
+	theHour = 11
 
 	local hourSrf = Surface:drawText(self.mainfont, self.mainfont_color, theHour)
 	local hw, hh = hourSrf:getSize()
-	hourSrf:blit(self.bg, self.measurements.hour, y + CLOCKY)			
 
-	colonSrf:blit(self.bg, self.measurements.colon1, y + CLOCKY)
+	-- Make sure the position is correct for hours below 10
+	if(tonumber(theHour) < 10) then
+		hourSrf:blit(self.bg, self.measurements.hour + self.measurements.digitwidth, y + CLOCKY)			
+	else 
+		hourSrf:blit(self.bg, self.measurements.hour, y + CLOCKY)			
+	end
 
 	-- Draw Minute
 	local theMinute = os.date("%M")
 	local minSrf = Surface:drawText(self.mainfont, self.mainfont_color, theMinute)
 	minSrf:blit(self.bg, self.measurements.minute, y + CLOCKY)
 
-	colonSrf:blit(self.bg, self.measurements.colon2, y + CLOCKY)
 
-	-- Draw Second
-	local theSecond = os.date("%S")
-	local secSrf = Surface:drawText(self.mainfont, self.mainfont_color, theSecond)
-	secSrf:blit(self.bg, self.measurements.second, y + CLOCKY)
+	-- Draw AM PM
+	local ampm = os.date("%p")
+	local ampmSrf = Surface:drawText(self.ampmfont, self.ampmfont_color, ampm)
+	local ampmw, ampmh = ampmSrf:getSize()
+			
+	local ampmy = y + CLOCKY + 5
+	if ampm == "PM" then
+		ampmy = ampmy + ampmh + 3
+	end
+
+	ampmSrf:blit(self.bg, self.measurements.ampm, ampmy)
+
+end
+
+
+function DigitalDetailed:Draw24HTime(x, y, bw, bh)
+
+	-- Draw Hour
+
+	-- Snip of leading 0
+	local theHour = string.gsub(os.date("%H"), "^0", "", 1)
+
+	local hourSrf = Surface:drawText(self.mainfont, self.mainfont_color, theHour)
+	local hw, hh = hourSrf:getSize()
+
+	-- Make sure the position is correct for hours below 10
+	if(tonumber(theHour) < 10) then
+		hourSrf:blit(self.bg, self.measurements.hour + self.measurements.digitwidth, y + CLOCKY)			
+	else 
+		hourSrf:blit(self.bg, self.measurements.hour, y + CLOCKY)			
+	end
+
+	-- Draw Minute
+	local theMinute = os.date("%M")
+	local minSrf = Surface:drawText(self.mainfont, self.mainfont_color, theMinute)
+	minSrf:blit(self.bg, self.measurements.minute, y + CLOCKY)
+
 end
 
 function DigitalDetailed:Draw(force)
@@ -569,15 +537,17 @@ function DigitalDetailed:Draw(force)
 	end
 end
 	
-local PADDINGX = 28 
+local PADDINGX = 6
 local PADDINGY = 10 
 
-local DAYFIXY = 2 
+local DAYFIXY = 2
 
 local DAYS_SUN = { "S", "M", "T", "W", "T", "F", "S" }
 local DAYS_MON = { "M", "T", "W", "T", "F", "S", "S" }
 
 function DigitalDetailed:DrawWeekdays(x, y, bw, bh, day)
+
+	day = tonumber(day)
 
 	local dw, dh = self.daysborder:getSize()	
 
@@ -590,18 +560,18 @@ function DigitalDetailed:DrawWeekdays(x, y, bw, bh, day)
 	while i < 7 do
 
 		local newx = x + (i*dh) + PADDINGX
-		self.daysborder:blit(self.bg, newx, y + PADDINGY)
 
-		local c = self.daysfont_color
-		if i == tonumber(day) then
-			c = self.daysfont_scolor
+		-- Only draw border on today!
+		if(i == day) then	
+			self.daysborder:blit(self.bg, newx, y + bh - (dh + PADDINGY))
 		end
 
+		local c = self.daysfont_color
 		local daySrf = Surface:drawText(self.daysfont, c, days[i+1])
 
 		local dayw, dayh = daySrf:getSize()
 
-		daySrf:blit(self.bg, newx + ((dw/2)-(dayw/2)), y + PADDINGY + ((dh/2)-(dayh/2)) + DAYFIXY)
+		daySrf:blit(self.bg, newx + ((dw/2)-(dayw/2)), y + bh - (dh + PADDINGY) + ((dh/2)-(dayh/2)) + DAYFIXY)
 
 		i = i + 1
 	end
