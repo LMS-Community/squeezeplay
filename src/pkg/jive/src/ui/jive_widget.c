@@ -272,7 +272,7 @@ int jiveL_widget_dolayout(lua_State *L) {
 				lua_pushvalue(L, 1);
 				lua_call(L, 1, 1);
 				printf("widget_layout > %dms: %3dms (%dms) [%s skin:%dms prepare:%dms layout:%dms]\n",
-					   perfwarn.layout, t3-t0, (int)((c1-c0) / (CLOCKS_PER_SEC / 1000)), lua_tostring(L, -1), t1-t0, t2-t1, t3-t2);
+					   perfwarn.layout, t3-t0, (int)((c1-c0) / CLOCKS_PER_SEC / 1000), lua_tostring(L, -1), t1-t0, t2-t1, t3-t2);
 				lua_pop(L, 1);
 			}
 		}
