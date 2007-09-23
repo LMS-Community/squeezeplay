@@ -7,6 +7,9 @@
 #include "common.h"
 #include "jive.h"
 
+#include <time.h>
+
+extern struct jive_perfwarn perfwarn;
 
 void jive_widget_pack(lua_State *L, int index, JiveWidget *data) {
 
@@ -202,6 +205,9 @@ int jiveL_widget_redraw(lua_State *L) {
 int jiveL_widget_dolayout(lua_State *L) {
 	int is_dirty;
 
+	Uint32 t0 = 0, t1 = 0, t2 = 0, t3 = 0;
+	clock_t c0 = 0, c1 = 0;
+
 	/* stack is:
 	 * 1: widget
 	 */
@@ -217,6 +223,11 @@ int jiveL_widget_dolayout(lua_State *L) {
 	if (is_dirty == 0) {
 		/* layout dirty, update */
 
+		if (perfwarn.layout) {
+			t0 = SDL_GetTicks();
+			c0 = clock();
+		}
+
 		/* does the skin need updating? */
 		lua_getfield(L, 1, "skinCount");
 		if (lua_equal(L, -1, -2) == 0) {
@@ -226,6 +237,8 @@ int jiveL_widget_dolayout(lua_State *L) {
 			}
 		}
 		lua_pop(L, 1);
+
+		if (perfwarn.layout) t1 = SDL_GetTicks();
 
 		/* does the content need updating? */
 		lua_getfield(L, 1, "invalid");
@@ -240,6 +253,8 @@ int jiveL_widget_dolayout(lua_State *L) {
 		}
 		lua_pop(L, 1);
 
+		if (perfwarn.layout) t2 = SDL_GetTicks();
+
 		/* update the layout */
 		if (jive_getmethod(L, 1, "_layout")) {
 			lua_pushvalue(L, 1);
@@ -248,6 +263,19 @@ int jiveL_widget_dolayout(lua_State *L) {
 
 		lua_setfield(L, 1, "layoutCount");
 		lua_pop(L, 1);
+
+		if (perfwarn.layout) {
+			t3 = SDL_GetTicks();
+			c1 = clock();
+			if (t3 - t0 > perfwarn.layout) {
+				lua_getglobal(L, "tostring");
+				lua_pushvalue(L, 1);
+				lua_call(L, 1, 1);
+				printf("widget_layout > %dms: %3dms (%dms) [%s skin:%dms prepare:%dms layout:%dms]\n",
+					   perfwarn.layout, t3-t0, (int)((c1-c0) / (CLOCKS_PER_SEC / 1000)), lua_tostring(L, -1), t1-t0, t2-t1, t3-t2);
+				lua_pop(L, 1);
+			}
+		}
 	}
 
 	/* layout children */

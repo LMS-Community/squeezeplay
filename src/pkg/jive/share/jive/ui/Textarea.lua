@@ -204,7 +204,7 @@ end
 
 
 function __tostring(self)
-	return "Textarea(" .. string.sub(self.text, 1, 20) .."...)"
+	return "Textarea(" .. string.sub(tostring(self.text), 1, 20) .."...)"
 end
 
 

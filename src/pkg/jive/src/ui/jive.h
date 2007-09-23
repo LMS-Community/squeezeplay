@@ -215,6 +215,15 @@ struct jive_font {
 	const char *magic;
 };
 
+struct jive_perfwarn {
+	Uint32 screen;
+	Uint32 layout;
+	Uint32 draw;
+	Uint32 event;
+	Uint32 queue;
+	Uint32 garbage;
+};
+
 
 /* Util functions */
 void jive_print_stack(lua_State *L, char *str);

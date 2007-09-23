@@ -20,12 +20,7 @@ SDL_Rect jive_dirty_region;
 
 
 /* performance warning thresholds, 0 = disabled */
-struct {
-	Uint32 screen;
-	Uint32 event;
-	Uint32 queue;
-	Uint32 garbage;
-} perfwarn = { 0, 0, 0 };
+struct jive_perfwarn perfwarn = { 0, 0, 0, 0, 0, 0 };
 
 
 /* Frame rate calculations */
@@ -1105,13 +1100,17 @@ int jiveL_perfwarn(lua_State *L) {
 	if (lua_istable(L, 2)) {
 		lua_getfield(L, 2, "screen");
 		perfwarn.screen = lua_tointeger(L, -1);
+		lua_getfield(L, 2, "layout");
+		perfwarn.layout = lua_tointeger(L, -1);
+		lua_getfield(L, 2, "draw");
+		perfwarn.draw = lua_tointeger(L, -1);
 		lua_getfield(L, 2, "event");
 		perfwarn.event = lua_tointeger(L, -1);
 		lua_getfield(L, 2, "queue");
 		perfwarn.queue = lua_tointeger(L, -1);
 		lua_getfield(L, 2, "garbage");
 		perfwarn.garbage = lua_tointeger(L, -1);
-		lua_pop(L, 4);
+		lua_pop(L, 6);
 	}
 	
 	return 0;

@@ -7,6 +7,7 @@
 #include "common.h"
 #include "jive.h"
 
+extern struct jive_perfwarn perfwarn;
 
 typedef struct window_widget {
 	JiveWidget w;
@@ -195,11 +196,26 @@ int jiveL_popup_iterate(lua_State *L) {
 
 
 static int draw_closure(lua_State *L) {
+	Uint32 t0 = 0, t1 = 0;
+
+	if (perfwarn.draw) t0 = SDL_GetTicks();
+
 	if (jive_getmethod(L, 1, "draw")) {
 		lua_pushvalue(L, 1); // widget
 		lua_pushvalue(L, lua_upvalueindex(1)); // surface
 		lua_pushvalue(L, lua_upvalueindex(2)); // layer
 		lua_call(L, 3, 0);
+	}
+
+	if (perfwarn.draw) {
+		t1 = SDL_GetTicks();
+		if (t1 - t0 > perfwarn.draw) {
+			lua_getglobal(L, "tostring");
+			lua_pushvalue(L, 1);
+			lua_call(L, 1, 1);
+			printf("widget_draw   > %dms: %4dms [%s]\n", perfwarn.draw, t1-t0, lua_tostring(L, -1));
+			lua_pop(L, 1);
+		}
 	}
 
 	return 0;
