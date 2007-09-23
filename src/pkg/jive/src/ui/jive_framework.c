@@ -500,7 +500,7 @@ int jiveL_update_screen(lua_State *L) {
 				t3 = t2; t4 = t2;
 			}
 			printf("update_screen > %dms: %4dms (%dms) [layout:%dms animate:%dms background:%dms draw:%dms flip:%dms]\n",
-				   perfwarn.screen, t5-t0, (int)((c1-c0) / CLOCKS_PER_SEC / 1000), t1-t0, t2-t1, t3-t2, t4-t3, t5-t4);
+				   perfwarn.screen, t5-t0, (int)((c1-c0) * 1000 / CLOCKS_PER_SEC), t1-t0, t2-t1, t3-t2, t4-t3, t5-t4);
 		}
 	}
 	
@@ -685,7 +685,7 @@ int jiveL_dispatch_event(lua_State *L) {
 		t1 = SDL_GetTicks();
 		c1 = clock();
 		if (t1-t0 > perfwarn.event) {
-			printf("process_event > %dms: %4dms (%dms) ", perfwarn.event, t1-t0, (int)((c1-c0) / CLOCKS_PER_SEC / 1000));
+			printf("process_event > %dms: %4dms (%dms) ", perfwarn.event, t1-t0, (int)((c1-c0) * 1000 / CLOCKS_PER_SEC));
 			lua_getglobal(L, "tostring");
 			lua_pushvalue(L, 2);
 			lua_call(L, 1, 1);
