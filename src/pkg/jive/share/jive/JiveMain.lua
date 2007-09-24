@@ -170,8 +170,8 @@ function JiveMain:__init()
 	log:debug("JiveMain:__init()")
 
 	-- in testing we trust
-	disableassert()
-
+-- FIXME disableassert is broken
+--	disableassert()
 --	assert(to infinity() & beyond!)
 
 	-- Seed the rng
