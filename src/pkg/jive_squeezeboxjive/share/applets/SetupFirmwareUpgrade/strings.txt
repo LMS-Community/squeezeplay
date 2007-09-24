@@ -93,7 +93,7 @@ UPDATE_CONTINUE_HELP
 	NL	Kies 'Verdergaan' om de software op deze afstandsbediening bij te werken. Dit proces neemt enkele minuten in beslag.
 
 UPDATE_BEGIN_HELP
-	EN	Updated software is availabe for this remote. This process may take a few minutes.
+	EN	Updated software is available for this remote. This process may take a few minutes.
 
 UPDATE_BATTERY
 	EN	Charge Battery
