@@ -320,7 +320,7 @@ function getCurrentTime()
 		timeSet = true
 	end
 
-	if globalHours == "24" then
+	if globalHours == "12" then
 		return os.date("%I:%M%p")		
 	else
 		local str = os.date("%H:%M")
