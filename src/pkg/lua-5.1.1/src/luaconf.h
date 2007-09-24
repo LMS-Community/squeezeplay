@@ -833,13 +833,5 @@ union luai_Cast { double l_d; long l_l; };
 
 #define LUA_USER_H "ltconf.h"
 
-/*
-@@ LUA_JIVE_ASSERT enables ignoring asserts at compile time using two additional
-** functions "enableassert" (default) and "disableassert".
-** Code inside the () of the assert is ignored but must be () balanced.
-*/
-
-#define LUA_JIVE_ASSERT
-
 #endif
 

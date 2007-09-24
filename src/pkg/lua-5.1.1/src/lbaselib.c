@@ -18,9 +18,7 @@
 
 #include "lauxlib.h"
 #include "lualib.h"
-#ifdef LUA_JIVE_ASSERT
-#include "lstate.h"
-#endif
+
 
 
 
@@ -333,32 +331,13 @@ static int luaB_dofile (lua_State *L) {
 }
 
 
-#ifdef LUA_JIVE_ASSERT
-static int luaB_enableassert (lua_State *L) {
-  L->enableassert = 1;
-  return 0;
-}
-static int luaB_disableassert (lua_State *L) {
-  L->enableassert = 0;
-  return 0;
-}
-static int luaB_assert (lua_State *L) {
-  if (L->enableassert == 1) {
-    luaL_checkany(L, 1);
-    if (!lua_toboolean(L, 1))
-      return luaL_error(L, "%s", luaL_optstring(L, 2, "assertion failed!"));
-    return lua_gettop(L);
-  }
-  return 0;
-}
-#else
 static int luaB_assert (lua_State *L) {
   luaL_checkany(L, 1);
   if (!lua_toboolean(L, 1))
     return luaL_error(L, "%s", luaL_optstring(L, 2, "assertion failed!"));
   return lua_gettop(L);
 }
-#endif
+
 
 static int luaB_unpack (lua_State *L) {
   int i, e, n;
@@ -464,10 +443,6 @@ static int luaB_newproxy (lua_State *L) {
 
 
 static const luaL_Reg base_funcs[] = {
-#ifdef LUA_JIVE_ASSERT
-  {"enableassert", luaB_enableassert},
-  {"disableassert", luaB_disableassert},
-#endif
   {"assert", luaB_assert},
   {"collectgarbage", luaB_collectgarbage},
   {"dofile", luaB_dofile},
