@@ -494,7 +494,8 @@ function _storeSettings(entry)
 
 	log:warn("storing settings at ", entry.settingsFilepath)
 
-	local file = assert(io.open(entry.settingsFilepath, "w"))
+	local file = io.open(entry.settingsFilepath, "w")
+	assert(file)
 	serialize.save(file, "settings", entry.settings)
 	file:close()
 end

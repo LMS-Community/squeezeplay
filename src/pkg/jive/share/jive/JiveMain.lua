@@ -169,6 +169,11 @@ end
 function JiveMain:__init()
 	log:debug("JiveMain:__init()")
 
+	-- in testing we trust
+	disableassert()
+
+--	assert(to infinity() & beyond!)
+
 	-- Seed the rng
 	local initTime = os.time()
 	math.randomseed(initTime)

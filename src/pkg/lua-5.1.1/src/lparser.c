@@ -384,6 +384,9 @@ Proto *luaY_parser (lua_State *L, ZIO *z, Mbuffer *buff, const char *name) {
   struct LexState lexstate;
   struct FuncState funcstate;
   lexstate.buff = buff;
+#ifdef LUA_JIVE_ASSERT
+  lexstate.enableassert = 1; /* enable by default */
+#endif
   luaX_setinput(L, &lexstate, z, luaS_new(L, name));
   open_func(&lexstate, &funcstate);
   funcstate.f->is_vararg = VARARG_ISVARARG;  /* main func. is always vararg */
@@ -615,7 +618,39 @@ static void funcargs (LexState *ls, expdesc *f) {
     case '(': {  /* funcargs -> `(' [ explist1 ] `)' */
       if (line != ls->lastline)
         luaX_syntaxerror(ls,"ambiguous syntax (function call x new statement)");
+
+#ifdef LUA_JIVE_ASSERT
+      int skip = 0;
+      // if enableassert is 1, we want to know about disableassert
+      if (ls->enableassert == 1) {
+        if (strcmp(getstr(ls->t.seminfo.ts), "disableassert") == 0) {
+          skip = 1;
+          ls->enableassert = 0;
+        }
+      } else {
+        // we want to know about enableassert and assert
+        if (strcmp(getstr(ls->t.seminfo.ts), "enableassert") == 0) {
+          skip = 1;
+          ls->enableassert = 1;
+        } else if (strcmp(getstr(ls->t.seminfo.ts), "assert") == 0) {
+          skip = 1;
+        }
+      }
+      
+      if (skip) {
+        // we want balanced ()
+        int c = 1;
+        do {
+          luaX_next(ls);
+          if (ls->t.token == ')') c--;
+          else if (ls->t.token == '(') c++;
+        } while (c>0);
+      } else {
+        luaX_next(ls);
+      }
+#else
       luaX_next(ls);
+#endif
       if (ls->t.token == ')')  /* arg list is empty? */
         args.k = VVOID;
       else {
