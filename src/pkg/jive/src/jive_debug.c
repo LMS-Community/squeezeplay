@@ -5,6 +5,7 @@
 */
 
 
+#include <time.h>
 #include "common.h"
 
 
@@ -54,7 +55,7 @@ static void perf_hook(lua_State *L, lua_Debug *ar) {
 
 			/* message */
 			lua_pushstring(L, "Warning function took ");
-			lua_pushinteger(L, (ticks - hd->hook_ticks[hd->hook_stack]) / CLOCKS_PER_MSEC);
+			lua_pushinteger(L, (ticks - hd->hook_ticks[hd->hook_stack]) * 1000 / CLOCKS_PER_SEC);
 			lua_pushstring(L, "ms");
 			lua_concat(L, 3);
 			/* skip this function */
