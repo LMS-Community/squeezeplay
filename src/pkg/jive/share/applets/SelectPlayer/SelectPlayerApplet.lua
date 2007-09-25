@@ -86,7 +86,7 @@ function manageSelectPlayerMenu(self)
 				text = self:string("SELECT_PLAYER"),
 				callback = function() self:setupShow() end,
 			}
-			jiveMain:addItem(menuItem, 900)
+			jiveMain:addItem(menuItem, 80)
 			self.selectPlayerMenuItem = menuItem
 		end
 

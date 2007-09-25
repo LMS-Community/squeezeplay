@@ -18,7 +18,7 @@ TODO
 --]]
 
 -- stuff we use
-local tostring, tonumber, type = tostring, tonumber, type
+local tostring, tonumber, type, sort = tostring, tonumber, type, sort
 local pairs, ipairs, select, assert = pairs, ipairs, select, assert
 
 local oo                     = require("loop.simple")
@@ -134,6 +134,7 @@ local _lastInput = ""
 -- Forward declarations 
 local _newDestination
 local _actionHandler
+local _menuSorter
 
 
 -- _safeDeref
@@ -573,6 +574,22 @@ local function _browseSink(step, chunk, err)
 	end
 end
 
+-- _menuSorter is an Item comparator to sort items using item.weight as a primary key, 
+-- and the index of the element as a secondary key.
+local function _menuSorter(a, b)
+
+	if not a.weight then a.weight = 5 end
+	if not b.weight then b.weight = 5 end
+
+        local w = a.weight - b.weight
+
+        if w == 0 then
+		return #a < #b
+        end
+        return (w < 0)
+
+end
+
 
 local function _merge(mlData, mainMenu)
 	
@@ -581,6 +598,11 @@ local function _merge(mlData, mainMenu)
 		return 
 	end
 	
+	-- we aren't calling the sort function unless at 
+	-- least one Jive menu item has a weight associated with it
+
+	local _sortByWeight = false
+
 	for _, menuItem in mainMenu:iterator() do
 	
 		local insert = true
@@ -591,10 +613,10 @@ local function _merge(mlData, mainMenu)
 			local dataLabel = dataItem.text
 			if tostring(dataLabel) == tostring(menuLabel) then
 				
+				if menuItem.weight then _sortByWeight = true end
 				-- found a match
 				-- recurse if the mainMenu item is a submenu
 				-- the top of this function takes care of a non recursive data item
-				log:debug("MATCH")
 				if mainMenu:isSubMenu(menuLabel) then
 					_merge(dataItem, mainMenu:subMenu(menuLabel))
 				end
@@ -603,18 +625,26 @@ local function _merge(mlData, mainMenu)
 		end
 		
 		if insert then
-			log:debug("Inserting main menu item ", menuLabel, " at the bottom")
+			log:debug("Inserting main menu item ", menuLabel)
+			log:debug("This item has a weight of ", menuItem.weight)
+			if menuItem.weight then _sortByWeight = true end
 			table.insert(mlData.item_loop, 
 				{
 					text = menuLabel,
 					_go = function(event)
 						return menuItem.callback(event, menuItem) or EVENT_CONSUME
-					end
+					end,
+					weight = menuItem.weight,
 				}
 			)
 			mlData.count = mlData.count + 1
 		end
 	end
+
+	if _sortByWeight then
+		table.sort(mlData.item_loop, _menuSorter)
+	end
+	
 end
 
 
@@ -635,6 +665,7 @@ local function _mergeSink(step, chunk, err)
 			1,
 			{
 				text = _string("SLIMBROWSER_NOW_PLAYING"),
+				weight = 4,
 				_go = _goNowPlaying
 			}
 		)
@@ -642,17 +673,18 @@ local function _mergeSink(step, chunk, err)
 		
 		-- and merge the main menu items
 		_merge(data, jiveMain)
-		
+	
 	else
 		log:error(err)
 		-- FIXME: What to do if there is an error getting the menu for the player ?
 	end
-	
+
 	-- get notified of changes in main menu from now on
 	jiveMain:startNotify()
-	
+
 	-- call the regular sink
-	_browseSink(step, chunk, err)
+	_browseSink(step, chunk, err)		
+
 end
 
 

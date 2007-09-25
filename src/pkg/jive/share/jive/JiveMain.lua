@@ -192,7 +192,7 @@ function JiveMain:__init()
 --	profiler.start()
 
 	-- Top level menu
-	jiveMain:subMenu(_globalStrings:str("SETTINGS"), 900)
+	jiveMain:subMenu(_globalStrings:str("SETTINGS"), 50)
 
 	-- init our listeners
 	jiveMain.skins = {}

@@ -24,7 +24,7 @@ end
 
 
 function registerApplet(meta)
-	local extrasMenu = jiveMain:subMenu(meta:string('EXTRAS'), 500)
+	local extrasMenu = jiveMain:subMenu(meta:string('EXTRAS'), 45)
 
 	extrasMenu:addItem(meta:menuItem(meta:string('INFOBROWSER'), function(applet, ...) applet:menu(...) end), 900)
 end

@@ -20,7 +20,7 @@ SETTINGS
 	NL	Instellingen
 
 REMOTE_SETTINGS
-	EN	Remote Settings
+	EN	Controller Settings
 	DE	Fernbedienungseinstellungen
 	ES	Configuracion del mando
 	IT	Impostazioni telecomando
