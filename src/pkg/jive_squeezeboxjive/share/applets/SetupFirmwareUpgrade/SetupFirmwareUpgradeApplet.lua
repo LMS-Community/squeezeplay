@@ -154,7 +154,7 @@ function _chargeBattery(self)
 	local menu = SimpleMenu("menu",
 				{
 					{
-						text = self:string("UPDATE_CONTINUE"),
+						text = self:string("CONTINUE"),
 						callback = function()
 								   if _checkBattery() then
 									   self:_upgrade()

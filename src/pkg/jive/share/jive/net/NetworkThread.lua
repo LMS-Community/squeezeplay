@@ -184,7 +184,7 @@ end
 local function _t_thread(self)
 	local ok, err
 
-	--perfhook(50)
+--	perfhook(50)
 
 --	log:debug("_t_thread()")
 	

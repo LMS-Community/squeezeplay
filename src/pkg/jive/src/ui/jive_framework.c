@@ -11,7 +11,6 @@
 #include <time.h>
 
 
-int (*jive_sdlevent_handler)(lua_State *L, SDL_Event *event, JiveEvent *jevent);
 int (*jive_sdlevent_pump)(lua_State *L);
 
 char *jive_resource_path = NULL;
@@ -344,6 +343,10 @@ static int jiveL_process_events(lua_State *L) {
 
 		/* pump keyboard/mouse events once per frame */
 		SDL_PumpEvents();
+
+		if (jive_sdlevent_pump) {
+			jive_sdlevent_pump(L);
+		}
 
 		do {
 			SDL_Event event;
@@ -904,12 +907,6 @@ static int process_event(lua_State *L, SDL_Event *event) {
 	JiveEvent jevent;
 
 	memset(&jevent, 0, sizeof(JiveEvent));
-
-	if (jive_sdlevent_handler) {
-		if (jive_sdlevent_handler(L, event, &jevent)) {
-			return do_dispatch_event(L, &jevent);
-		}
-	}
 
 	switch (event->type) {
 	case SDL_QUIT:

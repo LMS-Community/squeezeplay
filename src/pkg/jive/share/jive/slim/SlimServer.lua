@@ -246,7 +246,7 @@ function __init(self, jnt, ip, port, name)
 
 	assert(ip, "Cannot create SlimServer without ip address")
 	
-	local jpool = HttpPool(jnt, ip, port, 1, 1, name)
+	local jpool = HttpPool(jnt, ip, port, 2, 2, name)
 
 	local obj = oo.rawnew(self, {
 

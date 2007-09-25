@@ -22,33 +22,15 @@ static const char *mixer_devname = "/dev/sound/mixer";
 
 // XXXX these probably should be discovered based on supported events, not hard coded
 static const char *bsp_event_devname = "/dev/input/event1";
+static const char *wheel_event_devname = "/dev/input/event2";
 static const char *motion_event_devname = "/dev/input/event3";
 
 
 static int bsp_fd = -1;
 static int mixer_fd = -1;
 static int bsp_event_fd = -1;
+static int wheel_event_fd = -1;
 static int motion_event_fd = -1;
-
-static bool motion_update = false;
-static JiveEvent motion_event;
-
-extern int (*jive_sdlevent_handler)(lua_State *L, SDL_Event *event, JiveEvent *jevent);
-
-
-static int process_event(lua_State *L, SDL_Event *event, JiveEvent *jevent) {
-
-	// process wheel events
-	switch (event->type) {
-	case SDL_MOUSEMOTION:
-		// mouse motion is used for scroll events
-		jevent->type = JIVE_EVENT_SCROLL;
-		jevent->scroll_rel = event->motion.yrel;
-		return 1;
-	}
-
-	return 0;
-}
 
 
 static int l_jivebsp_ioctl(lua_State *L) {
@@ -103,7 +85,7 @@ static int l_jivebsp_mixer(lua_State *L) {
 }
 
 
-static int handle_events(int fd) {
+static int handle_switch_events(int fd) {
 	JiveEvent event;
 	struct input_event ev[64];
 	size_t rd;
@@ -117,16 +99,7 @@ static int handle_events(int fd) {
 	}
 
 	for (i = 0; i < rd / sizeof(struct input_event); i++) {
-		if (ev[i].type == EV_SYN) {
-			// sync event
-			if (motion_update) {
-				motion_update = false;
-
-				motion_event.type = (JiveEventType) JIVE_EVENT_MOTION;
-				jive_queue_event(&motion_event);
-			}
-		}
-		else if (ev[i].type == EV_SW) {
+		if (ev[i].type == EV_SW) {
 			// switch event
 
 			// XXXX update event struct when code is public
@@ -135,54 +108,132 @@ static int handle_events(int fd) {
 			event.scroll_rel = ev[i].value;
 			jive_queue_event(&event);
 		}
-		else if (ev[i].type == EV_ABS) {
-			// motion event
-
-			// XXXX update event struct when code is public
-			motion_update = true;
-			switch (ev[i].code) {
-			case ABS_X:
-				motion_event.mouse_x = (Sint16) ev[i].value;
-				break;
-			case ABS_Y:
-				motion_event.mouse_y = (Sint16) ev[i].value;
-				break;
-			case ABS_Z:
-				motion_event.scroll_rel = (Sint16) ev[i].value;
-				break;
-			}
-		}
 	}
 
 	return 0;
 }
 
-static int event_loop(void *unused) {
+
+static int handle_wheel_events(int fd) {
+	JiveEvent event;
+	struct input_event ev[64];
+	size_t rd;
+	int i, scroll = 0;
+
+	rd = read(fd, ev, sizeof(struct input_event) * 64);
+
+	if (rd < (int) sizeof(struct input_event)) {
+		perror("read error");
+		return -1;
+	}
+
+	for (i = 0; i < rd / sizeof(struct input_event); i++) {
+		if (ev[i].type == EV_REL) {
+			scroll += ev[i].value;
+		}
+	}
+
+	event.type = (JiveEventType) JIVE_EVENT_SCROLL;
+	event.scroll_rel = scroll;
+	jive_queue_event(&event);
+
+	return 0;
+}
+
+
+static int handle_motion_events(int fd) {
+	JiveEvent event;
+	struct input_event ev[64];
+	size_t rd;
+	int i, n_x, n_y, n_z;
+
+	rd = read(fd, ev, sizeof(struct input_event) * 64);
+
+	if (rd < (int) sizeof(struct input_event)) {
+		perror("read error");
+		return -1;
+	}
+
+	// update event struct for motion
+	n_x = 0;
+	n_y = 0;
+	n_z = 0;
+	event.mouse_x = 0;
+	event.mouse_y = 0;
+	event.scroll_rel = 0;
+
+	for (i = 0; i < rd / sizeof(struct input_event); i++) {
+		if (ev[i].type == EV_ABS) {
+			// motion event
+			switch (ev[i].code) {
+			case ABS_X:
+				event.mouse_x += (Sint16) ev[i].value;
+				n_x++;
+				break;
+			case ABS_Y:
+				event.mouse_y += (Sint16) ev[i].value;
+				n_y++;
+				break;
+			case ABS_Z:
+				event.scroll_rel += (Sint16) ev[i].value;
+				n_z++;
+				break;
+			}
+		}
+	}
+
+	if (n_x > 0 || n_y > 0 || n_z > 0) {
+		if (n_x > 0) {
+			event.mouse_x /= n_x;
+		}
+		if (n_y > 0) {
+			event.mouse_y /= n_y;
+		}
+		if (n_z > 0) {
+			event.scroll_rel /= n_z;
+		}
+		
+		event.type = (JiveEventType) JIVE_EVENT_MOTION;
+		jive_queue_event(&event);
+	}
+	return 0;
+}
+
+
+static int event_pump(lua_State *L) {
 	fd_set fds;
+	struct timeval timeout;
 
-	while (1) {
-		FD_ZERO(&fds);
+	FD_ZERO(&fds);
+	memset(&timeout, 0, sizeof(timeout));
 
-		if (bsp_event_fd != -1) {
-			FD_SET(bsp_event_fd, &fds);
-		}
+	if (bsp_event_fd != -1) {
+		FD_SET(bsp_event_fd, &fds);
+	}
 
-		if (motion_event_fd != -1) {
-			FD_SET(motion_event_fd, &fds);
-		}
+	if (wheel_event_fd != -1) {
+		FD_SET(wheel_event_fd, &fds);
+	}
 
-		if (select(FD_SETSIZE, &fds, NULL, NULL, NULL) < 0) {
-			perror("jivebsp:");
-			return -1;
-		}
+	if (motion_event_fd != -1) {
+		FD_SET(motion_event_fd, &fds);
+	}
 
-		if (bsp_event_fd != -1 && FD_ISSET(bsp_event_fd, &fds)) {
-			handle_events(bsp_event_fd);
-		}
+	if (select(FD_SETSIZE, &fds, NULL, NULL, &timeout) < 0) {
+		perror("jivebsp:");
+		return -1;
+	}
 
-		if (motion_event_fd != -1 && FD_ISSET(motion_event_fd, &fds)) {
-			handle_events(motion_event_fd);
-		}
+	if (bsp_event_fd != -1 && FD_ISSET(bsp_event_fd, &fds)) {
+		handle_switch_events(bsp_event_fd);
+	}
+
+	if (wheel_event_fd != -1 && FD_ISSET(wheel_event_fd, &fds)) {
+		handle_wheel_events(wheel_event_fd);
+	}
+
+	if (motion_event_fd != -1 && FD_ISSET(motion_event_fd, &fds)) {
+		handle_motion_events(motion_event_fd);
 	}
 
 	return 0;
@@ -261,16 +312,15 @@ int luaopen_jiveBSP(lua_State *L) {
 		perror("jivebsp:");
 	}
 
+	if ((wheel_event_fd = open(wheel_event_devname, O_RDONLY)) < 0) {
+		perror("jivebsp:");
+	}
+
 	if ((motion_event_fd = open(motion_event_devname, O_RDONLY)) < 0) {
 		perror("jivebsp motion:");
 	}
 
-	// additional thread to monitor events
-	SDL_CreateThread(event_loop, NULL);
-
-	// hook to allow wheel processing for SDL events
-	jive_sdlevent_handler = process_event;
-
+	jive_sdlevent_pump = event_pump;
 
 	// XXXX remove this when code is public
 	lua_getglobal(L, "jive");

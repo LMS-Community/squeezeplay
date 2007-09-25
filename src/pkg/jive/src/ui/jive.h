@@ -225,6 +225,10 @@ struct jive_perfwarn {
 };
 
 
+/* extra pump function */
+extern int (*jive_sdlevent_pump)(lua_State *L);
+
+
 /* Util functions */
 void jive_print_stack(lua_State *L, char *str);
 int jiveL_getframework(lua_State *L);
