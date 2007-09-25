@@ -33,7 +33,7 @@ BSP_BRIGHTNESS_ADJUST_HELP
 	NL	Gebruik het wiel om de helderheid van de verlichting aan te passen.
 
 BSP_BACKLIGHT_TIMER
-	EN	Screen dimming
+	EN	Screen Dimming
 
 BSP_BACKLIGHT_HIGH
 	EN	High
