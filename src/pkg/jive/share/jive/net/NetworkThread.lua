@@ -42,6 +42,8 @@ local Framework         = require("jive.ui.Framework")
 
 local log               = require("jive.utils.log").logger("net.thread")
 
+local perfhook          = jive.perfhook
+
 local EVENT_SERVICE_JNT = jive.ui.EVENT_SERVICE_JNT
 local EVENT_CONSUME     = jive.ui.EVENT_CONSUME
 
@@ -181,6 +183,8 @@ end
 -- the thread function with the endless loop
 local function _t_thread(self)
 	local ok, err
+
+	--perfhook(50)
 
 --	log:debug("_t_thread()")
 	

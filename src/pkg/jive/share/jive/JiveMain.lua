@@ -228,6 +228,7 @@ function JiveMain:__init()
 
 	-- debug: set event warning thresholds (0 = off)
 	jive.ui.Framework:perfwarn({ screen = 50, layout = 0, draw = 0, event = 50, queue = 5, garbage = 10 })
+	--jive.perfhook(50)
 
 	-- show splash screen for five seconds, or until key/scroll events
 	jive.ui.Framework:setUpdateScreen(false)

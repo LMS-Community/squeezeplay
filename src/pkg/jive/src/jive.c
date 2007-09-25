@@ -35,6 +35,7 @@
 /* Module initialization functions */
 int luaopen_jive(lua_State *L);
 int luaopen_jive_ui_framework(lua_State *L);
+int luaopen_jive_debug(lua_State *L);
 
 
 /* OPEN_ALL_STDLIBS
@@ -129,6 +130,9 @@ static void openlibs(lua_State *L) {
 	lua_call(L, 0, 0);
 
 	lua_pushcfunction(L, luaopen_jive_ui_framework);
+	lua_call(L, 0, 0);
+
+	lua_pushcfunction(L, luaopen_jive_debug);
 	lua_call(L, 0, 0);
 }
 

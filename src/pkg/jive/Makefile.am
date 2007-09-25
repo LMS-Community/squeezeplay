@@ -63,7 +63,8 @@ endif
 
 
 jive_SOURCES = \
-	src/jive.c
+	src/jive.c \
+	src/jive_debug.c
 
 jive_LDADD = libjiveui.la -llua
 

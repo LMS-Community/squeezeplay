@@ -59,7 +59,7 @@ function check(class, obj, step)
 			}
 		end
 	else
-		if not class or class == "" then class = "Anonymous" print("ANAONYMOUYS") end
+		--if not class or class == "" then class = "Anonymous" print("ANONYMOUS") end
 		objects[obj] = {
 			times = {},
 			fclass = class,
