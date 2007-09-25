@@ -48,7 +48,10 @@ local theTimer = nil
 
 local lWTitle = nil
 
-local lTrackInfo = nil
+local lTrackName = nil
+local lTrackArtist = nil
+local lTrackAlbum = nil
+local lPlaylist = nil
 local iArt = nil
 local sPos = nil
 local lPos = nil
@@ -56,6 +59,8 @@ local lRemain = nil
 
 local iTrackPos = 0
 local iTrackLen = 0
+
+local strOf = " of "
 
 ----------------------------------------------------------------------------------------
 -- Helper Functions
@@ -151,7 +156,27 @@ local function updatePosition()
 end
 
 local function setTrackInfo(value)
-	lTrackInfo:setValue(value)
+	-- Split Text Up into the three infos
+	--
+	local x = string.gfind(value, "([^\n]*)")
+	local i = 0
+	local split = {}
+	for v in x do
+		if string.len(v) > 0 then
+			i = i + 1
+			split[i] = v
+		end
+	end
+
+	if i == 3 then
+		lTrackName:setValue(split[1]);
+		lTrackArtist:setValue(split[3]);
+		lTrackAlbum:setValue(split[2]);
+	else 
+		lTrackName:setValue("")
+		lTrackArtist:setValue(value)
+		lTrackAlbum:setValue("")
+	end
 end
 
 local function setTime(trackpos, tracklen)
@@ -188,6 +213,16 @@ end
 local function updateTrack(trackinfo, pos, length)
 	setTrackInfo(trackinfo)
 	setTime(pos, length)
+end
+
+local function updatePlaylist(enabled, nr, count)
+	log:error(nr .. " - " .. count)
+	if enabled == true then
+		nr = nr + 1
+		lPlaylist:setValue(nr .. strOf .. count)
+	else 
+		lPlaylist:setValue("")
+	end
 end
 
 local function tick()
@@ -239,8 +274,6 @@ function _process_status(self, event)
 		log:debug("Unknown Mode: " .. data.mode)
 	end
 
-	log:error("Time: " .. data.mode)
-
 	if data.item_loop ~= nil then
 
 		local text = data.item_loop[1].text
@@ -253,10 +286,12 @@ function _process_status(self, event)
 		local icon = _getIcon(theItem)
 
 		updateTrack(text, data.time, data.duration)
+		updatePlaylist(true, data.playlist_cur_index, data.playlist_tracks)
 		setArtwork(icon)
 	else
 		theItem = nil
 		updateTrack("(Nothing Playing)", 0, 0)
+		updatePlaylist(false, 0, 0)
 		setArtwork(nil)
 	end
 end
@@ -271,6 +306,9 @@ function free(self)
 end
 
 function _createUI(self)
+	-- Retrieve " of " string
+	strOf = " " .. tostring(self:string("SCREENSAVER_NOWPLAYING_OF")) .. " "
+
 	local window = Window("nowplaying")
 
 	local sw, sh = Framework:getScreenSize()
@@ -279,39 +317,54 @@ function _createUI(self)
 	lWTitle:setPosition(5, 5)
 	lWTitle:setSize(sw-10, 35)
 
-	lTrackInfo = Label("label", "#TRACK NAME#")
-	lTrackInfo:setPosition(10, 45)
-	lTrackInfo:setSize(sw-20, 60)
+	lPlaylist = Label("playlist", "")
+	lPlaylist:setPosition(sw-70, 15)
+	lPlaylist:setSize(55, 10)
+
+	lTrackName = Label("labelbold", "")
+	lTrackName:setPosition(10, 45)
+	lTrackName:setSize(sw-20, 15)
+
+	lTrackArtist = Label("label", "")
+	lTrackArtist:setPosition(10, 60)
+	lTrackArtist:setSize(sw-20, 15)
+
+	lTrackAlbum = Label("label", "")
+	lTrackAlbum:setPosition(10, 75)
+	lTrackAlbum:setSize(sw-20, 15)
 
 	lPos = Label("wlabel", "n/a")
-	lPos:setPosition(10, sh-60)
-	lPos:setSize(sw/2, 10)
+	lPos:setPosition(10, sh-59)
+	lPos:setSize(20, 10)
 
 	lRemain = Label("wrlabel", "n/a")
-	lRemain:setPosition(sw/2, sh-60)
-	lRemain:setSize(sw/2-10, 10)
+	lRemain:setPosition(sw-30, sh-59)
+	lRemain:setSize(25, 10)
 
 	iArt = Icon("artwork")
 	iArt:setSize(ARTWORK_SIZE, ARTWORK_SIZE)
 	iArt:setPosition(sw/2-(ARTWORK_SIZE/2), 115)
 
 	local bg = Label("background", "")
-	bg:setSize(sw-11, 70)
+	bg:setSize(sw-11, 65)
 	bg:setPosition(6, 38)
 
 	sPos = Slider("slider", 0, 100, 0, function(slider, value) log:warn("slider: " .. value) end)
-	sPos:setPosition(10, sh-75)
-	sPos:setSize(sw-20, 10)
+	sPos:setPosition(35, sh-60)
+	sPos:setSize(sw-70, 10)
 	
 	window:addWidget(bg)
 	window:addWidget(lWTitle)
-	window:addWidget(lTrackInfo)
+	window:addWidget(lPlaylist)
+	window:addWidget(lTrackName)
+	window:addWidget(lTrackArtist)
+	window:addWidget(lTrackAlbum)
 	window:addWidget(sPos)
 	window:addWidget(lPos)
 	window:addWidget(lRemain)
 	window:addWidget(iArt)
 
-	window:focusWidget(lTrackInfo)
+	--window:focusWidget(lTrackInfo)
 
 	theWindow = window
 
@@ -320,7 +373,7 @@ end
 
 function openScreensaver(self, menuItem)
 
-	local window = _createUI()
+	local window = _createUI(self)
 
 	local discovery = appletManager:getAppletInstance("SlimDiscovery")
 	thePlayer = discovery:getCurrentPlayer()
@@ -392,22 +445,47 @@ function skin(self, s)
                                        imgpath .. "bghighlight_l.png"
                                })
 
-        s.nptitle.font = Font:load(fontpath .. "FreeSansBold.ttf", 20)
+	-- Title
+        s.nptitle.font = Font:load(fontpath .. "FreeSansBold.ttf", 18)
         s.nptitle.fg = { 0x37, 0x37, 0x37 }
         s.nptitle.bgImg = titleBox
         s.nptitle.padding = { 10, 7, 8, 9 }
         s.nptitle.position = LAYOUT_NORTH
 
-        s.label.font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
+	-- Bold Font for song title
+        s.labelbold.font = Font:load(fontpath .. "FreeSansBold.ttf", 13)
 
-	s.wlabel.fg = { 0xFF, 0xFF, 0xFF }
+	-- Normal font for artist and album name
+	s.label.font = Font:load(fontpath .. "FreeSans.ttf", 13)
 
-	s.wrlabel.fg = { 0xFF, 0xFF, 0xFF }
+	-- Time Position Label
+	s.wlabel.font = Font:load(fontpath .. "FreeSansBold.ttf", 11)
+	s.wlabel.fg = { 0xE7, 0xE7, 0xE7 }
+	
+	-- Time Position Label (DropShadow)
+	s.wlabel_ds.font = Font:load(fontpath .. "FreeSansBold.ttf", 11)
+	s.wlabel_ds.fg = { 0x35, 0x35, 0x35 }
+
+	-- Time Remaining Label
+	s.wrlabel.font = Font:load(fontpath .. "FreeSansBold.ttf", 11)
+	s.wrlabel.fg = { 0xE7, 0xE7, 0xE7 }
 	s.wrlabel.textAlign = "top-right"
 
+	-- Time Remaining Label (DropShadow)
+	s.wrlabel_ds.font = Font:load(fontpath .. "FreeSansBold.ttf", 11)
+	s.wrlabel_ds.fg = { 0x35, 0x35, 0x35 }
+	s.wrlabel_ds.textAlign = "top-right"
+
+	-- Playlist display
+	s.playlist.font = Font:load(fontpath .. "FreeSans.ttf", 14)
+	s.playlist.fg = { 0x0, 0x0, 0x0 }
+	s.playlist.textAlign = "top-right"
+
+	-- Artwork
 	s.artwork.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.artwork.x = 50
 	s.artwork.y = 100
 	
+	-- Label Background 
 	s.background.bgImg = highlightBox
 end
