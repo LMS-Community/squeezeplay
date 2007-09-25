@@ -19,7 +19,7 @@ DefaultSkinApplet overrides the following methods:
 
 
 -- stuff we use
-local ipairs, pairs = ipairs, pairs
+local ipairs, pairs, setmetatable = ipairs, pairs, setmetatable
 
 local oo                     = require("loop.simple")
 
@@ -67,9 +67,15 @@ oo.class(_M, Applet)
 local imgpath = "applets/DefaultSkin/images/"
 local sndpath = "applets/DefaultSkin/sounds/"
 local fontpath = "fonts/"
+local _setDefault
 
+local function _setDefault (t,d)
+	t.___ = d
+	setmetatable(t, mt)
+end
 
 -- define a local function to make it easier to create icons.
+local mt = {__index = function(t) return t.___ end}
 local function _icon(var, x, y, img)
 	var.x = x
 	var.y = y
@@ -303,6 +309,13 @@ function skin(self, s)
 	s.item.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
 	s.item.fg = { 0xe7, 0xe7, 0xe7 }
 	s.item.sh = { 0x37, 0x37, 0x37 }
+
+	-- menu item
+	s.itemNoAction.padding = 10
+	s.itemNoAction.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
+	s.itemNoAction.fg = { 0xe7, 0xe7, 0xe7 }
+	s.itemNoAction.sh = { 0x37, 0x37, 0x37 }
+
 	--s.item.bgImg = selectionBox
 
 	s.current.padding = 10
@@ -321,6 +334,10 @@ function skin(self, s)
 	s.selected.current.bgImg = selectionBox
 	s.selected.current.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
 
+	s.selected.itemNoAction.fg = { 0x37, 0x37, 0x37 }
+	s.selected.itemNoAction.sh = { }
+	s.selected.itemNoAction.bgImg = selectionBox
+
 	-- locked menu item (with loading animation)
 	s.locked.item.fg = { 0x37, 0x37, 0x37 }
 	s.locked.item.sh = { }
@@ -335,6 +352,12 @@ function skin(self, s)
 	s.item.choice.fg = { 0xe7, 0xe7, 0xe7 }
 	s.item.choice.sh = { 0x37, 0x37, 0x37 }
 	s.item.choice.padding = { 0, 0, 10, 0 }
+
+	-- menu item choice
+	s.itemNoAction.choice.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
+	s.itemNoAction.choice.fg = { 0xe7, 0xe7, 0xe7 }
+	s.itemNoAction.choice.sh = { 0x37, 0x37, 0x37 }
+	s.itemNoAction.choice.padding = { 0, 0, 10, 0 }
 
 	-- selected menu item choice
 	s.selected.item.choice.fg = { 0x37, 0x37, 0x37 }

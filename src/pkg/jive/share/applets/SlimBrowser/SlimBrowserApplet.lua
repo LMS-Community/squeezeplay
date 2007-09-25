@@ -1125,7 +1125,17 @@ local function _browseMenuRenderer(menu, widgets, toRenderIndexes, toRenderSize,
 			if current then
 				style = "albumcurrent"
 			end
-			
+
+			-- remove right arrow in cases where no action is defined
+			if not item["actions"] 
+				and not item["_go"] 
+				and not item["_do"] 
+				and not item["item_loop"]
+				and not item["textArea"]
+			then
+				style = 'itemNoAction'
+			end
+
 			if not widget then
 				widgets[widgetIndex] = _newDecoratedLabel(style, item, db)
 			else
