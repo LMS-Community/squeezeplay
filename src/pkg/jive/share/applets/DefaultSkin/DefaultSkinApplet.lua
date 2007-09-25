@@ -19,7 +19,7 @@ DefaultSkinApplet overrides the following methods:
 
 
 -- stuff we use
-local ipairs, pairs, setmetatable = ipairs, pairs, setmetatable
+local ipairs, pairs = ipairs, pairs
 
 local oo                     = require("loop.simple")
 
@@ -67,15 +67,8 @@ oo.class(_M, Applet)
 local imgpath = "applets/DefaultSkin/images/"
 local sndpath = "applets/DefaultSkin/sounds/"
 local fontpath = "fonts/"
-local _setDefault
-
-local function _setDefault (t,d)
-	t.___ = d
-	setmetatable(t, mt)
-end
 
 -- define a local function to make it easier to create icons.
-local mt = {__index = function(t) return t.___ end}
 local function _icon(var, x, y, img)
 	var.x = x
 	var.y = y
