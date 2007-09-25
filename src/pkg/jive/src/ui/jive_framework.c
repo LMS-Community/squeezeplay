@@ -82,6 +82,24 @@ static int process_event(lua_State *L, SDL_Event *event);
 int jiveL_update_screen(lua_State *L);
 
 
+static int traceback (lua_State *L) {
+	lua_getfield(L, LUA_GLOBALSINDEX, "debug");
+	if (!lua_istable(L, -1)) {
+		lua_pop(L, 1);
+		return 1;
+	}
+	lua_getfield(L, -1, "traceback");
+	if (!lua_isfunction(L, -1)) {
+		lua_pop(L, 2);
+		return 1;
+	}
+	lua_pushvalue(L, 1);  /* pass error message */
+	lua_pushinteger(L, 2);  /* skip this function and traceback */
+	lua_call(L, 2, 1);  /* call debug.traceback */
+	return 1;
+}
+
+
 static int jiveL_init(lua_State *L) {
 	SDL_Rect r;
 	JiveSurface *srf, *splash;
@@ -309,7 +327,22 @@ static int jiveL_process_events(lua_State *L) {
 			}
 		}
 
-		/* only pump events once per frame */
+		/* pump network queue */
+		lua_getglobal(L, "jnt");
+		if (!lua_isnil(L, -1)) {
+			lua_pushcfunction(L, traceback);  /* push traceback function */
+
+			lua_getfield(L, -2, "pump");
+			lua_pushvalue(L, -3);
+			if (lua_pcall(L, 1, 0, -3)) {
+				fprintf(stderr, "error in network pump:\n\t%s\n", lua_tostring(L, -1));
+				lua_pop(L, 1);
+			};
+			lua_pop(L, 1);
+		}
+		lua_pop(L, 1);
+
+		/* pump keyboard/mouse events once per frame */
 		SDL_PumpEvents();
 
 		do {
@@ -584,24 +617,6 @@ void jive_queue_event(JiveEvent *evt) {
 	memcpy(user_event.user.data1, evt, sizeof(JiveEvent));
 
 	SDL_PushEvent(&user_event);
-}
-
-
-static int traceback (lua_State *L) {
-	lua_getfield(L, LUA_GLOBALSINDEX, "debug");
-	if (!lua_istable(L, -1)) {
-		lua_pop(L, 1);
-		return 1;
-	}
-	lua_getfield(L, -1, "traceback");
-	if (!lua_isfunction(L, -1)) {
-		lua_pop(L, 2);
-		return 1;
-	}
-	lua_pushvalue(L, 1);  /* pass error message */
-	lua_pushinteger(L, 2);  /* skip this function and traceback */
-	lua_call(L, 2, 1);  /* call debug.traceback */
-	return 1;
 }
 
 

@@ -111,6 +111,19 @@ end
 
 --[[
 
+=head2 len()
+
+Returns the length of the queue
+
+=cut
+--]]
+function metat.__index:len(lock)
+	return self.last - self.first
+end
+
+
+--[[
+
 =head2 newqueue(size)
 
 Creates a new mutexed queue holding size elements.

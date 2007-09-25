@@ -49,9 +49,8 @@ local EVENT_CONSUME     = jive.ui.EVENT_CONSUME
 module(..., oo.class)
 
 -- constants
-local QUEUE_SIZE        = 50   -- size of the queue from/to the jnt
-local TIMEOUT           = 0.1  -- select timeout
-local QUEUE_PROCESS     = 5    -- number of queue items processed by loop (network thread side)
+local QUEUE_SIZE        = 100  -- size of the queue from/to the jnt
+local TIMEOUT           = 0.05 -- select timeout
 
 
 -- _add
@@ -169,15 +168,10 @@ local function _t_dequeue(self)
 --	log:debug("_t_dequeue()")
 	
 	local msg = true
-	local count = 0
-	
-	while msg and count < QUEUE_PROCESS do
-	
+	while msg do
 		msg = self.in_queue:remove(false)
-		
 		if msg then
 			msg()
-			count = count + 1
 		end
 	end
 end
@@ -193,15 +187,25 @@ local function _t_thread(self)
 --	log:info("NetworkThread starting...")
 
 	while self.running do
+		local t0 = Framework:getTicks()
 
 		ok, err = pcall(_t_select, self)
 		if not ok then
 			log:warn("error in _t_select: " .. err)
 		end
 
+		local t1 = Framework:getTicks()
+
+		local len = self.in_queue:len()
 		ok, err = pcall(_t_dequeue, self)
 		if not ok then
 			log:warn("error in _t_dequeue: " .. err)
+		end
+
+		local t2 = Framework:getTicks()
+
+		if t1 - t0 > 105 or t2 - t1 > 10 then
+			log:warn("NetworkThread select=", (t1-t0), "ms dequeue=", (t2-t1), " in_queue=", len)
 		end
 	end
 	
@@ -219,8 +223,8 @@ function t_perform(self, func)
 	self.out_queue:insert(func)
 
 	-- push event to wake up main thread
-	local evt = Event:new(EVENT_SERVICE_JNT)
-	Framework:pushEvent(evt)
+----	local evt = Event:new(EVENT_SERVICE_JNT)
+----	Framework:pushEvent(evt)
 end
 
 
@@ -258,18 +262,30 @@ end
 
 --[[
 
-=head2 NetworkThread:idle()
+=head2 NetworkThread:pump()
 
 Processes the queue on the main thread side. Messages are closures (functions), and simply called.
 
 =cut
 --]]
-function idle(self)
+function pump(self)
 --	log:debug("NetworkThread:idle()")
 	
-	msg = self.out_queue:remove(false)
-	if msg then
-		msg()
+	local t0 = Framework:getTicks()
+	local len = self.out_queue:len()
+
+	local msg = true
+	while msg do
+		msg = self.out_queue:remove(false)
+		if msg then
+			msg()
+		end
+	end
+
+	local t1 = Framework:getTicks()
+
+	if t1 - t0 > 5 then
+		log:warn("NetworkThread pump=", (t1 - t0), "ms out_queue=", len)
 	end
 end
 
@@ -331,14 +347,6 @@ function __init(self)
 		running = true,
 	})
 
-
-	-- create callback to service queue in main thread
-	Framework:addListener(EVENT_SERVICE_JNT,
-			      function()
-				      obj:idle()
-				      return EVENT_CONSUME
-			      end)
-	
 	-- we're running
 	thread.newthread(_t_thread, {obj})
 	

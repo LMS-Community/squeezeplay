@@ -246,7 +246,7 @@ function __init(self, jnt, ip, port, name)
 
 	assert(ip, "Cannot create SlimServer without ip address")
 	
-	local jpool = HttpPool(jnt, ip, port, 4, 2, name)
+	local jpool = HttpPool(jnt, ip, port, 1, 1, name)
 
 	local obj = oo.rawnew(self, {
 
@@ -390,7 +390,7 @@ local function _getArtworkThumbSink(self, iconId, size)
 	local icons = self.artworkThumbIcons
 	
 	if not size then
-		size = 50
+		size = 56
 	end
 	
 	local cacheKey = iconId .. size
@@ -480,14 +480,16 @@ function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, priority)
 	end
 	
 	-- no luck, generate a request for the artwork
-	local req = RequestHttp(
-		_getArtworkThumbSink(self, iconId, size), 
-		'GET',
-		uriGenerator(iconId, size)
-	)
-	-- remember the icon
 	self.artworkThumbIcons[cacheKey] = {icon}
 	logcache:debug("..fetching artwork")
+
+	local req = function()
+			    return RequestHttp(
+					_getArtworkThumbSink(self, iconId, size), 
+					'GET',
+					uriGenerator(iconId, size)
+				)
+		    end
 
 	if priority then
 		self.jpool:queuePriority(req)
@@ -513,7 +515,7 @@ function fetchArtworkURL(self, url, icon, size)
 	end
 	
 	if not size then
-		size = 50
+		size = 56
 	end
 	
 	local cacheKey = url .. size

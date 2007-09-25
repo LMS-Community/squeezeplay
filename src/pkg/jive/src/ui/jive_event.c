@@ -217,10 +217,6 @@ int jiveL_event_tostring(lua_State* L) {
 		lua_pushstring(L, "FOCUS_LOST");
 		break;
 		
-	case JIVE_EVENT_SERVICE_JNT:
-		lua_pushstring(L, "SERVICE_JNT");
-		break;
-		
 	default:
 		break;
 	}

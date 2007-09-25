@@ -348,7 +348,7 @@ local function _artworkItem(item)
 	elseif icon == false then
 		icon = nil
 	end
-	
+
 	return icon
 end
 
@@ -1120,6 +1120,21 @@ local function _browseMenuRenderer(menu, widgets, toRenderIndexes, toRenderSize,
 			end
 		end
 	end
+
+--[[
+	-- code for testing latency between ui and network threads
+	local t0 = Framework:getTicks()
+	jnt:perform(function()
+			    local t1 = Framework:getTicks()
+			    jnt:t_perform(function()
+						  local f0 = t0
+						  local f1 = t1
+						  local t2 = Framework:getTicks()
+						  log:warn("QUEUE ROUNDTRIP ", "jnt=", (f1-f0), " uit=", (t2-f1), " f0=", f0, " f1=", f1, " t2=", t2)
+					  end)
+		    end)
+--]]
+
 end
 
 

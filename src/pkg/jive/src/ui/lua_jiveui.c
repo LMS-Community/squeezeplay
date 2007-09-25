@@ -2021,7 +2021,6 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
     tolua_constant(tolua_S,"EVENT_HIDE",JIVE_EVENT_HIDE);
     tolua_constant(tolua_S,"EVENT_FOCUS_GAINED",JIVE_EVENT_FOCUS_GAINED);
     tolua_constant(tolua_S,"EVENT_FOCUS_LOST",JIVE_EVENT_FOCUS_LOST);
-    tolua_constant(tolua_S,"EVENT_SERVICE_JNT",JIVE_EVENT_SERVICE_JNT);
     tolua_constant(tolua_S,"EVENT_WINDOW_RESIZE",JIVE_EVENT_WINDOW_RESIZE);
     tolua_constant(tolua_S,"EVENT_SWITCH",JIVE_EVENT_SWITCH);
     tolua_constant(tolua_S,"EVENT_MOTION",JIVE_EVENT_MOTION);
