@@ -5,7 +5,7 @@
 #
 
 NETWORK
-	EN	Wireless Networks
+	EN	Wireless Network
 
 NETWORK_FINDING_NETWORKS
 	EN	\nFinding Networks
