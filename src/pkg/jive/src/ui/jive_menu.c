@@ -93,6 +93,10 @@ int jiveL_menu_layout(lua_State *L) {
 	/* measure scrollbar */
 	sw = 0;
 	sh = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
+	sborder.left = 0;
+	sborder.top = 0;
+	sborder.right = 0;
+	sborder.bottom = 0;
 
 	if (peer->has_scrollbar) {
 		lua_getfield(L, 1, "scrollbar");
