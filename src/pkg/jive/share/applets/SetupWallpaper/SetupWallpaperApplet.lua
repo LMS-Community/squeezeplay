@@ -48,23 +48,26 @@ oo.class(_M, Applet)
 -- Wallpapers
 local wallpapers = {
 	{
-		["EGGPLANT"] = "eggplant.png",
+		["SUNRISE"] = "sunrise.png",
+	},
+	{
+		["SUNLIGHT"] = "sunlight.png",
+		["FADETOBLACK"] = "fade_to_black.png",
+	},
+	{
 		["CONCRETE"] = "concrete.png",
 		["MIDNIGHT"] = "midnight.png",
 		["PEA"] = "pea.png",
-		["SLATE"] = "slate.png",
 		["BLACK"] = "black.png",
-		["CAMO"] = "camo.png",
 		["STONE"] = "stone.png",
 	},
 	{
 		["DUNES"] = "Chapple_1.jpg",
 		["IRIS"] = "Clearly-Ambiguous_1.jpg",
-		["YELLOW_ROSE"] = "Clearly-Ambiguous_2.jpg",
 		["SMOKE"] = "Clearly-Ambiguous_3.jpg",
 		["AMBER"] = "Clearly-Ambiguous_4.jpg",
 		["FLAME"] = "Clearly-Ambiguous_6.jpg",
-		["LOS_CARDINALOS"] = "Los-Cardinalos_1.jpg",
+		["GRAFFITI"] = "Los-Cardinalos_1.jpg",
 		["WEATHERED_WOOD"] = "Orin-Optiglot_1.jpg",
 	}
 }

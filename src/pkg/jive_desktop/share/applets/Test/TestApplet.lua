@@ -154,10 +154,6 @@ function menu(self, menuItem)
 				callback = function(event, menuItem)
 					self:ipinputWindow(menuItem)
 				end },
-			{ text = "Popup",
-				callback = function(event, menuItem)
-					self:popupWindow(menuItem)
-				end },
 			{ text = "Image JPG",
 				callback = function(event, menuItem)
 						   local t = Timer(0, function()
@@ -362,18 +358,6 @@ function ipinputWindow(self, menuItem)
 
 	self:tieAndShowWindow(window)
 	return window
-end
-
-
-function popupWindow(self, menuItem)
-
-	local popup = Popup("popup", menuItem.text)
-
-	local text = Textarea("textarea", "This is a popup window.\n\nPressing any button should close this window.")
-	popup:addWidget(text)
-
-	self:tieAndShowWindow(popup)
-	return popup
 end
 
 

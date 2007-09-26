@@ -28,12 +28,12 @@ SCREENSAVER_FLICKR_LOADING_PHOTO
 	NL	Flickr is bezig met laden van foto...
 
 SCREENSAVER_FLICKR_ERROR
-	EN	Flickr error:
-	DE	Flickr Fehler:
-	ES	Error de Flickr:
-	IT	Errore Flickr:
-	FR	Erreur Flickr:
-	NL	Flickr-fout:
+	EN	Flickr error
+	DE	Flickr Fehler
+	ES	Error de Flickr
+	IT	Errore Flickr
+	FR	Erreur Flickr
+	NL	Flickr-fout
 
 SCREENSAVER_FLICKR_DELAY
 	EN	Speed

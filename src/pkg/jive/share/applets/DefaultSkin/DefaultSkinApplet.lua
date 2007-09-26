@@ -221,6 +221,23 @@ function skin(self, s)
 
 	local textinputCursor = Tile:loadImage(imgpath .. "text_entry_letter.png")
 
+
+	local TEXT_COLOR = { 0xFF, 0xFF, 0xFF }
+	local TEXT_SH_COLOR = { } --{ 0x37, 0x37, 0x37 }
+
+	local SELECT_COLOR = { 0x00, 0x00, 0x00 }
+	local SELECT_SH_COLOR = { }
+
+	local FONT_13px = Font:load(fontpath .. "FreeSans.ttf", 14)
+	local FONT_15px = Font:load(fontpath .. "FreeSans.ttf", 16)
+
+	local FONT_BOLD_13px = Font:load(fontpath .. "FreeSansBold.ttf", 14)
+	local FONT_BOLD_15px = Font:load(fontpath .. "FreeSansBold.ttf", 16)
+	local FONT_BOLD_16px = Font:load(fontpath .. "FreeSansBold.ttf", 17)
+	local FONT_BOLD_18px = Font:load(fontpath .. "FreeSansBold.ttf", 20)
+	local FONT_BOLD_20px = Font:load(fontpath .. "FreeSansBold.ttf", 22)
+
+
 	-- Iconbar definitions, each icon needs an image and x,y
 	s.icon_background.x = 0
 	s.icon_background.y = screenHeight - 30
@@ -278,7 +295,7 @@ function skin(self, s)
 	s.icon_time.layer = LAYER_FRAME
 	s.icon_time.position = LAYOUT_SOUTH
 	s.icon_time.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
-	s.icon_time.fg = { 0xe7, 0xe7, 0xe7 }
+	s.icon_time.fg = TEXT_COLOR
 
 
 	-- Window title, this is a Label
@@ -287,8 +304,8 @@ function skin(self, s)
 	s.title.padding = { 10, 7, 8, 9 }
 	s.title.position = LAYOUT_NORTH
 
-	s.title.font = Font:load(fontpath .. "FreeSansBold.ttf", 20)
-	s.title.fg = { 0, 0, 0 }
+	s.title.font = FONT_BOLD_18px
+	s.title.fg = SELECT_COLOR
 	s.title.bgImg = titleBox
 
 
@@ -298,42 +315,49 @@ function skin(self, s)
 	s.menu.itemHeight = 27
 
 	-- menu item
-	s.item.padding = 10
-	s.item.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
-	s.item.fg = { 0xe7, 0xe7, 0xe7 }
-	s.item.sh = { 0x37, 0x37, 0x37 }
+	s.item.padding = 6
+	s.item.font = FONT_BOLD_15px
+	s.item.fg = TEXT_COLOR
+	s.item.sh = TEXT_SH_COLOR
 
 	-- menu item
-	s.itemNoAction.padding = 10
-	s.itemNoAction.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
-	s.itemNoAction.fg = { 0xe7, 0xe7, 0xe7 }
-	s.itemNoAction.sh = { 0x37, 0x37, 0x37 }
+	s.itemNoAction.padding = 6
+	s.itemNoAction.font = FONT_BOLD_15px
+	s.itemNoAction.fg = TEXT_COLOR
+	s.itemNoAction.sh = TEXT_SH_COLOR
 
 	--s.item.bgImg = selectionBox
 
-	s.current.padding = 10
-	s.current.font = Font:load(fontpath .. "FreeSansBold.ttf", 18)
-	s.current.fg = { 0xe7, 0xe7, 0xe7 }
-	s.current.sh = { 0xaa, 0xaa, 0xaa }
+	s.current.padding = 6
+	s.current.font = FONT_BOLD_15px
+	s.current.fg = TEXT_COLOR
+	s.current.sh = TEXT_COLOR -- FIXME
 
 	-- selected menu item
-	s.selected.item.fg = { 0x37, 0x37, 0x37 }
-	s.selected.item.sh = { }
+	s.selected.item.font = FONT_BOLD_16px
+	s.selected.item.fg = SELECT_COLOR
+	s.selected.item.sh = SELECT_SH_COLOR
 	s.selected.item.bgImg = selectionBox
+	s.selected.item.icon.padding = { 4, 0, 0, 0 }
 	s.selected.item.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
 
-	s.selected.current.fg = { 0x37, 0x37, 0x37 }
-	s.selected.current.sh = { }
+
+	s.selected.item.font = FONT_BOLD_16px
+	s.selected.current.fg = SELECT_COLOR
+	s.selected.current.sh = SELECT_SH_COLOR
 	s.selected.current.bgImg = selectionBox
+	s.selected.item.icon.padding = { 4, 0, 0, 0 }
 	s.selected.current.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
 
-	s.selected.itemNoAction.fg = { 0x37, 0x37, 0x37 }
-	s.selected.itemNoAction.sh = { }
+	s.selected.itemNoAction.font = FONT_BOLD_16px
+	s.selected.itemNoAction.fg = SELECT_COLOR
+	s.selected.itemNoAction.sh = SELECT_SH_COLOR
 	s.selected.itemNoAction.bgImg = selectionBox
 
 	-- locked menu item (with loading animation)
-	s.locked.item.fg = { 0x37, 0x37, 0x37 }
-	s.locked.item.sh = { }
+	s.locked.item.font = FONT_BOLD_16px
+	s.locked.item.fg = SELECT_COLOR
+	s.locked.item.sh = SELECT_SH_COLOR
 	s.locked.item.bgImg = selectionBox
 	s.locked.item.icon.img = Surface:loadImage(imgpath .. "selection_wait.png")
 	s.locked.item.icon.frameRate = 5
@@ -341,42 +365,44 @@ function skin(self, s)
 
 
 	-- menu item choice
-	s.item.choice.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
-	s.item.choice.fg = { 0xe7, 0xe7, 0xe7 }
-	s.item.choice.sh = { 0x37, 0x37, 0x37 }
-	s.item.choice.padding = { 0, 0, 10, 0 }
+	s.item.choice.font = FONT_BOLD_15px
+	s.item.choice.fg = TEXT_COLOR
+	s.item.choice.sh = TEXT_SH_COLOR
+	s.item.choice.padding = { 8, 0, 0, 0 }
 
 	-- menu item choice
-	s.itemNoAction.choice.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
-	s.itemNoAction.choice.fg = { 0xe7, 0xe7, 0xe7 }
-	s.itemNoAction.choice.sh = { 0x37, 0x37, 0x37 }
-	s.itemNoAction.choice.padding = { 0, 0, 10, 0 }
+	s.itemNoAction.choice.font = FONT_BOLD_15px
+	s.itemNoAction.choice.fg = TEXT_COLOR
+	s.itemNoAction.choice.sh = TEXT_SH_COLOR
+	s.itemNoAction.choice.padding = { 8, 0, 0, 0 }
 
 	-- selected menu item choice
-	s.selected.item.choice.fg = { 0x37, 0x37, 0x37 }
-	s.selected.item.choice.sh = { }
+	s.selected.item.choice.font = FONT_BOLD_16px
+	s.selected.item.choice.fg = SELECT_COLOR
+	s.selected.item.choice.sh = SELECT_SH_COLOR
 
 	-- menu value choice
-	s.item.value.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
-	s.item.value.fg = { 0xe7, 0xe7, 0xe7 }
-	s.item.value.sh = { 0x37, 0x37, 0x37 }
+	s.item.value.font = FONT_BOLD_15px
+	s.item.value.fg = TEXT_COLOR
+	s.item.value.sh = TEXT_SH_COLOR
 
 	-- selected menu item choice
-	s.selected.item.value.fg = { 0x37, 0x37, 0x37 }
-	s.selected.item.value.sh = { }
+	s.selected.item.value.font = FONT_BOLD_16px
+	s.selected.item.value.fg = SELECT_COLOR
+	s.selected.item.value.sh = SELECT_SH_COLOR
 
 	-- Text areas
 	s.textarea.w = screenWidth - 21
 	s.textarea.padding = { 13, 8, 8, 8 }
-	s.textarea.font = Font:load(fontpath .. "FreeSans.ttf", 16)
-	s.textarea.fg = { 0xe7, 0xe7, 0xe7 }
-	s.textarea.sh = { 0x37, 0x37, 0x37 }
+	s.textarea.font = FONT_BOLD_15px
+	s.textarea.fg = TEXT_COLOR
+	s.textarea.sh = TEXT_SH_COLOR
 	s.textarea.align = "left"
 	
 
 	-- Scrollbar
-	s.scrollbar.w = 8
-	s.scrollbar.padding = { 2, 0, 0, 0 }
+	s.scrollbar.w = 9
+	s.scrollbar.border = { 4, 0, 0, 0 }
 	s.scrollbar.horizontal = 0
 	s.scrollbar.bgImg = scrollBackground
 	s.scrollbar.img = scrollBar
@@ -386,12 +412,12 @@ function skin(self, s)
 	-- Checkbox
 	s.checkbox.imgOn = Surface:loadImage(imgpath .. "checkbox_on.png")
 	s.checkbox.imgOff = Surface:loadImage(imgpath .. "checkbox_off.png")
-	s.item.checkbox.padding = { 0, 0, 5, 0 }
+	s.item.checkbox.padding = { 4, 0, 0, 0 }
 
 	-- Radio button
 	s.radio.imgOn = Surface:loadImage(imgpath .. "radiobutton_on.png")
 	s.radio.imgOff = Surface:loadImage(imgpath .. "radiobutton_off.png")
-	s.item.radio.padding = { 0, 0, 5, 0 }
+	s.item.radio.padding = { 4, 0, 0, 0 }
 
 
 	-- Slider
@@ -404,7 +430,7 @@ function skin(self, s)
 	-- Text input
 	s.textinput.border = { 8, -5, 8, 0 }
 	s.textinput.padding = { 6, 0, 6, 0 }
-	s.textinput.font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
+	s.textinput.font = FONT_BOLD_15px
 	s.textinput.cursorFont = Font:load(fontpath .. "FreeSansBold.ttf", 22)
 	s.textinput.charWidth = 26
 	s.textinput.charHeight = 26
@@ -419,8 +445,8 @@ function skin(self, s)
 	s.help.w = screenWidth - 6
 	s.help.position = LAYOUT_SOUTH
 	s.help.padding = 12
-	s.help.font = Font:load(fontpath .. "FreeSans.ttf", 16)
-	s.help.fg = { 0xe7, 0xe7, 0xe7 }
+	s.help.font = FONT_15px
+	s.help.fg = TEXT_COLOR
 	s.help.bgImg = helpBox
 	s.help.textAlign = "left"
 	s.help.scrollbar.w = 0
@@ -429,8 +455,8 @@ function skin(self, s)
 	s.softHelp.w = screenWidth - 6
 	s.softHelp.position = LAYOUT_SOUTH
 	s.softHelp.padding = { 12, 12, 12, 42 }
-	s.softHelp.font = Font:load(fontpath .. "FreeSans.ttf", 14)
-	s.softHelp.fg = { 0xe7, 0xe7, 0xe7 }
+	s.softHelp.font = FONT_15px
+	s.softHelp.fg = TEXT_COLOR
 	s.softHelp.bgImg = helpBox
 	s.softHelp.textAlign = "left"
 	s.softHelp.scrollbar.w = 0
@@ -441,8 +467,8 @@ function skin(self, s)
 	s.softButton1.h = 28
 	s.softButton1.position = LAYOUT_NONE
 	s.softButton1.textAlign = "center"
-	s.softButton1.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
-	s.softButton1.fg = { 0x37, 0x37, 0x37 }
+	s.softButton1.font = FONT_15px
+	s.softButton1.fg = SELECT_COLOR
 	s.softButton1.bgImg = softButtonBackground
 
 	s.softButton2.x = (screenWidth / 2) + 5
@@ -451,50 +477,24 @@ function skin(self, s)
 	s.softButton2.h = 28
 	s.softButton2.position = LAYOUT_NONE
 	s.softButton2.textAlign = "center"
-	s.softButton2.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
-	s.softButton2.fg = { 0x37, 0x37, 0x37 }
+	s.softButton2.font = FONT_15px
+	s.softButton2.fg = SELECT_COLOR
 	s.softButton2.bgImg = softButtonBackground
 
 	s.window.w = screenWidth
 	s.window.h = screenHeight
 
-	-- Popup window
-	s.popup.border = { 13, 0, 13, 0 }
-	s.popup.popup = true
-	s.popup.bgImg = popupBox
-	s.popup.maskImg = popupMask
-
-	s.popup.title.border = 2
-	s.popup.title.padding = { 13, 13, 13, 13 }
-	s.popup.title.font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
-	s.popup.title.textAlign = "center"
-	s.popup.title.bgImg = false
-
-	s.popup.text.border = 10
-	s.popup.text.w = screenWidth - 60
-	s.popup.text.fg = { 0x37, 0x37, 0x37 }
-	s.popup.text.sh = { }
-	s.popup.text.textAlign = "center"
-
-	s.popup.textarea.w = screenWidth - 60
-	s.popup.textarea.fg = { 0x37, 0x37, 0x37 }
-	s.popup.textarea.sh = { }
-
-	s.popup.slider.border = { 15, 0, 15, 15 }
-	s.popup.slider.horizontal = 1
-	s.popup.slider.img = volumeBar
-	s.popup.slider.bgImg = volumeBackground
 
 	-- Popup window with Icon
 	s.popupIcon.border = { 13, 0, 13, 0 }
 	s.popupIcon.maskImg = Tile:fillColor(0x231f20cc)
 
 	s.popupIcon.text.border = 15
-	s.popupIcon.text.line[1].font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
+	s.popupIcon.text.line[1].font = FONT_BOLD_13px
 	s.popupIcon.text.line[1].height = 16
-	s.popupIcon.text.line[2].font = Font:load(fontpath .. "FreeSansBold.ttf", 22)
-	s.popupIcon.text.fg = { 0xff, 0xff, 0xff }
-	s.popupIcon.text.sh = { }
+	s.popupIcon.text.line[2].font = FONT_BOLD_20px
+	s.popupIcon.text.fg = TEXT_COLOR
+	s.popupIcon.text.sh = TEXT_SH_COLOR
 	s.popupIcon.text.textAlign = "center"
 	s.popupIcon.text.position = LAYOUT_SOUTH
 
@@ -566,8 +566,8 @@ function skin(self, s)
 	s.volumePopup.w = screenWidth
 	s.volumePopup.h = 80
 	s.volumePopup.bgImg = helpBox
-	s.volumePopup.title.fg = { 0xff, 0xff, 0xff }
-	s.volumePopup.title.font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
+	s.volumePopup.title.fg = SELECT_COLOR
+	s.volumePopup.title.font = FONT_BOLD_15px
 	s.volumePopup.title.textAlign = "center"
 	s.volumePopup.title.bgImg = false
 
@@ -576,11 +576,11 @@ function skin(self, s)
 	s.albumtitle.h = 60
 	s.albumtitle.border = 4
 	s.albumtitle.padding = { 10, 8, 8, 9 }
-	s.albumtitle.font = Font:load(fontpath .. "FreeSans.ttf", 14)
+	s.albumtitle.font = FONT_13px
 	s.albumtitle.lineHeight = 16
-	s.albumtitle.line[1].font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
+	s.albumtitle.line[1].font = FONT_BOLD_13px
 	s.albumtitle.line[1].height = 17
-	s.albumtitle.fg = { 0, 0, 0 }
+	s.albumtitle.fg = SELECT_COLOR
 	s.albumtitle.bgImg = titleBox
 	s.albumtitle.textAlign = "top-left"
 	s.albumtitle.iconAlign = "left"
@@ -597,12 +597,12 @@ function skin(self, s)
 	-- items with artwork and song info
 	s.albumitem.h = 60
 	s.albumitem.padding = { 12, 8, 8, 8 }
-	s.albumitem.font = Font:load(fontpath .. "FreeSans.ttf", 14)
+	s.albumitem.font = FONT_13px
 	s.albumitem.lineHeight = 16
-	s.albumitem.line[1].font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
+	s.albumitem.line[1].font = FONT_BOLD_13px
 	s.albumitem.line[1].height = 17
-	s.albumitem.fg = { 0xe7, 0xe7, 0xe7 }
-	s.albumitem.sh = { 0x37, 0x37, 0x37 }
+	s.albumitem.fg = TEXT_COLOR
+	s.albumitem.sh = TEXT_SH_COLOR
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumitem.icon.padding = { 6, 0, 0, 0 }
 	s.albumitem.textAlign = "top-left"
@@ -610,40 +610,38 @@ function skin(self, s)
 
 
 	-- selected item with artwork and song info
-	s.selected.albumitem.fg = { 0x37, 0x37, 0x37 }
-	s.selected.albumitem.sh = { }
+	s.selected.albumitem.fg = SELECT_COLOR
+	s.selected.albumitem.sh = SELECT_SH_COLOR
 	s.selected.albumitem.bgImg = selectionBox
 
 
 	-- locked item with artwork and song info
-	s.locked.albumitem.fg = { 0x37, 0x37, 0x37 }
-	s.locked.albumitem.sh = { }
+	s.locked.albumitem.fg = SELECT_COLOR
+	s.locked.albumitem.sh = SELECT_SH_COLOR
 	s.locked.albumitem.bgImg = selectionBox
 
 
 	-- now playing menu item
 	s.albumcurrent.padding = { 12, 8, 8, 8 }
-	s.albumcurrent.font = Font:load(fontpath .. "FreeSans.ttf", 16)
+	s.albumcurrent.font = FONT_13px
 	s.albumcurrent.lineHeight = 16
-	s.albumcurrent.line[1].font = Font:load(fontpath .. "FreeSansBold.ttf", 16)
+	s.albumcurrent.line[1].font = FONT_BOLD_13px
 	s.albumcurrent.line[1].height = 17
-	s.albumcurrent.fg = { 0xe7, 0xe7, 0xe7 }
-	s.albumcurrent.sh = { 0x37, 0x37, 0x37 }
+	s.albumcurrent.fg = TEXT_COLOR
+	s.albumcurrent.sh = TEXT_SH_COLOR
 	s.albumcurrent.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumcurrent.icon.padding = { 6, 0, 0, 0 }
 	s.albumcurrent.textAlign = "top-left"
 	s.albumcurrent.iconAlign = "left"
 
 	-- selected now playing menu item
-	s.selected.albumcurrent.fg = { 0x37, 0x37, 0x37 }
-	s.selected.albumcurrent.sh = { 0x33, 0x33, 0x33 }
-	s.selected.albumcurrent.sh = { }
+	s.selected.albumcurrent.fg = SELECT_COLOR
+	s.selected.albumcurrent.sh = SELECT_SH_COLOR
 	s.selected.albumcurrent.bgImg = selectionBox
 
 	-- locked now playing menu item (with loading animation)
-	s.locked.albumcurrent.fg = { 0x37, 0x37, 0x37 }
-	s.locked.albumcurrent.sh = { 0xaa, 0xaa, 0xaa }
-	s.locked.albumcurrent.sh = { }
+	s.locked.albumcurrent.fg = SELECT_COLOR
+	s.locked.albumcurrent.sh = SELECT_SH_COLOR
 	s.locked.albumcurrent.bgImg = selectionBox
 
 	-- Popup window for current song info
@@ -654,12 +652,16 @@ function skin(self, s)
 	s.currentsong.bgImg = helpBox
 	s.currentsong.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.currentsong.icon.padding = { 6, -30, 4, 4 }
+
 	s.currentsong.text.w = screenWidth
 	s.currentsong.text.h = 72
 	s.currentsong.text.padding = { 74, 12, 4, 4 }
-	s.currentsong.text.font = Font:load(fontpath .. "FreeSans.ttf", 16)
-	s.currentsong.text.fg = { 0xff, 0xff, 0xff }
-	s.currentsong.text.textAlign = "left"
+	s.currentsong.text.font = FONT_13px
+	s.currentsong.text.lineHeight = 17
+	s.currentsong.text.line[2].font = FONT_BOLD_13px
+	s.currentsong.text.line[2].height = 17
+	s.currentsong.text.fg = TEXT_COLOR
+	s.currentsong.text.textAlign = "top-left"
 
 	-- Popup window for information display
 	s.popupinfo.x = 0
@@ -670,8 +672,9 @@ function skin(self, s)
 	s.popupinfo.text.w = screenWidth
 	s.popupinfo.text.h = 72
 	s.popupinfo.text.padding = { 14, 24, 14, 14 }
-	s.popupinfo.text.font = Font:load(fontpath .. "FreeSans.ttf", 16)
-	s.popupinfo.text.fg = { 0xff, 0xff, 0xff }
+	s.popupinfo.text.font = FONT_BOLD_13px
+	s.popupinfo.text.lineHeight = 17
+	s.popupinfo.text.fg = TEXT_COLOR
 	s.popupinfo.text.textAlign = "left"
 
 	-- XXXX top and status styles defined using album and standard styles

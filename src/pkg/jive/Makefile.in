@@ -514,20 +514,16 @@ dist_applets_setupwallpaper_DATA = \
 applets_setupwallpaper_wallpaperdir = $(pkgdatadir)/applets/SetupWallpaper/wallpaper
 dist_applets_setupwallpaper_wallpaper_DATA = \
 	share/applets/SetupWallpaper/wallpaper/black.png \
-	share/applets/SetupWallpaper/wallpaper/camo.png \
 	share/applets/SetupWallpaper/wallpaper/Chapple_1.jpg \
 	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_1.jpg \
-	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_2.jpg \
 	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_3.jpg \
 	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_4.jpg \
 	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_6.jpg \
 	share/applets/SetupWallpaper/wallpaper/concrete.png \
-	share/applets/SetupWallpaper/wallpaper/eggplant.png \
 	share/applets/SetupWallpaper/wallpaper/Los-Cardinalos_1.jpg \
 	share/applets/SetupWallpaper/wallpaper/midnight.png \
 	share/applets/SetupWallpaper/wallpaper/Orin-Optiglot_1.jpg \
 	share/applets/SetupWallpaper/wallpaper/pea.png \
-	share/applets/SetupWallpaper/wallpaper/slate.png \
 	share/applets/SetupWallpaper/wallpaper/stone.png
 
 
@@ -661,7 +657,7 @@ dist_applets_defaultskin_images_DATA = \
         share/applets/DefaultSkin/images/popup_shutdown_icon.png \
         share/applets/DefaultSkin/images/popup_playlist_icon.png \
         share/applets/DefaultSkin/images/icon_nowplaying.png \
-        share/applets/DefaultSkin/images/album_noartwork.png \
+        share/applets/DefaultSkin/images/album_noartwork_166.png \
         share/applets/DefaultSkin/images/icon_nowplaying_selected.png \
         share/applets/DefaultSkin/images/button.png \
         share/applets/DefaultSkin/images/button_b.png \
@@ -671,7 +667,25 @@ dist_applets_defaultskin_images_DATA = \
         share/applets/DefaultSkin/images/button_br.png \
         share/applets/DefaultSkin/images/button_bl.png \
         share/applets/DefaultSkin/images/button_tl.png \
-        share/applets/DefaultSkin/images/button_tr.png
+        share/applets/DefaultSkin/images/button_tr.png \
+	share/applets/DefaultSkin/images/album_noartwork_166.png \
+	share/applets/DefaultSkin/images/album_noartwork_184.png \
+	share/applets/DefaultSkin/images/album_shadow_166.png \
+	share/applets/DefaultSkin/images/album_shadow_184.png \
+	share/applets/DefaultSkin/images/menu_nowplaying.png \
+	share/applets/DefaultSkin/images/menu_nowplaying_selected.png \
+	share/applets/DefaultSkin/images/menu_playlist.png \
+	share/applets/DefaultSkin/images/mini_favorites.png \
+	share/applets/DefaultSkin/images/mini_home.png \
+	share/applets/DefaultSkin/images/mini_internet_radio.png \
+	share/applets/DefaultSkin/images/mini_mymusic.png \
+	share/applets/DefaultSkin/images/mini_nowplaying.png \
+	share/applets/DefaultSkin/images/mini_quarter_note.png \
+	share/applets/DefaultSkin/images/mini_search.png \
+	share/applets/DefaultSkin/images/mini_settings.png \
+	share/applets/SetupWallpaper/wallpaper/fade_to_black.png \
+	share/applets/SetupWallpaper/wallpaper/sunlight.png \
+	share/applets/SetupWallpaper/wallpaper/sunrise.png
 
 applets_defaultskin_soundsdir = $(pkgdatadir)/applets/DefaultSkin/sounds
 dist_applets_defaultskin_sounds_DATA = \

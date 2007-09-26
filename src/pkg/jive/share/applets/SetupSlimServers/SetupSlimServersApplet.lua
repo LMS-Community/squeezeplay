@@ -37,6 +37,7 @@ local Window        = require("jive.ui.Window")
 local Textarea      = require("jive.ui.Textarea")
 local Textinput     = require("jive.ui.Textinput")
 local Popup         = require("jive.ui.Popup")
+local Icon          = require("jive.ui.Icon")
 
 local log           = require("jive.utils.log").logger("applets.setup")
 
@@ -263,10 +264,9 @@ end
 
 -- Connect to SqueezeNetwork
 function _connectSqueezeNetwork(self, menuItem)
-	local popup = Popup("popup", menuItem.text)
-
-        local text = Textarea("textarea", "          Coming Soon...\n\n")
-        popup:addWidget(text)
+	local popup = Popup("popupIcon")
+	popup:addWidget(Label("label", ""))
+	popup:addWidget(Label("text", "\nComing Soon..."))
 
         self:tieAndShowWindow(popup)
         return popup	

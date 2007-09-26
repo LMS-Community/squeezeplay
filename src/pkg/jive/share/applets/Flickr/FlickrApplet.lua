@@ -48,6 +48,7 @@ local json             = require("json")
 local log              = require("jive.utils.log").logger("applets.screensavers")
 
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
+local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
 local EVENT_WINDOW_RESIZE = jive.ui.EVENT_WINDOW_RESIZE
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 local FRAME_RATE       = jive.ui.FRAME_RATE
@@ -90,9 +91,14 @@ function openScreensaver(self, menuItem)
 end
 
 function popupMessage(self, title, msg)
-	local popup = Popup("popup", title)
+	local popup = Window("window", title)
 	local text = Textarea("textarea", msg)
 	popup:addWidget(text)
+
+	popup:addListener(EVENT_KEY_PRESS | EVENT_SCROLL,
+			  function()
+				  popup:hide()
+			  end)
 
 	self:tieAndShowWindow(popup)
 end

@@ -26,7 +26,7 @@ oo.class(_M, Applet)
 
 
 function popupWindow(self, text)
-	local popup = Popup("popup")
+	local popup = Window("window")
 	local text = Textarea("textarea", text)
 	popup:addWidget(text)
 	self:tieWindow(popup)

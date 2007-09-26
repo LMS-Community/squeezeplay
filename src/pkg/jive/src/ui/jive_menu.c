@@ -65,6 +65,7 @@ int jiveL_menu_layout(lua_State *L) {
 	MenuWidget *peer;
 	Uint16 x, y;
 	Uint16 sx, sy, sw, sh;
+	JiveInset sborder;
 	int numWidgets, listSize;
 
 	peer = jive_getpeer(L, 1, &menuPeerMeta);
@@ -109,12 +110,26 @@ int jiveL_menu_layout(lua_State *L) {
 
 				lua_pop(L, 4);
 			}
+
+			if (jive_getmethod(L, -1, "getBorder")) {
+				lua_pushvalue(L, -2);
+				lua_call(L, 1, 4);
+				
+				sborder.left = lua_tointeger(L, -4);
+				sborder.top = lua_tointeger(L, -3);
+				sborder.right = lua_tointeger(L, -2);
+				sborder.bottom = lua_tointeger(L, -1);
+				lua_pop(L, 4);
+			}
 		}
 		lua_pop(L, 1);
+
+		sw += sborder.left + sborder.right;
+		sh += sborder.top + sborder.bottom;
 	}
 
-	sx = peer->w.bounds.x + peer->w.bounds.w - sw - peer->w.padding.right;
-	sy = peer->w.bounds.y + peer->w.padding.top;
+	sx = peer->w.bounds.x + peer->w.bounds.w - sw + sborder.left - peer->w.padding.right;
+	sy = peer->w.bounds.y + peer->w.padding.top + sborder.top;
 
 
 	/* position widgets */
@@ -148,8 +163,8 @@ int jiveL_menu_layout(lua_State *L) {
 				lua_pushvalue(L, -2);
 				lua_pushinteger(L, sx);
 				lua_pushinteger(L, sy);
-				lua_pushinteger(L, sw);
-				lua_pushinteger(L, sh);
+				lua_pushinteger(L, sw - sborder.left - sborder.right);
+				lua_pushinteger(L, sh - sborder.top - sborder.bottom);
 				lua_call(L, 5, 0);
 			}
 		}

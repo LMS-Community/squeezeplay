@@ -403,6 +403,7 @@ function setTitle(self, title)
 	else
 		self.title = Label("title", title)
 		self:addWidget(self.title)
+		self.title:_event(Event:new(EVENT_FOCUS_GAINED))
 	end
 end
 
@@ -416,13 +417,14 @@ Sets the windows title to I<titleWidget>.
 =cut
 --]]
 function setTitleWidget(self, titleWidget)
-
 	if self.title then
+		self.title:_event(Event:new(EVENT_FOCUS_LOST))
 		self:removeWidget(self.title)
 	end
 
 	self.title = titleWidget
 	self:addWidget(self.title)
+	self.title:_event(Event:new(EVENT_FOCUS_GAINED))
 end
 
 
@@ -498,7 +500,7 @@ function focusWidget(self, widget)
 	assert(oo.instanceof(widget, Widget))
 	assert(table.contains(self.widgets, widget))
 
-	if self.focus then
+	if self.focus and self.focus ~= self.title then
 		self.focus:_event(Event:new(EVENT_FOCUS_LOST))
 	end
 

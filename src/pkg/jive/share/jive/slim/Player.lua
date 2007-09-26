@@ -41,7 +41,7 @@ local RequestJsonRpc = require("jive.net.RequestJsonRpc")
 local Framework      = require("jive.ui.Framework")
 local Popup          = require("jive.ui.Popup")
 local Icon           = require("jive.ui.Icon")
-local Textarea       = require("jive.ui.Textarea")
+local Label          = require("jive.ui.Label")
 local Window         = require("jive.ui.Window")
 
 local log            = require("jive.utils.log").logger("player")
@@ -346,7 +346,7 @@ function onStage(self, sink)
 	-- create window to display current song info
 	self.currentSong.window = Popup("currentsong")
 	self.currentSong.artIcon = Icon("icon")
-	self.currentSong.text = Textarea("text")
+	self.currentSong.text = Label("text", "")
 	self.currentSong.window:addWidget(self.currentSong.artIcon)
 	self.currentSong.window:addWidget(self.currentSong.text)
 	self.currentSong.window:addListener(EVENT_KEY_PRESS | EVENT_SCROLL,
@@ -442,7 +442,7 @@ function _showCurrentSong(self, text, iconId)
 		end
 	end
 
-	s.text:setText(text)
+	s.text:setValue(text)
 
 	s.window:showBriefly(3000, nil,
 			     Window.transitionPushPopupUp,
@@ -468,7 +468,7 @@ function _process_displaystatus(self, event)
 		else
 			-- other message from server
 			local popup = Popup("popupinfo")
-			popup:addWidget(Textarea("text", table.concat(display["text"], "\n")))
+			popup:addWidget(Label("text", table.concat(display["text"], "\n")))
 			popup:showBriefly(2000)
 		end
 	end

@@ -136,7 +136,7 @@ int jiveL_slider_draw(lua_State *L) {
 		w = MAX(tw, w);
 		h = MAX(th, h);
 
-		jive_tile_blit(peer->tile, srf, peer->w.bounds.x + x, peer->w.bounds.y + y, w, h);
+		jive_tile_blit(peer->tile, srf, peer->w.bounds.x + peer->w.padding.left + x, peer->w.bounds.y + peer->w.padding.right + y, w, h);
 	}
 
 	return 0;

@@ -35,9 +35,6 @@ CREDITS_BY
 	FR	Images de:
 	NL	Foto's door:
 
-EGGPLANT
-	EN	Eggplant
-
 CONCRETE
 	EN	Concrete
 
@@ -47,14 +44,8 @@ MIDNIGHT
 PEA
 	EN	Pea
 
-SLATE
-	EN	Slate
-
 BLACK
 	EN	Black
-
-CAMO
-	EN	Camo
 
 STONE
 	EN	Stone
@@ -63,10 +54,7 @@ DUNES
 	EN	Dunes
 
 IRIS
-	EN	Iris
-
-YELLOW_ROSE
-	EN	Yellow Rose
+	EN	Tulip
 
 SMOKE
 	EN	Smoke
@@ -77,8 +65,18 @@ AMBER
 FLAME
 	EN	Flame
 
-LOS_CARDINALOS
-	EN	Los Cardinalos
+GRAFFITI
+	EN	Graffiti
 
 WEATHERED_WOOD
 	EN	Weathered Wood
+
+SUNRISE
+	EN	Sun Rise
+
+SUNLIGHT
+	EN	Sun Light
+
+FADETOBLACK
+	EN	Fade to Black
+

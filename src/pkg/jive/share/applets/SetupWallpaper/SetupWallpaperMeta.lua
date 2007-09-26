@@ -35,7 +35,7 @@ end
 
 function defaultSettings(meta)
 	return { 
-		wallpaper = "Chapple_1.jpg",
+		wallpaper = "sunrise.png",
 	}
 end
 

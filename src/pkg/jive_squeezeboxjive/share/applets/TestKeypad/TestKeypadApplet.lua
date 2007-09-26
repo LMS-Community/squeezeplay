@@ -87,7 +87,7 @@ end
 
 
 function _completedShow(self)
-	local popup = Popup("popup")
+	local popup = Window("window")
 	popup:addWidget(Textarea("textarea", "Test Passed"))
 
 	self:tieWindow(popup)

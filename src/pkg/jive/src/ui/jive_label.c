@@ -288,7 +288,7 @@ int jiveL_label_layout(lua_State *L) {
 		case JIVE_ALIGN_RIGHT:
 		case JIVE_ALIGN_TOP_RIGHT:
 		case JIVE_ALIGN_BOTTOM_RIGHT:
-			wx = peer->w.bounds.w - ww;
+			wx = peer->w.bounds.w - peer->w.padding.right - ww;
 			break;
 		}
 		wy = peer->w.bounds.y + jive_widget_valign((JiveWidget *)peer, peer->icon_align, wh);
@@ -446,7 +446,7 @@ int jiveL_label_draw(lua_State *L) {
 
 		/* second text when scrolling */
 		o = (peer->scroll_offset < 0) ? 0 : peer->scroll_offset;
-		if (w < peer->text_w) {
+		if (w < peer->label_w) {
 			o = 0;
 		}
 
