@@ -549,17 +549,17 @@ end
 
 --[[
 
-=head2 jive.ui.Widget:addTimer(interval, closure)
+=head2 jive.ui.Widget:addTimer(interval, closure, once)
 
 Add a timer to this timer that calls I<closure> in I<interval> milliseconds. The timer is only called while the widget is shown on the screen.
 
 =cut
 --]]
-function addTimer(self, interval, callback)
+function addTimer(self, interval, callback, once)
 	assert(type(interval) == "number", "Invalid interval")
 	assert(type(callback) == "function", "Invalid callback")
 
-	timer = Timer(interval, callback) 
+	timer = Timer(interval, callback, once) 
 	self.timers[#self.timers + 1] = timer
 	timer:start()
 

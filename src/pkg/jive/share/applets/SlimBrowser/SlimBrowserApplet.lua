@@ -337,7 +337,12 @@ local function _artworkItem(item)
 		if item["icon-id"] then
 			-- Fetch an image from SlimServer
 			icon = Icon("icon")
-			_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri)
+			icon:addTimer(1000, 
+				function()
+					_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri)
+				end,
+				true
+			)
 			item["_jive_icon"] = icon
 		elseif item["icon"] then
 			-- Fetch a remote image URL, sized to 56x56

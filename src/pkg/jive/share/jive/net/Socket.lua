@@ -106,7 +106,7 @@ indicating if nil must be sent (i.e. standard source behaviour)
 --]]
 function getSafeSinkGenerator(self)
 
-	return function (sink, callNil)
+	return function (sink, callNil, priority)
 
 		return function(chunk, err)
 			if chunk ~= "" then
@@ -114,7 +114,8 @@ function getSafeSinkGenerator(self)
 					function() 
 						sink(chunk, err) 
 						if callNil then sink(nil) end 
-					end
+					end,
+					priority
 				)
 			end
 			return 1

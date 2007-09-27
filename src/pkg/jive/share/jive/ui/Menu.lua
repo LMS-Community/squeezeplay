@@ -502,8 +502,8 @@ function _updateWidgets(self)
 		if widget then
 			if widget.parent ~= self then
 				widget.parent = self
-				widget:dispatchNewEvent(EVENT_SHOW)
 			end
+			widget:dispatchNewEvent(EVENT_SHOW)
 
 			lastWidgets[widget] = nil
 			nextWidgets[widget] = 1

@@ -47,7 +47,6 @@ local table = require("jive.utils.table")
 
 local log   = require("jive.utils.log").logger("net.http")
 
-
 -- our class
 module(..., oo.class)
 
@@ -311,9 +310,10 @@ end
 
 -- sinkToSafeSink
 --
-function sinkToSafeSink(self, sink, gen, callNil)
+function sinkToSafeSink(self, sink, gen, callNil, priority)
+
 	if sink and gen then
-		local safeSink = gen(sink, callNil)
+		local safeSink = gen(sink, callNil, priority)
 		if type(safeSink) == 'function' then
 			return safeSink
 		else

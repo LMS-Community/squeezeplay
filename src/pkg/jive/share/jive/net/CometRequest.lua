@@ -120,7 +120,7 @@ function t_setResponseBody(self, data, safeSinkGen)
 --	log:info(data)
 
 	-- transform our sink into a safe one using handy function
-	local safeSink = self:sinkToSafeSink(self:t_getResponseSink(), safeSinkGen)
+	local safeSink = self:sinkToSafeSink(self:t_getResponseSink(), safeSinkGen, false, true)
 	
 	-- abort if we have no sink
 	if safeSink then

@@ -222,9 +222,15 @@ end
 
 -- t_perform
 -- queues a function for execution main thread side
-function t_perform(self, func)
+function t_perform(self, func, priority)
 
-	self.out_queue:insert(func)
+	if priority then
+		-- log:debug("enqueue high")
+		self.out_queueH:insert(func)
+	else
+		-- log:debug("enqueue low")
+		self.out_queueL:insert(func)
+	end
 
 	-- push event to wake up main thread
 ----	local evt = Event:new(EVENT_SERVICE_JNT)
@@ -276,20 +282,34 @@ function pump(self)
 --	log:debug("NetworkThread:idle()")
 	
 	local t0 = Framework:getTicks()
-	local len = self.out_queue:len()
+	local lenH = self.out_queueH:len()
+	local lenL = self.out_queueL:len()
+	local priority
 
 	local msg = true
+
+	-- process one or more messages in the high priority queue
 	while msg do
-		msg = self.out_queue:remove(false)
+		msg = self.out_queueH:remove(false)
+		if msg then
+			priority = true
+			msg()
+			--log:debug("dequeue high")
+		end
+	end
+
+	if not priority then
+		msg = self.out_queueL:remove(false)
 		if msg then
 			msg()
+			--log:debug("dequeue low")
 		end
 	end
 
 	local t1 = Framework:getTicks()
 
 	if t1 - t0 > 5 then
-		log:warn("NetworkThread pump=", (t1 - t0), "ms out_queue=", len)
+		log:warn("NetworkThread pump=", (t1 - t0), "ms out_queueH=", lenH, " out_queueL=", lenL)
 	end
 end
 
@@ -339,7 +359,8 @@ function __init(self)
 	local obj = oo.rawnew(self, {
 		-- create our in and out queues (mutexed)
 		in_queue = queue.newqueue(QUEUE_SIZE),
-		out_queue = queue.newqueue(QUEUE_SIZE),
+		out_queueH = queue.newqueue(QUEUE_SIZE),
+		out_queueL = queue.newqueue(QUEUE_SIZE),
 
 		-- list of sockets for select
 		t_readSocks = {},
