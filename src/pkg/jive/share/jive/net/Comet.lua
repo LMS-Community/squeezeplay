@@ -29,6 +29,12 @@ This class implements a HTTP socket running in a L<jive.net.NetworkThread>.
  -- request is a table (array) containing the raw request to pass to SlimServer
  comet:request(func, playerid, request)
 
+ -- add a callback function for an already-subscribed event
+ comet:addCallback('/slim/serverstatus', func)
+
+ -- remove a callback function
+ comet:removeCallback('/slim/serverstatus', func)
+
  -- start!
  comet:start()
 
@@ -331,6 +337,7 @@ _getEventSink = function(self)
 						log:debug("Comet:_getEventSink, notifiying callbacks for ", subscription)
 					
 						for _, func in pairs( self.notify[subscription] ) do
+							log:debug("  callback to: ", func)
 							func(event)
 						end
 						
@@ -646,6 +653,26 @@ _getRequestSink = function(self, func, reqid)
 			end
 		end
 	end
+end
+
+function addCallback(self, subscription, func)
+	log:debug("Comet:addCallback(", subscription, ", ", func, ")")
+	
+	subscription = '/' .. self.clientId .. subscription
+
+	if not self.notify[subscription] then
+		self.notify[subscription] = {}
+	end
+	
+	self.notify[subscription][func] = func
+end
+
+function removeCallback(self, subscription, func)
+	log:debug("Comet:removeCallback(", subscription, ", ", func, ")")
+	
+	subscription = '/' .. self.clientId .. subscription
+	
+	self.notify[subscription][func] = nil
 end
 
 -- Decide what to do if we get disconnected or get an error while handshaking/connecting

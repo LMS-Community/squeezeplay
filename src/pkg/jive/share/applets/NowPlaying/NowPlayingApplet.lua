@@ -1,4 +1,4 @@
-local pairs, ipairs, tostring = pairs, ipairs, tostring
+local pairs, ipairs, tostring, type = pairs, ipairs, tostring, type
 local tonumber = tonumber
 
 local math             = require("math")
@@ -19,8 +19,8 @@ local RadioGroup       = require("jive.ui.RadioGroup")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Surface          = require("jive.ui.Surface")
 local Window           = require("jive.ui.Window")
-local Tile	       = require("jive.ui.Tile")
-local Timer	       = require("jive.ui.Timer")
+local Tile	           = require("jive.ui.Tile")
+local Timer	           = require("jive.ui.Timer")
                        
 local log              = require("jive.utils.log").logger("applets.screensavers")
 local datetime         = require("jive.utils.datetime")
@@ -79,7 +79,7 @@ local function _getSink(self, cmd)
 		elseif chunk then
 			--log:info(chunk)
 						
-			local proc = "_process_" .. cmd[1]
+			local proc = "_process_" .. cmd
 			if self[proc] then
 				self[proc](self, chunk)
 			else
@@ -277,7 +277,8 @@ function _process_status(self, event)
 	if data.item_loop ~= nil then
 
 		local text = data.item_loop[1].text
-		if data.remote == 1 then 
+		-- XXX: current_title of null is a function value??
+		if data.remote == 1 and type(data.current_title) == 'string' then 
 			text = text .. "\n" .. data.current_title
 		end
 			
@@ -298,8 +299,8 @@ end
 
 function free(self)
 	if thePlayer then
-		thePlayer.slimServer.comet:unsubscribe( '/slim/displaystatus/' .. thePlayer:getId(), self.displaySink )
-		thePlayer.slimServer.comet:unsubscribe( '/slim/playerstatus/' .. thePlayer:getId(), self.statusSink )
+		thePlayer.slimServer.comet:removeCallback( '/slim/displaystatus/' .. thePlayer:getId(), self.displaySink )
+		thePlayer.slimServer.comet:removeCallback( '/slim/playerstatus/' .. thePlayer:getId(), self.statusSink )
 	end
 
 	theTimer:stop()
@@ -382,26 +383,25 @@ function openScreensaver(self, menuItem)
 	
 		local playerid = thePlayer:getId()
 	
-		local cmd =  { 'status', '-', 10, 'menu:menu', 'subscribe:30' }
-		self.statusSink = _getSink(self, cmd)
-		thePlayer.slimServer.comet:subscribe(
+		-- Register our own functions to be called when we receive data
+		self.statusSink = _getSink(self, 'status')
+		thePlayer.slimServer.comet:addCallback(
 			'/slim/playerstatus/' .. playerid,
-			self.statusSink,
-			playerid,
-			cmd
+			self.statusSink
 		)
 
-		local cmd = { 'displaystatus', 'subscribe:showbriefly' }
-		self.displaySink = _getSink(self, cmd)
-		thePlayer.slimServer.comet:subscribe(
+		self.displaySink = _getSink(self, 'displaystatus')
+		thePlayer.slimServer.comet:addCallback(
 			'/slim/displaystatus/' .. playerid,
-			self.displaySink,
-			playerid,
-			cmd
+			self.displaySink
 		)
 
 		theTimer = Timer(1000, function() tick() end)
 		theTimer:start()
+		
+		-- Initialize with current data from Player
+		local event = { data = thePlayer.state }
+		self:_process_status(event)
 
 		self:tieAndShowWindow(window)
 		return window
