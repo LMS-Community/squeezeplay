@@ -36,7 +36,7 @@ requests are serviced before basic ones.
 
 
 -- stuff we use
-local assert, ipairs, tostring, type = assert, ipairs, tostring, type
+local assert, pairs, tostring, type = assert, pairs, tostring, type
 
 local table           = require("table")
 local math            = require("math")
@@ -189,7 +189,7 @@ end
 function t_dequeue(self, socket)
 --	log:debug(self, ":t_dequeue()")
 		
-	for i, queue in ipairs(self.reqQueue) do
+	for i, queue in pairs(self.reqQueue) do
 		local request = table.remove(self.reqQueue[i], 1)
 		if request then
 			if type(request) == "function" then
