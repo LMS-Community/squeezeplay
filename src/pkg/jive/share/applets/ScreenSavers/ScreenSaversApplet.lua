@@ -67,8 +67,10 @@ function init(self, ...)
 	self.timer:start()
 
 	-- listener to restart screensaver timer
+	-- XXX: this used to include EVENT_MOTION but it was too annoying having Now Playing
+	-- disappear when you picked it up to look at it!
 	Framework:addListener(
-		EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_MOTION,
+		EVENT_KEY_PRESS | EVENT_SCROLL,
 		function(event)
 			self.timer:restart(self.timeout)
 
