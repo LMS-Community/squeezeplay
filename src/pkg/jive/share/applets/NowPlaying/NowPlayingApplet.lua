@@ -39,7 +39,7 @@ end
 -- Globals
 --
 
-local ARTWORK_SIZE = 114
+local ARTWORK_SIZE = 164
 
 local theWindow = nil
 local thePlayer = nil
@@ -217,7 +217,7 @@ end
 
 local function updatePlaylist(enabled, nr, count)
 	log:error(nr .. " - " .. count)
-	if enabled == true then
+	if enabled == true and count > 1 then
 		nr = nr + 1
 		lPlaylist:setValue(nr .. strOf .. count)
 	else 
@@ -335,23 +335,23 @@ function _createUI(self)
 	lTrackAlbum:setSize(sw-20, 15)
 
 	lPos = Label("wlabel", "n/a")
-	lPos:setPosition(10, sh-59)
+	lPos:setPosition(10, sh-44)
 	lPos:setSize(20, 10)
 
 	lRemain = Label("wrlabel", "n/a")
-	lRemain:setPosition(sw-30, sh-59)
+	lRemain:setPosition(sw-30, sh-44)
 	lRemain:setSize(25, 10)
 
 	iArt = Icon("artwork")
 	iArt:setSize(ARTWORK_SIZE, ARTWORK_SIZE)
-	iArt:setPosition(sw/2-(ARTWORK_SIZE/2), 115)
+	iArt:setPosition(sw/2-(ARTWORK_SIZE/2), 107)
 
 	local bg = Label("background", "")
 	bg:setSize(sw-11, 65)
 	bg:setPosition(6, 38)
 
 	sPos = Slider("slider", 0, 100, 0, function(slider, value) log:warn("slider: " .. value) end)
-	sPos:setPosition(35, sh-60)
+	sPos:setPosition(35, sh-45)
 	sPos:setSize(sw-70, 10)
 	
 	window:addWidget(bg)
