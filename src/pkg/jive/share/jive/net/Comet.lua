@@ -147,14 +147,14 @@ _addPendingRequests = function(self, data)
 			cmd[2] = v.request
 			
 			-- Prepend clientId to subscription name
-			v.subscription = '/' .. self.clientId .. v.subscription
+			local subscription = '/' .. self.clientId .. v.subscription
 	
 			local sub = {
 				channel = '/slim/subscribe',
 				id      = v.reqid,
 				data    = {
 					request  = cmd,
-					response = v.subscription,
+					response = subscription,
 					priority = v.priority,
 				},
 			}
@@ -165,9 +165,8 @@ _addPendingRequests = function(self, data)
 			end
 			self.notify[v.subscription][v.func] = v.func
 			
-			-- remove pending status and the callback from this sub
+			-- remove pending status from this sub
 			v.pending = nil
-			v.func    = nil
 	
 			table.insert( data, sub )
 		end
@@ -175,10 +174,12 @@ _addPendingRequests = function(self, data)
 
 	-- Add pending unsubscribe requests
 	for i, v in ipairs( self.pending_unsubs ) do
+		local subscription = '/' .. self.clientId .. v
+		
 		local unsub = {
 			channel = '/slim/unsubscribe',
 			data    = {
-				unsubscribe = v,
+				unsubscribe = subscription,
 			},
 		}
 	
@@ -209,7 +210,7 @@ _addPendingRequests = function(self, data)
 			req["data"]["response"] = '/' .. self.clientId .. '/slim/request'
 			
 			-- Store this request's callback
-			local subscription = req["data"]["response"] .. '|' .. v.reqid
+			local subscription = '/slim/request|' .. v.reqid
 			if not self.notify[subscription] then
 				self.notify[subscription] = {}
 			end
@@ -326,6 +327,9 @@ _getEventSink = function(self)
 				elseif event.channel then
 					local subscription    = event.channel
 					local onetime_request = false
+					
+					-- strip clientId from channel
+					subscription = string.gsub(subscription, "^/[0-9a-f]+", "")
 					
 					if string.find(subscription, '/slim/request') then
 						-- an async notification from a normal request
@@ -482,9 +486,6 @@ end
 function unsubscribe(self, subscription, func)
 	log:debug("Comet:unsubscribe(", subscription, ", ", func, ")")
 	
-	-- Prepend clientId to subscription name
-	subscription = '/' .. self.clientId .. subscription
-	
 	-- Remove from notify list
 	if func then
 		-- Remove only the given callback
@@ -604,7 +605,7 @@ function request(self, func, playerid, request, priority)
 		-- If we expect a response, we will get the response on the persistent 
 		-- connection.  Store our callback for later
 		if func then
-			local subscription = data[1]["data"]["response"] .. '|' .. id
+			local subscription = '/slim/request|' .. id
 			if not self.notify[subscription] then
 				self.notify[subscription] = {}
 			end
@@ -645,7 +646,7 @@ _getRequestSink = function(self, func, reqid)
 					log:debug("Comet:request got result for request id ", reqid)
 					
 					-- Remove subscription, we know this was not an async request
-					local subscription = '/' .. self.clientId .. '/slim/request|' .. reqid
+					local subscription = '/slim/request|' .. reqid
 					self.notify[subscription] = nil
 					
 					func(event)
@@ -657,8 +658,6 @@ end
 
 function addCallback(self, subscription, func)
 	log:debug("Comet:addCallback(", subscription, ", ", func, ")")
-	
-	subscription = '/' .. self.clientId .. subscription
 
 	if not self.notify[subscription] then
 		self.notify[subscription] = {}
@@ -669,8 +668,6 @@ end
 
 function removeCallback(self, subscription, func)
 	log:debug("Comet:removeCallback(", subscription, ", ", func, ")")
-	
-	subscription = '/' .. self.clientId .. subscription
 	
 	self.notify[subscription][func] = nil
 end
@@ -710,7 +707,7 @@ _handleAdvice = function(self)
 			true -- run timer only once
 		)
 		self.reconnect_timer:start()
-	elseif advice.reconnect == 'handshake' or advice.reconnect == 'recover' then
+	elseif advice.reconnect == 'handshake' then
 		log:warn(
 			"Comet: advice is ", advice.reconnect, ", re-handshaking in ",
 			retry_interval / 1000, " seconds"
@@ -720,8 +717,13 @@ _handleAdvice = function(self)
 		self.reconnect_timer = Timer(
 			retry_interval,
 			function()
-				-- This will re-subscribe to any old subscriptions
-				-- during _connect()
+				-- Go through all existing subscriptions and reset the pending flag
+				-- so they are re-subscribed to during _connect()
+				for i, v in ipairs( self.subs ) do
+					log:debug("Will re-subscribe to ", v.subscription)
+					v.pending = true
+				end
+				
 				_handshake(self)
 			end,
 			true -- run timer only once
