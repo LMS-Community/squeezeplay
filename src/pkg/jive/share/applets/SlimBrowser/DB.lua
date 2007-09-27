@@ -32,7 +32,7 @@ TODO
 --]]
 
 -- stuff we use
-local assert, tostring, ipairs = assert, tostring, ipairs
+local assert, tonumber, tostring, ipairs = assert, tonumber, tostring, ipairs
 
 local oo = require("loop.base")
 local RadioGroup = require("jive.ui.RadioGroup")
@@ -136,12 +136,12 @@ function menuItems(self, chunk)
 	end
 	
 	-- get the count
-	local cCount = chunk["count"]
+	local cCount = tonumber( chunk["count"] )
 
 	-- fix offset, CLI is 0 based and we're 1-based
 	local cFrom = 0
 	local cTo = 0
-	if cCount>0 then
+	if cCount > 0 then
 	
 		assert(chunk["item_loop"], "chunk must have item_loop field if count>0")
 		assert(chunk["offset"], "chunk must have offset field if count>0")
