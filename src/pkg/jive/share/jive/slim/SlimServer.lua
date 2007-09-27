@@ -414,10 +414,12 @@ local function _getArtworkThumbSink(self, iconId, size)
 				-- Note this allows for artwork to be resized to a larger
 				-- size than the original.  This is intentional so smaller cover
 				-- art will still fill the space properly on the Now Playing screen
-				artwork = artwork:rotozoom(0, size / w, 1)
-				if logcache:isDebug() then
-					local wnew, hnew = artwork:getSize()
-					logcache:debug("Resized artwork from ", w, "x", h, " to ", wnew, "x", hnew)
+				if w ~= size then
+					artwork = artwork:rotozoom(0, size / w, 1)
+					if logcache:isDebug() then
+						local wnew, hnew = artwork:getSize()
+						logcache:debug("Resized artwork from ", w, "x", h, " to ", wnew, "x", hnew)
+					end
 				end
 			end
 			
