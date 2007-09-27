@@ -36,7 +36,7 @@ requests are serviced before basic ones.
 
 
 -- stuff we use
-local assert, pairs, tostring, type = assert, pairs, tostring, type
+local assert, ipairs, tostring, type = assert, ipairs, tostring, type
 
 local table           = require("table")
 local math            = require("math")
@@ -86,7 +86,10 @@ function __init(self, jnt, ip, port, quantity, threshold, name)
 			threshold = threshold or 10,
 			jshq      = {}
 		},
-		reqQueue      = {},
+		reqQueue      = {
+			{}, -- priority request queue
+			{}  -- normal request queue
+		},
 		reqQueueCount = 0,
 		timeout_timer = nil,
 	})
@@ -156,11 +159,7 @@ end
 function t_queue(self, request, priority )
 --	log:debug(self, ":t_queue()")
 
-	assert(priority > 0, "queue priority must be at least 1")
-	
-	if not self.reqQueue[priority] then
-		self.reqQueue[priority] = {}
-	end
+	assert(priority == 1 or priority == 2, "queue priority must be 1 or 2")
 	
 	table.insert(self.reqQueue[priority], request)
 	self.reqQueueCount = self.reqQueueCount + 1
@@ -189,7 +188,7 @@ end
 function t_dequeue(self, socket)
 --	log:debug(self, ":t_dequeue()")
 		
-	for i, queue in pairs(self.reqQueue) do
+	for i, queue in ipairs(self.reqQueue) do
 		local request = table.remove(self.reqQueue[i], 1)
 		if request then
 			if type(request) == "function" then
