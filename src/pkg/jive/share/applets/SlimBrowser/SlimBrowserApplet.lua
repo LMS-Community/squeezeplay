@@ -430,7 +430,7 @@ local function _performJSONAction(jsonAction, from, qty, sink)
 	
 	-- replace player if needed
 	local playerid = jsonAction["player"]
-	if not playerid or playerid == 0 then
+	if not playerid or tostring(playerid) == "0" then
 		playerid = _player.id
 	end
 	
