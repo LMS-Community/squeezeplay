@@ -272,7 +272,7 @@ function __init(self, jnt, ip, port, name)
 
 		-- our socket for long term connections, this will not
 		-- actually connect yet
-		comet = Comet(jnt, jpool, ip, port, '/cometd', name),
+		comet = Comet(jnt, ip, port, '/cometd', name),
 		
 		-- artwork cache: Weak table storing a surface by iconId
 		artworkThumbCache = setmetatable({}, { __mode="k" }),

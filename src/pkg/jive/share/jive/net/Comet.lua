@@ -45,11 +45,12 @@ This class implements a HTTP socket running in a L<jive.net.NetworkThread>.
 
 
 -- stuff we use
-local ipairs, table, pairs = ipairs, table, pairs
+local ipairs, table, pairs, string = ipairs, table, pairs, string
 
 local oo            = require("loop.simple")
 
 local CometRequest  = require("jive.net.CometRequest")
+local HttpPool      = require("jive.net.HttpPool")
 local SocketHttp    = require("jive.net.SocketHttp")
 local Timer         = require("jive.ui.Timer")
 
@@ -77,7 +78,7 @@ I<path> is the absolute path to the server's cometd handler and defaults to
 
 =cut
 --]]
-function __init(self, jnt, jpool, ip, port, path, name)
+function __init(self, jnt, ip, port, path, name)
 	log:debug("Comet:__init(", name, ", ", ip, ", ", port, ", ", path, ")")
 
 	-- init superclass
@@ -85,7 +86,10 @@ function __init(self, jnt, jpool, ip, port, path, name)
 	
 	obj.uri = 'http://' .. ip .. ':' .. port .. path
 	
-	obj.jpool          = jpool    -- HttpPool from SlimServer
+	-- Comet uses 2 pools, 1 for chunked responses and 1 for requests
+	obj.cpool          = HttpPool(jnt, ip, port, 1, 1, name .. "_Chunked")
+	obj.rpool          = HttpPool(jnt, ip, port, 1, 1, name .. "_Request")
+	
 	obj.active         = false    -- whether or not we have an active connection
 	obj.clientId       = nil      -- clientId provided by server
 	obj.reqid          = 1        -- used to identify non-subscription requests
@@ -135,18 +139,29 @@ _addPendingRequests = function(self, data)
 			local cmd = {}
 			cmd[1] = v.playerid or ''
 			cmd[2] = v.request
+			
+			-- Prepend clientId to subscription name
+			v.subscription = '/' .. self.clientId .. v.subscription
 	
 			local sub = {
-				channel      = '/meta/subscribe',
-				clientId     = self.clientId,
-				subscription = v.subscription,
-				ext          = {
-					['slim.request'] = cmd
+				channel = '/slim/subscribe',
+				id      = v.reqid,
+				data    = {
+					request  = cmd,
+					response = v.subscription,
+					priority = v.priority,
 				},
 			}
+
+			-- Add callback
+			if not self.notify[v.subscription] then
+				self.notify[v.subscription] = {}
+			end
+			self.notify[v.subscription][v.func] = v.func
 			
-			-- remove pending status from this sub
+			-- remove pending status and the callback from this sub
 			v.pending = nil
+			v.func    = nil
 	
 			table.insert( data, sub )
 		end
@@ -155,9 +170,10 @@ _addPendingRequests = function(self, data)
 	-- Add pending unsubscribe requests
 	for i, v in ipairs( self.pending_unsubs ) do
 		local unsub = {
-			channel      = '/meta/unsubscribe',
-			clientId     = self.clientId,
-			subscription = v,
+			channel = '/slim/unsubscribe',
+			data    = {
+				unsubscribe = v,
+			},
 		}
 	
 		table.insert( data, unsub )
@@ -174,57 +190,65 @@ _addPendingRequests = function(self, data)
 		cmd[2] = v.request
 	
 		local req = {
-			channel      = '/slim/request',
-			clientId     = self.clientId,
-			id           = v.reqid,
-			data         = cmd
+			channel = '/slim/request',
+			id      = v.reqid,
+			data    = {
+				request  = cmd,
+				priority = v.priority,
+			},
 		}
+		
+		-- only ask for a response if we have a callback function
+		if v.func then
+			req["data"]["response"] = '/' .. self.clientId .. '/slim/request'
+			
+			-- Store this request's callback
+			local subscription = req["data"]["response"] .. '|' .. v.reqid
+			if not self.notify[subscription] then
+				self.notify[subscription] = {}
+			end
+			self.notify[subscription][v.func] = v.func
+		end
 	
 		table.insert( data, req )
-	
-		-- Store this request's callback
-		local subscription = '/slim/request|' .. v.reqid
-		if not self.notify[subscription] then
-			self.notify[subscription] = {}
-		end
-		self.notify[subscription][v.func] = v.func
 	end
 
 	-- Clear out pending requests
 	self.pending_reqs = {}
-	
+
 	return
 end
 
 _connect = function(self)
 	log:debug('Comet:_connect()')
 	
+	-- Connect and subscribe to all events for this clientId
 	local data = { {
 		channel        = '/meta/connect',
 		clientId       = self.clientId,
 		connectionType = 'streaming',
+	},
+	{
+		channel      = '/meta/subscribe',
+		clientId     = self.clientId,
+		subscription = '/' .. self.clientId .. '/**',
 	} }
 	
 	-- Add any other pending requests to the outgoing data
 	_addPendingRequests( self, data )
 	
-	local options = {
-		headers = {
-			['Content-Type'] = 'text/json',
-		}
-	}
-	
 	-- This will be our last request on this connection, it is now only
 	-- for listening for responses
 	
-	local req = CometRequest(
-		_getEventSink(self),
-		self.uri,
-		data,
-		options
-	)
+	local req = function()
+		return CometRequest(
+			_getEventSink(self),
+			self.uri,
+			data
+		)
+	end
 	
-	self:fetch(req)
+	self.cpool:queuePriority(req)
 end
 
 _getEventSink = function(self)
@@ -271,29 +295,41 @@ _getEventSink = function(self)
 					end
 				elseif event.channel == '/meta/subscribe' then
 					if event.successful then
-						log:debug("Comet:_getEventSink, subscription OK for ", event.subscription)
+						log:debug("Comet:_getEventSink, /meta/subscribe OK for ", event.subscription)
 					else
-						log:warn("Comet:_getEventSink, subscription failed for ", event.subscription, ": ", event.error)
+						log:warn("Comet:_getEventSink, /meta/subscribe failed: ", event.error)
 					end
 				elseif event.channel == '/meta/unsubscribe' then
 					if event.successful then
-						log:debug("Comet:_getEventSink, unsubscribe OK for ", event.subscription)
+						log:debug("Comet:_getEventSink, /meta/unsubscribe OK for ", event.subscription)
 					else
-						log:warn("Comet:_getEventSink, unsubscribe error: ", event.error)
+						log:warn("Comet:_getEventSink, /meta/unsubscribe error: ", event.error)
+					end
+				elseif event.channel == '/slim/subscribe' then
+					if event.successful then
+						log:debug("Comet:_getEventSink, /slim/subscribe OK for reqid ", event.id)
+					else
+						log:warn("Comet:_getEventSink, /slim/subscribe error for reqid ", event.id, ": ", event.error)
+					end
+				elseif event.channel == '/slim/unsubscribe' then
+					if event.successful then
+						log:debug("Comet:_getEventSink, /slim/unsubscribe OK for reqid ", event.id)
+					else
+						log:warn("Comet:_getEventSink, /slim/unsubscribe error for reqid ", event.id, ": ", event.error)
 					end
 				elseif event.channel then
 					local subscription    = event.channel
 					local onetime_request = false
 					
-					if subscription == '/slim/request' then
+					if string.find(subscription, '/slim/request') then
 						-- an async notification from a normal request
-						subscription = '/slim/request|' .. event.id
+						subscription = subscription .. '|' .. event.id
 						onetime_request = true
 					end
 					
-					log:debug("Comet:_getEventSink, notifiying callbacks for ", subscription)
-					
 					if self.notify[subscription] then
+						log:debug("Comet:_getEventSink, notifiying callbacks for ", subscription)
+					
 						for _, func in pairs( self.notify[subscription] ) do
 							func(event)
 						end
@@ -328,23 +364,18 @@ _handshake = function(self)
 		supportedConnectionTypes = { 'streaming' },
 	} }
 	
-	local options = {
-		headers = {
-			['Content-Type'] = 'text/json',
-		}
-	}
-	
 	-- XXX: according to the spec this should be sent as application/x-www-form-urlencoded
 	-- with message=<url-encoded json> but it works as straight JSON
 	
-	local req = CometRequest(
-		_getHandshakeSink(self),
-		self.uri,
-		data,
-		options
-	)
+	local req = function()
+		return CometRequest(
+			_getHandshakeSink(self),
+			self.uri,
+			data
+		)
+	end
 	
-	self:fetch(req)
+	self.cpool:queuePriority(req)
 end
 
 _getHandshakeSink = function(self)
@@ -357,6 +388,8 @@ _getHandshakeSink = function(self)
 		if chunk then
 			local data = chunk[1]
 			if data.successful then
+				self.active    = true
+				self.failures  = 0
 				self.clientId  = data.clientId
 				self.advice    = data.advice
 				
@@ -378,16 +411,12 @@ _getHandshakeSink = function(self)
 	end
 end
 
-function subscribe(self, subscription, func, playerid, request)
+function subscribe(self, subscription, func, playerid, request, priority)
+	local id = self.reqid
+
 	if log:isDebug() then
-		log:debug("Comet:subscribe(", subscription, ", ", func, ", ", playerid, ", ", table.concat(request, ","), ")")
+		log:debug("Comet:subscribe(", subscription, ", reqid:", id, ", ", func, ", ", playerid, ", ", table.concat(request, ","), ", priority:", priority, ")")
 	end
-	
-	-- Add callback
-	if not self.notify[subscription] then
-		self.notify[subscription] = {}
-	end
-	self.notify[subscription][func] = func
 	
 	-- Remember subs to send during connect now, or if we get
 	-- disconnected
@@ -395,8 +424,13 @@ function subscribe(self, subscription, func, playerid, request)
 		subscription = subscription,
 		playerid     = playerid,
 		request      = request,
+		reqid        = id,
+		func         = func,
+		priority     = priority,
 		pending      = true, -- pending means we haven't send this sub request yet
 	} )
+	
+	self.reqid = self.reqid + 1
 	
 	if self.active and not self.sub_timer then
 		-- batch subscription requests on a short timer
@@ -416,21 +450,16 @@ function subscribe(self, subscription, func, playerid, request)
 							log:debug("Sending pending subscribe request(s):")
 							debug.dump(data, 5)
 						end
-				
-						local options = {
-							headers = {
-								['Content-Type'] = 'text/json',
-							}
-						}
 
-						local req = CometRequest(
-							_getEventSink(self),
-							self.uri,
-							data,
-							options
-						)
+						local req = function()
+							return CometRequest(
+								_getEventSink(self),
+								self.uri,
+								data
+							)
+						end
 				
-						self.jpool:queuePriority(req)
+						self.rpool:queuePriority(req)
 					end
 				end
 			end,
@@ -445,6 +474,9 @@ end
 
 function unsubscribe(self, subscription, func)
 	log:debug("Comet:unsubscribe(", subscription, ", ", func, ")")
+	
+	-- Prepend clientId to subscription name
+	subscription = '/' .. self.clientId .. subscription
 	
 	-- Remove from notify list
 	if func then
@@ -488,22 +520,17 @@ function unsubscribe(self, subscription, func)
 								log:debug("Sending pending unsubscribe request(s):")
 								debug.dump(data, 5)
 							end
-					
-							local options = {
-								headers = {
-									['Content-Type'] = 'text/json',
-								}
-							}
 
-							local req = CometRequest(
-								_getEventSink(self),
-								self.uri,
-								data,
-								options
-							)
+							local req = function()
+								return CometRequest(
+									_getEventSink(self),
+									self.uri,
+									data
+								)
+							end
 
 							-- unsubscribe doesn't need to be high priority						
-							self.jpool:queue(req)
+							self.rpool:queue(req)
 						end
 					end
 				end,
@@ -517,66 +544,60 @@ function unsubscribe(self, subscription, func)
 	end
 end
 
-function request(self, func, playerid, request)
+function request(self, func, playerid, request, priority)
+	local id = self.reqid
+	
 	if log:isDebug() then
-		log:debug("Comet:request(", func, ", reqid:", self.reqid, ", ", playerid, ", ", table.concat(request, ","), ")")
+		log:debug("Comet:request(", func, ", reqid:", id, ", ", playerid, ", ", table.concat(request, ","), ", priority:", priority, ")")
 	end
 	
 	if not self.active then
-		-- Add subscription to pending requets, to be sent during connect/reconnect
+		-- Add subscription to pending requests, to be sent during connect/reconnect
 		table.insert( self.pending_reqs, {
-			reqid    = self.reqid,
+			reqid    = id,
 			func     = func,
 			playerid = playerid,
 			request  = request,
+			priority = priority,
 		} )
 	else	
 		local cmd = {}
 		cmd[1] = playerid or ''
 		cmd[2] = request
-	
+		
 		local data = { {
-			channel      = '/slim/request',
-			clientId     = self.clientId,
-			id           = self.reqid,
-			data         = cmd
+			channel = '/slim/request',
+			id      = id,
+			data    = {
+				request  = cmd,
+				priority = priority,
+			},
 		} }
 		
-		-- Requests can be sent that don't want a response
-		-- to save CPU time on Jive.  'no-response' tells the
-		-- server to send only a minimal HTTP response that we
-		-- will then ignore
-		if not func then
-			data[1]["ext"] = {
-				["no-response"] = 1
-			}
+		-- only ask for a response if we have a callback function
+		if func then
+			data[1]["data"]["response"] = '/' .. self.clientId .. '/slim/request'
 		end
-	
-		local options = {
-			headers = {
-				['Content-Type'] = 'text/json',
-			}
-		}
 		
 		local sink = nil
 		if func then
-			sink = _getRequestSink(self, func, self.reqid)
+			sink = _getRequestSink(self, func, id)
 		end
 	
-		local req = CometRequest(
-			sink,
-			self.uri,
-			data,
-			options
-		)
+		local req = function()
+			return CometRequest(
+				sink,
+				self.uri,
+				data
+			)
+		end
 	
-		self.jpool:queuePriority(req)
+		self.rpool:queuePriority(req)
 	
-		-- If we expect a response, and the request is async, we will get the 
-		-- response on the persistent connection.  Store our callback until we
-		-- know if it's async or not
+		-- If we expect a response, we will get the response on the persistent 
+		-- connection.  Store our callback for later
 		if func then
-			local subscription = '/slim/request|' .. self.reqid
+			local subscription = data[1]["data"]["response"] .. '|' .. id
 			if not self.notify[subscription] then
 				self.notify[subscription] = {}
 			end
@@ -590,7 +611,7 @@ function request(self, func, playerid, request)
 	self.reqid = self.reqid + 1
 	
 	-- Return the request id to the caller
-	return self.reqid - 1
+	return id
 end
 
 _getRequestSink = function(self, func, reqid)
@@ -617,7 +638,7 @@ _getRequestSink = function(self, func, reqid)
 					log:debug("Comet:request got result for request id ", reqid)
 					
 					-- Remove subscription, we know this was not an async request
-					local subscription = '/slim/request|' .. reqid
+					local subscription = '/' .. self.clientId .. '/slim/request|' .. reqid
 					self.notify[subscription] = nil
 					
 					func(event)
@@ -700,21 +721,16 @@ _reconnect = function(self)
 		clientId       = self.clientId,
 		connectionType = 'streaming',
 	} }
-
-	local options = {
-		headers = {
-			['Content-Type'] = 'text/json',
-		}
-	}
 	
-	local req = CometRequest(
-		_getEventSink(self),
-		self.uri,
-		data,
-		options
-	)
+	local req = function()
+		return CometRequest(
+			_getEventSink(self),
+			self.uri,
+			data
+		)
+	end
 	
-	self:fetch(req)	
+	self.cpool:queuePriority(req)	
 end
 
 --[[

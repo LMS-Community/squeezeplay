@@ -90,7 +90,11 @@ function __init(self, sink, uri, data, options)
 	--log:debug("CometRequest:__init()")
 	
 	if not options then
-		options = {}
+		options = {
+			headers = {
+				['Content-Type'] = 'text/json',
+			}
+		}
 	end
 	
 	options.t_bodySource = _getBodySource(data)
