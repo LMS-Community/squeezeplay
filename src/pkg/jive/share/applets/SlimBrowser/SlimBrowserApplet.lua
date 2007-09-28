@@ -335,14 +335,20 @@ local function _artworkItem(item)
 		item["_jive_icon"] = false
 	
 		if item["icon-id"] then
-			-- Fetch an image from SlimServer
 			icon = Icon("icon")
-			icon:addTimer(1000, 
-				function()
-					_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri)
-				end,
-				true
-			)
+			if _server:artworkThumbCached(item["icon-id"]) then
+				-- cache contains this icon-id display straight away
+				_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri)
+			else
+				-- wait for the icon to stay on screen for 1 sec, then fetch from server
+				-- fetching from the server is expensive and interrupts scrolling so delay doing this
+				icon:addTimer(1000,
+					function()
+						_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri)
+					end,
+					true
+				)
+			end
 			item["_jive_icon"] = icon
 		elseif item["icon"] then
 			-- Fetch a remote image URL, sized to 56x56
