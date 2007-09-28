@@ -60,6 +60,10 @@ local HttpPool      = require("jive.net.HttpPool")
 local SocketHttp    = require("jive.net.SocketHttp")
 local Timer         = require("jive.ui.Timer")
 
+local Icon          = require("jive.ui.Icon")
+local Label         = require("jive.ui.Label")
+local Popup         = require("jive.ui.Popup")
+
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("net.comet")
 
@@ -96,6 +100,7 @@ function __init(self, jnt, ip, port, path, name)
 	obj.cpool          = HttpPool(jnt, ip, port, 1, 1, name .. "_Chunked")
 	obj.rpool          = HttpPool(jnt, ip, port, 1, 1, name .. "_Request")
 	
+	obj.name           = name
 	obj.active         = false    -- whether or not we have an active connection
 	obj.clientId       = nil      -- clientId provided by server
 	obj.reqid          = 1        -- used to identify non-subscription requests
@@ -198,16 +203,16 @@ _addPendingRequests = function(self, data)
 	
 		local req = {
 			channel = '/slim/request',
-			id      = v.reqid,
 			data    = {
 				request  = cmd,
+				response = '/' .. self.clientId .. '/slim/request',
 				priority = v.priority,
 			},
 		}
 		
 		-- only ask for a response if we have a callback function
 		if v.func then
-			req["data"]["response"] = '/' .. self.clientId .. '/slim/request'
+			req["id"] = v.reqid
 			
 			-- Store this request's callback
 			local subscription = '/slim/request|' .. v.reqid
@@ -575,16 +580,17 @@ function request(self, func, playerid, request, priority)
 		
 		local data = { {
 			channel = '/slim/request',
-			id      = id,
 			data    = {
 				request  = cmd,
+				response = '/' .. self.clientId .. '/slim/request',
 				priority = priority,
 			},
 		} }
 		
-		-- only ask for a response if we have a callback function
+		-- only pass id if we have a callback function, this tells
+		-- SlimServer we don't want a response
 		if func then
-			data[1]["data"]["response"] = '/' .. self.clientId .. '/slim/request'
+			data[1]["id"] = id
 		end
 		
 		local sink = nil
@@ -675,12 +681,28 @@ end
 -- Decide what to do if we get disconnected or get an error while handshaking/connecting
 -- XXX: Need a way to propagate errors/retry notice up to the UI
 _handleAdvice = function(self)
+	-- could display a popup wait screen here, but needs more logic
+	-- such as are you using this connection or playing a game, etc
+	if false and self.active then
+		local popup = Popup("popupIcon")
+		local icon  = Icon("iconConnecting")
+		local label = Label("text", "Connection to " .. self.name .. " lost\nReconnecting...")
+		popup:addWidget(icon)
+		popup:addWidget(label)
+		popup:addTimer(1000, function()
+			if self.active then
+				popup:hide()
+			end
+		end)
+		popup:show()
+	end
+	
 	-- make sure our connection is closed
 	if self.active then
 		self.active = false
 		self:perform(function() self:t_close() end)
 	end
-	
+
 	self.failures = self.failures + 1
 	
 	local advice = self.advice
