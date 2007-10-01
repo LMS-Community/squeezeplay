@@ -181,7 +181,25 @@ end
 -- returns a URI to fetch artwork on the server
 -- FIXME: should this be styled?
 local function _artworkThumbUri(iconId)
-	return '/music/' .. iconId .. '/cover_56x56_f_000000.jpg'
+
+	-- if the iconId is a number, this is cover art, otherwise it's static content
+	-- do some extra checking instead of just looking for type = number
+	local thisIsAnId = true
+	if type(iconID) == number then -- iconID is a number
+		thisIsAnId = true
+	elseif string.find(iconId, "%a") then -- iconID string contains a letter
+		thisIsAnID = false
+	else -- a string with no letters must be an id
+		thisIsAnID = true
+	end
+
+	-- if this is a number, construct the path for a 56x56 cover art thumbnail
+	if thisIsAnID then 
+		return '/music/' .. iconId .. '/cover_56x56_p_ffffff.jpg' -- 'p' is for padded, ffffff means pad with white
+	-- if this isn't a number, then we just want the path
+	else
+		return iconId
+	end
 end
 
 
