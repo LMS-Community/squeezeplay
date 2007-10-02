@@ -188,9 +188,9 @@ local function _artworkThumbUri(iconId)
 	if type(iconID) == number then -- iconID is a number
 		thisIsAnId = true
 	elseif string.find(iconId, "%a") then -- iconID string contains a letter
-		thisIsAnID = false
+		thisIsAnId = false
 	else -- a string with no letters must be an id
-		thisIsAnID = true
+		thisIsAnId = true
 	end
 
 	-- if this is a number, construct the path for a 56x56 cover art thumbnail
