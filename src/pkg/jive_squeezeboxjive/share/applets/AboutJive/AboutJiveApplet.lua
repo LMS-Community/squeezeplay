@@ -55,7 +55,7 @@ function settingsShow(self)
 		"     Andy Grundman",
 		"     Raphael Juchli",
 		"     Ben Klaas",
-		"     Martin Seneclauze",
+		"     Martin Sénéclauze",
 		"     Adrian Smith",
 		"     Fred Thomas",
 		"     Richard Titmuss",
