@@ -185,7 +185,7 @@ local function _artworkThumbUri(iconId)
 	-- if the iconId is a number, this is cover art, otherwise it's static content
 	-- do some extra checking instead of just looking for type = number
 	local thisIsAnId = true
-	if type(iconID) == number then -- iconID is a number
+	if type(iconId) == number then -- iconId is a number
 		thisIsAnId = true
 	elseif string.find(iconId, "%a") then -- iconID string contains a letter
 		thisIsAnId = false
