@@ -67,7 +67,7 @@ local strOf = " of "
 --
 
 local function _nowPlayingArtworkThumbUri(iconId)
-        return '/music/' .. iconId .. '/cover_' .. ARTWORK_SIZE .. 'x' .. ARTWORK_SIZE .. '_f_000000.jpg'
+        return '/music/' .. iconId .. '/cover_' .. ARTWORK_SIZE .. 'x' .. ARTWORK_SIZE .. '_p.png'
 end
 
 local function _getSink(self, cmd)
