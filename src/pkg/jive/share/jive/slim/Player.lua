@@ -484,9 +484,7 @@ function togglePause(self)
 	local paused = self.state["mode"]
 	log:debug("Player:togglePause(", paused, ")")
 
-	if paused == 'stop' then
-		return
-	elseif paused == 'pause' then
+	if paused == 'stop' or paused == 'pause' then
 		self:call({'pause', '0'})
 		self.state["mode"] = 'play'
 	elseif paused == 'play' then
