@@ -195,7 +195,7 @@ local function _artworkThumbUri(iconId)
 
 	-- if this is a number, construct the path for a 56x56 cover art thumbnail
 	if thisIsAnId then 
-		return '/music/' .. iconId .. '/cover_56x56_p_ffffff.jpg' -- 'p' is for padded, ffffff means pad with white
+		return '/music/' .. iconId .. '/cover_56x56_p.png' -- 'p' is for padded, png gives us transparency
 	-- if this isn't a number, then we just want the path
 	else
 		return iconId
