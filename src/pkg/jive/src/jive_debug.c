@@ -21,15 +21,15 @@ struct perf_hook_data {
 static void perf_hook(lua_State *L, lua_Debug *ar) {
 	struct perf_hook_data *hd;
 
-	lua_pushlightuserdata(L, (void *)((unsigned int)L) + 1);
+	clock_t ticks = clock();
+
+	lua_pushlightuserdata(L, (char *)((unsigned int)L) + 1);
 	lua_gettable(L, LUA_REGISTRYINDEX);
 	hd = lua_touserdata(L, -1);
 
 	if (!hd) {
 		return;
 	}
-
-	clock_t ticks = clock();
 
 	if (ar->event == LUA_HOOKCALL) {
 		if (hd->hook_stack < sizeof(hd->hook_ticks)) {
@@ -83,7 +83,7 @@ static int jiveL_perfhook(lua_State *L) {
 
 	lua_sethook(L, perf_hook, LUA_MASKCALL | LUA_MASKRET, 0);
 
-	lua_pushlightuserdata(L, (void *)((unsigned int)L) + 1);
+	lua_pushlightuserdata(L, (char *)((unsigned int)L) + 1);
 	hd = lua_newuserdata(L, sizeof(struct perf_hook_data));
 	lua_settable(L, LUA_REGISTRYINDEX);
 
