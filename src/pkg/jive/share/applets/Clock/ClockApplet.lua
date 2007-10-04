@@ -438,7 +438,6 @@ function DigitalDetailed:DrawAMPMTime(x, y, bw, bh)
 
 	-- Snip of leading 0
 	local theHour = string.gsub(os.date("%I"), "^0", "", 1)
-	theHour = 11
 
 	local hourSrf = Surface:drawText(self.mainfont, self.mainfont_color, theHour)
 	local hw, hh = hourSrf:getSize()
