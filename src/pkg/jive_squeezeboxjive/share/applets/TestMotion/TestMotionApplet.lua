@@ -52,6 +52,8 @@ function settingsShow(self)
 	window:addWidget(self.maxY)
 	window:addWidget(self.maxZ)
 
+	window:focusWidget(nil)
+
 	local timer = Timer(1000,
 			    function()
 				    self.valX:setValue(0)
