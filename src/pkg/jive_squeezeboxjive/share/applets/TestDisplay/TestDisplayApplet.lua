@@ -84,7 +84,7 @@ function drawDisplay(self)
 	end
 	
 	self.state = self.state + 1
-	self.icon:setImage(srf)
+	self.icon:setValue(srf)
 end
 
 

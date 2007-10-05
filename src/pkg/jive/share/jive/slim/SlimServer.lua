@@ -387,8 +387,6 @@ end
 -- returns a sink for artwork so we can cache it as Surface before sending it forward
 local function _getArtworkThumbSink(self, iconId, size)
 
-	local icons = self.artworkThumbIcons
-	
 	if not size then
 		size = 56
 	end
@@ -422,10 +420,20 @@ local function _getArtworkThumbSink(self, iconId, size)
 					end
 				end
 			end
-			
+
+			-- don't display empty artwork
+			local w, h = artwork:getSize()
+			if w == 0 or h == 0 then
+				artwork = nil
+			end
+
 			-- set it to all icons waiting for it
-			for i, icon in ipairs(icons[cacheKey]) do
-				icon:setImage(artwork)
+			local icons = self.artworkThumbIcons
+			for icon, key in pairs(icons) do
+				if key == cacheKey then
+					icon:setValue(artwork)
+					icons[icon] = nil
+				end
 			end
 			
 			-- store the artwork in the cache
@@ -435,8 +443,6 @@ local function _getArtworkThumbSink(self, iconId, size)
 				_dumpArtworkThumbCache(self)
 			end
 		end
-		-- in all cases, remove the sinks
-		icons[cacheKey] = nil
 	end
 end
 
@@ -468,7 +474,7 @@ end
 
 The SlimServer object maintains an artwork cache. This function either loads from the cache or
 gets from the network the thumb for I<iconId>. A L<jive.ui.Surface> is used to perform
-I<icon>:setImage(). I<uriGenerator> must be a function that
+I<icon>:setValue(). I<uriGenerator> must be a function that
 computes the URI to request the artwork from the server from I<iconId> (i.e. if needed, this
 method will call uriGenerator(iconId) and use the result as URI).
 
@@ -491,36 +497,40 @@ function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, priority)
 	-- do we have the artwork in the cache
 	local artwork = self.artworkThumbCache[cacheKey]
 	if artwork then
-		logcache:debug("..artwork in cache")
-		icon:setImage(artwork)
-		return
+		-- are we requesting it already?
+		if artwork == true then
+			logcache:debug("..artwork already requested")
+			icon:setValue(nil)
+			self.artworkThumbIcons[icon] = cacheKey
+			return
+		else
+			logcache:debug("..artwork in cache")
+			icon:setValue(artwork)
+			return
+		end
 	end
-	
-	-- are we requesting it already?
-	local icons = self.artworkThumbIcons[cacheKey]
-	if icons then
-		logcache:debug("..artwork already requested")
-		table.insert(icons, icon)
-		return
-	end
-	
+
 	-- no luck, generate a request for the artwork
-	self.artworkThumbIcons[cacheKey] = {icon}
+	icon:setValue(nil)
+	self.artworkThumbCache[cacheKey] = true
+	self.artworkThumbIcons[icon] = cacheKey
 	logcache:debug("..fetching artwork")
-
-	local req = function()
-			    return RequestHttp(
-					_getArtworkThumbSink(self, iconId, size), 
-					'GET',
-					uriGenerator(iconId, size)
-				)
-		    end
-
-	if priority then
-		self.jpool:queuePriority(req)
-	else
-		self.jpool:queue(req)
-	end
+	
+	-- this takes some time, offset the task using a timer
+	icon:addTimer(0,
+		      function()
+			      local req = RequestHttp(
+						      _getArtworkThumbSink(self, iconId, size), 
+						      'GET',
+						      uriGenerator(iconId, size)
+					      )
+			      if priority then
+				      self.jpool:queuePriority(req)
+			      else
+				      self.jpool:queue(req)
+			      end
+		      end,
+		      true)
 end
 
 --[[
@@ -548,35 +558,39 @@ function fetchArtworkURL(self, url, icon, size)
 	-- do we have the artwork in the cache
 	local artwork = self.artworkThumbCache[cacheKey]
 	if artwork then
-		logcache:debug("..artwork in cache")
-		icon:setImage(artwork)
-		return
+		-- are we requesting it already?
+		if artwork == true then
+			logcache:debug("..artwork already requested")
+			icon:setValue(nil)
+			self.artworkThumbIcons[icon] = cacheKey
+			return
+		else
+			logcache:debug("..artwork in cache")
+			icon:setValue(artwork)
+			return
+		end
 	end
-	
-	-- are we requesting it already?
-	local icons = self.artworkThumbIcons[cacheKey]
-	if icons then
-		logcache:debug("..artwork already requested")
-		table.insert(icons, icon)
-		return
-	end
-	
+
 	-- no luck, generate a request for the artwork
-	local req = RequestHttp(
-		_getArtworkThumbSink(self, url, size),
-		'GET',
-		url
-	)
-	
-	-- remember the icon
-	self.artworkThumbIcons[cacheKey] = {icon}
+	icon:setValue(nil)
+	self.artworkThumbCache[cacheKey] = true
+	self.artworkThumbIcons[icon] = cacheKey
 	logcache:debug("..fetching artwork")
 
-	-- connect to the remote server
-	local uri  = req:getURI()
-	local http = SocketHttp(self.jnt, uri.host, uri.port, uri.host)
+	-- this takes some time, offset the task using a timer
+	icon:addTimer(0,
+		      function()
+			      local req = RequestHttp(
+						      _getArtworkThumbSink(self, url, size),
+						      'GET',
+						      url
+					      )
+			      -- connect to the remote server
+			      local uri  = req:getURI()
+			      local http = SocketHttp(self.jnt, uri.host, uri.port, uri.host)
 	
-	http:fetch(req)
+			      http:fetch(req)
+		      end)
 end
 
 

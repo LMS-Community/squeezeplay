@@ -101,7 +101,7 @@ function drawKeypad(self)
 	local currentKeyUp = 0
 
 	self.background:blit(srf, 0, 0)
-	self.icon:setImage(srf)
+	self.icon:setValue(srf)
 
 	for i,k in ipairs(keymap) do
 		local state = keyState[k.key]

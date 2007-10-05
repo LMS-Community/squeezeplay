@@ -87,7 +87,7 @@ function setValue(self, value)
 			self.value = value
 		end
 
-		self:rePrepare()
+		self:reLayout()
 	end
 end
 

@@ -56,6 +56,8 @@ local LAYOUT_WEST            = jive.ui.LAYOUT_WEST
 local LAYOUT_CENTER          = jive.ui.LAYOUT_CENTER
 local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
+local WH_FILL                = jive.ui.WH_FILL
+
 local appletManager          = appletManager
 
 
@@ -233,7 +235,6 @@ function skin(self, s)
 
 	local FONT_BOLD_13px = Font:load(fontpath .. "FreeSansBold.ttf", 14)
 	local FONT_BOLD_15px = Font:load(fontpath .. "FreeSansBold.ttf", 16)
-	local FONT_BOLD_16px = Font:load(fontpath .. "FreeSansBold.ttf", 17)
 	local FONT_BOLD_18px = Font:load(fontpath .. "FreeSansBold.ttf", 20)
 	local FONT_BOLD_20px = Font:load(fontpath .. "FreeSansBold.ttf", 22)
 
@@ -301,12 +302,12 @@ function skin(self, s)
 	-- Window title, this is a Label
 	-- black text with a background image
 	s.title.border = 4
-	s.title.padding = { 10, 7, 8, 9 }
 	s.title.position = LAYOUT_NORTH
-
-	s.title.font = FONT_BOLD_18px
-	s.title.fg = SELECT_COLOR
 	s.title.bgImg = titleBox
+	s.title.text.padding = { 10, 7, 8, 9 }
+	s.title.text.align = "top-left"
+	s.title.text.font = FONT_BOLD_18px
+	s.title.text.fg = SELECT_COLOR
 
 
 	-- Menu with three basic styles: normal, selected and locked
@@ -315,51 +316,57 @@ function skin(self, s)
 	s.menu.itemHeight = 27
 
 	-- menu item
+	s.item.order = { "text", "icon" }
 	s.item.padding = 6
-	s.item.font = FONT_BOLD_15px
-	s.item.fg = TEXT_COLOR
-	s.item.sh = TEXT_SH_COLOR
+	s.item.text.w = WH_FILL
+	s.item.text.font = FONT_BOLD_15px
+	s.item.text.fg = TEXT_COLOR
+	s.item.text.sh = TEXT_SH_COLOR
 
 	-- menu item
+	s.itemNoAction.order = { "text", "icon" }
 	s.itemNoAction.padding = 6
-	s.itemNoAction.font = FONT_BOLD_15px
-	s.itemNoAction.fg = TEXT_COLOR
-	s.itemNoAction.sh = TEXT_SH_COLOR
+	s.itemNoAction.text.w = WH_FILL
+	s.itemNoAction.text.font = FONT_BOLD_15px
+	s.itemNoAction.text.fg = TEXT_COLOR
+	s.itemNoAction.text.sh = TEXT_SH_COLOR
 
 	--s.item.bgImg = selectionBox
 
+	s.current.order = { "text", "icon" }
 	s.current.padding = 6
-	s.current.font = FONT_BOLD_15px
-	s.current.fg = TEXT_COLOR
-	s.current.sh = TEXT_COLOR -- FIXME
+	s.current.text.font = FONT_BOLD_15px
+	s.current.text.fg = TEXT_COLOR
+	s.current.text.sh = TEXT_COLOR -- FIXME
 
 	-- selected menu item
-	s.selected.item.font = FONT_BOLD_16px
-	s.selected.item.fg = SELECT_COLOR
-	s.selected.item.sh = SELECT_SH_COLOR
 	s.selected.item.bgImg = selectionBox
+	s.selected.item.text.font = FONT_BOLD_15px
+	s.selected.item.text.fg = SELECT_COLOR
+	s.selected.item.text.sh = SELECT_SH_COLOR
 	s.selected.item.icon.padding = { 4, 0, 0, 0 }
 	s.selected.item.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
+	s.selected.item.icon.align = "right"
 
-
-	s.selected.item.font = FONT_BOLD_16px
-	s.selected.current.fg = SELECT_COLOR
-	s.selected.current.sh = SELECT_SH_COLOR
 	s.selected.current.bgImg = selectionBox
-	s.selected.item.icon.padding = { 4, 0, 0, 0 }
+	s.selected.current.text.font = FONT_BOLD_15px
+	s.selected.current.text.fg = SELECT_COLOR
+	s.selected.current.text.sh = SELECT_SH_COLOR
+	s.selected.current.icon.padding = { 4, 0, 0, 0 }
 	s.selected.current.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
 
-	s.selected.itemNoAction.font = FONT_BOLD_16px
-	s.selected.itemNoAction.fg = SELECT_COLOR
-	s.selected.itemNoAction.sh = SELECT_SH_COLOR
 	s.selected.itemNoAction.bgImg = selectionBox
+	s.selected.itemNoAction.text.font = FONT_BOLD_15px
+	s.selected.itemNoAction.text.fg = SELECT_COLOR
+	s.selected.itemNoAction.text.sh = SELECT_SH_COLOR
 
 	-- locked menu item (with loading animation)
-	s.locked.item.font = FONT_BOLD_16px
-	s.locked.item.fg = SELECT_COLOR
-	s.locked.item.sh = SELECT_SH_COLOR
 	s.locked.item.bgImg = selectionBox
+	s.locked.item.text.font = FONT_BOLD_15px
+	s.locked.item.text.fg = SELECT_COLOR
+	s.locked.item.text.sh = SELECT_SH_COLOR
 	s.locked.item.icon.img = Surface:loadImage(imgpath .. "selection_wait.png")
+	s.locked.item.icon.align = "right"
 	s.locked.item.icon.frameRate = 5
 	s.locked.item.icon.frameWidth = 10
 
@@ -370,6 +377,7 @@ function skin(self, s)
 	s.item.choice.sh = TEXT_SH_COLOR
 	s.item.choice.padding = { 8, 0, 0, 0 }
 
+
 	-- menu item choice
 	s.itemNoAction.choice.font = FONT_BOLD_15px
 	s.itemNoAction.choice.fg = TEXT_COLOR
@@ -377,7 +385,7 @@ function skin(self, s)
 	s.itemNoAction.choice.padding = { 8, 0, 0, 0 }
 
 	-- selected menu item choice
-	s.selected.item.choice.font = FONT_BOLD_16px
+	s.selected.item.choice.font = FONT_BOLD_15px
 	s.selected.item.choice.fg = SELECT_COLOR
 	s.selected.item.choice.sh = SELECT_SH_COLOR
 
@@ -387,7 +395,7 @@ function skin(self, s)
 	s.item.value.sh = TEXT_SH_COLOR
 
 	-- selected menu item choice
-	s.selected.item.value.font = FONT_BOLD_16px
+	s.selected.item.value.font = FONT_BOLD_15px
 	s.selected.item.value.fg = SELECT_COLOR
 	s.selected.item.value.sh = SELECT_SH_COLOR
 
@@ -413,11 +421,14 @@ function skin(self, s)
 	s.checkbox.imgOn = Surface:loadImage(imgpath .. "checkbox_on.png")
 	s.checkbox.imgOff = Surface:loadImage(imgpath .. "checkbox_off.png")
 	s.item.checkbox.padding = { 4, 0, 0, 0 }
+	s.item.checkbox.align = "right"
+
 
 	-- Radio button
 	s.radio.imgOn = Surface:loadImage(imgpath .. "radiobutton_on.png")
 	s.radio.imgOff = Surface:loadImage(imgpath .. "radiobutton_off.png")
 	s.item.radio.padding = { 4, 0, 0, 0 }
+	s.item.radio.align = "right"
 
 
 	-- Slider
@@ -448,7 +459,7 @@ function skin(self, s)
 	s.help.font = FONT_15px
 	s.help.fg = TEXT_COLOR
 	s.help.bgImg = helpBox
-	s.help.textAlign = "left"
+	s.help.align = "left"
 	s.help.scrollbar.w = 0
 
 	-- Help with soft buttons
@@ -458,7 +469,7 @@ function skin(self, s)
 	s.softHelp.font = FONT_15px
 	s.softHelp.fg = TEXT_COLOR
 	s.softHelp.bgImg = helpBox
-	s.softHelp.textAlign = "left"
+	s.softHelp.align = "left"
 	s.softHelp.scrollbar.w = 0
 
 	s.softButton1.x = 15
@@ -466,7 +477,7 @@ function skin(self, s)
 	s.softButton1.w = (screenWidth / 2) - 20
 	s.softButton1.h = 28
 	s.softButton1.position = LAYOUT_NONE
-	s.softButton1.textAlign = "center"
+	s.softButton1.align = "center"
 	s.softButton1.font = FONT_15px
 	s.softButton1.fg = SELECT_COLOR
 	s.softButton1.bgImg = softButtonBackground
@@ -476,7 +487,7 @@ function skin(self, s)
 	s.softButton2.w = (screenWidth / 2) - 20
 	s.softButton2.h = 28
 	s.softButton2.position = LAYOUT_NONE
-	s.softButton2.textAlign = "center"
+	s.softButton2.align = "center"
 	s.softButton2.font = FONT_15px
 	s.softButton2.fg = SELECT_COLOR
 	s.softButton2.bgImg = softButtonBackground
@@ -495,7 +506,7 @@ function skin(self, s)
 	s.popupIcon.text.line[2].font = FONT_BOLD_20px
 	s.popupIcon.text.fg = TEXT_COLOR
 	s.popupIcon.text.sh = TEXT_SH_COLOR
-	s.popupIcon.text.textAlign = "center"
+	s.popupIcon.text.align = "center"
 	s.popupIcon.text.position = LAYOUT_SOUTH
 
 
@@ -568,23 +579,24 @@ function skin(self, s)
 	s.volumePopup.bgImg = helpBox
 	s.volumePopup.title.fg = SELECT_COLOR
 	s.volumePopup.title.font = FONT_BOLD_15px
-	s.volumePopup.title.textAlign = "center"
+	s.volumePopup.title.align = "center"
 	s.volumePopup.title.bgImg = false
 
 	-- titles with artwork and song info
+	s.albumtitle.position = LAYOUT_NORTH
+	s.albumtitle.bgImg = titleBox
+	s.albumtitle.order = { "icon", "text" }
 	s.albumtitle.w = screenWidth
 	s.albumtitle.h = 60
 	s.albumtitle.border = 4
-	s.albumtitle.padding = { 10, 8, 8, 9 }
-	s.albumtitle.font = FONT_13px
-	s.albumtitle.lineHeight = 16
-	s.albumtitle.line[1].font = FONT_BOLD_13px
-	s.albumtitle.line[1].height = 17
-	s.albumtitle.fg = SELECT_COLOR
-	s.albumtitle.bgImg = titleBox
-	s.albumtitle.textAlign = "top-left"
-	s.albumtitle.iconAlign = "left"
-	s.albumtitle.position = LAYOUT_NORTH
+	s.albumtitle.text.padding = { 10, 8, 8, 9 }
+	s.albumtitle.text.align = "top-left"
+	s.albumtitle.text.font = FONT_13px
+	s.albumtitle.text.lineHeight = 16
+	s.albumtitle.text.line[1].font = FONT_BOLD_13px
+	s.albumtitle.text.line[1].height = 17
+	s.albumtitle.text.fg = SELECT_COLOR
+	s.albumtitle.icon.align = "center"
 	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumtitle.icon.padding = { 6, 0, 0, 0 }
 
@@ -595,54 +607,61 @@ function skin(self, s)
 
 
 	-- items with artwork and song info
-	s.albumitem.h = 60
-	s.albumitem.padding = { 12, 8, 8, 8 }
-	s.albumitem.font = FONT_13px
-	s.albumitem.lineHeight = 16
-	s.albumitem.line[1].font = FONT_BOLD_13px
-	s.albumitem.line[1].height = 17
-	s.albumitem.fg = TEXT_COLOR
-	s.albumitem.sh = TEXT_SH_COLOR
+	--s.albumitem.h = 60
+	s.albumitem.order = { "icon", "text", "play" }
+	s.albumitem.text.w = WH_FILL
+	s.albumitem.text.padding = { 12, 8, 8, 8 }
+	s.albumitem.text.align = "top-left"
+	s.albumitem.text.font = FONT_13px
+	s.albumitem.text.lineHeight = 16
+	s.albumitem.text.line[1].font = FONT_BOLD_13px
+	s.albumitem.text.line[1].height = 17
+	s.albumitem.text.fg = TEXT_COLOR
+	s.albumitem.text.sh = TEXT_SH_COLOR
+	s.albumitem.icon.align = "center"
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumitem.icon.padding = { 6, 0, 0, 0 }
-	s.albumitem.textAlign = "top-left"
-	s.albumitem.iconAlign = "left"
 
 
 	-- selected item with artwork and song info
-	s.selected.albumitem.fg = SELECT_COLOR
-	s.selected.albumitem.sh = SELECT_SH_COLOR
+	s.selected.albumitem.text.fg = SELECT_COLOR
+	s.selected.albumitem.text.sh = SELECT_SH_COLOR
 	s.selected.albumitem.bgImg = selectionBox
 
 
 	-- locked item with artwork and song info
-	s.locked.albumitem.fg = SELECT_COLOR
-	s.locked.albumitem.sh = SELECT_SH_COLOR
+	s.locked.albumitem.text.fg = SELECT_COLOR
+	s.locked.albumitem.text.sh = SELECT_SH_COLOR
 	s.locked.albumitem.bgImg = selectionBox
 
 
 	-- now playing menu item
-	s.albumcurrent.padding = { 12, 8, 8, 8 }
-	s.albumcurrent.font = FONT_13px
-	s.albumcurrent.lineHeight = 16
-	s.albumcurrent.line[1].font = FONT_BOLD_13px
-	s.albumcurrent.line[1].height = 17
-	s.albumcurrent.fg = TEXT_COLOR
-	s.albumcurrent.sh = TEXT_SH_COLOR
+	s.albumcurrent.order = { "icon", "text", "play" }
+	s.albumcurrent.text.w = WH_FILL
+	s.albumcurrent.text.padding = { 12, 8, 8, 8 }
+	s.albumcurrent.text.align = "top-left"
+	s.albumcurrent.text.font = FONT_13px
+	s.albumcurrent.text.lineHeight = 16
+	s.albumcurrent.text.line[1].font = FONT_BOLD_13px
+	s.albumcurrent.text.line[1].height = 17
+	s.albumcurrent.text.fg = TEXT_COLOR
+	s.albumcurrent.text.sh = TEXT_SH_COLOR
+	s.albumcurrent.icon.align = "center"
 	s.albumcurrent.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumcurrent.icon.padding = { 6, 0, 0, 0 }
-	s.albumcurrent.textAlign = "top-left"
-	s.albumcurrent.iconAlign = "left"
+	s.albumcurrent.play.img = Surface:loadImage(imgpath .. "menu_nowplaying.png")
 
 	-- selected now playing menu item
-	s.selected.albumcurrent.fg = SELECT_COLOR
-	s.selected.albumcurrent.sh = SELECT_SH_COLOR
 	s.selected.albumcurrent.bgImg = selectionBox
+	s.selected.albumcurrent.text.fg = SELECT_COLOR
+	s.selected.albumcurrent.text.sh = SELECT_SH_COLOR
+	s.selected.albumcurrent.play.img = Surface:loadImage(imgpath .. "menu_nowplaying_selected.png")
+
 
 	-- locked now playing menu item (with loading animation)
-	s.locked.albumcurrent.fg = SELECT_COLOR
-	s.locked.albumcurrent.sh = SELECT_SH_COLOR
 	s.locked.albumcurrent.bgImg = selectionBox
+	s.locked.albumcurrent.text.fg = SELECT_COLOR
+	s.locked.albumcurrent.text.sh = SELECT_SH_COLOR
 
 	-- Popup window for current song info
 	s.currentsong.x = 0
@@ -661,7 +680,7 @@ function skin(self, s)
 	s.currentsong.text.line[2].font = FONT_BOLD_13px
 	s.currentsong.text.line[2].height = 17
 	s.currentsong.text.fg = TEXT_COLOR
-	s.currentsong.text.textAlign = "top-left"
+	s.currentsong.text.align = "top-left"
 
 	-- Popup window for information display
 	s.popupinfo.x = 0
@@ -675,7 +694,7 @@ function skin(self, s)
 	s.popupinfo.text.font = FONT_BOLD_13px
 	s.popupinfo.text.lineHeight = 17
 	s.popupinfo.text.fg = TEXT_COLOR
-	s.popupinfo.text.textAlign = "left"
+	s.popupinfo.text.align = "left"
 
 	-- XXXX top and status styles defined using album and standard styles
 	-- are these style needed?

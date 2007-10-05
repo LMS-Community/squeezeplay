@@ -150,7 +150,7 @@ function drawField(self)
 	local lStatus = Surface:drawText(window:styleFont("squeezebox"), 0xFFFFFF80, "    Lives: " .. lives .. "    Score: " .. score)
 
 	if labelStatus != nil then
-		labelStatus:setImage(lStatus)
+		labelStatus:setValue(lStatus)
 	else 
 		labelStatus = Icon("lives", lStatus)
 		window:addWidget(labelStatus)

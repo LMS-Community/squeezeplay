@@ -48,7 +48,9 @@ local assert, ipairs, string, tostring, type = assert, ipairs, string, tostring,
 local oo              = require("loop.simple")
 local debug           = require("jive.utils.debug")
 
+local Group           = require("jive.ui.Group")
 local Label           = require("jive.ui.Label")
+local Icon            = require("jive.ui.Icon")
 local Menu            = require("jive.ui.Menu")
 local Widget          = require("jive.ui.Widget")
 
@@ -97,12 +99,22 @@ local function _itemRenderer(menu, widgetList, indexList, size, list)
 		if indexList[i] ~= nil then
 			local item = list[indexList[i]]
 
+			local icon = item.icon or menu.icons[i]
+			if icon == nil then
+				icon = Icon("icon")
+				menu.icons[i] = icon
+			end
+
+
 			if widgetList[i] == nil then
-				widgetList[i] = Label(item.style or "item", item.text, item.icon)
+				widgetList[i] = Group(item.style or "item", {
+					text = Label("text", item.text),
+					icon = icon,
+				})
 			else
 				widgetList[i]:setStyle(item.style or "item")
-				widgetList[i]:setValue(item.text)
-				widgetList[i]:setWidget(item.icon)
+				widgetList[i]:setWidgetValue("text", item.text)
+				widgetList[i]:setWidget("icon", icon)
 			end
 		end
 	end
@@ -134,6 +146,7 @@ function __init(self, style, items)
 
 	local obj = oo.rawnew(self, Menu(style, _itemRenderer, _itemListener))
 	obj.items = items or {}
+	obj.icons = {}
 
 	obj:setItems(obj.items, #obj.items)
 

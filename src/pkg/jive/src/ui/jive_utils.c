@@ -75,7 +75,7 @@ int jive_getmethod(lua_State *L, int index, char *method)  {
 
 
 void *jive_getpeer(lua_State *L, int index, JivePeerMeta *peerMeta) {
-	void *peer;
+	JiveWidget *peer;
 
 	JIVEL_STACK_CHECK_BEGIN(L);
 
@@ -85,6 +85,10 @@ void *jive_getpeer(lua_State *L, int index, JivePeerMeta *peerMeta) {
 
 		peer = lua_newuserdata(L, peerMeta->size);
 		memset(peer, 0, peerMeta->size);
+
+		peer->skin_origin = jive_origin - 1;
+		peer->layout_origin = jive_origin - 1;
+		peer->child_origin = jive_origin - 1;
 		
 		luaL_newmetatable(L, peerMeta->magic);
 		lua_pushcfunction(L, peerMeta->gc);
@@ -102,7 +106,7 @@ void *jive_getpeer(lua_State *L, int index, JivePeerMeta *peerMeta) {
 
 	JIVEL_STACK_CHECK_END(L);
 
-	return peer;
+	return (void *)peer;
 }
 
 

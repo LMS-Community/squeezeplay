@@ -81,11 +81,8 @@ int jiveL_icon_skin(lua_State *L) {
 }
 
 
-int jiveL_icon_prepare(lua_State *L) {
-	IconWidget *peer;
-	JiveSurface *img = NULL;
-
-	peer = jive_getpeer(L, 1, &iconPeerMeta);
+static void prepare(lua_State *L, IconWidget *peer) {
+	JiveSurface *img;
 
 	/* use image from widget, or skin image as default */
 	lua_getfield(L, 1, "image");
@@ -93,6 +90,7 @@ int jiveL_icon_prepare(lua_State *L) {
 		img = tolua_tousertype(L, -1, 0);
 	}
 	else {
+		/* use skin image as default */
 		img = peer->default_img;
 	}
 
@@ -139,6 +137,46 @@ int jiveL_icon_prepare(lua_State *L) {
 				peer->anim_total = 1;
 			}
 		}
+		else {
+			peer->image_width = 0;
+			peer->image_height = 0;
+		}
+	}
+}
+
+
+int jiveL_icon_set_value(lua_State *L) {
+	IconWidget *peer;
+	Uint16 w = 0, h = 0;
+
+	/* stack is:
+	 * 1: widget
+	 * 2: image
+	 */
+
+	peer = jive_getpeer(L, 1, &iconPeerMeta);
+
+	lua_pushvalue(L, 2);
+	lua_setfield(L, 1, "image");
+
+	w = peer->image_width;
+	h = peer->image_height;
+
+	prepare(L, peer);
+
+	if (peer->image_width != w || peer->image_height != h) {
+		/* layout if image size has changed */
+		if (jive_getmethod(L, 1, "reLayout")) {
+			lua_pushvalue(L, 1);
+			lua_call(L, 1, 0);
+		}
+	}
+	else {
+		/* otherwise we are just dirty */
+		if (jive_getmethod(L, 1, "reDraw")) {
+			lua_pushvalue(L, 1);
+			lua_call(L, 1, 0);
+		}
 	}
 
 	return 0;
@@ -153,6 +191,8 @@ int jiveL_icon_layout(lua_State *L) {
 	 */
 
 	peer = jive_getpeer(L, 1, &iconPeerMeta);
+
+	prepare(L, peer);
 
 	if (peer->img) {
 		peer->offset_x = jive_widget_halign((JiveWidget *)peer, peer->align, peer->image_width) + peer->w.padding.left;
@@ -216,17 +256,20 @@ int jiveL_icon_get_preferred_bounds(lua_State *L) {
 	 * 1: widget
 	 */
 
-	if (jive_getmethod(L, 1, "doLayout")) {
+	if (jive_getmethod(L, 1, "checkSkin")) {
 		lua_pushvalue(L, 1);
 		lua_call(L, 1, 0);
 	}
 
 	peer = jive_getpeer(L, 1, &iconPeerMeta);
 
+	prepare(L, peer);
+
 	if (peer->img) {
 		jive_surface_get_size(peer->img, &w, &h);
 		w /= peer->anim_total;
 		w += peer->w.padding.left + peer->w.padding.right;
+		h += peer->w.padding.top + peer->w.padding.bottom;
 	}
 
 	if (peer->w.preferred_bounds.x == JIVE_XY_NIL) {
@@ -260,6 +303,10 @@ int jiveL_icon_gc(lua_State *L) {
 	if (peer->img) {
 		jive_surface_free(peer->img);
 		peer->img = NULL;
+	}
+	if (peer->default_img) {
+		jive_surface_free(peer->default_img);
+		peer->default_img = NULL;
 	}
 
 	return 0;

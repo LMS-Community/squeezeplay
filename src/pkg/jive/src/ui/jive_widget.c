@@ -35,8 +35,8 @@ void jive_widget_pack(lua_State *L, int index, JiveWidget *data) {
 int jiveL_widget_set_bounds(lua_State *L) {
 	JiveWidget *peer;
 	SDL_Rect bounds;
-	
-	if (jive_getmethod(L, 1, "doSkin")) {
+
+	if (jive_getmethod(L, 1, "checkSkin")) {
 		lua_pushvalue(L, 1);
 		lua_call(L, 1, 0);
 	}
@@ -44,6 +44,7 @@ int jiveL_widget_set_bounds(lua_State *L) {
 	lua_getfield(L, 1, "peer");
 	peer = lua_touserdata(L, -1);
 	if (!peer) {
+		peer = lua_touserdata(L, -1);
 		return 0;
 	}
 
@@ -95,7 +96,7 @@ int jiveL_widget_set_bounds(lua_State *L) {
 int jiveL_widget_get_bounds(lua_State *L) {
 	JiveWidget *peer;
 
-	if (jive_getmethod(L, 1, "doSkin")) {
+	if (jive_getmethod(L, 1, "checkSkin")) {
 		lua_pushvalue(L, 1);
 		lua_call(L, 1, 0);
 	}
@@ -105,7 +106,7 @@ int jiveL_widget_get_bounds(lua_State *L) {
 	if (!peer) {
 		return 0;
 	}
-	
+
 	lua_pushinteger(L, peer->bounds.x);
 	lua_pushinteger(L, peer->bounds.y);
 	lua_pushinteger(L, peer->bounds.w);
@@ -117,7 +118,7 @@ int jiveL_widget_get_bounds(lua_State *L) {
 int jiveL_widget_get_preferred_bounds(lua_State *L) {
 	JiveWidget *peer;
 
-	if (jive_getmethod(L, 1, "doSkin")) {
+	if (jive_getmethod(L, 1, "checkSkin")) {
 		lua_pushvalue(L, 1);
 		lua_call(L, 1, 0);
 	}
@@ -127,7 +128,7 @@ int jiveL_widget_get_preferred_bounds(lua_State *L) {
 	if (!peer) {
 		return 0;
 	}
-	
+
 	if (peer->preferred_bounds.x == JIVE_XY_NIL) {
 		lua_pushnil(L);
 	}
@@ -159,11 +160,11 @@ int jiveL_widget_get_preferred_bounds(lua_State *L) {
 int jiveL_widget_get_border(lua_State *L) {
 	JiveWidget *peer;
 
-	if (jive_getmethod(L, 1, "doSkin")) {
+	if (jive_getmethod(L, 1, "checkSkin")) {
 		lua_pushvalue(L, 1);
 		lua_call(L, 1, 0);
 	}
-	
+
 	lua_getfield(L, 1, "peer");
 	peer = lua_touserdata(L, -1);
 	if (!peer) {
@@ -175,6 +176,60 @@ int jiveL_widget_get_border(lua_State *L) {
 	lua_pushinteger(L, peer->border.right);
 	lua_pushinteger(L, peer->border.bottom);
 	return 4;
+}
+
+
+int jiveL_widget_reskin(lua_State *L) {
+	JiveWidget *peer;
+
+	/* stack is:
+	 * 1: widget
+	 */
+	lua_getfield(L, 1, "peer");
+	peer = lua_touserdata(L, -1);
+
+	if (peer) {
+		peer->skin_origin = jive_origin - 1;
+	}
+
+	return jiveL_widget_relayout(L);
+}
+
+
+int jiveL_widget_relayout(lua_State *L) {
+	JiveWidget *peer;
+	bool dirty;
+
+	/* stack is:
+	 * 1: widget
+	 */
+
+	/* mark widgets for layout until a layout root is reached */
+	dirty = true;
+	while (!lua_isnil(L, 1)) {
+		lua_getfield(L, 1, "peer");
+		peer = lua_touserdata(L, -1);
+
+		if (peer) {
+			peer->child_origin = jive_origin - 1;
+
+			if (dirty) {
+				peer->layout_origin = jive_origin - 1;
+
+				lua_getfield(L, 1, "layoutRoot");
+				if (lua_toboolean(L, -1)) {
+					dirty = false;
+				}
+				lua_pop(L, 1);
+			}
+		}
+		lua_pop(L, 1);
+
+		lua_getfield(L, 1, "parent");
+		lua_replace(L, 1);
+	}
+
+	return 0;
 }
 
 
@@ -202,58 +257,71 @@ int jiveL_widget_redraw(lua_State *L) {
 }
 
 
-int jiveL_widget_dolayout(lua_State *L) {
-	int is_dirty;
+int jiveL_widget_check_skin(lua_State *L) {
+	JiveWidget *peer;
 
-	Uint32 t0 = 0, t1 = 0, t2 = 0, t3 = 0;
+	lua_getfield(L, 1, "peer");
+	peer = lua_touserdata(L, -1);
+	lua_pop(L, 1);
+
+	if (!peer || peer->skin_origin != jive_origin) {
+		if (jive_getmethod(L, 1, "_skin")) {
+			lua_pushvalue(L, 1);
+			lua_call(L, 1, 0);
+		}
+
+		if (!peer) {
+			lua_getfield(L, 1, "peer");
+			peer = lua_touserdata(L, -1);
+			lua_pop(L, 1);
+		}
+
+		peer->skin_origin = jive_origin;
+	}
+
+	return 0;
+}
+
+
+int jiveL_widget_check_layout(lua_State *L) {
+	JiveWidget *peer;
+
+	Uint32 t0 = 0, t1 = 0, t2 = 0;
 	clock_t c0 = 0, c1 = 0;
 
 	/* stack is:
 	 * 1: widget
+	 * 2: force
 	 */
 
-	/* does the layout need updating? */
-	jiveL_getframework(L);
-	lua_getfield(L, -1, "layoutCount");
-
-	lua_getfield(L, 1, "layoutCount");
-	is_dirty = lua_equal(L, -1, -2);
+	lua_getfield(L, 1, "peer");
+	peer = lua_touserdata(L, -1);
 	lua_pop(L, 1);
 
-	if (is_dirty == 0) {
+	if (!peer || peer->layout_origin != jive_origin) {
 		/* layout dirty, update */
-
 		if (perfwarn.layout) {
 			t0 = SDL_GetTicks();
 			c0 = clock();
 		}
 
 		/* does the skin need updating? */
-		lua_getfield(L, 1, "skinCount");
-		if (lua_equal(L, -1, -2) == 0) {
-			if (jive_getmethod(L, 1, "doSkin")) {
+		if (!peer || peer->skin_origin != jive_origin) {
+			if (jive_getmethod(L, 1, "_skin")) {
 				lua_pushvalue(L, 1);
 				lua_call(L, 1, 0);
 			}
+
+			if (!peer) {
+				lua_getfield(L, 1, "peer");
+				peer = lua_touserdata(L, -1);
+				lua_pop(L, 1);
+			}
+
+			peer->skin_origin = jive_origin;
 		}
-		lua_pop(L, 1);
 
 		if (perfwarn.layout) t1 = SDL_GetTicks();
-
-		/* does the content need updating? */
-		lua_getfield(L, 1, "invalid");
-		if (lua_toboolean(L, -1)) {
-			if (jive_getmethod(L, 1, "_prepare")) {
-				lua_pushvalue(L, 1);
-				lua_call(L, 1, 0);
-			}
-			
-			lua_pushboolean(L, 0);
-			lua_setfield(L, 1, "invalid");
-		}
-		lua_pop(L, 1);
-
-		if (perfwarn.layout) t2 = SDL_GetTicks();
 
 		/* update the layout */
 		if (jive_getmethod(L, 1, "_layout")) {
@@ -261,31 +329,78 @@ int jiveL_widget_dolayout(lua_State *L) {
 			lua_call(L, 1, 0);
 		}
 
-		lua_setfield(L, 1, "layoutCount");
-		lua_pop(L, 1);
+		peer->layout_origin = jive_origin;
 
 		if (perfwarn.layout) {
-			t3 = SDL_GetTicks();
+			t2 = SDL_GetTicks();
 			c1 = clock();
-			if (t3 - t0 > perfwarn.layout) {
+			if (t2 - t0 > perfwarn.layout) {
 				lua_getglobal(L, "tostring");
 				lua_pushvalue(L, 1);
 				lua_call(L, 1, 1);
-				printf("widget_layout > %dms: %3dms (%dms) [%s skin:%dms prepare:%dms layout:%dms]\n",
-					   perfwarn.layout, t3-t0, (int)((c1-c0) * 1000 / CLOCKS_PER_SEC), lua_tostring(L, -1), t1-t0, t2-t1, t3-t2);
+				printf("widget_layout > %dms: %3dms (%dms) [%s skin:%dms layout:%dms]\n",
+					   perfwarn.layout, t2-t0, (int)((c1-c0) * 1000 / CLOCKS_PER_SEC), lua_tostring(L, -1), t1-t0, t2-t1);
 				lua_pop(L, 1);
 			}
 		}
 	}
 
-	/* layout children */
-	jive_getmethod(L, 1, "iterate");
-	lua_pushvalue(L, 1);
-	lua_pushcfunction(L, jiveL_widget_dolayout);
-	lua_call(L, 2, 0);
+	if (peer->child_origin != jive_origin) {
+		/* layout children */
+		jive_getmethod(L, 1, "iterate");
+		lua_pushvalue(L, 1);
+		lua_pushcfunction(L, jiveL_widget_check_layout);
+		lua_call(L, 2, 0);
 
-	lua_pop(L, 1);
+		peer->child_origin = jive_origin;
+	}
+
 	return 0;
+}
+
+
+int jiveL_widget_peer_tostring(lua_State *L) {
+	JiveWidget *peer;
+	int n;
+
+	lua_getfield(L, 1, "peer");
+	peer = lua_touserdata(L, -1);
+	lua_pop(L, 1);
+
+	if (!peer) {
+		lua_pushstring(L, "");
+		return 1;
+	}
+
+	n = lua_gettop(L);
+
+	lua_pushfstring(L, "%p ", lua_topointer(L, 1));
+
+	lua_pushinteger(L, peer->bounds.x);
+	lua_pushstring(L, ",");
+	lua_pushinteger(L, peer->bounds.y);
+	lua_pushstring(L, " ");
+	lua_pushinteger(L, peer->bounds.w);
+	lua_pushstring(L, "x");
+	lua_pushinteger(L, peer->bounds.h);
+	lua_pushstring(L, " ");
+
+	lua_pushinteger(L, peer->skin_origin);
+	lua_pushstring(L, "/");
+	lua_pushinteger(L, peer->layout_origin);
+	lua_pushstring(L, "/");
+	lua_pushinteger(L, peer->child_origin);
+
+	if (peer->skin_origin != jive_origin || peer->layout_origin != jive_origin) {
+		lua_pushstring(L, " **");
+	}
+	else if (peer->child_origin != jive_origin) {
+		lua_pushstring(L, " *");
+	}
+
+	lua_concat(L, lua_gettop(L) - n);
+
+	return 1;
 }
 
 
@@ -309,7 +424,7 @@ int jive_widget_halign(JiveWidget *this, JiveAlign align, Uint16 width) {
         case JIVE_ALIGN_RIGHT:
         case JIVE_ALIGN_TOP_RIGHT:
         case JIVE_ALIGN_BOTTOM_RIGHT:
-		return this->bounds.w - this->padding.right - width;
+		return this->bounds.w - this->padding.left - this->padding.right - width;
 	}
 }
 
@@ -333,3 +448,4 @@ int jive_widget_valign(JiveWidget *this, JiveAlign align, Uint16 height) {
 		return this->bounds.h - this->padding.bottom - height;
 	}
 }
+

@@ -185,10 +185,6 @@ local function _eventHandler(self, event)
 		end
 
 		return EVENT_UNUSED
-		
-	-- swallow these?
-	elseif evtype == EVENT_SERVICE_JNT  then
-		return EVENT_UNUSED
 	end
 
 	-- other events to selected widgets
@@ -268,7 +264,7 @@ function setItems(self, list, listSize, min, max)
 	if min >= topItem and min <= botItem
 		or max >= topItem and max <= botItem then
 
-		self:rePrepare()
+		self:reLayout()
 	end
 end
 
@@ -347,7 +343,7 @@ function setSelectedIndex(self, index)
 
 	if index <= self.listSize then
 		self.selected = index
-		self:rePrepare()
+		self:reLayout()
 	end
 end
 
@@ -391,28 +387,46 @@ Scroll the menu by I<scroll> items. If I<scroll> is negative the menu scrolls up
 function scrollBy(self, scroll)
 	assert(type(scroll) == "number")
 
-	local selected = (self.selected or 1) + scroll
+	local selected = (self.selected or 1)
+
+	-- restrict to scrolling one item unless at the edge of the
+	-- visible list
+	if scroll > 0 then
+		if selected < self.topItem + self.numWidgets - 2 then
+			scroll = 1
+		end
+
+	else
+		if selected > self.topItem + 1 then
+			scroll = -1
+		end
+	end
+
+
+	selected = selected  + scroll
+
 
 	-- virtual barrier when scrolling off the ends of the list
-	if selected == 1 or selected == self.listSize then
-		self.barrier = Framework:getTicks()
+	if self.barrier and Framework:getTicks() > self.barrier + 1000 then
+		self.barrier = nil
+	end
 
-	elseif selected > self.listSize then
+	if selected > self.listSize then
 		selected = self.listSize
 		if self.barrier == nil then
 			self.barrier = Framework:getTicks()
 		elseif Framework:getTicks() > self.barrier + 500 then
-			selected = 1
-			self.barrier = Framework:getTicks()
+			selected = _coerce(1, self.listSize)
+			self.barrier = nil
 		end
 
 	elseif selected < 1 then
-		selected = 1
+		selected = _coerce(1, self.listSize)
 		if self.barrier == nil then
 			self.barrier = Framework:getTicks()
 		elseif Framework:getTicks() > self.barrier + 500 then
 			selected = self.listSize
-			self.barrier = Framework:getTicks()
+			self.barrier = nil
 		end
 
 	else
@@ -420,7 +434,7 @@ function scrollBy(self, scroll)
 	end
 
 	-- if selection has change, play click and redraw
-	if selected ~= self.selected then
+	if (self.selected ~= nil and selected ~= self.selected) or (self.selected == nil and selected ~= 0) then
 		self:playSound("CLICK")
 		self.selected = selected
 
@@ -468,6 +482,7 @@ end
 
 
 function _updateWidgets(self)
+
 	-- update the list to keep the selection in view
 	_scrollList(self)
 
@@ -487,9 +502,23 @@ function _updateWidgets(self)
 	end
 
 
+	-- reorder widgets to maintain the position of the selected widgets
+	-- this avoids having to change the widgets skin modifier, and
+	-- therefore avoids having to reskin the widgets during scrolling.
+	if self._lastSelectedOffset then
+		local lastSelectedOffset = self._lastSelectedOffset
+		local selectedOffset = self.selected and self.selected - self.topItem + 1 or self.topItem
+
+		if lastSelectedOffset ~= selectedOffset then
+			self.widgets[lastSelectedOffset], self.widgets[selectedOffset] = self.widgets[selectedOffset], self.widgets[lastSelectedOffset]
+
+			self._lastSelected = self.widgets[lastSelectedOffset]
+		end
+	end
+
+
 	-- render menu widgets
 	self.itemRenderer(self, self.widgets, indexList, indexSize, self.list)
-
 
 	-- show or hide widgets
 	local nextWidgets = {}
@@ -502,8 +531,8 @@ function _updateWidgets(self)
 		if widget then
 			if widget.parent ~= self then
 				widget.parent = self
+				widget:dispatchNewEvent(EVENT_SHOW)
 			end
-			widget:dispatchNewEvent(EVENT_SHOW)
 
 			lastWidgets[widget] = nil
 			nextWidgets[widget] = 1
@@ -517,7 +546,6 @@ function _updateWidgets(self)
 
 	self.lastWidgets = nextWidgets
 
-
 	-- unreference menu widgets out off stage
 	for i = indexSize + 1, #self.widgets do
 		self.widgets[i] = nil
@@ -528,7 +556,7 @@ function _updateWidgets(self)
 	local nextSelected = _selectedItem(self)
 
 	-- clear selection and focus
-	if lastSelected ~= nextSelected or self._lastSelectedIndex ~= self.selected then
+	if lastSelected ~= nextSelected then
 		if lastSelected then
 			lastSelected:setStyleModifier(nil)
 			_itemListener(self, lastSelected, Event:new(EVENT_FOCUS_LOST))
@@ -548,10 +576,12 @@ function _updateWidgets(self)
 		end
 	end
 	self._lastSelected = nextSelected
-	self._lastSelectedIndex = self.selected
+	self._lastSelectedOffset = self.selected and self.selected - self.topItem + 1 or self.topItem
 
 	-- update scrollbar
 	self.scrollbar:setScrollbar(0, self.listSize, self.topItem, self.numWidgets)
+
+--	log:warn("_update menu:\n", self:dump())
 end
 
 

@@ -84,7 +84,8 @@ int jiveL_textarea_get_preferred_bounds(lua_State *L) {
 	 * 1: widget
 	 */
 
-	if (jive_getmethod(L, 1, "doLayout")) {
+	// FIXME
+	if (jive_getmethod(L, 1, "checkLayout")) {
 		lua_pushvalue(L, 1);
 		lua_call(L, 1, 0);
 	}
@@ -110,11 +111,6 @@ int jiveL_textarea_get_preferred_bounds(lua_State *L) {
 	lua_pushinteger(L, (peer->w.preferred_bounds.w == JIVE_WH_NIL) ? w : peer->w.preferred_bounds.w);
 	lua_pushinteger(L, (peer->w.preferred_bounds.h == JIVE_WH_NIL) ? h : peer->w.preferred_bounds.h);
 	return 4;
-}
-
-
-int jiveL_textarea_prepare(lua_State *L) {
-	return 0;
 }
 
 

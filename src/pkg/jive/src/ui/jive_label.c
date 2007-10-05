@@ -37,7 +37,6 @@ typedef struct label_widget {
 	// skin properties
 	Uint16 label_w;
 	JiveAlign text_align;
-	JiveAlign icon_align;
 	JiveTile *bg_tile;
 	size_t num_format;
 	LabelFormat *format;
@@ -108,29 +107,12 @@ int jiveL_label_skin(lua_State *L) {
 		peer->bg_tile = jive_tile_ref(bg_tile);
 	}
 
-	peer->text_align = jive_style_align(L, 1, "textAlign", JIVE_ALIGN_LEFT);
-	peer->icon_align = jive_style_align(L, 1, "iconAlign", JIVE_ALIGN_RIGHT);
-
-
-	// XXXX should not have to call pack here but when the label style
-	// is modified the icon do not get correctly updated
-
-	/* pack widgets */
-	lua_getfield(L, 1, "widget");
-	if (!lua_isnil(L, -1)) {
-		/* pack widget */
-		if (jive_getmethod(L, -1, "reSkin")) {
-			lua_pushvalue(L, -2);
-			lua_call(L, 1, 0);
-		}
-	}
-	lua_pop(L, 1);
-
+	peer->text_align = jive_style_align(L, 1, "align", JIVE_ALIGN_LEFT);
 	return 0;
 }
 
 
-int jiveL_label_prepare(lua_State *L) {
+static void prepare(lua_State *L) {
 	LabelWidget *peer;
 	Uint16 width, height;
 	int max_width = 0;
@@ -152,7 +134,7 @@ int jiveL_label_prepare(lua_State *L) {
 	ptr = str = lua_tostring(L, -1);
 
 	if (!ptr || *ptr == '\0') {
-		return 0;
+		return;
 	}
 
 	do {
@@ -225,87 +207,26 @@ int jiveL_label_prepare(lua_State *L) {
 
 	/* reset scroll position */
 	peer->scroll_offset = SCROLL_PAD_START;
-
-	return 0;
 }
 
 
 int jiveL_label_layout(lua_State *L) {
 	LabelWidget *peer;
 	Uint16 y;
-	int wx = 0, wy = 0, ww = 0, wh = 0;
 	int i;
 
 	/* stack is:
 	 * 1: widget
 	 */
 
+	// FIXME
+	prepare(L);
+
 	peer = jive_getpeer(L, 1, &labelPeerMeta);
 
-	/* layout widget */
-	lua_getfield(L, 1, "widget");
-	if (!lua_isnil(L, -1)) {
-		wx = peer->w.bounds.x;
-		wy = peer->w.bounds.y;
-		ww = 0;
-		wh = 0;
-
-		if (jive_getmethod(L, -1, "getPreferredBounds")) {
-			lua_pushvalue(L, -2);
-			lua_call(L, 1, 4);
-
-			if (!lua_isnil(L, -4)) {
-				wx = lua_tointeger(L, -4);
-			}
-			if (!lua_isnil(L, -3)) {
-				wy = lua_tointeger(L, -3);
-			}
-			if (!lua_isnil(L, -2)) {
-				ww = lua_tointeger(L, -2);
-			}
-			if (!lua_isnil(L, -1)) {
-				wh = lua_tointeger(L, -1);
-			}
-
-			lua_pop(L, 4);
-		}
-
-		/* don't apply padding for the widget horizontal layout */
-		switch (peer->icon_align) {
-		default:
-		case JIVE_ALIGN_LEFT:
-		case JIVE_ALIGN_TOP_LEFT:
-		case JIVE_ALIGN_BOTTOM_LEFT:
-			wx = 0;
-			break;
-
-		case JIVE_ALIGN_CENTER:
-		case JIVE_ALIGN_TOP:
-		case JIVE_ALIGN_BOTTOM:
-			wx = (peer->w.bounds.w - ww) / 2;
-			break;
-
-		case JIVE_ALIGN_RIGHT:
-		case JIVE_ALIGN_TOP_RIGHT:
-		case JIVE_ALIGN_BOTTOM_RIGHT:
-			wx = peer->w.bounds.w - peer->w.padding.right - ww;
-			break;
-		}
-		wy = peer->w.bounds.y + jive_widget_valign((JiveWidget *)peer, peer->icon_align, wh);
-
-		if (jive_getmethod(L, -1, "setBounds")) {
-			lua_pushvalue(L, -2);
-			lua_pushinteger(L, wx);
-			lua_pushinteger(L, wy);
-			lua_pushinteger(L, ww);
-			lua_pushinteger(L, wh);
-			lua_call(L, 5, 0);
-		}
-	}
 
 	/* align the label, minus the widget width */
 	y = jive_widget_valign((JiveWidget *)peer, peer->text_align, peer->text_h);
-	peer->w.bounds.w -= ww;
 
 	for (i=0; i<peer->num_lines; i++) {
 		LabelLine *line = &peer->line[i];
@@ -316,17 +237,11 @@ int jiveL_label_layout(lua_State *L) {
 		line->label_x = jive_widget_halign((JiveWidget *)peer, peer->text_align, w);
 		line->label_y = y;
 
-		if (peer->icon_align == JIVE_ALIGN_LEFT) {
-			line->label_x += ww;
-		}
-
 		y += line->height;
 	}
 
 	/* maximum render width */
 	peer->label_w = peer->w.bounds.w - peer->w.padding.left - peer->w.padding.right;
-
-	peer->w.bounds.w += ww;
 
 	return 0;
 }
@@ -422,16 +337,6 @@ int jiveL_label_draw(lua_State *L) {
 		//jive_surface_boxColor(srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.x + peer->w.bounds.w-1, peer->w.bounds.y + peer->w.bounds.h-1, 0xFF00007F);
 	}
 
-	/* draw child widgets */
-	lua_getfield(L, 1, "widget");
-	if (jive_getmethod(L, -1, "draw")) {
-		lua_pushvalue(L, -2);	// widget
-		lua_pushvalue(L, 2);	// surface
-		lua_pushvalue(L, 3);	// layer
-		lua_call(L, 3, 0);
-	}
-	lua_pop(L, 1);
-
 	/* draw text label */
 	if (!(drawLayer && peer->num_lines)) {
 		return 0;
@@ -488,7 +393,8 @@ int jiveL_label_get_preferred_bounds(lua_State *L) {
 	 * 1: widget
 	 */
 
-	if (jive_getmethod(L, 1, "doLayout")) {
+	// FIXME
+	if (jive_getmethod(L, 1, "checkLayout")) {
 		lua_pushvalue(L, 1);
 		lua_call(L, 1, 0);
 	}

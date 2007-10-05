@@ -151,7 +151,7 @@ int jiveL_slider_get_preferred_bounds(lua_State *L) {
 	 * 1: widget
 	 */
 
-	if (jive_getmethod(L, 1, "doLayout")) {
+	if (jive_getmethod(L, 1, "checkSkin")) {
 		lua_pushvalue(L, 1);
 		lua_call(L, 1, 0);
 	}

@@ -1,6 +1,6 @@
 /*
 ** Lua binding: jive
-** Generated automatically by tolua++-1.0.92 on Sun Jul 29 01:03:16 2007.
+** Generated automatically by tolua++-1.0.92 on Sat Aug 25 00:14:28 2007.
 */
 
 #ifndef __cplusplus
@@ -1982,6 +1982,9 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
     tolua_constant(tolua_S,"true",true);
     tolua_constant(tolua_S,"false",false);
     tolua_constant(tolua_S,"FRAME_RATE",JIVE_FRAME_RATE);
+    tolua_constant(tolua_S,"XY_NIL",JIVE_XY_NIL);
+    tolua_constant(tolua_S,"WH_NIL",JIVE_WH_NIL);
+    tolua_constant(tolua_S,"WH_FILL",JIVE_WH_FILL);
     tolua_constant(tolua_S,"ALIGN_CENTER",JIVE_ALIGN_CENTER);
     tolua_constant(tolua_S,"ALIGN_LEFT",JIVE_ALIGN_LEFT);
     tolua_constant(tolua_S,"ALIGN_RIGHT",JIVE_ALIGN_RIGHT);

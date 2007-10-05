@@ -31,6 +31,7 @@ local SlimServer             = require("jive.slim.SlimServer")
 local Framework              = require("jive.ui.Framework")
 local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
+local Group                  = require("jive.ui.Group")
 local Menu                   = require("jive.ui.Menu")
 local Label                  = require("jive.ui.Label")
 local Icon                   = require("jive.ui.Icon")
@@ -343,43 +344,21 @@ end
 
 
 -- _artworkItem
--- returns an icon for the item artwork, nil if no icon for this item
-local function _artworkItem(item)
+-- updates a group widget with the artwork for item
+local function _artworkItem(item, group)
+	local icon = group:getWidget("icon")
 
-	local icon = item["_jive_icon"]
-	
-	if icon == nil then
-		-- keep the icon, but be smart, remember if we have no artwork to display!
-		item["_jive_icon"] = false
-	
-		if item["icon-id"] then
-			icon = Icon("icon")
-			if _server:artworkThumbCached(item["icon-id"]) then
-				-- cache contains this icon-id display straight away
-				_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri)
-			else
-				-- wait for the icon to stay on screen for 1 sec, then fetch from server
-				-- fetching from the server is expensive and interrupts scrolling so delay doing this
-				icon:addTimer(1000,
-					function()
-						_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri)
-					end,
-					true
-				)
-			end
-			item["_jive_icon"] = icon
-		elseif item["icon"] then
-			-- Fetch a remote image URL, sized to 56x56
-			icon = Icon("icon")
-			_server:fetchArtworkURL(item["icon"], icon, 56)
-			item["_jive_icon"] = icon
-		end
-	
-	elseif icon == false then
-		icon = nil
+	if item["icon-id"] then
+		-- Fetch an image from SlimServer
+		_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri)
+	elseif item["icon"] then
+		-- Fetch a remote image URL, sized to 56x56
+		_server:fetchArtworkURL(item["icon"], icon, 56)
+
+	else
+		icon:setValue(nil)
+
 	end
-
-	return icon
 end
 
 
@@ -426,20 +405,37 @@ local function _radioItem(item, db)
 end
 
 
--- _newDecoratedLabel
--- generates a label cum decoration in the given labelStyle
-local function _newDecoratedLabel(labelStyle, item, db)
+-- _decoratedLabel
+-- updates or generates a label cum decoration in the given labelStyle
+local function _decoratedLabel(group, labelStyle, item, db)
 	-- if item is a windowSpec, then the icon is kept in the spec for nothing (overhead)
 	-- however it guarantees the icon in the title is not shared with (the same) icon in the menu.
-	if item["radio"] then
-		return Label(labelStyle, item["text"], _radioItem(item, db))
-	elseif item["checkbox"] then
-		return Label(labelStyle, item["text"], _checkboxItem(item, db))
-	elseif item then
-		return Label(labelStyle, item["text"], _artworkItem(item))
-	else
-		return Label(labelStyle, "")
+
+	if not group then
+		group = Group("item", { text = Label("text", ""), icon = Icon("icon"), play = Icon("play") })
 	end
+
+	if item then
+		group:setWidgetValue("text", item.text)
+
+		if item["radio"] then
+			group:setWidget("icon", _radioItem(item, db))
+
+		elseif item["checkbox"] then
+			group:setWidget("icon", _checkboxItem(item, db))
+
+		else
+			_artworkItem(item, group)
+		end
+		group:setStyle(labelStyle)
+
+	else
+		group:setWidgetValue("text", "")
+		group:setWidgetValue("icon", nil)
+		group:setStyle("item")
+	end
+
+	return group
 end
 
 
@@ -621,7 +617,7 @@ end
 
 
 local function _merge(mlData, mainMenu)
-	
+
 	if not mlData.item_loop then 
 		log:warn("SS menu data in merge not hierarchical for item ", mlData.text)
 		return 
@@ -1041,7 +1037,10 @@ local function _browseMenuListener(menu, menuItem, db, dbIndex, event)
 
 	-- we don't care about focus: we get one everytime we change current item
 	-- and it just pollutes our logging.
-	if evtType == EVENT_FOCUS_GAINED or evtType == EVENT_FOCUS_LOST then
+	if evtType == EVENT_FOCUS_GAINED
+		or evtType == EVENT_FOCUS_LOST
+		or evtType == EVENT_HIDE
+		or evtType == EVENT_SHOW then
 		return EVENT_UNUSED
 	end
 
@@ -1133,7 +1132,7 @@ local function _browseMenuRenderer(menu, widgets, toRenderIndexes, toRenderSize,
 	--	log:debug("_browseMenuRenderer(", toRenderSize, ", ", db, ")")
 	-- we must create or update the widgets for the indexes in toRenderIndexes.
 	-- this last list can contain null, so we iterate from 1 to toRenderSize
-	
+
 	local labelItemStyle = db:labelItemStyle()
 	
 	for widgetIndex = 1, toRenderSize do
@@ -1148,41 +1147,21 @@ local function _browseMenuRenderer(menu, widgets, toRenderIndexes, toRenderSize,
 --			)
 			
 			local widget = widgets[widgetIndex]
+
 			local item, current = db:item(dbIndex)
+
 			local style = labelItemStyle
 			
 			if current then
 				style = "albumcurrent"
-			elseif item["style"] then
+			elseif item and item["style"] then
 				style = item["style"]
 			end
 
-			if not widget then
-				widgets[widgetIndex] = _newDecoratedLabel(style, item, db)
-			else
-				if item and type(item) == 'table' then
-					-- change the label text...
-					widget:setValue(item.text)
-
-					if (item["radio"]) then
-						-- and change the radio button
-						widget:setWidget(_radioItem(item, db))
-					elseif (item["checkbox"]) then
-						-- and change the radio button
-						widget:setWidget(_checkboxItem(item, db))
-					else 
-						-- and change the icon!
-						widget:setWidget(_artworkItem(item))
-					end
-					widget:setStyle(style)
-				else
-					widget:setValue("")
-					widget:setWidget()
-					widget:setStyle("label")
-				end
-			end
+			widgets[widgetIndex] = _decoratedLabel(widget, style, item, db)
 		end
 	end
+
 
 --[[
 	-- code for testing latency between ui and network threads
@@ -1219,7 +1198,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	
 	-- create a window in all cases
 	local window = Window(windowSpec.windowStyle)
-	window:setTitleWidget(_newDecoratedLabel(windowSpec.labelTitleStyle, windowSpec, db))
+	window:setTitleWidget(_decoratedLabel(nil, windowSpec.labelTitleStyle, windowSpec, db))
 	
 	local menu
 
@@ -1621,11 +1600,13 @@ function notify_playerCurrent(self, player, force)
 
 	-- we start at home
 	_curStep = _homeStep
-	
+
+
 	-- auto notify ourselves
 	self:notify_jiveMainMenuChanged()
 
 	_replaceJiveHome(_homeStep.window)
+
 end
 
 

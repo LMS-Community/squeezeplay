@@ -42,6 +42,7 @@ local debug                   = require("debug")
 local oo                      = require("loop.simple")
 local table                   = require("jive.utils.table")
 local SimpleMenu              = require("jive.ui.SimpleMenu")
+local Group                   = require("jive.ui.Group")
 local Label                   = require("jive.ui.Label")
 local Timer                   = require("jive.ui.Timer")
 local Widget                  = require("jive.ui.Widget")
@@ -80,6 +81,7 @@ local LAYOUT_SOUTH            = jive.ui.LAYOUT_SOUTH
 local LAYOUT_WEST             = jive.ui.LAYOUT_WEST
 local LAYOUT_CENTER           = jive.ui.LAYOUT_CENTER
 local LAYOUT_NONE             = jive.ui.LAYOUT_NONE
+
 
 
 -- our class
@@ -135,7 +137,7 @@ function show(self, transition, soundEffect)
 	local stack = Framework.windowStack
 
 	-- make sure the window layout is done
-	self:doLayout()
+----	self:checkLayout()
 
 	local topwindow = stack[1]
 
@@ -399,9 +401,9 @@ Sets the windows title to I<title>.
 --]]
 function setTitle(self, title)
 	if self.title then
-		self.title:setValue(title)
+		self.title:setWidgetValue("text", title)
 	else
-		self.title = Label("title", title)
+		self.title = Group("title", { text = Label("text", title) })
 		self:addWidget(self.title)
 		self.title:_event(Event:new(EVENT_FOCUS_GAINED))
 	end
@@ -517,7 +519,6 @@ end
 
 
 function canActivateScreensaver(self)
-	log:warn("allowScreensaver=", self.allowScreensaver)
 	if self.allowScreensaver == nil then
 		return true
 	elseif self.allowScreensaver == "function" then
@@ -530,7 +531,7 @@ end
 
 function __tostring(self)
 	if self.title then
-		return "Window(" .. tostring(self.title:getValue()) .. ")"
+		return "Window(" .. tostring(self.title) .. ")"
 	else
 		return "Window()"
 	end
@@ -776,7 +777,7 @@ function noLayout(self)
 	ww = (_ww or sw) - wlb - wrb
 	wh = (_wh or sh) - wtb - wbb
 
-	iterate(self, function(widget) widget:doLayout() end)
+----	iterate(self, function(widget) widget:checkLayout() end)
 
 	self:setBounds(wx, wy, ww, wh)
 end
@@ -918,7 +919,7 @@ function borderLayout(self, fitWindow)
 				widget:setBounds(maxBounds(wx + x, wy + y, w, h))
 			end
 
-			widget:doLayout()
+----			widget:checkLayout()
 		end
 	)
 

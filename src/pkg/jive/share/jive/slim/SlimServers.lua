@@ -195,7 +195,7 @@ function __init(self, jnt)
 	obj.js = SocketUdp(jnt, _getSink(obj))
 
 	-- make us start
-	log:warn("calling discover")
+	log:debug("calling discover")
 	obj:discover()
 
 	return obj
@@ -215,7 +215,7 @@ function discover(self)
 	log:debug("SlimServers:discover()")
 
 	for _, address in pairs(self.poll) do
-		log:warn("sending to address ", address)
+		log:debug("sending to address ", address)
 		self.js:send(t_source, address, PORT)
 	end
 	_cacheCleanup(self)	

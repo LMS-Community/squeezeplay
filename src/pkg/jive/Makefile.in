@@ -77,10 +77,10 @@ CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
 libjiveui_la_DEPENDENCIES =
 am_libjiveui_la_OBJECTS = jive_audio.lo jive_event.lo jive_font.lo \
-	jive_framework.lo jive_icon.lo jive_label.lo jive_menu.lo \
-	jive_slider.lo jive_style.lo jive_surface.lo jive_textarea.lo \
-	jive_textinput.lo jive_tile.lo jive_timer.lo jive_utils.lo \
-	jive_widget.lo jive_window.lo lua_jiveui.lo
+	jive_framework.lo jive_group.lo jive_icon.lo jive_label.lo \
+	jive_menu.lo jive_slider.lo jive_style.lo jive_surface.lo \
+	jive_textarea.lo jive_textinput.lo jive_tile.lo jive_timer.lo \
+	jive_utils.lo jive_widget.lo jive_window.lo lua_jiveui.lo
 libjiveui_la_OBJECTS = $(am_libjiveui_la_OBJECTS)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" \
 	"$(DESTDIR)$(applets_clockdir)" \
@@ -310,6 +310,7 @@ libjiveui_la_SOURCES = \
 	src/ui/jive_event.c \
 	src/ui/jive_font.c \
 	src/ui/jive_framework.c \
+	src/ui/jive_group.c \
 	src/ui/jive_icon.c \
 	src/ui/jive_label.c \
 	src/ui/jive_menu.c \
@@ -361,6 +362,7 @@ dist_jiveui_DATA = \
 	share/jive/ui/Event.lua \
 	share/jive/ui/Framework.lua \
 	share/jive/ui/Font.lua \
+	share/jive/ui/Group.lua \
 	share/jive/ui/Icon.lua \
 	share/jive/ui/Label.lua \
 	share/jive/ui/Menu.lua \
@@ -842,6 +844,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_event.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_font.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_framework.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_group.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_icon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_label.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_menu.Plo@am__quote@
@@ -906,6 +909,13 @@ jive_framework.lo: src/ui/jive_framework.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ui/jive_framework.c' object='jive_framework.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_framework.lo `test -f 'src/ui/jive_framework.c' || echo '$(srcdir)/'`src/ui/jive_framework.c
+
+jive_group.lo: src/ui/jive_group.c
+@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_group.lo -MD -MP -MF "$(DEPDIR)/jive_group.Tpo" -c -o jive_group.lo `test -f 'src/ui/jive_group.c' || echo '$(srcdir)/'`src/ui/jive_group.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/jive_group.Tpo" "$(DEPDIR)/jive_group.Plo"; else rm -f "$(DEPDIR)/jive_group.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ui/jive_group.c' object='jive_group.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_group.lo `test -f 'src/ui/jive_group.c' || echo '$(srcdir)/'`src/ui/jive_group.c
 
 jive_icon.lo: src/ui/jive_icon.c
 @am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_icon.lo -MD -MP -MF "$(DEPDIR)/jive_icon.Tpo" -c -o jive_icon.lo `test -f 'src/ui/jive_icon.c' || echo '$(srcdir)/'`src/ui/jive_icon.c; \

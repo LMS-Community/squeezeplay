@@ -89,22 +89,13 @@ end
 
 --[[
 
-=head2 jive.ui.Icon:setImage(image)
+=head2 jive.ui.Icon:setValue(image)
 
 Sets the L<jive.ui.Surface> displayed by the icon.
 
 =cut
 --]]
-function setImage(self, image)
-	assert(image == nil or tolua.type(image) == "Surface")
-
-	-- mark old image bounds for redrawing
-	self:reDraw()
-
-	self.image = image
-
-	self:rePrepare()
-end
+-- C implementation
 
 
 --[[
@@ -122,7 +113,7 @@ function sink(self)
 			  elseif chunk then
 				  -- unless requested otherwise, the net. sources send a complete chunk,
 				  -- then nil
-				  self:setImage(Surface:loadImageData(chunk, #chunk))
+				  self:setValue(Surface:loadImageData(chunk, #chunk))
 			  end
 			  return true
 		  end

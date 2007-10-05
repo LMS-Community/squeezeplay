@@ -36,6 +36,11 @@ typedef unsigned int bool;
 
 #define JIVE_FRAME_RATE @ FRAME_RATE 20
 
+#define JIVE_XY_NIL @ XY_NIL -1
+#define JIVE_WH_NIL @ WH_NIL 65535
+#define JIVE_WH_FILL @ WH_FILL 65534
+
+
 // typedefs
 
 typedef enum {

@@ -16,7 +16,6 @@ typedef struct textinput_widget {
 	JiveFont *cursorFont;
 	Uint16 char_height;
 	Uint16 char_width;
-	Uint16 max_width;
 	bool is_sh;
 	Uint32 fg;
 	Uint32 sh;
@@ -96,23 +95,6 @@ int jiveL_textinput_skin(lua_State *L) {
 	return 0;
 }
 
-
-int jiveL_textinput_prepare(lua_State *L) {
-	TextinputWidget *peer;
-	const char *str;
-
-	peer = jive_getpeer(L, 1, &textinputPeerMeta);
-
-	/* measure text width */
-	lua_getglobal(L, "tostring");
-	lua_getfield(L, 1, "value");
-	lua_call(L, 1, 1);
-
-	str = lua_tostring(L, -1);
-	peer->max_width = peer->char_width * strlen(str); // FIXME utf8
-
-	return 0;
-}
 
 int jiveL_textinput_layout(lua_State *L) {
 	TextinputWidget *peer;
@@ -387,20 +369,30 @@ int jiveL_textinput_draw(lua_State *L) {
 
 int jiveL_textinput_get_preferred_bounds(lua_State *L) {
 	TextinputWidget *peer;
+	const char *str;
+	int max_width;
 	Uint16 w, h;
 
 	/* stack is:
 	 * 1: widget
 	 */
 
-	if (jive_getmethod(L, 1, "doLayout")) {
+	if (jive_getmethod(L, 1, "checkSkin")) {
 		lua_pushvalue(L, 1);
 		lua_call(L, 1, 0);
 	}
 
 	peer = jive_getpeer(L, 1, &textinputPeerMeta);
 
-	w = peer->max_width + peer->w.padding.left + peer->w.padding.right;
+	/* measure text width */
+	lua_getglobal(L, "tostring");
+	lua_getfield(L, 1, "value");
+	lua_call(L, 1, 1);
+
+	str = lua_tostring(L, -1);
+	max_width = peer->char_width * strlen(str); // FIXME utf8
+
+	w = max_width + peer->w.padding.left + peer->w.padding.right;
 	h = JIVE_WH_NIL;
 
 	lua_pushinteger(L, (peer->w.preferred_bounds.x == JIVE_XY_NIL) ? 0 : peer->w.preferred_bounds.x);

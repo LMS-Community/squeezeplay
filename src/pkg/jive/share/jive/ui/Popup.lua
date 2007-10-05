@@ -93,17 +93,6 @@ function getLowerWindow(self)
 end
 
 
-function doLayout(self)
-	local lower = self:getLowerWindow()
-	if lower ~= nil then
-		lower:doLayout()
-	end
-
-	Widget.doLayout(self)
-
-end
-
-
 function borderLayout(self)
 	Window.borderLayout(self, true)
 end

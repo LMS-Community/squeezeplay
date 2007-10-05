@@ -34,8 +34,10 @@ typedef unsigned int bool;
 
 #define JIVE_XY_NIL -1
 #define JIVE_WH_NIL 65535
+#define JIVE_WH_FILL 65534
 
 typedef enum {
+	/* note ordered for left->right sort */
         JIVE_ALIGN_CENTER = 0,
         JIVE_ALIGN_LEFT,
         JIVE_ALIGN_RIGHT,
@@ -168,6 +170,10 @@ struct jive_widget {
 	SDL_Rect preferred_bounds;
 	JiveInset padding;
 	JiveInset border;
+	Uint32 skin_origin;
+	Uint32 child_origin;
+	Uint32 layout_origin;
+	JiveAlign align;
 	Uint8 layer;
 };
 
@@ -228,6 +234,8 @@ struct jive_perfwarn {
 /* extra pump function */
 extern int (*jive_sdlevent_pump)(lua_State *L);
 
+/* global counter used to invalidate widget */
+extern Uint32 jive_origin;
 
 /* Util functions */
 void jive_print_stack(lua_State *L, char *str);
@@ -292,6 +300,7 @@ JiveTile *jive_tile_load_vtiles(char *path[3]);
 JiveTile *jive_tile_load_htiles(char *path[3]);
 JiveTile *jive_tile_ref(JiveTile *tile);
 void jive_tile_get_min_size(JiveTile *tile, Uint16 *w, Uint16 *h);
+void jive_tile_set_alpha(JiveTile *tile, Uint32 flags);
 void jive_tile_free(JiveTile *tile);
 void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh);
 void jive_tile_blit_centered(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh);
@@ -352,12 +361,16 @@ int jiveL_widget_set_bounds(lua_State *L);
 int jiveL_widget_get_bounds(lua_State *L);
 int jiveL_widget_get_preferred_bounds(lua_State *L);
 int jiveL_widget_get_border(lua_State *L);
+int jiveL_widget_reskin(lua_State *L);
+int jiveL_widget_relayout(lua_State *L);
 int jiveL_widget_redraw(lua_State *L);
-int jiveL_widget_dolayout(lua_State *L);
+int jiveL_widget_check_skin(lua_State *L);
+int jiveL_widget_check_layout(lua_State *L);
+int jiveL_widget_peer_tostring(lua_State *L);
 
 int jiveL_icon_get_preferred_bounds(lua_State *L);
 int jiveL_icon_skin(lua_State *L);
-int jiveL_icon_prepare(lua_State *L);
+int jiveL_icon_set_value(lua_State *L);
 int jiveL_icon_layout(lua_State *L);
 int jiveL_icon_animate(lua_State *L);
 int jiveL_icon_draw(lua_State *L);
@@ -365,21 +378,25 @@ int jiveL_icon_gc(lua_State *L);
 
 int jiveL_label_get_preferred_bounds(lua_State *L);
 int jiveL_label_skin(lua_State *L);
-int jiveL_label_prepare(lua_State *L);
 int jiveL_label_layout(lua_State *L);
 int jiveL_label_animate(lua_State *L);
 int jiveL_label_draw(lua_State *L);
 int jiveL_label_gc(lua_State *L);
 
+int jiveL_group_get_preferred_bounds(lua_State *L);
+int jiveL_group_skin(lua_State *L);
+int jiveL_group_layout(lua_State *L);
+int jiveL_group_iterate(lua_State *L);
+int jiveL_group_draw(lua_State *L);
+int jiveL_group_gc(lua_State *L);
+
 int jiveL_textinput_get_preferred_bounds(lua_State *L);
 int jiveL_textinput_skin(lua_State *L);
-int jiveL_textinput_prepare(lua_State *L);
 int jiveL_textinput_layout(lua_State *L);
 int jiveL_textinput_draw(lua_State *L);
 int jiveL_textinput_gc(lua_State *L);
 
 int jiveL_menu_skin(lua_State *L);
-int jiveL_menu_prepare(lua_State *L);
 int jiveL_menu_layout(lua_State *L);
 int jiveL_menu_iterate(lua_State *L);
 int jiveL_menu_draw(lua_State *L);
@@ -387,15 +404,13 @@ int jiveL_menu_gc(lua_State *L);
 
 int jiveL_textarea_get_preferred_bounds(lua_State *L);
 int jiveL_textarea_skin(lua_State *L);
-int jiveL_textarea_prepare(lua_State *L);
 int jiveL_textarea_layout(lua_State *L);
 int jiveL_textarea_draw(lua_State *L);
 int jiveL_textarea_gc(lua_State *L);
 
 int jiveL_window_skin(lua_State *L);
-int jiveL_window_prepare(lua_State *L);
-int jiveL_window_dolayout(lua_State *L);
-int jiveL_popup_dolayout(lua_State *L);
+int jiveL_window_check_layout(lua_State *L);
+int jiveL_popup_check_layout(lua_State *L);
 int jiveL_window_iterate(lua_State *L);
 int jiveL_popup_iterate(lua_State *L);
 int jiveL_window_draw(lua_State *L);

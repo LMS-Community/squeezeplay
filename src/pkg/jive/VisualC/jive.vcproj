@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
@@ -218,6 +218,10 @@
 			</File>
 			<File
 				RelativePath="..\src\ui\jive_framework.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\ui\jive_group.c"
 				>
 			</File>
 			<File

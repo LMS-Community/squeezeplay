@@ -88,38 +88,37 @@ int jiveL_window_skin(lua_State *L) {
 }
 
 
-int jiveL_window_prepare(lua_State *L) {
-
+int jiveL_window_check_layout(lua_State *L) {
 	/* stack is:
 	 * 1: widget
 	 */
 
-	return 0;
-}
+	WindowWidget *peer = jive_getpeer(L, 1, &windowPeerMeta);
 
-int jiveL_window_dolayout(lua_State *L) {
-	/* stack is:
-	 * 1: widget
-	 * 2: layoutCount
-	 */
+	if (peer->w.child_origin != jive_origin) {
+#if 0
+		/* debugging */
+		jive_getmethod(L, 1, "dump");
+		if (!lua_isnil(L, -1)) {
+			lua_pushvalue(L, 1);
+			lua_call(L, 1, 1);
 
-	lua_getfield(L, 1, "windowCount");
-	if (lua_equal(L, -1, 2) == 0) {
-		lua_pushcfunction(L, jiveL_widget_dolayout);
+			printf("layout %d:\n%s\n", jive_origin, lua_tostring(L, -1));
+			lua_pop(L, 1);
+		}
+#endif
+
+		lua_pushcfunction(L, jiveL_widget_check_layout);
 		lua_pushvalue(L, 1);
 		lua_call(L, 1, 0);
-
-		lua_pushvalue(L, 2);
-		lua_setfield(L, 1, "windowCount");
 	}
 
 	return 0;
 }
 
-int jiveL_popup_dolayout(lua_State *L) {
+int jiveL_popup_check_layout(lua_State *L) {
 	/* stack is:
 	 * 1: widget
-	 * 2: layoutCount
 	 */
 
 	if (jive_getmethod(L, 1, "getLowerWindow")) {
@@ -127,14 +126,13 @@ int jiveL_popup_dolayout(lua_State *L) {
 		lua_call(L, 1, 1);
 
 		if (!lua_isnil(L, -1)) {
-			lua_pushcfunction(L, jiveL_window_dolayout);
+			lua_pushcfunction(L, jiveL_window_check_layout);
 			lua_pushvalue(L, -2);
-			lua_pushvalue(L, 2);
-			lua_call(L, 2, 0);
+			lua_call(L, 1, 0);
 		}
 	}
 
-	return jiveL_window_dolayout(L);
+	return jiveL_window_check_layout(L);
 }
 
 

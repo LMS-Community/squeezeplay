@@ -31,6 +31,7 @@ libjiveui_la_SOURCES = \
 	src/ui/jive_event.c \
 	src/ui/jive_font.c \
 	src/ui/jive_framework.c \
+	src/ui/jive_group.c \
 	src/ui/jive_icon.c \
 	src/ui/jive_label.c \
 	src/ui/jive_menu.c \
@@ -96,6 +97,7 @@ dist_jiveui_DATA = \
 	share/jive/ui/Event.lua \
 	share/jive/ui/Framework.lua \
 	share/jive/ui/Font.lua \
+	share/jive/ui/Group.lua \
 	share/jive/ui/Icon.lua \
 	share/jive/ui/Label.lua \
 	share/jive/ui/Menu.lua \

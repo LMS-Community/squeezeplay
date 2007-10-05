@@ -48,6 +48,7 @@ local Checkbox      = require("jive.ui.Checkbox")
 local Choice        = require("jive.ui.Choice")
 local Event         = require("jive.ui.Event")
 local Font          = require("jive.ui.Font")
+local Group         = require("jive.ui.Group")
 local Icon          = require("jive.ui.Icon")
 local Label         = require("jive.ui.Label")
 local Menu          = require("jive.ui.Menu")
@@ -80,7 +81,6 @@ unusedListeners = {} -- unused listeners
 animations = {} -- active widget animations
 sound = {} -- sounds
 soundEnabled = {} -- sound enabled state
-layoutCount = 1
 
 screen = {}
 screen.bounds = { 0, 0, 240, 320 }

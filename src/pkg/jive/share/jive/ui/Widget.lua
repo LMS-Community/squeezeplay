@@ -22,7 +22,7 @@ B<x> : absolute x co-ordinate in pixels
 
 B<y> : absolute y co-ordinate in pixels
 
-B<w> : width in pixels
+B<w> : width in pixels, or WH_FILL to fill the available space.
 
 B<h> : height in pixels
 
@@ -68,6 +68,7 @@ Widgets in  the Content On Stage layer are only animated when moving on stage. T
 local assert, ipairs, require, tostring, type = assert, ipairs, require, tostring, type
 
 local oo            = require("loop.base")
+local string        = require("string")
 local table         = require("jive.utils.table")
 local Event         = require("jive.ui.Event")
 local Timer         = require("jive.ui.Timer")
@@ -100,8 +101,6 @@ function __init(self, style)
 		timers = {}, -- all timers associated with this widget
 		listeners = {}, -- event callback functions
 		animations = {}, -- amination functions
-		layoutCount = Framework.layoutCount - 1,
-		invalid = true,
 		style = style,
 	})
 end
@@ -232,6 +231,8 @@ function setStyle(self, style)
 
 	self.style = style
 	self:reSkin()
+
+	self:iterate(function(widget) widget:reSkin() end)
 end
 
 
@@ -250,6 +251,8 @@ function setStyleModifier(self, styleModifier)
 
 	self.styleModifier = styleModifier
 	self:reSkin()
+
+	self:iterate(function(widget) widget:reSkin() end)
 end
 
 
@@ -320,25 +323,7 @@ widget is packed and any layout updated before it is redrawn.
 
 =cut
 --]]
-function reSkin(self)
-	self.skinCount = Framework.layoutCount - 1
-	self:rePrepare()
-end
-
-
---[[
-
-=head2 jive.ui.Widget:rePrepare()
-
-Called when the widget content has changed. This will make sure the
-widget is packed and any layout updated before it is redrawn.
-
-=cut
---]]
-function rePrepare(self)
-	self.invalid = true
-	self:reLayout()
-end
+-- C function
 
 
 --[[
@@ -350,29 +335,7 @@ is layout is updated before it is redrawn.
 
 =cut
 --]]
-function reLayout(self)
-	local reachedRoot = false
-
-	local reLayoutCount = Framework.layoutCount - 1
-
-	-- mark widgets for layout until we reach a layout root
-	local widget = self
-	while widget do
-		if not reachedRoot then
-			widget.layoutCount = reLayoutCount
-
-			if widget.layoutRoot then
-				reachedRoot = true
-			end
-		end
-
-		if widget.parent == nil then
-			widget.windowCount = reLayoutCount
-		end
-
-		widget = widget.parent
-	end
-end
+-- C function
 
 
 --[[
@@ -383,29 +346,23 @@ Marks the bounding box of this widget for redrawing.
 
 =cut
 --]]
+-- C function
 
 
 --[[
 
-=head2 jive.ui.Widget:doSkin()
+=head2 jive.ui.Widget:checkSkin()
 
 Updates the widgets skin if required.
 
 =cut
 --]]
-function doSkin(self)
-	if Framework.layoutCount != self.skinCount then
-		self.skinCount = Framework.layoutCount
-		self.invalid = true
-
-		self:_skin()
-	end
-end
+-- C function
 
 
 --[[
 
-=head2 jive.ui.Widget:doLayout()
+=head2 jive.ui.Widget:checkLayout()
 
 Prepares the widgets contents and performs layout if required. Also calls do
 layout on any child widgets.
@@ -418,11 +375,6 @@ layout on any child widgets.
 function _skin(self)
 	-- must be overridden by widgets
 	assert(false)
-end
-
-
-function _prepare(self)
-	-- should be overridden by widgets
 end
 
 
@@ -632,6 +584,23 @@ function _event(self, event)
 
 	return r
 end
+
+
+function dump(self, level)
+	local str = {}
+	local pad = string.rep(" ", (level or 0) * 2)
+
+	level = (level or 0) + 1
+
+	table.insert(str, pad .. tostring(self) .. " [" .. self:peerToString() .. " " .. tostring(self.visible) .. "]")
+
+	self:iterate(function(child)
+			     table.insert(str, child:dump(level))
+		     end)
+
+	return table.concat(str, "\n")
+end
+
 
 --[[
 

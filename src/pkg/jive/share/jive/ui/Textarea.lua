@@ -17,7 +17,7 @@ A text area widget, extends L<jive.ui.Widget>.
  textarea:scroll(2)
 
  -- Set the text
- textarea:setText("Different text")
+ textarea:setValue("Different text")
 
 =head1 STYLE
 
@@ -117,15 +117,15 @@ end
 
 --[[
 
-=head2 jive.ui.Textarea:setText(text)
+=head2 jive.ui.Textarea:setValue(text)
 
 Sets the text in the Textarea to I<text>.
 
 =cut
 --]]
-function setText(self, text)
+function setValue(self, text)
 	self.text = text
-	self:rePrepare()
+	self:reLayout()
 end
 
 

@@ -51,16 +51,6 @@ int jiveL_menu_skin(lua_State *L) {
 }
 
 
-int jiveL_menu_prepare(lua_State *L) {
-
-	/* stack is:
-	 * 1: widget
-	 */
-
-	return 0;
-}
-
-
 int jiveL_menu_layout(lua_State *L) {
 	MenuWidget *peer;
 	Uint16 x, y;

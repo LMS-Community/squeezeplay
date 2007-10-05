@@ -17,6 +17,9 @@ char *jive_resource_path = NULL;
 
 SDL_Rect jive_dirty_region;
 
+/* global counter used to invalidate widget skin and layout */
+Uint32 jive_origin = 0;
+
 
 /* performance warning thresholds, 0 = disabled */
 struct jive_perfwarn perfwarn = { 0, 0, 0, 0, 0, 0 };
@@ -436,10 +439,9 @@ int jiveL_update_screen(lua_State *L) {
 	}
 
 	/* Layout window and widgets */
-	if (jive_getmethod(L, -1, "doLayout")) {
+	if (jive_getmethod(L, -1, "checkLayout")) {
 		lua_pushvalue(L, -2);
-		lua_getfield(L, 1, "layoutCount");
-		lua_call(L, 2, 0);
+		lua_call(L, 1, 0);
 	}
 
 	if (perfwarn.screen) t1 = SDL_GetTicks();
@@ -486,6 +488,7 @@ int jiveL_update_screen(lua_State *L) {
 	if (!lua_isnil(L, -1)) {
 		/* Draw background */
 		jive_surface_set_clip(srf, NULL);
+		jive_tile_set_alpha(jive_background, 0); // no alpha channel
 		jive_tile_blit(jive_background, srf, 0, 0, screen_w, screen_h);
 
 		if (perfwarn.screen) t3 = SDL_GetTicks();
@@ -596,10 +599,7 @@ int jiveL_style_changed(lua_State *L) {
 	lua_setfield(L, LUA_REGISTRYINDEX, "jiveStyleCache");
 
 	/* bump layout counter */
-	lua_getfield(L, 1, "layoutCount");
-	lua_pushinteger(L, lua_tointeger(L, -1) + 1);
-	lua_setfield(L, 1, "layoutCount");
-	lua_pop(L, 1);
+	jive_origin++;
 
 	/* redraw screen */
 	lua_pushcfunction(L, jiveL_redraw);
@@ -734,11 +734,7 @@ int jiveL_set_background(lua_State *L) {
 		jive_tile_free(jive_background);
 	}
 	jive_background = jive_tile_ref(tolua_tousertype(L, 2, 0));
-
-	lua_getfield(L, 1, "layoutCount");
-	lua_pushinteger(L, lua_tointeger(L, -1) + 1);
-	lua_setfield(L, 1, "layoutCount");
-	lua_pop(L, 2);
+	jive_origin++;
 
 	return 0;
 }
@@ -1084,11 +1080,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 		lua_pop(L, 1);
 
-
-		lua_getfield(L, 1, "layoutCount");
-		lua_pushinteger(L, lua_tointeger(L, -1) + 1);
-		lua_setfield(L, 1, "layoutCount");
-		lua_pop(L, 1);
+		jive_origin++;
 
 		jevent.type = JIVE_EVENT_WINDOW_RESIZE;
 		break;
@@ -1131,8 +1123,8 @@ int jiveL_perfwarn(lua_State *L) {
 
 static const struct luaL_Reg icon_methods[] = {
 	{ "getPreferredBounds", jiveL_icon_get_preferred_bounds },
+	{ "setValue", jiveL_icon_set_value },
 	{ "_skin", jiveL_icon_skin },
-	{ "_prepare", jiveL_icon_prepare },
 	{ "_layout", jiveL_icon_layout },
 	{ "draw", jiveL_icon_draw },
 	{ NULL, NULL }
@@ -1141,17 +1133,24 @@ static const struct luaL_Reg icon_methods[] = {
 static const struct luaL_Reg label_methods[] = {
 	{ "getPreferredBounds", jiveL_label_get_preferred_bounds },
 	{ "_skin", jiveL_label_skin },
-	{ "_prepare", jiveL_label_prepare },
 	{ "_layout", jiveL_label_layout },
 	{ "animate", jiveL_label_animate },
 	{ "draw", jiveL_label_draw },
 	{ NULL, NULL }
 };
 
+static const struct luaL_Reg group_methods[] = {
+	{ "getPreferredBounds", jiveL_group_get_preferred_bounds },
+	{ "_skin", jiveL_group_skin },
+	{ "_layout", jiveL_group_layout },
+	{ "iterate", jiveL_group_iterate },
+	{ "draw", jiveL_group_draw },
+	{ NULL, NULL }
+};
+
 static const struct luaL_Reg textinput_methods[] = {
 	{ "getPreferredBounds", jiveL_textinput_get_preferred_bounds },
 	{ "_skin", jiveL_textinput_skin },
-	{ "_prepare", jiveL_textinput_prepare },
 	{ "_layout", jiveL_textinput_layout },
 	{ "draw", jiveL_textinput_draw },
 	{ NULL, NULL }
@@ -1159,7 +1158,6 @@ static const struct luaL_Reg textinput_methods[] = {
 
 static const struct luaL_Reg menu_methods[] = {
 	{ "_skin", jiveL_menu_skin },
-	{ "_prepare", jiveL_menu_prepare },
 	{ "_layout", jiveL_menu_layout },
 	{ "iterate", jiveL_menu_iterate },
 	{ "draw", jiveL_menu_draw },
@@ -1177,7 +1175,6 @@ static const struct luaL_Reg slider_methods[] = {
 static const struct luaL_Reg textarea_methods[] = {
 	{ "getPreferredBounds", jiveL_textarea_get_preferred_bounds },
 	{ "_skin", jiveL_textarea_skin },
-	{ "_prepare", jiveL_textarea_prepare },
 	{ "_layout", jiveL_textarea_layout },
 	{ "draw", jiveL_textarea_draw },
 	{ NULL, NULL }
@@ -1188,8 +1185,12 @@ static const struct luaL_Reg widget_methods[] = {
 	{ "getBounds", jiveL_widget_get_bounds },
 	{ "getPreferredBounds", jiveL_widget_get_preferred_bounds },
 	{ "getBorder", jiveL_widget_get_border },
+	{ "reSkin", jiveL_widget_reskin },
+	{ "reLayout", jiveL_widget_relayout },
 	{ "reDraw", jiveL_widget_redraw },
-	{ "doLayout", jiveL_widget_dolayout },
+	{ "checkSkin", jiveL_widget_check_skin },
+	{ "checkLayout", jiveL_widget_check_layout },
+	{ "peerToString", jiveL_widget_peer_tostring },
 	{ "stylePath", jiveL_style_path },
 	{ "styleValue", jiveL_style_value },
 	{ "styleInt", jiveL_style_value },
@@ -1201,8 +1202,7 @@ static const struct luaL_Reg widget_methods[] = {
 
 static const struct luaL_Reg window_methods[] = {
 	{ "_skin", jiveL_window_skin },
-	{ "_prepare", jiveL_window_prepare },
-	{ "doLayout", jiveL_widget_dolayout },
+	{ "checkLayout", jiveL_window_check_layout },
 	{ "iterate", jiveL_window_iterate },
 	{ "draw", jiveL_window_draw },
 	{ "_eventHandler", jiveL_window_event_handler },
@@ -1211,8 +1211,7 @@ static const struct luaL_Reg window_methods[] = {
 
 static const struct luaL_Reg popup_methods[] = {
 	{ "_skin", jiveL_window_skin },
-	{ "_prepare", jiveL_window_prepare },
-	{ "doLayout", jiveL_popup_dolayout },
+	{ "checkLayout", jiveL_popup_check_layout },
 	{ "iterate", jiveL_popup_iterate },
 	{ "draw", jiveL_popup_draw },
 	{ "_eventHandler", jiveL_window_event_handler },
@@ -1273,6 +1272,10 @@ static int jiveL_core_init(lua_State *L) {
 
 	lua_getfield(L, 2, "Label");
 	luaL_register(L, NULL, label_methods);
+	lua_pop(L, 1);
+
+	lua_getfield(L, 2, "Group");
+	luaL_register(L, NULL, group_methods);
 	lua_pop(L, 1);
 
 	lua_getfield(L, 2, "Textinput");

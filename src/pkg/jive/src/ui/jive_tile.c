@@ -197,6 +197,16 @@ void jive_tile_get_min_size(JiveTile *tile, Uint16 *w, Uint16 *h) {
 	*h = tile->h[0] + tile->h[1];
 }
 
+void jive_tile_set_alpha(JiveTile *tile, Uint32 flags) {
+	int i;
+
+	for (i=0; i<9; i++) {
+		if (tile->srf[i]) {
+			SDL_SetAlpha(tile->srf[i], flags, 0);
+		}
+	}
+}
+
 void jive_tile_free(JiveTile *tile) {
 	int i;
 
