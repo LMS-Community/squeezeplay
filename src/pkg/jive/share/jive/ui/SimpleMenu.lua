@@ -126,6 +126,10 @@ end
 local function _itemListener(menu, menuItem, list, index, event)
 	local item = list[index]
 
+	if( item == nil) then
+		return EVENT_UNUSED
+	end
+
 	if event:getType() == EVENT_ACTION and item.callback then
 		return item.callback(event, item) or EVENT_CONSUME
 	

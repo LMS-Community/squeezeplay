@@ -71,10 +71,12 @@ function registerApplet(meta)
 				local cmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION }
 				-- FIXME send to slimserver installed applets and versions
 
-				player.slimServer.comet:request(firmwareUpgradeSink,
+				if( player) then				
+					player.slimServer.comet:request(firmwareUpgradeSink,
 								player:getId(),
 								cmd
-							)
+								)
+				end
 			end
 	}
 

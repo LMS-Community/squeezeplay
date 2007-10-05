@@ -179,10 +179,14 @@ function notify_playerCurrent(self, player)
 			     -- FIXME schedule updates from server
 		     end
 
-	player.slimServer.comet:request(sink,
+	if( player) then
+		player.slimServer.comet:request(sink,
 					player:getId(),
 					{ 'date' }
 				)
+	else
+		log:warn("player is nil")
+	end
 end
 
 

@@ -1617,8 +1617,13 @@ end
 function notify_jiveMainMenuChanged(self)
 	log:debug("notify_jiveMainMenuChanged")
 	
-	-- fetch the menu, pronto...
-	_server:request(_homeSink, _player.id, { 'menu', 0, 100 })
+	if( _server == false) then
+		log:warn("_server is false")
+		return
+	else
+		-- fetch the menu, pronto...
+		_server:request(_homeSink, _player.id, { 'menu', 0, 100 })
+	end
 end
 
 
