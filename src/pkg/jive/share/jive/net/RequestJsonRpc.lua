@@ -38,7 +38,7 @@ Note the implementation uses the source and sink concept of luasocket.
 
 
 -- stuff we use
-local assert, tostring, type = assert, tostring, type
+local _assert, tostring, type = _assert, tostring, type
 
 local string      = require("string")
 
@@ -102,9 +102,9 @@ Note the class calculates a JSON ID.
 function __init(self, sink, uri, method, params, options)
 	--log:debug("RequestJsonRpc:__init()")
 
---	assert(method)
---	assert(uri)
---	assert(sink)
+--	_assert(method)
+--	_assert(uri)
+--	_assert(sink)
 	if not params then
 		params = {}
 	end

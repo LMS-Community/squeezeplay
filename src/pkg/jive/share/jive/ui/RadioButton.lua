@@ -53,7 +53,7 @@ B<imgOff> : the image when the Radio Button is not selected.
 
 
 -- stuff we use
-local assert, require, tostring, type = assert, require, tostring, type
+local _assert, require, tostring, type = _assert, require, tostring, type
 
 local debug            = require("debug")
 
@@ -91,10 +91,10 @@ is selected by the user; the function prototype is:
 function __init(self, style, group, closure, selected)
 	log:debug("RadioButton:_init()");
 
-	assert(type(style) == "string")
-	assert(oo.instanceof(group, RadioGroup), "group is not RadioGroup - " .. debug.traceback())
-	assert(type(closure) == "function")
-	assert(selected == nil or type(selected) == "boolean")
+	_assert(type(style) == "string")
+	_assert(oo.instanceof(group, RadioGroup), "group is not RadioGroup - " .. debug.traceback())
+	_assert(type(closure) == "function")
+	_assert(selected == nil or type(selected) == "boolean")
 
 	local obj = oo.rawnew(self, Icon(style))
 

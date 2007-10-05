@@ -1,6 +1,7 @@
 
 -- stuff we use
-local assert, getmetatable, ipairs, setmetatable, string, tonumber, tostring, type, unpack = assert, getmetatable, ipairs, setmetatable, string, tonumber, tostring, type, unpack
+local _assert, getmetatable, ipairs, setmetatable = _assert, getmetatable, ipairs, setmetatable
+local string, tonumber, tostring, type, unpack = string, tonumber, tostring, type, unpack
 
 local oo                = require("loop.simple")
 local Widget            = require("jive.ui.Widget")
@@ -78,7 +79,7 @@ Sets the text displayed in the label.
 =cut
 --]]
 function setValue(self, value)
-	assert(value ~= nil)
+	_assert(value ~= nil)
 
 	if self.value ~= value then
 		if self.value.setValue  then
@@ -257,8 +258,8 @@ I<allowedChars> is an optional parameter containing the list of chars to propose
 =cut
 --]]
 function __init(self, style, value, closure, allowedChars)
-	assert(type(style) == "string")
-	assert(value ~= nil)
+	_assert(type(style) == "string")
+	_assert(value ~= nil)
 
 	local obj = oo.rawnew(self, Widget(style))
 	 _globalStrings = locale:readGlobalStringsFile()

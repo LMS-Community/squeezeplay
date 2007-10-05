@@ -42,7 +42,7 @@ B<itemHeight> : the height of each menu item.
 
 
 -- stuff we use
-local assert, ipairs, string, tostring, type = assert, ipairs, string, tostring, type
+local _assert, ipairs, string, tostring, type = _assert, ipairs, string, tostring, type
 
 
 local oo              = require("loop.simple")
@@ -147,7 +147,7 @@ end
 
 
 function __init(self, style, items)
-	assert(type(style) == "string")
+	_assert(type(style) == "string")
 
 	local obj = oo.rawnew(self, Menu(style, _itemRenderer, _itemListener))
 	obj.items = items or {}
@@ -229,7 +229,7 @@ Returns the item at the index I<index>.
 =cut
 --]]
 function getItem(self, index)
-	assert(type(index) == "number")
+	_assert(type(index) == "number")
 
 	return _safeIndex(self.items, index)
 end
@@ -324,7 +324,7 @@ See addItem for the definition of I<item>.
 =cut
 --]]
 function insertItem(self, item, index)
-	assert(index == nil or type(index) == "number")
+	_assert(index == nil or type(index) == "number")
 
 	if index == nil then
 		table.insert(self.items, item)
@@ -352,7 +352,7 @@ Replace the item at I<index> with I<item>.
 =cut
 --]]
 function replaceIndex(self, item, index)
-	assert(index and type(index) == "number")
+	_assert(index and type(index) == "number")
 
 	if _safeIndex(self.item, index) then
 		self.items[index] = item
@@ -371,7 +371,7 @@ the menu.
 =cut
 --]]
 function removeIndex(self, index)
-	assert(type(index) == "number")
+	_assert(type(index) == "number")
 
 	if _safeIndex(self.items, index) then
 		local item = table.remove(self.items, index)
@@ -414,7 +414,7 @@ Notifies the menu with the items at I<index> has changed. If neccessary this wil
 =cut
 --]]
 function updatedIndex(self, index)
-	assert(type(index) == "number")
+	_assert(type(index) == "number")
 
 	Menu.setItems(self, self.items, #self.items, index, index)
 end

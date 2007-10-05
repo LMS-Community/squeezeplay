@@ -23,7 +23,7 @@ None provided.
 
 
 -- stuff we use
-local assert, tostring = assert, tostring
+local _assert, tostring = _assert, tostring
 
 local oo         = require("loop.simple")
 
@@ -51,7 +51,7 @@ the connection must close.
 function __init(self, jnt, ip, port, queueObj, name)
 --	log:debug("SocketHttpQueue:__init(", name, ", ".. ip, ", ", port, ")")
 
---	assert(queueObj)
+--	_assert(queueObj)
 
 	-- init superclass
 	local obj = oo.rawnew(self, SocketHttp(jnt, ip, port, name))

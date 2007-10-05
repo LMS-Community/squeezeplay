@@ -28,7 +28,7 @@ User interface framework
 
 
 -- stuff we use
-local assert, jive, ipairs, pairs, require, string, tostring, type = assert, jive, ipairs, pairs, require, string, tostring, type
+local _assert, jive, ipairs, pairs, require, string, tostring, type = _assert, jive, ipairs, pairs, require, string, tostring, type
 
 local oo            = require("loop.simple")
 local table         = require("jive.utils.table")
@@ -147,9 +147,9 @@ Sets the screen size I<w, h>, and bbp I<bpp>. This must be called before jive.ui
 =cut
 --]]
 function setScreenSize(self, w, h, bpp)
-	assert(type(w) == "number")
-	assert(type(h) == "number")
-	assert(type(bpp) == "number")
+	_assert(type(w) == "number")
+	_assert(type(h) == "number")
+	_assert(type(bpp) == "number")
 
 	screen.bounds[3] = w
 	screen.bounds[4] = h
@@ -180,7 +180,7 @@ Add a global widget I<widget> to the screen. The global widgets are shown on all
 =cut
 --]]
 function addWidget(self, widget)
-	assert(oo.instanceof(widget, Widget))
+	_assert(oo.instanceof(widget, Widget))
 
 	widgets[#widgets + 1] = widget
 	widget:dispatchNewEvent(EVENT_SHOW)
@@ -198,7 +198,7 @@ Remove the global widget I<widget> from the screen.
 =cut
 --]]
 function removeWidget(self, widget)
-	assert(oo.instanceof(widget, Widget))
+	_assert(oo.instanceof(widget, Widget))
 
 	table.delete(widget, widget)
 	widget:dispatchNewEvent(EVENT_HIDE)
@@ -290,8 +290,8 @@ Add a global event listener I<listener>. The listener is called for events that 
 =cut
 --]]
 function addListener(self, mask, listener, priority)
-	assert(type(mask) == "number")
-	assert(type(listener) == "function")
+	_assert(type(mask) == "number")
+	_assert(type(listener) == "function")
 
 	local handle = { mask, listener }
 	if priority == false then
@@ -313,7 +313,7 @@ Removes the listener I<handle> from the widget.
 =cut
 --]]
 function removeListener(self, handle)
-	assert(type(handle) == "table")
+	_assert(type(handle) == "table")
 
 	table.delete(self.globalListeners, handle)
 	table.delete(self.unusedListeners, handle)
@@ -321,7 +321,7 @@ end
 
 
 function _addAnimationWidget(self, widget)
-	assert(not table.contains(animations, widget))
+	_assert(not table.contains(animations, widget))
 
 	animations[#animations + 1] = widget
 end

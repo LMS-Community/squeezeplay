@@ -19,7 +19,7 @@ TODO
 
 -- stuff we use
 local tostring, tonumber, type, sort = tostring, tonumber, type, sort
-local pairs, ipairs, select, assert = pairs, ipairs, select, assert
+local pairs, ipairs, select, _assert = pairs, ipairs, select, _assert
 
 local oo                     = require("loop.simple")
 local table                  = require("table")
@@ -723,7 +723,7 @@ local function _statusSink(step, chunk, err)
 	end
 
 	-- currently we're not going anywhere with Now Playing...
-	assert(step == _statusStep)
+	_assert(step == _statusStep)
 
 	-- Just in case we get passed a full event
 	local data = chunk
@@ -1330,7 +1330,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	-- indicate where we're going
 	if origin then
 	
-		assert(origin.destination == false)
+		_assert(origin.destination == false)
 		
 		-- we're going there
 		origin.destination = step

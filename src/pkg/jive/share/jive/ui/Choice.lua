@@ -54,7 +54,7 @@ B<icon_align> : the icon alignment.
 
 
 -- stuff we use
-local assert, tostring, type = assert, tostring, type
+local _assert, tostring, type = _assert, tostring, type
 
 --local debug = require("debug")
 
@@ -115,12 +115,12 @@ user; the function prototype is:
 =cut
 --]]
 function __init(self, style, options, closure, selectedIndex)
-	assert(type(style) == "string")
-	assert(type(options) == "table")
-	assert(type(closure) == "function")
+	_assert(type(style) == "string")
+	_assert(type(options) == "table")
+	_assert(type(closure) == "function")
 
 	selectedIndex = selectedIndex or 1
-	assert(type(selectedIndex) == "number")
+	_assert(type(selectedIndex) == "number")
 
 	local obj = oo.rawnew(self, Label(style, options[selectedIndex]))
 
@@ -177,7 +177,7 @@ Note that using this function calls the closure.
 =cut
 --]]
 function setSelectedIndex(self, selectedIndex)
-	assert(type(selectedIndex) == "number")
+	_assert(type(selectedIndex) == "number")
 
 	if self.selectedIndex == selectedIndex then
 		return

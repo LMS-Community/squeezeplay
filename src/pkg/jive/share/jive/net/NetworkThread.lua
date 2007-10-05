@@ -29,7 +29,7 @@ FIXME: Subscribe description
 
 
 -- stuff we use
-local assert, tostring, table, ipairs, pairs, pcall, type  = assert, tostring, table, ipairs, pairs, pcall, type
+local _assert, tostring, table, ipairs, pairs, pcall, type  = _assert, tostring, table, ipairs, pairs, pcall, type
 
 local thread            = require("thread")
 local socket            = require("socket")
@@ -60,7 +60,7 @@ local TIMEOUT           = 0.05 -- select timeout
 local function _add(sock, pump, sockList)
 --	log:debug("_add(", sock, ", ", pump, ")")
 
-	assert(pump, debug.traceback())
+	_assert(pump, debug.traceback())
 	
 	if not sock then 
 		return

@@ -36,7 +36,7 @@ requests are serviced before basic ones.
 
 
 -- stuff we use
-local assert, ipairs, tostring, type = assert, ipairs, tostring, type
+local _assert, ipairs, tostring, type = _assert, ipairs, tostring, type
 
 local table           = require("table")
 local math            = require("math")
@@ -76,7 +76,7 @@ function __init(self, jnt, ip, port, quantity, threshold, name)
 --	log:debug("HttpPool:__init(", name, ", ", ip, ", ", port, ", ", quantity, ")")
 
 	-- let used classes worry about ip, port existence
---	assert(jnt)
+--	_assert(jnt)
 	
 	local obj = oo.rawnew(self, {
 		jnt           = jnt,
@@ -159,7 +159,7 @@ end
 function t_queue(self, request, priority )
 --	log:debug(self, ":t_queue()")
 
-	assert(priority == 1 or priority == 2, "queue priority must be 1 or 2")
+	_assert(priority == 1 or priority == 2, "queue priority must be 1 or 2")
 	
 	table.insert(self.reqQueue[priority], request)
 	self.reqQueueCount = self.reqQueueCount + 1

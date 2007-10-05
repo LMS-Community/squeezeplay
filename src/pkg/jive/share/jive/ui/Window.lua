@@ -35,7 +35,7 @@ B<bgImg> : the windows background image.
 
 
 -- stuff we use
-local assert, ipairs, require, tostring, type, unpack = assert, ipairs, require, tostring, type, unpack
+local _assert, ipairs, require, tostring, type, unpack = _assert, ipairs, require, tostring, type, unpack
 
 local math                    = require("math")
 local debug                   = require("debug")
@@ -101,7 +101,7 @@ Constructs a new window widget. I<style> is the widgets style. The window can ha
 =cut
 --]]
 function __init(self, style, title)
-	assert(type(style) == "string", "style parameter is " .. type(style) .. " expected string - " .. debug.traceback())
+	_assert(type(style) == "string", "style parameter is " .. type(style) .. " expected string - " .. debug.traceback())
 
 	local obj = oo.rawnew(self, Widget(style))
 
@@ -452,7 +452,7 @@ Add the widget I<widget> to the window.
 =cut
 --]]
 function addWidget(self, widget)
-	assert(oo.instanceof(widget, Widget), "jive.ui.Window:addWidget(widget): widget is not an instance of Widget!")
+	_assert(oo.instanceof(widget, Widget), "jive.ui.Window:addWidget(widget): widget is not an instance of Widget!")
 
 	self.widgets[#self.widgets + 1] = widget
 	widget.parent = self
@@ -477,7 +477,7 @@ Remove the widget I<widget> from the window.
 =cut
 --]]
 function removeWidget(self, widget)
-	assert(oo.instanceof(widget, Widget))
+	_assert(oo.instanceof(widget, Widget))
 
 	if self:isVisible() then
 		widget:dispatchNewEvent(EVENT_HIDE)
@@ -499,8 +499,13 @@ events from the window, and should animate (if applicable).
 =cut
 --]]
 function focusWidget(self, widget)
+<<<<<<< .mine
+	_assert(oo.instanceof(widget, Widget))
+	_assert(table.contains(self.widgets, widget))
+=======
 	assert(widget == nil or oo.instanceof(widget, Widget))
 	assert(widget == nil or table.contains(self.widgets, widget))
+>>>>>>> .r666
 
 	if self.focus and self.focus ~= self.title then
 		self.focus:_event(Event:new(EVENT_FOCUS_LOST))
@@ -514,7 +519,7 @@ end
 
 
 function setAllowScreensaver(self, allowScreensaver)
-	assert(type(allowScreensaver) == "boolean" or type(allowScreensaver) == "function")
+	_assert(type(allowScreensaver) == "boolean" or type(allowScreensaver) == "function")
 
 	self.allowScreensaver = allowScreensaver
 end
@@ -620,8 +625,8 @@ Returns a push left window transition.
 =cut
 --]]
 function transitionPushLeft(oldWindow, newWindow)
-	assert(oo.instanceof(oldWindow, Widget))
-	assert(oo.instanceof(newWindow, Widget))
+	_assert(oo.instanceof(oldWindow, Widget))
+	_assert(oo.instanceof(newWindow, Widget))
 
 	local frames = FRAME_RATE / 2 -- 0.5 sec
 	local screenWidth = Framework:getScreenSize()
@@ -658,8 +663,8 @@ Returns a push right window transition.
 =cut
 --]]
 function transitionPushRight(oldWindow, newWindow)
-	assert(oo.instanceof(oldWindow, Widget))
-	assert(oo.instanceof(newWindow, Widget))
+	_assert(oo.instanceof(oldWindow, Widget))
+	_assert(oo.instanceof(newWindow, Widget))
 
 	local frames = FRAME_RATE / 2 -- 0.5 sec
 	local screenWidth = Framework:getScreenSize()
@@ -696,8 +701,8 @@ Returns a push up window transition for use with popup windows.
 =cut
 --]]
 function transitionPushPopupUp(oldWindow, newWindow)
-	assert(oo.instanceof(oldWindow, Widget))
-	assert(oo.instanceof(newWindow, Widget))
+	_assert(oo.instanceof(oldWindow, Widget))
+	_assert(oo.instanceof(newWindow, Widget))
 
 	local _, screenHeight = Framework:getScreenSize()
 
@@ -733,8 +738,8 @@ Returns a push down window transition for use with popup windows.
 =cut
 --]]
 function transitionPushPopupDown(oldWindow, newWindow)
-	assert(oo.instanceof(oldWindow, Widget))
-	assert(oo.instanceof(newWindow, Widget))
+	_assert(oo.instanceof(oldWindow, Widget))
+	_assert(oo.instanceof(newWindow, Widget))
 
 	local _, screenHeight = Framework:getScreenSize()
 

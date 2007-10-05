@@ -27,7 +27,7 @@ Notifications:
 local debug = require("jive.utils.debug")
 
 -- stuff we need
-local assert, tostring = assert, tostring
+local _assert, tostring = _assert, tostring
 
 local os             = require("os")
 local string         = require("string")
@@ -134,7 +134,7 @@ Create a Player object for server I<server>.
 function __init(self, slimServer, jnt, jpool, playerInfo)
 	log:debug("Player:__init(", playerInfo.playerid, ")")
 
-	assert(slimServer, "Cannot create Player without SlimServer object")
+	_assert(slimServer, "Cannot create Player without SlimServer object")
 	
 	local obj = oo.rawnew(self,{
 		

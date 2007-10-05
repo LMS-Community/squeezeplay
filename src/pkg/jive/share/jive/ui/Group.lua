@@ -27,7 +27,7 @@ B<order> : a table specifing the order of the widgets, by key. For example { "te
 --]]
 
 
-local assert, pairs, string, tostring, type = assert, pairs, string, tostring, type
+local _assert, pairs, string, tostring, type = _assert, pairs, string, tostring, type
 
 local oo                = require("loop.simple")
 local Widget            = require("jive.ui.Widget")
@@ -56,7 +56,7 @@ Constructs a new Group widget. I<style> is the widgets style. I<widgets> is a ta
 =cut
 --]]
 function __init(self, style, widgets)
-	assert(type(style) == "string")
+	_assert(type(style) == "string")
 
 	local obj = oo.rawnew(self, Widget(style))
 	obj.widgets = widgets

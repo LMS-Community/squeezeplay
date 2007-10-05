@@ -38,7 +38,7 @@ B<imgOff> : the image when the checkbox is not checked.
 
 
 -- stuff we use
-local assert, tostring, type = assert, tostring, type
+local _assert, tostring, type = _assert, tostring, type
 
 local oo              = require("loop.simple")
 local Icon            = require("jive.ui.Icon")
@@ -70,10 +70,10 @@ checkbox value changes; the function prototype is:
 =cut
 --]]
 function __init(self, style, closure, isSelected)
-	assert(type(style) == "string")
+	_assert(type(style) == "string")
 	
 	isSelected = isSelected or false
-	assert(type(isSelected) == "boolean")
+	_assert(type(isSelected) == "boolean")
 	
 	local obj = oo.rawnew(self, Icon(style))
 
@@ -129,7 +129,7 @@ Note that using this function calls the defined closure.
 =cut
 --]]
 function setSelected(self, isSelected)
-	assert(type(isSelected) == "boolean")
+	_assert(type(isSelected) == "boolean")
 
 	if self.selected == isSelected then
 		return

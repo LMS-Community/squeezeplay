@@ -65,7 +65,7 @@ Widgets in  the Content On Stage layer are only animated when moving on stage. T
 
 
 -- stuff we use
-local assert, ipairs, require, tostring, type = assert, ipairs, require, tostring, type
+local _assert, assert, ipairs, require, tostring, type = _assert, assert, ipairs, require, tostring, type
 
 local oo            = require("loop.base")
 local string        = require("string")
@@ -91,7 +91,7 @@ local Framework		= require("jive.ui.Framework")
 
 -- Constructs a new widget. This is only used by subclasses
 function __init(self, style)
-	assert(type(style) == "string", "Invalid style")
+	_assert(type(style) == "string", "Invalid style")
 
 	return oo.rawnew(self, {
 		bounds = { 0, 0, 0, 0 },
@@ -164,8 +164,8 @@ Sets the widgets size to I<w, h>
 =cut
 --]]
 function setSize(self, w, h)
-	assert(type(w) == "number", "Invalid width")
-	assert(type(h) == "number", "Invalid height")
+	_assert(type(w) == "number", "Invalid width")
+	_assert(type(h) == "number", "Invalid height")
 
 	self:setBounds(nil, nil, w, h)
 end
@@ -194,8 +194,8 @@ Sets the widgets x,y position.
 =cut
 --]]
 function setPosition(self, x, y)
-	assert(type(x) == "number", "Invalid x")
-	assert(type(y) == "number", "Invalid y")
+	_assert(type(x) == "number", "Invalid x")
+	_assert(type(y) == "number", "Invalid y")
 
 	self:setBounds(x, y, nil, nil)
 end
@@ -223,7 +223,7 @@ Sets the widgets style.
 =cut
 --]]
 function setStyle(self, style)
-	assert(type(style) == "string", "Invalid style")
+	_assert(type(style) == "string", "Invalid style")
 
 	if (self.style == style) then
 		return
@@ -399,7 +399,8 @@ Add a listener I<listener> to the widget. The listener is called for events that
 =cut
 --]]
 function addListener(self, mask, listener)
-	assert(type(mask) == "number", "Invalid event mask")	assert(type(listener) == "function", "Invalid listener")
+	_assert(type(mask) == "number", "Invalid event mask")
+	_assert(type(listener) == "function", "Invalid listener")
 
 	local handle = { mask, listener }
 	table.insert(self.listeners, 1, handle)
@@ -417,7 +418,7 @@ Removes the listener I<handle> from the widget.
 =cut
 --]]
 function removeListener(self, handle)
-	assert(type(handle) == "table", "Invalid listener handle")
+	_assert(type(handle) == "table", "Invalid listener handle")
 
 	table.delete(self.listeners, handle)
 end
@@ -432,8 +433,8 @@ Add an animation function I<animation> to the widget. This function will be call
 =cut
 --]]
 function addAnimation(self, animation, frameRate)
-	assert(type(animation) == "function", "Invalid animation function")
-	assert(type(frameRate) == "number", "Invalid frame rate")
+	_assert(type(animation) == "function", "Invalid animation function")
+	_assert(type(frameRate) == "number", "Invalid frame rate")
 
 	frameRate = FRAME_RATE / frameRate
 
@@ -457,7 +458,7 @@ Remove the animation function I<handle> from the widget.
 =cut
 --]]
 function removeAnimation(self, handle)
-	assert(type(handle) == "table", "Invalid animation handle")
+	_assert(type(handle) == "table", "Invalid animation handle")
 
 	table.delete(self.animations, handle)
 
@@ -476,7 +477,7 @@ Send a new event of type I<type> with value I<value> to this widgets listeners.
 =cut
 --]]
 function dispatchNewEvent(self, eventType)
-	assert(type(eventType) == "number", "Invalid event type")
+	_assert(type(eventType) == "number", "Invalid event type")
 
 	local event = Event:new(eventType)
 	return Framework:dispatchEvent(self, event)
@@ -492,7 +493,7 @@ Send an EVENT_UPDATE with value I<value> to this widgets listeners.
 =cut
 --]]
 function dispatchUpdateEvent(self, value)
-	assert(type(value) == "number", "Invalid value")
+	_assert(type(value) == "number", "Invalid value")
 
 	local event = Event:new(EVENT_UPDATE, value)
 	return Framework:dispatchEvent(self, event)
@@ -508,8 +509,8 @@ Add a timer to this timer that calls I<closure> in I<interval> milliseconds. The
 =cut
 --]]
 function addTimer(self, interval, callback, once)
-	assert(type(interval) == "number", "Invalid interval")
-	assert(type(callback) == "function", "Invalid callback")
+	_assert(type(interval) == "number", "Invalid interval")
+	_assert(type(callback) == "function", "Invalid callback")
 
 	timer = Timer(interval, callback, once) 
 	self.timers[#self.timers + 1] = timer
@@ -528,7 +529,7 @@ Remove timer I<timer> from this Widget.
 =cut
 --]]
 function removeTimer(self, timer)
-	assert(oo.instanceof(timer, Timer), "Invalid timer")
+	_assert(oo.instanceof(timer, Timer), "Invalid timer")
 
 	timer:stop()
 	table.delete(self.timers, timer)

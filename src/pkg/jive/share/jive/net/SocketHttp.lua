@@ -30,7 +30,7 @@ This class implements a HTTP socket running in a L<jive.net.NetworkThread>.
 
 
 -- stuff we use
-local assert, tostring, tonumber, type = assert, tostring, tonumber, type
+local _assert, tostring, tonumber, type = _assert, tostring, tonumber, type
 local setmetatable, pairs = setmetatable, pairs
 
 local math        = require("math")
@@ -99,7 +99,7 @@ The class maintains an internal queue of requests to fetch.
 =cut
 --]]
 function fetch(self, request)
---	assert(oo.instanceof(request, RequestHttp), tostring(self) .. ":fetch() parameter must be RequestHttp - " .. type(request) .. " - ".. debug.traceback())
+--	_assert(oo.instanceof(request, RequestHttp), tostring(self) .. ":fetch() parameter must be RequestHttp - " .. type(request) .. " - ".. debug.traceback())
 	self:perform(function() self:t_fetch(request) end)
 end
 
@@ -124,7 +124,7 @@ function t_sendNext(self, go, newState)
 --	log:debug(self, ":t_sendNext(", go, ", ", newState, ")")
 	
 	if newState then
---		assert(self[newState] and type(self[newState]) == 'function')
+--		_assert(self[newState] and type(self[newState]) == 'function')
 		self.t_httpSendState = newState
 	end
 	
@@ -328,7 +328,7 @@ function t_rcvNext(self, go, newState)
 --	log:debug(self, ":t_rcvNext(", go, ", ", newState, ")")
 
 	if newState then
---		assert(self[newState] and type(self[newState]) == 'function')
+--		_assert(self[newState] and type(self[newState]) == 'function')
 		self.t_httpRcvState = newState
 	end
 	

@@ -331,6 +331,13 @@ static int luaB_dofile (lua_State *L) {
 }
 
 
+#ifdef LUA_DISABLE_ASSERT
+static int luaB_assertdisabled (lua_State *L) {
+  return 0;
+}
+#endif
+
+
 static int luaB_assert (lua_State *L) {
   luaL_checkany(L, 1);
   if (!lua_toboolean(L, 1))
@@ -443,6 +450,11 @@ static int luaB_newproxy (lua_State *L) {
 
 
 static const luaL_Reg base_funcs[] = {
+#ifdef LUA_DISABLE_ASSERT
+  {"_assert", luaB_assertdisabled},
+#else
+  {"_assert", luaB_assert},
+#endif
   {"assert", luaB_assert},
   {"collectgarbage", luaB_collectgarbage},
   {"dofile", luaB_dofile},

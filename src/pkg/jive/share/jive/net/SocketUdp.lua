@@ -45,7 +45,7 @@ Note the implementation uses the source and sink concept of luasocket.
 
 
 -- stuff we use
-local assert,tostring = assert,tostring
+local _assert, tostring = _assert, tostring
 
 local socket  = require("socket")
 local table   = require("table")
@@ -103,7 +103,7 @@ B<port> : the source port
 function __init(self, jnt, sink, name)
 	--log:debug("SocketUdp:__init()")
 
---	assert(sink)
+--	_assert(sink)
 	
 	-- init superclass
 	local obj = oo.rawnew(self, Socket(jnt, name))
@@ -213,9 +213,9 @@ the network thread.
 function send(self, t_source, address, port)
 	--log:debug("SocketUdp:send()")
 
---	assert(t_source)
---      assert(address)
---	assert(port)
+--	_assert(t_source)
+--      _assert(address)
+--	_assert(port)
 
 	if self.t_sock then
 		self:perform(function() 

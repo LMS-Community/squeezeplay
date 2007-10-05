@@ -18,7 +18,7 @@ readStringsFile(thisPath)
 --]]
 
 -- stuff we use
-local ipairs, pairs, assert, io, select, setmetatable, string, tostring = ipairs, pairs, assert, io, select, setmetatable, string, tostring
+local ipairs, pairs, io, select, setmetatable, string, tostring = ipairs, pairs, io, select, setmetatable, string, tostring
 
 local log              = require("jive.utils.log").logger("utils")
 local Framework        = require("jive.ui.Framework")

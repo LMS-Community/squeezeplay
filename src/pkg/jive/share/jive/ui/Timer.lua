@@ -26,7 +26,7 @@ A timer object.
 
 
 -- stuff we use
-local assert, string, tostring, type = assert, string, tostring, type
+local _assert, string, tostring, type = _assert, string, tostring, type
 
 local oo	= require("loop.base")
 local debug	= require("jive.utils.debug")
@@ -48,8 +48,8 @@ The I<closure> is called with a single argument, the Timer object.
 =cut
 --]]
 function __init(self, interval, callback, once)
-	assert(type(interval) == "number", debug.traceback())
-	assert(type(callback) == "function")
+	_assert(type(interval) == "number", debug.traceback())
+	_assert(type(callback) == "function")
 
 	return oo.rawnew(self, {
 		interval = interval,
@@ -93,7 +93,7 @@ to I<interval>, otherwise the interval is unchanged.
 =cut
 --]]
 function restart(self, interval)
-	assert(interval == nil or type(interval) == "number")
+	_assert(interval == nil or type(interval) == "number")
 
 	self:stop()
 	if interval then
@@ -113,7 +113,7 @@ it is already running.
 =cut
 --]]
 function setInterval(self, interval)
-	assert(type(interval) == "number")
+	_assert(type(interval) == "number")
 
 	self.interval = interval
 	if self._timerData then

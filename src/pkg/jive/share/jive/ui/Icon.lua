@@ -41,7 +41,7 @@ B<frameRate> : if this is an animated icon this is the desired frame rate.
 
 
 -- stuff we use
-local assert, tostring, type, tolua = assert, tostring, type, tolua
+local _assert, tostring, type, tolua = _assert, tostring, type, tolua
 
 local oo        = require("loop.simple")
 local Widget    = require("jive.ui.Widget")
@@ -64,8 +64,8 @@ Constructs a Icon widget. I<style> is the Icon style. I<image> is an option L<ji
 =cut
 --]]
 function __init(self, style, image)
-	assert(type(style) == "string")
-	assert(image == nil or tolua.type(image) == "Surface")
+	_assert(type(style) == "string")
+	_assert(image == nil or tolua.type(image) == "Surface")
 
 	local obj = oo.rawnew(self, Widget(style))
 	obj.image = image
@@ -95,7 +95,12 @@ Sets the L<jive.ui.Surface> displayed by the icon.
 
 =cut
 --]]
+<<<<<<< .mine
+function setImage(self, image)
+	_assert(image == nil or tolua.type(image) == "Surface")
+=======
 -- C implementation
+>>>>>>> .r666
 
 
 --[[

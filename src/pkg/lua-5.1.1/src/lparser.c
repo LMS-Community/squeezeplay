@@ -615,7 +615,22 @@ static void funcargs (LexState *ls, expdesc *f) {
     case '(': {  /* funcargs -> `(' [ explist1 ] `)' */
       if (line != ls->lastline)
         luaX_syntaxerror(ls,"ambiguous syntax (function call x new statement)");
+
+#ifdef LUA_DISABLE_ASSERT
+      if (strcmp(getstr(ls->t.seminfo.ts), "_assert") == 0) {
+        // we want balanced ()
+        int c = 1;
+        do {
+          luaX_next(ls);
+          if (ls->t.token == ')') c--;
+          else if (ls->t.token == '(') c++;
+        } while (c>0);
+      } else {
+        luaX_next(ls);
+      }
+#else
       luaX_next(ls);
+#endif
       if (ls->t.token == ')')  /* arg list is empty? */
         args.k = VVOID;
       else {

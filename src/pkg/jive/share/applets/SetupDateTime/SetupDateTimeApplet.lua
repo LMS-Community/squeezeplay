@@ -17,7 +17,7 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local ipairs, pairs, assert, io, string, tostring = ipairs, pairs, assert, io, string, tostring
+local ipairs, pairs, io, string, tostring = ipairs, pairs, io, string, tostring
 local os = os
 
 local oo               = require("loop.simple")

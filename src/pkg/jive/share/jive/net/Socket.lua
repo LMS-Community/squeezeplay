@@ -38,7 +38,7 @@ convenient proxy functions.
 
 
 -- stuff we use
-local tostring, assert = tostring, assert
+local tostring, _assert = tostring, _assert
 
 local oo            = require("loop.base")
 
@@ -65,7 +65,7 @@ Must be called by subclasses.
 function __init(self, jnt, name)
 --	log:debug("Socket:__init(", name, ")")
 
---	assert(
+--	_assert(
 --		jnt and oo.instanceof(jnt, NetworkThread), 
 --		"Cannot create Socket without NetworkThread object"
 --	)

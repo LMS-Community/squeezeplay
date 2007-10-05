@@ -32,7 +32,7 @@ therefore is not fully useful as is.
 
 
 -- stuff we use
-local assert, tostring = assert, tostring
+local _assert, tostring = _assert, tostring
 
 local debug    = require("debug")
 
@@ -79,8 +79,8 @@ Must be called by subclasses.
 function __init(self, jnt, ip, port, name)
 	--log:debug("SocketTcp:__init(", name, ", ", ip, ", ", port, ")")
 
---	assert(ip, "Cannot create SocketTcp without ip address - " .. debug.traceback())
---	assert(port, "Cannot create SocketTcp without port")
+--	_assert(ip, "Cannot create SocketTcp without ip address - " .. debug.traceback())
+--	_assert(port, "Cannot create SocketTcp without port")
 
 	local obj = oo.rawnew(self, Socket(jnt, name))
 

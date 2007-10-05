@@ -36,7 +36,7 @@ B<itemHeight> : the height of each menu item.
 
 
 -- stuff we use
-local assert, ipairs, pairs, string, tostring, type = assert, ipairs, pairs, string, tostring, type
+local _assert, ipairs, pairs, string, tostring, type = _assert, ipairs, pairs, string, tostring, type
 
 local oo                   = require("loop.simple")
 local debug                = require("debug")
@@ -201,9 +201,9 @@ Constructs a new Menu object. I<style> is the widgets style.
 =cut
 --]]
 function __init(self, style, itemRenderer, itemListener)
-	assert(type(style) == "string")
-	assert(type(itemRenderer) == "function")
-	assert(type(itemListener) == "function")
+	_assert(type(style) == "string")
+	_assert(type(itemRenderer) == "function")
+	_assert(type(itemListener) == "function")
 
 	local obj = oo.rawnew(self, Widget(style))
 	obj.scrollbar = Scrollbar("scrollbar")
@@ -278,7 +278,7 @@ Sets if this menu is closeable. A closeable menu will pop from the window stack 
 =cut
 --]]
 function setCloseable(self, isCloseable)
-	assert(type(isCloseable) == "boolean")
+	_assert(type(isCloseable) == "boolean")
 
 	self.closeable = isCloseable
 end
@@ -339,7 +339,7 @@ Sets I<index> as the selected menu item.
 =cut
 --]]
 function setSelectedIndex(self, index)
-	assert(type(index) == "number", "setSelectedIndex index is not a number")
+	_assert(type(index) == "number", "setSelectedIndex index is not a number")
 
 	if index <= self.listSize then
 		self.selected = index
@@ -385,7 +385,7 @@ Scroll the menu by I<scroll> items. If I<scroll> is negative the menu scrolls up
 =cut
 --]]
 function scrollBy(self, scroll)
-	assert(type(scroll) == "number")
+	_assert(type(scroll) == "number")
 
 	local selected = (self.selected or 1)
 

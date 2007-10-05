@@ -19,7 +19,7 @@ See L<jive.ui.RadioButton>
 
 
 -- stuff we use
-local assert, require, tostring, type = assert, require, tostring, type
+local _assert, require, tostring, type = _assert, require, tostring, type
 
 local oo                = require("loop.simple")
 local Widget            = require("jive.ui.Widget")
@@ -74,7 +74,7 @@ Sets the L<jive.ui.RadioButton> selected in this RadioGroup.
 =cut
 --]]
 function setSelected(self, selected)
-	assert(oo.instanceof(selected, RadioButton))
+	_assert(oo.instanceof(selected, RadioButton))
 
 	if self.selected == selected then
 		return

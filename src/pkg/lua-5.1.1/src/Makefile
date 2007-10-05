@@ -106,7 +106,7 @@ linux:
 	$(MAKE) all MYCFLAGS="-O2 -Wall -pthread -fpic -DLUA_USE_LINUX" MYLIBS="-Wl,-E -ldl -lreadline -lhistory -lncurses -lpthread" MYTHREADLDFLAGS="-O -shared -fpic" OSXPREFIX="pwd"
 
 squeezeboxjive:
-	$(MAKE) all MYCFLAGS="-Os -Wall -pthread -fpic -DLUA_USE_POSIX -DLUA_USE_DLOPEN" MYLIBS="-Wl,-E -ldl -lpthread" MYTHREADLDFLAGS="-O -shared -fpic" OSXPREFIX="pwd"
+	$(MAKE) all MYCFLAGS="-Os -Wall -pthread -fpic -DLUA_USE_POSIX -DLUA_USE_DLOPEN -DLUA_DISABLE_ASSERT" MYLIBS="-Wl,-E -ldl -lpthread" MYTHREADLDFLAGS="-O -shared -fpic" OSXPREFIX="pwd"
 
 macosx:
 #	$(MAKE) all MYCFLAGS=-DLUA_USE_MACOSX

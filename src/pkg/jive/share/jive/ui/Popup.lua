@@ -35,7 +35,7 @@ B<maskImg> : Tile painted over any parts of the lower window that are visible be
 
 
 -- stuff we use
-local assert, ipairs, tostring, type = assert, ipairs, tostring, type
+local ipairs, tostring, type = ipairs, tostring, type
 
 local oo              = require("loop.simple")
 local Framework       = require("jive.ui.Framework")

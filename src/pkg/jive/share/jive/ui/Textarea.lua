@@ -45,7 +45,7 @@ B<text_align> : the text alignment.
 
 
 -- stuff we use
-local assert, string, tostring, type = assert, string, tostring, type
+local _assert, string, tostring, type = _assert, string, tostring, type
 
 local oo	= require("loop.simple")
 local string	= require("string")
@@ -82,8 +82,8 @@ Construct a new Textarea widget. I<style> is the widgets style. I<text> is the i
 =cut
 --]]
 function __init(self, style, text)
-	assert(type(style) == "string")
-	assert(type(text) ~= nil)
+	_assert(type(style) == "string")
+	_assert(type(text) ~= nil)
 
 	local obj = oo.rawnew(self, Widget(style))
 	obj.scrollbar = Scrollbar("scrollbar")
@@ -151,7 +151,7 @@ Scroll the Textarea by I<scroll> items. If I<scroll> is negative the text scroll
 =cut
 --]]
 function scrollBy(self, scroll)
-	assert(type(scroll) == "number")
+	_assert(type(scroll) == "number")
 
 	self.topLine = self.topLine + scroll
 

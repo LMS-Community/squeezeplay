@@ -29,7 +29,7 @@ Notifications:
 --]]
 
 -- our stuff
-local assert, tostring, type, tonumber = assert, tostring, type, tonumber
+local _assert, tostring, type, tonumber = _assert, tostring, type, tonumber
 local pairs, ipairs, setmetatable = pairs, ipairs, setmetatable
 
 local os          = require("os")
@@ -244,7 +244,7 @@ of the server.
 function __init(self, jnt, ip, port, name)
 	log:debug("SlimServer:__init(", ip, ":", port, " ",name, ")")
 
-	assert(ip, "Cannot create SlimServer without ip address")
+	_assert(ip, "Cannot create SlimServer without ip address")
 	
 	local jpool = HttpPool(jnt, ip, port, 2, 2, name)
 

@@ -35,7 +35,7 @@ B<horizontal> : true if the scrollbar is horizontal, otherwise the scrollbar is 
 
 
 -- stuff we use
-local assert, tostring, type = assert, tostring, type
+local tostring, type = tostring, type
 
 local oo	= require("loop.simple")
 local Slider	= require("jive.ui.Slider")

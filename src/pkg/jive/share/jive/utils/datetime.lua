@@ -30,16 +30,18 @@ timeFromSFM(self, secondsFromMidnight)
 
 
 -- stuff we use
-local ipairs, pairs, assert, io, select, setmetatable, string, tonumber, tostring = ipairs, pairs, assert, io, select, setmetatable, string, tonumber, tostring
-local type = type
-local os = os
+local ipairs, pairs, io, select, setmetatable = ipairs, pairs, io, select, setmetatable
+local string, type, tonumber, tostring = string, type, tonumber, tostring
+
+local os               = require("os")
+local math             = require("math")
 
 local log              = require("jive.utils.log").logger("utils")
-local math             = require("math")
 
 
 module(...)
 
+-- FIXME: i8n
 local globalWeekstart = "Sunday"
 local globalDateFormat = "%a, %B %d %Y"
 local globalHours = "12"

@@ -29,7 +29,7 @@ by the SlimDiscovery applet to discover and cache servers found on the network.
 --]]
 
 -- stuff we use
-local assert, tostring, pairs, type = assert, tostring, pairs, type
+local _assert, tostring, pairs, type = _assert, tostring, pairs, type
 
 local table          = require("table")
 local string         = require("string")
@@ -179,7 +179,7 @@ Create a SlimServers object.
 function __init(self, jnt)
 	log:debug("SlimServers:__init()")
 	
-	assert(jnt, "Cannot create SlimServers without NetworkThread object")
+	_assert(jnt, "Cannot create SlimServers without NetworkThread object")
 	
 	local obj = oo.rawnew(self, {
 		jnt = jnt,

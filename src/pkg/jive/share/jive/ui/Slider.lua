@@ -35,7 +35,7 @@ B<horizontal> : true if the slider is horizontal, otherwise the slider is vertia
 
 
 -- stuff we use
-local assert, tostring, type = assert, tostring, type
+local tostring, type = tostring, type
 
 local oo	= require("loop.simple")
 local Widget	= require("jive.ui.Widget")

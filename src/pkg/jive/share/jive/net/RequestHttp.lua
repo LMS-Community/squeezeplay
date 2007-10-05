@@ -39,7 +39,7 @@ by a L<jive.net.SocketHttp>.
 
 
 -- stuff we use
-local assert, tostring, type, pairs = assert, tostring, type, pairs
+local _assert, tostring, type, pairs = _assert, tostring, type, pairs
 
 local oo    = require("loop.base")
 local url   = require("socket.url")
@@ -75,13 +75,13 @@ function __init(self, sink, method, uri, options)
 
 --[[
 	if sink then
-		assert(type(sink) == 'function', "HTTP sink must be a function")
+		_assert(type(sink) == 'function', "HTTP sink must be a function")
 	end
-	assert(method, "Cannot create a RequestHttp without method")
-	assert(type(method) == 'string', "HTTP method shall be a string")
-	assert(method == 'GET' or method == 'POST', "HTTP methods other than POST or GET not supported")
-	assert(uri, "Cannot create a RequestHttp without uri")
-	assert(type(uri) == 'string', "HTTP uri shall be a string")
+	_assert(method, "Cannot create a RequestHttp without method")
+	_assert(type(method) == 'string', "HTTP method shall be a string")
+	_assert(method == 'GET' or method == 'POST', "HTTP methods other than POST or GET not supported")
+	_assert(uri, "Cannot create a RequestHttp without uri")
+	_assert(type(uri) == 'string', "HTTP uri shall be a string")
 --]]
 	
 	-- default set of request side headers
@@ -93,12 +93,12 @@ function __init(self, sink, method, uri, options)
 		-- validate t_bodySource
 		t_bodySource = options.t_bodySource
 		if t_bodySource then
---			assert(type(t_bodySource) == 'function', "HTTP body source shall be a function")
+--			_assert(type(t_bodySource) == 'function', "HTTP body source shall be a function")
 			if method == 'GET' then
 				log:warn("Body source provided in HTTP request won't be used by GET request")
 			end
 		else
---			assert(method == 'GET', "HTTP POST requires body source")
+--			_assert(method == 'GET', "HTTP POST requires body source")
 		end
 		
 		-- override/add provided headers, if any
@@ -110,7 +110,7 @@ function __init(self, sink, method, uri, options)
 		
 		headersSink = options.headersSink
 		if headersSink then
---			assert(type(headersSink) == 'function', "HTTP header sink must be a function")
+--			_assert(type(headersSink) == 'function', "HTTP header sink must be a function")
 		end
 	end
 	

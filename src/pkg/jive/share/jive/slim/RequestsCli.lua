@@ -78,7 +78,7 @@ end
 function jive.slim.RequestCli:__init(sink, player, cmdArray, from, qty, params, options)
 	log:debug("RequestCli:__init()")
 	
-	assert(cmdArray)
+	_assert(cmdArray)
 	
 	local cli = {
 		["cmdArray"] = cmdArray,
@@ -211,7 +211,7 @@ jive.slim.RequestStatus = oo.class({}, jive.slim.RequestCliXJive)
 function jive.slim.RequestStatus:__init(sink, player, from, qty, timeout, params, options)
 	log:debug("RequestStatus:__init()")
 	
-	assert(player, "Cannot create RequestStatus without player")
+	_assert(player, "Cannot create RequestStatus without player")
 	
 	return oo.rawnew(self, jive.slim.RequestCliXJive(
 		sink, 
@@ -246,7 +246,7 @@ jive.slim.RequestDisplaystatus = oo.class({}, jive.slim.RequestCliXJive)
 function jive.slim.RequestDisplaystatus:__init(sink, player, subscribe)
 	log:debug("RequestDisplaystatus:__init()")
 	
-	assert(player, "Cannot create RequestDisplaystatus without player")
+	_assert(player, "Cannot create RequestDisplaystatus without player")
 	
 	return oo.rawnew(self, jive.slim.RequestCliXJive(
 		sink, 

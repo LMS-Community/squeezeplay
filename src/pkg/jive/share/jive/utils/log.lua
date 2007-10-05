@@ -54,7 +54,7 @@ local logging   = require("logging")
 local Framework = require("jive.ui.Framework")
 
 local find, sub, format = string.find, string.sub, string.format
-local ipairs, print, assert, select, type = ipairs, print, assert, select, type
+local ipairs, print, _assert, select, type = ipairs, print, _assert, select, type
 local concat = table.concat
 local getinfo = debug.getinfo
 local date = os.date
@@ -218,9 +218,8 @@ it already exists.
 =cut
 --]]
 function addCategory(category, initialLevel)
-
-	assert(category, "addLogCategory requires a category")
-	assert(type(category) == "string", "category must be a string")
+	_assert(category, "addLogCategory requires a category")
+	_assert(type(category) == "string", "category must be a string")
 	
 	local log = categories[category]
 	

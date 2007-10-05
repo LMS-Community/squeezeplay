@@ -32,7 +32,7 @@ TODO
 --]]
 
 -- stuff we use
-local assert, tonumber, tostring, ipairs = assert, tonumber, tostring, ipairs
+local _assert, tonumber, tostring, ipairs = _assert, tonumber, tostring, ipairs
 
 local oo = require("loop.base")
 local RadioGroup = require("jive.ui.RadioGroup")
@@ -121,7 +121,7 @@ function menuItems(self, chunk)
 	end
 
 	-- sanity check on the chunk
-	assert(chunk["count"], "chunk must have count field")
+	_assert(chunk["count"], "chunk must have count field")
 
 	-- print the state before we change it
 	self:dump()
@@ -143,8 +143,8 @@ function menuItems(self, chunk)
 	local cTo = 0
 	if cCount > 0 then
 	
-		assert(chunk["item_loop"], "chunk must have item_loop field if count>0")
-		assert(chunk["offset"], "chunk must have offset field if count>0")
+		_assert(chunk["item_loop"], "chunk must have item_loop field if count>0")
+		_assert(chunk["offset"], "chunk must have offset field if count>0")
 		
 		-- add _from and _to to the chunk rather than redo the calculation every time
 		cFrom = chunk["offset"] + 1
@@ -224,7 +224,7 @@ function menuItems(self, chunk)
 			
 				-- replace next
 				log:debug("..new chunk replaces old")
-				assert(next)
+				_assert(next)
 				chunk["_next"] = next["_next"]
 				if prev then
 					prev["_next"] = chunk
@@ -247,7 +247,7 @@ function menuItems(self, chunk)
 				
 					-- new chunk becomes head
 					log:debug("..new chunk inserted between (prev) and next")
-					assert(next)
+					_assert(next)
 					if prev then
 						prev["_next"] = chunk
 					else
@@ -394,7 +394,7 @@ function menuItems(self, chunk)
 			-- new:                         |---|
 			else
 				log:debug("..new chunk is last")
-				assert(prev)
+				_assert(prev)
 				prev["_next"] = chunk
 				self:dump()
 				return self, self.count, cFrom, cTo
