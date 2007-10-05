@@ -333,11 +333,14 @@ function skin(self, s)
 
 	--s.item.bgImg = selectionBox
 
-	s.current.order = { "text", "icon" }
-	s.current.padding = { 9, 6, 6, 6 }
-	s.current.text.font = FONT_BOLD_15px
-	s.current.text.fg = TEXT_COLOR
-	s.current.text.sh = TEXT_COLOR -- FIXME
+	s.checked.order = { "text", "check", "icon" }
+	s.checked.padding = { 9, 6, 6, 6 }
+	s.checked.text.w = WH_FILL
+	s.checked.text.font = FONT_BOLD_15px
+	s.checked.text.fg = TEXT_COLOR
+	s.checked.text.sh = TEXT_SH_COLOR
+	s.checked.check.img = Surface:loadImage(imgpath .. "menu_nowplaying.png") -- FIXME
+	s.checked.check.align = "right"
 
 	-- selected menu item
 	s.selected.item.bgImg = selectionBox
@@ -345,15 +348,18 @@ function skin(self, s)
 	s.selected.item.text.fg = SELECT_COLOR
 	s.selected.item.text.sh = SELECT_SH_COLOR
 	s.selected.item.icon.padding = { 4, 0, 0, 0 }
-	s.selected.item.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
 	s.selected.item.icon.align = "right"
+	s.selected.item.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
 
-	s.selected.current.bgImg = selectionBox
-	s.selected.current.text.font = FONT_BOLD_15px
-	s.selected.current.text.fg = SELECT_COLOR
-	s.selected.current.text.sh = SELECT_SH_COLOR
-	s.selected.current.icon.padding = { 4, 0, 0, 0 }
-	s.selected.current.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
+	s.selected.checked.bgImg = selectionBox
+	s.selected.checked.text.font = FONT_BOLD_15px
+	s.selected.checked.text.fg = SELECT_COLOR
+	s.selected.checked.text.sh = SELECT_SH_COLOR
+	s.selected.checked.icon.padding = { 4, 0, 0, 0 }
+	s.selected.checked.icon.align = "right"
+	s.selected.checked.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
+	s.selected.checked.check.align = "right"
+	s.selected.checked.check.img = Surface:loadImage(imgpath .. "menu_nowplaying_selected.png") -- FIXME
 
 	s.selected.itemNoAction.bgImg = selectionBox
 	s.selected.itemNoAction.text.font = FONT_BOLD_15px
@@ -530,10 +536,15 @@ function skin(self, s)
 
 
 	-- wireless icons for menus
+	s.wirelessLevel0.align = "right"
 	s.wirelessLevel0.img = Surface:loadImage(imgpath .. "icon_wireless_0_shadow.png")
+	s.wirelessLevel1.align = "right"
 	s.wirelessLevel1.img = Surface:loadImage(imgpath .. "icon_wireless_1_shadow.png")
+	s.wirelessLevel2.align = "right"
 	s.wirelessLevel2.img = Surface:loadImage(imgpath .. "icon_wireless_2_shadow.png")
+	s.wirelessLevel3.align = "right"
 	s.wirelessLevel3.img = Surface:loadImage(imgpath .. "icon_wireless_3_shadow.png")
+	s.wirelessLevel4.align = "right"
 	s.wirelessLevel4.img = Surface:loadImage(imgpath .. "icon_wireless_4_shadow.png")
 
 

@@ -109,6 +109,7 @@ local function _itemRenderer(menu, widgetList, indexList, size, list)
 			if widgetList[i] == nil then
 				widgetList[i] = Group(item.style or "item", {
 					text = Label("text", item.text),
+					check = Icon("check"),
 					icon = icon,
 				})
 			else
