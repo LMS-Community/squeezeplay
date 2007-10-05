@@ -51,11 +51,6 @@ end
 --
 
 local Analog_Presets = {
-	Ruby = {
-		HighlightColor = 0x660000FF,
-		HighlightImage = "clock_watch_bkgrd_ruby.png",
-		BackgroundColor = 0x000000FF,
-	},
 	Teal = {
 		HighlightColor = 0x004444FF,
 		HighlightImage = "clock_analog_bkgrd.png",

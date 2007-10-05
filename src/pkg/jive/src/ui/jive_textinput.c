@@ -248,6 +248,13 @@ int jiveL_textinput_draw(lua_State *L) {
 		jive_tile_blit_centered(peer->bg_tile, srf, peer->w.bounds.x + (peer->w.bounds.w / 2), text_y + (text_h / 2), peer->w.bounds.w, text_h);
 	}
 
+
+	/* draw cursor */
+	if (drawLayer && peer->cursor_tile) {
+		jive_tile_blit_centered(peer->cursor_tile, srf, cursor_x + (peer->char_width / 2), text_y + (peer->char_height / 2), cursor_w, text_h);
+	}
+
+
 	/* content clip */
 	new_clip.x = peer->w.bounds.x + peer->w.padding.left;
 	new_clip.y = peer->w.bounds.y + peer->w.padding.top;
@@ -355,11 +362,6 @@ int jiveL_textinput_draw(lua_State *L) {
 	}
 
 	jive_surface_set_clip(srf, &old_clip);
-
-	/* draw cursor */
-	if (drawLayer && peer->cursor_tile) {
-		jive_tile_blit_centered(peer->cursor_tile, srf, cursor_x + (peer->char_width / 2), text_y + (peer->char_height / 2), cursor_w, text_h);
-	}
 
 	lua_pop(L, 4);
 

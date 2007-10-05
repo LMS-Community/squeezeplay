@@ -224,8 +224,8 @@ function skin(self, s)
 	local textinputCursor = Tile:loadImage(imgpath .. "text_entry_letter.png")
 
 
-	local TEXT_COLOR = { 0xFF, 0xFF, 0xFF }
-	local TEXT_SH_COLOR = { } --{ 0x37, 0x37, 0x37 }
+	local TEXT_COLOR = { 0xE7, 0xE7, 0xE7 }
+	local TEXT_SH_COLOR = { 0x37, 0x37, 0x37 }
 
 	local SELECT_COLOR = { 0x00, 0x00, 0x00 }
 	local SELECT_SH_COLOR = { }
@@ -443,12 +443,12 @@ function skin(self, s)
 	s.textinput.padding = { 6, 0, 6, 0 }
 	s.textinput.font = FONT_BOLD_15px
 	s.textinput.cursorFont = Font:load(fontpath .. "FreeSansBold.ttf", 22)
-	s.textinput.charWidth = 26
+	s.textinput.charWidth = 36
 	s.textinput.charHeight = 26
 	s.textinput.fg = { 0x37, 0x37, 0x37 }
 	s.textinput.wh = { 0x55, 0x55, 0x55, 0xB2 }
 	s.textinput.bgImg = textinputBackground
-	s.textinput.wheelImg = textinputWheel
+--	s.textinput.wheelImg = textinputWheel
 	s.textinput.cursorImg = textinputCursor
 	s.textinput.enterImg = Tile:loadImage(imgpath .. "selection_right.png")
 
