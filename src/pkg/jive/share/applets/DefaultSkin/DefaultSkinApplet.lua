@@ -317,7 +317,7 @@ function skin(self, s)
 
 	-- menu item
 	s.item.order = { "text", "icon" }
-	s.item.padding = 6
+	s.item.padding = { 9, 6, 6, 6 }
 	s.item.text.w = WH_FILL
 	s.item.text.font = FONT_BOLD_15px
 	s.item.text.fg = TEXT_COLOR
@@ -325,7 +325,7 @@ function skin(self, s)
 
 	-- menu item
 	s.itemNoAction.order = { "text", "icon" }
-	s.itemNoAction.padding = 6
+	s.itemNoAction.padding =  { 9, 6, 6, 6 }
 	s.itemNoAction.text.w = WH_FILL
 	s.itemNoAction.text.font = FONT_BOLD_15px
 	s.itemNoAction.text.fg = TEXT_COLOR
@@ -334,7 +334,7 @@ function skin(self, s)
 	--s.item.bgImg = selectionBox
 
 	s.current.order = { "text", "icon" }
-	s.current.padding = 6
+	s.current.padding = { 9, 6, 6, 6 }
 	s.current.text.font = FONT_BOLD_15px
 	s.current.text.fg = TEXT_COLOR
 	s.current.text.sh = TEXT_COLOR -- FIXME
