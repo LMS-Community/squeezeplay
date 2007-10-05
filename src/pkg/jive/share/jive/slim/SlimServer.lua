@@ -470,6 +470,21 @@ end
 
 --[[
 
+=head2 jive.slim.SlimServer:cancelArtworkThumb(icon)
+
+Cancel loading the artwork for icon.
+
+=cut
+--]]
+function cancelArtwork(self, icon)
+	-- prevent artwork being display when it has been loaded
+	icon:setValue(nil)
+	self.artworkThumbIcons[icon] = nil
+end
+
+
+--[[
+
 =head2 jive.slim.SlimServer:fetchArtworkThumb(iconId, icon, uriGenerator, size)
 
 The SlimServer object maintains an artwork cache. This function either loads from the cache or
@@ -506,6 +521,7 @@ function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, priority)
 		else
 			logcache:debug("..artwork in cache")
 			icon:setValue(artwork)
+			self.artworkThumbIcons[icon] = nil
 			return
 		end
 	end

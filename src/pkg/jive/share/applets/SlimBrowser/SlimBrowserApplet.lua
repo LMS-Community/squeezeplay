@@ -356,7 +356,7 @@ local function _artworkItem(item, group)
 		_server:fetchArtworkURL(item["icon"], icon, 56)
 
 	else
-		icon:setValue(nil)
+		_server:cancelArtwork(icon)
 
 	end
 end
