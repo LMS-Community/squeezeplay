@@ -104,6 +104,8 @@ Sets or replaces a widget in this group.
 =cut
 --]]
 function setWidget(self, key, widget)
+	_assert(widget == nil or oo.instanceof(widget, Widget))
+
 	if self.widgets[key] == widget then
 		return
 	end

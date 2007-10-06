@@ -80,14 +80,6 @@ function __init(self, style, value)
 	_assert(type(style) == "string")
 	_assert(value ~= nil)
 	
-<<<<<<< .mine
-	-- ideally the widget is a new one. Re-using widgets may cause problems, as nothing really
-	-- manages the forward/backward(parent) relationships.
-	-- this used to _assert about widget.parent == nil
-	_assert(widget == nil or oo.instanceof(widget, Widget))
-
-=======
->>>>>>> .r666
 	local obj = oo.rawnew(self, Widget(style))
 
 	obj.value = value
@@ -125,67 +117,6 @@ function setValue(self, value)
 
 	if self.value ~= value then
 		self.value = value
-<<<<<<< .mine
-		self:rePrepare()
-	end
-end
-
-
---[[
-
-=head2 jive.ui.Label:getWidget()
-
-Returns the widget displayed in this label, or nil for the skin's default widget.
-
-=cut
---]]
-function getWidget(self)
-	return self.widget
-end
-
-
---[[
-
-=head2 jive.ui.Label:setWidget(widget)
-
-Sets the widget displayed in this label to I<widget>. If set to nil the skin's default widget is displayed.
-
-=cut
-
---]]
-function setWidget(self, widget)
-	-- ideally the widget is a new one. Re-using widgets may cause problems, as nothing really
-	-- manages the forward/backward(parent) relationship.
-	_assert(widget == nil or oo.instanceof(widget, Widget))
-
-	if widget == nil then
-		if self.icon == nil then
-			self.icon = Icon("icon")
-		end
-		widget = self.icon
-	end
-
-	if self.widget ~= widget then
-		if self.widget then
-			if self.visible then
-				self.widget:dispatchNewEvent(EVENT_HIDE)
-			end
-
-			if self.widget.parent == self then
-				self.widget.parent = nil
-			end
-		end
-
-		self.widget = widget
-		self.widget.parent = self
-		self.widget:reSkin()
-
-		if self.visible then
-			self.widget:dispatchNewEvent(EVENT_SHOW)
-		end
-
-=======
->>>>>>> .r666
 		self:reLayout()
 	end
 end

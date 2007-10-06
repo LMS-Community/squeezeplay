@@ -499,13 +499,8 @@ events from the window, and should animate (if applicable).
 =cut
 --]]
 function focusWidget(self, widget)
-<<<<<<< .mine
-	_assert(oo.instanceof(widget, Widget))
-	_assert(table.contains(self.widgets, widget))
-=======
-	assert(widget == nil or oo.instanceof(widget, Widget))
-	assert(widget == nil or table.contains(self.widgets, widget))
->>>>>>> .r666
+	_assert(widget == nil or oo.instanceof(widget, Widget))
+	_assert(widget == nil or table.contains(self.widgets, widget))
 
 	if self.focus and self.focus ~= self.title then
 		self.focus:_event(Event:new(EVENT_FOCUS_LOST))
