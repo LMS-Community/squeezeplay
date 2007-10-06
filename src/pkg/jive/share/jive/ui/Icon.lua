@@ -95,13 +95,8 @@ Sets the L<jive.ui.Surface> displayed by the icon.
 
 =cut
 --]]
-<<<<<<< .mine
 function setImage(self, image)
 	_assert(image == nil or tolua.type(image) == "Surface")
-=======
--- C implementation
->>>>>>> .r666
-
 
 --[[
 
