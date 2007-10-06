@@ -124,7 +124,7 @@ function response(self, result, window, widget, list, prevmenu, locked)
 				widget = Textarea("textarea")
 				window:addWidget(widget)
 			end
-			widget:setText(entry.description)
+			widget:setValue(entry.description)
 			widget:addListener(EVENT_KEY_PRESS,
 				function(event)
 					local key = event:getKeycode()
