@@ -86,6 +86,25 @@ local DigitalStyled_Presets = {
 	}
 }
 
+local DigitalStyledPos = {
+	{
+		x = 58,
+		y = 58,
+	},
+	{
+		x = 124,
+		y = 58,
+	},
+	{
+		x = 58,
+		y = 168,
+	},
+	{
+		x = 124,
+		y = 168,
+	},
+}
+
 local DigitalDetailed_Presets = {
 	Default = {
 		Fonts = {
@@ -309,7 +328,19 @@ function DigitalStyled:__init(window, preset, ampm)
 
 	obj.color = preset.Color
 	obj.bgcolor = preset.Background
-	obj.font = Font:load("fonts/04B_24__.TTF", preset.FontSize)
+
+	-- Load 0 - 9 Graphics
+	obj.digits = {}
+	obj.digits[1]   =  Surface:loadImage("applets/Clock/Digital_dotmatrix_ghosted_0.png")
+	obj.digits[2]   =  Surface:loadImage("applets/Clock/Digital_dotmatrix_ghosted_1.png")
+	obj.digits[3]   =  Surface:loadImage("applets/Clock/Digital_dotmatrix_ghosted_2.png")
+	obj.digits[4]   =  Surface:loadImage("applets/Clock/Digital_dotmatrix_ghosted_3.png")
+	obj.digits[5]   =  Surface:loadImage("applets/Clock/Digital_dotmatrix_ghosted_4.png")
+	obj.digits[6]   =  Surface:loadImage("applets/Clock/Digital_dotmatrix_ghosted_5.png")
+	obj.digits[7]   =  Surface:loadImage("applets/Clock/Digital_dotmatrix_ghosted_6.png")
+	obj.digits[8]   =  Surface:loadImage("applets/Clock/Digital_dotmatrix_ghosted_7.png")
+	obj.digits[9]   =  Surface:loadImage("applets/Clock/Digital_dotmatrix_ghosted_8.png")
+	obj.digits[10]  =  Surface:loadImage("applets/Clock/Digital_dotmatrix_ghosted_9.png")
 
 	obj.oldtime = ""
 	obj.show_ampm = ampm
@@ -330,42 +361,27 @@ function DigitalStyled:Draw(force)
 	if theTime != self.oldtime or force then
 		self.oldtime = theTime
 
-		theTime = os.date(self.clock_format_hour)
-		local timeSrfHour = Surface:drawText(self.font, self.color, theTime)
-
-		theTime = os.date(self.clock_format_minute)
-		local timeSrfMin = Surface:drawText(self.font, self.color, theTime)	
-
-		local timeSrfAmPm
-		if self.show_ampm then
-			theTime = os.date("%p")
-			timeSrfAmPm = Surface:drawText(self.smallfont, self.color, theTime)
-		end
-
-		local tw, th = timeSrfHour:getSize()
-	
-		-- th correction
-		th = th - 25
-
-		local x = math.floor((self.screen_width/2) - (tw/2))
-		local y = math.floor((self.screen_height/2) - (th))
-
 		-- draw background
 		self.bg:filledRectangle(0, 0, self.screen_width, self.screen_height, self.bgcolor)
-		timeSrfHour:blit(self.bg, x, y)
-		timeSrfMin:blit(self.bg, x, y+th)
 
-		if timeSrfAmPm then
-			local offset = 15
-			if os.date("%p") == "PM" then
-				local dummy, h = timeSrfAmPm:getSize()
-				offset = offset + h
-			end
-			timeSrfAmPm:blit(self.bg, x+tw+5, y+th+offset)
-		end
+		theTime = os.date(self.clock_format_hour)
+		self:DrawDigit(string.sub(theTime, 1, 1), DigitalStyledPos[1].x, DigitalStyledPos[1].y)
+		self:DrawDigit(string.sub(theTime, 2, 2), DigitalStyledPos[2].x, DigitalStyledPos[2].y)
+
+		theTime = os.date(self.clock_format_minute)
+		self:DrawDigit(string.sub(theTime, 1, 1), DigitalStyledPos[3].x, DigitalStyledPos[3].y)
+		self:DrawDigit(string.sub(theTime, 2, 2), DigitalStyledPos[4].x, DigitalStyledPos[4].y)
 
 		self.bgicon:reDraw()
 	end
+end
+
+function DigitalStyled:DrawDigit(digit, x, y)
+	local theSrf = nil
+
+	log:error(tonumber(digit)+1)
+	theSrf = self.digits[tonumber(digit)+1]
+	theSrf:blit(self.bg, x, y)
 end
 
 DigitalDetailed = oo.class({}, Clock)
