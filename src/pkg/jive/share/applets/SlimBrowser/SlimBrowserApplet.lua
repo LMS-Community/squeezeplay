@@ -652,7 +652,7 @@ local function _merge(mlData, mainMenu)
 		if insert then
 			log:debug("Inserting main menu item ", menuLabel)
 			log:debug("This item has a weight of ", menuItem.weight)
-			if menuItem.weight then _sortByWeight = true end
+			if menuItem.weight and menuItem.weight != 5 then _sortByWeight = true end
 			table.insert(mlData.item_loop, 
 				{
 					text = menuLabel,
