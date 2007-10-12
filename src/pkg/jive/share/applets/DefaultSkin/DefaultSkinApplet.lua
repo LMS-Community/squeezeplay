@@ -19,7 +19,7 @@ DefaultSkinApplet overrides the following methods:
 
 
 -- stuff we use
-local ipairs, pairs = ipairs, pairs
+local ipairs, pairs, setmetatable = ipairs, pairs, setmetatable
 
 local oo                     = require("loop.simple")
 
@@ -237,6 +237,12 @@ function skin(self, s)
 	local FONT_BOLD_15px = Font:load(fontpath .. "FreeSansBold.ttf", 16)
 	local FONT_BOLD_18px = Font:load(fontpath .. "FreeSansBold.ttf", 20)
 	local FONT_BOLD_20px = Font:load(fontpath .. "FreeSansBold.ttf", 22)
+
+	local MINI_ICON_PADDING = { 0, 2, 0, 0 }
+	local MINI_ICON_TEXT_PADDING= { 10, 7, 8, 9 }
+	local MINI_ICON_TEXT_ALIGN = 'top-left'
+	local MINI_ICON_TITLE_BORDER = 4
+	local MINI_ICON_ITEM_ORDER = { "icon", "text" }
 
 
 	-- Iconbar definitions, each icon needs an image and x,y
@@ -611,6 +617,92 @@ function skin(self, s)
 	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumtitle.icon.padding = { 6, 0, 0, 0 }
 
+--[[
+	why the fudge can't I do it like this?
+	-- titles with artwork and song info
+	s.internetradiotitle = {}
+	s.internetradiotitle.mt = {}
+	s.internetradiotitle.mt.__index = s.title
+	setmetatable(s.internetradiotitle, s.internetradiotitle.mt)
+
+	s.internetradiotitle.order = { "icon", "text" }
+	s.internetradiotitle.icon.img = Surface:loadImage(imgpath .. "icon_internet_radio.png")
+	s.internetradiotitle.icon.padding = MINI_ICON_PADDING
+
+--]]
+
+	-- Based on s.title, this is for internetradio title style
+	s.internetradiotitle.border       = MINI_ICON_TITLE_BORDER
+	s.internetradiotitle.position     = LAYOUT_NORTH
+	s.internetradiotitle.bgImg        = titleBox
+	s.internetradiotitle.text.padding = MINI_ICON_TEXT_PADDING
+	s.internetradiotitle.text.align   = MINI_ICON_TEXT_ALIGN
+	s.internetradiotitle.text.font    = FONT_BOLD_18px
+	s.internetradiotitle.text.fg      = SELECT_COLOR
+	s.internetradiotitle.order        = MINI_ICON_ITEM_ORDER
+	s.internetradiotitle.icon.img     = Surface:loadImage(imgpath .. "icon_internet_radio.png")
+	s.internetradiotitle.icon.padding = MINI_ICON_PADDING
+
+	-- Based on s.title, this is for favorites title style
+	s.favoritestitle.border        = MINI_ICON_TITLE_BORDER
+	s.favoritestitle.position      = LAYOUT_NORTH
+	s.favoritestitle.bgImg         = titleBox
+	s.favoritestitle.text.padding  = MINI_ICON_TEXT_PADDING
+	s.favoritestitle.text.align    = MINI_ICON_TEXT_ALIGN
+	s.favoritestitle.text.font     = FONT_BOLD_18px
+	s.favoritestitle.text.fg       = SELECT_COLOR
+	s.favoritestitle.order         = MINI_ICON_ITEM_ORDER
+	s.favoritestitle.icon.img      = Surface:loadImage(imgpath .. "icon_favorites.png")
+	s.favoritestitle.icon.padding  = MINI_ICON_PADDING
+
+	-- Based on s.title, this is for mymusic title style
+	s.mymusictitle.border        = MINI_ICON_TITLE_BORDER
+	s.mymusictitle.position      = LAYOUT_NORTH
+	s.mymusictitle.bgImg         = titleBox
+	s.mymusictitle.text.padding  = MINI_ICON_TEXT_PADDING
+	s.mymusictitle.text.align    = MINI_ICON_TEXT_ALIGN
+	s.mymusictitle.text.font     = FONT_BOLD_18px
+	s.mymusictitle.text.fg       = SELECT_COLOR
+	s.mymusictitle.order         = MINI_ICON_ITEM_ORDER
+	s.mymusictitle.icon.img      = Surface:loadImage(imgpath .. "icon_mymusic.png")
+	s.mymusictitle.icon.padding  = MINI_ICON_PADDING
+
+	-- Based on s.title, this is for search title style
+	s.searchtitle.border        = MINI_ICON_TITLE_BORDER
+	s.searchtitle.position      = LAYOUT_NORTH
+	s.searchtitle.bgImg         = titleBox
+	s.searchtitle.text.padding  = MINI_ICON_TEXT_PADDING
+	s.searchtitle.text.align    = MINI_ICON_TEXT_ALIGN
+	s.searchtitle.text.font     = FONT_BOLD_18px
+	s.searchtitle.text.fg       = SELECT_COLOR
+	s.searchtitle.order         = MINI_ICON_ITEM_ORDER
+	s.searchtitle.icon.img      = Surface:loadImage(imgpath .. "icon_search.png")
+	s.searchtitle.icon.padding  = MINI_ICON_PADDING
+
+	-- Based on s.title, this is for settings title style
+	s.settingstitle.border        = MINI_ICON_TITLE_BORDER
+	s.settingstitle.position      = LAYOUT_NORTH
+	s.settingstitle.bgImg         = titleBox
+	s.settingstitle.text.padding  = MINI_ICON_TEXT_PADDING
+	s.settingstitle.text.align    = MINI_ICON_TEXT_ALIGN
+	s.settingstitle.text.font     = FONT_BOLD_18px
+	s.settingstitle.text.fg       = SELECT_COLOR
+	s.settingstitle.order         = MINI_ICON_ITEM_ORDER
+	s.settingstitle.icon.img      = Surface:loadImage(imgpath .. "icon_settings.png")
+	s.settingstitle.icon.padding  = MINI_ICON_PADDING
+
+	-- Based on s.title, this is for newmusic title style
+	s.newmusictitle.border        = MINI_ICON_TITLE_BORDER
+	s.newmusictitle.position      = LAYOUT_NORTH
+	s.newmusictitle.bgImg         = titleBox
+	s.newmusictitle.text.padding  = MINI_ICON_TEXT_PADDING
+	s.newmusictitle.text.align    = MINI_ICON_TEXT_ALIGN
+	s.newmusictitle.text.font     = FONT_BOLD_18px
+	s.newmusictitle.text.fg       = SELECT_COLOR
+	s.newmusictitle.order         = MINI_ICON_ITEM_ORDER
+	s.newmusictitle.icon.img      = Surface:loadImage(imgpath .. "icon_quarter_note.png")
+	s.newmusictitle.icon.padding  = MINI_ICON_PADDING
+
 
 	-- menus with artwork and song info
 	s.albummenu.padding = 2
@@ -644,6 +736,61 @@ function skin(self, s)
 	s.locked.albumitem.text.fg = SELECT_COLOR
 	s.locked.albumitem.text.sh = SELECT_SH_COLOR
 	s.locked.albumitem.bgImg = selectionBox
+
+	-- titles with artwork and song info
+	s.nowplayingtitle.position = LAYOUT_NORTH
+	s.nowplayingtitle.bgImg = titleBox
+	s.nowplayingtitle.order = { "text", "icon" }
+	s.nowplayingtitle.w = screenWidth
+	s.nowplayingtitle.h = 70
+	s.nowplayingtitle.border = 4
+	s.nowplayingtitle.text.padding = { 10, 8, 8, 9 }
+	s.nowplayingtitle.text.align = "top-left"
+	s.nowplayingtitle.text.font = FONT_18px
+	s.nowplayingtitle.text.lineHeight = 17
+	s.nowplayingtitle.text.line[1].font = FONT_BOLD_18px
+	s.nowplayingtitle.text.line[1].height = 20
+	s.nowplayingtitle.text.fg = SELECT_COLOR
+	s.nowplayingtitle.icon.hide = 1
+--	s.nowplayingtitle.icon.align = "center"
+--	s.nowplayingtitle.icon.img = Surface:loadImage(imgpath .. "menu_nowplaying_noartwork.png")
+--	s.nowplayingtitle.icon.padding = { 6, 0, 0, 0 }
+
+
+	-- menus with artwork and song info
+	s.nowplayingmenu.padding = 2
+	s.nowplayingmenu.itemHeight = 61
+
+
+	-- items with artwork and song info
+	--s.nowplayingitem.h = 60
+	s.nowplayingitem.order = { "icon", "text", "play" }
+	s.nowplayingitem.text.w = WH_FILL
+	s.nowplayingitem.text.padding = { 12, 8, 8, 8 }
+	s.nowplayingitem.text.align = "top-left"
+	s.nowplayingitem.text.font = FONT_13px
+	s.nowplayingitem.text.lineHeight = 170
+	s.nowplayingitem.text.line[1].font = FONT_BOLD_13px
+	s.nowplayingitem.text.line[1].height = 17
+	s.nowplayingitem.text.fg = TEXT_COLOR
+	s.nowplayingitem.text.sh = TEXT_SH_COLOR
+	s.nowplayingitem.icon.w = 156
+	s.nowplayingitem.icon.h = 156
+	s.nowplayingitem.icon.align = "center"
+	s.nowplayingitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
+	s.nowplayingitem.icon.padding = { 6, 0, 0, 0 }
+
+
+	-- selected item with artwork and song info
+	s.selected.nowplayingitem.text.fg = SELECT_COLOR
+	s.selected.nowplayingitem.text.sh = SELECT_SH_COLOR
+	s.selected.nowplayingitem.bgImg = selectionBox
+
+
+	-- locked item with artwork and song info
+	s.locked.nowplayingitem.text.fg = SELECT_COLOR
+	s.locked.nowplayingitem.text.sh = SELECT_SH_COLOR
+	s.locked.nowplayingitem.bgImg = selectionBox
 
 
 	-- now playing menu item
