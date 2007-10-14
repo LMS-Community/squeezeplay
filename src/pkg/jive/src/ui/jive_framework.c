@@ -807,6 +807,12 @@ int jiveL_get_ticks(lua_State *L) {
 }
 
 
+int jiveL_thread_time(lua_State *L) {
+	lua_pushinteger(L, (int)(clock() * 1000 / CLOCKS_PER_SEC));
+	return 1;
+}
+
+
 int jiveL_find_file(lua_State *L) {
 	/* stack is:
 	 * 1: framework
@@ -1245,6 +1251,7 @@ static const struct luaL_Reg core_methods[] = {
 	{ "dispatchEvent", jiveL_dispatch_event },
 	{ "findFile", jiveL_find_file },
 	{ "getTicks", jiveL_get_ticks },
+	{ "threadTime", jiveL_thread_time },
 	{ "getBackground", jiveL_get_background },
 	{ "setBackground", jiveL_set_background },
 	{ "styleChanged", jiveL_style_changed },

@@ -121,6 +121,10 @@ Find a file on the lua path. Returns the full path of the file, or nil if it was
 
 Return the number of milliseconds since the Jive initialization.
 
+=head2 jive.ui.Framework:threadTicks()
+
+Return the number of milliseconds spent in current thread.  Note this is lower resolution than getTicks().
+
 =head2 jive.ui.Framework:getBackground()
 
 Returns the current background image.
