@@ -444,10 +444,7 @@ function _showCurrentSong(self, text, iconId)
 
 	s.text:setValue(text)
 
-	s.window:showBriefly(3000, nil,
-			     Window.transitionPushPopupUp,
-			     Window.transitionPushPopupDown
-		     )
+	s.window:showBriefly(3000, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
 end
 
 
@@ -465,11 +462,16 @@ function _process_displaystatus(self, event)
 		if type == 'song' then
 			-- new song display from server
 			self:_showCurrentSong(table.concat(display["text"], "\n"), display["icon-id"])
+		elseif type == 'popupplay' then
+			-- playing display from server for artist/genre/year etc - no artwork 
+			local popup = Popup("popupplay")
+			popup:addWidget(Label("text", table.concat(display["text"], "\n")))
+			popup:showBriefly(3000, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
 		else
 			-- other message from server
 			local popup = Popup("popupinfo")
 			popup:addWidget(Label("text", table.concat(display["text"], "\n")))
-			popup:showBriefly(2000)
+			popup:showBriefly(3000, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
 		end
 	end
 end

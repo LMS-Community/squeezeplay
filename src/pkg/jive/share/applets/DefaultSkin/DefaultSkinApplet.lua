@@ -832,13 +832,30 @@ function skin(self, s)
 
 	s.currentsong.text.w = screenWidth
 	s.currentsong.text.h = 72
-	s.currentsong.text.padding = { 74, 12, 4, 4 }
+	s.currentsong.text.padding = { 74, 12, 12, 4 }
 	s.currentsong.text.font = FONT_13px
 	s.currentsong.text.lineHeight = 17
 	s.currentsong.text.line[2].font = FONT_BOLD_13px
 	s.currentsong.text.line[2].height = 17
 	s.currentsong.text.fg = TEXT_COLOR
 	s.currentsong.text.align = "top-left"
+
+	-- Popup window for play/add without artwork
+	s.popupplay.x = 0
+	s.popupplay.y = screenHeight - 96
+	s.popupplay.w = screenWidth
+	s.popupplay.h = 96
+	s.popupplay.bgImg = helpBox
+
+	s.popupplay.text.w = screenWidth
+	s.popupplay.text.h = 72
+	s.popupplay.text.padding = { 20, 20, 20, 20 }
+	s.popupplay.text.font = FONT_15px
+	s.popupplay.text.lineHeight = 17
+	s.popupplay.text.line[2].font = FONT_BOLD_15px
+	s.popupplay.text.line[2].height = 17
+	s.popupplay.text.fg = TEXT_COLOR
+	s.popupplay.text.align = "top-left"
 
 	-- Popup window for information display
 	s.popupinfo.x = 0
