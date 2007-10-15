@@ -696,6 +696,12 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/mini_quarter_note.png \
 	share/applets/DefaultSkin/images/mini_search.png \
 	share/applets/DefaultSkin/images/mini_settings.png \
+	share/applets/DefaultSkin/images/icon_internet_radio.png \
+	share/applets/DefaultSkin/images/icon_favorites.png \
+	share/applets/DefaultSkin/images/icon_mymusic.png \
+	share/applets/DefaultSkin/images/icon_quarter_note.png \
+	share/applets/DefaultSkin/images/icon_search.png \
+	share/applets/DefaultSkin/images/icon_settings.png \
 	share/applets/SetupWallpaper/wallpaper/fade_to_black.png \
 	share/applets/SetupWallpaper/wallpaper/sunlight.png \
 	share/applets/SetupWallpaper/wallpaper/sunrise.png
