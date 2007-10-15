@@ -659,7 +659,7 @@ function _openScreensaver(self, type)
 		clock = DigitalSimple(window, preset, hours)
 	elseif type == "styled" then
 		-- This clock always uses 24 hours mode for now
-		clock = DigitalStyled(window, preset, false)
+		clock = DigitalStyled(window, preset, hours)
 	elseif type == "detailed" then
 		clock = DigitalDetailed(window, preset, hours, weekstart)
 	elseif type == "analog" then
