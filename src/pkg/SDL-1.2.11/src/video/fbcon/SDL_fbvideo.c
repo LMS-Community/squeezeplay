@@ -32,6 +32,15 @@
 #include <asm/page.h>		/* For definition of PAGE_SIZE */
 #include <linux/vt.h>
 
+#if defined(linux)
+#define HAS_MMAP_ANON
+#include <sys/types.h>
+#include <sys/mman.h>
+#include <asm/page.h>   /* PAGE_SIZE */
+#define HAS_SC_PAGESIZE /* _SC_PAGESIZE may be an enum for Linux */
+#define HAS_GETPAGESIZE
+#endif /* linux */
+
 #include "SDL_video.h"
 #include "SDL_mouse.h"
 #include "../SDL_sysvideo.h"
@@ -477,6 +486,7 @@ static int FB_VideoInit(_THIS, SDL_PixelFormat *vformat)
 	unsigned int current_h;
 	const char *SDL_fbdev;
 	FILE *modesdb;
+	int pagesize = -1;
 
 	/* Initialize the library */
 	SDL_fbdev = SDL_getenv("SDL_FBDEV");
@@ -548,9 +558,27 @@ static int FB_VideoInit(_THIS, SDL_PixelFormat *vformat)
 		}
 	}
 
+#if defined(_SC_PAGESIZE) && defined(HAS_SC_PAGESIZE)
+	pagesize = sysconf(_SC_PAGESIZE);
+#endif
+#ifdef _SC_PAGE_SIZE
+	if (pagesize == -1)
+		pagesize = sysconf(_SC_PAGE_SIZE);
+#endif
+#ifdef HAS_GETPAGESIZE
+	if (pagesize == -1)
+		pagesize = getpagesize();
+#endif
+#ifdef PAGE_SIZE
+	if (pagesize == -1)
+		pagesize = PAGE_SIZE;
+#endif
+	if (pagesize == -1)
+		pagesize = 4096;
+
 	/* Memory map the device, compensating for buggy PPC mmap() */
 	mapped_offset = (((long)finfo.smem_start) -
-	                (((long)finfo.smem_start)&~(PAGE_SIZE-1)));
+			 (((long)finfo.smem_start)&~(pagesize-1)));
 	mapped_memlen = finfo.smem_len+mapped_offset;
 	mapped_mem = do_mmap(NULL, mapped_memlen,
 	                  PROT_READ|PROT_WRITE, MAP_SHARED, console_fd, 0);
