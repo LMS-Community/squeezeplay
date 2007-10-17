@@ -238,12 +238,13 @@ function skin(self, s)
 	local FONT_BOLD_18px = Font:load(fontpath .. "FreeSansBold.ttf", 20)
 	local FONT_BOLD_20px = Font:load(fontpath .. "FreeSansBold.ttf", 22)
 
-	local MINI_ICON_PADDING = { 0, 2, 0, 0 }
-	local MINI_ICON_TEXT_PADDING= { 10, 7, 8, 9 }
+--				left, top, right, bottom
+	local MINI_ICON_PADDING = { 0, 0, 4, 0 }
+	local MINI_ICON_TEXT_PADDING= { 10, 7, 0, 9 }
 	local MINI_ICON_TEXT_ALIGN = 'top-left'
 	local MINI_ICON_TITLE_BORDER = 4
-	local MINI_ICON_ITEM_ORDER = { "icon", "text" }
-
+	local MINI_ICON_ITEM_ORDER = { "text", "icon" }
+	local MINI_ICON_ICON_ALIGN = 'right'
 
 	-- Iconbar definitions, each icon needs an image and x,y
 	s.icon_background.x = 0
@@ -636,17 +637,20 @@ function skin(self, s)
 	s.internetradiotitle.position     = LAYOUT_NORTH
 	s.internetradiotitle.bgImg        = titleBox
 	s.internetradiotitle.text.padding = MINI_ICON_TEXT_PADDING
+	s.internetradiotitle.text.w       = WH_FILL
 	s.internetradiotitle.text.align   = MINI_ICON_TEXT_ALIGN
 	s.internetradiotitle.text.font    = FONT_BOLD_18px
 	s.internetradiotitle.text.fg      = SELECT_COLOR
 	s.internetradiotitle.order        = MINI_ICON_ITEM_ORDER
 	s.internetradiotitle.icon.img     = Surface:loadImage(imgpath .. "icon_internet_radio.png")
 	s.internetradiotitle.icon.padding = MINI_ICON_PADDING
+	s.internetradiotitle.icon.align   = MINI_ICON_ICON_ALIGN
 
 	-- Based on s.title, this is for favorites title style
 	s.favoritestitle.border        = MINI_ICON_TITLE_BORDER
 	s.favoritestitle.position      = LAYOUT_NORTH
 	s.favoritestitle.bgImg         = titleBox
+	s.favoritestitle.text.w        = WH_FILL
 	s.favoritestitle.text.padding  = MINI_ICON_TEXT_PADDING
 	s.favoritestitle.text.align    = MINI_ICON_TEXT_ALIGN
 	s.favoritestitle.text.font     = FONT_BOLD_18px
@@ -654,23 +658,28 @@ function skin(self, s)
 	s.favoritestitle.order         = MINI_ICON_ITEM_ORDER
 	s.favoritestitle.icon.img      = Surface:loadImage(imgpath .. "icon_favorites.png")
 	s.favoritestitle.icon.padding  = MINI_ICON_PADDING
+	s.favoritestitle.icon.align    = MINI_ICON_ICON_ALIGN
 
 	-- Based on s.title, this is for mymusic title style
 	s.mymusictitle.border        = MINI_ICON_TITLE_BORDER
 	s.mymusictitle.position      = LAYOUT_NORTH
 	s.mymusictitle.bgImg         = titleBox
+	s.mymusictitle.text.w        = WH_FILL
 	s.mymusictitle.text.padding  = MINI_ICON_TEXT_PADDING
 	s.mymusictitle.text.align    = MINI_ICON_TEXT_ALIGN
 	s.mymusictitle.text.font     = FONT_BOLD_18px
 	s.mymusictitle.text.fg       = SELECT_COLOR
 	s.mymusictitle.order         = MINI_ICON_ITEM_ORDER
-	s.mymusictitle.icon.img      = Surface:loadImage(imgpath .. "icon_mymusic.png")
 	s.mymusictitle.icon.padding  = MINI_ICON_PADDING
+	s.mymusictitle.icon.align    = MINI_ICON_ICON_ALIGN
+	s.mymusictitle.icon.img      = Surface:loadImage(imgpath .. "icon_mymusic.png")
+	s.mymusictitle.icon.align    = MINI_ICON_ICON_ALIGN
 
 	-- Based on s.title, this is for search title style
 	s.searchtitle.border        = MINI_ICON_TITLE_BORDER
 	s.searchtitle.position      = LAYOUT_NORTH
 	s.searchtitle.bgImg         = titleBox
+	s.searchtitle.text.w        = WH_FILL
 	s.searchtitle.text.padding  = MINI_ICON_TEXT_PADDING
 	s.searchtitle.text.align    = MINI_ICON_TEXT_ALIGN
 	s.searchtitle.text.font     = FONT_BOLD_18px
@@ -678,11 +687,13 @@ function skin(self, s)
 	s.searchtitle.order         = MINI_ICON_ITEM_ORDER
 	s.searchtitle.icon.img      = Surface:loadImage(imgpath .. "icon_search.png")
 	s.searchtitle.icon.padding  = MINI_ICON_PADDING
+	s.searchtitle.icon.align    = MINI_ICON_ICON_ALIGN
 
 	-- Based on s.title, this is for settings title style
 	s.settingstitle.border        = MINI_ICON_TITLE_BORDER
 	s.settingstitle.position      = LAYOUT_NORTH
 	s.settingstitle.bgImg         = titleBox
+	s.settingstitle.text.w        = WH_FILL
 	s.settingstitle.text.padding  = MINI_ICON_TEXT_PADDING
 	s.settingstitle.text.align    = MINI_ICON_TEXT_ALIGN
 	s.settingstitle.text.font     = FONT_BOLD_18px
@@ -690,11 +701,13 @@ function skin(self, s)
 	s.settingstitle.order         = MINI_ICON_ITEM_ORDER
 	s.settingstitle.icon.img      = Surface:loadImage(imgpath .. "icon_settings.png")
 	s.settingstitle.icon.padding  = MINI_ICON_PADDING
+	s.settingstitle.icon.align    = MINI_ICON_ICON_ALIGN
 
 	-- Based on s.title, this is for newmusic title style
 	s.newmusictitle.border        = MINI_ICON_TITLE_BORDER
 	s.newmusictitle.position      = LAYOUT_NORTH
 	s.newmusictitle.bgImg         = titleBox
+	s.newmusictitle.text.w        = WH_FILL
 	s.newmusictitle.text.padding  = MINI_ICON_TEXT_PADDING
 	s.newmusictitle.text.align    = MINI_ICON_TEXT_ALIGN
 	s.newmusictitle.text.font     = FONT_BOLD_18px
@@ -702,6 +715,7 @@ function skin(self, s)
 	s.newmusictitle.order         = MINI_ICON_ITEM_ORDER
 	s.newmusictitle.icon.img      = Surface:loadImage(imgpath .. "icon_quarter_note.png")
 	s.newmusictitle.icon.padding  = MINI_ICON_PADDING
+	s.newmusictitle.icon.align    = MINI_ICON_ICON_ALIGN
 
 
 	-- menus with artwork and song info
