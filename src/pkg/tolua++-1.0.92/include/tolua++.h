@@ -57,6 +57,7 @@ TOLUA_API void tolua_error (lua_State* L, char* msg, tolua_Error* err);
 TOLUA_API int tolua_isnoobj (lua_State* L, int lo, tolua_Error* err);
 TOLUA_API int tolua_isvalue (lua_State* L, int lo, int def, tolua_Error* err);
 TOLUA_API int tolua_isboolean (lua_State* L, int lo, int def, tolua_Error* err);
+TOLUA_API int tolua_isinteger (lua_State* L, int lo, int def, tolua_Error* err);
 TOLUA_API int tolua_isnumber (lua_State* L, int lo, int def, tolua_Error* err);
 TOLUA_API int tolua_isstring (lua_State* L, int lo, int def, tolua_Error* err);
 TOLUA_API int tolua_istable (lua_State* L, int lo, int def, tolua_Error* err);
@@ -100,6 +101,7 @@ TOLUA_API void tolua_array (lua_State* L,char* name, lua_CFunction get, lua_CFun
 
 TOLUA_API void tolua_pushvalue (lua_State* L, int lo);
 TOLUA_API void tolua_pushboolean (lua_State* L, int value);
+TOLUA_API void tolua_pushinteger (lua_State* L, lua_Integer value);
 TOLUA_API void tolua_pushnumber (lua_State* L, double value);
 TOLUA_API void tolua_pushstring (lua_State* L, const char* value);
 TOLUA_API void tolua_pushuserdata (lua_State* L, void* value);
@@ -113,6 +115,7 @@ TOLUA_API void tolua_pushfielduserdata (lua_State* L, int lo, int index, void* v
 TOLUA_API void tolua_pushfieldusertype (lua_State* L, int lo, int index, void* v, const char* type);
 TOLUA_API void tolua_pushfieldusertype_and_takeownership (lua_State* L, int lo, int index, void* v, const char* type);
 
+TOLUA_API lua_Integer tolua_tointeger (lua_State* L, int narg, lua_Integer def);
 TOLUA_API double tolua_tonumber (lua_State* L, int narg, double def);
 TOLUA_API const char* tolua_tostring (lua_State* L, int narg, const char* def);
 TOLUA_API void* tolua_touserdata (lua_State* L, int narg, void* def);

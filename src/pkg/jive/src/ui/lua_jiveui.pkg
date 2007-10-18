@@ -154,7 +154,7 @@ class Surface {
 	tolua_destroy void jive_surface_free @ free();
 
 	tolua_outside int jive_surface_save_bmp @ saveBMP(const char *file);
-	tolua_outside void jive_surface_set_offset @ setOffset(Uint16 x, Uint16 y);
+	tolua_outside void jive_surface_set_offset @ setOffset(Sint16 x, Sint16 y);
 
 	tolua_outside void jive_surface_set_clip_arg @ setClip(Uint16 x, Uint16 y, Uint16 w, Uint16 h);
 	tolua_outside void jive_surface_get_clip_arg @ getClip(Uint16 *x=0, Uint16 *y=0, Uint16 *w=0, Uint16 *h=0);

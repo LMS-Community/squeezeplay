@@ -27,6 +27,11 @@ TOLUA_API void tolua_pushboolean (lua_State* L, int value)
  lua_pushboolean(L,value);
 }
 
+TOLUA_API void tolua_pushinteger (lua_State* L, lua_Integer value)
+{
+ lua_pushinteger(L,value);
+}
+
 TOLUA_API void tolua_pushnumber (lua_State* L, double value)
 {
  lua_pushnumber(L,value);
