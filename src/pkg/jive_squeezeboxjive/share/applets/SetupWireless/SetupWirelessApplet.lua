@@ -70,7 +70,7 @@ local KEY_RIGHT       = jive.ui.KEY_RIGHT
 
 -- configuration
 local CONNECT_TIMEOUT = 30
-
+local wirelessTitleStyle = 'settingstitle'
 
 module(...)
 oo.class(_M, Applet)
@@ -85,7 +85,7 @@ end
 function setupRegionShow(self, setupNext)
 	local wlan = self.t_ctrl
 
-	local window = Window("window", self:string("NETWORK_REGION"))
+	local window = Window("window", self:string("NETWORK_REGION"), wirelessTitleStyle)
 
 	local region = wlan:getRegion()
 
@@ -123,7 +123,7 @@ end
 function settingsRegionShow(self)
 	local wlan = self.t_ctrl
 
-	local window = Window("window", self:string("NETWORK_REGION"))
+	local window = Window("window", self:string("NETWORK_REGION"), wirelessTitleStyle)
 
 	local region = wlan:getRegion()
 
@@ -226,7 +226,7 @@ end
 
 
 function _networksShow(self, title, help)
-	local window = Window("window", title)
+	local window = Window("window", title, wirelessTitleStyle)
 
 	-- window to return to on completion of network settings
 	self.topWindow = window
@@ -376,7 +376,7 @@ end
 
 
 function enterSSID(self)
-	local window = Window("window", self:string("NETWORK_NETWORK_NAME"))
+	local window = Window("window", self:string("NETWORK_NETWORK_NAME"), wirelessTitleStyle)
 
 	local textinput = Textinput("textinput", self.ssid or "",
 				    function(_, value)
@@ -431,7 +431,7 @@ function enterPassword(self)
 		return chooseWEPLength(self)
 
 	elseif string.find(flags, "WPA%-EAP") or string.find(flags, "WPA2%-EAP") then
-		local window = Window("window", self:string("NETWORK_CONNECTION_PROBLEM"))
+		local window = Window("window", self:string("NETWORK_CONNECTION_PROBLEM"), wirelessTitleStyle)
 
 		local menu = SimpleMenu("menu",
 					{
@@ -460,7 +460,7 @@ end
 
 
 function chooseEncryption(self)
-	local window = Window("window", self:string("NETWORK_WIRELESS_ENCRYPTION"))
+	local window = Window("window", self:string("NETWORK_WIRELESS_ENCRYPTION"), wirelessTitleStyle)
 
 	local menu = SimpleMenu("menu",
 				{
@@ -511,7 +511,7 @@ end
 
 
 function chooseWEPLength(self)
-	local window = Window("window", self:string("NETWORK_WIRELESS_ENCRYPTION"))
+	local window = Window("window", self:string("NETWORK_WIRELESS_ENCRYPTION"), wirelessTitleStyle)
 
 	local menu = SimpleMenu("menu",
 				{
@@ -541,7 +541,7 @@ end
 
 
 function enterWEPKey(self)
-	local window = Window("window", self:string("NETWORK_WIRELESS_KEY"))
+	local window = Window("window", self:string("NETWORK_WIRELESS_KEY"), wirelessTitleStyle)
 
 	-- create an object to hold the hex value. the methods are used
 	-- by the text input widget.
@@ -607,7 +607,7 @@ end
 
 
 function enterPSK(self)
-	local window = Window("window", self:string("NETWORK_WIRELESS_PASSWORD"))
+	local window = Window("window", self:string("NETWORK_WIRELESS_PASSWORD"), wirelessTitleStyle)
 
 	local textinput = Textinput("textinput", self.psk or "",
 				    function(_, value)
@@ -860,7 +860,7 @@ function connectFailed(self, reason)
 
 
 	-- popup failure
-	local window = Window("window", self:string("NETWORK_CONNECTION_PROBLEM"))
+	local window = Window("window", self:string("NETWORK_CONNECTION_PROBLEM"), wirelessTitleStyle)
 
 	local menu = SimpleMenu("menu",
 				{
@@ -1015,7 +1015,7 @@ end
 
 
 function failedDHCP(self)
-	local window = Window("window", self:string("NETWORK_ADDRESS_PROBLEM"))
+	local window = Window("window", self:string("NETWORK_ADDRESS_PROBLEM"), wirelessTitleStyle)
 
 	local menu = SimpleMenu("menu",
 				{
@@ -1057,7 +1057,7 @@ end
 function enterIP(self)
 	local v = Textinput.ipAddressValue(self.ipAddress or "0.0.0.0")
 
-	local window = Window("window", self:string("NETWORK_IP_ADDRESS"))
+	local window = Window("window", self:string("NETWORK_IP_ADDRESS"), wirelessTitleStyle)
 
 	window:addWidget(Textarea("help", self:string("NETWORK_IP_ADDRESS_HELP")))
 	window:addWidget(Textinput("textinput", v,
@@ -1082,7 +1082,7 @@ end
 function enterSubnet(self)
 	local v = Textinput.ipAddressValue(self.ipSubnet)
 
-	local window = Window("window", self:string("NETWORK_SUBNET"))
+	local window = Window("window", self:string("NETWORK_SUBNET"), wirelessTitleStyle)
 
 	window:addWidget(Textarea("help", self:string("NETWORK_SUBNET_HELP")))
 	window:addWidget(Textinput("textinput", v,
@@ -1104,7 +1104,7 @@ end
 function enterGateway(self)
 	local v = Textinput.ipAddressValue(self.ipGateway)
 
-	local window = Window("window", self:string("NETWORK_GATEWAY"))
+	local window = Window("window", self:string("NETWORK_GATEWAY"), wirelessTitleStyle)
 
 	window:addWidget(Textarea("help", self:string("NETWORK_GATEWAY_HELP")))
 	window:addWidget(Textinput("textinput", v,
@@ -1130,7 +1130,7 @@ end
 function enterDNS(self)
 	local v = Textinput.ipAddressValue(self.ipDNS)
 
-	local window = Window("window", self:string("NETWORK_DNS"))
+	local window = Window("window", self:string("NETWORK_DNS"), wirelessTitleStyle)
 
 	window:addWidget(Textarea("help", self:string("NETWORK_DNS_HELP")))
 	window:addWidget(Textinput("textinput", v,
@@ -1199,7 +1199,7 @@ end
 
 
 function connectOrDelete(self, ssid)
-	local window = Window("window", ssid)
+	local window = Window("window", ssid, wirelessTitleStyle)
 
 	local menu = SimpleMenu("menu",
 				{
@@ -1226,7 +1226,7 @@ end
 
 
 function deleteConfirm(self, ssid)
-	local window = Window("window", self:string("NETWORK_FORGET_NETWORK"))
+	local window = Window("window", self:string("NETWORK_FORGET_NETWORK"), wirelessTitleStyle)
 
 	local menu = SimpleMenu("menu",
 				{
@@ -1301,7 +1301,7 @@ end
 
 
 function networkStatusShow(self)
-	local window = Window("window", self:string("NETWORK_STATUS"))
+	local window = Window("window", self:string("NETWORK_STATUS"), wirelessTitleStyle)
 
 	local values = {}
 	for i=1,8 do

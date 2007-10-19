@@ -51,7 +51,7 @@ function setupShow(self, setupNext)
 	log:info("locale currently is ", currentLocale)
 
 	-- setup menu
-	local window = Window("window", self:string("CHOOSE_LANGUAGE"))
+	local window = Window("window", self:string("CHOOSE_LANGUAGE"), 'settingstitle')
 	local menu = SimpleMenu("menu")
 
 	for _, locale in ipairs(locale:getAllLocales()) do 
@@ -91,7 +91,7 @@ function settingsShow(self, menuItem)
 	log:info("locale currently is ", currentLocale)
 
 	-- setup menu
-	local window = Window("window", self:string("LANGUAGE"))
+	local window = Window("window", self:string("LANGUAGE"), 'settingstitle')
 	local menu = SimpleMenu("menu")
 
 	local group = RadioGroup()

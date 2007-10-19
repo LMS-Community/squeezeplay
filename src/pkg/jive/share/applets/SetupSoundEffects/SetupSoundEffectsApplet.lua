@@ -48,7 +48,7 @@ function settingsShow(self, menuItem)
 
 	local settings = self:getSettings()
 
-	local window = Window("window", menuItem.text)
+	local window = Window("window", menuItem.text, 'settingstitle')
 	local menu = SimpleMenu("menu")
 	menu:setComparator(menu.itemComparatorWeightAlpha)
 

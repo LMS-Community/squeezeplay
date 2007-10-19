@@ -31,7 +31,7 @@ oo.class(_M, Applet)
 function settingsShow(self, menuItem)
 	local sshEnabled = _fileMatch("/etc/inetd.conf", "^ssh")
 
-	local window = Window("window", menuItem.text)
+	local window = Window("window", menuItem.text, 'settingstitle')
 	local menu = SimpleMenu("menu", {
 					{
 						text = self:string("SSH_ENABLE"),

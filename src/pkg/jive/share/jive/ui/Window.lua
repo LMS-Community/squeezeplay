@@ -10,8 +10,8 @@ The window widget, extends L<jive.ui.Widget>. This is a container for other widg
 
 =head1 SYNOPSIS
 
- -- Create a new window with title "Jive"
- local window = jive.ui.Window("window", "Jive")
+ -- Create a new window with title "Jive" and title style "hometitle"
+ local window = jive.ui.Window("window", "Jive", "hometitle")
 
  -- Show the window on the screen
  window:show()
@@ -44,6 +44,7 @@ local table                   = require("jive.utils.table")
 local SimpleMenu              = require("jive.ui.SimpleMenu")
 local Group                   = require("jive.ui.Group")
 local Label                   = require("jive.ui.Label")
+local Icon                    = require("jive.ui.Icon")
 local Timer                   = require("jive.ui.Timer")
 local Widget                  = require("jive.ui.Widget")
 local Event                   = require("jive.ui.Event")
@@ -94,13 +95,13 @@ local Framework = require("jive.ui.Framework")
 
 --[[
 
-=head2 jive.ui.Window(style, title)
+=head2 jive.ui.Window(style, title, titleStyle)
 
-Constructs a new window widget. I<style> is the widgets style. The window can have an optional I<title>.
+Constructs a new window widget. I<style> is the widgets style. The window can have an optional I<title>, and an optional titleStyle I<titleStyle>
 
 =cut
 --]]
-function __init(self, style, title)
+function __init(self, style, title, titleStyle)
 	_assert(type(style) == "string", "style parameter is " .. type(style) .. " expected string - " .. debug.traceback())
 
 	local obj = oo.rawnew(self, Widget(style))
@@ -112,7 +113,9 @@ function __init(self, style, title)
 	obj._DEFAULT_SHOW_TRANSITION = transitionPushLeft
 	obj._DEFAULT_HIDE_TRANSITION = transitionPushRight
 
-	if title then
+	if titleStyle then
+		obj:setTitleWidget(Group(titleStyle, { text = Label("text", title), icon = Icon("icon") }))
+	elseif title then
 		obj:setTitle(title)
 	end
 

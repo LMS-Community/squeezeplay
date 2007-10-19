@@ -40,7 +40,7 @@ local EVENT_WINDOW_INACTIVE  = jive.ui.EVENT_WINDOW_INACTIVE
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
 
-
+local setupsqueezeboxTitleStyle = 'settingstitle'
 local SETUP_TIMEOUT = 45 -- 45 second timeout for each action
 
 
@@ -57,7 +57,7 @@ end
 
 -- setup squeezebox
 function settingsShow(self)
-	local window = Window("window", self:string("SQUEEZEBOX_SETUP"))
+	local window = Window("window", self:string("SQUEEZEBOX_SETUP"), setupsqueezeboxTitleStyle)
 
 	-- window to return to on completion of network settings
 	self.topWindow = window
@@ -154,7 +154,7 @@ end
 
 -- allow the user to choose between wired or wireless connection
 function _wiredOrWireless(self)
-	local window = Window("window", self:string("SQUEEZEBOX_NETWORK_CONNECTION"))
+	local window = Window("window", self:string("SQUEEZEBOX_NETWORK_CONNECTION"), setupsqueezeboxTitleStyle)
 
 	local menu = SimpleMenu("menu", {{
 						 text = self:string("SQUEEZEBOX_WIRELESS"),
@@ -235,7 +235,7 @@ function _enterIP(self)
 
 	local v = Textinput.ipAddressValue(address)
 
-	local window = Window("window", self:string("SQUEEZEBOX_IP_ADDRESS"))
+	local window = Window("window", self:string("SQUEEZEBOX_IP_ADDRESS"), setupsqueezeboxTitleStyle)
 
 	window:addWidget(Textarea("help", self:string("SQUEEZEBOX_IP_ADDRESS_HELP")))
 	window:addWidget(Textinput("textinput", v,
@@ -785,7 +785,7 @@ end
 
 -- menu allowing the user to choose the slimserver they want to connect to
 function _chooseSlimserver(self)
-	local window = Window("window", self:string("SQUEEZEBOX_MUSIC_SOURCE"))
+	local window = Window("window", self:string("SQUEEZEBOX_MUSIC_SOURCE"), setupsqueezeboxTitleStyle)
 
 	local menu = SimpleMenu("menu")
 	local help = Textarea("help", self:string("SQUEEZEBOX_MUSIC_SOURCE_HELP"))
@@ -1047,7 +1047,7 @@ end
 
 -- Squeezebox setup failed
 function _setupFailed(self)
-	local window = Window("wireless", self:string("SQUEEZEBOX_PROBLEM"))
+	local window = Window("wireless", self:string("SQUEEZEBOX_PROBLEM"), setupsqueezeboxTitleStyle)
 
 	local menu = SimpleMenu("menu",
 				{

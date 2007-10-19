@@ -11,6 +11,9 @@ SLIMBROWSER_NOW_PLAYING
 	FR	Lecture en cours
 	NL	Speelt nu
 
+SLIMBROWSER_CURRENT_PLAYLIST
+	EN	Current Playlist
+
 SLIMBROWSER_PAUSED
 	EN	Paused
 

@@ -319,7 +319,8 @@ end
 -- _newWindowSpec
 -- returns a Window spec based on the concatenation of base and item
 -- window definition
-local function _newWindowSpec(db, item)
+local function _newWindowSpec(db, item, titleStyle)
+	if not titleStyle then titleStyle = '' end
 	log:debug("_newWindowSpec()")
 	
 	local bWindow
@@ -333,7 +334,7 @@ local function _newWindowSpec(db, item)
 	local menuStyle = _priorityAssign('menuStyle', "", iWindow, bWindow)
 	return {
 		["windowStyle"]      = "",
-		["labelTitleStyle"]  = _priorityAssign('titleStyle', "",              iWindow, bWindow) .. "title",
+		["labelTitleStyle"]  = _priorityAssign('titleStyle', titleStyle, iWindow, bWindow) .. "title",
 		["menuStyle"]        = menuStyle .. "menu",
 		["labelItemStyle"]   = menuStyle .. "item",
 		["text"]             = _priorityAssign('text',       item["text"],    iWindow, bWindow),
@@ -738,10 +739,43 @@ local function _statusSink(step, chunk, err)
 		
 		if data.mode == "play" then
 			step.window:setTitle(_string("SLIMBROWSER_NOW_PLAYING"))
+			--[[ this causes the window to not exit in either direction
+			step.window:setTitleWidget(
+				Group(
+				"newmusictitle", 
+				{ 
+					text = Label("text", _string("SLIMBROWSER_NOW_PLAYING")),
+					icon = Icon("icon") 
+				}
+				)
+			)
+			--]]
 		elseif data.mode == "pause" then
 			step.window:setTitle(_string("SLIMBROWSER_PAUSED"))
+			--[[
+			step.window:setTitleWidget(
+				Group(
+				"newmusictitle", 
+				{ 
+					text = Label("text", _string("SLIMBROWSER_PAUSED")),
+					icon = Icon("icon") 
+				}
+				)
+			)
+			--]]
 		elseif data.mode == "stop" then
 			step.window:setTitle(_string("SLIMBROWSER_STOPPED"))
+			--[[
+			step.window:setTitleWidget(
+				Group(
+				"newmusictitle", 
+				{ 
+					text = Label("text", _string("SLIMBROWSER_STOPPED")),
+					icon = Icon("icon") 
+				}
+				)
+			)
+			--]]
 		end
 
 		-- stuff from the player is just json.result
@@ -1565,7 +1599,7 @@ function notify_playerCurrent(self, player, force)
 				text = _string("SLIMBROWSER_NOW_PLAYING"),
 				window = { 
 					["menuStyle"] = "album", 
-				},
+				}
 			}
 		),
 		_statusSink
@@ -1591,7 +1625,8 @@ function notify_playerCurrent(self, player, force)
 			nil, 
 			{
 				["text"] = player:getName(),
-			}
+			},
+			'home'
 		),
 		_mergeSink
 	)

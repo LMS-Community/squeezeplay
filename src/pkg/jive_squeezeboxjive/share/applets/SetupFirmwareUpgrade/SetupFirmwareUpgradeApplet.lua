@@ -64,13 +64,14 @@ local KEY_DOWN        = jive.ui.KEY_DOWN
 local KEY_LEFT        = jive.ui.KEY_LEFT
 local KEY_RIGHT       = jive.ui.KEY_RIGHT
 
+local firmwareupgradeTitleStyle = 'settingstitle'
 
 module(...)
 oo.class(_M, Applet)
 
 
 function forceUpgrade(self)
-	local window = Window("window", self:string("UPDATE"))
+	local window = Window("window", self:string("UPDATE"), firmwareupgradeTitleStyle)
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu")
@@ -108,7 +109,7 @@ end
 
 
 function settingsShow(self)
-	local window = Window("window", self:string("UPDATE"))
+	local window = Window("window", self:string("UPDATE"), firmwareupgradeTitleStyle)
 
 	local menu = SimpleMenu("menu")
 
@@ -149,7 +150,7 @@ end
 
 
 function _chargeBattery(self)
-	local window = Window("window", self:string("UPDATE_BATTERY"))
+	local window = Window("window", self:string("UPDATE_BATTERY"), firmwareupgradeTitleStyle)
 
 	local menu = SimpleMenu("menu",
 				{

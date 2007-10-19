@@ -224,7 +224,7 @@ function screensaverSetting(self, menuItem, mode)
 			     })
 	end
 
-	local window = Window("screensavers", menuItem.text)
+	local window = Window("screensavers", menuItem.text, 'settingstitle')
 	window:addWidget(Textarea("help", "Press Center to select screensaver or PLAY to preview"))
 	window:addWidget(menu)
 
@@ -240,7 +240,7 @@ function timeoutSetting(self, menuItem)
 
 	local timeout = self:getSettings()["timeout"]
 	
-	local window = Window("window", menuItem.text)
+	local window = Window("window", menuItem.text, 'settingstitle')
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
@@ -324,7 +324,7 @@ function openSettings(self, menuItem)
 			     })
 	end
 
-	local window = Window("window", menuItem.text)
+	local window = Window("window", menuItem.text, 'settingstitle')
 	window:addWidget(menu)
 
 	-- Store the applet settings when the window is closed

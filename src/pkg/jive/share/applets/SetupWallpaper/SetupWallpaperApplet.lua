@@ -76,7 +76,7 @@ local authors = { "Chapple", "Scott Robinson", "Los Cardinalos", "Orin Optiglot"
 
 
 function setupShow(self, setupNext)
-	local window = Window("window", self:string('WALLPAPER'))
+	local window = Window("window", self:string('WALLPAPER'), 'settingstitle')
 	local menu = SimpleMenu("menu")
 	window:addWidget(menu)
 
@@ -118,7 +118,7 @@ end
 
 
 function settingsShow(self)
-	local window = Window("window", self:string('WALLPAPER'))
+	local window = Window("window", self:string('WALLPAPER'), 'settingstitle')
 	local menu = SimpleMenu("menu")
 	window:addWidget(menu)
 

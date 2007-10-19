@@ -27,6 +27,8 @@ local SimpleMenu         = require("jive.ui.SimpleMenu")
 local RadioGroup         = require("jive.ui.RadioGroup")
 local RadioButton        = require("jive.ui.RadioButton")
 local Window             = require("jive.ui.Window")
+local Group              = require("jive.ui.Group")
+local Icon               = require("jive.ui.Icon")
 local Label              = require("jive.ui.Label")
 local Framework          = require("jive.ui.Framework")
 
@@ -119,7 +121,7 @@ end
 
 function setupShow(self, setupNext)
 	-- get list of slimservers
-	local window = Window("window", self:string("SELECT_PLAYER"))
+	local window = Window("window", self:string("SELECT_PLAYER"), 'settingstitle')
         local menu = SimpleMenu("menu")
 	menu:setComparator(SimpleMenu.itemComparatorAlpha)
 

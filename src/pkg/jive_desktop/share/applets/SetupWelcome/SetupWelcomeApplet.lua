@@ -45,6 +45,7 @@ local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
 local KEY_GO           = jive.ui.KEY_GO
 local KEY_BACK         = jive.ui.KEY_BACK
 
+local welcomeTitleStyle = 'settingstitle'
 module(...)
 oo.class(_M, Applet)
 
@@ -78,7 +79,7 @@ end
 
 
 function setupWelcome(self, setupNext)
-	local window = Window("window", self:string("WELCOME"))
+	local window = Window("window", self:string("WELCOME"), welcomeTitleStyle)
 
 	local textarea = Textarea("textarea", self:string("WELCOME_WALKTHROUGH"))
 	local help = Textarea("help", self:string("WELCOME_HELP"))
@@ -104,7 +105,7 @@ end
 
 
 function setupDone(self, setupNext)
-	local window = Window("window", self:string("DONE"))
+	local window = Window("window", self:string("DONE"), welcomeTitleStyle)
 	local menu = SimpleMenu("menu")
 
 	menu:addItem({ text = self:string("DONE_CONTINUE"),

@@ -69,6 +69,7 @@ local transitionTopDown
 local transitionBottomUp 
 local transitionLeftRight
 local transitionRightLeft
+local flickrTitleStyle = 'settingstitle'
 
 function openScreensaver(self, menuItem)
 
@@ -105,7 +106,7 @@ end
 
 
 function openSettings(self, menuItem)
-	local window = Window("window", menuItem.text)
+	local window = Window("window", menuItem.text, flickrTitleStyle)
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
@@ -147,7 +148,7 @@ end
 
 function defineFlickrId(self, menuItem)
 
-    local window = Window("window", self:string("SCREENSAVER_FLICKR_FLICKR_ID"))
+    local window = Window("window", self:string("SCREENSAVER_FLICKR_FLICKR_ID"), flickrTitleStyle)
 
 	local flickrid = self:getSettings()["flickr.idstring"]
 	if flickrid == nil then
@@ -181,7 +182,7 @@ function defineTransition(self, menuItem)
 
 	local trans = self:getSettings()["flickr.transition"]
 	
-	local window = Window("window", menuItem.text)
+	local window = Window("window", menuItem.text, flickrTitleStyle)
 	window:addWidget(SimpleMenu("menu",
 		{
             {
@@ -262,7 +263,7 @@ function displaySetting(self, menuItem)
 
 	local display = self:getSettings()["flickr.display"]
 	
-	local window = Window("window", menuItem.text)
+	local window = Window("window", menuItem.text, flickrTitleStyle)
 	window:addWidget(SimpleMenu("menu",
 		{
             {
@@ -321,7 +322,7 @@ function timeoutSetting(self, menuItem)
 
 	local timeout = self:getSettings()["flickr.timeout"]
 
-	local window = Window("window", menuItem.text)
+	local window = Window("window", menuItem.text, flickrTitleStyle)
 	window:addWidget(SimpleMenu("menu",
 		{
 			{

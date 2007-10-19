@@ -60,7 +60,7 @@ local KEY_PLAY               = jive.ui.KEY_PLAY
 local SW_AC_POWER            = 0
 local SW_PHONE_DETECT        = 1
 
-
+local squeezeboxjiveTitleStyle = 'settingstitle'
 module(...)
 oo.class(_M, Applet)
 
@@ -323,7 +323,7 @@ end
 
 
 function settingsBrightnessShow(self, menuItem)
-	local window = Window("window", menuItem.text)
+	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
 
 	local level = jiveBSP.ioctl(12) / 2047
 	log:warn("level is ", level);
@@ -352,7 +352,7 @@ end
 
 
 function settingsBacklightTimerShow(self, menuItem)
-	local window = Window("window", menuItem.text)
+	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
 
 	local settings = self:getSettings()
 	local timeout = settings.dimmedTimeout
@@ -536,7 +536,7 @@ end
 
 
 function factoryReset(self, menuItem)
-	local window = Window("window", menuItem.text)
+	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
 
 	local menu = SimpleMenu("menu", {
 					{

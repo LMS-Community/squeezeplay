@@ -690,6 +690,21 @@ function skin(self, s)
 	s.searchtitle.icon.align    = MINI_ICON_ICON_ALIGN
 
 	-- Based on s.title, this is for settings title style
+	s.hometitle.border        = MINI_ICON_TITLE_BORDER
+	s.hometitle.position      = LAYOUT_NORTH
+	s.hometitle.bgImg         = titleBox
+	s.hometitle.text.w        = WH_FILL
+	s.hometitle.text.padding  = MINI_ICON_TEXT_PADDING
+	s.hometitle.text.align    = MINI_ICON_TEXT_ALIGN
+	s.hometitle.text.font     = FONT_BOLD_18px
+	s.hometitle.text.fg       = SELECT_COLOR
+	s.hometitle.order         = MINI_ICON_ITEM_ORDER
+	s.hometitle.icon.img      = Surface:loadImage(imgpath .. "icon_home.png")
+	s.hometitle.icon.padding  = MINI_ICON_PADDING
+	s.hometitle.icon.align    = MINI_ICON_ICON_ALIGN
+
+
+	-- Based on s.title, this is for settings title style
 	s.settingstitle.border        = MINI_ICON_TITLE_BORDER
 	s.settingstitle.position      = LAYOUT_NORTH
 	s.settingstitle.bgImg         = titleBox

@@ -33,5 +33,6 @@ function registerApplet(self)
 
 		jiveMain:loadSkin("NowPlaying", "skin")
 	end
+        jiveMain:addItem(self:menuItem(self:string('SCREENSAVER_NOWPLAYING'), function(applet, ...) applet:openScreensaver(..., 'notScreensaver') end), 1)
 end
 

@@ -84,16 +84,15 @@ end
 
 
 -- create a new menu
-function JiveMainMenu:__init(name, style)
+function JiveMainMenu:__init(name, style, titleStyle)
 
 	local obj = oo.rawnew(self, {
 		menu = jive.ui.SimpleMenu("menu"),
-		window = jive.ui.Window(style or "window", name),
+		window = jive.ui.Window(style or "window", name, titleStyle),
 		menus = {},
 		notify = false,
 	})
-	
-	obj.menu:setComparator(jive.ui.SimpleMenu.itemComparatorWeightAlpha)
+
 	obj.window:addWidget(obj.menu)
 
 	return obj
@@ -107,11 +106,11 @@ end
 
 
 -- create a sub menu
-function JiveMainMenu:subMenu(name, weight)
+function JiveMainMenu:subMenu(name, weight, titleStyle)
 
 	if self.menus[name] == nil then
 	
-		local menu = JiveMainMenu(name)
+		local menu = JiveMainMenu(name, "", titleStyle)
 
 		local item = {
 			text = name,
@@ -185,14 +184,35 @@ function JiveMain:__init()
 	_globalStrings = locale:readGlobalStringsFile()
 
 	-- create our object (a subclass of JiveMainMenu)
-	jiveMain = oo.rawnew(self, JiveMainMenu(_globalStrings:str("JIVE_HOME"), "home.window"))
+	jiveMain = oo.rawnew(self, JiveMainMenu('', "home.window"))
+
+	jiveMain.window:setTitleWidget(
+		jive.ui.Group(
+			"hometitle", 
+			{ 
+				text = jive.ui.Label("text", _globalStrings:str("JIVE_HOME")),
+			 	icon = jive.ui.Icon("icon") 
+			}
+		)
+	)
+
 	jiveMain.menu:setCloseable(false)
 
 
 --	profiler.start()
 
 	-- Top level menu
-	jiveMain:subMenu(_globalStrings:str("SETTINGS"), 50)
+	jiveMain:subMenu(_globalStrings:str("SETTINGS"), 50, 'settingstitle')
+	-- Second level menu, needed to init here because of title style
+	jiveMain:subMenu(_globalStrings:str("SETTINGS"))
+		:subMenu(_globalStrings:str("REMOTE_SETTINGS"), _, 'settingstitle')
+
+	-- Why stop at two? Tertiary Menu
+	jiveMain:subMenu(_globalStrings:str("SETTINGS"))
+		:subMenu(_globalStrings:str("REMOTE_SETTINGS"))
+			:subMenu(_globalStrings:str("ADVANCED_SETTINGS"), _, 'settingstitle')
+
+	-- if you wanted to add a title style for "Extras", this is where it would go
 
 	-- init our listeners
 	jiveMain.skins = {}

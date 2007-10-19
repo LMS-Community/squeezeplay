@@ -372,7 +372,13 @@ function _createUI(self)
 	return window
 end
 
-function openScreensaver(self, menuItem)
+function openScreensaver(self, menuItem, mode)
+
+	-- this is to allow the screensaver to be opened in two modes: 
+	-- Screensaver and notScreensaver
+	-- default to Screensaver
+	if not mode then mode = 'Screensaver' end
+	log:warn(mode)
 
 	local window = _createUI(self)
 
