@@ -185,6 +185,9 @@ static void SDL_BlitCopy(SDL_BlitInfo *info)
 	}
 	else
 #endif
+	if(srcskip == dstskip && srcskip == w)
+		SDL_memcpy(dst, src, w*h);
+	else
 	while ( h-- ) {
 		SDL_memcpy(dst, src, w);
 		src += srcskip;
