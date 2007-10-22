@@ -71,6 +71,9 @@ DELETE
 ALLOWEDCHARS_NOCAPS
 	EN	abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{} :\\\"'<>?-=,./~`[];0123456789
 
+ALLOWEDCHARS_CAPS
+	EN	ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{} :\\\"'<>?-=,./~`[];0123456789
+
 ALLOWEDCHARS_WITHCAPS
 	EN	abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{} :\"'<>?-=,./~`[];0123456789
 

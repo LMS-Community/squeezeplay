@@ -1260,7 +1260,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		
 		-- default allowedChars
 		if not inputSpec.allowedChars then
-			inputSpec.allowedChars = _string("ALLOWEDCHARS_NOCAPS")
+			inputSpec.allowedChars = _string("ALLOWEDCHARS_CAPS")
 		end
 		local v = ""
 		local initialText = _safeDeref(item, 'input', 'initialText')
