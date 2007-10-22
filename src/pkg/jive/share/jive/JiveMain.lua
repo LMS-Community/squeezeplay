@@ -184,8 +184,10 @@ function JiveMain:__init()
 	_globalStrings = locale:readGlobalStringsFile()
 
 	-- create our object (a subclass of JiveMainMenu)
-	jiveMain = oo.rawnew(self, JiveMainMenu('', "home.window"))
+	jiveMain = oo.rawnew(self, JiveMainMenu(_globalStrings:str("JIVE_HOME"), "home.window"))
 
+--[[
+	this causes all keys to be unresponsive.
 	jiveMain.window:setTitleWidget(
 		jive.ui.Group(
 			"hometitle", 
@@ -195,6 +197,7 @@ function JiveMain:__init()
 			}
 		)
 	)
+--]]
 
 	jiveMain.menu:setCloseable(false)
 
