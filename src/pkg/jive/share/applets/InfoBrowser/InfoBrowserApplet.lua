@@ -60,10 +60,22 @@ function menu(self, menuItem)
 
 	self:tieAndShowWindow(window)
 
-	-- find server for current player and send first request
+	-- find a server: server for current player, else first server
 	sd = AppletManager:getAppletInstance("SlimDiscovery")
-	if sd and sd:getCurrentPlayer() then
-		self.server = sd:getCurrentPlayer():getSlimServer()
+
+	if sd then
+		if sd:getCurrentPlayer() then
+			self.server = sd:getCurrentPlayer():getSlimServer()
+		else
+			for _, server in sd:allServers() do
+				self.server = server
+				break
+			end
+		end
+	end
+
+	-- send first request if we have a server
+	if self.server then
 		self:request(nil, 0, window, menu, list)
 	end
 end
