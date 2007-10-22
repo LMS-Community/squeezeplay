@@ -23,9 +23,6 @@ local SlimServers   = require("jive.slim.SlimServers")
 
 local AppletManager = require("jive.AppletManager")
 
-require("jive.slim.RequestsCli")
-local RequestCli    = jive.slim.RequestCli
-
 local Framework     = require("jive.ui.Framework")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
@@ -84,19 +81,17 @@ end
 -- request for items
 function request(self, index, start, window, widget, list, prevmenu, locked)
 
-	local req = RequestCli(
+	self.server.comet:request(
 		function(chunk, err)
 			if err then
 				log:debug(err)
 			elseif chunk then
-				self:response(chunk.result, window, widget, list, prevmenu, locked)
+				self:response(chunk.data, window, widget, list, prevmenu, locked)
 			end
 		end,
 		false,
-		{'infobrowser', 'items'}, start, gulp, index and { item_id = index }
+		{ 'infobrowser', 'items', start, gulp, index and ("item_id:" .. index) }
 	)
-
-	self.server:queuePriority(req)
 end
 
 
