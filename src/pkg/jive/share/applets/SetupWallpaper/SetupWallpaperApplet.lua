@@ -26,7 +26,6 @@ local oo                     = require("loop.simple")
 local table                  = require("jive.utils.table")
 
 local Applet                 = require("jive.Applet")
-local AppletManager          = require("jive.AppletManager")
 local Framework              = require("jive.ui.Framework")
 local RadioButton            = require("jive.ui.RadioButton")
 local RadioGroup             = require("jive.ui.RadioGroup")
@@ -41,7 +40,6 @@ local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
 
 
 local print, tostring = print, tostring
-
 
 module(...)
 oo.class(_M, Applet)
@@ -77,14 +75,12 @@ local wallpapers = {
 local authors = { "Chapple", "Scott Robinson", "Los Cardinalos", "Orin Optiglot" }
 
 
-
 function setupShow(self, setupNext)
 	local window = Window("window", self:string('WALLPAPER'), 'settingstitle')
 	local menu = SimpleMenu("menu")
 	window:addWidget(menu)
 
-	local currentPlayer = _getCurrentPlayer()
-	local wallpaper = self:getSettings()["wallpaper"][currentPlayer]
+	local wallpaper = self:getSettings()["wallpaper"]
 
         menu:setComparator(menu.itemComparatorAlphaWeight)
 
@@ -93,7 +89,7 @@ function setupShow(self, setupNext)
 			menu:addItem({
 					     text = self:string(name), 
 					     callback = function()
-								self:_setBackground(file, currentPlayer)
+								self:_setBackground(file)
 								setupNext()
 							end,
 					     focusGained = function(event)
@@ -106,12 +102,12 @@ function setupShow(self, setupNext)
 			end
 		end
 	end
-	menu:addItem(self:_licenseMenuItem(currentPlayer))
+	menu:addItem(self:_licenseMenuItem())
 
 	-- Store the applet settings when the window is closed
 	window:addListener(EVENT_WINDOW_POP,
 		function()
-			self:_showBackground(nil, currentPlayer)
+			self:_showBackground(nil)
 			self:storeSettings()
 		end
 	)
@@ -120,25 +116,13 @@ function setupShow(self, setupNext)
 	return window
 end
 
-function _getCurrentPlayer(self)
-	local manager = AppletManager:getAppletInstance("SlimDiscovery")
-	local currentPlayer = 'default'
-	if manager then
-		local currentPlayerObj = manager:getCurrentPlayer()
-		if currentPlayerObj.id then
-			currentPlayer = currentPlayerObj.id
-		end
-	end
-	return currentPlayer
-end
 
 function settingsShow(self)
 	local window = Window("window", self:string('WALLPAPER'), 'settingstitle')
 	local menu = SimpleMenu("menu")
 	window:addWidget(menu)
 
-	local currentPlayer = _getCurrentPlayer()
-	local wallpaper = self:getSettings()["wallpaper"][currentPlayer]
+	local wallpaper = self:getSettings()["wallpaper"]
 	
 	local group = RadioGroup()
 
@@ -151,12 +135,12 @@ function settingsShow(self)
 					     icon = RadioButton("radio", 
 								group, 
 								function()
-									self:_setBackground(file, currentPlayer)
+									self:_setBackground(file)
 								end,
 								wallpaper == file
 							),
 					     focusGained = function(event)
-								   self:_showBackground(file, currentPlayer)
+								   self:_showBackground(file)
 							   end
 				     })
 
@@ -166,12 +150,12 @@ function settingsShow(self)
 		end
 	end
 
-	menu:addItem(self:_licenseMenuItem(currentPlayer))
+	menu:addItem(self:_licenseMenuItem())
 
 	-- Store the applet settings when the window is closed
 	window:addListener(EVENT_WINDOW_POP,
 		function()
-			self:_showBackground(nil, currentPlayer)
+			self:_showBackground(nil)
 			self:storeSettings()
 		end
 	)
@@ -181,7 +165,7 @@ function settingsShow(self)
 end
 
 
-function _licenseMenuItem(self, playerId)
+function _licenseMenuItem(self)
 	return {
 		text = self:string("CREDITS"),
 		callback = function()
@@ -197,21 +181,14 @@ function _licenseMenuItem(self, playerId)
 			window:addWidget(Textarea("textarea", text))
 			self:tieAndShowWindow(window)
 		end,
-		focusGained = function(event) self:_showBackground(nil, playerId) end
+		focusGained = function(event) self:_showBackground(nil) end
 	}
 end
 
 
-function _showBackground(self, wallpaper, playerId)
-	if not playerId then playerId = 'default' end
+function _showBackground(self, wallpaper)
 	if not wallpaper then
-		wallpaper = self:getSettings()["wallpaper"][playerId]
-		if not wallpaper then
-			wallpaper = self:getSettings()["wallpaper"]['default']
-			if not wallpaper then
-				wallpaper = 'sunrise.png'
-			end
-		end
+		wallpaper = self:getSettings()["wallpaper"]
 	end
 
 	local srf = Tile:loadImage("applets/SetupWallpaper/wallpaper/" .. wallpaper)
@@ -221,13 +198,13 @@ function _showBackground(self, wallpaper, playerId)
 end
 
 
-function _setBackground(self, wallpaper, playerId)
+function _setBackground(self, wallpaper)
 	-- set the new wallpaper, or use the existing setting
 	if wallpaper then
-		self:getSettings()["wallpaper"][playerId] = wallpaper
+		self:getSettings()["wallpaper"] = wallpaper
 	end
 
-	self:_showBackground(wallpaper, playerId)
+	self:_showBackground(wallpaper)
 end
 
 
