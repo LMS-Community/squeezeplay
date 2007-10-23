@@ -208,6 +208,9 @@ function _showBackground(self, wallpaper, playerId)
 		wallpaper = self:getSettings()["wallpaper"][playerId]
 		if not wallpaper then
 			wallpaper = self:getSettings()["wallpaper"]['default']
+			if not wallpaper then
+				wallpaper = 'sunrise.png'
+			end
 		end
 	end
 
