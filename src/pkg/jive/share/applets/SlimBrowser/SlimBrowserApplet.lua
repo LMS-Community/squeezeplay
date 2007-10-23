@@ -26,6 +26,7 @@ local table                  = require("table")
 local string                 = require("string")
                              
 local Applet                 = require("jive.Applet")
+local AppletManager          = require("jive.AppletManager")
 local Player                 = require("jive.slim.Player")
 local SlimServer             = require("jive.slim.SlimServer")
 local Framework              = require("jive.ui.Framework")
@@ -697,6 +698,13 @@ local function _mergeSink(step, chunk, err)
 		)
 		data.count = data.count + 1
 		
+		-- and load the wallpaper for this player
+		local obj = AppletManager:loadApplet("SetupWallpaper")
+		local currentPlayer = obj:_getCurrentPlayer()
+		log:info("setting background wallpaper for ", currentPlayer)
+		obj:_setBackground(nil, currentPlayer) 
+		AppletManager:freeApplet("SetupWallpaper")
+
 		-- and merge the main menu items
 		_merge(data, jiveMain)
 	
