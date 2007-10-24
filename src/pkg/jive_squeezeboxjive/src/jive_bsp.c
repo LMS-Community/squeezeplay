@@ -32,6 +32,9 @@ static int bsp_event_fd = -1;
 static int wheel_event_fd = -1;
 static int motion_event_fd = -1;
 
+static int last_x = 0;
+static int last_y = 0;
+static int last_z = 0;
 
 static int l_jivebsp_ioctl(lua_State *L) {
 	int c, v;
@@ -145,7 +148,7 @@ static int handle_motion_events(int fd) {
 	JiveEvent event;
 	struct input_event ev[64];
 	size_t rd;
-	int i, n_x, n_y, n_z;
+	int i, n;
 
 	rd = read(fd, ev, sizeof(struct input_event) * 64);
 
@@ -155,47 +158,50 @@ static int handle_motion_events(int fd) {
 	}
 
 	// update event struct for motion
-	n_x = 0;
-	n_y = 0;
-	n_z = 0;
+	n = 0;
 	event.mouse_x = 0;
 	event.mouse_y = 0;
 	event.scroll_rel = 0;
 
 	for (i = 0; i < rd / sizeof(struct input_event); i++) {
-		if (ev[i].type == EV_ABS) {
+		if (ev[i].type == EV_SYN) {
+			n++;
+		}
+		else if (ev[i].type == EV_ABS) {
 			// motion event
+			// accumulate with new values and unchanged values
 			switch (ev[i].code) {
+			
 			case ABS_X:
 				event.mouse_x += (Sint16) ev[i].value;
-				n_x++;
+				event.mouse_y += last_y;
+				event.scroll_rel += last_z;
+				last_x = (Sint16) ev[i].value;
 				break;
 			case ABS_Y:
+				event.mouse_x += last_x;
 				event.mouse_y += (Sint16) ev[i].value;
-				n_y++;
+				event.scroll_rel += last_z;
+				last_y = (Sint16) ev[i].value;
 				break;
 			case ABS_Z:
+				event.mouse_x += last_x;
+				event.mouse_y += last_y;
 				event.scroll_rel += (Sint16) ev[i].value;
-				n_z++;
+				last_z = (Sint16) ev[i].value;
 				break;
 			}
 		}
 	}
 
-	if (n_x > 0 || n_y > 0 || n_z > 0) {
-		if (n_x > 0) {
-			event.mouse_x /= n_x;
-		}
-		if (n_y > 0) {
-			event.mouse_y /= n_y;
-		}
-		if (n_z > 0) {
-			event.scroll_rel /= n_z;
-		}
-		
+	if (n > 0) {
+		event.mouse_x /= n;
+		event.mouse_y /= n;
+		event.scroll_rel /= n;
 		event.type = (JiveEventType) JIVE_EVENT_MOTION;
 		jive_queue_event(&event);
 	}
+	
 	return 0;
 }
 
