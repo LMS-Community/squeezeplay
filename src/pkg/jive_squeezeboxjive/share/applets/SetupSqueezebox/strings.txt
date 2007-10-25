@@ -152,12 +152,12 @@ SQUEEZEBOX_MUSIC_SOURCE
 	NL	Muziekbron kiezen
 
 SQUEEZEBOX_MUSIC_SOURCE_HELP
-	EN	The Squeezebox is connected to your network. Choose a music source.
-	DE	Die Squeezebox ist mit dem Netzwerk verbunden. Wählen Sie eine Musikquelle.
-	ES	Squeezebox está conectado a la red. Elija una fuente de música.
-	IT	Squeezebox è connesso alla rete. Scegliere una sorgente musicale.
-	FR	La Squeezebox est connectée au réseau. Sélectionnez une source musicale.
-	NL	De Squeezebox is met je netwerk verbonden. Kies een muziekbron.
+	EN	The Squeezebox %s is connected to your network. Choose a music source.
+	DE	Die Squeezebox %s ist mit dem Netzwerk verbunden. Wählen Sie eine Musikquelle.
+	ES	Squeezebox %s está conectado a la red. Elija una fuente de música.
+	IT	Squeezebox %s è connesso alla rete. Scegliere una sorgente musicale.
+	FR	La Squeezebox %s est connectée au réseau. Sélectionnez une source musicale.
+	NL	De Squeezebox %s is met je netwerk verbonden. Kies een muziekbron.
 
 SQUEEZEBOX_IP_ADDRESS
 	EN	IP Address

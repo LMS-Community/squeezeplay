@@ -42,7 +42,7 @@ local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
 
 local setupsqueezeboxTitleStyle = 'settingstitle'
 local SETUP_TIMEOUT = 45 -- 45 second timeout for each action
-
+local SETUP_EXTENDED_TIMEOUT = 85 -- 85 second timeout in case Squeezebox is upgrading after first connecting to SC
 
 module(...)
 oo.class(_M, Applet)
@@ -682,6 +682,17 @@ function t_udapReset(self)
 	end
 end
 
+-- Get Squeezebox IP address
+function t_udapGetIPAddr(self)
+	log:warn("udapGetIPAddr")
+
+	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
+
+	local packet = udap.createGetIPAddr(self.mac, self.seqno)
+	self.seqno = self.seqno + 1
+	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
+end
+
 
 -- sink for udap replies. based on the replies this sets up the next action to call.
 function t_udapSink(self, chunk, err)
@@ -721,16 +732,33 @@ function t_udapSink(self, chunk, err)
 			self.errorMsg = "SQUEEZEBOX_PROBLEM_DHCP_ERROR"
 
 		elseif pkt.ucp.device_status == "wait_slimserver" then
-			_setAction(self, nil)
-			jnt:t_perform(function()
-					      _chooseSlimserver(self)
-				      end)
+			_setAction(self, t_udapGetIPAddr)
 
 		elseif pkt.ucp.device_status == "connected" then
 			-- we should not get this far yet
 			error("squeezebox connected to slimserver")
 
 		end
+
+	-- Get Squeezebox IP address to be shown to user
+	elseif pkt.uapMethod == "get_ip" then
+			_setAction(self, nil)
+
+			local ip_addr_str = ""
+			local v = pkt.ucp["ip_addr"]
+			for i = 1,#v do
+				ip_addr_str = ip_addr_str .. string.format("%d", string.byte(string.sub(v, i, i)))
+				if i < #v then
+					ip_addr_str = ip_addr_str .. "."
+				end
+			end
+			-- Save Squeezebox IP address to be shown in next screen
+			self.squeezeboxIPAddr = ip_addr_str
+
+			jnt:t_perform(function()
+					      _chooseSlimserver(self)
+				      end)
+
 	end
 end
 
@@ -788,7 +816,7 @@ function _chooseSlimserver(self)
 	local window = Window("window", self:string("SQUEEZEBOX_MUSIC_SOURCE"), setupsqueezeboxTitleStyle)
 
 	local menu = SimpleMenu("menu")
-	local help = Textarea("help", self:string("SQUEEZEBOX_MUSIC_SOURCE_HELP"))
+	local help = Textarea("help", self:string("SQUEEZEBOX_MUSIC_SOURCE_HELP", self.squeezeboxIPAddr))
 
 	window:addWidget(help)
 	window:addWidget(menu)
@@ -941,8 +969,15 @@ function _nextAction(self)
 		return
 	end
 
+	local totalTimeout = SETUP_TIMEOUT
+	-- Extend timeout when waiting on Squeezebox to connect to SlimServer since SB might upgrade
+	if self._action == t_waitSlimserver then
+		totalTimeout = SETUP_EXTENDED_TIMEOUT
+	end
+
 	self._timeout = self._timeout + 1
-	if self._timeout == SETUP_TIMEOUT then
+
+	if self._timeout == totalTimeout then
 
 		-- restore our network connection
 		jnt:perform(function()

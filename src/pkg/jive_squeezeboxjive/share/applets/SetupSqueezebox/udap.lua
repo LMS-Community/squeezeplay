@@ -1,5 +1,5 @@
 
-local pairs, print, tonumber, unpack = pairs, print, tonumber, unpack
+local pairs, ipairs, print, tonumber, unpack = pairs, ipairs, print, tonumber, unpack
 
 local oo          = require("loop.base")
 
@@ -139,7 +139,7 @@ end
 
 local ucpMethodHandlers = {
 	[ "discover" ] = parseDiscover,
-	[ "get_ip" ] = nil,
+	[ "get_ip" ] = parseDiscover,
 	[ "set_ip" ] = nil,
 	[ "reset" ] = nil,
 	[ "get_data" ] = parseGetData,
@@ -241,6 +241,14 @@ function createReset(mac, seq)
 	return createUdap(mac,
 			  seq,
 			  packNumber(0x0004, 2) -- reset
+		   )
+end
+
+
+function createGetIPAddr(mac, seq)
+	return createUdap(mac,
+			  seq,
+			  packNumber(0x0002, 2) -- get ip
 		   )
 end
 
