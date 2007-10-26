@@ -110,6 +110,9 @@ function _addPlayerItem(self, player)
 				   self:selectPlayer(player)
 				   self.setupNext()
 			   end,
+		focusGained = function(event)
+			self:_showWallPaper(playerMac)
+		end
 	}
 	self.playerMenu:addItem(item)
 	self.playerItem[playerMac] = item
@@ -117,6 +120,14 @@ function _addPlayerItem(self, player)
 	if self.selectedPlayer == player then
 		self.playerMenu:setSelectedItem(item)
 	end
+end
+
+function _showWallPaper(self, playerId)
+	-- and load the wallpaper for this player
+        local obj = AppletManager:loadApplet("SetupWallpaper")
+	log:info("previewing background wallpaper for ", playerId)
+	obj:_setBackground(nil, playerId)
+	AppletManager:freeApplet("SetupWallpaper")
 end
 
 function setupShow(self, setupNext)
