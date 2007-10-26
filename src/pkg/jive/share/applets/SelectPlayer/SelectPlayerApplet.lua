@@ -40,6 +40,8 @@ local jnt                = jnt
 
 local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
 
+-- load SetupWallpaper for use in previewing Wallpapers
+local SetupWallpaper = AppletManager:loadApplet("SetupWallpaper")
 
 module(...)
 oo.class(_M, Applet)
@@ -111,7 +113,7 @@ function _addPlayerItem(self, player)
 				   self.setupNext()
 			   end,
 		focusGained = function(event)
-			self:_showWallPaper(playerMac)
+			self:_showWallpaper(playerMac)
 		end
 	}
 	self.playerMenu:addItem(item)
@@ -122,12 +124,9 @@ function _addPlayerItem(self, player)
 	end
 end
 
-function _showWallPaper(self, playerId)
-	-- and load the wallpaper for this player
-        local obj = AppletManager:loadApplet("SetupWallpaper")
+function _showWallpaper(self, playerId)
 	log:info("previewing background wallpaper for ", playerId)
-	obj:_setBackground(nil, playerId)
-	AppletManager:freeApplet("SetupWallpaper")
+	SetupWallpaper:_setBackground(nil, playerId)
 end
 
 function setupShow(self, setupNext)
@@ -184,6 +183,7 @@ function selectPlayer(self, player)
 end
 
 function free(self)
+	AppletManager:freeApplet("SetupWallpaper")
 	-- Never free this applet
 	return false
 end
