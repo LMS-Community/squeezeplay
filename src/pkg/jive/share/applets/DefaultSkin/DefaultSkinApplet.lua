@@ -522,6 +522,9 @@ function skin(self, s)
 	s.popupIcon.text.align = "center"
 	s.popupIcon.text.position = LAYOUT_SOUTH
 
+	s.iconFavorites.img = Surface:loadImage(imgpath .. "popup_fav_heart_bkgrd.png")
+	s.iconFavorites.frameWidth = 161
+	s.iconFavorites.align = 'center'
 
 	-- connecting/connected popup icon
 	s.iconConnecting.img = Surface:loadImage(imgpath .. "icon_connecting.png")
