@@ -183,6 +183,10 @@ function selectPlayer(self, player)
 end
 
 function free(self)
+
+	-- load the correct wallpaper on exit
+	self:_showWallpaper(self.selectedPlayer.id)
+	
 	AppletManager:freeApplet("SetupWallpaper")
 	-- Never free this applet
 	return false
