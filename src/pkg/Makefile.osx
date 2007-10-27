@@ -122,7 +122,7 @@ luazipfilter/Makefile:
 	cd luazipfilter; ./configure --prefix=${PREFIX}
 
 luazipfilter: luazipfilter/Makefile
-	cd luazipfilter; make && cp .libs/zipfilter.so ${PREFIX}/lib/lua/5.1/zipfiler.so
+	cd luazipfilter; make && cp .libs/zipfilter.so ${PREFIX}/lib/lua/5.1/zipfilter.so
 
 loop:
 	-mkdir ${PREFIX}/share/lua/5.1/loop
