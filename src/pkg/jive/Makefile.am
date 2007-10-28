@@ -249,6 +249,13 @@ dist_applets_nowplaying_DATA = \
 	share/applets/NowPlaying/NowPlayingMeta.lua \
 	share/applets/NowPlaying/strings.txt
 
+applets_setupappletinstallerdir = $(pkgdatadir)/applets/SetupAppletInstaller
+dist_applets_setupappletinstaller_DATA = \
+	share/applets/SetupAppletInstaller/SetupAppletInstallerApplet.lua \
+	share/applets/SetupAppletInstaller/SetupAppletInstallerMeta.lua \
+	share/applets/SetupAppletInstaller/strings.txt
+
+
 # Wallpaper
 applets_setupwallpaperdir = $(pkgdatadir)/applets/SetupWallpaper
 dist_applets_setupwallpaper_DATA = \

@@ -1,0 +1,18 @@
+# strings file for SettingsAppletInstaller
+APPLET_INSTALLER
+	EN	Applet Installer
+
+INSTALL
+	EN	Install
+
+NONE_FOUND
+	EN	No Applets Found
+
+HELP
+	EN	Choose applets to be installed from SqueezeCenter and then select Install
+
+DOWNLOADING
+	EN	Downloading Applets
+
+RESTART
+	EN	Restart application to make use of new applets
