@@ -19,6 +19,7 @@ SDL_Rect jive_dirty_region;
 
 /* global counter used to invalidate widget skin and layout */
 Uint32 jive_origin = 0;
+static Uint32 next_jive_origin = 0;
 
 
 /* performance warning thresholds, 0 = disabled */
@@ -438,6 +439,8 @@ int jiveL_update_screen(lua_State *L) {
 		c0 = clock();
 	}
 
+	jive_origin = next_jive_origin;
+
 	/* Layout window and widgets */
 	if (jive_getmethod(L, -1, "checkLayout")) {
 		lua_pushvalue(L, -2);
@@ -599,7 +602,7 @@ int jiveL_style_changed(lua_State *L) {
 	lua_setfield(L, LUA_REGISTRYINDEX, "jiveStyleCache");
 
 	/* bump layout counter */
-	jive_origin++;
+	next_jive_origin++;
 
 	/* redraw screen */
 	lua_pushcfunction(L, jiveL_redraw);
@@ -734,7 +737,7 @@ int jiveL_set_background(lua_State *L) {
 		jive_tile_free(jive_background);
 	}
 	jive_background = jive_tile_ref(tolua_tousertype(L, 2, 0));
-	jive_origin++;
+	next_jive_origin++;
 
 	return 0;
 }
@@ -1086,7 +1089,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 		lua_pop(L, 1);
 
-		jive_origin++;
+		next_jive_origin++;
 
 		jevent.type = JIVE_EVENT_WINDOW_RESIZE;
 		break;

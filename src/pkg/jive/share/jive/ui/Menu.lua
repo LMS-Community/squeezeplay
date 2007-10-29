@@ -501,6 +501,17 @@ function _updateWidgets(self)
 		indexList[#indexList + 1] = i
 	end
 
+	local lastSelected = self._lastSelected
+	local lastSelectedIndex = self._lastSelectedIndex
+	local nextSelectedIndex = self.selected
+
+	-- clear focus
+	if lastSelectedIndex ~= nextSelectedIndex then
+		if lastSelected then
+			lastSelected:setStyleModifier(nil)
+			_itemListener(self, lastSelected, Event:new(EVENT_FOCUS_LOST))
+		end
+	end
 
 	-- reorder widgets to maintain the position of the selected widgets
 	-- this avoids having to change the widgets skin modifier, and
@@ -515,7 +526,6 @@ function _updateWidgets(self)
 			self._lastSelected = self.widgets[lastSelectedOffset]
 		end
 	end
-
 
 	-- render menu widgets
 	self.itemRenderer(self, self.widgets, indexList, indexSize, self.list)
@@ -552,19 +562,11 @@ function _updateWidgets(self)
 	end
 
 
-	local lastSelected = self._lastSelected
 	local nextSelected = _selectedItem(self)
 
-	-- clear selection and focus
-	if lastSelected ~= nextSelected then
-		if lastSelected then
-			lastSelected:setStyleModifier(nil)
-			_itemListener(self, lastSelected, Event:new(EVENT_FOCUS_LOST))
-		end
-
-		if nextSelected then
-			_itemListener(self, nextSelected, Event:new(EVENT_FOCUS_GAINED))
-		end
+	-- clear selection
+	if lastSelected and lastSelected ~= nextSelected then
+		lastSelected:setStyleModifier(nil)
 	end
 
 	-- set selection and focus
@@ -574,8 +576,14 @@ function _updateWidgets(self)
 		else
 			nextSelected:setStyleModifier("selected")
 		end
+
+		if lastSelectedIndex ~= nextSelectedIndex then
+			_itemListener(self, nextSelected, Event:new(EVENT_FOCUS_GAINED))
+		end
 	end
+
 	self._lastSelected = nextSelected
+	self._lastSelectedIndex = nextSelectedIndex
 	self._lastSelectedOffset = self.selected and self.selected - self.topItem + 1 or self.topItem
 
 	-- update scrollbar
