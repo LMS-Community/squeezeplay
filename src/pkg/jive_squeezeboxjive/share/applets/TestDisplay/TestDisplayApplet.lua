@@ -36,50 +36,108 @@ function popupWindow(self, text)
 	return popup
 end
 
-
 function drawDisplay(self)
+	local y
 	local w, h = Framework:getScreenSize()
 	local srf  = Surface:newRGBA(w, h)
 
-	log:warn("state is ", self.state)
 	srf:filledRectangle(0, 0, w, h, 0xFFFFFFFF)
 
 	if self.state == 1 then
-		log:warn("DisplayTest: RED")
+		log:info("DisplayTest: RED")
 		srf:filledRectangle(0, 0, w, h, 0xFF0000FF)
 
 	elseif self.state == 2 then
-		log:warn("DisplayTest: GREEN")
-		srf:filledRectangle(0, 0, w, h, 0x00FF00FF)
+		log:info("DisplayTest: Gradiant RED")
+
+		for y = 0, 160, 1 do
+			local shade = (y * 0xFF / 160)
+			shade = shade - (shade%1)
+			local color = (shade << 24) | 0xFF
+			srf:line( 0, y, 240, y, color)
+		end
+		for y = 0, 160, 1 do
+			local shade = (y * 0xFF / 160)
+			shade = shade - (shade%1)
+			local color = 0xFF000000 | (shade << 16) | (shade << 8) | 0xFF
+			srf:line( 0, y+160, 240, y+160, color)
+		end
 
 	elseif self.state == 3 then
-		log:warn("DisplayTest: BLUE")
-		srf:filledRectangle(0, 0, w, h, 0x0000FFFF)
+		log:info("DisplayTest: GREEN")
+		srf:filledRectangle(0, 0, w, h, 0x00FF00FF)
 
 	elseif self.state == 4 then
-		log:warn("DisplayTest: WHITE")
+		log:info("DisplayTest: Gradiant GREEN")
+
+		for y = 0, 160, 1 do
+			local shade = (y * 0xFF / 160)
+			shade = shade - (shade%1)
+			local color = (shade << 16) | 0xFF
+			srf:line( 0, y, 240, y, color)
+		end
+		for y = 0, 160, 1 do
+			local shade = (y * 0xFF / 160)
+			shade = shade - (shade%1)
+			local color = (shade << 24) | 0xFF0000 | (shade << 8) | 0xFF
+			srf:line( 0, y+160, 240, y+160, color)
+		end
+	
+	elseif self.state == 5 then
+		log:info("DisplayTest: BLUE")
+		srf:filledRectangle(0, 0, w, h, 0x0000FFFF)
+	
+	elseif self.state == 6 then
+		log:info("DisplayTest: Gradiant BLUE")
+		srf:filledRectangle(0, 0, w, h, 0x0000FFFF)
+
+		for y = 0, 160, 1 do
+			local shade = (y * 0xFF / 160)
+			shade = shade - (shade%1)
+			local color = (shade << 8) | 0xFF
+			srf:line( 0, y, 240, y, color)
+		end
+		for y = 0, 160, 1 do
+			local shade = (y * 0xFF / 160)
+			shade = shade - (shade%1)
+			local color = (shade << 24) | (shade << 16) | 0xFFFF
+			srf:line( 0, y+160, 240, y+160, color)
+		end
+
+	elseif self.state == 7 then
+		log:info("DisplayTest: WHITE")
 		srf:filledRectangle(0, 0, w, h, 0xFFFFFFFF)
 
-	elseif self.state == 5 then
-		log:warn("DisplayTest: BLACK")
+	elseif self.state == 8 then
+		log:info("DisplayTest: Gradiant WHITE")
+
+		for y = 0, 320, 1 do
+			local shade = (y * 0xFF / 320)
+			shade = shade - (shade%1)
+			local color = (shade << 24) | (shade << 16) | (shade << 8) | 0xFF
+			srf:line( 0, y, 240, y, color)
+		end
+
+	elseif self.state == 8 then
+		log:info("DisplayTest: BLACK")
 		srf:filledRectangle(0, 0, w, h, 0x000000FF)
 
-	elseif self.state == 6 then
-		log:warn("DisplayTest: HORZ_STRIPES")
+	elseif self.state == 9 then
+		log:info("DisplayTest: HORZ_STRIPES")
 		srf:filledRectangle(0, 0, w, h, 0xFFFFFFFF)
 		for y = 0, h, 2 do
 			srf:line(0, y, w, y, 0x000000FF)
 		end
 
-	elseif self.state == 7 then
-		log:warn("DisplayTest: VERT_STRIPES")
+	elseif self.state == 10 then
+		log:info("DisplayTest: VERT_STRIPES")
 		srf:filledRectangle(0, 0, w, h, 0xFFFFFFFF)
 		for x = 0, w, 2 do
 			srf:line(x ,0, x, h, 0x000000FF)
 		end
 
 	else
-		log:warn("DisplayTest: TEST_COMPLETE")
+		log:info("DisplayTest: TEST_COMPLETE")
 		self:popupWindow(self:string("TEST_COMPLETE"))
 	end
 	
