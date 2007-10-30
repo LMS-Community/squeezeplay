@@ -10,7 +10,7 @@ export PREFIX=${BUILDDIR}/usr
 export CFLAGS=-I${PREFIX}/include -I${SRCDIR}/jive/src/ui -Os
 export LDFLAGS=-L${PREFIX}/lib
 
-TARGET=arm-9tdmi-linux-gnu
+TARGET=arm-926ejs-linux-gnueabi
 
 export CC=$(TARGET)-gcc
 export LD=$(TARGET)-ld
@@ -49,7 +49,7 @@ freetype: freetype-2.1.10/config.mk
 
 # sdl
 SDL-1.2.11/Makefile:
-	cd SDL-1.2.11; ./configure --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --enable-oss --disable-alsa --disable-esd --disable-arts --disable-video-x11 --disable-video-directfb --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
+	cd SDL-1.2.11; ./configure --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --disable-oss --enable-alsa --disable-esd --disable-arts --disable-video-x11 --disable-video-directfb --enable-clock_gettime --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 sdl: SDL-1.2.11/Makefile
 	cd SDL-1.2.11; make; make DESTDIR= install

@@ -55,7 +55,7 @@ function _factoryReset(self)
 
 				      -- touch .factoryreset and reboot
 				      io.open("/.factoryreset", "w"):close()
-				      os.execute("/bin/busybox reboot -n -f")
+				      os.execute("/bin/busybox reboot -f")
 			      end)
 
 	self:tieAndShowWindow(window)

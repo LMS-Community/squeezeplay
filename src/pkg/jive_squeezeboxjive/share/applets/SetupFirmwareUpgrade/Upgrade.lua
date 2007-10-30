@@ -124,16 +124,6 @@ function start(self, callback)
 	if not t then
 		return nil, err
 	end
-
-	-- erase yaffs
-	-- FIXME implement yaffs cleanup on reboot
-	--[[
-	cmd = "/usr/sbin/flash_eraseall -q " .. self._mtd["yaffs"]
-	log:warn("flash: ", cmd)
-	if os.execute(cmd) ~= 0 then
-		return nil, "flash_eraseall failed"
-	end
-	--]]
 	
 	return 1
 end

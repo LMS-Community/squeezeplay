@@ -202,7 +202,7 @@ function _t_upgrade(self)
 
 		-- reboot
 		log:warn("REBOOTING ...")
-		os.execute("/bin/busybox reboot -n -f")
+		os.execute("/bin/busybox reboot -f")
 	end
 end
 

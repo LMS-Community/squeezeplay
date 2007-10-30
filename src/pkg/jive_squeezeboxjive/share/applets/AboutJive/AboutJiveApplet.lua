@@ -51,6 +51,7 @@ function settingsShow(self)
 		"     Fred Bould",
 		"     Caleb Crome",
 		"     Noah DiJulio",
+		"     Ben Dooks",
 		"     Lukas Frey",
 		"     Andy Grundman",
 		"     Raphael Juchli",

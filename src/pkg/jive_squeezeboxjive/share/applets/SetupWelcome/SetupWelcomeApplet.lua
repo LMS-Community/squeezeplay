@@ -150,11 +150,11 @@ end
 
 function step8(self)
 	-- all done
+	self:getSettings().setupDone = true
+	self:storeSettings()
+
 	return self:setupDoneShow(function()
 			self._topWindow:hideToTop(Window.transitionPushLeft) 
-
-			self:getSettings().setupDone = true
-			self:storeSettings()
 		end)
 end
 

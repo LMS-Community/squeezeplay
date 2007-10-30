@@ -20,15 +20,10 @@
 static const char *bsp_devname = "/dev/misc/jive_mgmt";
 static const char *mixer_devname = "/dev/sound/mixer";
 
-// XXXX these probably should be discovered based on supported events, not hard coded
-static const char *bsp_event_devname = "/dev/input/event1";
-static const char *wheel_event_devname = "/dev/input/event2";
-static const char *motion_event_devname = "/dev/input/event3";
-
 
 static int bsp_fd = -1;
 static int mixer_fd = -1;
-static int bsp_event_fd = -1;
+static int switch_event_fd = -1;
 static int wheel_event_fd = -1;
 static int motion_event_fd = -1;
 
@@ -63,8 +58,8 @@ static int l_jivebsp_mixer(lua_State *L) {
 	unsigned int channel, l, r, volume;
 
 	if (mixer_fd == -1) {
-		lua_pushstring(L, "Mixer device is not open");
-		lua_error(L);
+		// silently fail
+		return 0;
 	}
 
 	channel = luaL_checkinteger(L, 1); // mixer
@@ -206,6 +201,56 @@ static int handle_motion_events(int fd) {
 }
 
 
+#define BITS_PER_LONG (sizeof(long) * 8)
+#define NBITS(x) ((((x)-1)/BITS_PER_LONG)+1)
+#define OFF(x)  ((x)%BITS_PER_LONG)
+#define BIT(x)  (1UL<<OFF(x))
+#define LONG(x) ((x)/BITS_PER_LONG)
+#define test_bit(bit, array)	((array[LONG(bit)] >> OFF(bit)) & 1)
+
+static void open_input_devices(void) {
+	char path[PATH_MAX];
+	struct stat sbuf;
+	unsigned long evbit[40];
+	int n, fd;
+
+	for (n=0; n<10; n++) {
+		snprintf(path, sizeof(path), "/dev/input/event%d", n);
+
+		if ((stat(path, &sbuf) != 0) | !S_ISCHR(sbuf.st_mode)) {
+			continue;
+		}
+
+		if ((fd = open(path, O_RDONLY, 0)) < 0) {
+			perror("open");
+			continue;
+		}
+
+		if (ioctl(fd, EVIOCGBIT(0, EV_MAX), &evbit) < 0) {
+			perror("ioctrl");
+			close(fd);
+			continue;
+		}
+
+		/* we only have limited and known hardware so
+		 * the tests here don't have to be too strict.
+		 */
+		if (test_bit(EV_REL, evbit)) {
+			wheel_event_fd = fd;
+		}
+		else if (test_bit(EV_ABS, evbit)) {
+			motion_event_fd = fd;
+		}
+		else if (test_bit(EV_SW, evbit)) {
+			switch_event_fd = fd;
+		}
+		else {
+			close(fd);
+		}
+	}
+}
+
+
 static int event_pump(lua_State *L) {
 	fd_set fds;
 	struct timeval timeout;
@@ -213,8 +258,8 @@ static int event_pump(lua_State *L) {
 	FD_ZERO(&fds);
 	memset(&timeout, 0, sizeof(timeout));
 
-	if (bsp_event_fd != -1) {
-		FD_SET(bsp_event_fd, &fds);
+	if (switch_event_fd != -1) {
+		FD_SET(switch_event_fd, &fds);
 	}
 
 	if (wheel_event_fd != -1) {
@@ -230,8 +275,8 @@ static int event_pump(lua_State *L) {
 		return -1;
 	}
 
-	if (bsp_event_fd != -1 && FD_ISSET(bsp_event_fd, &fds)) {
-		handle_switch_events(bsp_event_fd);
+	if (switch_event_fd != -1 && FD_ISSET(switch_event_fd, &fds)) {
+		handle_switch_events(switch_event_fd);
 	}
 
 	if (wheel_event_fd != -1 && FD_ISSET(wheel_event_fd, &fds)) {
@@ -305,26 +350,14 @@ int luaopen_jiveBSP(lua_State *L) {
 	bsp_fd = open(bsp_devname, O_RDWR);
 	if (bsp_fd == -1) {
 		perror("jivebsp:");
-		goto err1;
 	}
 
 	mixer_fd = open(mixer_devname, O_RDWR);
 	if (mixer_fd == -1) {
 		perror("jivebsp mixer:");
-		goto err2;
 	}
 
-	if ((bsp_event_fd = open(bsp_event_devname, O_RDONLY)) < 0) {
-		perror("jivebsp:");
-	}
-
-	if ((wheel_event_fd = open(wheel_event_devname, O_RDONLY)) < 0) {
-		perror("jivebsp:");
-	}
-
-	if ((motion_event_fd = open(motion_event_devname, O_RDONLY)) < 0) {
-		perror("jivebsp motion:");
-	}
+	open_input_devices();
 
 	jive_sdlevent_pump = event_pump;
 
@@ -339,10 +372,4 @@ int luaopen_jiveBSP(lua_State *L) {
 	luaL_register(L, "jivebsp", jivebsplib);
 
 	return 1;
-
- err2:
-	close(bsp_fd);
-
- err1:
-	return 0;
 }

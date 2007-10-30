@@ -111,7 +111,16 @@ function init(self)
 
 	-- power management
 	self.powerTimer = Timer(0, function() sleep(self) end)
-	Framework:addListener(EVENT_SCROLL | EVENT_MOTION,
+	Framework:addListener(EVENT_MOTION,
+			      function(event) 
+				      if state ~= "ac_active" and
+					      state ~= "ac_dimmed" then
+					      wakeup(self)
+				      end
+				      return EVENT_UNUSED
+			      end)
+
+	Framework:addListener(EVENT_SCROLL,
 			      function(event) 
 				      wakeup(self)
 				      return EVENT_UNUSED
@@ -532,63 +541,6 @@ function lockScreen(self)
 					      return EVENT_CONSUME
 				      end,
 				      true)
-end
-
-
-function factoryReset(self, menuItem)
-	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
-
-	local menu = SimpleMenu("menu", {
-					{
-						text = "Cancel",
-						callback = function()
-								   window:hide()
-							   end
-					},
-					{
-						text = "Continue",
-						callback = function()
-								   self:_doFactoryReset()
-							   end
-					},
-				})
-
-	window:addWidget(menu)
-
-	return window
-end
-
-
-function _doFactoryReset(self)
-	local window = Popup("popupIcon")
-	window:addWidget(Icon("iconConnected"))
-	window:addWidget(Textarea("text", "Rebooting"))
-
-	window:addTimer(2000, function()
-				      log:warn("Factory reset...")
-
-				      -- touch .factoryreset and reboot
-				      io.open("/.factoryreset", "w"):close()
-				      os.execute("/bin/busybox reboot -n -f")
-			      end)
-
-	self:tieAndShowWindow(window)
-end
-
-
-
-
--- skin
-local imgpath = "applets/SqueezeboxJive/images/"
-local skinimgpath = "applets/DefaultSkin/images/"
-local fontpath = "fonts/"
-
-local function _icon(var, x, y, img)
-	var.x = x
-	var.y = y
-	var.img = Surface:loadImage(imgpath .. img)
-	var.layer = LAYER_FRAME
-	var.position = LAYOUT_SOUTH
 end
 
 
