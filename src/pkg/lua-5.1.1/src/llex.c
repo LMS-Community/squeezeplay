@@ -483,6 +483,9 @@ static int llex (LexState *ls, SemInfo *seminfo) {
   }
 }
 
+#ifdef LUA_DISABLE_ASSERT
+#include "jive_assert.h"
+#endif
 
 void luaX_next (LexState *ls) {
   ls->lastline = ls->linenumber;
