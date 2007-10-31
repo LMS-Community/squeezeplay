@@ -917,8 +917,12 @@ function borderLayout(self, fitWindow)
 			elseif position == LAYOUT_CENTER then
 				h = h or (wh - maxN - maxS)
 				h = min(wh - maxN - maxS, h) - bb
-				widget:setBounds(maxBounds(wx + maxW + lb, wy + maxN + tb + cy, (ww - maxW - maxE) - rb, h))
-				cy = cy + tb + h + bb
+				w = w or (ww - maxW - maxE)
+				w = min(ww - maxW - maxE, w) - rb
+
+				widget:setBounds(maxBounds(wx + maxW + lb, wy + maxN + tb + cy, w, h))
+				-- FIXME why is bb needed twice here? check the layout in now playing if this is changed
+				cy = cy + h + bb + bb
 
 			elseif position == LAYOUT_NONE then
 				widget:setBounds(maxBounds(wx + x, wy + y, w, h))

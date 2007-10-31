@@ -667,15 +667,10 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/icon_connecting.png \
 	share/applets/DefaultSkin/images/icon_connected.png \
         share/applets/DefaultSkin/images/bghighlight_r.png \
-        share/applets/DefaultSkin/images/bghighlight_t.png \
         share/applets/DefaultSkin/images/bghighlight.png \
         share/applets/DefaultSkin/images/bghighlight_bl.png \
         share/applets/DefaultSkin/images/bghighlight_br.png \
-        share/applets/DefaultSkin/images/titlebox_bl_bghighlight.png \
-        share/applets/DefaultSkin/images/titlebox_br_bghighlight.png \
-        share/applets/DefaultSkin/images/bghighlight_tl.png \
         share/applets/DefaultSkin/images/bghighlight_b.png \
-        share/applets/DefaultSkin/images/bghighlight_tr.png \
         share/applets/DefaultSkin/images/bghighlight_l.png \
         share/applets/DefaultSkin/images/popup_shutdown_icon.png \
         share/applets/DefaultSkin/images/popup_playlist_icon.png \

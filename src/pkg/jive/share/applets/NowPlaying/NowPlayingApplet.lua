@@ -1,5 +1,4 @@
 local pairs, ipairs, tostring, type = pairs, ipairs, tostring, type
-local tonumber = tonumber
 
 local math             = require("math")
 local table            = require("table")
@@ -13,19 +12,30 @@ local Framework        = require("jive.ui.Framework")
 local Icon             = require("jive.ui.Icon")
 local Choice           = require("jive.ui.Choice")
 local Label            = require("jive.ui.Label")
+local Group            = require("jive.ui.Group")
 local Slider	       = require("jive.ui.Slider")
 local RadioButton      = require("jive.ui.RadioButton")
 local RadioGroup       = require("jive.ui.RadioGroup")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Surface          = require("jive.ui.Surface")
 local Window           = require("jive.ui.Window")
-local Tile	           = require("jive.ui.Tile")
-local Timer	           = require("jive.ui.Timer")
+local Tile             = require("jive.ui.Tile")
+local Timer            = require("jive.ui.Timer")
                        
 local log              = require("jive.utils.log").logger("applets.screensavers")
 local datetime         = require("jive.utils.datetime")
 
-local appletManager	= appletManager
+local appletManager    = appletManager
+
+
+local WH_FILL                = jive.ui.WH_FILL
+local LAYOUT_NORTH           = jive.ui.LAYOUT_NORTH
+local LAYOUT_EAST            = jive.ui.LAYOUT_EAST
+local LAYOUT_SOUTH           = jive.ui.LAYOUT_SOUTH
+local LAYOUT_WEST            = jive.ui.LAYOUT_WEST
+local LAYOUT_CENTER          = jive.ui.LAYOUT_CENTER
+local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
+
 
 module(...)
 oo.class(_M, Applet)
@@ -39,28 +49,29 @@ end
 -- Globals
 --
 
-local ARTWORK_SIZE = 164
+local ARTWORK_SIZE = 154
 
-local theWindow = nil
 local thePlayer = nil
 local theItem = nil
 local theTimer = nil
 
-local lWTitle = nil
+local titleGroup = nil
 
-local lTrackName = nil
+local trackGroup = nil
 local lTrackArtist = nil
 local lTrackAlbum = nil
 local lPlaylist = nil
 local iArt = nil
-local sPos = nil
+local progressSlider = nil
 local lPos = nil
 local lRemain = nil
 
 local iTrackPos = 0
 local iTrackLen = 0
 
-local strOf = " of "
+--local noArtworkImage = nil
+--local shadowArtworkImage = nil
+
 
 ----------------------------------------------------------------------------------------
 -- Helper Functions
@@ -93,26 +104,7 @@ local function SecondsToString(seconds)
 	local min = math.floor(seconds / 60)
 	local sec = math.floor(seconds - (min*60))
 
-	-- Fix when below 10
-	if sec < 10 then 
-		sec = "0" .. sec
-	end
-
-	return min .. ":" .. sec
-end
-
-local function _getCurrentIconId()
-	if theItem == nil then
-		return nil 
-	end
-
-	if theItem["icon-id"] then
-		return "icon-id:" .. theItem["icon-id"]
-	elseif theItem["icon"] then
-		return "icon:" .. theItem["icon"]
-	end
-
-	return nil
+	return string.format("%d:%02d", min, sec)
 end
 
 local function _getIcon(item)
@@ -121,107 +113,62 @@ local function _getIcon(item)
 
 	if item["icon-id"] then
 		-- Fetch an image from SlimServer
-		icon = Icon("icon")
+		icon = iArt --Icon("icon")
 		server:fetchArtworkThumb(item["icon-id"], icon, _nowPlayingArtworkThumbUri, ARTWORK_SIZE) 
 	elseif item["icon"] then
 		-- Fetch a remote image URL, sized to ARTWORK_SIZE x ARTWORK_SIZE
-		icon = Icon("icon")
+		icon = iArt --Icon("icon")
 		server:fetchArtworkURL(item["icon"], icon, ARTWORK_SIZE)
+	else
+		iArt:setValue(nil)
 	end
 	return icon
 end
 
 local function updatePosition()
+	local strElapsed = ""
+	local strRemain = ""
+	local pos = 0
+
+	if iTrackPos then 
+		strElapsed = SecondsToString(iTrackPos)
+	end
 
 	if iTrackLen and iTrackLen > 0 then
-		local strPos = SecondsToString(iTrackPos)
-		local strRemain = "-" .. SecondsToString(iTrackLen - iTrackPos)
-		
-		lPos:setValue(strPos)
-		lRemain:setValue(strRemain)
-
-		sPos:setValue(iTrackPos)
-
-	else 
-		if iTrackPos then 
-			lPos:setValue(SecondsToString(iTrackPos))
-		else 
-			lPos:setValue("n/a")
-		end
-	
-		lRemain:setValue("")
-		sPos:setValue(0)
+		strRemain = "-" .. SecondsToString(iTrackLen - iTrackPos)
+		pos = iTrackPos
 	end
 
+	progressGroup:setWidgetValue("elapsed", strElapsed)
+	progressGroup:setWidgetValue("remain", strRemain)
+	progressSlider:setValue(pos)
 end
 
-local function setTrackInfo(value)
-	-- Split Text Up into the three infos
-	--
-	local x = string.gfind(value, "([^\n]*)")
-	local i = 0
-	local split = {}
-	for v in x do
-		if string.len(v) > 0 then
-			i = i + 1
-			split[i] = v
-		end
-	end
-
-	if i == 3 then
-		lTrackName:setValue(split[1]);
-		lTrackArtist:setValue(split[3]);
-		lTrackAlbum:setValue(split[2]);
-	else 
-		lTrackName:setValue("")
-		lTrackArtist:setValue(value)
-		lTrackAlbum:setValue("")
-	end
+function updateTrack(self, trackinfo, pos, length)
+	trackGroup:setWidgetValue("text", trackinfo);
 end
 
-local function setTime(trackpos, tracklen)
+function updateProgress(self, trackpos, tracklen)
 	iTrackPos = trackpos
 	iTrackLen = tracklen	
 
 	if tracklen and tracklen > 0 then
-		sPos:setRange(0, tracklen, trackpos)
+		progressSlider:setRange(0, tracklen, trackpos)
 	else 
 		-- If 0 just set it to 100
-		sPos:setRange(0, 100, 0)
+		progressSlider:setRange(0, 100, 0)
 	end
 
 	updatePosition()
+
 end
 
-local function setArtwork(icon)
-	if icon ~= nil then
-		theWindow:removeWidget(iArt)
-
-		local sw, sh = iArt:getSize()
-		local x, y = iArt:getPosition()
-
-		iArt = icon
-		iArt:setSize(sw, sh)
-		iArt:setPosition(x,y)
-		theWindow:addWidget(iArt)
-	else
-		log:debug("No Icon")
-	end
-end
-
-
-local function updateTrack(trackinfo, pos, length)
-	setTrackInfo(trackinfo)
-	setTime(pos, length)
-end
-
-local function updatePlaylist(enabled, nr, count)
-	log:error(nr .. " - " .. count)
+function updatePlaylist(self, enabled, nr, count)
 	if enabled == true and count > 1 then
 		nr = nr + 1
-		lPlaylist:setValue(nr .. strOf .. count)
+		titleGroup:setWidgetValue("playlist", self:string("SCREENSAVER_NOWPLAYING_OF", nr, count))
 	else 
-		lPlaylist:setValue("")
+		titleGroup:setWidgetValue("playlist", "")
 	end
 end
 
@@ -249,17 +196,6 @@ end
 -- Screen Saver Display 
 --
 
-function _process_displaystatus(self, event)
-	log:debug("Display Status")
-
-	local data = event.data;
-	if data.display then 
-		local display = data.display;
-		log:debug(display)
-	else 
-		log:debug("No Display")
-	end
-end
 
 function _process_status(self, event)
 	log:debug("_process_status")
@@ -267,11 +203,13 @@ function _process_status(self, event)
 	local data = event.data;
 
 	if data.mode == "play" then
-		theTimer:start()	
+		theTimer:start()
+		titleGroup:setWidgetValue("title", self:string("SCREENSAVER_NOWPLAYING"))
 	elseif data.mode == "pause" then
 		theTimer:stop()
-	else
-		log:debug("Unknown Mode: " .. data.mode)
+		titleGroup:setWidgetValue("title", self:string("SCREENSAVER_PAUSED"))
+	elseif data.mode == "stop" then
+		titleGroup:setWidgetValue("title", self:string("SCREENSAVER_STOPPED"))
 	end
 
 	if data.item_loop ~= nil then
@@ -281,25 +219,25 @@ function _process_status(self, event)
 		if data.remote == 1 and type(data.current_title) == 'string' then 
 			text = text .. "\n" .. data.current_title
 		end
-			
+
 		theItem = data.item_loop[1]
 
-		local icon = _getIcon(theItem)
-
-		updateTrack(text, data.time, data.duration)
-		updatePlaylist(true, data.playlist_cur_index, data.playlist_tracks)
-		setArtwork(icon)
+		_getIcon(theItem)
+		self:updateTrack(text)
+		self:updateProgress(data.time, data.duration)
+		self:updatePlaylist(true, data.playlist_cur_index, data.playlist_tracks)
 	else
 		theItem = nil
-		updateTrack("(Nothing Playing)", 0, 0)
-		updatePlaylist(false, 0, 0)
-		setArtwork(nil)
+
+		_getIcon(theItem)
+		self:updateTrack("") -- FIXME what string?
+		self:updateProgress(0, 0)
+		self:updatePlaylist(false, 0, 0)
 	end
 end
 
 function free(self)
 	if thePlayer then
-		thePlayer.slimServer.comet:removeCallback( '/slim/displaystatus/' .. thePlayer:getId(), self.displaySink )
 		thePlayer.slimServer.comet:removeCallback( '/slim/playerstatus/' .. thePlayer:getId(), self.statusSink )
 	end
 
@@ -307,67 +245,39 @@ function free(self)
 end
 
 function _createUI(self)
-	-- Retrieve " of " string
-	strOf = " " .. tostring(self:string("SCREENSAVER_NOWPLAYING_OF")) .. " "
-
-	local window = Window("nowplaying")
+	local window = Window("window")
 
 	local sw, sh = Framework:getScreenSize()
 
-	lWTitle = Label("nptitle", "Now Playing")
-	lWTitle:setPosition(5, 5)
-	lWTitle:setSize(sw-10, 35)
+	titleGroup = Group("nptitle", {
+				   title = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
+				   playlist = Label("playlist", "")
+			   })
+	
 
-	lPlaylist = Label("playlist", "")
-	lPlaylist:setPosition(sw-70, 15)
-	lPlaylist:setSize(55, 10)
-
-	lTrackName = Label("labelbold", "")
-	lTrackName:setPosition(10, 45)
-	lTrackName:setSize(sw-20, 15)
-
-	lTrackArtist = Label("label", "")
-	lTrackArtist:setPosition(10, 60)
-	lTrackArtist:setSize(sw-20, 15)
-
-	lTrackAlbum = Label("label", "")
-	lTrackAlbum:setPosition(10, 75)
-	lTrackAlbum:setSize(sw-20, 15)
-
-	lPos = Label("wlabel", "n/a")
-	lPos:setPosition(10, sh-44)
-	lPos:setSize(20, 10)
-
-	lRemain = Label("wrlabel", "n/a")
-	lRemain:setPosition(sw-30, sh-44)
-	lRemain:setSize(25, 10)
+	trackGroup = Group("nptrack", {
+				   text = Label("text", "\n\n\n")
+			   })
+	
+	
+	progressSlider = Slider("slider", 0, 100, 0)
+	progressGroup = Group("progress", {
+				      elapsed = Label("text", ""),
+				      slider = progressSlider,
+				      remain = Label("text", "")
+			      })
 
 	iArt = Icon("artwork")
-	iArt:setSize(ARTWORK_SIZE, ARTWORK_SIZE)
-	iArt:setPosition(sw/2-(ARTWORK_SIZE/2), 107)
-
-	local bg = Label("background", "")
-	bg:setSize(sw-11, 65)
-	bg:setPosition(6, 38)
-
-	sPos = Slider("slider", 0, 100, 0, function(slider, value) log:warn("slider: " .. value) end)
-	sPos:setPosition(35, sh-45)
-	sPos:setSize(sw-70, 10)
+	artworkGroup = Group("npartwork166", {
+				     artwork = iArt     
+			     })
 	
-	window:addWidget(bg)
-	window:addWidget(lWTitle)
-	window:addWidget(lPlaylist)
-	window:addWidget(lTrackName)
-	window:addWidget(lTrackArtist)
-	window:addWidget(lTrackAlbum)
-	window:addWidget(sPos)
-	window:addWidget(lPos)
-	window:addWidget(lRemain)
-	window:addWidget(iArt)
+	window:addWidget(titleGroup)
+	window:addWidget(trackGroup)
+	window:addWidget(artworkGroup)
+	window:addWidget(progressGroup)
 
-	--window:focusWidget(lTrackInfo)
-
-	theWindow = window
+	window:focusWidget(trackGroup)
 
 	return window
 end
@@ -386,20 +296,16 @@ function openScreensaver(self, menuItem, mode)
 	thePlayer = discovery:getCurrentPlayer()
 
 	if thePlayer then
-	
 		local playerid = thePlayer:getId()
+
+		-- FIXME this callback should come from the Player object
+		-- is this why the playlist screen stops updating?
 	
 		-- Register our own functions to be called when we receive data
 		self.statusSink = _getSink(self, 'status')
 		thePlayer.slimServer.comet:addCallback(
 			'/slim/playerstatus/' .. playerid,
 			self.statusSink
-		)
-
-		self.displaySink = _getSink(self, 'displaystatus')
-		thePlayer.slimServer.comet:addCallback(
-			'/slim/displaystatus/' .. playerid,
-			self.displaySink
 		)
 
 		theTimer = Timer(1000, function() tick() end)
@@ -423,7 +329,7 @@ function skin(self, s)
 	local npimgpath = "applets/NowPlaying/images/"
 	local fontpath = "fonts/"
 
-	s.nowplaying.layout = Window.noLayout
+	local screenWidth, screenHeight = Framework:getScreenSize()
 
         local titleBox =
                 Tile:loadTiles({
@@ -432,18 +338,18 @@ function skin(self, s)
                                        imgpath .. "titlebox_t.png",
                                        imgpath .. "titlebox_tr.png",
                                        imgpath .. "titlebox_r.png",
-                                       imgpath .. "titlebox_br_bghighlight.png",
+                                       imgpath .. "bghighlight_tr.png",
                                        imgpath .. "titlebox_b.png",
-                                       imgpath .. "titlebox_bl_bghighlight.png",
+                                       imgpath .. "bghighlight_tl.png",
                                        imgpath .. "titlebox_l.png"
                                })
 
         local highlightBox =
                 Tile:loadTiles({
                                        imgpath .. "bghighlight.png",
-                                       imgpath .. "bghighlight_tl.png",
-                                       imgpath .. "bghighlight_t.png",
-                                       imgpath .. "bghighlight_tr.png",
+                                       nil,
+                                       nil,
+                                       nil,
                                        imgpath .. "bghighlight_r.png",
                                        imgpath .. "bghighlight_br.png",
                                        imgpath .. "bghighlight_b.png",
@@ -452,46 +358,45 @@ function skin(self, s)
                                })
 
 	-- Title
-        s.nptitle.font = Font:load(fontpath .. "FreeSansBold.ttf", 18)
-        s.nptitle.fg = { 0x37, 0x37, 0x37 }
-        s.nptitle.bgImg = titleBox
-        s.nptitle.padding = { 10, 7, 8, 9 }
-        s.nptitle.position = LAYOUT_NORTH
+	s.nptitle.border = { 4, 4, 4, 0 }
+	s.nptitle.position = LAYOUT_NORTH
+	s.nptitle.bgImg = titleBox
+	s.nptitle.order = { "title", "playlist" }
+	s.nptitle.text.w = WH_FILL
+	s.nptitle.text.padding = { 10, 7, 8, 9 }
+	s.nptitle.text.align = "top-left"
+	s.nptitle.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 20)
+	s.nptitle.text.fg = { 0x00, 0x00, 0x00 }
+	s.nptitle.playlist.padding = { 10, 7, 8, 9 }
+	s.nptitle.playlist.font = Font:load(fontpath .. "FreeSans.ttf", 15)
+	s.nptitle.playlist.fg = { 0x00, 0x00, 0x00 }
+	s.nptitle.playlist.textAlign = "top-right"
 
-	-- Bold Font for song title
-        s.labelbold.font = Font:load(fontpath .. "FreeSansBold.ttf", 13)
-
-	-- Normal font for artist and album name
-	s.label.font = Font:load(fontpath .. "FreeSans.ttf", 13)
-
-	-- Time Position Label
-	s.wlabel.font = Font:load(fontpath .. "FreeSansBold.ttf", 11)
-	s.wlabel.fg = { 0xE7, 0xE7, 0xE7 }
-	
-	-- Time Position Label (DropShadow)
-	s.wlabel_ds.font = Font:load(fontpath .. "FreeSansBold.ttf", 11)
-	s.wlabel_ds.fg = { 0x35, 0x35, 0x35 }
-
-	-- Time Remaining Label
-	s.wrlabel.font = Font:load(fontpath .. "FreeSansBold.ttf", 11)
-	s.wrlabel.fg = { 0xE7, 0xE7, 0xE7 }
-	s.wrlabel.textAlign = "top-right"
-
-	-- Time Remaining Label (DropShadow)
-	s.wrlabel_ds.font = Font:load(fontpath .. "FreeSansBold.ttf", 11)
-	s.wrlabel_ds.fg = { 0x35, 0x35, 0x35 }
-	s.wrlabel_ds.textAlign = "top-right"
-
-	-- Playlist display
-	s.playlist.font = Font:load(fontpath .. "FreeSans.ttf", 14)
-	s.playlist.fg = { 0x0, 0x0, 0x0 }
-	s.playlist.textAlign = "top-right"
+	-- Song
+	s.nptrack.border = { 4, 0, 4, 0 }
+        s.nptrack.bgImg = highlightBox
+	s.nptrack.text.w = WH_FILL
+	s.nptrack.text.padding = { 10, 7, 8, 9 }
+	s.nptrack.text.align = "top-left"
+        s.nptrack.text.font = Font:load(fontpath .. "FreeSans.ttf", 14)
+	s.nptrack.text.lineHeight = 17
+        s.nptrack.text.line[1].font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
+	s.nptrack.text.line[1].height = 17
+	s.nptrack.text.fg = { 0x00, 0x00, 0x00 }
 
 	-- Artwork
-	s.artwork.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
-	s.artwork.x = 50
-	s.artwork.y = 100
-	
-	-- Label Background 
-	s.background.bgImg = highlightBox
+	local noartwork166offset = (screenWidth - 166) / 2
+	s.npartwork166.w = 166
+	s.npartwork166.border = { noartwork166offset, 4, onoartwork166offset, 6 }
+	s.npartwork166.align = "center"
+	s.npartwork166.bgImg = Tile:loadImage(imgpath .. "album_shadow_166.png")
+	s.npartwork166.artwork.padding = 3
+	s.npartwork166.artwork.img = Surface:loadImage(imgpath .. "album_noartwork_166.png")
+
+	-- Progress bar
+	s.progress.order = { "elapsed", "slider", "remain" }
+	s.progress.text.padding = { 8, 0, 8, 0 }
+	s.progress.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
+	s.progress.text.fg = { 0xe7,0xe7, 0xe7 }
+	s.progress.text.sh = { 0x37, 0x37, 0x37 }
 end

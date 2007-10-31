@@ -54,7 +54,7 @@ int jiveL_menu_skin(lua_State *L) {
 int jiveL_menu_layout(lua_State *L) {
 	MenuWidget *peer;
 	Uint16 x, y;
-	Uint16 sx, sy, sw, sh;
+	Uint16 sx, sy, sw, sh, tmp;
 	JiveInset sborder;
 	int numWidgets, listSize;
 
@@ -96,10 +96,16 @@ int jiveL_menu_layout(lua_State *L) {
 				lua_call(L, 1, 4);
 				
 				if (!lua_isnil(L, -2)) {
-					sw = lua_tointeger(L, -2);
+					tmp = lua_tointeger(L, -2);
+					if (tmp != JIVE_WH_FILL) {
+						sw = tmp;
+					}
 				}
 				if (!lua_isnil(L, -1)) {
-					sh = lua_tointeger(L, -1);
+					tmp = lua_tointeger(L, -1);
+					if (tmp != JIVE_WH_FILL) {
+						sh = tmp;
+					}
 				}
 
 				lua_pop(L, 4);

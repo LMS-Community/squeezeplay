@@ -176,12 +176,12 @@ int jiveL_slider_get_preferred_bounds(lua_State *L) {
 	}
 
 	if (peer->horizontal) {
-		lua_pushnil(L);
+		lua_pushinteger(L, JIVE_WH_FILL);
 		lua_pushinteger(L, (peer->w.preferred_bounds.h == JIVE_WH_NIL) ? h : peer->w.preferred_bounds.h);
 	}
 	else {
 		lua_pushinteger(L, (peer->w.preferred_bounds.w == JIVE_WH_NIL) ? w : peer->w.preferred_bounds.w);
-		lua_pushnil(L);
+		lua_pushinteger(L, JIVE_WH_FILL);
 	}
 	return 4;
 }
