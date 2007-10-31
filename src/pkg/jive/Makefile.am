@@ -404,6 +404,8 @@ dist_applets_defaultskin_images_DATA = \
         share/applets/DefaultSkin/images/bghighlight_br.png \
         share/applets/DefaultSkin/images/bghighlight_b.png \
         share/applets/DefaultSkin/images/bghighlight_l.png \
+        share/applets/DefaultSkin/images/bghighlight_tr.png \
+        share/applets/DefaultSkin/images/bghighlight_tl.png \
         share/applets/DefaultSkin/images/popup_shutdown_icon.png \
         share/applets/DefaultSkin/images/popup_playlist_icon.png \
         share/applets/DefaultSkin/images/icon_nowplaying.png \
