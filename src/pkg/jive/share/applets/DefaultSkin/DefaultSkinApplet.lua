@@ -196,7 +196,7 @@ function skin(self, s)
 					imgpath .. "volume_bkgrd_r.png",
 			       })
 
-	local popupMask = Tile:fillColor(0x231f20e5)
+	local popupMask = Tile:fillColor(0x231f20f7)
 
 	local popupBox =
 		Tile:loadTiles({
@@ -524,7 +524,7 @@ function skin(self, s)
 
 	-- Popup window with Icon
 	s.popupIcon.border = { 13, 0, 13, 0 }
-	s.popupIcon.maskImg = Tile:fillColor(0x231f20cc)
+	s.popupIcon.maskImg = popupMask
 
 	s.popupIcon.text.border = 15
 	s.popupIcon.text.line[1].font = FONT_BOLD_13px
