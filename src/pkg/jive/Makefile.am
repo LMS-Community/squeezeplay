@@ -435,9 +435,16 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/mini_quarter_note.png \
 	share/applets/DefaultSkin/images/mini_search.png \
 	share/applets/DefaultSkin/images/mini_settings.png \
-	share/applets/SetupWallpaper/wallpaper/fade_to_black.png \
-	share/applets/SetupWallpaper/wallpaper/sunlight.png \
-	share/applets/SetupWallpaper/wallpaper/sunrise.png
+	share/applets/DefaultSkin/images/menu_album_selection_bl.png \
+	share/applets/DefaultSkin/images/menu_album_selection_b.png \
+	share/applets/DefaultSkin/images/menu_album_selection_br.png \
+	share/applets/DefaultSkin/images/menu_album_selection_l.png \
+	share/applets/DefaultSkin/images/menu_album_selection.png \
+	share/applets/DefaultSkin/images/menu_album_selection_r.png \
+	share/applets/DefaultSkin/images/menu_album_selection_tl.png \
+	share/applets/DefaultSkin/images/menu_album_selection_t.png \
+	share/applets/DefaultSkin/images/menu_album_selection_tr.png
+
 
 applets_defaultskin_soundsdir = $(pkgdatadir)/applets/DefaultSkin/sounds
 dist_applets_defaultskin_sounds_DATA = \

@@ -128,6 +128,19 @@ function skin(self, s)
 				       imgpath .. "menu_selection_box_l.png"
 			       })
 
+	local albumSelectionBox =
+		Tile:loadTiles({
+				       imgpath .. "menu_album_selection.png",
+				       imgpath .. "menu_album_selection_tl.png",
+				       imgpath .. "menu_album_selection_t.png",
+				       imgpath .. "menu_album_selection_tr.png",
+				       imgpath .. "menu_album_selection_r.png",
+				       imgpath .. "menu_album_selection_br.png",
+				       imgpath .. "menu_album_selection_b.png",
+				       imgpath .. "menu_album_selection_bl.png",
+				       imgpath .. "menu_album_selection_l.png"
+			       })
+
 	local helpBox = 
 		Tile:loadTiles({
 				       imgpath .. "helpbox.png",
@@ -761,13 +774,13 @@ function skin(self, s)
 	-- selected item with artwork and song info
 	s.selected.albumitem.text.fg = SELECT_COLOR
 	s.selected.albumitem.text.sh = SELECT_SH_COLOR
-	s.selected.albumitem.bgImg = selectionBox
+	s.selected.albumitem.bgImg = albumSelectionBox
 
 
 	-- locked item with artwork and song info
 	s.locked.albumitem.text.fg = SELECT_COLOR
 	s.locked.albumitem.text.sh = SELECT_SH_COLOR
-	s.locked.albumitem.bgImg = selectionBox
+	s.locked.albumitem.bgImg = albumSelectionBox
 
 	-- titles with artwork and song info
 	s.nowplayingtitle.position = LAYOUT_NORTH
@@ -816,13 +829,13 @@ function skin(self, s)
 	-- selected item with artwork and song info
 	s.selected.nowplayingitem.text.fg = SELECT_COLOR
 	s.selected.nowplayingitem.text.sh = SELECT_SH_COLOR
-	s.selected.nowplayingitem.bgImg = selectionBox
+	s.selected.nowplayingitem.bgImg = albumSelectionBox
 
 
 	-- locked item with artwork and song info
 	s.locked.nowplayingitem.text.fg = SELECT_COLOR
 	s.locked.nowplayingitem.text.sh = SELECT_SH_COLOR
-	s.locked.nowplayingitem.bgImg = selectionBox
+	s.locked.nowplayingitem.bgImg = albumSelectionBox
 
 
 	-- now playing menu item
@@ -842,14 +855,14 @@ function skin(self, s)
 	s.albumcurrent.play.img = Surface:loadImage(imgpath .. "menu_nowplaying.png")
 
 	-- selected now playing menu item
-	s.selected.albumcurrent.bgImg = selectionBox
+	s.selected.albumcurrent.bgImg = albumSelectionBox
 	s.selected.albumcurrent.text.fg = SELECT_COLOR
 	s.selected.albumcurrent.text.sh = SELECT_SH_COLOR
 	s.selected.albumcurrent.play.img = Surface:loadImage(imgpath .. "menu_nowplaying_selected.png")
 
 
 	-- locked now playing menu item (with loading animation)
-	s.locked.albumcurrent.bgImg = selectionBox
+	s.locked.albumcurrent.bgImg = albumSelectionBox
 	s.locked.albumcurrent.text.fg = SELECT_COLOR
 	s.locked.albumcurrent.text.sh = SELECT_SH_COLOR
 
