@@ -64,18 +64,16 @@ function registerApplet(meta)
 		end
 
 	local monitor = {
-		notify_playerCurrent =
-			function(self, player)
-				log:warn("PLAYER CURRENT!!")
-
+		notify_serverConnected =
+			function(self, server)
 				local cmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION }
 				-- FIXME send to slimserver installed applets and versions
 
-				if( player) then				
-					player.slimServer.comet:request(firmwareUpgradeSink,
-								player:getId(),
-								cmd
-								)
+				if server then				
+					server.comet:request(firmwareUpgradeSink,
+							     nil,
+							     cmd
+						     )
 				end
 			end
 	}

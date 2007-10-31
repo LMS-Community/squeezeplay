@@ -66,6 +66,8 @@ local KEY_RIGHT       = jive.ui.KEY_RIGHT
 
 local firmwareupgradeTitleStyle = 'settingstitle'
 
+local DEFAULT_FIRMWARE_URL = "http://www.slimdevices.com/update/firmware/7.0/jive.bin"
+
 module(...)
 oo.class(_M, Applet)
 
@@ -77,17 +79,19 @@ function forceUpgrade(self)
 	local menu = SimpleMenu("menu")
 	menu:setCloseable(false)
 
-	log:warn("upgradeUrl=", upgradeUrl[1])
-
-	if upgradeUrl[1] then
-		menu:addItem({
-				     text = self:string("BEGIN_UPDATE"),
-				     callback = function()
-							self.url = upgradeUrl[1]
-							self:_upgrade()
-						end
-			     })
+	local url = upgradeUrl[1]
+	if not url then
+		url = DEFAULT_FIRMWARE_URL
 	end
+	log:warn("url=", url)
+
+	menu:addItem({
+			     text = self:string("BEGIN_UPDATE"),
+			     callback = function()
+						self.url = url
+						self:_upgrade()
+					end
+		     })
 
 	if lfs.attributes("/mnt/mmc/jive.bin", "mode") == "file" then
 		menu:addItem({
@@ -113,17 +117,19 @@ function settingsShow(self)
 
 	local menu = SimpleMenu("menu")
 
-	log:warn("upgradeUrl=", upgradeUrl[1])
-
-	if upgradeUrl[1] then
-		menu:addItem({
-				     text = self:string("NETWORK_UPDATE"),
-				     callback = function()
-							self.url = upgradeUrl[1]
-							self:_upgrade()
-						end
-			     })
+	local url = upgradeUrl[1]
+	if not url then
+		url = DEFAULT_FIRMWARE_URL
 	end
+	log:warn("url=", url)
+
+	menu:addItem({
+			     text = self:string("NETWORK_UPDATE"),
+			     callback = function()
+						self.url = url
+						self:_upgrade()
+					end
+		     })
 
 	if lfs.attributes("/mnt/mmc/jive.bin", "mode") == "file" then
 		menu:addItem({
