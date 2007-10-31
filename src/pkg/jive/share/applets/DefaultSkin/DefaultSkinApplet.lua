@@ -543,18 +543,23 @@ function skin(self, s)
 	s.iconConnecting.img = Surface:loadImage(imgpath .. "icon_connecting.png")
 	s.iconConnecting.frameRate = 4
 	s.iconConnecting.frameWidth = 161
+	s.iconConnecting.w = WH_FILL
 	s.iconConnecting.align = "center"
 
 	s.iconConnected.img = Surface:loadImage(imgpath .. "icon_connected.png")
+	s.iconConnected.w = WH_FILL
 	s.iconConnected.align = "center"
 
 	s.iconLocked.img = Surface:loadImage(imgpath .. "popup_locked_icon.png")
+	s.iconLocked.w = WH_FILL
 	s.iconLocked.align = "center"
 
 	s.iconBatteryLow.img = Surface:loadImage(imgpath .. "popup_battery_low_icon.png")
+	s.iconBatteryLow.w = WH_FILL
 	s.iconBatteryLow.align = "center"
 
 	s.iconAlarm.img = Surface:loadImage(imgpath .. "popup_alarm_icon.png")
+	s.iconAlarm.w = WH_FILL
 	s.iconAlarm.align = "center"
 
 

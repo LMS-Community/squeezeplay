@@ -113,6 +113,10 @@ int jive_font_nwidth(JiveFont *font, const char *str, int len) {
 
 	assert(font && font->magic == JIVE_FONT_MAGIC);
 
+	if (len <= 0) {
+		return 0;
+	}
+
 	// FIXME use utf8 len
 	tmp = malloc(len + 1);
 	strncpy(tmp, str, len);

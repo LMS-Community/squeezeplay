@@ -371,8 +371,6 @@ int jiveL_textinput_draw(lua_State *L) {
 
 int jiveL_textinput_get_preferred_bounds(lua_State *L) {
 	TextinputWidget *peer;
-	const char *str;
-	int max_width;
 	Uint16 w, h;
 
 	/* stack is:
@@ -386,15 +384,7 @@ int jiveL_textinput_get_preferred_bounds(lua_State *L) {
 
 	peer = jive_getpeer(L, 1, &textinputPeerMeta);
 
-	/* measure text width */
-	lua_getglobal(L, "tostring");
-	lua_getfield(L, 1, "value");
-	lua_call(L, 1, 1);
-
-	str = lua_tostring(L, -1);
-	max_width = peer->char_width * strlen(str); // FIXME utf8
-
-	w = max_width + peer->w.padding.left + peer->w.padding.right;
+	w = JIVE_WH_FILL;
 	h = JIVE_WH_NIL;
 
 	lua_pushinteger(L, (peer->w.preferred_bounds.x == JIVE_XY_NIL) ? 0 : peer->w.preferred_bounds.x);
