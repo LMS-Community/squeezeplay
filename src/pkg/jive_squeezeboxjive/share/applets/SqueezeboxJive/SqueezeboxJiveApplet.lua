@@ -262,7 +262,7 @@ function _brightness(self, lcdLevel, keyLevel)
 
 	if keyLevel ~= nil then
 		self.keyLevel = keyLevel
-		jiveBSP.ioctl(13, keyLevel * 1024)
+		jiveBSP.ioctl(13, keyLevel * 512)
 	end
 end
 
