@@ -492,6 +492,7 @@ dist_applets_clock_DATA = \
 	share/applets/Clock/MinuteHand.png \
 	share/applets/Clock/weekday_frame.png \
 	share/applets/Clock/clock_classic_bkgrd.png \
+	share/applets/Clock/clock_classic_time_dots.png \
 	share/applets/Clock/clock_analog_bkgrd.png \
 	share/applets/Clock/ClockFace.png \
 	share/applets/Clock/Digital_dotmatrix_ghosted_0.png \
