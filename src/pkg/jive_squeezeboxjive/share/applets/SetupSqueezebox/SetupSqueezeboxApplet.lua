@@ -63,12 +63,16 @@ function settingsShow(self)
 	self.topWindow = window
 
 	self.scanMenu = SimpleMenu("menu")
+	self.scanMenu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
 	-- scan now (in network thread)
 	self.scanResults = {}
 
 	-- process existing scan results
-	self:_scanComplete(self.t_ctrl:scanResults())
+	-- note we keep old entries so this list the window is not empty
+	-- during initial setup. if this becomes a problem a "finding
+	-- squeezeboxen" screen will need to be added.
+	self:_scanComplete(self.t_ctrl:scanResults(), true)
 
 	-- network scan now
 	_scan(self)
@@ -105,7 +109,17 @@ end
 function setupSqueezeboxShow(self, setupNext)
 	self.setupNext = setupNext
 
-	return settingsShow(self)
+	local window = settingsShow(self)
+
+	self.scanMenu:addItem({
+				      text = self:string("SQUEEZEBOX_PROBLEM_SKIP"),
+				      callback = function()
+							 setupNext()
+						 end,
+				      weight = 2
+			      })
+
+	return window
 end
 
 
@@ -114,7 +128,7 @@ function _scan(self)
 end
 
 
-function _scanComplete(self, scanTable)
+function _scanComplete(self, scanTable, keepOldEntries)
 	local now = os.time()
 
 	for ssid, entry in pairs(scanTable) do
@@ -130,6 +144,7 @@ function _scanComplete(self, scanTable)
 							   _setupInit(self, mac, ether)
 							   _setupConfig(self)
 						   end,
+					weight = 1
 				}
 		      
 				self.scanResults[mac] = {
@@ -142,7 +157,7 @@ function _scanComplete(self, scanTable)
 			end
 
 			-- remove networks not seen for 20 seconds
-			if os.difftime(now, entry.lastScan) > 20 then
+			if keepOldEntries ~= true and os.difftime(now, entry.lastScan) > 20 then
 				log:warn(mac, " not ssen for 20 seconds")
 				self.scanMenu:removeItem(self.scanResults[mac].item)
 				self.scanResults[mac] = nil
@@ -946,13 +961,8 @@ end
 
 -- this is called by jnt when the playerConnected message is sent
 function notify_playerConnected(self, player)
-	local playerId = string.gsub(player:getId(), ":", "")
-
-	log:warn("got connected playerId ", playerId)
-	if string.lower(playerId) == string.lower(self.mac) then
-		-- player is connected to slimserver, we're done
-		_setupOK(self)
-	end
+	-- use same action as new player
+	notify_playerNew(self, player)
 end
 
 
