@@ -277,13 +277,10 @@ function textinputWindow(self, menuItem)
 
 	local window = Window("window", menuItem.text)
 
-	local input = Textinput("textinput", "A test string which is so long it goes past the end of the window",
+	local v = Textinput.textValue("", 5, 10)
+	local input = Textinput("textinput", v, --"A test string which is so long it goes past the end of the window",
 				function(_, value)
-					if #value < 4 then
-						return false
-					end
-
-					log:warn("Input " .. value)
+					log:warn("Input ", value)
 					window:hide(Window.transitionPushLeft)
 					return true
 				end)

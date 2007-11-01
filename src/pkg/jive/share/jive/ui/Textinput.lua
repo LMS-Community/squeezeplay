@@ -39,7 +39,7 @@ oo.class(_M, Widget)
 -- return valid characters at cursor position.
 function _getChars(self)
 	if self.value.getChars then
-		return self.value:getChars(self.cursor)
+		return tostring(self.value:getChars(self.cursor, self.allowedChars))
 	end
 
 	return tostring(self.allowedChars)
@@ -153,7 +153,7 @@ end
 
 function _delete(self)
 	local cursor = self.cursor
-	local str = self.value
+	local str = tostring(self.value)
 
 	local s1 = string.sub(str, 1, cursor - 1)
 	local s3 = string.sub(str, cursor + 1)
@@ -164,7 +164,7 @@ end
 
 function _insert(self)
 	local cursor = self.cursor
-	local str = self.value
+	local str = tostring(self.value)
 
 	local s1 = string.sub(str, 1, cursor)
 	local s3 = string.sub(str, cursor + 1)
@@ -217,9 +217,11 @@ function _eventHandler(self, event)
 				if not valid then
 					self:getWindow():bumpRight()
 				end
-			else
+			elseif self.cursor <= #tostring(self.value) then
 				_moveCursor(self, 1)
 				self:reDraw()
+			else
+				self:getWindow():bumpRight()
 			end
 			return EVENT_CONSUME
 
@@ -276,6 +278,56 @@ function __init(self, style, value, closure, allowedChars)
 			function(event)
 				return _eventHandler(obj, event)
 			end)
+
+	return obj
+end
+
+
+--[[
+
+=head2 jive.ui.Textinput.textValue(default, min, max)
+
+Returns a value that can be used for entering a length bounded text string
+
+=cut
+--]]
+function textValue(default, min, max)
+	local obj = {
+		s = default or ""
+	}
+
+	setmetatable(obj, {
+			     __tostring = function(obj)
+						  return obj.s
+					  end,
+
+			     __index = {
+				     setValue = function(obj, str)
+							obj.s = str
+						end,
+
+				     getValue = function(obj)
+							return obj.s
+						end,
+
+				     getChars = function(obj, cursor, allowedChars)
+							if cursor > max then
+								return ""
+							end
+							return allowedChars
+						end,
+
+				     isEntered = function(obj, cursor)
+							 if cursor <= min then
+								 return false
+							 elseif cursor >= max + 1 then
+								 return true
+							 else
+								 return cursor > #obj.s
+							 end
+						 end
+			     }
+		     })
 
 	return obj
 end
@@ -389,6 +441,9 @@ function hexValue(default)
 
 				     getChars = 
 					     function(value, cursor)
+						     if cursor == (#value * 3) then
+							     return ""
+						     end
 						     return "0123456789ABCDEF"
 					     end,
 
