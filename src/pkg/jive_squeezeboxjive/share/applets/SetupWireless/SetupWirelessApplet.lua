@@ -896,6 +896,11 @@ end
 
 
 function connectOK(self)
+	if self.ssid == nil then
+		-- make sure we are still trying to connect
+		return
+	end
+
 	log:warn("connection OK ", self.ssid)
 
 	self:_setCurrentSSID(self.ssid)

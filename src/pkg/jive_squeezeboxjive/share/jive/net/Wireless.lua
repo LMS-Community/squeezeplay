@@ -189,7 +189,7 @@ function t_scan(self, callback)
 
 		-- Bug #5227 if we are associated use the same quality indicator
 		-- as the icon bar
-		if associated then
+		if associated and _scanResults[associated] then
 			_scanResults[associated].quality = self:getLinkQuality()
 		end
 
