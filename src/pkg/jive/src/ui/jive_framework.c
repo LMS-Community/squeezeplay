@@ -923,12 +923,14 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		/* map the mouse scroll wheel to up/down */
 		if (event->button.button == SDL_BUTTON_WHEELUP) {
 			jevent.type = JIVE_EVENT_SCROLL;
-			--(jevent.scroll_rel);
+			jevent.ticks = SDL_GetTicks();
+			--(jevent.u.scroll.rel);
 			break;
 		}
 		else if (event->button.button == SDL_BUTTON_WHEELDOWN) {
 			jevent.type = JIVE_EVENT_SCROLL;
-			++(jevent.scroll_rel);
+			jevent.ticks = SDL_GetTicks();
+			++(jevent.u.scroll.rel);
 			break;
 		}
 		// Fall through
@@ -940,12 +942,14 @@ static int process_event(lua_State *L, SDL_Event *event) {
 	case SDL_KEYDOWN:
 		if (event->key.keysym.sym == SDLK_UP) {
 			jevent.type = JIVE_EVENT_SCROLL;
-			--(jevent.scroll_rel);
+			jevent.ticks = SDL_GetTicks();
+			--(jevent.u.scroll.rel);
 			break;
 		}
 		else if (event->key.keysym.sym == SDLK_DOWN) {
 			jevent.type = JIVE_EVENT_SCROLL;
-			++(jevent.scroll_rel);
+			jevent.ticks = SDL_GetTicks();
+			++(jevent.u.scroll.rel);
 			break;
 		}
 		// Fall through
@@ -981,7 +985,8 @@ static int process_event(lua_State *L, SDL_Event *event) {
 				key_mask |= entry->keycode;
 
 				jevent.type = JIVE_EVENT_KEY_DOWN;
-				jevent.key_code = entry->keycode;
+				jevent.ticks = SDL_GetTicks();
+				jevent.u.key.code = entry->keycode;
 
 				if (key_timer) {
 					SDL_RemoveTimer(key_timer);
@@ -1012,11 +1017,13 @@ static int process_event(lua_State *L, SDL_Event *event) {
 				JiveEvent keyup;
 
 				jevent.type = JIVE_EVENT_KEY_PRESS;
-				jevent.key_code = key_mask;
+				jevent.ticks = SDL_GetTicks();
+				jevent.u.key.code = key_mask;
 
 				memset(&keyup, 0, sizeof(JiveEvent));
 				keyup.type = JIVE_EVENT_KEY_UP;
-				keyup.key_code = entry->keycode;
+				keyup.ticks = SDL_GetTicks();
+				keyup.u.key.code = entry->keycode;
 				jive_queue_event(&keyup);
 
 				key_state = KEY_STATE_SENT;
@@ -1028,7 +1035,8 @@ static int process_event(lua_State *L, SDL_Event *event) {
 				 * KEY_UP event
 				 */
 				jevent.type = JIVE_EVENT_KEY_UP;
-				jevent.key_code = entry->keycode;
+				jevent.ticks = SDL_GetTicks();
+				jevent.u.key.code = entry->keycode;
 				break;
 			}
 			}
@@ -1056,7 +1064,8 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 		case JIVE_USER_EVENT_KEY_HOLD:
 			jevent.type = JIVE_EVENT_KEY_HOLD;
-			jevent.key_code = (JiveKey) event->user.data1;
+			jevent.ticks = SDL_GetTicks();
+			jevent.u.key.code = (JiveKey) event->user.data1;
 			key_state = KEY_STATE_SENT;
 			break;
 		case JIVE_USER_EVENT_EVENT:
@@ -1092,6 +1101,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		next_jive_origin++;
 
 		jevent.type = JIVE_EVENT_WINDOW_RESIZE;
+		jevent.ticks = SDL_GetTicks();
 		break;
 
 	}
@@ -1236,9 +1246,12 @@ static const struct luaL_Reg timer_methods[] = {
 static const struct luaL_Reg event_methods[] = {
 	{ "new", jiveL_event_new },
 	{ "getType", jiveL_event_get_type },
+	{ "getTicks", jiveL_event_get_ticks },
 	{ "getScroll", jiveL_event_get_scroll },
 	{ "getKeycode", jiveL_event_get_keycode },
 	{ "getMouse", jiveL_event_get_mouse },
+	{ "getMotion", jiveL_event_get_motion },
+	{ "getSwitch", jiveL_event_get_switch },
 	{ "tostring", jiveL_event_tostring },
 	{ NULL, NULL }
 };

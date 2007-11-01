@@ -67,16 +67,19 @@ function init(self, ...)
 	self.timer:start()
 
 	-- listener to restart screensaver timer
-	-- XXX: this used to include EVENT_MOTION but it was too annoying having Now Playing
-	-- disappear when you picked it up to look at it!
 	Framework:addListener(
-		EVENT_KEY_PRESS | EVENT_SCROLL,
+		EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_MOTION,
 		function(event)
 			self.timer:restart(self.timeout)
 
 			-- allow active screensaver to process events if
 			-- it is on top of the window stack
-			if self.active == Framework.windowStack[1] then
+			if self.active == Framework.windowStack[1] and
+				-- motion should not exit the screensaver,
+				-- it was too annoying having Now Playing
+				-- disappear when you picked it up!
+				event:getType() ~= EVENT_MOTION then
+
 				local r = self.active:_event(event)
 
 				if r == EVENT_UNUSED and self.active then

@@ -184,21 +184,41 @@ struct jive_surface {
 	Sint16 offset_x, offset_y;	
 };
 
+struct jive_scroll_event {
+	int rel;
+};
+
+struct jive_key_event {
+	JiveKey code;
+};
+
+struct jive_mouse_event {
+	Uint16 x;
+	Uint16 y;
+};
+
+struct jive_motion_event {
+	Sint16 x;
+	Sint16 y;
+	Sint16 z;
+};
+
+struct jive_sw_event {
+	Uint16 code;
+	Uint16 value;
+};
+
 struct jive_event {
 	JiveEventType type;
+	Uint32 ticks;
 
-	// FIXME i would like thie to be a union, but the tolua++
-	// binding does not work.
-	
-	/* scroll */
-	int scroll_rel;
-
-	/* key */
-	JiveKey key_code;
-
-	/* mouse */
-	Uint16 mouse_x;
-	Uint16 mouse_y;
+	union {
+		struct jive_scroll_event scroll;
+		struct jive_key_event key;
+		struct jive_mouse_event mouse;
+		struct jive_motion_event motion;
+		struct jive_sw_event sw;
+	} u;
 };
 
 struct jive_font {
@@ -353,9 +373,12 @@ int jiveL_free_audio(lua_State *L);
 int jiveL_event_new(lua_State *L);
 int jiveL_event_tostring(lua_State* L);
 int jiveL_event_get_type(lua_State *L);
+int jiveL_event_get_ticks(lua_State *L);
 int jiveL_event_get_scroll(lua_State *L);
 int jiveL_event_get_keycode(lua_State *L);
 int jiveL_event_get_mouse(lua_State *L);
+int jiveL_event_get_motion(lua_State *L);
+int jiveL_event_get_switch(lua_State *L);
 
 int jiveL_widget_set_bounds(lua_State *L);
 int jiveL_widget_get_bounds(lua_State *L);

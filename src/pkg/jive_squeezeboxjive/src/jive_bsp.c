@@ -27,9 +27,11 @@ static int switch_event_fd = -1;
 static int wheel_event_fd = -1;
 static int motion_event_fd = -1;
 
-static int last_x = 0;
-static int last_y = 0;
-static int last_z = 0;
+static Sint16 last_x = 0;
+static Sint16 last_y = 0;
+static Sint16 last_z = 0;
+
+#define TIMEVAL_TO_TICKS(tv) ((tv.tv_sec * 1000) + (tv.tv_usec / 1000))
 
 static int l_jivebsp_ioctl(lua_State *L) {
 	int c, v;
@@ -100,10 +102,10 @@ static int handle_switch_events(int fd) {
 		if (ev[i].type == EV_SW) {
 			// switch event
 
-			// XXXX update event struct when code is public
 			event.type = (JiveEventType) JIVE_EVENT_SWITCH;
-			event.key_code = ev[i].code;
-			event.scroll_rel = ev[i].value;
+			event.ticks = TIMEVAL_TO_TICKS(ev[i].time);
+			event.u.sw.code = ev[i].code;
+			event.u.sw.value = ev[i].value;
 			jive_queue_event(&event);
 		}
 	}
@@ -116,7 +118,8 @@ static int handle_wheel_events(int fd) {
 	JiveEvent event;
 	struct input_event ev[64];
 	size_t rd;
-	int i, scroll = 0;
+	int i;
+	Sint16 scroll = 0;
 
 	rd = read(fd, ev, sizeof(struct input_event) * 64);
 
@@ -132,7 +135,8 @@ static int handle_wheel_events(int fd) {
 	}
 
 	event.type = (JiveEventType) JIVE_EVENT_SCROLL;
-	event.scroll_rel = scroll;
+	event.ticks = TIMEVAL_TO_TICKS(ev[i].time);
+	event.u.scroll.rel = scroll;
 	jive_queue_event(&event);
 
 	return 0;
@@ -143,7 +147,8 @@ static int handle_motion_events(int fd) {
 	JiveEvent event;
 	struct input_event ev[64];
 	size_t rd;
-	int i, n;
+	int i;
+	Sint16 n = 0;
 
 	rd = read(fd, ev, sizeof(struct input_event) * 64);
 
@@ -152,47 +157,39 @@ static int handle_motion_events(int fd) {
 		return -1;
 	}
 
-	// update event struct for motion
-	n = 0;
-	event.mouse_x = 0;
-	event.mouse_y = 0;
-	event.scroll_rel = 0;
+	memset(&event, 0, sizeof(JiveEvent));
 
 	for (i = 0; i < rd / sizeof(struct input_event); i++) {
 		if (ev[i].type == EV_SYN) {
+			event.ticks = TIMEVAL_TO_TICKS(ev[i].time);
+
 			n++;
+			// record all values at sync
+			event.u.motion.x += last_x;
+			event.u.motion.y += last_y;
+			event.u.motion.z += last_z;
 		}
 		else if (ev[i].type == EV_ABS) {
 			// motion event
 			// accumulate with new values and unchanged values
 			switch (ev[i].code) {
-			
 			case ABS_X:
-				event.mouse_x += (Sint16) ev[i].value;
-				event.mouse_y += last_y;
-				event.scroll_rel += last_z;
-				last_x = (Sint16) ev[i].value;
+				last_x = ev[i].value;
 				break;
 			case ABS_Y:
-				event.mouse_x += last_x;
-				event.mouse_y += (Sint16) ev[i].value;
-				event.scroll_rel += last_z;
-				last_y = (Sint16) ev[i].value;
+				last_y = ev[i].value;
 				break;
 			case ABS_Z:
-				event.mouse_x += last_x;
-				event.mouse_y += last_y;
-				event.scroll_rel += (Sint16) ev[i].value;
-				last_z = (Sint16) ev[i].value;
+				last_z = ev[i].value;
 				break;
 			}
 		}
 	}
 
 	if (n > 0) {
-		event.mouse_x /= n;
-		event.mouse_y /= n;
-		event.scroll_rel /= n;
+		event.u.motion.x /= n;
+		event.u.motion.y /= n;
+		event.u.motion.z /= n;
 		event.type = (JiveEventType) JIVE_EVENT_MOTION;
 		jive_queue_event(&event);
 	}
@@ -291,55 +288,6 @@ static int event_pump(lua_State *L) {
 }
 
 
-// XXXX move this when code goes public
-int jiveL_event_get_motion(lua_State *L) {
-        JiveEvent* event = (JiveEvent*)lua_touserdata(L, 1);
-        if (event == NULL) {
-                luaL_error(L, "invalid Event");
-        }
-
-        switch (event->type) {
-        case (JiveEventType) JIVE_EVENT_MOTION:
-                lua_pushinteger(L, (Sint16) event->mouse_x);
-                lua_pushinteger(L, (Sint16) event->mouse_y);
-                lua_pushinteger(L, (Sint16) event->scroll_rel);
-                return 3;
-
-        default:
-                luaL_error(L, "Not a motion event");
-        }
-        return 0;
-}
-
-
-// XXXX move this when code goes public
-int jiveL_event_get_switch(lua_State *L) {
-        JiveEvent* event = (JiveEvent*)lua_touserdata(L, 1);
-        if (event == NULL) {
-                luaL_error(L, "invalid Event");
-        }
-
-        switch (event->type) {
-        case (JiveEventType) JIVE_EVENT_SWITCH:
-                lua_pushinteger(L, (Sint16) event->key_code);
-                lua_pushinteger(L, (Sint16) event->scroll_rel);
-                return 2;
-
-        default:
-                luaL_error(L, "Not a motion event");
-        }
-        return 0;
-}
-
-
-// XXXX move this when code goes public
-static const struct luaL_Reg event_methods[] = {
-	{ "getMotion", jiveL_event_get_motion },
-	{ "getSwitch", jiveL_event_get_switch },
-	{ NULL, NULL }
-};
-
-
 static const struct luaL_Reg jivebsplib[] = {
 	{ "ioctl", l_jivebsp_ioctl },
 	{ "mixer", l_jivebsp_mixer },
@@ -360,15 +308,6 @@ int luaopen_jiveBSP(lua_State *L) {
 	open_input_devices();
 
 	jive_sdlevent_pump = event_pump;
-
-	// XXXX remove this when code is public
-	lua_getglobal(L, "jive");
-	lua_getfield(L, -1, "ui");
-	lua_getfield(L, -1, "Event");
-	luaL_register(L, NULL, event_methods);
-	lua_pop(L, 2);
-
-
 	luaL_register(L, "jivebsp", jivebsplib);
 
 	return 1;
