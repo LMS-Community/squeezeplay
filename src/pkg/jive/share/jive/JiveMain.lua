@@ -93,6 +93,7 @@ function JiveMainMenu:__init(name, style, titleStyle)
 		notify = false,
 	})
 
+	obj.menu:setComparator(jive.ui.SimpleMenu.itemComparatorWeightAlpha)
 	obj.window:addWidget(obj.menu)
 
 	return obj
