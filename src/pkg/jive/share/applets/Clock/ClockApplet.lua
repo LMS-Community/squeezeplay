@@ -408,6 +408,7 @@ function DigitalDetailed:__init(window, preset, ampm, firstday)
 	obj.ampmfont_color = preset.Fonts.AMPM.Color
 
 	obj.mainborder = Surface:loadImage("applets/Clock/clock_classic_bkgrd.png")
+	obj.dots       = Surface:loadImage("applets/Clock/clock_classic_time_dots.png")
 	obj.daysborder = Surface:loadImage("applets/Clock/weekday_frame.png")
 
 	obj.weekstart = preset.FirstDayInWeek
@@ -437,9 +438,11 @@ function DigitalDetailed:SetPositions()
 	local dw, dh = testSrf:getSize()
 
 	self.measurements = {}
-	self.measurements.hour = 105 - dw
+	self.measurements.hourEnd = 105
+	self.measurements.hour = self.measurements.hourEnd - dw
 	self.measurements.minute = 125
-	self.measurements.ampm = self.measurements.minute + dw + 2
+	self.measurements.minuteEnd = 125 + dw
+	self.measurements.ampm = self.measurements.minuteEnd + 2
 	self.measurements.digitwidth = dw / 2
 end
 
@@ -463,8 +466,25 @@ function DigitalDetailed:DrawAMPMTime(x, y, bw, bh)
 	-- Draw Minute
 	local theMinute = os.date("%M")
 	local minSrf = Surface:drawText(self.mainfont, self.mainfont_color, theMinute)
-	minSrf:blit(self.bg, self.measurements.minute, y + CLOCKY)
+	local minStartY = y + CLOCKY
+	minSrf:blit(self.bg, self.measurements.minute, minStartY)
 
+	local hourWidth, hourHeigh  = hourSrf:getSize()
+	local minWidth,  minHeight  = minSrf:getSize()
+	local dotsWidth, dotsHeight = obj.dots:getSize()
+
+	local startOfMinX = self.measurements.minute
+	-- Draw Time Dots
+
+	local dw, dh = self.dots:getSize()
+	-- x position of dots is midpoint of end of hour digits and start of minute digits,
+	-- minus half the width of the dots themselves
+	local dotsx = ((self.measurements.minute + self.measurements.hourEnd) / 2) - (dotsWidth/2)
+
+	-- y position of dots is midpoint of where minute digit starts and ends,
+	-- minus half the height of the dots themselves
+	local dotsy = ((minStartY + (minStartY + minHeight)) / 2) - (dotsHeight/2)
+	self.dots:blit(self.bg, dotsx, dotsy)
 
 	-- Draw AM PM
 	local ampm = os.date("%p")
@@ -521,6 +541,7 @@ function DigitalDetailed:Draw(force)
 		x = (self.screen_width/2) - (bw/2)
 		y = (self.screen_height/2) - (bh/2)
 		self.mainborder:blit(self.bg, x, y)
+
 
 		if self.weekstart == "Sunday" then
 			self:DrawWeekdays(x, y, bw, bh, os.date("%w"))
