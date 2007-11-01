@@ -214,7 +214,7 @@ function JiveMain:__init()
 	-- Why stop at two? Tertiary Menu
 	jiveMain:subMenu(_globalStrings:str("SETTINGS"))
 		:subMenu(_globalStrings:str("REMOTE_SETTINGS"))
-			:subMenu(_globalStrings:str("ADVANCED_SETTINGS"), _, 'settingstitle')
+			:subMenu(_globalStrings:str("ADVANCED_SETTINGS"), 100, 'settingstitle')
 
 	-- if you wanted to add a title style for "Extras", this is where it would go
 
