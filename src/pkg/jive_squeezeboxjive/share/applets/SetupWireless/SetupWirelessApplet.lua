@@ -305,10 +305,11 @@ function _scanComplete(self, scanTable)
 
 			      if not self.scanResults[ssid] then
 				      _addNetwork(self, ssid)
-
-				      self.scanResults[ssid].bssid = entry.bssid
-				      self.scanResults[ssid].flags = entry.flags
 			      end
+
+			      -- always update the bssid and flags
+			      self.scanResults[ssid].bssid = entry.bssid
+			      self.scanResults[ssid].flags = entry.flags
 
 			      if entry.associated then
 				      associated = ssid
