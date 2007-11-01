@@ -609,14 +609,10 @@ end
 function enterPSK(self)
 	local window = Window("window", self:string("NETWORK_WIRELESS_PASSWORD"), wirelessTitleStyle)
 
-	local textinput = Textinput("textinput", self.psk or "",
+	local v = Textinput.textValue(self.psk, 8, 63)
+	local textinput = Textinput("textinput", v,
 				    function(_, value)
-					    if #value < 8 then
-						    -- the psk is 8 or more characters
-						    return false
-					    end
-
-					    self.psk = value
+					    self.psk = tostring(value)
 					    createAndConnect(self)
 
 					    return true
