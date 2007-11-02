@@ -334,7 +334,11 @@ function _wirelessConfig(self)
 
 	data.interface = udap.packNumber(0, 1) -- wireless
 	data.bridging = udap.packNumber(0, 1) -- off
-	data.wireless_mode = udap.packNumber(0, 1) -- infrastructure
+	if self.networkMode == 0 then
+		data.wireless_mode = udap.packNumber(0, 1) -- infrastructure
+	else
+		data.wireless_mode = udap.packNumber(1, 1) -- adhoc
+	end
 
 	self:_ipConfig(data) -- ip config
 
@@ -547,6 +551,7 @@ function t_readJiveConfig(self)
 
 	self.networkId = status.id
 	self.networkSSID = status.ssid
+	self.networkMode = 0 -- infrastructure
 	self.networkMethod = nil
 	self.networkOption = {}
 
@@ -556,6 +561,12 @@ function t_readJiveConfig(self)
 	if not status.ssid then
 		return
 	end
+
+
+	-- infrastructure or ad-hoc?
+	local mode = self.t_ctrl:request("GET_NETWORK " .. status.id .. " mode")
+	log:warn("mode=", mode)
+	self.networkMode = tonumber(mode) or 0
 
 
 	-- read dhcp/static from interfaces file
