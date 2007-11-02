@@ -695,6 +695,8 @@ function _connectTimer(self)
 end
 
 
+-- FIXME this function and associated attach/detach functions should
+-- be refactored into Wireless.lua with callbacks on approriate events.
 function _eventSink(self, chunk)
 	log:warn("wpa-cli event: ", chunk)
 
@@ -704,6 +706,22 @@ function _eventSink(self, chunk)
 
 	elseif string.match(chunk, "WPA: 4%-Way Handshake failed") then
 		self:connectFailed("psk")
+
+	elseif string.match(chunk, "Association request to the driver failed") and string.match(self.encryption, "wep") then
+
+		-- Detect when WEP association has failed, this may be due
+		-- to an incompatible auth_alg so toggle between trying
+		-- OPEN (the default) and SHARED authentication.
+
+		self.auth_alg = (self.auth_alg == "SHARED" and "OPEN" or "SHARED")
+		local id = self.scanResults[self.ssid].id
+
+		log:warn("WEP authentication failed. trying auth_alg=", self.auth_alg .. " network id=", id)
+
+		jnt:perform(function()
+				    request = 'SET_NETWORK ' .. id .. " auth_alg " .. self.auth_alg
+				    assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
+			    end)
 	end
 end
 
