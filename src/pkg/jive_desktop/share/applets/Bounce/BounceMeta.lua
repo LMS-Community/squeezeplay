@@ -39,7 +39,7 @@ function registerApplet(self)
 	-- Bounce implements a screensaver
 	local ssMgr = appletManager:loadApplet("ScreenSavers")
 	if ssMgr ~= nil then
-		ssMgr:addScreenSaver(self:string('SCREENSAVER_BOUNCE'), "Bounce", "bounce")
+		ssMgr:addScreenSaver(self:string('SCREENSAVER_BOUNCE'), "Bounce", "bounce", _, _, 110)
 
 		-- load our skin
 		jiveMain:loadSkin("Bounce", "skin")

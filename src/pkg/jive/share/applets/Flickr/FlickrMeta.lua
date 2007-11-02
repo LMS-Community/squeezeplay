@@ -52,7 +52,7 @@ function registerApplet(self)
 
 	if ssMgr ~= nil then
 		ssMgr:addScreenSaver(self:string("SCREENSAVER_FLICKR"), "Flickr", 
-"openScreensaver", self:string("SCREENSAVER_FLICKR_SETTINGS"), "openSettings")
+"openScreensaver", self:string("SCREENSAVER_FLICKR_SETTINGS"), "openSettings", 90)
 
 		-- load our skin
 		jiveMain:loadSkin("Flickr", "skin")

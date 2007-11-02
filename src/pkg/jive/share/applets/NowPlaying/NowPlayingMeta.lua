@@ -26,9 +26,12 @@ function registerApplet(self)
 		ssMgr:addScreenSaver(
 			self:string("SCREENSAVER_NOWPLAYING"), 
 			"NowPlaying", 
-			"openScreensaver" --[[,
+			"openScreensaver", 
+			--[[,
 			self:string("SCREENSAVER_NOWPLAYING_SETTINGS"), 
 			"openSettings" ]]--
+			_, _, 
+			10
 		)
 
 		jiveMain:loadSkin("NowPlaying", "skin")

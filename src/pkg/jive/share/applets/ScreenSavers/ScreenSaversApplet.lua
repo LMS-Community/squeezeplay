@@ -59,7 +59,7 @@ function init(self, ...)
 
 	self.screensavers = {}
 	self.screensaverSettings = {}
-	self:addScreenSaver("None", nil, nil)
+	self:addScreenSaver(self:string("SCREENSAVER_NONE"), nil, nil, _, _, 100)
 
 	self.timeout = self:getSettings()["timeout"]
 
@@ -166,13 +166,14 @@ function _activate(self, the_screensaver)
 end
 
 
-function addScreenSaver(self, displayName, applet, method, settingsName, settings)
+function addScreenSaver(self, displayName, applet, method, settingsName, settings, weight)
 	local key = tostring(applet) .. ":" .. tostring(method)
 	self.screensavers[key] = {
 		applet = applet,
 		method = method,
 		displayName = displayName,
-		settings = settings
+		settings = settings,
+		weight = weight
 	}
 
 	if settingsName then
@@ -196,7 +197,7 @@ end
 
 function screensaverSetting(self, menuItem, mode)
 	local menu = SimpleMenu("menu")
-        menu:setComparator(menu.itemComparatorAlpha)
+        menu:setComparator(menu.itemComparatorWeightAlpha)
 
 	local activeScreensaver = self:getSettings()[mode]
 
@@ -220,10 +221,12 @@ function screensaverSetting(self, menuItem, mode)
 				end
 			end
 		)
-
+		-- set default weight to 100
+		if not screensaver.weight then screensaver.weight = 100 end
 		menu:addItem({
-				     text = screensaver.displayName,
-				     icon = button
+				text = screensaver.displayName,
+				icon = button,
+				weight = screensaver.weight
 			     })
 	end
 

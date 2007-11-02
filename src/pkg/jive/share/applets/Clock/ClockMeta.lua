@@ -30,25 +30,25 @@ function registerApplet(self)
 		ssMgr:addScreenSaver(
 			self:string("SCREENSAVER_CLOCK_STYLE_ANALOG"), 
 			"Clock", 
-			"openAnalogClock"
+			"openAnalogClock", _, _, 20
 		)
 
 		ssMgr:addScreenSaver(
 			self:string("SCREENSAVER_CLOCK_STYLE_DIGITALSIMPLE"), 
 			"Clock", 
-			"openDigitalClock"
+			"openDigitalClock", _, _, 22
 		)
 
 		ssMgr:addScreenSaver(
 			self:string("SCREENSAVER_CLOCK_STYLE_DIGITALSTYLED"), 
 			"Clock", 
-			"openStyledClock"
+			"openStyledClock", _, _, 24
 		)
 
 		ssMgr:addScreenSaver(
 			self:string("SCREENSAVER_CLOCK_STYLE_DIGITALDETAILED"), 
 			"Clock", 
-			"openDetailedClock"
+			"openDetailedClock", _, _, 26
 		)
 
 		jiveMain:loadSkin("Clock", "skin")
