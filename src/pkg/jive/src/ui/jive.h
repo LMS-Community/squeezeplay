@@ -267,7 +267,7 @@ void jive_rect_union(SDL_Rect *a, SDL_Rect *b, SDL_Rect *c);
 void jive_rect_intersection(SDL_Rect *a, SDL_Rect *b, SDL_Rect *c);
 int jive_find_file(const char *path, char *fullpath);
 void jive_queue_event(JiveEvent *evt);
-
+int jive_traceback (lua_State *L);
 
 /* Surface functions */
 JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp);

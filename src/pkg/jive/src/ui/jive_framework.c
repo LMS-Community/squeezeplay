@@ -85,7 +85,7 @@ static int process_event(lua_State *L, SDL_Event *event);
 int jiveL_update_screen(lua_State *L);
 
 
-static int traceback (lua_State *L) {
+int jive_traceback (lua_State *L) {
 	lua_getfield(L, LUA_GLOBALSINDEX, "debug");
 	if (!lua_istable(L, -1)) {
 		lua_pop(L, 1);
@@ -333,7 +333,7 @@ static int jiveL_process_events(lua_State *L) {
 		/* pump network queue */
 		lua_getglobal(L, "jnt");
 		if (!lua_isnil(L, -1)) {
-			lua_pushcfunction(L, traceback);  /* push traceback function */
+			lua_pushcfunction(L, jive_traceback);  /* push traceback function */
 
 			lua_getfield(L, -2, "pump");
 			lua_pushvalue(L, -3);
@@ -642,7 +642,7 @@ int jiveL_dispatch_event(lua_State *L) {
 		c0 = clock();
 	}
 
-	lua_pushcfunction(L, traceback);  /* push traceback function */
+	lua_pushcfunction(L, jive_traceback);  /* push traceback function */
 
 	// call global event listeners
 	if (jive_getmethod(L, 1, "_event")) {
