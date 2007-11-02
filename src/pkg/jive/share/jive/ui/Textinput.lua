@@ -155,10 +155,27 @@ function _delete(self)
 	local cursor = self.cursor
 	local str = tostring(self.value)
 
-	local s1 = string.sub(str, 1, cursor - 1)
-	local s3 = string.sub(str, cursor + 1)
+	if cursor <= #str then
 
-	self:setValue(s1 .. s3)
+		-- delete at cursor
+		local s1 = string.sub(str, 1, cursor - 1)
+		local s3 = string.sub(str, cursor + 1)
+
+		self:setValue(s1 .. s3)
+		return true
+
+	elseif cursor > 1 then
+		-- backspace
+		local s1 = string.sub(str, 1, cursor - 2)
+
+		self:setValue(s1)
+		self.cursor = cursor - 1
+		return true
+
+	else
+		return false
+
+	end
 end
 
 
@@ -171,6 +188,8 @@ function _insert(self)
 
 	self:setValue(s1 .. " " .. s3)
 	_moveCursor(self, 1)
+
+	return true
 end
 
 
@@ -196,16 +215,19 @@ function _eventHandler(self, event)
 			return EVENT_CONSUME
 
 		elseif keycode == KEY_PLAY then
-			_delete(self)
+			if not _delete(self) then
+				self:getWindow():bumpRight()
+			end
 			return EVENT_CONSUME
 
 		elseif keycode == KEY_ADD then
-			_insert(self)
+			if not _insert(self) then
+				self:getWindow():bumpRight()
+			end
 			return EVENT_CONSUME
 
 		elseif keycode == KEY_GO or
-			keycode == KEY_RIGHT or
-			keycode == KEY_FWD then
+			keycode == KEY_RIGHT then
 
 			if _isEntered(self) then
 				local valid = false
@@ -237,9 +259,27 @@ function _eventHandler(self, event)
 			return EVENT_CONSUME
 
 		elseif keycode == KEY_REW then
+			self.cursor = 1
 			self:hide()
 			return EVENT_CONSUME
 
+		elseif keycode == KEY_FWD then
+			if _isEntered(self) then
+				local valid = false
+
+				if self.closure then
+					valid = self.closure(self, self:getValue())
+				end
+
+				if valid then
+					-- forward to end of input
+					self.cursor = #tostring(self.value) + 1
+				else
+					self:getWindow():bumpRight()
+				end
+			else
+				self:getWindow():bumpRight()
+			end
 		end
 	end
 
