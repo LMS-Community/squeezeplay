@@ -64,7 +64,7 @@ end
 
 
 -- setup squeezebox
-function settingsShow(self)
+function settingsShow(self, keepOldEntries)
 	local window = Window("window", self:string("SQUEEZEBOX_SETUP"), setupsqueezeboxTitleStyle)
 
 	-- window to return to on completion of network settings
@@ -80,11 +80,14 @@ function settingsShow(self)
 	-- note we keep old entries so this list the window is not empty
 	-- during initial setup. if this becomes a problem a "finding
 	-- squeezeboxen" screen will need to be added.
-	self:_scanComplete(self.t_ctrl:scanResults(), true)
+	self:_scanComplete(self.t_ctrl:scanResults(), keepOldEntries)
 
-	-- network scan now
-	_setAction(self, t_scanDiscover)
-	_scan(self)
+	window:addListener(EVENT_WINDOW_ACTIVE,
+			   function()
+				   -- network scan now
+				   _setAction(self, t_scanDiscover)
+				   _scan(self)
+			   end)
 
 	-- schedule network scan 
 	self.scanMenu:addTimer(2000, function()
@@ -110,7 +113,7 @@ function setupAdhocShow(self, setupNext)
 	self.setupNext = setupNext
 	self.interface = 'bridged'
 
-	return settingsShow(self)
+	return settingsShow(self, true)
 end
 
 
@@ -118,7 +121,7 @@ end
 function setupSqueezeboxShow(self, setupNext)
 	self.setupNext = setupNext
 
-	local window = settingsShow(self)
+	local window = settingsShow(self, true)
 
 	self.scanMenu:addItem({
 				      text = self:string("SQUEEZEBOX_PROBLEM_SKIP"),
@@ -148,33 +151,36 @@ function t_scanDiscover(self, pkt)
 		return
 	end
 
-	local mac = pkt.source
+	jnt:t_perform(function()
+			      local mac = pkt.source
+			      
+			      if not self.scanResults[mac] then
+				      local item = {
+					      text = mac,
+					      icon = Icon("icon"),
+					      callback = function()
+								 _setupInit(self, mac, nil)
 
-	if not self.scanResults[mac] then
-		local item = {
-			text = mac,
-			icon = Icon("icon"),
-			callback = function()
-					   _setupInit(self, mac, nil)
+								 self.interface = ''
+								 self.ipAddress = ''
 
-					   self.interface = ''
-					   self.ipAddress = ''
+								 _setAction(self, t_waitSqueezeboxNetwork)
+								 _setupSqueezebox(self)
+								 
+								 self.scanResults[mac] = nil
+							 end,
+					      weight = 1
+				      }
 
-					   _setAction(self, t_waitSqueezeboxNetwork)
-					   _setupSqueezebox(self)
+				      self.scanResults[mac] = {
+					      item = item,            -- menu item
+					      ether = ether,
+					      udap = true
+				      }
 
-					   self.scanResults[mac] = nil
-				   end,
-			weight = 1
-		}
-
-		self.scanResults[mac] = {
-			item = item,            -- menu item
-			ether = ether,
-		}
-
-		self.scanMenu:addItem(item)
-	end
+				      self.scanMenu:addItem(item)
+			      end
+		      end)
 end
 
 
@@ -206,7 +212,7 @@ function _scanComplete(self, scanTable, keepOldEntries)
 			end
 
 			-- remove networks not seen for 20 seconds
-			if keepOldEntries ~= true and os.difftime(now, entry.lastScan) > 20 then
+			if keepOldEntries ~= true and self.scanResults[mac].udap ~= true and os.difftime(now, entry.lastScan) > 20 then
 				log:warn(mac, " not ssen for 20 seconds")
 				self.scanMenu:removeItem(self.scanResults[mac].item)
 				self.scanResults[mac] = nil
@@ -1099,8 +1105,12 @@ function _setupSqueezebox(self)
 		else
 			help = self:string("SQUEEZEBOX_CONNECTING_TO", tostring(self:string("SQUEEZEBOX_ETHERNET")))
 		end
-	else
+	elseif self._action == t_udapSetSlimserver then
 		help = self:string("SQUEEZEBOX_CONNECTING_TO", tostring(self.slimserver))
+	elseif self._action == t_waitSqueezeboxNetwork then
+		-- displayed when setting squeezebox follow udap discovery
+		-- e.g. when squeezebox is discovered with blue led
+		help = self:string("SQUEEZEBOX_FINDING_SOURCES")
 	end
 
 	local window = Popup("popupIcon")
