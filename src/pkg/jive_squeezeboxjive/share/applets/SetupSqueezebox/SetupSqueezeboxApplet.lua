@@ -2,13 +2,14 @@
 
 
 -- stuff we use
-local assert, getmetatable, ipairs, pcall, pairs, require, setmetatable, tonumber, tostring = assert, getmetatable, ipairs, pcall, pairs, require, setmetatable, tonumber, tostring
+local assert, error, getmetatable, ipairs, pcall, pairs, require, setmetatable, tonumber, tostring = assert, error, getmetatable, ipairs, pcall, pairs, require, setmetatable, tonumber, tostring
 
 local oo                     = require("loop.simple")
 
 local string                 = require("string")
 local io                     = require("io")
 local os                     = require("os")
+local math                   = require("math")
 local table                  = require("jive.utils.table")
 local debug                  = require("jive.utils.debug")
 
@@ -49,9 +50,16 @@ oo.class(_M, Applet)
 
 
 function init(self)
-	self.t_ctrl = Wireless(jnt, "eth0")
 	self.data1 = {}
 	self.data2 = {}
+	self.seqno = math.random(65535)
+
+	self.t_ctrl = Wireless(jnt, "eth0")
+
+	-- socket for udap discovery
+	self.socket = assert(SocketUdp(jnt, function(chunk, err)
+						    self:t_udapSink(chunk, err)
+					    end))
 end
 
 
@@ -75,10 +83,11 @@ function settingsShow(self)
 	self:_scanComplete(self.t_ctrl:scanResults(), true)
 
 	-- network scan now
+	_setAction(self, t_scanDiscover)
 	_scan(self)
 
 	-- schedule network scan 
-	self.scanMenu:addTimer(5000, function()
+	self.scanMenu:addTimer(2000, function()
 					     _scan(self)
 				     end)
 
@@ -124,7 +133,48 @@ end
 
 
 function _scan(self)
-	self.t_ctrl:scan(function(scanTable) _scanComplete(self, scanTable) end)
+	self.t_ctrl:scan(function(scanTable)
+				 _scanComplete(self, scanTable)
+			 end)
+
+	self.seqno = self.seqno + 1
+	local packet = udap.createDiscover(nil, self.seqno)
+	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
+end
+
+
+function t_scanDiscover(self, pkt)
+	if pkt.uapMethod ~= "discover" then
+		return
+	end
+
+	local mac = pkt.source
+
+	if not self.scanResults[mac] then
+		local item = {
+			text = mac,
+			icon = Icon("icon"),
+			callback = function()
+					   _setupInit(self, mac, nil)
+
+					   self.interface = ''
+					   self.ipAddress = ''
+
+					   _setAction(self, t_waitSqueezeboxNetwork)
+					   _setupSqueezebox(self)
+
+					   self.scanResults[mac] = nil
+				   end,
+			weight = 1
+		}
+
+		self.scanResults[mac] = {
+			item = item,            -- menu item
+			ether = ether,
+		}
+
+		self.scanMenu:addItem(item)
+	end
 end
 
 
@@ -150,7 +200,6 @@ function _scanComplete(self, scanTable, keepOldEntries)
 				self.scanResults[mac] = {
 					item = item,            -- menu item
 					ether = ether,
-					flags = entry.flags,    -- beacon flags
 				}
 
 				self.scanMenu:addItem(item)
@@ -275,11 +324,7 @@ function _setupInit(self, mac, ether)
 	self.mac = mac or self.mac
 	self.ether = ether or self.ether
 
-	self.seqno = 1
 	_setAction(self, t_connectJiveAdhoc)
-	self.socket = SocketUdp(jnt, function(chunk, err)
-					     self:t_udapSink(chunk, err)
-				     end)
 end
 
 
@@ -658,8 +703,8 @@ function t_udapDiscover(self)
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
 	-- check squeezebox exists via udap
-	local packet = udap.createDiscover(self.mac, self.seqno)
 	self.seqno = self.seqno + 1
+	local packet = udap.createDiscover(self.mac, self.seqno)
 	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
 end
 
@@ -682,8 +727,8 @@ function t_udapSetData(self)
 	end
 
 	-- configure squeezebox network
-	local packet = udap.createSetData(self.mac, self.seqno, self.data1)
 	self.seqno = self.seqno + 1
+	local packet = udap.createSetData(self.mac, self.seqno, self.data1)
 	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
 end
 
@@ -695,8 +740,8 @@ function t_udapReset(self)
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
 	-- reset squeezebox
-	local packet = udap.createReset(self.mac, self.seqno)
 	self.seqno = self.seqno + 1
+	local packet = udap.createReset(self.mac, self.seqno)
 	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
 
 	-- if the reset udp reply is lost we won't know the squeezebox has reset ok
@@ -714,8 +759,8 @@ function t_udapGetIPAddr(self)
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
-	local packet = udap.createGetIPAddr(self.mac, self.seqno)
 	self.seqno = self.seqno + 1
+	local packet = udap.createGetIPAddr(self.mac, self.seqno)
 	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
 end
 
@@ -730,11 +775,21 @@ function t_udapSink(self, chunk, err)
 	end
 
 	local pkt = udap.parseUdap(chunk.data)
-	log:warn("pkt is ", udap.tostringUdap(pkt))
+	log:warn("seqno=", self.seqno, " pkt=", udap.tostringUdap(pkt))
+
+	if self.seqno ~= pkt.seqno then
+		log:warn("discarding old packet")
+		return
+	end
 
 	if pkt.uapMethod == "discover" then
-		assert(self._action == t_udapDiscover)
-		_setAction(self, t_udapSetData)
+		if self._action == t_scanDiscover then
+			t_scanDiscover(self, pkt)
+		elseif self._action == t_udapDiscover then
+			_setAction(self, t_udapSetData)
+		else
+			error("unexpected state " .. tostring(self._action))
+		end
 
 	elseif pkt.uapMethod == "set_data" then
 		if self._action == t_udapSetData then
@@ -742,7 +797,7 @@ function t_udapSink(self, chunk, err)
 		elseif self._action == t_udapSetSlimserver then
 			_setAction(self, t_waitSlimserver)
 		else
-			error("unexpected state")
+			error("unexpected state " .. tostring(self._action))
 		end
 
 	elseif pkt.uapMethod == "reset" then
@@ -831,8 +886,8 @@ function t_waitSqueezeboxNetwork(self)
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_CONNECTION_ERROR"
 
 	-- check squeezebox status via udap
-	local packet = udap.createAdvancedDiscover(self.mac, self.seqno)
 	self.seqno = self.seqno + 1
+	local packet = udap.createAdvancedDiscover(self.mac, self.seqno)
 	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
 end
 
@@ -927,7 +982,7 @@ function _setSlimserver(self, slimserver)
 	log:warn("slimserver_address=", serverip)
 
 	_setAction(self, t_udapSetSlimserver)
-	_setupConfig(self)
+	_setupSqueezebox(self)
 end
 
 
@@ -940,8 +995,8 @@ function t_udapSetSlimserver(self)
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
 	-- configure squeezebox network
-	local packet = udap.createSetData(self.mac, self.seqno, self.data2)
 	self.seqno = self.seqno + 1
+	local packet = udap.createSetData(self.mac, self.seqno, self.data2)
 	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
 end
 

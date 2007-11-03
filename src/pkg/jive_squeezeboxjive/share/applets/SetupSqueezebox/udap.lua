@@ -176,7 +176,7 @@ function parseUdap(recv)
 		error("uknown address type " .. pkt.sourceType)
 	end
 
-	pkt.sequence, offset = unpackNumber(recv, offset, 2)
+	pkt.seqno, offset = unpackNumber(recv, offset, 2)
 	pkt.udapType, offset = unpackNumber(recv, offset, 2)
 	pkt.udapFlag, offset = unpackNumber(recv, offset, 1)
 	pkt.uapClass, offset = unpackString(recv, offset, 4)
@@ -206,12 +206,13 @@ function createUdap(mac, seq, ...)
 	end
 
 	return table.concat {
-		packNumber(bcast | 0x01, 2),  -- ethernet
-		table.concat(macstr),          -- destination mac
+		packNumber(bcast, 1),         -- broadcast
+		packNumber(0x01, 1),          -- ethernet
+		table.concat(macstr),         -- destination mac
 		packNumber(0x0002, 2),        -- source type udp
 		packNumber(0x00000000, 4),    -- source ip
 		packNumber(0x0000, 2),        -- source port
-		packNumber(seq, 2),           -- sequence number
+		packNumber(seq, 2),           -- seqno number
 		packNumber(0xC001, 2),        -- udap_type_ucp
 		packNumber(0x01, 1),          -- flags
 		packNumber(0x00001, 2),       -- uap_class_ucp
@@ -307,7 +308,7 @@ function tostringUdap(pkt)
 	local t = {
 		"source:\t\t" .. pkt.source,
 		"dest:\t\t" .. pkt.dest,
-		"seq:\t\t" .. pkt.sequence,
+		"seq:\t\t" .. pkt.seqno,
 		"udap type:\t" .. string.format("%04x", pkt.udapType),
 		"udap flag:\t" .. string.format("%02x", pkt.udapFlag),
 		"uap class:\t" .. pkt.uapClass,
