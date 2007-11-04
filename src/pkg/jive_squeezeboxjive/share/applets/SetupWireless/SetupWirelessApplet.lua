@@ -334,7 +334,7 @@ function _scanComplete(self, scanTable)
 end
 
 
-function _hideToTop(self)
+function _hideToTop(self, dontSetupNext)
 	if Framework.windowStack[1] == self.topWindow then
 		return
 	end
@@ -348,7 +348,7 @@ function _hideToTop(self)
 
 	-- we have successfully setup the network, so hide any open network
 	-- settings windows before advancing during setup.
-	if type(self.setupNext) == "function" then
+	if dontSetupNext ~= true and type(self.setupNext) == "function" then
 		self.setupNext()
 		return
 	end
@@ -891,7 +891,7 @@ function connectFailed(self, reason)
 					{
 						text = self:string("NETWORK_TRY_DIFFERENT"),
 						callback = function()
-								   _hideToTop(self)
+								   _hideToTop(self, true)
 							   end
 					},
 					{
