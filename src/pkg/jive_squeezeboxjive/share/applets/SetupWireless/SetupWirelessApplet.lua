@@ -335,11 +335,6 @@ end
 
 
 function _hideToTop(self)
-	if type(self.setupNext) == "function" then
-		self.setupNext()
-		return
-	end
-
 	if Framework.windowStack[1] == self.topWindow then
 		return
 	end
@@ -350,6 +345,13 @@ function _hideToTop(self)
 	end
 
 	Framework.windowStack[1]:hide(Window.transitionPushLeft)
+
+	-- we have successfully setup the network, so hide any open network
+	-- settings windows before advancing during setup.
+	if type(self.setupNext) == "function" then
+		self.setupNext()
+		return
+	end
 end
 
 
