@@ -142,6 +142,13 @@ local function _eventHandler(self, event)
 				return EVENT_CONSUME
 			end
 		else
+			-- first send keys to selected widgets
+			local r = _itemListener(self, _selectedItem(self), event)
+			if r ~= EVENT_UNUSED then
+				return r
+			end
+
+			-- otherwise try default behaviour
 			if keycode == KEY_UP then
 				self:scrollBy( -1 )
 				return EVENT_CONSUME
@@ -151,9 +158,8 @@ local function _eventHandler(self, event)
 				return EVENT_CONSUME
 
 			elseif keycode == KEY_GO or
-				keycode == KEY_RIGHT then
-
-				local r = EVENT_UNUSED
+				keycode == KEY_RIGHT or
+				keycode == KEY_FWD then
 
 				r = self:dispatchNewEvent(EVENT_ACTION)
 
@@ -163,17 +169,14 @@ local function _eventHandler(self, event)
 				return r
 
 			elseif keycode == KEY_BACK or
-				keycode == KEY_LEFT then
+				keycode == KEY_LEFT or
+				keycode == KEY_REW then
 				if self.closeable then
 					self:hide()
 					return EVENT_CONSUME
 				else
 					self:getWindow():bumpLeft()
 				end
-
-			else
-				-- other keys to selected widgts
-				return _itemListener(self, _selectedItem(self), event)
 			end
 		end
 

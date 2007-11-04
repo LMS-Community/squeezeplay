@@ -492,7 +492,6 @@ dist_applets_clock_DATA = \
 	share/applets/Clock/MinuteHand.png \
 	share/applets/Clock/weekday_frame.png \
 	share/applets/Clock/clock_classic_bkgrd.png \
-	share/applets/Clock/clock_classic_time_dots.png \
 	share/applets/Clock/clock_analog_bkgrd.png \
 	share/applets/Clock/ClockFace.png \
 	share/applets/Clock/Digital_dotmatrix_ghosted_0.png \
@@ -712,7 +711,8 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/menu_album_selection_r.png \
 	share/applets/DefaultSkin/images/menu_album_selection_tl.png \
 	share/applets/DefaultSkin/images/menu_album_selection_t.png \
-	share/applets/DefaultSkin/images/menu_album_selection_tr.png
+	share/applets/DefaultSkin/images/menu_album_selection_tr.png \
+	share/applets/DefaultSkin/images/navcluster.png
 
 applets_defaultskin_soundsdir = $(pkgdatadir)/applets/DefaultSkin/sounds
 dist_applets_defaultskin_sounds_DATA = \

@@ -47,6 +47,8 @@ local EVENT_ACTION     = jive.ui.EVENT_ACTION
 local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
 local KEY_GO           = jive.ui.KEY_GO
 local KEY_BACK         = jive.ui.KEY_BACK
+local KEY_FWD          = jive.ui.KEY_FWD
+local KEY_REW          = jive.ui.KEY_REW
 
 local welcomeTitleStyle = 'settingstitle'
 
@@ -163,17 +165,21 @@ function setupWelcomeShow(self, setupNext)
 	local window = Window("window", self:string("WELCOME"), welcomeTitleStyle)
 
 	local textarea = Textarea("textarea", self:string("WELCOME_WALKTHROUGH"))
+	local navcluster = Icon("navcluster")
 	local help = Textarea("help", self:string("WELCOME_HELP"))
 
 	window:addWidget(textarea)
+	window:addWidget(navcluster)
 	window:addWidget(help)
 
 	window:addListener(EVENT_KEY_PRESS,
 		function(event)
 			local keycode = event:getKeycode()
-			if keycode == KEY_GO then
+			if keycode == KEY_GO or
+				keycode == KEY_FWD then
 				setupNext()
-			elseif keycode == KEY_BACK then
+			elseif keycode == KEY_BACK or
+				keycode == KEY_REW then
 				window:hide()
 			end
 

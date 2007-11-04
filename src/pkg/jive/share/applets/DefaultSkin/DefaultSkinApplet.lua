@@ -575,6 +575,10 @@ function skin(self, s)
 	s.wirelessLevel4.align = "right"
 	s.wirelessLevel4.img = Surface:loadImage(imgpath .. "icon_wireless_4_shadow.png")
 
+	s.navcluster.img = Surface:loadImage(imgpath .. "navcluster.png")
+	s.navcluster.align = "center"
+	s.navcluster.w = WH_FILL
+
 
 	-- Special styles for specific window types
 
