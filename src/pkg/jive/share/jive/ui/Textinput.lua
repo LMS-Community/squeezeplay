@@ -106,13 +106,23 @@ function _scroll(self, dir)
 	local s2 = string.sub(str, cursor, cursor)
 	local s3 = string.sub(str, cursor + 1)
 
+	if s2 == "" then
+		-- new char, keep cursor near the last letter
+		if cursor > 1 then
+			s2 = string.sub(str, cursor - 1, cursor - 1)
+		end
+
+		-- compensate for the initial nil value
+		if dir > 0 then
+			dir = dir - 1
+		end
+	end
+
 	-- find current character
 	local i = string.find(v, s2, 1, true)
 
-	-- move dir characters, compensating for the initial nil value
-	if (not (dir > 0 and s2 == "")) then
-		i = i + dir
-	end
+	-- move dir characters
+	i = i + dir
 
 	-- handle wrap around conditions
 	if i < 1 then

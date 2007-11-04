@@ -319,45 +319,54 @@ int jiveL_textinput_draw(lua_State *L) {
 	}
 
 	if (drawLayer) {
-		const char *ptr = strchr(validchars, text[cursor - 1]);
-		const char *ptr2;
+		const char *ptr_up, *ptr_down, *ptr;
+
+		if (cursor > 1 && cursor > text_len) {
+			/* new char, keep cursor near the last letter */
+			ptr_up = strchr(validchars, text[cursor - 2]) - 1;
+			ptr_down = ptr_up + 1;
+		}
+		else {
+			ptr_up = strchr(validchars, text[cursor - 1]) - 1;
+			ptr_down = ptr_up + 2;
+		}
 
 		/* Draw wheel up */
-		ptr2 = ptr - 1;
+		ptr = ptr_up;
 		for (i=1; i <= (peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom - peer->char_height) / 2 / peer->char_height; i++) {
-			if (ptr2 < validchars) {
-				ptr2 = validchars_end;
+			if (ptr < validchars) {
+				ptr = validchars_end;
 			}
-			else if (ptr2 > validchars_end) {
-				ptr2 = validchars;
+			else if (ptr > validchars_end) {
+				ptr = validchars;
 			}
 		
-			offset_x = (peer->char_width - jive_font_nwidth(peer->font, ptr2, 1)) / 2;
+			offset_x = (peer->char_width - jive_font_nwidth(peer->font, ptr, 1)) / 2;
 			
-			tsrf = jive_font_ndraw_text(peer->font, peer->wh, ptr2, 1);
+			tsrf = jive_font_ndraw_text(peer->font, peer->wh, ptr, 1);
 			jive_surface_blit(tsrf, srf, cursor_x + offset_x, text_y - (i * peer->char_height) + offset_y);
 			jive_surface_free(tsrf);
 
-			ptr2--; // FIXME utf8
+			ptr--; // FIXME utf8
 		}
 		
 		/* Draw wheel down */
-		ptr2 = ptr + 1;
+		ptr = ptr_down;
 		for (i=1; i <= (peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom - peer->char_height) / 2 / peer->char_height; i++) {
-			if (ptr2 < validchars) {
-				ptr2 = validchars_end;
+			if (ptr < validchars) {
+				ptr = validchars_end;
 			}
-			else if (ptr2 > validchars_end) {
-				ptr2 = validchars;
+			else if (ptr > validchars_end) {
+				ptr = validchars;
 			}
 			
-			offset_x = (peer->char_width - jive_font_nwidth(peer->font, ptr2, 1)) / 2;
+			offset_x = (peer->char_width - jive_font_nwidth(peer->font, ptr, 1)) / 2;
 			
-			tsrf = jive_font_ndraw_text(peer->font, peer->wh, ptr2, 1);
+			tsrf = jive_font_ndraw_text(peer->font, peer->wh, ptr, 1);
 			jive_surface_blit(tsrf, srf, cursor_x + offset_x, text_y + (i * peer->char_height) + offset_y);
 			jive_surface_free(tsrf);
 
-			ptr2++; // FIXME utf8
+			ptr++; // FIXME utf8
 		}
 	}
 

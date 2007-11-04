@@ -277,7 +277,7 @@ function textinputWindow(self, menuItem)
 
 	local window = Window("window", menuItem.text)
 
-	local v = Textinput.textValue("", 5, 10)
+	local v = Textinput.textValue("", 8, 10)
 	local input = Textinput("textinput", v, --"A test string which is so long it goes past the end of the window",
 				function(_, value)
 					log:warn("Input ", value)
