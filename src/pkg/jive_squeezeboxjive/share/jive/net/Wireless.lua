@@ -23,19 +23,17 @@ oo.class(_M, Socket)
 -- wpa scan results signal level -> quality
 -- FIXME tune with production boards
 local WIRELESS_LEVEL = {
-	180,
+	0,
 	190,
 	200,
-	210,
 }
 
 -- iwpriv snr -> quality
 -- FIXME tune with production boards
 local WIRELESS_SNR = {
-	20,
+	0,
 	25,
 	30,
-	35,
 }
 
 -- FIXME check this region mapping is correct for Marvell and Atheros
@@ -168,7 +166,7 @@ function t_scan(self, callback)
 	self.jnt:t_perform(function()
 		for bssid, level, flags, ssid in string.gmatch(scanResults, "([%x:]+)\t%d+\t(%d+)\t(%S*)\t([^\n]+)\n") do
 
-			local quality = 0
+			local quality = 1
 			level = tonumber(level)
 			for i, l in ipairs(WIRELESS_LEVEL) do
 				if level < l then
@@ -388,7 +386,7 @@ function getLinkQuality(self)
 		return nil
 	end
 
-	local quality = 0
+	local quality = 1
 	for i, l in ipairs(WIRELESS_SNR) do
 		if snr < l then
 			break

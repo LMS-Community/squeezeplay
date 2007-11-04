@@ -288,11 +288,9 @@ function skin(self, s)
 
 
 	-- wireless status
-	_icon(s.iconWireless0, 107, screenHeight - 30, "icon_wireless_0.png")
-	_icon(s.iconWireless1, 107, screenHeight - 30, "icon_wireless_1.png")
-	_icon(s.iconWireless2, 107, screenHeight - 30, "icon_wireless_2.png")
-	_icon(s.iconWireless3, 107, screenHeight - 30, "icon_wireless_3.png")
-	_icon(s.iconWireless4, 107, screenHeight - 30, "icon_wireless_4.png")
+	_icon(s.iconWireless1, 107, screenHeight - 30, "icon_wireless_2.png")
+	_icon(s.iconWireless2, 107, screenHeight - 30, "icon_wireless_3.png")
+	_icon(s.iconWireless3, 107, screenHeight - 30, "icon_wireless_4.png")
 	_icon(s.iconWirelessOff, 107, screenHeight - 30, "icon_wireless_off.png")
 
 	-- battery status
@@ -564,16 +562,12 @@ function skin(self, s)
 
 
 	-- wireless icons for menus
-	s.wirelessLevel0.align = "right"
-	s.wirelessLevel0.img = Surface:loadImage(imgpath .. "icon_wireless_0_shadow.png")
 	s.wirelessLevel1.align = "right"
-	s.wirelessLevel1.img = Surface:loadImage(imgpath .. "icon_wireless_1_shadow.png")
+	s.wirelessLevel1.img = Surface:loadImage(imgpath .. "icon_wireless_2_shadow.png")
 	s.wirelessLevel2.align = "right"
-	s.wirelessLevel2.img = Surface:loadImage(imgpath .. "icon_wireless_2_shadow.png")
+	s.wirelessLevel2.img = Surface:loadImage(imgpath .. "icon_wireless_3_shadow.png")
 	s.wirelessLevel3.align = "right"
-	s.wirelessLevel3.img = Surface:loadImage(imgpath .. "icon_wireless_3_shadow.png")
-	s.wirelessLevel4.align = "right"
-	s.wirelessLevel4.img = Surface:loadImage(imgpath .. "icon_wireless_4_shadow.png")
+	s.wirelessLevel3.img = Surface:loadImage(imgpath .. "icon_wireless_4_shadow.png")
 
 	s.navcluster.img = Surface:loadImage(imgpath .. "navcluster.png")
 	s.navcluster.align = "center"
