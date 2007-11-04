@@ -415,6 +415,9 @@ NETWORK_TRY_AGAIN
 	FR	Réessayer
 	NL	Opnieuw proberen
 
+NETWORK_EDIT_WIRELESS_KEY
+	EN	Edit wireless key
+
 NETWORK_TRY_DIFFERENT
 	EN	Try different network
 	DE	Anderes Netzwerk versuchen
@@ -486,6 +489,9 @@ NETWORK_ADDRESS_HELP
 	IT	Impossibile ottenere un indirizzo DHCP nella rete.
 	FR	Un problème est survenu lors de l'obtention d'une adresse DHCP du réseau.
 	NL	Er is een probleem met het verkrijgen van een DHCP-adres op je netwerk.
+
+NETWORK_ADDRESS_HELP_WEP
+	EN	Couldn't connect to your network. This may be caused by an incorrect wireless key or other network problem such as MAC filtering or missing DHCP server.
 
 ZEROCONF_ADDRESS
 	EN	Self-assign address

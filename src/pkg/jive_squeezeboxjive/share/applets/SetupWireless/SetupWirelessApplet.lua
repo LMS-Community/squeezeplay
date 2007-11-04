@@ -1035,6 +1035,19 @@ end
 
 
 function failedDHCP(self)
+	log:warn("self.encryption=", self.encryption)
+
+	if string.match(self.encryption, "^wep.*") then
+		-- use different error screen for WEP, the failure may
+		-- be due to a bad WEP passkey, not DHCP.
+		return failedDHCPandWEP(self)
+	else
+		return failedDHCPandWPA(self)
+	end
+end
+
+
+function failedDHCPandWPA(self)
 	local window = Window("window", self:string("NETWORK_ADDRESS_PROBLEM"), wirelessTitleStyle)
 
 	local menu = SimpleMenu("menu",
@@ -1065,6 +1078,58 @@ function failedDHCP(self)
 
 
 	local help = Textarea("help", self:string("NETWORK_ADDRESS_HELP"))
+
+	window:addWidget(help)
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+function failedDHCPandWEP(self)
+	local window = Window("window", self:string("NETWORK_CONNECTION_PROBLEM"), wirelessTitleStyle)
+
+	local menu = SimpleMenu("menu",
+				{
+					{
+						text = self:string("NETWORK_TRY_AGAIN"),
+						callback = function()
+								   -- poke udhcpto try again
+								   _sigusr1("udhcpc")
+								   connect(self, true)
+								   window:hide()
+							   end
+					},
+
+
+
+					{
+						text = self:string("NETWORK_EDIT_WIRELESS_KEY"),
+						callback = function()
+								   window:hide()
+							   end
+					},
+
+
+
+					{
+						text = self:string("ZEROCONF_ADDRESS"),
+						callback = function()
+								   -- already have a self assigned address, we're done
+								   connectOK(self)
+							   end
+					},
+					{
+						text = self:string("STATIC_ADDRESS"),
+						callback = function()
+								   enterIP(self)
+							   end
+					},
+				})
+
+
+	local help = Textarea("help", self:string("NETWORK_ADDRESS_HELP_WEP"))
 
 	window:addWidget(help)
 	window:addWidget(menu)
