@@ -367,7 +367,7 @@ end
 -- _checkboxItem
 -- returns a checkbox button for use on a given item
 local function _checkboxItem(item, db)
-	local checkboxFlag = item["checkbox"]
+	local checkboxFlag = tonumber(item["checkbox"])
 	if checkboxFlag and not item["_jive_button"] then
 		item["_jive_button"] = Checkbox(
 			"checkbox",
@@ -391,7 +391,7 @@ end
 -- _radioItem
 -- returns a radio button for use on a given item
 local function _radioItem(item, db)
-	local radioFlag = item["radio"]
+	local radioFlag = tonumber(item["radio"])
 	if radioFlag and not item["_jive_button"] then
 		item["_jive_button"] = RadioButton(
 			"radio",
