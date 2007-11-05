@@ -131,6 +131,10 @@ int jiveL_textarea_layout(lua_State *L) {
 	/* scrollbar size */
 	sw = 0;
 	sh = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
+	sborder.left = 0;
+	sborder.top = 0;
+	sborder.right = 0;
+	sborder.bottom = 0;
 
 	lua_getfield(L, 1, "scrollbar");
 	if (!lua_isnil(L, -1)) {
