@@ -587,7 +587,7 @@ function skin(self, s)
 	-- based on time of day
 	s.home.window.title.icon.img = 
 		function(widget)
-			return Surface:loadImage(imgpath .. "icon_home.png")
+			return Surface:loadImage(imgpath .. "mini_home.png")
 		end
 
 
@@ -646,7 +646,7 @@ function skin(self, s)
 	setmetatable(s.internetradiotitle, s.internetradiotitle.mt)
 
 	s.internetradiotitle.order = { "icon", "text" }
-	s.internetradiotitle.icon.img = Surface:loadImage(imgpath .. "icon_internet_radio.png")
+	s.internetradiotitle.icon.img = Surface:loadImage(imgpath .. "mini_internet_radio.png")
 	s.internetradiotitle.icon.padding = MINI_ICON_PADDING
 
 --]]
@@ -661,7 +661,7 @@ function skin(self, s)
 	s.internetradiotitle.text.font    = FONT_BOLD_18px
 	s.internetradiotitle.text.fg      = SELECT_COLOR
 	s.internetradiotitle.order        = MINI_ICON_ITEM_ORDER
-	s.internetradiotitle.icon.img     = Surface:loadImage(imgpath .. "icon_internet_radio.png")
+	s.internetradiotitle.icon.img     = Surface:loadImage(imgpath .. "mini_internet_radio.png")
 	s.internetradiotitle.icon.padding = MINI_ICON_PADDING
 	s.internetradiotitle.icon.align   = MINI_ICON_ICON_ALIGN
 
@@ -675,7 +675,7 @@ function skin(self, s)
 	s.favoritestitle.text.font     = FONT_BOLD_18px
 	s.favoritestitle.text.fg       = SELECT_COLOR
 	s.favoritestitle.order         = MINI_ICON_ITEM_ORDER
-	s.favoritestitle.icon.img      = Surface:loadImage(imgpath .. "icon_favorites.png")
+	s.favoritestitle.icon.img      = Surface:loadImage(imgpath .. "mini_favorites.png")
 	s.favoritestitle.icon.padding  = MINI_ICON_PADDING
 	s.favoritestitle.icon.align    = MINI_ICON_ICON_ALIGN
 
@@ -691,7 +691,7 @@ function skin(self, s)
 	s.mymusictitle.order         = MINI_ICON_ITEM_ORDER
 	s.mymusictitle.icon.padding  = MINI_ICON_PADDING
 	s.mymusictitle.icon.align    = MINI_ICON_ICON_ALIGN
-	s.mymusictitle.icon.img      = Surface:loadImage(imgpath .. "icon_mymusic.png")
+	s.mymusictitle.icon.img      = Surface:loadImage(imgpath .. "mini_mymusic.png")
 	s.mymusictitle.icon.align    = MINI_ICON_ICON_ALIGN
 
 	-- Based on s.title, this is for search title style
@@ -704,7 +704,7 @@ function skin(self, s)
 	s.searchtitle.text.font     = FONT_BOLD_18px
 	s.searchtitle.text.fg       = SELECT_COLOR
 	s.searchtitle.order         = MINI_ICON_ITEM_ORDER
-	s.searchtitle.icon.img      = Surface:loadImage(imgpath .. "icon_search.png")
+	s.searchtitle.icon.img      = Surface:loadImage(imgpath .. "mini_search.png")
 	s.searchtitle.icon.padding  = MINI_ICON_PADDING
 	s.searchtitle.icon.align    = MINI_ICON_ICON_ALIGN
 
@@ -718,7 +718,7 @@ function skin(self, s)
 	s.hometitle.text.font     = FONT_BOLD_18px
 	s.hometitle.text.fg       = SELECT_COLOR
 	s.hometitle.order         = MINI_ICON_ITEM_ORDER
-	s.hometitle.icon.img      = Surface:loadImage(imgpath .. "icon_home.png")
+	s.hometitle.icon.img      = Surface:loadImage(imgpath .. "mini_home.png")
 	s.hometitle.icon.padding  = MINI_ICON_PADDING
 	s.hometitle.icon.align    = MINI_ICON_ICON_ALIGN
 
@@ -733,7 +733,7 @@ function skin(self, s)
 	s.settingstitle.text.font     = FONT_BOLD_18px
 	s.settingstitle.text.fg       = SELECT_COLOR
 	s.settingstitle.order         = MINI_ICON_ITEM_ORDER
-	s.settingstitle.icon.img      = Surface:loadImage(imgpath .. "icon_settings.png")
+	s.settingstitle.icon.img      = Surface:loadImage(imgpath .. "mini_settings.png")
 	s.settingstitle.icon.padding  = MINI_ICON_PADDING
 	s.settingstitle.icon.align    = MINI_ICON_ICON_ALIGN
 
@@ -747,7 +747,7 @@ function skin(self, s)
 	s.newmusictitle.text.font     = FONT_BOLD_18px
 	s.newmusictitle.text.fg       = SELECT_COLOR
 	s.newmusictitle.order         = MINI_ICON_ITEM_ORDER
-	s.newmusictitle.icon.img      = Surface:loadImage(imgpath .. "icon_quarter_note.png")
+	s.newmusictitle.icon.img      = Surface:loadImage(imgpath .. "mini_quarter_note.png")
 	s.newmusictitle.icon.padding  = MINI_ICON_PADDING
 	s.newmusictitle.icon.align    = MINI_ICON_ICON_ALIGN
 
