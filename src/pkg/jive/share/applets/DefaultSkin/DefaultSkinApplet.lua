@@ -265,6 +265,7 @@ function skin(self, s)
 	s.icon_background.y = screenHeight - 30
 	s.icon_background.w = screenWidth
 	s.icon_background.h = 30
+	s.icon_background.border = { 4, 0, 4, 0 }
 	s.icon_background.bgImg = iconBackground
 	s.icon_background.layer = LAYER_FRAME
 	s.icon_background.position = LAYOUT_SOUTH
