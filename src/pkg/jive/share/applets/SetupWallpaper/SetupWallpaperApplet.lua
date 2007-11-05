@@ -35,6 +35,8 @@ local Textarea               = require("jive.ui.Textarea")
 local Tile                   = require("jive.ui.Tile")
 local Window                 = require("jive.ui.Window")
 
+local log                    = require("jive.utils.log").logger("applets.setup")
+
 local EVENT_FOCUS_GAINED     = jive.ui.EVENT_FOCUS_GAINED
 local EVENT_FOCUS_LOST       = jive.ui.EVENT_FOCUS_LOST
 local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
@@ -126,7 +128,7 @@ function _getCurrentPlayer(self)
 	local currentPlayer = 'wallpaper' 
 	if manager then
 		local currentPlayerObj = manager:getCurrentPlayer()
-		if currentPlayerObj.id then
+		if currentPlayerObj and currentPlayerObj.id then
 			currentPlayer = currentPlayerObj.id
 		end
 	end
@@ -211,6 +213,12 @@ function _showBackground(self, wallpaper, playerId)
 			wallpaper = self:getSettings()["wallpaper"]
 		end
 	end
+
+	if self.currentWallpaper == wallpaper then
+		-- no change
+		return
+	end
+	self.currentWallpaper = wallpaper
 
 	local srf = Tile:loadImage("applets/SetupWallpaper/wallpaper/" .. wallpaper)
 	if srf ~= nil then
