@@ -425,7 +425,7 @@ function skin(self, s)
 	s.selected.item.value.sh = SELECT_SH_COLOR
 
 	-- Text areas
-	s.textarea.w = screenWidth - 21
+	s.textarea.w = screenWidth
 	s.textarea.padding = { 13, 8, 8, 8 }
 	s.textarea.font = FONT_BOLD_15px
 	s.textarea.fg = TEXT_COLOR

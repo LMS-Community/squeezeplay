@@ -116,7 +116,8 @@ int jiveL_textarea_get_preferred_bounds(lua_State *L) {
 
 int jiveL_textarea_layout(lua_State *L) {
 	TextareaWidget *peer;
-	Uint16 sx, sy, sw, sh;
+	Uint16 sx, sy, sw, sh, tmp;
+	JiveInset sborder;
 	int top_line, visible_lines;
 	const char *text;
 
@@ -138,16 +139,37 @@ int jiveL_textarea_layout(lua_State *L) {
 			lua_call(L, 1, 4);
 
 			if (!lua_isnil(L, -2)) {
-				sw = lua_tointeger(L, -2);
+				tmp = lua_tointeger(L, -2);
+				if (tmp != JIVE_WH_FILL) {
+					sw = tmp;
+				}
 			}
 			if (!lua_isnil(L, -1)) {
-				sh = lua_tointeger(L, -1);
+				tmp = lua_tointeger(L, -1);
+				if (tmp != JIVE_WH_FILL) {
+					sh = tmp;
+				}
 			}
 
 			lua_pop(L, 4);
 		}
+
+		if (jive_getmethod(L, -1, "getBorder")) {
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 4);
+				
+			sborder.left = lua_tointeger(L, -4);
+			sborder.top = lua_tointeger(L, -3);
+			sborder.right = lua_tointeger(L, -2);
+			sborder.bottom = lua_tointeger(L, -1);
+			lua_pop(L, 4);
+		}
+
 	}
 	lua_pop(L, 1);
+
+	sw += sborder.left + sborder.right;
+	sh += sborder.top + sborder.bottom;
 
 	sx = peer->w.bounds.x + peer->w.bounds.w - sw;
 	sy = peer->w.bounds.y + peer->w.padding.top;
@@ -401,6 +423,7 @@ static void wordwrap(TextareaWidget *peer, unsigned char *text, int visible_line
 				max_lines += 100;
 				lines = realloc(lines, sizeof(int) * max_lines);
 			}
+
 			line_start = ptr;
 			lines[num_lines++] = (ptr - text);
 			line_width = 0;
