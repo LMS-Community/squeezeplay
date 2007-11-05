@@ -575,11 +575,6 @@ function enterWEPKey(self)
 					     function(value, cursor)
 						     return "0123456789ABCDEF"
 					     end,
-
-				     isEntered =
-					     function(value, cursor)
-						     return cursor == (#value * 3) - 1
-					     end
 			     }
 		     })
 

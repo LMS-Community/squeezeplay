@@ -46,13 +46,23 @@ function _getChars(self)
 end
 
 
--- returns true if text entry is completed.
-function _isEntered(self)
-	if self.value.isEntered then
-		return self.value:isEntered(self.cursor)
+-- returns true if text entry is valid.
+function _isValid(self)
+	if self.value.isValid then
+		return self.value:isValid(self.cursor)
 	end
 
-	return self.cursor > #tostring(self.value)
+	return true
+end
+
+
+-- returns true if text entry is completed.
+function _isEntered(self)
+	if self:_isValid() then
+		return self.cursor > #tostring(self.value)
+	else
+		return false
+	end
 end
 
 
@@ -274,7 +284,7 @@ function _eventHandler(self, event)
 			return EVENT_CONSUME
 
 		elseif keycode == KEY_FWD then
-			if _isEntered(self) then
+			if _isValid(self) then
 				local valid = false
 
 				if self.closure then
@@ -367,15 +377,15 @@ function textValue(default, min, max)
 							return allowedChars
 						end,
 
-				     isEntered = function(obj, cursor)
-							 if min and cursor <= min then
-								 return false
-							 elseif max and cursor >= max + 1 then
-								 return true
-							 else
-								 return cursor > #obj.s
-							 end
-						 end
+				     isValid = function(obj, cursor)
+						       if min and #obj.s < min then
+							       return false
+						       elseif max and #obj.s > max then
+							       return false
+						       else
+							       return true
+						       end
+					       end
 			     }
 		     })
 
@@ -443,9 +453,9 @@ function timeValue(default)
 							end
                                              end,
 
-				     isEntered =
+				     isValid =
 					     function(value, cursor)
-						    return cursor == 6
+						    return #value == 2
 					     end
 			     }
 		     })
@@ -496,11 +506,6 @@ function hexValue(default)
 						     end
 						     return "0123456789ABCDEF"
 					     end,
-
-				     isEntered =
-					     function(value, cursor)
-						     return cursor == (#value * 3)
-					     end
 			     }
 		     })
 
@@ -585,9 +590,9 @@ function ipAddressValue(default)
 						     end
 					     end,
 
-				     isEntered =
+				     isValid =
 					     function(value, cursor)
-						     return cursor == 16
+						     return #value == 4
 					     end
 			     }
 		     })

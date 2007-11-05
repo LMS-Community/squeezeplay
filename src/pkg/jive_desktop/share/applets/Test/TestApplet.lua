@@ -62,6 +62,11 @@ function menu(self, menuItem)
 	-- Menu	
 	local menu = SimpleMenu("menu",
 		{
+			{ text = "Text input",
+				callback = function(event, menuItem)
+					self:textinputWindow(menuItem)
+				end
+			},
 			{ 
 				text = "Choice, and some more text so that this item scrolls.", 
 				icon = Choice(
@@ -137,10 +142,6 @@ function menu(self, menuItem)
 			{ text = "Slider",
 				callback = function(event, menuItem)
 					self:sliderWindow(menuItem)
-				end },
-			{ text = "Text input",
-				callback = function(event, menuItem)
-					self:textinputWindow(menuItem)
 				end },
 			{ text = "Hex input",
 				callback = function(event, menuItem)
@@ -277,8 +278,9 @@ function textinputWindow(self, menuItem)
 
 	local window = Window("window", menuItem.text)
 
+--	local v = Textinput.textValue("A test string which is so long it goes past the end of the window", 8)
 	local v = Textinput.textValue("", 8, 10)
-	local input = Textinput("textinput", v, --"A test string which is so long it goes past the end of the window",
+	local input = Textinput("textinput", v,
 				function(_, value)
 					log:warn("Input ", value)
 					window:hide(Window.transitionPushLeft)
