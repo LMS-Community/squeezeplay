@@ -361,16 +361,16 @@ function textValue(default, min, max)
 						end,
 
 				     getChars = function(obj, cursor, allowedChars)
-							if cursor > max then
+							if max and cursor > max then
 								return ""
 							end
 							return allowedChars
 						end,
 
 				     isEntered = function(obj, cursor)
-							 if cursor <= min then
+							 if min and cursor <= min then
 								 return false
-							 elseif cursor >= max + 1 then
+							 elseif max and cursor >= max + 1 then
 								 return true
 							 else
 								 return cursor > #obj.s

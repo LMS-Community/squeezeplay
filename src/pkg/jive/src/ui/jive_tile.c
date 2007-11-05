@@ -193,8 +193,12 @@ JiveTile *jive_tile_ref(JiveTile *tile) {
 }
 
 void jive_tile_get_min_size(JiveTile *tile, Uint16 *w, Uint16 *h) {
-	*w = tile->w[0] + tile->w[1];
-	*h = tile->h[0] + tile->h[1];
+	if (w) {
+		*w = tile->w[0] + tile->w[1];
+	}
+	if (h) {
+		*h = tile->h[0] + tile->h[1];
+	}
 }
 
 void jive_tile_set_alpha(JiveTile *tile, Uint32 flags) {

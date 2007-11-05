@@ -250,6 +250,7 @@ function skin(self, s)
 	local FONT_BOLD_15px = Font:load(fontpath .. "FreeSansBold.ttf", 16)
 	local FONT_BOLD_18px = Font:load(fontpath .. "FreeSansBold.ttf", 20)
 	local FONT_BOLD_20px = Font:load(fontpath .. "FreeSansBold.ttf", 22)
+	local FONT_BOLD_22px = Font:load(fontpath .. "FreeSansBold.ttf", 24)
 
 --				left, top, right, bottom
 	local MINI_ICON_PADDING = { 0, 0, 4, 0 }
@@ -465,14 +466,14 @@ function skin(self, s)
 	-- Text input
 	s.textinput.border = { 8, -5, 8, 0 }
 	s.textinput.padding = { 6, 0, 6, 0 }
-	s.textinput.font = FONT_BOLD_15px
-	s.textinput.cursorFont = Font:load(fontpath .. "FreeSansBold.ttf", 22)
-	s.textinput.charWidth = 36
+	s.textinput.font = FONT_15px
+	s.textinput.cursorFont = FONT_BOLD_22px
+	s.textinput.wheelFont = FONT_BOLD_15px
 	s.textinput.charHeight = 26
-	s.textinput.fg = { 0x37, 0x37, 0x37 }
-	s.textinput.wh = { 0x55, 0x55, 0x55, 0xB2 }
+	s.textinput.fg = SELECT_COLOR
+	s.textinput.wh = { 0x55, 0x55, 0x55 }
 	s.textinput.bgImg = textinputBackground
---	s.textinput.wheelImg = textinputWheel
+	s.textinput.wheelImg = textinputWheel
 	s.textinput.cursorImg = textinputCursor
 	s.textinput.enterImg = Tile:loadImage(imgpath .. "selection_right.png")
 
