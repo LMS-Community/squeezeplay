@@ -294,7 +294,6 @@ applets_defaultskin_imagesdir = $(pkgdatadir)/applets/DefaultSkin/images
 dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/checkbox_off.png \
 	share/applets/DefaultSkin/images/checkbox_on.png \
-	share/applets/DefaultSkin/images/icon_home.png \
 	share/applets/DefaultSkin/images/icon_mode_off.png \
 	share/applets/DefaultSkin/images/icon_mode_pause.png \
 	share/applets/DefaultSkin/images/icon_mode_play.png \
@@ -407,9 +406,7 @@ dist_applets_defaultskin_images_DATA = \
         share/applets/DefaultSkin/images/bghighlight_tl.png \
         share/applets/DefaultSkin/images/popup_shutdown_icon.png \
         share/applets/DefaultSkin/images/popup_playlist_icon.png \
-        share/applets/DefaultSkin/images/icon_nowplaying.png \
         share/applets/DefaultSkin/images/album_noartwork_166.png \
-        share/applets/DefaultSkin/images/icon_nowplaying_selected.png \
         share/applets/DefaultSkin/images/button.png \
         share/applets/DefaultSkin/images/button_b.png \
         share/applets/DefaultSkin/images/button_l.png \

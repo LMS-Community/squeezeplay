@@ -657,6 +657,7 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/icon_wireless_3.png \
 	share/applets/DefaultSkin/images/icon_wireless_4.png \
 	share/applets/DefaultSkin/images/icon_wireless_off.png \
+	share/applets/DefaultSkin/images/icon_wireless_noserver.png \
 	share/applets/DefaultSkin/images/icon_wireless_1_shadow.png \
 	share/applets/DefaultSkin/images/icon_wireless_2_shadow.png \
 	share/applets/DefaultSkin/images/icon_wireless_3_shadow.png \
@@ -674,7 +675,6 @@ dist_applets_defaultskin_images_DATA = \
         share/applets/DefaultSkin/images/popup_shutdown_icon.png \
         share/applets/DefaultSkin/images/popup_playlist_icon.png \
         share/applets/DefaultSkin/images/album_noartwork_166.png \
-        share/applets/DefaultSkin/images/icon_nowplaying_selected.png \
         share/applets/DefaultSkin/images/button.png \
         share/applets/DefaultSkin/images/button_b.png \
         share/applets/DefaultSkin/images/button_l.png \
@@ -708,15 +708,7 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/menu_album_selection_tl.png \
 	share/applets/DefaultSkin/images/menu_album_selection_t.png \
 	share/applets/DefaultSkin/images/menu_album_selection_tr.png \
-	share/applets/DefaultSkin/images/navcluster.png \
-	share/applets/DefaultSkin/images/mini_internet_radio.png \
-	share/applets/DefaultSkin/images/mini_favorites.png \
-	share/applets/DefaultSkin/images/mini_home.png \
-	share/applets/DefaultSkin/images/mini_nowplaying.png \
-	share/applets/DefaultSkin/images/mini_mymusic.png \
-	share/applets/DefaultSkin/images/mini_search.png \
-	share/applets/DefaultSkin/images/mini_settings.png \
-	share/applets/DefaultSkin/images/mini_quarter_note.png 
+	share/applets/DefaultSkin/images/navcluster.png
 
 applets_defaultskin_soundsdir = $(pkgdatadir)/applets/DefaultSkin/sounds
 dist_applets_defaultskin_sounds_DATA = \
