@@ -305,8 +305,8 @@ function skin(self, s)
 	_icon(s.iconBattery3, 137, screenHeight - 30, "icon_battery_3.png")
 	_icon(s.iconBattery4, 137, screenHeight - 30, "icon_battery_4.png")
 
-	s.iconBatteryCharging.frameRate = 1
-	s.iconBatteryCharging.frameWidth = 37
+	s.iconBatteryCHARGING.frameRate = 1
+	s.iconBatteryCHARGING.frameWidth = 37
 
 
 	-- time
