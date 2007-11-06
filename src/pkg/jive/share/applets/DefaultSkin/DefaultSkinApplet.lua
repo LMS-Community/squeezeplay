@@ -196,7 +196,7 @@ function skin(self, s)
 					imgpath .. "volume_bkgrd_r.png",
 			       })
 
-	local popupMask = Tile:fillColor(0x231f20f7)
+	local popupMask = Tile:fillColor(0x000000e5)
 
 	local popupBox =
 		Tile:loadTiles({
@@ -261,44 +261,44 @@ function skin(self, s)
 	local MINI_ICON_ICON_ALIGN = 'right'
 
 	-- Iconbar definitions, each icon needs an image and x,y
-	s.icon_background.x = 0
-	s.icon_background.y = screenHeight - 30
-	s.icon_background.w = screenWidth
-	s.icon_background.h = 30
-	s.icon_background.border = { 4, 0, 4, 0 }
-	s.icon_background.bgImg = iconBackground
-	s.icon_background.layer = LAYER_FRAME
-	s.icon_background.position = LAYOUT_SOUTH
+	s.iconBackground.x = 0
+	s.iconBackground.y = screenHeight - 30
+	s.iconBackground.w = screenWidth
+	s.iconBackground.h = 30
+	s.iconBackground.border = { 4, 0, 4, 0 }
+	s.iconBackground.bgImg = iconBackground
+	s.iconBackground.layer = LAYER_FRAME
+	s.iconBackground.position = LAYOUT_SOUTH
 
 	-- play/stop/pause
-	_icon(s.icon_playmode_off, 9, screenHeight - 30, "icon_mode_off.png")
-	_icon(s.icon_playmode_stop, 9, screenHeight - 30, "icon_mode_off.png")
-	_icon(s.icon_playmode_play, 9, screenHeight - 30, "icon_mode_play.png")
-	_icon(s.icon_playmode_pause, 9, screenHeight - 30, "icon_mode_pause.png")
+	_icon(s.iconPlaymodeOFF, 9, screenHeight - 30, "icon_mode_off.png")
+	_icon(s.iconPlaymodeSTOP, 9, screenHeight - 30, "icon_mode_off.png")
+	_icon(s.iconPlaymodePLAY, 9, screenHeight - 30, "icon_mode_play.png")
+	_icon(s.iconPlaymodePAUSE, 9, screenHeight - 30, "icon_mode_pause.png")
 
 	-- repeat off/repeat track/repeat playlist
-	_icon(s.icon_repeat_off, 41, screenHeight - 30, "icon_repeat_off.png")
-	_icon(s.icon_repeat_0, 41, screenHeight - 30, "icon_repeat_off.png")
-	_icon(s.icon_repeat_1, 41, screenHeight - 30, "icon_repeat_1.png")
-	_icon(s.icon_repeat_2, 41, screenHeight - 30, "icon_repeat_1.png")
+	_icon(s.iconRepeatOFF, 41, screenHeight - 30, "icon_repeat_off.png")
+	_icon(s.iconRepeat0, 41, screenHeight - 30, "icon_repeat_off.png")
+	_icon(s.iconRepeat1, 41, screenHeight - 30, "icon_repeat_1.png")
+	_icon(s.iconRepeat2, 41, screenHeight - 30, "icon_repeat_1.png")
 
 	-- shuffle off/shuffle album/shuffle playlist
-	_icon(s.icon_shuffle_off, 75, screenHeight - 30, "icon_shuffle_off.png")
-	_icon(s.icon_shuffle_0, 75, screenHeight - 30, "icon_shuffle_off.png")
-	_icon(s.icon_shuffle_1, 75, screenHeight - 30, "icon_shuffle_1.png")
-	_icon(s.icon_shuffle_2, 75, screenHeight - 30, "icon_shuffle_1.png")
-
+	_icon(s.iconShuffleOFF, 75, screenHeight - 30, "icon_shuffle_off.png")
+	_icon(s.iconShuffle0, 75, screenHeight - 30, "icon_shuffle_off.png")
+	_icon(s.iconShuffle1, 75, screenHeight - 30, "icon_shuffle_1.png")
+	_icon(s.iconShuffle2, 75, screenHeight - 30, "icon_shuffle_1.png")
 
 	-- wireless status
 	_icon(s.iconWireless1, 107, screenHeight - 30, "icon_wireless_2.png")
 	_icon(s.iconWireless2, 107, screenHeight - 30, "icon_wireless_3.png")
 	_icon(s.iconWireless3, 107, screenHeight - 30, "icon_wireless_4.png")
-	_icon(s.iconWirelessOff, 107, screenHeight - 30, "icon_wireless_off.png")
+	_icon(s.iconWirelessERROR, 107, screenHeight - 30, "icon_wireless_off.png")
+	_icon(s.iconWirelessSERVERERROR, 107, screenHeight - 30, "icon_wireless_noserver.png")
 
 	-- battery status
 	_icon(s.iconBatteryAC, 137, screenHeight - 30, "icon_battery_ac.png")
 
-	_icon(s.iconBatteryCharging, 137, screenHeight - 30, "icon_battery_charging.png")
+	_icon(s.iconBatteryCHARGING, 137, screenHeight - 30, "icon_battery_charging.png")
 	_icon(s.iconBattery0, 137, screenHeight - 30, "icon_battery_0.png")
 	_icon(s.iconBattery1, 137, screenHeight - 30, "icon_battery_1.png")
 	_icon(s.iconBattery2, 137, screenHeight - 30, "icon_battery_2.png")
@@ -310,13 +310,13 @@ function skin(self, s)
 
 
 	-- time
-	s.icon_time.x = screenWidth - 60
-	s.icon_time.y = screenHeight - 34
-	s.icon_time.h = 34
-	s.icon_time.layer = LAYER_FRAME
-	s.icon_time.position = LAYOUT_SOUTH
-	s.icon_time.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
-	s.icon_time.fg = TEXT_COLOR
+	s.iconTime.x = screenWidth - 60
+	s.iconTime.y = screenHeight - 34
+	s.iconTime.h = 34
+	s.iconTime.layer = LAYER_FRAME
+	s.iconTime.position = LAYOUT_SOUTH
+	s.iconTime.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
+	s.iconTime.fg = TEXT_COLOR
 
 
 	-- Window title, this is a Label

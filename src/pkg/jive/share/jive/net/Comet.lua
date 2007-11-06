@@ -67,6 +67,8 @@ local Popup         = require("jive.ui.Popup")
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("net.comet")
 
+local iconbar = iconbar
+
 -- times are in ms
 local RETRY_DEFAULT = 5000  -- default delay time to retry connection
 local SUB_DELAY     = 1000  -- how long to wait before sending subscription requests
@@ -83,7 +85,7 @@ oo.class(_M, SocketHttp)
 Creates A Comet socket named I<name> to interface with the given I<jnt> 
 (a L<jive.net.NetworkThread> instance). I<name> is used for debugging and
 defaults to "". I<ip> and I<port> are the IP address and port of the HTTP server.
-I<path> is the absolute path to the server's cometd handler and defaults to
+I<path> is the absolute path to the servers cometd handler and defaults to
 '/cometd'.
 
 =cut
@@ -127,6 +129,7 @@ local _handshake
 local _getHandshakeSink
 local _getRequestSink
 local _reconnect
+local _active
 
 function start(self)
 	-- Begin handshake
@@ -288,7 +291,7 @@ _getEventSink = function(self)
 				if event.channel == '/meta/connect' then
 				 	if event.successful then
 						log:debug("Comet:_getEventSink, connect message acknowledged")
-						self.active   = true
+						_active(self, true)
 						self.failures = 0
 					else
 						log:warn("Comet:_getEventSink, connect failed: ", event.error)
@@ -298,7 +301,7 @@ _getEventSink = function(self)
 				elseif event.channel == '/meta/reconnect' then
 					if event.successful then
 						log:debug("Comet:_getEventSink, reconnect OK")
-						self.active   = true
+						_active(self, true)
 						self.failures = 0
 					else
 						log:warn("Comet:_getEventSink, reconnect failed: ", event.error)
@@ -404,7 +407,7 @@ _getHandshakeSink = function(self)
 		if chunk then
 			local data = chunk[1]
 			if data.successful then
-				self.active    = true
+				_active(self, true)
 				self.failures  = 0
 				self.clientId  = data.clientId
 				self.advice    = data.advice
@@ -679,27 +682,10 @@ function removeCallback(self, subscription, func)
 end
 
 -- Decide what to do if we get disconnected or get an error while handshaking/connecting
--- XXX: Need a way to propagate errors/retry notice up to the UI
 _handleAdvice = function(self)
-	-- could display a popup wait screen here, but needs more logic
-	-- such as are you using this connection or playing a game, etc
-	if false and self.active then
-		local popup = Popup("popupIcon")
-		local icon  = Icon("iconConnecting")
-		local label = Label("text", "Connection to " .. self.name .. " lost\nReconnecting...")
-		popup:addWidget(icon)
-		popup:addWidget(label)
-		popup:addTimer(1000, function()
-			if self.active then
-				popup:hide()
-			end
-		end)
-		popup:show()
-	end
-	
 	-- make sure our connection is closed
 	if self.active then
-		self.active = false
+		_active(self, false)
 		self:perform(function() self:t_close() end)
 	end
 
@@ -782,6 +768,33 @@ _reconnect = function(self)
 	end
 	
 	self.cpool:queuePriority(req)	
+end
+
+-- Notify changes in connection state
+_active = function(self, active)
+
+	-- XXX: Need a way to propagate errors/retry notice up to the UI
+
+	-- XXX update the icon bar. This should be done in Slimserver.lua not here.
+	iconbar:setServerError(active and "OK" or "ERROR")
+
+	-- could display a popup wait screen here, but needs more logic
+	-- such as are you using this connection or playing a game, etc
+	if false and self.active then
+		local popup = Popup("popupIcon")
+		local icon  = Icon("iconConnecting")
+		local label = Label("text", "Connection to " .. self.name .. " lost\nReconnecting...")
+		popup:addWidget(icon)
+		popup:addWidget(label)
+		popup:addTimer(1000, function()
+			if self.active then
+				popup:hide()
+			end
+		end)
+		popup:show()
+	end
+	
+	self.active = active
 end
 
 --[[

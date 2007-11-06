@@ -390,6 +390,7 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/icon_wireless_3.png \
 	share/applets/DefaultSkin/images/icon_wireless_4.png \
 	share/applets/DefaultSkin/images/icon_wireless_off.png \
+	share/applets/DefaultSkin/images/icon_wireless_noserver.png \
 	share/applets/DefaultSkin/images/icon_wireless_1_shadow.png \
 	share/applets/DefaultSkin/images/icon_wireless_2_shadow.png \
 	share/applets/DefaultSkin/images/icon_wireless_3_shadow.png \

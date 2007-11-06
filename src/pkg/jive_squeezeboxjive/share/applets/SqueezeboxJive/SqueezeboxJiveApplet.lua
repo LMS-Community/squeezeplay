@@ -66,19 +66,12 @@ oo.class(_M, Applet)
 
 
 function init(self)
-
 	self.Wireless = Wireless(jnt, "eth0")
 
-	self.iconWireless = Icon("")
-	self.iconBattery = Icon("")
-
-	Framework:addWidget(self.iconWireless)
-	Framework:addWidget(self.iconBattery)
-
-	self.iconWireless:addTimer(5000,  -- every 5 seconds
-				  function() 
-					  self:update()
-				  end)
+	iconbar.iconWireless:addTimer(5000,  -- every 5 seconds
+				      function() 
+					      self:update()
+				      end)
 
 	Framework:addListener(EVENT_SWITCH,
 			      function(event)
@@ -91,7 +84,7 @@ function init(self)
 
 					      if self.acpower then
 						      self:setPowerState("ac_dimmed")
-						      self.iconBattery:playSound("DOCKING")
+						      iconbar.iconBattery:playSound("DOCKING")
 					      else
 						      self:setPowerState("active")
 					      end
@@ -217,38 +210,32 @@ end
 
 
 function update(self)
-
 	-- ac power / battery
 	if self.acpower then
 		local nCHRG = jiveBSP.ioctl(25)
 		if nCHRG == 0 then
-			self.iconBattery:setStyle("iconBatteryCharging")
+			iconbar:setBattery("CHARGING")
 		else
-			self.iconBattery:setStyle("iconBatteryAC")
+			iconbar:setBattery("AC")
 		end
 	else
 		local bat = jiveBSP.ioctl(17)
 		if bat < 810 then
-			self.iconBattery:setStyle("iconBattery0")
+			iconbar:setBattery("0")
 		elseif bat < 820 then
-			self.iconBattery:setStyle("iconBattery1")
+			iconbar:setBattery("1")
 		elseif bat < 830 then
-			self.iconBattery:setStyle("iconBattery2")
+			iconbar:setBattery("2")
 		elseif bat < 840 then
-			self.iconBattery:setStyle("iconBattery3")
+			iconbar:setBattery("3")
 		else
-			self.iconBattery:setStyle("iconBattery4")
+			iconbar:setBattery("4")
 		end
 	end
 
 	-- wireless strength
 	local quality = self.Wireless:getLinkQuality()
-
-	if quality == nil then
-		self.iconWireless:setStyle("iconWirelessOff")
-	else
-		self.iconWireless:setStyle("iconWireless" .. quality)
-	end
+	iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
 end
 
 

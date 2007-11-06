@@ -35,6 +35,7 @@ local Framework = require("jive.ui.Framework")
 local Icon      = require("jive.ui.Icon")
 local Label     = require("jive.ui.Label")
 
+local string    = require("string")
 local datetime  = require("jive.utils.datetime")
 local log       = require("jive.utils.log").logger("ui")
 
@@ -52,9 +53,8 @@ Set the playmode icon of the iconbar. Values are nil (off), "stop", "play" or "p
 =cut
 --]]
 function setPlaymode(self, val)
-	log:debug("Iconbar:setPlaymode(", val, ")")
-	
-	self.icon_playmode:setStyle("icon_playmode_" .. (val or "off"))
+	log:warn("Iconbar:setPlaymode(", val, ")")
+	self.iconPlaymode:setStyle("iconPlaymode" .. string.upper((val or "OFF")))
 end
 
 
@@ -68,8 +68,7 @@ Set the repeat icon of the iconbar. Values are nil (no repeat), 1 for repeat sin
 --]]
 function setRepeat(self, val)
 	log:debug("Iconbar:setRepeat(", val, ")")
-
-	self.icon_repeat:setStyle("icon_repeat_" .. (val or "off"))
+	self.iconRepeat:setStyle("iconRepeat" .. string.upper((val or "OFF")))
 end
 
 
@@ -83,8 +82,56 @@ Set the shuffle icon of the iconbar. Values are nil (no shuffle), 1 for shuffle 
 --]]
 function setShuffle(self, val)
 	log:debug("Iconbar:setShuffle(", val, ")")
+	self.iconShuffle:setStyle("iconShuffle" .. string.upper((val or "OFF")))
+end
 
-	self.icon_shuffle:setStyle("icon_shuffle_" .. (val or "off"))
+
+--[[
+
+=head2 Iconbar:setBattery(val)
+
+Set the state of the battery icon of the iconbar. Values are nil (no battery), CHARGING, AC or 0-4.
+
+=cut
+--]]
+function setBattery(self, val)
+	log:debug("Iconbar:setBattery(", val, ")")
+	self.iconBattery:setStyle("iconBattery" .. string.upper((val or "NONE")))
+end
+
+
+--[[
+
+=head2 Iconbar:setWirelessSignal(val)
+
+Set the state of the network icon of the iconbar. Values are nil (no network), ERROR or 1-3.
+
+=cut
+--]]
+function setWirelessSignal(self, val)
+	log:debug("Iconbar:setWireless(", val, ")")
+
+	self.wirelessSignal = val
+
+	if self.serverError == "ERROR" then
+		self.iconWireless:setStyle("iconWirelessSERVERERROR")
+	else
+		self.iconWireless:setStyle("iconWireless" .. string.upper((val or "NONE")))
+	end
+end
+
+
+--[[
+
+=head2 Iconbar:setServerError(val)
+
+Set the state of the SqueezeCenter connection. Values are nil, OK or ERROR.
+
+=cut
+--]]
+function setServerError(self, val)
+	self.serverError = val
+	self:setWirelessSignal(self.wirelessSignal)
 end
 
 
@@ -99,7 +146,7 @@ Updates the iconbar.
 function update(self)
 	log:debug("Iconbar:update()")
 
-	self.icon_time:setValue(datetime:getCurrentTime())
+	self.iconTime:setValue(datetime:getCurrentTime())
 end
 
 
@@ -116,26 +163,30 @@ function __init(self)
 
 	local obj = oo.rawnew(self, {
 	        -- FIXME the background should be an icon, but icons use Surfaces not Tiles.
-		icon_background = Label("icon_background", ""),
-		icon_playmode = Icon("icon_playmode_off"),
-		icon_repeat = Icon("icon_repeat_off"),
-		icon_shuffle = Icon("icon_shuffle_off"),
-		icon_time = Label("icon_time", "XXXX"),
+		iconBackground = Label("iconBackground", ""),
+		iconPlaymode = Icon("iconPlaymodeOFF"),
+		iconRepeat = Icon("iconRepeatOFF"),
+		iconShuffle = Icon("iconShuffleOFF"),
+		iconBattery = Icon("iconBatteryNONE"),
+		iconWireless = Icon("iconWirelessNONE"),
+		iconTime = Label("iconTime", "XXXX"),
 	})
 
 
 	obj:update()
 
-	Framework:addWidget(obj.icon_background)
-	Framework:addWidget(obj.icon_playmode)
-	Framework:addWidget(obj.icon_repeat)
-	Framework:addWidget(obj.icon_shuffle)
-	Framework:addWidget(obj.icon_time)
+	Framework:addWidget(obj.iconBackground)
+	Framework:addWidget(obj.iconPlaymode)
+	Framework:addWidget(obj.iconRepeat)
+	Framework:addWidget(obj.iconShuffle)
+	Framework:addWidget(obj.iconBattery)
+	Framework:addWidget(obj.iconWireless)
+	Framework:addWidget(obj.iconTime)
 
-	obj.icon_time:addTimer(1000,  -- every second
-		function() 
-			obj:update()
-		end)
+	obj.iconTime:addTimer(1000,  -- every second
+			      function() 
+				      obj:update()
+			      end)
 	
 	return obj
 end
