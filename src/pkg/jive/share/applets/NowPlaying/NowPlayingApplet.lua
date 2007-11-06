@@ -53,7 +53,6 @@ local ARTWORK_SIZE = 154
 
 local thePlayer = nil
 local theItem = nil
-local theTimer = nil
 
 local titleGroup = nil
 
@@ -172,9 +171,12 @@ function updatePlaylist(self, enabled, nr, count)
 	end
 end
 
-local function tick()
-	iTrackPos = iTrackPos + 1
+function tick(self)
+	if self.mode ~= "play" then
+		return
+	end
 
+	iTrackPos = iTrackPos + 1
 	if iTrackLen and iTrackLen > 0 then
 		if iTrackPos > iTrackLen then iTrackPos = iTrackLen end
 	end
@@ -202,13 +204,12 @@ function _process_status(self, event)
 
 	local data = event.data;
 
-	if data.mode == "play" then
-		theTimer:start()
+	self.mode = data.mode
+	if self.mode == "play" then
 		titleGroup:setWidgetValue("title", self:string("SCREENSAVER_NOWPLAYING"))
-	elseif data.mode == "pause" then
-		theTimer:stop()
+	elseif self.mode == "pause" then
 		titleGroup:setWidgetValue("title", self:string("SCREENSAVER_PAUSED"))
-	elseif data.mode == "stop" then
+	elseif self.mode == "stop" then
 		titleGroup:setWidgetValue("title", self:string("SCREENSAVER_STOPPED"))
 	end
 
@@ -240,8 +241,6 @@ function free(self)
 	if thePlayer then
 		thePlayer.slimServer.comet:removeCallback( '/slim/playerstatus/' .. thePlayer:getId(), self.statusSink )
 	end
-
-	theTimer:stop()
 end
 
 function _createUI(self)
@@ -261,6 +260,8 @@ function _createUI(self)
 	
 	
 	progressSlider = Slider("slider", 0, 100, 0)
+	progressSlider:addTimer(1000, function() self:tick() end)
+
 	progressGroup = Group("progress", {
 				      elapsed = Label("text", ""),
 				      slider = progressSlider,
@@ -308,9 +309,6 @@ function openScreensaver(self, menuItem, mode)
 			self.statusSink
 		)
 
-		theTimer = Timer(1000, function() tick() end)
-		theTimer:start()
-		
 		-- Initialize with current data from Player
 		local event = { data = thePlayer.state }
 		self:_process_status(event)
