@@ -53,7 +53,7 @@ Set the playmode icon of the iconbar. Values are nil (off), "stop", "play" or "p
 =cut
 --]]
 function setPlaymode(self, val)
-	log:warn("Iconbar:setPlaymode(", val, ")")
+	log:debug("Iconbar:setPlaymode(", val, ")")
 	self.iconPlaymode:setStyle("iconPlaymode" .. string.upper((val or "OFF")))
 end
 

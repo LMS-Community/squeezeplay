@@ -50,6 +50,11 @@ local debug     = require("debug")
 local string    = require("string")
 local table     = require("table")
 
+local syslog    = false
+pcall(function()
+	      syslog = require("syslog") -- optional
+      end)
+
 local logging   = require("logging")
 local Framework = require("jive.ui.Framework")
 
@@ -80,6 +85,14 @@ WARN = logging.WARN
 ERROR = logging.ERROR
 FATAL = logging.FATAL
 
+local syslevel = {
+	DEBUG = "LOG_DEBUG",
+	INFO = "LOG_INFO",
+	WARN = "LOG_WARNING",
+	ERROR = "LOG_ERR",
+	FATAL = "LOG_CRIT",
+}
+
 
 -- jiveLogger
 -- our Lualogging "appender"
@@ -103,17 +116,27 @@ local function jiveLogger(level)
 			end
 			
 			-- print the message
-			print(
-				format(
-					"%s:%s %s (%s:%d) - %s", 
-					date("%H%M%S"),
-					Framework:getTicks(),
-					level,
-					source, 
-					info.currentline or "?",
-					concat(text)
-				)
-			)
+			if syslog then
+				syslog.syslog(syslevel[level],
+					      format(
+						     "(%s:%d) - %s",
+						     source,
+						     info.currentline or "?",
+						     concat(text)
+				     ))
+			else
+				print(
+				      format(
+					     "%s:%s %s (%s:%d) - %s", 
+					     date("%H%M%S"),
+					     Framework:getTicks(),
+					     level,
+					     source, 
+					     info.currentline or "?",
+					     concat(text)
+				     )
+			      )
+			end
 			return true
 		end,
 		level
@@ -121,6 +144,11 @@ local function jiveLogger(level)
 
 end
 
+
+-- use syslog if available
+if syslog then
+	syslog.openlog("jive", syslog.LOG_ODELAY | syslog.LOG_CONS, "LOG_USER")
+end
 
 -- the root logger
 local log = jiveLogger(logging.WARN)

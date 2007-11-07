@@ -78,9 +78,9 @@ sdl-gfx: SDL_gfx-2.0.15/Makefile
 #
 # LUA:
 #
-.PHONY: lua-all lua tolua++ luasocket slnunicode luajson loop lualogging luaexpat luafilesystem luaprofiler luazipfilter
+.PHONY: lua-all lua tolua++ luasocket slnunicode luajson loop lualogging luaexpat luafilesystem luaprofiler luazipfilter lsyslog
 
-lua-all: lua tolua++ luasocket luajson loop lualogging luaexpat luafilesystem luaprofiler luazipfilter
+lua-all: lua tolua++ luasocket luajson loop lualogging luaexpat luafilesystem luaprofiler luazipfilter lsyslog
 
 # lua (requires readline ncurses)
 lua:
@@ -117,6 +117,10 @@ loop:
 
 lualogging:
 	cd lualogging-1.1.2; make install LUA_DIR=${PREFIX}/share/lua/5.1
+
+lsyslog: lsyslog-4/Makefile
+	cd lsyslog-4; make LUA_SRC=${PREFIX} syslog.so
+	install lsyslog-4/syslog.so ${PREFIX}/lib/lua/5.1
 
 luaexpat:
 	cd luaexpat-1.0.2; make PREFIX=${PREFIX} PLATFORM=linux ; make install PREFIX=${PREFIX} PLATFORM=linux
