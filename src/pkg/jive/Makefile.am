@@ -235,7 +235,8 @@ dist_applets_clock_DATA = \
 	share/applets/Clock/Digital_dotmatrix_ghosted_6.png \
 	share/applets/Clock/Digital_dotmatrix_ghosted_7.png \
 	share/applets/Clock/Digital_dotmatrix_ghosted_8.png \
-	share/applets/Clock/Digital_dotmatrix_ghosted_9.png
+	share/applets/Clock/Digital_dotmatrix_ghosted_9.png \
+	share/applets/Clock/clock_classic_time_dots.png
 
 applets_infobrowserdir = $(pkgdatadir)/applets/InfoBrowser
 dist_applets_infobrowser_DATA = \
