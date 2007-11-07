@@ -440,7 +440,9 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/menu_album_selection_tl.png \
 	share/applets/DefaultSkin/images/menu_album_selection_t.png \
 	share/applets/DefaultSkin/images/menu_album_selection_tr.png \
-	share/applets/DefaultSkin/images/navcluster.png
+	share/applets/DefaultSkin/images/navcluster.png \
+	share/applets/DefaultSkin/images/menu_check.png \
+	share/applets/DefaultSkin/images/menu_check_selected.png
 
 
 applets_defaultskin_soundsdir = $(pkgdatadir)/applets/DefaultSkin/sounds

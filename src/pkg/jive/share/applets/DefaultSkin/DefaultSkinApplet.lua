@@ -359,7 +359,7 @@ function skin(self, s)
 	s.checked.text.font = FONT_BOLD_15px
 	s.checked.text.fg = TEXT_COLOR
 	s.checked.text.sh = TEXT_SH_COLOR
-	s.checked.check.img = Surface:loadImage(imgpath .. "menu_nowplaying.png") -- FIXME
+	s.checked.check.img = Surface:loadImage(imgpath .. "menu_check.png")
 	s.checked.check.align = "right"
 
 	-- selected menu item
@@ -379,7 +379,7 @@ function skin(self, s)
 	s.selected.checked.icon.align = "right"
 	s.selected.checked.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
 	s.selected.checked.check.align = "right"
-	s.selected.checked.check.img = Surface:loadImage(imgpath .. "menu_nowplaying_selected.png") -- FIXME
+	s.selected.checked.check.img = Surface:loadImage(imgpath .. "menu_check_selected.png")
 
 	s.selected.itemNoAction.bgImg = selectionBox
 	s.selected.itemNoAction.text.font = FONT_BOLD_15px
