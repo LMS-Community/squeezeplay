@@ -10,7 +10,7 @@
 
 	<p>Interface specifications for browsing using Jive.</p>
 
-	<p>Version 1.4 (<a href="#rev">revision history</a>)</p>
+	<p>Version 1.6 (<a href="#rev">revision history</a>)</p>
 
 	<h2>Introduction</h2>
 
@@ -160,6 +160,8 @@
         text = "...",
         token = "...",
     }
+    softbutton1 = "...",
+    softbutton2 = "...",
 }
         
 </pre>
@@ -179,6 +181,9 @@
 
 		<p><code>help</code><br>
 		A help text, if any. Can be specified either using the localized text or a token (localized by Jive),</p>
+
+		<p><code>softbutton1, softbutton2</code><br>
+		Text for softbuttons, if any. If either of these are configured, the help text widget will change from 'help' to 'softHelp' to accomodate the layout of the buttons.</p>
 
 	</blockquote>
 
@@ -492,6 +497,13 @@
 	<p>For example, the hierarchy [genres, artist, album] is done using a top level menu with command "genres menu:artist", that generates items with commands "artists menu:albums", etc... This is done in order to re-use the code of these queries. Experience shows they are high maintenance.</p>
 
 	<h2 id="rev">Revision history</h2>
+
+	<h3>1.6</h3>
+
+	<ul>
+		<li>Support for soft buttons in input window help box</li>
+	</ul>
+
 
 	<h3>1.5</h3>
 

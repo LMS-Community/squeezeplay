@@ -1325,9 +1325,23 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 			end
 		end
 		
+		local softButtons = { inputSpec.softbutton1, inputSpec.softbutton2 }
+		local helpStyle = 'help'
+
+		if softButtons[1] or softButtons[2] then
+			helpStyle = 'softHelp'
+		end
+
 		if helpText then
-			local help = Textarea("help", helpText)
+			local help = Textarea(helpStyle, helpText)
 			window:addWidget(help)
+		end
+
+		if softButtons[1] then
+			window:addWidget(Label("softButton1", softButtons[1]))
+		end
+		if softButtons[2] then
+			window:addWidget(Label("softButton2", softButtons[2]))
 		end
 		
 		window:addWidget(input)
