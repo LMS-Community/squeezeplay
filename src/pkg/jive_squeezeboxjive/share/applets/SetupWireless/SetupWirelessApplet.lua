@@ -747,6 +747,10 @@ function t_connect(self, ssid)
 	-- Allow reassociation
 	request = 'REASSOCIATE'
 	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+	-- Save configuration
+	request = 'SAVE_CONFIG'
+	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
 end
 
 
