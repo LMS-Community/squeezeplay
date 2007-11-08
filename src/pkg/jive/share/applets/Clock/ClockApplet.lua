@@ -425,83 +425,15 @@ function DigitalDetailed:__init(window, preset, ampm, firstday)
 		obj.clock_format = "%H:%M"
 	end
 
-	obj:SetPositions()
-
 	return obj;
 end
 
 local CLOCKY = 48
-local DATEY = 10
 	
-function DigitalDetailed:SetPositions()
-	local testSrf  = Surface:drawText(self.mainfont, self.mainfont_color, "88")
-	local dw, dh = testSrf:getSize()
+function DigitalDetailed:DrawTime(x, y, bw, bh, useAmPm)
 
-	self.measurements = {}
-	self.measurements.hourEnd = 105
-	self.measurements.hour = self.measurements.hourEnd - dw
-	self.measurements.minute = 125
-	self.measurements.minuteEnd = 125 + dw
-	self.measurements.ampm = self.measurements.minuteEnd + 2
-	self.measurements.digitwidth = dw / 2
-end
-
-function DigitalDetailed:DrawAMPMTime(x, y, bw, bh)
-
-	-- Draw Hour
-
-	-- Snip of leading 0
-	local theHour = string.gsub(os.date("%I"), "^0", "", 1)
-
-	local hourSrf = Surface:drawText(self.mainfont, self.mainfont_color, theHour)
-	local hw, hh = hourSrf:getSize()
-
-	-- Make sure the position is correct for hours below 10
-	if(tonumber(theHour) < 10) then
-		hourSrf:blit(self.bg, self.measurements.hour + self.measurements.digitwidth, y + CLOCKY)			
-	else 
-		hourSrf:blit(self.bg, self.measurements.hour, y + CLOCKY)			
-	end
-
-	-- Draw Minute
-	local theMinute = os.date("%M")
-	local minSrf = Surface:drawText(self.mainfont, self.mainfont_color, theMinute)
-	local minStartY = y + CLOCKY
-	minSrf:blit(self.bg, self.measurements.minute, minStartY)
-
-	local hourWidth, hourHeigh  = hourSrf:getSize()
-	local minWidth,  minHeight  = minSrf:getSize()
-	local dotsWidth, dotsHeight = obj.dots:getSize()
-
-	local startOfMinX = self.measurements.minute
-	-- Draw Time Dots
-
-	local dw, dh = self.dots:getSize()
-	-- x position of dots is midpoint of end of hour digits and start of minute digits,
-	-- minus half the width of the dots themselves
-	local dotsx = ((self.measurements.minute + self.measurements.hourEnd) / 2) - (dotsWidth/2)
-
-	-- y position of dots is midpoint of where minute digit starts and ends,
-	-- minus half the height of the dots themselves
-	local dotsy = ((minStartY + (minStartY + minHeight)) / 2) - (dotsHeight/2)
-	self.dots:blit(self.bg, dotsx, dotsy)
-
-	-- Draw AM PM
-	local ampm = os.date("%p")
-	local ampmSrf = Surface:drawText(self.ampmfont, self.ampmfont_color, ampm)
-	local ampmw, ampmh = ampmSrf:getSize()
-			
-	local ampmy = y + CLOCKY + 5
-	if ampm == "PM" then
-		ampmy = ampmy + ampmh + 3
-	end
-
-	ampmSrf:blit(self.bg, self.measurements.ampm, ampmy)
-
-end
-
-
-function DigitalDetailed:Draw24HTime(x, y, bw, bh)
+	local screenMidpointX = (self.screen_width/2)
+	local digitStartY = y + CLOCKY
 
 	-- Draw Hour
 
@@ -511,21 +443,55 @@ function DigitalDetailed:Draw24HTime(x, y, bw, bh)
 	local hourSrf = Surface:drawText(self.mainfont, self.mainfont_color, theHour)
 	local hw, hh = hourSrf:getSize()
 
-	-- Make sure the position is correct for hours below 10
-	if(tonumber(theHour) < 10) then
-		hourSrf:blit(self.bg, self.measurements.hour + self.measurements.digitwidth, y + CLOCKY)			
-	else 
-		hourSrf:blit(self.bg, self.measurements.hour, y + CLOCKY)			
-	end
+	-- x position for hour is half the screen width - 10 pixels - width of hour digits
+	local hourStartX = screenMidpointX - 10 - hw
+	hourSrf:blit(self.bg, hourStartX, digitStartY)			
 
 	-- Draw Minute
+
 	local theMinute = os.date("%M")
 	local minSrf = Surface:drawText(self.mainfont, self.mainfont_color, theMinute)
-	minSrf:blit(self.bg, self.measurements.minute, y + CLOCKY)
+	-- x position for minutes is half the screen width + 10 pixels
+	local minStartX = screenMidpointX + 10
+	minSrf:blit(self.bg, minStartX, digitStartY)
+	local mw,  mh  = minSrf:getSize()
+
+	-- Draw dots
+
+	local dotsWidth, dotsHeight = obj.dots:getSize()
+	local dw, dh = self.dots:getSize()
+	-- x position of dots is center of the screen
+	-- minus half the width of the dots themselves
+	local dotsx = screenMidpointX - (dotsWidth/2)
+
+	-- y position of dots is midpoint of where minute digit starts and ends,
+	-- minus half the height of the dots themselves
+	local dotsy = ((digitStartY + (digitStartY + mh)) / 2) - (dotsHeight/2)
+	self.dots:blit(self.bg, dotsx, dotsy)
+
+	-- Draw AM PM
+
+	if useAmPm then
+		local ampm = os.date("%p")
+		local ampmSrf = Surface:drawText(self.ampmfont, self.ampmfont_color, ampm)
+		local ampmw, ampmh = ampmSrf:getSize()
+			
+		local ampmStartY = digitStartY + 5
+		if ampm == "PM" then
+			ampmy = ampmy + ampmh + 3
+		end
+		-- x position of ampm is minute start X + minute width + 5 
+		local ampmStartX = minStartX + mw + 5
+	
+		ampmSrf:blit(self.bg, ampmStartX, ampmStartY)
+	end
 
 end
 
+local DATEY = 10
+
 function DigitalDetailed:Draw(force)
+
 	local theTime = os.date("%H:%M:%S")
 
 	if theTime != self.oldtime or force then
@@ -549,20 +515,17 @@ function DigitalDetailed:Draw(force)
 			self:DrawWeekdays(x, y, bw, bh, tonumber(os.date("%u"))-1)
 		end
 
-
-		if self.show_ampm then
-			self:DrawAMPMTime(x, y, bw, bh)
-		else
-			self:Draw24HTime(x, y, bw, bh)
-		end
+		self:DrawTime(x, y, bw, bh, self.show_ampm)
 
 		-- Draw Date
 		local theDate = os.date(datetime:getDateFormat())
 		local dateSrf = Surface:drawText(self.datefont, self.datefont_color, theDate)
 
 		local dw, dh = dateSrf:getSize()
+		local dateStartY = y + DATEY
+		local dateStartX = x + ((bw/2) - (dw/2))
 	
-		dateSrf:blit(self.bg, x + ((bw/2) - (dw/2)), y + DATEY)
+		dateSrf:blit(self.bg, dateStartX, dateStartY)
 
 		self.bgicon:reDraw()
 	end
