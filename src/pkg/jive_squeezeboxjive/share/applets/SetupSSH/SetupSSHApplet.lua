@@ -60,7 +60,7 @@ end
 
 function _enableSSH(self, window)
 	local ipaddr = _getIPAddress()
-	local password = _randomPassword()
+	local password = "1234"
 
 	log:warn("ipaddr = ", ipaddr)
 	log:warn("password = ", password)
@@ -77,7 +77,7 @@ function _enableSSH(self, window)
 	_sighup("/usr/sbin/inetd")
 
 	-- set root password
-	_passwd("root", password)
+	--_passwd("root", password)
 end
 
 
