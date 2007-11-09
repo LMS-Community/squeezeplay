@@ -216,6 +216,10 @@ end
 function update(self)
 	-- ac power / battery
 	if self.acpower then
+		if self.batteryPopup then
+			self:batteryLowHide()
+		end
+
 		local nCHRG = jiveBSP.ioctl(25)
 		if nCHRG == 0 then
 			iconbar:setBattery("CHARGING")
@@ -567,24 +571,30 @@ end
 
 
 function batteryLowShow(self)
+	if self.batteryPopup then
+		self.batteryPopup:show()
+		return
+	end
+
 	local popup = Popup("popupIcon")
 
 	popup:addWidget(Icon("iconBatteryLow"))
 	popup:addWidget(Label("text", self:string("BATTERY_LOW")))
 
-	local timer = Timer(10000,
-			    function()
-				    self:_powerOff()
-			    end,
-			    true)
-	timer:start()
+	self.batteryPopup = popup
+
+	popup:addTimer(30000,
+		       function()
+			       self:_powerOff()
+		       end,
+		       true)
 
 	-- consume all key and scroll events
-	Framework:addListener(EVENT_SCROLL | EVENT_KEY_DOWN | EVENT_KEY_PRESS,
-			      function(event)
-				      return EVENT_CONSUME
-			      end,
-			      true)
+	self.batteryListener= Framework:addListener(EVENT_SCROLL | EVENT_KEY_DOWN | EVENT_KEY_PRESS,
+						    function(event)
+							    return EVENT_CONSUME
+						    end,
+						    true)
 
 	-- make sure the display is on
 	self:setBrightness()
@@ -592,8 +602,17 @@ function batteryLowShow(self)
 	self:tieAndShowWindow(popup)
 end
 
-function settingsPowerDown(self, menuItem)
 
+function batteryLowHide(self)
+	Framework:removeListener(self.batteryListener)
+	self.batteryPopup:hide()
+
+	self.batteryPopup = nil
+	self.batteryListener = nil
+end
+
+
+function settingsPowerDown(self, menuItem)
         log:warn("powerDown menu")
 	-- add window
 	local window = Window("window", menuItem.text, 'settingstitle')
@@ -608,7 +627,7 @@ function settingsPowerDown(self, menuItem)
 		},
 		{ 
 			text = self:string("POWER_DOWN_CONFIRM"),
-			callback = function() _powerOff(self) end
+			callback = function() settingsPowerOff(self) end
 		},
 	}
 	menu:setItems(items)
@@ -617,25 +636,26 @@ function settingsPowerDown(self, menuItem)
         return window
 end
 
-function _powerOff(self)
-	log:warn('_powerOff HAS BEEN CALLED')
+
+function settingsPowerOff(self)
 	local popup = Popup("popupIcon")
-	local icon = Icon("iconPower")
-	local label = Label("text", self:string("GOODBYE"))
 
-	popup:addWidget(icon)
-	popup:addWidget(label)
+	popup:addWidget(Icon("iconPower"))
+	popup:addWidget(Label("text", self:string("GOODBYE")))
 
-
-	self:tieAndShowWindow(popup)
 	popup:addTimer(2000, 
 		function()
-			-- FIXME
-			log:warn("HERE'S WHERE I SHOULD POWER DOWN")
-			popup:hide()
+			self:_powerOff()
 		end
 	)
-	return popup
+
+	self:tieAndShowWindow(popup)
+end
+
+
+function _powerOff(self)
+	log:warn("POWEROFF")
+	os.execute("/sbin/poweroff")
 end
 
 
