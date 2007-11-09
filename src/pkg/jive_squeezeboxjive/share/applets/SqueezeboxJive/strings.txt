@@ -109,3 +109,6 @@ BSP_TIMER_NEVER
 
 DIM_WHEN_CHARGING
 	EN	Dim when charging
+
+BATTERY_LOW
+	EN	Battery Low\nPlease Charge Me

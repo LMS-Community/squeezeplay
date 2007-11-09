@@ -141,6 +141,10 @@ function init(self)
 				      return EVENT_UNUSED
 			      end)
 
+	-- brightness
+	self.lcdLevel = jiveBSP.ioctl(12) / 2048
+	self.keyLevel = jiveBSP.ioctl(14) / 512
+
 	-- ac or battery
 	self.acpower = (jiveBSP.ioctl(23) == 0)
 	if self.acpower then
@@ -220,13 +224,15 @@ function update(self)
 		end
 	else
 		local bat = jiveBSP.ioctl(17)
-		if bat < 810 then
-			iconbar:setBattery("0")
+		if bat < 807 then
+			self:batteryLowShow()
 		elseif bat < 820 then
+			iconbar:setBattery("0")
+		elseif bat < 834 then
 			iconbar:setBattery("1")
-		elseif bat < 830 then
+		elseif bat < 855 then
 			iconbar:setBattery("2")
-		elseif bat < 840 then
+		elseif bat < 875 then
 			iconbar:setBattery("3")
 		else
 			iconbar:setBattery("4")
@@ -267,7 +273,6 @@ function _setBrightness(self, fade, lcdLevel, keyLevel)
 	end
 
 	-- FIXME implement smooth fade in kernel using pwm interrupts
-
 	local steps = 30
 	local lcdVal = self.lcdLevel
 	local lcdInc = (lcdVal - lcdLevel) / steps
@@ -559,6 +564,39 @@ function lockScreen(self)
 					      return EVENT_CONSUME
 				      end,
 				      true)
+end
+
+
+function batteryLowShow(self)
+	local popup = Popup("popupIcon")
+
+	popup:addWidget(Icon("iconBatteryLow"))
+	popup:addWidget(Label("text", self:string("BATTERY_LOW")))
+
+	local timer = Timer(10000,
+			    function()
+				    self:_powerOff()
+			    end,
+			    true)
+	timer:start()
+
+	-- consume all key and scroll events
+	Framework:addListener(EVENT_SCROLL | EVENT_KEY_DOWN | EVENT_KEY_PRESS,
+			      function(event)
+				      return EVENT_CONSUME
+			      end,
+			      true)
+
+	-- make sure the display is on
+	self:setBrightness()
+
+	self:tieAndShowWindow(popup)
+end
+
+
+function _powerOff(self)
+	-- FIXME
+	log:warn("*** BOOM!! ***")
 end
 
 
