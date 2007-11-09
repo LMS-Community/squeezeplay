@@ -83,7 +83,6 @@ function settingsShow(self)
 		"",
 		"",
 		tostring(self:string("ABOUT_COPYRIGHT")),
-		tostring(self:string("ABOUT_ALL_RIGHTS_RESERVED")),
 	}
 
 	window:addWidget(Textarea("textarea", table.concat(about, "\n")))
