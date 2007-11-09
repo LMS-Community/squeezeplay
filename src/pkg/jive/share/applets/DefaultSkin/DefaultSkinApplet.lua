@@ -463,6 +463,8 @@ function skin(self, s)
 	s.slider.bgImg = sliderBackground
 	s.slider.img = sliderBar
 
+	s.sliderGroup.border = { 10, 20, 10, 20 }
+
 
 	-- Text input
 	s.textinput.border = { 8, -5, 8, 0 }
@@ -597,26 +599,23 @@ function skin(self, s)
 	-- SlimBrowser applet
 
 	s.iconVolumeMin.img = Surface:loadImage(imgpath .. "volume_speaker_l.png")
-	s.iconVolumeMin.position = LAYOUT_NONE
-	s.iconVolumeMin.x = 16
-	s.iconVolumeMin.y = 34
-
+	s.iconVolumeMin.border = { 5, 0, 5, 0 }
 	s.iconVolumeMax.img = Surface:loadImage(imgpath .. "volume_speaker_r.png")
-	s.iconVolumeMax.position = LAYOUT_NONE
-	s.iconVolumeMax.x = 208
-	s.iconVolumeMax.y = 33
+	s.iconVolumeMax.border = { 5, 0, 5, 0 }
 
-	s.volume.border = { 45, 0, 45, 25 }
 	s.volume.horizontal = 1
 	s.volume.img = volumeBar
 	s.volume.bgImg = volumeBackground
+
+	s.volumeGroup.border = { 16, 10, 16, 10 }
 
 	s.volumePopup.x = 0
 	s.volumePopup.y = screenHeight - 80
 	s.volumePopup.w = screenWidth
 	s.volumePopup.h = 80
 	s.volumePopup.bgImg = helpBox
-	s.volumePopup.title.fg = SELECT_COLOR
+	s.volumePopup.title.border = 10
+	s.volumePopup.title.fg = TEXT_COLOR
 	s.volumePopup.title.font = FONT_BOLD_15px
 	s.volumePopup.title.align = "center"
 	s.volumePopup.title.bgImg = false

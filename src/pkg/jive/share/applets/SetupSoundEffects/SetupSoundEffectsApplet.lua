@@ -18,7 +18,7 @@ SetupSoundEffectsApplet overrides the following methods:
 
 
 -- stuff we use
-local pairs, tostring = pairs, tostring
+local ipairs, pairs, tostring = ipairs, pairs, tostring
 
 local table           = require("table")
 
@@ -30,15 +30,48 @@ local Checkbox        = require("jive.ui.Checkbox")
 local Framework       = require("jive.ui.Framework")
 local SimpleMenu      = require("jive.ui.SimpleMenu")
 local Window          = require("jive.ui.Window")
+local Icon            = require("jive.ui.Icon")
+local Group           = require("jive.ui.Group")
+local Slider          = require("jive.ui.Slider")
+local Textarea        = require("jive.ui.Textarea")
 local jul             = require("jive.utils.log")
 
 local log             = jul.logger("applets.setup")
 
 local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
+local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
+local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
+local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
+
+local KEY_VOLUME_UP          = jive.ui.KEY_VOLUME_UP
+local KEY_VOLUME_DOWN        = jive.ui.KEY_VOLUME_DOWN
 
 
 module(...)
 oo.class(_M, Applet)
+
+
+local effects = {
+	SOUND_NAVIGATION = {
+		"PUSHLEFT",
+		"PUSHRIGHT",
+		"BUMP",
+		"HOME",
+		"SELECT"
+	},
+	SOUND_SCROLL = {
+		"CLICK"
+	},
+-- XXX playback sounds need implementing
+--[[
+	SOUND_PLAYBACK = {
+		"PLAYBACK"
+	},
+--]]
+	SOUND_CHARGING = {
+		"DOCKING"
+	},
+}
 
 
 -- logSettings
@@ -54,33 +87,20 @@ function settingsShow(self, menuItem)
 
 	local allButtons = {}
 
-	-- sometimes we need to disable the callback for the off switch
-	-- otherwise it turns everything back on again
-	local ignore = false
-
-	-- are sound effects enabled, or any individual sounds enabled?
-	local effectsEnabled = Audio:isEffectsEnabled()
-	local soundsEnabled = false
-	for k,v in pairs(Framework:getSounds()) do
-		if Framework:isSoundEnabled(k) then
-			soundsEnabled = true
-			break
-		end
-	end
-
 	-- off switch
 	local offButton = Checkbox("checkbox", 
 				   function(obj, isSelected)
-					   settings["_EFFECTS"] = not isSelected
-					   Audio:effectsEnable(not isSelected)
+					   local notSelected = not isSelected
 
-					   if ignore then return end
-					   for b,s in pairs(allButtons) do
-						   s:enable(not isSelected)
-						   b:setSelected(not isSelected)
+					   for b,v in pairs(allButtons) do
+						   b:setSelected(notSelected)
+						   for i,snd in ipairs(v) do
+							   settings[snd] = notSelected
+							   Framework:enableSound(snd, notSelected)
+						   end
 					   end
 				   end,
-				   not soundsEnabled or not Audio:isEffectsEnabled()
+				   false
 			   )
 
 	menu:addItem({
@@ -91,18 +111,21 @@ function settingsShow(self, menuItem)
 
 
 	-- add sounds
-	for k,v in pairs(Framework:getSounds()) do
-	
+	local effectsEnabled = false
+	for k,v in pairs(effects) do
+		local soundEnabled = Framework:isSoundEnabled(v[1])
+		effectsEnabled = effectsEnabled or soundEnabled
+
 		local button = Checkbox(
 			"checkbox", 
 			function(obj, isSelected)
-				settings[k] = isSelected
-				Framework:enableSound(k, isSelected)
+				for i,snd in ipairs(v) do
+					settings[snd] = isSelected
+					Framework:enableSound(snd, isSelected)
+				end
 
 				if isSelected then
-					ignore = true
 					offButton:setSelected(false)
-					ignore = false
 				end
 
 				-- turn on off switch?
@@ -115,18 +138,30 @@ function settingsShow(self, menuItem)
 					offButton:setSelected(true)
 				end
 			end,
-			effectsEnabled and Framework:isSoundEnabled(k)
+			soundEnabled
+			
 		)
 
 		allButtons[button] = v
 
 		-- insert suitable entry for Choice menu
 		menu:addItem({
-				     text = self:string("SOUND_" .. k),
+				     text = self:string(k),
 				     icon = button,
 				     weight = 10
 			     })
 	end
+
+	offButton:setSelected(not effectsEnabled)
+
+	-- volume
+	menu:addItem({
+			     text = self:string("SOUND_VOLUME"),
+			     weight = 20,
+			     callback = function()
+						self:volumeShow()
+					end
+		     })
 
 
 	window:addListener(EVENT_WINDOW_POP,
@@ -136,6 +171,55 @@ function settingsShow(self, menuItem)
 	)
 
 	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+local VOLUME_STEPS = 20
+local VOLUME_STEP = Audio.MAXVOLUME / VOLUME_STEPS
+
+
+function _setVolume(self, value)
+	local settings = self:getSettings()
+
+	Audio:setEffectVolume(value * VOLUME_STEP)
+
+	self.slider:setValue(value)
+	self.slider:playSound("CLICK")
+
+	settings["_VOLUME"] = value * VOLUME_STEP
+end
+
+
+function volumeShow(self)
+	local window = Window("window", self:string("SOUND_EFFECTS_VOLUME"), "settingstitle")
+
+	self.slider = Slider("slider", 1, VOLUME_STEPS, Audio:getEffectVolume() / VOLUME_STEP,
+			     function(slider, value)
+				     self:_setVolume(value)
+			     end)
+
+	self.slider:addListener(EVENT_KEY_PRESS,
+				function(event)
+					local code = event:getKeycode()
+					if code == KEY_VOLUME_UP then
+						self:_setVolume(self.slider:getValue() + 1)
+						return EVENT_CONSUME
+					elseif code == KEY_VOLUME_DOWN then
+						self:_setVolume(self.slider:getValue() - 1)
+						return EVENT_CONSUME
+					end
+					return EVENT_UNUSED
+				end)
+
+	window:addWidget(Textarea("help", self:string("SOUND_VOLUME_HELP")))
+	window:addWidget(Group("sliderGroup", {
+				     Icon("iconVolumeMin"),
+				     self.slider,
+				     Icon("iconVolumeMax")
+			     }))
 
 	self:tieAndShowWindow(window)
 	return window

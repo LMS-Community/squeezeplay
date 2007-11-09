@@ -128,7 +128,7 @@ function setValue(self, value)
 		return
 	end
 
-	self.size = value
+	self.size = value or 0
 
 	if self.size < self.min then
 		self.size = self.min
@@ -139,6 +139,18 @@ function setValue(self, value)
 	self:reDraw()
 end
 
+
+--[[
+
+=head2 jive.ui.Slider:getValue()
+
+Returns the value of the slider.
+
+=cut
+--]]
+function getValue(self)
+	return self.size
+end
 
 function _adjustSlider(self, value)
 	local oldSize = self.size

@@ -23,7 +23,7 @@ struct jive_sample {
 #define MAX_SOUNDS 2
 struct jive_sample *mixsnd[MAX_SOUNDS];
 
-bool effects_enabled = true;
+int effect_volume = SDL_MIX_MAXVOLUME;
 
 
 static void free_sound(struct jive_sample *snd) {
@@ -61,7 +61,7 @@ static void mixaudio(void *unused, Uint8 *stream, int len) {
 		}
 
 		// This mixer function should only be used for two sounds
-		SDL_MixAudio(stream, &mixsnd[i]->data[mixsnd[i]->pos], size, SDL_MIX_MAXVOLUME);
+		SDL_MixAudio(stream, &mixsnd[i]->data[mixsnd[i]->pos], size, effect_volume);
 		mixsnd[i]->pos += size;
 
 		if (mixsnd[i]->pos >= mixsnd[i]->len) {
@@ -185,15 +185,14 @@ static int jiveL_audio_load(lua_State *L) {
 }
 
 
-static int jiveL_audio_effects_enable(lua_State *L) {
+static int jiveL_audio_set_effect_volume(lua_State *L) {
 	/* stack is:
 	 * 1: sound
 	 * 2: enabled
 	 */
 
-	effects_enabled = lua_toboolean(L, 2);
-
-	if (effects_enabled) {
+	effect_volume = lua_tointeger(L, 2);
+	if (effect_volume > 0) {
 		open_audio();
 	}
 	else {
@@ -204,8 +203,8 @@ static int jiveL_audio_effects_enable(lua_State *L) {
 }
 
 
-static int jiveL_audio_is_effects_enabled(lua_State *L) {
-	lua_pushboolean(L, effects_enabled);
+static int jiveL_audio_get_effect_volume(lua_State *L) {
+	lua_pushinteger(L, effect_volume);
 	return 1;
 }
 
@@ -286,8 +285,8 @@ static const struct luaL_Reg sound_m[] = {
 
 static const struct luaL_Reg audio_c[] = {
 	{ "loadSound", jiveL_audio_load },
-	{ "effectsEnable", jiveL_audio_effects_enable },
-	{ "isEffectsEnabled", jiveL_audio_is_effects_enabled },
+	{ "setEffectVolume", jiveL_audio_set_effect_volume },
+	{ "getEffectVolume", jiveL_audio_get_effect_volume },
 	{ NULL, NULL }
 };
 
@@ -320,6 +319,9 @@ int jiveL_init_audio(lua_State *L) {
 	lua_getfield(L, -1, "ui");
 	lua_getfield(L, -1, "Audio");
 	luaL_register(L, NULL, audio_c);
+
+	lua_pushinteger(L, SDL_MIX_MAXVOLUME);
+	lua_setfield(L, -2, "MAXVOLUME");
 
 	lua_pop(L, 4);
 

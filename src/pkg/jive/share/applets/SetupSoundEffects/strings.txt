@@ -11,7 +11,7 @@ SOUND_EFFECTS
 	FR	Effets sonores
 	NL	Geluidseffecten
 
-SOUND_CLICK
+SOUND_SCROLL
 	EN	Scroll
 	DE	Scroll
 	ES	Desplazarse
@@ -19,69 +19,22 @@ SOUND_CLICK
 	FR	Défiler
 	NL	Scrollen
 
-SOUND_SELECT
-	EN	Select
-	DE	Auswahl
-	ES	Seleccionar
-	IT	Seleziona
-	FR	Sélectionner
-	NL	Selecteren
+SOUND_NAVIGATION
+	EN	Navigation
 
-SOUND_PUSHLEFT
-	EN	Forward
-	DE	Vorwärts
-	ES	Avance
-	IT	Avanti
-	FR	Suivant
-	NL	Vooruit
+SOUND_PLAYBACK
+	EN	Playback
 
-SOUND_JUMP
-	EN	Home
-	DE	Hauptmenü
-	ES	Inicio
-	IT	Pagina iniziale
-	FR	Accueil
-	NL	Hoofdmenu
+SOUND_VOLUME
+	EN	Volume
 
-SOUND_STARTUP
-	EN	Startup
-	DE	Start
-	ES	Iniciar
-	IT	Avvio
-	FR	Démarrage
-	NL	Opstarten
-
-SOUND_SHUTDOWN
-	EN	Shutdown
-	DE	Abschalten
-	ES	Apagar
-	IT	Chiusura
-	FR	Arrêt de l'ordinateur
-	NL	Afsluiten
-
-SOUND_BUMP
-	EN	Bump
-	DE	##Bump
-	ES	Choque
-	IT	Tonfo
-	FR	Bip
-	NL	Bump
-
-SOUND_DOCKING
+SOUND_CHARGING
 	EN	Charging
 	DE	Wird aufgeladen
 	ES	Cargando
 	IT	Caricamento
 	FR	Chargement en cours
 	NL	Bezig met opladen
-
-SOUND_PUSHRIGHT
-	EN	Back
-	DE	Zurück
-	ES	Atrás
-	IT	Indietro
-	FR	Précédent
-	NL	Terug
 
 SOUND_NONE
 	EN	None
@@ -90,3 +43,9 @@ SOUND_NONE
 	IT	Nessuno
 	FR	Aucun
 	NL	Geen
+
+SOUND_EFFECTS_VOLUME
+	EN	Effects Volume
+
+SOUND_VOLUME_HELP
+	EN	FIXME

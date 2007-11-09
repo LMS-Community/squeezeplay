@@ -101,6 +101,11 @@ end
 function _action(self)
 	self:setSelected(not self.selected)
 	self:playSound("SELECT")
+
+	if self.closure then
+		self.closure(self, self.selected)
+	end
+
 	return EVENT_CONSUME
 end
 
@@ -141,10 +146,6 @@ function setSelected(self, isSelected)
 		self.imgStyleName = "imgOn"
 	else
 		self.imgStyleName = "imgOff"
-	end
-
-	if self.closure then
-		self.closure(self, isSelected)
 	end
 
 	self:reSkin()

@@ -36,15 +36,17 @@ end
 
 
 function defaultSettings(meta)
-	return {}
+	return {
+		_VOLUME = Audio.MAXVOLUME / 2
+	}
 end
 
 function registerApplet(meta)
 	
 	local settings = meta:getSettings()
 	for k,v in pairs(settings) do
-		if k == "_EFFECTS" then
-			Audio:effectsEnable(v)
+		if k == "_VOLUME" then
+			Audio:setEffectVolume(v)
 		else
 			Framework:enableSound(k, v)
 		end
@@ -54,7 +56,7 @@ function registerApplet(meta)
 	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))
 	local advancedSettings = remoteSettings:subMenu(meta:string("ADVANCED_SETTINGS"), 1000)
 
-	advancedSettings:addItem(meta:menuItem("SOUND_EFFECTS", function(applet, ...) applet:settingsShow(...) end))
+	jiveMain:addItem(meta:menuItem("SOUND_EFFECTS", function(applet, ...) applet:settingsShow(...) end))
 end
 
 

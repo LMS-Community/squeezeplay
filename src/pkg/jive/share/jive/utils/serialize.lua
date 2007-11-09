@@ -18,7 +18,7 @@ Table serializer. From PIA chapter 12.1.2 Saving Table with Cycles.
 
 local string = require("string")
 
-local pairs, tostring, type = pairs, tostring, type
+local error, pairs, tostring, type = error, pairs, tostring, type
 
 module(...)
 
