@@ -47,19 +47,39 @@ function settingsShow(self)
 		tostring(self:string("ABOUT_MAC_ADDRESS", hwaddr)),
 		"",
 		tostring(self:string("ABOUT_CREDITS")),
+		"     Sean Adams",
+		"     Ena Bi",
 		"     Dean Blackketter",
 		"     Fred Bould",
+		"     Randy Buswell",
+		"     Jim Carlton",
 		"     Caleb Crome",
+		"     Kevin Deane-Freeman",
+		"     Julius Dauz",	
 		"     Noah DiJulio",
+		"     Mike Dilley",
+		"     Brian Dils",
+		"     Dan Evans",
 		"     Ben Dooks",
 		"     Lukas Frey",
+		"     Mickey Gee",
 		"     Andy Grundman",
 		"     Raphael Juchli",
 		"     Ben Klaas",
+		"     Wallace Lai",
+		"     Diane Lee",
+		"     Ross Levine",
+		"     Anoop Mehta",
+		"     Felix Mueller",
+		"     Chris Owens",
+		"     Robin Selden",
 		"     Martin Sénéclauze",
 		"     Adrian Smith",
+		"     Steven Spies",
+		"     David Stein",
 		"     Fred Thomas",
 		"     Richard Titmuss",
+		"     Julien Venetz",
 		"",
 		"",
 		tostring(self:string("ABOUT_COPYRIGHT")),
@@ -78,9 +98,9 @@ end
 
 =head1 LICENSE
 
-Copyright 2007 Logitech. All Rights Reserved.
+Copyright 2007 Logitech.
 
-This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENSE file for details.
 
 =cut
 --]]
