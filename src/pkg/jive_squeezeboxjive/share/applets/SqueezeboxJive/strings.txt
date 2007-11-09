@@ -112,3 +112,16 @@ DIM_WHEN_CHARGING
 
 BATTERY_LOW
 	EN	Battery Low\nPlease Charge Me
+
+POWER_DOWN
+	EN	Power down
+
+POWER_DOWN_CANCEL
+	EN	Cancel
+
+POWER_DOWN_CONFIRM
+	EN	Confirm
+
+GOODBYE
+	EN	Goodbye
+

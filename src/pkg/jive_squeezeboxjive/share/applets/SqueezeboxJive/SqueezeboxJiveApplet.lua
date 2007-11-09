@@ -322,7 +322,6 @@ function setBrightness(self, level)
 	_setBrightness(self, false, lcdLevel, keyLevel)
 end
 
-
 function settingsBrightnessShow(self, menuItem)
 	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
 
@@ -593,10 +592,50 @@ function batteryLowShow(self)
 	self:tieAndShowWindow(popup)
 end
 
+function settingsPowerDown(self, menuItem)
+
+        log:warn("powerDown menu")
+	-- add window
+	local window = Window("window", menuItem.text, 'settingstitle')
+
+	local menu = SimpleMenu("menu")
+	window:addWidget(menu)
+
+	local items = {
+		{ 
+			text = self:string("POWER_DOWN_CANCEL"),
+			callback = function() window:hide() end
+		},
+		{ 
+			text = self:string("POWER_DOWN_CONFIRM"),
+			callback = function() _powerOff(self) end
+		},
+	}
+	menu:setItems(items)
+
+        self:tieAndShowWindow(window)
+        return window
+end
 
 function _powerOff(self)
-	-- FIXME
-	log:warn("*** BOOM!! ***")
+	log:warn('_powerOff HAS BEEN CALLED')
+	local popup = Popup("popupIcon")
+	local icon = Icon("iconPower")
+	local label = Label("text", self:string("GOODBYE"))
+
+	popup:addWidget(icon)
+	popup:addWidget(label)
+
+
+	self:tieAndShowWindow(popup)
+	popup:addTimer(2000, 
+		function()
+			-- FIXME
+			log:warn("HERE'S WHERE I SHOULD POWER DOWN")
+			popup:hide()
+		end
+	)
+	return popup
 end
 
 
