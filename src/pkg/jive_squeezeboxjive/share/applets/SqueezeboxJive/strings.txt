@@ -114,7 +114,7 @@ BATTERY_LOW
 	EN	Battery Low\nPlease Charge Me
 
 POWER_DOWN
-	EN	Power down
+	EN	Power Down
 
 POWER_DOWN_CANCEL
 	EN	Cancel
@@ -123,5 +123,8 @@ POWER_DOWN_CONFIRM
 	EN	Confirm
 
 GOODBYE
-	EN	Goodbye
+	EN	\nGoodbye
+
+POWER_DOWN_HELP
+	EN	Cancel or Confirm the power down of your controller
 

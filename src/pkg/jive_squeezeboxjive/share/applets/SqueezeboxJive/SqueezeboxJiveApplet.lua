@@ -48,6 +48,7 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
 local EVENT_KEY_DOWN         = jive.ui.EVENT_KEY_DOWN
 local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
+local EVENT_KEY_HOLD         = jive.ui.EVENT_KEY_HOLD
 local EVENT_SCROLL           = jive.ui.EVENT_SCROLL
 local EVENT_SWITCH           = 0x400000 -- XXXX fixme when public
 local EVENT_MOTION           = 0x800000 -- XXXX fixme when public
@@ -57,6 +58,7 @@ local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
 
 local KEY_ADD                = jive.ui.KEY_ADD
 local KEY_PLAY               = jive.ui.KEY_PLAY
+local KEY_HOME               = jive.ui.KEY_HOME
 
 local SW_AC_POWER            = 0
 local SW_PHONE_DETECT        = 1
@@ -140,6 +142,20 @@ function init(self)
 				      wakeup(self)
 				      return EVENT_UNUSED
 			      end)
+
+	Framework:addListener(EVENT_KEY_HOLD,
+		function(event) 
+			local keycode = event:getKeycode()
+
+			-- key lock
+			if keycode == KEY_HOME then
+				local menuItem = { text = self:string("POWER_DOWN") }
+				settingsPowerDown(self, menuItem)
+				return EVENT_CONSUME
+			end
+			return EVENT_UNUSED
+		end)
+
 
 	-- brightness
 	self.lcdLevel = jiveBSP.ioctl(12) / 2048
@@ -613,12 +629,14 @@ end
 
 
 function settingsPowerDown(self, menuItem)
-        log:warn("powerDown menu")
+        log:debug("powerDown menu")
 	-- add window
 	local window = Window("window", menuItem.text, 'settingstitle')
+	window:addWidget(Textarea("help", self:string("POWER_DOWN_HELP")))
 
 	local menu = SimpleMenu("menu")
 	window:addWidget(menu)
+
 
 	local items = {
 		{ 
@@ -628,7 +646,7 @@ function settingsPowerDown(self, menuItem)
 		{ 
 			text = self:string("POWER_DOWN_CONFIRM"),
 			callback = function() settingsPowerOff(self) end
-		},
+		}
 	}
 	menu:setItems(items)
 
