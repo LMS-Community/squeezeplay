@@ -22,7 +22,8 @@ function defaultSettings(meta)
 		brightness = 32,
 		dimmedTimeout = 10000,
 		sleepTimeout = 60000,
-		hibernateTimeout = 300000
+		hibernateTimeout = 300000,
+		dimmedAC = true
 	}
 end
 

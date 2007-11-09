@@ -25,6 +25,7 @@ local Surface                = require("jive.ui.Surface")
 local Textarea               = require("jive.ui.Textarea")
 local Tile                   = require("jive.ui.Tile")
 local Timer                  = require("jive.ui.Timer")
+local Checkbox               = require("jive.ui.Checkbox")
 local Window                 = require("jive.ui.Window")
 
 local log                    = require("jive.utils.log").logger("applets.setup")
@@ -83,7 +84,7 @@ function init(self)
 					      self:update()
 
 					      if self.acpower then
-						      self:setPowerState("ac_dimmed")
+						      self:setPowerState("dimmed")
 						      iconbar.iconBattery:playSound("DOCKING")
 					      else
 						      self:setPowerState("active")
@@ -106,8 +107,7 @@ function init(self)
 	self.powerTimer = Timer(0, function() sleep(self) end)
 	Framework:addListener(EVENT_MOTION,
 			      function(event) 
-				      if state ~= "ac_active" and
-					      state ~= "ac_dimmed" then
+				      if not self.acpower then
 					      wakeup(self)
 				      end
 				      return EVENT_UNUSED
@@ -144,7 +144,7 @@ function init(self)
 	-- ac or battery
 	self.acpower = (jiveBSP.ioctl(23) == 0)
 	if self.acpower then
-		self:setPowerState("ac_dimmed")
+		self:setPowerState("dimmed")
 	else
 		self:setPowerState("active")
 	end
@@ -310,7 +310,7 @@ function setBrightness(self, level)
 	local lcdLevel = level or settings.brightness
 	local keyLevel = 0
 
-	if self.powerState == "active" or self.powerState == "ac_active" then
+	if self.powerState == "active" then
 		keyLevel = level or settings.brightness
 	end
 
@@ -329,10 +329,14 @@ function settingsBrightnessShow(self, menuItem)
 				      self:setBrightness(value)
 			      end)
 
-	local help = Textarea("help", self:string("BSP_BRIGHTNESS_ADJUST_HELP"))
-
-	window:addWidget(help)
+	window:addWidget(Textarea("help", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
 	window:addWidget(slider)
+
+	window:addListener(EVENT_WINDOW_POP,
+		function()
+			self:storeSettings()
+		end
+	)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -374,10 +378,24 @@ function settingsBacklightTimerShow(self, menuItem)
 					{
 						text = self:string("BSP_TIMER_NEVER"),
 						icon = RadioButton("radio", group, function() self:setBacklightTimeout(0) end, timeout == 0),
+					},
+					{
+						text = self:string("DIM_WHEN_CHARGING"),
+						icon = Checkbox("checkbox",
+								function(obj, isSelected)
+									settings.dimmedAC = isSelected
+								end,
+								settings.dimmedAC)
 					}
 				})
 
 	window:addWidget(menu)
+
+	window:addListener(EVENT_WINDOW_POP,
+		function()
+			self:storeSettings()
+		end
+	)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -391,11 +409,7 @@ function wakeup(self)
 		return
 	end
 
-	if self.powerState == "ac_active" then
-		self.powerTimer:restart()
-	elseif self.powerState == "ac_dimmed" then
-		self:setPowerState("ac_active")
-	elseif self.powerState == "active" then
+	if self.powerState == "active" then
 		self.powerTimer:restart()
 	else
 		self:setPowerState("active")
@@ -405,11 +419,7 @@ end
 
 -- called to sleep jive
 function sleep(self)
-	if self.powerState == "ac_active" then
-		self:setPowerState("ac_dimmed")
-	elseif self.powerState == "ac_dimmed" then
-		-- do nothing
-	elseif self.powerState == "active" then
+	if self.powerState == "active" then
 		self:setPowerState("dimmed")
 	elseif self.powerState == "locked" then
 		self:setPowerState("sleep")
@@ -434,44 +444,65 @@ function setPowerState(self, state)
 	self.powerTimer:stop()
 
 	local interval = 0
-	if state == "ac_active" then
-		self:setBrightness()
-		interval = settings.dimmedTimeout
-		
-	elseif state == "ac_dimmed" then
-		self:setBrightness()
 
-	elseif state == "active" then
-		self:setBrightness()
-		if self.isAudioEnabled ~= nil then
-			Audio:effectsEnable(self.isAudioEnabled)
-			self.isAudioEnabled = nil
+	if self.acpower then
+		-- charging
+
+		if state == "active" then
+			self:setBrightness()
+			interval = settings.dimmedTimeout
+			
+		elseif state == "dimmed" then
+			if settings.dimmedAC then
+				self:_setBrightness(true, 8, 0)
+			else
+				self:setBrightness()
+			end
+			interval = settings.sleepTimeout
+
+		elseif state == "sleep" then
+			if settings.dimmedAC then
+				self:_setBrightness(true, 0, 0)
+			else
+				self:setBrightness()
+			end
 		end
-		interval = settings.dimmedTimeout
-
-	elseif state == "locked" then
-		self:setBrightness()
-		self.lockedTimer:restart()
-		if self.isAudioEnabled ~= nil then
-			Audio:effectsEnable(self.isAudioEnabled)
-			self.isAudioEnabled = nil
-		end
-		interval = settings.dimmedTimeout
-
-	elseif state == "dimmed" then
-		self:_setBrightness(true, 8, 0)
-		self.isAudioEnabled = Audio:isEffectsEnabled()
-		Audio:effectsEnable(false)
-
-		interval = settings.sleepTimeout
 
 	else
-		self:_setBrightness(true, 0, 0)
+		-- battery
 
-		if state == "sleep" then
-			interval = settings.hibernateTimeout
-		elseif state == "hibernate" then
-			log:error("FIXME hibernate now...")
+		if state == "active" then
+			self:setBrightness()
+--			if self.isAudioEnabled ~= nil then
+--				Audio:effectsEnable(self.isAudioEnabled)
+--				self.isAudioEnabled = nil
+--			end
+			interval = settings.dimmedTimeout
+
+		elseif state == "locked" then
+			self:setBrightness()
+			self.lockedTimer:restart()
+--			if self.isAudioEnabled ~= nil then
+--				Audio:effectsEnable(self.isAudioEnabled)
+--				self.isAudioEnabled = nil
+--			end
+			interval = settings.dimmedTimeout
+
+		elseif state == "dimmed" then
+			self:_setBrightness(true, 8, 0)
+--			self.isAudioEnabled = Audio:isEffectsEnabled()
+--			Audio:effectsEnable(false)
+
+			interval = settings.sleepTimeout
+
+		else
+			self:_setBrightness(true, 0, 0)
+
+			if state == "sleep" then
+				interval = settings.hibernateTimeout
+			elseif state == "hibernate" then
+				log:error("FIXME hibernate now...")
+			end
 		end
 	end
 

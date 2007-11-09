@@ -106,3 +106,6 @@ BSP_TIMER_NEVER
 	IT	Mai
 	FR	Jamais
 	NL	Nooit
+
+DIM_WHEN_CHARGING
+	EN	Dim when charging
