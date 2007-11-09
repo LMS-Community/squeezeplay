@@ -56,7 +56,7 @@ function registerApplet(meta)
 	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))
 	local advancedSettings = remoteSettings:subMenu(meta:string("ADVANCED_SETTINGS"), 1000)
 
-	jiveMain:addItem(meta:menuItem("SOUND_EFFECTS", function(applet, ...) applet:settingsShow(...) end))
+	advancedSettings:addItem(meta:menuItem("SOUND_EFFECTS", function(applet, ...) applet:settingsShow(...) end))
 end
 
 
