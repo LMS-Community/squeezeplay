@@ -39,7 +39,7 @@ end
 function defaultSettings(meta)
 	return {
 		weekstart = "Sunday",
-		dateformat = "%a, %B %d %Y",
+		dateformat = "%a %d %b %Y",
 		hours = "12",
 	}
 end

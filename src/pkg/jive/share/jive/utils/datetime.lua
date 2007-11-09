@@ -50,6 +50,11 @@ local globalTimeZone = "GMT"
 local timeSet = false
 
 local DateFormats = {
+	"%a %d %b %Y",
+	"%a %d. %b %Y",
+	"%a, %b %d, '%y",
+	"%a, %d %b, %Y",
+	"%a, %d. %b, %Y",
 	"%A %d %B %Y",
 	"%A %d. %B %Y",
 	"%A, %B %d, %Y",
@@ -60,11 +65,6 @@ local DateFormats = {
 	"%Y/%m/%d",
 	"%Y/%m/%d %A",
 	"%Y/%m/%d (%a)",
-	"%a %d %b %Y",
-	"%a %d. %b %Y",
-	"%a, %b %d, '%y",
-	"%a, %d %b, %Y",
-	"%a, %d. %b, %Y",
 	"%d-%m-%Y",
 	"%d-%m-%y",
 	"%d.%m.%Y",
