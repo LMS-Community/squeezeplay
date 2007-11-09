@@ -91,6 +91,8 @@ local function _keyPress(self, event)
 		self:setSelectedIndex(newSelectedIndex)
 		self:playSound("SELECT")
 
+		return EVENT_CONSUME
+
 	elseif eventType == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()
 
@@ -99,8 +101,12 @@ local function _keyPress(self, event)
 
 			self:setSelectedIndex(newSelectedIndex)
 			self:playSound("SELECT")
+
+			return EVENT_CONSUME
 		end
 	end
+
+	return EVENT_UNUSED
 end
 
 
@@ -130,8 +136,7 @@ function __init(self, style, options, closure, selectedIndex)
 
 	obj:addListener(EVENT_ACTION | EVENT_KEY_PRESS,
 			 function(event)
-				 _keyPress(obj, event)
-				 return EVENT_CONSUME
+				 return _keyPress(obj, event)
 			 end)
 
 	return obj
