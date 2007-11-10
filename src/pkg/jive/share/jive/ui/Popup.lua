@@ -98,6 +98,11 @@ function borderLayout(self)
 end
 
 
+function __tostring(self)
+	return "Popup()"
+end
+
+
 --[[
 
 =head1 LICENSE

@@ -122,7 +122,7 @@ end
 
 
 function __tostring(self)
-	return "Icon(" .. tostring(self.image) .. ")"
+	return "Icon(" .. tostring(self.image or self.style) .. ")"
 end
 
 

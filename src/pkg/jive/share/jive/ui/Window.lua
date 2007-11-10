@@ -139,14 +139,16 @@ Show this window, adding it to the top of the window stack. The I<transition> is
 function show(self, transition, soundEffect)
 	local stack = Framework.windowStack
 
-	-- make sure the window layout is done
-----	self:checkLayout()
-
 	local topwindow = stack[1]
 
 	if topwindow == self then
 		-- we're already on top
 		return
+	end
+
+	-- reparent global widgets
+	for i, widget in ipairs(Framework.widgets) do
+		widget.parent = self
 	end
 
 	-- remove the window if it is already in the stack

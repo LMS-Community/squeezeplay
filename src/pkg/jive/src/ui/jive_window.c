@@ -65,25 +65,6 @@ int jiveL_window_skin(lua_State *L) {
 		peer->mask_tile = jive_tile_ref(mask_tile);
 	}
 
-
-	/* pack global widgets */
-	/* FIXME should this be needed here ? */
-	jiveL_getframework(L);
-	lua_getfield(L, -1, "widgets");
-	if (!lua_isnil(L, -1)) {
-		int n, len = (int) lua_objlen(L, -1);
-		for (n = 1; n <= len; n++) {
-			lua_rawgeti(L, -1, n);
-
-			// reparent global widget
-			lua_pushvalue(L, 1);
-			lua_setfield(L, -2, "parent");
-
-			lua_pop(L, 1);
-		}
-	}
-	lua_pop(L, 2);
-
 	return 0;
 }
 
@@ -111,6 +92,19 @@ int jiveL_window_check_layout(lua_State *L) {
 		lua_pushcfunction(L, jiveL_widget_check_layout);
 		lua_pushvalue(L, 1);
 		lua_call(L, 1, 0);
+
+		/* check global widget layout */
+		jiveL_getframework(L);
+		lua_getfield(L, -1, "widgets");
+		lua_pushnil(L);
+		while (lua_next(L, -2) != 0) {
+			lua_pushcfunction(L, jiveL_widget_check_layout);
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 0);
+
+			lua_pop(L, 1);
+		}
+		lua_pop(L, 2);
 	}
 
 	return 0;
