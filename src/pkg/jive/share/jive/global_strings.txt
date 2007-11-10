@@ -77,3 +77,6 @@ ALLOWEDCHARS_CAPS
 ALLOWEDCHARS_WITHCAPS
 	EN	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 
+RETURN_TO_SETUP
+	EN	Return to Setup
+
