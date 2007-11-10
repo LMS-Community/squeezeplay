@@ -74,7 +74,7 @@ local flickrTitleStyle = 'settingstitle'
 function openScreensaver(self, menuItem)
 
 	self.photoQueue = {}
-	self.transitions = { transitionBoxOut, transitionTopDown, transitionBottomUp, transitionLeftRight, transitionRightLeft }
+	self.transitions = { transitionBoxOut, transitionTopDown, transitionBottomUp, transitionLeftRight, transitionRightLeft, Window.transitionFadeIn }
 
 	local ok, err = self:displayNextPhoto()
 

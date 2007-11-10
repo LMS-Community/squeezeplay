@@ -61,6 +61,10 @@ Blits this surface to the I<dst> surface at I<dx, dy>.
 
 Blits a subset this surface I<sx, sy, sw, sh> to the I<dst> surface at I<dx, dy>.
 
+=head2 blitAlpha(dst, dx, dy, alpha)
+
+Blits this surface to the I<dst> surface at I<dx, dy> using a per surface alpha value. Only works with RGB surfaces.
+
 =head2 getSize()
 
 Returns I<w, h>, the surface size.

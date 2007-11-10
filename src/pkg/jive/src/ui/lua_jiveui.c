@@ -601,6 +601,45 @@ static int tolua_jive_jive_ui_Surface_blitClip00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
+/* method: jive_surface_blit_alpha of class  Surface */
+#ifndef TOLUA_DISABLE_tolua_jive_jive_ui_Surface_blitAlpha00
+static int tolua_jive_jive_ui_Surface_blitAlpha00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+ !tolua_isusertype(tolua_S,1,"Surface",0,&tolua_err) ||
+ !tolua_isusertype(tolua_S,2,"Surface",0,&tolua_err) ||
+ !tolua_isinteger(tolua_S,3,0,&tolua_err) ||
+ !tolua_isinteger(tolua_S,4,0,&tolua_err) ||
+ !tolua_isinteger(tolua_S,5,0,&tolua_err) ||
+ !tolua_isnoobj(tolua_S,6,&tolua_err)
+ )
+ goto tolua_lerror;
+ else
+#endif
+ {
+  Surface* self = (Surface*)  tolua_tousertype(tolua_S,1,0);
+  Surface* dst = ((Surface*)  tolua_tousertype(tolua_S,2,0));
+   short dx = ((  short)  tolua_tointeger(tolua_S,3,0));
+   short dy = ((  short)  tolua_tointeger(tolua_S,4,0));
+   short alpha = ((  short)  tolua_tointeger(tolua_S,5,0));
+#ifndef TOLUA_RELEASE
+ if (!self) tolua_error(tolua_S,"invalid 'self' in function 'jive_surface_blitAlpha'",NULL);
+#endif
+ {
+  jive_surface_blit_alpha(self,dst,dx,dy,alpha);
+ }
+ }
+ return 0;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'blit'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
 /* method: jive_surface_get_size of class  Surface */
 #ifndef TOLUA_DISABLE_tolua_jive_jive_ui_Surface_getSize00
 static int tolua_jive_jive_ui_Surface_getSize00(lua_State* tolua_S)
@@ -2063,6 +2102,7 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
     tolua_function(tolua_S,"getClip",tolua_jive_jive_ui_Surface_getClip00);
     tolua_function(tolua_S,"blit",tolua_jive_jive_ui_Surface_blit00);
     tolua_function(tolua_S,"blitClip",tolua_jive_jive_ui_Surface_blitClip00);
+    tolua_function(tolua_S,"blitAlpha",tolua_jive_jive_ui_Surface_blitAlpha00);
     tolua_function(tolua_S,"getSize",tolua_jive_jive_ui_Surface_getSize00);
     tolua_function(tolua_S,"rotozoom",tolua_jive_jive_ui_Surface_rotozoom00);
     tolua_function(tolua_S,"zoom",tolua_jive_jive_ui_Surface_zoom00);

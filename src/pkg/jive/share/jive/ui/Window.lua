@@ -48,6 +48,7 @@ local Icon                    = require("jive.ui.Icon")
 local Timer                   = require("jive.ui.Timer")
 local Widget                  = require("jive.ui.Widget")
 local Event                   = require("jive.ui.Event")
+local Surface                 = require("jive.ui.Surface")
 
 local log                     = require("jive.utils.log").logger("ui")
 
@@ -683,6 +684,43 @@ function transitionPushRight(oldWindow, newWindow)
 			newWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_ON_STAGE)
 
 			surface:setOffset(0, 0)
+
+			frames = frames - 1
+			if frames == 0 then
+				Framework:_killTransition()
+			end
+		end
+end
+
+
+--[[
+
+=head2 jive.ui.Window:transitionFadeIn(newWindow)
+
+Returns a fade in window transition.
+
+=cut
+--]]
+function transitionFadeIn(oldWindow, newWindow)
+	_assert(oo.instanceof(oldWindow, Widget))
+	_assert(oo.instanceof(newWindow, Widget))
+
+	local frames = FRAME_RATE -- 1 sec
+	local scale = 255 / frames
+
+	local bgd = Framework:getBackground()
+
+	local sw, sh = Framework:getScreenSize()
+	local srf = Surface:newRGB(sw, sh)
+
+	return function(widget, surface)
+			local x = frames * scale
+
+			bgd:blit(srf, 0, 0, sw, sh)
+			newWindow:draw(srf, LAYER_ALL)
+
+			oldWindow:draw(surface, LAYER_ALL)
+			srf:blitAlpha(surface, 0, 0, 255 - x)
 
 			frames = frames - 1
 			if frames == 0 then

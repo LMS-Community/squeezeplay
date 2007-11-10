@@ -286,6 +286,7 @@ void jive_surface_flip(JiveSurface *srf);
 void jive_surface_blit(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint16 dy);
 void jive_surface_blit_clip(JiveSurface *src, Uint16 sx, Uint16 sy, Uint16 sw, Uint16 sh,
 			    JiveSurface* dst, Uint16 dx, Uint16 dy);
+void jive_surface_blit_alpha(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint8 alpha);
 void jive_surface_get_size(JiveSurface *srf, Uint16 *w, Uint16 *h);
 void jive_surface_free(JiveSurface *srf);
 

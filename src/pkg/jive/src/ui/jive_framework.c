@@ -724,7 +724,7 @@ int jiveL_dispatch_event(lua_State *L) {
 
 
 int jiveL_get_background(lua_State *L) {
-	tolua_pushusertype(L, jive_background, "Surface");
+	tolua_pushusertype(L, jive_background, "Tile");
 	return 1;
 }
 

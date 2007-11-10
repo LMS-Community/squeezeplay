@@ -162,6 +162,7 @@ class Surface {
 	tolua_outside void jive_surface_blit @ blit(Surface *dst, Sint16 dx, Sint16 dy);
 	tolua_outside void jive_surface_blit_clip @ blitClip(Uint16 sx, Uint16 sy, Uint16 sw, Uint16 sh,
 			    Surface* dst, Uint16 dx, Uint16 dy);
+	tolua_outside void jive_surface_blit_alpha @ blit(Surface *dst, Sint16 dx, Sint16 dy, Uint8 alpha);
 	tolua_outside void jive_surface_get_size @ getSize(Uint16 *w=0, Uint16 *h=0);
 
 	tolua_create Surface *jive_surface_rotozoomSurface @ rotozoom(double angle, double zoom, int smooth=1);
