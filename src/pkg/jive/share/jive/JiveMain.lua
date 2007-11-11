@@ -253,15 +253,6 @@ function JiveMain:__init()
 		end,
 		false
 	)
---[[
-	jive.ui.Framework:addListener(
-		jive.ui.EVENT_KEY_HOLD,
-		function(event)
-			_homeHandler(event)
-		end,
-		false
-	)
---]]
 
 	-- global listener: resize window (only desktop versions)
 	jive.ui.Framework:addListener(jive.ui.EVENT_WINDOW_RESIZE,
