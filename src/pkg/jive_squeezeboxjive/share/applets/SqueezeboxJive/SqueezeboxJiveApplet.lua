@@ -280,7 +280,7 @@ function _brightness(self, lcdLevel, keyLevel)
 end
 
 
-function _setBrightness(self, fade, lcdLevel, keyLevel)
+function _setBrightness(self, fade, lcdLevel, keyLevel, closure)
 	-- stop existing fade
 	if self.fadeTimer then
 		self.fadeTimer:stop()
@@ -313,6 +313,10 @@ function _setBrightness(self, fade, lcdLevel, keyLevel)
 
 						   -- ensure we hit the set value
 						   _brightness(self, lcdLevel, keyLevel)
+
+						   if closure then
+							   closure()
+						   end
 						   return
 					   end
 
@@ -673,7 +677,11 @@ end
 
 function _powerOff(self)
 	log:warn("POWEROFF")
-	os.execute("/sbin/poweroff")
+
+	self:_setBrightness(true, 0, 0,
+			    function()
+				    os.execute("/sbin/poweroff")
+			    end)
 end
 
 
