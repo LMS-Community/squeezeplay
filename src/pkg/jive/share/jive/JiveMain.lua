@@ -82,6 +82,21 @@ local function _jiveMainMenuChanged(self)
 	end
 end
 
+-- bring us to the home menu
+local function _homeHandler(event)
+	if (
+		( event:getKeycode() == jive.ui.KEY_HOME and event:getType() == jive.ui.EVENT_KEY_PRESS) or
+		( event:getKeycode() == jive.ui.KEY_BACK and event:getType() == jive.ui.EVENT_KEY_HOLD)
+	) then
+		local windowStack = jive.ui.Framework.windowStack
+
+		while #windowStack > 1 do
+			windowStack[#windowStack - 1]:hide(nil, "JUMP")
+		end
+		return jive.ui.EVENT_CONSUME
+      end
+      return jive.ui.EVENT_UNUSED
+end
 
 -- create a new menu
 function JiveMainMenu:__init(name, style, titleStyle)
@@ -221,21 +236,21 @@ function JiveMain:__init()
 	-- init our listeners
 	jiveMain.skins = {}
 
-	-- home key handler
-	jive.ui.Framework:addListener(jive.ui.EVENT_KEY_PRESS,
-				      function(event)
-					      if event:getKeycode() == jive.ui.KEY_HOME then
-						      local windowStack = jive.ui.Framework.windowStack
-
-						      while #windowStack > 1 do
-							      windowStack[#windowStack - 1]:hide(nil, "JUMP")
-						      end
-						      return jive.ui.EVENT_CONSUME
-					      end
-					      
-					      return jive.ui.EVENT_UNUSED
-				      end,
-				      false)
+	-- home key handler, one for KEY_PRESS/HOME, one for KEY_HOLD/BACK
+	jive.ui.Framework:addListener(
+		jive.ui.EVENT_KEY_PRESS,
+		function(event)
+			_homeHandler(event)
+		end,
+		false
+	)
+	jive.ui.Framework:addListener(
+		jive.ui.EVENT_KEY_HOLD,
+		function(event)
+			_homeHandler(event)
+		end,
+		false
+	)
 
 	-- global listener: resize window (only desktop versions)
 	jive.ui.Framework:addListener(jive.ui.EVENT_WINDOW_RESIZE,

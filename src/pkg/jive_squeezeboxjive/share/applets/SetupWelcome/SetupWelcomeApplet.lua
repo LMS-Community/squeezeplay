@@ -41,6 +41,7 @@ local table            = require("jive.utils.table")
 
 local appletManager    = appletManager
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
+local EVENT_KEY_HOLD   = jive.ui.EVENT_KEY_HOLD
 local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
@@ -49,12 +50,33 @@ local KEY_GO           = jive.ui.KEY_GO
 local KEY_BACK         = jive.ui.KEY_BACK
 local KEY_FWD          = jive.ui.KEY_FWD
 local KEY_REW          = jive.ui.KEY_REW
+local KEY_HOME         = jive.ui.KEY_HOME
 
 local welcomeTitleStyle = 'settingstitle'
 
 module(...)
 oo.class(_M, Applet)
 
+local disableHomeKeyDuringSetup = 
+	Framework:addListener(EVENT_KEY_PRESS,
+	function(event)
+		local keycode = event:getKeycode()
+		if keycode == KEY_HOME then
+			log:warn("HOME KEY IS DISABLED IN SETUP. USE PRESS-HOLD BACK BUTTON INSTEAD")
+			-- don't allow this event to continue
+			return EVENT_CONSUME
+		end
+		return EVENT_UNUSED
+	end)
+local freeAppletWhenEscapingSetup =
+ 	Framework:addListener(EVENT_KEY_HOLD,
+	function(event)
+		local keycode = event:getKeycode()
+		if keycode == KEY_BACK then
+			free()
+		end
+		return EVENT_UNUSED
+	end)
 
 function step1(self)
 	-- choose language
@@ -227,6 +249,11 @@ function setupDoneShow(self, setupNext)
 	return window
 end
 
+function free(self)
+	-- remove listeners when leaving this applet
+	Framework:removeListener(disableHomeKeyDuringSetup)
+	Framework:removeListener(freeAppletWhenEscapingSetup)
+end
 
 --[[
 

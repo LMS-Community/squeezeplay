@@ -147,7 +147,7 @@ function init(self)
 		function(event) 
 			local keycode = event:getKeycode()
 
-			-- key lock
+			-- press-hold home is for power down
 			if keycode == KEY_HOME then
 				local menuItem = { text = self:string("POWER_DOWN") }
 				settingsPowerDown(self, menuItem)
