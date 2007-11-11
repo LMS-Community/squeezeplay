@@ -42,8 +42,19 @@ end
 
 
 function registerApplet(meta)
-	if not meta:getSettings().setupDone then
-		appletManager:loadApplet("SetupWelcome"):step1()	
+	if meta:getSettings().setupDone then
+		-- if setup is completed, remove Return to Setup from JiveMain
+		jiveMain:removeItemByText(meta:string("RETURN_TO_SETUP"))
+	else
+		-- if setup is not completed, put Return to Setup at the top
+		jiveMain:addItem({
+			text = meta:string("RETURN_TO_SETUP"),
+			callback = function()
+				appletManager:loadApplet("SetupWelcome"):step1()
+			end,
+			weight = 2,
+		})
+		appletManager:loadApplet("SetupWelcome"):step1()
 	end
 end
 

@@ -48,6 +48,8 @@ local KEY_GO           = jive.ui.KEY_GO
 local KEY_BACK         = jive.ui.KEY_BACK
 local KEY_HOME         = jive.ui.KEY_HOME
 
+local jiveMain         = jiveMain
+
 local welcomeTitleStyle = 'settingstitle'
 module(...)
 oo.class(_M, Applet)
@@ -96,6 +98,7 @@ function step4(self)
 			self._topWindow:hideToTop(Window.transitionPushLeft) 
 
 			self:getSettings().setupDone = true
+			jiveMain:removeItemByText(self:string("RETURN_TO_SETUP"))
 			self:storeSettings()
 		end)
 end

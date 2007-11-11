@@ -266,6 +266,24 @@ function getIndex(self, item)
 	return nil
 end
 
+--[[
+
+=head2 jive.ui.Menu:getTextIndex(item)
+
+Returns the index of item given by I<text>, or nil if it is not in this menu.
+
+=cut
+--]]
+function getTextIndex(self, item)
+	for k,v in ipairs(self.items) do
+		if item == v.text then
+			return k
+		end
+	end
+
+	return nil
+end
+
 
 --[[
 
@@ -404,6 +422,22 @@ function removeItem(self, item)
 	end
 end
 
+--[[
+
+=head2 jive.ui.Menu:removeItemByText(item)
+
+Remove I<item> given by I<text> from the menu. Returns the item removed from the menu.
+
+=cut
+--]]
+function removeItemByText(self, item)
+	local index = self:getTextIndex(item)
+	if index ~= nil then
+		return self:removeIndex(index)
+	else
+		return nil
+	end
+end
 
 --[[
 

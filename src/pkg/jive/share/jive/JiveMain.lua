@@ -156,11 +156,20 @@ function JiveMainMenu:addItem(item, weight)
 end
 
 
--- remove an item from a menu
+-- remove an item from a menu by its index
 function JiveMainMenu:removeItem(item)
+	log:warn("REMOVING MAIN MENU ITEM: ", item)
 	self.menu:removeItem(item)
 	_jiveMainMenuChanged(self)
 end
+
+-- remove an item from a menu by its text
+function JiveMainMenu:removeItemByText(text)
+	log:warn("REMOVING MAIN MENU ITEM: ", text)
+	self.menu:removeItemByText(text)
+	_jiveMainMenuChanged(self)
+end
+
 
 
 -- iterator over items in menu

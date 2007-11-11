@@ -52,6 +52,8 @@ local KEY_FWD          = jive.ui.KEY_FWD
 local KEY_REW          = jive.ui.KEY_REW
 local KEY_HOME         = jive.ui.KEY_HOME
 
+local jiveMain         = jiveMain
+
 local welcomeTitleStyle = 'settingstitle'
 
 module(...)
@@ -175,6 +177,7 @@ end
 function step8(self)
 	-- all done
 	self:getSettings().setupDone = true
+	jiveMain:removeItemByText(self:string("RETURN_TO_SETUP"))
 	self:storeSettings()
 
 	return self:setupDoneShow(function()
