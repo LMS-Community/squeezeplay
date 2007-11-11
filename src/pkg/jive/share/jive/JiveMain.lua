@@ -247,12 +247,13 @@ function JiveMain:__init()
 
 	-- home key handler, one for KEY_PRESS/HOME, one for KEY_HOLD/BACK
 	jive.ui.Framework:addListener(
-		jive.ui.EVENT_KEY_PRESS,
+		jive.ui.EVENT_KEY_PRESS | jive.ui.EVENT_KEY_HOLD,
 		function(event)
 			_homeHandler(event)
 		end,
 		false
 	)
+--[[
 	jive.ui.Framework:addListener(
 		jive.ui.EVENT_KEY_HOLD,
 		function(event)
@@ -260,6 +261,7 @@ function JiveMain:__init()
 		end,
 		false
 	)
+--]]
 
 	-- global listener: resize window (only desktop versions)
 	jive.ui.Framework:addListener(jive.ui.EVENT_WINDOW_RESIZE,

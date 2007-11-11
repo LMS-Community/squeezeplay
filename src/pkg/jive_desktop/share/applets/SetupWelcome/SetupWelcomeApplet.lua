@@ -51,33 +51,36 @@ local KEY_HOME         = jive.ui.KEY_HOME
 local jiveMain         = jiveMain
 
 local welcomeTitleStyle = 'settingstitle'
+local disableHomeKeyDuringSetup
+local freeAppletWhenEscapingSetup
+
 module(...)
 oo.class(_M, Applet)
-
-local disableHomeKeyDuringSetup = 
-	Framework:addListener(EVENT_KEY_PRESS,
-	function(event)
-		local keycode = event:getKeycode()
-		if keycode == KEY_HOME then
-			log:warn("HOME KEY IS DISABLED IN SETUP. USE PRESS-HOLD BACK BUTTON INSTEAD")
-			-- don't allow this event to continue
-			return EVENT_CONSUME
-		end
-		return EVENT_UNUSED
-	end)
-local freeAppletWhenEscapingSetup =
- 	Framework:addListener(EVENT_KEY_HOLD,
-	function(event)
-		local keycode = event:getKeycode()
-		if keycode == KEY_BACK then
-			free()
-		end
-		return EVENT_UNUSED
-	end)
 
 function step1(self)
 	local setupLanguage = assert(appletManager:loadApplet("SetupLanguage"))
 	self._topWindow = setupLanguage:setupShow(function() self:step2() end)
+	disableHomeKeyDuringSetup = 
+		Framework:addListener(EVENT_KEY_PRESS,
+		function(event)
+			local keycode = event:getKeycode()
+			if keycode == KEY_HOME then
+				log:warn("HOME KEY IS DISABLED IN SETUP. USE PRESS-HOLD BACK BUTTON INSTEAD")
+				-- don't allow this event to continue
+				return EVENT_CONSUME
+			end
+			return EVENT_UNUSED
+		end)
+	freeAppletWhenEscapingSetup =
+ 		Framework:addListener(EVENT_KEY_HOLD,
+		function(event)
+			local keycode = event:getKeycode()
+			if keycode == KEY_BACK then
+				free()
+			end
+			return EVENT_UNUSED
+		end)
+
 	return self.topWindow
 
 --	self._topWindow = self:setupWelcome(function() self:step3() end)
