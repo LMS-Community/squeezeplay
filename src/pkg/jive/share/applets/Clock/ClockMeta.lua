@@ -34,12 +34,6 @@ function registerApplet(self)
 		)
 
 		ssMgr:addScreenSaver(
-			self:string("SCREENSAVER_CLOCK_STYLE_DIGITALSIMPLE"), 
-			"Clock", 
-			"openDigitalClock", _, _, 22
-		)
-
-		ssMgr:addScreenSaver(
 			self:string("SCREENSAVER_CLOCK_STYLE_DIGITALSTYLED"), 
 			"Clock", 
 			"openStyledClock", _, _, 24

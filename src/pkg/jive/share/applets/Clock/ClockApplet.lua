@@ -61,18 +61,6 @@ local Analog_Presets = {
 
 Analog_Presets.Default = Analog_Presets.Teal
 
-local DigitalSimple_Presets = {
-	White = {
-		FontSizes = {
-			Main = 72,
-			AMPM = 36,
-			Date = 18
-		},
-		Color = 0xFFFFFFFF,
-		Background = 0x000000FF
-	}
-}
-
 local DigitalStyled_Presets = {
 	Green = {
 		FontSize = 148,
@@ -241,82 +229,6 @@ function Analog:Draw(force)
 		self.bgicon:reDraw()
 	end
 
-end
-
-DigitalSimple = oo.class({}, Clock)
-
-function DigitalSimple:__init(window, preset, ampm)
-	log:info("Init Digital Simple")
-	
-	local fontname = "fonts/FreeSans.ttf"
-
-	obj = oo.rawnew(self, Clock(window))
-
-	obj.color = preset.Color
-	obj.bgcolor = preset.Background
-	obj.font = Font:load(fontname, preset.FontSizes.Main)
-	obj.ampmfont = Font:load(fontname, preset.FontSizes.AMPM)
-	obj.datefont = Font:load(fontname, preset.FontSizes.Date)
-	obj.oldtime = ""
-	obj.show_ampm = ampm
-
-	if ampm then 
-		obj.clock_format = "%I:%M"
-	else
-		obj.clock_format = "%H:%M"
-	end
-
-	return obj;
-end
-
-function DigitalSimple:Draw(force)
-	local theTime = os.date(self.clock_format)
-
-	if theTime != self.oldtime or force then
-		self.oldtime = theTime
-
-		local timeSrf = Surface:drawText(self.font, self.color, theTime)	
-
-		local ampmSrf = nil
-		local ampmWidth, ampmHeight = 0
-		if self.show_ampm then
-			ampmSrf = Surface:drawText(self.ampmfont, self.color, os.date("%p"))
-			ampmWidth, ampmHeight = ampmSrf:getSize()
-		end
-
-		local dateSrf = Surface:drawText(self.datefont, self.color, os.date(datetime:getDateFormat()))
-
-		local tw, th = timeSrf:getSize()
-
-		local x
-		if self.show_ampm then
-			x = math.floor((self.screen_width/2) - ((tw+ampmWidth)/2))
-		else
-			x = math.floor((self.screen_width/2) - (tw/2))
-		end
-
-		local y = math.floor((self.screen_height/2) - (th/2))
-
-		-- draw background
-		self.bg:filledRectangle(0, 0, self.screen_width, self.screen_height, self.bgcolor)
-		timeSrf:blit(self.bg, x, y)
-
-		if ampmSrf then
-			local offset = 0
-			if os.date("%p") == "PM" then
-				offset = offset + ampmHeight
-			end
-			ampmSrf:blit(self.bg, x+tw+3, y+offset)
-		end
-		
-
-		local tw, th = dateSrf:getSize()
-		x = math.floor((self.screen_width/2) - (tw/2))
-
-		dateSrf:blit(self.bg, x, self.screen_height - th*3)
-
-		self.bgicon:reDraw()
-	end
 end
 
 DigitalStyled = oo.class({}, Clock)
@@ -587,14 +499,6 @@ function getPreset(self, type)
 			return nil
 		end
 
-	elseif type == "simple" then
-
-		pname = self:getSettings()["digitalsimple_preset"]
-		if pname == "White" then
-			return DigitalSimple_Presets.White
-		else
-			return nil
-		end
 	elseif type == "detailed" then
 		return DigitalDetailed_Presets.Default
 	else
@@ -605,10 +509,6 @@ end
 
 function openAnalogClock(self)
 	return self:_openScreensaver("analog")
-end
-
-function openDigitalClock(self)
-	return self:_openScreensaver("simple")
 end
 
 function openStyledClock(self)
@@ -639,9 +539,7 @@ function _openScreensaver(self, type)
 
 	local clock = nil;	
 	log:info("Type: " .. type)
-	if type == "simple" then
-		clock = DigitalSimple(window, preset, hours)
-	elseif type == "styled" then
+	if type == "styled" then
 		-- This clock always uses 24 hours mode for now
 		clock = DigitalStyled(window, preset, hours)
 	elseif type == "detailed" then
