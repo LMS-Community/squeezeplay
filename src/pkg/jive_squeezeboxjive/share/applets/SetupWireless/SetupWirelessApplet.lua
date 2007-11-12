@@ -726,12 +726,7 @@ end
 function t_connect(self, ssid)
 	local request
 
-	-- Force disconnect from existing network
-	request = 'DISCONNECT'
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-	-- Force the interface down
-	os.execute("/sbin/ifdown -f eth0")
+	self.t_ctrl:t_disconnectNetwork()
 
 	local id = self.scanResults[ssid].id
 	log:warn("t_connect ssid=", ssid, " id=", id)
@@ -739,18 +734,9 @@ function t_connect(self, ssid)
 	if id == nil then
 		-- Configuring the WLAN
 		self:t_addNetwork()
-	else
-		local request = 'SELECT_NETWORK ' .. id
-		assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
 	end
 
-	-- Allow reassociation
-	request = 'REASSOCIATE'
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-	-- Save configuration
-	request = 'SAVE_CONFIG'
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
+	self.t_ctrl:t_selectNetwork(ssid)	
 end
 
 
@@ -840,9 +826,7 @@ function t_connectFailed(self)
 	local request
 
 	-- Stop trying to connect to the network
-	request = 'DISCONNECT'
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
+	self.t_ctrl:t_disconnectNetwork(self)
 
 	log:warn("addNetwork=", self.addNetwork)
 	if self.addNetwork then
@@ -1038,7 +1022,7 @@ end
 function failedDHCP(self)
 	log:warn("self.encryption=", self.encryption)
 
-	if string.match(self.encryption, "^wep.*") then
+	if self.encryption and string.match(self.encryption, "^wep.*") then
 		-- use different error screen for WEP, the failure may
 		-- be due to a bad WEP passkey, not DHCP.
 		return failedDHCPandWEP(self)

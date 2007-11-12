@@ -151,8 +151,12 @@ function t_scanDiscover(self, pkt)
 		return
 	end
 
+	if pkt.type ~= "squeezebox" then
+		return
+	end
+
 	jnt:t_perform(function()
-			      local mac = pkt.source
+			      local mac = string.upper(pkt.source)
 			      
 			      if not self.scanResults[mac] then
 				      local item = {
@@ -192,6 +196,8 @@ function _scanComplete(self, scanTable, keepOldEntries)
 		log:warn("ether=", ether, " mac=", mac)
 
 		if mac ~= nil then
+			mac = string.upper(mac)
+
 			if not self.scanResults[mac] then
 				local item = {
 					text = mac,
@@ -211,9 +217,9 @@ function _scanComplete(self, scanTable, keepOldEntries)
 				self.scanMenu:addItem(item)
 			end
 
-			-- remove networks not seen for 20 seconds
-			if keepOldEntries ~= true and self.scanResults[mac].udap ~= true and os.difftime(now, entry.lastScan) > 20 then
-				log:warn(mac, " not ssen for 20 seconds")
+			-- remove networks not seen for 10 seconds
+			if keepOldEntries ~= true and self.scanResults[mac].udap ~= true and os.difftime(now, entry.lastScan) > 10 then
+				log:warn(mac, " not ssen for 10 seconds")
 				self.scanMenu:removeItem(self.scanResults[mac].item)
 				self.scanResults[mac] = nil
 			end
@@ -331,6 +337,10 @@ function _setupInit(self, mac, ether)
 	self.ether = ether or self.ether
 
 	_setAction(self, t_connectJiveAdhoc)
+
+	-- remove squeezebox from scan results
+	self.scanMenu:removeItem(self.scanResults[self.mac].item)
+	self.scanResults[self.mac] = nil
 end
 
 
@@ -533,17 +543,33 @@ function _bridgedConfig(self)
 	local request, response
 	local data = self.data1
 
+	-- generate WEP key
+	local key = {}
+	local binkey = {}
+	for i = 1,13 do
+		key[i] = string.format('%02x', math.random(255))
+		binkey[i] = string.char(tonumber(key[i], 16))
+	end
+
 	-- Jive config:
 	local ssid = 'logitech*squeezebox*' .. self.mac
 	local option = {
 		ibss = true,
-		-- FIXME secure network
 		encryption = "none"
+-- FIXME enable encryption
+--		encryption = "wep104",
+--		key = table.concat(key)
 	}
 
 	jnt:perform(function()
 			   self.networkId = self.t_ctrl:t_addNetwork(ssid, option)
 		   end)
+
+	self.networkSSID = ssid
+	self.networkMode = 1 -- adhoc
+	self.networkMethod = 'dhcp'
+	self.networkOption = {}
+
 
 	-- Squeezebox config:
 
@@ -565,9 +591,15 @@ function _bridgedConfig(self)
 	log:warn("data.region_id=", data.region)
 	data.region_id = udap.packNumber(region, 1)
 
-	-- FIXME secure network
-	data.wepon = udap.packNumber(0, 1)
+	-- secure network
 	data.wpa_enabled = udap.packNumber(0, 1)
+	data.wepon = udap.packNumber(0, 1)
+
+-- FIXME enable encryption
+--	data.wpa_enabled = udap.packNumber(0, 1)
+--	data.wepon = udap.packNumber(1, 1)
+--	data.keylen = udap.packNumber(1, 1)
+--	data.wep_key = table.concat(binkey)
 end
 
 
@@ -673,7 +705,6 @@ function t_connectJiveAdhoc(self)
 	local ssid = 'logitech' .. self.ether .. 'squeezebox' .. self.ether .. self.mac
 	local option = {
 		ibss = true,
-		-- FIXME secure network
 		encryption = "none"
 	}
 
@@ -857,14 +888,12 @@ function t_connectJiveNetwork(self)
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_NETWORK"
 
-	local request = 'SELECT_NETWORK ' .. self.networkId
-	assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
 	if self.adhoc_ssid then
 		self.t_ctrl:t_removeNetwork(self.adhoc_ssid)
 		self.adhoc_ssid = nil
 	end
 
+	self.t_ctrl:t_selectNetwork(self.networkSSID)
 	_setAction(self, t_waitJiveNetwork)
 end
 
@@ -875,9 +904,17 @@ function t_waitJiveNetwork(self)
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_NETWORK"
 
-	local status = self.t_ctrl:request("STATUS")
-	log:warn("STATUS ", status)
-	if string.match(status, "wpa_state=COMPLETED") then
+	local status = self.t_ctrl:t_wpaStatusRequest()
+	if status.wpa_state == "COMPLETED" and status.ip_address then
+		if self.networkMethod == 'dhcp' and string.match(status.ip_address, "^169.254.") then
+			-- waiting for dhcp
+			return
+		end
+
+		-- send notification we're on a new network
+		-- this will force Comet to reconnect to slimserver
+		jnt:notify("networkConnected")
+
 		_setAction(self, t_waitSqueezeboxNetwork)
 	end
 end
@@ -1176,9 +1213,7 @@ function _setupFailed(self)
 						text = self:string("SQUEEZEBOX_PROBLEM_TRY_AGAIN"),
 						callback = function()
 								   _setupInit(self)
-
-								   self.topWindow:hideToTop()
-								   _setupSqueezebox(self)
+								   self:_hideToTop()
 							   end
 					},
 					{
@@ -1212,6 +1247,20 @@ function _setupDone(self)
 
 	log:warn("hideToTop window=", self.topWindow)
 	self.topWindow:hideToTop(Window.transitionPushLeft)
+end
+
+
+function _hideToTop(self, dontSetupNext)
+	if Framework.windowStack[1] == self.topWindow then
+		return
+	end
+
+	while #Framework.windowStack > 2 and Framework.windowStack[2] ~= self.topWindow do
+		log:warn("hiding=", Framework.windowStack[2], " topWindow=", self.topWindow)
+		Framework.windowStack[2]:hide(Window.transitionPushLeft)
+	end
+
+	Framework.windowStack[1]:hide(Window.transitionPushLeft)
 end
 
 

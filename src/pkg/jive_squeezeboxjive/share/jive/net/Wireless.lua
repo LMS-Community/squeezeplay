@@ -217,7 +217,7 @@ function t_addNetwork(self, ssid, option)
 	-- make sure this ssid is not in any configuration
 	self:t_removeNetwork(ssid)
 
-	log:warn("Connect to ", ssid, " psk=", option.psk, " key=", option.key)
+	log:warn("Connect to ", ssid)
 	local flags = (_scanResults[ssid] and _scanResults[ssid].flags) or ""
 
 	-- Set to use dhcp by default
@@ -297,11 +297,9 @@ end
 
 function t_removeNetwork(self, ssid)
 	local networkResults = self:request("LIST_NETWORKS")
-	log:warn("list results ", networkResults)
 
 	local id = false
 	for nid, nssid in string.gmatch(networkResults, "([%d]+)\t([^\t]*).-\n") do
-		log:warn("id=", nid, " ssid=", nssid)
 		if nssid == ssid then
 			id = nid
 			break
@@ -319,6 +317,48 @@ function t_removeNetwork(self, ssid)
 
 	-- Remove dhcp/static ip configuration for network
 	self:_editNetworkInterfaces(ssid)
+end
+
+
+function t_disconnectNetwork(self)
+	-- Force disconnect from existing network
+	local request = 'DISCONNECT'
+	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+	-- Force the interface down
+	os.execute("/sbin/ifdown -f eth0")
+end
+
+
+function t_selectNetwork(self, ssid)
+	local networkResults = self:request("LIST_NETWORKS")
+	log:warn("list results ", networkResults)
+
+	local id = false
+	for nid, nssid in string.gmatch(networkResults, "([%d]+)\t([^\t]*).-\n") do
+		log:warn("id=", nid, " ssid=", nssid)
+		if nssid == ssid then
+			id = nid
+			break
+		end
+	end
+
+	-- Select network
+	if not id then
+		log:warn("can't find network ", ssid)
+		return
+	end
+
+	local request = 'SELECT_NETWORK ' .. id
+	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+	-- Allow association
+	request = 'REASSOCIATE'
+	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+	-- Save configuration
+	request = 'SAVE_CONFIG'
+	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 end
 
 
