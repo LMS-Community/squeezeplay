@@ -149,8 +149,7 @@ function init(self)
 
 			-- press-hold home is for power down
 			if keycode == KEY_HOME then
-				local menuItem = { text = self:string("POWER_DOWN") }
-				settingsPowerDown(self, menuItem)
+				settingsPowerOff(self)
 				return EVENT_CONSUME
 			end
 			return EVENT_UNUSED
