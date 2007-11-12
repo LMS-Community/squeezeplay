@@ -84,14 +84,6 @@ UPDATE_REBOOT
 	FR	\nRedémarrage
 	NL	\nBezig met opnieuw starten
 
-UPDATE_CONTINUE_HELP
-	EN	To update the software on this remote, choose Continue. This process takes a few minutes.
-	DE	Zum Aktualisieren der Software auf dieser Fernbedienung wählen Sie Weiter. Der Vorgang dauert nur wenige Minuten.
-	ES	Para actualizar el software de este mando, elija Continuar. Este proceso tarda varios minutos.
-	IT	Per aggiornare il software di questo dispositivo, scegliere Continua. L'operazione richiede alcuni minuti.
-	FR	Pour mettre à jour le logiciel sur la télécommande, sélectionnez Continuer. Ce processus peut prendre quelques minutes.
-	NL	Kies 'Verdergaan' om de software op deze afstandsbediening bij te werken. Dit proces neemt enkele minuten in beslag.
-
 UPDATE_BEGIN_HELP
 	EN	Updated software is available for this remote. This process may take a few minutes.
 

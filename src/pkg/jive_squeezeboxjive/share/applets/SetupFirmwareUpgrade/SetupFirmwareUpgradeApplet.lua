@@ -141,7 +141,7 @@ function settingsShow(self)
 			     })
 	end
 
-	local help = Textarea("help", self:string("UPDATE_CONTINUE_HELP"))
+	local help = Textarea("help", self:string("UPDATE_BEGIN_HELP"))
 	window:addWidget(help)
 	window:addWidget(menu)
 

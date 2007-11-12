@@ -469,7 +469,7 @@ end
 function setPowerState(self, state)
 	local settings = self:getSettings()
 
-	log:warn("setPowerState=", state)
+	log:warn("setPowerState=", state, " acpower=", self.acpower)
 	self.powerState = state
 
 	-- kill the timer
