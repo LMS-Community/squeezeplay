@@ -220,9 +220,9 @@ local function _openVolumePopup(vol)
 	local slider = Slider("volume")
 	slider:setRange(-1, 100, volume)
 	popup:addWidget(Group("volumeGroup", {
-				      Icon("iconVolumeMin"),
+				      Icon("volumeMin"),
 				      slider,
-				      Icon("iconVolumeMax")
+				      Icon("volumeMax")
 			      }))
 
 	local volumeStep = 100 / VOLUME_STEPS

@@ -216,9 +216,9 @@ function volumeShow(self)
 
 	window:addWidget(Textarea("help", self:string("SOUND_VOLUME_HELP")))
 	window:addWidget(Group("sliderGroup", {
-				     Icon("iconVolumeMin"),
+				     Icon("volumeMin"),
 				     self.slider,
-				     Icon("iconVolumeMax")
+				     Icon("volumeMax")
 			     }))
 
 	self:tieAndShowWindow(window)

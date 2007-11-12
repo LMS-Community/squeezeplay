@@ -14,6 +14,7 @@ local Applet                 = require("jive.Applet")
 local Audio                  = require("jive.ui.Audio")
 local Font                   = require("jive.ui.Font")
 local Framework              = require("jive.ui.Framework")
+local Group                  = require("jive.ui.Group")
 local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
 local Popup                  = require("jive.ui.Popup")
@@ -357,7 +358,11 @@ function settingsBrightnessShow(self, menuItem)
 			      end)
 
 	window:addWidget(Textarea("help", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
-	window:addWidget(slider)
+	window:addWidget(Group("sliderGroup", {
+				       Icon("sliderMin"),
+				       slider,
+				       Icon("sliderMax")
+			       }))
 
 	window:addListener(EVENT_WINDOW_POP,
 		function()

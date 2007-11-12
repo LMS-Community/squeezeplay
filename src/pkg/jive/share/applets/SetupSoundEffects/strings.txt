@@ -48,4 +48,4 @@ SOUND_EFFECTS_VOLUME
 	EN	Effects Volume
 
 SOUND_VOLUME_HELP
-	EN	FIXME
+	EN	Use the wheel to adjust the volume of the sound effects.

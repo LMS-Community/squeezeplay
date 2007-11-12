@@ -347,9 +347,24 @@ int jiveL_window_event_handler(lua_State *L) {
 		break;
 
 
+	case JIVE_EVENT_WINDOW_ACTIVE:
+		/*
+		 * Reparent global widgets when this widget is active
+		 */
+		jiveL_getframework(L);
+		lua_getfield(L, -1, "widgets");
+		lua_pushnil(L);
+		while (lua_next(L, -2) != 0) {
+			lua_pushvalue(L, 1);
+			lua_setfield(L, -2, "parent");
+			
+			lua_pop(L, 1);
+		}
+		lua_pop(L, 2);
+		/* fall through */
+
 	case JIVE_EVENT_WINDOW_PUSH:
 	case JIVE_EVENT_WINDOW_POP:
-	case JIVE_EVENT_WINDOW_ACTIVE:
 	case JIVE_EVENT_WINDOW_INACTIVE:
 		/*
 		 * Don't forward window events

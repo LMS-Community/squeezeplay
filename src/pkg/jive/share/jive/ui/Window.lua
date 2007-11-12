@@ -147,11 +147,6 @@ function show(self, transition, soundEffect)
 		return
 	end
 
-	-- reparent global widgets
-	for i, widget in ipairs(Framework.widgets) do
-		widget.parent = self
-	end
-
 	-- remove the window if it is already in the stack
 	local onstack = table.delete(stack, self)
 

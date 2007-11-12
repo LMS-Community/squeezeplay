@@ -463,6 +463,11 @@ function skin(self, s)
 	s.slider.bgImg = sliderBackground
 	s.slider.img = sliderBar
 
+	s.sliderMin.img = Surface:loadImage(imgpath .. "slider_icon_negative.png")
+	s.sliderMin.border = { 5, 0, 5, 0 }
+	s.sliderMax.img = Surface:loadImage(imgpath .. "slider_icon_positive.png")
+	s.sliderMax.border = { 5, 0, 5, 0 }
+
 	s.sliderGroup.border = { 10, 20, 10, 20 }
 
 
@@ -602,10 +607,10 @@ function skin(self, s)
 
 	-- SlimBrowser applet
 
-	s.iconVolumeMin.img = Surface:loadImage(imgpath .. "volume_speaker_l.png")
-	s.iconVolumeMin.border = { 5, 0, 5, 0 }
-	s.iconVolumeMax.img = Surface:loadImage(imgpath .. "volume_speaker_r.png")
-	s.iconVolumeMax.border = { 5, 0, 5, 0 }
+	s.volumeMin.img = Surface:loadImage(imgpath .. "volume_speaker_l.png")
+	s.volumeMin.border = { 5, 0, 5, 0 }
+	s.volumeMax.img = Surface:loadImage(imgpath .. "volume_speaker_r.png")
+	s.volumeMax.border = { 5, 0, 5, 0 }
 
 	s.volume.horizontal = 1
 	s.volume.img = volumeBar
