@@ -69,6 +69,14 @@ dist_applets_testKeypad_DATA = \
 	share/applets/TestKeypad/Keypad.png
 
 
+applets_testIRdir = $(datadir)/jive/applets/TestIR
+dist_applets_testIR_DATA = \
+	share/applets/TestIR/TestIRApplet.lua \
+	share/applets/TestIR/TestIRMeta.lua \
+	share/applets/TestIR/strings.txt \
+	share/applets/TestIR/TestIR.png
+
+
 applets_setupSqueezeboxdir = $(datadir)/jive/applets/SetupSqueezebox
 dist_applets_setupSqueezebox_DATA = \
 	share/applets/SetupSqueezebox/SetupSqueezeboxApplet.lua \
