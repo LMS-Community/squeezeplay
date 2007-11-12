@@ -3,18 +3,49 @@
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
-HTTP_AUTH
-	EN	SqueezeCenter Password Protection
+SOUND_EFFECTS
+	EN	Sound Effects
+	DE	Soundeffekte
+	ES	Efectos de sonido
+	IT	Effetti sonori
+	FR	Effets sonores
+	NL	Geluidseffecten
 
-HTTP_AUTH_USERNAME
-	EN	Username
+SOUND_SCROLL
+	EN	Scroll
+	DE	Scroll
+	ES	Desplazarse
+	IT	Scorri
+	FR	Défiler
+	NL	Scrollen
 
-HTTP_AUTH_PASSWORD
-	EN	Password
+SOUND_NAVIGATION
+	EN	Navigation
 
-HTTP_AUTH_HELP
-	EN	If your SqueezeCenter is configured for password protection, configure the username and password here
+SOUND_PLAYBACK
+	EN	Playback
 
-HTTP_AUTH_ENTER_HELP
-	EN	Enter the %s configured for password protection on your SqueezeCenter 
+SOUND_VOLUME
+	EN	Volume
 
+SOUND_CHARGING
+	EN	Charging
+	DE	Wird aufgeladen
+	ES	Cargando
+	IT	Caricamento
+	FR	Chargement en cours
+	NL	Bezig met opladen
+
+SOUND_NONE
+	EN	None
+	DE	Kein
+	ES	Ninguno
+	IT	Nessuno
+	FR	Aucun
+	NL	Geen
+
+SOUND_EFFECTS_VOLUME
+	EN	Effects Volume
+
+SOUND_VOLUME_HELP
+	EN	Use the wheel to adjust the volume of the sound effects.

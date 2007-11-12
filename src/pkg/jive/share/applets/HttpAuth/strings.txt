@@ -1,0 +1,20 @@
+# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+HTTP_AUTH
+	EN	SqueezeCenter Password Protection
+
+HTTP_AUTH_USERNAME
+	EN	Username
+
+HTTP_AUTH_PASSWORD
+	EN	Password
+
+HTTP_AUTH_HELP
+	EN	If your SqueezeCenter is configured for password protection, configure the username and password here
+
+HTTP_AUTH_ENTER_HELP
+	EN	Enter the %s configured for password protection on your SqueezeCenter 
+
