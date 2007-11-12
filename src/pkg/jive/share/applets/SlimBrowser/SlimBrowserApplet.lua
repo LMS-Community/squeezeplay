@@ -43,6 +43,7 @@ local Textarea               = require("jive.ui.Textarea")
 local RadioGroup             = require("jive.ui.RadioGroup")
 local RadioButton            = require("jive.ui.RadioButton")
 local Checkbox               = require("jive.ui.Checkbox")
+local SimpleMenu             = require("jive.ui.SimpleMenu")
 local DateTime               = require("jive.utils.datetime")
                              
 local DB                     = require("applets.SlimBrowser.DB")
@@ -547,6 +548,11 @@ end
 local function _browseSink(step, chunk, err)
 	log:debug("_browseSink()")
 	
+	if err then
+		log:warn("########### ", err)
+		return
+	end
+
 	-- check we're still relevant
 	if step.origin then
 		-- only the main window has got no origin...
@@ -1611,7 +1617,7 @@ function notify_playerCurrent(self, player, force)
 	_player = player
 	_server = player:getSlimServer()
 	_string = function(token) return self:string(token) end
-	
+
 	-- create a window for Now Playing, this is our _statusStep
 	local step, sink = _newDestination(
 		nil,
@@ -1675,7 +1681,7 @@ end
 function notify_jiveMainMenuChanged(self)
 	log:debug("notify_jiveMainMenuChanged")
 	
-	if( _server == false) then
+	if _server == false then
 		log:warn("_server is false")
 		return
 	else
@@ -1683,6 +1689,52 @@ function notify_jiveMainMenuChanged(self)
 		_server:request(_homeSink, _player.id, { 'menu', 0, 100 })
 	end
 end
+
+
+function notify_serverConnectionError(self, server)
+	if _server ~= server then
+		-- not our server
+		return
+	end
+
+	log:warn("******************************* :)")
+
+	local window = Window("window", self:string("SLIMBROWSER_PROBLEM_CONNECTING"), 'settingstitle')
+
+	local menu = SimpleMenu("menu")
+
+	menu:addItem({
+			     text = self:string("SLIMBROWSER_TRY_AGAIN"),
+			     callback = function()
+					end,
+		     })
+	menu:addItem({
+			     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
+			     callback = function()
+					end,
+		     })
+	menu:addItem({
+			     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
+			     callback = function()
+					end,
+		     })
+
+	window:addWidget(Textarea("help", self:string("SLIMBROWSER_PROBLEM_CONNECTING_HELP", tostring(_player:getName()), tostring(_server:getName()))))
+	window:addWidget(menu)
+
+
+	-- check if the connection recovers
+	window:addTimer(1000,
+			function()
+				if _server:isConnected() then
+					window:hide()
+				end
+			end)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
 
 
 --[[

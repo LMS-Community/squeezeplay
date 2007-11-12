@@ -69,7 +69,7 @@ local function _getSink(self, cmd)
 	return function(chunk, err)
 	
 		if err then
-			log:debug(err)
+			log:warn("########### ", err)
 			
 		elseif chunk then
 			--log:info(chunk)

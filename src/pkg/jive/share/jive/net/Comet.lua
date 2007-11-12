@@ -90,7 +90,7 @@ I<path> is the absolute path to the servers cometd handler and defaults to
 
 =cut
 --]]
-function __init(self, jnt, ip, port, path, name)
+function __init(self, jnt, ip, port, path, name, notifyErr)
 	log:debug("Comet:__init(", name, ", ", ip, ", ", port, ", ", path, ")")
 
 	-- init superclass
@@ -113,6 +113,8 @@ function __init(self, jnt, ip, port, path, name)
 	obj.pending_unsubs = {}       -- pending unsubscribe requests
 	obj.pending_reqs   = {}       -- pending requests to send with connect
 	obj.notify         = {}       -- callbacks to notify
+
+	obj.notifyErr      = notifyErr
 	
 	-- Subscribe to networkConnected events, which happen if we change wireless networks
 	jnt:subscribe(obj)
@@ -134,6 +136,10 @@ local _active
 function start(self)
 	-- Begin handshake
 	_handshake(self)
+end
+
+function isConnected(self)
+	return self.active
 end
 
 function notify_networkConnected(self)
@@ -570,12 +576,17 @@ function request(self, func, playerid, request, priority)
 	if not self.active then
 		-- Add subscription to pending requests, to be sent during connect/reconnect
 		table.insert( self.pending_reqs, {
-			reqid    = id,
-			func     = func,
-			playerid = playerid,
-			request  = request,
-			priority = priority,
+                        reqid    = id,
+                        func     = func,
+                        playerid = playerid,
+                        request  = request,
+                        priority = priority,
 		} )
+		log:warn("***************")
+
+		if self.notifyErr then
+			self.notifyErr(nil, "disconnected")
+		end
 	else	
 		local cmd = {}
 		cmd[1] = playerid or ''
@@ -636,8 +647,10 @@ _getRequestSink = function(self, func, reqid)
 		-- on error, print something...
 		if err then
 			log:warn("Comet:request error: ", err)
-			
-			-- XXX: need to handle this error by retrying the failed request?
+
+			if self.notifyErr then
+				self.notifyErr(nil, err)
+			end
 		end
 		-- if we have data
 		if chunk then

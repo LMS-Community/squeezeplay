@@ -27,3 +27,18 @@ SLIMBROWSER_SEARCH_HELP
 	IT	Usa la rotellina per cambiare le lettere e premi il pulsante centrale per selezionarle. Premi nuovamente il pulsante centrale per avviare la ricerca.
 	FR	Utiliser le bidule pour choisir une lettre, plus appuyer sur le bouton central afin de la sélectionner. Appuyer à nouveau sur le bouton central pour démarrer la recherche.
 	NL	Gebruik het scrollwiel om letters te wijzigen. Druk dan op de middelste knop om die letter te selecteren. Druk nogmaals op de middelste knop om je zoekopdracht te starten.
+
+SLIMBROWSER_PROBLEM_CONNECTING
+	EN	Problem Connecting
+
+SLIMBROWSER_TRY_AGAIN
+	EN	Try Again
+
+SLIMBROWSER_CHOOSE_MUSIC_SOURCE
+	EN	Choose Music Source
+
+SLIMBROWSER_CHOOSE_PLAYER
+	EN	Choose Player
+
+SLIMBROWSER_PROBLEM_CONNECTING_HELP
+	EN	%s is having trouble connecting to %s

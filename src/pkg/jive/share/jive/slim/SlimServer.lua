@@ -270,16 +270,20 @@ function __init(self, jnt, ip, port, name)
 		-- our pool
 		jpool = jpool,
 
-		-- our socket for long term connections, this will not
-		-- actually connect yet
-		comet = Comet(jnt, ip, port, '/cometd', name),
-		
 		-- artwork cache: Weak table storing a surface by iconId
 		artworkThumbCache = setmetatable({}, { __mode="k" }),
 		-- Icons waiting for the given iconId
 		artworkThumbIcons = {},
 		
 	})
+
+	-- our socket for long term connections, this will not
+	-- actually connect yet
+	obj.comet = Comet(jnt, ip, port, '/cometd', name,
+			  function()
+				  log:warn("!!!!!!!!!!!!!!! ")
+				  jnt:notify('serverConnectionError', obj)
+			  end)
 
 	obj.id = obj:idFor(ip, port, name)
 	
@@ -692,7 +696,7 @@ L<jive.slim.SlimServers> to delete old servers.
 =cut
 --]]
 function isConnected(self)
-	return self.plumbing.state == "connected"
+	return self.plumbing.state == "connected" and self.comet:isConnected()
 end
 
 

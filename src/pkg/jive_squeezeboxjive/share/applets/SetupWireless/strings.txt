@@ -581,3 +581,11 @@ NETWORK_DNS_HELP
 	FR	Entrer l'adresse IP du serveur DNS.
 	NL	Voer het IP-adres van je DNS-server in.
 
+NETWORK_PROBLEM
+	EN	Network Problem
+
+NETWORK_CHOOSE_NETWORK
+	EN	Choose Network
+
+NETWORK_PROBLEM_HELP
+	EN	This remote is having trouble connecting to %s.
