@@ -123,6 +123,21 @@ end
 
 --[[
 
+=head2 jive.net.HttpPool:close()
+
+Close all connects to the server.
+
+=cut
+--]]
+function close(self)
+	for i=1,#self.pool.jshq do
+		self.pool.jshq[i]:close()
+	end
+end
+
+
+--[[
+
 =head2 jive.net.HttpPool:queue(request)
 
 Queues I<request>, a L<jive.net.RequestHttp> instance. All previously

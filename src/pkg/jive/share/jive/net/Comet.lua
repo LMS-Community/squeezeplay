@@ -67,16 +67,14 @@ local Popup         = require("jive.ui.Popup")
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("net.comet")
 
-local iconbar = iconbar
 
 -- times are in ms
 local RETRY_DEFAULT = 5000  -- default delay time to retry connection
 local SUB_DELAY     = 1000  -- how long to wait before sending subscription requests
 local UNSUB_DELAY   = 3000  -- how long to wait before sending unsubscription requests
 
--- jive.net.Comet is a subclass of jive.net.SocketHttp
-module(...)
-oo.class(_M, SocketHttp)
+-- jive.net.Comet is a base class
+module(..., oo.class)
 
 --[[
 
@@ -88,9 +86,14 @@ defaults to "". I<ip> and I<port> are the IP address and port of the HTTP server
 I<path> is the absolute path to the servers cometd handler and defaults to
 '/cometd'.
 
+Notifications:
+
+ cometConnected(self)
+ cometDisconnected(self, numPendingRequests)
+
 =cut
 --]]
-function __init(self, jnt, ip, port, path, name, notifyErr)
+function __init(self, jnt, ip, port, path, name)
 	log:debug("Comet:__init(", name, ", ", ip, ", ", port, ", ", path, ")")
 
 	-- init superclass
@@ -102,6 +105,7 @@ function __init(self, jnt, ip, port, path, name, notifyErr)
 	obj.cpool          = HttpPool(jnt, ip, port, 1, 1, name .. "_Chunked")
 	obj.rpool          = HttpPool(jnt, ip, port, 1, 1, name .. "_Request")
 	
+	obj.jnt            = jnt
 	obj.name           = name
 	obj.active         = false    -- whether or not we have an active connection
 	obj.clientId       = nil      -- clientId provided by server
@@ -114,8 +118,6 @@ function __init(self, jnt, ip, port, path, name, notifyErr)
 	obj.pending_reqs   = {}       -- pending requests to send with connect
 	obj.notify         = {}       -- callbacks to notify
 
-	obj.notifyErr      = notifyErr
-	
 	-- Subscribe to networkConnected events, which happen if we change wireless networks
 	jnt:subscribe(obj)
 	
@@ -134,12 +136,16 @@ local _reconnect
 local _active
 
 function start(self)
-	-- Begin handshake
-	_handshake(self)
+	if not self.active then
+		-- Begin handshake
+		_handshake(self)
+	end
 end
 
-function isConnected(self)
-	return self.active
+function disconnect(self)
+	if self.active then
+		_active(self, false)
+	end
 end
 
 function notify_networkConnected(self)
@@ -260,7 +266,7 @@ _connect = function(self)
 	
 	-- This will be our last request on this connection, it is now only
 	-- for listening for responses
-	
+
 	local req = function()
 		return CometRequest(
 			_getEventSink(self),
@@ -284,7 +290,6 @@ _getEventSink = function(self)
 		
 		-- if we have data
 		if chunk then
-		
 			-- Process each response event
 			for i, event in ipairs(chunk) do
 			
@@ -298,7 +303,6 @@ _getEventSink = function(self)
 				 	if event.successful then
 						log:debug("Comet:_getEventSink, connect message acknowledged")
 						_active(self, true)
-						self.failures = 0
 					else
 						log:warn("Comet:_getEventSink, connect failed: ", event.error)
 						_handleAdvice(self)
@@ -308,7 +312,6 @@ _getEventSink = function(self)
 					if event.successful then
 						log:debug("Comet:_getEventSink, reconnect OK")
 						_active(self, true)
-						self.failures = 0
 					else
 						log:warn("Comet:_getEventSink, reconnect failed: ", event.error)
 						_handleAdvice(self)
@@ -338,6 +341,8 @@ _getEventSink = function(self)
 					else
 						log:warn("Comet:_getEventSink, /slim/unsubscribe error for reqid ", event.id, ": ", event.error)
 					end
+				elseif event.channel == '/slim/request' and event.successful then
+					log:debug("Comet:request id ", event.id, " sent OK")
 				elseif event.channel then
 					local subscription    = event.channel
 					local onetime_request = false
@@ -350,7 +355,7 @@ _getEventSink = function(self)
 						subscription = subscription .. '|' .. event.id
 						onetime_request = true
 					end
-					
+
 					if self.notify[subscription] then
 						log:debug("Comet:_getEventSink, notifiying callbacks for ", subscription)
 					
@@ -408,20 +413,20 @@ _getHandshakeSink = function(self)
 		-- on error, print something...
 		if err then
 			log:warn("Comet:_handshake with ", self.jsName, " error: ", err)
+
+			-- try to reconnect according to advice
+			_handleAdvice(self)
 		end
 		-- if we have data
 		if chunk then
 			local data = chunk[1]
 			if data.successful then
 				_active(self, true)
-				self.failures  = 0
 				self.clientId  = data.clientId
 				self.advice    = data.advice
 				
 				log:debug("Comet:_handshake OK with ", self.jsName, ", clientId: ", self.clientId)
 				
-				-- Reset error count
-				self.failures = 0
 				
 				-- Continue with connect phase
 				_connect(self)
@@ -582,11 +587,7 @@ function request(self, func, playerid, request, priority)
                         request  = request,
                         priority = priority,
 		} )
-		log:warn("***************")
-
-		if self.notifyErr then
-			self.notifyErr(nil, "disconnected")
-		end
+		self.jnt:notify('cometDisconnected', self, #self.pending_reqs)
 	else	
 		local cmd = {}
 		cmd[1] = playerid or ''
@@ -647,10 +648,6 @@ _getRequestSink = function(self, func, reqid)
 		-- on error, print something...
 		if err then
 			log:warn("Comet:request error: ", err)
-
-			if self.notifyErr then
-				self.notifyErr(nil, err)
-			end
 		end
 		-- if we have data
 		if chunk then
@@ -664,14 +661,9 @@ _getRequestSink = function(self, func, reqid)
 					func(nil, event.error)
 				elseif event.channel == '/slim/request' and event.successful then
 					log:debug("Comet:request id ", reqid, " sent OK")
-				elseif event.id == reqid then
-					log:debug("Comet:request got result for request id ", reqid)
-					
-					-- Remove subscription, we know this was not an async request
-					local subscription = '/slim/request|' .. reqid
-					self.notify[subscription] = nil
-					
-					func(event)
+
+				else
+					log:warn("Comet:request unknown response")
 				end
 			end
 		end
@@ -699,7 +691,12 @@ _handleAdvice = function(self)
 	-- make sure our connection is closed
 	if self.active then
 		_active(self, false)
-		self:perform(function() self:t_close() end)
+	end
+
+	-- stop any existing reconnect timer
+	if self.reconnect_timer then
+		self.reconnect_timer:stop()
+		self.reconnect_timer = nil
 	end
 
 	self.failures = self.failures + 1
@@ -785,29 +782,24 @@ end
 
 -- Notify changes in connection state
 _active = function(self, active)
-
-	-- XXX: Need a way to propagate errors/retry notice up to the UI
-
-	-- XXX update the icon bar. This should be done in Slimserver.lua not here.
-	iconbar:setServerError(active and "OK" or "ERROR")
-
-	-- could display a popup wait screen here, but needs more logic
-	-- such as are you using this connection or playing a game, etc
-	if false and self.active then
-		local popup = Popup("popupIcon")
-		local icon  = Icon("iconConnecting")
-		local label = Label("text", "Connection to " .. self.name .. " lost\nReconnecting...")
-		popup:addWidget(icon)
-		popup:addWidget(label)
-		popup:addTimer(1000, function()
-			if self.active then
-				popup:hide()
-			end
-		end)
-		popup:show()
+        if self.active == active then
+		return
 	end
-	
+
 	self.active = active
+
+	if active then
+		-- Reset error count
+		self.failures = 0
+
+		self.jnt:notify('cometConnected', self)
+	else
+		-- force connections closed
+		self.cpool:close()
+		self.rpool:close()
+
+		self.jnt:notify('cometDisconnected', self, #self.pending_reqs)
+	end
 end
 
 --[[

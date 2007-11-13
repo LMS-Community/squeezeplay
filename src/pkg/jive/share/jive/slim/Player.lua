@@ -125,13 +125,13 @@ end
 
 --[[
 
-=head2 jive.slim.Player(server, jnt, jpool, playerInfo)
+=head2 jive.slim.Player(server, jnt, playerInfo)
 
 Create a Player object for server I<server>.
 
 =cut
 --]]
-function __init(self, slimServer, jnt, jpool, playerInfo)
+function __init(self, slimServer, jnt, playerInfo)
 	log:debug("Player:__init(", playerInfo.playerid, ")")
 
 	_assert(slimServer, "Cannot create Player without SlimServer object")
@@ -142,7 +142,6 @@ function __init(self, slimServer, jnt, jpool, playerInfo)
 		
 		slimServer = slimServer,
 		jnt = jnt,
-		jpool = jpool,
 
 		id = playerInfo.playerid,
 		name = playerInfo.name,
@@ -628,19 +627,6 @@ end
 
 function getConnected(self)
 	return self.connected
-end
-
--- queue
--- proxy function for the slimserver pool
-function queue(self, request)
-	self.jpool:queue(request)
-end
-
-
--- queuePriority
--- proxy function for the slimserver pool
-function queuePriority(self, request)
-	self.jpool:queuePriority(request)
 end
 
 

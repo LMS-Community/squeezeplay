@@ -22,6 +22,8 @@ Notifications:
 
  serverNew (performed by SlimServers)
  serverDelete (performed by SlimServers)
+ serverConnected(self)
+ serverDisconnected(self, numPendingRequests)
 
 =head1 FUNCTIONS
 
@@ -34,6 +36,7 @@ local pairs, ipairs, setmetatable = pairs, ipairs, setmetatable
 
 local os          = require("os")
 local table       = require("table")
+local debug       = require("jive.utils.debug")
 
 local oo          = require("loop.base")
 
@@ -56,50 +59,6 @@ module(..., oo.class)
 local RETRY_UNREACHABLE = 120        -- Min delay (in s) before retrying a server unreachable
 
 
--- _setPlumbingState
--- set the validity status of the server, i.e. can we talk to it
-local function _setPlumbingState(self, state)
-
-	if state ~= self.plumbing.state then
-		
-		log:debug(self, ":_setPlumbingState(", state, ")")
-
-		if self.plumbing.state == 'init' and state == 'connected' then
-			self.jnt:notify('serverConnected', self)
-		end
-		
-		log:warn(self, ' is ', state)
-
-		self.plumbing.state = state
-	end
-end
-
-
--- forward declaration
-local _establishConnection
-
-
--- _errSink
--- manages connection errors
-local function _errSink(self, name, err)
-
-	if err then
-		log:error(self, ": ", err, " during ", name)
-	
-		-- give peace a chance and retry immediately, unless that's what we were already doing
-		if self.plumbing.state == 'retry' then
-			_setPlumbingState(self, 'unreachable')
-		else
-			_setPlumbingState(self, 'retry')
-			_establishConnection(self)
-		end
-	end
-	
-	-- always return false so data (probably bogus) is not sent for processing
-	return false
-end
-
-
 -- _getSink
 -- returns a sink
 local function _getSink(self, name)
@@ -109,9 +68,9 @@ local function _getSink(self, name)
 
 		return function(chunk, err)
 			
-			-- be smart and don't call errSink if not necessary
-			if not err or _errSink(self, name, err) then
-			
+			if err then
+				log:error(self, ": ", err, " during ", name)
+			else
 				func(self, chunk)
 			end
 		end
@@ -119,27 +78,6 @@ local function _getSink(self, name)
 	else
 		log:error(self, ": no function called [", name .."]")
 	end
-end
-
-
--- _establishConnection
--- sends our long term request
-_establishConnection = function(self)
-	log:debug(self, ":_establishConnection()")
-
-	-- try to get a long term connection with the server, timeout at 60 seconds.
-	-- get 50 players
-	-- FIXME: what if the server has more than 50 players?
-	
-	self.comet:subscribe(
-		'/slim/serverstatus',
-		_getSink(self, '_serverstatusSink'),
-		nil,
-		{ 'serverstatus', 0, 50, 'subscribe:60' }
-	)
-	
-	-- Start the Comet connection process
-	self.comet:start()
 end
 
 
@@ -158,9 +96,6 @@ function _serverstatusSink(self, event, err)
 		return
 	end
 
-	-- if we get here we're connected
-	_setPlumbingState(self, 'connected')
-	
 	-- remember players from server
 	local serverPlayers = data.players_loop
 	data.players_loop = nil
@@ -203,7 +138,7 @@ function _serverstatusSink(self, event, err)
 			-- create new players
 			if not self.players[player_info.playerid] then
 			
-				player = Player(self, self.jnt, self.jpool, player_info)
+				player = Player(self, self.jnt, player_info)
 			
 				self.players[player_info.playerid] = player
 				
@@ -245,8 +180,6 @@ function __init(self, jnt, ip, port, name)
 	log:debug("SlimServer:__init(", ip, ":", port, " ",name, ")")
 
 	_assert(ip, "Cannot create SlimServer without ip address")
-	
-	local jpool = HttpPool(jnt, ip, port, 2, 2, name)
 
 	local obj = oo.rawnew(self, {
 
@@ -255,7 +188,6 @@ function __init(self, jnt, ip, port, name)
 
 		-- connection stuff
 		plumbing = {
-			state = 'init',
 			lastSeen = os.time(),
 			ip = ip,
 			port = port,
@@ -267,28 +199,38 @@ function __init(self, jnt, ip, port, name)
 		-- players
 		players = {},
 
-		-- our pool
-		jpool = jpool,
+		-- artwork http pool
+		artworkPool = HttpPool(jnt, ip, port, 2, 2, name),
 
 		-- artwork cache: Weak table storing a surface by iconId
 		artworkThumbCache = setmetatable({}, { __mode="k" }),
 		-- Icons waiting for the given iconId
 		artworkThumbIcons = {},
-		
-	})
 
-	-- our socket for long term connections, this will not
-	-- actually connect yet
-	obj.comet = Comet(jnt, ip, port, '/cometd', name,
-			  function()
-				  log:warn("!!!!!!!!!!!!!!! ")
-				  jnt:notify('serverConnectionError', obj)
-			  end)
+		-- our socket for long term connections, this will not
+		-- actually connect yet
+		comet = Comet(jnt, ip, port, '/cometd', name),
+
+		-- are we connected to the server?
+		active = false,
+	})
 
 	obj.id = obj:idFor(ip, port, name)
 	
-	-- our long term request
-	_establishConnection(obj)
+	-- subscribe to comet events
+	jnt:subscribe(obj)
+
+	-- subscribe to server status, timeout at 60 seconds.
+	-- get 50 players
+	-- FIXME: what if the server has more than 50 players?
+	obj.comet:subscribe('/slim/serverstatus',
+			    _getSink(obj, '_serverstatusSink'),
+			    nil,
+			    { 'serverstatus', 0, 50, 'subscribe:60' }
+		    )
+
+	-- long term connection to the server
+	obj:connect(obj)
 	
 	-- notify we're here by caller in SlimServers
 	
@@ -320,14 +262,51 @@ function free(self)
 	self.players = nil
 
 	-- delete connections
-	if self.jpool then
-		self.jpool:free()
-		self.jpool = nil
+	if self.artworkPool then
+		self.artworkPool:free()
+		self.artworkPool = nil
 	end
 	if self.comet then
-		self.comet:free()
+		self.comet:disconnect()
 		self.comet = nil
 	end
+end
+
+
+function connect(self)
+	log:warn(self, ":connect()")
+
+	-- artwork pool connects on demand
+	self.comet:start()
+end
+
+
+function disconnect(self)
+	log:warn(self, ":disconnect()")
+
+	self.artworkPool:disconnect()
+	self.comet:disconnect()
+end
+
+
+-- comet has connected to SC
+function notify_cometConnected(self, comet)
+	if self.comet ~= comet then
+		return
+	end
+
+	self.active = false
+	self.jnt:notify('serverConnected', self)
+end
+
+-- comet is disconnected from SC
+function notify_cometDisconnected(self, comet, numPendingRequests)
+	if self.comet ~= comet then
+		return
+	end
+
+	self.active = false
+	self.jnt:notify('serverDisconnected', self, numPendingRequests)
 end
 
 
@@ -364,15 +343,7 @@ function updateFromUdp(self, name)
 		self.name = name
 	end
 
-	-- manage retries
-	local now = os.time()
-	
-	if self.plumbing.state == 'unreachable' and now - self.plumbing.lastSeen > RETRY_UNREACHABLE then
-		_setPlumbingState(self, 'retry')
-		_establishConnection(self)
-	end
-
-	self.plumbing.lastSeen = now
+	self.plumbing.lastSeen = os.time()
 end
 
 
@@ -545,9 +516,9 @@ function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, priority)
 						      uriGenerator(iconId, size)
 					      )
 			      if priority then
-				      self.jpool:queuePriority(req)
+				      self.artworkPool:queuePriority(req)
 			      else
-				      self.jpool:queue(req)
+				      self.artworkPool:queue(req)
 			      end
 		      end,
 		      true)
@@ -696,7 +667,7 @@ L<jive.slim.SlimServers> to delete old servers.
 =cut
 --]]
 function isConnected(self)
-	return self.plumbing.state == "connected" and self.comet:isConnected()
+	return self.active
 end
 
 
@@ -719,12 +690,6 @@ end
 
 -- Proxies
 
-function queue(self, request)
-	self.jpool:queue(request)
-end
-function queuePriority(self, request)
-	self.jpool:queuePriority(request)
-end
 function request(self, ...)
 	self.comet:request(...)
 end

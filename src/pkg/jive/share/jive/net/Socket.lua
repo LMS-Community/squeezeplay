@@ -80,6 +80,19 @@ end
 
 --[[
 
+=head2 jive.net.Socket:close()
+
+Closes the socket.
+
+=cut
+--]]
+function close(self)
+--	log:debug(self, ":close()")
+
+	self:perform(function() self:t_close() end)
+end
+--[[
+
 =head2 jive.net.Socket:free()
 
 Frees and closes the socket including any reference in the jnt.
