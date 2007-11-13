@@ -118,18 +118,18 @@ function drawDisplay(self)
 			srf:line( 0, y, 240, y, color)
 		end
 
-	elseif self.state == 8 then
+	elseif self.state == 9 then
 		log:info("DisplayTest: BLACK")
 		srf:filledRectangle(0, 0, w, h, 0x000000FF)
 
-	elseif self.state == 9 then
+	elseif self.state == 10 then
 		log:info("DisplayTest: HORZ_STRIPES")
 		srf:filledRectangle(0, 0, w, h, 0xFFFFFFFF)
 		for y = 0, h, 2 do
 			srf:line(0, y, w, y, 0x000000FF)
 		end
 
-	elseif self.state == 10 then
+	elseif self.state == 11 then
 		log:info("DisplayTest: VERT_STRIPES")
 		srf:filledRectangle(0, 0, w, h, 0xFFFFFFFF)
 		for x = 0, w, 2 do
