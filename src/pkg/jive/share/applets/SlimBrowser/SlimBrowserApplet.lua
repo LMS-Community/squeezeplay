@@ -183,7 +183,8 @@ end
 -- artworkThumbUri
 -- returns a URI to fetch artwork on the server
 -- FIXME: should this be styled?
-local function _artworkThumbUri(iconId)
+local function _artworkThumbUri(iconId, size)
+
 
 	-- if the iconId is a number, this is cover art, otherwise it's static content
 	-- do some extra checking instead of just looking for type = number
@@ -196,9 +197,11 @@ local function _artworkThumbUri(iconId)
 		thisIsAnId = true
 	end
 
-	-- if this is a number, construct the path for a 56x56 cover art thumbnail
+	-- if this is a number, construct the path for a sizexsize cover art thumbnail
 	if thisIsAnId then 
-		return '/music/' .. iconId .. '/cover_56x56_p.png' -- 'p' is for padded, png gives us transparency
+		-- we want a 56 pixel thumbnail if it wasn't specified
+		if not size then size = 56 end
+		return '/music/' .. iconId .. '/cover_' .. size .. 'x' .. size .. '_p.png' -- 'p' is for padded, png gives us transparency
 	-- if this isn't a number, then we just want the path
 	else
 		return iconId
@@ -533,6 +536,27 @@ local function _getStepSink(step, sink)
 	end
 end
 
+
+-- _bigArtworkPopup
+-- special case sink that pops up big artwork
+local function _bigArtworkPopup(chunk, err)
+
+	log:debug("Rendering artwork")
+	local popup = Popup("popupArt")
+	local icon = Icon("artwork")
+
+	local screenW, screenH = Framework:getScreenSize()
+	local shortDimension = screenW
+	if screenW > screenH then
+		shortDimension = screenH
+	end
+
+	log:debug("Artwork width/height will be ", shortDimension)
+	_server:fetchArtworkThumb(chunk.data.artworkId, icon, _artworkThumbUri, shortDimension)
+	popup:addWidget(icon)
+	popup:show()
+	return popup
+end
 
 -- _devnull
 -- sinks that silently swallows data
@@ -1012,6 +1036,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 					from = 0
 					to = BROWSE_FIRST_FETCH
 					step, sink = _newDestination(_curStep, item, _newWindowSpec(db, item), _browseSink, jsonAction)
+				elseif item["showBigArtwork"] then
+					sink = _bigArtworkPopup
 				end
 			
 				-- send the command
