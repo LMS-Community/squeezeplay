@@ -853,21 +853,25 @@ end
 local _defaultActions = {
 	
 	["pause"] = function()
+	        Framework:playSound("PLAYBACK")
 		_player:togglePause()
 		return EVENT_CONSUME
 	end,
 
 	["pause-hold"] = function()
+	        Framework:playSound("PLAYBACK")
 		_player:stop()
 		return EVENT_CONSUME
 	end,
 
 	["rew"] = function()
+	        Framework:playSound("PLAYBACK")
 		_player:rew()
 		return EVENT_CONSUME
 	end,
 
 	["fwd"] = function()
+	        Framework:playSound("PLAYBACK")
 		_player:fwd()
 		return EVENT_CONSUME
 	end,
@@ -920,6 +924,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 			-- check first for a hierarchical menu or a input to perform 
 			if item['count'] or (item['input'] and not item['_inputDone']) then
 				log:debug("_actionHandler(", actionName, "): hierachical or input")
+
+				menuItem:playSound("WINDOWSHOW")
 
 				-- make a new window
 				local step, sink = _newDestination(_curStep, item, _newWindowSpec(db, item), _browseSink)
@@ -1021,6 +1027,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 			-- now we may have found a command
 			if jsonAction then
 				log:debug("_actionHandler(", actionName, "): json action")
+
+				menuItem:playSound("WINDOWSHOW")
 			
 				-- set good or dummy sink as needed
 				-- prepare the window if needed

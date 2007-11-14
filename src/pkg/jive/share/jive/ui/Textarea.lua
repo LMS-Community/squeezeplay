@@ -188,11 +188,13 @@ function _eventHandler(self, event)
 
 		elseif keycode == KEY_GO or
 			keycode == KEY_RIGHT then
+			self:playSound("BUMP")
 			self:getWindow():bumpRight()
 			return EVENT_CONSUME
 
 		elseif keycode == KEY_BACK or
 			keycode == KEY_LEFT then
+			self:playSound("WINDOWHIDE")
 			self:hide()
 			return EVENT_CONSUME
 		end

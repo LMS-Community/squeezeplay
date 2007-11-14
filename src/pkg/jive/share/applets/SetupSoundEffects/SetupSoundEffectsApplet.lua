@@ -53,8 +53,8 @@ oo.class(_M, Applet)
 
 local effects = {
 	SOUND_NAVIGATION = {
-		"PUSHLEFT",
-		"PUSHRIGHT",
+		"WINDOWSHOW",
+		"WINDOWHIDE",
 		"BUMP",
 		"HOME",
 		"SELECT"
@@ -62,12 +62,9 @@ local effects = {
 	SOUND_SCROLL = {
 		"CLICK"
 	},
--- XXX playback sounds need implementing
---[[
 	SOUND_PLAYBACK = {
 		"PLAYBACK"
 	},
---]]
 	SOUND_CHARGING = {
 		"DOCKING"
 	},

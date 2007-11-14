@@ -14,11 +14,13 @@ A simple menu widget, extends L<jive.ui.Menu>.
 		   {
 			   {
 				   text = "Item 1",
+				   sound = "WINDOWSHOW",
 				   icon = widget1,
 				   callback = function1
 			   ),
 			   {
 				   text = "Item 2",
+				   sound = "WINDOWSHOW",
 				   icon = widget2,
 				   callback = function2
 			   ),
@@ -132,6 +134,9 @@ local function _itemListener(menu, menuItem, list, index, event)
 	end
 
 	if event:getType() == EVENT_ACTION and item.callback then
+		if item.sound then
+			menuItem:playSound(item.sound)
+		end
 		return item.callback(event, item) or EVENT_CONSUME
 	
 	elseif event:getType() == EVENT_FOCUS_GAINED and item.focusGained then

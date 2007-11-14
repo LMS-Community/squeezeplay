@@ -89,9 +89,10 @@ function skin(self, s)
 	Framework:loadSound("BUMP", sndpath .. "bump.wav", 1)
 	Framework:loadSound("CLICK", sndpath .. "click.wav", 0)
 	Framework:loadSound("JUMP", sndpath .. "jump.wav", 0)
-	Framework:loadSound("PUSHLEFT", sndpath .. "pushleft.wav", 1)
-	Framework:loadSound("PUSHRIGHT", sndpath .. "pushright.wav", 1)
+	Framework:loadSound("WINDOWSHOW", sndpath .. "pushleft.wav", 1)
+	Framework:loadSound("WINDOWHIDE", sndpath .. "pushright.wav", 1)
 	Framework:loadSound("SELECT", sndpath .. "select.wav", 0)
+	Framework:loadSound("PLAYBACK", sndpath .. "select.wav", 0)
 	Framework:loadSound("DOCKING", sndpath .. "docking.wav", 1)
 
 	-- Images and Tiles

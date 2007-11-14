@@ -66,7 +66,7 @@ function __init(self, style, title)
 	-- by default close popup on keypress
 	obj:addListener(EVENT_KEY_PRESS,
 			function(event)
-				log:debug("IN POPUP HANDLER")
+				obj:playSound("WINDOWHIDE")
 				obj:hide()
 				return EVENT_CONSUME
 			end)

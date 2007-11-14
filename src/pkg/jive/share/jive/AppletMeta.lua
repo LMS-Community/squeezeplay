@@ -94,6 +94,7 @@ is the function executed when the MenuItem is selected.
 function menuItem(self, label, closure)
 	return {
 		text = self:string(label),
+		sound = "WINDOWSHOW",
 		callback = function(event, menuItem)
 				local applet = appletManager:loadApplet(self._entry.appletName)
 				return closure(applet, menuItem)

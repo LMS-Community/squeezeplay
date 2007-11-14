@@ -185,6 +185,7 @@ function _eventHandler(self, event)
 
 		elseif keycode == KEY_BACK or
 			keycode == KEY_LEFT then
+			self:playSound("WINDOWHIDE")
 			self:hide()
 			return EVENT_CONSUME
 			

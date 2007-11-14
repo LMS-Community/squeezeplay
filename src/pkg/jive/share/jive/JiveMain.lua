@@ -130,6 +130,7 @@ function JiveMainMenu:subMenu(name, weight, titleStyle)
 
 		local item = {
 			text = name,
+			sound = "WINDOWSHOW",
 			callback = function()
 				menu.window:show()
 			end,
@@ -158,14 +159,12 @@ end
 
 -- remove an item from a menu by its index
 function JiveMainMenu:removeItem(item)
-	log:warn("REMOVING MAIN MENU ITEM: ", item)
 	self.menu:removeItem(item)
 	_jiveMainMenuChanged(self)
 end
 
 -- remove an item from a menu by its text
 function JiveMainMenu:removeItemByText(text)
-	log:warn("REMOVING MAIN MENU ITEM: ", text)
 	self.menu:removeItemByText(text)
 	_jiveMainMenuChanged(self)
 end

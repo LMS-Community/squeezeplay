@@ -236,12 +236,14 @@ function _eventHandler(self, event)
 
 		elseif keycode == KEY_PLAY then
 			if not _delete(self) then
+				self:playSound("BUMP")
 				self:getWindow():bumpRight()
 			end
 			return EVENT_CONSUME
 
 		elseif keycode == KEY_ADD then
 			if not _insert(self) then
+				self:playSound("BUMP")
 				self:getWindow():bumpRight()
 			end
 			return EVENT_CONSUME
@@ -257,12 +259,14 @@ function _eventHandler(self, event)
 				end
 
 				if not valid then
+					self:playSound("BUMP")
 					self:getWindow():bumpRight()
 				end
 			elseif self.cursor <= #tostring(self.value) then
 				_moveCursor(self, 1)
 				self:reDraw()
 			else
+				self:playSound("BUMP")
 				self:getWindow():bumpRight()
 			end
 			return EVENT_CONSUME
@@ -271,6 +275,7 @@ function _eventHandler(self, event)
 			keycode == KEY_LEFT then
 
 			if self.cursor == 1 then
+				self:playSound("WINDOWHIDE")
 				self:hide()
 			else
 				_moveCursor(self, -1)
@@ -280,6 +285,7 @@ function _eventHandler(self, event)
 
 		elseif keycode == KEY_REW then
 			self.cursor = 1
+			self:playSound("WINDOWHIDE")
 			self:hide()
 			return EVENT_CONSUME
 
@@ -295,9 +301,11 @@ function _eventHandler(self, event)
 					-- forward to end of input
 					self.cursor = #tostring(self.value) + 1
 				else
+					self:playSound("BUMP")
 					self:getWindow():bumpRight()
 				end
 			else
+				self:playSound("BUMP")
 				self:getWindow():bumpRight()
 			end
 		end

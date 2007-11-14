@@ -164,6 +164,7 @@ local function _eventHandler(self, event)
 				r = self:dispatchNewEvent(EVENT_ACTION)
 
 				if r == EVENT_UNUSED then
+					self:playSound("BUMP")
 					self:getWindow():bumpRight()
 				end
 				return r
@@ -172,9 +173,11 @@ local function _eventHandler(self, event)
 				keycode == KEY_LEFT or
 				keycode == KEY_REW then
 				if self.closeable then
+					self:playSound("WINDOWHIDE")
 					self:hide()
 					return EVENT_CONSUME
 				else
+					self:playSound("BUMP")
 					self:getWindow():bumpLeft()
 				end
 			end
