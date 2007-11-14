@@ -113,7 +113,10 @@ function setupAdhocShow(self, setupNext)
 	self.setupNext = setupNext
 	self.interface = 'bridged'
 
-	return settingsShow(self, true)
+	local window = settingsShow(self, true)
+	window:setAllowScreensaver(false)
+
+	return window
 end
 
 
@@ -122,6 +125,7 @@ function setupSqueezeboxShow(self, setupNext)
 	self.setupNext = setupNext
 
 	local window = settingsShow(self, true)
+	window:setAllowScreensaver(false)
 
 	self.scanMenu:addItem({
 				      text = self:string("SQUEEZEBOX_PROBLEM_SKIP"),

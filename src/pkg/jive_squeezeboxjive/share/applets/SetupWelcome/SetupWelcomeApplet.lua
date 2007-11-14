@@ -133,7 +133,6 @@ function step51(self)
 	-- connect using squeezebox in adhoc mode
 	self.setupSqueezebox = assert(appletManager:loadApplet("SetupSqueezebox"))
 
-	-- FIXME set active player to squeezebox that has been setup
 	return self.setupSqueezebox:setupAdhocShow(function() self:step8() end)
 end
 
@@ -190,6 +189,7 @@ end
 
 function setupWelcomeShow(self, setupNext)
 	local window = Window("window", self:string("WELCOME"), welcomeTitleStyle)
+	window:setAllowScreensaver(false)
 
 	local textarea = Textarea("textarea", self:string("WELCOME_WALKTHROUGH"))
 	local navcluster = Icon("navcluster")
@@ -220,6 +220,8 @@ end
 
 function setupConnectionShow(self, setupSqueezebox, setupNetwork)
 	local window = Window("window", self:string("WIRELESS_CONNECTION"), welcomeTitleStyle)
+	window:setAllowScreensaver(false)
+
 	local menu = SimpleMenu("menu")
 
 	menu:addItem({
@@ -241,6 +243,8 @@ end
 
 function setupDoneShow(self, setupNext)
 	local window = Window("window", self:string("DONE"), welcomeTitleStyle)
+	window:setAllowScreensaver(false)
+
 	local menu = SimpleMenu("menu")
 
 	menu:addItem({ text = self:string("DONE_CONTINUE"),

@@ -52,6 +52,8 @@ function setupShow(self, setupNext)
 
 	-- setup menu
 	local window = Window("window", self:string("CHOOSE_LANGUAGE"), 'settingstitle')
+	window:setAllowScreensaver(false)
+
 	local menu = SimpleMenu("menu")
 
 	for _, locale in ipairs(locale:getAllLocales()) do 

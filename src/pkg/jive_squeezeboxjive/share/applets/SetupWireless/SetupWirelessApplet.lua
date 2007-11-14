@@ -86,6 +86,7 @@ function setupRegionShow(self, setupNext)
 	local wlan = self.t_ctrl
 
 	local window = Window("window", self:string("NETWORK_REGION"), wirelessTitleStyle)
+	window:setAllowScreensaver(false)
 
 	local region = wlan:getRegion()
 
@@ -194,6 +195,7 @@ end
 
 function setupScanShow(self, setupNext)
 	local window = Popup("popupIcon")
+	window:setAllowScreensaver(false)
 
 	window:addWidget(Icon("iconConnecting"))
 	window:addWidget(Label("text", self:string("NETWORK_FINDING_NETWORKS")))
@@ -212,7 +214,10 @@ end
 function setupNetworksShow(self, setupNext)
 	self.setupNext = setupNext
 
-	return _networksShow(self, self:string("NETWORK_WIRELESS_NETWORKS"), self:string("NETWORK_SETUP_HELP"))
+	window = _networksShow(self, self:string("NETWORK_WIRELESS_NETWORKS"), self:string("NETWORK_SETUP_HELP"))
+	window:setAllowScreensaver(false)
+
+	return window
 end
 
 
