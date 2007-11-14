@@ -350,7 +350,12 @@ function DigitalDetailed:DrawTime(x, y, bw, bh, useAmPm)
 	-- Draw Hour
 
 	-- Snip of leading 0
-	local theHour = string.gsub(os.date("%H"), "^0", "", 1)
+	local theHour
+	if useAmPm then
+		theHour = string.gsub(os.date("%I"), "^0", "", 1)
+	else
+		theHour = string.gsub(os.date("%H"), "^0", "", 1)
+	end
 
 	local hourSrf = Surface:drawText(self.mainfont, self.mainfont_color, theHour)
 	local hw, hh = hourSrf:getSize()
@@ -390,7 +395,7 @@ function DigitalDetailed:DrawTime(x, y, bw, bh, useAmPm)
 			
 		local ampmStartY = digitStartY + 5
 		if ampm == "PM" then
-			ampmStartY = ampmStartY + 3
+			ampmStartY = ampmStartY + ampmh + 3
 		end
 		-- x position of ampm is minute start X + minute width + 5 
 		local ampmStartX = minStartX + mw + 5
