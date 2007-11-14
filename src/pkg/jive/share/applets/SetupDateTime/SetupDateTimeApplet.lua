@@ -71,12 +71,14 @@ function settingsShow(self, menuItem)
 		{
 			{	
 				text = self:string("DATETIME_TIMEFORMAT"),
+				sound = "WINDOWSHOW",
 				callback = function(obj, selectedIndex)
 						self:timeSetting(menuItem)
 					end
 			},
 			{
 				text = self:string("DATETIME_DATEFORMAT"),
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 						self:dateFormatSetting(menuItem)
 						return EVENT_CONSUME
@@ -84,6 +86,7 @@ function settingsShow(self, menuItem)
 			},
 			{
 				text = self:string("DATETIME_WEEKSTART"),
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 						self:weekstartSetting(menuItem)
 					end

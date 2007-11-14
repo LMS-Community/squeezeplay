@@ -43,6 +43,7 @@ oo.class(_M, Applet)
 
 local function _keyHold(self, event)
 	if event:getKeycode() == (KEY_REW | KEY_PAUSE) then
+		Framework:playSound("CLICK")
 
 		local file = string.format("jive%04d.bmp", self.number)
 		self.number = self.number + 1

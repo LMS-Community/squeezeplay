@@ -128,6 +128,14 @@ end
 
 function keyEvent(self, evt)
 	local key = evt:getKeycode()
+
+	if key == KEY_BACK then
+		window:playSound("SELECT")
+		self.window:hide()
+		return
+	end
+
+	window:playSound("CLICK")
 	if key == KEY_GO then
 		for i,k in ipairs(keymap) do
 			if wheel_index == i then
@@ -148,9 +156,7 @@ function keyEvent(self, evt)
 		os.execute( bin_path .. " 0x7689807F")
 	elseif key == KEY_VOLUME_DOWN then
 		os.execute( bin_path .. " 0x768900FF")
-	elseif key == KEY_BACK then
-		self.window:hide()
-	end
+	else
 end
 
 

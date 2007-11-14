@@ -165,9 +165,12 @@ function KeypadTest(self)
 
 			if eventtype then
 				if eventtype == EVENT_SCROLL then
+					window:playSound("CLICK")
 					self:_scroll(event:getScroll())
 
 				elseif eventtype | EVENT_KEY_ALL then
+					window:playSound("SELECT")
+
 					-- update key state
 					local keycode = event:getKeycode()
 

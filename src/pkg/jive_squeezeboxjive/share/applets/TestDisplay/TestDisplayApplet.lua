@@ -165,10 +165,12 @@ function DisplayTest(self)
 			log:warn("DisplayTest: key: ".. key)
 
 			if key == KEY_BACK then
+				window:playSound("WINDOWHIDE")
 				window:hide()
 				return EVENT_CONSUME
 
 			elseif key == KEY_GO then
+				window:playSound("WINDOWSHOW")
 				self:drawDisplay()
 				return EVENT_CONSUME
 

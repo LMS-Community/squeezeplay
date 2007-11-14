@@ -154,6 +154,7 @@ function settingsShow(self, menuItem)
 	-- volume
 	menu:addItem({
 			     text = self:string("SOUND_VOLUME"),
+			     sound = "WINDOWSHOW",
 			     weight = 20,
 			     callback = function()
 						self:volumeShow()

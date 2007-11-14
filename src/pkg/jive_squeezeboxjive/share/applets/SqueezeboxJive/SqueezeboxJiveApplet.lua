@@ -136,6 +136,7 @@ function init(self)
 
 				      -- key lock
 				      if keycode == (KEY_ADD | KEY_PLAY) then
+					      window:playSound("WINDOWSHOW")
 					      lockScreen(self)
 					      return EVENT_CONSUME
 				      end
@@ -549,19 +550,6 @@ end
 function lockScreen(self)
 	log:warn("lock screen")
 
-	if self.lockedPopup then
-		-- unlock
-		Framework:removeListener(self.lockedListener)
-		self.lockedTimer:stop()
-		self.lockedPopup:hide()
-
-		self.lockedPopup = nil
-		self.lockedTimer = nil
-		self.lockedListener = nil
-
-		return
-	end
-
 	-- lock
 	local popup = Popup("popupIcon")
 	-- FIXME change icon and text
@@ -583,7 +571,8 @@ function lockScreen(self)
 		Framework:addListener(EVENT_KEY_DOWN | EVENT_KEY_PRESS,
 				      function(event)
 					      if event:getType() == EVENT_KEY_PRESS and event:getKeycode() == (KEY_ADD | KEY_PLAY) then
-						      lockScreen(self)
+						      window:playSound("WINDOWHIDE")
+						      unlockScreen(self)
 						      return EVENT_CONSUME
 					      end
 
@@ -591,6 +580,22 @@ function lockScreen(self)
 					      return EVENT_CONSUME
 				      end,
 				      true)
+end
+
+
+function unlockScreen(self)
+	log:warn("unlock screen")
+
+	if self.lockedPopup then
+		-- unlock
+		Framework:removeListener(self.lockedListener)
+		self.lockedTimer:stop()
+		self.lockedPopup:hide()
+
+		self.lockedPopup = nil
+		self.lockedTimer = nil
+		self.lockedListener = nil
+	end
 end
 
 
@@ -649,10 +654,12 @@ function settingsPowerDown(self, menuItem)
 	local items = {
 		{ 
 			text = self:string("POWER_DOWN_CANCEL"),
+			sound = "WINDOWHIDE",
 			callback = function() window:hide() end
 		},
 		{ 
 			text = self:string("POWER_DOWN_CONFIRM"),
+			sound = "SELECT",
 			callback = function() settingsPowerOff(self) end
 		}
 	}

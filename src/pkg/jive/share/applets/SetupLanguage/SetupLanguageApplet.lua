@@ -59,6 +59,7 @@ function setupShow(self, setupNext)
 	for _, locale in ipairs(locale:getAllLocales()) do 
 		menu:addItem({
 		        text = self:string("LANGUAGE_" .. locale),
+			sound = "WINDOWSHOW",
 			callback = function() self:setLang(locale) setupNext() end,
 			focusGained = function() self:_showLang(locale) end
 		})

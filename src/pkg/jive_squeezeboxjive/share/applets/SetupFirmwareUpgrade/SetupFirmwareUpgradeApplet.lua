@@ -87,6 +87,7 @@ function forceUpgrade(self)
 
 	menu:addItem({
 			     text = self:string("BEGIN_UPDATE"),
+			     sound = "WINDOWSHOW",
 			     callback = function()
 						self.url = url
 						self:_upgrade()
@@ -96,6 +97,7 @@ function forceUpgrade(self)
 	if lfs.attributes("/mnt/mmc/jive.bin", "mode") == "file" then
 		menu:addItem({
 				     text = self:string("UPDATE_CONTINUE_SDCARD"),
+				     sound = "WINDOWSHOW",
 				     callback = function()
 							self.url = "file:/mnt/mmc/jive.bin"
 							self:_upgrade()
@@ -125,6 +127,7 @@ function settingsShow(self)
 
 	menu:addItem({
 			     text = self:string("NETWORK_UPDATE"),
+			     sound = "WINDOWSHOW",
 			     callback = function()
 						self.url = url
 						self:_upgrade()
@@ -134,6 +137,7 @@ function settingsShow(self)
 	if lfs.attributes("/mnt/mmc/jive.bin", "mode") == "file" then
 		menu:addItem({
 				     text = self:string("UPDATE_CONTINUE_SDCARD"),
+				     sound = "WINDOWSHOW",
 				     callback = function()
 							self.url = "file:/mnt/mmc/jive.bin"
 							self:_upgrade()
@@ -162,6 +166,7 @@ function _chargeBattery(self)
 				{
 					{
 						text = self:string("CONTINUE"),
+						sound = "WINDOWSHOW",
 						callback = function()
 								   if _checkBattery() then
 									   self:_upgrade()
@@ -252,6 +257,7 @@ function _upgradeFailed(self)
 				{
 					{
 						text = self:string("UPDATE_TRY_AGAIN"),
+						sound = "WINDOWSHOW",
 						callback = function()
 								   if _checkBattery() then
 									   self:_upgrade():showInstead()

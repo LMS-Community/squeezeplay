@@ -104,6 +104,7 @@ function step4(self)
 	-- finding networks
 	self.scanWindow = self.setupWireless:setupScanShow(function()
 								   self:step5()
+								   -- FIXME is this required:
 								   if self.scanWindow then
 									   self.scanWindow:hide()
 									   self.scanWindow = nil
@@ -207,6 +208,7 @@ function setupWelcomeShow(self, setupNext)
 				setupNext()
 			elseif keycode == KEY_BACK or
 				keycode == KEY_REW then
+				window:playSound("WINDOWHIDE")
 				window:hide()
 			end
 
@@ -226,10 +228,12 @@ function setupConnectionShow(self, setupSqueezebox, setupNetwork)
 
 	menu:addItem({
 			     text = self:string("CONNECT_USING_SQUEEZEBOX"),
+			     sound = "WINDOWSHOW",
 			     callback = setupSqueezebox,
 		     })
 	menu:addItem({
 			     text = self:string("CONNECT_USING_NETWORK"),
+			     sound = "WINDOWSHOW",
 			     callback = setupNetwork,
 		     })
 	
@@ -248,6 +252,7 @@ function setupDoneShow(self, setupNext)
 	local menu = SimpleMenu("menu")
 
 	menu:addItem({ text = self:string("DONE_CONTINUE"),
+		       sound = "WINDOWSHOW",
 		       callback = setupNext
 		     })
 

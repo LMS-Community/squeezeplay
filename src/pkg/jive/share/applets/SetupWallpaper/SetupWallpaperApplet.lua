@@ -94,6 +94,7 @@ function setupShow(self, setupNext)
 		for name, file in table.pairsByKeys(section) do
 			menu:addItem({
 					     text = self:string(name), 
+					     sound = "WINDOWSHOW",
 					     callback = function()
 								self:_setBackground(file, currentPlayer)
 								setupNext()
@@ -187,6 +188,7 @@ end
 function _licenseMenuItem(self, playerId)
 	return {
 		text = self:string("CREDITS"),
+		sound = "WINDOWSHOW",
 		callback = function()
 			local window = Window("window", self:string("CREDITS"))
 			

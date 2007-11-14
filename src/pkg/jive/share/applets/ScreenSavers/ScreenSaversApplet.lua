@@ -297,6 +297,7 @@ function openSettings(self, menuItem)
 			{ 
 				text = self:string('SCREENSAVER_PLAYING'),
 				weight = 1,
+				sound = "WINDOWSHOW",
 				callback = function(event, menu_item)
 						   self:screensaverSetting(menu_item, "whenPlaying")
 					   end
@@ -304,6 +305,7 @@ function openSettings(self, menuItem)
 			{
 				text = self:string("SCREENSAVER_STOPPED"),
 				weight = 1,
+				sound = "WINDOWSHOW",
 				callback = function(event, menu_item)
 						   self:screensaverSetting(menu_item, "whenStopped")
 					   end
@@ -311,6 +313,7 @@ function openSettings(self, menuItem)
 			{
 				text = self:string("SCREENSAVER_DELAY"),
 				weight = 2,
+				sound = "WINDOWSHOW",
 				callback = function(event, menu_item)
 						   self:timeoutSetting(menu_item)
 					   end
@@ -322,6 +325,7 @@ function openSettings(self, menuItem)
 		menu:addItem({
 				     text = setting_name,
 				     weight = 3,
+				     sound = "WINDOWSHOW",
 				     callback =
 					     function(event, menuItem)
 							local instance = appletManager:loadApplet(screensaver.applet)

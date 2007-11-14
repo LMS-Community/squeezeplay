@@ -138,6 +138,7 @@ function setupDone(self, setupNext)
 	local menu = SimpleMenu("menu")
 
 	menu:addItem({ text = self:string("DONE_CONTINUE"),
+		       sound = "WINDOWSHOW",
 		       callback = setupNext
 		     })
 

@@ -88,6 +88,7 @@ function manageSelectPlayerMenu(self)
 		if not self.selectPlayerMenuItem then
 			local menuItem = {
 				text = self:string("SELECT_PLAYER"),
+				sound = "WINDOWSHOW",
 				callback = function() self:setupShow() end,
 			}
 			jiveMain:addItem(menuItem, 80)
@@ -108,6 +109,7 @@ function _addPlayerItem(self, player)
 	log:warn("_addPlayerItem")
 	local item = {
 		text = playerName,
+		sound = "WINDOWSHOW",
 		callback = function()
 				   self:selectPlayer(player)
 				   self.setupNext()
@@ -155,6 +157,7 @@ function setupShow(self, setupNext)
 	-- no player for debugging
 	self.playerMenu:addItem({
 					text = "NO PLAYER (DEBUG)",
+					sound = "WINDOWSHOW",
 					callback = function()
 							   self:selectPlayer(nil)
 							   self.setupNext()

@@ -113,6 +113,7 @@ function response(self, result, window, widget, list, prevmenu, locked)
 			-- branch - add menu entry for this item
 			list[#list + 1] = {
 				text = entry.name or entry.title,
+				sound = "WINDOWSHOW",
 				callback = function(_, menuItem)
 							   local newlist = {}
 							   local newwindow = Window("window", menuItem.text)

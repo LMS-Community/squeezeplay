@@ -90,6 +90,7 @@ function settingsShow(self, menuItem)
 
 	local item = {
 		text = self:string("SLIMSERVER_ADD_SERVER"), 
+		sound = "WINDOWSHOW",
 		callback = function(event, menuItem)
 				   self:_addServer(menuItem)
 			   end,
@@ -99,6 +100,7 @@ function settingsShow(self, menuItem)
 
 	item = {
 		text = self:string("SLIMSERVER_SQUEEZENETWORK"), 
+		sound = "WINDOWSHOW",
 		callback = function(event, menuItem)
 				   self:_connectSqueezeNetwork(menuItem)
 			   end,
@@ -108,6 +110,7 @@ function settingsShow(self, menuItem)
 
 	item = {
 		text = self:string("SLIMSERVER_AUTO_DISCOVERY"),
+		sound = "WINDOWSHOW",
 		icon = Checkbox("checkbox",
 				function(object, isSelected)
 					if isSelected then
@@ -148,6 +151,7 @@ function _addServerItem(self, id, server)
 	-- new entry
 	local item = {
 		text = server and server:getName() or id,
+		sound = "WINDOWSHOW",
 		callback = function() self:_serverMenu(id, server) end,
 		weight = 1
 	}
@@ -191,6 +195,7 @@ function _serverMenu(self, id, server)
 	if poll[id] then
 		menu:addItem({
 				     text = self:string("SLIMSERVER_FORGET", name),
+				     sound = "WINDOWHIDE",
 				     callback = function() 
 							self:_del(id)
 							window:hide()

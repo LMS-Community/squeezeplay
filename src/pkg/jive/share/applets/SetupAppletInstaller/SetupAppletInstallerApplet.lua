@@ -142,6 +142,7 @@ function menuSink(self, data)
 	if self.menu:numItems() > 0 then
 		self.menu:addItem( {
 			text = self:string("INSTALL"),
+			sound = "WINDOWSHOW",
 			callback = function(event, menuItem)
 						   if next(self.todownload) then
 							   self:startDownload()
@@ -198,7 +199,7 @@ function finishedDownload(self)
 
 	if lfs.attributes("/bin/busybox") ~= nil then
 		log:warn("RESTARTING JIVE...")
-		os.execute("/bin/busybox reboot -n -f")
+		os.execute("/bin/busybox reboot -f")
 	else
 		self.animatewindow:hide()
 		self.window:removeWidget(self.menu)

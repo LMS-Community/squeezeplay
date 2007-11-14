@@ -26,12 +26,14 @@ function settingsShow(self, menuItem)
 	local menu = SimpleMenu("menu", {
 					{
 						text = self:string("RESET_CANCEL"),
+						sound = "WINDOWHIDE",
 						callback = function()
 								   window:hide()
 							   end
 					},
 					{
 						text = self:string("RESET_CONTINUE"),
+						sound = "WINDOWSHOW",
 						callback = function()
 								   self:_factoryReset()
 							   end

@@ -86,8 +86,10 @@ function settingsShow(self)
 			   function(event)
 				   local key = event:getKeycode()
 				   if key == KEY_BACK then
+					   window:playSound("WINDOWHIDE")
 					   window:hide()
 				   elseif key == KEY_GO then
+					   window:playSound("SELECT")
 					   mx, my, mz = 0, 0, 0
 					   self.maxX:setValue(mx)
 					   self.maxY:setValue(my)

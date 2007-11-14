@@ -165,6 +165,7 @@ function t_scanDiscover(self, pkt)
 			      if not self.scanResults[mac] then
 				      local item = {
 					      text = mac,
+					      sound = "WINDOWSHOW",
 					      icon = Icon("icon"),
 					      callback = function()
 								 _setupInit(self, mac, nil)
@@ -238,6 +239,7 @@ function _wiredOrWireless(self)
 
 	local menu = SimpleMenu("menu", {{
 						 text = self:string("SQUEEZEBOX_WIRELESS"),
+						 sound = "WINDOWSHOW",
 						 callback = function()
 								    self.interface = 'wireless'
 								    _setupConfig(self)
@@ -245,6 +247,7 @@ function _wiredOrWireless(self)
 					 },
 					 {
 						 text = self:string("SQUEEZEBOX_ETHERNET"),
+						 sound = "WINDOWSHOW",
 						 callback = function()
 								    self.interface = 'wired'
 								    _setupConfig(self)
@@ -1215,6 +1218,7 @@ function _setupFailed(self)
 				{
 					{
 						text = self:string("SQUEEZEBOX_PROBLEM_TRY_AGAIN"),
+						sound = "WINDOWHIDE",
 						callback = function()
 								   _setupInit(self)
 								   self:_hideToTop()
@@ -1222,6 +1226,7 @@ function _setupFailed(self)
 					},
 					{
 						text = self:string("SQUEEZEBOX_PROBLEM_SKIP"),
+						sound = "WINDOWSHOW",
 						callback = function()
 								   self:_setupDone()
 							   end

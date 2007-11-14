@@ -96,6 +96,7 @@ function setupRegionShow(self, setupNext)
 	for name in wlan:getRegionNames() do
 		local item = {
 			text = self:string("NETWORK_REGION_" .. name),
+			sound = "WINDOWSHOW",
 			callback = function()
 					   if region ~= name then
 						   wlan:setRegion(name)
@@ -176,6 +177,7 @@ function _addNetwork(self, ssid)
 	local item = {
 		text = ssid,
 		icon = Icon("icon"),
+		sound = "WINDOWSHOW",
 		callback = function()
 				   openNetwork(self, ssid)
 			   end,
@@ -241,6 +243,7 @@ function _networksShow(self, title, help)
 
 	self.scanMenu:addItem({
 				      text = self:string("NETWORK_ENTER_ANOTHER_NETWORK"),
+				      sound = "WINDOWSHOW",
 				      callback = function()
 							 enterSSID(self)
 						 end,
@@ -445,6 +448,7 @@ function enterPassword(self)
 					{
 						{
 							text = self:string("NETWORK_GO_BACK"),
+							sound = "WINDOWHIDE",
 							callback = function()
 									   window:hide()
 								   end
@@ -474,6 +478,7 @@ function chooseEncryption(self)
 				{
 					{
 						text = self:string("NETWORK_NO_ENCRYPTION"),
+						sound = "WINDOWSHOW",
 						callback = function()
 								   self.encryption = "none"
 								   createAndConnect(self)
@@ -481,6 +486,7 @@ function chooseEncryption(self)
 					},
 					{
 						text = self:string("NETWORK_WEP_64"),
+						sound = "WINDOWSHOW",
 						callback = function()
 								   self.encryption = "wep40"
 								   enterWEPKey(self)
@@ -488,6 +494,7 @@ function chooseEncryption(self)
 					},
 					{
 						text = self:string("NETWORK_WEP_128"),
+						sound = "WINDOWSHOW",
 						callback = function()
 								   self.encryption = "wep104"
 								   enterWEPKey(self)
@@ -495,6 +502,7 @@ function chooseEncryption(self)
 					},
 					{
 						text = self:string("NETWORK_WPA"),
+						sound = "WINDOWSHOW",
 						callback = function()
 								   self.encryption = "wpa"
 								   enterPSK(self)
@@ -502,6 +510,7 @@ function chooseEncryption(self)
 					},
 					{
 						text = self:string("NETWORK_WPA2"),
+						sound = "WINDOWSHOW",
 						callback = function()
 								   self.encryption = "wpa2"
 								   enterPSK(self)
@@ -525,6 +534,7 @@ function chooseWEPLength(self)
 				{
 					{
 						text = self:string("NETWORK_WEP_64"),
+						sound = "WINDOWSHOW",
 						callback = function()
 								   self.encryption = "wep40"
 								   enterWEPKey(self)
@@ -532,6 +542,7 @@ function chooseWEPLength(self)
 					},
 					{
 						text = self:string("NETWORK_WEP_128"),
+						sound = "WINDOWSHOW",
 						callback = function()
 								   self.encryption = "wep104"
 								   enterWEPKey(self)
@@ -871,6 +882,7 @@ function connectFailed(self, reason)
 				{
 					{
 						text = self:string("NETWORK_TRY_AGAIN"),
+						sound = "WINDOWHIDE",
 						callback = function()
 								   connect(self)
 								   window:hide()
@@ -878,12 +890,14 @@ function connectFailed(self, reason)
 					},
 					{
 						text = self:string("NETWORK_TRY_DIFFERENT"),
+						sound = "WINDOWSHOW",
 						callback = function()
 								   _hideToTop(self, true)
 							   end
 					},
 					{
 						text = self:string("NETWORK_GO_BACK"),
+						sound = "WINDOWHIDE",
 						callback = function()
 								   window:hide()
 							   end
@@ -1044,6 +1058,7 @@ function failedDHCPandWPA(self)
 				{
 					{
 						text = self:string("NETWORK_TRY_AGAIN"),
+						sound = "WINDOWHIDE",
 						callback = function()
 								   -- poke udhcpto try again
 								   _sigusr1("udhcpc")
@@ -1053,6 +1068,7 @@ function failedDHCPandWPA(self)
 					},
 					{
 						text = self:string("ZEROCONF_ADDRESS"),
+						sound = "WINDOWSHOW",
 						callback = function()
 								   -- already have a self assigned address, we're done
 								   connectOK(self)
@@ -1060,6 +1076,7 @@ function failedDHCPandWPA(self)
 					},
 					{
 						text = self:string("STATIC_ADDRESS"),
+						sound = "WINDOWSHOW",
 						callback = function()
 								   enterIP(self)
 							   end
@@ -1084,6 +1101,7 @@ function failedDHCPandWEP(self)
 				{
 					{
 						text = self:string("NETWORK_TRY_AGAIN"),
+						sound = "WINDOWHIDE",
 						callback = function()
 								   -- poke udhcpto try again
 								   _sigusr1("udhcpc")
@@ -1096,6 +1114,7 @@ function failedDHCPandWEP(self)
 
 					{
 						text = self:string("NETWORK_EDIT_WIRELESS_KEY"),
+						sound = "WINDOWHIDE",
 						callback = function()
 								   window:hide()
 							   end
@@ -1105,6 +1124,7 @@ function failedDHCPandWEP(self)
 
 					{
 						text = self:string("ZEROCONF_ADDRESS"),
+						sound = "WINDOWSHOW",
 						callback = function()
 								   -- already have a self assigned address, we're done
 								   connectOK(self)
@@ -1112,6 +1132,7 @@ function failedDHCPandWEP(self)
 					},
 					{
 						text = self:string("STATIC_ADDRESS"),
+						sound = "WINDOWSHOW",
 						callback = function()
 								   enterIP(self)
 							   end
@@ -1280,6 +1301,7 @@ function connectOrDelete(self, ssid)
 				{
 					{
 						text = self:string("NETWORK_CONNECT_TO_NETWORK"), nil,
+						sound = "WINDOWSHOW",
 						callback = function()
 								   self.ssid = ssid
 								   connect(self)
@@ -1287,6 +1309,7 @@ function connectOrDelete(self, ssid)
 					},
 					{
 						text = self:string("NETWORK_FORGET_NETWORK"), nil,
+						sound = "WINDOWSHOW",
 						callback = function()
 								   deleteConfirm(self, ssid)
 							   end
@@ -1307,12 +1330,14 @@ function deleteConfirm(self, ssid)
 				{
 					{
 						text = self:string("NETWORK_FORGET_CANCEL"), nil,
+						sound = "WINDOWHIDE",
 						callback = function()
 								   window:hide()
 							   end
 					},
 					{
 						text = self:string("NETWORK_FORGET_CONFIRM", ssid), nil,
+						sound = "WINDOWSHOW",
 						callback = function()
 								   removeNetwork(self, ssid)
 							   end

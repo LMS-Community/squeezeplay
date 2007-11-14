@@ -111,6 +111,7 @@ function openSettings(self, menuItem)
 		{
 			{
 				text = self:string("SCREENSAVER_FLICKR_DISPLAY"), 
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:displaySetting(menuItem)
 					return EVENT_CONSUME
@@ -118,6 +119,7 @@ function openSettings(self, menuItem)
 			},
 			{
 				text = self:string("SCREENSAVER_FLICKR_DELAY"),
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:timeoutSetting(menuItem)
 					return EVENT_CONSUME
@@ -125,6 +127,7 @@ function openSettings(self, menuItem)
 			},
 			{
 				text = self:string("SCREENSAVER_FLICKR_FLICKR_ID"),
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:defineFlickrId(menuItem)
 					return EVENT_CONSUME
@@ -133,6 +136,7 @@ function openSettings(self, menuItem)
 			--[[
 			{
 				text = self:string("SCREENSAVER_FLICKR_TRANSITION"),
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:defineTransition(menuItem)
 					return EVENT_CONSUME

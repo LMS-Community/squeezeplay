@@ -63,6 +63,7 @@ function menu(self, menuItem)
 	local menu = SimpleMenu("menu",
 		{
 			{ text = "Text input",
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:textinputWindow(menuItem)
 				end
@@ -124,38 +125,47 @@ function menu(self, menuItem)
 				)
 			},
 			{ text = "Menu",
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:menuWindow(menuItem)
 				end },
 			{ text = "Sorted Menu",
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:sortedMenuWindow(menuItem)
 				end },
 			{ text = "Text UTF8",
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:textWindow(menuItem, "applets/Test/test.txt")
 				end },
 			{ text = "Connecting Popup",
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:connectingPopup(menuItem)
 				end },
 			{ text = "Slider",
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:sliderWindow(menuItem)
 				end },
 			{ text = "Hex input",
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:hexinputWindow(menuItem)
 				end },
 			{ text = "Time input",
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:timeinputWindow(menuItem)
 				end },
 			{ text = "IP input",
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:ipinputWindow(menuItem)
 				end },
 			{ text = "Image JPG",
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 						   local t = Timer(0, function()
 									      log:warn("timer fired")
@@ -164,10 +174,12 @@ function menu(self, menuItem)
 						   t:start()
 				end },
 			{ text = "Image PNG",
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:imageWindow(menuItem, "applets/Test/test.png")
 				end },
 			{ text = "Image GIF",
+				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:imageWindow(menuItem, "applets/Test/test.gif")
 				end },

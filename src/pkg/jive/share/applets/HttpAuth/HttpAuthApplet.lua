@@ -48,6 +48,7 @@ function settingsShow(self)
 		-- username
 		{	
 			text = self:string("HTTP_AUTH_USERNAME"),
+			sound = "WINDOWSHOW",
 			callback = function(event, menuItem)
 				self:enterTextWindow('username', menuItem)
 			end
@@ -55,6 +56,7 @@ function settingsShow(self)
 		-- password
 		{
 			text = self:string("HTTP_AUTH_PASSWORD"),
+			sound = "WINDOWSHOW",
 			callback = function(event, menuItem)
 				self:enterTextWindow('password', menuItem)
 			end
