@@ -390,7 +390,7 @@ function DigitalDetailed:DrawTime(x, y, bw, bh, useAmPm)
 			
 		local ampmStartY = digitStartY + 5
 		if ampm == "PM" then
-			ampmy = ampmy + ampmh + 3
+			ampmStartY = ampmStartY + 3
 		end
 		-- x position of ampm is minute start X + minute width + 5 
 		local ampmStartX = minStartX + mw + 5
