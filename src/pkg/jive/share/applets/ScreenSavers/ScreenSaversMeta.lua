@@ -35,7 +35,7 @@ end
 
 function defaultSettings(self)
 	return {
-		whenStopped = "nil:nil",
+		whenStopped = "Clock:openAnalogClock",
 		whenPlaying = "NowPlaying:openScreensaver",
 		timeout = 10000,
 	}
