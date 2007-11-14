@@ -437,8 +437,15 @@ function DigitalDetailed:Draw(force)
 		-- Draw Date
 		local theDate = os.date(datetime:getDateFormat())
 		local dateSrf = Surface:drawText(self.datefont, self.datefont_color, theDate)
-
 		local dw, dh = dateSrf:getSize()
+
+		-- if date width exceeds border width, then fall back to a format that will fit
+		if dw > bw then
+			theDate = os.date("%a %d %b %Y")
+			dateSrf = Surface:drawText(self.datefont, self.datefont_color, theDate)
+			dw, dh = dateSrf:getSize()
+		end
+
 		local dateStartY = y + DATEY
 		local dateStartX = x + ((bw/2) - (dw/2))
 	
