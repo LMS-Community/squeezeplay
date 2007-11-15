@@ -272,8 +272,13 @@ function sliderWindow(self, menuItem)
 	local window = Window("window", menuItem.text)
 
 	local slider = Slider("slider", 1, 20, 5,
-		function(slider, value)
-			log:warn("slider value is " .. value)
+		function(slider, value, done)
+			log:warn("slider value is ", value, " ", done)
+
+			if done then
+				window:playSound("WINDOWSHOW")
+				window:hide(Window.transitionPushLeft)
+			end
 		end)
 
 	local help = Textarea("help", "We can add some help text here.\n\nThis screen is for testing the slider.")

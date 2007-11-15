@@ -45,11 +45,15 @@ local log       = require("jive.utils.log").logger("ui")
 local EVENT_KEY_PRESS = jive.ui.EVENT_KEY_PRESS
 local EVENT_SCROLL    = jive.ui.EVENT_SCROLL
 local EVENT_CONSUME   = jive.ui.EVENT_CONSUME
+local EVENT_UNUSED    = jive.ui.EVENT_UNUSED
 
 local KEY_BACK        = jive.ui.KEY_BACK
 local KEY_UP          = jive.ui.KEY_UP
 local KEY_DOWN        = jive.ui.KEY_DOWN
 local KEY_LEFT        = jive.ui.KEY_LEFT
+local KEY_GO          = jive.ui.KEY_GO
+local KEY_RIGHT       = jive.ui.KEY_RIGHT
+local KEY_FWD         = jive.ui.KEY_FWD
 
 
 -- our class
@@ -159,7 +163,7 @@ function _adjustSlider(self, value)
 
 	if self.size ~= oldSize then
 		if self.closure then
-			self.closure(self, self.size)
+			self.closure(self, self.size, false)
 		end
 	end
 end
@@ -188,7 +192,13 @@ function _eventHandler(self, event)
 			self:playSound("WINDOWHIDE")
 			self:hide()
 			return EVENT_CONSUME
-			
+
+		elseif keycode == KEY_GO or
+			keycode == KEY_RIGHT or
+			keycode == KEY_FWD then
+
+			self.closure(self, self.size, true)
+			return EVENT_CONSUME
 		end
 	end
 end
