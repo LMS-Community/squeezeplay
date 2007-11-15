@@ -90,8 +90,14 @@ local function _homeHandler(event)
 	) then
 		local windowStack = jive.ui.Framework.windowStack
 
-		while #windowStack > 1 do
-			windowStack[#windowStack - 1]:hide(nil, "JUMP")
+		if #windowStack > 1 then
+			jive.ui.Framework:playSound("JUMP")
+			while #windowStack > 1 do
+				windowStack[#windowStack - 1]:hide(nil, "JUMP")
+			end
+		else
+			jive.ui.Framework:playSound("BUMP")
+			windowStack[1]:bumpLeft()
 		end
 		return jive.ui.EVENT_CONSUME
       end

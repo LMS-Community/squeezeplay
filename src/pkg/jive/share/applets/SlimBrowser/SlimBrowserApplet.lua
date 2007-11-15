@@ -1028,7 +1028,9 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 			if jsonAction then
 				log:debug("_actionHandler(", actionName, "): json action")
 
-				menuItem:playSound("WINDOWSHOW")
+				if menuItem then
+					menuItem:playSound("WINDOWSHOW")
+				end
 			
 				-- set good or dummy sink as needed
 				-- prepare the window if needed
@@ -1173,6 +1175,7 @@ local function _browseMenuListener(menu, menuItem, db, dbIndex, event)
 				local func = item._go
 				if func then
 					log:debug("_browseMenuListener: Calling found func")
+					menuItem:playSound("WINDOWSHOW")
 					return func()
 				end
 		
@@ -1474,44 +1477,6 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 end
 
 
-
-
--- _replaceJiveHome
--- replaces the Jive main menu with our window.
-local function _replaceJiveHome(window)
-
-	-- switch out the standard home menu, and replace with our window
-	_jiveHomeWindow = Framework.windowStack[#Framework.windowStack]
-	Framework.windowStack[#Framework.windowStack] = window
-
-	-- keep the window state updated
-	window:dispatchNewEvent(EVENT_WINDOW_ACTIVE)
-	window:dispatchNewEvent(EVENT_SHOW)
-
-	_jiveHomeWindow:dispatchNewEvent(EVENT_HIDE)
-	_jiveHomeWindow:dispatchNewEvent(EVENT_WINDOW_INACTIVE)
-end
-
-
--- _restoreJiveHome
--- restores the Jive main menu
-local function _restoreJiveHome()
-
-	-- restore the system home menu
-	if _jiveHomeWindow then
-		local window = Framework.windowStack[#Framework.windowStack]
-		Framework.windowStack[#Framework.windowStack] = _jiveHomeWindow
-
-		-- keep the window state updated
-		_jiveHomeWindow:dispatchNewEvent(EVENT_WINDOW_ACTIVE)
-		_jiveHomeWindow:dispatchNewEvent(EVENT_SHOW)
-
-		window:hide()
-		_jiveHomeWindow = false
-	end
-end
-
-
 -- _installHomeKeyHandler
 -- sets a global listener for the home key that shows our main menu
 local function _installHomeKeyHandler()
@@ -1519,44 +1484,20 @@ local function _installHomeKeyHandler()
 	-- implement the home button using a global handler, this will work even
 	-- when other applets/screensavers are displayed
 	_homeKeyHandler = Framework:addListener(
-		
 		EVENT_KEY_PRESS,
-		
 		function(event)
-
 			if event:getKeycode() == KEY_HOME then
-				
+			
 				local windowStack = Framework.windowStack
 
 				-- are we in home?
 				if #windowStack > 1 then
-
-					-- no, unroll
-					local step = homePath.destination
-					-- FIXME: loop looks weird, can probably be simplified.
-					while step do
-						if step.destination then
-							-- hide the window
-							step.window:hide(nil, "JUMP")
-							-- destroy scaffholding to data coming in is stopped
-							step.origin = false
-							step = step.destination
-						else
-							break
-						end
-					end
-
-					_curStep = homePath
-					-- if we were going somewhere, we're no longer
-					_curStep.destination = false
-					_curStep.menu:unlock()
-
-					-- close any non SlimBrowser windows
-
+					Framework:playSound("JUMP")
 					while #windowStack > 1 do
 						windowStack[#windowStack - 1]:hide(nil, "JUMP")
 					end
 				else
+					Framework:playSound("WINDOWSHOW")
 					_goNowPlaying()
 				end
 				
@@ -1577,6 +1518,48 @@ local function _removeHomeKeyHandler()
 		Framework:removeListener(_homeKeyHandler)
 		_homeKeyHandler = false
 	end		
+end
+
+
+-- _replaceJiveHome
+-- replaces the Jive main menu with our window.
+local function _replaceJiveHome(window)
+
+	if not _jiveHomeWindow then
+		-- switch out the standard home menu, and replace with our window
+		_jiveHomeWindow = Framework.windowStack[#Framework.windowStack]
+		Framework.windowStack[#Framework.windowStack] = window
+
+		-- keep the window state updated
+		window:dispatchNewEvent(EVENT_WINDOW_ACTIVE)
+		window:dispatchNewEvent(EVENT_SHOW)
+
+		_jiveHomeWindow:dispatchNewEvent(EVENT_HIDE)
+		_jiveHomeWindow:dispatchNewEvent(EVENT_WINDOW_INACTIVE)
+
+		_installHomeKeyHandler()
+	end
+end
+
+
+-- _restoreJiveHome
+-- restores the Jive main menu
+local function _restoreJiveHome()
+
+	-- restore the system home menu
+	if _jiveHomeWindow then
+		local window = Framework.windowStack[#Framework.windowStack]
+		Framework.windowStack[#Framework.windowStack] = _jiveHomeWindow
+
+		-- keep the window state updated
+		_jiveHomeWindow:dispatchNewEvent(EVENT_WINDOW_ACTIVE)
+		_jiveHomeWindow:dispatchNewEvent(EVENT_SHOW)
+
+		window:hide()
+		_jiveHomeWindow = false
+
+		_removeHomeKeyHandler()
+	end
 end
 
 
