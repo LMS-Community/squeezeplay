@@ -130,12 +130,12 @@ function keyEvent(self, evt, window)
 	local key = evt:getKeycode()
 
 	if key == KEY_BACK then
-		window:playSound("SELECT")
+		self.window:playSound("SELECT")
 		self.window:hide()
-		return
+		return EVENT_CONSUME
 	end
 
-	window:playSound("CLICK")
+	self.window:playSound("CLICK")
 	if key == KEY_GO then
 		for i,k in ipairs(keymap) do
 			if wheel_index == i then
