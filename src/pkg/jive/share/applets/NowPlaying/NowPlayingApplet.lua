@@ -393,6 +393,7 @@ function skin(self, s)
 
 	-- Progress bar
 	s.progress.order = { "elapsed", "slider", "remain" }
+	s.progress.text.w = 45
 	s.progress.text.padding = { 8, 0, 8, 0 }
 	s.progress.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
 	s.progress.text.fg = { 0xe7,0xe7, 0xe7 }
