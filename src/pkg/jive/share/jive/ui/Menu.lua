@@ -158,8 +158,7 @@ local function _eventHandler(self, event)
 				return EVENT_CONSUME
 
 			elseif keycode == KEY_GO or
-				keycode == KEY_RIGHT or
-				keycode == KEY_FWD then
+				keycode == KEY_RIGHT then
 
 				r = self:dispatchNewEvent(EVENT_ACTION)
 
@@ -170,8 +169,7 @@ local function _eventHandler(self, event)
 				return r
 
 			elseif keycode == KEY_BACK or
-				keycode == KEY_LEFT or
-				keycode == KEY_REW then
+				keycode == KEY_LEFT then
 				if self.closeable then
 					self:playSound("WINDOWHIDE")
 					self:hide()

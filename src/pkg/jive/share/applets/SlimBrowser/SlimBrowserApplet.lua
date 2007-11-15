@@ -122,7 +122,7 @@ local _statusStep = false
 -- Our main menu/handlers
 local _homeStep = false
 local _homeSink = false
-local _homeKeyHandler = false
+local _playerKeyHandler = false
 
 -- The system home menu
 local _jiveHomeWindow = false
@@ -217,6 +217,12 @@ local function _openVolumePopup(vol)
 --	log:debug("_openVolumePopup START ------------------- (", vol, ")")
 
 	local volume = _player:getVolume()
+
+	-- take no action if we don't know the players volume, for example
+	-- shortly after changing players.
+	if not volume then
+		return
+	end
 
 	local popup = Popup("volumePopup")
 
@@ -847,11 +853,32 @@ local function _statusSink(step, chunk, err)
 end
 
 
--- _defaultActions
--- provides a function for each actionName for which Jive provides a default behaviour
--- the function prototype is the same than _actionHandler (i.e. the whole shebang to cover all cases)
-local _defaultActions = {
-	
+-- _globalActions
+-- provides a function for default button behaviour, called outside of the context of the browser
+local _globalActions = {
+	["home"] = function()
+		local windowStack = Framework.windowStack
+			   
+		-- are we in home?
+		if #windowStack > 1 then
+			Framework:playSound("JUMP")
+			while #windowStack > 1 do
+				windowStack[#windowStack - 1]:hide(nil, "JUMP")
+			end
+		else
+			Framework:playSound("WINDOWSHOW")
+			_goNowPlaying()
+		end
+				
+		return EVENT_CONSUME
+	end,
+
+	["play"] = function()
+	        Framework:playSound("PLAYBACK")
+		_player:play()
+		return EVENT_CONSUME
+	end,
+
 	["pause"] = function()
 	        Framework:playSound("PLAYBACK")
 		_player:togglePause()
@@ -876,6 +903,23 @@ local _defaultActions = {
 		return EVENT_CONSUME
 	end,
 
+	["volup-down"] = function()
+		_openVolumePopup(1)
+		return EVENT_CONSUME
+	end,
+
+	["voldown-down"] = function()
+		_openVolumePopup(-1)
+		return EVENT_CONSUME
+	end,
+}
+
+
+-- _defaultActions
+-- provides a function for each actionName for which Jive provides a default behaviour
+-- the function prototype is the same than _actionHandler (i.e. the whole shebang to cover all cases)
+local _defaultActions = {
+	
 	-- default commands in Now Playing
 	
 	["play-status"] = function(_1, _2, _3, dbIndex)
@@ -1099,6 +1143,9 @@ end
 
 -- map from a key to an actionName
 local _keycodeActionName = {
+	[KEY_VOLUME_UP] = 'volup', 
+	[KEY_VOLUME_DOWN] = 'voldown', 
+	[KEY_HOME] = 'home', 
 	[KEY_PAUSE] = 'pause', 
 	[KEY_PLAY]  = 'play',
 	[KEY_FWD]   = 'fwd',
@@ -1146,60 +1193,38 @@ local function _browseMenuListener(menu, menuItem, db, dbIndex, event)
 
 	
 	-- actions on button down
-	if evtType == EVENT_KEY_DOWN then
-		log:debug("_browseMenuListener: EVENT_KEY_DOWN")
-
-		local evtCode = event:getKeycode()
-
-		if evtCode == KEY_VOLUME_UP then
-			log:debug("_browseMenuListener: KEY_VOLUME_UP")
+	if evtType == EVENT_ACTION then
+		log:debug("_browseMenuListener: EVENT_ACTION")
 		
-			_openVolumePopup(1)
-			return EVENT_CONSUME
+		if item then
+			-- check for a local action
+			local func = item._go
+			if func then
+				log:debug("_browseMenuListener: Calling found func")
+				menuItem:playSound("WINDOWSHOW")
+				return func()
+			end
 		
-		elseif evtCode == KEY_VOLUME_DOWN then
-			log:debug("_browseMenuListener: KEY_VOLUME_DOWN")
+			-- otherwise, check for a handler
+			return _actionHandler(menu, menuItem, db, dbIndex, event, 'go', item)
+		end
 
-			_openVolumePopup(-1)
-			return EVENT_CONSUME
+	elseif evtType == EVENT_KEY_PRESS then
+		log:debug("_browseMenuListener: EVENT_KEY_PRESS")
+		
+		local actionName = _keycodeActionName[event:getKeycode()]
+
+		if actionName then
+			return _actionHandler(menu, menuItem, db, dbIndex, event, actionName, item)
 		end
 		
-	else
-	
+	elseif evtType == EVENT_KEY_HOLD then
+		log:debug("_browseMenuListener: EVENT_KEY_HOLD")
 		
-		if evtType == EVENT_ACTION then
-			log:debug("_browseMenuListener: EVENT_ACTION")
-		
-			if item then
-				-- check for a local action
-				local func = item._go
-				if func then
-					log:debug("_browseMenuListener: Calling found func")
-					menuItem:playSound("WINDOWSHOW")
-					return func()
-				end
-		
-				-- otherwise, check for a handler
-				return _actionHandler(menu, menuItem, db, dbIndex, event, 'go', item)
-			end
+		local actionName = _keycodeActionName[event:getKeycode()]
 
-		elseif evtType == EVENT_KEY_PRESS then
-			log:debug("_browseMenuListener: EVENT_KEY_PRESS")
-		
-			local actionName = _keycodeActionName[event:getKeycode()]
-
-			if actionName then
-				return _actionHandler(menu, menuItem, db, dbIndex, event, actionName, item)
-			end
-		
-		elseif evtType == EVENT_KEY_HOLD then
-			log:debug("_browseMenuListener: EVENT_KEY_HOLD")
-		
-			local actionName = _keycodeActionName[event:getKeycode()]
-
-			if actionName then
-				return _actionHandler(menu, menuItem, db, dbIndex, event, actionName .. "-hold", item)
-			end
+		if actionName then
+			return _actionHandler(menu, menuItem, db, dbIndex, event, actionName .. "-hold", item)
 		end
 	end
 
@@ -1243,22 +1268,6 @@ local function _browseMenuRenderer(menu, widgets, toRenderIndexes, toRenderSize,
 			widgets[widgetIndex] = _decoratedLabel(widget, style, item, db)
 		end
 	end
-
-
---[[
-	-- code for testing latency between ui and network threads
-	local t0 = Framework:getTicks()
-	jnt:perform(function()
-			    local t1 = Framework:getTicks()
-			    jnt:t_perform(function()
-						  local f0 = t0
-						  local f1 = t1
-						  local t2 = Framework:getTicks()
-						  log:warn("QUEUE ROUNDTRIP ", "jnt=", (f1-f0), " uit=", (t2-f1), " f0=", f0, " f1=", f1, " t2=", t2)
-					  end)
-		    end)
---]]
-
 end
 
 
@@ -1478,47 +1487,49 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 end
 
 
--- _installHomeKeyHandler
--- sets a global listener for the home key that shows our main menu
-local function _installHomeKeyHandler()
+local function _installPlayerKeyHandler()
+	if _playerKeyHandler then
+		return
+	end
 
-	-- implement the home button using a global handler, this will work even
-	-- when other applets/screensavers are displayed
-	_homeKeyHandler = Framework:addListener(
-		EVENT_KEY_PRESS,
+	_playerKeyHandler = Framework:addListener(
+		EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD,
 		function(event)
-			if event:getKeycode() == KEY_HOME then
-			
-				local windowStack = Framework.windowStack
+			local type = event:getType()
 
-				-- are we in home?
-				if #windowStack > 1 then
-					Framework:playSound("JUMP")
-					while #windowStack > 1 do
-						windowStack[#windowStack - 1]:hide(nil, "JUMP")
-					end
-				else
-					Framework:playSound("WINDOWSHOW")
-					_goNowPlaying()
-				end
-				
-				return EVENT_CONSUME
+			local actionName = _keycodeActionName[event:getKeycode()]
+			if not actionName then
+				return EVENT_UNUSED
 			end
-			return EVENT_UNUSED
+
+			if type == EVENT_KEY_DOWN then
+				actionName = actionName .. "-down"
+			elseif type == EVENT_KEY_HOLD then
+				actionName = actionName .. "-hold"
+			end
+
+			local func = _globalActions[actionName]
+
+			if not func then
+				return EVENT_UNUSED
+			end
+
+			-- call the action
+			func()
+			return EVENT_CONSUME
 		end,
 		false
 	)
 end
 
 
--- _removeHomeKeyHandler
--- removes the global handler
-local function _removeHomeKeyHandler()
+local function _removePlayerKeyHandler()
+	if not _playerKeyHandler then
+		return
+	end
 
-	if _homeKeyHandler then
-		Framework:removeListener(_homeKeyHandler)
-		_homeKeyHandler = false
-	end		
+	Framework:removeListener(_playerKeyHandler)
+	_playerKeyHandler = false
 end
 
 
@@ -1537,8 +1548,6 @@ local function _replaceJiveHome(window)
 
 		_jiveHomeWindow:dispatchNewEvent(EVENT_HIDE)
 		_jiveHomeWindow:dispatchNewEvent(EVENT_WINDOW_INACTIVE)
-
-		_installHomeKeyHandler()
 	end
 end
 
@@ -1558,8 +1567,6 @@ local function _restoreJiveHome()
 
 		window:hide()
 		_jiveHomeWindow = false
-
-		_removeHomeKeyHandler()
 	end
 end
 
@@ -1684,7 +1691,7 @@ function notify_playerCurrent(self, player, force)
 	self:notify_jiveMainMenuChanged()
 
 	_replaceJiveHome(_homeStep.window)
-
+	_installPlayerKeyHandler()
 end
 
 
@@ -1783,7 +1790,7 @@ function free(self)
 
 	_restoreJiveHome()
 	
-	_removeHomeKeyHandler()
+	_removePlayerKeyHandler()
 
 	_player = false
 	_server = false

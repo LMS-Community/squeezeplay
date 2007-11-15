@@ -522,6 +522,16 @@ function isCurrent(self, index)
 end
 
 
+-- play
+-- 
+function play(self)
+	log:debug("Player:play()")
+	self:call({'mode', 'play'})
+	self.state["mode"] = 'play'
+	self:updateIconbar()
+end
+
+
 -- stop
 -- 
 function stop(self)
