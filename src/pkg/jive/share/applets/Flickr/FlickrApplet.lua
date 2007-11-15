@@ -167,6 +167,8 @@ function defineFlickrId(self, menuItem)
 
 			log:warn("Input " .. value)
 			self:setFlickrIdString(value)
+
+			window:playSound("WINDOWSHOW")
 			window:hide(Window.transitionPushLeft)
 			return true
 		end)

@@ -322,13 +322,15 @@ function _enterIP(self)
 
 	window:addWidget(Textarea("help", self:string("SQUEEZEBOX_IP_ADDRESS_HELP")))
 	window:addWidget(Textinput("textinput", v,
-				   function(_, value)
+				   function(widget, value)
 					   value = value:getValue()
 					   if not _validip(value) then
 						   return false
 					   end
 
 					   self.ipAddress = value
+
+					   widget:playSound("WINDOWSHOW")
 					   _setupConfig(self)
 					   return true
 				   end))

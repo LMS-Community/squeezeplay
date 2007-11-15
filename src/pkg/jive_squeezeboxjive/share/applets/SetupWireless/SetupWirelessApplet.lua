@@ -390,12 +390,14 @@ function enterSSID(self)
 	local window = Window("window", self:string("NETWORK_NETWORK_NAME"), wirelessTitleStyle)
 
 	local textinput = Textinput("textinput", self.ssid or "",
-				    function(_, value)
+				    function(widget, value)
 					    if #value == 0 then
 						    return false
 					    end
 
 					    self.ssid = value
+
+					    widget:playSound("WINDOWSHOW")
 					    enterPassword(self)
 
 					    return true
@@ -603,8 +605,10 @@ function enterWEPKey(self)
 
 
 	local textinput = Textinput("textinput", v,
-				    function(_, value)
+				    function(widget, value)
 					    self.key = value:getValue()
+
+					    widget:playSound("WINDOWSHOW")
 					    createAndConnect(self)
 
 					    return true
@@ -625,8 +629,10 @@ function enterPSK(self)
 
 	local v = Textinput.textValue(self.psk, 8, 63)
 	local textinput = Textinput("textinput", v,
-				    function(_, value)
+				    function(widget, value)
 					    self.psk = tostring(value)
+
+					    widget:playSound("WINDOWSHOW")
 					    createAndConnect(self)
 
 					    return true
@@ -1157,7 +1163,7 @@ function enterIP(self)
 
 	window:addWidget(Textarea("help", self:string("NETWORK_IP_ADDRESS_HELP")))
 	window:addWidget(Textinput("textinput", v,
-				   function(_, value)
+				   function(widget, value)
 					   value = value:getValue()
 					   if not _validip(value) then
 						   return false
@@ -1166,6 +1172,7 @@ function enterIP(self)
 					   self.ipAddress = value
 					   self.ipSubnet = _subnet(self)
 
+					   widget:playSound("WINDOWSHOW")
 					   self:enterSubnet()
 					   return true
 				   end))
@@ -1182,12 +1189,13 @@ function enterSubnet(self)
 
 	window:addWidget(Textarea("help", self:string("NETWORK_SUBNET_HELP")))
 	window:addWidget(Textinput("textinput", v,
-				   function(_, value)
+				   function(widget, value)
 					   value = value:getValue()
 
 					   self.ipSubnet = value
 					   self.ipGateway = _gateway(self)
 
+					   widget:playSound("WINDOWSHOW")
 					   self:enterGateway()
 					   return true
 				   end))
@@ -1204,7 +1212,7 @@ function enterGateway(self)
 
 	window:addWidget(Textarea("help", self:string("NETWORK_GATEWAY_HELP")))
 	window:addWidget(Textinput("textinput", v,
-				   function(_, value)
+				   function(widget, value)
 					   value = value:getValue()
 
 					   if not _validip(value) then
@@ -1214,6 +1222,7 @@ function enterGateway(self)
 					   self.ipGateway = value
 					   self.ipDNS = self.ipGateway
 
+					   widget:playSound("WINDOWSHOW")
 					   self:enterDNS()
 					   return true
 				   end))
@@ -1230,7 +1239,7 @@ function enterDNS(self)
 
 	window:addWidget(Textarea("help", self:string("NETWORK_DNS_HELP")))
 	window:addWidget(Textinput("textinput", v,
-				   function(_, value)
+				   function(widget, value)
 					   value = value:getValue()
 
 					   if not _validip(value) then
@@ -1238,6 +1247,8 @@ function enterDNS(self)
 					   end
 
 					   self.ipDNS = value
+
+					   widget:playSound("WINDOWSHOW")
 					   self:setStaticIP()
 					   return true
 				   end))

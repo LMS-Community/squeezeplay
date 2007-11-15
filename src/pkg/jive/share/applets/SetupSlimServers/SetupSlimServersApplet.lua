@@ -257,6 +257,8 @@ function _addServer(self, menuItem)
 				function(_, value)
 					self:_add(value:getValue())
 					self:_addServerItem(value:getValue())
+
+					window:playSound("WINDOWSHOW")
 					window:hide(Window.transitionPushLeft)
 					return true
 				end)

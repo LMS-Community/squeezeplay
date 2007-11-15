@@ -205,6 +205,7 @@ function setupWelcomeShow(self, setupNext)
 			local keycode = event:getKeycode()
 			if keycode == KEY_GO or
 				keycode == KEY_FWD then
+				window:playSound("WINDOWSHOW")
 				setupNext()
 			elseif keycode == KEY_BACK or
 				keycode == KEY_REW then

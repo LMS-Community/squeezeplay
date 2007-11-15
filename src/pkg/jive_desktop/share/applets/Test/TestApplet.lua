@@ -300,6 +300,8 @@ function textinputWindow(self, menuItem)
 	local input = Textinput("textinput", v,
 				function(_, value)
 					log:warn("Input ", value)
+
+					window:playSound("WINDOWSHOW")
 					window:hide(Window.transitionPushLeft)
 					return true
 				end)
@@ -322,6 +324,8 @@ function timeinputWindow(self, menuItem)
 	local input = Textinput("textinput", v,
 				function(_, value)
 					log:warn("Input " .. value:getValue())
+
+					window:playSound("WINDOWSHOW")
 					window:hide(Window.transitionPushLeft)
 					return true
 				end)
@@ -342,6 +346,8 @@ function hexinputWindow(self, menuItem)
 	local input = Textinput("textinput", v,
 				function(_, value)
 					log:warn("Input " .. value:getValue())
+
+					window:playSound("WINDOWSHOW")
 					window:hide(Window.transitionPushLeft)
 					return true
 				end)
@@ -363,6 +369,8 @@ function ipinputWindow(self, menuItem)
 	local input = Textinput("textinput", v,
 				function(_, value)
 					log:warn("Input " .. value:getValue())
+
+					window:playSound("WINDOWSHOW")
 					window:hide(Window.transitionPushLeft)
 					return true
 				end)

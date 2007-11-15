@@ -354,8 +354,13 @@ function settingsBrightnessShow(self, menuItem)
 	log:warn("level is ", level);
 
 	local slider = Slider("slider", 1, 32, level,
-			      function(slider, value)
+			      function(slider, value, done)
 				      self:setBrightness(value)
+
+				      if done then
+					      window:playSound("WINDOWSHOW")
+					      window:hide(Window.transitionPushLeft)
+				      end
 			      end)
 
 	window:addWidget(Textarea("help", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))

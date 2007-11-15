@@ -84,6 +84,8 @@ function enterTextWindow(self, userOrPass, menuItem)
 				function(_, value)
 					log:warn("Input ", value)
 					self:storeInput(userOrPass, value)
+
+					window:playSound("WINDOWSHOW")
 					window:hide(Window.transitionPushLeft)
 					return true
 				end)

@@ -1346,6 +1346,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 				local doAction = _safeDeref(item, 'actions', 'do')
 				if doAction then
 					-- close the window
+					window:playSound("WINDOWHIDE")
 					window:hide()
 				end
 				return true
