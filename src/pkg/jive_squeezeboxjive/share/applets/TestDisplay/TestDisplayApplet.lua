@@ -43,11 +43,20 @@ function drawDisplay(self)
 
 	srf:filledRectangle(0, 0, w, h, 0xFFFFFFFF)
 
+
 	if self.state == 1 then
+		log:info("DisplayTest: White Frame")
+		srf:filledRectangle(0, 0, w, h, 0x000000FF)
+		srf:line(   4,   4, 236,   4, 0xFFFFFFFF)
+		srf:line( 236,   4, 236, 316, 0xFFFFFFFF)
+		srf:line( 236, 316,   4, 316, 0xFFFFFFFF)
+		srf:line(   4, 316,   4,   4, 0xFFFFFFFF)
+
+	elseif self.state == 2 then
 		log:info("DisplayTest: RED")
 		srf:filledRectangle(0, 0, w, h, 0xFF0000FF)
 
-	elseif self.state == 2 then
+	elseif self.state == 3 then
 		log:info("DisplayTest: Gradiant RED")
 
 		for y = 0, 160, 1 do
@@ -63,11 +72,11 @@ function drawDisplay(self)
 			srf:line( 0, y+160, 240, y+160, color)
 		end
 
-	elseif self.state == 3 then
+	elseif self.state == 4 then
 		log:info("DisplayTest: GREEN")
 		srf:filledRectangle(0, 0, w, h, 0x00FF00FF)
 
-	elseif self.state == 4 then
+	elseif self.state == 5 then
 		log:info("DisplayTest: Gradiant GREEN")
 
 		for y = 0, 160, 1 do
@@ -83,11 +92,11 @@ function drawDisplay(self)
 			srf:line( 0, y+160, 240, y+160, color)
 		end
 	
-	elseif self.state == 5 then
+	elseif self.state == 6 then
 		log:info("DisplayTest: BLUE")
 		srf:filledRectangle(0, 0, w, h, 0x0000FFFF)
 	
-	elseif self.state == 6 then
+	elseif self.state == 7 then
 		log:info("DisplayTest: Gradiant BLUE")
 		srf:filledRectangle(0, 0, w, h, 0x0000FFFF)
 
@@ -104,11 +113,11 @@ function drawDisplay(self)
 			srf:line( 0, y+160, 240, y+160, color)
 		end
 
-	elseif self.state == 7 then
+	elseif self.state == 8 then
 		log:info("DisplayTest: WHITE")
 		srf:filledRectangle(0, 0, w, h, 0xFFFFFFFF)
 
-	elseif self.state == 8 then
+	elseif self.state == 9 then
 		log:info("DisplayTest: Gradiant WHITE")
 
 		for y = 0, 320, 1 do
@@ -118,18 +127,18 @@ function drawDisplay(self)
 			srf:line( 0, y, 240, y, color)
 		end
 
-	elseif self.state == 9 then
+	elseif self.state == 10 then
 		log:info("DisplayTest: BLACK")
 		srf:filledRectangle(0, 0, w, h, 0x000000FF)
 
-	elseif self.state == 10 then
+	elseif self.state == 11 then
 		log:info("DisplayTest: HORZ_STRIPES")
 		srf:filledRectangle(0, 0, w, h, 0xFFFFFFFF)
 		for y = 0, h, 2 do
 			srf:line(0, y, w, y, 0x000000FF)
 		end
 
-	elseif self.state == 11 then
+	elseif self.state == 12 then
 		log:info("DisplayTest: VERT_STRIPES")
 		srf:filledRectangle(0, 0, w, h, 0xFFFFFFFF)
 		for x = 0, w, 2 do
