@@ -136,7 +136,7 @@ function init(self)
 
 				      -- key lock
 				      if keycode == (KEY_ADD | KEY_PLAY) then
-					      window:playSound("WINDOWSHOW")
+					      Framework:playSound("WINDOWSHOW")
 					      lockScreen(self)
 					      return EVENT_CONSUME
 				      end
@@ -571,7 +571,7 @@ function lockScreen(self)
 		Framework:addListener(EVENT_KEY_DOWN | EVENT_KEY_PRESS,
 				      function(event)
 					      if event:getType() == EVENT_KEY_PRESS and event:getKeycode() == (KEY_ADD | KEY_PLAY) then
-						      window:playSound("WINDOWHIDE")
+						      popup:playSound("WINDOWHIDE")
 						      unlockScreen(self)
 						      return EVENT_CONSUME
 					      end

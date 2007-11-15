@@ -111,12 +111,12 @@ function IRTest(self)
 
 	window:addListener(EVENT_KEY_DOWN, 
 		function(evt)
-			keyEvent(self, evt)
+			keyEvent(self, evt, window)
 		end
 	)
 	window:addListener(EVENT_SCROLL,
 		function(evt)
-			scrollEvent(self, evt)
+			scrollEvent(self, evt, window)
 			self:drawKeypad()
 		end
 	)
@@ -126,7 +126,7 @@ function IRTest(self)
 end
 
 
-function keyEvent(self, evt)
+function keyEvent(self, evt, window)
 	local key = evt:getKeycode()
 
 	if key == KEY_BACK then
@@ -156,20 +156,24 @@ function keyEvent(self, evt)
 		os.execute( bin_path .. " 0x7689807F")
 	elseif key == KEY_VOLUME_DOWN then
 		os.execute( bin_path .. " 0x768900FF")
-	else
+	end
 end
 
 
-function scrollEvent(self, evt)
+function scrollEvent(self, evt, window)
 	local scroll = evt:getScroll()
 	
 	wheel_index_last = wheel_index
-	if scroll == 1 then
+	if scroll >= 1 then
+		window:playSound("CLICK")
+
 		wheel_index = wheel_index + 1
 		if wheel_index > #keymap then
 			wheel_index = 1
 		end
-	elseif scroll == -1 then
+	elseif scroll <= -1 then
+		window:playSound("CLICK")
+
 		wheel_index = wheel_index - 1
 		if wheel_index < 1 then
 			wheel_index = #keymap 
