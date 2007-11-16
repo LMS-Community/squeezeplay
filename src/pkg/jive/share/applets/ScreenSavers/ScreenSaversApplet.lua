@@ -51,6 +51,7 @@ local EVENT_WINDOW_INACTIVE = jive.ui.EVENT_WINDOW_INACTIVE
 local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
 local KEY_PLAY         = jive.ui.KEY_PLAY
 local KEY_GO           = jive.ui.KEY_GO
+local KEY_LEFT         = jive.ui.KEY_LEFT
 
 
 module(...)
@@ -195,7 +196,12 @@ function screensaverWindow(self, window)
 				   -- keys should close the screensaver, and not
 				   -- perform an action
 				   if event:getType() == EVENT_KEY_PRESS then
-					   return EVENT_CONSUME
+					   local keycode = event:getKeycode()
+
+					   if keycode == KEY_GO or
+						   keycode == KEY_LEFT then
+						   return EVENT_CONSUME
+					   end
 				   end
 				   return EVENT_UNUSED
 			   end)
