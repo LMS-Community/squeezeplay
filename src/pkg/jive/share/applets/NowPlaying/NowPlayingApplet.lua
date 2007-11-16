@@ -150,9 +150,18 @@ end
 function _process_status(self, data)
 	log:debug("_process_status")
 
-	-- create new window
-	-- FIXME this can now be combined in _process_status, may help fixing bug 6087
-	_createUI(self)
+	local createdWindow = false
+
+	if data.item_loop and
+		data.item_loop[1].params.track_id ~= self.track_id then
+
+		-- create new window
+		-- FIXME this can now be combined in _process_status, may help fixing bug 6087
+		_createUI(self)
+		createdWindow = true
+
+		self.track_id = data.item_loop[1].params.track_id
+	end
 
 	self.mode = data.mode
 	if self.mode == "play" then
@@ -163,7 +172,7 @@ function _process_status(self, data)
 		self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_STOPPED"))
 	end
 
-	if data.item_loop ~= nil then
+	if data.item_loop then
 		local text = data.item_loop[1].text
 		-- XXX: current_title of null is a function value??
 		if data.remote == 1 and type(data.current_title) == 'string' then 
@@ -187,6 +196,8 @@ function _process_status(self, data)
 		self:updateProgress(0, 0)
 		self:updatePlaylist(false, 0, 0)
 	end
+
+	return createdWindow
 end
 
 
@@ -266,8 +277,10 @@ function openScreensaver(self, menuItem, mode)
 				if Framework.windowStack[1] ~= self.window then
 					return
 				end
-				self:_process_status(chunk.data)
-				self.window:showInstead(Window.transitionFadeIn)
+
+				if self:_process_status(chunk.data) then
+					self.window:showInstead(Window.transitionFadeIn)
+				end
 			end
 		end
 
