@@ -47,7 +47,6 @@ local oo            = require("loop.simple")
 
 local NetworkThread = require("jive.net.NetworkThread")
 local Iconbar       = require("jive.Iconbar")
-local autotable     = require("jive.utils.autotable")
 local AppletManager = require("jive.AppletManager")
 local perfs         = require("jive.utils.perfs")
 local locale        = require("jive.utils.locale")
@@ -308,7 +307,7 @@ function JiveMain:reload()
 	log:debug("JiveMain:reload()")
 
 	-- reset the skin
-	jive.ui.style = autotable.new()
+	jive.ui.style = {}
 
 	-- manage applets
 	appletManager:discover()
@@ -335,7 +334,7 @@ end
 -- 
 function JiveMain:reloadSkin()
 	-- reset the skin
-	jive.ui.style = autotable.new()
+	jive.ui.style = {}
 
 	for i,v in ipairs(self.skins) do
 		local obj, method = v[1], v[2]

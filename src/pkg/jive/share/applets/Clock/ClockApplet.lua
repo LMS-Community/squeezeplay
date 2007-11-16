@@ -592,6 +592,7 @@ function _openScreensaver(self, type)
 end
 
 function skin(self, s)
+	s.clock = {}
 	s.clock.layout = Window.noLayout
 end
 

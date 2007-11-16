@@ -159,6 +159,7 @@ end
 
 -- applet skin
 function skin(self, s)
+	s.bounce = {}
 	s.bounce.layout = Window.noLayout
 end
 

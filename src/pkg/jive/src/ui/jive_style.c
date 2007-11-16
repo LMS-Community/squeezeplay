@@ -28,7 +28,7 @@ static int search_path(lua_State *L, int widget, char *path, const char *key) {
 	char *tok = strtok(path, ".");
 	while (tok) {
 		lua_pushstring(L, tok);
-		lua_rawget(L, -2);
+		lua_gettable(L, -2);
 
 		if (lua_isnil(L, -1)) {
 			lua_pop(L, 1);
@@ -42,7 +42,7 @@ static int search_path(lua_State *L, int widget, char *path, const char *key) {
 	}
 
 	lua_pushstring(L, key);
-	lua_rawget(L, -2);
+	lua_gettable(L, -2);
 
 	return 1;
 }
@@ -168,7 +168,7 @@ int jiveL_style_rawvalue(lua_State *L) {
 
 	/* nil marker */
 	lua_pushlightuserdata(L, &STYLE_VALUE_NIL);
-	if (lua_rawequal(L, -1, -2) == 1) {
+	if (lua_equal(L, -1, -2) == 1) {
 		lua_pushnil(L);
 		lua_replace(L, -3);
 	}
@@ -245,7 +245,7 @@ int jiveL_style_array_value(lua_State *L) {
 
 	/* fetch index */
 	lua_pushvalue(L, 4);
-	lua_rawget(L, -2);
+	lua_gettable(L, -2);
 	if (lua_isnil(L, -1)) {
 		lua_pushvalue(L, 6);
 		return 1;
@@ -253,7 +253,7 @@ int jiveL_style_array_value(lua_State *L) {
 
 	/* fetch value */
 	lua_pushvalue(L, 5);
-	lua_rawget(L, -2);
+	lua_gettable(L, -2);
 	if (lua_isnil(L, -1)) {
 		lua_pushvalue(L, 6);
 		return 1;

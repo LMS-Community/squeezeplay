@@ -836,6 +836,7 @@ end
 
 -- applet skin
 function skin(self, s)
+	s.flickr = {}
 	s.flickr.layout = Window.noLayout
 	s.flickr.font = Font:load("fonts/FreeSans.ttf", 10)
 end

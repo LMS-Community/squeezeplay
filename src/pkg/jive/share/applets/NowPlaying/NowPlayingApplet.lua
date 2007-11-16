@@ -356,43 +356,56 @@ function skin(self, s)
                                })
 
 	-- Title
+	s.nptitle = {}
 	s.nptitle.border = { 4, 4, 4, 0 }
 	s.nptitle.position = LAYOUT_NORTH
 	s.nptitle.bgImg = titleBox
 	s.nptitle.order = { "title", "playlist" }
+	s.nptitle.text = {}
 	s.nptitle.text.w = WH_FILL
 	s.nptitle.text.padding = { 10, 7, 8, 9 }
 	s.nptitle.text.align = "top-left"
 	s.nptitle.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 20)
 	s.nptitle.text.fg = { 0x00, 0x00, 0x00 }
+	s.nptitle.playlist = {}
 	s.nptitle.playlist.padding = { 10, 7, 8, 9 }
 	s.nptitle.playlist.font = Font:load(fontpath .. "FreeSans.ttf", 15)
 	s.nptitle.playlist.fg = { 0x00, 0x00, 0x00 }
 	s.nptitle.playlist.textAlign = "top-right"
 
 	-- Song
+	s.nptrack = {}
 	s.nptrack.border = { 4, 0, 4, 0 }
         s.nptrack.bgImg = highlightBox
+	s.nptrack.text = {}
 	s.nptrack.text.w = WH_FILL
 	s.nptrack.text.padding = { 10, 7, 8, 9 }
 	s.nptrack.text.align = "top-left"
         s.nptrack.text.font = Font:load(fontpath .. "FreeSans.ttf", 14)
 	s.nptrack.text.lineHeight = 17
-        s.nptrack.text.line[1].font = Font:load(fontpath .. "FreeSansBold.ttf", 14)
-	s.nptrack.text.line[1].height = 17
+        s.nptrack.text.line = {
+		{
+			font = Font:load(fontpath .. "FreeSansBold.ttf", 14),
+			height = 17
+		}
+	}
 	s.nptrack.text.fg = { 0x00, 0x00, 0x00 }
 
 	-- Artwork
 	local noartwork166offset = (screenWidth - 166) / 2
+	s.npartwork166 = {}
 	s.npartwork166.w = 166
 	s.npartwork166.border = { noartwork166offset, 4, onoartwork166offset, 6 }
 	s.npartwork166.align = "center"
 	s.npartwork166.bgImg = Tile:loadImage(imgpath .. "album_shadow_166.png")
+	s.npartwork166.artwork = {}
 	s.npartwork166.artwork.padding = 3
 	s.npartwork166.artwork.img = Surface:loadImage(imgpath .. "album_noartwork_166.png")
 
 	-- Progress bar
+	s.progress = {}
 	s.progress.order = { "elapsed", "slider", "remain" }
+	s.progress.text = {}
 	s.progress.text.w = 45
 	s.progress.text.padding = { 8, 0, 8, 0 }
 	s.progress.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
