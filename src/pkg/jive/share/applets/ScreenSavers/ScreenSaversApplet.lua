@@ -182,16 +182,10 @@ function screensaverWindow(self, window)
 	window:addListener(EVENT_KEY_PRESS | EVENT_SCROLL,
 			   function(event)
 
-				   log:warn("closing")
-				   debug.dump(Framework.windowStack, 2)
-
 				   -- close all screensaver windows
 				   for i,w in ipairs(self.active) do
 					   w:hide(Window.transitionNone)
 				   end
-
-				   log:warn("closed")
-				   debug.dump(Framework.windowStack, 2)
 
 				   -- keys should close the screensaver, and not
 				   -- perform an action

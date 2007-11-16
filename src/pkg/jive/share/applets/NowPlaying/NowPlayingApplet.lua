@@ -256,9 +256,8 @@ function openScreensaver(self, menuItem, mode)
 	local playerid = self.player:getId()
 
 	-- Register our own functions to be called when we receive data
-	self.player.slimServer.comet:addCallback(
-		'/slim/playerstatus/' .. playerid,
-	        function(chunk, err)
+	self.statusSink =
+		function(chunk, err)
 			if err then
 				log:warn(err)
 			else
@@ -271,6 +270,9 @@ function openScreensaver(self, menuItem, mode)
 				self.window:showInstead(Window.transitionFadeIn)
 			end
 		end
+
+	self.player.slimServer.comet:addCallback(
+		'/slim/playerstatus/' .. playerid, self.statusSink
 	)
 
 	-- Initialize with current data from Player
