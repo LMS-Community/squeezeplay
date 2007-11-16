@@ -71,7 +71,7 @@ module(...)
 
 =head1 LEVELS
 
-The following levels are defined: DEBUG, INFO, WARN, ERROR and FATAL.
+The following levels are defined: DEBUG, INFO, WARN and ERROR.
 They are defined in the module and can therefore be accessed using jive.utils.log.LEVEL,
 for example jive.utils.log.DEBUG.
 
@@ -83,14 +83,12 @@ DEBUG = logging.DEBUG
 INFO = logging.INFO
 WARN = logging.WARN
 ERROR = logging.ERROR
-FATAL = logging.FATAL
 
 local syslevel = {
 	DEBUG = "LOG_DEBUG",
 	INFO = "LOG_INFO",
 	WARN = "LOG_WARNING",
 	ERROR = "LOG_ERR",
-	FATAL = "LOG_CRIT",
 }
 
 

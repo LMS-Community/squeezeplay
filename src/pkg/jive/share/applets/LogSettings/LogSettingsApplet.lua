@@ -53,7 +53,7 @@ local function _gatherLogCategories()
 		-- create a Choice
 		local choice = Choice(
 			"choice", 
-			{ "Debug", "Info", "Warn", "Error", "Fatal" }, 
+			{ "Debug", "Info", "Warn", "Error" }, 
 			function(obj, selectedIndex)
 				log:info("Setting log category ", k, " to ", logging.LEVEL_A[selectedIndex])
 				v:setLevel(logging.LEVEL_A[selectedIndex])
