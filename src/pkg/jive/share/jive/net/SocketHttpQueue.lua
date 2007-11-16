@@ -39,7 +39,7 @@ oo.class(_M, SocketHttp)
 
 --[[
 
-=head2 jive.net.SocketHttpQueue(jnt, ip, port, queueObj, name)
+=head2 jive.net.SocketHttpQueue(jnt, address, port, queueObj, name)
 
 Same as L<jive.net.SocketHttp>, save for the I<queueObj> parameter
 which must refer to an object implementing a B<t_dequeue> function
@@ -48,13 +48,13 @@ the connection must close.
 
 =cut
 --]]
-function __init(self, jnt, ip, port, queueObj, name)
---	log:debug("SocketHttpQueue:__init(", name, ", ".. ip, ", ", port, ")")
+function __init(self, jnt, address, port, queueObj, name)
+--	log:debug("SocketHttpQueue:__init(", name, ", ".. address, ", ", port, ")")
 
 --	_assert(queueObj)
 
 	-- init superclass
-	local obj = oo.rawnew(self, SocketHttp(jnt, ip, port, name))
+	local obj = oo.rawnew(self, SocketHttp(jnt, address, port, name))
 
 	obj.httpqueue = queueObj
 	

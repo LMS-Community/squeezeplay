@@ -35,6 +35,7 @@ local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Textarea         = require("jive.ui.Textarea")
 local string           = require("string")
 local table            = require("jive.utils.table")
+local debug            = require("jive.utils.debug")
 
 local log              = require("jive.utils.log").logger("applets.screensavers")
 
@@ -45,6 +46,7 @@ local EVENT_MOTION     = jive.ui.EVENT_MOTION
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
 local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
+local EVENT_WINDOW_PUSH = jive.ui.EVENT_WINDOW_PUSH
 local EVENT_WINDOW_INACTIVE = jive.ui.EVENT_WINDOW_INACTIVE
 local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
 local KEY_PLAY         = jive.ui.KEY_PLAY
@@ -56,45 +58,25 @@ oo.class(_M, Applet)
 
 
 function init(self, ...)
-
 	self.screensavers = {}
 	self.screensaverSettings = {}
 	self:addScreenSaver(self:string("SCREENSAVER_NONE"), nil, nil, _, _, 100)
 
 	self.timeout = self:getSettings()["timeout"]
 
-	self.timer = Timer(self.timeout, function() self:_activate() end, true)
+	self.active = {}
+
+	-- wait for at least a minute after we start before activating a screensaver,
+	-- otherwise the screensaver may have started when you exit the bootscreen
+	self.timer = Timer(60000, function() self:_activate() end, true)
 	self.timer:start()
 
 	-- listener to restart screensaver timer
 	Framework:addListener(
 		EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_MOTION,
 		function(event)
-			self.timer:restart(self.timeout)
-
-			-- allow active screensaver to process events if
-			-- it is on top of the window stack
-			if self.active == Framework.windowStack[1] and
-				-- motion should not exit the screensaver,
-				-- it was too annoying having Now Playing
-				-- disappear when you picked it up!
-				event:getType() ~= EVENT_MOTION then
-
-				local r = self.active:_event(event)
-
-				if r == EVENT_UNUSED and self.active then
-					self.active:hide(Window.transitionNone)
-				end
-
-				-- Go should close the screensaver, and not
-				-- perform an action
-				if event:getType() == EVENT_KEY_PRESS and
-					event:getKeycode() == KEY_GO then
-					return EVENT_CONSUME
-				end
-				return r
-			end
-			return EVENT_UNUSED
+			-- restart timer if it is running
+			self.timer:setInterval(self.timeout)
 		end
 	)
 
@@ -137,6 +119,7 @@ function _activate(self, the_screensaver)
 		return
 	end
 
+	-- what screensaver, check the playmode of the current player
 	if the_screensaver == nil then
 		local sd = AppletManager:getAppletInstance("SlimDiscovery")
 		
@@ -153,16 +136,69 @@ function _activate(self, the_screensaver)
 		return
 	end
 
-	-- activate the screensaver
-	self.timer:stop()
+	-- activate the screensaver. it should register any windows with
+	-- screensaverWindow, and open then itself
 	local instance = appletManager:loadApplet(screensaver.applet)
-	self.active = instance[screensaver.method](instance)
+	instance[screensaver.method](instance)
+end
 
-	self.active:addListener(EVENT_WINDOW_POP,
-				function()
-					log:warn("screensaver is inactive")
-					self.active = nil
-				end)
+
+--[[
+
+=head2 screensaverWindow(window)
+
+Register the I<window> as a screensaver window. This is used to maintain the
+the screensaver activity, and adds some default listeners for screensaver
+behaviour.
+
+=cut
+--]]
+function screensaverWindow(self, window)
+	-- the screensaver is active when this window is pushed to the window stack
+	window:addListener(EVENT_WINDOW_PUSH,
+			   function(event)
+				   log:debug("screensaver opened ", #self.active)
+
+				   table.insert(self.active, window)
+				   self.timer:stop()
+				   return EVENT_UNUSED
+			   end)
+
+	-- the screensaver is inactive when this window is poped from the window stack
+	window:addListener(EVENT_WINDOW_POP,
+			   function(event)
+				   table.delete(self.active, window)
+				   if #self.active == 0 then
+					   log:debug("screensaver inactive")
+					   self.timer:start()
+				   end
+
+				   log:debug("screensaver closed ", #self.active)
+				   return EVENT_UNUSED
+			   end)
+
+	-- key or scroll events quit the screensaver
+	window:addListener(EVENT_KEY_PRESS | EVENT_SCROLL,
+			   function(event)
+
+				   log:warn("closing")
+				   debug.dump(Framework.windowStack, 2)
+
+				   -- close all screensaver windows
+				   for i,w in ipairs(self.active) do
+					   w:hide(Window.transitionNone)
+				   end
+
+				   log:warn("closed")
+				   debug.dump(Framework.windowStack, 2)
+
+				   -- keys should close the screensaver, and not
+				   -- perform an action
+				   if event:getType() == EVENT_KEY_PRESS then
+					   return EVENT_CONSUME
+				   end
+				   return EVENT_UNUSED
+			   end)
 end
 
 

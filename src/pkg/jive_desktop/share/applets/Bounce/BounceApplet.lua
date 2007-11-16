@@ -130,16 +130,6 @@ function bounce(self)
 		FRAME_RATE
 	)
 
-
-	-- any button to exit
-	window:addListener(
-		EVENT_KEY_PRESS,
-		function(event)
-			window:hide()
-			return EVENT_CONSUME
-		end
-	)
-
 	window:addListener(EVENT_WINDOW_RESIZE,
 			   function(event)
 				   self:bounce():show(Window.transitionNone)
@@ -151,6 +141,10 @@ function bounce(self)
 	for i,sprit in ipairs(self.sprits) do
 		window:addWidget(sprit.icon)
 	end
+
+	-- register window as a screensaver
+	local manager = appletManager:getAppletInstance("ScreenSavers")
+	manager:screensaverWindow(obj.window)
 
 	self:tieAndShowWindow(window)
 	return window

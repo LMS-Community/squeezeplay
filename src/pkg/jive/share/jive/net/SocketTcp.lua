@@ -66,26 +66,26 @@ end)
 
 --[[
 
-=head2 jive.net.SocketTcp(jnt, ip, port, name)
+=head2 jive.net.SocketTcp(jnt, address, port, name)
 
 Creates a TCP/IP socket named I<name> to interface with the given I<jnt> 
 (a L<jive.net.NetworkThread> instance). I<name> is used for debugging and
-defaults to "". I<ip> and I<port> are the IP address and port to 
+defaults to "". I<address> and I<port> are the hostname/IP address and port to 
 send/receive data from/to.
 Must be called by subclasses.
 
 =cut
 --]]
-function __init(self, jnt, ip, port, name)
-	--log:debug("SocketTcp:__init(", name, ", ", ip, ", ", port, ")")
+function __init(self, jnt, address, port, name)
+	--log:debug("SocketTcp:__init(", name, ", ", address, ", ", port, ")")
 
---	_assert(ip, "Cannot create SocketTcp without ip address - " .. debug.traceback())
+--	_assert(address, "Cannot create SocketTcp without hostname/ip address - " .. debug.traceback())
 --	_assert(port, "Cannot create SocketTcp without port")
 
 	local obj = oo.rawnew(self, Socket(jnt, name))
 
 	obj.t_tcp = {
-		ip = ip,
+		address = address,
 		port = port,
 		connected = false,
 		mutex = thread.newmutex(),
@@ -107,7 +107,7 @@ function t_connect(self)
 
 	-- set a long timeout for connection
 	self.t_sock:settimeout(30)
-	local err = socket.skip(1, self.t_sock:connect(self.t_tcp.ip, self.t_tcp.port))
+	local err = socket.skip(1, self.t_sock:connect(self.t_tcp.address, self.t_tcp.port))
 
 	if err then
 	
@@ -164,9 +164,9 @@ end
 
 
 -- t_getIpPort
--- returns the IP and port
-function t_getIpPort(self)
-	return self.t_tcp.ip, self.t_tcp.port
+-- returns the Address and port
+function t_getAddressPort(self)
+	return self.t_tcp.address, self.t_tcp.port
 end
 
 

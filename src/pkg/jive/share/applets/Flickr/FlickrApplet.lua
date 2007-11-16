@@ -24,7 +24,7 @@ local pairs, ipairs, tostring = pairs, ipairs, tostring
 
 local math             = require("math")
 local table            = require("table")
-local socket           = require("socket")
+local string           = require("string")
 
 local oo               = require("loop.simple")
 
@@ -33,6 +33,7 @@ local Font             = require("jive.ui.Font")
 local Framework        = require("jive.ui.Framework")
 local Icon             = require("jive.ui.Icon")
 local Label            = require("jive.ui.Label")
+local Group            = require("jive.ui.Group")
 local Popup            = require("jive.ui.Popup")
 local RadioButton      = require("jive.ui.RadioButton")
 local RadioGroup       = require("jive.ui.RadioGroup")
@@ -44,7 +45,8 @@ local Window           = require("jive.ui.Window")
 local SocketHttp       = require("jive.net.SocketHttp")
 local RequestHttp      = require("jive.net.RequestHttp")
 local json             = require("json")
-                       
+
+local debug            = require("jive.utils.debug")
 local log              = require("jive.utils.log").logger("applets.screensavers")
 
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
@@ -55,8 +57,10 @@ local FRAME_RATE       = jive.ui.FRAME_RATE
 local LAYER_FRAME      = jive.ui.LAYER_FRAME
 local LAYER_CONTENT    = jive.ui.LAYER_CONTENT
 local KEY_BACK         = jive.ui.KEY_BACK
+local KEY_GO           = jive.ui.KEY_GO
 
 local jnt              = jnt
+local appletManager    = appletManager
 
 
 module(...)
@@ -71,8 +75,8 @@ local transitionLeftRight
 local transitionRightLeft
 local flickrTitleStyle = 'settingstitle'
 
-function openScreensaver(self, menuItem)
 
+function openScreensaver(self, menuItem)
 	self.photoQueue = {}
 	self.transitions = { transitionBoxOut, transitionTopDown, transitionBottomUp, transitionLeftRight, transitionRightLeft, Window.transitionFadeIn }
 
@@ -86,10 +90,9 @@ function openScreensaver(self, menuItem)
 	end
 	
 	self.window = self:_window(label)
-
-	self:tieAndShowWindow(self.window)
-	return self.window
+	self.window:show()
 end
+
 
 function popupMessage(self, title, msg)
 	local popup = Window("window", title)
@@ -165,7 +168,7 @@ function defineFlickrId(self, menuItem)
 				return false
 			end
 
-			log:warn("Input " .. value)
+			log:debug("Input " .. value)
 			self:setFlickrIdString(value)
 
 			window:playSound("WINDOWSHOW")
@@ -369,10 +372,12 @@ function setTimeout(self, timeout)
 	self:storeSettings()
 end
 
+
 function setFlickrId(self, flickrid)
 	self:getSettings()["flickr.id"] = flickrid
 	self:storeSettings()
 end
+
 
 function setFlickrIdString(self, flickridString)
 	self:getSettings()["flickr.idstring"] = flickridString
@@ -380,6 +385,7 @@ function setFlickrIdString(self, flickridString)
 	self:storeSettings()
 	self:resolveFlickrIdByEmail(flickridString)
 end
+
 
 function setTransition(self, trans)
 	self:getSettings()["flickr.transition"] = trans
@@ -405,7 +411,7 @@ function displayNextPhoto(self)
 	local req = RequestHttp(function(chunk, err)
 			if chunk then
 				local srf = Surface:loadImageData(chunk, #chunk)
-				self:_loaded(photo, srf)
+				self:_loadedPhoto(self.window, photo, srf)
 			end
 		end,
 		'GET',
@@ -427,22 +433,20 @@ function _requestPhoto(self)
 
 	if displaysetting == "recent" then
 		method = "flickr.photos.getRecent"
-		args = { per_page = 1 }
+		args = { per_page = 1, extras = "owner_name" }
 	elseif displaysetting == "contacts" then
 		method = "flickr.photos.getContactsPublicPhotos"
-		args = { per_page = 100, user_id = self:getSettings()["flickr.id"], include_self = 1 }
+		args = { per_page = 100, extras = "owner_name", user_id = self:getSettings()["flickr.id"], include_self = 1 }
 	elseif displaysetting == "own" then
 		method = "flickr.people.getPublicPhotos"
-		args = { per_page = 100, user_id = self:getSettings()["flickr.id"] }
+		args = { per_page = 100, extras = "owner_name", user_id = self:getSettings()["flickr.id"] }
 	else 
-        method = "flickr.interestingness.getList"
-        args = { per_page = 100 }
+		method = "flickr.interestingness.getList"
+		args = { per_page = 100, extras = "owner_name" }
 	end
 
-	local host, port, path = self:_getRest(method, args)
+	local host, port, path = self:_flickrApi(method, args)
 	if host then
-		log:warn("getRecent URL: ", host, ":", port, path)
-
 		local socket = SocketHttp(jnt, host, port, "flickr")
 		local req = RequestHttp(
 			function(chunk, err)
@@ -467,7 +471,7 @@ function _window(self, ...)
 	local window = Window("flickr")
 
 	-- black window background
-	local w, h = window:getSize()
+	local w, h = Framework:getScreenSize()
 	local bg  = Surface:newRGBA(w, h)
 	bg:filledRectangle(0, 0, w, h, 0x000000FF)
 	window:addWidget(Icon("background", bg))
@@ -476,31 +480,23 @@ function _window(self, ...)
 		window:addWidget(v)
 	end
 
-	-- close the window on left
-	window:addListener(EVENT_KEY_PRESS,
-		function(evt)
-		   if evt:getKeycode() == KEY_BACK then
-			   window:hide()
-			   self.photoQueue = {}
-			   return EVENT_CONSUME
-		   end
-		end)
-
 	window:addListener(EVENT_WINDOW_RESIZE,
 		function(evt)
-		   local icon = self:_makeIcon(self.photo, self.photoSrf)
+		   local icon = self:_makeIcon()
 		   self.window:addWidget(icon)
 		end)
 
-	self:tieWindow(window)
+	-- register window as a screensaver
+	local manager = appletManager:getAppletInstance("ScreenSavers")
+	manager:screensaverWindow(window)
+
 	return window
 end
 
 
 function _getPhotoList(self, chunk, err)
 	if chunk then
-
-		log:warn("got chunk ", chunk)
+		log:debug("got chunk ", chunk)
 		local obj = json.decode(chunk)
 
 		-- add photos to queue
@@ -513,9 +509,12 @@ function _getPhotoList(self, chunk, err)
 end
 
 
-function _makeIcon(self, photo, srf)
+function _makeIcon(self)
 	-- reposition icon
 	local sw, sh = Framework:getScreenSize()
+
+	local photo = self.photo
+	local srf = self.photoSrf
 
 	local w,h = srf:getSize()
 	if w < h then
@@ -530,7 +529,7 @@ function _makeIcon(self, photo, srf)
 	local fontBold = Font:load("fonts/FreeSansBold.ttf", 10)
 	local fontRegular = Font:load("fonts/FreeSans.ttf", 10)
 
-    -- empty image to draw onto
+	-- empty image to draw onto
 	local totImg = Surface:newRGBA(sw, sh)
         totImg:filledRectangle(0, 0, sw, sh, 0x000000FF)
 
@@ -559,17 +558,80 @@ function _makeIcon(self, photo, srf)
 end
 
 
-function _loaded(self, photo, srf)
+function _detailsShow(self)
+	self.commentText = Textarea("textarea", "")
+
+	local host, port, path = self:_getComments()
+	log:info("comments URL: ", host, ":", port, path)
+
+	-- request comments
+	local http = SocketHttp(jnt, host, port, "flickr")
+	local req = RequestHttp(function(chunk, err)
+			if chunk then
+				self:_loadedComments(chunk)
+			end
+		end,
+		'GET',
+		path)
+	http:fetch(req)
+
+	-- open window
+	local window = Window("window", self.photo.title .. " (" .. self.photo.ownername .. ")")
+	window:addWidget(self.commentText)
+	window:show()
+end
+
+
+function _loadedComments(self, comments)
+	local data = json.decode(comments)
+
+	local text = {}
+
+	for i,comment in pairs(data.comments.comment) do
+		local content = comment._content
+
+		-- remove \r
+		content = string.gsub(content, "\r", "")
+
+		-- remove html tags <...>
+		content = string.gsub(content, "%<.-%>", "")
+
+		text[#text + 1] = comment.authorname .. ":"
+		text[#text + 1] = content
+		text[#text + 1] = ""
+	end
+
+	self.commentText:setValue(table.concat(text, "\n"))
+end
+
+
+function _loadedPhoto(self, lastWindow, photo, srf)
 	log:debug("photo loaded")
+
+	-- don't display the photo if the top window has changed
+	if lastWindow ~= Framework.windowStack[1] then
+		return
+	end
 
 	self.photo = photo
 	self.photoSrf = srf
 
-	local icon = self:_makeIcon(photo, srf)
+	local icon = self:_makeIcon()
 
 	self.window = self:_window(icon)
 
-    local transition
+	self.window:addListener(EVENT_KEY_PRESS,
+				function(event)
+					if event:getKeycode() ~= KEY_GO then
+						return EVENT_UNUSED
+					end
+
+					self.window:playSound("WINDOWSHOW")
+					self:_detailsShow()
+					return EVENT_CONSUME
+				end)
+
+	local transition
 	local trans = self:getSettings()["flickr.transition"]
 	if trans == "random" then
 		transition = self.transitions[math.random(#self.transitions)]
@@ -596,7 +658,7 @@ function _loaded(self, photo, srf)
 end
 
 
-function _getRest(self, method, args)
+function _flickrApi(self, method, args)
 	local url = {}	
 	url[#url + 1] = "method=" .. method
 
@@ -605,59 +667,37 @@ function _getRest(self, method, args)
 	end
 
 	url[#url + 1] = "api_key=" .. apiKey
-	url[#url + 1] = "extras=owner_name"
 	url[#url + 1] = "format=json"
 	url[#url + 1] = "nojsoncallback=1"
 	
-	local ip, err = socket.dns.toip("api.flickr.com")
+	url = "/services/rest/?" .. table.concat(url, "&")
+	log:info("service=", url)
 
-	if ip then
-		return ip, 80, "/services/rest/?" .. table.concat(url, "&")
-	else
-		self:popupMessage(self:string("SCREENSAVER_FLICKR_ERROR"), self:string("SCREENSAVER_FLICKR_NETWORK_ERROR"))
-		log:error(err)
-		return nil, err
-	end
+	return "api.flickr.com", 80, url
 end
 
 
 function _findFlickrIdByEmail(self, searchText)
-	local url = "method=flickr.people.findByEmail"
-	url = url .. "&api_key=" .. apiKey
-	url = url .. "&format=json"
-	url = url .. "&nojsoncallback=1"
-	url = url .. "&find_email=" .. searchText
-
-	local ip, err = socket.dns.toip("api.flickr.com")
-
-	if ip then
-		return ip, 80, "/services/rest/?" .. url
-	else
-		self:popupMessage(self:string("SCREENSAVER_FLICKR_ERROR"), self:string("SCREENSAVER_FLICKR_NETWORK_ERROR"))
-		log:error(err)
-		return nil, err
-	end
+	return self:_flickrApi("flickr.people.findByEmail",
+			       {
+				       find_email = searchText
+			       })
 end
 
 
 function _findFlickrIdByUserID(self, searchText)
-	local url = "method=flickr.people.findByUsername"
-	url = url .. "&api_key=" .. apiKey
-	url = url .. "&format=json"
-	url = url .. "&nojsoncallback=1"
-	url = url .. "&username=" .. searchText
-
-	local ip, err = socket.dns.toip("api.flickr.com")
-
-	if ip then
-		return ip, 80, "/services/rest/?" .. url
-	else
-		self:popupMessage(self:string("SCREENSAVER_FLICKR_ERROR"), self:string("SCREENSAVER_FLICKR_NETWORK_ERROR"))
-		log:error(err)
-		return nil, err
-	end
+	return self:_flickrApi("flickr.people.findByUsername",
+			       {
+				       username = searchText
+			       })
 end
 
+function _getComments(self)
+	return self:_flickrApi("flickr.photos.comments.getList",
+			       {
+				       photo_id = self.photo.id,
+			       })
+end
 
 
 function resolveFlickrIdByEmail(self, searchText)
@@ -673,8 +713,7 @@ function resolveFlickrIdByEmail(self, searchText)
 					log:info("flickr id found: " .. obj.user.nsid)
 					self:setFlickrId(obj.user.nsid)
 				else
-					log:warn("search by email failed")
-					log:warn(searchText)
+					log:warn("search by email failed: ", searchText)
 					self:resolveFlickrIdByUsername(searchText)
 				end
 			end
@@ -715,7 +754,7 @@ function _getPhotoUrl(self, photo, size)
 	local server = "farm" .. photo.farm .. ".static.flickr.com"
 	local path = "/" .. photo.server .. "/" .. photo.id .. "_" .. photo.secret .. (size or "") .. ".jpg"
 
-	return socket.dns.toip(server), 80, path
+	return server, 80, path
 end
 
 
@@ -836,9 +875,10 @@ end
 
 -- applet skin
 function skin(self, s)
-	s.flickr = {}
-	s.flickr.layout = Window.noLayout
-	s.flickr.font = Font:load("fonts/FreeSans.ttf", 10)
+	s.flickr = {
+		layout = Window.noLayout,
+		font = Font:load("fonts/FreeSans.ttf", 10)
+	}
 end
 
 

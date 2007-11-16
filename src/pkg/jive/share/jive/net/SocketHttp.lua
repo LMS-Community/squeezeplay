@@ -58,19 +58,19 @@ oo.class(_M, SocketTcp)
 
 --[[
 
-=head2 jive.net.SocketHttp(jnt, ip, port, name)
+=head2 jive.net.SocketHttp(jnt, address, port, name)
 
 Creates an HTTP socket named I<name> to interface with the given I<jnt> 
 (a L<jive.net.NetworkThread> instance). I<name> is used for debugging and
-defaults to "". I<ip> and I<port> are the IP address and port of the HTTP server.
+defaults to "". I<address> and I<port> are the hostname/IP address and port of the HTTP server.
 
 =cut
 --]]
-function __init(self, jnt, ip, port, name)
-	--log:debug("SocketHttp:__init(", name, ", ", ip, ", ", port, ")")
+function __init(self, jnt, address, port, name)
+	--log:debug("SocketHttp:__init(", name, ", ", address, ", ", port, ")")
 
 	-- init superclass
-	local obj = oo.rawnew(self, SocketTcp(jnt, ip, port, name))
+	local obj = oo.rawnew(self, SocketTcp(jnt, address, port, name))
 
 	-- init states
 	obj.t_httpSendState = 't_sendDequeue'
@@ -196,8 +196,8 @@ function t_getSendHeaders(self)
 	
 	local req_headers = self.t_httpSending:t_getRequestHeaders()
 	if not req_headers["Host"] then
-		local ip, port = self:t_getIpPort()
-		headers["Host"] = ip
+		local address, port = self:t_getAddressPort()
+		headers["Host"] = address
 		if port != 80 then
 			headers["Host"] = headers["Host"] .. ':' .. port
 		end

@@ -861,10 +861,12 @@ local _globalActions = {
 			   
 		-- are we in home?
 		if #windowStack > 1 then
+			log:warn("FOO")
 			Framework:playSound("JUMP")
 			while #windowStack > 1 do
 				windowStack[#windowStack - 1]:hide(nil, "JUMP")
 			end
+			log:warn("BAR")
 		else
 			Framework:playSound("WINDOWSHOW")
 			_goNowPlaying()

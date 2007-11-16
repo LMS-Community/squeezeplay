@@ -1,7 +1,5 @@
 
-local collectgarbage = collectgarbage
-local pairs, ipairs, tostring = pairs, ipairs, tostring
-local tonumber = tonumber
+local pairs, ipairs, tonumber, tostring = pairs, ipairs, tonumber, tostring
 
 local math             = require("math")
 local table            = require("table")
@@ -126,16 +124,20 @@ local DigitalDetailed_Presets = {
 
 Clock  = oo.class()
 
-function Clock:__init(window)
+function Clock:__init()
 	log:info("Init Clock")
-	local w, h = Framework:getScreenSize()
 
 	obj = oo.rawnew(self)
-	obj.window = window
-	obj.screen_width = w
-	obj.screen_height = h
 
+	obj.screen_width, obj.screen_height = Framework:getScreenSize()
+
+	-- create window and icon
+	obj.window = Window("Clock")
 	obj:_createSurface()
+
+	-- register window as a screensaver
+	local manager = appletManager:getAppletInstance("ScreenSavers")
+	manager:screensaverWindow(obj.window)
 
 	return obj
 end
@@ -146,27 +148,23 @@ function Clock:_createSurface()
 	self.window:addWidget(self.bgicon)
 end
 
-function Clock:Tick()
-	self:Draw()
-end 
-
 function Clock:Resize(w, h)
 	self.screen_width = w
 	self.screen_height = h
 
 	self.window:removeWidget(self.bgicon)
-
 	self:_createSurface()
 
-	self:Draw(true)
+	self:Draw()
 end
+
 
 Analog = oo.class({}, Clock)
 
-function Analog:__init(window, preset)
+function Analog:__init(preset)
 	log:info("Init Analog Clock")
 
-	obj = oo.rawnew(self, Clock(window))
+	obj = oo.rawnew(self, Clock())
 
 	obj.clockface = Surface:loadImage("applets/Clock/ClockFace.png")
 	obj.pointer_hour = Surface:loadImage("applets/Clock/HourHand.png")
@@ -176,67 +174,61 @@ function Analog:__init(window, preset)
 	obj.bgcolor = preset.BackgroundColor
 
 	obj.clock_format = "%H:%M"
-	obj.oldtime = ""
 
 	return obj
 end
 
 
-function Analog:Draw(force)
-	local theTime = os.date(self.clock_format)
-	if theTime != self.oldtime or force then
-		self.oldtime = theTime
+function Analog:Draw()
+	-- Draw Background
+	self.bg:filledRectangle(0, 0, self.screen_width, self.screen_height, self.bgcolor)
 
-		-- Draw Background
-		self.bg:filledRectangle(0, 0, self.screen_width, self.screen_height, self.bgcolor)
+	local x, y
 
-		local x, y
+	-- Clock Highlight
+	local hlw, hlh = self.clockhighlight:getSize()
+	x = math.floor((self.screen_width/2) - (hlw/2))
+	y = math.floor((self.screen_height/2) - (hlh/2))
+	self.clockhighlight:blit(self.bg, x, y)
 
-		-- Clock Highlight
-		local hlw, hlh = self.clockhighlight:getSize()
-		x = math.floor((self.screen_width/2) - (hlw/2))
-		y = math.floor((self.screen_height/2) - (hlh/2))
-		self.clockhighlight:blit(self.bg, x, y)
+	-- Clock Face
+	local facew, faceh = self.clockface:getSize()
+	x = math.floor((self.screen_width/2) - (facew/2))
+	y = math.floor((self.screen_height/2) - (faceh/2))
+	self.clockface:blit(self.bg, x, y)
 
-		-- Clock Face
-		local facew, faceh = self.clockface:getSize()
-		x = math.floor((self.screen_width/2) - (facew/2))
-		y = math.floor((self.screen_height/2) - (faceh/2))
-		self.clockface:blit(self.bg, x, y)
+	-- Setup Time Objects
+	local m = os.date("%M")
+	local h = os.date("%I")
 
-		-- Setup Time Objects
-		local m = os.date("%M")
-		local h = os.date("%I")
+	-- Hour Pointer
+	local angle = (360 / 12) * (h + (m/60))
 
-		-- Hour Pointer
-		local angle = (360 / 12) * (h + (m/60))
+	local tmp = self.pointer_hour:rotozoom(-angle, 1, 5)
+	local facew, faceh = tmp:getSize()
+	x = math.floor((self.screen_width/2) - (facew/2))
+	y = math.floor((self.screen_height/2) - (faceh/2))
+	tmp:blit(self.bg, x, y)
 
-		local tmp = self.pointer_hour:rotozoom(-angle, 1, 5)
-		local facew, faceh = tmp:getSize()
-		x = math.floor((self.screen_width/2) - (facew/2))
-		y = math.floor((self.screen_height/2) - (faceh/2))
-		tmp:blit(self.bg, x, y)
+	-- Minute Pointer
+	local angle = (360 / 60) * m 
 
-		-- Minute Pointer
-		local angle = (360 / 60) * m 
+	local tmp = self.pointer_minute:rotozoom(-angle, 1, 5)
+	local facew, faceh = tmp:getSize()
+	x = math.floor((self.screen_width/2) - (facew/2))
+	y = math.floor((self.screen_height/2) - (faceh/2))
+	tmp:blit(self.bg, x, y)
 
-		local tmp = self.pointer_minute:rotozoom(-angle, 1, 5)
-		local facew, faceh = tmp:getSize()
-		x = math.floor((self.screen_width/2) - (facew/2))
-		y = math.floor((self.screen_height/2) - (faceh/2))
-		tmp:blit(self.bg, x, y)
-
-		self.bgicon:reDraw()
-	end
-
+	self.bgicon:reDraw()
 end
+
 
 DigitalStyled = oo.class({}, Clock)
 
-function DigitalStyled:__init(window, preset, ampm)
+function DigitalStyled:__init(preset, ampm)
 	log:info("Init Digital Simple")
 
-	obj = oo.rawnew(self, Clock(window))
+	obj = oo.rawnew(self, Clock())
 
 	obj.color = preset.Color
 	obj.bgcolor = preset.Background
@@ -254,7 +246,6 @@ function DigitalStyled:__init(window, preset, ampm)
 	obj.digits[9]   =  Surface:loadImage("applets/Clock/Digital_dotmatrix_ghosted_8.png")
 	obj.digits[10]  =  Surface:loadImage("applets/Clock/Digital_dotmatrix_ghosted_9.png")
 
-	obj.oldtime = ""
 	obj.show_ampm = ampm
 
 	if ampm then
@@ -264,46 +255,42 @@ function DigitalStyled:__init(window, preset, ampm)
 	end
 	obj.clock_format_minute = "%M"
 
+	obj.clock_format = obj.clock_format_hour .. ":" .. obj.clock_format_minute
+
 	return obj;
 end
 
-function DigitalStyled:Draw(force)
-	local theTime = os.date("%H:%M")
+function DigitalStyled:Draw()
+	-- draw background
+	self.bg:filledRectangle(0, 0, self.screen_width, self.screen_height, self.bgcolor)
 
-	if theTime != self.oldtime or force then
-		self.oldtime = theTime
+	theTime = os.date(self.clock_format_hour)
+	self:DrawDigit(string.sub(theTime, 1, 1), DigitalStyledPos[1].x, DigitalStyledPos[1].y)
+	self:DrawDigit(string.sub(theTime, 2, 2), DigitalStyledPos[2].x, DigitalStyledPos[2].y)
 
-		-- draw background
-		self.bg:filledRectangle(0, 0, self.screen_width, self.screen_height, self.bgcolor)
+	theTime = os.date(self.clock_format_minute)
+	self:DrawDigit(string.sub(theTime, 1, 1), DigitalStyledPos[3].x, DigitalStyledPos[3].y)
+	self:DrawDigit(string.sub(theTime, 2, 2), DigitalStyledPos[4].x, DigitalStyledPos[4].y)
 
-		theTime = os.date(self.clock_format_hour)
-		self:DrawDigit(string.sub(theTime, 1, 1), DigitalStyledPos[1].x, DigitalStyledPos[1].y)
-		self:DrawDigit(string.sub(theTime, 2, 2), DigitalStyledPos[2].x, DigitalStyledPos[2].y)
-
-		theTime = os.date(self.clock_format_minute)
-		self:DrawDigit(string.sub(theTime, 1, 1), DigitalStyledPos[3].x, DigitalStyledPos[3].y)
-		self:DrawDigit(string.sub(theTime, 2, 2), DigitalStyledPos[4].x, DigitalStyledPos[4].y)
-
-		self.bgicon:reDraw()
-	end
+	self.bgicon:reDraw()
 end
 
 function DigitalStyled:DrawDigit(digit, x, y)
 	local theSrf = nil
 
-	log:error(tonumber(digit)+1)
 	theSrf = self.digits[tonumber(digit)+1]
 	theSrf:blit(self.bg, x, y)
 end
 
+
 DigitalDetailed = oo.class({}, Clock)
 
-function DigitalDetailed:__init(window, preset, ampm, firstday)
+function DigitalDetailed:__init(preset, ampm, firstday)
 	log:info("Init Digital Detailed")
 	
 	local fontname = "fonts/FreeSans.ttf"
 
-	obj = oo.rawnew(self, Clock(window))
+	obj = oo.rawnew(self, Clock())
 
 	obj.bgcolor = preset.Background
 	obj.mainfont = Font:load(fontname, preset.Fonts.Main.Size)
@@ -328,7 +315,6 @@ function DigitalDetailed:__init(window, preset, ampm, firstday)
 		obj.weekstart = firstday
 	end
 
-	obj.oldtime = ""
 	obj.show_ampm = ampm
 
 	if ampm then 
@@ -407,52 +393,46 @@ end
 
 local DATEY = 10
 
-function DigitalDetailed:Draw(force)
+function DigitalDetailed:Draw()
 
-	local theTime = os.date("%H:%M:%S")
+	-- Draw Background
+	self.bg:filledRectangle(0, 0, self.screen_width, self.screen_height, self.bgcolor)
 
-	if theTime != self.oldtime or force then
-		self.oldtime = theTime
-
-		-- Draw Background
-		self.bg:filledRectangle(0, 0, self.screen_width, self.screen_height, self.bgcolor)
-
-		local x,y
+	local x,y
 		
-		-- Draw Main Border
-		local bw, bh = self.mainborder:getSize()
-		x = (self.screen_width/2) - (bw/2)
-		y = (self.screen_height/2) - (bh/2)
-		self.mainborder:blit(self.bg, x, y)
+	-- Draw Main Border
+	local bw, bh = self.mainborder:getSize()
+	x = (self.screen_width/2) - (bw/2)
+	y = (self.screen_height/2) - (bh/2)
+	self.mainborder:blit(self.bg, x, y)
 
 
-		if self.weekstart == "Sunday" then
-			self:DrawWeekdays(x, y, bw, bh, os.date("%w"))
-		else 
-			self:DrawWeekdays(x, y, bw, bh, tonumber(os.date("%u"))-1)
-		end
-
-		self:DrawTime(x, y, bw, bh, self.show_ampm)
-
-		-- Draw Date
-		local theDate = os.date(datetime:getDateFormat())
-		local dateSrf = Surface:drawText(self.datefont, self.datefont_color, theDate)
-		local dw, dh = dateSrf:getSize()
-
-		-- if date width exceeds border width, then fall back to a format that will fit
-		if dw > bw then
-			theDate = os.date("%a %d %b %Y")
-			dateSrf = Surface:drawText(self.datefont, self.datefont_color, theDate)
-			dw, dh = dateSrf:getSize()
-		end
-
-		local dateStartY = y + DATEY
-		local dateStartX = x + ((bw/2) - (dw/2))
-	
-		dateSrf:blit(self.bg, dateStartX, dateStartY)
-
-		self.bgicon:reDraw()
+	if self.weekstart == "Sunday" then
+		self:DrawWeekdays(x, y, bw, bh, os.date("%w"))
+	else 
+		self:DrawWeekdays(x, y, bw, bh, tonumber(os.date("%u"))-1)
 	end
+
+	self:DrawTime(x, y, bw, bh, self.show_ampm)
+
+	-- Draw Date
+	local theDate = os.date(datetime:getDateFormat())
+	local dateSrf = Surface:drawText(self.datefont, self.datefont_color, theDate)
+	local dw, dh = dateSrf:getSize()
+
+	-- if date width exceeds border width, then fall back to a format that will fit
+	if dw > bw then
+		theDate = os.date("%a %d %b %Y")
+		dateSrf = Surface:drawText(self.datefont, self.datefont_color, theDate)
+		dw, dh = dateSrf:getSize()
+	end
+
+	local dateStartY = y + DATEY
+	local dateStartX = x + ((bw/2) - (dw/2))
+	
+	dateSrf:blit(self.bg, dateStartX, dateStartY)
+
+	self.bgicon:reDraw()
 end
 	
 local PADDINGX = 6
@@ -532,67 +512,67 @@ function openDetailedClock(self)
 end
 
 
+function _tick(self)
+	local theTime = os.date(self.clock[1].clock_format)
+	if theTime == self.oldTime then
+		-- nothing to do yet
+		return
+	end
+
+	self.oldTime = theTime
+
+	self.clock[self.buffer]:Draw()
+	self.clock[self.buffer].window:showInstead(Window.transitionFadeIn)
+
+	self.buffer = (self.buffer == 1) and 2 or 1
+end
+
+
 function _openScreensaver(self, type)
-	local window = Window("Clock")
+	log:info("Type: " .. type)
 
 	-- Global Date/Time Settings
-	local dt = datetime
-
-	local hours      = dt:getHours() 
-	local weekstart  = dt:getWeekstart()
+	local hours      = datetime:getHours() 
+	local weekstart  = datetime:getWeekstart()
 
 	local preset = self:getPreset(type)
+	hours = (hours == "12")
 
-	if hours == "12" then
-		hours = true
-	else
-		hours = false
-	end
+	-- Create two clock instances, so that we can do use a fade in transition
+	self.clock = {}
+	self.buffer = 2 -- buffer to display
 
-	local clock = nil;	
-	log:info("Type: " .. type)
 	if type == "styled" then
 		-- This clock always uses 24 hours mode for now
-		clock = DigitalStyled(window, preset, hours)
+		self.clock[1] = DigitalStyled(preset, hours)
+		self.clock[2] = DigitalStyled(preset, hours)
 	elseif type == "detailed" then
-		clock = DigitalDetailed(window, preset, hours, weekstart)
+		self.clock[1] = DigitalDetailed(preset, hours, weekstart)
+		self.clock[2] = DigitalDetailed(preset, hours, weekstart)
 	elseif type == "analog" then
-		clock = Analog(window, preset)
+		self.clock[1] = Analog(preset)
+		self.clock[2] = Analog(preset)
+	else
+		log:error("Unknown clock type")
+		return
 	end
 
-	clock:Draw()
-	
-	-- close the window on left
-	window:addListener(EVENT_KEY_PRESS,
-			   function(evt)
-				   if evt:getKeycode() == KEY_BACK then
-					   window:hide()
-					   return EVENT_CONSUME
-				   end
-			   end)
+	self.clock[1].window:addTimer(1000, function() self:_tick() end)
+	self.clock[2].window:addTimer(1000, function() self:_tick() end)
 
-	window:addListener(EVENT_WINDOW_RESIZE,
-			   function(evt)
-				if clock != nil then
-					local w, h = Framework:getScreenSize()
-					clock:Resize(w, h)
-				end
-			   end)
-
-	window:addTimer(1000,
-		function(evt)
-			if clock != nil then
-				clock:Tick()
-			end
-		end
-	)
-
-	self:tieAndShowWindow(window)
-	return window
+	self.clock[1]:Draw()
+	self.clock[1].window:show(Window.transitionFadeIn)
 end
 
-function skin(self, s)
-	s.clock = {}
-	s.clock.layout = Window.noLayout
-end
+
+--[[
+
+=head1 LICENSE
+
+Copyright 2007 Logitech. All Rights Reserved.
+
+This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+
+=cut
+--]]
 

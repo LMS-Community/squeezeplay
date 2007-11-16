@@ -23,6 +23,7 @@ local Tile             = require("jive.ui.Tile")
 local Timer            = require("jive.ui.Timer")
                        
 local log              = require("jive.utils.log").logger("applets.screensavers")
+local debug            = require("jive.utils.debug")
 local datetime         = require("jive.utils.datetime")
 
 local appletManager    = appletManager
@@ -40,36 +41,7 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 module(...)
 oo.class(_M, Applet)
 
-
-function displayName(self)
-	return "Now Playing"
-end
-
-----------------------------------------------------------------------------------------
--- Globals
---
-
 local ARTWORK_SIZE = 154
-
-local thePlayer = nil
-local theItem = nil
-
-local titleGroup = nil
-
-local trackGroup = nil
-local lTrackArtist = nil
-local lTrackAlbum = nil
-local lPlaylist = nil
-local iArt = nil
-local progressSlider = nil
-local lPos = nil
-local lRemain = nil
-
-local iTrackPos = 0
-local iTrackLen = 0
-
---local noArtworkImage = nil
---local shadowArtworkImage = nil
 
 
 ----------------------------------------------------------------------------------------
@@ -80,25 +52,6 @@ local function _nowPlayingArtworkThumbUri(iconId)
         return '/music/' .. iconId .. '/cover_' .. ARTWORK_SIZE .. 'x' .. ARTWORK_SIZE .. '_p.png'
 end
 
-local function _getSink(self, cmd)
-	return function(chunk, err)
-
-		if err then
-			log:debug(err)
-					
-		elseif chunk then
-			--log:info(chunk)
-						
-			local proc = "_process_" .. cmd
-			if self[proc] then
-				self[proc](self, chunk)
-			else
-				log:error("No Such Method: " .. proc)
-			end
-		end
-	end
-end
-
 local function SecondsToString(seconds)
 	local min = math.floor(seconds / 60)
 	local sec = math.floor(seconds - (min*60))
@@ -106,68 +59,64 @@ local function SecondsToString(seconds)
 	return string.format("%d:%02d", min, sec)
 end
 
-local function _getIcon(item)
-	local icon = nil
-	local server = thePlayer:getSlimServer()
+local function _getIcon(self, item, icon)
+	local server = self.player:getSlimServer()
 
-	if item["icon-id"] then
+	if item and item["icon-id"] then
 		-- Fetch an image from SlimServer
-		icon = iArt --Icon("icon")
 		server:fetchArtworkThumb(item["icon-id"], icon, _nowPlayingArtworkThumbUri, ARTWORK_SIZE) 
-	elseif item["icon"] then
+	elseif item and item["icon"] then
 		-- Fetch a remote image URL, sized to ARTWORK_SIZE x ARTWORK_SIZE
-		icon = iArt --Icon("icon")
 		server:fetchArtworkURL(item["icon"], icon, ARTWORK_SIZE)
 	else
-		iArt:setValue(nil)
+		icon:setValue(nil)
 	end
-	return icon
 end
 
-local function updatePosition()
+local function updatePosition(self)
 	local strElapsed = ""
 	local strRemain = ""
 	local pos = 0
 
-	if iTrackPos then 
-		strElapsed = SecondsToString(iTrackPos)
+	if self.trackPos then
+		strElapsed = SecondsToString(self.trackPos)
 	end
 
-	if iTrackLen and iTrackLen > 0 then
-		strRemain = "-" .. SecondsToString(iTrackLen - iTrackPos)
-		pos = iTrackPos
+	if self.trackLen and self.trackLen > 0 then
+		strRemain = "-" .. SecondsToString(self.trackLen - self.trackPos)
+		pos = self.trackPos
 	end
 
-	progressGroup:setWidgetValue("elapsed", strElapsed)
-	progressGroup:setWidgetValue("remain", strRemain)
-	progressSlider:setValue(pos)
+	self.progressGroup:setWidgetValue("elapsed", strElapsed)
+	self.progressGroup:setWidgetValue("remain", strRemain)
+	self.progressSlider:setValue(pos)
 end
 
 function updateTrack(self, trackinfo, pos, length)
-	trackGroup:setWidgetValue("text", trackinfo);
+	self.trackGroup:setWidgetValue("text", trackinfo);
 end
 
 function updateProgress(self, trackpos, tracklen)
-	iTrackPos = trackpos
-	iTrackLen = tracklen	
+	self.trackPos = trackpos
+	self.trackLen = tracklen	
 
 	if tracklen and tracklen > 0 then
-		progressSlider:setRange(0, tracklen, trackpos)
+		self.progressSlider:setRange(0, tracklen, trackpos)
 	else 
 		-- If 0 just set it to 100
-		progressSlider:setRange(0, 100, 0)
+		self.progressSlider:setRange(0, 100, 0)
 	end
 
-	updatePosition()
+	updatePosition(self)
 
 end
 
 function updatePlaylist(self, enabled, nr, count)
 	if enabled == true and count > 1 then
 		nr = nr + 1
-		titleGroup:setWidgetValue("playlist", self:string("SCREENSAVER_NOWPLAYING_OF", nr, count))
+		self.titleGroup:setWidgetValue("playlist", self:string("SCREENSAVER_NOWPLAYING_OF", nr, count))
 	else 
-		titleGroup:setWidgetValue("playlist", "")
+		self.titleGroup:setWidgetValue("playlist", "")
 	end
 end
 
@@ -176,12 +125,12 @@ function tick(self)
 		return
 	end
 
-	iTrackPos = iTrackPos + 1
-	if iTrackLen and iTrackLen > 0 then
-		if iTrackPos > iTrackLen then iTrackPos = iTrackLen end
+	self.trackPos = self.trackPos + 1
+	if self.trackLen and self.trackLen > 0 then
+		if self.trackPos > self.trackLen then self.trackPos = self.trackLen end
 	end
 
-	updatePosition()
+	updatePosition(self)
 end
 
 -----------------------------------------------------------------------------------------
@@ -198,129 +147,144 @@ end
 -- Screen Saver Display 
 --
 
-
-function _process_status(self, event)
+function _process_status(self, data)
 	log:debug("_process_status")
 
-	local data = event.data;
+	-- create new window
+	-- FIXME this can now be combined in _process_status, may help fixing bug 6087
+	_createUI(self)
 
 	self.mode = data.mode
 	if self.mode == "play" then
-		titleGroup:setWidgetValue("title", self:string("SCREENSAVER_NOWPLAYING"))
+		self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_NOWPLAYING"))
 	elseif self.mode == "pause" then
-		titleGroup:setWidgetValue("title", self:string("SCREENSAVER_PAUSED"))
-	elseif self.mode == "stop" then
-		titleGroup:setWidgetValue("title", self:string("SCREENSAVER_STOPPED"))
+		self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_PAUSED"))
+	else
+		self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_STOPPED"))
 	end
 
 	if data.item_loop ~= nil then
-
 		local text = data.item_loop[1].text
 		-- XXX: current_title of null is a function value??
 		if data.remote == 1 and type(data.current_title) == 'string' then 
 			text = text .. "\n" .. data.current_title
 		end
 
-		theItem = data.item_loop[1]
+		local item = data.item_loop[1]
 
-		_getIcon(theItem)
+		_getIcon(self, item, self.artwork)
 		self:updateTrack(text)
 		self:updateProgress(data.time, data.duration)
 		self:updatePlaylist(true, data.playlist_cur_index, data.playlist_tracks)
-	else
-		theItem = nil
 
-		_getIcon(theItem)
-		self:updateTrack("") -- FIXME what string?
+		-- preload artwork for next track
+		if data.item_loop[2] then
+			_getIcon(self, data.item_loop[2], Icon("artwork"))
+		end
+	else
+		_getIcon(self, nil, self.artwork)
+		self:updateTrack("\n\n\n")
 		self:updateProgress(0, 0)
 		self:updatePlaylist(false, 0, 0)
 	end
 end
 
-function free(self)
-	if thePlayer then
-		thePlayer.slimServer.comet:removeCallback( '/slim/playerstatus/' .. thePlayer:getId(), self.statusSink )
-	end
-end
 
 function _createUI(self)
 	local window = Window("window")
 
 	local sw, sh = Framework:getScreenSize()
 
-	titleGroup = Group("nptitle", {
+	self.titleGroup = Group("nptitle", {
 				   title = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
 				   playlist = Label("playlist", "")
 			   })
 	
 
-	trackGroup = Group("nptrack", {
+	self.trackGroup = Group("nptrack", {
 				   text = Label("text", "\n\n\n")
 			   })
 	
 	
-	progressSlider = Slider("slider", 0, 100, 0)
-	progressSlider:addTimer(1000, function() self:tick() end)
+	self.progressSlider = Slider("slider", 0, 100, 0)
+	self.progressSlider:addTimer(1000, function() self:tick() end)
 
-	progressGroup = Group("progress", {
+	self.progressGroup = Group("progress", {
 				      elapsed = Label("text", ""),
-				      slider = progressSlider,
+				      slider = self.progressSlider,
 				      remain = Label("text", "")
 			      })
 
-	iArt = Icon("artwork")
+	self.artwork = Icon("artwork")
 	artworkGroup = Group("npartwork166", {
-				     artwork = iArt     
+				     artwork = self.artwork    
 			     })
 	
-	window:addWidget(titleGroup)
-	window:addWidget(trackGroup)
+	self.preartwork = Icon("artwork") -- not disabled, used for preloading
+
+	window:addWidget(self.titleGroup)
+	window:addWidget(self.trackGroup)
 	window:addWidget(artworkGroup)
-	window:addWidget(progressGroup)
+	window:addWidget(self.progressGroup)
 
-	window:focusWidget(trackGroup)
+	window:focusWidget(self.trackGroup)
 
-	return window
+	-- register window as a screensaver
+	local manager = appletManager:getAppletInstance("ScreenSavers")
+	manager:screensaverWindow(window)
+
+	self:tieWindow(window)
+	self.window = window
 end
 
-function openScreensaver(self, menuItem, mode)
 
+function openScreensaver(self, menuItem, mode)
 	-- this is to allow the screensaver to be opened in two modes: 
 	-- Screensaver and notScreensaver
 	-- default to Screensaver
 	if not mode then mode = 'Screensaver' end
-	log:warn(mode)
-
-	local window = _createUI(self)
+	log:debug(mode)
 
 	local discovery = appletManager:getAppletInstance("SlimDiscovery")
-	thePlayer = discovery:getCurrentPlayer()
+	self.player = discovery:getCurrentPlayer()
 
-	if thePlayer then
-		local playerid = thePlayer:getId()
-
-		-- FIXME this callback should come from the Player object
-		-- is this why the playlist screen stops updating?
-	
-		-- Register our own functions to be called when we receive data
-		self.statusSink = _getSink(self, 'status')
-		thePlayer.slimServer.comet:addCallback(
-			'/slim/playerstatus/' .. playerid,
-			self.statusSink
-		)
-
-		-- Initialize with current data from Player
-		local event = { data = thePlayer.state }
-		self:_process_status(event)
-
-		self:tieAndShowWindow(window)
-		return window
-
-	else
+	if not self.player then
 		-- No current player - don't start screensaver
-		return nil
+		return
+	end
+
+	local playerid = self.player:getId()
+
+	-- Register our own functions to be called when we receive data
+	self.player.slimServer.comet:addCallback(
+		'/slim/playerstatus/' .. playerid,
+	        function(chunk, err)
+			if err then
+				log:warn(err)
+			else
+				-- only update if previous now playing window is
+				-- on the top of the stack
+				if Framework.windowStack[1] ~= self.window then
+					return
+				end
+				self:_process_status(chunk.data)
+				self.window:showInstead(Window.transitionFadeIn)
+			end
+		end
+	)
+
+	-- Initialize with current data from Player
+	self:_process_status(self.player.state)
+	self.window:show()
+end
+
+
+function free(self)
+	if self.player then
+		self.player.slimServer.comet:removeCallback( '/slim/playerstatus/' .. self.player:getId(), self.statusSink )
 	end
 end
+
 
 function skin(self, s)
 	local imgpath = "applets/DefaultSkin/images/"

@@ -507,21 +507,17 @@ function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, priority)
 	self.artworkThumbIcons[icon] = cacheKey
 	logcache:debug("..fetching artwork")
 	
-	-- this takes some time, offset the task using a timer
-	icon:addTimer(0,
-		      function()
-			      local req = RequestHttp(
-						      _getArtworkThumbSink(self, iconId, size), 
-						      'GET',
-						      uriGenerator(iconId, size)
-					      )
-			      if priority then
-				      self.artworkPool:queuePriority(req)
-			      else
-				      self.artworkPool:queue(req)
-			      end
-		      end,
-		      true)
+	-- FIXME this takes some time, move to a new Task object?
+	local req = RequestHttp(
+				_getArtworkThumbSink(self, iconId, size), 
+				'GET',
+				uriGenerator(iconId, size)
+			)
+	if priority then
+		self.artworkPool:queuePriority(req)
+	else
+		self.artworkPool:queue(req)
+	end
 end
 
 --[[

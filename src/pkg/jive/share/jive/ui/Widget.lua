@@ -514,7 +514,10 @@ function addTimer(self, interval, callback, once)
 
 	timer = Timer(interval, callback, once) 
 	self.timers[#self.timers + 1] = timer
-	timer:start()
+
+	if self.visible then
+		timer:start()
+	end
 
 	return timer
 end
