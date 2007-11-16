@@ -294,8 +294,6 @@ int jiveL_icon_get_preferred_bounds(lua_State *L) {
 int jiveL_icon_gc(lua_State *L) {
 	IconWidget *peer;
 
-	printf("********************* ICON GC\n");
-
 	luaL_checkudata(L, 1, iconPeerMeta.magic);
 
 	peer = lua_touserdata(L, 1);

@@ -31,7 +31,6 @@ static void free_sound(struct jive_sample *snd) {
 		return;
 	}
 
-	printf("## Free sound\n");
 	free(snd->data);
 	free(snd);
 }

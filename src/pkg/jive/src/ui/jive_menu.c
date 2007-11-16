@@ -247,8 +247,6 @@ int jiveL_menu_draw(lua_State *L) {
 
 
 int jiveL_menu_gc(lua_State *L) {
-	printf("********************* MENU GC\n");
-
 	luaL_checkudata(L, 1, menuPeerMeta.magic);
 
 	/* nothing to do */

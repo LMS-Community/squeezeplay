@@ -467,8 +467,6 @@ static void jive_label_gc_formats(LabelWidget *peer) {
 int jiveL_label_gc(lua_State *L) {
 	LabelWidget *peer;
 
-	printf("********************* LABEL GC\n");
-
 	luaL_checkudata(L, 1, labelPeerMeta.magic);
 
 	peer = lua_touserdata(L, 1);

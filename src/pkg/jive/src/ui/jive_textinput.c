@@ -403,8 +403,6 @@ int jiveL_textinput_get_preferred_bounds(lua_State *L) {
 int jiveL_textinput_gc(lua_State *L) {
 	TextinputWidget *peer;
 
-	printf("********************* TEXTINPUT GC\n");
-
 	luaL_checkudata(L, 1, textinputPeerMeta.magic);
 
 	peer = lua_touserdata(L, 1);

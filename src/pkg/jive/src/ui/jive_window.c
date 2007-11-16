@@ -411,8 +411,6 @@ int jiveL_window_event_handler(lua_State *L) {
 int jiveL_window_gc(lua_State *L) {
 	WindowWidget *peer;
 
-	printf("********************* WINDOW GC\n");
-
 	luaL_checkudata(L, 1, windowPeerMeta.magic);
 	peer = lua_touserdata(L, 1);
 

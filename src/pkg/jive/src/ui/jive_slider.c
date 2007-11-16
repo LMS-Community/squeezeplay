@@ -189,8 +189,6 @@ int jiveL_slider_get_preferred_bounds(lua_State *L) {
 int jiveL_slider_gc(lua_State *L) {
 	SliderWidget *peer;
 
-	printf("********************* SLIDER GC\n");
-
 	luaL_checkudata(L, 1, sliderPeerMeta.magic);
 
 	peer = lua_touserdata(L, 1);

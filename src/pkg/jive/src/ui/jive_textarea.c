@@ -490,8 +490,6 @@ static void wordwrap(TextareaWidget *peer, unsigned char *text, int visible_line
 int jiveL_textarea_gc(lua_State *L) {
 	TextareaWidget *peer;
 
-	printf("********************* TEXTAREA GC\n");
-
 	luaL_checkudata(L, 1, textareaPeerMeta.magic);
 
 	peer = lua_touserdata(L, 1);
