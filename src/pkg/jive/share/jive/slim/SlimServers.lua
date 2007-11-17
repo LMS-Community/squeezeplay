@@ -155,9 +155,10 @@ end
 local function _cacheCleanup(self)
 	log:debug("_cacheCleanup()")
 
+	local now = os.time()
 	for ss_id, server in pairs(self._servers) do
 		if not server:isConnected() and
-			os.time() - server:getLastSeen() > TIMEOUT then
+			now - server:getLastSeen() > TIMEOUT then
 		
 			log:info("Removing server ", server:getName(), " (", ss_id, ")")
 			self._servers[ss_id] = nil

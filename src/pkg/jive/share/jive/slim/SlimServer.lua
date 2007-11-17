@@ -105,6 +105,7 @@ function _serverstatusSink(self, event, err)
 	
 	-- update in one shot
 	self.state = data
+	self.plumbing.lastSeen = os.time()
 	
 	-- manage rescan
 	-- use tostring to handle nil case (in either server of self data)
@@ -268,7 +269,6 @@ function free(self)
 	end
 	if self.comet then
 		self.comet:disconnect()
-		self.comet = nil
 	end
 end
 

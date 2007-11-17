@@ -56,7 +56,7 @@ local effects = {
 		"WINDOWSHOW",
 		"WINDOWHIDE",
 		"BUMP",
-		"HOME",
+		"JUMP",
 		"SELECT"
 	},
 	SOUND_SCROLL = {
