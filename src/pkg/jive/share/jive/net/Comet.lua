@@ -144,7 +144,23 @@ end
 
 function disconnect(self)
 	if self.active then
-		_active(self, false)
+	
+		log:debug('Comet:disconnect()')
+
+		local data = { {
+			channel  = '/meta/disconnect',
+			clientId = self.clientId,
+		} }
+
+		local req = function()
+			return CometRequest(
+				_getEventSink(self),
+				self.uri,
+				data
+			)
+		end
+
+		self.rpool:queuePriority(req)
 	end
 end
 
@@ -308,6 +324,14 @@ _getEventSink = function(self)
 						_handleAdvice(self)
 						break
 					end
+				elseif event.channel == '/meta/disconnect' then
+					if event.successful then
+						log:debug("Comet:_getEventSink, disconnect OK")
+					else
+						log:warn("Comet:_getEventSink, disconnect failed: ", event.error)
+					end
+					_active(self, false)
+					break
 				elseif event.channel == '/meta/reconnect' then
 					if event.successful then
 						log:debug("Comet:_getEventSink, reconnect OK")
