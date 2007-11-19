@@ -212,6 +212,7 @@ function _scanComplete(self, scanTable, keepOldEntries)
 			if not self.scanResults[mac] then
 				local item = {
 					text = mac,
+					sound = "WINDOWSHOW",
 					icon = Icon("icon"),
 					callback = function()
 							   _setupInit(self, mac, ether)
@@ -242,6 +243,7 @@ end
 -- allow the user to choose between wired or wireless connection
 function _wiredOrWireless(self)
 	local window = Window("window", self:string("SQUEEZEBOX_NETWORK_CONNECTION"), setupsqueezeboxTitleStyle)
+	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu", {{
 						 text = self:string("SQUEEZEBOX_WIRELESS"),
@@ -325,6 +327,7 @@ function _enterIP(self)
 	local v = Textinput.ipAddressValue(address)
 
 	local window = Window("window", self:string("SQUEEZEBOX_IP_ADDRESS"), setupsqueezeboxTitleStyle)
+	window:setAllowScreensaver(false)
 
 	window:addWidget(Textarea("help", self:string("SQUEEZEBOX_IP_ADDRESS_HELP")))
 	window:addWidget(Textinput("textinput", v,
@@ -351,7 +354,7 @@ function _setupInit(self, mac, ether)
 	self.mac = mac or self.mac
 	self.ether = ether or self.ether
 
-	_setAction(self, t_connectJiveAdhoc)
+	_setAction(self, t_disconnectSlimserver)
 
 	-- remove squeezebox from scan results
 	self.scanMenu:removeItem(self.scanResults[self.mac].item)
@@ -703,6 +706,38 @@ function t_readJiveConfig(self)
 end
 
 
+-- disconnect from all slimservers
+function t_disconnectSlimserver(self)
+	log:warn("t_disconnectSlimserver")
+
+	-- we must have a network connection now, either to an
+	-- access point or bridged.
+	assert(self.networkId, "jive not connected to network")
+
+	-- disconnect to slimserver
+	self.slimdiscovery.serversObj:disconnect()
+
+	_setAction(self, t_waitDisconnectSlimserver)
+end
+
+
+-- wait until we have disconnected from all slimservers
+function t_waitDisconnectSlimserver(self)
+	log:warn("t_waitDisconnectSlimserver")
+
+	local connected = false
+
+	for i,server in self.slimdiscovery:allServers() do
+		connected = connected or server:isConnected()
+		log:warn("server=", server:getName(), " connected=", connected)
+	end		
+
+	if not connected then
+		_setAction(self, t_connectJiveAdhoc)
+	end
+end
+
+
 -- connects jive to the squeezebox adhoc network. we also capture the existing
 -- network id for later.
 function t_connectJiveAdhoc(self)
@@ -711,13 +746,6 @@ function t_connectJiveAdhoc(self)
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_CONNECTION"
 
 	local request, response, id
-
-	-- we must have a network connection now, either to an
-	-- access point or bridged.
-	assert(self.networkId, "jive not connected to network")
-
-	-- disconnect to slimserver
-	self.slimdiscovery.serversObj:connect()
 
 	-- connect to squeezebox ah-hoc network
 	local ssid = 'logitech' .. self.ether .. 'squeezebox' .. self.ether .. self.mac
@@ -955,6 +983,7 @@ end
 -- menu allowing the user to choose the slimserver they want to connect to
 function _chooseSlimserver(self)
 	local window = Window("window", self:string("SQUEEZEBOX_MUSIC_SOURCE"), setupsqueezeboxTitleStyle)
+	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu")
 	local help = Textarea("help", self:string("SQUEEZEBOX_MUSIC_SOURCE_HELP", self.squeezeboxIPAddr))
@@ -1145,18 +1174,18 @@ function _setupSqueezebox(self)
 	_nextAction(self)
 
 	local help
-	if self._action == t_connectJiveAdhoc then
-		if self.data1.SSID then
-			help = self:string("SQUEEZEBOX_CONNECTING_TO", self.data1.SSID)
-		else
-			help = self:string("SQUEEZEBOX_CONNECTING_TO", tostring(self:string("SQUEEZEBOX_ETHERNET")))
-		end
-	elseif self._action == t_udapSetSlimserver then
+	if self._action == t_udapSetSlimserver then
 		help = self:string("SQUEEZEBOX_CONNECTING_TO", tostring(self.slimserver))
 	elseif self._action == t_waitSqueezeboxNetwork then
 		-- displayed when setting squeezebox follow udap discovery
 		-- e.g. when squeezebox is discovered with blue led
 		help = self:string("SQUEEZEBOX_FINDING_SOURCES")
+	else
+		if self.data1.SSID then
+			help = self:string("SQUEEZEBOX_CONNECTING_TO", self.data1.SSID)
+		else
+			help = self:string("SQUEEZEBOX_CONNECTING_TO", tostring(self:string("SQUEEZEBOX_ETHERNET")))
+		end
 	end
 
 	local window = Popup("popupIcon")
@@ -1191,6 +1220,8 @@ end
 -- Squeezebox setup completed
 function _setupOK(self)
 	local window = Popup("popupIcon")
+	window:setAllowScreensaver(false)
+
 	window:addWidget(Icon("iconConnected"))
 
 	local text = Label("text", self:string("SQUEEZEBOX_SETUP_COMPLETE"))
@@ -1215,6 +1246,7 @@ end
 -- Squeezebox setup failed
 function _setupFailed(self)
 	local window = Window("wireless", self:string("SQUEEZEBOX_PROBLEM"), setupsqueezeboxTitleStyle)
+	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu",
 				{

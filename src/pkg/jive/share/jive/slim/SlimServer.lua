@@ -284,7 +284,7 @@ end
 function disconnect(self)
 	log:warn(self, ":disconnect()")
 
-	self.artworkPool:disconnect()
+	self.artworkPool:close()
 	self.comet:disconnect()
 end
 
