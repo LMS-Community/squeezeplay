@@ -84,8 +84,8 @@ function settingsShow(self, menuItem)
 
 	-- discovered slimservers
 	for _,server in self.sdApplet:allServers() do
-		local id = server:getIpPort()
-		self:_addServerItem(id, server)
+		local id, port = server:getIpPort()
+		self:_addServerItem(id, port, server)
 	end
 
 	local item = {
@@ -140,8 +140,8 @@ function settingsShow(self, menuItem)
 end
 
 
-function _addServerItem(self, id, server)
-	log:debug("_addServerItem ", id, " " ,server)
+function _addServerItem(self, id, port, server)
+	log:debug("_addServerItem ", id, " " , port, " ", server)
 
 	-- remove existing entry
 	if self.serverList[id] then
@@ -155,7 +155,17 @@ function _addServerItem(self, id, server)
 		callback = function() self:_serverMenu(id, server) end,
 		weight = 1
 	}
+
+	-- this is the current server if _server.id == id .. ":" .. port
+	local currentPlayer = self.sdApplet:getCurrentPlayer()
+	local currentServer = currentPlayer:getSlimServer()
+	local thisServer = id .. ':' .. port
+	if currentServer.id == thisServer then
+		item.style = 'checked'
+	end
+
 	self.serverMenu:addItem(item)
+
 	self.serverList[id] = item
 end
 
