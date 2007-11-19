@@ -98,6 +98,10 @@ function settingsShow(self, menuItem)
 	local currentLocale = locale:getLocale()
 	log:info("locale currently is ", currentLocale)
 
+	-- this uses private data/methods from Applet and locale. don't do this elsewhere,
+	-- but it's needed for speed here
+	self.allStrings = locale:loadAllStrings(self._entry.stringsFilepath)
+
 	-- setup menu
 	local window = Window("window", self:string("LANGUAGE"), 'settingstitle')
 	local menu = SimpleMenu("menu")
