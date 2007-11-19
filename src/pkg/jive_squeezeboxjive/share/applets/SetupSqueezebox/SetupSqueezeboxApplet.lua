@@ -54,6 +54,12 @@ function init(self)
 	self.data2 = {}
 	self.seqno = math.random(65535)
 
+	self.slimdiscovery = AppletManager:getAppletInstance("SlimDiscovery")
+	if not self.slimdiscovery then
+		error("No slimdiscovery applet")
+	end
+
+
 	self.t_ctrl = Wireless(jnt, "eth0")
 
 	-- socket for udap discovery
@@ -710,6 +716,9 @@ function t_connectJiveAdhoc(self)
 	-- access point or bridged.
 	assert(self.networkId, "jive not connected to network")
 
+	-- disconnect to slimserver
+	self.slimdiscovery.serversObj:connect()
+
 	-- connect to squeezebox ah-hoc network
 	local ssid = 'logitech' .. self.ether .. 'squeezebox' .. self.ether .. self.mac
 	local option = {
@@ -920,9 +929,8 @@ function t_waitJiveNetwork(self)
 			return
 		end
 
-		-- send notification we're on a new network
-		-- this will force Comet to reconnect to slimserver
-		jnt:notify("networkConnected")
+		-- reconnect to slimserver
+		self.slimdiscovery.serversObj:connect()
 
 		_setAction(self, t_waitSqueezeboxNetwork)
 	end
@@ -986,17 +994,12 @@ end
 
 -- poll for slimservers and populate the slimserver menu.
 function _scanSlimservers(self)
-	local sdApplet = AppletManager:getAppletInstance("SlimDiscovery")
-	if not sdApplet then
-		return
-	end
-
 	-- scan for slimservers
 	log:warn("in _scanSlimservers calling discover")
-	sdApplet.serversObj:discover()
+	self.slimdiscovery:discover()
 
 	-- update slimserver list
-	for i,v in sdApplet:allServers() do
+	for i,v in self.slimdiscovery:allServers() do
 		if self.slimservers[i] == nil then
 			local item = {
 				text = v:getName(),
@@ -1066,10 +1069,7 @@ function notify_playerNew(self, player)
 	log:warn("got new playerId ", playerId)
 	if string.lower(playerId) == string.lower(self.mac) then
 		-- player is connected to slimserver, set as current player
-		local manager = AppletManager:getAppletInstance("SlimDiscovery")
-		if manager then
-			manager:setCurrentPlayer(player)
-		end
+		self.slimdiscovery:setCurrentPlayer(player)
 
 		-- and then we're done
 		_setupOK(self)

@@ -225,6 +225,37 @@ end
 
 --[[
 
+=head2 connect()
+
+Allow connection to all Slimservers.
+
+=cut
+--]]
+function connect(self)
+	for ss_id, server in pairs(self._servers) do
+		server:connect()
+	end
+end
+
+
+--[[
+
+=head2 disconnect()
+
+Force disconnection from all Slimservers.
+
+=cut
+--]]
+function disconnect(self)
+	for ss_id, server in pairs(self._servers) do
+		server:disconnect()
+	end
+end
+
+
+
+--[[
+
 =head2 jive.slim.SlimServers:allServers()
 
 Returns an iterator over the discovered slimservers.
