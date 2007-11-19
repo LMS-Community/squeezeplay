@@ -331,6 +331,13 @@ _getEventSink = function(self)
 						log:warn("Comet:_getEventSink, disconnect failed: ", event.error)
 					end
 					_active(self, false)
+					
+					-- Mark all subs as pending so they can be resubscribed later
+					for i, v in ipairs( self.subs ) do
+						log:debug("Will re-subscribe to ", v.subscription, " on next connect")
+						v.pending = true
+					end
+					
 					break
 				elseif event.channel == '/meta/reconnect' then
 					if event.successful then
