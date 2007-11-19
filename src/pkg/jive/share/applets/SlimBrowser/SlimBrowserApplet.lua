@@ -186,6 +186,8 @@ end
 -- FIXME: should this be styled?
 local function _artworkThumbUri(iconId, size)
 
+	-- we want a 56 pixel thumbnail if it wasn't specified
+	if not size then size = 56 end
 
 	-- if the iconId is a number, this is cover art, otherwise it's static content
 	-- do some extra checking instead of just looking for type = number
@@ -199,14 +201,20 @@ local function _artworkThumbUri(iconId, size)
 	end
 
 	-- if this is a number, construct the path for a sizexsize cover art thumbnail
+	local artworkUri
+	local resizeFrag = '_' .. size .. 'x' .. size .. '_p.png' -- 'p' is for padded, png gives us transparency
 	if thisIsAnId then 
 		-- we want a 56 pixel thumbnail if it wasn't specified
-		if not size then size = 56 end
-		return '/music/' .. iconId .. '/cover_' .. size .. 'x' .. size .. '_p.png' -- 'p' is for padded, png gives us transparency
-	-- if this isn't a number, then we just want the path
+		artworkUri = '/music/' .. iconId .. '/cover' .. resizeFrag 
+	-- if this isn't a number, then we just want the path with server-side resizing
+	-- if .png, then resize it
+	elseif string.match(iconId, '.png') then
+		artworkUri = string.gsub(iconId, '.png', resizeFrag) 
+	-- otherwise punt
 	else
 		return iconId
 	end
+	return artworkUri
 end
 
 
@@ -364,7 +372,7 @@ local function _artworkItem(item, group)
 
 	if item["icon-id"] then
 		-- Fetch an image from SlimServer
-		_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri)
+		_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri, 56)
 	elseif item["icon"] then
 		-- Fetch a remote image URL, sized to 56x56
 		_server:fetchArtworkURL(item["icon"], icon, 56)
