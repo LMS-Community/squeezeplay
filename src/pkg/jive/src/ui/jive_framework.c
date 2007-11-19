@@ -439,13 +439,18 @@ int jiveL_update_screen(lua_State *L) {
 		c0 = clock();
 	}
 
-	jive_origin = next_jive_origin;
 
-	/* Layout window and widgets */
-	if (jive_getmethod(L, -1, "checkLayout")) {
-		lua_pushvalue(L, -2);
-		lua_call(L, 1, 0);
-	}
+	do {
+		jive_origin = next_jive_origin;
+
+		/* Layout window and widgets */
+		if (jive_getmethod(L, -1, "checkLayout")) {
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 0);
+		}
+
+		/* check in case the origin changes during layout */
+	} while (jive_origin != next_jive_origin);
 
 	if (perfwarn.screen) t1 = SDL_GetTicks();
  

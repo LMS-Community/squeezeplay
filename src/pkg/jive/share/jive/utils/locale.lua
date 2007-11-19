@@ -57,7 +57,7 @@ function setLocale(self, newLocale)
 	-- reload existing strings files
 	for k, v in pairs(loadedFiles) do
 		readGlobalStringsFile(self)
-		parseStringsFile(self, newLocale, k, v)
+		_parseStringsFile(self, newLocale, k, v)
 	end
 end
 
@@ -104,7 +104,7 @@ function readGlobalStringsFile(self)
 	if globalStringsPath == nil then
 		return globalStrings
 	end
-	globalStrings = parseStringsFile(self, globalLocale, globalStringsPath, globalStrings)
+	globalStrings = _parseStringsFile(self, globalLocale, globalStringsPath, globalStrings)
 	setmetatable(globalStrings, { __index = self , mode = "_v" })
 	return globalStrings
 end
@@ -116,12 +116,12 @@ function readStringsFile(self, fullPath, stringsTable)
 	stringsTable = stringsTable or {}
 	loadedFiles[fullPath] = stringsTable
 	setmetatable(stringsTable, { __index = globalStrings })
-	stringsTable = parseStringsFile(self, globalLocale, fullPath, stringsTable)
+	stringsTable = _parseStringsFile(self, globalLocale, fullPath, stringsTable)
 
 	return stringsTable
 end
 
-function parseStringsFile(self, myLocale, myFilePath, stringsTable)
+function _parseStringsFile(self, myLocale, myFilePath, stringsTable)
 	local stringsFile = io.open(myFilePath)
 	if stringsFile == nil then
 		return stringsTable
@@ -179,7 +179,63 @@ function parseStringsFile(self, myLocale, myFilePath, stringsTable)
 		end
 	end
 	stringsFile:close()
+
 	return stringsTable
+end
+
+
+--[[
+
+=head2 loadAllStrings(self, filePath)
+
+Parse strings.txt file and put all locale translations into a lua table
+that is returned. Strings for all locales are returned.
+
+=cut
+--]]
+function loadAllStrings(self, myFilePath)
+	local stringsFile = io.open(myFilePath)
+	if stringsFile == nil then
+		return {}
+	end
+	
+	local allStrings = {}
+	local thisString 
+	while true do
+		local line = stringsFile:read()
+		if not line then
+			break
+		end
+
+		-- remove trailing spaces and/or control chars
+		line = string.gsub(line, "[%c ]+$", '')
+		-- lines that begin with an uppercase char are the strings to translate
+		if string.match(line, '^%u') then
+			thisString = line
+			log:debug("this is a string to be matched |", thisString, "|")
+		else
+			-- look for matching translation lines.
+			-- defined here as one or more tabs
+			-- followed by one or more non-spaces (lang)
+			-- followed by one or more tabs
+			-- followed by the rest (the translation)
+			local locale, translatedString  = string.match(line, '^\t+([^%s]+)\t+(.+)')
+
+			if thisString and translatedString then
+				-- convert \n to \n
+				translatedString = string.gsub(translatedString, "\\n", "\n")
+
+				if allStrings[locale] == nil then
+					allStrings[locale] = {}
+				end
+
+				allStrings[locale][thisString] = translatedString
+			end
+		end
+	end
+	stringsFile:close()
+
+	return allStrings
 end
 
 

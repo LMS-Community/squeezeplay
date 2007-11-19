@@ -33,6 +33,7 @@ local Window           = require("jive.ui.Window")
 local log              = require("jive.utils.log").logger("applets.setup")
 local locale           = require("jive.utils.locale")
 local table            = require("jive.utils.table")
+local debug            = require("jive.utils.debug")
 
 local appletManager    = appletManager
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
@@ -49,6 +50,10 @@ oo.class(_M, Applet)
 function setupShow(self, setupNext)
 	local currentLocale = locale:getLocale()
 	log:info("locale currently is ", currentLocale)
+
+	-- this uses private data/methods from Applet and locale. don't do this elsewhere,
+	-- but it's needed for speed here
+	self.allStrings = locale:loadAllStrings(self._entry.stringsFilepath)
 
 	-- setup menu
 	local window = Window("window", self:string("CHOOSE_LANGUAGE"), 'settingstitle')
@@ -136,8 +141,12 @@ function _showLang(self, choice)
 		choice = self:getSettings().locale
 	end
 
-	-- this uses private data/methods from Applet and locale, but it's needed for speed
-	locale:parseStringsFile(choice, self._entry.stringsFilepath, self._stringsTable)
+	-- this modifies the Applets strings directly. don't do this elsewhere, but it's
+	-- needed for speed here
+	for k,v in pairs(self._stringsTable) do
+		v.str = self.allStrings[choice][k] or self.allStrings["EN"][k]
+	end
+
 	Framework:styleChanged()
 end
 
