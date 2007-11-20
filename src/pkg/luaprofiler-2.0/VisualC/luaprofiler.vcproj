@@ -81,6 +81,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			>
@@ -101,6 +102,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories=".;&quot;..\..\lua-5.1.1\src&quot;"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
