@@ -35,13 +35,11 @@ end
 
 function registerApplet(meta)
 
---[[
 	-- add a menu to load us
 	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))
 	local advancedSettings = remoteSettings:subMenu(meta:string("ADVANCED_SETTINGS"), 1000)
 	
 	advancedSettings:addItem(meta:menuItem("DEBUG_LOG", function(applet, ...) applet:logSettings(...) end))
---]]
 end
 
 
