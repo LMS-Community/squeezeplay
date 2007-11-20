@@ -161,7 +161,7 @@ function t_scanDiscover(self, pkt)
 		return
 	end
 
-	if pkt.type ~= "squeezebox" then
+	if pkt.ucp.type ~= "squeezebox" then
 		return
 	end
 
@@ -174,27 +174,21 @@ function t_scanDiscover(self, pkt)
 					      sound = "WINDOWSHOW",
 					      icon = Icon("icon"),
 					      callback = function()
-								 _setupInit(self, mac, nil)
-
-								 self.interface = ''
-								 self.ipAddress = ''
-
-								 _setAction(self, t_waitSqueezeboxNetwork)
-								 _setupSqueezebox(self)
-								 
-								 self.scanResults[mac] = nil
+								 _selectSqueezebox(self, mac)
 							 end,
 					      weight = 1
 				      }
 
 				      self.scanResults[mac] = {
 					      item = item,            -- menu item
-					      ether = ether,
-					      udap = true
+					      ether = nil	      -- unknown
 				      }
 
 				      self.scanMenu:addItem(item)
 			      end
+
+			      -- squeezebox available via udap
+			      self.scanResults[mac].udap = true
 		      end)
 end
 
@@ -215,28 +209,58 @@ function _scanComplete(self, scanTable, keepOldEntries)
 					sound = "WINDOWSHOW",
 					icon = Icon("icon"),
 					callback = function()
-							   _setupInit(self, mac, ether)
-							   _setupConfig(self)
+							   _selectSqueezebox(self, mac)
 						   end,
 					weight = 1
 				}
 		      
 				self.scanResults[mac] = {
 					item = item,            -- menu item
-					ether = ether,
+					ether = ether
 				}
 
 				self.scanMenu:addItem(item)
 			end
 
+			-- squeezebox available via adhoc
+			self.scanResults[mac].adhoc = true
+
 			-- remove networks not seen for 10 seconds
-			if keepOldEntries ~= true and self.scanResults[mac].udap ~= true and os.difftime(now, entry.lastScan) > 10 then
+			if keepOldEntries ~= true and os.difftime(now, entry.lastScan) > 10 then
 				log:warn(mac, " not ssen for 10 seconds")
-				self.scanMenu:removeItem(self.scanResults[mac].item)
-				self.scanResults[mac] = nil
+				self.scanResults[mac].adhoc = nil
+
+				if self.scanResults[mac].udap ~= true then
+					self.scanMenu:removeItem(self.scanResults[mac].item)
+					self.scanResults[mac] = nil
+				end
 			end
 		end
 	end
+end
+
+
+function _selectSqueezebox(self, mac)
+
+	-- prefer setup via wireless
+	if self.scanResults[mac].adhoc then
+		-- adhoc setup
+		_setupInit(self, mac, self.scanResults[mac].ether)
+		_setupConfig(self)
+	else
+		-- udap setup
+		_setupInit(self, mac, nil)
+
+		self.interface = ''
+		self.ipAddress = ''
+
+		_setAction(self, t_waitSqueezeboxNetwork)
+		_setupSqueezebox(self)
+	end
+
+	-- remove squeezebox from scan results
+	self.scanMenu:removeItem(self.scanResults[self.mac].item)
+	self.scanResults[self.mac] = nil
 end
 
 
@@ -353,12 +377,9 @@ end
 function _setupInit(self, mac, ether)
 	self.mac = mac or self.mac
 	self.ether = ether or self.ether
+	self.interface = nil
 
 	_setAction(self, t_disconnectSlimserver)
-
-	-- remove squeezebox from scan results
-	self.scanMenu:removeItem(self.scanResults[self.mac].item)
-	self.scanResults[self.mac] = nil
 end
 
 
@@ -870,8 +891,6 @@ function t_udapSink(self, chunk, err)
 			t_scanDiscover(self, pkt)
 		elseif self._action == t_udapDiscover then
 			_setAction(self, t_udapSetData)
-		else
-			error("unexpected state " .. tostring(self._action))
 		end
 
 	elseif pkt.uapMethod == "set_data" then
