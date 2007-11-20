@@ -18,7 +18,7 @@
 
 
 static const char *bsp_devname = "/dev/misc/jive_mgmt";
-static const char *mixer_devname = "/dev/sound/mixer";
+static const char *mixer_devname = "/dev/mixer";
 
 
 static int bsp_fd = -1;
