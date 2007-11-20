@@ -62,6 +62,15 @@ module(...)
 oo.class(_M, Applet)
 
 function step1(self)
+	-- add 'RETURN_TO_SETUP' at top
+	jiveMain:addItem({
+		id   = 'returntosetup',
+		text = self:string("RETURN_TO_SETUP"),
+		callback = function()
+			self:step1()
+		end,
+	}, 2)
+
 	-- choose language
 	self.setupLanguage = assert(appletManager:loadApplet("SetupLanguage"))
 	self._topWindow = self.setupLanguage:setupShow(function() self:step2() end)
@@ -179,7 +188,7 @@ end
 function step8(self)
 	-- all done
 	self:getSettings().setupDone = true
-	jiveMain:removeItemByText(self:string("RETURN_TO_SETUP"))
+	jiveMain:removeItemById('returntosetup')
 	self:storeSettings()
 
 	return self:setupDoneShow(function()

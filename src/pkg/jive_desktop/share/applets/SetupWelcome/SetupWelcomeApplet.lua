@@ -58,6 +58,15 @@ module(...)
 oo.class(_M, Applet)
 
 function step1(self)
+	-- put Return to Setup menu item on jiveMain menu
+	jiveMain:addItem({
+		id   = 'returntosetup',
+		text = self:string("RETURN_TO_SETUP"),
+		callback = function()
+			self:step1()
+		end,
+	}, 2)
+
 	local setupLanguage = assert(appletManager:loadApplet("SetupLanguage"))
 	self._topWindow = setupLanguage:setupShow(function() self:step2() end)
 	disableHomeKeyDuringSetup = 
@@ -101,7 +110,7 @@ function step4(self)
 			self._topWindow:hideToTop(Window.transitionPushLeft) 
 
 			self:getSettings().setupDone = true
-			jiveMain:removeItemByText(self:string("RETURN_TO_SETUP"))
+			jiveMain:removeItemById('returntosetup')
 			self:storeSettings()
 		end)
 end

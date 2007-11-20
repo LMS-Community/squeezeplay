@@ -127,11 +127,13 @@ end
 
 
 -- create a sub menu
-function JiveMainMenu:subMenu(name, weight, titleStyle)
+function JiveMainMenu:subMenu(name, weight, titleStyle, id)
 
-	if self.menus[name] == nil then
+	if not id then id = name end
+
+	if self.menus[id] == nil then
 	
-		local menu = JiveMainMenu(name, "", titleStyle)
+		local menu = JiveMainMenu(id, "", titleStyle)
 
 		local item = {
 			text = name,
@@ -142,11 +144,11 @@ function JiveMainMenu:subMenu(name, weight, titleStyle)
 		}
 
 		self:addItem(item, weight)
-		self.menus[name] = menu
+		self.menus[id] = menu
 		_jiveMainMenuChanged(self)
 	end
 
-	return self.menus[name]
+	return self.menus[id]
 end
 
 
@@ -168,12 +170,17 @@ function JiveMainMenu:removeItem(item)
 	_jiveMainMenuChanged(self)
 end
 
+-- remove an item from a menu by its id
+function JiveMainMenu:removeItemById(id)
+	self.menu:removeItemById(id)
+	_jiveMainMenuChanged(self)
+end
+
 -- remove an item from a menu by its text
 function JiveMainMenu:removeItemByText(text)
 	self.menu:removeItemByText(text)
 	_jiveMainMenuChanged(self)
 end
-
 
 
 -- iterator over items in menu
