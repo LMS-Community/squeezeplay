@@ -13,12 +13,14 @@ A simple menu widget, extends L<jive.ui.Menu>.
  local menu = jive.ui.Menu("menu",
 		   {
 			   {
+				   id = 'uniqueString',
 				   text = "Item 1",
 				   sound = "WINDOWSHOW",
 				   icon = widget1,
 				   callback = function1
 			   ),
 			   {
+				   id = 'anotherUniqueString',
 				   text = "Item 2",
 				   sound = "WINDOWSHOW",
 				   icon = widget2,
@@ -273,15 +275,34 @@ end
 
 --[[
 
+=head2 jive.ui.Menu:getIdIndex(id)
+
+Returns the index of item given by I<id>, or nil if it is not in this menu.
+
+=cut
+--]]
+function getIdIndex(self, id)
+	for k,v in ipairs(self.items) do
+		if id == v.id then
+			return k
+		end
+	end
+
+	return nil
+end
+
+
+--[[
+
 =head2 jive.ui.Menu:getTextIndex(item)
 
 Returns the index of item given by I<text>, or nil if it is not in this menu.
 
 =cut
 --]]
-function getTextIndex(self, item)
+function getTextIndex(self, text)
 	for k,v in ipairs(self.items) do
-		if item == v.text then
+		if text == v.text then
 			return k
 		end
 	end
@@ -313,7 +334,8 @@ end
 Add I<item> to the end of the menu. Returns the index of the item added.
 
 I<item> is a table with the following keys: 
-- text, 
+- id,
+- text (id will default to text if not given), 
 - icon (optional), 
 - weight (optional), see jive.ui.Menu.itemComparatorWeightAlpha,
 - callback (optional), a function performing whatever the menu is supposed to do, having prototype:
@@ -323,6 +345,9 @@ For convenience, EVENT_CONSUME is assumed if the function returns nothing
 =cut
 --]]
 function addItem(self, item)
+
+	if not item.id then item.id = item.text end
+
 	if self.comparator then
 		for i=1,#self.items do
 			local x = self.items[i]
@@ -429,14 +454,32 @@ end
 
 --[[
 
-=head2 jive.ui.Menu:removeItemByText(item)
+=head2 jive.ui.Menu:removeItemById(id)
+
+Remove I<item> given by I<id> from the menu. Returns the item removed from the menu.
+
+=cut
+--]]
+function removeItemById(self, id)
+	local index = self:getIdIndex(id)
+	if index ~= nil then
+		return self:removeIndex(index)
+	else
+		return nil
+	end
+end
+
+
+--[[
+
+=head2 jive.ui.Menu:removeItemByText(text)
 
 Remove I<item> given by I<text> from the menu. Returns the item removed from the menu.
 
 =cut
 --]]
-function removeItemByText(self, item)
-	local index = self:getTextIndex(item)
+function removeItemByText(self, text)
+	local index = self:getTextIndex(text)
 	if index ~= nil then
 		return self:removeIndex(index)
 	else
