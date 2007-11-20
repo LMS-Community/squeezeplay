@@ -10,4 +10,12 @@ SELECT_PLAYER
 	IT	Scegli lettore
 	NL	Speler kiezen
 
+SQUEEZEBOX_SETUP
+	DE	Squeezebox einrichten
+	EN	Set Up Squeezebox
+	ES	Configuración de Squeezebox
+	FR	Configuration de la Squeezebox
+	IT	Configura Squeezebox
+	NL	Squeezebox instellen
+
 

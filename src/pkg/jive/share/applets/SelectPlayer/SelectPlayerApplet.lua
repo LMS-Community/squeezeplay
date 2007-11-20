@@ -89,7 +89,7 @@ function manageSelectPlayerMenu(self)
 			local menuItem = {
 				text = self:string("SELECT_PLAYER"),
 				sound = "WINDOWSHOW",
-				callback = function() self:setupShow() end,
+				callback = function() self:setupShow() end
 			}
 			jiveMain:addItem(menuItem, 80)
 			self.selectPlayerMenuItem = menuItem
@@ -116,7 +116,8 @@ function _addPlayerItem(self, player)
 			   end,
 		focusGained = function(event)
 			self:_showWallpaper(playerMac)
-		end
+		end,
+		weight =  1
 	}
 	self.playerMenu:addItem(item)
 	self.playerItem[playerMac] = item
@@ -135,7 +136,7 @@ function setupShow(self, setupNext)
 	-- get list of slimservers
 	local window = Window("window", self:string("SELECT_PLAYER"), 'settingstitle')
         local menu = SimpleMenu("menu")
-	menu:setComparator(SimpleMenu.itemComparatorAlpha)
+	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
 	self.playerMenu = menu
 	self.setupNext = setupNext or 
@@ -153,6 +154,19 @@ function setupShow(self, setupNext)
 		_addPlayerItem(self, playerObj)
 	end
 
+	-- Bug 6130 add a Set up Squeezebox option
+	local sbsetup = AppletManager:loadApplet("SetupSqueezebox")
+	if sbsetup then
+		self.playerMenu:addItem({
+					text = self:string("SQUEEZEBOX_SETUP"),
+					sound = "WINDOWSHOW",
+					callback = function()
+							   sbsetup:settingsShow()
+						   end,
+					weight =  10
+				})
+	end
+
 	--[[
 	-- no player for debugging
 	self.playerMenu:addItem({
@@ -161,7 +175,8 @@ function setupShow(self, setupNext)
 					callback = function()
 							   self:selectPlayer(nil)
 							   self.setupNext()
-						   end
+						   end,
+					weight =  9
 				})
 	--]]
 
