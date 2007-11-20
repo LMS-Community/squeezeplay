@@ -1,82 +1,116 @@
-# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
 #
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 WELCOME
-	EN	Welcome
 	DE	Willkommen!
+	EN	Welcome
 	ES	Bienvenido.
-	IT	Benvenuti
 	FR	Bienvenue!
+	IT	Benvenuti
 	NL	Welkom!
 
 SETTINGS
-	EN	Settings
 	DE	Einstellungen
+	EN	Settings
 	ES	Configuración
-	IT	Impostazioni
 	FR	Paramètres
+	IT	Impostazioni
 	NL	Instellingen
 
 REMOTE_SETTINGS
-	EN	Controller Settings
 	DE	Fernbedienungseinstellungen
+	EN	Controller Settings
 	ES	Configuracion del mando
-	IT	Impostazioni telecomando
 	FR	Parametres de la telecommande
+	IT	Impostazioni telecomando
 	NL	Afstandsbedieningsinstellingen
 
 JIVE_HOME
-	EN	Jive Home
 	DE	Jive-Hauptmenü
+	EN	Jive Home
 	ES	Página principal de Jive
-	IT	Home page Jive
 	FR	La maison de Jive
+	IT	Home page Jive
 	NL	Hoofdmenu van Jive
 
 ADVANCED_SETTINGS
+	DE	Erweitert
 	EN	Advanced
+	ES	Avanzada
+	FR	Avancé
+	IT	Avanzate
+	NL	Geavanceerd
 
 FACTORY_TEST
-	EN	Factory Test
 	DE	Fabriktest
+	EN	Factory Test
 	ES	Prueba de fábrica
-	IT	Test di fabbrica
 	FR	Test d'usine
+	IT	Test di fabbrica
 	NL	Fabriekstest
 
 DEBUG_LOG
-	EN	Logging
 	DE	Protokoll
+	EN	Logging
 	ES	Registrando
-	IT	Registrazione in corso
 	FR	Journalisation
+	IT	Registrazione in corso
 	NL	Loggen
 
 EXTRAS
-	EN	Extras
 	DE	Extras
+	EN	Extras
 	ES	Extras
-	IT	Extra
 	FR	Extras
+	IT	Extra
 	NL	Extra's
 
 INSERT
+	DE	Einfügen
 	EN	Insert
+	ES	Insertar
+	FR	Insérer
+	IT	Inserisci
+	NL	Invoegen
 
 DELETE
+	DE	Löschen
 	EN	Delete
+	ES	Eliminar
+	FR	Supprimer
+	IT	Elimina
+	NL	Verwijderen
 
 ALLOWEDCHARS_NOCAPS
-	EN	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:\\\"'<>?-=,./~`[];0123456789
+	DE	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
+	EN	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
+	ES	 abcdefghijklmnñopqrstuvwxyz¡!@#$%^&*()_+{}:\\\"'<>¿?-=,./~`[];0123456789
+	FR	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
+	IT	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
+	NL	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 
 ALLOWEDCHARS_CAPS
-	EN	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\\\"'<>?-=,./~`[];0123456789
+	DE	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
+	EN	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
+	ES	 ABCDEFGHIJKLMNÑOPQRSTUVWXYZ¡!@#$%^&*()_+{}:\\\"'<>¿?-=,./~`[];0123456789
+	FR	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
+	IT	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
+	NL	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 
 ALLOWEDCHARS_WITHCAPS
-	EN	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	DE	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	EN	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	ES	 abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ¡!@#$%^&*()_+{}:\"'<>¿?-=,./~`[];0123456789
+	FR	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	IT	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	NL	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 
 RETURN_TO_SETUP
+	DE	Zurück zum Setup
 	EN	Return to Setup
+	ES	Regresar a configuración
+	FR	Retour à la configuration
+	IT	Torna all'installazione
+	NL	Terug naar set-up
 

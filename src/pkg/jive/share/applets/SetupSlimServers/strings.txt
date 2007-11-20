@@ -1,59 +1,68 @@
-# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
 #
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SLIMSERVER_SERVERS
+	DE	Musikquelle
 	EN	Music Source
+	ES	Origen de música
+	FR	Source musicale
+	IT	Sorgente musicale
+	NL	Muziekbron
 
 SLIMSERVER_AUTO_DISCOVERY
-	EN	Auto Discovery
 	DE	Autom. Erkennung
+	EN	Auto Discovery
 	ES	Detección automática
-	IT	Rilevamento automatico
 	FR	Détection automatique
+	IT	Rilevamento automatico
 	NL	Autom. detectie
 
 SLIMSERVER_FORGET
-	EN	Forget %s
 	DE	%s vergessen
+	EN	Forget %s
 	ES	Olvidar %s
-	IT	Ignora %s
 	FR	Ignorer %s
+	IT	Ignora %s
 	NL	%s vergeten
 
 SLIMSERVER_ADDRESS
-	EN	Address:
 	DE	Adresse:
+	EN	Address:
 	ES	Dirección:
-	IT	Indirizzo:
 	FR	Adresse:
+	IT	Indirizzo:
 	NL	Adres:
 
 SLIMSERVER_VERSION
-	EN	Version:
 	DE	Version:
+	EN	Version:
 	ES	Versión:
-	IT	Versione:
 	FR	Version:
+	IT	Versione:
 	NL	Versie:
 
 SLIMSERVER_ADD_SERVER
-	EN	Other Server
 	DE	Anderer Server
+	EN	Other Server
 	ES	Otro servidor
-	IT	Altro server
 	FR	Autres services
+	IT	Altro server
 	NL	Andere server
 
 SLIMSERVER_SQUEEZENETWORK
+	DE	SqueezeNetwork
 	EN	SqueezeNetwork
+	ES	SqueezeNetwork
+	FR	SqueezeNetwork
+	IT	SqueezeNetwork
+	NL	SqueezeNetwork
 
 SLIMSERVER_HELP
-	EN	Enter the IP address of the computer running SlimServer
 	DE	IP-Adresse des Computers mit SlimServer eingeben
+	EN	Enter the IP address of the computer running SlimServer
 	ES	Escriba la dirección IP del ordenador que ejecuta SlimServer
-	IT	Immettere l'indirizzo IP del computer in cui è in esecuzione SlimServer
 	FR	Spécifiez l'adresse IP de l'ordinateur exécutant le SlimServer
+	IT	Immettere l'indirizzo IP del computer in cui è in esecuzione SlimServer
 	NL	Voer het IP-adres in van de computer waarop SlimServer wordt uitgevoerd
 

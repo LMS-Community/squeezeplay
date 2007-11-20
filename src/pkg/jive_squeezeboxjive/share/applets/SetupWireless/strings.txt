@@ -1,591 +1,620 @@
-# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
 #
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 #
 
 NETWORK
+	DE	Kabelloses Netzwerk
 	EN	Wireless Network
+	ES	Red inalámbrica
+	FR	Réseau sans fil
+	IT	Rete senza fili
+	NL	Draadloos netwerk
 
 NETWORK_FINDING_NETWORKS
-	EN	\nFinding Networks
 	DE	\nNetzwerksuche
+	EN	\nFinding Networks
 	ES	\nBuscando redes
-	IT	\nRilevamento delle reti
 	FR	\nRecherche de réseaux
+	IT	\nRilevamento delle reti
 	NL	\nBezig met zoeken naar netwerken
 
 NETWORK_BSSID
-	EN	BSSID:
 	DE	BSSID:
+	EN	BSSID:
 	ES	BSSID:
-	IT	BSSID:
 	FR	BSSID:
+	IT	BSSID:
 	NL	BSSID:
 
 NETWORK_ENCRYPTION
-	EN	Encryption:
 	DE	Verschlüsselung:
+	EN	Encryption:
 	ES	Cifrado:
-	IT	Crittografia:
 	FR	Chiffrement:
+	IT	Crittografia:
 	NL	Codering:
 
 NETWORK_CONNECT_TO_NETWORK
-	EN	Connect to network
 	DE	Verbindung zum Netzwerk herstellen
+	EN	Connect to network
 	ES	Conectar a red
-	IT	Connetti alla rete
 	FR	Connecter au réseau
+	IT	Connetti alla rete
 	NL	Verbinding met netwerk maken
 
 NETWORK_ENTER_ANOTHER_NETWORK
-	EN	Other Network
 	DE	Anderes Netzwerk
+	EN	Other Network
 	ES	Otra red
-	IT	Altra rete
 	FR	Autre réseau
+	IT	Altra rete
 	NL	Ander netwerk
 
 NETWORK_FORGET_NETWORK
-	EN	Forget network
 	DE	Netzwerk vergessen
+	EN	Forget network
 	ES	Olvidar red
-	IT	Ignora rete
 	FR	Ignorer le réseau
+	IT	Ignora rete
 	NL	Netwerk vergeten
 
 NETWORK_FORGET_CANCEL
-	EN	Cancel
 	DE	Abbrechen
+	EN	Cancel
 	ES	Cancelar
-	IT	Annulla
 	FR	Annuler
+	IT	Annulla
 	NL	Annuleren
 
 NETWORK_FORGET_CONFIRM
-	EN	Forget %s
 	DE	%s vergessen
+	EN	Forget %s
 	ES	Olvidar %s
-	IT	Ignora %s
 	FR	Ignorer %s
+	IT	Ignora %s
 	NL	%s vergeten
 
 NETWORK_FORGET_HELP
-	EN	Choose Forget %s to confirm that you want to forget the settings for this network.
 	DE	Wählen Sie "%s vergessen", um zu bestätigen, dass diese Einstellungen nicht mehr relevant sind.
+	EN	Choose Forget %s to confirm that you want to forget the settings for this network.
 	ES	Elija Olvidar %s para confirmar que desea olvidar la configuración para esta red.
-	IT	Scegliere Ignora %s per confermare che si desidera ignorare le impostazioni di questa rete.
 	FR	Sélectionnez Ignorer %s pour confirmer que vous souhaitez ignorer les paramètres du réseau.
+	IT	Scegliere Ignora %s per confermare che si desidera ignorare le impostazioni di questa rete.
 	NL	Kies '%s vergeten' om te bevestigen dat de instellingen voor dit netwerk vergeten moeten worden.
 
 NETWORK_FORGOTTEN
-	EN	Forgotting
 	DE	Vergessen
+	EN	Forgotting
 	ES	Olvidando
-	IT	Rete ignorata
 	FR	Ignorer
+	IT	Rete ignorata
 	NL	Bezig met vergeten
 
 NETWORK_FORGOTTEN_NETWORK
-	EN	Forgotting %s
 	DE	%s vergessen
+	EN	Forgotting %s
 	ES	Olvidando %s
-	IT	%s ignorata
 	FR	Ignorer %s
+	IT	%s ignorata
 	NL	%s wordt vergeten
 
 NETWORK_NF
-	EN	NF:
 	DE	NF:
+	EN	NF:
 	ES	No encontrada:
-	IT	NF:
 	FR	NF:
+	IT	NF:
 	NL	NF:
 
 NETWORK_RSSI
-	EN	RSSI:
 	DE	RSSI:
+	EN	RSSI:
 	ES	RSSI:
-	IT	RSSI:
 	FR	RSSI:
+	IT	RSSI:
 	NL	RSSI:
 
 NETWORK_SSID
-	EN	SSID:
 	DE	SSID:
+	EN	SSID:
 	ES	SSID:
-	IT	SSID:
 	FR	SSID:
+	IT	SSID:
 	NL	SSID:
 
 NETWORK_SNR
-	EN	SNR:
 	DE	SNR:
+	EN	SNR:
 	ES	SNR:
-	IT	SNR:
 	FR	SNR:
+	IT	SNR:
 	NL	SNR:
 
 NETWORK_STATE
-	EN	State:
 	DE	Zustand:
+	EN	State:
 	ES	Estado:
-	IT	Stato:
 	FR	Etat:
+	IT	Stato:
 	NL	Status:
 
 NETWORK_STATE_DISCONNECTED
-	EN	Disconnected
 	DE	Getrennt
+	EN	Disconnected
 	ES	Desconectado
-	IT	Disconnesso
 	FR	Déconnecté
+	IT	Disconnesso
 	NL	Verbinding verbroken
 
 NETWORK_STATE_SCANNING
-	EN	Scanning
 	DE	Suche...
+	EN	Scanning
 	ES	Examinando
-	IT	Scansione in corso
 	FR	Analyse
+	IT	Scansione in corso
 	NL	Bezig met scannen
 
 NETWORK_STATE_CONNECTING
-	EN	Connecting
 	DE	Verbindung
+	EN	Connecting
 	ES	Conectando
-	IT	Connessione...
 	FR	Connexion
+	IT	Connessione...
 	NL	Bezig met verbinden
 
 NETWORK_STATE_HANDSHAKE
-	EN	Handshake
 	DE	Handshake
+	EN	Handshake
 	ES	Enlace
-	IT	Handshake
 	FR	Connexion
+	IT	Handshake
 	NL	Handshake
 
 NETWORK_STATE_CONNECTED
-	EN	Connected
 	DE	Verbunden
+	EN	Connected
 	ES	Conectado
-	IT	Connesso
 	FR	Connecté
+	IT	Connesso
 	NL	Verbonden
 
 NETWORK_STATUS
-	EN	Network Status
 	DE	Netzwerkstatus
+	EN	Network Status
 	ES	Estado de red
-	IT	Stato della rete
 	FR	Statut du réseau
+	IT	Stato della rete
 	NL	Netwerkstatus
 
 NETWORK_UNSUPPORTED_TYPES_HELP
-	EN	WPA-EAP and WPA2-EAP are not supported encryption types.
 	DE	WPA-EAP und WPA2-EAP werden nicht unterstützt.
+	EN	WPA-EAP and WPA2-EAP are not supported encryption types.
 	ES	WPA-EAP y WPA2-EAP no son tipos de cifrado admitidos.
-	IT	I tipi di crittografia WPA-EAP e WPA2-EAP non sono supportati.
 	FR	Les types de chiffrement WPA-EAP et WPA2-EAP ne sont pas pris en charge.
+	IT	I tipi di crittografia WPA-EAP e WPA2-EAP non sono supportati.
 	NL	De coderingstypen WPA-EAP en WPA2-EAP worden niet ondersteund.
 
 NETWORK_WIRELESS_KEY
-	EN	Wireless Key
 	DE	WEP-Schlüssel
+	EN	Wireless Key
 	ES	Clave inalámbrica
-	IT	Chiave rete senza fili
 	FR	Clé sans fil
+	IT	Chiave rete senza fili
 	NL	Draadloze sleutel
 
 NETWORK_WIRELESS_KEY_HELP
-	EN	Enter your wireless key. Scroll to change letters, press the center button to choose that letter. Press the center button twice to finish.
 	DE	Geben Sie den WEP-Schlüssel ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der Mitteltaste. Drücken Sie zum Beenden die Mitteltaste zweimal.
+	EN	Enter your wireless key. Scroll to change letters, press the center button to choose that letter. Press the center button twice to finish.
 	ES	Escriba la clave inalámbrica. Desplace la rueda para cambiar de letra y pulse el botón central para elegirla. Pulse dos veces el botón central para terminar.
-	IT	Immettere la chiave della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare una lettera. Premere il pulsante centrale due volte per uscire.
 	FR	Entrer la clé sans fil. Faites défiler les lettres et appuyez sur le bouton central pour effectuer la sélection. Appuyez deux fois sur le bouton central pour terminer.
+	IT	Immettere la chiave della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare una lettera. Premere il pulsante centrale due volte per uscire.
 	NL	Voer je draadloze sleutel in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
 
 NETWORK_REGION
-	EN	Wireless Region
 	DE	Wireless-Region
+	EN	Wireless Region
 	ES	Región inalámbrica
-	IT	Area senza fili
 	FR	Zone sans fil
+	IT	Area senza fili
 	NL	Draadloze regio
 
 NETWORK_REGION_US
-	EN	United States & Mexico
 	DE	USA und Mexiko
+	EN	United States & Mexico
 	ES	Estados Unidos y México
-	IT	Stati Uniti e Messico
 	FR	Etats-Unis et Mexique
+	IT	Stati Uniti e Messico
 	NL	Verenigde Staten en Mexico
 
 NETWORK_REGION_CA
-	EN	Canada
 	DE	Kanada
+	EN	Canada
 	ES	Canadá
-	IT	Canada
 	FR	Canada
+	IT	Canada
 	NL	Canada
 
 NETWORK_REGION_EU
-	EN	Europe
 	DE	Europa
+	EN	Europe
 	ES	Europa
-	IT	Europa
 	FR	Europe
+	IT	Europa
 	NL	Europa
 
 NETWORK_REGION_FR
-	EN	France
 	DE	Frankreich
+	EN	France
 	ES	Francia
-	IT	Francia
 	FR	France
+	IT	Francia
 	NL	Frankrijk
 
 NETWORK_REGION_AU
-	EN	Australia
 	DE	Australien
+	EN	Australia
 	ES	Australia
-	IT	Australia
 	FR	Australie
+	IT	Australia
 	NL	Australië
 
 NETWORK_REGION_JP
-	EN	Japan
 	DE	Japan
+	EN	Japan
 	ES	Japón
-	IT	Giappone
 	FR	Japon
+	IT	Giappone
 	NL	Japan
 
 NETWORK_REGION_CH
-	EN	China
 	DE	China
+	EN	China
 	ES	China
-	IT	Cina
 	FR	Chine
+	IT	Cina
 	NL	China
 
 NETWORK_REGION_TW
-	EN	Taiwan
 	DE	Taiwan
+	EN	Taiwan
 	ES	Taiwan
-	IT	Taiwan
 	FR	Taïwan
+	IT	Taiwan
 	NL	Taiwan
 
 NETWORK_REGION_HELP
-	EN	Choose the local region or country.
 	DE	Wählen Sie Region oder Land.
+	EN	Choose the local region or country.
 	ES	Elija la región o el país.
-	IT	Scegliere il paese o l'area geografica.
 	FR	Choisissez votre zone ou pays local.
+	IT	Scegliere il paese o l'area geografica.
 	NL	Kies de regio of het land.
 
 NETWORK_WIRELESS_NETWORKS
-	EN	Wireless Networks
 	DE	Kabellose Netzwerke
+	EN	Wireless Networks
 	ES	Redes inalámbricas
-	IT	Reti senza fili
 	FR	Réseaux sans fil
+	IT	Reti senza fili
 	NL	Draadloze netwerken
 
 NETWORK_SETTINGS_HELP
-	EN	To change to or forget about a network, select the network name. To add a network not listed above, choose Other Network.
 	DE	Wählen Sie den zu ändernden oder zu entfernenden Netzwerknamen aus. Wählen Sie "Anderes Netzwerk", um eines hinzuzufügen.
+	EN	To change to or forget about a network, select the network name. To add a network not listed above, choose Other Network.
 	ES	Para cambiar a una red u olvidar una red, seleccione el nombre de la red. Para agregar una red que no esté en la lista, elija Otra red.
-	IT	Per passare a una rete o ignorarla, selezionarne il nome. Per aggiungere una rete non elencata sopra, scegliere Altra rete.
 	FR	Pour basculer vers un réseau ou l'ignorer, sélectionnez son nom. Pour ajouter un réseau à la liste, sélectionnez Autre réseau.
+	IT	Per passare a una rete o ignorarla, selezionarne il nome. Per aggiungere una rete non elencata sopra, scegliere Altra rete.
 	NL	Selecteer de netwerknaam om een netwerk te wijzigen of te vergeten. Kies 'Ander netwerk' om een netwerk toe te voegen dat hierboven niet wordt genoemd.
 
 NETWORK_SETUP_HELP
-	EN	Choose your wireless network.
 	DE	Wählen Sie Ihr kabelloses Netzwerk.
+	EN	Choose your wireless network.
 	ES	Elija la red inalámbrica.
-	IT	Scegliere la rete senza fili.
 	FR	Choisissez votre réseau sans fil.
+	IT	Scegliere la rete senza fili.
 	NL	Kies je draadloze netwerk.
 
 NETWORK_WIRELESS_ENCRYPTION
-	EN	Wireless Encryption
 	DE	Kabellose Verschlüsselung
+	EN	Wireless Encryption
 	ES	Cifrado inalámbrico
-	IT	Crittografia senza fili
 	FR	Chiffrement du réseau sans fil
+	IT	Crittografia senza fili
 	NL	Draadloze codering
 
 NETWORK_NO_ENCRYPTION
-	EN	No password/no encryption
 	DE	Kein Kennwort/keine Verschlüsselung
+	EN	No password/no encryption
 	ES	Sin contraseña/sin cifrado
-	IT	Nessuna password/crittografia
 	FR	Aucun mot de passe/chiffrement
+	IT	Nessuna password/crittografia
 	NL	Geen wachtwoord/geen codering
 
 NETWORK_WEP_64
-	EN	64-bit WEP
 	DE	64-Bit-WEP
+	EN	64-bit WEP
 	ES	WEP de 64 bits
-	IT	WEP a 64 bit
 	FR	WEP 64 bits
+	IT	WEP a 64 bit
 	NL	64-bits WEP
 
 NETWORK_WEP_128
-	EN	128-bit WEP
 	DE	128-Bit-WEP
+	EN	128-bit WEP
 	ES	WEP de 128 bits
-	IT	WEP a 128 bit
 	FR	WEP 128 bits
+	IT	WEP a 128 bit
 	NL	128-bits WEP
 
 NETWORK_WPA
-	EN	WPA Personal
 	DE	WPA-Personal
+	EN	WPA Personal
 	ES	WPA personal
-	IT	WPA Personal
 	FR	WPA personnel
+	IT	WPA Personal
 	NL	WPA (persoonlijk)
 
 NETWORK_WPA2
-	EN	WPA2 Personal
 	DE	WPA2-Personal
+	EN	WPA2 Personal
 	ES	WPA2 personal
-	IT	WPA2 Personal
 	FR	WPA2 personnel
+	IT	WPA2 Personal
 	NL	WPA2 (persoonlijk)
 
 NETWORK_WIRELESS_ENCRYPTION_HELP
-	EN	Choose the type of encryption that your network uses.
 	DE	Wählen Sie die im Netzwerk verwendete Verschlüsselung.
+	EN	Choose the type of encryption that your network uses.
 	ES	Elija el tipo de cifrado que utiliza la red.
-	IT	Scegliere il tipo di crittografia utilizzata dalla rete.
 	FR	Choisissez le type de chiffrement que votre réseau utilise.
+	IT	Scegliere il tipo di crittografia utilizzata dalla rete.
 	NL	Kies het type codering dat je netwerk gebruikt.
 
 NETWORK_WIRELESS_PASSWORD
-	EN	Wireless Password
 	DE	Netzwerkkennwort
+	EN	Wireless Password
 	ES	Contraseña para red inalámbrica
-	IT	Password senza fili
 	FR	Mot de passe du réseau sans fil
+	IT	Password senza fili
 	NL	Draadloos wachtwoord
 
 NETWORK_WIRELESS_PASSWORD_HELP
-	EN	Enter your wireless password. Scroll to change letters, press the center button to choose that letter. Press center button twice to finish.
 	DE	Geben Sie Ihr Netzwerkkennwort ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der Mitteltaste. Drücken Sie die Mitteltaste zweimal zum Beenden.
+	EN	Enter your wireless password. Scroll to change letters, press the center button to choose that letter. Press center button twice to finish.
 	ES	Escriba la contraseña para red inalámbrica. Desplácese para cambiar de letra y pulse el botón central para elegir una letra. Pulse dos veces el botón central para terminar.
-	IT	Immettere la password della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare la lettera. Premere il pulsante centrale due volte per completare l'operazione.
 	FR	Saisissez un mot de passe pour votre réseau sans fil. Faites défiler les lettres et appuyez sur le bouton central pour sélectionner la lettre souhaitée. Appuyez deux fois sur le bouton central pour terminer.
+	IT	Immettere la password della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare la lettera. Premere il pulsante centrale due volte per completare l'operazione.
 	NL	Voer je draadloze wachtwoord in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
 
 NETWORK_CONNECTING_TO
-	EN	Connecting to\n%s
 	DE	Verbindung mit\n%s
+	EN	Connecting to\n%s
 	ES	Estableciendo conexión a\n%s
-	IT	Connessione a\n%s\nin corso
 	FR	Connexion à\n%s
+	IT	Connessione a\n%s\nin corso
 	NL	Bezig verbinding te maken met\n%s
 
 NETWORK_CONNECTED_TO
-	EN	Connected to\n%s
 	DE	Verbunden mit\n%s
+	EN	Connected to\n%s
 	ES	Conexión a\n%s\nestablecida
-	IT	Connesso a\n%s
 	FR	Connecté à\n%s
+	IT	Connesso a\n%s
 	NL	Verbonden met\n%s
 
 NETWORK_CONNECTION_PROBLEM
-	EN	Connection Problem
 	DE	Verbindungsproblem
+	EN	Connection Problem
 	ES	Problema de conexión
-	IT	Problema di connessione
 	FR	Problème de connexion
+	IT	Problema di connessione
 	NL	Verbindingsprobleem
 
 NETWORK_TRY_AGAIN
-	EN	Try again
 	DE	Erneut versuchen.
+	EN	Try again
 	ES	Vuelva a intentarlo
-	IT	Riprova
 	FR	Réessayer
+	IT	Riprova
 	NL	Opnieuw proberen
 
 NETWORK_EDIT_WIRELESS_KEY
+	DE	WEP-Schlüssel ändern
 	EN	Edit wireless key
+	ES	Editar clave inalámbrica
+	FR	Modifier la clé sans fil
+	IT	Modifica chiave senza fili
+	NL	Draadloze sleutel bew.
 
 NETWORK_TRY_DIFFERENT
-	EN	Try different network
 	DE	Anderes Netzwerk versuchen
+	EN	Try different network
 	ES	Pruebe con otra red
-	IT	Prova una rete diversa
 	FR	Essayez avec un réseau différent
+	IT	Prova una rete diversa
 	NL	Ander netwerk proberen
 
 NETWORK_GO_BACK
-	EN	Go back
 	DE	Zurück
+	EN	Go back
 	ES	Regresar
-	IT	Indietro
 	FR	Retour
+	IT	Indietro
 	NL	Terug
 
 NETWORK_CONNECTION_PROBLEM_HELP
-	EN	There was a problem connecting to your wireless network.
 	DE	Problem beim Verbinden mit Ihrem kabellosen Netzwerk.
+	EN	There was a problem connecting to your wireless network.
 	ES	Problema al conectar a la red inalámbrica.
-	IT	Si è verificato un problema durante la connessione alla rete senza fili.
 	FR	Un problème est survenu lors de la connexion à votre réseau sans fil.
+	IT	Si è verificato un problema durante la connessione alla rete senza fili.
 	NL	Er is een probleem opgetreden tijdens het maken van een verbinding met je draadloze netwerk.
 
 NETWORK_PROBLEM_PASSWORD_INCORRECT
-	EN	Your password was incorrect.
 	DE	Falsches Kennwort.
+	EN	Your password was incorrect.
 	ES	Contraseña incorrecta.
-	IT	Password errata.
 	FR	Votre mot de passe est incorrect.
+	IT	Password errata.
 	NL	Verkeerd wachtwoord.
 
 NETWORK_IP_ADDRESS
-	EN	IP Address
 	DE	IP-Adresse:
+	EN	IP Address
 	ES	Dirección IP:
-	IT	Indirizzo IP:
 	FR	Adresse IP:
+	IT	Indirizzo IP:
 	NL	IP-adres:
 
 NETWORK_NETWORK_NAME
-	EN	Network Name
 	DE	Netzwerkname
+	EN	Network Name
 	ES	Nombre de red
-	IT	Nome della rete
 	FR	Nom du réseau
+	IT	Nome della rete
 	NL	Netwerknaam
 
 NETWORK_NETWORK_NAME_HELP
-	EN	Enter your wireless network name. Scroll to change letters, press the center button to choose that letter. Press center button twice to finish.
 	DE	Geben Sie den Namen des kabellosen Netzwerks ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der Mitteltaste. Drücken Sie die Mitteltaste zweimal zum Beenden.
+	EN	Enter your wireless network name. Scroll to change letters, press the center button to choose that letter. Press center button twice to finish.
 	ES	Escriba el nombre de la red inalámbrica. Desplácese para cambiar de letra y pulse el botón central para elegir una letra. Pulse dos veces el botón central para terminar.
-	IT	Immettere il nome della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare la lettera. Premere il pulsante centrale due volte per completare l'operazione.
 	FR	Saisissez le nom de votre réseau sans fil. Faites défiler les lettres et appuyez sur le bouton central pour sélectionner la lettre souhaitée. Appuyez deux fois sur le bouton central pour terminer.
+	IT	Immettere il nome della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare la lettera. Premere il pulsante centrale due volte per completare l'operazione.
 	NL	Voer de naam van je draadloze netwerk in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
 
 NETWORK_ADDRESS_PROBLEM
-	EN	Address Problem
 	DE	Adressenproblem
+	EN	Address Problem
 	ES	Problema de dirección
-	IT	Problema di indirizzo
 	FR	Problème d'adresse
+	IT	Problema di indirizzo
 	NL	Adresprobleem
 
 NETWORK_ADDRESS_HELP
-	EN	There was a problem obtaining a DHCP address on your network.
 	DE	Problem bei Abfrage einer DHCP-Adresse in Ihrem Netzwerk.
+	EN	There was a problem obtaining a DHCP address on your network.
 	ES	Problema al obtener una dirección DHCP en la red.
-	IT	Impossibile ottenere un indirizzo DHCP nella rete.
 	FR	Un problème est survenu lors de l'obtention d'une adresse DHCP du réseau.
+	IT	Impossibile ottenere un indirizzo DHCP nella rete.
 	NL	Er is een probleem met het verkrijgen van een DHCP-adres op je netwerk.
 
 NETWORK_ADDRESS_HELP_WEP
+	DE	Verbindung mit Netzwerk nicht möglich. Dies kann an einem falschen WEP-Schlüssel oder einem anderen Problem (MAC-Filter oder fehlernder DHCP-Server) liegen.
 	EN	Couldn't connect to your network. This may be caused by an incorrect wireless key or other network problem such as MAC filtering or missing DHCP server.
+	ES	No ha sido posible la conexión a su red. Puede ser debido a una clave inalámbrica incorrecta o a otro problema de red como, por ejemplo, el filtrado MAC o un servidor DHCP que no se encuentra.
+	FR	Impossible de se connecter au réseau. Cela peut être dû à une clé sans fil incorrecte ou à un autre problème, tel que le filtrage MAC ou l'absence du serveur DHCP.
+	IT	Impossibile connettersi alla rete. È possibile che non sia stata utilizzata la chiave di rete senza fili corretta o che si sia verificato un altro problema, quale un filtraggio MAC o l'assenza di un server DHCP.
+	NL	Kan geen verbinding met je netwerk maken. Dit kan veroorzaakt worden door een onjuiste draadloze sleutel of een ander netwerkprobleem zoals MAC-filtering of een ontbrekende DHCP-server.
 
 ZEROCONF_ADDRESS
-	EN	Self-assign address
 	DE	IP-Adresse selbst zuweisen
+	EN	Self-assign address
 	ES	Dirección autoasignada
-	IT	Indirizzo assegnato automaticamente
 	FR	Attribuer l'adresse automatiquement
+	IT	Indirizzo assegnato automaticamente
 	NL	Zelf-toewijzend adres
 
 STATIC_ADDRESS
-	EN	Use a static address
 	DE	Statische Adresse verwenden
+	EN	Use a static address
 	ES	Usar una dirección estática
-	IT	Usa un indirizzo statico
 	FR	Utiliser une adresse fixe
+	IT	Usa un indirizzo statico
 	NL	Statisch adres gebruiken
 
 NETWORK_ADDRESS_HELP
-	EN	There was a problem obtaining a DHCP address on your network.
 	DE	Problem bei Abfrage einer DHCP-Adresse in Ihrem Netzwerk.
+	EN	There was a problem obtaining a DHCP address on your network.
 	ES	Problema al obtener una dirección DHCP en la red.
-	IT	Impossibile ottenere un indirizzo DHCP nella rete.
 	FR	Un problème est survenu lors de l'obtention d'une adresse DHCP du réseau.
+	IT	Impossibile ottenere un indirizzo DHCP nella rete.
 	NL	Er is een probleem met het verkrijgen van een DHCP-adres op je netwerk.
 
 NETWORK_IP_ADDRESS
-	EN	IP Address
 	DE	IP-Adresse:
+	EN	IP Address
 	ES	Dirección IP:
-	IT	Indirizzo IP:
 	FR	Adresse IP:
+	IT	Indirizzo IP:
 	NL	IP-adres:
 
 NETWORK_IP_ADDRESS_HELP
-	EN	Enter the IP address for this remote.
 	DE	Geben Sie die IP-Adresse für diese Fernbedienung ein.
+	EN	Enter the IP address for this remote.
 	ES	Escriba la dirección IP del mando.
-	IT	Immettere l'indirizzo IP del telecomando.
 	FR	Entrer l'adresse IP de la télécommande.
+	IT	Immettere l'indirizzo IP del telecomando.
 	NL	Voer het IP-adres voor deze afstandsbediening in.
 
 NETWORK_SUBNET
-	EN	Subnet
 	DE	Subnetz
+	EN	Subnet
 	ES	Subred
-	IT	Subnet
 	FR	Sous-réseau
+	IT	Subnet
 	NL	Subnet
 
 NETWORK_SUBNET_HELP
-	EN	Enter the subnet mask for your network.
 	DE	Geben Sie die Subnetzmaske für das Netzwerk ein.
+	EN	Enter the subnet mask for your network.
 	ES	Escriba la máscara de subred de la red.
-	IT	Immettere la subnet mask della rete.
 	FR	Entrer le masque de sous-réseau du réseau.
+	IT	Immettere la subnet mask della rete.
 	NL	Voer het subnetmasker voor je netwerk in.
 
 NETWORK_GATEWAY
-	EN	Gateway
 	DE	Gateway
+	EN	Gateway
 	ES	Puerta de enlace
-	IT	Gateway
 	FR	Passerelle
+	IT	Gateway
 	NL	Gateway
 
 NETWORK_GATEWAY_HELP
-	EN	Enter the IP address or your router.
 	DE	Geben Sie die IP-Adresse oder den Router ein.
+	EN	Enter the IP address or your router.
 	ES	Escriba la dirección IP del enrutador.
-	IT	Immettere l'indirizzo IP del router.
 	FR	Entrer l'adresse IP ou le routeur.
+	IT	Immettere l'indirizzo IP del router.
 	NL	Voer het IP-adres of je router in.
 
 NETWORK_DNS
-	EN	DNS Server
 	DE	DNS-Server
+	EN	DNS Server
 	ES	Servidor DNS
-	IT	Server DNS
 	FR	Serveur DNS:
+	IT	Server DNS
 	NL	DNS-server
 
 NETWORK_DNS_HELP
-	EN	Enter the IP address of your DNS server.
 	DE	Geben Sie die IP-Adresse für den DNS-Server ein.
+	EN	Enter the IP address of your DNS server.
 	ES	Escriba la dirección IP del servidor DNS.
-	IT	Immettere l'indirizzo IP del server DNS.
 	FR	Entrer l'adresse IP du serveur DNS.
+	IT	Immettere l'indirizzo IP del server DNS.
 	NL	Voer het IP-adres van je DNS-server in.
 
 NETWORK_PROBLEM
+	DE	Netwerkproblem
 	EN	Network Problem
+	ES	Problema de red
+	FR	Problème réseau
+	IT	Problema di rete
+	NL	Netwerkprobleem
 
 NETWORK_CHOOSE_NETWORK
+	DE	Netzwerk wählen
 	EN	Choose Network
+	ES	Elegir red
+	FR	Choisir un réseau
+	IT	Scegli rete
+	NL	Netwerk kiezen
 
 NETWORK_PROBLEM_HELP
+	DE	Probleme beim Verbinden der Fernbedienung mit %s
 	EN	This remote is having trouble connecting to %s.
+	ES	Este mando tiene problemas para conectarse a %s.
+	FR	Cette télécommande ne peut se connecter à %s.
+	IT	Problema di connessione del telecomando a %s
+	NL	Deze afstandsbediening kan geen verbinding maken met %s.

@@ -1,44 +1,83 @@
-# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
 #
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SLIMBROWSER_NOW_PLAYING
-	EN	Now Playing
 	DE	Aktueller Titel
+	EN	Now Playing
 	ES	Reproduciendo
-	IT	Riproduzione in corso
 	FR	Lecture en cours
+	IT	Riproduzione in corso
 	NL	Speelt nu
 
 SLIMBROWSER_CURRENT_PLAYLIST
+	DE	Aktuelle Wiedergabeliste
 	EN	Current Playlist
+	ES	Lista de reproducción actual
+	FR	Liste de lecture en cours
+	IT	El. di riproduz. corrente
+	NL	Huidige playlist
 
 SLIMBROWSER_PAUSED
+	DE	Pause
 	EN	Paused
+	ES	En pausa
+	FR	En pause
+	IT	In pausa
+	NL	Gepauzeerd
 
 SLIMBROWSER_STOPPED
+	DE	Angehalten
 	EN	Stopped
+	ES	Detenido
+	FR	Arrêté
+	IT	Arrestato
+	NL	Gestopt
 
 SLIMBROWSER_SEARCH_HELP
-	EN	Use the scroll wheel to change letters, then press the center button to select that letter. Press the center button again to start your search.
 	DE	Wählen Sie den gewünschten Buchstaben mit dem Rad und drücken Sie zum Bestätigen die Mitteltaste. Drücken Sie zum Starten der Suche die Mitteltaste erneut.
+	EN	Use the scroll wheel to change letters, then press the center button to select that letter. Press the center button again to start your search.
 	ES	Cambie de letra con la rueda de desplazamiento y pulse el botón central para seleccionarla. Pulse de nuevo el botón central para iniciar la búsqueda.
-	IT	Usa la rotellina per cambiare le lettere e premi il pulsante centrale per selezionarle. Premi nuovamente il pulsante centrale per avviare la ricerca.
 	FR	Utiliser le bidule pour choisir une lettre, plus appuyer sur le bouton central afin de la sélectionner. Appuyer à nouveau sur le bouton central pour démarrer la recherche.
+	IT	Usa la rotellina per cambiare le lettere e premi il pulsante centrale per selezionarle. Premi nuovamente il pulsante centrale per avviare la ricerca.
 	NL	Gebruik het scrollwiel om letters te wijzigen. Druk dan op de middelste knop om die letter te selecteren. Druk nogmaals op de middelste knop om je zoekopdracht te starten.
 
 SLIMBROWSER_PROBLEM_CONNECTING
+	DE	Verbindungsproblem
 	EN	Problem Connecting
+	ES	Problema de conexión
+	FR	Problème de connexion
+	IT	Problema di connessione
+	NL	Probleem bij verbinden
 
 SLIMBROWSER_TRY_AGAIN
+	DE	Erneut versuchen
 	EN	Try Again
+	ES	Vuelva a intentarlo
+	FR	Réessayer
+	IT	Riprova
+	NL	Opnieuw proberen
 
 SLIMBROWSER_CHOOSE_MUSIC_SOURCE
+	DE	Musikquelle wählen
 	EN	Choose Music Source
+	ES	Elija origen de música
+	FR	Sélection d'une source musicale
+	IT	Scegliere la sorgente musicale
+	NL	Muziekbron kiezen
 
 SLIMBROWSER_CHOOSE_PLAYER
+	DE	Player auswählen
 	EN	Choose Player
+	ES	Elegir reproductor
+	FR	Sélectionner lecteur
+	IT	Scegli lettore
+	NL	Speler kiezen
 
 SLIMBROWSER_PROBLEM_CONNECTING_HELP
+	DE	Probleme beim Verbinden von %s mit %s
 	EN	%s is having trouble connecting to %s
+	ES	%s tiene problemas para conectarse a %s
+	FR	%s ne peut se connecter à %s
+	IT	Problema di connessione di %s a %s
+	NL	%s kan geen verbinding maken met %s

@@ -1,15 +1,33 @@
-SCREENSAVER_NOWPLAYING
 	EN	Now Playing
 
 SCREENSAVER_PAUSED
+	DE	Pause
 	EN	Paused
+	ES	En pausa
+	FR	En pause
+	IT	In pausa
+	NL	Gepauzeerd
 
 SCREENSAVER_STOPPED
+	DE	Angehalten
 	EN	Stopped
+	ES	Detenido
+	FR	Arrêté
+	IT	Arrestato
+	NL	Gestopt
 
 SCREENSAVER_NOWPLAYING_SETTINGS
+	DE	Aktueller Titel - Einstellung
 	EN	Now Playing Settings
+	ES	Configuración de reproducción en curso
+	FR	Paramètres des éléments en cours de lecture
+	IT	Impostazioni della riproduzione in corso
+	NL	Instellingen Speelt nu
 
 SCREENSAVER_NOWPLAYING_OF
-	EN	%s of %s
 	DE	%s von %s
+	EN	%s of %s
+	ES	%s de %s
+	FR	%s de %s
+	IT	%s di %s
+	NL	%s van %s

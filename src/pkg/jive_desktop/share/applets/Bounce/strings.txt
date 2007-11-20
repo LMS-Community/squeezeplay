@@ -1,12 +1,11 @@
-# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
 #
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SCREENSAVER_BOUNCE
-	EN	Bounce
 	DE	Boing
+	EN	Bounce
 	ES	Bote
-	IT	Rimbalzo
 	FR	Retour
+	IT	Rimbalzo
 	NL	Stuiteren

@@ -1,82 +1,156 @@
-# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
 #
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 WALLPAPER
-	EN	Wallpaper
 	DE	Hintergrundbild
+	EN	Wallpaper
 	ES	Papel tapiz
-	IT	Sfondo
 	FR	Arrière-plan
+	IT	Sfondo
 	NL	Achtergrond
 
 CREDITS
-	EN	Credits
 	DE	Mitwirkende
+	EN	Credits
 	ES	Créditos
-	IT	Riconoscimenti
 	FR	Crédits
+	IT	Riconoscimenti
 	NL	Credits
 
 CREATIVE_COMMONS
-	EN	The background images are under a Creative Commons Attribution license. See http://creativecommons.org/licenses/by/3.0/.
 	DE	Die Hintergrundbilder unterliegen einer "Creative Commons Attribution"-Lizenz (siehe http://creativecommons.org/licenses/by/3.0/).
+	EN	The background images are under a Creative Commons Attribution license. See http://creativecommons.org/licenses/by/3.0/.
 	ES	Imágenes de fondo con licencia Creative Commons Attribution. Consulte http://creativecommons.org/licenses/by/3.0/.
-	IT	Le immagini degli sfondi sono concesse in licenza da Creative Commons Attribution. Vedere http://creativecommons.org/licenses/by/3.0/.
 	FR	Les images d'arrière-plan sont sous licence Creative Commons. Voir http://creativecommons.org/licenses/by/3.0/.
+	IT	Le immagini degli sfondi sono concesse in licenza da Creative Commons Attribution. Vedere http://creativecommons.org/licenses/by/3.0/.
 	NL	De achtergrondafbeeldingen zijn onderhevig aan een Creative Commons Attribution-licentie. Zie http://creativecommons.org/licenses/by/3.0/.
 
 CREDITS_BY
-	EN	Pictures by:
 	DE	Bilder von:
+	EN	Pictures by:
 	ES	Imágenes de:
-	IT	Immagini di:
 	FR	Images de:
+	IT	Immagini di:
 	NL	Foto's door:
 
 CONCRETE
+	DE	Beton
 	EN	Concrete
+	ES	Hormigón
+	FR	Béton
+	IT	Cemento
+	NL	Beton
 
 MIDNIGHT
+	DE	Mitternacht
 	EN	Midnight
+	ES	Medianoche
+	FR	Minuit
+	IT	Mezzanotte
+	NL	Middernacht
 
 PEA
+	DE	Erbse
 	EN	Pea
+	ES	Guisante
+	FR	Poire
+	IT	Pisello
+	NL	Doperwt
 
 BLACK
+	DE	Schwarz
 	EN	Black
+	ES	Negro
+	FR	Noir
+	IT	Nero
+	NL	Zwart
 
 STONE
+	DE	Stein
 	EN	Stone
+	ES	Piedra
+	FR	Pierre
+	IT	Pietra
+	NL	Steen
 
 DUNES
+	DE	Dünen
 	EN	Dunes
+	ES	Dunas
+	FR	Dunes
+	IT	Dune
+	NL	Duinen
 
 IRIS
+	DE	Tulpe
 	EN	Tulip
+	ES	Tulipán
+	FR	Tulipe
+	IT	Tulipano
+	NL	Tulp
 
 SMOKE
+	DE	Rauch
 	EN	Smoke
+	ES	Humo
+	FR	Fumée
+	IT	Fumo
+	NL	Rook
 
 AMBER
+	DE	Bernstein
 	EN	Amber
+	ES	Ámbar
+	FR	Ambre
+	IT	Ambra
+	NL	Amber
 
 FLAME
+	DE	Flamme
 	EN	Flame
+	ES	Llama
+	FR	Flamme
+	IT	Fiamma
+	NL	Vlam
 
 GRAFFITI
+	DE	Graffiti
 	EN	Graffiti
+	ES	Graffiti
+	FR	Graffiti
+	IT	Graffiti
+	NL	Graffiti
 
 WEATHERED_WOOD
+	DE	Verwittertes Holz
 	EN	Weathered Wood
+	ES	Madera vieja
+	FR	Bois patiné
+	IT	Legno invecchiato
+	NL	Verweerd hout
 
 SUNRISE
+	DE	Sonnenaufgang
 	EN	Sun Rise
+	ES	Amanecer
+	FR	Lever de soleil
+	IT	Alba
+	NL	Zonsopgang
 
 SUNLIGHT
+	DE	Sonnenschein
 	EN	Sun Light
+	ES	Sol
+	FR	Rayon de soleil
+	IT	Luce solare
+	NL	Zonlicht
 
 FADETOBLACK
+	DE	Ausblenden
 	EN	Fade to Black
+	ES	Fundido a negro
+	FR	Fondu au noir
+	IT	Verso il nero
+	NL	Faden naar zwart
 

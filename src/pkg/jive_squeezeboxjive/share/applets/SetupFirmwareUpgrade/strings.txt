@@ -1,105 +1,124 @@
-# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
 #
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 UPDATE
-	EN	Software Update
 	DE	Software-Aktualisierung
+	EN	Software Update
 	ES	Actualización de software
-	IT	Aggiornamento software
 	FR	Mise à jour du logiciel
+	IT	Aggiornamento software
 	NL	Software-update
 
 NETWORK_UPDATE
+	DE	Netzwerk-Update
 	EN	Network update
+	ES	Actualización de red
+	FR	Mise à jour réseau
+	IT	Aggiornamento rete
+	NL	Netwerkupdate
 
 BEGIN_UPDATE
+	DE	Update starten
 	EN	Begin update
+	ES	Iniciar actualización
+	FR	Démarrer la mise à jour
+	IT	Inizia aggiornamento
+	NL	Update starten
 
 CONTINUE
+	DE	Weiter
 	EN	Continue
+	ES	Continuar
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
 
 UPDATE_CONTINUE_SDCARD
-	EN	Update from SD card
 	DE	Aktualisierung von SD-Karte
+	EN	Update from SD card
 	ES	Actualizar desde tarjeta SD
-	IT	Aggiorna da scheda SD
 	FR	Mise à jour à partir d'une carte SD
+	IT	Aggiorna da scheda SD
 	NL	Update van SD-kaart
 
 UPDATE_FAILURE
-	EN	Upgrade failed
 	DE	Aktualisierungsfehler
+	EN	Upgrade failed
 	ES	Error de actualización
-	IT	Aggiornamento non riuscito
 	FR	Echec de la mise à niveau
+	IT	Aggiornamento non riuscito
 	NL	Upgrade mislukt
 
 UPDATE_FAILURE_HELP
-	EN	There was a problem upgrading this remote. Please try again, or contact support.
 	DE	Fehler beim Aktualisieren der Fernbedienung. Versuchen Sie es noch einmal oder wenden Sie sich an den Kundendienst.
+	EN	There was a problem upgrading this remote. Please try again, or contact support.
 	ES	Hubo un problema al actualizar este mando. Vuelva a intentarlo o contacte con asistencia técnica.
-	IT	Si è verificato un problema durante l'aggiornamento del telecomando. Riprovare o contattare l'assistenza.
 	FR	Un problème est survenu lors de la mise à niveau. Veuillez réessayer ou contactez le service de support.
+	IT	Si è verificato un problema durante l'aggiornamento del telecomando. Riprovare o contattare l'assistenza.
 	NL	Er is een probleem opgetreden tijdens het upgraden van deze afstandsbediening. Probeer het opnieuw, of neem contact op met ondersteuning.
 
 UPDATE_TRY_AGAIN
-	EN	Try again...
 	DE	Erneut versuchen...
+	EN	Try again...
 	ES	Vuelva a intentarlo...
-	IT	Riprova...
 	FR	Veuillez réessayer.
+	IT	Riprova...
 	NL	Opnieuw proberen...
 
 UPDATE_DOWNLOAD
-	EN	\nCopying Update
 	DE	\nAktualisierung wird kopiert
+	EN	\nCopying Update
 	ES	\nCopiando actualización
-	IT	\nCopia aggiornamento in corso
 	FR	\nCopie de la mise à jour
+	IT	\nCopia aggiornamento in corso
 	NL	\nUpdate wordt gekopieerd
 
 UPDATE_WRITE
-	EN	\nInstalling Update
 	DE	\nAktualisierung wird installiert
+	EN	\nInstalling Update
 	ES	\nInstalando actualización
-	IT	\nInstallazione aggiornamento in corso
 	FR	\nInstallation de la mise à jour
+	IT	\nInstallazione aggiornamento in corso
 	NL	\nUpdate wordt geïnstalleerd
 
 UPDATE_VERIFY
-	EN	\nVerifying Update
 	DE	\nAktualisierung wird geprüft
+	EN	\nVerifying Update
 	ES	\nComprobando actualización
-	IT	\nVerifica aggiornamento in corso
 	FR	\nVérification de la mise à jour
+	IT	\nVerifica aggiornamento in corso
 	NL	\nUpdate wordt geverifieerd
 
 UPDATE_REBOOT
-	EN	\nRestarting
 	DE	\nNeustart
+	EN	\nRestarting
 	ES	\nReiniciando
-	IT	\nRiavvio
 	FR	\nRedémarrage
+	IT	\nRiavvio
 	NL	\nBezig met opnieuw starten
 
 UPDATE_BEGIN_HELP
+	DE	Für diese Fernbedienung ist aktualisierte Software verfügbar. Dieser Vorgang kann ein paar Minuten dauern.
 	EN	Updated software is available for this remote. This process may take a few minutes.
+	ES	Existe software actualizado disponible para este mando a distancia. El proceso de actualización puede tardar unos minutos.
+	FR	Une mise à jour de logiciel est disponible pour cette télécommande. Cette procédure peut prendre quelques minutes.
+	IT	Per questo telecomando è disponibile software aggiornato. L'operazione potrebbe richiedere alcuni minuti.
+	NL	Voor deze afstandsbediening is bijgewerkte software beschikbaar. Dit proces kan enkele minuten in beslag nemen.
 
 UPDATE_BATTERY
-	EN	Charge Battery
 	DE	Batterie aufladen
+	EN	Charge Battery
 	ES	Cambiar pila
-	IT	Carica batteria
 	FR	Charge de la batterie
+	IT	Carica batteria
 	NL	Batterij opladen
 
 UPDATE_BATTERY_HELP
-	EN	Please put this remote in the charger to continue with the software upgrade.
 	DE	Legen Sie die Fernbedienung ins Ladegerät, um mit der Software-Aktualisierung fortzufahren.
+	EN	Please put this remote in the charger to continue with the software upgrade.
 	ES	Coloque este mando en el cargador para continuar con la actualización del software.
-	IT	Collocare il telecomando nella base di ricarica per continuare l'aggiornamento del software.
 	FR	Veuillez placer la télécommande sur son dispositif de charge afin de poursuivre la mise à niveau du logiciel.
+	IT	Collocare il telecomando nella base di ricarica per continuare l'aggiornamento del software.
 	NL	Zet deze afstandsbediening in de oplader om de software-upgrade voort te zetten.
 

@@ -1,63 +1,107 @@
-# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
 #
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SCREENSAVERS
-	EN	Screensavers
 	DE	Bildschirmschoner
+	EN	Screensavers
 	ES	Protectores de pantalla
-	IT	Screen saver
 	FR	Ecrans de veille
+	IT	Screen saver
 	NL	Schermbeveiligers
 
 SCREENSAVER_PLAYING
-	EN	When playing
 	DE	Bei Wiedergabe
+	EN	When playing
 	ES	Al reproducir
-	IT	Durante la riproduzione
 	FR	Pendant la lecture
+	IT	Durante la riproduzione
 	NL	Tijdens afspelen
 
 SCREENSAVER_STOPPED
-	EN	When stopped
 	DE	Bei Pause
+	EN	When stopped
 	ES	Al detener
-	IT	Quando la riproduzione è interrotta
 	FR	A l'arrêt
+	IT	Quando la riproduzione è interrotta
 	NL	Wanneer gestopt
 
 SCREENSAVER_DELAY
-	EN	Delay
 	DE	Verzögerung
+	EN	Delay
 	ES	Retraso
-	IT	Ritardo
 	FR	Retard
+	IT	Ritardo
 	NL	Vertraging
 
 DELAY_10_SEC
+	DE	10 Sekunden
 	EN	10 seconds
+	ES	10 segundos
+	FR	10 secondes
+	IT	10 secondi
+	NL	10 seconden
 
 DELAY_20_SEC
+	DE	20 Sekunden
 	EN	20 seconds
+	ES	20 segundos
+	FR	20 secondes
+	IT	20 secondi
+	NL	20 seconden
 
 DELAY_30_SEC
+	DE	30 Sekunden
 	EN	30 seconds
+	ES	30 segundos
+	FR	30 secondes
+	IT	30 secondi
+	NL	30 seconden
 
 DELAY_1_MIN
+	DE	1 Minute
 	EN	1 minute
+	ES	1 minuto
+	FR	1 minute
+	IT	1 minuto
+	NL	1 minuut
 
 DELAY_2_MIN
+	DE	2 Minuten
 	EN	2 minutes
+	ES	2 minutos
+	FR	2 minutes
+	IT	2 minuti
+	NL	2 minuten
 
 DELAY_5_MIN
+	DE	5 Minuten
 	EN	5 minutes
+	ES	5 minutos
+	FR	5 minutes
+	IT	5 minuti
+	NL	5 minuten
 
 DELAY_10_MIN
+	DE	10 Minuten
 	EN	10 minutes
+	ES	10 minutos
+	FR	10 minutes
+	IT	10 minuti
+	NL	10 minuten
 
 DELAY_30_MIN
+	DE	30 Minuten
 	EN	30 minutes
+	ES	30 minutos
+	FR	30 minutes
+	IT	30 minuti
+	NL	30 minuten
 
 SCREENSAVER_NONE
+	DE	Keine
 	EN	None
+	ES	Ninguno
+	FR	Aucun
+	IT	Nessuno
+	NL	Geen

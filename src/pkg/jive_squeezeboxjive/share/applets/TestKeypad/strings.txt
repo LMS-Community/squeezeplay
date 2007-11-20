@@ -1,16 +1,20 @@
-# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
 #
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 
 TEST_KEYPAD
-	EN	Keypad
 	DE	Tastenfeld
+	EN	Keypad
 	ES	Teclado
-	IT	Tastierino numerico
 	FR	Pavé numérique
+	IT	Tastierino numerico
 	NL	Toetsenblok
 
 TEST_KEYPAD_HELP
+	DE	Zum Abschluss alle Tasten und Rad betätigen.
 	EN	Press all keys and scroll the wheel to complete.
+	ES	Pulse todos los botones y gire la rueda para completar la operación.
+	FR	Appuyez sur tous les boutons et sur la molette pour terminer le test.
+	IT	Premere tutti i tasti e scorrere la rotellina per completare.
+	NL	Druk alle knoppen in en druk op het wiel om de test te voltooien.

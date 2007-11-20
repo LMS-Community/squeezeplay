@@ -1,20 +1,44 @@
-# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
 #
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 HTTP_AUTH
+	DE	SqueezeCenter-Kennwortschutz
 	EN	SqueezeCenter Password Protection
+	ES	Protección por contraseña de SqueezeCenter
+	FR	Protection par mot de passe du SqueezeCenter
+	IT	Protezione con password SqueezeCenter
+	NL	SqueezeCenter-wachtwoordbeveiliging
 
 HTTP_AUTH_USERNAME
+	DE	Benutzername
 	EN	Username
+	ES	Nombre de usuario
+	FR	Nom d'utilisateur
+	IT	Nome utente
+	NL	Gebruikersnaam
 
 HTTP_AUTH_PASSWORD
+	DE	Kennwort
 	EN	Password
+	ES	Contraseña
+	FR	Mot de passe
+	IT	Password
+	NL	Wachtwoord
 
 HTTP_AUTH_HELP
+	DE	Ist der Kennwortschutz für SqueezeCenter konfiguriert, geben Sie hier Benutzername und Kennwort ein.
 	EN	If your SqueezeCenter is configured for password protection, configure the username and password here
+	ES	Si SqueezeCenter se ha configurado con protección por contraseña, configure el nombre de usuario y la contraseña aquí
+	FR	Si le SqueezeCenter est configuré pour la protection par mot de passe, spécifiez le nom d'utilisateur et le mot de passe ici.
+	IT	Se SqueezeCenter è configurato con la protezione tramite password, configurare qui nome utente e password
+	NL	Als je SqueezeCenter voor wachtwoordbeveiliging geconfigureerd is, kun je de gebruikersnaam en het wachtwoord hier instellen.
 
 HTTP_AUTH_ENTER_HELP
-	EN	Enter the %s configured for password protection on your SqueezeCenter 
+	DE	Geben Sie den für den SqueezeCenter-Kennwortschutz konfigurierten %s ein.
+	EN	Enter the %s configured for password protection on your SqueezeCenter
+	ES	Introduzca %s tal y como se haya configurado para protección por contraseña en SqueezeCenter
+	FR	Spécifiez le %s configuré pour la protection par mot de passe sur le SqueezeCenter.
+	IT	Immettere %s configurato per la protezione con password in SqueezeCenter
+	NL	Voer geconfigureerd(e) %s dat/die voor wachtwoordbeveiliging in je SqueezeCenter is ingesteld
 

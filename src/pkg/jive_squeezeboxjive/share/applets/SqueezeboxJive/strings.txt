@@ -1,4 +1,3 @@
-# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
 #
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
@@ -6,125 +5,210 @@
 
 
 BSP_SCREEN_LOCKED
-	EN	Locked
 	DE	LCD gesperrt. Drücken Sie HINZUFÜGEN und WIEDERGABE.
+	EN	Locked
 	ES	Pantalla bloqueada. Pulse AGREGAR y REPRODUCIR para desbloquear.
-	IT	Schermo bloccato. Premere AGGIUNGI e RIPRODUCI per sbloccarlo.
 	FR	Ecran verrouillé. Appuyez sur ADD et PLAY pour le déverrouiller.
+	IT	Schermo bloccato. Premere AGGIUNGI e RIPRODUCI per sbloccarlo.
 	NL	Scherm vergrendeld. Druk op TOEVOEGEN en AFSPELEN om het te ontgrendelen.
 
 BSP_SCREEN_LOCKED_HELP
+	DE	Drücken Sie zum Aufheben der Sperre gleichzeitig ADD und PLAY.
 	EN	To unlock press the ADD and PLAY buttons at the same time.
+	ES	Para desbloquear, pulse los botones ADD y PLAY simultáneamente.
+	FR	Pour déverrouiller, appuyez sur les boutons ADD et PLAY simultanément.
+	IT	Per sbloccare premere contemporaneamente i pulsanti ADD e PLAY.
+	NL	Druk de knoppen ADD en PLAY tegelijk in voor ontgrendeling.
 
 BSP_BRIGHTNESS
-	EN	Brightness
 	DE	Helligkeit
+	EN	Brightness
 	ES	Brillo
-	IT	Luminosità
 	FR	Luminosité
+	IT	Luminosità
 	NL	Helderheid
 
 BSP_BRIGHTNESS_ADJUST_HELP
-	EN	Use the wheel to adjust the brightness of the backlight
 	DE	Sie können die Helligkeit mit dem Rad anpassen
+	EN	Use the wheel to adjust the brightness of the backlight
 	ES	Use la rueda para ajustar el brillo de la retroiluminación
-	IT	Usare la rotellina per regolare la luminosità della retroilluminazione.
 	FR	Utilisez la molette pour régler la luminosité et le rétroéclairage.
+	IT	Usare la rotellina per regolare la luminosità della retroilluminazione.
 	NL	Gebruik het wiel om de helderheid van de verlichting aan te passen.
 
 BSP_BACKLIGHT_TIMER
+	DE	LCD-Dimmer
 	EN	Screen Dimming
+	ES	Atenuación de pantalla
+	FR	Réduction de l'éclairage de l'écran
+	IT	Riduzione lumin. schermo
+	NL	Scherm dimmen
 
 BSP_BACKLIGHT_HIGH
-	EN	High
 	DE	Hoch
+	EN	High
 	ES	Alta
-	IT	Alta
 	FR	Elevée
+	IT	Alta
 	NL	Hoog
 
 BSP_BACKLIGHT_MEDIUM
-	EN	Medium
 	DE	Mittel
+	EN	Medium
 	ES	Media
-	IT	Media
 	FR	Moyenne
+	IT	Media
 	NL	Gemiddeld
 
 BSP_BACKLIGHT_LOW
-	EN	Low
 	DE	Niedrig
+	EN	Low
 	ES	Baja
-	IT	Bassa
 	FR	Faible
+	IT	Bassa
 	NL	Laag
 
 BSP_TIMER_OFF
-	EN	Off
 	DE	Aus
+	EN	Off
 	ES	Apagado
-	IT	Disattivato
 	FR	Désactivé
+	IT	Disattivato
 	NL	Uit
 
 BSP_TIMER_ON
-	EN	On
 	DE	Ein
+	EN	On
 	ES	Encendido
-	IT	Attivato
 	FR	Activé
+	IT	Attivato
 	NL	Aan
 
 BSP_TIMER_5_SEC
+	DE	5 Sekunden
 	EN	5 seconds
+	ES	5 segundos
+	FR	5 secondes
+	IT	5 secondi
+	NL	5 seconden
 
 BSP_TIMER_10_SEC
+	DE	10 Sekunden
 	EN	10 seconds
+	ES	10 segundos
+	FR	10 secondes
+	IT	10 secondi
+	NL	10 seconden
 
 BSP_TIMER_15_SEC
+	DE	15 Sekunden
 	EN	15 seconds
+	ES	15 segundos
+	FR	15 secondes
+	IT	15 secondi
+	NL	15 seconden
 
 BSP_TIMER_20_SEC
+	DE	20 Sekunden
 	EN	20 seconds
+	ES	20 segundos
+	FR	20 secondes
+	IT	20 secondi
+	NL	20 seconden
 
 BSP_TIMER_30_SEC
+	DE	30 Sekunden
 	EN	30 seconds
+	ES	30 segundos
+	FR	30 secondes
+	IT	30 secondi
+	NL	30 seconden
 
 BSP_TIMER_1_MIN
+	DE	1 Minute
 	EN	1 minute
+	ES	1 minuto
+	FR	1 minute
+	IT	1 minuto
+	NL	1 minuut
 
 BSP_TIMER_2_MIN
+	DE	2 Minute
 	EN	2 minute
+	ES	2 minutos
+	FR	2 minutes
+	IT	2 minuti
+	NL	2 minuten
 
 BSP_TIMER_5_MIN
+	DE	5 Minute
 	EN	5 minute
+	ES	5 minutos
+	FR	5 minutes
+	IT	5 minuti
+	NL	5 minuten
 
 BSP_TIMER_NEVER
-	EN	Never
 	DE	Nie
+	EN	Never
 	ES	Nunca
-	IT	Mai
 	FR	Jamais
+	IT	Mai
 	NL	Nooit
 
 DIM_WHEN_CHARGING
+	DE	Beim Laden dimmen
 	EN	Dim when charging
+	ES	Atenuado durante carga
+	FR	Réduction de l'éclairage en cours de charge
+	IT	Riduci lumin. in carica
+	NL	Dimmen tijdens opladen
 
 BATTERY_LOW
+	DE	Batterie schwach\nBitte aufladen
 	EN	Battery Low\nPlease Charge Me
+	ES	Pila baja\nNecesita carga
+	FR	Batterie faible\nRechargez la télécommande
+	IT	Livello batteria insufficiente\nCaricare batteria
+	NL	Batterij bijna leeg\nOpladen alsjeblieft
 
 POWER_DOWN
+	DE	Herunterfahren
 	EN	Power Down
+	ES	Apagar
+	FR	Désactiver
+	IT	Disattivazione
+	NL	Uitzetten
 
 POWER_DOWN_CANCEL
+	DE	Abbrechen
 	EN	Cancel
+	ES	Cancelar
+	FR	Annuler
+	IT	Annulla
+	NL	Annuleren
 
 POWER_DOWN_CONFIRM
+	DE	Bestätigen
 	EN	Confirm
+	ES	Confirmar
+	FR	Confirmer
+	IT	Conferma
+	NL	Bevestigen
 
 GOODBYE
+	DE	\nAuf Wiedersehen
 	EN	\nGoodbye
+	ES	\nAdiós
+	FR	\nA bientôt
+	IT	\nA presto
+	NL	\nTot ziens
 
 POWER_DOWN_HELP
+	DE	Herunterfahren der Fernbedienung Abbrechen oder Bestätigen
 	EN	Cancel or Confirm the power down of your controller
+	ES	Cancele o confirme el apagado del controlador
+	FR	Annulez ou confirmez la désactivation du contrôleur.
+	IT	Annullare o confermare la disattivazione del telecomando
+	NL	Annuleer of bevestig het uitzetten van je controller
 

@@ -1,51 +1,75 @@
-# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
 #
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SOUND_EFFECTS
-	EN	Sound Effects
 	DE	Soundeffekte
+	EN	Sound Effects
 	ES	Efectos de sonido
-	IT	Effetti sonori
 	FR	Effets sonores
+	IT	Effetti sonori
 	NL	Geluidseffecten
 
 SOUND_SCROLL
-	EN	Scroll
 	DE	Scroll
+	EN	Scroll
 	ES	Desplazarse
-	IT	Scorri
 	FR	Défiler
+	IT	Scorri
 	NL	Scrollen
 
 SOUND_NAVIGATION
+	DE	Navigation
 	EN	Navigation
+	ES	Navegación
+	FR	Navigation
+	IT	Esplorazione
+	NL	Navigatie
 
 SOUND_PLAYBACK
+	DE	Wiedergabe
 	EN	Playback
+	ES	Reproducción
+	FR	Lecture
+	IT	Riproduzione
+	NL	Afspelen
 
 SOUND_VOLUME
+	DE	Lautstärke
 	EN	Volume
+	ES	Volumen
+	FR	Volume
+	IT	Volume
+	NL	Volume
 
 SOUND_CHARGING
-	EN	Charging
 	DE	Wird aufgeladen
+	EN	Charging
 	ES	Cargando
-	IT	Caricamento
 	FR	Chargement en cours
+	IT	Caricamento
 	NL	Bezig met opladen
 
 SOUND_NONE
-	EN	None
 	DE	Kein
+	EN	None
 	ES	Ninguno
-	IT	Nessuno
 	FR	Aucun
+	IT	Nessuno
 	NL	Geen
 
 SOUND_EFFECTS_VOLUME
+	DE	Effektlautstärke
 	EN	Effects Volume
+	ES	Volumen de efectos
+	FR	Volume des effets
+	IT	Volume effetti
+	NL	Volume van effecten
 
 SOUND_VOLUME_HELP
+	DE	Passen Sie die Lautstärke der Effekte mit dem Rad an.
 	EN	Use the wheel to adjust the volume of the sound effects.
+	ES	Use la rueda para ajustar el volumen de los efectos de sonido.
+	FR	Utilisez la molette pour régler le volume des effets sonores.
+	IT	Usare la rotellina per regolare il volume degli effetti sonori.
+	NL	Gebruik het wiel om het volume van de geluidseffecten aan te passen.

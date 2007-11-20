@@ -1,62 +1,61 @@
-# NOTE: Please keep the languages in alphabetical order by two-letter identifier.
 #
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 
 SCREENSAVER_CLOCK
-	EN	Clock
 	DE	Uhr
+	EN	Clock
 	ES	Reloj
-	IT	Orologio
 	FR	Horloge
+	IT	Orologio
 	NL	Klok
 
 SCREENSAVER_CLOCK_SETTINGS
-	EN	Clock Settings
 	DE	Uhr Einstellungen
+	EN	Clock Settings
 	ES	Configuración de reloj
-	IT	Impostazioni orologio
 	FR	Paramètres d'horloge
+	IT	Impostazioni orologio
 	NL	Klokinstellingen
 
 SCREENSAVER_CLOCK_TYPE
-	EN	Clock Type
 	DE	Uhr Typ
+	EN	Clock Type
 	ES	Tipo de reloj
-	IT	Tipo orologio
 	FR	Montre
+	IT	Tipo orologio
 	NL	Type klok
 
 SCREENSAVER_CLOCK_STYLE_ANALOG
-	EN	Analog Clock
 	DE	Analoguhr
+	EN	Analog Clock
 	ES	Reloj analógico
-	IT	Orologio analogico
 	FR	Analogique
+	IT	Orologio analogico
 	NL	Analoge klok
 
 SCREENSAVER_CLOCK_STYLE_DIGITALSIMPLE
-	EN	Digital Clock
 	DE	Digitaluhr
+	EN	Digital Clock
 	ES	Reloj digital
-	IT	Orologio digitale
 	FR	Numérique
+	IT	Orologio digitale
 	NL	Digitale klok
 
 SCREENSAVER_CLOCK_STYLE_DIGITALSTYLED
-	EN	Block Clock
 	DE	Elegante Uhr
+	EN	Block Clock
 	ES	Reloj con estilo
-	IT	Orologio elegante
 	FR	Stylisée
+	IT	Orologio elegante
 	NL	Gestileerde klok
 
 SCREENSAVER_CLOCK_STYLE_DIGITALDETAILED
-	EN	Classic Clock
 	DE	Beschriftete Uhr
+	EN	Classic Clock
 	ES	Reloj detallado
-	IT	Orologio dettagliato
 	FR	Détaillée
+	IT	Orologio dettagliato
 	NL	Gedetailleerde klok
 

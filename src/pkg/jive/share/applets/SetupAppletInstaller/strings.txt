@@ -1,18 +1,47 @@
-# strings file for SettingsAppletInstaller
 APPLET_INSTALLER
+	DE	Applet-Installation
 	EN	Applet Installer
+	ES	Instalador de subprogramas
+	FR	Programme d'installation d'applets
+	IT	Progr. di install. applet
+	NL	Appletinstallatieprogr.
 
 INSTALL
+	DE	Installieren
 	EN	Install
+	ES	Instalar
+	FR	Installer
+	IT	Installa
+	NL	Installeren
 
 NONE_FOUND
+	DE	Keine Applets gefunden
 	EN	No Applets Found
+	ES	No se han encontrado subprogramas
+	FR	Aucun applet trouvé
+	IT	Nessuna applet trovata
+	NL	Geen applets gevonden
 
 HELP
+	DE	Wählen Sie die aus SqueezeCenter zu installierenden Applets und anschließend 'Installieren'
 	EN	Choose applets to be installed from SqueezeCenter and then select Install
+	ES	Elija los subprogramas que instalar desde SqueezeCenter y seleccione Instalar
+	FR	Sélectionnez les applets à installer à partir du SqueezeCenter, puis sélectionnez Installer.
+	IT	Scegliere le applet da installare da SqueezeCenter, quindi selezionare Installa
+	NL	Kies de applets die vanuit SqueezeCenter geïnstalleerd moeten worden en selecteer dan Installeren
 
 DOWNLOADING
+	DE	Applets herunterladen
 	EN	Downloading Applets
+	ES	Descargando subprogramas
+	FR	Téléchargement des applets
+	IT	Download delle applet
+	NL	Applets worden gedownload
 
 RESTART
+	DE	Zum Nutzen neuer Applets Anwendung neu starten
 	EN	Restart application to make use of new applets
+	ES	Reiniciar aplicación para utilizar nuevos subprogramas
+	FR	Redémarrez l'application pour utiliser les nouveaux applets.
+	IT	Riavviare l'applicazione per usare le nuove applet
+	NL	Start de toepassing opnieuw om nieuwe applets te kunnen gebruiken
