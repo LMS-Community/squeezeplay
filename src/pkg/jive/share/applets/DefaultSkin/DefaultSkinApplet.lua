@@ -114,6 +114,7 @@ function skin(self, s)
 	Framework:loadSound("SELECT", sndpath .. "select.wav", 0)
 	Framework:loadSound("PLAYBACK", sndpath .. "select.wav", 0)
 	Framework:loadSound("DOCKING", sndpath .. "docking.wav", 1)
+	Framework:loadSound("SHUTDOWN", sndpath .. "shutdown.wav", 1)
 
 	-- Images and Tiles
 	local iconBackground = 

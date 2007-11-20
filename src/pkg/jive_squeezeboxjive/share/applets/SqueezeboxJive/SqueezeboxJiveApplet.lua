@@ -83,6 +83,8 @@ function init(self)
 				      local sw,val = event:getSwitch()
 
 				      if sw == SW_AC_POWER then
+					      log:warn("acpower=", val)
+
 					      self.acpower = (val == 0)
 					      self:update()
 
@@ -681,13 +683,15 @@ function settingsPowerOff(self)
 	popup:addWidget(Icon("iconPower"))
 	popup:addWidget(Label("text", self:string("GOODBYE")))
 
-	popup:addTimer(2000, 
+	popup:addTimer(4000, 
 		function()
 			self:_powerOff()
 		end
 	)
 
 	self:tieAndShowWindow(popup)
+
+	popup:playSound("SHUTDOWN")
 end
 
 
