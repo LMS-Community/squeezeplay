@@ -9,6 +9,14 @@ TOLUA = tolua++
 	$(TOLUA) $(TOLUAFLAGS) $(AM_TOLUAFLAGS) -n jive -o $@ $^
 
 
+# Check lua syntax
+check_lua:
+	@rm -f badsyntax
+	@find . -name "*.lua" -a \( -exec luac -p '{}' \; -or -fprint badsyntax \)
+	@test \! -s badsyntax
+	@rm -f badsyntax
+
+
 # Convenience library: libui.la
 noinst_LTLIBRARIES = libjiveui.la
 
@@ -54,6 +62,7 @@ libjiveui_la_LIBADD = -ltolua++ -llua -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL
 # Program: jivebrowser
 bin_PROGRAMS = jive
 
+
 # Test programs: jiveblit
 testdir = $(bindir)
 if TEST_PROGRAMS
@@ -68,6 +77,7 @@ jive_SOURCES = \
 	src/jive_debug.c
 
 jive_LDADD = libjiveui.la -llua
+jive_DEPENDENCIES = check_lua
 
 
 # Test program: jiveblit

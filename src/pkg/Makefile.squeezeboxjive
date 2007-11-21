@@ -52,7 +52,7 @@ SDL-1.2.11/Makefile:
 	cd SDL-1.2.11; ./configure --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --disable-oss --enable-alsa --disable-esd --disable-arts --disable-video-x11 --disable-video-directfb --enable-clock_gettime --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 sdl: SDL-1.2.11/Makefile
-	cd SDL-1.2.11; make; make DESTDIR= install
+	cd SDL-1.2.11; make && make DESTDIR= install
 
 # sdl_image (requires jpeg tiff png)
 SDL_image-1.2.5/Makefile:
@@ -72,7 +72,7 @@ SDL_gfx-2.0.15/Makefile:
 	cd SDL_gfx-2.0.15; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --disable-mmx --host=${TARGET} --target=${TARGET} --prefix=/usr ${ENABLE_PROFILING}
 
 sdl-gfx: SDL_gfx-2.0.15/Makefile
-	cd SDL_gfx-2.0.15; make; make DESTDIR=${BUILDDIR} install	
+	cd SDL_gfx-2.0.15; make && make DESTDIR=${BUILDDIR} install	
 
 
 #
@@ -84,7 +84,7 @@ lua-all: lua tolua++ luasocket luajson loop lualogging luaexpat luafilesystem lu
 
 # lua (requires readline ncurses)
 lua:
-	cd lua-5.1.1; make squeezeboxjive CFLAGS='-I${PREFIX}/include' INSTALL_TOP=${PREFIX} TARGET=$(TARGET); make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET)
+	cd lua-5.1.1; make squeezeboxjive CFLAGS='-I${PREFIX}/include' INSTALL_TOP=${PREFIX} TARGET=$(TARGET) && make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET)
 
 # luasocket (requires lua)
 luasocket: lua
@@ -123,7 +123,7 @@ lsyslog: lsyslog-4/Makefile
 	install lsyslog-4/syslog.so ${PREFIX}/lib/lua/5.1
 
 luaexpat:
-	cd luaexpat-1.0.2; make PREFIX=${PREFIX} PLATFORM=linux ; make install PREFIX=${PREFIX} PLATFORM=linux
+	cd luaexpat-1.0.2; make PREFIX=${PREFIX} PLATFORM=linux && make install PREFIX=${PREFIX} PLATFORM=linux
 
 luafilesystem:
 	cd luafilesystem-1.2; make install LUA_LIBDIR=${PREFIX}/lib/lua/5.1 PLATFORM=linux

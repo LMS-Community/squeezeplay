@@ -1,10 +1,19 @@
 ## Makefile.am -- Process this file with automake to produce Makefile.in
 
 
+# Check lua syntax
+check_lua:
+	@rm -f badsyntax
+	@find . -name "*.lua" -a \( -exec luac -p '{}' \; -or -fprint badsyntax \)
+	@test \! -s badsyntax
+	@rm -f badsyntax
+
+
 AM_CFLAGS = -Wall -Werror -D_GNU_SOURCE
 
 lib_LTLIBRARIES = jiveBSP.la jiveWireless.la
 
+jiveBSP_la_DEPENDENCIES = check_lua
 jiveBSP_la_LDFLAGS = -module -no-version
 jiveBSP_la_SOURCES = \
 	src/jive_bsp.c
