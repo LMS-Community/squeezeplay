@@ -4,7 +4,7 @@
 # Check lua syntax
 check_lua:
 	@rm -f badsyntax
-	@find . -name "*.lua" -a \( -exec luac -p '{}' \; -or -fprint badsyntax \)
+	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
 	@test \! -s badsyntax
 	@rm -f badsyntax
 
