@@ -378,6 +378,7 @@ function _setupInit(self, mac, ether)
 	self.mac = mac or self.mac
 	self.ether = ether or self.ether
 
+	if self.bridged then
 		self.interface = 'bridged'
 	else
 		self.interface = nil
@@ -961,7 +962,6 @@ function t_scanNetwork(self)
 	log:warn("scanNetwork network=", self.networkSSID)
 
 	local scan = self.t_ctrl:scanResults()
-	debug.dump(scan, 2)
 
 	if scan[self.networkSSID] then
 		_setAction(self, t_connectJiveNetwork)
