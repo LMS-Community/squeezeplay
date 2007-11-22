@@ -378,15 +378,13 @@ function _setupInit(self, mac, ether)
 	self.mac = mac or self.mac
 	self.ether = ether or self.ether
 
-	if self.bridged then
 		self.interface = 'bridged'
 	else
 		self.interface = nil
 	end
 
-	_setAction(self, t_connectJiveAdhoc)
+	_setAction(self, t_disconnectSlimserver)
 end
-
 
 -- fill in the Squeezebox configuration, based on the Jive network configuration.
 function _setupConfig(self)
