@@ -117,7 +117,7 @@ end
 -- bridge jive via a squeezebox
 function setupAdhocShow(self, setupNext)
 	self.setupNext = setupNext
-	self.interface = 'bridged'
+	self.bridged = true
 
 	local window = settingsShow(self, true)
 	window:setAllowScreensaver(false)
@@ -377,9 +377,14 @@ end
 function _setupInit(self, mac, ether)
 	self.mac = mac or self.mac
 	self.ether = ether or self.ether
-	self.interface = nil
 
-	_setAction(self, t_disconnectSlimserver)
+	if self.bridged then
+		self.interface = 'bridged'
+	else
+		self.interface = nil
+	end
+
+	_setAction(self, t_connectJiveAdhoc)
 end
 
 
@@ -853,7 +858,7 @@ function t_udapReset(self)
 	-- by now we are probably about to fail anyway
 	if self._timeout >= 10 then
 		log:warn("missing reset response, assuming squeezebox has rebooted")
-		_setAction(self, t_connectJiveNetwork)
+		_setAction(self, t_scanNetwork)
 	end
 end
 
@@ -904,7 +909,7 @@ function t_udapSink(self, chunk, err)
 
 	elseif pkt.uapMethod == "reset" then
 		assert(self._action == t_udapReset)
-		_setAction(self, t_connectJiveNetwork)
+		_setAction(self, t_scanNetwork)
 
 	elseif pkt.uapMethod == "adv_discover" then
 		assert(self._action == t_waitSqueezeboxNetwork)
@@ -942,6 +947,28 @@ function t_udapSink(self, chunk, err)
 					      _chooseSlimserver(self)
 				      end)
 
+	end
+end
+
+
+-- wait until the network is available. this is needed in the bridged case, as
+-- we need to wait for Ray to create the network first.
+function t_scanNetwork(self)
+	if not self.bridged then
+		-- skip this step if we are not bridged
+		_setAction(self, t_connectJiveNetwork)
+		return
+	end
+
+	log:warn("scanNetwork network=", self.networkSSID)
+
+	local scan = self.t_ctrl:scanResults()
+	debug.dump(scan, 2)
+
+	if scan[self.networkSSID] then
+		_setAction(self, t_connectJiveNetwork)
+	else
+		self.t_ctrl:scan()
 	end
 end
 
