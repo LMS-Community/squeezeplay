@@ -295,7 +295,7 @@ function notify_cometConnected(self, comet)
 		return
 	end
 
-	self.active = false
+	self.active = true
 	self.jnt:notify('serverConnected', self)
 end
 
