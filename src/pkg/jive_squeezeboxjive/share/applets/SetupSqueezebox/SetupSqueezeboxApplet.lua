@@ -598,10 +598,8 @@ function _bridgedConfig(self)
 	local ssid = 'logitech*squeezebox*' .. self.mac
 	local option = {
 		ibss = true,
-		encryption = "none"
--- FIXME enable encryption
---		encryption = "wep104",
---		key = table.concat(key)
+		encryption = "wep104",
+		key = table.concat(key)
 	}
 
 	jnt:perform(function()
@@ -636,13 +634,9 @@ function _bridgedConfig(self)
 
 	-- secure network
 	data.wpa_enabled = udap.packNumber(0, 1)
-	data.wepon = udap.packNumber(0, 1)
-
--- FIXME enable encryption
---	data.wpa_enabled = udap.packNumber(0, 1)
---	data.wepon = udap.packNumber(1, 1)
---	data.keylen = udap.packNumber(1, 1)
---	data.wep_key = table.concat(binkey)
+	data.wepon = udap.packNumber(1, 1)
+	data.keylen = udap.packNumber(1, 1)
+	data.wep_key = table.concat(binkey)
 end
 
 
@@ -857,7 +851,7 @@ function t_udapReset(self)
 	-- by now we are probably about to fail anyway
 	if self._timeout >= 10 then
 		log:warn("missing reset response, assuming squeezebox has rebooted")
-		_setAction(self, t_scanNetwork)
+		_setAction(self, t_connectJiveNetwork)
 	end
 end
 
@@ -908,7 +902,7 @@ function t_udapSink(self, chunk, err)
 
 	elseif pkt.uapMethod == "reset" then
 		assert(self._action == t_udapReset)
-		_setAction(self, t_scanNetwork)
+		_setAction(self, t_connectJiveNetwork)
 
 	elseif pkt.uapMethod == "adv_discover" then
 		assert(self._action == t_waitSqueezeboxNetwork)
@@ -950,31 +944,13 @@ function t_udapSink(self, chunk, err)
 end
 
 
--- wait until the network is available. this is needed in the bridged case, as
--- we need to wait for Ray to create the network first.
-function t_scanNetwork(self)
-	if not self.bridged then
-		-- skip this step if we are not bridged
-		_setAction(self, t_connectJiveNetwork)
-		return
-	end
-
-	log:warn("scanNetwork network=", self.networkSSID)
-
-	local scan = self.t_ctrl:scanResults()
-
-	if scan[self.networkSSID] then
-		_setAction(self, t_connectJiveNetwork)
-	else
-		self.t_ctrl:scan()
-	end
-end
-
-
 -- reconnect Jive to it's network. we also remove the ad-hoc network from the
 -- wpa-supplicant configuration.
 function t_connectJiveNetwork(self)
 	log:warn("connectJiveNetwork adhoc_ssid=", self.adhoc_ssid)
+
+	-- disconnect from existing network
+	self.t_ctrl:t_disconnectNetwork()
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_NETWORK"
 
