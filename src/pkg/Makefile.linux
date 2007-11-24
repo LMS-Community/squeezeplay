@@ -181,5 +181,7 @@ clean:
 	-cd luaexpat-1.0.2; make clean PLATFORM=linux
 	-cd luafilesystem-1.2; make clean PLATFORM=linux
 	-cd luajson; make distclean
+	-cd luazipfilter; make distclean
+	-cd luaprofiler-2.0; make -f Makefile.linux clean
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
 	-cd jive; make distclean
