@@ -191,33 +191,37 @@ end
 
 
 function _serverSink(self, data)
-	for _,entry in pairs(data.item_loop) do
-		log:info("server wallpaper: ", entry.name)
-		self.menu:addItem( {
-			weight = 50,	  
-			text = entry.name,
-			icon = RadioButton("radio",
-							   self.group,
-							   function()
-								   local path = Framework:findFile(PREFIX) .. entry.file
-								   local attr = lfs.attributes(path)
-								   if attr then
-									   self:_setBackground(entry.file, self.currentPlayer)
-								   end
-							   end
-						   ),
-			focusGained = function()
-							  local path = Framework:findFile(PREFIX) .. entry.file
-							  local attr = lfs.attributes(path)
-							  if attr and os.time() - attr.modification < REFRESH_TIME then
-								  log:info("using local copy of: ", entry.file)
-								  self:_showBackground(entry.file, self.currentPlayer)
-							  else
-								  log:info("fetching: ", entry.file)
-								  self:_fetchFile(entry.url, path, function() self:_showBackground(entry.file, self.currentPlayer) end)
-							  end
-						  end
-		} )
+	if data.item_loop then
+		for _,entry in pairs(data.item_loop) do
+			log:info("server wallpaper: ", entry.name)
+			self.menu:addItem(
+				{
+					weight = 50,	  
+					text = entry.name,
+					icon = RadioButton("radio",
+									   self.group,
+									   function()
+										   local path = Framework:findFile(PREFIX) .. entry.file
+										   local attr = lfs.attributes(path)
+										   if attr then
+											   self:_setBackground(entry.file, self.currentPlayer)
+										   end
+									   end
+								   ),
+					focusGained = function()
+									  local path = Framework:findFile(PREFIX) .. entry.file
+									  local attr = lfs.attributes(path)
+									  if attr and os.time() - attr.modification < REFRESH_TIME then
+										  log:info("using local copy of: ", entry.file)
+										  self:_showBackground(entry.file, self.currentPlayer)
+									  else
+										  log:info("fetching: ", entry.file)
+										  self:_fetchFile(entry.url, path, function() self:_showBackground(entry.file, self.currentPlayer) end)
+									  end
+								  end
+				}
+			)
+		end
 	end
 end
 
