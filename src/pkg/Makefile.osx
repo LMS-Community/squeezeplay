@@ -168,6 +168,7 @@ jive/Makefile:
 	cd jive; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --prefix=${PREFIX}
 
 jive: jive/Makefile
+	export PATH=$(BUILD_TOP)/bin:$(PATH); \
 	cd jive; make && make install
 
 jive_desktop: jive/Makefile
