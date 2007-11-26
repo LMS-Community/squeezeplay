@@ -97,7 +97,7 @@ function settingsShow(self)
 
 	self.currentPlayer = _getCurrentPlayer()
 
-	local wallpaper = self:getSettings()[currentPlayer]
+	local wallpaper = self:getSettings()[self.currentPlayer]
 
 	self.server = self:_getCurrentServer()
 	self.group  = RadioGroup()
