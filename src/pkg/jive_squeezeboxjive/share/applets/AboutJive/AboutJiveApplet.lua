@@ -63,6 +63,7 @@ function settingsShow(self)
 		"     Lukas Frey",
 		"     Mickey Gee",
 		"     Andy Grundman",
+		"     Michael Herger",
 		"     Raphael Juchli",
 		"     Ben Klaas",
 		"     Wallace Lai",
