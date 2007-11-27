@@ -68,6 +68,12 @@ function menu(self, menuItem)
 					self:textinputWindow(menuItem)
 				end
 			},
+			{ text = "Timer stress",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:timerTestWindow(menuItem)
+				end
+			},
 			{ 
 				text = "Choice, and some more text so that this item scrolls.", 
 				icon = Choice(
@@ -452,6 +458,44 @@ function imageWindow(self, menuItem, filename)
 
 	self:tieAndShowWindow(window)
 	return window
+end
+
+
+function timerTestWindow(self, instead)
+	local popup = Popup("popupIcon")
+	local icon = Icon("iconConnecting")
+	local label = Label("text", "Timer test 1")
+
+	popup:addWidget(icon)
+	popup:addWidget(label)
+
+	popup:addTimer(2000,
+		function()
+			self:timerTestWindow2()
+		end)	
+
+	if instead then
+		popup:showInstead(Window.transitionFadeIn)
+	else
+		popup:show()
+	end
+end
+
+
+function timerTestWindow2(self)
+	local window = Popup("popupIcon")
+	local icon = Icon("iconConnected")
+	local label = Label("text", "Timer test 2")
+
+	window:addWidget(icon)
+	window:addWidget(label)
+
+	window:addTimer(1000,
+		function()
+			self:timerTestWindow(true)
+		end)	
+
+	window:showInstead(Window.transitionFadeIn)
 end
 
 
