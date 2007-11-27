@@ -191,7 +191,7 @@ function menu(self, menuItem)
 				end },
 		})
 
-	local window = Window("window", "This is a really long title to test the bounding box")
+	local window = Window("window", "This") -- is a really long title to test the bounding box")
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

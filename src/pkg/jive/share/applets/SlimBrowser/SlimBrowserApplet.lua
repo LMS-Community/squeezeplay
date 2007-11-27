@@ -788,43 +788,13 @@ local function _statusSink(step, chunk, err)
 		
 		if data.mode == "play" then
 			step.window:setTitle(_string("SLIMBROWSER_NOW_PLAYING"))
-			--[[ this causes the window to not exit in either direction
-			step.window:setTitleWidget(
-				Group(
-				"newmusictitle", 
-				{ 
-					text = Label("text", _string("SLIMBROWSER_NOW_PLAYING")),
-					icon = Icon("icon") 
-				}
-				)
-			)
-			--]]
+			step.window:setTitleStyle("newmusictitle")
 		elseif data.mode == "pause" then
 			step.window:setTitle(_string("SLIMBROWSER_PAUSED"))
-			--[[
-			step.window:setTitleWidget(
-				Group(
-				"newmusictitle", 
-				{ 
-					text = Label("text", _string("SLIMBROWSER_PAUSED")),
-					icon = Icon("icon") 
-				}
-				)
-			)
-			--]]
+			step.window:setTitleStyle("newmusictitle")
 		elseif data.mode == "stop" then
 			step.window:setTitle(_string("SLIMBROWSER_STOPPED"))
-			--[[
-			step.window:setTitleWidget(
-				Group(
-				"newmusictitle", 
-				{ 
-					text = Label("text", _string("SLIMBROWSER_STOPPED")),
-					icon = Icon("icon") 
-				}
-				)
-			)
-			--]]
+			step.window:setTitleStyle("newmusictitle")
 		end
 
 		-- stuff from the player is just json.result

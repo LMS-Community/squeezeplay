@@ -392,9 +392,24 @@ function setTitle(self, title)
 	if self.title then
 		self.title:setWidgetValue("text", title)
 	else
-		self.title = Group("title", { text = Label("text", title) })
-		self:addWidget(self.title)
+		self.title = Group("title", { text = Label("text", title), icon = Icon("icon") })
+		self:_addWidget(self.title)
 		self.title:_event(Event:new(EVENT_FOCUS_GAINED))
+	end
+end
+
+
+--[[
+
+=head2 jive.ui.Window:setTitle(style)
+
+Sets the windows title style to I<style>.
+
+=cut
+--]]
+function setTitleStyle(self, style)
+	if self.title then
+		self.title:setStyle(style)
 	end
 end
 
@@ -408,13 +423,15 @@ Sets the windows title to I<titleWidget>.
 =cut
 --]]
 function setTitleWidget(self, titleWidget)
+	_assert(oo.instanceof(titleWidget, Widget), "setTitleWidget(widget): widget is not an instance of Widget!")
+
 	if self.title then
 		self.title:_event(Event:new(EVENT_FOCUS_LOST))
 		self:removeWidget(self.title)
 	end
 
 	self.title = titleWidget
-	self:addWidget(self.title)
+	self:_addWidget(self.title)
 	self.title:_event(Event:new(EVENT_FOCUS_GAINED))
 end
 
@@ -441,19 +458,22 @@ Add the widget I<widget> to the window.
 =cut
 --]]
 function addWidget(self, widget)
-	_assert(oo.instanceof(widget, Widget), "jive.ui.Window:addWidget(widget): widget is not an instance of Widget!")
+	_assert(oo.instanceof(widget, Widget), "addWidget(widget): widget is not an instance of Widget!")
 
+	_addWidget(self, widget)
+
+	-- FIXME last widget added always has focus
+	self:focusWidget(widget)
+end
+
+function _addWidget(self, widget)
 	self.widgets[#self.widgets + 1] = widget
 	widget.parent = self
+	widget:reSkin()
 
 	if self:isVisible() then
 		widget:dispatchNewEvent(EVENT_SHOW)
 	end
-
-	-- FIXME last widget added always has focus
-	self:focusWidget(widget)
-
-	widget:reSkin()
 end
 
 
