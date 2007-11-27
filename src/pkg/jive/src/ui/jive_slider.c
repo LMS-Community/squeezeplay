@@ -116,25 +116,22 @@ int jiveL_slider_draw(lua_State *L) {
 		size = lua_tointeger(L, -1);
 		lua_pop(L, 2);
 
-		if (peer->horizontal) {			
+		jive_tile_get_min_size(peer->tile, &tw, &th);
+
+		if (peer->horizontal) {
+			width -= tw;
 			x = (width / (float)(range - 1)) * (value - 1);
-			w = (width / (float)(range - 1)) * (size - 1);
+			w = (width / (float)(range - 1)) * (size - 1) + tw;
 			y = 0;
 			h = height;
 		}
 		else {
+			height -= th;
 			x = 0;
 			w = width;
 			y = (height / (float)(range - 1)) * (value - 1);
-			h = (height / (float)(range - 1)) * (size - 1);
+			h = (height / (float)(range - 1)) * (size - 1) + th;
 		}
-
-		/* make sure the slider is bigger than the tile minimum
-		 * size, otherwise it does not render correctly.
-		 */
-		jive_tile_get_min_size(peer->tile, &tw, &th);
-		w = MAX(tw, w);
-		h = MAX(th, h);
 
 		jive_tile_blit(peer->tile, srf, peer->w.bounds.x + peer->w.padding.left + x, peer->w.bounds.y + peer->w.padding.right + y, w, h);
 	}
