@@ -41,6 +41,12 @@ This class implements a HTTP socket running in a L<jive.net.NetworkThread>.
  -- disconnect
  comet:disconnect()
 
+ -- batch a set of calls together into one request
+  comet:startBatch()
+  comet:subscribe(...)
+  comet:request(...)
+  comet:endBatch()
+
 =head1 FUNCTIONS
 
 =cut
@@ -112,6 +118,7 @@ function __init(self, jnt, ip, port, path, name)
 	obj.reqid          = 1        -- used to identify non-subscription requests
 	obj.advice         = {}       -- advice from server on how to handle reconnects
 	obj.failures       = 0        -- count of connection failures
+	obj.batch          = false    -- are we batching queries?
 	
 	obj.subs           = {}       -- all subscriptions
 	obj.pending_unsubs = {}       -- pending unsubscribe requests
@@ -492,44 +499,30 @@ function subscribe(self, subscription, func, playerid, request, priority)
 	} )
 	
 	self.reqid = self.reqid + 1
-	
-	if self.active and not self.sub_timer then
-		-- batch subscription requests on a short timer
-		self.sub_timer = Timer(
-			SUB_DELAY,
-			function()
-				self.sub_timer = nil
-				
-				if self.active then
-					-- add all pending unsub requests, and any others we need to send
-					local data = {}
-					_addPendingRequests(self, data)
-					
-					-- Only continue if we have some data to send
-					if data[1] then
-						if log:isDebug() then
-							log:debug("Sending pending subscribe request(s):")
-							debug.dump(data, 5)
-						end
 
-						local req = function()
-							return CometRequest(
-								_getEventSink(self),
-								self.uri,
-								data
-							)
-						end
-				
-						self.rpool:queuePriority(req)
-					end
-				end
-			end,
-			true -- run timer only once
-		)
-		
-		log:debug("Comet:subscribe: delaying subscribe requests for ", SUB_DELAY / 1000, " seconds")
-		
-		self.sub_timer:start()
+	-- Send immediately unless we're batching queries
+	if self.active and not self.batch then
+		-- add all pending unsub requests, and any others we need to send
+		local data = {}
+		_addPendingRequests(self, data)
+	
+		-- Only continue if we have some data to send
+		if data[1] then
+			if log:isDebug() then
+				log:debug("Sending pending subscribe request(s):")
+				debug.dump(data, 5)
+			end
+
+			local req = function()
+				return CometRequest(
+					_getEventSink(self),
+					self.uri,
+					data
+				)
+			end
+
+			self.rpool:queuePriority(req)
+		end
 	end
 end
 
@@ -557,47 +550,31 @@ function unsubscribe(self, subscription, func)
 			end
 		end
 		
-		-- Unsub requests are always batched and sent after a short delay
 		table.insert( self.pending_unsubs, subscription )
 		
-		if self.active and not self.unsub_timer then
-			-- Send unsub requests in 3 seconds
-			self.unsub_timer = Timer(
-				UNSUB_DELAY,
-				function()
-					self.unsub_timer = nil
-					
-					if self.active and self.pending_unsubs then
-						-- add all pending unsub requests, and any others we need to send
-						local data = {}
-						_addPendingRequests(self, data)
-						
-						-- Only continue if we have stuff to send
-						if data[1] then
-							if log:isDebug() then
-								log:debug("Sending pending unsubscribe request(s):")
-								debug.dump(data, 5)
-							end
-
-							local req = function()
-								return CometRequest(
-									_getEventSink(self),
-									self.uri,
-									data
-								)
-							end
-
-							-- unsubscribe doesn't need to be high priority						
-							self.rpool:queue(req)
-						end
-					end
-				end,
-				true -- run timer only once
-			)
+		if self.active and not self.batch then
+			-- add all pending unsub requests, and any others we need to send
+			local data = {}
+			_addPendingRequests(self, data)
 			
-			log:debug("Comet:unsubscribe: delaying unsubscribe requests for ", UNSUB_DELAY / 1000, " seconds")
-			
-			self.unsub_timer:start()
+			-- Only continue if we have stuff to send
+			if data[1] then
+				if log:isDebug() then
+					log:debug("Sending pending unsubscribe request(s):")
+					debug.dump(data, 5)
+				end
+
+				local req = function()
+					return CometRequest(
+						_getEventSink(self),
+						self.uri,
+						data
+					)
+				end
+
+				-- unsubscribe doesn't need to be high priority						
+				self.rpool:queue(req)
+			end
 		end
 	end
 end
@@ -609,7 +586,7 @@ function request(self, func, playerid, request, priority)
 		log:debug("Comet:request(", func, ", reqid:", id, ", ", playerid, ", ", table.concat(request, ","), ", priority:", priority, ")")
 	end
 	
-	if not self.active then
+	if not self.active or self.batch then
 		-- Add subscription to pending requests, to be sent during connect/reconnect
 		table.insert( self.pending_reqs, {
                         reqid    = id,
@@ -830,6 +807,42 @@ _active = function(self, active)
 		self.rpool:close()
 
 		self.jnt:notify('cometDisconnected', self, #self.pending_reqs)
+	end
+end
+
+-- Begin a set of batched queries
+function startBatch(self)
+	log:debug("Comet:startBatch()")
+
+	self.batch = true
+end
+
+-- End batch mode, send all batched queries together
+function endBatch(self)
+	log:debug("Comet:endBatch()")
+	
+	self.batch = false
+	
+	-- add all pending requests
+	local data = {}
+	_addPendingRequests(self, data)
+
+	-- Only continue if we have some data to send
+	if data[1] then
+		if log:isDebug() then
+			log:debug("Sending pending queries:")
+			debug.dump(data, 5)
+		end
+
+		local req = function()
+			return CometRequest(
+				_getEventSink(self),
+				self.uri,
+				data
+			)
+		end
+
+		self.rpool:queuePriority(req)
 	end
 end
 

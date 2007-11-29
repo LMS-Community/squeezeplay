@@ -324,6 +324,9 @@ function onStage(self, sink)
 	self.isOnStage = true
 	self.statusSink = sink
 	
+	-- Batch these queries together
+	self.slimServer.comet:startBatch()
+	
 	-- subscribe to player status updates
 	local cmd = { 'status', '-', 10, 'menu:menu', 'subscribe:30' }
 	self.slimServer.comet:subscribe(
@@ -341,6 +344,8 @@ function onStage(self, sink)
 		self.id,
 		cmd
 	)
+	
+	self.slimServer.comet:endBatch()
 
 	-- create window to display current song info
 	self.currentSong.window = Popup("currentsong")
@@ -372,8 +377,10 @@ function offStage(self)
 	iconbar:setShuffle(nil)
 	
 	-- unsubscribe from playerstatus and displaystatus events
+	self.slimServer.comet:startBatch()
 	self.slimServer.comet:unsubscribe('/slim/playerstatus/' .. self.id)
 	self.slimServer.comet:unsubscribe('/slim/displaystatus/' .. self.id)
+	self.slimServer.comet:endBatch()
 
 	self.currentSong = {}
 end
