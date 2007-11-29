@@ -428,7 +428,11 @@ function removeIndex(self, index)
 		end
 
 		if self.selected and index > self.selected then
-			self.selected = self.selected - 1
+			if #self.items == 0 then
+				self.selected = nil
+			else
+				self.selected = self.selected - 1
+			end
 		end
 	end
 	return nil

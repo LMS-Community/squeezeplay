@@ -39,7 +39,7 @@ B<itemHeight> : the height of each menu item.
 local _assert, ipairs, pairs, string, tostring, type = _assert, ipairs, pairs, string, tostring, type
 
 local oo                   = require("loop.simple")
-local debug                = require("debug")
+local debug                = require("jive.utils.debug")
                            
 local table                = require("jive.utils.table")
 local Framework            = require("jive.ui.Framework")
