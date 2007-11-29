@@ -12,7 +12,7 @@ TOLUA = tolua++
 # Check lua syntax
 check_lua:
 	@rm -f badsyntax
-	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
+	@find . -name "*.lua" -a \( -exec luac -p '{}' \; -or -fprint badsyntax \)
 	@test \! -s badsyntax
 	@rm -f badsyntax
 
