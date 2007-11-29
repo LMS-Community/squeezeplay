@@ -59,10 +59,10 @@ SLIMSERVER_SQUEEZENETWORK
 	NL	SqueezeNetwork
 
 SLIMSERVER_HELP
-	DE	IP-Adresse des Computers mit SqueezeCenter eingeben
-	EN	Enter the IP address of the computer running SqueezeCenter
-	ES	Escriba la dirección IP del ordenador que ejecuta SqueezeCenter
-	FR	Spécifiez l'adresse IP de l'ordinateur exécutant le SqueezeCenter
-	IT	Immettere l'indirizzo IP del computer in cui è in esecuzione SqueezeCenter
-	NL	Voer het IP-adres in van de computer waarop SqueezeCenter wordt uitgevoerd
+	DE	IP-Adresse des Computers mit SlimServer eingeben
+	EN	Enter the IP address of the computer running SlimServer
+	ES	Escriba la dirección IP del ordenador que ejecuta SlimServer
+	FR	Spécifiez l'adresse IP de l'ordinateur exécutant le SlimServer
+	IT	Immettere l'indirizzo IP del computer in cui è in esecuzione SlimServer
+	NL	Voer het IP-adres in van de computer waarop SlimServer wordt uitgevoerd
 
