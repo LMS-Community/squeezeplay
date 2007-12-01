@@ -333,6 +333,25 @@ function DigitalDetailed:DrawTime(x, y, bw, bh, useAmPm)
 	local screenMidpointX = (self.screen_width/2)
 	local digitStartY = y + CLOCKY
 
+	-- ampm variables, needed before drawing dots
+	local ampm = os.date("%p")
+	local ampmSrf = Surface:drawText(self.ampmfont, self.ampmfont_color, ampm)
+	local ampmw, ampmh = ampmSrf:getSize()
+
+	-- Draw dots
+
+	local dotsWidth, dotsHeight = obj.dots:getSize()
+	local dw, dh = self.dots:getSize()
+	-- x position of dots is center of the screen
+	-- minus half the width of the dots themselves
+	local dotsx = screenMidpointX - (dotsWidth/2)
+	if useAmPm then
+		dotsx = dotsx - (ampmw/2)
+	end
+
+	-- "midpoint" is now the midpoint of the dots, not the screen
+	local adjMidpointX = dotsx + (dotsWidth/2)
+
 	-- Draw Hour
 
 	-- Snip of leading 0
@@ -347,7 +366,7 @@ function DigitalDetailed:DrawTime(x, y, bw, bh, useAmPm)
 	local hw, hh = hourSrf:getSize()
 
 	-- x position for hour is half the screen width - 10 pixels - width of hour digits
-	local hourStartX = screenMidpointX - 10 - hw
+	local hourStartX = adjMidpointX - 10 - hw
 	hourSrf:blit(self.bg, hourStartX, digitStartY)			
 
 	-- Draw Minute
@@ -355,17 +374,9 @@ function DigitalDetailed:DrawTime(x, y, bw, bh, useAmPm)
 	local theMinute = os.date("%M")
 	local minSrf = Surface:drawText(self.mainfont, self.mainfont_color, theMinute)
 	-- x position for minutes is half the screen width + 10 pixels
-	local minStartX = screenMidpointX + 10
+	local minStartX = adjMidpointX + 10
 	minSrf:blit(self.bg, minStartX, digitStartY)
 	local mw,  mh  = minSrf:getSize()
-
-	-- Draw dots
-
-	local dotsWidth, dotsHeight = obj.dots:getSize()
-	local dw, dh = self.dots:getSize()
-	-- x position of dots is center of the screen
-	-- minus half the width of the dots themselves
-	local dotsx = screenMidpointX - (dotsWidth/2)
 
 	-- y position of dots is midpoint of where minute digit starts and ends,
 	-- minus half the height of the dots themselves
@@ -375,14 +386,9 @@ function DigitalDetailed:DrawTime(x, y, bw, bh, useAmPm)
 	-- Draw AM PM
 
 	if useAmPm then
-		local ampm = os.date("%p")
-		local ampmSrf = Surface:drawText(self.ampmfont, self.ampmfont_color, ampm)
-		local ampmw, ampmh = ampmSrf:getSize()
 			
 		local ampmStartY = digitStartY + 5
-		if ampm == "PM" then
-			ampmStartY = ampmStartY + ampmh + 3
-		end
+
 		-- x position of ampm is minute start X + minute width + 5 
 		local ampmStartX = minStartX + mw + 5
 	
