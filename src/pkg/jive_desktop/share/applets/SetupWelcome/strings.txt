@@ -19,12 +19,13 @@ WELCOME
 	NL	Welkom
 
 WELCOME_WALKTHROUGH
-	DE	Vielen Dank, dass Sie einen Jive gekauft haben.\n\nJetzt stellen wir die Verbindung zum Netzwerk und Ihrer Musik her.
-	EN	Thanks for buying a Jive.\n\nLet's get started by getting you connected to your network and music.
-	ES	Gracias por adquirir Jive.\n\nEl primer paso será la conexión a la red y a la música.
-	FR	Merci d'avoir acheté une télécommande Jive.\n\nNous allons commencer par la connecter à votre réseau.
-	IT	Grazie per avere acquistato Jive.\n\nPer prima cosa impostiamo la connessione con la rete e la raccolta musicale.
-	NL	Hartelijk dank voor de aanschaf van een Jive.\n\nWe gaan je eerst met je netwerk en muziek verbinden.
+	DE	Jetzt stellen wir die Verbindung zum Netzwerk und Ihrer Musik her.
+	EN	Let's get started by getting you connected to your network and music.
+	ES	Comencemos por realizar la conexión a la red y música.
+	FR	Commençons par vous connecter au réseau.
+	IT	Iniziamo con il collegamento alla rete e alla musica.
+	NL	We gaan je eerst met je netwerk en muziek verbinden.
+
 
 WELCOME_HELP
 	DE	Drücken Sie die Mitteltaste, wenn Sie so weit sind.
@@ -51,9 +52,10 @@ DONE_CONTINUE
 	NL	Verdergaan
 
 DONE_HELP
-	DE	Jetzt können Sie mit der Jive auf all Ihre Musik zugreifen. Zum Fortfahren Mitteltaste drücken.
-	EN	Now you can use your Jive to access all your music. Press the center button to continue.
-	ES	Ya puede usar Jive para acceder a toda su música. Pulse el botón central para continuar.
-	FR	Vous pouvez maintenant accéder à votre musique avec la Jive. Appuyez sur le bouton central pour continuer.
-	IT	Ora è possibile utilizzare Jive per accedere alla musica. Premere il pulsante centrale per continuare.
-	NL	Nu heb je met je Jive toegang tot al je muziek. Druk op de middelste knop om verder te gaan.
+	DE	Jetzt können Sie mit der Squeezebox Controller auf all Ihre Musik zugreifen. Zum Fortfahren Mitteltaste drücken.
+	EN	Now you can use your Squeezebox Controller to access all your music. Press the center button to continue.
+	ES	Ya puede usar Squeezebox Controller para acceder a toda su música. Pulse el botón central para continuar.
+	FR	Vous pouvez maintenant accéder à votre musique avec la Squeezebox Controller. Appuyez sur le bouton central pour continuer.
+	IT	Ora è possibile utilizzar Squeezebox Controller per accedere alla musica. Premere il pulsante centrale per continuare.
+	NL	Nu heb je met je Squeezebox Controller toegang tot al je muziek. Druk op de middelste knop om verder te gaan.
+

@@ -83,9 +83,9 @@ DONE_CONTINUE
 	NL	Verdergaan
 
 DONE_HELP
-	DE	Jetzt können Sie mit der Jive auf Ihre Musik zugreifen. Drücken Sie zum Fortfahren die Mitteltaste.
-	EN	Now you can use your Jive to access all your music. Press the center button to continue.
-	ES	Ya puede usar Jive para acceder a toda su música. Pulse el botón central para continuar.
-	FR	Vous pouvez maintenant accéder à votre musique avec la Jive. Appuyez sur le bouton central pour continuer.
-	IT	Ora è possibile utilizzare Jive per accedere alla musica. Premere il pulsante centrale per continuare.
-	NL	Nu heb je met je Jive toegang tot al je muziek. Druk op de middelste knop om verder te gaan.
+	DE	Jetzt können Sie mit der Squeezebox Controller auf Ihre Musik zugreifen. Drücken Sie zum Fortfahren die Mitteltaste.
+	EN	Now you can use your Squeezebox Controller to access all your music. Press the center button to continue.
+	ES	Ya puede usar Squeezebox Controller para acceder a toda su música. Pulse el botón central para continuar.
+	FR	Vous pouvez maintenant accéder à votre musique avec la Squeezebox Controller. Appuyez sur le bouton central pour continuer.
+	IT	Ora è possibile utilizzare Squeezebox Controller per accedere alla musica. Premere il pulsante centrale per continuare.
+	NL	Nu heb je met je Squeezebox Controller toegang tot al je muziek. Druk op de middelste knop om verder te gaan.

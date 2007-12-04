@@ -4,11 +4,11 @@
 
 
 ABOUT_JIVE
-	DE	Infos zu Jive
-	EN	About Jive
-	ES	Acerca de Jive
-	FR	A propos de Jive
-	IT	Info su Jive
+	DE	Über
+	EN	About
+	ES	Acerca de
+	FR	A propos de
+	IT	Info
 	NL	Info
 
 ABOUT_COPYRIGHT
