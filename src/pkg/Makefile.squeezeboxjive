@@ -161,6 +161,8 @@ jive_squeezeboxjive: jive_squeezeboxjive/Makefile
 	cp jive_squeezeboxjive/.libs/jiveBSP.so ${PREFIX}/lib/lua/5.1/jiveBSP.so
 	rm ${PREFIX}/lib/jiveWireless.*
 	cp jive_squeezeboxjive/.libs/jiveWireless.so ${PREFIX}/lib/lua/5.1/jiveWireless.so
+	rm ${PREFIX}/lib/jiveWatchdog.*
+	cp jive_squeezeboxjive/.libs/jiveWatchdog.so ${PREFIX}/lib/lua/5.1/jiveWatchdog.so
 
 
 freefont:

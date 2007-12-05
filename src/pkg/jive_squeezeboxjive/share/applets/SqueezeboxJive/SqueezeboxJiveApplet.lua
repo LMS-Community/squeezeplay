@@ -8,6 +8,7 @@ local math                   = require("math")
 local os                     = require("os")
 
 local jiveBSP                = require("jiveBSP")
+local Watchdog               = require("jiveWatchdog")
 local Wireless               = require("jive.net.Wireless")
 
 local Applet                 = require("jive.Applet")
@@ -70,6 +71,21 @@ oo.class(_M, Applet)
 
 
 function init(self)
+	-- watchdog timer
+	self.watchdog = Watchdog:open()
+	if self.watchdog then
+		self.watchdog:setTimeout(30) -- 30 seconds
+		local timer = Timer(10000, -- 10 seconds
+				    function()
+					    self.watchdog:keepAlive()
+				    end)
+		timer:start()
+	else
+		log:warn("Watchdog timer is disabled")
+	end
+
+
+	-- wireless
 	self.Wireless = Wireless(jnt, "eth0")
 
 	iconbar.iconWireless:addTimer(5000,  -- every 5 seconds

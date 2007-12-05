@@ -11,7 +11,7 @@ check_lua:
 
 AM_CFLAGS = -Wall -Werror -D_GNU_SOURCE
 
-lib_LTLIBRARIES = jiveBSP.la jiveWireless.la
+lib_LTLIBRARIES = jiveBSP.la jiveWireless.la jiveWatchdog.la
 
 jiveBSP_la_DEPENDENCIES = check_lua
 jiveBSP_la_LDFLAGS = -module -no-version
@@ -22,6 +22,10 @@ jiveWireless_la_LDFLAGS = -module -no-version
 jiveWireless_la_SOURCES = \
 	src/jive_wireless.c \
 	src/wpa_ctrl.c
+
+jiveWatchdog_la_LDFLAGS = -module -no-version
+jiveWatchdog_la_SOURCES = \
+	src/jive_watchdog.c
 
 jive_netdir = $(datadir)/jive/jive/net
 dist_jive_net_DATA = \
