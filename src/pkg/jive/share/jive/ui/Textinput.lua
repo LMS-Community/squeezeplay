@@ -18,6 +18,7 @@ local EVENT_UNUSED      = jive.ui.EVENT_UNUSED
 local EVENT_KEY_PRESS   = jive.ui.EVENT_KEY_PRESS
 local EVENT_SCROLL      = jive.ui.EVENT_SCROLL
 local EVENT_WINDOW_RESIZE = jive.ui.EVENT_WINDOW_RESIZE
+local EVENT_CONSUME     = jive.ui.EVENT_CONSUME
 
 local KEY_FWD           = jive.ui.KEY_FWD
 local KEY_REW           = jive.ui.KEY_REW
