@@ -108,6 +108,12 @@ void SDL_ThreadedTimerCheck(void)
 	SDL_bool removed;
 
 	SDL_mutexP(SDL_timer_mutex);
+
+	if ( !SDL_timer_running ) {
+		SDL_mutexV(SDL_timer_mutex);
+		return;
+	}
+
 	list_changed = SDL_FALSE;
 	now = SDL_GetTicks();
 	for ( prev = NULL, t = SDL_timers; t; t = next ) {
