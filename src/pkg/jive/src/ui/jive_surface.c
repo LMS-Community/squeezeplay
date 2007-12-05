@@ -9,9 +9,6 @@
 #include "jive.h"
 
 
-#define COLOR_CKEY 0xFF, 0x00, 0xFF
-
-
 JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp) {
 	JiveSurface *srf;
 	SDL_Surface *sdl;
@@ -43,10 +40,8 @@ JiveSurface *jive_surface_newRGB(Uint16 w, Uint16 h) {
 
 	sdl = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 16, 0, 0, 0, 0);
 
-	/* set color key, paint transparency */
+	/* Opaque surface */
 	SDL_SetAlpha(sdl, SDL_SRCALPHA, SDL_ALPHA_OPAQUE);
-	SDL_SetColorKey(sdl, SDL_SRCCOLORKEY, SDL_MapRGB(sdl->format, COLOR_CKEY));
-	SDL_FillRect(sdl, 0, SDL_MapRGB(sdl->format, COLOR_CKEY));
 
 	srf = calloc(sizeof(JiveSurface), 1);
 	srf->refcount = 1;
@@ -62,7 +57,7 @@ JiveSurface *jive_surface_newRGBA(Uint16 w, Uint16 h) {
 
 	/*
 	 * Work out the optimium pixel masks for the display with
-	 * 32bit alpha surfaces. If we get this wrong a non-optimised
+	 * 32 bit alpha surfaces. If we get this wrong a non-optimised
 	 * blitter will be used.
 	 */
 	const SDL_VideoInfo *video_info = SDL_GetVideoInfo();
