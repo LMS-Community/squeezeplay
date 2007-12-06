@@ -536,7 +536,19 @@ local function _goNowPlaying()
 		_statusStep.origin = _curStep
 		_curStep.destination = _statusStep
 		_curStep = _statusStep
-		
+
+		-- current playlist should select currently playing item 
+		if _statusStep.menu.list.currentIndex then
+			_statusStep.menu.selected = _statusStep.menu.list.currentIndex
+			if _statusStep.menu["_lastSelectedIndex"] then
+				_statusStep.menu["_lastSelectedIndex"] = _statusStep.menu.selected
+				_statusStep.menu["_lastSelectedOffset"] = 2
+			end
+			-- since we've hacked the _lastSelectedIndex, it's necessary to 
+			-- _updateWidgets to display correctly selected item
+			_statusStep.menu:_updateWidgets()
+		end
+	
 		return EVENT_CONSUME
 	end
 	return EVENT_UNUSED
