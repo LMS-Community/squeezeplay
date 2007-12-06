@@ -366,7 +366,7 @@ function skin(self, s)
 	s.item.text.sh = TEXT_SH_COLOR
 
 	-- menu item with no right icon
-	s.itemNoAction = _uses(item)
+	s.itemNoAction = _uses(s.item)
 
 	-- checked menu item
 	s.checked =
@@ -432,22 +432,12 @@ function skin(self, s)
 	s.locked.item.icon.frameRate = 5
 	s.locked.item.icon.frameWidth = 10
 
-
 	-- menu item choice
 	s.item.choice = {}
 	s.item.choice.font = FONT_BOLD_15px
 	s.item.choice.fg = TEXT_COLOR
 	s.item.choice.sh = TEXT_SH_COLOR
 	s.item.choice.padding = { 8, 0, 0, 0 }
-
-
-	-- menu item choice
-	s.itemNoAction = {}
-	s.itemNoAction.choice = {}
-	s.itemNoAction.choice.font = FONT_BOLD_15px
-	s.itemNoAction.choice.fg = TEXT_COLOR
-	s.itemNoAction.choice.sh = TEXT_SH_COLOR
-	s.itemNoAction.choice.padding = { 8, 0, 0, 0 }
 
 	-- selected menu item choice
 	s.selected.item.choice = {}
