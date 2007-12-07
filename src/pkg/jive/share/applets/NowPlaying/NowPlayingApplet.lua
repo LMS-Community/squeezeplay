@@ -205,6 +205,11 @@ function _createUI(self)
 	local window = Window("window")
 
 	local sw, sh = Framework:getScreenSize()
+	--[[ figure out way of painting background across entire window
+        local bg  = Surface:newRGBA(sw, sh)
+        bg:filledRectangle(0, 0, sw, sh, 0x000000FF)
+	window:addWidget(Icon("background", bg))
+	--]]
 
 	self.titleGroup = Group("nptitle", {
 				   title = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
@@ -217,7 +222,7 @@ function _createUI(self)
 			   })
 	
 	
-	self.progressSlider = Slider("slider", 0, 100, 0)
+	self.progressSlider = Slider("progressB", 0, 100, 0)
 	self.progressSlider:addTimer(1000, function() self:tick() end)
 
 	self.progressGroup = Group("progress", {
@@ -382,12 +387,33 @@ function skin(self, s)
 	s.npartwork166.artwork.img = Surface:loadImage(imgpath .. "album_noartwork_166.png")
 
 	-- Progress bar
+	local imgpath = "applets/NowPlaying/images/"
+        local progressBackground =
+                Tile:loadHTiles({
+                                        imgpath .. "progressbar_bkgrd_l.png",
+                                        imgpath .. "progressbar_bkgrd.png",
+                                        imgpath .. "progressbar_bkgrd_r.png",
+                               })
+
+        local progressBar =
+                Tile:loadHTiles({
+                                        imgpath .. "progressbar_fill_l.png",
+                                        imgpath .. "progressbar_fill.png",
+                                        imgpath .. "progressbar_fill_r.png",
+                               })
+
 	s.progress = {}
 	s.progress.order = { "elapsed", "slider", "remain" }
 	s.progress.text = {}
-	s.progress.text.w = 45
+	s.progress.text.w = 50
 	s.progress.text.padding = { 8, 0, 8, 0 }
 	s.progress.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
 	s.progress.text.fg = { 0xe7,0xe7, 0xe7 }
 	s.progress.text.sh = { 0x37, 0x37, 0x37 }
+
+	s.progressB             = {}
+        s.progressB.horizontal  = 1
+        s.progressB.bgImg       = progressBackground
+        s.progressB.img         = progressBar
+
 end
