@@ -516,17 +516,13 @@ applets_nowplayingdir = $(pkgdatadir)/applets/NowPlaying
 dist_applets_nowplaying_DATA = \
 	share/applets/NowPlaying/NowPlayingApplet.lua \
 	share/applets/NowPlaying/NowPlayingMeta.lua \
-	share/applets/NowPlaying/strings.txt
-
-# Data: now playing
-applets_nowplaying_imagesdir = $(pkgdatadir)/applets/NowPlaying/images
-dist_applets_nowplaying_images_DATA = \
-        share/applets/NowPlaying/images/progressbar_bkgrd_l.png \
-        share/applets/NowPlaying/images/progressbar_bkgrd_r.png \
-        share/applets/NowPlaying/images/progressbar_bkgrd.png \
-        share/applets/NowPlaying/images/progressbar_fill_l.png \
-        share/applets/NowPlaying/images/progressbar_fill_r.png \
-        share/applets/NowPlaying/images/progressbar_fill.png 
+	share/applets/NowPlaying/strings.txt \
+	share/applets/NowPlaying/progressbar_bkgrd.png \
+	share/applets/NowPlaying/progressbar_bkgrd_l.png \
+	share/applets/NowPlaying/progressbar_bkgrd_r.png \
+	share/applets/NowPlaying/progressbar_fill.png \
+	share/applets/NowPlaying/progressbar_fill_l.png \
+	share/applets/NowPlaying/progressbar_fill_r.png
 
 applets_setupappletinstallerdir = $(pkgdatadir)/applets/SetupAppletInstaller
 dist_applets_setupappletinstaller_DATA = \
@@ -1233,6 +1229,25 @@ uninstall-dist_applets_nowplayingDATA:
 	  echo " rm -f '$(DESTDIR)$(applets_nowplayingdir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(applets_nowplayingdir)/$$f"; \
 	done
+
+install-dist_applets_nowplaying_imagesDATA: $(dist_applets_nowplaying_images_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(applets_nowplaying_imagesdir)" || $(mkdir_p) "$(DESTDIR)$(applets_nowplaying_imagesdir)"
+	@list='$(dist_applets_nowplaying_images_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(dist_applets_nowplaying_imagesDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_nowplaying_imagesdir)/$$f'"; \
+	  $(dist_applets_nowplaying_imagesDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_nowplaying_imagesdir)/$$f"; \
+	done
+
+uninstall-dist_applets_nowplaying_imagesDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_applets_nowplaying_images_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(applets_nowplaying_imagesdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(applets_nowplaying_imagesdir)/$$f"; \
+	done
+
 install-dist_applets_screensaversDATA: $(dist_applets_screensavers_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(applets_screensaversdir)" || $(mkdir_p) "$(DESTDIR)$(applets_screensaversdir)"
@@ -1574,7 +1589,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/Clock $(distdir)/share/applets/DefaultSkin $(distdir)/share/applets/DefaultSkin/images $(distdir)/share/applets/DefaultSkin/sounds $(distdir)/share/applets/Flickr $(distdir)/share/applets/InfoBrowser $(distdir)/share/applets/LogSettings $(distdir)/share/applets/NowPlaying $(distdir)/share/applets/ScreenSavers $(distdir)/share/applets/Screenshot $(distdir)/share/applets/SelectPlayer $(distdir)/share/applets/SetupAppletInstaller $(distdir)/share/applets/SetupDateTime $(distdir)/share/applets/SetupLanguage $(distdir)/share/applets/SetupSlimServers $(distdir)/share/applets/SetupSoundEffects $(distdir)/share/applets/SetupWallpaper $(distdir)/share/applets/SetupWallpaper/wallpaper $(distdir)/share/applets/SlimBrowser $(distdir)/share/applets/SlimDiscovery $(distdir)/share/jive $(distdir)/share/jive/net $(distdir)/share/jive/slim $(distdir)/share/jive/ui $(distdir)/share/jive/utils $(distdir)/src
+	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/Clock $(distdir)/share/applets/DefaultSkin $(distdir)/share/applets/DefaultSkin/images $(distdir)/share/applets/DefaultSkin/sounds $(distdir)/share/applets/Flickr $(distdir)/share/applets/InfoBrowser $(distdir)/share/applets/LogSettings $(distdir)/share/applets/NowPlaying $(distdir)/share/applets/NowPlaying/images $(distdir)/share/applets/ScreenSavers $(distdir)/share/applets/Screenshot $(distdir)/share/applets/SelectPlayer $(distdir)/share/applets/SetupAppletInstaller $(distdir)/share/applets/SetupDateTime $(distdir)/share/applets/SetupLanguage $(distdir)/share/applets/SetupSlimServers $(distdir)/share/applets/SetupSoundEffects $(distdir)/share/applets/SetupWallpaper $(distdir)/share/applets/SetupWallpaper/wallpaper $(distdir)/share/applets/SlimBrowser $(distdir)/share/applets/SlimDiscovery $(distdir)/share/jive $(distdir)/share/jive/net $(distdir)/share/jive/slim $(distdir)/share/jive/ui $(distdir)/share/jive/utils $(distdir)/src
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \

@@ -258,18 +258,14 @@ applets_nowplayingdir = $(pkgdatadir)/applets/NowPlaying
 dist_applets_nowplaying_DATA = \
 	share/applets/NowPlaying/NowPlayingApplet.lua \
 	share/applets/NowPlaying/NowPlayingMeta.lua \
-	share/applets/NowPlaying/strings.txt
+	share/applets/NowPlaying/strings.txt \
+        share/applets/NowPlaying/progressbar_bkgrd.png \
+        share/applets/NowPlaying/progressbar_bkgrd_l.png \
+        share/applets/NowPlaying/progressbar_bkgrd_r.png \
+        share/applets/NowPlaying/progressbar_fill.png \
+        share/applets/NowPlaying/progressbar_fill_l.png \
+        share/applets/NowPlaying/progressbar_fill_r.png
 
-# Data: now playing
-applets_nowplaying_imagesdir = $(pkgdatadir)/applets/NowPlaying/images
-dist_applets_nowplaying_images_DATA = \
-	share/applets/NowPlaying/images/progressbar_bkgrd_l.png \
-	share/applets/NowPlaying/images/progressbar_bkgrd_r.png \
-	share/applets/NowPlaying/images/progressbar_bkgrd.png \
-	share/applets/NowPlaying/images/progressbar_fill_l.png \
-	share/applets/NowPlaying/images/progressbar_fill_r.png \
-	share/applets/NowPlaying/images/progressbar_fill.png 
-	
 applets_setupappletinstallerdir = $(pkgdatadir)/applets/SetupAppletInstaller
 dist_applets_setupappletinstaller_DATA = \
 	share/applets/SetupAppletInstaller/SetupAppletInstallerApplet.lua \
