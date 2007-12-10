@@ -517,12 +517,12 @@ dist_applets_nowplaying_DATA = \
 	share/applets/NowPlaying/NowPlayingApplet.lua \
 	share/applets/NowPlaying/NowPlayingMeta.lua \
 	share/applets/NowPlaying/strings.txt \
-	share/applets/NowPlaying/progressbar_bkgrd.png \
-	share/applets/NowPlaying/progressbar_bkgrd_l.png \
-	share/applets/NowPlaying/progressbar_bkgrd_r.png \
-	share/applets/NowPlaying/progressbar_fill.png \
-	share/applets/NowPlaying/progressbar_fill_l.png \
-	share/applets/NowPlaying/progressbar_fill_r.png
+        share/applets/NowPlaying/progressbar_bkgrd.png \
+        share/applets/NowPlaying/progressbar_bkgrd_l.png \
+        share/applets/NowPlaying/progressbar_bkgrd_r.png \
+        share/applets/NowPlaying/progressbar_fill.png \
+        share/applets/NowPlaying/progressbar_fill_l.png \
+        share/applets/NowPlaying/progressbar_fill_r.png
 
 applets_setupappletinstallerdir = $(pkgdatadir)/applets/SetupAppletInstaller
 dist_applets_setupappletinstaller_DATA = \
@@ -572,9 +572,11 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/icon_mode_off.png \
 	share/applets/DefaultSkin/images/icon_mode_pause.png \
 	share/applets/DefaultSkin/images/icon_mode_play.png \
-	share/applets/DefaultSkin/images/icon_repeat_1.png \
+	share/applets/DefaultSkin/images/icon_repeat.png \
+	share/applets/DefaultSkin/images/icon_repeat_song.png \
 	share/applets/DefaultSkin/images/icon_repeat_off.png \
-	share/applets/DefaultSkin/images/icon_shuffle_1.png \
+	share/applets/DefaultSkin/images/icon_shuffle.png \
+	share/applets/DefaultSkin/images/icon_shuffle_album.png \
 	share/applets/DefaultSkin/images/icon_shuffle_off.png \
 	share/applets/DefaultSkin/images/menu_album_noartwork.png \
 	share/applets/DefaultSkin/images/menu_selection_box_bl.png \
@@ -1229,7 +1231,6 @@ uninstall-dist_applets_nowplayingDATA:
 	  echo " rm -f '$(DESTDIR)$(applets_nowplayingdir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(applets_nowplayingdir)/$$f"; \
 	done
-
 install-dist_applets_screensaversDATA: $(dist_applets_screensavers_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(applets_screensaversdir)" || $(mkdir_p) "$(DESTDIR)$(applets_screensaversdir)"

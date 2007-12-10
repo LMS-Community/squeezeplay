@@ -295,19 +295,20 @@ function skin(self, s)
 	-- repeat off/repeat track/repeat playlist
 	s.iconRepeatOFF = _icon(41, screenHeight - 30, "icon_repeat_off.png")
 	s.iconRepeat0 = _icon(41, screenHeight - 30, "icon_repeat_off.png")
-	s.iconRepeat1 = _icon(41, screenHeight - 30, "icon_repeat_1.png")
-	s.iconRepeat2 = _icon(41, screenHeight - 30, "icon_repeat_1.png")
+	s.iconRepeat1 = _icon(41, screenHeight - 30, "icon_repeat_song.png")
+	s.iconRepeat2 = _icon(41, screenHeight - 30, "icon_repeat.png")
 
 	-- shuffle off/shuffle album/shuffle playlist
 	s.iconShuffleOFF = _icon(75, screenHeight - 30, "icon_shuffle_off.png")
 	s.iconShuffle0 = _icon(75, screenHeight - 30, "icon_shuffle_off.png")
-	s.iconShuffle1 = _icon(75, screenHeight - 30, "icon_shuffle_1.png")
-	s.iconShuffle2 = _icon(75, screenHeight - 30, "icon_shuffle_1.png")
+	s.iconShuffle1 = _icon(75, screenHeight - 30, "icon_shuffle.png")
+	s.iconShuffle2 = _icon(75, screenHeight - 30, "icon_shuffle_album.png")
 
 	-- wireless status
 	s.iconWireless1 = _icon(107, screenHeight - 30, "icon_wireless_2.png")
 	s.iconWireless2 = _icon(107, screenHeight - 30, "icon_wireless_3.png")
 	s.iconWireless3 = _icon(107, screenHeight - 30, "icon_wireless_4.png")
+	s.iconWirelessNONE = _icon(107, screenHeight - 30, "icon_wireless_4.png")
 	s.iconWirelessERROR = _icon(107, screenHeight - 30, "icon_wireless_off.png")
 	s.iconWirelessSERVERERROR = _icon(107, screenHeight - 30, "icon_wireless_noserver.png")
 

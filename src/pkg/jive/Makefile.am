@@ -314,9 +314,11 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/icon_mode_off.png \
 	share/applets/DefaultSkin/images/icon_mode_pause.png \
 	share/applets/DefaultSkin/images/icon_mode_play.png \
-	share/applets/DefaultSkin/images/icon_repeat_1.png \
+	share/applets/DefaultSkin/images/icon_repeat.png \
+	share/applets/DefaultSkin/images/icon_repeat_song.png \
 	share/applets/DefaultSkin/images/icon_repeat_off.png \
-	share/applets/DefaultSkin/images/icon_shuffle_1.png \
+	share/applets/DefaultSkin/images/icon_shuffle.png \
+	share/applets/DefaultSkin/images/icon_shuffle_album.png \
 	share/applets/DefaultSkin/images/icon_shuffle_off.png \
 	share/applets/DefaultSkin/images/menu_album_noartwork.png \
 	share/applets/DefaultSkin/images/menu_selection_box_bl.png \
