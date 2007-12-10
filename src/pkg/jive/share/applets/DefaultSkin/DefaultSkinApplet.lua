@@ -730,9 +730,9 @@ function skin(self, s)
 	}
 	s.albumtitle.text.fg = SELECT_COLOR
 	s.albumtitle.icon = {}
-	s.albumtitle.icon.align = "center"
+	s.albumtitle.icon.align = "left"
 	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
-	s.albumtitle.icon.padding = { 6, 0, 0, 0 }
+	s.albumtitle.icon.padding = { 5, 0, 0, 0 }
 
 
 	-- titles with mini icons
@@ -836,9 +836,9 @@ function skin(self, s)
 	s.albumitem.text.fg = TEXT_COLOR
 	s.albumitem.text.sh = TEXT_SH_COLOR
 	s.albumitem.icon = {}
-	s.albumitem.icon.align = "center"
+	s.albumitem.icon.align = "left"
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
-	s.albumitem.icon.padding = { 6, 0, 0, 0 }
+	s.albumitem.icon.padding = { 5, 0, 0, 0 }
 
 
 	-- selected item with artwork and song info
@@ -910,9 +910,9 @@ function skin(self, s)
 	s.nowplayingitem.icon = {}
 	s.nowplayingitem.icon.w = 156
 	s.nowplayingitem.icon.h = 156
-	s.nowplayingitem.icon.align = "center"
+	s.nowplayingitem.icon.align = "left"
 	s.nowplayingitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
-	s.nowplayingitem.icon.padding = { 6, 0, 0, 0 }
+	s.nowplayingitem.icon.padding = { 5, 0, 0, 0 }
 
 
 	-- selected item with artwork and song info
