@@ -308,7 +308,6 @@ function skin(self, s)
 	s.iconWireless1 = _icon(107, screenHeight - 30, "icon_wireless_2.png")
 	s.iconWireless2 = _icon(107, screenHeight - 30, "icon_wireless_3.png")
 	s.iconWireless3 = _icon(107, screenHeight - 30, "icon_wireless_4.png")
-	s.iconWirelessNONE = _icon(107, screenHeight - 30, "icon_wireless_4.png")
 	s.iconWirelessERROR = _icon(107, screenHeight - 30, "icon_wireless_off.png")
 	s.iconWirelessSERVERERROR = _icon(107, screenHeight - 30, "icon_wireless_noserver.png")
 
