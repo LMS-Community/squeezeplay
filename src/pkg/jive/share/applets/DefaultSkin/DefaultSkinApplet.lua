@@ -352,7 +352,7 @@ function skin(self, s)
 	-- Menu with three basic styles: normal, selected and locked
 	-- First define the dimesions of the menu
 	s.menu = {}
-	s.menu.padding = { 4, 0, 4, 4 }
+	s.menu.padding = { 4, 2, 4, 2 }
 	s.menu.itemHeight = 27
 
 	-- menu item
@@ -813,7 +813,7 @@ function skin(self, s)
 
 	-- menus with artwork and song info
 	s.albummenu = {}
-	s.albummenu.padding = 2
+	s.albummenu.padding = { 4, 2, 4, 2 }
 	s.albummenu.itemHeight = 61
 
 
