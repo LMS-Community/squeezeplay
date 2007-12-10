@@ -694,7 +694,7 @@ function skin(self, s)
 	s.volume.bgImg = volumeBackground
 
 	s.volumeGroup = {}
-	s.volumeGroup.border = { 16, 10, 16, 10 }
+	s.volumeGroup.border = { 16, 5, 16, 10 }
 
 	s.volumePopup = {}
 	s.volumePopup.x = 0

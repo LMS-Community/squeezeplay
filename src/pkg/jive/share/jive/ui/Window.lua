@@ -826,8 +826,6 @@ function noLayout(self)
 	ww = (_ww or sw) - wlb - wrb
 	wh = (_wh or sh) - wtb - wbb
 
-----	iterate(self, function(widget) widget:checkLayout() end)
-
 	self:setBounds(wx, wy, ww, wh)
 end
 
@@ -959,20 +957,18 @@ function borderLayout(self, fitWindow)
 				widget:setBounds(maxBounds(wx + x + lb, wy + y + tb, w, wh - bb))
 
 			elseif position == LAYOUT_CENTER then
+				-- FIXME why does w-rb work, but h-bb lays out incorrectly?
 				h = h or (wh - maxN - maxS)
-				h = min(wh - maxN - maxS, h) - bb
+				h = min(wh - maxN - maxS, h)
 				w = w or (ww - maxW - maxE)
 				w = min(ww - maxW - maxE, w) - rb
 
 				widget:setBounds(maxBounds(wx + maxW + lb, wy + maxN + tb + cy, w, h))
-				-- FIXME why is bb needed twice here? check the layout in now playing if this is changed
-				cy = cy + h + bb + bb
+				cy = cy + h + bb
 
 			elseif position == LAYOUT_NONE then
 				widget:setBounds(maxBounds(wx + x, wy + y, w, h))
 			end
-
-----			widget:checkLayout()
 		end
 	)
 

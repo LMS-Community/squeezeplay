@@ -11,6 +11,9 @@
 typedef struct slider_widget {
 	JiveWidget w;
 
+	JiveAlign align;
+	Uint16 slider_x, slider_y; // aligned position
+
 	JiveTile *bg;
 	JiveTile *tile;
 	bool horizontal;
@@ -63,15 +66,32 @@ int jiveL_slider_skin(lua_State *L) {
 		peer->tile = jive_tile_ref(tile);
 	}
 
+	peer->align = jive_style_align(L, 1, "align", JIVE_ALIGN_CENTER);
+
 	return 0;
 }
 
 
 int jiveL_slider_layout(lua_State *L) {
+	SliderWidget *peer;
+	Uint16 tw, th;
 
 	/* stack is:
 	 * 1: widget
 	 */
+	peer = jive_getpeer(L, 1, &sliderPeerMeta);
+
+	if (!peer->tile) {
+		return 0;
+	}
+
+	jive_tile_get_min_size(peer->tile, &tw, &th);
+	if (peer->horizontal) {
+		peer->slider_y = jive_widget_valign((JiveWidget *)peer, peer->align, tw);
+	}
+	else {
+		peer->slider_x = jive_widget_halign((JiveWidget *)peer, peer->align, th);
+	}
 
 	return 0;
 }
@@ -93,7 +113,7 @@ int jiveL_slider_draw(lua_State *L) {
 	}
 
 	if (peer->bg) {
-		jive_tile_blit(peer->bg, srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.w, peer->w.bounds.h);
+		jive_tile_blit(peer->bg, srf, peer->w.bounds.x + peer->slider_x, peer->w.bounds.y + peer->slider_y, peer->w.bounds.w, peer->w.bounds.h);
 	}
 
 	if (peer->tile) {
@@ -133,7 +153,7 @@ int jiveL_slider_draw(lua_State *L) {
 			h = (height / (float)(range - 1)) * (size - 1) + th;
 		}
 
-		jive_tile_blit(peer->tile, srf, peer->w.bounds.x + peer->w.padding.left + x, peer->w.bounds.y + peer->w.padding.right + y, w, h);
+		jive_tile_blit(peer->tile, srf, peer->w.bounds.x + peer->slider_x + peer->w.padding.left + x, peer->w.bounds.y + peer->slider_y + peer->w.padding.top + y, w, h);
 	}
 
 	return 0;

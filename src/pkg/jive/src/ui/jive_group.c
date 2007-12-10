@@ -83,6 +83,7 @@ int jiveL_group_skin(lua_State *L) {
 
 int jiveL_group_layout(lua_State *L) {
 	GroupWidget *peer;
+	JiveInset *border;
 	int *w;
 	int fc = 0, fw = 0, num = 0;
 	int max_w, sum_w;
@@ -121,16 +122,36 @@ int jiveL_group_layout(lua_State *L) {
 	 */
 
 	w = calloc(num, sizeof(int));
+	h = 0;
+	border = calloc(num, sizeof(JiveInset));
 
 	/* first pass, find widget preferred bounds */
 	i = 0;
 	lua_pushnil(L);
 	while (lua_next(L, 2) != 0) {
+		if (jive_getmethod(L, -1, "getBorder")) {
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 4);
+				
+			border[i].left = lua_tointeger(L, -4);
+			border[i].top = lua_tointeger(L, -3);
+			border[i].right = lua_tointeger(L, -2);
+			border[i].bottom = lua_tointeger(L, -1);
+			lua_pop(L, 4);
+		}
+		else {
+			border[i].left = 0;
+			border[i].top = 0;
+			border[i].right = 0;
+			border[i].bottom = 0;
+		}
+
 		if (jive_getmethod(L, -1, "getPreferredBounds")) {
 			lua_pushvalue(L, -2);
 			lua_call(L, 1, 4);
 
-			w[i] = lua_tointeger(L, -2);
+			w[i] = lua_tointeger(L, -2) + border[i].left + border[i].right;
+			h = MAX(h + border[i].top + border[i].bottom, lua_tointeger(L, -1));
 
 			if (w[i] == JIVE_WH_FILL) {
 				fc++;
@@ -160,9 +181,12 @@ int jiveL_group_layout(lua_State *L) {
 		sum_w += w[i];
 	}
 
+	if (h != JIVE_WH_NIL && h != JIVE_WH_FILL) {
+		h = MIN(h, peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom);
+	}
+
 	x = peer->w.bounds.x + peer->w.padding.left;
 	y = peer->w.bounds.y + peer->w.padding.top;
-	h = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
 
 	/* second pass, set widget bounds */
 	i = 0;
@@ -170,10 +194,10 @@ int jiveL_group_layout(lua_State *L) {
 	while (lua_next(L, 2) != 0) {
 		if (jive_getmethod(L, -1, "setBounds")) {
 			lua_pushvalue(L, -2);
-			lua_pushinteger(L, x);
-			lua_pushinteger(L, y);
-			lua_pushinteger(L, w[i]);
-			lua_pushinteger(L, h);
+			lua_pushinteger(L, x + border[i].left);
+			lua_pushinteger(L, y + border[i].top);
+			lua_pushinteger(L, w[i] - border[i].left - border[i].right);
+			lua_pushinteger(L, h - border[i].top - border[i].bottom);
 			
 			lua_call(L, 5, 0);
 		}
@@ -182,6 +206,9 @@ int jiveL_group_layout(lua_State *L) {
 
 		lua_pop(L, 1);
 	}
+
+	free(w);
+	free(border);
 
 	return 0;
 }
