@@ -57,7 +57,7 @@ local function _keyHold(self, event)
 		local bg = Framework.getBackground()
 
 		local srf = Surface:newRGB(sw, sh)
-		bg:blit(srf, 0, 0)
+		bg:blit(srf, 0, 0, sw, sh)
 		window:draw(srf, JIVE_LAYER_ALL)
 
 		srf:saveBMP(file)
