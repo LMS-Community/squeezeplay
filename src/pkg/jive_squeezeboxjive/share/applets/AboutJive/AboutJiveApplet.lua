@@ -80,6 +80,7 @@ function settingsShow(self)
 		"     Fred Thomas",
 		"     Richard Titmuss",
 		"     Julien Venetz",
+		"     Osama Zaidan",
 		"",
 		"",
 		tostring(self:string("ABOUT_COPYRIGHT")),
