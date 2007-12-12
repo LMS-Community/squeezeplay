@@ -319,7 +319,10 @@ function _setBrightness(self, fade, lcdLevel, keyLevel, closure)
 	local keyInc = (keyVal - keyLevel) / steps
 
 	if lcdVal == lcdLevel and keyVal == keyLevel then
-		-- already at level, nothing to do
+		-- already at level, no need to fade so execute closure and return
+		if closure then
+			closure()
+		end
 		return
 	end
 
@@ -698,11 +701,19 @@ function settingsPowerOff(self)
 
 	popup:addWidget(Icon("iconPower"))
 	popup:addWidget(Label("text", self:string("GOODBYE")))
+	popup:setAllowScreensaver(false)
+
+	-- we're shutting down, so prohibit any key presses or holds
+	popup:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD, 
+				function () 
+					return EVENT_CONSUME
+				end)
 
 	popup:addTimer(4000, 
 		function()
 			self:_powerOff()
-		end
+		end,
+		true
 	)
 
 	self:tieAndShowWindow(popup)
