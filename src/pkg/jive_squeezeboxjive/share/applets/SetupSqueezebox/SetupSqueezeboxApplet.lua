@@ -53,6 +53,7 @@ function init(self)
 	self.data1 = {}
 	self.data2 = {}
 	self.seqno = math.random(65535)
+	self.lastActionTicks = Framework:getTicks()
 
 	self.slimdiscovery = AppletManager:getAppletInstance("SlimDiscovery")
 	if not self.slimdiscovery then
@@ -227,7 +228,7 @@ function _scanComplete(self, scanTable, keepOldEntries)
 
 			-- remove networks not seen for 10 seconds
 			if keepOldEntries ~= true and os.difftime(now, entry.lastScan) > 10 then
-				log:warn(mac, " not ssen for 10 seconds")
+				log:warn(mac, " not seen for 10 seconds")
 				self.scanResults[mac].adhoc = nil
 
 				if self.scanResults[mac].udap ~= true then
@@ -798,6 +799,14 @@ function t_waitJiveAdhoc(self)
 end
 
 
+function t_udapSend(self, packet)
+	-- send three udp packets in case the wireless network drops them
+	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
+	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
+	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
+end
+
+
 -- discover the Squeezebox over udap. this makes sure that the Squeezebox exists.
 function t_udapDiscover(self)
 	log:warn("udapDiscover")
@@ -807,7 +816,7 @@ function t_udapDiscover(self)
 	-- check squeezebox exists via udap
 	self.seqno = self.seqno + 1
 	local packet = udap.createDiscover(self.mac, self.seqno)
-	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
+	self:t_udapSend(packet)
 end
 
 
@@ -831,7 +840,7 @@ function t_udapSetData(self)
 	-- configure squeezebox network
 	self.seqno = self.seqno + 1
 	local packet = udap.createSetData(self.mac, self.seqno, self.data1)
-	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
+	self:t_udapSend(packet)
 end
 
 
@@ -844,7 +853,7 @@ function t_udapReset(self)
 	-- reset squeezebox
 	self.seqno = self.seqno + 1
 	local packet = udap.createReset(self.mac, self.seqno)
-	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
+	self:t_udapSend(packet)
 
 	-- if the reset udp reply is lost we won't know the squeezebox has reset ok
 	-- let's assume that after ten requests it must have reset, if we haven't
@@ -855,6 +864,19 @@ function t_udapReset(self)
 	end
 end
 
+
+-- Get Squeezebox UUID
+function t_udapGetUUID(self)
+	log:warn("udapGetUUID")
+
+	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
+
+	self.seqno = self.seqno + 1
+	local packet = udap.createGetUUID(self.mac, self.seqno)
+	self:t_udapSend(packet)
+end
+
+
 -- Get Squeezebox IP address
 function t_udapGetIPAddr(self)
 	log:warn("udapGetIPAddr")
@@ -863,7 +885,7 @@ function t_udapGetIPAddr(self)
 
 	self.seqno = self.seqno + 1
 	local packet = udap.createGetIPAddr(self.mac, self.seqno)
-	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
+	self:t_udapSend(packet)
 end
 
 
@@ -896,16 +918,16 @@ function t_udapSink(self, chunk, err)
 			_setAction(self, t_udapReset)
 		elseif self._action == t_udapSetSlimserver then
 			_setAction(self, t_waitSlimserver)
-		else
-			error("unexpected state " .. tostring(self._action))
 		end
 
-	elseif pkt.uapMethod == "reset" then
-		assert(self._action == t_udapReset)
+	elseif pkt.uapMethod == "reset"
+		and self._action == t_udapReset then
+
 		_setAction(self, t_connectJiveNetwork)
 
-	elseif pkt.uapMethod == "adv_discover" then
-		assert(self._action == t_waitSqueezeboxNetwork)
+	elseif pkt.uapMethod == "adv_discover"
+		and self._action == t_waitSqueezeboxNetwork then
+
 		if pkt.ucp.device_status == "wait_wireless" then
 			-- we won't see this, the Squeezebox network is not up yet
 
@@ -913,7 +935,7 @@ function t_udapSink(self, chunk, err)
 			self.errorMsg = "SQUEEZEBOX_PROBLEM_DHCP_ERROR"
 
 		elseif pkt.ucp.device_status == "wait_slimserver" then
-			_setAction(self, t_udapGetIPAddr)
+			_setAction(self, t_udapGetUUID)
 
 		elseif pkt.ucp.device_status == "connected" then
 			-- we should not get this far yet
@@ -921,25 +943,35 @@ function t_udapSink(self, chunk, err)
 
 		end
 
+	-- Get Squeezebox UUID
+	elseif pkt.uapMethod == "get_uuid"
+		and self._action == t_udapGetUUID then
+		
+		log:warn("squeezebox uuid=", pkt.uuid)
+
+		self.uuid = pkt.uuid
+		_setAction(self, t_udapGetIPAddr)
+
 	-- Get Squeezebox IP address to be shown to user
-	elseif pkt.uapMethod == "get_ip" then
-			_setAction(self, nil)
+	elseif pkt.uapMethod == "get_ip"
+		and self._action == t_udapGetIPAddr then
 
-			local ip_addr_str = ""
-			local v = pkt.ucp["ip_addr"]
-			for i = 1,#v do
-				ip_addr_str = ip_addr_str .. string.format("%d", string.byte(string.sub(v, i, i)))
-				if i < #v then
-					ip_addr_str = ip_addr_str .. "."
-				end
+		_setAction(self, nil)
+			
+		local ip_addr_str = ""
+		local v = pkt.ucp["ip_addr"]
+		for i = 1,#v do
+			ip_addr_str = ip_addr_str .. string.format("%d", string.byte(string.sub(v, i, i)))
+			if i < #v then
+				ip_addr_str = ip_addr_str .. "."
 			end
-			-- Save Squeezebox IP address to be shown in next screen
-			self.squeezeboxIPAddr = ip_addr_str
+		end
+		-- Save Squeezebox IP address to be shown in next screen
+		self.squeezeboxIPAddr = ip_addr_str
 
-			jnt:t_perform(function()
-					      _chooseSlimserver(self)
-				      end)
-
+		jnt:t_perform(function()
+				      _chooseSlimserver(self)
+			      end)
 	end
 end
 
@@ -996,7 +1028,7 @@ function t_waitSqueezeboxNetwork(self)
 	-- check squeezebox status via udap
 	self.seqno = self.seqno + 1
 	local packet = udap.createAdvancedDiscover(self.mac, self.seqno)
-	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
+	self:t_udapSend(packet)
 end
 
 
@@ -1006,6 +1038,8 @@ function _chooseSlimserver(self)
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu")
+	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
+
 	local help = Textarea("help", self:string("SQUEEZEBOX_MUSIC_SOURCE_HELP", self.squeezeboxIPAddr))
 
 	window:addWidget(help)
@@ -1049,12 +1083,19 @@ function _scanSlimservers(self)
 
 	-- update slimserver list
 	for i,v in self.slimdiscovery:allServers() do
-		if self.slimservers[i] == nil then
+		if not v:isConnected() then
+			-- remove any servers that are not connected
+			if self.slimservers[i] then
+				self.slimserverMenu:removeItem(self.slimservers[i])
+			end
+
+		elseif self.slimservers[i] == nil then
 			local item = {
 				text = v:getName(),
 				callback = function()
 						   _setSlimserver(self, v)
-					   end
+					   end,
+				weight = v:isSqueezeNetwork() and 2 or 1,
 			}
 
 			self.slimservers[i] = item
@@ -1077,13 +1118,29 @@ end
 -- user has selected a slimserver. open the connecting popup again, and send
 -- the slimserver configuration to Squeezebox over udap.
 function _setSlimserver(self, slimserver)
-	local serverip, port = slimserver:getIpPort()
+	local serverip = slimserver:getIpPort()
 
 	self.slimserver = slimserver:getName()
-	self.data2.server_address = udap.packNumber(0, 4)
-	self.data2.slimserver_address = udap.packNumber(parseip(serverip), 4)
 
-	log:warn("slimserver_address=", serverip)
+	if slimserver:isSqueezeNetwork() then
+		log:warn("slimserver_address=www.squeezenetwork.com")
+
+		self.data2.server_address = udap.packNumber(1, 4)
+		-- set slimserver address to 0.0.0.1 to workaround a bug in
+		-- squeezebox firmware
+		self.data2.slimserver_address = udap.packNumber(parseip("0.0.0.1"), 4)
+	else
+		log:warn("slimserver_address=", serverip)
+
+		self.data2.server_address = udap.packNumber(0, 4)
+		self.data2.slimserver_address = udap.packNumber(parseip(serverip), 4)
+	end
+
+
+	if self.uuid then
+		local cmd = { 'playerRegister', self.uuid, self.mac }
+		slimserver:request(nil, nil, cmd)
+	end
 
 	_setAction(self, t_udapSetSlimserver)
 	_setupSqueezebox(self)
@@ -1101,7 +1158,7 @@ function t_udapSetSlimserver(self)
 	-- configure squeezebox network
 	self.seqno = self.seqno + 1
 	local packet = udap.createSetData(self.mac, self.seqno, self.data2)
-	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
+	self:t_udapSend(packet)
 end
 
 
@@ -1170,6 +1227,19 @@ function _nextAction(self)
 			    if self._action == nil then
 				    return
 			    end
+
+			    -- check for queued action events, this can happen
+			    -- due to the blocking i/o used in the network thread
+			    --
+			    -- it should be possible to remove this workaround
+			    -- when the zerotimeout patch is applied for the
+			    -- network thread.
+			    local now = Framework:getTicks()
+			    if now - self.lastActionTicks < 500 then
+				    log:warn("queued timer events?")
+				    return
+			    end
+			    self.lastActionTicks = now
 
 			    local ok, err = pcall(self._action, self)
 			    if not ok then

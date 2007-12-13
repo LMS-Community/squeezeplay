@@ -52,6 +52,8 @@ local ucpMethods = {
 	"error",
 	"credentials_error",
 	"adv_discover",
+	nil,
+	"get_uuid"
 }
 
 
@@ -69,6 +71,7 @@ local ucpCodes = {
 	"hardware_rev",
 	"device_id",
 	"device_status",
+	"uuid"
 }
 
 
@@ -137,6 +140,22 @@ function parseGetData(pkt, recv, offset)
 end
 
 
+function parseGetUUID(pkt, recv, offset)
+	local num, off, len, data
+
+	pkt.data = {}
+
+	len, offset = unpackNumber(recv, offset, 2)
+	local n = { string.byte(string.sub(recv, offset, offset + len - 1), 1, len) }
+
+	pkt.uuid = {}
+	for k,v in ipairs(n) do
+		pkt.uuid[#pkt.uuid + 1] = string.format("%02x", v)
+	end
+	pkt.uuid = table.concat(pkt.uuid)
+end
+
+
 local ucpMethodHandlers = {
 	[ "discover" ] = parseDiscover,
 	[ "get_ip" ] = parseDiscover,
@@ -147,6 +166,7 @@ local ucpMethodHandlers = {
 	[ "error" ] = nil,
 	[ "credentials_error" ] = nil,
 	[ "adv_discover" ] = parseDiscover,
+	[ "get_uuid" ] = parseGetUUID,
 }
 
 
@@ -250,6 +270,14 @@ function createGetIPAddr(mac, seq)
 	return createUdap(mac,
 			  seq,
 			  packNumber(0x0002, 2) -- get ip
+		   )
+end
+
+
+function createGetUUID(mac, seq)
+	return createUdap(mac,
+			  seq,
+			  packNumber(0x000b, 2) -- get uuid
 		   )
 end
 

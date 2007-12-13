@@ -273,6 +273,11 @@ function free(self)
 end
 
 
+function isSqueezeNetwork(self)
+	return self.name == "SqueezeNetwork"
+end
+
+
 function connect(self)
 	log:warn(self, ":connect()")
 

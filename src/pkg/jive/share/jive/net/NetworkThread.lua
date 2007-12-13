@@ -347,6 +347,33 @@ end
 
 --[[
 
+=head2 getUUID()
+
+Returns the UUID and Mac address of this device.
+
+=cut
+--]]
+function getUUID(self)
+	return self.uuid, self.mac
+end
+
+
+--[[
+
+=head2 setUUID(uuid, mac)
+
+Sets the UUID and Mac address of this device.
+
+=cut
+--]]
+function setUUID(self, uuid, mac)
+	self.uuid = uuid
+	self.mac = mac
+end
+
+
+--[[
+
 =head2 __init()
 
 Creates a new NetworkThread. The thread starts immediately.

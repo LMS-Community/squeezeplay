@@ -6,6 +6,7 @@ local oo                     = require("loop.simple")
 local string                 = require("string")
 local math                   = require("math")
 local os                     = require("os")
+local io                     = require("io")
 
 local jiveBSP                = require("jiveBSP")
 local Watchdog               = require("jiveWatchdog")
@@ -71,6 +72,31 @@ oo.class(_M, Applet)
 
 
 function init(self)
+	local uuid, mac
+
+	-- read device uuid
+	local f = io.popen("/usr/sbin/fw_printenv")
+	if f then
+		local printenv = f:read("*all")
+		f:close()
+
+		uuid = string.match(printenv, "serial#=(%x+)")
+	end
+	
+	-- read device mac
+	local f = io.popen("/sbin/ifconfig eth0")
+	if f then
+		local ifconfig = f:read("*all")
+		f:close()
+
+		mac = string.match(ifconfig, "HWaddr%s(%x%x:%x%x:%x%x:%x%x:%x%x:%x%x)")
+	end
+
+	log:warn("uuid=", uuid)
+	log:warn("mac=", mac)
+
+	jnt:setUUID(uuid, mac)
+
 	-- watchdog timer
 	self.watchdog = Watchdog:open()
 	if self.watchdog then
@@ -83,7 +109,6 @@ function init(self)
 	else
 		log:warn("Watchdog timer is disabled")
 	end
-
 
 	-- wireless
 	self.Wireless = Wireless(jnt, "eth0")

@@ -76,7 +76,7 @@ local function _cacheServer(self, ss_ip, ss_port, ss_name)
 			
 	-- in the cache?			
 	if self._servers[ss_id] == nil then
-		log:info("Creating server ", ss_name, " (", ss_id, ":", ss_port, ")")
+		log:info("Creating server ", ss_name, " (", ss_id, ")")
 		
 		-- drop the port info, we're not doing anything with it
 	 	local server = SlimServer(self.jnt, ss_ip, ss_port, ss_name)
@@ -219,6 +219,10 @@ function discover(self)
 		log:debug("sending to address ", address)
 		self.js:send(t_source, address, PORT)
 	end
+
+	-- Special case Squeezenetwork
+	_cacheServer(self, "www.squeezenetwork.com", 9000, "SqueezeNetwork")
+
 	_cacheCleanup(self)	
 end
 

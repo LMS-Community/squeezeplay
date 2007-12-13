@@ -1,4 +1,6 @@
 
+local tonumber = tonumber
+
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
@@ -55,7 +57,7 @@ function registerApplet(meta)
 			end
 
 			-- are we forcing an upgrade
-			if chunk.data.firmwareUpgrade == 1 then
+			if tonumber(chunk.data.firmwareUpgrade) == 1 then
 				local applet = appletManager:loadApplet("SetupFirmwareUpgrade")
 				applet:forceUpgrade()
 			end

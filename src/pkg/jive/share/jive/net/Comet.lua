@@ -73,6 +73,7 @@ local Popup         = require("jive.ui.Popup")
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("net.comet")
 
+local JIVE_VERSION  = jive.JIVE_VERSION
 
 -- times are in ms
 local RETRY_DEFAULT = 5000  -- default delay time to retry connection
@@ -160,6 +161,14 @@ function disconnect(self)
 		} }
 
 		local req = function()
+			_active(self, false)
+		
+			-- Mark all subs as pending so they can be resubscribed later
+			for i, v in ipairs( self.subs ) do
+				log:debug("Will re-subscribe to ", v.subscription, " on next connect")
+				v.pending = true
+			end
+		
 			return CometRequest(
 				_getEventSink(self),
 				self.uri,
@@ -225,7 +234,7 @@ _addPendingRequests = function(self, data)
 				unsubscribe = subscription,
 			},
 		}
-	
+
 		table.insert( data, unsub )
 	end
 
@@ -247,7 +256,7 @@ _addPendingRequests = function(self, data)
 				priority = v.priority,
 			},
 		}
-		
+
 		-- only ask for a response if we have a callback function
 		if v.func then
 			req["id"] = v.reqid
@@ -283,7 +292,7 @@ _connect = function(self)
 		clientId     = self.clientId,
 		subscription = '/' .. self.clientId .. '/**',
 	} }
-	
+
 	-- Add any other pending requests to the outgoing data
 	_addPendingRequests( self, data )
 	
@@ -337,15 +346,6 @@ _getEventSink = function(self)
 					else
 						log:warn("Comet:_getEventSink, disconnect failed: ", event.error)
 					end
-					_active(self, false)
-					
-					-- Mark all subs as pending so they can be resubscribed later
-					for i, v in ipairs( self.subs ) do
-						log:debug("Will re-subscribe to ", v.subscription, " on next connect")
-						v.pending = true
-					end
-					
-					break
 				elseif event.channel == '/meta/reconnect' then
 					if event.successful then
 						log:debug("Comet:_getEventSink, reconnect OK")
@@ -386,7 +386,7 @@ _getEventSink = function(self)
 					local onetime_request = false
 					
 					-- strip clientId from channel
-					subscription = string.gsub(subscription, "^/[0-9a-f]+", "")
+					subscription = string.gsub(subscription, "^/[0-9A-Za-z]+", "")
 					
 					if string.find(subscription, '/slim/request') then
 						-- an async notification from a normal request
@@ -430,8 +430,20 @@ _handshake = function(self)
 		channel                  = '/meta/handshake',
 		version                  = '1.0',
 		supportedConnectionTypes = { 'streaming' },
+		ext                      = {
+			rev = JIVE_VERSION,
+		},
 	} }
 	
+	local uuid, mac = self.jnt:getUUID()
+
+	if mac then
+		data[1].ext.mac = mac
+	end
+	if uuid then
+		data[1].ext.uuid = uuid
+	end
+
 	-- XXX: according to the spec this should be sent as application/x-www-form-urlencoded
 	-- with message=<url-encoded json> but it works as straight JSON
 	
@@ -462,7 +474,7 @@ _getHandshakeSink = function(self)
 				_active(self, true)
 				self.clientId  = data.clientId
 				self.advice    = data.advice
-				
+
 				log:debug("Comet:_handshake OK with ", self.jsName, ", clientId: ", self.clientId)
 				
 				
@@ -609,7 +621,7 @@ function request(self, func, playerid, request, priority)
 				priority = priority,
 			},
 		} }
-		
+
 		-- only pass id if we have a callback function, this tells
 		-- SlimServer we don't want a response
 		if func then
@@ -719,27 +731,18 @@ _handleAdvice = function(self)
 		retry_interval = 1
 	end
 	
-	if advice.reconnect == 'retry' then
-		log:warn(
-			"Comet: advice is ", advice.reconnect, ", reconnecting in ",
-			retry_interval / 1000, " seconds"
-		)
-	
-		self.reconnect_timer = Timer(
-			retry_interval,
-			function()
-				_reconnect(self)
-			end,
-			true -- run timer only once
-		)
-		self.reconnect_timer:start()
+	if advice.reconnect == 'none' then
+		self.clientId  = nil
+		log:warn("Comet:_connect, server told us not to reconnect")
+
 	elseif advice.reconnect == 'handshake' then
 		log:warn(
 			"Comet: advice is ", advice.reconnect, ", re-handshaking in ",
 			retry_interval / 1000, " seconds"
 		)
 	
-		self.clientId = nil
+		self.clientId  = nil
+
 		self.reconnect_timer = Timer(
 			retry_interval,
 			function()
@@ -755,9 +758,21 @@ _handleAdvice = function(self)
 			true -- run timer only once
 		)
 		self.reconnect_timer:start()
-	else
-		self.clientId = nil
-		log:warn("Comet:_connect, server told us not to reconnect")
+
+	else -- if advice.reconnect == 'retry' then
+		log:warn(
+			"Comet: advice is ", advice.reconnect, ", reconnecting in ",
+			retry_interval / 1000, " seconds"
+		)
+	
+		self.reconnect_timer = Timer(
+			retry_interval,
+			function()
+				_reconnect(self)
+			end,
+			true -- run timer only once
+		)
+		self.reconnect_timer:start()
 	end
 end
 
