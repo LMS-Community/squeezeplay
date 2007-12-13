@@ -53,13 +53,24 @@ local KEY_REW          = jive.ui.KEY_REW
 local KEY_HOME         = jive.ui.KEY_HOME
 
 local jiveMain         = jiveMain
+local jnt           = jnt
 
 local welcomeTitleStyle = 'settingstitle'
-local disableHomeKeyDuringSetup
-local freeAppletWhenEscapingSetup
+
 
 module(...)
 oo.class(_M, Applet)
+
+
+function notify_playerCurrent(self, player)
+	-- setup is completed when a player is selected
+	self:getSettings().setupDone = true
+	self:storeSettings()
+
+	-- remove Return to Setup from JiveMain
+	jiveMain:removeItem(self.returnToSetup)
+end
+
 
 function step1(self)
 	-- add 'RETURN_TO_SETUP' at top
@@ -85,15 +96,21 @@ function step1(self)
 			end
 			return EVENT_UNUSED
 		end)
-	freeAppletWhenEscapingSetup =
+
+	-- add press and hold left to escape setup
+	self.freeAppletWhenEscapingSetup =
  		Framework:addListener(EVENT_KEY_HOLD,
 		function(event)
 			local keycode = event:getKeycode()
 			if keycode == KEY_BACK then
-				free()
+				self:removeListeners()
 			end
 			return EVENT_UNUSED
 		end)
+
+	-- choose language
+	self.setupLanguage = assert(appletManager:loadApplet("SetupLanguage"))
+	self._topWindow = self.setupLanguage:setupShow(function() self:step2() end)
 
 	return self.topWindow
 end
@@ -273,10 +290,22 @@ function setupDoneShow(self, setupNext)
 	return window
 end
 
+
+function init(self)
+	jnt:subscribe(self)
+end
+
+
 function free(self)
-	-- remove listeners when leaving this applet
-	Framework:removeListener(disableHomeKeyDuringSetup)
-	Framework:removeListener(freeAppletWhenEscapingSetup)
+	jnt:unsubscribe(self)
+	self:removeListeners()
+end
+
+
+-- remove listeners when leaving this applet
+function removeListeners(self)
+	Framework:removeListener(self.disableHomeKeyDuringSetup)
+	Framework:removeListener(self.freeAppletWhenEscapingSetup)
 end
 
 --[[
