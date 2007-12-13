@@ -63,12 +63,17 @@ oo.class(_M, Applet)
 
 
 function notify_playerCurrent(self, player)
+	log:info("setup complete")
+
 	-- setup is completed when a player is selected
 	self:getSettings().setupDone = true
 	self:storeSettings()
 
 	-- remove Return to Setup from JiveMain
 	jiveMain:removeItem(self.returnToSetup)
+
+	log:info("unsubscribe")
+	jnt:unsubscribe(self)
 end
 
 
@@ -103,7 +108,7 @@ function step1(self)
 		function(event)
 			local keycode = event:getKeycode()
 			if keycode == KEY_BACK then
-				self:removeListeners()
+				self:free()
 			end
 			return EVENT_UNUSED
 		end)
@@ -116,17 +121,23 @@ function step1(self)
 end
 
 function step2(self)
+	log:info("step2")
+
 	-- welcome!
 	return self:setupWelcomeShow(function() self:step3() end)
 end
 
 function step3(self)
+	log:info("step3")
+
 	-- wireless region
 	self.setupWireless = assert(appletManager:loadApplet("SetupWireless"))
 	return self.setupWireless:setupRegionShow(function() self:step4() end)
 end
 
 function step4(self)
+	log:info("step4")
+
 	-- finding networks
 	self.scanWindow = self.setupWireless:setupScanShow(function()
 								   self:step5()
@@ -140,6 +151,8 @@ function step4(self)
 end
 
 function step5(self)
+	log:info("step5")
+
 	-- wireless connection, using squeezebox?
 	local scanResults = Wireless.scanResults()
 
@@ -157,6 +170,8 @@ function step5(self)
 end
 
 function step51(self)
+	log:info("step51")
+
 	-- connect using squeezebox in adhoc mode
 	self.setupSqueezebox = assert(appletManager:loadApplet("SetupSqueezebox"))
 
@@ -164,11 +179,15 @@ function step51(self)
 end
 
 function step52(self)
+	log:info("step52")
+
 	-- connect using other wireless network
 	return self.setupWireless:setupNetworksShow(function() self:step6() end)
 end
 
 function step6(self)
+	log:info("step6")
+
 	-- wireless connection, using squeezebox?
 	local scanResults = Wireless.scanResults()
 
@@ -184,6 +203,8 @@ function step6(self)
 end
 
 function step61(self)
+	log:info("step61")
+
 	-- setup squeezebox
 	self.setupSqueezebox = assert(appletManager:loadApplet("SetupSqueezebox"))
 
@@ -191,6 +212,8 @@ function step61(self)
 end
 
 function step7(self)
+	log:info("step7")
+
 	-- skip this step if a player has been selected
 	local manager = AppletManager:getAppletInstance("SlimDiscovery")
 	if manager and manager:getCurrentPlayer() ~= nil then
@@ -203,6 +226,8 @@ function step7(self)
 end
 
 function step8(self)
+	log:info("step8")
+
 	-- all done
 	self:getSettings().setupDone = true
 	jiveMain:removeItemById('returntosetup')
@@ -292,18 +317,14 @@ end
 
 
 function init(self)
+	log:info("subscribe")
 	jnt:subscribe(self)
 end
 
 
-function free(self)
-	jnt:unsubscribe(self)
-	self:removeListeners()
-end
-
-
 -- remove listeners when leaving this applet
-function removeListeners(self)
+function free(self)
+	log:info("free")
 	Framework:removeListener(self.disableHomeKeyDuringSetup)
 	Framework:removeListener(self.freeAppletWhenEscapingSetup)
 end
