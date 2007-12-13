@@ -181,29 +181,29 @@ Categories are strings. The following are the default categories:
 
 -- table to contain all the loggers indexed by category
 local categories = {
-	["applets.setup"]            = jiveLogger(logging.WARN),
-	["applets.browser"]          = jiveLogger(logging.WARN),
-	["applets.games"]            = jiveLogger(logging.WARN),
-	["applets.screensavers"]     = jiveLogger(logging.WARN),
-	["applets.misc"]             = jiveLogger(logging.WARN),
+	["applets.setup"]            = jiveLogger(logging.INFO),
+	["applets.browser"]          = jiveLogger(logging.INFO),
+	["applets.games"]            = jiveLogger(logging.INFO),
+	["applets.screensavers"]     = jiveLogger(logging.INFO),
+	["applets.misc"]             = jiveLogger(logging.INFO),
 
-	["jive.main"]                = jiveLogger(logging.WARN),
+	["jive.main"]                = jiveLogger(logging.INFO),
 
-	["slimserver"]               = jiveLogger(logging.WARN),
-	["slimserver.cache"]         = jiveLogger(logging.WARN),
-	["player"]                   = jiveLogger(logging.WARN),
-	["player.browse"]            = jiveLogger(logging.WARN),
-	["player.browse.data"]       = jiveLogger(logging.WARN),
+	["slimserver"]               = jiveLogger(logging.INFO),
+	["slimserver.cache"]         = jiveLogger(logging.INFO),
+	["player"]                   = jiveLogger(logging.INFO),
+	["player.browse"]            = jiveLogger(logging.INFO),
+	["player.browse.data"]       = jiveLogger(logging.INFO),
                          
-	["net.cli"]                  = jiveLogger(logging.WARN),
-	["net.thread"]               = jiveLogger(logging.WARN),
-	["net.socket"]               = jiveLogger(logging.WARN),
-	["net.http"]                 = jiveLogger(logging.WARN),
-	["net.comet"]                = jiveLogger(logging.WARN),
+	["net.cli"]                  = jiveLogger(logging.INFO),
+	["net.thread"]               = jiveLogger(logging.INFO),
+	["net.socket"]               = jiveLogger(logging.INFO),
+	["net.http"]                 = jiveLogger(logging.INFO),
+	["net.comet"]                = jiveLogger(logging.INFO),
 	                             
-	["ui"]                       = jiveLogger(logging.WARN),
+	["ui"]                       = jiveLogger(logging.INFO),
                                  
-	["utils"]                    = jiveLogger(logging.WARN),
+	["utils"]                    = jiveLogger(logging.INFO),
 }
 
 --[[
@@ -250,7 +250,7 @@ function addCategory(category, initialLevel)
 	local log = categories[category]
 	
 	if not log then
-		local level = initialLevel or WARN
+		local level = initialLevel or INFO
 		log = jiveLogger(level)
 		categories[category] = log
 	end

@@ -59,6 +59,7 @@ local log           = require("jive.utils.log").logger("jive.main")
 require("jive.ui.Framework")
 --require("profiler")
 
+local JIVE_VERSION  = jive.JIVE_VERSION
 
 
 -- Classes
@@ -202,7 +203,7 @@ end
 -- JiveMain:__init
 -- creates our JiveMain main object
 function JiveMain:__init()
-	log:debug("JiveMain:__init()")
+	log:info("jive ", JIVE_VERSION)
 
 	-- Seed the rng
 	local initTime = os.time()
