@@ -119,7 +119,9 @@ function start(self, callback)
 	-- switch running kernel and filesystem and enable VOL+ on boot
 	t, err = self:fw_setenv({ kernelblock = self.nextKernelblock,
 				  mtdset = self.nextMtdset,
-				  sw7 = "echo Booting last image; blink; setenv kernelblock " .. self.thisKernelblock .. "; setenv mtdset " .. self.thisMtdset .. "; boot"
+				  sw7 = "echo Booting last image; blink; setenv kernelblock " .. self.thisKernelblock .. "; setenv mtdset " .. self.thisMtdset .. "; boot",
+				  -- fix for bug 6322
+				  sw6 = "echo Factory reset; blink; nande b00 1400000; blink"
 			  })
 	if not t then
 		return nil, err
