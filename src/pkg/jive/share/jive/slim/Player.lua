@@ -27,7 +27,7 @@ Notifications:
 local debug = require("jive.utils.debug")
 
 -- stuff we need
-local _assert, tostring = _assert, tostring
+local _assert, tonumber, tostring = _assert, tonumber, tostring
 
 local os             = require("os")
 local string         = require("string")
@@ -44,6 +44,7 @@ local Icon           = require("jive.ui.Icon")
 local Label          = require("jive.ui.Label")
 local Window         = require("jive.ui.Window")
 
+local debug          = require("jive.utils.debug")
 local log            = require("jive.utils.log").logger("player")
 
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
@@ -148,6 +149,7 @@ function __init(self, slimServer, jnt, playerInfo)
 		model = playerInfo.model,
 		connected = playerInfo.connected,
 		power = playerInfo.power,
+		needsUpgrade = (tonumber(playerInfo.player_needs_upgrade) == 1),
 
 		-- menu item of home menu that represents this player
 		homeMenuItem = false,
@@ -158,7 +160,7 @@ function __init(self, slimServer, jnt, playerInfo)
 		-- current song info
 		currentSong = {}
 	})
-	
+
 	-- SlimServer notifies of our arrival, so that listener see us in the SS db when notified, not before
 	
 	return obj
@@ -175,9 +177,11 @@ Updates the player with fresh data from SS.
 --]]
 function updateFromSS(self, playerInfo)
 	
+	self.model = playerInfo.model
+	self.needsUpgrade = (tonumber(playerInfo.player_needs_upgrade) == 1),
+
 	_setPlayerName(self, playerInfo.name)
 	_setPlayerPower(self, playerInfo.power)
-	self.model = playerInfo.model
 	_setConnected(self, playerInfo.connected)
 end
 
@@ -526,6 +530,11 @@ function isCurrent(self, index)
 	if self.state then
 		return self.state["playlist_cur_index"] == index - 1
 	end
+end
+
+
+function isNeedsUpgrade(self)
+	return self.needsUpgrade
 end
 
 

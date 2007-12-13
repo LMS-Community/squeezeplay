@@ -1174,6 +1174,12 @@ function notify_playerNew(self, player)
 
 	log:warn("got new playerId ", playerId)
 	if string.lower(playerId) == string.lower(self.mac) then
+
+		if player:isNeedsUpgrade() then
+			totalTimeout = 300
+			return
+		end
+
 		-- player is connected to slimserver, set as current player
 		self.slimdiscovery:setCurrentPlayer(player)
 
