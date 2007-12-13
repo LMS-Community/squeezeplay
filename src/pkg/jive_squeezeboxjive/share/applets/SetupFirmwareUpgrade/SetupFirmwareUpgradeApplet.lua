@@ -85,10 +85,10 @@ function forceUpgrade(self)
 	end
 	log:warn("url=", url)
 
-	window:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+	window:addListener(EVENT_KEY_PRESS,
 			   function(event)
 				   local keycode = event:getKeycode()
-				   if keycode == KEY_HOME or keycode == KEY_BACK then
+				   if keycode == KEY_HOME then
 					   return EVENT_CONSUME
 				   end
 
