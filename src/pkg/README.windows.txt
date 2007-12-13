@@ -4,11 +4,6 @@ Building on Linux
 This was tested using Windows XP SP2, with Microsoft Visual Studio 2005 Professional Edition. Instructions for building with the Visual C++ Express (free) can be found at http://wiki.slimdevices.com/index.cgi?BuildingJiveOnVCExpress.
 
 
-## Requirements:
-
-Before building Jive you need to download and install the DirectX SDK from http://msdn2.microsoft.com/en-us/xna/aa937788.aspx.
-
-
 ## Instructions:
 
 To build:
