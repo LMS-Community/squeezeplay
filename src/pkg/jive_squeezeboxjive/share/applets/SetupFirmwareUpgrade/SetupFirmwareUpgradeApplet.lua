@@ -36,7 +36,6 @@ local jnt                    = jnt
 local upgradeUrl             = upgradeUrl
 
 local EVENT_ACTION           = jive.ui.EVENT_ACTION
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
 local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
@@ -49,6 +48,7 @@ local LAYOUT_CENTER          = jive.ui.LAYOUT_CENTER
 local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
 local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
+local EVENT_KEY_HOLD         = jive.ui.EVENT_KEY_HOLD
 local EVENT_WINDOW_ACTIVE    = jive.ui.EVENT_WINDOW_ACTIVE
 local EVENT_WINDOW_INACTIVE  = jive.ui.EVENT_WINDOW_INACTIVE
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
@@ -62,6 +62,7 @@ local KEY_UP          = jive.ui.KEY_UP
 local KEY_DOWN        = jive.ui.KEY_DOWN
 local KEY_LEFT        = jive.ui.KEY_LEFT
 local KEY_RIGHT       = jive.ui.KEY_RIGHT
+local KEY_HOME        = jive.ui.KEY_HOME
 
 local firmwareupgradeTitleStyle = 'settingstitle'
 
@@ -83,6 +84,16 @@ function forceUpgrade(self)
 		url = DEFAULT_FIRMWARE_URL
 	end
 	log:warn("url=", url)
+
+	window:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+			   function(event)
+				   local keycode = event:getKeycode()
+				   if keycode == KEY_HOME or keycode == KEY_BACK then
+					   return EVENT_CONSUME
+				   end
+
+				   return EVENT_UNUSED
+			   end)
 
 	menu:addItem({
 			     text = self:string("BEGIN_UPDATE"),
