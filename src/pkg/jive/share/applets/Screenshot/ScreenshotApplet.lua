@@ -20,12 +20,12 @@ ScreenshotApplet overrides the following methods:
 -- stuff we use
 local oo               = require("loop.simple")
 local string           = require("string")
+local io               = io
 
 local Applet           = require("jive.Applet")
 local Framework        = require("jive.ui.Framework")
 local Surface          = require("jive.ui.Surface")
 local Window           = require("jive.ui.Window")
-
 local log              = require("jive.utils.log").logger("applets.misc")
 
 
@@ -47,6 +47,20 @@ local function _keyHold(self, event)
 
 		local file = string.format("jive%04d.bmp", self.number)
 		self.number = self.number + 1
+		
+		local mounts = io.open('/proc/mounts')
+		while true do
+			local line = mounts:read()
+
+			if not line then
+				break
+			end
+
+			if string.match(line, '/mnt/mmc') then
+				file = '/mnt/mmc/'..file
+			end
+		end
+		mounts:close()
 
 		log:warn("Taking screenshot " .. file)
 
