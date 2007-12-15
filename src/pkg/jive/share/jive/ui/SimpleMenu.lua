@@ -402,7 +402,7 @@ Replace the item at I<index> with I<item>.
 function replaceIndex(self, item, index)
 	_assert(index and type(index) == "number")
 
-	if _safeIndex(self.item, index) then
+	if _safeIndex(self.items, index) then
 		self.items[index] = item
 		Menu.setItems(self, self.items, #self.items, index, index)
 	end
