@@ -217,6 +217,10 @@ int jiveL_event_tostring(lua_State* L) {
 		lua_pushfstring(L, "SCROLL rel=%d", event->u.scroll.rel);
 		break;
 		
+	case JIVE_EVENT_ACTION:
+		lua_pushfstring(L, "ACTION");
+		break;
+
 	case JIVE_EVENT_KEY_DOWN:
 		lua_pushfstring(L, "KEY_DOWN code=%d", event->u.key.code);
 		break;

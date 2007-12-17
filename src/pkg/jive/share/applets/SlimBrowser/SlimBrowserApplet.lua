@@ -359,22 +359,23 @@ local function _openVolumePopup(vol)
 --	log:debug("_openVolumePopup END --------------------------")
 end
 
-local function _pushToNewWindow(step, _currentStep)
+local function _pushToNewWindow(step)
+	if not step then
+		return
+	end
 
-	if not step and _currentStep then return end
-
-	if _currentStep.menu then
-		_currentStep.menu:lock(
+	if _curStep.menu then
+		_curStep.menu:lock(
 			function()
 				step.cancelled = true
 			end)
 	end
-
+	
 	step.loaded = function()
-		if _currentStep.menu then
-			_currentStep.menu:unlock()
+		if _curStep.menu then
+			_curStep.menu:unlock()
 		end
-		_currentStep = step
+		_curStep = step
 		step.window:show()
       	end
 end
@@ -883,7 +884,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 				-- make a new window
 				local step, sink = _newDestination(_curStep, item, _newWindowSpec(db, item), _browseSink)
 				
-				_pushToNewWindow(step, _curStep)
+				_pushToNewWindow(step)
 
 				-- the item is the data, wrapped into a result hash
 				local res = {
