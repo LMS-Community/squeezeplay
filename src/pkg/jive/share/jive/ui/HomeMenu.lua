@@ -18,6 +18,7 @@ module(..., oo.class)
 function __init(self, name, style, titleStyle)
 	local obj = oo.rawnew(self, {
 		window = Window(style or "window", name, titleStyle),
+		windowTitle = name,
 		menuTable = {},
 		nodeTable = {},
 	})
@@ -35,6 +36,15 @@ function __init(self, name, style, titleStyle)
 	}
 
 	return obj
+end
+
+
+function setTitle(self, title)
+	if title then
+		self.window:setTitle(title)
+	else
+		self.window:setTitle(self.windowTitle)
+	end
 end
 
 
@@ -65,10 +75,12 @@ function addNode(self, item)
 	-- remove node from previous node (if changed)
 	if self.menuTable[item.id] then
 		local newNode    = item.node
-		local prevNode   = self.menuTable[id].node
+		local prevNode   = self.menuTable[item.id].node
 		if newNode != prevNode then
 			_changeNode(item.id, newNode)
 		end
+
+		return
 	end
 
 	-- new/update node

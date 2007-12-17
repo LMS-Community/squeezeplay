@@ -334,8 +334,8 @@ end
 Add I<item> to the end of the menu. Returns the index of the item added.
 
 I<item> is a table with the following keys: 
-- id,
-- text (id will default to text if not given), 
+- id (optional), a unique key for this menu item
+- text,
 - icon (optional), 
 - weight (optional), see jive.ui.Menu.itemComparatorWeightAlpha,
 - callback (optional), a function performing whatever the menu is supposed to do, having prototype:
@@ -345,9 +345,6 @@ For convenience, EVENT_CONSUME is assumed if the function returns nothing
 =cut
 --]]
 function addItem(self, item)
-
-	if not item.id then item.id = item.text end
-
 	if self.comparator then
 		for i=1,#self.items do
 			local x = self.items[i]
@@ -373,6 +370,17 @@ See addItem for the definition of I<item>.
 --]]
 function insertItem(self, item, index)
 	_assert(index == nil or type(index) == "number")
+
+	-- replace existing item if the id matches
+	if item.id then
+		for i,v in ipairs(self.items) do
+			if item.id == v.id then
+				self.items[i] = item
+				self:reLayout()
+				return i
+			end
+		end
+	end
 
 	if index == nil then
 		table.insert(self.items, item)

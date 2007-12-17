@@ -1343,7 +1343,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 			-- cancel the step to prevent new data being loaded
 			step.cancelled = true
 
-			if _curStep.origin then
+			if _curStep and _curStep.origin then
 				_curStep = _curStep.origin
 			end
 		end
@@ -1428,9 +1428,7 @@ function notify_playerNewName(self, player, newName)
 
 	-- if this concerns our player
 	if _player == player then
-
-		-- XXXX: Set the jive menu window title
-		--_homeStep.window:setTitle(newName)
+		jiveMain:setTitle(newName)
 	end
 end
 
@@ -1510,6 +1508,7 @@ function notify_playerCurrent(self, player)
 	-- showtime for the player
 	-- FIXME: handle player off...
 	_player:onStage(sink)
+	jiveMain:setTitle(player:getName())
 
 	_homeStep = step
 	_homeSink = sink
@@ -1612,7 +1611,8 @@ function free(self)
 	log:debug("SlimBrowserApplet:free()")
 
 	-- XXXX remove player menus
-	
+
+	jiveMain:setTitle(nil)
 	_player:offStage()
 
 	_removePlayerKeyHandler()
