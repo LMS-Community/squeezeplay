@@ -387,18 +387,19 @@ function skin(self, s)
 	s.npartwork166.artwork.img = Surface:loadImage(imgpath .. "album_noartwork_166.png")
 
 	-- Progress bar
+	local imgpath = "applets/NowPlaying/images/"
         local progressBackground =
                 Tile:loadHTiles({
-                                        npimgpath .. "progressbar_bkgrd_l.png",
-                                        npimgpath .. "progressbar_bkgrd.png",
-                                        npimgpath .. "progressbar_bkgrd_r.png",
+                                        imgpath .. "progressbar_bkgrd_l.png",
+                                        imgpath .. "progressbar_bkgrd.png",
+                                        imgpath .. "progressbar_bkgrd_r.png",
                                })
 
         local progressBar =
                 Tile:loadHTiles({
-                                        npimgpath .. "progressbar_fill_l.png",
-                                        npimgpath .. "progressbar_fill.png",
-                                        npimgpath .. "progressbar_fill_r.png",
+                                        imgpath .. "progressbar_fill_l.png",
+                                        imgpath .. "progressbar_fill.png",
+                                        imgpath .. "progressbar_fill_r.png",
                                })
 
 	s.progress = {}

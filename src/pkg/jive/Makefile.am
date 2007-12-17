@@ -108,6 +108,7 @@ dist_jiveui_DATA = \
 	share/jive/ui/Framework.lua \
 	share/jive/ui/Font.lua \
 	share/jive/ui/Group.lua \
+	share/jive/ui/HomeMenu.lua \
 	share/jive/ui/Icon.lua \
 	share/jive/ui/Label.lua \
 	share/jive/ui/Menu.lua \
@@ -266,6 +267,16 @@ dist_applets_nowplaying_DATA = \
         share/applets/NowPlaying/progressbar_fill_l.png \
         share/applets/NowPlaying/progressbar_fill_r.png
 
+# Data: now playing
+applets_nowplaying_imagesdir = $(pkgdatadir)/applets/NowPlaying/images
+dist_applets_nowplaying_images_DATA = \
+	share/applets/NowPlaying/images/progressbar_bkgrd_l.png \
+	share/applets/NowPlaying/images/progressbar_bkgrd_r.png \
+	share/applets/NowPlaying/images/progressbar_bkgrd.png \
+	share/applets/NowPlaying/images/progressbar_fill_l.png \
+	share/applets/NowPlaying/images/progressbar_fill_r.png \
+	share/applets/NowPlaying/images/progressbar_fill.png 
+	
 applets_setupappletinstallerdir = $(pkgdatadir)/applets/SetupAppletInstaller
 dist_applets_setupappletinstaller_DATA = \
 	share/applets/SetupAppletInstaller/SetupAppletInstallerApplet.lua \

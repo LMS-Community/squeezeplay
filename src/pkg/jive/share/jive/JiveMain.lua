@@ -52,66 +52,51 @@ local perfs         = require("jive.utils.perfs")
 local locale        = require("jive.utils.locale")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
+local HomeMenu      = require("jive.ui.HomeMenu")
+local Framework     = require("jive.ui.Framework")
+local Timer         = require("jive.ui.Timer")
 
 local debug         = require("jive.utils.debug")
-
-local jud = require("jive.utils.debug")
-
-
 local log           = require("jive.utils.log").logger("jive.main")
-
-require("jive.ui.Framework")
 --require("profiler")
 
 local JIVE_VERSION  = jive.JIVE_VERSION
 
 
 -- Classes
-local JiveMainMenu = oo.class()
-local JiveMain = oo.class({}, JiveMainMenu)
+local JiveMain = oo.class({}, HomeMenu)
 
 
 -- strings
 local _globalStrings
 
--- table with all menu items
-local _menuTable = {}
-local _nodeTable = {}
-
 -- several submenus created by applets (settings, controller settings, extras)
 -- should not need to have an id passed when creating it
 local _idTranslations = {}
 	
------------------------------------------------------------------------------
--- JiveMainMenu
--- This class abstracts some window/menu functions for the main menu
------------------------------------------------------------------------------
-
 
 -- bring us to the home menu
 local function _homeHandler(event)
 	if (
-		( event:getKeycode() == jive.ui.KEY_HOME and event:getType() == jive.ui.EVENT_KEY_PRESS) or
-		( event:getKeycode() == jive.ui.KEY_BACK and event:getType() == jive.ui.EVENT_KEY_HOLD)
+		( event:getKeycode() == KEY_HOME and event:getType() == EVENT_KEY_PRESS) or
+		( event:getKeycode() == KEY_BACK and event:getType() == EVENT_KEY_HOLD)
 	) then
-		local windowStack = jive.ui.Framework.windowStack
+		local windowStack = Framework.windowStack
 
 		if #windowStack > 1 then
-			jive.ui.Framework:playSound("JUMP")
+			Framework:playSound("JUMP")
 			while #windowStack > 1 do
 				windowStack[#windowStack - 1]:hide(nil, "JUMP")
 			end
 		else
-			jive.ui.Framework:playSound("BUMP")
+			Framework:playSound("BUMP")
 			windowStack[1]:bumpLeft()
 		end
-		return jive.ui.EVENT_CONSUME
+		return EVENT_CONSUME
       end
-      return jive.ui.EVENT_UNUSED
+      return EVENT_UNUSED
 end
 
--- create a new menu
-function JiveMainMenu:__init(name, style, titleStyle)
 
 	local obj = oo.rawnew(self, {
 		menu   = jive.ui.SimpleMenu("menu"),
@@ -274,7 +259,7 @@ function JiveMain:__init()
 	math.randomseed(initTime)
 
 	-- Initialise UI
-	jive.ui.Framework:init()
+	Framework:init()
 
 	-- Singleton instances (globals)
 	jnt = NetworkThread()
@@ -284,10 +269,9 @@ function JiveMain:__init()
 	-- Singleton instances (locals)
 	_globalStrings = locale:readGlobalStringsFile()
 
-	-- create our object (a subclass of JiveMainMenu)
-	jiveMain = oo.rawnew(self, JiveMainMenu(_globalStrings:str("JIVE_HOME"), "home.window"))
-	jiveMain.window:setTitleStyle("hometitle")
-	jiveMain.menu:setCloseable(false)
+	-- create the main menu
+--	jiveMain = oo.rawnew(self, JiveMainMenu(_globalStrings:str("JIVE_HOME"), "home.window"))
+	jiveMain = oo.rawnew(self, HomeMenu(_globalStrings:str("JIVE_HOME"), nil, "hometitle"))
 
 
 --	profiler.start()
@@ -304,8 +288,8 @@ function JiveMain:__init()
 	jiveMain.skins = {}
 
 	-- home key handler, one for KEY_PRESS/HOME, one for KEY_HOLD/BACK
-	jive.ui.Framework:addListener(
-		jive.ui.EVENT_KEY_PRESS | jive.ui.EVENT_KEY_HOLD,
+	Framework:addListener(
+		EVENT_KEY_PRESS | EVENT_KEY_HOLD,
 		function(event)
 			_homeHandler(event)
 		end,
@@ -313,10 +297,10 @@ function JiveMain:__init()
 	)
 
 	-- global listener: resize window (only desktop versions)
-	jive.ui.Framework:addListener(jive.ui.EVENT_WINDOW_RESIZE,
+	Framework:addListener(EVENT_WINDOW_RESIZE,
 				      function(event)
 					      jiveMain:reloadSkin()
-					      return jive.ui.EVENT_UNUSED
+					      return EVENT_UNUSED
 				      end)
 
 	-- show our window!
@@ -326,27 +310,27 @@ function JiveMain:__init()
 	jiveMain:reload()
 
 	-- debug: set event warning thresholds (0 = off)
-	--jive.ui.Framework:perfwarn({ screen = 50, layout = 1, draw = 0, event = 50, queue = 5, garbage = 10 })
+	--Framework:perfwarn({ screen = 50, layout = 1, draw = 0, event = 50, queue = 5, garbage = 10 })
 	--jive.perfhook(50)
 
 	-- show splash screen for five seconds, or until key/scroll events
-	jive.ui.Framework:setUpdateScreen(false)
-	local splashHandler = jive.ui.Framework:addListener(jive.ui.EVENT_KEY_ALL | jive.ui.EVENT_SCROLL,
+	Framework:setUpdateScreen(false)
+	local splashHandler = Framework:addListener(EVENT_KEY_ALL | EVENT_SCROLL,
 							    function()
-								jive.ui.Framework:setUpdateScreen(true)
-								return jive.ui.EVENT_UNUSED
+								Framework:setUpdateScreen(true)
+								return EVENT_UNUSED
 							    end)
-	local splashTimer = jive.ui.Timer(5000 - (os.time() - initTime), function()
-				jive.ui.Framework:setUpdateScreen(true)
-				jive.ui.Framework:removeListener(splashHandler)
+	local splashTimer = Timer(5000 - (os.time() - initTime), function()
+				Framework:setUpdateScreen(true)
+				Framework:removeListener(splashHandler)
 			    end)
 	splashTimer:start()
 
 	-- event loop
-	jive.ui.Framework:processEvents()
+	Framework:processEvents()
 
 	jnt:stop()
-	jive.ui.Framework:quit()
+	Framework:quit()
 
 	perfs.dump('Pool Queue')
 	perfs.dump('Pool Priority Queue')
@@ -358,7 +342,7 @@ end
 -- reload
 -- 
 function JiveMain:reload()
-	log:debug("JiveMain:reload()")
+	log:debug("reload()")
 
 	-- reset the skin
 	jive.ui.style = {}
@@ -366,14 +350,14 @@ function JiveMain:reload()
 	-- manage applets
 	appletManager:discover()
 	
-	jive.ui.Framework:styleChanged()
+	Framework:styleChanged()
 end
 
 
 -- loadSkin
 -- 
 function JiveMain:loadSkin(appletName, method)
-	log:debug("JiveMain:loadSkin(", appletName, ")")
+	log:debug("loadSkin(", appletName, ")")
 	
 	local obj = appletManager:loadApplet(appletName)
 	assert(obj, "Cannot load skin " .. appletName)
@@ -395,7 +379,7 @@ function JiveMain:reloadSkin()
 		obj[method](obj, jive.ui.style)
 	end
 
-	jive.ui.Framework:styleChanged()
+	Framework:styleChanged()
 end
 
 
