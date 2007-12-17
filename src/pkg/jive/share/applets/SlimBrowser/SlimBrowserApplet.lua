@@ -463,17 +463,28 @@ local function _decoratedLabel(group, labelStyle, item, db)
 		group:setWidgetValue("text", item.text)
 
 		if item["radio"] then
+			group._type = "radio"
 			group:setWidget("icon", _radioItem(item, db))
 
 		elseif item["checkbox"] then
+			group._type = "checkbox"
 			group:setWidget("icon", _checkboxItem(item, db))
 
 		else
+			if group._type then
+				group:setWidget("icon", Icon("icon"))
+				group._type = nil
+			end
 			_artworkItem(item, group)
 		end
 		group:setStyle(labelStyle)
 
 	else
+		if group._type then
+			group:setWidget("icon", Icon("icon"))
+			group._type = nil
+		end
+
 		group:setWidgetValue("text", "")
 		group:setWidgetValue("icon", nil)
 		group:setStyle("item")
@@ -857,9 +868,6 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 					["result"] = item,
 				}
 				-- make base accessible
-
-				log:warn("WHOOOOO!")
-
 				_browseSink(step, res)
 				return EVENT_CONSUME
 			end
