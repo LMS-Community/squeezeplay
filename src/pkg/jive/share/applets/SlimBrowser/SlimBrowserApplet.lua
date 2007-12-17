@@ -22,7 +22,7 @@ local tostring, tonumber, type, sort = tostring, tonumber, type, sort
 local pairs, ipairs, select, _assert = pairs, ipairs, select, _assert
 
 local oo                     = require("loop.simple")
-local table                  = require("table")
+local table                  = require("jive.utils.table")
 local string                 = require("string")
                              
 local Applet                 = require("jive.Applet")
@@ -120,12 +120,7 @@ local _curStep = false
 local _statusStep = false
 
 -- Our main menu/handlers
-local _homeStep = false
-local _homeSink = false
 local _playerKeyHandler = false
-
--- The system home menu
-local _jiveHomeWindow = false
 
 -- The last entered text
 local _lastInput = ""
@@ -492,7 +487,6 @@ end
 -- performs the JSON action...
 local function _performJSONAction(jsonAction, from, qty, sink)
 	log:debug("_performJSONAction(from:", from, ", qty:", qty, "):")
---	debug.dump(jsonAction)
 	
 	local cmdArray = jsonAction["cmd"]
 	
@@ -561,7 +555,6 @@ local function _goNowPlaying()
 		
 		-- arrange so that menuListener works
 		_statusStep.origin = _curStep
-		_curStep.destination = _statusStep
 		_curStep = _statusStep
 
 		-- current playlist should select currently playing item 
@@ -612,6 +605,7 @@ local function _bigArtworkPopup(chunk, err)
 	return popup
 end
 
+
 -- _devnull
 -- sinks that silently swallows data
 -- used for actions that go nowhere (play, add, etc.)
@@ -625,29 +619,17 @@ end
 -- sink that sets the data for our go action
 local function _browseSink(step, chunk, err)
 	log:debug("_browseSink()")
-	
-	-- check we're still relevant
-	if step.origin then
-		-- only the main window has got no origin...
-		
-		-- are we still supposed to make this step?
-		-- the unlock closure sets step.origin.destination to false...
-		if step.origin.destination != step then
-			log:info("_browseSink(): ignoring data, action cancelled...")
-			return
-		end
+
+	-- are we cancelled?
+	if step.cancelled then
+		log:debug("_browseSink(): ignoring data, action cancelled...")
+		return
 	end
-	
-	-- we're relevant
-	log:debug("step: ", step)
-	log:debug("_curStep: ", _curStep)
-	if _curStep != step and not step.destination then
-		-- install us as the new top of the world, unless we went somewhere from there
-		_curStep = step
-		step.window:show()
-		if step.origin and step.origin.menu then
-			step.origin.menu:unlock()
-		end
+
+	-- function to perform when the data is loaded? 
+	if step.loaded then
+		step.loaded()
+		step.loaded = nil
 	end
 
 	if chunk then
@@ -875,6 +857,9 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 					["result"] = item,
 				}
 				-- make base accessible
+
+				log:warn("WHOOOOO!")
+
 				_browseSink(step, res)
 				return EVENT_CONSUME
 			end
@@ -974,16 +959,29 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 			
 				-- set good or dummy sink as needed
 				-- prepare the window if needed
+				local step
 				local sink = _devnull
 				local from
 				local to
 				if actionName == 'go' then
-					local step
 					from = 0
 					to = BROWSE_FIRST_FETCH
 					step, sink = _newDestination(_curStep, item, _newWindowSpec(db, item), _browseSink, jsonAction)
 				elseif item["showBigArtwork"] then
 					sink = _bigArtworkPopup
+				end
+
+
+				if step then
+					_curStep.menu:lock(function()
+								   step.cancelled = true
+							   end)
+					step.loaded = function()
+							      _curStep.menu:unlock()
+						    
+							      _curStep = step
+							      step.window:show()
+						      end
 				end
 			
 				-- send the command
@@ -1304,10 +1302,6 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		-- a menu. We manage closing ourselves to guide our path
 		menu = Menu(windowSpec.menuStyle, _browseMenuRenderer, _browseMenuListener)
 		
-		if not origin then
-			menu:setCloseable(false)
-		end
-
 		-- alltogether now
 		menu:setItems(db:menuItems())
 		window:addWidget(menu)
@@ -1329,48 +1323,20 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	
 	log:debug("new step: " , step)
 	
-	-- indicate where we're going
-	if origin then
-	
-		_assert(origin.destination == false)
-		
-		-- we're going there
-		origin.destination = step
-		
-		-- so please wait dear user...
-		if origin.menu then
-			origin.menu:lock(
-				function()
-					-- huh, no, we're no longer going...
-					log:info("_newDestination(): cancelling action...")
-					origin.destination = false
-				end
-			)
-		end
-	end
-
 	-- make sure closing our windows do keep the path alive!
 	window:addListener(
 		EVENT_WINDOW_POP,
 		function(evt)
+			-- clear it if present, so we can start again the textinput
+			if item then
+				item['_inputDone'] = nil
+			end
 
-			-- _curStep should point/be the current window
-			-- we're stacking windows, so when we close one, we go one step back
-			-- i.e. we go to _curStep.origin
+			-- cancel the step to prevent new data being loaded
+			step.cancelled = true
 
 			if _curStep.origin then
-			
-				-- clear it if present, so we can start again the textinput
-				if item then
-					item['_inputDone'] = nil
-				end
-			
 				_curStep = _curStep.origin
-				_curStep.destination = false
-				
-				log:warn("POP, browsePath: ", _curStep)
-			else
-				log:error("_curStep.origin is nil in POP handler!")
 			end
 		end
 	)
@@ -1429,44 +1395,6 @@ local function _removePlayerKeyHandler()
 end
 
 
--- _replaceJiveHome
--- replaces the Jive main menu with our window.
-local function _replaceJiveHome(window)
-
-	if not _jiveHomeWindow then
-		-- switch out the standard home menu, and replace with our window
-		_jiveHomeWindow = Framework.windowStack[#Framework.windowStack]
-		Framework.windowStack[#Framework.windowStack] = window
-
-		-- keep the window state updated
-		window:dispatchNewEvent(EVENT_WINDOW_ACTIVE)
-		window:dispatchNewEvent(EVENT_SHOW)
-
-		_jiveHomeWindow:dispatchNewEvent(EVENT_HIDE)
-		_jiveHomeWindow:dispatchNewEvent(EVENT_WINDOW_INACTIVE)
-	end
-end
-
-
--- _restoreJiveHome
--- restores the Jive main menu
-local function _restoreJiveHome()
-
-	-- restore the system home menu
-	if _jiveHomeWindow then
-		local window = Framework.windowStack[#Framework.windowStack]
-		Framework.windowStack[#Framework.windowStack] = _jiveHomeWindow
-
-		-- keep the window state updated
-		_jiveHomeWindow:dispatchNewEvent(EVENT_WINDOW_ACTIVE)
-		_jiveHomeWindow:dispatchNewEvent(EVENT_SHOW)
-
-		window:hide()
-		_jiveHomeWindow = false
-	end
-end
-
-
 --==============================================================================
 -- SlimBrowserApplet public methods
 --==============================================================================
@@ -1479,7 +1407,8 @@ function notify_playerPower(self, player, power)
 	-- only if this concerns our player
 	if _player == player then
 		-- refresh the main menu
-		self:notify_playerCurrent(player, 1)
+		-- XXXX: do this locally
+		--self:notify_playerCurrent(player, 1)
 	end
 end
 
@@ -1491,7 +1420,9 @@ function notify_playerNewName(self, player, newName)
 
 	-- if this concerns our player
 	if _player == player then
-		_homeStep.window:setTitle(newName)
+
+		-- XXXX: Set the jive menu window title
+		--_homeStep.window:setTitle(newName)
 	end
 end
 
@@ -1512,11 +1443,11 @@ end
 
 -- notify_playerCurrent
 -- this is called when the current player changes (possibly from no player)
-function notify_playerCurrent(self, player, force)
+function notify_playerCurrent(self, player)
 	log:debug("SlimBrowserApplet:notify_playerCurrent(", player, ")")
 
 	-- has the player actually changed?
-	if _player == player and not force then
+	if _player == player then
 		return
 	end
 
@@ -1671,11 +1602,11 @@ Overridden to close our player.
 --]]
 function free(self)
 	log:debug("SlimBrowserApplet:free()")
+
+	-- XXXX remove player menus
 	
 	_player:offStage()
 
-	_restoreJiveHome()
-	
 	_removePlayerKeyHandler()
 
 	_player = false
@@ -1687,24 +1618,15 @@ function free(self)
 	
 	while step do
 		step.window:hide()
-		step.destination = false
-		local prev = step
 		step = step.origin
-		prev.origin = nil
 	end
 	
 	local step = _statusStep
 	
 	while step do
 		step.window:hide()
-		step.destination = false
-		local prev = step
 		step = step.origin
-		prev.origin = nil
 	end
-	
-	_homeStep = false
-	_homeSink = false
 	
 	return true
 end

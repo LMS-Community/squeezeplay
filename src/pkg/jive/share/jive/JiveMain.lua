@@ -87,12 +87,6 @@ local _idTranslations = {}
 -- This class abstracts some window/menu functions for the main menu
 -----------------------------------------------------------------------------
 
--- changed
-local function _jiveMainMenuChanged(self)
-	if self.notify then
-		jnt:notify("jiveMainMenuChanged")
-	end
-end
 
 -- bring us to the home menu
 local function _homeHandler(event)
@@ -234,19 +228,28 @@ end
 -- remove an item from a menu by its index
 function JiveMainMenu:removeItem(item)
 	self.menu:removeItem(item)
-	_jiveMainMenuChanged(self)
 end
+
 
 -- remove an item from a menu by its id
 function JiveMainMenu:removeItemById(id)
 	self.menu:removeItemById(id)
-	_jiveMainMenuChanged(self)
 end
 
--- remove an item from a menu by its text
-function JiveMainMenu:removeItemByText(text)
-	self.menu:removeItemByText(text)
-	_jiveMainMenuChanged(self)
+
+-- lock an item in the menu
+function JiveMainMenu:lockItem(item, ...)
+	if _nodeTable[item.node] then
+		_nodeTable[item.node].menu:lock(...)
+	end
+end
+
+
+-- unlock an item in the menu
+function JiveMainMenu:unlockItem(item)
+	if _nodeTable[item.node] then
+		_nodeTable[item.node].menu:unlock()
+	end
 end
 
 
@@ -255,11 +258,6 @@ function JiveMainMenu:iterator()
 	return self.menu:iterator()
 end
 
-
--- startNotify
-function JiveMainMenu:startNotify()
-	self.notify = true
-end
 
 -----------------------------------------------------------------------------
 -- JiveMain

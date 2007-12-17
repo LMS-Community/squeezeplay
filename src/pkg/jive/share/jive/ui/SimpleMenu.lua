@@ -456,6 +456,7 @@ function removeItem(self, item)
 	end
 end
 
+
 --[[
 
 =head2 jive.ui.Menu:removeItemById(id)
@@ -473,23 +474,6 @@ function removeItemById(self, id)
 	end
 end
 
-
---[[
-
-=head2 jive.ui.Menu:removeItemByText(text)
-
-Remove I<item> given by I<text> from the menu. Returns the item removed from the menu.
-
-=cut
---]]
-function removeItemByText(self, text)
-	local index = self:getTextIndex(text)
-	if index ~= nil then
-		return self:removeIndex(index)
-	else
-		return nil
-	end
-end
 
 --[[
 
