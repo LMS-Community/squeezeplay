@@ -17,12 +17,7 @@ end
 
 
 function registerApplet(meta)
-	-- add a menu to load us
-	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))
-	local advancedSettings = remoteSettings:subMenu(meta:string("ADVANCED_SETTINGS"), 1000)
-	local factoryTests = advancedSettings:subMenu(meta:string("FACTORY_TEST"), 1000)
-
-	factoryTests:addItem(meta:menuItem("TEST_DISPLAY", function(applet, ...) applet:DisplayTest(...) end))
+	jiveMain:addItem(meta:menuItem('factoryDisplay', 'factoryTest', "TEST_DISPLAY", function(applet, ...) applet:DisplayTest(...) end))
 end
 
 

@@ -66,6 +66,14 @@ EXTRAS
 	IT	Extra
 	NL	Extra's
 
+GAMES
+	DE	Spiele
+	EN	Games
+	ES	Juegos
+	FR	Jeux
+	IT	Giochi
+	NL	Games
+
 INSERT
 	DE	Einfügen
 	EN	Insert

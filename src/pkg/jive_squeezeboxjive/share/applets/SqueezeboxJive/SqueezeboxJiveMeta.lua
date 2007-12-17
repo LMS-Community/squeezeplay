@@ -34,12 +34,9 @@ function registerApplet(meta)
 	-- SqueezeboxJive is a resident Applet
 	appletManager:loadApplet("SqueezeboxJive")
 
-	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))
-	local advancedSettings = remoteSettings:subMenu(meta:string("ADVANCED_SETTINGS"))
-
-	remoteSettings:addItem(meta:menuItem("BSP_BRIGHTNESS", function(applet, ...) applet:settingsBrightnessShow(...) end))
-	remoteSettings:addItem(meta:menuItem("BSP_BACKLIGHT_TIMER", function(applet, ...) applet:settingsBacklightTimerShow(...) end))
-	advancedSettings:addItem(meta:menuItem("POWER_DOWN", function(applet, ...) applet:settingsPowerDown(...) end))
+	jiveMain:addItem(meta:menuItem('brightnessSetting', 'remoteSettings', "BSP_BRIGHTNESS", function(applet, ...) applet:settingsBrightnessShow(...) end))
+	jiveMain:addItem(meta:menuItem('backlightSetting', 'remoteSettings', "BSP_BACKLIGHT_TIMER", function(applet, ...) applet:settingsBacklightTimerShow(...) end))
+	jiveMain:addItem(meta:menuItem('powerDown', 'advancedSettings', "POWER_DOWN", function(applet, ...) applet:settingsPowerDown(...) end))
 end
 
 

@@ -34,8 +34,7 @@ end
 
 
 function registerApplet(self)
-	local gameMenu = jiveMain:subMenu("Games", 500)
-	gameMenu:addItem(self:menuItem("Space Invaders", function(applet, ...) applet:openWindow(...) end))
+	jiveMain:addItem(self:menuItem('invaders', 'games', "Space Invaders", function(applet, ...) applet:openWindow(...) end))
 end
 
 

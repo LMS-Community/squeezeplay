@@ -295,9 +295,11 @@ function JiveMain:__init()
 
 	-- menu nodes to add...these are menu items that are used by applets
 	jiveMain:addNode( { id = 'extras', node = 'home', text = _globalStrings:str("EXTRAS"), weight = 70  } )
+	jiveMain:addNode( { id = 'games', node = 'extras', text = _globalStrings:str("GAMES"), weight = 70  } )
 	jiveMain:addNode( { id = 'settings', node = 'home', text = _globalStrings:str("SETTINGS"), weight = 50, titleStyle = 'settings' })
 	jiveMain:addNode(  { id = 'remoteSettings', node = 'settings', text = _globalStrings:str("REMOTE_SETTINGS"), titleStyle = 'settings' })
 	jiveMain:addNode( { id = 'advancedSettings', node = 'remoteSettings', text = _globalStrings:str("ADVANCED_SETTINGS"), weight =100, titleStyle = 'settings' })
+	jiveMain:addNode( { id = 'factoryTest', node = 'advancedSettings', text = _globalStrings:str("FACTORY_TEST"), weight = 100, titleStyle = 'settings' })
 
 	-- if you wanted to add a title style for "Extras", this is where it would go
 

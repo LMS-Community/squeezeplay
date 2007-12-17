@@ -22,12 +22,8 @@ function registerApplet(meta)
 	-- defined here so that it can be changed using LogSettingsApplet before the applet is run.		
 	jul.addCategory("applet.wireless", jul.DEBUG)
 	
-	-- add a menu to load us
-	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))
-	local advancedSettings = remoteSettings:subMenu(meta:string("ADVANCED_SETTINGS"), 1000)
-
-	remoteSettings:addItem(meta:menuItem("NETWORK", function(applet, ...) applet:settingsNetworksShow(...) end))
-	advancedSettings:addItem(meta:menuItem("NETWORK_REGION", function(applet, ...) applet:settingsRegionShow(...) end))
+	jiveMain:addItem(meta:menuItem('networkSettings', 'remoteSettings', "NETWORK", function(applet, ...) applet:settingsNetworksShow(...) end))
+	jiveMain:addItem(meta:menuItem('networkRegion', 'advancedSettings', "NETWORK_REGION", function(applet, ...) applet:settingsRegionShow(...) end))
 end
 
 
