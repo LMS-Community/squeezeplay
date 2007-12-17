@@ -60,7 +60,12 @@ local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("jive.main")
 --require("profiler")
 
-local JIVE_VERSION  = jive.JIVE_VERSION
+local EVENT_KEY_ALL        = jive.ui.EVENT_KEY_ALL
+local EVENT_KEY_PRESS      = jive.ui.EVENT_KEY_PRESS
+local EVENT_KEY_HOLD       = jive.ui.EVENT_KEY_HOLD
+local EVENT_SCROLL         = jive.ui.EVENT_SCROLL
+local EVENT_WINDOW_RESIZE  = jive.ui.EVENT_WINDOW_RESIZE
+local EVENT_UNUSED         = jive.ui.EVENT_UNUSED
 
 local KEY_HOME             = jive.ui.KEY_HOME
 local KEY_BACK             = jive.ui.KEY_BACK
@@ -264,7 +269,7 @@ end
 -- JiveMain:__init
 -- creates our JiveMain main object
 function JiveMain:__init()
-	log:info("jive ", JIVE_VERSION)
+	log:debug("__init()")
 
 	-- Seed the rng
 	local initTime = os.time()
