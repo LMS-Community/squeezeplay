@@ -109,7 +109,7 @@ function addNode(self, item)
 	end
 
 	if not item.sound then
-		sound = "WINDOWSHOW"
+		item.sound = "WINDOWSHOW"
 	end
 
 	-- now add the item to the menu
