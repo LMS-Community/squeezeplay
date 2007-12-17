@@ -60,7 +60,8 @@ oo.class(_M, Applet)
 function step1(self)
 	-- put Return to Setup menu item on jiveMain menu
 	jiveMain:addItem({
-		id   = 'returntosetup',
+		id   = 'returnToSetup',
+		node = 'home',
 		text = self:string("RETURN_TO_SETUP"),
 		callback = function()
 			self:step1()

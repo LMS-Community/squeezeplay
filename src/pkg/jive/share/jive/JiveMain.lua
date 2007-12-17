@@ -50,6 +50,7 @@ local Iconbar       = require("jive.Iconbar")
 local AppletManager = require("jive.AppletManager")
 local perfs         = require("jive.utils.perfs")
 local locale        = require("jive.utils.locale")
+local SimpleMenu    = require("jive.ui.SimpleMenu")
 
 local jud = require("jive.utils.debug")
 
@@ -70,6 +71,14 @@ local JiveMain = oo.class({}, JiveMainMenu)
 -- strings
 local _globalStrings
 
+-- table with all menu items
+local _menuTable = {}
+local _nodeTable = {}
+
+-- several submenus created by applets (settings, controller settings, extras)
+-- should not need to have an id passed when creating it
+local _idTranslations = {}
+	
 -----------------------------------------------------------------------------
 -- JiveMainMenu
 -- This class abstracts some window/menu functions for the main menu
@@ -120,47 +129,80 @@ function JiveMainMenu:__init(name, style, titleStyle)
 	return obj
 end
 
-
--- returns true if menu is submenu
-function JiveMainMenu:isSubMenu(name)
-	return (self.menus[name] != nil)
+function JiveMainMenu:changeNode(id, node)
+	-- looks at the node and decides whether it needs to be removed
+	-- from a different node before adding
+	if _menuTable[id] and _menuTable[id].node != node then 
+		-- remove menuitem from previous node
+		table.delete(_nodeTable[node].items, _menuTable[id])
+		-- change menuitem's node
+		_menuTable[id].node = node
+		-- add item to that node
+		JiveMainMenu:addNode(_menuTable[id])
+	end
 end
 
+function JiveMainMenu:addNode(item)
 
--- create a sub menu
-function JiveMainMenu:subMenu(name, weight, titleStyle, id)
+	assert(item.id)
+	assert(item.node)
 
-	if not id then id = name end
-
-	if self.menus[id] == nil then
+	-- special case-- root element; id = 'home'
+	if item.id == 'home' then
+		local menu = SimpleMenu("menu", item)
+		_nodeTable[item.id] = { menu = menu, 
+					items = {} }
+	else 
+		if not item.weight then 
+			item.weight = 5
+		end
 	
-		local menu = JiveMainMenu(id, "", titleStyle)
-
-		local item = {
-			text = name,
-			sound = "WINDOWSHOW",
-			callback = function()
-				menu.window:show()
-			end,
-		}
-
-		self:addItem(item, weight)
-		self.menus[id] = menu
-		_jiveMainMenuChanged(self)
+		-- remove node from previous node (if changed)
+		if _menuTable[item.id] then
+			local newNode    = item.node
+			local prevNode   = _menuTable[id].node
+			if newNode != prevNode then
+				changeNode(item.id, newNode)
+			end
+		end
+	
+		-- new/update node
+		local menu = SimpleMenu("menu", item)
+		_nodeTable[item.id] = { menu = menu, 
+					items = {} }
+		table.insert(_nodeTable[item.node].items, item)
+		_nodeTable[item.node].menu:addItem(item)
 	end
 
-	return self.menus[id]
-end
+	_jiveMainMenuChanged(self)
 
+end
 
 -- add an item to a menu. the menu is ordered by weight, then item name
-function JiveMainMenu:addItem(item, weight)
+function JiveMainMenu:addItem(item)
+
+	assert(item.id)
+	assert(item.node)
 
 	if not item.weight then 
-		item.weight = weight or 5
+		item.weight = 5
 	end
 
-	self.menu:addItem(item)
+	if not _menuTable[item.id] then
+
+		self.menu:addItem(item.item)
+		_menuTable[item.id] = item
+		log:warn(item.node)
+		_nodeTable[item.node].menu:addItem(item)
+
+	else
+		table.delete(_nodeTable[item.node].items, _menuTable[item.id])
+		_menuTable[item.id] = item
+	end
+
+	table.insert(_nodeTable[item.node].items, item)
+	_nodeTable[item.node].menu:addItem(item)
+
 	_jiveMainMenuChanged(self)
 end
 
@@ -224,20 +266,16 @@ function JiveMain:__init()
 	jiveMain = oo.rawnew(self, JiveMainMenu(_globalStrings:str("JIVE_HOME"), "home.window"))
 	jiveMain.window:setTitleStyle("hometitle")
 	jiveMain.menu:setCloseable(false)
+	jiveMain:addNode( { id = 'home', node = 'root' })
 
 
 --	profiler.start()
 
-	-- Top level menu
-	jiveMain:subMenu(_globalStrings:str("SETTINGS"), 50, 'settingstitle')
-	-- Second level menu, needed to init here because of title style
-	jiveMain:subMenu(_globalStrings:str("SETTINGS"))
-		:subMenu(_globalStrings:str("REMOTE_SETTINGS"), _, 'settingstitle')
-
-	-- Why stop at two? Tertiary Menu
-	jiveMain:subMenu(_globalStrings:str("SETTINGS"))
-		:subMenu(_globalStrings:str("REMOTE_SETTINGS"))
-			:subMenu(_globalStrings:str("ADVANCED_SETTINGS"), 100, 'settingstitle')
+	-- menu nodes to add...these are menu items that are used by applets
+	jiveMain:addNode( { id = 'extras', node = 'home', text = _globalStrings:str("EXTRAS"), weight = 70 } )
+	jiveMain:addNode( { id = 'settings', node = 'home', text = _globalStrings:str("SETTINGS"), weight = 50, titleStyle = 'settingstitle' })
+	jiveMain:addNode(  { id = 'remoteSettings', node = 'settings', text = _globalStrings:str("REMOTE_SETTINGS"), titleStyle = 'settingstitle' })
+	jiveMain:addNode( { id = 'advancedSettings', node = 'remoteSettings', text = _globalStrings:str("ADVANCED_SETTINGS"), weight =100, titleStyle = 'settingstitle' })
 
 	-- if you wanted to add a title style for "Extras", this is where it would go
 

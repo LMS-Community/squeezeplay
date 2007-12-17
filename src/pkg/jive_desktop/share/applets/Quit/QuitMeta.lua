@@ -39,6 +39,8 @@ end
 function registerApplet(self)
 	-- add ourselves to the end of the main menu
 	jiveMain:addItem({
+		id = 'appletQuit',
+		node = 'home',
 		text = self:string("QUIT"),
 		callback = function() 
 			return (EVENT_CONSUME | EVENT_QUIT)

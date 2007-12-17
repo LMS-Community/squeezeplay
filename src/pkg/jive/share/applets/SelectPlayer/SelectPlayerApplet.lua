@@ -87,16 +87,20 @@ function manageSelectPlayerMenu(self)
 	if _numberOfPlayers > 1 or not self.selectedPlayer then
 		if not self.selectPlayerMenuItem then
 			local menuItem = {
+				id = 'selectPlayer',
+				node = 'home',
 				text = self:string("SELECT_PLAYER"),
 				sound = "WINDOWSHOW",
-				callback = function() self:setupShow() end
+				callback = function() self:setupShow() end,
+				weight = 80
 			}
-			jiveMain:addItem(menuItem, 80)
+			jiveMain:addItem(menuItem)
 			self.selectPlayerMenuItem = menuItem
 		end
 
 	-- if numberOfPlayers < 2 and selectPlayerMenuItem exists, get rid of it
 	elseif _numberOfPlayers < 2 and self.selectPlayerMenuItem then
+		-- FIXME, this probably won't work quite right with new main menu code
 		jiveMain:removeItem(self.selectPlayerMenuItem)
 		self.selectPlayerMenuItem = nil
 	end

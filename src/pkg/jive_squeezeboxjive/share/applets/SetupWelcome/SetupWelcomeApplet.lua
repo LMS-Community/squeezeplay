@@ -80,7 +80,8 @@ end
 function step1(self)
 	-- add 'RETURN_TO_SETUP' at top
 	jiveMain:addItem({
-		id   = 'returntosetup',
+		id   = 'returnToSetup',
+		node = 'home',
 		text = self:string("RETURN_TO_SETUP"),
 		callback = function()
 			self:step1()

@@ -38,9 +38,6 @@ function defaultSettings(self)
 end
 
 function registerApplet(self)
-	local remoteSettings = jiveMain:subMenu(self:string("SETTINGS")):subMenu(self:string("REMOTE_SETTINGS"))
-	local advancedSettings = remoteSettings:subMenu(self:string("ADVANCED_SETTINGS"), 1000)
-
-	advancedSettings:addItem(self:menuItem("APPLET_INSTALLER", function(applet, ...) applet:menu(...) end))
+	jiveMain:addItem(self:menuItem('appletSetupAppletInstaller', 'advancedSettings', "APPLET_INSTALLER", function(applet, ...) applet:menu(...) end))
 end
 

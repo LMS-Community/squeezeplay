@@ -47,8 +47,8 @@ function registerApplet(meta)
 	appletManager:freeApplet("SetupWallpaper")
 
 	-- add a menu item for configuration
-	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))
-	remoteSettings:addItem(meta:menuItem('WALLPAPER', function(applet, ...) applet:settingsShow(...) end))
+	jiveMain:addItem(meta:menuItem('appletSetupWallpaper', 'remoteSettings', 'WALLPAPER', function(applet, ...) applet:settingsShow(...) end))
+
 end
 
 

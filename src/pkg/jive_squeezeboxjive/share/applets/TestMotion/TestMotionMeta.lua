@@ -22,7 +22,9 @@ function registerApplet(meta)
 	local advancedSettings = remoteSettings:subMenu(meta:string("ADVANCED_SETTINGS"), 1000)
 	local factoryTests = advancedSettings:subMenu(meta:string("FACTORY_TEST"), 1000)
 
-	factoryTests:addItem(meta:menuItem("TEST_MOTION", function(applet, ...) applet:settingsShow(...) end))
+	-- add appletFactoryTest if it's not already there
+	jiveMain:addNode({ id = 'appletFactoryTest', node = 'advancedSettings' })
+	jiveMain:addItem('appletTestMotion', 'appletFactoryTest', meta:menuItem("TEST_MOTION", function(applet, ...) applet:settingsShow(...) end))
 end
 
 

@@ -41,9 +41,7 @@ end
 
 function registerApplet(meta)
 	-- add a menu to load us
-	local remoteSettings = jiveMain:subMenu(meta:string("SETTINGS")):subMenu(meta:string("REMOTE_SETTINGS"))
-	local advancedSettings = remoteSettings:subMenu(meta:string("ADVANCED_SETTINGS"), 1000)
-	advancedSettings:addItem(meta:menuItem("HTTP_AUTH", function(applet, ...) applet:settingsShow(...) end))
+	jiveMain:addItem(meta:menuItem('appletHttpAuth', 'advancedSettings', "HTTP_AUTH", function(applet, ...) applet:settingsShow(...) end))
 end
 
 --[[

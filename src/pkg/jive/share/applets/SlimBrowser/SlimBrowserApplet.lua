@@ -138,8 +138,29 @@ local _lastInput = ""
 -- Forward declarations 
 local _newDestination
 local _actionHandler
-local _menuSorter
 
+
+-- _menuSink
+-- returns a sink with a closure to self
+-- cmd is passed in so we know what process function to call
+-- this sink receives all the data from our Comet interface
+local function _menuSink(self, cmd)
+	return function(chunk, err)
+		-- process data from a menu notification
+		log:warn('I RECEIVED SOME DATA')
+		-- each chunk.data[2] contains a table that needs insertion into the menu
+		for k, v in pairs(chunk.data[2]) do
+			local item = {
+					id = v.id,
+					text = v.text,
+					sound = "WINDOWSHOW",
+					defaultPath = v.defaultPath
+				}
+			log:warn("SLIMBROWSER: ", v.id, item.id, item.text)
+			jiveMain:addMainMenuItem(item, v.weight)
+		end
+         end
+end
 
 -- _safeDeref
 -- safely derefence a structure in depth
@@ -653,127 +674,6 @@ local function _browseSink(step, chunk, err)
 		log:error(err)
 	end
 end
-
--- _menuSorter is an Item comparator to sort items using item.weight as a primary key, 
--- and the index of the element as a secondary key.
-local function _menuSorter(a, b)
-
-	if not a.weight then a.weight = 5 end
-	if not b.weight then b.weight = 5 end
-
-        local w = a.weight - b.weight
-
-        if w == 0 then
-		return #a < #b
-        end
-        return (w < 0)
-
-end
-
-
-local function _merge(mlData, mainMenu)
-
-	if not mlData.item_loop then 
-		log:warn("SS menu data in merge not hierarchical for item ", mlData.text)
-		return 
-	end
-	
-	-- we aren't calling the sort function unless at 
-	-- least one Jive menu item has a weight associated with it
-
-	local _sortByWeight = false
-
-	for _, menuItem in mainMenu:iterator() do
-	
-		local insert = true
-
-		-- try to find our item in the data
-		local menuLabel = menuItem.text
-		for _, dataItem in ipairs(mlData.item_loop) do
-			local dataLabel = dataItem.text
-			if tostring(dataLabel) == tostring(menuLabel) then
-				
-				if menuItem.weight then _sortByWeight = true end
-				-- found a match
-				-- recurse if the mainMenu item is a submenu
-				-- the top of this function takes care of a non recursive data item
-				if mainMenu:isSubMenu(menuLabel) then
-					_merge(dataItem, mainMenu:subMenu(menuLabel))
-				end
-				insert = false
-			end
-		end
-		
-		if insert then
-			log:debug("Inserting main menu item ", menuLabel)
-			log:debug("This item has a weight of ", menuItem.weight)
-			if menuItem.weight and menuItem.weight != 5 then _sortByWeight = true end
-			table.insert(mlData.item_loop, 
-				{
-					text = menuLabel,
-					_go = function(event)
-						return menuItem.callback(event, menuItem) or EVENT_CONSUME
-					end,
-					weight = menuItem.weight,
-				}
-			)
-			mlData.count = mlData.count + 1
-		end
-	end
-
-	if _sortByWeight then
-		table.sort(mlData.item_loop, _menuSorter)
-	end
-	
-end
-
-
--- _mergeSink
--- SlimBrowser merges the menu coming from SS and the local Jive main menu
--- FIXME: Modify for player off?
--- We set this sink instead of the main one (_browseSink) in notify_jiveMainMenuChanged
-local function _mergeSink(step, chunk, err)
-	log:debug("_mergeSink()")
---	debug.dump(chunk, 8)
-
-	local data = chunk.data
-	
-	if data then
-
-		-- we want to add a Now playing item (at the top)
-		table.insert(data.item_loop,
-			1,
-			{
-				text = _string("SLIMBROWSER_NOW_PLAYING"),
-				weight = 4,
-				_go = _goNowPlaying
-			}
-		)
-		data.count = data.count + 1
-		
-		-- and load the wallpaper for this player
-		local obj = AppletManager:loadApplet("SetupWallpaper")
-		local currentPlayer = obj:_getCurrentPlayer()
-		log:warn("setting background wallpaper for ", currentPlayer)
-		obj:_setBackground(nil, currentPlayer) 
-		AppletManager:freeApplet("SetupWallpaper")
-
-		-- and merge the main menu items
-		_merge(data, jiveMain)
-	
-	else
-		log:error(err)
-		-- FIXME: What to do if there is an error getting the menu for the player ?
-	end
-
-	-- get notified of changes in main menu from now on
-	jiveMain:startNotify()
-
-	-- call the regular sink
-	_browseSink(step, chunk, err)		
-
-end
-
 
 -- _statusSink
 -- sink that sets the data for our status window(s)
@@ -1629,6 +1529,16 @@ function notify_playerCurrent(self, player, force)
 	_server = player:getSlimServer()
 	_string = function(token) return self:string(token) end
 
+--	_server.comet:unsubscribe('/slim/menustatus')
+
+	log:warn('I am now subscribing to /slim/menustatus')
+	local cmd = { 'menustatus' }
+	_server.comet:subscribe(
+		'/slim/menustatus',
+		_menuSink(sink, cmd),
+		nil,
+		cmd
+	)
 	-- create a window for Now Playing, this is our _statusStep
 	local step, sink = _newDestination(
 		nil,
@@ -1656,31 +1566,11 @@ function notify_playerCurrent(self, player, force)
 	-- FIXME: handle player off...
 	_player:onStage(sink)
 
-
-	-- create our main menu
-	step, sink = _newDestination(
-		nil,
-		nil,
-		_newWindowSpec(
-			nil, 
-			{
-				["text"] = player:getName(),
-			},
-			'home'
-		),
-		_mergeSink
-	)
 	_homeStep = step
 	_homeSink = sink
-
-	-- we start at home
 	_curStep = _homeStep
 
-
-	-- auto notify ourselves
-	self:notify_jiveMainMenuChanged()
-
-	_replaceJiveHome(_homeStep.window)
+	_server:request(_homeSink, _player.id, { 'menu', 0, 100 })
 	_installPlayerKeyHandler()
 end
 
@@ -1697,7 +1587,7 @@ function notify_jiveMainMenuChanged(self)
 		return
 	else
 		-- fetch the menu, pronto...
-		_server:request(_homeSink, _player.id, { 'menu', 0, 100 })
+--		_server:request(_homeSink, _player.id, { 'menu', 0, 100 })
 	end
 end
 

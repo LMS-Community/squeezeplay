@@ -91,9 +91,12 @@ is the function executed when the MenuItem is selected.
 
 =cut
 --]]
-function menuItem(self, label, closure)
+function menuItem(self, id, node, label, closure, weight)
 	return {
+		id = id,
+		node = node,
 		text = self:string(label),
+		weight = weight,
 		sound = "WINDOWSHOW",
 		callback = function(event, menuItem)
 				local applet = appletManager:loadApplet(self._entry.appletName)
