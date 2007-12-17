@@ -62,6 +62,9 @@ local log           = require("jive.utils.log").logger("jive.main")
 
 local JIVE_VERSION  = jive.JIVE_VERSION
 
+local KEY_HOME             = jive.ui.KEY_HOME
+local KEY_BACK             = jive.ui.KEY_BACK
+
 
 -- Classes
 local JiveMain = oo.class({}, HomeMenu)
@@ -77,10 +80,19 @@ local _idTranslations = {}
 
 -- bring us to the home menu
 local function _homeHandler(event)
-	if (
-		( event:getKeycode() == KEY_HOME and event:getType() == EVENT_KEY_PRESS) or
-		( event:getKeycode() == KEY_BACK and event:getType() == EVENT_KEY_HOLD)
-	) then
+	local type = event:getType()
+
+	if (( type == EVENT_KEY_PRESS and event:getKeycode() == KEY_HOME) or
+	    ( type == EVENT_KEY_HOLD and event:getKeycode() == KEY_BACK)) then
+
+		-- disconnect from player on press and hold left
+		if type == EVENT_KEY_HOLD then
+			local manager = AppletManager:getAppletInstance("SlimDiscovery")
+			if manager then
+				manager:setCurrentPlayer(nil)
+			end
+		end
+
 		local windowStack = Framework.windowStack
 
 		if #windowStack > 1 then

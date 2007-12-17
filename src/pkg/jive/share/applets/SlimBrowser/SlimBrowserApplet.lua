@@ -1529,11 +1529,7 @@ function notify_playerCurrent(self, player)
 	-- make sure it has our modifier (so that we use different default action in Now Playing)
 	_statusStep.actionModifier = "-status"
 	
-	-- fix the menu so that it's closable, we manage the origin business
-	step.menu:setCloseable(true)
-
 	-- showtime for the player
-	-- FIXME: handle player off...
 	_player:onStage(sink)
 	jiveMain:setTitle(player:getName())
 
@@ -1643,7 +1639,8 @@ function free(self)
 
 	-- remove player menus
 	jiveMain:setTitle(nil)
-	for id, v in ipairs(_playerMenus) do
+	for id, v in pairs(_playerMenus) do
+		debug.dump(v, -1)
 		jiveMain:removeItem(v)
 	end
 
