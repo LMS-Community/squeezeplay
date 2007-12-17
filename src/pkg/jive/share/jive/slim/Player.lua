@@ -117,7 +117,7 @@ end
 
 local function _setPlayerPower(self, power)
 	log:debug("_setPlayerPower")
-	-- only kick off notification on state change
+
 	if power != self.power then
 		self.power = power
 		self.jnt:notify('playerPower', self, power)
@@ -181,7 +181,7 @@ function updateFromSS(self, playerInfo)
 	self.needsUpgrade = (tonumber(playerInfo.player_needs_upgrade) == 1),
 
 	_setPlayerName(self, playerInfo.name)
-	_setPlayerPower(self, playerInfo.power)
+	_setPlayerPower(self, tonumber(playerInfo.power))
 	_setConnected(self, playerInfo.connected)
 end
 
@@ -261,6 +261,19 @@ Returns the player name
 --]]
 function getName(self)
 	return self.name
+end
+
+
+--[[
+
+=head2 jive.slim.Player:isPowerOn()
+
+Returns true if the player is powered on
+
+=cut
+--]]
+function isPowerOn(self)
+	return tonumber(self.power) == 1
 end
 
 

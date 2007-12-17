@@ -143,13 +143,17 @@ end
 
 -- remove an item from a menu by its index
 function removeItem(self, item)
-	self.menu:removeItem(item)
+	if self.nodeTable[item.node] then
+		self.nodeTable[item.node].menu:removeItem(item)
+	end
 end
 
 
 -- remove an item from a menu by its id
 function removeItemById(self, id)
-	self.menu:removeItemById(id)
+	if self.nodeTable[item.node] then
+		self.nodeTable[item.node].menu:removeItemById(id)
+	end
 end
 
 

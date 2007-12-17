@@ -120,6 +120,7 @@ local _curStep = false
 local _statusStep = false
 
 -- Our main menu/handlers
+local _playerMenus = {}
 local _playerKeyHandler = false
 
 -- The last entered text
@@ -1415,8 +1416,13 @@ function notify_playerPower(self, player, power)
 	-- only if this concerns our player
 	if _player == player then
 		-- refresh the main menu
-		-- XXXX: do this locally
-		--self:notify_playerCurrent(player, 1)
+		for i, v in pairs(_playerMenus) do
+			if not player:isPowerOn() and not v.displayWhenOff then
+				jiveMain:removeItem(v)
+			else
+				jiveMain:addItem(v)
+			end
+		end
 	end
 end
 
@@ -1610,12 +1616,15 @@ Overridden to close our player.
 function free(self)
 	log:debug("SlimBrowserApplet:free()")
 
-	-- XXXX remove player menus
-
-	jiveMain:setTitle(nil)
 	_player:offStage()
 
 	_removePlayerKeyHandler()
+
+	-- remove player menus
+	jiveMain:setTitle(nil)
+	for i, v in ipairs(_playerMenus) do
+		jiveMain:removeItem(v)
+	end
 
 	_player = false
 	_server = false
