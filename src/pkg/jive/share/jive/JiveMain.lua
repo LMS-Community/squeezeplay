@@ -120,9 +120,9 @@ end
 function JiveMainMenu:__init(name, style, titleStyle)
 
 	local obj = oo.rawnew(self, {
-		menu = jive.ui.SimpleMenu("menu"),
+		menu   = jive.ui.SimpleMenu("menu"),
 		window = jive.ui.Window(style or "window", name, titleStyle),
-		menus = {},
+		menus  = {},
 		notify = false,
 	})
 
@@ -169,7 +169,16 @@ function JiveMainMenu:addNode(item)
 	end
 
 	-- new/update node
-	local window = Window("window", item.text)
+
+	local window
+	if item.window and item.window.titleStyle then
+		window = Window("window", item.text, item.window.titleStyle .. "title")
+	elseif item.titleStyle then
+		window = Window("window", item.text, item.titleStyle .. "title")
+	else
+		window = Window("window", item.text)
+	end
+
 	local menu = SimpleMenu("menu", item)
 	window:addWidget(menu)
 
@@ -211,7 +220,7 @@ function JiveMainMenu:addItem(item)
 
 	else
 		log:warn("THIS ID ALREADY EXISTS, removing existing item")
-		table.delete(_nodeTable[item.node].items, _menuTable[item.id])
+--		table.delete(_nodeTable[item.node].items, _menuTable[item.id])
 		_menuTable[item.id] = item
 	end
 
@@ -287,9 +296,9 @@ function JiveMain:__init()
 
 	-- menu nodes to add...these are menu items that are used by applets
 	jiveMain:addNode( { id = 'extras', node = 'home', text = _globalStrings:str("EXTRAS"), weight = 70  } )
-	jiveMain:addNode( { id = 'settings', node = 'home', text = _globalStrings:str("SETTINGS"), weight = 50, titleStyle = 'settingstitle' })
-	jiveMain:addNode(  { id = 'remoteSettings', node = 'settings', text = _globalStrings:str("REMOTE_SETTINGS"), titleStyle = 'settingstitle' })
-	jiveMain:addNode( { id = 'advancedSettings', node = 'remoteSettings', text = _globalStrings:str("ADVANCED_SETTINGS"), weight =100, titleStyle = 'settingstitle' })
+	jiveMain:addNode( { id = 'settings', node = 'home', text = _globalStrings:str("SETTINGS"), weight = 50, titleStyle = 'settings' })
+	jiveMain:addNode(  { id = 'remoteSettings', node = 'settings', text = _globalStrings:str("REMOTE_SETTINGS"), titleStyle = 'settings' })
+	jiveMain:addNode( { id = 'advancedSettings', node = 'remoteSettings', text = _globalStrings:str("ADVANCED_SETTINGS"), weight =100, titleStyle = 'settings' })
 
 	-- if you wanted to add a title style for "Extras", this is where it would go
 

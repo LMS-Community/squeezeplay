@@ -152,12 +152,18 @@ local function _menuSink(self, cmd)
 		for k, v in pairs(chunk.data[2]) do
 			local item = {
 					id = v.id,
+					node = v.node,
 					text = v.text,
-					sound = "WINDOWSHOW",
-					defaultPath = v.defaultPath
+					weight = v.weight,
+					window = v.window,
+					sound = "WINDOWSHOW"
 				}
-			log:warn("SLIMBROWSER: ", v.id, item.id, item.text)
-			jiveMain:addMainMenuItem(item, v.weight)
+			if v.isANode then
+				jiveMain:addNode(item)
+			else
+				log:debug("SLIMBROWSER MAIN MENU ITEM: ", v.id, "|", item.text)
+				jiveMain:addItem(item)
+			end
 		end
          end
 end
