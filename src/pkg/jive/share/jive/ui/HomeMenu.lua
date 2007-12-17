@@ -1,5 +1,5 @@
 
-local assert = assert
+local assert, pairs = assert, pairs
 
 local oo            = require("loop.base")
 local table         = require("jive.utils.table")
@@ -7,6 +7,7 @@ local table         = require("jive.utils.table")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
 
+local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("ui")
 
 
@@ -53,7 +54,7 @@ function _changeNode(self, id, node)
 	-- from a different node before adding
 	if self.menuTable[id] and self.menuTable[id].node != node then 
 		-- remove menuitem from previous node
-		table.delete(self.nodeTable[node].items, self.menuTable[id])
+		self.nodeTable[node].items[id] = nil
 		-- change menuitem's node
 		self.menuTable[id].node = node
 		-- add item to that node
@@ -99,8 +100,11 @@ function addNode(self, item)
 
 	window:addWidget(menu)
 
-	self.nodeTable[item.id] = { menu = menu, 
-				items = {} }
+	self.nodeTable[item.id] = {
+		menu = menu,
+		item = item,
+		items = {}
+	}
 
 	if not item.callback then
 		item.callback = function () 
@@ -111,9 +115,6 @@ function addNode(self, item)
 	if not item.sound then
 		item.sound = "WINDOWSHOW"
 	end
-
-	-- now add the item to the menu
-	self:addItem(item)
 end
 
 
@@ -132,12 +133,44 @@ function addItem(self, item)
 
 	else
 		log:debug("THIS ID ALREADY EXISTS, removing existing item")
---		table.delete(self.nodeTable[item.node].items, self.menuTable[item.id])
 		self.menuTable[item.id] = item
 	end
 
-	table.insert(self.nodeTable[item.node].items, item)
+	self.nodeTable[item.node].items[item.id] = item
 	self.nodeTable[item.node].menu:addItem(item)
+
+	-- add parent node?
+	local nodeEntry = self.nodeTable[item.node]
+	if nodeEntry.item then
+		local hasItem = self.menuTable[nodeEntry.item.id] ~= nil
+
+		if not hasItem then
+			-- any entries in items table?
+			local hasEntry = pairs(nodeEntry.items)(nodeEntry.items)
+			if  hasEntry then
+				-- now add the item to the menu
+				self:addItem(nodeEntry.item)
+			end
+		end
+	end
+end
+
+
+function _checkRemoveNode(self, node)
+	local nodeEntry = self.nodeTable[node]
+
+	if nodeEntry.item then
+		local hasItem = self.menuTable[nodeEntry.item.id] ~= nil
+
+		if hasItem then
+			-- any entries in items table?
+			local hasEntry = pairs(nodeEntry.items)(nodeEntry.items)
+
+			if not hasEntry  then
+				self:removeItem(nodeEntry.item)
+			end
+		end
+	end
 end
 
 
@@ -145,6 +178,11 @@ end
 function removeItem(self, item)
 	if self.nodeTable[item.node] then
 		self.nodeTable[item.node].menu:removeItem(item)
+
+		self.menuTable[item.id] = nil
+		self.nodeTable[item.node].items[item.id] = nil
+
+		self:_checkRemoveNode(item.node)
 	end
 end
 
@@ -153,6 +191,11 @@ end
 function removeItemById(self, id)
 	if self.nodeTable[item.node] then
 		self.nodeTable[item.node].menu:removeItemById(id)
+
+		self.menuTable[item.id] = nil
+		self.nodeTable[item.node].items[id] = nil
+
+		self:_checkRemoveNode(item.node)
 	end
 end
 
