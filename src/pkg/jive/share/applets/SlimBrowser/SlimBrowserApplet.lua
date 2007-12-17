@@ -1416,7 +1416,7 @@ function notify_playerPower(self, player, power)
 	-- only if this concerns our player
 	if _player == player then
 		-- refresh the main menu
-		for i, v in pairs(_playerMenus) do
+		for id, v in pairs(_playerMenus) do
 			if not player:isPowerOn() and not v.displayWhenOff then
 				jiveMain:removeItem(v)
 			else
@@ -1622,7 +1622,7 @@ function free(self)
 
 	-- remove player menus
 	jiveMain:setTitle(nil)
-	for i, v in ipairs(_playerMenus) do
+	for id, v in ipairs(_playerMenus) do
 		jiveMain:removeItem(v)
 	end
 
