@@ -87,9 +87,6 @@ function step1(self)
 		end,
 	}, 2)
 
-	-- choose language
-	self.setupLanguage = assert(appletManager:loadApplet("SetupLanguage"))
-	self._topWindow = self.setupLanguage:setupShow(function() self:step2() end)
 	disableHomeKeyDuringSetup = 
 		Framework:addListener(EVENT_KEY_PRESS,
 		function(event)
