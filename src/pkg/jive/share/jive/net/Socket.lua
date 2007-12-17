@@ -192,16 +192,16 @@ end
 -- Proxy functions for NetworkThread, for convenience of subclasses
 
 -- t_add/remove/read/write
-function t_addRead(self, pump)
-	self.jnt:t_addRead(self.t_sock, pump)
+function t_addRead(self, pump, timeout)
+	self.jnt:t_addRead(self.t_sock, pump, timeout)
 end
 
 function t_removeRead(self)
 	self.jnt:t_removeRead(self.t_sock)
 end
 
-function t_addWrite(self, pump)
-	self.jnt:t_addWrite(self.t_sock, pump)
+function t_addWrite(self, pump, timeout)
+	self.jnt:t_addWrite(self.t_sock, pump, timeout)
 end
 
 function t_removeWrite(self)

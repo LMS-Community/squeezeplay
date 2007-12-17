@@ -52,12 +52,13 @@ module(..., oo.class)
 
 -- constants
 local QUEUE_SIZE        = 100  -- size of the queue from/to the jnt
-local TIMEOUT           = 0.05 -- select timeout
+local TIMEOUT           = 0.05 -- select timeout (seconds)
 
 
 -- _add
 -- adds a socket to the read or write list
-local function _add(sock, pump, sockList)
+-- timeout == 0 => no time out!
+local function _add(sock, pump, sockList, timeout)
 --	log:debug("_add(", sock, ", ", pump, ")")
 
 	_assert(pump, debug.traceback())
@@ -73,8 +74,12 @@ local function _add(sock, pump, sockList)
 		table.insert(sockList, sock)
 	end	
 	
-	-- remember the pump
-	sockList[sock] = pump
+	-- remember the pump, the time and the desired timeout
+	sockList[sock] = {
+		pumpIt = pump,
+		lastSeen = socket.gettime(),
+		timeout = timeout or 60
+	}
 end
 
 
@@ -104,10 +109,10 @@ end
 
 -- t_add/remove/read/write
 -- add/remove sockets api
-function t_addRead(self, sock, pump)
+function t_addRead(self, sock, pump, timeout)
 --	log:debug("NetworkThread:t_addRead()")
 	
-	_add(sock, pump, self.t_readSocks)
+	_add(sock, pump, self.t_readSocks, timeout)
 end
 
 function t_removeRead(self, sock)
@@ -116,16 +121,33 @@ function t_removeRead(self, sock)
 	_remove(sock, self.t_readSocks)
 end
 
-function t_addWrite(self, sock, pump)
+function t_addWrite(self, sock, pump, timeout)
 --	log:debug("NetworkThread:t_addWrite()")
 	
-	_add(sock, pump, self.t_writeSocks)
+	_add(sock, pump, self.t_writeSocks, timeout)
 end
 
 function t_removeWrite(self, sock)
 --	log:debug("NetworkThread:t_removeWrite()")
 	
 	_remove(sock, self.t_writeSocks)
+end
+
+
+-- _timeout
+-- manages the timeout of our sockets
+local function _timeout(now, sockList)
+--	log:debug("NetworkThread:_timeout()")
+
+	for v, t in pairs(sockList) do
+		-- the sockList contains both sockList[i] = sock and sockList[sock] = {pumpIt=,lastSeem=}
+		-- we want the second case, the sock is a userdata (implemented by LuaSocket)
+		-- we also want the timeout to exist and have expired
+		if type(v) == "userdata" and t.timeout > 0 and now - t.lastSeen > t.timeout then
+			log:error("network thread timeout for ", v)
+			t.pumpIt("inactivity timeout")
+		end
+	end
 end
 
 
@@ -136,6 +158,8 @@ local function _t_select(self)
 	
 	local r,w,e = socket.select(self.t_readSocks, self.t_writeSocks, TIMEOUT)
 	
+	local now = socket.gettime()
+		
 	if e and self.running then
 		-- timeout is a normal error for select if there's nothing to do!
 		if e ~= 'timeout' then
@@ -144,7 +168,8 @@ local function _t_select(self)
 	else
 		-- call the write pumps
 		for i,v in ipairs(w) do
-			self.t_writeSocks[v]()
+			self.t_writeSocks[v].lastSeen = now
+			self.t_writeSocks[v].pumpIt()
 		end
 		
 		-- call the read pumps
@@ -157,10 +182,15 @@ local function _t_select(self)
 				log:error("\t", a, " = ", b)
 				end
 			else
-				self.t_readSocks[v]()
+				self.t_readSocks[v].lastSeen = now
+				self.t_readSocks[v].pumpIt()
 			end
 		end
 	end
+	
+	-- manage timeouts
+	_timeout(now, self.t_readSocks)
+	_timeout(now, self.t_writeSocks)
 end
 
 
@@ -186,8 +216,6 @@ local function _t_thread(self)
 
 --	perfhook(50)
 
---	log:debug("_t_thread()")
-	
 --	log:info("NetworkThread starting...")
 
 	while self.running do
@@ -231,10 +259,6 @@ function t_perform(self, func, priority)
 		-- log:debug("enqueue low")
 		self.out_queueL:insert(func)
 	end
-
-	-- push event to wake up main thread
-----	local evt = Event:new(EVENT_SERVICE_JNT)
-----	Framework:pushEvent(evt)
 end
 
 

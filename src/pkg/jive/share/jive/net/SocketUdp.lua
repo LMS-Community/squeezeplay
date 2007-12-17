@@ -72,7 +72,7 @@ local _createUdpSocket = socket.protect(function()
     local try = socket.newtry(function() sock:close() end)
     -- do everything reassured c will be closed
 	try(sock:setoption("broadcast", true))
-	try(sock:settimeout(2))
+	try(sock:settimeout(0))
 	
 	return sock
 end)
@@ -123,7 +123,7 @@ function __init(self, jnt, sink, name)
 		local safeSink = obj:safeSink(sink)
 	
 		-- add our read function (thread side)
-		jnt:perform(function() obj:t_addRead(obj:t_getReadPump(safeSink)) end)
+		jnt:perform(function() obj:t_addRead(obj:t_getReadPump(safeSink), 0) end)
 	end
 	
 	return obj
@@ -146,8 +146,13 @@ function t_getReadPump(self, sink)
 		end
 	end
 
-	return function()
+	return function(NetworkThreadErr)
 		--log:debug("SocketUdp:readPump()")
+
+		if NetworkThreadErr then
+			log:error("SocketUdp:readPump() error:", NetworkThreadErr)
+			return
+		end
 
 		local err = socket.skip(1, ltn12.pump.step(source, sink))
 
@@ -179,10 +184,15 @@ end
 -- queue is empty after each pump
 function t_getWritePump(self, t_source)
 
-	return function()
+	return function(NetworkThreadErr)
 		--log:debug("SocketUdp:writePump()")
 		
-	        local sink = table.remove(self.queue, 1)
+		if NetworkThreadErr then
+			log:error("SocketUdp:writePump() error:", NetworkThreadErr)
+			-- let it run, we'll return below after removing ourselves...
+		end
+
+		local sink = table.remove(self.queue, 1)
 
 		-- stop the pumping when queue is empty
 		if sink == nil then
@@ -214,16 +224,16 @@ function send(self, t_source, address, port)
 	--log:debug("SocketUdp:send()")
 
 --	_assert(t_source)
---      _assert(address)
+--	_assert(address)
 --	_assert(port)
 
 	if self.t_sock then
 		self:perform(function() 
-				     if #self.queue == 0 then
-					     self:t_addWrite(self:t_getWritePump(t_source))
-				     end
-				     table.insert(self.queue, self:t_getSink(address, port))
-			     end)	
+			if #self.queue == 0 then
+				self:t_addWrite(self:t_getWritePump(t_source), 60)
+			end
+			table.insert(self.queue, self:t_getSink(address, port))
+		end)
 	end
 end
 

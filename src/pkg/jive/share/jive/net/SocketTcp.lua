@@ -54,13 +54,7 @@ oo.class(_M, Socket)
 local _createTcpSocket = socket.protect(function()
 	--log:debug("_createTcpSocket()")
 	
-	local sock = socket.try(socket.tcp())
-	-- create a try function that closes 'c' on error
-    local try = socket.newtry(function() sock:close() end)
-    -- do everything reassured c will be closed
-	try(sock:settimeout(2))
-	
-	return sock
+	return socket.try(socket.tcp())
 end)
 
 
@@ -79,8 +73,8 @@ Must be called by subclasses.
 function __init(self, jnt, address, port, name)
 	--log:debug("SocketTcp:__init(", name, ", ", address, ", ", port, ")")
 
---	_assert(address, "Cannot create SocketTcp without hostname/ip address - " .. debug.traceback())
---	_assert(port, "Cannot create SocketTcp without port")
+	_assert(address, "Cannot create SocketTcp without hostname/ip address - " .. debug.traceback())
+	_assert(port, "Cannot create SocketTcp without port")
 
 	local obj = oo.rawnew(self, Socket(jnt, name))
 
@@ -106,21 +100,17 @@ function t_connect(self)
 	self.t_sock = socket.tcp()
 
 	-- set a long timeout for connection
-	self.t_sock:settimeout(30)
+	self.t_sock:settimeout(0)
 	local err = socket.skip(1, self.t_sock:connect(self.t_tcp.address, self.t_tcp.port))
 
-	if err then
+	if err and err ~= "timeout" then
 	
 		log:error("SocketTcp:t_connect: ", err)
 		return nil, err
 	
-	else
-	
-		-- reduce timeout for further operations
-		self.t_sock:settimeout(1)
-		self:t_setConnected(true)
-		return 1
 	end
+	
+	return 1
 end
 
 
@@ -129,9 +119,13 @@ end
 function t_setConnected(self, state)
 	--log:debug(self, ":t_setConnected(", state, ")")
 
-	self.t_tcp.mutex:lock()
-	self.t_tcp.connected = state
-	self.t_tcp.mutex:unlock()
+	local stcp = self.t_tcp
+
+	if state ~= stcp.connected then
+		stcp.mutex:lock()
+		stcp.connected = state
+		stcp.mutex:unlock()
+	end
 end
 
 
@@ -204,6 +198,25 @@ function __tostring(self)
 	return "SocketTcp {" .. tostring(self.jsName) .. "}"
 end
 
+
+-- Overrides to manage connected state
+
+-- t_add/read/write
+function t_addRead(self, pump, timeout)
+	local newpump = function(...)
+		if not self.t_tcp.connected then self:t_setConnected(true) end
+		pump(...)
+	end
+	Socket.t_addRead(self, newpump, timeout)
+end
+
+function t_addWrite(self, pump, timeout)
+	local newpump = function(...)
+		if not self.t_tcp.connected then self:t_setConnected(true) end
+		pump(...)
+	end
+	Socket.t_addWrite(self, newpump, timeout)
+end
 
 --[[
 

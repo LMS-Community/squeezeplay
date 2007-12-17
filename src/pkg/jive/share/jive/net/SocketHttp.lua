@@ -56,6 +56,9 @@ module(...)
 oo.class(_M, SocketTcp)
 
 
+local SOCKET_TIMEOUT = 70 -- timeout for socket operations (seconds)
+
+
 --[[
 
 =head2 jive.net.SocketHttp(jnt, address, port, name)
@@ -99,7 +102,7 @@ The class maintains an internal queue of requests to fetch.
 =cut
 --]]
 function fetch(self, request)
---	_assert(oo.instanceof(request, RequestHttp), tostring(self) .. ":fetch() parameter must be RequestHttp - " .. type(request) .. " - ".. debug.traceback())
+	_assert(oo.instanceof(request, RequestHttp), tostring(self) .. ":fetch() parameter must be RequestHttp - " .. type(request) .. " - ".. debug.traceback())
 	self:perform(function() self:t_fetch(request) end)
 end
 
@@ -124,7 +127,7 @@ function t_sendNext(self, go, newState)
 --	log:debug(self, ":t_sendNext(", go, ", ", newState, ")")
 	
 	if newState then
---		_assert(self[newState] and type(self[newState]) == 'function')
+		_assert(self[newState] and type(self[newState]) == 'function')
 		self.t_httpSendState = newState
 	end
 	
@@ -217,6 +220,35 @@ function t_getSendHeaders(self)
 end
 
 
+-- jive-keep-open socket sink
+-- our "keep-open" sink, added to the socket namespace so we can use it like any other
+-- our version is non blocking
+socket.sinkt["jive-keep-open"] = function(sock)
+	local first = 0
+	return setmetatable(
+		{
+			getfd = function() return sock:getfd() end,
+			dirty = function() return sock:dirty() end
+		}, 
+		{
+			__call = function(self, chunk, err)
+--				log:debug("jive-keep-open sink(", chunk and #chunk, ", ", tostring(err), ", ", tostring(first), ")")
+				if chunk then 
+					local res, err
+					-- if send times out, err is 'timeout' and first is updated.
+					res, err, first = sock:send(chunk, first+1)
+--					log:debug("jive-keep-open sent - first is ", tostring(first), " returning ", tostring(res), ", " , tostring(err))
+					-- we return the err
+					return res, err
+				else 
+					return 1 
+				end
+			end
+		}
+	)
+end
+
+
 -- t_sendHeaders
 -- send the headers, aggregates request and socket headers
 function t_sendHeaders(self)
@@ -243,20 +275,34 @@ function t_sendHeaders(self)
 		return table.concat(t, "\r\n")
 	end
 
-	local sink = socket.sink('keep-open', self.t_sock)
+	local sink = socket.sink('jive-keep-open', self.t_sock)
 	
-	local pump = function ()
-
+	local pump = function (NetworkThreadErr)
 --		log:debug(self, ":t_sendHeaders.pump()")
+		
+		if NetworkThreadErr then
+			log:error(self, ":t_sendHeaders.pump: ", NetworkThreadErr)
+			self:t_close(NetworkThreadErr)
+			return
+		end
+		
 		perfs.check('Pool Queue', self.t_httpSending, 4)
 		local ret, err = ltn12.pump.step(source, sink)
 		
+		
 		if err then
+			-- do nothing on timeout, we will be called again to send the rest of the data...
+			if err == 'timeout' then
+				return
+			end
+
+			-- handle any "real" error
 			log:error(self, ":t_sendHeaders.pump: ", err)
 			self:t_close(err)
 			return
 		end
 		
+		-- no error, we're done, move on!
 		if self.t_httpSending:t_hasBody() then
 			self:t_sendNext(true, 't_sendBody')
 		else
@@ -265,8 +311,61 @@ function t_sendHeaders(self)
 		end
 	end
 
+	self:t_addWrite(pump, SOCKET_TIMEOUT)
+end
 
-	self:t_addWrite(pump)
+-- jive-http-chunked sink
+-- same as socket.http, only non blocking
+socket.sinkt["jive-http-chunked"] = function(sock)
+	local chunks = {}
+	local curChunk
+	local done = false
+	return setmetatable(
+		{
+			getfd = function() return sock:getfd() end,
+			dirty = function() return sock:dirty() end
+		}, 
+		{
+			__call = function(self, chunk, err)
+--				log:debug("jive-http-chunked sink(", chunk and #chunk, ", ", tostring(err), ", ", #chunks, ")")
+
+				if done or err then return 1 end
+				
+				-- store the chunk
+				if chunk then
+					-- prepare the chunk
+					local size = string.format("%X\r\n", string.len(chunk))
+					chunk = size .. chunk .. "\r\n"
+					table.insert(chunks, { data = chunk, first = 0})
+--					log:debug("jive-http-chunked stored chunk")
+				end
+				
+				-- if no curChunk, load one if we have any or load the last chunk data
+				if not curChunk then
+				 	if #chunks > 0 then
+						curChunk = table.remove(chunks, 1)
+--						log:debug("jive-http-chunked loaded chunk")
+					elseif not done then
+						curChunk = { data = "0\r\n\r\n", first = 0}
+--						log:debug("jive-http-chunked loaded last chunk")
+						done = true
+					end
+				end
+				
+				-- send curChunk
+				local res, err
+				res, err, curChunk.first = sock:send(curChunk.data, curChunk.first)
+--				log:debug("jive-http-chunked sent - first is ", tostring(curChunk.first), " returning ", tostring(res), ", " , tostring(err))
+
+				if not curChunk.first then 
+--					log:debug("jive-http-chunked discarding finished curChunk")
+					curChunk = nil
+				end
+
+				return res, err
+			end
+		}
+	)
 end
 
 
@@ -277,14 +376,26 @@ function t_sendBody(self)
 	
 	local source = self.t_httpSending:t_getBodySource()
 	
-	local sink = socket.sink('http-chunked', self.t_sock)
+	local sink = socket.sink('jive-http-chunked', self.t_sock)
 
-	local pump = function ()
+	local pump = function (NetworkThreadErr)
 --		log:debug(self, ":t_sendBody.pump()")
 		
+		if NetworkThreadErr then
+			log:error(self, ":t_sendBody.pump: ", NetworkThreadErr)
+			self:t_close(NetworkThreadErr)
+			return
+		end
+
 		local ret, err = ltn12.pump.step(source, sink)
 		
 		if err then
+		
+			-- just loop on timeout
+			if err == 'timeout' then
+				return
+			end
+		
 			log:error(self, ":t_sendBody.pump: ", err)
 			self:t_close(err)
 			return
@@ -297,7 +408,7 @@ function t_sendBody(self)
 		end
 	end
 	
-	self:t_addWrite(pump)
+	self:t_addWrite(pump, SOCKET_TIMEOUT)
 end
 
 
@@ -328,7 +439,7 @@ function t_rcvNext(self, go, newState)
 --	log:debug(self, ":t_rcvNext(", go, ", ", newState, ")")
 
 	if newState then
---		_assert(self[newState] and type(self[newState]) == 'function')
+		_assert(self[newState] and type(self[newState]) == 'function')
 		self.t_httpRcvState = newState
 	end
 	
@@ -358,10 +469,15 @@ function t_rcvHeaders(self)
 --	log:debug(self, ":t_rcvHeaders()")
 	
 	local first = true
+	local partial
 	
 	local source = function()
 	
-		local line, err = self.t_sock:receive()
+		local line, err = self.t_sock:receive('*l', partial)
+		
+		if err == 'timeout' then
+			return nil, err
+		end
 		
 		if err then
 --			log:debug(self, ":t_rcvHeaders.source:", err)
@@ -404,25 +520,40 @@ function t_rcvHeaders(self)
 					return false, "malformed reponse headers"
 				else
 					headers[name] = value
---					log:error(self, ":t_rcvHeaders.sink header: ", name, ":", value)
+--					log:debug(self, ":t_rcvHeaders.sink header: ", name, ":", value)
 				end
 			end
 		end
 		return 1
 	end
 
-	local pump = function ()
+	local pump = function (NetworkThreadErr)
 --		log:debug(self, ":t_rcvHeaders.pump()")
 		if first then
 			perfs.check('Pool Queue', self.t_httpReceiving, 6)
-			first =false
+			first = false
 		end
+		
+		if NetworkThreadErr then
+			log:error(self, ":t_rcvHeaders.pump:", err)
+			--self:t_removeRead()
+			self:t_close(err)
+			return
+		end
+		
+		
 		local ret, err = ltn12.pump.step(source, sink)
 	
 		if err then
 		
+			if err == 'timeout' then
+--				log:debug(self, ":t_rcvHeaders.pump - timeout")
+				-- more next time
+				return
+			end
+		
 			log:error(self, ":t_rcvHeaders.pump:", err)
-			self:t_removeRead()
+			--self:t_removeRead()
 			self:t_close(err)
 			return
 			
@@ -446,7 +577,7 @@ function t_rcvHeaders(self)
 		end
 	end
 	
-	self:t_addRead(pump)
+	self:t_addRead(pump, SOCKET_TIMEOUT)
 end
 
 
@@ -457,46 +588,71 @@ end
 -- they signal no more data (by returning nil). We can't use that however since the 
 -- pump won't be called in select!
 socket.sourcet["jive-until-closed"] = function(sock, self)
-    local done
-    return setmetatable({
-        getfd = function() return sock:getfd() end,
-        dirty = function() return sock:dirty() end
-    }, {
-        __call = function()
-            if done then return nil end
-            local chunk, err, partial = sock:receive(socket.BLOCKSIZE)
-            if not err then return chunk
-            elseif err == "closed" then
-            	--close the socket using self
-                SocketTcp.t_close(self)
-                done = 1
-                return partial, 'done'
-            else return nil, err end
-        end
-    })
+	local done
+	local partial
+	return setmetatable(
+		{
+			getfd = function() return sock:getfd() end,
+			dirty = function() return sock:dirty() end
+		}, 
+		{
+			__call = function()
+			
+				if done then 
+					return nil 
+				end
+			
+				local chunk, err
+				chunk, err, partial = sock:receive(socket.BLOCKSIZE, partial)
+				
+				if not err then 
+					return chunk
+				elseif err == "closed" then
+					--close the socket using self
+					SocketTcp.t_close(self)
+					done = true
+					return partial, 'done'
+				else -- including timeout
+					return nil, err 
+				end
+			end
+		}
+	)
 end
 
 
 -- jive-by-length socket source
 -- same principle as until-close, we need to return somehow the fact we're done
 socket.sourcet["jive-by-length"] = function(sock, length)
-    return setmetatable({
-        getfd = function() return sock:getfd() end,
-        dirty = function() return sock:dirty() end
-    }, {
-        __call = function()
-            if length <= 0 then return nil, 'done' end
-            local size = math.min(socket.BLOCKSIZE, length)
-            local chunk, err = sock:receive(size)
-            if err then return nil, err end
-            length = length - string.len(chunk)
-            if length <= 0 then
-            	return chunk, 'done'
-            else
-            	return chunk
-            end
-        end
-    })
+	local partial
+	return setmetatable(
+		{
+			getfd = function() return sock:getfd() end,
+			dirty = function() return sock:dirty() end
+		}, 
+		{
+			__call = function()
+				if length <= 0 then 
+					return nil, 'done' 
+				end
+				
+				local size = math.min(socket.BLOCKSIZE, length)
+				
+				local chunk, err
+				chunk, err, partial = sock:receive(size, partial)
+				
+				if err then -- including timeout
+					return nil, err 
+				end
+				length = length - string.len(chunk)
+				if length <= 0 then
+					return chunk, 'done'
+				else
+					return chunk
+				end
+			end
+		}
+	)
 end
 
 
@@ -504,27 +660,67 @@ end
 -- same as the one in http, except does not attempt to read headers after
 -- last chunk and returns 'done' pseudo error
 socket.sourcet["jive-http-chunked"] = function(sock)
-    return setmetatable({
-        getfd = function() return sock:getfd() end,
-        dirty = function() return sock:dirty() end
-    }, {
-        __call = function()
-            -- get chunk size, skip extention
-            local line, err = sock:receive()
-            if err then return nil, err end
-            local size = tonumber(string.gsub(line, ";.*", ""), 16)
-            if not size then return nil, "invalid chunk size" end
-            -- was it the last chunk?
-            if size > 0 then
-                -- if not, get chunk and skip terminating CRLF
-                local chunk, err, part = sock:receive(size)
-                if chunk then sock:receive() end
-                return chunk, err
-            else
-                return nil, 'done'
-            end
-        end
-    })
+	local partial
+	local schunk
+	local pattern = '*l'
+	local step = 1
+	return setmetatable(
+		{
+			getfd = function() return sock:getfd() end,
+			dirty = function() return sock:dirty() end
+		}, 
+		{
+			__call = function()
+
+				-- read
+				local chunk, err
+				chunk, err, partial = sock:receive(pattern, partial)
+
+--				log:debug("SocketHttp.jive-http-chunked.source(", chunk and #chunk, ", ", err, ")")
+
+				if err then
+--					log:debug("SocketHttp.jive-http-chunked.source - RETURN err")
+					return nil, err 
+				end
+				
+				if step == 1 then
+					-- read size
+					local size = tonumber(string.gsub(chunk, ";.*", ""), 16)
+					if not size then 
+						return nil, "invalid chunk size" 
+					end
+--					log:debug("SocketHttp.jive-http-chunked.source - size: ", tostring(size))
+			
+					-- last chunk ?
+					if size > 0 then
+						step = 2
+						pattern = size
+						return nil, 'timeout'
+					else
+						return nil, 'done'
+					end
+				end
+				
+				if step == 2 then
+--					log:debug("SocketHttp.jive-http-chunked.source(", chunk and #chunk, ", ", err, ", ", part and #part, ")")
+					
+					-- remember chunk, go read terminating CRLF
+					step = 3
+					pattern = '*l'
+					schunk = chunk
+					return nil, 'timeout'
+				end
+				
+				if step == 3 then
+--					log:debug("SocketHttp.jive-http-chunked.source 3 (", chunk and #chunk, ", ", err, ", ", part and #part, ")")
+					
+					-- done
+					step = 1
+					return schunk
+				end
+			end
+		}
+	)
 end
 
 
@@ -633,10 +829,22 @@ function t_rcvResponse(self)
 	local sinkMode = self.t_httpReceiving:t_getResponseSinkMode()
 	local sink = _getSink(sinkMode, self.t_httpReceiving, self:getSafeSinkGenerator())
 
-	local pump = function ()
---		log:debug(self, ":t_rcvResponse.pump(", mode, ")")
+	local pump = function (NetworkThreadErr)
+--		log:debug(self, ":t_rcvResponse.pump(", mode, ", ", tostring(nt_err) , ")")
+		
+		if NetworkThreadErr then
+			log:error(self, ":t_rcvResponse.pump() error:", NetworkThreadErr)
+			self:t_close(NetworkThreadErr)
+			return
+		end
+		
 		
 		local continue, err = ltn12.pump.step(source, sink)
+		
+		-- shortcut on timeout
+		if err == 'timeout' then
+			return
+		end
 		
 		if not continue then
 			-- we're done
@@ -663,7 +871,7 @@ function t_rcvResponse(self)
 		end
 	end
 	
-	self:t_addRead(pump)
+	self:t_addRead(pump, SOCKET_TIMEOUT)
 end
 
 
