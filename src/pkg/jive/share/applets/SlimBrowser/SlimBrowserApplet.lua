@@ -137,34 +137,6 @@ local _newDestination
 local _actionHandler
 
 
--- _menuSink
--- returns a sink with a closure to self
--- cmd is passed in so we know what process function to call
--- this sink receives all the data from our Comet interface
-local function _menuSink(self, cmd)
-	return function(chunk, err)
-		-- process data from a menu notification
-		log:warn('I RECEIVED SOME DATA')
-		-- each chunk.data[2] contains a table that needs insertion into the menu
-		for k, v in pairs(chunk.data[2]) do
-			local item = {
-					id = v.id,
-					node = v.node,
-					text = v.text,
-					weight = v.weight,
-					window = v.window,
-					sound = "WINDOWSHOW"
-				}
-			if v.isANode then
-				jiveMain:addNode(item)
-			else
-				log:debug("SLIMBROWSER MAIN MENU ITEM: ", v.id, "|", item.text)
-				jiveMain:addItem(item)
-			end
-		end
-         end
-end
-
 -- _safeDeref
 -- safely derefence a structure in depth
 -- doing a.b.c.d will fail if b or c are not defined
@@ -520,6 +492,7 @@ end
 -- performs the JSON action...
 local function _performJSONAction(jsonAction, from, qty, sink)
 	log:debug("_performJSONAction(from:", from, ", qty:", qty, "):")
+	log:warn("_performJSONAction(from:", from, ", qty:", qty, "):")
 	
 	local cmdArray = jsonAction["cmd"]
 	
@@ -695,6 +668,140 @@ local function _browseSink(step, chunk, err)
 		log:error(err)
 	end
 end
+
+-- _menuSink
+-- returns a sink with a closure to self
+-- cmd is passed in so we know what process function to call
+-- this sink receives all the data from our Comet interface
+local function _menuSink(self, cmd)
+	return function(chunk, err)
+
+		-- catch race condition if we've switch player
+		if not _player then
+			return
+		end
+
+		-- process data from a menu notification
+		-- each chunk.data[2] contains a table that needs insertion into the menu
+		local menuItems = chunk.data[2]
+		-- directive for these items is in chunk.data[3]
+		local menuDirective = chunk.data[3]
+		for k, v in pairs(menuItems) do
+
+			--debug.dump(v.actions, -1)
+
+			local item = {
+					id = v.id,
+					node = v.node,
+					text = v.text,
+					weight = v.weight,
+					window = v.window,
+					sound = "WINDOWSHOW",
+					displayWhenOff = (v.displayWhenOff == 1)
+				}
+
+			local choiceAction = _safeDeref(v, 'actions', 'do', 'choices')
+
+			if v.isANode then
+				jiveMain:addNode(item)
+
+			elseif menuDirective == 'remove' then
+				jiveMain:removeItemById(item.id)
+
+			elseif choiceAction then
+
+				local selectedIndex = 1
+				if v.selectedIndex then
+					selectedIndex = v.selectedIndex
+				end
+
+				local choice = Choice(
+					"choice",
+					v.choiceStrings,
+					function(obj, selectedIndex)
+						local jsonAction = v.actions['do'].choices[selectedIndex]
+						_performJSONAction(jsonAction, nil, nil, nil)
+					end,
+					selectedIndex
+				)
+				
+				item.icon = choice
+
+				--add the item to the menu
+				if _player:isPowerOn() or item.displayWhenOff then
+					jiveMain:addItem(item)
+				end
+
+			else
+
+				item.callback = function()
+					--	local jsonAction = v.actions.go
+						local jsonAction, from, to, step, sink
+						local doAction = _safeDeref(v, 'actions', 'do')
+						local goAction = _safeDeref(v, 'actions', 'go')
+
+						if doAction then
+							jsonAction = v.actions['do']
+						elseif goAction then
+							jsonAction = v.actions.go
+						else
+							return false
+						end
+
+						-- we need a new window for go actions, or do actions that involve input
+						if goAction or (doAction and v.input) then
+							from = 0
+							to = BROWSE_FIRST_FETCH
+							step, sink =_newDestination(nil,
+										  v,
+										  _newWindowSpec(nil, v),
+										  _browseSink,
+										  jsonAction
+									  )
+	
+							jiveMain:lockItem(item,
+								  function()
+								  step.cancelled = true
+							  end)
+	
+							step.loaded = function()
+								      jiveMain:unlockItem(item)
+	
+								      _curStep = step
+								      step.window:show()
+							      end
+						end
+
+						_performJSONAction(jsonAction, from, to, sink)
+					end
+
+				_playerMenus[item.id] = item
+				if _player:isPowerOn() or item.displayWhenOff then
+					jiveMain:addItem(item)
+				end
+			end
+		end
+
+		-- add local menus
+		local localItems = {
+			{
+				id = "nowplaying",
+				node = "home",
+				text = _string("SLIMBROWSER_NOW_PLAYING"),
+				callback = _goNowPlaying,
+				displayWhenOff = false,
+			},
+		}
+
+		for i, item in ipairs(localItems) do
+			_playerMenus[item.id] = item
+			if _player:isPowerOn() or item.displayWhenOff then
+				jiveMain:addItem(item)
+			end
+		end
+         end
+end
+
 
 -- _statusSink
 -- sink that sets the data for our status window(s)
@@ -1003,17 +1110,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 					sink = _bigArtworkPopup
 				end
 
-				if step then
-					_curStep.menu:lock(function()
-								   step.cancelled = true
-							   end)
-					step.loaded = function()
-							      _curStep.menu:unlock()
-						    
-							      _curStep = step
-							      step.window:show()
-						      end
-				end
+				_pushToNewWindow(step)
 			
 				-- send the command
 				 _performJSONAction(jsonAction, from, to, sink)
@@ -1502,6 +1599,7 @@ function notify_playerCurrent(self, player)
 
 --	_server.comet:unsubscribe('/slim/menustatus')
 
+
 	log:warn('I am now subscribing to /slim/menustatus')
 	local cmd = { 'menustatus' }
 	_server.comet:subscribe(
@@ -1510,6 +1608,7 @@ function notify_playerCurrent(self, player)
 		nil,
 		cmd
 	)
+
 	-- create a window for Now Playing, this is our _statusStep
 	local step, sink = _newDestination(
 		nil,
@@ -1534,31 +1633,44 @@ function notify_playerCurrent(self, player)
 	_player:onStage(sink)
 	jiveMain:setTitle(player:getName())
 
-	_homeStep = step
-	_homeSink = sink
-	_curStep = _homeStep
+	_server:request(sink, _player.id, { 'menu', 0, 100 })
 
-	_server:request(_homeSink, _player.id, { 'menu', 0, 100 })
+	-- Check for compatibility with HomeMenu.lua menu management
+	local timer = Timer(
+			2000, 
+			function()
+				log:warn("Checking to see if you are running a compatible version of SC")
+				-- item id 'myMusic' always exists in HomeMenu tables when SC is compatible
+				-- no ids exist when SC is not compatible
+				local myMusicItem = jiveMain:isMenuItem('myMusic')
+				if not myMusicItem then
+					log:warn("THIS SqueezeCenter IS NOT COMPATIBLE WITH THIS FIRMWARE")
+					local item = {
+						id = 'upgradeSC',
+						node = 'home',
+						text = 'UPGRADE YOUR SQUEEZECENTER',
+						weight = '1',
+						window = { titleStyle = 'settings' },
+						sound = "WINDOWSHOW",
+						displayWhenOff = 1,
+						callback = function()
+							local window = Window("window", 'Upgrade your SqueezeCenter')
+							local upgradeMessage = Textarea("textarea", "BETA TESTERS: Please upgrade your SqueezeCenter installation.\n\nThere have been updates to better support the communication between your remote and SqueezeCenter, and this requires a newer, compatible version of SqueezeCenter.")
+							window:addWidget(upgradeMessage)
+							window:show()
+						end
+						,
+					}
+					jiveMain:addItem(item)
+				else
+					log:debug("this is a compatible SC version")
+				end
+			end, 
+			0)
+	timer:start()
+
 	_installPlayerKeyHandler()
 end
-
-
--- notify_jiveMainMenuChanged
--- this is called whenever the Jive main menu (which we hide)
--- gets changed (f.e. by an applet)
--- we re-fetch the menu from SS and re-merge the items.
-function notify_jiveMainMenuChanged(self)
-	log:debug("notify_jiveMainMenuChanged")
-	
-	if _server == false then
-		log:warn("_server is false")
-		return
-	else
-		-- fetch the menu, pronto...
---		_server:request(_homeSink, _player.id, { 'menu', 0, 100 })
-	end
-end
-
 
 function notify_serverConnected(self, server)
 	if _server ~= server then

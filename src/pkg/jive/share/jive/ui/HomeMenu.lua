@@ -155,6 +155,14 @@ function addItem(self, item)
 	end
 end
 
+-- takes an id and returns true if this item exists in either the menuTable or the nodeTable
+function isMenuItem(self, id)
+	if self.menuTable[id] or self.nodeTable[id] then
+		return true
+	else
+		return false
+	end
+end
 
 function _checkRemoveNode(self, node)
 	local nodeEntry = self.nodeTable[node]

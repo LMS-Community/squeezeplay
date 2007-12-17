@@ -41,7 +41,7 @@ end
 
 function registerApplet(meta)
 	-- add a menu to load us
-	jiveMain:addItem(meta:menuItem('appletHttpAuth', 'advancedSettings', "HTTP_AUTH", function(applet, ...) applet:settingsShow(...) end))
+	jiveMain:addItem(meta:menuItem('appletHttpAuth', 'advancedSettings', "HTTP_AUTH", function(applet, ...) applet:settingsShow(...) end, 85))
 end
 
 --[[

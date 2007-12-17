@@ -443,13 +443,7 @@ function removeIndex(self, index)
 			Menu.setItems(self, self.items, #self.items, index, #self.items)
 		end
 
-		if self.selected and index < self.selected then
-			if #self.items == 0 then
-				self.selected = nil
-			else
-				self.selected = self.selected - 1
-			end
-		end
+		return item
 	end
 	return nil
 end

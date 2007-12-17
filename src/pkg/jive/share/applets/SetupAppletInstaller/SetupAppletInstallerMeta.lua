@@ -38,6 +38,6 @@ function defaultSettings(self)
 end
 
 function registerApplet(self)
-	jiveMain:addItem(self:menuItem('appletSetupAppletInstaller', 'advancedSettings', "APPLET_INSTALLER", function(applet, ...) applet:menu(...) end))
+	jiveMain:addItem(self:menuItem('appletSetupAppletInstaller', 'advancedSettings', "APPLET_INSTALLER", function(applet, ...) applet:menu(...) end, 20))
 end
 

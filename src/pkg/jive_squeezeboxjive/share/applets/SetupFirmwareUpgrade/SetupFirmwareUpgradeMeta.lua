@@ -34,7 +34,7 @@ function registerApplet(meta)
 	-- defined here so that it can be changed using LogSettingsApplet before the applet is run.		
 	jul.addCategory("applet.wifi", jul.DEBUG)
 	
-	jiveMain:addItem(meta:menuItem('appletSetupFirmwareUpgrade', 'advancedSettings', "UPDATE", function(applet) applet:settingsShow() end))
+	jiveMain:addItem(meta:menuItem('appletSetupFirmwareUpgrade', 'advancedSettings', "UPDATE", function(applet) applet:settingsShow() end, 70))
 
 	-- check for firmware upgrades when we connect to a new player
 	-- we don't want the firmware upgrade applets always loaded so

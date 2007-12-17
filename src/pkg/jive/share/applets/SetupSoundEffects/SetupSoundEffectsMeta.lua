@@ -53,7 +53,7 @@ function registerApplet(meta)
 	end
 
 	-- add a menu to load us
-	jiveMain:addItem(meta:menuItem('appletSetupSoundEffects', 'advancedSettings', "SOUND_EFFECTS", function(applet, ...) applet:settingsShow(...) end))
+	jiveMain:addItem(meta:menuItem('appletSetupSoundEffects', 'advancedSettings', "SOUND_EFFECTS", function(applet, ...) applet:settingsShow(...) end, 80))
 end
 
 
