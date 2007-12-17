@@ -1001,7 +1001,6 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 					sink = _bigArtworkPopup
 				end
 
-
 				if step then
 					_curStep.menu:lock(function()
 								   step.cancelled = true
