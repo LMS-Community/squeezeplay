@@ -432,6 +432,14 @@ function removeIndex(self, index)
 	if _safeIndex(self.items, index) then
 		local item = table.remove(self.items, index)
 		if item ~= nil then
+			if self.selected and index < self.selected then
+				if #self.items == 0 then
+					self.selected = nil
+				else
+					self.selected = self.selected - 1
+				end
+			end
+
 			Menu.setItems(self, self.items, #self.items, index, #self.items)
 		end
 
