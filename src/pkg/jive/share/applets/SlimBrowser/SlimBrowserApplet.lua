@@ -363,13 +363,17 @@ local function _pushToNewWindow(step, _currentStep)
 
 	if not step and _currentStep then return end
 
-	_currentStep.menu:lock(
-		function()
-		   step.cancelled = true
-		   end)
+	if _currentStep.menu then
+		_currentStep.menu:lock(
+			function()
+				step.cancelled = true
+			end)
+	end
 
 	step.loaded = function()
-		_currentStep.menu:unlock()
+		if _currentStep.menu then
+			_currentStep.menu:unlock()
+		end
 		_currentStep = step
 		step.window:show()
       	end
