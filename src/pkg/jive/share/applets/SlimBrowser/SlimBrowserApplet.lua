@@ -1640,7 +1640,6 @@ function free(self)
 	-- remove player menus
 	jiveMain:setTitle(nil)
 	for id, v in pairs(_playerMenus) do
-		debug.dump(v, -1)
 		jiveMain:removeItem(v)
 	end
 
