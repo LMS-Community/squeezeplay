@@ -51,6 +51,9 @@ local AppletManager = require("jive.AppletManager")
 local perfs         = require("jive.utils.perfs")
 local locale        = require("jive.utils.locale")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
+local Window        = require("jive.ui.Window")
+
+local debug         = require("jive.utils.debug")
 
 local jud = require("jive.utils.debug")
 
@@ -126,6 +129,9 @@ function JiveMainMenu:__init(name, style, titleStyle)
 	obj.menu:setComparator(jive.ui.SimpleMenu.itemComparatorWeightAlpha)
 	obj.window:addWidget(obj.menu)
 
+	_nodeTable['home'] = { menu = obj.menu, 
+		items = {} }
+
 	return obj
 end
 
@@ -147,32 +153,41 @@ function JiveMainMenu:addNode(item)
 	assert(item.id)
 	assert(item.node)
 
-	-- special case-- root element; id = 'home'
-	if item.id == 'home' then
-		local menu = SimpleMenu("menu", item)
-		_nodeTable[item.id] = { menu = menu, 
-					items = {} }
-	else 
-		if not item.weight then 
-			item.weight = 5
-		end
-	
-		-- remove node from previous node (if changed)
-		if _menuTable[item.id] then
-			local newNode    = item.node
-			local prevNode   = _menuTable[id].node
-			if newNode != prevNode then
-				changeNode(item.id, newNode)
-			end
-		end
-	
-		-- new/update node
-		local menu = SimpleMenu("menu", item)
-		_nodeTable[item.id] = { menu = menu, 
-					items = {} }
-		table.insert(_nodeTable[item.node].items, item)
-		_nodeTable[item.node].menu:addItem(item)
+	log:warn("JiveMain.addNode: Adding a non-root node, ", item.id)
+
+	if not item.weight then 
+		item.weight = 5
 	end
+
+	-- remove node from previous node (if changed)
+	if _menuTable[item.id] then
+		local newNode    = item.node
+		local prevNode   = _menuTable[id].node
+		if newNode != prevNode then
+			changeNode(item.id, newNode)
+		end
+	end
+
+	-- new/update node
+	local window = Window("window", item.text)
+	local menu = SimpleMenu("menu", item)
+	window:addWidget(menu)
+
+	_nodeTable[item.id] = { menu = menu, 
+				items = {} }
+
+	if not item.callback then
+		item.callback = function () 
+       	                 window:show()
+		end
+	end
+
+	if not item.sound then
+		sound = "WINDOWSHOW"
+	end
+
+	-- now add the item to the menu
+	self:addItem(item)
 
 	_jiveMainMenuChanged(self)
 
@@ -181,6 +196,7 @@ end
 -- add an item to a menu. the menu is ordered by weight, then item name
 function JiveMainMenu:addItem(item)
 
+	-- no sense in doing anything without an id and a node
 	assert(item.id)
 	assert(item.node)
 
@@ -190,12 +206,11 @@ function JiveMainMenu:addItem(item)
 
 	if not _menuTable[item.id] then
 
-		self.menu:addItem(item.item)
+		log:warn("JiveMain.addItem: Adding ", item.text, " to ", item.node)
 		_menuTable[item.id] = item
-		log:warn(item.node)
-		_nodeTable[item.node].menu:addItem(item)
 
 	else
+		log:warn("THIS ID ALREADY EXISTS, removing existing item")
 		table.delete(_nodeTable[item.node].items, _menuTable[item.id])
 		_menuTable[item.id] = item
 	end
@@ -266,13 +281,12 @@ function JiveMain:__init()
 	jiveMain = oo.rawnew(self, JiveMainMenu(_globalStrings:str("JIVE_HOME"), "home.window"))
 	jiveMain.window:setTitleStyle("hometitle")
 	jiveMain.menu:setCloseable(false)
-	jiveMain:addNode( { id = 'home', node = 'root' })
 
 
 --	profiler.start()
 
 	-- menu nodes to add...these are menu items that are used by applets
-	jiveMain:addNode( { id = 'extras', node = 'home', text = _globalStrings:str("EXTRAS"), weight = 70 } )
+	jiveMain:addNode( { id = 'extras', node = 'home', text = _globalStrings:str("EXTRAS"), weight = 70  } )
 	jiveMain:addNode( { id = 'settings', node = 'home', text = _globalStrings:str("SETTINGS"), weight = 50, titleStyle = 'settingstitle' })
 	jiveMain:addNode(  { id = 'remoteSettings', node = 'settings', text = _globalStrings:str("REMOTE_SETTINGS"), titleStyle = 'settingstitle' })
 	jiveMain:addNode( { id = 'advancedSettings', node = 'remoteSettings', text = _globalStrings:str("ADVANCED_SETTINGS"), weight =100, titleStyle = 'settingstitle' })

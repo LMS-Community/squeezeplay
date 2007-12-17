@@ -18,6 +18,7 @@ be accessed and loaded on demand.
 
 
 local oo = require("loop.base")
+local log = require("jive.utils.log").logger("jive.main")
 
 local appletManager = appletManager
 
@@ -85,7 +86,7 @@ end
 
 =head2 self:menuItem(label, closure)
 
-Convience method that returns a MenuItem to be used in the SimpleMenu
+Convenience method that returns a MenuItem to be used in the SimpleMenu
 to open an applet. I<label> is a string token, and I<closure>
 is the function executed when the MenuItem is selected. 
 
