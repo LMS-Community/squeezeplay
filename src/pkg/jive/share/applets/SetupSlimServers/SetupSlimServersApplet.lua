@@ -99,16 +99,6 @@ function settingsShow(self, menuItem)
 	menu:addItem(item)
 
 	item = {
-		text = self:string("SLIMSERVER_SQUEEZENETWORK"), 
-		sound = "WINDOWSHOW",
-		callback = function(event, menuItem)
-				   self:_connectSqueezeNetwork(menuItem)
-			   end,
-		weight = 3
-	}
-	menu:addItem(item)
-
-	item = {
 		text = self:string("SLIMSERVER_AUTO_DISCOVERY"),
 		sound = "WINDOWSHOW",
 		icon = Checkbox("checkbox",
@@ -279,15 +269,6 @@ function _addServer(self, menuItem)
 	self:tieAndShowWindow(window)
 end
 
--- Connect to SqueezeNetwork
-function _connectSqueezeNetwork(self, menuItem)
-	local popup = Popup("popupIcon")
-	popup:addWidget(Label("label", ""))
-	popup:addWidget(Label("text", "\nComing Soon..."))
-
-        self:tieAndShowWindow(popup)
-        return popup	
-end
 
 --[[
 
