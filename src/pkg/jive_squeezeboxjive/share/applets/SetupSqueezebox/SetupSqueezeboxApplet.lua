@@ -1062,7 +1062,9 @@ function _chooseSlimserver(self)
 
 	window:show()
 
-	if self.slimserverMenu:numItems() == 0 then
+	-- SqueezeNetwork will always be one entry, so wait until we have
+	-- two or more
+	if self.slimserverMenu:numItems() <= 1 then
 		local popup = Popup("popupIcon")
 
 		popup:addWidget(Icon("iconConnecting"))
@@ -1087,13 +1089,7 @@ function _scanSlimservers(self)
 
 	-- update slimserver list
 	for i,v in self.slimdiscovery:allServers() do
-		if not v:isConnected() then
-			-- remove any servers that are not connected
-			if self.slimservers[i] then
-				self.slimserverMenu:removeItem(self.slimservers[i])
-			end
-
-		elseif self.slimservers[i] == nil then
+		if self.slimservers[i] == nil then
 			local item = {
 				text = v:getName(),
 				callback = function()
