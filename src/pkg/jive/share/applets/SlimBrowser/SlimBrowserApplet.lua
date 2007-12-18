@@ -712,7 +712,7 @@ local function _menuSink(self, cmd)
 
 				local selectedIndex = 1
 				if v.selectedIndex then
-					selectedIndex = v.selectedIndex
+					selectedIndex = tonumber(v.selectedIndex)
 				end
 
 				local choice = Choice(
@@ -1637,7 +1637,7 @@ function notify_playerCurrent(self, player)
 
 	-- Check for compatibility with HomeMenu.lua menu management
 	local timer = Timer(
-			2000, 
+			4000, 
 			function()
 				log:warn("Checking to see if you are running a compatible version of SC")
 				-- item id 'myMusic' always exists in HomeMenu tables when SC is compatible
