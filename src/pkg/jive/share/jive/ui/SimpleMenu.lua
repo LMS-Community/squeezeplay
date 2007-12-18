@@ -442,8 +442,6 @@ function removeIndex(self, index)
 
 			Menu.setItems(self, self.items, #self.items, index, #self.items)
 		end
-
-		return item
 	end
 	return nil
 end
