@@ -70,7 +70,7 @@ function notify_playerCurrent(self, player)
 	self:storeSettings()
 
 	-- remove Return to Setup from JiveMain
-	jiveMain:removeItem(self.returnToSetup)
+	jiveMain:removeItemById('returnToSetup')
 
 	log:info("unsubscribe")
 	jnt:unsubscribe(self)
@@ -79,14 +79,17 @@ end
 
 function step1(self)
 	-- add 'RETURN_TO_SETUP' at top
-	jiveMain:addItem({
+	log:debug('step1')
+	local returnToSetup = {
 		id   = 'returnToSetup',
 		node = 'home',
 		text = self:string("RETURN_TO_SETUP"),
+		weight = 2,
 		callback = function()
 			self:step1()
-		end,
-	}, 2)
+		end
+		}
+	jiveMain:addItem(returnToSetup)
 
 	disableHomeKeyDuringSetup = 
 		Framework:addListener(EVENT_KEY_PRESS,
@@ -228,7 +231,7 @@ function step8(self)
 
 	-- all done
 	self:getSettings().setupDone = true
-	jiveMain:removeItemById('returntosetup')
+	jiveMain:removeItemById('returnToSetup')
 	self:storeSettings()
 
 	return self:setupDoneShow(function()

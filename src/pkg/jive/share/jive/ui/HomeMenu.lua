@@ -184,6 +184,8 @@ end
 
 -- remove an item from a menu by its index
 function removeItem(self, item)
+	assert(item)
+	assert(item.node)
 	if self.nodeTable[item.node] then
 		self.nodeTable[item.node].menu:removeItem(item)
 
@@ -194,16 +196,17 @@ function removeItem(self, item)
 	end
 end
 
-
 -- remove an item from a menu by its id
 function removeItemById(self, id)
-	if self.nodeTable[item.node] then
-		self.nodeTable[item.node].menu:removeItemById(id)
+	if self.menuTable[id] then
+		local item = self.menuTable[id]
 
-		self.menuTable[item.id] = nil
+		self.nodeTable[item.node].menu:removeItemById(id)
 		self.nodeTable[item.node].items[id] = nil
+		self.menuTable[id] = nil
 
 		self:_checkRemoveNode(item.node)
+
 	end
 end
 
