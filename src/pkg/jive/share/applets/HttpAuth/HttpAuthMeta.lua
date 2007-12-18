@@ -40,8 +40,10 @@ function defaultSettings(meta)
 end
 
 function registerApplet(meta)
+--[[ FIXME-- this is not implemented correctly, comment for now
 	-- add a menu to load us
 	jiveMain:addItem(meta:menuItem('appletHttpAuth', 'advancedSettings', "HTTP_AUTH", function(applet, ...) applet:settingsShow(...) end, 85))
+--]]
 end
 
 --[[
