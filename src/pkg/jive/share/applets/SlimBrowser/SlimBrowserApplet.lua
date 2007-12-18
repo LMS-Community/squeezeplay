@@ -852,6 +852,14 @@ local function _statusSink(step, chunk, err)
 			return
 		end
 		
+		-- FIXME: this can go away once we dispense of the upgrade messages
+		-- if we have a data.item_loop[1].text == 'READ ME', 
+		-- we've hit the SC upgrade message and shouldn't be dropping it into NOW PLAYING
+		if data.item_loop[1].text == 'READ ME' then
+			log:warn('This is not a message suitable for the Now Playing list')
+			return
+		end
+
 		step.menu:setItems(step.db:menuItems(data))
 
 		-- what's missing?
