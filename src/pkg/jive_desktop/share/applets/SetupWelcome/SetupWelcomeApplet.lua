@@ -59,14 +59,16 @@ oo.class(_M, Applet)
 
 function step1(self)
 	-- put Return to Setup menu item on jiveMain menu
-	jiveMain:addItem({
+	local returnToSetup = {
 		id   = 'returnToSetup',
 		node = 'home',
 		text = self:string("RETURN_TO_SETUP"),
+		weight = 2,
 		callback = function()
 			self:step1()
-		end,
-	}, 2)
+		end
+	}
+	jiveMain:addItem(returnToSetup)
 
 	local setupLanguage = assert(appletManager:loadApplet("SetupLanguage"))
 	self._topWindow = setupLanguage:setupShow(function() self:step2() end)
@@ -111,7 +113,7 @@ function step4(self)
 			self._topWindow:hideToTop(Window.transitionPushLeft) 
 
 			self:getSettings().setupDone = true
-			jiveMain:removeItemById('returntosetup')
+			jiveMain:removeItemById('returnToSetup')
 			self:storeSettings()
 		end)
 end
