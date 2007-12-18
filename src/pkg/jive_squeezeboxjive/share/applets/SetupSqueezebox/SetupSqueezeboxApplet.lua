@@ -171,7 +171,7 @@ function t_scanDiscover(self, pkt)
 			      
 			      if not self.scanResults[mac] then
 				      local item = {
-					      text = mac,
+					      text = self:string("SQUEEZEBOX_BRIDGED_NAME", string.sub(mac, 7)),
 					      sound = "WINDOWSHOW",
 					      icon = Icon("icon"),
 					      callback = function()
@@ -206,7 +206,7 @@ function _scanComplete(self, scanTable, keepOldEntries)
 
 			if not self.scanResults[mac] then
 				local item = {
-					text = mac,
+					text = self:string("SQUEEZEBOX_BRIDGED_NAME", string.sub(mac, 7)),
 					sound = "WINDOWSHOW",
 					icon = Icon("icon"),
 					callback = function()
@@ -448,6 +448,7 @@ function _wirelessConfig(self)
 	self:_ipConfig(data) -- ip config
 
 	data.SSID = status.ssid
+	self.networkName = status.ssid
 
 	-- wireless region
 	local region = self.t_ctrl:getAtherosRegionCode()
@@ -571,6 +572,8 @@ end
 function _wiredConfig(self)
 	local data = self.data1
 
+	self.networkName = tostring(self:string("SQUEEZEBOX_ETHERNET"))
+
 	-- no slimserver
 	data.server_address = udap.packNumber(0, 4)
 	data.slimserver_address = udap.packNumber(0, 4)
@@ -607,6 +610,7 @@ function _bridgedConfig(self)
 			   self.networkId = self.t_ctrl:t_addNetwork(ssid, option)
 		   end)
 
+	self.networkName = self:string("SQUEEZEBOX_BRIDGED_NAME", string.sub(self.mac, 7))
 	self.networkSSID = ssid
 	self.networkMode = 1 -- adhoc
 	self.networkMethod = 'dhcp'
@@ -1284,11 +1288,7 @@ function _setupSqueezebox(self)
 		-- e.g. when squeezebox is discovered with blue led
 		help = self:string("SQUEEZEBOX_FINDING_SOURCES")
 	else
-		if self.data1.SSID then
-			help = self:string("SQUEEZEBOX_CONNECTING_TO", self.data1.SSID)
-		else
-			help = self:string("SQUEEZEBOX_CONNECTING_TO", tostring(self:string("SQUEEZEBOX_ETHERNET")))
-		end
+		help = self:string("SQUEEZEBOX_CONNECTING_TO", self.networkName)
 	end
 
 	local window = Popup("popupIcon")

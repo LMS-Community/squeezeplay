@@ -178,3 +178,11 @@ SQUEEZEBOX_IP_ADDRESS_HELP
 	FR	Spécifiez l'adresse IP à utiliser pour la Squeezebox.
 	IT	Immettere l'indirizzo IP da utilizzare con questo Squeezebox.
 	NL	Voer het IP-adres in voor de Squeezebox die gebruikt moet worden.
+
+SQUEEZEBOX_BRIDGED_NAME
+	DE	Squeezebox %s
+	EN	Squeezebox %s
+	ES	Squeezebox %s
+	FR	Squeezebox %s
+	IT	Squeezebox %s
+	NL	Squeezebox %s
