@@ -194,7 +194,7 @@ end
 function volumeShow(self)
 	local window = Window("window", self:string("SOUND_EFFECTS_VOLUME"), "settingstitle")
 
-	self.slider = Slider("slider", 1, VOLUME_STEPS, Audio:getEffectVolume() / VOLUME_STEP,
+	self.slider = Slider("volume", 1, VOLUME_STEPS, Audio:getEffectVolume() / VOLUME_STEP,
 			     function(slider, value)
 				     self:_setVolume(value)
 			     end)
@@ -213,7 +213,7 @@ function volumeShow(self)
 				end)
 
 	window:addWidget(Textarea("help", self:string("SOUND_VOLUME_HELP")))
-	window:addWidget(Group("sliderGroup", {
+	window:addWidget(Group("volumeGroup", {
 				     Icon("volumeMin"),
 				     self.slider,
 				     Icon("volumeMax")
