@@ -1175,6 +1175,13 @@ function notify_playerNew(self, player)
 	log:warn("got new playerId ", playerId)
 	if string.lower(playerId) == string.lower(self.mac) then
 
+		-- wait until the player is connected before continuing
+		if not player:getConnected() then
+			log:warn("player not connected to SC")
+			return
+		end
+
+		-- increase timeout if the player is upgrading
 		if player:isNeedsUpgrade() then
 			totalTimeout = 300
 			return
