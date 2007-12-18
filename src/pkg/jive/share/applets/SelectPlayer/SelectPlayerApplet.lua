@@ -139,6 +139,8 @@ end
 function setupShow(self, setupNext)
 	-- get list of slimservers
 	local window = Window("window", self:string("SELECT_PLAYER"), 'settingstitle')
+	window:setAllowScreensaver(false)
+
         local menu = SimpleMenu("menu")
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
