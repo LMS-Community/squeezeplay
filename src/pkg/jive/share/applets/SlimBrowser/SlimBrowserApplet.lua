@@ -1614,7 +1614,7 @@ function notify_playerCurrent(self, player)
 	_server.comet:subscribe(
 		'/slim/menustatus/' .. _player.id,
 		_menuSink(sink, cmd),
-		nil,
+		_player.id,
 		cmd
 	)
 
