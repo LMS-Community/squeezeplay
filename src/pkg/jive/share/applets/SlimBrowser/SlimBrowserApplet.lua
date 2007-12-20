@@ -676,6 +676,7 @@ end
 local function _menuSink(self, cmd)
 	return function(chunk, err)
 
+		--log:warn("*********** YOU ARE IN _menuSink***********")
 		-- catch race condition if we've switch player
 		if not _player then
 			return
@@ -856,7 +857,7 @@ local function _statusSink(step, chunk, err)
 		-- if we have a data.item_loop[1].text == 'READ ME', 
 		-- we've hit the SC upgrade message and shouldn't be dropping it into NOW PLAYING
 		if data.item_loop and data.item_loop[1].text == 'READ ME' then
-			log:warn('This is not a message suitable for the Now Playing list')
+			log:debug('This is not a message suitable for the Now Playing list')
 			return
 		end
 
@@ -1608,10 +1609,10 @@ function notify_playerCurrent(self, player)
 --	_server.comet:unsubscribe('/slim/menustatus')
 
 
-	log:warn('I am now subscribing to /slim/menustatus')
+	log:warn('I am now subscribing to /slim/menustatus/', _player.id)
 	local cmd = { 'menustatus' }
 	_server.comet:subscribe(
-		'/slim/menustatus',
+		'/slim/menustatus/' .. _player.id,
 		_menuSink(sink, cmd),
 		nil,
 		cmd
@@ -1753,6 +1754,9 @@ Overridden to close our player.
 --]]
 function free(self)
 	log:debug("SlimBrowserApplet:free()")
+
+	-- unsubscribe from this player's menustatus
+	_server.comet:unsubscribe('/slim/menustatus/' .. _player.id)
 
 	_player:offStage()
 
