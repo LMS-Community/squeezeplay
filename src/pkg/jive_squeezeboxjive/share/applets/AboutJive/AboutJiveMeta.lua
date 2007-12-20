@@ -17,7 +17,7 @@ end
 
 
 function registerApplet(meta)
-	jiveMain:addItem(meta:menuItem('appletAboutJive', 'advancedSettings', "ABOUT_JIVE", function(applet, ...) applet:settingsShow(...) end, 10))
+	jiveMain:addItem(meta:menuItem('appletAboutJive', 'advancedSettings', "ABOUT_JIVE", function(applet, ...) applet:settingsShow(...) end, 3))
 end
 
 

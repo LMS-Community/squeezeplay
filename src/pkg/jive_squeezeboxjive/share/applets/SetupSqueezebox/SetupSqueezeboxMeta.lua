@@ -17,7 +17,7 @@ end
 
 
 function registerApplet(meta)
-	jiveMain:addItem(meta:menuItem('setupSqueezebox', 'advancedSettings', "SQUEEZEBOX_SETUP", function(applet, ...) applet:settingsShow(...) end, 60))
+	jiveMain:addItem(meta:menuItem('setupSqueezebox', 'advancedSettings', "SQUEEZEBOX_SETUP", function(applet, ...) applet:settingsShow(...) end))
 end
 
 

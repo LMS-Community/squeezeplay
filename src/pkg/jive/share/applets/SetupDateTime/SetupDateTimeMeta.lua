@@ -57,7 +57,7 @@ function registerApplet(meta)
 	initDateTimeObject(meta)
 
         -- Menu for configuration
-        jiveMain:addItem(meta:menuItem('appletSetupDateTime', 'advancedSettings', "DATETIME_TITLE", function(applet, ...) applet:settingsShow(...) end, 30))
+        jiveMain:addItem(meta:menuItem('appletSetupDateTime', 'advancedSettings', "DATETIME_TITLE", function(applet, ...) applet:settingsShow(...) end))
 end
 
 

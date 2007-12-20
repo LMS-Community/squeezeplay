@@ -47,7 +47,7 @@ function registerApplet(meta)
 	appletManager:freeApplet("SetupWallpaper")
 
 	-- add a menu item for configuration
-	jiveMain:addItem(meta:menuItem('appletSetupWallpaper', 'settings', 'WALLPAPER', function(applet, ...) applet:settingsShow(...) end, 55))
+	jiveMain:addItem(meta:menuItem('appletSetupWallpaper', 'screenSettings', 'WALLPAPER', function(applet, ...) applet:settingsShow(...) end))
 
 end
 

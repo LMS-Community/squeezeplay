@@ -26,6 +26,14 @@ REMOTE_SETTINGS
 	IT	Impostazioni telecomando
 	NL	Afstandsbedieningsinstellingen
 
+SCREEN_SETTINGS
+	DE	Anzeige
+	EN	Screen
+	ES	Pantalla
+	FR	Affichage
+	IT	Visualizza
+	NL	Display
+
 JIVE_HOME
 	DE	Jive-Hauptmenü
 	EN	Jive Home
