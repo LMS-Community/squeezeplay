@@ -136,8 +136,10 @@ function addItem(self, item)
 		self.menuTable[item.id] = item
 	end
 
-	self.nodeTable[item.node].items[item.id] = item
-	self.nodeTable[item.node].menu:addItem(item)
+	if self.nodeTable[item.node] then
+		self.nodeTable[item.node].items[item.id] = item
+		self.nodeTable[item.node].menu:addItem(item)
+	end
 
 	-- add parent node?
 	local nodeEntry = self.nodeTable[item.node]
