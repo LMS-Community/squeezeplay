@@ -676,17 +676,34 @@ end
 local function _menuSink(self, cmd)
 	return function(chunk, err)
 
-		--log:warn("*********** YOU ARE IN _menuSink***********")
 		-- catch race condition if we've switch player
 		if not _player then
 			return
 		end
+
+		log:warn("*********** _menuSink has been called***********")
+		log:warn(chunk.data[1])
+		log:warn(chunk.data[2])
+		log:warn(chunk.data[3])
+		log:warn(chunk.data[4])
 
 		-- process data from a menu notification
 		-- each chunk.data[2] contains a table that needs insertion into the menu
 		local menuItems = chunk.data[2]
 		-- directive for these items is in chunk.data[3]
 		local menuDirective = chunk.data[3]
+		-- the player ID this notification is for is in chunk.data[4]
+		local playerId = chunk.data[4]
+
+		-- FIXME: `playerId not nil` part of this clause needs to be removed
+		-- It is necessary to support pre 21Dec07 versions of SC
+		if playerId ~= nil and playerId ~= 'all' and playerId ~= _player.id then
+			log:warn('***** This menu notification was not for this player ***** ')
+			log:warn("Notification for: ", playerId)
+			log:warn("This player is: ", _player.id)
+			return
+		end
+
 		for k, v in pairs(menuItems) do
 
 			--debug.dump(v.actions, -1)
@@ -1594,10 +1611,8 @@ function notify_playerCurrent(self, player)
 	_server = player:getSlimServer()
 	_string = function(token) return self:string(token) end
 
---	_server.comet:unsubscribe('/slim/menustatus')
 
-
-	log:warn('I am now subscribing to /slim/menustatus/', _player.id)
+	log:warn('**** SUBSCRIBING to /slim/menustatus/', _player.id)
 	local cmd = { 'menustatus' }
 	_server.comet:subscribe(
 		'/slim/menustatus/' .. _player.id,
@@ -1631,39 +1646,6 @@ function notify_playerCurrent(self, player)
 	jiveMain:setTitle(player:getName())
 
 	_server:request(sink, _player.id, { 'menu', 0, 100 })
-
-	-- Check for compatibility with HomeMenu.lua menu management
-	local timer = Timer(
-			4000, 
-			function()
-				log:warn("Checking to see if you are running a compatible version of SC")
-				-- item id 'myMusic' always exists in HomeMenu tables when SC is compatible
-				-- no ids exist when SC is not compatible
-				local myMusicItem = jiveMain:isMenuItem('myMusic')
-				if not myMusicItem then
-					log:warn("THIS SqueezeCenter IS NOT COMPATIBLE WITH THIS FIRMWARE")
-					local item = {
-						id = 'upgradeSC',
-						node = 'home',
-						text = 'UPGRADE YOUR SQUEEZECENTER',
-						weight = '1',
-						window = { titleStyle = 'settings' },
-						sound = "WINDOWSHOW",
-						callback = function()
-							local window = Window("window", 'Upgrade your SqueezeCenter')
-							local upgradeMessage = Textarea("textarea", "BETA TESTERS: Please upgrade your SqueezeCenter installation.\n\nThere have been updates to better support the communication between your remote and SqueezeCenter, and this requires a newer, compatible version of SqueezeCenter.")
-							window:addWidget(upgradeMessage)
-							window:show()
-						end
-						,
-					}
-					jiveMain:addItem(item)
-				else
-					log:debug("this is a compatible SC version")
-				end
-			end, 
-			0)
-	timer:start()
 
 	_installPlayerKeyHandler()
 end
@@ -1743,6 +1725,7 @@ function free(self)
 	log:debug("SlimBrowserApplet:free()")
 
 	-- unsubscribe from this player's menustatus
+	log:warn("***** UNSUBSCRIBING FROM /slim/menustatus/", _player.id)
 	_server.comet:unsubscribe('/slim/menustatus/' .. _player.id)
 
 	_player:offStage()
