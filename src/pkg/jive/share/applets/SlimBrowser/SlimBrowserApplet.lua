@@ -698,7 +698,6 @@ local function _menuSink(self, cmd)
 					weight = v.weight,
 					window = v.window,
 					sound = "WINDOWSHOW",
-					displayWhenOff = (v.displayWhenOff == 1)
 				}
 
 			local choiceAction = _safeDeref(v, 'actions', 'do', 'choices')
@@ -729,9 +728,7 @@ local function _menuSink(self, cmd)
 				item.icon = choice
 
 				--add the item to the menu
-				if _player:isPowerOn() or item.displayWhenOff then
-					jiveMain:addItem(item)
-				end
+				jiveMain:addItem(item)
 
 			else
 
@@ -777,9 +774,7 @@ local function _menuSink(self, cmd)
 					end
 
 				_playerMenus[item.id] = item
-				if _player:isPowerOn() or item.displayWhenOff then
-					jiveMain:addItem(item)
-				end
+				jiveMain:addItem(item)
 			end
 		end
 
@@ -790,15 +785,12 @@ local function _menuSink(self, cmd)
 				node = "home",
 				text = _string("SLIMBROWSER_NOW_PLAYING"),
 				callback = _goNowPlaying,
-				displayWhenOff = false,
 			},
 		}
 
 		for i, item in ipairs(localItems) do
 			_playerMenus[item.id] = item
-			if _player:isPowerOn() or item.displayWhenOff then
-				jiveMain:addItem(item)
-			end
+			jiveMain:addItem(item)
 		end
          end
 end
@@ -1545,11 +1537,7 @@ function notify_playerPower(self, player, power)
 	if _player == player then
 		-- refresh the main menu
 		for id, v in pairs(_playerMenus) do
-			if not player:isPowerOn() and not v.displayWhenOff then
-				jiveMain:removeItem(v)
-			else
-				jiveMain:addItem(v)
-			end
+			jiveMain:addItem(v)
 		end
 	end
 end
@@ -1661,7 +1649,6 @@ function notify_playerCurrent(self, player)
 						weight = '1',
 						window = { titleStyle = 'settings' },
 						sound = "WINDOWSHOW",
-						displayWhenOff = 1,
 						callback = function()
 							local window = Window("window", 'Upgrade your SqueezeCenter')
 							local upgradeMessage = Textarea("textarea", "BETA TESTERS: Please upgrade your SqueezeCenter installation.\n\nThere have been updates to better support the communication between your remote and SqueezeCenter, and this requires a newer, compatible version of SqueezeCenter.")
