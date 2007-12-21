@@ -325,14 +325,14 @@ function getCurrentTime()
 		timeSet = true
 	end
 
+	local str
 	if globalHours == "12" then
-		return os.date("%I:%M%p")		
+		str = os.date("%I:%M%p")		
 	else
-		local str = os.date("%H:%M")
-
-		-- replace leading 0 with space
-		str = string.gsub(str, "^0", " ", 1)
-
-		return str
+		str = os.date("%H:%M")
 	end	
+	-- replace leading 0 with space
+	str = string.gsub(str, "^0", " ", 1)
+
+	return str
 end
