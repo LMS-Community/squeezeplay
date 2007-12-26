@@ -122,7 +122,7 @@ function settingsShow(self)
 							  end
 			})
 
-			if self.wallpaper == file then
+			if wallpaper == file then
 				self.menu:setSelectedIndex(self.menu:numItems())
 			end
 		end
