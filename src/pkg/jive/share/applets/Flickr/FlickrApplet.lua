@@ -159,7 +159,7 @@ function defineFlickrId(self, menuItem)
 
 	local flickrid = self:getSettings()["flickr.idstring"]
 	if flickrid == nil then
-		flickrid = "Your ID"
+		flickrid = " "
 	end
 
 	local input = Textinput("textinput", flickrid,

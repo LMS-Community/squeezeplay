@@ -38,8 +38,8 @@ function defaultSettings(self)
 	local defaultSetting = {}
 	defaultSetting["flickr.timeout"] = 30000
 	defaultSetting["flickr.display"] = "interesting"
-	defaultSetting["flickr.idstring" ] = "Your_ID"
-	defaultSetting["flickr.id"] = "Your_ID"
+	defaultSetting["flickr.idstring" ] = ""
+	defaultSetting["flickr.id"] = ""
 	defaultSetting["flickr.transition"] = "random"
 	return defaultSetting
 end
