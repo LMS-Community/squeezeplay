@@ -34,6 +34,9 @@ SCREENSAVER_DELAY
 	IT	Ritardo
 	NL	Vertraging
 
+SCREENSAVER_SELECT_HELP
+	EN	Press the center button to choose a screensaver, play to preview.
+
 DELAY_10_SEC
 	DE	10 Sekunden
 	EN	10 seconds

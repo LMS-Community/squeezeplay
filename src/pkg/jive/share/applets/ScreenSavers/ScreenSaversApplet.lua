@@ -269,7 +269,7 @@ function screensaverSetting(self, menuItem, mode)
 	end
 
 	local window = Window("screensavers", menuItem.text, 'settingstitle')
-	window:addWidget(Textarea("help", "Press Center to select screensaver or PLAY to preview"))
+	window:addWidget(Textarea("help", self:string("SCREENSAVER_SELECT_HELP")))
 	window:addWidget(menu)
 
 	window:addListener(EVENT_WINDOW_POP, function() self:storeSettings() end)
