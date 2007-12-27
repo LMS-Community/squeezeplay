@@ -29,6 +29,9 @@ local Label            = require("jive.ui.Label")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Textarea         = require("jive.ui.Textarea")
 local Window           = require("jive.ui.Window")
+local Popup            = require("jive.ui.Popup")
+local Icon             = require("jive.ui.Icon")
+local Timer            = require("jive.ui.Timer")
 
 local log              = require("jive.utils.log").logger("applets.setup")
 local locale           = require("jive.utils.locale")
@@ -42,6 +45,8 @@ local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
 local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
 local KEY_PLAY         = jive.ui.KEY_PLAY
+
+local jiveMain         = jiveMain
 
 module(...)
 oo.class(_M, Applet)
@@ -156,7 +161,27 @@ end
 
 function setLang(self, choice)
 	log:info("Locale choice set to ", choice)
+	log:warn("YOU ARE HERE")
 
+        local popup = Popup("popupIcon")
+        popup:setAllowScreensaver(false)
+        popup:addWidget(Icon("iconConnecting"))
+	local stringChoice = "LANGUAGE_" .. choice
+        popup:addWidget(Label("text", self:string(stringChoice)))
+	-- FIXME why doesn't this popup display immediately?
+	popup:show()
+
+	local langChanged = self:_setLang(choice)
+	popup:addTimer(1000, 
+		function()
+			if langChanged then
+				popup:hide()
+			end
+		end
+	)
+end
+
+function _setLang(self, choice)
 	self:_showLang(choice)
 	self:getSettings().locale = choice
 
@@ -164,7 +189,9 @@ function setLang(self, choice)
 	-- so it doesn't have to be refetched for every applet
 	local globalStrings = locale:readGlobalStringsFile()
 	locale:setLocale(choice, globalStrings)
+	jiveMain:jiveMainNodes()
 	Framework:styleChanged()
+	return true
 end
 
 

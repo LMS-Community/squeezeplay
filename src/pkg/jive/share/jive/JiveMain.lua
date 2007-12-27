@@ -143,14 +143,7 @@ function JiveMain:__init()
 --	profiler.start()
 
 	-- menu nodes to add...these are menu items that are used by applets
-	jiveMain:addNode( { id = 'extras', node = 'home', text = _globalStrings:str("EXTRAS"), weight = 70  } )
-	jiveMain:addNode( { id = 'games', node = 'extras', text = _globalStrings:str("GAMES"), weight = 70  } )
-	jiveMain:addNode( { id = 'settings', node = 'home', text = _globalStrings:str("SETTINGS"), weight = 50, titleStyle = 'settings' })
-	jiveMain:addNode( { id = 'advancedSettings', node = 'settings', text = _globalStrings:str("ADVANCED_SETTINGS"), weight = 100, titleStyle = 'settings' })
-	jiveMain:addNode( { id = 'screenSettings', node = 'settings', text = _globalStrings:str("SCREEN_SETTINGS"), weight = 50, titleStyle = 'settings' })
-	jiveMain:addNode( { id = 'factoryTest', node = 'advancedSettings', text = _globalStrings:str("FACTORY_TEST"), weight = 100, titleStyle = 'settings' })
-
-	-- if you wanted to add a title style for "Extras", this is where it would go
+	JiveMain:jiveMainNodes(_globalStrings)
 
 	-- init our listeners
 	jiveMain.skins = {}
@@ -206,6 +199,24 @@ function JiveMain:__init()
 --	profiler.stop()
 end
 
+function JiveMain:jiveMainNodes(globalStrings)
+
+	-- this can be called after language change, 
+	-- so we need to bring in _globalStrings again if it wasn't provided to the method
+	if globalStrings then
+		_globalStrings = globalStrings
+	else
+		_globalStrings = locale:readGlobalStringsFile()
+	end
+
+	jiveMain:addNode( { id = 'extras', node = 'home', text = _globalStrings:str("EXTRAS"), weight = 70  } )
+	jiveMain:addNode( { id = 'games', node = 'extras', text = _globalStrings:str("GAMES"), weight = 70  } )
+	jiveMain:addNode( { id = 'settings', node = 'home', text = _globalStrings:str("SETTINGS"), weight = 50, titleStyle = 'settings' })
+	jiveMain:addNode( { id = 'advancedSettings', node = 'settings', text = _globalStrings:str("ADVANCED_SETTINGS"), weight = 100, titleStyle = 'settings' })
+	jiveMain:addNode( { id = 'screenSettings', node = 'settings', text = _globalStrings:str("SCREEN_SETTINGS"), weight = 50, titleStyle = 'settings' })
+	jiveMain:addNode( { id = 'factoryTest', node = 'advancedSettings', text = _globalStrings:str("FACTORY_TEST"), weight = 100, titleStyle = 'settings' })
+
+end
 
 -- reload
 -- 
@@ -234,7 +245,6 @@ function JiveMain:loadSkin(appletName, method)
 
 	self.skins[#self.skins + 1] = { obj, method }
 end
-
 
 -- reloadSkin
 -- 
