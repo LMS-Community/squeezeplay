@@ -160,7 +160,10 @@ function setLang(self, choice)
 	self:_showLang(choice)
 	self:getSettings().locale = choice
 
-	locale:setLocale(choice)
+	-- fetch global strings table first and then send it to setLocale 
+	-- so it doesn't have to be refetched for every applet
+	local globalStrings = locale:readGlobalStringsFile()
+	locale:setLocale(choice, globalStrings)
 	Framework:styleChanged()
 end
 

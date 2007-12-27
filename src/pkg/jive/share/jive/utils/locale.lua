@@ -47,16 +47,22 @@ file for the new locale.
 
 =cut
 --]]
-function setLocale(self, newLocale)
+function setLocale(self, newLocale, myGlobalStrings)
 	if newLocale == globalLocale then
 		return
 	end
 
 	globalLocale = newLocale or "EN"
 
+	-- globalStrings table was either passed to this method or we need to fetch it
+	if myGlobalStrings then
+		globalStrings = myGlobalStrings
+	else
+		readGlobalStringsFile(self)
+	end
+
 	-- reload existing strings files
 	for k, v in pairs(loadedFiles) do
-		readGlobalStringsFile(self)
 		_parseStringsFile(self, newLocale, k, v)
 	end
 end
@@ -122,6 +128,8 @@ function readStringsFile(self, fullPath, stringsTable)
 end
 
 function _parseStringsFile(self, myLocale, myFilePath, stringsTable)
+	log:debug("starting to parse", myFilePath)
+
 	local stringsFile = io.open(myFilePath)
 	if stringsFile == nil then
 		return stringsTable
