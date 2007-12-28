@@ -550,37 +550,6 @@ local function _performJSONAction(jsonAction, from, qty, sink)
 end
 
 
--- _goNowPlaying
---
-local function _goNowPlaying()
-	if _statusStep then
-		log:debug("_goNowPlaying()")
-	
-		-- show our NowPlaying window!
-		_statusStep.window:show()
-		
-		-- arrange so that menuListener works
-		_statusStep.origin = _curStep
-		_curStep = _statusStep
-
-		-- current playlist should select currently playing item 
-		if _statusStep.menu.list.currentIndex then
-			_statusStep.menu.selected = _statusStep.menu.list.currentIndex
-			if _statusStep.menu["_lastSelectedIndex"] then
-				_statusStep.menu["_lastSelectedIndex"] = _statusStep.menu.selected
-				_statusStep.menu["_lastSelectedOffset"] = 2
-			end
-			-- since we've hacked the _lastSelectedIndex, it's necessary to 
-			-- _updateWidgets to display correctly selected item
-			_statusStep.menu:_updateWidgets()
-		end
-	
-		return EVENT_CONSUME
-	end
-	return EVENT_UNUSED
-end
-
-
 -- _getStepSink
 -- returns a closure to a sink embedding step
 local function _getStepSink(step, sink)
@@ -794,21 +763,6 @@ local function _menuSink(self, cmd)
 				jiveMain:addItem(item)
 			end
 		end
-
-		-- add local menus
-		local localItems = {
-			{
-				id = "nowplaying",
-				node = "home",
-				text = _string("SLIMBROWSER_NOW_PLAYING"),
-				callback = _goNowPlaying,
-			},
-		}
-
-		for i, item in ipairs(localItems) do
-			_playerMenus[item.id] = item
-			jiveMain:addItem(item)
-		end
          end
 end
 
@@ -903,7 +857,8 @@ local _globalActions = {
 			end
 		else
 			Framework:playSound("WINDOWSHOW")
-			_goNowPlaying()
+			--FIXME: really what we want here is to go to NowPlaying, but that's served by the NowPlaying applet, so not sure how we'd do that...
+			showPlaylist()
 		end
 				
 		return EVENT_CONSUME
@@ -1545,6 +1500,35 @@ end
 -- SlimBrowserApplet public methods
 --==============================================================================
 
+-- showPlaylist
+--
+function showPlaylist()
+	if _statusStep then
+		log:debug("showPlaylist()")
+	
+		-- show our NowPlaying window!
+		_statusStep.window:show()
+		
+		-- arrange so that menuListener works
+		_statusStep.origin = _curStep
+		_curStep = _statusStep
+
+		-- current playlist should select currently playing item 
+		if _statusStep.menu.list.currentIndex then
+			_statusStep.menu.selected = _statusStep.menu.list.currentIndex
+			if _statusStep.menu["_lastSelectedIndex"] then
+				_statusStep.menu["_lastSelectedIndex"] = _statusStep.menu.selected
+				_statusStep.menu["_lastSelectedOffset"] = 2
+			end
+			-- since we've hacked the _lastSelectedIndex, it's necessary to 
+			-- _updateWidgets to display correctly selected item
+			_statusStep.menu:_updateWidgets()
+		end
+	
+		return EVENT_CONSUME
+	end
+	return EVENT_UNUSED
+end
 
 -- notify_playerPower
 -- we refresh the main menu after playerPower changes

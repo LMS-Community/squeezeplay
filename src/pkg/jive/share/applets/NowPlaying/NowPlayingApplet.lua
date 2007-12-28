@@ -37,6 +37,35 @@ local LAYOUT_WEST            = jive.ui.LAYOUT_WEST
 local LAYOUT_CENTER          = jive.ui.LAYOUT_CENTER
 local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
+local EVENT_KEY_ALL          = jive.ui.EVENT_KEY_ALL
+local EVENT_KEY_DOWN         = jive.ui.EVENT_KEY_DOWN
+local EVENT_KEY_UP           = jive.ui.EVENT_KEY_UP
+local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
+local EVENT_KEY_HOLD         = jive.ui.EVENT_KEY_HOLD
+local EVENT_SCROLL           = jive.ui.EVENT_SCROLL
+local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
+local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
+local EVENT_ACTION           = jive.ui.EVENT_ACTION
+local EVENT_FOCUS_GAINED     = jive.ui.EVENT_FOCUS_GAINED
+local EVENT_FOCUS_LOST       = jive.ui.EVENT_FOCUS_LOST
+local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
+local EVENT_WINDOW_INACTIVE  = jive.ui.EVENT_WINDOW_INACTIVE
+local EVENT_WINDOW_ACTIVE    = jive.ui.EVENT_WINDOW_ACTIVE
+local EVENT_HIDE             = jive.ui.EVENT_HIDE
+local EVENT_SHOW             = jive.ui.EVENT_SHOW
+local KEY_GO                 = jive.ui.KEY_GO
+local KEY_FWD                = jive.ui.KEY_FWD
+local KEY_REW                = jive.ui.KEY_REW
+local KEY_HOME               = jive.ui.KEY_HOME
+local KEY_PLAY               = jive.ui.KEY_PLAY
+local KEY_ADD                = jive.ui.KEY_ADD
+local KEY_BACK               = jive.ui.KEY_BACK
+local KEY_PAUSE              = jive.ui.KEY_PAUSE
+local KEY_VOLUME_DOWN        = jive.ui.KEY_VOLUME_DOWN
+local KEY_VOLUME_UP          = jive.ui.KEY_VOLUME_UP
+
+local jiveMain               = jiveMain
+local jnt                    = jnt
 
 module(...)
 oo.class(_M, Applet)
@@ -90,6 +119,29 @@ local function updatePosition(self)
 	self.progressGroup:setWidgetValue("elapsed", strElapsed)
 	self.progressGroup:setWidgetValue("remain", strRemain)
 	self.progressSlider:setValue(pos)
+end
+
+function init(self)
+	jnt:subscribe(self)
+end
+
+function notify_playerCurrent(self, player)
+
+	log:debug("NowPlaying.notify_playerCurrent()")
+
+	jiveMain:addItem( 
+		{
+			id = 'appletNowPlaying',
+			node = 'home',
+			text = self:string('SCREENSAVER_NOWPLAYING'),
+			sound = 'WINDOWSHOW',
+			weight = 1,
+			callback = function(event, menuItem)
+				self:openScreensaver('notScreensaver')
+			end
+		}
+	)
+
 end
 
 function updateTrack(self, trackinfo, pos, length)
@@ -245,24 +297,35 @@ function _createUI(self)
 
 	window:focusWidget(self.trackGroup)
 
-	-- register window as a screensaver
-	local manager = appletManager:getAppletInstance("ScreenSavers")
-	manager:screensaverWindow(window)
+	-- register window as a screensaver, unless we are explicitly not in that mode
+	if self.mode == 'Screensaver' then
+		local manager = appletManager:getAppletInstance("ScreenSavers")
+		manager:screensaverWindow(window)
+	end
 
 	self:tieWindow(window)
 	self.window = window
 end
 
 
-function openScreensaver(self, menuItem, mode)
+function openScreensaver(self, mode)
 	-- this is to allow the screensaver to be opened in two modes: 
 	-- Screensaver and notScreensaver
 	-- default to Screensaver
 	if not mode then mode = 'Screensaver' end
 	log:debug(mode)
+	self.mode = mode
 
 	local discovery = appletManager:getAppletInstance("SlimDiscovery")
 	self.player = discovery:getCurrentPlayer()
+
+
+	local transitionOn
+	if mode == 'Screensaver' then
+		transitionOn = Window.transitionFadeIn
+	else
+		transitionOn = Window.transitionPushLeft
+	end
 
 	if not self.player then
 		-- No current player - don't start screensaver
@@ -295,7 +358,36 @@ function openScreensaver(self, menuItem, mode)
 
 	-- Initialize with current data from Player
 	self:_process_status(self.player.state)
-	self.window:show()
+	self.window:show(transitionOn)
+
+	if mode == 'notScreensaver' then
+
+		local browser = appletManager:getAppletInstance("SlimBrowser")
+
+		-- don't allow a screensaver on this window
+		-- FIXME: ideally, screensaver would only be repressed if the screensaver was set to NowPlaying 
+		self.window:setAllowScreensaver(false)
+
+		-- install listeners to this "special" window, if opened not in a screensaver context
+		self.window:addListener(
+			EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+			function(event)
+				local type = event:getType()
+				local keyPress = event:getKeycode()
+				if (keyPress == KEY_BACK) then
+					-- back to Home
+					-- FIXME: transition is too fast. why?
+					self.window:hide(Window.transitionPushRight)
+					return EVENT_CONSUME
+				elseif (keyPress == KEY_GO) then
+					browser:showPlaylist()
+					return EVENT_CONSUME
+				end
+				return EVENT_UNUSED
+			end
+		)
+
+	end
 end
 
 
