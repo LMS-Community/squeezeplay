@@ -1599,6 +1599,11 @@ function notify_playerCurrent(self, player)
 	-- free current player
 	if _player then
 		self:free()
+	else
+		log:info("First load...get the correct wallpaper on screen")
+		local SetupWallpaper = AppletManager:loadApplet("SetupWallpaper")
+		SetupWallpaper:_setBackground(nil, player.id)
+		AppletManager:freeApplet("SetupWallpaper")
 	end
 
 	-- nothing to do if we don't have a player
