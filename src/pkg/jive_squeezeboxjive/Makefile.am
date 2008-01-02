@@ -2,18 +2,18 @@
 
 
 # Check lua syntax
-#dcs check_lua:
-#	@rm -f badsyntax
-#	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
-#	@test \! -s badsyntax
-#	@rm -f badsyntax
+check_lua:
+	@rm -f badsyntax
+	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
+	@test \! -s badsyntax
+	@rm -f badsyntax
 
 
 AM_CFLAGS = -Wall -Werror -D_GNU_SOURCE
 
 lib_LTLIBRARIES = jiveBSP.la jiveWireless.la jiveWatchdog.la
 
-#jiveBSP_la_DEPENDENCIES = check_lua
+jiveBSP_la_DEPENDENCIES = check_lua
 jiveBSP_la_LDFLAGS = -module -no-version
 jiveBSP_la_SOURCES = \
 	src/jive_bsp.c
