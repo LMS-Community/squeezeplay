@@ -14,6 +14,13 @@
 
 @SET_MAKE@
 
+# Check lua syntax
+#dcs check_lua:
+#	@rm -f badsyntax
+#	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
+#	@test \! -s badsyntax
+#	@rm -f badsyntax
+
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -253,7 +260,8 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AM_CFLAGS = -Wall -Werror -D_GNU_SOURCE
 lib_LTLIBRARIES = jiveBSP.la jiveWireless.la jiveWatchdog.la
-jiveBSP_la_DEPENDENCIES = check_lua
+
+#jiveBSP_la_DEPENDENCIES = check_lua
 jiveBSP_la_LDFLAGS = -module -no-version
 jiveBSP_la_SOURCES = \
 	src/jive_bsp.c
@@ -307,6 +315,7 @@ dist_applets_testDisplay_DATA = \
 	share/applets/TestDisplay/TestDisplayApplet.lua \
 	share/applets/TestDisplay/TestDisplayMeta.lua \
 	share/applets/TestDisplay/strings.txt
+	share/applets/TestDisplay/circle.jpg
 
 applets_testKeypaddir = $(datadir)/jive/applets/TestKeypad
 dist_applets_testKeypad_DATA = \
@@ -1050,13 +1059,6 @@ uninstall-am: uninstall-dist_applets_SetupFactoryResetDATA \
 	uninstall-dist_jive_netDATA uninstall-info-am \
 	uninstall-libLTLIBRARIES
 
-
-# Check lua syntax
-check_lua:
-	@rm -f badsyntax
-	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
-	@test \! -s badsyntax
-	@rm -f badsyntax
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

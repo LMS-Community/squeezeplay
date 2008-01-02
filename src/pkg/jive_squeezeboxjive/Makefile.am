@@ -2,18 +2,18 @@
 
 
 # Check lua syntax
-check_lua:
-	@rm -f badsyntax
-	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
-	@test \! -s badsyntax
-	@rm -f badsyntax
+#dcs check_lua:
+#	@rm -f badsyntax
+#	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
+#	@test \! -s badsyntax
+#	@rm -f badsyntax
 
 
 AM_CFLAGS = -Wall -Werror -D_GNU_SOURCE
 
 lib_LTLIBRARIES = jiveBSP.la jiveWireless.la jiveWatchdog.la
 
-jiveBSP_la_DEPENDENCIES = check_lua
+#jiveBSP_la_DEPENDENCIES = check_lua
 jiveBSP_la_LDFLAGS = -module -no-version
 jiveBSP_la_SOURCES = \
 	src/jive_bsp.c
@@ -71,7 +71,8 @@ applets_testDisplaydir = $(datadir)/jive/applets/TestDisplay
 dist_applets_testDisplay_DATA = \
 	share/applets/TestDisplay/TestDisplayApplet.lua \
 	share/applets/TestDisplay/TestDisplayMeta.lua \
-	share/applets/TestDisplay/strings.txt
+	share/applets/TestDisplay/strings.txt \ 
+	share/applets/TestDisplay/circle.jpg
 
 
 applets_testKeypaddir = $(datadir)/jive/applets/TestKeypad
