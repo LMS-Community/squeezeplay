@@ -5,7 +5,6 @@ local string, tonumber, tostring, type, unpack = string, tonumber, tostring, typ
 
 local oo                = require("loop.simple")
 local Widget            = require("jive.ui.Widget")
-local Acceleration      = require("jive.ui.Acceleration")
 
 local math              = require("math")
 local string            = require("string")
@@ -219,11 +218,7 @@ function _eventHandler(self, event)
 	local type = event:getType()
 
 	if type == EVENT_SCROLL then
-		-- XXX optimize by caching v and i in _scroll?
-		local v = self:_getChars()
-		local i = string.find(v, string.sub(tostring(self.value), self.cursor, self.cursor), 1, true)
-
-		_scroll(self, self.accel:event(event, i, #v))
+		_scroll(self, event:getScroll())
 		return EVENT_CONSUME
 
 	elseif type == EVENT_WINDOW_RESIZE then
@@ -347,7 +342,6 @@ function __init(self, style, value, closure, allowedChars)
 	obj.closure = closure
 	obj.allowedChars = allowedChars or
 		_globalStrings:str("ALLOWEDCHARS_WITHCAPS")
-	obj.accel = Acceleration()
 
 	obj:addListener(EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE,
 			function(event)

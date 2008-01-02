@@ -46,11 +46,8 @@ local Framework            = require("jive.ui.Framework")
 local Event                = require("jive.ui.Event")
 local Widget               = require("jive.ui.Widget")
 local Scrollbar            = require("jive.ui.Scrollbar")
-local Acceleration         = require("jive.ui.Acceleration")
 
 local log                  = require("jive.utils.log").logger("ui")
-
-local math                 = require("math")
                            
 local EVENT_ALL            = jive.ui.EVENT_ALL
 local EVENT_ACTION         = jive.ui.EVENT_ACTION
@@ -126,7 +123,7 @@ local function _eventHandler(self, event)
 
 	if evtype == EVENT_SCROLL then
 		if self.locked == nil then
-			self:scrollBy(self.accel:event(event, self.selected, self.listSize))
+			self:scrollBy(event:getScroll())
 			return EVENT_CONSUME
 		end
 
@@ -213,7 +210,6 @@ function __init(self, style, itemRenderer, itemListener)
 	_assert(type(itemListener) == "function")
 
 	local obj = oo.rawnew(self, Widget(style))
-	obj.accel = Acceleration()
 	obj.scrollbar = Scrollbar("scrollbar")
 	obj.scrollbar.parent = obj
 	obj.layoutRoot = true
