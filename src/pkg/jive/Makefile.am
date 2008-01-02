@@ -101,6 +101,7 @@ dist_jive_DATA = \
 
 jiveuidir = $(pkgdatadir)/jive/ui
 dist_jiveui_DATA = \
+	share/jive/ui/Acceleration.lua \
 	share/jive/ui/Audio.lua \
 	share/jive/ui/Checkbox.lua \
 	share/jive/ui/Choice.lua \
@@ -166,6 +167,11 @@ applets_logdir = $(pkgdatadir)/applets/LogSettings
 dist_applets_log_DATA = \
 	share/applets/LogSettings/LogSettingsApplet.lua \
 	share/applets/LogSettings/LogSettingsMeta.lua
+
+applets_menutestdir = $(pkgdatadir)/applets/
+dist_applets_menutest_DATA = \
+	share/applets/MenuTest/MenuTestApplet.lua \
+	share/applets/MenuTest/MenuTestMeta.lua
 
 applets_screensaversdir = $(pkgdatadir)/applets/ScreenSavers
 dist_applets_screensavers_DATA = \

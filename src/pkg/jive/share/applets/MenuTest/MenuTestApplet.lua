@@ -29,6 +29,8 @@ local log           = require("jive.utils.log").logger("applets.misc")
 local debug         = require("jive.utils.debug")
 
 local EVENT_FOCUS_GAINED = jive.ui.EVENT_FOCUS_GAINED
+local EVENT_UNUSED = jive.ui.EVENT_UNUSED
+
 
 module(...)
 oo.class(_M, Applet)
@@ -136,29 +138,21 @@ function _menuRenderer(menu, widgets, toRenderIndexes, toRenderSize, db)
 	if fetchFirst then return end
 
 	local self = db.owner
-	local i = menu:getSelectedIndex() or 1
-
-	if math.modf(i, 10) == 0 then
-		log:warn("i=", i)
-	end
 
 
-	if db:item(i + 50) then
+	local i = menu.accel:predictIndex()
+
+	if db:item(i) then
 		return
 	end
 
-	if i - 1 + gulp > total then
-		self:request(total - gulp)
-	elseif self.menu.scrollDir < 1 then
-		self:request(i - 2)
-	else
-		self:request(i - self.menu.numWidgets + 1)
-	end
+	self:request(i - gulp / 2)
 end
 
 
 function _menuListener(menu, menuItem, db, dbIndex, event)
 	-- not needed for test
+	return EVENT_UNUSED
 end
 
 
