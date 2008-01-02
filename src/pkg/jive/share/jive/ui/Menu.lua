@@ -48,6 +48,8 @@ local Widget               = require("jive.ui.Widget")
 local Scrollbar            = require("jive.ui.Scrollbar")
 
 local log                  = require("jive.utils.log").logger("ui")
+
+local math                 = require("math")
                            
 local EVENT_ALL            = jive.ui.EVENT_ALL
 local EVENT_ACTION         = jive.ui.EVENT_ACTION
@@ -220,6 +222,7 @@ function __init(self, style, itemRenderer, itemListener)
 
 	obj.list = nil
 	obj.listSize = 0
+	obj.scrollDir = 0
 
 	obj.widgets = {}        -- array of widgets
 	obj.lastWidgets = {}    -- hash of widgets
@@ -392,6 +395,35 @@ function scrollBy(self, scroll)
 	_assert(type(scroll) == "number")
 
 	local selected = (self.selected or 1)
+
+	-- acceleration
+	local now = Framework:getTicks()
+	local dir = scroll > 0 and 1 or -1
+
+--[[
+	if dir == self.scrollDir and now - self.scrollLastT < 250 then
+		if self.scrollAccel then
+			self.scrollAccel = self.scrollAccel + 1
+			if     self.scrollAccel > 50 then
+				scroll = dir * math.max(math.ceil(self.listSize/50), math.abs(scroll) * 16)
+			elseif self.scrollAccel > 40 then
+				scroll = scroll * 16
+			elseif self.scrollAccel > 30 then
+				scroll = scroll * 8
+			elseif self.scrollAccel > 20 then
+				scroll = scroll * 4
+			elseif self.scrollAccel > 10 then
+				scroll = scroll * 2
+			end
+		else
+			self.scrollAccel = 1
+		end
+	else
+		self.scrollAccel = nil
+	end
+--]]
+	self.scrollDir   = dir
+	self.scrollLastT = now
 
 	-- restrict to scrolling one item unless at the edge of the
 	-- visible list
