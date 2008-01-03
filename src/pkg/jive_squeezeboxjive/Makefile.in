@@ -53,7 +53,8 @@ DIST_COMMON = $(am__configure_deps) \
 	$(dist_applets_setupSqueezebox_DATA) \
 	$(dist_applets_setupWireless_DATA) \
 	$(dist_applets_squeezeboxjive_DATA) \
-	$(dist_applets_testDisplay_DATA) $(dist_applets_testIR_DATA) \
+	$(dist_applets_testDisplay_DATA) \
+	$(dist_applets_testIR_DATA) \
 	$(dist_applets_testKeypad_DATA) \
 	$(dist_applets_testMotion_DATA) $(dist_jive_net_DATA) \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
@@ -138,7 +139,8 @@ DATA = $(dist_applets_SetupFactoryReset_DATA) \
 	$(dist_applets_setupSqueezebox_DATA) \
 	$(dist_applets_setupWireless_DATA) \
 	$(dist_applets_squeezeboxjive_DATA) \
-	$(dist_applets_testDisplay_DATA) $(dist_applets_testIR_DATA) \
+	$(dist_applets_testDisplay_DATA) \
+	$(dist_applets_testIR_DATA) \
 	$(dist_applets_testKeypad_DATA) \
 	$(dist_applets_testMotion_DATA) $(dist_jive_net_DATA)
 ETAGS = etags
@@ -314,7 +316,7 @@ applets_testDisplaydir = $(datadir)/jive/applets/TestDisplay
 dist_applets_testDisplay_DATA = \
 	share/applets/TestDisplay/TestDisplayApplet.lua \
 	share/applets/TestDisplay/TestDisplayMeta.lua \
-	share/applets/TestDisplay/strings.txt
+	share/applets/TestDisplay/strings.txt \
 	share/applets/TestDisplay/circle.jpg
 
 applets_testKeypaddir = $(datadir)/jive/applets/TestKeypad
