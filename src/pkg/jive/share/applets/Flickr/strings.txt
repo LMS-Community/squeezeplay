@@ -92,7 +92,7 @@ SCREENSAVER_FLICKR_DISPLAY_OWN
 
 SCREENSAVER_FLICKR_DISPLAY_CONTACTS
 	DE	Bilder meiner Kontakte
-	EN	My contacts pictures
+	EN	My contacts' pictures
 	ES	Imágenes de mis contactos
 	FR	Images de mes contacts
 	IT	Immagini dei contatti
