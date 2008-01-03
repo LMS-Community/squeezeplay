@@ -69,11 +69,25 @@ function drawDisplay(self)
 		srf:filledRectangle(0, 0, w, h, 0xFFFFFFFF)
 
 	elseif self.state == 6 then
+		log:info("DisplayTest: HORZ_STRIPES")
+		srf:filledRectangle(0, 0, w, h, 0xFFFFFFFF)
+		for y = 0, h, 2 do
+			srf:line(0, y, w, y, 0x000000FF)
+		end
+		
+	elseif self.state == 7 then
+		log:info("DisplayTest: VERT_STRIPES")
+		srf:filledRectangle(0, 0, w, h, 0xFFFFFFFF)
+		for x = 0, w, 2 do
+			srf:line(x ,0, x, h, 0x000000FF)
+		end
+		
+	elseif self.state == 8 then
 		log:info("DisplayTest: BLACK")
 		srf:filledRectangle(0, 0, w, h, 0x000000FF)
 
-	elseif self.state == 7 then
-		log:info("DisplayTest: GRADIENT")
+	elseif self.state == 9 then
+		log:info("DisplayTest: COLOR_GRADIENT")
 		srf:filledRectangle(0, 0, w, h, 0x000000FF)
 		srf = Surface:loadImage("applets/TestDisplay/circle.jpg")
 	else
