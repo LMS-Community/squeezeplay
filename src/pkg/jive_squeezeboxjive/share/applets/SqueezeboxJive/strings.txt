@@ -174,7 +174,7 @@ BATTERY_LOW
 
 POWER_DOWN
 	DE	Herunterfahren
-	EN	Power Down
+	EN	Turn Off
 	ES	Apagar
 	FR	Désactiver
 	IT	Disattivazione
