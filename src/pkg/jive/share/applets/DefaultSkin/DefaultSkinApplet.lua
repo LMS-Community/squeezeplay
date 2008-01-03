@@ -806,9 +806,75 @@ function skin(self, s)
 	s.newmusictitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "mini_quarter_note.png")
+				      img = Surface:loadImage(imgpath .. "mini_newmusic.png")
 			      }
 		      })
+
+	-- Based on s.title, this is for infobrowser title style
+	s.infobrowsertitle =
+		_uses(s.minititle, {
+			      icon = {
+				      img = Surface:loadImage(imgpath .. "mini_infobrowser.png")
+			      }
+		      })
+
+	-- Based on s.title, this is for albumlist title style
+	-- NOTE: not to be confused with "album", which is a different style
+	s.albumlisttitle =
+		_uses(s.minititle, {
+			      icon = {
+				      img = Surface:loadImage(imgpath .. "mini_albums.png")
+			      }
+		      })
+
+
+	-- Based on s.title, this is for artists title style
+	s.artiststitle =
+		_uses(s.minititle, {
+			      icon = {
+				      img = Surface:loadImage(imgpath .. "mini_artists.png")
+			      }
+		      })
+	-- Based on s.title, this is for random title style
+	s.randomtitle =
+		_uses(s.minititle, {
+			      icon = {
+				      img = Surface:loadImage(imgpath .. "mini_random.png")
+			      }
+		      })
+
+	-- Based on s.title, this is for musicfolder title style
+	s.musicfoldertitle =
+		_uses(s.minititle, {
+			      icon = {
+				      img = Surface:loadImage(imgpath .. "mini_musicfolder.png")
+			      }
+		      })
+
+	-- Based on s.title, this is for genres title style
+	s.genrestitle =
+		_uses(s.minititle, {
+			      icon = {
+				      img = Surface:loadImage(imgpath .. "mini_genres.png")
+			      }
+		      })
+
+	-- Based on s.title, this is for years title style
+	s.yearstitle =
+		_uses(s.minititle, {
+			      icon = {
+				      img = Surface:loadImage(imgpath .. "mini_years.png")
+			      }
+		      })
+	-- Based on s.title, this is for playlist title style
+	s.playlisttitle =
+		_uses(s.minititle, {
+			      icon = {
+				      img = Surface:loadImage(imgpath .. "mini_playlist.png")
+			      }
+		      })
+
+
 
 
 	-- menus with artwork and song info

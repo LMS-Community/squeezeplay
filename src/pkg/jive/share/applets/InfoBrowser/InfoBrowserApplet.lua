@@ -51,7 +51,7 @@ local gulp    = 20     -- get this many entries per request
 function menu(self, menuItem)
 
 	local list = {}
-	local window = Window("window", menuItem.text)
+	local window = Window("window", menuItem.text, "infobrowsertitle")
 	local menu = SimpleMenu("menu", list)
 	window:addWidget(menu)
 
