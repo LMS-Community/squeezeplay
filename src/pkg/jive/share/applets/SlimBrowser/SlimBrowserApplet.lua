@@ -792,13 +792,13 @@ local function _statusSink(step, chunk, err)
 		
 		if data.mode == "play" then
 			step.window:setTitle(_string("SLIMBROWSER_NOW_PLAYING"))
-			step.window:setTitleStyle("newmusictitle")
+			step.window:setTitleStyle("playlisttitle")
 		elseif data.mode == "pause" then
 			step.window:setTitle(_string("SLIMBROWSER_PAUSED"))
-			step.window:setTitleStyle("newmusictitle")
+			step.window:setTitleStyle("playlisttitle")
 		elseif data.mode == "stop" then
 			step.window:setTitle(_string("SLIMBROWSER_STOPPED"))
-			step.window:setTitleStyle("newmusictitle")
+			step.window:setTitleStyle("playlisttitle")
 		end
 
 		-- stuff from the player is just json.result
