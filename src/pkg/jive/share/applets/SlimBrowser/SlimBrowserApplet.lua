@@ -367,12 +367,14 @@ local function _newWindowSpec(db, item, titleStyle)
 		bWindow = _safeDeref(db:chunk(), 'base', 'window')
 	end
 	
+	local help = _safeDeref(item, 'window', 'help', 'text')
+
 	-- determine style
 	local menuStyle = _priorityAssign('menuStyle', "", iWindow, bWindow)
 	return {
 		["windowStyle"]      = "",
 		["labelTitleStyle"]  = _priorityAssign('titleStyle', titleStyle, iWindow, bWindow) .. "title",
-		['help']             = _priorityAssign('help', item['help'], iWindow, bWindow),
+		['help']             = help,
 		["menuStyle"]        = menuStyle .. "menu",
 		["labelItemStyle"]   = menuStyle .. "item",
 		["text"]             = _priorityAssign('text',       item["text"],    iWindow, bWindow),
