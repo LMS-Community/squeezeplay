@@ -26,7 +26,7 @@ function registerApplet(self)
 		ssMgr:addScreenSaver(
 			self:string("SCREENSAVER_NOWPLAYING"), 
 			"NowPlaying", 
-			"openScreensaver", 
+			"showNowPlaying", 
 			--[[,
 			self:string("SCREENSAVER_NOWPLAYING_SETTINGS"), 
 			"openSettings" ]]--

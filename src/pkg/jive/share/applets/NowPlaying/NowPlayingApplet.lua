@@ -1,4 +1,4 @@
-local pairs, ipairs, tostring, type = pairs, ipairs, tostring, type
+local pairs, ipairs, tostring, type, setmetatable = pairs, ipairs, tostring, type, setmetatable
 
 local math             = require("math")
 local table            = require("table")
@@ -70,12 +70,34 @@ local jnt                    = jnt
 module(...)
 oo.class(_M, Applet)
 
+-- with drop shadow
 local ARTWORK_SIZE = 154
+-- without drop shadow
+--local ARTWORK_SIZE = 166
 
 
 ----------------------------------------------------------------------------------------
 -- Helper Functions
 --
+
+local windowStyle
+
+-- defines a new style that inherits from an existing style
+local function _uses(parent, value)
+        local style = {}
+        setmetatable(style, { __index = parent })
+
+        for k,v in pairs(value or {}) do
+                if type(v) == "table" and type(parent[k]) == "table" then
+                        -- recursively inherit from parent style
+                        style[k] = _uses(parent[k], v)
+                else
+                        style[k] = v
+                end
+        end
+
+        return style
+end
 
 local function _nowPlayingArtworkThumbUri(iconId)
         return '/music/' .. iconId .. '/cover_' .. ARTWORK_SIZE .. 'x' .. ARTWORK_SIZE .. '_p.png'
@@ -90,6 +112,18 @@ end
 
 local function _getIcon(self, item, icon)
 	local server = self.player:getSlimServer()
+
+	if windowStyle == 'ss' then
+		-- without drop shadow
+		--ARTWORK_SIZE = 184
+		-- with drop shadow
+		ARTWORK_SIZE = 172
+	else
+		-- without drop shadow
+		--ARTWORK_SIZE = 166
+		-- with drop shadow
+		ARTWORK_SIZE = 154
+	end
 
 	if item and item["icon-id"] then
 		-- Fetch an image from SlimServer
@@ -137,7 +171,7 @@ function notify_playerCurrent(self, player)
 			sound = 'WINDOWSHOW',
 			weight = 1,
 			callback = function(event, menuItem)
-				self:openScreensaver('notScreensaver')
+				self:showNowPlaying('browse')
 			end
 		}
 	)
@@ -204,8 +238,9 @@ function _process_status(self, data)
 
 	local createdWindow = false
 
-	if data.item_loop and
-		data.item_loop[1].params.track_id ~= self.track_id then
+	if data.item_loop 
+		and data.item_loop[1].params.track_id ~= self.track_id 
+		then
 
 		-- create new window
 		-- FIXME this can now be combined in _process_status, may help fixing bug 6087
@@ -216,6 +251,7 @@ function _process_status(self, data)
 	end
 
 	self.mode = data.mode
+
 	if self.mode == "play" then
 		self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_NOWPLAYING"))
 	elseif self.mode == "pause" then
@@ -256,35 +292,48 @@ end
 function _createUI(self)
 	local window = Window("window")
 
-	local sw, sh = Framework:getScreenSize()
-	--[[ figure out way of painting background across entire window
-        local bg  = Surface:newRGBA(sw, sh)
-        bg:filledRectangle(0, 0, sw, sh, 0x000000FF)
-	window:addWidget(Icon("background", bg))
-	--]]
+	if windowStyle == 'ss' then
+		local sw, sh = Framework:getScreenSize()
+		local newBg = Framework:getBackground()
+		local srf = Surface:newRGBA(sw, sh)
+		newBg:blit(srf, 0, 0, sw, sh)
+		window:addWidget(Icon("iconbg", srf))
+	end
 
-	self.titleGroup = Group("nptitle", {
+	local components = { 
+		nptitle = "nptitle", 
+		nptrack = "nptrack", 
+		progressB = "progressB", 
+		progress = "progress", 
+		npartwork = "npartwork" 
+	}
+	for k, v in pairs(components) do
+		local new = windowStyle .. v
+		components[k] = new
+	end
+
+	self.titleGroup = Group(components.nptitle, {
 				   title = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
 				   playlist = Label("playlist", "")
 			   })
 	
 
-	self.trackGroup = Group("nptrack", {
+	self.trackGroup = Group(components.nptrack, {
 				   text = Label("text", "\n\n\n")
 			   })
 	
 	
-	self.progressSlider = Slider("progressB", 0, 100, 0)
+	self.progressSlider = Slider(components.progressB, 0, 100, 0)
 	self.progressSlider:addTimer(1000, function() self:tick() end)
 
-	self.progressGroup = Group("progress", {
+	self.progressGroup = Group(components.progress, {
 				      elapsed = Label("text", ""),
 				      slider = self.progressSlider,
 				      remain = Label("text", "")
 			      })
 
 	self.artwork = Icon("artwork")
-	artworkGroup = Group("npartwork166", {
+	artworkGroup = Group(components.npartwork, {
 				     artwork = self.artwork    
 			     })
 	
@@ -296,9 +345,8 @@ function _createUI(self)
 	window:addWidget(self.progressGroup)
 
 	window:focusWidget(self.trackGroup)
-
 	-- register window as a screensaver, unless we are explicitly not in that mode
-	if self.mode == 'Screensaver' then
+	if windowStyle == 'ss' then
 		local manager = appletManager:getAppletInstance("ScreenSavers")
 		manager:screensaverWindow(window)
 	end
@@ -308,22 +356,22 @@ function _createUI(self)
 end
 
 
-function openScreensaver(self, mode)
-	-- this is to allow the screensaver to be opened in two modes: 
-	-- Screensaver and notScreensaver
-	-- default to Screensaver
-	if not mode then mode = 'Screensaver' end
-	log:debug(mode)
-	self.mode = mode
+function showNowPlaying(self, style)
+	-- this is to show the window to be opened in two modes: 
+	-- ss and browse
+
+	if not style then style = 'ss' end
+
+	windowStyle = style
 
 	local discovery = appletManager:getAppletInstance("SlimDiscovery")
 	self.player = discovery:getCurrentPlayer()
 
 
 	local transitionOn
-	if mode == 'Screensaver' then
+	if style == 'ss' then
 		transitionOn = Window.transitionFadeIn
-	else
+	elseif style == 'browse' then
 		transitionOn = Window.transitionPushLeft
 	end
 
@@ -357,10 +405,11 @@ function openScreensaver(self, mode)
 	)
 
 	-- Initialize with current data from Player
+	-- FIXME, if this gets called when it shouldn't, we write a window over our current one and mess up the stack (easy way to reproduce: hit fwd to go to the next track when on the NowPlaying window)
 	self:_process_status(self.player.state)
 	self.window:show(transitionOn)
 
-	if mode == 'notScreensaver' then
+	if windowStyle == 'browse' then
 
 		local browser = appletManager:getAppletInstance("SlimBrowser")
 
@@ -376,7 +425,6 @@ function openScreensaver(self, mode)
 				local keyPress = event:getKeycode()
 				if (keyPress == KEY_BACK) then
 					-- back to Home
-					-- FIXME: transition is too fast. why?
 					self.window:hide(Window.transitionPushRight)
 					return EVENT_CONSUME
 				elseif (keyPress == KEY_GO) then
@@ -394,11 +442,18 @@ end
 function free(self)
 	if self.player then
 		self.player.slimServer.comet:removeCallback( '/slim/playerstatus/' .. self.player:getId(), self.statusSink )
+		-- this will cause the window to be recreated when moving between ss and browse styles
+		self.track_id = nil
 	end
 end
 
 
 function skin(self, s)
+
+	-- this skin is established in two forms,
+	-- one for the Screensaver windowStyle (ss), one for the browse windowStyle (browse)
+	-- a lot of it can be recycled from one to the other
+
 	local imgpath = "applets/DefaultSkin/images/"
 	local npimgpath = "applets/NowPlaying/"
 	local fontpath = "fonts/"
@@ -432,51 +487,71 @@ function skin(self, s)
                                })
 
 	-- Title
-	s.nptitle = {}
-	s.nptitle.border = { 4, 4, 4, 0 }
-	s.nptitle.position = LAYOUT_NORTH
-	s.nptitle.bgImg = titleBox
-	s.nptitle.order = { "title", "playlist" }
-	s.nptitle.text = {}
-	s.nptitle.text.w = WH_FILL
-	s.nptitle.text.padding = { 10, 7, 8, 9 }
-	s.nptitle.text.align = "top-left"
-	s.nptitle.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 20)
-	s.nptitle.text.fg = { 0x00, 0x00, 0x00 }
-	s.nptitle.playlist = {}
-	s.nptitle.playlist.padding = { 10, 7, 8, 9 }
-	s.nptitle.playlist.font = Font:load(fontpath .. "FreeSans.ttf", 15)
-	s.nptitle.playlist.fg = { 0x00, 0x00, 0x00 }
-	s.nptitle.playlist.textAlign = "top-right"
+	s.ssnptitle = {}
+	s.ssnptitle.border = { 4, 4, 4, 0 }
+	s.ssnptitle.position = LAYOUT_NORTH
+	s.ssnptitle.bgImg = titleBox
+	s.ssnptitle.order = { "title", "playlist" }
+	s.ssnptitle.text = {}
+	s.ssnptitle.text.w = WH_FILL
+	s.ssnptitle.text.padding = { 10, 7, 8, 9 }
+	s.ssnptitle.text.align = "top-left"
+	s.ssnptitle.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 20)
+	s.ssnptitle.text.fg = { 0x00, 0x00, 0x00 }
+	s.ssnptitle.playlist = {}
+	s.ssnptitle.playlist.padding = { 10, 7, 8, 9 }
+	s.ssnptitle.playlist.font = Font:load(fontpath .. "FreeSans.ttf", 15)
+	s.ssnptitle.playlist.fg = { 0x00, 0x00, 0x00 }
+	s.ssnptitle.playlist.textAlign = "top-right"
+
+
+	-- nptitle style is the same for both windowStyles
+	s.browsenptitle = _uses(s.ssnptitle, browsenptitle)
 
 	-- Song
-	s.nptrack = {}
-	s.nptrack.border = { 4, 0, 4, 0 }
-        s.nptrack.bgImg = highlightBox
-	s.nptrack.text = {}
-	s.nptrack.text.w = WH_FILL
-	s.nptrack.text.padding = { 10, 7, 8, 9 }
-	s.nptrack.text.align = "top-left"
-        s.nptrack.text.font = Font:load(fontpath .. "FreeSans.ttf", 14)
-	s.nptrack.text.lineHeight = 17
-        s.nptrack.text.line = {
+	s.ssnptrack = {}
+	s.ssnptrack.border = { 4, 0, 4, 0 }
+        s.ssnptrack.bgImg = highlightBox
+	s.ssnptrack.text = {}
+	s.ssnptrack.text.w = WH_FILL
+	s.ssnptrack.text.padding = { 10, 7, 8, 9 }
+	s.ssnptrack.text.align = "top-left"
+        s.ssnptrack.text.font = Font:load(fontpath .. "FreeSans.ttf", 14)
+	s.ssnptrack.text.lineHeight = 17
+        s.ssnptrack.text.line = {
 		{
 			font = Font:load(fontpath .. "FreeSansBold.ttf", 14),
 			height = 17
 		}
 	}
-	s.nptrack.text.fg = { 0x00, 0x00, 0x00 }
+	s.ssnptrack.text.fg = { 0x00, 0x00, 0x00 }
+
+	-- nptrack is identical between the two windowStyles
+	s.browsenptrack = _uses(s.ssnptrack)
 
 	-- Artwork
-	local noartwork166offset = (screenWidth - 166) / 2
-	s.npartwork166 = {}
-	s.npartwork166.w = 166
-	s.npartwork166.border = { noartwork166offset, 4, onoartwork166offset, 6 }
-	s.npartwork166.align = "center"
-	s.npartwork166.bgImg = Tile:loadImage(imgpath .. "album_shadow_166.png")
-	s.npartwork166.artwork = {}
-	s.npartwork166.artwork.padding = 3
-	s.npartwork166.artwork.img = Surface:loadImage(imgpath .. "album_noartwork_166.png")
+	local browseArtWidth = 166
+	local ssArtWidth = 184
+
+	local ssnoartworkoffset = (screenWidth - ssArtWidth) / 2
+	s.ssnpartwork = {}
+	s.ssnpartwork.w = ssArtWidth
+	s.ssnpartwork.border = { ssnoartworkoffset, 4, ssnoartworkoffset, 6 }
+	s.ssnpartwork.align = "center"
+	s.ssnpartwork.bgImg = Tile:loadImage(imgpath .. "album_shadow_" .. ssArtWidth .. ".png")
+	s.ssnpartwork.artwork = {}
+	s.ssnpartwork.artwork.padding = 3
+	s.ssnpartwork.artwork.img = Surface:loadImage(imgpath .. "album_noartwork_" .. ssArtWidth .. ".png")
+
+	-- artwork layout is not the same between the two windowStyles
+	local browsenoartworkoffset = (screenWidth - browseArtWidth) / 2
+	local browsenpartwork = {
+		w = browseArtWidth,
+		border = { browsenoartworkoffset, 4, browsenoartworkoffset, 6 },
+		bgImg = Tile:loadImage(imgpath .. "album_shadow_" .. browseArtWidth .. ".png"),
+		artwork = { padding = 3, img = Surface:loadImage(imgpath .. "album_noartwork_" .. browseArtWidth .. ".png") }
+	}
+	s.browsenpartwork = _uses(s.ssnpartwork, browsenpartwork)
 
 	-- Progress bar
         local progressBackground =
@@ -493,18 +568,37 @@ function skin(self, s)
                                         npimgpath .. "progressbar_fill_r.png",
                                })
 
-	s.progress = {}
-	s.progress.order = { "elapsed", "slider", "remain" }
-	s.progress.text = {}
-	s.progress.text.w = 50
-	s.progress.text.padding = { 8, 0, 8, 0 }
-	s.progress.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
-	s.progress.text.fg = { 0xe7,0xe7, 0xe7 }
-	s.progress.text.sh = { 0x37, 0x37, 0x37 }
+	s.ssprogress = {}
+	s.ssprogress.order = { "elapsed", "slider", "remain" }
+	s.ssprogress.text = {}
+	s.ssprogress.text.w = 50
+	s.ssprogress.padding = { 0, 10, 0, 0 }
+	s.ssprogress.text.padding = { 8, 0, 8, 0 }
+	s.ssprogress.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
+	s.ssprogress.text.fg = { 0xe7,0xe7, 0xe7 }
+	s.ssprogress.text.sh = { 0x37, 0x37, 0x37 }
 
-	s.progressB             = {}
-        s.progressB.horizontal  = 1
-        s.progressB.bgImg       = progressBackground
-        s.progressB.img         = progressBar
+	-- browse has different positioning than ss windowStyle
+	local browseprogress = {
+		padding = { 0, 0, 0, 0 } 
+	}
+	s.browseprogress = _uses(s.ssprogress)
 
+	s.ssprogressB             = {}
+        s.ssprogressB.horizontal  = 1
+        s.ssprogressB.bgImg       = progressBackground
+        s.ssprogressB.img         = progressBar
+
+	s.browseprogressB = _uses(s.ssprogressB)
+
+	-- background style should start at x,y = 0,0
+        s.iconbg = {}
+        s.iconbg.x = 0
+        s.iconbg.y = 0
+        s.iconbg.h = screenHeight
+        s.iconbg.w = screenWidth
+	s.iconbg.border = { 0, 0, 0, 0 }
+	s.iconbg.position = LAYOUT_NONE
 end
+
+
