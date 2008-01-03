@@ -372,6 +372,7 @@ local function _newWindowSpec(db, item, titleStyle)
 	return {
 		["windowStyle"]      = "",
 		["labelTitleStyle"]  = _priorityAssign('titleStyle', titleStyle, iWindow, bWindow) .. "title",
+		['help']             = _priorityAssign('help', item['help'], iWindow, bWindow),
 		["menuStyle"]        = menuStyle .. "menu",
 		["labelItemStyle"]   = menuStyle .. "item",
 		["text"]             = _priorityAssign('text',       item["text"],    iWindow, bWindow),
@@ -1406,7 +1407,17 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		-- alltogether now
 		menu:setItems(db:menuItems())
 		window:addWidget(menu)
-	
+
+		-- add support for help text on a regular menu
+		local helpText
+		if windowSpec.help then
+			helpText = windowSpec.help
+			if helpText then
+				local help = Textarea('help', helpText)
+				window:addWidget(help)
+			end
+		end
+
 	end
 	
 	
