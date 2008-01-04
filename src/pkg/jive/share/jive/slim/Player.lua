@@ -18,6 +18,8 @@ Notifications:
  playerPower:
  playerNew (performed by SlimServer)
  playerDelete (performed by SlimServer)
+ playerTrackChange
+ playerModeChange
 
 =head1 FUNCTIONS
 
@@ -27,7 +29,7 @@ Notifications:
 local debug = require("jive.utils.debug")
 
 -- stuff we need
-local _assert, tonumber, tostring = _assert, tonumber, tostring
+local _assert, tonumber, tostring, pairs = _assert, tonumber, tostring, pairs
 
 local os             = require("os")
 local string         = require("string")
@@ -124,6 +126,42 @@ local function _setPlayerPower(self, power)
 	end
 end
 
+
+-- _setPlayerModeChange()
+-- sends notifications when changes in the play mode (e.g., moves from play to paused)
+local function _setPlayerModeChange(self, mode)
+	log:debug("_setPlayerModeChange")
+	if mode != self.mode then
+		self.mode = mode
+		self.jnt:notify('playerModeChange', mode)
+	end
+end
+
+-- _whatsPlaying(obj)
+-- returns the track_id from a playerstatus structure
+local function _whatsPlaying(obj)
+	if obj.item_loop then
+		if obj.item_loop[1].params then
+			if obj.item_loop[1].params.track_id and not obj.remote then
+				return obj.item_loop[1].params.track_id
+			elseif obj.item_loop[1].text then
+				return obj.item_loop[1].text
+			end
+		end
+	end
+	return nil
+end
+
+-- _setPlayerTrackChange()
+-- sends notifications when a change occurs to the currently playing track
+local function _setPlayerTrackChange(self, nowPlaying, data)
+	log:debug("_setPlayerTrackChange")
+	if self.nowPlaying != nowPlaying then
+		self.nowPlaying = nowPlaying
+		self.jnt:notify('playerTrackChange', nowPlaying, data)
+	end
+end
+
 --[[
 
 =head2 jive.slim.Player(server, jnt, playerInfo)
@@ -132,6 +170,7 @@ Create a Player object for server I<server>.
 
 =cut
 --]]
+
 function __init(self, slimServer, jnt, playerInfo)
 	log:debug("Player:__init(", playerInfo.playerid, ")")
 
@@ -178,11 +217,54 @@ Updates the player with fresh data from SS.
 function updateFromSS(self, playerInfo)
 	
 	self.model = playerInfo.model
-	self.needsUpgrade = (tonumber(playerInfo.player_needs_upgrade) == 1),
+	self.needsUpgrade = (tonumber(playerInfo.player_needs_upgrade) == 1)
 
 	_setPlayerName(self, playerInfo.name)
 	_setPlayerPower(self, tonumber(playerInfo.power))
 	_setConnected(self, playerInfo.connected)
+
+end
+
+--[[
+
+=head2 jive.slim.Player:getTrackElapsed()
+
+returns the amount of time elapsed on the current track
+
+=cut
+--]]
+function getTrackElapsed(self, data)
+
+	local now = os.time()
+	local correction = now - data.lastSeen
+	local trackElapsed = data.time + correction
+	if correction <= 0 then
+		return data.time
+	else
+		return trackElapsed
+	end
+	
+end
+
+--[[
+
+=head2 jive.slim.Player:getTrackRemaining()
+
+returns the amount of time left on the current track
+
+=cut
+--]]
+
+function getTrackRemaining(self)
+
+	local now = os.time()
+	local correction = now - self.lastSeen
+	if correction < 0 then
+		correction = 0
+	end
+
+	return self.duration - self.time + correction
+	
 end
 
 --[[
@@ -422,15 +504,25 @@ end
 
 
 -- _process_status
--- receives the status data
+-- processes the playerstatus data and calls associated functions for notification
 function _process_status(self, event)
 	log:debug("Player:_process_playerstatus()")
 	
 	-- update our cache in one go
 	self.state = event.data
 	
+	-- used for calculating getTrackElapsed(), getTrackRemaining()
+	self.lastSeen = os.time()
+	event.data.lastSeen = self.lastSeen
+
 	_setConnected(self, self.state["player_connected"])
-	
+
+	_setPlayerModeChange(self, event.data.mode)
+
+	local nowPlaying = _whatsPlaying(event.data)
+
+	_setPlayerTrackChange(self, nowPlaying, event.data)
+
 	self:updateIconbar()
 	
 	self:feedStatusSink()

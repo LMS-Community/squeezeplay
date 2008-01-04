@@ -1,4 +1,4 @@
-local pairs, ipairs, tostring, type, setmetatable = pairs, ipairs, tostring, type, setmetatable
+local pairs, ipairs, tostring, type, setmetatable, tonumber = pairs, ipairs, tostring, type, setmetatable, tonumber
 
 local math             = require("math")
 local table            = require("table")
@@ -180,7 +180,86 @@ local function updatePosition(self)
 end
 
 function init(self)
+
 	jnt:subscribe(self)
+	self.data = {}
+	self.data.item_loop = {}
+
+end
+
+function notify_playerTrackChange(self, nowPlaying, data)
+	log:debug("PLAYER TRACK NOTIFICATION RECEIVED")
+
+	if not self.player then
+		local discovery = appletManager:getAppletInstance("SlimDiscovery")
+		self.player = discovery:getCurrentPlayer()
+	end
+
+	local playerid = self.player:getId()
+
+	-- the playerstatus data coming through this notification gets attached to self.data
+	self.data = data
+
+        if data.item_loop
+		and self.nowPlaying ~= nowPlaying
+	then
+		-- for remote streams, nowPlaying = text
+		-- for local music, nowPlaying = track_id
+		self.nowPlaying = nowPlaying
+
+		if data.item_loop then
+			log:debug("...AND THE TRACK HAS CHANGED")
+			local text = data.item_loop[1].text
+			local showProgressBar = true
+			-- XXX: current_title of null is a function value??
+			if data.remote == 1 and type(data.current_title) == 'string' then 
+				text = text .. "\n" .. data.current_title
+			end
+			if data.time == 0 then
+				showProgressBar = false
+			end
+	
+			local item = data.item_loop[1]
+	
+			if self.window then
+				_getIcon(self, item, self.artwork, data.remote)
+
+				self:updateTrack(text)
+				self:updateProgress(data)
+				self:updatePlaylist(true, data.playlist_cur_index, data.playlist_tracks)
+	
+				-- preload artwork for next track
+				if data.item_loop[2] then
+					_getIcon(self, data.item_loop[2], Icon("artwork"), data.remote)
+				end
+			end
+		else
+			if self.window then
+				_getIcon(self, nil, self.artwork, nil)
+				self:updateTrack("\n\n\n")
+				--self:updateProgress(0, 0)
+				self:updatePlaylist(false, 0, 0)
+			end
+		end
+	end
+end
+
+function notify_playerModeChange(self, mode)
+
+	log:debug("Mode has been changed to:", mode)
+
+	self.mode = mode
+
+	if self.titleGroup then
+		if mode == "play" then
+			self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_NOWPLAYING"))
+		elseif mode == "pause" then
+			self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_PAUSED"))
+		else
+			self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_STOPPED"))
+		end
+	end
+
 end
 
 function notify_playerCurrent(self, player)
@@ -200,19 +279,24 @@ function notify_playerCurrent(self, player)
 		}
 	)
 
+
 end
 
 function updateTrack(self, trackinfo, pos, length)
 	self.trackGroup:setWidgetValue("text", trackinfo);
 end
 
-function updateProgress(self, trackpos, tracklen)
-	self.trackPos = trackpos
-	self.trackLen = tracklen	
+function updateProgress(self, data)
+	self.trackPos = tonumber(data.time)
+	self.trackLen = tonumber(data.duration)
+
+	if self.player then
+		self.trackPos = self.player:getTrackElapsed(data)
+	end
 
 	if self.progressSlider then
-		if tracklen and tracklen > 0 then
-			self.progressSlider:setRange(0, tracklen, trackpos)
+		if self.trackLen and self.trackLen > 0 then
+			self.progressSlider:setRange(0, self.trackLen, self.trackPos)
 		else 
 			-- If 0 just set it to 100
 			self.progressSlider:setRange(0, 100, 0)
@@ -259,67 +343,7 @@ end
 -- Screen Saver Display 
 --
 
-function _process_status(self, data)
-	log:debug("_process_status")
-
-	local createdWindow = false
-
-	if data.item_loop 
-		and data.item_loop[1].params.track_id ~= self.track_id 
-		then
-
-		-- create new window
-		-- FIXME this can now be combined in _process_status, may help fixing bug 6087
-		_createUI(self, data)
-		createdWindow = true
-
-		self.track_id = data.item_loop[1].params.track_id
-	end
-
-	self.mode = data.mode
-
-	if self.mode == "play" then
-		self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_NOWPLAYING"))
-	elseif self.mode == "pause" then
-		self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_PAUSED"))
-	else
-		self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_STOPPED"))
-	end
-
-	if data.item_loop then
-		local text = data.item_loop[1].text
-		local showProgressBar = true
-		-- XXX: current_title of null is a function value??
-		if data.remote == 1 and type(data.current_title) == 'string' then 
-			text = text .. "\n" .. data.current_title
-		end
-		if data.time == 0 then
-			showProgressBar = false
-		end
-
-		local item = data.item_loop[1]
-
-		_getIcon(self, item, self.artwork, data.remote)
-		self:updateTrack(text)
-		self:updateProgress(data.time, data.duration)
-		self:updatePlaylist(true, data.playlist_cur_index, data.playlist_tracks)
-
-		-- preload artwork for next track
-		if data.item_loop[2] then
-			_getIcon(self, data.item_loop[2], Icon("artwork"), data.remote)
-		end
-	else
-		_getIcon(self, nil, self.artwork, nil)
-		self:updateTrack("\n\n\n")
-		self:updateProgress(0, 0)
-		self:updatePlaylist(false, 0, 0)
-	end
-
-	return createdWindow
-end
-
-
-function _createUI(self, data)
+function _createUI(self)
 	local window = Window("window")
 
 	if windowStyle == 'ss' then
@@ -330,10 +354,10 @@ function _createUI(self, data)
 		window:addWidget(Icon("iconbg", srf))
 	end
 
-	if data.duration then
-		showProgressBar = true
-	else
+	if not self.data.duration then
 		showProgressBar = false
+	else
+		showProgressBar = true
 	end
 
 	local components = { 
@@ -404,13 +428,21 @@ function showNowPlaying(self, style)
 	-- this is to show the window to be opened in two modes: 
 	-- ss and browse
 
+	--convenience
+	local _statusData = self.data
+	local _thisTrack = self.data.item_loop[1]
+
 	if not style then style = 'ss' end
 
 	windowStyle = style
 
+	if not self.window then
+		log:debug("CREATING UI FOR NOWPLAYING")
+		_createUI(self)
+	end
+
 	local discovery = appletManager:getAppletInstance("SlimDiscovery")
 	self.player = discovery:getCurrentPlayer()
-
 
 	local transitionOn
 	if style == 'ss' then
@@ -426,31 +458,36 @@ function showNowPlaying(self, style)
 
 	local playerid = self.player:getId()
 
-	-- Register our own functions to be called when we receive data
-	self.statusSink =
-		function(chunk, err)
-			if err then
-				log:warn(err)
-			else
-				-- only update if previous now playing window is
-				-- on the top of the stack
-				if Framework.windowStack[1] ~= self.window then
-					return
-				end
 
-				if self:_process_status(chunk.data) then
-					self.window:showInstead(Window.transitionFadeIn)
-				end
-			end
+	-- if we have data, then update and display it
+	if _thisTrack then
+		local text = _thisTrack.text
+		if _statusData.remote == 1 and type(_statusData.current_title) == 'string' then
+			text = text .. "\n" .. _statusData.current_title
 		end
 
-	self.player.slimServer.comet:addCallback(
-		'/slim/playerstatus/' .. playerid, self.statusSink
-	)
+		_getIcon(self, _thisTrack, self.artwork, _statusData.remote)
+		self:updateTrack(text)
+		--self:updateProgress(self.data.time, self.data.duration)
+		self:updateProgress(_statusData)
+		self:updatePlaylist(true, self.data.playlist_cur_index, self.data.playlist_tracks)
+
+		-- preload artwork for next track
+		if _statusData.item_loop[2] then
+			_getIcon(self, _statusData.item_loop[2], Icon("artwork"), _statusData.remote)
+		end
+
+	-- otherwise punt
+	else
+		-- FIXME: we should probably exit the window when there's no track to display
+		_getIcon(self, nil, self.artwork, nil) 
+		self:updateTrack("\n\n\n")
+		--self:updateProgress(0, 0)
+		self:updatePlaylist(false, 0, 0)	
+	end
 
 	-- Initialize with current data from Player
 	-- FIXME, if this gets called when it shouldn't, we write a window over our current one and mess up the stack (easy way to reproduce: hit fwd to go to the next track when on the NowPlaying window)
-	self:_process_status(self.player.state)
 	self.window:show(transitionOn)
 
 	if windowStyle == 'browse' then
@@ -482,13 +519,12 @@ function showNowPlaying(self, style)
 	end
 end
 
-
 function free(self)
-	if self.player then
-		self.player.slimServer.comet:removeCallback( '/slim/playerstatus/' .. self.player:getId(), self.statusSink )
-		-- this will cause the window to be recreated when moving between ss and browse styles
-		self.track_id = nil
-	end
+	-- when we leave NowPlaying, ditch the window
+	-- the screen can get loaded with two layouts, and by doing this
+	-- we force the recreation of the UI when re-entering the screen, possibly in a different mode
+	self.window = nil
+
 end
 
 

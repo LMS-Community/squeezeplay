@@ -670,9 +670,9 @@ local function _menuSink(self, cmd)
 		-- FIXME: `playerId not nil` part of this clause needs to be removed
 		-- It is necessary to support pre 21Dec07 versions of SC
 		if playerId ~= nil and playerId ~= 'all' and playerId ~= _player.id then
-			log:warn('***** This menu notification was not for this player ***** ')
-			log:warn("Notification for: ", playerId)
-			log:warn("This player is: ", _player.id)
+			log:debug('***** This menu notification was not for this player ***** ')
+			log:debug("Notification for: ", playerId)
+			log:debug("This player is: ", _player.id)
 			return
 		end
 
@@ -941,7 +941,7 @@ local _defaultActions = {
 -- _actionHandler
 -- sorts out the action business: item action, base action, default action...
 _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
-	log:warn("_actionHandler(", actionName, ")")
+	log:debug("_actionHandler(", actionName, ")")
 
 	if logd:isDebug() then
 		debug.dump(item, 4)
