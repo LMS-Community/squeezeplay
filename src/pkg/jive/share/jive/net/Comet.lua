@@ -77,8 +77,6 @@ local JIVE_VERSION  = jive.JIVE_VERSION
 
 -- times are in ms
 local RETRY_DEFAULT = 5000  -- default delay time to retry connection
-local SUB_DELAY     = 1000  -- how long to wait before sending subscription requests
-local UNSUB_DELAY   = 3000  -- how long to wait before sending unsubscription requests
 
 -- jive.net.Comet is a base class
 module(..., oo.class)
