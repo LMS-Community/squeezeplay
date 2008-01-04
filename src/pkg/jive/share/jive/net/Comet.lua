@@ -76,7 +76,8 @@ local log           = require("jive.utils.log").logger("net.comet")
 local JIVE_VERSION  = jive.JIVE_VERSION
 
 -- times are in ms
-local RETRY_DEFAULT = 5000  -- default delay time to retry connection
+local RETRY_DEFAULT = 5000  -- default delay time to retry connection (5s)
+local MAX_BACKOFF   = 60000 -- don't wait longer than this before retrying (60s)
 
 -- jive.net.Comet is a base class
 module(..., oo.class)
@@ -723,10 +724,9 @@ _handleAdvice = function(self)
 	
 	-- Keep retrying after multiple failures but backoff gracefully
 	local retry_interval = ( advice.interval or RETRY_DEFAULT ) * self.failures
-	
-	-- XXX: Work around a bug in Timer where interval of 0 causes a loop
-	if retry_interval < 1 then
-		retry_interval = 1
+
+	if retry_interval > MAX_BACKOFF then
+		retry_interval = MAX_BACKOFF
 	end
 	
 	if advice.reconnect == 'none' then
