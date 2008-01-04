@@ -10,11 +10,11 @@ TOLUA = tolua++
 
 
 # Check lua syntax
-check_lua:
-	@rm -f badsyntax
-	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
-	@test \! -s badsyntax
-	@rm -f badsyntax
+#check_lua:
+#	@rm -f badsyntax
+#	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
+#	@test \! -s badsyntax
+#	@rm -f badsyntax
 
 
 # Convenience library: libui.la
@@ -77,7 +77,7 @@ jive_SOURCES = \
 	src/jive_debug.c
 
 jive_LDADD = libjiveui.la -llua
-jive_DEPENDENCIES = check_lua
+#jive_DEPENDENCIES = check_lua
 
 
 # Test program: jiveblit
@@ -461,6 +461,15 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/mini_quarter_note.png \
 	share/applets/DefaultSkin/images/mini_search.png \
 	share/applets/DefaultSkin/images/mini_settings.png \
+	share/applets/DefaultSkin/images/mini_albums.png \
+	share/applets/DefaultSkin/images/mini_artists.png \
+	share/applets/DefaultSkin/images/mini_genres.png \
+	share/applets/DefaultSkin/images/mini_infobrowser.png \
+	share/applets/DefaultSkin/images/mini_musicfolder.png \
+	share/applets/DefaultSkin/images/mini_newmusic.png \
+	share/applets/DefaultSkin/images/mini_playlist.png \
+	share/applets/DefaultSkin/images/mini_random.png \
+	share/applets/DefaultSkin/images/mini_years.png \
 	share/applets/DefaultSkin/images/menu_album_selection_bl.png \
 	share/applets/DefaultSkin/images/menu_album_selection_b.png \
 	share/applets/DefaultSkin/images/menu_album_selection_br.png \
