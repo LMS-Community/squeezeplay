@@ -14,13 +14,6 @@
 
 @SET_MAKE@
 
-# Check lua syntax
-check_lua:
-	@rm -f badsyntax
-	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
-	@test \! -s badsyntax
-	@rm -f badsyntax
-
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -53,8 +46,7 @@ DIST_COMMON = $(am__configure_deps) \
 	$(dist_applets_setupSqueezebox_DATA) \
 	$(dist_applets_setupWireless_DATA) \
 	$(dist_applets_squeezeboxjive_DATA) \
-	$(dist_applets_testDisplay_DATA) \
-	$(dist_applets_testIR_DATA) \
+	$(dist_applets_testDisplay_DATA) $(dist_applets_testIR_DATA) \
 	$(dist_applets_testKeypad_DATA) \
 	$(dist_applets_testMotion_DATA) $(dist_jive_net_DATA) \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
@@ -139,8 +131,7 @@ DATA = $(dist_applets_SetupFactoryReset_DATA) \
 	$(dist_applets_setupSqueezebox_DATA) \
 	$(dist_applets_setupWireless_DATA) \
 	$(dist_applets_squeezeboxjive_DATA) \
-	$(dist_applets_testDisplay_DATA) \
-	$(dist_applets_testIR_DATA) \
+	$(dist_applets_testDisplay_DATA) $(dist_applets_testIR_DATA) \
 	$(dist_applets_testKeypad_DATA) \
 	$(dist_applets_testMotion_DATA) $(dist_jive_net_DATA)
 ETAGS = etags
@@ -262,7 +253,6 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AM_CFLAGS = -Wall -Werror -D_GNU_SOURCE
 lib_LTLIBRARIES = jiveBSP.la jiveWireless.la jiveWatchdog.la
-
 jiveBSP_la_DEPENDENCIES = check_lua
 jiveBSP_la_LDFLAGS = -module -no-version
 jiveBSP_la_SOURCES = \
@@ -1061,6 +1051,13 @@ uninstall-am: uninstall-dist_applets_SetupFactoryResetDATA \
 	uninstall-dist_jive_netDATA uninstall-info-am \
 	uninstall-libLTLIBRARIES
 
+
+# Check lua syntax
+check_lua:
+	@rm -f badsyntax
+	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
+	@test \! -s badsyntax
+	@rm -f badsyntax
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
