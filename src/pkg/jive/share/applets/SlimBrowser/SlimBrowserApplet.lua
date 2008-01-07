@@ -860,8 +860,9 @@ local _globalActions = {
 			end
 		else
 			Framework:playSound("WINDOWSHOW")
-			--FIXME: really what we want here is to go to NowPlaying, but that's served by the NowPlaying applet, so not sure how we'd do that...
-			showPlaylist()
+			local NowPlaying = AppletManager:loadApplet("NowPlaying")
+			NowPlaying:showNowPlaying('browse')
+			AppletManager:freeApplet("NowPlaying")
 		end
 				
 		return EVENT_CONSUME
