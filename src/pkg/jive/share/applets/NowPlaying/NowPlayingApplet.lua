@@ -188,7 +188,7 @@ function init(self)
 
 end
 
-function notify_playerTrackChange(self, nowPlaying, data)
+function notify_playerTrackChange(self, player, nowPlaying, data)
 	log:debug("PLAYER TRACK NOTIFICATION RECEIVED")
 
 	if not self.player then
@@ -260,7 +260,7 @@ function _updateAll(self, data)
 	end
 end
 
-function notify_playerModeChange(self, mode)
+function notify_playerModeChange(self, player, mode)
 
 	log:debug("Player mode has been changed to: ", mode)
 
