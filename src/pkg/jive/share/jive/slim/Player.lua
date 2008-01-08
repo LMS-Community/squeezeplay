@@ -133,7 +133,7 @@ local function _setPlayerModeChange(self, mode)
 	log:debug("_setPlayerModeChange")
 	if mode != self.mode then
 		self.mode = mode
-		self.jnt:notify('playerModeChange', mode)
+		self.jnt:notify('playerModeChange', self, mode)
 	end
 end
 
@@ -158,7 +158,7 @@ local function _setPlayerTrackChange(self, nowPlaying, data)
 	log:debug("_setPlayerTrackChange")
 	if self.nowPlaying != nowPlaying then
 		self.nowPlaying = nowPlaying
-		self.jnt:notify('playerTrackChange', nowPlaying, data)
+		self.jnt:notify('playerTrackChange', self, nowPlaying, data)
 	end
 end
 
