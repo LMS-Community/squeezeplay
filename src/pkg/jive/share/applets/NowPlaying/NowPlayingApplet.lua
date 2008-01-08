@@ -153,7 +153,7 @@ local function _getIcon(self, item, icon, remote)
 	elseif item and item["params"] and item["params"]["track_id"] then
 		-- this is for the radio image-- remote URLs with no icon (Bug 6087)
 		server:fetchArtworkThumb(item["params"]["track_id"], icon, _nowPlayingArtworkThumbUri, ARTWORK_SIZE) 
-	else
+	elseif icon then 
 		icon:setValue(nil)
 	end
 end
