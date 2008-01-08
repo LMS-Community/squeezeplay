@@ -203,6 +203,30 @@ end
 
 --[[
 
+=head2 jive.ui.Window:replace(toReplace, transition)
+
+Replaces toReplace window with a new window object
+
+=cut
+--]]
+
+function replace(self, toReplace, transition)
+	local topWindow = 1
+	for i in ipairs(Framework.windowStack) do
+		if Framework.windowStack[i] == toReplace then
+			if i == topWindow then
+				log:warn('replacing top window')
+				self:showInstead(transition)
+			else
+				log:warn('replacing window at position ', i, ' in the stack')
+				Framework.windowStack[i] = self
+			end
+		end
+	end
+end
+
+--[[
+
 =head2 jive.ui.Window:showBriefly(msecs, closure, pushTransition, popTransition)
 
 Shows this window briefly for I<msecs> milliseconds. When the timeout occurs, or a key has been pressed then window is hidden and the I<closure> is called. The I<pushTransition> and I<popTransition> transitions are used to move the window on and off stage.

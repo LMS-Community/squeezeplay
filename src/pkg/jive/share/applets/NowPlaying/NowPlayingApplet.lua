@@ -158,6 +158,7 @@ local function _getIcon(self, item, icon, remote)
 	end
 end
 
+
 local function updatePosition(self)
 	local strElapsed = ""
 	local strRemain = ""
@@ -200,64 +201,74 @@ function notify_playerTrackChange(self, nowPlaying, data)
 	-- the playerstatus data coming through this notification gets attached to self.data
 	self.data = data
 
-        if data.item_loop
-		and self.nowPlaying ~= nowPlaying
-	then
-		-- for remote streams, nowPlaying = text
-		-- for local music, nowPlaying = track_id
-		self.nowPlaying = nowPlaying
+	-- if windowStyle hasn't been initialized yet, skip this
+	if windowStyle then
 
-		if data.item_loop then
-			log:debug("...AND THE TRACK HAS CHANGED")
-			local text = data.item_loop[1].text
-			local showProgressBar = true
-			-- XXX: current_title of null is a function value??
-			if data.remote == 1 and type(data.current_title) == 'string' then 
-				text = text .. "\n" .. data.current_title
-			end
-			if data.time == 0 then
-				showProgressBar = false
-			end
-	
-			local item = data.item_loop[1]
-	
-			if self.window then
-				_getIcon(self, item, self.artwork, data.remote)
+		-- create the window to display
+		local window = _createUI(self)
+		window:replace(self.window, Window.transitionFadeIn)
+		self.window = window
+		self:_installListeners(window)
 
-				self:updateTrack(text)
-				self:updateProgress(data)
-				self:updatePlaylist(true, data.playlist_cur_index, data.playlist_tracks)
+	        if data.item_loop
+			and self.nowPlaying ~= nowPlaying
+		then
+			-- for remote streams, nowPlaying = text
+			-- for local music, nowPlaying = track_id
+			self.nowPlaying = nowPlaying
 	
-				-- preload artwork for next track
-				if data.item_loop[2] then
-					_getIcon(self, data.item_loop[2], Icon("artwork"), data.remote)
-				end
+			--update everything
+			self:_updateAll(data)
+
+		end
+	end
+end
+
+function _updateAll(self, data)
+	if not data then data = self.data end
+	if data.item_loop then
+		local text = data.item_loop[1].text
+		local showProgressBar = true
+		-- XXX: current_title of null is a function value??
+		if data.remote == 1 and type(data.current_title) == 'string' then 
+			text = text .. "\n" .. data.current_title
+		end
+		if data.time == 0 then
+			showProgressBar = false
+		end
+
+		local item = data.item_loop[1]
+	
+		if self.window then
+			_getIcon(self, item, self.artwork, data.remote)
+
+			self:updateTrack(text)
+			self:updateProgress(data)
+			self:updatePlaylist(true, data.playlist_cur_index, data.playlist_tracks)
+		
+			-- preload artwork for next track
+			if data.item_loop[2] then
+				_getIcon(self, data.item_loop[2], Icon("artwork"), data.remote)
 			end
-		else
-			if self.window then
-				_getIcon(self, nil, self.artwork, nil)
-				self:updateTrack("\n\n\n")
-				--self:updateProgress(0, 0)
-				self:updatePlaylist(false, 0, 0)
-			end
+		end
+	else
+		if self.window then
+			_getIcon(self, nil, self.artwork, nil)
+			self:updateTrack("\n\n\n")
+			self:updatePlaylist(false, 0, 0)
 		end
 	end
 end
 
 function notify_playerModeChange(self, mode)
 
-	log:debug("Mode has been changed to:", mode)
+	log:debug("Player mode has been changed to: ", mode)
 
+	self.data.mode = mode
 	self.mode = mode
 
 	if self.titleGroup then
-		if mode == "play" then
-			self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_NOWPLAYING"))
-		elseif mode == "pause" then
-			self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_PAUSED"))
-		else
-			self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_STOPPED"))
-		end
+		self:updateMode(mode)
 	end
 
 end
@@ -278,7 +289,6 @@ function notify_playerCurrent(self, player)
 			end
 		}
 	)
-
 
 end
 
@@ -316,6 +326,16 @@ function updatePlaylist(self, enabled, nr, count)
 	end
 end
 
+function updateMode(self, mode)
+	if mode == "play" then
+		self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_NOWPLAYING"))
+	elseif mode == "pause" then
+		self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_PAUSED"))
+	else
+		self.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_STOPPED"))
+	end
+end
+
 function tick(self)
 	if self.mode ~= "play" then
 		return
@@ -337,6 +357,36 @@ function openSettings(self, menuItem)
 
 	self:tieAndShowWindow(window)
 	return window
+end
+
+
+function _installListeners(self, window)
+	window:addListener(
+		EVENT_WINDOW_ACTIVE,
+		function(event)
+			self:_updateAll(self.data)
+		end
+	)
+
+	if windowStyle == 'browse' then
+		local browser = appletManager:getAppletInstance("SlimBrowser")
+		window:addListener(
+			EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+			function(event)
+				local type = event:getType()
+				local keyPress = event:getKeycode()
+				if (keyPress == KEY_BACK) then
+					-- back to Home
+					window:hide(Window.transitionPushRight)
+					return EVENT_CONSUME
+				elseif (keyPress == KEY_GO) then
+					browser:showPlaylist()
+					return EVENT_CONSUME
+				end
+				return EVENT_UNUSED
+			end
+		)
+	end
 end
 
 ----------------------------------------------------------------------------------------
@@ -420,7 +470,7 @@ function _createUI(self)
 	end
 
 	self:tieWindow(window)
-	self.window = window
+	return window
 end
 
 
@@ -430,16 +480,17 @@ function showNowPlaying(self, style)
 
 	--convenience
 	local _statusData = self.data
-	local _thisTrack = self.data.item_loop[1]
+	local _thisTrack
+	if self.data.item_loop then
+		_thisTrack = self.data.item_loop[1]
+	end
 
 	if not style then style = 'ss' end
 
 	windowStyle = style
 
-	if not self.window then
-		log:debug("CREATING UI FOR NOWPLAYING")
-		_createUI(self)
-	end
+	log:debug("CREATING UI FOR NOWPLAYING")
+	self.window = _createUI(self)
 
 	local discovery = appletManager:getAppletInstance("SlimDiscovery")
 	self.player = discovery:getCurrentPlayer()
@@ -467,8 +518,8 @@ function showNowPlaying(self, style)
 		end
 
 		_getIcon(self, _thisTrack, self.artwork, _statusData.remote)
+		self:updateMode(_statusData.mode)
 		self:updateTrack(text)
-		--self:updateProgress(self.data.time, self.data.duration)
 		self:updateProgress(_statusData)
 		self:updatePlaylist(true, self.data.playlist_cur_index, self.data.playlist_tracks)
 
@@ -480,43 +531,15 @@ function showNowPlaying(self, style)
 	-- otherwise punt
 	else
 		-- FIXME: we should probably exit the window when there's no track to display
-		_getIcon(self, nil, self.artwork, nil) 
+		_getIcon(self, nil, self.data.artwork, nil) 
 		self:updateTrack("\n\n\n")
-		--self:updateProgress(0, 0)
+		self:updateMode(_statusData.mode)
 		self:updatePlaylist(false, 0, 0)	
 	end
 
 	-- Initialize with current data from Player
-	-- FIXME, if this gets called when it shouldn't, we write a window over our current one and mess up the stack (easy way to reproduce: hit fwd to go to the next track when on the NowPlaying window)
 	self.window:show(transitionOn)
-
-	if windowStyle == 'browse' then
-
-		local browser = appletManager:getAppletInstance("SlimBrowser")
-
-		-- don't allow a screensaver on this window
-		-- FIXME: ideally, screensaver would only be repressed if the screensaver was set to NowPlaying 
-		self.window:setAllowScreensaver(false)
-
-		-- install listeners to this "special" window, if opened not in a screensaver context
-		self.window:addListener(
-			EVENT_KEY_PRESS | EVENT_KEY_HOLD,
-			function(event)
-				local type = event:getType()
-				local keyPress = event:getKeycode()
-				if (keyPress == KEY_BACK) then
-					-- back to Home
-					self.window:hide(Window.transitionPushRight)
-					return EVENT_CONSUME
-				elseif (keyPress == KEY_GO) then
-					browser:showPlaylist()
-					return EVENT_CONSUME
-				end
-				return EVENT_UNUSED
-			end
-		)
-
-	end
+	self:_installListeners(self.window)
 end
 
 function free(self)
