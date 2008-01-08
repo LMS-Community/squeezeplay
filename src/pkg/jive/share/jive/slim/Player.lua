@@ -158,7 +158,8 @@ local function _setPlayerTrackChange(self, nowPlaying, data)
 	log:debug("_setPlayerTrackChange")
 	if self.nowPlaying != nowPlaying then
 		self.nowPlaying = nowPlaying
-		self.jnt:notify('playerTrackChange', self, nowPlaying, data)
+		self.playerStatus = data
+		self.jnt:notify('playerTrackChange', self, nowPlaying)
 	end
 end
 

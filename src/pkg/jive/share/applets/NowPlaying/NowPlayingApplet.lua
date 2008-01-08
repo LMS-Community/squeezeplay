@@ -128,7 +128,7 @@ local function _getIcon(self, item, icon, remote)
 
 	if windowStyle == 'ss' then
 		-- without drop shadow
-		ARTWORK_SIZE = 190
+		ARTWORK_SIZE = 186
 		-- with drop shadow
 		--ARTWORK_SIZE = 172
 	else
@@ -153,24 +153,27 @@ local function _getIcon(self, item, icon, remote)
 	elseif item and item["params"] and item["params"]["track_id"] then
 		-- this is for the radio image-- remote URLs with no icon (Bug 6087)
 		server:fetchArtworkThumb(item["params"]["track_id"], icon, _nowPlayingArtworkThumbUri, ARTWORK_SIZE) 
-	elseif icon then 
+	elseif icon then
 		icon:setValue(nil)
 	end
 end
 
 
 local function updatePosition(self)
+
+	if not self.player then return end
+
 	local strElapsed = ""
 	local strRemain = ""
 	local pos = 0
 
-	if self.trackPos then
-		strElapsed = SecondsToString(self.trackPos)
+	if self.player.trackPos then
+		strElapsed = SecondsToString(self.player.trackPos)
 	end
 
-	if self.trackLen and self.trackLen > 0 then
-		strRemain = "-" .. SecondsToString(self.trackLen - self.trackPos)
-		pos = self.trackPos
+	if self.player.trackLen and self.player.trackLen > 0 then
+		strRemain = "-" .. SecondsToString(self.player.trackLen - self.player.trackPos)
+		pos = self.player.trackPos
 	end
 
 	self.progressGroup:setWidgetValue("elapsed", strElapsed)
@@ -183,23 +186,18 @@ end
 function init(self)
 
 	jnt:subscribe(self)
-	self.data = {}
-	self.data.item_loop = {}
+	self.player = {}
+	self.player.playerStatus = {}
 
 end
 
-function notify_playerTrackChange(self, player, nowPlaying, data)
-	log:debug("PLAYER TRACK NOTIFICATION RECEIVED")
+function notify_playerTrackChange(self, player, nowPlaying)
+	log:warn("PLAYER TRACK NOTIFICATION RECEIVED")
 
-	if not self.player then
-		local discovery = appletManager:getAppletInstance("SlimDiscovery")
-		self.player = discovery:getCurrentPlayer()
-	end
+	local thisPlayer = _isThisPlayer(self, player)
+	if not thisPlayer then return end
 
-	local playerid = self.player:getId()
-
-	-- the playerstatus data coming through this notification gets attached to self.data
-	self.data = data
+	self.player = player
 
 	-- if windowStyle hasn't been initialized yet, skip this
 	if windowStyle then
@@ -210,7 +208,7 @@ function notify_playerTrackChange(self, player, nowPlaying, data)
 		self.window = window
 		self:_installListeners(window)
 
-	        if data.item_loop
+	        if player.playerStatus and player.playerStatus.item_loop
 			and self.nowPlaying ~= nowPlaying
 		then
 			-- for remote streams, nowPlaying = text
@@ -218,37 +216,40 @@ function notify_playerTrackChange(self, player, nowPlaying, data)
 			self.nowPlaying = nowPlaying
 	
 			--update everything
-			self:_updateAll(data)
+			self:_updateAll(player.playerStatus)
 
 		end
 	end
 end
 
-function _updateAll(self, data)
-	if not data then data = self.data end
-	if data.item_loop then
-		local text = data.item_loop[1].text
+function _updateAll(self, playerStatus)
+
+	log:debug("UPDATE ALL")
+	if not playerStatus then playerStatus = self.player.playerStatus end
+
+	if playerStatus.item_loop then
+		local text = playerStatus.item_loop[1].text
 		local showProgressBar = true
 		-- XXX: current_title of null is a function value??
-		if data.remote == 1 and type(data.current_title) == 'string' then 
-			text = text .. "\n" .. data.current_title
+		if playerStatus.remote == 1 and type(playerStatus.current_title) == 'string' then 
+			text = text .. "\n" .. playerStatus.current_title
 		end
-		if data.time == 0 then
+		if playerStatus.time == 0 then
 			showProgressBar = false
 		end
 
-		local item = data.item_loop[1]
+		local item = playerStatus.item_loop[1]
 	
 		if self.window then
-			_getIcon(self, item, self.artwork, data.remote)
+			_getIcon(self, item, self.artwork, playerStatus.remote)
 
 			self:updateTrack(text)
-			self:updateProgress(data)
-			self:updatePlaylist(true, data.playlist_cur_index, data.playlist_tracks)
+			self:updateProgress(playerStatus)
+			self:updatePlaylist(true, playerStatus.playlist_cur_index, playerStatus.playlist_tracks)
 		
 			-- preload artwork for next track
-			if data.item_loop[2] then
-				_getIcon(self, data.item_loop[2], Icon("artwork"), data.remote)
+			if playerStatus.item_loop[2] then
+				_getIcon(self, playerStatus.item_loop[2], Icon("artwork"), playerStatus.remote)
 			end
 		end
 	else
@@ -262,10 +263,11 @@ end
 
 function notify_playerModeChange(self, player, mode)
 
+	if not self.player then return end
+
 	log:debug("Player mode has been changed to: ", mode)
 
-	self.data.mode = mode
-	self.mode = mode
+	self.player.mode = mode
 
 	if self.titleGroup then
 		self:updateMode(mode)
@@ -275,7 +277,8 @@ end
 
 function notify_playerCurrent(self, player)
 
-	log:debug("NowPlaying.notify_playerCurrent()")
+	self.player = player
+	windowStyle = 'ss'
 
 	jiveMain:addItem( 
 		{
@@ -292,21 +295,43 @@ function notify_playerCurrent(self, player)
 
 end
 
+function _isThisPlayer(self, player)
+
+	if not self.player then
+		local discovery = appletManager:getAppletInstance("SlimDiscovery")
+		self.player = discovery:getCurrentPlayer()
+	end
+
+	if player.id ~= self.player.id then
+		log:warn("notification was not for this player")
+		log:warn("notification: ", player.id, "your player: ", self.player.id)
+		return false
+	else
+		return true
+	end
+	
+end
+
 function updateTrack(self, trackinfo, pos, length)
 	self.trackGroup:setWidgetValue("text", trackinfo);
 end
 
 function updateProgress(self, data)
-	self.trackPos = tonumber(data.time)
-	self.trackLen = tonumber(data.duration)
 
-	if self.player then
-		self.trackPos = self.player:getTrackElapsed(data)
+	if not self.player and self.player.playerStatus then
+		return
+	end
+
+	self.player.trackPos = tonumber(data.time)
+	self.player.trackLen = tonumber(data.duration)
+
+	if self.player and self.player.playerStatus and self.player.mode == 'play' then
+		self.player.trackPos = self.player:getTrackElapsed(data)
 	end
 
 	if self.progressSlider then
-		if self.trackLen and self.trackLen > 0 then
-			self.progressSlider:setRange(0, self.trackLen, self.trackPos)
+		if self.player.trackLen and self.player.trackLen > 0 then
+			self.progressSlider:setRange(0, self.player.trackLen, self.player.trackPos)
 		else 
 			-- If 0 just set it to 100
 			self.progressSlider:setRange(0, 100, 0)
@@ -337,13 +362,13 @@ function updateMode(self, mode)
 end
 
 function tick(self)
-	if self.mode ~= "play" then
+	if self.player.mode ~= "play" then
 		return
 	end
 
-	self.trackPos = self.trackPos + 1
-	if self.trackLen and self.trackLen > 0 then
-		if self.trackPos > self.trackLen then self.trackPos = self.trackLen end
+	self.player.trackPos = self.player.trackPos + 1
+	if self.player.trackLen and self.player.trackLen > 0 then
+		if self.player.trackPos > self.player.trackLen then self.player.trackPos = self.player.trackLen end
 	end
 
 	updatePosition(self)
@@ -364,7 +389,7 @@ function _installListeners(self, window)
 	window:addListener(
 		EVENT_WINDOW_ACTIVE,
 		function(event)
-			self:_updateAll(self.data)
+			self:_updateAll(self.player.playerStatus)
 		end
 	)
 
@@ -404,10 +429,12 @@ function _createUI(self)
 		window:addWidget(Icon("iconbg", srf))
 	end
 
-	if not self.data.duration then
-		showProgressBar = false
-	else
-		showProgressBar = true
+	if self.player.playerStatus then
+		if not self.player.playerStatus.duration then
+			showProgressBar = false
+		else
+			showProgressBar = true
+		end
 	end
 
 	local components = { 
@@ -479,10 +506,10 @@ function showNowPlaying(self, style)
 	-- ss and browse
 
 	--convenience
-	local _statusData = self.data
+	local _statusData = self.player.playerStatus
 	local _thisTrack
-	if self.data.item_loop then
-		_thisTrack = self.data.item_loop[1]
+	if _statusData.item_loop then
+		_thisTrack = _statusData.item_loop[1]
 	end
 
 	if not style then style = 'ss' end
@@ -507,9 +534,6 @@ function showNowPlaying(self, style)
 		return
 	end
 
-	local playerid = self.player:getId()
-
-
 	-- if we have data, then update and display it
 	if _thisTrack then
 		local text = _thisTrack.text
@@ -521,7 +545,7 @@ function showNowPlaying(self, style)
 		self:updateMode(_statusData.mode)
 		self:updateTrack(text)
 		self:updateProgress(_statusData)
-		self:updatePlaylist(true, self.data.playlist_cur_index, self.data.playlist_tracks)
+		self:updatePlaylist(true, self.player.playerStatus.playlist_cur_index, self.player.playerStatus.playlist_tracks)
 
 		-- preload artwork for next track
 		if _statusData.item_loop[2] then
@@ -531,7 +555,7 @@ function showNowPlaying(self, style)
 	-- otherwise punt
 	else
 		-- FIXME: we should probably exit the window when there's no track to display
-		_getIcon(self, nil, self.data.artwork, nil) 
+		_getIcon(self, nil, self.player.playerStatus.artwork, nil) 
 		self:updateTrack("\n\n\n")
 		self:updateMode(_statusData.mode)
 		self:updatePlaylist(false, 0, 0)	
@@ -547,6 +571,7 @@ function free(self)
 	-- the screen can get loaded with two layouts, and by doing this
 	-- we force the recreation of the UI when re-entering the screen, possibly in a different mode
 	self.window = nil
+	self.player = nil
 
 end
 
@@ -634,7 +659,7 @@ function skin(self, s)
 
 	-- Artwork
 	local browseArtWidth = 166
-	local ssArtWidth = 190
+	local ssArtWidth = 186
 
 	local ssnoartworkoffset = (screenWidth - ssArtWidth) / 2
 	s.ssnpartwork = {}

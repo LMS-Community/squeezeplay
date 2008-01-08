@@ -1729,9 +1729,13 @@ function free(self)
 
 	-- unsubscribe from this player's menustatus
 	log:warn("***** UNSUBSCRIBING FROM /slim/menustatus/", _player.id)
-	_server.comet:unsubscribe('/slim/menustatus/' .. _player.id)
+	if _server and _player then
+		_server.comet:unsubscribe('/slim/menustatus/' .. _player.id)
+	end
 
-	_player:offStage()
+	if _player then
+		_player:offStage()
+	end
 
 	_removePlayerKeyHandler()
 
