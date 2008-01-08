@@ -156,9 +156,9 @@ end
 -- sends notifications when a change occurs to the currently playing track
 local function _setPlayerTrackChange(self, nowPlaying, data)
 	log:debug("_setPlayerTrackChange")
+	self.playerStatus = data
 	if self.nowPlaying != nowPlaying then
 		self.nowPlaying = nowPlaying
-		self.playerStatus = data
 		self.jnt:notify('playerTrackChange', self, nowPlaying)
 	end
 end
@@ -266,6 +266,19 @@ function getTrackRemaining(self)
 
 	return self.duration - self.time + correction
 	
+end
+
+--[[
+
+=head2 jive.slim.Player:getPlayerStatus()
+
+returns the playerStatus information for a given player object
+
+=cut
+--]]
+
+function getPlayerStatus(self)
+	return self.playerStatus
 end
 
 --[[
