@@ -436,7 +436,6 @@ dist_applets_defaultskin_images_DATA = \
         share/applets/DefaultSkin/images/bghighlight_tl.png \
         share/applets/DefaultSkin/images/popup_shutdown_icon.png \
         share/applets/DefaultSkin/images/popup_playlist_icon.png \
-        share/applets/DefaultSkin/images/album_noartwork_166.png \
         share/applets/DefaultSkin/images/button.png \
         share/applets/DefaultSkin/images/button_b.png \
         share/applets/DefaultSkin/images/button_l.png \
@@ -446,8 +445,11 @@ dist_applets_defaultskin_images_DATA = \
         share/applets/DefaultSkin/images/button_bl.png \
         share/applets/DefaultSkin/images/button_tl.png \
         share/applets/DefaultSkin/images/button_tr.png \
+        share/applets/DefaultSkin/images/album_noartwork_56.png \
+        share/applets/DefaultSkin/images/album_noartwork_154.png \
 	share/applets/DefaultSkin/images/album_noartwork_166.png \
 	share/applets/DefaultSkin/images/album_noartwork_184.png \
+        share/applets/DefaultSkin/images/album_noartwork_186.png \
 	share/applets/DefaultSkin/images/album_shadow_166.png \
 	share/applets/DefaultSkin/images/album_shadow_184.png \
 	share/applets/DefaultSkin/images/menu_nowplaying.png \
