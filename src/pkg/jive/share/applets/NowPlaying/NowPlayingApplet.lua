@@ -502,6 +502,13 @@ end
 
 
 function showNowPlaying(self, style)
+
+	if not self.player.playerStatus then
+		local browser = appletManager:getAppletInstance("SlimBrowser")
+		browser:showPlaylist()
+		free(self)
+		return
+	end
 	-- this is to show the window to be opened in two modes: 
 	-- ss and browse
 
@@ -571,7 +578,6 @@ function free(self)
 	-- the screen can get loaded with two layouts, and by doing this
 	-- we force the recreation of the UI when re-entering the screen, possibly in a different mode
 	self.window = nil
-	self.player = nil
 
 end
 
