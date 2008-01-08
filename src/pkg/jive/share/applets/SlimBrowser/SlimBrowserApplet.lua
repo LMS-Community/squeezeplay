@@ -793,7 +793,13 @@ local function _statusSink(step, chunk, err)
 			debug.dump(data, 8)
 		end
 		
-		if data.mode == "play" then
+		local _playerStatus    = _player:getPlayerStatus()
+		local _playlistHasSize = _safeDeref(_playerStatus, 'item_loop', 1)
+		if not _playlistHasSize then
+			-- FIXME, this is where you'd setup the 'NOTHING' playlist
+			step.window:setTitle(_string("SLIMBROWSER_NOW_PLAYING"))
+			step.window:setTitleStyle("playlisttitle")
+		elseif data.mode == "play" then
 			step.window:setTitle(_string("SLIMBROWSER_NOW_PLAYING"))
 			step.window:setTitleStyle("playlisttitle")
 		elseif data.mode == "pause" then

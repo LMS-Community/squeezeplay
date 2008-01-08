@@ -198,6 +198,8 @@ function notify_playerTrackChange(self, player, nowPlaying)
 	if not thisPlayer then return end
 
 	self.player = player
+	-- make sure we've got the playerStatus data
+	self.player.playerStatus = player:getPlayerStatus()
 
 	-- if windowStyle hasn't been initialized yet, skip this
 	if windowStyle then
@@ -225,7 +227,12 @@ end
 function _updateAll(self, playerStatus)
 
 	log:debug("UPDATE ALL")
-	if not playerStatus then playerStatus = self.player.playerStatus end
+	if not playerStatus then 
+		playerStatus = self.player.playerStatus 
+	end
+	if self.player and not playerStatus then
+		playerStatus = self.player:getPlayerStatus()
+	end
 
 	if playerStatus.item_loop then
 		local text = playerStatus.item_loop[1].text
@@ -268,6 +275,7 @@ function notify_playerModeChange(self, player, mode)
 	log:debug("Player mode has been changed to: ", mode)
 
 	self.player.mode = mode
+	self.player.playerStatus = self.player:getPlayerStatus()
 
 	if self.titleGroup then
 		self:updateMode(mode)
@@ -278,6 +286,8 @@ end
 function notify_playerCurrent(self, player)
 
 	self.player = player
+	self.player.playerStatus = self.player:getPlayerStatus()
+
 	windowStyle = 'ss'
 
 	jiveMain:addItem( 
@@ -318,8 +328,11 @@ end
 
 function updateProgress(self, data)
 
-	if not self.player and self.player.playerStatus then
+	if not self.player then
 		return
+	end
+	if not self.player.playerStatus then
+		self.player.playerStatus = self.player:getPlayerStatus()
 	end
 
 	self.player.trackPos = tonumber(data.time)
@@ -503,7 +516,10 @@ end
 
 function showNowPlaying(self, style)
 
-	if not self.player.playerStatus then
+	-- an empty item_loop means an empty playlist
+	if not self.player 
+		or not self.player.playerStatus 
+			or not self.player.playerStatus.item_loop then
 		local browser = appletManager:getAppletInstance("SlimBrowser")
 		browser:showPlaylist()
 		free(self)
@@ -578,7 +594,6 @@ function free(self)
 	-- the screen can get loaded with two layouts, and by doing this
 	-- we force the recreation of the UI when re-entering the screen, possibly in a different mode
 	self.window = nil
-
 end
 
 
