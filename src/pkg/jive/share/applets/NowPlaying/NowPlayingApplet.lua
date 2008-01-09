@@ -186,7 +186,9 @@ function notify_playerTrackChange(self, player, nowPlaying)
 		-- create the window to display
 		local window = _createUI(self)
 		if self[windowStyle].window then
+			self:_uninstallListeners(windowStyle)
 			window:replace(self[windowStyle].window, Window.transitionFadeIn)
+			self:_installListeners(window)
 		end
 		self[windowStyle].window = window
 
@@ -417,9 +419,21 @@ function openSettings(self, menuItem)
 end
 
 
+function _uninstallListeners(self, ws)
+	if not self[ws].listeners then
+		return
+        end
+
+	for i in ipairs(self[ws].listeners) do
+	        Framework:removeListener(self[ws].listeners[i])
+	end
+	self[ws].listeners = false
+end
+		
 function _installListeners(self, window)
 
-	self[windowStyle].windowActiveListener = window:addListener(
+	self[windowStyle].listeners = {}
+	self[windowStyle].listeners[1] = window:addListener(
 		EVENT_WINDOW_ACTIVE,
 		function(event)
 			local stack = Framework.windowStack
@@ -437,7 +451,7 @@ function _installListeners(self, window)
 
 	if windowStyle == 'browse' then
 		local browser = appletManager:getAppletInstance("SlimBrowser")
-		window:addListener(
+		self[windowStyle].listeners[2] = window:addListener(
 			EVENT_KEY_PRESS | EVENT_KEY_HOLD,
 			function(event)
 				local type = event:getType()
@@ -628,9 +642,11 @@ function free(self)
 	log:warn("NowPlaying.free()")
 	self.player = false
 	if self['ss'] then
+		self:_uninstallListeners('ss')
 		self['ss'] = nil
 	end
 	if self['browse'] then
+		self:_uninstallListeners('browse')
 		self['browse'] = nil
 	end
 end
