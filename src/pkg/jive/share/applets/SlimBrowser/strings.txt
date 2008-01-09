@@ -81,3 +81,11 @@ SLIMBROWSER_PROBLEM_CONNECTING_HELP
 	FR	%s ne peut se connecter à %s
 	IT	Problema di connessione di %s a %s
 	NL	%s kan geen verbinding maken met %s
+
+NOTHING
+	DE	Nichts
+	EN	Nothing
+	ES	Nada
+	FR	Rien
+	IT	Niente
+	NL	Niets
