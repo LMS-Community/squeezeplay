@@ -70,10 +70,7 @@ local jnt                    = jnt
 module(...)
 oo.class(_M, Applet)
 
--- with drop shadow
---local ARTWORK_SIZE = 154
--- without drop shadow
-local ARTWORK_SIZE = 166
+local ARTWORK_SIZE = 154
 
 local showProgressBar = true
 
@@ -132,10 +129,7 @@ local function _getIcon(self, item, icon, remote)
 		-- with drop shadow
 		--ARTWORK_SIZE = 172
 	else
-		-- without drop shadow
-		ARTWORK_SIZE = 166
-		-- with drop shadow
-		--ARTWORK_SIZE = 154
+		ARTWORK_SIZE = 154
 	end
 
 	if item and item["icon-id"] then
@@ -698,12 +692,12 @@ function skin(self, s)
 	s.ssnptitle.order = { "title", "playlist" }
 	s.ssnptitle.text = {}
 	s.ssnptitle.text.w = WH_FILL
-	s.ssnptitle.text.padding = { 10, 7, 8, 9 }
+	s.ssnptitle.text.padding = { 10, 7, 10, 9 }
 	s.ssnptitle.text.align = "top-left"
 	s.ssnptitle.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 20)
 	s.ssnptitle.text.fg = { 0x00, 0x00, 0x00 }
 	s.ssnptitle.playlist = {}
-	s.ssnptitle.playlist.padding = { 10, 7, 8, 9 }
+	s.ssnptitle.playlist.padding = { 10, 7, 10, 9 }
 	s.ssnptitle.playlist.font = Font:load(fontpath .. "FreeSans.ttf", 15)
 	s.ssnptitle.playlist.fg = { 0x00, 0x00, 0x00 }
 	s.ssnptitle.playlist.textAlign = "top-right"
@@ -712,13 +706,14 @@ function skin(self, s)
 	-- nptitle style is the same for both windowStyles
 	s.browsenptitle = _uses(s.ssnptitle, browsenptitle)
 
+
 	-- Song
 	s.ssnptrack = {}
 	s.ssnptrack.border = { 4, 0, 4, 0 }
         s.ssnptrack.bgImg = highlightBox
 	s.ssnptrack.text = {}
 	s.ssnptrack.text.w = WH_FILL
-	s.ssnptrack.text.padding = { 8, 7, 8, 2 }
+	s.ssnptrack.text.padding = { 10, 10, 8, 4 }
 	s.ssnptrack.text.align = "top-left"
         s.ssnptrack.text.font = Font:load(fontpath .. "FreeSans.ttf", 14)
 	s.ssnptrack.text.lineHeight = 17
@@ -734,26 +729,28 @@ function skin(self, s)
 	s.browsenptrack = _uses(s.ssnptrack)
 
 	-- Artwork
-	local browseArtWidth = 166
+	local browseArtWidth = 154
 	local ssArtWidth = 186
 
 	local ssnoartworkoffset = (screenWidth - ssArtWidth) / 2
 	s.ssnpartwork = {}
 	s.ssnpartwork.w = ssArtWidth
-	s.ssnpartwork.border = { ssnoartworkoffset, 4, ssnoartworkoffset, 6 }
+	-- 8 pixel padding below artwork in browse mode
+	s.ssnpartwork.border = { ssnoartworkoffset, 10, ssnoartworkoffset, 8 }
 	s.ssnpartwork.align = "bottom-right"
 --	s.ssnpartwork.bgImg = Tile:loadImage(imgpath .. "album_shadow_" .. ssArtWidth .. ".png")
 	s.ssnpartwork.artwork = {}
-	s.ssnpartwork.artwork.padding = 1 
+	s.ssnpartwork.artwork.padding = 0 
 	s.ssnpartwork.artwork.img = Surface:loadImage(imgpath .. "album_noartwork_" .. ssArtWidth .. ".png")
 
 	-- artwork layout is not the same between the two windowStyles
 	local browsenoartworkoffset = (screenWidth - browseArtWidth) / 2
 	local browsenpartwork = {
 		w = browseArtWidth,
-		border = { browsenoartworkoffset, 4, browsenoartworkoffset, 6 },
+		-- 10 pixel padding below artwork in browse mode
+		border = { browsenoartworkoffset, 10, browsenoartworkoffset, 10 },
 		--bgImg = Tile:loadImage(imgpath .. "album_shadow_" .. browseArtWidth .. ".png"),
-		artwork = { padding = 1, img = Surface:loadImage(imgpath .. "album_noartwork_" .. browseArtWidth .. ".png") }
+		artwork = { padding = 0, img = Surface:loadImage(imgpath .. "album_noartwork_" .. browseArtWidth .. ".png") }
 	}
 	s.browsenpartwork = _uses(s.ssnpartwork, browsenpartwork)
 
