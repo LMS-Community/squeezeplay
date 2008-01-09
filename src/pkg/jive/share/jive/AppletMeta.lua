@@ -16,6 +16,7 @@ be accessed and loaded on demand.
 =cut
 --]]
 
+local error = error
 
 local oo = require("loop.base")
 local log = require("jive.utils.log").logger("jive.main")
