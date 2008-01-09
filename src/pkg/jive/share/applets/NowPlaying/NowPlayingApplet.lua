@@ -285,6 +285,10 @@ end
 
 function notify_playerCurrent(self, player)
 
+	if self.player ~= player then
+		self:free()
+	end
+
 	self.player = player
 	self.player.playerStatus = self.player:getPlayerStatus()
 
@@ -522,7 +526,7 @@ function showNowPlaying(self, style)
 			or not self.player.playerStatus.item_loop then
 		local browser = appletManager:getAppletInstance("SlimBrowser")
 		browser:showPlaylist()
-		free(self)
+		self:free()
 		return
 	end
 	-- this is to show the window to be opened in two modes: 
@@ -593,6 +597,8 @@ function free(self)
 	-- when we leave NowPlaying, ditch the window
 	-- the screen can get loaded with two layouts, and by doing this
 	-- we force the recreation of the UI when re-entering the screen, possibly in a different mode
+	log:warn("NowPlaying.free()")
+	self.player = false
 	self.window = nil
 end
 
