@@ -66,10 +66,6 @@ local HttpPool      = require("jive.net.HttpPool")
 local SocketHttp    = require("jive.net.SocketHttp")
 local Timer         = require("jive.ui.Timer")
 
-local Icon          = require("jive.ui.Icon")
-local Label         = require("jive.ui.Label")
-local Popup         = require("jive.ui.Popup")
-
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("net.comet")
 
