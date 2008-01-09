@@ -38,7 +38,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories=".;&quot;..\..\lua-5.1.1\src&quot;"
-				PreprocessorDefinitions="WIN32;;LUAPROFILER_API=__declspec(dllexport);_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
+				PreprocessorDefinitions="WIN32;LUAPROFILER_API=__declspec(dllexport);_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
 				RuntimeLibrary="3"
 			/>
 			<Tool
@@ -83,7 +83,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -103,6 +103,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories=".;&quot;..\..\lua-5.1.1\src&quot;"
+				PreprocessorDefinitions="WIN32;LUAPROFILER_API=__declspec(dllexport);_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
