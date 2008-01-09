@@ -82,7 +82,7 @@ SLIMBROWSER_PROBLEM_CONNECTING_HELP
 	IT	Problema di connessione di %s a %s
 	NL	%s kan geen verbinding maken met %s
 
-NOTHING
+SLIMBROWSER_NOTHING
 	DE	Nichts
 	EN	Nothing
 	ES	Nada

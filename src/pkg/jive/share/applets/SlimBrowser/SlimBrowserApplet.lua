@@ -799,7 +799,7 @@ local function _statusSink(step, chunk, err)
 			local window = Window("window", _string("SLIMBROWSER_NOW_PLAYING"), 'playlisttitle')
 			local menu = SimpleMenu("menu")
 			menu:addItem({
-				text = _string('NOTHING'),
+				text = _string('SLIMBROWSER_NOTHING'),
 				style = 'itemNoAction'
 			})
 			window:addWidget(menu)
