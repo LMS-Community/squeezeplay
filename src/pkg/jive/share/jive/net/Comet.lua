@@ -149,21 +149,21 @@ function disconnect(self)
 	if self.active then
 	
 		log:debug('Comet:disconnect()')
+		
+		_active(self, false)
+
+		-- Mark all subs as pending so they can be resubscribed later
+		for i, v in ipairs( self.subs ) do
+			log:debug("Will re-subscribe to ", v.subscription, " on next connect")
+			v.pending = true
+		end
 
 		local data = { {
 			channel  = '/meta/disconnect',
 			clientId = self.clientId,
 		} }
 
-		local req = function()
-			_active(self, false)
-		
-			-- Mark all subs as pending so they can be resubscribed later
-			for i, v in ipairs( self.subs ) do
-				log:debug("Will re-subscribe to ", v.subscription, " on next connect")
-				v.pending = true
-			end
-		
+		local req = function()		
 			return CometRequest(
 				_getEventSink(self),
 				self.uri,

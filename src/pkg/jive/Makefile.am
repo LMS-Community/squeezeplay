@@ -226,6 +226,12 @@ dist_applets_setupslimservers_DATA = \
 	share/applets/SetupSlimServers/SetupSlimServersMeta.lua \
 	share/applets/SetupSlimServers/strings.txt
 
+applets_squeezenetworkpindir = $(pkgdatadir)/applets/SqueezeNetworkPIN
+dist_applets_squeezenetworkpin_DATA = \
+	share/applets/SqueezeNetworkPIN/SqueezeNetworkPINApplet.lua \
+	share/applets/SqueezeNetworkPIN/SqueezeNetworkPINMeta.lua \
+	share/applets/SqueezeNetworkPIN/strings.txt
+
 applets_clockdir = $(pkgdatadir)/applets/Clock
 dist_applets_clock_DATA = \
 	share/applets/Clock/ClockApplet.lua \

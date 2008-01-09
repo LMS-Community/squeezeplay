@@ -190,6 +190,7 @@ function __init(self, slimServer, jnt, playerInfo)
 		connected = playerInfo.connected,
 		power = playerInfo.power,
 		needsUpgrade = (tonumber(playerInfo.player_needs_upgrade) == 1),
+		pin = playerInfo.pin,
 
 		-- menu item of home menu that represents this player
 		homeMenuItem = false,
@@ -223,6 +224,11 @@ function updateFromSS(self, playerInfo)
 	_setPlayerName(self, playerInfo.name)
 	_setPlayerPower(self, tonumber(playerInfo.power))
 	_setConnected(self, playerInfo.connected)
+
+	-- PIN is removed from serverstatus after a player is linked
+	if self.pin and not playerInfo.pin then
+		self.pin = nil
+	end
 
 end
 
@@ -385,6 +391,18 @@ function getId(self)
 	return self.id
 end
 
+
+--[[
+
+=head2 jive.slim.Player:getPin()
+
+Returns the SqueezeNetwork PIN for this player, if it needs to be registered
+
+=cut
+--]]
+function getPin(self)
+	return self.pin
+end
 
 --[[
 

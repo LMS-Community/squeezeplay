@@ -293,6 +293,12 @@ function disconnect(self)
 	self.comet:disconnect()
 end
 
+function reconnect(self)
+	log:warn(self, ":reconnect()")
+
+	self:disconnect()
+	self:connect()
+end
 
 -- comet has connected to SC
 function notify_cometConnected(self, comet)

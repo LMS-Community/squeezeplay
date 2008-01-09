@@ -1,0 +1,11 @@
+SQUEEZENETWORK_PIN_TITLE
+	EN	Activate Account
+
+SQUEEZENETWORK_PIN
+	EN	Player PIN: %s
+
+SQUEEZENETWORK_PIN_HELP
+	EN	Visit\nwww.squeezenetwork.com\nand enter your PIN to connect to your account.  Press the center button after you have entered your PIN.
+
+SQUEEZENETWORK_NOT_LINKED
+	EN	Could not verify your PIN.  Have you entered it on the website?
