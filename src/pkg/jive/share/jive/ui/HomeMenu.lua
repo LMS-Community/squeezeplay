@@ -143,7 +143,7 @@ function addItem(self, item)
 
 	-- add parent node?
 	local nodeEntry = self.nodeTable[item.node]
-	if nodeEntry.item then
+	if nodeEntry and nodeEntry.item then
 		local hasItem = self.menuTable[nodeEntry.item.id] ~= nil
 
 		if not hasItem then
