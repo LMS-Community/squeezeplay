@@ -28,7 +28,7 @@ User interface framework
 
 
 -- stuff we use
-local _assert, jive, ipairs, pairs, require, string, tostring, type = _assert, jive, ipairs, pairs, require, string, tostring, type
+local _assert, collectgarbage, jive, ipairs, pairs, require, string, tostring, type = _assert, collectgarbage, jive, ipairs, pairs, require, string, tostring, type
 
 local oo            = require("loop.simple")
 local table         = require("jive.utils.table")
@@ -38,10 +38,15 @@ local EVENT_HIDE    = jive.ui.EVENT_HIDE
 local EVENT_CONSUME = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED  = jive.ui.EVENT_UNUSED
 
+local FRAME_RATE    = jive.ui.FRAME_RATE
+
+local jnt           = jnt
+
 
 -- our class
 module(..., oo.class)
 
+local math          = require("math")
 
 local Audio         = require("jive.ui.Audio")
 local Checkbox      = require("jive.ui.Checkbox")
@@ -61,12 +66,14 @@ local Slider        = require("jive.ui.Slider")
 local Surface       = require("jive.ui.Surface")
 local Textarea      = require("jive.ui.Textarea")
 local Textinput     = require("jive.ui.Textinput")
+local Task          = require("jive.ui.Task")
 local Tile          = require("jive.ui.Tile")
 local Timer         = require("jive.ui.Timer")
 local Widget        = require("jive.ui.Widget")
 local Window        = require("jive.ui.Window")
 
-local log             = require("jive.utils.log").logger("ui")
+local log           = require("jive.utils.log").logger("ui")
+local logTask       = require("jive.utils.log").logger("ui.task")
 
 
 -- import C functions
@@ -139,6 +146,93 @@ Indicates the style parameters have changed, this clears any caching of the styl
 
 =cut
 --]]
+
+
+
+--[[
+
+=head2 jive.ui.Framework:eventLoop(netTask)
+
+Main event loop.
+
+=cut
+--]]
+function eventLoop(self, netTask)
+
+	local eventTask =
+		Task("ui",
+		     self,
+		     function(self)
+			     -- must wrap C function
+			     while self:processEvents() do end
+		     end)
+
+
+	collectgarbage("collect")
+	collectgarbage("stop")
+
+
+	-- frame rate in milliseconds
+	local framerate = math.floor(1000 / FRAME_RATE)
+
+	-- next frame due
+	local now = self:getTicks()
+	local framedue = now + framerate
+
+	local running = true
+	while running do
+		-- process tasks
+		local tasks = false
+		for task in Task:iterator() do
+			local start = now
+			tasks = task:resume() or tasks
+			now = self:getTicks()
+			if now - start > 20 then
+				log:warn(task.name, " took ", now - start, " ms")
+			end
+			if framedue <= now then
+				break
+			end
+		end
+
+		-- call the network task, if no tasks are runnable this blocks
+		-- until a file descriptor is ready for io or it will timeout
+		-- before the next frame should be drawn
+		if tasks then
+			netTask:setArgs(0)
+		else
+			netTask:setArgs(framedue - now)
+		end
+		netTask:resume()
+
+		-- draw frame and process ui event queue
+		now = self:getTicks()
+		if framedue <= now then
+			logTask:info("--------")
+
+			-- draw screen
+			self:updateScreen()
+
+			-- keep on top of the garbage
+			collectgarbage("step")
+
+			-- process ui event once per frame
+			running = eventTask:resume()
+
+			-- when is the next frame due?
+			framedue = framedue + framerate
+
+			now = self:getTicks()
+			if now > framedue then
+				logTask:warn("Dropped frame. delay=", now-framedue, "ms")
+				framedue = now + (framerate >> 2)
+			end
+		end
+	end
+
+	collectgarbage("restart")
+end
+
 
 
 

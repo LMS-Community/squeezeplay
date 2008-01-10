@@ -215,6 +215,13 @@ int wpa_ctrl_request(struct wpa_ctrl *ctrl, const char *cmd, size_t cmd_len,
 	}
 	os_free(cmd_buf);
 
+	/* Richard 1 Jan 2008
+	 * Allow the request to be non-blocking
+	 */
+	if (!reply) {
+		return 0;
+	}
+
 	for (;;) {
 		/* Richard 30 May 2007
 		 * Increased timeout to 10 seconds. The previous 2 seconds

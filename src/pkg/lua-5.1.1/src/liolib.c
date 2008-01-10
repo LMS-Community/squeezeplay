@@ -512,6 +512,12 @@ static int f_flush (lua_State *L) {
 }
 
 
+static int io_fileno (lua_State *L) {
+  lua_pushinteger(L, fileno(tofile(L)));
+  return 1;
+}
+
+
 static const luaL_Reg iolib[] = {
   {"close", io_close},
   {"flush", io_flush},
@@ -536,6 +542,7 @@ static const luaL_Reg flib[] = {
   {"seek", f_seek},
   {"setvbuf", f_setvbuf},
   {"write", f_write},
+  {"fileno", io_fileno},
   {"__gc", io_gc},
   {"__tostring", io_tostring},
   {NULL, NULL}

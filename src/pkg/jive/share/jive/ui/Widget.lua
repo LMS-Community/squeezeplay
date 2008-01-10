@@ -541,6 +541,32 @@ end
 
 --[[
 
+=head2 jive.ui.Widget:setAccelKey(key)
+
+Sets the key letter displayed in an accelerated menu.
+
+=cut
+--]]
+function setAccelKey(self, key)
+	self.accelKey = key
+end
+
+
+--[[
+
+=head2 jive.ui.Widget:getAccelKey()
+
+Returns the key letter displayed in an accelerated menu.
+
+=cut
+--]]
+function getAccelKey(self)
+	return self.accelKey
+end
+
+
+--[[
+
 =head2 jive.ui.Widget:playSound(sound)
 
 Play the sound when the widget is visible.

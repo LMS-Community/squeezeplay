@@ -65,6 +65,7 @@ local CometRequest  = require("jive.net.CometRequest")
 local HttpPool      = require("jive.net.HttpPool")
 local SocketHttp    = require("jive.net.SocketHttp")
 local Timer         = require("jive.ui.Timer")
+local Task          = require("jive.ui.Task")
 
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("net.comet")
@@ -104,8 +105,8 @@ function __init(self, jnt, ip, port, path, name)
 	obj.uri = 'http://' .. ip .. ':' .. port .. path
 	
 	-- Comet uses 2 pools, 1 for chunked responses and 1 for requests
-	obj.cpool          = HttpPool(jnt, ip, port, 1, 1, name .. "_Chunked")
-	obj.rpool          = HttpPool(jnt, ip, port, 1, 1, name .. "_Request")
+	obj.cpool          = HttpPool(jnt, name .. "_Chunked", ip, port, 1, 1, Task.PRIORITY_HIGH)
+	obj.rpool          = HttpPool(jnt, name .. "_Request", ip, port, 1, 1, Task.PRIORITY_HIGH)
 	
 	obj.jnt            = jnt
 	obj.name           = name
@@ -171,7 +172,7 @@ function disconnect(self)
 			)
 		end
 
-		self.rpool:queuePriority(req)
+		self.rpool:queue(req)
 	end
 end
 
@@ -302,7 +303,7 @@ _connect = function(self)
 		)
 	end
 	
-	self.cpool:queuePriority(req)
+	self.cpool:queue(req)
 end
 
 _getEventSink = function(self)
@@ -450,7 +451,7 @@ _handshake = function(self)
 		)
 	end
 	
-	self.cpool:queuePriority(req)
+	self.cpool:queue(req)
 end
 
 _getHandshakeSink = function(self)
@@ -528,7 +529,7 @@ function subscribe(self, subscription, func, playerid, request, priority)
 				)
 			end
 
-			self.rpool:queuePriority(req)
+			self.rpool:queue(req)
 		end
 	end
 end
@@ -636,7 +637,7 @@ function request(self, func, playerid, request, priority)
 			)
 		end
 	
-		self.rpool:queuePriority(req)
+		self.rpool:queue(req)
 	
 		-- If we expect a response, we will get the response on the persistent 
 		-- connection.  Store our callback for later
@@ -794,7 +795,7 @@ _reconnect = function(self)
 		)
 	end
 	
-	self.cpool:queuePriority(req)	
+	self.cpool:queue(req)	
 end
 
 -- Notify changes in connection state
@@ -851,7 +852,7 @@ function endBatch(self)
 			)
 		end
 
-		self.rpool:queuePriority(req)
+		self.rpool:queue(req)
 	end
 end
 

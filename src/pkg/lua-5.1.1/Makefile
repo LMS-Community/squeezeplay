@@ -19,7 +19,6 @@ INSTALL_LIB= $(INSTALL_TOP)/lib
 INSTALL_MAN= $(INSTALL_TOP)/man/man1
 INSTALL_LMOD= $(INSTALL_TOP)/share/lua/$V
 INSTALL_CMOD= $(INSTALL_TOP)/lib/lua/$V
-INSTALL_LTHREAD=$(INSTALL_LMOD)/thread
 
 # How to install. You may prefer "install" instead of "cp" if you have it.
 # To remove debug information from binaries, use "install -s" in INSTALL_EXEC.
@@ -43,11 +42,10 @@ PLATS= aix ansi bsd generic linux squeezeboxjive macosx mingw posix solaris
 
 # What to install.
 TO_BIN= lua luac
-TO_INC= lua.h luaconf.h lualib.h lauxlib.h ../etc/lua.hpp ltconf.h pt.h luathread.h
+TO_INC= lua.h luaconf.h lualib.h lauxlib.h ../etc/lua.hpp ltconf.h
 TO_LIB= liblua.a
 TO_MAN= lua.1 luac.1
-TO_LMOD= thread.lua
-TO_LTHREAD= queue.lua 
+TO_LMOD= 
 
 # Lua version and release.
 V= 5.1
@@ -62,12 +60,10 @@ test:	dummy
 	src/lua test/hello.lua
 
 install: dummy
-	cd src && $(MKDIR) -p $(INSTALL_BIN) $(INSTALL_INC) $(INSTALL_LIB) $(INSTALL_MAN) $(INSTALL_LMOD) $(INSTALL_CMOD) $(INSTALL_LTHREAD)
+	cd src && $(MKDIR) -p $(INSTALL_BIN) $(INSTALL_INC) $(INSTALL_LIB) $(INSTALL_MAN) $(INSTALL_LMOD) $(INSTALL_CMOD)
 	cd src && $(INSTALL_EXEC) $(TO_BIN) $(INSTALL_BIN)
 	cd src && $(INSTALL_DATA) $(TO_INC) $(INSTALL_INC)
 	cd src && $(INSTALL_DATA) $(TO_LIB) $(INSTALL_LIB)
-	cd src && $(INSTALL_DATA) $(TO_LTHREAD) $(INSTALL_LTHREAD)
-	cd src && $(INSTALL_DATA) $(TO_LMOD) $(INSTALL_LMOD)
 	cd doc && $(INSTALL_DATA) $(TO_MAN) $(INSTALL_MAN)
 #	$(RANLIB) $(INSTALL_LIB)/$(TO_LIB)
 
@@ -101,7 +97,6 @@ echo:
 	@echo "INSTALL_MAN = $(INSTALL_MAN)"
 	@echo "INSTALL_LMOD = $(INSTALL_LMOD)"
 	@echo "INSTALL_CMOD = $(INSTALL_CMOD)"
-	@echo "INSTALL_LTHREAD = $(INSTALL_LTHREAD)"
 	@echo "INSTALL_EXEC = $(INSTALL_EXEC)"
 	@echo "INSTALL_DATA = $(INSTALL_DATA)"
 	@echo ""
@@ -116,7 +111,6 @@ pecho:
 	@echo "TO_INC = $(TO_INC)"
 	@echo "TO_LIB = $(TO_LIB)"
 	@echo "TO_MAN = $(TO_MAN)"
-	@echo "TO_LTHREAD = $TO_LTHREAD"
 
 # echo config parameters as Lua code
 # uncomment the last sed expression if you want nil instead of empty strings

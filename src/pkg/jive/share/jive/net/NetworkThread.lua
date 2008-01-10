@@ -31,14 +31,16 @@ FIXME: Subscribe description
 -- stuff we use
 local _assert, tostring, table, ipairs, pairs, pcall, type  = _assert, tostring, table, ipairs, pairs, pcall, type
 
-local thread            = require("thread")
 local socket            = require("socket")
-local debug             = require("debug")
+local coroutine         = require("coroutine")
+local table             = require("jive.utils.table")
+local debug             = require("jive.utils.debug")
 local oo                = require("loop.base")
 
 local queue             = require("jive.utils.queue")
 local Event             = require("jive.ui.Event")
 local Framework         = require("jive.ui.Framework")
+local Task              = require("jive.ui.Task")
 
 local log               = require("jive.utils.log").logger("net.thread")
 
@@ -47,36 +49,30 @@ local perfhook          = jive.perfhook
 local EVENT_SERVICE_JNT = jive.ui.EVENT_SERVICE_JNT
 local EVENT_CONSUME     = jive.ui.EVENT_CONSUME
 
+
 -- jive.net.NetworkThread is a base class
 module(..., oo.class)
-
--- constants
-local QUEUE_SIZE        = 100  -- size of the queue from/to the jnt
-local TIMEOUT           = 0.05 -- select timeout (seconds)
 
 
 -- _add
 -- adds a socket to the read or write list
 -- timeout == 0 => no time out!
-local function _add(sock, pump, sockList, timeout)
---	log:debug("_add(", sock, ", ", pump, ")")
-
-	_assert(pump, debug.traceback())
-	
+local function _add(sock, task, sockList, timeout)
 	if not sock then 
 		return
 	end
 	
-	-- add us if we're not already in there
 	if not sockList[sock] then
-	
-		-- add the socket to the sockList
+		-- add us if we're not already in there
 		table.insert(sockList, sock)
+	else
+		-- else remove previous task
+		sockList[sock].task:removeTask()
 	end	
 	
 	-- remember the pump, the time and the desired timeout
 	sockList[sock] = {
-		pumpIt = pump,
+		task = task,
 		lastSeen = socket.gettime(),
 		timeout = timeout or 60
 	}
@@ -86,49 +82,42 @@ end
 -- _remove
 -- removes a socket from the read or write list
 local function _remove(sock, sockList)
---	log:debug("_remove(", sock, ")")
-	
 	if not sock then 
 		return 
 	end
 
 	-- remove the socket from the sockList
 	if sockList[sock] then
+		sockList[sock].task:removeTask()
 		
 		sockList[sock] = nil
-
-		for i,v in ipairs(sockList) do
-			if v == sock then
-				table.remove(sockList, i)
-				return
-			end
-		end
+		table.delete(sockList, sock)
 	end
 end
 
 
 -- t_add/remove/read/write
 -- add/remove sockets api
-function t_addRead(self, sock, pump, timeout)
---	log:debug("NetworkThread:t_addRead()")
-	
-	_add(sock, pump, self.t_readSocks, timeout)
+function t_addRead(self, sock, task, timeout)
+--	log:warn("NetworkThread:t_addRead()", sock)
+
+	_add(sock, task, self.t_readSocks, timeout)
 end
 
 function t_removeRead(self, sock)
---	log:debug("NetworkThread:t_removeRead()")
+--	log:warn("NetworkThread:t_removeRead()", sock)
 	
 	_remove(sock, self.t_readSocks)
 end
 
-function t_addWrite(self, sock, pump, timeout)
---	log:debug("NetworkThread:t_addWrite()")
+function t_addWrite(self, sock, task, timeout)
+--	log:warn("NetworkThread:t_addWrite()", sock)
 	
-	_add(sock, pump, self.t_writeSocks, timeout)
+	_add(sock, task, self.t_writeSocks, timeout)
 end
 
 function t_removeWrite(self, sock)
---	log:debug("NetworkThread:t_removeWrite()")
+--	log:warn("NetworkThread:t_removeWrite()", sock)
 	
 	_remove(sock, self.t_writeSocks)
 end
@@ -145,7 +134,7 @@ local function _timeout(now, sockList)
 		-- we also want the timeout to exist and have expired
 		if type(v) == "userdata" and t.timeout > 0 and now - t.lastSeen > t.timeout then
 			log:error("network thread timeout for ", v)
-			t.pumpIt("inactivity timeout")
+			t.task:addTask("inactivity timeout")
 		end
 	end
 end
@@ -153,188 +142,78 @@ end
 
 -- _t_select
 -- runs our sockets through select
-local function _t_select(self)
+local function _t_select(self, timeout)
 --	log:debug("_t_select(r", #self.t_readSocks, " w", #self.t_writeSocks, ")")
-	
-	local r,w,e = socket.select(self.t_readSocks, self.t_writeSocks, TIMEOUT)
-	
+
+	local r,w,e = socket.select(self.t_readSocks, self.t_writeSocks, timeout)
+
 	local now = socket.gettime()
 		
-	if e and self.running then
+	if e then
 		-- timeout is a normal error for select if there's nothing to do!
 		if e ~= 'timeout' then
 			log:error(e)
 		end
+
 	else
 		-- call the write pumps
 		for i,v in ipairs(w) do
 			self.t_writeSocks[v].lastSeen = now
-			self.t_writeSocks[v].pumpIt()
+			if not self.t_writeSocks[v].task:addTask() then
+				_remove(v, self.t_writeSocks)
+			end
 		end
 		
 		-- call the read pumps
 		for i,v in ipairs(r) do
-			-- debug to track pump error
-			if self.t_readSocks[v] == nil then
-				log:error("readSocks pump is nil for ", v)
-				log:error("readSocks is:")
-				for a,b in pairs(self.t_readSocks) do
-				log:error("\t", a, " = ", b)
-				end
-			else
-				self.t_readSocks[v].lastSeen = now
-				self.t_readSocks[v].pumpIt()
+			self.t_readSocks[v].lastSeen = now
+			if not self.t_readSocks[v].task:addTask() then
+				_remove(v, self.t_readSocks)
 			end
 		end
 	end
-	
+
 	-- manage timeouts
 	_timeout(now, self.t_readSocks)
 	_timeout(now, self.t_writeSocks)
 end
 
 
--- _t_dequeue
--- fetches messages from the main thread
-local function _t_dequeue(self)
---	log:debug("_t_dequeue()")
-	
-	local msg = true
-	while msg do
-		msg = self.in_queue:remove(false)
-		if msg then
-			msg()
-		end
-	end
-end
-
-
 -- _thread
 -- the thread function with the endless loop
-local function _t_thread(self)
+local function _run(self, timeout)
 	local ok, err
 
---	perfhook(50)
+	log:info("NetworkThread starting...")
 
---	log:info("NetworkThread starting...")
+	while true do
+		local timeoutSecs = timeout / 1000
+		if timeoutSecs < 0 then
+			timeoutSecs = 0
+		end
 
-	while self.running do
-		local t0 = Framework:getTicks()
-
-		ok, err = pcall(_t_select, self)
+		ok, err = pcall(_t_select, self, timeoutSecs)
 		if not ok then
 			log:warn("error in _t_select: " .. err)
 		end
 
-		local t1 = Framework:getTicks()
-
-		local len = self.in_queue:len()
-		ok, err = pcall(_t_dequeue, self)
-		if not ok then
-			log:warn("error in _t_dequeue: " .. err)
-		end
-
-		local t2 = Framework:getTicks()
-
-		if t1 - t0 > 105 or t2 - t1 > 10 then
-			log:warn("NetworkThread select=", (t1-t0), "ms dequeue=", (t2-t1), " in_queue=", len)
-		end
+		_, timeout = Task:yield(true)
 	end
-	
-	-- clean up here
---	log:info("NetworkThread exiting...")
-	self.t_readSocks = nil
-	self.t_writeSocks = nil
 end
 
 
--- t_perform
--- queues a function for execution main thread side
+function task(self)
+	return Task("networkTask", self, _run)
+end
+
+
 function t_perform(self, func, priority)
-
-	if priority then
-		-- log:debug("enqueue high")
-		self.out_queueH:insert(func)
-	else
-		-- log:debug("enqueue low")
-		self.out_queueL:insert(func)
-	end
+	-- XXXX deprecated
+	log:error("t_perform: ", debug.traceback())
 end
-
-
---[[
-
-=head2 NetworkThread:stop()
-
-Sends a message to stop the thread.
-
-=cut
---]]
-function stop(self)
---	log:info("NetworkThread:stop()")
-	
-	self:perform(function() self.running = false end)
-end
-
-
---[[
-
-=head2 NetworkThread:perform(func)
-
-Queues a function for execution thread side.
-
-=cut
---]]
 function perform(self, func)
---	log:debug("NetworkThread:perform()")
-	
-	if func then
-		self.in_queue:insert(func)	
-	end
-end
-
-
---[[
-
-=head2 NetworkThread:pump()
-
-Processes the queue on the main thread side. Messages are closures (functions), and simply called.
-
-=cut
---]]
-function pump(self)
---	log:debug("NetworkThread:idle()")
-	
-	local t0 = Framework:getTicks()
-	local lenH = self.out_queueH:len()
-	local lenL = self.out_queueL:len()
-	local priority
-
-	local msg = true
-
-	-- process one or more messages in the high priority queue
-	while msg do
-		msg = self.out_queueH:remove(false)
-		if msg then
-			priority = true
-			msg()
-			--log:debug("dequeue high")
-		end
-	end
-
-	if not priority then
-		msg = self.out_queueL:remove(false)
-		if msg then
-			msg()
-			--log:debug("dequeue low")
-		end
-	end
-
-	local t1 = Framework:getTicks()
-
-	if t1 - t0 > 5 then
-		log:warn("NetworkThread pump=", (t1 - t0), "ms out_queueH=", lenH, " out_queueL=", lenL)
-	end
+	-- XXXX deprecated
+	log:error("perform: ", debug.traceback())
 end
 
 
@@ -346,6 +225,8 @@ function subscribe(self, object)
 		self.subscribers[object] = 1
 	end
 end
+
+
 function unsubscribe(self, object)
 --	log:debug("NetworkThread:unsubscribe()")
 	
@@ -408,24 +289,14 @@ function __init(self)
 --	log:debug("NetworkThread:__init()")
 
 	local obj = oo.rawnew(self, {
-		-- create our in and out queues (mutexed)
-		in_queue = queue.newqueue(QUEUE_SIZE),
-		out_queueH = queue.newqueue(QUEUE_SIZE),
-		out_queueL = queue.newqueue(QUEUE_SIZE),
-
 		-- list of sockets for select
 		t_readSocks = {},
 		t_writeSocks = {},
 
 		-- list of objects for notify
 		subscribers = {},
-		
-		running = true,
 	})
 
-	-- we're running
-	thread.newthread(_t_thread, {obj})
-	
 	return obj
 end
 

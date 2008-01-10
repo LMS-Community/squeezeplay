@@ -35,7 +35,7 @@ local _assert, tostring, type, tonumber = _assert, tostring, type, tonumber
 local pairs, ipairs, setmetatable = pairs, ipairs, setmetatable
 
 local os          = require("os")
-local table       = require("table")
+local table       = require("jive.utils.table")
 local debug       = require("jive.utils.debug")
 
 local oo          = require("loop.base")
@@ -46,6 +46,9 @@ local Player      = require("jive.slim.Player")
 local Surface     = require("jive.ui.Surface")
 local RequestHttp = require("jive.net.RequestHttp")
 local SocketHttp  = require("jive.net.SocketHttp")
+
+local Task        = require("jive.ui.Task")
+local Framework   = require("jive.ui.Framework")
 
 local log         = require("jive.utils.log").logger("slimserver")
 local logcache    = require("jive.utils.log").logger("slimserver.cache")
@@ -201,7 +204,7 @@ function __init(self, jnt, ip, port, name)
 		players = {},
 
 		-- artwork http pool
-		artworkPool = HttpPool(jnt, ip, port, 2, 2, name),
+		artworkPool = HttpPool(jnt, name, ip, port, 2, 2, Task.PRIORITY_LOW),
 
 		-- artwork cache: Weak table storing a surface by iconId
 		artworkThumbCache = setmetatable({}, { __mode="k" }),
@@ -214,6 +217,10 @@ function __init(self, jnt, ip, port, name)
 
 		-- are we connected to the server?
 		active = false,
+
+		-- queue of artwork to fetch
+		artworkFetchQueue = {},
+		artworkFetchCount = 0
 	})
 
 	obj.id = obj:idFor(ip, port, name)
@@ -235,6 +242,10 @@ function __init(self, jnt, ip, port, name)
 	
 	-- notify we're here by caller in SlimServers
 	
+	-- task to fetch artwork while browsing
+	obj.artworkFetchTask = Task("artwork", obj, processArtworkQueue)
+
+
 	return obj
 end
 
@@ -380,6 +391,13 @@ local function _getArtworkThumbSink(self, iconId, size)
 	local cacheKey = iconId .. size
 
 	return function(chunk, err)
+
+		if err or chunk then
+			-- allow more artwork to be fetched
+			self.artworkFetchCount = self.artworkFetchCount - 1
+			self.artworkFetchTask:addTask()
+		end
+
 		-- on error, print something...
 		if err then
 			logcache:error("_getArtworkThumbSink(", iconId, ", ", size, ") error: ", err)
@@ -387,28 +405,24 @@ local function _getArtworkThumbSink(self, iconId, size)
 		-- if we have data
 		if chunk then
 			logcache:debug("_getArtworkThumbSink(", iconId, ", ", size, ")")
-			
+
 			-- create a surface
 			local artwork = Surface:loadImageData(chunk, #chunk)
-			
+
 			-- Resize image if we have a size arg
-			if size then
-				local w, h = artwork:getSize()
-				
-				-- Note this allows for artwork to be resized to a larger
-				-- size than the original.  This is intentional so smaller cover
-				-- art will still fill the space properly on the Now Playing screen
-				if w ~= size then
-					artwork = artwork:rotozoom(0, size / w, 1)
-					if logcache:isDebug() then
-						local wnew, hnew = artwork:getSize()
-						logcache:debug("Resized artwork from ", w, "x", h, " to ", wnew, "x", hnew)
-					end
+			-- Note this allows for artwork to be resized to a larger
+			-- size than the original.  This is intentional so smaller cover
+			-- art will still fill the space properly on the Now Playing screen
+			local w, h = artwork:getSize()
+			if w ~= size then
+				artwork = artwork:rotozoom(0, size / w, 1)
+				if logcache:isDebug() then
+					local wnew, hnew = artwork:getSize()
+					logcache:debug("Resized artwork from ", w, "x", h, " to ", wnew, "x", hnew)
 				end
 			end
 
 			-- don't display empty artwork
-			local w, h = artwork:getSize()
 			if w == 0 or h == 0 then
 				artwork = nil
 			end
@@ -421,7 +435,7 @@ local function _getArtworkThumbSink(self, iconId, size)
 					icons[icon] = nil
 				end
 			end
-			
+
 			-- store the artwork in the cache
 			self.artworkThumbCache[cacheKey] = artwork
 			
@@ -431,6 +445,46 @@ local function _getArtworkThumbSink(self, iconId, size)
 		end
 	end
 end
+
+
+function processArtworkQueue(self)
+	while true do
+		while self.artworkFetchCount < 4 and #self.artworkFetchQueue > 0 do
+			-- remove tail entry
+			local entry = table.remove(self.artworkFetchQueue)
+
+
+			--log:warn("ARTWORK ID=", entry.key)
+			local req = RequestHttp(
+				_getArtworkThumbSink(self, entry.key, entry.size),
+				'GET',
+				entry.url
+			)
+
+			self.artworkFetchCount = self.artworkFetchCount + 1
+
+
+			if type(entry.key) == "number" then
+				-- slimserver icon id
+				self.artworkPool:queue(req)
+			else
+				-- image from remote server
+
+				-- XXXX manage pool of connections to remote server
+				local uri  = req:getURI()
+				local http = SocketHttp(self.jnt, uri.host, uri.port, uri.host)
+						    
+				http:fetch(req)
+			end
+
+			-- try again
+			Task:yield(true)
+		end
+
+		Task:yield(false)
+	end
+end
+
 
 
 --[[
@@ -464,8 +518,40 @@ Cancel loading the artwork for icon.
 --]]
 function cancelArtwork(self, icon)
 	-- prevent artwork being display when it has been loaded
-	icon:setValue(nil)
-	self.artworkThumbIcons[icon] = nil
+	if icon then
+		icon:setValue(nil)
+		self.artworkThumbIcons[icon] = nil
+	end
+end
+
+
+--[[
+
+=head2 jive.slim.SlimServer:cancelArtworkThumb(icon)
+
+Cancel loading the artwork for icon.
+
+=cut
+--]]
+function cancelAllArtwork(self, icon)
+
+	for i, entry in ipairs(self.artworkFetchQueue) do
+		local cacheKey = entry.key .. entry.size
+
+		-- release cache marker
+		self.artworkThumbCache[cacheKey] = nil
+
+		-- release icons
+		local icons = self.artworkThumbIcons
+		for icon, key in pairs(icons) do
+			if key == cacheKey then
+				icons[icon] = nil
+			end
+		end
+	end
+
+	-- clear the queue
+	self.artworkFetchQueue = {}
 end
 
 
@@ -482,7 +568,7 @@ method will call uriGenerator(iconId) and use the result as URI).
 
 =cut
 --]]
-function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, priority)
+function fetchArtworkThumb(self, iconId, icon, uriGenerator, size)
 	logcache:debug(self, ":fetchArtworkThumb(", iconId, ")")
 
 	if logcache:isDebug() then
@@ -501,34 +587,36 @@ function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, priority)
 		-- are we requesting it already?
 		if artwork == true then
 			logcache:debug("..artwork already requested")
-			icon:setValue(nil)
-			self.artworkThumbIcons[icon] = cacheKey
+			if icon then
+				icon:setValue(nil)
+				self.artworkThumbIcons[icon] = cacheKey
+			end
 			return
 		else
 			logcache:debug("..artwork in cache")
-			icon:setValue(artwork)
-			self.artworkThumbIcons[icon] = nil
+			if icon then
+				icon:setValue(artwork)
+				self.artworkThumbIcons[icon] = nil
+			end
 			return
 		end
 	end
 
 	-- no luck, generate a request for the artwork
-	icon:setValue(nil)
 	self.artworkThumbCache[cacheKey] = true
-	self.artworkThumbIcons[icon] = cacheKey
-	logcache:debug("..fetching artwork")
-	
-	-- FIXME this takes some time, move to a new Task object?
-	local req = RequestHttp(
-				_getArtworkThumbSink(self, iconId, size), 
-				'GET',
-				uriGenerator(iconId, size)
-			)
-	if priority then
-		self.artworkPool:queuePriority(req)
-	else
-		self.artworkPool:queue(req)
+	if icon then
+		self.artworkThumbIcons[icon] = cacheKey
+		icon:setValue(nil)
 	end
+	logcache:debug("..fetching artwork")
+
+	-- queue up the request on a lifo
+	table.insert(self.artworkFetchQueue, {
+			     key = iconId,
+			     url = uriGenerator(iconId, size),
+			     size = size,
+		     })
+	self.artworkFetchTask:addTask()
 end
 
 --[[
@@ -559,36 +647,36 @@ function fetchArtworkURL(self, url, icon, size)
 		-- are we requesting it already?
 		if artwork == true then
 			logcache:debug("..artwork already requested")
-			icon:setValue(nil)
-			self.artworkThumbIcons[icon] = cacheKey
+			if icon then
+				icon:setValue(nil)
+				self.artworkThumbIcons[icon] = cacheKey
+			end
 			return
 		else
 			logcache:debug("..artwork in cache")
-			icon:setValue(artwork)
+			if icon then
+				icon:setValue(artwork)
+				self.artworkThumbIcons[icon] = nil
+			end
 			return
 		end
 	end
 
 	-- no luck, generate a request for the artwork
-	icon:setValue(nil)
 	self.artworkThumbCache[cacheKey] = true
-	self.artworkThumbIcons[icon] = cacheKey
+	if icon then
+		icon:setValue(nil)
+		self.artworkThumbIcons[icon] = cacheKey
+	end
 	logcache:debug("..fetching artwork")
 
-	-- this takes some time, offset the task using a timer
-	icon:addTimer(0,
-		      function()
-			      local req = RequestHttp(
-						      _getArtworkThumbSink(self, url, size),
-						      'GET',
-						      url
-					      )
-			      -- connect to the remote server
-			      local uri  = req:getURI()
-			      local http = SocketHttp(self.jnt, uri.host, uri.port, uri.host)
-	
-			      http:fetch(req)
-		      end)
+	-- queue up the request on a lifo
+	table.insert(self.artworkFetchQueue, {
+			     key = url,
+			     url = url,
+			     size = size,
+		     })
+	self.artworkFetchTask:addTask()
 end
 
 

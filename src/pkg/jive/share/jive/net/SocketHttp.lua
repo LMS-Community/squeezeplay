@@ -37,6 +37,7 @@ local math        = require("math")
 local table       = require("table")
 local string      = require("string")
 local debug       = require("debug")
+local coroutine   = require("coroutine")
 
 local oo          = require("loop.simple")
 local socket      = require("socket")
@@ -45,7 +46,6 @@ local ltn12       = require("ltn12")
 
 local SocketTcp   = require("jive.net.SocketTcp")
 local RequestHttp = require("jive.net.RequestHttp")
-local perfs       = require("jive.utils.perfs")
 
 local log         = require("jive.utils.log").logger("net.http")
 
@@ -103,7 +103,7 @@ The class maintains an internal queue of requests to fetch.
 --]]
 function fetch(self, request)
 	_assert(oo.instanceof(request, RequestHttp), tostring(self) .. ":fetch() parameter must be RequestHttp - " .. type(request) .. " - ".. debug.traceback())
-	self:perform(function() self:t_fetch(request) end)
+	self:t_fetch(request)
 end
 
 
@@ -178,7 +178,7 @@ function t_sendConnect(self)
 		if err then
 	
 			log:error(self, ":t_sendConnect: ", err)
-			self:t_close(err)
+			self:close(err)
 			return
 		end
 	end
@@ -282,11 +282,10 @@ function t_sendHeaders(self)
 		
 		if NetworkThreadErr then
 			log:error(self, ":t_sendHeaders.pump: ", NetworkThreadErr)
-			self:t_close(NetworkThreadErr)
+			self:close(NetworkThreadErr)
 			return
 		end
 		
-		perfs.check('Pool Queue', self.t_httpSending, 4)
 		local ret, err = ltn12.pump.step(source, sink)
 		
 		
@@ -298,7 +297,7 @@ function t_sendHeaders(self)
 
 			-- handle any "real" error
 			log:error(self, ":t_sendHeaders.pump: ", err)
-			self:t_close(err)
+			self:close(err)
 			return
 		end
 		
@@ -383,7 +382,7 @@ function t_sendBody(self)
 		
 		if NetworkThreadErr then
 			log:error(self, ":t_sendBody.pump: ", NetworkThreadErr)
-			self:t_close(NetworkThreadErr)
+			self:close(NetworkThreadErr)
 			return
 		end
 
@@ -397,12 +396,11 @@ function t_sendBody(self)
 			end
 		
 			log:error(self, ":t_sendBody.pump: ", err)
-			self:t_close(err)
+			self:close(err)
 			return
 			
 		-- we pump until the source returns nil -> send last chunk
 		elseif not ret then
-			perfs.check('Pool Queue', self.t_httpSending, 5)
 			self:t_removeWrite()
 			self:t_sendNext(true, 't_sendReceive')
 		end
@@ -475,12 +473,9 @@ function t_rcvHeaders(self)
 	
 		local line, err = self.t_sock:receive('*l', partial)
 		
-		if err == 'timeout' then
-			return nil, err
-		end
-		
 		if err then
 --			log:debug(self, ":t_rcvHeaders.source:", err)
+
 			return nil, err
 		end
 		
@@ -530,50 +525,51 @@ function t_rcvHeaders(self)
 	local pump = function (NetworkThreadErr)
 --		log:debug(self, ":t_rcvHeaders.pump()")
 		if first then
-			perfs.check('Pool Queue', self.t_httpReceiving, 6)
 			first = false
 		end
 		
 		if NetworkThreadErr then
 			log:error(self, ":t_rcvHeaders.pump:", err)
 			--self:t_removeRead()
-			self:t_close(err)
+			self:close(err)
 			return
 		end
 		
-		
-		local ret, err = ltn12.pump.step(source, sink)
+		while true do
+			local ret, err = ltn12.pump.step(source, sink)
 	
-		if err then
+			if err then
 		
-			if err == 'timeout' then
---				log:debug(self, ":t_rcvHeaders.pump - timeout")
-				-- more next time
+				if err == 'timeout' then
+--					log:debug(self, ":t_rcvHeaders.pump - timeout")
+					-- more next time
+					return
+				end
+		
+				log:error(self, ":t_rcvHeaders.pump:", err)
+				--self:t_removeRead()
+				self:close(err)
+				return
+			
+			elseif not ret then
+		
+				-- we're done
+--				self:t_removeRead()
+			
+				self.t_httpReceiving:t_setResponseHeaders(statusCode, statusLine, headers)
+		
+				-- release send queue
+				self:t_sendNext(false, 't_sendDequeue')
+		
+				-- we've received response headers, check with request if OK to send next query now
+				if self.t_httpReceiving:t_canDequeue() then
+					self:t_sendDequeueIfIdle()
+				end
+			
+				-- move on to our future...
+				self:t_rcvNext(true, 't_rcvResponse')
 				return
 			end
-		
-			log:error(self, ":t_rcvHeaders.pump:", err)
-			--self:t_removeRead()
-			self:t_close(err)
-			return
-			
-		elseif not ret then
-		
-			-- we're done
---			self:t_removeRead()
-			
-			self.t_httpReceiving:t_setResponseHeaders(statusCode, statusLine, headers, self:getSafeSinkGenerator())
-		
-			-- release send queue
-			self:t_sendNext(false, 't_sendDequeue')
-		
-			-- we've received response headers, check with request if OK to send next query now
-			if self.t_httpReceiving:t_canDequeue() then
-				self:t_sendDequeueIfIdle()
-			end
-			
-			-- move on to our future...
-			self:t_rcvNext(true, 't_rcvResponse')
 		end
 	end
 	
@@ -609,7 +605,7 @@ socket.sourcet["jive-until-closed"] = function(sock, self)
 					return chunk
 				elseif err == "closed" then
 					--close the socket using self
-					SocketTcp.t_close(self)
+					SocketTcp.close(self)
 					done = true
 					return partial, 'done'
 				else -- including timeout
@@ -729,7 +725,7 @@ local sinkt = {}
 
 -- jive-concat sink
 -- a sink that concats chunks and forwards to the request once done
-sinkt["jive-concat"] = function(request, safeSinkGen)
+sinkt["jive-concat"] = function(request)
 	local data = {}
 	return function(chunk, src_err)
 --		log:debug("SocketHttp.jive-concat.sink(", chunk and #chunk, ", ", src_err, ")")
@@ -747,7 +743,7 @@ sinkt["jive-concat"] = function(request, safeSinkGen)
 		if not chunk or src_err == "done" then
 			local blob = table.concat(data)
 			-- let request decide what to do with data
-			request:t_setResponseBody(blob, safeSinkGen)
+			request:t_setResponseBody(blob)
 --			log:debug("SocketHttp.jive-concat.sink: done ", #blob)
 			return nil
 		end
@@ -759,7 +755,7 @@ end
 
 -- jive-by-chunk sink
 -- a sink that forwards each received chunk as complete data to the request
-sinkt["jive-by-chunk"] = function(request, safeSinkGen)
+sinkt["jive-by-chunk"] = function(request)
 	return function(chunk, src_err)
 --		log:debug("SocketHttp.jive-by-chunk.sink(", chunk and #chunk, ", ", src_err, ")")
 	
@@ -767,16 +763,17 @@ sinkt["jive-by-chunk"] = function(request, safeSinkGen)
 			-- let the pump handle errors
 			return nil, src_err
 		end
-	
+
 		-- forward any chunk
 		if chunk and chunk != "" then
 			-- let request decide what to do with data
-			request:t_setResponseBody(chunk, safeSinkGen)
 --			log:debug("SocketHttp.jive-by-chunk.sink: chunk bytes: ", #chunk)
+			request:t_setResponseBody(chunk)
 		end
 
 		if not chunk or src_err == "done" then
 --			log:debug("SocketHttp.jive-by-chunk.sink: done")
+			request:t_setResponseBody(nil)
 			return nil
 		end
 	
@@ -827,14 +824,14 @@ function t_rcvResponse(self)
 	local source = socket.source(mode, self.t_sock, len or self)
 	
 	local sinkMode = self.t_httpReceiving:t_getResponseSinkMode()
-	local sink = _getSink(sinkMode, self.t_httpReceiving, self:getSafeSinkGenerator())
+	local sink = _getSink(sinkMode, self.t_httpReceiving)
 
 	local pump = function (NetworkThreadErr)
 --		log:debug(self, ":t_rcvResponse.pump(", mode, ", ", tostring(nt_err) , ")")
 		
 		if NetworkThreadErr then
 			log:error(self, ":t_rcvResponse.pump() error:", NetworkThreadErr)
-			self:t_close(NetworkThreadErr)
+			self:close(NetworkThreadErr)
 			return
 		end
 		
@@ -855,10 +852,9 @@ function t_rcvResponse(self)
 			
 			-- handle any error
 			if err and err != "done" then
-				self:t_close(err)
+				self:close(err)
 				return
 			end
-			perfs.check('', self.t_httpReceiving, 7)
 
 			-- move on to our future
 			self:t_rcvNext(true, 't_rcvSend')
@@ -896,10 +892,10 @@ function t_rcvSend(self)
 end
 
 
--- t_free
+-- free
 -- frees our socket
-function t_free(self)
---	log:debug(self, ":t_free()")
+function free(self)
+--	log:debug(self, ":free()")
 
 	-- dump queues
 	-- FIXME: should it free requests?
@@ -908,27 +904,25 @@ function t_free(self)
 	self.t_httpRcvRequests = nil
 	self.t_httpReceiving = nil
 	
-	SocketTcp.t_free(self)
+	SocketTcp.free(self)
 end
 
 
--- t_close
+-- close
 -- close our socket
-function t_close(self, err)
+function close(self, err)
 --	log:info(self, " closing with err: ", err, ")")
 
 	-- assumption is sending and receiving queries are never the same
 	if self.t_httpSending then
 		local errorSink = self.t_httpSending:t_getResponseSink()
-		local safeSink = self:safeSink(errorSink)
-		safeSink(nil, err)
+		errorSink(nil, err)
 		self.t_httpSending = nil
 	end
 
 	if self.t_httpReceiving then
 		local errorSink = self.t_httpReceiving:t_getResponseSink()
-		local safeSink = self:safeSink(errorSink)
-		safeSink(nil, err)
+		errorSink(nil, err)
 		self.t_httpReceiving = nil
 	end
 
@@ -937,7 +931,7 @@ function t_close(self, err)
 
 	-- FIXME: manage the queues
 	
-	SocketTcp.t_close(self)
+	SocketTcp.close(self)
 end
 
 

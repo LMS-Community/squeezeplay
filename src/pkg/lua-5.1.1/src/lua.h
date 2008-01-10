@@ -377,7 +377,6 @@ struct lua_Debug {
   int i_ci;  /* active function */
 };
 
-#include "luathread.h"
 
 /* }====================================================================== */
 

@@ -267,6 +267,7 @@ static void _blit_tile(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, U
 
 	if (tile->is_bg) {
 		jive_surface_boxColor(dst, dx, dy, dx + dw - 1, dy + dh - 1, tile->bg);
+		return;
 	}
 
 	dx += dst->offset_x;

@@ -6,12 +6,14 @@ local oo          = require("loop.simple")
 local io          = require("io")
 local os          = require("os")
 local string      = require("string")
+local table       = require("jive.utils.table")
 local ltn12       = require("ltn12")
 
 local debug       = require("jive.utils.debug")
 local log         = require("jive.utils.log").logger("net.socket")
 
 local Socket      = require("jive.net.Socket")
+local Task        = require("jive.ui.Task")
 local wireless    = require("jiveWireless")
 
 
@@ -53,13 +55,24 @@ local REGION_CODE_MAPPING = {
 -- global wireless network scan results
 local _scanResults = {}
 
+-- singleton wireless instance per interface
+local _instance = {}
+
 
 function __init(self, jnt, interface, name)
+	if _instance[interface] then
+		return _instance[interface]
+	end
+
 	local obj = oo.rawnew(self, Socket(jnt, name))
 
 	obj.interface = interface
-	obj.t_sock = wireless:open()
+	obj.responseQueue = {}
 
+	obj.t_sock = wireless:open()
+	obj:_addPump()
+
+	_instance[interface] = obj
 	return obj
 end
 
@@ -92,9 +105,9 @@ function getRegion(self)
 	local code = tonumber(string.match(line, "getregioncode:(%d+)"))
 
 	for name,mapping in pairs(REGION_CODE_MAPPING) do
-		log:warn("code=", code, " mapping[1]=", mapping[1])
+		log:info("code=", code, " mapping[1]=", mapping[1])
 		if mapping[1] == code then
-			log:warn("retruning=", name)
+			log:info("returning=", name)
 			return name
 		end
 	end
@@ -117,7 +130,7 @@ function setRegion(self, region)
 
 	-- set new region
 	local cmd = "/usr/sbin/iwpriv " .. self.interface .. " setregioncode " .. mapping[1]
-	log:warn("setRegion: ", cmd)
+	log:info("setRegion: ", cmd)
 	os.execute(cmd)
 end
 
@@ -136,11 +149,12 @@ function getAtherosRegionCode(self)
 end
 
 
--- perform a network scan
+-- start a network scan in a new task
 function scan(self, callback)
-	self.jnt:perform(function()
-				 t_scan(self, callback)
-			 end)
+	Task("networkScan", self,
+	     function()
+		     t_scan(self, callback)
+	     end):addTask()
 end
 
 
@@ -153,6 +167,8 @@ end
 -- network scanning. this can take a little time so we do this in 
 -- the network thread so the ui is not bocked.
 function t_scan(self, callback)
+	assert(Task:running(), "Wireless:scan must be called in a Task")
+
 	self:request("SCAN")
 
 	local status = self:request("STATUS")
@@ -162,44 +178,45 @@ function t_scan(self, callback)
 
 	_scanResults = _scanResults or {}
 
-	-- process in the main thread
-	self.jnt:t_perform(function()
-		for bssid, level, flags, ssid in string.gmatch(scanResults, "([%x:]+)\t%d+\t(%d+)\t(%S*)\t([^\n]+)\n") do
+	for bssid, level, flags, ssid in string.gmatch(scanResults, "([%x:]+)\t%d+\t(%d+)\t(%S*)\t([^\n]+)\n") do
 
-			local quality = 1
-			level = tonumber(level)
-			for i, l in ipairs(WIRELESS_LEVEL) do
-				if level < l then
-					break
-				end
-				quality = i
+		local quality = 1
+		level = tonumber(level)
+		for i, l in ipairs(WIRELESS_LEVEL) do
+			if level < l then
+				break
 			end
-
-			_scanResults[ssid] = {
-				bssid = bssid,
-				flags = flags,
-				level = level,
-				quality = quality,
-				associated = (ssid == associated),
-				lastScan = os.time()
-			}
+			quality = i
 		end
 
-		-- Bug #5227 if we are associated use the same quality indicator
-		-- as the icon bar
-		if associated and _scanResults[associated] then
-			_scanResults[associated].quality = self:getLinkQuality()
-		end
+		_scanResults[ssid] = {
+			bssid = bssid,
+			flags = flags,
+			level = level,
+			quality = quality,
+			associated = (ssid == associated),
+			lastScan = os.time()
+		}
+	end
 
-		if callback then
-			callback(_scanResults)
-		end
-	end)
+	-- Bug #5227 if we are associated use the same quality indicator
+	-- as the icon bar
+	if associated and _scanResults[associated] then
+		_scanResults[associated].quality = self:getLinkQuality()
+	end
+
+	if callback then
+		callback(_scanResults)
+	end
+
+	self.scanTask = nil
 end
 
 
 -- parse and return wpa status
-function t_wpaStatusRequest(self)
+function t_wpaStatus(self)
+	assert(Task:running(), "Wireless:wpaStatus must be called in a Task")
+
 	local statusStr = self:request("STATUS")
 
 	local status = {}
@@ -212,12 +229,14 @@ end
 
 
 function t_addNetwork(self, ssid, option)
+	assert(Task:running(), "Wireless:addNetwork must be called in a Task")
+
 	local request, response
 
 	-- make sure this ssid is not in any configuration
 	self:t_removeNetwork(ssid)
 
-	log:warn("Connect to ", ssid)
+	log:info("Connect to ", ssid)
 	local flags = (_scanResults[ssid] and _scanResults[ssid].flags) or ""
 
 	-- Set to use dhcp by default
@@ -236,7 +255,7 @@ function t_addNetwork(self, ssid, option)
 	end
 
 	if option.encryption == "wpa" then
-		log:warn("encryption WPA")
+		log:info("encryption WPA")
 
 		request = 'SET_NETWORK ' .. id .. ' key_mgmt WPA-PSK'
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
@@ -250,7 +269,7 @@ function t_addNetwork(self, ssid, option)
 			      assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 		      end)
 	elseif option.encryption == "wpa2" then
-		log:warn("encryption WPA2")
+		log:info("encryption WPA2")
 
 		request = 'SET_NETWORK ' .. id .. ' key_mgmt WPA-PSK'
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
@@ -269,7 +288,7 @@ function t_addNetwork(self, ssid, option)
 	end
 
 	if option.encryption == "wep40" or option.encryption == "wep104" then
-		log:warn("encryption WEP")
+		log:info("encryption WEP")
 
 		request = 'SET_NETWORK ' .. id .. ' wep_key0 ' .. option.key
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
@@ -287,6 +306,10 @@ function t_addNetwork(self, ssid, option)
 	request = 'SELECT_NETWORK ' .. id
 	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
+	-- Allow association
+	request = 'REASSOCIATE'
+	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
 	-- Save config, it will be removed later if it fails
 	request = 'SAVE_CONFIG'
 	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
@@ -296,6 +319,8 @@ end
 
 
 function t_removeNetwork(self, ssid)
+	assert(Task:running(), "Wireless:removeNetwork must be called in a Task")
+
 	local networkResults = self:request("LIST_NETWORKS")
 
 	local id = false
@@ -321,6 +346,8 @@ end
 
 
 function t_disconnectNetwork(self)
+	assert(Task:running(), "Wireless:disconnectNetwork must be called in a Task")
+
 	-- Force disconnect from existing network
 	local request = 'DISCONNECT'
 	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
@@ -331,12 +358,14 @@ end
 
 
 function t_selectNetwork(self, ssid)
+	assert(Task:running(), "Wireless:selectNetwork must be called in a Task")
+
 	local networkResults = self:request("LIST_NETWORKS")
-	log:warn("list results ", networkResults)
+	log:info("list results ", networkResults)
 
 	local id = false
 	for nid, nssid in string.gmatch(networkResults, "([%d]+)\t([^\t]*).-\n") do
-		log:warn("id=", nid, " ssid=", nssid)
+		log:info("id=", nid, " ssid=", nssid)
 		if nssid == ssid then
 			id = nid
 			break
@@ -378,7 +407,7 @@ function t_setStaticIP(self, ssid, ipAddress, ipSubnet, ipGateway, ipDNS)
 
 	-- Bring up the network
 	local status = os.execute("/sbin/ifup eth0")
-	log:warn("ifup status=", status)
+	log:info("ifup status=", status)
 end
 
 
@@ -387,7 +416,7 @@ function _editNetworkInterfaces(self, ssid, method, ...)
 	-- FIXME ssid's with \n are not supported
 	assert(ssid, debug.traceback())
 	ssid = string.gsub(ssid, "[ \t]", "_")
-	log:warn("munged ssid=", ssid)
+	log:info("munged ssid=", ssid)
 
 	local fi = assert(io.open("/etc/network/interfaces", "r+"))
 	local fo = assert(io.open("/etc/network/interfaces.tmp", "w"))
@@ -477,29 +506,61 @@ function getNF(self)
 end
 
 
-function request(self, ...)
-	return self.t_sock:request(...)
-end
-
-
-function attach(self, sink)
-	-- calling attach requests unsolicied events from the wpa-cli
-	self.t_sock:attach()
-
+function _addPump(self)
 	local source = function()
 			       return self.t_sock:receive()
 		       end
 
+	local sink = function(chunk, err)
+			     if chunk and string.sub(chunk, 1, 1) == "<" then
+				     -- wpa event message
+				     if self.eventSink  then
+					     Task("wirelessEvent", nil,
+						  function()
+							  self.eventSink(chunk, err)
+						  end):addTask()
+				     end
+			     else
+				     -- request response
+				     local task = table.remove(self.responseQueue, 1)
+				     if task then
+					     task:addTask(chunk, err)
+				     end
+			     end
+		     end
+
 	self:t_addRead(function()
-			       ltn12.pump.step(source, self:safeSink(sink))
-		       end)
+			       -- XXXX handle timeout
+			       return ltn12.pump.step(source, sink)
+		       end,
+		       0) -- no timeout
+end
+
+
+function request(self, ...)
+	local task = Task:running()
+	assert(task, "Wireless:request must be called in a Task")
+
+	log:info("REQUEST: ", ...)
+	self.t_sock:request(...)
+
+	-- yield task
+	table.insert(self.responseQueue, task)
+	local _, reply = Task:yield(false)
+
+	log:info("REPLY:", reply)
+	return reply
+end
+
+
+function attach(self, sink)
+	-- XXXX allow multiple sinks
+	self.eventSink = sink
 end
 
 
 function detach(self)
-	--self.t_sock:detach()
-	self:t_removeRead()
-	self.t_sock = false
+	self.eventSink = nil
 end
 
 

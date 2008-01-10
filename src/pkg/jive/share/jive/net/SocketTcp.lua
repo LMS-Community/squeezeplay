@@ -37,7 +37,6 @@ local _assert, tostring = _assert, tostring
 local debug    = require("debug")
 
 local socket   = require("socket")
-local thread   = require("thread")
 local oo       = require("loop.simple")
 
 local Socket   = require("jive.net.Socket")
@@ -82,7 +81,6 @@ function __init(self, jnt, address, port, name)
 		address = address,
 		port = port,
 		connected = false,
-		mutex = thread.newmutex(),
 	}
 
 	return obj
@@ -122,9 +120,7 @@ function t_setConnected(self, state)
 	local stcp = self.t_tcp
 
 	if state ~= stcp.connected then
-		stcp.mutex:lock()
 		stcp.connected = state
-		stcp.mutex:unlock()
 	end
 end
 
@@ -136,24 +132,24 @@ function t_getConnected(self)
 end
 
 
--- t_free
+-- free
 -- frees our socket
-function t_free(self)
-	--log:debug(self, ":t_free()")
+function free(self)
+	--log:debug(self, ":free()")
 	
 	-- we store nothing, just call superclass
-	Socket.t_free(self)
+	Socket.free(self)
 end
 
 
--- t_close
+-- close
 -- closes our socket
-function t_close(self)
-	--log:debug(self, ":t_close()")
+function close(self)
+	--log:debug(self, ":close()")
 	
 	self:t_setConnected(false)
 	
-	Socket.t_close(self)
+	Socket.close(self)
 end
 
 
@@ -176,9 +172,7 @@ on the socket occur network thread-side.
 --]]
 function connected(self)
 
-	self.t_tcp.mutex:lock()
 	local connected = self.t_tcp.connected
-	self.t_tcp.mutex:unlock()
 	
 	--log:debug(self, ":connected() = ", connected)
 	return connected

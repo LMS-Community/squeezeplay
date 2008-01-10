@@ -117,8 +117,11 @@ dist_jiveui_DATA = \
 	share/jive/ui/RadioGroup.lua \
 	share/jive/ui/SimpleMenu.lua \
 	share/jive/ui/Scrollbar.lua \
+	share/jive/ui/ScrollAccel.lua \
+	share/jive/ui/ScrollWheel.lua \
 	share/jive/ui/Slider.lua \
 	share/jive/ui/Surface.lua \
+	share/jive/ui/Task.lua \
 	share/jive/ui/Textarea.lua \
 	share/jive/ui/Textinput.lua \
 	share/jive/ui/Tile.lua \
@@ -131,6 +134,7 @@ dist_luanet_DATA = \
 	share/jive/net/Comet.lua \
 	share/jive/net/CometRequest.lua \
 	share/jive/net/NetworkThread.lua \
+	share/jive/net/Process.lua \
 	share/jive/net/SocketHttp.lua \
 	share/jive/net/SocketHttpQueue.lua \
 	share/jive/net/Socket.lua \
@@ -153,11 +157,9 @@ dist_luautil_DATA = \
 	share/jive/utils/debug.lua \
 	share/jive/utils/locale.lua \
 	share/jive/utils/log.lua \
-	share/jive/utils/queue.lua \
 	share/jive/utils/strings.lua \
 	share/jive/utils/autotable.lua \
 	share/jive/utils/jsonfilters.lua \
-	share/jive/utils/perfs.lua \
 	share/jive/utils/serialize.lua \
 	share/jive/utils/table.lua
 
@@ -166,6 +168,11 @@ applets_logdir = $(pkgdatadir)/applets/LogSettings
 dist_applets_log_DATA = \
 	share/applets/LogSettings/LogSettingsApplet.lua \
 	share/applets/LogSettings/LogSettingsMeta.lua
+
+applets_menutestdir = $(pkgdatadir)/applets/
+dist_applets_menutest_DATA = \
+	share/applets/MenuTest/MenuTestApplet.lua \
+	share/applets/MenuTest/MenuTestMeta.lua
 
 applets_screensaversdir = $(pkgdatadir)/applets/ScreenSavers
 dist_applets_screensavers_DATA = \
@@ -282,7 +289,7 @@ dist_applets_nowplaying_images_DATA = \
 	share/applets/NowPlaying/images/progressbar_fill_l.png \
 	share/applets/NowPlaying/images/progressbar_fill_r.png \
 	share/applets/NowPlaying/images/progressbar_fill.png 
-	
+
 applets_setupappletinstallerdir = $(pkgdatadir)/applets/SetupAppletInstaller
 dist_applets_setupappletinstaller_DATA = \
 	share/applets/SetupAppletInstaller/SetupAppletInstallerApplet.lua \

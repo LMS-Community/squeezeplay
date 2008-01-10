@@ -10,8 +10,6 @@ This class manages 2 queues of a requests, processed using a number
 of HTTP sockets (see L<jive.net.SocketHttp>). The sockets are opened
 dynamically as the queue size grows, and are closed once all requests
 have been serviced.
-jive.net.HttpPool defines 2 priorities: basic and high. High priority
-requests are serviced before basic ones.
 
 =head1 SYNOPSIS
 
@@ -21,9 +19,6 @@ requests are serviced before basic ones.
 
  -- queue a request
  pool:queue(aRequest)
-
- -- queue a request, with high priority
- pool:queuePriority(anImportantRequest)
 
 
 =head1 FUNCTIONS
@@ -45,7 +40,6 @@ local oo              = require("loop.base")
 
 local SocketHttpQueue = require("jive.net.SocketHttpQueue")
 local Timer           = require("jive.ui.Timer")
-local perfs           = require("jive.utils.perfs")
 
 local log             = require("jive.utils.log").logger("net.http")
 
@@ -57,7 +51,7 @@ module(..., oo.class)
 
 --[[
 
-=head2 jive.net.HttpPool(jnt, ip, port, quantity, threshold, name)
+=head2 jive.net.HttpPool(jnt, name, ip, port, quantity, threshold, priority)
 
 Creates an HTTP pool named I<name> to interface with the given I<jnt> 
 (a L<jive.net.NetworkThread> instance). I<name> is used for debugging and
@@ -69,10 +63,11 @@ I<threshold> parameter which indicates the ratio of requests to connections.
 For example, if I<threshold> is 2, a single connection is used until 2 requests
 are pending, at which point a second connection is used. A third connection
 will be opened as soon as the number of queued requests reaches 6.
+I<priority> identifies the pool for processing at lower priority.
 
 =cut
 --]]
-function __init(self, jnt, ip, port, quantity, threshold, name)
+function __init(self, jnt, name, ip, port, quantity, threshold, priority)
 --	log:debug("HttpPool:__init(", name, ", ", ip, ", ", port, ", ", quantity, ")")
 
 	-- let used classes worry about ip, port existence
@@ -86,10 +81,7 @@ function __init(self, jnt, ip, port, quantity, threshold, name)
 			threshold = threshold or 10,
 			jshq      = {}
 		},
-		reqQueue      = {
-			{}, -- priority request queue
-			{}  -- normal request queue
-		},
+		reqQueue      = {},
 		reqQueueCount = 0,
 		timeout_timer = nil,
 	})
@@ -99,6 +91,7 @@ function __init(self, jnt, ip, port, quantity, threshold, name)
 	local q = quantity or 1
 	for i = 1, q do
 		obj.pool.jshq[i] = SocketHttpQueue(jnt, ip, port, obj, obj.poolName .. i)
+		obj.pool.jshq[i]:setPriority(priority)
 	end
 	
 	return obj
@@ -146,37 +139,9 @@ queued requests will be serviced before this one.
 =cut
 --]]
 function queue(self, request)
-	perfs.check('Pool Queue', request, 1)
 --	log:warn(self, " enqueues ", request)
-	self.jnt:perform(function() self:t_queue(request, 2) end)
-end
 
-
---[[
-
-=head2 jive.net.HttpPool:queuePriority(request)
-
-Queues I<request>, a L<jive.net.RequestHttp> instance. All previously
-priority queued requests will be serviced before this one, but the request
-will be serviced before normal requests.
-
-=cut
---]]
-function queuePriority(self, request)
-	perfs.check('Pool Priority Queue', request, 1)
---	log:warn(self, " priority enqueues ", request)
-	self.jnt:perform(function() self:t_queue(request, 1) end)
-end
-
-
--- t_queue
--- queues a request
-function t_queue(self, request, priority )
---	log:debug(self, ":t_queue()")
-
-	_assert(priority == 1 or priority == 2, "queue priority must be 1 or 2")
-	
-	table.insert(self.reqQueue[priority], request)
+	table.insert(self.reqQueue, request)
 	self.reqQueueCount = self.reqQueueCount + 1
 	
 	-- calculate threshold
@@ -187,8 +152,6 @@ function t_queue(self, request, priority )
 	self.pool.active = active
 	
 --	log:debug(self, ":", self.reqQueueCount, " requests, ", self.pool.active, " connections")
-
-	perfs.check('', request, 2)
 
 	-- kick all active queues
 	for i = 1, self.pool.active do
@@ -203,24 +166,21 @@ end
 function t_dequeue(self, socket)
 --	log:debug(self, ":t_dequeue()")
 		
-	for i, queue in ipairs(self.reqQueue) do
-		local request = table.remove(self.reqQueue[i], 1)
-		if request then
-			if type(request) == "function" then
-				request = request()
-			end
-
-			self.reqQueueCount = self.reqQueueCount - 1
---			log:warn(self, " dequeues ", request)
-			perfs.check('', request, 3)
-			
-			if self.timeout_timer then
-				self.timeout_timer:stop()
-				self.timeout_timer = nil
-			end
-			
-			return request, false
+	local request = table.remove(self.reqQueue, 1)
+	if request then
+		if type(request) == "function" then
+			request = request()
 		end
+
+		self.reqQueueCount = self.reqQueueCount - 1
+--		log:warn(self, " dequeues ", request)
+			
+		if self.timeout_timer then
+			self.timeout_timer:stop()
+			self.timeout_timer = nil
+		end
+			
+		return request, false
 	end
 	
 	self.reqQueueCount = 0
@@ -231,7 +191,7 @@ function t_dequeue(self, socket)
 			KEEPALIVE_TIMEOUT,
 			function()
 				log:debug(self, ": closing idle connection")
-				self.pool.jshq[1]:t_close('keep-alive timeout')
+				self.pool.jshq[1]:close('keep-alive timeout')
 			end,
 			true -- run once
 		)

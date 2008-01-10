@@ -26,6 +26,7 @@ local RadioButton            = require("jive.ui.RadioButton")
 local RadioGroup             = require("jive.ui.RadioGroup")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Surface                = require("jive.ui.Surface")
+local Task                   = require("jive.ui.Task")
 local Textarea               = require("jive.ui.Textarea")
 local Textinput              = require("jive.ui.Textinput")
 local Window                 = require("jive.ui.Window")
@@ -202,7 +203,7 @@ function setupScanShow(self, setupNext)
 	window:addWidget(Icon("iconConnecting"))
 	window:addWidget(Label("text", self:string("NETWORK_FINDING_NETWORKS")))
 
-	-- wait for network scan (in network thred)
+	-- wait for network scan (in task)
 	self.t_ctrl:scan(setupNext)
 
 	-- or timeout after 10 seconds if no networks are found
@@ -226,9 +227,10 @@ end
 function settingsNetworksShow(self)
 	self.setupNext = nil
 
-	return setupScanShow(self, function()
-					   _networksShow(self, self:string("NETWORK"), self:string("NETWORK_SETTINGS_HELP"))
-				   end)
+	return setupScanShow(self,
+			     function()
+				     _networksShow(self, self:string("NETWORK"), self:string("NETWORK_SETTINGS_HELP"))
+			     end)
 end
 
 
@@ -254,15 +256,16 @@ function _networksShow(self, title, help)
 	self.scanResults = {}
 
 	-- load known networks (in network thread)
-	jnt:perform(function()
-			    self:t_listNetworks()
-		    end)
+	Task("networkList", self, t_listNetworks):addTask()
 
 	-- process existing scan results
 	self:_scanComplete(self.t_ctrl:scanResults())
 
 	-- schedule network scan 
-	self.scanMenu:addTimer(5000, function() self:_scan() end)
+	self.scanMenu:addTimer(5000,
+			       function()
+				       self:scan()
+			       end)
 
 	local help = Textarea("help", help)
 	window:addWidget(help)
@@ -278,32 +281,32 @@ function t_listNetworks(self)
 	local networkResults = self.t_ctrl:request("LIST_NETWORKS")
 	log:warn("list results ", networkResults)
 
-	-- update the ui in the main thread
-	jnt:t_perform(function()
-	      for id, ssid, flags in string.gmatch(networkResults, "([%d]+)\t([^\t]*)\t[^\t]*\t([^\t]*)\n") do
-		      if not string.match(ssid, "logitech[%-%+%*]squeezebox[%-%+%*](%x+)") then
+	for id, ssid, flags in string.gmatch(networkResults, "([%d]+)\t([^\t]*)\t[^\t]*\t([^\t]*)\n") do
+		if not string.match(ssid, "logitech[%-%+%*]squeezebox[%-%+%*](%x+)") then
 
-			      if not self.scanResults[ssid] then
-				      _addNetwork(self, ssid)
-			      end
-			      self.scanResults[ssid].id = id
+			if not self.scanResults[ssid] then
+				_addNetwork(self, ssid)
+			end
+			self.scanResults[ssid].id = id
 
-			      if string.match(flags, "%[CURRENT%]") then
-				      self:_setCurrentSSID(ssid)
-				      self.scanMenu:setSelectedItem(self.scanResults[ssid].item)
-			      end
-		      end
-	      end
-      end)
+			if string.match(flags, "%[CURRENT%]") then
+				self:_setCurrentSSID(ssid)
+				self.scanMenu:setSelectedItem(self.scanResults[ssid].item)
+			end
+		end
+	end
 end
 
 
-function _scan(self)
-	self.t_ctrl:scan(function(scanTable) _scanComplete(self, scanTable) end)
+function scan(self)
+	self.t_ctrl:scan(function(scanTable)
+				 _scanComplete(self, scanTable)
+			 end)
 end
 
 
 function _scanComplete(self, scanTable)
+
 	local now = os.time()
 
 	local associated = nil
@@ -428,7 +431,7 @@ function enterPassword(self)
 
 	if flags == "" then
 		self.encryption = "none"
-		return connect(self)
+		return createAndConnect(self)
 
 	elseif string.find(flags, "WPA2%-PSK") then
 		log:warn("**** WPA2")
@@ -676,47 +679,42 @@ function _connectTimer(self)
 	-- the connection is completed when we connected to the wireless
 	-- network, and have an ip address. if dhcp failed this address
 	-- will be self assigned.
-	jnt:perform(function()
-			    log:warn("connectTimeout=", self.connectTimeout, " dhcpTimeout=", self.dhcpTimeout)
+	Task("networkConnect", self,
+	     function()
+		     log:warn("connectTimeout=", self.connectTimeout, " dhcpTimeout=", self.dhcpTimeout)
 
-			    local status = self.t_ctrl:t_wpaStatusRequest()
+		     local status = self.t_ctrl:t_wpaStatus()
 
-			    log:warn("wpa_state=", status.wpa_state)
-			    log:warn("ip_address=", status.ip_address)
+		     log:warn("wpa_state=", status.wpa_state)
+		     log:warn("ip_address=", status.ip_address)
 
-			    if not (status.wpa_state == "COMPLETED" and status.ip_address) then
-				    -- not connected yet
+		     if not (status.wpa_state == "COMPLETED" and status.ip_address) then
+			     -- not connected yet
 
-				    self.connectTimeout = self.connectTimeout + 1
-				    if self.connectTimeout ~= CONNECT_TIMEOUT then
-					    return
-				    end
+			     self.connectTimeout = self.connectTimeout + 1
+			     if self.connectTimeout ~= CONNECT_TIMEOUT then
+				     return
+			     end
 
-				    -- connection timed out
-				    jnt:t_perform(function()
-							  self:connectFailed("timeout")
-						  end)
-				    return
-			    end
+			     -- connection timed out
+			     self:connectFailed("timeout")
+			     return
+		     end
 			    
-			    if string.match(status.ip_address, "^169.254.") then
-				    -- auto ip
-				    self.dhcpTimeout = self.dhcpTimeout + 1
-				    if self.dhcpTimeout ~= CONNECT_TIMEOUT then
-					    return
-				    end
+		     if string.match(status.ip_address, "^169.254.") then
+			     -- auto ip
+			     self.dhcpTimeout = self.dhcpTimeout + 1
+			     if self.dhcpTimeout ~= CONNECT_TIMEOUT then
+				     return
+			     end
 
-				    -- dhcp timed out
-				    jnt:t_perform(function()
-							  self:failedDHCP()
-						  end)
-			    else
-				    -- dhcp completed
-				    jnt:t_perform(function()
-							  self:connectOK()
-						  end)
-			    end
-		    end)
+			     -- dhcp timed out
+			     self:failedDHCP()
+		     else
+			     -- dhcp completed
+			     self:connectOK()
+		     end
+	     end):addTask()
 end
 
 
@@ -743,24 +741,33 @@ function _eventSink(self, chunk)
 
 		log:warn("WEP authentication failed. trying auth_alg=", self.auth_alg .. " network id=", id)
 
-		jnt:perform(function()
-				    request = 'SET_NETWORK ' .. id .. " auth_alg " .. self.auth_alg
-				    assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
-			    end)
+		request = 'SET_NETWORK ' .. id .. " auth_alg " .. self.auth_alg
+		assert(self.t_ctrl:request(request) == "OK\n", "wpa_cli failed:" .. request)
 	end
 end
 
 
-function t_connect(self, ssid)
+function t_selectNetwork(self, ssid)
 	local request
 
 	self.t_ctrl:t_disconnectNetwork()
 
+	if self.createNetwork == ssid then
+		-- remove the network config
+		self:t_removeNetwork(ssid)
+	end
+
+	if self.scanResults[ssid] == nil then
+		-- ensure the network state exists
+		_addNetwork(self, ssid)
+	end
+
+	log:warn("SSID=", self.ssid, " SR=", self.scanResults)
 	local id = self.scanResults[ssid].id
-	log:warn("t_connect ssid=", ssid, " id=", id)
+	log:warn("t_selectNetwork ssid=", ssid, " id=", id)
 
 	if id == nil then
-		-- Configuring the WLAN
+		-- create the network config
 		self:t_addNetwork()
 	end
 
@@ -769,14 +776,10 @@ end
 
 
 function createAndConnect(self)
-	log:warn("removing network")
+	log:warn("createAndConnect ", self.ssid)
 
-	jnt:perform(function()
-			    self:t_removeNetwork(self.ssid)
-			    jnt:t_perform(function()
-						  connect(self)
-					  end)
-		    end)
+	self.createNetwork = self.ssid
+	connect(self)
 end
 
 
@@ -789,14 +792,9 @@ function connect(self, keepConfig)
 	if not keepConfig then
 		self:_setCurrentSSID(nil)
 
-		-- Configuring the WLAN in the network thread
-		if self.scanResults[self.ssid] == nil then
-			_addNetwork(self, self.ssid)
-		end
-
-		jnt:perform(function()
-				    self:t_connect(self.ssid)
-			    end)
+		-- Select/add the network in a background task
+		log:warn("SSID=", self.ssid)
+		Task("networkSelect", self, t_selectNetwork):addTask(self.ssid)
 	end
 
 	-- Progress window
@@ -815,27 +813,16 @@ function connect(self, keepConfig)
 
 	window:addListener(EVENT_WINDOW_ACTIVE,
 			   function(event)
-				   log:warn("****** ACTIVE")
-
-				   jnt:perform(function()
-						       -- Open an additional connection for wpa-cli events
-						       self.e_ctrl = Wireless(jnt, "eth0")
-						       self.e_ctrl:attach(function(chunk, err)
-										  _eventSink(self, chunk)
-									  end)
-					       end)
+				   self.t_ctrl:attach(function(chunk, err)
+							      _eventSink(self, chunk)
+						      end)
 
 				   return EVENT_UNUSED
 			   end)
 
 	window:addListener(EVENT_WINDOW_INACTIVE,
 			   function(event)
-				   log:warn("****** INACTIVE")
-
-				   jnt:perform(function()
-						       self.e_ctrl:detach()
-						       self.e_ctrl = nil
-					       end)
+				   self.t_ctrl:detach()
 
 				   return EVENT_UNUSED
 			   end)
@@ -860,11 +847,7 @@ function t_connectFailed(self)
 	if self.addNetwork then
 		-- Remove failed network
 		self:t_removeNetwork(self.ssid)
-
-		-- Update state in main thread
-		jnt:t_perform(function()
-				      self.addNetwork = false
-			      end)
+		self.addNetwork = nil
 	end
 end
 
@@ -874,10 +857,7 @@ function connectFailed(self, reason)
 
 	-- Stop trying to connect to the network, if this network is
 	-- being added this will also remove the network configuration
-	jnt:perform(function()
-			    self:t_connectFailed()
-		    end)
-
+	Task("networkFailed", self, t_connectFailed):addTask()
 
 	-- Message based on failure type
 	local helpText = self:string("NETWORK_CONNECTION_PROBLEM_HELP")
@@ -1274,37 +1254,31 @@ end
 function setStaticIP(self)
 	log:warn("setStaticIP addr=", self.ipAddress, " subnet=", self.ipSubnet, " gw=", self.ipGateway, " dns=", self.ipDNS)
 
-	jnt:perform(function()
-			    self.t_ctrl:t_setStaticIP(self.ssid, self.ipAddress, self.ipSubnet, self.ipGateway, self.ipDNS)
-			    jnt:t_perform(function()
-						  connectOK(self)
-					  end)
-		    end)
+	Task("networkStatic", self,
+	     function()
+		     self.t_ctrl:t_setStaticIP(self.ssid, self.ipAddress, self.ipSubnet, self.ipGateway, self.ipDNS)
+		     connectOK(self)
+	     end)
 end
 
 
 function t_removeNetwork(self, ssid)
 	self.t_ctrl:t_removeNetwork(ssid)
 
-	-- Update state in main thread
-	jnt:t_perform(function()
-			      if self.scanResults[ssid] then
-				      -- remove from menu
-				      local item = self.scanResults[ssid].item
-				      self.scanMenu:removeItem(item)
+	if self.scanResults[ssid] then
+		-- remove from menu
+		local item = self.scanResults[ssid].item
+		self.scanMenu:removeItem(item)
 
-				      -- clear entry
-				      self.scanResults[ssid] = nil
-			      end
-		      end)
+		-- clear entry
+		self.scanResults[ssid] = nil
+	end
 end
 
 
 function removeNetwork(self, ssid)
 	-- forget the network
-	jnt:perform(function()
-			    self:t_removeNetwork(ssid)
-		    end)
+	Task("networkRemove", self, t_removeNetwork):addTask(ssid)
 
 	-- popup confirmation
 	local window = Popup("popupIcon")
@@ -1389,7 +1363,7 @@ local stateTxt = {
 
 
 function t_networkStatusTimer(self, values)
-	local status = self.t_ctrl:t_wpaStatusRequest()
+	local status = self.t_ctrl:t_wpaStatus()
 
 	local snr = self.t_ctrl:getSNR()
 	local rssi = self.t_ctrl:getRSSI()
@@ -1403,24 +1377,23 @@ function t_networkStatusTimer(self, values)
 		encryption = "WEP"
 	end
 
-	-- update the ui in the main thread
-	jnt:t_perform(function()
-			      values[1]:setValue(self:string(wpa_state))
-			      values[2]:setValue(tostring(status.ssid))
-			      values[3]:setValue(tostring(status.bssid))
-			      values[4]:setValue(tostring(encryption))
-			      values[5]:setValue(tostring(status.ip_address))
-			      values[6]:setValue(tostring(snr))
-			      values[7]:setValue(tostring(rssi))
-			      values[8]:setValue(tostring(nf))
-		      end)
+	-- update the ui
+	values[1]:setValue(self:string(wpa_state))
+	values[2]:setValue(tostring(status.ssid))
+	values[3]:setValue(tostring(status.bssid))
+	values[4]:setValue(tostring(encryption))
+	values[5]:setValue(tostring(status.ip_address))
+	values[6]:setValue(tostring(snr))
+	values[7]:setValue(tostring(rssi))
+	values[8]:setValue(tostring(nf))
 end
 
 
 function networkStatusTimer(self, values)
-	jnt:perform(function()
-			    self:t_networkStatusTimer(values)
-		    end)
+	Task("networkStatus", self,
+	     function()
+		     self:t_networkStatusTimer(values)
+	     end):addTask()
 end
 
 

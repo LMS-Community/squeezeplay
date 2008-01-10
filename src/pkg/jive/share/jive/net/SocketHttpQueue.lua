@@ -76,7 +76,7 @@ function t_sendDequeue(self)
 	end
 	
 	if close then
-		self:t_close()
+		self:close()
 	end
 end
 

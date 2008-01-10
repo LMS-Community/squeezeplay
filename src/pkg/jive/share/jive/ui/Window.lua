@@ -215,10 +215,8 @@ function replace(self, toReplace, transition)
 	for i in ipairs(Framework.windowStack) do
 		if Framework.windowStack[i] == toReplace then
 			if i == topWindow then
-				log:warn('replacing top window')
 				self:showInstead(transition)
 			else
-				log:warn('replacing window at position ', i, ' in the stack')
 				Framework.windowStack[i] = self
 			end
 		end

@@ -272,7 +272,7 @@ int jiveL_popup_draw(lua_State *L) {
 				lua_call(L, 3, 0);
 			}
 
-			if (peer->mask_tile) {
+			if (!lua_isnil(L, -1) && peer->mask_tile) {
 				JiveWidget *peer2;
 
 				lua_getfield(L, -1, "peer");

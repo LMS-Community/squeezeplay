@@ -51,6 +51,7 @@ local socket  = require("socket")
 local table   = require("table")
 local ltn12   = require("ltn12")
 local oo      = require("loop.simple")
+local coroutine = require("coroutine")
 
 local strings = require("jive.utils.strings")
 local Socket  = require("jive.net.Socket")
@@ -119,11 +120,8 @@ function __init(self, jnt, sink, name)
 		obj.t_sock = sock
 		obj.queue = {}
 		
-		-- transform the main thread sink in something that can be called network thread side
-		local safeSink = obj:safeSink(sink)
-	
 		-- add our read function (thread side)
-		jnt:perform(function() obj:t_addRead(obj:t_getReadPump(safeSink), 0) end)
+		obj:t_addRead(obj:t_getReadPump(sink), 0)
 	end
 	
 	return obj
@@ -137,12 +135,13 @@ function t_getReadPump(self, sink)
 	-- a ltn12 source that reads from a udp socket, including the source address
 	-- NOTE: this source produces chunks as tables and cannot be generally chained
 	local source = function()
-		local dgram, ssIp, ssPort, err = self.t_sock:receivefrom()
+		local dgram, ssIp, ssPort = self.t_sock:receivefrom()
 
-		if not err then
+		if dgram ~= nil then
 			return {ip = ssIp, port = ssPort, data = dgram}
 		else
-			return nil, err
+			-- error in ssIp
+			return nil, ssIp
 		end
 	end
 
@@ -228,12 +227,10 @@ function send(self, t_source, address, port)
 --	_assert(port)
 
 	if self.t_sock then
-		self:perform(function() 
-			if #self.queue == 0 then
-				self:t_addWrite(self:t_getWritePump(t_source), 60)
-			end
-			table.insert(self.queue, self:t_getSink(address, port))
-		end)
+		if #self.queue == 0 then
+			self:t_addWrite(self:t_getWritePump(t_source), 60)
+		end
+		table.insert(self.queue, self:t_getSink(address, port))
 	end
 end
 

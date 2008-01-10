@@ -30,11 +30,13 @@ local io               = require("io")
 local zip              = require("zipfilter")
 local ltn12            = require("ltn12")
 local lfs              = require("lfs")
-local http             = require("socket.http")
 
 local Applet           = require("jive.Applet")
 local AppletManager    = require("jive.AppletManager")
 local SlimServer       = require("jive.slim.SlimServer")
+
+local RequestHttp      = require("jive.net.RequestHttp")
+local SocketHttp       = require("jive.net.SocketHttp")
 
 local Window           = require("jive.ui.Window")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
@@ -44,6 +46,7 @@ local Popup            = require("jive.ui.Popup")
 local Icon             = require("jive.ui.Icon")
 local Textarea         = require("jive.ui.Textarea")
 local Framework        = require("jive.ui.Framework")
+local Task             = require("jive.ui.Task")
 
 local log              = require("jive.utils.log").logger("applets.setup")
 
@@ -182,13 +185,45 @@ function startDownload(self)
 		end
 	end
 
-	-- perform download in jnt so we can continue to animate
-	jnt:perform(function() _t_download(self, appletdir) end)
+	self.task = Task("applet download", self, function()
+												  self:_download(appletdir)
+												  self:_finished()
+											  end)
+
+	self.task:addTask()
+end
+
+
+-- download each applet in turn
+function _download(self, appletdir)
+
+	for applet, appletdata in pairs(self.todownload) do
+		local dir = appletdir .. "/" .. applet .. "/"
+		local sink = ltn12.sink.chain(zip.filter(), self:_zipSink(dir))
+
+		log:info("downloading: ", appletdata.url, " to: ", dir)
+
+		if lfs.attributes(dir) == nil then
+			lfs.mkdir(dir)
+		end
+
+		self.fetched = false
+
+		local req = RequestHttp(sink, 'GET', appletdata.url, { stream = true })
+		local uri = req:getURI()
+
+		local http = SocketHttp(jnt, uri.host, uri.port, uri.host)
+		http:fetch(req)
+
+		while not self.fetched do
+			self.task:yield()
+		end
+	end
 end
 
 
 -- called when download complete
-function finishedDownload(self)
+function _finished(self)
 	-- save new version numbers
 	for applet, appletdata in pairs(self.todownload) do
 		self:getSettings()[applet] = appletdata.ver
@@ -209,39 +244,17 @@ function finishedDownload(self)
 end
 
 
--- download each applet in turn
-function _t_download(self, appletdir)
-
-	for applet, appletdata in pairs(self.todownload) do
-		local dir = appletdir .. "/" .. applet .. "/"
-		local sink = ltn12.sink.chain(zip.filter(), self:_t_zipSink(dir))
-
-		log:info("downloading: ", appletdata.url, " to: ", dir)
-
-		if lfs.attributes(dir) == nil then
-			lfs.mkdir(dir)
-		end
-
-		if http.request{ url  = appletdata.url,	sink = ltn12.sink.simplify(sink) } == nil then
-			log:warn("failed downloading: ", appletdata.url)
-			-- remove from download list to avoid setting new version number
-			self.todownload[applet] = nil
-		end
-	end
-
-	jnt:t_perform(function() finishedDownload(self) end)
-end
-
-
 -- sink for writing out files once they have been unziped by zipfilter
-function _t_zipSink(self, dir)
+function _zipSink(self, dir)
 	local fh = nil
 
 	return function(chunk)
+
 		if chunk == nil then
 			if fh then
 				fh:close()
 				fh = nil
+				self.fetched = true
 			end
 
 		elseif type(chunk) == "table" then

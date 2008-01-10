@@ -15,10 +15,6 @@ convenient proxy functions.
  -- jive.net.Socket is abstract so this is not a useful example
  local mySocket = Socket(jnt, "mySocket")
 
- -- FROM THE MAIN THREAD
- -- transform a sink into a network thread one
- local t_Sink = mySocket:safeSink(sink)
-
  -- information about the socket
  log:debug("Freeing: ", mySocket)
  -- print
@@ -43,6 +39,7 @@ local tostring, _assert = tostring, _assert
 local oo            = require("loop.base")
 
 local NetworkThread = require("jive.net.NetworkThread")
+local Task          = require("jive.ui.Task")
 
 local log           = require("jive.utils.log").logger("net.socket")
 
@@ -78,93 +75,20 @@ function __init(self, jnt, name)
 end
 
 
---[[
-
-=head2 jive.net.Socket:close()
-
-Closes the socket.
-
-=cut
---]]
-function close(self)
---	log:debug(self, ":close()")
-
-	self:perform(function() self:t_close() end)
-end
---[[
-
-=head2 jive.net.Socket:free()
-
-Frees and closes the socket including any reference in the jnt.
-Must be called by subclasses.
-
-=cut
---]]
+-- free
+-- frees (and closes) the socket
 function free(self)
 --	log:debug(self, ":free()")
 
-	self:perform(function() self:t_free() end)
-end
-
-
---[[
-
-=head2 jive.net.Socket:getSafeSinkGenerator()
-
-Returns a function that transforms a main thread sink in 
-a network thread sink. The function accepts an optional boolean
-indicating if nil must be sent (i.e. standard source behaviour)
-
-=cut
---]]
-function getSafeSinkGenerator(self)
-
-	return function (sink, callNil, priority)
-
-		return function(chunk, err)
-			if chunk ~= "" then
-				self.jnt:t_perform(
-					function() 
-						sink(chunk, err) 
-						if callNil then sink(nil) end 
-					end,
-					priority
-				)
-			end
-			return 1
-		end
-	end
-end
-
-
---[[
-
-=head2 jive.net.Socket:safeSink()
-
-Transforms a main thread sink in a network thread sink.
-
-=cut
---]]
-function safeSink(self, sink)
-	local gen = self:getSafeSinkGenerator()
-	return gen(sink)
-end
-
-
--- t_free
--- frees (and closes) the socket
-function t_free(self)
---	log:debug(self, ":t_free()")
-
 	-- we store nothing so closing is all we need
-	self:t_close()
+	self:close()
 end
 
 
--- t_close
+-- close
 -- closes the socket
-function t_close(self)
---	log:debug(self, ":t_close()")
+function close(self)
+--	log:debug(self, ":close()")
 
 	if self.t_sock then
 		self:t_removeRead()
@@ -172,6 +96,18 @@ function t_close(self)
 		self.t_sock:close()
 		self.t_sock = nil
 	end
+end
+
+
+--[[
+
+=head2 setPriority(priority)
+
+Sets the socket priority.
+
+--]]
+function setPriority(self, priority)
+	self.priority = priority
 end
 
 
@@ -193,32 +129,59 @@ end
 
 -- t_add/remove/read/write
 function t_addRead(self, pump, timeout)
-	self.jnt:t_addRead(self.t_sock, pump, timeout)
+	if not self.readPump then
+		-- task to iterate over all read pumps
+		local task = Task(tostring(self) .. "(R)",
+				  nil,
+				  function(_, networkErr)
+					  while self.readPump do
+						  if not self.readPump(networkErr) then
+							  _, networkErr = Task:yield(false)
+						  end
+					  end
+				  end,
+				  nil, -- FIXME err function
+				  self.priority)
+		self.jnt:t_addRead(self.t_sock, task, timeout)
+	end
+
+	self.readPump = pump
 end
 
 function t_removeRead(self)
-	self.jnt:t_removeRead(self.t_sock)
+	if self.readPump then
+		self.readPump = nil
+		self.jnt:t_removeRead(self.t_sock)
+	end
 end
 
 function t_addWrite(self, pump, timeout)
-	self.jnt:t_addWrite(self.t_sock, pump, timeout)
+	if not self.writePump then
+		-- task to iterate over all write pumps
+		local task = Task(tostring(self) .. "(W)",
+				  nil,
+				  function(_, networkErr)
+					  while self.writePump do
+						  if not self.writePump(networkErr) then
+							  networkErr = Task:yield(false)
+						  end
+					  end
+				  end,
+				  nil, -- FIXME err function
+				  self.priority)
+		self.jnt:t_addWrite(self.t_sock, task, timeout)
+	end
+		
+	self.writePump = pump
 end
 
 function t_removeWrite(self)
-	self.jnt:t_removeWrite(self.t_sock)
+	if self.writePump then
+		self.writePump = nil
+		self.jnt:t_removeWrite(self.t_sock)
+	end
 end
 
---[[
-
-=head2 jive.net.Socket:perform(func)
-
-A proxy for the I<perform> method of L<jive.net.NetworkThread>.
-
-=cut
---]]
-function perform(self, func)
-	self.jnt:perform(func)
-end
 
 
 --[[

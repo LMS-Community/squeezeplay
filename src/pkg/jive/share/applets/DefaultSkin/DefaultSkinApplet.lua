@@ -273,6 +273,7 @@ function skin(self, s)
 	local FONT_BOLD_18px = Font:load(fontpath .. "FreeSansBold.ttf", 20)
 	local FONT_BOLD_20px = Font:load(fontpath .. "FreeSansBold.ttf", 22)
 	local FONT_BOLD_22px = Font:load(fontpath .. "FreeSansBold.ttf", 24)
+	local FONT_BOLD_200px = Font:load(fontpath .. "FreeSansBold.ttf", 200)
 
 
 	-- Iconbar definitions, each icon needs an image and x,y
@@ -354,6 +355,8 @@ function skin(self, s)
 	s.menu = {}
 	s.menu.padding = { 4, 2, 4, 2 }
 	s.menu.itemHeight = 27
+	s.menu.fg = {0xbb, 0xbb, 0xbb }
+	s.menu.font = FONT_BOLD_200px
 
 	-- menu item
 	s.item = {}
@@ -881,6 +884,8 @@ function skin(self, s)
 	s.albummenu = {}
 	s.albummenu.padding = { 4, 2, 4, 2 }
 	s.albummenu.itemHeight = 61
+	s.albummenu.fg = {0xbb, 0xbb, 0xbb }
+	s.albummenu.font = FONT_BOLD_200px
 
 
 	-- items with artwork and song info

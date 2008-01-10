@@ -1,11 +1,4 @@
 
--- XXXX must be run in the network thread
---
--- note this is not a good example of how to program a jive
--- applet, the network thread is blocked while this is running.
--- however while upgrading this is actually what we want.
-
-
 -- FIXME at the moment the upgrade stores the kernel and filesystem
 -- images in /tmp before writing to flash. when the bootloader and
 -- kernel support safe upgrading the flash should be written to as
@@ -17,15 +10,24 @@ local ipairs, pairs, tonumber, tostring, type = ipairs, pairs, tonumber, tostrin
 local oo          = require("loop.base")
 local io          = require("io")
 local os          = require("os")
+local math        = require("math")
 local table       = require("jive.utils.table")
 local zip         = require("zipfilter")
 local ltn12       = require("ltn12")
 local string      = require("string")
 local url         = require("socket.url")
 local http        = require("socket.http")
+local coroutine   = require("coroutine")
 
+local RequestHttp = require("jive.net.RequestHttp")
+local SocketHttp  = require("jive.net.SocketHttp")
+local Process     = require("jive.net.Process")
+local Framework   = require("jive.ui.Framework")
+
+local debug       = require("jive.utils.debug")
 local log         = require("jive.utils.log").logger("upgrade")
 
+local jnt = jnt
 
 module(..., oo.class)
 
@@ -47,72 +49,86 @@ end
 function start(self, callback)
 	local t, err
 
-	if callback then
-		callback("UPDATE_DOWNLOAD")
+	if not callback then
+		callback = function() end
 	end
+
+	callback(false, "UPDATE_DOWNLOAD", "")
 
 	-- parse the flash devices
 	t, err = self:parseMtd()
 	if not t then
+		log:warn("parseMtd failed")
 		return nil, err
 	end
 			    
 	-- parse the kernel version
+	self._zImageExtraVersion = "zImage-P7"
+	self._mtd[self._zImageExtraVersion] = self._mtd["zImage"]
 	t, err = self:parseVersion()
 	if not t then
+		log:warn("parseVersion failed")
 		return nil, err
 	end
 			    
 	-- stream the firmware, and update the flash
-	t, err = self:download()
+	t, err = self:download(callback)
 	if not t then
+		log:warn("download Failed")
 		return nil, err
 	end
 
-	if callback then
-		callback("UPDATE_VERIFY")
-	end
+	callback(false, "UPDATE_VERIFY")
 
 	-- checksum kernel
 	t, err = self:checksum(self._zImageExtraVersion, "/tmp/")
 	if not t then
+		log:warn("file checksum failed")
 		return nil, err
 	end
 
 	-- checksum cramfs
 	t, err = self:checksum("root.cramfs", "/tmp/")
 	if not t then
+		log:warn("file checksum failed")
 		return nil, err
 	end
 
-	if callback then
-		callback("UPDATE_WRITE")
-	end
+	callback(false, "UPDATE_WRITE")
 
 	-- disable VOL+ on boot
 	t, err = self:fw_setenv({ sw7 = "" })
 	if not t then
+		log:warn("fw_setenv failed")
 		return nil, err
 	end
 
 	-- write images to flash
-	-- FIXME remove this and flash in download()
-	self:flash(self._zImageExtraVersion)
-	self:flash("root.cramfs")
-
-	if callback then
-		callback("UPDATE_VERIFY")
+	t, err = self:flash(self._zImageExtraVersion)
+	if not t then
+		log:warn("flash kernel failed")
+		return nil, err
 	end
+
+	t, err = self:flash("root.cramfs")
+	if not t then
+		log:warn("flash filesystem failed")
+		return nil, err
+	end
+
+	callback(false, "UPDATE_VERIFY")
 
 	-- checksum kernel
 	t, err = self:checksum(self._zImageExtraVersion)
 	if not t then
+		log:warn("flash checksum failed")
 		return nil, err
 	end
 
 	-- checksum cramfs
 	t, err = self:checksum("root.cramfs")
 	if not t then
+		log:warn("flash checksum failed")
 		return nil, err
 	end
 
@@ -124,10 +140,22 @@ function start(self, callback)
 				  sw6 = "echo Factory reset; blink; nande b00 1400000; blink"
 			  })
 	if not t then
+		log:warn("fw_setenv failed")
 		return nil, err
 	end
-	
-	return 1
+
+	callback(true, "UPDATE_REBOOT")
+
+	-- two second delay
+	local t = Framework:getTicks()
+	while (t + 2000) > Framework:getTicks() do
+		Task:yield(true)
+	end
+
+	log:warn("REBOOTING ...")
+	os.execute("/bin/busybox reboot -f")
+
+	return true
 end
 
 
@@ -139,7 +167,11 @@ function upgradeSink(self)
 	local part = nil
 
 	return function(chunk)
+		       Task:yield(true)
+
 		       if type(chunk) == "string" then
+			       self.downloadBytes = self.downloadBytes + #chunk
+
 			       if action == "store" then
 				       -- write content to fhsink
 				       local t, err = fhsink(chunk)
@@ -170,6 +202,7 @@ function upgradeSink(self)
 		       if chunk == nil then
 			       -- end of zip file
 			       log:warn("END OF ZIP FILE")
+			       self.downloadClose = true
 			       return nil
 		       end
 
@@ -204,7 +237,6 @@ function upgradeSink(self)
 				       local fh, err = io.open("/tmp/" .. part, "w+")
 				       fhsink = ltn12.sink.file(fh, err)
 			       end
-
 
 			       return 1
 		       end
@@ -270,6 +302,8 @@ function parseMtd(self)
 
 	log:warn("mtdset=", mtdset, " nextKernelblock=", self.nextKernelblock, " nextMtdset=", self.nextMtdset)
 
+	Task:yield(true)
+
 	return 1
 end
 
@@ -298,6 +332,8 @@ function parseVersion(self)
 	self._zImageExtraVersion = "zImage" .. extraversion
 	self._mtd[self._zImageExtraVersion] = self._mtd["zImage"]
 
+	Task:yield(true)
+
 	return 1
 end
 
@@ -320,58 +356,107 @@ function fw_setenv(self, variables)
 
 	local str = table.concat(cmd, " ")
 
-	log:warn("fw_setenv: ", str)	
+	log:warn("fw_setenv: ", str)
 	if os.execute(str) ~= 0 then
 		return nil, "fw_setenv failed"
 	end
+
+	Task:yield(true)
 
 	return 1
 end
 
 
 -- open the zip file or stream for processing
-function download(self)
+function download(self, callback)
 	log:warn("self.url=", self.url)
 
 	-- unzip the stream, and store the contents
 	local sink = ltn12.sink.chain(zip.filter(), self:upgradeSink())
 
-	-- this would normally be bad, it blocks this thread
 	local parsedUrl = url.parse(self.url)
+	self.downloadBytes = 0
 
 	local t, err
 	if parsedUrl.scheme == "file" then
-		local source = ltn12.source.file(io.open(parsedUrl.path))
-		t, err = ltn12.pump.all(source, sink)
+		local file = io.open(parsedUrl.path)
+
+		local totalBytes = file:seek("end")
+		file:seek("set", 0)
+
+		local source = function()
+			            local chunk = file:read(0x16000)
+			            if not chunk then file:close() end
+			            return chunk
+			        end
+
+		while true do
+			local t, err = ltn12.pump.step(source, sink)
+			callback(false, "UPDATE_DOWNLOAD", math.floor((self.downloadBytes / totalBytes) * 100) .. "%")
+
+			Task:yield()
+			if not t then
+				return not err, err
+			end
+		end 
 
 	elseif parsedUrl.scheme == "http" then
-		t, err = http.request{
-			url = self.url,
-			sink = ltn12.sink.simplify(sink)
-		}
+		self.downloadClose = false
 
+		local req = RequestHttp(sink, 'GET', self.url, { stream = true })
+		local uri  = req:getURI()
+
+		local http = SocketHttp(jnt, uri.host, uri.port, uri.host)
+		http:fetch(req)
+
+		while not self.downloadClose do
+			local totalBytes = req:t_getResponseHeader("Content-Length")
+			if totalBytes then
+				callback(false, "UPDATE_DOWNLOAD", math.floor((self.downloadBytes / totalBytes) * 100) .. "%")
+			end
+			Task:yield(true)
+		end
+
+		return true
 	else
-		t, err = false, "Unsupported url scheme"
+		return false, "Unsupported url scheme"
 	end
+end
 
-	return t, err
+
+function nullProcessSink(chunk, err)
+	if err then
+		log:warn("process error:", err)
+		return nil
+	end
+	return 1
 end
 
 
 -- flash the image from tmp file
 function flash(self, part)
-	local cmd
+	local cmd, proc
 
+	-- erase flash
 	cmd = "/usr/sbin/flash_eraseall -q " .. self._mtd[part]
 	log:warn("flash: ", cmd)
-	if os.execute(cmd) ~= 0 then
-		return nil, "flash_eraseall failed"
+
+	proc = Process(jnt, cmd)
+	proc:read(nullProcessSink)
+	while proc:status() ~= "dead" do
+		-- wait for the process to complete
+		Task:yield()
 	end
 
+	-- write flash
 	cmd = "/usr/sbin/nandwrite -qp " .. self._mtd[part] .. " " .. "/tmp/" .. part
 	log:warn("flash: ", cmd)
-	if os.execute(cmd) ~= 0 then
-		return nil, "nandwrite failed"
+
+	proc = Process(jnt, cmd)
+	proc:read(nullProcessSink)
+	while proc:status() ~= "dead" do
+		-- wait for the process to complete
+		Task:yield()
 	end
 
 	return 1
@@ -396,11 +481,28 @@ function checksum(self, part, dir)
 	end
 	log:warn("checksum cmd: ", cmd)
 
-	local fh = io.popen(cmd, "r")
-	local md5flash = string.match(fh:read("*all"), "(%x+)%s+.+")
-	io.close(fh)
+	local md5flash = {}
 
-	log:warn("md5check=", md5check, " md5flash=", md5flash)
+	local proc = Process(jnt, cmd)
+	proc:read(
+		function(chunk, err)
+			if err then
+				log:warn("md5sum error ", err)
+				return nil
+			end
+			if chunk ~= nil then
+				table.insert(md5flash, chunk)
+			end
+			return 1			
+		end)
+
+	while proc:status() ~= "dead" do
+		-- wait for the process to complete
+		Task:yield()
+	end
+	md5flash = string.match(table.concat(md5flash), "(%x+)%s+.+")
+
+	log:warn("md5check=", md5check, " md5flash=", md5flash, " ", md5check == md5flash)
 	return md5check == md5flash, "PROBLEM_CHECKSUM_FAILED"
 end
 

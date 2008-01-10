@@ -94,7 +94,7 @@ void timedBlit(SDL_Surface *srf, SDL_Surface *img) {
 	printf("\tstart.. \n");
 	SDL_Rect r;
 	
-	SDL_Surface *bg = loadImage("/usr/share/jive/applets/DefaultSkin/wallpaper/sunandmoon.png", 0);
+	SDL_Surface *bg = loadImage("/usr/share/jive/applets/SetupWallpaper/wallpaper/Chapple_1.jpg", 0);
 
 	SDL_initFramerate(&manager);
 	SDL_setFramerate(&manager, 20);
@@ -102,17 +102,22 @@ void timedBlit(SDL_Surface *srf, SDL_Surface *img) {
 	Uint32 t0 = SDL_GetTicks();
 	clk0 = times(&tms0);
 
-	int i;
+	int i,j;
 	for (i=0; i<LOOP; i++) {
-		SDL_Delay(10);
+		//SDL_Delay(10);
 
 		SDL_BlitSurface(bg, NULL, srf, NULL);
 
 		r.x = i & 0x7f;
 		r.y = i & 0x7f;
-		SDL_BlitSurface(img, NULL, srf, &r);
 
-		SDL_framerateDelay(&manager);
+		for (j=0; j<50; j++) {
+			r.y = (i & 0x7f) + j;
+			SDL_BlitSurface(img, NULL, srf, &r);
+		}
+
+
+		//SDL_framerateDelay(&manager);
 #if 1
 		SDL_Flip(srf);
 
@@ -150,7 +155,7 @@ int main(int argc, char *args[]) {
 
 
 	/* double buffered hardware surface */
-	SDL_Surface *srf = SDL_SetVideoMode(240, 320, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
+	SDL_Surface *srf = SDL_SetVideoMode(240, 320, 16, /*SDL_HWSURFACE | SDL_DOUBLEBUF*/ 0);
 	if (!srf) {
 		printf("No surface\n");
 		exit(-1);
@@ -163,7 +168,9 @@ int main(int argc, char *args[]) {
 	SDL_Surface *img;
 	SDL_Rect r;
 	SDL_Color black = { 255, 255, 255 };
+#if 0
 	SDL_Color white = { 0, 0, 0 };
+#endif
 	r.x = 0;
 	r.y = 0;
 	r.w = 320;
@@ -182,6 +189,7 @@ int main(int argc, char *args[]) {
 	timedBlit(srf, img);
 
 
+#if 0
 	/* solid text */
 	printf("Solid text:\n");
 	img = TTF_RenderText_Solid(font, "Hello World solid", black);
@@ -196,13 +204,13 @@ int main(int argc, char *args[]) {
 
 	/* large image (no alpha) */
 	printf("Large image (no alpha):\n");
-	img = loadImage("/usr/share/jive/applets/DefaultSkin/wallpaper/goldfish.png", 0);
+	img = loadImage("/usr/share/jive/applets/SetupWallpaper/wallpaper/stone.png", 0);
 	timedBlit(srf, img);
 
 
 	/* small image (with alpha) */
 	printf("Small image (with alpha):\n");
-	img = loadImage("/usr/share/jive/applets/DefaultSkin/images/Icon_Battery_Charging.png", 1);
+	img = loadImage("/usr/share/jive/applets/DefaultSkin/images/icon_battery_charging.png", 1);
 	timedBlit(srf, img);
 
 
@@ -238,6 +246,8 @@ int main(int argc, char *args[]) {
 
 	/* all done */
 	sleep(5);
+#endif
+
 	SDL_Quit();
 
 	return 0;

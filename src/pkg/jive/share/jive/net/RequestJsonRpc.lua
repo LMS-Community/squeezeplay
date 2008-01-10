@@ -131,15 +131,14 @@ end
 
 -- t_setResponseBody
 -- HTTP socket data to process, along with a safe sink to send it to customer
-function t_setResponseBody(self, data, safeSinkGen)
+function t_setResponseBody(self, data)
 	--log:debug("RequestJsonRpc:t_setResponseBody()")
 --	log:info(data)
 
-	-- transform our sink into a safe one using handy function
-	local safeSink = self:sinkToSafeSink(self:t_getResponseSink(), safeSinkGen)
+	local sink = self:t_getResponseSink()
 	
 	-- abort if we have no sink
-	if safeSink then
+	if sink then
 	
 		-- the HTTP layer has read any data coming with a 404, but we do not care
 		-- only send data back in case of 200!
@@ -147,11 +146,11 @@ function t_setResponseBody(self, data, safeSinkGen)
 		if code == 200 then
 			local mySink = ltn12.sink.chain(
 				jsonfilters.decode,
-				safeSink
+				sink
 			)
 			mySink(data)
 		else
-			safeSink(nil, err)
+			sink(nil, err)
 		end
 	end
 end

@@ -202,6 +202,7 @@ local categories = {
 	["net.comet"]                = jiveLogger(logging.INFO),
 	                             
 	["ui"]                       = jiveLogger(logging.INFO),
+	["ui.task"]                  = jiveLogger(logging.WARN),
                                  
 	["utils"]                    = jiveLogger(logging.INFO),
 }

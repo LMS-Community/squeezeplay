@@ -22,6 +22,7 @@ local tostring, tonumber, type, sort = tostring, tonumber, type, sort
 local pairs, ipairs, select, _assert = pairs, ipairs, select, _assert
 
 local oo                     = require("loop.simple")
+local math                   = require("math")
 local table                  = require("jive.utils.table")
 local string                 = require("string")
                              
@@ -92,15 +93,6 @@ oo.class(_M, Applet)
 --==============================================================================
 -- Global "constants"
 --==============================================================================
-
--- number of items to get for missing items in status.
--- Note the first/pushed number of items is defined in Player.lua
-local STATUS_MISSING_FETCH = 100 
-
--- number of items to fetch initially (window opens) for browse items
-local BROWSE_FIRST_FETCH = 100
--- number of items to get for browse missing items
-local BROWSE_MISSING_FETCH = 100
 
 -- number of volume steps
 local VOLUME_STEPS = 20
@@ -197,15 +189,16 @@ local function _artworkThumbUri(iconId, size)
 	end
 
 	-- if this is a number, construct the path for a sizexsize cover art thumbnail
+	-- use gd file format to get the output direct from libgd without compression
 	local artworkUri
-	local resizeFrag = '_' .. size .. 'x' .. size .. '_p.png' -- 'p' is for padded, png gives us transparency
+	local resizeFrag = '_' .. size .. 'x' .. size .. '_p.gd' -- 'p' is for padded
 	if thisIsAnId then 
 		-- we want a 56 pixel thumbnail if it wasn't specified
 		artworkUri = '/music/' .. iconId .. '/cover' .. resizeFrag 
 	-- if this isn't a number, then we just want the path with server-side resizing
 	-- if .png, then resize it
-	elseif string.match(iconId, '.png') then
-		artworkUri = string.gsub(iconId, '.png', resizeFrag) 
+	elseif string.match(iconId, '.gd') then
+		artworkUri = string.gsub(iconId, '.gd', resizeFrag) 
 	-- otherwise punt
 	else
 		return iconId
@@ -386,15 +379,26 @@ end
 
 -- _artworkItem
 -- updates a group widget with the artwork for item
-local function _artworkItem(item, group)
-	local icon = group:getWidget("icon")
+local function _artworkItem(item, group, menuAccel)
+	local icon = group and group:getWidget("icon")
 
 	if item["icon-id"] then
-		-- Fetch an image from SlimServer
-		_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri, 56)
+		if menuAccel and not _server:artworkThumbCached(item["icon-id"], 56) then
+			-- Don't load artwork while accelerated
+			_server:cancelArtwork(icon)
+		else
+			-- Fetch an image from SlimServer
+			_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri, 56)
+		end
+
 	elseif item["icon"] then
-		-- Fetch a remote image URL, sized to 56x56
-		_server:fetchArtworkURL(item["icon"], icon, 56)
+		if menuAccel and not _server:artworkThumbCached(item["icon"], 56) then
+			-- Don't load artwork while accelerated
+			_server:cancelArtwork(icon)
+		else
+			-- Fetch a remote image URL, sized to 56x56
+			_server:fetchArtworkURL(item["icon"], icon, 56)
+		end
 
 	else
 		_server:cancelArtwork(icon)
@@ -448,7 +452,7 @@ end
 
 -- _decoratedLabel
 -- updates or generates a label cum decoration in the given labelStyle
-local function _decoratedLabel(group, labelStyle, item, db)
+local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 	-- if item is a windowSpec, then the icon is kept in the spec for nothing (overhead)
 	-- however it guarantees the icon in the title is not shared with (the same) icon in the menu.
 
@@ -458,6 +462,12 @@ local function _decoratedLabel(group, labelStyle, item, db)
 
 	if item then
 		group:setWidgetValue("text", item.text)
+
+		-- set an acceleration key, but not for playlists
+		if item.params and item.params.textkey then
+			-- FIXME the, el, la, etc articles
+			group:setAccelKey(item.params.textkey)
+		end
 
 		if item["radio"] then
 			group._type = "radio"
@@ -472,7 +482,7 @@ local function _decoratedLabel(group, labelStyle, item, db)
 				group:setWidget("icon", Icon("icon"))
 				group._type = nil
 			end
-			_artworkItem(item, group)
+			_artworkItem(item, group, menuAccel)
 		end
 		group:setStyle(labelStyle)
 
@@ -629,7 +639,7 @@ local function _browseSink(step, chunk, err)
 			step.menu:setItems(step.db:menuItems(data))
 
 			-- what's missing?
-			local from, qty = step.db:missing(BROWSE_MISSING_FETCH)
+			local from, qty = step.db:missing(step.menu:isAccelerated())
 		
 			if from then
 				_performJSONAction(step.data, from, qty, step.sink)
@@ -723,7 +733,7 @@ local function _menuSink(self, cmd)
 
 				item.callback = function()
 					--	local jsonAction = v.actions.go
-						local jsonAction, from, to, step, sink
+						local jsonAction, from, qty, step, sink
 						local doAction = _safeDeref(v, 'actions', 'do')
 						local goAction = _safeDeref(v, 'actions', 'go')
 
@@ -737,14 +747,13 @@ local function _menuSink(self, cmd)
 
 						-- we need a new window for go actions, or do actions that involve input
 						if goAction or (doAction and v.input) then
-							from = 0
-							to = BROWSE_FIRST_FETCH
 							step, sink =_newDestination(nil,
 										  v,
 										  _newWindowSpec(nil, v),
 										  _browseSink,
 										  jsonAction
 									  )
+							from, qty = step.db:missing(step.menu:isAccelerated())
 	
 							jiveMain:lockItem(item,
 								  function()
@@ -759,7 +768,7 @@ local function _menuSink(self, cmd)
 							      end
 						end
 
-						_performJSONAction(jsonAction, from, to, sink)
+						_performJSONAction(jsonAction, from, qty, sink)
 					end
 
 				_playerMenus[item.id] = item
@@ -770,57 +779,34 @@ local function _menuSink(self, cmd)
 end
 
 
+-- _requestStatus
+-- request the next chunk from the player status (playlist)
+local function _requestStatus()
+	local step = _statusStep
+
+	local from, qty = step.db:missing(step.menu:isAccelerated())
+	if from then
+		_server:request(
+				step.sink,
+				_player.id,
+				{ 'status', from, qty, 'menu:menu' }
+			)
+	end
+end
+
+
 -- _statusSink
 -- sink that sets the data for our status window(s)
 local function _statusSink(step, chunk, err)
 	log:debug("_statusSink()")
 		
-	if logd:isDebug() then
-		debug.dump(chunk, 8)
-	end
-
 	-- currently we're not going anywhere with Now Playing...
 	_assert(step == _statusStep)
 
-	-- Just in case we get passed a full event
-	local data = chunk
-	if data.data then
-		data = data.data
-	end
-	
+	local data = chunk.data
 	if data then
 		if logd:isDebug() then
 			debug.dump(data, 8)
-		end
-		
-		local _playerStatus    = _player:getPlayerStatus()
-		local _playlistHasSize = _safeDeref(_playerStatus, 'item_loop', 1)
-		if not _playlistHasSize then
-			local window = Window("window", _string("SLIMBROWSER_NOW_PLAYING"), 'playlisttitle')
-			local menu = SimpleMenu("menu")
-			menu:addItem({
-				text = _string('SLIMBROWSER_NOTHING'),
-				style = 'itemNoAction'
-			})
-			window:addWidget(menu)
-			step.window = window
-		elseif data.mode == "play" then
-			step.window:setTitle(_string("SLIMBROWSER_NOW_PLAYING"))
-			step.window:setTitleStyle("playlisttitle")
-		elseif data.mode == "pause" then
-			step.window:setTitle(_string("SLIMBROWSER_PAUSED"))
-			step.window:setTitleStyle("playlisttitle")
-		elseif data.mode == "stop" then
-			step.window:setTitle(_string("SLIMBROWSER_STOPPED"))
-			step.window:setTitleStyle("playlisttitle")
-		end
-
-		-- stuff from the player is just json.result
-		-- stuff from our completion calls below will be full json
-		-- adapt
-		-- XXX: still needed?
-		if data.id and data.result then
-			data = data.result
 		end
 		
 		-- handle the case where the player disappears
@@ -839,17 +825,7 @@ local function _statusSink(step, chunk, err)
 		end
 
 		step.menu:setItems(step.db:menuItems(data))
-
-		-- what's missing?
-		local from, qty = step.db:missing(STATUS_MISSING_FETCH)
-
-		if from then
-			_server:request(
-				step.sink,
-				_player.id,
-				{ 'status', from, qty, 'menu:menu' }
-			)
-		end
+		_requestStatus()
 
 	else
 		log:error(err)
@@ -1088,12 +1064,10 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 				-- prepare the window if needed
 				local step
 				local sink = _devnull
-				local from
-				local to
+				local from, qty
 				if actionName == 'go' then
-					from = 0
-					to = BROWSE_FIRST_FETCH
 					step, sink = _newDestination(_curStep, item, _newWindowSpec(db, item), _browseSink, jsonAction)
+					from, qty = step.db:missing(step.menu:isAccelerated())
 				elseif item["showBigArtwork"] then
 					sink = _bigArtworkPopup
 				end
@@ -1101,7 +1075,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 				_pushToNewWindow(step)
 			
 				-- send the command
-				 _performJSONAction(jsonAction, from, to, sink)
+				 _performJSONAction(jsonAction, from, qty, sink)
 			
 				return EVENT_CONSUME
 			end
@@ -1167,7 +1141,7 @@ local _keycodeActionName = {
 
 -- _browseMenuListener
 -- called 
-local function _browseMenuListener(menu, menuItem, db, dbIndex, event)
+local function _browseMenuListener(menu, db, menuItem, dbIndex, event)
 
 	-- ok so joe did press a key while in our menu...
 	-- figure out the item action...
@@ -1197,7 +1171,7 @@ local function _browseMenuListener(menu, menuItem, db, dbIndex, event)
 	-- like a radio, checkbox, or set of choices
 	-- further, we want the event to propagate to the active widget, so return EVENT_UNUSED
 	local item = db:item(dbIndex)
-	if item["_jive_button"] then
+	if item and item["_jive_button"] then
 		return EVENT_UNUSED
 	end
 
@@ -1245,13 +1219,18 @@ end
 
 -- _browseMenuRenderer
 -- renders a basic menu
-local function _browseMenuRenderer(menu, widgets, toRenderIndexes, toRenderSize, db)
+local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderSize)
 	--	log:debug("_browseMenuRenderer(", toRenderSize, ", ", db, ")")
 	-- we must create or update the widgets for the indexes in toRenderIndexes.
 	-- this last list can contain null, so we iterate from 1 to toRenderSize
 
 	local labelItemStyle = db:labelItemStyle()
 	
+	local menuAccel, dir = menu:isAccelerated()
+	if menuAccel then
+		_server:cancelAllArtwork()
+	end
+
 	for widgetIndex = 1, toRenderSize do
 		local dbIndex = toRenderIndexes[widgetIndex]
 		
@@ -1275,9 +1254,42 @@ local function _browseMenuRenderer(menu, widgets, toRenderIndexes, toRenderSize,
 				style = item["style"]
 			end
 
-			widgets[widgetIndex] = _decoratedLabel(widget, style, item, db)
+			widgets[widgetIndex] = _decoratedLabel(widget, style, item, db, menuAccel)
 		end
 	end
+
+	if menuAccel or toRenderSize == 0 then
+		return
+	end
+
+	-- preload artwork in the direction of scrolling
+	-- FIXME wrap around cases
+	local startIndex
+	if dir > 0 then
+		startIndex = toRenderIndexes[toRenderSize]
+	else
+		startIndex = toRenderIndexes[1] - toRenderSize
+	end
+
+	for dbIndex = startIndex, startIndex + toRenderSize do
+		local item = db:item(dbIndex)
+		if item then
+			_artworkItem(item, nil, false)
+		end
+	end
+end
+
+
+-- _browseMenuAvailable
+-- renders a basic menu
+local function _browseMenuAvailable(menu, db, dbIndex, dbVisible)
+	-- check range
+	local minIndex = math.max(1, dbIndex)
+	local maxIndex = math.min(dbIndex + dbVisible, db:size())
+
+	-- only check first and last item, this assumes that the middle
+	-- items are available
+	return (db:item(minIndex) ~= nil) and (db:item(maxIndex) ~= nil)
 end
 
 
@@ -1299,7 +1311,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	
 	-- create a window in all cases
 	local window = Window(windowSpec.windowStyle)
-	window:setTitleWidget(_decoratedLabel(nil, windowSpec.labelTitleStyle, windowSpec, db))
+	window:setTitleWidget(_decoratedLabel(nil, windowSpec.labelTitleStyle, windowSpec, db, false))
 	
 	local menu
 
@@ -1416,7 +1428,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		-- a db above
 	
 		-- a menu. We manage closing ourselves to guide our path
-		menu = Menu(windowSpec.menuStyle, _browseMenuRenderer, _browseMenuListener)
+		menu = Menu(windowSpec.menuStyle, _browseMenuRenderer, _browseMenuListener, _browseMenuAvailable)
 		
 		-- alltogether now
 		menu:setItems(db:menuItems())
@@ -1555,6 +1567,54 @@ function showPlaylist()
 	return EVENT_UNUSED
 end
 
+
+function notify_playerModeChange(self, player, mode)
+	if _player ~= player then
+		return
+	end
+
+	local step = _statusStep
+
+	if mode == "play" then
+		step.window:setTitle(_string("SLIMBROWSER_NOW_PLAYING"))
+		step.window:setTitleStyle("playlisttitle")
+	elseif mode == "pause" then
+		step.window:setTitle(_string("SLIMBROWSER_PAUSED"))
+		step.window:setTitleStyle("playlisttitle")
+	elseif mode == "stop" then
+		step.window:setTitle(_string("SLIMBROWSER_STOPPED"))
+		step.window:setTitleStyle("playlisttitle")
+	end
+end
+
+
+function notify_playerTrackChange(self, player, nowplaying)
+	if _player ~= player then
+		return
+	end
+
+	local playerStatus = player:getPlayerStatus()
+	local step = _statusStep
+
+	-- move selection if playing track is selected
+	local moveSelection = (step.menu:getSelectedIndex() == step.db:playlistIndex())
+
+	if step.db:updateStatus(playerStatus) then
+		-- move selection if playlist has changed
+		moveSelection = true
+	end
+
+	if moveSelection then
+		step.menu:setSelectedIndex(step.db:playlistIndex())
+	else
+		step.menu:reLayout()
+	end
+
+	-- does the playlist need loading?
+	_requestStatus()
+end
+
+
 -- notify_playerPower
 -- we refresh the main menu after playerPower changes
 function notify_playerPower(self, player, power)
@@ -1654,13 +1714,13 @@ function notify_playerCurrent(self, player)
 	
 	-- make sure it has our modifier (so that we use different default action in Now Playing)
 	_statusStep.actionModifier = "-status"
-	
+
 	-- showtime for the player
-	_player:onStage(sink)
-	jiveMain:setTitle(player:getName())
-
+	_player:onStage()
 	_server:request(sink, _player.id, { 'menu', 0, 100 })
+	_requestStatus()
 
+	jiveMain:setTitle(player:getName())
 	_installPlayerKeyHandler()
 end
 

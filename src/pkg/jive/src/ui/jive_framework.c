@@ -27,8 +27,8 @@ struct jive_perfwarn perfwarn = { 0, 0, 0, 0, 0, 0 };
 
 
 /* Frame rate calculations */
-static Uint32 framedue = 0;
-static Uint32 framerate = 1000 / JIVE_FRAME_RATE;
+//static Uint32 framedue = 0;
+//static Uint32 framerate = 1000 / JIVE_FRAME_RATE;
 
 
 /* button hold threshold 2 seconds */
@@ -266,136 +266,63 @@ static int jiveL_quit(lua_State *L) {
 
 
 static int jiveL_process_events(lua_State *L) {
-	Uint32 t0 = 0, t1 = 0;
-	Uint32 ticks, frameticks;
+	Uint32 r = 0;
+	SDL_Event event;
 
 	/* stack:
 	 * 1 : jive.ui.Framework
 	 */
 
-	framedue = SDL_GetTicks();
+	JIVEL_STACK_CHECK_BEGIN(L);
 
-	/* stop automatic gc */
-	lua_gc(L, LUA_GCSTOP, 0);
-
-	/* perform a full collection */
-	lua_gc(L, LUA_GCCOLLECT, 0);
-
-
-	/* FIXME check we have Framework */
-
-	while (1) {
-		Uint32 r = 0;
-
-		JIVEL_STACK_CHECK_BEGIN(L);
-
-		/* Call garbage collector every frame */
-		if (perfwarn.garbage) {
-			t0 = SDL_GetTicks();
-		}
-
-		lua_gc(L, LUA_GCSTEP, 0);
-
-		if (perfwarn.garbage) {
-			t1 = SDL_GetTicks();
-			if (t1 - t0 > perfwarn.garbage) {
-				printf("lua garbage > %2d : %3d\n", perfwarn.garbage, t1-t0);
-			}
-		}
-
-		/* Exit if we have no windows */
-		lua_getfield(L, 1, "windowStack");
-		if (lua_objlen(L, -1) == 0) {
-			lua_pop(L, 1);
-			return 0;
-		}
-		lua_rawgeti(L, -1, 1);
-
-
-		/* Process an event from SDL */
-		frameticks = SDL_GetTicks();
-
-		if (frameticks > framedue || frameticks < framedue - framerate) {
-#if 0
-			if (frameticks > framedue) {
-				printf("Dropped frames. framerate=%dms delay=%dms\n", (Uint32)framerate, (frameticks - framedue));
-			}
-#endif
-			framedue = frameticks + (framerate >> 2);
-		}
-
-		if (perfwarn.queue) {
-			if (SDL_EventQueueLength() > perfwarn.queue) {
-				printf("SDL_event_queue > %2d : %3d\n", perfwarn.queue, SDL_EventQueueLength());
-			}
-		}
-
-		/* pump network queue */
-		lua_getglobal(L, "jnt");
-		if (!lua_isnil(L, -1)) {
-			lua_pushcfunction(L, jive_traceback);  /* push traceback function */
-
-			lua_getfield(L, -2, "pump");
-			lua_pushvalue(L, -3);
-			if (lua_pcall(L, 1, 0, -3)) {
-				fprintf(stderr, "error in network pump:\n\t%s\n", lua_tostring(L, -1));
-				lua_pop(L, 1);
-			};
-			lua_pop(L, 1);
-		}
+	/* Exit if we have no windows */
+	lua_getfield(L, 1, "windowStack");
+	if (lua_objlen(L, -1) == 0) {
 		lua_pop(L, 1);
 
-		/* pump keyboard/mouse events once per frame */
-		SDL_PumpEvents();
-
-		if (jive_sdlevent_pump) {
-			jive_sdlevent_pump(L);
-		}
-
-		do {
-			SDL_Event event;
-			if (SDL_PeepEvents(&event, 1, SDL_GETEVENT, SDL_ALLEVENTS) > 0 ) {
-				r |= process_event(L, &event);
-			}
-			else {
-				ticks = SDL_GetTicks();
-				if (ticks < framedue) {
-					SDL_Delay(10);
-				}
-			}
-
-			ticks = SDL_GetTicks();
-		} while (ticks < framedue && ticks > frameticks);
-
-		/* Time next frame is due */
-		framedue += framerate;
-
-		lua_pop(L, 2);
-
-		JIVEL_STACK_CHECK_END(L);
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+	lua_rawgeti(L, -1, 1);
 
 
-		/* Draw the top window. */
-		if (update_screen) {
-			jiveL_update_screen(L);
-		}
+	/* pump keyboard/mouse events once per frame */
+	SDL_PumpEvents();
 
+	if (jive_sdlevent_pump) {
+		jive_sdlevent_pump(L);
+	}
 
-		if (r & JIVE_EVENT_QUIT) {
-			return 0;
+	/* check queue size */
+	if (perfwarn.queue) {
+		if (SDL_EventQueueLength() > perfwarn.queue) {
+			printf("SDL_event_queue > %2d : %3d\n", perfwarn.queue, SDL_EventQueueLength());
 		}
 	}
 
-	lua_gc(L, LUA_GCRESTART, 0);
+	/* process events */
+	while (SDL_PeepEvents(&event, 1, SDL_GETEVENT, SDL_ALLEVENTS) > 0 ) {
+		r |= process_event(L, &event);
+	}
 
-	return 0;
+	lua_pop(L, 2);
+	
+	JIVEL_STACK_CHECK_END(L);
+
+	if (r & JIVE_EVENT_QUIT) {
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+
+	lua_pushboolean(L, 1);
+	return lua_yield(L, 1);
 }
 
 
 int jiveL_set_update_screen(lua_State *L) {
 	/* stack is:
 	 * 1: framework
-	 * 2: eanble/disanle screen updates
+	 * 2: enable/disable screen updates
 	 */
 
 	update_screen = lua_toboolean(L, 2);
@@ -403,16 +330,19 @@ int jiveL_set_update_screen(lua_State *L) {
 }
 
 
-int jiveL_update_screen(lua_State *L) {
+static int _update_screen(lua_State *L) {
 	JiveSurface *srf;
 	Uint32 t0 = 0, t1 = 0, t2 = 0, t3 = 0, t4 = 0, t5 = 0;
 	clock_t c0 = 0, c1 = 0;
 
 	JIVEL_STACK_CHECK_BEGIN(L);
 
+	if (!update_screen) {
+		return 0;
+	}
+
 	/* stack is:
 	 * 1: framework
-	 * 2: screen surface
 	 */
 
 	lua_getfield(L, 1, "screen");
@@ -554,6 +484,27 @@ int jiveL_update_screen(lua_State *L) {
 	lua_pop(L, 4);
 
 	JIVEL_STACK_CHECK_END(L);
+
+	return 0;
+}
+
+
+int jiveL_update_screen(lua_State *L) {
+	/* stack is:
+	 * 1: framework
+	 */
+
+	lua_pushcfunction(L, jive_traceback);  /* push traceback function */
+
+	lua_pushcfunction(L, _update_screen);
+	lua_pushvalue(L, 1);
+
+	if (lua_pcall(L, 1, 0, 2) != 0) {
+		fprintf(stderr, "error in event function:\n\t%s\n", lua_tostring(L, -1));
+		return 0;
+	}
+
+	lua_pop(L, 1);
 
 	return 0;
 }

@@ -13,6 +13,9 @@ typedef struct menu_widget {
 
 	Uint16 item_height;
 	bool has_scrollbar;
+
+	JiveFont *font;
+	Uint32 fg;
 } MenuWidget;
 
 
@@ -41,6 +44,9 @@ int jiveL_menu_skin(lua_State *L) {
 
 	/* menu properties */
 	peer->item_height = jive_style_int(L, 1, "itemHeight", 20);
+
+	peer->font = jive_font_ref(jive_style_font(L, 1, "font"));
+	peer->fg = jive_style_color(L, 1, "fg", JIVE_COLOR_BLACK, NULL);
 
 	/* number of menu items visible */
 	numWidgets = peer->w.bounds.h / peer->item_height;
@@ -205,7 +211,7 @@ int jiveL_menu_iterate(lua_State *L) {
 }
 
 int jiveL_menu_draw(lua_State *L) {
-	MenuWidget *peer;
+	const char *accelKey;
 
 	/* stack is:
 	 * 1: widget
@@ -213,7 +219,28 @@ int jiveL_menu_draw(lua_State *L) {
 	 * 3: layer
 	 */
 
-	peer = jive_getpeer(L, 1, &menuPeerMeta);
+	MenuWidget *peer = jive_getpeer(L, 1, &menuPeerMeta);
+	JiveSurface *srf = tolua_tousertype(L, 2, 0);
+	bool drawLayer = luaL_optinteger(L, 3, JIVE_LAYER_ALL) & peer->w.layer;
+
+	lua_getfield(L, 1, "accelKey");
+	accelKey = lua_tostring(L, -1);
+
+	/* draw acceleration key letter */
+	if (drawLayer && accelKey) {
+		JiveSurface *txt;
+		Uint16 srf_w, srf_h, txt_w, txt_h;
+
+		txt = jive_font_draw_text(peer->font, peer->fg, accelKey);
+
+		jive_surface_get_size(srf, &srf_w, &srf_h);
+		jive_surface_get_size(txt, &txt_w, &txt_h);
+
+		jive_surface_blit(txt, srf, (srf_w - txt_w) / 2, (srf_h - txt_h) / 2);
+
+		jive_surface_free(txt);
+	}
+
 
 	/* draw widgets */
 	lua_getfield(L, 1, "widgets");
@@ -247,9 +274,16 @@ int jiveL_menu_draw(lua_State *L) {
 
 
 int jiveL_menu_gc(lua_State *L) {
+	MenuWidget *peer;
+
 	luaL_checkudata(L, 1, menuPeerMeta.magic);
 
-	/* nothing to do */
+	peer = lua_touserdata(L, 1);
+
+	if (peer->font) {
+		jive_font_free(peer->font);
+		peer->font = NULL;
+	}
 
 	return 0;
 }

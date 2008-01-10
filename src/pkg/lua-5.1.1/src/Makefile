@@ -38,10 +38,10 @@ LUA_O=	lua.o
 LUAC_T=	luac
 LUAC_O=	luac.o print.o
 
-LUATHREAD_O= luathread.o auxiliar.o pt.o srm.o
+LUATHREAD_O=
 
-ALL_O= $(CORE_O) $(LIB_O) $(LUA_O) $(LUAC_O) $(LUATHREAD_O)
-ALL_T= $(LUA_A) $(LUA_T) $(LUAC_T) $(LUATHREAD_T)
+ALL_O= $(CORE_O) $(LIB_O) $(LUA_O) $(LUAC_O)
+ALL_T= $(LUA_A) $(LUA_T) $(LUAC_T)
 ALL_A= $(LUA_A)
 
 default: $(PLAT)
@@ -52,7 +52,7 @@ o:	$(ALL_O)
 
 a:	$(ALL_A)
 
-$(LUA_A): $(CORE_O) $(LIB_O) $(LUATHREAD_O)
+$(LUA_A): $(CORE_O) $(LIB_O)
 	$(AR) $(ARFLAGS) $@ $?
 	$(RANLIB) $@
 
@@ -61,9 +61,6 @@ $(LUA_T): $(LUA_O) $(LUA_A)
 
 $(LUAC_T): $(LUAC_O) $(LUA_A)
 	$(CC) -o $@ $(LDFLAGS) $(CFLAGS) $(MYLDFLAGS) $(LUAC_O) $(LUA_A) $(LIBS)
-
-$(LUATHREAD_T): $(LUATHREAD_O) 
-	$(OSXPREFIX); $(CC) -o $@ $(CFLAGS) $(LDFLAGS) $(MYTHREADLDFLAGS) $(LUATHREAD_O)
 
 .c.o:
 	$(CC) $(CFLAGS) $(MYCFLAGS) -c -o $@ $<
@@ -103,15 +100,15 @@ generic:
 	$(MAKE) all MYCFLAGS=
 
 linux:
-	$(MAKE) all MYCFLAGS="-O2 -Wall -pthread -fpic -DLUA_USE_LINUX" MYLIBS="-Wl,-E -ldl -lreadline -lhistory -lncurses -lpthread" MYTHREADLDFLAGS="-O -shared -fpic" OSXPREFIX="pwd"
+	$(MAKE) all MYCFLAGS="-O2 -Wall -fpic -DLUA_USE_LINUX" MYLIBS="-Wl,-E -ldl -lreadline -lhistory -lncurses" OSXPREFIX="pwd"
 
 squeezeboxjive:
-	$(MAKE) all MYCFLAGS="-Os -Wall -pthread -fpic -DLUA_USE_POSIX -DLUA_USE_DLOPEN" MYLIBS="-Wl,-E -ldl -lpthread" MYTHREADLDFLAGS="-O -shared -fpic" OSXPREFIX="pwd"
+	$(MAKE) all MYCFLAGS="-Os -Wall -fpic -DLUA_USE_POSIX -DLUA_USE_DLOPEN" MYLIBS="-Wl,-E -ldl" OSXPREFIX="pwd"
 
 macosx:
 #	$(MAKE) all MYCFLAGS=-DLUA_USE_MACOSX
 # use this on Mac OS X 10.4
-	$(MAKE) all MYCFLAGS="-DLUA_USE_MACOSX -DLUA_USE_READLINE" MYLIBS="-lreadline -lpthread" OSXPREFIX='export MACOSX_DEPLOYMENT_TARGET="10.3"' MYTHREADLDFLAGS="-bundle -undefined dynamic_lookup"
+	$(MAKE) all MYCFLAGS="-DLUA_USE_MACOSX -DLUA_USE_READLINE" MYLIBS="-lreadline" OSXPREFIX='export MACOSX_DEPLOYMENT_TARGET="10.3"'
 
 #	$(OSXPREFIX); $(CC) -o $@ $(MYTHREADLDFLAGS) $(LUATHREAD_O)
 

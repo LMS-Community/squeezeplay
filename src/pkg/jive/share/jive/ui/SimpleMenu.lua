@@ -98,7 +98,7 @@ end
 
 -- _itemRenderer
 -- updates the widgetList ready for the menu to be rendered
-local function _itemRenderer(menu, widgetList, indexList, size, list)
+local function _itemRenderer(menu, list, widgetList, indexList, size)
 	for i = 1,size do
 		if indexList[i] ~= nil then
 			local item = list[indexList[i]]
@@ -128,7 +128,7 @@ end
 
 -- _itemListener
 -- called for menu item events
-local function _itemListener(menu, menuItem, list, index, event)
+local function _itemListener(menu, list, menuItem, index, event)
 	local item = list[index]
 
 	if( item == nil) then

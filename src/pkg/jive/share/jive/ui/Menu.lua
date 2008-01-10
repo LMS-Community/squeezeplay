@@ -46,6 +46,8 @@ local Framework            = require("jive.ui.Framework")
 local Event                = require("jive.ui.Event")
 local Widget               = require("jive.ui.Widget")
 local Scrollbar            = require("jive.ui.Scrollbar")
+local ScrollAccel          = require("jive.ui.ScrollAccel")
+local Timer                = require("jive.ui.Timer")
 
 local log                  = require("jive.utils.log").logger("ui")
 
@@ -108,7 +110,7 @@ local function _itemListener(self, item, event)
 	local r = EVENT_UNUSED
 
 	if item then
-		r = self.itemListener(self, item, self.list, self.selected or 1, event)
+		r = self.itemListener(self, self.list, item, self.selected or 1, event)
 
 		if r == EVENT_UNUSED then
 			r = item:_event(event)
@@ -125,7 +127,7 @@ local function _eventHandler(self, event)
 
 	if evtype == EVENT_SCROLL then
 		if self.locked == nil then
-			self:scrollBy(event:getScroll())
+			self:scrollBy(self.scroll:event(event, self.topItem, self.selected or 1, self.numWidgets, self.listSize))
 			return EVENT_CONSUME
 		end
 
@@ -206,12 +208,20 @@ Constructs a new Menu object. I<style> is the widgets style.
 
 =cut
 --]]
-function __init(self, style, itemRenderer, itemListener)
+function __init(self, style, itemRenderer, itemListener, itemAvailable)
 	_assert(type(style) == "string")
 	_assert(type(itemRenderer) == "function")
 	_assert(type(itemListener) == "function")
+	_assert(itemAvailable == nil or type(itemAvailable) == "function")
 
 	local obj = oo.rawnew(self, Widget(style))
+	obj.scroll = ScrollAccel(function(...)
+					 if itemAvailable then
+						 
+					 else
+						 return true
+					 end
+				 end)
 	obj.scrollbar = Scrollbar("scrollbar")
 	obj.scrollbar.parent = obj
 	obj.layoutRoot = true
@@ -219,6 +229,12 @@ function __init(self, style, itemRenderer, itemListener)
 
 	obj.itemRenderer = itemRenderer
 	obj.itemListener = itemListener
+	if itemAvailable then
+		obj.scroll = ScrollAccel(function(...) return itemAvailable(obj, obj.list, ...) end)
+	else
+		obj.scroll = ScrollAccel()
+	end
+
 
 	obj.list = nil
 	obj.listSize = 0
@@ -229,6 +245,17 @@ function __init(self, style, itemRenderer, itemListener)
 	obj.numWidgets = 0      -- number of visible widges
 	obj.topItem = 1         -- index of top widget
 	obj.selected = nil      -- index of selected widget
+	obj.accel = false       -- true if the window is accelerated
+	obj.dir = 0             -- last direction of scrolling
+
+	-- timer to drop out of accelerated mode
+	obj.accelTimer = Timer(200,
+			       function()
+				       obj.accel = false
+				       obj.accelKey = nil
+				       obj:reLayout()
+			       end,
+			       true)
 
 	obj:addListener(EVENT_ALL,
 			 function (event)
@@ -268,9 +295,7 @@ function setItems(self, list, listSize, min, max)
 
 	-- update if changed items are visible
 	local topItem, botItem = self:getVisibleIndicies()
-	if min >= topItem and min <= botItem
-		or max >= topItem and max <= botItem then
-
+	if not (max < topItem or min > botItem) then
 		self:reLayout()
 	end
 end
@@ -355,6 +380,11 @@ function setSelectedIndex(self, index)
 end
 
 
+function isAccelerated(self)
+	return self.accel, self.dir, self.selected
+end
+
+
 --[[
 
 =head2 jive.ui.Menu:lock(self, cancel)
@@ -428,19 +458,32 @@ function scrollBy(self, scroll)
 	-- restrict to scrolling one item unless at the edge of the
 	-- visible list
 	if scroll > 0 then
+		self.dir = 1
+		self.accel = scroll > 1
+
 		if selected < self.topItem + self.numWidgets - 2 then
 			scroll = 1
 		end
 
-	else
+	elseif scroll < 0 then
+		self.dir = -1
+		self.accel = scroll < -1
+
 		if selected > self.topItem + 1 then
 			scroll = -1
 		end
+	else
+		self.dir = 0
+		self.accel = false
 	end
 
+	if self.accel then
+		self.accelTimer:restart()
+	else
+		self.accelTimer:stop()
+	end
 
 	selected = selected  + scroll
-
 
 	-- virtual barrier when scrolling off the ends of the list
 	if self.barrier and Framework:getTicks() > self.barrier + 1000 then
@@ -468,6 +511,8 @@ function scrollBy(self, scroll)
 	else
 		self.barrier = nil
 	end
+
+	
 
 	-- if selection has change, play click and redraw
 	if (self.selected ~= nil and selected ~= self.selected) or (self.selected == nil and selected ~= 0) then
@@ -564,7 +609,7 @@ function _updateWidgets(self)
 	end
 
 	-- render menu widgets
-	self.itemRenderer(self, self.widgets, indexList, indexSize, self.list)
+	self.itemRenderer(self, self.list, self.widgets, indexList, indexSize)
 
 	-- show or hide widgets
 	local nextWidgets = {}
@@ -607,6 +652,8 @@ function _updateWidgets(self)
 
 	-- set selection and focus
 	if nextSelected then
+		self.accelKey = self.accel and nextSelected:getAccelKey() or nil
+
 		if self.locked then
 			nextSelected:setStyleModifier("locked")
 		else

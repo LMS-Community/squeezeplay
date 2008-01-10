@@ -831,8 +831,6 @@ union luai_Cast { double l_d; long l_l; };
 ** without modifying the main part of the file.
 */
 
-#define LUA_USER_H "ltconf.h"
-
 /*
 @@ LUA_DISABLE_ASSERT disables the _assert() function.
 ** Code inside the () of the _assert is ignored but must be () balanced.

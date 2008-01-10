@@ -129,13 +129,16 @@ static int handle_wheel_events(int fd) {
 	}
 
 	for (i = 0; i < rd / sizeof(struct input_event); i++) {
-		if (ev[i].type == EV_REL) {
+		if (ev[i].type == EV_SYN) {
+			event.ticks = TIMEVAL_TO_TICKS(ev[0].time);
+		}
+		else if (ev[i].type == EV_REL) {
 			scroll += ev[i].value;
 		}
 	}
 
 	event.type = (JiveEventType) JIVE_EVENT_SCROLL;
-	event.ticks = TIMEVAL_TO_TICKS(ev[i].time);
+
 	event.u.scroll.rel = scroll;
 	jive_queue_event(&event);
 

@@ -87,6 +87,7 @@ function __init(self, sink, method, uri, options)
 	-- default set of request side headers
 	local defHeaders = {}
 	local t_bodySource, headersSink
+	local stream = false
 
 	-- handle the options table
 	if options then
@@ -110,7 +111,11 @@ function __init(self, sink, method, uri, options)
 		
 		headersSink = options.headersSink
 		if headersSink then
---			_assert(type(headersSink) == 'function', "HTTP header sink must be a function")
+			_assert(type(headersSink) == 'function', "HTTP header sink must be a function")
+		end
+
+		if options.stream then
+			stream = options.stream
 		end
 	end
 	
@@ -149,6 +154,7 @@ function __init(self, sink, method, uri, options)
 			["body"]        = "",
 			["done"]        = false,
 			["sink"]        = sink,
+			["stream"]      = stream,
 		},
 	})
 end
@@ -219,7 +225,7 @@ end
 
 -- t_setResponseHeaders
 -- receives the response headers from the HTTP layer
-function t_setResponseHeaders(self, statusCode, statusLine, headers, safeSinkGen)
+function t_setResponseHeaders(self, statusCode, statusLine, headers)
 --	log:debug(
 --		"RequestHttp:t_setResponseHeaders(", 
 --		self, 
@@ -234,12 +240,11 @@ function t_setResponseHeaders(self, statusCode, statusLine, headers, safeSinkGen
 	self.t_httpResponse.statusLine = statusLine
 	self.t_httpResponse.headers = headers
 	
-	-- transform our sink into a safe one using handy function
-	local safeSink = self:sinkToSafeSink(self.t_httpResponse.headersSink, safeSinkGen)
+	local sink = self.t_httpResponse.headersSink
 	
 	-- abort if we have no sink
-	if safeSink then
-		safeSink(headers)
+	if sink then
+		sink(headers)
 	end
 end
 
@@ -247,7 +252,11 @@ end
 -- t_getResponseHeader
 -- returns a response header
 function t_getResponseHeader(self, key)
-	return self.t_httpResponse.headers[key]
+	if self.t_httpResponse.headers then
+		return self.t_httpResponse.headers[key]
+	else
+		return nil
+	end
 end
 
 
@@ -262,8 +271,12 @@ end
 -- returns the sink mode
 function t_getResponseSinkMode(self)
 --	log:debug("RequestHttp:t_getResponseSinkMode()")
-	
-	return 'jive-concat'
+
+	if self.t_httpResponse.stream then
+		return "jive-by-chunk"
+	else
+		return "jive-concat"
+	end
 end
 
 
@@ -278,23 +291,28 @@ end
 
 -- t_setResponseBody
 -- HTTP socket data to process, along with a safe sink to send it to customer
-function t_setResponseBody(self, data, safeSinkGen)
+function t_setResponseBody(self, data)
 --	log:info("RequestHttp:t_setResponseBody(", self, ")")
 
-	-- transform our sink into a safe one using handy function
-	local safeSink = self:sinkToSafeSink(self:t_getResponseSink(), safeSinkGen, true)
+	local sink = self:t_getResponseSink()
 	
 	-- abort if we have no sink
-	if safeSink then
+	if sink then
 	
 		-- the HTTP layer has read any data coming with a 404, but we do not care
 		-- only send data back in case of 200!
 		local code, err = self:t_getResponseStatus()
 		if code == 200 then
-			safeSink(data)
-			safeSink(nil)
+			if self.t_httpResponse.stream then
+				sink(data)
+			else
+				if data and data ~= "" then
+					sink(data)
+					sink(nil)
+				end
+			end
 		else
-			safeSink(nil, err)
+			sink(nil, err)
 		end
 	end
 end
@@ -305,22 +323,6 @@ end
 -- can be sent
 function t_canDequeue(self)
 	return false
-end
-
-
--- sinkToSafeSink
---
-function sinkToSafeSink(self, sink, gen, callNil, priority)
-
-	if sink and gen then
-		local safeSink = gen(sink, callNil, priority)
-		if type(safeSink) == 'function' then
-			return safeSink
-		else
-			log:error("safeSink is not a function!")
-		end
-	end
-	return nil
 end
 
 

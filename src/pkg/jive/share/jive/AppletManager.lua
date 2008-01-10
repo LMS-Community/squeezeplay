@@ -545,15 +545,6 @@ function _freeApplet(self, entry)
 	entry.appletEvaluated = false
 	entry.appletLoaded = false
 	package.loaded[entry.appletModule] = nil
-
-	-- run the garbage collector later, some garbage may be in scope
-	-- on the stack
-	jnt:perform(
-		function()
-			log:debug("calling collectgarbage()")
-			collectgarbage()
-		end
-	)
 end
 
 

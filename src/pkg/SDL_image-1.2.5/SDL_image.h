@@ -86,6 +86,7 @@ extern DECLSPEC int SDLCALL IMG_isTIF(SDL_RWops *src);
 extern DECLSPEC int SDLCALL IMG_isXCF(SDL_RWops *src);
 extern DECLSPEC int SDLCALL IMG_isXPM(SDL_RWops *src);
 extern DECLSPEC int SDLCALL IMG_isXV(SDL_RWops *src);
+extern DECLSPEC int SDLCALL IMG_isGD(SDL_RWops *src);
 
 /* Individual loading functions */
 extern DECLSPEC SDL_Surface * SDLCALL IMG_LoadBMP_RW(SDL_RWops *src);
@@ -100,6 +101,7 @@ extern DECLSPEC SDL_Surface * SDLCALL IMG_LoadTIF_RW(SDL_RWops *src);
 extern DECLSPEC SDL_Surface * SDLCALL IMG_LoadXCF_RW(SDL_RWops *src);
 extern DECLSPEC SDL_Surface * SDLCALL IMG_LoadXPM_RW(SDL_RWops *src);
 extern DECLSPEC SDL_Surface * SDLCALL IMG_LoadXV_RW(SDL_RWops *src);
+extern DECLSPEC SDL_Surface * SDLCALL IMG_LoadGD_RW(SDL_RWops *src);
 
 extern DECLSPEC SDL_Surface * SDLCALL IMG_ReadXPMFromArray(char **xpm);
 

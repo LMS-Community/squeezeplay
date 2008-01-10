@@ -17,6 +17,7 @@ local socket                 = require("socket")
 local lfs                    = require("lfs")
 local os                     = require("os")
 local bsp                    = require("jiveBSP")
+local coroutine               = require("coroutine")
 
 local Applet                 = require("jive.Applet")
 local Framework              = require("jive.ui.Framework")
@@ -25,11 +26,13 @@ local Label                  = require("jive.ui.Label")
 local Tile                   = require("jive.ui.Tile")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Surface                = require("jive.ui.Surface")
+local Task                   = require("jive.ui.Task")
 local Textarea               = require("jive.ui.Textarea")
 local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
 local Upgrade                = require("applets.SetupFirmwareUpgrade.Upgrade")
 
+local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("applets.setup")
 
 local jnt                    = jnt
@@ -196,34 +199,23 @@ function _chargeBattery(self)
 end
 
 
-function _t_setText(self, msg, done)
-	jnt:t_perform(function()
-			      self.textarea:setValue(self:string(msg))
-			      if done then
-				      self.icon:setStyle("iconConnected")
-			      end
-		      end)
+function _t_setText(self, done, msg, foo, ...)
+	self.textarea:setValue(self:string(msg, foo, ...))
+	if done then
+		self.icon:setStyle("iconConnected")
+	end
 end
 
 function _t_upgrade(self)
-	local t, err = self.upgrade:start(function(msg)
-						  self:_t_setText(msg)
+	Task:yield(true)
+
+	local t, err = self.upgrade:start(function(...)
+						  self:_t_setText(...)
 					  end)
 
 	if t == nil then
 		-- error
-		jnt:t_perform(function()
-				      self:_upgradeFailed():showInstead()
-			      end)
-	else
-		self:_t_setText(self:string("UPDATE_REBOOT"), true)
-
-		-- two second delay
-		socket.select(nil, nil, 2)
-
-		-- reboot
-		log:warn("REBOOTING ...")
-		os.execute("/bin/busybox reboot -f")
+		self:_upgradeFailed():showInstead()
 	end
 end
 
@@ -239,7 +231,7 @@ function _upgrade(self)
 	self.icon = Icon("iconConnecting")
 	window:addWidget(self.icon)
 
-	self.textarea = Label("text", self:string("UPDATE_DOWNLOAD"))
+	self.textarea = Label("text", self:string("UPDATE_DOWNLOAD", ""))
 	window:addWidget(self.textarea)
 
 	-- no way to exit this window
@@ -251,9 +243,7 @@ function _upgrade(self)
 
 	-- start the upgrade
 	self.upgrade = Upgrade(self.url)
-	jnt:perform(function()
-			    _t_upgrade(self)
-		    end)
+	Task("upgrade", self, _t_upgrade, _upgradeFailed):addTask()
 
 	self:tieAndShowWindow(window)
 	return window

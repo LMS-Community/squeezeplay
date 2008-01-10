@@ -43,17 +43,18 @@ JiveMainMenu notifies any change with mainMenuUpdate
 -- stuff we use
 local math          = require("math")
 local os            = require("os")
+local coroutine     = require("coroutine")
 local oo            = require("loop.simple")
 
 local NetworkThread = require("jive.net.NetworkThread")
 local Iconbar       = require("jive.Iconbar")
 local AppletManager = require("jive.AppletManager")
-local perfs         = require("jive.utils.perfs")
 local locale        = require("jive.utils.locale")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
 local HomeMenu      = require("jive.ui.HomeMenu")
 local Framework     = require("jive.ui.Framework")
+local Task          = require("jive.ui.Task")
 local Timer         = require("jive.ui.Timer")
 
 local debug         = require("jive.utils.debug")
@@ -129,6 +130,7 @@ function JiveMain:__init()
 
 	-- Singleton instances (globals)
 	jnt = NetworkThread()
+
 	appletManager = AppletManager(jnt)
 	iconbar = Iconbar()
 	
@@ -136,7 +138,6 @@ function JiveMain:__init()
 	_globalStrings = locale:readGlobalStringsFile()
 
 	-- create the main menu
---	jiveMain = oo.rawnew(self, JiveMainMenu(_globalStrings:str("JIVE_HOME"), "home.window"))
 	jiveMain = oo.rawnew(self, HomeMenu(_globalStrings:str("JIVE_HOME"), nil, "hometitle"))
 
 
@@ -187,15 +188,11 @@ function JiveMain:__init()
 			    end)
 	splashTimer:start()
 
-	-- event loop
-	Framework:processEvents()
+	-- run event loop
+	Framework:eventLoop(jnt:task())
 
-	jnt:stop()
 	Framework:quit()
 
-	perfs.dump('Pool Queue')
-	perfs.dump('Pool Priority Queue')
-	perfs.dump('Anonymous')
 --	profiler.stop()
 end
 

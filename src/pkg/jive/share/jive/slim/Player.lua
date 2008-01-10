@@ -196,7 +196,6 @@ function __init(self, slimServer, jnt, playerInfo)
 		homeMenuItem = false,
 		
 		isOnStage = false,
-		statusSink = false,
 
 		-- current song info
 		currentSong = {}
@@ -449,11 +448,10 @@ end
 
 -- onStage
 -- we're being browsed!
-function onStage(self, sink)
+function onStage(self)
 	log:debug("Player:onStage()")
 
 	self.isOnStage = true
-	self.statusSink = sink
 	
 	-- Batch these queries together
 	self.slimServer.comet:startBatch()
@@ -556,17 +554,6 @@ function _process_status(self, event)
 	_setPlayerTrackChange(self, nowPlaying, event.data)
 
 	self:updateIconbar()
-	
-	self:feedStatusSink()
-end
-
-
--- feedStatusSink
---
-function feedStatusSink(self)
-	if self.state and self.statusSink then
-		self.statusSink(self.state)
-	end
 end
 
 
@@ -585,7 +572,7 @@ function _showCurrentSong(self, text, iconId)
 		s.artIcon = Icon("icon")
 		s.window:addWidget(s.artIcon)
 		if iconId ~= 0 then
-			self.slimServer:fetchArtworkThumb(iconId, s.artIcon, artworkThumbUri, nil, true)
+			self.slimServer:fetchArtworkThumb(iconId, s.artIcon, artworkThumbUri, nil)
 		end
 	end
 

@@ -116,9 +116,6 @@ static void openlibs(lua_State *L) {
 	lua_call(L, 0, 0);
 #endif
 
-	lua_pushcfunction(L, luaopen_thread_core);
-	lua_call(L, 0, 0);
-
 	// jive version
 	lua_newtable(L);
 	lua_pushstring(L, JIVE_VERSION);

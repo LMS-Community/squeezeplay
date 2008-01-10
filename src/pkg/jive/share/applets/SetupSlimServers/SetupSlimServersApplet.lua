@@ -147,11 +147,13 @@ function _addServerItem(self, id, port, server)
 	}
 
 	-- this is the current server if _server.id == id .. ":" .. port
-	local currentPlayer = self.sdApplet:getCurrentPlayer()
-	local currentServer = currentPlayer:getSlimServer()
-	local thisServer = id .. ':' .. (port or 0)
-	if currentServer.id == thisServer then
-		item.style = 'checked'
+	local  currentPlayer = self.sdApplet:getCurrentPlayer()
+	if currentPlayer then
+		local currentServer = currentPlayer:getSlimServer()
+		local thisServer = id .. ':' .. (port or 0)
+		if currentServer.id == thisServer then
+			item.style = 'checked'
+		end
 	end
 
 	self.serverMenu:addItem(item)

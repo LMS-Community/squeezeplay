@@ -19,6 +19,7 @@ local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
+local Task                   = require("jive.ui.Task")
 local Textarea               = require("jive.ui.Textarea")
 local Textinput              = require("jive.ui.Textinput")
 local Window                 = require("jive.ui.Window")
@@ -61,7 +62,7 @@ function init(self)
 	end
 
 
-	self.t_ctrl = Wireless(jnt, "eth0")
+	self.wireless = Wireless(jnt, "eth0")
 
 	-- socket for udap discovery
 	self.socket = assert(SocketUdp(jnt, function(chunk, err)
@@ -87,12 +88,11 @@ function settingsShow(self, keepOldEntries)
 	-- note we keep old entries so this list the window is not empty
 	-- during initial setup. if this becomes a problem a "finding
 	-- squeezeboxen" screen will need to be added.
-	self:_scanComplete(self.t_ctrl:scanResults(), keepOldEntries)
+	self:_scanComplete(self.wireless:scanResults(), keepOldEntries)
 
 	window:addListener(EVENT_WINDOW_ACTIVE,
 			   function()
 				   -- network scan now
-				   _setAction(self, t_scanDiscover)
 				   _scan(self)
 			   end)
 
@@ -102,9 +102,7 @@ function settingsShow(self, keepOldEntries)
 				     end)
 
 	-- find jive network configuration
-	jnt:perform(function()
-			    self:t_readJiveConfig()
-		    end)
+	Task("readConfig", self, t_readJiveConfig):addTask()
 
 	local help = Textarea("help", self:string("SQUEEZEBOX_HELP"))
 	window:addWidget(help)
@@ -147,50 +145,46 @@ end
 
 
 function _scan(self)
-	self.t_ctrl:scan(function(scanTable)
+	self.wireless:scan(function(scanTable)
 				 _scanComplete(self, scanTable)
 			 end)
 
 	self.seqno = self.seqno + 1
-	local packet = udap.createDiscover(nil, self.seqno)
+	local packet = udap.createAdvancedDiscover(nil, self.seqno)
 	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
 end
 
 
 function t_scanDiscover(self, pkt)
-	if pkt.uapMethod ~= "discover" then
+	if pkt.uapMethod ~= "adv_discover"
+		or pkt.ucp.device_status ~= "wait_slimserver"
+		or pkt.ucp.type ~= "squeezebox" then
 		return
 	end
-
-	if pkt.ucp.type ~= "squeezebox" then
-		return
-	end
-
-	jnt:t_perform(function()
-			      local mac = string.upper(pkt.source)
+	
+	local mac = string.upper(pkt.source)
 			      
-			      if not self.scanResults[mac] then
-				      local item = {
-					      text = self:string("SQUEEZEBOX_BRIDGED_NAME", string.sub(mac, 7)),
-					      sound = "WINDOWSHOW",
-					      icon = Icon("icon"),
-					      callback = function()
-								 _selectSqueezebox(self, mac)
-							 end,
-					      weight = 1
-				      }
+	if not self.scanResults[mac] then
+		local item = {
+			text = self:string("SQUEEZEBOX_BRIDGED_NAME", string.sub(mac, 7)),
+			sound = "WINDOWSHOW",
+			icon = Icon("icon"),
+			callback = function()
+					   _selectSqueezebox(self, mac)
+				   end,
+			weight = 1
+		}
 
-				      self.scanResults[mac] = {
-					      item = item,            -- menu item
-					      ether = nil	      -- unknown
-				      }
+		self.scanResults[mac] = {
+			item = item,            -- menu item
+			ether = nil	      -- unknown
+		}
 
-				      self.scanMenu:addItem(item)
-			      end
+		self.scanMenu:addItem(item)
+	end
 
-			      -- squeezebox available via udap
-			      self.scanResults[mac].udap = true
-		      end)
+	-- squeezebox available via udap
+	self.scanResults[mac].udap = true
 end
 
 
@@ -199,7 +193,7 @@ function _scanComplete(self, scanTable, keepOldEntries)
 
 	for ssid, entry in pairs(scanTable) do
 		local ether,mac = string.match(ssid, "logitech([%-%+])squeezebox[%-%+](%x+)")
-		log:warn("ether=", ether, " mac=", mac)
+		log:debug("ether=", ether, " mac=", mac)
 
 		if mac ~= nil then
 			mac = string.upper(mac)
@@ -228,7 +222,7 @@ function _scanComplete(self, scanTable, keepOldEntries)
 
 			-- remove networks not seen for 10 seconds
 			if keepOldEntries ~= true and os.difftime(now, entry.lastScan) > 10 then
-				log:warn(mac, " not seen for 10 seconds")
+				log:debug(mac, " not seen for 10 seconds")
 				self.scanResults[mac].adhoc = nil
 
 				if self.scanResults[mac].udap ~= true then
@@ -255,7 +249,7 @@ function _selectSqueezebox(self, mac)
 		self.interface = ''
 		self.ipAddress = ''
 
-		_setAction(self, t_waitSqueezeboxNetwork)
+		_setAction(self, t_waitSqueezeboxNetwork, "find_slimserver")
 		_setupSqueezebox(self)
 	end
 
@@ -385,11 +379,22 @@ function _setupInit(self, mac, ether)
 		self.interface = nil
 	end
 
-	_setAction(self, t_disconnectSlimserver)
+	-- task for performing setup
+	if self.actionTask then
+		self.actionTask:removeTask()
+	end
+	self.actionTask = Task("setupSqueezebox", self, t_nextAction, _setupFailed)
+	self.statusText = ""
+
+	log:info("_setupInit mac=", mac, " ether=", ether)
 end
 
--- fill in the Squeezebox configuration, based on the Jive network configuration.
+
+-- prompt the user to comple the Squeezebox configuration, based on
+-- the information needed for the Jive network configuration.
 function _setupConfig(self)
+	log:info("_setupConfig interface=", self.interface, " ipaddr=", self.networkMethod)
+
 	if self.interface == nil then
 		if self.ether == '-' then
 			-- wireless only
@@ -403,26 +408,45 @@ function _setupConfig(self)
 		return _enterIP(self)
 	end
 
-	if self.interface ~= '' then
-		if self.interface  == 'wireless' then
-			_wirelessConfig(self)
-		elseif self.interface == 'wired' then
-			_wiredConfig(self)
-		elseif self.interface == 'bridged' then
-			_bridgedConfig(self)
-		end
-		self.interface = ''
+	-- network name
+	if self.interface  == 'wireless' then
+		self.networkName = self.networkSSID
+	elseif self.interface == 'wired' then
+		self.networkName = tostring(self:string("SQUEEZEBOX_ETHERNET"))
+	elseif self.interface == 'bridged' then
+		self.networkName = self:string("SQUEEZEBOX_BRIDGED_NAME", string.sub(self.mac, 7))
 	end
 
-	return _setupSqueezebox(self)
+	-- begin setup
+	_setAction(self, t_setupBegin, "connect_network")
+	self.actionTask:addTask()
+
+	-- start spinny
+	_setupSqueezebox(self)
+end
+
+
+-- initial task in the thread, configure the network data needed
+function t_setupBegin(self)
+	log:info("t_setupBegin interface=", self.interface)
+
+	if self.interface  == 'wireless' then
+		t_wirelessConfig(self)
+	elseif self.interface == 'wired' then
+		t_wiredConfig(self)
+	elseif self.interface == 'bridged' then
+		t_bridgedConfig(self)
+	end
+
+	_setAction(self, t_disconnectSlimserver)
 end
 
 
 -- configure Squeezebox for wirless network
-function _wirelessConfig(self)
+function t_wirelessConfig(self)
 
-	local statusStr = self.t_ctrl:request("STATUS")
-	log:warn("status ", statusStr)
+	local statusStr = self.wireless:request("STATUS")
+	log:info("status ", statusStr)
 
 	local status = {}
 	for k,v in string.gmatch(statusStr, "([^=]+)=([^\n]+)\n") do
@@ -448,11 +472,10 @@ function _wirelessConfig(self)
 	self:_ipConfig(data) -- ip config
 
 	data.SSID = status.ssid
-	self.networkName = status.ssid
 
 	-- wireless region
-	local region = self.t_ctrl:getAtherosRegionCode()
-	log:warn("data.region_id=", data.region)
+	local region = self.wireless:getAtherosRegionCode()
+	log:info("data.region_id=", data.region)
 	data.region_id = udap.packNumber(region, 1)
 
 	-- default to encryption disabled
@@ -473,7 +496,6 @@ function _wirelessConfig(self)
 
 	end
 
-	-- FIXME including this causes squeezebox to ignore the setdata command?
 	if status.pairwise_cipher == "CCMP" then
 		data.wpa_cipher = udap.packNumber(2, 1) -- CCMP
 
@@ -518,7 +540,7 @@ function _readWpaConfig(self, ssid)
 		else
 			local k, v = string.match(line, '%s?([^=]+)=(.+)')
 
-			log:warn("k=", k, " v=", v)
+			log:debug("k=", k, " v=", v)
 			if state == 1 and k == "ssid" and v == ssid then
 				state = 2
 			end
@@ -538,8 +560,6 @@ end
 function _readWepKey(self, ssid)
 	local param = _readWpaConfig(self, ssid)
 	local key_str = assert(param["wep_key0"])
-
-	log:warn("key_str=", key_str)
 
 	local ascii = string.match(key_str, '^"(.+)"$')
 	if ascii then
@@ -569,10 +589,8 @@ end
 
 
 -- configure Squeezebox for wired network
-function _wiredConfig(self)
+function t_wiredConfig(self)
 	local data = self.data1
-
-	self.networkName = tostring(self:string("SQUEEZEBOX_ETHERNET"))
 
 	-- no slimserver
 	data.server_address = udap.packNumber(0, 4)
@@ -586,7 +604,7 @@ end
 
 
 -- configure both Squeezebox and Jive for bridged configuration
-function _bridgedConfig(self)
+function t_bridgedConfig(self)
 	local request, response
 	local data = self.data1
 
@@ -606,11 +624,8 @@ function _bridgedConfig(self)
 		key = table.concat(key)
 	}
 
-	jnt:perform(function()
-			   self.networkId = self.t_ctrl:t_addNetwork(ssid, option)
-		   end)
+	self.networkId = self.wireless:t_addNetwork(ssid, option)
 
-	self.networkName = self:string("SQUEEZEBOX_BRIDGED_NAME", string.sub(self.mac, 7))
 	self.networkSSID = ssid
 	self.networkMode = 1 -- adhoc
 	self.networkMethod = 'dhcp'
@@ -633,8 +648,8 @@ function _bridgedConfig(self)
 	data.SSID = ssid
 
 	-- wireless region
-	local region = self.t_ctrl:getAtherosRegionCode()
-	log:warn("data.region_id=", data.region)
+	local region = self.wireless:getAtherosRegionCode()
+	log:info("data.region_id=", data.region)
 	data.region_id = udap.packNumber(region, 1)
 
 	-- secure network
@@ -647,10 +662,10 @@ end
 
 function _ipConfig(self, data)
 	if self.networkMethod == 'static' then
-		log:warn("ipAddress=", self.ipAddress)
-		log:warn("netmask=", self.networkOption.netmask)
-		log:warn("gateway=", self.networkOption.gateway)
-		log:warn("dns=", self.networkOption.dns)
+		log:info("ipAddress=", self.ipAddress)
+		log:info("netmask=", self.networkOption.netmask)
+		log:info("gateway=", self.networkOption.gateway)
+		log:info("dns=", self.networkOption.dns)
 
 		data.lan_ip_mode = udap.packNumber(0, 1) -- 0 static ip
 		data.lan_network_address = udap.packNumber(_parseip(self.ipAddress), 4)
@@ -667,7 +682,7 @@ end
 -- network id, dhcp/static ip information.
 function t_readJiveConfig(self)
 	-- read the existing network configuration
-	local statusStr = self.t_ctrl:request("STATUS-VERBOSE")
+	local statusStr = self.wireless:request("STATUS-VERBOSE")
 	local status = {}
 	for k,v in string.gmatch(statusStr, "([^=]+)=([^\n]+)\n") do
 		status[k] = v
@@ -689,8 +704,8 @@ function t_readJiveConfig(self)
 
 
 	-- infrastructure or ad-hoc?
-	local mode = self.t_ctrl:request("GET_NETWORK " .. status.id .. " mode")
-	log:warn("mode=", mode)
+	local mode = self.wireless:request("GET_NETWORK " .. status.id .. " mode")
+	log:info("mode=", mode)
 	self.networkMode = tonumber(mode) or 0
 
 
@@ -698,7 +713,7 @@ function t_readJiveConfig(self)
 	-- the interfaces file uses " \t" as word breaks so munge the ssid
 	-- FIXME ssid's with \n are not supported
 	local ssid = string.gsub(self.networkSSID, "[ \t]", "_")
-	log:warn("munged ssid=", ssid)
+	log:info("munged ssid=", ssid)
 
 	local fh = assert(io.open("/etc/network/interfaces", "r+"))
 
@@ -715,16 +730,16 @@ function t_readJiveConfig(self)
 		else
 			if network == ssid then
 				local option, value = string.match(line, "%s*(%a+)%s+(.+)")
-				log:warn("option=", option, " value=", value)
+				log:info("option=", option, " value=", value)
 
 				self.networkOption[option] = value
 			end
 		end
 	end
 
-	log:warn("network_id=", self.networkId)
-	log:warn("network_ssid=", self.networkSSID)
-	log:warn("network_method=", self.networkMethod)
+	log:info("network_id=", self.networkId)
+	log:info("network_ssid=", self.networkSSID)
+	log:info("network_method=", self.networkMethod)
 
 	fh:close()
 end
@@ -732,7 +747,7 @@ end
 
 -- disconnect from all slimservers
 function t_disconnectSlimserver(self)
-	log:warn("t_disconnectSlimserver")
+	log:info("t_disconnectSlimserver")
 
 	-- we must have a network connection now, either to an
 	-- access point or bridged.
@@ -747,13 +762,13 @@ end
 
 -- wait until we have disconnected from all slimservers
 function t_waitDisconnectSlimserver(self)
-	log:warn("t_waitDisconnectSlimserver")
+	log:info("t_waitDisconnectSlimserver")
 
 	local connected = false
 
 	for i,server in self.slimdiscovery:allServers() do
 		connected = connected or server:isConnected()
-		log:warn("server=", server:getName(), " connected=", connected)
+		log:info("server=", server:getName(), " connected=", connected)
 	end		
 
 	if not connected then
@@ -765,7 +780,7 @@ end
 -- connects jive to the squeezebox adhoc network. we also capture the existing
 -- network id for later.
 function t_connectJiveAdhoc(self)
-	log:warn("connectSqueezebox")
+	log:info("connectSqueezebox")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_CONNECTION"
 
@@ -778,7 +793,11 @@ function t_connectJiveAdhoc(self)
 		encryption = "none"
 	}
 
-	local id = self.t_ctrl:t_addNetwork(ssid, option)
+	-- disconnect from existing network
+	self.wireless:t_disconnectNetwork()
+
+	-- configure ad-hoc network
+	local id = self.wireless:t_addNetwork(ssid, option)
 
 	self.adhoc_ssid = ssid
 	_setAction(self, t_waitJiveAdhoc)
@@ -787,18 +806,17 @@ end
 
 -- polls jive network status, waiting until we have connected to the ad-hoc network.
 function t_waitJiveAdhoc(self)
-	log:warn("waitSqueezebox")
+	log:info("waitSqueezebox")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_CONNECTION"
 
-	local status = self.t_ctrl:t_wpaStatusRequest("STATUS")
+	local status = self.wireless:t_wpaStatus("STATUS")
 
 	if status.wpa_state ~= "COMPLETED" or not status.ip_address then
 		return
 	end
 
 	-- we're connected
-	log:warn("completed")
 	_setAction(self, t_udapDiscover)
 end
 
@@ -813,7 +831,7 @@ end
 
 -- discover the Squeezebox over udap. this makes sure that the Squeezebox exists.
 function t_udapDiscover(self)
-	log:warn("udapDiscover")
+	log:info("udapDiscover")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
@@ -828,7 +846,7 @@ end
 -- network settings, and the dhcp or static ip settings. we don't configure the
 -- slimserver yet.
 function t_udapSetData(self)
-	log:warn("udapSetData")
+	log:info("udapSetData")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
@@ -838,7 +856,7 @@ function t_udapSetData(self)
 			hex = hex .. string.format("%02x", string.byte(string.sub(v, i, i)))
 		end
 
-		log:warn("\tk=", k, " v=", hex)
+		log:info("\tk=", k, " v=", hex)
 	end
 
 	-- configure squeezebox network
@@ -850,7 +868,7 @@ end
 
 -- reset Squeezebox over udap
 function t_udapReset(self)
-	log:warn("udapReset")
+	log:info("udapReset")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
@@ -871,7 +889,7 @@ end
 
 -- Get Squeezebox UUID
 function t_udapGetUUID(self)
-	log:warn("udapGetUUID")
+	log:info("udapGetUUID")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
@@ -883,7 +901,7 @@ end
 
 -- Get Squeezebox IP address
 function t_udapGetIPAddr(self)
-	log:warn("udapGetIPAddr")
+	log:info("udapGetIPAddr")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
@@ -895,7 +913,7 @@ end
 
 -- sink for udap replies. based on the replies this sets up the next action to call.
 function t_udapSink(self, chunk, err)
-	log:warn("udapSink chunk=", chunk, " err=", err)
+	log:info("udapSink chunk=", chunk, " err=", err)
 
 	if chunk == nil then
 		-- ignore errors, and try again
@@ -903,17 +921,15 @@ function t_udapSink(self, chunk, err)
 	end
 
 	local pkt = udap.parseUdap(chunk.data)
-	log:warn("seqno=", self.seqno, " pkt=", udap.tostringUdap(pkt))
+	log:info("seqno=", self.seqno, " pkt=", udap.tostringUdap(pkt))
 
 	if self.seqno ~= pkt.seqno then
-		log:warn("discarding old packet")
+		log:info("discarding old packet")
 		return
 	end
 
 	if pkt.uapMethod == "discover" then
-		if self._action == t_scanDiscover then
-			t_scanDiscover(self, pkt)
-		elseif self._action == t_udapDiscover then
+		if self._action == t_udapDiscover then
 			_setAction(self, t_udapSetData)
 		end
 
@@ -929,29 +945,31 @@ function t_udapSink(self, chunk, err)
 
 		_setAction(self, t_connectJiveNetwork)
 
-	elseif pkt.uapMethod == "adv_discover"
-		and self._action == t_waitSqueezeboxNetwork then
+	elseif pkt.uapMethod == "adv_discover" then
+		if self._action == t_waitSqueezeboxNetwork then
 
-		if pkt.ucp.device_status == "wait_wireless" then
-			-- we won't see this, the Squeezebox network is not up yet
+			if pkt.ucp.device_status == "wait_wireless" then
+				-- we won't see this, the Squeezebox network is not up yet
 
-		elseif pkt.ucp.device_status == "wait_dhcp" then
-			self.errorMsg = "SQUEEZEBOX_PROBLEM_DHCP_ERROR"
+			elseif pkt.ucp.device_status == "wait_dhcp" then
+				self.errorMsg = "SQUEEZEBOX_PROBLEM_DHCP_ERROR"
 
-		elseif pkt.ucp.device_status == "wait_slimserver" then
-			_setAction(self, t_udapGetUUID)
+			elseif pkt.ucp.device_status == "wait_slimserver" then
+				_setAction(self, t_udapGetUUID)
 
-		elseif pkt.ucp.device_status == "connected" then
-			-- we should not get this far yet
-			error("squeezebox connected to slimserver")
-
+			elseif pkt.ucp.device_status == "connected" then
+				-- we should not get this far yet
+				error("squeezebox connected to slimserver")
+			end
+		else
+			t_scanDiscover(self, pkt)
 		end
 
 	-- Get Squeezebox UUID
 	elseif pkt.uapMethod == "get_uuid"
 		and self._action == t_udapGetUUID then
 		
-		log:warn("squeezebox uuid=", pkt.uuid)
+		log:info("squeezebox uuid=", pkt.uuid)
 
 		self.uuid = pkt.uuid
 		_setAction(self, t_udapGetIPAddr)
@@ -973,9 +991,7 @@ function t_udapSink(self, chunk, err)
 		-- Save Squeezebox IP address to be shown in next screen
 		self.squeezeboxIPAddr = ip_addr_str
 
-		jnt:t_perform(function()
-				      _chooseSlimserver(self)
-			      end)
+		_chooseSlimserver(self)
 	end
 end
 
@@ -983,30 +999,30 @@ end
 -- reconnect Jive to it's network. we also remove the ad-hoc network from the
 -- wpa-supplicant configuration.
 function t_connectJiveNetwork(self)
-	log:warn("connectJiveNetwork adhoc_ssid=", self.adhoc_ssid)
+	log:info("connectJiveNetwork adhoc_ssid=", self.adhoc_ssid)
 
 	-- disconnect from existing network
-	self.t_ctrl:t_disconnectNetwork()
+	self.wireless:t_disconnectNetwork()
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_NETWORK"
 
 	if self.adhoc_ssid then
-		self.t_ctrl:t_removeNetwork(self.adhoc_ssid)
+		self.wireless:t_removeNetwork(self.adhoc_ssid)
 		self.adhoc_ssid = nil
 	end
 
-	self.t_ctrl:t_selectNetwork(self.networkSSID)
+	self.wireless:t_selectNetwork(self.networkSSID)
 	_setAction(self, t_waitJiveNetwork)
 end
 
 
 -- polls jives network status, waiting until we have connected to the network again.
 function t_waitJiveNetwork(self)
-	log:warn("waitJiveNetwork")
+	log:info("waitJiveNetwork")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_NETWORK"
 
-	local status = self.t_ctrl:t_wpaStatusRequest()
+	local status = self.wireless:t_wpaStatus()
 	if status.wpa_state == "COMPLETED" and status.ip_address then
 		if self.networkMethod == 'dhcp' and string.match(status.ip_address, "^169.254.") then
 			-- waiting for dhcp
@@ -1025,7 +1041,7 @@ end
 -- replies with a status string so we know when the Squeezebox is ready to connect
 -- to slimserver.
 function t_waitSqueezeboxNetwork(self)
-	log:warn("waitSqueezeboxNetwork")
+	log:info("waitSqueezeboxNetwork")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_CONNECTION_ERROR"
 
@@ -1084,7 +1100,7 @@ end
 -- poll for slimservers and populate the slimserver menu.
 function _scanSlimservers(self)
 	-- scan for slimservers
-	log:warn("in _scanSlimservers calling discover")
+	log:info("in _scanSlimservers calling discover")
 	self.slimdiscovery:discover()
 
 	-- update slimserver list
@@ -1123,14 +1139,14 @@ function _setSlimserver(self, slimserver)
 	self.slimserver = slimserver:getName()
 
 	if slimserver:isSqueezeNetwork() then
-		log:warn("slimserver_address=www.squeezenetwork.com")
+		log:info("slimserver_address=www.squeezenetwork.com")
 
 		self.data2.server_address = udap.packNumber(1, 4)
 		-- set slimserver address to 0.0.0.1 to workaround a bug in
 		-- squeezebox firmware
 		self.data2.slimserver_address = udap.packNumber(parseip("0.0.0.1"), 4)
 	else
-		log:warn("slimserver_address=", serverip)
+		log:info("slimserver_address=", serverip)
 
 		self.data2.server_address = udap.packNumber(0, 4)
 		self.data2.slimserver_address = udap.packNumber(parseip(serverip), 4)
@@ -1142,7 +1158,7 @@ function _setSlimserver(self, slimserver)
 		slimserver:request(nil, nil, cmd)
 	end
 
-	_setAction(self, t_udapSetSlimserver)
+	_setAction(self, t_udapSetSlimserver, "connect_slimserver")
 	_setupSqueezebox(self)
 end
 
@@ -1151,7 +1167,7 @@ end
 -- repeats until notify_playerNew or notify_playerConnected indicate that
 -- the player is successfully connected to slimserver.
 function t_udapSetSlimserver(self)
-	log:warn("t_connectSqueezeboxSlimserver")
+	log:info("t_connectSqueezeboxSlimserver")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
@@ -1163,7 +1179,7 @@ end
 
 
 function t_waitSlimserver(self)
-	log:warn("t_waitSlimserver")
+	log:info("t_waitSlimserver")
 	-- do nothing, notify_playerNew will be called
 end
 
@@ -1172,12 +1188,12 @@ end
 function notify_playerNew(self, player)
 	local playerId = string.gsub(player:getId(), ":", "")
 
-	log:warn("got new playerId ", playerId)
+	log:info("got new playerId ", playerId)
 	if string.lower(playerId) == string.lower(self.mac) then
 
 		-- wait until the player is connected before continuing
 		if not player:getConnected() then
-			log:warn("player not connected to SC")
+			log:info("player not connected to SC")
 			return
 		end
 
@@ -1203,70 +1219,77 @@ function notify_playerConnected(self, player)
 end
 
 
-function _setAction(self, action)
-	self._action = action
-	self._timeout = 1
+-- make sure Jive is reconnected to it's network when setup fails.
+function t_connectJiveOnFailure(self)
+	log:info("connectJiveOnFailure adhoc_ssid=", self.adhoc_ssid)
+
+	if not self.adhoc_ssid then
+		-- we're not connected to the ad-hoc network
+		return
+	end
+
+	-- disconnect from existing network
+	self.wireless:t_disconnectNetwork()
+
+	-- remove ad-hoc network
+	self.wireless:t_removeNetwork(self.adhoc_ssid)
+	self.adhoc_ssid = nil
+
+	-- connect to jive network
+	self.wireless:t_selectNetwork(self.networkSSID)
 end
 
 
--- call the next action require to setup the Squeezebox, we do this in the network
--- thread.
-function _nextAction(self)
-	if self._action == nil then
-		return
+function _setAction(self, action, label)
+	log:info("SET ACTION: ", action)
+
+	self._action = action
+	self._timeout = 1
+
+
+	-- update status
+	if label == "connect_slimserver" then
+		self.statusText = self:string("SQUEEZEBOX_CONNECTING_TO", tostring(self.slimserver))
+	elseif label == "find_slimserver" then
+		-- displayed when setting squeezebox follow udap discovery
+		-- e.g. when squeezebox is discovered with blue led
+		self.statusText = self:string("SQUEEZEBOX_FINDING_SOURCES")
+	elseif label == "connect_network" then
+		self.statusText = self:string("SQUEEZEBOX_CONNECTING_TO", self.networkName)
 	end
+end
 
-	local totalTimeout = SETUP_TIMEOUT
-	-- Extend timeout when waiting on Squeezebox to connect to SlimServer since SB might upgrade
-	if self._action == t_waitSlimserver then
-		totalTimeout = SETUP_EXTENDED_TIMEOUT
+
+-- task to call the next action require to setup the Squeezebox
+function t_nextAction(self)
+	while true do
+		local action = self._action
+
+		-- Extend timeout when waiting on Squeezebox to connect 
+		-- to SlimServer since SB might upgrade
+		local totalTimeout = SETUP_TIMEOUT
+		if action == t_waitSlimserver then
+			totalTimeout = SETUP_EXTENDED_TIMEOUT
+		end
+
+		log:info("t_nextAction timeout=", self._timeout, " total=", totalTimeout)
+
+		-- action timeout?
+		self._timeout = self._timeout + 1
+		if self._timeout == totalTimeout then
+			log:warn("action timeout")
+			return _setupFailed(self)
+		end
+
+		-- run action
+		self.idle = false
+		if action ~= nil then
+			action(self)
+		end
+
+		self.idle = true
+		Task:yield(false)
 	end
-
-	self._timeout = self._timeout + 1
-
-	if self._timeout == totalTimeout then
-
-		-- restore our network connection
-		jnt:perform(function()
-				    t_connectJiveNetwork(self)
-			    end)
-
-		-- display error
-		_setupFailed(self)
-		return
-	end
-
-	jnt:perform(function()
-			    if self._action == nil then
-				    return
-			    end
-
-			    -- check for queued action events, this can happen
-			    -- due to the blocking i/o used in the network thread
-			    --
-			    -- it should be possible to remove this workaround
-			    -- when the zerotimeout patch is applied for the
-			    -- network thread.
-			    local now = Framework:getTicks()
-			    if now - self.lastActionTicks < 500 then
-				    log:warn("queued timer events?")
-				    return
-			    end
-			    self.lastActionTicks = now
-
-			    local ok, err = pcall(self._action, self)
-			    if not ok then
-				    log:warn(err)
-
-				    -- restore our network connection
-				    t_connectJiveNetwork(self)
-
-				    jnt:t_perform(function()
-							  _setupFailed(self)
-						  end)
-
-			    end
-		    end)
 end
 
 
@@ -1274,26 +1297,24 @@ end
 -- when this popup is displayed the _nextAction() function walks through the actions
 -- required to setup the Squeezebox.
 function _setupSqueezebox(self)
-	_nextAction(self)
-
-	local help
-	if self._action == t_udapSetSlimserver then
-		help = self:string("SQUEEZEBOX_CONNECTING_TO", tostring(self.slimserver))
-	elseif self._action == t_waitSqueezeboxNetwork then
-		-- displayed when setting squeezebox follow udap discovery
-		-- e.g. when squeezebox is discovered with blue led
-		help = self:string("SQUEEZEBOX_FINDING_SOURCES")
-	else
-		help = self:string("SQUEEZEBOX_CONNECTING_TO", self.networkName)
-	end
-
 	local window = Popup("popupIcon")
 
 	window:addWidget(Icon("iconConnecting"))
-	window:addWidget(Label("text", help))
+
+	local statusLabel = Label("text", self.statusText)
+	window:addWidget(statusLabel)
+
+	-- run action now, and then every second
+	self.actionTask:addTask()
 	window:addTimer(1000,
 			function()
-				_nextAction(self)
+				-- self.idle is to make sure we don't wake
+				-- up a network task by mistake
+				if self.idle then
+					self.actionTask:addTask()
+				end
+
+				statusLabel:setValue(self.statusText)
 			end)
 
 	window:addListener(EVENT_KEY_PRESS,
@@ -1344,6 +1365,11 @@ end
 
 -- Squeezebox setup failed
 function _setupFailed(self)
+	if self.adhoc_ssid then
+		-- reconnect to network
+		Task("setupFailed", self, t_connectJiveOnFailure):addTask()
+	end
+
 	local window = Window("wireless", self:string("SQUEEZEBOX_PROBLEM"), setupsqueezeboxTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -1383,11 +1409,9 @@ end
 
 function _setupDone(self)
 	if self.setupNext then
-		log:warn("calling setupNext=", self.setupNext)
 		return self.setupNext()
 	end
 
-	log:warn("hideToTop window=", self.topWindow)
 	self.topWindow:hideToTop(Window.transitionPushLeft)
 end
 
@@ -1398,7 +1422,6 @@ function _hideToTop(self, dontSetupNext)
 	end
 
 	while #Framework.windowStack > 2 and Framework.windowStack[2] ~= self.topWindow do
-		log:warn("hiding=", Framework.windowStack[2], " topWindow=", self.topWindow)
 		Framework.windowStack[2]:hide(Window.transitionPushLeft)
 	end
 
