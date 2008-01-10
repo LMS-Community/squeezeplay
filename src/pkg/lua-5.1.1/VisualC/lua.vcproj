@@ -175,10 +175,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\src\auxiliar.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\lapi.c"
 				>
 			</File>
@@ -283,10 +279,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\luathread.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\lundump.c"
 				>
 			</File>
@@ -298,24 +290,12 @@
 				RelativePath="..\src\lzio.c"
 				>
 			</File>
-			<File
-				RelativePath="..\src\pt.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\srm.c"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\src\auxiliar.h"
-				>
-			</File>
 			<File
 				RelativePath="..\src\lapi.h"
 				>
@@ -401,10 +381,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\luathread.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\lundump.h"
 				>
 			</File>
@@ -414,14 +390,6 @@
 			</File>
 			<File
 				RelativePath="..\src\lzio.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\pt.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\srm.h"
 				>
 			</File>
 		</Filter>

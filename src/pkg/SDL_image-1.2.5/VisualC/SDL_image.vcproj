@@ -259,6 +259,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\IMG_gd.c"
+				>
+			</File>
+			<File
 				RelativePath="..\IMG_gif.c"
 				>
 				<FileConfiguration
@@ -521,6 +525,10 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\showimage.c"
+				>
 			</File>
 			<File
 				RelativePath="Version.rc"

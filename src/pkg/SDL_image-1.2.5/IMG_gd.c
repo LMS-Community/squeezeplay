@@ -17,10 +17,11 @@ int IMG_isGD(SDL_RWops *src)
 {
 	int start;
 	int is_GD;
+	Uint16 magic;
 
 	start = SDL_RWtell(src);
 
-	Uint16 magic = SDL_ReadBE16(src);
+	magic = SDL_ReadBE16(src);
 
 	is_GD = (magic == MAGIC);
 
