@@ -37,7 +37,6 @@ local table             = require("jive.utils.table")
 local debug             = require("jive.utils.debug")
 local oo                = require("loop.base")
 
-local queue             = require("jive.utils.queue")
 local Event             = require("jive.ui.Event")
 local Framework         = require("jive.ui.Framework")
 local Task              = require("jive.ui.Task")
