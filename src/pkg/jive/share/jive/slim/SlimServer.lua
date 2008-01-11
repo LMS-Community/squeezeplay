@@ -453,7 +453,6 @@ function processArtworkQueue(self)
 			-- remove tail entry
 			local entry = table.remove(self.artworkFetchQueue)
 
-
 			--log:warn("ARTWORK ID=", entry.key)
 			local req = RequestHttp(
 				_getArtworkThumbSink(self, entry.key, entry.size),
@@ -464,7 +463,7 @@ function processArtworkQueue(self)
 			self.artworkFetchCount = self.artworkFetchCount + 1
 
 
-			if type(entry.key) == "number" then
+			if entry.thumb then
 				-- slimserver icon id
 				self.artworkPool:queue(req)
 			else
@@ -615,6 +614,7 @@ function fetchArtworkThumb(self, iconId, icon, uriGenerator, size)
 			     key = iconId,
 			     url = uriGenerator(iconId, size),
 			     size = size,
+			     thumb = true
 		     })
 	self.artworkFetchTask:addTask()
 end
@@ -675,6 +675,7 @@ function fetchArtworkURL(self, url, icon, size)
 			     key = url,
 			     url = url,
 			     size = size,
+			     thumb = false
 		     })
 	self.artworkFetchTask:addTask()
 end

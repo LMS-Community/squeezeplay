@@ -180,7 +180,7 @@ local function _artworkThumbUri(iconId, size)
 	-- if the iconId is a number, this is cover art, otherwise it's static content
 	-- do some extra checking instead of just looking for type = number
 	local thisIsAnId = true
-	if type(iconId) == number then -- iconId is a number
+	if type(iconId) == "number" then -- iconId is a number
 		thisIsAnId = true
 	elseif string.find(iconId, "%a") then -- iconID string contains a letter
 		thisIsAnId = false
@@ -191,14 +191,14 @@ local function _artworkThumbUri(iconId, size)
 	-- if this is a number, construct the path for a sizexsize cover art thumbnail
 	-- use gd file format to get the output direct from libgd without compression
 	local artworkUri
-	local resizeFrag = '_' .. size .. 'x' .. size .. '_p.gd' -- 'p' is for padded
+	local resizeFrag = '_' .. size .. 'x' .. size .. '_p' -- 'p' is for padded
 	if thisIsAnId then 
 		-- we want a 56 pixel thumbnail if it wasn't specified
-		artworkUri = '/music/' .. iconId .. '/cover' .. resizeFrag 
-	-- if this isn't a number, then we just want the path with server-side resizing
-	-- if .png, then resize it and render as gd
+		artworkUri = '/music/' .. iconId .. '/cover' .. resizeFrag .. '.gd'
 	elseif string.match(iconId, '.png') then
-		artworkUri = string.gsub(iconId, '.png', resizeFrag) 
+		-- if this isn't a number, then we just want the path
+		-- with server-side resizing
+		artworkUri = string.gsub(iconId, '.png', resizeFrag .. '.png')
 	-- otherwise punt
 	else
 		return iconId
@@ -1721,8 +1721,8 @@ function notify_playerCurrent(self, player)
 	_statusStep.actionModifier = "-status"
 
 	-- showtime for the player
-	_player:onStage()
 	_server:request(sink, _player.id, { 'menu', 0, 100 })
+	_player:onStage()
 	_requestStatus()
 
 	jiveMain:setTitle(player:getName())
