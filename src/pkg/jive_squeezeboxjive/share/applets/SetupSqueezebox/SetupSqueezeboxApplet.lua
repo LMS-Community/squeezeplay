@@ -1199,7 +1199,7 @@ function notify_playerNew(self, player)
 
 		-- increase timeout if the player is upgrading
 		if player:isNeedsUpgrade() then
-			totalTimeout = 300
+			self._totalTimeout = SETUP_EXTENDED_TIMEOUT
 			return
 		end
 
@@ -1245,7 +1245,7 @@ function _setAction(self, action, label)
 
 	self._action = action
 	self._timeout = 1
-
+	self._totalTimeout = SETUP_TIMEOUT
 
 	-- update status
 	if label == "connect_slimserver" then
@@ -1265,18 +1265,11 @@ function t_nextAction(self)
 	while true do
 		local action = self._action
 
-		-- Extend timeout when waiting on Squeezebox to connect 
-		-- to SlimServer since SB might upgrade
-		local totalTimeout = SETUP_TIMEOUT
-		if action == t_waitSlimserver then
-			totalTimeout = SETUP_EXTENDED_TIMEOUT
-		end
-
-		log:info("t_nextAction timeout=", self._timeout, " total=", totalTimeout)
+		log:info("t_nextAction timeout=", self._timeout, " total=", self._totalTimeout)
 
 		-- action timeout?
 		self._timeout = self._timeout + 1
-		if self._timeout == totalTimeout then
+		if self._timeout == self._totalTimeout then
 			log:warn("action timeout")
 			return _setupFailed(self)
 		end
