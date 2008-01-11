@@ -220,6 +220,9 @@ function notify_playerCurrent(self, player)
 	end
 
 	self.player = player
+	if not self.player then
+		return
+	end
 	self.player.playerStatus = self.player:getPlayerStatus()
 
 	windowStyle = 'ss'
@@ -446,7 +449,7 @@ function _installListeners(self, window)
 	if windowStyle == 'browse' then
 		local browser = appletManager:getAppletInstance("SlimBrowser")
 		self[windowStyle].listeners[2] = window:addListener(
-			EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+			EVENT_KEY_PRESS,
 			function(event)
 				local type = event:getType()
 				local keyPress = event:getKeycode()
@@ -643,6 +646,7 @@ function free(self)
 		self:_uninstallListeners('browse')
 		self['browse'] = nil
 	end
+	jiveMain:removeItemById('appletNowPlaying')
 end
 
 
