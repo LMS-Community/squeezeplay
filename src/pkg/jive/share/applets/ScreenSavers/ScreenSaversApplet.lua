@@ -55,6 +55,8 @@ local KEY_GO           = jive.ui.KEY_GO
 local KEY_LEFT         = jive.ui.KEY_LEFT
 local KEY_HOME         = jive.ui.KEY_HOME
 
+local jnt = jnt
+
 
 module(...)
 oo.class(_M, Applet)
@@ -80,8 +82,12 @@ function init(self, ...)
 		function(event)
 			-- restart timer if it is running
 			self.timer:setInterval(self.timeout)
-		end
+			return EVENT_UNUSED
+		end,
+		true
 	)
+
+	jnt:subscribe(self)
 
 	return self
 end
@@ -143,6 +149,25 @@ function _activate(self, the_screensaver)
 	-- screensaverWindow, and open then itself
 	local instance = appletManager:loadApplet(screensaver.applet)
 	instance[screensaver.method](instance)
+end
+
+
+-- switch screensavers on a player mode change
+function notify_playerModeChange(self, player, mode)
+	local oldActive = self.active
+
+	if #oldActive == 0 then
+		-- screensaver is not active
+		return
+	end
+
+	self.active = {}
+	self:_activate(nil)
+
+	-- close active screensaver
+	for i, window in ipairs(oldActive) do
+		window:hide(Window.transitionNone)
+	end
 end
 
 
