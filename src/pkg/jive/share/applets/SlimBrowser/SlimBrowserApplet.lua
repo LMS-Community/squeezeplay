@@ -196,9 +196,9 @@ local function _artworkThumbUri(iconId, size)
 		-- we want a 56 pixel thumbnail if it wasn't specified
 		artworkUri = '/music/' .. iconId .. '/cover' .. resizeFrag 
 	-- if this isn't a number, then we just want the path with server-side resizing
-	-- if .png, then resize it
-	elseif string.match(iconId, '.gd') then
-		artworkUri = string.gsub(iconId, '.gd', resizeFrag) 
+	-- if .png, then resize it and render as gd
+	elseif string.match(iconId, '.png') then
+		artworkUri = string.gsub(iconId, '.png', resizeFrag) 
 	-- otherwise punt
 	else
 		return iconId
