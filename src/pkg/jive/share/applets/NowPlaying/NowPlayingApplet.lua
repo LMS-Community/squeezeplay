@@ -431,9 +431,9 @@ function _installListeners(self, window)
 		EVENT_WINDOW_ACTIVE,
 		function(event)
 			local stack = Framework.windowStack
-			if self['browse'].window == stack[1] then
+			if self['browse'] and self['browse'].window == stack[1] then
 				windowStyle = 'browse'
-			elseif self['ss'].window == stack[1] then
+			elseif self['ss'] and self['ss'].window == stack[1] then
 				windowStyle = 'ss'
 			end
 
