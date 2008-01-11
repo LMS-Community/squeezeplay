@@ -70,7 +70,11 @@ function setupShow(self, setupNext)
 		menu:addItem({
 		        text = self:string("LANGUAGE_" .. locale),
 			sound = "WINDOWSHOW",
-			callback = function() self:setLang(locale) setupNext() end,
+			callback = function()
+					   self:setLang(locale)
+					   self:storeSettings()
+					   setupNext()
+				   end,
 			focusGained = function() self:_showLang(locale) end
 		})
 
