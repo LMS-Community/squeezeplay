@@ -195,8 +195,8 @@ int jiveL_icon_layout(lua_State *L) {
 	prepare(L, peer);
 
 	if (peer->img) {
-		peer->offset_x = jive_widget_halign((JiveWidget *)peer, peer->align, peer->image_width) + peer->w.padding.left;
-		peer->offset_y = jive_widget_valign((JiveWidget *)peer, peer->align, peer->image_height) + peer->w.padding.top;
+		peer->offset_x = jive_widget_halign((JiveWidget *)peer, peer->align, peer->image_width);
+		peer->offset_y = jive_widget_valign((JiveWidget *)peer, peer->align, peer->image_height);
 	}
 
 	return 0;
