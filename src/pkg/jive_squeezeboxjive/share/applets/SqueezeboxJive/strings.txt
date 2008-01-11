@@ -30,10 +30,10 @@ BSP_BRIGHTNESS
 
 BSP_BRIGHTNESS_ADJUST_HELP
 	DE	Sie können die Helligkeit mit dem Rad anpassen
-	EN	Use the wheel to adjust the brightness of the backlight
-	ES	Use la rueda para ajustar el brillo de la retroiluminación
-	FR	Utilisez la molette pour régler la luminosité et le rétroéclairage.
-	IT	Usare la rotellina per regolare la luminosità della retroilluminazione.
+	EN	Use the wheel to adjust the brightness.
+	ES	Use la rueda para ajustar el brillo.
+	FR	Utilisez la molette pour régler la luminosité.
+	IT	Usare la rotellina per regolare la luminosità.
 	NL	Gebruik het wiel om de helderheid van de verlichting aan te passen.
 
 BSP_BACKLIGHT_TIMER
