@@ -505,7 +505,6 @@ end
 -- performs the JSON action...
 local function _performJSONAction(jsonAction, from, qty, sink)
 	log:debug("_performJSONAction(from:", from, ", qty:", qty, "):")
-	log:warn("_performJSONAction(from:", from, ", qty:", qty, "):")
 	
 	local cmdArray = jsonAction["cmd"]
 	
@@ -571,7 +570,6 @@ local function _getStepSink(step, sink)
 	end
 end
 
-
 -- _bigArtworkPopup
 -- special case sink that pops up big artwork
 local function _bigArtworkPopup(chunk, err)
@@ -593,6 +591,23 @@ local function _bigArtworkPopup(chunk, err)
 	return popup
 end
 
+-- _goNowPlaying
+-- pushes next window to the NowPlaying window
+local function _goNowPlaying(chunk, err)
+	Framework:playSound("WINDOWSHOW")
+	local NowPlaying = AppletManager:loadApplet("NowPlaying")
+	NowPlaying:showNowPlaying('browse')
+end
+
+-- _goHome
+-- pushes the home window to the top
+local function _goHome(chunk, err)
+	local windowStack = Framework.windowStack
+	Framework:playSound("JUMP")
+	while #windowStack > 1 do
+		windowStack[#windowStack - 1]:hide(nil, "JUMP")
+	end
+end
 
 -- _devnull
 -- sinks that silently swallows data
@@ -745,25 +760,34 @@ local function _menuSink(self, cmd)
 
 						-- we need a new window for go actions, or do actions that involve input
 						if goAction or (doAction and v.input) then
-							step, sink =_newDestination(nil,
-										  v,
-										  _newWindowSpec(nil, v),
-										  _browseSink,
-										  jsonAction
-									  )
-							from, qty = step.db:missing(step.menu and step.menu:isAccelerated())
+							log:warn(v.nextWindow)
+							if v.nextWindow then
+								if v.nextWindow == 'home' then
+									sink = _goHome
+								elseif v.nextWindow == 'nowPlaying' then
+									sink = _goNowPlaying
+								end
+							else
+								step, sink =_newDestination(nil,
+											  v,
+											  _newWindowSpec(nil, v),
+											  _browseSink,
+											  jsonAction
+										  )
+								from, qty = step.db:missing(step.menu and step.menu:isAccelerated())
 	
-							jiveMain:lockItem(item,
-								  function()
-								  step.cancelled = true
-							  end)
-	
-							step.loaded = function()
-								      jiveMain:unlockItem(item)
-	
-								      _curStep = step
-								      step.window:show()
-							      end
+								jiveMain:lockItem(item,
+									  function()
+									  step.cancelled = true
+								  end)
+		
+								step.loaded = function()
+									      jiveMain:unlockItem(item)
+		
+									      _curStep = step
+									      step.window:show()
+								      end
+							end
 						end
 
 						_performJSONAction(jsonAction, from, qty, sink)
@@ -818,6 +842,14 @@ local function _statusSink(step, chunk, err)
 			return
 		end
 		
+		-- FIXME: this can go away once we dispense of the upgrade messages
+		-- if we have a data.item_loop[1].text == 'READ ME', 
+		-- we've hit the SC upgrade message and shouldn't be dropping it into NOW PLAYING
+		if data.item_loop and data.item_loop[1].text == 'READ ME' then
+			log:debug('This is not a message suitable for the Now Playing list')
+			return
+		end
+
 		step.menu:setItems(step.db:menuItems(data))
 		_requestStatus()
 
@@ -825,7 +857,6 @@ local function _statusSink(step, chunk, err)
 		log:error(err)
 	end
 end
-
 
 -- _globalActions
 -- provides a function for default button behaviour, called outside of the context of the browser
@@ -835,14 +866,9 @@ local _globalActions = {
 			   
 		-- are we in home?
 		if #windowStack > 1 then
-			Framework:playSound("JUMP")
-			while #windowStack > 1 do
-				windowStack[#windowStack - 1]:hide(nil, "JUMP")
-			end
+			_goHome()
 		else
-			Framework:playSound("WINDOWSHOW")
-			local NowPlaying = AppletManager:loadApplet("NowPlaying")
-			NowPlaying:showNowPlaying('browse')
+			_goNowPlaying()
 		end
 				
 		return EVENT_CONSUME
@@ -1070,11 +1096,16 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 				local step
 				local sink = _devnull
 				local from, qty
-				if actionName == 'go' then
-					step, sink = _newDestination(_curStep, item, _newWindowSpec(db, item), _browseSink, jsonAction)
-					from, qty = step.db:missing(step.menu:isAccelerated())
+				-- cover all our "special cases" first, custom navigation, artwork popup, etc.
+				if item['nextWindow'] == 'nowPlaying' then
+					sink = _goNowPlaying
+				elseif item['nextWindow'] == 'home' then
+					sink = _goHome
 				elseif item["showBigArtwork"] then
 					sink = _bigArtworkPopup
+				elseif actionName == 'go' then
+					step, sink = _newDestination(_curStep, item, _newWindowSpec(db, item), _browseSink, jsonAction)
+					from, qty = step.db:missing(step.menu:isAccelerated())
 				end
 
 				_pushToNewWindow(step)
