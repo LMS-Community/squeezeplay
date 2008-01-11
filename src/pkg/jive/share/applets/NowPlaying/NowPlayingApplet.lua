@@ -567,7 +567,6 @@ function openScreensaver(self, style)
 			or not self.player.playerStatus.item_loop then
 		local browser = appletManager:getAppletInstance("SlimBrowser")
 		browser:showPlaylist()
-		self:free()
 		return
 	end
 	-- this is to show the window to be opened in two modes: 
