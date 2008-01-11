@@ -753,7 +753,7 @@ local function _menuSink(self, cmd)
 										  _browseSink,
 										  jsonAction
 									  )
-							from, qty = step.db:missing(step.menu:isAccelerated())
+							from, qty = step.db:missing(step.menu and step.menu:isAccelerated())
 	
 							jiveMain:lockItem(item,
 								  function()
@@ -849,7 +849,6 @@ local _globalActions = {
 			Framework:playSound("WINDOWSHOW")
 			local NowPlaying = AppletManager:loadApplet("NowPlaying")
 			NowPlaying:showNowPlaying('browse')
-			AppletManager:freeApplet("NowPlaying")
 		end
 				
 		return EVENT_CONSUME

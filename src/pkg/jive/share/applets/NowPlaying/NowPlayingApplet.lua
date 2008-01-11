@@ -390,7 +390,7 @@ function _updateMode(self, mode, ws)
 end
 
 function tick(self)
-	if self.player.mode ~= "play" then
+	if not self.player or self.player.mode ~= "play" then
 		return
 	end
 
