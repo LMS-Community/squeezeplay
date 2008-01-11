@@ -674,7 +674,6 @@ _getRequestSink = function(self, func, reqid)
 				
 				if event.error then
 					log:warn("Comet:request error: ", event.error)
-					func(nil, event.error)
 				elseif event.channel == '/slim/request' and event.successful then
 					log:debug("Comet:request id ", reqid, " sent OK")
 
