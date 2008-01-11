@@ -731,6 +731,19 @@ function button(self, buttonName)
 	end
 end
 
+-- scan_rew
+-- what to do for the rew button when held
+-- use button so that the reverse scan mode is triggered.
+function scan_rew(self)
+	self:button('scan_rew')
+end
+
+-- scan_fwd
+-- what to do for the fwd button when held
+-- use button so that the forward scan mode is triggered.
+function scan_fwd(self)
+	self:button('scan_fwd')
+end
 
 -- rew
 -- what to do for the rew button
@@ -739,7 +752,6 @@ function rew(self)
 	log:debug("Player:rew()")
 	self:button('jump_rew')
 end
-
 
 -- fwd
 -- what to do for the fwd button

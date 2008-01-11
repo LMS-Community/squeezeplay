@@ -878,9 +878,21 @@ local _globalActions = {
 		return EVENT_CONSUME
 	end,
 
+	["rew-hold"] = function()
+		Framework:playSound("PLAYBACK")
+		_player:scan_rew()
+		return EVENT_CONSUME
+	end,
+
 	["fwd"] = function()
 	        Framework:playSound("PLAYBACK")
 		_player:fwd()
+		return EVENT_CONSUME
+	end,
+
+	["fwd-hold"] = function()
+		Framework:playSound("PLAYBACK")
+		_player:scan_fwd()
 		return EVENT_CONSUME
 	end,
 
