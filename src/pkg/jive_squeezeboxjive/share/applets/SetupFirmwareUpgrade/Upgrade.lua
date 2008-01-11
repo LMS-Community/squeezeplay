@@ -17,12 +17,12 @@ local ltn12       = require("ltn12")
 local string      = require("string")
 local url         = require("socket.url")
 local http        = require("socket.http")
-local coroutine   = require("coroutine")
 
 local RequestHttp = require("jive.net.RequestHttp")
 local SocketHttp  = require("jive.net.SocketHttp")
 local Process     = require("jive.net.Process")
 local Framework   = require("jive.ui.Framework")
+local Task        = require("jive.ui.Task")
 
 local debug       = require("jive.utils.debug")
 local log         = require("jive.utils.log").logger("upgrade")
