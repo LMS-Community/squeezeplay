@@ -235,7 +235,7 @@ function notify_playerCurrent(self, player)
 			sound = 'WINDOWSHOW',
 			weight = 1,
 			callback = function(event, menuItem)
-				self:showNowPlaying('browse')
+				self:openScreensaver('browse')
 			end
 		}
 	)
@@ -454,9 +454,15 @@ function _installListeners(self, window)
 				local type = event:getType()
 				local keyPress = event:getKeycode()
 				if (keyPress == KEY_BACK) then
+					local windowStack = Framework.windowStack
+					Framework:playSound("JUMP")
+					while #windowStack > 1 do
+						windowStack[#windowStack - 1]:hide(nil, "JUMP")
+					end
 					-- back to Home
-					window:hide(Window.transitionPushRight)
+					--window:hide(Window.transitionPushRight)
 					return EVENT_CONSUME
+
 				elseif (keyPress == KEY_GO) then
 					browser:showPlaylist()
 					return EVENT_CONSUME
@@ -553,7 +559,7 @@ function _createUI(self)
 end
 
 
-function showNowPlaying(self, style)
+function openScreensaver(self, style)
 
 	-- an empty item_loop means an empty playlist
 	if not self.player 

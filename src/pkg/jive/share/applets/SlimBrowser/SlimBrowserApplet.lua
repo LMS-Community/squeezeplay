@@ -596,7 +596,7 @@ end
 local function _goNowPlaying(chunk, err)
 	Framework:playSound("WINDOWSHOW")
 	local NowPlaying = AppletManager:loadApplet("NowPlaying")
-	NowPlaying:showNowPlaying('browse')
+	NowPlaying:openScreensaver('browse')
 end
 
 -- _goHome
