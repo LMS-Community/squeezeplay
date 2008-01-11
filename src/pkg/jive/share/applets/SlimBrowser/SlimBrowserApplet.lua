@@ -677,9 +677,7 @@ local function _menuSink(self, cmd)
 		-- the player ID this notification is for is in chunk.data[4]
 		local playerId = chunk.data[4]
 
-		-- FIXME: `playerId not nil` part of this clause needs to be removed
-		-- It is necessary to support pre 21Dec07 versions of SC
-		if playerId ~= nil and playerId ~= 'all' and playerId ~= _player.id then
+		if playerId ~= 'all' and playerId ~= _player.id then
 			log:debug('***** This menu notification was not for this player ***** ')
 			log:debug("Notification for: ", playerId)
 			log:debug("This player is: ", _player.id)
@@ -805,6 +803,10 @@ local function _statusSink(step, chunk, err)
 
 	local data = chunk.data
 	if data then
+
+		local hasSize = _safeDeref(data, 'item_loop', 1)
+		if not hasSize then return end
+
 		if logd:isDebug() then
 			debug.dump(data, 8)
 		end
@@ -816,14 +818,6 @@ local function _statusSink(step, chunk, err)
 			return
 		end
 		
-		-- FIXME: this can go away once we dispense of the upgrade messages
-		-- if we have a data.item_loop[1].text == 'READ ME', 
-		-- we've hit the SC upgrade message and shouldn't be dropping it into NOW PLAYING
-		if data.item_loop and data.item_loop[1].text == 'READ ME' then
-			log:debug('This is not a message suitable for the Now Playing list')
-			return
-		end
-
 		step.menu:setItems(step.db:menuItems(data))
 		_requestStatus()
 
