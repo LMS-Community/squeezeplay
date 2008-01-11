@@ -735,7 +735,7 @@ function skin(self, s)
 	s.albumtitle.icon = {}
 	s.albumtitle.icon.align = "left"
 	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
-	s.albumtitle.icon.padding = { 5, 0, 0, 0 }
+	s.albumtitle.icon.padding = { 9, 0, 0, 0 }
 
 
 	-- titles with mini icons
@@ -747,13 +747,13 @@ function skin(self, s)
 	s.minititle.bgImg         = titleBox
 	s.minititle.text = {}
 	s.minititle.text.w        = WH_FILL
-	s.minititle.text.padding  = { 10, 7, 0, 9 }
+	s.minititle.text.padding  = { 8, 7, 0, 9 }
 	s.minititle.text.align    = 'top-left'
 	s.minititle.text.font     = FONT_BOLD_18px
 	s.minititle.text.fg       = SELECT_COLOR
 	s.minititle.order         = { "text", "icon" }
 	s.minititle.icon = {}
-	s.minititle.icon.padding  = { 0, 0, 4, 0 }
+	s.minititle.icon.padding  = { 0, 0, 8, 0 }
 	s.minititle.icon.align    = 'right'
 
 
@@ -894,7 +894,7 @@ function skin(self, s)
 	s.albumitem.order = { "icon", "text", "play" }
 	s.albumitem.text = {}
 	s.albumitem.text.w = WH_FILL
-	s.albumitem.text.padding = { 12, 8, 8, 8 }
+	s.albumitem.text.padding = { 6, 8, 8, 8 }
 	s.albumitem.text.align = "top-left"
 	s.albumitem.text.font = FONT_13px
 	s.albumitem.text.lineHeight = 16
@@ -909,7 +909,7 @@ function skin(self, s)
 	s.albumitem.icon = {}
 	s.albumitem.icon.align = "left"
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
-	s.albumitem.icon.padding = { 5, 0, 0, 0 }
+	s.albumitem.icon.padding = { 8, 0, 0, 0 }
 
 
 	-- selected item with artwork and song info
@@ -1046,29 +1046,12 @@ function skin(self, s)
 	-- Popup window for current song info
 	s.currentsong = {}
 	s.currentsong.x = 0
-	s.currentsong.y = screenHeight - 96
+	s.currentsong.y = screenHeight - 93
 	s.currentsong.w = screenWidth
-	s.currentsong.h = 96
+	s.currentsong.h = 93
 	s.currentsong.bgImg = helpBox
-	s.currentsong.icon = {}
-	s.currentsong.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
-	s.currentsong.icon.padding = { 6, -30, 4, 4 }
-
-	s.currentsong.text = {}
-	s.currentsong.text.w = screenWidth
-	s.currentsong.text.h = 72
-	s.currentsong.text.padding = { 74, 12, 12, 4 }
-	s.currentsong.text.font = FONT_13px
-	s.currentsong.text.lineHeight = 17
-	s.currentsong.text.line = {
-		nil,
-		{
-			font = FONT_BOLD_13px,
-			height = 17
-		}
-	}
-	s.currentsong.text.fg = TEXT_COLOR
-	s.currentsong.text.align = "top-left"
+	s.currentsong.albumitem = {}
+	s.currentsong.albumitem.border = { 4, 9, 4, 0 }
 
 	-- Popup window for play/add without artwork
 	s.popupplay= {}
@@ -1109,24 +1092,6 @@ function skin(self, s)
 	s.popupinfo.text.lineHeight = 17
 	s.popupinfo.text.fg = TEXT_COLOR
 	s.popupinfo.text.align = "left"
-
-	-- XXXX top and status styles defined using album and standard styles
-	-- are these style needed?
---[[
-	s.toptitle = s.albumtitle
-	s.statustitle = s.title
-
-	s.topmenu = s.menu
-	s.statusmenu = s.albummenu
-
-	s.topitem = s.item
-	s.selected.topitem = s.selected.item
-	s.locked.topitem = s.locked.item
-
-	s.statusitem = s.albumitem
-	s.selected.statusitem = s.selected.albumitem
-	s.locked.statusitem = s.locked.albumitem
---]]
 end
 
 

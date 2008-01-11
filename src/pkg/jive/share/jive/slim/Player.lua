@@ -45,6 +45,7 @@ local Popup          = require("jive.ui.Popup")
 local Icon           = require("jive.ui.Icon")
 local Label          = require("jive.ui.Label")
 local Window         = require("jive.ui.Window")
+local Group          = require("jive.ui.Group")
 
 local debug          = require("jive.utils.debug")
 local log            = require("jive.utils.log").logger("player")
@@ -480,8 +481,13 @@ function onStage(self)
 	self.currentSong.window = Popup("currentsong")
 	self.currentSong.artIcon = Icon("icon")
 	self.currentSong.text = Label("text", "")
-	self.currentSong.window:addWidget(self.currentSong.artIcon)
-	self.currentSong.window:addWidget(self.currentSong.text)
+
+	local group = Group("albumitem", {
+		      text = self.currentSong.text,
+		      icon = self.currentSong.artIcon
+	      })
+
+	self.currentSong.window:addWidget(group)
 	self.currentSong.window:addListener(EVENT_KEY_PRESS | EVENT_SCROLL,
 		function(event)
 			local prev = self.currentSong.window:getLowerWindow()
@@ -568,12 +574,7 @@ function _showCurrentSong(self, text, iconId)
 	local s = self.currentSong
 
 	if iconId then
-		s.window:removeWidget(s.artIcon)
-		s.artIcon = Icon("icon")
-		s.window:addWidget(s.artIcon)
-		if iconId ~= 0 then
-			self.slimServer:fetchArtworkThumb(iconId, s.artIcon, artworkThumbUri, nil)
-		end
+		self.slimServer:fetchArtworkThumb(iconId, s.artIcon, artworkThumbUri, nil)
 	end
 
 	s.text:setValue(text)
