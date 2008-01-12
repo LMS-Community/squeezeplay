@@ -240,6 +240,8 @@ int jiveL_icon_draw(lua_State *L) {
 		return 0;
 	}
 
+	//jive_surface_boxColor(srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.x + peer->w.bounds.w-1, peer->w.bounds.y + peer->w.bounds.h-1, 0xFF00007F);
+
 	jive_surface_blit_clip(peer->img, peer->image_width * peer->anim_frame, 0, peer->image_width, peer->image_height,
 			       srf, peer->w.bounds.x + peer->offset_x, peer->w.bounds.y + peer->offset_y);
 
