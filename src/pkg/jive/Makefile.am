@@ -360,6 +360,8 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/scrollbar_bodymid.png \
 	share/applets/DefaultSkin/images/scrollbar_bodytop.png \
 	share/applets/DefaultSkin/images/selection_right.png \
+	share/applets/DefaultSkin/images/selection_play.png \
+	share/applets/DefaultSkin/images/selection_add.png \
 	share/applets/DefaultSkin/images/selection_wait.png \
 	share/applets/DefaultSkin/images/titlebox_bl.png \
 	share/applets/DefaultSkin/images/titlebox_b.png \

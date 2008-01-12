@@ -371,6 +371,12 @@ function skin(self, s)
 	-- menu item with no right icon
 	s.itemNoAction = _uses(s.item)
 
+	-- menu items for using different selection icons
+	s.itemplay = {}
+	s.itemplay = _uses(s.item)
+	s.itemadd  = {}
+	s.itemadd = _uses(s.item)
+
 	-- checked menu item
 	s.checked =
 		_uses(s.item, {
@@ -397,6 +403,38 @@ function skin(self, s)
 				      img = Surface:loadImage(imgpath .. "selection_right.png")
 			      }
 		      })
+
+	s.selected.itemplay = {}
+	s.selected.itemplay =
+		_uses(s.itemplay, {
+			      bgImg = selectionBox,
+			      text = {
+				      fg = SELECT_COLOR,
+				      sh = SELECT_SH_COLOR
+			      },
+			      icon = {
+				      padding = { 4, 0, 0, 0 },
+				      align = "right",
+				      img = Surface:loadImage(imgpath .. "selection_play.png")
+			      }
+		      })
+
+	s.selected.itemadd = {}
+	s.selected.itemdd =
+		_uses(s.itemadd, {
+			      bgImg = selectionBox,
+			      text = {
+				      fg = SELECT_COLOR,
+				      sh = SELECT_SH_COLOR
+			      },
+			      icon = {
+				      padding = { 4, 0, 0, 0 },
+				      align = "right",
+				      img = Surface:loadImage(imgpath .. "selection_add.png")
+			      }
+		      })
+
+
 
 
 	-- FIXME convert to use _uses() ...

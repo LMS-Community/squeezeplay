@@ -760,7 +760,7 @@ local function _menuSink(self, cmd)
 
 						-- we need a new window for go actions, or do actions that involve input
 						if goAction or (doAction and v.input) then
-							log:warn(v.nextWindow)
+							log:debug(v.nextWindow)
 							if v.nextWindow then
 								if v.nextWindow == 'home' then
 									sink = _goHome
@@ -1283,11 +1283,37 @@ local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderS
 			local item, current = db:item(dbIndex)
 
 			local style = labelItemStyle
+
+			local itemAction = {}
+			if style == 'item' then
+				local chunk = db:chunk()
+                        	local bActionPlay = _safeDeref(chunk, 'base', 'actions', 'play')
+				local iActionPlay = _safeDeref(item, 'actions', 'play')
+                        	local bActionAdd  = _safeDeref(chunk, 'base', 'actions', 'add')
+				local iActionAdd  = _safeDeref(item, 'actions', 'add')
+                        	local bActionGo   = _safeDeref(chunk, 'base', 'actions', 'go')
+				local iActionGo   = _safeDeref(item, 'actions', 'go')
+				if bActionPlay or iActionPlay then
+					itemAction['play'] = true
+				end
+				if bActionAdd or iActionAdd then
+					itemAction['add'] = true
+				end
+				if bActionGo or iActionGo then
+					itemAction['go'] = true
+				end
+			end
 			
 			if current then
 				style = "albumcurrent"
 			elseif item and item["style"] then
 				style = item["style"]
+			-- style with a filled '>' sign if play action
+			elseif itemAction['play'] then
+				style = 'itemplay'
+			-- only style with a '+' sign if no go or play action
+			elseif itemAction['add'] and not itemAction['go'] then
+				style = 'itemadd'
 			end
 
 			widgets[widgetIndex] = _decoratedLabel(widget, style, item, db, menuAccel)
