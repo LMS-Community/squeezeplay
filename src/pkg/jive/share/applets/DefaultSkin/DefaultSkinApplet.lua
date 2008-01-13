@@ -551,7 +551,7 @@ function skin(self, s)
 	s.sliderMax.border = { 5, 0, 5, 0 }
 
 	s.sliderGroup = {}
-	s.sliderGroup.border = { 10, 5, 25, 10 }
+	s.sliderGroup.border = { 7, 5, 25, 10 }
 
 	-- Text input
 	s.textinput = {}
