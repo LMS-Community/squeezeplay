@@ -1722,6 +1722,11 @@ end
 function notify_playerCurrent(self, player)
 	log:debug("SlimBrowserApplet:notify_playerCurrent(", player, ")")
 
+	-- nothing to do if we don't have a player
+	if not player then
+		return
+	end
+
 	-- has the player actually changed?
 	if _player == player then
 		return
@@ -1735,11 +1740,6 @@ function notify_playerCurrent(self, player)
 		local SetupWallpaper = AppletManager:loadApplet("SetupWallpaper")
 		SetupWallpaper:_setBackground(nil, player.id)
 		AppletManager:freeApplet("SetupWallpaper")
-	end
-
-	-- nothing to do if we don't have a player
-	if not player then
-		return
 	end
 	
 	-- assign our locals
