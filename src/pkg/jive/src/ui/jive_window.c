@@ -76,6 +76,20 @@ int jiveL_window_check_layout(lua_State *L) {
 
 	WindowWidget *peer = jive_getpeer(L, 1, &windowPeerMeta);
 
+	lua_getfield(L, 1, "transparent");
+	if (lua_toboolean(L, -1) && jive_getmethod(L, 1, "getLowerWindow")) {
+		/* if transparent drawn lower window first */
+		lua_pushvalue(L, 1);
+		lua_call(L, 1, 1);
+
+		if (!lua_isnil(L, -1)) {
+			lua_pushcfunction(L, jiveL_window_check_layout);
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 0);
+		}
+	}
+	lua_pop(L, 1);
+
 	if (peer->w.child_origin != jive_origin) {
 #if 0
 		/* debugging */
@@ -110,25 +124,6 @@ int jiveL_window_check_layout(lua_State *L) {
 	return 0;
 }
 
-int jiveL_popup_check_layout(lua_State *L) {
-	/* stack is:
-	 * 1: widget
-	 */
-
-	if (jive_getmethod(L, 1, "getLowerWindow")) {
-		lua_pushvalue(L, 1);
-		lua_call(L, 1, 1);
-
-		if (!lua_isnil(L, -1)) {
-			lua_pushcfunction(L, jiveL_window_check_layout);
-			lua_pushvalue(L, -2);
-			lua_call(L, 1, 0);
-		}
-	}
-
-	return jiveL_window_check_layout(L);
-}
-
 
 int jiveL_window_iterate(lua_State *L) {
 	/* stack is:
@@ -136,40 +131,22 @@ int jiveL_window_iterate(lua_State *L) {
 	 * 2: closure
 	 */
 
-	// global widgets
-	jiveL_getframework(L);
-	lua_getfield(L, -1, "widgets");
-	lua_pushnil(L);
-	while (lua_next(L, -2) != 0) {
-		lua_pushvalue(L, 2);
-		lua_pushvalue(L, -2);
-		lua_call(L, 1, 0);
-
-		lua_pop(L, 1);
-	}
-	lua_pop(L, 2);
-
-	// window widgets
-	lua_getfield(L, 1, "widgets");
-	lua_pushnil(L);
-	while (lua_next(L, -2) != 0) {
-		lua_pushvalue(L, 2);
-		lua_pushvalue(L, -2);
-		lua_call(L, 1, 0);
-
-		lua_pop(L, 1);
+	lua_getfield(L, 1, "showFrameworkWidgets");
+	if (lua_toboolean(L, -1)) {
+		// global widgets
+		jiveL_getframework(L);
+		lua_getfield(L, -1, "widgets");
+		lua_pushnil(L);
+		while (lua_next(L, -2) != 0) {
+			lua_pushvalue(L, 2);
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 0);
+			
+			lua_pop(L, 1);
+		}
+		lua_pop(L, 2);
 	}
 	lua_pop(L, 1);
-
-	return 0;
-}
-
-
-int jiveL_popup_iterate(lua_State *L) {
-	/* stack is:
-	 * 1: widget
-	 * 2: closure
-	 */
 
 	// window widgets
 	lua_getfield(L, 1, "widgets");
@@ -226,40 +203,9 @@ int jiveL_window_draw(lua_State *L) {
 	JiveSurface *srf = tolua_tousertype(L, 2, 0);
 	Uint32 layer = luaL_optinteger(L, 3, JIVE_LAYER_ALL);
 
-	/* window background */
-	if ((layer & peer->w.layer) && peer->bg_tile) {
-		jive_tile_blit(peer->bg_tile, srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.w, peer->w.bounds.h);
-	}
-
-	/* draw widgets */
-	if (jive_getmethod(L, 1, "iterate")) {
-		lua_pushvalue(L, 1); // widget
-
-		lua_pushvalue(L, 2); // surface
-		lua_pushvalue(L, 3); // layer
-		lua_pushcclosure(L, draw_closure, 2);
-
-		lua_call(L, 2, 0);
-	}
-
-	return 0;
-}
-
-
-int jiveL_popup_draw(lua_State *L) {
-
-	/* stack is:
-	 * 1: widget
-	 * 2: surface
-	 * 3: layer
-	 */
-
-	WindowWidget *peer = jive_getpeer(L, 1, &windowPeerMeta);
-	JiveSurface *srf = tolua_tousertype(L, 2, 0);
-	Uint32 layer = luaL_optinteger(L, 3, JIVE_LAYER_ALL);
-
-	/* draw underneath a popup */
-	if (layer & JIVE_LAYER_FRAME) {
+	lua_getfield(L, 1, "transparent");
+	if (lua_toboolean(L, -1) && (layer & JIVE_LAYER_FRAME)) {
+		/* draw underneath a popup */
 		if (jive_getmethod(L, 1, "getLowerWindow")) {
 			lua_pushvalue(L, 1);
 			lua_call(L, 1, 1);
@@ -288,9 +234,27 @@ int jiveL_popup_draw(lua_State *L) {
 			lua_pop(L, 1);
 		}
 	}
+	lua_pop(L, 1);
 
-	return jiveL_window_draw(L);
+	/* window background */
+	if ((layer & peer->w.layer) && peer->bg_tile) {
+		jive_tile_blit(peer->bg_tile, srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.w, peer->w.bounds.h);
+	}
+
+	/* draw widgets */
+	if (jive_getmethod(L, 1, "iterate")) {
+		lua_pushvalue(L, 1); // widget
+
+		lua_pushvalue(L, 2); // surface
+		lua_pushvalue(L, 3); // layer
+		lua_pushcclosure(L, draw_closure, 2);
+
+		lua_call(L, 2, 0);
+	}
+
+	return 0;
 }
+
 
 static int do_array_event(lua_State *L) {
 	int r = 0;

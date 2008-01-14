@@ -479,6 +479,7 @@ function onStage(self)
 
 	-- create window to display current song info
 	self.currentSong.window = Popup("currentsong")
+	self.currentSong.window:setAllowScreensaver(true)
 	self.currentSong.artIcon = Icon("icon")
 	self.currentSong.text = Label("text", "")
 
@@ -568,21 +569,6 @@ function artworkThumbUri (iconId, size)
 end
 
 
-function _showCurrentSong(self, text, iconId)
-	log:debug("Player:showCurrentSong()")
-
-	local s = self.currentSong
-
-	if iconId then
-		self.slimServer:fetchArtworkThumb(iconId, s.artIcon, artworkThumbUri, nil)
-	end
-
-	s.text:setValue(text)
-
-	s.window:showBriefly(3000, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
-end
-
-
 -- _process_displaystatus
 -- receives the display status data
 function _process_displaystatus(self, event)
@@ -594,20 +580,20 @@ function _process_displaystatus(self, event)
 		local display = data.display
 		local type    = display["type"] or 'text'
 
+		local s = self.currentSong
+
 		if type == 'song' then
 			-- new song display from server
-			self:_showCurrentSong(table.concat(display["text"], "\n"), display["icon-id"])
-		elseif type == 'popupplay' then
-			-- playing display from server for artist/genre/year etc - no artwork 
-			local popup = Popup("popupplay")
-			popup:addWidget(Label("text", table.concat(display["text"], "\n")))
-			popup:showBriefly(3000, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
+			s.text:setValue(table.concat(display["text"], "\n"))
+			s.artIcon:setStyle("icon")
+			self.slimServer:fetchArtworkThumb(display["icon-id"], s.artIcon, artworkThumbUri, nil)
 		else
-			-- other message from server
-			local popup = Popup("popupinfo")
-			popup:addWidget(Label("text", table.concat(display["text"], "\n")))
-			popup:showBriefly(3000, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
+			s.text:setValue(table.concat(display["text"], "\n"))
+			s.artIcon:setStyle("noimage")
+			s.artIcon:setValue(nil)
 		end
+
+		s.window:showBriefly(3000, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
 	end
 end
 

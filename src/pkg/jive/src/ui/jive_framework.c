@@ -1184,15 +1184,6 @@ static const struct luaL_Reg window_methods[] = {
 	{ NULL, NULL }
 };
 
-static const struct luaL_Reg popup_methods[] = {
-	{ "_skin", jiveL_window_skin },
-	{ "checkLayout", jiveL_popup_check_layout },
-	{ "iterate", jiveL_popup_iterate },
-	{ "draw", jiveL_popup_draw },
-	{ "_eventHandler", jiveL_window_event_handler },
-	{ NULL, NULL }
-};
-
 static const struct luaL_Reg timer_methods[] = {
 	{ "start", jiveL_timer_add_timer },
 	{ "stop", jiveL_timer_remove_timer },
@@ -1275,10 +1266,6 @@ static int jiveL_core_init(lua_State *L) {
 
 	lua_getfield(L, 2, "Window");
 	luaL_register(L, NULL, window_methods);
-	lua_pop(L, 1);
-
-	lua_getfield(L, 2, "Popup");
-	luaL_register(L, NULL, popup_methods);
 	lua_pop(L, 1);
 
 	lua_getfield(L, 2, "Slider");

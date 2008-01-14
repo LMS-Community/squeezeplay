@@ -107,6 +107,12 @@ function __init(self, style, title, titleStyle)
 
 	local obj = oo.rawnew(self, Widget(style))
 
+	obj.allowScreensaver = true
+	obj.alwaysOnTop = false
+	obj.autoHide = false
+	obj.showFrameworkWidgets = true
+	obj.transparent = false
+
 	obj.widgets = {} -- child widgets
 	obj.layoutRoot = true
 	obj.focus = nil
@@ -140,7 +146,12 @@ Show this window, adding it to the top of the window stack. The I<transition> is
 function show(self, transition)
 	local stack = Framework.windowStack
 
-	local topwindow = stack[1]
+	local idx = 1
+	local topwindow = stack[idx]
+	while topwindow and topwindow.alwaysOnTop do
+		idx = idx + 1
+		topwindow = stack[idx]
+	end
 
 	if topwindow == self then
 		-- we're already on top
@@ -162,23 +173,25 @@ function show(self, transition)
 	self:dispatchNewEvent(EVENT_SHOW)
 
 	-- insert the window in the window stack
-	table.insert(stack, 1, self)
+	table.insert(stack, idx, self)
 
 	if topwindow then
 		-- push transitions
 		transition = transition or self._DEFAULT_SHOW_TRANSITION
 		Framework:_startTransition(transition(topwindow, self))
 
-		-- the old window and widgets are no longer visible
-		topwindow:dispatchNewEvent(EVENT_HIDE)
+		if not self.transparent then
+			-- the old window and widgets are no longer visible
+			topwindow:dispatchNewEvent(EVENT_HIDE)
 
-		-- the old window is inactive
-		topwindow:dispatchNewEvent(EVENT_WINDOW_INACTIVE)
+			-- the old window is inactive
+			topwindow:dispatchNewEvent(EVENT_WINDOW_INACTIVE)
+		end
 	end
 
 	-- hide windows with autoHide enabled
-	while stack[2] ~= nil and stack[2]._autoHide do
-		stack[2]:hide()
+	while stack[idx + 1] ~= nil and stack[idx + 1].autoHide do
+		stack[idx + 1]:hide()
 	end
 
 	Framework:reDraw(nil)
@@ -351,8 +364,8 @@ moves back.
 
 ==cut
 --]]
-function autoHide(self, enabled)
-	self._autoHide = enabled and true or nil
+function setAutoHide(self, enabled)
+	self.autoHide = enabled and true or nil
 end
 
 
@@ -548,6 +561,7 @@ function setAllowScreensaver(self, allowScreensaver)
 	_assert(type(allowScreensaver) == "boolean" or type(allowScreensaver) == "function")
 
 	self.allowScreensaver = allowScreensaver
+	-- FIXME disable screensaver if active?
 end
 
 
@@ -559,6 +573,30 @@ function canActivateScreensaver(self)
 	else
 		return self.allowScreensaver
 	end
+end
+
+
+function setAlwaysOnTop(self, alwaysOnTop)
+	_assert(type(alwaysOnTop) == "boolean")
+
+	self.alwaysOnTop = alwaysOnTop
+	-- FIXME modify window position if already shown?
+end
+
+
+function setShowFrameworkWidgets(self, showFrameworkWidgets)
+	_assert(type(showFrameworkWidgets) == "boolean")
+
+	self.showFrameworkWidgets = showFrameworkWidgets
+	self:reLayout()
+end
+
+
+function setTransparent(self, transparent)
+	_assert(type(transparent) == "boolean")
+
+	self.transparent = transparent
+	self:reLayout()
 end
 
 
