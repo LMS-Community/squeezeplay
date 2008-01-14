@@ -481,11 +481,7 @@ function _createUI(self)
 	local window = Window("window")
 
 	if windowStyle == 'ss' then
-		local sw, sh = Framework:getScreenSize()
-		local newBg = Framework:getBackground()
-		local srf = Surface:newRGBA(sw, sh)
-		newBg:blit(srf, 0, 0, sw, sh)
-		window:addWidget(Icon("iconbg", srf))
+		window:setShowFrameworkWidgets(false)
 	end
 
 	if self.player.playerStatus then

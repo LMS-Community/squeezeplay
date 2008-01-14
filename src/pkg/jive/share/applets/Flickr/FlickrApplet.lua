@@ -67,7 +67,8 @@ module(...)
 oo.class(_M, Applet)
 
 
-local apiKey           = "18d9e492ca288b453a9cc6065c440d0c"
+local apiKey           = "6505cb025e34a7e9b3f88daa9fa87a04"
+
 local transitionBoxOut
 local transitionTopDown 
 local transitionBottomUp 
@@ -471,10 +472,7 @@ function _window(self, ...)
 	local window = Window("flickr")
 
 	-- black window background
-	local w, h = Framework:getScreenSize()
-	local bg  = Surface:newRGBA(w, h)
-	bg:filledRectangle(0, 0, w, h, 0x000000FF)
-	window:addWidget(Icon("background", bg))
+	window:setShowFrameworkWidgets(false)
 
 	for i, v in ipairs{...} do
 		window:addWidget(v)
