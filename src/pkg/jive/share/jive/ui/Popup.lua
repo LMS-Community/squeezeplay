@@ -61,7 +61,6 @@ function __init(self, style, title)
 	obj._DEFAULT_HIDE_TRANSITION = Window.transitionNone
 
 	obj:setAllowScreensaver(false)
-	obj:setAlwaysOnTop(true)
 	obj:setAutoHide(true)
 	obj:setShowFrameworkWidgets(false)
 	obj:setTransparent(true)
@@ -75,24 +74,6 @@ function __init(self, style, title)
 			end)
 
 	return obj
-end
-
-
---[[
-
-=head2 jive.ui.Popup:lowerWindow(widget)
-
-Returns the window beneath this popup.
-
-=cut
---]]
-function getLowerWindow(self)
-	for i = 1,#Framework.windowStack do
-		if Framework.windowStack[i] == self then
-			return Framework.windowStack[i + 1]
-		end
-	end
-	return nil
 end
 
 

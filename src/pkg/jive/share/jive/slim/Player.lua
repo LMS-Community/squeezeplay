@@ -480,6 +480,7 @@ function onStage(self)
 	-- create window to display current song info
 	self.currentSong.window = Popup("currentsong")
 	self.currentSong.window:setAllowScreensaver(true)
+	self.currentSong.window:setAlwaysOnTop(true)
 	self.currentSong.artIcon = Icon("icon")
 	self.currentSong.text = Label("text", "")
 

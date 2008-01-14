@@ -320,7 +320,9 @@ function hide(self, transition)
 		-- push transitions
 		transition = transition or self._DEFAULT_HIDE_TRANSITION
 		Framework:_startTransition(_newTransition(transition, self, topWindow))
+	end
 
+	if self.visible then
 		-- this window and widgets are now not visible
 		self:dispatchNewEvent(EVENT_HIDE)
 
@@ -481,6 +483,24 @@ Returns I<self>.
 --]]
 function getWindow(self)
 	return self
+end
+
+
+--[[
+
+=head2 jive.ui.Popup:lowerWindow(widget)
+
+Returns the window beneath this popup.
+
+=cut
+--]]
+function getLowerWindow(self)
+	for i = 1,#Framework.windowStack do
+		if Framework.windowStack[i] == self then
+			return Framework.windowStack[i + 1]
+		end
+	end
+	return nil
 end
 
 
