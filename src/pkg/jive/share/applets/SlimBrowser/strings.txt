@@ -89,3 +89,12 @@ SLIMBROWSER_NOTHING
 	FR	Rien
 	IT	Niente
 	NL	Niets
+
+SLIMBROWSER_CONNECTING_TO
+	DE	Verbindung mit %s
+	EN	Connecting to\n%s
+	ES	Conectando a %s
+	FR	Connexion à %s
+	IT	Connessione a %s
+	NL	Er wordt een verbinding met %s gemaakt
+

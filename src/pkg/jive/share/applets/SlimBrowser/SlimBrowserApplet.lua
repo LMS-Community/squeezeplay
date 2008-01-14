@@ -119,6 +119,9 @@ local _playerKeyHandler = false
 -- The last entered text
 local _lastInput = ""
 
+-- connectingToPlayer popup handlers
+local _connectingPopup = false
+local _menuReceived = false
 --==============================================================================
 -- Local functions
 --==============================================================================
@@ -570,6 +573,39 @@ local function _getStepSink(step, sink)
 	end
 end
 
+-- _connectingToPlayer
+-- full screen popup that appears until menus are loaded
+local function _connectingToPlayer(self, player)
+
+	local popup = Popup("popupIcon")
+	local icon  = Icon("iconConnecting")
+	local label = Label("text", self:string("SLIMBROWSER_CONNECTING_TO", player.name))
+	popup:addWidget(icon)
+	popup:addWidget(label)
+	popup:setAlwaysOnTop(true)
+
+	-- add a listener for KEY_PRESS that disconnects from the player and returns to home
+	popup:addListener(
+		EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+		function(event)
+			local evtCode = event:getKeycode()
+
+			if evtCode == KEY_BACK then
+				-- disconnect from player and go home
+				self:free()
+				popup:hide()
+			end
+			-- other keys are disabled when this popup is on screen
+			return EVENT_CONSUME
+
+		end
+	)
+	
+	popup:show()
+	_connectingPopup = popup
+
+end
+
 -- _bigArtworkPopup
 -- special case sink that pops up big artwork
 local function _bigArtworkPopup(chunk, err)
@@ -699,6 +735,9 @@ local function _menuSink(self, cmd)
 			return
 		end
 
+		-- if we get here, it was for this player. set menuReceived to true
+		_menuReceived = true
+
 		for k, v in pairs(menuItems) do
 
 			--debug.dump(v.actions, -1)
@@ -796,6 +835,10 @@ local function _menuSink(self, cmd)
 				_playerMenus[item.id] = item
 				jiveMain:addItem(item)
 			end
+		end
+		if _menuReceived and _connectingPopup then
+			_connectingPopup:hide()
+			_connectingPopup = nil
 		end
          end
 end
@@ -1720,7 +1763,7 @@ end
 -- notify_playerCurrent
 -- this is called when the current player changes (possibly from no player)
 function notify_playerCurrent(self, player)
-	log:debug("SlimBrowserApplet:notify_playerCurrent(", player, ")")
+	log:warn("SlimBrowserApplet:notify_playerCurrent(", player, ")")
 
 	-- nothing to do if we don't have a player
 	if not player then
@@ -1735,6 +1778,9 @@ function notify_playerCurrent(self, player)
 	-- free current player
 	if _player then
 		self:free()
+		-- add a fullscreen popup that waits for the _menuSink to load
+		_menuReceived = false
+		_connectingToPlayer(self, player)
 	else
 		log:info("First load...get the correct wallpaper on screen")
 		local SetupWallpaper = AppletManager:loadApplet("SetupWallpaper")
@@ -1746,7 +1792,6 @@ function notify_playerCurrent(self, player)
 	_player = player
 	_server = player:getSlimServer()
 	_string = function(token) return self:string(token) end
-
 
 	log:warn('**** SUBSCRIBING to /slim/menustatus/', _player.id)
 	local cmd = { 'menustatus' }
