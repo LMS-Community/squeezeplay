@@ -178,7 +178,7 @@ function show(self, transition)
 	if topwindow then
 		-- push transitions
 		transition = transition or self._DEFAULT_SHOW_TRANSITION
-		Framework:_startTransition(transition(topwindow, self))
+		Framework:_startTransition(_newTransition(transition, topwindow, self))
 
 		if not self.transparent then
 			-- the old window and widgets are no longer visible
@@ -319,7 +319,7 @@ function hide(self, transition)
 
 		-- push transitions
 		transition = transition or self._DEFAULT_HIDE_TRANSITION
-		Framework:_startTransition(transition(self, topWindow))
+		Framework:_startTransition(_newTransition(transition, self, topWindow))
 
 		-- this window and widgets are now not visible
 		self:dispatchNewEvent(EVENT_HIDE)
@@ -605,6 +605,39 @@ function __tostring(self)
 		return "Window(" .. tostring(self.title) .. ")"
 	else
 		return "Window()"
+	end
+end
+
+
+-- Create a new transition. This wrapper is lets transitions to be used
+-- underneath transparent windows (e.g. popups)
+function _newTransition(transition, oldwindow, newwindow)
+	local f = transition(oldwindow, newwindow)
+	if not f then
+		return f
+	end
+
+	local idx = 1
+	local windows = {}
+
+	local w = Framework.windowStack[idx]
+	while w ~= newwindow and w.transparent do
+		table.insert(windows, 1, w)
+
+		idx = idx + 1
+		w = Framework.windowStack[idx]
+	end
+
+	if #windows then
+		return function(widget, surface)
+			       f(widget, surface)
+
+			       for i,w in ipairs(windows) do
+				       w:draw(surface, LAYER_ALL)
+			       end
+		       end
+	else
+		return f
 	end
 end
 
