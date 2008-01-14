@@ -37,7 +37,7 @@ end
 
 function defaultSettings(meta)
 	return {
-		_VOLUME = Audio.MAXVOLUME / 2
+		_VOLUME = Audio.MAXVOLUME / 3
 	}
 end
 
