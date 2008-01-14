@@ -770,6 +770,7 @@ function skin(self, s)
 	}
 	s.albumtitle.text.fg = SELECT_COLOR
 	s.albumtitle.icon = {}
+	s.albumtitle.icon.h = WH_FILL
 	s.albumtitle.icon.align = "left"
 	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumtitle.icon.padding = { 9, 0, 0, 0 }
@@ -944,6 +945,7 @@ function skin(self, s)
 	s.albumitem.text.fg = TEXT_COLOR
 	s.albumitem.text.sh = TEXT_SH_COLOR
 	s.albumitem.icon = {}
+	s.albumitem.icon.h = WH_FILL
 	s.albumitem.icon.align = "left"
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumitem.icon.padding = { 8, 0, 0, 0 }
@@ -1057,6 +1059,7 @@ function skin(self, s)
 	s.albumcurrent.text.fg = TEXT_COLOR
 	s.albumcurrent.text.sh = TEXT_SH_COLOR
 	s.albumcurrent.icon = {}
+	s.albumcurrent.icon.h = WH_FILL
 	s.albumcurrent.icon.align = "center"
 	s.albumcurrent.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumcurrent.icon.padding = { 6, 0, 0, 0 }

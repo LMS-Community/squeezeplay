@@ -333,9 +333,9 @@ int jiveL_label_draw(lua_State *L) {
 
 	if (drawLayer && peer->bg_tile) {
 		jive_tile_blit(peer->bg_tile, srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.w, peer->w.bounds.h);
-
-		//jive_surface_boxColor(srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.x + peer->w.bounds.w-1, peer->w.bounds.y + peer->w.bounds.h-1, 0xFF00007F);
 	}
+
+	//jive_surface_boxColor(srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.x + peer->w.bounds.w-1, peer->w.bounds.y + peer->w.bounds.h-1, 0x00FF007F);
 
 	/* draw text label */
 	if (!(drawLayer && peer->num_lines)) {

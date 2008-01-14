@@ -181,8 +181,11 @@ int jiveL_group_layout(lua_State *L) {
 		sum_w += w[i];
 	}
 
-	if (h != JIVE_WH_NIL && h != JIVE_WH_FILL) {
-		h = MAX(h, peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom);
+	if (h == JIVE_WH_FILL) {
+		h = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
+	}
+	else if (h != JIVE_WH_NIL && h != JIVE_WH_FILL) {
+		h = MIN(h, peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom);
 	}
 
 	x = peer->w.bounds.x + peer->w.padding.left;
