@@ -302,6 +302,9 @@ function t_addNetwork(self, ssid, option)
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 	end
 
+	-- Disconnect from existing network
+	self:t_disconnectNetwork()
+
 	-- Use select network to disable all other networks
 	request = 'SELECT_NETWORK ' .. id
 	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
@@ -377,6 +380,9 @@ function t_selectNetwork(self, ssid)
 		log:warn("can't find network ", ssid)
 		return
 	end
+
+	-- Disconnect from existing network
+	self:t_disconnectNetwork()
 
 	local request = 'SELECT_NETWORK ' .. id
 	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)

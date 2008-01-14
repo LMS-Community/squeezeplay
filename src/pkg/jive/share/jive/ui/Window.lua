@@ -488,9 +488,9 @@ end
 
 --[[
 
-=head2 jive.ui.Popup:lowerWindow(widget)
+=head2 jive.ui.Window:lowerWindow(self)
 
-Returns the window beneath this popup.
+Returns the window beneath this window in the window stack.
 
 =cut
 --]]

@@ -98,6 +98,10 @@ function settingsShow(self, keepOldEntries)
 
 	-- schedule network scan 
 	self.scanMenu:addTimer(2000, function()
+					     -- only scan if this window is on top, not under a transparent popup
+					     if Framework.windowStack[1] ~= window then
+						     return
+					     end
 					     _scan(self)
 				     end)
 
