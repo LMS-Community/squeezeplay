@@ -153,6 +153,7 @@ dist_luaslim_DATA = \
 
 luautildir = $(pkgdatadir)/jive/utils
 dist_luautil_DATA = \
+	share/jive/utils/coxpcall.lua \
 	share/jive/utils/datetime.lua \
 	share/jive/utils/debug.lua \
 	share/jive/utils/locale.lua \
