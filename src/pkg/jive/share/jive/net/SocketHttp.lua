@@ -104,6 +104,7 @@ The class maintains an internal queue of requests to fetch.
 --]]
 function fetch(self, request)
 	_assert(oo.instanceof(request, RequestHttp), tostring(self) .. ":fetch() parameter must be RequestHttp - " .. type(request) .. " - ".. debug.traceback())
+
 	-- push the request
 	table.insert(self.t_httpSendRequests, request)
 
@@ -118,7 +119,7 @@ end
 -- manages the http state machine for sending stuff to the server
 function t_sendNext(self, go, newState)
 --	log:debug(self, ":t_sendNext(", go, ", ", newState, ")")
-	
+
 	if newState then
 		_assert(self[newState] and type(self[newState]) == 'function')
 		self.t_httpSendState = newState
@@ -132,14 +133,25 @@ function t_sendNext(self, go, newState)
 end
 
 
+-- t_dequeueRequest
+-- removes a request from the queue, can be overridden by sub-classes
+function _dequeueRequest(self)
+	if #self.t_httpSendRequests > 0 then
+		return table.remove(self.t_httpSendRequests, 1)
+	end
+
+	return nil
+end
+
+
 -- t_sendDequeue
 -- removes a request from the queue
 function t_sendDequeue(self)
 --	log:debug(self, ":t_sendDequeue()")
 	
-	if #self.t_httpSendRequests > 0 then
-	
-		self.t_httpSending = table.remove(self.t_httpSendRequests, 1)
+	self.t_httpSending = self:_dequeueRequest()
+
+	if self.t_httpSending then
 --		log:info(self, " processing ", self.t_httpSending)
 		self:t_sendNext(true, 't_sendConnect')
 		return
@@ -147,6 +159,14 @@ function t_sendDequeue(self)
 	
 	-- back to idle
 --	log:info(self, ": no request in queue")
+
+	if self:connected() then
+		local pump = function(NetworkThreadErr)
+				     self:close("connect closed")
+			     end
+
+		self:t_addRead(pump, 0) -- No timeout
+	end
 end
 
 
@@ -165,11 +185,9 @@ function t_sendConnect(self)
 --	log:debug(self, ":t_sendConnect()")
 	
 	if not self:connected() then
-	
 		local err = socket.skip(1, self:t_connect())
 	
 		if err then
-	
 			log:error(self, ":t_sendConnect: ", err)
 			self:close(err)
 			return
@@ -245,7 +263,7 @@ function t_sendRequest(self)
 	local source = function()
 	
 		local line1 = string.format("%s HTTP/%s", self.t_httpSending:t_getRequestString(), self.t_httpProtocol)
-		
+
 		local t = {}
 		
 		table.insert(t, line1)
@@ -403,8 +421,6 @@ function t_rcvHeaders(self)
 			else
 				return false, "cannot parse: " .. chunk
 			end
-
-			log:warn(self," CODE: line1=", line1)
 		end
 
 		-- read headers
@@ -425,130 +441,12 @@ function t_rcvHeaders(self)
 
 				headers[name] = value
 			else
-				log:warn(self," HDRS: line1=", line1)
-
 				-- we're done
 				self.t_httpReceiving:t_setResponseHeaders(statusCode, statusLine, headers)
 
 				-- release send queue
 				self:t_sendNext(false, 't_sendDequeue')
 		
-				-- we've received response headers, check with request if OK to send next query now
-				if self.t_httpReceiving:t_canDequeue() then
-					self:t_sendDequeueIfIdle()
-				end
-			
-				-- move on to our future...
-				self:t_rcvNext(true, 't_rcvResponse')
-				return
-			end
-		end
-	end
-	
-	self:t_addRead(pump, SOCKET_TIMEOUT)
-
-
-	
-	local first = true
-	local partial
-	
-	local source = function()
-	
-		local line, err = self.t_sock:receive('*l', partial)
-		
-		if err then
---			log:debug(self, ":t_rcvHeaders.source:", err)
-
-			return nil, err
-		end
-		
-		if line == "" then
-			-- we're done
-			return nil
-		end
-		
-		return line
-	end
-
-	local headers = {}
-	local statusCode = false
-	local statusLine = false
-	local sink = function(chunk, err)
---		log:debug(self, ":t_rcvHeaders.sink: ", chunk)
-		
-		if chunk then
-			
-			-- first line is status line
-			if not statusCode then
-			
-				local data = socket.skip(2, string.find(chunk, "HTTP/%d*%.%d* (%d%d%d)"))
-				
-				if data then
-					statusCode = tonumber(data)
-					statusLine = chunk
-				else
-					return false, "cannot parse: " .. chunk
-				end
-				
-			else
-				
-				local name, value = socket.skip(2, string.find(chunk, "^(.-):%s*(.*)"))
-				
-				if not (name and value) then 
-					return false, "malformed reponse headers"
-				else
-					headers[name] = value
---					log:debug(self, ":t_rcvHeaders.sink header: ", name, ":", value)
-				end
-			end
-		end
-		return 1
-	end
-
-	local pump = function (NetworkThreadErr)
---		log:debug(self, ":t_rcvHeaders.pump()")
-		if first then
-			first = false
-		end
-		
-		if NetworkThreadErr then
-			log:error(self, ":t_rcvHeaders.pump:", err)
-			--self:t_removeRead()
-			self:close(err)
-			return
-		end
-		
-		while true do
-			local ret, err = ltn12.pump.step(source, sink)
-	
-			if err then
-		
-				if err == 'timeout' then
---					log:debug(self, ":t_rcvHeaders.pump - timeout")
-					-- more next time
-					return
-				end
-		
-				log:error(self, ":t_rcvHeaders.pump:", err)
-				--self:t_removeRead()
-				self:close(err)
-				return
-			
-			elseif not ret then
-		
-				-- we're done
---				self:t_removeRead()
-			
-				self.t_httpReceiving:t_setResponseHeaders(statusCode, statusLine, headers)
-		
-				-- release send queue
-				self:t_sendNext(false, 't_sendDequeue')
-		
-				-- we've received response headers, check with request if OK to send next query now
-				if self.t_httpReceiving:t_canDequeue() then
-					self:t_sendDequeueIfIdle()
-				end
-			
 				-- move on to our future...
 				self:t_rcvNext(true, 't_rcvResponse')
 				return
@@ -841,12 +739,6 @@ function t_rcvResponse(self)
 
 			-- move on to our future
 			self:t_rcvNext(true, 't_rcvSend')
-			
-		-- else let the request decide if we can send another request, if any	
-		else
-			if self.t_httpReceiving:t_canDequeue() then
-				self:t_sendDequeueIfIdle()
-			end
 		end
 	end
 	

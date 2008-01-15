@@ -204,7 +204,7 @@ function __init(self, jnt, ip, port, name)
 		players = {},
 
 		-- artwork http pool
-		artworkPool = HttpPool(jnt, name, ip, port, 2, 2, Task.PRIORITY_LOW),
+		artworkPool = HttpPool(jnt, name, ip, port, 2, 1, Task.PRIORITY_LOW),
 
 		-- artwork cache: Weak table storing a surface by iconId
 		artworkThumbCache = setmetatable({}, { __mode="k" }),

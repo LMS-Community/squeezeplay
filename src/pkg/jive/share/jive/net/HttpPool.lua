@@ -43,7 +43,7 @@ local Timer           = require("jive.ui.Timer")
 
 local log             = require("jive.utils.log").logger("net.http")
 
-local KEEPALIVE_TIMEOUT = 300000 -- timeout idle connections after 300 seconds
+local KEEPALIVE_TIMEOUT = 60000 -- timeout idle connections after 60 seconds
 
 -- jive.net.HttpPool is a base class
 module(..., oo.class)
@@ -191,7 +191,9 @@ function t_dequeue(self, socket)
 			KEEPALIVE_TIMEOUT,
 			function()
 				log:debug(self, ": closing idle connection")
-				self.pool.jshq[1]:close('keep-alive timeout')
+				for i = 1, self.pool.active do
+					self.pool.jshq[1]:close('keep-alive timeout')
+				end
 			end,
 			true -- run once
 		)
@@ -199,7 +201,7 @@ function t_dequeue(self, socket)
 	end			
 
 	-- close all but the first one (active = 1)
-	return nil, (socket != self.pool.jshq[1])
+	return nil, false
 end
 
 

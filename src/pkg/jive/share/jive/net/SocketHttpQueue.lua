@@ -62,22 +62,22 @@ function __init(self, jnt, address, port, queueObj, name)
 end
 
 
--- t_sendDequeue
+-- _dequeueRequest
 --
-function t_sendDequeue(self)
---	log:debug(self, ":t_sendDequeue()")
+function _dequeueRequest(self)
+--	log:debug(self, ":_dequeueRequest()")
 	
 	local request, close = self.httpqueue:t_dequeue(self)
 	
 	if request then
-		self.t_httpSending = request
---		log:info(self, " processing ", self.t_httpSending)
-		self:t_sendNext(true, 't_sendConnect')
+		return request
 	end
 	
 	if close then
 		self:close()
 	end
+
+	return nil
 end
 
 

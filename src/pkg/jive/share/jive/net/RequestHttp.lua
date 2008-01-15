@@ -352,14 +352,6 @@ function t_setResponseBody(self, data)
 end
 
 
--- t_canDequeue
--- called by the HTTP layer to determine if the next request in the queue
--- can be sent
-function t_canDequeue(self)
-	return false
-end
-
-
 --[[
 
 =head2 tostring(aRequest)
