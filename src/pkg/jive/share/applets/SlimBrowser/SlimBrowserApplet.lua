@@ -81,6 +81,7 @@ local KEY_PAUSE              = jive.ui.KEY_PAUSE
 local KEY_VOLUME_DOWN        = jive.ui.KEY_VOLUME_DOWN
 local KEY_VOLUME_UP          = jive.ui.KEY_VOLUME_UP
 
+local JIVE_VERSION           = jive.JIVE_VERSION
 local jiveMain               = jiveMain
 local iconbar                = iconbar
 local jnt                    = jnt
@@ -699,6 +700,36 @@ local function _browseSink(step, chunk, err)
 		
 	else
 		log:error(err)
+	end
+end
+
+-- _firmwareSink
+-- returns a sink with a closure to self
+-- cmd is passed so we know what process function to call
+-- this sink receives notifications of new Jive firmware available
+local function _firmwareSink(self, cmd)
+	return function(chunk, err) 
+		log:info("FIRMWARE SINK")
+		if err then
+			log:warn(err)
+			return
+		end
+                  
+		local _data = chunk.data
+		if _data and _data.firmwareUpgrade and tonumber(_data.firmwareUpgrade) == 1 then
+			-- time to make the donuts
+			log:warn("New firmware detected!")
+			local fwApplet = AppletManager:loadApplet("SetupFirmwareUpgrade")
+			if fwApplet then
+				fwApplet:forceUpgrade(_data.firmwareUrl)	
+				-- you've gotten the fw upgrade notice, so quit requesting it
+				if _server and _player then
+					log:warn("unsubscribing from firmwarestatus")
+					_server.comet:unsubscribe('/slim/firmwarestatus/' .. _player.id)
+				end
+			end
+			return
+		end
 	end
 end
 
@@ -1793,6 +1824,23 @@ function notify_playerCurrent(self, player)
 	_server = player:getSlimServer()
 	_string = function(token) return self:string(token) end
 
+	if _player then                                
+		local fwApplet = AppletManager:loadApplet("SetupFirmwareUpgrade")
+		-- no need to bother if we don't have the SetupFirmware applet (e.g., when running jive_desktop)
+		if fwApplet then
+			log:warn('**** SUBSCRIBING to /slim/firmwarestatus/', _player.id)
+		 	local fwcmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION, 'subscribe:3600' }
+			_server.comet:subscribe(
+				'/slim/firmwarestatus/' .. _player.id,
+				_firmwareSink(sink, fwcmd, fwApplet),
+				_player.id,
+				fwcmd
+			)
+		end
+		AppletManager:freeApplet("SetupFirmwareUpgrade")
+	end
+
+
 	log:warn('**** SUBSCRIBING to /slim/menustatus/', _player.id)
 	local cmd = { 'menustatus' }
 	_server.comet:subscribe(
@@ -1907,8 +1955,10 @@ function free(self)
 
 	-- unsubscribe from this player's menustatus
 	log:warn("***** UNSUBSCRIBING FROM /slim/menustatus/", _player.id)
+	log:warn("***** UNSUBSCRIBING FROM /slim/firmwarestatus/", _player.id)
 	if _server and _player then
 		_server.comet:unsubscribe('/slim/menustatus/' .. _player.id)
+		_server.comet:unsubscribe('/slim/firmwarestatus/' .. _player.id)
 	end
 
 	if _player then

@@ -75,14 +75,17 @@ module(...)
 oo.class(_M, Applet)
 
 
-function forceUpgrade(self)
+function forceUpgrade(self, upgUrl)
 	local window = Window("window", self:string("UPDATE"), firmwareupgradeTitleStyle)
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu")
 	menu:setCloseable(false)
 
-	local url = upgradeUrl[1]
+	local url
+	if not upgUrl then
+		url = upgradeUrl[1]
+	end
 	if not url then
 		url = DEFAULT_FIRMWARE_URL
 	end
