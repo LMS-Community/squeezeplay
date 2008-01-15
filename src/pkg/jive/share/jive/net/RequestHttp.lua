@@ -39,16 +39,36 @@ by a L<jive.net.SocketHttp>.
 
 
 -- stuff we use
-local _assert, tostring, type, pairs = _assert, tostring, type, pairs
+local _assert, pairs, tostring, type = _assert, pairs, tostring, type
 
-local oo    = require("loop.base")
-local url   = require("socket.url")
-local table = require("jive.utils.table")
+local oo        = require("loop.base")
+local url       = require("socket.url")
+local table     = require("jive.utils.table")
+local Task      = require("jive.ui.Task")
 
-local log   = require("jive.utils.log").logger("net.http")
+local log       = require("jive.utils.log").logger("net.http")
 
 -- our class
 module(..., oo.class)
+
+
+-- catch errors in a sink or source
+local function _makeSafe(sourceOrSink, errstr)
+	if sourceOrSink == nil then
+		return nil
+	end
+
+	return function(...)
+		       local status, chunk, sink = Task:pcall(sourceOrSink, ...)
+
+		       if not status then
+			       log:error(errstr, chunk)
+			       return nil, chunk
+		       end
+
+		       return chunk, sink
+	       end
+end
 
 
 --[[
@@ -218,8 +238,7 @@ end
 -- returns the body source
 function t_getBodySource(self)
 	--log:debug("RequestHttp:t_getBodySource()")
-
-	return self.t_httpRequest.src
+	return _makeSafe(self.t_httpRequest.src, "Body source:")
 end
 
 
@@ -284,8 +303,8 @@ end
 -- returns the sink mode
 function t_getResponseSink(self)
 --	log:debug("RequestHttp:t_getResponseSink()")
-	
-	return self.t_httpResponse.sink
+
+	return _makeSafe(self.t_httpResponse.sink, "Response sink:")
 end
 
 

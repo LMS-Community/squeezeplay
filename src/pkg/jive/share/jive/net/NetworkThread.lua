@@ -193,7 +193,7 @@ local function _run(self, timeout)
 
 		ok, err = pcall(_t_select, self, timeoutSecs)
 		if not ok then
-			log:warn("error in _t_select: " .. err)
+			log:error("error in _t_select: " .. err)
 		end
 
 		_, timeout = Task:yield(true)

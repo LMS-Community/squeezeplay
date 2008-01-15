@@ -127,20 +127,25 @@ end
 
 -- Proxy functions for NetworkThread, for convenience of subclasses
 
+local function _taskError(self)
+	self:close("task error")
+end
+
+
 -- t_add/remove/read/write
 function t_addRead(self, pump, timeout)
 	if not self.readPump then
 		-- task to iterate over all read pumps
 		local task = Task(tostring(self) .. "(R)",
-				  nil,
-				  function(_, networkErr)
+				  self,
+				  function(self, networkErr)
 					  while self.readPump do
 						  if not self.readPump(networkErr) then
-							  _, networkErr = Task:yield(false)
+							  self, networkErr = Task:yield(false)
 						  end
 					  end
 				  end,
-				  nil, -- FIXME err function
+				  _taskError,
 				  self.priority)
 		self.jnt:t_addRead(self.t_sock, task, timeout)
 	end
@@ -159,15 +164,15 @@ function t_addWrite(self, pump, timeout)
 	if not self.writePump then
 		-- task to iterate over all write pumps
 		local task = Task(tostring(self) .. "(W)",
-				  nil,
-				  function(_, networkErr)
+				  self,
+				  function(self, networkErr)
 					  while self.writePump do
 						  if not self.writePump(networkErr) then
-							  networkErr = Task:yield(false)
+							  self, networkErr = Task:yield(false)
 						  end
 					  end
 				  end,
-				  nil, -- FIXME err function
+				  _taskError,
 				  self.priority)
 		self.jnt:t_addWrite(self.t_sock, task, timeout)
 	end

@@ -7,6 +7,7 @@ local coroutine        = require("coroutine")
 local oo               = require("loop.base")
 local debug            = require("jive.utils.debug")
 local table            = require("jive.utils.table")
+local coxpcall         = require("jive.utils.coxpcall")
 
 local log              = require("jive.utils.log").logger("ui.task")
 
@@ -157,6 +158,16 @@ end
 
 function yield(class, ...)
 	return coroutine.yield(...)
+end
+
+
+function pcall(class, f, ...)
+	return coxpcall.coxpcall(f, debug.traceback, ...)
+end
+
+
+function xpcall(class, ...)
+	return coxpcall.coxpcall(...)
 end
 
 
