@@ -47,6 +47,7 @@ local ltn12       = require("ltn12")
 local SocketTcp   = require("jive.net.SocketTcp")
 local RequestHttp = require("jive.net.RequestHttp")
 
+local locale      = require("jive.utils.locale")
 local log         = require("jive.utils.log").logger("net.http")
 
 local JIVE_VERSION = jive.JIVE_VERSION
@@ -175,7 +176,7 @@ function t_sendConnect(self)
 		end
 	end
 		
-	self:t_sendNext(true, 't_sendHeaders')
+	self:t_sendNext(true, 't_sendRequest')
 end
 
 
@@ -199,23 +200,18 @@ function t_getSendHeaders(self)
 	end
 	
 	if self.t_httpSending:t_hasBody() then
-	
-		if self.t_httpProtocol == '1.1' then
-			headers["Transfer-Encoding"] = 'chunked'
-		else
-			-- FIXME: we should get the body length here
-			error(tostring(self) .. ":POST with HTTP 1.0 not supported")
-		end
+		headers["Content-Length"] = #self.t_httpSending:t_body()
 	end
-	
+
+	req_headers["Accept-Language"] = string.lower(locale.getLocale())	
 	return headers
 end
 
 
--- jive-keep-open socket sink
+-- keep-open-non-blocking socket sink
 -- our "keep-open" sink, added to the socket namespace so we can use it like any other
 -- our version is non blocking
-socket.sinkt["jive-keep-open"] = function(sock)
+socket.sinkt["keep-open-non-blocking"] = function(sock)
 	local first = 0
 	return setmetatable(
 		{
@@ -224,12 +220,12 @@ socket.sinkt["jive-keep-open"] = function(sock)
 		}, 
 		{
 			__call = function(self, chunk, err)
---				log:debug("jive-keep-open sink(", chunk and #chunk, ", ", tostring(err), ", ", tostring(first), ")")
+--				log:debug("keep-open-non-blocking sink(", chunk and #chunk, ", ", tostring(err), ", ", tostring(first), ")")
 				if chunk then 
 					local res, err
 					-- if send times out, err is 'timeout' and first is updated.
 					res, err, first = sock:send(chunk, first+1)
---					log:debug("jive-keep-open sent - first is ", tostring(first), " returning ", tostring(res), ", " , tostring(err))
+--					log:debug("keep-open-non-blocking sent - first is ", tostring(first), " returning ", tostring(res), ", " , tostring(err))
 					-- we return the err
 					return res, err
 				else 
@@ -241,10 +237,10 @@ socket.sinkt["jive-keep-open"] = function(sock)
 end
 
 
--- t_sendHeaders
+-- t_sendRequest
 -- send the headers, aggregates request and socket headers
-function t_sendHeaders(self)
---	log:debug(self, ":t_sendHeaders()")
+function t_sendRequest(self)
+--	log:debug(self, ":t_sendRequest()")
 	
 	local source = function()
 	
@@ -262,18 +258,22 @@ function t_sendHeaders(self)
 		end
 		
 		table.insert(t, "")
-		table.insert(t, "")
+		if self.t_httpSending:t_hasBody() then
+			table.insert(t, self.t_httpSending:t_body())
+		else
+			table.insert(t, "")
+		end
 
 		return table.concat(t, "\r\n")
 	end
 
-	local sink = socket.sink('jive-keep-open', self.t_sock)
+	local sink = socket.sink('keep-open-non-blocking', self.t_sock)
 	
 	local pump = function (NetworkThreadErr)
---		log:debug(self, ":t_sendHeaders.pump()")
+--		log:debug(self, ":t_sendRequest.pump()")
 		
 		if NetworkThreadErr then
-			log:error(self, ":t_sendHeaders.pump: ", NetworkThreadErr)
+			log:error(self, ":t_sendRequest.pump: ", NetworkThreadErr)
 			self:close(NetworkThreadErr)
 			return
 		end
@@ -288,116 +288,16 @@ function t_sendHeaders(self)
 			end
 
 			-- handle any "real" error
-			log:error(self, ":t_sendHeaders.pump: ", err)
+			log:error(self, ":t_sendRequest.pump: ", err)
 			self:close(err)
 			return
 		end
 		
 		-- no error, we're done, move on!
-		if self.t_httpSending:t_hasBody() then
-			self:t_sendNext(true, 't_sendBody')
-		else
-			self:t_removeWrite()
-			self:t_sendNext(true, 't_sendReceive')
-		end
+		self:t_removeWrite()
+		self:t_sendNext(true, 't_sendReceive')
 	end
 
-	self:t_addWrite(pump, SOCKET_TIMEOUT)
-end
-
--- jive-http-chunked sink
--- same as socket.http, only non blocking
-socket.sinkt["jive-http-chunked"] = function(sock)
-	local chunks = {}
-	local curChunk
-	local done = false
-	return setmetatable(
-		{
-			getfd = function() return sock:getfd() end,
-			dirty = function() return sock:dirty() end
-		}, 
-		{
-			__call = function(self, chunk, err)
---				log:debug("jive-http-chunked sink(", chunk and #chunk, ", ", tostring(err), ", ", #chunks, ")")
-
-				if done or err then return 1 end
-				
-				-- store the chunk
-				if chunk then
-					-- prepare the chunk
-					local size = string.format("%X\r\n", string.len(chunk))
-					chunk = size .. chunk .. "\r\n"
-					table.insert(chunks, { data = chunk, first = 0})
---					log:debug("jive-http-chunked stored chunk")
-				end
-				
-				-- if no curChunk, load one if we have any or load the last chunk data
-				if not curChunk then
-				 	if #chunks > 0 then
-						curChunk = table.remove(chunks, 1)
---						log:debug("jive-http-chunked loaded chunk")
-					elseif not done then
-						curChunk = { data = "0\r\n\r\n", first = 0}
---						log:debug("jive-http-chunked loaded last chunk")
-						done = true
-					end
-				end
-				
-				-- send curChunk
-				local res, err
-				res, err, curChunk.first = sock:send(curChunk.data, curChunk.first)
---				log:debug("jive-http-chunked sent - first is ", tostring(curChunk.first), " returning ", tostring(res), ", " , tostring(err))
-
-				if not curChunk.first then 
---					log:debug("jive-http-chunked discarding finished curChunk")
-					curChunk = nil
-				end
-
-				return res, err
-			end
-		}
-	)
-end
-
-
--- t_sendBody
--- sends the body
-function t_sendBody(self)
---	log:debug(self, ":t_sendBody()")
-	
-	local source = self.t_httpSending:t_getBodySource()
-	
-	local sink = socket.sink('jive-http-chunked', self.t_sock)
-
-	local pump = function (NetworkThreadErr)
---		log:debug(self, ":t_sendBody.pump()")
-		
-		if NetworkThreadErr then
-			log:error(self, ":t_sendBody.pump: ", NetworkThreadErr)
-			self:close(NetworkThreadErr)
-			return
-		end
-
-		local ret, err = ltn12.pump.step(source, sink)
-		
-		if err then
-		
-			-- just loop on timeout
-			if err == 'timeout' then
-				return
-			end
-		
-			log:error(self, ":t_sendBody.pump: ", err)
-			self:close(err)
-			return
-			
-		-- we pump until the source returns nil -> send last chunk
-		elseif not ret then
-			self:t_removeWrite()
-			self:t_sendNext(true, 't_sendReceive')
-		end
-	end
-	
 	self:t_addWrite(pump, SOCKET_TIMEOUT)
 end
 

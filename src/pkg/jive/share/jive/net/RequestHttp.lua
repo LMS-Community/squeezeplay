@@ -44,6 +44,8 @@ local _assert, pairs, tostring, type = _assert, pairs, tostring, type
 local oo        = require("loop.base")
 local url       = require("socket.url")
 local table     = require("jive.utils.table")
+local ltn12       = require("ltn12")
+
 local Task      = require("jive.ui.Task")
 
 local log       = require("jive.utils.log").logger("net.http")
@@ -188,6 +190,19 @@ end
 -- returns if the request has a body to send, i.e. is POST
 function t_hasBody(self)
 	return self.t_httpRequest.method == 'POST'
+end
+
+
+function t_body(self)
+	if not self.t_httpRequest.body and self:t_hasBody() then
+		local body = {}
+		local bodySink = ltn12.sink.table(body)
+
+		ltn12.pump.all(self:t_getBodySource(), bodySink)
+
+		self.t_httpRequest.body = table.concat(body)
+	end
+	return self.t_httpRequest.body
 end
 
 
