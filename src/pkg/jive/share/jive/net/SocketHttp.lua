@@ -357,6 +357,97 @@ end
 --
 function t_rcvHeaders(self)
 --	log:debug(self, ":t_rcvHeaders()")
+
+	local line, err, partial = true
+	local source = function()
+		line, err, partial = self.t_sock:receive('*l', partial)
+		if err then
+			if err == 'timeout' then
+				return
+			end
+
+			log:error(self, ":t_rcvHeaders.pump:", err)
+			self:close(err)
+			return false, err
+		end
+
+		return line
+	end
+
+
+	local headers = {}
+	local statusCode = false
+	local statusLine = false
+
+	local pump = function (NetworkThreadErr)
+--		log:debug(self, ":t_rcvHeaders.pump()")
+		if NetworkThreadErr then
+			log:error(self, ":t_rcvHeaders.pump:", err)
+			--self:t_removeRead()
+			self:close(err)
+			return
+		end
+
+		-- read status line
+		if not statusCode then
+			local line, err = source()
+			if err then
+				return false, err
+			end
+
+			local data = socket.skip(2, string.find(line, "HTTP/%d*%.%d* (%d%d%d)"))
+				
+			if data then
+				statusCode = tonumber(data)
+				statusLine = chunk
+			else
+				return false, "cannot parse: " .. chunk
+			end
+
+			log:warn(self," CODE: line1=", line1)
+		end
+
+		-- read headers
+		while true do
+			local line, err = source()
+			if err then
+				return false, err
+			end
+
+			if line ~= "" then
+				local name, value = socket.skip(2, string.find(line, "^(.-):%s*(.*)"))
+				if not (name and value) then
+					err = "malformed reponse headers"
+					log:warn(err)
+					self:close(err)
+					return false, err
+				end
+
+				headers[name] = value
+			else
+				log:warn(self," HDRS: line1=", line1)
+
+				-- we're done
+				self.t_httpReceiving:t_setResponseHeaders(statusCode, statusLine, headers)
+
+				-- release send queue
+				self:t_sendNext(false, 't_sendDequeue')
+		
+				-- we've received response headers, check with request if OK to send next query now
+				if self.t_httpReceiving:t_canDequeue() then
+					self:t_sendDequeueIfIdle()
+				end
+			
+				-- move on to our future...
+				self:t_rcvNext(true, 't_rcvResponse')
+				return
+			end
+		end
+	end
+	
+	self:t_addRead(pump, SOCKET_TIMEOUT)
+
+
 	
 	local first = true
 	local partial
