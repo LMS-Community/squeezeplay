@@ -19,10 +19,8 @@ local JIVE_VERSION  = jive.JIVE_VERSION
 upgradeUrl          = { false }
 local upgradeUrl    = upgradeUrl
 
-
 module(...)
 oo.class(_M, AppletMeta)
-
 
 function jiveVersion(meta)
 	return 1, 1
@@ -41,6 +39,7 @@ function registerApplet(meta)
 	-- do this in a closure
 	local firmwareUpgradeSink =
 		function(chunk, err)
+			log:warn("FIRMWARE SINK")
 			if err then
 				log:warn(err)
 				return
@@ -53,31 +52,54 @@ function registerApplet(meta)
 
 			-- are we forcing an upgrade
 			if tonumber(chunk.data.firmwareUpgrade) == 1 then
+				log:warn("New Firmware Available")
 				local applet = appletManager:loadApplet("SetupFirmwareUpgrade")
-				applet:forceUpgrade()
+				applet:forceUpgrade(upgradeUrl[1])
+				--FIXME, the unsubscriptions do not work
+				if player then
+					log:warn("Unsubscribing from /slim/firmwarestatus/", player.id)
+					player.slimServer.comet:unsubscribe('/slim/firmwarestatus/' .. player.id)
+				end
+				if self and self.player then
+					log:warn("Unsubscribing from /slim/firmwarestatus/", self.player.id)
+					self.player.slimServer.comet:unsubscribe('/slim/firmwarestatus/' .. self.player.id)
+				end
+			else
+				log:warn("no new firmware needed")
 			end
 
-			-- FIXME allow for applet install/upgrade here
 		end
 
 	local monitor = {
 		notify_playerCurrent =
 			function(self, player)
 				log:warn("PLAYER CURRENT!!")
+				--FIXME, the unsubscription does not work
+				if self.player and player and self.player ~= player then
+					log:warn("Unsubscribing from /slim/firmwarestatus/", self.player.id)
+					self.player.slimServer.comet:unsubscribe('/slim/firmwarestatus/' .. self.player.id)
+				end
 
-				local cmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION }
-				-- FIXME send to slimserver installed applets and versions
-
-				if( player) then				
-					player.slimServer.comet:request(firmwareUpgradeSink,
-								player:getId(),
-								cmd
-								)
+				if player then				
+					local fwcmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION, 'subscribe:3600' }
+		                        player.slimServer.comet:subscribe(
+						'/slim/firmwarestatus/' .. player.id,
+						firmwareUpgradeSink,
+						player.id,
+						fwcmd
+					)
+				end
+			end,
+		notify_playerDisconnect =
+			function(self,player)
+				if player then
+					player.slimServer.comet:unsubscribe('/slim/firmwarestatus/' .. player.id)
 				end
 			end
 	}
 
 	jnt:subscribe(monitor)
+
 end
 
 
