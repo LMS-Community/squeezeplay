@@ -82,7 +82,7 @@ function forceUpgrade(self, upgUrl)
 	local menu = SimpleMenu("menu")
 	menu:setCloseable(false)
 
-	local url
+	local url = upgUrl
 	if not upgUrl then
 		url = upgradeUrl[1]
 	end
