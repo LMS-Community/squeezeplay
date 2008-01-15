@@ -113,7 +113,7 @@ function __init(self, jnt, ip, port, path, name)
 	
 	obj.jnt            = jnt
 	obj.name           = name
-	obj.active         = false    -- whether or not we have an active connection
+	obj.active         = "closed" -- whether or not we have an active connection: [ closed, handshake, connected ]
 	obj.clientId       = nil      -- clientId provided by server
 	obj.reqid          = 1        -- used to identify non-subscription requests
 	obj.advice         = {}       -- advice from server on how to handle reconnects
@@ -143,18 +143,18 @@ local _reconnect
 local _active
 
 function start(self)
-	if not self.active then
+	if self.active ~= "connected" then
 		-- Begin handshake
 		_handshake(self)
 	end
 end
 
 function disconnect(self)
-	if self.active then
+	if self.active == "connected" then
 	
 		log:debug('Comet:disconnect()')
 		
-		_active(self, false)
+		_active(self, "closed")
 
 		-- Mark all subs as pending so they can be resubscribed later
 		for i, v in ipairs( self.subs ) do
@@ -178,7 +178,7 @@ function disconnect(self)
 end
 
 function notify_networkConnected(self)
-	if self.active then
+	if self.active == "connected" then
 		log:warn("Comet: Got networkConnected event, will try to reconnect to ", self.uri)
 		_handleAdvice(self)
 	else
@@ -329,7 +329,7 @@ _getEventSink = function(self)
 				if event.channel == '/meta/connect' then
 				 	if event.successful then
 						log:debug("Comet:_getEventSink, connect message acknowledged")
-						_active(self, true)
+						_active(self, "connected")
 					else
 						log:warn("Comet:_getEventSink, connect failed: ", event.error)
 						_handleAdvice(self)
@@ -344,7 +344,7 @@ _getEventSink = function(self)
 				elseif event.channel == '/meta/reconnect' then
 					if event.successful then
 						log:debug("Comet:_getEventSink, reconnect OK")
-						_active(self, true)
+						_active(self, "connected")
 					else
 						log:warn("Comet:_getEventSink, reconnect failed: ", event.error)
 						_handleAdvice(self)
@@ -447,6 +447,8 @@ _handshake = function(self)
 			self.uri,
 			data
 		)
+
+	_active(self, "handshake")
 	
 	self.chttp:fetch(req)
 end
@@ -464,7 +466,7 @@ _getHandshakeSink = function(self)
 		if chunk then
 			local data = chunk[1]
 			if data.successful then
-				_active(self, true)
+				_active(self, "connected")
 				self.clientId  = data.clientId
 				self.advice    = data.advice
 
@@ -506,7 +508,7 @@ function subscribe(self, subscription, func, playerid, request, priority)
 	self.reqid = self.reqid + 1
 
 	-- Send immediately unless we're batching queries
-	if self.active and not self.batch then
+	if self.active == "connected" and not self.batch then
 		-- add all pending unsub requests, and any others we need to send
 		local data = {}
 		_addPendingRequests(self, data)
@@ -555,7 +557,7 @@ function unsubscribe(self, subscription, func)
 		
 		table.insert( self.pending_unsubs, subscription )
 		
-		if self.active and not self.batch then
+		if self.active == "connected" and not self.batch then
 			-- add all pending unsub requests, and any others we need to send
 			local data = {}
 			_addPendingRequests(self, data)
@@ -587,7 +589,7 @@ function request(self, func, playerid, request, priority)
 		log:debug("Comet:request(", func, ", reqid:", id, ", ", playerid, ", ", table.concat(request, ","), ", priority:", priority, ")")
 	end
 	
-	if not self.active or self.batch then
+	if self.active ~= "connected" or self.batch then
 		-- Add subscription to pending requests, to be sent during connect/reconnect
 		table.insert( self.pending_reqs, {
                         reqid    = id,
@@ -695,8 +697,8 @@ end
 -- Decide what to do if we get disconnected or get an error while handshaking/connecting
 _handleAdvice = function(self)
 	-- make sure our connection is closed
-	if self.active then
-		_active(self, false)
+	if self.active ~= "closed" then
+		_active(self, "closed")
 	end
 
 	-- stop any existing reconnect timer
@@ -788,13 +790,16 @@ end
 
 -- Notify changes in connection state
 _active = function(self, active)
+
+		  log:warn("ACTIVE was=", self.active, " now=", active)
+
         if self.active == active then
 		return
 	end
 
 	self.active = active
 
-	if active then
+	if active == "connected" then
 		-- Reset error count
 		self.failures = 0
 
