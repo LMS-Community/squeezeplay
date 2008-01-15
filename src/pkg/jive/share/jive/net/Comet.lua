@@ -105,8 +105,11 @@ function __init(self, jnt, ip, port, path, name)
 	obj.uri = 'http://' .. ip .. ':' .. port .. path
 	
 	-- Comet uses 2 pools, 1 for chunked responses and 1 for requests
-	obj.cpool          = HttpPool(jnt, name .. "_Chunked", ip, port, 1, 1, Task.PRIORITY_HIGH)
-	obj.rpool          = HttpPool(jnt, name .. "_Request", ip, port, 1, 1, Task.PRIORITY_HIGH)
+	obj.chttp          = SocketHttp(jnt, ip, port, name .. "_Chunked")
+	obj.rhttp          = SocketHttp(jnt, ip, port, name .. "_Request")
+
+	obj.chttp:setPriority(Task.PRIORITY_HIGH)
+	obj.rhttp:setPriority(Task.PRIORITY_HIGH)
 	
 	obj.jnt            = jnt
 	obj.name           = name
@@ -164,15 +167,13 @@ function disconnect(self)
 			clientId = self.clientId,
 		} }
 
-		local req = function()		
-			return CometRequest(
+		local req = CometRequest(
 				_getEventSink(self),
 				self.uri,
 				data
 			)
-		end
 
-		self.rpool:queue(req)
+		self.rhttp:fetch(req)
 	end
 end
 
@@ -295,15 +296,13 @@ _connect = function(self)
 	-- This will be our last request on this connection, it is now only
 	-- for listening for responses
 
-	local req = function()
-		return CometRequest(
+	local req = CometRequest(
 			_getEventSink(self),
 			self.uri,
 			data
 		)
-	end
 	
-	self.cpool:queue(req)
+	self.chttp:fetch(req)
 end
 
 _getEventSink = function(self)
@@ -443,15 +442,13 @@ _handshake = function(self)
 	-- XXX: according to the spec this should be sent as application/x-www-form-urlencoded
 	-- with message=<url-encoded json> but it works as straight JSON
 	
-	local req = function()
-		return CometRequest(
+	local req = CometRequest(
 			_getHandshakeSink(self),
 			self.uri,
 			data
 		)
-	end
 	
-	self.cpool:queue(req)
+	self.chttp:fetch(req)
 end
 
 _getHandshakeSink = function(self)
@@ -521,15 +518,13 @@ function subscribe(self, subscription, func, playerid, request, priority)
 				debug.dump(data, 5)
 			end
 
-			local req = function()
-				return CometRequest(
+			local req = CometRequest(
 					_getEventSink(self),
 					self.uri,
 					data
 				)
-			end
 
-			self.rpool:queue(req)
+			self.rhttp:fetch(req)
 		end
 	end
 end
@@ -572,16 +567,14 @@ function unsubscribe(self, subscription, func)
 					debug.dump(data, 5)
 				end
 
-				local req = function()
-					return CometRequest(
+				local req = CometRequest(
 						_getEventSink(self),
 						self.uri,
 						data
 					)
-				end
 
 				-- unsubscribe doesn't need to be high priority						
-				self.rpool:queue(req)
+				self.rhttp:fetch(req)
 			end
 		end
 	end
@@ -629,15 +622,13 @@ function request(self, func, playerid, request, priority)
 			sink = _getRequestSink(self, func, id)
 		end
 	
-		local req = function()
-			return CometRequest(
+		local req = CometRequest(
 				sink,
 				self.uri,
 				data
 			)
-		end
 	
-		self.rpool:queue(req)
+		self.rhttp:fetch(req)
 	
 		-- If we expect a response, we will get the response on the persistent 
 		-- connection.  Store our callback for later
@@ -786,15 +777,13 @@ _reconnect = function(self)
 		connectionType = 'streaming',
 	} }
 	
-	local req = function()
-		return CometRequest(
+	local req = CometRequest(
 			_getEventSink(self),
 			self.uri,
 			data
 		)
-	end
 	
-	self.cpool:queue(req)	
+	self.chttp:fetch(req)	
 end
 
 -- Notify changes in connection state
@@ -812,8 +801,8 @@ _active = function(self, active)
 		self.jnt:notify('cometConnected', self)
 	else
 		-- force connections closed
-		self.cpool:close()
-		self.rpool:close()
+		self.chttp:close()
+		self.rhttp:close()
 
 		self.jnt:notify('cometDisconnected', self, #self.pending_reqs)
 	end
@@ -843,15 +832,13 @@ function endBatch(self)
 			debug.dump(data, 5)
 		end
 
-		local req = function()
-			return CometRequest(
+		local req = CometRequest(
 				_getEventSink(self),
 				self.uri,
 				data
 			)
-		end
 
-		self.rpool:queue(req)
+		self.rhttp:fetch(req)
 	end
 end
 

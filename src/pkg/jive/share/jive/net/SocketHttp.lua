@@ -103,14 +103,6 @@ The class maintains an internal queue of requests to fetch.
 --]]
 function fetch(self, request)
 	_assert(oo.instanceof(request, RequestHttp), tostring(self) .. ":fetch() parameter must be RequestHttp - " .. type(request) .. " - ".. debug.traceback())
-	self:t_fetch(request)
-end
-
-
--- t_fetch
--- fetches a request (network thread side)
-function t_fetch(self, request)
-	
 	-- push the request
 	table.insert(self.t_httpSendRequests, request)
 
