@@ -688,15 +688,12 @@ function t_rcvResponse(self)
 		
 	else
 			
-		if self.t_httpReceiving:t_getResponseHeader("Content-Length")  and 
-			self.t_httpReceiving:t_getResponseHeader("Connection") != 'close' then
-		
+		if self.t_httpReceiving:t_getResponseHeader("Content-Length")
 			-- if we have a length, use it!
 			len = tonumber(self.t_httpReceiving:t_getResponseHeader("Content-Length"))
 			mode = 'jive-by-length'
 			
 		else
-		
 			-- by default we close and we start from scratch for the next request
 			mode = 'jive-until-closed'
 		end
