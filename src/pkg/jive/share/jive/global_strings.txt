@@ -34,13 +34,8 @@ SCREEN_SETTINGS
 	IT	Visualizza
 	NL	Display
 
-JIVE_HOME
-	DE	Jive-Hauptmenü
-	EN	Jive Home
-	ES	Página principal de Jive
-	FR	La maison de Jive
-	IT	Home page Jive
-	NL	Hoofdmenu van Jive
+HOME
+	EN	Home
 
 ADVANCED_SETTINGS
 	DE	Erweitert

@@ -138,7 +138,7 @@ function JiveMain:__init()
 	_globalStrings = locale:readGlobalStringsFile()
 
 	-- create the main menu
-	jiveMain = oo.rawnew(self, HomeMenu(_globalStrings:str("JIVE_HOME"), nil, "hometitle"))
+	jiveMain = oo.rawnew(self, HomeMenu(_globalStrings:str("HOME"), nil, "hometitle"))
 
 
 --	profiler.start()
