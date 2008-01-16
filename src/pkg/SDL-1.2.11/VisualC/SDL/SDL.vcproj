@@ -147,7 +147,7 @@
 				InlineFunctionExpansion="1"
 				EnableIntrinsicFunctions="false"
 				AdditionalIncludeDirectories="..\..\include;..\include;&quot;C:\Program Files\Microsoft DirectX SDK (February 2007)\Include&quot;"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;_WIN32_WINNT=0x0400"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_WINDOWS;_WIN32_WINNT=0x0400"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"

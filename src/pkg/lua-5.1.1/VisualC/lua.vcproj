@@ -115,7 +115,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LUA_EXPORTS;LUA_BUILD_AS_DLL;LUATHREAD_API=__declspec(dllexport);_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_USRDLL;LUA_EXPORTS;LUA_BUILD_AS_DLL;LUATHREAD_API=__declspec(dllexport);_CRT_SECURE_NO_DEPRECATE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"

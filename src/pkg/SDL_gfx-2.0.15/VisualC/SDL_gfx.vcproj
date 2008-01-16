@@ -115,7 +115,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;..\..\SDL-1.2.11\VisualC\include&quot;;&quot;..\..\SDL-1.2.11\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;BUILD_DLL"
+				PreprocessorDefinitions="WIN32;_CONSOLE;BUILD_DLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
