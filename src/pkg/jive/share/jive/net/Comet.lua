@@ -113,7 +113,7 @@ function __init(self, jnt, ip, port, path, name)
 	
 	obj.jnt            = jnt
 	obj.name           = name
-	obj.active         = "closed" -- whether or not we have an active connection: [ closed, handshake, connected ]
+	obj.active         = "closed" -- whether or not we have an active connection: [ closed, handshake, connected, disconnect ]
 	obj.clientId       = nil      -- clientId provided by server
 	obj.reqid          = 1        -- used to identify non-subscription requests
 	obj.advice         = {}       -- advice from server on how to handle reconnects
@@ -154,7 +154,7 @@ function disconnect(self)
 	
 		log:debug('Comet:disconnect()')
 		
-		_active(self, "closed")
+		_active(self, "disconnect")
 
 		-- Mark all subs as pending so they can be resubscribed later
 		for i, v in ipairs( self.subs ) do
@@ -338,6 +338,7 @@ _getEventSink = function(self)
 				elseif event.channel == '/meta/disconnect' then
 					if event.successful then
 						log:debug("Comet:_getEventSink, disconnect OK")
+						_active(self, "closed")
 					else
 						log:warn("Comet:_getEventSink, disconnect failed: ", event.error)
 					end
@@ -791,8 +792,6 @@ end
 -- Notify changes in connection state
 _active = function(self, active)
 
-		  log:warn("ACTIVE was=", self.active, " now=", active)
-
         if self.active == active then
 		return
 	end
@@ -804,7 +803,7 @@ _active = function(self, active)
 		self.failures = 0
 
 		self.jnt:notify('cometConnected', self)
-	else
+	elseif active == "closed" then
 		-- force connections closed
 		self.chttp:close()
 		self.rhttp:close()
