@@ -176,11 +176,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="winmm.lib dxguid.lib"
+				AdditionalDependencies="winmm.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft DirectX SDK (February 2007)\Lib\x86&quot;"
+				AdditionalLibraryDirectories=""
 				IgnoreAllDefaultLibraries="false"
 				ProgramDatabaseFile=".\Release/SDL.pdb"
 				SubSystem="2"
