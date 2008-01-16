@@ -593,7 +593,10 @@ local function _connectingToPlayer(self, player)
 
 			if evtCode == KEY_BACK then
 				-- disconnect from player and go home
-				self:free()
+				local manager = AppletManager:getAppletInstance("SlimDiscovery")
+				if manager then
+					manager:setCurrentPlayer(nil)
+				end
 				popup:hide()
 			end
 			-- other keys are disabled when this popup is on screen
@@ -1750,11 +1753,6 @@ end
 function notify_playerCurrent(self, player)
 	log:warn("SlimBrowserApplet:notify_playerCurrent(", player, ")")
 
-	-- nothing to do if we don't have a player
-	if not player then
-		return
-	end
-
 	-- has the player actually changed?
 	if _player == player then
 		return
@@ -1763,16 +1761,25 @@ function notify_playerCurrent(self, player)
 	-- free current player
 	if _player then
 		self:free()
-		-- add a fullscreen popup that waits for the _menuSink to load
-		_menuReceived = false
-		_connectingToPlayer(self, player)
-	else
+	end
+
+	-- FIXME this is badly placed. the per player wallpaper now seems to
+	-- be split into three different applets (SelectPlayer, SetupWallpaper
+	-- and here). This should be refactored, preferably into one place
+	if not _player and player then
 		log:info("First load...get the correct wallpaper on screen")
 		local SetupWallpaper = AppletManager:loadApplet("SetupWallpaper")
 		SetupWallpaper:_setBackground(nil, player.id)
 		AppletManager:freeApplet("SetupWallpaper")
 	end
-	
+
+	-- nothing to do if we don't have a player
+	-- NOTE don't move this, the code above needs to run when disconnecting
+	-- for all players.
+	if not player then
+		return
+	end
+
 	-- assign our locals
 	_player = player
 	_server = player:getSlimServer()
@@ -1811,6 +1818,10 @@ function notify_playerCurrent(self, player)
 	_server:request(sink, _player.id, { 'menu', 0, 100 })
 	_player:onStage()
 	_requestStatus()
+
+	-- add a fullscreen popup that waits for the _menuSink to load
+	_menuReceived = false
+	_connectingToPlayer(self, player)
 
 	jiveMain:setTitle(player:getName())
 	_installPlayerKeyHandler()
