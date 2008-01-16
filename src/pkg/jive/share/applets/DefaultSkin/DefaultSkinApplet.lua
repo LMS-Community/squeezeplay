@@ -404,53 +404,31 @@ function skin(self, s)
 			      }
 		      })
 
-	s.selected.itemplay = {}
 	s.selected.itemplay =
-		_uses(s.itemplay, {
-			      bgImg = selectionBox,
-			      text = {
-				      fg = SELECT_COLOR,
-				      sh = SELECT_SH_COLOR
-			      },
+		_uses(s.selected.item, {
 			      icon = {
-				      padding = { 4, 0, 0, 0 },
-				      align = "right",
 				      img = Surface:loadImage(imgpath .. "selection_play.png")
 			      }
 		      })
 
-	s.selected.itemadd = {}
-	s.selected.itemdd =
-		_uses(s.itemadd, {
-			      bgImg = selectionBox,
-			      text = {
-				      fg = SELECT_COLOR,
-				      sh = SELECT_SH_COLOR
-			      },
+	s.selected.itemadd =
+		_uses(s.selected.item, {
 			      icon = {
-				      padding = { 4, 0, 0, 0 },
-				      align = "right",
 				      img = Surface:loadImage(imgpath .. "selection_add.png")
 			      }
 		      })
 
-
-
-
-	-- FIXME convert to use _uses() ...
-	s.selected.checked = {}
-	s.selected.checked.bgImg = selectionBox
-	s.selected.checked.text = {}
-	s.selected.checked.text.font = FONT_BOLD_15px
-	s.selected.checked.text.fg = SELECT_COLOR
-	s.selected.checked.text.sh = SELECT_SH_COLOR
-	s.selected.checked.icon = {}
-	s.selected.checked.icon.padding = { 4, 0, 0, 0 }
-	s.selected.checked.icon.align = "right"
-	s.selected.checked.icon.img = Surface:loadImage(imgpath .. "selection_right.png")
-	s.selected.checked.check = {}
-	s.selected.checked.check.align = "right"
-	s.selected.checked.check.img = Surface:loadImage(imgpath .. "menu_check_selected.png")
+	s.selected.checked = _uses(s.selected.item, {
+			      		order = { "text", "check", "icon" },
+					icon = {
+						img = Surface:loadImage(imgpath .. "selection_right.png")
+					},
+					check = {
+						align = "right",
+						img = Surface:loadImage(imgpath .. "menu_check_selected.png")
+					}
+				
+				})
 
 	s.selected.itemNoAction = {}
 	s.selected.itemNoAction.bgImg = selectionBox
@@ -461,17 +439,17 @@ function skin(self, s)
 
 	-- locked menu item (with loading animation)
 	s.locked = {}
-	s.locked.item = {}
-	s.locked.item.bgImg = selectionBox
-	s.locked.item.text = {}
-	s.locked.item.text.font = FONT_BOLD_15px
-	s.locked.item.text.fg = SELECT_COLOR
-	s.locked.item.text.sh = SELECT_SH_COLOR
-	s.locked.item.icon = {}
-	s.locked.item.icon.img = Surface:loadImage(imgpath .. "selection_wait.png")
-	s.locked.item.icon.align = "right"
-	s.locked.item.icon.frameRate = 5
-	s.locked.item.icon.frameWidth = 10
+	s.locked.item = _uses(s.selected.item, {
+					icon = {
+						img = Surface:loadImage(imgpath .. "selection_wait.png"),
+						frameRate = 5,
+						frameWidth = 10
+					}
+			})
+
+	--FIXME, locked menu item for these should show something other than the same icon as selected
+	s.locked.itemplay = _uses(s.selected.itemplay)
+	s.locked.itemadd = _uses(s.selected.itemadd)
 
 	-- menu item choice
 	s.item.choice = {}
