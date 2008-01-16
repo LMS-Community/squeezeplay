@@ -688,7 +688,7 @@ function t_rcvResponse(self)
 		
 	else
 			
-		if self.t_httpReceiving:t_getResponseHeader("Content-Length")
+		if self.t_httpReceiving:t_getResponseHeader("Content-Length") then
 			-- if we have a length, use it!
 			len = tonumber(self.t_httpReceiving:t_getResponseHeader("Content-Length"))
 			mode = 'jive-by-length'
