@@ -83,6 +83,13 @@ function getSettings(self)
 end
 
 
+-- storeSettings
+-- used by jive.AppletManager to persist the applet settings
+function storeSettings(self)
+	appletManager._storeSettings(self._entry)
+end
+
+
 --[[
 
 =head2 self:menuItem(label, closure)
