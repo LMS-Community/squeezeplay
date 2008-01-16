@@ -31,6 +31,7 @@ by the SlimDiscovery applet to discover and cache servers found on the network.
 -- stuff we use
 local _assert, tostring, pairs, type = _assert, tostring, pairs, type
 
+local math           = require("math")
 local table          = require("table")
 local string         = require("string")
 local os             = require("os")
@@ -40,12 +41,13 @@ local oo             = require("loop.base")
 local SocketUdp      = require("jive.net.SocketUdp")
 local SlimServer     = require("jive.slim.SlimServer")
 local strings        = require("jive.utils.strings")
+local Timer          = require("jive.ui.Timer")
 
 local log            = require("jive.utils.log").logger("slimserver")
 
 
 -- jive.slim.SlimServers is a base class
-module("jive.slim.SlimServers", oo.class)
+module(..., oo.class)
 
 -- constants
 local PORT    = 3483            -- port used to discover servers
@@ -184,6 +186,9 @@ function __init(self, jnt)
 	
 	local obj = oo.rawnew(self, {
 		jnt = jnt,
+
+		-- current player
+		currentPlayer = nil,
 		
 		-- servers cache
 		_servers = {},
@@ -195,9 +200,18 @@ function __init(self, jnt)
 	-- create a udp socket
 	obj.js = SocketUdp(jnt, _getSink(obj))
 
+	obj.discoverState = 'idle' -- 'discover', 'timeout'
+	obj.discoverInterval = 1000
+	obj.discoverTimer = Timer(obj.discoverInterval,
+				  function() obj:_discover() end)
+
 	-- make us start
-	log:debug("calling discover")
-	obj:discover()
+	-- FIXME we need a slight delay here to allow the settings to be loaded
+	-- really the settings should be loaded before the applets start.
+	obj.discoverTimer:restart(2000)
+
+	-- subscribe to network events
+	jnt:subscribe(obj)
 
 	return obj
 end
@@ -208,13 +222,24 @@ end
 =head2 jive.slim.SlimServers:discover()
 
 Sends the necessary broadcast message to discover slimservers on the network.
-Called repeatedly by SlimDiscovery applet while in home.
+Called repeatedly when looking for players.
 
 =cut
 --]]
 function discover(self)
+	-- force a discovery if the timer is not running, otherwise it
+	-- will automatically run soon
+	if self.discoverState ~= 'discover' then
+		self.discoverState = 'idle'
+		self:_discover()
+	end
+end
+
+
+function _discover(self)
 	log:debug("SlimServers:discover()")
 
+	-- Broadcast discovery
 	for _, address in pairs(self.poll) do
 		log:debug("sending to address ", address)
 		self.js:send(t_source, address, PORT)
@@ -223,7 +248,42 @@ function discover(self)
 	-- Special case Squeezenetwork
 	_cacheServer(self, "www.squeezenetwork.com", 9000, "SqueezeNetwork")
 
-	_cacheCleanup(self)	
+	-- Remove SqueezeCenters that have not been seen for a while
+	_cacheCleanup(self)
+
+	if self.discoverState == 'idle' then
+		-- reconnect to all servers
+		log:info("Reconnecting to all servers")
+		self:connect()
+	end
+
+
+	if self.currentPlayer then
+		if self.discoverState ~= 'timeout' then
+			self.discoverState = 'timeout'
+			self.discoverTimer:restart(10000)
+
+		else
+			self.discoverState = 'idle'
+			self.discoverTimer:stop()
+
+			-- disconnect from idle servers
+			log:info("Disconnecting from idle servers")
+			self:idleDisconnect()
+		end
+	else
+		if self.discoverState ~= 'discover' then
+			log:info("Starting discovery")
+
+			self.discoverState = 'discover'
+			self.discoverInterval = 1000
+			self.discoverTimer:restart(self.discoverInterval)
+
+		else
+			self.discoverInterval = math.min(self.discoverInterval + 1000, 30000)
+			self.discoverTimer:restart(self.discoverInterval)
+		end
+	end
 end
 
 
@@ -257,6 +317,58 @@ function disconnect(self)
 end
 
 
+--[[
+=head2 idleDisconnect()
+
+Force disconnection from all idle SlimServers, that is all SlimServers
+apart from the one controlling the currently selected player.
+
+=cut
+--]]
+function idleDisconnect(self)
+	for ss_id, server in pairs(self._servers) do
+		if self.currentPlayer and self.currentPlayer:getSlimServer() ~= server then
+			server:disconnect()
+		end
+	end
+end
+
+
+--[[
+
+=head2 SlimServers:setCurrentPlayer()
+
+Sets the current player
+
+=cut
+--]]
+function setCurrentPlayer(self, player)
+	if self.currentPlayer == player then
+		return -- no change
+	end
+
+	self.currentPlayer = player
+	self.jnt:notify("playerCurrent", player)
+
+	-- restart discovery when we have no player
+	if not self.currentPlayer then
+		self:discover()
+	end
+end
+
+
+--[[
+
+=head2 SlimServers:getCurrentPlayer()
+
+Returns the current player
+
+=cut
+--]]
+function getCurrentPlayer(self)
+	return self.currentPlayer
+end
+
 
 --[[
 
@@ -268,6 +380,56 @@ Returns an iterator over the discovered slimservers.
 --]]
 function allServers(self)
 	return pairs(self._servers)
+end
+
+
+--[[
+
+=head2 SlimServers:allPlayers()
+
+Returns an iterator over the discovered players.
+
+ for id, player in allPlayers() do
+    ...
+ end
+
+=cut
+--]]
+-- this iterator respects the implementation privacy of the SlimServers and SlimServer
+-- classes. It only uses the fact allServers and allPlayers calls respect the for
+-- generator logic of Lua.
+local function _playerIterator(invariant)
+	while true do
+	
+		-- if no current player, load next server
+		-- NB: true first time
+		if not invariant.pk then
+			invariant.sk, invariant.sv = invariant.sf(invariant.si, invariant.sk)
+			invariant.pk = nil
+			if invariant.sv then
+				invariant.pf, invariant.pi, invariant.pk = invariant.sv:allPlayers()
+			end
+		end
+	
+		-- if we have a server, use it to get players
+		if invariant.sv then
+			-- get the next/first player, depending on pk
+			local pv
+			invariant.pk, pv = invariant.pf(invariant.pi, invariant.pk)
+			if invariant.pk then
+				return invariant.pk, pv
+			end
+		else
+			-- no further servers, we're done
+			return nil
+		end
+	end
+end
+
+function allPlayers(self)
+	local i = {}
+	i.sf, i.si, i.sk = self:allServers()
+	return _playerIterator, i
 end
 
 
@@ -294,6 +456,14 @@ function pollList(self, list)
 
 	return self.poll
 end
+
+
+-- restart discovery on new network
+function notify_networkConnected(self)
+	log:info("network connected")
+	self:discover()
+end
+
 
 --[[
 

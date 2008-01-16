@@ -30,9 +30,7 @@ QuitApplet does not override any jive.Applet method.
 -- stuff we use
 local oo            = require("loop.simple")
 
-local math          = require("math")
 local Applet        = require("jive.Applet")
-local Timer         = require("jive.ui.Timer")
 local SlimServers   = require("jive.slim.SlimServers")
 
 local log           = require("jive.utils.log").logger("applets.setup")
@@ -46,7 +44,8 @@ module(...)
 oo.class(_M, Applet)
 
 
--- FIXME: freeing this should free all the jive.slim.* stuff!
+-- FIXME: this class does not really do much now, it should be written out!
+
 
 -- init
 -- Initializes the applet
@@ -61,25 +60,7 @@ function __init(self, ...)
 	-- create a list of SlimServers
 	obj.serversObj = SlimServers(jnt)
 
-	-- timer to discover slimservers
-	obj.discoverInterval = 1000
-	obj.discoverTimer = Timer(obj.discoverInterval,
-				  function() obj:_pollDiscover(false) end)
-	obj.discoverTimer:start()
-
 	return obj
-end
-
-
-function _pollDiscover(self, restart)
-	self:discover()
-	
-	if restart then
-		self.discoverInterval = 1000
-	else
-		self.discoverInterval = math.min(self.discoverInterval + 1000, 30000)
-	end
-	self.discoverTimer:setInterval(self.discoverInterval)
 end
 
 
@@ -126,41 +107,8 @@ Returns an iterator over the discovered players.
 
 =cut
 --]]
--- this iterator respects the implementation privacy of the SlimServers and SlimServer
--- classes. It only uses the fact allServers and allPlayers calls respect the for
--- generator logic of Lua.
-local function _playerIterator(invariant)
-	while true do
-	
-		-- if no current player, load next server
-		-- NB: true first time
-		if not invariant.pk then
-			invariant.sk, invariant.sv = invariant.sf(invariant.si, invariant.sk)
-			invariant.pk = nil
-			if invariant.sv then
-				invariant.pf, invariant.pi, invariant.pk = invariant.sv:allPlayers()
-			end
-		end
-	
-		-- if we have a server, use it to get players
-		if invariant.sv then
-			-- get the next/first player, depending on pk
-			local pv
-			invariant.pk, pv = invariant.pf(invariant.pi, invariant.pk)
-			if invariant.pk then
-				return invariant.pk, pv
-			end
-		else
-			-- no further servers, we're done
-			return nil
-		end
-	end
-end
-
 function allPlayers(self)
-	local i = {}
-	i.sf, i.si, i.sk = self:allServers()
-	return _playerIterator, i
+	return self.serversObj:allPlayers()
 end
 
 
@@ -190,11 +138,6 @@ Sets the current player
 =cut
 --]]
 function setCurrentPlayer(self, player)
-	if self.currentPlayer == player then
-		-- no change
-		return
-	end
-
 	local settings = self:getSettings()
 
 	if settings.currentPlayer ~= player then
@@ -202,16 +145,7 @@ function setCurrentPlayer(self, player)
 		self:storeSettings()
 	end
 
-	self.currentPlayer = player
-	jnt:notify("playerCurrent", player)
-
-	-- only do discovery when we don't have a selected player
-	if self.currentPlayer then
-		self.discoverTimer:stop()
-	else
-		self:_pollDiscover(true)
-		self.discoverTimer:start()
-	end
+	self.serversObj:setCurrentPlayer(player)
 end
 
 
@@ -224,7 +158,7 @@ Returns the current player
 =cut
 --]]
 function getCurrentPlayer(self)
-	return self.currentPlayer
+	return self.serversObj:getCurrentPlayer()
 end
 
 
@@ -264,14 +198,6 @@ function notify_playerDelete(self, player)
 		self:setCurrentPlayer(nil)
 	end
 end
-
-
--- restart discovery on new network
-function notify_networkConnected(self)
-	log:warn("network connected")
-	self:_pollDiscover(true)
-end
-
 
 
 --[[
