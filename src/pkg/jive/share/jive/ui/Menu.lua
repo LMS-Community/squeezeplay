@@ -74,6 +74,7 @@ local KEY_UP               = jive.ui.KEY_UP
 local KEY_DOWN             = jive.ui.KEY_DOWN
 local KEY_LEFT             = jive.ui.KEY_LEFT
 local KEY_RIGHT            = jive.ui.KEY_RIGHT
+local KEY_PLAY             = jive.ui.KEY_PLAY
 
 
 -- our class
@@ -161,8 +162,8 @@ local function _eventHandler(self, event)
 				self:scrollBy( 1 )
 				return EVENT_CONSUME
 
-			elseif keycode == KEY_GO or
-				keycode == KEY_RIGHT then
+			elseif keycode == KEY_GO or 
+				keycode == KEY_PLAY then
 
 				r = self:dispatchNewEvent(EVENT_ACTION)
 
