@@ -33,6 +33,7 @@
 #include <CoreServices/CoreServices.h>
 
 #include <AudioUnit/AudioUnit.h>
+#include <AudioUnit/AUNTComponent.h>
 
 #include "SDL_error.h"
 

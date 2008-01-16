@@ -22,6 +22,7 @@
 #include "SDL_config.h"
 
 #include <AudioUnit/AudioUnit.h>
+#include <AudioUnit/AUNTComponent.h>
 
 #include "SDL_audio.h"
 #include "../SDL_audio_c.h"
