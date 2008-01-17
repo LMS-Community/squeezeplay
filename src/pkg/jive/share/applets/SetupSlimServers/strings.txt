@@ -66,3 +66,21 @@ SLIMSERVER_HELP
 	IT	Immettere l'indirizzo IP del computer in cui è in esecuzione SqueezeCenter
 	NL	Voer het IP-adres in van de computer waarop SqueezeCenter wordt uitgevoerd
 
+SLIMSERVER_CONNECTING_TO
+	DE	Verbindung mit\n%s
+	EN	Connecting to\n%s
+	ES	Estableciendo conexión a\n%s
+	FR	Connexion à\n%s
+	IT	Connessione a\n%s\nin corso
+	NL	Bezig verbinding te maken met\n%s
+
+SLIMSERVER_CONNECTED_TO
+	DE	Verbunden mit\n%s
+	EN	Connected to\n%s
+	ES	Conexión a\n%s\nestablecida
+	FR	Connecté à\n%s
+	IT	Connesso a\n%s
+	NL	Verbonden met\n%s
+
+SLIMSERVER_CONNECT
+	EN	Use %s

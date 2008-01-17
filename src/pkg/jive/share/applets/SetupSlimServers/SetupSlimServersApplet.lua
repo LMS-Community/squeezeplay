@@ -39,9 +39,13 @@ local Textinput     = require("jive.ui.Textinput")
 local Popup         = require("jive.ui.Popup")
 local Icon          = require("jive.ui.Icon")
 
+local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("applets.setup")
 
 local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
+local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
+local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
+local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
 
 local jnt           = jnt
 local jiveMain      = jiveMain
@@ -98,6 +102,10 @@ function settingsShow(self, menuItem)
 	}
 	menu:addItem(item)
 
+	--[[
+	-- Remove auto discovery, most of the time Jive now is only
+	-- connected to the same server as the current player, so
+	-- this is less relevant.
 	item = {
 		text = self:string("SLIMSERVER_AUTO_DISCOVERY"),
 		sound = "WINDOWSHOW",
@@ -114,6 +122,7 @@ function settingsShow(self, menuItem)
 		weight = 4 
 	}
 	menu:addItem(item)
+	--]]
 
 	-- Discover slimservers in this window
 	window:addTimer(1000, function() self.sdApplet:discover() end)
@@ -150,14 +159,12 @@ function _addServerItem(self, id, port, server)
 	local  currentPlayer = self.sdApplet:getCurrentPlayer()
 	if currentPlayer then
 		local currentServer = currentPlayer:getSlimServer()
-		local thisServer = id .. ':' .. (port or 0)
-		if currentServer.id == thisServer then
+		if currentServer:getIpPort() == id then
 			item.style = 'checked'
 		end
 	end
 
 	self.serverMenu:addItem(item)
-
 	self.serverList[id] = item
 end
 
@@ -165,7 +172,7 @@ end
 function _delServerItem(self, id, server)
 	-- remove entry
 	if self.serverList[id] then
-		server.serverMenu:removeItem(self.serverList[id])
+		self.serverMenu:removeItem(self.serverList[id])
 		self.serverList[id] = nil
 	end
 
@@ -182,7 +189,19 @@ function _serverMenu(self, id, server)
 	local window = Window("window", name)
 	local menu = SimpleMenu("menu", items)
 
+	local currentPlayer = self.sdApplet:getCurrentPlayer()
+
 	if server then
+		if server and currentPlayer and currentPlayer:getSlimServer() ~= server then
+			menu:addItem({
+					     text = self:string("SLIMSERVER_CONNECT", name),
+					     callback = function()
+								self:connectPlayer(currentPlayer, server)
+								window:hide()
+							end
+				     })
+		end
+
 		menu:addItem({
 				     text = self:string("SLIMSERVER_ADDRESS"),
 				     icon = Label("value", table.concat({ server:getIpPort() }, ":"))
@@ -211,18 +230,115 @@ end
 
 
 function notify_serverNew(self, server)
-	log:debug("server new", server)
-
 	local id = server:getIpPort()
 	self:_addServerItem(id, server)
 end
 
 
 function notify_serverDelete(self, server)
-	log:debug("server delete", server)
-
 	local id = server:getIpPort()
 	self:_delServerItem(id, server)
+end
+
+
+function _updateServerList(self, server)
+	for id, item in pairs(self.serverList) do
+		if server and server:getIpPort() == id then
+			item.style = 'checked'
+		else
+			item.style = nil
+		end
+		self.serverMenu:updatedItem(item)
+	end
+end
+
+
+function notify_playerNew(self, player)
+	local currentPlayer = self.sdApplet:getCurrentPlayer()
+	if player ~= currentPlayer then
+		return
+	end
+
+	_updateServerList(self, player:getSlimServer())
+end
+
+
+function notify_playerDelete(self, player)
+	local currentPlayer = self.sdApplet:getCurrentPlayer()
+	if player ~= currentPlayer then
+		return
+	end
+
+	_updateServerList(self, player:getSlimServer())
+end
+
+
+function notify_playerCurrent(self, player)
+	_updateServerList(self, player and player:getSlimServer())
+end
+
+
+-- connect player to server
+function connectPlayer(self, player, server)
+	log:warn("connect ", player, " to ", server)
+
+	-- tell the player to move servers
+	local ip, port = server:getIpPort()
+	player:send({'connect', ip})
+
+
+	local window = Popup("popupIcon")
+	window:addWidget(Icon("iconConnecting"))
+
+	local statusLabel = Label("text", self:string("SLIMSERVER_CONNECTING_TO", server:getName()))
+	window:addWidget(statusLabel)
+
+	-- disable key presses
+	window:addListener(EVENT_KEY_PRESS,
+			   function(event)
+				   return EVENT_CONSUME
+			   end)
+
+	local timeout = 1
+	window:addTimer(1000,
+			function()
+				-- scan all servers waiting for the player
+				self.sdApplet:discover()
+
+				if player:getSlimServer() == server then
+					self:_connectPlayerDone(player, server)
+				end
+
+				timeout = timeout + 1
+				if timeout == 60 then
+					self:_connectPlayerFailed(player, server)
+				end
+			end)
+
+	self:tieAndShowWindow(window)
+end
+
+
+-- sucessfully connected player to server
+function _connectPlayerDone(self, player, server)
+	local window = Popup("popupIcon")
+	window:addWidget(Icon("iconConnected"))
+
+	local statusLabel = Label("text", self:string("SLIMSERVER_CONNECTED_TO", server:getName()))
+	window:addWidget(statusLabel)
+
+	window:addTimer(2000,
+			function()
+				window:hide()
+			end)
+
+	self:tieAndShowWindow(window)
+end
+
+
+-- failed to connect player to server
+function _connectPlayerFailed(self, player, server)
+	log:warn("FAILED")
 end
 
 

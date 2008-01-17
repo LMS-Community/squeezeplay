@@ -142,13 +142,13 @@ function _serverstatusSink(self, event, err)
 			-- create new players
 			if not self.players[player_info.playerid] then
 			
-				player = Player(self, self.jnt, player_info)
+				player = Player(self.jnt, self, player_info)
 			
 				self.players[player_info.playerid] = player
 
 			else
 				-- update existing players
-				self.players[player_info.playerid]:updateFromSS(player_info)
+				self.players[player_info.playerid]:update(self, player_info)
 			end
 		end
 	else

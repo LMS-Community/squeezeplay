@@ -65,6 +65,10 @@ local MIN_KEY_INT    = 150  -- sending key rate limit in ms
 module(..., oo.class)
 
 
+-- list of players index by id.
+local players = {}
+
+
 -- _getSink
 -- returns a sink with a closure to self
 -- cmd is passed in so we know what process function to call
@@ -173,11 +177,21 @@ Create a Player object for server I<server>.
 =cut
 --]]
 
-function __init(self, slimServer, jnt, playerInfo)
+function __init(self, jnt, slimServer, playerInfo)
 	log:debug("Player:__init(", playerInfo.playerid, ")")
 
-	_assert(slimServer, "Cannot create Player without SlimServer object")
-	
+	_assert(slimServer, "Needs slimServer")
+	_assert(playerInfo, "Needs playerInfo")
+
+	-- Only create one player object per id. This avoids duplicates
+	-- when moving between servers
+
+	local obj = players[playerInfo.playerid]
+	if  obj then
+		obj:update(slimServer, playerInfo)
+		return obj
+	end
+
 	local obj = oo.rawnew(self,{
 		
 		lastSeen = os.time(),
@@ -202,6 +216,8 @@ function __init(self, slimServer, jnt, playerInfo)
 		currentSong = {}
 	})
 
+	players[obj.id] = obj
+
 	-- notify of new player
 	jnt:notify('playerNew', obj)
 
@@ -211,13 +227,30 @@ end
 
 --[[
 
-=head2 jive.slim.Player:updateFromSS(playerInfo)
+=head2 jive.slim.Player:update(playerInfo)
 
 Updates the player with fresh data from SS.
 
 =cut
 --]]
-function updateFromSS(self, playerInfo)
+function update(self, slimServer, playerInfo)
+	-- ignore updates from a different server if the player
+	-- is not connected to it
+	if self.slimServer ~= slimServer 
+		and playerInfo.connected ~= 1 then
+		return
+	end
+
+	if self.slimServer ~= slimServer then
+		-- delete from old server
+		if self.slimServer then
+			self.jnt:notify('playerDelete', self)
+		end
+
+		-- add to new server
+		self.slimServer = slimServer
+		self.jnt:notify('playerNew', self)
+	end
 	
 	self.model = playerInfo.model
 	self.needsUpgrade = (tonumber(playerInfo.player_needs_upgrade) == 1)
@@ -230,7 +263,6 @@ function updateFromSS(self, playerInfo)
 	if self.pin and not playerInfo.pin then
 		self.pin = nil
 	end
-
 end
 
 --[[
@@ -298,9 +330,10 @@ Deletes the player.
 --]]
 function free(self)
 	self.jnt:notify('playerDelete', self)
-
 	self:offStage()
-	-- caller has to notify we're gone
+
+	-- FIXME we can't free players, maybe used by other servers
+	-- players[self.id] = nil
 end
 
 

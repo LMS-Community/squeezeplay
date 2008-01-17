@@ -140,7 +140,7 @@ Sets the current player
 function setCurrentPlayer(self, player)
 	local settings = self:getSettings()
 
-	if settings.currentPlayer ~= player then
+	if player and settings.currentPlayer ~= player then
 		settings.currentPlayer = player and player.id or false
 		self:storeSettings()
 	end
@@ -179,9 +179,7 @@ end
 -- notify_playerNew
 -- this is called by jnt when the playerNew message is sent
 function notify_playerNew(self, player)
-	log:warn("playerNew ", player)
-
-	if not self.currentPlayer then
+	if not self:getCurrentPlayer() then
 		local settings = self:getSettings()
 
 		if settings.currentPlayer == player.id then
@@ -194,7 +192,7 @@ end
 -- notify_playerDelete
 -- this is called by jnt when the playerDelete message is sent
 function notify_playerDelete(self, player)
-	if self.currentPlayer == player then
+	if self:getCurrentPlayer() == player then
 		self:setCurrentPlayer(nil)
 	end
 end
