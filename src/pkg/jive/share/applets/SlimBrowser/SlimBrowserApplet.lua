@@ -1703,8 +1703,14 @@ function showPlaylist()
 			function(event)
 				local evtCode = event:getKeycode()
 				if evtCode == KEY_BACK then
-					--FIXME window transition is wrong here
-					_goNowPlaying(Window.transitionPushRight)
+					local windowStack = Framework.windowStack
+					-- if this window is #2 on the stack there is no NowPlaying window 
+					-- (e.g., when playlist is empty)
+					if #windowStack == 2 then
+						_goHome()
+					else
+						_goNowPlaying(Window.transitionPushRight)
+					end
 					return EVENT_CONSUME
 				end
 			end
