@@ -58,17 +58,13 @@ function registerApplet(meta)
 	end
 
 	if not settings.mac then
-		-- FIXME this needs testing
 		local f = io.popen("ipconfig /all")
 		if f then
 			local ipconfig = f:read("*a")
 			f:close()
 
-			log:debug("ipconfig: ", ipconfig)
-
 			store = true
-			local mac = string.match(ipconfig, "Physical Address.-:([%x%-]+)")
-			log:debug("mac: ", mac)
+			local mac = string.match(ipconfig, "Physical Address[ %.%-]-:%s([%x%-]+)")
 
 			if mac then
 				settings.mac = string.gsub(mac, "%-", ":")

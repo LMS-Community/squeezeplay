@@ -9,6 +9,7 @@ cd..
 md %1\lua
 md %1\lua\applets
 xcopy jive\share\applets\*.* %1\lua\applets\*.* /S/Y
+xcopy jive_desktop\share\applets\*.* %1\lua\applets\*.* /S/Y
 
 md %1\lua\jive
 xcopy jive\share\jive\*.* %1\lua\jive\*.* /S/Y
