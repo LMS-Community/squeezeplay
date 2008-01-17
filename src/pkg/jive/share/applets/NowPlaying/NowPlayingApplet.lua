@@ -555,7 +555,7 @@ function _createUI(self)
 end
 
 
-function openScreensaver(self, style)
+function openScreensaver(self, style, transition)
 
 	-- an empty item_loop means an empty playlist
 	if not self.player 
@@ -587,7 +587,10 @@ function openScreensaver(self, style)
 	self.player = discovery:getCurrentPlayer()
 
 	local transitionOn
-	if style == 'ss' then
+	if transition then
+		transitionOn = transition
+		log:warn(transitionOn)
+	elseif style == 'ss' then
 		transitionOn = Window.transitionFadeIn
 	elseif style == 'browse' then
 		transitionOn = Window.transitionPushLeft

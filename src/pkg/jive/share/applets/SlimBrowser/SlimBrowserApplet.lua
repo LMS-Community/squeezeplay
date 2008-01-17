@@ -666,15 +666,22 @@ end
 
 -- _goNowPlaying
 -- pushes next window to the NowPlaying window
-local function _goNowPlaying(chunk, err)
+local function _goNowPlaying(transition)
 	Framework:playSound("WINDOWSHOW")
 	local NowPlaying = AppletManager:loadApplet("NowPlaying")
-	NowPlaying:openScreensaver('browse')
+	NowPlaying:openScreensaver('browse', transition)
+end
+
+-- _goPlaylist
+-- pushes next window to the Playlist window
+local function _goPlaylist()
+	Framework:playSound("WINDOWSHOW")
+	showPlaylist()
 end
 
 -- _goHome
 -- pushes the home window to the top
-local function _goHome(chunk, err)
+local function _goHome()
 	local windowStack = Framework.windowStack
 	Framework:playSound("JUMP")
 	while #windowStack > 1 do
@@ -840,6 +847,8 @@ local function _menuSink(self, cmd)
 							if v.nextWindow then
 								if v.nextWindow == 'home' then
 									sink = _goHome
+								elseif v.nextWindow == 'playlist' then
+									sink = _goPlaylist
 								elseif v.nextWindow == 'nowPlaying' then
 									sink = _goNowPlaying
 								end
@@ -1179,6 +1188,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 				-- cover all our "special cases" first, custom navigation, artwork popup, etc.
 				if item['nextWindow'] == 'nowPlaying' then
 					sink = _goNowPlaying
+				elseif item['nextWindow'] == 'playlist' then
+					sink = _goPlaylist
 				elseif item['nextWindow'] == 'home' then
 					sink = _goHome
 				elseif item["showBigArtwork"] then
@@ -1687,6 +1698,18 @@ function showPlaylist()
 			-- _updateWidgets to display correctly selected item
 			_statusStep.menu:_updateWidgets()
 		end
+	
+		_statusStep.window:addListener(EVENT_KEY_PRESS,
+			function(event)
+				local evtCode = event:getKeycode()
+				if evtCode == KEY_BACK then
+					--FIXME window transition is wrong here
+					_goNowPlaying(Window.transitionPushRight)
+					return EVENT_CONSUME
+				end
+			end
+		)
+
 	
 		return EVENT_CONSUME
 	end
