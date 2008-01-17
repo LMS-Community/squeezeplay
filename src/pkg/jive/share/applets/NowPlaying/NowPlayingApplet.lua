@@ -142,7 +142,14 @@ local function _getIcon(self, item, icon, remote)
 		if remoteContent then
 			server:fetchArtworkURL(item["icon"], icon, ARTWORK_SIZE)
 		else
-			server:fetchArtworkThumb(item["icon"], icon, _staticArtworkThumbUri, ARTWORK_SIZE) 
+			if server:isSqueezeNetwork() then
+				-- Artwork on SN must be fetched as a normal URL
+				local ip, port = server:getIpPort()
+				item["icon"] = 'http://' .. ip .. ':' .. port .. '/' .. item["icon"]
+				server:fetchArtworkURL(item["icon"], icon, ARTWORK_SIZE)
+			else
+				server:fetchArtworkThumb(item["icon"], icon, _staticArtworkThumbUri, ARTWORK_SIZE)
+			end
 		end
 	elseif item and item["params"] and item["params"]["track_id"] then
 		-- this is for the radio image-- remote URLs with no icon (Bug 6087)
