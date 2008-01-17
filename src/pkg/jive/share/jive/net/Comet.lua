@@ -142,8 +142,12 @@ local _getRequestSink
 local _reconnect
 local _active
 
+
+-- FIXME add timer to make sure handshake and disconnect complete
+
+
 function start(self)
-	if self.active ~= "connected" then
+	if self.active ~= "connected" and self.active ~= "handshake" then
 		-- Begin handshake
 		_handshake(self)
 	end
