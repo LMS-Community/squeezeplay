@@ -163,7 +163,8 @@ local function _eventHandler(self, event)
 				return EVENT_CONSUME
 
 			elseif keycode == KEY_GO or 
-				keycode == KEY_PLAY then
+				keycode == KEY_PLAY or
+				 keycode == KEY_RIGHT then
 
 				r = self:dispatchNewEvent(EVENT_ACTION)
 
