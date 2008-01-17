@@ -34,8 +34,7 @@ local Icon               = require("jive.ui.Icon")
 local Label              = require("jive.ui.Label")
 local Framework          = require("jive.ui.Framework")
 
-local SocketUdp          = require("jive.net.SocketUdp")
-local udap               = require("jive.net.Udap")
+local Udap               = require("jive.net.Udap")
 
 local log                = require("jive.utils.log").logger("applets.setup")
 local debug              = require("jive.utils.debug")
@@ -157,8 +156,12 @@ function _addSqueezeboxItem(self, mac, name, adhoc)
 		text = name or self:string("SQUEEZEBOX_NAME", string.sub(mac, 7)),
 		sound = "WINDOWSHOW",
 		callback = function()
-				   log:error("SETUP SQUEEZEBOX")
-				   --self.setupNext()
+				   local sbsetup = AppletManager:loadApplet("SetupSqueezebox")
+				   if not sbsetup then
+					   return
+				   end
+
+				   sbsetup:startSqueezeboxSetup(mac, nil, self.setupNext)
 			   end,
 		focusGained = function(event)
 			self:_showWallpaper(nil)
@@ -236,17 +239,20 @@ end
 
 function _scanActive(self)
 	-- socket for udap discovery
-	if not self.socket then
-		self.socket = assert(SocketUdp(jnt, function(chunk, err)
-							    self:_udapSink(chunk, err)
-						    end))
+	self.udap = Udap(jnt)
+	if not self.udapSink then
+		self.udapSink = self.udap:addSink(function(chunk, err)
+							  self:_udapSink(chunk, err)
+						  end)
 	end
 end
 
 
 function _scanInactive(self)
-	self.socket:close()
-	self.socket = nil
+	if self.udapSink then
+		self.udap:removeSink(self.udapSink)
+		self.udapSink = nil
+	end
 end
 
 
@@ -255,17 +261,17 @@ function _udapSink(self, chunk, err)
 		return -- ignore errors
 	end
 
-	local pkt = udap.parseUdap(chunk.data)
+	local pkt = Udap.parseUdap(chunk.data)
 
 	if pkt.uapMethod ~= "adv_discover"
-		or pkt.ucp.device_status ~= "wait_slimserver"
+--		or pkt.ucp.device_status ~= "wait_slimserver"
 		or pkt.ucp.type ~= "squeezebox" then
 		-- we are only looking for squeezeboxen trying to connect to SC
 		return
 	end
 
 	local mac = pkt.source
-	local name = pkt.ucp.name
+	local name = pkt.ucp.name ~= "" and pkt.ucp.name
 	if not self.scanResults[mac] then
 		self.scanResults[mac] = {
 			lastScan = os.time(),
@@ -282,8 +288,8 @@ function _scan(self)
 	self.discovery:discover()
 
 	-- udap discovery
-	local packet = udap.createAdvancedDiscover(nil, 1)
-	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
+	local packet = Udap.createAdvancedDiscover(nil, 1)
+	self.udap:send(function() return packet end, "255.255.255.255")
 
 	-- remove squeezeboxen not seen for 10 seconds
 	local now = os.time()

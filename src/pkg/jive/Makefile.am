@@ -142,7 +142,8 @@ dist_luanet_DATA = \
 	share/jive/net/SocketTcp.lua \
 	share/jive/net/RequestHttp.lua \
 	share/jive/net/RequestJsonRpc.lua \
-	share/jive/net/HttpPool.lua	
+	share/jive/net/HttpPool.lua \
+	share/jive/net/Udap.lua
 
 luaslimdir = $(pkgdatadir)/jive/slim
 dist_luaslim_DATA = \
@@ -318,6 +319,11 @@ dist_applets_setupwallpaper_wallpaper_DATA = \
 	share/applets/SetupWallpaper/wallpaper/sunlight.png \
 	share/applets/SetupWallpaper/wallpaper/sunrise.png
 
+applets_setupSqueezeboxdir = $(datadir)/jive/applets/SetupSqueezebox
+dist_applets_setupSqueezebox_DATA = \
+	share/applets/SetupSqueezebox/SetupSqueezeboxApplet.lua \
+	share/applets/SetupSqueezebox/SetupSqueezeboxMeta.lua \
+	share/applets/SetupSqueezebox/strings.txt
 
 # Default skin
 applets_defaultskindir = $(pkgdatadir)/applets/DefaultSkin

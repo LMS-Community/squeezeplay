@@ -5,13 +5,20 @@ local oo          = require("loop.base")
 
 local socket      = require("socket")
 local string      = require("string")
-local table       = require("table")
+local table       = require("jive.utils.table")
+
+local SocketUdp   = require("jive.net.SocketUdp")
+local log         = require("jive.utils.log").logger("net.socket")
 
 
 module(..., oo.class)
 
 
-port = 0x4578
+local PORT = 0x4578
+
+
+-- singleton wireless instance per interface
+local _instance = nil
 
 
 -- Squeezebox nvram settings
@@ -73,6 +80,45 @@ local ucpCodes = {
 	"device_status",
 	"uuid"
 }
+
+
+function __init(self, jnt)
+	if _instance then
+		return _instance
+	end
+
+	local obj = oo.rawnew(self, {})
+	obj.sinks = {}
+
+	obj.socket = SocketUdp(jnt,
+			       function(chunk, err)
+				       -- forward to all sinks
+				       for i, sink in ipairs(obj.sinks) do
+					       sink(chunk, err)
+				       end
+				       return 1
+			       end)
+
+	return obj
+end
+
+
+function addSink(self, sink)
+	log:warn("ADD SINK ", sink)
+	table.insert(self.sinks, sink)
+	return sink
+end
+
+
+function removeSink(self, sink)
+	log:warn("REMOVE SINK ", sink)
+	table.delete(self.sinks, sink)
+end
+
+
+function send(self, pkt, addr, port)
+	self.socket:send(pkt, addr, port or PORT)
+end
 
 
 function packNumber(v, len)

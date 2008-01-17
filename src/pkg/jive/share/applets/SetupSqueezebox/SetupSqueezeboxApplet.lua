@@ -25,14 +25,11 @@ local Textinput              = require("jive.ui.Textinput")
 local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
 
-local Wireless               = require("jive.net.Wireless")
+local Udap                   = require("jive.net.Udap")
+local hasWireless, Wireless  = pcall(require, "jive.net.Wireless")
 
 local log                    = require("jive.utils.log").logger("applets.setup")
 
-local SocketUdp              = require("jive.net.SocketUdp")
-local socket                 = require("socket")
-
-local udap                   = require("applets.SetupSqueezebox.udap")
 local jnt                    = jnt
 
 
@@ -61,13 +58,20 @@ function init(self)
 		error("No slimdiscovery applet")
 	end
 
-
-	self.wireless = Wireless(jnt, "eth0")
+	if hasWireless then
+		self.wireless = Wireless(jnt, "eth0")
+	end
 
 	-- socket for udap discovery
-	self.socket = assert(SocketUdp(jnt, function(chunk, err)
-						    self:t_udapSink(chunk, err)
-					    end))
+	self.udap = Udap(jnt)
+	self.udapSink = self.udap:addSink(function(chunk, err)
+						  self:t_udapSink(chunk, err)
+					  end)
+end
+
+
+function free(self)
+	self.udap:removeSink(self.udapSink)
 end
 
 
@@ -88,7 +92,12 @@ function settingsShow(self, keepOldEntries)
 	-- note we keep old entries so this list the window is not empty
 	-- during initial setup. if this becomes a problem a "finding
 	-- squeezeboxen" screen will need to be added.
-	self:_scanComplete(self.wireless:scanResults(), keepOldEntries)
+	if self.hasWireless then
+		self:_scanComplete(self.wireless:scanResults(), keepOldEntries)
+
+		-- find jive network configuration
+		Task("readConfig", self, t_readJiveConfig):addTask()
+	end
 
 	window:addListener(EVENT_WINDOW_ACTIVE,
 			   function()
@@ -104,9 +113,6 @@ function settingsShow(self, keepOldEntries)
 					     end
 					     _scan(self)
 				     end)
-
-	-- find jive network configuration
-	Task("readConfig", self, t_readJiveConfig):addTask()
 
 	local help = Textarea("help", self:string("SQUEEZEBOX_HELP"))
 	window:addWidget(help)
@@ -149,17 +155,24 @@ end
 
 
 function _scan(self)
-	self.wireless:scan(function(scanTable)
-				 _scanComplete(self, scanTable)
-			 end)
+	if self.hasWireless then
+		self.wireless:scan(function(scanTable)
+					   _scanComplete(self, scanTable)
+				   end)
+	end
 
 	self.seqno = self.seqno + 1
-	local packet = udap.createAdvancedDiscover(nil, self.seqno)
-	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
+	local packet = Udap.createAdvancedDiscover(nil, self.seqno)
+	self.udap:send(function() return packet end, "255.255.255.255")
 end
 
 
 function t_scanDiscover(self, pkt)
+	if not self.scanResults then
+		-- we are not scanning
+		return
+	end
+
 	if pkt.uapMethod ~= "adv_discover"
 		or pkt.ucp.device_status ~= "wait_slimserver"
 		or pkt.ucp.type ~= "squeezebox" then
@@ -174,7 +187,7 @@ function t_scanDiscover(self, pkt)
 			sound = "WINDOWSHOW",
 			icon = Icon("icon"),
 			callback = function()
-					   _selectSqueezebox(self, mac)
+					   startSqueezeboxSetup(self, mac)
 				   end,
 			weight = 1
 		}
@@ -196,7 +209,7 @@ function _scanComplete(self, scanTable, keepOldEntries)
 	local now = os.time()
 
 	for ssid, entry in pairs(scanTable) do
-		local ether,mac = string.match(ssid, "logitech([%-%+])squeezebox[%-%+](%x+)")
+		local mac, ether = self:ssidIsSqueezebox(ssid)
 		log:debug("ether=", ether, " mac=", mac)
 
 		if mac ~= nil then
@@ -208,7 +221,7 @@ function _scanComplete(self, scanTable, keepOldEntries)
 					sound = "WINDOWSHOW",
 					icon = Icon("icon"),
 					callback = function()
-							   _selectSqueezebox(self, mac)
+							   startSqueezeboxSetup(self, mac, ssid)
 						   end,
 					weight = 1
 				}
@@ -239,15 +252,45 @@ function _scanComplete(self, scanTable, keepOldEntries)
 end
 
 
-function _selectSqueezebox(self, mac)
+--[[
+Return the Squeezebox mac address from the ssid, or nil if the ssid is
+not from a Squeezebox in setup mode.
+--]]
+function ssidIsSqueezebox(self, ssid)
+	local hasEthernet, mac = string.match(ssid, "logitech([%-%+])squeezebox[%-%+](%x+)")
 
-	-- prefer setup via wireless
-	if self.scanResults[mac].adhoc then
-		-- adhoc setup
-		_setupInit(self, mac, self.scanResults[mac].ether)
+	return mac, hasEthernet
+end
+
+
+--[[
+This function is the entry point after a squeezebox has been choosen
+for setup, may be called from outside this applet.
+
+I<mac> is the mac address of the squeezebox
+I<adhoc> is the ad-hoc ssid for setup, or nil if already on the network
+I<setupNext> if given, is a function to call once setup is complete
+
+--]]
+function startSqueezeboxSetup(self, mac, adhoc, setupNext)
+	if setupNext then
+		self.setupNext = setupNext
+	end
+
+	if not self.topWindow then
+		-- remember the top window
+		self.topWindow = Framework.windowStack[1]
+	end
+
+	if adhoc then
+		-- full configuration via adhoc network
+		local hasEthernet = self:ssidIsSqueezebox(adhoc)[1]
+		assert(hasEthernet)
+
+		_setupInit(self, mac, hasEthernet)
 		_setupConfig(self)
 	else
-		-- udap setup
+		-- SqueezeCenter configuration with udap
 		_setupInit(self, mac, nil)
 
 		self.interface = ''
@@ -258,8 +301,10 @@ function _selectSqueezebox(self, mac)
 	end
 
 	-- remove squeezebox from scan results
-	self.scanMenu:removeItem(self.scanResults[self.mac].item)
-	self.scanResults[self.mac] = nil
+	if self.scanMenu then
+		self.scanMenu:removeItem(self.scanResults[mac].item)
+		self.scanResults[mac] = nil
+	end
 end
 
 
@@ -462,15 +507,15 @@ function t_wirelessConfig(self)
 	local data = self.data1
 
 	-- no slimserver
-	data.server_address = udap.packNumber(0, 4)
-	data.slimserver_address = udap.packNumber(0, 4) -- none existant server
+	data.server_address = Udap.packNumber(0, 4)
+	data.slimserver_address = Udap.packNumber(0, 4) -- none existant server
 
-	data.interface = udap.packNumber(0, 1) -- wireless
-	data.bridging = udap.packNumber(0, 1) -- off
+	data.interface = Udap.packNumber(0, 1) -- wireless
+	data.bridging = Udap.packNumber(0, 1) -- off
 	if self.networkMode == 0 then
-		data.wireless_mode = udap.packNumber(0, 1) -- infrastructure
+		data.wireless_mode = Udap.packNumber(0, 1) -- infrastructure
 	else
-		data.wireless_mode = udap.packNumber(1, 1) -- adhoc
+		data.wireless_mode = Udap.packNumber(1, 1) -- adhoc
 	end
 
 	self:_ipConfig(data) -- ip config
@@ -480,42 +525,42 @@ function t_wirelessConfig(self)
 	-- wireless region
 	local region = self.wireless:getAtherosRegionCode()
 	log:info("data.region_id=", data.region)
-	data.region_id = udap.packNumber(region, 1)
+	data.region_id = Udap.packNumber(region, 1)
 
 	-- default to encryption disabled
-	data.wepon = udap.packNumber(0, 1)
-	data.wpa_enabled = udap.packNumber(0, 1)
+	data.wepon = Udap.packNumber(0, 1)
+	data.wpa_enabled = Udap.packNumber(0, 1)
 
 	if status.key_mgmt == "WPA2-PSK" then
-		data.wpa_enabled = udap.packNumber(1, 1)
-		data.wpa_mode = udap.packNumber(2, 1)
+		data.wpa_enabled = Udap.packNumber(1, 1)
+		data.wpa_mode = Udap.packNumber(2, 1)
 
 		data.wpa_psk = _readPSK(self, status.ssid)
 
 	elseif status.key_mgmt == "WPA-PSK" then
-		data.wpa_enabled = udap.packNumber(1, 1)
-		data.wpa_mode = udap.packNumber(1, 1)
+		data.wpa_enabled = Udap.packNumber(1, 1)
+		data.wpa_mode = Udap.packNumber(1, 1)
 
 		data.wpa_psk = _readPSK(self, status.ssid)
 
 	end
 
 	if status.pairwise_cipher == "CCMP" then
-		data.wpa_cipher = udap.packNumber(2, 1) -- CCMP
+		data.wpa_cipher = Udap.packNumber(2, 1) -- CCMP
 
 	elseif status.pairwise_cipher == "TKIP" then
-		data.wpa_cipher = udap.packNumber(1, 1) -- TKIP
+		data.wpa_cipher = Udap.packNumber(1, 1) -- TKIP
 
 	end
 
 	if status.pairwise_cipher == "WEP-104" then
-		data.wepon = udap.packNumber(1, 1)
-		data.keylen = udap.packNumber(1, 1)
+		data.wepon = Udap.packNumber(1, 1)
+		data.keylen = Udap.packNumber(1, 1)
 		data.wep_key = _readWepKey(self, status.ssid)
 
 	elseif status.pairwise_cipher == "WEP-40" then	
-		data.wepon = udap.packNumber(1, 1)
-		data.keylen = udap.packNumber(0, 1)
+		data.wepon = Udap.packNumber(1, 1)
+		data.keylen = Udap.packNumber(0, 1)
 		data.wep_key = _readWepKey(self, status.ssid)
 	end
 end
@@ -597,11 +642,11 @@ function t_wiredConfig(self)
 	local data = self.data1
 
 	-- no slimserver
-	data.server_address = udap.packNumber(0, 4)
-	data.slimserver_address = udap.packNumber(0, 4)
+	data.server_address = Udap.packNumber(0, 4)
+	data.slimserver_address = Udap.packNumber(0, 4)
 
-	data.interface = udap.packNumber(1, 1) -- wired
-	data.bridging = udap.packNumber(0, 1) -- off
+	data.interface = Udap.packNumber(1, 1) -- wired
+	data.bridging = Udap.packNumber(0, 1) -- off
 
 	self:_ipConfig(data) -- ip config
 end
@@ -639,27 +684,27 @@ function t_bridgedConfig(self)
 	-- Squeezebox config:
 
 	-- no slimserver
-	data.server_address = udap.packNumber(0, 4)
-	data.slimserver_address = udap.packNumber(0, 4)
+	data.server_address = Udap.packNumber(0, 4)
+	data.slimserver_address = Udap.packNumber(0, 4)
 
-	data.interface = udap.packNumber(0, 1) -- wireless
-	data.bridging = udap.packNumber(1, 1) -- on
-	data.wireless_mode = udap.packNumber(1, 1) -- adhoc
---	data.channel = udap.packNumber(6, 1) -- fixed channel
+	data.interface = Udap.packNumber(0, 1) -- wireless
+	data.bridging = Udap.packNumber(1, 1) -- on
+	data.wireless_mode = Udap.packNumber(1, 1) -- adhoc
+--	data.channel = Udap.packNumber(6, 1) -- fixed channel
 
-	data.lan_ip_mode = udap.packNumber(1, 1) -- 1 dhcp
+	data.lan_ip_mode = Udap.packNumber(1, 1) -- 1 dhcp
 
 	data.SSID = ssid
 
 	-- wireless region
 	local region = self.wireless:getAtherosRegionCode()
 	log:info("data.region_id=", data.region)
-	data.region_id = udap.packNumber(region, 1)
+	data.region_id = Udap.packNumber(region, 1)
 
 	-- secure network
-	data.wpa_enabled = udap.packNumber(0, 1)
-	data.wepon = udap.packNumber(1, 1)
-	data.keylen = udap.packNumber(1, 1)
+	data.wpa_enabled = Udap.packNumber(0, 1)
+	data.wepon = Udap.packNumber(1, 1)
+	data.keylen = Udap.packNumber(1, 1)
 	data.wep_key = table.concat(binkey)
 end
 
@@ -671,13 +716,13 @@ function _ipConfig(self, data)
 		log:info("gateway=", self.networkOption.gateway)
 		log:info("dns=", self.networkOption.dns)
 
-		data.lan_ip_mode = udap.packNumber(0, 1) -- 0 static ip
-		data.lan_network_address = udap.packNumber(_parseip(self.ipAddress), 4)
-		data.lan_subnet_mask = udap.packNumber(_parseip(self.networkOption.netmask), 4)
-		data.lan_gateway = udap.packNumber(_parseip(self.networkOption.gateway), 4)
-		data.primary_dns = udap.packNumber(_parseip(self.networkOption.dns), 4)
+		data.lan_ip_mode = Udap.packNumber(0, 1) -- 0 static ip
+		data.lan_network_address = Udap.packNumber(_parseip(self.ipAddress), 4)
+		data.lan_subnet_mask = Udap.packNumber(_parseip(self.networkOption.netmask), 4)
+		data.lan_gateway = Udap.packNumber(_parseip(self.networkOption.gateway), 4)
+		data.primary_dns = Udap.packNumber(_parseip(self.networkOption.dns), 4)
 	else
-		data.lan_ip_mode = udap.packNumber(1, 1) -- 1 dhcp
+		data.lan_ip_mode = Udap.packNumber(1, 1) -- 1 dhcp
 	end
 end
 
@@ -827,9 +872,9 @@ end
 
 function t_udapSend(self, packet)
 	-- send three udp packets in case the wireless network drops them
-	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
-	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
-	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
+	self.udap:send(function() return packet end, "255.255.255.255")
+	self.udap:send(function() return packet end, "255.255.255.255")
+	self.udap:send(function() return packet end, "255.255.255.255")
 end
 
 
@@ -841,7 +886,7 @@ function t_udapDiscover(self)
 
 	-- check squeezebox exists via udap
 	self.seqno = self.seqno + 1
-	local packet = udap.createDiscover(self.mac, self.seqno)
+	local packet = Udap.createDiscover(self.mac, self.seqno)
 	self:t_udapSend(packet)
 end
 
@@ -865,7 +910,7 @@ function t_udapSetData(self)
 
 	-- configure squeezebox network
 	self.seqno = self.seqno + 1
-	local packet = udap.createSetData(self.mac, self.seqno, self.data1)
+	local packet = Udap.createSetData(self.mac, self.seqno, self.data1)
 	self:t_udapSend(packet)
 end
 
@@ -878,7 +923,7 @@ function t_udapReset(self)
 
 	-- reset squeezebox
 	self.seqno = self.seqno + 1
-	local packet = udap.createReset(self.mac, self.seqno)
+	local packet = Udap.createReset(self.mac, self.seqno)
 	self:t_udapSend(packet)
 
 	-- if the reset udp reply is lost we won't know the squeezebox has reset ok
@@ -898,7 +943,7 @@ function t_udapGetUUID(self)
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
 	self.seqno = self.seqno + 1
-	local packet = udap.createGetUUID(self.mac, self.seqno)
+	local packet = Udap.createGetUUID(self.mac, self.seqno)
 	self:t_udapSend(packet)
 end
 
@@ -910,22 +955,20 @@ function t_udapGetIPAddr(self)
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
 	self.seqno = self.seqno + 1
-	local packet = udap.createGetIPAddr(self.mac, self.seqno)
+	local packet = Udap.createGetIPAddr(self.mac, self.seqno)
 	self:t_udapSend(packet)
 end
 
 
 -- sink for udap replies. based on the replies this sets up the next action to call.
 function t_udapSink(self, chunk, err)
-	log:info("udapSink chunk=", chunk, " err=", err)
-
 	if chunk == nil then
 		-- ignore errors, and try again
 		return
 	end
 
-	local pkt = udap.parseUdap(chunk.data)
-	log:info("seqno=", self.seqno, " pkt=", udap.tostringUdap(pkt))
+	local pkt = Udap.parseUdap(chunk.data)
+	log:info("seqno=", self.seqno, " pkt=", Udap.tostringUdap(pkt))
 
 	if self.seqno ~= pkt.seqno then
 		log:info("discarding old packet")
@@ -1051,7 +1094,7 @@ function t_waitSqueezeboxNetwork(self)
 
 	-- check squeezebox status via udap
 	self.seqno = self.seqno + 1
-	local packet = udap.createAdvancedDiscover(self.mac, self.seqno)
+	local packet = Udap.createAdvancedDiscover(self.mac, self.seqno)
 	self:t_udapSend(packet)
 end
 
@@ -1145,15 +1188,15 @@ function _setSlimserver(self, slimserver)
 	if slimserver:isSqueezeNetwork() then
 		log:info("slimserver_address=www.squeezenetwork.com")
 
-		self.data2.server_address = udap.packNumber(1, 4)
+		self.data2.server_address = Udap.packNumber(1, 4)
 		-- set slimserver address to 0.0.0.1 to workaround a bug in
 		-- squeezebox firmware
-		self.data2.slimserver_address = udap.packNumber(parseip("0.0.0.1"), 4)
+		self.data2.slimserver_address = Udap.packNumber(parseip("0.0.0.1"), 4)
 	else
 		log:info("slimserver_address=", serverip)
 
-		self.data2.server_address = udap.packNumber(0, 4)
-		self.data2.slimserver_address = udap.packNumber(parseip(serverip), 4)
+		self.data2.server_address = Udap.packNumber(0, 4)
+		self.data2.slimserver_address = Udap.packNumber(parseip(serverip), 4)
 	end
 
 
@@ -1177,7 +1220,7 @@ function t_udapSetSlimserver(self)
 
 	-- configure squeezebox network
 	self.seqno = self.seqno + 1
-	local packet = udap.createSetData(self.mac, self.seqno, self.data2)
+	local packet = Udap.createSetData(self.mac, self.seqno, self.data2)
 	self:t_udapSend(packet)
 end
 

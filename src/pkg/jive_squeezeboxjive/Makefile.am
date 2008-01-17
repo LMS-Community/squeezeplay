@@ -71,7 +71,7 @@ applets_testDisplaydir = $(datadir)/jive/applets/TestDisplay
 dist_applets_testDisplay_DATA = \
 	share/applets/TestDisplay/TestDisplayApplet.lua \
 	share/applets/TestDisplay/TestDisplayMeta.lua \
-	share/applets/TestDisplay/strings.txt \ 
+	share/applets/TestDisplay/strings.txt \
 	share/applets/TestDisplay/circle.jpg
 
 
@@ -89,14 +89,6 @@ dist_applets_testIR_DATA = \
 	share/applets/TestIR/TestIRMeta.lua \
 	share/applets/TestIR/strings.txt \
 	share/applets/TestIR/TestIR.png
-
-
-applets_setupSqueezeboxdir = $(datadir)/jive/applets/SetupSqueezebox
-dist_applets_setupSqueezebox_DATA = \
-	share/applets/SetupSqueezebox/SetupSqueezeboxApplet.lua \
-	share/applets/SetupSqueezebox/SetupSqueezeboxMeta.lua \
-	share/applets/SetupSqueezebox/udap.lua \
-	share/applets/SetupSqueezebox/strings.txt
 
 
 applets_SetupFactoryResetdir = $(datadir)/jive/applets/SetupFactoryReset
