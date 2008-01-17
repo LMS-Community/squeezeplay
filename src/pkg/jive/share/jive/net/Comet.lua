@@ -97,7 +97,7 @@ Notifications:
 =cut
 --]]
 function __init(self, jnt, ip, port, path, name)
-	log:debug("Comet:__init(", name, ", ", ip, ", ", port, ", ", path, ")")
+	log:debug("Comet: __init(", name, ", ", ip, ", ", port, ", ", path, ")")
 
 	-- init superclass
 	local obj = oo.rawnew( self, SocketHttp(jnt, ip, port, name) )
@@ -151,7 +151,6 @@ end
 
 function disconnect(self)
 	if self.active == "connected" then
-	
 		log:debug('Comet:disconnect()')
 		
 		_active(self, "disconnect")
@@ -174,15 +173,24 @@ function disconnect(self)
 			)
 
 		self.rhttp:fetch(req)
+	else
+		-- disable reconnections
+		self.advice.reconnect = 'none'
+
+		-- stop any existing reconnect timer
+		if self.reconnect_timer then
+			self.reconnect_timer:stop()
+			self.reconnect_timer = nil
+		end
 	end
 end
 
 function notify_networkConnected(self)
 	if self.active == "connected" then
-		log:warn("Comet: Got networkConnected event, will try to reconnect to ", self.uri)
+		log:warn(self, " Got networkConnected event, will try to reconnect to ", self.uri)
 		_handleAdvice(self)
 	else
-		log:warn("Comet: Got networkConnected event, but not currently connected")
+		log:warn(self, " Got networkConnected event, but not currently connected")
 	end
 end
 
@@ -309,7 +317,7 @@ _getEventSink = function(self)
 	return function(chunk, err)
 		-- on error, print something...
 		if err then
-			log:warn("Comet:_getEventSink: error: ", err)
+			log:warn(self, "_getEventSink: error: ", err)
 			
 			-- try to reconnect according to advice
 			_handleAdvice(self)
@@ -323,60 +331,60 @@ _getEventSink = function(self)
 				-- update advice if any
 				if event.advice then
 					self.advice = event.advice
-					log:debug("Comet:_getEventSink, advice updated from server")
+					log:debug(self, "_getEventSink, advice updated from server")
 				end
 				
 				if event.channel == '/meta/connect' then
 				 	if event.successful then
-						log:debug("Comet:_getEventSink, connect message acknowledged")
+						log:debug(self, "_getEventSink, connect message acknowledged")
 						_active(self, "connected")
 					else
-						log:warn("Comet:_getEventSink, connect failed: ", event.error)
+						log:warn(self, "_getEventSink, connect failed: ", event.error)
 						_handleAdvice(self)
 						break
 					end
 				elseif event.channel == '/meta/disconnect' then
 					if event.successful then
-						log:debug("Comet:_getEventSink, disconnect OK")
+						log:debug(self, "_getEventSink, disconnect OK")
 						_active(self, "closed")
 					else
-						log:warn("Comet:_getEventSink, disconnect failed: ", event.error)
+						log:warn(self, "_getEventSink, disconnect failed: ", event.error)
 					end
 				elseif event.channel == '/meta/reconnect' then
 					if event.successful then
-						log:debug("Comet:_getEventSink, reconnect OK")
+						log:debug(self, "_getEventSink, reconnect OK")
 						_active(self, "connected")
 					else
-						log:warn("Comet:_getEventSink, reconnect failed: ", event.error)
+						log:warn(self, "_getEventSink, reconnect failed: ", event.error)
 						_handleAdvice(self)
 						break
 					end
 				elseif event.channel == '/meta/subscribe' then
 					if event.successful then
-						log:debug("Comet:_getEventSink, /meta/subscribe OK for ", event.subscription)
+						log:debug(self, "_getEventSink, /meta/subscribe OK for ", event.subscription)
 					else
-						log:warn("Comet:_getEventSink, /meta/subscribe failed: ", event.error)
+						log:warn(self, "_getEventSink, /meta/subscribe failed: ", event.error)
 					end
 				elseif event.channel == '/meta/unsubscribe' then
 					if event.successful then
-						log:debug("Comet:_getEventSink, /meta/unsubscribe OK for ", event.subscription)
+						log:debug(self, "_getEventSink, /meta/unsubscribe OK for ", event.subscription)
 					else
-						log:warn("Comet:_getEventSink, /meta/unsubscribe error: ", event.error)
+						log:warn(self, "_getEventSink, /meta/unsubscribe error: ", event.error)
 					end
 				elseif event.channel == '/slim/subscribe' then
 					if event.successful then
-						log:debug("Comet:_getEventSink, /slim/subscribe OK for reqid ", event.id)
+						log:debug(self, "_getEventSink, /slim/subscribe OK for reqid ", event.id)
 					else
-						log:warn("Comet:_getEventSink, /slim/subscribe error for reqid ", event.id, ": ", event.error)
+						log:warn(self, "_getEventSink, /slim/subscribe error for reqid ", event.id, ": ", event.error)
 					end
 				elseif event.channel == '/slim/unsubscribe' then
 					if event.successful then
-						log:debug("Comet:_getEventSink, /slim/unsubscribe OK for reqid ", event.id)
+						log:debug(self, "_getEventSink, /slim/unsubscribe OK for reqid ", event.id)
 					else
-						log:warn("Comet:_getEventSink, /slim/unsubscribe error for reqid ", event.id, ": ", event.error)
+						log:warn(self, "_getEventSink, /slim/unsubscribe error for reqid ", event.id, ": ", event.error)
 					end
 				elseif event.channel == '/slim/request' and event.successful then
-					log:debug("Comet:request id ", event.id, " sent OK")
+					log:debug(self, "request id ", event.id, " sent OK")
 				elseif event.channel then
 					local subscription    = event.channel
 					local onetime_request = false
@@ -391,7 +399,7 @@ _getEventSink = function(self)
 					end
 
 					if self.notify[subscription] then
-						log:debug("Comet:_getEventSink, notifiying callbacks for ", subscription)
+						log:debug(self, "_getEventSink, notifiying callbacks for ", subscription)
 					
 						for _, func in pairs( self.notify[subscription] ) do
 							log:debug("  callback to: ", func)
@@ -405,10 +413,10 @@ _getEventSink = function(self)
 					else
 						-- this is normal, since unsub's are delayed by a few seconds, we may receive events
 						-- after we unsubscribed but before the server is notified about it
-						log:debug("Comet:_getEventSink, got data for an event we aren't subscribed to, ignoring -> ", subscription)
+						log:debug(self, "_getEventSink, got data for an event we aren't subscribed to, ignoring -> ", subscription)
 					end
 				else
-					log:warn("Comet:_getEventSink, unknown error: ", event.error)
+					log:warn(self, "_getEventSink, unknown error: ", event.error)
 					if event.advice then
 						_handleAdvice(self)
 						break
@@ -458,7 +466,7 @@ _getHandshakeSink = function(self)
 	return function(chunk, err)
 		-- on error, print something...
 		if err then
-			log:warn("Comet:_handshake with ", self.jsName, " error: ", err)
+			log:warn(self, "_handshake with ", self.jsName, " error: ", err)
 
 			-- try to reconnect according to advice
 			_handleAdvice(self)
@@ -471,13 +479,13 @@ _getHandshakeSink = function(self)
 				self.clientId  = data.clientId
 				self.advice    = data.advice
 
-				log:debug("Comet:_handshake OK with ", self.jsName, ", clientId: ", self.clientId)
+				log:debug(self, "_handshake OK with ", self.jsName, ", clientId: ", self.clientId)
 				
 				
 				-- Continue with connect phase
 				_connect(self)
 			else
-				log:warn("Comet:_handshake error: ", data.error)
+				log:warn(self, "_handshake error: ", data.error)
 				if data.advice then
 					self.advice = data.advice
 					_handleAdvice(self)
@@ -491,7 +499,7 @@ function subscribe(self, subscription, func, playerid, request, priority)
 	local id = self.reqid
 
 	if log:isDebug() then
-		log:debug("Comet:subscribe(", subscription, ", reqid:", id, ", ", func, ", ", playerid, ", ", table.concat(request, ","), ", priority:", priority, ")")
+		log:debug(self, "subscribe(", subscription, ", reqid:", id, ", ", func, ", ", playerid, ", ", table.concat(request, ","), ", priority:", priority, ")")
 	end
 	
 	-- Remember subs to send during connect now, or if we get
@@ -533,7 +541,7 @@ function subscribe(self, subscription, func, playerid, request, priority)
 end
 
 function unsubscribe(self, subscription, func)
-	log:debug("Comet:unsubscribe(", subscription, ", ", func, ")")
+	log:debug(self, "unsubscribe(", subscription, ", ", func, ")")
 	
 	-- Remove from notify list
 	if func then
@@ -587,7 +595,7 @@ function request(self, func, playerid, request, priority)
 	local id = self.reqid
 	
 	if log:isDebug() then
-		log:debug("Comet:request(", func, ", reqid:", id, ", ", playerid, ", ", table.concat(request, ","), ", priority:", priority, ")")
+		log:debug(self, "request(", func, ", reqid:", id, ", ", playerid, ", ", table.concat(request, ","), ", priority:", priority, ")")
 	end
 	
 	if self.active ~= "connected" or self.batch then
@@ -657,7 +665,7 @@ _getRequestSink = function(self, func, reqid)
 	return function(chunk, err)
 		-- on error, print something...
 		if err then
-			log:warn("Comet:request error: ", err)
+			log:warn(self, "request error: ", err)
 		end
 		-- if we have data
 		if chunk then
@@ -667,12 +675,12 @@ _getRequestSink = function(self, func, reqid)
 				end
 				
 				if event.error then
-					log:warn("Comet:request error: ", event.error)
+					log:warn(self, "request error: ", event.error)
 				elseif event.channel == '/slim/request' and event.successful then
-					log:debug("Comet:request id ", reqid, " sent OK")
+					log:debug(self, "request id ", reqid, " sent OK")
 
 				else
-					log:warn("Comet:request unknown response")
+					log:warn(self, "request unknown response")
 				end
 			end
 		end
@@ -680,7 +688,7 @@ _getRequestSink = function(self, func, reqid)
 end
 
 function addCallback(self, subscription, func)
-	log:debug("Comet:addCallback(", subscription, ", ", func, ")")
+	log:debug(self, "addCallback(", subscription, ", ", func, ")")
 
 	if not self.notify[subscription] then
 		self.notify[subscription] = {}
@@ -690,7 +698,7 @@ function addCallback(self, subscription, func)
 end
 
 function removeCallback(self, subscription, func)
-	log:debug("Comet:removeCallback(", subscription, ", ", func, ")")
+	log:debug(self, "removeCallback(", subscription, ", ", func, ")")
 	
 	self.notify[subscription][func] = nil
 end
@@ -721,11 +729,11 @@ _handleAdvice = function(self)
 	
 	if advice.reconnect == 'none' then
 		self.clientId  = nil
-		log:warn("Comet:_connect, server told us not to reconnect")
+		log:warn(self, "_connect, server told us not to reconnect")
 
 	elseif advice.reconnect == 'handshake' then
 		log:warn(
-			"Comet: advice is ", advice.reconnect, ", re-handshaking in ",
+			self, " advice is ", advice.reconnect, ", re-handshaking in ",
 			retry_interval / 1000, " seconds"
 		)
 	
@@ -749,7 +757,7 @@ _handleAdvice = function(self)
 
 	else -- if advice.reconnect == 'retry' then
 		log:warn(
-			"Comet: advice is ", advice.reconnect, ", reconnecting in ",
+			self, " advice is ", advice.reconnect, ", reconnecting in ",
 			retry_interval / 1000, " seconds"
 		)
 	
@@ -769,7 +777,7 @@ _reconnect = function(self)
 	log:debug('Comet:_reconnect()')
 	
 	if not self.clientId then
-		log:debug("Comet:_reconnect error: cannot reconnect without clientId, handshaking instead")
+		log:debug(self, "_reconnect error: cannot reconnect without clientId, handshaking instead")
 		_handshake(self)
 		do return end
 	end
@@ -814,14 +822,14 @@ end
 
 -- Begin a set of batched queries
 function startBatch(self)
-	log:debug("Comet:startBatch()")
+	log:debug(self, "startBatch()")
 
 	self.batch = true
 end
 
 -- End batch mode, send all batched queries together
 function endBatch(self)
-	log:debug("Comet:endBatch()")
+	log:debug(self, "endBatch()")
 	
 	self.batch = false
 	
@@ -844,6 +852,11 @@ function endBatch(self)
 
 		self.rhttp:fetch(req)
 	end
+end
+
+
+function __tostring(self)
+	return "Comet {" .. self.name .. "}: "
 end
 
 --[[
