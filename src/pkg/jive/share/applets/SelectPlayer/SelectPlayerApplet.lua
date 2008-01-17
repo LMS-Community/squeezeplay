@@ -17,9 +17,11 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local pairs, ipairs, tostring      = pairs, ipairs, tostring
+local assert, pairs, ipairs, tostring = assert, pairs, ipairs, tostring
 
 local oo                 = require("loop.simple")
+local os                 = require("os")
+local string             = require("string")
 
 local Applet             = require("jive.Applet")
 local AppletManager      = require("jive.AppletManager")
@@ -32,6 +34,9 @@ local Icon               = require("jive.ui.Icon")
 local Label              = require("jive.ui.Label")
 local Framework          = require("jive.ui.Framework")
 
+local SocketUdp          = require("jive.net.SocketUdp")
+local udap               = require("jive.net.Udap")
+
 local log                = require("jive.utils.log").logger("applets.setup")
 local debug              = require("jive.utils.debug")
 
@@ -39,6 +44,8 @@ local jiveMain           = jiveMain
 local jnt                = jnt
 
 local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
+local EVENT_WINDOW_ACTIVE = jive.ui.EVENT_WINDOW_ACTIVE
+local EVENT_WINDOW_INACTIVE = jive.ui.EVENT_WINDOW_INACTIVE
 
 -- load SetupWallpaper for use in previewing Wallpapers
 local SetupWallpaper = AppletManager:loadApplet("SetupWallpaper")
@@ -49,23 +56,26 @@ oo.class(_M, Applet)
 
 function init(self, ...)
 	self.playerItem = {}
-	jnt:subscribe(self)
+	self.scanResults = {}
 
+	jnt:subscribe(self)
 	self:manageSelectPlayerMenu()
 end
 
+
 function notify_playerDelete(self, playerObj)
-	local playerMac = playerObj.id
+	local mac = playerObj.id
 	manageSelectPlayerMenu(self)
-	if self.playerMenu and self.playerItem[playerMac] then
-		self.playerMenu:removeItem(self.playerItem[playerMac])
-		self.playerItem[playerMac] = nil
+	if self.playerMenu and self.playerItem[mac] then
+		self.playerMenu:removeItem(self.playerItem[mac])
+		self.playerItem[mac] = nil
 	end
 end
 
+
 function notify_playerNew(self, playerObj)
 	-- get number of players. if number of players is > 1, add menu item
-	local playerMac = playerObj.id
+	local mac = playerObj.id
 
 	manageSelectPlayerMenu(self)
 	if self.playerMenu then
@@ -73,10 +83,12 @@ function notify_playerNew(self, playerObj)
 	end
 end
 
+
 function notify_playerCurrent(self, playerObj)
 	self.selectedPlayer = playerObj
 	self:manageSelectPlayerMenu()
 end
+
 
 function manageSelectPlayerMenu(self)
         local sdApplet = AppletManager:getAppletInstance("SlimDiscovery")
@@ -106,12 +118,18 @@ function manageSelectPlayerMenu(self)
 	end
 end
 
+
+function _unifyMac(mac)
+	return string.upper(string.gsub(mac, "[^%x]", ""))
+end
+
+
 function _addPlayerItem(self, player)
-	local playerMac = player.id
+	local mac = player.id
 	local playerName = player.name
 
-	log:warn("_addPlayerItem")
 	local item = {
+		id = _unifyMac(mac),
 		text = playerName,
 		sound = "WINDOWSHOW",
 		callback = function()
@@ -119,22 +137,44 @@ function _addPlayerItem(self, player)
 				   self.setupNext()
 			   end,
 		focusGained = function(event)
-			self:_showWallpaper(playerMac)
+			self:_showWallpaper(mac)
 		end,
 		weight =  1
 	}
 	self.playerMenu:addItem(item)
-	self.playerItem[playerMac] = item
+	self.playerItem[mac] = item
 	
 	if self.selectedPlayer == player then
 		self.playerMenu:setSelectedItem(item)
 	end
 end
 
+
+-- add a squeezebox discovered using udap or an adhoc network
+function _addSqueezeboxItem(self, mac, name, adhoc)
+	local item = {
+		id = _unifyMac(mac),
+		text = name or self:string("SQUEEZEBOX_NAME", string.sub(mac, 7)),
+		sound = "WINDOWSHOW",
+		callback = function()
+				   log:error("SETUP SQUEEZEBOX")
+				   --self.setupNext()
+			   end,
+		focusGained = function(event)
+			self:_showWallpaper(nil)
+		end,
+		weight =  1
+	}
+	self.playerMenu:addItem(item)
+	self.playerItem[mac] = item
+end
+
+
 function _showWallpaper(self, playerId)
 	log:info("previewing background wallpaper for ", playerId)
 	SetupWallpaper:_setBackground(nil, playerId)
 end
+
 
 function setupShow(self, setupNext)
 	-- get list of slimservers
@@ -150,13 +190,13 @@ function setupShow(self, setupNext)
 			window:hide(Window.transitionPushLeft)
 		end
 
-        local sdApplet = AppletManager:getAppletInstance("SlimDiscovery")
-        if not sdApplet then
+        self.discovery = AppletManager:getAppletInstance("SlimDiscovery")
+        if not self.discovery then
 		return
 	end
 
-	self.selectedPlayer = sdApplet:getCurrentPlayer()
-	for playerMac, playerObj in sdApplet:allPlayers() do
+	self.selectedPlayer = self.discovery:getCurrentPlayer()
+	for mac, playerObj in self.discovery:allPlayers() do
 		_addPlayerItem(self, playerObj)
 	end
 
@@ -173,30 +213,92 @@ function setupShow(self, setupNext)
 				})
 	end
 
-	--[[
-	-- no player for debugging
-	self.playerMenu:addItem({
-					text = "NO PLAYER (DEBUG)",
-					sound = "WINDOWSHOW",
-					callback = function()
-							   self:selectPlayer(nil)
-							   self.setupNext()
-						   end,
-					weight =  9
-				})
-	--]]
-
 	window:addWidget(menu)
 
-	sdApplet:discover()
-	window:addTimer(1000, function() sdApplet:discover() end)
+	window:addTimer(1000, function() self:_scan() end)
+
+
+	window:addListener(EVENT_WINDOW_ACTIVE,
+			   function()
+				   self:_scanActive()
+				   self:_scan()
+			   end)
+
+	window:addListener(EVENT_WINDOW_INACTIVE,
+			   function()
+				   self:_scanInactive()
+			   end)
 
 	self:tieAndShowWindow(window)
 	return window
 end
 
+
+function _scanActive(self)
+	-- socket for udap discovery
+	if not self.socket then
+		self.socket = assert(SocketUdp(jnt, function(chunk, err)
+							    self:_udapSink(chunk, err)
+						    end))
+	end
+end
+
+
+function _scanInactive(self)
+	self.socket:close()
+	self.socket = nil
+end
+
+
+function _udapSink(self, chunk, err)
+	if chunk == nil then
+		return -- ignore errors
+	end
+
+	local pkt = udap.parseUdap(chunk.data)
+
+	if pkt.uapMethod ~= "adv_discover"
+		or pkt.ucp.device_status ~= "wait_slimserver"
+		or pkt.ucp.type ~= "squeezebox" then
+		-- we are only looking for squeezeboxen trying to connect to SC
+		return
+	end
+
+	local mac = pkt.source
+	local name = pkt.ucp.name
+	if not self.scanResults[mac] then
+		self.scanResults[mac] = {
+			lastScan = os.time(),
+			udap = true,
+		}
+
+		self:_addSqueezeboxItem(mac, name, nil)
+	end
+end
+
+
+function _scan(self)
+	-- SqueezeCenter and player discovery
+	self.discovery:discover()
+
+	-- udap discovery
+	local packet = udap.createAdvancedDiscover(nil, 1)
+	self.socket:send(function() return packet end, "255.255.255.255", udap.port)
+
+	-- remove squeezeboxen not seen for 10 seconds
+	local now = os.time()
+	for mac, entry in pairs(self.scanResults) do
+		if os.difftime(now, entry.lastScan) > 10 then
+			self.playerMenu:removeItem(self.playerItem[mac])
+			self.playerItem[mac] = nil
+			self.scanResults[mac] = nil
+		end
+	end
+end
+
+
 function selectPlayer(self, player)
-	log:warn("Selected player is now ", player)
+	log:info("Selected player=", player)
 
 	local manager = AppletManager:getAppletInstance("SlimDiscovery")
 	if manager then
@@ -205,6 +307,7 @@ function selectPlayer(self, player)
 
 	return true
 end
+
 
 function free(self)
 

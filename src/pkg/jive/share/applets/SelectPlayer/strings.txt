@@ -16,4 +16,11 @@ SQUEEZEBOX_SETUP
 	IT	Configura Squeezebox
 	NL	Squeezebox instellen
 
+SQUEEZEBOX_NAME
+	DE	Squeezebox %s
+	EN	Squeezebox %s
+	ES	Squeezebox %s
+	FR	Squeezebox %s
+	IT	Squeezebox %s
+	NL	Squeezebox %s
 
