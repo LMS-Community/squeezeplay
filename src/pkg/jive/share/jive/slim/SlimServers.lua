@@ -230,7 +230,9 @@ function discover(self)
 	-- force a discovery if the timer is not running, otherwise it
 	-- will automatically run soon
 	if self.discoverState ~= 'discover' then
-		self.discoverState = 'idle'
+		if self.discoverState == 'timeout' then
+			self.discoverState = 'discover'
+		end
 		self:_discover()
 	end
 end
