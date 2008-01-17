@@ -51,7 +51,7 @@ module(..., oo.class)
 
 -- constants
 local PORT    = 3483            -- port used to discover servers
-local TIMEOUT = 300             -- timeout (in seconds) before removing servers
+local TIMEOUT = 60              -- timeout (in seconds) before removing servers
 
 
 -- t_source

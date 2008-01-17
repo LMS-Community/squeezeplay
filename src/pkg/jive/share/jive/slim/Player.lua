@@ -202,8 +202,9 @@ function __init(self, slimServer, jnt, playerInfo)
 		currentSong = {}
 	})
 
-	-- SlimServer notifies of our arrival, so that listener see us in the SS db when notified, not before
-	
+	-- notify of new player
+	jnt:notify('playerNew', obj)
+
 	return obj
 end
 
@@ -296,6 +297,8 @@ Deletes the player.
 =cut
 --]]
 function free(self)
+	self.jnt:notify('playerDelete', self)
+
 	self:offStage()
 	-- caller has to notify we're gone
 end

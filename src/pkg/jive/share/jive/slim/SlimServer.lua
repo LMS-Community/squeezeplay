@@ -145,9 +145,6 @@ function _serverstatusSink(self, event, err)
 				player = Player(self, self.jnt, player_info)
 			
 				self.players[player_info.playerid] = player
-				
-				-- notify of new player
-				self.jnt:notify('playerNew', player)
 
 			else
 				-- update existing players
@@ -155,16 +152,15 @@ function _serverstatusSink(self, event, err)
 			end
 		end
 	else
-		log:warn(self, ": has no players!")
+		log:info(self, ": has no players!")
 	end
 	
 	-- any players still in the list are gone...
 	for k,v in pairs(selfPlayers) do
 		player = self.players[k]
-		self.players[k] = nil
 		-- wave player bye bye
-		self.jnt:notify('playerDelete', player)
 		player:free()
+		self.players[k] = nil
 	end
 	
 end
@@ -260,7 +256,7 @@ Deletes a SlimServer object, frees memory and closes connections with the server
 --]]
 function free(self)
 	log:debug(self, ":free()")
-	
+
 	-- notify we're gone by caller in SlimServers
 		
 	-- clear cache
@@ -290,7 +286,7 @@ end
 
 
 function connect(self)
-	log:warn(self, ":connect()")
+	log:info(self, ":connect()")
 
 	-- artwork pool connects on demand
 	self.comet:start()
@@ -298,14 +294,14 @@ end
 
 
 function disconnect(self)
-	log:warn(self, ":disconnect()")
+	log:info(self, ":disconnect()")
 
 	self.artworkPool:close()
 	self.comet:disconnect()
 end
 
 function reconnect(self)
-	log:warn(self, ":reconnect()")
+	log:info(self, ":reconnect()")
 
 	self:disconnect()
 	self:connect()
@@ -453,7 +449,7 @@ function processArtworkQueue(self)
 			-- remove tail entry
 			local entry = table.remove(self.artworkFetchQueue)
 
-			--log:warn("ARTWORK ID=", entry.key)
+			--log:debug("ARTWORK ID=", entry.key)
 			local req = RequestHttp(
 				_getArtworkThumbSink(self, entry.key, entry.size),
 				'GET',
