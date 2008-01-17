@@ -552,18 +552,19 @@ end
 
 --[[
 
-=head2 jive.slim.SlimServer:fetchArtworkThumb(iconId, icon, uriGenerator, size)
+=head2 jive.slim.SlimServer:fetchArtworkThumb(iconId, icon, uriGenerator, size, imgFormat)
 
 The SlimServer object maintains an artwork cache. This function either loads from the cache or
 gets from the network the thumb for I<iconId>. A L<jive.ui.Surface> is used to perform
 I<icon>:setValue(). I<uriGenerator> must be a function that
 computes the URI to request the artwork from the server from I<iconId> (i.e. if needed, this
-method will call uriGenerator(iconId) and use the result as URI).
+method will call uriGenerator(iconId) and use the result as URI). I<imgFormat> is an optional
+argument sent to the uriGenerator. See applets.SlimBrowser._artworkThumbUri as an example.
 
 
 =cut
 --]]
-function fetchArtworkThumb(self, iconId, icon, uriGenerator, size)
+function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, imgFormat)
 	logcache:debug(self, ":fetchArtworkThumb(", iconId, ")")
 
 	if logcache:isDebug() then
@@ -608,7 +609,7 @@ function fetchArtworkThumb(self, iconId, icon, uriGenerator, size)
 	-- queue up the request on a lifo
 	table.insert(self.artworkFetchQueue, {
 			     key = iconId,
-			     url = uriGenerator(iconId, size),
+			     url = uriGenerator(iconId, size, imgFormat),
 			     size = size,
 			     thumb = true
 		     })

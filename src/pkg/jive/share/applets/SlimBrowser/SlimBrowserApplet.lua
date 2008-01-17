@@ -176,7 +176,10 @@ end
 -- artworkThumbUri
 -- returns a URI to fetch artwork on the server
 -- FIXME: should this be styled?
-local function _artworkThumbUri(iconId, size)
+local function _artworkThumbUri(iconId, size, imgFormat)
+
+	-- imgFormat can force to a different format than gd, the default
+	if not imgFormat then imgFormat = 'gd' end
 
 	-- we want a 56 pixel thumbnail if it wasn't specified
 	if not size then size = 56 end
@@ -198,11 +201,13 @@ local function _artworkThumbUri(iconId, size)
 	local resizeFrag = '_' .. size .. 'x' .. size .. '_p' -- 'p' is for padded
 	if thisIsAnId then 
 		-- we want a 56 pixel thumbnail if it wasn't specified
-		artworkUri = '/music/' .. iconId .. '/cover' .. resizeFrag .. '.gd'
+		artworkUri = '/music/' .. iconId .. '/cover' .. resizeFrag .. '.' .. imgFormat
 	elseif string.match(iconId, '.png') then
 		-- if this isn't a number, then we just want the path
 		-- with server-side resizing
-		artworkUri = string.gsub(iconId, '.png', resizeFrag .. '.png')
+		-- and we don't want this in gd format, because that doesn't work
+		imgFormat = 'png'
+		artworkUri = string.gsub(iconId, '.png', resizeFrag .. '.' .. imgFormat)
 	-- otherwise punt
 	else
 		return iconId
@@ -380,6 +385,18 @@ local function _newWindowSpec(db, item, titleStyle)
 	} 
 end
 
+-- _staticArtworkThumbUri
+-- helper method for cobbling together a properly formed url for static content
+local function _staticArtworkThumbUri(path, ARTWORK_SIZE)
+	-- 'p' is for padded, png gives us transparency
+	local resizeFrag = '_' .. ARTWORK_SIZE .. 'x' .. ARTWORK_SIZE .. '_p.png'
+	local artworkUri = path
+	-- replace .png with the resize params
+	if string.match(path, '.png') then
+		artworkUri = string.gsub(path, '.png', resizeFrag)
+	end
+	return artworkUri
+end
 
 -- _artworkItem
 -- updates a group widget with the artwork for item
@@ -400,10 +417,26 @@ local function _artworkItem(item, group, menuAccel)
 			-- Don't load artwork while accelerated
 			_server:cancelArtwork(icon)
 		else
-			-- Fetch a remote image URL, sized to 56x56
-			_server:fetchArtworkURL(item["icon"], icon, 56)
+                	 
+		        	local remoteContent = string.find(item['icon'], 'http://')
+				if remoteContent then
+					-- Fetch a remote image URL, sized to 56x56 (artwork from a streamed source)
+					_server:fetchArtworkURL(item["icon"], icon, 56)
+		                else
+					-- sometimes we have static img content sent from SC (e.g., playlist icon)
+					_server:fetchArtworkThumb(item["icon"], icon, _staticArtworkThumbUri, 56)
+		                end
 		end
 
+	-- this is for the radio image-- remote URLs with no icon (Bug 6087)
+	elseif item["params"] and item["params"]["track_id"] then
+		if menuAccel and not _server:artworkThumbCached(item["params"]["track_id"], 56) then
+			-- Don't load artwork while accelerated
+			_server:cancelArtwork(icon)
+               	else
+			-- workaround: this needs to be png not gd because in gd it looks like garbage
+			_server:fetchArtworkThumb(item["params"]["track_id"], icon, _artworkThumbUri, 56, 'png')
+		end
 	else
 		_server:cancelArtwork(icon)
 
