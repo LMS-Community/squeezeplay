@@ -71,6 +71,7 @@ end
 
 
 function free(self)
+	log:warn("## removing udap sink")
 	self.udap:removeSink(self.udapSink)
 end
 
@@ -92,7 +93,7 @@ function settingsShow(self, keepOldEntries)
 	-- note we keep old entries so this list the window is not empty
 	-- during initial setup. if this becomes a problem a "finding
 	-- squeezeboxen" screen will need to be added.
-	if self.hasWireless then
+	if hasWireless then
 		self:_scanComplete(self.wireless:scanResults(), keepOldEntries)
 
 		-- find jive network configuration
@@ -155,7 +156,7 @@ end
 
 
 function _scan(self)
-	if self.hasWireless then
+	if hasWireless then
 		self.wireless:scan(function(scanTable)
 					   _scanComplete(self, scanTable)
 				   end)
@@ -284,8 +285,7 @@ function startSqueezeboxSetup(self, mac, adhoc, setupNext)
 
 	if adhoc then
 		-- full configuration via adhoc network
-		local hasEthernet = self:ssidIsSqueezebox(adhoc)[1]
-		assert(hasEthernet)
+		local _, hasEthernet = self:ssidIsSqueezebox(adhoc)
 
 		_setupInit(self, mac, hasEthernet)
 		_setupConfig(self)
@@ -301,7 +301,7 @@ function startSqueezeboxSetup(self, mac, adhoc, setupNext)
 	end
 
 	-- remove squeezebox from scan results
-	if self.scanMenu then
+	if self.scanResults and self.scanResults[mac] then
 		self.scanMenu:removeItem(self.scanResults[mac].item)
 		self.scanResults[mac] = nil
 	end
@@ -1123,7 +1123,7 @@ function _chooseSlimserver(self)
 				    _scanSlimservers(self)
 			    end)
 
-	window:show()
+	self:tieAndShowWindow(window)
 
 	-- SqueezeNetwork will always be one entry, so wait until we have
 	-- two or more
@@ -1399,7 +1399,7 @@ function _setupOK(self)
 			   end)
 
 
-	window:show()
+	self:tieAndShowWindow(window)
 end
 
 
@@ -1443,7 +1443,7 @@ function _setupFailed(self)
 	window:addWidget(help)
 	window:addWidget(menu)
 
-	window:show()
+	self:tieAndShowWindow(window)
 end
 
 
