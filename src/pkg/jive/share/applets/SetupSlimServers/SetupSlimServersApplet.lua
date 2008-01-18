@@ -109,28 +109,6 @@ function settingsShow(self, menuItem)
 	}
 	menu:addItem(item)
 
-	--[[
-	-- Remove auto discovery, most of the time Jive now is only
-	-- connected to the same server as the current player, so
-	-- this is less relevant.
-	item = {
-		text = self:string("SLIMSERVER_AUTO_DISCOVERY"),
-		sound = "WINDOWSHOW",
-		icon = Checkbox("checkbox",
-				function(object, isSelected)
-					if isSelected then
-						self:_add("255.255.255.255")
-					else
-						self:_del("255.255.255.255")
-					end
-				end,
-				poll["255.255.255.255"] ~= nil
-			),
-		weight = 4 
-	}
-	menu:addItem(item)
-	--]]
-
 	-- Store the applet settings when the window is closed
 	window:addListener(EVENT_WINDOW_POP,
 			   function()
@@ -156,20 +134,30 @@ function _addServerItem(self, server, address)
 		self.serverMenu:removeItem(self.serverList[server:getIpPort()])
 	end
 
-	-- new entry
-	local item = {
-		text = server and server:getName() or address,
-		sound = "WINDOWSHOW",
-		callback = function() self:_serverMenu(server, address) end,
-		weight = 1
-	}
-
-	-- this is the current server if _server.id == id .. ":" .. port
 	local  currentPlayer = self.sdApplet:getCurrentPlayer()
-	if currentPlayer then
+
+	-- new entry
+	local item
+	if server and currentPlayer then
+		item = {
+			text = server:getName(),
+			sound = "WINDOWSHOW",
+			callback = function()
+					   self:connectPlayer(currentPlayer, server)
+				   end,
+			weight = 1
+		}
+
+		-- check current player
 		if server == currentPlayer:getSlimServer() then
 			item.style = 'checked'
 		end
+	else
+		item = {
+			text = server and server:getName() or address,
+			weight = 1,
+			style = 'itemNoAction'
+		}
 	end
 
 	self.serverMenu:addItem(item)
@@ -193,54 +181,6 @@ function _delServerItem(self, server, address)
 			self:_addServerItem(nil, address)
 		end
 	end
-end
-
-
-function _serverMenu(self, server, address)
-	local name = server and server:getName() or address
-
-	local window = Window("window", name)
-	local menu = SimpleMenu("menu", items)
-
-	local currentPlayer = self.sdApplet:getCurrentPlayer()
-
-	if server then
-		if server and currentPlayer and currentPlayer:getSlimServer() ~= server then
-			menu:addItem({
-					     text = self:string("SLIMSERVER_CONNECT", name),
-					     callback = function()
-								self:connectPlayer(currentPlayer, server)
-								window:hide()
-							end
-				     })
-		end
-
-		menu:addItem({
-				     text = self:string("SLIMSERVER_ADDRESS"),
-				     icon = Label("value", table.concat({ server:getIpPort() }, ":"))
-			     })
-		menu:addItem({
-				     text = self:string("SLIMSERVER_VERSION"),
-				     icon = Label("value", server:getVersion() or "")
-			     })
-	end
-
-	local poll = self.sdApplet:pollList()
-	local id = address or server:getIpPort()
-	if poll[id] then
-		menu:addItem({
-				     text = self:string("SLIMSERVER_FORGET", name),
-				     sound = "WINDOWHIDE",
-				     callback = function() 
-							self:_del(id)
-							self:_delServerItem(nil, id)
-							window:hide()
-						end
-			     })
-	end
-
-	window:addWidget(menu)
-	self:tieAndShowWindow(window)
 end
 
 
@@ -383,35 +323,41 @@ function _connectPlayerFailed(self, player, server)
 end
 
 
+function _getOtherServer(self)
+	local list = self.sdApplet:pollList()
+	for i,v in pairs(list) do
+		if i ~= "255.255.255.255" then
+			return i
+		end
+	end
+
+	return nil
+end
+
+
 -- remove broadcast address & add new address
 function _add(self, address)
 	log:debug("SlimServerApplet:_add: ", address)
 
-	local list = self.sdApplet:pollList()
-	list[address] = address
+	-- only keep other server and the broadcast address
+	local oldAddress = self:_getOtherServer()
+	self:_delServerItem(nil, oldAddress)
+
+	local list = {
+		["255.255.255.255"] = "255.255.255.255",
+		[address] = address
+	}
 
 	self.sdApplet:pollList(list)
 	self:getSettings().poll = list
 end
 
-
--- remove address and add broadcast if no other addresses
-function _del(self, address)
-	log:debug("SlimServerApplet:_del: ", address)
-
-	local list = self.sdApplet:pollList()
-	list[address] = nil
-
-	self.sdApplet:pollList(list)
-	self:getSettings().poll = list
-end
-	
 
 -- ip address input window
 function _addServer(self, menuItem)
 	local window = Window("window", menuItem.text)
 
-	local v = Textinput.ipAddressValue("0.0.0.0")
+	local v = Textinput.ipAddressValue(self:_getOtherServer() or "0.0.0.0")
 	local input = Textinput("textinput", v,
 				function(_, value)
 					self:_add(value:getValue())

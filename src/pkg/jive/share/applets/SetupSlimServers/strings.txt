@@ -10,38 +10,6 @@ SLIMSERVER_SERVERS
 	IT	Sorgente musicale
 	NL	Muziekbron
 
-SLIMSERVER_AUTO_DISCOVERY
-	DE	Autom. Erkennung
-	EN	Auto Discovery
-	ES	Detección automática
-	FR	Détection automatique
-	IT	Rilevamento automatico
-	NL	Autom. detectie
-
-SLIMSERVER_FORGET
-	DE	%s vergessen
-	EN	Forget %s
-	ES	Olvidar %s
-	FR	Ignorer %s
-	IT	Ignora %s
-	NL	%s vergeten
-
-SLIMSERVER_ADDRESS
-	DE	Adresse:
-	EN	Address:
-	ES	Dirección:
-	FR	Adresse:
-	IT	Indirizzo:
-	NL	Adres:
-
-SLIMSERVER_VERSION
-	DE	Version:
-	EN	Version:
-	ES	Versión:
-	FR	Version:
-	IT	Versione:
-	NL	Versie:
-
 SLIMSERVER_ADD_SERVER
 	DE	Anderer Server
 	EN	Other Server
@@ -81,10 +49,6 @@ SLIMSERVER_CONNECTED_TO
 	FR	Connecté à\n%s
 	IT	Connesso a\n%s
 	NL	Verbonden met\n%s
-
-SLIMSERVER_CONNECT
-	EN	Use %s
-
 
 SQUEEZEBOX_PROBLEM
 	DE	Verbindungsproblem
