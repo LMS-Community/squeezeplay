@@ -732,10 +732,13 @@ local function _browseSink(step, chunk, err)
 		if logd:isDebug() then
 			debug.dump(chunk, 8)
 		end
-	
+
 		-- if our window has a menu - some windows don't :(
 		if step.menu then
 			step.menu:setItems(step.db:menuItems(data))
+			if data.window and data.window.menuStyle then
+				step.menu:setStyle(data.window.menuStyle .. 'menu')
+			end
 
 			-- what's missing?
 			local from, qty = step.db:missing(step.menu:isAccelerated())
