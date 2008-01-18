@@ -84,3 +84,31 @@ SLIMSERVER_CONNECTED_TO
 
 SLIMSERVER_CONNECT
 	EN	Use %s
+
+
+SQUEEZEBOX_PROBLEM
+	DE	Verbindungsproblem
+	EN	Problem Connecting
+	ES	Problema de conexión
+	FR	Problème de connexion
+	IT	Problema di connessione
+	NL	Probleem bij verbinden
+
+SQUEEZEBOX_GO_BACK
+	DE	Zurück
+	EN	Go back
+	ES	Regresar
+	FR	Retour
+	IT	Indietro
+	NL	Terug
+
+SQUEEZEBOX_TRY_AGAIN
+	DE	Erneut versuchen.
+	EN	Try again
+	ES	Vuelva a intentarlo
+	FR	Réessayer
+	IT	Riprova
+	NL	Opnieuw proberen
+
+SQUEEZEBOX_PROBLEM_HELP
+	EN	Could not connect %s to %s.

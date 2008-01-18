@@ -56,6 +56,9 @@ module(...)
 oo.class(_M, Applet)
 
 
+local CONNECT_TIMEOUT = 30
+
+
 -- main setting menu
 function settingsShow(self, menuItem)
 
@@ -320,7 +323,7 @@ function connectPlayer(self, player, server)
 				end
 
 				timeout = timeout + 1
-				if timeout == 60 then
+				if timeout == CONNECT_TIMEOUT then
 					self:_connectPlayerFailed(player, server)
 				end
 			end)
@@ -348,7 +351,35 @@ end
 
 -- failed to connect player to server
 function _connectPlayerFailed(self, player, server)
-	log:warn("FAILED")
+	local window = Window("wireless", self:string("SQUEEZEBOX_PROBLEM"), setupsqueezeboxTitleStyle)
+	window:setAllowScreensaver(false)
+
+	local menu = SimpleMenu("menu",
+				{
+					{
+						text = self:string("SQUEEZEBOX_GO_BACK"),
+						sound = "WINDOWHIDE",
+						callback = function()
+								   window:hide()
+							   end
+					},
+					{
+						text = self:string("SQUEEZEBOX_TRY_AGAIN"),
+						sound = "WINDOWSHOW",
+						callback = function()
+								   self:connectPlayer(player, server)
+								   window:hide()
+							   end
+					},
+				})
+
+
+	local help = Textarea("help", self:string("SQUEEZEBOX_PROBLEM_HELP", player:getName(), server:getName()))
+
+	window:addWidget(help)
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
 end
 
 
