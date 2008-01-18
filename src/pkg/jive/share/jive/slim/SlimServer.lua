@@ -159,7 +159,7 @@ function _serverstatusSink(self, event, err)
 	for k,v in pairs(selfPlayers) do
 		player = self.players[k]
 		-- wave player bye bye
-		player:free()
+		player:free(self)
 		self.players[k] = nil
 	end
 	
@@ -265,7 +265,7 @@ function free(self)
 
 	-- delete players
 	for id, player in pairs(self.players) do
-		player:free()
+		player:free(self)
 	end
 	self.players = nil
 

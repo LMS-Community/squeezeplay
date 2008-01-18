@@ -219,6 +219,7 @@ function __init(self, jnt, slimServer, playerInfo)
 	players[obj.id] = obj
 
 	-- notify of new player
+	log:info(obj, " new for ", obj.slimServer)
 	jnt:notify('playerNew', obj)
 
 	return obj
@@ -244,11 +245,13 @@ function update(self, slimServer, playerInfo)
 	if self.slimServer ~= slimServer then
 		-- delete from old server
 		if self.slimServer then
+			log:info(self, " delete for ", self.slimServer)
 			self.jnt:notify('playerDelete', self)
 		end
 
 		-- add to new server
 		self.slimServer = slimServer
+		log:info(self, " new for ", self.slimServer)
 		self.jnt:notify('playerNew', self)
 	end
 	
@@ -322,18 +325,25 @@ end
 
 --[[
 
-=head2 jive.slim.Player:free()
+=head2 jive.slim.Player:free(slimServer)
 
-Deletes the player.
+Deletes the player, if connect to the given slimServer
 
 =cut
 --]]
-function free(self)
+function free(self, slimServer)
+	_assert(slimServer)
+
+	if self.slimServer ~= slimServer then
+		-- ignore, we are not connected to this server
+		return
+	end
+
+	log:info(self, " delete for ", self.slimServer)
 	self.jnt:notify('playerDelete', self)
 	self:offStage()
 
-	-- FIXME we can't free players, maybe used by other servers
-	-- players[self.id] = nil
+	players[self.id] = nil
 end
 
 
