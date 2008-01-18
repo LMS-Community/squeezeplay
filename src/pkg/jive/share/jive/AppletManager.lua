@@ -66,7 +66,7 @@ end
 -- _saveApplet
 -- creates entries for appletsDb, calculates paths and module names
 local function _saveApplet(name, dir)
-	log:debug("Found applet [", name, "] in ", dir)
+	log:debug("Found applet ", name, " in ", dir)
 	
 	if not _appletsDb[name] then
 	
@@ -97,7 +97,7 @@ end
 -- _findApplets
 -- find the available applets and store the findings in the appletsDb
 local function _findApplets()
-	log:debug("_findApplets()")
+	log:debug("_findApplets")
 
 	-- Find all applets/* directories on lua path
 	for dir in package.path:gmatch("([^;]*)%?[^;]*;") do
@@ -120,7 +120,7 @@ end
 -- _loadMeta
 -- loads the meta information of applet entry
 local function _loadMeta(entry)
-	log:debug("_loadMeta(", entry.appletName, ")")
+	log:debug("_loadMeta: ", entry.appletName)
 
 	local p = entry.metaLoaded
 	if p then
@@ -158,7 +158,7 @@ end
 -- _ploadMeta
 -- pcall of _loadMeta
 local function _ploadMeta(entry)
---	log:debug("_ploadMeta(", entry.appletName, ")")
+--	log:debug("_ploadMeta: ", entry.appletName)
 	
 	local ok, resOrErr = pcall(_loadMeta, entry)
 	if not ok then
@@ -173,7 +173,7 @@ end
 -- _loadMetas
 -- loads the meta-information of all applets
 local function _loadMetas()
-	log:debug("_loadMetas()")
+	log:debug("_loadMetas")
 
 	for name, entry in pairs(_appletsDb) do
 		if not entry.metaLoaded then
@@ -186,7 +186,7 @@ end
 -- _evalMeta
 -- evaluates the meta information of applet entry
 local function _evalMeta(entry)
-	log:debug("_evalMeta(", entry.appletName, ")")
+	log:debug("_evalMeta: ", entry.appletName)
 
 	entry.metaEvaluated = true
 
@@ -210,7 +210,7 @@ local function _evalMeta(entry)
 
 	-- we're good to go, the meta should now hook the applet
 	-- so it can be loaded on demand.
-	log:info("Registering applet ", entry.appletName)
+	log:info("Registering: ", entry.appletName)
 	obj:registerApplet()
 
 	-- get rid of us
@@ -256,7 +256,7 @@ end
 -- _evalMetas
 -- evaluates the meta-information of all applets
 local function _evalMetas()
-	log:debug("_evalMetas()")
+	log:debug("_evalMetas")
 
 	for name, entry in pairs(_appletsDb) do
 		if entry.metaLoaded and not entry.metaEvaluated then
@@ -269,7 +269,7 @@ end
 -- discover
 -- finds and loads applets
 function discover(self)
-	log:debug("AppletManager:loadApplets()")
+	log:debug("AppletManager:loadApplets")
 
 	_findApplets()
 	_loadMetas()
@@ -280,7 +280,7 @@ end
 -- _loadApplet
 -- loads the applet 
 local function _loadApplet(entry)
-	log:debug("_loadApplet(", entry.appletName, ")")
+	log:debug("_loadApplet: ", entry.appletName)
 
 	-- check to see if Applet is already loaded
 	local p = entry.appletLoaded
@@ -319,7 +319,7 @@ end
 -- _ploadApplet
 -- pcall of _loadApplet
 local function _ploadApplet(entry)
---	log:debug("_ploadApplet(", entry.appletName, ")")
+--	log:debug("_ploadApplet: ", entry.appletName)
 	
 	local ok, resOrErr = pcall(_loadApplet, entry)
 	if not ok then
@@ -334,7 +334,7 @@ end
 -- _evalApplet
 -- evaluates the applet
 local function _evalApplet(entry)
-	log:debug("_evalApplet(", entry.appletName, ")")
+	log:debug("_evalApplet: ", entry.appletName)
 
 	entry.appletEvaluated = true
 
@@ -359,7 +359,7 @@ end
 -- _pevalApplet
 -- pcall of _evalApplet
 local function _pevalApplet(entry)
---	log:debug("_pevalApplet(", entry.appletName, ")")
+--	log:debug("_pevalApplet: ", entry.appletName)
 	
 	local ok, resOrErr = pcall(_evalApplet, entry)
 	if not ok then
@@ -376,7 +376,7 @@ end
 -- load
 -- loads an applet. returns an instance of the applet
 function loadApplet(self, appletName)
-	log:debug("AppletManager:loadApplet(", appletName, ")")
+	log:debug("AppletManager:loadApplet: ", appletName)
 
 	local entry = _appletsDb[appletName]
 	
@@ -410,7 +410,7 @@ function loadApplet(self, appletName)
 	if _ploadApplet(entry) then
 		local obj = _pevalApplet(entry)
 		if obj then
-			log:info("Loaded applet ", appletName)
+			log:info("Loaded: ", appletName)
 		end
 		return obj
 	end
@@ -450,7 +450,7 @@ function _loadLocaleStrings(entry)
 		return
 	end
 
-	log:debug("_loadLocaleStrings(", entry.appletName, ")")
+	log:debug("_loadLocaleStrings: ", entry.appletName)
 	entry.stringsTable = locale:readStringsFile(entry.stringsFilepath)
 end
 
@@ -463,7 +463,7 @@ function _loadSettings(entry)
 		return
 	end
 
-	log:debug("_loadSettings(", entry.appletName, ")")
+	log:debug("_loadSettings: ", entry.appletName)
 
 	local fh = io.open(entry.settingsFilepath)
 	if fh == nil then
@@ -475,7 +475,7 @@ function _loadSettings(entry)
 	fh:close()
 
 	if not f then
-		log:warn("Error reading ", entry.appletName, " settings: ", err)
+		log:error("Error reading ", entry.appletName, " settings: ", err)
 	else
 		-- evalulate the settings in a sandbox
 		local env = {}
@@ -492,7 +492,7 @@ end
 function _storeSettings(entry)
 	assert(entry)
 
-	log:warn("storing settings at ", entry.settingsFilepath)
+	log:info("storeSettings: ", entry.appletName)
 
 	local file = assert(io.open(entry.settingsFilepath, "w"))
 	serialize.save(file, "settings", entry.settings)
@@ -519,7 +519,7 @@ end
 -- _freeApplet
 --
 function _freeApplet(self, entry)
-	log:warn("AppletManager:_freeApplet(", entry.appletName, ")")
+	log:debug("freeApplet: ", entry.appletName)
 
 	if entry.appletEvaluated then
 
@@ -540,7 +540,7 @@ function _freeApplet(self, entry)
 		end
 	end
 	
-	log:info("Freeing ", appletName)
+	log:info("Freeing: ", entry.appletName)
 	
 	entry.appletEvaluated = false
 	entry.appletLoaded = false
