@@ -77,19 +77,23 @@ function settingsShow(self, menuItem)
 	jnt:subscribe(self)
 
 
+	-- Discover slimservers in this window
+	self.sdApplet:discover()
+	window:addTimer(1000, function() self.sdApplet:discover() end)
+
+
 	-- slimservers on the poll list
 	local poll = self.sdApplet:pollList()
 	for address,_ in pairs(poll) do
 		if address ~= "255.255.255.255" then
-			self:_addServerItem(address)
+			self:_addServerItem(nil, address)
 		end
 	end
 
 
 	-- discovered slimservers
 	for _,server in self.sdApplet:allServers() do
-		local id, port = server:getIpPort()
-		self:_addServerItem(id, port, server)
+		self:_addServerItem(server)
 	end
 
 	local item = {
@@ -124,9 +128,6 @@ function settingsShow(self, menuItem)
 	menu:addItem(item)
 	--]]
 
-	-- Discover slimservers in this window
-	window:addTimer(1000, function() self.sdApplet:discover() end)
-
 	-- Store the applet settings when the window is closed
 	window:addListener(EVENT_WINDOW_POP,
 			   function()
@@ -139,27 +140,31 @@ function settingsShow(self, menuItem)
 end
 
 
-function _addServerItem(self, id, port, server)
-	log:debug("_addServerItem ", id, " " , port, " ", server)
+function _addServerItem(self, server, address)
+	log:debug("_addServerItem ", server, " " , port)
+
+	local id = server or address
 
 	-- remove existing entry
 	if self.serverList[id] then
 		self.serverMenu:removeItem(self.serverList[id])
 	end
+	if server and self.serverList[server:getIpPort()] then
+		self.serverMenu:removeItem(self.serverList[server:getIpPort()])
+	end
 
 	-- new entry
 	local item = {
-		text = server and server:getName() or id,
+		text = server and server:getName() or address,
 		sound = "WINDOWSHOW",
-		callback = function() self:_serverMenu(id, server) end,
+		callback = function() self:_serverMenu(server, address) end,
 		weight = 1
 	}
 
 	-- this is the current server if _server.id == id .. ":" .. port
 	local  currentPlayer = self.sdApplet:getCurrentPlayer()
 	if currentPlayer then
-		local currentServer = currentPlayer:getSlimServer()
-		if currentServer:getIpPort() == id then
+		if server == currentPlayer:getSlimServer() then
 			item.style = 'checked'
 		end
 	end
@@ -169,22 +174,27 @@ function _addServerItem(self, id, port, server)
 end
 
 
-function _delServerItem(self, id, server)
+function _delServerItem(self, server, address)
 	-- remove entry
+	local id = server or address
 	if self.serverList[id] then
 		self.serverMenu:removeItem(self.serverList[id])
 		self.serverList[id] = nil
 	end
 
 	-- new entry if server is on poll list
-	local poll = self.sdApplet:pollList()
-	if poll[id] then
-		self:_addServerItem(id)
+	if server then
+		local poll = self.sdApplet:pollList()
+		local address = server:getIpPort()
+		if poll[address] then
+			self:_addServerItem(nil, address)
+		end
 	end
 end
 
-function _serverMenu(self, id, server)
-	local name = server and server:getName() or id
+
+function _serverMenu(self, server, address)
+	local name = server and server:getName() or address
 
 	local window = Window("window", name)
 	local menu = SimpleMenu("menu", items)
@@ -213,12 +223,14 @@ function _serverMenu(self, id, server)
 	end
 
 	local poll = self.sdApplet:pollList()
+	local id = address or server:getIpPort()
 	if poll[id] then
 		menu:addItem({
 				     text = self:string("SLIMSERVER_FORGET", name),
 				     sound = "WINDOWHIDE",
 				     callback = function() 
 							self:_del(id)
+							self:_delServerItem(nil, id)
 							window:hide()
 						end
 			     })
@@ -230,20 +242,18 @@ end
 
 
 function notify_serverNew(self, server)
-	local id = server:getIpPort()
-	self:_addServerItem(id, server)
+	self:_addServerItem(server)
 end
 
 
 function notify_serverDelete(self, server)
-	local id = server:getIpPort()
-	self:_delServerItem(id, server)
+	self:_delServerItem(server)
 end
 
 
 function _updateServerList(self, server)
 	for id, item in pairs(self.serverList) do
-		if server and server:getIpPort() == id then
+		if server == id then
 			item.style = 'checked'
 		else
 			item.style = nil
@@ -374,7 +384,7 @@ function _addServer(self, menuItem)
 	local input = Textinput("textinput", v,
 				function(_, value)
 					self:_add(value:getValue())
-					self:_addServerItem(value:getValue())
+					self:_addServerItem(nil, value:getValue())
 
 					window:playSound("WINDOWSHOW")
 					window:hide(Window.transitionPushLeft)
