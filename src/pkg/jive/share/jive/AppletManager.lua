@@ -492,7 +492,7 @@ end
 function _storeSettings(entry)
 	assert(entry)
 
-	log:info("storeSettings: ", entry.appletName)
+	log:info("Store settings: ", entry.appletName)
 
 	local file = assert(io.open(entry.settingsFilepath, "w"))
 	serialize.save(file, "settings", entry.settings)
