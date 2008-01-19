@@ -303,23 +303,30 @@ Hides this window. It it is currently at the top of the window stack then the I<
 function hide(self, transition)
 	local stack = Framework.windowStack
 
-	local wasVisible = (stack[1] == self)
+	local wasVisible = self.visible
 
 	-- remove the window from window stack
 	table.delete(stack, self)
 
-	local topWindow = stack[1]
-	if wasVisible and topWindow then
+	-- find top window, ignoring always on top windows
+	local idx = 1
+	local topwindow = stack[idx]
+	while topwindow and topwindow.alwaysOnTop do
+		idx = idx + 1
+		topwindow = stack[idx]
+	end
+
+	if wasVisible and topwindow then
 		-- top window is now active
-		topWindow:dispatchNewEvent(EVENT_WINDOW_ACTIVE)
+		topwindow:dispatchNewEvent(EVENT_WINDOW_ACTIVE)
 
 		-- top window and widgets are now visible
-		topWindow:dispatchNewEvent(EVENT_SHOW)
-		topWindow:reDraw()
+		topwindow:dispatchNewEvent(EVENT_SHOW)
+		topwindow:reDraw()
 
 		-- push transitions
 		transition = transition or self._DEFAULT_HIDE_TRANSITION
-		Framework:_startTransition(_newTransition(transition, self, topWindow))
+		Framework:_startTransition(_newTransition(transition, self, topwindow))
 	end
 
 	if self.visible then
@@ -641,7 +648,7 @@ function _newTransition(transition, oldwindow, newwindow)
 	local windows = {}
 
 	local w = Framework.windowStack[idx]
-	while w ~= newwindow and w.transparent do
+	while w ~= oldwindow and w ~= newwindow and w.transparent do
 		table.insert(windows, 1, w)
 
 		idx = idx + 1
@@ -653,7 +660,7 @@ function _newTransition(transition, oldwindow, newwindow)
 			       f(widget, surface)
 
 			       for i,w in ipairs(windows) do
-				       w:draw(surface, LAYER_ALL)
+				       w:draw(surface, LAYER_CONTENT)
 			       end
 		       end
 	else
