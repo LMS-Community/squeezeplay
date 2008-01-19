@@ -134,30 +134,34 @@ function _addServerItem(self, server, address)
 		self.serverMenu:removeItem(self.serverList[server:getIpPort()])
 	end
 
-	local  currentPlayer = self.sdApplet:getCurrentPlayer()
+	local currentPlayer = self.sdApplet:getCurrentPlayer()
 
 	-- new entry
 	local item
-	if server and currentPlayer then
+	if server and currentPlayer and currentPlayer:canConnectToServer() then
+		local f = function()
+				  self:connectPlayer(currentPlayer, server)
+			  end
+
 		item = {
 			text = server:getName(),
 			sound = "WINDOWSHOW",
-			callback = function()
-					   self:connectPlayer(currentPlayer, server)
-				   end,
+			callback = f,
+			connectFunc = f,
 			weight = 1
 		}
-
-		-- check current player
-		if server == currentPlayer:getSlimServer() then
-			item.style = 'checked'
-		end
 	else
 		item = {
 			text = server and server:getName() or address,
 			weight = 1,
 			style = 'itemNoAction'
 		}
+	end
+
+	-- check current player
+	if server == currentPlayer:getSlimServer() then
+		item.style = 'checked' -- XXXX NoAction
+		item.callback = nil
 	end
 
 	self.serverMenu:addItem(item)
@@ -194,12 +198,19 @@ function notify_serverDelete(self, server)
 end
 
 
-function _updateServerList(self, server)
+function _updateServerList(self, player)
+	local server = player and player:getSlimServer()
+
 	for id, item in pairs(self.serverList) do
 		if server == id then
-			item.style = 'checked'
+			item.style = 'checked' -- XXXX NoAction
+			item.callback = nil
 		else
 			item.style = nil
+
+			if player and player:canConnectToServer() then
+				item.callback = item.connectFunc
+			end
 		end
 		self.serverMenu:updatedItem(item)
 	end
@@ -207,12 +218,19 @@ end
 
 
 function notify_playerNew(self, player)
+	if player == self.waitForConnect.player
+		and player:getSlimServer() == self.waitForConnect.server then
+
+		self.waitForConnect = nil
+		jiveMain:closeToHome()
+	end
+
 	local currentPlayer = self.sdApplet:getCurrentPlayer()
 	if player ~= currentPlayer then
 		return
 	end
 
-	_updateServerList(self, player:getSlimServer())
+	_updateServerList(self, player)
 end
 
 
@@ -222,23 +240,23 @@ function notify_playerDelete(self, player)
 		return
 	end
 
-	_updateServerList(self, player:getSlimServer())
+	_updateServerList(self, player)
 end
 
 
 function notify_playerCurrent(self, player)
-	_updateServerList(self, player and player:getSlimServer())
+	_updateServerList(self, player)
 end
 
 
 -- connect player to server
 function connectPlayer(self, player, server)
-	log:warn("connect ", player, " to ", server)
-
 	-- tell the player to move servers
-	local ip, port = server:getIpPort()
-	player:send({'connect', ip})
-
+	self.waitForConnect = {
+		player = player,
+		server = server
+	}
+	player:connectToServer(server)
 
 	local window = Popup("popupIcon")
 	window:addWidget(Icon("iconConnecting"))
@@ -258,31 +276,13 @@ function connectPlayer(self, player, server)
 				-- scan all servers waiting for the player
 				self.sdApplet:discover()
 
-				if player:getSlimServer() == server then
-					self:_connectPlayerDone(player, server)
-				end
+				-- we detect when the connect to the new server
+				-- with notify_playerNew
 
 				timeout = timeout + 1
 				if timeout == CONNECT_TIMEOUT then
 					self:_connectPlayerFailed(player, server)
 				end
-			end)
-
-	self:tieAndShowWindow(window)
-end
-
-
--- sucessfully connected player to server
-function _connectPlayerDone(self, player, server)
-	local window = Popup("popupIcon")
-	window:addWidget(Icon("iconConnected"))
-
-	local statusLabel = Label("text", self:string("SLIMSERVER_CONNECTED_TO", server:getName()))
-	window:addWidget(statusLabel)
-
-	window:addTimer(2000,
-			function()
-				window:hide()
 			end)
 
 	self:tieAndShowWindow(window)

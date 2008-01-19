@@ -29,7 +29,7 @@ Notifications:
 local debug = require("jive.utils.debug")
 
 -- stuff we need
-local _assert, tonumber, tostring, pairs = _assert, tonumber, tostring, pairs
+local _assert, setmetatable, tonumber, tostring, pairs = _assert, setmetatable, tonumber, tostring, pairs
 
 local os             = require("os")
 local string         = require("string")
@@ -67,6 +67,7 @@ module(..., oo.class)
 
 -- list of players index by id.
 local players = {}
+setmetatable(players, { __mode = 'v' })
 
 
 -- _getSink
@@ -343,7 +344,8 @@ function free(self, slimServer)
 	self.jnt:notify('playerDelete', self)
 	self:offStage()
 
-	players[self.id] = nil
+	-- The global players table uses weak values, it will be removed
+	-- when all references are freed.
 end
 
 
@@ -818,6 +820,20 @@ function getVolume(self)
 	if self.state then
 		return self.state["mixer volume"] or 0
 	end
+end
+
+
+-- returns true if this player can connect to another server
+function canConnectToServer(self)
+	return self.model == "squeezebox2"
+		or self.model == "receiver"
+		or self.model == "transporter"
+end
+
+-- tell the player to connect to another server
+function connectToServer(self, server)
+	local ip, port = server:getIpPort()
+	self:send({'connect', ip})
 end
 
 

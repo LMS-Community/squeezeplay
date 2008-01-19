@@ -61,7 +61,7 @@ function closeToHome(self, hideAlwaysOnTop)
 
 	local k = 1
 	for i = 1, #stack do
-		if stack[i].alwaysOnTop and ~hideAlwaysOnTop then
+		if stack[i].alwaysOnTop and hideAlwaysOnTop == false then
 			k = i + 1
 		end
 
