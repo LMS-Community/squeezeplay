@@ -470,16 +470,16 @@ end
 
 --[[
 
-=head2 jive.ui.Widget:dispatchNewEvent(eventType)
+=head2 jive.ui.Widget:dispatchNewEvent(eventType, ...)
 
-Send a new event of type I<type> with value I<value> to this widgets listeners.
+Send a new event of type I<type> with value I<value> to this widgets listeners. The additional args are event specific.
 
 =cut
 --]]
-function dispatchNewEvent(self, eventType)
+function dispatchNewEvent(self, eventType, ...)
 	_assert(type(eventType) == "number", "Invalid event type")
 
-	local event = Event:new(eventType)
+	local event = Event:new(eventType, ...)
 	return Framework:dispatchEvent(self, event)
 end
 
