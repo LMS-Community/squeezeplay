@@ -4,6 +4,7 @@ local assert, pairs = assert, pairs
 local oo            = require("loop.base")
 local table         = require("jive.utils.table")
 
+local Framework     = require("jive.ui.Framework")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
 
@@ -45,6 +46,30 @@ function setTitle(self, title)
 		self.window:setTitle(title)
 	else
 		self.window:setTitle(self.windowTitle)
+	end
+end
+
+
+--[[
+
+Close all windows to expose the home menu. By default alwaysOnTop windows
+are not hidden.
+
+--]]
+function closeToHome(self, hideAlwaysOnTop)
+	local stack = Framework.windowStack
+
+	local k = 1
+	for i = 1, #stack do
+		if stack[i].alwaysOnTop and ~hideAlwaysOnTop then
+			k = i + 1
+		end
+
+		if stack[i] == self.window then
+			for j = i - 1, k, -1 do
+				stack[j]:hide()
+			end
+		end
 	end
 end
 

@@ -103,9 +103,7 @@ local function _homeHandler(event)
 
 		if #windowStack > 1 then
 			Framework:playSound("JUMP")
-			while #windowStack > 1 do
-				windowStack[#windowStack - 1]:hide(nil, "JUMP")
-			end
+			jiveMain:closeToHome(true)
 		else
 			Framework:playSound("BUMP")
 			windowStack[1]:bumpLeft()

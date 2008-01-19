@@ -204,13 +204,13 @@ int jiveL_window_draw(lua_State *L) {
 	Uint32 layer = luaL_optinteger(L, 3, JIVE_LAYER_ALL);
 
 	lua_getfield(L, 1, "transparent");
-	if (lua_toboolean(L, -1) && (layer & JIVE_LAYER_FRAME)) {
+	if (lua_toboolean(L, -1)) {
 		/* draw underneath a popup */
 		if (jive_getmethod(L, 1, "getLowerWindow")) {
 			lua_pushvalue(L, 1);
 			lua_call(L, 1, 1);
 
-			if (jive_getmethod(L, -1, "draw")) {
+			if ((layer & JIVE_LAYER_FRAME) && jive_getmethod(L, -1, "draw")) {
 				lua_pushvalue(L, -2);
 				lua_pushvalue(L, 2);
 				lua_pushinteger(L, JIVE_LAYER_ALL);
@@ -218,7 +218,7 @@ int jiveL_window_draw(lua_State *L) {
 				lua_call(L, 3, 0);
 			}
 
-			if (!lua_isnil(L, -1) && peer->mask_tile) {
+			if ((layer & peer->w.layer) && !lua_isnil(L, -1) && peer->mask_tile) {
 				JiveWidget *peer2;
 
 				lua_getfield(L, -1, "peer");
