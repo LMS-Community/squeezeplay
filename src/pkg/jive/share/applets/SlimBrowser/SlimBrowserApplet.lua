@@ -683,16 +683,6 @@ local function _goPlaylist()
 	showPlaylist()
 end
 
--- _goHome
--- pushes the home window to the top
-local function _goHome()
-	local windowStack = Framework.windowStack
-	Framework:playSound("JUMP")
-	while #windowStack > 1 do
-		windowStack[#windowStack - 1]:hide(nil, "JUMP")
-	end
-end
-
 -- _devnull
 -- sinks that silently swallows data
 -- used for actions that go nowhere (play, add, etc.)
@@ -853,7 +843,7 @@ local function _menuSink(self, cmd)
 							log:debug(v.nextWindow)
 							if v.nextWindow then
 								if v.nextWindow == 'home' then
-									sink = _goHome
+									sink = goHome
 								elseif v.nextWindow == 'playlist' then
 									sink = _goPlaylist
 								elseif v.nextWindow == 'nowPlaying' then
@@ -962,7 +952,7 @@ local _globalActions = {
 			   
 		-- are we in home?
 		if #windowStack > 1 then
-			_goHome()
+			goHome()
 		else
 			_goNowPlaying()
 		end
@@ -1198,7 +1188,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 				elseif item['nextWindow'] == 'playlist' then
 					sink = _goPlaylist
 				elseif item['nextWindow'] == 'home' then
-					sink = _goHome
+					sink = goHome
 				elseif item["showBigArtwork"] then
 					sink = _bigArtworkPopup
 				elseif actionName == 'go' then
@@ -1681,21 +1671,38 @@ end
 -- SlimBrowserApplet public methods
 --==============================================================================
 
+-- goHome
+-- pushes the home window to the top
+function goHome()
+	local windowStack = Framework.windowStack
+	Framework:playSound("JUMP")
+	while #windowStack > 1 do
+		windowStack[#windowStack - 1]:hide(nil, "JUMP")
+	end
+end
+
+
 -- showPlaylist
 --
 function showPlaylist()
 	if _statusStep then
 		log:debug("showPlaylist()")
-	
-		-- show our NowPlaying window!
-		_statusStep.window:show()
-		
+
 		-- arrange so that menuListener works
 		_statusStep.origin = _curStep
 		_curStep = _statusStep
 
 		-- current playlist should select currently playing item 
-		if _statusStep.menu.list.currentIndex then
+		-- if there is only one item in the playlist, bring the selected item to top
+		-- FIXME, having the list size of 3 be the indicator of a single-item playlist is a hack
+		-- track count should be sent by playerstatus in addition to item_loop count
+		if _statusStep.menu.listSize == 3 then
+			_statusStep.menu["_lastSelectedIndex"] = 1
+			_statusStep.menu["_lastSelectedOffset"] = 1 
+			_statusStep.menu.selected = 1
+			_statusStep.menu:_updateWidgets()
+		-- otherwise bring the currently playing item to the screen with offset of 2
+		elseif _statusStep.menu.list.currentIndex then
 			_statusStep.menu.selected = _statusStep.menu.list.currentIndex
 			if _statusStep.menu["_lastSelectedIndex"] then
 				_statusStep.menu["_lastSelectedIndex"] = _statusStep.menu.selected
@@ -1705,7 +1712,7 @@ function showPlaylist()
 			-- _updateWidgets to display correctly selected item
 			_statusStep.menu:_updateWidgets()
 		end
-	
+
 		_statusStep.window:addListener(EVENT_KEY_PRESS,
 			function(event)
 				local evtCode = event:getKeycode()
@@ -1714,7 +1721,7 @@ function showPlaylist()
 					-- if this window is #2 on the stack there is no NowPlaying window 
 					-- (e.g., when playlist is empty)
 					if #windowStack == 2 then
-						_goHome()
+						goHome()
 					else
 						_goNowPlaying(Window.transitionPushRight)
 					end
@@ -1722,11 +1729,29 @@ function showPlaylist()
 				end
 			end
 		)
+		 _statusStep.window:addListener(EVENT_WINDOW_ACTIVE,
+			function(event)
+				-- FIXME, next line is a workaround for Bug 6670
+				_statusStep.window:checkLayout()
+				-- a menu size of 3 means a single item playlist (1 track plus clear/save playlist items)
+				-- single item playlists are skipped into the songinfo window
+				-- FIXME, having the list size of 3 be the indicator of a single-item playlist is a hack
+				-- track count should be sent by playerstatus in addition to item_loop count
+				if _statusStep.menu.listSize == 3 then
+					-- need to spoof a key press here to descend one window further
+					_statusStep.menu:dispatchNewEvent(EVENT_ACTION)
+					-- we only do this once, so remove the listener now
+					return EVENT_CONSUME
+				end
+			end
+		)
 
-	
+		_statusStep.window:show()
+
 		return EVENT_CONSUME
 	end
 	return EVENT_UNUSED
+
 end
 
 

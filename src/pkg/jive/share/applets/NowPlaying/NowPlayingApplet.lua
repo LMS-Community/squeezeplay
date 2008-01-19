@@ -461,16 +461,12 @@ function _installListeners(self, window)
 				local type = event:getType()
 				local keyPress = event:getKeycode()
 				if (keyPress == KEY_BACK) then
-					local windowStack = Framework.windowStack
-					Framework:playSound("JUMP")
-					while #windowStack > 1 do
-						windowStack[#windowStack - 1]:hide(nil, "JUMP")
-					end
 					-- back to Home
-					--window:hide(Window.transitionPushRight)
+					browser:goHome()
 					return EVENT_CONSUME
 
 				elseif (keyPress == KEY_GO) then
+					-- to playlist
 					browser:showPlaylist()
 					return EVENT_CONSUME
 				end
@@ -596,7 +592,6 @@ function openScreensaver(self, style, transition)
 	local transitionOn
 	if transition then
 		transitionOn = transition
-		log:warn(transitionOn)
 	elseif style == 'ss' then
 		transitionOn = Window.transitionFadeIn
 	elseif style == 'browse' then
