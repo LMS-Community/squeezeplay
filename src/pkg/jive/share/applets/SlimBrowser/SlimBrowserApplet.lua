@@ -1694,9 +1694,8 @@ function showPlaylist()
 
 		-- current playlist should select currently playing item 
 		-- if there is only one item in the playlist, bring the selected item to top
-		-- FIXME, having the list size of 3 be the indicator of a single-item playlist is a hack
-		-- track count should be sent by playerstatus in addition to item_loop count
-		if _statusStep.menu.listSize == 3 then
+		local playlistSize = _safeDeref(_player, 'playerStatus', 'playlist_tracks')
+		if playlistSize == 1 then
 			_statusStep.menu["_lastSelectedIndex"] = 1
 			_statusStep.menu["_lastSelectedOffset"] = 1 
 			_statusStep.menu.selected = 1
@@ -1735,9 +1734,8 @@ function showPlaylist()
 				_statusStep.window:checkLayout()
 				-- a menu size of 3 means a single item playlist (1 track plus clear/save playlist items)
 				-- single item playlists are skipped into the songinfo window
-				-- FIXME, having the list size of 3 be the indicator of a single-item playlist is a hack
-				-- track count should be sent by playerstatus in addition to item_loop count
-				if _statusStep.menu.listSize == 3 then
+				local playlistSize = _safeDeref(_player, 'playerStatus', 'playlist_tracks')
+				if playlistSize == 1 then
 					-- need to spoof a key press here to descend one window further
 					_statusStep.menu:dispatchNewEvent(EVENT_ACTION)
 					-- we only do this once, so remove the listener now
