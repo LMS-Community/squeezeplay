@@ -31,17 +31,25 @@ HELP
 	NL	Kies de applets die vanuit SqueezeCenter geïnstalleerd moeten worden en selecteer dan Installeren
 
 DOWNLOADING
-	DE	Applets herunterladen
-	EN	Downloading Applets
-	ES	Descargando subprogramas
-	FR	Téléchargement des applets
-	IT	Download delle applet
-	NL	Applets worden gedownload
+	DE	\nApplets herunterladen
+	EN	\nDownloading Applets
+	ES	\nDescargando subprogramas
+	FR	\nTéléchargement des applets
+	IT	\nDownload delle applet
+	NL	\nApplets worden gedownload
 
-RESTART
+RESTART_APP
 	DE	Zum Nutzen neuer Applets Anwendung neu starten
 	EN	Restart application to make use of new applets
 	ES	Reiniciar aplicación para utilizar nuevos subprogramas
 	FR	Redémarrez l'application pour utiliser les nouveaux applets.
 	IT	Riavviare l'applicazione per usare le nuove applet
 	NL	Start de toepassing opnieuw om nieuwe applets te kunnen gebruiken
+
+RESTART_JIVE
+	DE	\nNeustart
+	EN	\nRestarting
+	ES	\nReiniciando
+	FR	\nRedémarrage
+	IT	\nRiavvio
+	NL	\nBezig met opnieuw starten

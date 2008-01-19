@@ -187,7 +187,7 @@ function startDownload(self)
 
 	self.task = Task("applet download", self, function()
 												  self:_download(appletdir)
-												  self:_finished()
+												  self:_finished(label)
 											  end)
 
 	self.task:addTask()
@@ -223,7 +223,7 @@ end
 
 
 -- called when download complete
-function _finished(self)
+function _finished(self, label)
 	-- save new version numbers
 	for applet, appletdata in pairs(self.todownload) do
 		self:getSettings()[applet] = appletdata.ver
@@ -233,13 +233,19 @@ function _finished(self)
 	-- FIXME: ideally we do something here to reload all applets or restart the app itself rather than rebooting
 
 	if lfs.attributes("/bin/busybox") ~= nil then
+		label:setValue(self:string("RESTART_JIVE"))
+		-- two second delay
+		local t = Framework:getTicks()
+		while (t + 2000) > Framework:getTicks() do
+			Task:yield(true)
+		end
 		log:warn("RESTARTING JIVE...")
 		os.execute("/bin/busybox reboot -f")
 	else
 		self.animatewindow:hide()
 		self.window:removeWidget(self.menu)
 		self.window:removeWidget(self.help)
-		self.window:addWidget(Textarea("help", self:string("RESTART")))
+		self.window:addWidget(Textarea("help", self:string("RESTART_APP")))
 	end
 end
 
