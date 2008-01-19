@@ -81,6 +81,32 @@ local ucpCodes = {
 	"uuid"
 }
 
+local function _ucpString(v)
+	return v
+end
+
+local function _ucpHex(v)
+	local h = { '0x' }
+	for i, n in ipairs({ string.byte(v, 1, -1) }) do
+		h[#h + 1] = string.format('%02x', n)
+	end
+
+	return #v .. " " .. table.concat(h)
+end
+
+local ucpStrings = {
+	name = _ucpString,
+	type = _ucpString,
+	use_dhcp = _ucpHex,
+	ip_addr = _ucpHex,
+	subnet_mask = _ucpHex,
+	gateway_addr = _ucpHex,
+	firmware_rev = _ucpString,
+	hardware_rev = _ucpString,
+	device_id = _ucpString,
+	device_status = _ucpString,
+	uuid = _ucpString,
+}
 
 function __init(self, jnt)
 	if _instance then
@@ -104,14 +130,12 @@ end
 
 
 function addSink(self, sink)
-	log:warn("ADD SINK ", sink)
 	table.insert(self.sinks, sink)
 	return sink
 end
 
 
 function removeSink(self, sink)
-	log:warn("REMOVE SINK ", sink)
 	table.delete(self.sinks, sink)
 end
 
@@ -158,7 +182,6 @@ function parseDiscover(pkt, recv, offset)
 		ucp_len, offset = unpackNumber(recv, offset, 1)
 		ucp_data = string.sub(recv, offset, offset + ucp_len - 1)
 		offset = offset + ucp_len
-
 		pkt.ucp[ucpCodes[ucp_code]] = ucp_data
 	end
 end
@@ -390,7 +413,7 @@ function tostringUdap(pkt)
 	}
 	if pkt.ucp then
 		for k,v in pairs(pkt.ucp) do
-			t[#t + 1] = k .. ":\t" .. v
+			t[#t + 1] = k .. ":\t" .. ucpStrings[k](v)
 		end
 	end
 	if pkt.data then
@@ -402,6 +425,9 @@ function tostringUdap(pkt)
 
 			t[#t + 1] = k .. " (#" .. #v .. "):\t" .. hex
 		end
+	end
+	if pkt.uuid then
+		t[#t + 1] = "uuid:\t\t" .. pkt.uuid
 	end
 
 	return table.concat(t, "\n")
