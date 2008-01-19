@@ -533,7 +533,12 @@ function _freeApplet(self, entry)
 
 		-- swallow any error
 		
-		if not continue then
+		if continue == nil then
+			-- warn if applet returns nil
+			log:warn(entry.appletName, ":free() returned nil")
+		end
+
+		if continue == false then
 			-- the only way for continue to be false is to have the loaded applet have a free funtion
 			-- that successfully executes and returns false.
 			return
