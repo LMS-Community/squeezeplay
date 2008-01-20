@@ -159,7 +159,7 @@ function _addServerItem(self, server, address)
 	end
 
 	-- check current player
-	if server == currentPlayer:getSlimServer() then
+	if currentPlayer and server == currentPlayer:getSlimServer() then
 		item.style = 'checkedNoAction'
 		item.callback = nil
 	end
@@ -218,8 +218,8 @@ end
 
 
 function notify_playerNew(self, player)
-	if player == self.waitForConnect.player
-		and player:getSlimServer() == self.waitForConnect.server then
+	if self.waitForConnect and self.waitForConnect.player == player
+		and self.waitForConnect.server == player:getSlimServer() then
 
 		self.waitForConnect = nil
 		jiveMain:closeToHome()
