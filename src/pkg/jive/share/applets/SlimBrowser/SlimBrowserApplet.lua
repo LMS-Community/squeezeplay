@@ -404,7 +404,6 @@ end
 local function _artworkItem(item, group, menuAccel)
 	local icon = group and group:getWidget("icon")
 
-	debug.dump(item, 2)
 	if item["icon-id"] then
 		if menuAccel and not _server:artworkThumbCached(item["icon-id"], 56) then
 			-- Don't load artwork while accelerated
