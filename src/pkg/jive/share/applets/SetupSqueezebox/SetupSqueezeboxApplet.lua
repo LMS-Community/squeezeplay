@@ -1245,7 +1245,7 @@ function notify_playerNew(self, player)
 	if string.lower(playerId) == string.lower(self.mac) then
 
 		-- wait until the player is connected before continuing
-		if not player:getConnected() then
+		if not player:isConnected() then
 			log:info("player not connected to SC")
 			return
 		end

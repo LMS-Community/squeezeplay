@@ -89,6 +89,22 @@ function notify_playerCurrent(self, playerObj)
 end
 
 
+function notify_serverConnected(self, server)
+	for id, player in server:allPlayers() do
+		self:_refreshPlayerItem(player)
+	end
+	self:manageSelectPlayerMenu()
+end
+
+
+function notify_serverDisconnected(self, server)
+	for id, player in server:allPlayers() do
+		self:_refreshPlayerItem(player)
+	end
+	self:manageSelectPlayerMenu()
+end
+
+
 function manageSelectPlayerMenu(self)
         local sdApplet = AppletManager:getAppletInstance("SlimDiscovery")
 	local _numberOfPlayers = sdApplet and sdApplet:countPlayers() or 0
@@ -140,11 +156,43 @@ function _addPlayerItem(self, player)
 		end,
 		weight =  1
 	}
+
+	if player == self.selectedPlayer then
+		item.style = "checked"
+	end
+
 	self.playerMenu:addItem(item)
 	self.playerItem[mac] = item
 	
 	if self.selectedPlayer == player then
 		self.playerMenu:setSelectedItem(item)
+	end
+end
+
+
+function _refreshPlayerItem(self, player)
+	local mac = player.id
+
+	if player:isConnected() then
+		if not self.playerItem[mac] then
+			-- add player
+			self:_addPlayerItem(player)
+
+		else
+			-- update player state
+			if player == self.selectedPlayer then
+				item.style = "checked"
+			else
+				item.style = nil
+			end
+		end
+
+	else
+		-- not connected
+		if self.playerItem[mac] then
+			self.playerMenu:removeItem(self.playerItem[mac])
+			self.playerItem[mac] = nil
+		end
 	end
 end
 
@@ -204,21 +252,10 @@ function setupShow(self, setupNext)
 	end
 
 	self.selectedPlayer = self.discovery:getCurrentPlayer()
-	for mac, playerObj in self.discovery:allPlayers() do
-		_addPlayerItem(self, playerObj)
-	end
-
-	-- Bug 6130 add a Set up Squeezebox option
-	local sbsetup = AppletManager:loadApplet("SetupSqueezebox")
-	if sbsetup then
-		self.playerMenu:addItem({
-					text = self:string("SQUEEZEBOX_SETUP"),
-					sound = "WINDOWSHOW",
-					callback = function()
-							   sbsetup:settingsShow()
-						   end,
-					weight =  10
-				})
+	for mac, player in self.discovery:allPlayers() do
+		if player:isConnected() then
+			_addPlayerItem(self, player)
+		end
 	end
 
 	window:addWidget(menu)

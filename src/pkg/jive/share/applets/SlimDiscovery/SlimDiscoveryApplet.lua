@@ -131,6 +131,25 @@ end
 
 --[[
 
+=head2 applets.SlimDiscovery.SlimDiscoveryApplet:countPlayers()
+
+Returns the number of connected players.
+
+=cut
+--]]
+function countConnectedPlayers(self)
+	local count = 0
+	for i, player in self:allPlayers() do
+		if player:isConnected() then
+			count = count + 1
+		end
+	end
+	return count
+end
+
+
+--[[
+
 =head2 applets.SlimDiscovery.SlimDiscoveryApplet:setCurrentPlayer()
 
 Sets the current player

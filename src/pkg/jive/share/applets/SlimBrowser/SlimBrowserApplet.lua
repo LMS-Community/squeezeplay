@@ -83,6 +83,7 @@ local KEY_VOLUME_UP          = jive.ui.KEY_VOLUME_UP
 
 local JIVE_VERSION           = jive.JIVE_VERSION
 local jiveMain               = jiveMain
+local appletManager          = appletManager
 local iconbar                = iconbar
 local jnt                    = jnt
 
@@ -1944,7 +1945,7 @@ function notify_serverDisconnected(self, server, numPendingRequests)
 
 	iconbar:setServerError("ERROR")
 
-	if numPendingRequests == 0 then
+	if numPendingRequests == 0 or self.serverErrorWindow then
 		return
 	end
 
@@ -1953,34 +1954,57 @@ function notify_serverDisconnected(self, server, numPendingRequests)
 
 	local menu = SimpleMenu("menu")
 
+	local player = _player
+
+	-- try again, reconnect to server
 	menu:addItem({
 			     text = self:string("SLIMBROWSER_TRY_AGAIN"),
 			     callback = function()
 						server:connect()
+
+						local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
+						slimDiscovery:setCurrentPlayer(player)
 					end,
 		     })
 
-	--[[ XXXX to do
-	menu:addItem({
-			     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
-			     callback = function()
-					end,
-		     })
-	--]]
-	--[[ XXXX to do
-	menu:addItem({
-			     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
-			     callback = function()
-					end,
-		     })
-	--]]
+	-- change music source, only for udap players
+	if player and player:canUdap() and appletManager:hasApplet("SetupSqueezebox") then
+		menu:addItem({
+				     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
+				     callback = function()
+							local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
+							slimDiscovery:setCurrentPlayer(nil)
+
+							local setupSqueezebox = appletManager:loadApplet("SetupSqueezebox")
+							setupSqueezebox:startSqueezeboxSetup(player:getMacAddress(), nil)
+						end,
+			     })
+	end
+
+	-- change player, only if multiple players
+	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
+	if slimDiscovery:countConnectedPlayers() > 1 and appletManager:hasApplet("SelectPlayer") then
+		menu:addItem({
+				     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
+				     callback = function()
+							slimDiscovery:setCurrentPlayer(nil)
+
+							local selectPlayer = appletManager:loadApplet("SelectPlayer")
+							selectPlayer:setupShow()
+						end,
+			     })
+	end
 
 	window:addWidget(Textarea("help", self:string("SLIMBROWSER_PROBLEM_CONNECTING_HELP", tostring(_player:getName()), tostring(_server:getName()))))
 	window:addWidget(menu)
 
-	window:show()
-
 	self.serverErrorWindow = window
+	window:addListener(EVENT_WINDOW_POP,
+			   function()
+				   self.serverErrorWindow = nil
+			   end)
+
+	window:show()
 end
 
 

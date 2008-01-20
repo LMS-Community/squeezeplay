@@ -417,6 +417,12 @@ function loadApplet(self, appletName)
 end
 
 
+-- returns true if the applet can be loaded
+function hasApplet(self, appletName)
+	return _appletsDb[appletName] ~= nil
+end
+
+
 --[[
 
 =head2 jive.AppletManager.getAppletInstance(appletName)

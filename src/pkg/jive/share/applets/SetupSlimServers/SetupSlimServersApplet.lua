@@ -60,9 +60,9 @@ local CONNECT_TIMEOUT = 30
 
 
 -- main setting menu
-function settingsShow(self, menuItem)
+function settingsShow(self)
 
-	local window = Window("window", menuItem.text)
+	local window = Window("window", self:string("SLIMSERVER_SERVERS"))
 	local menu = SimpleMenu("menu", items)
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 	window:addWidget(menu)

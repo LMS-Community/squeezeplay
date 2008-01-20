@@ -313,6 +313,7 @@ function notify_cometConnected(self, comet)
 		return
 	end
 
+	log:info(self, " connected")
 	self.active = true
 	self.jnt:notify('serverConnected', self)
 end
@@ -323,6 +324,7 @@ function notify_cometDisconnected(self, comet, numPendingRequests)
 		return
 	end
 
+	log:info(self, " disconnected")
 	self.active = false
 	self.jnt:notify('serverDisconnected', self, numPendingRequests)
 end

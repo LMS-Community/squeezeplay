@@ -443,6 +443,26 @@ end
 
 --[[
 
+=head2 jive.slim.Player:getMacAddress()
+
+Returns the player mac address, or nil for http players.
+
+=cut
+--]]
+function getMacAddress(self)
+	if self.model == "squeezebox2"
+		or self.model == "receiver"
+		or self.model == "transporter" then
+
+		return string.gsub(self.id, "[^%x]", "")
+	end
+
+	return nil
+end
+
+
+--[[
+
 =head2 jive.slim.Player:getPin()
 
 Returns the SqueezeNetwork PIN for this player, if it needs to be registered
@@ -824,12 +844,19 @@ function getVolume(self)
 end
 
 
+-- returns true if this player supports udap setup
+function canUdap(self)
+	return self.model == "receiver"
+end
+
+
 -- returns true if this player can connect to another server
 function canConnectToServer(self)
 	return self.model == "squeezebox2"
 		or self.model == "receiver"
 		or self.model == "transporter"
 end
+
 
 -- tell the player to connect to another server
 function connectToServer(self, server)
@@ -838,8 +865,8 @@ function connectToServer(self, server)
 end
 
 
-function getConnected(self)
-	return self.connected
+function isConnected(self)
+	return self.slimServer and self.slimServer:isConnected() and self.connected
 end
 
 

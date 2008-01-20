@@ -259,7 +259,6 @@ function _discover(self)
 		self:connect()
 	end
 
-
 	if self.currentPlayer then
 		if self.discoverState ~= 'timeout' then
 			self.discoverState = 'timeout'
