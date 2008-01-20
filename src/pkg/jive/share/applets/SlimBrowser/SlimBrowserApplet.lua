@@ -1865,6 +1865,9 @@ function notify_playerCurrent(self, player)
 		AppletManager:freeApplet("SetupWallpaper")
 	end
 
+	-- clear any errors, we may have changed servers
+	iconbar:setServerError("OK")
+
 	-- nothing to do if we don't have a player
 	-- NOTE don't move this, the code above needs to run when disconnecting
 	-- for all players.

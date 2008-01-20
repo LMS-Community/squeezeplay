@@ -349,6 +349,7 @@ function setCurrentPlayer(self, player)
 		return -- no change
 	end
 
+	log:info("selected player: ", player)
 	self.currentPlayer = player
 	self.jnt:notify("playerCurrent", player)
 

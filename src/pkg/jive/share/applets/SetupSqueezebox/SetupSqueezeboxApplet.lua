@@ -71,8 +71,8 @@ end
 
 
 function free(self)
-	log:warn("## removing udap sink")
 	self.udap:removeSink(self.udapSink)
+	return true
 end
 
 
@@ -281,6 +281,13 @@ function startSqueezeboxSetup(self, mac, adhoc, setupNext)
 	if not self.topWindow then
 		-- remember the top window
 		self.topWindow = Framework.windowStack[1]
+	end
+
+	-- disconnect from current player, if any. after a successful setup
+	-- we will be connected to mac
+	local manager = AppletManager:getAppletInstance("SlimDiscovery")
+	if manager then
+		manager:setCurrentPlayer(player)
 	end
 
 	if adhoc then
@@ -1235,7 +1242,6 @@ end
 function notify_playerNew(self, player)
 	local playerId = string.gsub(player:getId(), ":", "")
 
-	log:info("got new playerId ", playerId)
 	if string.lower(playerId) == string.lower(self.mac) then
 
 		-- wait until the player is connected before continuing

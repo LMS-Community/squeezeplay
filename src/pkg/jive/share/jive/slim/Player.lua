@@ -343,6 +343,7 @@ function free(self, slimServer)
 	log:info(self, " delete for ", self.slimServer)
 	self.jnt:notify('playerDelete', self)
 	self:offStage()
+	self.slimServer = nil
 
 	-- The global players table uses weak values, it will be removed
 	-- when all references are freed.

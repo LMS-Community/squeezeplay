@@ -161,7 +161,12 @@ function _addSqueezeboxItem(self, mac, name, adhoc)
 					   return
 				   end
 
-				   sbsetup:startSqueezeboxSetup(mac, nil, self.setupNext)
+				   -- setup squeezebox, this will set current
+				   -- player on completion
+				   sbsetup:startSqueezeboxSetup(mac, nil,
+								function()
+									jiveMain:closeToHome()
+								end)
 			   end,
 		focusGained = function(event)
 			self:_showWallpaper(nil)
@@ -304,8 +309,6 @@ end
 
 
 function selectPlayer(self, player)
-	log:info("Selected player=", player)
-
 	local manager = AppletManager:getAppletInstance("SlimDiscovery")
 	if manager then
 		manager:setCurrentPlayer(player)
