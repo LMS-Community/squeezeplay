@@ -224,11 +224,11 @@ dist_applets_selectplayer_DATA = \
 	share/applets/SelectPlayer/SelectPlayerMeta.lua \
 	share/applets/SelectPlayer/strings.txt
 
-applets_setupslimserversdir = $(pkgdatadir)/applets/SetupSlimServers
-dist_applets_setupslimservers_DATA = \
-	share/applets/SetupSlimServers/SetupSlimServersApplet.lua \
-	share/applets/SetupSlimServers/SetupSlimServersMeta.lua \
-	share/applets/SetupSlimServers/strings.txt
+applets_choosemusicsourcedir = $(pkgdatadir)/applets/ChooseMusicSource
+dist_applets_choosemusicsource_DATA = \
+	share/applets/ChooseMusicSource/ChooseMusicSourceApplet.lua \
+	share/applets/ChooseMusicSource/ChooseMusicSourceMeta.lua \
+	share/applets/ChooseMusicSource/strings.txt
 
 applets_squeezenetworkpindir = $(pkgdatadir)/applets/SqueezeNetworkPIN
 dist_applets_squeezenetworkpin_DATA = \
