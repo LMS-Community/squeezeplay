@@ -160,7 +160,7 @@ function _addServerItem(self, server, address)
 
 	-- check current player
 	if server == currentPlayer:getSlimServer() then
-		item.style = 'checked' -- XXXX NoAction
+		item.style = 'checkedNoAction'
 		item.callback = nil
 	end
 
@@ -203,7 +203,7 @@ function _updateServerList(self, player)
 
 	for id, item in pairs(self.serverList) do
 		if server == id then
-			item.style = 'checked' -- XXXX NoAction
+			item.style = 'checkedNoAction'
 			item.callback = nil
 		else
 			item.style = nil

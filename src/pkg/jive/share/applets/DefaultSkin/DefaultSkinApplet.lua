@@ -388,6 +388,9 @@ function skin(self, s)
 			      }
 		      })
 
+	-- checked menu item, with no action
+	s.checkedNoAction = _uses(s.checked)
+
 	-- selected menu item
 	s.selected = {}
 	s.selected.item =
@@ -430,12 +433,28 @@ function skin(self, s)
 				
 				})
 
-	s.selected.itemNoAction = {}
-	s.selected.itemNoAction.bgImg = selectionBox
-	s.selected.itemNoAction.text = {}
-	s.selected.itemNoAction.text.font = FONT_BOLD_15px
-	s.selected.itemNoAction.text.fg = SELECT_COLOR
-	s.selected.itemNoAction.text.sh = SELECT_SH_COLOR
+	s.selected.itemNoAction =
+		_uses(s.itemNoAction, {
+			      bgImg = selectionBox,
+			      text = {
+				      fg = SELECT_COLOR,
+				      sh = SELECT_SH_COLOR
+			      },
+		      })
+
+	s.selected.checkedNoAction =
+		_uses(s.checkedNoAction, {
+			      bgImg = selectionBox,
+			      text = {
+				      fg = SELECT_COLOR,
+				      sh = SELECT_SH_COLOR
+			      },
+			      check = {
+				      align = "right",
+				      img = Surface:loadImage(imgpath .. "menu_check_selected.png")
+			      }
+		      })
+
 
 	-- locked menu item (with loading animation)
 	s.locked = {}
