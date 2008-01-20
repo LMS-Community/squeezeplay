@@ -404,6 +404,7 @@ end
 local function _artworkItem(item, group, menuAccel)
 	local icon = group and group:getWidget("icon")
 
+	debug.dump(item, 2)
 	if item["icon-id"] then
 		if menuAccel and not _server:artworkThumbCached(item["icon-id"], 56) then
 			-- Don't load artwork while accelerated
@@ -428,12 +429,7 @@ local function _artworkItem(item, group, menuAccel)
 					_server:fetchArtworkThumb(item["icon"], icon, _staticArtworkThumbUri, 56)
 		                end
 		end
-
-	-- FIXME-- Bug 6653, this was added to support having the radio icon in playlists, 
-	-- but it screws up the UI in many other spots
-	-- this is for the radio image-- remote URLs with no icon (Bug 6087)
---[[
-	elseif item["params"] and item["params"]["track_id"] then
+	elseif item["trackType"] == 'radio' and item["params"] and item["params"]["track_id"] then
 		if menuAccel and not _server:artworkThumbCached(item["params"]["track_id"], 56) then
 			-- Don't load artwork while accelerated
 			_server:cancelArtwork(icon)
@@ -441,7 +437,6 @@ local function _artworkItem(item, group, menuAccel)
 			-- workaround: this needs to be png not gd because in gd it looks like garbage
 			_server:fetchArtworkThumb(item["params"]["track_id"], icon, _artworkThumbUri, 56, 'png')
 		end
---]]
 	else
 		_server:cancelArtwork(icon)
 
