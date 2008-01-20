@@ -893,6 +893,15 @@ function skin(self, s)
 			      }
 		      })
 
+	-- Based on s.title, this is for currentplaylist title style
+	s.currentplaylisttitle =
+		_uses(s.minititle, {
+			      icon = {
+				      img = Surface:loadImage(imgpath .. "mini_nowplaying.png")
+			      }
+		      })
+
+
 
 
 

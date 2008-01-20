@@ -1762,13 +1762,13 @@ function notify_playerModeChange(self, player, mode)
 
 	if mode == "play" then
 		step.window:setTitle(_string("SLIMBROWSER_NOW_PLAYING"))
-		step.window:setTitleStyle("playlisttitle")
+		step.window:setTitleStyle("currentplaylisttitle")
 	elseif mode == "pause" then
 		step.window:setTitle(_string("SLIMBROWSER_PAUSED"))
-		step.window:setTitleStyle("playlisttitle")
+		step.window:setTitleStyle("currentplaylisttitle")
 	elseif mode == "stop" then
 		step.window:setTitle(_string("SLIMBROWSER_STOPPED"))
-		step.window:setTitleStyle("playlisttitle")
+		step.window:setTitleStyle("currentplaylisttitle")
 	end
 end
 
