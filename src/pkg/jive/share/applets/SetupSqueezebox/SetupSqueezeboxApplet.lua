@@ -95,9 +95,6 @@ function settingsShow(self, keepOldEntries)
 	-- squeezeboxen" screen will need to be added.
 	if hasWireless then
 		self:_scanComplete(self.wireless:scanResults(), keepOldEntries)
-
-		-- find jive network configuration
-		Task("readConfig", self, t_readJiveConfig):addTask()
 	end
 
 	window:addListener(EVENT_WINDOW_ACTIVE,
@@ -294,8 +291,17 @@ function startSqueezeboxSetup(self, mac, adhoc, setupNext)
 		-- full configuration via adhoc network
 		local _, hasEthernet = self:ssidIsSqueezebox(adhoc)
 
-		_setupInit(self, mac, hasEthernet)
-		_setupConfig(self)
+		-- find jive network configuration
+		Task("readConfig", self,
+		     function(self)
+			     -- read jive network config
+			     _readJiveConfig(self)
+
+			     -- complete setup data
+			     _setupInit(self, mac, hasEthernet)
+			     _setupConfig(self)
+		     end):addTask()
+
 	else
 		-- SqueezeCenter configuration with udap
 		_setupInit(self, mac, nil)
@@ -305,12 +311,6 @@ function startSqueezeboxSetup(self, mac, adhoc, setupNext)
 
 		_setAction(self, t_waitSqueezeboxNetwork, "find_slimserver")
 		_setupSqueezebox(self)
-	end
-
-	-- remove squeezebox from scan results
-	if self.scanResults and self.scanResults[mac] then
-		self.scanMenu:removeItem(self.scanResults[mac].item)
-		self.scanResults[mac] = nil
 	end
 end
 
@@ -429,10 +429,10 @@ function _setupInit(self, mac, ether)
 	self.mac = mac or self.mac
 	self.ether = ether or self.ether
 
-	if self.bridged then
-		self.interface = 'bridged'
-	else
-		self.interface = nil
+	-- remove squeezebox from scan results
+	if self.scanResults and self.scanResults[mac] then
+		self.scanMenu:removeItem(self.scanResults[mac].item)
+		self.scanResults[mac] = nil
 	end
 
 	-- task for performing setup
@@ -451,7 +451,10 @@ end
 function _setupConfig(self)
 	log:info("_setupConfig interface=", self.interface, " ipaddr=", self.networkMethod)
 
-	if self.interface == nil then
+	if self.bridged then
+		self.interface = 'bridged'
+
+	elseif self.interface == nil then
 		if self.ether == '-' then
 			-- wireless only
 			self.interface = 'wireless'
@@ -736,7 +739,7 @@ end
 
 -- reads the existing network configuraton on Jive, including ssid,
 -- network id, dhcp/static ip information.
-function t_readJiveConfig(self)
+function _readJiveConfig(self)
 	-- read the existing network configuration
 	local statusStr = self.wireless:request("STATUS-VERBOSE")
 	local status = {}

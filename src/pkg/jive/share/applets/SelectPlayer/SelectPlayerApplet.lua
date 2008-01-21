@@ -35,9 +35,12 @@ local Label              = require("jive.ui.Label")
 local Framework          = require("jive.ui.Framework")
 
 local Udap               = require("jive.net.Udap")
+local hasWireless, Wireless  = pcall(require, "jive.net.Wireless")
 
 local log                = require("jive.utils.log").logger("applets.setup")
 local debug              = require("jive.utils.debug")
+
+local SetupSqueezeboxApplet = require("applets.SetupSqueezebox.SetupSqueezeboxApplet")
 
 local jiveMain           = jiveMain
 local jnt                = jnt
@@ -56,6 +59,10 @@ oo.class(_M, Applet)
 function init(self, ...)
 	self.playerItem = {}
 	self.scanResults = {}
+
+	if hasWireless then
+		self.wireless = Wireless(jnt, "eth0")
+	end
 
 	jnt:subscribe(self)
 	self:manageSelectPlayerMenu()
@@ -198,7 +205,7 @@ end
 
 
 -- add a squeezebox discovered using udap or an adhoc network
-function _addSqueezeboxItem(self, mac, name, adhoc)
+function _addSqueezeboxItem(self, mac, name)
 	local item = {
 		id = _unifyMac(mac),
 		text = name or self:string("SQUEEZEBOX_NAME", string.sub(mac, 7)),
@@ -209,9 +216,14 @@ function _addSqueezeboxItem(self, mac, name, adhoc)
 					   return
 				   end
 
+				   local adhoc = self.scanResults[mac].adhoc
+				   if self.scanResults[mac].udap then
+					   adhoc = nil
+				   end
+
 				   -- setup squeezebox, this will set current
 				   -- player on completion
-				   sbsetup:startSqueezeboxSetup(mac, nil,
+				   sbsetup:startSqueezeboxSetup(mac, adhoc,
 								function()
 									jiveMain:closeToHome()
 								end)
@@ -260,7 +272,7 @@ function setupShow(self, setupNext)
 
 	window:addWidget(menu)
 
-	window:addTimer(1000, function() self:_scan() end)
+	window:addTimer(5000, function() self:_scan() end)
 
 
 	window:addListener(EVENT_WINDOW_ACTIVE,
@@ -306,7 +318,7 @@ function _udapSink(self, chunk, err)
 	local pkt = Udap.parseUdap(chunk.data)
 
 	if pkt.uapMethod ~= "adv_discover"
---		or pkt.ucp.device_status ~= "wait_slimserver"
+		or pkt.ucp.device_status ~= "wait_slimserver"
 		or pkt.ucp.type ~= "squeezebox" then
 		-- we are only looking for squeezeboxen trying to connect to SC
 		return
@@ -320,7 +332,7 @@ function _udapSink(self, chunk, err)
 			udap = true,
 		}
 
-		self:_addSqueezeboxItem(mac, name, nil)
+		self:_addSqueezeboxItem(mac, name)
 	end
 end
 
@@ -333,13 +345,40 @@ function _scan(self)
 	local packet = Udap.createAdvancedDiscover(nil, 1)
 	self.udap:send(function() return packet end, "255.255.255.255")
 
-	-- remove squeezeboxen not seen for 10 seconds
+	-- scan for players in setup state
+	if hasWireless then
+		self.wireless:scan(function(scanTable)
+					   _scanComplete(self, scanTable)
+				   end)
+	end
+
+	-- remove squeezeboxen not seen for 20 seconds
 	local now = os.time()
 	for mac, entry in pairs(self.scanResults) do
-		if os.difftime(now, entry.lastScan) > 10 then
+		if os.difftime(now, entry.lastScan) > 20 then
 			self.playerMenu:removeItem(self.playerItem[mac])
 			self.playerItem[mac] = nil
 			self.scanResults[mac] = nil
+		end
+	end
+end
+
+
+function _scanComplete(self, scanTable, keepOldEntries)
+	local now = os.time()
+
+	for ssid, entry in pairs(scanTable) do
+		local mac, ether = SetupSqueezeboxApplet:ssidIsSqueezebox(ssid)
+
+		log:warn("MAC=", mac, " ETHER=", ether)
+
+		if mac and not self.scanResults[mac] then
+			self.scanResults[mac] = {
+				lastScan = os.time(),
+				adhoc = ssid,
+			}
+
+			self:_addSqueezeboxItem(mac, name)
 		end
 	end
 end
