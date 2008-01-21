@@ -5,7 +5,7 @@
 
 SQUEEZEBOX_SETUP
 	DE	Squeezebox einrichten
-	EN	Set Up Squeezebox
+	EN	Set Up Receiver
 	ES	Configuración de Squeezebox
 	FR	Configuration de la Squeezebox
 	IT	Configura Squeezebox
