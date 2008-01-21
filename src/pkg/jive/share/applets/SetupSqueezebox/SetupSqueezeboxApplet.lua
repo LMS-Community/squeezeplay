@@ -732,7 +732,7 @@ function _ipConfig(self, data)
 		data.lan_gateway = Udap.packNumber(_parseip(self.networkOption.gateway), 4)
 		data.primary_dns = Udap.packNumber(_parseip(self.networkOption.dns), 4)
 	else
-		data.lan_ip_mode = Udap.packNumber(1, 1) -- 1 dhcp
+		data.lan_ip_mode = Udap.packNumber(1, 1) -- 1 dhcp or auto ip
 	end
 end
 
@@ -794,6 +794,11 @@ function _readJiveConfig(self)
 				self.networkOption[option] = value
 			end
 		end
+	end
+
+	-- use audo-ip?
+	if self.networkMethod == 'dhcp' and string.match(status.ip_address, "^169.254.") then
+		self.networkMethod = 'autoip' 
 	end
 
 	log:info("network_id=", self.networkId)
