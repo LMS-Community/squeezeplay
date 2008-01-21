@@ -1412,7 +1412,7 @@ function networkStatusShow(self)
 				   { text = self:string("NETWORK_ENCRYPTION"), icon = values[4] },
 				   { text = self:string("NETWORK_IP_ADDRESS"), icon = values[5] },
 				   { text = self:string("NETWORK_SNR"), icon = values[6] },
---				   { text = self:string("NETWORK_BITRATE"), icon = values[7] },
+				   { text = self:string("NETWORK_BITRATE"), icon = values[7] },
 				})
 	window:addWidget(menu)
 
