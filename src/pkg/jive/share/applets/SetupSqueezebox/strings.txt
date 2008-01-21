@@ -44,12 +44,12 @@ SQUEEZEBOX_ETHERNET
 	NL	Ethernet
 
 SQUEEZEBOX_HELP
-	DE	Wählen Sie die gewünschte SqueezeBox. Wird sie nicht angezeigt, halten Sie die Taste an der Vorderseite gedrückt, bis sie blinkt.
-	EN	Choose the Squeezebox you want to set up. If you don't see it here, press and hold the button on the front until it flashes.
-	ES	Seleccione el dispositivo Squeezebox que desee configurar. Si no lo encuentra aquí, mantenga pulsado el botón en la parte frontal hasta que empiece a emitir destellos.
-	FR	Sélectionnez la Squeezebox à configurer. Si elle ne s'affiche pas, maintenez le bouton frontal enfoncé jusqu'à ce qu'il clignote.
-	IT	Selezionare il dispositivo Squeezebox che si desidera configurare. Se non è visualizzato, tenere premuto il pulsante sulla parte anteriore finché non lampeggia.
-	NL	Kies de Squeezebox die je wilt instellen. Staat deze niet in de lijst, houd dan de knop aan de voorkant ingedrukt totdat deze knippert.
+	DE	Wählen Sie die gewünschte Squeezebox-Empfänger. Wird sie nicht angezeigt, halten Sie die Taste an der Vorderseite gedrückt, bis sie blinkt.
+	EN	Choose the Squeezebox Receiver you want to set up. If you don't see it here, press and hold the button on the front until it flashes.
+	ES	Seleccione el dispositivo Receptor Squeezebox que desee configurar. Si no lo encuentra aquí, mantenga pulsado el botón en la parte frontal hasta que empiece a emitir destellos.
+	FR	Sélectionnez la Squeezebox Receiver à configurer. Si elle ne s'affiche pas, maintenez le bouton frontal enfoncé jusqu'à ce qu'il clignote.
+	IT	Selezionare il dispositivo Ricevitore Squeezebox che si desidera configurare. Se non è visualizzato, tenere premuto il pulsante sulla parte anteriore finché non lampeggia.
+	NL	Kies de Squeezebox-ontvanger die je wilt instellen. Staat deze niet in de lijst, houd dan de knop aan de voorkant ingedrukt totdat deze knippert.
 
 SQUEEZEBOX_FINDING_SOURCES
 	DE	Musikquellen werden gesucht
