@@ -1366,8 +1366,7 @@ function t_networkStatusTimer(self, values)
 	local status = self.t_ctrl:t_wpaStatus()
 
 	local snr = self.t_ctrl:getSNR()
-	local rssi = self.t_ctrl:getRSSI()
-	local nf = self.t_ctrl:getNF()
+	local bitrate = self.t_ctrl:getTxBitRate()
 
 	local wpa_state = stateTxt[status.wpa_state] or "NETWORK_STATE_UNKNOWN"
 
@@ -1384,8 +1383,7 @@ function t_networkStatusTimer(self, values)
 	values[4]:setValue(tostring(encryption))
 	values[5]:setValue(tostring(status.ip_address))
 	values[6]:setValue(tostring(snr))
-	values[7]:setValue(tostring(rssi))
-	values[8]:setValue(tostring(nf))
+	values[7]:setValue(tostring(bitrate))
 end
 
 
@@ -1401,7 +1399,7 @@ function networkStatusShow(self)
 	local window = Window("window", self:string("NETWORK_STATUS"), wirelessTitleStyle)
 
 	local values = {}
-	for i=1,8 do
+	for i=1,7 do
 		values[i] = Label("value", "")
 	end
 
@@ -1414,8 +1412,7 @@ function networkStatusShow(self)
 				   { text = self:string("NETWORK_ENCRYPTION"), icon = values[4] },
 				   { text = self:string("NETWORK_IP_ADDRESS"), icon = values[5] },
 				   { text = self:string("NETWORK_SNR"), icon = values[6] },
-				   { text = self:string("NETWORK_RSSI"), icon = values[7] },
-				   { text = self:string("NETWORK_NF"), icon = values[8] },
+--				   { text = self:string("NETWORK_BITRATE"), icon = values[7] },
 				})
 	window:addWidget(menu)
 

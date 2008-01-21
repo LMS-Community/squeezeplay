@@ -306,9 +306,10 @@ function skin(self, s)
 	s.iconShuffle2 = _icon(75, screenHeight - 30, "icon_shuffle_album.png")
 
 	-- wireless status
-	s.iconWireless1 = _icon(107, screenHeight - 30, "icon_wireless_2.png")
-	s.iconWireless2 = _icon(107, screenHeight - 30, "icon_wireless_3.png")
-	s.iconWireless3 = _icon(107, screenHeight - 30, "icon_wireless_4.png")
+	s.iconWireless1 = _icon(107, screenHeight - 30, "icon_wireless_1.png")
+	s.iconWireless2 = _icon(107, screenHeight - 30, "icon_wireless_2.png")
+	s.iconWireless3 = _icon(107, screenHeight - 30, "icon_wireless_3.png")
+	s.iconWireless4 = _icon(107, screenHeight - 30, "icon_wireless_4.png")
 	s.iconWirelessERROR = _icon(107, screenHeight - 30, "icon_wireless_off.png")
 	s.iconWirelessSERVERERROR = _icon(107, screenHeight - 30, "icon_wireless_noserver.png")
 
@@ -684,13 +685,16 @@ function skin(self, s)
 	-- wireless icons for menus
 	s.wirelessLevel1 = {}
 	s.wirelessLevel1.align = "right"
-	s.wirelessLevel1.img = Surface:loadImage(imgpath .. "icon_wireless_2_shadow.png")
+	s.wirelessLevel1.img = Surface:loadImage(imgpath .. "icon_wireless_1_shadow.png")
 	s.wirelessLevel2 = {}
 	s.wirelessLevel2.align = "right"
-	s.wirelessLevel2.img = Surface:loadImage(imgpath .. "icon_wireless_3_shadow.png")
+	s.wirelessLevel2.img = Surface:loadImage(imgpath .. "icon_wireless_2_shadow.png")
 	s.wirelessLevel3 = {}
 	s.wirelessLevel3.align = "right"
-	s.wirelessLevel3.img = Surface:loadImage(imgpath .. "icon_wireless_4_shadow.png")
+	s.wirelessLevel3.img = Surface:loadImage(imgpath .. "icon_wireless_3_shadow.png")
+	s.wirelessLevel4 = {}
+	s.wirelessLevel4.align = "right"
+	s.wirelessLevel4.img = Surface:loadImage(imgpath .. "icon_wireless_4_shadow.png")
 
 	s.navcluster = {}
 	s.navcluster.img = Surface:loadImage(imgpath .. "navcluster.png")

@@ -131,6 +131,10 @@ NETWORK_SNR
 	IT	SNR:
 	NL	SNR:
 
+NETWORK_BITRATE
+	EN	Tx rate:
+
+
 NETWORK_STATE
 	DE	Zustand:
 	EN	State:

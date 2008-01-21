@@ -26,16 +26,18 @@ oo.class(_M, Socket)
 -- FIXME tune with production boards
 local WIRELESS_LEVEL = {
 	0,
+	175,
+	180,
 	190,
-	200,
 }
 
 -- iwpriv snr -> quality
 -- FIXME tune with production boards
 local WIRELESS_SNR = {
 	0,
+	10,
+	18,
 	25,
-	30,
 }
 
 -- FIXME check this region mapping is correct for Marvell and Atheros
@@ -463,7 +465,7 @@ function getLinkQuality(self)
 
 	local quality = 1
 	for i, l in ipairs(WIRELESS_SNR) do
-		if snr < l then
+		if snr <= l then
 			break
 		end
 		quality = i
@@ -509,6 +511,19 @@ function getNF(self)
 	f:close()
 
 	return tonumber(string.match(t, ":(%-?%d+)"))
+end
+
+
+function getTxBitRate(self)
+	local f = io.popen("/usr/sbin/iwconfig " .. self.interface)
+	if f == nil then
+		return "0"
+	end
+
+	local t = f:read("*all")
+	f:close()
+
+	return string.match(t, "Bit Rate:(%d+%s[^%s]+)")
 end
 
 
