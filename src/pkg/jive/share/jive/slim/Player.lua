@@ -162,7 +162,7 @@ end
 -- sends notifications when a change occurs to the currently playing track
 local function _setPlayerTrackChange(self, nowPlaying, data)
 	log:debug("_setPlayerTrackChange")
-	self.playerStatus = data
+
 	if self.nowPlaying != nowPlaying then
 		self.nowPlaying = nowPlaying
 		self.jnt:notify('playerTrackChange', self, nowPlaying)
@@ -273,43 +273,40 @@ end
 
 =head2 jive.slim.Player:getTrackElapsed()
 
-returns the amount of time elapsed on the current track
+Returns the amount of time elapsed on the current track, and the track
+duration (if known). eg:
+
+  local elapsed, duration = player:getTrackElapsed()
+  local remaining
+  if duration then
+	  remaining = duration - elapsed
+  end
 
 =cut
 --]]
-function getTrackElapsed(self, data)
+function getTrackElapsed(self)
+	if not self.trackTime then
+		return nil
+	end
 
-	local now = os.time()
-	local correction = now - data.lastSeen
-	local trackElapsed = data.time + correction
-	if correction <= 0 then
-		return data.time
+	if self.state.mode == "play" then
+		local now = os.time()
+
+		-- multiply by rate to allow for trick modes
+		self.trackCorrection = tonumber(self.state.rate) * (now - self.trackSeen)
+	end
+
+log:warn("C=", self.trackCorrection, " T=", self.trackTime, " D=", self.trackDuration, " E=", self.trackTime + self.trackCorrection)
+
+	if self.trackCorrection <= 0 then
+		return self.trackTime, self.trackDuration
 	else
-		return trackElapsed
+		local trackElapsed = self.trackTime + self.trackCorrection
+		return trackElapsed, self.trackDuration
 	end
 	
 end
 
---[[
-
-=head2 jive.slim.Player:getTrackRemaining()
-
-returns the amount of time left on the current track
-
-=cut
---]]
-
-function getTrackRemaining(self)
-
-	local now = os.time()
-	local correction = now - self.lastSeen
-	if correction < 0 then
-		correction = 0
-	end
-
-	return self.duration - self.time + correction
-	
-end
 
 --[[
 
@@ -319,9 +316,8 @@ returns the playerStatus information for a given player object
 
 =cut
 --]]
-
 function getPlayerStatus(self)
-	return self.playerStatus
+	return self.state
 end
 
 --[[
@@ -614,13 +610,15 @@ end
 -- processes the playerstatus data and calls associated functions for notification
 function _process_status(self, event)
 	log:debug("Player:_process_playerstatus()")
-	
+
 	-- update our cache in one go
 	self.state = event.data
-	
+
 	-- used for calculating getTrackElapsed(), getTrackRemaining()
-	self.lastSeen = os.time()
-	event.data.lastSeen = self.lastSeen
+	self.trackSeen = os.time()
+	self.trackCorrection = 0
+	self.trackTime = event.data.time
+	self.trackDuration = event.data.duration
 
 	_setConnected(self, self.state["player_connected"])
 
@@ -678,6 +676,9 @@ function togglePause(self)
 	log:debug("Player:togglePause(", paused, ")")
 
 	if paused == 'stop' or paused == 'pause' then
+		-- reset the elapsed time epoch
+		self.trackSeen = os.time()
+
 		self:call({'pause', '0'})
 		self.state["mode"] = 'play'
 	elseif paused == 'play' then
@@ -723,6 +724,12 @@ end
 -- 
 function play(self)
 	log:debug("Player:play()")
+
+	if self.state.mode ~= 'play' then
+		-- reset the elapsed time epoch
+		self.trackSeen = os.time()
+	end
+
 	self:call({'mode', 'play'})
 	self.state["mode"] = 'play'
 	self:updateIconbar()

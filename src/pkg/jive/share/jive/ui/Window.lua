@@ -220,6 +220,7 @@ end
 
 Replaces toReplace window with a new window object
 
+
 =cut
 --]]
 
@@ -230,7 +231,20 @@ function replace(self, toReplace, transition)
 			if i == topWindow then
 				self:showInstead(transition)
 			else
+				-- the old window may still be visible under
+				-- a transparent window, if so hide it
+				local oldwindow = Framework.windowStack[i]
+				if oldwindow.visible then
+					oldwindow:dispatchNewEvent(EVENT_HIDE)
+				end
+
 				Framework.windowStack[i] = self
+
+				-- if the old window was visible, the new one
+				-- is now 
+				if oldwindow.visible then
+					self:dispatchNewEvent(EVENT_SHOW)
+				end
 			end
 		end
 	end
