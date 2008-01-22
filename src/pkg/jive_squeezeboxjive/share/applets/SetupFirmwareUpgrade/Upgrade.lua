@@ -166,7 +166,13 @@ function upgradeSink(self)
 	local length = 0
 	local part = nil
 
-	return function(chunk)
+	return function(chunk, err)
+		       if err then
+			       log:info("sinkErr=", err)
+			       self.sinkErr = err
+			       return 0
+		       end
+
 		       Task:yield(true)
 
 		       if type(chunk) == "string" then
@@ -376,6 +382,7 @@ function download(self, callback)
 
 	local parsedUrl = url.parse(self.url)
 	self.downloadBytes = 0
+	self.sinkErr = false
 
 	local t, err
 	if parsedUrl.scheme == "file" then
@@ -396,7 +403,7 @@ function download(self, callback)
 
 			Task:yield()
 			if not t then
-				return not err, err
+				return false, err
 			end
 		end 
 
@@ -409,12 +416,17 @@ function download(self, callback)
 		local http = SocketHttp(jnt, uri.host, uri.port, uri.host)
 		http:fetch(req)
 
-		while not self.downloadClose do
+		while not self.sinkErr and not self.downloadClose do
 			local totalBytes = req:t_getResponseHeader("Content-Length")
 			if totalBytes then
 				callback(false, "UPDATE_DOWNLOAD", math.floor((self.downloadBytes / totalBytes) * 100) .. "%")
 			end
 			Task:yield(true)
+		end
+
+		if self.sinkErr then
+			log:info("sinkErr=", sinkErr)
+			return false, self.sinkErr
 		end
 
 		return true

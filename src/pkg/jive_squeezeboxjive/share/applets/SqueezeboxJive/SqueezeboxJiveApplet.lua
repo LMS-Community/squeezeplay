@@ -35,6 +35,7 @@ local log                    = require("jive.utils.log").logger("applets.setup")
 
 local jnt                    = jnt
 local iconbar                = iconbar
+local appletManager          = appletManager
 
 local EVENT_ACTION           = jive.ui.EVENT_ACTION
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
@@ -52,6 +53,7 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 local EVENT_KEY_DOWN         = jive.ui.EVENT_KEY_DOWN
 local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
 local EVENT_KEY_HOLD         = jive.ui.EVENT_KEY_HOLD
+local EVENT_ALL_INPUT        = jive.ui.EVENT_ALL_INPUT
 local EVENT_SCROLL           = jive.ui.EVENT_SCROLL
 local EVENT_SWITCH           = 0x400000 -- XXXX fixme when public
 local EVENT_MOTION           = 0x800000 -- XXXX fixme when public
@@ -110,6 +112,11 @@ function init(self)
 		log:warn("Watchdog timer is disabled")
 	end
 
+	-- register wakeup function
+	Framework:registerWakeup(function()
+					 wakeup(self)
+				 end)
+
 	-- wireless
 	self.Wireless = Wireless(jnt, "eth0")
 
@@ -124,7 +131,7 @@ function init(self)
 				      local sw,val = event:getSwitch()
 
 				      if sw == SW_AC_POWER then
-					      log:warn("acpower=", val)
+					      log:info("acpower=", val)
 
 					      self.acpower = (val == 0)
 					      self:update()
@@ -245,13 +252,11 @@ function notify_playerCurrent(self, player)
 			     -- FIXME schedule updates from server
 		     end
 
-	if( player) then
+	if player then
 		player.slimServer.comet:request(sink,
 					player:getId(),
 					{ 'date' }
 				)
-	else
-		log:warn("player is nil")
 	end
 end
 
@@ -260,8 +265,7 @@ function setDate(self, date)
 	-- matches date format 2007-09-08T20:40:42+00:00
 	local CCYY, MM, DD, hh, mm, ss, TZ = string.match(date, "(%d%d%d%d)%-(%d%d)%-(%d%d)T(%d%d):(%d%d):(%d%d)([-+]%d%d:%d%d)")
 
-	log:warn("date=", date)
-	log:warn("CCYY=", CCYY, " MM=", MM, " DD=", DD, " hh=", hh, " mm=", mm, " ss=", ss, " TZ=", TZ)
+	log:info("CCYY=", CCYY, " MM=", MM, " DD=", DD, " hh=", hh, " mm=", mm, " ss=", ss, " TZ=", TZ)
 
 	-- set system date
 	os.execute("date " .. MM..DD..hh..mm..CCYY.."."..ss)
@@ -397,7 +401,6 @@ function settingsBrightnessShow(self, menuItem)
 	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
 
 	local level = jiveBSP.ioctl(12) / 2047
-	log:warn("level is ", level);
 
 	local slider = Slider("slider", 1, 32, level,
 			      function(slider, value, done)
@@ -521,7 +524,7 @@ end
 function setPowerState(self, state)
 	local settings = self:getSettings()
 
-	log:warn("setPowerState=", state, " acpower=", self.acpower)
+	log:info("setPowerState=", state, " acpower=", self.acpower)
 	self.powerState = state
 
 	-- kill the timer
@@ -591,7 +594,6 @@ function setPowerState(self, state)
 	end
 
 	if interval > 0 then
-		log:warn("interval=", interval)
 		self.powerTimer:setInterval(interval)
 		self.powerTimer:start()
 	end
@@ -599,8 +601,6 @@ end
 
 
 function lockScreen(self)
-	log:warn("lock screen")
-
 	-- lock
 	local popup = Popup("popupIcon")
 	-- FIXME change icon and text
@@ -635,8 +635,6 @@ end
 
 
 function unlockScreen(self)
-	log:warn("unlock screen")
-
 	if self.lockedPopup then
 		-- unlock
 		Framework:removeListener(self.lockedListener)
@@ -661,6 +659,11 @@ function batteryLowShow(self)
 	popup:addWidget(Icon("iconBatteryLow"))
 	popup:addWidget(Label("text", self:string("BATTERY_LOW")))
 
+	-- make sure this popup remains on screen
+	popup:setAllowScreensaver(false)
+	popup:setAlwaysOnTop(true)
+	popup:setAutoHide(false)
+
 	self.batteryPopup = popup
 
 	popup:addTimer(30000,
@@ -670,11 +673,16 @@ function batteryLowShow(self)
 		       true)
 
 	-- consume all key and scroll events
-	self.batteryListener= Framework:addListener(EVENT_SCROLL | EVENT_KEY_DOWN | EVENT_KEY_PRESS,
-						    function(event)
-							    return EVENT_CONSUME
-						    end,
-						    true)
+	self.batteryListener
+		= Framework:addListener(EVENT_SCROLL | EVENT_KEY_PRESS | EVENT_KEY_DOWN | EVENT_KEY_HOLD,
+					function(event)
+						-- allow power off
+						if event:getType() == EVENT_KEY_HOLD and event:getKeyCode() == KEY_HOME then
+							self:settingsPowerOff()
+						end
+						return EVENT_CONSUME
+					end,
+					true)
 
 	-- make sure the display is on
 	self:setBrightness()
@@ -722,17 +730,26 @@ end
 
 
 function settingsPowerOff(self)
+	-- disconnect from SqueezeCenter
+	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
+	slimDiscovery.serversObj:disconnect()
+
 	local popup = Popup("popupIcon")
 
 	popup:addWidget(Icon("iconPower"))
 	popup:addWidget(Label("text", self:string("GOODBYE")))
+
+	-- make sure this popup remains on screen
 	popup:setAllowScreensaver(false)
+	popup:setAlwaysOnTop(true)
+	popup:setAutoHide(false)
 
 	-- we're shutting down, so prohibit any key presses or holds
-	popup:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD, 
-				function () 
-					return EVENT_CONSUME
-				end)
+	Framework:addListener(EVENT_ALL_INPUT,
+			      function () 
+				      return EVENT_CONSUME
+			      end,
+			      true)
 
 	popup:addTimer(4000, 
 		function()
@@ -748,10 +765,11 @@ end
 
 
 function _powerOff(self)
-	log:warn("POWEROFF")
+	log:info("Poweroff begin")
 
 	self:_setBrightness(true, 0, 0,
 			    function()
+				    log:info("Poweroff on")
 				    os.execute("/sbin/poweroff")
 			    end)
 end

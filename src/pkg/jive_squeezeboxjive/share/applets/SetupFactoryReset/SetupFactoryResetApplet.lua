@@ -5,6 +5,7 @@ local io                     = require("io")
 local os                     = require("os")
 
 local Applet                 = require("jive.Applet")
+local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
 local Popup                  = require("jive.ui.Popup")
@@ -14,6 +15,11 @@ local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
 
 local log                    = require("jive.utils.log").logger("applets.setup")
+
+local EVENT_ALL_INPUT        = jive.ui.EVENT_ALL_INPUT
+local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
+
+local appletManager          = appletManager
 
 
 module(...)
@@ -48,19 +54,35 @@ end
 
 
 function _factoryReset(self)
-	local window = Popup("popupIcon")
-	window:addWidget(Icon("iconConnected"))
-	window:addWidget(Label("text", self:string("RESET_RESETTING")))
+	-- disconnect from SqueezeCenter
+	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
+	slimDiscovery.serversObj:disconnect()
 
-	window:addTimer(2000, function()
-				      log:warn("Factory reset...")
+	local popup = Popup("popupIcon")
+	popup:addWidget(Icon("iconConnected"))
+	popup:addWidget(Label("text", self:string("RESET_RESETTING")))
 
-				      -- touch .factoryreset and reboot
-				      io.open("/.factoryreset", "w"):close()
-				      os.execute("/bin/busybox reboot -f")
+	-- make sure this popup remains on screen
+	popup:setAllowScreensaver(false)
+	popup:setAlwaysOnTop(true)
+	popup:setAutoHide(false)
+
+	-- we're shutting down, so prohibit any key presses or holds
+	Framework:addListener(EVENT_ALL_INPUT,
+			      function () 
+				      return EVENT_CONSUME
+			      end,
+			      true)
+
+	popup:addTimer(2000, function()
+				     log:info("Factory reset...")
+
+				     -- touch .factoryreset and reboot
+				     io.open("/.factoryreset", "w"):close()
+				     os.execute("/bin/busybox reboot -f")
 			      end)
 
-	self:tieAndShowWindow(window)
+	self:tieAndShowWindow(popup)
 end
 
 

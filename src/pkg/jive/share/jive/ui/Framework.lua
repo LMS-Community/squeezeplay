@@ -271,6 +271,32 @@ end
 
 --[[
 
+=head2 jive.ui.Framework:wakeup()
+
+Power management wakeup.
+
+=cut
+--]]
+function wakeup(self)
+end
+
+
+--[[
+
+=head2 jive.ui.Framework:registerWakeup()
+
+Register a power management wakeup function.
+
+=cut
+--]]
+function registerWakeup(self, wakeup)
+	_assert(type(wakeup) == "function")
+	self.wakeup = wakeup
+end
+
+
+--[[
+
 =head2 jive.ui.Framework:addWidget(widget)
 
 Add a global widget I<widget> to the screen. The global widgets are shown on all windows.

@@ -36,6 +36,7 @@ local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("applets.setup")
 
 local jnt                    = jnt
+local appletManager          = appletManager
 local upgradeUrl             = upgradeUrl
 
 local EVENT_ACTION           = jive.ui.EVENT_ACTION
@@ -50,6 +51,7 @@ local LAYOUT_WEST            = jive.ui.LAYOUT_WEST
 local LAYOUT_CENTER          = jive.ui.LAYOUT_CENTER
 local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
+local EVENT_ALL_INPUT        = jive.ui.EVENT_ALL_INPUT
 local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
 local EVENT_KEY_HOLD         = jive.ui.EVENT_KEY_HOLD
 local EVENT_WINDOW_ACTIVE    = jive.ui.EVENT_WINDOW_ACTIVE
@@ -229,31 +231,51 @@ function _upgrade(self)
 		return self:_chargeBattery()
 	end
 
-	local window = Popup("popupIcon")
+	local popup = Popup("popupIcon")
 
 	self.icon = Icon("iconConnecting")
-	window:addWidget(self.icon)
+	popup:addWidget(self.icon)
 
 	self.textarea = Label("text", self:string("UPDATE_DOWNLOAD", ""))
-	window:addWidget(self.textarea)
+	popup:addWidget(self.textarea)
 
-	-- no way to exit this window
-	-- FIXME add global handler to block all key events
-	window:addListener(EVENT_KEY_PRESS,
-			   function(event)
-				   return EVENT_CONSUME
-			   end)
+	-- make sure this popup remains on screen
+	popup:setAllowScreensaver(false)
+	popup:setAlwaysOnTop(true)
+	popup:setAutoHide(false)
+
+	-- no way to exit this popup
+	self.upgradeListener =
+		Framework:addListener(EVENT_ALL_INPUT,
+				      function()
+					      Framework.wakeup()
+					      return EVENT_CONSUME
+				      end,
+				      true)
+
+	-- disconnect from SqueezeCenter, we don't want to up
+	-- interrupted during the firmware upgrade.
+	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
+	slimDiscovery.serversObj:disconnect()
 
 	-- start the upgrade
 	self.upgrade = Upgrade(self.url)
 	Task("upgrade", self, _t_upgrade, _upgradeFailed):addTask()
 
-	self:tieAndShowWindow(window)
+	self:tieAndShowWindow(popup)
 	return window
 end
 
 
 function _upgradeFailed(self)
+	-- unblock keys
+	Framework:removeListener(self.upgradeListener)
+	self.upgradeListener = nil
+
+	-- reconnect to server
+	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
+	slimDiscovery.serversObj:connect()
+
 	local window = Window("window", self:string("UPDATE_FAILURE"))
 
 	local menu = SimpleMenu("menu",
