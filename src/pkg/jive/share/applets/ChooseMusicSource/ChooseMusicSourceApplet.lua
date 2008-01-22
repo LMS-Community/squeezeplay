@@ -166,6 +166,10 @@ function _addServerItem(self, server, address)
 
 	self.serverMenu:addItem(item)
 	self.serverList[id] = item
+
+	if currentPlayer and server == currentPlayer:getSlimServer() then
+		self.serverMenu:setSelectedItem(item)
+	end
 end
 
 
