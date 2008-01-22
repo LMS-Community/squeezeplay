@@ -369,7 +369,7 @@ NETWORK_WPA2
 
 NETWORK_WIRELESS_ENCRYPTION_HELP
 	DE	Wählen Sie die im Netzwerk verwendete Verschlüsselung.
-	EN	Choose the type of encryption that your network uses.
+	EN	Choose the size of encryption key that your network uses. The key may include digits 0-9 and letters A-F. 64-bit keys are 10 digits long, 128-bit networks are 26 digits long.
 	ES	Elija el tipo de cifrado que utiliza la red.
 	FR	Choisissez le type de chiffrement que votre réseau utilise.
 	IT	Scegliere il tipo di crittografia utilizzata dalla rete.
