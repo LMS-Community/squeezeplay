@@ -553,7 +553,7 @@ local function _performJSONAction(jsonAction, from, qty, sink)
 	-- replace player if needed
 	local playerid = jsonAction["player"]
 	if not playerid or tostring(playerid) == "0" then
-		playerid = _player.id
+		playerid = _player:getId()
 	end
 	
 	-- look for __INPUT__ as a param value
@@ -622,7 +622,8 @@ local function _connectingToPlayer(self, player)
 
 	local popup = Popup("popupIcon")
 	local icon  = Icon("iconConnecting")
-	local label = Label("text", self:string("SLIMBROWSER_CONNECTING_TO", player.name))
+	local playerName = player:getName()
+	local label = Label("text", self:string("SLIMBROWSER_CONNECTING_TO", playerName))
 	popup:addWidget(icon)
 	popup:addWidget(label)
 	popup:setAlwaysOnTop(true)
@@ -774,10 +775,10 @@ local function _menuSink(self, cmd)
 		-- the player ID this notification is for is in chunk.data[4]
 		local playerId = chunk.data[4]
 
-		if playerId ~= 'all' and playerId ~= _player.id then
+		if playerId ~= 'all' and playerId ~= _player:getId() then
 			log:debug('***** This menu notification was not for this player ***** ')
 			log:debug("Notification for: ", playerId)
-			log:debug("This player is: ", _player.id)
+			log:debug("This player is: ", _player:getId())
 			return
 		end
 
@@ -901,7 +902,7 @@ local function _requestStatus()
 	if from then
 		_server:request(
 				step.sink,
-				_player.id,
+				_player:getId(),
 				{ 'status', from, qty, 'menu:menu' }
 			)
 	end
@@ -1874,7 +1875,7 @@ function notify_playerCurrent(self, player)
 	if not _player and player then
 		log:info("First load...get the correct wallpaper on screen")
 		local SetupWallpaper = AppletManager:loadApplet("SetupWallpaper")
-		SetupWallpaper:_setBackground(nil, player.id)
+		SetupWallpaper:_setBackground(nil, player:getId())
 		AppletManager:freeApplet("SetupWallpaper")
 	end
 
@@ -1892,13 +1893,14 @@ function notify_playerCurrent(self, player)
 	_player = player
 	_server = player:getSlimServer()
 	_string = function(token) return self:string(token) end
+	local _playerId = _player:getId()
 
-	log:warn('**** SUBSCRIBING to /slim/menustatus/', _player.id)
+	log:warn('**** SUBSCRIBING to /slim/menustatus/', _playerId)
 	local cmd = { 'menustatus' }
 	_server.comet:subscribe(
-		'/slim/menustatus/' .. _player.id,
+		'/slim/menustatus/' .. _playerId,
 		_menuSink(sink, cmd),
-		_player.id,
+		_playerId,
 		cmd
 	)
 
@@ -1923,7 +1925,7 @@ function notify_playerCurrent(self, player)
 	_statusStep.actionModifier = "-status"
 
 	-- showtime for the player
-	_server:request(sink, _player.id, { 'menu', 0, 100 })
+	_server:request(sink, _playerId, { 'menu', 0, 100 })
 	_player:onStage()
 	_requestStatus()
 
@@ -2033,9 +2035,9 @@ function free(self)
 	log:debug("SlimBrowserApplet:free()")
 
 	-- unsubscribe from this player's menustatus
-	log:warn("***** UNSUBSCRIBING FROM /slim/menustatus/", _player.id)
+	log:warn("***** UNSUBSCRIBING FROM /slim/menustatus/", _player:getId())
 	if _server and _player then
-		_server.comet:unsubscribe('/slim/menustatus/' .. _player.id)
+		_server.comet:unsubscribe('/slim/menustatus/' .. _player:getId())
 	end
 
 	if _player then
