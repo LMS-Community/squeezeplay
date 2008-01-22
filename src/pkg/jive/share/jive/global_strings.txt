@@ -21,7 +21,7 @@ SETTINGS
 REMOTE_SETTINGS
 	DE	Fernbedienungseinstellungen
 	EN	Controller Settings
-	ES	Configuracion del mando
+	ES	Configuración del mando
 	FR	Parametres de la telecommande
 	IT	Impostazioni telecomando
 	NL	Afstandsbedieningsinstellingen
@@ -35,7 +35,12 @@ SCREEN_SETTINGS
 	NL	Display
 
 HOME
+	DE	Hauptmenü
 	EN	Home
+	ES	Inicio
+	FR	Accueil
+	IT	Pagina iniziale
+	NL	Hoofdmenu
 
 ADVANCED_SETTINGS
 	DE	Erweitert
