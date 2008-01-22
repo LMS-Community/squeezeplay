@@ -198,6 +198,15 @@ static SDL_Surface *draw_ttf_font(JiveFont *font, Uint32 color, const char *str)
 
 	srf = TTF_RenderUTF8_Blended(font->ttf, str, clr);
 
+#if 0
+	// draw text bounding box for debugging
+	if (srf) {
+		rectangleColor(srf, 0,0, srf->w - 1, srf->h - 1, 0xff0000df);
+		lineColor(srf, 0, font->ascend, srf->w - 1, font->ascend, 0xff0000df);
+	}
+#endif
+
+
 #ifdef JIVE_PROFILE_BLIT
 	t1 = SDL_GetTicks();
 	printf("\tdraw_ttf_font took=%d %s\n", t1-t0, str);
