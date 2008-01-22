@@ -560,10 +560,11 @@ end
 
 function openScreensaver(self, style, transition)
 
-	-- an empty item_loop means an empty playlist
+	-- playlist_tracks needs to be > 0 or else defer back to SlimBrowser
 	if not self.player 
 		or not self.player.playerStatus 
-			or not self.player.playerStatus.item_loop then
+			or not self.player.playerStatus.playlist_tracks 
+				or self.player.playerStatus.playlist_tracks == 0 then
 		local browser = appletManager:getAppletInstance("SlimBrowser")
 		browser:showPlaylist()
 		return

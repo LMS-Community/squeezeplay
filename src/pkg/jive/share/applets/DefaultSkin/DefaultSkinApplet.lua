@@ -960,6 +960,10 @@ function skin(self, s)
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumitem.icon.padding = { 8, 0, 0, 0 }
 
+	s.albumitemNoAction = _uses(s.albumitem, {
+					order = { 'text' }
+				})
+	s.selected.albumitemNoAction = _uses(s.albumitemNoAction)
 
 	-- selected item with artwork and song info
 	s.selected.albumitem = {}
@@ -967,6 +971,7 @@ function skin(self, s)
 	s.selected.albumitem.text.fg = SELECT_COLOR
 	s.selected.albumitem.text.sh = SELECT_SH_COLOR
 	s.selected.albumitem.bgImg = albumSelectionBox
+
 
 
 	-- locked item with artwork and song info

@@ -1381,8 +1381,10 @@ local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderS
 				style = "albumcurrent"
 			elseif item and item["style"] then
 				style = item["style"]
+log:warn(style)
 			end
 
+log:warn(style)
 			widgets[widgetIndex] = _decoratedLabel(widget, style, item, db, menuAccel)
 		end
 	end
@@ -1690,10 +1692,14 @@ function showPlaylist()
 		-- current playlist should select currently playing item 
 		-- if there is only one item in the playlist, bring the selected item to top
 		local playlistSize = _safeDeref(_player, 'playerStatus', 'playlist_tracks')
-		if playlistSize == 1 then
+		if playlistSize == 0 then
+			_statusStep.window:setTitle(_string("SLIMBROWSER_NOW_PLAYING"))
+		end
+
+		if playlistSize <= 1 then
 			_statusStep.menu["_lastSelectedIndex"] = 1
 			_statusStep.menu["_lastSelectedOffset"] = 1 
-			_statusStep.menu.selected = 1
+			_statusStep.menu.selected = 1 
 			_statusStep.menu:_updateWidgets()
 		-- otherwise bring the currently playing item to the screen with offset of 2
 		elseif _statusStep.menu.list.currentIndex then
