@@ -606,6 +606,16 @@ local function _getStepSink(step, sink)
 	end
 end
 
+-- _searchInProgress
+-- full screen popup that appears until search is complete
+local function _searchInProgress(self)
+	local popup = Popup("popupIcon")
+	local icon  = Icon("iconConnecting")
+	popup:addWidget(icon)
+	popup:show()
+end
+
+
 -- _connectingToPlayer
 -- full screen popup that appears until menus are loaded
 local function _connectingToPlayer(self, player)
@@ -1381,10 +1391,8 @@ local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderS
 				style = "albumcurrent"
 			elseif item and item["style"] then
 				style = item["style"]
-log:warn(style)
 			end
 
-log:warn(style)
 			widgets[widgetIndex] = _decoratedLabel(widget, style, item, db, menuAccel)
 		end
 	end
@@ -1502,6 +1510,8 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 				_lastInput = value
 				item['_inputDone'] = value
 				
+				-- popup time
+				_searchInProgress(self)
 				-- now we should perform the action !
 				_actionHandler(nil, nil, db, nil, nil, 'go', item)
 				-- close the text input if this is a "do"
