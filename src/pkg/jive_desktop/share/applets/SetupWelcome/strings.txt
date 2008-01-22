@@ -26,9 +26,8 @@ WELCOME_WALKTHROUGH
 	IT	Iniziamo con il collegamento alla rete e alla musica.
 	NL	We gaan je eerst met je netwerk en muziek verbinden.
 
-
 WELCOME_HELP
-	DE	Drücken Sie die Mitteltaste, wenn Sie so weit sind.
+	DE	Drücken Sie die mittlere Taste, wenn Sie so weit sind.
 	EN	Press the center button when you are ready to move on.
 	ES	Pulse el botón central cuando esté listo para continuar.
 	FR	Appuyez sur le bouton central pour continuer.
@@ -52,10 +51,10 @@ DONE_CONTINUE
 	NL	Verdergaan
 
 DONE_HELP
-	DE	Jetzt können Sie mit der Squeezebox Controller auf all Ihre Musik zugreifen. Zum Fortfahren Mitteltaste drücken.
+	DE	Jetzt können Sie mit der Squeezebox Controller auf Ihre Musik zugreifen. Drücken Sie zum Fortfahren die mittlere Taste.
 	EN	Now you can use your Squeezebox Controller to access all your music. Press the center button to continue.
 	ES	Ya puede usar Squeezebox Controller para acceder a toda su música. Pulse el botón central para continuar.
 	FR	Vous pouvez maintenant accéder à votre musique avec la Squeezebox Controller. Appuyez sur le bouton central pour continuer.
-	IT	Ora è possibile utilizzar Squeezebox Controller per accedere alla musica. Premere il pulsante centrale per continuare.
+	IT	Ora è possibile utilizzare Squeezebox Controller per accedere alla musica. Premere il pulsante centrale per continuare.
 	NL	Nu heb je met je Squeezebox Controller toegang tot al je muziek. Druk op de middelste knop om verder te gaan.
 

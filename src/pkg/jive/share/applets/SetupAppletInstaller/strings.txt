@@ -31,12 +31,12 @@ HELP
 	NL	Kies de applets die vanuit SqueezeCenter geïnstalleerd moeten worden en selecteer dan Installeren
 
 DOWNLOADING
-	DE	\nApplets herunterladen
+	DE	Applets herunterladen
 	EN	\nDownloading Applets
-	ES	\nDescargando subprogramas
-	FR	\nTéléchargement des applets
-	IT	\nDownload delle applet
-	NL	\nApplets worden gedownload
+	ES	Descargando subprogramas
+	FR	Téléchargement des applets
+	IT	Download delle applet
+	NL	Applets worden gedownload
 
 RESTART_APP
 	DE	Zum Nutzen neuer Applets Anwendung neu starten

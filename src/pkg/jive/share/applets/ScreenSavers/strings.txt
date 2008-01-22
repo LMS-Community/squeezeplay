@@ -35,7 +35,12 @@ SCREENSAVER_DELAY
 	NL	Vertraging
 
 SCREENSAVER_SELECT_HELP
+	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu suchen, und PLAY, um eine Vorschau anzuzeigen.
 	EN	Press the center button to choose a screensaver, play to preview.
+	ES	Pulse el botón central para elegir un protector de pantalla y el de reproducción para ver una vista previa.
+	FR	Appuyez sur le bouton central pour sélectionner un économiseur d'écran et sur PLAY pour afficher un aperçu.
+	IT	Premere il pulsante centrale per selezionare uno screen saver e il pulsante di riproduzione per vederne l'anteprima.
+	NL	Druk op de middelste knop om een schermbeveiliger te kiezen. Druk op PLAY om een voorbeeld te bekijken.
 
 DELAY_10_SEC
 	DE	10 Sekunden
@@ -108,3 +113,4 @@ SCREENSAVER_NONE
 	FR	Aucun
 	IT	Nessuno
 	NL	Geen
+

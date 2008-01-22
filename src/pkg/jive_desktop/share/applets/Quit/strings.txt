@@ -9,3 +9,4 @@ QUIT
 	FR	Quitter
 	IT	Esci
 	NL	Stoppen
+

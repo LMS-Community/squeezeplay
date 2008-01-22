@@ -25,3 +25,4 @@ SSH_HOWTO
 	FR	Le mot de passe racine pour le dispositif est %s et vous pouvez le connecter à l'adresse %s
 	IT	La password principale per questo dispositivo è %s ed è possibile connettersi al dispositivo tramite l'indirizzo %s
 	NL	Het hoofdwachtwoord voor dit apparaat is %s en je kunt er via het adres %s een verbinding mee maken.
+

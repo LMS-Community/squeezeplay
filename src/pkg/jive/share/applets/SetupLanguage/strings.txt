@@ -68,7 +68,7 @@ LANGUAGE_NL
 	NL	Nederlands
 
 CHOOSE_LANGUAGE_HELP
-	DE	Wählen Sie Ihre Sprache mit dem Rad aus. Drücken Sie zum Fortfahren die Mitteltaste.
+	DE	Wählen Sie Ihre Sprache mit dem Rad aus. Drücken Sie zum Fortfahren die mittlere Taste.
 	EN	Use the wheel to choose your language. Press the center button to go on.
 	ES	Use el botón rueda para elegir el idioma. Pulse el botón central para continuar.
 	FR	Utilisez la roulette pour choisir une langue. Appuyez sur le bouton central pour continuer.

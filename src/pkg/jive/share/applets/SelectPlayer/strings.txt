@@ -3,8 +3,10 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SELECT_PLAYER
+	DE	Player wählen
 	EN	Choose Player
 	ES	Elegir reproductor
+	FR	Sélectionner une platine
 	IT	Scegli lettore
 	NL	Speler kiezen
 

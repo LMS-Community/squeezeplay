@@ -18,3 +18,4 @@ TEST_KEYPAD_HELP
 	FR	Appuyez sur tous les boutons et sur la molette pour terminer le test.
 	IT	Premere tutti i tasti e scorrere la rotellina per completare.
 	NL	Druk alle knoppen in en druk op het wiel om de test te voltooien.
+

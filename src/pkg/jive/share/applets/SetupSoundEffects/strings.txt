@@ -73,3 +73,4 @@ SOUND_VOLUME_HELP
 	FR	Utilisez la molette pour régler le volume des effets sonores.
 	IT	Usare la rotellina per regolare il volume degli effetti sonori.
 	NL	Gebruik het wiel om het volume van de geluidseffecten aan te passen.
+

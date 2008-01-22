@@ -26,3 +26,4 @@ TEST_MOTION_MAX
 	FR	Max
 	IT	Max
 	NL	Max
+

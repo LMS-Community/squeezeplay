@@ -41,3 +41,4 @@ SCREENSAVER_NOWPLAYING_OF
 	FR	%s de %s
 	IT	%s di %s
 	NL	%s van %s
+

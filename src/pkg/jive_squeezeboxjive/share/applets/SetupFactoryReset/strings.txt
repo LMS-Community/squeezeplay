@@ -33,3 +33,4 @@ RESET_RESETTING
 	FR	\nRedémarrage
 	IT	\nRiavvio
 	NL	\nBezig met opnieuw starten
+

@@ -1,11 +1,32 @@
 SQUEEZENETWORK_PIN_TITLE
+	DE	Konto aktivieren
 	EN	Activate Account
+	ES	Activar cuenta
+	FR	Activer le compte
+	IT	Attiva account
+	NL	Account activeren
 
 SQUEEZENETWORK_PIN
+	DE	Player-PIN: %s
 	EN	Player PIN: %s
+	ES	PIN de reproductor: %s
+	FR	PIN de la platine: %s
+	IT	PIN lettore: %s
+	NL	Speler-PIN: %s
 
 SQUEEZENETWORK_PIN_HELP
+	DE	Gehen Sie zu\nwww.squeezenetwork.com\nund geben Sie Ihre PIN ein, um eine Verbindung zum Konto herzustellen. Drücken Sie anschließend die mittlere Taste.
 	EN	Visit\nwww.squeezenetwork.com\nand enter your PIN to connect to your account.  Press the center button after you have entered your PIN.
+	ES	Visite\nwww.squeezenetwork.com\ne introduzca el PIN para conectarse a si cuenta. Cuando haya introducido el PIN, pulse el botón central.
+	FR	Rendez-vous sur\nwww.squeezenetwork.com\net spécifiez votre code PIN pour accéder à votre compte. Appuyez sur le bouton central une fois que vous avez spécifié le code PIN.
+	IT	Visitare il sito Web\nwww.squeezenetwork.com\ne immettere il PIN per accedere all'account. Premere il pulsante centrale dopo avere immesso il PIN.
+	NL	Ga naar\nwww.squeezenetwork.com\nen voer je pincode in om naar je account te gaan. Druk op de middelste knop nadat je je pincode hebt ingevoerd.
 
 SQUEEZENETWORK_NOT_LINKED
+	DE	Ihre PIN konnte nicht bestätigt werden. Haben Sie sie auf der Website eingegeben?
 	EN	Could not verify your PIN.  Have you entered it on the website?
+	ES	No se ha podido verificar el PIN. ¿Lo ha introducido en el sitio Web?
+	FR	Impossible de vérifier le code PIN. Spécifiez le code sur le site Web.
+	IT	Impossibile verificare il PIN. È stato immesso nel sito Web?
+	NL	Pincode kan niet worden geverifieerd. Heb je deze op de website ingevoerd?
+

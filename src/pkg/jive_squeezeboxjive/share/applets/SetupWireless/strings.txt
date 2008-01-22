@@ -208,7 +208,7 @@ NETWORK_WIRELESS_KEY
 	NL	Draadloze sleutel
 
 NETWORK_WIRELESS_KEY_HELP
-	DE	Geben Sie den WEP-Schlüssel ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der Mitteltaste. Drücken Sie zum Beenden die Mitteltaste zweimal.
+	DE	Geben Sie den WEP-Schlüssel ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der mittleren Taste. Drücken Sie zum Beenden die mittlere Taste zweimal.
 	EN	Enter your wireless key. Scroll to change letters, press the center button to choose that letter. Press the center button twice to finish.
 	ES	Escriba la clave inalámbrica. Desplace la rueda para cambiar de letra y pulse el botón central para elegirla. Pulse dos veces el botón central para terminar.
 	FR	Entrer la clé sans fil. Faites défiler les lettres et appuyez sur le bouton central pour effectuer la sélection. Appuyez deux fois sur le bouton central pour terminer.
@@ -384,7 +384,7 @@ NETWORK_WIRELESS_PASSWORD
 	NL	Draadloos wachtwoord
 
 NETWORK_WIRELESS_PASSWORD_HELP
-	DE	Geben Sie Ihr Netzwerkkennwort ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der Mitteltaste. Drücken Sie die Mitteltaste zweimal zum Beenden.
+	DE	Geben Sie Ihr Netzwerkkennwort ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der mittleren Taste. Drücken Sie die mittlere Taste zweimal zum Beenden.
 	EN	Enter your wireless password. Scroll to change letters, press the center button to choose that letter. Press center button twice to finish.
 	ES	Escriba la contraseña para red inalámbrica. Desplácese para cambiar de letra y pulse el botón central para elegir una letra. Pulse dos veces el botón central para terminar.
 	FR	Saisissez un mot de passe pour votre réseau sans fil. Faites défiler les lettres et appuyez sur le bouton central pour sélectionner la lettre souhaitée. Appuyez deux fois sur le bouton central pour terminer.
@@ -480,7 +480,7 @@ NETWORK_NETWORK_NAME
 	NL	Netwerknaam
 
 NETWORK_NETWORK_NAME_HELP
-	DE	Geben Sie den Namen des kabellosen Netzwerks ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der Mitteltaste. Drücken Sie die Mitteltaste zweimal zum Beenden.
+	DE	Geben Sie den Namen des kabellosen Netzwerks ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der mittleren Taste. Drücken Sie die mittlere Taste zweimal zum Beenden.
 	EN	Enter your wireless network name. Scroll to change letters, press the center button to choose that letter. Press center button twice to finish.
 	ES	Escriba el nombre de la red inalámbrica. Desplácese para cambiar de letra y pulse el botón central para elegir una letra. Pulse dos veces el botón central para terminar.
 	FR	Saisissez le nom de votre réseau sans fil. Faites défiler les lettres et appuyez sur le bouton central pour sélectionner la lettre souhaitée. Appuyez deux fois sur le bouton central pour terminer.
@@ -622,3 +622,4 @@ NETWORK_PROBLEM_HELP
 	FR	Cette télécommande ne peut se connecter à %s.
 	IT	Problema di connessione del telecomando a %s
 	NL	Deze afstandsbediening kan geen verbinding maken met %s.
+
