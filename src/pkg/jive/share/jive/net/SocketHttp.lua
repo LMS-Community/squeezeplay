@@ -788,13 +788,17 @@ function close(self, err)
 	-- assumption is sending and receiving queries are never the same
 	if self.t_httpSending then
 		local errorSink = self.t_httpSending:t_getResponseSink()
-		errorSink(nil, err)
+		if errorSink then
+			errorSink(nil, err)
+		end
 		self.t_httpSending = nil
 	end
 
 	if self.t_httpReceiving then
 		local errorSink = self.t_httpReceiving:t_getResponseSink()
-		errorSink(nil, err)
+		if errorSink then
+			errorSink(nil, err)
+		end
 		self.t_httpReceiving = nil
 	end
 
