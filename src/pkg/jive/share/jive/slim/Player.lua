@@ -296,8 +296,6 @@ function getTrackElapsed(self)
 		self.trackCorrection = tonumber(self.state.rate) * (now - self.trackSeen)
 	end
 
-log:warn("C=", self.trackCorrection, " T=", self.trackTime, " D=", self.trackDuration, " E=", self.trackTime + self.trackCorrection)
-
 	if self.trackCorrection <= 0 then
 		return self.trackTime, self.trackDuration
 	else
