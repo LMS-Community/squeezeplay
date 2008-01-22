@@ -1701,8 +1701,9 @@ function showPlaylist()
 
 		-- current playlist should select currently playing item 
 		-- if there is only one item in the playlist, bring the selected item to top
-		-- BUG! breaks player encapsualtion
-		local playlistSize = _safeDeref(_player, 'state', 'playlist_tracks')
+		local playerStatus = _player:getPlayerStatus()
+		local playlistSize = playerStatus and playerStatus.playlist_tracks
+
 		if playlistSize == 0 then
 			_statusStep.window:setTitle(_string("SLIMBROWSER_NOW_PLAYING"))
 		end
@@ -1744,10 +1745,9 @@ function showPlaylist()
 			function(event)
 				-- FIXME, next line is a workaround for Bug 6670
 				_statusStep.window:checkLayout()
-				-- a menu size of 3 means a single item playlist (1 track plus clear/save playlist items)
 				-- single item playlists are skipped into the songinfo window
-				-- BUG! breaks player encapsulation
-				local playlistSize = _safeDeref(_player, 'state', 'playlist_tracks')
+				local playerStatus = _player:getPlayerStatus()
+				local playlistSize = playerStatus and playerStatus.playlist_tracks
 				if playlistSize == 1 then
 					-- need to spoof a key press here to descend one window further
 					_statusStep.menu:dispatchNewEvent(EVENT_ACTION)
