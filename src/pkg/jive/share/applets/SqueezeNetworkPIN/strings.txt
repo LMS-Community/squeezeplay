@@ -15,12 +15,12 @@ SQUEEZENETWORK_PIN
 	NL	Speler-PIN: %s
 
 SQUEEZENETWORK_PIN_HELP
-	DE	Gehen Sie zu\nwww.squeezenetwork.com\nund geben Sie Ihre PIN ein, um eine Verbindung zum Konto herzustellen. Drücken Sie anschließend die mittlere Taste.
-	EN	Visit\nwww.squeezenetwork.com\nand enter your PIN to connect to your account.  Press the center button after you have entered your PIN.
-	ES	Visite\nwww.squeezenetwork.com\ne introduzca el PIN para conectarse a si cuenta. Cuando haya introducido el PIN, pulse el botón central.
-	FR	Rendez-vous sur\nwww.squeezenetwork.com\net spécifiez votre code PIN pour accéder à votre compte. Appuyez sur le bouton central une fois que vous avez spécifié le code PIN.
-	IT	Visitare il sito Web\nwww.squeezenetwork.com\ne immettere il PIN per accedere all'account. Premere il pulsante centrale dopo avere immesso il PIN.
-	NL	Ga naar\nwww.squeezenetwork.com\nen voer je pincode in om naar je account te gaan. Druk op de middelste knop nadat je je pincode hebt ingevoerd.
+	DE	Gehen Sie zu\n%s\nund geben Sie Ihre PIN ein, um eine Verbindung zum Konto herzustellen. Drücken Sie anschließend die mittlere Taste.
+	EN	Visit\n%s\nand enter your PIN to connect to your account.  Press the center button after you have entered your PIN.
+	ES	Visite\n%s\ne introduzca el PIN para conectarse a si cuenta. Cuando haya introducido el PIN, pulse el botón central.
+	FR	Rendez-vous sur\n%s\net spécifiez votre code PIN pour accéder à votre compte. Appuyez sur le bouton central une fois que vous avez spécifié le code PIN.
+	IT	Visitare il sito Web\n%s\ne immettere il PIN per accedere all'account. Premere il pulsante centrale dopo avere immesso il PIN.
+	NL	Ga naar\n%s\nen voer je pincode in om naar je account te gaan. Druk op de middelste knop nadat je je pincode hebt ingevoerd.
 
 SQUEEZENETWORK_NOT_LINKED
 	DE	Ihre PIN konnte nicht bestätigt werden. Haben Sie sie auf der Website eingegeben?

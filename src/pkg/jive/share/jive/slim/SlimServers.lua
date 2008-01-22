@@ -248,7 +248,7 @@ function _discover(self)
 	end
 
 	-- Special case Squeezenetwork
-	_cacheServer(self, "www.squeezenetwork.com", 9000, "SqueezeNetwork")
+	_cacheServer(self, self.jnt:getSNHostname(), 9000, "SqueezeNetwork")
 
 	-- Remove SqueezeCenters that have not been seen for a while
 	_cacheCleanup(self)

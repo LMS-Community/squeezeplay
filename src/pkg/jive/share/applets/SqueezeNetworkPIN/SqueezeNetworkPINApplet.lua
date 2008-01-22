@@ -73,7 +73,7 @@ function forcePin(self, player)
 		end
 	} )
 
-	local help = Textarea("help", self:string("SQUEEZENETWORK_PIN_HELP"))
+	local help = Textarea("help", self:string("SQUEEZENETWORK_PIN_HELP", jnt:getSNHostname()))
 	window:addWidget(help)
 	window:addWidget(menu)
 

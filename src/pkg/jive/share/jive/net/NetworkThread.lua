@@ -278,6 +278,51 @@ end
 
 --[[
 
+=head2 getSNBeta()
+
+Boolean, indicates whether we're using the SqueezeNetwork
+Beta server (as opposed to production)
+
+=cut
+--]]
+function getSNBeta(self)
+	return self.use_sn_beta
+end
+
+--[[
+
+=head2 setSNBeta(use_sn_beta)
+
+Set the use_sn_beta flag in jnt.  This is only to be
+called once by the SetupSN applet's Meta, and affects
+the output of getSNBeta() and getSNHostname()
+
+--]]
+function setSNBeta(self, use_sn_beta)
+	if use_sn_beta then
+		self.use_sn_beta = true
+		self.sn_hostname = "www.beta.squeezenetwork.com"
+	else
+		self.use_sn_beta = false
+		self.sn_hostname = "www.squeezenetwork.com"
+	end
+end
+
+--[[
+
+=head2 getSNHostname()
+
+Retreive the hostname to be used to connect to SqueezeNetwork,
+which is affected by the use_sn_beta (getSNBeta()) flag.
+
+=cut
+--]]
+function getSNHostname(self)
+	return self.sn_hostname
+end
+
+--[[
+
 =head2 __init()
 
 Creates a new NetworkThread. The thread starts immediately.

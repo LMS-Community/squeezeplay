@@ -1,0 +1,20 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+ADVSET_SQUEEZENETWORK
+	DE	SqueezeNetwork
+	EN	SqueezeNetwork
+	ES	SqueezeNetwork
+	FR	SqueezeNetwork
+	IT	SqueezeNetwork
+	NL	SqueezeNetwork
+
+SN_BETA_ENABLE
+	DE	SN Beta aktivieren
+	EN	Enable SN Beta
+	ES	Activar SN Beta
+	FR	Activer SN Beta
+	IT	Attiva SN Beta
+	NL	SN Beta inschakelen
+

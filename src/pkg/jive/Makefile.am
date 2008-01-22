@@ -265,6 +265,12 @@ dist_applets_infobrowser_DATA = \
 	share/applets/InfoBrowser/InfoBrowserMeta.lua \
 	share/applets/InfoBrowser/strings.txt
 
+applets_SetupSNdir = $(datadir)/jive/applets/SetupSN
+dist_applets_SetupSN_DATA = \
+	share/applets/SetupSN/SetupSNApplet.lua \
+	share/applets/SetupSN/SetupSNMeta.lua \
+	share/applets/SetupSN/strings.txt
+
 applets_nowplayingdir = $(pkgdatadir)/applets/NowPlaying
 dist_applets_nowplaying_DATA = \
 	share/applets/NowPlaying/NowPlayingApplet.lua \
