@@ -7,6 +7,7 @@ local oo                     = require("loop.base")
 local os                     = require("os")
 local math                   = require("math")
 
+local Framework              = require("jive.ui.Framework")
 local Group                  = require("jive.ui.Group")
 local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
@@ -28,6 +29,7 @@ local EVENT_SCROLL           = jive.ui.EVENT_SCROLL
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
 
+local KEY_GO                 = jive.ui.KEY_GO
 local KEY_VOLUME_DOWN        = jive.ui.KEY_VOLUME_DOWN
 local KEY_VOLUME_UP          = jive.ui.KEY_VOLUME_UP
 
@@ -39,18 +41,31 @@ local VOLUME_STEP = 100 / 40
 module(..., oo.class)
 
 
+local function _updateDisplay(self)
+	if self.volume < 0 then
+		self.title:setValue(self.applet:string("SLIMBROWSER_VOLUME_MUTED"))
+		self.slider:setValue(0)
+
+	else
+		self.title:setValue(self.applet:string("SLIMBROWSER_VOLUME"))
+		self.slider:setValue(self.volume)
+	end
+end
+
+
 local function _openPopup(self)
-	if self.player == nil then
+	if self.popup or not self.player then
 		return
 	end
 
 	-- we need a local copy of the volume
-	self.volume = self.player:getVolume()
+	self.volume = self.player:getVolume() or 0
 
 	local popup = Popup("volumePopup")
 	popup:setAutoHide(false)
 
-	popup:addWidget(Label("title", "Volume"))
+	local title = Label("title", "")
+	popup:addWidget(title)
 
 	local slider = Slider("volume")
 	slider:setRange(-1, 100, self.volume)
@@ -70,7 +85,10 @@ local function _openPopup(self)
 
 	-- open the popup
 	self.popup = popup
+	self.title = title
 	self.slider = slider
+
+	_updateDisplay(self)
 
 	popup:showBriefly(2000,
 		function()
@@ -93,23 +111,28 @@ local function _updateVolume(self, mute)
 
 	-- ignore updates while muting
 	if self.muting then
-		return
+		return _updateDisplay(self)
 	end
 
 	-- mute?
 	if mute then
 		self.muting = true
 		self.volume = self.player:mute(true)
-		return
+		return _updateDisplay(self)
 	end
 
-	-- accelation for key holds
-	local accel = 1
-	if self.downAt then
-		accel = 1 + (os.time() - self.downAt)
+	-- accelation
+	local now = Framework:getTicks()
+	if self.accelDelta ~= self.delta or (now - self.lastUpdate) > 350 then
+		self.accelCount = 0
 	end
+
+	self.accelCount = math.min(self.accelCount + 1, 20)
+	self.accelDelta = self.delta
+	self.lastUpdate = now
 
 	-- change volume
+	local accel = self.accelCount / 4
 	local new = math.abs(self.volume) + self.delta * accel * VOLUME_STEP
 	
 	if new > 100 then 
@@ -117,18 +140,19 @@ local function _updateVolume(self, mute)
 	elseif new < 0 then
 		new = 0
 	end
-			
+
 	self.volume = self.player:volume(new) or self.volume
-	self.slider:setValue(self.volume)
+	_updateDisplay(self)
 end
 
 
-function __init(self)
+function __init(self, applet)
 	local obj = oo.rawnew(self, {})
 
-	self.muting = false
-	self.downAt = false
-	obj.timer = Timer(300, function()
+	obj.applet = applet
+	obj.muting = false
+	obj.lastUpdate = 0
+	obj.timer = Timer(100, function()
 				       _updateVolume(obj)
 			       end)
 
@@ -142,10 +166,10 @@ end
 
 
 function event(self, event)
+	local onscreen = true
 	if not self.popup then
+		onscreen = false
 		_openPopup(self)
-	else
-		self.popup:showBriefly()
 	end
 
 	local type = event:getType()
@@ -165,12 +189,16 @@ function event(self, event)
 	elseif type == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()
 
+		if keycode == KEY_GO then
+			self.popup:showBriefly(0)
+			return EVENT_CONSUME
+		end
+
 		-- we're only interested in volume keys
 		if keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) ~= (KEY_VOLUME_UP|KEY_VOLUME_DOWN) then
 			return EVENT_CONSUME
 		end
 
-		self.downAt = false
 		_updateVolume(self, self.volume >= 0)
 
 	else
@@ -185,7 +213,6 @@ function event(self, event)
 		if type == EVENT_KEY_UP then
 			self.delta = 0
 			self.muting = false
-			self.downAt = false
 			self.timer:stop()
 			return EVENT_CONSUME
 		end
@@ -200,9 +227,10 @@ function event(self, event)
 				self.delta = 0
 			end
 
-			self.downAt = os.time()
 			self.timer:restart()
-			_updateVolume(self)
+			if onscreen then
+				_updateVolume(self)
+			end
 
 			return EVENT_CONSUME
 		end

@@ -1970,7 +1970,7 @@ Overridden to subscribe to events about players
 function init(self)
 	jnt:subscribe(self)
 
-	self.volume = Volume()
+	self.volume = Volume(self)
 end
 
 --[[

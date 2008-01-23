@@ -98,3 +98,18 @@ SLIMBROWSER_CONNECTING_TO
 	IT	Connessione a %s
 	NL	Er wordt een verbinding met %s gemaakt
 
+SLIMBROWSER_VOLUME
+	DE	Lautstärke
+	EN	Volume
+	ES	Volumen
+	FR	Volume
+	IT	Volume
+	NL	Volume
+
+SLIMBROWSER_VOLUME_MUTED
+	DE	Lautstärke (Stille)
+	EN	Volume (Muted)
+	ES	Volumen (Silenciado)
+	FR	Volume (En sourdine)
+	IT	Volume (Audio disattivato)
+	NL	Volume (Gedempt)
