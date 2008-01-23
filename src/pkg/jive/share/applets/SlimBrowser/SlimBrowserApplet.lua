@@ -49,11 +49,13 @@ local SimpleMenu             = require("jive.ui.SimpleMenu")
 local DateTime               = require("jive.utils.datetime")
                              
 local DB                     = require("applets.SlimBrowser.DB")
+local Volume                 = require("applets.SlimBrowser.Volume")
 
 local debug                  = require("jive.utils.debug")
 
 local log                    = require("jive.utils.log").logger("player.browse")
 local logd                   = require("jive.utils.log").logger("player.browse.data")
+
                              
 local EVENT_KEY_ALL          = jive.ui.EVENT_KEY_ALL
 local EVENT_KEY_DOWN         = jive.ui.EVENT_KEY_DOWN
@@ -216,124 +218,6 @@ local function _artworkThumbUri(iconId, size, imgFormat)
 	return artworkUri
 end
 
-
--- _openVolumePopup
--- manages the volume pop up window
-local function _openVolumePopup(vol)
-
---	log:debug("_openVolumePopup START ------------------- (", vol, ")")
-
-	local volume = _player:getVolume()
-
-	-- take no action if we don't know the players volume, for example
-	-- shortly after changing players.
-	if not volume then
-		return
-	end
-
-	local popup = Popup("volumePopup")
-
-	popup:addWidget(Label("title", "Volume"))
-
-	local slider = Slider("volume")
-	slider:setRange(-1, 100, volume)
-	popup:addWidget(Group("volumeGroup", {
-				      Icon("volumeMin"),
-				      slider,
-				      Icon("volumeMax")
-			      }))
-
-	local volumeStep = 100 / VOLUME_STEPS
-
-	local _updateVolume =
-		function(delta)
-			local new = volume + delta * volumeStep
-
-			if new > 100 then new = 100 elseif new < 0 then new = 0 end
-			
-			volume = _player:volume(new) or volume
-			slider:setValue(volume)
-			
-			popup:showBriefly()
-		end
-
-	-- timer to change volume
-	local timer = Timer(300,
-		function()
---			log:debug("_openVolumePopup - timer ", timer)
-			_updateVolume(vol)
-		end
-	)
-
-	-- listener for volume up and down keys
-	popup:addListener(
-		EVENT_KEY_ALL,
-		function(event)
-			local evtCode = event:getKeycode()
-
-			-- we're only interested in volume keys
-			if evtCode == KEY_VOLUME_UP then
-				vol = 1
-			elseif evtCode == KEY_VOLUME_DOWN then
-				vol = -1
-			else
-				return EVENT_UNUSED
-			end
-
-			-- if timer is gone, don't do anything => the window is closing
-			if not timer then
-				return EVENT_CONSUME
-			end
-
-			local evtType = event:getType()
-			if evtType == EVENT_KEY_UP then
-				-- stop volume timer
---				log:debug("stop timer (listener) ", timer)
-				timer:stop()
-				-- ensure we send an update for the final volume setting
-				_player:volume(volume, true)
-			elseif evtType == EVENT_KEY_DOWN then
-				-- start volume timer
---				log:debug("start timer (listener) ", timer)
-				timer.callback()
-				timer:restart()
-			end
-
-			-- make sure we don't hide popup
-			return EVENT_CONSUME
-		end
-	)
-
-	-- scroll listener
-	popup:addListener(EVENT_SCROLL,
-			  function(event)
-				  _updateVolume(event:getScroll())
-			  end)
-
-
-	-- we handle events
-	popup.brieflyHandler = 1
-
-	popup:showBriefly(2000,
-		function()
-			if timer then
---				log:debug("stop timer (showBriefly timeout), ", timer)
-				timer:stop()
-				-- make sure it cannot ever be started again
-				timer = nil
-			end
-		end,
-		Window.transitionPushPopupUp,
-		Window.transitionPushPopupDown
-	)
-
-	timer:start()
-
-	-- update volume from initial key press
-	_updateVolume(vol)
-
---	log:debug("_openVolumePopup END --------------------------")
-end
 
 local function _pushToNewWindow(step)
 	if not step then
@@ -1008,14 +892,12 @@ local _globalActions = {
 		return EVENT_CONSUME
 	end,
 
-	["volup-down"] = function()
-		_openVolumePopup(1)
-		return EVENT_CONSUME
+	["volup-down"] = function(self, event)
+		return self.volume:event(event)
 	end,
 
-	["voldown-down"] = function()
-		_openVolumePopup(-1)
-		return EVENT_CONSUME
+	["voldown-down"] = function(self, event)
+		return self.volume:event(event)
 	end,
 }
 
@@ -1629,7 +1511,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 end
 
 
-local function _installPlayerKeyHandler()
+local function _installPlayerKeyHandler(self)
 	if _playerKeyHandler then
 		return
 	end
@@ -1657,15 +1539,14 @@ local function _installPlayerKeyHandler()
 			end
 
 			-- call the action
-			func()
-			return EVENT_CONSUME
+			return func(self, event)
 		end,
 		false
 	)
 end
 
 
-local function _removePlayerKeyHandler()
+local function _removePlayerKeyHandler(self)
 	if not _playerKeyHandler then
 		return
 	end
@@ -1882,6 +1763,9 @@ function notify_playerCurrent(self, player)
 	-- clear any errors, we may have changed servers
 	iconbar:setServerError("OK")
 
+	-- update the volume object
+	self.volume:setPlayer(player)
+
 	-- nothing to do if we don't have a player
 	-- NOTE don't move this, the code above needs to run when disconnecting
 	-- for all players.
@@ -1934,7 +1818,7 @@ function notify_playerCurrent(self, player)
 	_connectingToPlayer(self, player)
 
 	jiveMain:setTitle(player:getName())
-	_installPlayerKeyHandler()
+	_installPlayerKeyHandler(self)
 end
 
 function notify_serverConnected(self, server)
@@ -2044,7 +1928,7 @@ function free(self)
 		_player:offStage()
 	end
 
-	_removePlayerKeyHandler()
+	_removePlayerKeyHandler(self)
 
 	-- remove player menus
 	jiveMain:setTitle(nil)
@@ -2085,6 +1969,8 @@ Overridden to subscribe to events about players
 --]]
 function init(self)
 	jnt:subscribe(self)
+
+	self.volume = Volume()
 end
 
 --[[

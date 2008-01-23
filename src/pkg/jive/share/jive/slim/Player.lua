@@ -32,6 +32,7 @@ local debug = require("jive.utils.debug")
 local _assert, setmetatable, tonumber, tostring, pairs = _assert, setmetatable, tonumber, tostring, pairs
 
 local os             = require("os")
+local math           = require("math")
 local string         = require("string")
 local table          = require("table")
 
@@ -825,7 +826,7 @@ end
 
 
 -- volume
--- send new volume value to SS
+-- send new volume value to SS, returns a negitive value if the player is muted
 function volume(self, vol, send)
 	local now = Framework:getTicks()
 	if self.mixerTo == nil or self.mixerTo < now or send then
@@ -839,6 +840,27 @@ function volume(self, vol, send)
 		return nil
 	end
 end
+
+
+-- mute
+-- mutes or ummutes the player, returns a negitive value if the player is muted
+function mute(self, mute)
+	local vol = self.state["mixer volume"]
+	if mute and vol >= 0 then
+		-- mute
+		self:send({'mixer', 'muting'})
+		vol = -math.abs(vol)
+
+	elseif vol < 0 then
+		-- unmute
+		self:send({'mixer', 'muting'})
+		vol = math.abs(vol)
+	end
+
+	self.state["mixer volume"] = vol
+	return vol
+end
+
 
 -- getVolume
 -- returns current volume (from last status update)
