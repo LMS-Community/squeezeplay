@@ -299,13 +299,7 @@ the output of getSNBeta() and getSNHostname()
 
 --]]
 function setSNBeta(self, use_sn_beta)
-	if use_sn_beta then
-		self.use_sn_beta = true
-		self.sn_hostname = "www.beta.squeezenetwork.com"
-	else
-		self.use_sn_beta = false
-		self.sn_hostname = "www.squeezenetwork.com"
-	end
+	self.use_sn_beta = use_sn_beta
 end
 
 --[[
@@ -318,7 +312,11 @@ which is affected by the use_sn_beta (getSNBeta()) flag.
 =cut
 --]]
 function getSNHostname(self)
-	return self.sn_hostname
+	if use_sn_beta then
+		return "www.beta.squeezenetwork.com"
+	else
+		return "www.squeezenetwork.com"
+	end
 end
 
 --[[
