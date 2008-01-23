@@ -52,7 +52,7 @@ local BLOCK_SIZE = 200
 -- creates an empty database object
 function __init(self, windowSpec)
 	log:debug("DB:__init()")
-	
+
 	return oo.rawnew(self, {
 		
 		-- data
@@ -71,6 +71,11 @@ function __init(self, windowSpec)
 		-- windowSpec (to create labels in renderer)
 		windowSpec = windowSpec,
 	})
+end
+
+
+function menuStyle(self)
+	return self.windowSpec.menuStyle
 end
 
 
@@ -126,6 +131,17 @@ function updateStatus(self, chunk)
 		self.store = {}
 		self.complete = false
 	end
+
+	-- update the window properties
+	if chunk and chunk.window then
+		local window = chunk.window
+
+		if window.menuStyle then
+			self.windowSpec.menuStyle = window.menuStyle .. "menu"
+			self.windowSpec.labelItemStyle = window.menuStyle .. "item"
+		end
+	end
+
 
 	self.ts = ts
 	self.count = cCount

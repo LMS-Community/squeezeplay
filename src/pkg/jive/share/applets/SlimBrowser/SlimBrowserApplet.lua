@@ -616,9 +616,10 @@ local function _browseSink(step, chunk, err)
 		-- if our window has a menu - some windows don't :(
 		if step.menu then
 			step.menu:setItems(step.db:menuItems(data))
-			if data.window and data.window.menuStyle then
-				step.menu:setStyle(data.window.menuStyle .. 'menu')
-			end
+
+			-- update the window properties
+			-- TODO add more properties here
+			step.menu:setStyle(step.db:menuStyle())
 
 			-- what's missing?
 			local from, qty = step.db:missing(step.menu:isAccelerated())
@@ -1452,7 +1453,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		-- a db above
 	
 		-- a menu. We manage closing ourselves to guide our path
-		menu = Menu(windowSpec.menuStyle, _browseMenuRenderer, _browseMenuListener, _browseMenuAvailable)
+		menu = Menu(db:menuStyle(), _browseMenuRenderer, _browseMenuListener, _browseMenuAvailable)
 		
 		-- alltogether now
 		menu:setItems(db:menuItems())
