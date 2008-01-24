@@ -194,7 +194,10 @@ local function _evalMeta(entry)
 	local obj = class()
  
 	-- check Applet version
-	local ver = tonumber(string.match(JIVE_VERSION, "(%d+)"))
+-- FIXME the JIVE_VERSION has changed from '1' to '7.x'. lets not break
+-- the applets now.
+--	local ver = tonumber(string.match(JIVE_VERSION, "(%d+)"))
+	local ver = 1
 	local min, max = obj:jiveVersion()
 	if min < ver or max > ver then
 		error("Incompatible applet " .. entry.appletName)

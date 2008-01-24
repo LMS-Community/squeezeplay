@@ -83,7 +83,6 @@ local KEY_PAUSE              = jive.ui.KEY_PAUSE
 local KEY_VOLUME_DOWN        = jive.ui.KEY_VOLUME_DOWN
 local KEY_VOLUME_UP          = jive.ui.KEY_VOLUME_UP
 
-local JIVE_VERSION           = jive.JIVE_VERSION
 local jiveMain               = jiveMain
 local appletManager          = appletManager
 local iconbar                = iconbar
