@@ -25,6 +25,6 @@ end
 
 function registerApplet(meta)
 	jiveMain:addItem(
-		meta:menuItem('appletInfoBrowser', 'extras', meta:string('INFOBROWSER'), function(applet, ...) applet:menu(...) end, 900)
+		meta:menuItem('appletInfoBrowser', 'extras', meta:string('INFOBROWSER'), function(applet, ...) applet:menu(...) end, 10)
 	)
 end
