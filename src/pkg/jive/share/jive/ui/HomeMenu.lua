@@ -95,7 +95,7 @@ function addNode(self, item)
 	log:debug("JiveMain.addNode: Adding a non-root node, ", item.id)
 
 	if not item.weight then 
-		item.weight = 5
+		item.weight = 100
 	end
 
 	-- remove node from previous node (if changed)
@@ -149,7 +149,7 @@ function addItem(self, item)
 	assert(item.node)
 
 	if not item.weight then 
-		item.weight = 5
+		item.weight = 100
 	end
 
 	if not self.menuTable[item.id] then
