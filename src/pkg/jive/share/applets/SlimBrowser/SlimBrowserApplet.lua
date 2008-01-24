@@ -557,6 +557,13 @@ local function _bigArtworkPopup(chunk, err)
 	return popup
 end
 
+-- _hideMe
+-- hides the top window
+local function _hideMe(step)
+	Framework:playSound("WINDOWHIDE")
+	step.window:hide()
+end
+
 -- _goNowPlaying
 -- pushes next window to the NowPlaying window
 local function _goNowPlaying(transition)
@@ -1077,6 +1084,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 					sink = _goPlaylist
 				elseif item['nextWindow'] == 'home' then
 					sink = goHome
+				elseif item['nextWindow'] == 'parent' then
+					sink = _hideMe(_curStep)
 				elseif item["showBigArtwork"] then
 					sink = _bigArtworkPopup
 				elseif actionName == 'go' then
@@ -1566,7 +1575,7 @@ function goHome()
 	local windowStack = Framework.windowStack
 	Framework:playSound("JUMP")
 	while #windowStack > 1 do
-		windowStack[#windowStack - 1]:hide(nil, "JUMP")
+		windowStack[#windowStack - 1]:hide()
 	end
 end
 
