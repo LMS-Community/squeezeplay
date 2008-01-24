@@ -30,6 +30,6 @@ xcopy luasocket-2.0.1\src\tp.lua %1\lua\socket /Y
 xcopy luasocket-2.0.1\src\url.lua %1\lua\socket /Y
 
 md %1\fonts
-xcopy freefont-debian\*.ttf %1\fonts /Y
+xcopy freefont-20060126\*.ttf %1\fonts /Y
 
 xcopy SDL_image-1.2.5\VisualC\graphics\lib\*.dll %1 /Y

@@ -236,6 +236,7 @@ struct jive_font {
 	// Data for specifc font types
 	TTF_Font *ttf;
 	int height;
+	int capheight;
 	int ascend;
 
 	struct jive_font *next;
@@ -336,6 +337,7 @@ void jive_font_free(JiveFont *font);
 int jive_font_width(JiveFont *font, const char *str);
 int jive_font_nwidth(JiveFont *font, const char *str, int len);
 int jive_font_height(JiveFont *font);
+int jive_font_capheight(JiveFont *font);
 int jive_font_ascend(JiveFont *font);
 JiveSurface *jive_font_draw_text(JiveFont *font, Uint32 color, const char *str);
 JiveSurface *jive_font_ndraw_text(JiveFont *font, Uint32 color, const char *str, size_t len);

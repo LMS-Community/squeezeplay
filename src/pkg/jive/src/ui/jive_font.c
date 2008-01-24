@@ -129,6 +129,12 @@ int jive_font_nwidth(JiveFont *font, const char *str, int len) {
 	return w;
 }
 
+int jive_font_capheight(JiveFont *font) {
+	assert(font && font->magic == JIVE_FONT_MAGIC);
+
+	return font->capheight;
+}
+
 int jive_font_height(JiveFont *font) {
 	assert(font && font->magic == JIVE_FONT_MAGIC);
 
@@ -142,6 +148,7 @@ int jive_font_ascend(JiveFont *font) {
 }
 
 static int load_ttf_font(JiveFont *font, const char *name, Uint16 size) {
+	int maxy;
 	char *fullpath = malloc(PATH_MAX);
 
 	if (!jive_find_file(name, fullpath) ) {
@@ -160,6 +167,15 @@ static int load_ttf_font(JiveFont *font, const char *name, Uint16 size) {
 
 	font->height = TTF_FontHeight(font->ttf);
 	font->ascend = TTF_FontAscent(font->ttf);
+
+	/* calcualte the cap height using H */
+	if (TTF_GlyphMetrics(font->ttf, 'H', NULL, NULL, NULL, &maxy, NULL) == 0) {
+		font->capheight = maxy;
+	}
+	else {
+		font->capheight = font->ascend;
+	}
+
 	font->width = width_ttf_font;
 	font->draw = draw_ttf_font;
 	font->destroy = destroy_ttf_font;
@@ -203,6 +219,8 @@ static SDL_Surface *draw_ttf_font(JiveFont *font, Uint32 color, const char *str)
 	if (srf) {
 		rectangleColor(srf, 0,0, srf->w - 1, srf->h - 1, 0xff0000df);
 		lineColor(srf, 0, font->ascend, srf->w - 1, font->ascend, 0xff0000df);
+		lineColor(srf, 0, font->ascend, srf->w - 1, font->ascend, 0xff0000df);
+		lineColor(srf, 0, font->ascend - font->capheight, srf->w - 1, font->ascend - font->capheight, 0xff0000df);
 	}
 #endif
 

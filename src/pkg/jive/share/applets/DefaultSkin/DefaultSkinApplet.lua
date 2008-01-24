@@ -265,15 +265,18 @@ function skin(self, s)
 	local SELECT_COLOR = { 0x00, 0x00, 0x00 }
 	local SELECT_SH_COLOR = { }
 
-	local FONT_13px = Font:load(fontpath .. "FreeSans.ttf", 14)
-	local FONT_15px = Font:load(fontpath .. "FreeSans.ttf", 16)
+	local FONT_NAME = "FreeSans"
+	local BOLD_PREFIX = "Bold"
 
-	local FONT_BOLD_13px = Font:load(fontpath .. "FreeSansBold.ttf", 14)
-	local FONT_BOLD_15px = Font:load(fontpath .. "FreeSansBold.ttf", 16)
-	local FONT_BOLD_18px = Font:load(fontpath .. "FreeSansBold.ttf", 20)
-	local FONT_BOLD_20px = Font:load(fontpath .. "FreeSansBold.ttf", 22)
-	local FONT_BOLD_22px = Font:load(fontpath .. "FreeSansBold.ttf", 24)
-	local FONT_BOLD_200px = Font:load(fontpath .. "FreeSansBold.ttf", 200)
+	local FONT_13px = Font:load(fontpath .. FONT_NAME .. BOLD_PREFIX .. ".ttf", 14)
+	local FONT_15px = Font:load(fontpath .. FONT_NAME .. BOLD_PREFIX .. ".ttf", 16)
+
+	local FONT_BOLD_13px = Font:load(fontpath .. FONT_NAME .. BOLD_PREFIX .. ".ttf", 14)
+	local FONT_BOLD_15px = Font:load(fontpath .. FONT_NAME .. BOLD_PREFIX .. ".ttf", 16)
+	local FONT_BOLD_18px = Font:load(fontpath .. FONT_NAME .. BOLD_PREFIX .. ".ttf", 20)
+	local FONT_BOLD_20px = Font:load(fontpath .. FONT_NAME .. BOLD_PREFIX .. ".ttf", 22)
+	local FONT_BOLD_22px = Font:load(fontpath .. FONT_NAME .. BOLD_PREFIX .. ".ttf", 24)
+	local FONT_BOLD_200px = Font:load(fontpath .. FONT_NAME .. BOLD_PREFIX .. ".ttf", 200)
 
 
 	-- Iconbar definitions, each icon needs an image and x,y

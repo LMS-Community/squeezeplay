@@ -177,8 +177,8 @@ jive_desktop: jive/Makefile
 # freefont
 freefont:
 	mkdir -p ${PREFIX}/share/jive/fonts
-	cp freefont-debian/FreeSans.ttf ${PREFIX}/share/jive/fonts
-	cp freefont-debian/FreeSansBold.ttf ${PREFIX}/share/jive/fonts
+	cp freefont-20060126/FreeSans.ttf ${PREFIX}/share/jive/fonts
+	cp freefont-20060126/FreeSansBold.ttf ${PREFIX}/share/jive/fonts
 # fonts for clock screensaver
 	cp fonts-clock/Digital.ttf ${PREFIX}/share/jive/fonts
 	cp fonts-clock/DigitalItalic.ttf ${PREFIX}/share/jive/fonts
