@@ -539,14 +539,14 @@ function _makeIcon(self)
 
 	-- draw photo owner
 	local txt1 = Surface:drawText(fontBold, 0xFFFFFFFF, photo.ownername)
-	txt1:blit(totImg, 5, sh-15)
+	txt1:blit(totImg, 5, sh-15 - fontBold:offset())
 
 	-- draw photo title
 	if photo.title then
 		local titleWidth = fontRegular:width(photo.title)
 
 		local txt2 = Surface:drawText(fontRegular, 0xFFFFFFFF, photo.title)
-		txt2:blit(totImg, sw - 5 - titleWidth, sh-15)
+		txt2:blit(totImg, sw - 5 - titleWidth, sh-15 - fontRegular:offset())
 	end
 
 	local icon = Icon("image", totImg)
