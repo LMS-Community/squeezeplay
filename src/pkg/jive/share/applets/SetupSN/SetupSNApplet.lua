@@ -8,7 +8,7 @@ local Checkbox               = require("jive.ui.Checkbox")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Window                 = require("jive.ui.Window")
 
-local log                    = require("jive.utils.log").logger("applets.setup")
+local jnt                    = jnt
 
 module(...)
 oo.class(_M, Applet)
@@ -21,14 +21,12 @@ function settingsShow(self, menuItem)
 			icon = Checkbox("checkbox",
 					function(_, isSelected)
 						if isSelected then
-							self:getSettings()["use_sn_beta"] = true
-							self:storeSettings()
+							jnt:setSNBetaSetting(true);
 						else
-							self:getSettings()["use_sn_beta"] = false
-							self:storeSettings()
+							jnt:setSNBetaSetting(false);
 						end
 					end,
-					self:getSettings()["use_sn_beta"]
+					jnt:getSNBetaSetting()
 				)
 		},
 	})

@@ -31,7 +31,7 @@ local hasWireless, Wireless  = pcall(require, "jive.net.Wireless")
 local log                    = require("jive.utils.log").logger("applets.setup")
 
 local jnt                    = jnt
-
+local socket                 = require("socket")
 
 local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
 local EVENT_WINDOW_ACTIVE    = jive.ui.EVENT_WINDOW_ACTIVE
@@ -1201,14 +1201,29 @@ function _setSlimserver(self, slimserver)
 	self.slimserver = slimserver:getName()
 
 	if slimserver:isSqueezeNetwork() then
-		log:info("slimserver_address=www.squeezenetwork.com")
-
-		self.data2.server_address = Udap.packNumber(1, 4)
 		-- set slimserver address to 0.0.0.1 to workaround a bug in
 		-- squeezebox firmware
+		--
+		-- XXX this should be 1 or 2 depending on jnt:getSNBeta()
+		-- this:
+		-- self.data2.server_address = Udap.packNumber(1, 4)
+		-- self.data2.slimserver_address = Udap.packNumber(parseip("0.0.0.1"), 4)
+		-- or:
+		-- self.data2.server_address = Udap.packNumber(2, 4)
+		-- self.data2.slimserver_address = Udap.packNumber(parseip("0.0.0.1"), 4)
+		--
+		-- XXX but until that's in firmware and while using funny beta addresses:
+		local ip
+		if jnt:getSNBeta() then
+			ip = socket.dns.toip(jnt:getSNHostname())
+		else
+			ip = "207.7.156.11"
+		end
+		log:info("SN server_address=", ip)
+		self.data2.server_address = Udap.packNumber(parseip(ip), 4)
 		self.data2.slimserver_address = Udap.packNumber(parseip("0.0.0.1"), 4)
 	else
-		log:info("slimserver_address=", serverip)
+		log:info("SC slimserver_address=", serverip)
 
 		self.data2.server_address = Udap.packNumber(0, 4)
 		self.data2.slimserver_address = Udap.packNumber(parseip(serverip), 4)

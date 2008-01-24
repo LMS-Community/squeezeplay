@@ -248,7 +248,13 @@ function _discover(self)
 	end
 
 	-- Special case Squeezenetwork
-	_cacheServer(self, self.jnt:getSNHostname(), 9000, "SqueezeNetwork")
+	local sn_name
+	if self.jnt:getSNBeta() then
+		sn_name = "SqueezeNetwork Beta"
+	else
+		sn_name = "SqueezeNetwork"
+	end
+	_cacheServer(self, self.jnt:getSNHostname(), 9000, sn_name)
 
 	-- Remove SqueezeCenters that have not been seen for a while
 	_cacheCleanup(self)

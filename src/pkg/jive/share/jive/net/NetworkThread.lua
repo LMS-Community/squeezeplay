@@ -278,41 +278,56 @@ end
 
 --[[
 
-=head2 getSNBeta()
+=head2 setSNBetaSetting(bool)
 
-Boolean, indicates whether we're using the SqueezeNetwork
-Beta server (as opposed to production)
+Changes whether NetworkThread will use
+production or beta SqueezeNetwork servers on
+next reboot.
 
 =cut
 --]]
-function getSNBeta(self)
-	return self.use_sn_beta
+function setSNBetaSetting(self, use_sn_beta)
+	Framework:setGlobalSetting("use_sn_beta", use_sn_beta)
 end
 
 --[[
 
-=head2 setSNBeta(use_sn_beta)
+=head2 getSNBetaSetting()
 
-Set the use_sn_beta flag in jnt.  This is only to be
-called once by the SetupSN applet's Meta, and affects
-the output of getSNBeta() and getSNHostname()
+Indicates whether NetworkThread will use
+production or beta SqueezeNetwork servers on
+next reboot.
 
+=cut
 --]]
-function setSNBeta(self, use_sn_beta)
-	self.use_sn_beta = use_sn_beta
+function getSNBetaSetting(self)
+	return Framework:getGlobalSetting("use_sn_beta");
+end
+
+--[[
+
+=head2 getSNBeta()
+
+Boolean, indicates whether we're using the SqueezeNetwork
+Beta server (as opposed to production) Right Now
+
+=cut
+--]]
+function getSNBeta(self)
+	return self._use_sn_beta
 end
 
 --[[
 
 =head2 getSNHostname()
 
-Retreive the hostname to be used to connect to SqueezeNetwork,
-which is affected by the use_sn_beta (getSNBeta()) flag.
+Retreive the hostname to be used to connect to SqueezeNetwork
+Right Now
 
 =cut
 --]]
 function getSNHostname(self)
-	if self.use_sn_beta then
+	if self._use_sn_beta then
 		return "www.beta.squeezenetwork.com"
 	else
 		return "www.squeezenetwork.com"
@@ -337,6 +352,9 @@ function __init(self)
 
 		-- list of objects for notify
 		subscribers = {},
+
+		-- SN Beta in use?
+		_use_sn_beta = Framework:getGlobalSetting("use_sn_beta")
 	})
 
 	return obj

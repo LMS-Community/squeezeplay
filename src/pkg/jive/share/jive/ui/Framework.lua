@@ -28,7 +28,7 @@ User interface framework
 
 
 -- stuff we use
-local _assert, collectgarbage, jive, ipairs, pairs, require, string, tostring, type = _assert, collectgarbage, jive, ipairs, pairs, require, string, tostring, type
+local _assert, collectgarbage, jive, ipairs, load, pairs, require, setfenv, string, tostring, type = _assert, collectgarbage, jive, ipairs, load, pairs, require, setfenv, string, tostring, type
 
 local oo            = require("loop.simple")
 local table         = require("jive.utils.table")
@@ -75,6 +75,8 @@ local Window        = require("jive.ui.Window")
 local log           = require("jive.utils.log").logger("ui")
 local logTask       = require("jive.utils.log").logger("ui.task")
 
+local serialize     = require("jive.utils.serialize")
+local io            = require("io")
 
 -- import C functions
 jive.frameworkOpen()
@@ -93,6 +95,14 @@ screen = {}
 screen.bounds = { 0, 0, 240, 320 }
 screen.bpp = 16
 
+-- Put default global settings here
+default_global_settings = {
+	use_sn_beta = false,
+}
+
+-- To be filled in later when someone tries
+--  to access a setting...
+global_settings_file = nil
 
 --[[ C functions:
 
@@ -441,6 +451,69 @@ function removeListener(self, handle)
 
 	table.delete(self.globalListeners, handle)
 	table.delete(self.unusedListeners, handle)
+end
+
+
+--[[
+
+=head2 jive.ui.Framework:getGlobalSetting(key)
+
+Get the value of a given Global Settings key
+
+=cut
+--]]
+function getGlobalSetting(self, key)
+
+	if not self._global_settings then
+		-- One-shot initialization, the first
+		-- time someone accesses a Global Setting
+
+		global_settings_file = self:findFile("jive/") .. "global_settings.txt"
+
+		local fh = io.open(global_settings_file)
+		if fh == nil then
+			self._global_settings = default_global_settings
+		else
+        		local f, err = load(function() return fh:read() end)
+        		fh:close()
+			if not f then
+				log:error("Error reading global settings: ", err)
+				self._global_settings = default_global_settings
+			else
+				-- evalulate the settings in a sandbox
+				local env = {}
+				setfenv(f, env)
+				f()
+				self._global_settings = env.global_settings
+			end
+		end
+        end
+
+	return self._global_settings[key]
+end
+
+
+--[[
+
+=head2 jive.ui.Framework:setGlobalSetting(key, value)
+
+Change the value of the Global Setting indicated by key
+
+=cut
+--]]
+function setGlobalSetting(self, key, value)
+	-- skip no-ops
+	-- as a nice side-effect, calling getGlobalSetting
+	-- ensures global_settings_file and self._global_settings
+	-- are initialized
+	if self:getGlobalSetting(key) == value then
+		return
+	end
+
+	self._global_settings[key] = value
+	local file = _assert(io.open(global_settings_file, "w"))
+	serialize.save(file, "global_settings", self._global_settings)
+	file:close()
 end
 
 
