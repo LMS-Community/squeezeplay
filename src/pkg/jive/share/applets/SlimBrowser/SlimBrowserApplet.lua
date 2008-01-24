@@ -1667,8 +1667,7 @@ function notify_playerModeChange(self, player, mode)
 	end
 end
 
-
-function notify_playerTrackChange(self, player, nowplaying)
+function notify_playerPlaylistChange(self, player)
 	if _player ~= player then
 		return
 	end
@@ -1676,24 +1675,30 @@ function notify_playerTrackChange(self, player, nowplaying)
 	local playerStatus = player:getPlayerStatus()
 	local step = _statusStep
 
-	-- move selection if playing track is selected
-	local moveSelection = (step.menu:getSelectedIndex() == step.db:playlistIndex())
-
-	if step.db:updateStatus(playerStatus) then
-		-- move selection if playlist has changed
-		moveSelection = true
-	end
-
-	if moveSelection then
-		step.menu:setSelectedIndex(step.db:playlistIndex())
-	else
-		step.menu:reLayout()
-	end
+	step.db:updateStatus(playerStatus)
+	step.menu:reLayout()
 
 	-- does the playlist need loading?
 	_requestStatus()
+
 end
 
+function notify_playerTrackChange(self, player, nowplaying)
+
+	log:warn('SlimBrowser.notify_playerTrackChange')
+	if _player ~= player then
+		return
+	end
+	local playerStatus = player:getPlayerStatus()
+	local step = _statusStep
+
+	step.db:updateStatus(playerStatus)
+	step.menu:setSelectedIndex(step.db:playlistIndex())
+	step.menu:reLayout()
+
+        -- does the playlist need loading?
+        _requestStatus()
+end
 
 -- notify_playerNewName
 -- this is called when the player name changes

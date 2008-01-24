@@ -20,6 +20,7 @@ Notifications:
  playerDelete (performed by SlimServer)
  playerTrackChange
  playerModeChange
+ playerPlaylistChange
 
 =head1 FUNCTIONS
 
@@ -29,7 +30,7 @@ Notifications:
 local debug = require("jive.utils.debug")
 
 -- stuff we need
-local _assert, setmetatable, tonumber, tostring, pairs = _assert, setmetatable, tonumber, tostring, pairs
+local _assert, setmetatable, tonumber, tostring, pairs, ipairs = _assert, setmetatable, tonumber, tostring, pairs, ipairs
 
 local os             = require("os")
 local math           = require("math")
@@ -82,9 +83,11 @@ local function _getSink(self, cmd)
 			log:warn("########### ", err)
 			
 		elseif chunk then
-			--log:info(chunk)
-			
 			local proc = "_process_" .. cmd[1]
+			if cmd[1] == 'status' then
+				log:debug('stored playlist timestamp: ', self.playlist_timestamp)
+				log:debug('   new playlist timestamp: ', chunk.data.playlist_timestamp)
+			end
 			if self[proc] then
 				self[proc](self, chunk)
 			end
@@ -159,10 +162,20 @@ local function _whatsPlaying(obj)
 	return nil
 end
 
+-- _setPlayerPlaylistChange()
+-- sends notifications when anything gets sent about the playlist changing
+local function _setPlayerPlaylistChange(self, timestamp)
+	log:debug("Player:_setPlayerPlaylistChange")
+	if self.playlist_timestamp != timestamp then
+		self.playlist_timestamp = timestamp
+		self.jnt:notify('playerPlaylistChange', self)
+	end
+end
+
 -- _setPlayerTrackChange()
 -- sends notifications when a change occurs to the currently playing track
-local function _setPlayerTrackChange(self, nowPlaying, data)
-	log:debug("_setPlayerTrackChange")
+local function _setPlayerTrackChange(self, nowPlaying)
+	log:debug("Player:_setPlayerTrackChange")
 
 	if self.nowPlaying != nowPlaying then
 		self.nowPlaying = nowPlaying
@@ -304,6 +317,20 @@ function getTrackElapsed(self)
 		return trackElapsed, self.trackDuration
 	end
 	
+end
+
+--[[
+
+=head2 jive.slim.Player:getPlaylistTimestamp()
+
+returns the playlist timestamp for a given player object
+the timestamp is an indicator of the last time the playlist changed
+it serves as a good check to see whether playlist items should be refreshed
+
+=cut
+--]]
+function getPlaylistTimestamp(self)
+	return self.playlist_timestamp
 end
 
 
@@ -625,11 +652,11 @@ function _process_status(self, event)
 
 	local nowPlaying = _whatsPlaying(event.data)
 
-	_setPlayerTrackChange(self, nowPlaying, event.data)
+	_setPlayerTrackChange(self, nowPlaying)
+	_setPlayerPlaylistChange(self, event.data.playlist_timestamp)
 
 	self:updateIconbar()
 end
-
 
 function artworkThumbUri (iconId, size)
 	return '/music/' .. iconId .. '/cover_' .. size .. 'x' .. size .. '_f_000000.jpg'
