@@ -69,6 +69,11 @@ function init(self, ...)
 end
 
 
+function free(self)
+	jnt:unsubscribe(self)
+end
+
+
 function notify_playerDelete(self, playerObj)
 	local mac = playerObj.id
 	manageSelectPlayerMenu(self)
@@ -91,24 +96,30 @@ end
 
 
 function notify_playerCurrent(self, playerObj)
-	self.selectedPlayer = playerObj
-	self:manageSelectPlayerMenu()
+	if self.playerMenu then
+		self.selectedPlayer = playerObj
+		self:manageSelectPlayerMenu()
+	end
 end
 
 
 function notify_serverConnected(self, server)
-	for id, player in server:allPlayers() do
-		self:_refreshPlayerItem(player)
+	if self.playerMenu then
+		for id, player in server:allPlayers() do
+			self:_refreshPlayerItem(player)
+		end
+		self:manageSelectPlayerMenu()
 	end
-	self:manageSelectPlayerMenu()
 end
 
 
 function notify_serverDisconnected(self, server)
-	for id, player in server:allPlayers() do
-		self:_refreshPlayerItem(player)
+	if self.playerMenu then
+		for id, player in server:allPlayers() do
+			self:_refreshPlayerItem(player)
+		end
+		self:manageSelectPlayerMenu()
 	end
-	self:manageSelectPlayerMenu()
 end
 
 
@@ -181,7 +192,8 @@ function _refreshPlayerItem(self, player)
 	local mac = player.id
 
 	if player:isConnected() then
-		if not self.playerItem[mac] then
+		local item = self.playerItem[mac]
+		if not item then
 			-- add player
 			self:_addPlayerItem(player)
 
