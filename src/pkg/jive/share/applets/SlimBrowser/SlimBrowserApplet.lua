@@ -799,7 +799,7 @@ end
 local function _statusSink(step, chunk, err)
 	log:debug("_statusSink()")
 		
-	-- currently we're not going anywhere with Now Playing...
+	-- currently we're not going anywhere with current playlist...
 	_assert(step == _statusStep)
 
 	local data = chunk.data
@@ -823,7 +823,7 @@ local function _statusSink(step, chunk, err)
 		-- if we have a data.item_loop[1].text == 'READ ME', 
 		-- we've hit the SC upgrade message and shouldn't be dropping it into NOW PLAYING
 		if data.item_loop and data.item_loop[1].text == 'READ ME' then
-			log:debug('This is not a message suitable for the Now Playing list')
+			log:debug('This is not a message suitable for the current playlist')
 			return
 		end
 
@@ -1648,7 +1648,6 @@ function showPlaylist()
 
 end
 
-
 function notify_playerModeChange(self, player, mode)
 	if _player ~= player then
 		return
@@ -1695,19 +1694,6 @@ function notify_playerTrackChange(self, player, nowplaying)
 	_requestStatus()
 end
 
-
--- notify_playerPower
--- we refresh the main menu after playerPower changes
-function notify_playerPower(self, player, power)
-	log:debug("SlimBrowserApplet:notify_playerPower(", player, ")")
-	-- only if this concerns our player
-	if _player == player then
-		-- refresh the main menu
-		for id, v in pairs(_playerMenus) do
-			jiveMain:addItem(v)
-		end
-	end
-end
 
 -- notify_playerNewName
 -- this is called when the player name changes
@@ -1789,7 +1775,7 @@ function notify_playerCurrent(self, player)
 		cmd
 	)
 
-	-- create a window for Now Playing, this is our _statusStep
+	-- create a window for the current playlist, this is our _statusStep
 	local step, sink = _newDestination(
 		nil,
 		nil,
@@ -1821,6 +1807,7 @@ function notify_playerCurrent(self, player)
 	jiveMain:setTitle(player:getName())
 	_installPlayerKeyHandler(self)
 end
+
 
 function notify_serverConnected(self, server)
 	if _server ~= server then
@@ -1936,6 +1923,7 @@ function free(self)
 	for id, v in pairs(_playerMenus) do
 		jiveMain:removeItem(v)
 	end
+	_playerMenus = {}
 
 	_player = false
 	_server = false
