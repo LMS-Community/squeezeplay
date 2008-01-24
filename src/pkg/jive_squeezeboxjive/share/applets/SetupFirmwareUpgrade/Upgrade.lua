@@ -403,7 +403,7 @@ function download(self, callback)
 
 			Task:yield()
 			if not t then
-				return false, err
+				return not err, err
 			end
 		end 
 
