@@ -31,6 +31,7 @@ local Timer                  = require("jive.ui.Timer")
 local Checkbox               = require("jive.ui.Checkbox")
 local Window                 = require("jive.ui.Window")
 
+local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("applets.setup")
 
 local jnt                    = jnt
@@ -58,6 +59,7 @@ local EVENT_SCROLL           = jive.ui.EVENT_SCROLL
 local EVENT_SWITCH           = 0x400000 -- XXXX fixme when public
 local EVENT_MOTION           = 0x800000 -- XXXX fixme when public
 local EVENT_WINDOW_PUSH      = jive.ui.EVENT_WINDOW_PUSH
+local EVENT_VISIBLE_ALL      = jive.ui.EVENT_VISIBLE_ALL
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
 
@@ -328,7 +330,7 @@ function _brightness(self, lcdLevel, keyLevel)
 end
 
 
-function _setBrightness(self, fade, lcdLevel, keyLevel, closure)
+function _setBrightness(self, fade, lcdLevel, keyLevel)
 	-- stop existing fade
 	if self.fadeTimer then
 		self.fadeTimer:stop()
@@ -348,10 +350,6 @@ function _setBrightness(self, fade, lcdLevel, keyLevel, closure)
 	local keyInc = (keyVal - keyLevel) / steps
 
 	if lcdVal == lcdLevel and keyVal == keyLevel then
-		-- already at level, no need to fade so execute closure and return
-		if closure then
-			closure()
-		end
 		return
 	end
 
@@ -364,10 +362,6 @@ function _setBrightness(self, fade, lcdLevel, keyLevel, closure)
 
 						   -- ensure we hit the set value
 						   _brightness(self, lcdLevel, keyLevel)
-
-						   if closure then
-							   closure()
-						   end
 						   return
 					   end
 
@@ -650,9 +644,10 @@ end
 
 function batteryLowShow(self)
 	if self.batteryPopup then
-		self.batteryPopup:show()
 		return
 	end
+
+	log:info("batteryLowShow")
 
 	local popup = Popup("popupIcon")
 
@@ -674,10 +669,12 @@ function batteryLowShow(self)
 
 	-- consume all key and scroll events
 	self.batteryListener
-		= Framework:addListener(EVENT_SCROLL | EVENT_KEY_PRESS | EVENT_KEY_DOWN | EVENT_KEY_HOLD,
+		= Framework:addListener(EVENT_ALL_INPUT,
 					function(event)
+						Framework.wakeup()
+
 						-- allow power off
-						if event:getType() == EVENT_KEY_HOLD and event:getKeyCode() == KEY_HOME then
+						if event:getType() == EVENT_KEY_HOLD and event:getKeycode() == KEY_HOME then
 							self:settingsPowerOff()
 						end
 						return EVENT_CONSUME
@@ -692,6 +689,8 @@ end
 
 
 function batteryLowHide(self)
+	log:info("batteryLowHide")
+
 	Framework:removeListener(self.batteryListener)
 	self.batteryPopup:hide()
 
@@ -767,11 +766,20 @@ end
 function _powerOff(self)
 	log:info("Poweroff begin")
 
-	self:_setBrightness(true, 0, 0,
-			    function()
-				    log:info("Poweroff on")
-				    os.execute("/sbin/poweroff")
-			    end)
+	self:_setBrightness(true, 0, 0)
+
+	-- power off when lcd is off, or after 1 seconds
+	local tries = 10
+	self.powerOffTimer = Timer(100,
+				   function()
+					   if self.lcdLevel == 0 or tries  == 0 then
+						   log:info("Poweroff on")
+						   os.execute("/sbin/poweroff")
+					   else
+						   tries = tries - 1
+					   end
+				   end)
+	self.powerOffTimer:start()
 end
 
 
