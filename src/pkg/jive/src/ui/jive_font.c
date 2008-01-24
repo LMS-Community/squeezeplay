@@ -147,8 +147,14 @@ int jive_font_ascend(JiveFont *font) {
 	return font->ascend;
 }
 
+int jive_font_offset(JiveFont *font) {
+	assert(font && font->magic == JIVE_FONT_MAGIC);
+
+	return font->ascend - font->capheight;
+}
+
 static int load_ttf_font(JiveFont *font, const char *name, Uint16 size) {
-	int maxy;
+	int miny, maxy, descent;
 	char *fullpath = malloc(PATH_MAX);
 
 	if (!jive_find_file(name, fullpath) ) {
@@ -165,7 +171,6 @@ static int load_ttf_font(JiveFont *font, const char *name, Uint16 size) {
 	}
 	free(fullpath);
 
-	font->height = TTF_FontHeight(font->ttf);
 	font->ascend = TTF_FontAscent(font->ttf);
 
 	/* calcualte the cap height using H */
@@ -175,6 +180,17 @@ static int load_ttf_font(JiveFont *font, const char *name, Uint16 size) {
 	else {
 		font->capheight = font->ascend;
 	}
+
+	/* calcualte the non diacritical descent using g */
+	if (TTF_GlyphMetrics(font->ttf, 'g', NULL, NULL, &miny, NULL, NULL) == 0) {
+		descent = miny;
+	}
+	else {
+		descent = TTF_FontDescent(font->ttf);
+	}
+
+	/* calculate the font height, using the capheight and descent */
+	font->height = font->capheight - descent + 1;
 
 	font->width = width_ttf_font;
 	font->draw = draw_ttf_font;

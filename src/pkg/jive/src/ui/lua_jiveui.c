@@ -1,6 +1,6 @@
 /*
 ** Lua binding: jive
-** Generated automatically by tolua++-1.0.92 on Sat Aug 25 13:34:31 2007.
+** Generated automatically by tolua++-1.0.92 on Tue Jan 22 12:52:24 2008.
 */
 
 #ifndef __cplusplus
@@ -623,9 +623,9 @@ static int tolua_jive_jive_ui_Surface_blitAlpha00(lua_State* tolua_S)
   Surface* dst = ((Surface*)  tolua_tousertype(tolua_S,2,0));
    short dx = ((  short)  tolua_tointeger(tolua_S,3,0));
    short dy = ((  short)  tolua_tointeger(tolua_S,4,0));
-   short alpha = ((  short)  tolua_tointeger(tolua_S,5,0));
+  unsigned char alpha = (( unsigned char)  tolua_tointeger(tolua_S,5,0));
 #ifndef TOLUA_RELEASE
- if (!self) tolua_error(tolua_S,"invalid 'self' in function 'jive_surface_blitAlpha'",NULL);
+ if (!self) tolua_error(tolua_S,"invalid 'self' in function 'jive_surface_blit_alpha'",NULL);
 #endif
  {
   jive_surface_blit_alpha(self,dst,dx,dy,alpha);
@@ -634,7 +634,7 @@ static int tolua_jive_jive_ui_Surface_blitAlpha00(lua_State* tolua_S)
  return 0;
 #ifndef TOLUA_RELEASE
  tolua_lerror:
- tolua_error(tolua_S,"#ferror in function 'blit'.",&tolua_err);
+ tolua_error(tolua_S,"#ferror in function 'blitAlpha'.",&tolua_err);
  return 0;
 #endif
 }
@@ -1936,6 +1936,38 @@ static int tolua_jive_jive_ui_Font_width00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
+/* method: jive_font_capheight of class  Font */
+#ifndef TOLUA_DISABLE_tolua_jive_jive_ui_Font_capheight00
+static int tolua_jive_jive_ui_Font_capheight00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+ !tolua_isusertype(tolua_S,1,"Font",0,&tolua_err) ||
+ !tolua_isnoobj(tolua_S,2,&tolua_err)
+ )
+ goto tolua_lerror;
+ else
+#endif
+ {
+  Font* self = (Font*)  tolua_tousertype(tolua_S,1,0);
+#ifndef TOLUA_RELEASE
+ if (!self) tolua_error(tolua_S,"invalid 'self' in function 'jive_font_capheight'",NULL);
+#endif
+ {
+  tolua_outside int tolua_ret = (tolua_outside int)  jive_font_capheight(self);
+ tolua_pushinteger(tolua_S,(lua_Integer)tolua_ret);
+ }
+ }
+ return 1;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'capheight'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
 /* method: jive_font_height of class  Font */
 #ifndef TOLUA_DISABLE_tolua_jive_jive_ui_Font_height00
 static int tolua_jive_jive_ui_Font_height00(lua_State* tolua_S)
@@ -1995,6 +2027,38 @@ static int tolua_jive_jive_ui_Font_ascend00(lua_State* tolua_S)
 #ifndef TOLUA_RELEASE
  tolua_lerror:
  tolua_error(tolua_S,"#ferror in function 'ascend'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: jive_font_offset of class  Font */
+#ifndef TOLUA_DISABLE_tolua_jive_jive_ui_Font_offset00
+static int tolua_jive_jive_ui_Font_offset00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+ !tolua_isusertype(tolua_S,1,"Font",0,&tolua_err) ||
+ !tolua_isnoobj(tolua_S,2,&tolua_err)
+ )
+ goto tolua_lerror;
+ else
+#endif
+ {
+  Font* self = (Font*)  tolua_tousertype(tolua_S,1,0);
+#ifndef TOLUA_RELEASE
+ if (!self) tolua_error(tolua_S,"invalid 'self' in function 'jive_font_offset'",NULL);
+#endif
+ {
+  tolua_outside int tolua_ret = (tolua_outside int)  jive_font_offset(self);
+ tolua_pushinteger(tolua_S,(lua_Integer)tolua_ret);
+ }
+ }
+ return 1;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'offset'.",&tolua_err);
  return 0;
 #endif
 }
@@ -2143,8 +2207,10 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
     tolua_function(tolua_S,"load",tolua_jive_jive_ui_Font_load00);
     tolua_function(tolua_S,"_free",tolua_jive_jive_ui_Font__free00);
     tolua_function(tolua_S,"width",tolua_jive_jive_ui_Font_width00);
+    tolua_function(tolua_S,"capheight",tolua_jive_jive_ui_Font_capheight00);
     tolua_function(tolua_S,"height",tolua_jive_jive_ui_Font_height00);
     tolua_function(tolua_S,"ascend",tolua_jive_jive_ui_Font_ascend00);
+    tolua_function(tolua_S,"offset",tolua_jive_jive_ui_Font_offset00);
    tolua_endmodule(tolua_S);
   tolua_endmodule(tolua_S);
  tolua_endmodule(tolua_S);

@@ -348,7 +348,7 @@ function skin(self, s)
 	s.title.position = LAYOUT_NORTH
 	s.title.bgImg = titleBox
 	s.title.text = {}
-	s.title.text.padding = { 10, 7, 8, 9 }
+	s.title.text.padding = { 10, 8, 8, 8 }
 	s.title.text.align = "top-left"
 	s.title.text.font = FONT_BOLD_18px
 	s.title.text.fg = SELECT_COLOR

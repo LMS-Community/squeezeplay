@@ -85,7 +85,7 @@ int jiveL_label_skin(lua_State *L) {
 
 	peer->base.font = jive_font_ref(jive_style_font(L, 1, "font"));
 	peer->base.lineHeight = jive_style_int(L, 1, "lineHeight", jive_font_capheight(peer->base.font));
-	peer->base.textOffset = jive_font_ascend(peer->base.font) - jive_font_capheight(peer->base.font);
+	peer->base.textOffset = jive_font_offset(peer->base.font);
 
 	peer->base.fg = jive_style_color(L, 1, "fg", JIVE_COLOR_BLACK, NULL);
 	peer->base.sh = jive_style_color(L, 1, "sh", JIVE_COLOR_WHITE, &(peer->base.is_sh));
@@ -98,7 +98,7 @@ int jiveL_label_skin(lua_State *L) {
 		peer->format[i].font = jive_font_ref(jive_style_array_font(L, 1, "line", i+1, "font"));
 		if (peer->format[i].font) {
 			peer->format[i].lineHeight = jive_style_array_int(L, 1, "line", i+1, "height", jive_font_capheight(peer->format[i].font));
-			peer->format[i].textOffset = jive_font_ascend(peer->base.font) - jive_font_capheight(peer->base.font);
+			peer->format[i].textOffset = jive_font_offset(peer->base.font);
 		}
 //		peer->format[i].fg = jive_style_color(L, 1, "fg", JIVE_COLOR_BLACK, &(peer->format[i].is_fg);
 //		peer->format[i].sh = jive_style_color(L, 1, "sh", JIVE_COLOR_BLACK, &(peer->format[i].is_sh);

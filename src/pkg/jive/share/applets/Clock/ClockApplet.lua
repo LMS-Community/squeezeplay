@@ -326,12 +326,12 @@ function DigitalDetailed:__init(preset, ampm, firstday)
 	return obj;
 end
 
-local CLOCKY = 48
+local CLOCKY = 52
 	
 function DigitalDetailed:DrawTime(x, y, bw, bh, useAmPm)
 
 	local screenMidpointX = (self.screen_width/2)
-	local digitStartY = y + CLOCKY
+	local digitStartY = y + CLOCKY - self.mainfont:offset()
 
 	-- ampm variables, needed before drawing dots
 	local ampm = os.date("%p")
@@ -367,7 +367,7 @@ function DigitalDetailed:DrawTime(x, y, bw, bh, useAmPm)
 
 	-- x position for hour is half the screen width - 10 pixels - width of hour digits
 	local hourStartX = adjMidpointX - 10 - hw
-	hourSrf:blit(self.bg, hourStartX, digitStartY)			
+	hourSrf:blit(self.bg, hourStartX, digitStartY)
 
 	-- Draw Minute
 
@@ -387,7 +387,7 @@ function DigitalDetailed:DrawTime(x, y, bw, bh, useAmPm)
 
 	if useAmPm then
 			
-		local ampmStartY = digitStartY + 5
+		local ampmStartY = y + CLOCKY - self.ampmfont:offset() + 3
 
 		-- x position of ampm is minute start X + minute width + 5 
 		local ampmStartX = minStartX + mw + 5
@@ -397,7 +397,7 @@ function DigitalDetailed:DrawTime(x, y, bw, bh, useAmPm)
 
 end
 
-local DATEY = 10
+local DATEY = 12
 
 function DigitalDetailed:Draw()
 
@@ -436,7 +436,7 @@ function DigitalDetailed:Draw()
 	local dateStartY = y + DATEY
 	local dateStartX = x + ((bw/2) - (dw/2))
 	
-	dateSrf:blit(self.bg, dateStartX, dateStartY)
+	dateSrf:blit(self.bg, dateStartX, dateStartY - self.datefont:offset())
 
 	self.bgicon:reDraw()
 end
@@ -444,7 +444,7 @@ end
 local PADDINGX = 6
 local PADDINGY = 10 
 
-local DAYFIXY = 2
+local DAYFIXY = 0
 
 local DAYS_SUN = { "S", "M", "T", "W", "T", "F", "S" }
 local DAYS_MON = { "M", "T", "W", "T", "F", "S", "S" }
@@ -473,9 +473,10 @@ function DigitalDetailed:DrawWeekdays(x, y, bw, bh, day)
 		local c = self.daysfont_color
 		local daySrf = Surface:drawText(self.daysfont, c, days[i+1])
 
-		local dayw, dayh = daySrf:getSize()
+		local dayw = daySrf:getSize()
+		local dayh = self.daysfont:capheight()
 
-		daySrf:blit(self.bg, newx + ((dw/2)-(dayw/2)), y + bh - (dh + PADDINGY) + ((dh/2)-(dayh/2)) + DAYFIXY)
+		daySrf:blit(self.bg, newx + ((dw/2)-(dayw/2)), y + bh - (dh + PADDINGY) + ((dh/2)-(dayh/2)) + DAYFIXY - self.daysfont:offset())
 
 		i = i + 1
 	end

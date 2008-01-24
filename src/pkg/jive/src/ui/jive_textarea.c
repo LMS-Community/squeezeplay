@@ -19,6 +19,7 @@ typedef struct textarea_widget {
 	// style
 	JiveFont *font;
 	Uint16 line_height;
+	Uint16 text_offset;
 	JiveAlign align;
 	bool is_sh;
 	Uint32 sh;
@@ -68,6 +69,7 @@ int jiveL_textarea_skin(lua_State *L) {
 	}
 
 	peer->line_height = jive_style_int(L, 1, "lineHeight", jive_font_height(peer->font));
+	peer->text_offset = jive_font_offset(peer->font);
 
 	peer->align = jive_style_align(L, 1, "textAlign", JIVE_ALIGN_LEFT);
 
@@ -270,7 +272,7 @@ int jiveL_textarea_draw(lua_State *L) {
 
 	text = (char *) lua_tostring(L, -1);
 
-	y = peer->w.bounds.y + peer->w.padding.top;
+	y = peer->w.bounds.y + peer->w.padding.top - peer->text_offset;
 
 	lua_getfield(L, 1, "topLine");
 	top_line = lua_tointeger(L, -1);
