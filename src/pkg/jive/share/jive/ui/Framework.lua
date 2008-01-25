@@ -468,7 +468,8 @@ function getGlobalSetting(self, key)
 		-- One-shot initialization, the first
 		-- time someone accesses a Global Setting
 
-		global_settings_file = self:findFile("jive/") .. "global_settings.txt"
+		global_settings_file = self:findFile("jive/JiveMain.lua"):sub(1,-13)
+			.. "global_settings.txt"
 
 		local fh = io.open(global_settings_file)
 		if fh == nil then
