@@ -1588,6 +1588,73 @@ function goHome()
 end
 
 
+-- showTrackOne
+--
+-- pushes the song info window for track one on stage
+-- this method is used solely by NowPlaying Applet for 
+-- skipping the playlist screen when the playlist size == 1
+function showTrackOne()
+	local playerStatus = _player:getPlayerStatus()
+	local item = playerStatus and playerStatus.item_loop and playerStatus.item_loop[1]
+	local iWindow = _safeDeref(item, 'window')
+
+	local baseData = playerStatus and playerStatus.base
+	local bWindow = _safeDeref(baseData, 'window')
+
+	local bAction = _safeDeref(baseData, 'actions', 'go')
+	local iAction = _safeDeref(item, 'actions', 'go')
+
+	local jsonAction
+
+	-- if the action is defined in the item, then do that
+	if iAction then
+		jsonAction = iAction
+	-- bAction contains (possibly) the start of the songinfo command for track 1
+	else
+		jsonAction = bAction
+		local params = jsonAction["params"]
+                if not params then
+			params = {}
+		end
+		-- but also get params in the item
+		if item["params"] then
+			for k,v in pairs(item['params']) do
+				params[k] = v
+			end
+		end
+		jsonAction["params"] = params
+	end
+
+	-- determine style
+	local menuStyle = _priorityAssign('menuStyle', "", iWindow, bWindow)
+	local newWindowSpec = {
+		["windowStyle"]      = "",
+		["labelTitleStyle"]  = _priorityAssign('titleStyle', iWindow, bWindow, 'album') .. "title",
+		["menuStyle"]        = menuStyle .. "menu",
+		["labelItemStyle"]   = menuStyle .. "item",
+		["text"]             = _priorityAssign('text',       item["text"],    iWindow, bWindow),
+		["icon-id"]          = _priorityAssign('icon-id',    item["icon-id"], iWindow, bWindow),
+		["icon"]             = _priorityAssign('icon',       item["icon"],    iWindow, bWindow),
+	}		
+
+	local step, sink = _newDestination(nil, item, newWindowSpec, _browseSink)
+	step.window:addListener(EVENT_KEY_PRESS,
+		function(event)
+			local evtCode = event:getKeycode()
+			if evtCode == KEY_BACK then
+				_goNowPlaying(Window.transitionPushRight)
+				return EVENT_CONSUME
+			end
+		end
+	)
+	step.window:show()
+	_curStep = step
+
+	-- send the command
+	local from, qty
+	_performJSONAction(jsonAction, 0, 200, sink)
+end
+
 -- showPlaylist
 --
 function showPlaylist()
