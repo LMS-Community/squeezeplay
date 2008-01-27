@@ -268,8 +268,8 @@ function skin(self, s)
 	local FONT_NAME = "FreeSans"
 	local BOLD_PREFIX = "Bold"
 
-	local FONT_13px = Font:load(fontpath .. FONT_NAME .. BOLD_PREFIX .. ".ttf", 14)
-	local FONT_15px = Font:load(fontpath .. FONT_NAME .. BOLD_PREFIX .. ".ttf", 16)
+	local FONT_13px = Font:load(fontpath .. FONT_NAME .. ".ttf", 14)
+	local FONT_15px = Font:load(fontpath .. FONT_NAME .. ".ttf", 16)
 
 	local FONT_BOLD_13px = Font:load(fontpath .. FONT_NAME .. BOLD_PREFIX .. ".ttf", 14)
 	local FONT_BOLD_15px = Font:load(fontpath .. FONT_NAME .. BOLD_PREFIX .. ".ttf", 16)
