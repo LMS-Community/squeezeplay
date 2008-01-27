@@ -53,7 +53,6 @@ function registerApplet(meta)
 				applet:forceUpgrade(upgradeUrl[1])
 
 				if meta.player then
-					log:warn("Unsubscribing from /slim/firmwarestatus/", self.player.id)
 					meta.player.slimServer.comet:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
 				end
 			end
@@ -63,19 +62,14 @@ function registerApplet(meta)
 	local monitor = {
 		notify_playerCurrent =
 			function(self, player)
-				log:warn("PLAYER CURRENT!!")
-
 				if not player then
 					-- should never happen
 					error("No player")
 				end
 
 				if meta.player and meta.player ~= player then
-					log:warn("Unsubscribing from /slim/firmwarestatus/", meta.player)
 					meta.player.slimServer.comet:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
 				end
-
-				log:warn("SUB ", player)
 
 				meta.player = player
 
