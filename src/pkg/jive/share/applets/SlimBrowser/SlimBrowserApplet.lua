@@ -1707,21 +1707,6 @@ function showPlaylist()
 				end
 			end
 		)
-		 _statusStep.window:addListener(EVENT_WINDOW_ACTIVE,
-			function(event)
-				-- FIXME, next line is a workaround for Bug 6670
-				_statusStep.window:checkLayout()
-				-- single item playlists are skipped into the songinfo window
-				local playerStatus = _player:getPlayerStatus()
-				local playlistSize = playerStatus and playerStatus.playlist_tracks
-				if playlistSize == 1 then
-					-- need to spoof a key press here to descend one window further
-					_statusStep.menu:dispatchNewEvent(EVENT_ACTION)
-					-- we only do this once, so remove the listener now
-					return EVENT_CONSUME
-				end
-			end
-		)
 
 		_statusStep.window:show()
 
