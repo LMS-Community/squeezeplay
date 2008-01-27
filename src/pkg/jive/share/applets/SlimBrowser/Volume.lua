@@ -59,7 +59,11 @@ local function _openPopup(self)
 	end
 
 	-- we need a local copy of the volume
-	self.volume = self.player:getVolume() or 0
+	self.volume = self.player:getVolume()
+	if not self.volume then
+		-- don't show the popup if the player state is not loaded
+		return
+	end
 
 	local popup = Popup("volumePopup")
 	popup:setAutoHide(false)
@@ -189,17 +193,30 @@ function event(self, event)
 	elseif type == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()
 
-		if keycode == KEY_GO then
+		-- GO closes the volume popup
+		if keycode & KEY_GO ~= 0 then
 			self.popup:showBriefly(0)
 			return EVENT_CONSUME
 		end
 
-		-- we're only interested in volume keys
-		if keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) ~= (KEY_VOLUME_UP|KEY_VOLUME_DOWN) then
+		-- volume + and - for mute
+		if keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) == (KEY_VOLUME_UP|KEY_VOLUME_DOWN) then
+			_updateVolume(self, self.volume >= 0)
 			return EVENT_CONSUME
 		end
 
-		_updateVolume(self, self.volume >= 0)
+		-- any other keys forward to the lower window
+		if keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) == 0 then
+			local lower = self.popup:getLowerWindow()
+			if lower then
+				Framework:dispatchEvent(lower, event)
+			end
+
+			self.popup:showBriefly(0)
+			return EVENT_CONSUME
+		end
+
+		return EVENT_CONSUME
 
 	else
 		local keycode = event:getKeycode()
