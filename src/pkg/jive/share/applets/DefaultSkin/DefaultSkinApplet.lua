@@ -963,6 +963,7 @@ function skin(self, s)
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumitem.icon.padding = { 8, 0, 0, 0 }
 
+
 	s.albumitemNoAction = _uses(s.albumitem, {
 					order = { 'text' }
 				})
@@ -1064,7 +1065,7 @@ function skin(self, s)
 	s.albumcurrent.order = { "icon", "text", "play" }
 	s.albumcurrent.text = {}
 	s.albumcurrent.text.w = WH_FILL
-	s.albumcurrent.text.padding = { 12, 8, 8, 8 }
+	s.albumcurrent.text.padding = { 6, 8, 8, 8 }
 	s.albumcurrent.text.align = "top-left"
 	s.albumcurrent.text.font = FONT_13px
 	s.albumcurrent.text.lineHeight = 16
@@ -1078,9 +1079,9 @@ function skin(self, s)
 	s.albumcurrent.text.sh = TEXT_SH_COLOR
 	s.albumcurrent.icon = {}
 	s.albumcurrent.icon.h = WH_FILL
-	s.albumcurrent.icon.align = "center"
+	s.albumcurrent.icon.align = "left"
 	s.albumcurrent.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
-	s.albumcurrent.icon.padding = { 6, 0, 0, 0 }
+	s.albumcurrent.icon.padding = { 8, 0, 0, 0 }
 	s.albumcurrent.play = {}
 	s.albumcurrent.play.img = Surface:loadImage(imgpath .. "menu_nowplaying.png")
 
