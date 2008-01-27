@@ -1,5 +1,5 @@
 
-local tonumber = tonumber
+local error, tonumber = error, tonumber
 
 local oo            = require("loop.simple")
 
@@ -28,10 +28,6 @@ end
 
 
 function registerApplet(meta)
-	-- Wifi uses its own log category
-	-- defined here so that it can be changed using LogSettingsApplet before the applet is run.		
-	jul.addCategory("applet.wifi", jul.DEBUG)
-	
 	jiveMain:addItem(meta:menuItem('appletSetupFirmwareUpgrade', 'advancedSettings', "UPDATE", function(applet) applet:settingsShow() end))
 
 	-- check for firmware upgrades when we connect to a new player
@@ -39,7 +35,6 @@ function registerApplet(meta)
 	-- do this in a closure
 	local firmwareUpgradeSink =
 		function(chunk, err)
-			log:warn("FIRMWARE SINK")
 			if err then
 				log:warn(err)
 				return
@@ -48,24 +43,19 @@ function registerApplet(meta)
 			-- store firmware upgrade url
 			if chunk.data.firmwareUrl then
 				upgradeUrl[1] = chunk.data.firmwareUrl
+				log:info("Firmware URL=", upgradeUrl[1])
 			end
 
 			-- are we forcing an upgrade
 			if tonumber(chunk.data.firmwareUpgrade) == 1 then
-				log:warn("New Firmware Available")
+				log:info("Force firmware upgrade")
 				local applet = appletManager:loadApplet("SetupFirmwareUpgrade")
 				applet:forceUpgrade(upgradeUrl[1])
-				--FIXME, the unsubscriptions do not work
-				if player then
-					log:warn("Unsubscribing from /slim/firmwarestatus/", player.id)
-					player.slimServer.comet:unsubscribe('/slim/firmwarestatus/' .. player.id)
-				end
-				if self and self.player then
+
+				if meta.player then
 					log:warn("Unsubscribing from /slim/firmwarestatus/", self.player.id)
-					self.player.slimServer.comet:unsubscribe('/slim/firmwarestatus/' .. self.player.id)
+					meta.player.slimServer.comet:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
 				end
-			else
-				log:warn("no new firmware needed")
 			end
 
 		end
@@ -74,28 +64,29 @@ function registerApplet(meta)
 		notify_playerCurrent =
 			function(self, player)
 				log:warn("PLAYER CURRENT!!")
-				--FIXME, the unsubscription does not work
-				if self.player and player and self.player ~= player then
-					log:warn("Unsubscribing from /slim/firmwarestatus/", self.player.id)
-					self.player.slimServer.comet:unsubscribe('/slim/firmwarestatus/' .. self.player.id)
+
+				if not player then
+					-- should never happen
+					error("No player")
 				end
 
-				if player then				
-					local fwcmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION, 'subscribe:3600' }
-		                        player.slimServer.comet:subscribe(
-						'/slim/firmwarestatus/' .. player.id,
-						firmwareUpgradeSink,
-						player.id,
-						fwcmd
-					)
+				if meta.player and meta.player ~= player then
+					log:warn("Unsubscribing from /slim/firmwarestatus/", meta.player)
+					meta.player.slimServer.comet:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
 				end
+
+				log:warn("SUB ", player)
+
+				meta.player = player
+
+				local fwcmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION, 'subscribe:3600' }
+				player.slimServer.comet:subscribe(
+					'/slim/firmwarestatus/' .. player.id,
+					firmwareUpgradeSink,
+					player.id,
+					fwcmd
+				)
 			end,
-		notify_playerDisconnect =
-			function(self,player)
-				if player then
-					player.slimServer.comet:unsubscribe('/slim/firmwarestatus/' .. player.id)
-				end
-			end
 	}
 
 	jnt:subscribe(monitor)

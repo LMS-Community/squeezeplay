@@ -29,7 +29,7 @@ FIXME: Subscribe description
 
 
 -- stuff we use
-local _assert, tostring, table, ipairs, pairs, pcall, type  = _assert, tostring, table, ipairs, pairs, pcall, type
+local _assert, tostring, table, ipairs, pairs, pcall, select, type  = _assert, tostring, table, ipairs, pairs, pcall, select, type
 
 local socket            = require("socket")
 local coroutine         = require("coroutine")
@@ -237,7 +237,12 @@ end
 
 -- notify
 function notify(self, event, ...)
---	log:info("NetworkThread:notify(", event, ")")
+	-- detailed logging for events
+	local a = {}
+	for i=1, select('#', ...) do
+		a[i] = tostring(select(i, ...))
+	end
+	log:info("NOTIFY ", event, ": ", table.concat(a, ", "))
 	
 	local method = "notify_" .. event
 	
