@@ -104,6 +104,12 @@ static int zip_filter_func(lua_State *L) {
 		case PARSE_FILE_HEADER:
 			DEBUG("PARSE FILE HEADER\n");
 
+			if (lua_isnil(L, 1)) {
+				/* empty file */
+				lua_pushnil(L);
+				return 1;
+			}
+
 			if (end - ptr < 30 /* local file header length */) {
 				lua_pushlstring(L, (const char *)ptr, end - ptr);
 				lua_replace(L, lua_upvalueindex(2));

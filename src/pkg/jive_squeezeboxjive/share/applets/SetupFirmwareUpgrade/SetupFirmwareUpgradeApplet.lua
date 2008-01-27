@@ -16,7 +16,6 @@ local table                  = require("jive.utils.table")
 local socket                 = require("socket")
 local lfs                    = require("lfs")
 local os                     = require("os")
-local bsp                    = require("jiveBSP")
 local coroutine               = require("coroutine")
 
 local Applet                 = require("jive.Applet")
@@ -30,7 +29,9 @@ local Task                   = require("jive.ui.Task")
 local Textarea               = require("jive.ui.Textarea")
 local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
+
 local Upgrade                = require("applets.SetupFirmwareUpgrade.Upgrade")
+local hasBSP, BSP            = pcall(require, "jiveBSP")
 
 local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("applets.setup")
@@ -173,7 +174,11 @@ end
 
 
 function _checkBattery()
-	return bsp.ioctl(23) == 0 or bsp.ioctl(17) > 830
+	if hasBSP then
+		return BSP.ioctl(23) == 0 or bsp.ioctl(17) > 830
+	else
+		return true
+	end
 end
 
 
@@ -285,7 +290,9 @@ function _upgradeFailed(self)
 						sound = "WINDOWSHOW",
 						callback = function()
 								   if _checkBattery() then
-									   self:_upgrade():showInstead()
+									   window:hide()
+									   self:_upgrade()
+
 								   else
 									   window:bumpRight()
 								   end
