@@ -63,8 +63,7 @@ function registerApplet(meta)
 		notify_playerCurrent =
 			function(self, player)
 				if not player then
-					-- should never happen
-					error("No player")
+					return
 				end
 
 				if meta.player and meta.player ~= player then
