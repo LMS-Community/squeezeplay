@@ -598,6 +598,11 @@ function focusWidget(self, widget)
 end
 
 
+function getAllowScreensaver(self)
+	return self.allowScreensaver
+end
+
+
 function setAllowScreensaver(self, allowScreensaver)
 	_assert(type(allowScreensaver) == "boolean" or type(allowScreensaver) == "function")
 
@@ -617,6 +622,11 @@ function canActivateScreensaver(self)
 end
 
 
+function getAlwaysOnTop(self)
+	return self.alwaysOnTop
+end
+
+
 function setAlwaysOnTop(self, alwaysOnTop)
 	_assert(type(alwaysOnTop) == "boolean")
 
@@ -625,11 +635,21 @@ function setAlwaysOnTop(self, alwaysOnTop)
 end
 
 
+function getShowFrameworkWidgets(self)
+	return self.showFrameworkWidgets
+end
+
+
 function setShowFrameworkWidgets(self, showFrameworkWidgets)
 	_assert(type(showFrameworkWidgets) == "boolean")
 
 	self.showFrameworkWidgets = showFrameworkWidgets
 	self:reLayout()
+end
+
+
+function getTransparent(self)
+	return self.transparent
 end
 
 

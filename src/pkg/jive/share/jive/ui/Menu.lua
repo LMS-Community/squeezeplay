@@ -398,6 +398,11 @@ Lock the menu. Pressing back unlocks it and calls the I<cancel> closure. The sty
 function lock(self, cancel)
 	self.locked = cancel or true
 	self:reLayout()
+
+	-- don't allow screensaver while locked
+	local window = self:getWindow()
+	self.lockedScreensaver = window:getAllowScreensaver()
+	window:setAllowScreensaver(false)
 end
 
 
@@ -410,6 +415,11 @@ Unlock the menu.
 =cut
 --]]
 function unlock(self)
+	-- restore screensaver setting
+	local window = self:getWindow()
+	window:setAllowScreensaver(self.lockedScreensaver)
+	self.lockedScreensaver = nil
+
 	self.locked = nil
 	self:reLayout()
 end
