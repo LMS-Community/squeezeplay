@@ -489,12 +489,16 @@ local function _getStepSink(step, sink)
 	end
 end
 
--- _searchInProgress
--- full screen popup that appears until search is complete
-local function _searchInProgress(self)
+-- _inputInProgress
+-- full screen popup that appears until action from text input is complete
+local function _inputInProgress(self, msg)
 	local popup = Popup("popupIcon")
 	local icon  = Icon("iconConnecting")
 	popup:addWidget(icon)
+	if msg then
+		local label = Label("text", msg)
+		popup:addWidget(label)
+	end
 	popup:show()
 end
 
@@ -1403,7 +1407,11 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 				item['_inputDone'] = value
 				
 				-- popup time
-				_searchInProgress(self)
+				local displayPopup = _safeDeref(item, 'input', 'processingPopup')
+				local displayPopupText = _safeDeref(item, 'input', 'processingPopup', 'text')
+				if displayPopup then
+					_inputInProgress(self, displayPopupText)
+				end
 				-- now we should perform the action !
 				_actionHandler(nil, nil, db, nil, nil, 'go', item)
 				-- close the text input if this is a "do"
