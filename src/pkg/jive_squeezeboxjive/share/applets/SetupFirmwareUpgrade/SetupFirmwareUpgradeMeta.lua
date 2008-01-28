@@ -39,9 +39,19 @@ function registerApplet(meta)
 				log:warn(err)
 				return
 			end
+			
+			if not meta.player then
+				log:warn("Firmware upgrade response but not connected to server")
+				return
+			end
 
 			-- store firmware upgrade url
-			if chunk.data.firmwareUrl then
+			-- Bug 6828, use a relative URL from SC to handle dual-homed servers
+			if chunk.data.relativeFirmwareUrl then
+				local ip, port = meta.player.slimServer:getIpPort()
+				upgradeUrl[1] = 'http://' .. ip .. ':' .. port .. chunk.data.relativeFirmwareUrl
+				log:info("Relative Firmware URL=", upgradeUrl[1])
+			elseif chunk.data.firmwareUrl then
 				upgradeUrl[1] = chunk.data.firmwareUrl
 				log:info("Firmware URL=", upgradeUrl[1])
 			end
@@ -52,9 +62,7 @@ function registerApplet(meta)
 				local applet = appletManager:loadApplet("SetupFirmwareUpgrade")
 				applet:forceUpgrade(upgradeUrl[1])
 
-				if meta.player then
-					meta.player.slimServer.comet:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
-				end
+				meta.player.slimServer.comet:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
 			end
 
 		end
