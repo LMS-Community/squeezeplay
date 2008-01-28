@@ -220,13 +220,14 @@ function __init(self, jnt, ip, port, name)
 	})
 
 	obj.id = obj:idFor(ip, port, name)
-	
+
 	-- subscribe to comet events
 	jnt:subscribe(obj)
 
 	-- subscribe to server status, timeout at 60 seconds.
 	-- get 50 players
 	-- FIXME: what if the server has more than 50 players?
+	obj.comet:aggressiveReconnect(true)
 	obj.comet:subscribe('/slim/serverstatus',
 			    _getSink(obj, '_serverstatusSink'),
 			    nil,
@@ -293,7 +294,7 @@ function connect(self)
 	log:info(self, ":connect()")
 
 	-- artwork pool connects on demand
-	self.comet:start()
+	self.comet:connect()
 end
 
 

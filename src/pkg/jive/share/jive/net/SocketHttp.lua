@@ -808,6 +808,9 @@ function close(self, err)
 	-- FIXME: manage the queues
 	
 	SocketTcp.close(self)
+
+	-- restart the state machine if it is idle
+	self:t_sendDequeueIfIdle()
 end
 
 

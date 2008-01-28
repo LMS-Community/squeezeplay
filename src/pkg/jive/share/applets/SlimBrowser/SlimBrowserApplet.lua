@@ -1869,9 +1869,11 @@ function notify_playerCurrent(self, player)
 	_statusStep.actionModifier = "-status"
 
 	-- showtime for the player
+	_server.comet:startBatch()
 	_server:request(sink, _playerId, { 'menu', 0, 100 })
 	_player:onStage()
 	_requestStatus()
+	_server.comet:endBatch()
 
 	-- add a fullscreen popup that waits for the _menuSink to load
 	_menuReceived = false

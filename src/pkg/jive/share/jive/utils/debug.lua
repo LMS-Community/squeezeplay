@@ -62,16 +62,29 @@ end
 
 --[[
 
-=head2 trace()
+=head2 traceon()
 
-Traces Lua calls, line by line. There is no way to stop tracing. This is very verbose,
+Traces Lua calls, line by line. Use traceoff() to turn off tracing. This is very verbose,
 but can help trace performance or strange behavioral issues. It also gives a glimpse on
 the inner working of the Lua engine.
 
 =cut
 --]]
-function trace ()
+function traceon ()
 	ldebug.sethook(_trace_line, "l")
+end
+
+
+--[[
+
+=head2 traceff()
+
+Turns off tracing Lua calls, line by line.
+
+=cut
+--]]
+function traceoff ()
+	ldebug.sethook(nil, "l")
 end
 
 
