@@ -191,6 +191,9 @@ end
 
 
 function _serverSink(self, data)
+
+	local ip, port = self.server:getIpPort()
+
 	if data.item_loop then
 		for _,entry in pairs(data.item_loop) do
 			log:info("server wallpaper: ", entry.name)
@@ -216,7 +219,13 @@ function _serverSink(self, data)
 										  self:_showBackground(entry.file, self.currentPlayer)
 									  else
 										  log:info("fetching: ", entry.file)
-										  self:_fetchFile(entry.url, path, function() self:_showBackground(entry.file, self.currentPlayer) end)
+										  local url
+										  if entry.relurl then
+											  url = 'http://' .. ip .. ':' .. port .. entry.relurl
+										  else
+											  url = entry.url
+										  end
+										  self:_fetchFile(url, path, function() self:_showBackground(entry.file, self.currentPlayer) end)
 									  end
 								  end
 				}

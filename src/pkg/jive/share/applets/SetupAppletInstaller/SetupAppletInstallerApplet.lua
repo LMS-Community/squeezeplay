@@ -108,21 +108,29 @@ function menuSink(self, data)
 	self.todownload = {}
 
 	local installed = self:getSettings()
+	local ip, port = self.server:getIpPort()
 
 	for _,entry in pairs(data.item_loop) do
 
 		local version
 		local check = false
+		local url
+
+		if entry.relurl then
+			url = 'http://' .. ip .. ':' .. port .. entry.relurl
+		else
+			url = entry.url
+		end
 
 		if installed[entry.applet] then
 			version = installed[entry.applet] .. " > " .. entry.version
 			if entry.version > installed[entry.applet] then
-				self.todownload[entry.applet] = { url = entry.url, ver = entry.version }
+				self.todownload[entry.applet] = { url = url, ver = entry.version }
 				check = true
 			end
 		else
 			version = entry.version
-			self.todownload[entry.applet] = { url = entry.url, ver = entry.version }
+			self.todownload[entry.applet] = { url = url, ver = entry.version }
 			check = true
 		end
 
@@ -131,7 +139,7 @@ function menuSink(self, data)
 			icon = Checkbox("checkbox",
 				function(object, isSelected)
 					if isSelected then
-						self.todownload[entry.applet] = { url = entry.url, ver = entry.version }
+						self.todownload[entry.applet] = { url = url, ver = entry.version }
 					else
 						self.todownload[entry.applet] = nil
 					end
