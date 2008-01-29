@@ -283,6 +283,28 @@ function update(self, slimServer, playerInfo)
 	end
 end
 
+
+-- Subscribe to events for this player
+function subscribe(self, ...)
+	if not self.slimServer then
+		return
+	end
+
+	self.slimServer.comet:subscribe(...)
+end
+
+
+-- Unsubscribe to events for this player
+function unsubscribe(self, ...)
+	if not self.slimServer then
+		return
+	end
+
+	self.slimServer.comet:unsubscribe(...)
+end
+
+
+
 --[[
 
 =head2 jive.slim.Player:getTrackElapsed()

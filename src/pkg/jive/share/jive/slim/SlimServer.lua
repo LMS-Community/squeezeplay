@@ -261,14 +261,14 @@ function free(self)
 	-- notify we're gone by caller in SlimServers
 		
 	-- clear cache
-	self.artworkThumbCache = nil
-	self.artworkThumbIcons = nil
+	self.artworkThumbCache = {}
+	self.artworkThumbIcons = {}
 
 	-- delete players
 	for id, player in pairs(self.players) do
 		player:free(self)
 	end
-	self.players = nil
+	self.players = {}
 
 	-- delete connections
 	if self.artworkPool then

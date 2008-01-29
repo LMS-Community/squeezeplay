@@ -62,7 +62,7 @@ function registerApplet(meta)
 				local applet = appletManager:loadApplet("SetupFirmwareUpgrade")
 				applet:forceUpgrade(upgradeUrl[1])
 
-				meta.player.slimServer.comet:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
+				meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
 			end
 
 		end
@@ -75,13 +75,13 @@ function registerApplet(meta)
 				end
 
 				if meta.player and meta.player ~= player then
-					meta.player.slimServer.comet:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
+					meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
 				end
 
 				meta.player = player
-
+				
 				local fwcmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION, 'subscribe:3600' }
-				player.slimServer.comet:subscribe(
+				player:subscribe(
 					'/slim/firmwarestatus/' .. player.id,
 					firmwareUpgradeSink,
 					player.id,

@@ -112,12 +112,16 @@ function settingsShow(self)
 	-- Store the applet settings when the window is closed
 	window:addListener(EVENT_WINDOW_POP,
 			   function()
-				   jnt:unsubscribe(self)
 				   self:storeSettings()
 			   end
 		   )
 
 	self:tieAndShowWindow(window)
+end
+
+
+function free(self)
+	jnt:unsubscribe(self)
 end
 
 
@@ -222,6 +226,12 @@ end
 
 
 function notify_playerNew(self, player)
+	log:warn("waitForConnect=", self.waitForConnect)
+	if self.waitForConnect then
+		log:warn("  server=", self.waitForConnect.server)
+		log:warn("  player=", self.waitForConnect.player)
+	end
+
 	if self.waitForConnect and self.waitForConnect.player == player
 		and self.waitForConnect.server == player:getSlimServer() then
 

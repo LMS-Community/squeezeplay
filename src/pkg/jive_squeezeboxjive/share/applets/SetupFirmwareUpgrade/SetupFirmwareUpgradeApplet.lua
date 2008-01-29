@@ -175,7 +175,7 @@ end
 
 function _checkBattery()
 	if hasBSP then
-		return BSP.ioctl(23) == 0 or bsp.ioctl(17) > 830
+		return BSP.ioctl(23) == 0 or BSP.ioctl(17) > 830
 	else
 		return true
 	end
