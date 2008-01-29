@@ -819,7 +819,7 @@ function skin(self, s)
 	s.mymusictitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "mini_mymusic.png")
+				      img = Surface:loadImage(imgpath .. "mini_music_library.png")
 			      }
 		      })
 
