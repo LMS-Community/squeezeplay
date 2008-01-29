@@ -12,12 +12,12 @@ ABOUT_JIVE
 	NL	Info
 
 ABOUT_COPYRIGHT
-	DE	Copyright 2007, Logitech.
-	EN	Copyright 2007, Logitech.
-	ES	Copyright 2007, Logitech.
-	FR	Copyright 2007, Logitech.
-	IT	Copyright 2007, Logitech.
-	NL	Copyright 2007, Logitech.
+	DE	Copyright 2007-2008, Logitech.
+	EN	Copyright 2007-2008, Logitech.
+	ES	Copyright 2007-2008, Logitech.
+	FR	Copyright 2007-2008, Logitech.
+	IT	Copyright 2007-2008, Logitech.
+	NL	Copyright 2007-2008, Logitech.
 
 ABOUT_MAC_ADDRESS
 	DE	MAC-Adresse: %s
