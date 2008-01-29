@@ -1674,7 +1674,7 @@ function showPlaylist()
 			_statusStep.window:setTitle(_string("SLIMBROWSER_NOW_PLAYING"))
 		end
 
-		if playlistSize <= 1 then
+		if playlistSize == nil or (playlistSize and playlistSize <= 1) then
 			_statusStep.menu["_lastSelectedIndex"] = 1
 			_statusStep.menu["_lastSelectedOffset"] = 1 
 			_statusStep.menu.selected = 1 
@@ -1761,7 +1761,11 @@ function notify_playerTrackChange(self, player, nowplaying)
 	local step = _statusStep
 
 	step.db:updateStatus(playerStatus)
-	step.menu:setSelectedIndex(step.db:playlistIndex())
+	if step.db:playlistIndex() then
+		step.menu:setSelectedIndex(step.db:playlistIndex())
+	else
+		step.menu:setSelectedIndex(1)
+	end
 	step.menu:reLayout()
 
         -- does the playlist need loading?

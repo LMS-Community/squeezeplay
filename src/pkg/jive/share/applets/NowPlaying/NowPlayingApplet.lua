@@ -358,7 +358,7 @@ end
 
 function _updatePlaylist(self, enabled, nr, count, ws)
 	if not ws then ws = self[windowStyle] end
-	if enabled == true and count > 1 then
+	if enabled == true and count and count > 1 then
 		nr = nr + 1
 		ws.titleGroup:setWidgetValue("playlist", self:string("SCREENSAVER_NOWPLAYING_OF", nr, count))
 	else 
