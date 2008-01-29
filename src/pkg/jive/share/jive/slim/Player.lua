@@ -637,6 +637,11 @@ end
 function _process_status(self, event)
 	log:debug("Player:_process_playerstatus()")
 
+	if event.data.error then
+		-- ignore player status sent with an error
+		return
+	end
+
 	-- update our cache in one go
 	self.state = event.data
 

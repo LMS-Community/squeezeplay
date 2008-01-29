@@ -482,6 +482,10 @@ function endBatch(self)
 		return
 	end
 
+	if self.state ~= CONNECTED then
+		return
+	end
+
 	-- Send all pending requests and subscriptions
 	_sendPendingRequests(self)
 end

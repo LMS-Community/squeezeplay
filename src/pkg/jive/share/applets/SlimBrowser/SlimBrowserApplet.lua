@@ -1752,8 +1752,8 @@ function notify_playerPlaylistChange(self, player)
 end
 
 function notify_playerTrackChange(self, player, nowplaying)
+	log:debug('SlimBrowser.notify_playerTrackChange')
 
-	log:warn('SlimBrowser.notify_playerTrackChange')
 	if _player ~= player then
 		return
 	end
