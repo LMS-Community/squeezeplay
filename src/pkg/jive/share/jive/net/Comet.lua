@@ -57,7 +57,7 @@ This class implements a HTTP socket running in a L<jive.net.NetworkThread>.
 
 
 -- stuff we use
-local assert, ipairs, table, pairs, string = assert, ipairs, table, pairs, string
+local assert, ipairs, table, pairs, string, tonumber = assert, ipairs, table, pairs, string, tonumber
 
 local oo            = require("loop.simple")
 local math          = require("math")
@@ -337,14 +337,16 @@ end
 
 
 function subscribe(self, subscription, func, playerid, request, priority)
+	local id = self.reqid
+
 	if log:isDebug() then
-		log:debug(self, ": subscribe(", subscription, " ", func, ", ", playerid, ", ", table.concat(request, ","), ", priority:", priority, ")")
+		log:debug(self, ": subscribe(", subscription, " ", func, ", reqid:", id, ", ", playerid, ", ", table.concat(request, ","), ", priority:", priority, ")")
 	end
 	
 	-- Remember subs to send during connect now, or if we get
 	-- disconnected
 	table.insert( self.subs, {
-		reqid = self.reqid,
+		reqid        = id,
 		subscription = subscription,
 		playerid     = playerid,
 		request      = request,
@@ -354,7 +356,7 @@ function subscribe(self, subscription, func, playerid, request, priority)
 	} )
 
 	-- Bump reqid for the next request
-	self.reqid = self.reqid + 1
+	self.reqid = id + 1
 
 	-- Send immediately unless we're batching queries
 	if self.active ~= CONNECTED or self.batch ~= 0 then
@@ -367,7 +369,9 @@ end
 
 
 function unsubscribe(self, subscription, func)
-	log:debug(self, ": unsubscribe(", subscription, ", ", func, ")")
+	local id = self.reqid
+
+	log:debug(self, ": unsubscribe(", subscription, ", ", func, " reqid:", id, ")")
 	
 	-- Remove from notify list
 	if func then
@@ -395,12 +399,12 @@ function unsubscribe(self, subscription, func)
 
 	-- Add to pending unsubs
 	table.insert(self.pending_unsubs, {
-		reqid = self.reqid,
+		reqid = id,
 		subscription = subscription,
 	} )
 
 	-- Bump reqid for the next request
-	self.reqid = self.reqid + 1
+	self.reqid = id + 1
 
 	-- Send immediately unless we're batching queries
 	if self.state ~= CONNECTED or self.batch ~= 0 then
@@ -745,17 +749,17 @@ _response = function(self, chunk)
 
 		-- Remove request from sent queue
 		for i, v in ipairs( self.sent_reqs ) do
-			if v.id == event.id then
-				table.remove(self.sent_reqs, i)
+			if v.id == tonumber(event.id) then
+				table.remove( self.sent_reqs, i )
 				break
 			end
 		end
 
 		-- Log response
 		if event.error then
-			log:warn(self, ": _response, ", event.channel, " failed: ", event.error)
+			log:warn(self, ": _response, ", event.channel, " id=", event.id, " failed: ", event.error)
 		else
-			log:debug(self, ": _response, ", event.channel, " OK")
+			log:debug(self, ": _response, ", event.channel, " id=", event.id, " OK")
 		end
 
 		-- Update advice if any
