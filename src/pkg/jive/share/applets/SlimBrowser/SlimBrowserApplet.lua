@@ -1094,7 +1094,9 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 					sink = _bigArtworkPopup
 				elseif actionName == 'go' then
 					step, sink = _newDestination(_curStep, item, _newWindowSpec(db, item), _browseSink, jsonAction)
-					from, qty = step.db:missing(step.menu:isAccelerated())
+					if step.menu then
+						from, qty = step.db:missing(step.menu:isAccelerated())
+					end
 				end
 
 				_pushToNewWindow(step)
