@@ -780,8 +780,12 @@ _response = function(self, chunk)
 			end
 		elseif event.channel == '/meta/disconnect' then
 			if event.successful then
-				self.clientId = nil
-				_state(self, UNCONNECTED)
+				-- we may have started CONNECTING again, ignore
+				-- disconnects if we are in the wrong state
+				if self.state == UNCONNECTING then
+					self.clientId = nil
+					_state(self, UNCONNECTED)
+				end
 			else
 				return _handleAdvice(self)
 			end
