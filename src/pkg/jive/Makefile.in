@@ -766,7 +766,7 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/mini_favorites.png \
 	share/applets/DefaultSkin/images/mini_home.png \
 	share/applets/DefaultSkin/images/mini_internet_radio.png \
-	share/applets/DefaultSkin/images/mini_mymusic.png \
+	share/applets/DefaultSkin/images/mini_music_library.png \
 	share/applets/DefaultSkin/images/mini_nowplaying.png \
 	share/applets/DefaultSkin/images/mini_quarter_note.png \
 	share/applets/DefaultSkin/images/mini_search.png \
