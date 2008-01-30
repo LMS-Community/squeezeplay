@@ -242,7 +242,6 @@ function __init(self, jnt, ip, port, name)
 	-- task to fetch artwork while browsing
 	obj.artworkFetchTask = Task("artwork", obj, processArtworkQueue)
 
-
 	return obj
 end
 
@@ -271,13 +270,8 @@ function free(self)
 	self.players = {}
 
 	-- delete connections
-	if self.artworkPool then
-		self.artworkPool:free()
-		self.artworkPool = nil
-	end
-	if self.comet then
-		self.comet:disconnect()
-	end
+	self.artworkPool:close()
+	self.comet:disconnect()
 end
 
 
