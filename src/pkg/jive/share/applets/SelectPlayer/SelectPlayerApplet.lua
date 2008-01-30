@@ -384,9 +384,12 @@ function _scanComplete(self, scanTable, keepOldEntries)
 
 		log:warn("MAC=", mac, " ETHER=", ether)
 
-		if mac and not self.scanResults[mac] then
+		if mac and not self.scanResults[mac] and
+			-- FIXME Wireless class should be timing out entries
+			-- See bug 6860.
+			os.difftime(now, entry.lastScan) < 20 then
 			self.scanResults[mac] = {
-				lastScan = os.time(),
+				lastScan = entry.lastScan,
 				adhoc = ssid,
 			}
 
