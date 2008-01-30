@@ -641,6 +641,8 @@ function t_rcvResponse(self)
 			mode = 'jive-until-closed'
 		end
 	end
+
+	local connectionClose = self.t_httpRequest:t_getResponseHeader('Connection') == 'close'
 	
 	local source = socket.source(mode, self.t_sock, len or self)
 	
@@ -677,7 +679,7 @@ function t_rcvResponse(self)
 				return
 			end
 
-			if self.t_httpRequest:t_getResponseHeader('Connection') == 'close' then
+			if connectionClose then
 				-- just close the socket, don't reset our state
 				SocketTcp.close(self)
 			end
