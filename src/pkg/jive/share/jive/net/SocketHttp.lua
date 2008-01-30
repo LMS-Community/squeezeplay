@@ -36,7 +36,6 @@ local setmetatable, pairs = setmetatable, pairs
 local math        = require("math")
 local table       = require("table")
 local string      = require("string")
-local debug       = require("debug")
 local coroutine   = require("coroutine")
 
 local oo          = require("loop.simple")
@@ -47,6 +46,7 @@ local ltn12       = require("ltn12")
 local SocketTcp   = require("jive.net.SocketTcp")
 local RequestHttp = require("jive.net.RequestHttp")
 
+local debug       = require("jive.utils.debug")
 local locale      = require("jive.utils.locale")
 local log         = require("jive.utils.log").logger("net.http")
 
@@ -681,16 +681,18 @@ function t_rcvResponse(self)
 	
 	local mode
 	local len
+
+	local httpReceiving = self.t_httpReceiving
 	
-	if self.t_httpReceiving:t_getResponseHeader('Transfer-Encoding') == 'chunked' then
+	if httpReceiving:t_getResponseHeader('Transfer-Encoding') == 'chunked' then
 	
 		mode = 'jive-http-chunked'
 		
 	else
 			
-		if self.t_httpReceiving:t_getResponseHeader("Content-Length") then
+		if httpReceiving:t_getResponseHeader("Content-Length") then
 			-- if we have a length, use it!
-			len = tonumber(self.t_httpReceiving:t_getResponseHeader("Content-Length"))
+			len = tonumber(httpReceiving:t_getResponseHeader("Content-Length"))
 			mode = 'jive-by-length'
 			
 		else
@@ -701,8 +703,8 @@ function t_rcvResponse(self)
 	
 	local source = socket.source(mode, self.t_sock, len or self)
 	
-	local sinkMode = self.t_httpReceiving:t_getResponseSinkMode()
-	local sink = _getSink(sinkMode, self.t_httpReceiving)
+	local sinkMode = httpReceiving:t_getResponseSinkMode()
+	local sink = _getSink(sinkMode, httpReceiving)
 
 	local pump = function (NetworkThreadErr)
 --		log:debug(self, ":t_rcvResponse.pump(", mode, ", ", tostring(nt_err) , ")")
@@ -732,6 +734,11 @@ function t_rcvResponse(self)
 			if err and err != "done" then
 				self:close(err)
 				return
+			end
+
+			if httpReceiving:t_getResponseHeader('Connection') == 'close' then
+				-- just close the socket, don't reset our state
+				SocketTcp.close(self)
 			end
 
 			-- move on to our future
