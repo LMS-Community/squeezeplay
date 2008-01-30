@@ -1110,7 +1110,9 @@ function skin(self, s)
 	s.currentsong.h = 93
 	s.currentsong.bgImg = helpBox
 	s.currentsong.albumitem = {}
-	s.currentsong.albumitem.border = { 4, 9, 4, 0 }
+	s.currentsong.albumitem.border = { 4, 10, 4, 0 }
+	s.currentsong.albumitem.icon = { }
+	s.currentsong.albumitem.icon.align = "top"
 
 	-- Popup window for play/add without artwork
 	s.popupplay= {}
