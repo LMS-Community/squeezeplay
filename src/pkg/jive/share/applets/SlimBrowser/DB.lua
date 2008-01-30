@@ -248,9 +248,9 @@ function missing(self, accel, dir, index)
 	for key = fromKey, toKey, step do
 		if not self.store[key] then
 			local idx = key * BLOCK_SIZE
-			-- outside world is 0 based!
+
 			log:debug(self, " missing ", BLOCK_SIZE, " items from pos ", idx)
-			return idx - 1, BLOCK_SIZE
+			return idx, BLOCK_SIZE
 		end
 	end
 
