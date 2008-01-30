@@ -145,12 +145,16 @@ function queue(self, request)
 	self.reqQueueCount = self.reqQueueCount + 1
 	
 	-- calculate threshold
+--[[
 	local active = math.floor(self.reqQueueCount / self.pool.threshold) + 1
 	if active > #self.pool.jshq then
 		active = #self.pool.jshq
 	end
 	self.pool.active = active
-	
+--]]
+	self.pool.active = #self.pool.jshq
+
+
 --	log:debug(self, ":", self.reqQueueCount, " requests, ", self.pool.active, " connections")
 
 	-- kick all active queues
