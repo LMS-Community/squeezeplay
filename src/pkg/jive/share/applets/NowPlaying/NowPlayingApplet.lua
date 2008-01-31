@@ -169,6 +169,18 @@ function init(self)
 
 end
 
+function notify_playerPower(self, player, power)
+	if player ~= self.player then
+		return
+	end
+	-- hide this window if the player is turned off
+	if power == 0 then
+		if self['browse'].window then
+			self['browse'].window:hide()
+		end
+	end
+end
+
 function notify_playerTrackChange(self, player, nowPlaying)
 	log:warn("PLAYER TRACK NOTIFICATION RECEIVED")
 
