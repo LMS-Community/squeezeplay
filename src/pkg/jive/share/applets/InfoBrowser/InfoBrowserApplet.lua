@@ -90,8 +90,8 @@ function request(self, index, start, window, widget, list, prevmenu, locked)
 				self:response(chunk.data, window, widget, list, prevmenu, locked)
 			end
 		end,
-		false,
-		{ 'infobrowser', 'items', start, gulp, index and ("item_id:" .. index), "player_id:" .. self.player.id }
+		self.player.id,
+		{ 'infobrowser', 'items', start, gulp, index and ("item_id:" .. index) }
 	)
 end
 
