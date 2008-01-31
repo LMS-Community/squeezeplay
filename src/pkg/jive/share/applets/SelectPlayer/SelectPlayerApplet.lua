@@ -291,6 +291,19 @@ function setupShow(self, setupNext)
 		end
 	end
 
+	-- Bug 6130 add a Set up Squeezebox option, only in Setup not Settings
+	local sbsetup = AppletManager:loadApplet("SetupSqueezebox")
+	if sbsetup and setupNext then
+		self.playerMenu:addItem({
+			text = self:string("SQUEEZEBOX_SETUP"),
+			sound = "WINDOWSHOW",
+			callback = function()
+				sbsetup:settingsShow()
+			end,
+			weight = 20,
+		})
+	end
+
 	window:addWidget(menu)
 
 	window:addTimer(5000, function() self:_scan() end)
