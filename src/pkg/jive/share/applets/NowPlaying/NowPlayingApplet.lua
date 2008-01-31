@@ -175,7 +175,7 @@ function notify_playerPower(self, player, power)
 	end
 	-- hide this window if the player is turned off
 	if power == 0 then
-		if self['browse'].window then
+		if self['browse'] and self['browse'].window then
 			self['browse'].window:hide()
 		end
 	end
