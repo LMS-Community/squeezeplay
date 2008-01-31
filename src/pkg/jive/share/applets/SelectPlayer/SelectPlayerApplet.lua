@@ -42,8 +42,9 @@ local debug              = require("jive.utils.debug")
 
 local SetupSqueezeboxApplet = require("applets.SetupSqueezebox.SetupSqueezeboxApplet")
 
-local jiveMain           = jiveMain
 local jnt                = jnt
+local jiveMain           = jiveMain
+local appletManager      = appletManager
 
 local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
 local EVENT_WINDOW_ACTIVE = jive.ui.EVENT_WINDOW_ACTIVE
@@ -160,19 +161,27 @@ end
 function _addPlayerItem(self, player)
 	local mac = player.id
 	local playerName = player.name
+	local playerWeight = 1
+
+	-- if waiting for a SN pin modify name
+	if player:getPin() then
+		playerName = self:string("SQUEEZEBOX_ACTIVATE", player.name)
+		playerWeight = 10
+	end
 
 	local item = {
 		id = _unifyMac(mac),
 		text = playerName,
 		sound = "WINDOWSHOW",
 		callback = function()
-				   self:selectPlayer(player)
-				   self.setupNext()
+				   if self:selectPlayer(player) then
+					   self.setupNext()
+				   end
 			   end,
 		focusGained = function(event)
 			self:_showWallpaper(mac)
 		end,
-		weight =  1
+		weight = playerWeight
 	}
 
 	if player == self.selectedPlayer then
@@ -382,7 +391,7 @@ function _scanComplete(self, scanTable, keepOldEntries)
 	for ssid, entry in pairs(scanTable) do
 		local mac, ether = SetupSqueezeboxApplet:ssidIsSqueezebox(ssid)
 
-		log:warn("MAC=", mac, " ETHER=", ether)
+		log:debug("MAC=", mac, " ETHER=", ether)
 
 		if mac and not self.scanResults[mac] and
 			-- FIXME Wireless class should be timing out entries
@@ -400,6 +409,17 @@ end
 
 
 function selectPlayer(self, player)
+	-- if connecting to SqueezeNetwork, first check we are linked
+	if player:getPin() then
+		-- as we are not linked this is a dummy player, after we need linked we
+		-- need to return to the choose player screen 
+		local snpin = appletManager:loadApplet("SqueezeNetworkPIN")
+		snpin:enterPin(nil, player)
+
+		return false
+	end
+
+	-- set the current player
 	local manager = AppletManager:getAppletInstance("SlimDiscovery")
 	if manager then
 		manager:setCurrentPlayer(player)

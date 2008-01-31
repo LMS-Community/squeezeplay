@@ -265,6 +265,25 @@ end
 
 -- connect player to server
 function connectPlayer(self, player, server)
+
+	-- if connecting to SqueezeNetwork, first check jive is linked
+	if server:getPin() then
+		local snpin = appletManager:loadApplet("SqueezeNetworkPIN")
+		snpin:enterPin(server, nil,
+			       function()
+				       self:connectPlayer(player, server)
+			       end)
+
+		return
+	end
+
+	-- make sure the player is linked on SqueezeNetwork, this may return an
+	-- error if the player can't be linked, for example it is linked to another
+	-- account already.
+	--
+	-- XXX send a playerRegister, we'll need to check the response to make sure
+	-- the player is not linked to another account.
+
 	-- tell the player to move servers
 	self.waitForConnect = {
 		player = player,

@@ -26,3 +26,11 @@ SQUEEZEBOX_NAME
 	IT	Squeezebox %s
 	NL	Squeezebox %s
 
+SQUEEZEBOX_ACTIVATE
+	DE	%s
+	EN	Activate %s
+	ES	%s
+	FR	%s
+	IT	%s
+	NL	%s
+

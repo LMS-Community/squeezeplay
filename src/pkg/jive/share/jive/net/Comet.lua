@@ -36,7 +36,7 @@ This class implements a HTTP socket running in a L<jive.net.NetworkThread>.
  comet:removeCallback('/slim/serverstatus', func)
 
  -- start!
- comet:start()
+ comet:connect()
 
  -- disconnect
  comet:disconnect()

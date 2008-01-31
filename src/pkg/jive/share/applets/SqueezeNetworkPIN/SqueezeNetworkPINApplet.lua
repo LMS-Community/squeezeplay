@@ -28,50 +28,60 @@ local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
 module(...)
 oo.class(_M, Applet)
 
+
+function enterPin(self, server, player, next)
+	self:_enterPin(false, server, player, next)
+end
+
+
 function forcePin(self, player)
+	self:_enterPin(false, player:getSlimServer(), player)
+end
+
+
+function _enterPin(self, force, server, player, next)
 	local window = Window("window", self:string("SQUEEZENETWORK_PIN_TITLE"), "settingstitle")
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu")
-	menu:setCloseable(false)
+	if force then
+		menu:setCloseable(false)
+	end
+
+	self.pin = player and player:getPin() or server:getPin()
+
+	if not server then
+		server = player:getSlimServer()
+	end
 	
-	local slimServer = player.slimServer
+	local nextfunc = function()
+		-- Always close the pin entry window
+		window:hide()
+		if next then
+			next()
+		end
+	end
 
 	menu:addItem( {
-		text     = self:string( "SQUEEZENETWORK_PIN", player:getPin() ),
+		text     = self:string( "SQUEEZENETWORK_PIN", self.pin ),
 		sound    = "WINDOWSHOW",
 		callback = function()
-			-- When the user clicks the button, ask SN if we're registered
-			local uuid, mac = jnt:getUUID()
-			local cmd = { 'islinked', uuid }
-			
-			local checkLinkedSink = function(chunk, err)
-				if err then
-					log:warn(err)
-					return
-				end
-
-				if chunk.data.islinked and chunk.data.islinked == 1 then
-					-- Jive is linked!
-					log:debug("checkLinkedSink: Jive is linked")
-					
-					-- Reconnect to SN, refreshes the list of players
-					slimServer:reconnect()
-				
-					-- close pin menu, back to main
-					-- XXX: Not sure if this should so something more...
-					menu:hide()
-				else
-					log:debug("checkLinkedSink: Jive is not linked yet")
-			
-					-- display error
-					self:displayNotLinked()
-				end
-			end
-			
-			slimServer.comet:request( checkLinkedSink, nil, cmd )
+			self:_checkLinked(server,
+					  nextfunc,
+					  function()
+						  self:displayNotLinked()
+					  end)
 		end
 	} )
+
+	-- automatically check if we are linked every 5 seconds
+	-- XXX check this is ok with Andy and Dean...
+	menu:addTimer(5000,
+		      function()
+			      self:_checkLinked(server,
+						nextfunc,
+						nil)
+		      end)
 
 	-- XXX this is temporary until the :3000 "production" beta goes away by
 	-- some means or other 
@@ -80,13 +90,55 @@ function forcePin(self, player)
 		addport = ":3000"
 	end
 
-	local help = Textarea("help", self:string("SQUEEZENETWORK_PIN_HELP", jnt:getSNHostname() .. addport))
-	window:addWidget(help)
+	window:addWidget(Textarea("help", self:string("SQUEEZENETWORK_PIN_HELP", jnt:getSNHostname() .. addport)))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
 	return window
 end
+
+
+function _checkLinked(self, server, next, fail)
+	-- When the user clicks the button, ask SN if we're registered
+	local uuid, mac = jnt:getUUID()
+	local cmd = { 'islinked', uuid }
+
+	local checkLinkedSink = function(chunk, err)
+		if err then
+			log:warn(err)
+			return
+		end
+
+		if chunk.data.islinked and chunk.data.islinked == 1 then
+
+			-- Jive is linked!
+			log:debug("checkLinkedSink: Jive is linked")
+
+			-- The pin will be cleared on the next serverstatus,
+			-- but this is not instant, so clear the pin now
+			server:linked(self.pin)
+					
+			-- Reconnect to SN, refreshes the list of players
+			server:reconnect()
+				
+			if next then
+				next()
+			end
+		else
+			log:debug("checkLinkedSink: Jive is not linked yet")
+			
+			if fail then
+				fail()
+			end
+		end
+	end
+			
+	-- make sure the server is connected
+	server.comet:connect()
+
+	server.comet:request( checkLinkedSink, nil, cmd )
+end
+
 
 function displayNotLinked(self)
 	local window = Window("window", self:string("SQUEEZENETWORK_PIN_TITLE"), "settingstitle")

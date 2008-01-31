@@ -131,11 +131,17 @@ function _serverstatusSink(self, event, err)
 	for k,v in pairs(self.players) do
 		selfPlayers[k] = k
 	end
+
+	self.pin = nil
 	
 	if tonumber(data["player count"]) > 0 then
 
 		for i, player_info in ipairs(serverPlayers) do
-	
+
+			if player_info.pin then
+				self.pin = player_info.pin
+			end
+
 			-- remove the player from our list since it is reported by the server
 			selfPlayers[player_info.playerid] = nil
 	
@@ -280,6 +286,40 @@ function isSqueezeNetwork(self)
 		return self.name == "SqueezeNetwork Beta"
 	else
 		return self.name == "SqueezeNetwork"
+	end
+end
+
+
+--[[
+
+=head2 jive.slim.SlimServer:getPin()
+
+Returns the PIN for SqueezeNetwork, if it needs to be registered
+
+=cut
+--]]
+function getPin(self)
+	return self.pin
+end
+
+
+--[[
+
+=head2 jive.slim.SlimServer:linked(pin)
+
+Called once the server or player are linked on SqueezeNetwork.
+
+=cut
+--]]
+function linked(self, pin)
+	if self.pin == pin then
+		self.pin = nil
+	end
+
+	for id, player in pairs(self.players) do
+		if player.pin == pin then
+			player.pin = nil
+		end
 	end
 end
 

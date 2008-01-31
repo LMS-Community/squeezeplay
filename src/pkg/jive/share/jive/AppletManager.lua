@@ -28,6 +28,7 @@ local oo               = require("loop.simple")
 local io               = require("io")
 local lfs              = require("lfs")
                        
+local debug            = require("jive.utils.debug")
 local log              = require("jive.utils.log").logger("applets.misc")
 local locale           = require("jive.utils.locale")
 local serialize        = require("jive.utils.serialize")
