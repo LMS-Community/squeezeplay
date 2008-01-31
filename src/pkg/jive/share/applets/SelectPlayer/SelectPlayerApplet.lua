@@ -165,6 +165,11 @@ function _addPlayerItem(self, player)
 
 	-- if waiting for a SN pin modify name
 	if player:getPin() then
+		if not self.setupMode then
+			-- Only include Activate SN during setup
+			return
+		end
+
 		playerName = self:string("SQUEEZEBOX_ACTIVATE", player.name)
 		playerWeight = 10
 	end
@@ -274,6 +279,7 @@ function setupShow(self, setupNext)
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
 	self.playerMenu = menu
+	self.setupMode = setupNext ~= nil
 	self.setupNext = setupNext or 
 		function()
 			window:hide(Window.transitionPushLeft)

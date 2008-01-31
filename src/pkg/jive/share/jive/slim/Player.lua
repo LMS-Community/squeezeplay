@@ -225,6 +225,7 @@ function __init(self, jnt, slimServer, playerInfo)
 		jnt = jnt,
 
 		id = playerInfo.playerid,
+		uuid = playerInfo.uuid,
 		name = playerInfo.name,
 		model = playerInfo.model,
 		connected = playerInfo.connected,
@@ -517,6 +518,19 @@ Returns the player id (in general the MAC address)
 --]]
 function getId(self)
 	return self.id
+end
+
+
+--[[
+
+=head2 jive.slim.Player:getUuid()
+
+Returns the player uuid.
+
+=cut
+--]]
+function getUuid(self)
+	return self.uuid
 end
 
 

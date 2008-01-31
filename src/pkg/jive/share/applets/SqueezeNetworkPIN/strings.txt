@@ -30,3 +30,12 @@ SQUEEZENETWORK_NOT_LINKED
 	IT	Impossibile verificare il PIN. È stato immesso nel sito Web?
 	NL	Pincode kan niet worden geverifieerd. Heb je deze op de website ingevoerd?
 
+SQUEEZENETWORK_GO_BACK
+	DE	Zurück
+	EN	Go back
+	ES	Regresar
+	FR	Retour
+	IT	Indietro
+	NL	Terug
+
+

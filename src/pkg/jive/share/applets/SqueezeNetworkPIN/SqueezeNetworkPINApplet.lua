@@ -146,7 +146,20 @@ function displayNotLinked(self)
 
 	local textarea = Textarea("textarea", self:string("SQUEEZENETWORK_NOT_LINKED"))
 
+	local menu = SimpleMenu("menu",
+				{
+					{
+						text = self:string("SQUEEZENETWORK_GO_BACK"),
+						sound = "WINDOWHIDE",
+						callback = function()
+								   window:hide()
+							   end
+					},
+				})
+
+
 	window:addWidget(textarea)
+	window:addWidget(menu)
 
 	window:addListener(EVENT_KEY_PRESS,
 		function(event)

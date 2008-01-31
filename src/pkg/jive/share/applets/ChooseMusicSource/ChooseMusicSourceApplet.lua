@@ -265,7 +265,6 @@ end
 
 -- connect player to server
 function connectPlayer(self, player, server)
-
 	-- if connecting to SqueezeNetwork, first check jive is linked
 	if server:getPin() then
 		local snpin = appletManager:loadApplet("SqueezeNetworkPIN")
@@ -277,12 +276,29 @@ function connectPlayer(self, player, server)
 		return
 	end
 
+	-- we are now ready to connect to SqueezeCenter
+	if not server:isSqueezeNetwork() then
+		self:_doConnectPlayer(player, server)
+	end
+
 	-- make sure the player is linked on SqueezeNetwork, this may return an
 	-- error if the player can't be linked, for example it is linked to another
 	-- account already.
-	--
-	-- XXX send a playerRegister, we'll need to check the response to make sure
-	-- the player is not linked to another account.
+	local cmd = { 'playerRegister', player:getUuid(), player:getId() }
+
+	local playerRegisterSink = function(chunk, err)
+		if chunk.error then
+			self:_playerRegisterFailed(chunk.error)
+		else
+			self:_doConnectPlayer(player, server)
+		end
+	end
+
+	server:request(playerRegisterSink, nil, cmd)
+end
+
+
+function _doConnectPlayer(self, player, server)
 
 	-- tell the player to move servers
 	self.waitForConnect = {
@@ -317,6 +333,32 @@ function connectPlayer(self, player, server)
 					self:_connectPlayerFailed(player, server)
 				end
 			end)
+
+	self:tieAndShowWindow(window)
+end
+
+
+function _playerRegisterFailed(self, error)
+	local window = Window("wireless", self:string("SQUEEZEBOX_PROBLEM"), setupsqueezeboxTitleStyle)
+	window:setAllowScreensaver(false)
+
+	local textarea = Textarea("textarea", error)
+
+	local menu = SimpleMenu("menu",
+				{
+					{
+						text = self:string("SQUEEZEBOX_GO_BACK"),
+						sound = "WINDOWHIDE",
+						callback = function()
+								   window:hide()
+							   end
+
+					},
+				})
+
+
+	window:addWidget(textarea)
+	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
 end
