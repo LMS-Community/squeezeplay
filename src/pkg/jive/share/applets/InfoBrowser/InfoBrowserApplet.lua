@@ -62,7 +62,8 @@ function menu(self, menuItem)
 
 	if sd then
 		if sd:getCurrentPlayer() then
-			self.server = sd:getCurrentPlayer():getSlimServer()
+			self.player = sd:getCurrentPlayer()
+			self.server = self.player:getSlimServer()
 		else
 			for _, server in sd:allServers() do
 				self.server = server
@@ -90,7 +91,7 @@ function request(self, index, start, window, widget, list, prevmenu, locked)
 			end
 		end,
 		false,
-		{ 'infobrowser', 'items', start, gulp, index and ("item_id:" .. index) }
+		{ 'infobrowser', 'items', start, gulp, index and ("item_id:" .. index), "player_id:" .. self.player.id }
 	)
 end
 
