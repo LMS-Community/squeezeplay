@@ -21,6 +21,7 @@ Notifications:
  playerTrackChange
  playerModeChange
  playerPlaylistChange
+ playerPlaylistSize
 
 =head1 FUNCTIONS
 
@@ -123,6 +124,15 @@ local function _setPlayerName(self, playerName)
 	if tostring(playerName) != tostring(self.name) then
 		self.name = playerName
 		self.jnt:notify('playerNewName', self, playerName)
+	end
+end
+
+local function _setPlayerPlaylistSize(self, playlistSize)
+	log:debug("_setPlayerPlaylistSize")
+
+	if playlistSize != self.playlistSize then
+		self.playlistSize = playlistSize
+		self.jnt:notify('playerPlaylistSize', self, playlistSize)
 	end
 end
 
@@ -353,6 +363,31 @@ it serves as a good check to see whether playlist items should be refreshed
 --]]
 function getPlaylistTimestamp(self)
 	return self.playlist_timestamp
+end
+
+--[[
+
+=head2 jive.slim.Player:getPlaylistSize()
+
+returns the playlist size for a given player object
+
+=cut
+--]]
+function getPlaylistSize(self)
+	return self.playlistSize
+end
+
+
+--[[
+
+=head2 jive.slim.Player:getPlayerPower()
+
+returns the playerPower for a given player object
+
+=cut
+--]]
+function getPlayerPower(self)
+	return self.power
 end
 
 
@@ -674,6 +709,8 @@ function _process_status(self, event)
 	self.trackDuration = event.data.duration
 
 	_setConnected(self, self.state["player_connected"])
+	_setPlayerPlaylistSize(self, tonumber(event.data.playlist_tracks))
+	_setPlayerPower(self, tonumber(self.power))
 
 	_setPlayerModeChange(self, event.data.mode)
 

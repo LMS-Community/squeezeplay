@@ -963,10 +963,31 @@ function skin(self, s)
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumitem.icon.padding = { 8, 0, 0, 0 }
 
+	s.albumitemNoAction = {}
+	s.albumitemNoAction.order = { "text" }
+	s.albumitemNoAction.text = {}
+	s.albumitemNoAction.text.w = WH_FILL
+	s.albumitemNoAction.text.padding = { 6, 8, 8, 8 }
+	s.albumitemNoAction.text.align = "top-left"
+	s.albumitemNoAction.text.font = FONT_13px
+	s.albumitemNoAction.text.lineHeight = 16
+	s.albumitemNoAction.text.line = {
+		{
+			font = FONT_BOLD_13px,
+			height = 17
+		}
+	}
+	s.albumitemNoAction.text.fg = TEXT_COLOR
+	s.albumitemNoAction.text.sh = TEXT_SH_COLOR
 
+
+--FIXME: albumitemNoAction can't use _uses because it sticks an icon on the screen
+--[[
 	s.albumitemNoAction = _uses(s.albumitem, {
-					order = { 'text' }
+					order = { 'text' },
+					icon  = nil
 				})
+--]]
 	s.selected.albumitemNoAction = _uses(s.albumitemNoAction)
 
 	-- selected item with artwork and song info

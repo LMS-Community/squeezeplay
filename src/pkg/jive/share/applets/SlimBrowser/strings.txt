@@ -90,6 +90,14 @@ SLIMBROWSER_NOTHING
 	IT	Niente
 	NL	Niets
 
+SLIMBROWSER_OFF
+	DE	Aus
+	EN	Off
+	ES	Apagado
+	FR	Désactivé
+	IT	Disattivato
+	NL	Uit
+
 SLIMBROWSER_CONNECTING_TO
 	DE	Verbindung mit %s
 	EN	Connecting to\n%s
@@ -113,3 +121,4 @@ SLIMBROWSER_VOLUME_MUTED
 	FR	Volume (En sourdine)
 	IT	Volume (Audio disattivato)
 	NL	Volume (Gedempt)
+
