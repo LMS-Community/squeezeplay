@@ -209,8 +209,9 @@ function _chargeBattery(self)
 end
 
 
-function _t_setText(self, done, msg, foo, ...)
-	self.textarea:setValue(self:string(msg, foo, ...))
+function _t_setText(self, done, msg, count)
+	self.counter:setValue(count)
+	self.textarea:setValue(self:string(msg))
 	if done then
 		self.icon:setStyle("iconConnected")
 	end
@@ -241,7 +242,9 @@ function _upgrade(self)
 	self.icon = Icon("iconConnecting")
 	popup:addWidget(self.icon)
 
+	self.counter = Label("text", "")
 	self.textarea = Label("text", self:string("UPDATE_DOWNLOAD", ""))
+	popup:addWidget(self.counter)
 	popup:addWidget(self.textarea)
 
 	-- make sure this popup remains on screen

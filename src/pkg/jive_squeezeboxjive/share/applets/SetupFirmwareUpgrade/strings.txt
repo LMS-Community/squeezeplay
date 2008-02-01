@@ -67,12 +67,12 @@ UPDATE_TRY_AGAIN
 	NL	Opnieuw proberen...
 
 UPDATE_DOWNLOAD
-	DE	%s\nAktualisierung wird kopiert
-	EN	%s\nCopying Update
-	ES	%s\nCopiando actualización
-	FR	%s\nCopie de la mise à jour
-	IT	%s\nCopia aggiornamento in corso
-	NL	%s\nUpdate wordt gekopieerd
+	DE	\nAktualisierung wird kopiert
+	EN	\nCopying Update
+	ES	\nCopiando actualización
+	FR	\nCopie de la mise à jour
+	IT	\nCopia aggiornamento in corso
+	NL	\nUpdate wordt gekopieerd
 
 UPDATE_WRITE
 	DE	\nAktualisierung wird installiert
