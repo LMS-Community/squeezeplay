@@ -62,6 +62,11 @@ module(..., oo.class)
 local RETRY_UNREACHABLE = 120        -- Min delay (in s) before retrying a server unreachable
 
 
+-- list of servers index by id.
+local servers = {}
+setmetatable(servers, { __mode = 'v' })
+
+
 -- _getSink
 -- returns a sink
 local function _getSink(self, name)
@@ -193,8 +198,19 @@ function __init(self, jnt, ip, port, name)
 
 	_assert(ip, "Cannot create SlimServer without ip address")
 
+	-- Only create one server object per server. This avoids duplicates
+	-- following a server disconnect.
+
+	local id = self:idFor(ip, port, name)
+	local obj = servers[id]
+	if obj then
+		return obj
+	end
+
+
 	local obj = oo.rawnew(self, {
 
+		id = id,
 		name = name,
 		jnt = jnt,
 
@@ -232,6 +248,8 @@ function __init(self, jnt, ip, port, name)
 	})
 
 	obj.id = obj:idFor(ip, port, name)
+
+	servers[obj.id] = obj
 
 	-- subscribe to comet events
 	jnt:subscribe(obj)
