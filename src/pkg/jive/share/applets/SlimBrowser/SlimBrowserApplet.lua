@@ -268,7 +268,9 @@ local function _newWindowSpec(db, item, titleStyle)
 		["icon-id"]          = _priorityAssign('icon-id',    item["icon-id"], iWindow, bWindow),
 		["icon"]             = _priorityAssign('icon',       item["icon"],    iWindow, bWindow),
 	} 
+
 end
+
 
 -- _staticArtworkThumbUri
 -- helper method for cobbling together a properly formed url for static content
@@ -635,13 +637,17 @@ local function _browseSink(step, chunk, err)
 		else
 			data = chunk.data
 		end
-		
 		if logd:isDebug() then
 			debug.dump(chunk, 8)
 		end
 
-		-- if our window has a menu - some windows don't :(
-		if step.menu then
+		if step.window and data and data.window and data.window.textArea then
+			if step.menu then
+				step.window:removeWidget(step.menu)
+			end
+			local textArea = Textarea("textarea", data.window.textArea)
+			step.window:addWidget(textArea)
+		elseif step.menu then
 			step.menu:setItems(step.db:menuItems(data))
 
 			-- update the window properties
