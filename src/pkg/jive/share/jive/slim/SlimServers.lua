@@ -473,6 +473,11 @@ end
 function notify_networkConnected(self)
 	log:info("network connected")
 	self:discover()
+
+	-- force reconnection to all servers if we don't have a player
+	if not self.currentPlayer then
+		self:connect()
+	end
 end
 
 
