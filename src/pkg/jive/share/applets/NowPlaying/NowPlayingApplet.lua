@@ -786,8 +786,8 @@ function skin(self, s)
 	s.browseprogress = _uses(s.ssprogress,
 				{ 
 					padding = { 0, 0, 0, 25 },
-				text = {
-					padding = { 8, 0, 8, 25 },
+					text = {
+						padding = { 8, 0, 8, 25 },
 					}
 				}
 			)
@@ -812,13 +812,20 @@ function skin(self, s)
 	s.ssprogressNB.text = {}
 	s.ssprogressNB.text.w = WH_FILL
 	s.ssprogressNB.text.align = "center"
-	s.ssprogressNB.padding = { 0, 0, 0, 0 }
-	s.ssprogressNB.text.padding = { 0, 0, 0, 0 }
+	s.ssprogressNB.padding = { 0, 0, 0, 5 }
+	s.ssprogressNB.text.padding = { 0, 0, 0, 5 }
 	s.ssprogressNB.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
 	s.ssprogressNB.text.fg = { 0xe7, 0xe7, 0xe7 }
 	s.ssprogressNB.text.sh = { 0x37, 0x37, 0x37 }
 
-	s.browseprogressNB = _uses(s.ssprogressNB)
+	s.browseprogressNB = _uses(s.ssprogressNB,
+				{ 
+					padding = { 0, 0, 0, 25 },
+					text = {
+						padding = { 8, 0, 8, 25 },
+					}
+				}
+			)
 
 -- background style should start at x,y = 0,0
         s.iconbg = {}
