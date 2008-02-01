@@ -772,30 +772,42 @@ function skin(self, s)
                                })
 
 	s.ssprogress = {}
+	s.ssprogress.position = LAYOUT_SOUTH
 	s.ssprogress.order = { "elapsed", "slider", "remain" }
 	s.ssprogress.text = {}
 	s.ssprogress.text.w = 50
-	s.ssprogress.padding = { 0, 0, 0, 0 }
-	s.ssprogress.text.padding = { 8, 0, 8, 0 }
+	s.ssprogress.padding = { 0, 0, 0, 5 }
+	s.ssprogress.text.padding = { 8, 0, 8, 5 }
 	s.ssprogress.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
 	s.ssprogress.text.fg = { 0xe7,0xe7, 0xe7 }
 	s.ssprogress.text.sh = { 0x37, 0x37, 0x37 }
 
 	-- browse has different positioning than ss windowStyle
-	local browseprogress = {
-		padding = { 0, 0, 0, 0 } 
-	}
-	s.browseprogress = _uses(s.ssprogress)
+	s.browseprogress = _uses(s.ssprogress,
+				{ 
+					padding = { 0, 0, 0, 25 },
+				text = {
+					padding = { 8, 0, 8, 25 },
+					}
+				}
+			)
 
 	s.ssprogressB             = {}
         s.ssprogressB.horizontal  = 1
         s.ssprogressB.bgImg       = progressBackground
         s.ssprogressB.img         = progressBar
+	s.ssprogressB.position    = LAYOUT_SOUTH
+	s.ssprogressB.padding     = { 0, 0, 0, 5 }
 
-	s.browseprogressB = _uses(s.ssprogressB)
+	s.browseprogressB = _uses(s.ssprogressB,
+					{
+					padding = { 0, 0, 0, 25 }
+					}
+				)
 
 	-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
 	s.ssprogressNB = {}
+	s.ssprogressNB.position = LAYOUT_SOUTH
 	s.ssprogressNB.order = { "elapsed" }
 	s.ssprogressNB.text = {}
 	s.ssprogressNB.text.w = WH_FILL
