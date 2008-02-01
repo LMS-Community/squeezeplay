@@ -279,6 +279,7 @@ function connectPlayer(self, player, server)
 	-- we are now ready to connect to SqueezeCenter
 	if not server:isSqueezeNetwork() then
 		self:_doConnectPlayer(player, server)
+		return
 	end
 
 	-- make sure the player is linked on SqueezeNetwork, this may return an

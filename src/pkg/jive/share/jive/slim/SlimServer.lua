@@ -171,6 +171,12 @@ function _serverstatusSink(self, event, err)
 	
 end
 
+-- package private method to delete a player
+function _deletePlayer(self, player)
+	player:free(self)
+	table:delete(self.players, player:getId())
+end
+
 
 --[[
 

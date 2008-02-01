@@ -509,6 +509,11 @@ end
 local function _connectingToPlayer(self, player)
 	log:info("_connectingToPlayer popup show")
 
+	if _connectingPopup then
+		-- don't open this popup twice
+		return
+	end
+
 	local popup = Popup("popupIcon")
 	local icon  = Icon("iconConnecting")
 	local playerName = player:getName()
@@ -538,8 +543,18 @@ local function _connectingToPlayer(self, player)
 	)
 	
 	popup:show()
-	_connectingPopup = popup
 
+	_connectingPopup = popup
+end
+
+-- _connectedToPlayer
+-- hide the full screen popup that appears until menus are loaded
+local function _connectedToPlayer()
+	if _connectingPopup then
+		log:info("_connectingToPlayer popup hide")
+		_connectingPopup:hide()
+		_connectingPopup = nil
+	end
 end
 
 -- _bigArtworkPopup
@@ -778,10 +793,8 @@ local function _menuSink(self, cmd)
 				jiveMain:addItem(item)
 			end
 		end
-		if _menuReceived and _connectingPopup then
-			log:info("_connectingToPlayer popup hide")
-			_connectingPopup:hide()
-			_connectingPopup = nil
+		if _menuReceived then
+			_connectedToPlayer()
 		end
          end
 end
@@ -2105,6 +2118,9 @@ function free(self)
 		jiveMain:removeItem(v)
 	end
 	_playerMenus = {}
+
+	-- remove connecting popup
+	_connectedToPlayer()
 
 	_player = false
 	_server = false

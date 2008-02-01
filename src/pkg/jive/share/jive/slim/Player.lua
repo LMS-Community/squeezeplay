@@ -272,7 +272,7 @@ function update(self, slimServer, playerInfo)
 		-- delete from old server
 		if self.slimServer then
 			log:info(self, " delete for ", self.slimServer)
-			self.jnt:notify('playerDelete', self)
+			self.slimServer:_deletePlayer(self)
 		end
 
 		-- add to new server
