@@ -41,6 +41,7 @@ local oo             = require("loop.base")
 local SocketUdp      = require("jive.net.SocketUdp")
 local SlimServer     = require("jive.slim.SlimServer")
 local strings        = require("jive.utils.strings")
+local Framework      = require("jive.ui.Framework")
 local Timer          = require("jive.ui.Timer")
 
 local log            = require("jive.utils.log").logger("slimserver")
@@ -51,7 +52,7 @@ module(..., oo.class)
 
 -- constants
 local PORT    = 3483            -- port used to discover servers
-local TIMEOUT = 60              -- timeout (in seconds) before removing servers
+local TIMEOUT = 60000           -- timeout (in milliseconds) before removing servers
 
 
 -- t_source
@@ -157,7 +158,7 @@ end
 local function _cacheCleanup(self)
 	log:debug("_cacheCleanup()")
 
-	local now = os.time()
+	local now = Framework:getTicks()
 	for ss_id, server in pairs(self._servers) do
 		if not server:isConnected() and
 			now - server:getLastSeen() > TIMEOUT then

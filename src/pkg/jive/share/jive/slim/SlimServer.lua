@@ -113,7 +113,7 @@ function _serverstatusSink(self, event, err)
 	
 	-- update in one shot
 	self.state = data
-	self.plumbing.lastSeen = os.time()
+	self.plumbing.lastSeen = Framework:getTicks()
 	
 	-- manage rescan
 	-- use tostring to handle nil case (in either server of self data)
@@ -216,7 +216,7 @@ function __init(self, jnt, ip, port, name)
 
 		-- connection stuff
 		plumbing = {
-			lastSeen = os.time(),
+			lastSeen = Framework:getTicks(),
 			ip = ip,
 			port = port,
 		},
@@ -426,7 +426,7 @@ function updateFromUdp(self, name)
 		self.name = name
 	end
 
-	self.plumbing.lastSeen = os.time()
+	self.plumbing.lastSeen = Framework:getTicks()
 end
 
 

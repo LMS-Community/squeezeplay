@@ -219,8 +219,6 @@ function __init(self, jnt, slimServer, playerInfo)
 
 	local obj = oo.rawnew(self,{
 		
-		lastSeen = os.time(),
-		
 		slimServer = slimServer,
 		jnt = jnt,
 
@@ -336,7 +334,7 @@ function getTrackElapsed(self)
 	end
 
 	if self.state.mode == "play" then
-		local now = os.time()
+		local now = Framework:getTicks() / 1000
 
 		-- multiply by rate to allow for trick modes
 		self.trackCorrection = tonumber(self.state.rate) * (now - self.trackSeen)
@@ -716,7 +714,7 @@ function _process_status(self, event)
 	self.state = event.data
 
 	-- used for calculating getTrackElapsed(), getTrackRemaining()
-	self.trackSeen = os.time()
+	self.trackSeen = Framework:getTicks() / 1000
 	self.trackCorrection = 0
 	self.trackTime = event.data.time
 	self.trackDuration = event.data.duration
@@ -815,7 +813,7 @@ function togglePause(self)
 
 	if paused == 'stop' or paused == 'pause' then
 		-- reset the elapsed time epoch
-		self.trackSeen = os.time()
+		self.trackSeen = Framework:getTicks() / 1000
 
 		self:call({'pause', '0'})
 		self.state["mode"] = 'play'
@@ -865,7 +863,7 @@ function play(self)
 
 	if self.state.mode ~= 'play' then
 		-- reset the elapsed time epoch
-		self.trackSeen = os.time()
+		self.trackSeen = Framework:getTicks()
 	end
 
 	self:call({'mode', 'play'})
