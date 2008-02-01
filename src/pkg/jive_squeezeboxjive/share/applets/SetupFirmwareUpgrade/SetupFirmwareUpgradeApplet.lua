@@ -210,7 +210,7 @@ end
 
 
 function _t_setText(self, done, msg, count)
-	self.counter:setValue(count)
+	self.counter:setValue(count or "")
 	self.textarea:setValue(self:string(msg))
 	if done then
 		self.icon:setStyle("iconConnected")
