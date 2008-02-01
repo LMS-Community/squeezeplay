@@ -271,7 +271,6 @@ function update(self, slimServer, playerInfo)
 	if self.slimServer ~= slimServer then
 		-- delete from old server
 		if self.slimServer then
-			log:info(self, " delete for ", self.slimServer)
 			self.slimServer:_deletePlayer(self)
 		end
 

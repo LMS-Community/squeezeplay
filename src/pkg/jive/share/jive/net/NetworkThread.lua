@@ -72,8 +72,8 @@ local function _add(sock, task, sockList, timeout)
 	-- remember the pump, the time and the desired timeout
 	sockList[sock] = {
 		task = task,
-		lastSeen = socket.gettime(),
-		timeout = timeout or 60
+		lastSeen = Framework:getTicks(),
+		timeout = (timeout or 60) * 1000
 	}
 end
 
@@ -132,7 +132,7 @@ local function _timeout(now, sockList)
 		-- we want the second case, the sock is a userdata (implemented by LuaSocket)
 		-- we also want the timeout to exist and have expired
 		if type(v) == "userdata" and t.timeout > 0 and now - t.lastSeen > t.timeout then
-			log:error("network thread timeout for ", v)
+			log:error("network thread timeout for ", t.task)
 			t.task:addTask("inactivity timeout")
 		end
 	end
@@ -146,7 +146,7 @@ local function _t_select(self, timeout)
 
 	local r,w,e = socket.select(self.t_readSocks, self.t_writeSocks, timeout)
 
-	local now = socket.gettime()
+	local now = Framework:getTicks()
 		
 	if e then
 		-- timeout is a normal error for select if there's nothing to do!
