@@ -756,7 +756,7 @@ function artworkThumbUri (iconId, size)
         local resizeFrag = '_' .. size .. 'x' .. size .. '_p' -- 'p' is for padded
         if thisIsAnId then
                 -- we want a 56 pixel thumbnail if it wasn't specified
-                artworkUri = '/music/' .. iconId .. '/cover' .. resizeFrag .. '.png'
+                artworkUri = '/music/' .. iconId .. '/cover' .. resizeFrag .. '.gd'
 	elseif string.match(iconId, '.png') then
 		-- if this isn't a number, then we just want the path
 		-- with server-side resizing
