@@ -276,38 +276,8 @@ function connectPlayer(self, player, server)
 		return
 	end
 
-	-- we are now ready to connect to SqueezeCenter
-	if not server:isSqueezeNetwork() then
-		self:_doConnectPlayer(player, server)
-		return
-	end
 
-	-- make sure the player is linked on SqueezeNetwork, this may return an
-	-- error if the player can't be linked, for example it is linked to another
-	-- account already.
-	local cmd = { 'playerRegister', player:getUuid(), player:getId() }
-
-	local playerRegisterSink = function(chunk, err)
-		if chunk.error then
-			self:_playerRegisterFailed(chunk.error)
-		else
-			self:_doConnectPlayer(player, server)
-		end
-	end
-
-	server:request(playerRegisterSink, nil, cmd)
-end
-
-
-function _doConnectPlayer(self, player, server)
-
-	-- tell the player to move servers
-	self.waitForConnect = {
-		player = player,
-		server = server
-	}
-	player:connectToServer(server)
-
+	-- stoppage popup
 	local window = Popup("popupIcon")
 	window:addWidget(Icon("iconConnecting"))
 
@@ -336,6 +306,38 @@ function _doConnectPlayer(self, player, server)
 			end)
 
 	self:tieAndShowWindow(window)
+
+
+	-- we are now ready to connect to SqueezeCenter
+	if not server:isSqueezeNetwork() then
+		self:_doConnectPlayer(player, server)
+		return
+	end
+
+	-- make sure the player is linked on SqueezeNetwork, this may return an
+	-- error if the player can't be linked, for example it is linked to another
+	-- account already.
+	local cmd = { 'playerRegister', player:getUuid(), player:getId() }
+
+	local playerRegisterSink = function(chunk, err)
+		if chunk.error then
+			self:_playerRegisterFailed(chunk.error)
+		else
+			self:_doConnectPlayer(player, server)
+		end
+	end
+
+	server:request(playerRegisterSink, nil, cmd)
+end
+
+
+function _doConnectPlayer(self, player, server)
+	-- tell the player to move servers
+	self.waitForConnect = {
+		player = player,
+		server = server
+	}
+	player:connectToServer(server)
 end
 
 
