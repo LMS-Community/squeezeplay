@@ -171,7 +171,7 @@ function _addPlayerItem(self, player)
 		end
 
 		playerName = self:string("SQUEEZEBOX_ACTIVATE", player.name)
-		playerWeight = 10
+		playerWeight = 20
 	end
 
 	local item = {
@@ -306,7 +306,7 @@ function setupShow(self, setupNext)
 			callback = function()
 				sbsetup:settingsShow()
 			end,
-			weight = 20,
+			weight = 10,
 		})
 	end
 
