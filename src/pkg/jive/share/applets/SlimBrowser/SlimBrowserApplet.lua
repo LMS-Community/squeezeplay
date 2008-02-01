@@ -360,7 +360,7 @@ local function _radioItem(item, db)
 			"radio",
 			db:getRadioGroup(),
 			function() 
-				log:warn('Callback has been called') 
+				log:info('Callback has been called') 
 				_actionHandler(nil, nil, db, nil, nil, 'do', item) 
 			end,
 			radioFlag == 1
@@ -507,6 +507,7 @@ end
 -- _connectingToPlayer
 -- full screen popup that appears until menus are loaded
 local function _connectingToPlayer(self, player)
+	log:info("_connectingToPlayer popup show")
 
 	local popup = Popup("popupIcon")
 	local icon  = Icon("iconConnecting")
@@ -657,11 +658,7 @@ local function _menuSink(self, cmd)
 			return
 		end
 
-		log:warn("*********** _menuSink has been called***********")
-		log:warn(chunk.data[1])
-		log:warn(chunk.data[2])
-		log:warn(chunk.data[3])
-		log:warn(chunk.data[4])
+		log:info("_menuSink()")
 
 		-- process data from a menu notification
 		-- each chunk.data[2] contains a table that needs insertion into the menu
@@ -672,7 +669,7 @@ local function _menuSink(self, cmd)
 		local playerId = chunk.data[4]
 
 		if playerId ~= 'all' and playerId ~= _player:getId() then
-			log:debug('***** This menu notification was not for this player ***** ')
+			log:debug('This menu notification was not for this player')
 			log:debug("Notification for: ", playerId)
 			log:debug("This player is: ", _player:getId())
 			return
@@ -782,6 +779,7 @@ local function _menuSink(self, cmd)
 			end
 		end
 		if _menuReceived and _connectingPopup then
+			log:info("_connectingToPlayer popup hide")
 			_connectingPopup:hide()
 			_connectingPopup = nil
 		end
@@ -1693,7 +1691,6 @@ function showPlaylist()
 		end
 
 		if playlistSize == 0 then
-			log:warn('mark1')
 			local customWindow = showEmptyPlaylist('SLIMBROWSER_NOTHING') 
 			customWindow:show()
 			return EVENT_CONSUME
@@ -1744,7 +1741,7 @@ function showPlaylist()
 end
 
 function notify_playerPlaylistSize(self, player, playlistSize)
-	log:warn('SlimBrowser.notify_playerPlaylistSize')
+	log:info('SlimBrowser.notify_playerPlaylistSize')
 	if _player ~= player then
 		return
 	end
@@ -1773,13 +1770,13 @@ function notify_playerPlaylistSize(self, player, playlistSize)
 end
 
 function notify_playerPower(self, player, power)
-	log:warn('SlimBrowser.notify_playerPower')
+	log:info('SlimBrowser.notify_playerPower')
 	if _player ~= player then
 		return
 	end
 	local playerStatus = player:getPlayerStatus()
 	if not playerStatus then
-		log:warn('no player status')
+		log:info('no player status')
 		return
 	end
 
@@ -1809,7 +1806,7 @@ function notify_playerPower(self, player, power)
 end
 
 function notify_playerModeChange(self, player, mode)
-	log:warn('SlimBrowser.notify_playerModeChange')
+	log:info('SlimBrowser.notify_playerModeChange')
 	if _player ~= player then
 		return
 	end
@@ -1829,7 +1826,7 @@ function notify_playerModeChange(self, player, mode)
 end
 
 function notify_playerPlaylistChange(self, player)
-	log:warn('SlimBrowser.notify_playerPlaylistChange')
+	log:info('SlimBrowser.notify_playerPlaylistChange')
 	if _player ~= player then
 		return
 	end
@@ -1846,7 +1843,7 @@ function notify_playerPlaylistChange(self, player)
 end
 
 function notify_playerTrackChange(self, player, nowplaying)
-	log:warn('SlimBrowser.notify_playerTrackChange')
+	log:info('SlimBrowser.notify_playerTrackChange')
 
 	if _player ~= player then
 		return
@@ -1887,7 +1884,7 @@ function notify_playerDelete(self, player)
 	-- if this concerns our player
 	if _player == player then
 		-- panic!
-		log:warn("Player gone while browsing it ! -- packing home!")
+		log:info("Player gone while browsing it ! -- packing home!")
 		self:free()
 	end
 end
@@ -1896,7 +1893,7 @@ end
 -- notify_playerCurrent
 -- this is called when the current player changes (possibly from no player)
 function notify_playerCurrent(self, player)
-	log:warn("SlimBrowserApplet:notify_playerCurrent(", player, ")")
+	log:info("SlimBrowserApplet:notify_playerCurrent(", player, ")")
 
 	-- has the player actually changed?
 	if _player == player then
@@ -1937,7 +1934,7 @@ function notify_playerCurrent(self, player)
 	_string = function(token) return self:string(token) end
 	local _playerId = _player:getId()
 
-	log:warn('**** SUBSCRIBING to /slim/menustatus/', _playerId)
+	log:info('Subscribing to /slim/menustatus/', _playerId)
 	local cmd = { 'menustatus' }
 	_server.comet:subscribe(
 		'/slim/menustatus/' .. _playerId,
@@ -1976,9 +1973,8 @@ function notify_playerCurrent(self, player)
 	-- look to see if the playlist has size and the state of player power
 	-- if playlistSize is 0 or power is off, we show and empty playlist
 	local playerPower = _player:getPlayerPower()
-	log:warn('power: ', playerPower)
+	log:info('power: ', playerPower)
 	if playerPower == 0 then
-		log:warn('you be empty')
 		local customWindow = showEmptyPlaylist('SLIMBROWSER_OFF')
 		if _statusStep.window then
 			customWindow:replace(_statusStep.window, Window.transitionFadeIn)
@@ -2092,7 +2088,7 @@ function free(self)
 	log:debug("SlimBrowserApplet:free()")
 
 	-- unsubscribe from this player's menustatus
-	log:warn("***** UNSUBSCRIBING FROM /slim/menustatus/", _player:getId())
+	log:info("Unsubscribe /slim/menustatus/", _player:getId())
 	if _server and _player then
 		_server.comet:unsubscribe('/slim/menustatus/' .. _player:getId())
 	end
