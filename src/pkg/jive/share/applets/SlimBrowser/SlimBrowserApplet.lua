@@ -590,6 +590,9 @@ end
 -- _goNowPlaying
 -- pushes next window to the NowPlaying window
 local function _goNowPlaying(transition)
+	if not transition then
+		transition = Window.transitionPushRight
+	end
 	Framework:playSound("WINDOWSHOW")
 	local NowPlaying = AppletManager:loadApplet("NowPlaying")
 	NowPlaying:openScreensaver('browse', transition)
@@ -610,6 +613,22 @@ local function _devnull(chunk, err)
 	log:debug(chunk)
 end
 
+-- _goNow
+-- go immediately to a particular destination
+local function _goNow(destination, transition, step)
+	if not transition then
+		transition = Window.transitionPushRight
+	end
+	if destination == 'nowPlaying' then
+		_goNowPlaying(transition)
+	elseif destination == 'home' then
+		goHome()
+	elseif destination == 'playlist' then
+		_goPlaylist()
+	elseif destination == 'parent' and step and step.window then
+		_hideMe(step)
+	end
+end
 
 -- _browseSink
 -- sink that sets the data for our go action
@@ -641,6 +660,9 @@ local function _browseSink(step, chunk, err)
 			debug.dump(chunk, 8)
 		end
 
+		if step.window and data and data.goNow then
+			_goNow(data.goNow)
+		end
 		if step.window and data and data.window and data.window.textArea then
 			if step.menu then
 				step.window:removeWidget(step.menu)
@@ -871,9 +893,9 @@ local _globalActions = {
 			   
 		-- are we in home?
 		if #windowStack > 1 then
-			goHome()
+			_goNow('home')
 		else
-			_goNowPlaying()
+			_goNow('nowPlaying', Window.transitionPushLeft)
 		end
 				
 		return EVENT_CONSUME
@@ -1656,7 +1678,7 @@ function showTrackOne()
 		function(event)
 			local evtCode = event:getKeycode()
 			if evtCode == KEY_BACK then
-				_goNowPlaying(Window.transitionPushRight)
+				_goNow('nowPlaying')
 				return EVENT_CONSUME
 			end
 		end
@@ -1741,9 +1763,9 @@ function showPlaylist()
 					-- if this window is #2 on the stack there is no NowPlaying window 
 					-- (e.g., when playlist is empty)
 					if #windowStack == 2 then
-						goHome()
+						_goNow('home')
 					else
-						_goNowPlaying(Window.transitionPushRight)
+						_goNow('nowPlaying')
 					end
 					return EVENT_CONSUME
 				end
