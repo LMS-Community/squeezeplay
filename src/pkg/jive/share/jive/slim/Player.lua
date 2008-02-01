@@ -31,7 +31,7 @@ Notifications:
 local debug = require("jive.utils.debug")
 
 -- stuff we need
-local _assert, setmetatable, tonumber, tostring, pairs, ipairs = _assert, setmetatable, tonumber, tostring, pairs, ipairs
+local _assert, setmetatable, tonumber, tostring, pairs, type = _assert, setmetatable, tonumber, tostring, pairs, type
 
 local os             = require("os")
 local math           = require("math")
@@ -737,7 +737,39 @@ function _process_status(self, event)
 end
 
 function artworkThumbUri (iconId, size)
-	return '/music/' .. iconId .. '/cover_' .. size .. 'x' .. size .. '_f_000000.jpg'
+
+
+	-- we want a 56 pixel thumbnail if it wasn't specified
+	if not size then size = 56 end
+
+	-- sometimes we get a path to a static image rather than an iconId
+	-- if the iconId is a number, this is cover art, otherwise it's static content
+	-- do some extra checking instead of just looking for type = number
+	local thisIsAnId = true
+	if type(iconId) == "number" then -- iconId is a number
+		thisIsAnId = true
+	elseif string.find(iconId, "%a") then -- iconID string contains a letter
+		thisIsAnId = false
+	else -- a string with no letters must be an id
+		thisIsAnId = true
+	end
+
+        -- if this is a number, construct the path for a sizexsize cover art thumbnail
+        local artworkUri
+        local resizeFrag = '_' .. size .. 'x' .. size .. '_p' -- 'p' is for padded
+        if thisIsAnId then
+                -- we want a 56 pixel thumbnail if it wasn't specified
+                artworkUri = '/music/' .. iconId .. '/cover' .. resizeFrag .. '.png'
+	elseif string.match(iconId, '.png') then
+		-- if this isn't a number, then we just want the path
+		-- with server-side resizing
+                artworkUri = string.gsub(iconId, '.png', resizeFrag .. '.png')
+        -- otherwise punt and just send back the iconId path
+        else
+                return iconId
+        end
+	log:info(artworkUri)
+        return artworkUri
 end
 
 
@@ -758,13 +790,16 @@ function _process_displaystatus(self, event)
 			-- new song display from server
 			s.text:setValue(table.concat(display["text"], "\n"))
 			s.artIcon:setStyle("icon")
-			self.slimServer:fetchArtworkThumb(display["icon-id"], s.artIcon, artworkThumbUri, nil)
+			if display['icon'] then
+				self.slimServer:fetchArtworkURL(display['icon'], s.artIcon, 56)
+			else
+				self.slimServer:fetchArtworkThumb(display["icon-id"], s.artIcon, artworkThumbUri, 56)
+			end
 		else
 			s.text:setValue(table.concat(display["text"], "\n"))
 			s.artIcon:setStyle("noimage")
 			s.artIcon:setValue(nil)
 		end
-
 		s.window:showBriefly(3000, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
 	end
 end
