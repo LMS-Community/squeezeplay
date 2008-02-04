@@ -1282,7 +1282,9 @@ function removeNetwork(self, ssid)
 
 	-- popup confirmation
 	local window = Popup("popupIcon")
-	local text = Textarea("text", self:string("NETWORK_FORGOTTEN_NETWORK", ssid))
+	window:addWidget(Icon("iconConnected"))
+
+	local text = Label("text", self:string("NETWORK_FORGOTTEN_NETWORK", ssid))
 	window:addWidget(text)
 
 	self:tieWindow(window)
@@ -1418,7 +1420,7 @@ function networkStatusShow(self)
 					   text = self:string("NETWORK_FORGET_NETWORK"), nil,
 					   sound = "WINDOWSHOW",
 					   callback = function()
-							      deleteConfirm(self, ssid)
+							      deleteConfirm(self, self.currentSSID)
 						      end
 				   },
 				})
