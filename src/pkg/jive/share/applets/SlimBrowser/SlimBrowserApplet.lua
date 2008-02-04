@@ -1579,6 +1579,10 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 
 			-- cancel the step to prevent new data being loaded
 			step.cancelled = true
+
+			if _curStep and _curStep.origin then
+				_curStep = _curStep.origin
+			end
 		end
 	)
 		
@@ -1742,6 +1746,7 @@ function showPlaylist()
 	if _statusStep then
 
 		-- arrange so that menuListener works
+		_statusStep.origin = _curStep
 		_curStep = _statusStep
 
 		-- current playlist should select currently playing item 
@@ -2179,7 +2184,20 @@ function free(self)
 	_server = false
 	_string = false
 
-	log:info("done SlimBrowserApplet:free()")
+	-- walk down our path and close...
+	local step = _curStep
+	
+	while step do
+		step.window:hide()
+		step = step.origin
+	end
+	
+	local step = _statusStep
+	
+	while step do
+		step.window:hide()
+		step = step.origin
+	end
 	
 	return true
 end
