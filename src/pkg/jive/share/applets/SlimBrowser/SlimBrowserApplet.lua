@@ -230,7 +230,6 @@ local function _pushToNewWindow(step)
 				step.cancelled = true
 			end)
 	end
-	
 	step.loaded = function()
 		if _curStep.menu then
 			_curStep.menu:unlock()
@@ -425,9 +424,8 @@ end
 
 -- _performJSONAction
 -- performs the JSON action...
-local function _performJSONAction(jsonAction, from, qty, sink)
+local function _performJSONAction(jsonAction, from, qty, step, sink)
 	log:debug("_performJSONAction(from:", from, ", qty:", qty, "):")
-	
 	local cmdArray = jsonAction["cmd"]
 	
 	-- sanity check
@@ -478,11 +476,35 @@ local function _performJSONAction(jsonAction, from, qty, sink)
 			table.insert(request, v)
 		end
 	end
-	
+
+	if step then
+		step.jsonAction = request
+	end
+
 	-- send the command
 	_server:request(sink, playerid, request)
 end
 
+-- for a given step, rerun the json request that created that slimbrowser menu
+local function _refreshJSONAction(step)
+	if not _player then
+		return
+	end
+
+	if not step.jsonAction then
+		log:warn('No jsonAction request defined for this step')
+		return
+	end
+
+	local playerid = _player:getId()
+	if not playerid then
+		log:warn('no player!')
+		return
+	end
+
+	_server:request(step.sink, playerid, step.jsonAction)
+
+end
 
 -- _getStepSink
 -- returns a closure to a sink embedding step
@@ -585,6 +607,14 @@ end
 local function _hideMe(step)
 	Framework:playSound("WINDOWHIDE")
 	step.window:hide()
+	if step.origin then
+		_curStep = step.origin
+		local timer = Timer(1000,
+			function()
+				_refreshJSONAction(_curStep)
+			end, true)
+		timer:start()
+	end
 end
 
 -- _goNowPlaying
@@ -680,7 +710,7 @@ local function _browseSink(step, chunk, err)
 			local from, qty = step.db:missing(step.menu:isAccelerated())
 		
 			if from then
-				_performJSONAction(step.data, from, qty, step.sink)
+				_performJSONAction(step.data, from, qty, step, step.sink)
 			end
 		end
 		
@@ -754,7 +784,7 @@ local function _menuSink(self, cmd)
 					v.choiceStrings,
 					function(obj, selectedIndex)
 						local jsonAction = v.actions['do'].choices[selectedIndex]
-						_performJSONAction(jsonAction, nil, nil, nil)
+						_performJSONAction(jsonAction, nil, nil, nil, nil)
 					end,
 					selectedIndex
 				)
@@ -814,7 +844,7 @@ local function _menuSink(self, cmd)
 							end
 						end
 
-						_performJSONAction(jsonAction, from, qty, sink)
+						_performJSONAction(jsonAction, from, qty, step, sink)
 					end
 
 				_playerMenus[item.id] = item
@@ -1142,7 +1172,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 				_pushToNewWindow(step)
 			
 				-- send the command
-				 _performJSONAction(jsonAction, from, qty, sink)
+				 _performJSONAction(jsonAction, from, qty, step, sink)
 			
 				return EVENT_CONSUME
 			end
@@ -1684,7 +1714,7 @@ function showTrackOne()
 
 	-- send the command
 	local from, qty
-	_performJSONAction(jsonAction, 0, 200, sink)
+	_performJSONAction(jsonAction, 0, 200, step, sink)
 end
 
 -- showEmptyPlaylist
