@@ -1746,7 +1746,6 @@ function showPlaylist()
 	if _statusStep then
 
 		-- arrange so that menuListener works
-		_statusStep.origin = _curStep
 		_curStep = _statusStep
 
 		-- current playlist should select currently playing item 
@@ -2186,17 +2185,30 @@ function free(self)
 
 	-- walk down our path and close...
 	local step = _curStep
-	
+
+	-- Note, we guard against circular references here
 	while step do
 		step.window:hide()
-		step = step.origin
+
+		if step == step.origin then
+			log:error("Loop detected in _curStep")
+			step = nil
+		else
+			step = step.origin
+		end
 	end
 	
 	local step = _statusStep
 	
 	while step do
 		step.window:hide()
-		step = step.origin
+
+		if step == step.origin then
+			log:error("Loop detected in _statusStep")
+			step = nil
+		else
+			step = step.origin
+		end
 	end
 	
 	return true
