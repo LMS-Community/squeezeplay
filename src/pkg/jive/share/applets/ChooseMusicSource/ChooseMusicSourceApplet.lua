@@ -317,7 +317,7 @@ function connectPlayer(self, player, server)
 	-- make sure the player is linked on SqueezeNetwork, this may return an
 	-- error if the player can't be linked, for example it is linked to another
 	-- account already.
-	local cmd = { 'playerRegister', player:getUuid(), player:getId() }
+	local cmd = { 'playerRegister', player:getUuid(), player:getId(), player:getName() }
 
 	local playerRegisterSink = function(chunk, err)
 		if chunk.error then
