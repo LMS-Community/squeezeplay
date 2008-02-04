@@ -174,7 +174,7 @@ function menuItems(self, chunk)
 		cFrom = chunk["offset"] + 1
 		cTo = cFrom + #chunk["item_loop"] - 1
 	end
-	
+
 	-- store chunk
 	local key = math.modf(cFrom / BLOCK_SIZE)
 	self.store[key] = chunk["item_loop"]
@@ -228,7 +228,7 @@ function missing(self, accel, dir, index)
 	end
 
 	-- load first chunk
-	if not self.last_chunk then
+	if not self.store[0] then
 		return 0, BLOCK_SIZE
 	end
 
