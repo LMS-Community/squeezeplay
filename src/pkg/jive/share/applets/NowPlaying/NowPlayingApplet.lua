@@ -257,7 +257,7 @@ end
 
 function _isThisPlayer(self, player)
 
-	if not self.player then
+	if not self.player and not self.player:getId() then
 		local discovery = appletManager:getAppletInstance("SlimDiscovery")
 		self.player = discovery:getCurrentPlayer()
 	end
@@ -822,7 +822,7 @@ function skin(self, s)
 				{ 
 					padding = { 0, 0, 0, 25 },
 					text = {
-						padding = { 8, 0, 8, 25 },
+						padding = { 0, 0, 0, 25 },
 					}
 				}
 			)
