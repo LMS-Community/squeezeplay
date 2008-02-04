@@ -328,7 +328,7 @@ function _scanComplete(self, scanTable)
 
 			      local item = self.scanResults[ssid].item
 
-			      assert(type(entry.quality) == "number", "Eh? quality is " .. tostring(entry.quality) .. " for " .. ssid)
+			      --assert(type(entry.quality) == "number", "Eh? quality is " .. tostring(entry.quality) .. " for " .. ssid)
 			      item.icon:setStyle("wirelessLevel" .. entry.quality)
 			      self.scanMenu:updatedItem(item)
 
@@ -1413,6 +1413,14 @@ function networkStatusShow(self)
 				   { text = self:string("NETWORK_IP_ADDRESS"), icon = values[5] },
 				   { text = self:string("NETWORK_SNR"), icon = values[6] },
 				   { text = self:string("NETWORK_BITRATE"), icon = values[7] },
+
+				   {
+					   text = self:string("NETWORK_FORGET_NETWORK"), nil,
+					   sound = "WINDOWSHOW",
+					   callback = function()
+							      deleteConfirm(self, ssid)
+						      end
+				   },
 				})
 	window:addWidget(menu)
 

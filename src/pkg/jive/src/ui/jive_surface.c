@@ -281,6 +281,19 @@ void jive_surface_get_size(JiveSurface *srf, Uint16 *w, Uint16 *h) {
 	}
 }
 
+
+int jive_surface_get_bytes(JiveSurface *srf) {
+	SDL_PixelFormat *format;
+
+	if (!srf->sdl) {
+		return 0;
+	}
+
+	format = srf->sdl->format;
+	return srf->sdl->w * srf->sdl->h * format->BytesPerPixel;
+}
+
+
 void jive_surface_free(JiveSurface *srf) {
 	if (--srf->refcount > 0) {
 		return;

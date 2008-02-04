@@ -150,7 +150,7 @@ dist_luaslim_DATA = \
 	share/jive/slim/Player.lua  \
 	share/jive/slim/SlimServer.lua \
 	share/jive/slim/SlimServers.lua \
-	share/jive/slim/RequestsCli.lua
+	share/jive/slim/ArtworkCache.lua
 
 luautildir = $(pkgdatadir)/jive/utils
 dist_luautil_DATA = \

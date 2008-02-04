@@ -50,6 +50,8 @@ local SocketHttp  = require("jive.net.SocketHttp")
 local Task        = require("jive.ui.Task")
 local Framework   = require("jive.ui.Framework")
 
+local ArtworkCache = require("jive.slim.ArtworkCache")
+
 local log         = require("jive.utils.log").logger("slimserver")
 local logcache    = require("jive.utils.log").logger("slimserver.cache")
 
@@ -231,7 +233,7 @@ function __init(self, jnt, ip, port, name)
 		artworkPool = HttpPool(jnt, name, ip, port, 2, 1, Task.PRIORITY_LOW),
 
 		-- artwork cache: Weak table storing a surface by iconId
-		artworkThumbCache = setmetatable({}, { __mode="k" }),
+		artworkCache = ArtworkCache(),
 		-- Icons waiting for the given iconId
 		artworkThumbIcons = {},
 
@@ -290,7 +292,7 @@ function free(self)
 	-- notify we're gone by caller in SlimServers
 		
 	-- clear cache
-	self.artworkThumbCache = {}
+	self.artworkCache:free()
 	self.artworkThumbIcons = {}
 
 	-- delete players
@@ -430,17 +432,6 @@ function updateFromUdp(self, name)
 end
 
 
--- _dunpArtworkCache
--- returns statistical data about our cache
-local function _dumpArtworkThumbCache(self)
-	local items = 0
-	for k, v in pairs(self.artworkThumbCache) do
-		items = items + 1
-	end
-	logcache:debug("artworkThumbCache contains ", items, " items")
-end
-
-
 -- _getArworkThumbSink
 -- returns a sink for artwork so we can cache it as Surface before sending it forward
 local function _getArtworkThumbSink(self, iconId, size)
@@ -449,7 +440,7 @@ local function _getArtworkThumbSink(self, iconId, size)
 		size = 56
 	end
 	
-	local cacheKey = iconId .. size
+	local cacheKey = iconId .. "@" .. size
 
 	return function(chunk, err)
 
@@ -483,6 +474,10 @@ local function _getArtworkThumbSink(self, iconId, size)
 				end
 			end
 
+
+			log:warn("ARTWORK BYTES=", artwork:getBytes())
+
+
 			-- don't display empty artwork
 			if w == 0 or h == 0 then
 				artwork = nil
@@ -498,11 +493,7 @@ local function _getArtworkThumbSink(self, iconId, size)
 			end
 
 			-- store the artwork in the cache
-			self.artworkThumbCache[cacheKey] = artwork
-			
-			if logcache:isDebug() then
-				_dumpArtworkThumbCache(self)
-			end
+			self.artworkCache:set(cacheKey, artwork)
 		end
 	end
 end
@@ -559,8 +550,8 @@ whether to display the thumb straight away or wait before fetching it.
 --]]
 
 function artworkThumbCached(self, iconId, size)
-	local cacheKey = iconId .. (size or 56)
-	if self.artworkThumbCache[cacheKey] then
+	local cacheKey = iconId .. "@" .. (size or 56)
+	if self.artworkCache:get(cacheKey) then
 		return true
 	else
 		return false
@@ -596,10 +587,10 @@ Cancel loading the artwork for icon.
 function cancelAllArtwork(self, icon)
 
 	for i, entry in ipairs(self.artworkFetchQueue) do
-		local cacheKey = entry.key .. entry.size
+		local cacheKey = entry.key .. "@" .. entry.size
 
 		-- release cache marker
-		self.artworkThumbCache[cacheKey] = nil
+		self.artworkCache:set(cacheKey, nil)
 
 		-- release icons
 		local icons = self.artworkThumbIcons
@@ -632,18 +623,14 @@ argument sent to the uriGenerator. See applets.SlimBrowser._artworkThumbUri as a
 function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, imgFormat)
 	logcache:debug(self, ":fetchArtworkThumb(", iconId, ")")
 
-	if logcache:isDebug() then
-		_dumpArtworkThumbCache(self)
-	end
-
 	if not size then
 		size = 56
 	end
 	
-	local cacheKey = iconId .. size
+	local cacheKey = iconId .. "@" .. size
 
 	-- do we have the artwork in the cache
-	local artwork = self.artworkThumbCache[cacheKey]
+	local artwork = self.artworkCache:get(cacheKey)
 	if artwork then
 		-- are we requesting it already?
 		if artwork == true then
@@ -664,7 +651,7 @@ function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, imgFormat)
 	end
 
 	-- no luck, generate a request for the artwork
-	self.artworkThumbCache[cacheKey] = true
+	self.artworkCache:set(cacheKey, true)
 	if icon then
 		self.artworkThumbIcons[icon] = cacheKey
 		icon:setValue(nil)
@@ -693,18 +680,14 @@ This method is in the SlimServer class so it can reuse the other artwork code.
 function fetchArtworkURL(self, url, icon, size)
 	logcache:debug(self, ":fetchArtworkURL(", url, ")")
 
-	if logcache:isDebug() then
-		_dumpArtworkThumbCache(self)
-	end
-	
 	if not size then
 		size = 56
 	end
 	
-	local cacheKey = url .. size
+	local cacheKey = url .. "@" .. size
 
 	-- do we have the artwork in the cache
-	local artwork = self.artworkThumbCache[cacheKey]
+	local artwork = self.artworkCache:get(cacheKey)
 	if artwork then
 		-- are we requesting it already?
 		if artwork == true then
@@ -725,7 +708,7 @@ function fetchArtworkURL(self, url, icon, size)
 	end
 
 	-- no luck, generate a request for the artwork
-	self.artworkThumbCache[cacheKey] = true
+	self.artworkCache:set(cacheKey, true)
 	if icon then
 		icon:setValue(nil)
 		self.artworkThumbIcons[icon] = cacheKey
