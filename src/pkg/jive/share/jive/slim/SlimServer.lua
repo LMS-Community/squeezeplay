@@ -474,10 +474,6 @@ local function _getArtworkThumbSink(self, iconId, size)
 				end
 			end
 
-
-			log:warn("ARTWORK BYTES=", artwork:getBytes())
-
-
 			-- don't display empty artwork
 			if w == 0 or h == 0 then
 				artwork = nil
