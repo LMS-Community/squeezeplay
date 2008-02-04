@@ -372,6 +372,19 @@ end
 
 --[[
 
+=head2 jive.ui.Menu:getSelectedItem()
+
+Returns the widget of the selected item.
+
+=cut
+--]]
+function getSelectedItem(self)
+	return _selectedItem(self)
+end
+
+
+--[[
+
 =head2 jive.ui.Menu:setSelectedIndex(index)
 
 Sets I<index> as the selected menu item. 
