@@ -254,10 +254,16 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 	obj.accelTimer = Timer(200,
 			       function()
 				       obj.accel = false
-				       obj.accelKey = nil
 				       obj:reLayout()
 			       end,
 			       true)
+			       
+	obj.accelKeyTimer = Timer(500,
+					function()
+				    	obj.accelKey = nil
+						obj:reLayout()	
+					end,
+					true)
 
 	obj:addListener(EVENT_ALL,
 			 function (event)
@@ -491,6 +497,7 @@ function scrollBy(self, scroll)
 
 	if self.accel then
 		self.accelTimer:restart()
+		self.accelKeyTimer:restart()
 	else
 		self.accelTimer:stop()
 	end
@@ -664,8 +671,10 @@ function _updateWidgets(self)
 
 	-- set selection and focus
 	if nextSelected then
-		self.accelKey = self.accel and nextSelected:getAccelKey() or nil
-
+		if self.accel then
+			self.accelKey = nextSelected:getAccelKey()
+		end
+		
 		if self.locked then
 			nextSelected:setStyleModifier("locked")
 		else
