@@ -93,7 +93,7 @@ NETWORK_FORGOTTEN
 
 NETWORK_FORGOTTEN_NETWORK
 	DE	%s vergessen
-	EN	Forgotting %s
+	EN	Forgotten %s
 	ES	Olvidando %s
 	FR	Ignorer %s
 	IT	%s ignorata
