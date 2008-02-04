@@ -415,7 +415,7 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 
 		group:setWidgetValue("text", "")
 		group:setWidgetValue("icon", nil)
-		group:setStyle("item")
+		group:setStyle(labelStyle .. "waiting")
 	end
 
 	return group

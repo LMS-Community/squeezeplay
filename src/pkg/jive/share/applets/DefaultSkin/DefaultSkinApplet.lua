@@ -1006,6 +1006,19 @@ function skin(self, s)
 	s.locked.albumitem.text.sh = SELECT_SH_COLOR
 	s.locked.albumitem.bgImg = albumSelectionBox
 
+
+	-- waiting item with spinny
+	s.albumitemwaiting = _uses(s.albumitem, {
+		icon = {
+			img = Surface:loadImage(imgpath .. "icon_connecting_56.png"),
+			frameRate = 4,
+			frameWidth = 56
+		}
+	})
+
+	s.selected.albumitemwaiting = _uses(s.waiting)
+
+
 	-- titles with artwork and song info
 	s.nowplayingtitle = {}
 	s.nowplayingtitle.position = LAYOUT_NORTH
