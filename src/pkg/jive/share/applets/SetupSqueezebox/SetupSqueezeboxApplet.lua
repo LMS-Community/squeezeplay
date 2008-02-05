@@ -31,6 +31,7 @@ local hasWireless, Wireless  = pcall(require, "jive.net.Wireless")
 local log                    = require("jive.utils.log").logger("applets.setup")
 
 local jnt                    = jnt
+local appletManager          = appletManager
 local socket                 = require("socket")
 
 local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
@@ -1230,7 +1231,29 @@ function _setSlimserver(self, slimserver)
 	end
 
 
+	-- if connecting to SqueezeNetwork, first check jive is linked
+	if slimserver:getPin() then
+		local snpin = appletManager:loadApplet("SqueezeNetworkPIN")
+		snpin:enterPin(slimserver, nil,
+			       function()
+				       self:_registerPlayer(slimserver)
+			       end)
+
+		return
+	end
+
+	-- we are not SqueezeNetwork, so continue
+	_setAction(self, t_udapSetSlimserver, "connect_slimserver")
+	_setupSqueezebox(self)
+end
+
+
+-- called after pin registration for SN
+function _registerPlayer(self, slimserver)
 	if self.uuid then
+		-- XXX don't wait for a reply, Ray should always be
+		-- registered. This will work better after refactoring
+		-- with Bug 6683.
 		local cmd = { 'playerRegister', self.uuid, self.mac }
 		slimserver:request(nil, nil, cmd)
 	end
