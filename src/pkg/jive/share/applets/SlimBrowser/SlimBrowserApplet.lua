@@ -693,7 +693,16 @@ local function _browseSink(step, chunk, err)
 		if step.window and data and data.goNow then
 			_goNow(data.goNow)
 		end
-		if step.window and data and data.window and data.window.textArea then
+		if data.networkerror then
+			if step.menu then
+				step.window:removeWidget(step.menu)
+			end
+			local textArea = Textarea("textarea", data.networkerror)
+			if step.window then
+				step.window:setTitle(_string("SLIMBROWSER_PROBLEM_CONNECTING"), 'settingstitle')
+				step.window:addWidget(textArea)
+			end
+		elseif step.window and data and data.window and data.window.textArea then
 			if step.menu then
 				step.window:removeWidget(step.menu)
 			end
