@@ -131,8 +131,8 @@ local function _setPlayerPlaylistSize(self, playlistSize)
 	log:debug("_setPlayerPlaylistSize")
 
 	if playlistSize != self.playlistSize then
-		self.playlistSize = playlistSize
-		self.jnt:notify('playerPlaylistSize', self, playlistSize)
+		self.playlistSize = tonumber(playlistSize)
+		self.jnt:notify('playerPlaylistSize', self, tonumber(playlistSize))
 	end
 end
 
@@ -141,8 +141,8 @@ local function _setPlayerPower(self, power)
 	log:debug("_setPlayerPower")
 
 	if power != self.power then
-		self.power = power
-		self.jnt:notify('playerPower', self, power)
+		self.power = tonumber(power)
+		self.jnt:notify('playerPower', self, tonumber(power))
 	end
 end
 
@@ -341,10 +341,10 @@ function getTrackElapsed(self)
 	end
 
 	if self.trackCorrection <= 0 then
-		return self.trackTime, self.trackDuration
+		return tonumber(self.trackTime), tonumber(self.trackDuration)
 	else
 		local trackElapsed = self.trackTime + self.trackCorrection
-		return trackElapsed, self.trackDuration
+		return tonumber(trackElapsed), tonumber(self.trackDuration)
 	end
 	
 end
@@ -372,7 +372,7 @@ returns the playlist size for a given player object
 =cut
 --]]
 function getPlaylistSize(self)
-	return self.playlistSize
+	return tonumber(self.playlistSize)
 end
 
 
@@ -385,7 +385,7 @@ returns the playerPower for a given player object
 =cut
 --]]
 function getPlayerPower(self)
-	return self.power
+	return tonumber(self.power)
 end
 
 
