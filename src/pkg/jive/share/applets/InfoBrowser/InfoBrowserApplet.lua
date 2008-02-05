@@ -66,8 +66,10 @@ function menu(self, menuItem)
 			self.server = self.player:getSlimServer()
 		else
 			for _, server in sd:allServers() do
-				self.server = server
-				break
+				if server:isConnected() then
+					self.server = server
+					break
+				end
 			end
 		end
 	end
@@ -90,7 +92,7 @@ function request(self, index, start, window, widget, list, prevmenu, locked)
 				self:response(chunk.data, window, widget, list, prevmenu, locked)
 			end
 		end,
-		self.player.id,
+		self.player and self.player.id,
 		{ 'infobrowser', 'items', start, gulp, index and ("item_id:" .. index) }
 	)
 end
