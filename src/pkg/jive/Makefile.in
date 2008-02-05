@@ -733,7 +733,7 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/icon_wireless_3_shadow.png \
 	share/applets/DefaultSkin/images/icon_wireless_4_shadow.png \
 	share/applets/DefaultSkin/images/icon_connecting.png \
-	share/applets/DefaultSkin/images/icon_connecting_56.png \
+	share/applets/DefaultSkin/images/icon_connecting_44.png \
 	share/applets/DefaultSkin/images/icon_connected.png \
         share/applets/DefaultSkin/images/bghighlight_r.png \
         share/applets/DefaultSkin/images/bghighlight.png \

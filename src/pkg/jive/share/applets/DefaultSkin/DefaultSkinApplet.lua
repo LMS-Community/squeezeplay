@@ -1010,7 +1010,7 @@ function skin(self, s)
 	-- waiting item with spinny
 	s.albumitemwaiting = _uses(s.albumitem, {
 		icon = {
-			img = Surface:loadImage(imgpath .. "icon_connecting_56.png"),
+			img = Surface:loadImage(imgpath .. "icon_connecting_44.png"),
 			frameRate = 4,
 			frameWidth = 56
 		}
