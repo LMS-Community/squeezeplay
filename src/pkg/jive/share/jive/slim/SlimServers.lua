@@ -52,7 +52,7 @@ module(..., oo.class)
 
 -- constants
 local PORT    = 3483            -- port used to discover servers
-local TIMEOUT = 60000           -- timeout (in milliseconds) before removing servers
+local TIMEOUT = 120000          -- timeout (in milliseconds) before removing servers
 
 
 -- t_source
@@ -90,12 +90,11 @@ local function _cacheServer(self, ss_ip, ss_port, ss_name)
 		-- notify
 		self.jnt:notify('serverNew', server)	
 
-	else
-	
-		-- update the server with the name info, might have changed
-		-- also keeps track of the last time we've seen the server for deletion
-		self._servers[ss_id]:updateFromUdp(ss_name)
 	end
+	
+	-- update the server with the name info, might have changed
+	-- also keeps track of the last time we've seen the server for deletion
+	self._servers[ss_id]:updateFromUdp(ss_name)
 end
 
 
