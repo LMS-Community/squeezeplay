@@ -885,7 +885,7 @@ _handleAdvice = function(self)
 
 	self.failures = self.failures + 1
 	local reconnect = self.advice.reconnect or "retry"
-	local retry_interval = self.advice.interval or RETRY_DEFAULT
+	local retry_interval = tonumber(self.advice.interval) or RETRY_DEFAULT
 
 	if retry_interval == 0 then
 		-- Retry immediately
