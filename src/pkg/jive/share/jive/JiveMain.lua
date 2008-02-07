@@ -180,10 +180,12 @@ function JiveMain:__init()
 								Framework:setUpdateScreen(true)
 								return EVENT_UNUSED
 							    end)
-	local splashTimer = Timer(5000 - (os.time() - initTime), function()
-				Framework:setUpdateScreen(true)
-				Framework:removeListener(splashHandler)
-			    end)
+	local splashTimer = Timer(5000 - (os.time() - initTime),
+		function()
+			Framework:setUpdateScreen(true)
+			Framework:removeListener(splashHandler)
+		end,
+		true)
 	splashTimer:start()
 
 	-- run event loop
