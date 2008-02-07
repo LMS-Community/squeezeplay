@@ -10,54 +10,43 @@
 #include "wpa_ctrl.h"
 
 
-static struct wpa_ctrl *open_wpa_ctrl(lua_State *L) {
-	const char *ctrl_path;
-	struct wpa_ctrl *ctrl;
-	int err;
-
-	// FIXME allow variable control path
-	ctrl_path = "/var/run/wpa_supplicant/eth0";
-
-	ctrl = wpa_ctrl_open(ctrl_path);
-	if (ctrl == NULL) {
-		luaL_error(L, "cannot open wpa_cli %s", ctrl_path);
-	}
-
-	err = wpa_ctrl_attach(ctrl);
-	if (err == -1) {
-		wpa_ctrl_close(ctrl);
-		luaL_error(L, "wpa_ctrl_attach error");
-	}
-	if (err == -2) {
-		wpa_ctrl_close(ctrl);
-		luaL_error(L, "wpa_ctrl_attach timeout");
-	}
-
-	return ctrl;
-}
-
-static void close_wpa_ctrl(lua_State *L) {
-	struct wpa_ctrl **ctrl;
-
-	ctrl = (struct wpa_ctrl **)lua_touserdata(L, 1);
-	if (*ctrl) {
-		wpa_ctrl_close(*ctrl);
-		*ctrl = NULL;
-	}
-}
-
-
 static int jive_net_wpa_ctrl_open(lua_State *L) {
-	//const char *ctrl_path;
+	const char *ctrl_path;
 	struct wpa_ctrl **ctrl;
+	int err;
 
 	/* stack is:
 	 * 1: JiveWPA
 	 * 2: ctrl_path
 	 */
 
-	ctrl = lua_newuserdata(L, sizeof(struct wpa_ctrl *));
-	*ctrl = open_wpa_ctrl(L);
+	// FIXME allow variable control path
+	ctrl_path = "/var/run/wpa_supplicant/eth0";
+
+	ctrl = lua_newuserdata(L, sizeof(struct wpa_ctrl **));
+
+	*ctrl = wpa_ctrl_open(ctrl_path);
+	if (*ctrl == NULL) {
+		lua_pushnil(L);
+		lua_pushfstring(L, "cannot open wpa_cli %s", ctrl_path);
+		return 2;
+	}
+
+	err = wpa_ctrl_attach(*ctrl);
+	if (err == -1) {
+		wpa_ctrl_close(*ctrl);
+
+		lua_pushnil(L);
+		lua_pushstring(L, "wpa_ctrl attach error");
+		return 2;
+	}
+	if (err == -2) {
+		wpa_ctrl_close(*ctrl);
+
+		lua_pushnil(L);
+		lua_pushstring(L, "wpa_ctrl attach timeout");
+		return 2;
+	}
 
 	luaL_getmetatable(L, "jive.wireless");
 	lua_setmetatable(L, -2);
@@ -65,8 +54,16 @@ static int jive_net_wpa_ctrl_open(lua_State *L) {
 	return 1;
 }
 
-static int jive_net_wpa_ctrl_gc(lua_State *L) {
-	close_wpa_ctrl(L);
+
+static int jive_net_wpa_ctrl_close(lua_State *L) {
+	struct wpa_ctrl **ctrl;
+
+	ctrl = (struct wpa_ctrl **)lua_touserdata(L, 1);
+	if (*ctrl) {
+		wpa_ctrl_close(*ctrl);
+		*ctrl = NULL;
+	}
+
 	return 0;
 }
 
@@ -80,13 +77,23 @@ static int jive_net_wpa_ctrl_request(lua_State *L) {
 	ctrl = *(struct wpa_ctrl **)lua_touserdata(L, 1);
 	cmd = lua_tolstring(L, 2, &cmd_len);
 
-	err = wpa_ctrl_request(ctrl, cmd, cmd_len, NULL, NULL, NULL);
-	if (err == -1) {
-		close_wpa_ctrl(L);
-		luaL_error(L, "wpa_ctrl_request error");
+	if (!ctrl) {
+		lua_pushnil(L);
+		lua_pushstring(L, "wpa_ctrl closed");
+		return 2;
 	}
 
-	return 0;
+	err = wpa_ctrl_request(ctrl, cmd, cmd_len, NULL, NULL, NULL);
+	if (err == -1) {
+		jive_net_wpa_ctrl_close(L);
+
+		lua_pushnil(L);
+		lua_pushstring(L, "wpa_ctrl request error");
+		return 2;
+	}
+
+	lua_pushboolean(L, 1);
+	return 1;
 }
 
 
@@ -94,6 +101,13 @@ static int jive_net_wpa_ctrl_get_fd(lua_State *L) {
 	struct wpa_ctrl *ctrl;
 
 	ctrl = *(struct wpa_ctrl **)lua_touserdata(L, 1);
+
+	if (!ctrl) {
+		lua_pushnil(L);
+		lua_pushstring(L, "wpa_ctrl closed");
+		return 2;
+	}
+
 	lua_pushinteger(L, wpa_ctrl_get_fd(ctrl));
 
 	return 1;
@@ -108,19 +122,28 @@ static int jive_net_wpa_ctrl_recv(lua_State *L) {
 
 	ctrl = *(struct wpa_ctrl **)lua_touserdata(L, 1);
 
+	if (!ctrl) {
+		lua_pushnil(L);
+		lua_pushstring(L, "wpa_ctrl closed");
+		return 2;
+	}
+
 	if (!wpa_ctrl_pending(ctrl)) {
 		lua_pushnil(L);
-		return 1;
+		lua_pushstring(L, "timeout");
+		return 2;
 	}
 
 	err = wpa_ctrl_recv(ctrl, reply, &reply_len);
 	if (err == -1) {
-		close_wpa_ctrl(L);
-		luaL_error(L, "wpa_ctrl_request error");
+		jive_net_wpa_ctrl_close(L);
+
+		lua_pushnil(L);
+		lua_pushstring(L, "wpa_ctrl recv error");
+		return 2;
 	}
 
 	lua_pushlstring(L, reply, reply_len);
-
 	return 1;
 }
 
@@ -134,8 +157,11 @@ static const struct luaL_Reg jive_net_wpa_ctrl_lib[] = {
 int luaopen_jiveWireless(lua_State *L) {
 	luaL_newmetatable(L, "jive.wireless");
 
-	lua_pushcfunction(L, jive_net_wpa_ctrl_gc);
+	lua_pushcfunction(L, jive_net_wpa_ctrl_close);
 	lua_setfield(L, -2, "__gc");
+
+	lua_pushcfunction(L, jive_net_wpa_ctrl_close);
+	lua_setfield(L, -2, "close");
 
 	lua_pushcfunction(L, jive_net_wpa_ctrl_request);
 	lua_setfield(L, -2, "request");

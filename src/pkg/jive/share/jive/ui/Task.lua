@@ -94,7 +94,7 @@ function addTask(self, ...)
 	log:debug("addTask ", self.name)
 
 	if self.state == "error" then
-		log:warn("task has error")
+		log:warn("task ", self.name, " in error state")
 		return false
 	end
 

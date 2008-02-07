@@ -71,8 +71,7 @@ function __init(self, jnt, interface, name)
 	obj.interface = interface
 	obj.responseQueue = {}
 
-	obj.t_sock = wireless:open()
-	obj:_addPump()
+	obj:open()
 
 	_instance[interface] = obj
 	return obj
@@ -171,12 +170,22 @@ end
 function t_scan(self, callback)
 	assert(Task:running(), "Wireless:scan must be called in a Task")
 
-	self:request("SCAN")
+	local status, err = self:request("SCAN")
+	if err then
+		return
+	end
 
-	local status = self:request("STATUS")
+	local status, err = self:request("STATUS")
+	if err then
+		return
+	end
+
 	local associated = string.match(status, "\nssid=([^\n]+)")
 
-	local scanResults = self:request("SCAN_RESULTS")
+	local scanResults, err = self:request("SCAN_RESULTS")
+	if err then
+		return
+	end
 
 	_scanResults = _scanResults or {}
 
@@ -527,7 +536,21 @@ function getTxBitRate(self)
 end
 
 
-function _addPump(self)
+function open(self)
+	if self.t_sock then
+		log:error("Socket already open")
+		return
+	end
+
+	local err
+	self.t_sock, err = wireless:open()
+	if err then
+		log:warn(err)
+
+		self:close()
+		return false
+	end
+
 	local source = function()
 			       return self.t_sock:receive()
 		       end
@@ -552,9 +575,26 @@ function _addPump(self)
 
 	self:t_addRead(function()
 			       -- XXXX handle timeout
-			       return ltn12.pump.step(source, sink)
+			       local status, err = ltn12.pump.step(source, sink)
+			       if err then
+				       log:warn(err)
+				       self:close()
+			       end
 		       end,
 		       0) -- no timeout
+
+	return true
+end
+
+
+function close(self)
+	-- cancel queued requests
+	for i, task in ipairs(self.responseQueue) do
+		task:addTask(nil, "closed")
+	end
+	self.responseQueue = {}
+
+	Socket.close(self)
 end
 
 
@@ -563,11 +603,34 @@ function request(self, ...)
 	assert(task, "Wireless:request must be called in a Task")
 
 	log:info("REQUEST: ", ...)
-	self.t_sock:request(...)
+
+	-- open the socket if it is closed
+	if not self.t_sock and not self:open() then
+		-- XXXX callers expect a string
+		return "", "closed"
+	end
+
+	local status, err = self.t_sock:request(...)
+
+	if err then
+		log:warn(err)
+		self:close()
+
+		-- XXXX callers expect a string
+		return "", err
+	end
 
 	-- yield task
 	table.insert(self.responseQueue, task)
-	local _, reply = Task:yield(false)
+	local _, reply, err = Task:yield(false)
+
+	if err then
+		log:warn(err)
+		self:close()
+
+		-- XXXX callers expect a string
+		return "", err
+	end
 
 	log:info("REPLY:", reply)
 	return reply
