@@ -83,14 +83,7 @@ function _enterPin(self, force, server, player, next)
 						nil)
 		      end)
 
-	-- XXX this is temporary until the :3000 "production" beta goes away by
-	-- some means or other 
-	local addport = "";
-	if not jnt:getSNBeta() then
-		addport = ":3000"
-	end
-
-	window:addWidget(Textarea("help", self:string("SQUEEZENETWORK_PIN_HELP", jnt:getSNHostname() .. addport)))
+	window:addWidget(Textarea("help", self:string("SQUEEZENETWORK_PIN_HELP", jnt:getSNHostname())))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

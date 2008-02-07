@@ -1205,21 +1205,14 @@ function _setSlimserver(self, slimserver)
 		-- set slimserver address to 0.0.0.1 to workaround a bug in
 		-- squeezebox firmware
 		--
-		-- XXX this should be 1 or 2 depending on jnt:getSNBeta()
-		-- this:
+		-- XXX this should be this when in production or post "serv 2" firmware:
 		-- self.data2.server_address = Udap.packNumber(1, 4)
 		-- self.data2.slimserver_address = Udap.packNumber(parseip("0.0.0.1"), 4)
 		-- or:
 		-- self.data2.server_address = Udap.packNumber(2, 4)
 		-- self.data2.slimserver_address = Udap.packNumber(parseip("0.0.0.1"), 4)
 		--
-		-- XXX but until that's in firmware and while using funny beta addresses:
-		local ip
-		if jnt:getSNBeta() then
-			ip = socket.dns.toip(jnt:getSNHostname())
-		else
-			ip = "207.7.156.11"
-		end
+		local ip = socket.dns.toip(jnt:getSNHostname())
 		log:info("SN server_address=", ip)
 		self.data2.server_address = Udap.packNumber(parseip(ip), 4)
 		self.data2.slimserver_address = Udap.packNumber(parseip("0.0.0.1"), 4)

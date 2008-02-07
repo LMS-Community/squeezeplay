@@ -280,63 +280,16 @@ function setUUID(self, uuid, mac)
 	self.mac = mac
 end
 
-
---[[
-
-=head2 setSNBetaSetting(bool)
-
-Changes whether NetworkThread will use
-production or beta SqueezeNetwork servers on
-next reboot.
-
-=cut
---]]
-function setSNBetaSetting(self, use_sn_beta)
-	Framework:setGlobalSetting("use_sn_beta", use_sn_beta)
-end
-
---[[
-
-=head2 getSNBetaSetting()
-
-Indicates whether NetworkThread will use
-production or beta SqueezeNetwork servers on
-next reboot.
-
-=cut
---]]
-function getSNBetaSetting(self)
-	return Framework:getGlobalSetting("use_sn_beta");
-end
-
---[[
-
-=head2 getSNBeta()
-
-Boolean, indicates whether we're using the SqueezeNetwork
-Beta server (as opposed to production) Right Now
-
-=cut
---]]
-function getSNBeta(self)
-	return self._use_sn_beta
-end
-
 --[[
 
 =head2 getSNHostname()
 
 Retreive the hostname to be used to connect to SqueezeNetwork
-Right Now
 
 =cut
 --]]
 function getSNHostname(self)
-	if self._use_sn_beta then
-		return "www.beta.squeezenetwork.com"
-	else
-		return "www.squeezenetwork.com"
-	end
+	return "www.beta.squeezenetwork.com"
 end
 
 --[[
@@ -357,9 +310,6 @@ function __init(self)
 
 		-- list of objects for notify
 		subscribers = {},
-
-		-- SN Beta in use?
-		_use_sn_beta = Framework:getGlobalSetting("use_sn_beta")
 	})
 
 	return obj

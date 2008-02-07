@@ -97,7 +97,6 @@ screen.bpp = 16
 
 -- Put default global settings here
 default_global_settings = {
-	use_sn_beta = false,
 }
 
 -- To be filled in later when someone tries

@@ -308,11 +308,7 @@ end
 
 
 function isSqueezeNetwork(self)
-	if self.jnt:getSNBeta() then
-		return self.name == "SqueezeNetwork Beta"
-	else
-		return self.name == "SqueezeNetwork"
-	end
+	return self.name == "SqueezeNetwork"
 end
 
 
