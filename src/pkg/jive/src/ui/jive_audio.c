@@ -249,6 +249,13 @@ static int jiveL_sound_enable(lua_State *L) {
 	snd = *(struct jive_sample **)lua_touserdata(L, 1);
 	snd->enabled = lua_toboolean(L, 2);
 
+	if (snd->enabled) {
+		open_audio();
+	}
+	else {
+		close_audio();
+	}
+
 	return 0;
 }
 
