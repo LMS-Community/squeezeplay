@@ -75,6 +75,10 @@ module(...)
 oo.class(_M, Applet)
 
 
+-- disable battery low test, useful for debugging
+local CHECK_BATTERY_LOW      = true
+
+
 function init(self)
 	local uuid, mac
 
@@ -294,7 +298,7 @@ function update(self)
 		end
 	else
 		local bat = jiveBSP.ioctl(17)
-		if bat < 807 then
+		if CHECK_BATTERY_LOW and bat < 807 then
 			self:batteryLowShow()
 		elseif bat < 820 then
 			iconbar:setBattery("0")
@@ -321,6 +325,13 @@ function _brightness(self, lcdLevel, keyLevel)
 	if lcdLevel ~= nil then
 		self.lcdLevel = lcdLevel
 		jiveBSP.ioctl(11, lcdLevel * 2048)
+
+		-- don't update the screen when the lcd is off
+		if lcdLevel == 0 then
+			Framework:setUpdateScreen(false)
+		else
+			Framework:setUpdateScreen(true)
+		end
 	end
 
 	if keyLevel ~= nil then
@@ -507,8 +518,8 @@ function sleep(self)
 	elseif self.powerState == "dimmed" then
 		self:setPowerState("sleep")
 	elseif self.powerState == "sleep" then
-		self:setPowerState("hibernate")
-	elseif self.powerState == "hibernate" then
+		self:setPowerState("suspend")
+	elseif self.powerState == "suspend" then
 		-- we can't go to sleep anymore
 	end
 end
@@ -528,6 +539,12 @@ function setPowerState(self, state)
 
 	if self.acpower then
 		-- charging
+		self:_setCPUSpeed(true)
+
+		if self.audioVolume ~= nil then
+			Audio:setEffectVolume(self.audioVolume)
+			self.audioVolume = nil
+		end
 
 		if state == "active" then
 			self:setBrightness()
@@ -553,36 +570,45 @@ function setPowerState(self, state)
 		-- battery
 
 		if state == "active" then
+			self:_setCPUSpeed(true)
 			self:setBrightness()
---			if self.isAudioEnabled ~= nil then
---				Audio:effectsEnable(self.isAudioEnabled)
---				self.isAudioEnabled = nil
---			end
+
+			if self.audioVolume ~= nil then
+				Audio:setEffectVolume(self.audioVolume)
+				self.audioVolume = nil
+			end
+
 			interval = settings.dimmedTimeout
 
 		elseif state == "locked" then
+			self:_setCPUSpeed(true)
 			self:setBrightness()
+
+			if self.audioVolume ~= nil then
+				Audio:setEffectVolume(self.audioVolume)
+				self.audioVolume = nil
+			end
+
 			self.lockedTimer:restart()
---			if self.isAudioEnabled ~= nil then
---				Audio:effectsEnable(self.isAudioEnabled)
---				self.isAudioEnabled = nil
---			end
 			interval = settings.dimmedTimeout
 
 		elseif state == "dimmed" then
+			self:_setCPUSpeed(true)
 			self:_setBrightness(true, 8, 0)
---			self.isAudioEnabled = Audio:isEffectsEnabled()
---			Audio:effectsEnable(false)
 
 			interval = settings.sleepTimeout
 
 		else
 			self:_setBrightness(true, 0, 0)
+			self:_setCPUSpeed(false)
+
+			self.audioVolume = Audio:getEffectVolume()
+			Audio:setEffectVolume(0)
 
 			if state == "sleep" then
-				interval = settings.hibernateTimeout
-			elseif state == "hibernate" then
-				log:error("FIXME hibernate now...")
+				interval = settings.suspendTimeout
+			elseif state == "suspend" then
+				log:error("FIXME suspend now...")
 			end
 		end
 	end
@@ -603,14 +629,15 @@ function lockScreen(self)
 	popup:addWidget(Textarea("help", self:string("BSP_SCREEN_LOCKED_HELP")))
 	self:tieAndShowWindow(popup)
 
+	self:setPowerState("locked")
+
 	self.lockedPopup = popup
 	self.lockedTimer = Timer(2000,
 				 function()
 					 self:_setBrightness(true, 0, 0)
+					 self:_setCPUSpeed(false)
 				 end,
 				 true)
-
-	self:setPowerState("locked")
 
 	self.lockedListener = 
 		Framework:addListener(EVENT_KEY_DOWN | EVENT_KEY_PRESS,
@@ -760,6 +787,24 @@ function settingsPowerOff(self)
 	self:tieAndShowWindow(popup)
 
 	popup:playSound("SHUTDOWN")
+end
+
+
+function _setCPUSpeed(self, fast)
+	local filename = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed"
+
+	-- 200MHZ or 50MHz
+	local speed = fast and 200000 or 50000
+
+	log:info("Set CPU speed ", speed)
+	local fh, err = io.open(filename, "w")
+	if err then
+		log:warn("Can't write to  ", filename)
+		return
+	end
+
+	fh:write(speed)
+	fh:close()
 end
 
 
