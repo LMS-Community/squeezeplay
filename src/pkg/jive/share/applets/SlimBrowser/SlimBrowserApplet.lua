@@ -126,6 +126,13 @@ local _lastInput = ""
 -- connectingToPlayer popup handlers
 local _connectingPopup = false
 local _menuReceived = false
+
+local modeTokens = {	
+			play  = "SLIMBROWSER_NOW_PLAYING",
+			pause = "SLIMBROWSER_PAUSED", 
+			stop  = "SLIMBROWSER_STOPPED",
+			off   = "SLIMBROWSER_OFF"
+}
 --==============================================================================
 -- Local functions
 --==============================================================================
@@ -1734,10 +1741,10 @@ function showTrackOne()
 end
 
 -- showEmptyPlaylist
--- if the player is off or if the playlist is empty, we replace _statusStep with this window
+-- if the player playlist is empty, we replace _statusStep with this window
 function showEmptyPlaylist(token)
 
-	local window = Window("window", _string('SLIMBROWSER_NOW_PLAYING'), 'currentplaylisttitle')
+	local window = Window("window", _string(modeTokens['play']), 'currentplaylisttitle')
 	local menu = SimpleMenu("menu")
 	menu:addItem({
 		     text = _string(token),
@@ -1767,9 +1774,8 @@ function showPlaylist()
 		local playerPower = _player:getPlayerPower()
 
 		if playerPower == 0 then
-			local customWindow = showEmptyPlaylist('SLIMBROWSER_OFF') 
-			customWindow:show()
-			return EVENT_CONSUME
+			_statusStep.window:setTitle(_string(modeTokens['off']))
+			_statusStep.window:setTitleStyle("currentplaylisttitle")
 		end
 
 		if playlistSize == 0 then
@@ -1852,7 +1858,7 @@ function notify_playerPlaylistSize(self, player, playlistSize)
 end
 
 function notify_playerPower(self, player, power)
-	log:info('SlimBrowser.notify_playerPower')
+	log:debug('SlimBrowser.notify_playerPower')
 	if _player ~= player then
 		return
 	end
@@ -1863,53 +1869,57 @@ function notify_playerPower(self, player, power)
 	end
 
 	local playlistSize = playerStatus.playlist_tracks
+	local mode = player:getPlayMode()
 
 	-- when player goes off, user should get single item styled 'Off' playlist
 	local step = _statusStep
 	local emptyStep = _emptyStep
 
 	if step.menu then
-		-- show 'OFF' in playlist window when the player is off
+		-- show 'OFF' in playlist window title when the player is off
 		if power == 0 then
-			local customWindow = showEmptyPlaylist('SLIMBROWSER_OFF') 
-			if emptyStep then
-				customWindow:replace(emptyStep.window, Window.transitionFadeIn)
-			end
 			if step.window then
-				customWindow:replace(step.window, Window.transitionFadeIn)
+				step.window:setTitle(_string("SLIMBROWSER_OFF"))
+				step.window:setTitleStyle("currentplaylisttitle")
 			end
-		elseif power == 1 and emptyStep then
-			-- only with the player on and a non-zero playlist do we bring the playlist up
+		elseif power == 1 then
 			if step.window then
-				step.window:replace(emptyStep.window, Window.transitionFadeIn)
+				if emptyStep then
+					step.window:replace(emptyStep.window, Window.transitionFadeIn)
+				end
+				step.window:setTitle(_string(modeTokens[mode]))
+				step.window:setTitleStyle("currentplaylisttitle")
 			end
 		end
 	end
 end
 
 function notify_playerModeChange(self, player, mode)
-	log:info('SlimBrowser.notify_playerModeChange')
+	log:debug('SlimBrowser.notify_playerModeChange')
 	if _player ~= player then
 		return
 	end
 
 	local step = _statusStep
-
-	if mode == "play" then
-		step.window:setTitle(_string("SLIMBROWSER_NOW_PLAYING"))
-		step.window:setTitleStyle("currentplaylisttitle")
-	elseif mode == "pause" then
-		step.window:setTitle(_string("SLIMBROWSER_PAUSED"))
-		step.window:setTitleStyle("currentplaylisttitle")
-	elseif mode == "stop" then
-		step.window:setTitle(_string("SLIMBROWSER_STOPPED"))
-		step.window:setTitleStyle("currentplaylisttitle")
+	local power = player:getPlayerPower()
+	local token = mode
+	if power == 0 then
+		token = 'off'
 	end
+
+	step.window:setTitle(_string(modeTokens[token]))
+	step.window:setTitleStyle("currentplaylisttitle")
+
 end
 
 function notify_playerPlaylistChange(self, player)
-	log:info('SlimBrowser.notify_playerPlaylistChange')
+	log:warn('SlimBrowser.notify_playerPlaylistChange')
 	if _player ~= player then
+		return
+	end
+
+	local power = player:getPlayerPower()
+	if power == 0 then
 		return
 	end
 
@@ -1925,11 +1935,17 @@ function notify_playerPlaylistChange(self, player)
 end
 
 function notify_playerTrackChange(self, player, nowplaying)
-	log:info('SlimBrowser.notify_playerTrackChange')
+	log:warn('SlimBrowser.notify_playerTrackChange')
 
 	if _player ~= player then
 		return
 	end
+
+	local power = player:getPlayerPower()
+	if power == 0 then
+		return
+	end
+
 	local playerStatus = player:getPlayerStatus()
 	local step = _statusStep
 
@@ -2057,9 +2073,9 @@ function notify_playerCurrent(self, player)
 	local playerPower = _player:getPlayerPower()
 	log:info('power: ', playerPower)
 	if playerPower == 0 then
-		local customWindow = showEmptyPlaylist('SLIMBROWSER_OFF')
 		if _statusStep.window then
-			customWindow:replace(_statusStep.window, Window.transitionFadeIn)
+			_statusStep.window:setTitle(_string("SLIMBROWSER_OFF"))
+			_statusStep.window:setTitleStyle("currentplaylisttitle")
 		end
 	end
 

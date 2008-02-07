@@ -42,3 +42,10 @@ SCREENSAVER_NOWPLAYING_OF
 	IT	%s di %s
 	NL	%s van %s
 
+SCREENSAVER_OFF
+	DE	Aus
+	EN	Off
+	ES	Apagado
+	FR	Désactivé
+	IT	Disattivato
+	NL	Uit

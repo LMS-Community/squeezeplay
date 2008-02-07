@@ -73,7 +73,13 @@ oo.class(_M, Applet)
 local ARTWORK_SIZE = 154
 
 local showProgressBar = true
-
+local modeTokens = {
+	off   = "SCREENSAVER_OFF",
+	play  = "SCREENSAVER_NOWPLAYING",
+	pause = "SCREENSAVER_PAUSED",
+	stop  = "SCREENSAVER_STOPPED"
+}
+	
 ----------------------------------------------------------------------------------------
 -- Helper Functions
 --
@@ -173,13 +179,37 @@ function notify_playerPower(self, player, power)
 	if player ~= self.player then
 		return
 	end
+
+	local mode = self.player:getPlayMode()
+
 	-- hide this window if the player is turned off
 	if power == 0 then
 		if self['browse'] and self['browse'].window then
-			self['browse'].window:hide()
+			self['browse'].titleGroup:setWidgetValue("title", self:string(modeTokens['off']))
+		end
+		if self['ss'] and self['ss'].window then
+			self['ss'].titleGroup:setWidgetValue("title", self:string(modeTokens['off']))
+		end
+	elseif power == 1 then
+		if self['browse'] and self['browse'].window then
+			self['browse'].titleGroup:setWidgetValue("title", self:string(modeTokens[mode]))
+		end
+		if self['ss'] and self['ss'].window then
+			self['ss'].titleGroup:setWidgetValue("title", self:string(modeTokens[mode]))
 		end
 	end
 end
+
+function notify_playerDelete(self, player)
+	if player ~= self.player then
+		return
+	end
+	-- player has left the building, close Now Playing browse window
+	if self['browse'] and self['browse'].window then
+		self['browse'].window:hide()
+	end
+end
+
 
 function notify_playerTrackChange(self, player, nowPlaying)
 	log:warn("PLAYER TRACK NOTIFICATION RECEIVED")
@@ -329,8 +359,8 @@ function _updateProgress(self, data, ws)
 	local elapsed, duration = self.player:getTrackElapsed()
 
 	if ws.progressSlider then
-		if duration and duration > 0 then
-			ws.progressSlider:setRange(0, duration, elapsed)
+		if duration and tonumber(duration) > 0 then
+			ws.progressSlider:setRange(0, tonumber(duration), tonumber(elapsed))
 		else 
 			-- If 0 just set it to 100
 			ws.progressSlider:setRange(0, 100, 0)
@@ -381,14 +411,13 @@ end
 function _updateMode(self, mode, ws)
 	if not ws then ws = self[windowStyle] end
 	if not ws then return end
+	local power = self.player:getPlayerPower()
+	local token = mode
+	if power == 0 then
+		token = 'off'
+	end
 	if ws.titleGroup then
-		if mode == "play" then
-			ws.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_NOWPLAYING"))
-		elseif mode == "pause" then
-			ws.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_PAUSED"))
-		else
-			ws.titleGroup:setWidgetValue("title", self:string("SCREENSAVER_STOPPED"))
-		end
+		ws.titleGroup:setWidgetValue("title", self:string(modeTokens[token]))
 	end
 end
 
