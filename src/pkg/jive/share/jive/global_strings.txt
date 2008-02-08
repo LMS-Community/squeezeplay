@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 WELCOME
+	DA	Velkommen
 	DE	Willkommen!
 	EN	Welcome
 	ES	Bienvenido.
@@ -11,6 +12,7 @@ WELCOME
 	NL	Welkom!
 
 SETTINGS
+	DA	Indstillinger
 	DE	Einstellungen
 	EN	Settings
 	ES	Configuración
@@ -19,6 +21,7 @@ SETTINGS
 	NL	Instellingen
 
 REMOTE_SETTINGS
+	DA	Indstillinger for fjernbetjening
 	DE	Fernbedienungseinstellungen
 	EN	Controller Settings
 	ES	Configuración del mando
@@ -27,6 +30,7 @@ REMOTE_SETTINGS
 	NL	Afstandsbedieningsinstellingen
 
 SCREEN_SETTINGS
+	DA	Skærm
 	DE	Anzeige
 	EN	Screen
 	ES	Pantalla
@@ -35,6 +39,7 @@ SCREEN_SETTINGS
 	NL	Display
 
 HOME
+	DA	Hovedmenu
 	DE	Hauptmenü
 	EN	Home
 	ES	Inicio
@@ -43,6 +48,7 @@ HOME
 	NL	Hoofdmenu
 
 ADVANCED_SETTINGS
+	DA	Avanceret
 	DE	Erweitert
 	EN	Advanced
 	ES	Avanzada
@@ -51,6 +57,7 @@ ADVANCED_SETTINGS
 	NL	Geavanceerd
 
 FACTORY_TEST
+	DA	Fabrikstest
 	DE	Fabriktest
 	EN	Factory Test
 	ES	Prueba de fábrica
@@ -59,6 +66,7 @@ FACTORY_TEST
 	NL	Fabriekstest
 
 DEBUG_LOG
+	DA	Logning
 	DE	Protokoll
 	EN	Logging
 	ES	Registrando
@@ -67,6 +75,7 @@ DEBUG_LOG
 	NL	Loggen
 
 EXTRAS
+	DA	Extras
 	DE	Extras
 	EN	Extras
 	ES	Extras
@@ -75,6 +84,7 @@ EXTRAS
 	NL	Extra's
 
 GAMES
+	DA	Spil
 	DE	Spiele
 	EN	Games
 	ES	Juegos
@@ -83,6 +93,7 @@ GAMES
 	NL	Games
 
 INSERT
+	DA	Indsæt
 	DE	Einfügen
 	EN	Insert
 	ES	Insertar
@@ -91,6 +102,7 @@ INSERT
 	NL	Invoegen
 
 DELETE
+	DA	Slet
 	DE	Löschen
 	EN	Delete
 	ES	Eliminar
@@ -99,6 +111,7 @@ DELETE
 	NL	Verwijderen
 
 ALLOWEDCHARS_NOCAPS
+	DA	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 	DE	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 	EN	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 	ES	 abcdefghijklmnñopqrstuvwxyz¡!@#$%^&*()_+{}:\\\"'<>¿?-=,./~`[];0123456789
@@ -107,6 +120,7 @@ ALLOWEDCHARS_NOCAPS
 	NL	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 
 ALLOWEDCHARS_CAPS
+	DA	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 	DE	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 	EN	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 	ES	 ABCDEFGHIJKLMNÑOPQRSTUVWXYZ¡!@#$%^&*()_+{}:\\\"'<>¿?-=,./~`[];0123456789
@@ -115,6 +129,7 @@ ALLOWEDCHARS_CAPS
 	NL	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 
 ALLOWEDCHARS_WITHCAPS
+	DA	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	DE	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	EN	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	ES	 abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ¡!@#$%^&*()_+{}:\"'<>¿?-=,./~`[];0123456789
@@ -123,6 +138,7 @@ ALLOWEDCHARS_WITHCAPS
 	NL	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 
 RETURN_TO_SETUP
+	DA	Tilbage til Indstillinger
 	DE	Zurück zum Setup
 	EN	Return to Setup
 	ES	Regresar a configuración
