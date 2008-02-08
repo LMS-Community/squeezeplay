@@ -206,6 +206,7 @@ function __init(self, jnt, ip, port, name)
 	local id = self:idFor(ip, port, name)
 	local obj = servers[id]
 	if obj then
+		obj:connect(obj)
 		return obj
 	end
 
