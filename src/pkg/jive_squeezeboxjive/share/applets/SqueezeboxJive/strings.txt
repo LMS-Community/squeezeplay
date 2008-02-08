@@ -5,6 +5,7 @@
 
 
 BSP_SCREEN_LOCKED
+	DA	Låst
 	DE	LCD gesperrt. Drücken Sie HINZUFÜGEN und WIEDERGABE.
 	EN	Locked
 	ES	Pantalla bloqueada. Pulse AGREGAR y REPRODUCIR para desbloquear.
@@ -13,6 +14,7 @@ BSP_SCREEN_LOCKED
 	NL	Scherm vergrendeld. Druk op TOEVOEGEN en AFSPELEN om het te ontgrendelen.
 
 BSP_SCREEN_LOCKED_HELP
+	DA	For at låse op, tryk ADD og PLAY knappene på samme tid.
 	DE	Drücken Sie zum Aufheben der Sperre gleichzeitig ADD und PLAY.
 	EN	To unlock press the ADD and PLAY buttons at the same time.
 	ES	Para desbloquear, pulse los botones ADD y PLAY simultáneamente.
@@ -21,6 +23,7 @@ BSP_SCREEN_LOCKED_HELP
 	NL	Druk de knoppen ADD en PLAY tegelijk in voor ontgrendeling.
 
 BSP_BRIGHTNESS
+	DA	Lysstyrke
 	DE	Helligkeit
 	EN	Brightness
 	ES	Brillo
@@ -29,6 +32,7 @@ BSP_BRIGHTNESS
 	NL	Helderheid
 
 BSP_BRIGHTNESS_ADJUST_HELP
+	DA	Brug hjulet til at justere lysstyrken.
 	DE	Sie können die Helligkeit mit dem Rad anpassen
 	EN	Use the wheel to adjust the brightness.
 	ES	Use la rueda para ajustar el brillo.
@@ -37,6 +41,7 @@ BSP_BRIGHTNESS_ADJUST_HELP
 	NL	Gebruik het wiel om de helderheid van de verlichting aan te passen.
 
 BSP_BACKLIGHT_TIMER
+	DA	LCD dæmpning
 	DE	LCD-Dimmer
 	EN	Screen Dimming
 	ES	Atenuación de pantalla
@@ -45,6 +50,7 @@ BSP_BACKLIGHT_TIMER
 	NL	Scherm dimmen
 
 BSP_BACKLIGHT_HIGH
+	DA	Høj
 	DE	Hoch
 	EN	High
 	ES	Alta
@@ -53,6 +59,7 @@ BSP_BACKLIGHT_HIGH
 	NL	Hoog
 
 BSP_BACKLIGHT_MEDIUM
+	DA	Medium
 	DE	Mittel
 	EN	Medium
 	ES	Media
@@ -61,6 +68,7 @@ BSP_BACKLIGHT_MEDIUM
 	NL	Gemiddeld
 
 BSP_BACKLIGHT_LOW
+	DA	Lav
 	DE	Niedrig
 	EN	Low
 	ES	Baja
@@ -69,6 +77,7 @@ BSP_BACKLIGHT_LOW
 	NL	Laag
 
 BSP_TIMER_OFF
+	DA	Slukket
 	DE	Aus
 	EN	Off
 	ES	Apagado
@@ -77,6 +86,7 @@ BSP_TIMER_OFF
 	NL	Uit
 
 BSP_TIMER_ON
+	DA	Tændt
 	DE	Ein
 	EN	On
 	ES	Encendido
@@ -85,6 +95,7 @@ BSP_TIMER_ON
 	NL	Aan
 
 BSP_TIMER_5_SEC
+	DA	5 sekunder
 	DE	5 Sekunden
 	EN	5 seconds
 	ES	5 segundos
@@ -93,6 +104,7 @@ BSP_TIMER_5_SEC
 	NL	5 seconden
 
 BSP_TIMER_10_SEC
+	DA	10 sekunder
 	DE	10 Sekunden
 	EN	10 seconds
 	ES	10 segundos
@@ -101,6 +113,7 @@ BSP_TIMER_10_SEC
 	NL	10 seconden
 
 BSP_TIMER_15_SEC
+	DA	15 sekunder
 	DE	15 Sekunden
 	EN	15 seconds
 	ES	15 segundos
@@ -109,6 +122,7 @@ BSP_TIMER_15_SEC
 	NL	15 seconden
 
 BSP_TIMER_20_SEC
+	DA	20 sekunder
 	DE	20 Sekunden
 	EN	20 seconds
 	ES	20 segundos
@@ -117,6 +131,7 @@ BSP_TIMER_20_SEC
 	NL	20 seconden
 
 BSP_TIMER_30_SEC
+	DA	30 sekunder
 	DE	30 Sekunden
 	EN	30 seconds
 	ES	30 segundos
@@ -125,6 +140,7 @@ BSP_TIMER_30_SEC
 	NL	30 seconden
 
 BSP_TIMER_1_MIN
+	DA	1 minut
 	DE	1 Minute
 	EN	1 minute
 	ES	1 minuto
@@ -133,6 +149,7 @@ BSP_TIMER_1_MIN
 	NL	1 minuut
 
 BSP_TIMER_2_MIN
+	DA	2 minutter
 	DE	2 Minute
 	EN	2 minute
 	ES	2 minutos
@@ -141,6 +158,7 @@ BSP_TIMER_2_MIN
 	NL	2 minuten
 
 BSP_TIMER_5_MIN
+	DA	5 minutter
 	DE	5 Minute
 	EN	5 minute
 	ES	5 minutos
@@ -149,6 +167,7 @@ BSP_TIMER_5_MIN
 	NL	5 minuten
 
 BSP_TIMER_NEVER
+	DA	Aldrig
 	DE	Nie
 	EN	Never
 	ES	Nunca
@@ -157,6 +176,7 @@ BSP_TIMER_NEVER
 	NL	Nooit
 
 DIM_WHEN_CHARGING
+	DA	Dæmp under opladning
 	DE	Beim Laden dimmen
 	EN	Dim when charging
 	ES	Atenuado durante carga
@@ -165,6 +185,7 @@ DIM_WHEN_CHARGING
 	NL	Dimmen tijdens opladen
 
 BATTERY_LOW
+	DA	Lavt batteri\nOplad mig venligst
 	DE	Batterie schwach\nBitte aufladen
 	EN	Battery Low\nPlease Charge Me
 	ES	Pila baja\nNecesita carga
@@ -173,6 +194,7 @@ BATTERY_LOW
 	NL	Batterij bijna leeg\nOpladen alsjeblieft
 
 POWER_DOWN
+	DA	Sluk
 	DE	Herunterfahren
 	EN	Turn Off
 	ES	Apagar
@@ -181,6 +203,7 @@ POWER_DOWN
 	NL	Uitzetten
 
 POWER_DOWN_CANCEL
+	DA	Afbryd
 	DE	Abbrechen
 	EN	Cancel
 	ES	Cancelar
@@ -189,6 +212,7 @@ POWER_DOWN_CANCEL
 	NL	Annuleren
 
 POWER_DOWN_CONFIRM
+	DA	Bekræft
 	DE	Bestätigen
 	EN	Confirm
 	ES	Confirmar
@@ -197,6 +221,7 @@ POWER_DOWN_CONFIRM
 	NL	Bevestigen
 
 GOODBYE
+	DA	\nFarvel
 	DE	\nAuf Wiedersehen
 	EN	\nGoodbye
 	ES	\nAdiós
@@ -205,6 +230,7 @@ GOODBYE
 	NL	\nTot ziens
 
 POWER_DOWN_HELP
+	DA	Afbrud eller Bekræft slukning af din fjernbetjening.
 	DE	Herunterfahren der Fernbedienung Abbrechen oder Bestätigen
 	EN	Cancel or Confirm the power down of your controller
 	ES	Cancele o confirme el apagado del controlador

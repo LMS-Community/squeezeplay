@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 WALLPAPER
+	DA	Baggrund
 	DE	Hintergrundbild
 	EN	Wallpaper
 	ES	Papel tapiz
@@ -11,6 +12,7 @@ WALLPAPER
 	NL	Achtergrond
 
 CREDITS
+	DA	Krediteringer
 	DE	Mitwirkende
 	EN	Credits
 	ES	Créditos
@@ -19,6 +21,7 @@ CREDITS
 	NL	Credits
 
 CREATIVE_COMMONS
+	DA	Baggrundsbillederne er publiceret under Creative Commons Attribution licensen. Se http://creativecommons.org/licenses/by/3.0/.
 	DE	Die Hintergrundbilder unterliegen einer "Creative Commons Attribution"-Lizenz (siehe http://creativecommons.org/licenses/by/3.0/).
 	EN	The background images are under a Creative Commons Attribution license. See http://creativecommons.org/licenses/by/3.0/.
 	ES	Imágenes de fondo con licencia Creative Commons Attribution. Consulte http://creativecommons.org/licenses/by/3.0/.
@@ -27,6 +30,7 @@ CREATIVE_COMMONS
 	NL	De achtergrondafbeeldingen zijn onderhevig aan een Creative Commons Attribution-licentie. Zie http://creativecommons.org/licenses/by/3.0/.
 
 CREDITS_BY
+	DA	Billeder af:
 	DE	Bilder von:
 	EN	Pictures by:
 	ES	Imágenes de:
@@ -35,6 +39,7 @@ CREDITS_BY
 	NL	Foto's door:
 
 CONCRETE
+	DA	Beton
 	DE	Beton
 	EN	Concrete
 	ES	Hormigón
@@ -43,6 +48,7 @@ CONCRETE
 	NL	Beton
 
 MIDNIGHT
+	DA	Midnat
 	DE	Mitternacht
 	EN	Midnight
 	ES	Medianoche
@@ -51,6 +57,7 @@ MIDNIGHT
 	NL	Middernacht
 
 PEA
+	DA	Ært
 	DE	Erbse
 	EN	Pea
 	ES	Guisante
@@ -59,6 +66,7 @@ PEA
 	NL	Doperwt
 
 BLACK
+	DA	Sort
 	DE	Schwarz
 	EN	Black
 	ES	Negro
@@ -67,6 +75,7 @@ BLACK
 	NL	Zwart
 
 STONE
+	DA	Sten
 	DE	Stein
 	EN	Stone
 	ES	Piedra
@@ -75,6 +84,7 @@ STONE
 	NL	Steen
 
 DUNES
+	DA	Klit
 	DE	Dünen
 	EN	Dunes
 	ES	Dunas
@@ -83,6 +93,7 @@ DUNES
 	NL	Duinen
 
 IRIS
+	DA	Tulipan
 	DE	Tulpe
 	EN	Tulip
 	ES	Tulipán
@@ -91,6 +102,7 @@ IRIS
 	NL	Tulp
 
 SMOKE
+	DA	Røg
 	DE	Rauch
 	EN	Smoke
 	ES	Humo
@@ -99,6 +111,7 @@ SMOKE
 	NL	Rook
 
 AMBER
+	DA	Rav
 	DE	Bernstein
 	EN	Amber
 	ES	Ámbar
@@ -107,6 +120,7 @@ AMBER
 	NL	Amber
 
 FLAME
+	DA	Flamme
 	DE	Flamme
 	EN	Flame
 	ES	Llama
@@ -115,6 +129,7 @@ FLAME
 	NL	Vlam
 
 GRAFFITI
+	DA	Grafitti
 	DE	Graffiti
 	EN	Graffiti
 	ES	Graffiti
@@ -123,6 +138,7 @@ GRAFFITI
 	NL	Graffiti
 
 WEATHERED_WOOD
+	DA	Slidt træ
 	DE	Verwittertes Holz
 	EN	Weathered Wood
 	ES	Madera vieja
@@ -131,6 +147,7 @@ WEATHERED_WOOD
 	NL	Verweerd hout
 
 SUNRISE
+	DA	Solopgang
 	DE	Sonnenaufgang
 	EN	Sun Rise
 	ES	Amanecer
@@ -139,6 +156,7 @@ SUNRISE
 	NL	Zonsopgang
 
 SUNLIGHT
+	DA	Sollys
 	DE	Sonnenschein
 	EN	Sun Light
 	ES	Sol
@@ -147,6 +165,7 @@ SUNLIGHT
 	NL	Zonlicht
 
 FADETOBLACK
+	DA	Blød overgang til sort
 	DE	Ausblenden
 	EN	Fade to Black
 	ES	Fundido a negro

@@ -4,6 +4,7 @@
 
 
 TEST_KEYPAD
+	DA	Tastatur
 	DE	Tastenfeld
 	EN	Keypad
 	ES	Teclado
@@ -12,6 +13,7 @@ TEST_KEYPAD
 	NL	Toetsenblok
 
 TEST_KEYPAD_HELP
+	DA	Tryk alle knapper og rullehjulet for at fuldføre.
 	DE	Zum Abschluss alle Tasten und Rad betätigen.
 	EN	Press all keys and scroll the wheel to complete.
 	ES	Pulse todos los botones y gire la rueda para completar la operación.

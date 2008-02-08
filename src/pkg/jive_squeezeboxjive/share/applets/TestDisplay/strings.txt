@@ -4,6 +4,7 @@
 
 
 TEST_DISPLAY
+	DA	Skærm
 	DE	Anzeige
 	EN	Display
 	ES	Pantalla
@@ -12,6 +13,7 @@ TEST_DISPLAY
 	NL	Display
 
 TEST_COMPLETE
+	DA	Test fuldført
 	DE	Test abgeschlossen
 	EN	Test Complete
 	ES	Prueba completada

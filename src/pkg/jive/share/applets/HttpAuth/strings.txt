@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 HTTP_AUTH
+	DA	SqueezeCenter kodeord-beskyttelse
 	DE	SqueezeCenter-Kennwortschutz
 	EN	SqueezeCenter Password Protection
 	ES	Protección por contraseña de SqueezeCenter
@@ -11,6 +12,7 @@ HTTP_AUTH
 	NL	SqueezeCenter-wachtwoordbeveiliging
 
 HTTP_AUTH_USERNAME
+	DA	Brugernavn
 	DE	Benutzername
 	EN	Username
 	ES	Nombre de usuario
@@ -19,6 +21,7 @@ HTTP_AUTH_USERNAME
 	NL	Gebruikersnaam
 
 HTTP_AUTH_PASSWORD
+	DA	Kodeord
 	DE	Kennwort
 	EN	Password
 	ES	Contraseña
@@ -27,6 +30,7 @@ HTTP_AUTH_PASSWORD
 	NL	Wachtwoord
 
 HTTP_AUTH_HELP
+	DA	Hvis du har aktiveret kodeord-beskyttelse af SqueezeCenter skal du konfigurere brugernavn og kodeord her.
 	DE	Ist der Kennwortschutz für SqueezeCenter konfiguriert, geben Sie hier Benutzername und Kennwort ein.
 	EN	If your SqueezeCenter is configured for password protection, configure the username and password here
 	ES	Si SqueezeCenter se ha configurado con protección por contraseña, configure el nombre de usuario y la contraseña aquí
@@ -35,6 +39,7 @@ HTTP_AUTH_HELP
 	NL	Als je SqueezeCenter voor wachtwoordbeveiliging geconfigureerd is, kun je de gebruikersnaam en het wachtwoord hier instellen.
 
 HTTP_AUTH_ENTER_HELP
+	DA	Indtast %s som er konfigureret for kodeord-beskyttelse på dit SqueezeCenter
 	DE	Geben Sie den für den SqueezeCenter-Kennwortschutz konfigurierten %s ein.
 	EN	Enter the %s configured for password protection on your SqueezeCenter
 	ES	Introduzca %s tal y como se haya configurado para protección por contraseña en SqueezeCenter

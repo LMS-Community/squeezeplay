@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SOUND_EFFECTS
+	DA	Lyd effekter
 	DE	Soundeffekte
 	EN	Sound Effects
 	ES	Efectos de sonido
@@ -11,6 +12,7 @@ SOUND_EFFECTS
 	NL	Geluidseffecten
 
 SOUND_SCROLL
+	DA	Rul
 	DE	Scroll
 	EN	Scroll
 	ES	Desplazarse
@@ -19,6 +21,7 @@ SOUND_SCROLL
 	NL	Scrollen
 
 SOUND_NAVIGATION
+	DA	Navigation
 	DE	Navigation
 	EN	Navigation
 	ES	Navegación
@@ -27,6 +30,7 @@ SOUND_NAVIGATION
 	NL	Navigatie
 
 SOUND_PLAYBACK
+	DA	Afspilning
 	DE	Wiedergabe
 	EN	Playback
 	ES	Reproducción
@@ -35,6 +39,7 @@ SOUND_PLAYBACK
 	NL	Afspelen
 
 SOUND_VOLUME
+	DA	Lydstyrke
 	DE	Lautstärke
 	EN	Volume
 	ES	Volumen
@@ -43,6 +48,7 @@ SOUND_VOLUME
 	NL	Volume
 
 SOUND_CHARGING
+	DA	Oplader
 	DE	Wird aufgeladen
 	EN	Charging
 	ES	Cargando
@@ -51,6 +57,7 @@ SOUND_CHARGING
 	NL	Bezig met opladen
 
 SOUND_NONE
+	DA	Ingen
 	DE	Kein
 	EN	None
 	ES	Ninguno
@@ -59,6 +66,7 @@ SOUND_NONE
 	NL	Geen
 
 SOUND_EFFECTS_VOLUME
+	DA	Lydstyrke for effekter
 	DE	Effektlautstärke
 	EN	Effects Volume
 	ES	Volumen de efectos
@@ -67,6 +75,7 @@ SOUND_EFFECTS_VOLUME
 	NL	Volume van effecten
 
 SOUND_VOLUME_HELP
+	DA	Brug hjulet for at justere lydstyrken for lyd effekter.
 	DE	Passen Sie die Lautstärke der Effekte mit dem Rad an.
 	EN	Use the wheel to adjust the volume of the sound effects.
 	ES	Use la rueda para ajustar el volumen de los efectos de sonido.

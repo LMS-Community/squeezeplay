@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 RESET_FACTORY_RESET
+	DA	Fabriksindstillinger
 	DE	Standardeinstellungen
 	EN	Factory Reset
 	ES	Configuración de fábrica
@@ -11,6 +12,7 @@ RESET_FACTORY_RESET
 	NL	Fabrieksinstellingen
 
 RESET_CANCEL
+	DA	Afbryd
 	DE	Abbrechen
 	EN	Cancel
 	ES	Cancelar
@@ -19,6 +21,7 @@ RESET_CANCEL
 	NL	Annuleren
 
 RESET_CONTINUE
+	DA	Fortsæt
 	DE	Weiter
 	EN	Continue
 	ES	Continuar
@@ -27,6 +30,7 @@ RESET_CONTINUE
 	NL	Verdergaan
 
 RESET_RESETTING
+	DA	\nGenstarter
 	DE	\nNeustart
 	EN	\nRestarting
 	ES	\nReiniciando

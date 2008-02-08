@@ -4,6 +4,7 @@
 
 
 CHOOSE_LANGUAGE
+	DA	Vælg sprog
 	DE	Sprache wählen
 	EN	Choose Language
 	ES	Elegir idioma
@@ -12,6 +13,7 @@ CHOOSE_LANGUAGE
 	NL	Taal kiezen
 
 LANGUAGE
+	DA	Sprog
 	DE	Sprache
 	EN	Language
 	ES	Idioma
@@ -20,6 +22,7 @@ LANGUAGE
 	NL	Taal
 
 LANGUAGE_DE
+	DA	Deutsch
 	DE	Deutsch
 	EN	Deutsch
 	ES	Deutsch
@@ -28,6 +31,7 @@ LANGUAGE_DE
 	NL	Deutsch
 
 LANGUAGE_EN
+	DA	English
 	DE	English
 	EN	English
 	ES	English
@@ -36,6 +40,7 @@ LANGUAGE_EN
 	NL	English
 
 LANGUAGE_ES
+	DA	Español
 	DE	Español
 	EN	Español
 	ES	Español
@@ -44,6 +49,7 @@ LANGUAGE_ES
 	NL	Español
 
 LANGUAGE_FR
+	DA	Français
 	DE	Français
 	EN	Français
 	ES	Français
@@ -52,6 +58,7 @@ LANGUAGE_FR
 	NL	Français
 
 LANGUAGE_IT
+	DA	Italiano
 	DE	Italiano
 	EN	Italiano
 	ES	Italiano
@@ -60,6 +67,7 @@ LANGUAGE_IT
 	NL	Italiano
 
 LANGUAGE_NL
+	DA	Nederlands
 	DE	Nederlands
 	EN	Nederlands
 	ES	Nederlands
@@ -68,6 +76,7 @@ LANGUAGE_NL
 	NL	Nederlands
 
 CHOOSE_LANGUAGE_HELP
+	DA	Anvend rullehjulet til at vælge sprog. Tryk midterknappen for at fortsætte.
 	DE	Wählen Sie Ihre Sprache mit dem Rad aus. Drücken Sie zum Fortfahren die mittlere Taste.
 	EN	Use the wheel to choose your language. Press the center button to go on.
 	ES	Use el botón rueda para elegir el idioma. Pulse el botón central para continuar.

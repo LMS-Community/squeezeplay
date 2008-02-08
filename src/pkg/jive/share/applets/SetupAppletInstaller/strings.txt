@@ -1,4 +1,5 @@
 APPLET_INSTALLER
+	DA	Installation af miniprogram
 	DE	Applet-Installation
 	EN	Applet Installer
 	ES	Instalador de subprogramas
@@ -7,6 +8,7 @@ APPLET_INSTALLER
 	NL	Appletinstallatieprogr.
 
 INSTALL
+	DA	Installer
 	DE	Installieren
 	EN	Install
 	ES	Instalar
@@ -15,6 +17,7 @@ INSTALL
 	NL	Installeren
 
 NONE_FOUND
+	DA	Ingen miniprogram fundet
 	DE	Keine Applets gefunden
 	EN	No Applets Found
 	ES	No se han encontrado subprogramas
@@ -23,6 +26,7 @@ NONE_FOUND
 	NL	Geen applets gevonden
 
 HELP
+	DA	Vælg miniprogram som skal installeres fra SqueezeCenter og vælg Installer
 	DE	Wählen Sie die aus SqueezeCenter zu installierenden Applets und anschließend 'Installieren'
 	EN	Choose applets to be installed from SqueezeCenter and then select Install
 	ES	Elija los subprogramas que instalar desde SqueezeCenter y seleccione Instalar
@@ -31,6 +35,7 @@ HELP
 	NL	Kies de applets die vanuit SqueezeCenter geïnstalleerd moeten worden en selecteer dan Installeren
 
 DOWNLOADING
+	DA	\nHenter miniprogram
 	DE	Applets herunterladen
 	EN	\nDownloading Applets
 	ES	Descargando subprogramas
@@ -39,6 +44,7 @@ DOWNLOADING
 	NL	Applets worden gedownload
 
 RESTART_APP
+	DA	Genstart programmet for at anvende nye miniprogram
 	DE	Zum Nutzen neuer Applets Anwendung neu starten
 	EN	Restart application to make use of new applets
 	ES	Reiniciar aplicación para utilizar nuevos subprogramas
@@ -47,6 +53,7 @@ RESTART_APP
 	NL	Start de toepassing opnieuw om nieuwe applets te kunnen gebruiken
 
 RESTART_JIVE
+	DA	\nGenstarter
 	DE	\nNeustart
 	EN	\nRestarting
 	ES	\nReiniciando

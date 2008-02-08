@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SETUP_WELCOME
+	DA	Velkommen
 	DE	Willkommen
 	EN	Welcome
 	ES	Bienvenido
@@ -11,6 +12,7 @@ SETUP_WELCOME
 	NL	Welkom
 
 WELCOME
+	DA	Velkommen
 	DE	Willkommen
 	EN	Welcome
 	ES	Bienvenido
@@ -19,6 +21,7 @@ WELCOME
 	NL	Welkom
 
 WELCOME_WALKTHROUGH
+	DA	Lad os komme i gang med at tilslutte til dit netværk og din musik.
 	DE	Jetzt stellen wir die Verbindung zum Netzwerk und Ihrer Musik her.
 	EN	Let's get started by getting you connected to your network and music.
 	ES	Comencemos por realizar la conexión a la red y música.
@@ -27,6 +30,7 @@ WELCOME_WALKTHROUGH
 	NL	We gaan je eerst met je netwerk en muziek verbinden.
 
 WELCOME_HELP
+	DA	Tryk på midterknappen når du er klar til at fortsætte.
 	DE	Drücken Sie die mittlere Taste, wenn Sie so weit sind.
 	EN	Press the center button when you are ready to move on.
 	ES	Pulse el botón central cuando esté listo para continuar.
@@ -35,6 +39,7 @@ WELCOME_HELP
 	NL	Druk op de middelste knop wanneer je klaar bent om verder te gaan.
 
 DONE
+	DA	Færdig!
 	DE	Fertig!
 	EN	That's it!
 	ES	Y esto es todo.
@@ -43,6 +48,7 @@ DONE
 	NL	Klaar!
 
 DONE_CONTINUE
+	DA	Fortsæt
 	DE	Weiter
 	EN	Continue
 	ES	Continuar
@@ -51,6 +57,7 @@ DONE_CONTINUE
 	NL	Verdergaan
 
 DONE_HELP
+	DA	Du kan nu tilgå al din musik med Squeezebox Controlleren. Tryk på midterknappen for at fortsætte.
 	DE	Jetzt können Sie mit der Squeezebox Controller auf Ihre Musik zugreifen. Drücken Sie zum Fortfahren die mittlere Taste.
 	EN	Now you can use your Squeezebox Controller to access all your music. Press the center button to continue.
 	ES	Ya puede usar Squeezebox Controller para acceder a toda su música. Pulse el botón central para continuar.

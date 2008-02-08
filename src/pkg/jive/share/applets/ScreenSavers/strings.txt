@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SCREENSAVERS
+	DA	Pauseskærme
 	DE	Bildschirmschoner
 	EN	Screensavers
 	ES	Protectores de pantalla
@@ -11,6 +12,7 @@ SCREENSAVERS
 	NL	Schermbeveiligers
 
 SCREENSAVER_PLAYING
+	DA	Under afspilning
 	DE	Bei Wiedergabe
 	EN	When playing
 	ES	Al reproducir
@@ -19,6 +21,7 @@ SCREENSAVER_PLAYING
 	NL	Tijdens afspelen
 
 SCREENSAVER_STOPPED
+	DA	På pause
 	DE	Bei Pause
 	EN	When stopped
 	ES	Al detener
@@ -27,6 +30,7 @@ SCREENSAVER_STOPPED
 	NL	Wanneer gestopt
 
 SCREENSAVER_DELAY
+	DA	Forsinkelse
 	DE	Verzögerung
 	EN	Delay
 	ES	Retraso
@@ -35,6 +39,7 @@ SCREENSAVER_DELAY
 	NL	Vertraging
 
 SCREENSAVER_SELECT_HELP
+	DA	Tryk midterknappen for at vælge en pauseskærm, PLAY for forhåndsvisning.
 	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu suchen, und PLAY, um eine Vorschau anzuzeigen.
 	EN	Press the center button to choose a screensaver, play to preview.
 	ES	Pulse el botón central para elegir un protector de pantalla y el de reproducción para ver una vista previa.
@@ -43,6 +48,7 @@ SCREENSAVER_SELECT_HELP
 	NL	Druk op de middelste knop om een schermbeveiliger te kiezen. Druk op PLAY om een voorbeeld te bekijken.
 
 DELAY_10_SEC
+	DA	10 sekunder
 	DE	10 Sekunden
 	EN	10 seconds
 	ES	10 segundos
@@ -51,6 +57,7 @@ DELAY_10_SEC
 	NL	10 seconden
 
 DELAY_20_SEC
+	DA	20 sekunder
 	DE	20 Sekunden
 	EN	20 seconds
 	ES	20 segundos
@@ -59,6 +66,7 @@ DELAY_20_SEC
 	NL	20 seconden
 
 DELAY_30_SEC
+	DA	30 sekunder
 	DE	30 Sekunden
 	EN	30 seconds
 	ES	30 segundos
@@ -67,6 +75,7 @@ DELAY_30_SEC
 	NL	30 seconden
 
 DELAY_1_MIN
+	DA	1 minut
 	DE	1 Minute
 	EN	1 minute
 	ES	1 minuto
@@ -75,6 +84,7 @@ DELAY_1_MIN
 	NL	1 minuut
 
 DELAY_2_MIN
+	DA	2 minutter
 	DE	2 Minuten
 	EN	2 minutes
 	ES	2 minutos
@@ -83,6 +93,7 @@ DELAY_2_MIN
 	NL	2 minuten
 
 DELAY_5_MIN
+	DA	5 minutter
 	DE	5 Minuten
 	EN	5 minutes
 	ES	5 minutos
@@ -91,6 +102,7 @@ DELAY_5_MIN
 	NL	5 minuten
 
 DELAY_10_MIN
+	DA	10 minutter
 	DE	10 Minuten
 	EN	10 minutes
 	ES	10 minutos
@@ -99,6 +111,7 @@ DELAY_10_MIN
 	NL	10 minuten
 
 DELAY_30_MIN
+	DA	30 minutter
 	DE	30 Minuten
 	EN	30 minutes
 	ES	30 minutos
@@ -107,6 +120,7 @@ DELAY_30_MIN
 	NL	30 minuten
 
 SCREENSAVER_NONE
+	DA	Ingen
 	DE	Keine
 	EN	None
 	ES	Ninguno

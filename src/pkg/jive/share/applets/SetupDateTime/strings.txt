@@ -2,6 +2,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 DATETIME_TITLE
+	DA	Dato & Tid
 	DE	Datum & Zeit
 	EN	Date & Time
 	ES	Fecha & Hora
@@ -10,6 +11,7 @@ DATETIME_TITLE
 	NL	Datum & tijd
 
 DATETIME_TIMEFORMAT
+	DA	Format for tid
 	DE	Zeit Format
 	EN	Time Format
 	ES	Formato de hora
@@ -18,6 +20,7 @@ DATETIME_TIMEFORMAT
 	NL	Tijdnotatie
 
 DATETIME_TIMEFORMAT_12H
+	DA	12 timer
 	DE	12 Stunden
 	EN	12 hours
 	ES	12 horas
@@ -26,6 +29,7 @@ DATETIME_TIMEFORMAT_12H
 	NL	12 uur
 
 DATETIME_TIMEFORMAT_24H
+	DA	24 timer
 	DE	24 Stunden
 	EN	24 hours
 	ES	24 horas
@@ -34,6 +38,7 @@ DATETIME_TIMEFORMAT_24H
 	NL	24 uur
 
 DATETIME_DATEFORMAT
+	DA	Format for dato
 	DE	Datums Format
 	EN	Date Format
 	ES	Formato de fecha
@@ -42,6 +47,7 @@ DATETIME_DATEFORMAT
 	NL	Datumnotatie
 
 DATETIME_WEEKSTART
+	DA	Ugen starter
 	DE	Wochenstart
 	EN	Week Start
 	ES	La semana empieza el
@@ -50,6 +56,7 @@ DATETIME_WEEKSTART
 	NL	Begin van week
 
 DATETIME_MONDAY
+	DA	Mandag
 	DE	Montag
 	EN	Monday
 	ES	Lunes
@@ -58,6 +65,7 @@ DATETIME_MONDAY
 	NL	Maandag
 
 DATETIME_SUNDAY
+	DA	Søndag
 	DE	Sonntag
 	EN	Sunday
 	ES	Domingo

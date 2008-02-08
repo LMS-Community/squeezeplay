@@ -1,6 +1,7 @@
 #
 
 INFOBROWSER
+	DA	Informationslæser
 	DE	Informations-Browser
 	EN	Information Browser
 	ES	Navegador de información

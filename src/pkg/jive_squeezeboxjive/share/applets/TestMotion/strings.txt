@@ -4,6 +4,7 @@
 
 
 TEST_MOTION
+	DA	Bevægelses-sensor
 	DE	Bewegungsmelder
 	EN	Motion Detector
 	ES	Detector de movimiento
@@ -12,6 +13,7 @@ TEST_MOTION
 	NL	Bewegingsdetector
 
 TEST_MOTION_VALUE
+	DA	Værdi
 	DE	Wert
 	EN	Value
 	ES	Valor
@@ -20,6 +22,7 @@ TEST_MOTION_VALUE
 	NL	Waarde
 
 TEST_MOTION_MAX
+	DA	Max.
 	DE	Max.
 	EN	Max
 	ES	Máx.

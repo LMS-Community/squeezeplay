@@ -4,6 +4,7 @@
 #
 
 SQUEEZEBOX_SETUP
+	DA	Indstillinger for Receiver
 	DE	Squeezebox einrichten
 	EN	Set Up Receiver
 	ES	Configuración de Squeezebox
@@ -12,6 +13,7 @@ SQUEEZEBOX_SETUP
 	NL	Squeezebox instellen
 
 SQUEEZEBOX_NETWORK_CONNECTION
+	DA	Trådløs tilslutning
 	DE	Kabellose Verbindung
 	EN	Wireless Connection
 	ES	Conexión inalámbrica
@@ -20,6 +22,7 @@ SQUEEZEBOX_NETWORK_CONNECTION
 	NL	Draadloze verbinding
 
 SQUEEZEBOX_CONNECT_HELP
+	DA	Vælg hvordan din Squeezebox skal tilsluttes dit netværk.
 	DE	Bestimmen Sie, wie die Squeezebox mit dem Netzwerk verbunden werden soll.
 	EN	Choose how your Squeezebox should connect to your network.
 	ES	Elija cómo se conecta Squeezebox a la red.
@@ -28,6 +31,7 @@ SQUEEZEBOX_CONNECT_HELP
 	NL	Kies hoe je Squeezebox verbinding met je netwerk moet maken.
 
 SQUEEZEBOX_WIRELESS
+	DA	Trådløs
 	DE	Drahtlos
 	EN	Wireless
 	ES	Inalámbrica
@@ -36,6 +40,7 @@ SQUEEZEBOX_WIRELESS
 	NL	Draadloos
 
 SQUEEZEBOX_ETHERNET
+	DA	Ethernet
 	DE	Ethernet
 	EN	Ethernet
 	ES	Ethernet
@@ -44,6 +49,7 @@ SQUEEZEBOX_ETHERNET
 	NL	Ethernet
 
 SQUEEZEBOX_HELP
+	DA	Vælg hvilken Squeezebox Receiver du ønsker at indstille. Hvis den ikke er vist her skal du trykke og holde knappen på forsiden indtil den blinker.
 	DE	Wählen Sie die gewünschte SqueezeBox. Wird sie nicht angezeigt, halten Sie die Taste an der Vorderseite gedrückt, bis sie blinkt.
 	EN	Choose the Squeezebox Receiver you want to set up. If you don't see it here, press and hold the button on the front until it flashes.
 	ES	Seleccione el dispositivo Squeezebox que desee configurar. Si no lo encuentra aquí, mantenga pulsado el botón en la parte frontal hasta que empiece a emitir destellos.
@@ -52,6 +58,7 @@ SQUEEZEBOX_HELP
 	NL	Kies de Squeezebox die je wilt instellen. Staat deze niet in de lijst, houd dan de knop aan de voorkant ingedrukt totdat deze knippert.
 
 SQUEEZEBOX_FINDING_SOURCES
+	DA	Søger efter musikkilder
 	DE	Musikquellen werden gesucht
 	EN	Finding music sources
 	ES	Buscando fuentes de música
@@ -60,6 +67,7 @@ SQUEEZEBOX_FINDING_SOURCES
 	NL	Bezig met zoeken naar muziekbronnen
 
 SQUEEZEBOX_CONNECTING_TO
+	DA	Tilslutter til\n%s
 	DE	Verbindung mit %s
 	EN	Connecting to\n%s
 	ES	Conectando a %s
@@ -68,6 +76,7 @@ SQUEEZEBOX_CONNECTING_TO
 	NL	Er wordt een verbinding met %s gemaakt
 
 SQUEEZEBOX_SETUP_COMPLETE
+	DA	Din Squeezebox er nu sat op.
 	DE	Die Squeezebox ist eingerichtet.
 	EN	Your squeezebox is now set up.
 	ES	Se ha configurado Squeezebox.
@@ -76,6 +85,7 @@ SQUEEZEBOX_SETUP_COMPLETE
 	NL	Je Squeezebox is nu ingesteld.
 
 SQUEEZEBOX_PROBLEM
+	DA	Problem med tilslutning
 	DE	Verbindungsproblem
 	EN	Problem Connecting
 	ES	Problema de conexión
@@ -84,6 +94,7 @@ SQUEEZEBOX_PROBLEM
 	NL	Probleem bij verbinden
 
 SQUEEZEBOX_PROBLEM_TRY_AGAIN
+	DA	Forsøg igen
 	DE	Erneut versuchen.
 	EN	Try again
 	ES	Vuelva a intentarlo
@@ -92,6 +103,7 @@ SQUEEZEBOX_PROBLEM_TRY_AGAIN
 	NL	Opnieuw proberen
 
 SQUEEZEBOX_PROBLEM_SKIP
+	DA	Spring over dette trin
 	DE	Diesen Schritt überspringen
 	EN	Skip this step
 	ES	Omitir este paso
@@ -100,6 +112,7 @@ SQUEEZEBOX_PROBLEM_SKIP
 	NL	Deze stap overslaan
 
 SQUEEZEBOX_PROBLEM_HELP
+	DA	Kunne ikke tilslutte din Squeezebox til dit trådløse netværk. Sikre dig at den er indenfor rækkevidde for dit trådløse netværk.
 	DE	Die Squeezebox konnte nicht mit dem kabellosen Netzwerk verbunden werden. Vergewissern Sie sich, dass sie sich in Reichweite befindet.
 	EN	Couldn't connect your Squeezebox to your wireless network. Make sure it is within range of your wireless network.
 	ES	No se pudo conectar Squeezebox a la red inalámbrica. Compruebe que se encuentre dentro del radio de la red inalámbrica.
@@ -108,6 +121,7 @@ SQUEEZEBOX_PROBLEM_HELP
 	NL	Je Squeezebox kan niet met je draadloze netwerk worden verbonden. Zorg dat het apparaat zich binnen het bereik van je draadloze netwerk bevindt.
 
 SQUEEZEBOX_PROBLEM_LOST_CONNECTION
+	DA	(Forbindelse tabt).
 	DE	(Verbindung unterbrochen)
 	EN	(Lost connection).
 	ES	(Se ha perdido la conexión).
@@ -116,6 +130,7 @@ SQUEEZEBOX_PROBLEM_LOST_CONNECTION
 	NL	(Verbinding is verloren gegaan).
 
 SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX
+	DA	(Squeezebox tabt).
 	DE	(Squeezebox nicht verbunden)
 	EN	(Lost Squeezebox).
 	ES	(Squeezebox perdido).
@@ -124,6 +139,7 @@ SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX
 	NL	(Squeezebox is verloren gegaan).
 
 SQUEEZEBOX_PROBLEM_DHCP_ERROR
+	DA	(DHCP fejl).
 	DE	(DHCP-Fehler)
 	EN	(DHCP error).
 	ES	(Error de DHCP).
@@ -132,6 +148,7 @@ SQUEEZEBOX_PROBLEM_DHCP_ERROR
 	NL	(DHCP-fout).
 
 SQUEEZEBOX_PROBLEM_LOST_NETWORK
+	DA	(Netværk tabt).
 	DE	(Netzwerkverbindung unterbrochen)
 	EN	(Lost network).
 	ES	(Se ha perdido la red).
@@ -140,6 +157,7 @@ SQUEEZEBOX_PROBLEM_LOST_NETWORK
 	NL	(Netwerk is verloren gegaan).
 
 SQUEEZEBOX_PROBLEM_CONNECTION_ERROR
+	DA	(Fejl ved tilslutning).
 	DE	(Verbindungsfehler)
 	EN	(Connection error).
 	ES	(Error de conexión).
@@ -148,6 +166,7 @@ SQUEEZEBOX_PROBLEM_CONNECTION_ERROR
 	NL	(Verbindingsfout).
 
 SQUEEZEBOX_MUSIC_SOURCE
+	DA	Vælg musikkilde
 	DE	Musikquelle wählen
 	EN	Choose Music Source
 	ES	Elija fuente de música
@@ -156,6 +175,7 @@ SQUEEZEBOX_MUSIC_SOURCE
 	NL	Muziekbron kiezen
 
 SQUEEZEBOX_MUSIC_SOURCE_HELP
+	DA	Squeezeboxen %s er tilsluttet dit netværk. Vælg en musikkilde.
 	DE	Die Squeezebox %s ist mit dem Netzwerk verbunden. Wählen Sie eine Musikquelle.
 	EN	The Squeezebox %s is connected to your network. Choose a music source.
 	ES	Squeezebox %s está conectado a la red. Elija una fuente de música.
@@ -164,6 +184,7 @@ SQUEEZEBOX_MUSIC_SOURCE_HELP
 	NL	De Squeezebox %s is met je netwerk verbonden. Kies een muziekbron.
 
 SQUEEZEBOX_IP_ADDRESS
+	DA	IP adresse
 	DE	IP-Adresse
 	EN	IP Address
 	ES	Dirección IP
@@ -172,6 +193,7 @@ SQUEEZEBOX_IP_ADDRESS
 	NL	IP-adres
 
 SQUEEZEBOX_IP_ADDRESS_HELP
+	DA	Indtast IP adresse som denne Squeezebox skal anvende.
 	DE	Geben Sie die IP-Adresse für diese Squeezebox ein.
 	EN	Enter the IP address for this Squeezebox to use.
 	ES	Escriba la dirección IP que debe usar este Squeezebox.
@@ -180,6 +202,7 @@ SQUEEZEBOX_IP_ADDRESS_HELP
 	NL	Voer het IP-adres in voor de Squeezebox die gebruikt moet worden.
 
 SQUEEZEBOX_BRIDGED_NAME
+	DA	Squeezebox %s
 	DE	Squeezebox %s
 	EN	Squeezebox %s
 	ES	Squeezebox %s

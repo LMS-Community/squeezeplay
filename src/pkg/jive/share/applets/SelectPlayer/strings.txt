@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SELECT_PLAYER
+	DA	Vælg afspiller
 	DE	Player wählen
 	EN	Choose Player
 	ES	Elegir reproductor
@@ -11,6 +12,7 @@ SELECT_PLAYER
 	NL	Speler kiezen
 
 SQUEEZEBOX_SETUP
+	DA	Konfiguration af Squeezebox
 	DE	Squeezebox einrichten
 	EN	Set Up Squeezebox
 	ES	Configuración de Squeezebox
@@ -19,6 +21,7 @@ SQUEEZEBOX_SETUP
 	NL	Squeezebox instellen
 
 SQUEEZEBOX_NAME
+	DA	Squeezebox %s
 	DE	Squeezebox %s
 	EN	Squeezebox %s
 	ES	Squeezebox %s
@@ -27,6 +30,7 @@ SQUEEZEBOX_NAME
 	NL	Squeezebox %s
 
 SQUEEZEBOX_ACTIVATE
+	DA	Aktiver %s
 	DE	%s
 	EN	Activate %s
 	ES	%s

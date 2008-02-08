@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SCREENSAVER_BOUNCE
+	DA	Bump
 	DE	Boing
 	EN	Bounce
 	ES	Bote

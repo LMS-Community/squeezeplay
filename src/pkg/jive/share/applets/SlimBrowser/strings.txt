@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SLIMBROWSER_NOW_PLAYING
+	DA	Afspille nu
 	DE	Aktueller Titel
 	EN	Now Playing
 	ES	Reproduciendo
@@ -11,6 +12,7 @@ SLIMBROWSER_NOW_PLAYING
 	NL	Speelt nu
 
 SLIMBROWSER_CURRENT_PLAYLIST
+	DA	Aktiv spilleliste
 	DE	Aktuelle Wiedergabeliste
 	EN	Current Playlist
 	ES	Lista de reproducción actual
@@ -19,6 +21,7 @@ SLIMBROWSER_CURRENT_PLAYLIST
 	NL	Huidige playlist
 
 SLIMBROWSER_PAUSED
+	DA	Pause
 	DE	Pause
 	EN	Paused
 	ES	En pausa
@@ -27,6 +30,7 @@ SLIMBROWSER_PAUSED
 	NL	Gepauzeerd
 
 SLIMBROWSER_STOPPED
+	DA	Stop
 	DE	Angehalten
 	EN	Stopped
 	ES	Detenido
@@ -35,6 +39,7 @@ SLIMBROWSER_STOPPED
 	NL	Gestopt
 
 SLIMBROWSER_SEARCH_HELP
+	DA	Brug rullehjulet for at skifte bokstav og midterknappen for at vælge bokstav. Tryk midterknappen igen for at begynde søgning.
 	DE	Wählen Sie den gewünschten Buchstaben mit dem Rad und drücken Sie zum Bestätigen die mittlere Taste. Drücken Sie zum Starten der Suche die mittlere Taste erneut.
 	EN	Use the scroll wheel to change letters, then press the center button to select that letter. Press the center button again to start your search.
 	ES	Cambie de letra con la rueda de desplazamiento y pulse el botón central para seleccionarla. Pulse de nuevo el botón central para iniciar la búsqueda.
@@ -43,6 +48,7 @@ SLIMBROWSER_SEARCH_HELP
 	NL	Gebruik het scrollwiel om letters te wijzigen. Druk dan op de middelste knop om die letter te selecteren. Druk nogmaals op de middelste knop om je zoekopdracht te starten.
 
 SLIMBROWSER_PROBLEM_CONNECTING
+	DA	Problem med tilslutning
 	DE	Verbindungsproblem
 	EN	Problem Connecting
 	ES	Problema de conexión
@@ -51,6 +57,7 @@ SLIMBROWSER_PROBLEM_CONNECTING
 	NL	Probleem bij verbinden
 
 SLIMBROWSER_TRY_AGAIN
+	DA	Forsøg igen
 	DE	Erneut versuchen
 	EN	Try Again
 	ES	Vuelva a intentarlo
@@ -59,6 +66,7 @@ SLIMBROWSER_TRY_AGAIN
 	NL	Opnieuw proberen
 
 SLIMBROWSER_CHOOSE_MUSIC_SOURCE
+	DA	Vælg musikkilde
 	DE	Musikquelle wählen
 	EN	Choose Music Source
 	ES	Elija origen de música
@@ -67,6 +75,7 @@ SLIMBROWSER_CHOOSE_MUSIC_SOURCE
 	NL	Muziekbron kiezen
 
 SLIMBROWSER_CHOOSE_PLAYER
+	DA	Vælg afspiller
 	DE	Player auswählen
 	EN	Choose Player
 	ES	Elegir reproductor
@@ -75,6 +84,7 @@ SLIMBROWSER_CHOOSE_PLAYER
 	NL	Speler kiezen
 
 SLIMBROWSER_PROBLEM_CONNECTING_HELP
+	DA	%s har problemer med at tilslutte til %s
 	DE	Probleme beim Verbinden von %s mit %s
 	EN	%s is having trouble connecting to %s
 	ES	%s tiene problemas para conectarse a %s
@@ -83,6 +93,7 @@ SLIMBROWSER_PROBLEM_CONNECTING_HELP
 	NL	%s kan geen verbinding maken met %s
 
 SLIMBROWSER_NOTHING
+	DA	Intet
 	DE	Nichts
 	EN	Nothing
 	ES	Nada
@@ -91,6 +102,7 @@ SLIMBROWSER_NOTHING
 	NL	Niets
 
 SLIMBROWSER_OFF
+	DA	Sluk
 	DE	Aus
 	EN	Off
 	ES	Apagado
@@ -99,6 +111,7 @@ SLIMBROWSER_OFF
 	NL	Uit
 
 SLIMBROWSER_CONNECTING_TO
+	DA	tilslutter til\n%s
 	DE	Verbindung mit %s
 	EN	Connecting to\n%s
 	ES	Conectando a %s
@@ -107,6 +120,7 @@ SLIMBROWSER_CONNECTING_TO
 	NL	Er wordt een verbinding met %s gemaakt
 
 SLIMBROWSER_VOLUME
+	DA	Lydstyrke
 	DE	Lautstärke
 	EN	Volume
 	ES	Volumen
@@ -115,6 +129,7 @@ SLIMBROWSER_VOLUME
 	NL	Volume
 
 SLIMBROWSER_VOLUME_MUTED
+	DA	Lydstyrke (Lyd fra)
 	DE	Lautstärke (Stille)
 	EN	Volume (Muted)
 	ES	Volumen (Silenciado)

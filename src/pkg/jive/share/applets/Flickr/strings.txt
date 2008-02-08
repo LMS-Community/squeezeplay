@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SCREENSAVER_FLICKR
+	DA	Flickr
 	DE	Flickr
 	EN	Flickr
 	ES	Flickr
@@ -11,6 +12,7 @@ SCREENSAVER_FLICKR
 	NL	Flickr
 
 SCREENSAVER_FLICKR_SETTINGS
+	DA	Indstillinger for Flickr
 	DE	Flickr Einstellungen
 	EN	Flickr Settings
 	ES	Configuración de Flickr
@@ -19,6 +21,7 @@ SCREENSAVER_FLICKR_SETTINGS
 	NL	Flickr-instellingen
 
 SCREENSAVER_FLICKR_LOADING_PHOTO
+	DA	Flickr indlæser billede...
 	DE	Flickr lädt photo...
 	EN	Flickr loading photo...
 	ES	Flickr al cargar foto...
@@ -27,6 +30,7 @@ SCREENSAVER_FLICKR_LOADING_PHOTO
 	NL	Flickr is bezig met laden van foto...
 
 SCREENSAVER_FLICKR_ERROR
+	DA	Flickr fejl
 	DE	Flickr Fehler
 	EN	Flickr error
 	ES	Error de Flickr
@@ -35,6 +39,7 @@ SCREENSAVER_FLICKR_ERROR
 	NL	Flickr-fout
 
 SCREENSAVER_FLICKR_DELAY
+	DA	Hastighed
 	DE	Geschwindigkeit
 	EN	Speed
 	ES	Velocidad
@@ -43,6 +48,7 @@ SCREENSAVER_FLICKR_DELAY
 	NL	Snelheid
 
 SCREENSAVER_FLICKR_DELAY_10_SEC
+	DA	10 sek.
 	DE	10 Sek.
 	EN	10 sec
 	ES	10 s
@@ -51,6 +57,7 @@ SCREENSAVER_FLICKR_DELAY_10_SEC
 	NL	10 sec
 
 SCREENSAVER_FLICKR_DELAY_20_SEC
+	DA	20 sek.
 	DE	20 Sek.
 	EN	20 sec
 	ES	20 s
@@ -59,6 +66,7 @@ SCREENSAVER_FLICKR_DELAY_20_SEC
 	NL	20 sec
 
 SCREENSAVER_FLICKR_DELAY_30_SEC
+	DA	20 sek.
 	DE	30 Sek.
 	EN	30 sec
 	ES	30 s
@@ -67,6 +75,7 @@ SCREENSAVER_FLICKR_DELAY_30_SEC
 	NL	30 sec
 
 SCREENSAVER_FLICKR_DELAY_1_MIN
+	DA	1 min.
 	DE	1 Min.
 	EN	1 min
 	ES	1 m
@@ -75,6 +84,7 @@ SCREENSAVER_FLICKR_DELAY_1_MIN
 	NL	1 min
 
 SCREENSAVER_FLICKR_DISPLAY
+	DA	Skærm
 	DE	Anzeige
 	EN	Display
 	ES	Mostrar
@@ -83,6 +93,7 @@ SCREENSAVER_FLICKR_DISPLAY
 	NL	Weergeven
 
 SCREENSAVER_FLICKR_DISPLAY_OWN
+	DA	Mine billeder
 	DE	Meine eigenen Bilder
 	EN	My own pictures
 	ES	Mis imágenes
@@ -91,6 +102,7 @@ SCREENSAVER_FLICKR_DISPLAY_OWN
 	NL	Mijn eigen foto's
 
 SCREENSAVER_FLICKR_DISPLAY_CONTACTS
+	DA	Mine kontakters billeder
 	DE	Bilder meiner Kontakte
 	EN	My contacts' pictures
 	ES	Imágenes de mis contactos
@@ -99,6 +111,7 @@ SCREENSAVER_FLICKR_DISPLAY_CONTACTS
 	NL	Foto's van mijn contacten
 
 SCREENSAVER_FLICKR_DISPLAY_INTERESTING
+	DA	Interessante billeder
 	DE	Interessante Bilder
 	EN	Interesting pictures
 	ES	Imágenes interesantes
@@ -107,6 +120,7 @@ SCREENSAVER_FLICKR_DISPLAY_INTERESTING
 	NL	Interessante foto's
 
 SCREENSAVER_FLICKR_DISPLAY_RECENT
+	DA	Nylig tilføjede billeder
 	DE	Neu hinzugefügte Bilder
 	EN	Recently added pictures
 	ES	Imágenes agregadas recientemente
@@ -115,6 +129,7 @@ SCREENSAVER_FLICKR_DISPLAY_RECENT
 	NL	Recent toegevoegde foto's
 
 SCREENSAVER_FLICKR_FLICKR_ID
+	DA	Flickr bruger
 	DE	Flickr Benutzer
 	EN	Flickr User
 	ES	Usuario de Flickr
@@ -123,6 +138,7 @@ SCREENSAVER_FLICKR_FLICKR_ID
 	NL	Flickr-gebruiker
 
 SCREENSAVER_FLICKR_FLICKR_ID_HELP
+	DA	Indtast venligst dit Flickr brugernavn eller din e-post adresse.
 	DE	Bitte geben Sie Ihren Flickr Benutzernamen oder Ihre Email-Adresse ein
 	EN	Please enter your Flickr Username or your Email address
 	ES	Introduzca su nombre de usuario de Flickr o su dirección de correo electrónico
@@ -131,6 +147,7 @@ SCREENSAVER_FLICKR_FLICKR_ID_HELP
 	NL	Voer je Flickr-gebruikersnaam of je e-mailadres in.
 
 SCREENSAVER_FLICKR_TRANSITION
+	DA	Overgange
 	DE	Übergänge
 	EN	Transitions
 	ES	Transiciones
@@ -139,6 +156,7 @@ SCREENSAVER_FLICKR_TRANSITION
 	NL	Overgangen
 
 SCREENSAVER_FLICKR_TRANSITION_RANDOM
+	DA	Blandede overgange
 	DE	Zufällige Übergänge
 	EN	Random transitions
 	ES	Transiciones aleatorias
@@ -147,6 +165,7 @@ SCREENSAVER_FLICKR_TRANSITION_RANDOM
 	NL	Willekeurige overgangen
 
 SCREENSAVER_FLICKR_TRANSITION_INSIDE_OUT
+	DA	Blød overgang indefra-ud
 	DE	von innen nach aussen
 	EN	Fade inside-out
 	ES	Fundido dentro-afuera
@@ -155,6 +174,7 @@ SCREENSAVER_FLICKR_TRANSITION_INSIDE_OUT
 	NL	Faden: binnen-buiten
 
 SCREENSAVER_FLICKR_TRANSITION_TOP_DOWN
+	DA	Blød overgang top-bund
 	DE	von oben nach unten
 	EN	Fade top-down
 	ES	Fundido arriba-abajo
@@ -163,6 +183,7 @@ SCREENSAVER_FLICKR_TRANSITION_TOP_DOWN
 	NL	Faden: boven-onder
 
 SCREENSAVER_FLICKR_TRANSITION_BOTTOM_UP
+	DA	Blød overgang bund-top
 	DE	von unten nach oben
 	EN	Fade bottom-up
 	ES	Fundido abajo-arriba
@@ -171,6 +192,7 @@ SCREENSAVER_FLICKR_TRANSITION_BOTTOM_UP
 	NL	Faden: onder-boven
 
 SCREENSAVER_FLICKR_TRANSITION_LEFT_RIGHT
+	DA	Blød overgang venstre-højre
 	DE	von links nach rechts
 	EN	Fade left-right
 	ES	Fundido izquierda-derecha
@@ -179,6 +201,7 @@ SCREENSAVER_FLICKR_TRANSITION_LEFT_RIGHT
 	NL	Faden: links-rechts
 
 SCREENSAVER_FLICKR_TRANSITION_RIGHT_LEFT
+	DA	Blød overgang højre-venstre
 	DE	von rechts nach links
 	EN	Fade right-left
 	ES	Fundido derecha-izquierda
@@ -187,6 +210,7 @@ SCREENSAVER_FLICKR_TRANSITION_RIGHT_LEFT
 	NL	Faden: rechts-links
 
 SCREENSAVER_FLICKR_NETWORK_ERROR
+	DA	Der ser ud til at være problem med netværket.\n\nTryk en vilkårlig knap for at fortsætte.
 	DE	Es scheint ein Netzwerk-Problem zu bestehen.\n\nBitte drücken Sie eine Taste für weiter.
 	EN	There seems to be a network problem.\n\nPress any key to continue.
 	ES	Parece haber un problema de red.\n\nPulse una tecla cualquiera para continuar.
@@ -195,6 +219,7 @@ SCREENSAVER_FLICKR_NETWORK_ERROR
 	NL	Er is schijnbaar een netwerkprobleem.\n\nDruk op een willekeurige knop om verder te gaan.
 
 SCREENSAVER_FLICKR_USERID_ERROR
+	DA	Det indtastede Flickr ID kunne ikke identificeres med en Flickr brugerkonto. Korriger venligst din indtastning.\n\nTryk en vilkårlig tast for at fortsætte.
 	DE	Für den eingegebenen Flickr Benutzernamen kann keine Flickr ID gefunden werden. Bitte korrigieren Sie ihre Eingabe.\n\nBitte drücken Sie eine Taste für weiter.
 	EN	The entered flickr id could not be resolved to a flicker user account! Please correct your entry.\n\nPress any key to continue.
 	ES	El ID de Flickr indicado no se ha podido resolver en una cuenta de usuario de Flickr. Debe corregir el ID.\n\nPulse una tecla cualquiera para continuar.
@@ -203,6 +228,7 @@ SCREENSAVER_FLICKR_USERID_ERROR
 	NL	De ingevoerde Flickr-ID kan niet worden opgehaald voor een Flickr-gebruikersaccount! Corrigeer je invoer.\n\nDruk op een willekeurige knop om verder te gaan.
 
 SCREENSAVER_FLICKR_INVALID_DISPLAY_OPTION
+	DA	Dit Flickr ID er ikke sat. Set venligst et gyldigt Flickr ID, eller vælg et andet visningsvalg.\n\nTryk en vilkårlig knap for at fortsætte.
 	DE	Ihre Flickr ID ist noch nicht gesetzt. Bitte setzen Sie die Flickr ID, oder wählen Sie eine andere Anzeige-Option.\n\nBitte drücken Sie eine Taste für weiter.
 	EN	Your flickr id is not set yet. Please set a valid flickr id, or choose another display option.\n\nPress any key to continue.
 	ES	Aún no hay un ID de Flickr configurado. Indique un ID válido o elija otra opción de pantalla.\n\nPulse una tecla cualquiera para continuar.

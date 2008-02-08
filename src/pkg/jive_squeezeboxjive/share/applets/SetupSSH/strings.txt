@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SSH
+	DA	Fjern logind
 	DE	Remote-Anmeldung
 	EN	Remote Login
 	ES	Inicio de sesión remoto
@@ -11,6 +12,7 @@ SSH
 	NL	Externe aanmelding
 
 SSH_ENABLE
+	DA	Aktiver SSH
 	DE	SSH aktivieren
 	EN	Enable SSH
 	ES	Activar SSH
@@ -19,6 +21,7 @@ SSH_ENABLE
 	NL	SSH inschakelen
 
 SSH_HOWTO
+	DA	Root kodeordet for denne enhed er %s og du kan tilslutte til den på adressen %s
 	DE	Root-Kennwort dieses Geräts ist %s und Sie über Adresse %s eine Verbindung herstellen.
 	EN	The root password for this device is %s and you can connect to it on address %s
 	ES	La contraseña de ruta para este dispositivo es %s y se puede conectar en %s

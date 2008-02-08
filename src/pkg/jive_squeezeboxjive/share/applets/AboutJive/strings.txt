@@ -4,6 +4,7 @@
 
 
 ABOUT_JIVE
+	DA	Om
 	DE	Über
 	EN	About
 	ES	Acerca de
@@ -12,6 +13,7 @@ ABOUT_JIVE
 	NL	Info
 
 ABOUT_COPYRIGHT
+	DA	Copyright 2007-2008, Logitech.
 	DE	Copyright 2007-2008, Logitech.
 	EN	Copyright 2007-2008, Logitech.
 	ES	Copyright 2007-2008, Logitech.
@@ -20,6 +22,7 @@ ABOUT_COPYRIGHT
 	NL	Copyright 2007-2008, Logitech.
 
 ABOUT_MAC_ADDRESS
+	DA	MAC-adresse: %s
 	DE	MAC-Adresse: %s
 	EN	MAC Address: %s
 	ES	Dirección MAC: %s
@@ -28,6 +31,7 @@ ABOUT_MAC_ADDRESS
 	NL	MAC-adres: %s
 
 ABOUT_CREDITS
+	DA	Krediteringer:
 	DE	Mitwirkende:
 	EN	Credits:
 	ES	Créditos:
@@ -36,6 +40,7 @@ ABOUT_CREDITS
 	NL	Credits:
 
 ABOUT_VERSION
+	DA	Version:
 	DE	Version:
 	EN	Version:
 	ES	Versión:
@@ -44,6 +49,7 @@ ABOUT_VERSION
 	NL	Versie:
 
 ABOUT_ALL_RIGHTS_RESERVED
+	DA	Alle rettigheder reserveret
 	DE	Alle Rechte vorbehalten
 	EN	All Rights Reserved
 	ES	Reservados todos los derechos

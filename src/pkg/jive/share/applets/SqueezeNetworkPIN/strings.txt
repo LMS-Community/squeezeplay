@@ -1,4 +1,5 @@
 SQUEEZENETWORK_PIN_TITLE
+	DA	Aktiver konto
 	DE	Konto aktivieren
 	EN	Activate Account
 	ES	Activar cuenta
@@ -7,6 +8,7 @@ SQUEEZENETWORK_PIN_TITLE
 	NL	Account activeren
 
 SQUEEZENETWORK_PIN
+	DA	Afspiller PIN: %s
 	DE	Player-PIN: %s
 	EN	Player PIN: %s
 	ES	PIN de reproductor: %s
@@ -15,6 +17,7 @@ SQUEEZENETWORK_PIN
 	NL	Speler-PIN: %s
 
 SQUEEZENETWORK_PIN_HELP
+	DA	Gå til \n%s\nog indtast din PIN for at tilslutte til din konto. Tryk midterknappen efter du har indtastet din PIN.
 	DE	Gehen Sie zu\n%s\nund geben Sie Ihre PIN ein, um eine Verbindung zum Konto herzustellen. Drücken Sie anschließend die mittlere Taste.
 	EN	Visit\n%s\nand enter your PIN to connect to your account.  Press the center button after you have entered your PIN.
 	ES	Visite\n%s\ne introduzca el PIN para conectarse a si cuenta. Cuando haya introducido el PIN, pulse el botón central.
@@ -23,6 +26,7 @@ SQUEEZENETWORK_PIN_HELP
 	NL	Ga naar\n%s\nen voer je pincode in om naar je account te gaan. Druk op de middelste knop nadat je je pincode hebt ingevoerd.
 
 SQUEEZENETWORK_NOT_LINKED
+	DA	Din PIN kunne ikke bekræftes. Har du indtastet den på web-siden?
 	DE	Ihre PIN konnte nicht bestätigt werden. Haben Sie sie auf der Website eingegeben?
 	EN	Could not verify your PIN.  Have you entered it on the website?
 	ES	No se ha podido verificar el PIN. ¿Lo ha introducido en el sitio Web?
@@ -31,6 +35,7 @@ SQUEEZENETWORK_NOT_LINKED
 	NL	Pincode kan niet worden geverifieerd. Heb je deze op de website ingevoerd?
 
 SQUEEZENETWORK_GO_BACK
+	DA	Tilbage
 	DE	Zurück
 	EN	Go back
 	ES	Regresar

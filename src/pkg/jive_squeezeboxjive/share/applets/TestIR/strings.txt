@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 TEST_IR
+	DA	Infrarød
 	DE	Infrarot
 	EN	Infrared
 	ES	Infrarrojos

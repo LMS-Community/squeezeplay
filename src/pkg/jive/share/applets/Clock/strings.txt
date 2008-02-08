@@ -4,6 +4,7 @@
 
 
 SCREENSAVER_CLOCK
+	DA	Ur
 	DE	Uhr
 	EN	Clock
 	ES	Reloj
@@ -12,6 +13,7 @@ SCREENSAVER_CLOCK
 	NL	Klok
 
 SCREENSAVER_CLOCK_SETTINGS
+	DA	Indstillinger for Ur
 	DE	Uhr Einstellungen
 	EN	Clock Settings
 	ES	Configuración de reloj
@@ -20,6 +22,7 @@ SCREENSAVER_CLOCK_SETTINGS
 	NL	Klokinstellingen
 
 SCREENSAVER_CLOCK_TYPE
+	DA	Ur type
 	DE	Uhr Typ
 	EN	Clock Type
 	ES	Tipo de reloj
@@ -28,6 +31,7 @@ SCREENSAVER_CLOCK_TYPE
 	NL	Type klok
 
 SCREENSAVER_CLOCK_STYLE_ANALOG
+	DA	Analogt Ur
 	DE	Analoguhr
 	EN	Analog Clock
 	ES	Reloj analógico
@@ -36,6 +40,7 @@ SCREENSAVER_CLOCK_STYLE_ANALOG
 	NL	Analoge klok
 
 SCREENSAVER_CLOCK_STYLE_DIGITALSIMPLE
+	DA	Digitalt Ur
 	DE	Digitaluhr
 	EN	Digital Clock
 	ES	Reloj digital
@@ -44,6 +49,7 @@ SCREENSAVER_CLOCK_STYLE_DIGITALSIMPLE
 	NL	Digitale klok
 
 SCREENSAVER_CLOCK_STYLE_DIGITALSTYLED
+	DA	Elegant Ur
 	DE	Elegante Uhr
 	EN	Block Clock
 	ES	Reloj con estilo
@@ -52,6 +58,7 @@ SCREENSAVER_CLOCK_STYLE_DIGITALSTYLED
 	NL	Gestileerde klok
 
 SCREENSAVER_CLOCK_STYLE_DIGITALDETAILED
+	DA	Klassisk Ur
 	DE	Beschriftete Uhr
 	EN	Classic Clock
 	ES	Reloj detallado

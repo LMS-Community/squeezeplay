@@ -1,3 +1,4 @@
 
 MACRO_PLAY
+	DA	Makro for afspil
 	EN	Play Macro

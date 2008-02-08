@@ -4,6 +4,7 @@
 #
 
 NETWORK
+	DA	Trådløst netværk
 	DE	Kabelloses Netzwerk
 	EN	Wireless Network
 	ES	Red inalámbrica
@@ -12,6 +13,7 @@ NETWORK
 	NL	Draadloos netwerk
 
 NETWORK_FINDING_NETWORKS
+	DA	\nSøger netværk
 	DE	\nNetzwerksuche
 	EN	\nFinding Networks
 	ES	\nBuscando redes
@@ -20,6 +22,7 @@ NETWORK_FINDING_NETWORKS
 	NL	\nBezig met zoeken naar netwerken
 
 NETWORK_BSSID
+	DA	BSSID:
 	DE	BSSID:
 	EN	BSSID:
 	ES	BSSID:
@@ -28,6 +31,7 @@ NETWORK_BSSID
 	NL	BSSID:
 
 NETWORK_ENCRYPTION
+	DA	Kryptering:
 	DE	Verschlüsselung:
 	EN	Encryption:
 	ES	Cifrado:
@@ -36,6 +40,7 @@ NETWORK_ENCRYPTION
 	NL	Codering:
 
 NETWORK_CONNECT_TO_NETWORK
+	DA	Tilslut til netværk
 	DE	Verbindung zum Netzwerk herstellen
 	EN	Connect to network
 	ES	Conectar a red
@@ -44,6 +49,7 @@ NETWORK_CONNECT_TO_NETWORK
 	NL	Verbinding met netwerk maken
 
 NETWORK_ENTER_ANOTHER_NETWORK
+	DA	Andet netværk
 	DE	Anderes Netzwerk
 	EN	Other Network
 	ES	Otra red
@@ -52,6 +58,7 @@ NETWORK_ENTER_ANOTHER_NETWORK
 	NL	Ander netwerk
 
 NETWORK_FORGET_NETWORK
+	DA	Glem netværk
 	DE	Netzwerk vergessen
 	EN	Forget network
 	ES	Olvidar red
@@ -60,6 +67,7 @@ NETWORK_FORGET_NETWORK
 	NL	Netwerk vergeten
 
 NETWORK_FORGET_CANCEL
+	DA	Afbryd
 	DE	Abbrechen
 	EN	Cancel
 	ES	Cancelar
@@ -68,6 +76,7 @@ NETWORK_FORGET_CANCEL
 	NL	Annuleren
 
 NETWORK_FORGET_CONFIRM
+	DA	Glem %s
 	DE	%s vergessen
 	EN	Forget %s
 	ES	Olvidar %s
@@ -76,6 +85,7 @@ NETWORK_FORGET_CONFIRM
 	NL	%s vergeten
 
 NETWORK_FORGET_HELP
+	DA	Vælg Glem %s for at bekræfte at du vil fjerne indstillinger for dette netværk.
 	DE	Wählen Sie "%s vergessen", um zu bestätigen, dass diese Einstellungen nicht mehr relevant sind.
 	EN	Choose Forget %s to confirm that you want to forget the settings for this network.
 	ES	Elija Olvidar %s para confirmar que desea olvidar la configuración para esta red.
@@ -84,6 +94,7 @@ NETWORK_FORGET_HELP
 	NL	Kies '%s vergeten' om te bevestigen dat de instellingen voor dit netwerk vergeten moeten worden.
 
 NETWORK_FORGOTTEN
+	DA	Glemmmer
 	DE	Vergessen
 	EN	Forgotting
 	ES	Olvidando
@@ -92,6 +103,7 @@ NETWORK_FORGOTTEN
 	NL	Bezig met vergeten
 
 NETWORK_FORGOTTEN_NETWORK
+	DA	Glemt %s
 	DE	%s vergessen
 	EN	Forgotten %s
 	ES	Olvidando %s
@@ -100,6 +112,7 @@ NETWORK_FORGOTTEN_NETWORK
 	NL	%s wordt vergeten
 
 NETWORK_NF
+	DA	NF:
 	DE	NF:
 	EN	NF:
 	ES	No encontrada:
@@ -108,6 +121,7 @@ NETWORK_NF
 	NL	NF:
 
 NETWORK_RSSI
+	DA	RSSI:
 	DE	RSSI:
 	EN	RSSI:
 	ES	RSSI:
@@ -116,6 +130,7 @@ NETWORK_RSSI
 	NL	RSSI:
 
 NETWORK_SSID
+	DA	SSID:
 	DE	SSID:
 	EN	SSID:
 	ES	SSID:
@@ -124,6 +139,7 @@ NETWORK_SSID
 	NL	SSID:
 
 NETWORK_SNR
+	DA	SNR:
 	DE	SNR:
 	EN	SNR:
 	ES	SNR:
@@ -132,10 +148,12 @@ NETWORK_SNR
 	NL	SNR:
 
 NETWORK_BITRATE
+	DA	Tx rate:
 	EN	Tx rate:
 
 
 NETWORK_STATE
+	DA	Tilstand:
 	DE	Zustand:
 	EN	State:
 	ES	Estado:
@@ -144,6 +162,7 @@ NETWORK_STATE
 	NL	Status:
 
 NETWORK_STATE_DISCONNECTED
+	DA	Ikke tilsluttet
 	DE	Getrennt
 	EN	Disconnected
 	ES	Desconectado
@@ -152,6 +171,7 @@ NETWORK_STATE_DISCONNECTED
 	NL	Verbinding verbroken
 
 NETWORK_STATE_SCANNING
+	DA	Søger...
 	DE	Suche...
 	EN	Scanning
 	ES	Examinando
@@ -160,6 +180,7 @@ NETWORK_STATE_SCANNING
 	NL	Bezig met scannen
 
 NETWORK_STATE_CONNECTING
+	DA	Tilslutter
 	DE	Verbindung
 	EN	Connecting
 	ES	Conectando
@@ -168,6 +189,7 @@ NETWORK_STATE_CONNECTING
 	NL	Bezig met verbinden
 
 NETWORK_STATE_HANDSHAKE
+	DA	Forhandler
 	DE	Handshake
 	EN	Handshake
 	ES	Enlace
@@ -176,6 +198,7 @@ NETWORK_STATE_HANDSHAKE
 	NL	Handshake
 
 NETWORK_STATE_CONNECTED
+	DA	Tilsluttet
 	DE	Verbunden
 	EN	Connected
 	ES	Conectado
@@ -184,6 +207,7 @@ NETWORK_STATE_CONNECTED
 	NL	Verbonden
 
 NETWORK_STATUS
+	DA	Status for netværk
 	DE	Netzwerkstatus
 	EN	Network Status
 	ES	Estado de red
@@ -192,6 +216,7 @@ NETWORK_STATUS
 	NL	Netwerkstatus
 
 NETWORK_UNSUPPORTED_TYPES_HELP
+	DA	WPA-EAP og WPA2-EAP er ikke understøttet.
 	DE	WPA-EAP und WPA2-EAP werden nicht unterstützt.
 	EN	WPA-EAP and WPA2-EAP are not supported encryption types.
 	ES	WPA-EAP y WPA2-EAP no son tipos de cifrado admitidos.
@@ -200,6 +225,7 @@ NETWORK_UNSUPPORTED_TYPES_HELP
 	NL	De coderingstypen WPA-EAP en WPA2-EAP worden niet ondersteund.
 
 NETWORK_WIRELESS_KEY
+	DA	Trådløs nøgle
 	DE	WEP-Schlüssel
 	EN	Wireless Key
 	ES	Clave inalámbrica
@@ -208,6 +234,7 @@ NETWORK_WIRELESS_KEY
 	NL	Draadloze sleutel
 
 NETWORK_WIRELESS_KEY_HELP
+	DA	Indtast din trådløse nøgle. Rul for at skifte tegn, tryk midterknappen for at vælge tegn. Tryk midterknappen to gange for at afslutte.
 	DE	Geben Sie den WEP-Schlüssel ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der mittleren Taste. Drücken Sie zum Beenden die mittlere Taste zweimal.
 	EN	Enter your wireless key. Scroll to change letters, press the center button to choose that letter. Press the center button twice to finish.
 	ES	Escriba la clave inalámbrica. Desplace la rueda para cambiar de letra y pulse el botón central para elegirla. Pulse dos veces el botón central para terminar.
@@ -216,6 +243,7 @@ NETWORK_WIRELESS_KEY_HELP
 	NL	Voer je draadloze sleutel in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
 
 NETWORK_REGION
+	DA	Trådløst område
 	DE	Wireless-Region
 	EN	Wireless Region
 	ES	Región inalámbrica
@@ -224,6 +252,7 @@ NETWORK_REGION
 	NL	Draadloze regio
 
 NETWORK_REGION_US
+	DA	USA og Mexico
 	DE	USA und Mexiko
 	EN	United States & Mexico
 	ES	Estados Unidos y México
@@ -232,6 +261,7 @@ NETWORK_REGION_US
 	NL	Verenigde Staten en Mexico
 
 NETWORK_REGION_CA
+	DA	Canada
 	DE	Kanada
 	EN	Canada
 	ES	Canadá
@@ -240,6 +270,7 @@ NETWORK_REGION_CA
 	NL	Canada
 
 NETWORK_REGION_EU
+	DA	Europa
 	DE	Europa
 	EN	Europe
 	ES	Europa
@@ -248,6 +279,7 @@ NETWORK_REGION_EU
 	NL	Europa
 
 NETWORK_REGION_FR
+	DA	Frankrige
 	DE	Frankreich
 	EN	France
 	ES	Francia
@@ -256,6 +288,7 @@ NETWORK_REGION_FR
 	NL	Frankrijk
 
 NETWORK_REGION_AU
+	DA	Australien
 	DE	Australien
 	EN	Australia
 	ES	Australia
@@ -264,6 +297,7 @@ NETWORK_REGION_AU
 	NL	Australië
 
 NETWORK_REGION_JP
+	DA	Japan
 	DE	Japan
 	EN	Japan
 	ES	Japón
@@ -272,6 +306,7 @@ NETWORK_REGION_JP
 	NL	Japan
 
 NETWORK_REGION_CH
+	DA	Kina
 	DE	China
 	EN	China
 	ES	China
@@ -280,6 +315,7 @@ NETWORK_REGION_CH
 	NL	China
 
 NETWORK_REGION_TW
+	DA	Taiwan
 	DE	Taiwan
 	EN	Taiwan
 	ES	Taiwan
@@ -288,6 +324,7 @@ NETWORK_REGION_TW
 	NL	Taiwan
 
 NETWORK_REGION_HELP
+	DA	Vælg dit lokale område eller land.
 	DE	Wählen Sie Region oder Land.
 	EN	Choose the local region or country.
 	ES	Elija la región o el país.
@@ -296,6 +333,7 @@ NETWORK_REGION_HELP
 	NL	Kies de regio of het land.
 
 NETWORK_WIRELESS_NETWORKS
+	DA	Trådløse netværk
 	DE	Kabellose Netzwerke
 	EN	Wireless Networks
 	ES	Redes inalámbricas
@@ -304,6 +342,7 @@ NETWORK_WIRELESS_NETWORKS
 	NL	Draadloze netwerken
 
 NETWORK_SETTINGS_HELP
+	DA	For at skifte til, eller glemme, et netværk skal du vælge netværksnavnet. For at tilføje et netværk, vælg Andet netværk.
 	DE	Wählen Sie den zu ändernden oder zu entfernenden Netzwerknamen aus. Wählen Sie "Anderes Netzwerk", um eines hinzuzufügen.
 	EN	To change to or forget about a network, select the network name. To add a network not listed above, choose Other Network.
 	ES	Para cambiar a una red u olvidar una red, seleccione el nombre de la red. Para agregar una red que no esté en la lista, elija Otra red.
@@ -312,6 +351,7 @@ NETWORK_SETTINGS_HELP
 	NL	Selecteer de netwerknaam om een netwerk te wijzigen of te vergeten. Kies 'Ander netwerk' om een netwerk toe te voegen dat hierboven niet wordt genoemd.
 
 NETWORK_SETUP_HELP
+	DA	Vælg dit trådløse netværk.
 	DE	Wählen Sie Ihr kabelloses Netzwerk.
 	EN	Choose your wireless network.
 	ES	Elija la red inalámbrica.
@@ -320,6 +360,7 @@ NETWORK_SETUP_HELP
 	NL	Kies je draadloze netwerk.
 
 NETWORK_WIRELESS_ENCRYPTION
+	DA	Trådløs kryptering
 	DE	Kabellose Verschlüsselung
 	EN	Wireless Encryption
 	ES	Cifrado inalámbrico
@@ -328,6 +369,7 @@ NETWORK_WIRELESS_ENCRYPTION
 	NL	Draadloze codering
 
 NETWORK_NO_ENCRYPTION
+	DA	Ingen kodeord/ingen kryptering
 	DE	Kein Kennwort/keine Verschlüsselung
 	EN	No password/no encryption
 	ES	Sin contraseña/sin cifrado
@@ -336,6 +378,7 @@ NETWORK_NO_ENCRYPTION
 	NL	Geen wachtwoord/geen codering
 
 NETWORK_WEP_64
+	DA	64 Bit WEP
 	DE	64-Bit-WEP
 	EN	64-bit WEP
 	ES	WEP de 64 bits
@@ -344,6 +387,7 @@ NETWORK_WEP_64
 	NL	64-bits WEP
 
 NETWORK_WEP_128
+	DA	128 Bit WEP
 	DE	128-Bit-WEP
 	EN	128-bit WEP
 	ES	WEP de 128 bits
@@ -352,6 +396,7 @@ NETWORK_WEP_128
 	NL	128-bits WEP
 
 NETWORK_WPA
+	DA	WPA Personlig
 	DE	WPA-Personal
 	EN	WPA Personal
 	ES	WPA personal
@@ -360,6 +405,7 @@ NETWORK_WPA
 	NL	WPA (persoonlijk)
 
 NETWORK_WPA2
+	DA	WPA2 Personlig
 	DE	WPA2-Personal
 	EN	WPA2 Personal
 	ES	WPA2 personal
@@ -368,6 +414,7 @@ NETWORK_WPA2
 	NL	WPA2 (persoonlijk)
 
 NETWORK_WIRELESS_ENCRYPTION_HELP
+	DA	Vælg størrelsen på krypteringsnøglen dit netværk anvender. Nøglen kan bestå af tal 0-9 og bokstaver A-F. 64 Bit nøgler er 10 tegn lange, 128 Bit nøgler 26 tegn lange.
 	DE	Wählen Sie die im Netzwerk verwendete Verschlüsselung.
 	EN	Choose the size of encryption key that your network uses. The key may include digits 0-9 and letters A-F. 64-bit keys are 10 digits long, 128-bit networks are 26 digits long.
 	ES	Elija el tipo de cifrado que utiliza la red.
@@ -376,6 +423,7 @@ NETWORK_WIRELESS_ENCRYPTION_HELP
 	NL	Kies het type codering dat je netwerk gebruikt.
 
 NETWORK_WIRELESS_PASSWORD
+	DA	Trådløst kodeord
 	DE	Netzwerkkennwort
 	EN	Wireless Password
 	ES	Contraseña para red inalámbrica
@@ -384,6 +432,7 @@ NETWORK_WIRELESS_PASSWORD
 	NL	Draadloos wachtwoord
 
 NETWORK_WIRELESS_PASSWORD_HELP
+	DA	Indtast trådløst kodeord. Rul for at skifte bokstaver, tryk midterknappen for at vælge. Tryk midterknappen to gange for at afslutte.
 	DE	Geben Sie Ihr Netzwerkkennwort ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der mittleren Taste. Drücken Sie die mittlere Taste zweimal zum Beenden.
 	EN	Enter your wireless password. Scroll to change letters, press the center button to choose that letter. Press center button twice to finish.
 	ES	Escriba la contraseña para red inalámbrica. Desplácese para cambiar de letra y pulse el botón central para elegir una letra. Pulse dos veces el botón central para terminar.
@@ -392,6 +441,7 @@ NETWORK_WIRELESS_PASSWORD_HELP
 	NL	Voer je draadloze wachtwoord in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
 
 NETWORK_CONNECTING_TO
+	DA	Tilslutter til \n%s
 	DE	Verbindung mit\n%s
 	EN	Connecting to\n%s
 	ES	Estableciendo conexión a\n%s
@@ -400,6 +450,7 @@ NETWORK_CONNECTING_TO
 	NL	Bezig verbinding te maken met\n%s
 
 NETWORK_CONNECTED_TO
+	DA	Tilsluttet til \n%s
 	DE	Verbunden mit\n%s
 	EN	Connected to\n%s
 	ES	Conexión a\n%s\nestablecida
@@ -408,6 +459,7 @@ NETWORK_CONNECTED_TO
 	NL	Verbonden met\n%s
 
 NETWORK_CONNECTION_PROBLEM
+	DA	Problem med tilslutning
 	DE	Verbindungsproblem
 	EN	Connection Problem
 	ES	Problema de conexión
@@ -416,6 +468,7 @@ NETWORK_CONNECTION_PROBLEM
 	NL	Verbindingsprobleem
 
 NETWORK_TRY_AGAIN
+	DA	Forsøg igen
 	DE	Erneut versuchen.
 	EN	Try again
 	ES	Vuelva a intentarlo
@@ -424,6 +477,7 @@ NETWORK_TRY_AGAIN
 	NL	Opnieuw proberen
 
 NETWORK_EDIT_WIRELESS_KEY
+	DA	Rediger trådløs nøgle
 	DE	WEP-Schlüssel ändern
 	EN	Edit wireless key
 	ES	Editar clave inalámbrica
@@ -432,6 +486,7 @@ NETWORK_EDIT_WIRELESS_KEY
 	NL	Draadloze sleutel bew.
 
 NETWORK_TRY_DIFFERENT
+	DA	Forsøg et andet netværk
 	DE	Anderes Netzwerk versuchen
 	EN	Try different network
 	ES	Pruebe con otra red
@@ -440,6 +495,7 @@ NETWORK_TRY_DIFFERENT
 	NL	Ander netwerk proberen
 
 NETWORK_GO_BACK
+	DA	Tilbage
 	DE	Zurück
 	EN	Go back
 	ES	Regresar
@@ -448,6 +504,7 @@ NETWORK_GO_BACK
 	NL	Terug
 
 NETWORK_CONNECTION_PROBLEM_HELP
+	DA	Der opstod et problem under tilslutning til dit trådløse netværk.
 	DE	Problem beim Verbinden mit Ihrem kabellosen Netzwerk.
 	EN	There was a problem connecting to your wireless network.
 	ES	Problema al conectar a la red inalámbrica.
@@ -456,6 +513,7 @@ NETWORK_CONNECTION_PROBLEM_HELP
 	NL	Er is een probleem opgetreden tijdens het maken van een verbinding met je draadloze netwerk.
 
 NETWORK_PROBLEM_PASSWORD_INCORRECT
+	DA	Forkert kodeord.
 	DE	Falsches Kennwort.
 	EN	Your password was incorrect.
 	ES	Contraseña incorrecta.
@@ -464,6 +522,7 @@ NETWORK_PROBLEM_PASSWORD_INCORRECT
 	NL	Verkeerd wachtwoord.
 
 NETWORK_IP_ADDRESS
+	DA	IP adresse:
 	DE	IP-Adresse:
 	EN	IP Address
 	ES	Dirección IP:
@@ -472,6 +531,7 @@ NETWORK_IP_ADDRESS
 	NL	IP-adres:
 
 NETWORK_NETWORK_NAME
+	DA	Netværksnavn
 	DE	Netzwerkname
 	EN	Network Name
 	ES	Nombre de red
@@ -480,6 +540,7 @@ NETWORK_NETWORK_NAME
 	NL	Netwerknaam
 
 NETWORK_NETWORK_NAME_HELP
+	DA	Indtast navn på det trådløse netværk. Rul for at skifte bokstav, tryk midterknappen for at vælge. Tryk midterknappen to gange for at afslutte.
 	DE	Geben Sie den Namen des kabellosen Netzwerks ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der mittleren Taste. Drücken Sie die mittlere Taste zweimal zum Beenden.
 	EN	Enter your wireless network name. Scroll to change letters, press the center button to choose that letter. Press center button twice to finish.
 	ES	Escriba el nombre de la red inalámbrica. Desplácese para cambiar de letra y pulse el botón central para elegir una letra. Pulse dos veces el botón central para terminar.
@@ -488,6 +549,7 @@ NETWORK_NETWORK_NAME_HELP
 	NL	Voer de naam van je draadloze netwerk in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
 
 NETWORK_ADDRESS_PROBLEM
+	DA	Problem med adresse
 	DE	Adressenproblem
 	EN	Address Problem
 	ES	Problema de dirección
@@ -496,6 +558,7 @@ NETWORK_ADDRESS_PROBLEM
 	NL	Adresprobleem
 
 NETWORK_ADDRESS_HELP
+	DA	Der opstod et problem under hentning af DHCP adresse på dit netværk.
 	DE	Problem bei Abfrage einer DHCP-Adresse in Ihrem Netzwerk.
 	EN	There was a problem obtaining a DHCP address on your network.
 	ES	Problema al obtener una dirección DHCP en la red.
@@ -504,6 +567,7 @@ NETWORK_ADDRESS_HELP
 	NL	Er is een probleem met het verkrijgen van een DHCP-adres op je netwerk.
 
 NETWORK_ADDRESS_HELP_WEP
+	DA	Kunne ikke tilslutte til dit netværk. Grunden til dette kan være en forkert trådløs nøgle, eller et andet netværksproblem så som MAC filtrering eller manglede DHCP server.
 	DE	Verbindung mit Netzwerk nicht möglich. Dies kann an einem falschen WEP-Schlüssel oder einem anderen Problem (MAC-Filter oder fehlernder DHCP-Server) liegen.
 	EN	Couldn't connect to your network. This may be caused by an incorrect wireless key or other network problem such as MAC filtering or missing DHCP server.
 	ES	No ha sido posible la conexión a su red. Puede ser debido a una clave inalámbrica incorrecta o a otro problema de red como, por ejemplo, el filtrado MAC o un servidor DHCP que no se encuentra.
@@ -512,6 +576,7 @@ NETWORK_ADDRESS_HELP_WEP
 	NL	Kan geen verbinding met je netwerk maken. Dit kan veroorzaakt worden door een onjuiste draadloze sleutel of een ander netwerkprobleem zoals MAC-filtering of een ontbrekende DHCP-server.
 
 ZEROCONF_ADDRESS
+	DA	Selvtilskrevet IP adresse
 	DE	IP-Adresse selbst zuweisen
 	EN	Self-assign address
 	ES	Dirección autoasignada
@@ -520,6 +585,7 @@ ZEROCONF_ADDRESS
 	NL	Zelf-toewijzend adres
 
 STATIC_ADDRESS
+	DA	Brug en statisk adresse
 	DE	Statische Adresse verwenden
 	EN	Use a static address
 	ES	Usar una dirección estática
@@ -528,6 +594,7 @@ STATIC_ADDRESS
 	NL	Statisch adres gebruiken
 
 NETWORK_ADDRESS_HELP
+	DA	Der opstod et problem under hentning af DHCP adresse på dit netværk.
 	DE	Problem bei Abfrage einer DHCP-Adresse in Ihrem Netzwerk.
 	EN	There was a problem obtaining a DHCP address on your network.
 	ES	Problema al obtener una dirección DHCP en la red.
@@ -536,6 +603,7 @@ NETWORK_ADDRESS_HELP
 	NL	Er is een probleem met het verkrijgen van een DHCP-adres op je netwerk.
 
 NETWORK_IP_ADDRESS
+	DA	IP adresse
 	DE	IP-Adresse:
 	EN	IP Address
 	ES	Dirección IP:
@@ -544,6 +612,7 @@ NETWORK_IP_ADDRESS
 	NL	IP-adres:
 
 NETWORK_IP_ADDRESS_HELP
+	DA	Indtast IP adressen for denne fjernbetjening.
 	DE	Geben Sie die IP-Adresse für diese Fernbedienung ein.
 	EN	Enter the IP address for this remote.
 	ES	Escriba la dirección IP del mando.
@@ -552,6 +621,7 @@ NETWORK_IP_ADDRESS_HELP
 	NL	Voer het IP-adres voor deze afstandsbediening in.
 
 NETWORK_SUBNET
+	DA	Subnet
 	DE	Subnetz
 	EN	Subnet
 	ES	Subred
@@ -560,6 +630,7 @@ NETWORK_SUBNET
 	NL	Subnet
 
 NETWORK_SUBNET_HELP
+	DA	Indtast subnet-maske for dit netværk.
 	DE	Geben Sie die Subnetzmaske für das Netzwerk ein.
 	EN	Enter the subnet mask for your network.
 	ES	Escriba la máscara de subred de la red.
@@ -568,6 +639,7 @@ NETWORK_SUBNET_HELP
 	NL	Voer het subnetmasker voor je netwerk in.
 
 NETWORK_GATEWAY
+	DA	Adgangspunkt
 	DE	Gateway
 	EN	Gateway
 	ES	Puerta de enlace
@@ -576,6 +648,7 @@ NETWORK_GATEWAY
 	NL	Gateway
 
 NETWORK_GATEWAY_HELP
+	DA	Indtast IP adresse eller din ruter.
 	DE	Geben Sie die IP-Adresse oder den Router ein.
 	EN	Enter the IP address or your router.
 	ES	Escriba la dirección IP del enrutador.
@@ -584,6 +657,7 @@ NETWORK_GATEWAY_HELP
 	NL	Voer het IP-adres of je router in.
 
 NETWORK_DNS
+	DA	DNS server
 	DE	DNS-Server
 	EN	DNS Server
 	ES	Servidor DNS
@@ -592,6 +666,7 @@ NETWORK_DNS
 	NL	DNS-server
 
 NETWORK_DNS_HELP
+	DA	Indtast IP adresse på din DNS server.
 	DE	Geben Sie die IP-Adresse für den DNS-Server ein.
 	EN	Enter the IP address of your DNS server.
 	ES	Escriba la dirección IP del servidor DNS.
@@ -600,6 +675,7 @@ NETWORK_DNS_HELP
 	NL	Voer het IP-adres van je DNS-server in.
 
 NETWORK_PROBLEM
+	DA	Netværksproblem
 	DE	Netwerkproblem
 	EN	Network Problem
 	ES	Problema de red
@@ -608,6 +684,7 @@ NETWORK_PROBLEM
 	NL	Netwerkprobleem
 
 NETWORK_CHOOSE_NETWORK
+	DA	Vælg netværk
 	DE	Netzwerk wählen
 	EN	Choose Network
 	ES	Elegir red
@@ -616,6 +693,7 @@ NETWORK_CHOOSE_NETWORK
 	NL	Netwerk kiezen
 
 NETWORK_PROBLEM_HELP
+	DA	Denne fjernbetjening har problemer med at tilslutte til %s.
 	DE	Probleme beim Verbinden der Fernbedienung mit %s
 	EN	This remote is having trouble connecting to %s.
 	ES	Este mando tiene problemas para conectarse a %s.

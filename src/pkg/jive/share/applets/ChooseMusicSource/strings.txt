@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SLIMSERVER_SERVERS
+	DA	Musikkilde
 	DE	Musikquelle
 	EN	Music Source
 	ES	Origen de música
@@ -11,6 +12,7 @@ SLIMSERVER_SERVERS
 	NL	Muziekbron
 
 SLIMSERVER_ADD_SERVER
+	DA	Anden Server
 	DE	Anderer Server
 	EN	Other Server
 	ES	Otro servidor
@@ -19,6 +21,7 @@ SLIMSERVER_ADD_SERVER
 	NL	Andere server
 
 SLIMSERVER_SQUEEZENETWORK
+	DA	SqueezeNetwork
 	DE	SqueezeNetwork
 	EN	SqueezeNetwork
 	ES	SqueezeNetwork
@@ -27,6 +30,7 @@ SLIMSERVER_SQUEEZENETWORK
 	NL	SqueezeNetwork
 
 SLIMSERVER_HELP
+	DA	Indtast IP adressen på computeren som kører SqueezeCenter.
 	DE	IP-Adresse des Computers mit SqueezeCenter eingeben
 	EN	Enter the IP address of the computer running SqueezeCenter
 	ES	Escriba la dirección IP del ordenador que ejecuta SqueezeCenter
@@ -35,6 +39,7 @@ SLIMSERVER_HELP
 	NL	Voer het IP-adres in van de computer waarop SqueezeCenter wordt uitgevoerd
 
 SLIMSERVER_CONNECTING_TO
+	DA	Tilslutter til\n%s
 	DE	Verbindung mit\n%s
 	EN	Connecting to\n%s
 	ES	Estableciendo conexión a\n%s
@@ -43,6 +48,7 @@ SLIMSERVER_CONNECTING_TO
 	NL	Bezig verbinding te maken met\n%s
 
 SLIMSERVER_CONNECTED_TO
+	DA	Tilsluttet til \n%s
 	DE	Verbunden mit\n%s
 	EN	Connected to\n%s
 	ES	Conexión a\n%s\nestablecida
@@ -51,6 +57,7 @@ SLIMSERVER_CONNECTED_TO
 	NL	Verbonden met\n%s
 
 SQUEEZEBOX_PROBLEM
+	DA	Problem med tilslutning
 	DE	Verbindungsproblem
 	EN	Problem Connecting
 	ES	Problema de conexión
@@ -59,6 +66,7 @@ SQUEEZEBOX_PROBLEM
 	NL	Probleem bij verbinden
 
 SQUEEZEBOX_GO_BACK
+	DA	Tilbage
 	DE	Zurück
 	EN	Go back
 	ES	Regresar
@@ -67,6 +75,7 @@ SQUEEZEBOX_GO_BACK
 	NL	Terug
 
 SQUEEZEBOX_TRY_AGAIN
+	DA	Forsøg igen
 	DE	Erneut versuchen.
 	EN	Try again
 	ES	Vuelva a intentarlo
@@ -75,4 +84,5 @@ SQUEEZEBOX_TRY_AGAIN
 	NL	Opnieuw proberen
 
 SQUEEZEBOX_PROBLEM_HELP
+	DA	Kunne ikke tilslutte %s til %s.
 	EN	Could not connect %s to %s.

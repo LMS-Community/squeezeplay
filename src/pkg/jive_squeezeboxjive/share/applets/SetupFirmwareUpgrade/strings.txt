@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 UPDATE
+	DA	Opdatering af programmel
 	DE	Software-Aktualisierung
 	EN	Software Update
 	ES	Actualización de software
@@ -11,6 +12,7 @@ UPDATE
 	NL	Software-update
 
 NETWORK_UPDATE
+	DA	Netværksopdatering
 	DE	Netzwerk-Update
 	EN	Network update
 	ES	Actualización de red
@@ -19,6 +21,7 @@ NETWORK_UPDATE
 	NL	Netwerkupdate
 
 BEGIN_UPDATE
+	DA	Start opdatering
 	DE	Update starten
 	EN	Begin update
 	ES	Iniciar actualización
@@ -27,6 +30,7 @@ BEGIN_UPDATE
 	NL	Update starten
 
 CONTINUE
+	DA	Fortsæt
 	DE	Weiter
 	EN	Continue
 	ES	Continuar
@@ -35,6 +39,7 @@ CONTINUE
 	NL	Verdergaan
 
 UPDATE_CONTINUE_SDCARD
+	DA	Opdaterer fra SD kort
 	DE	Aktualisierung von SD-Karte
 	EN	Update from SD card
 	ES	Actualizar desde tarjeta SD
@@ -43,6 +48,7 @@ UPDATE_CONTINUE_SDCARD
 	NL	Update van SD-kaart
 
 UPDATE_FAILURE
+	DA	Fejl under opdatering
 	DE	Aktualisierungsfehler
 	EN	Upgrade failed
 	ES	Error de actualización
@@ -51,6 +57,7 @@ UPDATE_FAILURE
 	NL	Upgrade mislukt
 
 UPDATE_FAILURE_HELP
+	DA	Der opstod et problem under opdatering af denne fjernbetjening. Forsøg venligst igen, eller kontakt kundeservice.
 	DE	Fehler beim Aktualisieren der Fernbedienung. Versuchen Sie es noch einmal oder wenden Sie sich an den Kundendienst.
 	EN	There was a problem upgrading this remote. Please try again, or contact support.
 	ES	Hubo un problema al actualizar este mando. Vuelva a intentarlo o contacte con asistencia técnica.
@@ -59,6 +66,7 @@ UPDATE_FAILURE_HELP
 	NL	Er is een probleem opgetreden tijdens het upgraden van deze afstandsbediening. Probeer het opnieuw, of neem contact op met ondersteuning.
 
 UPDATE_TRY_AGAIN
+	DA	Forsøg igen...
 	DE	Erneut versuchen...
 	EN	Try again...
 	ES	Vuelva a intentarlo...
@@ -67,6 +75,7 @@ UPDATE_TRY_AGAIN
 	NL	Opnieuw proberen...
 
 UPDATE_DOWNLOAD
+	DA	\nKopierer opdatering
 	DE	\nAktualisierung wird kopiert
 	EN	\nCopying Update
 	ES	\nCopiando actualización
@@ -75,6 +84,7 @@ UPDATE_DOWNLOAD
 	NL	\nUpdate wordt gekopieerd
 
 UPDATE_WRITE
+	DA	\nInstallerer opdatering
 	DE	\nAktualisierung wird installiert
 	EN	\nInstalling Update
 	ES	\nInstalando actualización
@@ -83,6 +93,7 @@ UPDATE_WRITE
 	NL	\nUpdate wordt geïnstalleerd
 
 UPDATE_VERIFY
+	DA	\nBekræfter opdatering
 	DE	\nAktualisierung wird geprüft
 	EN	\nVerifying Update
 	ES	\nComprobando actualización
@@ -91,6 +102,7 @@ UPDATE_VERIFY
 	NL	\nUpdate wordt geverifieerd
 
 UPDATE_REBOOT
+	DA	\nGenstarter
 	DE	\nNeustart
 	EN	\nRestarting
 	ES	\nReiniciando
@@ -99,6 +111,7 @@ UPDATE_REBOOT
 	NL	\nBezig met opnieuw starten
 
 UPDATE_BEGIN_HELP
+	DA	Opdateret programmel er tilgængeligt for denne fjernbetjening. Dette tager nogle få minutter.
 	DE	Für diese Fernbedienung ist aktualisierte Software verfügbar. Dieser Vorgang kann ein paar Minuten dauern.
 	EN	Updated software is available for this remote. This process may take a few minutes.
 	ES	Existe software actualizado disponible para este mando a distancia. El proceso de actualización puede tardar unos minutos.
@@ -107,6 +120,7 @@ UPDATE_BEGIN_HELP
 	NL	Voor deze afstandsbediening is bijgewerkte software beschikbaar. Dit proces kan enkele minuten in beslag nemen.
 
 UPDATE_BATTERY
+	DA	Oplad batteri
 	DE	Batterie aufladen
 	EN	Charge Battery
 	ES	Cambiar pila
@@ -115,6 +129,7 @@ UPDATE_BATTERY
 	NL	Batterij opladen
 
 UPDATE_BATTERY_HELP
+	DA	Pladser venligst denne fjernbetjening i opladeren for at fortsætte med opdateringen af programmel.
 	DE	Legen Sie die Fernbedienung ins Ladegerät, um mit der Software-Aktualisierung fortzufahren.
 	EN	Please put this remote in the charger to continue with the software upgrade.
 	ES	Coloque este mando en el cargador para continuar con la actualización del software.
