@@ -1,6 +1,6 @@
 
 -- stuff we use
-local pcall, tostring = pcall, tostring
+local ipairs, pcall, tostring = ipairs, pcall, tostring
 
 local oo                     = require("loop.simple")
 local string                 = require("string")
@@ -26,6 +26,7 @@ local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Slider                 = require("jive.ui.Slider")
 local Surface                = require("jive.ui.Surface")
 local Textarea               = require("jive.ui.Textarea")
+local Task                   = require("jive.ui.Task")
 local Tile                   = require("jive.ui.Tile")
 local Timer                  = require("jive.ui.Timer")
 local Checkbox               = require("jive.ui.Checkbox")
@@ -124,7 +125,7 @@ function init(self)
 				 end)
 
 	-- wireless
-	self.Wireless = Wireless(jnt, "eth0")
+	self.wireless = Wireless(jnt, "eth0")
 
 	iconbar.iconWireless:addTimer(5000,  -- every 5 seconds
 				      function() 
@@ -314,7 +315,7 @@ function update(self)
 	end
 
 	-- wireless strength
-	local quality = self.Wireless:getLinkQuality()
+	local quality = self.wireless:getLinkQuality()
 	iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
 end
 
@@ -542,6 +543,7 @@ function setPowerState(self, state)
 		self:_setCPUSpeed(true)
 
 		if self.audioVolume ~= nil then
+			log:info("Restore effect volume ", self.audioVolume)
 			Audio:setEffectVolume(self.audioVolume)
 			self.audioVolume = nil
 		end
@@ -574,6 +576,7 @@ function setPowerState(self, state)
 			self:setBrightness()
 
 			if self.audioVolume ~= nil then
+				log:info("Restore effect volume ", self.audioVolume)
 				Audio:setEffectVolume(self.audioVolume)
 				self.audioVolume = nil
 			end
@@ -585,6 +588,7 @@ function setPowerState(self, state)
 			self:setBrightness()
 
 			if self.audioVolume ~= nil then
+				log:info("Restore effect volume ", self.audioVolume)
 				Audio:setEffectVolume(self.audioVolume)
 				self.audioVolume = nil
 			end
@@ -602,13 +606,18 @@ function setPowerState(self, state)
 			self:_setBrightness(true, 0, 0)
 			self:_setCPUSpeed(false)
 
-			self.audioVolume = Audio:getEffectVolume()
-			Audio:setEffectVolume(0)
+			if not self.audioVolume then
+				self.audioVolume = Audio:getEffectVolume()
+				log:info("Store effect volume ", self.audioVolume)
+				Audio:setEffectVolume(0)
+			end
 
 			if state == "sleep" then
 				interval = settings.suspendTimeout
+
 			elseif state == "suspend" then
-				log:error("FIXME suspend now...")
+				-- XXXX
+				-- self:_suspend()
 			end
 		end
 	end
@@ -805,6 +814,86 @@ function _setCPUSpeed(self, fast)
 
 	fh:write(speed)
 	fh:close()
+end
+
+
+function _suspendTask(self)
+	-- check existing network config
+	local status = self.wireless:t_wpaStatus()
+	local zeroconf = string.match(status.ip_address, "^169.254.") ~= nil
+
+	-- suspend
+	os.execute("/etc/init.d/suspend")
+
+	-- wake up power state
+	self:wakeup()
+
+	-- start timer to resume this task every second
+	self.suspendPopup:addTimer(1000,
+		function()
+			self.suspendTask:addTask()
+		end)
+
+	while true do
+		local status = self.wireless:t_wpaStatus()
+
+		-- network connected?
+		log:info("resume ip=", status.ip_address, " zeroconf=", zeroconf)
+		if status.wpa_state == "COMPLETED" and status.ip_address and (not string.match(status.ip_address, "^169.254.") or zeroconf) then
+
+			-- force reconnections
+			jnt:notify("networkConnected")
+
+			-- close popup
+			self.suspendPopup:hide()
+
+			-- wake up
+			self:wakeup()
+
+			self.suspendPopup = nil
+			self.suspendTask = nil
+
+			return
+		end
+
+		Task:yield(false)
+	end
+end
+
+
+function _suspend(self)
+	log:info("Suspend ...")
+
+	-- draw popup ready for resume
+	local popup = Popup("popupIcon")
+	popup:setAllowScreensaver(false)
+	popup:setAlwaysOnTop(true)
+	popup:setAutoHide(false)
+
+	popup:addWidget(Icon("iconConnecting"))
+	popup:addWidget(Label("text", self:string("PLEASE_WAIT")))
+
+	-- ignore all events
+	popup:addListener(EVENT_ALL_INPUT,
+			   function(event)
+				   return EVENT_CONSUME
+			   end)
+
+	popup:show(Window.transitionNone)
+	self.suspendPopup = popup
+
+	-- make sure the cpu is fast when we resume
+	self:_setCPUSpeed(true)
+
+	-- enable frame updates
+	Framework:setUpdateScreen(true)
+
+	-- force popup to be drawn to the framebuffer
+	Framework:updateScreen()
+
+	-- start suspend task
+	self.suspendTask = Task("networkStatus", self, _suspendTask)
+	self.suspendTask:addTask()
 end
 
 

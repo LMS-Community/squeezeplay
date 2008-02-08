@@ -19,11 +19,11 @@ end
 
 function defaultSettings(meta)
 	return { 
-		brightness = 32,
-		dimmedTimeout = 10000,
-		sleepTimeout = 60000,
-		hibernateTimeout = 300000,
-		dimmedAC = false
+		brightness	= 32,
+		dimmedTimeout	= 10000,	-- 10 seconds
+		sleepTimeout	= 60000,	-- 60 seconds
+		suspendTimeout 	= 3600000,	-- 1 hour
+		dimmedAC	= false
 	}
 end
 
