@@ -111,7 +111,7 @@ DELETE
 	NL	Verwijderen
 
 ALLOWEDCHARS_NOCAPS
-	DA	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
+	DA	 abcdefghijklmnopqrstuvwxyzæøå!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 	DE	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 	EN	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 	ES	 abcdefghijklmnñopqrstuvwxyz¡!@#$%^&*()_+{}:\\\"'<>¿?-=,./~`[];0123456789
@@ -120,7 +120,7 @@ ALLOWEDCHARS_NOCAPS
 	NL	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 
 ALLOWEDCHARS_CAPS
-	DA	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
+	DA	 ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 	DE	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 	EN	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 	ES	 ABCDEFGHIJKLMNÑOPQRSTUVWXYZ¡!@#$%^&*()_+{}:\\\"'<>¿?-=,./~`[];0123456789
@@ -129,7 +129,7 @@ ALLOWEDCHARS_CAPS
 	NL	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\\\"'<>?-=,./~`[];0123456789
 
 ALLOWEDCHARS_WITHCAPS
-	DA	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	DA	 abcdefghijklmnopqrstuvwxyzæøåABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	DE	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	EN	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	ES	 abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ¡!@#$%^&*()_+{}:\"'<>¿?-=,./~`[];0123456789
