@@ -21,6 +21,16 @@ LANGUAGE
 	IT	Lingua
 	NL	Taal
 
+LANGUAGE_DA
+	DA	Dansk
+	DE	Dansk
+	EN	Dansk
+	ES	Dansk
+	FR	Dansk
+	IT	Dansk
+	NL	Dansk
+
+
 LANGUAGE_DE
 	DA	Deutsch
 	DE	Deutsch
