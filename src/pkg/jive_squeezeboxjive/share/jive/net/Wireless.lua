@@ -624,7 +624,7 @@ function request(self, ...)
 	table.insert(self.responseQueue, task)
 	local _, reply, err = Task:yield(false)
 
-	if err then
+	if not reply or err then
 		log:warn(err)
 		self:close()
 

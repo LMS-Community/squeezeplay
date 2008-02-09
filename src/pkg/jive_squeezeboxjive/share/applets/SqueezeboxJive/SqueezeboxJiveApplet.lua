@@ -831,7 +831,9 @@ function _suspendTask(self)
 	-- start timer to resume this task every second
 	self.suspendPopup:addTimer(1000,
 		function()
-			self.suspendTask:addTask()
+			if self.suspendTask then
+				self.suspendTask:addTask()
+			end
 		end)
 
 	while true do

@@ -238,3 +238,10 @@ POWER_DOWN_HELP
 	IT	Annullare o confermare la disattivazione del telecomando
 	NL	Annuleer of bevestig het uitzetten van je controller
 
+PLEASE_WAIT
+	DE	Verbindung
+	EN	Please wait
+	ES	Conectando
+	FR	Connexion
+	IT	Connessione...
+	NL	Bezig met verbinden
