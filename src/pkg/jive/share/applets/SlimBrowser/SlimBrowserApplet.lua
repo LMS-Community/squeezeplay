@@ -769,6 +769,11 @@ local function _browseSink(step, chunk, err)
 			end
 			local textArea = Textarea("textarea", data.window.textArea)
 			step.window:addWidget(textArea)
+		-- avoid infinite request loop on count == 0
+		elseif step.menu and data and data.count and data.count == 0 then
+			-- this will render a blank menu, which is typically undesirable 
+			-- but we don't want to reach the next clause
+			-- count == 0 responses should not be typical
 		elseif step.menu then
 			step.menu:setItems(step.db:menuItems(data))
 
