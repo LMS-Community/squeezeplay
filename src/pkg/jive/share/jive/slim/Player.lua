@@ -22,6 +22,7 @@ Notifications:
  playerModeChange
  playerPlaylistChange
  playerPlaylistSize
+ playerNeedsUpgrade
 
 =head1 FUNCTIONS
 
@@ -157,6 +158,16 @@ local function _setPlayerModeChange(self, mode)
 	end
 end
 
+-- _setPlayerNeedsUpgrade()
+-- sends notification of player_needs_upgrade value. 
+local function _setPlayerNeedsUpgrade(self, playerNeedsUpgrade)
+	local needsUpgrade = (tonumber(playerNeedsUpgrade) == 1)
+	if needsUpgrade != self.needsUpgrade then
+		self.needsUpgrade = needsUpgrade
+		self.jnt:notify('playerNeedsUpgrade', self, self:isNeedsUpgrade())
+	end
+end
+
 -- _whatsPlaying(obj)
 -- returns the track_id from a playerstatus structure
 local function _whatsPlaying(obj)
@@ -279,8 +290,8 @@ function update(self, slimServer, playerInfo)
 	end
 	
 	self.model = playerInfo.model
-	self.needsUpgrade = (tonumber(playerInfo.player_needs_upgrade) == 1)
 
+	_setPlayerNeedsUpgrade(self, playerInfo.player_needs_upgrade)
 	_setPlayerName(self, playerInfo.name)
 	_setPlayerPower(self, tonumber(playerInfo.power))
 	_setConnected(self, playerInfo.connected)

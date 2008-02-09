@@ -123,8 +123,9 @@ local _playerKeyHandler = false
 -- The last entered text
 local _lastInput = ""
 
--- connectingToPlayer popup handlers
+-- connectingToPlayer and _upgradingPlayer popup handlers
 local _connectingPopup = false
+local _updatingPlayerPopup = false
 local _menuReceived = false
 
 local modeTokens = {	
@@ -537,7 +538,7 @@ end
 
 -- _connectingToPlayer
 -- full screen popup that appears until menus are loaded
-local function _connectingToPlayer(self, player)
+local function _connectingToPlayer(self)
 	log:info("_connectingToPlayer popup show")
 
 	if _connectingPopup then
@@ -547,7 +548,7 @@ local function _connectingToPlayer(self, player)
 
 	local popup = Popup("popupIcon")
 	local icon  = Icon("iconConnecting")
-	local playerName = player:getName()
+	local playerName = _player:getName()
 	local label = Label("text", self:string("SLIMBROWSER_CONNECTING_TO", playerName))
 	popup:addWidget(icon)
 	popup:addWidget(label)
@@ -578,13 +579,66 @@ local function _connectingToPlayer(self, player)
 	_connectingPopup = popup
 end
 
--- _connectedToPlayer
+-- _updatingPlayer
+-- full screen popup that appears until menus are loaded
+local function _updatingPlayer(self)
+	log:info("_connectingToPlayer popup show")
+
+	if _updatingPlayerPopup then
+		-- don't open this popup twice
+		return
+	end
+
+	local popup = Popup("popupIcon")
+	local icon  = Icon("iconConnecting")
+	local label = Label("text", self:string('SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX'))
+	popup:addWidget(icon)
+	popup:addWidget(label)
+	popup:setAlwaysOnTop(true)
+
+	-- add a listener for KEY_PRESS that disconnects from the player and returns to home
+	popup:addListener(
+		EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+		function(event)
+			local evtCode = event:getKeycode()
+
+			if evtCode == KEY_BACK then
+				-- disconnect from player and go home
+				local manager = AppletManager:getAppletInstance("SlimDiscovery")
+				if manager then
+					manager:setCurrentPlayer(nil)
+				end
+				popup:hide()
+			end
+			-- other keys are disabled when this popup is on screen
+			return EVENT_CONSUME
+
+		end
+	)
+	
+	popup:show()
+
+	_updatingPlayerPopup = popup
+end
+
+
+-- _hideConnectingToPlayer
 -- hide the full screen popup that appears until menus are loaded
-local function _connectedToPlayer()
+local function _hideConnectingToPlayer()
 	if _connectingPopup then
 		log:info("_connectingToPlayer popup hide")
 		_connectingPopup:hide()
 		_connectingPopup = nil
+	end
+end
+
+-- _hidePlayerUpdating
+-- hide the full screen popup that appears until player is updated
+local function _hidePlayerUpdating()
+	if _updatingPlayerPopup then
+		log:info("_updatingPlayer popup hide")
+		_updatingPlayerPopup:hide()
+		_updatingPlayerPopup = false
 	end
 end
 
@@ -868,7 +922,7 @@ local function _menuSink(self, cmd)
 			end
 		end
 		if _menuReceived then
-			_connectedToPlayer()
+			_hideConnectingToPlayer()
 		end
          end
 end
@@ -1046,6 +1100,11 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 		local onAction
 		local offAction
 		
+		-- we handle no action in the case of an item telling us not to
+		if item['action'] == 'none' then
+			return EVENT_UNUSED
+		end
+
 		-- special cases for go action:
 		if actionName == 'go' then
 			
@@ -2079,14 +2138,35 @@ function notify_playerCurrent(self, player)
 		end
 	end
 
+	if _player:isNeedsUpgrade() then
+		_updatingPlayer(self)
+	else
+		_hidePlayerUpdating()
+	end
+
 	-- add a fullscreen popup that waits for the _menuSink to load
 	_menuReceived = false
-	_connectingToPlayer(self, player)
+	_connectingToPlayer(self)
 
-	jiveMain:setTitle(player:getName())
+	jiveMain:setTitle(_player:getName())
 	_installPlayerKeyHandler(self)
 end
 
+function notify_playerNeedsUpgrade(self, player, needsUpgrade)
+
+	if _player ~= player then
+		return
+	end
+
+	if needsUpgrade then
+		log:info('Show upgradingPlayer popup')
+		_updatingPlayer(self)
+	else
+		log:info('Hide upgradingPlayer popup')
+		_hidePlayerUpdating()
+	end
+
+end
 
 function notify_serverConnected(self, server)
 	if _server ~= server then
@@ -2205,7 +2285,8 @@ function free(self)
 	_playerMenus = {}
 
 	-- remove connecting popup
-	_connectedToPlayer()
+	_hideConnectingToPlayer()
+	_hidePlayerUpdating()
 
 	_player = false
 	_server = false

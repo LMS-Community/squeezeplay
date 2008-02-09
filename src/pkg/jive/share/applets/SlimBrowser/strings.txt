@@ -137,3 +137,12 @@ SLIMBROWSER_VOLUME_MUTED
 	IT	Volume (Audio disattivato)
 	NL	Volume (Gedempt)
 
+SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
+	DA	Opdaterer Squeezebox firmware
+	DE	Squeezebox-Firmware wird aktualisiert
+	EN	Updating Squeezebox firmware
+	ES	Actualizando firmware de Squeezebox
+	FR	Mise à jour du micrologiciel Squeezebox
+	IT	Aggiornamento firmware Squeezebox
+	NL	Squeezebox-firmware wordt bijgewerkt
+
