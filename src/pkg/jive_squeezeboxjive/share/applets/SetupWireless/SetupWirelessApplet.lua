@@ -1258,7 +1258,7 @@ function setStaticIP(self)
 	     function()
 		     self.t_ctrl:t_setStaticIP(self.ssid, self.ipAddress, self.ipSubnet, self.ipGateway, self.ipDNS)
 		     connectOK(self)
-	     end)
+	     end):addTask()
 end
 
 
