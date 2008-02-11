@@ -324,15 +324,11 @@ function _brightness(self, lcdLevel, keyLevel)
 	local settings = self:getSettings()
 
 	if lcdLevel ~= nil then
+		-- don't update the screen when the lcd is off
+		Framework:setUpdateScreen(lcdLevel ~= 0)
+
 		self.lcdLevel = lcdLevel
 		jiveBSP.ioctl(11, lcdLevel * 2048)
-
-		-- don't update the screen when the lcd is off
-		if lcdLevel == 0 then
-			Framework:setUpdateScreen(false)
-		else
-			Framework:setUpdateScreen(true)
-		end
 	end
 
 	if keyLevel ~= nil then

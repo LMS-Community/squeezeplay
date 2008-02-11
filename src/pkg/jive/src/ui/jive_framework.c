@@ -325,7 +325,23 @@ int jiveL_set_update_screen(lua_State *L) {
 	 * 2: enable/disable screen updates
 	 */
 
+	bool old_update_screen = update_screen;
 	update_screen = lua_toboolean(L, 2);
+
+	if (update_screen && !old_update_screen) {
+		/* cancel any pending transitions */
+		lua_pushnil(L);
+		lua_setfield(L, 1, "transition");
+
+		/* redraw now */
+		lua_pushcfunction(L, jiveL_update_screen);
+		lua_pushvalue(L, 1);
+		lua_call(L, 1, 0);
+
+		/* short delay to allow video buffer to flip */
+		SDL_Delay(50);
+	}
+
 	return 0;
 }
 
