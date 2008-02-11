@@ -23,7 +23,7 @@ function defaultSettings(meta)
 		dimmedTimeout	= 10000,	-- 10 seconds
 		sleepTimeout	= 60000,	-- 60 seconds
 		suspendTimeout 	= 3600000,	-- 1 hour
-		suspendEnable   = false,
+		suspendEnable   = true,
 		suspendWake     = nil,
 		dimmedAC	= false
 	}
