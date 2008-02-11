@@ -101,8 +101,8 @@ function init(self)
 		mac = string.match(ifconfig, "HWaddr%s(%x%x:%x%x:%x%x:%x%x:%x%x:%x%x)")
 	end
 
-	log:warn("uuid=", uuid)
-	log:warn("mac=", mac)
+	log:info("uuid=", uuid)
+	log:info("mac=", mac)
 
 	jnt:setUUID(uuid, mac)
 
