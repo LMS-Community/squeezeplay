@@ -14,6 +14,8 @@ local Wireless               = require("jive.net.Wireless")
 
 local Applet                 = require("jive.Applet")
 local Audio                  = require("jive.ui.Audio")
+local Checkbox               = require("jive.ui.Checkbox")
+local Choice                 = require("jive.ui.Choice")
 local Font                   = require("jive.ui.Font")
 local Framework              = require("jive.ui.Framework")
 local Group                  = require("jive.ui.Group")
@@ -621,8 +623,9 @@ function setPowerState(self, state)
 				interval = settings.suspendTimeout
 
 			elseif state == "suspend" then
-				-- XXXX
-				-- self:_suspend()
+				if settings.suspendEnabled then
+					self:_suspend()
+				end
 			end
 		end
 	end
@@ -804,6 +807,91 @@ function settingsPowerOff(self)
 end
 
 
+function settingsTestSuspend(self, menuItem)
+	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
+
+	local settings = self:getSettings()
+
+	local sleepOptions = { 10, 30, 60 }
+	local sleepIndex
+	for i, v in ipairs(sleepOptions) do
+		if v == (settings.sleepTimeout / 1000) then
+			sleepIndex = i
+			break
+		end
+	end
+
+	local suspendOptions = { 10, 30, 60, 600, 3600 }
+	local suspendIndex
+	for i, v in ipairs(suspendOptions) do
+		if v == (settings.suspendTimeout / 1000) then
+			suspendIndex = i
+			break
+		end
+	end
+
+	local menu = SimpleMenu("menu", {
+		{ 
+			text = "Sleep Timeout", 
+			icon = Choice(
+				      "choice", 
+				      sleepOptions,
+				      function(obj, selectedIndex)
+					      settings.sleepTimeout = sleepOptions[selectedIndex] * 1000
+					      log:warn("sleepTimeout = ", settings.sleepTimeout)
+				      end,
+				      sleepIndex
+			      )
+		},
+		{
+			text = "Suspend Timeout", 
+			icon = Choice(
+				      "choice", 
+				      suspendOptions,
+				      function(obj, selectedIndex)
+					      settings.suspendTimeout = suspendOptions[selectedIndex] * 1000
+					      log:warn("suspendTimeout = ", settings.suspendTimeout)
+				      end,
+				      suspendIndex
+			      )
+		},
+		{
+			text = "Suspend Enabled", 
+			icon = Checkbox(
+				      "checkbox", 
+				      function(obj, isSelected)
+					      settings.suspendEnabled = isSelected
+					      log:warn("suspendEnalbed = ", settings.suspendEnabled)
+				      end,
+				      settings.suspendEnabled
+			      )
+		},
+		{
+			text = "Suspend Wake", 
+			icon = Checkbox(
+				      "checkbox", 
+				      function(obj, isSelected)
+					      settings.suspendWake = isSelected and 30 or nil
+					      log:warn("suspendWake = ", settings.suspendWake)
+				      end,
+				      settings.suspendWake ~= nil
+			      )
+		},
+	})
+
+	window:addWidget(menu)
+
+	window:addListener(EVENT_WINDOW_POP,
+		function()
+			self:storeSettings()
+		end
+	)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
 function _setCPUSpeed(self, fast)
 	local filename = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed"
 
@@ -827,8 +915,11 @@ function _suspendTask(self)
 	local status = self.wireless:t_wpaStatus()
 	local zeroconf = string.match(status.ip_address, "^169.254.") ~= nil
 
+	local settings = self:getSettings()
+	local wakeAfter = settings.suspendWake and settings.suspendWake or ""
+
 	-- suspend
-	os.execute("/etc/init.d/suspend")
+	os.execute("/etc/init.d/suspend " .. wakeAfter)
 
 	-- wake up power state
 	self:wakeup()
