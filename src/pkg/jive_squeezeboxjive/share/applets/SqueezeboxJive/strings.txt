@@ -239,9 +239,9 @@ POWER_DOWN_HELP
 	NL	Annuleer of bevestig het uitzetten van je controller
 
 PLEASE_WAIT
-	DE	Verbindung
-	EN	Please wait
-	ES	Conectando
-	FR	Connexion
-	IT	Connessione...
-	NL	Bezig met verbinden
+	DE	\nVerbindung
+	EN	\nPlease wait
+	ES	\nConectando
+	FR	\nConnexion
+	IT	\nConnessione...
+	NL	\nBezig met verbinden
