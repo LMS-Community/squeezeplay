@@ -277,26 +277,22 @@ function showBriefly(self, msecs, callback,
 		return
 	end
 
+	if callback then
+		self:addListener(EVENT_WINDOW_POP, callback)
+	end
+
 	if self.brieflyHandler == nil then
 		self.brieflyHandler =
 			self:addListener(EVENT_KEY_PRESS | EVENT_SCROLL,
 					 function(event)
-						 local r = EVENT_CONSUME
-						 if callback then
-							 r = callback()
-						 end
-						 
 						 self:hide(popTransition, "NONE")
-						 return r
+						 return EVENT_CONSUME
 					 end)
 	end
 
 	self.brieflyTimer = Timer(msecs,
 				  function(timer)
 					  self.brieflyTimer = nil
-					  if callback then
-						  callback()
-					  end
 					  self:hide(popTransition, "NONE")
 				  end,
 				  true)
