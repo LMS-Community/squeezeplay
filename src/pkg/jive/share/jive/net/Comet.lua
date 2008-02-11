@@ -209,9 +209,13 @@ end
 
 
 function notify_networkConnected(self)
-	if self.active == "connected" then
+	if self.state == CONNECTING or self.state == CONNECTED then
 		log:info(self, ": Got networkConnected event, will try to reconnect")
-		return _handleAdvice(self)
+
+		-- Force disconnection, and reconnect
+		_state(self, UNCONNECTED)
+		self:connect()
+
 	else
 		log:debug(self, ": Got networkConnected event, but not currently connected")
 	end
@@ -359,7 +363,7 @@ function subscribe(self, subscription, func, playerid, request, priority)
 	self.reqid = id + 1
 
 	-- Send immediately unless we're batching queries
-	if self.active ~= CONNECTED or self.batch ~= 0 then
+	if self.state ~= CONNECTED or self.batch ~= 0 then
 		return
 	end
 
