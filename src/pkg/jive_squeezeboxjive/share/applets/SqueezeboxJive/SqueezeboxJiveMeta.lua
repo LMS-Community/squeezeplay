@@ -33,6 +33,12 @@ end
 function registerApplet(meta)
 	jul.addCategory("squeezeboxJive", jul.DEBUG)
 
+	-- Fixup settings after upgrade
+	local settings = meta:getSettings()
+	if not settings.suspendTimeout then
+		settings.suspendTimeout	= 3600000 -- 1 hour
+	end
+
 	-- SqueezeboxJive is a resident Applet
 	appletManager:loadApplet("SqueezeboxJive")
 
