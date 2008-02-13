@@ -136,6 +136,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="ws2_32.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -206,6 +207,10 @@
 			</File>
 			<File
 				RelativePath="..\src\jive_debug.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\net\jive_dns.c"
 				>
 			</File>
 			<File

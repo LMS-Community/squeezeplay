@@ -6,7 +6,40 @@
 
 #include "common.h"
 
+#ifdef _WIN32
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#endif
+
 #define RESOLV_TIMEOUT (2 * 60 * 1000) /* 2 minutes */
+
+
+/*
+ * Some systems do not provide this so that we provide our own. It's not
+ * marvelously fast, but it works just fine.
+ * (from luasocket)
+ */
+#ifndef HAVE_INET_ATON
+int inet_aton(const char *cp, struct in_addr *inp)
+{
+    unsigned int a = 0, b = 0, c = 0, d = 0;
+    int n = 0, r;
+    unsigned long int addr = 0;
+    r = sscanf(cp, "%u.%u.%u.%u%n", &a, &b, &c, &d, &n);
+    if (r == 0 || n == 0) return 0;
+    cp += n;
+    if (*cp) return 0;
+    if (a > 255 || b > 255 || c > 255 || d > 255) return 0;
+    if (inp) {
+        addr += a; addr <<= 8;
+        addr += b; addr <<= 8;
+        addr += c; addr <<= 8;
+        addr += d;
+        inp->s_addr = htonl(addr);
+    }
+    return 1;
+}
+#endif
 
 
 /* write a string to the pipe fd */
