@@ -663,6 +663,16 @@ local function _bigArtworkPopup(chunk, err)
 	return popup
 end
 
+local function _refreshMe(step)
+	if step.origin then
+		local timer = Timer(100,
+			function()
+				_refreshJSONAction(step.origin)
+			end, true)
+		timer:start()
+	end
+end
+
 -- _hideMe
 -- hides the top window
 local function _hideMe(step)
@@ -676,6 +686,8 @@ local function _hideMe(step)
 			end, true)
 		timer:start()
 	end
+
+
 end
 
 -- _goNowPlaying
@@ -718,6 +730,8 @@ local function _goNow(destination, transition, step)
 		_goPlaylist()
 	elseif destination == 'parent' and step and step.window then
 		_hideMe(step)
+	elseif destination == 'refresh' and step and step.window then
+		_refreshMe(step)
 	end
 end
 
@@ -1240,6 +1254,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 					sink = goHome
 				elseif item['nextWindow'] == 'parent' then
 					sink = _hideMe(_curStep)
+				elseif item['nextWindow'] == 'refresh' then
+					sink = _refreshMe(_curStep)
 				elseif item["showBigArtwork"] then
 					sink = _bigArtworkPopup
 				elseif actionName == 'go' 
