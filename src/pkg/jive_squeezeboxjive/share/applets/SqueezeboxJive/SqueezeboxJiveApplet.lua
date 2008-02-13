@@ -913,7 +913,9 @@ end
 function _suspendTask(self)
 	-- check existing network config
 	local status = self.wireless:t_wpaStatus()
-	local zeroconf = string.match(status.ip_address, "^169.254.") ~= nil
+	local wirelessWasConnected = (status.wpa_state == 'COMPLETED')
+
+	local zeroconf = status.ip_address and string.match(status.ip_address, "^169.254.") ~= nil
 
 	local settings = self:getSettings()
 	local wakeAfter = settings.suspendWake and settings.suspendWake or ""
@@ -936,11 +938,19 @@ function _suspendTask(self)
 		local status = self.wireless:t_wpaStatus()
 
 		-- network connected?
-		log:info("resume ip=", status.ip_address, " zeroconf=", zeroconf)
-		if status.wpa_state == "COMPLETED" and status.ip_address and (not string.match(status.ip_address, "^169.254.") or zeroconf) then
+		log:info('Wireless was connected: ', wirelessWasConnected)
+		if status then
+			log:info('wpa_state=', status.wpa_state)
+			log:info("resume ip=", status.ip_address, " zeroconf=", zeroconf)
+		end
+
+		if not wirelessWasConnected and status and status.wpa_state
+			or (status.wpa_state == "COMPLETED" and status.ip_address and (not string.match(status.ip_address, "^169.254.") or zeroconf)) then
 
 			-- force reconnections
-			jnt:notify("networkConnected")
+			if wirelessWasConnected then
+				jnt:notify("networkConnected")
+			end
 
 			-- close popup
 			self.suspendPopup:hide()
