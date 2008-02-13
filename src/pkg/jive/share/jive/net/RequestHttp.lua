@@ -346,6 +346,9 @@ function t_setResponseBody(self, data)
 				end
 			end
 		else
+			if not err then
+				err = "HTTP request failed with code" .. code
+			end
 			sink(nil, err)
 		end
 	end
