@@ -511,9 +511,11 @@ socket.sourcet["jive-by-length"] = function(sock, length)
 				if length <= 0 then 
 					return nil, 'done' 
 				end
-				
+		
+				local size = math.min(BLOCKSIZE, length)
+
 				local chunk, err
-				chunk, err, partial = sock:receive(length, partial)
+				chunk, err, partial = sock:receive(size, partial)
 				
 				if err then -- including timeout
 					return nil, err 
