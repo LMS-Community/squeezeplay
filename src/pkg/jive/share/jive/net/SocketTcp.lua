@@ -49,14 +49,6 @@ module(...)
 oo.class(_M, Socket)
 
 
--- _createTcpSocket
-local _createTcpSocket = socket.protect(function()
-	--log:debug("_createTcpSocket()")
-	
-	return socket.try(socket.tcp())
-end)
-
-
 --[[
 
 =head2 jive.net.SocketTcp(jnt, address, port, name)
@@ -93,8 +85,6 @@ function t_connect(self)
 	--log:debug(self, ":t_connect()")
 	
 	-- create a tcp socket
-	local sock, err = _createTcpSocket()
-	
 	self.t_sock = socket.tcp()
 
 	-- set a long timeout for connection

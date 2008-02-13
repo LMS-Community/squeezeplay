@@ -79,6 +79,9 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/src/config.h
 CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
+libjivenet_la_DEPENDENCIES =
+am_libjivenet_la_OBJECTS = jive_dns.lo
+libjivenet_la_OBJECTS = $(am_libjivenet_la_OBJECTS)
 libjiveui_la_DEPENDENCIES =
 am_libjiveui_la_OBJECTS = jive_audio.lo jive_event.lo jive_font.lo \
 	jive_framework.lo jive_group.lo jive_icon.lo jive_label.lo \
@@ -118,7 +121,7 @@ testPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS) $(test_PROGRAMS)
 am_jive_OBJECTS = jive.$(OBJEXT) jive_debug.$(OBJEXT)
 jive_OBJECTS = $(am_jive_OBJECTS)
-jive_DEPENDENCIES = libjiveui.la
+jive_DEPENDENCIES = libjiveui.la libjivenet.la
 am_jiveblit_OBJECTS = jiveblit.$(OBJEXT)
 jiveblit_OBJECTS = $(am_jiveblit_OBJECTS)
 jiveblit_DEPENDENCIES =
@@ -133,9 +136,10 @@ LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(libjiveui_la_SOURCES) $(jive_SOURCES) $(jiveblit_SOURCES)
-DIST_SOURCES = $(libjiveui_la_SOURCES) $(jive_SOURCES) \
-	$(jiveblit_SOURCES)
+SOURCES = $(libjivenet_la_SOURCES) $(libjiveui_la_SOURCES) \
+	$(jive_SOURCES) $(jiveblit_SOURCES)
+DIST_SOURCES = $(libjivenet_la_SOURCES) $(libjiveui_la_SOURCES) \
+	$(jive_SOURCES) $(jiveblit_SOURCES)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -323,8 +327,8 @@ TOLUA = tolua++
 #	@test \! -s badsyntax
 #	@rm -f badsyntax
 
-# Convenience library: libui.la
-noinst_LTLIBRARIES = libjiveui.la
+# Convenience library:
+noinst_LTLIBRARIES = libjiveui.la libjivenet.la
 BUILT_SOURCES = \
 	src/ui/lua_jiveui.c \
 	src/version.h
@@ -351,6 +355,10 @@ libjiveui_la_SOURCES = \
 	src/ui/lua_jiveui.c
 
 libjiveui_la_LIBADD = -ltolua++ -llua -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL
+libjivenet_la_SOURCES = \
+	src/net/jive_dns.c
+
+libjivenet_la_LIBADD = -lSDL
 
 # Test programs: jiveblit
 testdir = $(bindir)
@@ -358,7 +366,7 @@ jive_SOURCES = \
 	src/jive.c \
 	src/jive_debug.c
 
-jive_LDADD = libjiveui.la -llua
+jive_LDADD = libjiveui.la libjivenet.la -llua
 #jive_DEPENDENCIES = check_lua
 
 # Test program: jiveblit
@@ -860,6 +868,8 @@ clean-noinstLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
+libjivenet.la: $(libjivenet_la_OBJECTS) $(libjivenet_la_DEPENDENCIES) 
+	$(LINK)  $(libjivenet_la_LDFLAGS) $(libjivenet_la_OBJECTS) $(libjivenet_la_LIBADD) $(LIBS)
 libjiveui.la: $(libjiveui_la_OBJECTS) $(libjiveui_la_DEPENDENCIES) 
 	$(LINK)  $(libjiveui_la_LDFLAGS) $(libjiveui_la_OBJECTS) $(libjiveui_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
@@ -934,6 +944,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_audio.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_debug.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_dns.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_event.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_font.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_framework.Plo@am__quote@
@@ -974,6 +985,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+jive_dns.lo: src/net/jive_dns.c
+@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_dns.lo -MD -MP -MF "$(DEPDIR)/jive_dns.Tpo" -c -o jive_dns.lo `test -f 'src/net/jive_dns.c' || echo '$(srcdir)/'`src/net/jive_dns.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/jive_dns.Tpo" "$(DEPDIR)/jive_dns.Plo"; else rm -f "$(DEPDIR)/jive_dns.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/net/jive_dns.c' object='jive_dns.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_dns.lo `test -f 'src/net/jive_dns.c' || echo '$(srcdir)/'`src/net/jive_dns.c
 
 jive_audio.lo: src/ui/jive_audio.c
 @am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_audio.lo -MD -MP -MF "$(DEPDIR)/jive_audio.Tpo" -c -o jive_audio.lo `test -f 'src/ui/jive_audio.c' || echo '$(srcdir)/'`src/ui/jive_audio.c; \

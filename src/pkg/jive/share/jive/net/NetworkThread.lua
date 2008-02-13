@@ -40,6 +40,7 @@ local oo                = require("loop.base")
 local Event             = require("jive.ui.Event")
 local Framework         = require("jive.ui.Framework")
 local Task              = require("jive.ui.Task")
+local DNS               = require("jive.net.DNS")
 
 local log               = require("jive.utils.log").logger("net.thread")
 
@@ -311,6 +312,9 @@ function __init(self)
 		-- list of objects for notify
 		subscribers = {},
 	})
+
+	-- create dns resolver
+	DNS(obj)
 
 	return obj
 end

@@ -17,8 +17,8 @@ TOLUA = tolua++
 #	@rm -f badsyntax
 
 
-# Convenience library: libui.la
-noinst_LTLIBRARIES = libjiveui.la
+# Convenience library:
+noinst_LTLIBRARIES = libjiveui.la libjivenet.la
 
 BUILT_SOURCES = \
 	src/ui/lua_jiveui.c \
@@ -55,8 +55,13 @@ libjiveui_la_SOURCES = \
 	src/ui/jive_window.c \
 	src/ui/lua_jiveui.c
 
-
 libjiveui_la_LIBADD = -ltolua++ -llua -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL
+
+
+libjivenet_la_SOURCES = \
+	src/net/jive_dns.c
+
+libjivenet_la_LIBADD = -lSDL
 
 
 # Program: jivebrowser
@@ -76,7 +81,7 @@ jive_SOURCES = \
 	src/jive.c \
 	src/jive_debug.c
 
-jive_LDADD = libjiveui.la -llua
+jive_LDADD = libjiveui.la libjivenet.la -llua
 #jive_DEPENDENCIES = check_lua
 
 

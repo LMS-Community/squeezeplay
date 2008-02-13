@@ -42,6 +42,9 @@ local socket      = require("socket")
 local socketHttp  = require("socket.http")
 local ltn12       = require("ltn12")
 
+local Task        = require("jive.ui.Task")
+
+local DNS         = require("jive.net.DNS")
 local SocketTcp   = require("jive.net.SocketTcp")
 local RequestHttp = require("jive.net.RequestHttp")
 
@@ -76,6 +79,9 @@ function __init(self, jnt, address, port, name)
 
 	-- init superclass
 	local obj = oo.rawnew(self, SocketTcp(jnt, address, port, name))
+
+	-- hostname
+	obj.address = address
 
 	-- init states
 	obj.t_httpSendState = 't_sendDequeue'
@@ -155,7 +161,7 @@ function t_sendDequeue(self)
 
 	if self.t_httpSendRequest then
 		log:debug(self, " send processing ", self.t_httpSendRequest)
-		self:t_nextSendState(true, 't_sendConnect')
+		self:t_nextSendState(true, 't_sendResolve')
 		return
 	end
 end
@@ -172,11 +178,42 @@ function t_sendDequeueIfIdle(self)
 end
 
 
+-- t_sendResolve
+-- resolve the hostname to an ip address
+function t_sendResolve(self)
+	log:debug(self, ":t_sendResolve()")
+
+	if DNS:isip(self.address) then
+		-- don't lookup an ip address
+		self.t_tcp.address = self.address
+		self:t_nextSendState(true, 't_sendConnect')
+		return
+	end
+
+	local t = Task(tostring(self) .. "(D)",
+		       self,
+		       function()
+			       log:debug(self, " DNS loopup for ", self.address)
+			       local ip, err = DNS:toip(self.address)
+
+			       log:debug(self, " IP=", ip)
+			       if not ip then
+				       self:close(self.address .. " " .. err)
+				       return
+			       end
+
+			       self.t_tcp.address = ip
+			       self:t_nextSendState(true, 't_sendConnect')
+		       end)
+	t:addTask()
+end
+
+
 -- t_sendConnect
 -- open our socket
 function t_sendConnect(self)
 	log:debug(self, ":t_sendConnect()")
-	
+
 	if not self:connected() then
 		local err = socket.skip(1, self:t_connect())
 	
