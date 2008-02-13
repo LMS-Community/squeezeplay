@@ -673,8 +673,28 @@ local function _refreshMe(step)
 	end
 end
 
+-- _hideMeAndMyDad
+-- hides the top window and the parent below it, refreshing the 'grandparent' window via a new request
+local function _hideMeAndMyDad(step)
+	Framework:playSound("WINDOWHIDE")
+	step.window:hide()
+	if step.origin then
+		local parentStep = step.origin
+		if parentStep.origin then
+			parentStep.window:hide()
+			local grandparentStep = parentStep.origin
+			local timer = Timer(1000,
+				function()
+					_refreshJSONAction(grandparentStep)
+				end, true)
+			timer:start()
+		end
+	end
+end
+
+
 -- _hideMe
--- hides the top window
+-- hides the top window and refreshes the parent window, via a new request
 local function _hideMe(step)
 	Framework:playSound("WINDOWHIDE")
 	step.window:hide()
@@ -730,6 +750,8 @@ local function _goNow(destination, transition, step)
 		_goPlaylist()
 	elseif destination == 'parent' and step and step.window then
 		_hideMe(step)
+	elseif destination == 'grandparent' and step and step.window then
+		_hideMeAndMyDad(step)
 	elseif destination == 'refresh' and step and step.window then
 		_refreshMe(step)
 	end
@@ -1254,6 +1276,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 					sink = goHome
 				elseif item['nextWindow'] == 'parent' then
 					sink = _hideMe(_curStep)
+				elseif item['nextWindow'] == 'grandparent' then
+					sink = _hideMeAndMyDad(_curStep)
 				elseif item['nextWindow'] == 'refresh' then
 					sink = _refreshMe(_curStep)
 				elseif item["showBigArtwork"] then
