@@ -57,7 +57,7 @@ AC_HEADER_TIME
 # Checks for library functions.
 AC_PROG_GCC_TRADITIONAL
 AC_TYPE_SIGNAL
-AC_CHECK_FUNCS([malloc calloc realloc getcwd gettimeofday memmove realpath strchr strdup strerror strtol sqrt])
+AC_CHECK_FUNCS([malloc calloc realloc getcwd gettimeofday memmove realpath strchr strdup strerror strtol sqrt inet_aton])
 
 # Test programs
 AC_ARG_ENABLE(tests,
