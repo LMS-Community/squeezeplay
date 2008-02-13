@@ -157,8 +157,6 @@ function _serverstatusSink(self, event, err)
 			
 				player = Player(self.jnt, self, player_info)
 			
-				self.players[player_info.playerid] = player
-
 			else
 				-- update existing players
 				self.players[player_info.playerid]:update(self, player_info)
@@ -180,8 +178,14 @@ end
 
 -- package private method to delete a player
 function _deletePlayer(self, player)
-	player:free(self)
-	table:delete(self.players, player:getId())
+	self.players[player:getId()] = nil
+	self.jnt:notify('playerDelete', player)
+end
+
+
+function _addPlayer(self, player)
+	self.players[player:getId()] = player
+	self.jnt:notify('playerNew', player)
 end
 
 

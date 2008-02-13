@@ -141,9 +141,10 @@ end
 local function _setPlayerPower(self, power)
 	log:debug("_setPlayerPower")
 
+	power = tonumber(power)
 	if power != self.power then
-		self.power = tonumber(power)
-		self.jnt:notify('playerPower', self, tonumber(power))
+		self.power = power
+		self.jnt:notify('playerPower', self, power)
 	end
 end
 
@@ -255,7 +256,7 @@ function __init(self, jnt, slimServer, playerInfo)
 
 	-- notify of new player
 	log:info(obj, " new for ", obj.slimServer)
-	jnt:notify('playerNew', obj)
+	obj.slimServer:_addPlayer(obj)
 
 	return obj
 end
@@ -280,13 +281,13 @@ function update(self, slimServer, playerInfo)
 	if self.slimServer ~= slimServer then
 		-- delete from old server
 		if self.slimServer then
-			self.slimServer:_deletePlayer(self)
+			self:free(self.slimServer)
 		end
 
 		-- add to new server
 		self.slimServer = slimServer
+		self.slimServer:_addPlayer(self)
 		log:info(self, " new for ", self.slimServer)
-		self.jnt:notify('playerNew', self)
 	end
 	
 	self.model = playerInfo.model
@@ -429,7 +430,7 @@ function free(self, slimServer)
 	end
 
 	log:info(self, " delete for ", self.slimServer)
-	self.jnt:notify('playerDelete', self)
+	self.slimServer:_deletePlayer(self)
 	self:offStage()
 	self.slimServer = nil
 
