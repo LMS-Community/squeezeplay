@@ -45,9 +45,13 @@
 #include <unistd.h>
 #endif
 
+#ifdef HAVE_NETDB_H
 #include <netdb.h>
-#include <arpa/inet.h>
+#endif
 
+#ifdef HAVE_ARPA_INET_H
+#include <arpa/inet.h>
+#endif
 
 #ifndef PATH_MAX
 /* Default POSIX maximum path length */
