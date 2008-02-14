@@ -14,7 +14,7 @@ BSP_SCREEN_LOCKED
 	NL	Scherm vergrendeld. Druk op TOEVOEGEN en AFSPELEN om het te ontgrendelen.
 
 BSP_SCREEN_LOCKED_HELP
-	DA	For at låse op, tryk ADD og PLAY knappene på samme tid.
+	DA	For at låse op, tryk ADD og PLAY på samme tid.
 	DE	Drücken Sie zum Aufheben der Sperre gleichzeitig ADD und PLAY.
 	EN	To unlock press the ADD and PLAY buttons at the same time.
 	ES	Para desbloquear, pulse los botones ADD y PLAY simultáneamente.
