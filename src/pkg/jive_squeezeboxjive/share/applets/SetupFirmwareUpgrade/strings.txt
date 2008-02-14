@@ -83,15 +83,6 @@ UPDATE_DOWNLOAD
 	IT	\nCopia aggiornamento in corso
 	NL	\nUpdate wordt gekopieerd
 
-UPDATE_WRITE
-	DA	\nInstallerer opdatering
-	DE	\nAktualisierung wird installiert
-	EN	\nInstalling Update
-	ES	\nInstalando actualización
-	FR	\nInstallation de la mise à jour
-	IT	\nInstallazione aggiornamento in corso
-	NL	\nUpdate wordt geïnstalleerd
-
 UPDATE_VERIFY
 	DA	\nBekræfter opdatering
 	DE	\nAktualisierung wird geprüft

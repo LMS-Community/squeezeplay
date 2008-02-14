@@ -1,9 +1,4 @@
 
--- FIXME at the moment the upgrade stores the kernel and filesystem
--- images in /tmp before writing to flash. when the bootloader and
--- kernel support safe upgrading the flash should be written to as
--- the images are downloaded.
-
 
 local ipairs, pairs, tonumber, tostring, type = ipairs, pairs, tonumber, tostring, type
 
@@ -70,31 +65,6 @@ function start(self, callback)
 		log:warn("parseVersion failed")
 		return nil, err
 	end
-			    
-	-- stream the firmware, and update the flash
-	t, err = self:download(callback)
-	if not t then
-		log:warn("download Failed")
-		return nil, err
-	end
-
-	callback(false, "UPDATE_VERIFY")
-
-	-- checksum kernel
-	t, err = self:checksum(self._zImageExtraVersion, "/tmp/")
-	if not t then
-		log:warn("file checksum failed")
-		return nil, err
-	end
-
-	-- checksum cramfs
-	t, err = self:checksum("root.cramfs", "/tmp/")
-	if not t then
-		log:warn("file checksum failed")
-		return nil, err
-	end
-
-	callback(false, "UPDATE_WRITE")
 
 	-- disable VOL+ on boot
 	t, err = self:fw_setenv({ sw7 = "" })
@@ -103,16 +73,23 @@ function start(self, callback)
 		return nil, err
 	end
 
-	-- write images to flash
-	t, err = self:flash(self._zImageExtraVersion)
+	-- erase flash
+	t, err = self:flashErase(self._zImageExtraVersion)
 	if not t then
 		log:warn("flash kernel failed")
 		return nil, err
 	end
 
-	t, err = self:flash("root.cramfs")
+	t, err = self:flashErase("root.cramfs")
 	if not t then
 		log:warn("flash filesystem failed")
+		return nil, err
+	end
+			    
+	-- stream the firmware, and update the flash
+	t, err = self:download(callback)
+	if not t then
+		log:warn("download Failed")
 		return nil, err
 	end
 
@@ -156,6 +133,26 @@ function start(self, callback)
 	os.execute("/bin/busybox reboot -f")
 
 	return true
+end
+
+
+function processSink(self, prog)
+	local fh, err = io.popen(prog, "w")
+
+	if fh == nil then
+		return function()
+			return false, err
+		end
+	end
+
+	return function(chunk, err)
+		if chunk then
+			return fh:write(chunk)
+		else
+			fh:close()
+			return false
+		end
+	end
 end
 
 
@@ -239,9 +236,10 @@ function upgradeSink(self)
 				       length = 0
 
 				       -- open file handle
-				       -- FIXME erase and write flash here
-				       local fh, err = io.open("/tmp/" .. part, "w+")
-				       fhsink = ltn12.sink.file(fh, err)
+					local cmd = "/usr/sbin/nandwrite -qp " .. self._mtd[part] .. " -"
+					log:warn("flash: ", cmd)
+
+					fhsink = self:processSink(cmd)
 			       end
 
 			       return 1
@@ -446,22 +444,11 @@ end
 
 
 -- flash the image from tmp file
-function flash(self, part)
+function flashErase(self, part)
 	local cmd, proc
 
 	-- erase flash
 	cmd = "/usr/sbin/flash_eraseall -q " .. self._mtd[part]
-	log:warn("flash: ", cmd)
-
-	proc = Process(jnt, cmd)
-	proc:read(nullProcessSink)
-	while proc:status() ~= "dead" do
-		-- wait for the process to complete
-		Task:yield()
-	end
-
-	-- write flash
-	cmd = "/usr/sbin/nandwrite -qp " .. self._mtd[part] .. " " .. "/tmp/" .. part
 	log:warn("flash: ", cmd)
 
 	proc = Process(jnt, cmd)
