@@ -116,6 +116,12 @@ local function _staticArtworkThumbUri(path)
 	if string.match(path, '.png') then
                 artworkUri = string.gsub(path, '.png', resizeFrag)
 	end
+	
+	-- Bug 7123, Add a leading slash if needed
+	if not string.find(artworkUri, "^/") then
+		artworkUri = "/" .. artworkUri
+	end
+	
 	return artworkUri
 end
 
@@ -151,7 +157,13 @@ local function _getIcon(self, item, icon, remote)
 			if server:isSqueezeNetwork() then
 				-- Artwork on SN must be fetched as a normal URL
 				local ip, port = server:getIpPort()
-				item["icon"] = 'http://' .. ip .. ':' .. port .. '/' .. item["icon"]
+				
+				-- Bug 7123, Add a leading slash if needed
+				if not string.find(item["icon"], "^/") then
+					item["icon"] = "/" .. item["icon"]
+				end
+				
+				item["icon"] = 'http://' .. ip .. ':' .. port .. item["icon"]
 				server:fetchArtworkURL(item["icon"], icon, ARTWORK_SIZE)
 			else
 				server:fetchArtworkThumb(item["icon"], icon, _staticArtworkThumbUri, ARTWORK_SIZE)

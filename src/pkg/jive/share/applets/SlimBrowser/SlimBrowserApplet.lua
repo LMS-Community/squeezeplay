@@ -219,6 +219,11 @@ local function _artworkThumbUri(iconId, size, imgFormat)
 		-- and we don't want this in gd format, because that doesn't work
 		imgFormat = 'png'
 		artworkUri = string.gsub(iconId, '.png', resizeFrag .. '.' .. imgFormat)
+		
+		-- Bug 7123, Add a leading slash if needed
+		if not string.find(artworkUri, "^/") then
+			artworkUri = "/" .. artworkUri
+		end
 	-- otherwise punt
 	else
 		return iconId
@@ -289,6 +294,12 @@ local function _staticArtworkThumbUri(path, ARTWORK_SIZE)
 	if string.match(path, '.png') then
 		artworkUri = string.gsub(path, '.png', resizeFrag)
 	end
+	
+	-- Bug 7123, Add a leading slash if needed
+	if not string.find(artworkUri, "^/") then
+		artworkUri = "/" .. artworkUri
+	end
+	
 	return artworkUri
 end
 
