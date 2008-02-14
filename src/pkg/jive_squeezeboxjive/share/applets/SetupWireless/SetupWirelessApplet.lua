@@ -878,7 +878,7 @@ function connectFailed(self, reason)
 						sound = "WINDOWHIDE",
 						callback = function()
 								   connect(self)
-								   window:hide()
+								   window:hide(Window.transitionNone)
 							   end
 					},
 					{
@@ -1057,7 +1057,7 @@ function failedDHCPandWPA(self)
 								   -- poke udhcpto try again
 								   _sigusr1("udhcpc")
 								   connect(self, true)
-								   window:hide()
+								   window:hide(Window.transitionNone)
 							   end
 					},
 					{
@@ -1101,7 +1101,7 @@ function failedDHCPandWEP(self)
 								   -- poke udhcpto try again
 								   _sigusr1("udhcpc")
 								   connect(self, true)
-								   window:hide()
+								   window:hide(Window.transitionNone)
 							   end
 					},
 
