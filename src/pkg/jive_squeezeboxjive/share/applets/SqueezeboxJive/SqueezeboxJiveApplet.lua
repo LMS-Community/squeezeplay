@@ -640,6 +640,11 @@ end
 function lockScreen(self)
 	-- lock
 	local popup = Popup("popupIcon")
+
+	popup:setAllowScreensaver(false)
+	popup:setAlwaysOnTop(true)
+	popup:setAutoHide(false)
+
 	-- FIXME change icon and text
 	popup:addWidget(Icon("iconLocked"))
 	popup:addWidget(Label("text", self:string("BSP_SCREEN_LOCKED")))
