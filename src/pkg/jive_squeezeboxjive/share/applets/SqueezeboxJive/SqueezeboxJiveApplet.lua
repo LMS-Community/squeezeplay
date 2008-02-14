@@ -429,7 +429,7 @@ function settingsBrightnessShow(self, menuItem)
 		end
 	)
 
-	self:tieAndShowWindow(window)
+	window:show()
 	return window
 end
 
@@ -488,7 +488,7 @@ function settingsBacklightTimerShow(self, menuItem)
 		end
 	)
 
-	self:tieAndShowWindow(window)
+	window:show()
 	return window
 end
 
@@ -519,7 +519,7 @@ function sleep(self)
 		-- e.g. Bug 6641 during a firmware upgrade
 		-- XXXX this needs reviewing
 		local topWindow = Framework.windowStack[1]
-		if oo.instanceof(topWindow, Popup) then
+		if oo.instanceof(topWindow, Popup) and not self.lockedPopup then
 			self:setPowerState("dimmed")
 			
 		elseif self.powerState == "dimmed" then
@@ -644,9 +644,8 @@ function lockScreen(self)
 	popup:addWidget(Icon("iconLocked"))
 	popup:addWidget(Label("text", self:string("BSP_SCREEN_LOCKED")))
 	popup:addWidget(Textarea("help", self:string("BSP_SCREEN_LOCKED_HELP")))
-	self:tieAndShowWindow(popup)
 
-	self:setPowerState("locked")
+	popup:show()
 
 	self.lockedPopup = popup
 	self.lockedTimer = Timer(2000,
@@ -655,6 +654,8 @@ function lockScreen(self)
 					 self:_setCPUSpeed(false)
 				 end,
 				 true)
+
+	self:setPowerState("locked")
 
 	self.lockedListener = 
 		Framework:addListener(EVENT_KEY_DOWN | EVENT_KEY_PRESS,
@@ -728,7 +729,7 @@ function batteryLowShow(self)
 	-- make sure the display is on
 	self:setBrightness()
 
-	self:tieAndShowWindow(popup)
+	popup:show()
 end
 
 
@@ -767,7 +768,7 @@ function settingsPowerDown(self, menuItem)
 	}
 	menu:setItems(items)
 
-        self:tieAndShowWindow(window)
+	window:show()
         return window
 end
 
@@ -801,7 +802,7 @@ function settingsPowerOff(self)
 		true
 	)
 
-	self:tieAndShowWindow(popup)
+	popup:show()
 
 	popup:playSound("SHUTDOWN")
 end
@@ -887,7 +888,7 @@ function settingsTestSuspend(self, menuItem)
 		end
 	)
 
-	self:tieAndShowWindow(window)
+	window:show()
 	return window
 end
 
