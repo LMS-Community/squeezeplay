@@ -197,7 +197,7 @@ function eventLoop(self, netTask)
 			tasks = task:resume() or tasks
 			now = self:getTicks()
 			if now - start > 20 then
-				log:warn(task.name, " took ", now - start, " ms")
+				log:debug(task.name, " took ", now - start, " ms")
 			end
 			if framedue <= now then
 				break
@@ -233,7 +233,7 @@ function eventLoop(self, netTask)
 
 			now = self:getTicks()
 			if now > framedue then
-				logTask:warn("Dropped frame. delay=", now-framedue, "ms")
+				logTask:debug("Dropped frame. delay=", now-framedue, "ms")
 				framedue = now + (framerate >> 2)
 			end
 		end
