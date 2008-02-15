@@ -466,10 +466,13 @@ end
 function notify_networkConnected(self)
 	log:info("network connected")
 
-	-- force reconnection to all servers if we don't have a player
 	if not self.currentPlayer then
+		-- force reconnection to all servers if we don't have a player
 		self:discover()
 		self:connect()
+	else
+		-- otherwise force connection to the current player
+		self.currentPlayer:getSlimServer():connect()
 	end
 end
 

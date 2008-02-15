@@ -926,11 +926,11 @@ function _suspendTask(self)
 	local settings = self:getSettings()
 	local wakeAfter = settings.suspendWake and settings.suspendWake or ""
 
-	-- suspend
-	os.execute("/etc/init.d/suspend " .. wakeAfter)
-
-	-- wake up power state
-	self:wakeup()
+	local slimDiscovery = appletManager:getAppletInstance("SlimDiscovery")
+	local slimServers
+	if slimDiscovery then
+		slimServers = slimDiscovery.serversObj
+	end
 
 	-- start timer to resume this task every second
 	self.suspendPopup:addTimer(1000,
@@ -940,20 +940,43 @@ function _suspendTask(self)
 			end
 		end)
 
+	-- disconnect from all SlimServers
+	if slimServers then
+		slimServers:disconnect()
+
+		local connected
+		repeat
+			connected = false
+			for i,server in slimServers:allServers() do
+				connected = connected or server:isConnected()
+				log:info("server=", server:getName(), " connected=", connected)
+			end
+
+			Task:yield(false)
+		until not connected
+	end
+
+
+	-- suspend
+	os.execute("/etc/init.d/suspend " .. wakeAfter)
+
+	-- wake up power state
+	self:wakeup()
+
 	while true do
 		local status = self.wireless:t_wpaStatus()
 
 		-- network connected?
-		log:info('Wireless was connected: ', wirelessWasConnected)
 		if status then
-			log:info('wpa_state=', status.wpa_state)
-			log:info("resume ip=", status.ip_address, " zeroconf=", zeroconf)
+			log:info("wpa_state=", status.wpa_state, " resume ip=", status.ip_address, " zeroconf=", zeroconf)
+		else
+			log:info("connected=", wirelessWasConnected)
 		end
 
 		if not wirelessWasConnected and status and status.wpa_state
 			or (status.wpa_state == "COMPLETED" and status.ip_address and (not string.match(status.ip_address, "^169.254.") or zeroconf)) then
 
-			-- force reconnections
+			-- force connection to SlimServer
 			if wirelessWasConnected then
 				jnt:notify("networkConnected")
 			end
