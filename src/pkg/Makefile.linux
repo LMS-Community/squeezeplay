@@ -38,7 +38,7 @@ all: sdl-all lua-all app
 #####
 
 .PHONY: sdl-all freetype sdl sdl-image sdl-tff sdl-gfx c-ares
-sdl-all: freetype sdl sdl-ttf sdl-image sdl-gfx c-ares
+sdl-all: freetype sdl sdl-ttf sdl-image sdl-gfx
 
 # freetype
 freetype-2.1.10/config.mk:
@@ -75,12 +75,6 @@ SDL_gfx-2.0.15/Makefile:
 sdl-gfx: SDL_gfx-2.0.15/Makefile
 	cd SDL_gfx-2.0.15; make && make install
 
-# c-ares
-c-ares-1.5.1/Makefile:
-	cd c-ares-1.5.1; ./configure --prefix=${PREFIX}
-
-c-ares: c-ares-1.5.1/Makefile
-	cd c-ares-1.5.1; make && make install
 
 #####
 # lua
