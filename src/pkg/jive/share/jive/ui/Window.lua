@@ -207,10 +207,17 @@ Shows this window as a replacement for the window at the top of the window stack
 =cut
 --]]
 function showInstead(self, transition)
-	local last = Framework.windowStack[1]
+	local stack = Framework.windowStack
+
+	local idx = 1
+	local topwindow = stack[idx]
+	while topwindow and topwindow.alwaysOnTop do
+		idx = idx + 1
+		topwindow = stack[idx]
+	end
 
 	self:show(transition)
-	last:hide()
+	topwindow:hide()
 end
 
 
