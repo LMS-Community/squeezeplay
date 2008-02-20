@@ -914,6 +914,7 @@ local function _menuSink(self, cmd)
 				item.icon = choice
 
 				--add the item to the menu
+				_playerMenus[item.id] = item
 				jiveMain:addItem(item)
 
 			else
