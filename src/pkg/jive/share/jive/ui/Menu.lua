@@ -382,6 +382,23 @@ function getSelectedItem(self)
 	return _selectedItem(self)
 end
 
+--[[
+
+=head2 jive.ui.Menu:getCurrentIndex()
+
+Returns the index of the item that is marked as the currentIndex
+Used primarily in the current playlist
+
+=cut
+--]]
+function getCurrentIndex(self)
+	if self.list and self.list.currentIndex then
+		return self.list.currentIndex
+	else
+		return false
+	end
+end
+
 
 --[[
 

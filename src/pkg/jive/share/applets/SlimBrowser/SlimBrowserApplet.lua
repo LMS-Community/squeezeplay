@@ -1901,20 +1901,9 @@ function showPlaylist()
 
 
 		if playlistSize == nil or (playlistSize and playlistSize <= 1) then
-			_statusStep.menu["_lastSelectedIndex"] = 1
-			_statusStep.menu["_lastSelectedOffset"] = 1 
-			_statusStep.menu.selected = 1 
-			_statusStep.menu:_updateWidgets()
-		-- otherwise bring the currently playing item to the screen with offset of 2
-		elseif _statusStep.menu.list.currentIndex then
-			_statusStep.menu.selected = _statusStep.menu.list.currentIndex
-			if _statusStep.menu["_lastSelectedIndex"] then
-				_statusStep.menu["_lastSelectedIndex"] = _statusStep.menu.selected
-				_statusStep.menu["_lastSelectedOffset"] = 2
-			end
-			-- since we've hacked the _lastSelectedIndex, it's necessary to 
-			-- _updateWidgets to display correctly selected item
-			_statusStep.menu:_updateWidgets()
+			_statusStep.menu:setSelectedIndex(1)
+		elseif _statusStep.menu:getCurrentIndex() then
+			_statusStep.menu:setSelectedIndex(_statusStep.menu:getCurrentIndex())
 		end
 
 		_statusStep.window:addListener(EVENT_KEY_PRESS,
