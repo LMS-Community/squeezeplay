@@ -17,8 +17,6 @@ end
 
 
 function registerApplet(meta)
-	-- bug 6837: remove setup receiver from setting menu
-	--jiveMain:addItem(meta:menuItem('setupSqueezebox', 'advancedSettings', "SQUEEZEBOX_SETUP", function(applet, ...) applet:settingsShow(...) end))
 end
 
 
