@@ -11,6 +11,12 @@ WALLPAPER
 	IT	Sfondo
 	NL	Achtergrond
 
+WALLPAPER_HELP_PLAYER
+	EN	Choose the screen background to be shown for %s
+
+WALLPAPER_HELP_NO_PLAYER
+	EN	Choose the default screen background to be shown
+
 CREDITS
 	DA	Krediteringer
 	DE	Mitwirkende
