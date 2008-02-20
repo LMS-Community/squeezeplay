@@ -89,24 +89,44 @@ local PREFIX = "applets/SetupWallpaper/wallpaper/"
 
 local REFRESH_TIME = 300 -- only fetch remote wallpapers while browsing if the file is older than this (seconds)
 
+function init(self)
+	jnt:subscribe(self)
+end
+
+-- notify_playerCurrent
+-- this is called when the current player changes (possibly from no player)
+function notify_playerCurrent(self, player)
+        log:info("SetupWallpaper:notify_playerCurrent(", player, ")")
+	if player == self.player then
+		return
+	end
+
+	self.player = player
+	if player and player:getId() then
+		self:setBackground(nil, player:getId())
+	else
+		self:setBackground(nil, 'wallpaper')
+	end
+end
 
 function settingsShow(self)
 	local window = Window("window", self:string('WALLPAPER'), 'settingstitle')
 
-	self.currentPlayer = _getCurrentPlayer()
 	self.currentPlayerId = 'wallpaper'
 
-	local _currentPlayer = self.currentPlayer
-	local _playerId      = self.currentPlayerid
 	local _playerName    = false
 
-	if _currentPlayer then
-		_playerId      = _currentPlayer:getId()
-		_playerName    = _currentPlayer:getName()
+	if not self.player then
+		self.player = _getCurrentPlayer()
 	end
 
-	if _playerName then
-		window:addWidget(Textarea("help", self:string("WALLPAPER_HELP_PLAYER", _playerName)))
+	if self.player then
+		self.currentPlayerId = self.player:getId()
+		self.playerName    = self.player:getName()
+	end
+
+	if self.playerName then
+		window:addWidget(Textarea("help", self:string("WALLPAPER_HELP_PLAYER", self.playerName)))
 	else
 		window:addWidget(Textarea("help", self:string("WALLPAPER_HELP_NO_PLAYER")))
 	end
@@ -114,9 +134,10 @@ function settingsShow(self)
 	self.menu = SimpleMenu("menu")
 	window:addWidget(self.menu)
 
-	local wallpaper = self:getSettings()[_playerId]
+	local wallpaper = self:getSettings()[self.currentPlayerId]
 
 	self.server = self:_getCurrentServer()
+
 	self.group  = RadioGroup()
 
 	self.menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
@@ -130,12 +151,12 @@ function settingsShow(self)
 				icon = RadioButton("radio", 
 								   self.group, 
 								   function()
-									   self:_setBackground(file, _playerId)
+									   self:setBackground(file, self.currentPlayerId)
 								   end,
 								   wallpaper == file
 							   ),
 				focusGained = function(event)
-								  self:_showBackground(file, _playerId)
+								  self:showBackground(file, self.currentPlayerId)
 							  end
 			})
 
@@ -166,7 +187,7 @@ function settingsShow(self)
 	-- Store the applet settings when the window is closed
 	window:addListener(EVENT_WINDOW_POP,
 		function()
-			self:_showBackground(nil, _playerId)
+			self:showBackground(nil, self.currentPlayerId)
 			self:storeSettings()
 		end
 	)
@@ -174,7 +195,6 @@ function settingsShow(self)
 	self:tieAndShowWindow(window)
 	return window
 end
-
 
 function _getCurrentPlayer(self)
 	local manager = AppletManager:getAppletInstance("SlimDiscovery")
@@ -185,20 +205,19 @@ function _getCurrentPlayer(self)
 	return false
 end
 
-
 function _getCurrentServer(self)
-	local manager = AppletManager:getAppletInstance("SlimDiscovery")
+
 	local server
-	if manager then
-		if manager:getCurrentPlayer() then
-			server = manager:getCurrentPlayer():getSlimServer()
-		else
-			for _, s in manager:allServers() do
-				server = s
-				break
-			end
+	if self.player then
+		server = self.player:getSlimServer()
+	else
+		local manager = AppletManager:getAppletInstance("SlimDiscovery")
+		for _, s in manager:allServers() do
+			server = s
+			break
 		end
 	end
+
 	return server
 end
 
@@ -220,7 +239,7 @@ function _serverSink(self, data)
 										   local path = Framework:findFile(PREFIX) .. entry.file
 										   local attr = lfs.attributes(path)
 										   if attr then
-											   self:_setBackground(entry.file, self.currentPlayerId)
+											   self:setBackground(entry.file, self.currentPlayerId)
 										   end
 									   end
 								   ),
@@ -229,7 +248,7 @@ function _serverSink(self, data)
 									  local attr = lfs.attributes(path)
 									  if attr and os.time() - attr.modification < REFRESH_TIME then
 										  log:info("using local copy of: ", entry.file)
-										  self:_showBackground(entry.file, self.currentPlayerId)
+										  self:showBackground(entry.file, self.currentPlayerId)
 									  else
 										  log:info("fetching: ", entry.file)
 										  local url
@@ -238,7 +257,7 @@ function _serverSink(self, data)
 										  else
 											  url = entry.url
 										  end
-										  self:_fetchFile(url, path, function() self:_showBackground(entry.file, self.currentPlayerId) end)
+										  self:_fetchFile(url, path, function() self:showBackground(entry.file, self.currentPlayerId) end)
 									  end
 								  end
 				}
@@ -266,7 +285,7 @@ function _licenseMenuItem(self)
 			window:addWidget(Textarea("textarea", text))
 			self:tieAndShowWindow(window)
 		end,
-		focusGained = function(event) self:_showBackground(nil, self.currentPlayerId) end
+		focusGained = function(event) self:showBackground(nil, self.currentPlayerId) end
 	}
 end
 
@@ -314,7 +333,7 @@ function _fetchFile(self, url, path, callback)
 end
 
 
-function _showBackground(self, wallpaper, playerId)
+function showBackground(self, wallpaper, playerId)
 	if not playerId then playerId = 'wallpaper' end
 	if not wallpaper then
 		wallpaper = self:getSettings()[playerId]
@@ -336,14 +355,18 @@ function _showBackground(self, wallpaper, playerId)
 end
 
 
-function _setBackground(self, wallpaper, playerId)
-	if not playerId then playerId = 'wallpaper' end
+function setBackground(self, wallpaper, playerId)
+
+	if not playerId then 
+		playerId = 'wallpaper' 
+	end
+	log:info('SetupWallpaper, setting wallpaper for ', playerId)
 	-- set the new wallpaper, or use the existing setting
 	if wallpaper then
 		self:getSettings()[playerId] = wallpaper
 	end
 
-	self:_showBackground(wallpaper, playerId)
+	self:showBackground(wallpaper, playerId)
 end
 
 

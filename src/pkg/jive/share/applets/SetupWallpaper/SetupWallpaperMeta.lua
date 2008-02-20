@@ -43,7 +43,7 @@ end
 function registerApplet(meta)
 	-- load default wallpaper
 	local obj = appletManager:loadApplet("SetupWallpaper")
-	obj:_setBackground(nil) -- nil is default from settings
+	obj:setBackground(nil) -- nil is default from settings
 	appletManager:freeApplet("SetupWallpaper")
 
 	-- add a menu item for configuration

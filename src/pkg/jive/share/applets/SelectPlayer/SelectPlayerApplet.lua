@@ -146,8 +146,7 @@ function manageSelectPlayerMenu(self)
 
 	-- if numberOfPlayers < 2 and selectPlayerMenuItem exists, get rid of it
 	elseif _numberOfPlayers < 2 and self.selectPlayerMenuItem then
-		-- FIXME, this probably won't work quite right with new main menu code
-		jiveMain:removeItem(self.selectPlayerMenuItem)
+		jiveMain:removeItemById('selectPlayer')
 		self.selectPlayerMenuItem = nil
 	end
 end
@@ -266,7 +265,7 @@ end
 
 function _showWallpaper(self, playerId)
 	log:info("previewing background wallpaper for ", playerId)
-	SetupWallpaper:_setBackground(nil, playerId)
+	SetupWallpaper:showBackground(nil, playerId)
 end
 
 
@@ -451,7 +450,11 @@ end
 function free(self)
 
 	-- load the correct wallpaper on exit
-	self:_showWallpaper(self.selectedPlayer.id)
+	if self.selectedPlayer and self.selectedPlayer:getId() then
+		self:_showWallpaper(self.selectedPlayer:getId())
+	else
+		self:_showWallpaper('wallpaper')
+	end
 	
 	AppletManager:freeApplet("SetupWallpaper")
 	-- Never free this applet

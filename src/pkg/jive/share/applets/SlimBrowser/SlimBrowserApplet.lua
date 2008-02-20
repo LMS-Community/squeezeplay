@@ -2028,7 +2028,7 @@ function notify_playerModeChange(self, player, mode)
 end
 
 function notify_playerPlaylistChange(self, player)
-	log:warn('SlimBrowser.notify_playerPlaylistChange')
+	log:debug('SlimBrowser.notify_playerPlaylistChange')
 	if _player ~= player then
 		return
 	end
@@ -2050,7 +2050,7 @@ function notify_playerPlaylistChange(self, player)
 end
 
 function notify_playerTrackChange(self, player, nowplaying)
-	log:warn('SlimBrowser.notify_playerTrackChange')
+	log:debug('SlimBrowser.notify_playerTrackChange')
 
 	if _player ~= player then
 		return
@@ -2106,7 +2106,7 @@ end
 -- notify_playerCurrent
 -- this is called when the current player changes (possibly from no player)
 function notify_playerCurrent(self, player)
-	log:info("SlimBrowserApplet:notify_playerCurrent(", player, ")")
+	log:debug("SlimBrowserApplet:notify_playerCurrent(", player, ")")
 
 	-- has the player actually changed?
 	if _player == player then
@@ -2116,16 +2116,6 @@ function notify_playerCurrent(self, player)
 	-- free current player
 	if _player then
 		self:free()
-	end
-
-	-- FIXME this is badly placed. the per player wallpaper now seems to
-	-- be split into three different applets (SelectPlayer, SetupWallpaper
-	-- and here). This should be refactored, preferably into one place
-	if not _player and player then
-		log:info("First load...get the correct wallpaper on screen")
-		local SetupWallpaper = AppletManager:loadApplet("SetupWallpaper")
-		SetupWallpaper:_setBackground(nil, player:getId())
-		AppletManager:freeApplet("SetupWallpaper")
 	end
 
 	-- clear any errors, we may have changed servers
@@ -2209,6 +2199,7 @@ function notify_playerCurrent(self, player)
 end
 
 function notify_playerNeedsUpgrade(self, player, needsUpgrade)
+	log:debug("SlimBrowserApplet:notify_playerNeedsUpgrade(", player, ")")
 
 	if _player ~= player then
 		return
