@@ -61,7 +61,9 @@ oo.class(_M, SocketTcp)
 
 local BLOCKSIZE = 4096
 
-local SOCKET_TIMEOUT = 70 -- timeout for socket operations (seconds)
+-- timeout for socket operations
+local SOCKET_CONNECT_TIMEOUT = 10 -- connect in 10 seconds
+local SOCKET_TIMEOUT = 70 -- response in 70 seconds
 
 
 --[[
@@ -346,7 +348,7 @@ function t_sendRequest(self)
 		self:t_nextSendState(true, 't_sendComplete')
 	end
 
-	self:t_addWrite(pump, SOCKET_TIMEOUT)
+	self:t_addWrite(pump, SOCKET_CONNECT_TIMEOUT)
 end
 
 
