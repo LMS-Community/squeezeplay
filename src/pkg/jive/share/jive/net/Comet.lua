@@ -174,6 +174,8 @@ end
 function connect(self)
 	log:debug(self, ": connect state=", self.state)
 
+	self.isactive = true
+
 	if self.state == CONNECTING or self.state == CONNECTED then
 		-- Already connecting/connected
 		return
@@ -184,13 +186,14 @@ function connect(self)
 		_state(self, UNCONNECTED)
 	end
 
-	self.isactive = true
 	_handshake(self)
 end
 
 
 function disconnect(self)
 	log:debug(self, ": disconnect state=", self.state)
+
+	self.isactive = false
 
 	if self.state == UNCONNECTED or self.state == UNCONNECTING then
 		-- Already disconnecting/unconnected
@@ -203,7 +206,6 @@ function disconnect(self)
 		return
 	end
 
-	self.isactive = false
 	_disconnect(self)
 end
 
@@ -442,7 +444,7 @@ function request(self, func, playerid, request, priority)
 	-- Send immediately unless we're batching queries
 	if self.state ~= CONNECTED or self.batch ~= 0 then
 		if self.state ~= CONNECTED then
-			self.jnt:notify('cometDisconnected', self, #self.pending_reqs)
+			self.jnt:notify('cometDisconnected', self, #self.pending_reqs + #self.sent_reqs)
 		end
 
 		return id
@@ -522,7 +524,7 @@ _state = function(self, state)
 		self.chttp:close()
 		self.rhttp:close()
 
-		self.jnt:notify('cometDisconnected', self, #self.pending_reqs)
+		self.jnt:notify('cometDisconnected', self, #self.pending_reqs + #self.sent_reqs)
 	end
 end
 
@@ -608,6 +610,14 @@ _getHandshakeSink = function(self)
 			self.advice    = data.advice
 
 			log:debug(self, ": _handshake OK, clientId: ", self.clientId)
+
+			-- Rewrite clientId in requests to be reset
+			for i, req in ipairs(self.sent_reqs) do
+				if req.data.response then
+					req.data.response = string.gsub(req.data.response, "/(%x+)/", "/" .. self.clientId .. "/")
+				end
+			end
+
 
 			-- Continue with connect phase, note we are still not CONNECTED
 			_connect(self)
