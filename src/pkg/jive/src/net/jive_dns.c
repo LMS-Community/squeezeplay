@@ -9,6 +9,8 @@
 #ifdef _WIN32
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#else
+#include <sys/stat.h>
 #endif
 
 #define RESOLV_TIMEOUT (2 * 60 * 1000) /* 2 minutes */
@@ -73,6 +75,24 @@ static void read_pushstring(lua_State *L, int fd) {
 }
 
 
+static int stat_resolv_conf(void) {
+#ifndef _WIN32
+	struct stat stat_buf;
+	static time_t last_mtime = 0;
+
+	/* check if resolv.conf has changed */
+	if (stat("/etc/resolv.conf", &stat_buf) == 0) {
+		if (last_mtime != stat_buf.st_mtime) {
+			last_mtime = stat_buf.st_mtime;
+			return 1;
+		}
+	}
+#endif
+
+	return 0;
+}
+
+
 /* dns resolver thread */
 static int dns_resolver_thread(void *p) {
 	int fd = (int) p;
@@ -89,7 +109,7 @@ static int dns_resolver_thread(void *p) {
 			/* broken pipe */
 			return 0;
 		}
-		
+
 		buf = malloc(len + 1);
 		if (read(fd, buf, len) < 0) {
 			/* broken pipe */
@@ -98,16 +118,16 @@ static int dns_resolver_thread(void *p) {
 		}
 		buf[len] = '\0';
 
-		if (failed_error) {
+
+		if (failed_error && !stat_resolv_conf()) {
 			Uint32 now = SDL_GetTicks();
 			
 			if (now - failed_timeout < RESOLV_TIMEOUT) {
 				write_str(fd, failed_error);
 				continue;
 			}
-
-			failed_error = NULL;
 		}
+		failed_error = NULL;
 
 		if (inet_aton(buf, &byaddr)) {
 			hostent = gethostbyaddr((char *) &byaddr, sizeof(addr), AF_INET);
