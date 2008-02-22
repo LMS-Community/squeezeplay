@@ -134,23 +134,21 @@ end
 
 -- t_add/remove/read/write
 function t_addRead(self, pump, timeout)
-	if not self.readPump then
-		-- task to iterate over all read pumps
-		local task = Task(tostring(self) .. "(R)",
-				  self,
-				  function(self, networkErr)
-					  while self.readPump do
-						  if not self.readPump(networkErr) then
-							  self, networkErr = Task:yield(false)
-						  end
+	-- task to iterate over all read pumps
+	local task = Task(tostring(self) .. "(R)",
+			  self,
+			  function(self, networkErr)
+				  while self.readPump do
+					  if not self.readPump(networkErr) then
+						  self, networkErr = Task:yield(false)
 					  end
-				  end,
-				  _taskError,
-				  self.priority)
-		self.jnt:t_addRead(self.t_sock, task, timeout)
-	end
+				  end
+			  end,
+			  _taskError,
+			  self.priority)
 
 	self.readPump = pump
+	self.jnt:t_addRead(self.t_sock, task, timeout)
 end
 
 function t_removeRead(self)
@@ -161,23 +159,21 @@ function t_removeRead(self)
 end
 
 function t_addWrite(self, pump, timeout)
-	if not self.writePump then
-		-- task to iterate over all write pumps
-		local task = Task(tostring(self) .. "(W)",
-				  self,
-				  function(self, networkErr)
-					  while self.writePump do
-						  if not self.writePump(networkErr) then
-							  self, networkErr = Task:yield(false)
-						  end
+	-- task to iterate over all write pumps
+	local task = Task(tostring(self) .. "(W)",
+			  self,
+			  function(self, networkErr)
+				  while self.writePump do
+					  if not self.writePump(networkErr) then
+						  self, networkErr = Task:yield(false)
 					  end
-				  end,
-				  _taskError,
-				  self.priority)
-		self.jnt:t_addWrite(self.t_sock, task, timeout)
-	end
-		
+				  end
+			  end,
+			  _taskError,
+			  self.priority)
+
 	self.writePump = pump
+	self.jnt:t_addWrite(self.t_sock, task, timeout)
 end
 
 function t_removeWrite(self)
