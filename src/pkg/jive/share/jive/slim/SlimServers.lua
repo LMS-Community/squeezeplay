@@ -94,7 +94,7 @@ local function _cacheServer(self, ss_ip, ss_port, ss_name)
 	
 	-- update the server with the name info, might have changed
 	-- also keeps track of the last time we've seen the server for deletion
-	self._servers[ss_id]:updateFromUdp(ss_name)
+	self._servers[ss_id]:updateFromUdp(ss_ip, ss_port, ss_name)
 end
 
 
@@ -459,6 +459,19 @@ function pollList(self, list)
 	end
 
 	return self.poll
+end
+
+
+-- restart discovery if the current slimserver disconnects
+function notify_serverDisconnected(self, slimserver)
+	if not self.currentPlayer or self.currentPlayer:getSlimServer() ~= slimserver then
+		return
+	end
+
+	-- start discovery, use a timer to make sure we don't loop
+	-- back into the Comet class while handling the event.
+	self.discoverState = 'discover'
+	self.discoverTimer:restart(1)
 end
 
 

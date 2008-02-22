@@ -248,6 +248,7 @@ function __init(self, jnt, ip, port, name)
 
 		-- are we connected to the server?
 		active = false,
+		connecting = false,
 
 		-- queue of artwork to fetch
 		artworkFetchQueue = {},
@@ -354,6 +355,8 @@ end
 function connect(self)
 	log:info(self, ":connect()")
 
+	self.connecting = true
+
 	-- artwork pool connects on demand
 	self.comet:connect()
 end
@@ -361,6 +364,8 @@ end
 
 function disconnect(self)
 	log:info(self, ":disconnect()")
+
+	self.connecting = false
 
 	self.artworkPool:close()
 	self.comet:disconnect()
@@ -405,7 +410,8 @@ Returns an identifier for a server named I<name> at IP address I<ip>:I<port>.
 =cut
 --]]
 function idFor(self, ip, port, name)
-	return tostring(ip) .. ":" .. tostring(port)
+	-- XXXX remove this function and just use SC name
+	return name
 end
 
 
@@ -419,14 +425,33 @@ and manages retries of the server long term connection.
 
 =cut
 --]]
-function updateFromUdp(self, name)
+function updateFromUdp(self, ip, port, name)
 	log:debug(self, ":updateFromUdp()")
 
 	-- update the name in all cases
 	if self.name ~= name then
-	
 		log:info(self, ": Renamed to ", name)
 		self.name = name
+	end
+
+	if self.plumbing.ip ~= ip or self.plumbing.port ~= port then
+		log:info(self, ": IP Address changed to ", ip , ":", port, " connecting=", self.connecting)
+
+		local connecting = self.connecting
+
+		-- close old comet connection
+		self:disconnect()
+
+		-- open new comet connection
+		self.plumbing.ip = ip
+		self.plumbing.port = port
+		self.artworkPool = HttpPool(self.jnt, name, ip, port, 2, 1, Task.PRIORITY_LOW)
+		self.comet = Comet(self.jnt, ip, port, '/cometd', name)
+
+		-- reconnect, if we were already connected
+		if connecting then
+			self:connect()
+		end
 	end
 
 	self.plumbing.lastSeen = Framework:getTicks()
