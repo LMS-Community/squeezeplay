@@ -181,14 +181,6 @@ function init(self)
 				      return EVENT_UNUSED
 			      end)
 
-	Framework:addListener(EVENT_WINDOW_PUSH,
-			      function(event) 
-				      if self.powerState == "active" then
-					      wakeup(self)
-				      end
-				      return EVENT_UNUSED
-			      end)
-
 	Framework:addListener(EVENT_KEY_PRESS,
 			      function(event) 
 				      local keycode = event:getKeycode()
