@@ -1225,13 +1225,19 @@ function _setSlimserver(self, slimserver)
 
 
 	-- if connecting to SqueezeNetwork, first check jive is linked
-	if slimserver:getPin() then
-		local snpin = appletManager:loadApplet("SqueezeNetworkPIN")
-		snpin:enterPin(slimserver, nil,
-			       function()
-				       self:_registerPlayer(slimserver)
-			       end)
+	if slimserver:isSqueezeNetwork() then
+		if slimserver:getPin() then
+			local snpin = appletManager:loadApplet("SqueezeNetworkPIN")
+			snpin:enterPin(slimserver, nil,
+				       function()
+					       self:_registerPlayer(slimserver)
+				       end)
 
+			return
+		else
+			self:_registerPlayer(slimserver)
+		end
+		
 		return
 	end
 
