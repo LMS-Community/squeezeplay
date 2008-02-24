@@ -159,16 +159,6 @@ local function _setPlayerModeChange(self, mode)
 	end
 end
 
--- _setPlayerNeedsUpgrade()
--- sends notification of player_needs_upgrade value. 
-local function _setPlayerNeedsUpgrade(self, playerNeedsUpgrade)
-	local needsUpgrade = (tonumber(playerNeedsUpgrade) == 1)
-	if needsUpgrade != self.needsUpgrade then
-		self.needsUpgrade = needsUpgrade
-		self.jnt:notify('playerNeedsUpgrade', self, self:isNeedsUpgrade())
-	end
-end
-
 -- _whatsPlaying(obj)
 -- returns the track_id from a playerstatus structure
 local function _whatsPlaying(obj)
@@ -278,6 +268,16 @@ function update(self, slimServer, playerInfo)
 		return
 	end
 
+	-- Update player state
+	local lastNeedsUpgrade = self.needsUpgrade
+	self.needsUpgrade = (tonumber(playerInfo.player_needs_upgrade) == 1)
+
+	-- FIXME the object state needs setting before any notifications
+	-- this is now changed for needsUpgrade, but still needs to be done
+	-- for all other player state
+
+
+	-- Send player notifications
 	if self.slimServer ~= slimServer then
 		-- delete from old server
 		if self.slimServer then
@@ -292,7 +292,10 @@ function update(self, slimServer, playerInfo)
 	
 	self.model = playerInfo.model
 
-	_setPlayerNeedsUpgrade(self, playerInfo.player_needs_upgrade)
+	if lastNeedsUpgrade != self.needsUpgrade then
+		self.jnt:notify('playerNeedsUpgrade', self, self:isNeedsUpgrade())
+	end
+
 	_setPlayerName(self, playerInfo.name)
 	_setPlayerPower(self, tonumber(playerInfo.power))
 	_setConnected(self, playerInfo.connected)

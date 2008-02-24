@@ -42,7 +42,7 @@ local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
 
 local setupsqueezeboxTitleStyle = 'settingstitle'
 local SETUP_TIMEOUT = 45 -- 45 second timeout for each action
-local SETUP_EXTENDED_TIMEOUT = 85 -- 85 second timeout in case Squeezebox is upgrading after first connecting to SC
+local SETUP_EXTENDED_TIMEOUT = 180  -- 180 second timeout in case Squeezebox is upgrading after first connecting to SC
 
 module(...)
 oo.class(_M, Applet)
@@ -1291,6 +1291,9 @@ function notify_playerNew(self, player)
 
 		-- increase timeout if the player is upgrading
 		if player:isNeedsUpgrade() then
+			-- make sure we are in the waiting for slimserver state, this is
+			-- needed in case the set slimserver udap packets got lost
+			_setAction(self, t_waitSlimserver)
 			self._totalTimeout = SETUP_EXTENDED_TIMEOUT
 			return
 		end
@@ -1308,6 +1311,16 @@ end
 function notify_playerConnected(self, player)
 	-- use same action as new player
 	notify_playerNew(self, player)
+end
+
+
+-- called when player comes back from firmware update.  If the
+-- player record was never removed while it was upgrading, this
+-- is the only message we get when it comes back.
+function notify_playerNeedsUpgrade(self, player, needsUpgrade)
+       if not needsUpgrade then
+               notify_playerNew(self, player)
+       end
 end
 
 
