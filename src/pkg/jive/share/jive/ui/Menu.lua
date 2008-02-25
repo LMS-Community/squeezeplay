@@ -384,21 +384,15 @@ end
 
 --[[
 
-=head2 jive.ui.Menu:getCurrentIndex()
+=head2 jive.ui.Menu:getItems()
 
-Returns the index of the item that is marked as the currentIndex
-Used primarily in the current playlist
+Returns the list items from a menu
 
 =cut
 --]]
-function getCurrentIndex(self)
-	if self.list and self.list.currentIndex then
-		return self.list.currentIndex
-	else
-		return false
-	end
+function getItems(self)
+	return self.list
 end
-
 
 --[[
 

@@ -1601,7 +1601,6 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 				initialText = '0'
 			end
 			local timeFormat = _getTimeFormat()
-			log:warn('DATETIME FORMAT RETURNED AS ', timeFormat)
 			local _v = DateTime:timeFromSFM(v, timeFormat)
 			v = Textinput.timeValue(_v, timeFormat)
 		end
@@ -1917,8 +1916,9 @@ function showPlaylist()
 
 		if playlistSize == nil or (playlistSize and playlistSize <= 1) then
 			_statusStep.menu:setSelectedIndex(1)
-		elseif _statusStep.menu:getCurrentIndex() then
-			_statusStep.menu:setSelectedIndex(_statusStep.menu:getCurrentIndex())
+		-- where we are in the playlist is stored in the item list as currentIndex
+		elseif _statusStep.menu:getItems() and _statusStep.menu:getItems().currentIndex then
+			_statusStep.menu:setSelectedIndex(_statusStep.menu:getItems().currentIndex)
 		end
 
 		_statusStep.window:addListener(EVENT_KEY_PRESS,
