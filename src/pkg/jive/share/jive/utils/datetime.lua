@@ -292,18 +292,49 @@ Takes seconds from midnight and returns time format (24h for now)
 
 =cut
 --]]
-function timeFromSFM(self, secondsFromMidnight)
+function timeFromSFM(self, secondsFromMidnight, format)
 
-	local sfm = tonumber(secondsFromMidnight)
-	if (sfm >= 86400 or sfm < 0) then
-		return "00:00"
+	if not format then
+		format = '24'
 	end
 
-	local hours   = tonumber(math.floor(sfm/3600))
-	local minutes = tonumber(math.floor((sfm % 3600) / 60 ))
+	local sfm = tonumber(secondsFromMidnight)
+	-- 24h format
+	if format == '24' then
+		if (sfm >= 86400 or sfm < 0) then
+			return "00:00"
+		end
 
-	local formattedTime = string.format("%02d:%02d", hours, minutes)
-	return formattedTime
+		local hours   = tonumber(math.floor(sfm/3600))
+		local minutes = tonumber(math.floor((sfm % 3600) / 60 ))
+	
+		local formattedTime = string.format("%02d:%02d", hours, minutes)
+		return formattedTime
+	-- 12h format
+	else
+		local ampm
+		if (sfm >= 86400 or sfm < 0) then
+			return "12:00a"
+		end
+
+		if (sfm < 43200) then
+			ampm = 'a'
+		else
+			ampm = 'p'
+		end
+
+		local hours   = tonumber(math.floor(sfm/3600))
+		local minutes = tonumber(math.floor((sfm % 3600) / 60 ))
+
+		if hours < 1 then
+			hours = 12
+		elseif hours > 12 then
+			hours = hours - 12
+		end
+	
+		local formattedTime = string.format("%02d:%02d%s", hours, minutes, ampm)
+		return formattedTime
+	end
 end
 
 --[[

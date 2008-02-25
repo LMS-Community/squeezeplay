@@ -346,6 +346,17 @@ local function _artworkItem(item, group, menuAccel)
 	end
 end
 
+-- _getTimeFormat
+-- loads SetupDateTime and returns current setting for date time format
+local function _getTimeFormat()
+	local SetupDateTime = AppletManager:loadApplet("SetupDateTime")
+	local format = '12'
+	if SetupDateTime and SetupDateTime:getSettings()['hours'] then
+		format = SetupDateTime:getSettings()['hours']
+	end
+	AppletManager:freeApplet("SetupDateTime")
+	return format
+end
 
 -- _checkboxItem
 -- returns a checkbox button for use on a given item
@@ -1580,16 +1591,19 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		local v = ""
 		local initialText = _safeDeref(item, 'input', 'initialText')
                 local inputStyle  = _safeDeref(item, 'input', '_inputStyle')
+
 		if initialText then
 			v = tostring(initialText)
-			if inputStyle == 'time' then
-				local _v = DateTime:timeFromSFM(v)
-				v = Textinput.timeValue(_v)
+		end
+
+		if inputStyle == 'time' then
+			if not initialText then
+				initialText = '0'
 			end
-		else 
-			if inputStyle == 'time' then
-				v = Textinput.timeValue("00:00")
-			end
+			local timeFormat = _getTimeFormat()
+			log:warn('DATETIME FORMAT RETURNED AS ', timeFormat)
+			local _v = DateTime:timeFromSFM(v, timeFormat)
+			v = Textinput.timeValue(_v, timeFormat)
 		end
 
 		-- create a text input

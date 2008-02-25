@@ -12,6 +12,7 @@ local string            = require("string")
 local table             = require("jive.utils.table")
 local log               = require("jive.utils.log").logger("ui")
 local locale            = require("jive.utils.locale")
+local debug             = require("jive.utils.debug")
 
 local EVENT_ALL         = jive.ui.EVENT_ALL
 local EVENT_UNUSED      = jive.ui.EVENT_UNUSED
@@ -416,9 +417,96 @@ Returns a value that can be used for entering time setting
 
 =cut
 --]]
-function timeValue(default)
+function timeValue(default, format)
 	local obj = {}
-	setmetatable(obj, {
+	if not format then
+		format = '24'
+	end
+	if tostring(format) == '12' then
+		setmetatable(obj, {
+		     __tostring =
+				function(e)
+				if type(e) == 'table' and e[3] then
+					return e[1] .. ":" .. e[2] .. e[3]
+				else
+					return table.concat(e, ":")
+				end
+			end,
+
+		     __index = {
+				setValue =
+					function(value, str)
+						local i = 1
+						for dd in string.gmatch(str, "(%d+)") do
+							local n = tonumber(dd)
+							if n > 12 and i == 1 then 
+								n = 0 
+							end
+							value[i] = string.format("%02d", n)
+							i = i + 1
+							if i > 2 then 
+								break
+							end
+						end
+						local ampm = string.match(str, "[ap]", i)
+						value[i] = ampm
+				    	end,
+				getValue =
+					function(value)
+						-- remove leading zeros
+						local norm = {}
+						for i,v in ipairs(value) do
+							if type(v) == 'number' then
+								norm[i] = tostring(tonumber(v))
+							elseif type(v) == 'string' then
+								norm[i] = v
+							end
+						end
+						return norm[1] .. ":" .. norm[2] .. norm[3]
+					end,
+
+                               getChars = 
+					function(value, cursor)
+						if cursor == 7 then 
+							return "" 
+						end
+						local v = tonumber(value[math.floor(cursor/3)+1])
+						if cursor == 1 then
+							-- first char can only be 1 if hour is 10
+							if v == 10 then
+								return "1"
+							-- first char can be 0 or 1 if hour is 1,2,11,or 12
+							elseif v < 3 or v > 10 then
+								return "01"
+							-- hour 3-9 only allows first num in hour to be 0
+							else 
+								return "0"
+							end
+						elseif cursor == 2 then
+							if v > 9 then
+								return "012"
+							else
+								return "123456789"
+							end
+						elseif cursor == 3 then
+							return ""
+						elseif cursor == 4 then
+							return "012345"
+						elseif cursor == 5 then
+							return "0123456789"
+						elseif cursor == 6 then
+							return "ap"
+						end
+				end,
+
+				isValid =
+					function(value, cursor)
+						return #value == 3 
+					end
+			}
+		})
+	else
+		setmetatable(obj, {
 			     __tostring =
 				     function(e)
 					     return table.concat(e, ":")
@@ -474,6 +562,7 @@ function timeValue(default)
 					     end
 			     }
 		     })
+	end
 
 	if default then
 		obj:setValue(default)
