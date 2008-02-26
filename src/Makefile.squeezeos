@@ -1,7 +1,7 @@
 
 # Absolute path to top of source directories
 SRCDIR = $(realpath ${PWD})
-TOPSRCDIR = $(realpath ${PWD}/../../../squeezeos/build)
+TOPSRCDIR = $(realpath ${PWD}/../../squeezeos/build)
 TOPDIR = $(dir ${TOPSRCDIR})
 
 export BUILDDIR=$(TOPDIR)build
@@ -140,8 +140,8 @@ tolua++:
 #
 # squeezeplay
 #
-.PHONY: squeezeplay-all squeezeplay squeezeplay_squeezeos freefont fonts-clock
-squeezeplay-all: squeezeplay squeezeplay_squeezeos freefont fonts-clock
+.PHONY: squeezeplay-all squeezeplay squeezeplay_jive freefont fonts-clock
+squeezeplay-all: squeezeplay squeezeplay_jive freefont fonts-clock
 
 
 # squeezeplay
@@ -152,17 +152,17 @@ squeezeplay: squeezeplay/Makefile
 	cd squeezeplay; make && make install DESTDIR=${BUILDDIR}
 
 
-squeezeplay_squeezeos/Makefile:
-	cd squeezeplay_squeezeos; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --host=${TARGET} --target=${TARGET} --prefix=/usr
+squeezeplay_jive/Makefile:
+	cd squeezeplay_jive; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --host=${TARGET} --target=${TARGET} --prefix=/usr
 
-squeezeplay_squeezeos: squeezeplay_squeezeos/Makefile
-	cd squeezeplay_squeezeos; make && make DESTDIR=${BUILDDIR} install
+squeezeplay_jive: squeezeplay_jive/Makefile
+	cd squeezeplay_jive; make && make DESTDIR=${BUILDDIR} install
 	rm ${PREFIX}/lib/jiveBSP.*
-	cp squeezeplay_squeezeos/.libs/jiveBSP.so ${PREFIX}/lib/lua/5.1/jiveBSP.so
+	cp squeezeplay_jive/.libs/jiveBSP.so ${PREFIX}/lib/lua/5.1/jiveBSP.so
 	rm ${PREFIX}/lib/jiveWireless.*
-	cp squeezeplay_squeezeos/.libs/jiveWireless.so ${PREFIX}/lib/lua/5.1/jiveWireless.so
+	cp squeezeplay_jive/.libs/jiveWireless.so ${PREFIX}/lib/lua/5.1/jiveWireless.so
 	rm ${PREFIX}/lib/jiveWatchdog.*
-	cp squeezeplay_squeezeos/.libs/jiveWatchdog.so ${PREFIX}/lib/lua/5.1/jiveWatchdog.so
+	cp squeezeplay_jive/.libs/jiveWatchdog.so ${PREFIX}/lib/lua/5.1/jiveWatchdog.so
 
 
 freefont:
@@ -192,4 +192,4 @@ clean:
 	-cd luaprofiler; make -f Makefile.linux clean
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
 	-cd squeezeplay; make distclean
-	-cd squeezeplay_squeezeos; make distclean
+	-cd squeezeplay_jive; make distclean
