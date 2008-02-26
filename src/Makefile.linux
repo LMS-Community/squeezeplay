@@ -7,7 +7,7 @@
 # Absolute path to top of SQUEEZEPLAY directories
 #
 
-SRC_DIR = $(realpath ${PWD}/..)
+SRC_DIR = $(realpath ${PWD})
 BASE_DIR = $(dir ${SRC_DIR})
 
 export BUILD_TOP=$(BASE_DIR)/build/linux
