@@ -102,7 +102,7 @@ generic:
 linux:
 	$(MAKE) all MYCFLAGS="-O2 -Wall -fpic -DLUA_USE_LINUX" MYLIBS="-Wl,-E -ldl -lreadline -lhistory -lncurses" OSXPREFIX="pwd"
 
-squeezeboxjive:
+squeezeos:
 	$(MAKE) all MYCFLAGS="-Os -Wall -fpic -DLUA_USE_POSIX -DLUA_USE_DLOPEN" MYLIBS="-Wl,-E -ldl" OSXPREFIX="pwd"
 
 macosx:

@@ -1,5 +1,5 @@
 ################################################################################
-# Jive makefile for OS X
+# Squeezeplay makefile for OS X
 # Copyright 2007 Logitech
 ################################################################################
 
@@ -21,7 +21,7 @@ ARCH = $(shell uname -m | grep i386)
 
 
 #
-# Absolute path to top of JIVE directories
+# Absolute path to top of SQUEEZEPLAY directories
 #
 
 # OSX 10.4 has GNU Make 3.8, which does not support realpath (need Make 3.81).
@@ -157,22 +157,22 @@ tolua++:
 
 
 #
-# jive
+# squeezeplay
 #
 
-.PHONY: app jive jive_desktop freefont
-app: jive jive_desktop freefont
+.PHONY: app squeezeplay squeezeplay_desktop freefont
+app: squeezeplay squeezeplay_desktop freefont
 
-# jive
-jive/Makefile:
-	cd jive; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --prefix=${PREFIX}
+# squeezeplay
+squeezeplay/Makefile:
+	cd squeezeplay; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --prefix=${PREFIX}
 
-jive: jive/Makefile
+squeezeplay: squeezeplay/Makefile
 	export PATH=$(BUILD_TOP)/bin:$(PATH); \
-	cd jive; make && make install
+	cd squeezeplay; make && make install
 
-jive_desktop: jive/Makefile
-	cd jive_desktop; make PREFIX=${PREFIX}
+squeezeplay_desktop:
+	cd squeezeplay_desktop; make PREFIX=${PREFIX}
 
 # freefont
 freefont:
@@ -190,8 +190,8 @@ freefont:
 .PHONY: clean
 clean:
 	@echo "----------------------------------------------------------"
-	@echo "Cleaning: jive"
-	-cd jive; make clean
+	@echo "Cleaning: squeezeplay"
+	-cd squeezeplay; make clean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL"
 	-cd SDL-1.2.11; make distclean; rm -f include/SDL_config.h;

@@ -1,13 +1,13 @@
 
 # Absolute path to top of source directories
 SRCDIR = $(realpath ${PWD})
-TOPSRCDIR = $(realpath ${PWD}/../../../squeezeboxJive/build)
+TOPSRCDIR = $(realpath ${PWD}/../../../squeezeos/build)
 TOPDIR = $(dir ${TOPSRCDIR})
 
 export BUILDDIR=$(TOPDIR)build
 export PREFIX=${BUILDDIR}/usr
 
-export CFLAGS=-I${PREFIX}/include -I${SRCDIR}/jive/src/ui -Os
+export CFLAGS=-I${PREFIX}/include -I${SRCDIR}/squeezeplay/src/ui -Os
 export LDFLAGS=-L${PREFIX}/lib
 
 TARGET=arm-926ejs-linux-gnueabi
@@ -28,7 +28,7 @@ LIB_DIR=$(TOPDIR)/toolchain/gcc-4.1.1-glibc-2.3.2/$(TARGET)/$(TARGET)/lib
 # Top level targets
 #
 .PHONY: all
-all: sdl-all lua-all jive-all
+all: sdl-all lua-all squeezeplay-all
 
 
 
@@ -84,7 +84,7 @@ lua-all: lua tolua++ luasocket luajson loop lualogging luaexpat luafilesystem lu
 
 # lua (requires readline ncurses)
 lua:
-	cd lua-5.1.1; make squeezeboxjive CFLAGS='-I${PREFIX}/include' INSTALL_TOP=${PREFIX} TARGET=$(TARGET) && make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET)
+	cd lua-5.1.1; make squeezeos CFLAGS='-I${PREFIX}/include' INSTALL_TOP=${PREFIX} TARGET=$(TARGET) && make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET)
 
 # luasocket (requires lua)
 luasocket: lua
@@ -138,31 +138,31 @@ tolua++:
 	install tolua++-1.0.92/src/lib/libtolua++.so ${PREFIX}/lib
 
 #
-# jive
+# squeezeplay
 #
-.PHONY: jive-all jive jive_squeezeboxjive freefont fonts-clock
-jive-all: jive jive_squeezeboxjive freefont fonts-clock
+.PHONY: squeezeplay-all squeezeplay squeezeplay_squeezeos freefont fonts-clock
+squeezeplay-all: squeezeplay squeezeplay_squeezeos freefont fonts-clock
 
 
-# jive
-jive/Makefile:
-	cd jive; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --host=${TARGET} --target=${TARGET} --prefix=/usr ${ENABLE_PROFILING} --enable-tests
+# squeezeplay
+squeezeplay/Makefile:
+	cd squeezeplay; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --host=${TARGET} --target=${TARGET} --prefix=/usr ${ENABLE_PROFILING} --enable-tests
 
-jive: jive/Makefile
-	cd jive; make && make install DESTDIR=${BUILDDIR}
+squeezeplay: squeezeplay/Makefile
+	cd squeezeplay; make && make install DESTDIR=${BUILDDIR}
 
 
-jive_squeezeboxjive/Makefile:
-	cd jive_squeezeboxjive; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --host=${TARGET} --target=${TARGET} --prefix=/usr
+squeezeplay_squeezeos/Makefile:
+	cd squeezeplay_squeezeos; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --host=${TARGET} --target=${TARGET} --prefix=/usr
 
-jive_squeezeboxjive: jive_squeezeboxjive/Makefile
-	cd jive_squeezeboxjive; make && make DESTDIR=${BUILDDIR} install
+squeezeplay_squeezeos: squeezeplay_squeezeos/Makefile
+	cd squeezeplay_squeezeos; make && make DESTDIR=${BUILDDIR} install
 	rm ${PREFIX}/lib/jiveBSP.*
-	cp jive_squeezeboxjive/.libs/jiveBSP.so ${PREFIX}/lib/lua/5.1/jiveBSP.so
+	cp squeezeplay_squeezeos/.libs/jiveBSP.so ${PREFIX}/lib/lua/5.1/jiveBSP.so
 	rm ${PREFIX}/lib/jiveWireless.*
-	cp jive_squeezeboxjive/.libs/jiveWireless.so ${PREFIX}/lib/lua/5.1/jiveWireless.so
+	cp squeezeplay_squeezeos/.libs/jiveWireless.so ${PREFIX}/lib/lua/5.1/jiveWireless.so
 	rm ${PREFIX}/lib/jiveWatchdog.*
-	cp jive_squeezeboxjive/.libs/jiveWatchdog.so ${PREFIX}/lib/lua/5.1/jiveWatchdog.so
+	cp squeezeplay_squeezeos/.libs/jiveWatchdog.so ${PREFIX}/lib/lua/5.1/jiveWatchdog.so
 
 
 freefont:
@@ -191,5 +191,5 @@ clean:
 	-cd luazipfilter; make distclean
 	-cd luaprofiler; make -f Makefile.linux clean
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
-	-cd jive; make distclean
-	-cd jive_squeezeboxjive; make distclean
+	-cd squeezeplay; make distclean
+	-cd squeezeplay_squeezeos; make distclean

@@ -1,10 +1,10 @@
 ################################################################################
-# Jive makefile for Linux
+# Squeezeplay makefile for Linux
 # Copyright 2007 Logitech
 ################################################################################
 
 #
-# Absolute path to top of JIVE directories
+# Absolute path to top of SQUEEZEPLAY directories
 #
 
 SRC_DIR = $(realpath ${PWD}/..)
@@ -139,21 +139,21 @@ tolua++: lua
 
 
 #
-# jive
+# squeezeplay
 #
 
-.PHONY: app jive jive_desktop freefont freefont-debian
-app: jive jive_desktop freefont
+.PHONY: app squeezeplay squeezeplay_desktop freefont freefont-debian
+app: squeezeplay squeezeplay_desktop freefont
 
-# jive
-jive/Makefile:
-	cd jive; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_PROFILING} --prefix=${PREFIX}
+# squeezeplay
+squeezeplay/Makefile:
+	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_PROFILING} --prefix=${PREFIX}
 
-jive: jive/Makefile
-	cd jive; make && make install
+squeezeplay: squeezeplay/Makefile
+	cd squeezeplay; make && make install
 
-jive_desktop: jive/Makefile
-	cd jive_desktop; make PREFIX=${PREFIX}
+squeezeplay_desktop: squeezeplay/Makefile
+	cd squeezeplay_desktop; make PREFIX=${PREFIX}
 
 # freefont
 freefont:
@@ -184,4 +184,4 @@ clean:
 	-cd luazipfilter; make distclean
 	-cd luaprofiler-2.0; make -f Makefile.linux clean
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
-	-cd jive; make distclean
+	-cd squeezeplay; make distclean
