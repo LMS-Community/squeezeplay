@@ -231,11 +231,20 @@ function missing(self, accel, dir, index)
 	if not self.store[0] then
 		return 0, BLOCK_SIZE
 	end
+	
+	local count = tonumber(self.last_chunk.count)
 
 	-- load last chunk
-	local lastKey = math.modf(self.last_chunk.count / BLOCK_SIZE)
-	if not self.store[lastKey] then
-		return lastKey * BLOCK_SIZE, BLOCK_SIZE
+	local lastKey = 0
+	if count > BLOCK_SIZE then
+		lastKey = math.modf(count / BLOCK_SIZE)
+		if not self.store[lastKey] then
+			if lastKey * BLOCK_SIZE != count then
+				return lastKey * BLOCK_SIZE, BLOCK_SIZE
+			else
+				return lastKey * BLOCK_SIZE - 1, BLOCK_SIZE
+			end
+		end
 	end
 
 	-- otherwise load in the direction of scrolling
