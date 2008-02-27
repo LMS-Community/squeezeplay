@@ -934,10 +934,10 @@ function _suspendTask(self)
 
 	-- disconnect from all SlimServers
 	if slimServers then
-		slimServers:disconnect()
-
 		local connected
 		repeat
+			slimServers:disconnect()
+
 			connected = false
 			for i,server in slimServers:allServers() do
 				connected = connected or server:isConnected()
