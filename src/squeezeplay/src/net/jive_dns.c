@@ -190,6 +190,7 @@ static int jiveL_dns_open(lua_State *L) {
 	struct dns_userdata *u;
 	int r;
 
+#ifndef _WIN32
 	u = lua_newuserdata(L, sizeof(struct dns_userdata));
 
 	r = socketpair(AF_UNIX, SOCK_STREAM, 0, u->fd);
@@ -203,6 +204,9 @@ static int jiveL_dns_open(lua_State *L) {
 	lua_setmetatable(L, -2);
 
 	return 1;
+#else
+	return 0;
+#endif // _WIN32
 }
 
 
