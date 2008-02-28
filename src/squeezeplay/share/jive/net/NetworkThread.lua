@@ -290,7 +290,7 @@ Retreive the hostname to be used to connect to SqueezeNetwork
 =cut
 --]]
 function getSNHostname(self)
-	return "www.beta.squeezenetwork.com"
+	return "www.squeezenetwork.com"
 end
 
 --[[

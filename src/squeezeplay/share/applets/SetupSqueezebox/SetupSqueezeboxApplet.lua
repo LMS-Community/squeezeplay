@@ -1202,19 +1202,24 @@ function _setSlimserver(self, slimserver)
 	self.slimserver = slimserver:getName()
 
 	if slimserver:isSqueezeNetwork() then
+		local sn_hostname = jnt:getSNHostname()
+
+		if sn_hostname == "www.squeezenetwork.com" then
+			self.data2.server_address = Udap.packNumber(1, 4)
+		elseif sn_hostname == "www.beta.squeezenetwork.com" then
+			self.data2.server_address = Udap.packNumber(1, 4)
+			-- XXX the above should be this when "serv 2" in all firmware:
+			-- self.data2.server_address = Udap.packNumber(2, 4)
+		else
+			-- for locally edited values (SN developers)
+			local ip = socket.dns.toip(sn_hostname)
+			self.data2.server_address = Udap.packNumber(parseip(ip), 4)
+		end
+
+		log:info("SN server_address=", self.data2.server_address)
+
 		-- set slimserver address to 0.0.0.1 to workaround a bug in
 		-- squeezebox firmware
-		--
-		-- XXX this should be this when in production or post "serv 2" firmware:
-		-- self.data2.server_address = Udap.packNumber(1, 4)
-		-- self.data2.slimserver_address = Udap.packNumber(parseip("0.0.0.1"), 4)
-		-- or:
-		-- self.data2.server_address = Udap.packNumber(2, 4)
-		-- self.data2.slimserver_address = Udap.packNumber(parseip("0.0.0.1"), 4)
-		--
-		local ip = socket.dns.toip(jnt:getSNHostname())
-		log:info("SN server_address=", ip)
-		self.data2.server_address = Udap.packNumber(parseip(ip), 4)
 		self.data2.slimserver_address = Udap.packNumber(parseip("0.0.0.1"), 4)
 	else
 		log:info("SC slimserver_address=", serverip)
