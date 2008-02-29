@@ -121,6 +121,17 @@ function init(self)
 		log:warn("Watchdog timer is disabled")
 	end
 
+	-- sync clock to hw clock every 10 minutes
+	local clockSyncTimer = Timer(600000, -- 10 minutes
+					function()
+						local systemTime = os.date()
+						log:info('syncing system clock to hw clock: ', systemTime)
+						os.execute("hwclock -s")
+						systemTime = os.date()
+						log:info('system clock now synced to hw clock: ', systemTime)
+					end)
+	clockSyncTimer:start()
+
 	-- register wakeup function
 	Framework:registerWakeup(function()
 					 wakeup(self)
