@@ -975,23 +975,30 @@ local function _menuSink(self, cmd)
 											  _browseSink,
 											  jsonAction
 										  )
-								from, qty = step.db:missing(step.menu and step.menu:isAccelerated())
+								if v.input then
+									step.window:show()
+									_curStep = step
+								else
+									from, qty = step.db:missing(step.menu and step.menu:isAccelerated())
 	
-								jiveMain:lockItem(item,
-									  function()
-									  step.cancelled = true
-								  end)
+									jiveMain:lockItem(item,
+										  function()
+										  step.cancelled = true
+									  end)
 		
-								step.loaded = function()
-									      jiveMain:unlockItem(item)
+									step.loaded = function()
+										      jiveMain:unlockItem(item)
 		
-									      _curStep = step
-									      step.window:show()
-								      end
+										      _curStep = step
+										      step.window:show()
+									      end
+								end
 							end
 						end
 
-						_performJSONAction(jsonAction, from, qty, step, sink)
+						if not v.input then
+							_performJSONAction(jsonAction, from, qty, step, sink)
+						end
 					end
 
 				_playerMenus[item.id] = item
