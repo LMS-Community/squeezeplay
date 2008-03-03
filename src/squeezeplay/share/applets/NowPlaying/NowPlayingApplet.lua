@@ -421,11 +421,19 @@ function _updatePlaylist(self, enabled, nr, count, ws)
 end
 
 function _updateMode(self, mode, ws)
-	if not ws then ws = self[windowStyle] end
-	if not ws then return end
+	if not ws then 
+		ws = self[windowStyle] 
+	end
+
+	if not ws then 
+		return 
+	end
+
 	local power = self.player:getPlayerPower()
 	local token = mode
-	if power == 0 then
+	-- sometimes there is a race condition here between updating player mode and power, 
+	-- so only set the title to 'off' if the mode is also not 'play'
+	if token != 'play' and power == 0 then
 		token = 'off'
 	end
 	if ws.titleGroup then

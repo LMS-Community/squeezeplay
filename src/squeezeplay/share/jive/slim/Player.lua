@@ -390,6 +390,18 @@ function getPlaylistSize(self)
 	return tonumber(self.playlistSize)
 end
 
+--[[
+
+=head2 jive.slim.Player:getPlayerMode()
+
+returns the playerMode for a given player object
+
+=cut
+--]]
+function getPlayerMode(self)
+	return self.mode
+end
+
 
 --[[
 
