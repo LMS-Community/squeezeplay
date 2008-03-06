@@ -188,6 +188,7 @@ local categories = {
 	["applets.misc"]             = jiveLogger(logging.INFO),
 
 	["jive.main"]                = jiveLogger(logging.INFO),
+	["jive.heap"]                = jiveLogger(logging.INFO),
 
 	["slimserver"]               = jiveLogger(logging.INFO),
 	["slimserver.cache"]         = jiveLogger(logging.INFO),

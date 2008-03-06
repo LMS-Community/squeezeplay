@@ -59,6 +59,7 @@ local Timer         = require("jive.ui.Timer")
 
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("jive.main")
+local logheap       = require("jive.utils.log").logger("jive.heap")
 --require("profiler")
 
 local EVENT_KEY_ALL        = jive.ui.EVENT_KEY_ALL
@@ -187,6 +188,26 @@ function JiveMain:__init()
 		end,
 		true)
 	splashTimer:start()
+
+	local heapTimer = Timer(60000,
+		function()
+			if not logheap:isDebug() then
+				return
+			end
+
+			local s = jive.heap()
+			logheap:debug("--- HEAP total/new/free ---")
+			logheap:debug("number=", s["number"]);
+			logheap:debug("integer=", s["integer"]);
+			logheap:debug("boolean=", s["boolean"]);
+			logheap:debug("string=", s["string"]);
+			logheap:debug("table=", s["table"], "/", s["new_table"], "/", s["free_table"]);
+			logheap:debug("function=", s["function"], "/", s["new_function"], "/", s["free_function"]);
+			logheap:debug("thread=", s["thread"], "/", s["new_thread"], "/", s["free_thread"]);
+			logheap:debug("userdata=", s["userdata"], "/", s["new_userdata"], "/", s["free_userdata"]);
+			logheap:debug("lightuserdata=", s["lightuserdata"], "/", s["new_lightuserdata"], "/", s["free_lightuserdata"]);
+		end)
+	heapTimer:start()
 
 	-- run event loop
 	Framework:eventLoop(jnt:task())

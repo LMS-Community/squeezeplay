@@ -19,8 +19,8 @@ local log         = require("jive.utils.log").logger("slimserver.cache")
 module(..., oo.class)
 
 
--- Limit artwork cache to 20 Mbytes
-local ARTWORK_LIMIT = 20 * 1024 * 1024
+-- Limit artwork cache to 15 Mbytes
+local ARTWORK_LIMIT = 15 * 1024 * 1024
 
 
 function __init(self)
@@ -60,7 +60,7 @@ function dump(self)
 		v = v.prev
 	end
 
-	log:debug("artworkThumbCache items=", items, " citems=", citems, " bytes=", self.total)
+	log:debug("artworkThumbCache items=", items, " citems=", citems, " bytes=", self.total, " fullness=", (self.total / ARTWORK_LIMIT) * 100)
 end
 
 

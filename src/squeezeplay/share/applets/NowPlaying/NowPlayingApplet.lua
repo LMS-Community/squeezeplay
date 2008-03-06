@@ -239,7 +239,6 @@ function notify_playerTrackChange(self, player, nowPlaying)
 		-- create the window to display
 		local window = _createUI(self)
 		if self[windowStyle].window then
-			self:_uninstallListeners(windowStyle)
 			window:replace(self[windowStyle].window, Window.transitionFadeIn)
 			self:_installListeners(window)
 		end
@@ -445,24 +444,6 @@ end
 -----------------------------------------------------------------------------------------
 -- Settings
 --
-function openSettings(self, menuItem)
-	local window = Window("Now Playing Settings")
-
-	self:tieAndShowWindow(window)
-	return window
-end
-
-
-function _uninstallListeners(self, ws)
-	if not self[ws].listeners then
-		return
-        end
-
-	for i in ipairs(self[ws].listeners) do
-	        Framework:removeListener(self[ws].listeners[i])
-	end
-	self[ws].listeners = false
-end
 		
 function _installListeners(self, window)
 
@@ -591,7 +572,6 @@ function _createUI(self)
 		manager:screensaverWindow(window)
 	end
 
-	self:tieWindow(window)
 	return window
 end
 
@@ -685,14 +665,8 @@ function free(self)
 	-- we force the recreation of the UI when re-entering the screen, possibly in a different mode
 	log:warn("NowPlaying.free()")
 	self.player = false
-	if self['ss'] then
-		self:_uninstallListeners('ss')
-		self['ss'] = nil
-	end
-	if self['browse'] then
-		self:_uninstallListeners('browse')
-		self['browse'] = nil
-	end
+	self['ss'] = nil
+	self['browse'] = nil
 	jiveMain:removeItemById('appletNowPlaying')
 end
 

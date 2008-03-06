@@ -232,20 +232,37 @@ Replaces toReplace window with a new window object
 --]]
 
 function replace(self, toReplace, transition)
+	local stack = Framework.windowStack
+
 	local topWindow = 1
-	for i in ipairs(Framework.windowStack) do
-		if Framework.windowStack[i] == toReplace then
+	for i in ipairs(stack) do
+		if stack[i] == toReplace then
 			if i == topWindow then
 				self:showInstead(transition)
 			else
 				-- the old window may still be visible under
 				-- a transparent window, if so hide it
-				local oldwindow = Framework.windowStack[i]
+				local oldwindow = stack[i]
 				if oldwindow.visible then
 					oldwindow:dispatchNewEvent(EVENT_HIDE)
 				end
 
-				Framework.windowStack[i] = self
+				-- old windw is being removed from the window
+				-- stack
+				oldwindow:dispatchNewEvent(EVENT_WINDOW_POP)
+
+				-- remove the window if it is already in the
+				-- stack
+				local onstack = table.delete(stack, self)
+
+				if not onstack then
+					-- this window is being pushed to the
+					-- stack
+					self:dispatchNewEvent(EVENT_WINDOW_PUSH)
+				end
+
+
+				stack[i] = self
 
 				-- if the old window was visible, the new one
 				-- is now 
