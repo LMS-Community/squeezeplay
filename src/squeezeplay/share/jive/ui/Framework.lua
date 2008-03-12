@@ -184,6 +184,10 @@ function eventLoop(self, netTask)
 	-- frame rate in milliseconds
 	local framerate = math.floor(1000 / FRAME_RATE)
 
+	-- time for a vertical refesh. in the future this may need adjusting
+	-- per squeezeplay platform
+	local framerefresh = framerate >> 2
+
 	-- next frame due
 	local now = self:getTicks()
 	local framedue = now + framerate
@@ -232,9 +236,9 @@ function eventLoop(self, netTask)
 			framedue = framedue + framerate
 
 			now = self:getTicks()
-			if now > framedue then
+			if now > framedue - framerefresh then
 				logTask:debug("Dropped frame. delay=", now-framedue, "ms")
-				framedue = now + (framerate >> 2)
+				framedue = now + framerefresh
 			end
 		end
 	end
