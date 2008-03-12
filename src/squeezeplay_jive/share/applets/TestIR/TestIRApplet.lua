@@ -22,6 +22,7 @@ local EVENT_SCROLL           = jive.ui.EVENT_SCROLL
 local EVENT_KEY_DOWN         = jive.ui.EVENT_KEY_DOWN
 local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
+local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
 local KEY_ADD                = jive.ui.KEY_ADD
 local KEY_PLAY               = jive.ui.KEY_PLAY
 local KEY_REW                = jive.ui.KEY_REW
@@ -109,15 +110,26 @@ function IRTest(self)
 
 	self:drawKeypad()
 
+	window:addListener(EVENT_KEY_PRESS, 
+		function(evt)
+			if evt:getKeycode() == KEY_BACK then
+				window:playSound("WINDOWHIDE")
+				self.window:hide()
+				return EVENT_CONSUME
+			end
+			return EVENT_UNUSED
+		end
+	)
 	window:addListener(EVENT_KEY_DOWN, 
 		function(evt)
-			keyEvent(self, evt, window)
+			return keyEvent(self, evt, window)
 		end
 	)
 	window:addListener(EVENT_SCROLL,
 		function(evt)
 			scrollEvent(self, evt, window)
 			self:drawKeypad()
+			return EVENT_CONSUME
 		end
 	)
 
@@ -129,33 +141,37 @@ end
 function keyEvent(self, evt, window)
 	local key = evt:getKeycode()
 
-	if key == KEY_BACK then
-		self.window:playSound("SELECT")
-		self.window:hide()
-		return EVENT_CONSUME
-	end
+	local code = false
 
-	self.window:playSound("CLICK")
 	if key == KEY_GO then
 		for i,k in ipairs(keymap) do
 			if wheel_index == i then
-				os.execute( bin_path .. " " .. k.ir)
+				code = k.ir
 			end
 		end
 	elseif key == KEY_ADD then
-		os.execute( bin_path .. " 0x7689609F")
+		code = "0x7689609F"
 	elseif key == KEY_PLAY then
-		os.execute( bin_path .. " 0x768910EF")
+		code = "0x768910EF"
 	elseif key == KEY_REW then
-		os.execute( bin_path .. " 0x7689C03F")
+		code = "0x7689C03F"
 	elseif key == KEY_PAUSE then
-		os.execute( bin_path .. " 0x768920DF")
+		code = "0x768920DF"
 	elseif key == KEY_FWD then
-		os.execute( bin_path .. " 0x7689A05F")
+		code = "0x7689A05F"
 	elseif key == KEY_VOLUME_UP then
-		os.execute( bin_path .. " 0x7689807F")
+		code = "0x7689807F"
 	elseif key == KEY_VOLUME_DOWN then
-		os.execute( bin_path .. " 0x768900FF")
+		code = "0x768900FF"
+	end
+
+	if code then
+		self.window:playSound("CLICK")
+
+		os.execute( bin_path .. " " .. code)
+		return EVENT_CONSUME
+	else
+		return EVENT_UNUSED
 	end
 end
 
