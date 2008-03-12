@@ -645,7 +645,8 @@ function enterPSK(self)
 					    createAndConnect(self)
 
 					    return true
-				    end
+				    end,
+				    self:string("ALLOWEDCHARS_WPA")
 			    )
 
 	window:addWidget(Textarea("softHelp", self:string("NETWORK_WIRELESS_PASSWORD_HELP")))
