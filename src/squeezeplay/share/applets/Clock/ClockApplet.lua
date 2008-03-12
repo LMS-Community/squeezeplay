@@ -137,7 +137,7 @@ function Clock:__init()
 
 	-- register window as a screensaver
 	local manager = appletManager:getAppletInstance("ScreenSavers")
-	manager:screensaverWindow(obj.window)
+	manager:screensaverWindow(obj.window, true)
 
 	return obj
 end

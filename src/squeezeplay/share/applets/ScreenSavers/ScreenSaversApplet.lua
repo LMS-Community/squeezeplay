@@ -181,7 +181,7 @@ behaviour.
 
 =cut
 --]]
-function screensaverWindow(self, window)
+function screensaverWindow(self, window, hideOnMotion)
 	-- the screensaver is active when this window is pushed to the window stack
 	window:addListener(EVENT_WINDOW_PUSH,
 			   function(event)
@@ -226,6 +226,16 @@ function screensaverWindow(self, window)
 				   end
 				   return EVENT_UNUSED
 			   end)
+
+	if hideOnMotion then
+		window:addListener(EVENT_MOTION,
+				   function(event)
+					   -- close all screensaver windows
+					   for i,w in ipairs(self.active) do
+						   w:hide(Window.transitionNone)
+					   end
+				   end)
+	end
 end
 
 
