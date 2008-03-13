@@ -80,8 +80,6 @@ oo.class(_M, Applet)
 
 function forceUpgrade(self, upgUrl)
 	local window = Window("window", self:string("UPDATE"), firmwareupgradeTitleStyle)
-	window:setAllowScreensaver(false)
-
 	local menu = SimpleMenu("menu")
 	menu:setCloseable(false)
 
