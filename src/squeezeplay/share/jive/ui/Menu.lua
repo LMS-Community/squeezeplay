@@ -627,7 +627,7 @@ function _updateWidgets(self)
 
 	local lastSelected = self._lastSelected
 	local lastSelectedIndex = self._lastSelectedIndex
-	local nextSelectedIndex = self.selected
+	local nextSelectedIndex = self.selected or 1
 
 	-- clear focus
 	if lastSelectedIndex ~= nextSelectedIndex then
