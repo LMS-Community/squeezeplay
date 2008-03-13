@@ -323,13 +323,13 @@ int jiveL_widget_check_layout(lua_State *L) {
 
 		if (perfwarn.layout) t1 = SDL_GetTicks();
 
+		peer->layout_origin = jive_origin;
+
 		/* update the layout */
 		if (jive_getmethod(L, 1, "_layout")) {
 			lua_pushvalue(L, 1);
 			lua_call(L, 1, 0);
 		}
-
-		peer->layout_origin = jive_origin;
 
 		if (perfwarn.layout) {
 			t2 = SDL_GetTicks();
@@ -346,13 +346,13 @@ int jiveL_widget_check_layout(lua_State *L) {
 	}
 
 	if (peer->child_origin != jive_origin) {
+		peer->child_origin = jive_origin;
+
 		/* layout children */
 		jive_getmethod(L, 1, "iterate");
 		lua_pushvalue(L, 1);
 		lua_pushcfunction(L, jiveL_widget_check_layout);
 		lua_call(L, 2, 0);
-
-		peer->child_origin = jive_origin;
 	}
 
 	return 0;

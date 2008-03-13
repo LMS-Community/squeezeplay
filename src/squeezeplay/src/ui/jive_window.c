@@ -90,7 +90,7 @@ int jiveL_window_check_layout(lua_State *L) {
 	}
 	lua_pop(L, 1);
 
-	if (peer->w.child_origin != jive_origin) {
+	while (peer->w.child_origin != jive_origin) {
 #if 0
 		/* debugging */
 		jive_getmethod(L, 1, "dump");
