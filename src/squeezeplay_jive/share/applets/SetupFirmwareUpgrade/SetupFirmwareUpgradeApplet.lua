@@ -40,6 +40,8 @@ local jnt                    = jnt
 local appletManager          = appletManager
 local upgradeUrl             = upgradeUrl
 
+local JIVE_VERSION           = jive.JIVE_VERSION
+
 local EVENT_ACTION           = jive.ui.EVENT_ACTION
 local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
@@ -74,12 +76,74 @@ local firmwareupgradeTitleStyle = 'settingstitle'
 
 local DEFAULT_FIRMWARE_URL = "http://www.slimdevices.com/update/firmware/7.0/jive.bin"
 
+local SDCARD_PATH = "/mnt/mmc/"
+
 module(...)
 oo.class(_M, Applet)
 
 
+function _firmwareVersion(self, url)
+
+	log:warn("url=", url)
+
+	local major, minor = string.match(url, "jive_([^_]+)_([^_]+)\.bin")
+
+	if not major then
+		return
+	end
+
+	return major .. " " .. minor
+end
+
+
+function _makeUpgradeItems(self, window, menu, url)
+	local help = Textarea("help", "")
+
+	local version = self:_firmwareVersion(url)
+	menu:addItem({
+		text = self:string("BEGIN_UPDATE"),
+		sound = "WINDOWSHOW",
+		callback = function()
+			self.url = url
+			self:_upgrade()
+		end,
+		focusGained = function()
+			if version == JIVE_VERSION then
+				help:setValue(self:string("UPDATE_BEGIN_REINSTALL", version or "?"))
+			else
+				help:setValue(self:string("UPDATE_BEGIN_UPGRADE", version or "?"))
+			end
+		end
+	})
+
+	for entry in lfs.dir(SDCARD_PATH) do
+		local fileurl = "file:" .. SDCARD_PATH .. entry
+		local version = self:_firmwareVersion(fileurl)
+	
+		if version or entry == "jive.bin" then
+			menu:addItem({
+				     text = self:string("UPDATE_CONTINUE_SDCARD"),
+				     sound = "WINDOWSHOW",
+				     callback = function()
+							self.url = fileurl
+							self:_upgrade()
+						end,
+				     focusGained = function()
+							   help:setValue(self:string("UPDATE_BEGIN_SDCARD", version or ""))
+						   end
+			     })
+		end
+	end
+
+	window:addWidget(help)
+	window:addWidget(menu)
+end
+
+
 function forceUpgrade(self, upgUrl)
 	local window = Window("window", self:string("UPDATE"), firmwareupgradeTitleStyle)
+	window:setAllowScreensaver(false)
+
 	local menu = SimpleMenu("menu")
 	menu:setCloseable(false)
 
@@ -90,7 +154,6 @@ function forceUpgrade(self, upgUrl)
 	if not url then
 		url = DEFAULT_FIRMWARE_URL
 	end
-	log:warn("url=", url)
 
 	window:addListener(EVENT_KEY_PRESS,
 			   function(event)
@@ -102,29 +165,7 @@ function forceUpgrade(self, upgUrl)
 				   return EVENT_UNUSED
 			   end)
 
-	menu:addItem({
-			     text = self:string("BEGIN_UPDATE"),
-			     sound = "WINDOWSHOW",
-			     callback = function()
-						self.url = url
-						self:_upgrade()
-					end
-		     })
-
-	if lfs.attributes("/mnt/mmc/jive.bin", "mode") == "file" then
-		menu:addItem({
-				     text = self:string("UPDATE_CONTINUE_SDCARD"),
-				     sound = "WINDOWSHOW",
-				     callback = function()
-							self.url = "file:/mnt/mmc/jive.bin"
-							self:_upgrade()
-						end
-			     })
-	end
-
-	local help = Textarea("help", self:string("UPDATE_BEGIN_HELP"))
-	window:addWidget(help)
-	window:addWidget(menu)
+	self:_makeUpgradeItems(window, menu, url)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -140,31 +181,8 @@ function settingsShow(self)
 	if not url then
 		url = DEFAULT_FIRMWARE_URL
 	end
-	log:warn("url=", url)
 
-	menu:addItem({
-			     text = self:string("NETWORK_UPDATE"),
-			     sound = "WINDOWSHOW",
-			     callback = function()
-						self.url = url
-						self:_upgrade()
-					end
-		     })
-
-	if lfs.attributes("/mnt/mmc/jive.bin", "mode") == "file" then
-		menu:addItem({
-				     text = self:string("UPDATE_CONTINUE_SDCARD"),
-				     sound = "WINDOWSHOW",
-				     callback = function()
-							self.url = "file:/mnt/mmc/jive.bin"
-							self:_upgrade()
-						end
-			     })
-	end
-
-	local help = Textarea("help", self:string("UPDATE_BEGIN_HELP"))
-	window:addWidget(help)
-	window:addWidget(menu)
+	self:_makeUpgradeItems(window, menu, url)
 
 	self:tieAndShowWindow(window)
 	return window

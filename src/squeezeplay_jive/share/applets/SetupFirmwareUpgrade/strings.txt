@@ -101,14 +101,14 @@ UPDATE_REBOOT
 	IT	\nRiavvio
 	NL	\nBezig met opnieuw starten
 
-UPDATE_BEGIN_HELP
-	DA	Opdateret programmel er tilgængeligt for denne fjernbetjening. Dette tager nogle få minutter.
-	DE	Für diese Fernbedienung ist aktualisierte Software verfügbar. Dieser Vorgang kann ein paar Minuten dauern.
-	EN	Updated software is available for this remote. This process may take a few minutes.
-	ES	Existe software actualizado disponible para este mando a distancia. El proceso de actualización puede tardar unos minutos.
-	FR	Une mise à jour de logiciel est disponible pour cette télécommande. Cette procédure peut prendre quelques minutes.
-	IT	Per questo telecomando è disponibile software aggiornato. L'operazione potrebbe richiedere alcuni minuti.
-	NL	Voor deze afstandsbediening is bijgewerkte software beschikbaar. Dit proces kan enkele minuten in beslag nemen.
+UPDATE_BEGIN_UPGRADE
+	EN	Updated software is available for this remote. It may take a few minutes to update to version %s.
+
+UPDATE_BEGIN_REINSTALL
+	EN	The software for this remote is up to date. If you'd like to reinstall version %s, choose Begin Update.
+
+UPDATE_BEGIN_SDCARD
+	EN	Install %s from SD card.
 
 UPDATE_BATTERY
 	DA	Oplad batteri
