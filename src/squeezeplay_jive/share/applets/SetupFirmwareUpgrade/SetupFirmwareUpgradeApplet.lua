@@ -242,6 +242,11 @@ function _t_upgrade(self)
 	if t == nil then
 		-- error
 		self:_upgradeFailed():showInstead()
+
+		if self.popup then
+			self.popup:hide()
+			self.popup = nil
+		end
 	end
 end
 
@@ -252,20 +257,20 @@ function _upgrade(self)
 		return self:_chargeBattery()
 	end
 
-	local popup = Popup("popupIcon")
+	self.popup = Popup("popupIcon")
 
 	self.icon = Icon("iconConnecting")
-	popup:addWidget(self.icon)
+	self.popup:addWidget(self.icon)
 
 	self.counter = Label("text", "")
 	self.textarea = Label("text", self:string("UPDATE_DOWNLOAD", ""))
-	popup:addWidget(self.counter)
-	popup:addWidget(self.textarea)
+	self.popup:addWidget(self.counter)
+	self.popup:addWidget(self.textarea)
 
 	-- make sure this popup remains on screen
-	popup:setAllowScreensaver(false)
-	popup:setAlwaysOnTop(true)
-	popup:setAutoHide(false)
+	self.popup:setAllowScreensaver(false)
+	self.popup:setAlwaysOnTop(true)
+	self.popup:setAutoHide(false)
 
 	-- no way to exit this popup
 	self.upgradeListener =
@@ -285,7 +290,7 @@ function _upgrade(self)
 	self.upgrade = Upgrade(self.url)
 	Task("upgrade", self, _t_upgrade, _upgradeFailed):addTask()
 
-	self:tieAndShowWindow(popup)
+	self:tieAndShowWindow(self.popup)
 	return window
 end
 

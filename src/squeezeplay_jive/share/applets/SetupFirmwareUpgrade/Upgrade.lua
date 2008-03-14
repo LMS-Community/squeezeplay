@@ -20,7 +20,7 @@ local Framework   = require("jive.ui.Framework")
 local Task        = require("jive.ui.Task")
 
 local debug       = require("jive.utils.debug")
-local log         = require("jive.utils.log").logger("upgrade")
+local log         = require("jive.utils.log").logger("applet.setup")
 
 local jnt = jnt
 
@@ -35,7 +35,6 @@ function __init(self, url)
 				      _checksum = "",
 			      })
 
-	log:warn("created object\n")
 	return obj
 end
 
@@ -89,7 +88,7 @@ function start(self, callback)
 	-- stream the firmware, and update the flash
 	t, err = self:download(callback)
 	if not t then
-		log:warn("download Failed")
+		log:warn("download Failed err=", err)
 		return nil, err
 	end
 
@@ -204,15 +203,12 @@ function upgradeSink(self)
 
 		       if chunk == nil then
 			       -- end of zip file
-			       log:warn("END OF ZIP FILE")
 			       self.downloadClose = true
 			       return nil
 		       end
 
 		       if type(chunk) == "table" then
 			       -- new file
-			       log:warn("GOT FILE ", chunk.filename)
-
 			       if chunk.filename == self._zImageExtraVersion then
 				       -- kernel
 				       part = self._zImageExtraVersion
@@ -237,7 +233,7 @@ function upgradeSink(self)
 
 				       -- open file handle
 					local cmd = "/usr/sbin/nandwrite -qp " .. self._mtd[part] .. " -"
-					log:warn("flash: ", cmd)
+					log:info("flash: ", cmd)
 
 					fhsink = self:processSink(cmd)
 			       end
@@ -253,8 +249,6 @@ end
 
 -- utility function to parse /dev/mtd
 function parseMtd(self)
-	log:warn("PARSEMTD")
-
 	-- parse mtd to work out what partitions to use
 	local fh, err = io.open("/proc/mtd")
 	if fh == nil then
@@ -270,8 +264,6 @@ function parseMtd(self)
 	self._mtd["env"] = string.match(mtd, "mtd(%d+):[^\n]*env[^\n]*\n")
 
 	for _, part in ipairs({"zImage", "root.cramfs", "yaffs", "env"}) do
-		log:warn("mtd ", part, " ", self._mtd[part])
-
 		if self._mtd[part] == nil then
 			return nil, "PROBLEM_PARSE_MTD"
 		else
@@ -288,7 +280,6 @@ function parseMtd(self)
 	local cmdline = string.lower(fh:read("*all"))
 	fh:close()
 
-	log:warn("cmdline=", cmdline)
 	local mtdset = string.match(cmdline, "mtdset=(%d+)")
 	mtdset = tonumber(mtdset) or 0
 
@@ -304,7 +295,7 @@ function parseMtd(self)
 		self.nextMtdset = "0"
 	end
 
-	log:warn("mtdset=", mtdset, " nextKernelblock=", self.nextKernelblock, " nextMtdset=", self.nextMtdset)
+	log:info("mtdset=", mtdset, " nextKernelblock=", self.nextKernelblock, " nextMtdset=", self.nextMtdset)
 
 	Task:yield(true)
 
@@ -330,7 +321,7 @@ function parseVersion(self)
 		extraversion = ""
 	end
 
-	log:warn("extraversion=", extraversion)
+	log:info("extraversion=", extraversion)
 
 	-- select kernel to use
 	self._zImageExtraVersion = "zImage" .. extraversion
@@ -347,8 +338,6 @@ function fw_setenv(self, variables)
 	local cmd = { "/usr/sbin/fw_setenv" }
 
 	for k,v in pairs(variables) do
-		log:warn("k=", k, " v=", v)
-
 		cmd[#cmd + 1] = k
 
 		if v == nil then
@@ -360,7 +349,7 @@ function fw_setenv(self, variables)
 
 	local str = table.concat(cmd, " ")
 
-	log:warn("fw_setenv: ", str)
+	log:info("fw_setenv: ", str)
 	if os.execute(str) ~= 0 then
 		return nil, "fw_setenv failed"
 	end
@@ -373,7 +362,7 @@ end
 
 -- open the zip file or stream for processing
 function download(self, callback)
-	log:warn("self.url=", self.url)
+	log:info("self.url=", self.url)
 
 	-- unzip the stream, and store the contents
 	local sink = ltn12.sink.chain(zip.filter(), self:upgradeSink())
@@ -423,7 +412,7 @@ function download(self, callback)
 		end
 
 		if self.sinkErr then
-			log:info("sinkErr=", sinkErr)
+			log:info("sinkErr=", self.sinkErr)
 			return false, self.sinkErr
 		end
 
@@ -449,7 +438,7 @@ function flashErase(self, part)
 
 	-- erase flash
 	cmd = "/usr/sbin/flash_eraseall -q " .. self._mtd[part]
-	log:warn("flash: ", cmd)
+	log:info("flash: ", cmd)
 
 	proc = Process(jnt, cmd)
 	proc:read(nullProcessSink)
@@ -478,7 +467,7 @@ function checksum(self, part, dir)
 	else
 		cmd = "/usr/sbin/nanddump -obl " .. self._size[part] .. " " .. self._mtd[part] .. " | md5sum"
 	end
-	log:warn("checksum cmd: ", cmd)
+	log:info("checksum cmd: ", cmd)
 
 	local md5flash = {}
 
@@ -501,7 +490,7 @@ function checksum(self, part, dir)
 	end
 	md5flash = string.match(table.concat(md5flash), "(%x+)%s+.+")
 
-	log:warn("md5check=", md5check, " md5flash=", md5flash, " ", md5check == md5flash)
+	log:info("md5check=", md5check, " md5flash=", md5flash, " ", md5check == md5flash)
 	return md5check == md5flash, "PROBLEM_CHECKSUM_FAILED"
 end
 
