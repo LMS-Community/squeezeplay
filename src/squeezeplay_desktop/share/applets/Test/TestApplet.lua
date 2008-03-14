@@ -150,6 +150,11 @@ function menu(self, menuItem)
 				callback = function(event, menuItem)
 					self:connectingPopup(menuItem)
 				end },
+			{ text = "Error",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:errorWindow(menuItem)
+				end },
 			{ text = "Slider",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -291,6 +296,39 @@ function sliderWindow(self, menuItem)
 
 	window:addWidget(help)
 	window:addWidget(slider)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+function errorWindow(self)
+	local window = Popup("errorWindow", "Error Message")
+	window:setAllowScreensaver(false)
+
+	local textarea = Textarea("textarea", "A description of the error. This may be several lines long.")
+
+	local menu = SimpleMenu("menu",
+				{
+					{
+						text = "Go back",
+						sound = "WINDOWHIDE",
+						callback = function()
+								   window:hide()
+							   end
+					},
+					{
+						text = "Corrective action",
+						sound = "WINDOWHIDE",
+						callback = function()
+								   window:hide()
+							   end
+					},
+				})
+
+
+	window:addWidget(textarea)
+	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
 	return window

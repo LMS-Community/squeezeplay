@@ -619,6 +619,10 @@ function skin(self, s)
 	s.window.w = screenWidth
 	s.window.h = screenHeight
 
+	s.errorWindow = {}
+	s.errorWindow.w = screenWidth
+	s.errorWindow.h = screenHeight
+	s.errorWindow.maskImg = popupMask
 
 	-- Popup window with Icon, no borders
 	s.popupArt = {}
