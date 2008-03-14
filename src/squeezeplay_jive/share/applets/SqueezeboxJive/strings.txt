@@ -245,3 +245,12 @@ PLEASE_WAIT
 	FR	\nConnexion
 	IT	\nConnessione...
 	NL	\nBezig met verbinden
+
+INVALID_MAC_TITLE
+	EN	Error
+
+INVALID_MAC_TEXT
+	EN	Invalid mac address or uuid. Please contact support.
+
+INVALID_MAC_CONTINUE
+	EN	Continue
