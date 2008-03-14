@@ -27,15 +27,12 @@ function registerApplet(self)
 			self:string("SCREENSAVER_NOWPLAYING"), 
 			"NowPlaying", 
 			"openScreensaver", 
-			--[[,
-			self:string("SCREENSAVER_NOWPLAYING_SETTINGS"), 
-			"openSettings" ]]--
 			_, _, 
 			10
 		)
 
-		jiveMain:loadSkin("NowPlaying", "skin")
 	end
+	appletManager:loadApplet("NowPlaying")
 
 end
 

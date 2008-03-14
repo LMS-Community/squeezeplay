@@ -1191,6 +1191,194 @@ function skin(self, s)
 	s.popupinfo.text.lineHeight = 17
 	s.popupinfo.text.fg = TEXT_COLOR
 	s.popupinfo.text.align = "left"
+
+	-- the NowPlaying skin code is established in two forms,
+	-- one for the Screensaver windowStyle (ss), one for the browse windowStyle (browse)
+	-- a lot of it can be recycled from one to the other
+
+	-- BEGIN NowPlaying skin code
+	local npimgpath = "applets/NowPlaying/"
+	local screenWidth, screenHeight = Framework:getScreenSize()
+
+        local titleBox =
+                Tile:loadTiles({
+                                       imgpath .. "titlebox.png",
+                                       imgpath .. "titlebox_tl.png",
+                                       imgpath .. "titlebox_t.png",
+                                       imgpath .. "titlebox_tr.png",
+                                       imgpath .. "titlebox_r.png",
+                                       imgpath .. "bghighlight_tr.png",
+                                       imgpath .. "titlebox_b.png",
+                                       imgpath .. "bghighlight_tl.png",
+                                       imgpath .. "titlebox_l.png"
+                               })
+
+        local highlightBox =
+                Tile:loadTiles({
+                                       imgpath .. "bghighlight.png",
+                                       nil,
+                                       nil,
+                                       nil,
+                                       imgpath .. "bghighlight_r.png",
+                                       imgpath .. "bghighlight_br.png",
+                                       imgpath .. "bghighlight_b.png",
+                                       imgpath .. "bghighlight_bl.png",
+                                       imgpath .. "bghighlight_l.png"
+                               })
+
+	-- Title
+	s.ssnptitle = {}
+	s.ssnptitle.border = { 4, 4, 4, 0 }
+	s.ssnptitle.position = LAYOUT_NORTH
+	s.ssnptitle.bgImg = titleBox
+	s.ssnptitle.order = { "title", "playlist" }
+	s.ssnptitle.text = {}
+	s.ssnptitle.text.w = WH_FILL
+	s.ssnptitle.text.padding = { 10, 7, 10, 9 }
+	s.ssnptitle.text.align = "top-left"
+	s.ssnptitle.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 20)
+	s.ssnptitle.text.fg = { 0x00, 0x00, 0x00 }
+	s.ssnptitle.playlist = {}
+	s.ssnptitle.playlist.padding = { 10, 7, 10, 9 }
+	s.ssnptitle.playlist.font = Font:load(fontpath .. "FreeSans.ttf", 15)
+	s.ssnptitle.playlist.fg = { 0x00, 0x00, 0x00 }
+	s.ssnptitle.playlist.textAlign = "top-right"
+
+
+	-- nptitle style is the same for both windowStyles
+	s.browsenptitle = _uses(s.ssnptitle, browsenptitle)
+
+
+	-- Song
+	s.ssnptrack = {}
+	s.ssnptrack.border = { 4, 0, 4, 0 }
+        s.ssnptrack.bgImg = highlightBox
+	s.ssnptrack.text = {}
+	s.ssnptrack.text.w = WH_FILL
+	s.ssnptrack.text.padding = { 10, 10, 8, 4 }
+	s.ssnptrack.text.align = "top-left"
+        s.ssnptrack.text.font = Font:load(fontpath .. "FreeSans.ttf", 14)
+	s.ssnptrack.text.lineHeight = 17
+        s.ssnptrack.text.line = {
+		{
+			font = Font:load(fontpath .. "FreeSansBold.ttf", 14),
+			height = 17
+		}
+	}
+	s.ssnptrack.text.fg = { 0x00, 0x00, 0x00 }
+
+	-- nptrack is identical between the two windowStyles
+	s.browsenptrack = _uses(s.ssnptrack)
+
+	-- Artwork
+	local browseArtWidth = 154
+	local ssArtWidth = 186
+
+	local ssnoartworkoffset = (screenWidth - ssArtWidth) / 2
+	s.ssnpartwork = {}
+	s.ssnpartwork.w = ssArtWidth
+	-- 8 pixel padding below artwork in browse mode
+	s.ssnpartwork.border = { ssnoartworkoffset, 10, ssnoartworkoffset, 8 }
+	s.ssnpartwork.align = "bottom-right"
+--	s.ssnpartwork.bgImg = Tile:loadImage(imgpath .. "album_shadow_" .. ssArtWidth .. ".png")
+	s.ssnpartwork.artwork = {}
+	s.ssnpartwork.artwork.padding = 0 
+	s.ssnpartwork.artwork.img = Surface:loadImage(imgpath .. "album_noartwork_" .. ssArtWidth .. ".png")
+
+	-- artwork layout is not the same between the two windowStyles
+	local browsenoartworkoffset = (screenWidth - browseArtWidth) / 2
+	local browsenpartwork = {
+		w = browseArtWidth,
+		-- 10 pixel padding below artwork in browse mode
+		border = { browsenoartworkoffset, 10, browsenoartworkoffset, 10 },
+		--bgImg = Tile:loadImage(imgpath .. "album_shadow_" .. browseArtWidth .. ".png"),
+		artwork = { padding = 0, img = Surface:loadImage(imgpath .. "album_noartwork_" .. browseArtWidth .. ".png") }
+	}
+	s.browsenpartwork = _uses(s.ssnpartwork, browsenpartwork)
+
+	-- Progress bar
+        local progressBackground =
+                Tile:loadHTiles({
+                                        npimgpath .. "progressbar_bkgrd_l.png",
+                                        npimgpath .. "progressbar_bkgrd.png",
+                                        npimgpath .. "progressbar_bkgrd_r.png",
+                               })
+
+        local progressBar =
+                Tile:loadHTiles({
+                                        npimgpath .. "progressbar_fill_l.png",
+                                        npimgpath .. "progressbar_fill.png",
+                                        npimgpath .. "progressbar_fill_r.png",
+                               })
+
+	s.ssprogress = {}
+	s.ssprogress.position = LAYOUT_SOUTH
+	s.ssprogress.order = { "elapsed", "slider", "remain" }
+	s.ssprogress.text = {}
+	s.ssprogress.text.w = 50
+	s.ssprogress.padding = { 0, 0, 0, 5 }
+	s.ssprogress.text.padding = { 8, 0, 8, 5 }
+	s.ssprogress.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
+	s.ssprogress.text.fg = { 0xe7,0xe7, 0xe7 }
+	s.ssprogress.text.sh = { 0x37, 0x37, 0x37 }
+
+	-- browse has different positioning than ss windowStyle
+	s.browseprogress = _uses(s.ssprogress,
+				{ 
+					padding = { 0, 0, 0, 25 },
+					text = {
+						padding = { 8, 0, 8, 25 },
+					}
+				}
+			)
+
+	s.ssprogressB             = {}
+        s.ssprogressB.horizontal  = 1
+        s.ssprogressB.bgImg       = progressBackground
+        s.ssprogressB.img         = progressBar
+	s.ssprogressB.position    = LAYOUT_SOUTH
+	s.ssprogressB.padding     = { 0, 0, 0, 5 }
+
+	s.browseprogressB = _uses(s.ssprogressB,
+					{
+					padding = { 0, 0, 0, 25 }
+					}
+				)
+
+	-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
+	s.ssprogressNB = {}
+	s.ssprogressNB.position = LAYOUT_SOUTH
+	s.ssprogressNB.order = { "elapsed" }
+	s.ssprogressNB.text = {}
+	s.ssprogressNB.text.w = WH_FILL
+	s.ssprogressNB.text.align = "center"
+	s.ssprogressNB.padding = { 0, 0, 0, 5 }
+	s.ssprogressNB.text.padding = { 0, 0, 0, 5 }
+	s.ssprogressNB.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
+	s.ssprogressNB.text.fg = { 0xe7, 0xe7, 0xe7 }
+	s.ssprogressNB.text.sh = { 0x37, 0x37, 0x37 }
+
+	s.browseprogressNB = _uses(s.ssprogressNB,
+				{ 
+					padding = { 0, 0, 0, 25 },
+					text = {
+						padding = { 0, 0, 0, 25 },
+					}
+				}
+			)
+
+	-- background style should start at x,y = 0,0
+        s.iconbg = {}
+        s.iconbg.x = 0
+        s.iconbg.y = 0
+        s.iconbg.h = screenHeight
+        s.iconbg.w = screenWidth
+	s.iconbg.border = { 0, 0, 0, 0 }
+	s.iconbg.position = LAYOUT_NONE
+
+	-- END NowPlaying skin code
+
+
 end
 
 
