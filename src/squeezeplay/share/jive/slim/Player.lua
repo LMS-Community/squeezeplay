@@ -32,7 +32,7 @@ Notifications:
 local debug = require("jive.utils.debug")
 
 -- stuff we need
-local _assert, setmetatable, tonumber, tostring, pairs, type = _assert, setmetatable, tonumber, tostring, pairs, type
+local _assert, assert, setmetatable, tonumber, tostring, pairs, type = _assert, assert, setmetatable, tonumber, tostring, pairs, type
 
 local os             = require("os")
 local math           = require("math")
@@ -763,8 +763,8 @@ end
 function artworkThumbUri (iconId, size)
 
 
-	-- we want a 56 pixel thumbnail if it wasn't specified
-	if not size then size = 56 end
+	assert(iconId)
+	assert(size)
 
 	-- sometimes we get a path to a static image rather than an iconId
 	-- if the iconId is a number, this is cover art, otherwise it's static content
@@ -782,7 +782,6 @@ function artworkThumbUri (iconId, size)
         local artworkUri
         local resizeFrag = '_' .. size .. 'x' .. size .. '_p' -- 'p' is for padded
         if thisIsAnId then
-                -- we want a 56 pixel thumbnail if it wasn't specified
                 artworkUri = '/music/' .. iconId .. '/cover' .. resizeFrag .. '.gd'
 	elseif string.match(iconId, '.png') then
 		-- if this isn't a number, then we just want the path

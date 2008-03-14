@@ -31,7 +31,7 @@ Notifications:
 --]]
 
 -- our stuff
-local _assert, tostring, type, tonumber = _assert, tostring, type, tonumber
+local _assert, assert, tostring, type, tonumber = _assert, assert, tostring, type, tonumber
 local pairs, ipairs, setmetatable = pairs, ipairs, setmetatable
 
 local os          = require("os")
@@ -462,9 +462,7 @@ end
 -- returns a sink for artwork so we can cache it as Surface before sending it forward
 local function _getArtworkThumbSink(self, iconId, size)
 
-	if not size then
-		size = 56
-	end
+	assert(size)
 	
 	local cacheKey = iconId .. "@" .. size
 
@@ -572,7 +570,7 @@ whether to display the thumb straight away or wait before fetching it.
 --]]
 
 function artworkThumbCached(self, iconId, size)
-	local cacheKey = iconId .. "@" .. (size or 56)
+	local cacheKey = iconId .. "@" .. (size)
 	if self.artworkCache:get(cacheKey) then
 		return true
 	else
@@ -645,9 +643,7 @@ argument sent to the uriGenerator. See applets.SlimBrowser._artworkThumbUri as a
 function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, imgFormat)
 	logcache:debug(self, ":fetchArtworkThumb(", iconId, ")")
 
-	if not size then
-		size = 56
-	end
+	assert(size)
 	
 	local cacheKey = iconId .. "@" .. size
 
@@ -702,9 +698,7 @@ This method is in the SlimServer class so it can reuse the other artwork code.
 function fetchArtworkURL(self, url, icon, size)
 	logcache:debug(self, ":fetchArtworkURL(", url, ")")
 
-	if not size then
-		size = 56
-	end
+	assert(size)
 	
 	local cacheKey = url .. "@" .. size
 
