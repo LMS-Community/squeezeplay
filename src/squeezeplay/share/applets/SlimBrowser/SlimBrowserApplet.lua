@@ -99,7 +99,7 @@ oo.class(_M, Applet)
 
 -- number of volume steps
 local VOLUME_STEPS = 20
-
+local THUMB_SIZE = 56
 --==============================================================================
 -- Local variables (globals)
 --==============================================================================
@@ -192,8 +192,10 @@ local function _artworkThumbUri(iconId, size, imgFormat)
 	-- imgFormat can force to a different format than gd, the default
 	if not imgFormat then imgFormat = 'gd' end
 
-	-- we want a 56 pixel thumbnail if it wasn't specified
-	if not size then size = 56 end
+	-- we want a THUMB_SIZE pixel thumbnail if it wasn't specified
+	if not size then 
+		size = THUMB_SIZE 
+	end
 
 	-- if the iconId is a number, this is cover art, otherwise it's static content
 	-- do some extra checking instead of just looking for type = number
@@ -211,7 +213,7 @@ local function _artworkThumbUri(iconId, size, imgFormat)
 	local artworkUri
 	local resizeFrag = '_' .. size .. 'x' .. size .. '_p' -- 'p' is for padded
 	if thisIsAnId then 
-		-- we want a 56 pixel thumbnail if it wasn't specified
+		-- we want a THUMB_SIZE pixel thumbnail if it wasn't specified
 		artworkUri = '/music/' .. iconId .. '/cover' .. resizeFrag .. '.' .. imgFormat
 	elseif string.match(iconId, '.png') then
 		-- if this isn't a number, then we just want the path
@@ -309,36 +311,36 @@ local function _artworkItem(item, group, menuAccel)
 	local icon = group and group:getWidget("icon")
 
 	if item["icon-id"] then
-		if menuAccel and not _server:artworkThumbCached(item["icon-id"], 56) then
+		if menuAccel and not _server:artworkThumbCached(item["icon-id"], THUMB_SIZE) then
 			-- Don't load artwork while accelerated
 			_server:cancelArtwork(icon)
 		else
 			-- Fetch an image from SlimServer
-			_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri, 56)
+			_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri, THUMB_SIZE)
 		end
 
 	elseif item["icon"] then
-		if menuAccel and not _server:artworkThumbCached(item["icon"], 56) then
+		if menuAccel and not _server:artworkThumbCached(item["icon"], THUMB_SIZE) then
 			-- Don't load artwork while accelerated
 			_server:cancelArtwork(icon)
 		else
                 	 
 		        	local remoteContent = string.find(item['icon'], 'http://')
 				if remoteContent then
-					-- Fetch a remote image URL, sized to 56x56 (artwork from a streamed source)
-					_server:fetchArtworkURL(item["icon"], icon, 56)
+					-- Fetch a remote image URL, sized to THUMB_SIZExTHUMB_SIZE (artwork from a streamed source)
+					_server:fetchArtworkURL(item["icon"], icon, THUMB_SIZE)
 		                else
 					-- sometimes we have static img content sent from SC (e.g., playlist icon)
-					_server:fetchArtworkThumb(item["icon"], icon, _staticArtworkThumbUri, 56)
+					_server:fetchArtworkThumb(item["icon"], icon, _staticArtworkThumbUri, THUMB_SIZE)
 		                end
 		end
 	elseif item["trackType"] == 'radio' and item["params"] and item["params"]["track_id"] then
-		if menuAccel and not _server:artworkThumbCached(item["params"]["track_id"], 56) then
+		if menuAccel and not _server:artworkThumbCached(item["params"]["track_id"], THUMB_SIZE) then
 			-- Don't load artwork while accelerated
 			_server:cancelArtwork(icon)
                	else
 			-- workaround: this needs to be png not gd because in gd it looks like garbage
-			_server:fetchArtworkThumb(item["params"]["track_id"], icon, _artworkThumbUri, 56, 'png')
+			_server:fetchArtworkThumb(item["params"]["track_id"], icon, _artworkThumbUri, THUMB_SIZE, 'png')
 		end
 	else
 		_server:cancelArtwork(icon)
@@ -2044,10 +2046,11 @@ function notify_playerModeChange(self, player, mode)
 	local step = _statusStep
 	local power = player:getPlayerPower()
 	local token = mode
-	if power == 0 then
+	if mode != 'play' and power == 0 then
 		token = 'off'
 	end
 
+	-- FIXME, bug 7365: this title doesn't get set even though this command does change the text of the window title label
 	step.window:setTitle(_string(modeTokens[token]))
 	step.window:setTitleStyle("currentplaylisttitle")
 
@@ -2056,11 +2059,6 @@ end
 function notify_playerPlaylistChange(self, player)
 	log:debug('SlimBrowser.notify_playerPlaylistChange')
 	if _player ~= player then
-		return
-	end
-
-	local power = player:getPlayerPower()
-	if power == 0 then
 		return
 	end
 
@@ -2148,7 +2146,9 @@ function notify_playerCurrent(self, player)
 	iconbar:setServerError("OK")
 
 	-- update the volume object
-	self.volume:setPlayer(player)
+	if self.volume then
+		self.volume:setPlayer(player)
+	end
 
 	-- nothing to do if we don't have a player
 	-- NOTE don't move this, the code above needs to run when disconnecting
