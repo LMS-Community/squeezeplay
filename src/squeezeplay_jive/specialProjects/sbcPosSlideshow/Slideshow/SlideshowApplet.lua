@@ -27,6 +27,7 @@ local table                  = require("jive.utils.table")
 
 local Applet                 = require("jive.Applet")
 local appletManager          = require("jive.AppletManager")
+local Event                  = require("jive.ui.Event")
 local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
 local Surface                = require("jive.ui.Surface")
@@ -122,6 +123,8 @@ function displaySlide(self)
 	if self.window then
 		window:showInstead(Window.transitionFadeIn)
 		self.window = window
+	        local event = Event:new(EVENT_KEY_PRESS)
+		Framework:dispatchEvent(self.window, event)
 	-- otherwise it's new
 	else
 		self.window = window
