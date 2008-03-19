@@ -126,10 +126,15 @@ local function _staticArtworkThumbUri(path)
 end
 
 local function _secondsToString(seconds)
-	local min = math.floor(seconds / 60)
+	local hrs = math.floor(seconds / 3600)
+	local min = math.floor((seconds / 60) - (hrs*60))
 	local sec = math.floor(seconds - (min*60))
 
-	return string.format("%d:%02d", min, sec)
+	if hrs > 0 then
+		return string.format("%d:%02d:%02d", hrs, min, sec)
+	else
+		return string.format("%d:%02d", min, sec)
+	end
 end
 
 local function _getIcon(self, item, icon, remote)

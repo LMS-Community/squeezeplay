@@ -1316,8 +1316,8 @@ function skin(self, s)
 	s.ssprogress.order = { "elapsed", "slider", "remain" }
 	s.ssprogress.text = {}
 	s.ssprogress.text.w = 50
-	s.ssprogress.padding = { 0, 0, 0, 5 }
-	s.ssprogress.text.padding = { 8, 0, 8, 5 }
+	s.ssprogress.padding = { 8, 0, 8, 5 }
+	s.ssprogress.text.padding = { 8, 0, 0, 5 }
 	s.ssprogress.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
 	s.ssprogress.text.fg = { 0xe7,0xe7, 0xe7 }
 	s.ssprogress.text.sh = { 0x37, 0x37, 0x37 }
@@ -1325,9 +1325,9 @@ function skin(self, s)
 	-- browse has different positioning than ss windowStyle
 	s.browseprogress = _uses(s.ssprogress,
 				{ 
-					padding = { 0, 0, 0, 25 },
+					padding = { 8, 0, 8, 25 },
 					text = {
-						padding = { 8, 0, 8, 25 },
+						padding = { 8, 0, 0, 25 }
 					}
 				}
 			)
