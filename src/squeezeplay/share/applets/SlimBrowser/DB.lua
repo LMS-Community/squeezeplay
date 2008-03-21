@@ -238,12 +238,11 @@ function missing(self, accel, dir, index)
 	local lastKey = 0
 	if count > BLOCK_SIZE then
 		lastKey = math.modf(count / BLOCK_SIZE)
+		if lastKey * BLOCK_SIZE == count then
+			lastKey = lastKey - 1
+		end
 		if not self.store[lastKey] then
-			if lastKey * BLOCK_SIZE != count then
-				return lastKey * BLOCK_SIZE, BLOCK_SIZE
-			else
-				return lastKey * BLOCK_SIZE - 1, BLOCK_SIZE
-			end
+			return lastKey * BLOCK_SIZE, BLOCK_SIZE
 		end
 	end
 
