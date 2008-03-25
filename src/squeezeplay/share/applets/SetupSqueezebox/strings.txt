@@ -111,6 +111,9 @@ SQUEEZEBOX_PROBLEM_SKIP
 	IT	Salta questa operazione
 	NL	Deze stap overslaan
 
+SQUEEZEBOX_ETHERNET_PROBLEM_HELP
+	EN	Couldn't connect your Squeezebox to your ethernet network.
+
 SQUEEZEBOX_PROBLEM_HELP
 	DA	Kunne ikke tilslutte din Squeezebox til dit trådløse netværk. Sikre dig at den er indenfor rækkevidde for dit trådløse netværk.
 	DE	Die Squeezebox konnte nicht mit dem kabellosen Netzwerk verbunden werden. Vergewissern Sie sich, dass sie sich in Reichweite befindet.

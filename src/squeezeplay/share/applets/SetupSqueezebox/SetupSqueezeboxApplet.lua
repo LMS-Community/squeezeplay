@@ -1502,7 +1502,11 @@ function _setupFailed(self)
 				})
 
 
-	helpText = self:string("SQUEEZEBOX_PROBLEM_HELP")
+	local helpText = self:string("SQUEEZEBOX_PROBLEM_HELP")
+	if self.interface == 'wired' then
+		helpText = self:string("SQUEEZEBOX_ETHERNET_PROBLEM_HELP")
+	end
+
 	if self.errorMsg then
 		helpText = tostring(helpText) .. tostring(self:string(self.errorMsg))
 	end
