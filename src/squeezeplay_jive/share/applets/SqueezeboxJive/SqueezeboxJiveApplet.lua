@@ -164,6 +164,11 @@ function init(self)
 	-- wireless
 	self.wireless = Wireless(jnt, "eth0")
 
+	-- register network active function
+	jnt:registerNetworkActive(function(active)
+		self:_wlanPowerSave(active)
+	end)
+
 	iconbar.iconWireless:addTimer(5000,  -- every 5 seconds
 				      function() 
 					      self:update()
@@ -657,6 +662,9 @@ function setPowerState(self, state)
 		end
 	end
 
+	-- update wlan power save mode
+	self:_wlanPowerSave()
+
 	if interval > 0 then
 		self.powerTimer:setInterval(interval)
 		self.powerTimer:start()
@@ -940,6 +948,35 @@ function _setCPUSpeed(self, fast)
 
 	fh:write(speed)
 	fh:close()
+end
+
+
+function _wlanPowerSave(self, active)
+	if active ~= nil then
+		-- update the network active state
+		self.networkActive = active
+	end
+
+	if self._wlanPowerSaveTimer == nil then
+		self._wlanPowerSaveTimer =
+			Timer(1000,
+			      function()
+				      self.wireless:powerSave(true)
+			      end,
+			      true)
+	end
+
+	-- disable PS mode when on ac power, or the network and device or
+	-- both active. when battery powered only disable PS mode when the
+	-- user is actively using the device.
+	if self.acpower or (self.networkActive and self.powerState == "active") then
+		self.wireless:powerSave(false)
+		self._wlanPowerSaveTimer:stop()
+	else
+		self._wlanPowerSaveTimer:start()
+	end
+
+	self.networkActive = active
 end
 
 

@@ -348,6 +348,8 @@ function t_sendRequest(self)
 		self:t_nextSendState(true, 't_sendComplete')
 	end
 
+	self:socketActive()
+
 	self:t_addWrite(pump, SOCKET_CONNECT_TIMEOUT)
 end
 
@@ -722,7 +724,10 @@ function t_rcvResponse(self)
 	if self.t_httpRecvRequest:t_getResponseHeader('Transfer-Encoding') == 'chunked' then
 	
 		mode = 'jive-http-chunked'
-		
+
+		-- don't count the chunked connections as active, these are
+		-- long term connections used for server push
+		self:socketInactive()
 	else
 			
 		if self.t_httpRecvRequest:t_getResponseHeader("Content-Length") then
@@ -788,6 +793,8 @@ end
 
 
 function t_recvComplete(self)
+	self:socketInactive()
+
 	self.t_httpRecvRequest = nil
 	self:t_nextRecvState(true, 't_recvDequeue')
 end

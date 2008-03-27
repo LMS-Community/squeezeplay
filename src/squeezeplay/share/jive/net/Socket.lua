@@ -95,6 +95,8 @@ function close(self)
 		self:t_removeWrite()
 		self.t_sock:close()
 		self.t_sock = nil
+
+		self:socketInactive()
 	end
 end
 
@@ -109,6 +111,23 @@ Sets the socket priority.
 function setPriority(self, priority)
 	self.priority = priority
 end
+
+
+function socketActive(self)
+	if not self.active then
+		self.active = true
+		self.jnt:networkActive()
+	end
+end
+
+
+function socketInactive(self)
+	if self.active then
+		self.active = false
+		self.jnt:networkInactive()
+	end
+end
+
 
 
 --[[

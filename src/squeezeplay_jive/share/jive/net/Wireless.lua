@@ -536,6 +536,22 @@ function getTxBitRate(self)
 end
 
 
+function powerSave(self, enable)
+	if self._powerSaveState == enable then
+		return
+	end
+
+	self._powerSaveState = enable
+	if enable then
+		log:info("iwconfig power on")
+		os.execute("/usr/sbin/iwconfig eth0 power on")
+	else
+		log:info("iwconfig power off")
+		os.execute("/usr/sbin/iwconfig eth0 power off")
+	end
+end
+
+
 function open(self)
 	if self.t_sock then
 		log:error("Socket already open")

@@ -255,6 +255,37 @@ function notify(self, event, ...)
 end
 
 
+-- Called by the network layer when the network is active
+function networkActive(self)
+	if self.activeCount == 0 then
+		if self.activeCallback then
+			self.activeCallback(true)
+		end
+	end
+
+	self.activeCount = self.activeCount + 1
+end
+
+
+-- Called by the network layer when the network is inactive
+function networkInactive(self)
+	self.activeCount = self.activeCount - 1
+
+	if self.activeCount == 0 then
+		if self.activeCallback then
+			self.activeCallback(false)
+		end
+	end
+end
+
+
+-- Register a network active callback for power management
+function registerNetworkActive(self, callback)
+	self.activeCallback = callback
+end
+
+
+
 --[[
 
 =head2 getUUID()
@@ -311,6 +342,8 @@ function __init(self)
 
 		-- list of objects for notify
 		subscribers = {},
+
+		activeCount = 0,
 	})
 
 	-- create dns resolver
