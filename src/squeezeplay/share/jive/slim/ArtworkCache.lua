@@ -80,7 +80,7 @@ function set(self, key, value)
 	end
 
 	-- loaded artwork
-	local bytes = value:getBytes()
+	local bytes = #value
 
 	self.total = self.total + bytes
 
@@ -117,7 +117,7 @@ function set(self, key, value)
 		end
 		self.lru = entry.prev
 
-		self.total = self.total - entry.value:getBytes()
+		self.total = self.total - #entry.value
 	end
 
 	if log:isDebug() then

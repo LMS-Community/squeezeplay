@@ -962,10 +962,11 @@ function skin(self, s)
 	s.albumitem.text.fg = TEXT_COLOR
 	s.albumitem.text.sh = TEXT_SH_COLOR
 	s.albumitem.icon = {}
+	s.albumitem.icon.w = 56
 	s.albumitem.icon.h = WH_FILL
-	s.albumitem.icon.align = "left"
+	s.albumitem.icon.align = "center"
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
-	s.albumitem.icon.padding = { 8, 0, 0, 0 }
+	s.albumitem.icon.border = { 8, 0, 0, 0 }
 
 	s.albumitemNoAction = {}
 	s.albumitemNoAction.order = { "text" }
@@ -1116,10 +1117,11 @@ function skin(self, s)
 	s.albumcurrent.text.fg = TEXT_COLOR
 	s.albumcurrent.text.sh = TEXT_SH_COLOR
 	s.albumcurrent.icon = {}
+	s.albumcurrent.icon.w = 56
 	s.albumcurrent.icon.h = WH_FILL
-	s.albumcurrent.icon.align = "left"
+	s.albumcurrent.icon.align = "center"
 	s.albumcurrent.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
-	s.albumcurrent.icon.padding = { 8, 0, 0, 0 }
+	s.albumcurrent.icon.border = { 8, 0, 0, 0 }
 	s.albumcurrent.play = {}
 	s.albumcurrent.play.img = Surface:loadImage(imgpath .. "menu_nowplaying.png")
 

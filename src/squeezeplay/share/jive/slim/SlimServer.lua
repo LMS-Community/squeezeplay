@@ -253,8 +253,13 @@ function __init(self, jnt, ip, port, name)
 
 		-- queue of artwork to fetch
 		artworkFetchQueue = {},
-		artworkFetchCount = 0
+		artworkFetchCount = 0,
+
+		-- loaded images
+		imageCache = {},
 	})
+
+	setmetatable(obj.imageCache, { __mode = "kv" })
 
 	obj.id = obj:idFor(ip, port, name)
 
@@ -459,6 +464,38 @@ function updateFromUdp(self, ip, port, name)
 end
 
 
+-- convert artwork to a resized image
+local function _loadArtworkImage(self, cacheKey, chunk, size)
+	-- create a surface
+	local image = Surface:loadImageData(chunk, #chunk)
+
+	local w, h = image:getSize()
+
+	-- don't display empty artwork
+	if w == 0 or h == 0 then
+		self.imageCache[cacheKey] = true
+		return nil
+	end
+
+	-- Resize image
+	-- Note this allows for artwork to be resized to a larger
+	-- size than the original.  This is intentional so smaller cover
+	-- art will still fill the space properly on the Now Playing screen
+	if w ~= size and h ~= size then
+		image = image:rotozoom(0, size / w, 1)
+		if logcache:isDebug() then
+			local wnew, hnew = image:getSize()
+			logcache:debug("Resized artwork from ", w, "x", h, " to ", wnew, "x", hnew)
+		end
+	end
+
+	-- cache image
+	self.imageCache[cacheKey] = image
+
+	return image
+end
+
+
 -- _getArworkThumbSink
 -- returns a sink for artwork so we can cache it as Surface before sending it forward
 local function _getArtworkThumbSink(self, cacheKey, size)
@@ -481,38 +518,19 @@ local function _getArtworkThumbSink(self, cacheKey, size)
 		if chunk then
 			logcache:debug("_getArtworkThumbSink(", iconId, ", ", size, ")")
 
-			-- create a surface
-			local artwork = Surface:loadImageData(chunk, #chunk)
+			-- store the compressed artwork in the cache
+			self.artworkCache:set(cacheKey, chunk)
 
-			-- Resize image if we have a size arg
-			-- Note this allows for artwork to be resized to a larger
-			-- size than the original.  This is intentional so smaller cover
-			-- art will still fill the space properly on the Now Playing screen
-			local w, h = artwork:getSize()
-			if w ~= size then
-				artwork = artwork:rotozoom(0, size / w, 1)
-				if logcache:isDebug() then
-					local wnew, hnew = artwork:getSize()
-					logcache:debug("Resized artwork from ", w, "x", h, " to ", wnew, "x", hnew)
-				end
-			end
-
-			-- don't display empty artwork
-			if w == 0 or h == 0 then
-				artwork = nil
-			end
+			local image = _loadArtworkImage(self, cacheKey, chunk, size)
 
 			-- set it to all icons waiting for it
 			local icons = self.artworkThumbIcons
 			for icon, key in pairs(icons) do
 				if key == cacheKey then
-					icon:setValue(artwork)
+					icon:setValue(image)
 					icons[icon] = nil
 				end
 			end
-
-			-- store the artwork in the cache
-			self.artworkCache:set(cacheKey, artwork)
 		end
 	end
 end
@@ -689,10 +707,31 @@ end
 
 -- common parts of fetchArtworkThumb and fetchArtworkURL
 function _fetchArtworkURL(self, icon, iconId, size, cacheKey, url)
-	-- do we have the artwork in the cache
+
+	-- do we have an image cached
+	local image = self.imageCache[cacheKey]
+	if image then
+		logcache:debug("..image in cache")
+
+		-- are we requesting it already?
+		if image == true then
+			if icon then
+				icon:setValue(nil)
+				self.artworkThumbIcons[icon] = cacheKey
+			end
+			return
+		else
+			if icon then
+				icon:setValue(image)
+				self.artworkThumbIcons[icon] = nil
+			end
+			return
+		end
+	end
+
+	-- or do is the compressed artwork cached
 	local artwork = self.artworkCache:get(cacheKey)
 	if artwork then
-		-- are we requesting it already?
 		if artwork == true then
 			logcache:debug("..artwork already requested")
 			if icon then
@@ -703,7 +742,8 @@ function _fetchArtworkURL(self, icon, iconId, size, cacheKey, url)
 		else
 			logcache:debug("..artwork in cache")
 			if icon then
-				icon:setValue(artwork)
+				image = _loadArtworkImage(self, cacheKey, artwork, size)
+				icon:setValue(image)
 				self.artworkThumbIcons[icon] = nil
 			end
 			return
