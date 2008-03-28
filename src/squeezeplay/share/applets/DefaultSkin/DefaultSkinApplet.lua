@@ -1276,23 +1276,22 @@ function skin(self, s)
 	local browseArtWidth = 154
 	local ssArtWidth = 186
 
-	local ssnoartworkoffset = (screenWidth - ssArtWidth) / 2
 	s.ssnpartwork = {}
-	s.ssnpartwork.w = ssArtWidth
+	s.ssnpartwork.w = WH_FILL
 	-- 8 pixel padding below artwork in browse mode
-	s.ssnpartwork.border = { ssnoartworkoffset, 10, ssnoartworkoffset, 8 }
-	s.ssnpartwork.align = "bottom-right"
+	s.ssnpartwork.border = { 0, 10, 0, 8 }
 --	s.ssnpartwork.bgImg = Tile:loadImage(imgpath .. "album_shadow_" .. ssArtWidth .. ".png")
 	s.ssnpartwork.artwork = {}
 	s.ssnpartwork.artwork.padding = 0 
+	s.ssnpartwork.artwork.w = WH_FILL
+	s.ssnpartwork.artwork.align = "center"
 	s.ssnpartwork.artwork.img = Surface:loadImage(imgpath .. "album_noartwork_" .. ssArtWidth .. ".png")
 
 	-- artwork layout is not the same between the two windowStyles
-	local browsenoartworkoffset = (screenWidth - browseArtWidth) / 2
 	local browsenpartwork = {
-		w = browseArtWidth,
 		-- 10 pixel padding below artwork in browse mode
-		border = { browsenoartworkoffset, 10, browsenoartworkoffset, 10 },
+		w = WH_FILL,
+		border = { 0, 10, 0, 10 },
 		--bgImg = Tile:loadImage(imgpath .. "album_shadow_" .. browseArtWidth .. ".png"),
 		artwork = { padding = 0, img = Surface:loadImage(imgpath .. "album_noartwork_" .. browseArtWidth .. ".png") }
 	}
