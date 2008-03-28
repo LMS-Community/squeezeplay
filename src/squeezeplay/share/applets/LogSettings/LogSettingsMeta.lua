@@ -34,9 +34,7 @@ end
 
 
 function registerApplet(meta)
---[[
 	jiveMain:addItem(meta:menuItem('appletLogSettings', 'advancedSettings', 'DEBUG_LOG', function(applet, ...) applet:logSettings(...) end))
---]]
 end
 
 
