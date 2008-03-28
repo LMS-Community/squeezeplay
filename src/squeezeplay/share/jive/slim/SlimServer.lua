@@ -36,6 +36,7 @@ local pairs, ipairs, setmetatable = pairs, ipairs, setmetatable
 
 local os          = require("os")
 local table       = require("jive.utils.table")
+local string      = require("string")
 local debug       = require("jive.utils.debug")
 
 local oo          = require("loop.base")
@@ -460,12 +461,10 @@ end
 
 -- _getArworkThumbSink
 -- returns a sink for artwork so we can cache it as Surface before sending it forward
-local function _getArtworkThumbSink(self, iconId, size)
+local function _getArtworkThumbSink(self, cacheKey, size)
 
 	assert(size)
 	
-	local cacheKey = iconId .. "@" .. size
-
 	return function(chunk, err)
 
 		if err or chunk then
@@ -535,7 +534,7 @@ function processArtworkQueue(self)
 			self.artworkFetchCount = self.artworkFetchCount + 1
 
 
-			if entry.thumb then
+			if entry.id then
 				-- slimserver icon id
 				self.artworkPool:queue(req)
 			else
@@ -628,62 +627,45 @@ end
 
 --[[
 
-=head2 jive.slim.SlimServer:fetchArtworkThumb(iconId, icon, uriGenerator, size, imgFormat)
+=head2 jive.slim.SlimServer:fetchArtworkThumb(iconId, icon, size, imgFormat)
 
 The SlimServer object maintains an artwork cache. This function either loads from the cache or
 gets from the network the thumb for I<iconId>. A L<jive.ui.Surface> is used to perform
-I<icon>:setValue(). I<uriGenerator> must be a function that
-computes the URI to request the artwork from the server from I<iconId> (i.e. if needed, this
-method will call uriGenerator(iconId) and use the result as URI). I<imgFormat> is an optional
-argument sent to the uriGenerator. See applets.SlimBrowser._artworkThumbUri as an example.
-
+I<icon>:setValue(). This function computes the URI to request the artwork from the server from I<iconId>. I<imgFormat> is an optional
+argument to control the image format.
 
 =cut
 --]]
-function fetchArtworkThumb(self, iconId, icon, uriGenerator, size, imgFormat)
+function fetchArtworkThumb(self, iconId, icon, size, imgFormat)
 	logcache:debug(self, ":fetchArtworkThumb(", iconId, ")")
 
 	assert(size)
-	
+
+	-- we want jpg if it wasn't specified
+	if not imgFormat then
+		imgFormat = 'jpg'
+	end
+
 	local cacheKey = iconId .. "@" .. size
 
-	-- do we have the artwork in the cache
-	local artwork = self.artworkCache:get(cacheKey)
-	if artwork then
-		-- are we requesting it already?
-		if artwork == true then
-			logcache:debug("..artwork already requested")
-			if icon then
-				icon:setValue(nil)
-				self.artworkThumbIcons[icon] = cacheKey
-			end
-			return
-		else
-			logcache:debug("..artwork in cache")
-			if icon then
-				icon:setValue(artwork)
-				self.artworkThumbIcons[icon] = nil
-			end
-			return
+	-- request SqueezeCenter resizes the thumbnail, use 'o' for
+	-- original aspect ratio
+	local resizeFrag = '_' .. size .. 'x' .. size .. '_o'
+
+	local url
+	if string.match(iconId, "^%d+$") then
+		-- if the iconId is a number, this is cover art
+		url = '/music/' .. iconId .. '/cover' .. resizeFrag .. "." .. imgFormat
+	else
+		url = string.gsub(iconId, "(%a+)(%.%a+)", "%1" .. resizeFrag .. "%2")
+
+		if not string.find(url, "^/") then
+			-- Bug 7123, Add a leading slash if needed
+			url = "/" .. url
 		end
 	end
 
-	-- no luck, generate a request for the artwork
-	self.artworkCache:set(cacheKey, true)
-	if icon then
-		self.artworkThumbIcons[icon] = cacheKey
-		icon:setValue(nil)
-	end
-	logcache:debug("..fetching artwork")
-
-	-- queue up the request on a lifo
-	table.insert(self.artworkFetchQueue, {
-			     key = iconId,
-			     url = uriGenerator(iconId, size, imgFormat),
-			     size = size,
-			     thumb = true
-		     })
-	self.artworkFetchTask:addTask()
+	return _fetchArtworkURL(self, icon, iconId, size, cacheKey, url)
 end
 
 --[[
@@ -699,9 +681,14 @@ function fetchArtworkURL(self, url, icon, size)
 	logcache:debug(self, ":fetchArtworkURL(", url, ")")
 
 	assert(size)
-	
 	local cacheKey = url .. "@" .. size
 
+	return _fetchArtworkURL(self, icon, nil, size, cacheKey, url)
+end
+
+
+-- common parts of fetchArtworkThumb and fetchArtworkURL
+function _fetchArtworkURL(self, icon, iconId, size, cacheKey, url)
 	-- do we have the artwork in the cache
 	local artwork = self.artworkCache:get(cacheKey)
 	if artwork then
@@ -733,10 +720,10 @@ function fetchArtworkURL(self, url, icon, size)
 
 	-- queue up the request on a lifo
 	table.insert(self.artworkFetchQueue, {
-			     key = url,
+			     key = cacheKey,
+			     id = iconId,
 			     url = url,
 			     size = size,
-			     thumb = false
 		     })
 	self.artworkFetchTask:addTask()
 end

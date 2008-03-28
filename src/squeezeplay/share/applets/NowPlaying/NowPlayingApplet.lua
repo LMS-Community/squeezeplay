@@ -103,28 +103,6 @@ local function _uses(parent, value)
         return style
 end
 
-local function _nowPlayingArtworkThumbUri(iconId)
-        return '/music/' .. iconId .. '/cover_' .. ARTWORK_SIZE .. 'x' .. ARTWORK_SIZE .. '_p.png'
-end
-
-local function _staticArtworkThumbUri(path)
-	local resizedImg = path
-	-- 'p' is for padded, png gives us transparency
-	local resizeFrag = '_' .. ARTWORK_SIZE .. 'x' .. ARTWORK_SIZE .. '_p.png' 
-	local artworkUri = path
-	-- replace .png with the resize params
-	if string.match(path, '.png') then
-                artworkUri = string.gsub(path, '.png', resizeFrag)
-	end
-	
-	-- Bug 7123, Add a leading slash if needed
-	if not string.find(artworkUri, "^/") then
-		artworkUri = "/" .. artworkUri
-	end
-	
-	return artworkUri
-end
-
 local function _secondsToString(seconds)
 	local hrs = math.floor(seconds / 3600)
 	local min = math.floor((seconds / 60) - (hrs*60))
@@ -151,7 +129,7 @@ local function _getIcon(self, item, icon, remote)
 
 	if item and item["icon-id"] then
 		-- Fetch an image from SlimServer
-		server:fetchArtworkThumb(item["icon-id"], icon, _nowPlayingArtworkThumbUri, ARTWORK_SIZE) 
+		server:fetchArtworkThumb(item["icon-id"], icon, ARTWORK_SIZE) 
 	elseif item and item["icon"] then
 		-- Fetch a remote image URL, sized to ARTWORK_SIZE x ARTWORK_SIZE
 		local remoteContent = string.find(item['icon'], 'http://')
@@ -171,12 +149,12 @@ local function _getIcon(self, item, icon, remote)
 				item["icon"] = 'http://' .. ip .. ':' .. port .. item["icon"]
 				server:fetchArtworkURL(item["icon"], icon, ARTWORK_SIZE)
 			else
-				server:fetchArtworkThumb(item["icon"], icon, _staticArtworkThumbUri, ARTWORK_SIZE)
+				server:fetchArtworkThumb(item["icon"], icon, ARTWORK_SIZE)
 			end
 		end
 	elseif item and item["params"] and item["params"]["track_id"] then
 		-- this is for the radio image-- remote URLs with no icon (Bug 6087)
-		server:fetchArtworkThumb(item["params"]["track_id"], icon, _nowPlayingArtworkThumbUri, ARTWORK_SIZE) 
+		server:fetchArtworkThumb(item["params"]["track_id"], icon, ARTWORK_SIZE) 
 	elseif icon then
 		icon:setValue(nil)
 	end

@@ -102,7 +102,6 @@ local VOLUME_STEPS = 20
 
 -- defaults for thumbnail images
 local THUMB_SIZE = 56
-local THUMB_FORMAT = 'jpg'
 
 --==============================================================================
 -- Local variables (globals)
@@ -188,41 +187,6 @@ local function _priorityAssign(key, defaultValue, ...)
 end
 
 
--- artworkThumbUri
--- returns a URI to fetch artwork on the server
--- FIXME: should this be styled?
-local function _artworkThumbUri(iconId, size, imgFormat)
-	-- we want THUMB_FORMAT if it wasn't specified
-	if not imgFormat then
-		imgFormat = THUMB_FORMAT
-	end
-
-	-- we want a THUMB_SIZE pixel thumbnail if it wasn't specified
-	if not size then 
-		size = THUMB_SIZE 
-	end
-
-	-- request SqueezeCenter resizes the thumbnail, use 'o' for
-	-- original aspect ratio
-	local resizeFrag = '_' .. size .. 'x' .. size .. '_o'
-
-	local artworkUri
-	if string.match(iconId, "^%d+$") then
-		-- if the iconId is a number, this is cover art
-		artworkUri = '/music/' .. iconId .. '/cover' .. resizeFrag .. "." .. imgFormat
-	else
-		artworkUri = string.gsub(iconId, "(%a+)(%.%a+)", "%1" .. resizeFrag .. "%2")
-
-		if not string.find(artworkUri, "^/") then
-			-- Bug 7123, Add a leading slash if needed
-			artworkUri = "/" .. artworkUri
-		end
-	end
-
-	return artworkUri
-end
-
-
 local function _pushToNewWindow(step)
 	if not step then
 		return
@@ -286,7 +250,7 @@ local function _artworkItem(item, group, menuAccel)
 			_server:cancelArtwork(icon)
 		else
 			-- Fetch an image from SlimServer
-			_server:fetchArtworkThumb(item["icon-id"], icon, _artworkThumbUri, THUMB_SIZE)
+			_server:fetchArtworkThumb(item["icon-id"], icon, THUMB_SIZE)
 		end
 
 	elseif item["icon"] then
@@ -301,7 +265,7 @@ local function _artworkItem(item, group, menuAccel)
 				-- Fetch a remote image URL, sized to THUMB_SIZExTHUMB_SIZE (artwork from a streamed source)
 				_server:fetchArtworkURL(item["icon"], icon, THUMB_SIZE)
 			else
-				_server:fetchArtworkThumb(item["icon"], icon, _artworkThumbUri, THUMB_SIZE)
+				_server:fetchArtworkThumb(item["icon"], icon, THUMB_SIZE)
 			end
 		end
 	elseif item["trackType"] == 'radio' and item["params"] and item["params"]["track_id"] then
@@ -311,7 +275,7 @@ local function _artworkItem(item, group, menuAccel)
                	else
 			-- workaround: this needs to be png not jpg to allow for transparencies
 			-- XXXX is this workaround needed now?
-			_server:fetchArtworkThumb(item["params"]["track_id"], icon, _artworkThumbUri, THUMB_SIZE, 'png')
+			_server:fetchArtworkThumb(item["params"]["track_id"], icon, THUMB_SIZE, 'png')
 		end
 	else
 		_server:cancelArtwork(icon)
@@ -652,7 +616,7 @@ local function _bigArtworkPopup(chunk, err)
 	end
 
 	log:debug("Artwork width/height will be ", shortDimension)
-	_server:fetchArtworkThumb(chunk.data.artworkId, icon, _artworkThumbUri, shortDimension)
+	_server:fetchArtworkThumb(chunk.data.artworkId, icon, shortDimension)
 	popup:addWidget(icon)
 	popup:show()
 	return popup
