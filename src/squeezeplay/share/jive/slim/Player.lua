@@ -29,7 +29,6 @@ Notifications:
 =cut
 --]]
 
-local debug = require("jive.utils.debug")
 
 -- stuff we need
 local _assert, assert, setmetatable, tonumber, tostring, pairs, type = _assert, assert, setmetatable, tonumber, tostring, pairs, type
@@ -781,7 +780,7 @@ function _process_displaystatus(self, event)
 			if display['icon'] then
 				self.slimServer:fetchArtworkURL(display['icon'], s.artIcon, 56)
 			else
-				self.slimServer:fetchArtworkThumb(display["icon-id"], s.artIcon, 56)
+				self.slimServer:fetchArtworkThumb(display["icon-id"], s.artIcon, 56, 'png')
 			end
 		else
 			s.text:setValue(table.concat(display["text"], "\n"))

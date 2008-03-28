@@ -258,15 +258,8 @@ local function _artworkItem(item, group, menuAccel)
 			-- Don't load artwork while accelerated
 			_server:cancelArtwork(icon)
 		else
-			-- XXXX this should not be needed, all SC server content
-			-- should use icon-id?
-			local remoteContent = string.find(item['icon'], 'http://')
-			if remoteContent then
-				-- Fetch a remote image URL, sized to THUMB_SIZExTHUMB_SIZE (artwork from a streamed source)
-				_server:fetchArtworkURL(item["icon"], icon, THUMB_SIZE)
-			else
-				_server:fetchArtworkThumb(item["icon"], icon, THUMB_SIZE)
-			end
+			-- Fetch a remote image URL, sized to THUMB_SIZExTHUMB_SIZE (artwork from a streamed source)
+			_server:fetchArtworkURL(item["icon"], icon, THUMB_SIZE)
 		end
 	elseif item["trackType"] == 'radio' and item["params"] and item["params"]["track_id"] then
 		if menuAccel and not _server:artworkThumbCached(item["params"]["track_id"], THUMB_SIZE) then
@@ -274,7 +267,6 @@ local function _artworkItem(item, group, menuAccel)
 			_server:cancelArtwork(icon)
                	else
 			-- workaround: this needs to be png not jpg to allow for transparencies
-			-- XXXX is this workaround needed now?
 			_server:fetchArtworkThumb(item["params"]["track_id"], icon, THUMB_SIZE, 'png')
 		end
 	else

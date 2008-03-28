@@ -153,8 +153,8 @@ local function _getIcon(self, item, icon, remote)
 			end
 		end
 	elseif item and item["params"] and item["params"]["track_id"] then
-		-- this is for the radio image-- remote URLs with no icon (Bug 6087)
-		server:fetchArtworkThumb(item["params"]["track_id"], icon, ARTWORK_SIZE) 
+		-- this is for placeholder artwork, either for local tracks or radio streams with no art
+		server:fetchArtworkThumb(item["params"]["track_id"], icon, ARTWORK_SIZE, 'png') 
 	elseif icon then
 		icon:setValue(nil)
 	end
