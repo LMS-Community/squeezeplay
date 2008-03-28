@@ -161,16 +161,19 @@ end
 -- _whatsPlaying(obj)
 -- returns the track_id from a playerstatus structure
 local function _whatsPlaying(obj)
+	local whatsPlaying = nil
 	if obj.item_loop then
 		if obj.item_loop[1].params then
 			if obj.item_loop[1].params.track_id and not obj.remote then
-				return obj.item_loop[1].params.track_id
+				whatsPlaying = obj.item_loop[1].params.track_id
+			elseif obj.item_loop[1].text and obj.remote and type(obj.current_title) == 'string' then
+				whatsPlaying = obj.item_loop[1].text .. "\n" .. obj.current_title
 			elseif obj.item_loop[1].text then
-				return obj.item_loop[1].text
+				whatsPlaying = obj.item_loop[1].text
 			end
 		end
 	end
-	return nil
+	return whatsPlaying
 end
 
 -- _setPlayerPlaylistChange()
