@@ -99,7 +99,11 @@ oo.class(_M, Applet)
 
 -- number of volume steps
 local VOLUME_STEPS = 20
+
+-- defaults for thumbnail images
 local THUMB_SIZE = 56
+local THUMB_FORMAT = 'jpg'
+
 --==============================================================================
 -- Local variables (globals)
 --==============================================================================
@@ -188,48 +192,33 @@ end
 -- returns a URI to fetch artwork on the server
 -- FIXME: should this be styled?
 local function _artworkThumbUri(iconId, size, imgFormat)
-
-	-- imgFormat can force to a different format than gd, the default
-	if not imgFormat then imgFormat = 'gd' end
+	-- we want THUMB_FORMAT if it wasn't specified
+	if not imgFormat then
+		imgFormat = THUMB_FORMAT
+	end
 
 	-- we want a THUMB_SIZE pixel thumbnail if it wasn't specified
 	if not size then 
 		size = THUMB_SIZE 
 	end
 
-	-- if the iconId is a number, this is cover art, otherwise it's static content
-	-- do some extra checking instead of just looking for type = number
-	local thisIsAnId = true
-	if type(iconId) == "number" then -- iconId is a number
-		thisIsAnId = true
-	elseif string.find(iconId, "%a") then -- iconID string contains a letter
-		thisIsAnId = false
-	else -- a string with no letters must be an id
-		thisIsAnId = true
-	end
+	-- request SqueezeCenter resizes the thumbnail, use 'o' for
+	-- original aspect ratio
+	local resizeFrag = '_' .. size .. 'x' .. size .. '_o'
 
-	-- if this is a number, construct the path for a sizexsize cover art thumbnail
-	-- use gd file format to get the output direct from libgd without compression
 	local artworkUri
-	local resizeFrag = '_' .. size .. 'x' .. size .. '_p' -- 'p' is for padded
-	if thisIsAnId then 
-		-- we want a THUMB_SIZE pixel thumbnail if it wasn't specified
-		artworkUri = '/music/' .. iconId .. '/cover' .. resizeFrag .. '.' .. imgFormat
-	elseif string.match(iconId, '.png') then
-		-- if this isn't a number, then we just want the path
-		-- with server-side resizing
-		-- and we don't want this in gd format, because that doesn't work
-		imgFormat = 'png'
-		artworkUri = string.gsub(iconId, '.png', resizeFrag .. '.' .. imgFormat)
-		
-		-- Bug 7123, Add a leading slash if needed
+	if string.match(iconId, "^%d+$") then
+		-- if the iconId is a number, this is cover art
+		artworkUri = '/music/' .. iconId .. '/cover' .. resizeFrag .. "." .. imgFormat
+	else
+		artworkUri = string.gsub(iconId, "(%a+)(%.%a+)", "%1" .. resizeFrag .. "%2")
+
 		if not string.find(artworkUri, "^/") then
+			-- Bug 7123, Add a leading slash if needed
 			artworkUri = "/" .. artworkUri
 		end
-	-- otherwise punt
-	else
-		return iconId
 	end
+
 	return artworkUri
 end
 
@@ -286,25 +275,6 @@ local function _newWindowSpec(db, item, titleStyle)
 end
 
 
--- _staticArtworkThumbUri
--- helper method for cobbling together a properly formed url for static content
-local function _staticArtworkThumbUri(path, ARTWORK_SIZE)
-	-- 'p' is for padded, png gives us transparency
-	local resizeFrag = '_' .. ARTWORK_SIZE .. 'x' .. ARTWORK_SIZE .. '_p.png'
-	local artworkUri = path
-	-- replace .png with the resize params
-	if string.match(path, '.png') then
-		artworkUri = string.gsub(path, '.png', resizeFrag)
-	end
-	
-	-- Bug 7123, Add a leading slash if needed
-	if not string.find(artworkUri, "^/") then
-		artworkUri = "/" .. artworkUri
-	end
-	
-	return artworkUri
-end
-
 -- _artworkItem
 -- updates a group widget with the artwork for item
 local function _artworkItem(item, group, menuAccel)
@@ -324,22 +294,23 @@ local function _artworkItem(item, group, menuAccel)
 			-- Don't load artwork while accelerated
 			_server:cancelArtwork(icon)
 		else
-                	 
-		        	local remoteContent = string.find(item['icon'], 'http://')
-				if remoteContent then
-					-- Fetch a remote image URL, sized to THUMB_SIZExTHUMB_SIZE (artwork from a streamed source)
-					_server:fetchArtworkURL(item["icon"], icon, THUMB_SIZE)
-		                else
-					-- sometimes we have static img content sent from SC (e.g., playlist icon)
-					_server:fetchArtworkThumb(item["icon"], icon, _staticArtworkThumbUri, THUMB_SIZE)
-		                end
+			-- XXXX this should not be needed, all SC server content
+			-- should use icon-id?
+			local remoteContent = string.find(item['icon'], 'http://')
+			if remoteContent then
+				-- Fetch a remote image URL, sized to THUMB_SIZExTHUMB_SIZE (artwork from a streamed source)
+				_server:fetchArtworkURL(item["icon"], icon, THUMB_SIZE)
+			else
+				_server:fetchArtworkThumb(item["icon"], icon, _artworkThumbUri, THUMB_SIZE)
+			end
 		end
 	elseif item["trackType"] == 'radio' and item["params"] and item["params"]["track_id"] then
 		if menuAccel and not _server:artworkThumbCached(item["params"]["track_id"], THUMB_SIZE) then
 			-- Don't load artwork while accelerated
 			_server:cancelArtwork(icon)
                	else
-			-- workaround: this needs to be png not gd because in gd it looks like garbage
+			-- workaround: this needs to be png not jpg to allow for transparencies
+			-- XXXX is this workaround needed now?
 			_server:fetchArtworkThumb(item["params"]["track_id"], icon, _artworkThumbUri, THUMB_SIZE, 'png')
 		end
 	else
