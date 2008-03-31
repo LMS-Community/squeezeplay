@@ -39,9 +39,9 @@ static struct {
 	/* keep magicless formats first */
 	/* this list is searched in order - so we put our most common formats first */
 //	{ "TGA", NULL,      IMG_LoadTGA_RW },
-	{ "GD" , IMG_isGD,  IMG_LoadGD_RW  },
-	{ "PNG", IMG_isPNG, IMG_LoadPNG_RW },
 	{ "JPG", IMG_isJPG, IMG_LoadJPG_RW },
+	{ "PNG", IMG_isPNG, IMG_LoadPNG_RW },
+	{ "GD" , IMG_isGD,  IMG_LoadGD_RW  },
 	{ "BMP", IMG_isBMP, IMG_LoadBMP_RW },
 	{ "GIF", IMG_isGIF, IMG_LoadGIF_RW },
 	{ "LBM", IMG_isLBM, IMG_LoadLBM_RW },
