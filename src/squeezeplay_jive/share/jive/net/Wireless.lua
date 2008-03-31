@@ -541,13 +541,17 @@ function powerSave(self, enable)
 		return
 	end
 
+	if not self.t_sock then
+		return
+	end
+
 	self._powerSaveState = enable
 	if enable then
 		log:info("iwconfig power on")
-		os.execute("/usr/sbin/iwconfig eth0 power on")
+		self.t_sock:setPower(true)
 	else
 		log:info("iwconfig power off")
-		os.execute("/usr/sbin/iwconfig eth0 power off")
+		self.t_sock:setPower(false)
 	end
 end
 
