@@ -70,9 +70,9 @@ local localwallpapers = {
 		["MIDNIGHT"] = "midnight.png",
 		["PEA"] = "pea.png",
 		["BLACK"] = "black.png",
-		["STONE"] = "stone.png",
 	},
 	{
+		["STONE"] = "stone.png",
 		["DUNES"] = "Chapple_1.jpg",
 		["IRIS"] = "Clearly-Ambiguous_1.jpg",
 		["SMOKE"] = "Clearly-Ambiguous_3.jpg",
@@ -83,7 +83,7 @@ local localwallpapers = {
 	}
 }
 
-local authors = { "Chapple", "Scott Robinson", "Los Cardinalos", "Orin Optiglot" }
+local authors = { "Chapple", "Scott Robinson", "Los Cardinalos", "Orin Optiglot", "Ryan McD" }
 
 local PREFIX = "applets/SetupWallpaper/wallpaper/"
 
