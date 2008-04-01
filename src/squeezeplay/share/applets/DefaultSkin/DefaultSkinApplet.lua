@@ -1002,7 +1002,11 @@ function skin(self, s)
 	s.selected.albumitem.text.sh = SELECT_SH_COLOR
 	s.selected.albumitem.bgImg = albumSelectionBox
 
-
+	s.selected.albumitem.play = {}
+	s.selected.albumitem.play.h = WH_FILL
+	s.selected.albumitem.play.align = "center"
+	s.selected.albumitem.play.img = Surface:loadImage(imgpath .. "selection_right.png")
+	s.selected.albumitem.play.border = { 0, 0, 5, 0 }
 
 	-- locked item with artwork and song info
 	s.locked.albumitem = {}
@@ -1011,18 +1015,13 @@ function skin(self, s)
 	s.locked.albumitem.text.sh = SELECT_SH_COLOR
 	s.locked.albumitem.bgImg = albumSelectionBox
 
-
-	-- waiting item with spinny
-	s.albumitemwaiting = _uses(s.albumitem, {
-		icon = {
-			img = Surface:loadImage(imgpath .. "icon_connecting_44.png"),
-			frameRate = 4,
-			frameWidth = 56
-		}
-	})
-
-	s.selected.albumitemwaiting = _uses(s.waiting)
-
+	s.locked.albumitem.play = {}
+	s.locked.albumitem.play.h = WH_FILL
+	s.locked.albumitem.play.align = "center"
+	s.locked.albumitem.play.img = Surface:loadImage(imgpath .. "selection_wait.png")
+	s.locked.albumitem.play.border = { 0, 0, 5, 0 }
+	s.locked.albumitem.play.frameRate = 4
+	s.locked.albumitem.play.frameWidth = 10
 
 	-- titles with artwork and song info
 	s.nowplayingtitle = {}
