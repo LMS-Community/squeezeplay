@@ -149,7 +149,8 @@ dist_luanet_DATA = \
 	share/jive/net/RequestHttp.lua \
 	share/jive/net/RequestJsonRpc.lua \
 	share/jive/net/HttpPool.lua \
-	share/jive/net/Udap.lua
+	share/jive/net/Udap.lua \
+	share/jive/net/WakeOnLan.lua
 
 luaslimdir = $(pkgdatadir)/jive/slim
 dist_luaslim_DATA = \

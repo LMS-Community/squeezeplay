@@ -31,8 +31,9 @@ FIXME: Subscribe description
 -- stuff we use
 local _assert, tostring, table, ipairs, pairs, pcall, select, type  = _assert, tostring, table, ipairs, pairs, pcall, select, type
 
+local io                = require("io")
 local socket            = require("socket")
-local coroutine         = require("coroutine")
+local string            = require("string")
 local table             = require("jive.utils.table")
 local debug             = require("jive.utils.debug")
 local oo                = require("loop.base")
@@ -41,6 +42,7 @@ local Event             = require("jive.ui.Event")
 local Framework         = require("jive.ui.Framework")
 local Task              = require("jive.ui.Task")
 local DNS               = require("jive.net.DNS")
+local Process           = require("jive.net.Process")
 
 local log               = require("jive.utils.log").logger("net.thread")
 
@@ -323,6 +325,36 @@ Retreive the hostname to be used to connect to SqueezeNetwork
 function getSNHostname(self)
 	return "www.squeezenetwork.com"
 end
+
+
+--[[
+
+=head2 arp(host)
+
+Look up hardware address for host. This is async and the sink function
+is called when the hardware address is known, or with an error.
+
+=cut
+--]]
+function arp(self, host, sink)
+	local arp = ""
+
+	-- XXXX this won't work on windows
+
+	local proc = Process(self, "arp " .. host)
+	proc:read(function(chunk, err)
+			  if err then
+				  return sink(err)
+			  end
+
+			  if chunk then
+				  arp = arp .. chunk
+			  else
+				  sink(string.match(arp, "%x%x:%x%x:%x%x:%x%x:%x%x:%x%x"))
+			  end
+		  end)
+end
+
 
 --[[
 

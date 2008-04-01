@@ -47,6 +47,7 @@ local Player      = require("jive.slim.Player")
 local Surface     = require("jive.ui.Surface")
 local RequestHttp = require("jive.net.RequestHttp")
 local SocketHttp  = require("jive.net.SocketHttp")
+local WakeOnLan   = require("jive.net.WakeOnLan")
 
 local Task        = require("jive.ui.Task")
 local Framework   = require("jive.ui.Framework")
@@ -363,6 +364,12 @@ function connect(self)
 
 	self.connecting = true
 
+	if self.plumbing.mac and not self:isSqueezeNetwork() then
+		-- send WOL packet to SqueezeCenter
+		local wol = WakeOnLan(self.jnt)
+		wol:wakeOnLan(self.plumbing.mac)
+	end
+
 	-- artwork pool connects on demand
 	self.comet:connect()
 end
@@ -393,6 +400,16 @@ function notify_cometConnected(self, comet)
 	log:info(self, " connected")
 	self.active = true
 	self.jnt:notify('serverConnected', self)
+
+	-- auto discovery SqueezeCenter's mac address
+	self.jnt:arp(self.plumbing.ip,
+		     function(chunk, err)
+			     if err then
+				     log:warn("arp: " .. err)
+			     else
+				     self.plumbing.mac = chunk
+			     end
+		     end)
 end
 
 -- comet is disconnected from SC
