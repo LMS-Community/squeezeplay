@@ -1015,6 +1015,17 @@ function skin(self, s)
 	s.locked.albumitem.text.sh = SELECT_SH_COLOR
 	s.locked.albumitem.bgImg = albumSelectionBox
 
+	-- waiting item with spinny
+	s.albumitemwaiting = _uses(s.albumitem, {
+		icon = {
+			img = Surface:loadImage(imgpath .. "icon_connecting_44.png"),
+			frameRate = 4,
+			frameWidth = 56
+		}
+	})
+
+	s.selected.albumitemwaiting = _uses(s.albumitemwaiting)
+
 	s.locked.albumitem.play = {}
 	s.locked.albumitem.play.h = WH_FILL
 	s.locked.albumitem.play.align = "center"
