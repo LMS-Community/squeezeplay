@@ -293,7 +293,6 @@ function t_sendRequest(self)
 	log:debug(self, ":t_sendRequest()")
 	
 	local source = function()
-	
 		local line1 = string.format("%s HTTP/%s", self.t_httpSendRequest:t_getRequestString(), self.t_httpProtocol)
 
 		local t = {}
@@ -357,7 +356,7 @@ end
 function t_sendComplete(self)
 	if self.t_httpSendRequest then
 		table.insert(self.t_httpRecvRequests, self.t_httpSendRequest)
-		self.t_httpSendRequest = nil
+		self.t_httpSendRequest = false
 	end
 
 	self:t_nextSendState(true, 't_sendDequeue')
@@ -828,7 +827,7 @@ function close(self, err)
 		if errorSink then
 			errorSink(nil, err)
 		end
-		self.t_httpSendRequest = nil
+		self.t_httpSendRequest = false
 	end
 
 	-- error for pipelined requests
@@ -846,7 +845,7 @@ function close(self, err)
 		if errorSink then
 			errorSink(nil, err)
 		end
-		self.t_httpRecvRequest = nil
+		self.t_httpRecvRequest = false
 	end
 
 	-- close the socket

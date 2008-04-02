@@ -507,9 +507,6 @@ _state = function(self, state)
 		return
 	end
 
-	log:debug(self, ": state is ", state)
-	self.state = state
-
 	-- Stop reconnect timer
 	self.reconnect_timer:stop()
 
@@ -526,6 +523,9 @@ _state = function(self, state)
 
 		self.jnt:notify('cometDisconnected', self, #self.pending_reqs + #self.sent_reqs)
 	end
+
+	log:debug(self, ": state is ", state)
+	self.state = state
 end
 
 
@@ -691,6 +691,11 @@ _reconnect = function(self)
 		clientId       = self.clientId,
 		connectionType = 'streaming',
 	} }
+
+	-- Add any un-acknowledged requests to the outgoing data
+	for i, v in ipairs(self.sent_reqs) do
+		table.insert(data, v)
+	end
 	
 	local req = CometRequest(
 			_getEventSink(self),
@@ -887,7 +892,7 @@ end
 
 -- Decide what to do if we get disconnected or get an error while handshaking/connecting
 _handleAdvice = function(self)
-	log:warn(self, ": handleAdvice state=", self.state)
+	log:info(self, ": handleAdvice state=", self.state)
 
 	if self.state == UNCONNECTED then
 		-- do nothing 

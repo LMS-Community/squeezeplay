@@ -2194,6 +2194,31 @@ function notify_serverDisconnected(self, server, numPendingRequests)
 		return
 	end
 
+	-- attempt to reconnect, this may send WOL
+	server:connect()
+
+	-- popup
+	local popup = Popup("popupIcon")
+	popup:addWidget(Icon("iconConnecting"))
+	popup:addWidget(Label("text", self:string("SLIMBROWSER_CONNECTING_TO", server:getName())))
+
+	local count = 0
+	popup:addTimer(1000,
+		function()
+			count = count + 1
+			if count == 20 then
+				self:_problemConnecting(server)
+			end
+		end)
+
+	-- once the server is connected the popup is closed in
+	-- notify_serverConnected
+	self.serverErrorWindow = popup
+	popup:show()
+end
+
+
+function _problemConnecting(self, server)
 	-- open connection error window
 	local window = Window("window", self:string("SLIMBROWSER_PROBLEM_CONNECTING"), 'settingstitle')
 
@@ -2240,13 +2265,13 @@ function notify_serverDisconnected(self, server, numPendingRequests)
 			     })
 	end
 
-	window:addWidget(Textarea("help", self:string("SLIMBROWSER_PROBLEM_CONNECTING_HELP", tostring(_player:getName()), tostring(_server:getName()))))
+	window:addWidget(Textarea("help", self:string("SLIMBROWSER_PROBLEM_CONNECTING_HELP", tostring(_server:getName()))))
 	window:addWidget(menu)
 
 	self.serverErrorWindow = window
 	window:addListener(EVENT_WINDOW_POP,
 			   function()
-				   self.serverErrorWindow = nil
+				   self.serverErrorWindow = false
 			   end)
 
 	window:show()

@@ -160,6 +160,7 @@ local function _cacheCleanup(self)
 	local now = Framework:getTicks()
 	for ss_id, server in pairs(self._servers) do
 		if not server:isConnected() and
+			(not self.currentPlayer or self.currentPlayer:getSlimServer() ~= server) and
 			now - server:getLastSeen() > TIMEOUT then
 		
 			log:info("Removing server ", server:getName(), " (", ss_id, ")")
@@ -330,7 +331,7 @@ apart from the one controlling the currently selected player.
 --]]
 function idleDisconnect(self)
 	for ss_id, server in pairs(self._servers) do
-		if self.currentPlayer and self.currentPlayer:getSlimServer() ~= server then
+		if not self.currentPlayer or self.currentPlayer:getSlimServer() ~= server then
 			server:disconnect()
 		end
 	end
