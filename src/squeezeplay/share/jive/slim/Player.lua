@@ -750,7 +750,7 @@ function _process_status(self, event)
 
 	_setConnected(self, self.state["player_connected"])
 	_setPlayerPlaylistSize(self, tonumber(event.data.playlist_tracks))
-	_setPlayerPower(self, tonumber(self.power))
+	_setPlayerPower(self, tonumber(event.data.power))
 
 	_setPlayerModeChange(self, event.data.mode)
 
