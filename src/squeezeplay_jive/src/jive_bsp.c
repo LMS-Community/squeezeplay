@@ -119,7 +119,7 @@ static int handle_wheel_events(int fd) {
 	struct input_event ev[64];
 	size_t rd;
 	int i;
-	Sint16 scroll = 0;
+	Sint16 scroll = 0, last_value = 0;
 
 	rd = read(fd, ev, sizeof(struct input_event) * 64);
 
@@ -128,19 +128,32 @@ static int handle_wheel_events(int fd) {
 		return -1;
 	}
 
+	event.type = (JiveEventType) JIVE_EVENT_SCROLL;
+
 	for (i = 0; i < rd / sizeof(struct input_event); i++) {
 		if (ev[i].type == EV_SYN) {
 			event.ticks = TIMEVAL_TO_TICKS(ev[0].time);
+
+			/* changed direction? */
+			if (scroll != 0 && abs(scroll) != abs(last_value)) {
+				event.u.scroll.rel = scroll;
+				jive_queue_event(&event);
+
+				scroll = 0;
+			}
+
+			scroll += last_value;
+			last_value = 0;
 		}
 		else if (ev[i].type == EV_REL) {
-			scroll += ev[i].value;
+			last_value += ev[i].value;
 		}
 	}
 
-	event.type = (JiveEventType) JIVE_EVENT_SCROLL;
-
-	event.u.scroll.rel = scroll;
-	jive_queue_event(&event);
+	if (scroll != 0) {
+		event.u.scroll.rel = scroll;
+		jive_queue_event(&event);
+	}
 
 	return 0;
 }

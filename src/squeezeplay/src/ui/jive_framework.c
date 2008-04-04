@@ -128,6 +128,9 @@ static int jiveL_init(lua_State *L) {
 	screen_w = r.w;
 	screen_h = r.h;
 
+	/* linux fbcon does not need a mouse */
+	SDL_putenv("SDL_NOMOUSE=1");
+
 	/* initialise SDL */
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
 		fprintf(stderr, "SDL_Init(V|T|A): %s\n", SDL_GetError());
