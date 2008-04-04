@@ -25,7 +25,8 @@ function defaultSettings(meta)
 		suspendTimeout 	= 3600000,	-- 1 hour
 		suspendEnabled  = true,
 		suspendWake     = nil,
-		dimmedAC	= false
+		dimmedAC	= false,
+		wlanPSEnabled   = true,
 	}
 end
 
@@ -45,7 +46,7 @@ function registerApplet(meta)
 	jiveMain:addItem(meta:menuItem('backlightSetting', 'screenSettings', "BSP_BACKLIGHT_TIMER", function(applet, ...) applet:settingsBacklightTimerShow(...) end))
 	jiveMain:addItem(meta:menuItem('brightnessSetting', 'screenSettings', "BSP_BRIGHTNESS", function(applet, ...) applet:settingsBrightnessShow(...) end))
 	jiveMain:addItem(meta:menuItem('powerDown', 'advancedSettings', "POWER_DOWN", function(applet, ...) applet:settingsPowerDown(...) end))
-	jiveMain:addItem(meta:menuItem('powerDown', 'factoryTest', "Suspend Test Settings", function(applet, ...) applet:settingsTestSuspend(...) end))
+	jiveMain:addItem(meta:menuItem('suspendTest', 'factoryTest', "POWER_MANAGEMENT_SETTINGS", function(applet, ...) applet:settingsTestSuspend(...) end))
 end
 
 

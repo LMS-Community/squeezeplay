@@ -254,3 +254,25 @@ INVALID_MAC_TEXT
 
 INVALID_MAC_CONTINUE
 	EN	Continue
+
+
+POWER_MANAGEMENT_SETTINGS
+	EN	Power management
+
+SLEEP_TIMEOUT
+	EN	Sleep Timeout
+
+SUSPEND_TIMEOUT
+	EN	Suspend Timeout
+
+SUSPEND_ENABLED
+	EN	Suspend Enabled
+
+SUSPEND_WAKE
+	EN	Suspend Wake
+
+WLAN_POWER_SAVE
+	EN	Wireless Power Save
+
+POWER_MANAGEMENT_SETTINGS_HELP
+	EN	Power management test settings. Changing these settings may reduce your battery life.

@@ -879,7 +879,7 @@ function settingsTestSuspend(self, menuItem)
 				      sleepOptions,
 				      function(obj, selectedIndex)
 					      settings.sleepTimeout = sleepOptions[selectedIndex] * 1000
-					      log:warn("sleepTimeout = ", settings.sleepTimeout)
+					      log:info("sleepTimeout=", settings.sleepTimeout)
 				      end,
 				      sleepIndex
 			      )
@@ -891,7 +891,7 @@ function settingsTestSuspend(self, menuItem)
 				      suspendOptions,
 				      function(obj, selectedIndex)
 					      settings.suspendTimeout = suspendOptions[selectedIndex] * 1000
-					      log:warn("suspendTimeout = ", settings.suspendTimeout)
+					      log:info("suspendTimeout=", settings.suspendTimeout)
 				      end,
 				      suspendIndex
 			      )
@@ -902,7 +902,7 @@ function settingsTestSuspend(self, menuItem)
 				      "checkbox", 
 				      function(obj, isSelected)
 					      settings.suspendEnabled = isSelected
-					      log:warn("suspendEnalbed = ", settings.suspendEnabled)
+					      log:info("suspendEnabled=", settings.suspendEnabled)
 				      end,
 				      settings.suspendEnabled
 			      )
@@ -913,13 +913,26 @@ function settingsTestSuspend(self, menuItem)
 				      "checkbox", 
 				      function(obj, isSelected)
 					      settings.suspendWake = isSelected and 30 or nil
-					      log:warn("suspendWake = ", settings.suspendWake)
+					      log:info("suspendWake=", settings.suspendWake)
 				      end,
 				      settings.suspendWake ~= nil
 			      )
 		},
+		{
+			text = self:string("WLAN_POWER_SAVE"), 
+			icon = Checkbox(
+				      "checkbox", 
+				      function(obj, isSelected)
+					      settings.wlanPSEnabled = isSelected
+					      log:info("wlanPSEnabled=", settings.wlanPSEnabled)
+					      self:_wlanPowerSave()
+				      end,
+				      settings.wlanPSEnabled
+			      )
+		},
 	})
 
+	window:addWidget(Textarea("help", self:string("POWER_MANAGEMENT_SETTINGS_HELP")))
 	window:addWidget(menu)
 
 	window:addListener(EVENT_WINDOW_POP,
@@ -955,6 +968,12 @@ function _wlanPowerSave(self, active)
 	if active ~= nil then
 		-- update the network active state
 		self.networkActive = active
+	end
+
+	local settings = self:getSettings()
+	if not settings.wlanPSEnabled then
+		self.wireless:powerSave(false)
+		return
 	end
 
 	if self._wlanPowerSaveTimer == nil then
