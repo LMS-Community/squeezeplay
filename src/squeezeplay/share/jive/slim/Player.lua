@@ -120,8 +120,11 @@ end
 local function _setPlayerName(self, playerName)
 	log:debug("_setPlayerName(", playerName, ")")
 
+	-- convert to string, in case SC sends a nil player name
+	playerName = tostring(playerName)
+
 	-- make sure this is a new name
-	if tostring(playerName) != tostring(self.name) then
+	if playerName != self.name then
 		self.name = playerName
 		self.jnt:notify('playerNewName', self, playerName)
 	end
@@ -228,7 +231,7 @@ function __init(self, jnt, slimServer, playerInfo)
 
 		id = playerInfo.playerid,
 		uuid = playerInfo.uuid,
-		name = playerInfo.name,
+		name = tostring(playerInfo.name),
 		model = playerInfo.model,
 		connected = playerInfo.connected,
 		power = playerInfo.power,
