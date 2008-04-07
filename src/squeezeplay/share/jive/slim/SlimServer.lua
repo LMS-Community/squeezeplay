@@ -641,7 +641,7 @@ Cancel loading the artwork for icon.
 function cancelAllArtwork(self, icon)
 
 	for i, entry in ipairs(self.artworkFetchQueue) do
-		local cacheKey = entry.key .. "@" .. entry.size
+		local cacheKey = entry.key
 
 		-- release cache marker
 		self.artworkCache:set(cacheKey, nil)
