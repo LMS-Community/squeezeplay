@@ -72,6 +72,7 @@ function settingsShow(self)
 		"     Anoop Mehta",
 		"     Felix Mueller",
 		"     Chris Owens",
+		"     James Richardson",
 		"     Robin Selden",
 		"     Martin Sénéclauze",
 		"     Adrian Smith",
