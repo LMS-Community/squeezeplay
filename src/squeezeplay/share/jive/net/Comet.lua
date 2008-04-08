@@ -697,15 +697,15 @@ _reconnect = function(self)
 		table.insert(data, v)
 	end
 	
+	_state(self, CONNECTING)
+	
 	local req = CometRequest(
 			_getEventSink(self),
 			self.uri,
 			data
 		)
-	
-	self.chttp:fetch(req)
 
-	_state(self, CONNECTING)
+	self.chttp:fetch(req)
 end
 
 
@@ -878,6 +878,8 @@ _disconnect = function(self)
 		clientId = self.clientId,
 	} }
 
+	_state(self, UNCONNECTING)
+
 	local req = CometRequest(
 		_getRequestSink(self),
 		self.uri,
@@ -885,8 +887,6 @@ _disconnect = function(self)
 	)
 
 	self.rhttp:fetch(req)
-
-	_state(self, UNCONNECTING)
 end
 
 

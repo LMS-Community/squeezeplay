@@ -11,21 +11,26 @@
 typedef struct {
 	SDL_TimerID timerId;
 	int ref;
-	int once;
+	bool once;
+	bool busy;
 } TimerData;
 
 
 static Uint32 timer_callback(Uint32 interval, void *param) {
 	TimerData *data = (TimerData *) param;
 
-	SDL_Event user_event;
-	memset(&user_event, 0, sizeof(SDL_Event));
+	if (data->busy == 0) {
+		SDL_Event user_event;
+		memset(&user_event, 0, sizeof(SDL_Event));
 
-	user_event.type = SDL_USEREVENT;
-	user_event.user.code = JIVE_USER_EVENT_TIMER;
-	user_event.user.data1 = (void *) data->ref;
+		user_event.type = SDL_USEREVENT;
+		user_event.user.code = JIVE_USER_EVENT_TIMER;
+		user_event.user.data1 = (void *) data->ref;
 
-	SDL_PushEvent(&user_event);
+		SDL_PushEvent(&user_event);
+	}
+
+	data->busy++;
 
 	if (data->once) {
 		return 0;
@@ -37,6 +42,8 @@ static Uint32 timer_callback(Uint32 interval, void *param) {
 
 
 void jive_timer_dispatch_event(lua_State *L, void *param) {
+	TimerData *data = NULL;
+
 	JIVEL_STACK_CHECK_BEGIN(L);
 
 	lua_rawgeti(L, LUA_REGISTRYINDEX, (lua_Integer) param);
@@ -47,8 +54,33 @@ void jive_timer_dispatch_event(lua_State *L, void *param) {
 		return;
 	}
 
-	lua_pushcfunction(L, jive_traceback);  /* push traceback function */
+	/* local copy of timer data */
+	lua_getfield(L, -1, "_timerData");
+	if (!lua_isnil(L, -1)) {
+		data = (TimerData *) lua_touserdata(L, -1);
+		data->busy = 0;
+	}
+	else {
+		lua_pop(L, 2);
 
+		JIVEL_STACK_CHECK_ASSERT(L);
+		return;
+	}
+	lua_pop(L, 1);
+
+	/* if this timer is called once then unref the _timerData */
+	if (data && data->once) {
+		SDL_RemoveTimer(data->timerId);
+		luaL_unref(L, LUA_REGISTRYINDEX, data->ref);
+
+		lua_pushnil(L);
+		lua_setfield(L, -2, "_timerData");
+	}
+
+	/* push traceback function */
+	lua_pushcfunction(L, jive_traceback);
+
+	/* timer callback */
 	lua_getfield(L, -2, "callback");
 	if (lua_isnil(L, -1) || !lua_isfunction(L, -1)) {
 		lua_pop(L, 1);
@@ -64,14 +96,6 @@ void jive_timer_dispatch_event(lua_State *L, void *param) {
 
 		JIVEL_STACK_CHECK_ASSERT(L);
 		return;
-	}
-	lua_pop(L, 1);
-
-	lua_getfield(L, -1, "once");
-	if (lua_toboolean(L, -1)) {
-	    lua_pushcfunction(L, &jiveL_timer_remove_timer);
-	    lua_pushvalue(L, -3);
-	    lua_call(L, 1, 0);
 	}
 	lua_pop(L, 2);
 
@@ -105,6 +129,7 @@ int jiveL_timer_add_timer(lua_State *L) {
 	lua_pushvalue(L, 1);
 	data->ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	data->timerId = SDL_AddTimer(interval, &timer_callback, data);
+	data->busy = 0;
 
 	return 0;
 }
