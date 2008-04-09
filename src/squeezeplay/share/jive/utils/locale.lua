@@ -47,19 +47,13 @@ file for the new locale.
 
 =cut
 --]]
-function setLocale(self, newLocale, myGlobalStrings)
+function setLocale(self, newLocale)
 	if newLocale == globalLocale then
 		return
 	end
 
 	globalLocale = newLocale or "EN"
-
-	-- globalStrings table was either passed to this method or we need to fetch it
-	if myGlobalStrings then
-		globalStrings = myGlobalStrings
-	else
-		readGlobalStringsFile(self)
-	end
+	readGlobalStringsFile(self)
 
 	-- reload existing strings files
 	for k, v in pairs(loadedFiles) do

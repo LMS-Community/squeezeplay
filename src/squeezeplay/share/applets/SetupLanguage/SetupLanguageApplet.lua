@@ -22,6 +22,7 @@ local ipairs, pairs, io, string = ipairs, pairs, io, string
 local oo               = require("loop.simple")
 
 local Applet           = require("jive.Applet")
+local AppletManager    = require("jive.AppletManager")
 local RadioGroup       = require("jive.ui.RadioGroup")
 local RadioButton      = require("jive.ui.RadioButton")
 local Framework        = require("jive.ui.Framework")
@@ -165,7 +166,6 @@ end
 
 function setLang(self, choice)
 	log:info("Locale choice set to ", choice)
-	log:warn("YOU ARE HERE")
 
         local popup = Popup("popupIcon")
         popup:setAllowScreensaver(false)
@@ -189,15 +189,29 @@ function _setLang(self, choice)
 	self:_showLang(choice)
 	self:getSettings().locale = choice
 
-	-- fetch global strings table first and then send it to setLocale 
-	-- so it doesn't have to be refetched for every applet
-	local globalStrings = locale:readGlobalStringsFile()
-	locale:setLocale(choice, globalStrings)
+	-- if connected to a player, ask for the menu again
+	local player = _getCurrentPlayer(self)
+	if player then
+		local server = player:getSlimServer()
+		if server then
+			 server:request(nil, player:getId(), { 'menu', 0, 100 })
+		end
+	end
+
+	locale:setLocale(choice)
 	jiveMain:jiveMainNodes()
 	Framework:styleChanged()
 	return true
 end
 
+function _getCurrentPlayer(self)
+	local manager = AppletManager:getAppletInstance("SlimDiscovery")
+
+	if manager and manager:getCurrentPlayer() then
+		return manager:getCurrentPlayer()
+	end
+	return false
+end
 
 --[[
 
