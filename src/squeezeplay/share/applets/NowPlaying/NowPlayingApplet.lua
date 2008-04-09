@@ -106,7 +106,7 @@ end
 local function _secondsToString(seconds)
 	local hrs = math.floor(seconds / 3600)
 	local min = math.floor((seconds / 60) - (hrs*60))
-	local sec = math.floor(seconds - (min*60))
+	local sec = math.floor( seconds - (hrs*3600) - (min*60) )
 
 	if hrs > 0 then
 		return string.format("%d:%02d:%02d", hrs, min, sec)
