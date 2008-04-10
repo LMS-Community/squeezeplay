@@ -94,3 +94,11 @@ CHOOSE_LANGUAGE_HELP
 	IT	Utilizzare la ghiera per scegliere la lingua. Premere il pulsante centrale per continuare.
 	NL	Gebruik het wiel om je taal te kiezen. Druk op de middelste knop om verder te gaan.
 
+LOADING_LANGUAGE
+	DA	Dansk
+	DE	Deutsch
+	EN	Loading English
+	ES	Español
+	FR	Français
+	IT	Italiano
+	NL	Nederlands

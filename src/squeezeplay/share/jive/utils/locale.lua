@@ -22,6 +22,7 @@ local ipairs, pairs, io, select, setmetatable, string, tostring = ipairs, pairs,
 
 local log              = require("jive.utils.log").logger("utils")
 local Framework        = require("jive.ui.Framework")
+local Task             = require("jive.ui.Task")
 
 module(...)
 
@@ -47,7 +48,7 @@ file for the new locale.
 
 =cut
 --]]
-function setLocale(self, newLocale)
+function setLocale(self, newLocale, doYield)
 	if newLocale == globalLocale then
 		return
 	end
@@ -55,10 +56,15 @@ function setLocale(self, newLocale)
 	globalLocale = newLocale or "EN"
 	readGlobalStringsFile(self)
 
+for i=1,100 do
 	-- reload existing strings files
 	for k, v in pairs(loadedFiles) do
+		if doYield then
+			Task:yield(true)
+		end
 		_parseStringsFile(self, newLocale, k, v)
 	end
+end
 end
 
 

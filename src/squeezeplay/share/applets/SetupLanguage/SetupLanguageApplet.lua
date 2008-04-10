@@ -33,6 +33,7 @@ local Window           = require("jive.ui.Window")
 local Popup            = require("jive.ui.Popup")
 local Icon             = require("jive.ui.Icon")
 local Timer            = require("jive.ui.Timer")
+local Task             = require("jive.ui.Task")
 
 local log              = require("jive.utils.log").logger("applets.setup")
 local locale           = require("jive.utils.locale")
@@ -45,6 +46,7 @@ local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
 local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
+local EVENT_WINDOW_INACTIVE = jive.ui.EVENT_WINDOW_INACTIVE
 local KEY_PLAY         = jive.ui.KEY_PLAY
 
 local jiveMain         = jiveMain
@@ -72,9 +74,7 @@ function setupShow(self, setupNext)
 		        text = self:string("LANGUAGE_" .. locale),
 			sound = "WINDOWSHOW",
 			callback = function()
-					   self:setLang(locale)
-					   self:storeSettings()
-					   setupNext()
+					   self:setLang(locale, setupNext)
 				   end,
 			focusGained = function() self:_showLang(locale) end
 		})
@@ -89,7 +89,7 @@ function setupShow(self, setupNext)
 	window:addWidget(menu)
 
 	-- Store the selected language when the menu is exited
-        window:addListener(EVENT_WINDOW_POP,
+        window:addListener(EVENT_WINDOW_INACTIVE,
                 function()
 			self:_showLang(nil)
                         self:storeSettings()
@@ -164,31 +164,14 @@ function _showLang(self, choice)
 	Framework:styleChanged()
 end
 
-function setLang(self, choice)
+function setLang(self, choice, next)
 	log:info("Locale choice set to ", choice)
 
-        local popup = Popup("popupIcon")
-        popup:setAllowScreensaver(false)
-        popup:addWidget(Icon("iconConnecting"))
-	local stringChoice = "LANGUAGE_" .. choice
-        popup:addWidget(Label("text", self:string(stringChoice)))
-	-- FIXME why doesn't this popup display immediately?
-	popup:show()
-
-	local langChanged = self:_setLang(choice)
-	popup:addTimer(1000, 
-		function()
-			if langChanged then
-				popup:hide()
-			end
-		end
-	)
-end
-
-function _setLang(self, choice)
 	self:_showLang(choice)
+
 	self:getSettings().locale = choice
 
+	-- FIXME SlimBrowser should use notification
 	-- if connected to a player, ask for the menu again
 	local player = _getCurrentPlayer(self)
 	if player then
@@ -198,10 +181,29 @@ function _setLang(self, choice)
 		end
 	end
 
-	locale:setLocale(choice)
-	jiveMain:jiveMainNodes()
-	Framework:styleChanged()
-	return true
+	-- changing the locale is slow, do this in a task with a spinny
+	self.popup = Popup("popupIcon")
+	self.popup:setAllowScreensaver(false)
+	self.popup:addWidget(Icon("iconConnecting"))
+  	local stringChoice = "LOADING_LANGUAGE"
+	self.popup:addWidget(Label("text", self:string(stringChoice)))
+ 	self.popup:show()
+  
+	self.task = Task('setLang', self, 
+			 function(self)
+				 locale:setLocale(choice, true)
+
+				 -- FIXME jiveMainNodes should use notification
+				 jiveMain:jiveMainNodes()
+				 Framework:styleChanged()
+
+				 self.popup:hide()
+
+				 if next then
+					 next()
+				 end
+			 end
+		 ):addTask()
 end
 
 function _getCurrentPlayer(self)
