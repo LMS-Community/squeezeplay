@@ -684,14 +684,14 @@ function skin(self, s)
 
 	-- connecting/connected popup icon
 	s.iconConnecting = {}
-	s.iconConnecting.img = Surface:loadImage(imgpath .. "icon_connecting.png")
+	s.iconConnecting.img = Surface:loadImage(imgpath .. "icon_connecting_161.png")
 	s.iconConnecting.frameRate = 4
-	s.iconConnecting.frameWidth = 120
+	s.iconConnecting.frameWidth = 161
 	s.iconConnecting.w = WH_FILL
 	s.iconConnecting.align = "center"
 
 	s.iconConnected = {}
-	s.iconConnected.img = Surface:loadImage(imgpath .. "icon_connected.png")
+	s.iconConnected.img = Surface:loadImage(imgpath .. "icon_connected_161.png")
 	s.iconConnected.w = WH_FILL
 	s.iconConnected.align = "center"
 
