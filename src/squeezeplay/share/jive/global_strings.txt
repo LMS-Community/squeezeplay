@@ -111,28 +111,28 @@ DELETE
 	NL	Verwijderen
 
 ALLOWEDCHARS_NOCAPS
-	DA	 abcdefghijklmnopqrstuvwxyzæøå!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	DA	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	DE	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	EN	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
-	ES	 abcdefghijklmnñopqrstuvwxyz¡!@#$%^&*()_+{}:\"'<>¿?-=,./~`[];0123456789
+	ES	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	FR	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	IT	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	NL	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 
 ALLOWEDCHARS_CAPS
-	DA	 ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	DA	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	DE	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	EN	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
-	ES	 ABCDEFGHIJKLMNÑOPQRSTUVWXYZ¡!@#$%^&*()_+{}:\"'<>¿?-=,./~`[];0123456789
+	ES	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	FR	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	IT	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	NL	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 
 ALLOWEDCHARS_WITHCAPS
-	DA	 abcdefghijklmnopqrstuvwxyzæøåABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	DA	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	DE	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	EN	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
-	ES	 abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ¡!@#$%^&*()_+{}:\"'<>¿?-=,./~`[];0123456789
+	ES	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	FR	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	IT	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	NL	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
