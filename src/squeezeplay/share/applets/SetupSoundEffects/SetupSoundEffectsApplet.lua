@@ -68,6 +68,10 @@ local effects = {
 	SOUND_CHARGING = {
 		"DOCKING"
 	},
+	SOUND_NONE = {
+		"STARTUP",
+		"SHUTDOWN"
+	},
 }
 
 
@@ -141,12 +145,14 @@ function settingsShow(self, menuItem)
 
 		allButtons[button] = v
 
-		-- insert suitable entry for Choice menu
-		menu:addItem({
-				     text = self:string(k),
-				     icon = button,
-				     weight = 10
-			     })
+		if k ~= "SOUND_NONE" then
+			-- insert suitable entry for Choice menu
+			menu:addItem({
+					     text = self:string(k),
+					     icon = button,
+					     weight = 10
+				     })
+		end
 	end
 
 	offButton:setSelected(not effectsEnabled)

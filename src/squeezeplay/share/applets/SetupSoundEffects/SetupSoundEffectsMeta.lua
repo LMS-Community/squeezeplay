@@ -52,6 +52,24 @@ function registerApplet(meta)
 		end
 	end
 
+	local sndpath = "applets/DefaultSkin/sounds/"
+
+	-- The startup sound needs to be played with the minimum
+	-- delay, load and play it first
+	Framework:loadSound("STARTUP", "jive/splash.wav", 1)
+	Framework:playSound("STARTUP")
+
+	-- Load sounds
+	Framework:loadSound("BUMP", sndpath .. "bump.wav", 1)
+	Framework:loadSound("CLICK", sndpath .. "click.wav", 0)
+	Framework:loadSound("JUMP", sndpath .. "jump.wav", 0)
+	Framework:loadSound("WINDOWSHOW", sndpath .. "pushleft.wav", 1)
+	Framework:loadSound("WINDOWHIDE", sndpath .. "pushright.wav", 1)
+	Framework:loadSound("SELECT", sndpath .. "select.wav", 0)
+	Framework:loadSound("PLAYBACK", sndpath .. "select.wav", 0)
+	Framework:loadSound("DOCKING", sndpath .. "docking.wav", 1)
+	Framework:loadSound("SHUTDOWN", sndpath .. "shutdown.wav", 1)
+
 	-- add a menu to load us
 	jiveMain:addItem(meta:menuItem('appletSetupSoundEffects', 'advancedSettings', "SOUND_EFFECTS", function(applet, ...) applet:settingsShow(...) end))
 end

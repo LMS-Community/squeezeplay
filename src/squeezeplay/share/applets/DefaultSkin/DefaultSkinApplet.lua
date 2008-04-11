@@ -67,7 +67,6 @@ oo.class(_M, Applet)
 
 -- Define useful variables for this skin
 local imgpath = "applets/DefaultSkin/images/"
-local sndpath = "applets/DefaultSkin/sounds/"
 local fontpath = "fonts/"
 
 -- define a local function to make it easier to create icons.
@@ -104,17 +103,6 @@ end
 -- The meta arranges for this to be called to skin Jive.
 function skin(self, s)
 	local screenWidth, screenHeight = Framework:getScreenSize()
-
-	-- Sounds
-	Framework:loadSound("BUMP", sndpath .. "bump.wav", 1)
-	Framework:loadSound("CLICK", sndpath .. "click.wav", 0)
-	Framework:loadSound("JUMP", sndpath .. "jump.wav", 0)
-	Framework:loadSound("WINDOWSHOW", sndpath .. "pushleft.wav", 1)
-	Framework:loadSound("WINDOWHIDE", sndpath .. "pushright.wav", 1)
-	Framework:loadSound("SELECT", sndpath .. "select.wav", 0)
-	Framework:loadSound("PLAYBACK", sndpath .. "select.wav", 0)
-	Framework:loadSound("DOCKING", sndpath .. "docking.wav", 1)
-	Framework:loadSound("SHUTDOWN", sndpath .. "shutdown.wav", 1)
 
 	-- Images and Tiles
 	local iconBackground = 
