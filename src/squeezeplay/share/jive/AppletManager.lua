@@ -276,6 +276,14 @@ function discover(self)
 	log:debug("AppletManager:loadApplets")
 
 	_findApplets()
+
+	-- load the sound effects applet first so the startup
+	-- sound is played without delay.
+	-- FIXME make the startup order of applet configurable
+	local soundEffectsEntry = _appletsDb["SetupSoundEffects"]
+	_loadMeta(soundEffectsEntry)
+	_evalMeta(soundEffectsEntry)
+
 	_loadMetas()
 	_evalMetas()
 end

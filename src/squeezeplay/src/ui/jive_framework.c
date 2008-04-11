@@ -148,14 +148,6 @@ static int jiveL_init(lua_State *L) {
 		exit(-1);
 	}
 
-	/* show splash screen */
-	splash = jive_surface_load_image("jive/splash.png");
-	if (splash) {
-		jive_surface_get_size(splash, &splash_w, &splash_h);
-		jive_surface_blit(splash, srf, (screen_w - splash_w) / 2, (screen_h - splash_h) / 2);
-		jive_surface_flip(srf);
-	}
-
   /* load the icon */
   icon = jive_surface_load_image("jive/app.png");
   if (icon->sdl)
@@ -172,25 +164,16 @@ static int jiveL_init(lua_State *L) {
 	/* init audio */
 	jiveL_init_audio(L);
 
-	/* play startup sound */
-	lua_getglobal(L, "jive");
-	lua_getfield(L, -1, "ui");
-	lua_getfield(L, -1, "Audio");
-	lua_getfield(L, -1, "loadSound");
-	lua_pushvalue(L, -2);
-	lua_pushstring(L, "jive/splash.wav");
-	lua_pushnumber(L, 1);
-	lua_call(L, 3, 1);
-
-	if (!lua_isnil(L, -1)) {
-		lua_getfield(L, -1, "play");
-		lua_pushvalue(L, -2);
-		lua_call(L, 1, 0);
-	}
-	lua_pop(L, 1);
-
 	/* background image */
 	jive_background = jive_tile_fill_color(0x000000FF);
+
+	/* show splash screen */
+	splash = jive_surface_load_image("jive/splash.png");
+	if (splash) {
+		jive_surface_get_size(splash, &splash_w, &splash_h);
+		jive_surface_blit(splash, srf, (screen_w - splash_w) / 2, (screen_h - splash_h) / 2);
+		jive_surface_flip(srf);
+	}
 
 	/* jive.ui.style = {} */
 	lua_getglobal(L, "jive");

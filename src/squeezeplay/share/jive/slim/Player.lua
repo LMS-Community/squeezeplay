@@ -47,6 +47,7 @@ local Framework      = require("jive.ui.Framework")
 local Popup          = require("jive.ui.Popup")
 local Icon           = require("jive.ui.Icon")
 local Label          = require("jive.ui.Label")
+local Textarea       = require("jive.ui.Textarea")
 local Window         = require("jive.ui.Window")
 local Group          = require("jive.ui.Group")
 
@@ -778,8 +779,10 @@ function _process_displaystatus(self, event)
 		local type    = display["type"] or 'text'
 
 		local s = self.currentSong
+		local showMe
 
 		if type == 'song' then
+			showMe = s.window
 			-- new song display from server
 			s.text:setValue(table.concat(display["text"], "\n"))
 			s.artIcon:setStyle("icon")
@@ -789,11 +792,13 @@ function _process_displaystatus(self, event)
 				self.slimServer:fetchArtworkThumb(display["icon-id"], s.artIcon, 56, 'png')
 			end
 		else
-			s.text:setValue(table.concat(display["text"], "\n"))
-			s.artIcon:setStyle("noimage")
-			s.artIcon:setValue(nil)
+			local textarea = Textarea('popupplay', table.concat(display['text'], ' '))
+			showMe = Popup("currentsong")
+			showMe:addWidget(textarea)
+			showMe:setAllowScreensaver(true)
+			showMe:setAlwaysOnTop(true)
 		end
-		s.window:showBriefly(3000, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
+		showMe:showBriefly(3000, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
 	end
 end
 
