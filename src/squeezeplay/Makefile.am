@@ -18,7 +18,7 @@ TOLUA = tolua++
 
 
 # Convenience library:
-noinst_LTLIBRARIES = libjiveui.la libjivenet.la
+noinst_LTLIBRARIES = libjiveui.la libjiveaudio.la libjivenet.la
 
 BUILT_SOURCES = \
 	src/ui/lua_jiveui.c \
@@ -57,6 +57,18 @@ libjiveui_la_SOURCES = \
 
 libjiveui_la_LIBADD = -ltolua++ -llua -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL
 
+libjiveaudio_la_SOURCES = \
+	src/audio/fifo.c \
+	src/audio/mqueue.c \
+	src/audio/streambuf.c \
+	src/audio/decode/decode.c \
+	src/audio/decode/decode_flac.c \
+	src/audio/decode/decode_output.c \
+	src/audio/decode/decode_pcm.c \
+	src/audio/decode/decode_portaudio.c \
+	src/audio/decode/decode_tones.c
+
+libjiveaudio_la_LIBADD = -lSDL -lportaudio -lFLAC	
 
 libjivenet_la_SOURCES = \
 	src/net/jive_dns.c
@@ -81,7 +93,7 @@ jive_SOURCES = \
 	src/jive.c \
 	src/jive_debug.c
 
-jive_LDADD = libjiveui.la libjivenet.la -llua
+jive_LDADD = libjiveui.la libjiveaudio.la libjivenet.la -llua
 #jive_DEPENDENCIES = check_lua
 
 
@@ -102,7 +114,8 @@ dist_jive_DATA = \
 	share/jive/Iconbar.lua \
 	share/jive/global_strings.txt \
 	share/jive/splash.png \
-	share/jive/splash.wav
+	share/jive/splash.wav \
+	share/jive/app.png
 
 jiveuidir = $(pkgdatadir)/jive/ui
 dist_jiveui_DATA = \
@@ -134,6 +147,10 @@ dist_jiveui_DATA = \
 	share/jive/ui/Widget.lua \
 	share/jive/ui/Window.lua
 
+luaaudiodir = $(pkgdatadir)/jive/audio
+dist_luaaudio_DATA = \
+	share/jive/audio/Playback.lua
+
 luanetdir = $(pkgdatadir)/jive/net
 dist_luanet_DATA = \
 	share/jive/net/Comet.lua \
@@ -141,6 +158,7 @@ dist_luanet_DATA = \
 	share/jive/net/DNS.lua \
 	share/jive/net/NetworkThread.lua \
 	share/jive/net/Process.lua \
+	share/jive/net/SlimProto.lua \
 	share/jive/net/SocketHttp.lua \
 	share/jive/net/SocketHttpQueue.lua \
 	share/jive/net/Socket.lua \
@@ -339,7 +357,6 @@ dist_applets_defaultskin_DATA = \
 	share/applets/DefaultSkin/DefaultSkinApplet.lua \
 	share/applets/DefaultSkin/DefaultSkinMeta.lua
 
-
 # Data: default skin
 applets_defaultskin_imagesdir = $(pkgdatadir)/applets/DefaultSkin/images
 dist_applets_defaultskin_images_DATA = \
@@ -509,8 +526,7 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/menu_album_selection_tr.png \
 	share/applets/DefaultSkin/images/navcluster.png \
 	share/applets/DefaultSkin/images/menu_check.png \
-	share/applets/DefaultSkin/images/menu_check_selected.png
-
+	share/applets/DefaultSkin/images/menu_check_selected.png 
 
 applets_defaultskin_soundsdir = $(pkgdatadir)/applets/DefaultSkin/sounds
 dist_applets_defaultskin_sounds_DATA = \
@@ -522,4 +538,233 @@ dist_applets_defaultskin_sounds_DATA = \
 	share/applets/DefaultSkin/sounds/select.wav \
 	share/applets/DefaultSkin/sounds/shutdown.wav \
 	share/applets/DefaultSkin/sounds/docking.wav
+
+# Fullscreen skin
+applets_fullscreenskindir = $(pkgdatadir)/applets/FullscreenSkin
+dist_applets_fullscreenskin_DATA = \
+	share/applets/FullscreenSkin/FullscreenSkinApplet.lua \
+	share/applets/FullscreenSkin/FullscreenSkinMeta.lua
+
+applets_fullscreenskin_imagesdir = $(pkgdatadir)/applets/FullscreenSkin/images
+dist_applets_fullscreenskin_images_DATA = \
+	share/applets/FullscreenSkin/images/album_noartwork.png  \
+	share/applets/FullscreenSkin/images/album_noartwork_154.png  \
+	share/applets/FullscreenSkin/images/album_noartwork_166.png  \
+	share/applets/FullscreenSkin/images/album_noartwork_184.png  \
+	share/applets/FullscreenSkin/images/album_noartwork_186.png  \
+	share/applets/FullscreenSkin/images/album_noartwork_375.png  \
+	share/applets/FullscreenSkin/images/album_noartwork_56.png  \
+	share/applets/FullscreenSkin/images/album_shadow_166.png  \
+	share/applets/FullscreenSkin/images/album_shadow_184.png  \
+	share/applets/FullscreenSkin/images/bghighlight.png  \
+	share/applets/FullscreenSkin/images/bghighlight_b.png  \
+	share/applets/FullscreenSkin/images/bghighlight_bl.png  \
+	share/applets/FullscreenSkin/images/bghighlight_br.png  \
+	share/applets/FullscreenSkin/images/bghighlight_l.png  \
+	share/applets/FullscreenSkin/images/bghighlight_r.png  \
+	share/applets/FullscreenSkin/images/bghighlight_tl.png  \
+	share/applets/FullscreenSkin/images/bghighlight_tr.png  \
+	share/applets/FullscreenSkin/images/border.png  \
+	share/applets/FullscreenSkin/images/border_l.png  \
+	share/applets/FullscreenSkin/images/border_r.png  \
+	share/applets/FullscreenSkin/images/btn_selector_add.png  \
+	share/applets/FullscreenSkin/images/btn_selector_play.png  \
+	share/applets/FullscreenSkin/images/button.png  \
+	share/applets/FullscreenSkin/images/button_b.png  \
+	share/applets/FullscreenSkin/images/button_bl.png  \
+	share/applets/FullscreenSkin/images/button_br.png  \
+	share/applets/FullscreenSkin/images/button_l.png  \
+	share/applets/FullscreenSkin/images/button_r.png  \
+	share/applets/FullscreenSkin/images/button_t.png  \
+	share/applets/FullscreenSkin/images/button_tl.png  \
+	share/applets/FullscreenSkin/images/button_tr.png  \
+	share/applets/FullscreenSkin/images/checkbox_off.png  \
+	share/applets/FullscreenSkin/images/checkbox_on.png  \
+	share/applets/FullscreenSkin/images/header_BL.png  \
+	share/applets/FullscreenSkin/images/header_BR.png  \
+	share/applets/FullscreenSkin/images/header_M.png  \
+	share/applets/FullscreenSkin/images/header_TL.png  \
+	share/applets/FullscreenSkin/images/header_TR.png  \
+	share/applets/FullscreenSkin/images/helpbox.png  \
+	share/applets/FullscreenSkin/images/helpbox_l.png  \
+	share/applets/FullscreenSkin/images/helpbox_r.png  \
+	share/applets/FullscreenSkin/images/helpbox_t.png  \
+	share/applets/FullscreenSkin/images/helpbox_tl.png  \
+	share/applets/FullscreenSkin/images/helpbox_tr.png  \
+	share/applets/FullscreenSkin/images/icon_battery_0.png  \
+	share/applets/FullscreenSkin/images/icon_battery_1.png  \
+	share/applets/FullscreenSkin/images/icon_battery_2.png  \
+	share/applets/FullscreenSkin/images/icon_battery_3.png  \
+	share/applets/FullscreenSkin/images/icon_battery_4.png  \
+	share/applets/FullscreenSkin/images/icon_battery_ac.png  \
+	share/applets/FullscreenSkin/images/icon_battery_charging.png  \
+	share/applets/FullscreenSkin/images/icon_connected.png  \
+	share/applets/FullscreenSkin/images/icon_connecting.png  \
+	share/applets/FullscreenSkin/images/icon_connecting_44.png  \
+	share/applets/FullscreenSkin/images/icon_mode_off.png  \
+	share/applets/FullscreenSkin/images/icon_mode_pause.png  \
+	share/applets/FullscreenSkin/images/icon_mode_play.png  \
+	share/applets/FullscreenSkin/images/icon_nowplaying.png  \
+	share/applets/FullscreenSkin/images/icon_repeat.png  \
+	share/applets/FullscreenSkin/images/icon_repeat_off.png  \
+	share/applets/FullscreenSkin/images/icon_repeat_song.png  \
+	share/applets/FullscreenSkin/images/icon_shuffle.png  \
+	share/applets/FullscreenSkin/images/icon_shuffle_album.png  \
+	share/applets/FullscreenSkin/images/icon_shuffle_off.png  \
+	share/applets/FullscreenSkin/images/icon_wireless_1.png  \
+	share/applets/FullscreenSkin/images/icon_wireless_1_shadow.png  \
+	share/applets/FullscreenSkin/images/icon_wireless_2.png  \
+	share/applets/FullscreenSkin/images/icon_wireless_2_shadow.png  \
+	share/applets/FullscreenSkin/images/icon_wireless_3.png  \
+	share/applets/FullscreenSkin/images/icon_wireless_3_shadow.png  \
+	share/applets/FullscreenSkin/images/icon_wireless_4.png  \
+	share/applets/FullscreenSkin/images/icon_wireless_4_shadow.png  \
+	share/applets/FullscreenSkin/images/icon_wireless_noserver.png  \
+	share/applets/FullscreenSkin/images/icon_wireless_off.png  \
+	share/applets/FullscreenSkin/images/menu_album_noartwork.png  \
+	share/applets/FullscreenSkin/images/menu_album_noartwork_125.png  \
+	share/applets/FullscreenSkin/images/menu_album_noartwork_150.png  \
+	share/applets/FullscreenSkin/images/menu_album_noartwork_56.png  \
+	share/applets/FullscreenSkin/images/menu_album_selection.png  \
+	share/applets/FullscreenSkin/images/menu_album_selection_b.png  \
+	share/applets/FullscreenSkin/images/menu_album_selection_bl.png  \
+	share/applets/FullscreenSkin/images/menu_album_selection_br.png  \
+	share/applets/FullscreenSkin/images/menu_album_selection_l.png  \
+	share/applets/FullscreenSkin/images/menu_album_selection_r.png  \
+	share/applets/FullscreenSkin/images/menu_album_selection_t.png  \
+	share/applets/FullscreenSkin/images/menu_album_selection_tl.png  \
+	share/applets/FullscreenSkin/images/menu_album_selection_tr.png  \
+	share/applets/FullscreenSkin/images/menu_check.png  \
+	share/applets/FullscreenSkin/images/menu_check_selected.png  \
+	share/applets/FullscreenSkin/images/menu_nowplaying.png  \
+	share/applets/FullscreenSkin/images/menu_nowplaying_selected.png  \
+	share/applets/FullscreenSkin/images/menu_playlist.png  \
+	share/applets/FullscreenSkin/images/menu_selection_box.png  \
+	share/applets/FullscreenSkin/images/menu_selection_box_b.png  \
+	share/applets/FullscreenSkin/images/menu_selection_box_bl.png  \
+	share/applets/FullscreenSkin/images/menu_selection_box_br.png  \
+	share/applets/FullscreenSkin/images/menu_selection_box_l.png  \
+	share/applets/FullscreenSkin/images/menu_selection_box_r.png  \
+	share/applets/FullscreenSkin/images/menu_selection_box_t.png  \
+	share/applets/FullscreenSkin/images/menu_selection_box_tl.png  \
+	share/applets/FullscreenSkin/images/menu_selection_box_tr.png  \
+	share/applets/FullscreenSkin/images/mini_albums.png  \
+	share/applets/FullscreenSkin/images/mini_artists.png  \
+	share/applets/FullscreenSkin/images/mini_favorites.png  \
+	share/applets/FullscreenSkin/images/mini_genres.png  \
+	share/applets/FullscreenSkin/images/mini_home.png  \
+	share/applets/FullscreenSkin/images/mini_infobrowser.png  \
+	share/applets/FullscreenSkin/images/mini_internet_radio.png  \
+	share/applets/FullscreenSkin/images/mini_music_library.png  \
+	share/applets/FullscreenSkin/images/mini_musicfolder.png  \
+	share/applets/FullscreenSkin/images/mini_mymusic.png  \
+	share/applets/FullscreenSkin/images/mini_newmusic.png  \
+	share/applets/FullscreenSkin/images/mini_nowplaying.png  \
+	share/applets/FullscreenSkin/images/mini_playlist.png  \
+	share/applets/FullscreenSkin/images/mini_quarter_note.png  \
+	share/applets/FullscreenSkin/images/mini_random.png  \
+	share/applets/FullscreenSkin/images/mini_search.png  \
+	share/applets/FullscreenSkin/images/mini_settings.png  \
+	share/applets/FullscreenSkin/images/mini_years.png  \
+	share/applets/FullscreenSkin/images/navcluster.png  \
+	share/applets/FullscreenSkin/images/note.png  \
+	share/applets/FullscreenSkin/images/pointer_nowplaying_L.png  \
+	share/applets/FullscreenSkin/images/pointer_nowplaying_R.png  \
+	share/applets/FullscreenSkin/images/pointer_selector_L.png  \
+	share/applets/FullscreenSkin/images/pointer_selector_R.png  \
+	share/applets/FullscreenSkin/images/popup_alarm_icon.png  \
+	share/applets/FullscreenSkin/images/popup_battery_low_icon.png  \
+	share/applets/FullscreenSkin/images/popup_fav_heart_bkgrd.png  \
+	share/applets/FullscreenSkin/images/popup_locked_icon.png  \
+	share/applets/FullscreenSkin/images/popup_playlist_icon.png  \
+	share/applets/FullscreenSkin/images/popup_shutdown_icon.png  \
+	share/applets/FullscreenSkin/images/popupbox.png  \
+	share/applets/FullscreenSkin/images/popupbox_b.png  \
+	share/applets/FullscreenSkin/images/popupbox_bl.png  \
+	share/applets/FullscreenSkin/images/popupbox_br.png  \
+	share/applets/FullscreenSkin/images/popupbox_l.png  \
+	share/applets/FullscreenSkin/images/popupbox_r.png  \
+	share/applets/FullscreenSkin/images/popupbox_t.png  \
+	share/applets/FullscreenSkin/images/popupbox_tl.png  \
+	share/applets/FullscreenSkin/images/popupbox_tr.png  \
+	share/applets/FullscreenSkin/images/radiobutton_off.png  \
+	share/applets/FullscreenSkin/images/radiobutton_on.png  \
+	share/applets/FullscreenSkin/images/scrollbar_B.png  \
+	share/applets/FullscreenSkin/images/scrollbar_B_mouse.png  \
+	share/applets/FullscreenSkin/images/scrollbar_M.png  \
+	share/applets/FullscreenSkin/images/scrollbar_T.png  \
+	share/applets/FullscreenSkin/images/scrollbar_T_mouse.png  \
+	share/applets/FullscreenSkin/images/scrollbar_bkground.png  \
+	share/applets/FullscreenSkin/images/scrollbar_bkground_b.png  \
+	share/applets/FullscreenSkin/images/scrollbar_bkground_t.png  \
+	share/applets/FullscreenSkin/images/scrollbar_bkgroundbottom.png  \
+	share/applets/FullscreenSkin/images/scrollbar_bkgroundmid.png  \
+	share/applets/FullscreenSkin/images/scrollbar_bkgroundtop.png  \
+	share/applets/FullscreenSkin/images/scrollbar_bodybottom.png  \
+	share/applets/FullscreenSkin/images/scrollbar_bodymid.png  \
+	share/applets/FullscreenSkin/images/scrollbar_bodytop.png  \
+	share/applets/FullscreenSkin/images/scrollbar_thumb_B.png  \
+	share/applets/FullscreenSkin/images/scrollbar_thumb_M.png  \
+	share/applets/FullscreenSkin/images/scrollbar_thumb_T.png  \
+	share/applets/FullscreenSkin/images/selection_add.png  \
+	share/applets/FullscreenSkin/images/selection_play.png  \
+	share/applets/FullscreenSkin/images/selection_right.png  \
+	share/applets/FullscreenSkin/images/selection_right_textentry.png  \
+	share/applets/FullscreenSkin/images/selection_wait.png  \
+	share/applets/FullscreenSkin/images/selector_BL.png  \
+	share/applets/FullscreenSkin/images/selector_BR.png  \
+	share/applets/FullscreenSkin/images/selector_M.png  \
+	share/applets/FullscreenSkin/images/selector_TL.png  \
+	share/applets/FullscreenSkin/images/selector_TR.png  \
+	share/applets/FullscreenSkin/images/slider_bkgrd.png  \
+	share/applets/FullscreenSkin/images/slider_bkgrd_l.png  \
+	share/applets/FullscreenSkin/images/slider_bkgrd_r.png  \
+	share/applets/FullscreenSkin/images/slider_fill.png  \
+	share/applets/FullscreenSkin/images/slider_fill_l.png  \
+	share/applets/FullscreenSkin/images/slider_fill_r.png  \
+	share/applets/FullscreenSkin/images/slider_icon_negative.png  \
+	share/applets/FullscreenSkin/images/slider_icon_positive.png  \
+	share/applets/FullscreenSkin/images/text_entry_bkgrd.png  \
+	share/applets/FullscreenSkin/images/text_entry_bkgrd_l.png  \
+	share/applets/FullscreenSkin/images/text_entry_bkgrd_r.png  \
+	share/applets/FullscreenSkin/images/text_entry_letter.png  \
+	share/applets/FullscreenSkin/images/text_entry_select.png  \
+	share/applets/FullscreenSkin/images/titlebox.png  \
+	share/applets/FullscreenSkin/images/titlebox_b.png  \
+	share/applets/FullscreenSkin/images/titlebox_bl.png  \
+	share/applets/FullscreenSkin/images/titlebox_br.png  \
+	share/applets/FullscreenSkin/images/titlebox_l.png  \
+	share/applets/FullscreenSkin/images/titlebox_r.png  \
+	share/applets/FullscreenSkin/images/titlebox_t.png  \
+	share/applets/FullscreenSkin/images/titlebox_tl.png  \
+	share/applets/FullscreenSkin/images/titlebox_tr.png  \
+	share/applets/FullscreenSkin/images/toast_M.png  \
+	share/applets/FullscreenSkin/images/toast_TL.png  \
+	share/applets/FullscreenSkin/images/toast_TR.png  \
+	share/applets/FullscreenSkin/images/volume_bkgrd.png  \
+	share/applets/FullscreenSkin/images/volume_bkgrd_l.png  \
+	share/applets/FullscreenSkin/images/volume_bkgrd_r.png  \
+	share/applets/FullscreenSkin/images/volume_fill.png  \
+	share/applets/FullscreenSkin/images/volume_fill_l.png  \
+	share/applets/FullscreenSkin/images/volume_fill_r.png  \
+	share/applets/FullscreenSkin/images/volume_speaker_l.png  \
+	share/applets/FullscreenSkin/images/volume_speaker_r.png \
+	share/applets/FullscreenSkin/images/slider_volume_L.png \
+	share/applets/FullscreenSkin/images/slider_volume_M.png \
+	share/applets/FullscreenSkin/images/slider_volume_R.png \
+	share/applets/FullscreenSkin/images/slider_volume_fill_L.png \
+	share/applets/FullscreenSkin/images/slider_volume_fill_M.png \
+	share/applets/FullscreenSkin/images/slider_volume_thumb.png
+
+applets_fullscreenskin_soundsdir = $(pkgdatadir)/applets/FullscreenSkin/sounds
+dist_applets_fullscreenskin_sounds_DATA = \
+	share/applets/FullscreenSkin/sounds/bump.wav \
+	share/applets/FullscreenSkin/sounds/click.wav \
+	share/applets/FullscreenSkin/sounds/jump.wav \
+	share/applets/FullscreenSkin/sounds/pushleft.wav \
+	share/applets/FullscreenSkin/sounds/pushright.wav \
+	share/applets/FullscreenSkin/sounds/select.wav \
+	share/applets/FullscreenSkin/sounds/shutdown.wav \
+	share/applets/FullscreenSkin/sounds/docking.wav
+
 

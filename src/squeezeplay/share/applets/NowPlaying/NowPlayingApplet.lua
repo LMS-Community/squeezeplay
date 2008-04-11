@@ -70,9 +70,9 @@ local jnt                    = jnt
 module(...)
 oo.class(_M, Applet)
 
-local ARTWORK_SIZE = 154
+local ARTWORK_SIZE = 350
 
-local showProgressBar = true
+--local showProgressBar = true
 local modeTokens = {
 	off   = "SCREENSAVER_OFF",
 	play  = "SCREENSAVER_NOWPLAYING",
@@ -117,15 +117,6 @@ end
 
 local function _getIcon(self, item, icon, remote)
 	local server = self.player:getSlimServer()
-
-	if windowStyle == 'ss' then
-		-- without drop shadow
-		ARTWORK_SIZE = 186
-		-- with drop shadow
-		--ARTWORK_SIZE = 172
-	else
-		ARTWORK_SIZE = 154
-	end
 
 	if item and item["icon-id"] then
 		-- Fetch an image from SlimServer
@@ -264,7 +255,6 @@ function notify_playerCurrent(self, player)
 
 	windowStyle = 'ss'
 
-log:warn('ACK!')
 	jiveMain:addItem( 
 		{
 			id = 'appletNowPlaying',
@@ -306,13 +296,13 @@ function _updateAll(self, ws)
 
 	if playerStatus.item_loop then
 		local text = playerStatus.item_loop[1].text
-		local showProgressBar = true
+--		local showProgressBar = true
 		-- XXX: current_title of null is a function value??
 		if playerStatus.remote == 1 and type(playerStatus.current_title) == 'string' then 
 			text = text .. "\n" .. playerStatus.current_title
 		end
 		if playerStatus.time == 0 then
-			showProgressBar = false
+--			showProgressBar = false
 		end
 
 		local item = playerStatus.item_loop[1]
@@ -321,8 +311,7 @@ function _updateAll(self, ws)
 			_getIcon(self, item, ws.artwork, playerStatus.remote)
 
 			self:_updateTrack(text, ws)
-			self:_updateProgress(playerStatus, ws)
-			self:_updatePlaylist(true, playerStatus.playlist_cur_index, playerStatus.playlist_tracks, ws)
+--			self:_updateProgress(playerStatus, ws)
 		
 			-- preload artwork for next track
 			if playerStatus.item_loop[2] then
@@ -333,7 +322,6 @@ function _updateAll(self, ws)
 		if ws and ws.window then
 			_getIcon(self, nil, ws.artwork, nil)
 			self:_updateTrack("\n\n\n", ws)
-			self:_updatePlaylist(false, 0, 0, ws)
 		end
 	end
 end
@@ -385,23 +373,15 @@ function _updatePosition(self)
 		strRemain = "-" .. _secondsToString(duration - elapsed)
 	end
 
+--[[
 	self[windowStyle].progressGroup:setWidgetValue("elapsed", strElapsed)
 	if showProgressBar then
 		self[windowStyle].progressGroup:setWidgetValue("remain", strRemain)
 		self[windowStyle].progressSlider:setValue(elapsed)
 	end
+--]]
 end
 
-
-function _updatePlaylist(self, enabled, nr, count, ws)
-	if not ws then ws = self[windowStyle] end
-	if enabled == true and count and count > 1 then
-		nr = nr + 1
-		ws.titleGroup:setWidgetValue("playlist", self:string("SCREENSAVER_NOWPLAYING_OF", nr, count))
-	else 
-		ws.titleGroup:setWidgetValue("playlist", "")
-	end
-end
 
 function _updateMode(self, mode, ws)
 	if not ws then 
@@ -501,10 +481,12 @@ function _createUI(self)
 	local components = { 
 		nptitle = "nptitle", 
 		nptrack = "nptrack", 
-		progressB = "progressB", 
-		progress = "progress", 
-		progressNB = "progressNB",
-		npartwork = "npartwork" 
+		leftarrow = 'leftarrow',
+		rightarrow = 'rightarrow',
+--		progressB = "progressB", 
+--		progress = "progress", 
+--		progressNB = "progressNB",
+		npartwork = "npartwork",
 	}
 	for k, v in pairs(components) do
 		local new = windowStyle .. v
@@ -512,7 +494,6 @@ function _createUI(self)
 	end
 	self[windowStyle].titleGroup = Group(components.nptitle, {
 				   title = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
-				   playlist = Label("playlist", "")
 			   })
 	
 
@@ -520,7 +501,11 @@ function _createUI(self)
 				   text = Label("text", "\n\n\n")
 			   })
 	
-	
+	self[windowStyle].leftArrow = Icon(components.leftarrow)
+	self[windowStyle].rightArrow = Icon(components.rightarrow)
+
+
+--[[
 	if showProgressBar then
 		self[windowStyle].progressSlider = Slider(components.progressB, 0, 100, 0)
 		self[windowStyle].progressSlider:addTimer(1000, function() self:_updatePosition() end)
@@ -534,9 +519,9 @@ function _createUI(self)
 		self[windowStyle].progressGroup = Group(components.progressNB, {
 					      elapsed = Label("text", "")
 				      })
-		self[windowStyle].progressGroup:addTimer(1000, function() self:_updatePosition() end)
 	end
 
+--]]
 	self[windowStyle].artwork = Icon("artwork")
 	self[windowStyle].artworkGroup = Group(components.npartwork, {
 				     artwork = self[windowStyle].artwork    
@@ -547,7 +532,9 @@ function _createUI(self)
 	window:addWidget(self[windowStyle].titleGroup)
 	window:addWidget(self[windowStyle].trackGroup)
 	window:addWidget(self[windowStyle].artworkGroup)
-	window:addWidget(self[windowStyle].progressGroup)
+	window:addWidget(self[windowStyle].leftArrow)
+	window:addWidget(self[windowStyle].rightArrow)
+--	window:addWidget(self[windowStyle].progressGroup)
 
 	window:focusWidget(self[windowStyle].trackGroup)
 	-- register window as a screensaver, unless we are explicitly not in that mode
@@ -618,8 +605,7 @@ function openScreensaver(self, style, transition)
 		_getIcon(self, _thisTrack, self[windowStyle].artwork, playerStatus.remote)
 		self:_updateMode(playerStatus.mode)
 		self:_updateTrack(text)
-		self:_updateProgress(playerStatus)
-		self:_updatePlaylist(true, playerStatus.playlist_cur_index, playerStatus.playlist_tracks)
+--		self:_updateProgress(playerStatus)
 
 		-- preload artwork for next track
 		if playerStatus.item_loop[2] then
@@ -632,7 +618,6 @@ function openScreensaver(self, style, transition)
 		_getIcon(self, nil, playerStatus.artwork, nil) 
 		self:_updateTrack("\n\n\n")
 		self:_updateMode(playerStatus.mode)
-		self:_updatePlaylist(false, 0, 0)	
 	end
 
 	-- Initialize with current data from Player

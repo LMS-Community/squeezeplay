@@ -9,11 +9,19 @@
 #include "jive.h"
 
 
-JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp) {
+JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fullscreen) {
 	JiveSurface *srf;
 	SDL_Surface *sdl;
+	Uint32 flags;
 
-	sdl = SDL_SetVideoMode (w, h, bpp, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
+	if (fullscreen) {
+	    flags = SDL_FULLSCREEN;
+	}
+	else {
+	    flags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE;
+	}
+
+	sdl = SDL_SetVideoMode (w, h, bpp, flags);
 	if (!sdl) {
 		fprintf(stderr, "SDL_SetVideoMode(%d,%d,%d): %s\n",
 			w, h, bpp, SDL_GetError());

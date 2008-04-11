@@ -195,12 +195,14 @@ local categories = {
 	["player"]                   = jiveLogger(logging.INFO),
 	["player.browse"]            = jiveLogger(logging.INFO),
 	["player.browse.data"]       = jiveLogger(logging.INFO),
+	["audio"]                    = jiveLogger(logging.DEBUG),
                          
 	["net.cli"]                  = jiveLogger(logging.INFO),
 	["net.thread"]               = jiveLogger(logging.INFO),
 	["net.socket"]               = jiveLogger(logging.INFO),
 	["net.http"]                 = jiveLogger(logging.INFO),
 	["net.comet"]                = jiveLogger(logging.INFO),
+	["net.slimproto"]            = jiveLogger(logging.INFO),
 	                             
 	["ui"]                       = jiveLogger(logging.INFO),
 	["ui.task"]                  = jiveLogger(logging.WARN),

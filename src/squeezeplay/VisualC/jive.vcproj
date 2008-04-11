@@ -40,7 +40,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/D &quot;_CRT_SECURE_NO_DEPRECATE&quot;"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;..\src;..\src\jiveui;&quot;..\..\SDL-1.2.11\include&quot;;&quot;..\..\SDL-1.2.11\VisualC\include&quot;;&quot;..\..\SDL_image-1.2.5&quot;;&quot;..\..\SDL_ttf-2.0.8&quot;;&quot;..\..\SDL_gfx-2.0.15&quot;;&quot;..\..\lua-5.1.1\src&quot;;&quot;..\..\tolua++-1.0.92\include&quot;"
+				AdditionalIncludeDirectories=".;..\src;..\src\jiveui;&quot;..\..\SDL-1.2.11\include&quot;;&quot;..\..\SDL-1.2.11\VisualC\include&quot;;&quot;..\..\SDL_image-1.2.5&quot;;&quot;..\..\SDL_ttf-2.0.8&quot;;&quot;..\..\SDL_gfx-2.0.15&quot;;&quot;..\..\lua-5.1.1\src&quot;;&quot;..\..\tolua++-1.0.92\include&quot;;..\..\portaudio_v19_1360\include;&quot;..\..\flac-1.2.1\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,9 +62,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib"
+				AdditionalDependencies="ws2_32.lib wmvcore.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories=""
+				AdditionalLibraryDirectories="C:\WMSDK\WMFSDK11\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -118,7 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".;..\src;..\src\jiveui;&quot;..\..\SDL-1.2.11\include&quot;;&quot;..\..\SDL-1.2.11\VisualC\include&quot;;&quot;..\..\SDL_image-1.2.5&quot;;&quot;..\..\SDL_ttf-2.0.8&quot;;&quot;..\..\SDL_gfx-2.0.15&quot;;&quot;..\..\lua-5.1.1\src&quot;;&quot;..\..\tolua++-1.0.92\include&quot;"
+				AdditionalIncludeDirectories=".;..\src;..\src\jiveui;&quot;..\..\SDL-1.2.11\include&quot;;&quot;..\..\SDL-1.2.11\VisualC\include&quot;;&quot;..\..\SDL_image-1.2.5&quot;;&quot;..\..\SDL_ttf-2.0.8&quot;;&quot;..\..\SDL_gfx-2.0.15&quot;;&quot;..\..\lua-5.1.1\src&quot;;&quot;..\..\tolua++-1.0.92\include&quot;;..\..\portaudio_v19_1360\include;&quot;..\..\flac-1.2.1\include&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -137,10 +137,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib"
+				AdditionalDependencies="ws2_32.lib wmvcore.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="C:\WMSDK\WMFSDK11\lib"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="0"
 				EnableCOMDATFolding="0"
 				TargetMachine="1"
@@ -189,7 +190,43 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\audio\decode\decode.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\audio\decode\decode_priv.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\audio\decode\decode_wma_win_DMOWrapper.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\audio\fifo.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\ui\jive.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\audio\mqueue.h"
+				>
+			</File>
+			<File
+				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\audio\streambuf.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\types.h"
+				>
+			</File>
+			<File
+				RelativePath=".\version.h"
 				>
 			</File>
 		</Filter>
@@ -198,6 +235,72 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath="..\src\audio\decode\decode.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\audio\decode\decode_flac.c"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\audio\decode\decode_output.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\audio\decode\decode_pcm.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\audio\decode\decode_portaudio.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\audio\decode\decode_tones.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\audio\decode\decode_wma_win.c"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						CompileAs="1"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\audio\decode\decode_wma_win_DMOWrapper.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						CompileAs="2"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\audio\fifo.c"
+				>
+			</File>
 			<File
 				RelativePath="..\src\jive.c"
 				>
@@ -286,7 +389,23 @@
 				RelativePath="..\src\ui\lua_jiveui.c"
 				>
 			</File>
+			<File
+				RelativePath="..\src\audio\mqueue.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\audio\streambuf.c"
+				>
+			</File>
 		</Filter>
+		<File
+			RelativePath=".\jive.rc"
+			>
+		</File>
+		<File
+			RelativePath="..\rsc\jiveapp.ico"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

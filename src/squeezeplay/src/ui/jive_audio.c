@@ -45,6 +45,7 @@ static int jiveL_sound_gc(lua_State *L) {
 }
 
 
+#if 0
 static void mixaudio(void *unused, Uint8 *stream, int len) {
 	Uint32 size;
 	int i;
@@ -69,9 +70,11 @@ static void mixaudio(void *unused, Uint8 *stream, int len) {
 		}
 	}
 }
+#endif
 
 
 static void open_audio(void) {
+#if 0
 	SDL_AudioSpec fmt;
 
 	if (SDL_GetAudioStatus() != SDL_AUDIO_STOPPED) {
@@ -89,19 +92,24 @@ static void open_audio(void) {
 	if (SDL_OpenAudio(&fmt, NULL) < 0) {
 		fprintf(stderr, "Unable to open audio: %s\n", SDL_GetError());
 	}
+
 	SDL_PauseAudio(0);
+#endif
 }
 
 
 static void close_audio(void) {
+#if 0
 	if (SDL_GetAudioStatus() == SDL_AUDIO_STOPPED) {
 		return;
 	}
 
 	SDL_CloseAudio();
+#endif
 }
 
 
+#if 0
 static struct jive_sample *load_sound(char *filename, Uint32 mixer) {
 	struct jive_sample *snd;
 	SDL_AudioSpec wave;
@@ -140,9 +148,11 @@ static struct jive_sample *load_sound(char *filename, Uint32 mixer) {
 
 	return snd;
 }
+#endif
 
 
 static int jiveL_audio_load(lua_State *L) {
+#if 0
 	struct jive_sample **snd;
 	char fullpath[PATH_MAX];
 	
@@ -181,6 +191,9 @@ static int jiveL_audio_load(lua_State *L) {
 	}
 
 	return 1;
+#else
+	return 0;
+#endif
 }
 
 
@@ -209,6 +222,7 @@ static int jiveL_audio_get_effect_volume(lua_State *L) {
 
 
 static int jiveL_sound_play(lua_State *L) {
+#if 0
 	struct jive_sample *snd;
 
 	/* stack is:
@@ -233,6 +247,7 @@ static int jiveL_sound_play(lua_State *L) {
 	mixsnd[snd->mixer]->refcount++;
 	mixsnd[snd->mixer]->pos = 0;
 	SDL_UnlockAudio();
+#endif
 
 	return 0;
 }

@@ -22,5 +22,8 @@ all:
 	install share/applets/Test/TestMeta.lua ${APPLETS}/Test/TestMeta.lua
 	install share/applets/Test/test.png ${APPLETS}/Test/test.png
 	install share/applets/Test/test.txt ${APPLETS}/Test/test.txt
+	install -d share/applets/TestDecode ${APPLETS}/TestDecode
+	install share/applets/TestDecode/TestDecodeApplet.lua ${APPLETS}/TestDecode/TestDecodeApplet.lua
+	install share/applets/TestDecode/TestDecodeMeta.lua ${APPLETS}/TestDecode/TestDecodeMeta.lua
 	install -d share/applets/DesktopJive ${APPLETS}/DesktopJive
 	install share/applets/DesktopJive/DesktopJiveMeta.lua ${APPLETS}/DesktopJive/DesktopJiveMeta.lua

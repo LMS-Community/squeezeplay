@@ -23,6 +23,11 @@
 #include "common.h"
 #include "version.h"
 
+
+#include "audio/streambuf.h"
+#include "audio/decode/decode.h"
+
+
 #if defined (_MSC_VER)
 #include <windows.h>
 #endif
@@ -134,6 +139,12 @@ static void openlibs(lua_State *L) {
 	lua_call(L, 0, 0);
 
 	lua_pushcfunction(L, luaopen_jive_debug);
+	lua_call(L, 0, 0);
+
+	lua_pushcfunction(L, luaopen_decode);
+	lua_call(L, 0, 0);
+
+	lua_pushcfunction(L, luaopen_streambuf);
 	lua_call(L, 0, 0);
 }
 

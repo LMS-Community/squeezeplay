@@ -142,8 +142,22 @@ tolua++: lua
 # squeezeplay
 #
 
-.PHONY: app squeezeplay squeezeplay_desktop freefont freefont-debian
-app: squeezeplay squeezeplay_desktop freefont
+.PHONY: app portaudio flac squeezeplay squeezeplay_desktop freefont freefont-debian
+app: portaudio flac squeezeplay squeezeplay_desktop freefont
+
+# portaudio
+portaudio_v19_1360/Makefile:
+	cd portaudio_v19_1360; ./configure --prefix=${PREFIX}
+
+portaudio: portaudio_v19_1360/Makefile
+	cd portaudio_v19_1360; make && make install
+
+# flac
+flac-1.2.1/Makefile:
+	cd flac-1.2.1; ./configure --prefix=${PREFIX}
+
+flac: flac-1.2.1/Makefile
+	cd flac-1.2.1; make && make install
 
 # squeezeplay
 squeezeplay/Makefile:

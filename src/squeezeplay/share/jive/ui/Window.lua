@@ -38,7 +38,7 @@ B<bgImg> : the windows background image.
 local _assert, ipairs, require, tostring, type, unpack = _assert, ipairs, require, tostring, type, unpack
 
 local math                    = require("math")
-local debug                   = require("debug")
+local debug                   = require("jive.utils.debug")
 local oo                      = require("loop.simple")
 local table                   = require("jive.utils.table")
 local SimpleMenu              = require("jive.ui.SimpleMenu")
@@ -1137,7 +1137,7 @@ function borderLayout(self, fitWindow)
 				w = w or (ww - maxW - maxE)
 				w = min(ww - maxW - maxE, w) - rb
 
-				widget:setBounds(maxBounds(wx + maxW + lb, wy + maxN + tb + cy, w, h))
+				widget:setBounds(maxBounds(wx + lb, wy + maxN + tb + cy, w, h))
 				cy = cy + h + bb
 
 			elseif position == LAYOUT_NONE then

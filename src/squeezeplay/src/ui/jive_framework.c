@@ -105,7 +105,7 @@ int jive_traceback (lua_State *L) {
 
 static int jiveL_init(lua_State *L) {
 	SDL_Rect r;
-	JiveSurface *srf, *splash;
+	JiveSurface *srf, *splash, *icon;
 	Uint16 splash_w, splash_h;
 	int bpp;
 
@@ -140,7 +140,9 @@ static int jiveL_init(lua_State *L) {
 
 	/* open window */
 	SDL_WM_SetCaption("Jive", "Jive");
-	srf = jive_surface_set_video_mode(screen_w, screen_h, bpp);
+
+
+	srf = jive_surface_set_video_mode(screen_w, screen_h, bpp, false);
 	if (!srf) {
 		SDL_Quit();
 		exit(-1);
@@ -153,6 +155,13 @@ static int jiveL_init(lua_State *L) {
 		jive_surface_blit(splash, srf, (screen_w - splash_w) / 2, (screen_h - splash_h) / 2);
 		jive_surface_flip(srf);
 	}
+
+  /* load the icon */
+  icon = jive_surface_load_image("jive/app.png");
+  if (icon->sdl)
+	  SDL_WM_SetIcon(icon->sdl, NULL);
+  else
+		fprintf(stderr, "SDL_WM_SetIcon(jive/jiveapp.png): %s\n", SDL_GetError());
 
 //	SDL_ShowCursor (SDL_DISABLE);
 	SDL_EnableKeyRepeat (100, 100);
@@ -697,6 +706,43 @@ int jiveL_dispatch_event(lua_State *L) {
 	return 1;
 }
 
+int jiveL_set_video_mode(lua_State *L) {
+	JiveSurface *srf;
+
+	/* stack is:
+	 * 1: framework
+	 * 2: w
+	 * 3: h
+	 * 4: bpp
+	 * 5: fullscreen
+	 */
+
+	/* update video mode */
+	srf = jive_surface_set_video_mode(luaL_optinteger(L, 2, 0), luaL_optinteger(L, 3, 0), luaL_optinteger(L, 4, 16), lua_toboolean(L, 5));
+
+	/* store new screen surface */
+	lua_getfield(L, 1, "screen");
+	tolua_pushusertype(L, srf, "Surface");
+	lua_setfield(L, -2, "surface");
+
+	lua_getfield(L, -1, "bounds");
+	lua_pushvalue(L, 2); /* width */
+	lua_rawseti(L, -2, 3);
+	lua_pushvalue(L, 3); /* height */
+	lua_rawseti(L, -2, 4);
+	lua_pop(L, 2);
+
+	screen_w = luaL_optinteger(L, 2, 0);
+	screen_h = luaL_optinteger(L, 3, 0);
+
+	/* redraw screen */
+	lua_pushcfunction(L, jiveL_redraw);
+	lua_pushvalue(L, 1);
+	lua_pushnil(L);
+	lua_call(L, 2, 0);
+
+	return 0;
+}
 
 int jiveL_get_background(lua_State *L) {
 	tolua_pushusertype(L, jive_background, "Tile");
@@ -1057,7 +1103,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		screen_w = event->resize.w;
 		screen_h = event->resize.h;
 
-		srf = jive_surface_set_video_mode(screen_w, screen_h, bpp);
+		srf = jive_surface_set_video_mode(screen_w, screen_h, bpp, false);
 
 		lua_getfield(L, 1, "screen");
 
@@ -1234,6 +1280,7 @@ static const struct luaL_Reg core_methods[] = {
 	{ "findFile", jiveL_find_file },
 	{ "getTicks", jiveL_get_ticks },
 	{ "threadTime", jiveL_thread_time },
+	{ "setVideoMode", jiveL_set_video_mode },
 	{ "getBackground", jiveL_get_background },
 	{ "setBackground", jiveL_set_background },
 	{ "styleChanged", jiveL_style_changed },

@@ -13,6 +13,8 @@ xcopy squeezeplay_desktop\share\applets\*.* %1\lua\applets\*.* /S/Y
 
 md %1\lua\jive
 xcopy squeezeplay\share\jive\*.* %1\lua\jive\*.* /S/Y
+xcopy jive\rsc\jiveapp.png %1\lua\jive\*.* /S/Y
+
 
 md %1\lua\loop
 xcopy loop-2.2-alpha\loop\*.* %1\lua\loop\*.* /S/Y

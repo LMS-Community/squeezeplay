@@ -22,10 +22,6 @@
 /* print profile information for blit's */
 #undef JIVE_PROFILE_BLIT
 
-typedef unsigned int bool;
-#define true 1
-#define false !true
-
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
@@ -273,7 +269,7 @@ void jive_queue_event(JiveEvent *evt);
 int jive_traceback (lua_State *L);
 
 /* Surface functions */
-JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp);
+JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fullscreen);
 JiveSurface *jive_surface_newRGB(Uint16 w, Uint16 h);
 JiveSurface *jive_surface_newRGBA(Uint16 w, Uint16 h);
 JiveSurface *jive_surface_ref(JiveSurface *srf);

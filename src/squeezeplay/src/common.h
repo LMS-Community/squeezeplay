@@ -4,6 +4,8 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
+#ifndef JIVE_COMMON_H
+#define JIVE_COMMON_H
 
 #include "config.h"
 
@@ -82,8 +84,11 @@
 #include "tolua++.h"
 
 #include "debug.h"
+#include "types.h"
 
 #if WITH_DMALLOC
 #include <dmalloc.h>
 #endif
+
+#endif // JIVE_COMMON_H
 
