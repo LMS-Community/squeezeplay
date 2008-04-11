@@ -269,7 +269,9 @@ int jiveL_icon_get_preferred_bounds(lua_State *L) {
 
 	if (peer->img) {
 		jive_surface_get_size(peer->img, &w, &h);
-		w /= peer->anim_total;
+		if (peer->anim_total) {
+			w /= peer->anim_total;
+		}
 		w += peer->w.padding.left + peer->w.padding.right;
 		h += peer->w.padding.top + peer->w.padding.bottom;
 	}
