@@ -1188,6 +1188,15 @@ function skin(self, s)
 	s.popupplay.text.fg = TEXT_COLOR
 	s.popupplay.text.align = "top-left"
 
+	-- for textarea properties in popupplay
+	s.popupplay.padding = 12
+	s.popupplay.h = 72
+	s.popupplay.fg = TEXT_COLOR
+	s.popupplay.font = FONT_15px
+	s.popupplay.align = "top-left"
+	s.popupplay.scrollbar = {}
+	s.popupplay.scrollbar.w = 0
+
 	-- Popup window for information display
 	s.popupinfo = {}
 	s.popupinfo.x = 0
