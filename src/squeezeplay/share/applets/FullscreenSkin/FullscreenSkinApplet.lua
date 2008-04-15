@@ -994,6 +994,24 @@ function skin(self, s)
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
 	s.albumitem.icon.padding = 0
 
+	s.popupToast = _uses(s.albumitem, 
+		{
+			order = { 'icon', 'text', 'textarea' },
+			textarea = { 
+				w = WH_FILL, 
+				h = WH_FILL, 
+				padding = { 12, 20, 12, 12 } 
+			},
+			text = { 
+				padding = { 6, 15, 8, 8 } 
+			},
+			icon = { 
+				align = 'top-left', 
+				border = { 12, 12, 0, 0 } 
+			}
+		}
+	)
+
 	s.albumitemNoAction = {}
 	s.albumitemNoAction.order = { "text" }
 	s.albumitemNoAction.text = {}
@@ -1183,7 +1201,14 @@ function skin(self, s)
 	s.popupplay.y = screenHeight - 96
 	s.popupplay.w = screenWidth / 2
 	s.popupplay.h = POPUP_HEIGHT
-	s.popupplay.bgImg = helpBox
+
+	-- for textarea properties in popupplay
+	s.popupplay.padding = { 12, 12, 12, 0 }
+	s.popupplay.fg = TEXT_COLOR
+	s.popupplay.font = _font(TRACK_FONT_SIZE)
+	s.popupplay.align = "top-left"
+	s.popupplay.scrollbar = {}
+	s.popupplay.scrollbar.w = 0
 
 	s.popupplay.text = {}
 	s.popupplay.text.w = screenWidth
