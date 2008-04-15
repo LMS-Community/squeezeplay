@@ -675,10 +675,12 @@ function onStage(self)
 	self.currentSong.window:setAlwaysOnTop(true)
 	self.currentSong.artIcon = Icon("icon")
 	self.currentSong.text = Label("text", "")
+	self.currentSong.textarea = Textarea('popupplay', '')
 
-	local group = Group("albumitem", {
-		      text = self.currentSong.text,
-		      icon = self.currentSong.artIcon
+	local group = Group("popupToast", {
+			text = self.currentSong.text,
+			textarea = self.currentSong.textarea,
+			icon = self.currentSong.artIcon
 	      })
 
 	self.currentSong.window:addWidget(group)
@@ -779,11 +781,9 @@ function _process_displaystatus(self, event)
 		local type    = display["type"] or 'text'
 
 		local s = self.currentSong
-		local showMe
 
 		if type == 'song' then
-			showMe = s.window
-			-- new song display from server
+			s.textarea:setValue("")
 			s.text:setValue(table.concat(display["text"], "\n"))
 			s.artIcon:setStyle("icon")
 			if display['icon'] then
@@ -792,13 +792,12 @@ function _process_displaystatus(self, event)
 				self.slimServer:fetchArtworkThumb(display["icon-id"], s.artIcon, 56, 'png')
 			end
 		else
-			local textarea = Textarea('popupplay', table.concat(display['text'], ' '))
-			showMe = Popup("currentsong")
-			showMe:addWidget(textarea)
-			showMe:setAllowScreensaver(true)
-			showMe:setAlwaysOnTop(true)
+			s.text:setValue('')
+			s.artIcon:setStyle("noimage")
+			s.artIcon:setValue(nil)
+			s.textarea:setValue(table.concat(display["text"], "\n"))
 		end
-		showMe:showBriefly(3000, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
+		s.window:showBriefly(3000, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
 	end
 end
 
