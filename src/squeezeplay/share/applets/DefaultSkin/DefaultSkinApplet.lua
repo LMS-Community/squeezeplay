@@ -956,6 +956,24 @@ function skin(self, s)
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumitem.icon.border = { 8, 0, 0, 0 }
 
+	s.popupToast = _uses(s.albumitem, 
+		{
+			order = { 'icon', 'text', 'textarea' },
+			textarea = { 
+				w = WH_FILL, 
+				h = WH_FILL, 
+				padding = { 12, 20, 12, 12 } 
+			},
+			text = { 
+				padding = { 6, 15, 8, 8 } 
+			},
+			icon = { 
+				align = 'top-left', 
+				border = { 12, 12, 0, 0 } 
+			}
+		}
+	)
+
 	s.albumitemNoAction = {}
 	s.albumitemNoAction.order = { "text" }
 	s.albumitemNoAction.text = {}
@@ -1158,7 +1176,15 @@ function skin(self, s)
 	s.popupplay.y = screenHeight - 96
 	s.popupplay.w = screenWidth
 	s.popupplay.h = 96
-	s.popupplay.bgImg = helpBox
+
+	-- for textarea properties in popupplay
+	s.popupplay.padding = { 12, 12, 12, 0 }
+	s.popupplay.fg = TEXT_COLOR
+	s.popupplay.font = FONT_15px
+	s.popupplay.align = "top-left"
+	s.popupplay.scrollbar = {}
+	s.popupplay.scrollbar.w = 0
+
 
 	s.popupplay.text = {}
 	s.popupplay.text.w = screenWidth
@@ -1175,15 +1201,6 @@ function skin(self, s)
 	}
 	s.popupplay.text.fg = TEXT_COLOR
 	s.popupplay.text.align = "top-left"
-
-	-- for textarea properties in popupplay
-	s.popupplay.padding = 12
-	s.popupplay.h = 72
-	s.popupplay.fg = TEXT_COLOR
-	s.popupplay.font = FONT_15px
-	s.popupplay.align = "top-left"
-	s.popupplay.scrollbar = {}
-	s.popupplay.scrollbar.w = 0
 
 	-- Popup window for information display
 	s.popupinfo = {}

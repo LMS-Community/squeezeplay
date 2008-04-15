@@ -59,21 +59,20 @@ SDL_image-1.2.5/Makefile:
 	cd SDL_image-1.2.5; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --disable-tif --disable-jpg-shared --disable-png-shared --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 sdl-image: SDL_image-1.2.5/Makefile
-	cd SDL_image-1.2.5; make && make DESTDIR= install
+	cd SDL_image-1.2.5; make && make DESTDIR= install-strip
 
 # sdl_ttf
 SDL_ttf-2.0.8/Makefile:
 	cd SDL_ttf-2.0.8; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --host=${TARGET} --target=${TARGET} --with-freetype-prefix=${PREFIX} --without-opengl --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 sdl-ttf: SDL_ttf-2.0.8/Makefile
-	cd SDL_ttf-2.0.8; make && make DESTDIR= install
+	cd SDL_ttf-2.0.8; make && make DESTDIR= install-strip
 
 SDL_gfx-2.0.15/Makefile:
 	cd SDL_gfx-2.0.15; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --disable-mmx --host=${TARGET} --target=${TARGET} --prefix=/usr ${ENABLE_PROFILING}
 
 sdl-gfx: SDL_gfx-2.0.15/Makefile
-	cd SDL_gfx-2.0.15; make && make DESTDIR=${BUILDDIR} install	
-
+	cd SDL_gfx-2.0.15; make && make DESTDIR=${BUILDDIR} install-strip
 
 #
 # LUA:
