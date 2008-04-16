@@ -1,6 +1,6 @@
 /*
 ** Lua binding: jive
-** Generated automatically by tolua++-1.0.92 on Wed Jan 30 21:18:12 2008.
+** Generated automatically by tolua++-1.0.92 on Wed Apr  9 13:56:44 2008.
 */
 
 #ifndef __cplusplus
@@ -2159,6 +2159,7 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"EVENT_HIDE",JIVE_EVENT_HIDE);
    tolua_constant(tolua_S,"EVENT_FOCUS_GAINED",JIVE_EVENT_FOCUS_GAINED);
    tolua_constant(tolua_S,"EVENT_FOCUS_LOST",JIVE_EVENT_FOCUS_LOST);
+   tolua_constant(tolua_S,"EVENT_MOUSE_DRAG",JIVE_EVENT_MOUSE_DRAG);
    tolua_constant(tolua_S,"EVENT_WINDOW_RESIZE",JIVE_EVENT_WINDOW_RESIZE);
    tolua_constant(tolua_S,"EVENT_SWITCH",JIVE_EVENT_SWITCH);
    tolua_constant(tolua_S,"EVENT_MOTION",JIVE_EVENT_MOTION);

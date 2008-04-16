@@ -281,6 +281,41 @@ static int do_array_event(lua_State *L) {
 }
 
 
+static int mouse_closure(lua_State *L) {
+	JiveWidget *peer;
+	JiveEvent *event;
+
+	/* stack is:
+	 * 1: widget
+	 * upvalue:
+	 * 1: event
+	 */
+
+	lua_getfield(L, 1, "peer");
+	peer = lua_touserdata(L, -1);
+	if (!peer) {
+		lua_pop(L, 1);
+		return 0;
+	}
+
+	event = lua_touserdata(L, lua_upvalueindex(1));
+
+	if (peer->bounds.x < event->u.mouse.x && event->u.mouse.x < peer->bounds.x + peer->bounds.w && 
+	    peer->bounds.y < event->u.mouse.y && event->u.mouse.y < peer->bounds.y + peer->bounds.h) {
+		if (jive_getmethod(L, 1, "_event")) {
+			lua_pushvalue(L, 1); /* widget */
+			lua_pushvalue(L, lua_upvalueindex(1)); /* event */
+			lua_call(L, 2, 1);
+			
+			// FIXME return value
+			lua_pop(L, 1);
+		}
+	}
+
+	return 0;
+}
+
+
 int jiveL_window_event_handler(lua_State *L) {
 	int r = 0;
 
@@ -312,6 +347,26 @@ int jiveL_window_event_handler(lua_State *L) {
 		}
 		break;
 
+
+	case JIVE_EVENT_MOUSE_DOWN:
+	case JIVE_EVENT_MOUSE_UP:
+	case JIVE_EVENT_MOUSE_PRESS:
+	case JIVE_EVENT_MOUSE_HOLD:
+	case JIVE_EVENT_MOUSE_DRAG:
+
+		/* Forward mouse events to the enclosed widgets */
+		if (jive_getmethod(L, 1, "iterate")) {
+			lua_pushvalue(L, 1); // widget
+
+			lua_pushvalue(L, 2); // event
+			lua_pushcclosure(L, mouse_closure, 1);
+
+			lua_call(L, 2, 0);
+		}
+		// FIXME r
+
+		lua_pushinteger(L, r);
+		return 1;
 
 	case JIVE_EVENT_WINDOW_ACTIVE:
 		/*

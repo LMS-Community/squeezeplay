@@ -60,8 +60,11 @@ local EVENT_KEY_PRESS      = jive.ui.EVENT_KEY_PRESS
 local EVENT_SHOW           = jive.ui.EVENT_SHOW
 local EVENT_HIDE           = jive.ui.EVENT_HIDE
 local EVENT_SERVICE_JNT    = jive.ui.EVENT_SERVICE_JNT
-local EVENT_FOCUS_GAINED = jive.ui.EVENT_FOCUS_GAINED
-local EVENT_FOCUS_LOST   = jive.ui.EVENT_FOCUS_LOST
+local EVENT_FOCUS_GAINED   = jive.ui.EVENT_FOCUS_GAINED
+local EVENT_FOCUS_LOST     = jive.ui.EVENT_FOCUS_LOST
+local EVENT_MOUSE_PRESS    = jive.ui.EVENT_MOUSE_PRESS
+local EVENT_MOUSE_DOWN     = jive.ui.EVENT_MOUSE_DOWN
+local EVENT_MOUSE_DRAG     = jive.ui.EVENT_MOUSE_DRAG
 
 local EVENT_CONSUME        = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED         = jive.ui.EVENT_UNUSED
@@ -187,6 +190,37 @@ local function _eventHandler(self, event)
 			end
 		end
 
+	elseif evtype == EVENT_MOUSE_PRESS then
+
+		if self.scrollbar:mouseInside(event) then
+			-- forward event to scrollbar
+			self.scrollbar:_event(event)
+
+		else
+			r = self:dispatchNewEvent(EVENT_ACTION)
+
+			if r == EVENT_UNUSED then
+				self:playSound("BUMP")
+				self:getWindow():bumpRight()
+			end
+			return r
+		end
+
+	elseif evtype == EVENT_MOUSE_DOWN or
+		evtype == EVENT_MOUSE_DRAG then
+
+		if self.scrollbar:mouseInside(event) then
+			-- forward event to scrollbar
+			self.scrollbar:_event(event)
+
+		else
+			-- menu selection follows mouse
+			local x,y,w,h = self:mouseBounds(event)
+			local i = y / self.itemHeight --(h / self.numWidgets)
+
+			self:setSelectedIndex(self.topItem + math.floor(i))
+		end
+
 	elseif evtype == EVENT_SHOW or
 		evtype == EVENT_HIDE then
 
@@ -224,7 +258,12 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 						 return true
 					 end
 				 end)
-	obj.scrollbar = Scrollbar("scrollbar")
+	obj.scrollbar = Scrollbar("scrollbar",
+				  function(_, value)
+					  log:warn("V=", value)
+					  obj:setSelectedIndex(value)
+				  end)
+
 	obj.scrollbar.parent = obj
 	obj.layoutRoot = true
 	obj.closeable = true

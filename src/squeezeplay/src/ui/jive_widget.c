@@ -179,6 +179,74 @@ int jiveL_widget_get_border(lua_State *L) {
 }
 
 
+int jiveL_widget_mouse_inside(lua_State *L) {
+	JiveWidget *peer;
+	JiveEvent* event;
+
+	/* stack is:
+	 * 1: widget
+	 * 2: mouse event
+	 */
+
+	if (jive_getmethod(L, 1, "checkSkin")) {
+		lua_pushvalue(L, 1);
+		lua_call(L, 1, 0);
+	}
+	
+	lua_getfield(L, 1, "peer");
+	peer = lua_touserdata(L, -1);
+	if (!peer) {
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+
+	event = (JiveEvent*)lua_touserdata(L, 2);
+	if (!event || (event->type & JIVE_EVENT_MOUSE_ALL) == 0) {
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+
+	lua_pushboolean(L, peer->bounds.x < event->u.mouse.x && event->u.mouse.x < peer->bounds.x + peer->bounds.w &&
+			peer->bounds.y < event->u.mouse.y && event->u.mouse.y < peer->bounds.y + peer->bounds.h);
+	return 1;
+}
+
+
+int jiveL_widget_mouse_bounds(lua_State *L) {
+	JiveWidget *peer;
+	JiveEvent* event;
+
+	/* stack is:
+	 * 1: widget
+	 * 2: mouse event
+	 */
+
+	if (jive_getmethod(L, 1, "checkSkin")) {
+		lua_pushvalue(L, 1);
+		lua_call(L, 1, 0);
+	}
+	
+	lua_getfield(L, 1, "peer");
+	peer = lua_touserdata(L, -1);
+	if (!peer) {
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+
+	event = (JiveEvent*)lua_touserdata(L, 2);
+	if (!event || (event->type & JIVE_EVENT_MOUSE_ALL) == 0) {
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+
+	lua_pushinteger(L, event->u.mouse.x - peer->bounds.x);
+	lua_pushinteger(L, event->u.mouse.y - peer->bounds.y - peer->padding.top - peer->padding.bottom);
+	lua_pushinteger(L, peer->bounds.w);
+	lua_pushinteger(L, peer->bounds.h);
+	return 4;
+}
+
+
 int jiveL_widget_reskin(lua_State *L) {
 	JiveWidget *peer;
 

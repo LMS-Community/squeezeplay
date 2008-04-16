@@ -38,6 +38,7 @@ B<horizontal> : true if the scrollbar is horizontal, otherwise the scrollbar is 
 local tostring, type = tostring, type
 
 local oo	= require("loop.simple")
+local math      = require("math")
 local Slider	= require("jive.ui.Slider")
 local Widget	= require("jive.ui.Widget")
 
@@ -60,13 +61,14 @@ oo.class(_M, Slider)
 
 
 
-function __init(self, style)
+function __init(self, style, closure)
 
 	local obj = oo.rawnew(self, Slider(style))
 
 	obj.range = 1
 	obj.value = 1
 	obj.size = 1
+	obj.closure = closure
 
 	return obj
 end
@@ -87,12 +89,25 @@ function setScrollbar(self, min, max, pos, size)
 	self.value = pos - min
 	self.size = size
 
+self.foo = min
+
 	self:reDraw()
 end
 
 
-function _eventHandler(self, event)
-	-- XXXX FIXME todo
+function _adjustPosition(self, percent)
+	local oldvalue = self.value
+
+	local pos = math.floor(percent * self.range)
+
+	self.value = pos - self.foo
+	self:reDraw()
+		
+	log:warn("value=", self.value, " oldvalue=", oldvalue, " closure=", self.closure) 
+
+	if self.value ~= oldvalue and self.closure then
+		self.closure(self, pos, false)
+	end
 end
 
 

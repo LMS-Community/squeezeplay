@@ -45,6 +45,9 @@ int jiveL_menu_skin(lua_State *L) {
 	/* menu properties */
 	peer->item_height = jive_style_int(L, 1, "itemHeight", 20);
 
+	lua_pushinteger(L, peer->item_height);
+	lua_setfield(L, 1, "itemHeight");
+
 	peer->font = jive_font_ref(jive_style_font(L, 1, "font"));
 	peer->fg = jive_style_color(L, 1, "fg", JIVE_COLOR_BLACK, NULL);
 

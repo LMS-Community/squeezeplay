@@ -91,13 +91,13 @@ typedef enum {
 	JIVE_EVENT_FOCUS_GAINED		= 0x040000,
 	JIVE_EVENT_FOCUS_LOST		= 0x080000,
 
-/*	unused                          = 0x100000, */
+	JIVE_EVENT_MOUSE_DRAG           = 0x100000,
 	JIVE_EVENT_WINDOW_RESIZE	= 0x200000,
 	JIVE_EVENT_SWITCH		= 0x400000,
 	JIVE_EVENT_MOTION		= 0x800000,
 
 	JIVE_EVENT_KEY_ALL		= ( JIVE_EVENT_KEY_DOWN | JIVE_EVENT_KEY_UP | JIVE_EVENT_KEY_PRESS | JIVE_EVENT_KEY_HOLD ),
-	JIVE_EVENT_MOUSE_ALL		= ( JIVE_EVENT_MOUSE_DOWN | JIVE_EVENT_MOUSE_PRESS | JIVE_EVENT_MOUSE_HOLD ),
+	JIVE_EVENT_MOUSE_ALL		= ( JIVE_EVENT_MOUSE_DOWN | JIVE_EVENT_MOUSE_PRESS | JIVE_EVENT_MOUSE_HOLD | JIVE_EVENT_MOUSE_DRAG ),
 	JIVE_EVENT_ALL_INPUT		= ( JIVE_EVENT_KEY_ALL | JIVE_EVENT_MOUSE_ALL | JIVE_EVENT_SCROLL),
 
 	JIVE_EVENT_VISIBLE_ALL		= ( JIVE_EVENT_SHOW | JIVE_EVENT_HIDE ),
@@ -133,8 +133,9 @@ typedef enum {
 
 enum {
 	JIVE_USER_EVENT_TIMER		= 0x00000001,
-	JIVE_USER_EVENT_KEY_HOLD		= 0x00000002,
-	JIVE_USER_EVENT_EVENT		= 0x00000003,
+	JIVE_USER_EVENT_KEY_HOLD       	= 0x00000002,
+	JIVE_USER_EVENT_MOUSE_HOLD  	= 0x00000003,
+	JIVE_USER_EVENT_EVENT		= 0x00000004,
 };
 
 
@@ -387,6 +388,8 @@ int jiveL_widget_set_bounds(lua_State *L);
 int jiveL_widget_get_bounds(lua_State *L);
 int jiveL_widget_get_preferred_bounds(lua_State *L);
 int jiveL_widget_get_border(lua_State *L);
+int jiveL_widget_mouse_bounds(lua_State *L);
+int jiveL_widget_mouse_inside(lua_State *L);
 int jiveL_widget_reskin(lua_State *L);
 int jiveL_widget_relayout(lua_State *L);
 int jiveL_widget_redraw(lua_State *L);
