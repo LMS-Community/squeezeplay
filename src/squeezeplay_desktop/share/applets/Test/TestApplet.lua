@@ -152,6 +152,11 @@ function menu(self, menuItem)
 					self:lockedScreen(menuItem)
 				end
 			},
+			{ text = "Downloading Software",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:downloadingSoftware(menuItem)
+			end },
 			{ text = "Connecting Popup",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -454,6 +459,49 @@ function lockedScreen(self, menuItem)
 	self:tieAndShowWindow(popup)
 	return popup
 end
+
+function downloadingSoftware(self, menuItem)
+
+	local popup = Popup("popupIcon")
+
+	--FIXME, this window does not layout correctly (Bug 5412)
+	local icon = Icon("iconConnecting")
+	local text = Label("text", "\nDownloading Firmware")
+	local label = Label("downloading", "0%")
+
+	popup:addWidget(label)
+	popup:addWidget(icon)
+	popup:addWidget(text)
+
+
+	local state = 1
+	popup:addTimer(1000, function()
+				       if state == 1 then
+					       label:setValue("5%")
+				       elseif state == 2 then
+					       label:setValue("10%")
+				       elseif state == 3 then
+					       label:setValue("27%")
+				       elseif state == 4 then
+					       label:setValue("43%")
+				       elseif state == 5 then
+					       label:setValue("52%")
+				       elseif state == 6 then
+					       label:setValue("74%")
+				       elseif state == 7 then
+					       icon:setStyle("iconConnected")
+					       label:setValue("100%")
+						text:setValue("\nDownloading Complete!")
+				       else
+					       popup:hide()
+				       end
+				       state = state + 1
+			       end)
+
+	self:tieAndShowWindow(popup)
+	return popup
+end
+
 
 function connectingPopup(self, menuItem)
 
