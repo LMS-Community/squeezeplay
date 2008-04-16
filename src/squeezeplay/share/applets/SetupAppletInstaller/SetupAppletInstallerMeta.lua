@@ -23,7 +23,7 @@ local AppletMeta    = require("jive.AppletMeta")
 local jul           = require("jive.utils.log")
 
 local appletManager = appletManager
-
+local jnt           = jnt
 
 module(...)
 oo.class(_M, AppletMeta)
@@ -38,6 +38,14 @@ function defaultSettings(self)
 end
 
 function registerApplet(self)
-	jiveMain:addItem(self:menuItem('appletSetupAppletInstaller', 'advancedSettings', "APPLET_INSTALLER", function(applet, ...) applet:menu(...) end))
+	jnt:subscribe(self)
+	self.menu = self:menuItem('appletSetupAppletInstaller', 'advancedSettings', self:string("APPLET_INSTALLER"), function(applet, ...) applet:menu(...) end)
 end
 
+function notify_playerCurrent(self, player)
+	if player == nil or player.slimServer:isSqueezeNetwork() then
+		jiveMain:removeItem(self.menu)
+	else
+		jiveMain:addItem(self.menu)
+	end
+end
