@@ -33,6 +33,7 @@ local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
 local Popup                  = require("jive.ui.Popup")
+local Group                  = require("jive.ui.Group")
 local RadioButton            = require("jive.ui.RadioButton")
 local RadioGroup             = require("jive.ui.RadioGroup")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
@@ -145,6 +146,12 @@ function menu(self, menuItem)
 				callback = function(event, menuItem)
 					self:textWindow(menuItem, "applets/Test/test.txt")
 				end },
+			{ text = 'Locked Screen Popup',
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:lockedScreen(menuItem)
+				end
+			},
 			{ text = "Connecting Popup",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -196,7 +203,7 @@ function menu(self, menuItem)
 				end },
 		})
 
-	local window = Window("window", "This") -- is a really long title to test the bounding box")
+	local window = Window("window", "Test") -- is a really long title to test the bounding box")
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -428,6 +435,25 @@ function ipinputWindow(self, menuItem)
 	return window
 end
 
+
+function lockedScreen(self, menuItem)
+	local popup = Popup("popupIcon")
+
+        popup:setAllowScreensaver(false)
+        popup:setAlwaysOnTop(true)
+        popup:setAutoHide(false)
+
+        popup:addWidget(Icon("iconLocked"))
+        popup:addWidget(Label("text", "Locked"))
+	popup:addWidget(Textarea("lockedHelp", 'To unlock press the ADD and PLAY buttons at the same time.'))
+
+	popup:addTimer(10000, function()
+			       popup:hide()
+			       end)
+
+	self:tieAndShowWindow(popup)
+	return popup
+end
 
 function connectingPopup(self, menuItem)
 
