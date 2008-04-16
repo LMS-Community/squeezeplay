@@ -683,7 +683,7 @@ function lockScreen(self)
 	-- FIXME change icon and text
 	popup:addWidget(Icon("iconLocked"))
 	popup:addWidget(Label("text", self:string("BSP_SCREEN_LOCKED")))
-	popup:addWidget(Textarea("help", self:string("BSP_SCREEN_LOCKED_HELP")))
+	popup:addWidget(Textarea("lockedHelp", self:string("BSP_SCREEN_LOCKED_HELP")))
 
 	popup:show()
 

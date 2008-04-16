@@ -1185,6 +1185,15 @@ function skin(self, s)
 	s.popupplay.scrollbar = {}
 	s.popupplay.scrollbar.w = 0
 
+	s.lockedHelp = {}
+	s.lockedHelp.padding = { 12, 0, 12, 12 }
+	s.lockedHelp.fg = TEXT_COLOR
+	s.lockedHelp.font = FONT_BOLD_15px
+	s.lockedHelp.align = "center"
+	s.lockedHelp.position = LAYOUT_NORTH
+	s.lockedHelp.w = screenWidth - 20
+	s.lockedHelp.x = 20
+	s.lockedHelp.y = 0
 
 	s.popupplay.text = {}
 	s.popupplay.text.w = screenWidth
