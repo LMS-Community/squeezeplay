@@ -42,33 +42,22 @@ function defaultSettings(meta)
 end
 
 function registerApplet(meta)
-	
-	local settings = meta:getSettings()
-	for k,v in pairs(settings) do
-		if k == "_VOLUME" then
-			Audio:setEffectVolume(v)
-		else
-			Framework:enableSound(k, v)
-		end
-	end
 
-	local sndpath = "applets/DefaultSkin/sounds/"
+	-- set volume
+	local settings = meta:getSettings()
+	Audio:setEffectVolume(settings["_VOLUME"])
+
+	-- load sounds
+	local obj = appletManager:loadApplet("SetupSoundEffects")
 
 	-- The startup sound needs to be played with the minimum
 	-- delay, load and play it first
-	Framework:loadSound("STARTUP", "jive/splash.wav", 1)
+	obj:_loadSounds("STARTUP")
 	Framework:playSound("STARTUP")
-
-	-- Load sounds
-	Framework:loadSound("BUMP", sndpath .. "bump.wav", 1)
-	Framework:loadSound("CLICK", sndpath .. "click.wav", 0)
-	Framework:loadSound("JUMP", sndpath .. "jump.wav", 0)
-	Framework:loadSound("WINDOWSHOW", sndpath .. "pushleft.wav", 1)
-	Framework:loadSound("WINDOWHIDE", sndpath .. "pushright.wav", 1)
-	Framework:loadSound("SELECT", sndpath .. "select.wav", 0)
-	Framework:loadSound("PLAYBACK", sndpath .. "select.wav", 0)
-	Framework:loadSound("DOCKING", sndpath .. "docking.wav", 1)
-	Framework:loadSound("SHUTDOWN", sndpath .. "shutdown.wav", 1)
+	
+	-- Load all other sounds
+	obj:_loadSounds(nil) -- nil is default from settings
+	appletManager:freeApplet("SetupSoundEffects")
 
 	-- add a menu to load us
 	jiveMain:addItem(meta:menuItem('appletSetupSoundEffects', 'advancedSettings', "SOUND_EFFECTS", function(applet, ...) applet:settingsShow(...) end))
