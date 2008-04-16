@@ -6,12 +6,12 @@
 
 BSP_SCREEN_LOCKED
 	DA	Låst
-	DE	LCD gesperrt. Drücken Sie HINZUFÜGEN und WIEDERGABE.
+	DE	Gesperrt
 	EN	Locked
-	ES	Pantalla bloqueada. Pulse AGREGAR y REPRODUCIR para desbloquear.
-	FR	Ecran verrouillé. Appuyez sur ADD et PLAY pour le déverrouiller.
-	IT	Schermo bloccato. Premere AGGIUNGI e RIPRODUCI per sbloccarlo.
-	NL	Scherm vergrendeld. Druk op TOEVOEGEN en AFSPELEN om het te ontgrendelen.
+	ES	Bloqueda
+	FR	Verrouillé
+	IT	Bloccato
+	NL	Vergrendeld
 
 BSP_SCREEN_LOCKED_HELP
 	DA	For at låse op, tryk ADD og PLAY på samme tid.
