@@ -688,7 +688,7 @@ function lockScreen(self)
 	popup:show()
 
 	self.lockedPopup = popup
-	self.lockedTimer = Timer(2000,
+	self.lockedTimer = Timer(5000,
 				 function()
 					 self:_setBrightness(true, 0, 0)
 					 self:_setCPUSpeed(false)
