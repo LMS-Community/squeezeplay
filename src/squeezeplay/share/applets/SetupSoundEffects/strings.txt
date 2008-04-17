@@ -83,3 +83,44 @@ SOUND_VOLUME_HELP
 	IT	Usare la rotellina per regolare il volume degli effetti sonori.
 	NL	Gebruik het wiel om het volume van de geluidseffecten aan te passen.
 
+SOUND_CUSTOMIZE
+	EN	Customize Sounds
+
+SOUND_DEFAULT
+	EN	Default
+
+SOUND_BUMP
+	EN	Menu Bump
+
+SOUND_CLICK
+	EN	Click
+
+SOUND_JUMP
+	EN	Jump
+
+SOUND_WINDOWSHOW
+	EN	Show New Window
+
+SOUND_WINDOWHIDE
+	EN	Hide Window
+
+SOUND_SELECT
+	EN	Menu Select Item
+
+SOUND_PLAYBACK
+	EN	Playback
+
+SOUND_DOCKING
+	EN	Docking
+
+SOUND_STARTUP
+	EN	Startup
+
+SOUND_SHUTDOWN
+	EN	Shutdown
+
+SOUND_CUSTOM_HELP
+	EN	Select the action that you would like to customize.
+
+SOUND_CUSTOMSOUND_HELP
+	EN	Select the sound you would like to use for this action.

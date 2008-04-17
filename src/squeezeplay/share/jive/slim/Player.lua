@@ -978,6 +978,21 @@ function volume(self, vol, send)
 	end
 end
 
+-- gototime
+-- jump to new time in song
+function gototime(self, time)
+	self.trackSeen = Framework:getTicks() / 1000
+	self.trackTime = time
+	log:debug("Sending player:time(", time, ")")
+	self:send({'time', time })
+	return nil
+end
+
+-- isTrackSeekable
+-- Try to work out if SC can seek in this track - only really a guess
+function isTrackSeekable(self)
+	return self.trackDuration and not self.state.remote
+end
 
 -- mute
 -- mutes or ummutes the player, returns a negitive value if the player is muted

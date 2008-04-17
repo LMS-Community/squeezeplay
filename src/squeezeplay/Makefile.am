@@ -113,9 +113,7 @@ dist_jive_DATA = \
 	share/jive/AppletMeta.lua \
 	share/jive/Iconbar.lua \
 	share/jive/global_strings.txt \
-	share/jive/splash.png \
-	share/jive/splash.wav \
-	share/jive/app.png
+	share/jive/splash.png
 
 jiveuidir = $(pkgdatadir)/jive/ui
 dist_jiveui_DATA = \
@@ -536,6 +534,7 @@ dist_applets_defaultskin_sounds_DATA = \
 	share/applets/DefaultSkin/sounds/pushleft.wav \
 	share/applets/DefaultSkin/sounds/pushright.wav \
 	share/applets/DefaultSkin/sounds/select.wav \
+	share/applets/DefaultSkin/sounds/splash.wav \
 	share/applets/DefaultSkin/sounds/shutdown.wav \
 	share/applets/DefaultSkin/sounds/docking.wav
 
