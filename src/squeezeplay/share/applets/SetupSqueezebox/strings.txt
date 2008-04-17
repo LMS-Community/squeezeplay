@@ -213,3 +213,11 @@ SQUEEZEBOX_BRIDGED_NAME
 	IT	Squeezebox %s
 	NL	Squeezebox %s
 
+SQUEEZEBOX_UPDATING_FIRMWARE_SQUEEZEBOX
+	DE	Squeezebox-Firmware wird aktualisiert
+	EN	Updating Squeezebox firmware
+	ES	Actualizando firmware de Squeezebox
+	FR	Mise à jour du micrologiciel Squeezebox
+	IT	Aggiornamento firmware Squeezebox
+	NL	Squeezebox-firmware wordt bijgewerkt
+
