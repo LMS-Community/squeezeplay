@@ -50,6 +50,7 @@ local DateTime               = require("jive.utils.datetime")
                              
 local DB                     = require("applets.SlimBrowser.DB")
 local Volume                 = require("applets.SlimBrowser.Volume")
+local Scanner                = require("applets.SlimBrowser.Scanner")
 
 local debug                  = require("jive.utils.debug")
 
@@ -82,6 +83,7 @@ local KEY_BACK               = jive.ui.KEY_BACK
 local KEY_PAUSE              = jive.ui.KEY_PAUSE
 local KEY_VOLUME_DOWN        = jive.ui.KEY_VOLUME_DOWN
 local KEY_VOLUME_UP          = jive.ui.KEY_VOLUME_UP
+local KEY_GO                 = jive.ui.KEY_GO
 
 local jiveMain               = jiveMain
 local appletManager          = appletManager
@@ -1038,10 +1040,8 @@ local _globalActions = {
 		return EVENT_CONSUME
 	end,
 
-	["rew-hold"] = function()
-		Framework:playSound("PLAYBACK")
-		_player:scan_rew()
-		return EVENT_CONSUME
+	["rew-hold"] = function(self, event)
+		return self.scanner:event(event)
 	end,
 
 	["fwd"] = function()
@@ -1050,10 +1050,8 @@ local _globalActions = {
 		return EVENT_CONSUME
 	end,
 
-	["fwd-hold"] = function()
-		Framework:playSound("PLAYBACK")
-		_player:scan_fwd()
-		return EVENT_CONSUME
+	["fwd-hold"] = function(self, event)
+		return self.scanner:event(event)
 	end,
 
 	["volup-down"] = function(self, event)
@@ -1063,6 +1061,11 @@ local _globalActions = {
 	["voldown-down"] = function(self, event)
 		return self.volume:event(event)
 	end,
+--[[	
+	["go-hold"] = function(self, event)
+		return self.scanner:event(event)
+	end,
+--]]
 }
 
 
@@ -1329,6 +1332,7 @@ local _keycodeActionName = {
 	[KEY_FWD]   = 'fwd',
 	[KEY_REW]   = 'rew',
 	[KEY_ADD]   = 'add',
+	[KEY_GO]    = 'go',
 }
 -- internal actionNames:
 --				  'inputDone'
@@ -2077,6 +2081,9 @@ function notify_playerCurrent(self, player)
 		self.volume:setPlayer(player)
 	end
 
+    -- update the scanner object
+    self.scanner:setPlayer(player)
+
 	-- nothing to do if we don't have a player
 	-- NOTE don't move this, the code above needs to run when disconnecting
 	-- for all players.
@@ -2361,6 +2368,7 @@ function init(self)
 	jnt:subscribe(self)
 
 	self.volume = Volume(self)
+	self.scanner = Scanner(self)
 end
 
 --[[

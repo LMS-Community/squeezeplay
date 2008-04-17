@@ -745,6 +745,34 @@ function skin(self, s)
 	s.volumePopup.title.align = "center"
 	s.volumePopup.title.bgImg = false
 
+	s.scanner = {}
+	s.scanner.horizontal = 1
+	s.scanner.img = volumeBar
+	s.scanner.bgImg = volumeBackground
+
+	s.scannerGroup = {}
+	s.scannerGroup.border = { 16, 5, 16, 10 }
+	s.scannerGroup.order = { "elapsed", "slider", "remain" }
+	s.scannerGroup.text = {}
+	s.scannerGroup.text.fg = TEXT_COLOR
+	s.scannerGroup.text.font = FONT_13px
+	s.scannerGroup.text.w = 55
+	-- s.scannerGroup.padding = { 0, 0, 0, 0 }
+	s.scannerGroup.text.padding = { 8, 0, 0, 0}
+
+	s.scannerPopup = {}
+	s.scannerPopup.x = 0
+	s.scannerPopup.y = screenHeight - 80
+	s.scannerPopup.w = screenWidth
+	s.scannerPopup.h = 80
+	s.scannerPopup.bgImg = helpBox
+	s.scannerPopup.title = {}
+	s.scannerPopup.title.border = 10
+	s.scannerPopup.title.fg = TEXT_COLOR
+	s.scannerPopup.title.font = FONT_BOLD_15px
+	s.scannerPopup.title.align = "center"
+	s.scannerPopup.title.bgImg = false
+
 	-- titles with artwork and song info
 	s.albumtitle = {}
 	s.albumtitle.position = LAYOUT_NORTH
