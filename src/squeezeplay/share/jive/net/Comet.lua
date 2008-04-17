@@ -271,8 +271,8 @@ _addPendingRequests = function(self, data)
 			},
 		}
 
-		table.insert( data, sub )
-		table.insert( self.sent_reqs, sub )
+		table.insert( data, unsub )
+		table.insert( self.sent_reqs, unsub )
 	end
 
 	-- Clear out pending requests
