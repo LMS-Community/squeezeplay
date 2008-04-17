@@ -56,7 +56,6 @@ function setLocale(self, newLocale, doYield)
 	globalLocale = newLocale or "EN"
 	readGlobalStringsFile(self)
 
-for i=1,100 do
 	-- reload existing strings files
 	for k, v in pairs(loadedFiles) do
 		if doYield then
@@ -64,7 +63,6 @@ for i=1,100 do
 		end
 		_parseStringsFile(self, newLocale, k, v)
 	end
-end
 end
 
 
