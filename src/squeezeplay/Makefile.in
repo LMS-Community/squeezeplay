@@ -45,8 +45,9 @@ DIST_COMMON = $(am__configure_deps) \
 	$(dist_applets_clock_DATA) $(dist_applets_defaultskin_DATA) \
 	$(dist_applets_defaultskin_images_DATA) \
 	$(dist_applets_defaultskin_sounds_DATA) \
-	$(dist_applets_flickr_DATA) $(dist_applets_infobrowser_DATA) \
-	$(dist_applets_log_DATA) $(dist_applets_nowplaying_DATA) \
+	$(dist_applets_flickr_DATA) $(dist_applets_httpauth_DATA) \
+	$(dist_applets_infobrowser_DATA) $(dist_applets_log_DATA) \
+	$(dist_applets_nowplaying_DATA) \
 	$(dist_applets_nowplaying_images_DATA) \
 	$(dist_applets_screensavers_DATA) \
 	$(dist_applets_screenshot_DATA) \
@@ -96,6 +97,7 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" \
 	"$(DESTDIR)$(applets_defaultskin_imagesdir)" \
 	"$(DESTDIR)$(applets_defaultskin_soundsdir)" \
 	"$(DESTDIR)$(applets_flickrdir)" \
+	"$(DESTDIR)$(applets_httpauthdir)" \
 	"$(DESTDIR)$(applets_infobrowserdir)" \
 	"$(DESTDIR)$(applets_logdir)" \
 	"$(DESTDIR)$(applets_nowplayingdir)" \
@@ -152,6 +154,7 @@ dist_applets_defaultskinDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_defaultskin_imagesDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_defaultskin_soundsDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_flickrDATA_INSTALL = $(INSTALL_DATA)
+dist_applets_httpauthDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_infobrowserDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_logDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_nowplayingDATA_INSTALL = $(INSTALL_DATA)
@@ -178,8 +181,9 @@ DATA = $(dist_applets_choosemusicsource_DATA) \
 	$(dist_applets_clock_DATA) $(dist_applets_defaultskin_DATA) \
 	$(dist_applets_defaultskin_images_DATA) \
 	$(dist_applets_defaultskin_sounds_DATA) \
-	$(dist_applets_flickr_DATA) $(dist_applets_infobrowser_DATA) \
-	$(dist_applets_log_DATA) $(dist_applets_nowplaying_DATA) \
+	$(dist_applets_flickr_DATA) $(dist_applets_httpauth_DATA) \
+	$(dist_applets_infobrowser_DATA) $(dist_applets_log_DATA) \
+	$(dist_applets_nowplaying_DATA) \
 	$(dist_applets_nowplaying_images_DATA) \
 	$(dist_applets_screensavers_DATA) \
 	$(dist_applets_screenshot_DATA) \
@@ -615,6 +619,12 @@ dist_applets_setupSqueezebox_DATA = \
 	share/applets/SetupSqueezebox/SetupSqueezeboxApplet.lua \
 	share/applets/SetupSqueezebox/SetupSqueezeboxMeta.lua \
 	share/applets/SetupSqueezebox/strings.txt
+
+applets_httpauthdir = $(datadir)/jive/applets/HttpAuth
+dist_applets_httpauth_DATA = \
+	share/applets/HttpAuth/HttpAuthApplet.lua \
+	share/applets/HttpAuth/HttpAuthMeta.lua \
+	share/applets/HttpAuth/strings.txt
 
 
 # Default skin
@@ -1281,6 +1291,23 @@ uninstall-dist_applets_flickrDATA:
 	  echo " rm -f '$(DESTDIR)$(applets_flickrdir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(applets_flickrdir)/$$f"; \
 	done
+install-dist_applets_httpauthDATA: $(dist_applets_httpauth_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(applets_httpauthdir)" || $(mkdir_p) "$(DESTDIR)$(applets_httpauthdir)"
+	@list='$(dist_applets_httpauth_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(dist_applets_httpauthDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_httpauthdir)/$$f'"; \
+	  $(dist_applets_httpauthDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_httpauthdir)/$$f"; \
+	done
+
+uninstall-dist_applets_httpauthDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_applets_httpauth_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(applets_httpauthdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(applets_httpauthdir)/$$f"; \
+	done
 install-dist_applets_infobrowserDATA: $(dist_applets_infobrowser_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(applets_infobrowserdir)" || $(mkdir_p) "$(DESTDIR)$(applets_infobrowserdir)"
@@ -1707,7 +1734,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/ChooseMusicSource $(distdir)/share/applets/Clock $(distdir)/share/applets/DefaultSkin $(distdir)/share/applets/DefaultSkin/images $(distdir)/share/applets/DefaultSkin/sounds $(distdir)/share/applets/Flickr $(distdir)/share/applets/InfoBrowser $(distdir)/share/applets/LogSettings $(distdir)/share/applets/NowPlaying $(distdir)/share/applets/NowPlaying/images $(distdir)/share/applets/ScreenSavers $(distdir)/share/applets/Screenshot $(distdir)/share/applets/SelectPlayer $(distdir)/share/applets/SetupAppletInstaller $(distdir)/share/applets/SetupDateTime $(distdir)/share/applets/SetupLanguage $(distdir)/share/applets/SetupSoundEffects $(distdir)/share/applets/SetupSqueezebox $(distdir)/share/applets/SetupWallpaper $(distdir)/share/applets/SetupWallpaper/wallpaper $(distdir)/share/applets/SlimBrowser $(distdir)/share/applets/SlimDiscovery $(distdir)/share/applets/SqueezeNetworkPIN $(distdir)/share/jive $(distdir)/share/jive/net $(distdir)/share/jive/slim $(distdir)/share/jive/ui $(distdir)/share/jive/utils $(distdir)/src
+	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/ChooseMusicSource $(distdir)/share/applets/Clock $(distdir)/share/applets/DefaultSkin $(distdir)/share/applets/DefaultSkin/images $(distdir)/share/applets/DefaultSkin/sounds $(distdir)/share/applets/Flickr $(distdir)/share/applets/HttpAuth $(distdir)/share/applets/InfoBrowser $(distdir)/share/applets/LogSettings $(distdir)/share/applets/NowPlaying $(distdir)/share/applets/NowPlaying/images $(distdir)/share/applets/ScreenSavers $(distdir)/share/applets/Screenshot $(distdir)/share/applets/SelectPlayer $(distdir)/share/applets/SetupAppletInstaller $(distdir)/share/applets/SetupDateTime $(distdir)/share/applets/SetupLanguage $(distdir)/share/applets/SetupSoundEffects $(distdir)/share/applets/SetupSqueezebox $(distdir)/share/applets/SetupWallpaper $(distdir)/share/applets/SetupWallpaper/wallpaper $(distdir)/share/applets/SlimBrowser $(distdir)/share/applets/SlimDiscovery $(distdir)/share/applets/SqueezeNetworkPIN $(distdir)/share/jive $(distdir)/share/jive/net $(distdir)/share/jive/slim $(distdir)/share/jive/ui $(distdir)/share/jive/utils $(distdir)/src
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -1836,7 +1863,7 @@ check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" "$(DESTDIR)$(applets_choosemusicsourcedir)" "$(DESTDIR)$(applets_clockdir)" "$(DESTDIR)$(applets_defaultskindir)" "$(DESTDIR)$(applets_defaultskin_imagesdir)" "$(DESTDIR)$(applets_defaultskin_soundsdir)" "$(DESTDIR)$(applets_flickrdir)" "$(DESTDIR)$(applets_infobrowserdir)" "$(DESTDIR)$(applets_logdir)" "$(DESTDIR)$(applets_nowplayingdir)" "$(DESTDIR)$(applets_nowplaying_imagesdir)" "$(DESTDIR)$(applets_screensaversdir)" "$(DESTDIR)$(applets_screenshotdir)" "$(DESTDIR)$(applets_selectplayerdir)" "$(DESTDIR)$(applets_setupSqueezeboxdir)" "$(DESTDIR)$(applets_setupappletinstallerdir)" "$(DESTDIR)$(applets_setupdatetimedir)" "$(DESTDIR)$(applets_setuplanguagedir)" "$(DESTDIR)$(applets_setupsoundeffectsdir)" "$(DESTDIR)$(applets_setupwallpaperdir)" "$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)" "$(DESTDIR)$(applets_slimbrowserdir)" "$(DESTDIR)$(applets_slimdiscoverydir)" "$(DESTDIR)$(applets_squeezenetworkpindir)" "$(DESTDIR)$(jivedir)" "$(DESTDIR)$(jiveuidir)" "$(DESTDIR)$(luanetdir)" "$(DESTDIR)$(luaslimdir)" "$(DESTDIR)$(luautildir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" "$(DESTDIR)$(applets_choosemusicsourcedir)" "$(DESTDIR)$(applets_clockdir)" "$(DESTDIR)$(applets_defaultskindir)" "$(DESTDIR)$(applets_defaultskin_imagesdir)" "$(DESTDIR)$(applets_defaultskin_soundsdir)" "$(DESTDIR)$(applets_flickrdir)" "$(DESTDIR)$(applets_httpauthdir)" "$(DESTDIR)$(applets_infobrowserdir)" "$(DESTDIR)$(applets_logdir)" "$(DESTDIR)$(applets_nowplayingdir)" "$(DESTDIR)$(applets_nowplaying_imagesdir)" "$(DESTDIR)$(applets_screensaversdir)" "$(DESTDIR)$(applets_screenshotdir)" "$(DESTDIR)$(applets_selectplayerdir)" "$(DESTDIR)$(applets_setupSqueezeboxdir)" "$(DESTDIR)$(applets_setupappletinstallerdir)" "$(DESTDIR)$(applets_setupdatetimedir)" "$(DESTDIR)$(applets_setuplanguagedir)" "$(DESTDIR)$(applets_setupsoundeffectsdir)" "$(DESTDIR)$(applets_setupwallpaperdir)" "$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)" "$(DESTDIR)$(applets_slimbrowserdir)" "$(DESTDIR)$(applets_slimdiscoverydir)" "$(DESTDIR)$(applets_squeezenetworkpindir)" "$(DESTDIR)$(jivedir)" "$(DESTDIR)$(jiveuidir)" "$(DESTDIR)$(luanetdir)" "$(DESTDIR)$(luaslimdir)" "$(DESTDIR)$(luautildir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -1893,6 +1920,7 @@ install-data-am: install-dist_applets_choosemusicsourceDATA \
 	install-dist_applets_defaultskin_imagesDATA \
 	install-dist_applets_defaultskin_soundsDATA \
 	install-dist_applets_flickrDATA \
+	install-dist_applets_httpauthDATA \
 	install-dist_applets_infobrowserDATA \
 	install-dist_applets_logDATA \
 	install-dist_applets_nowplayingDATA \
@@ -1949,6 +1977,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	uninstall-dist_applets_defaultskin_imagesDATA \
 	uninstall-dist_applets_defaultskin_soundsDATA \
 	uninstall-dist_applets_flickrDATA \
+	uninstall-dist_applets_httpauthDATA \
 	uninstall-dist_applets_infobrowserDATA \
 	uninstall-dist_applets_logDATA \
 	uninstall-dist_applets_nowplayingDATA \
@@ -1985,6 +2014,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	install-dist_applets_defaultskin_imagesDATA \
 	install-dist_applets_defaultskin_soundsDATA \
 	install-dist_applets_flickrDATA \
+	install-dist_applets_httpauthDATA \
 	install-dist_applets_infobrowserDATA \
 	install-dist_applets_logDATA \
 	install-dist_applets_nowplayingDATA \
@@ -2017,6 +2047,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	uninstall-dist_applets_defaultskin_imagesDATA \
 	uninstall-dist_applets_defaultskin_soundsDATA \
 	uninstall-dist_applets_flickrDATA \
+	uninstall-dist_applets_httpauthDATA \
 	uninstall-dist_applets_infobrowserDATA \
 	uninstall-dist_applets_logDATA \
 	uninstall-dist_applets_nowplayingDATA \
