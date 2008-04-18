@@ -139,3 +139,5 @@ SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
 	IT	Aggiornamento firmware Squeezebox
 	NL	Squeezebox-firmware wordt bijgewerkt
 
+SLIMBROWSER_ENTER_PASSWORD
+	EN	Enter Password

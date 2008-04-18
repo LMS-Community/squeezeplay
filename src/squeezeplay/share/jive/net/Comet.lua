@@ -579,7 +579,7 @@ end
 
 
 _getHandshakeSink = function(self)
-	return function(chunk, err)
+	return function(chunk, err, cometRequest)
 		if self.state ~= CONNECTING then
 			return
 		end
@@ -589,7 +589,7 @@ _getHandshakeSink = function(self)
 			log:info(self, ": _handshake error: ", err)
 
 			-- Try to reconnect according to advice
-			return _handleAdvice(self)
+			return _handleAdvice(self, cometRequest)
 		end
 
 		-- If we have data
@@ -711,13 +711,13 @@ end
 
 -- sink for chunked connection, handle advice on error
 _getEventSink = function(self)
-	return function(chunk, err)
+	return function(chunk, err, cometRequest)
 		-- On error, print something...
 		if err then
 			log:info(self, ": _getEventSink error: ", err)
 			
 			-- Try to reconnect according to advice
-			return _handleAdvice(self)
+			return _handleAdvice(self, cometRequest)
 		end
 
 		_response(self, chunk)
@@ -727,10 +727,14 @@ end
 
 -- sink for request connection, resend requests on error
 _getRequestSink = function(self)
-	return function(chunk, err)
+	return function(chunk, err, cometRequest)
 		-- On error, print something...
 		if err then
 			log:info(self, ": _getRequestSink error: ", err)
+
+			if cometRequest:t_getResponseStatus() == 401 then
+				return _handleAdvice(self, cometRequest)
+			end
 
 			-- Resend any un-acknowledged requests
 			local data = {}
@@ -891,12 +895,20 @@ end
 
 
 -- Decide what to do if we get disconnected or get an error while handshaking/connecting
-_handleAdvice = function(self)
+_handleAdvice = function(self, cometRequest)
 	log:info(self, ": handleAdvice state=", self.state)
 
 	if self.state == UNCONNECTED then
 		-- do nothing 
 		return
+	end
+
+	-- FIXME can handle HTTP errors here
+
+	-- HTTP authorization failure?
+	if cometRequest and cometRequest:t_getResponseStatus() == 401 then
+		self.jnt:notify('cometHttpError', self, cometRequest)
+		-- keep trying to connect
 	end
 
 	-- force connection closed

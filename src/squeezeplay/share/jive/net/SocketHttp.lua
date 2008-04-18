@@ -39,7 +39,7 @@ local coroutine   = require("coroutine")
 
 local oo          = require("loop.simple")
 local socket      = require("socket")
-local socketHttp  = require("socket.http")
+local mime        = require("mime")
 local ltn12       = require("ltn12")
 
 local Task        = require("jive.ui.Task")
@@ -65,25 +65,41 @@ local BLOCKSIZE = 4096
 local SOCKET_CONNECT_TIMEOUT = 10 -- connect in 10 seconds
 local SOCKET_TIMEOUT = 70 -- response in 70 seconds
 
+-- http authentication credentials
+local credentials = {}
+
+
+-- Class method to set HTTP authentication headers
+function setCredentials(class, cred)
+	_assert(cred.ipport)
+	_assert(cred.realm)
+	_assert(cred.username)
+	_assert(cred.password)
+
+	-- FIXME this only supports one username:password per server
+	local key = table.concat(cred.ipport, ":")
+	credentials[key] = cred
+end
+
 
 --[[
 
-=head2 jive.net.SocketHttp(jnt, address, port, name)
+=head2 jive.net.SocketHttp(jnt, host, port, name)
 
 Creates an HTTP socket named I<name> to interface with the given I<jnt> 
 (a L<jive.net.NetworkThread> instance). I<name> is used for debugging and
-defaults to "". I<address> and I<port> are the hostname/IP address and port of the HTTP server.
+defaults to "". I<host> and I<port> are the hostname/IP host and port of the HTTP server.
 
 =cut
 --]]
-function __init(self, jnt, address, port, name)
-	log:debug("SocketHttp:__init(", name, ", ", address, ", ", port, ")")
+function __init(self, jnt, host, port, name)
+	log:debug("SocketHttp:__init(", name, ", ", host, ", ", port, ")")
 
 	-- init superclass
-	local obj = oo.rawnew(self, SocketTcp(jnt, address, port, name))
+	local obj = oo.rawnew(self, SocketTcp(jnt, host, port, name))
 
 	-- hostname
-	obj.address = address
+	obj.host = host
 
 	-- init states
 	obj.t_httpSendState = 't_sendDequeue'
@@ -185,9 +201,9 @@ end
 function t_sendResolve(self)
 	log:debug(self, ":t_sendResolve()")
 
-	if DNS:isip(self.address) then
+	if DNS:isip(self.host) then
 		-- don't lookup an ip address
-		self.t_tcp.address = self.address
+		self.t_tcp.address = self.host
 		self:t_nextSendState(true, 't_sendConnect')
 		return
 	end
@@ -195,12 +211,12 @@ function t_sendResolve(self)
 	local t = Task(tostring(self) .. "(D)",
 		       self,
 		       function()
-			       log:debug(self, " DNS loopup for ", self.address)
-			       local ip, err = DNS:toip(self.address)
+			       log:debug(self, " DNS loopup for ", self.host)
+			       local ip, err = DNS:toip(self.host)
 
 			       log:debug(self, " IP=", ip)
 			       if not ip then
-				       self:close(self.address .. " " .. err)
+				       self:close(self.host .. " " .. err)
 				       return
 			       end
 
@@ -240,12 +256,14 @@ function t_getSendHeaders(self)
 		["User-Agent"] = 'Jive/' .. JIVE_VERSION,
 	}
 	
+	local ip, port = self:t_getAddressPort()
+
 	local req_headers = self.t_httpSendRequest:t_getRequestHeaders()
 	if not req_headers["Host"] then
-		local address, port = self:t_getAddressPort()
-		headers["Host"] = address
-		if port != 80 then
-			headers["Host"] = headers["Host"] .. ':' .. port
+		if port == 80 then
+			headers["Host"] = self.host
+		else
+			headers["Host"] = self.host .. ":" .. port
 		end
 	end
 	
@@ -253,7 +271,14 @@ function t_getSendHeaders(self)
 		headers["Content-Length"] = #self.t_httpSendRequest:t_body()
 	end
 
-	req_headers["Accept-Language"] = string.lower(locale.getLocale())	
+	req_headers["Accept-Language"] = string.lower(locale.getLocale())
+
+	-- http authentication?
+	local cred = credentials[ip .. ":" .. port]
+	if cred then
+		req_headers["Authorization"] = "Basic " .. mime.b64(cred.username .. ":" .. cred.password)
+	end
+
 	return headers
 end
 
