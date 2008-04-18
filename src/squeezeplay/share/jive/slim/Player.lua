@@ -237,6 +237,7 @@ function __init(self, jnt, slimServer, playerInfo)
 		connected = playerInfo.connected,
 		power = playerInfo.power,
 		needsUpgrade = (tonumber(playerInfo.player_needs_upgrade) == 1),
+		playerIsUpgrading = (tonumber(playerInfo.player_is_upgrading) == 1),
 		pin = playerInfo.pin,
 
 		-- menu item of home menu that represents this player
@@ -277,9 +278,11 @@ function update(self, slimServer, playerInfo)
 	-- Update player state
 	local lastNeedsUpgrade = self.needsUpgrade
 	self.needsUpgrade = (tonumber(playerInfo.player_needs_upgrade) == 1)
+	local lastIsUpgrading = self.playerIsUpgrading
+	self.playerIsUpgrading = (tonumber(playerInfo.player_is_upgrading) == 1)
 
 	-- FIXME the object state needs setting before any notifications
-	-- this is now changed for needsUpgrade, but still needs to be done
+	-- this is now changed for needsUpgrade and playerIsUpgrading, but still needs to be done
 	-- for all other player state
 
 
@@ -298,8 +301,8 @@ function update(self, slimServer, playerInfo)
 	
 	self.model = playerInfo.model
 
-	if lastNeedsUpgrade != self.needsUpgrade then
-		self.jnt:notify('playerNeedsUpgrade', self, self:isNeedsUpgrade())
+	if lastNeedsUpgrade != self.needsUpgrade or lastIsUpgrading != self.playerIsUpgrading then
+		self.jnt:notify('playerNeedsUpgrade', self, self:isNeedsUpgrade(), self:isUpgrading())
 	end
 
 	_setPlayerName(self, playerInfo.name)
@@ -747,7 +750,7 @@ function _process_status(self, event)
 
 	-- update our cache in one go
 	self.state = event.data
-
+debug.dump(event.data, -1)
 	-- used for calculating getTrackElapsed(), getTrackRemaining()
 	self.trackSeen = Framework:getTicks() / 1000
 	self.trackCorrection = 0
@@ -855,6 +858,9 @@ function isNeedsUpgrade(self)
 	return self.needsUpgrade
 end
 
+function isUpgrading(self)
+	return self.playerIsUpgrading
+end
 
 -- play
 -- 
