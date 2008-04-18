@@ -43,10 +43,62 @@ local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
 local setupsqueezeboxTitleStyle = 'settingstitle'
 local SETUP_TIMEOUT = 45 -- 45 second timeout for each action
 local SETUP_EXTENDED_TIMEOUT = 180  -- 180 second timeout in case Squeezebox is upgrading after first connecting to SC
+local _updatingPlayerPopup = false
 
 module(...)
 oo.class(_M, Applet)
 
+-- _updatingPlayer
+-- full screen popup that appears while player is getting fw update
+local function _updatingPlayer(self)
+	log:info("_updating popup show")
+
+	if _updatingPlayerPopup then
+		-- don't open this popup twice
+		return
+	end
+
+	local popup = Popup("popupIcon")
+	local icon  = Icon("iconConnecting")
+	local label = Label("text", self:string('SQUEEZEBOX_UPDATING_FIRMWARE_SQUEEZEBOX'))
+	popup:addWidget(icon)
+	popup:addWidget(label)
+	popup:setAlwaysOnTop(true)
+
+	-- add a listener for KEY_PRESS that disconnects from the player and returns to home
+	popup:addListener(
+		EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+		function(event)
+			local evtCode = event:getKeycode()
+
+			if evtCode == KEY_BACK then
+				-- disconnect from player and go home
+				local manager = AppletManager:getAppletInstance("SlimDiscovery")
+				if manager then
+					manager:setCurrentPlayer(nil)
+				end
+				popup:hide()
+			end
+			-- other keys are disabled when this popup is on screen
+			return EVENT_CONSUME
+
+		end
+	)
+	
+	popup:show()
+
+	_updatingPlayerPopup = popup
+end
+
+-- _hidePlayerUpdating
+-- hide the full screen popup that appears until player is updated
+local function _hidePlayerUpdating()
+	if _updatingPlayerPopup then
+		log:info("_updatingPlayer popup hide")
+		_updatingPlayerPopup:hide()
+		_updatingPlayerPopup = false
+	end
+end
 
 function init(self)
 	self.data1 = {}
@@ -1306,7 +1358,11 @@ function notify_playerNew(self, player)
 			-- needed in case the set slimserver udap packets got lost
 			_setAction(self, t_waitSlimserver)
 			self._totalTimeout = SETUP_EXTENDED_TIMEOUT
+
+			_updatingPlayer(self)
 			return
+		else
+			_hidePlayerUpdating()
 		end
 
 		-- player is connected to slimserver, set as current player
