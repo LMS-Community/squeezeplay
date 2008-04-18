@@ -131,6 +131,7 @@ local _lastInput = ""
 -- connectingToPlayer and _upgradingPlayer popup handlers
 local _connectingPopup = false
 local _updatingPlayerPopup = false
+local _userUpdatePopup = false
 local _menuReceived = false
 
 local modeTokens = {	
@@ -494,8 +495,8 @@ end
 local function _connectingToPlayer(self)
 	log:info("_connectingToPlayer popup show")
 
-	if _connectingPopup then
-		-- don't open this popup twice
+	if _connectingPopup or _userUpdatePopup or _updatingPlayerPopup then
+		-- don't open this popup twice or when firmware update windows are on screen
 		return
 	end
 
@@ -532,10 +533,57 @@ local function _connectingToPlayer(self)
 	_connectingPopup = popup
 end
 
+-- _userTriggeredUpdate
+-- full screen popup that appears until user hits brightness on player to start upgrade
+local function _userTriggeredUpdate(self)
+	log:warn("_connectingToPlayer popup show")
+
+
+	if _userUpdatePopup then
+		return
+	end
+
+	local window = Window("window", self:string('SLIMBROWSER_PLAYER_UPDATE_REQUIRED'))
+	local label = Textarea("textarea", self:string('SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX', _player:getName()))
+	window:addWidget(label)
+	window:setAlwaysOnTop(true)
+	window:setAllowScreensaver(false)
+
+	-- add a listener for KEY_HOLD that disconnects from the player and returns to home
+	window:addListener(
+		EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+		function(event)
+			local type = event:getType()
+	 		local evtCode = event:getKeycode()
+
+			if evtCode == KEY_BACK and type == EVENT_KEY_HOLD then
+				-- disconnect from player and go home
+				local manager = AppletManager:getAppletInstance("SlimDiscovery")
+				if manager then
+					manager:setCurrentPlayer(nil)
+				end
+				window:hide()
+			end
+			-- other keys are disabled when this window is on screen
+			return EVENT_CONSUME
+
+		end
+	)
+	
+	window:show()
+
+	_userUpdatePopup = window
+end
+
+
 -- _updatingPlayer
 -- full screen popup that appears until menus are loaded
 local function _updatingPlayer(self)
-	log:info("_connectingToPlayer popup show")
+	log:warn("_connectingToPlayer popup show")
+
+	if _userUpdatePopup then
+		_hideUserUpdatePopup()
+	end
 
 	if _updatingPlayerPopup then
 		-- don't open this popup twice
@@ -544,7 +592,7 @@ local function _updatingPlayer(self)
 
 	local popup = Popup("popupIcon")
 	local icon  = Icon("iconConnecting")
-	local label = Label("text", self:string('SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX'))
+	local label = Label("text", self:string('SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX', _player:getName()))
 	popup:addWidget(icon)
 	popup:addWidget(label)
 	popup:setAlwaysOnTop(true)
@@ -584,6 +632,17 @@ local function _hideConnectingToPlayer()
 		_connectingPopup = nil
 	end
 end
+
+-- _hideUserUpdatePopup
+-- hide the full screen popup that appears until player is updated
+local function _hideUserUpdatePopup()
+	if _userUpdatePopup then
+		log:info("_userUpdatePopup popup hide")
+		_userUpdatePopup:hide()
+		_userUpdatePopup = false
+	end
+end
+
 
 -- _hidePlayerUpdating
 -- hide the full screen popup that appears until player is updated
@@ -2145,7 +2204,11 @@ function notify_playerCurrent(self, player)
 	end
 
 	if _player:isNeedsUpgrade() then
-		_updatingPlayer(self)
+		if _player:isUpgrading() then
+			_updatingPlayer(self)
+		else
+			_userTriggeredUpdate(self)
+		end
 	else
 		_hidePlayerUpdating()
 	end
@@ -2158,18 +2221,21 @@ function notify_playerCurrent(self, player)
 	_installPlayerKeyHandler(self)
 end
 
-function notify_playerNeedsUpgrade(self, player, needsUpgrade)
+function notify_playerNeedsUpgrade(self, player, needsUpgrade, isUpgrading)
 	log:debug("SlimBrowserApplet:notify_playerNeedsUpgrade(", player, ")")
 
 	if _player ~= player then
 		return
 	end
 
-	if needsUpgrade then
+	if isUpgrading then
 		log:info('Show upgradingPlayer popup')
 		_updatingPlayer(self)
+	elseif needsUpgrade then
+		log:info('Show userUpdate popup')
+		_userTriggeredUpdate(self)
 	else
-		log:info('Hide upgradingPlayer popup')
+		_hideUserUpdatePopup()
 		_hidePlayerUpdating()
 	end
 
@@ -2330,6 +2396,7 @@ function free(self)
 	-- remove connecting popup
 	_hideConnectingToPlayer()
 	_hidePlayerUpdating()
+	_hideUserUpdatePopup()
 
 	_player = false
 	_server = false
