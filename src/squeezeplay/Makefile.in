@@ -654,6 +654,12 @@ dist_applets_setupSqueezebox_DATA = \
 	share/applets/SetupSqueezebox/SetupSqueezeboxMeta.lua \
 	share/applets/SetupSqueezebox/strings.txt
 
+applets_httpauthdir = $(datadir)/jive/applets/HttpAuth
+dist_applets_httpauth_DATA = \
+	share/applets/HttpAuth/HttpAuthApplet.lua \
+	share/applets/HttpAuth/HttpAuthMeta.lua \
+	share/applets/HttpAuth/strings.txt
+
 
 # Default skin
 applets_defaultskindir = $(pkgdatadir)/applets/DefaultSkin
