@@ -282,23 +282,44 @@ end
 
 
 function notify_playerCurrent(self, player)
+	local server
+	if player then
+		self.player = player
+		self.server = player:getSlimServer()
+	else
+		return
+	end
+
+	if self.clockTimer then
+		self.clockTimer:stop()
+	end
+
 	local sink = function(chunk, err)
 			     if err then
 				     log:warn(err)
 				     return
 			     end
 
-			     self:setDate(chunk.data.date)
+                             self:setDate(chunk.data.date)
+ 		     end
+ 
+       self.server.comet:request(sink,
+                       player:getId(),
+                       { 'date' }
+       )
 
-			     -- FIXME schedule updates from server
-		     end
-
-	if player then
-		player.slimServer.comet:request(sink,
-					player:getId(),
-					{ 'date' }
-				)
-	end
+       -- start a recurring timer for synching to SC/SN
+       self.clockTimer = Timer(6000000, -- 1 hour
+                               function()
+                                       if self.player and self.server then
+                                               self.server.comet:request(sink,
+                                                       self.player:getId(),
+                                                       { 'date' }
+                                               )
+                                       end
+                               end,
+			       false)
+       self.clockTimer:start()
 end
 
 

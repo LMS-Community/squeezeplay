@@ -41,6 +41,7 @@ local table            = require("jive.utils.table")
 local debug            = require("jive.utils.debug")
 
 local appletManager    = appletManager
+local EVENT_ALL_INPUT  = jive.ui.EVENT_ALL_INPUT
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
 local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
@@ -184,11 +185,22 @@ function setLang(self, choice, next)
 	-- changing the locale is slow, do this in a task with a spinny
 	self.popup = Popup("popupIcon")
 	self.popup:setAllowScreensaver(false)
+	self.popup:setAlwaysOnTop(true)
+	self.popup:setAutoHide(false)
+
 	self.popup:addWidget(Icon("iconConnecting"))
   	local stringChoice = "LOADING_LANGUAGE"
 	self.popup:addWidget(Label("text", self:string(stringChoice)))
- 	self.popup:show()
-  
+   	self.popup:show()
+
+	-- no way to exit this popup
+	local listener =
+		Framework:addListener(EVENT_ALL_INPUT,
+				      function()
+					      return EVENT_CONSUME
+				      end,
+				      true)
+
 	self.task = Task('setLang', self, 
 			 function(self)
 				 locale:setLocale(choice, true)
@@ -197,6 +209,7 @@ function setLang(self, choice, next)
 				 jiveMain:jiveMainNodes()
 				 Framework:styleChanged()
 
+				 Framework:removeListener(listener)
 				 self.popup:hide()
 
 				 if next then
