@@ -279,7 +279,7 @@ function event(self, event)
 		if type == EVENT_KEY_DOWN then
 			if keycode == KEY_FWD then
 				self.delta = 1
-			elseif keycode == KEY_REW thlocal EVENT_KEY_DOWN         = jive.ui.EVENT_KEY_DOWNen
+			elseif keycode == KEY_REW then
 				self.delta = -1
 			else
 				self.delta = 0

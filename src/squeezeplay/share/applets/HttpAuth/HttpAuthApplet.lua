@@ -34,63 +34,68 @@ local Label           = require("jive.ui.Label")
 local Choice          = require("jive.ui.Choice")
 local Textarea        = require("jive.ui.Textarea")
 local Textinput       = require("jive.ui.Textinput")
+
+local SocketHttp      = require("jive.net.SocketHttp")
+
 local log             = require("jive.utils.log").logger("applets.setup")
 
 module(...)
 oo.class(_M, Applet)
 
 
-function settingsShow(self)
-	-- setup menu
-	local window = Window("window", self:string("HTTP_AUTH", 'settingstitle'))
-	local menu = SimpleMenu("menu",
-	{
-		-- username
-		{	
-			text = self:string("HTTP_AUTH_USERNAME"),
-			sound = "WINDOWSHOW",
-			callback = function(event, menuItem)
-				self:enterTextWindow('username', menuItem)
-			end
-		},
-		-- password
-		{
-			text = self:string("HTTP_AUTH_PASSWORD"),
-			sound = "WINDOWSHOW",
-			callback = function(event, menuItem)
-				self:enterTextWindow('password', menuItem)
-			end
-		}
-	})
-		
-	window:addWidget(Textarea("help", self:string("HTTP_AUTH_HELP")))
-	window:addWidget(menu)
+function squeezeCenterPassword(self, server)
+	self.server = server
 
-	self:tieAndShowWindow(window)
-	return window
+	self.topWindow = self:_enterTextWindow("username", "HTTP_AUTH_USERNAME", "HTTP_AUTH_USERNAME_HELP", _enterPassword)
 end
 
-function enterTextWindow(self, userOrPass, menuItem)
-	local window = Window("window", menuItem.text)
 
-	local helpText = self:string("HTTP_AUTH_ENTER_HELP", userOrPass)
+function _enterPassword(self)
+	self:_enterTextWindow("password", "HTTP_AUTH_PASSWORD", "HTTP_AUTH_PASSWORD_HELP", _enterDone)
+end
 
-	local defaultText = self:getSettings()[userOrPass]
-	if defaultText == nil then
-		defaultText = ""
-	end
 
-	local input = Textinput("textinput", defaultText,
+function _enterDone(self)
+	local protected, realm = self.server:isPasswordProtected()
+
+	-- store username/password
+	local settings = self:getSettings()
+	settings[self.server:getName()] = {
+		realm = realm,
+		username = self.username,
+		password = self.password
+	}
+	self:storeSettings()
+
+	-- set authorization
+	self.server:setCredentials({
+		realm = realm,
+		username = self.username,
+		password = self.password,
+	})
+
+	self.username = nil
+	self.password = nil
+
+	-- FIXME delay here to check if the username/password are correct
+
+	self.topWindow:hideToTop(Window.transitionPushLeft)
+end
+
+
+function _enterTextWindow(self, key, title, help, next)
+	local window = Window("window", self:string(title))
+
+	local input = Textinput("textinput", self[key] or "",
 				function(_, value)
-					log:warn("Input ", value)
-					self:storeInput(userOrPass, value)
+					self[key] = value
 
 					window:playSound("WINDOWSHOW")
-					window:hide(Window.transitionPushLeft)
+					next(self)
 					return true
 				end)
 
-	window:addWidget(Textarea("softHelp", helpText))
+	window:addWidget(Textarea("softHelp", self:string(help)))
 	window:addWidget(Label("softButton1", "Insert"))
 	window:addWidget(Label("softButton2", "Delete"))
 	window:addWidget(input)
@@ -99,10 +104,6 @@ function enterTextWindow(self, userOrPass, menuItem)
 	return window
 end
 
-function storeInput(self, userOrPass, value)
-	self:getSettings()[userOrPass] = value
-	self:storeSettings()
-end
 
 --[[
 

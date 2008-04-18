@@ -70,6 +70,9 @@ local RETRY_UNREACHABLE = 120        -- Min delay (in s) before retrying a serve
 local servers = {}
 setmetatable(servers, { __mode = 'v' })
 
+-- credential list
+local credentials = {}
+
 
 -- _getSink
 -- returns a sink
@@ -191,6 +194,27 @@ function _addPlayer(self, player)
 end
 
 
+-- can be called as a object or class method
+function setCredentials(self, cred, name)
+	if not name then
+		-- object method
+		name = self:getName()
+
+		SocketHttp:setCredentials({
+			ipport = { self:getIpPort() },
+			realm = cred.realm,
+			username = cred.username,
+			password = cred.password,
+		})
+
+		-- force re-connection
+		self:connect()
+	end
+
+	credentials[name] = cred
+end
+
+
 --[[
 
 =head2 jive.slim.SlimServer(jnt, ip, name)
@@ -263,8 +287,18 @@ function __init(self, jnt, ip, port, name)
 	setmetatable(obj.imageCache, { __mode = "kv" })
 
 	obj.id = obj:idFor(ip, port, name)
-
 	servers[obj.id] = obj
+
+	-- http authentication
+	local cred = credentials[name]
+	if cred then
+		SocketHttp:setCredentials({
+			ipport = { obj:getIpPort() },
+			realm = cred.realm,
+			username = cred.username,
+			password = cred.password,
+		})
+	end
 
 	-- subscribe to comet events
 	jnt:subscribe(obj)
@@ -421,6 +455,16 @@ function notify_cometDisconnected(self, comet, numPendingRequests)
 	log:info(self, " disconnected")
 	self.active = false
 	self.jnt:notify('serverDisconnected', self, numPendingRequests)
+end
+
+
+-- comet http error
+function notify_cometHttpError(self, comet, cometRequest)
+	if cometRequest:t_getResponseStatus() == 401 then
+		local authenticate = cometRequest:t_getResponseHeader("WWW-Authenticate")
+
+		self.realm = string.match(authenticate, 'Basic realm="(.*)"')
+	end
 end
 
 
@@ -869,6 +913,16 @@ L<jive.slim.SlimServers> to delete old servers.
 --]]
 function isConnected(self)
 	return self.active
+end
+
+
+-- returns true if a password is needed
+function isPasswordProtected(self)
+	if self.realm and not self.active then
+		return true, self.realm
+	else
+		return false
+	end
 end
 
 
