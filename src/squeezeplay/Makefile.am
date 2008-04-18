@@ -189,6 +189,7 @@ dist_applets_slimbrowser_DATA = \
 	share/applets/SlimBrowser/SlimBrowserMeta.lua \
 	share/applets/SlimBrowser/strings.txt \
 	share/applets/SlimBrowser/DB.lua \
+	share/applets/SlimBrowser/Scanner.lua \
 	share/applets/SlimBrowser/Volume.lua
 
 applets_slimdiscoverydir = $(pkgdatadir)/applets/SlimDiscovery
