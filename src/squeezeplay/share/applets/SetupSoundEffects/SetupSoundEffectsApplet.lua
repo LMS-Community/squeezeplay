@@ -62,7 +62,7 @@ module(...)
 oo.class(_M, Applet)
 
 
-local PATH = "applets/DefaultSkin/sounds/"
+local PATH = "applets/SetupSoundEffects/sounds/"
 
 local REFRESH_TIME = 300
 
