@@ -206,6 +206,7 @@ dist_applets_slimbrowser_DATA = \
 	share/applets/SlimBrowser/SlimBrowserMeta.lua \
 	share/applets/SlimBrowser/strings.txt \
 	share/applets/SlimBrowser/DB.lua \
+	share/applets/SlimBrowser/Scanner.lua \
 	share/applets/SlimBrowser/Volume.lua
 
 applets_slimdiscoverydir = $(pkgdatadir)/applets/SlimDiscovery
@@ -235,6 +236,18 @@ dist_applets_setupsoundeffects_DATA = \
 	share/applets/SetupSoundEffects/SetupSoundEffectsApplet.lua \
 	share/applets/SetupSoundEffects/SetupSoundEffectsMeta.lua \
 	share/applets/SetupSoundEffects/strings.txt
+
+applets_setupsoundeffects_soundsdir = $(pkgdatadir)/applets/SetupSoundEffects/sounds
+dist_applets_setupsoundeffects_sounds_DATA = \
+	share/applets/SetupSoundEffects/sounds/bump.wav \
+	share/applets/SetupSoundEffects/sounds/click.wav \
+	share/applets/SetupSoundEffects/sounds/jump.wav \
+	share/applets/SetupSoundEffects/sounds/pushleft.wav \
+	share/applets/SetupSoundEffects/sounds/pushright.wav \
+	share/applets/SetupSoundEffects/sounds/select.wav \
+	share/applets/SetupSoundEffects/sounds/splash.wav \
+	share/applets/SetupSoundEffects/sounds/shutdown.wav \
+	share/applets/SetupSoundEffects/sounds/docking.wav
 
 applets_setuplanguagedir = $(pkgdatadir)/applets/SetupLanguage
 dist_applets_setuplanguage_DATA = \
@@ -532,18 +545,6 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/menu_check.png \
 	share/applets/DefaultSkin/images/menu_check_selected.png 
 
-applets_defaultskin_soundsdir = $(pkgdatadir)/applets/DefaultSkin/sounds
-dist_applets_defaultskin_sounds_DATA = \
-	share/applets/DefaultSkin/sounds/bump.wav \
-	share/applets/DefaultSkin/sounds/click.wav \
-	share/applets/DefaultSkin/sounds/jump.wav \
-	share/applets/DefaultSkin/sounds/pushleft.wav \
-	share/applets/DefaultSkin/sounds/pushright.wav \
-	share/applets/DefaultSkin/sounds/select.wav \
-	share/applets/DefaultSkin/sounds/splash.wav \
-	share/applets/DefaultSkin/sounds/shutdown.wav \
-	share/applets/DefaultSkin/sounds/docking.wav
-
 # Fullscreen skin
 applets_fullscreenskindir = $(pkgdatadir)/applets/FullscreenSkin
 dist_applets_fullscreenskin_DATA = \
@@ -760,16 +761,4 @@ dist_applets_fullscreenskin_images_DATA = \
 	share/applets/FullscreenSkin/images/slider_volume_fill_L.png \
 	share/applets/FullscreenSkin/images/slider_volume_fill_M.png \
 	share/applets/FullscreenSkin/images/slider_volume_thumb.png
-
-applets_fullscreenskin_soundsdir = $(pkgdatadir)/applets/FullscreenSkin/sounds
-dist_applets_fullscreenskin_sounds_DATA = \
-	share/applets/FullscreenSkin/sounds/bump.wav \
-	share/applets/FullscreenSkin/sounds/click.wav \
-	share/applets/FullscreenSkin/sounds/jump.wav \
-	share/applets/FullscreenSkin/sounds/pushleft.wav \
-	share/applets/FullscreenSkin/sounds/pushright.wav \
-	share/applets/FullscreenSkin/sounds/select.wav \
-	share/applets/FullscreenSkin/sounds/shutdown.wav \
-	share/applets/FullscreenSkin/sounds/docking.wav
-
 
