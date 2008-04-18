@@ -132,9 +132,9 @@ function t_setResponseBody(self, data)
 				jsonfilters.decode,
 				sink
 			)
-			mySink(data)
+			mySink(data, nil, self)
 		else
-			sink(nil, err)
+			sink(nil, err, self)
 		end
 	end
 end

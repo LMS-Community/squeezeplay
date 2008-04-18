@@ -22,6 +22,8 @@ local oo            = require("loop.simple")
 local AppletMeta    = require("jive.AppletMeta")
 local Framework     = require("jive.ui.Framework")
 
+local SlimServer    = require("jive.slim.SlimServer")
+
 local appletManager = appletManager
 local jiveMain      = jiveMain
 
@@ -33,17 +35,15 @@ function jiveVersion(meta)
 end
 
 function defaultSettings(meta)
-        return {
-		username = "",
-		password = ""
-	}
+        return { }
 end
 
 function registerApplet(meta)
---[[ FIXME-- this is not implemented correctly, comment for now
-	-- add a menu to load us
-	jiveMain:addItem(meta:menuItem('appletHttpAuth', 'advancedSettings', "HTTP_AUTH", function(applet, ...) applet:settingsShow(...) end, 85))
---]]
+	local settings = meta:getSettings()
+
+	for servername, cred in pairs(settings) do
+		SlimServer:setCredentials(cred, servername)
+	end
 end
 
 --[[

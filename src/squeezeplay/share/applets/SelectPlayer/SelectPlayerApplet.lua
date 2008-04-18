@@ -57,8 +57,14 @@ module(...)
 oo.class(_M, Applet)
 
 
+local PLAYER_WEIGHT = 1
+local SERVER_WEIGHT = 10
+local ACTIVATE_WEIGHT = 20
+
+
 function init(self, ...)
 	self.playerItem = {}
+	self.serverItem = {}
 	self.scanResults = {}
 
 	if hasWireless then
@@ -82,6 +88,8 @@ function notify_playerDelete(self, playerObj)
 		self.playerMenu:removeItem(self.playerItem[mac])
 		self.playerItem[mac] = nil
 	end
+
+	self:_updateServerItem(playerObj:getSlimServer())
 end
 
 
@@ -93,6 +101,8 @@ function notify_playerNew(self, playerObj)
 	if self.playerMenu then
 		self:_addPlayerItem(playerObj)
 	end
+
+	self:_updateServerItem(playerObj:getSlimServer())
 end
 
 
@@ -105,22 +115,30 @@ end
 
 
 function notify_serverConnected(self, server)
-	if self.playerMenu then
-		for id, player in server:allPlayers() do
-			self:_refreshPlayerItem(player)
-		end
-		self:manageSelectPlayerMenu()
+	if not self.playerMenu then
+		return
 	end
+
+	for id, player in server:allPlayers() do
+		self:_refreshPlayerItem(player)
+	end
+	self:manageSelectPlayerMenu()
+	
+	self:_updateServerItem(server)
 end
 
 
 function notify_serverDisconnected(self, server)
-	if self.playerMenu then
-		for id, player in server:allPlayers() do
-			self:_refreshPlayerItem(player)
-		end
-		self:manageSelectPlayerMenu()
+	if not self.playerMenu then
+		return
 	end
+
+	for id, player in server:allPlayers() do
+		self:_refreshPlayerItem(player)
+	end
+	self:manageSelectPlayerMenu()
+
+	self:_updateServerItem(server)
 end
 
 
@@ -160,7 +178,7 @@ end
 function _addPlayerItem(self, player)
 	local mac = player.id
 	local playerName = player.name
-	local playerWeight = 1
+	local playerWeight = PLAYER_WEIGHT
 
 	-- if waiting for a SN pin modify name
 	if player:getPin() then
@@ -170,7 +188,7 @@ function _addPlayerItem(self, player)
 		end
 
 		playerName = self:string("SQUEEZEBOX_ACTIVATE", player.name)
-		playerWeight = 20
+		playerWeight = ACTIVATE_WEIGHT
 	end
 
 	local item = {
@@ -263,6 +281,34 @@ function _addSqueezeboxItem(self, mac, name)
 end
 
 
+-- Add password protected servers
+function _updateServerItem(self, server)
+	local id = server:getName()
+
+	if not server:isPasswordProtected() then
+		if self.serverItem[id] then
+			self.playerMenu:removeItem(self.serverItem[id])
+			self.serverItem[id] = nil
+		end
+		return
+	end
+
+	local item = {
+		id = id,
+		text = server:getName(),
+		sound = "WINDOWSHOW",
+		callback = function()
+			local auth = AppletManager:loadApplet("HttpAuth")
+			auth:squeezeCenterPassword(server)
+		end,
+		weight = SERVER_WEIGHT,
+	}
+
+	self.playerMenu:addItem(item)
+	self.serverItem[id] = item
+end
+
+
 function _showWallpaper(self, playerId)
 	log:info("previewing background wallpaper for ", playerId)
 	SetupWallpaper:showBackground(nil, playerId)
@@ -294,6 +340,11 @@ function setupShow(self, setupNext)
 		if player:isConnected() then
 			_addPlayerItem(self, player)
 		end
+	end
+
+	-- Display password protected servers
+	for id, server in self.discovery:allServers() do
+		_updateServerItem(self, server)
 	end
 
 	-- Bug 6130 add a Set up Squeezebox option, only in Setup not Settings

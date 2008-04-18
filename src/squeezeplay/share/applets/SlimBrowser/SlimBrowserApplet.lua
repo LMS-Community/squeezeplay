@@ -2244,6 +2244,17 @@ function _problemConnecting(self, server)
 					end,
 		     })
 
+	if server:isPasswordProtected() then
+		-- password protection has been enabled
+		menu:addItem({
+			text = self:string("SLIMBROWSER_ENTER_PASSWORD"),
+			callback = function()
+				local auth = AppletManager:loadApplet("HttpAuth")
+				auth:squeezeCenterPassword(server)
+			end,
+		})
+	end
+
 	-- change music source, only for udap players
 	if player and player:canUdap() and appletManager:hasApplet("SetupSqueezebox") then
 		menu:addItem({

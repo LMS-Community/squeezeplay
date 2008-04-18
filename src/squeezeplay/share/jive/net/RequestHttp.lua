@@ -338,18 +338,18 @@ function t_setResponseBody(self, data)
 		local code, err = self:t_getResponseStatus()
 		if code == 200 then
 			if self.t_httpResponse.stream then
-				sink(data)
+				sink(data, nil, self)
 			else
 				if data and data ~= "" then
-					sink(data)
-					sink(nil)
+					sink(data, nil, self)
+					sink(nil, nil, self)
 				end
 			end
 		else
 			if not err then
 				err = "HTTP request failed with code" .. code
 			end
-			sink(nil, err)
+			sink(nil, err, self)
 		end
 	end
 end
