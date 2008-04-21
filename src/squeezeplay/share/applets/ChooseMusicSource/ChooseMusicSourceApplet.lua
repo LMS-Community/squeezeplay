@@ -73,6 +73,18 @@ function settingsShow(self)
 		return window:tieAndShowWindow()
 	end
 
+
+	-- Bug 7862
+	-- Workaround to allow changing music source using udap until
+	-- refactoring for bug 6683
+	local current = self.sdApplet:getCurrentPlayer()
+	if current and not current:isConnected() and current:canUdap() and appletManager:hasApplet("SetupSqueezebox") then
+		local setupSqueezebox = appletManager:loadApplet("SetupSqueezebox")
+		setupSqueezebox:startSqueezeboxSetup(current:getMacAddress(), nil)
+		return
+	end
+
+
 	self.serverMenu = menu
 	self.serverList = {}
 
