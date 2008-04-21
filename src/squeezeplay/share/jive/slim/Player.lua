@@ -750,7 +750,7 @@ function _process_status(self, event)
 
 	-- update our cache in one go
 	self.state = event.data
-debug.dump(event.data, -1)
+
 	-- used for calculating getTrackElapsed(), getTrackRemaining()
 	self.trackSeen = Framework:getTicks() / 1000
 	self.trackCorrection = 0
