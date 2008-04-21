@@ -489,6 +489,37 @@ local function _inputInProgress(self, msg)
 	popup:show()
 end
 
+-- _hideConnectingToPlayer
+-- hide the full screen popup that appears until menus are loaded
+local function _hideConnectingToPlayer()
+	if _connectingPopup then
+		log:info("_connectingToPlayer popup hide")
+		_connectingPopup:hide()
+		_connectingPopup = nil
+	end
+end
+
+-- _hideUserUpdatePopup
+-- hide the full screen popup that appears until player is updated
+local function _hideUserUpdatePopup()
+	if _userUpdatePopup then
+		log:info("_userUpdatePopup popup hide")
+		_userUpdatePopup:hide()
+		_userUpdatePopup = false
+	end
+end
+
+
+-- _hidePlayerUpdating
+-- hide the full screen popup that appears until player is updated
+local function _hidePlayerUpdating()
+	if _updatingPlayerPopup then
+		log:info("_updatingPlayer popup hide")
+		_updatingPlayerPopup:hide()
+		_updatingPlayerPopup = false
+	end
+end
+
 
 -- _connectingToPlayer
 -- full screen popup that appears until menus are loaded
@@ -620,38 +651,6 @@ local function _updatingPlayer(self)
 	popup:show()
 
 	_updatingPlayerPopup = popup
-end
-
-
--- _hideConnectingToPlayer
--- hide the full screen popup that appears until menus are loaded
-local function _hideConnectingToPlayer()
-	if _connectingPopup then
-		log:info("_connectingToPlayer popup hide")
-		_connectingPopup:hide()
-		_connectingPopup = nil
-	end
-end
-
--- _hideUserUpdatePopup
--- hide the full screen popup that appears until player is updated
-local function _hideUserUpdatePopup()
-	if _userUpdatePopup then
-		log:info("_userUpdatePopup popup hide")
-		_userUpdatePopup:hide()
-		_userUpdatePopup = false
-	end
-end
-
-
--- _hidePlayerUpdating
--- hide the full screen popup that appears until player is updated
-local function _hidePlayerUpdating()
-	if _updatingPlayerPopup then
-		log:info("_updatingPlayer popup hide")
-		_updatingPlayerPopup:hide()
-		_updatingPlayerPopup = false
-	end
 end
 
 -- _bigArtworkPopup
