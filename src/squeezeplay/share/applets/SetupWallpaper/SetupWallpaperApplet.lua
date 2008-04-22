@@ -46,13 +46,9 @@ local SocketHttp             = require("jive.net.SocketHttp")
 local log                    = require("jive.utils.log").logger("applets.setup")
 local debug                  = require("jive.utils.debug")
 
-local EVENT_FOCUS_GAINED     = jive.ui.EVENT_FOCUS_GAINED
-local EVENT_FOCUS_LOST       = jive.ui.EVENT_FOCUS_LOST
-local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
-
 local jnt                    = jnt
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

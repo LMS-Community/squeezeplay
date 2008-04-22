@@ -36,7 +36,7 @@ local jul             = require("jive.utils.log")
 local log             = jul.logger("applets.browser")
 
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

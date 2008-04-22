@@ -39,26 +39,8 @@ local log              = require("jive.utils.log").logger("applets.misc")
 local jive = jive
 
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
-
-
--- Declare as module variables, not locals. This allows visiblity to
--- loaded macro functions using setfenv.
-EVENT_KEY_PRESS           = jive.ui.EVENT_KEY_PRESS
-EVENT_KEY_DOWN            = jive.ui.EVENT_KEY_DOWN
-EVENT_KEY_UP              = jive.ui.EVENT_KEY_UP
-EVENT_KEY_HOLD            = jive.ui.EVENT_KEY_HOLD
-EVENT_SCROLL              = jive.ui.EVENT_SCROLL
-EVENT_CONSUME             = jive.ui.EVENT_CONSUME
-EVENT_ACTION              = jive.ui.EVENT_ACTION
-EVENT_WINDOW_POP          = jive.ui.EVENT_WINDOW_POP
-
-KEY_BACK                  = jive.ui.KEY_BACK
-KEY_DOWN                  = jive.ui.KEY_DOWN
-KEY_HOME                  = jive.ui.KEY_HOME
-KEY_GO                    = jive.ui.KEY_GO
-KEY_PLAY                  = jive.ui.KEY_PLAY
 
 
 -- macro (global) state

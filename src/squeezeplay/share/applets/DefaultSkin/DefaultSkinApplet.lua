@@ -43,9 +43,6 @@ local autotable              = require("jive.utils.autotable")
 
 local log = require("jive.utils.log").logger("ui")
 
-local EVENT_ACTION           = jive.ui.EVENT_ACTION
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
-local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
 
@@ -61,7 +58,7 @@ local WH_FILL                = jive.ui.WH_FILL
 local appletManager          = appletManager
 
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

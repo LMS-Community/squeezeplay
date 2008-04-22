@@ -38,16 +38,10 @@ local datetime         = require("jive.utils.datetime")
 local table            = require("jive.utils.table")
 
 local appletManager    = appletManager
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
-local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
-local EVENT_ACTION     = jive.ui.EVENT_ACTION
-local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
-local KEY_PLAY         = jive.ui.KEY_PLAY
 
 local datetimeTitleStyle = 'settingstitle'
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 function settingsShow(self, menuItem)

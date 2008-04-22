@@ -46,14 +46,10 @@ local jnt                = jnt
 local jiveMain           = jiveMain
 local appletManager      = appletManager
 
-local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
-local EVENT_WINDOW_ACTIVE = jive.ui.EVENT_WINDOW_ACTIVE
-local EVENT_WINDOW_INACTIVE = jive.ui.EVENT_WINDOW_INACTIVE
-
 -- load SetupWallpaper for use in previewing Wallpapers
 local SetupWallpaper = AppletManager:loadApplet("SetupWallpaper")
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

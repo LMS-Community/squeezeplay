@@ -29,15 +29,10 @@ local Window           = require("jive.ui.Window")
 local log              = require("jive.utils.log").logger("applets.misc")
 
 
-local EVENT_KEY_HOLD   = jive.ui.EVENT_KEY_HOLD
-local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
-local KEY_REW          = jive.ui.KEY_REW
-local KEY_PAUSE        = jive.ui.KEY_PAUSE
 local JIVE_LAYER_ALL   = jive.ui.JIVE_LAYER_ALL
 
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

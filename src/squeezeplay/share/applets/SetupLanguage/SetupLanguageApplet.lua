@@ -41,18 +41,9 @@ local table            = require("jive.utils.table")
 local debug            = require("jive.utils.debug")
 
 local appletManager    = appletManager
-local EVENT_ALL_INPUT  = jive.ui.EVENT_ALL_INPUT
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
-local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
-local EVENT_ACTION     = jive.ui.EVENT_ACTION
-local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
-local EVENT_WINDOW_INACTIVE = jive.ui.EVENT_WINDOW_INACTIVE
-local KEY_PLAY         = jive.ui.KEY_PLAY
-
 local jiveMain         = jiveMain
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

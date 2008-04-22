@@ -30,6 +30,7 @@ local table         = require("jive.utils.table")
 local Applet        = require("jive.Applet")
 local SlimServers   = require("jive.slim.SlimServers")
 
+local Framework     = require("jive.ui.Framework")
 local Checkbox      = require("jive.ui.Checkbox")
 local Label         = require("jive.ui.Label")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
@@ -42,17 +43,12 @@ local Icon          = require("jive.ui.Icon")
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("applets.setup")
 
-local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
-
 local jnt           = jnt
 local jiveMain      = jiveMain
 local appletManager = appletManager
 
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
