@@ -179,3 +179,17 @@ FADETOBLACK
 	IT	Verso il nero
 	NL	Faden naar zwart
 
+WEATHEREDRED
+	EN	Weathered Red
+
+PURPLENOTE
+	EN	Purple Notes
+
+ORANGEMARBLE
+	EN	Orange Marble
+
+NOTE
+	EN	Notes
+
+GREENFLOWERS
+	EN	Green Flowers

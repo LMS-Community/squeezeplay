@@ -632,7 +632,12 @@ dist_applets_setupwallpaper_wallpaper_DATA = \
 	share/applets/SetupWallpaper/wallpaper/stone.png \
 	share/applets/SetupWallpaper/wallpaper/fade_to_black.png \
 	share/applets/SetupWallpaper/wallpaper/sunlight.png \
-	share/applets/SetupWallpaper/wallpaper/sunrise.png
+	share/applets/SetupWallpaper/wallpaper/sunrise.png \
+	share/applets/SetupWallpaper/wallpaper/flowersgreen.jpg \
+	share/applets/SetupWallpaper/wallpaper/note.jpg \
+	share/applets/SetupWallpaper/wallpaper/orangemarble.jpg \
+	share/applets/SetupWallpaper/wallpaper/purplenote.jpg \
+	share/applets/SetupWallpaper/wallpaper/redgrunge.jpg 
 
 applets_setupSqueezeboxdir = $(datadir)/jive/applets/SetupSqueezebox
 dist_applets_setupSqueezebox_DATA = \
