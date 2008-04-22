@@ -297,6 +297,12 @@ dist_applets_nowplaying_DATA = \
         share/applets/NowPlaying/progressbar_fill_l.png \
         share/applets/NowPlaying/progressbar_fill_r.png
 
+applets_macroplaydir = $(pkgdatadir)/applets/MacroPlay
+dist_applets_macroplay_DATA = \
+	share/applets/MacroPlay/MacroPlayApplet.lua \
+	share/applets/MacroPlay/MacroPlayMeta.lua \
+	share/applets/MacroPlay/strings.txt
+
 # Data: now playing
 applets_nowplaying_imagesdir = $(pkgdatadir)/applets/NowPlaying/images
 dist_applets_nowplaying_images_DATA = \

@@ -36,6 +36,8 @@ local Window           = require("jive.ui.Window")
 local debug            = require("jive.utils.debug")
 local log              = require("jive.utils.log").logger("applets.misc")
 
+local LAYER_ALL        = jive.ui.LAYER_ALL
+
 local jive = jive
 
 
@@ -76,7 +78,7 @@ function settingsShow(self)
 	window:addWidget(menu)
 
 	-- Load macro configuration
-	local f = loadmacro("applets/MacroPlay/Macros.lua")
+	local f = loadmacro("Macros.lua")
 	if f then
 		-- Defines self.macros
 		f()
@@ -183,7 +185,7 @@ function macroScreenshot(interval, file, limit)
 	local window = Framework.windowStack[1]
 
 	local screen = Surface:newRGB(w, h)
-	window:draw(screen, JIVE_LAYER_ALL)
+	window:draw(screen, LAYER_ALL)
 
 
 	local reffile = macrodir .. file .. ".bmp"
