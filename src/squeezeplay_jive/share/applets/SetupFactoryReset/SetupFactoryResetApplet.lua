@@ -15,14 +15,10 @@ local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
 
 local log                    = require("jive.utils.log").logger("applets.setup")
-
-local EVENT_ALL_INPUT        = jive.ui.EVENT_ALL_INPUT
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
-
 local appletManager          = appletManager
 
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

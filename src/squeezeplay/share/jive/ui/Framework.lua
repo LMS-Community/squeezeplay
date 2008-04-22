@@ -166,6 +166,10 @@ Import constants into a module.
 =cut
 --]]
 function constants(module)
+	module.EVENT_UNUSED = jive.ui.EVENT_UNUSED
+	module.EVENT_CONSUME = jive.ui.EVENT_CONSUME
+	module.EVENT_QUIT = jive.ui.EVENT_QUIT
+
 	module.EVENT_SCROLL = jive.ui.EVENT_SCROLL
 	module.EVENT_ACTION = jive.ui.EVENT_ACTION
 	module.EVENT_KEY_DOWN = jive.ui.EVENT_KEY_DOWN

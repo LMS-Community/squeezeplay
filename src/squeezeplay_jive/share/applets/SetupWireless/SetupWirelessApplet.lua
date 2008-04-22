@@ -38,9 +38,6 @@ local log                    = require("jive.utils.log").logger("applets.setup")
 
 local jnt                    = jnt
 
-local EVENT_ACTION           = jive.ui.EVENT_ACTION
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
-local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
 
@@ -51,29 +48,12 @@ local LAYOUT_WEST            = jive.ui.LAYOUT_WEST
 local LAYOUT_CENTER          = jive.ui.LAYOUT_CENTER
 local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
-local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
-local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
-local EVENT_WINDOW_ACTIVE    = jive.ui.EVENT_WINDOW_ACTIVE
-local EVENT_WINDOW_INACTIVE  = jive.ui.EVENT_WINDOW_INACTIVE
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
-
-local KEY_FWD         = jive.ui.KEY_FWD
-local KEY_REW         = jive.ui.KEY_REW
-local KEY_GO          = jive.ui.KEY_GO
-local KEY_BACK        = jive.ui.KEY_BACK
-local KEY_UP          = jive.ui.KEY_UP
-local KEY_DOWN        = jive.ui.KEY_DOWN
-local KEY_LEFT        = jive.ui.KEY_LEFT
-local KEY_RIGHT       = jive.ui.KEY_RIGHT
-
-
 
 -- configuration
 local CONNECT_TIMEOUT = 30
 local wirelessTitleStyle = 'settingstitle'
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

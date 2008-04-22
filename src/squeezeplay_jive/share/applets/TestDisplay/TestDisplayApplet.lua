@@ -15,15 +15,8 @@ local Font                = require("jive.ui.Font")
 local Timer               = require("jive.ui.Timer")
 local math                = require("math")
 
-local EVENT_KEY_PRESS     = jive.ui.EVENT_KEY_PRESS
-local EVENT_WINDOW_RESIZE = jive.ui.EVENT_WINDOW_RESIZE
-local EVENT_CONSUME       = jive.ui.EVENT_CONSUME
 
-local KEY_GO              = jive.ui.KEY_GO
-local KEY_BACK            = jive.ui.KEY_BACK
-
-
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

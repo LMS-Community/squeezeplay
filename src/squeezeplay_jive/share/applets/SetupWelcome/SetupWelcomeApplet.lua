@@ -40,17 +40,6 @@ local locale           = require("jive.utils.locale")
 local table            = require("jive.utils.table")
 
 local appletManager    = appletManager
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local EVENT_KEY_HOLD   = jive.ui.EVENT_KEY_HOLD
-local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
-local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
-local EVENT_ACTION     = jive.ui.EVENT_ACTION
-local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
-local KEY_GO           = jive.ui.KEY_GO
-local KEY_BACK         = jive.ui.KEY_BACK
-local KEY_FWD          = jive.ui.KEY_FWD
-local KEY_REW          = jive.ui.KEY_REW
-local KEY_HOME         = jive.ui.KEY_HOME
 
 local jiveMain         = jiveMain
 local jnt           = jnt
@@ -58,7 +47,7 @@ local jnt           = jnt
 local welcomeTitleStyle = 'settingstitle'
 
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
