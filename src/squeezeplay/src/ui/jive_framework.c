@@ -31,8 +31,8 @@ struct jive_perfwarn perfwarn = { 0, 0, 0, 0, 0, 0 };
 //static Uint32 framerate = 1000 / JIVE_FRAME_RATE;
 
 
-/* button hold threshold 2 seconds */
-#define HOLD_TIMEOUT 2000
+/* button hold threshold 1 seconds */
+#define HOLD_TIMEOUT 1000
 
 static bool update_screen = true;
 
