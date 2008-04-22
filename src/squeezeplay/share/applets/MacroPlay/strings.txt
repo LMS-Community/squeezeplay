@@ -2,3 +2,9 @@
 MACRO_PLAY
 	DA	Makro for afspil
 	EN	Play Macro
+
+MACRO_PLAY_AUTOSTART
+	EN	Automatic tests
+
+MACRO_PLAY_AUTOSTART_HELP
+	EN	Start automatic tests.

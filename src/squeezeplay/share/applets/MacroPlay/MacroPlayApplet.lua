@@ -48,23 +48,48 @@ oo.class(_M, Applet)
 -- macro (global) state
 local task = false
 local timer = false
-local macrodir = false
+local macro = false
+
+
+function init(self)
+	self:loadconfig()
+end
 
 
 local function loadmacro(file)
 	for dir in package.path:gmatch("([^;]*)%?[^;]*;") do
-		-- FIXME file test first
+		local filepath = dir .. file
 
-		local f, err = loadfile(dir .. file)
-		if err == nil then
-			-- Set chunk environment to be contained in the
-			-- MacroPlay applet.
-			setfenv(f, getfenv(1))
-			return f, string.match(dir .. file, "(.*[/\]).+")
+		if lfs.attributes(filepath, "mode") == "file" then
+			local f, err = loadfile(filepath)
+			if err == nil then
+				-- Set chunk environment to be contained in the
+				-- MacroPlay applet.
+				setfenv(f, getfenv(1))
+				return f, string.match(filepath, "(.*[/\]).+")
+			else
+				return nil, err
+			end
 		end
 	end
 
-	return nil, err
+	return nil
+end
+
+
+function loadconfig(self)
+	-- Load macro configuration
+	local f, err = loadmacro("Macros.lua")
+	if f then
+		-- Defines self.macros
+		f()
+	else
+		log:warn("Error loading Macros: ", err)
+	end
+
+--	if self.autostart then
+--		self:autoplay()
+--	end
 end
 
 
@@ -74,28 +99,48 @@ function settingsShow(self)
 	local menu = SimpleMenu("menu", items)
 	local help = Textarea("help", "")
 
+	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
+
 	window:addWidget(help)
 	window:addWidget(menu)
 
-	-- Load macro configuration
-	local f = loadmacro("Macros.lua")
-	if f then
-		-- Defines self.macros
-		f()
+	-- Macro menus
+	if self.autostart then
+		local item = {
+			text = self:string("MACRO_PLAY_AUTOSTART"),
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self.auto = nil
+				self:autoplay()
+			end,
+			focusGained = function()
+				help:setValue(self:string("MACRO_PLAY_AUTOSTART_HELP"))
+			end,
+			weight = 1,
+		}
+		menu:addItem(item)
+	end
 
-		for i, v in ipairs(self.macros) do
-			local item = {
-				text = self:string(v.name),
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:play(v.file)
-				end,
-				focusGained = function()
-					help:setValue(v.desc)
-				end,
-			}
-			menu:addItem(item)
+	for k, v in pairs(self.macros) do
+		local item = {
+			text = self:string(v.name),
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self.auto = false
+				self:play(v)
+			end,
+			focusGained = function()
+				help:setValue(v.desc)
+			end,
+			weight = 5,
+		}
+
+		if v.passed then
+			log:warn("SETTING STYLE")
+			item.style = "checked"
 		end
+
+		menu:addItem(item)
 	end
 
 	-- FIXME can't tie applet due to global macro state
@@ -103,15 +148,41 @@ function settingsShow(self)
 end
 
 
+function autoplay(self)
+	if self.auto == false then
+		return
+	end
+
+	if self.auto == nil then
+		self.auto = 1
+	end
+
+	if self.auto > #self.autostart then
+		log:info("Macro Autoplay FINISHED")
+		self.auto = false
+
+		return
+	end
+
+	local macro = self.macros[self.autostart[self.auto]]
+	self.auto = self.auto + 1
+
+	self:play(macro)
+end
+
 -- play the macro
-function play(self, file)
+function play(self, entry)
 	task = Task("MacroPlay", self,
 		function()
-			local f, dir = loadmacro(file)
+			local f, dir = loadmacro(entry.file)
 			if f then
-				log:info("Macro starting: ", file)
-				macrodir = dir
+				macro = entry
+				macro.dir = dir
+
+				log:info("Macro starting: ", macro.file)
 				f()
+
+				self:autoplay()
 			else
 				log:warn("Macro error: ", err)
 			end
@@ -164,12 +235,21 @@ end
 
 
 -- returns true if the menu item 'text' is selected
-function macroIsMenuItem(text)
+function macroIsMenuItem(pattern)
 	local menuText = macroGetMenuText()
 
-	log:info("macroIsMenuItem ", menuText, "==", text)
+	log:info("macroIsMenuItem ", menuText, "==", pattern)
 
-	return tostring(menuText) == tostring(text)
+	return string.match(tostring(menuText), pattern)
+end
+
+
+-- force return to the home menu
+function macroHome()
+	log:info("macroHome")
+	if #Framework.windowStack > 1 then
+		Framework.windowStack[#Framework.windowStack - 1]:hideToTop()
+	end
 end
 
 
@@ -188,7 +268,7 @@ function macroScreenshot(interval, file, limit)
 	window:draw(screen, LAYER_ALL)
 
 
-	local reffile = macrodir .. file .. ".bmp"
+	local reffile = macro.dir .. file .. ".bmp"
 	if lfs.attributes(reffile, "mode") == "file" then
 		-- verify screenshot
 		log:debug("Loading reference screenshot " .. reffile)
@@ -198,11 +278,11 @@ function macroScreenshot(interval, file, limit)
 
 		if match < limit then
 			-- failure
-			log:warn("Screenshot FAILED " .. file .. " match=" .. match .. " limt=" .. limit)
-			failfile = macrodir .. file .. "_fail.bmp"
+			log:warn("Macro Screenshot FAILED " .. file .. " match=" .. match .. " limt=" .. limit)
+			failfile = macro.dir .. file .. "_fail.bmp"
 			screen:saveBMP(failfile)
 		else
-			log:info("Screenshot PASSED " .. file)
+			log:info("Macro Screenshot PASSED " .. file)
 			pass = true
 		end
 	else
@@ -212,6 +292,18 @@ function macroScreenshot(interval, file, limit)
 
 	macroDelay(interval)
 	return pass
+end
+
+
+function macroPass(msg)
+	log:warn("Macro PASS ", macro.name, ": ", msg)
+
+	macro.passed = Framework:getTicks()
+end
+
+
+function macroFail(msg)
+	log:warn("Macro FAIL ", macro.name, ": ", msg)
 end
 
 
