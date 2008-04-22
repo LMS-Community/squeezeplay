@@ -997,7 +997,7 @@ end
 -- isTrackSeekable
 -- Try to work out if SC can seek in this track - only really a guess
 function isTrackSeekable(self)
-	return self.trackDuration and not self.state.remote
+	return self.trackDuration and self.state["can_seek"]
 end
 
 -- mute
