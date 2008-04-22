@@ -796,11 +796,21 @@ int jiveL_find_file(lua_State *L) {
 
 
 int jive_find_file(const char *path, char *fullpath) {
-	char *resource_path = strdup(jive_resource_path);
+	char *resource_path, *ptr;
+	FILE *fp;
 
-	char *ptr = strtok(resource_path, ";");
+	/* absolute/relative path */
+	fp = fopen(path, "r");
+	if (fp) {
+		fclose(fp);
+		strcpy(fullpath, path);
+		return 1;
+	}
+
+	/* search lua path */
+	resource_path = strdup(jive_resource_path);
+	ptr = strtok(resource_path, ";");
 	while (ptr) {
-		FILE *fp;
 #if defined(WIN32)
 		char *tmp;
 #endif

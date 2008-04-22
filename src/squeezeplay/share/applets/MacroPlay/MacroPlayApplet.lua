@@ -13,75 +13,125 @@ This applet will play ui sequences using a lua script for testing.
 
 
 -- stuff we use
-local ipairs, pairs, tostring = ipairs, pairs, tostring
+local getfenv, loadfile, ipairs, package, pairs, require, setfenv, setmetatable, tostring = getfenv, loadfile, ipairs, package, pairs, require, setfenv, setmetatable, tostring
 
 local oo               = require("loop.simple")
+local lfs              = require("lfs")
 local math             = require("math")
+local string           = require("string")
 local table            = require("jive.utils.table")
+
 
 local Applet           = require("jive.Applet")
 local Event            = require("jive.ui.Event")
 local Framework        = require("jive.ui.Framework")
 local Menu             = require("jive.ui.Menu")
+local SimpleMenu       = require("jive.ui.SimpleMenu")
+local Surface          = require("jive.ui.Surface")
 local Task             = require("jive.ui.Task")
+local Textarea         = require("jive.ui.Textarea")
 local Timer            = require("jive.ui.Timer")
+local Window           = require("jive.ui.Window")
 
+local debug            = require("jive.utils.debug")
 local log              = require("jive.utils.log").logger("applets.misc")
 
-
-local EVENT_KEY_PRESS           = jive.ui.EVENT_KEY_PRESS
-local EVENT_KEY_DOWN            = jive.ui.EVENT_KEY_DOWN
-local EVENT_KEY_UP              = jive.ui.EVENT_KEY_UP
-local EVENT_KEY_HOLD            = jive.ui.EVENT_KEY_HOLD
-local EVENT_SCROLL              = jive.ui.EVENT_SCROLL
-local EVENT_CONSUME             = jive.ui.EVENT_CONSUME
-local EVENT_ACTION              = jive.ui.EVENT_ACTION
-local EVENT_WINDOW_POP          = jive.ui.EVENT_WINDOW_POP
-
-local KEY_BACK                  = jive.ui.KEY_BACK
-local KEY_DOWN                  = jive.ui.KEY_DOWN
-local KEY_HOME                  = jive.ui.KEY_HOME
-local KEY_GO                    = jive.ui.KEY_GO
-local KEY_PLAY                  = jive.ui.KEY_PLAY
+local jive = jive
 
 
 module(...)
 oo.class(_M, Applet)
 
 
--- XXX Load script from file
-local script = function()
-	log:info("Starting macro script")
+-- Declare as module variables, not locals. This allows visiblity to
+-- loaded macro functions using setfenv.
+EVENT_KEY_PRESS           = jive.ui.EVENT_KEY_PRESS
+EVENT_KEY_DOWN            = jive.ui.EVENT_KEY_DOWN
+EVENT_KEY_UP              = jive.ui.EVENT_KEY_UP
+EVENT_KEY_HOLD            = jive.ui.EVENT_KEY_HOLD
+EVENT_SCROLL              = jive.ui.EVENT_SCROLL
+EVENT_CONSUME             = jive.ui.EVENT_CONSUME
+EVENT_ACTION              = jive.ui.EVENT_ACTION
+EVENT_WINDOW_POP          = jive.ui.EVENT_WINDOW_POP
 
-	-- key HOME
-	macroEvent(100, EVENT_KEY_PRESS, KEY_HOME)
+KEY_BACK                  = jive.ui.KEY_BACK
+KEY_DOWN                  = jive.ui.KEY_DOWN
+KEY_HOME                  = jive.ui.KEY_HOME
+KEY_GO                    = jive.ui.KEY_GO
+KEY_PLAY                  = jive.ui.KEY_PLAY
 
-	while true do
-		-- key down until Choose Player
-		while not macroIsMenuItem("Choose Player") do
-			macroEvent(100, EVENT_KEY_PRESS, KEY_DOWN)
+
+-- macro (global) state
+local task = false
+local timer = false
+local macrodir = false
+
+
+local function loadmacro(file)
+	for dir in package.path:gmatch("([^;]*)%?[^;]*;") do
+		-- FIXME file test first
+
+		local f, err = loadfile(dir .. file)
+		if err == nil then
+			-- Set chunk environment to be contained in the
+			-- MacroPlay applet.
+			setfenv(f, getfenv(1))
+			return f, string.match(dir .. file, "(.*[/\]).+")
 		end
-
-		-- key go into Choose Player
-		macroEvent(10000, EVENT_KEY_PRESS, KEY_GO)
-
-		-- key back from Choose Player
-		macroEvent(100, EVENT_KEY_PRESS, KEY_BACK)
-
-		-- key down
-		macroEvent(100, EVENT_KEY_PRESS, KEY_DOWN)
 	end
+
+	return nil, err
 end
 
 
--- macro state
-local task = false
-local timer = false
+function settingsShow(self)
+	-- Create window
+	local window = Window("window", self:string("MACRO_PLAY"))
+	local menu = SimpleMenu("menu", items)
+	local help = Textarea("help", "")
+
+	window:addWidget(help)
+	window:addWidget(menu)
+
+	-- Load macro configuration
+	local f = loadmacro("applets/MacroPlay/Macros.lua")
+	if f then
+		-- Defines self.macros
+		f()
+
+		for i, v in ipairs(self.macros) do
+			local item = {
+				text = self:string(v.name),
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:play(v.file)
+				end,
+				focusGained = function()
+					help:setValue(v.desc)
+				end,
+			}
+			menu:addItem(item)
+		end
+	end
+
+	-- FIXME can't tie applet due to global macro state
+	window:show()
+end
 
 
 -- play the macro
-function play(self)
-	task = Task("MacroPlay", self, script)
+function play(self, file)
+	task = Task("MacroPlay", self,
+		function()
+			local f, dir = loadmacro(file)
+			if f then
+				log:info("Macro starting: ", file)
+				macrodir = dir
+				f()
+			else
+				log:warn("Macro error: ", err)
+			end
+		end)
 	task:addTask()
 
 	timer = Timer(0, function()
@@ -136,6 +186,48 @@ function macroIsMenuItem(text)
 	log:info("macroIsMenuItem ", menuText, "==", text)
 
 	return tostring(menuText) == tostring(text)
+end
+
+
+-- capture or verify a screenshot
+function macroScreenshot(interval, file, limit)
+	local pass = false
+
+	limit = limit or 100
+
+	-- create screenshot
+	local w, h = Framework:getScreenSize()
+
+	local window = Framework.windowStack[1]
+
+	local screen = Surface:newRGB(w, h)
+	window:draw(screen, JIVE_LAYER_ALL)
+
+
+	local reffile = macrodir .. file .. ".bmp"
+	if lfs.attributes(reffile, "mode") == "file" then
+		-- verify screenshot
+		log:debug("Loading reference screenshot " .. reffile)
+		local ref = Surface:loadImage(reffile)
+
+		local match = ref:compare(screen, 0xFF00FF)
+
+		if match < limit then
+			-- failure
+			log:warn("Screenshot FAILED " .. file .. " match=" .. match .. " limt=" .. limit)
+			failfile = macrodir .. file .. "_fail.bmp"
+			screen:saveBMP(failfile)
+		else
+			log:info("Screenshot PASSED " .. file)
+			pass = true
+		end
+	else
+		log:debug("Saving reference screenshot " .. reffile)
+		screen:saveBMP(reffile)
+	end
+
+	macroDelay(interval)
+	return pass
 end
 
 

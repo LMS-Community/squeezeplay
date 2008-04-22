@@ -39,6 +39,6 @@ end
 
 function registerApplet(meta)
 	-- menu item to start
-	jiveMain:addItem(meta:menuItem('macroPlay', 'advancedSettings', 'MACRO_PLAY', function(applet, ...) applet:play(...) end))
+	jiveMain:addItem(meta:menuItem('macroPlay', 'advancedSettings', 'MACRO_PLAY', function(applet, ...) applet:settingsShow(...) end))
 end
 

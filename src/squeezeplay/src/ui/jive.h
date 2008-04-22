@@ -280,6 +280,7 @@ JiveSurface *jive_surface_ref(JiveSurface *srf);
 JiveSurface *jive_surface_load_image(const char *path);
 JiveSurface *jive_surface_load_image_data(const char *data, size_t len);
 int jive_surface_save_bmp(JiveSurface *srf, const char *file);
+int jive_surface_cmp(JiveSurface *a, JiveSurface *b, Uint32 key);
 void jive_surface_set_offset(JiveSurface *src, Sint16 x, Sint16 y);
 void jive_surface_get_clip(JiveSurface *srf, SDL_Rect *r);
 void jive_surface_set_clip(JiveSurface *srf, SDL_Rect *r);
