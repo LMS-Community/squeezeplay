@@ -589,6 +589,8 @@ applets_macroplaydir = $(pkgdatadir)/applets/MacroPlay
 dist_applets_macroplay_DATA = \
 	share/applets/MacroPlay/MacroPlayApplet.lua \
 	share/applets/MacroPlay/MacroPlayMeta.lua \
+	share/applets/MacroPlay/pass.png \
+	share/applets/MacroPlay/fail.png \
 	share/applets/MacroPlay/strings.txt
 
 
