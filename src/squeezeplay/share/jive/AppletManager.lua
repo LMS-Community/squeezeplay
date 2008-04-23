@@ -31,7 +31,7 @@ local lfs              = require("lfs")
 local debug            = require("jive.utils.debug")
 local log              = require("jive.utils.log").logger("applets.misc")
 local locale           = require("jive.utils.locale")
-local serialize        = require("jive.utils.serialize")
+local dumper           = require("jive.utils.dumper")
 
 local JIVE_VERSION     = jive.JIVE_VERSION
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
@@ -513,7 +513,7 @@ function _storeSettings(entry)
 	log:info("Store settings: ", entry.appletName)
 
 	local file = assert(io.open(entry.settingsFilepath, "w"))
-	serialize.save(file, "settings", entry.settings)
+	file:write(dumper.dump(entry.settings, "settings", true))
 	file:close()
 end
 

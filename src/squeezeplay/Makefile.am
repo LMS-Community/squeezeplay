@@ -168,7 +168,7 @@ dist_luautil_DATA = \
 	share/jive/utils/strings.lua \
 	share/jive/utils/autotable.lua \
 	share/jive/utils/jsonfilters.lua \
-	share/jive/utils/serialize.lua \
+	share/jive/utils/dumper.lua \
 	share/jive/utils/table.lua
 
 

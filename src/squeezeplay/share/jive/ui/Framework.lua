@@ -75,7 +75,7 @@ local Window        = require("jive.ui.Window")
 local log           = require("jive.utils.log").logger("ui")
 local logTask       = require("jive.utils.log").logger("ui.task")
 
-local serialize     = require("jive.utils.serialize")
+local dumper        = require("jive.utils.dumper")
 local io            = require("io")
 
 -- import C functions
@@ -574,7 +574,7 @@ function setGlobalSetting(self, key, value)
 
 	self._global_settings[key] = value
 	local file = _assert(io.open(global_settings_file, "w"))
-	serialize.save(file, "global_settings", self._global_settings)
+	file:write(dumper.dump(self._global_settings, "global_settings", true))
 	file:close()
 end
 
