@@ -13,7 +13,7 @@ This applet will play ui sequences using a lua script for testing.
 
 
 -- stuff we use
-local assert, getfenv, loadfile, ipairs, package, pairs, require, setfenv, setmetatable, tostring = assert, getfenv, loadfile, ipairs, package, pairs, require, setfenv, setmetatable, tostring
+local assert, getfenv, loadfile, ipairs, package, pairs, require, setfenv, setmetatable, tostring, type = assert, getfenv, loadfile, ipairs, package, pairs, require, setfenv, setmetatable, tostring, type
 
 local oo               = require("loop.simple")
 local io               = require("io")
@@ -27,6 +27,7 @@ local dumper           = require("jive.utils.dumper")
 local Applet           = require("jive.Applet")
 local Event            = require("jive.ui.Event")
 local Framework        = require("jive.ui.Framework")
+local Icon             = require("jive.ui.Icon")
 local Menu             = require("jive.ui.Menu")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Surface          = require("jive.ui.Surface")
@@ -48,15 +49,12 @@ oo.class(_M, Applet)
 
 
 -- macro (global) state
-local task = false
-local timer = false
-local macro = false
-local macrodir = false
+local instance = false
 
 
 function init(self)
 	self.config = {}
-	self:loadconfig()
+	self:loadConfig()
 end
 
 
@@ -81,7 +79,7 @@ local function loadmacro(file)
 end
 
 
-function loadconfig(self)
+function loadConfig(self)
 	-- Load macro configuration
 	local f, dirorerr = loadmacro("Macros.lua")
 	if f then
@@ -93,10 +91,91 @@ function loadconfig(self)
 end
 
 
-function saveconfig(self)
+function saveConfig(self)
 	local file = assert(io.open(self.configFile, "w"))
 	file:write(dumper.dump(self.config, nil, false))
 	file:close()
+end
+
+
+function autoplayShow(self, countdown)
+	-- Create window
+	local window = Window("window", self:string("MACRO_AUTOSTART"))
+	local menu = SimpleMenu("menu", items)
+	local help = Textarea("textarea", "")
+
+	window:addWidget(help)
+	window:addWidget(menu)
+
+	menu:addItem({
+		text = self:string("MACRO_START"),
+		sound = "WINDOWSHOW",
+		callback = function(event, menuItem)
+			if self.config.auto == false then
+				self:autoplayReset()
+			end
+			self:autoplay()
+		end,
+	})
+	menu:addItem({
+		text = self:string("MACRO_CANCEL"),
+		sound = "WINDOWSHOW",
+		callback = function(event, menuItem)
+			window:hide()
+		end,
+	})
+
+	for i, key in ipairs(self.config.autostart) do
+		local macro = self.config.macros[key]
+
+		local item = {
+			text = self:string(macro.name),
+			sound = "BUMP",
+		}
+
+		debug.dump(macro, -1)
+
+		if macro.passed then
+			item.icon = Icon("macroPass")
+		end
+		if macro.failed then
+			item.icon = Icon("macroFail")
+		end
+
+		debug.dump(item, -1)
+
+		menu:addItem(item)
+	end
+
+	if self.config.auto > #self.config.autostart then
+		-- test finished
+		self.config.auto = false
+		self:saveConfig()
+
+		help:setValue(self:string("MACRO_AUTOSTART_COMPLETE"))
+	else
+		-- countdown to tests
+		local timer = countdown or 30
+		help:setValue(self:string("MACRO_AUTOSTART_HELP", timer))
+
+		window:addTimer(1000,
+				function()
+					if timer == 1 then
+						window:hide()
+
+						self:autoplay()
+					end
+
+					timer = timer - 1
+					help:setValue(self:string("MACRO_AUTOSTART_HELP", timer))
+				end)
+	end
+
+	window:setAllowScreensaver(false)
+	window:setAlwaysOnTop(true)
+	window:setAutoHide(false)
+
+	window:show()
 end
 
 
@@ -114,38 +193,33 @@ function settingsShow(self)
 	-- Macro menus
 	if self.config.autostart then
 		local item = {
-			text = self:string("MACRO_PLAY_AUTOSTART"),
+			text = self:string("MACRO_AUTOPLAY"),
 			sound = "WINDOWSHOW",
 			callback = function(event, menuItem)
-				self.config.auto = true
-				self:autoplay()
+				self:autoplayReset()
+				self:autoplayShow()
 			end,
 			focusGained = function()
-				help:setValue(self:string("MACRO_PLAY_AUTOSTART_HELP"))
+				help:setValue(self:string("MACRO_AUTOPLAY_HELP"))
 			end,
 			weight = 1,
 		}
 		menu:addItem(item)
 	end
 
-	for k, v in pairs(self.config.macros) do
+	for key, macro in pairs(self.config.macros) do
 		local item = {
-			text = self:string(v.name),
+			text = self:string(macro.name),
 			sound = "WINDOWSHOW",
 			callback = function(event, menuItem)
-				self.auto = false
-				self:play(v)
+				self.config.auto = false
+				self:play(macro)
 			end,
 			focusGained = function()
-				help:setValue(v.desc)
+				help:setValue(macro.desc)
 			end,
 			weight = 5,
 		}
-
-		if v.passed then
-			log:warn("SETTING STYLE")
-			item.style = "checked"
-		end
 
 		menu:addItem(item)
 	end
@@ -155,16 +229,23 @@ function settingsShow(self)
 end
 
 
+-- reset autoplay
+function autoplayReset(self)
+	self.config.auto = 1
+
+	for key, macro in pairs(self.config.macros) do
+		macro.passed = nil
+		macro.failed = nil
+	end
+end
+
+
 -- play the next autostart macro
 function autoplay(self)
 	local config = self.config
 
 	if config.auto == false then
 		return
-	end
-
-	if config.auto == true then
-		config.auto = 1
 	end
 
 	if config.auto > #config.autostart then
@@ -178,38 +259,44 @@ function autoplay(self)
 		self:play(macro)
 	end
 
-	self:saveconfig()
+	self:saveConfig()
 end
 
 
 -- play the macro
 function play(self, _macro)
-	task = Task("MacroPlay", self,
+	local task = Task("MacroPlay", self,
 		function()
 			local f, dirorerr = loadmacro(_macro.file)
 			if f then
-				macro = _macro
-				macrodir = dirorerr
+				self.macro = _macro
+				self.macrodir = dirorerr
 
-				log:info("Macro starting: ", macro.file)
+				instance = self
+
+				log:info("Macro starting: ", _macro.file)
 				f()
 
-				self:autoplay()
+				if self.config.auto then
+					self:autoplayShow(5)
+				end
 			else
 				log:warn("Macro error: ", dirorerr)
 			end
 		end)
 	task:addTask()
 
-	timer = Timer(0, function()
-				 task:addTask()
-			 end, true)
+	self.timer = Timer(0, function()
+				      task:addTask()
+			      end, true)
 end
 
 
 -- delay macro for interval ms
 function macroDelay(interval)
-	timer:restart(interval)
+	local self = instance
+
+	self.timer:restart(interval)
 	Task:yield(false)	
 end
 
@@ -267,6 +354,7 @@ end
 
 -- capture or verify a screenshot
 function macroScreenshot(interval, file, limit)
+	local self = instance
 	local pass = false
 
 	limit = limit or 100
@@ -279,7 +367,7 @@ function macroScreenshot(interval, file, limit)
 	local screen = Surface:newRGB(w, h)
 	window:draw(screen, LAYER_ALL)
 
-	local reffile = macrodir .. file .. ".bmp"
+	local reffile = self.macrodir .. file .. ".bmp"
 	if lfs.attributes(reffile, "mode") == "file" then
 		-- verify screenshot
 		log:debug("Loading reference screenshot " .. reffile)
@@ -290,7 +378,7 @@ function macroScreenshot(interval, file, limit)
 		if match < limit then
 			-- failure
 			log:warn("Macro Screenshot " .. file .. " FAILED match=" .. match .. " limt=" .. limit)
-			failfile = macrodir .. file .. "_fail.bmp"
+			failfile = self.macrodir .. file .. "_fail.bmp"
 			screen:saveBMP(failfile)
 		else
 			log:info("Macro Screenshot " .. file .. " PASSED")
@@ -307,18 +395,36 @@ end
 
 
 function macroPass(msg)
-	log:warn("Macro PASS ", macro.name, ": ", msg)
+	local self = instance
 
-	macro.passed = os.date()
-	macro.failed = nil
+	log:warn("Macro PASS ", self.macro.name, ": ", msg)
+
+	self.macro.passed = os.date()
+	self.macro.failed = nil
+
+	self:saveConfig()
 end
 
 
 function macroFail(msg)
-	log:warn("Macro FAIL ", macro.name, ": ", msg)
+	local self = instance
 
-	macro.passed = nil
-	macro.failed = os.date()
+	log:warn("Macro FAIL ", self.macro.name, ": ", msg)
+
+	self.macro.passed = nil
+	self.macro.failed = os.date()
+
+	self:saveConfig()
+end
+
+
+function skin(self, s)
+	s.macroPass = {
+		img = Surface:loadImage("applets/MacroPlay/pass.png")
+	}
+	s.macroFail = {
+		img = Surface:loadImage("applets/MacroPlay/fail.png")
+	}
 end
 
 

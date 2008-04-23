@@ -48,14 +48,12 @@ function registerApplet(meta)
 	end
 
 	if applet.config.auto then
-		Timer(30000,
-		      function()
-			      applet:autoplay()
-		      end,
-		      true):start()
+		applet:autoplayShow()
 	end
 
 	-- menu item to start
 	jiveMain:addItem(meta:menuItem('macroPlay', 'extras', 'MACRO_PLAY', function(applet, ...) applet:settingsShow(...) end))
+
+	jiveMain:loadSkin("MacroPlay", "skin")
 end
 
