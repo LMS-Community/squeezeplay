@@ -13,14 +13,16 @@ This applet will play ui sequences using a lua script for testing.
 
 
 -- stuff we use
-local getfenv, loadfile, ipairs, package, pairs, require, setfenv, setmetatable, tostring = getfenv, loadfile, ipairs, package, pairs, require, setfenv, setmetatable, tostring
+local assert, getfenv, loadfile, ipairs, package, pairs, require, setfenv, setmetatable, tostring = assert, getfenv, loadfile, ipairs, package, pairs, require, setfenv, setmetatable, tostring
 
 local oo               = require("loop.simple")
+local io               = require("io")
+local os               = require("os")
 local lfs              = require("lfs")
 local math             = require("math")
 local string           = require("string")
 local table            = require("jive.utils.table")
-
+local dumper           = require("jive.utils.dumper")
 
 local Applet           = require("jive.Applet")
 local Event            = require("jive.ui.Event")
@@ -49,9 +51,11 @@ oo.class(_M, Applet)
 local task = false
 local timer = false
 local macro = false
+local macrodir = false
 
 
 function init(self)
+	self.config = {}
 	self:loadconfig()
 end
 
@@ -79,17 +83,20 @@ end
 
 function loadconfig(self)
 	-- Load macro configuration
-	local f, err = loadmacro("Macros.lua")
+	local f, dirorerr = loadmacro("Macros.lua")
 	if f then
-		-- Defines self.macros
-		f()
+		self.configFile = dirorerr .. "Macros.lua"
+		self.config = f()
 	else
-		log:warn("Error loading Macros: ", err)
+		log:warn("Error loading Macros: ", dirorerr)
 	end
+end
 
---	if self.autostart then
---		self:autoplay()
---	end
+
+function saveconfig(self)
+	local file = assert(io.open(self.configFile, "w"))
+	file:write(dumper.dump(self.config, nil, false))
+	file:close()
 end
 
 
@@ -105,12 +112,12 @@ function settingsShow(self)
 	window:addWidget(menu)
 
 	-- Macro menus
-	if self.autostart then
+	if self.config.autostart then
 		local item = {
 			text = self:string("MACRO_PLAY_AUTOSTART"),
 			sound = "WINDOWSHOW",
 			callback = function(event, menuItem)
-				self.auto = nil
+				self.config.auto = true
 				self:autoplay()
 			end,
 			focusGained = function()
@@ -121,7 +128,7 @@ function settingsShow(self)
 		menu:addItem(item)
 	end
 
-	for k, v in pairs(self.macros) do
+	for k, v in pairs(self.config.macros) do
 		local item = {
 			text = self:string(v.name),
 			sound = "WINDOWSHOW",
@@ -148,43 +155,48 @@ function settingsShow(self)
 end
 
 
+-- play the next autostart macro
 function autoplay(self)
-	if self.auto == false then
+	local config = self.config
+
+	if config.auto == false then
 		return
 	end
 
-	if self.auto == nil then
-		self.auto = 1
+	if config.auto == true then
+		config.auto = 1
 	end
 
-	if self.auto > #self.autostart then
+	if config.auto > #config.autostart then
 		log:info("Macro Autoplay FINISHED")
-		self.auto = false
+		config.auto = false
 
-		return
+	else
+		local macro = config.macros[config.autostart[config.auto]]
+		config.auto = config.auto + 1
+
+		self:play(macro)
 	end
 
-	local macro = self.macros[self.autostart[self.auto]]
-	self.auto = self.auto + 1
-
-	self:play(macro)
+	self:saveconfig()
 end
 
+
 -- play the macro
-function play(self, entry)
+function play(self, _macro)
 	task = Task("MacroPlay", self,
 		function()
-			local f, dir = loadmacro(entry.file)
+			local f, dirorerr = loadmacro(_macro.file)
 			if f then
-				macro = entry
-				macro.dir = dir
+				macro = _macro
+				macrodir = dirorerr
 
 				log:info("Macro starting: ", macro.file)
 				f()
 
 				self:autoplay()
 			else
-				log:warn("Macro error: ", err)
+				log:warn("Macro error: ", dirorerr)
 			end
 		end)
 	task:addTask()
@@ -267,8 +279,7 @@ function macroScreenshot(interval, file, limit)
 	local screen = Surface:newRGB(w, h)
 	window:draw(screen, LAYER_ALL)
 
-
-	local reffile = macro.dir .. file .. ".bmp"
+	local reffile = macrodir .. file .. ".bmp"
 	if lfs.attributes(reffile, "mode") == "file" then
 		-- verify screenshot
 		log:debug("Loading reference screenshot " .. reffile)
@@ -278,11 +289,11 @@ function macroScreenshot(interval, file, limit)
 
 		if match < limit then
 			-- failure
-			log:warn("Macro Screenshot FAILED " .. file .. " match=" .. match .. " limt=" .. limit)
-			failfile = macro.dir .. file .. "_fail.bmp"
+			log:warn("Macro Screenshot " .. file .. " FAILED match=" .. match .. " limt=" .. limit)
+			failfile = macrodir .. file .. "_fail.bmp"
 			screen:saveBMP(failfile)
 		else
-			log:info("Macro Screenshot PASSED " .. file)
+			log:info("Macro Screenshot " .. file .. " PASSED")
 			pass = true
 		end
 	else
@@ -298,12 +309,16 @@ end
 function macroPass(msg)
 	log:warn("Macro PASS ", macro.name, ": ", msg)
 
-	macro.passed = Framework:getTicks()
+	macro.passed = os.date()
+	macro.failed = nil
 end
 
 
 function macroFail(msg)
 	log:warn("Macro FAIL ", macro.name, ": ", msg)
+
+	macro.passed = nil
+	macro.failed = os.date()
 end
 
 
