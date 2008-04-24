@@ -42,8 +42,6 @@ local upgradeUrl             = upgradeUrl
 
 local JIVE_VERSION           = jive.JIVE_VERSION
 
-local EVENT_ACTION           = jive.ui.EVENT_ACTION
-local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
 
@@ -54,31 +52,13 @@ local LAYOUT_WEST            = jive.ui.LAYOUT_WEST
 local LAYOUT_CENTER          = jive.ui.LAYOUT_CENTER
 local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
-local EVENT_ALL_INPUT        = jive.ui.EVENT_ALL_INPUT
-local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
-local EVENT_KEY_HOLD         = jive.ui.EVENT_KEY_HOLD
-local EVENT_WINDOW_ACTIVE    = jive.ui.EVENT_WINDOW_ACTIVE
-local EVENT_WINDOW_INACTIVE  = jive.ui.EVENT_WINDOW_INACTIVE
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
-
-local KEY_FWD         = jive.ui.KEY_FWD
-local KEY_REW         = jive.ui.KEY_REW
-local KEY_GO          = jive.ui.KEY_GO
-local KEY_BACK        = jive.ui.KEY_BACK
-local KEY_UP          = jive.ui.KEY_UP
-local KEY_DOWN        = jive.ui.KEY_DOWN
-local KEY_LEFT        = jive.ui.KEY_LEFT
-local KEY_RIGHT       = jive.ui.KEY_RIGHT
-local KEY_HOME        = jive.ui.KEY_HOME
-
 local firmwareupgradeTitleStyle = 'settingstitle'
 
 local DEFAULT_FIRMWARE_URL = "http://www.slimdevices.com/update/firmware/7.0/jive.bin"
 
 local SDCARD_PATH = "/mnt/mmc/"
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

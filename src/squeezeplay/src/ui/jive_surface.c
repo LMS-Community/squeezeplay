@@ -166,6 +166,89 @@ int jive_surface_save_bmp(JiveSurface *srf, const char *file) {
 	return SDL_SaveBMP(srf->sdl, file);
 }
 
+
+static int _getPixel(SDL_Surface *s, Uint16 x, Uint16 y) {
+	Uint8 R, G, B;
+
+	switch (s->format->BytesPerPixel) {
+	case 1: { /* 8-bpp */
+		Uint8 *p;
+		p = (Uint8 *)s->pixels + y*s->pitch + x;
+
+		SDL_GetRGB(*p, s->format, &R, &G, &B);
+		return (R << 16) | (G << 8) | B;
+	}
+
+	case 2: { /* 15-bpp or 16-bpp */
+		Uint16 *p;
+		p = (Uint16 *)s->pixels + y*s->pitch/2 + x;
+
+		SDL_GetRGB(*p, s->format, &R, &G, &B);
+		return (R << 16) | (G << 8) | B;
+	}
+
+	case 3: { /* 24-bpp */
+		/* FIXME */
+		assert(0);
+	}
+
+	case 4: { /* 32-bpp */
+		Uint32 *p;
+		p = (Uint32 *)s->pixels + y*s->pitch/4 + x;
+
+		SDL_GetRGB(*p, s->format, &R, &G, &B);
+		return (R << 16) | (G << 8) | B;
+	}
+	}
+
+	return 0;
+}
+
+
+int jive_surface_cmp(JiveSurface *a, JiveSurface *b, Uint32 key) {
+	SDL_Surface *sa = a->sdl;
+	SDL_Surface *sb = b->sdl;
+	Uint32 pa, pb;
+	int x, y;
+	int count=0, equal=0;
+
+	if (!sa || !sb) {
+		return 0;
+	}
+
+	if (sa->w != sb->w || sa->h != sb->h) {
+		return 0;
+	}
+
+	if (SDL_MUSTLOCK(sa)) {
+		SDL_LockSurface(sa);
+	}
+	if (SDL_MUSTLOCK(sb)) {
+		SDL_LockSurface(sb);
+	}
+	
+	for (x=0; x<sa->w; x++) {
+		for (y=0; y<sa->h; y++) {
+			pa = _getPixel(sa, x, y);
+			pb = _getPixel(sb, x ,y);
+			
+			count++;
+			if (pa == pb || pa == key || pb == key) {
+				equal++;
+			}
+		}
+	}
+
+	if (SDL_MUSTLOCK(sb)) {
+		SDL_UnlockSurface(sb);
+	}
+	if (SDL_MUSTLOCK(sa)) {
+		SDL_UnlockSurface(sa);
+	}
+
+	return (int)(((float)equal / count) * 100);
+}
+
 void jive_surface_set_offset(JiveSurface *srf, Sint16 x, Sint16 y) {
 	srf->offset_x = x;
 	srf->offset_y = y;

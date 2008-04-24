@@ -20,6 +20,8 @@ local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
 
+local Timer         = require("jive.ui.Timer")
+
 local appletManager = appletManager
 local jiveMain      = jiveMain
 
@@ -38,7 +40,20 @@ end
 
 
 function registerApplet(meta)
+	local applet = appletManager:loadApplet('MacroPlay')
+
+	if not applet.config.macros then
+		appletManager:freeApplet('MacroPlay')
+		return
+	end
+
+	if applet.config.auto then
+		applet:autoplayShow()
+	end
+
 	-- menu item to start
-	jiveMain:addItem(meta:menuItem('macroPlay', 'advancedSettings', 'MACRO_PLAY', function(applet, ...) applet:play(...) end))
+	jiveMain:addItem(meta:menuItem('macroPlay', 'extras', 'MACRO_PLAY', function(applet, ...) applet:settingsShow(...) end))
+
+	jiveMain:loadSkin("MacroPlay", "skin")
 end
 

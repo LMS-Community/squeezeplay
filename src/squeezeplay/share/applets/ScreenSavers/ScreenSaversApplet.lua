@@ -40,25 +40,11 @@ local debug            = require("jive.utils.debug")
 local log              = require("jive.utils.log").logger("applets.screensavers")
 
 local appletManager    = appletManager
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local EVENT_KEY_HOLD   = jive.ui.EVENT_KEY_HOLD 
-local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
-local EVENT_MOTION     = jive.ui.EVENT_MOTION
-local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
-local EVENT_ACTION     = jive.ui.EVENT_ACTION
-local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
-local EVENT_WINDOW_PUSH = jive.ui.EVENT_WINDOW_PUSH
-local EVENT_WINDOW_INACTIVE = jive.ui.EVENT_WINDOW_INACTIVE
-local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
-local KEY_PLAY         = jive.ui.KEY_PLAY
-local KEY_GO           = jive.ui.KEY_GO
-local KEY_LEFT         = jive.ui.KEY_LEFT
-local KEY_HOME         = jive.ui.KEY_HOME
 
 local jnt = jnt
 
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

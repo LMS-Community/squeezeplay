@@ -22,10 +22,7 @@ local debug                  = require("jive.utils.debug")
 
 local jnt                    = jnt
 
-local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
-
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

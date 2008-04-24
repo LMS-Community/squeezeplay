@@ -30,17 +30,11 @@ local Textarea      = require("jive.ui.Textarea")
 local Popup         = require("jive.ui.Popup")
 local Timer         = require("jive.ui.Timer")
 
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
-local KEY_ADD          = jive.ui.KEY_ADD
-local KEY_PLAY         = jive.ui.KEY_PLAY
-
 local log           = require("jive.utils.log").logger("applets.misc")
 local debug         = require("jive.utils.debug")
 
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

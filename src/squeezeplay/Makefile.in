@@ -105,6 +105,7 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" \
 	"$(DESTDIR)$(applets_httpauthdir)" \
 	"$(DESTDIR)$(applets_infobrowserdir)" \
 	"$(DESTDIR)$(applets_logdir)" \
+	"$(DESTDIR)$(applets_macroplaydir)" \
 	"$(DESTDIR)$(applets_nowplayingdir)" \
 	"$(DESTDIR)$(applets_nowplaying_imagesdir)" \
 	"$(DESTDIR)$(applets_screensaversdir)" \
@@ -165,6 +166,7 @@ dist_applets_fullscreenskin_imagesDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_httpauthDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_infobrowserDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_logDATA_INSTALL = $(INSTALL_DATA)
+dist_applets_macroplayDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_nowplayingDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_nowplaying_imagesDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_screensaversDATA_INSTALL = $(INSTALL_DATA)
@@ -486,7 +488,7 @@ dist_luautil_DATA = \
 	share/jive/utils/strings.lua \
 	share/jive/utils/autotable.lua \
 	share/jive/utils/jsonfilters.lua \
-	share/jive/utils/serialize.lua \
+	share/jive/utils/dumper.lua \
 	share/jive/utils/table.lua
 
 applets_logdir = $(pkgdatadir)/applets/LogSettings
@@ -614,6 +616,14 @@ dist_applets_nowplaying_DATA = \
         share/applets/NowPlaying/progressbar_fill_l.png \
         share/applets/NowPlaying/progressbar_fill_r.png
 
+applets_macroplaydir = $(pkgdatadir)/applets/MacroPlay
+dist_applets_macroplay_DATA = \
+	share/applets/MacroPlay/MacroPlayApplet.lua \
+	share/applets/MacroPlay/MacroPlayMeta.lua \
+	share/applets/MacroPlay/pass.png \
+	share/applets/MacroPlay/fail.png \
+	share/applets/MacroPlay/strings.txt
+
 
 # Data: now playing
 applets_nowplaying_imagesdir = $(pkgdatadir)/applets/NowPlaying/images
@@ -655,7 +665,12 @@ dist_applets_setupwallpaper_wallpaper_DATA = \
 	share/applets/SetupWallpaper/wallpaper/stone.png \
 	share/applets/SetupWallpaper/wallpaper/fade_to_black.png \
 	share/applets/SetupWallpaper/wallpaper/sunlight.png \
-	share/applets/SetupWallpaper/wallpaper/sunrise.png
+	share/applets/SetupWallpaper/wallpaper/sunrise.png \
+	share/applets/SetupWallpaper/wallpaper/flowersgreen.jpg \
+	share/applets/SetupWallpaper/wallpaper/note.jpg \
+	share/applets/SetupWallpaper/wallpaper/orangemarble.jpg \
+	share/applets/SetupWallpaper/wallpaper/purplenote.jpg \
+	share/applets/SetupWallpaper/wallpaper/redgrunge.jpg 
 
 applets_setupSqueezeboxdir = $(datadir)/jive/applets/SetupSqueezebox
 dist_applets_setupSqueezebox_DATA = \
@@ -1682,6 +1697,23 @@ uninstall-dist_applets_logDATA:
 	  echo " rm -f '$(DESTDIR)$(applets_logdir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(applets_logdir)/$$f"; \
 	done
+install-dist_applets_macroplayDATA: $(dist_applets_macroplay_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(applets_macroplaydir)" || $(mkdir_p) "$(DESTDIR)$(applets_macroplaydir)"
+	@list='$(dist_applets_macroplay_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(dist_applets_macroplayDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_macroplaydir)/$$f'"; \
+	  $(dist_applets_macroplayDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_macroplaydir)/$$f"; \
+	done
+
+uninstall-dist_applets_macroplayDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_applets_macroplay_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(applets_macroplaydir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(applets_macroplaydir)/$$f"; \
+	done
 install-dist_applets_nowplayingDATA: $(dist_applets_nowplaying_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(applets_nowplayingdir)" || $(MKDIR_P) "$(DESTDIR)$(applets_nowplayingdir)"
@@ -2296,6 +2328,7 @@ install-data-am: install-dist_applets_choosemusicsourceDATA \
 	install-dist_applets_httpauthDATA \
 	install-dist_applets_infobrowserDATA \
 	install-dist_applets_logDATA \
+	install-dist_applets_macroplayDATA \
 	install-dist_applets_nowplayingDATA \
 	install-dist_applets_nowplaying_imagesDATA \
 	install-dist_applets_screensaversDATA \
@@ -2364,6 +2397,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	uninstall-dist_applets_httpauthDATA \
 	uninstall-dist_applets_infobrowserDATA \
 	uninstall-dist_applets_logDATA \
+	uninstall-dist_applets_macroplayDATA \
 	uninstall-dist_applets_nowplayingDATA \
 	uninstall-dist_applets_nowplaying_imagesDATA \
 	uninstall-dist_applets_screensaversDATA \
@@ -2405,6 +2439,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	install-dist_applets_httpauthDATA \
 	install-dist_applets_infobrowserDATA \
 	install-dist_applets_logDATA \
+	install-dist_applets_macroplayDATA \
 	install-dist_applets_nowplayingDATA \
 	install-dist_applets_nowplaying_imagesDATA \
 	install-dist_applets_screensaversDATA \
@@ -2442,6 +2477,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	uninstall-dist_applets_httpauthDATA \
 	uninstall-dist_applets_infobrowserDATA \
 	uninstall-dist_applets_logDATA \
+	uninstall-dist_applets_macroplayDATA \
 	uninstall-dist_applets_nowplayingDATA \
 	uninstall-dist_applets_nowplaying_imagesDATA \
 	uninstall-dist_applets_screensaversDATA \

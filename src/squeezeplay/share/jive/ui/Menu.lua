@@ -52,7 +52,8 @@ local Timer                = require("jive.ui.Timer")
 local log                  = require("jive.utils.log").logger("ui")
 
 local math                 = require("math")
-                           
+
+
 local EVENT_ALL            = jive.ui.EVENT_ALL
 local EVENT_ACTION         = jive.ui.EVENT_ACTION
 local EVENT_SCROLL         = jive.ui.EVENT_SCROLL

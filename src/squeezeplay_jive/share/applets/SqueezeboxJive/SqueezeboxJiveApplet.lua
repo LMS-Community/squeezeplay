@@ -41,9 +41,6 @@ local jnt                    = jnt
 local iconbar                = iconbar
 local appletManager          = appletManager
 
-local EVENT_ACTION           = jive.ui.EVENT_ACTION
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
-local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
 
@@ -54,27 +51,11 @@ local LAYOUT_WEST            = jive.ui.LAYOUT_WEST
 local LAYOUT_CENTER          = jive.ui.LAYOUT_CENTER
 local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
-local EVENT_KEY_DOWN         = jive.ui.EVENT_KEY_DOWN
-local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
-local EVENT_KEY_HOLD         = jive.ui.EVENT_KEY_HOLD
-local EVENT_ALL_INPUT        = jive.ui.EVENT_ALL_INPUT
-local EVENT_SCROLL           = jive.ui.EVENT_SCROLL
-local EVENT_SWITCH           = 0x400000 -- XXXX fixme when public
-local EVENT_MOTION           = 0x800000 -- XXXX fixme when public
-local EVENT_WINDOW_PUSH      = jive.ui.EVENT_WINDOW_PUSH
-local EVENT_VISIBLE_ALL      = jive.ui.EVENT_VISIBLE_ALL
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
-
-local KEY_ADD                = jive.ui.KEY_ADD
-local KEY_PLAY               = jive.ui.KEY_PLAY
-local KEY_HOME               = jive.ui.KEY_HOME
-
 local SW_AC_POWER            = 0
 local SW_PHONE_DETECT        = 1
 
 local squeezeboxjiveTitleStyle = 'settingstitle'
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

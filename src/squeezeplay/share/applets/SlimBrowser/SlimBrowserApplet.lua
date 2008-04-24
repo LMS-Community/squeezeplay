@@ -57,41 +57,13 @@ local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("player.browse")
 local logd                   = require("jive.utils.log").logger("player.browse.data")
 
-                             
-local EVENT_KEY_ALL          = jive.ui.EVENT_KEY_ALL
-local EVENT_KEY_DOWN         = jive.ui.EVENT_KEY_DOWN
-local EVENT_KEY_UP           = jive.ui.EVENT_KEY_UP
-local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
-local EVENT_KEY_HOLD         = jive.ui.EVENT_KEY_HOLD
-local EVENT_SCROLL           = jive.ui.EVENT_SCROLL
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
-local EVENT_ACTION           = jive.ui.EVENT_ACTION
-local EVENT_FOCUS_GAINED     = jive.ui.EVENT_FOCUS_GAINED
-local EVENT_FOCUS_LOST       = jive.ui.EVENT_FOCUS_LOST
-local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
-local EVENT_WINDOW_INACTIVE  = jive.ui.EVENT_WINDOW_INACTIVE
-local EVENT_WINDOW_ACTIVE    = jive.ui.EVENT_WINDOW_ACTIVE
-local EVENT_HIDE             = jive.ui.EVENT_HIDE
-local EVENT_SHOW             = jive.ui.EVENT_SHOW
-local KEY_FWD                = jive.ui.KEY_FWD
-local KEY_REW                = jive.ui.KEY_REW
-local KEY_HOME               = jive.ui.KEY_HOME
-local KEY_PLAY               = jive.ui.KEY_PLAY
-local KEY_ADD                = jive.ui.KEY_ADD
-local KEY_BACK               = jive.ui.KEY_BACK
-local KEY_PAUSE              = jive.ui.KEY_PAUSE
-local KEY_VOLUME_DOWN        = jive.ui.KEY_VOLUME_DOWN
-local KEY_VOLUME_UP          = jive.ui.KEY_VOLUME_UP
-local KEY_GO                 = jive.ui.KEY_GO
-
 local jiveMain               = jiveMain
 local appletManager          = appletManager
 local iconbar                = iconbar
 local jnt                    = jnt
 
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

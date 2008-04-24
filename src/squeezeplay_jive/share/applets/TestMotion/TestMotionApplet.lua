@@ -20,13 +20,7 @@ local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
 
 
-local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
-local EVENT_MOTION           = 0x800000 -- XXXX fixme when public
-local KEY_GO                 = jive.ui.KEY_GO
-local KEY_BACK               = jive.ui.KEY_BACK
-
-
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

@@ -751,6 +751,12 @@ function _process_status(self, event)
 	-- update our cache in one go
 	self.state = event.data
 
+	-- Update player state
+	local lastNeedsUpgrade = (self.needsUpgrade == 1)
+	local lastIsUpgrading = (self.playerIsUpgrading == 1)
+	self.needsUpgrade = (tonumber(event.data.player_needs_upgrade) == 1)
+	self.playerIsUpgrading = (tonumber(event.data.player_is_upgrading) == 1)
+
 	-- used for calculating getTrackElapsed(), getTrackRemaining()
 	self.trackSeen = Framework:getTicks() / 1000
 	self.trackCorrection = 0
@@ -762,6 +768,10 @@ function _process_status(self, event)
 	_setPlayerPower(self, tonumber(event.data.power))
 
 	_setPlayerModeChange(self, event.data.mode)
+
+	if self.needsUpgrade ~= lastNeedsUpgrading or self.playerIsUpgrading ~= lastIsUpgrading then
+		self.jnt:notify('playerNeedsUpgrade', self, self:isNeedsUpgrade(), self:isUpgrading())
+	end
 
 	local nowPlaying = _whatsPlaying(event.data)
 
@@ -997,7 +1007,7 @@ end
 -- isTrackSeekable
 -- Try to work out if SC can seek in this track - only really a guess
 function isTrackSeekable(self)
-	return self.trackDuration and not self.state.remote
+	return self.trackDuration and self.state["can_seek"]
 end
 
 -- mute

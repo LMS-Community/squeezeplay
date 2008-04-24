@@ -23,20 +23,9 @@ local Window           = require("jive.ui.Window")
 local log              = require("jive.utils.log").logger("applets.screensavers")
 local datetime         = require("jive.utils.datetime")
 
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local EVENT_WINDOW_RESIZE = jive.ui.EVENT_WINDOW_RESIZE
-local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
-local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
-local FRAME_RATE       = jive.ui.FRAME_RATE
-local LAYER_FRAME      = jive.ui.LAYER_FRAME
-local LAYER_CONTENT    = jive.ui.LAYER_CONTENT
-local LAYER_ALL	       = jive.ui.JIVE_LAYER_ALL
-local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
-local KEY_BACK         = jive.ui.KEY_BACK
-
 local appletManager	= appletManager
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

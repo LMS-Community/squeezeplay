@@ -1,4 +1,24 @@
 
 MACRO_PLAY
-	DA	Makro for afspil
-	EN	Play Macro
+	EN	Test macros
+
+MACRO_AUTOPLAY
+	EN	Automatic tests
+
+MACRO_AUTOPLAY_HELP
+	EN	Start automatic tests.
+
+MACRO_AUTOSTART
+	EN	Automatic tests
+
+MACRO_AUTOSTART_HELP
+	EN	Starting in %s seconds.
+
+MACRO_AUTOSTART_COMPLETE
+	EN	Tests complete.
+
+MACRO_START
+	EN	Start
+
+MACRO_CANCEL
+	EN	Cancel

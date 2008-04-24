@@ -75,7 +75,7 @@ local Window        = require("jive.ui.Window")
 local log           = require("jive.utils.log").logger("ui")
 local logTask       = require("jive.utils.log").logger("ui.task")
 
-local serialize     = require("jive.utils.serialize")
+local dumper        = require("jive.utils.dumper")
 local io            = require("io")
 
 -- import C functions
@@ -155,6 +155,64 @@ Indicates the style parameters have changed, this clears any caching of the styl
 
 =cut
 --]]
+
+
+--[[
+
+=head2 jive.ui.Framework:constants()
+
+Import constants into a module.
+
+=cut
+--]]
+function constants(module)
+	module.EVENT_UNUSED = jive.ui.EVENT_UNUSED
+	module.EVENT_CONSUME = jive.ui.EVENT_CONSUME
+	module.EVENT_QUIT = jive.ui.EVENT_QUIT
+
+	module.EVENT_SCROLL = jive.ui.EVENT_SCROLL
+	module.EVENT_ACTION = jive.ui.EVENT_ACTION
+	module.EVENT_KEY_DOWN = jive.ui.EVENT_KEY_DOWN
+	module.EVENT_KEY_UP = jive.ui.EVENT_KEY_UP
+	module.EVENT_KEY_PRESS = jive.ui.EVENT_KEY_PRESS
+	module.EVENT_KEY_HOLD = jive.ui.EVENT_KEY_HOLD
+	module.EVENT_MOUSE_DOWN = jive.ui.EVENT_MOUSE_DOWN
+	module.EVENT_MOUSE_UP = jive.ui.EVENT_MOUSE_UP
+	module.EVENT_MOUSE_PRESS = jive.ui.EVENT_MOUSE_PRESS
+	module.EVENT_MOUSE_HOLD = jive.ui.EVENT_MOUSE_HOLD
+	module.EVENT_WINDOW_PUSH = jive.ui.EVENT_WINDOW_PUSH
+	module.EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
+	module.EVENT_WINDOW_ACTIVE = jive.ui.EVENT_WINDOW_ACTIVE
+	module.EVENT_WINDOW_INACTIVE = jive.ui.EVENT_WINDOW_INACTIVE
+	module.EVENT_SHOW = jive.ui.EVENT_SHOW 
+	module.EVENT_HIDE = jive.ui.EVENT_HIDE
+	module.EVENT_FOCUS_GAINED = jive.ui.EVENT_FOCUS_GAINED
+	module.EVENT_FOCUS_LOST = jive.ui.EVENT_FOCUS_LOST
+	module.EVENT_WINDOW_RESIZE = jive.ui.EVENT_WINDOW_RESIZE
+	module.EVENT_SWITCH = jive.ui.EVENT_SWITCH
+	module.EVENT_MOTION = jive.ui.EVENT_MOTION
+	module.EVENT_KEY_ALL = jive.ui.EVENT_KEY_ALL
+	module.EVENT_MOUSE_ALL = jive.ui.EVENT_MOUSE_ALL
+	module.EVENT_ALL_INPUT = jive.ui.EVENT_ALL_INPUT
+	module.EVENT_VISIBLE_ALL = jive.ui.EVENT_VISIBLE_ALL
+	module.EVENT_ALL = jive.ui.EVENT_ALL
+
+	module.KEY_NONE = jive.ui.KEY_NONE
+	module.KEY_GO = jive.ui.KEY_GO
+	module.KEY_BACK = jive.ui.KEY_BACK
+	module.KEY_UP = jive.ui.KEY_UP
+	module.KEY_DOWN = jive.ui.KEY_DOWN
+	module.KEY_LEFT = jive.ui.KEY_LEFT
+	module.KEY_RIGHT = jive.ui.KEY_RIGHT
+	module.KEY_HOME = jive.ui.KEY_HOME
+	module.KEY_PLAY = jive.ui.KEY_PLAY
+	module.KEY_ADD = jive.ui.KEY_ADD
+	module.KEY_PAUSE = jive.ui.KEY_PAUSE
+	module.KEY_REW = jive.ui.KEY_REW
+	module.KEY_FWD = jive.ui.KEY_FWD 
+	module.KEY_VOLUME_UP = jive.ui.KEY_VOLUME_UP
+	module.KEY_VOLUME_DOWN = jive.ui.KEY_VOLUME_DOWN
+end
 
 
 
@@ -516,7 +574,7 @@ function setGlobalSetting(self, key, value)
 
 	self._global_settings[key] = value
 	local file = _assert(io.open(global_settings_file, "w"))
-	serialize.save(file, "global_settings", self._global_settings)
+	file:write(dumper.dump(self._global_settings, "global_settings", true))
 	file:close()
 end
 

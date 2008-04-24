@@ -18,21 +18,6 @@ local Framework              = require("jive.ui.Framework")
 
 local log                    = require("jive.utils.log").logger("applets.misc")
 
-local EVENT_SCROLL           = jive.ui.EVENT_SCROLL
-local EVENT_KEY_DOWN         = jive.ui.EVENT_KEY_DOWN
-local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
-local KEY_ADD                = jive.ui.KEY_ADD
-local KEY_PLAY               = jive.ui.KEY_PLAY
-local KEY_REW                = jive.ui.KEY_REW
-local KEY_PAUSE              = jive.ui.KEY_PAUSE
-local KEY_FWD                = jive.ui.KEY_FWD
-local KEY_VOLUME_UP          = jive.ui.KEY_VOLUME_UP
-local KEY_VOLUME_DOWN        = jive.ui.KEY_VOLUME_DOWN
-local KEY_GO                 = jive.ui.KEY_GO
-local KEY_BACK               = jive.ui.KEY_BACK
-
 local bin_path	= "/usr/bin/testir"
 
 local wheel_index_last = 1
@@ -65,7 +50,7 @@ local keymap = {
 	{ key=KEY_BRIGHTNESS, x=185, y=289, dx=222, dy=314, ir="0x768904fb" },
 }
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

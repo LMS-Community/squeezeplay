@@ -185,7 +185,7 @@ dist_luautil_DATA = \
 	share/jive/utils/strings.lua \
 	share/jive/utils/autotable.lua \
 	share/jive/utils/jsonfilters.lua \
-	share/jive/utils/serialize.lua \
+	share/jive/utils/dumper.lua \
 	share/jive/utils/table.lua
 
 
@@ -314,6 +314,14 @@ dist_applets_nowplaying_DATA = \
         share/applets/NowPlaying/progressbar_fill_l.png \
         share/applets/NowPlaying/progressbar_fill_r.png
 
+applets_macroplaydir = $(pkgdatadir)/applets/MacroPlay
+dist_applets_macroplay_DATA = \
+	share/applets/MacroPlay/MacroPlayApplet.lua \
+	share/applets/MacroPlay/MacroPlayMeta.lua \
+	share/applets/MacroPlay/pass.png \
+	share/applets/MacroPlay/fail.png \
+	share/applets/MacroPlay/strings.txt
+
 # Data: now playing
 applets_nowplaying_imagesdir = $(pkgdatadir)/applets/NowPlaying/images
 dist_applets_nowplaying_images_DATA = \
@@ -354,7 +362,12 @@ dist_applets_setupwallpaper_wallpaper_DATA = \
 	share/applets/SetupWallpaper/wallpaper/stone.png \
 	share/applets/SetupWallpaper/wallpaper/fade_to_black.png \
 	share/applets/SetupWallpaper/wallpaper/sunlight.png \
-	share/applets/SetupWallpaper/wallpaper/sunrise.png
+	share/applets/SetupWallpaper/wallpaper/sunrise.png \
+	share/applets/SetupWallpaper/wallpaper/flowersgreen.jpg \
+	share/applets/SetupWallpaper/wallpaper/note.jpg \
+	share/applets/SetupWallpaper/wallpaper/orangemarble.jpg \
+	share/applets/SetupWallpaper/wallpaper/purplenote.jpg \
+	share/applets/SetupWallpaper/wallpaper/redgrunge.jpg 
 
 applets_setupSqueezeboxdir = $(datadir)/jive/applets/SetupSqueezebox
 dist_applets_setupSqueezebox_DATA = \

@@ -21,10 +21,7 @@ local Window                 = require("jive.ui.Window")
 
 local log                    = require("jive.utils.log").logger("applets.setup")
 
-local EVENT_ALL              = jive.ui.EVENT_ALL
-
-
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

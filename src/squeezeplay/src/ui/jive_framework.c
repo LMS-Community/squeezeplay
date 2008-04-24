@@ -31,8 +31,8 @@ struct jive_perfwarn perfwarn = { 0, 0, 0, 0, 0, 0 };
 //static Uint32 framerate = 1000 / JIVE_FRAME_RATE;
 
 
-/* button hold threshold 2 seconds */
-#define HOLD_TIMEOUT 2000
+/* button hold threshold 1 seconds */
+#define HOLD_TIMEOUT 1000
 
 static bool update_screen = true;
 
@@ -851,11 +851,21 @@ int jiveL_find_file(lua_State *L) {
 
 
 int jive_find_file(const char *path, char *fullpath) {
-	char *resource_path = strdup(jive_resource_path);
+	char *resource_path, *ptr;
+	FILE *fp;
 
-	char *ptr = strtok(resource_path, ";");
+	/* absolute/relative path */
+	fp = fopen(path, "r");
+	if (fp) {
+		fclose(fp);
+		strcpy(fullpath, path);
+		return 1;
+	}
+
+	/* search lua path */
+	resource_path = strdup(jive_resource_path);
+	ptr = strtok(resource_path, ";");
 	while (ptr) {
-		FILE *fp;
 #if defined(WIN32)
 		char *tmp;
 #endif

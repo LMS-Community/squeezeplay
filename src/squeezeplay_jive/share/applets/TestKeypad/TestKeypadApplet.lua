@@ -17,27 +17,9 @@ local Framework           = require("jive.ui.Framework")
 local Popup               = require("jive.ui.Popup")
 local Textarea            = require("jive.ui.Textarea")
 
-local EVENT_KEY_ALL    = jive.ui.EVENT_KEY_ALL
-local EVENT_KEY_DOWN   = jive.ui.EVENT_KEY_DOWN
-local EVENT_KEY_UP     = jive.ui.EVENT_KEY_UP
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local EVENT_KEY_HOLD   = jive.ui.EVENT_KEY_HOLD
-local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
-local EVENT_ACTION     = jive.ui.EVENT_ACTION
-local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
-local KEY_FWD          = jive.ui.KEY_FWD
-local KEY_REW          = jive.ui.KEY_REW
-local KEY_HOME         = jive.ui.KEY_HOME
-local KEY_PLAY         = jive.ui.KEY_PLAY
-local KEY_ADD          = jive.ui.KEY_ADD
-local KEY_BACK         = jive.ui.KEY_BACK
-local KEY_PAUSE        = jive.ui.KEY_PAUSE
-local KEY_VOLUME_DOWN  = jive.ui.KEY_VOLUME_DOWN
-local KEY_VOLUME_UP    = jive.ui.KEY_VOLUME_UP
-local KEY_GO           = jive.ui.KEY_GO
-local WHEEL_CW         = jive.ui.KEY_DOWN
-local WHEEL_CCW        = jive.ui.KEY_UP
+
+module(..., Framework.constants)
+oo.class(_M, Applet)
 
 
 local keyState = {}
@@ -55,21 +37,15 @@ local keymap = {
 	{ key = KEY_VOLUME_DOWN, name = "KEY_VOLUME_DOWN", x =  92, y = 215 },
 	{ key = KEY_VOLUME_UP,   name = "KEY_VOLUME_UP",   x = 140, y = 215 },
 	{ key = KEY_GO,    name = "KEY_GO",    x = 115, y = 110 },
-	{ key = WHEEL_CW,  name = "WHEEL_CW",  x = 160, y = 110 },
-	{ key = WHEEL_CCW, name = "WHEEL_CCW", x =  75, y = 110 },
+	{ key = KEY_UP,  name = "KEY_UP",  x = 160, y = 110 },
+	{ key = KEY_DOWN, name = "KEY_DOWN", x =  75, y = 110 },
 }
-
 
 local stateToColor = {}
 stateToColor[EVENT_KEY_UP]      = 0x00FF00FF
 stateToColor[EVENT_KEY_DOWN]    = 0xFF0000FF
 stateToColor[EVENT_KEY_PRESS]   = 0x0000FFFF
 stateToColor[EVENT_KEY_HOLD]    = 0xFFFFFFFF
-
-
-
-module(...)
-oo.class(_M, Applet)
 
 
 -- test if all buttons have been pressed and released
@@ -122,26 +98,26 @@ function _scroll(self, dir)
 	wheelState = wheelState + dir
 
 	if wheelState > 0 then
-		if keyState[WHEEL_CW] == EVENT_KEY_UP then
+		if keyState[KEY_UP] == EVENT_KEY_UP then
 			wheelState = 0
 
 		elseif wheelState >= 12 then
-			keyState[WHEEL_CW] = EVENT_KEY_UP
+			keyState[KEY_UP] = EVENT_KEY_UP
 
 		else
-			keyState[WHEEL_CW] = EVENT_KEY_DOWN
+			keyState[KEY_UP] = EVENT_KEY_DOWN
 		end
 	end
 
 	if wheelState < 0 then
-		if keyState[WHEEL_CCW] == EVENT_KEY_UP then
+		if keyState[KEY_DOWN] == EVENT_KEY_UP then
 			wheelState = 0
 
 		elseif wheelState <= -12 then
-			keyState[WHEEL_CCW] = EVENT_KEY_UP
+			keyState[KEY_DOWN] = EVENT_KEY_UP
 
 		else
-			keyState[WHEEL_CCW] = EVENT_KEY_DOWN
+			keyState[KEY_DOWN] = EVENT_KEY_DOWN
 		end
 	end
 end
