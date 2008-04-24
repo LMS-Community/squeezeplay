@@ -10,7 +10,7 @@
 
 typedef struct {
 	SDL_TimerID timerId;
-	int ref;
+	long ref;
 	bool once;
 	bool busy;
 } TimerData;

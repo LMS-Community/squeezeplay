@@ -6,5 +6,5 @@ LUA_50_OUTPUT= profiler.so
 INCS= -I$(LUA_50_INCLUDE)
 #WARN= -ansi -pedantic -W -Wall
 EXTRA_LIBS=
-CFLAGS= -g3 -DTESTS $(WARN) $(INCS) -I./src
+CFLAGS= -fPIC -g3 -DTESTS $(WARN) $(INCS) -I./src
 
