@@ -1,6 +1,6 @@
 return {
   auto=1,
-  autostart={ "forcedUpgrade", "softwareUpgrade", "playmode" },
+  autostart={ "homeMenu", "playmode" },
   macros={
     forcedUpgrade={
       desc="Forced software upgrade.",
@@ -16,6 +16,11 @@ return {
       desc="User requested software upgrade.",
       file="SoftwareUpgradeMacro.lua",
       name="Software Upgrade" 
+    },
+    homeMenu={
+      desc="Verify the home menu.",
+      file="HomeMenuMacro.lua",
+      name="Home Menu" 
     } 
   } 
 }

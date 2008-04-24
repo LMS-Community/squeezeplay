@@ -297,8 +297,10 @@ end
 function macroDelay(interval)
 	local self = instance
 
-	self.timer:restart(interval)
-	Task:yield(false)	
+	if interval then
+		self.timer:restart(interval)
+		Task:yield(false)
+	end
 end
 
 
@@ -345,11 +347,13 @@ end
 
 
 -- force return to the home menu
-function macroHome()
+function macroHome(interval)
 	log:info("macroHome")
 	if #Framework.windowStack > 1 then
 		Framework.windowStack[#Framework.windowStack - 1]:hideToTop()
 	end
+
+	macroDelay(interval)
 end
 
 
