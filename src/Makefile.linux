@@ -142,8 +142,8 @@ tolua++: lua
 # squeezeplay
 #
 
-.PHONY: app squeezeplay squeezeplay_desktop freefont freefont-debian
-app: squeezeplay squeezeplay_desktop freefont
+.PHONY: app squeezeplay squeezeplay_desktop squeezeplay_test freefont freefont-debian
+app: squeezeplay squeezeplay_desktop squeezeplay_test freefont
 
 # squeezeplay
 squeezeplay/Makefile:
@@ -154,6 +154,9 @@ squeezeplay: squeezeplay/Makefile
 
 squeezeplay_desktop: squeezeplay/Makefile
 	cd squeezeplay_desktop; make PREFIX=${PREFIX}
+
+squeezeplay_test: squeezeplay/Makefile
+	cd squeezeplay_test; make PREFIX=${PREFIX}
 
 # freefont
 freefont:

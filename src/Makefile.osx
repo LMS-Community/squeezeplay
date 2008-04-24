@@ -160,8 +160,8 @@ tolua++:
 # squeezeplay
 #
 
-.PHONY: app squeezeplay squeezeplay_desktop freefont
-app: squeezeplay squeezeplay_desktop freefont
+.PHONY: app squeezeplay squeezeplay_desktop squeezeplay_test freefont
+app: squeezeplay squeezeplay_desktop squeezeplay_test freefont
 
 # squeezeplay
 squeezeplay/Makefile:
@@ -173,6 +173,9 @@ squeezeplay: squeezeplay/Makefile
 
 squeezeplay_desktop:
 	cd squeezeplay_desktop; make PREFIX=${PREFIX}
+
+squeezeplay_test:
+	cd squeezeplay_test; make PREFIX=${PREFIX}
 
 # freefont
 freefont:
