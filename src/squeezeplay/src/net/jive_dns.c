@@ -95,7 +95,7 @@ static int stat_resolv_conf(void) {
 
 /* dns resolver thread */
 static int dns_resolver_thread(void *p) {
-	int fd = (int) p;
+	int fd = (long) p;
 	struct hostent *hostent;
 	struct in_addr **addr, byaddr;
 	char **alias;
@@ -198,7 +198,7 @@ static int jiveL_dns_open(lua_State *L) {
 		return luaL_error(L, "socketpair failed: %s", strerror(r));
 	}
 
-	u->t = SDL_CreateThread(dns_resolver_thread, (void *)(u->fd[1]));
+	u->t = SDL_CreateThread(dns_resolver_thread, (void *)(long)(u->fd[1]));
 
 	luaL_getmetatable(L, "jive.dns");
 	lua_setmetatable(L, -2);

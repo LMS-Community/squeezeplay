@@ -132,7 +132,7 @@ luaprofiler:
 # just compile the library for to tolua++
 .PHONY: tolua++
 tolua++: lua
-	cd tolua++-1.0.92/src/lib; ${CC} -shared -o libtolua++.so -I../../include -I${PREFIX}/include *.c
+	cd tolua++-1.0.92/src/lib; ${CC} -shared -fPIC -o libtolua++.so -I../../include -I${PREFIX}/include *.c
 	mkdir -p ${PREFIX}/lib
 	install tolua++-1.0.92/include/tolua++.h ${PREFIX}/include
 	install tolua++-1.0.92/src/lib/libtolua++.so ${PREFIX}/lib
@@ -142,8 +142,8 @@ tolua++: lua
 # squeezeplay
 #
 
-.PHONY: app portaudio flac squeezeplay squeezeplay_desktop freefont freefont-debian
-app: portaudio flac squeezeplay squeezeplay_desktop freefont
+.PHONY: app squeezeplay squeezeplay_desktop squeezeplay_test freefont freefont-debian
+app: squeezeplay squeezeplay_desktop squeezeplay_test freefont
 
 # portaudio
 portaudio_v19_1360/Makefile:
@@ -168,6 +168,9 @@ squeezeplay: squeezeplay/Makefile
 
 squeezeplay_desktop: squeezeplay/Makefile
 	cd squeezeplay_desktop; make PREFIX=${PREFIX}
+
+squeezeplay_test: squeezeplay/Makefile
+	cd squeezeplay_test; make PREFIX=${PREFIX}
 
 # freefont
 freefont:
