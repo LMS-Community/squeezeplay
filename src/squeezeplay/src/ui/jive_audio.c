@@ -109,9 +109,9 @@ static void close_audio(void) {
 }
 
 
-#if 0
 static struct jive_sample *load_sound(char *filename, Uint32 mixer) {
 	struct jive_sample *snd;
+#if 0
 	SDL_AudioSpec wave;
 	SDL_AudioCVT cvt;
 	Uint8 *data;
@@ -138,21 +138,22 @@ static struct jive_sample *load_sound(char *filename, Uint32 mixer) {
 		return NULL;
 	}
 	SDL_FreeWAV(data);
+#endif
 
 	snd = malloc(sizeof(struct jive_sample));
 	snd->refcount = 1;
+#if 0
 	snd->data = cvt.buf;
 	snd->len = cvt.len_cvt;
+#endif
 	snd->mixer = mixer;
 	snd->enabled = true;
 
 	return snd;
 }
-#endif
 
 
 static int jiveL_audio_load(lua_State *L) {
-#if 0
 	struct jive_sample **snd;
 	char fullpath[PATH_MAX];
 	
@@ -191,9 +192,6 @@ static int jiveL_audio_load(lua_State *L) {
 	}
 
 	return 1;
-#else
-	return 0;
-#endif
 }
 
 

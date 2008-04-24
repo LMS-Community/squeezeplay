@@ -180,6 +180,7 @@ function constants(module)
 	module.EVENT_MOUSE_UP = jive.ui.EVENT_MOUSE_UP
 	module.EVENT_MOUSE_PRESS = jive.ui.EVENT_MOUSE_PRESS
 	module.EVENT_MOUSE_HOLD = jive.ui.EVENT_MOUSE_HOLD
+	module.EVENT_MOUSE_DRAG = jive.ui.EVENT_MOUSE_DRAG
 	module.EVENT_WINDOW_PUSH = jive.ui.EVENT_WINDOW_PUSH
 	module.EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
 	module.EVENT_WINDOW_ACTIVE = jive.ui.EVENT_WINDOW_ACTIVE
