@@ -47,3 +47,8 @@ if not macroScreenshot(1000, "CopyingUpdate") then
 end
 
 macroPass("SoftwareUpgrade")
+
+-- 5 minute delay to allow upgrade to complete, this is never expected
+-- to return
+macroDelay(300000)
+macroFail("Timeout")
