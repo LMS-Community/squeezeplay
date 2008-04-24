@@ -1,6 +1,6 @@
 return {
   auto=1,
-  autostart={ "softwareUpgrade, playmode" },
+  autostart={ "forcedUpgrade", "softwareUpgrade", "playmode" },
   macros={
     forcedUpgrade={
       desc="Forced software upgrade.",
