@@ -1,7 +1,12 @@
 return {
   auto=1,
-  autostart={ "softwareUpgrade", "playmode" },
+  autostart={ "softwareUpgrade, playmode" },
   macros={
+    forcedUpgrade={
+      desc="Forced software upgrade.",
+      file="ForcedUpgradeMacro.lua",
+      name="Forced Upgrade",
+    },
     playmode={
       desc="Playmode tests (stop/pause/play).",
       file="PlaymodeMacro.lua",
