@@ -114,6 +114,8 @@ function autoplayShow(self, countdown)
 			if self.config.auto == false then
 				self:autoplayReset()
 			end
+
+			window:hide()
 			self:autoplay()
 		end,
 	})
@@ -155,14 +157,13 @@ function autoplayShow(self, countdown)
 		help:setValue(self:string("MACRO_AUTOSTART_COMPLETE"))
 	else
 		-- countdown to tests
-		local timer = countdown or 30
+		local timer = countdown or 20
 		help:setValue(self:string("MACRO_AUTOSTART_HELP", timer))
 
 		window:addTimer(1000,
 				function()
 					if timer == 1 then
 						window:hide()
-
 						self:autoplay()
 					end
 
