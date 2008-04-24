@@ -21,6 +21,11 @@ return {
       desc="Verify the home menu.",
       file="HomeMenuMacro.lua",
       name="Home Menu" 
+    },
+    factoryReset={
+      desc="Verify a factory reset.",
+      file="FactoryResetMacro.lua",
+      name="Factory Reset" 
     } 
   } 
 }
