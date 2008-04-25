@@ -161,7 +161,7 @@ tolua++:
 #
 
 .PHONY: app squeezeplay squeezeplay_desktop squeezeplay_test freefont
-app: squeezeplay squeezeplay_desktop squeezeplay_test freefont
+app: portaudio flac squeezeplay squeezeplay_desktop squeezeplay_test freefont
 
 # portaudio
 portaudio_v19_1360/Makefile:
