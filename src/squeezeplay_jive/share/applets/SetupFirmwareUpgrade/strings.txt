@@ -128,3 +128,12 @@ UPDATE_BATTERY_HELP
 	IT	Collocare il telecomando nella base di ricarica per continuare l'aggiornamento del software.
 	NL	Zet deze afstandsbediening in de oplader om de software-upgrade voort te zetten.
 
+UPDATE_CANCEL
+	DA	Afbryd
+	DE	Abbrechen
+	EN	Cancel
+	ES	Cancelar
+	FR	Annuler
+	IT	Annulla
+	NL	Annuleren
+

@@ -56,11 +56,11 @@ function registerApplet(meta)
 				log:info("Firmware URL=", upgradeUrl[1])
 			end
 
-			-- are we forcing an upgrade
+			-- are we offering or forcing an upgrade
 			if tonumber(chunk.data.firmwareUpgrade) == 1 then
-				log:info("Force firmware upgrade")
+				log:info("Firmware upgrade")
 				local applet = appletManager:loadApplet("SetupFirmwareUpgrade")
-				applet:forceUpgrade(upgradeUrl[1])
+				applet:forceUpgrade(tonumber(chunk.data.firmwareOptional) == 1, upgradeUrl[1], chunk.data.firmwareHelp)
 
 				meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
 			end
