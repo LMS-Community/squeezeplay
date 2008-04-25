@@ -171,8 +171,11 @@ squeezeplay: squeezeplay/Makefile
 	export PATH=$(BUILD_TOP)/bin:$(PATH); \
 	cd squeezeplay; make && make install
 
-squeezeplay_desktop:
-	cd squeezeplay_desktop; make PREFIX=${PREFIX}
+squeezeplay_desktop/Makefile:
+	cd squeezeplay_desktop; SDL_CONFIG=${SDL_CONFIG} ./configure --prefix=${PREFIX}
+
+squeezeplay_desktop: squeezeplay_desktop/Makefile
+	cd squeezeplay_desktop; make install
 
 squeezeplay_test:
 	cd squeezeplay_test; make PREFIX=${PREFIX}
