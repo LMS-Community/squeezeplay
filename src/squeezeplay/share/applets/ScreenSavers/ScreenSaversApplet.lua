@@ -64,7 +64,7 @@ function init(self, ...)
 
 	-- listener to restart screensaver timer
 	Framework:addListener(
-		EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOTION,
+		EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION,
 		function(event)
 			-- restart timer if it is running
 			self.timer:setInterval(self.timeout)
@@ -192,7 +192,7 @@ function screensaverWindow(self, window, hideOnMotion)
 			   end)
 
 	-- key or scroll events quit the screensaver
-	window:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL,
+	window:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_ALL,
 			   function(event)
 
 				   -- close all screensaver windows

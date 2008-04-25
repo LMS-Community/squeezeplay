@@ -2187,6 +2187,8 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"EVENT_MOUSE_UP",JIVE_EVENT_MOUSE_UP);
    tolua_constant(tolua_S,"EVENT_MOUSE_PRESS",JIVE_EVENT_MOUSE_PRESS);
    tolua_constant(tolua_S,"EVENT_MOUSE_HOLD",JIVE_EVENT_MOUSE_HOLD);
+   tolua_constant(tolua_S,"EVENT_MOUSE_MOVE",JIVE_EVENT_MOUSE_MOVE);
+   tolua_constant(tolua_S,"EVENT_MOUSE_DRAG",JIVE_EVENT_MOUSE_DRAG);
    tolua_constant(tolua_S,"EVENT_WINDOW_PUSH",JIVE_EVENT_WINDOW_PUSH);
    tolua_constant(tolua_S,"EVENT_WINDOW_POP",JIVE_EVENT_WINDOW_POP);
    tolua_constant(tolua_S,"EVENT_WINDOW_ACTIVE",JIVE_EVENT_WINDOW_ACTIVE);
@@ -2195,7 +2197,6 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"EVENT_HIDE",JIVE_EVENT_HIDE);
    tolua_constant(tolua_S,"EVENT_FOCUS_GAINED",JIVE_EVENT_FOCUS_GAINED);
    tolua_constant(tolua_S,"EVENT_FOCUS_LOST",JIVE_EVENT_FOCUS_LOST);
-   tolua_constant(tolua_S,"EVENT_MOUSE_DRAG",JIVE_EVENT_MOUSE_DRAG);
    tolua_constant(tolua_S,"EVENT_WINDOW_RESIZE",JIVE_EVENT_WINDOW_RESIZE);
    tolua_constant(tolua_S,"EVENT_SWITCH",JIVE_EVENT_SWITCH);
    tolua_constant(tolua_S,"EVENT_MOTION",JIVE_EVENT_MOTION);

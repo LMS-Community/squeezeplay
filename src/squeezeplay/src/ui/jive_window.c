@@ -352,8 +352,8 @@ int jiveL_window_event_handler(lua_State *L) {
 	case JIVE_EVENT_MOUSE_UP:
 	case JIVE_EVENT_MOUSE_PRESS:
 	case JIVE_EVENT_MOUSE_HOLD:
+	case JIVE_EVENT_MOUSE_MOVE:
 	case JIVE_EVENT_MOUSE_DRAG:
-
 		/* Forward mouse events to the enclosed widgets */
 		if (jive_getmethod(L, 1, "iterate")) {
 			lua_pushvalue(L, 1); // widget

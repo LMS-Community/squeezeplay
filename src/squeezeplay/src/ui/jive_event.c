@@ -60,6 +60,8 @@ int jiveL_event_new(lua_State *L) {
 		case JIVE_EVENT_MOUSE_UP:
 		case JIVE_EVENT_MOUSE_PRESS:
 		case JIVE_EVENT_MOUSE_HOLD:
+		case JIVE_EVENT_MOUSE_MOVE:
+		case JIVE_EVENT_MOUSE_DRAG:
 			event->u.mouse.x = lua_tointeger(L, 3);
 			event->u.mouse.y = lua_tointeger(L, 4);
 			break;
@@ -146,6 +148,7 @@ int jiveL_event_get_mouse(lua_State *L) {
 	case JIVE_EVENT_MOUSE_UP:
 	case JIVE_EVENT_MOUSE_PRESS:
 	case JIVE_EVENT_MOUSE_HOLD:
+	case JIVE_EVENT_MOUSE_MOVE:
 	case JIVE_EVENT_MOUSE_DRAG:
 		lua_pushinteger(L, event->u.mouse.x);
 		lua_pushinteger(L, event->u.mouse.y);
@@ -246,6 +249,9 @@ int jiveL_event_tostring(lua_State* L) {
 		break;
 	case JIVE_EVENT_MOUSE_HOLD:
 		lua_pushfstring(L, "MOUSE_HOLD x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		break;
+	case JIVE_EVENT_MOUSE_MOVE:
+		lua_pushfstring(L, "MOUSE_MOVE x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
 		break;
 	case JIVE_EVENT_MOUSE_DRAG:
 		lua_pushfstring(L, "MOUSE_DRAG x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);

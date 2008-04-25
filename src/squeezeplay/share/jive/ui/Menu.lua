@@ -65,6 +65,7 @@ local EVENT_FOCUS_GAINED   = jive.ui.EVENT_FOCUS_GAINED
 local EVENT_FOCUS_LOST     = jive.ui.EVENT_FOCUS_LOST
 local EVENT_MOUSE_PRESS    = jive.ui.EVENT_MOUSE_PRESS
 local EVENT_MOUSE_DOWN     = jive.ui.EVENT_MOUSE_DOWN
+local EVENT_MOUSE_MOVE     = jive.ui.EVENT_MOUSE_MOVE
 local EVENT_MOUSE_DRAG     = jive.ui.EVENT_MOUSE_DRAG
 
 local EVENT_CONSUME        = jive.ui.EVENT_CONSUME
@@ -208,6 +209,7 @@ local function _eventHandler(self, event)
 		end
 
 	elseif evtype == EVENT_MOUSE_DOWN or
+		evtype == EVENT_MOUSE_MOVE or
 		evtype == EVENT_MOUSE_DRAG then
 
 		if self.scrollbar:mouseInside(event) then

@@ -1026,12 +1026,19 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		break;
 
 	case SDL_MOUSEMOTION:
-		if (event->motion.state & SDL_BUTTON(1) && mouse_state != MOUSE_STATE_SENT) {
-			jevent.type = JIVE_EVENT_MOUSE_DRAG;
+		if (event->motion.state & SDL_BUTTON(1)) {
+			if (mouse_state != MOUSE_STATE_SENT) {
+				jevent.type = JIVE_EVENT_MOUSE_DRAG;
+				jevent.u.mouse.x = event->motion.x;
+				jevent.u.mouse.y = event->motion.y;
+
+				mouse_state = MOUSE_STATE_DRAG;
+			}
+		}
+		else {
+			jevent.type = JIVE_EVENT_MOUSE_MOVE;
 			jevent.u.mouse.x = event->motion.x;
 			jevent.u.mouse.y = event->motion.y;
-
-			mouse_state = MOUSE_STATE_DRAG;
 		}
 		break;
 
