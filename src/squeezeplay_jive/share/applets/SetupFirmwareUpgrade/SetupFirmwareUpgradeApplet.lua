@@ -63,9 +63,6 @@ oo.class(_M, Applet)
 
 
 function _firmwareVersion(self, url)
-
-	log:warn("url=", url)
-
 	local major, minor = string.match(url, "jive_([^_]+)_([^_]+)\.bin")
 
 	if not major then
@@ -76,7 +73,7 @@ function _firmwareVersion(self, url)
 end
 
 
-function _makeUpgradeItems(self, window, menu, url)
+function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
 	local help = Textarea("help", "")
 
 	local version = self:_firmwareVersion(url)
@@ -89,9 +86,9 @@ function _makeUpgradeItems(self, window, menu, url)
 		end,
 		focusGained = function()
 			if version == JIVE_VERSION then
-				help:setValue(self:string("UPDATE_BEGIN_REINSTALL", version or "?"))
+				help:setValue(self:string(urlHelp or "UPDATE_BEGIN_REINSTALL", version or "?"))
 			else
-				help:setValue(self:string("UPDATE_BEGIN_UPGRADE", version or "?"))
+				help:setValue(self:string(urlHelp or "UPDATE_BEGIN_UPGRADE", version or "?"))
 			end
 		end
 	})
@@ -115,17 +112,26 @@ function _makeUpgradeItems(self, window, menu, url)
 		end
 	end
 
+	if optional then
+		-- offered upgrade
+		menu:addItem({
+			text = self:string("UPDATE_CANCEL"),
+			sound = "WINDOWHIDE",
+			callback = function()
+				window:hide()
+			end,
+			focusGained = function()
+				help:setValue(nil)
+			end
+		})
+	end
+
 	window:addWidget(help)
 	window:addWidget(menu)
 end
 
 
-function forceUpgrade(self, upgUrl)
-	local window = Window("window", self:string("UPDATE"), firmwareupgradeTitleStyle)
-
-	local menu = SimpleMenu("menu")
-	menu:setCloseable(false)
-
+function forceUpgrade(self, optional, upgUrl, urlHelp)
 	local url = upgUrl
 	if not upgUrl then
 		url = upgradeUrl[1]
@@ -134,17 +140,25 @@ function forceUpgrade(self, upgUrl)
 		url = DEFAULT_FIRMWARE_URL
 	end
 
-	window:addListener(EVENT_KEY_PRESS,
-			   function(event)
-				   local keycode = event:getKeycode()
-				   if keycode == KEY_HOME then
-					   return EVENT_CONSUME
-				   end
+	local window = Window("window", self:string("UPDATE"), firmwareupgradeTitleStyle)
+	local menu = SimpleMenu("menu")
 
-				   return EVENT_UNUSED
-			   end)
+	if not optional then
+		-- forced upgrade, don't allow the user to break out
+		menu:setCloseable(false)
 
-	self:_makeUpgradeItems(window, menu, url)
+		window:addListener(EVENT_KEY_PRESS,
+			function(event)
+				local keycode = event:getKeycode()
+				if keycode == KEY_HOME then
+					return EVENT_CONSUME
+				end
+
+				return EVENT_UNUSED
+			end)
+	end
+
+	self:_makeUpgradeItems(window, menu, optional, url, urlHelp)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -161,7 +175,7 @@ function settingsShow(self)
 		url = DEFAULT_FIRMWARE_URL
 	end
 
-	self:_makeUpgradeItems(window, menu, url)
+	self:_makeUpgradeItems(window, menu, true, url)
 
 	self:tieAndShowWindow(window)
 	return window

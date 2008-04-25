@@ -100,10 +100,11 @@ function addNode(self, item)
 
 	-- remove node from previous node (if changed)
 	if self.menuTable[item.id] then
+		self.menuTable[item.id].text = item.text
 		local newNode    = item.node
 		local prevNode   = self.menuTable[item.id].node
 		if newNode != prevNode then
-			_changeNode(item.id, newNode)
+			_changeNode(self, item.id, newNode)
 		end
 
 		return
@@ -133,7 +134,8 @@ function addNode(self, item)
 
 	if not item.callback then
 		item.callback = function () 
-       	                 window:show()
+			window:setTitle(item.text)
+			window:show()
 		end
 	end
 
@@ -152,14 +154,8 @@ function addItem(self, item)
 		item.weight = 100
 	end
 
-	if not self.menuTable[item.id] then
-		log:debug("JiveMain.addItem: Adding ", item.text, " to ", item.node)
-		self.menuTable[item.id] = item
-
-	else
-		log:debug("THIS ID ALREADY EXISTS, removing existing item")
-		self.menuTable[item.id] = item
-	end
+	-- add or update the item from the menuTable
+	self.menuTable[item.id] = item
 
 	if self.nodeTable[item.node] then
 		self.nodeTable[item.node].items[item.id] = item

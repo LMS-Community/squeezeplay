@@ -94,6 +94,15 @@ int jiveL_textarea_get_preferred_bounds(lua_State *L) {
 
 	peer = jive_getpeer(L, 1, &textareaPeerMeta);
 
+	if (peer->num_lines == 0) {
+		/* empty textarea */
+		lua_pushnil(L);
+		lua_pushnil(L);
+		lua_pushinteger(L, 0);
+		lua_pushinteger(L, 0);
+		return 4;
+	}
+
 	w = peer->w.bounds.w + peer->w.padding.left + peer->w.padding.right;
 	h = (peer->num_lines * peer->line_height) + peer->w.padding.top + peer->w.padding.bottom;
 
@@ -184,8 +193,18 @@ int jiveL_textarea_layout(lua_State *L) {
 	/* word wrap text */
 	lua_getglobal(L, "tostring");
 	lua_getfield(L, 1, "text");
-	lua_call(L, 1, 1);
+	if (lua_isnil(L, -1)) {
+		/* nil is empty textarea */
+		lua_pop(L, 2);
 
+		peer->num_lines = 0;
+		lua_pushinteger(L, peer->num_lines);
+		lua_setfield(L, 1, "numLines");
+
+		return 0;
+	}
+
+	lua_call(L, 1, 1);
 	text = lua_tostring(L, -1);
 
 	visible_lines = peer->w.bounds.h / peer->line_height;
@@ -254,7 +273,7 @@ int jiveL_textarea_draw(lua_State *L) {
 	JiveSurface *srf = tolua_tousertype(L, 2, 0);
 	bool drawLayer = luaL_optinteger(L, 3, JIVE_LAYER_ALL) & peer->w.layer;
 
-	if (!drawLayer) {
+	if (!drawLayer || peer->num_lines == 0) {
 		return 0;
 	}
 

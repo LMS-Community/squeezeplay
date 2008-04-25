@@ -249,7 +249,11 @@ function str(self, token, ...)
 	if select('#', ...) == 0 then
 		return self[token] or token
 	else
-		return string.format(self[token].str or token, ...)
+		if self[token] then
+			return string.format(self[token].str or token, ...)
+		else
+			return string.format(token, ...)
+		end
 	end
 end
 
