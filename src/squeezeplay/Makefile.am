@@ -113,6 +113,7 @@ dist_jive_DATA = \
 	share/jive/AppletMeta.lua \
 	share/jive/Iconbar.lua \
 	share/jive/global_strings.txt \
+	share/jive/app.png \
 	share/jive/splash.png
 
 jiveuidir = $(pkgdatadir)/jive/ui

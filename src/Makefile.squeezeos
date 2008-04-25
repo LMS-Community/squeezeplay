@@ -139,9 +139,23 @@ tolua++:
 #
 # squeezeplay
 #
-.PHONY: squeezeplay-all squeezeplay squeezeplay_jive freefont fonts-clock
-squeezeplay-all: squeezeplay squeezeplay_jive freefont fonts-clock
+.PHONY: squeezeplay-all portaudio flac squeezeplay squeezeplay_jive freefont fonts-clock
+squeezeplay-all: portaudio flac squeezeplay squeezeplay_jive freefont fonts-clock
 
+
+# portaudio
+portaudio_v19_1360/Makefile:
+	cd portaudio_v19_1360; ./configure --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+
+portaudio: portaudio_v19_1360/Makefile
+	cd portaudio_v19_1360; make && make install
+
+# flac
+flac-1.2.1/Makefile:
+	cd flac-1.2.1; ./configure --disable-ogg --disable-xmms-plugin --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+
+flac: flac-1.2.1/Makefile
+	cd flac-1.2.1; make && make install
 
 # squeezeplay
 squeezeplay/Makefile:

@@ -5,6 +5,9 @@
 */
 
 
+#ifndef SQUEEZEPLAY_JIVE_COMMON_H
+#define SQUEEZEPLAY_JIVE_COMMON_H
+
 #include "config.h"
 
 #include <assert.h>
@@ -50,3 +53,10 @@
 #include "lua.h"
 #include "lauxlib.h"
 
+/* boolean type */
+typedef unsigned int bool;
+#define true 1
+#define false !true
+
+
+#endif // SQUEEZEPLAY_JIVE_COMMON_H

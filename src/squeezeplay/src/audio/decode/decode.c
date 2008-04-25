@@ -232,6 +232,8 @@ static int decode_thread_execute(void *unused) {
 
 		// XXXX buffer underrun
 	}
+
+	return 0;
 }
 
 
