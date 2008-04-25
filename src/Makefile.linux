@@ -23,6 +23,7 @@ export TOOLPATH = $(shell dirname `which gcc`)
 export SDL_CONFIG = ${BUILD_TOP}/bin/sdl-config
 
 ENABLE_PROFILING=--enable-profiling --disable-shared
+USE_MMX=--disable-mmx
 
 
 #
@@ -70,7 +71,7 @@ sdl-ttf: SDL_ttf-2.0.8/Makefile
 
 # sdl_gfx
 SDL_gfx-2.0.15/Makefile:
-	cd SDL_gfx-2.0.15; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX}
+	cd SDL_gfx-2.0.15; ./configure ${ENABLE_PROFILING} ${USE_MMX} --prefix=${PREFIX}
 
 sdl-gfx: SDL_gfx-2.0.15/Makefile
 	cd SDL_gfx-2.0.15; make && make install
