@@ -134,7 +134,8 @@ function addNode(self, item)
 
 	if not item.callback then
 		item.callback = function () 
-       	                 window:show()
+			window:setTitle(item.text)
+			window:show()
 		end
 	end
 
