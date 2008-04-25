@@ -35,7 +35,7 @@ end
 
 function registerApplet(self)
 	-- load ourselves indirectly through jiveMain
---	jiveMain:loadSkin("DefaultSkin", "skin")
+	jiveMain:loadSkin("DefaultSkin", "skin")
 end
 
 
