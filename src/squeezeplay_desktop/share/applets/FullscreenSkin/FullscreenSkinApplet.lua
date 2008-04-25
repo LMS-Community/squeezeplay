@@ -337,18 +337,18 @@ function skin(self, s)
 
 	s.iconBatteryCHARGING.frameRate = 1
 	s.iconBatteryCHARGING.frameWidth = 37
+--]]
 
 
-	-- time
+	-- time (hidden off screen)
 	s.iconTime = {}
-	s.iconTime.x = screenWidth - 60
-	s.iconTime.y = screenHeight - 34
+	s.iconTime.x = screenWidth + 10
+	s.iconTime.y = screenHeight + 10
 	s.iconTime.h = 34
 	s.iconTime.layer = LAYER_FRAME
-	s.iconTime.position = LAYOUT_SOUTH
+	s.iconTime.position = LAYOUT_NONE
 	s.iconTime.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
 	s.iconTime.fg = TEXT_COLOR
---]]
 
 
 	-- Window title, this is a Label
