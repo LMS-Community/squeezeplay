@@ -167,8 +167,11 @@ squeezeplay/Makefile:
 squeezeplay: squeezeplay/Makefile
 	cd squeezeplay; make && make install
 
-squeezeplay_desktop: squeezeplay/Makefile
-	cd squeezeplay_desktop; make PREFIX=${PREFIX}
+squeezeplay_desktop/Makefile:
+	cd squeezeplay_desktop; SDL_CONFIG=${SDL_CONFIG} ./configure --prefix=${PREFIX}
+
+squeezeplay_desktop: squeezeplay_desktop/Makefile
+	cd squeezeplay_desktop; make install
 
 squeezeplay_test: squeezeplay/Makefile
 	cd squeezeplay_test; make PREFIX=${PREFIX}
