@@ -37,6 +37,7 @@ local debug             = require("jive.utils.debug")
 local log               = require("jive.utils.log").logger("ui")
 
 local EVENT_ALL         = jive.ui.EVENT_ALL
+local EVENT_MOUSE_ALL   = jive.ui.EVENT_MOUSE_ALL
 local EVENT_UNUSED      = jive.ui.EVENT_UNUSED
 
 local EVENT_SHOW      = jive.ui.EVENT_SHOW
@@ -68,11 +69,14 @@ function __init(self, style, widgets)
 	-- forward events to contained widgets
 	obj:addListener(EVENT_ALL,
 			 function(event)
-				 for _,widget in pairs(obj.widgets) do
-					 local r = widget:_event(event)
+				 local notMouse = (event:getType() & EVENT_MOUSE_ALL) == 0
 
-					 if r ~= EVENT_UNUSED then
-						 return r
+				 for _,widget in pairs(obj.widgets) do
+					 if notMouse or widget:mouseInside(event) then
+						 local r = widget:_event(event)
+						 if r ~= EVENT_UNUSED then
+							 return r
+						 end
 					 end
 				 end
 				 return EVENT_UNUSED

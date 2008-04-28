@@ -42,6 +42,7 @@ local debug                   = require("jive.utils.debug")
 local oo                      = require("loop.simple")
 local table                   = require("jive.utils.table")
 local SimpleMenu              = require("jive.ui.SimpleMenu")
+local Button                  = require("jive.ui.Button")
 local Group                   = require("jive.ui.Group")
 local Label                   = require("jive.ui.Label")
 local Icon                    = require("jive.ui.Icon")
@@ -69,6 +70,8 @@ local EVENT_SHOW              = jive.ui.EVENT_SHOW
 local EVENT_HIDE              = jive.ui.EVENT_HIDE
 local EVENT_CONSUME           = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED            = jive.ui.EVENT_UNUSED
+
+local KEY_BACK                = jive.ui.KEY_BACK
 
 local FRAME_RATE              = jive.ui.FRAME_RATE
 local LAYER_ALL               = jive.ui.LAYER_ALL
@@ -121,7 +124,7 @@ function __init(self, style, title, titleStyle)
 	obj._DEFAULT_HIDE_TRANSITION = transitionPushRight
 
 	if titleStyle then
-		obj:setTitleWidget(Group(titleStyle, { text = Label("text", title), icon = Icon("icon") }))
+		obj:setTitleWidget(Group(titleStyle, { text = Label("text", title), icon = Icon("icon"), back = Button(Icon("back"), function() obj:dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) return EVENT_CONSUME end) }))
 	elseif title then
 		obj:setTitle(title)
 	end
@@ -470,7 +473,7 @@ function setTitle(self, title)
 	if self.title then
 		self.title:setWidgetValue("text", title)
 	else
-		self.title = Group("title", { text = Label("text", title), icon = Icon("icon") })
+		self.title = Group("title", { text = Label("text", title), icon = Icon("icon"), back = Button(Icon("back"), function() self:dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) return EVENT_CONSUME end) })
 		self:_addWidget(self.title)
 		self.title:_event(Event:new(EVENT_FOCUS_GAINED))
 	end

@@ -448,7 +448,7 @@ Sets I<index> as the selected menu item.
 function setSelectedIndex(self, index)
 	_assert(type(index) == "number", "setSelectedIndex index is not a number")
 
-	if index <= self.listSize then
+	if index >= 1 and index <= self.listSize then
 		self.selected = index
 		self:reLayout()
 	end

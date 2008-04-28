@@ -46,6 +46,7 @@ local RadioGroup             = require("jive.ui.RadioGroup")
 local RadioButton            = require("jive.ui.RadioButton")
 local Checkbox               = require("jive.ui.Checkbox")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
+local Button                 = require("jive.ui.Button")
 local DateTime               = require("jive.utils.datetime")
                              
 local DB                     = require("applets.SlimBrowser.DB")
@@ -312,7 +313,7 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 	-- however it guarantees the icon in the title is not shared with (the same) icon in the menu.
 
 	if not group then
-		group = Group("item", { text = Label("text", ""), icon = Icon("icon"), play = Icon("play") })
+		group = Group("item", { text = Label("text", ""), icon = Icon("icon"), play = Icon("play"), back = Button(Icon("back"), function() group:getWindow():dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) return EVENT_CONSUME end) })
 	end
 
 	if item then

@@ -119,6 +119,7 @@ dist_jive_DATA = \
 jiveuidir = $(pkgdatadir)/jive/ui
 dist_jiveui_DATA = \
 	share/jive/ui/Audio.lua \
+	share/jive/ui/Button.lua \
 	share/jive/ui/Checkbox.lua \
 	share/jive/ui/Choice.lua \
 	share/jive/ui/Event.lua \
@@ -557,4 +558,5 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/menu_album_selection_tr.png \
 	share/applets/DefaultSkin/images/navcluster.png \
 	share/applets/DefaultSkin/images/menu_check.png \
-	share/applets/DefaultSkin/images/menu_check_selected.png 
+	share/applets/DefaultSkin/images/menu_check_selected.png \
+	share/applets/DefaultSkin/images/selection_left.png 

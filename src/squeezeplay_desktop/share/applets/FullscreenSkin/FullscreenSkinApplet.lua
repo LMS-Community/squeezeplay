@@ -357,12 +357,18 @@ function skin(self, s)
 	s.title.padding = { 15, 5, 10, 0 }
 	s.title.position = LAYOUT_NORTH
 	s.title.bgImg = titleBox
+	s.title.order = { "back", "text" }
 	s.title.text = {}
         s.title.text.w = WH_FILL
 	s.title.text.padding = TITLE_PADDING
 	s.title.text.align = "top-left"
 	s.title.text.font = _boldfont(TITLE_FONT_SIZE)
 	s.title.text.fg = TEXT_COLOR_BLACK
+	s.title.back = {}
+	s.title.back.img = Surface:loadImage(imgpath .. "pointer_selector_L.png")
+	s.title.back.align = "left"
+
+
 
 	-- Menu with three basic styles: normal, selected and locked
 	-- First define the dimesions of the menu
@@ -775,7 +781,7 @@ function skin(self, s)
 	s.albumtitle = {}
 	s.albumtitle.position = LAYOUT_NORTH
 	s.albumtitle.bgImg = titleBox
-	s.albumtitle.order = { "icon", "text" }
+	s.albumtitle.order = { "back", "icon", "text" }
 	s.albumtitle.w = screenWidth
 	s.albumtitle.h = 130
 	s.albumtitle.border = 4
@@ -796,6 +802,9 @@ function skin(self, s)
 	s.albumtitle.icon.align = "left"
 	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
 	s.albumtitle.icon.padding = { 9, 0, 0, 0 }
+	s.albumtitle.back = {}
+	s.albumtitle.back.img = Surface:loadImage(imgpath .. "pointer_selector_L.png")
+	s.albumtitle.back.align = "left"
 
 
 	-- titles with mini icons
@@ -812,7 +821,7 @@ function skin(self, s)
 	s.minititle.text.align    = 'top-left'
 	s.minititle.text.font     = _boldfont(TITLE_FONT_SIZE)
 	s.minititle.text.fg       = TEXT_COLOR_BLACK
-	s.minititle.order         = { "text", "icon" }
+	s.minititle.order         = { "back", "text", "icon" }
 	s.minititle.icon = {}
 	s.minititle.icon.padding  = { 0, 0, 8, 0 }
 	s.minititle.icon.align    = 'right'
@@ -1061,7 +1070,7 @@ function skin(self, s)
 	s.nowplayingtitle = {}
 	s.nowplayingtitle.position = LAYOUT_NORTH
 	s.nowplayingtitle.bgImg = titleBox
-	s.nowplayingtitle.order = { "text", "icon" }
+	s.nowplayingtitle.order = { "back", "text", "icon" }
 	s.nowplayingtitle.w = screenWidth
 	s.nowplayingtitle.h = 70
 	s.nowplayingtitle.border = 4
