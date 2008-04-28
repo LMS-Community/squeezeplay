@@ -52,8 +52,12 @@ local string	= require("string")
 local Widget	= require("jive.ui.Widget")
 local Scrollbar	= require("jive.ui.Scrollbar")
 
+local log       = require("jive.utils.log").logger("ui")
+
+
 local EVENT_SCROLL	= jive.ui.EVENT_SCROLL
 local EVENT_KEY_PRESS	= jive.ui.EVENT_KEY_PRESS
+local EVENT_MOUSE_DRAG	= jive.ui.EVENT_MOUSE_DRAG
 
 local EVENT_CONSUME	= jive.ui.EVENT_CONSUME
 local EVENT_UNUSED	= jive.ui.EVENT_UNUSED
@@ -86,14 +90,17 @@ function __init(self, style, text)
 	_assert(type(text) ~= nil)
 
 	local obj = oo.rawnew(self, Widget(style))
-	obj.scrollbar = Scrollbar("scrollbar")
+	obj.scrollbar = Scrollbar("scrollbar",
+		function(_, value)
+			obj:_scrollTo(value)
+		end)
 	obj.scrollbar.parent = obj
 	
 	obj.topLine = 0
-	obj.visibleLine = 0
+	obj.visibleLines = 0
 	obj.text = text
 
-	obj:addListener(EVENT_SCROLL | EVENT_KEY_PRESS,
+	obj:addListener(EVENT_SCROLL | EVENT_KEY_PRESS | EVENT_MOUSE_DRAG,
 			 function (event)
 				return obj:_eventHandler(event)
 			 end)
@@ -153,15 +160,18 @@ Scroll the Textarea by I<scroll> items. If I<scroll> is negative the text scroll
 function scrollBy(self, scroll)
 	_assert(type(scroll) == "number")
 
-	self.topLine = self.topLine + scroll
+	self:_scrollTo(self.topLine + scroll)
+end
 
-	if self.topLine < 0 then
-		self.topLine = 0
+function _scrollTo(self, topLine)
+	if topLine < 0 then
+		topLine = 0
 	end
-	if self.topLine + self.visibleLines > self.numLines then
-		self.topLine = self.numLines - self.visibleLines
+	if topLine + self.visibleLines > self.numLines then
+		topLine = self.numLines - self.visibleLines
 	end
 
+	self.topLine = topLine
 	self.scrollbar:setScrollbar(0, self.numLines, self.topLine + 1, self.visibleLines)
 	self:reDraw()
 end
@@ -174,6 +184,10 @@ function _eventHandler(self, event)
 
 		self:scrollBy(event:getScroll())
 		return EVENT_CONSUME
+
+	elseif type == EVENT_MOUSE_DRAG then
+
+		return self.scrollbar:_event(event)
 		
 	elseif type == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()

@@ -214,7 +214,7 @@ local function _eventHandler(self, event)
 
 		if self.scrollbar:mouseInside(event) then
 			-- forward event to scrollbar
-			self.scrollbar:_event(event)
+			return self.scrollbar:_event(event)
 
 		else
 			-- menu selection follows mouse
@@ -222,6 +222,8 @@ local function _eventHandler(self, event)
 			local i = y / self.itemHeight --(h / self.numWidgets)
 
 			self:setSelectedIndex(self.topItem + math.floor(i))
+
+			return EVENT_CONSUME
 		end
 
 	elseif evtype == EVENT_SHOW or
@@ -263,7 +265,6 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 				 end)
 	obj.scrollbar = Scrollbar("scrollbar",
 				  function(_, value)
-					  log:warn("V=", value)
 					  obj:setSelectedIndex(value)
 				  end)
 

@@ -46,11 +46,8 @@ local Timer                  = require("jive.ui.Timer")
 
 local log                    = require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
 
-local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
 
-
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
@@ -561,7 +558,7 @@ function imageWindow(self, menuItem, filename)
 	log:debug("w = " .. w .. " h = " .. h)
 	
 	window:addWidget(Icon("image", image))
-	window:addListener(EVENT_KEY_PRESS,
+	window:addListener(EVENT_KEY_PRESS | EVENT_MOUSE_PRESS,
 		function(event)
 			window:hide()
 			return EVENT_CONSUME

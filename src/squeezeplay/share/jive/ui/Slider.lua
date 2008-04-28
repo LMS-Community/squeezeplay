@@ -38,6 +38,8 @@ B<horizontal> : true if the slider is horizontal, otherwise the slider is vertia
 local tostring, type = tostring, type
 
 local oo	= require("loop.simple")
+local math      = require("math")
+
 local Widget	= require("jive.ui.Widget")
 
 local log       = require("jive.utils.log").logger("ui")
@@ -158,10 +160,24 @@ function getValue(self)
 	return self.size
 end
 
-function _adjustSlider(self, value)
+
+function _moveSlider(self, value)
 	local oldSize = self.size
 
 	self:setValue(self.size + value)
+
+	if self.size ~= oldSize then
+		if self.closure then
+			self.closure(self, self.size, false)
+		end
+	end
+end
+
+
+function _setSlider(self, percent)
+	local oldSize = self.size
+
+	self:setValue(math.ceil(percent * self.range))
 
 	if self.size ~= oldSize then
 		if self.closure then
@@ -175,7 +191,7 @@ function _eventHandler(self, event)
 	local type = event:getType()
 
 	if type == EVENT_SCROLL then
-		self:_adjustSlider(event:getScroll())
+		self:_moveSlider(event:getScroll())
 		return EVENT_CONSUME
 
 	elseif type == EVENT_MOUSE_DOWN or
@@ -185,13 +201,12 @@ function _eventHandler(self, event)
 
 		if w > h then
 			-- horizontal
-			self:_adjustPosition(x / w)
-			log:warn("H=", x / w)
+			self:_setSlider(x / w)
 		else
 			-- vertical
-			self:_adjustPosition(y / h)
-			log:warn("V=", y / h)
+			self:_setSlider(y / h)
 		end
+		return EVENT_CONSUME
 
 	elseif type == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()

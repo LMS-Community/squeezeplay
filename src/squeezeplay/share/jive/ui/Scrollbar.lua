@@ -89,24 +89,20 @@ function setScrollbar(self, min, max, pos, size)
 	self.value = pos - min
 	self.size = size
 
-self.foo = min
-
 	self:reDraw()
 end
 
 
-function _adjustPosition(self, percent)
+function _setSlider(self, percent)
 	local oldvalue = self.value
 
-	local pos = math.floor(percent * self.range)
+	local pos = percent * (self.range)
 
-	self.value = pos - self.foo
+	self.value = math.floor(pos)
 	self:reDraw()
 		
-	log:warn("value=", self.value, " oldvalue=", oldvalue, " closure=", self.closure) 
-
 	if self.value ~= oldvalue and self.closure then
-		self.closure(self, pos, false)
+		self.closure(self, self.value, false)
 	end
 end
 
