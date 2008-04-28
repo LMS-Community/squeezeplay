@@ -64,6 +64,8 @@ static SDL_TimerID key_timer = NULL;
 
 static SDL_TimerID mouse_timer = NULL;
 
+static Uint16 mouse_origin_x, mouse_origin_y;
+
 static struct jive_keymap keymap[] = {
 	{ SDLK_RIGHT,		JIVE_KEY_GO },
 	{ SDLK_RETURN,		JIVE_KEY_GO },
@@ -998,6 +1000,9 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 				param = (event->button.y << 16) | event->button.x;
 				mouse_timer = SDL_AddTimer(HOLD_TIMEOUT, &mousehold_callback, (void *) param);
+
+				mouse_origin_x = event->button.x;
+				mouse_origin_y = event->button.y;
 				break;
 			}
 		}
@@ -1027,7 +1032,10 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 	case SDL_MOUSEMOTION:
 		if (event->motion.state & SDL_BUTTON(1)) {
-			if (mouse_state != MOUSE_STATE_SENT) {
+			if ( (mouse_state == MOUSE_STATE_DOWN
+			       && (abs(mouse_origin_x - event->motion.x) > 10
+				   || abs(mouse_origin_y - event->motion.y) > 10))
+			     || mouse_state == MOUSE_STATE_DRAG) {
 				jevent.type = JIVE_EVENT_MOUSE_DRAG;
 				jevent.u.mouse.x = event->motion.x;
 				jevent.u.mouse.y = event->motion.y;
