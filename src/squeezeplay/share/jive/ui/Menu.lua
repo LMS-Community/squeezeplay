@@ -223,6 +223,10 @@ local function _eventHandler(self, event)
 
 			self:setSelectedIndex(self.topItem + math.floor(i))
 
+			if evtype == EVENT_MOUSE_DRAG then
+				_scrollList(self)
+			end
+
 			return EVENT_CONSUME
 		end
 
@@ -605,6 +609,7 @@ function scrollBy(self, scroll)
 		self:playSound("CLICK")
 		self.selected = selected
 
+		_scrollList(self)
 		self:reLayout()
 	end
 end
@@ -651,7 +656,11 @@ end
 function _updateWidgets(self)
 
 	-- update the list to keep the selection in view
-	_scrollList(self)
+	local selected = _coerce(self.selected or 1, self.listSize)
+	if selected < self.topItem
+		or selected >= self.topItem + self.numWidgets then
+		_scrollList(self)
+	end
 
 	local indexSize = self.numWidgets
 	local min = self.topItem
