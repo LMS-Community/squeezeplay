@@ -39,7 +39,8 @@ local Window           = require("jive.ui.Window")
 local debug            = require("jive.utils.debug")
 local log              = require("jive.utils.log").logger("applets.misc")
 
-local LAYER_ALL        = jive.ui.LAYER_ALL
+local LAYER_CONTENT    = jive.ui.LAYER_CONTENT
+local LAYER_FRAME      = jive.ui.LAYER_FRAME
 
 local jive = jive
 
@@ -425,7 +426,7 @@ function macroScreenshot(interval, file, limit)
 	local window = Framework.windowStack[1]
 
 	local screen = Surface:newRGB(w, h)
-	window:draw(screen, LAYER_ALL)
+	window:draw(screen, LAYER_FRAME | LAYER_CONTENT)
 
 	local reffile = self.macrodir .. file .. ".bmp"
 	if lfs.attributes(reffile, "mode") == "file" then
