@@ -4,9 +4,7 @@ macroHome()
 
 
 -- Settings
-while not macroIsMenuItem("Settings") do
-	macroEvent(100, EVENT_KEY_PRESS, KEY_DOWN)
-end
+macroSelectMenuItem(100, "Settings")
 macroEvent(100, EVENT_KEY_PRESS, KEY_GO)
 
 if not macroScreenshot(1000, "Settings") then
@@ -15,9 +13,7 @@ end
 
 
 -- Advanced
-while not macroIsMenuItem("Advanced") do
-	macroEvent(100, EVENT_KEY_PRESS, KEY_DOWN)
-end
+macroSelectMenuItem(100, "Advanced")
 macroEvent(100, EVENT_KEY_PRESS, KEY_GO)
 
 if not macroScreenshot(1000, "Advanced") then
@@ -26,9 +22,7 @@ end
 
 
 -- Factory Reset
-while not macroIsMenuItem("Factory Reset") do
-	macroEvent(100, EVENT_KEY_PRESS, KEY_DOWN)
-end
+macroSelectMenuItem(100, "Factory Reset")
 macroEvent(500, EVENT_KEY_PRESS, KEY_GO)
 
 if not macroScreenshot(1000, "FactoryReset1") then
@@ -37,9 +31,7 @@ end
 
 
 -- Begin update
-while not macroIsMenuItem("Continue") do
-	macroEvent(100, EVENT_KEY_PRESS, KEY_DOWN)
-end
+macroSelectMenuItem(100, "Continue")
 macroEvent(1000, EVENT_KEY_PRESS, KEY_GO)
 
 if not macroScreenshot(1000, "FactoryReset2") then

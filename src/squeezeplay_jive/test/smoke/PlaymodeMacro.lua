@@ -1,11 +1,9 @@
 
 -- go home
-macroHome()
+macroHome(100)
 
--- key down until Now Playing
-while not macroIsMenuItem("Now Playing") do
-	macroEvent(100, EVENT_KEY_PRESS, KEY_DOWN)
-end
+-- select Now Playing
+macroSelectMenuItem(100, "Now Playing")
 
 -- key go into Now Playing
 macroEvent(100, EVENT_KEY_PRESS, KEY_GO)

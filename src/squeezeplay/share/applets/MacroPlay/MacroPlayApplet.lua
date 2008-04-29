@@ -13,7 +13,7 @@ This applet will play ui sequences using a lua script for testing.
 
 
 -- stuff we use
-local assert, getfenv, loadfile, ipairs, package, pairs, require, setfenv, setmetatable, tostring, type = assert, getfenv, loadfile, ipairs, package, pairs, require, setfenv, setmetatable, tostring, type
+local assert, getfenv, loadfile, ipairs, package, pairs, require, setfenv, setmetatable, tostring, type, unpack = assert, getfenv, loadfile, ipairs, package, pairs, require, setfenv, setmetatable, tostring, type, unpack
 
 local oo               = require("loop.simple")
 local io               = require("io")
@@ -135,16 +135,12 @@ function autoplayShow(self, countdown)
 			sound = "BUMP",
 		}
 
-		debug.dump(macro, -1)
-
 		if macro.passed then
 			item.icon = Icon("macroPass")
 		end
 		if macro.failed then
 			item.icon = Icon("macroFail")
 		end
-
-		debug.dump(item, -1)
 
 		menu:addItem(item)
 	end
@@ -315,24 +311,83 @@ function macroEvent(interval, ...)
 end
 
 
--- returns the text of the selected menu item (or nil)
-function macroGetMenuText()
+-- returns the widgets of type class from the window
+function _macroFindWidget(class)
 	local window = Framework.windowStack[1]
 
-	-- find menu + selection
-	local item = false
-	window:iterate(function(widget)
-		if oo.instanceof(widget, Menu) then
-			item = widget:getSelectedItem()
+	-- find widget
+	local widget = {}
+	window:iterate(function(w)
+		if oo.instanceof(w, class) then
+			widget[#widget + 1] = w
 		end
 	end)
 
+	return unpack(widget)
+end
+
+
+-- returns the text of the selected menu item (or nil)
+function macroGetMenuText()
+	local menu = _macroFindWidget(Menu)
+	if not menu then
+		return
+	end
+
+	local item = menu:getSelectedItem()
 	if not item then
 		return
 	end
 
 	-- assumes Group with "text" widget
 	return item:getWidget("text"):getValue()
+end
+
+
+-- select the menu item, using index
+function macroSelectMenuIndex(interval, index)
+	local menu = _macroFindWidget(Menu)
+	if not menu then
+		return
+	end
+
+	local ok = false
+
+	local len = #menu:getItems()
+	if index > len then
+		return false
+	end
+
+	while menu:getSelectedIndex() ~= index do
+		macroEvent(100, EVENT_KEY_PRESS, KEY_DOWN)
+	end
+
+	macroDelay(interval)
+	return true
+end
+
+
+-- select the menu item, based on pattern. this uses key down events.
+function macroSelectMenuItem(interval, pattern)
+	local menu = _macroFindWidget(Menu)
+	if not menu then
+		return
+	end
+
+	local len = #menu:getItems()
+
+	local ok = false
+	for i=1,len do
+		macroEvent(100, EVENT_KEY_PRESS, KEY_DOWN)
+
+		if macroIsMenuItem(pattern) then
+			ok = true
+			break
+		end
+	end
+
+	macroDelay(interval)
+	return ok
 end
 
 
