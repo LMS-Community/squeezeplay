@@ -374,16 +374,16 @@ function macroSelectMenuItem(interval, pattern)
 		return
 	end
 
-	local index = menu:getSelectedIndex()
+	local index = menu:getSelectedIndex() or 1
 
 	local ok = false
 	repeat
-		macroEvent(100, EVENT_KEY_PRESS, KEY_DOWN)
-
 		if macroIsMenuItem(pattern) then
 			ok = true
 			break
 		end
+
+		macroEvent(100, EVENT_KEY_PRESS, KEY_DOWN)
 	until menu:getSelectedIndex() == index
 
 	macroDelay(interval)

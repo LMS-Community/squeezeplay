@@ -37,7 +37,7 @@ end
 
 
 -- Begin update
-if not macroSelectMenuItem(100, "Begin Update") then
+if not macroSelectMenuItem(100, "Begin update") then
 	return macroFail("CopyingUpdate")
 end
 macroEvent(1000, EVENT_KEY_PRESS, KEY_GO)
