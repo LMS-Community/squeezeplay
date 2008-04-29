@@ -33,6 +33,7 @@ local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Surface          = require("jive.ui.Surface")
 local Task             = require("jive.ui.Task")
 local Textarea         = require("jive.ui.Textarea")
+local Textinput        = require("jive.ui.Textinput")
 local Timer            = require("jive.ui.Timer")
 local Window           = require("jive.ui.Window")
 
@@ -402,6 +403,33 @@ function macroIsMenuItem(pattern)
 end
 
 
+-- enter text
+function macroTextInput(interval, text)
+	log:info("macroTextInput ", text)
+
+	local input = _macroFindWidget(Textinput)
+
+	local i = 1
+
+	local value = tostring(input:getValue())
+	while value ~= text do
+		local ct = string.sub(text, i, i)
+		local cv = string.sub(value, i, i)
+
+		if ct == cv then
+			macroEvent(100, EVENT_KEY_PRESS, KEY_RIGHT)
+			i = i + 1
+		else
+			macroEvent(20, EVENT_KEY_PRESS, KEY_UP)
+		end
+
+		value = tostring(input:getValue())
+	end
+
+	macroEvent(100, EVENT_KEY_PRESS, KEY_RIGHT)
+end
+
+
 -- force return to the home menu
 function macroHome(interval)
 	log:info("macroHome")
@@ -452,6 +480,13 @@ function macroScreenshot(interval, file, limit)
 
 	macroDelay(interval)
 	return pass
+end
+
+
+function macroParameter(key)
+	local self = instance
+
+	return self.macro[key]
 end
 
 
