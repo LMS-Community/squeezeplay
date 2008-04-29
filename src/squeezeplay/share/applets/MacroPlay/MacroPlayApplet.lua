@@ -480,6 +480,7 @@ function macroScreenshot(interval, file, limit)
 	else
 		log:debug("Saving reference screenshot " .. reffile)
 		screen:saveBMP(reffile)
+		pass = true
 	end
 
 	macroDelay(interval)
@@ -490,7 +491,7 @@ end
 function macroParameter(key)
 	local self = instance
 
-	return self.macro[key]
+	return self.macro.param[key]
 end
 
 

@@ -7,7 +7,7 @@ macroHome()
 if not macroSelectMenuItem(100, "Settings") then
 	return macroFail("Settings")
 end
-macroEvent(100, EVENT_KEY_PRESS, KEY_GO)
+macroEvent(1000, EVENT_KEY_PRESS, KEY_GO)
 
 if not macroScreenshot(1000, "Settings") then
 	return macroFail("Settings")
@@ -18,7 +18,7 @@ end
 if not macroSelectMenuItem(100, "Advanced") then
 	return macroFail("Advanced")
 end
-macroEvent(100, EVENT_KEY_PRESS, KEY_GO)
+macroEvent(1000, EVENT_KEY_PRESS, KEY_GO)
 
 if not macroScreenshot(1000, "Advanced") then
 	return macroFail("Advanced")
@@ -29,7 +29,7 @@ end
 if not macroSelectMenuItem(100, "Factory Reset") then
 	return macroFail("FactoryReset1")
 end
-macroEvent(500, EVENT_KEY_PRESS, KEY_GO)
+macroEvent(1000, EVENT_KEY_PRESS, KEY_GO)
 
 if not macroScreenshot(1000, "FactoryReset1") then
 	return macroFail("FactoryReset1")
@@ -42,7 +42,7 @@ if not macroSelectMenuItem(100, "Continue") then
 end
 macroEvent(1000, EVENT_KEY_PRESS, KEY_GO)
 
-if not macroScreenshot(1000, "FactoryReset2") then
+if not macroScreenshot(100, "FactoryReset2") then
 	return macroFail("FactoryReset2")
 end
 

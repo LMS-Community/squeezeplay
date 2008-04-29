@@ -28,13 +28,15 @@ return {
       name="Software Upgrade" 
     },
     setupWPA={
-      desc="Setup using WPA network.",
+      desc="Setup using WPA network. This macro only works after a Factory Reset.",
       file="SetupWPAMacro.lua",
       name="Setup WPA",
-      region="Europe",
-      ssid="linksys",
-      wpa="adgjmptw",
-      player="Transporter",
+      param={
+        region="Europe",
+        ssid="linksys",
+        wpa="adgjmptw",
+        player="Transporter"
+      }
     }
   } 
 }
