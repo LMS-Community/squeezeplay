@@ -377,6 +377,10 @@ function macroSelectMenuItem(interval, pattern)
 	end
 
 	local index = menu:getSelectedIndex() or 1
+	local dir = KEY_DOWN
+	if index ~= 1 then
+		dir = KEY_UP
+	end
 
 	local ok = false
 	repeat
@@ -385,7 +389,7 @@ function macroSelectMenuItem(interval, pattern)
 			break
 		end
 
-		macroEvent(100, EVENT_KEY_PRESS, KEY_DOWN)
+		macroEvent(100, EVENT_KEY_PRESS, dir)
 	until menu:getSelectedIndex() == index
 
 	macroDelay(interval)

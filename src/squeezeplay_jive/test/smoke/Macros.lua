@@ -1,6 +1,6 @@
 return {
-  auto=3,
-  autostart={ "forcedUpgrade", "softwareUpgrade", "homeMenu", "playmode" },
+  auto=1,
+  autostart={ "forcedUpgrade", "softwareUpgrade", "factoryReset", "setupWPA", "homeMenu", "playmode" },
   macros={
     factoryReset={
       desc="Verify a factory reset.",
@@ -26,6 +26,15 @@ return {
       desc="User requested software upgrade.",
       file="SoftwareUpgradeMacro.lua",
       name="Software Upgrade" 
-    } 
+    },
+    setupWPA={
+      desc="Setup using WPA network.",
+      file="SetupWPAMacro.lua",
+      name="Setup WPA",
+      region="Europe",
+      ssid="linksys",
+      wpa="adgjmptw",
+      player="Transporter",
+    }
   } 
 }
