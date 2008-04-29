@@ -3,7 +3,9 @@
 macroHome(100)
 
 -- select Now Playing
-macroSelectMenuItem(100, "Now Playing")
+if not macroSelectMenuItem(100, "Now Playing") then
+	return macroFail("Now Playing")
+end
 
 -- key go into Now Playing
 macroEvent(100, EVENT_KEY_PRESS, KEY_GO)

@@ -11,7 +11,9 @@ end
 
 
 -- Begin update
-macroSelectMenuItem(100, "Begin update")
+if not macroSelectMenuItem(100, "Begin update") then
+	return macroFail("CopyingUpdate")
+end
 macroEvent(1000, EVENT_KEY_PRESS, KEY_GO)
 
 if not macroScreenshot(1000, "CopyingUpdate") then

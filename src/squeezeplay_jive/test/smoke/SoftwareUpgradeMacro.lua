@@ -4,7 +4,9 @@ macroHome()
 
 
 -- Settings
-macroSelectMenuItem(100, "Settings")
+if not macroSelectMenuItem(100, "Settings") then
+	return macroFail("Settings")
+end
 macroEvent(100, EVENT_KEY_PRESS, KEY_GO)
 
 if not macroScreenshot(1000, "Settings") then
@@ -13,7 +15,9 @@ end
 
 
 -- Advanced
-macroSelectMenuItem(100, "Advanced")
+if not macroSelectMenuItem(100, "Advanced") then
+	return macroFail("Advanced")
+end
 macroEvent(100, EVENT_KEY_PRESS, KEY_GO)
 
 if not macroScreenshot(1000, "Advanced") then
@@ -22,7 +26,9 @@ end
 
 
 -- Software Update
-macroSelectMenuItem(100, "Software Update")
+if not macroSelectMenuItem(100, "Software Update") then
+	return macroFail("SoftwareUpdate")
+end
 macroEvent(500, EVENT_KEY_PRESS, KEY_GO)
 
 if not macroScreenshot(1000, "SoftwareUpdate") then
@@ -31,7 +37,9 @@ end
 
 
 -- Begin update
-macroSelectMenuItem(100, "Begin Update")
+if not macroSelectMenuItem(100, "Begin Update") then
+	return macroFail("CopyingUpdate")
+end
 macroEvent(1000, EVENT_KEY_PRESS, KEY_GO)
 
 if not macroScreenshot(1000, "CopyingUpdate") then

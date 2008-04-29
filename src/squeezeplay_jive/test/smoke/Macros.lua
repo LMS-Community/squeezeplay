@@ -1,6 +1,6 @@
 return {
-  auto=false,
-  autostart={ "homeMenu", "playmode" },
+  auto=3,
+  autostart={ "forcedUpgrade", "softwareUpgrade", "homeMenu", "playmode" },
   macros={
     factoryReset={
       desc="Verify a factory reset.",
@@ -16,13 +16,11 @@ return {
       desc="Verify the home menu.",
       file="HomeMenuMacro.lua",
       name="Home Menu",
-      passed="Sun Apr 13 09:23:07 2008" 
     },
     playmode={
       desc="Playmode tests (stop/pause/play).",
       file="PlaymodeMacro.lua",
-      name="Playmode",
-      passed="Sun Apr 13 09:29:03 2008" 
+      name="Playmode" 
     },
     softwareUpgrade={
       desc="User requested software upgrade.",
