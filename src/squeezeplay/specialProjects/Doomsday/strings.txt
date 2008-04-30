@@ -1,0 +1,34 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+DOOMSDAY
+	EN	Doomsday
+	DE	Doomstag
+
+DOOMSDAY_OPTION1
+	EN	Dire Warning 1
+
+DOOMSDAY_OPTION2
+	EN	Dire Warning 2
+
+DOOMSDAY_OPTION3
+	EN	Dire Warning 3
+
+DOOMSDAY_OPTION4
+	EN	Dire Warning 4
+
+DOOMSDAY_MESSAGE0
+	EN	Fear is in the air!
+
+DOOMSDAY_MESSAGE1
+	EN	The End is Nigh!
+
+DOOMSDAY_MESSAGE2
+	EN	Run for the hills!
+
+DOOMSDAY_MESSAGE3
+	EN	Get your affairs in order!
+
+DOOMSDAY_MESSAGE4
+	EN	DUCK!
