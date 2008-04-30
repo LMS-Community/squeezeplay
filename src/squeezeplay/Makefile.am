@@ -364,6 +364,12 @@ dist_applets_httpauth_DATA = \
 	share/applets/HttpAuth/HttpAuthMeta.lua \
 	share/applets/HttpAuth/strings.txt
 
+applets_setupnettestdir = $(datadir)/jive/applets/SetupNetTest
+dist_applets_setupnettest_DATA = \
+	share/applets/SetupNetTest/SetupNetTestApplet.lua \
+	share/applets/SetupNetTest/SetupNetTestMeta.lua \
+	share/applets/SetupNetTest/strings.txt	
+
 # Default skin
 applets_defaultskindir = $(pkgdatadir)/applets/DefaultSkin
 dist_applets_defaultskin_DATA = \
