@@ -2175,6 +2175,7 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"LAYER_CONTENT",JIVE_LAYER_CONTENT);
    tolua_constant(tolua_S,"LAYER_CONTENT_OFF_STAGE",JIVE_LAYER_CONTENT_OFF_STAGE);
    tolua_constant(tolua_S,"LAYER_CONTENT_ON_STAGE",JIVE_LAYER_CONTENT_ON_STAGE);
+   tolua_constant(tolua_S,"LAYER_LOWER",JIVE_LAYER_LOWER);
    tolua_constant(tolua_S,"LAYER_ALL",JIVE_LAYER_ALL);
    tolua_constant(tolua_S,"EVENT_NONE",JIVE_EVENT_NONE);
    tolua_constant(tolua_S,"EVENT_SCROLL",JIVE_EVENT_SCROLL);

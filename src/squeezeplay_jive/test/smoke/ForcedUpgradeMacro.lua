@@ -11,8 +11,8 @@ end
 
 
 -- Begin update
-while not macroIsMenuItem("Begin update") do
-	return macroEvent(100, EVENT_KEY_PRESS, KEY_DOWN)
+if not macroSelectMenuItem(100, "Begin update") then
+	return macroFail("CopyingUpdate")
 end
 macroEvent(1000, EVENT_KEY_PRESS, KEY_GO)
 

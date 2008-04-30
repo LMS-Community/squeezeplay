@@ -877,6 +877,10 @@ _disconnect = function(self)
 		v.pending = true
 	end
 
+	-- As we are disconnecting we no longer care about waiting for
+	-- a reply from the sent requests
+	self.sent_reqs = {}
+
 	local data = { {
 		channel  = '/meta/disconnect',
 		clientId = self.clientId,

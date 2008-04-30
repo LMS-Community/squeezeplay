@@ -1,11 +1,21 @@
 return {
   auto=1,
-  autostart={ "homeMenu", "playmode" },
+  autostart={ "forcedUpgrade", "softwareUpgrade", "factoryReset", "setupWPA", "homeMenu", "playmode" },
   macros={
+    factoryReset={
+      desc="Verify a factory reset.",
+      file="FactoryResetMacro.lua",
+      name="Factory Reset" 
+    },
     forcedUpgrade={
       desc="Forced software upgrade.",
       file="ForcedUpgradeMacro.lua",
-      name="Forced Upgrade",
+      name="Forced Upgrade" 
+    },
+    homeMenu={
+      desc="Verify the home menu.",
+      file="HomeMenuMacro.lua",
+      name="Home Menu",
     },
     playmode={
       desc="Playmode tests (stop/pause/play).",
@@ -17,15 +27,16 @@ return {
       file="SoftwareUpgradeMacro.lua",
       name="Software Upgrade" 
     },
-    homeMenu={
-      desc="Verify the home menu.",
-      file="HomeMenuMacro.lua",
-      name="Home Menu" 
-    },
-    factoryReset={
-      desc="Verify a factory reset.",
-      file="FactoryResetMacro.lua",
-      name="Factory Reset" 
-    } 
+    setupWPA={
+      desc="Setup using WPA network. This macro only works after a Factory Reset.",
+      file="SetupWPAMacro.lua",
+      name="Setup WPA",
+      param={
+        region="Europe",
+        ssid="linksys",
+        wpa="adgjmptw",
+        player="Transporter"
+      }
+    }
   } 
 }

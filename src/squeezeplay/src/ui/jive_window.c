@@ -210,7 +210,7 @@ int jiveL_window_draw(lua_State *L) {
 			lua_pushvalue(L, 1);
 			lua_call(L, 1, 1);
 
-			if ((layer & JIVE_LAYER_FRAME) && jive_getmethod(L, -1, "draw")) {
+			if ((layer & JIVE_LAYER_LOWER) && jive_getmethod(L, -1, "draw")) {
 				lua_pushvalue(L, -2);
 				lua_pushvalue(L, 2);
 				lua_pushinteger(L, JIVE_LAYER_ALL);

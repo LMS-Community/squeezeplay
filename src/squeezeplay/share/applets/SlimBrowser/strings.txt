@@ -143,7 +143,7 @@ SLIMBROWSER_SCANNER
 	EN	Song Position
 
 SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX
-	EN	Software Update ready for %s. To begin, press and hold the Brightness button on your original IR remote
+	EN	Software Update ready for %s. To begin, press and hold the Brightness button on your original IR remote.
 
 SLIMBROWSER_PLAYER_UPDATE_REQUIRED
 	EN	Player Update

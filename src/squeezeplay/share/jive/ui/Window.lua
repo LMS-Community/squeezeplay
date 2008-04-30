@@ -79,6 +79,7 @@ local LAYER_CONTENT           = jive.ui.LAYER_CONTENT
 local LAYER_CONTENT_OFF_STAGE = jive.ui.LAYER_CONTENT_OFF_STAGE
 local LAYER_CONTENT_ON_STAGE  = jive.ui.LAYER_CONTENT_ON_STAGE
 local LAYER_FRAME             = jive.ui.LAYER_FRAME
+local LAYER_LOWER             = jive.ui.LAYER_LOWER
 
 local LAYOUT_NORTH            = jive.ui.LAYOUT_NORTH
 local LAYOUT_EAST             = jive.ui.LAYOUT_EAST
@@ -755,7 +756,7 @@ function transitionBumpLeft(self)
 	return function(widget, surface)
 			local x = frames * 3
 
-			self:draw(surface, LAYER_FRAME)
+			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
 			surface:setOffset(x, 0)
 			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE)
 			surface:setOffset(0, 0)
@@ -784,7 +785,7 @@ function transitionBumpRight(self)
 	return function(widget, surface)
 			local x = frames * 3
 
-			self:draw(surface, LAYER_FRAME)
+			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
 			surface:setOffset(-x, 0)
 			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE)
 			surface:setOffset(0, 0)
@@ -817,7 +818,7 @@ function transitionPushLeft(oldWindow, newWindow)
 			local x = screenWidth - ((frames * frames * frames) / scale)
 
 			surface:setOffset(0, 0)
-			newWindow:draw(surface, LAYER_FRAME)
+			newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER)
 
 			surface:setOffset(-x, 0)
 			oldWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE)
@@ -855,7 +856,7 @@ function transitionPushRight(oldWindow, newWindow)
 			local x = screenWidth - ((frames * frames * frames) / scale)
 
 			surface:setOffset(0, 0)
-			newWindow:draw(surface, LAYER_FRAME)
+			newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER)
 
 			surface:setOffset(x, 0)
 			oldWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE)
