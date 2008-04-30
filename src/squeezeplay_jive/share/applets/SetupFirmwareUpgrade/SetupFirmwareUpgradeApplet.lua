@@ -80,8 +80,8 @@ function _versionCompare(a, b)
 		return math.huge
 	end
 
-	local aMajor, aMinor = string.match(a, "(%d+) r(%d+)")
-	local bMajor, bMinor = string.match(b, "(%d+) r(%d+)")
+	local aMajor, aMinor = string.match(a, "(.+) r(%d+)")
+	local bMajor, bMinor = string.match(b, "(.+) r(%d+)")
 
 	if not aMajor or not bMajor or aMajor ~= bMajor then
 		return math.huge
