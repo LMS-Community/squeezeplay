@@ -26,7 +26,7 @@ oo.class(_M, Applet)
 function settingsShow(self)
 	local window = Window("window", self:string("ABOUT_JIVE"), 'settingstitle')
 
-	local fh = io.open("/etc/jive.version", "r")
+	local fh = io.open("/etc/squeezeos.version", "r")
 	local version = fh:read("*a")
 	fh:close()
 
