@@ -11,6 +11,7 @@ local assert, getmetatable, ipairs, pcall, setmetatable, tonumber, tostring = as
 
 local oo                     = require("loop.simple")
 
+local math                   = require("math")
 local string                 = require("string")
 local table                  = require("jive.utils.table")
 local socket                 = require("socket")
@@ -73,6 +74,23 @@ function _firmwareVersion(self, url)
 end
 
 
+-- return 0 if version are same, +ive if upgrade, -ive if downgrade
+function _versionCompare(a, b)
+	if not a or not b then
+		return math.huge
+	end
+
+	local aMajor, aMinor = string.match(a, "(%d+) r(%d+)")
+	local bMajor, bMinor = string.match(b, "(%d+) r(%d+)")
+
+	if not aMajor or not bMajor or aMajor ~= bMajor then
+		return math.huge
+	end
+
+	return bMinor - aMinor
+end
+
+
 function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
 	local help = Textarea("help", "")
 
@@ -85,7 +103,7 @@ function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
 			self:_upgrade()
 		end,
 		focusGained = function()
-			if version == JIVE_VERSION then
+			if _versionCompare(JIVE_VERSION, version) <= 0 then
 				help:setValue(self:string(urlHelp or "UPDATE_BEGIN_REINSTALL", version or "?"))
 			else
 				help:setValue(self:string(urlHelp or "UPDATE_BEGIN_UPGRADE", version or "?"))
