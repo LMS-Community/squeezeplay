@@ -40,6 +40,21 @@ function __init(self, name, style, titleStyle)
 	return obj
 end
 
+function getMenuTable(self)
+	if self.menuTable then
+		return self.menuTable
+	else
+		return {}
+	end
+end
+
+function getNodeTable(self)
+	if self.nodeTable then
+		return self.nodeTable
+	else
+		return {}
+	end
+end
 
 function setTitle(self, title)
 	if title then
@@ -49,6 +64,13 @@ function setTitle(self, title)
 	end
 end
 
+function setNode(self, item, node)
+	assert(item)
+	assert(node)
+	self:removeItem(item)
+	item.node = node
+	self:addItem(item)
+end
 
 --[[
 
@@ -87,18 +109,22 @@ function _changeNode(self, id, node)
 	end
 end
 
-
 function addNode(self, item)
 	assert(item.id)
 	assert(item.node)
 
 	log:debug("JiveMain.addNode: Adding a non-root node, ", item.id)
 
+	item.isANode = 1
+
 	if not item.weight then 
 		item.weight = 100
 	end
+	if not item.defaultNode then
+		item.defaultNode = item.node
+	end
 
-	-- remove node from previous node (if changed)
+	-- remove/update node from previous node (if changed)
 	if self.menuTable[item.id] then
 		self.menuTable[item.id].text = item.text
 		local newNode    = item.node
@@ -109,8 +135,6 @@ function addNode(self, item)
 
 		return
 	end
-
-	-- new/update node
 
 	local window
 	if item.window and item.window.titleStyle then
@@ -153,9 +177,13 @@ function addItem(self, item)
 	if not item.weight then 
 		item.weight = 100
 	end
+	if not item.defaultNode then
+		item.defaultNode = item.node
+	end
 
 	-- add or update the item from the menuTable
 	self.menuTable[item.id] = item
+	log:warn(self.menuTable[item.id]['node'])
 
 	if self.nodeTable[item.node] then
 		self.nodeTable[item.node].items[item.id] = item
@@ -190,7 +218,7 @@ end
 function _checkRemoveNode(self, node)
 	local nodeEntry = self.nodeTable[node]
 
-	if nodeEntry.item then
+	if nodeEntry and nodeEntry.item then
 		local hasItem = self.menuTable[nodeEntry.item.id] ~= nil
 
 		if hasItem then
@@ -210,11 +238,9 @@ function removeItem(self, item)
 	assert(item)
 	assert(item.node)
 	if self.nodeTable[item.node] then
-		self.nodeTable[item.node].menu:removeItem(item)
-
 		self.menuTable[item.id] = nil
 		self.nodeTable[item.node].items[item.id] = nil
-
+		self.nodeTable[item.node].menu:removeItem(item)
 		self:_checkRemoveNode(item.node)
 	end
 end
@@ -223,9 +249,10 @@ end
 function removeItemById(self, id)
 	if self.menuTable[id] then
 		local item = self.menuTable[id]
-
-		self.nodeTable[item.node].menu:removeItemById(id)
-		self.nodeTable[item.node].items[id] = nil
+		if self.nodeTable[item.node] then
+			self.nodeTable[item.node].menu:removeItemById(id)
+			self.nodeTable[item.node].items[id] = nil
+		end
 		self.menuTable[id] = nil
 
 		self:_checkRemoveNode(item.node)

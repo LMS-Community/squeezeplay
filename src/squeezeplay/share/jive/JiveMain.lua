@@ -227,6 +227,7 @@ function JiveMain:jiveMainNodes(globalStrings)
 		_globalStrings = locale:readGlobalStringsFile()
 	end
 
+	jiveMain:addNode( { id = 'hidden', node = 'nowhere' } )
 	jiveMain:addNode( { id = 'extras', node = 'home', text = _globalStrings:str("EXTRAS"), weight = 70  } )
 	jiveMain:addNode( { id = 'games', node = 'extras', text = _globalStrings:str("GAMES"), weight = 70  } )
 	jiveMain:addNode( { id = 'settings', node = 'home', text = _globalStrings:str("SETTINGS"), weight = 50, titleStyle = 'settings' })
