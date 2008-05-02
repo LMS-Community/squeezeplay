@@ -41,6 +41,10 @@ function __init(self, name, style, titleStyle)
 	return obj
 end
 
+function getMenuItem(self, id)
+	return self.menuTable[id]
+end
+
 function getMenuTable(self)
 	return self.menuTable
 end

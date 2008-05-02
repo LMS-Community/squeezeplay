@@ -30,6 +30,7 @@ local RadioGroup             = require("jive.ui.RadioGroup")
 local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
 local Textarea               = require('jive.ui.Textarea')
+local Framework              = require('jive.ui.Framework')
 
 local SimpleMenu             = require("jive.ui.SimpleMenu")
 local RadioGroup             = require("jive.ui.RadioGroup")
@@ -48,42 +49,67 @@ function menu(self, menuItem)
 
 	log:info("menu")
 	local group = RadioGroup()
-	local currentSettings = self:getSettings()
+	self.currentSettings = self:getSettings()
 
 	-- get the menu table from jiveMain
-	local menuTable = jiveMain:getMenuTable()
+	self.menuTable = jiveMain:getMenuTable()
 	-- get items that have been customized
 	--local customTable = jiveMain:getCustomTable()
 
 	-- get the nodes. these become the choices + hidden
-	local nodeTable = jiveMain:getNodeTable()
+	self.nodeTable = jiveMain:getNodeTable()
 
 	local homeMenuItems = {}
 	
 	-- first add an entry for returning everything to defaults
-	local menuItem = {
+	table.insert(homeMenuItems,
+		{
 			text = self:string('CUSTOMIZE_RESTORE_DEFAULTS'),
 			weight = 1,
 			callback = function()
 				self:restoreDefaultsMenu()
 			end
-	}
-	table.insert(homeMenuItems, menuItem)
+		}
+	)
 
-	for id, item in pairs(menuTable) do
-		if id ~= 'nowhere' and id ~= 'hidden' then
+	table.insert(homeMenuItems,  
+		{
+			text = self:string('SETTINGS'),
+			weight = 100,
+			callback = function()
+				self:warnHide('settings')
+			end
+		}
+	)
+
+	table.insert(homeMenuItems, 
+		{
+			text = self:string('CUSTOMIZE_HOME'),
+			weight = 101,
+			callback = function()
+				self:warnHide('appletCustomizeHome')
+			end
+		}
+	)
+
+
+	for id, item in pairs(self.menuTable) do
+		if id ~= 'hidden' and
+			id ~= 'nowhere' and
+			id ~= 'appletCustomizeHome' and
+			id ~= 'settings' then
 			
 		local selected
 		local choices = { self:string('CUSTOMIZE_HIDDEN'), self:string('HOME') }
 
 		-- add the item's node to the list of choices if it's not home or hidden
 		if item.node ~= 'home' and item.node ~= 'hidden' then
-			table.insert(choices, nodeTable[item.node]['item']['text'])
+			table.insert(choices, self.nodeTable[item.node]['item']['text'])
 		end
 
-		if currentSettings[id] and currentSettings[id] == 'hidden' then
+		if self.currentSettings[id] and self.currentSettings[id] == 'hidden' then
 			selected = 1
-		elseif currentSettings[id] and currentSettings[id] == 'home' then
+		elseif self.currentSettings[id] and self.currentSettings[id] == 'home' then
 			selected = 2
 		else
 			selected = #choices
@@ -104,11 +130,8 @@ function menu(self, menuItem)
 						node = 'home'
 						self:getSettings()[item.id] = node
 					elseif selectedIndex == 3 then
-						node = menuTable[id]['node']
+						node = self.menuTable[id]['node']
 						self:getSettings()[item.id] = nil
-					end
-					-- special case: we want the customize home applet to move to the home menu when settings is removed
-					if item.id == settings and node == 'hidden' then
 					end
 					self:storeSettings()
 					jiveMain:setNode(item, node)
@@ -128,7 +151,7 @@ function menu(self, menuItem)
 	window:show()
 end
 
-function restoreDefaultsMenu(self)
+function restoreDefaultsMenu(self, id)
 	local window = Window("window", self:string("CUSTOMIZE_RESTORE_DEFAULTS"), 'settingstitle')
         local menu = SimpleMenu("menu", {
 		{
@@ -146,12 +169,12 @@ function restoreDefaultsMenu(self)
 				for id, node in pairs(currentSettings) do
 					self:getSettings()[id] = nil
 					-- fetch item by id
-					local item = jiveMain:getItemById(id)
+					local item = jiveMain:getMenuItem(id)
 					-- replace to original node, remove customNode
 					jiveMain:setNode(item, item.node)
 				end
 				self:storeSettings()
-				window:hide()
+				_goHome()
 			end
 		},
 	})
@@ -159,4 +182,75 @@ function restoreDefaultsMenu(self)
 	window:addWidget(Textarea("help", self:string("CUSTOMIZE_RESTORE_DEFAULTS_HELP")))
         window:addWidget(menu)
 	window:show()
+end
+
+function warnHide(self, id)
+	local item = self.menuTable[id]
+	local window = Window("window", item.text, 'settingstitle')
+
+	local selected
+	local choices = { self:string('CUSTOMIZE_HIDDEN'), self:string('HOME') }
+
+	-- add the item's (default) node to the list of choices if it's not home or hidden
+	if item.node ~= 'home' and item.node ~= 'hidden' then
+		table.insert(choices, self.nodeTable[item.node]['item']['text'])
+	end
+
+	if self.currentSettings[id] and self.currentSettings[id] == 'hidden' then
+		selected = 1
+	elseif self.currentSettings[id] and self.currentSettings[id] == 'home' then
+		selected = 2
+	else
+		selected = #choices
+	end
+
+	local menuItem = {
+		text = item.text,
+		icon = Choice(
+			"choice",
+			choices,
+			function(object, selectedIndex)
+				local node
+				if selectedIndex == 1 then
+					node = 'hidden'
+					self:getSettings()[item.id] = node
+				elseif selectedIndex == 2 then
+					node = 'home'
+					self:getSettings()[item.id] = node
+				elseif selectedIndex == 3 then
+					node = self.menuTable[id]['node']
+					self:getSettings()[item.id] = nil
+				end
+				self:storeSettings()
+				jiveMain:setNode(item, node)
+			end,
+			selected
+		),
+	}
+
+        local menu = SimpleMenu("menu", {
+		{
+			text = self:string("CUSTOMIZE_CANCEL"),
+			sound = "WINDOWHIDE",
+			callback = function()
+				window:hide()
+			end
+		},
+		menuItem
+	})
+
+
+	window:addWidget(Textarea("help", self:string("CUSTOMIZE_HIDDEN_WARNING")))
+        window:addWidget(menu)
+	window:show()
+end
+
+-- goHome
+-- pushes the home window to the top
+function _goHome()
+	local windowStack = Framework.windowStack
+	Framework:playSound("JUMP")
+	while #windowStack > 1 do
+		windowStack[#windowStack - 1]:hide()
+	end
 end

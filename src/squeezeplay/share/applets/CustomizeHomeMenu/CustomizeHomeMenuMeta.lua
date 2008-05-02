@@ -28,6 +28,6 @@ function registerApplet(self)
 		jiveMain:setCustomNode(id, node)
 	end
 
-	jiveMain:addItem(self:menuItem('customizeHomeApplet', 'home', "CUSTOMIZE_HOME", function(applet, ...) applet:menu(...) end, 1))
+	jiveMain:addItem(self:menuItem('appletCustomizeHome', 'settings', "CUSTOMIZE_HOME", function(applet, ...) applet:menu(...) end))
 
 end
