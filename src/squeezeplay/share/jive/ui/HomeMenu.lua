@@ -23,6 +23,7 @@ function __init(self, name, style, titleStyle)
 		windowTitle = name,
 		menuTable = {},
 		nodeTable = {},
+		customNodes = {},
 	})
 
 	local menu = SimpleMenu("menu")
@@ -41,19 +42,11 @@ function __init(self, name, style, titleStyle)
 end
 
 function getMenuTable(self)
-	if self.menuTable then
-		return self.menuTable
-	else
-		return {}
-	end
+	return self.menuTable
 end
 
 function getNodeTable(self)
-	if self.nodeTable then
-		return self.nodeTable
-	else
-		return {}
-	end
+	return self.nodeTable
 end
 
 function setTitle(self, title)
@@ -64,11 +57,21 @@ function setTitle(self, title)
 	end
 end
 
+function setCustomNode(self, id, node)
+	if self.menuTable[id] then
+		local item = self.menuTable[id]
+		self:removeItem(item)
+		self:addItem(item)
+	end
+	self.customNodes[id] = node
+end
+
 function setNode(self, item, node)
 	assert(item)
 	assert(node)
+
 	self:removeItem(item)
-	item.node = node
+	self:setCustomNode(item.id, node)
 	self:addItem(item)
 end
 
@@ -181,17 +184,23 @@ function addItem(self, item)
 		item.defaultNode = item.node
 	end
 
+	local whichNode
+	if self.customNodes[item.id] then
+		whichNode = self.customNodes[item.id]
+	else
+		whichNode = item.node
+	end
+
 	-- add or update the item from the menuTable
 	self.menuTable[item.id] = item
-	log:warn(self.menuTable[item.id]['node'])
 
-	if self.nodeTable[item.node] then
-		self.nodeTable[item.node].items[item.id] = item
-		self.nodeTable[item.node].menu:addItem(item)
+	if self.nodeTable[whichNode] then
+		self.nodeTable[whichNode].items[item.id] = item
+		self.nodeTable[whichNode].menu:addItem(item)
 	end
 
 	-- add parent node?
-	local nodeEntry = self.nodeTable[item.node]
+	local nodeEntry = self.nodeTable[whichNode]
 	if nodeEntry and nodeEntry.item then
 		local hasItem = self.menuTable[nodeEntry.item.id] ~= nil
 
@@ -237,11 +246,22 @@ end
 function removeItem(self, item)
 	assert(item)
 	assert(item.node)
-	if self.nodeTable[item.node] then
+
+	if self.menuTable[item.id] then
 		self.menuTable[item.id] = nil
-		self.nodeTable[item.node].items[item.id] = nil
-		self.nodeTable[item.node].menu:removeItem(item)
-		self:_checkRemoveNode(item.node)
+	end
+
+	local node
+	if self.customNodes[item.id] then
+		node = self.customNodes[item.id]
+	elseif self.nodeTable[item.node] then
+		node = item.node
+	end
+
+	if self.nodeTable[node] then
+		self.nodeTable[node].items[item.id] = nil
+		self.nodeTable[node].menu:removeItem(item)
+		self:_checkRemoveNode(node)
 	end
 end
 

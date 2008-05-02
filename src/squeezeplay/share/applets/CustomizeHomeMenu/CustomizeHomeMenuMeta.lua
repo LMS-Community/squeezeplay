@@ -1,5 +1,7 @@
+local pairs         = pairs
 local oo            = require("loop.simple")
 local AppletMeta    = require("jive.AppletMeta")
+local log           = require("jive.utils.log").addCategory("customizeHome", jive.utils.log.DEBUG)
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
@@ -9,18 +11,23 @@ module(...)
 oo.class(_M, AppletMeta)
 
 
-function jiveVersion(meta)
+function jiveVersion(self)
 	return 1, 1
 end
 
-
-function defaultSettings(meta)
+function defaultSettings(self)
         return {
         }
 end
 
-function registerApplet(meta)
-	
-	jiveMain:addItem(meta:menuItem('customizeHomeApplet', 'home', "CUSTOMIZE_HOME", function(applet, ...) applet:menu(...) end, 1))
+function registerApplet(self)
+
+	-- register custom nodes for ids stored in settings.lua in a HomeMenu table customNodes
+	local currentSettings = self:getSettings()
+	for id, node in pairs(currentSettings) do
+		jiveMain:setCustomNode(id, node)
+	end
+
+	jiveMain:addItem(self:menuItem('customizeHomeApplet', 'home', "CUSTOMIZE_HOME", function(applet, ...) applet:menu(...) end, 1))
 
 end

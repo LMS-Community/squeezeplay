@@ -59,17 +59,26 @@ function menu(self, menuItem)
 	local nodeTable = jiveMain:getNodeTable()
 
 	local homeMenuItems = {}
+	
+	-- first add an entry for returning everything to defaults
+	local menuItem = {
+			text = self:string('CUSTOMIZE_RESTORE_DEFAULTS'),
+			weight = 1,
+			callback = function()
+				self:restoreDefaultsMenu()
+			end
+	}
+	table.insert(homeMenuItems, menuItem)
+
 	for id, item in pairs(menuTable) do
 		if id ~= 'nowhere' and id ~= 'hidden' then
 			
 		local selected
-		local choices = { self:string('HIDDEN'), self:string('HOME') }
+		local choices = { self:string('CUSTOMIZE_HIDDEN'), self:string('HOME') }
 
-		-- add the default node if it's not home
-		if item.defaultNode ~= 'home' then
-			log:warn(id)
-			log:warn(item.node)
-			table.insert(choices, nodeTable[item.defaultNode]['item']['text'])
+		-- add the item's node to the list of choices if it's not home or hidden
+		if item.node ~= 'home' and item.node ~= 'hidden' then
+			table.insert(choices, nodeTable[item.node]['item']['text'])
 		end
 
 		if currentSettings[id] and currentSettings[id] == 'hidden' then
@@ -82,6 +91,7 @@ function menu(self, menuItem)
 
 		local menuItem = {
 			text = item.text,
+			weight = 5,
 			icon = Choice(
 				"choice",
 				choices,
@@ -89,14 +99,19 @@ function menu(self, menuItem)
 					local node
 					if selectedIndex == 1 then
 						node = 'hidden'
+						self:getSettings()[item.id] = node
 					elseif selectedIndex == 2 then
 						node = 'home'
+						self:getSettings()[item.id] = node
 					elseif selectedIndex == 3 then
-						node = menuTable[id]['defaultNode']
+						node = menuTable[id]['node']
+						self:getSettings()[item.id] = nil
 					end
-					jiveMain:setNode(item, node)
-					self:getSettings()[item.id] = item.node
+					-- special case: we want the customize home applet to move to the home menu when settings is removed
+					if item.id == settings and node == 'hidden' then
+					end
 					self:storeSettings()
+					jiveMain:setNode(item, node)
 				end,
 				selected
 			),
@@ -106,10 +121,42 @@ function menu(self, menuItem)
 	end
 
 	local menu = SimpleMenu("menu",  homeMenuItems  )
-	menu:setComparator(menu.itemComparatorAlpha)
+	menu:setComparator(menu.itemComparatorWeightAlpha)
 
-	local window = Window("window", self:string("CUSTOMIZE_HOME"))
+	local window = Window("window", self:string("CUSTOMIZE_HOME"), 'settingstitle')
 	window:addWidget(menu)
 	window:show()
 end
 
+function restoreDefaultsMenu(self)
+	local window = Window("window", self:string("CUSTOMIZE_RESTORE_DEFAULTS"), 'settingstitle')
+        local menu = SimpleMenu("menu", {
+		{
+			text = self:string("CUSTOMIZE_CANCEL"),
+			sound = "WINDOWHIDE",
+			callback = function()
+				window:hide()
+			end
+		},
+		{
+			text = self:string("CUSTOMIZE_CONTINUE"),
+			sound = "WINDOWSHOW",
+			callback = function()
+				local currentSettings = self:getSettings()
+				for id, node in pairs(currentSettings) do
+					self:getSettings()[id] = nil
+					-- fetch item by id
+					local item = jiveMain:getItemById(id)
+					-- replace to original node, remove customNode
+					jiveMain:setNode(item, item.node)
+				end
+				self:storeSettings()
+				window:hide()
+			end
+		},
+	})
+
+	window:addWidget(Textarea("help", self:string("CUSTOMIZE_RESTORE_DEFAULTS_HELP")))
+        window:addWidget(menu)
+	window:show()
+end
