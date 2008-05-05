@@ -32,5 +32,3 @@ CUSTOMIZE_CONTINUE
 CUSTOMIZE_RESTORE_DEFAULTS_HELP
 	EN	Select "Continue" to remove all custom menu organization settings
 
-CUSTOMIZE_HIDDEN_WARNING
-	EN	Warning: setting this item to 'Hidden' could block your ability to get back to this applet for further customization.

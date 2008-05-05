@@ -285,6 +285,12 @@ dist_applets_infobrowser_DATA = \
 	share/applets/InfoBrowser/InfoBrowserMeta.lua \
 	share/applets/InfoBrowser/strings.txt
 
+applets_customizehomemenudir = $(pkgdatadir)/applets/CustomizeHomeMenu
+dist_applets_customizehomemenu_DATA = \
+	share/applets/CustomizeHomeMenu/CustomizeHomeMenuApplet.lua \
+	share/applets/CustomizeHomeMenu/CustomizeHomeMenuMeta.lua \
+	share/applets/CustomizeHomeMenu/strings.txt
+
 applets_nowplayingdir = $(pkgdatadir)/applets/NowPlaying
 dist_applets_nowplaying_DATA = \
 	share/applets/NowPlaying/NowPlayingApplet.lua \

@@ -53,6 +53,15 @@ function getNodeTable(self)
 	return self.nodeTable
 end
 
+function getNodeText(self, node)
+	assert(node)
+	if self.nodeTable[node] and self.nodeTable[node]['item'] and self.nodeTable[node]['item']['text'] then
+		return self.nodeTable[node]['item']['text']
+	else
+		return nil
+	end
+end
+
 function setTitle(self, title)
 	if title then
 		self.window:setTitle(title)
@@ -64,8 +73,11 @@ end
 function setCustomNode(self, id, node)
 	if self.menuTable[id] then
 		local item = self.menuTable[id]
-		self:removeItem(item)
-		self:addItem(item)
+		-- an item from home that is set for 'hidden' should be removed from home
+		if item.node == 'home' and node == 'hidden' then
+			self:removeItemFromNode(item, 'home')
+		end
+		self:addItemToNode(item, node)
 	end
 	self.customNodes[id] = node
 end
@@ -127,9 +139,6 @@ function addNode(self, item)
 	if not item.weight then 
 		item.weight = 100
 	end
-	if not item.defaultNode then
-		item.defaultNode = item.node
-	end
 
 	-- remove/update node from previous node (if changed)
 	if self.menuTable[item.id] then
@@ -175,6 +184,22 @@ function addNode(self, item)
 	end
 end
 
+-- add an item to a node
+function addItemToNode(self, item, node)
+	assert(item.id)
+	if node then
+		self.customNodes[item.id] = node
+	else
+		node = item.node
+	end
+	assert(node)
+
+	if self.nodeTable[node] then
+		self.nodeTable[node].items[item.id] = item
+		self.nodeTable[node].menu:addItem(item)
+	end
+
+end
 
 -- add an item to a menu. the menu is ordered by weight, then item name
 function addItem(self, item)
@@ -184,27 +209,29 @@ function addItem(self, item)
 	if not item.weight then 
 		item.weight = 100
 	end
-	if not item.defaultNode then
-		item.defaultNode = item.node
-	end
-
-	local whichNode
-	if self.customNodes[item.id] then
-		whichNode = self.customNodes[item.id]
-	else
-		whichNode = item.node
-	end
 
 	-- add or update the item from the menuTable
 	self.menuTable[item.id] = item
 
-	if self.nodeTable[whichNode] then
-		self.nodeTable[whichNode].items[item.id] = item
-		self.nodeTable[whichNode].menu:addItem(item)
+	-- add item to its custom node
+	local customNode = self.customNodes[item.id]
+	if customNode then
+		if customNode == 'hidden' and item.node == 'home' then
+			self:addItemToNode(item, customNode)
+			self:removeItemFromNode(item, 'home')
+			return
+		elseif customNode == 'home' then
+			self:addItemToNode(item, customNode)
+		end
 	end
 
+	-- add item to its default node
+	self:addItemToNode(item)
+
 	-- add parent node?
-	local nodeEntry = self.nodeTable[whichNode]
+	local nodeEntry = self.nodeTable[item.node]
+
+	-- FIXME: this looks like a bug...shouldn't we be adding a node entry also when nodeEntry is false?
 	if nodeEntry and nodeEntry.item then
 		local hasItem = self.menuTable[nodeEntry.item.id] ~= nil
 
@@ -245,6 +272,19 @@ function _checkRemoveNode(self, node)
 	end
 end
 
+-- remove an item from a node
+function removeItemFromNode(self, item, node)
+	assert(item)
+	if not node then
+		node = item.node
+	end
+	assert(node)
+	if self.nodeTable[node] then
+		self.nodeTable[node].items[item.id] = nil
+		self.nodeTable[node].menu:removeItem(item)
+		self:_checkRemoveNode(node)
+	end
+end
 
 -- remove an item from a menu by its index
 function removeItem(self, item)
@@ -255,18 +295,10 @@ function removeItem(self, item)
 		self.menuTable[item.id] = nil
 	end
 
-	local node
-	if self.customNodes[item.id] then
-		node = self.customNodes[item.id]
-	elseif self.nodeTable[item.node] then
-		node = item.node
-	end
+	self:removeItemFromNode(item)
+	-- if this item is co-located in home, get rid of it there too
+	self:removeItemFromNode(item, 'home')
 
-	if self.nodeTable[node] then
-		self.nodeTable[node].items[item.id] = nil
-		self.nodeTable[node].menu:removeItem(item)
-		self:_checkRemoveNode(node)
-	end
 end
 
 -- remove an item from a menu by its id
