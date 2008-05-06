@@ -82,14 +82,14 @@ static FLAC__StreamDecoderWriteStatus decode_flac_write_callback(
 	if (frame->header.channels == 1) {
 		if (frame->header.bits_per_sample == 16) {
 			for (i=0; i<frame->header.blocksize; i++) {
-				FLAC__int32 s = *lptr++ << 16;
+				FLAC__int32 s = *lptr++ << 8;
 				*sptr++ = s;
 				*sptr++ = s;
 			}
 		}
-		else /* bites_per_sample == 24 */ {
+		else /* bits_per_sample == 24 */ {
 			for (i=0; i<frame->header.blocksize; i++) {
-				FLAC__int32 s = *lptr++ << 8;
+				FLAC__int32 s = *lptr++;
 				*sptr++ = s;
 				*sptr++ = s;
 			}
@@ -98,11 +98,11 @@ static FLAC__StreamDecoderWriteStatus decode_flac_write_callback(
 	else {
 		if (frame->header.bits_per_sample == 16) {
 			for (i=0; i<frame->header.blocksize; i++) {
-				*sptr++ = *lptr++ << 16;
-				*sptr++ = *rptr++ << 16;
+				*sptr++ = *lptr++ << 8;
+				*sptr++ = *rptr++ << 8;
 			}
 		}
-		else /* bites_per_sample == 24 */ {
+		else /* bits_per_sample == 24 */ {
 			for (i=0; i<frame->header.blocksize; i++) {
 				*sptr++ = *lptr++ << 8;
 				*sptr++ = *rptr++ << 8;
@@ -176,10 +176,6 @@ static bool_t decode_flac_callback(void *data) {
 
 
 static u32_t decode_flac_period(void *data) {
-// XXXX
-	return 10;
-
-#if 0
 	struct decode_flac *self = (struct decode_flac *) data;
 
 	if (self->sample_rate <= 48000) {
@@ -188,7 +184,6 @@ static u32_t decode_flac_period(void *data) {
 	else {
 		return 4;
 	}
-#endif
 }
 
 
@@ -220,7 +215,8 @@ static void *decode_flac_start(u8_t *params, u32_t num_params) {
 	self->sample_rate = 44100;
 	self->error_occurred = FALSE;
 	
-	FLAC__stream_decoder_process_until_end_of_metadata(self->decoder);
+	// XXXX this was needed for SB, why?
+	//FLAC__stream_decoder_process_until_end_of_metadata(self->decoder);
 
 	return self;
 }

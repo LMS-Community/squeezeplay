@@ -11,16 +11,9 @@
 #include "audio/fifo.h"
 
 
-/* Audio sample.
- * This can be set to 16-bits or 32-bits as a compile time option.
+/* Audio sample, 24-bit padded.
  */
-#define AUDIO_ENCODING_BITS 32
-
-#if AUDIO_ENCODING_BITS == 32
 typedef s32_t sample_t;
-#else
-typedef s16_t sample_t;
-#endif
 
 #define DECODER_MAX_PARAMS 32
 

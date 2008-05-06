@@ -23,7 +23,7 @@ static bool_t output_started = FALSE;
 
 void decode_output_begin(void) {
 	// XXXX fifo mutex
-	
+
 	decode_audio->start();
 
 	if (output_started) {

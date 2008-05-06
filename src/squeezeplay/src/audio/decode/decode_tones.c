@@ -12,7 +12,7 @@
 #include "audio/decode/decode_priv.h"
 
 
-#define BLOCKSIZE 1024
+#define BLOCKSIZE 2048
 
 struct decode_tones {
 	sample_t *write_buffer;
@@ -36,11 +36,9 @@ struct decode_tones {
 
 /* 40-step (360¡) sine is used for 1102.5 Hz, 2205.0, etc */
 /* TODO make 90¡ */
-static const u32_t sine40[] = {	/* amplitude 2^32-2.  40 samples per cycle gives 1102.5Hz */
-0, 335940456, 663608942, 974937174, 1262259217, 1518500249, 1737350766, 1913421940, 2042378316, 2121044560, 2147483647, 2121044560, 2042378316, 
-1913421940, 1737350766, 1518500249, 1262259217, 974937174, 663608942, 335940456, 0, -335940456, -663608942, -974937174, -1262259217, -1518500249, 
--1737350766, -1913421940, -2042378316, -2121044560, -2147483647, -2121044560, -2042378316, -1913421940, -1737350766, -1518500249, -1262259217, 
--974937174, -663608942, -335940456
+static const u32_t sine40[] = {	/* amplitude 2^24-2.  40 samples per cycle gives 1102.5Hz */
+0,1312267,2592222,3808348,4930699,5931641,6786526,7474304,7978039,8285329,8388607,8285329,7978039,7474304,6786526,5931641,4930700,3808348,2592222,1312267,
+0,-1312267,-2592222,-3808348,-4930699,-5931641,-6786526,-7474304,-7978039,-8285329,-8388607,-8285329,-7978039,-7474304,-6786526,-5931641,-4930700,-3808348,-2592222,-1312267
 };
 
 /* 16-step (90¡) sine s used for calculated sines at arbitrary frequencies */
@@ -97,7 +95,8 @@ static bool_t decode_tones_callback(void *data) {
 	sample_t sample, left, right;
 	sample_t *write_pos;
 	int i;
-	
+
+
 	if (!decode_output_can_write(sizeof(sample_t) * BLOCKSIZE, self->sample_rate)) {
 		return FALSE;
 	}
@@ -107,11 +106,7 @@ static bool_t decode_tones_callback(void *data) {
 	switch (self->mode) {
 		case DECODE_TONES_MODE_SINE40:
 			for (i = 0; i < BLOCKSIZE; i+=2) {
-#if AUDIO_ENCODING_BITS == 32
 				sample = sine40[self->count];
-#else
-				sample = (sine40[self->count] >> 16);
-#endif
 		
 				if (++self->count == 40)
 					self->count = 0;
@@ -141,11 +136,7 @@ static bool_t decode_tones_callback(void *data) {
 					case 4: self->theta += SINE_FREQ_TO_STEP_44100(349.2); break;	
 				}
 
-#if AUDIO_ENCODING_BITS == 32
-				sample = (decode_tones_sine(self->theta) << 8);
-#else
-				sample = (decode_tones_sine(self->theta) >> 8);
-#endif
+				sample = decode_tones_sine(self->theta);
 				
 				/* Select which channel */
 				if (self->tones_multitone_test <= 5) {
@@ -177,14 +168,18 @@ static bool_t decode_tones_callback(void *data) {
 
 
 static u32_t decode_tones_period(void *data) {
-	struct decode_tones *self = (struct decode_tones *) data;
+    //	struct decode_tones *self = (struct decode_tones *) data;
 
+	return 1;
+
+#if 0
 	if (self->sample_rate <= 48000) {
 		return 8;
 	}
 	else {
 		return 4;
 	}
+#endif
 }
 
 

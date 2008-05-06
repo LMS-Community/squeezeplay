@@ -220,11 +220,7 @@ static void decode_portaudio_init(void) {
 
 	memset(&outputParam, 0, sizeof(outputParam));
 	outputParam.channelCount = 2;
-#if AUDIO_ENCODING_BITS == 32
-	outputParam.sampleFormat = paInt32;
-#else
-	outputParam.sampleFormat = paInt16;
-#endif
+	outputParam.sampleFormat = paInt24Padded;
 
 	num_devices = Pa_GetDeviceCount();
 	for (i = 0; i < num_devices; i++) {

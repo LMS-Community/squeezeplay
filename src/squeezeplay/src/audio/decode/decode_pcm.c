@@ -77,7 +77,7 @@ static sample_t pcm_read16bitBE(u8_t *pos) {
 
 
 static sample_t pcm_read16bitLE(u8_t *pos) { 
-	return (*pos | (*(pos + 1) << 8)) << 16;
+	return ((*pos << 16) | (*(pos + 1) << 8));
 }
 
 
