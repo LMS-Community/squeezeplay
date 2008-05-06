@@ -123,11 +123,11 @@ end
 local opcodes = {
 	HELO = function(self, data)
 		assert(data.revision)
-
-		local uuid, mac = self.jnt:getUUID()
+		assert(data.mac)
+		assert(data.uuid)
 
 		local macp = {}
-		for v in string.gmatch(data.mac or mac, "(%x%x)") do
+		for v in string.gmatch(data.mac, "(%x%x)") do
 			macp[#macp + 1] = string.char(tonumber(v, 16))
 		end
 
@@ -286,6 +286,11 @@ function __init(self, jnt, serverip, heloPacket)
 
 	-- helo packet sent on connection
 	obj.heloPacket     = heloPacket
+
+	local uuid, mac = jnt:getUUID()
+	obj.heloPacket.mac = string.lower(mac)
+	obj.heloPacket.uuid = uuid
+
 	obj.statusCallback = _defaultStatusCallback
 
 	-- opcode subscriptions
@@ -305,6 +310,12 @@ end
 -- Return the server ip address
 function getServerIp(self)
 	return self.serverip
+end
+
+
+-- Return this player's id 
+function getId(self)
+	return self.heloPacket.mac
 end
 
 

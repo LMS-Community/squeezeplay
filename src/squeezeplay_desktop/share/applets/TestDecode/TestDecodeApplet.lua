@@ -54,28 +54,6 @@ function menu(self, menuItem)
 
 	local menu = SimpleMenu("menu",
 		{
---[[
-			{ text = "VolUp",
-				callback = function()
-					sp:send({
-							opcode = "IR  ",
-							format = 1,
-							noBits = 1,
-							code = 0x7689807f,
-						})
-				end,
-			},
-			{ text = "VolDown",
-				callback = function()
-				sp:send({
-							opcode = "IR  ",
-							format = 1,
-							noBits = 1,
-							code = 0x768900ff,
-						})
-				end,
-			},
---]]
 			{ text = "State:", icon = values[1] },
 			{ text = "Decode:", icon = values[2] },
 			{ text = "Output:", icon = values[3] },
@@ -107,20 +85,13 @@ function menu(self, menuItem)
 				end
 			},
 			
-			{ text = "Decode WMA",
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					Decode:start(
-						string.byte('w'), 0, 0, 0, 0, 0, 0
-					)
-				end
-			},
 			{ text = "Decode Tone Multitone",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					Decode:start(
 						string.byte('t'), 0, 0, 0, 0, 0, 1
 					)
+					Decode:resume()
 				end
 			},
 			{ text = "Decode Tone Sine 44.1k",
@@ -129,6 +100,7 @@ function menu(self, menuItem)
 					Decode:start(
 						string.byte('t'), 0, 0, 0, 0, 0, 10
 					)
+					Decode:resume()
 				end
 			},
 			{ text = "Decode Tone Sine 48k",
@@ -137,6 +109,7 @@ function menu(self, menuItem)
 					Decode:start(
 						string.byte('t'), 0, 0, 0, 0, 0, 11
 					)
+					Decode:resume()
 				end
 			},
 			{ text = "Decode Tone Sine 88.2k",
@@ -145,6 +118,7 @@ function menu(self, menuItem)
 					Decode:start(
 						string.byte('t'), 0, 0, 0, 0, 0, 12
 					)
+					Decode:resume()
 				end
 			},
 			{ text = "Decode Tone Sine 96k",
@@ -153,6 +127,7 @@ function menu(self, menuItem)
 					Decode:start(
 						string.byte('t'), 0, 0, 0, 0, 0, 13
 					)
+					Decode:resume()
 				end
 			},			
 
