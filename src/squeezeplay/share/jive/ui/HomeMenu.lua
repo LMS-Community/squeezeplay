@@ -23,6 +23,7 @@ function __init(self, name, style, titleStyle)
 		windowTitle = name,
 		menuTable = {},
 		nodeTable = {},
+		customNodes = {},
 	})
 
 	local menu = SimpleMenu("menu")
@@ -40,6 +41,26 @@ function __init(self, name, style, titleStyle)
 	return obj
 end
 
+function getMenuItem(self, id)
+	return self.menuTable[id]
+end
+
+function getMenuTable(self)
+	return self.menuTable
+end
+
+function getNodeTable(self)
+	return self.nodeTable
+end
+
+function getNodeText(self, node)
+	assert(node)
+	if self.nodeTable[node] and self.nodeTable[node]['item'] and self.nodeTable[node]['item']['text'] then
+		return self.nodeTable[node]['item']['text']
+	else
+		return nil
+	end
+end
 
 function setTitle(self, title)
 	if title then
@@ -49,6 +70,26 @@ function setTitle(self, title)
 	end
 end
 
+function setCustomNode(self, id, node)
+	if self.menuTable[id] then
+		local item = self.menuTable[id]
+		-- an item from home that is set for 'hidden' should be removed from home
+		if item.node == 'home' and node == 'hidden' then
+			self:removeItemFromNode(item, 'home')
+		end
+		self:addItemToNode(item, node)
+	end
+	self.customNodes[id] = node
+end
+
+function setNode(self, item, node)
+	assert(item)
+	assert(node)
+
+	self:removeItem(item)
+	self:setCustomNode(item.id, node)
+	self:addItem(item)
+end
 
 --[[
 
@@ -87,18 +128,19 @@ function _changeNode(self, id, node)
 	end
 end
 
-
 function addNode(self, item)
 	assert(item.id)
 	assert(item.node)
 
 	log:debug("JiveMain.addNode: Adding a non-root node, ", item.id)
 
+	item.isANode = 1
+
 	if not item.weight then 
 		item.weight = 100
 	end
 
-	-- remove node from previous node (if changed)
+	-- remove/update node from previous node (if changed)
 	if self.menuTable[item.id] then
 		self.menuTable[item.id].text = item.text
 		local newNode    = item.node
@@ -109,8 +151,6 @@ function addNode(self, item)
 
 		return
 	end
-
-	-- new/update node
 
 	local window
 	if item.window and item.window.titleStyle then
@@ -144,6 +184,22 @@ function addNode(self, item)
 	end
 end
 
+-- add an item to a node
+function addItemToNode(self, item, node)
+	assert(item.id)
+	if node then
+		self.customNodes[item.id] = node
+	else
+		node = item.node
+	end
+	assert(node)
+
+	if self.nodeTable[node] then
+		self.nodeTable[node].items[item.id] = item
+		self.nodeTable[node].menu:addItem(item)
+	end
+
+end
 
 -- add an item to a menu. the menu is ordered by weight, then item name
 function addItem(self, item)
@@ -157,13 +213,25 @@ function addItem(self, item)
 	-- add or update the item from the menuTable
 	self.menuTable[item.id] = item
 
-	if self.nodeTable[item.node] then
-		self.nodeTable[item.node].items[item.id] = item
-		self.nodeTable[item.node].menu:addItem(item)
+	-- add item to its custom node
+	local customNode = self.customNodes[item.id]
+	if customNode then
+		if customNode == 'hidden' and item.node == 'home' then
+			self:addItemToNode(item, customNode)
+			self:removeItemFromNode(item, 'home')
+			return
+		elseif customNode == 'home' then
+			self:addItemToNode(item, customNode)
+		end
 	end
+
+	-- add item to its default node
+	self:addItemToNode(item)
 
 	-- add parent node?
 	local nodeEntry = self.nodeTable[item.node]
+
+	-- FIXME: this looks like a bug...shouldn't we be adding a node entry also when nodeEntry is false?
 	if nodeEntry and nodeEntry.item then
 		local hasItem = self.menuTable[nodeEntry.item.id] ~= nil
 
@@ -190,7 +258,7 @@ end
 function _checkRemoveNode(self, node)
 	local nodeEntry = self.nodeTable[node]
 
-	if nodeEntry.item then
+	if nodeEntry and nodeEntry.item then
 		local hasItem = self.menuTable[nodeEntry.item.id] ~= nil
 
 		if hasItem then
@@ -204,28 +272,43 @@ function _checkRemoveNode(self, node)
 	end
 end
 
+-- remove an item from a node
+function removeItemFromNode(self, item, node)
+	assert(item)
+	if not node then
+		node = item.node
+	end
+	assert(node)
+	if self.nodeTable[node] then
+		self.nodeTable[node].items[item.id] = nil
+		self.nodeTable[node].menu:removeItem(item)
+		self:_checkRemoveNode(node)
+	end
+end
 
 -- remove an item from a menu by its index
 function removeItem(self, item)
 	assert(item)
 	assert(item.node)
-	if self.nodeTable[item.node] then
-		self.nodeTable[item.node].menu:removeItem(item)
 
+	if self.menuTable[item.id] then
 		self.menuTable[item.id] = nil
-		self.nodeTable[item.node].items[item.id] = nil
-
-		self:_checkRemoveNode(item.node)
 	end
+
+	self:removeItemFromNode(item)
+	-- if this item is co-located in home, get rid of it there too
+	self:removeItemFromNode(item, 'home')
+
 end
 
 -- remove an item from a menu by its id
 function removeItemById(self, id)
 	if self.menuTable[id] then
 		local item = self.menuTable[id]
-
-		self.nodeTable[item.node].menu:removeItemById(id)
-		self.nodeTable[item.node].items[id] = nil
+		if self.nodeTable[item.node] then
+			self.nodeTable[item.node].menu:removeItemById(id)
+			self.nodeTable[item.node].items[id] = nil
+		end
 		self.menuTable[id] = nil
 
 		self:_checkRemoveNode(item.node)

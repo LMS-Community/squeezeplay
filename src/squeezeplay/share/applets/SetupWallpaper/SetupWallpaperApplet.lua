@@ -87,7 +87,7 @@ local localwallpapers = {
 	}
 }
 
-local authors = { "Chapple", "Scott Robinson", "Los Cardinalos", "Orin Optiglot", "Ryan McD", "Fred Fredrickson" }
+local authors = { "Chapple", "Scott Robinson", "Los Cardinalos", "Orin Optiglot", "Ryan McD", "Robbie Fisher" }
 
 local PREFIX = "applets/SetupWallpaper/wallpaper/"
 

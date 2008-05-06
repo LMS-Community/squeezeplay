@@ -42,7 +42,9 @@ bin_PROGRAMS = jive$(EXEEXT)
 @TEST_PROGRAMS_TRUE@test_PROGRAMS = jiveblit$(EXEEXT)
 DIST_COMMON = $(am__configure_deps) \
 	$(dist_applets_choosemusicsource_DATA) \
-	$(dist_applets_clock_DATA) $(dist_applets_defaultskin_DATA) \
+	$(dist_applets_clock_DATA) \
+	$(dist_applets_customizehomemenu_DATA) \
+	$(dist_applets_defaultskin_DATA) \
 	$(dist_applets_defaultskin_images_DATA) \
 	$(dist_applets_flickr_DATA) $(dist_applets_httpauth_DATA) \
 	$(dist_applets_infobrowser_DATA) $(dist_applets_log_DATA) \
@@ -55,6 +57,7 @@ DIST_COMMON = $(am__configure_deps) \
 	$(dist_applets_setupappletinstaller_DATA) \
 	$(dist_applets_setupdatetime_DATA) \
 	$(dist_applets_setuplanguage_DATA) \
+	$(dist_applets_setupnettest_DATA) \
 	$(dist_applets_setupsoundeffects_DATA) \
 	$(dist_applets_setupsoundeffects_sounds_DATA) \
 	$(dist_applets_setupwallpaper_DATA) \
@@ -99,6 +102,7 @@ libjiveui_la_OBJECTS = $(am_libjiveui_la_OBJECTS)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" \
 	"$(DESTDIR)$(applets_choosemusicsourcedir)" \
 	"$(DESTDIR)$(applets_clockdir)" \
+	"$(DESTDIR)$(applets_customizehomemenudir)" \
 	"$(DESTDIR)$(applets_defaultskindir)" \
 	"$(DESTDIR)$(applets_defaultskin_imagesdir)" \
 	"$(DESTDIR)$(applets_flickrdir)" \
@@ -115,6 +119,7 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" \
 	"$(DESTDIR)$(applets_setupappletinstallerdir)" \
 	"$(DESTDIR)$(applets_setupdatetimedir)" \
 	"$(DESTDIR)$(applets_setuplanguagedir)" \
+	"$(DESTDIR)$(applets_setupnettestdir)" \
 	"$(DESTDIR)$(applets_setupsoundeffectsdir)" \
 	"$(DESTDIR)$(applets_setupsoundeffects_soundsdir)" \
 	"$(DESTDIR)$(applets_setupwallpaperdir)" \
@@ -157,6 +162,7 @@ am__vpath_adj = case $$p in \
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
 dist_applets_choosemusicsourceDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_clockDATA_INSTALL = $(INSTALL_DATA)
+dist_applets_customizehomemenuDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_defaultskinDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_defaultskin_imagesDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_flickrDATA_INSTALL = $(INSTALL_DATA)
@@ -173,6 +179,7 @@ dist_applets_setupSqueezeboxDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupappletinstallerDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupdatetimeDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setuplanguageDATA_INSTALL = $(INSTALL_DATA)
+dist_applets_setupnettestDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupsoundeffectsDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupsoundeffects_soundsDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupwallpaperDATA_INSTALL = $(INSTALL_DATA)
@@ -187,7 +194,9 @@ dist_luanetDATA_INSTALL = $(INSTALL_DATA)
 dist_luaslimDATA_INSTALL = $(INSTALL_DATA)
 dist_luautilDATA_INSTALL = $(INSTALL_DATA)
 DATA = $(dist_applets_choosemusicsource_DATA) \
-	$(dist_applets_clock_DATA) $(dist_applets_defaultskin_DATA) \
+	$(dist_applets_clock_DATA) \
+	$(dist_applets_customizehomemenu_DATA) \
+	$(dist_applets_defaultskin_DATA) \
 	$(dist_applets_defaultskin_images_DATA) \
 	$(dist_applets_flickr_DATA) $(dist_applets_httpauth_DATA) \
 	$(dist_applets_infobrowser_DATA) $(dist_applets_log_DATA) \
@@ -200,6 +209,7 @@ DATA = $(dist_applets_choosemusicsource_DATA) \
 	$(dist_applets_setupappletinstaller_DATA) \
 	$(dist_applets_setupdatetime_DATA) \
 	$(dist_applets_setuplanguage_DATA) \
+	$(dist_applets_setupnettest_DATA) \
 	$(dist_applets_setupsoundeffects_DATA) \
 	$(dist_applets_setupsoundeffects_sounds_DATA) \
 	$(dist_applets_setupwallpaper_DATA) \
@@ -599,6 +609,12 @@ dist_applets_infobrowser_DATA = \
 	share/applets/InfoBrowser/InfoBrowserMeta.lua \
 	share/applets/InfoBrowser/strings.txt
 
+applets_customizehomemenudir = $(pkgdatadir)/applets/CustomizeHomeMenu
+dist_applets_customizehomemenu_DATA = \
+	share/applets/CustomizeHomeMenu/CustomizeHomeMenuApplet.lua \
+	share/applets/CustomizeHomeMenu/CustomizeHomeMenuMeta.lua \
+	share/applets/CustomizeHomeMenu/strings.txt
+
 applets_nowplayingdir = $(pkgdatadir)/applets/NowPlaying
 dist_applets_nowplaying_DATA = \
 	share/applets/NowPlaying/NowPlayingApplet.lua \
@@ -678,6 +694,12 @@ dist_applets_httpauth_DATA = \
 	share/applets/HttpAuth/HttpAuthApplet.lua \
 	share/applets/HttpAuth/HttpAuthMeta.lua \
 	share/applets/HttpAuth/strings.txt
+
+applets_setupnettestdir = $(datadir)/jive/applets/SetupNetTest
+dist_applets_setupnettest_DATA = \
+	share/applets/SetupNetTest/SetupNetTestApplet.lua \
+	share/applets/SetupNetTest/SetupNetTestMeta.lua \
+	share/applets/SetupNetTest/strings.txt	
 
 
 # Default skin
@@ -1340,6 +1362,23 @@ uninstall-dist_applets_clockDATA:
 	  echo " rm -f '$(DESTDIR)$(applets_clockdir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(applets_clockdir)/$$f"; \
 	done
+install-dist_applets_customizehomemenuDATA: $(dist_applets_customizehomemenu_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(applets_customizehomemenudir)" || $(mkdir_p) "$(DESTDIR)$(applets_customizehomemenudir)"
+	@list='$(dist_applets_customizehomemenu_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(dist_applets_customizehomemenuDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_customizehomemenudir)/$$f'"; \
+	  $(dist_applets_customizehomemenuDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_customizehomemenudir)/$$f"; \
+	done
+
+uninstall-dist_applets_customizehomemenuDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_applets_customizehomemenu_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(applets_customizehomemenudir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(applets_customizehomemenudir)/$$f"; \
+	done
 install-dist_applets_defaultskinDATA: $(dist_applets_defaultskin_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(applets_defaultskindir)" || $(mkdir_p) "$(DESTDIR)$(applets_defaultskindir)"
@@ -1611,6 +1650,23 @@ uninstall-dist_applets_setuplanguageDATA:
 	  f=$(am__strip_dir) \
 	  echo " rm -f '$(DESTDIR)$(applets_setuplanguagedir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(applets_setuplanguagedir)/$$f"; \
+	done
+install-dist_applets_setupnettestDATA: $(dist_applets_setupnettest_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(applets_setupnettestdir)" || $(mkdir_p) "$(DESTDIR)$(applets_setupnettestdir)"
+	@list='$(dist_applets_setupnettest_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(dist_applets_setupnettestDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_setupnettestdir)/$$f'"; \
+	  $(dist_applets_setupnettestDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_setupnettestdir)/$$f"; \
+	done
+
+uninstall-dist_applets_setupnettestDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_applets_setupnettest_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(applets_setupnettestdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(applets_setupnettestdir)/$$f"; \
 	done
 install-dist_applets_setupsoundeffectsDATA: $(dist_applets_setupsoundeffects_DATA)
 	@$(NORMAL_INSTALL)
@@ -2067,6 +2123,7 @@ info-am:
 
 install-data-am: install-dist_applets_choosemusicsourceDATA \
 	install-dist_applets_clockDATA \
+	install-dist_applets_customizehomemenuDATA \
 	install-dist_applets_defaultskinDATA \
 	install-dist_applets_defaultskin_imagesDATA \
 	install-dist_applets_flickrDATA \
@@ -2083,6 +2140,7 @@ install-data-am: install-dist_applets_choosemusicsourceDATA \
 	install-dist_applets_setupappletinstallerDATA \
 	install-dist_applets_setupdatetimeDATA \
 	install-dist_applets_setuplanguageDATA \
+	install-dist_applets_setupnettestDATA \
 	install-dist_applets_setupsoundeffectsDATA \
 	install-dist_applets_setupsoundeffects_soundsDATA \
 	install-dist_applets_setupwallpaperDATA \
@@ -2126,6 +2184,7 @@ ps-am:
 uninstall-am: uninstall-binPROGRAMS \
 	uninstall-dist_applets_choosemusicsourceDATA \
 	uninstall-dist_applets_clockDATA \
+	uninstall-dist_applets_customizehomemenuDATA \
 	uninstall-dist_applets_defaultskinDATA \
 	uninstall-dist_applets_defaultskin_imagesDATA \
 	uninstall-dist_applets_flickrDATA \
@@ -2142,6 +2201,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	uninstall-dist_applets_setupappletinstallerDATA \
 	uninstall-dist_applets_setupdatetimeDATA \
 	uninstall-dist_applets_setuplanguageDATA \
+	uninstall-dist_applets_setupnettestDATA \
 	uninstall-dist_applets_setupsoundeffectsDATA \
 	uninstall-dist_applets_setupsoundeffects_soundsDATA \
 	uninstall-dist_applets_setupwallpaperDATA \
@@ -2164,6 +2224,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	install install-am install-binPROGRAMS install-data \
 	install-data-am install-dist_applets_choosemusicsourceDATA \
 	install-dist_applets_clockDATA \
+	install-dist_applets_customizehomemenuDATA \
 	install-dist_applets_defaultskinDATA \
 	install-dist_applets_defaultskin_imagesDATA \
 	install-dist_applets_flickrDATA \
@@ -2180,6 +2241,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	install-dist_applets_setupappletinstallerDATA \
 	install-dist_applets_setupdatetimeDATA \
 	install-dist_applets_setuplanguageDATA \
+	install-dist_applets_setupnettestDATA \
 	install-dist_applets_setupsoundeffectsDATA \
 	install-dist_applets_setupsoundeffects_soundsDATA \
 	install-dist_applets_setupwallpaperDATA \
@@ -2198,6 +2260,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	tags uninstall uninstall-am uninstall-binPROGRAMS \
 	uninstall-dist_applets_choosemusicsourceDATA \
 	uninstall-dist_applets_clockDATA \
+	uninstall-dist_applets_customizehomemenuDATA \
 	uninstall-dist_applets_defaultskinDATA \
 	uninstall-dist_applets_defaultskin_imagesDATA \
 	uninstall-dist_applets_flickrDATA \
@@ -2214,6 +2277,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	uninstall-dist_applets_setupappletinstallerDATA \
 	uninstall-dist_applets_setupdatetimeDATA \
 	uninstall-dist_applets_setuplanguageDATA \
+	uninstall-dist_applets_setupnettestDATA \
 	uninstall-dist_applets_setupsoundeffectsDATA \
 	uninstall-dist_applets_setupsoundeffects_soundsDATA \
 	uninstall-dist_applets_setupwallpaperDATA \

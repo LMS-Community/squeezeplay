@@ -1,0 +1,34 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+CUSTOMIZE_HOME
+	EN	Customize Home Menu
+
+CUSTOMIZE_HIDDEN
+	EN	Hidden
+
+CUSTOMIZE_RESTORE_DEFAULTS
+	EN	Restore Menu Defaults
+
+CUSTOMIZE_CANCEL
+	DA	Afbryd
+	DE	Abbrechen
+	EN	Cancel
+	ES	Cancelar
+	FR	Annuler
+	IT	Annulla
+	NL	Annuleren
+
+CUSTOMIZE_CONTINUE
+	DA	Fortsæt
+	DE	Weiter
+	EN	Continue
+	ES	Continuar
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+
+CUSTOMIZE_RESTORE_DEFAULTS_HELP
+	EN	Select "Continue" to remove all custom menu organization settings
+
