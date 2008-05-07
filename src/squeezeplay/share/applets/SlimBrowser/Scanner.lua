@@ -39,7 +39,8 @@ local KEY_REW                = jive.ui.KEY_REW
 -- Tuning
 local POSITION_STEP = 5
 local POPUP_AUTOCLOSE_INTERVAL = 10000  -- close popup after this much inactivity
-local POPUP_AUTOINVOKE_INTERVAL = 1300	-- invoke gotoTime after this much inactivity
+local AUTOINVOKE_INTERVAL_LOCAL = 400	-- invoke gotoTime after this much inactivity for local tracks
+local AUTOINVOKE_INTERVAL_REMOTE = 2000	-- and this much for remote streams
 local ACCELERATION_INTERVAL = 350       -- events faster than this cause acceleration
 local ACCELERATION_INTERVAL_SLOW = 200  -- but less so unless faster than this
 
@@ -118,6 +119,12 @@ local function _openPopup(self)
 
 	self.displayTimer:restart()
 
+	if self.player:isRemote() then
+		self.autoinvokeTime = AUTOINVOKE_INTERVAL_REMOTE
+	else
+		self.autoinvokeTime = AUTOINVOKE_INTERVAL_LOCAL	
+	end
+
 	_updateDisplay(self)
 
 	popup:showBriefly(POPUP_AUTOCLOSE_INTERVAL,
@@ -176,7 +183,8 @@ local function _updateSelectedTime(self)
 	-- self.elapsed = self.player:gotoTime(new) or self.elapsed
 	self.elapsed = new
 	_updateDisplay(self)
-	self.autoInvokeTimer:restart()
+	
+	self.autoInvokeTimer:restart(self.autoinvokeTime)
 end
 
 
@@ -195,7 +203,7 @@ function __init(self, applet)
 	obj.applet = applet
 	obj.lastUpdate = 0
 	obj.displayTimer = Timer(1000, function() _updateElapsedTime(obj) end)
-	obj.autoInvokeTimer = Timer(POPUP_AUTOINVOKE_INTERVAL, function() _gotoTime(obj) end, true)
+	obj.autoInvokeTimer = Timer(AUTOINVOKE_INTERVAL_LOCAL, function() _gotoTime(obj) end, true)
 	obj.holdTimer = Timer(100, function() _updateSelectedTime(obj) end)
 
 	return obj

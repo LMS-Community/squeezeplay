@@ -1010,6 +1010,11 @@ function isTrackSeekable(self)
 	return self.trackDuration and self.state["can_seek"]
 end
 
+-- isRemote
+function isRemote(self)
+	return self.state.remote
+end
+
 -- mute
 -- mutes or ummutes the player, returns a negitive value if the player is muted
 function mute(self, mute)
