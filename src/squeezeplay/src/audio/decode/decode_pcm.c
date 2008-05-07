@@ -238,7 +238,7 @@ static void *decode_pcm_start(u8_t *params, u32_t num_params) {
 	self->stereo = (params[2] == '2');
 	self->big_endian = (params[3] == '0');
 
-	DEBUG_TRACE("sample_size=%d sample_rate=%d stereo=%d big_endian=%d\n",
+	DEBUG_TRACE("sample_size=%d sample_rate=%d stereo=%d big_endian=%d",
 		    self->sample_size, self->sample_rate, self->stereo, self->big_endian);
 
 	self->read_buffer = malloc(sizeof(u8_t) * BLOCKSIZE);
