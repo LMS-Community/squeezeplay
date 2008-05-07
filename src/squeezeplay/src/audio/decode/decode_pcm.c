@@ -40,100 +40,106 @@ static u32_t pcm_sample_widths[] = {
 
 
 static sample_t pcm_read8bitBE(u8_t *pos) { 
-	DEBUG_ERROR("here!");
-	return 0;
-
-/*
+	sample_t sample;
 	struct { s32_t sign_extend:8; } s;
-	s32_t sample = s.sign_extend = mem_read_u8(MEM_DATA, pos+offset);
-	sample <<= 16;
-	return sample;
-*/
+
+	/* XXXX: REVIEW */
+
+	sample = *pos;
+
+	sample = s.sign_extend = sample;
+	return sample << 16;
 }
 
 
 static sample_t pcm_read8bitLE(u8_t *pos) { 
-	DEBUG_ERROR("here!");
-	return 0;
-
-/*
+	sample_t sample;
 	struct { s32_t sign_extend:8; } s;
-	s32_t sample = s.sign_extend = mem_read_u8(MEM_DATA, pos+3-offset);
+
+	/* XXXX: REVIEW */
+
+	sample = *pos;
+
+	sample = s.sign_extend = sample;
 	return sample << 16;
-*/
 }
 
 
 static sample_t pcm_read16bitBE(u8_t *pos) { 
-	DEBUG_ERROR("here!");
-	return 0;
-
-/*
+	sample_t sample;
 	struct { s32_t sign_extend:16; } s;
-	s32_t sample = s.sign_extend = mem_read_u16(MEM_DATA, pos+(offset * sizeof(u16_t)));
-	return sample << 8;	
-*/
+
+	/* XXXX: REVIEW */
+
+	sample = *pos++ << 8;
+	sample = *pos;
+
+	sample = s.sign_extend = sample;
+	return sample << 8;
 }
 
 
-static sample_t pcm_read16bitLE(u8_t *pos) { 
-	return ((*pos << 16) | (*(pos + 1) << 8));
+static sample_t pcm_read16bitLE(u8_t *pos) {
+	sample_t sample;
+	struct { s32_t sign_extend:16; } s;
+
+	sample = *pos++;
+	sample = *pos << 8;
+
+	sample = s.sign_extend = sample;
+	return sample << 8;
 }
 
 
 static sample_t pcm_read24bitBE(u8_t *pos) { 
-	DEBUG_ERROR("here!");
-	return 0;
-
-/*
+	sample_t sample;
 	struct { s32_t sign_extend:24; } s;
 
-	s32_t sample = mem_read_u8(MEM_DATA, pos) << 16;
-	sample |= mem_read_u8(MEM_DATA, pos+1) << 8;
-	sample |= mem_read_u8(MEM_DATA, pos+2);
+	/* XXXX: REVIEW */
+
+	sample = *pos++ << 16;
+	sample |= *pos++ << 8;
+	sample |= *pos;
 
 	sample = s.sign_extend = sample;
 	return sample;
-*/
 }
 
 
 static sample_t pcm_read24bitLE(u8_t *pos) { 
-	DEBUG_ERROR("here!");
-	return 0;
-
-/*
+	sample_t sample;
 	struct { s32_t sign_extend:24; } s;
 
-	s32_t sample = mem_read_u8(MEM_DATA, pos);
-	sample |= mem_read_u8(MEM_DATA, pos+1) << 8;
-	sample |= mem_read_u8(MEM_DATA, pos+2) << 16;
+	sample = *pos++;
+	sample |= *pos++ << 8;
+	sample |= *pos << 16;
 
 	sample = s.sign_extend = sample;
 	return sample;
-*/
 }
 
 
 static sample_t pcm_read32bitBE(u8_t *pos) { 
-	DEBUG_ERROR("here!");
-	return 0;
+	sample_t sample;
+	struct { s32_t sign_extend:32; } s;
 
-/*
-	s32_t sample = mem_read_u32(MEM_DATA, pos);
+	/* XXXX: REVIEW */
+
+	sample = *pos++ << 24;
+	sample |= *pos++ << 16;
+	sample |= *pos++ << 8;
+	sample |= *pos;
+
+	sample = s.sign_extend = sample;
 	return sample >> 8;
-*/
 }
 
 
 static sample_t pcm_read32bitLE(u8_t *pos) { 
-	DEBUG_ERROR("here!");
-	return 0;
+	sample_t sample;
 
-/*
-	s32_t sample = le_u32_to_arch_u32(mem_read_u32(MEM_DATA, pos));
+	sample = *((s32_t *)pos);
 	return sample >> 8;
-*/
 }
 
 
@@ -214,7 +220,7 @@ static u32_t decode_pcm_period(void *data) {
 		return 8;
 	}
 	else {
-		return 4;
+		return 1;
 	}
 }
 
