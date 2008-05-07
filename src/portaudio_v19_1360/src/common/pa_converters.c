@@ -1200,6 +1200,8 @@ static void Int32_To_UInt8_Dither(
     }
 }
 
+
+
 /* -------------------------------------------------------------------------- */
 
 static void Int24Padded_To_Float32(
@@ -1207,13 +1209,31 @@ static void Int24Padded_To_Float32(
     void *sourceBuffer, signed int sourceStride,
     unsigned int count, struct PaUtilTriangularDitherGenerator *ditherGenerator )
 {
-    (void) destinationBuffer; /* unused parameters */
-    (void) destinationStride; /* unused parameters */
-    (void) sourceBuffer; /* unused parameters */
-    (void) sourceStride; /* unused parameters */
-    (void) count; /* unused parameters */
-    (void) ditherGenerator; /* unused parameters */
-    /* IMPLEMENT ME */
+    unsigned char *src = (unsigned char*)sourceBuffer;
+    float *dest = (float*)destinationBuffer;
+    PaInt32 temp;
+
+    (void) ditherGenerator; /* unused parameter */
+    
+    while( count-- )
+    {
+        /* REVIEW */
+
+#if defined(PA_LITTLE_ENDIAN)
+        temp = (((long)src[0]) << 8);  
+        temp = temp | (((long)src[1]) << 16);
+        temp = temp | (((long)src[2]) << 24);
+#elif defined(PA_BIG_ENDIAN)
+        temp = (((long)src[0]) << 24);
+        temp = temp | (((long)src[1]) << 16);
+        temp = temp | (((long)src[2]) << 8);
+#endif
+
+        *dest = (float) ((double)temp * const_1_div_2147483648_);
+
+        src += sourceStride * 4;
+        dest += destinationStride;
+    }
 }
 
 /* -------------------------------------------------------------------------- */
