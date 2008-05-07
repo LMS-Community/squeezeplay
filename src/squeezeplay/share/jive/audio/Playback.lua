@@ -1,5 +1,5 @@
 
-local assert = assert
+local assert, tostring = assert, tostring
 
 
 local oo                     = require("loop.base")
@@ -174,7 +174,7 @@ function _timerCallback(self)
 		status.decodeState & DECODE_RUNNING == 0 then
 
 		if self.autostart == '1' and not self.sentResume then
-			log:info("resume")
+			log:info("resume decodeFull=", status.decodeFull, " threshold=", self.threshold)
 			Decode:resume()
 			self.sentResume = true
 
@@ -188,8 +188,42 @@ function _timerCallback(self)
 end
 
 
+function _streamConnect(self, serverIp, serverPort)
+	self.stream = Stream:connect(serverIp, serverPort)
+
+	log:info("connect streambuf")
+
+	local wtask = Task("streambufW", self, _streamWrite)
+	self.jnt:t_addWrite(self.stream, wtask, 5)
+	
+	self.rtask = Task("streambufR", self, _streamRead)
+	self.jnt:t_addRead(self.stream, self.rtask, 0) -- XXXX timeout?
+end
+
+
+function _streamDisconnect(self)
+	if not self.stream then
+		return
+	end
+
+	log:info("disconnect streambuf")
+
+	self.jnt:t_removeWrite(self.stream)
+	self.jnt:t_removeRead(self.stream)
+
+	self.stream:disconnect()
+	self.stream = nil
+
+	-- XXXX do we need to notify SqueezeCenter
+end
+
+
 function _streamWrite(self, networkErr)
-	-- XXXX networkErr
+	if networkErr then
+		log:error("write error: ", networkErr)
+		self:_streamDisconnect()
+		return
+	end
 
 	local status, err = self.stream:write(self.header)
 	self.jnt:t_removeWrite(self.stream)
@@ -201,7 +235,11 @@ end
 
 
 function _streamRead(self, networkErr)
-	-- XXXX networkErr
+	if networkErr then
+		log:error("read error: ", networkErr)
+		self:_streamDisconnect()
+		return
+	end
 
 	local n = self.stream:read()
 	while n do
@@ -217,8 +255,7 @@ function _streamRead(self, networkErr)
 		n = self.stream:read()
 	end
 
-	self.jnt:t_removeRead(self.stream)
-	self.stream = nil
+	self:_streamDisconnect()
 end
 
 
@@ -227,6 +264,10 @@ function _strm(self, data)
 
 	if data.command == 's' then
 		-- start
+
+		-- disconnect any existing stream
+		self:_streamDisconnect()
+
 		Decode:start(string.byte(data.mode),
 			     string.byte(data.transitionType),
 			     data.transitionPeriod,
@@ -241,11 +282,6 @@ function _strm(self, data)
 
 		local serverIp = data.serverIp == 0 and self.slimproto:getServerIp() or data.serverIp
 
-		if self.stream then
-			-- disconnect any existing stream
-			self.stream:disconnect()
-		end
-
 		-- reset stream state
 		-- XXXX flags
 		self.header = data.header
@@ -259,21 +295,13 @@ function _strm(self, data)
 		self.sentAudioUnderrunEvent = false
 
 		-- connect to server
-		self.stream = Stream:connect(serverIp, data.serverPort)
-
-		local wtask = Task("streambufW", self, _streamWrite)
-		self.jnt:t_addWrite(self.stream, wtask, 30)
-
-		self.rtask = Task("streambufR", self, _streamRead)
-		self.jnt:t_addRead(self.stream, self.rtask, 0) -- XXXX timeout?
+		self:_streamConnect(serverIp, data.serverPort)
 
 	elseif data.command == 'q' then
 		-- quit
 		-- XXXX check against ip3k
 		Decode:stop()
-		if self.stream then
-			self.stream:disconnect()
-		end
+		self:_streamDisconnect()
 
 		self.tracksStarted = 0
 

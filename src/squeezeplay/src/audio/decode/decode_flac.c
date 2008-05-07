@@ -104,8 +104,8 @@ static FLAC__StreamDecoderWriteStatus decode_flac_write_callback(
 		}
 		else /* bits_per_sample == 24 */ {
 			for (i=0; i<frame->header.blocksize; i++) {
-				*sptr++ = *lptr++ << 8;
-				*sptr++ = *rptr++ << 8;
+				*sptr++ = *lptr++;
+				*sptr++ = *rptr++;
 			}
 		}
 	}
