@@ -341,10 +341,10 @@ function arp(self, host, sink)
 	local arp = ""
 
 	local cmd = "arp " .. host
-	if string.match(os.getenv("OS"), "Windows") then
+	if string.match(os.getenv("OS") or "", "Windows") then
 			cmd = "arp -a " .. host
 	end
-	
+
 	local proc = Process(self, cmd)
 	proc:read(function(chunk, err)
 			if err then

@@ -36,7 +36,7 @@ function read(self, sink)
 		return
 	end
 
-	if string.match(os.getenv("OS"), "Windows") then
+	if string.match(os.getenv("OS") or "", "Windows") then
 			-- blocking on Windows!
 			local chunk = self.fh:read("*a")
 			self.fh:close()
