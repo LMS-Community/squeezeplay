@@ -48,6 +48,9 @@
 /* Define to 1 if you have the `realpath' function. */
 #undef HAVE_REALPATH
 
+/* Define to 1 if you have the `socketpair' function. */
+#undef HAVE_SOCKETPAIR
+
 /* Define to 1 if you have the `sqrt' function. */
 #undef HAVE_SQRT
 
