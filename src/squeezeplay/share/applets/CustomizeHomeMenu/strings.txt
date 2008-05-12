@@ -3,13 +3,13 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 CUSTOMIZE_HOME
-	EN	Customize Home Menu
+	EN	Home Menu
 
 CUSTOMIZE_HIDDEN
 	EN	Hidden
 
 CUSTOMIZE_RESTORE_DEFAULTS
-	EN	Restore Menu Defaults
+	EN	Restore Defaults
 
 CUSTOMIZE_CANCEL
 	DA	Afbryd

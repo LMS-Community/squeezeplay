@@ -100,7 +100,7 @@ is the function executed when the MenuItem is selected.
 
 =cut
 --]]
-function menuItem(self, id, node, label, closure, weight)
+function menuItem(self, id, node, label, closure, weight, extras)
 	return {
 		id = id,
 		node = node,
@@ -110,7 +110,8 @@ function menuItem(self, id, node, label, closure, weight)
 		callback = function(event, menuItem)
 				local applet = appletManager:loadApplet(self._entry.appletName)
 				return closure(applet, menuItem)
-		end
+		end,
+		extras = extras
 	}
 end
 

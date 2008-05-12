@@ -1,5 +1,5 @@
 
-local assert, pairs = assert, pairs
+local assert, pairs, type = assert, pairs, type
 
 local oo            = require("loop.base")
 local table         = require("jive.utils.table")
@@ -208,6 +208,13 @@ function addItem(self, item)
 
 	if not item.weight then 
 		item.weight = 100
+	end
+
+	if item.extras and type(item.extras) == 'table' then
+		for key, val in pairs(item.extras) do
+			item[key] = val
+		end
+		item.extras = nil
 	end
 
 	-- add or update the item from the menuTable

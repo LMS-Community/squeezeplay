@@ -55,11 +55,11 @@ function menu(self, menuItem)
 
 	local homeMenuItems = {}
 	
-	-- first add an entry for returning everything to defaults
+	-- add an entry for returning everything to defaults
 	table.insert(homeMenuItems,
 		{
 			text = self:string('CUSTOMIZE_RESTORE_DEFAULTS'),
-			weight = 1,
+			weight = 100,
 			callback = function()
 				self:restoreDefaultsMenu()
 			end
@@ -69,7 +69,9 @@ function menu(self, menuItem)
 	for id, item in pairs(self.menuTable) do
 		if id ~= 'hidden' and
 			id ~= 'nowhere' and
-			id ~= 'settings' then
+			id ~= 'settings' and
+			not item.noCustom
+			then
 			
 		local title, selected, weight
 

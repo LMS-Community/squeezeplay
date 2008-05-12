@@ -231,9 +231,9 @@ function JiveMain:jiveMainNodes(globalStrings)
 	jiveMain:addNode( { id = 'extras', node = 'home', text = _globalStrings:str("EXTRAS"), weight = 70  } )
 	jiveMain:addNode( { id = 'games', node = 'extras', text = _globalStrings:str("GAMES"), weight = 70  } )
 	jiveMain:addNode( { id = 'settings', node = 'home', text = _globalStrings:str("SETTINGS"), weight = 50, titleStyle = 'settings' })
-	jiveMain:addNode( { id = 'advancedSettings', node = 'settings', text = _globalStrings:str("ADVANCED_SETTINGS"), weight = 100, titleStyle = 'settings' })
+	jiveMain:addNode( { id = 'advancedSettings', node = 'settings', noCustom = 1, text = _globalStrings:str("ADVANCED_SETTINGS"), weight = 110, titleStyle = 'settings' })
 	jiveMain:addNode( { id = 'screenSettings', node = 'settings', text = _globalStrings:str("SCREEN_SETTINGS"), weight = 50, titleStyle = 'settings' })
-	jiveMain:addNode( { id = 'factoryTest', node = 'advancedSettings', text = _globalStrings:str("FACTORY_TEST"), weight = 100, titleStyle = 'settings' })
+	jiveMain:addNode( { id = 'factoryTest', node = 'advancedSettings', noCustom = 1, text = _globalStrings:str("FACTORY_TEST"), weight = 100, titleStyle = 'settings' })
 
 end
 

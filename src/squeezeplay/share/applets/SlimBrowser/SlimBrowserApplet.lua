@@ -391,6 +391,7 @@ local function _performJSONAction(jsonAction, from, qty, step, sink)
 					table.insert( newparams, k .. ":" .. _lastInput )
 				end
 			else
+				log:warn(k, ':', v)
 				table.insert( newparams, k .. ":" .. v )
 			end
 		end
