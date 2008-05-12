@@ -9,8 +9,16 @@
 #ifdef _WIN32
 #include <winsock2.h>
 #include <ws2tcpip.h>
+
+typedef SOCKET socket_t;
+#define CLOSESOCKET(s) closesocket(s)
+
 #else
 #include <sys/stat.h>
+
+typedef int socket_t;
+#define CLOSESOCKET(s) close(s)
+
 #endif
 
 #define RESOLV_TIMEOUT (2 * 60 * 1000) /* 2 minutes */
@@ -44,22 +52,92 @@ int inet_aton(const char *cp, struct in_addr *inp)
 #endif
 
 
+#ifndef HAVE_SOCKETPAIR
+
+/* socketpair.c
+ * Copyright 2007 by Nathan C. Myers <ncm@cantrip.org>; all rights reserved.
+ * This code is Free Software.  It may be copied freely, in original or 
+ * modified form, subject only to the restrictions that (1) the author is
+ * relieved from all responsibilities for any use for any purpose, and (2)
+ * this copyright notice must be retained, unchanged, in its entirety.  If
+ * for any reason the author might be held responsible for any consequences
+ * of copying or use, license is withheld.  
+ */
+
+int socketpair(int domain, int type, int protocol, SOCKET socks[2])
+{
+    struct sockaddr_in addr;
+    SOCKET listener;
+    int e;
+    int addrlen = sizeof(addr);
+    DWORD flags = WSA_FLAG_OVERLAPPED;
+
+    if (socks == 0) {
+      WSASetLastError(WSAEINVAL);
+      return SOCKET_ERROR;
+    }
+
+    socks[0] = socks[1] = INVALID_SOCKET;
+    if ((listener = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) 
+        return SOCKET_ERROR;
+
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = htonl(0x7f000001);
+    addr.sin_port = 0;
+
+    e = bind(listener, (const struct sockaddr*) &addr, sizeof(addr));
+    if (e == SOCKET_ERROR) {
+        e = WSAGetLastError();
+    	closesocket(listener);
+        WSASetLastError(e);
+        return SOCKET_ERROR;
+    }
+    e = getsockname(listener, (struct sockaddr*) &addr, &addrlen);
+    if (e == SOCKET_ERROR) {
+        e = WSAGetLastError();
+    	closesocket(listener);
+        WSASetLastError(e);
+        return SOCKET_ERROR;
+    }
+
+    do {
+        if (listen(listener, 1) == SOCKET_ERROR)                      break;
+        if ((socks[0] = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, flags))
+                == INVALID_SOCKET)                                    break;
+        if (connect(socks[0], (const struct sockaddr*) &addr,
+                    sizeof(addr)) == SOCKET_ERROR)                    break;
+        if ((socks[1] = accept(listener, NULL, NULL))
+                == INVALID_SOCKET)                                    break;
+        closesocket(listener);
+        return 0;
+    } while (0);
+    e = WSAGetLastError();
+    closesocket(listener);
+    closesocket(socks[0]);
+    closesocket(socks[1]);
+    WSASetLastError(e);
+    return SOCKET_ERROR;
+}
+#endif
+
+
 /* write a string to the pipe fd */
-static void write_str(int fd, char *str) {
+static void write_str(socket_t fd, char *str) {
 	size_t len;
 
 	len = strlen(str);
-	write(fd, &len, sizeof(len));
-	write(fd, str, len);
+	send(fd, &len, sizeof(len), 0);
+	send(fd, str, len, 0);
 }
 
 
 /* read a string to the lua stack from the pipe fd */
-static void read_pushstring(lua_State *L, int fd) {
+static void read_pushstring(lua_State *L, socket_t fd) {
 	size_t len;
 	char *buf;
 
-	read(fd, &len, sizeof(len));
+	recv(fd, &len, sizeof(len), 0);
 
 	if (len == 0) {
 		lua_pushnil(L);
@@ -67,7 +145,7 @@ static void read_pushstring(lua_State *L, int fd) {
 	else {
 		buf = malloc(len);
 
-		read(fd, buf, len);
+		recv(fd, buf, len, 0);
 		lua_pushlstring(L, buf, len);
 
 		free(buf);
@@ -95,7 +173,7 @@ static int stat_resolv_conf(void) {
 
 /* dns resolver thread */
 static int dns_resolver_thread(void *p) {
-	int fd = (long) p;
+	socket_t fd = (long) p;
 	struct hostent *hostent;
 	struct in_addr **addr, byaddr;
 	char **alias;
@@ -105,13 +183,13 @@ static int dns_resolver_thread(void *p) {
 	Uint32 failed_timeout = 0;
 
 	while (1) {
-		if (read(fd, &len, sizeof(len)) < 0) {
+		if (recv(fd, &len, sizeof(len), 0) < 0) {
 			/* broken pipe */
 			return 0;
 		}
 
 		buf = malloc(len + 1);
-		if (read(fd, buf, len) < 0) {
+		if (recv(fd, buf, len, 0) < 0) {
 			/* broken pipe */
 			free(buf);
 			return 0;
@@ -181,7 +259,7 @@ static int dns_resolver_thread(void *p) {
 
 
 struct dns_userdata {
-	int fd[2];
+	socket_t fd[2];
 	SDL_Thread *t;
 };
 
@@ -190,7 +268,6 @@ static int jiveL_dns_open(lua_State *L) {
 	struct dns_userdata *u;
 	int r;
 
-#ifndef _WIN32
 	u = lua_newuserdata(L, sizeof(struct dns_userdata));
 
 	r = socketpair(AF_UNIX, SOCK_STREAM, 0, u->fd);
@@ -204,9 +281,6 @@ static int jiveL_dns_open(lua_State *L) {
 	lua_setmetatable(L, -2);
 
 	return 1;
-#else
-	return 0;
-#endif // _WIN32
 }
 
 
@@ -214,8 +288,8 @@ static int jiveL_dns_gc(lua_State *L) {
 	struct dns_userdata *u;
 
 	u = lua_touserdata(L, 1);
-	close(u->fd[0]);
-	close(u->fd[1]);
+	CLOSESOCKET(u->fd[0]);
+	CLOSESOCKET(u->fd[1]);
 
 	return 0;
 }
@@ -285,8 +359,8 @@ static int jiveL_dns_write(lua_State *L) {
 	u = lua_touserdata(L, 1);
 	buf = lua_tolstring(L, 2, &len);
 
-	write(u->fd[0], &len, sizeof(len));
-	write(u->fd[0], buf, len);
+	send(u->fd[0], &len, sizeof(len), 0);
+	send(u->fd[0], buf, len, 0);
 
 	return 0;
 }
