@@ -2,7 +2,9 @@
 
 local oo              = require("loop.base")
 local io              = require("io")
+local os              = require("os")
 local coroutine       = require("coroutine")
+local string          = require("string")
 
 local Task            = require("jive.ui.Task")
 
@@ -32,6 +34,16 @@ function read(self, sink)
 
 		self._status = "dead"
 		return
+	end
+
+	if string.match(os.getenv("OS"), "Windows") then
+			-- blocking on Windows!
+			local chunk = self.fh:read("*a")
+			self.fh:close()
+			
+			sink(chunk)
+			sink(nil)
+			return
 	end
 
 	local task = Task("prog:" .. self.prog,
