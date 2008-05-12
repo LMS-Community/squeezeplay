@@ -111,6 +111,11 @@ function menu(self, menuItem)
 							jiveMain:setNode(item, 'home')
 						else
 							self:getSettings()[item.id] = 'home'
+							if item.homeMenuToken then
+								item.text = self:string(item.homeMenuToken)
+							elseif item.homeMenuText then
+								item.text = item.homeMenuText
+							end
 							jiveMain:addItemToNode(item, 'home')
 						end
 					else

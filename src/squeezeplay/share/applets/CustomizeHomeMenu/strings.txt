@@ -5,6 +5,9 @@
 CUSTOMIZE_HOME
 	EN	Home Menu
 
+CUSTOMIZE_HOME_HOMESTRING
+	EN	Customize This Menu
+
 CUSTOMIZE_HIDDEN
 	EN	Hidden
 
