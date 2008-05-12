@@ -32,6 +32,7 @@ FIXME: Subscribe description
 local _assert, tostring, table, ipairs, pairs, pcall, select, type  = _assert, tostring, table, ipairs, pairs, pcall, select, type
 
 local io                = require("io")
+local os                = require("os")
 local socket            = require("socket")
 local string            = require("string")
 local table             = require("jive.utils.table")
@@ -339,20 +340,28 @@ is called when the hardware address is known, or with an error.
 function arp(self, host, sink)
 	local arp = ""
 
-	-- XXXX this won't work on windows
+	local cmd = "arp " .. host
+	if string.match(os.getenv("OS") or "", "Windows") then
+			cmd = "arp -a " .. host
+	end
 
-	local proc = Process(self, "arp " .. host)
+	local proc = Process(self, cmd)
 	proc:read(function(chunk, err)
-			  if err then
-				  return sink(err)
-			  end
+			if err then
+					return sink(err)
+			end
 
-			  if chunk then
-				  arp = arp .. chunk
-			  else
-				  sink(string.match(arp, "%x%x:%x%x:%x%x:%x%x:%x%x:%x%x"))
-			  end
-		  end)
+			if chunk then
+					arp = arp .. chunk
+			else
+					local mac = string.match(arp, "%x%x[:-]%x%x[:-]%x%x[:-]%x%x[:-]%x%x[:-]%x%x")
+					if mac then
+							mac = string.gsub(mac, "-", ":")
+					end
+					
+					sink(mac)
+			end
+	end)
 end
 
 

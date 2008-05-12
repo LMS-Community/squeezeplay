@@ -16,7 +16,7 @@ BSP_SCREEN_LOCKED
 BSP_SCREEN_LOCKED_HELP
 	DA	For at låse op, tryk ADD og PLAY på samme tid.
 	DE	Drücken Sie zum Aufheben der Sperre gleichzeitig ADD und PLAY.
-	EN	To unlock, press the ADD and PLAY buttons at the same time.
+	EN	To unlock, press the add and play buttons at the same time.
 	ES	Para desbloquear, pulse los botones ADD y PLAY simultáneamente.
 	FR	Pour déverrouiller, appuyez sur les boutons ADD et PLAY simultanément.
 	IT	Per sbloccare premere contemporaneamente i pulsanti ADD e PLAY.
