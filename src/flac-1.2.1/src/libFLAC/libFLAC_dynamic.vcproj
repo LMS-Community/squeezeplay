@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="libFLAC_dynamic"
-	ProjectGUID="{4cefbc83-c215-11db-8314-0800200c9a66}"
+	ProjectGUID="{4CEFBC83-C215-11DB-8314-0800200C9A66}"
 	RootNamespace="libFLAC_dynamic"
 	Keyword="Win32Proj"
 	>
@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\obj\debug\lib"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="Debug_dynamic"
 			ConfigurationType="2"
 			>
@@ -40,7 +40,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".\include;..\..\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;FLAC_API_EXPORTS;FLAC__HAS_OGG;FLAC__CPU_IA32;FLAC__HAS_NASM;FLAC__USE_3DNOW;VERSION=\&quot;1.2.0\&quot;;DEBUG;FLAC__OVERFLOW_DETECT"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;FLAC_API_EXPORTS;FLAC__CPU_IA32;FLAC__USE_3DNOW;VERSION=\&quot;1.2.0\&quot;;DEBUG;FLAC__OVERFLOW_DETECT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -62,7 +62,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\obj\release\lib\ogg_static.lib"
 				LinkIncremental="2"
 				IgnoreDefaultLibraryNames="uuid.lib"
 				GenerateDebugInformation="true"
@@ -96,7 +95,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\obj\release\lib"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="Release_dynamic"
 			ConfigurationType="2"
 			>
@@ -122,7 +121,7 @@
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories=".\include;..\..\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;FLAC_API_EXPORTS;FLAC__HAS_OGG;FLAC__CPU_IA32;FLAC__HAS_NASM;FLAC__USE_3DNOW;VERSION=\&quot;1.2.0\&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;FLAC_API_EXPORTS;FLAC__CPU_IA32;FLAC__USE_3DNOW;VERSION=\&quot;1.2.0\&quot;"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				UsePrecompiledHeader="0"
@@ -143,7 +142,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\obj\release\lib\ogg_static.lib"
 				LinkIncremental="1"
 				IgnoreDefaultLibraryNames="uuid.lib"
 				GenerateDebugInformation="true"
@@ -188,11 +186,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\include\private\all.h"
+				RelativePath=".\include\protected\all.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\protected\all.h"
+				RelativePath=".\include\private\all.h"
 				>
 			</File>
 			<File
@@ -340,18 +338,62 @@
 			<File
 				RelativePath=".\ogg_decoder_aspect.c"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\ogg_encoder_aspect.c"
 				>
-			</File>
-			<File
-				RelativePath=".\ogg_helper.c"
-				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\ogg_mapping.c"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\stream_decoder.c"
@@ -415,6 +457,7 @@
 			>
 			<FileConfiguration
 				Name="Debug|Win32"
+				ExcludedFromBuild="true"
 				>
 				<Tool
 					Name="VCCustomBuildTool"
@@ -425,6 +468,7 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="Release|Win32"
+				ExcludedFromBuild="true"
 				>
 				<Tool
 					Name="VCCustomBuildTool"
@@ -443,6 +487,7 @@
 			>
 			<FileConfiguration
 				Name="Debug|Win32"
+				ExcludedFromBuild="true"
 				>
 				<Tool
 					Name="VCCustomBuildTool"
@@ -453,6 +498,7 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="Release|Win32"
+				ExcludedFromBuild="true"
 				>
 				<Tool
 					Name="VCCustomBuildTool"
@@ -467,6 +513,7 @@
 			>
 			<FileConfiguration
 				Name="Debug|Win32"
+				ExcludedFromBuild="true"
 				>
 				<Tool
 					Name="VCCustomBuildTool"
@@ -477,6 +524,7 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="Release|Win32"
+				ExcludedFromBuild="true"
 				>
 				<Tool
 					Name="VCCustomBuildTool"
@@ -491,6 +539,7 @@
 			>
 			<FileConfiguration
 				Name="Debug|Win32"
+				ExcludedFromBuild="true"
 				>
 				<Tool
 					Name="VCCustomBuildTool"
@@ -501,6 +550,7 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="Release|Win32"
+				ExcludedFromBuild="true"
 				>
 				<Tool
 					Name="VCCustomBuildTool"
@@ -515,6 +565,7 @@
 			>
 			<FileConfiguration
 				Name="Debug|Win32"
+				ExcludedFromBuild="true"
 				>
 				<Tool
 					Name="VCCustomBuildTool"
@@ -525,6 +576,7 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="Release|Win32"
+				ExcludedFromBuild="true"
 				>
 				<Tool
 					Name="VCCustomBuildTool"

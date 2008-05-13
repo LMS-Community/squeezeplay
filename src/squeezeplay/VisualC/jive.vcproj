@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wmvcore.lib"
+				AdditionalDependencies="ws2_32.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="C:\WMSDK\WMFSDK11\lib"
 				GenerateDebugInformation="true"
@@ -137,7 +137,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wmvcore.lib"
+				AdditionalDependencies="ws2_32.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="C:\WMSDK\WMFSDK11\lib"
 				GenerateDebugInformation="true"
@@ -242,20 +242,6 @@
 			<File
 				RelativePath="..\src\audio\decode\decode_flac.c"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\src\audio\decode\decode_output.c"
@@ -282,18 +268,6 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						CompileAs="1"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\src\audio\decode\decode_wma_win_DMOWrapper.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						CompileAs="2"
 					/>
 				</FileConfiguration>
 			</File>
