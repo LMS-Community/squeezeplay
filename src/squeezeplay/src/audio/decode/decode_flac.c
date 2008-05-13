@@ -34,6 +34,7 @@ static FLAC__StreamDecoderReadStatus decode_flac_read_callback(
 
 	struct decode_flac *self = (struct decode_flac *) data;
 	const size_t requested_bytes = *bytes;
+	bool_t streaming;
 
 	if (self->error_occurred) {
 		return FLAC__STREAM_DECODER_READ_STATUS_ABORT;
@@ -44,14 +45,17 @@ static FLAC__StreamDecoderReadStatus decode_flac_read_callback(
 		return FLAC__STREAM_DECODER_READ_STATUS_ABORT;
 	}
 
-	*bytes = streambuf_read(buffer, 0, requested_bytes);
+	*bytes = streambuf_read(buffer, 0, requested_bytes, &streaming);
 	if (*bytes == 0) {
 		current_decoder_state |= DECODE_STATE_UNDERRUN;
+
+		if (!streaming) {
+			return FLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM;
+		}
 	}
 	else {
 		current_decoder_state &= ~DECODE_STATE_UNDERRUN;
 	}
-
 
 	return FLAC__STREAM_DECODER_READ_STATUS_CONTINUE;
 }
@@ -142,11 +146,7 @@ static void decode_flac_error_callback(
 	const FLAC__StreamDecoderErrorStatus status,
 	void *data) {
 
-	struct decode_flac *self = (struct decode_flac *) data;
-
-	DEBUG_ERROR("FLAC error: %s\n", FLAC__StreamDecoderErrorStatusString[status]);
-
-	self->error_occurred = TRUE;
+	DEBUG_TRACE("FLAC error: %s\n", FLAC__StreamDecoderErrorStatusString[status]);
 }
 
 
@@ -167,7 +167,7 @@ static bool_t decode_flac_callback(void *data) {
 	state = FLAC__stream_decoder_get_state(self->decoder);
 	if (state == FLAC__STREAM_DECODER_ABORTED ||
 	    state == FLAC__STREAM_DECODER_END_OF_STREAM) {
-		DEBUG_ERROR("FLAC error %d", state);
+		DEBUG_TRACE("FLAC error: %s", FLAC__StreamDecoderStateString[state]);
 		current_decoder_state |= DECODE_STATE_ERROR;
 	}
 

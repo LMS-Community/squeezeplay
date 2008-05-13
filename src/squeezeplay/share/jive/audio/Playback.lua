@@ -201,7 +201,7 @@ function _streamConnect(self, serverIp, serverPort)
 end
 
 
-function _streamDisconnect(self)
+function _streamDisconnect(self, flush)
 	if not self.stream then
 		return
 	end
@@ -212,6 +212,9 @@ function _streamDisconnect(self)
 	self.jnt:t_removeRead(self.stream)
 
 	self.stream:disconnect()
+	if flush then
+		self.stream:flush()
+	end
 	self.stream = nil
 
 	-- XXXX do we need to notify SqueezeCenter
@@ -265,8 +268,9 @@ function _strm(self, data)
 	if data.command == 's' then
 		-- start
 
-		-- disconnect any existing stream
-		self:_streamDisconnect()
+		-- if we aborted the stream early, or there's any junk left 
+		-- over, flush out whatever's left.
+		self:_streamDisconnect(true)
 
 		Decode:start(string.byte(data.mode),
 			     string.byte(data.transitionType),

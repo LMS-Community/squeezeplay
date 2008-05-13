@@ -170,7 +170,7 @@ static bool_t decode_pcm_callback(void *data) {
 		return FALSE;
 	}
 
-	sz = streambuf_read(self->read_buffer + self->leftover, 0, BLOCKSIZE - self->leftover);
+	sz = streambuf_read(self->read_buffer + self->leftover, 0, BLOCKSIZE - self->leftover, NULL);
 	if (!sz) {
 		current_decoder_state |= DECODE_STATE_UNDERRUN;
 		return FALSE;

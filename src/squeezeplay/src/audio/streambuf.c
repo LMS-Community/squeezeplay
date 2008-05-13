@@ -37,7 +37,7 @@ static u8_t streambuf_buf[STREAMBUF_SIZE];
 static struct fifo streambuf_fifo;
 static size_t streambuf_lptr = 0;
 static bool_t streambuf_loop = FALSE;
-
+static bool_t streambuf_streaming = FALSE;
 
 
 size_t streambuf_get_size(void) {
@@ -118,6 +118,8 @@ void streambuf_feed(u8_t *buf, size_t size) {
 
 	fifo_lock(&streambuf_fifo);
 
+	streambuf_streaming = TRUE;
+
 	while (size) {
 		n = fifo_bytes_until_wptr_wrap(&streambuf_fifo);
 
@@ -139,6 +141,8 @@ size_t streambuf_feed_fd(int fd) {
 
 	fifo_lock(&streambuf_fifo);
 
+	streambuf_streaming = TRUE;
+
 	size = fifo_bytes_free(&streambuf_fifo);
 	if (size < 4096) {
 		fifo_unlock(&streambuf_fifo);
@@ -152,11 +156,15 @@ size_t streambuf_feed_fd(int fd) {
 
 	n = recv(fd, streambuf_buf + streambuf_fifo.wptr, n, 0);
 	if (n < 0) {
+		streambuf_streaming = FALSE;
+
 		fifo_unlock(&streambuf_fifo);
 		return -SOCKETERROR;
 	}
-
-	if (n > 0) {
+	else if (n == 0) {
+		streambuf_streaming = FALSE;
+	}
+	else {
 		fifo_wptr_incby(&streambuf_fifo, n);
 	}
 
@@ -165,16 +173,19 @@ size_t streambuf_feed_fd(int fd) {
 }
 
 
-size_t streambuf_read(u8_t *buf, size_t min, size_t max) {
+size_t streambuf_read(u8_t *buf, size_t min, size_t max, bool_t *streaming) {
 	size_t sz, w;
 
 
 	fifo_lock(&streambuf_fifo);
 
+	if (streaming) {
+		*streaming = streambuf_streaming;
+	}
+
 	sz = streambuf_get_usedbytes();
 	if (sz < min) {
 		fifo_unlock(&streambuf_fifo);
-
 		return 0; /* underrun */
 	}
 
@@ -340,8 +351,6 @@ int stream_readL(lua_State *L) {
 	 * 1: self
 	 */
 
-	// XXXX adjust tcp window size?
-
 	stream = lua_touserdata(L, 1);
 
 
@@ -359,7 +368,7 @@ int stream_readL(lua_State *L) {
 			return 1;
 		}
 
-		if (n < 0 && n != -ENOSPC) {
+		if (n < 0) {
 			CLOSESOCKET(stream->fd);
 
 			lua_pushnil(L);
