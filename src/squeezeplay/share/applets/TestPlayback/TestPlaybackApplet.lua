@@ -73,7 +73,9 @@ function settingsShow(self)
 
 	-- discovered slimservers
 	for _,server in self.sdApplet:allServers() do
-		self:_addServerItem(server)
+		if not server:isSqueezeNetwork() then
+			self:_addServerItem(server)
+		end
 	end
 
 	-- Store the applet settings when the window is closed

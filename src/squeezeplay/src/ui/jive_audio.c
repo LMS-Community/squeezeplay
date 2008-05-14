@@ -31,7 +31,9 @@ static void free_sound(struct jive_sample *snd) {
 		return;
 	}
 
-	free(snd->data);
+	if (snd->data) {
+		free(snd->data);
+	}
 	free(snd);
 }
 
@@ -145,6 +147,9 @@ static struct jive_sample *load_sound(char *filename, Uint32 mixer) {
 #if 0
 	snd->data = cvt.buf;
 	snd->len = cvt.len_cvt;
+#else
+	snd->data = NULL;
+	snd->len = 0;
 #endif
 	snd->mixer = mixer;
 	snd->enabled = true;
