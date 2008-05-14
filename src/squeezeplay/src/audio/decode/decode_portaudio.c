@@ -62,13 +62,19 @@ static int callback(const void *inputBuffer,
 	}
 
 	/* audio underrun? */
-	// XXXX we must empty the output buffer to allow audio underruns
-	if (bytes_used < len) {
+	if (bytes_used == 0) {
 		current_audio_state |= DECODE_STATE_UNDERRUN;
 		memset(outputBuffer, 0, len);
 		return 0;
 	}
-	current_audio_state &= ~DECODE_STATE_UNDERRUN;
+
+	if (bytes_used < len) {
+		current_audio_state |= DECODE_STATE_UNDERRUN;
+		memset(outputBuffer + bytes_used, 0, len - bytes_used);
+	}
+	else {
+		current_audio_state &= ~DECODE_STATE_UNDERRUN;
+	}
 
 	outputArray = (u8_t *)outputBuffer;
 	while (bytes_used) {

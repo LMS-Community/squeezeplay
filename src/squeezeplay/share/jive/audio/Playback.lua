@@ -138,7 +138,7 @@ function _timerCallback(self)
 		-- when XXXX
 
 		if not self.sentAudioUnderrunEvent and
-			self.sentDecoderUnderrrunEvent then
+			self.sentDecoderUnderrunEvent then
 
 			log:info("status AUDIO UNDERRUN")
 			self:sendStatus(status, "STMu")
