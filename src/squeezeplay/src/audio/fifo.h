@@ -14,6 +14,7 @@
 struct fifo {
 	SDL_mutex *mutex;
 	SDL_cond *cond;
+	bool_t lock;
 
 	size_t rptr;
 	size_t wptr;

@@ -56,6 +56,8 @@ static int callback(const void *inputBuffer,
 		return 0;
 	}
 
+	fifo_lock(&decode_fifo);
+
 	bytes_used = fifo_bytes_used(&decode_fifo);	
 	if (bytes_used > len) {
 		bytes_used = len;
@@ -65,6 +67,8 @@ static int callback(const void *inputBuffer,
 	if (bytes_used == 0) {
 		current_audio_state |= DECODE_STATE_UNDERRUN;
 		memset(outputBuffer, 0, len);
+
+		fifo_unlock(&decode_fifo);
 		return 0;
 	}
 
@@ -98,9 +102,12 @@ static int callback(const void *inputBuffer,
 	reached_start_point = decode_check_start_point();
 	if (reached_start_point && current_sample_rate != stream_sample_rate) {
 		change_sample_rate = true;
+
+		fifo_unlock(&decode_fifo);
 		return paComplete;
 	}
 
+	fifo_unlock(&decode_fifo);
 	return paContinue;
 }
 

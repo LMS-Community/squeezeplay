@@ -127,7 +127,7 @@ void streambuf_feed(u8_t *buf, size_t size) {
 			n = size;
 		}
 
-		memcpy(buf, streambuf_buf + streambuf_fifo.wptr, n);
+		memcpy(streambuf_buf + streambuf_fifo.wptr, buf, n);
 		fifo_wptr_incby(&streambuf_fifo, n);
 		size -= n;
 	}
@@ -183,7 +183,7 @@ size_t streambuf_read(u8_t *buf, size_t min, size_t max, bool_t *streaming) {
 		*streaming = streambuf_streaming;
 	}
 
-	sz = streambuf_get_usedbytes();
+	sz = fifo_bytes_used(&streambuf_fifo);
 	if (sz < min) {
 		fifo_unlock(&streambuf_fifo);
 		return 0; /* underrun */
@@ -383,7 +383,7 @@ int stream_readL(lua_State *L) {
 
 
 	/* read buffer, but we must not overflow the stream fifo */
-	n = fifo_bytes_free(&streambuf_fifo);
+	n = streambuf_get_freebytes();
 	if (n > sizeof(buf)) {
 		n = sizeof(buf);
 	}

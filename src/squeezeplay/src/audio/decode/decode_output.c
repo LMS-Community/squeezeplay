@@ -110,6 +110,8 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 
 	// XXXX full port from ip3k
 
+	fifo_lock(&decode_fifo);
+
 	if (decode_first_buffer) {
 		current_sample_rate = sample_rate;
 		track_start_point = decode_fifo.wptr;
@@ -139,6 +141,8 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 	if (start_immediately) {
 		current_audio_state = DECODE_STATE_RUNNING;
 	}
+
+	fifo_unlock(&decode_fifo);
 }
 
 
@@ -148,7 +152,11 @@ bool_t decode_output_can_write(u32_t buffer_size, u32_t sample_rate) {
 
 	// XXXX full port from ip3k
 	
+	fifo_lock(&decode_fifo);
+
 	freebytes = fifo_bytes_free(&decode_fifo);
+
+	fifo_unlock(&decode_fifo);
 
 	if (freebytes >= buffer_size) {
 		return TRUE;

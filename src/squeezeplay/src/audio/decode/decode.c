@@ -74,6 +74,8 @@ static void decode_resume_handler(void) {
 
 	DEBUG_TRACE("decode_resume_handler start_jiffies=%d", start_jiffies);
 
+	fifo_lock(&decode_fifo);
+
 	// XXXX handle start_jiffies
 
 	if (decoder) {
@@ -85,6 +87,8 @@ static void decode_resume_handler(void) {
 	}
 
 	DEBUG_TRACE("resume decode state: %x audio state %x", current_decoder_state, current_audio_state);
+
+	fifo_unlock(&decode_fifo);
 }
 
 
@@ -394,7 +398,7 @@ static int decode_start(lua_State *L) {
 static int decode_status(lua_State *L) {
 	lua_newtable(L);
 
-	// XXXX fifo mutex lock
+	fifo_lock(&decode_fifo);
 
 	lua_pushinteger(L, fifo_bytes_used(&decode_fifo));
 	lua_setfield(L, -2, "outputFull");
@@ -408,7 +412,7 @@ static int decode_status(lua_State *L) {
 	lua_pushinteger(L, decode_num_tracks_started);
 	lua_setfield(L, -2, "tracksStarted");
 
-	// XXXX fifo mutex unlock
+	fifo_unlock(&decode_fifo);
 
 
 	lua_pushinteger(L, streambuf_get_usedbytes());
