@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# note: jiveboot.sh is deprecated in deference to squeezeos-boot.sh from 7.1 forward
+# from 7.1 forward, squeezeos-boot.sh is the boot script name
 rm -rf /usr/share/jive/applets/Slideshow
 cp -rf /mnt/mmc/Slideshow /usr/share/jive/applets/.
 cp -rf /mnt/mmc/popImages /usr/share/jive/applets/Slideshow/images
