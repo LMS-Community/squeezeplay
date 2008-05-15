@@ -17,9 +17,10 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local tostring, pairs, table = tostring, pairs, table
+local tostring, tonumber, pairs, ipairs, table = tostring, tonumber, pairs, ipairs, table
 local oo                     = require("loop.simple")
 local string                 = require("string")
+local strings                = require("jive.utils.strings")
 local table                  = require("jive.utils.table")
 
 local Applet                 = require("jive.Applet")
@@ -39,6 +40,19 @@ local jnt                    = jnt
 module(...)
 oo.class(_M, Applet)
 
+-- FIXME: this method should be farmed out to SimpleMenu as a function called from _itemRenderer()
+-- _indent
+-- returns a string of <size> spaces
+local function _indent(indentSize)
+	local indent = ''
+	if not indentSize then
+		return indent
+	end
+	for i = 1, tonumber(indentSize) do
+		indent = tostring(indent) .. ' '
+	end
+	return indent
+end
 
 function menu(self, menuItem)
 
@@ -59,28 +73,26 @@ function menu(self, menuItem)
 	table.insert(homeMenuItems,
 		{
 			text = self:string('CUSTOMIZE_RESTORE_DEFAULTS'),
-			weight = 100,
+			weights = { 1001 },
 			callback = function()
 				self:restoreDefaultsMenu()
 			end
 		}
 	)
 
+
 	for id, item in pairs(self.menuTable) do
-		if id ~= 'hidden' and
-			id ~= 'nowhere' and
-			id ~= 'settings' and
-			not item.noCustom
+		if id ~= 'hidden'
+			and id ~= 'nowhere'
+			-- a small hack to make sounds/effects not appear twice
+			and id ~= 'opmlsounds'
 			then
 			
-		local title, selected, weight
+		local title, selected
 
-		local defaultNode = jiveMain:getNodeText(item.node)
-		if defaultNode then
-			title = tostring(item.text) .. ' (' .. tostring(defaultNode) .. ')'
-		else
-			title = item.text
-		end
+		local complexWeight = jiveMain:getComplexWeight(id, item)
+		local weights = {}
+		item.weights = strings:split('%.', complexWeight, weights)
 
 		-- if this is a home item and setting = 'hidden', then unselect
 		if self.currentSettings[id] and self.currentSettings[id] == 'hidden' and item.node == 'home' then
@@ -93,51 +105,72 @@ function menu(self, menuItem)
 			selected = false
 		end
 
-		if item.node == 'home' then
-			weight = 2
-		else
-			weight = 5
+		local indentSize = 0
+		for i,v in ipairs(item.weights) do
+			if i > 1 then
+				indentSize = indentSize + 2
+			end
 		end
+		local indent = _indent(indentSize)
 
-		local menuItem = {
-			text = title,
-			weight = weight,
-			icon = Checkbox(
-				"checkbox",
-				function(object, isSelected)
-					if isSelected then
-						if item.node == 'home' then
-							self:getSettings()[item.id] = nil
-							jiveMain:setNode(item, 'home')
-						else
-							self:getSettings()[item.id] = 'home'
-							if item.homeMenuToken then
-								item.text = self:string(item.homeMenuToken)
-							elseif item.homeMenuText then
-								item.text = item.homeMenuText
+		if item.node == 'home' then
+			title = item.text
+		elseif item.homeMenuToken then
+			title = indent .. tostring(self:string(item.homeMenuToken))
+		elseif item.homeMenuText then
+			title = indent .. tostring(item.homeMenuText)
+		else
+			title = indent .. tostring(item.text)
+		end
+	
+		if not item.weights[1] then
+			item.weights = { 2 }
+		end
+		local menuItem
+		if item.noCustom then
+			menuItem = {
+				text = title,
+				weights = item.weights,
+				indent = indentSize,
+				style = 'itemNoAction'
+			}
+		else
+			menuItem = {
+				text = title,
+				weights = item.weights,
+				indent = indentSize,
+				icon = Checkbox(
+					"checkbox",
+					function(object, isSelected)
+						if isSelected then
+							if item.node == 'home' then
+								self:getSettings()[item.id] = nil
+								jiveMain:setNode(item, 'home')
+							else
+								self:getSettings()[item.id] = 'home'
+								jiveMain:addItemToNode(item, 'home')
 							end
-							jiveMain:addItemToNode(item, 'home')
-						end
-					else
-						if item.node == 'home' then
-							self:getSettings()[item.id] = 'hidden'
-							jiveMain:setNode(item, 'hidden')
 						else
-							self:getSettings()[item.id] = nil
-							jiveMain:removeItemFromNode(item, 'home')
+							if item.node == 'home' then
+								self:getSettings()[item.id] = 'hidden'
+								jiveMain:setNode(item, 'hidden')
+							else
+								self:getSettings()[item.id] = nil
+								jiveMain:removeItemFromNode(item, 'home')
+							end
 						end
-					end
-					self:storeSettings()
-				end,
-				selected
-			),
-		}
+						self:storeSettings()
+					end,
+					selected
+				),
+			}
+		end
 		table.insert(homeMenuItems, menuItem)
 		end
 	end
 
 	local menu = SimpleMenu("menu",  homeMenuItems  )
-	menu:setComparator(menu.itemComparatorWeightAlpha)
+	menu:setComparator(menu.itemComparatorComplexWeightAlpha)
 
 	local window = Window("window", self:string("CUSTOMIZE_HOME"), 'settingstitle')
 	window:addWidget(menu)
@@ -186,3 +219,4 @@ function _goHome()
 		windowStack[#windowStack - 1]:hide()
 	end
 end
+

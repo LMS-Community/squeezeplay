@@ -46,7 +46,7 @@ B<itemHeight> : the height of each menu item.
 
 
 -- stuff we use
-local _assert, ipairs, string, tostring, type = _assert, ipairs, string, tostring, type
+local _assert, ipairs, string, tostring, type, tonumber = _assert, ipairs, string, tostring, type, tonumber
 
 
 local oo              = require("loop.simple")
@@ -95,6 +95,18 @@ local function _safeIndex(array, index)
 	return nil
 end
 
+-- _indent
+-- returns a string of <size> spaces
+local function _indent(indentSize)
+	local indent = ''
+	if not indentSize then
+		return indent
+	end
+	for i = 1, tonumber(indentSize) do
+		indent = tostring(indent) .. ' '
+	end
+	return indent
+end
 
 -- _itemRenderer
 -- updates the widgetList ready for the menu to be rendered
@@ -102,6 +114,21 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 	for i = 1,size do
 		if indexList[i] ~= nil then
 			local item = list[indexList[i]]
+			local labelText = item.text
+			-- FIXME
+			-- changing labelText for the item for the home menu
+			-- also changes it for its default location
+			-- label text needs to be changed on a contextual basis
+			-- question is how to determine context in _itemRenderer since self is not available
+			--[[
+			if item.homeMenuText then
+				labelText = item.homeMenuText
+			end
+			if item.indent then
+				local indent = _indent(item.indent)
+				labelText = indent .. tostring(labelText)
+			end
+			--]]
 
 			local icon = item.icon or menu.icons[i]
 			if icon == nil then
@@ -112,13 +139,13 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 
 			if widgetList[i] == nil then
 				widgetList[i] = Group(item.style or "item", {
-					text = Label("text", item.text),
+					text = Label("text", labelText),
 					check = Icon("check"),
 					icon = icon,
 				})
 			else
 				widgetList[i]:setStyle(item.style or "item")
-				widgetList[i]:setWidgetValue("text", item.text)
+				widgetList[i]:setWidgetValue("text", labelText)
 				widgetList[i]:setWidget("icon", icon)
 			end
 		end
@@ -211,6 +238,87 @@ function itemComparatorWeightAlpha(a, b)
 		return tostring(a.text) < tostring(b.text)
 	end
 	return (w < 0)
+end
+
+--[[
+
+=head2 jive.ui.Menu.itemComparatorNodeWeightAlpha
+
+Item comparator to sort items using item.sortKey as a primary key, item.weight as a secondary key, and
+item.text as a tertiary key.
+
+--]]
+function itemComparatorKeyWeightAlpha(a, b)
+	local an = tostring(a.sortKey)
+	local bn = tostring(b.sortKey)
+	
+	if an == bn then
+		local w = a.weight - b.weight
+
+		if w == 0 then
+			return tostring(a.text) < tostring(b.text)
+		end
+		return (w < 0)
+	else
+		return an < bn
+	end
+end
+
+--[[
+
+=head2 jive.ui.Menu.itemComparatorComplexWeightAlpha
+
+Item comparator to sort items using a complex a.b.c...n-style item.weights (table) as a primary key, and
+item.text as a secondary key.
+
+--]]
+function itemComparatorComplexWeightAlpha(a, b)
+	if not a.weights then
+		a.weights = { a.weight }
+	end
+	if not b.weights then
+		b.weights = { b.weight }
+	end
+	
+	local aSize = #a.weights
+	local bSize = #b.weights
+	local x
+	if aSize > bSize then
+		x = aSize
+	else
+		x = bSize
+	end
+
+	for i=1,x do
+		if not a.weights[i] then
+			a.weights[i] = 0
+		end
+		if not b.weights[i] then
+			b.weights[i] = 0
+		end
+		local w = a.weights[i] - b.weights[i]
+		-- nodes above subitems (e.g., 11 ranks above 11.10)
+		if (not a.weights[i+1] or not b.weights[i+1]) and w == 0 then
+			-- end of the road, weights are the same
+			if not a.weights[i+1] and not b.weights[i+1] then
+				return tostring(a.text) < tostring(b.text)
+			-- a is the node
+			elseif not a.weights[i+1] then
+				return true
+			-- b is the node
+			elseif not b.weights[i+1] then
+				return false
+			end
+		-- weights differ
+		elseif w ~= 0 then
+			return (w < 0)
+		-- end of the road, weight is the same
+		elseif i==x then
+			return tostring(a.text) < tostring(b.text)
+		end
+		-- if we get here, it's time to examine the next i in the weights table
+	end
+
 end
 
 
