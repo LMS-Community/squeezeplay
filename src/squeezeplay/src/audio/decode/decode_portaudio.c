@@ -40,7 +40,7 @@ static int callback(const void *inputBuffer,
 		    void *userData) {
 	size_t bytes_used, len;
 	bool_t reached_start_point;
-	Uint8 *outputArray;
+	Uint8 *outputArray = (u8_t *)outputBuffer;
 
 	if (statusFlags & (paOutputUnderflow | paOutputOverflow)) {
 		DEBUG_TRACE("pa status %x\n", (unsigned int)statusFlags);
@@ -52,7 +52,7 @@ static int callback(const void *inputBuffer,
 
 	/* audio running? */
 	if (!(current_audio_state & DECODE_STATE_RUNNING)) {
-		memset(outputBuffer, 0, len);
+		memset(outputArray, 0, len);
 		return 0;
 	}
 
@@ -66,7 +66,7 @@ static int callback(const void *inputBuffer,
 	/* audio underrun? */
 	if (bytes_used == 0) {
 		current_audio_state |= DECODE_STATE_UNDERRUN;
-		memset(outputBuffer, 0, len);
+		memset(outputArray, 0, len);
 
 		fifo_unlock(&decode_fifo);
 		return 0;
@@ -74,13 +74,12 @@ static int callback(const void *inputBuffer,
 
 	if (bytes_used < len) {
 		current_audio_state |= DECODE_STATE_UNDERRUN;
-		memset(outputBuffer + bytes_used, 0, len - bytes_used);
+		memset(outputArray + bytes_used, 0, len - bytes_used);
 	}
 	else {
 		current_audio_state &= ~DECODE_STATE_UNDERRUN;
 	}
 
-	outputArray = (u8_t *)outputBuffer;
 	while (bytes_used) {
 		size_t wrap, bytes_write;
 
