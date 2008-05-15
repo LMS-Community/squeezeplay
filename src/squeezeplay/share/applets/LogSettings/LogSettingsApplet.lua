@@ -31,6 +31,7 @@ local Applet          = require("jive.Applet")
 local Choice          = require("jive.ui.Choice")
 local SimpleMenu      = require("jive.ui.SimpleMenu")
 local Window          = require("jive.ui.Window")
+local Framework       = require("jive.ui.Framework")
 local jul             = require("jive.utils.log")
 
 local log             = jul.logger("applets.browser")
