@@ -1,8 +1,9 @@
 
-local assert, pairs = assert, pairs
+local assert, pairs, type = assert, pairs, type
 
 local oo            = require("loop.base")
 local table         = require("jive.utils.table")
+local strings       = require("jive.utils.strings")
 
 local Framework     = require("jive.ui.Framework")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
@@ -27,7 +28,7 @@ function __init(self, name, style, titleStyle)
 	})
 
 	local menu = SimpleMenu("menu")
-	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
+	menu:setComparator(SimpleMenu.itemComparatorComplexWeightAlpha)
 
 	-- home menu is not closeable
 	menu:setCloseable(false)
@@ -59,6 +60,22 @@ function getNodeText(self, node)
 		return self.nodeTable[node]['item']['text']
 	else
 		return nil
+	end
+end
+
+function getComplexWeight(self, id, item)
+	if self.menuTable[id]['node'] == 'home' then
+		return item.weight
+	elseif self.menuTable[id]['node'] == 'hidden' then
+		return 100
+	else
+		local nodeItem = self.menuTable[id]['node']
+		if not self.menuTable[nodeItem] then
+			log:warn('when trying to analyze ', item.text, ', its node, ', nodeItem, ', is not currently in the menuTable thus no way to establish a complex weight for sorting')
+			return item.weight
+		else
+			return self:getComplexWeight(self.menuTable[id]['node'], self.menuTable[nodeItem]) .. '.' .. item.weight
+		end
 	end
 end
 
@@ -187,8 +204,15 @@ end
 -- add an item to a node
 function addItemToNode(self, item, node)
 	assert(item.id)
+	self.node = node
 	if node then
 		self.customNodes[item.id] = node
+		if item.node ~= 'home' and node == 'home' then
+			local complexWeight = self:getComplexWeight(item.id, item)
+			item.weights = strings:split('%.', complexWeight)
+			-- non-home items on home get an indent
+			item.indent = #item.weights * 2
+		end
 	else
 		node = item.node
 	end
@@ -208,6 +232,13 @@ function addItem(self, item)
 
 	if not item.weight then 
 		item.weight = 100
+	end
+
+	if item.extras and type(item.extras) == 'table' then
+		for key, val in pairs(item.extras) do
+			item[key] = val
+		end
+		item.extras = nil
 	end
 
 	-- add or update the item from the menuTable

@@ -17,7 +17,7 @@ end
 
 
 function registerApplet(meta)
-	jiveMain:addItem(meta:menuItem('factoryKeypad', 'factoryTest', "TEST_KEYPAD", function(applet, ...) applet:KeypadTest(...) end))
+	jiveMain:addItem(meta:menuItem('factoryKeypad', 'factoryTest', "TEST_KEYPAD", function(applet, ...) applet:KeypadTest(...) end, _, { noCustom = 1}))
 end
 
 

@@ -16,7 +16,7 @@ end
 
 
 function registerApplet(meta)
-	jiveMain:addItem(meta:menuItem('factoryIR', 'factoryTest', "TEST_IR", function(applet, ...) applet:IRTest(...) end))
+	jiveMain:addItem(meta:menuItem('factoryIR', 'factoryTest', "TEST_IR", function(applet, ...) applet:IRTest(...) end, _, { noCustom = 1}))
 end
 
 

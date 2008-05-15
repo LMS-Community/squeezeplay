@@ -17,7 +17,7 @@ end
 
 
 function registerApplet(meta)
-	jiveMain:addItem(meta:menuItem('factoryDisplay', 'factoryTest', "TEST_DISPLAY", function(applet, ...) applet:DisplayTest(...) end))
+	jiveMain:addItem(meta:menuItem('factoryDisplay', 'factoryTest', "TEST_DISPLAY", function(applet, ...) applet:DisplayTest(...) end, _, { noCustom = 1 }))
 end
 
 

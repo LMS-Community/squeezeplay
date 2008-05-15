@@ -866,7 +866,9 @@ local function _menuSink(self, cmd)
 			local item = {
 					id = v.id,
 					node = v.node,
+					style = v.style,
 					text = v.text,
+					homeMenuText = v.homeMenuText,
 					weight = v.weight,
 					window = v.window,
 					sound = "WINDOWSHOW",

@@ -60,6 +60,33 @@ function trim(s)
 		return s
 	end
 end
+
+--[[
+
+=head2 split(self, inSplitPattern, myString, returnTable)
+
+Takes a string pattern and string as arguments, and an optional third argument of a returnTable
+
+Splits myString on inSplitPattern and returns elements in returnTable (appending to returnTable if returnTable is given)
+
+=cut
+--]]
+
+function split(self, inSplitPattern, myString, returnTable)
+	if not returnTable then
+		returnTable = {}
+	end
+	local theStart = 1
+	local theSplitStart, theSplitEnd = string.find(myString, inSplitPattern, theStart)
+	while theSplitStart do
+		table.insert(returnTable, string.sub(myString, theStart, theSplitStart-1))
+		theStart = theSplitEnd + 1
+		theSplitStart, theSplitEnd = string.find(myString, inSplitPattern, theStart)
+	end
+	table.insert(returnTable, string.sub(myString, theStart))
+	return returnTable
+end
+
 --[[
 
 =head1 LICENSE

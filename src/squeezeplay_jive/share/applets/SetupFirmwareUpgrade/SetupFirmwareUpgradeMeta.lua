@@ -80,7 +80,7 @@ function registerApplet(meta)
 
 				meta.player = player
 				
-				local fwcmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION, 'subscribe:3600' }
+				local fwcmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION, 'subscribe:0' }
 				player:subscribe(
 					'/slim/firmwarestatus/' .. player.id,
 					firmwareUpgradeSink,
