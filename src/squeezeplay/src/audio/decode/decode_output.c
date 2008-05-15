@@ -165,3 +165,7 @@ bool_t decode_output_can_write(u32_t buffer_size, u32_t sample_rate) {
 	return FALSE;
 }
 
+
+int decode_output_samplerate() {
+	return current_sample_rate;
+}

@@ -212,7 +212,8 @@ static void *decode_flac_start(u8_t *params, u32_t num_params) {
 		);
 	// XXXX error handling
 
-	self->sample_rate = 44100;
+	/* Assume we aren't changing sample rates until proven wrong */
+	self->sample_rate = decode_output_samplerate();
 	self->error_occurred = FALSE;
 	
 	// XXXX this was needed for SB, why?

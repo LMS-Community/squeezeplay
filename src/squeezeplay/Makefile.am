@@ -63,12 +63,13 @@ libjiveaudio_la_SOURCES = \
 	src/audio/streambuf.c \
 	src/audio/decode/decode.c \
 	src/audio/decode/decode_flac.c \
+	src/audio/decode/decode_mad.c \
 	src/audio/decode/decode_output.c \
 	src/audio/decode/decode_pcm.c \
 	src/audio/decode/decode_portaudio.c \
 	src/audio/decode/decode_tones.c
 
-libjiveaudio_la_LIBADD = -lSDL -lportaudio -lFLAC	
+libjiveaudio_la_LIBADD = -lSDL -lportaudio -lFLAC -lmad
 
 libjivenet_la_SOURCES = \
 	src/net/jive_dns.c
@@ -394,6 +395,11 @@ dist_applets_setupnettest_DATA = \
 	share/applets/SetupNetTest/SetupNetTestApplet.lua \
 	share/applets/SetupNetTest/SetupNetTestMeta.lua \
 	share/applets/SetupNetTest/strings.txt	
+
+applets_testplaybackdir = $(datadir)/jive/applets/TestPlayback
+dist_applets_testplayback_DATA = \
+	share/applets/TestPlayback/TestPlaybackApplet.lua \
+	share/applets/TestPlayback/TestPlaybackMeta.lua
 
 # Default skin
 applets_defaultskindir = $(pkgdatadir)/applets/DefaultSkin
