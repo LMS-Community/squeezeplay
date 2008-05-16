@@ -48,7 +48,7 @@ static sample_t pcm_read8bitBE(u8_t *pos) {
 	sample = *pos;
 
 	sample = s.sign_extend = sample;
-	return sample << 16;
+	return sample << 24;
 }
 
 
@@ -61,7 +61,7 @@ static sample_t pcm_read8bitLE(u8_t *pos) {
 	sample = *pos;
 
 	sample = s.sign_extend = sample;
-	return sample << 16;
+	return sample << 24;
 }
 
 
@@ -75,7 +75,7 @@ static sample_t pcm_read16bitBE(u8_t *pos) {
 	sample = *pos;
 
 	sample = s.sign_extend = sample;
-	return sample << 8;
+	return sample << 16;
 }
 
 
@@ -87,7 +87,7 @@ static sample_t pcm_read16bitLE(u8_t *pos) {
 	sample = *pos << 8;
 
 	sample = s.sign_extend = sample;
-	return sample << 8;
+	return sample << 16;
 }
 
 
@@ -102,7 +102,7 @@ static sample_t pcm_read24bitBE(u8_t *pos) {
 	sample |= *pos;
 
 	sample = s.sign_extend = sample;
-	return sample;
+	return sample << 8;
 }
 
 
@@ -115,7 +115,7 @@ static sample_t pcm_read24bitLE(u8_t *pos) {
 	sample |= *pos << 16;
 
 	sample = s.sign_extend = sample;
-	return sample;
+	return sample << 8;
 }
 
 
@@ -131,7 +131,7 @@ static sample_t pcm_read32bitBE(u8_t *pos) {
 	sample |= *pos;
 
 	sample = s.sign_extend = sample;
-	return sample >> 8;
+	return sample;
 }
 
 
@@ -139,7 +139,7 @@ static sample_t pcm_read32bitLE(u8_t *pos) {
 	sample_t sample;
 
 	sample = *((s32_t *)pos);
-	return sample >> 8;
+	return sample;
 }
 
 

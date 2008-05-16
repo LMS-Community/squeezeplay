@@ -11,7 +11,7 @@
 #include "audio/fifo.h"
 
 
-/* Audio sample, 24-bit padded.
+/* Audio sample, 32-bits.
  */
 typedef s32_t sample_t;
 

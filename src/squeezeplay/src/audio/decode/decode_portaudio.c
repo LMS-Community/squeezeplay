@@ -232,7 +232,7 @@ static void decode_portaudio_init(void) {
 
 	memset(&outputParam, 0, sizeof(outputParam));
 	outputParam.channelCount = 2;
-	outputParam.sampleFormat = paInt24Padded;
+	outputParam.sampleFormat = paInt32;
 
 	num_devices = Pa_GetDeviceCount();
 	for (i = 0; i < num_devices; i++) {

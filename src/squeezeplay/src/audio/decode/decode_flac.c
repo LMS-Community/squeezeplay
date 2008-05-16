@@ -86,14 +86,14 @@ static FLAC__StreamDecoderWriteStatus decode_flac_write_callback(
 	if (frame->header.channels == 1) {
 		if (frame->header.bits_per_sample == 16) {
 			for (i=0; i<frame->header.blocksize; i++) {
-				FLAC__int32 s = *lptr++ << 8;
+				FLAC__int32 s = *lptr++ << 16;
 				*sptr++ = s;
 				*sptr++ = s;
 			}
 		}
 		else /* bits_per_sample == 24 */ {
 			for (i=0; i<frame->header.blocksize; i++) {
-				FLAC__int32 s = *lptr++;
+				FLAC__int32 s = *lptr++ << 8;
 				*sptr++ = s;
 				*sptr++ = s;
 			}
@@ -102,14 +102,14 @@ static FLAC__StreamDecoderWriteStatus decode_flac_write_callback(
 	else {
 		if (frame->header.bits_per_sample == 16) {
 			for (i=0; i<frame->header.blocksize; i++) {
-				*sptr++ = *lptr++ << 8;
-				*sptr++ = *rptr++ << 8;
+				*sptr++ = *lptr++ << 16;
+				*sptr++ = *rptr++ << 16;
 			}
 		}
 		else /* bits_per_sample == 24 */ {
 			for (i=0; i<frame->header.blocksize; i++) {
-				*sptr++ = *lptr++;
-				*sptr++ = *rptr++;
+				*sptr++ = *lptr++ << 8;
+				*sptr++ = *rptr++ << 8;
 			}
 		}
 	}

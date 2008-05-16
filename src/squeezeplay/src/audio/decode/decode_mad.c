@@ -150,8 +150,8 @@ static void decode_mad_output(struct decode_mad *self) {
 	if (self->synth.pcm.channels == 2) {
 		/* stero */
 		for (i=0; i<self->synth.pcm.length; i++) {
-			*buf++ = *left++ >> (MAD_F_FRACBITS + 1 - 24);
-			*buf++ = *right++ >> (MAD_F_FRACBITS + 1 - 24);
+			*buf++ = *left++ << (32 - MAD_F_FRACBITS - 1);
+			*buf++ = *right++ << (32 - MAD_F_FRACBITS - 1);
 		}
 	}
 	else {
@@ -159,7 +159,7 @@ static void decode_mad_output(struct decode_mad *self) {
 		sample_t s;
 
 		for (i=0; i<self->synth.pcm.length; i++) {
-			s = *left++ >> (MAD_F_FRACBITS + 1 - 24);
+			s = *left++ << (32 - MAD_F_FRACBITS - 1);
 
 			*buf++ = s;
 			*buf++ = s;

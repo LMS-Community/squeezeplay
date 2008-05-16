@@ -111,8 +111,8 @@ static bool_t decode_tones_callback(void *data) {
 				if (++self->count == 40)
 					self->count = 0;
 
-				*write_pos++ = sample;
-				*write_pos++ = sample;
+				*write_pos++ = sample << 8;
+				*write_pos++ = sample << 8;
 			}
 			break;
 	
@@ -153,8 +153,8 @@ static bool_t decode_tones_callback(void *data) {
 					right = sample;
 				}
 				
-				*write_pos++ = left;
-				*write_pos++ = right;
+				*write_pos++ = left << 8;
+				*write_pos++ = right << 8;
 			}
 			
 			DEBUG_TRACE("count: %08x, theta: %08x", self->count, self->theta);
