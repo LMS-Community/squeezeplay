@@ -222,6 +222,22 @@ static void decode_mad_frame(struct decode_mad *self) {
 }		
 
 
+static inline sample_t mad_fixed_to_32bit(mad_fixed_t fixed)
+{
+	fixed += (1L << (MAD_F_FRACBITS - 24));
+
+	/* Clipping */
+	if(fixed >= MAD_F_ONE)
+		fixed = MAD_F_ONE - 1;
+	if(fixed <= -MAD_F_ONE)
+		fixed = -MAD_F_ONE;
+
+	/* Conversion */
+	fixed = fixed >> (MAD_F_FRACBITS - 23);
+	return ((sample_t)fixed) << 8;
+}
+
+
 static void decode_mad_output(struct decode_mad *self) {
 	struct mad_pcm *pcm;
 	sample_t *buf;
@@ -251,8 +267,8 @@ static void decode_mad_output(struct decode_mad *self) {
 		if (pcm->channels == 2) {
 			/* stero */
 			for (i=0; i<pcm->length; i++) {
-				*buf++ = *left++ << (32 - MAD_F_FRACBITS - 1);
-				*buf++ = *right++ << (32 - MAD_F_FRACBITS - 1);
+				*buf++ = mad_fixed_to_32bit(*left++);
+				*buf++ = mad_fixed_to_32bit(*right++);
 			}
 		}
 		else {
@@ -260,7 +276,7 @@ static void decode_mad_output(struct decode_mad *self) {
 			sample_t s;
 
 			for (i=0; i<pcm->length; i++) {
-				s = *left++ << (32 - MAD_F_FRACBITS - 1);
+				s = mad_fixed_to_32bit(*left++);
 
 				*buf++ = s;
 				*buf++ = s;
