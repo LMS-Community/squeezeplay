@@ -141,11 +141,6 @@ typedef struct{
     PaUtilConverter *Float32_To_Int32_Clip;
     PaUtilConverter *Float32_To_Int32_DitherClip;
 
-    PaUtilConverter *Float32_To_Int24Padded;
-    PaUtilConverter *Float32_To_Int24Padded_Dither;
-    PaUtilConverter *Float32_To_Int24Padded_Clip;
-    PaUtilConverter *Float32_To_Int24Padded_DitherClip;
-
     PaUtilConverter *Float32_To_Int24;
     PaUtilConverter *Float32_To_Int24_Dither;
     PaUtilConverter *Float32_To_Int24_Clip;
@@ -167,8 +162,6 @@ typedef struct{
     PaUtilConverter *Float32_To_UInt8_DitherClip;
 
     PaUtilConverter *Int32_To_Float32;
-    PaUtilConverter *Int32_To_Int24Padded;
-    PaUtilConverter *Int32_To_Int24Padded_Dither;
     PaUtilConverter *Int32_To_Int24;
     PaUtilConverter *Int32_To_Int24_Dither;
     PaUtilConverter *Int32_To_Int16;
@@ -178,21 +171,8 @@ typedef struct{
     PaUtilConverter *Int32_To_UInt8;
     PaUtilConverter *Int32_To_UInt8_Dither;
 
-    PaUtilConverter *Int24Padded_To_Float32;
-    PaUtilConverter *Int24Padded_To_Int32;
-    PaUtilConverter *Int24Padded_To_Int32_Dither;
-    PaUtilConverter *Int24Padded_To_Int24;
-    PaUtilConverter *Int24Padded_To_Int24_Dither;
-    PaUtilConverter *Int24Padded_To_Int16;
-    PaUtilConverter *Int24Padded_To_Int16_Dither;
-    PaUtilConverter *Int24Padded_To_Int8;
-    PaUtilConverter *Int24Padded_To_Int8_Dither;
-    PaUtilConverter *Int24Padded_To_UInt8;
-    PaUtilConverter *Int24Padded_To_UInt8_Dither;
-
     PaUtilConverter *Int24_To_Float32;
     PaUtilConverter *Int24_To_Int32;
-    PaUtilConverter *Int24_To_Int24Padded;
     PaUtilConverter *Int24_To_Int16;
     PaUtilConverter *Int24_To_Int16_Dither;
     PaUtilConverter *Int24_To_Int8;
@@ -202,7 +182,6 @@ typedef struct{
 
     PaUtilConverter *Int16_To_Float32;
     PaUtilConverter *Int16_To_Int32;
-    PaUtilConverter *Int16_To_Int24Padded;
     PaUtilConverter *Int16_To_Int24;
     PaUtilConverter *Int16_To_Int8;
     PaUtilConverter *Int16_To_Int8_Dither;
@@ -211,14 +190,12 @@ typedef struct{
 
     PaUtilConverter *Int8_To_Float32;
     PaUtilConverter *Int8_To_Int32;
-    PaUtilConverter *Int8_To_Int24Padded;
     PaUtilConverter *Int8_To_Int24;
     PaUtilConverter *Int8_To_Int16;
     PaUtilConverter *Int8_To_UInt8;
     
     PaUtilConverter *UInt8_To_Float32;
     PaUtilConverter *UInt8_To_Int32;
-    PaUtilConverter *UInt8_To_Int24Padded;
     PaUtilConverter *UInt8_To_Int24;
     PaUtilConverter *UInt8_To_Int16;
     PaUtilConverter *UInt8_To_Int8;
