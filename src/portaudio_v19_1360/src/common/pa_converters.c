@@ -961,13 +961,15 @@ static void Int32_To_Int16_Dither(
 {
     PaInt32 *src = (PaInt32*)sourceBuffer;
     PaInt16 *dest =  (PaInt16*)destinationBuffer;
-    PaInt32 dither;
+    PaInt32 dither, dithered;
 
     while( count-- )
     {
         /* REVIEW */
         dither = PaUtil_Generate16BitTriangularDither( ditherGenerator );
-        *dest = (PaInt16) ((((*src)>>1) + dither) >> 15);
+	dithered = ((((*src)>>1) + (dither>>1)) >> 15);
+	PA_CLIP_( dithered, -0x8000, 0x7FFF );
+        *dest = (PaInt16) dithered;
 
         src += sourceStride;
         dest += destinationStride;
