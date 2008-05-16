@@ -160,8 +160,8 @@ tolua++:
 # squeezeplay
 #
 
-.PHONY: app squeezeplay squeezeplay_desktop squeezeplay_test freefont
-app: portaudio flac squeezeplay squeezeplay_desktop squeezeplay_test freefont
+.PHONY: app portaudio flac libmad squeezeplay squeezeplay_desktop squeezeplay_test freefont
+app: portaudio flac libmad squeezeplay squeezeplay_desktop squeezeplay_test freefont
 
 # portaudio
 portaudio_v19_1360/Makefile:
@@ -176,6 +176,13 @@ flac-1.2.1/Makefile:
 
 flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install
+
+# libmad
+libmad-0.15.1b/Makefile:
+	cd libmad-0.15.1b; ./configure --prefix=${PREFIX}
+
+libmad: libmad-0.15.1b/Makefile
+	cd libmad-0.15.1b; make && make install
 
 # squeezeplay
 squeezeplay/Makefile:
