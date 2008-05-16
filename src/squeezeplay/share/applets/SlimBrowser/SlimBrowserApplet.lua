@@ -1294,6 +1294,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 				elseif actionName == 'go' 
 					-- when we want play or add action to do the same thing as 'go', and give us a new window
 					or ( item['playAction'] == 'go' and actionName == 'play' ) 
+					or ( item['playHoldAction'] == 'go' and actionName == 'play-hold' ) 
 					or ( item['addAction'] == 'go' and actionName == 'add' ) then
 					step, sink = _newDestination(_curStep, item, _newWindowSpec(db, item), _browseSink, jsonAction)
 					if step.menu then
