@@ -166,6 +166,48 @@ bool_t decode_output_can_write(u32_t buffer_size, u32_t sample_rate) {
 }
 
 
+/* This removes padding samples from the buffer (for gapless mp3 playback). */
+void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate) {
+#if 0
+	int numerator, denominator;
+	u32_t resampled_rate;
+#endif
+	size_t buffer_size;
+
+	buffer_size = SAMPLES_TO_BYTES(nsamples);
+
+#if 0
+	// XXXX full port from ip3k
+	u32_t resampled_rate = decode_output_scaled_samplerate(sample_rate, &numerator, &denominator);
+	if (numerator != 1) {
+		buffer_size /= numerator;
+	}
+	buffer_size *= denominator;
+#endif
+
+	DEBUG_TRACE("Removing %d bytes padding from buffer", buffer_size);
+
+	fifo_lock(&decode_fifo);
+
+	/* have we already started playing the padding? */
+	if (fifo_bytes_used(&decode_fifo) <= buffer_size) {
+		fifo_unlock(&decode_fifo);
+
+		DEBUG_TRACE("- already playing padding");
+		return;
+	}
+
+	if (decode_fifo.wptr < buffer_size) {
+		decode_fifo.wptr += decode_fifo.size - buffer_size;
+	}
+	else {
+		decode_fifo.wptr -= buffer_size;
+	}
+
+	fifo_unlock(&decode_fifo);
+}
+
+
 int decode_output_samplerate() {
 	return current_sample_rate;
 }

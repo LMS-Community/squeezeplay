@@ -32,6 +32,10 @@ struct decode_mad {
 	sample_t *output_buffer;
 	u8_t *guard_pointer;
 
+	u32_t frames;
+	u32_t encoder_delay;
+	u32_t encoder_padding;
+
 	enum {
 		MAD_STATE_OK = 0,
 		MAD_STATE_PCM_READY,
@@ -41,6 +45,95 @@ struct decode_mad {
 
 	int sample_rate;
 };
+
+
+#define XING_MAGIC      ( ('X' << 24) | ('i' << 16) | ('n' << 8) | 'g' )
+#define INFO_MAGIC      ( ('I' << 24) | ('n' << 16) | ('f' << 8) | 'o' )
+#define LAME_MAGIC      ( ('L' << 24) | ('A' << 16) | ('M' << 8) | 'E' )
+
+#define XING_FRAMES 	0x01
+#define XING_BYTES  	0x02
+#define XING_TOC    	0x04
+#define XING_SCALE  	0x08
+
+static void xing_parse(struct decode_mad *self) {
+	struct mad_bitptr ptr = self->stream.anc_ptr;
+	unsigned int bitlen = self->stream.anc_bitlen;
+
+	if (bitlen < 64) {
+		DEBUG_TRACE("no xing header");
+		return;
+	}
+
+	u32_t magic = mad_bit_read(&ptr, 32);
+	DEBUG_TRACE("xing magic %x", magic);
+	if (magic != XING_MAGIC && magic != INFO_MAGIC) {
+		return;
+	}
+
+	u32_t flags = mad_bit_read(&ptr, 32);
+	bitlen -= 64;
+
+	// skip traditional xing vbr tag data
+	if (flags & XING_FRAMES) {
+		DEBUG_TRACE("skipping xing frames");
+		if (bitlen < 32) {
+			return;
+		}
+		mad_bit_skip(&ptr, 32);
+		bitlen -= 32;
+	}
+	if (flags & XING_BYTES) {
+		DEBUG_TRACE("skipping xing bytes");
+		if (bitlen < 32) {
+			return;
+		}
+		mad_bit_skip(&ptr, 32);
+		bitlen -= 32;
+	}
+	if (flags & XING_TOC) {
+		DEBUG_TRACE("skipping xing toc");
+		if (bitlen < 800) {
+			return;
+		}
+		mad_bit_skip(&ptr, 800);
+		bitlen -= 800;
+	}
+	if (flags & XING_SCALE) {
+		DEBUG_TRACE("skipping xing scale");
+		if (bitlen < 32) {
+			return;
+		}
+		mad_bit_skip(&ptr, 32);
+		bitlen -= 32;
+	}
+
+	if (bitlen < 72) {
+		DEBUG_TRACE("no lame header");
+		return;
+	}
+
+	magic = mad_bit_read(&ptr, 32);
+	mad_bit_skip(&ptr, 40);
+	bitlen -= 72;
+
+	DEBUG_TRACE("lame magic %x", magic);
+	if (magic != LAME_MAGIC) {
+		return;
+	}
+
+	if (bitlen < 120) {
+		return;
+	}
+
+	mad_bit_skip(&ptr, 96);
+
+	self->encoder_delay = mad_bit_read(&ptr, 12);
+	self->encoder_padding = mad_bit_read(&ptr, 12);
+
+	DEBUG_TRACE("encoder delay %d", self->encoder_delay);
+	DEBUG_TRACE("encoder padding %d", self->encoder_padding);
+}
 
 
 static void decode_mad_frame(struct decode_mad *self) {
@@ -82,7 +175,7 @@ static void decode_mad_frame(struct decode_mad *self) {
 				/* If we're at the end of the input file, write
 				 * out the buffer guard.
 				 */
-				self->guard_pointer = read_start + read_num;
+				self->guard_pointer = read_start;
 				memset(self->guard_pointer, 0, MAD_BUFFER_GUARD);
 				read_num += MAD_BUFFER_GUARD;
 			}
@@ -129,49 +222,68 @@ static void decode_mad_frame(struct decode_mad *self) {
 
 
 static void decode_mad_output(struct decode_mad *self) {
+	struct mad_pcm *pcm;
 	sample_t *buf;
 	mad_fixed_t *left, *right;
-	int i;
+	int i, offset = 0;
+
+	pcm = &self->synth.pcm;
 
 	self->sample_rate = self->frame.header.samplerate;
 
-	if (!decode_output_can_write(self->synth.pcm.length * 2 * sizeof(sample_t), self->sample_rate)) {
+	if (!decode_output_can_write(pcm->length * 2 * sizeof(sample_t), self->sample_rate)) {
 		self->state = MAD_STATE_PCM_READY;
 		return;
 	}
 
-	// XXXX parse xing header
-
-	buf = self->output_buffer;
-
-	left = self->synth.pcm.samples[0];
-	right = self->synth.pcm.samples[1];
-
-	if (self->synth.pcm.channels == 2) {
-		/* stero */
-		for (i=0; i<self->synth.pcm.length; i++) {
-			*buf++ = *left++ << (32 - MAD_F_FRACBITS - 1);
-			*buf++ = *right++ << (32 - MAD_F_FRACBITS - 1);
-		}
+	/* parse xing header */
+	if (self->frames++ == 0) {
+		xing_parse(self);
+		self->encoder_delay *= pcm->channels;
 	}
 	else {
-		/* mono */
-		sample_t s;
+		buf = self->output_buffer;
 
-		for (i=0; i<self->synth.pcm.length; i++) {
-			s = *left++ << (32 - MAD_F_FRACBITS - 1);
+		left = pcm->samples[0];
+		right = pcm->samples[1];
 
-			*buf++ = s;
-			*buf++ = s;
+		if (pcm->channels == 2) {
+			/* stero */
+			for (i=0; i<pcm->length; i++) {
+				*buf++ = *left++ << (32 - MAD_F_FRACBITS - 1);
+				*buf++ = *right++ << (32 - MAD_F_FRACBITS - 1);
+			}
 		}
+		else {
+			/* mono */
+			sample_t s;
+
+			for (i=0; i<pcm->length; i++) {
+				s = *left++ << (32 - MAD_F_FRACBITS - 1);
+
+				*buf++ = s;
+				*buf++ = s;
+			}
+		}
+
+		/* skip samples for the encoder delay */
+		if (self->encoder_delay) {
+			offset = self->encoder_delay;
+			if (offset > pcm->length) {
+				offset = pcm->length;
+			}
+			self->encoder_delay -= offset;
+
+			DEBUG_TRACE("Skip encoder_delay=%d pcm->length=%d offset=%d", self->encoder_delay, pcm->length, offset);
+		}
+		
+		decode_output_samples(self->output_buffer + (offset * sizeof(sample_t)),
+				      pcm->length - offset,
+				      self->sample_rate,
+				      FALSE,
+				      TRUE,
+				      FALSE);
 	}
-	
-	decode_output_samples(self->output_buffer,
-			      self->synth.pcm.length,
-			      self->sample_rate,
-			      FALSE,
-			      TRUE,
-			      FALSE);
 
 	/* If we've come to the guard pointer, we're done */
 	if (self->stream.this_frame == self->guard_pointer) {
@@ -179,7 +291,10 @@ static void decode_mad_output(struct decode_mad *self) {
 
 		self->state = MAD_STATE_END_OF_FILE;
 
-		// XXXX remove padding?
+		if (self->encoder_padding) {
+			DEBUG_TRACE("Remove encoder padding=%d", self->encoder_padding);
+			decode_output_remove_padding(self->encoder_padding, self->sample_rate);
+		}
 	}
 	else {
 		self->state = MAD_STATE_OK;
@@ -243,6 +358,10 @@ static void *decode_mad_start(u8_t *params, u32_t num_params) {
 
 	/* Assume we aren't changing sample rates until proven wrong */
 	self->sample_rate = decode_output_samplerate();
+
+	/* Don't check for CRC errors (bug #2527) */
+	// XXXX this needs a patch to libmad
+	//decoder->stream.options = MAD_OPTION_ZEROCRC;
 	
 	return self;
 }

@@ -48,6 +48,8 @@ extern void decode_output_samples(sample_t *buffer, u32_t samples, int sample_ra
 				   bool_t need_scaling, bool_t start_immediately,
 				   bool_t copyright_asserted);
 
+extern void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate);
+
 extern int decode_output_samplerate();
 
 
