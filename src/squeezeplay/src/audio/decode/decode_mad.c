@@ -59,19 +59,20 @@ struct decode_mad {
 static void xing_parse(struct decode_mad *self) {
 	struct mad_bitptr ptr = self->stream.anc_ptr;
 	unsigned int bitlen = self->stream.anc_bitlen;
+	u32_t magic, flags;
 
 	if (bitlen < 64) {
 		DEBUG_TRACE("no xing header");
 		return;
 	}
 
-	u32_t magic = mad_bit_read(&ptr, 32);
+	magic = mad_bit_read(&ptr, 32);
 	DEBUG_TRACE("xing magic %x", magic);
 	if (magic != XING_MAGIC && magic != INFO_MAGIC) {
 		return;
 	}
 
-	u32_t flags = mad_bit_read(&ptr, 32);
+	flags = mad_bit_read(&ptr, 32);
 	bitlen -= 64;
 
 	// skip traditional xing vbr tag data
