@@ -810,8 +810,16 @@ local function _browseSink(step, chunk, err)
 			step.menu:setItems(step.db:menuItems(data))
 
 			-- update the window properties
-			-- TODO add more properties here
 			step.menu:setStyle(step.db:menuStyle())
+			if data.window then
+				if data.window.text then
+					step.window:setTitle(data.window.text)
+				end
+				--FIXME-- if the existing style had an icon, changing the style does not remove it
+				if data.window.titleStyle then
+					step.window:setTitleStyle(data.window.titleStyle .. 'title')
+				end
+			end
 
 			-- what's missing?
 			local from, qty = step.db:missing(step.menu:isAccelerated())
