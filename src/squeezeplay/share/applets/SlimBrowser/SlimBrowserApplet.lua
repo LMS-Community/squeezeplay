@@ -812,12 +812,24 @@ local function _browseSink(step, chunk, err)
 			-- update the window properties
 			step.menu:setStyle(step.db:menuStyle())
 			if data.window then
-				if data.window.text then
-					step.window:setTitle(data.window.text)
-				end
-				--FIXME-- if the existing style had an icon, changing the style does not remove it
+				-- if a titleStyle is being sent, we need to setTitleWidget completely
 				if data.window.titleStyle then
+					-- first setup the widget with the existing title text
+					local existingTitle = step.window:getTitle()
+					if not existingTitle then
+						existingTitle = ''
+					end
+					local newTitleWidget = Group("title", { text = Label("text", existingTitle), icon = Icon("icon") })	
+					step.window:setTitleWidget(newTitleWidget)
+					-- change the title text if necessary
+					if data.window.text then
+						step.window:setTitle(data.window.text)
+					end
+					-- after widget is created, set the style as directed
 					step.window:setTitleStyle(data.window.titleStyle .. 'title')
+				-- change the text as specified if no titleStyle param was also sent
+				elseif data.window.text then
+					step.window:setTitle(data.window.text)
 				end
 			end
 
