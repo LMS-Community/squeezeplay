@@ -242,7 +242,7 @@ end
 
 --[[
 
-=head2 jive.ui.Menu.itemComparatorNodeWeightAlpha
+=head2 jive.ui.Menu.itemComparatorKeyWeightAlpha
 
 Item comparator to sort items using item.sortKey as a primary key, item.weight as a secondary key, and
 item.text as a tertiary key.

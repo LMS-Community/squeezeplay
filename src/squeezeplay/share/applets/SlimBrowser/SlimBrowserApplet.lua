@@ -813,12 +813,26 @@ local function _browseSink(step, chunk, err)
 			-- update the window properties
 			step.menu:setStyle(step.db:menuStyle())
 			if data.window then
-				if data.window.text then
-					step.window:setTitle(data.window.text)
-				end
-				--FIXME-- if the existing style had an icon, changing the style does not remove it
+				-- if a titleStyle is being sent, we need to setTitleWidget completely
 				if data.window.titleStyle then
-					step.window:setTitleStyle(data.window.titleStyle .. 'title')
+					local titleText
+					-- set the title text if specified
+					if data.window.text then
+						titleText = data.window.text
+					-- otherwise default back to what's currently in the title widget
+					else	
+						titleText = step.window:getTitle()
+						if not titleText then
+							log:warn('no title found in existing title widget')
+							titleText = ''
+						end
+					end
+					local titleStyle = data.window.titleStyle .. 'title'
+					local newTitleWidget = Group(titleStyle, { text = Label("text", titleText), icon = Icon("icon") })	
+					step.window:setTitleWidget(newTitleWidget)
+				-- change the text as specified if no titleStyle param was also sent
+				elseif data.window.text then
+					step.window:setTitle(data.window.text)
 				end
 			end
 
@@ -2023,9 +2037,8 @@ function notify_playerModeChange(self, player, mode)
 		token = 'off'
 	end
 
-	-- FIXME, bug 7365: this title doesn't get set even though this command does change the text of the window title label
-	step.window:setTitle(_string(modeTokens[token]))
-	step.window:setTitleStyle("currentplaylisttitle")
+	local newTitleWidget = Group('currentplaylisttitle', { text = Label("text", _string(modeTokens[token])), icon = Icon("icon") })	
+	step.window:setTitleWidget(newTitleWidget)
 
 end
 

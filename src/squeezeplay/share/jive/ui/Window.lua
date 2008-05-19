@@ -461,6 +461,23 @@ function hideAll(self)
 	-- FIXME window events
 end
 
+--[[
+
+=head2 jive.ui.Window:getTitle()
+
+Returns the text of the title widget.
+
+=cut
+--]]
+function getTitle(self)
+	if self.title then
+		if self.title:getWidget('text') then
+			return self.title:getWidget('text'):getValue()
+		end
+	end
+	return nil
+end
+
 
 --[[
 
@@ -483,7 +500,7 @@ end
 
 --[[
 
-=head2 jive.ui.Window:setTitle(style)
+=head2 jive.ui.Window:setTitleStyle(style)
 
 Sets the windows title style to I<style>.
 
