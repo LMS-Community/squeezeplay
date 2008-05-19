@@ -811,8 +811,16 @@ local function _browseSink(step, chunk, err)
 			step.menu:setItems(step.db:menuItems(data))
 
 			-- update the window properties
-			-- TODO add more properties here
 			step.menu:setStyle(step.db:menuStyle())
+			if data.window then
+				if data.window.text then
+					step.window:setTitle(data.window.text)
+				end
+				--FIXME-- if the existing style had an icon, changing the style does not remove it
+				if data.window.titleStyle then
+					step.window:setTitleStyle(data.window.titleStyle .. 'title')
+				end
+			end
 
 			-- what's missing?
 			local from, qty = step.db:missing(step.menu:isAccelerated())
@@ -1295,6 +1303,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 				elseif actionName == 'go' 
 					-- when we want play or add action to do the same thing as 'go', and give us a new window
 					or ( item['playAction'] == 'go' and actionName == 'play' ) 
+					or ( item['playHoldAction'] == 'go' and actionName == 'play-hold' ) 
 					or ( item['addAction'] == 'go' and actionName == 'add' ) then
 					step, sink = _newDestination(_curStep, item, _newWindowSpec(db, item), _browseSink, jsonAction)
 					if step.menu then
