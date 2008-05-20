@@ -197,6 +197,8 @@ function _streamConnect(self, serverIp, serverPort)
 	
 	self.rtask = Task("streambufR", self, _streamRead)
 	self.jnt:t_addRead(self.stream, self.rtask, 0) -- XXXX timeout?
+
+	self.slimproto:sendStatus('STMc')
 end
 
 
@@ -253,7 +255,7 @@ function _streamRead(self, networkErr)
 
 		_, networkErr = Task:yield(false)
 
-		n = self.stream:read()
+		n = self.stream:read(self)
 	end
 
 	self:_streamDisconnect()
