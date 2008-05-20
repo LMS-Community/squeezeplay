@@ -21,6 +21,9 @@ extern bool_t streambuf_is_looping(void);
 
 extern void streambuf_flush(void);
 
+/* the mutex should be locked when using fast read */
+extern size_t streambuf_fast_read(u8_t *buf, size_t min, size_t max, bool_t *streaming);
+
 extern size_t streambuf_read(u8_t *buf, size_t min, size_t max, bool_t *streaming);
 
 extern int streambuf_openL(lua_State *L);

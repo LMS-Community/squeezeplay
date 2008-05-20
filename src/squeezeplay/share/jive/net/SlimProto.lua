@@ -270,7 +270,7 @@ local opcodes = {
 
 	cont = function(self, packet)
 		return {
-			metainterval = unpackNumber(packet, 5, 4),
+			icyMetaInterval = unpackNumber(packet, 5, 4),
 			loop = unpackNumber(packet, 9, 1),
 			-- XXXX read wma guid's
 		}

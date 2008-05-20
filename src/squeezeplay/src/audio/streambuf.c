@@ -40,6 +40,13 @@ static bool_t streambuf_loop = FALSE;
 static bool_t streambuf_streaming = FALSE;
 static u64_t streambuf_bytes_received = 0;
 
+/* streambuf filter, used to parse metadata */
+static size_t (*streambuf_filter)(u8_t *buf, size_t min, size_t max, bool_t *streaming);
+
+/* shoutcast metadata state */
+static u32_t icy_meta_interval;
+static s32_t icy_meta_remaining;
+
 
 size_t streambuf_get_size(void) {
 	return STREAMBUF_SIZE;
@@ -191,11 +198,8 @@ size_t streambuf_feed_fd(int fd) {
 }
 
 
-size_t streambuf_read(u8_t *buf, size_t min, size_t max, bool_t *streaming) {
+size_t streambuf_fast_read(u8_t *buf, size_t min, size_t max, bool_t *streaming) {
 	size_t sz, w;
-
-
-	fifo_lock(&streambuf_fifo);
 
 	if (streaming) {
 		*streaming = streambuf_streaming;
@@ -203,7 +207,6 @@ size_t streambuf_read(u8_t *buf, size_t min, size_t max, bool_t *streaming) {
 
 	sz = fifo_bytes_used(&streambuf_fifo);
 	if (sz < min) {
-		fifo_unlock(&streambuf_fifo);
 		return 0; /* underrun */
 	}
 
@@ -225,9 +228,93 @@ size_t streambuf_read(u8_t *buf, size_t min, size_t max, bool_t *streaming) {
 		streambuf_fifo.rptr = streambuf_lptr;
 	}
 
+	return sz;
+}
+
+
+size_t streambuf_read(u8_t *buf, size_t min, size_t max, bool_t *streaming) {
+	size_t n;
+
+	fifo_lock(&streambuf_fifo);
+
+	if (streambuf_filter) {
+		/* filters are called with the streambuf locked */
+		n = streambuf_filter(buf, min, max, streaming);
+	}
+	else {
+		n = streambuf_fast_read(buf, min, max, streaming);
+	}
+
 	fifo_unlock(&streambuf_fifo);
 
-	return sz;
+	return n;
+}
+
+
+size_t streambuf_icy_filter(u8_t *buf, size_t min, size_t max, bool_t *streaming) {
+	size_t avail, r, n = 0;
+	
+	/* streambuf is locked */
+
+	/* icy is only used with the mp3 decoder, it always uses min=0.
+	 * let's use this to make this code simpler.
+	 */
+	assert(min == 0);
+
+	avail = fifo_bytes_used(&streambuf_fifo);
+	while (avail && n < max) {
+		if (icy_meta_remaining > 0) {
+			/* we're waiting for the metadata */
+			r = icy_meta_remaining;
+			if (r > max - n) {
+				r = max - n;
+			}
+
+			r = streambuf_fast_read(buf, 0, r, streaming);
+
+			buf += r;
+			n += r;
+			icy_meta_remaining -= r;
+
+		}
+		else if (icy_meta_remaining == 0) {
+			/* we're reading the metadata length byte */
+			u8_t len;
+
+			r = streambuf_fast_read(&len, 1, 1, NULL);
+			assert(r == 1);
+
+			icy_meta_remaining = -16 * len;
+			if (!icy_meta_remaining) {
+				/* it's a zero length metadata, reset to the next interval */
+				icy_meta_remaining = icy_meta_interval;
+			}
+		}
+		else {
+			/* we're reading the metadata */
+			u32_t icy_len = -icy_meta_remaining;
+			u8_t *icy_buf;
+
+			if (avail < icy_len) {
+				/* wait for more data */
+				break;
+			}
+
+			icy_buf = malloc(icy_len);
+			r = streambuf_fast_read(icy_buf, icy_len, icy_len, NULL);
+			assert(r == icy_len);
+
+			// XXXX queue metadata
+			DEBUG_TRACE("got icy metadata len=%d", icy_len);
+			free(icy_buf);
+
+			icy_meta_remaining = icy_meta_interval;
+		}
+
+		avail = fifo_bytes_used(&streambuf_fifo);
+	}
+
+	return n;
 }
 
 
@@ -313,6 +400,7 @@ static int stream_connectL(lua_State *L) {
 	lua_setmetatable(L, -2);
 
 	streambuf_bytes_received = 0;
+	streambuf_filter = NULL;
 
 	return 1;
 }
@@ -537,6 +625,25 @@ static int stream_mark_loopL(lua_State *L) {
 }
 
 
+static int stream_icy_metaintervalL(lua_State *L) {
+	/*
+	 * 1: Stream (self)
+	 * 2: meta interval
+	 */
+
+	fifo_lock(&streambuf_fifo);
+
+	streambuf_filter = streambuf_icy_filter;
+
+	icy_meta_interval = lua_tointeger(L, 2);
+	icy_meta_remaining = icy_meta_interval;
+
+	fifo_unlock(&streambuf_fifo);
+
+	return 0;
+}
+
+
 static const struct luaL_Reg stream_f[] = {
 	{ "connect", stream_connectL },
 	{ NULL, NULL }
@@ -550,6 +657,7 @@ static const struct luaL_Reg stream_m[] = {
 	{ "read", stream_readL },
 	{ "write", stream_writeL },
 	{ "markLoop", stream_mark_loopL },
+	{ "icyMetaInterval", stream_icy_metaintervalL },
 	{ NULL, NULL }
 };
 

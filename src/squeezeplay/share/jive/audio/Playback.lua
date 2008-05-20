@@ -365,7 +365,11 @@ function _cont(self, data)
 		self.stream:markLoop()
 	end
 
-	-- XXXX icy metainterval
+	-- icy metainterval
+	if data.icyMetaInterval then
+		self.stream:icyMetaInterval(data.icyMetaInterval)
+	end
+
 	-- XXXX wma guid's
 
 	self.autostart = (self.autostart == '2') and '0' or '1'
