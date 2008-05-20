@@ -90,5 +90,9 @@
 #include <dmalloc.h>
 #endif
 
+#if defined(_MSC_VER)
+#define inline __inline
+#endif //defined(_MSC_VER)
+
 #endif // JIVE_COMMON_H
 
