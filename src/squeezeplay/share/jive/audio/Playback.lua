@@ -42,14 +42,15 @@ function __init(self, jnt, slimproto)
 		status.event = event
 		status.serverTimestamp = serverTimestamp
 		
-		-- XXXX fix this missing status field
-		status.bytesReceived = 0
-
 		return status
 	end)
 
 	obj.slimproto:subscribe("strm", function(_, data)
 		return obj:_strm(data)
+	end)
+
+	obj.slimproto:subscribe("cont", function(_, data)
+		return obj:_cont(data)
 	end)
 
 	obj.timer = Timer(100, function()
@@ -84,9 +85,6 @@ end
 function _timerCallback(self)
 	local status = Decode:status()
 
-
-	-- XXXX fix this missing status field
-	status.bytesReceived = 0
 
 	-- enable stream reads when decode buffer is not full
 	if status.decodeFull < status.decodeSize and self.stream then
@@ -179,6 +177,7 @@ function _timerCallback(self)
 			self.sentResume = true
 
 		elseif not self.sentDecoderFullEvent then
+			-- Tell SC decoder buffer is full
 			log:info("status FULL")
 			self:sendStatus(status, "STMl")
 
@@ -217,7 +216,8 @@ function _streamDisconnect(self, flush)
 	end
 	self.stream = nil
 
-	-- XXXX do we need to notify SqueezeCenter
+	-- Notify SqueezeCenter the stream is closed
+	self.slimproto:sendStatus('STMf')
 end
 
 
@@ -228,7 +228,7 @@ function _streamWrite(self, networkErr)
 		return
 	end
 
-	local status, err = self.stream:write(self.header)
+	local status, err = self.stream:write(self, self.header)
 	self.jnt:t_removeWrite(self.stream)
 
 	if err then
@@ -244,14 +244,12 @@ function _streamRead(self, networkErr)
 		return
 	end
 
-	local n = self.stream:read()
+	local n = self.stream:read(self)
 	while n do
 		if n == 0 then
 			-- buffer full
 			self.jnt:t_removeRead(self.stream)
 		end
-
-		-- XXXX handle autostart
 
 		_, networkErr = Task:yield(false)
 
@@ -259,6 +257,15 @@ function _streamRead(self, networkErr)
 	end
 
 	self:_streamDisconnect()
+end
+
+
+function _streamHttpHeaders(self, headers)
+	-- send stream http headers to SqueezeCenter
+	self.slimproto:send({
+		opcode = "RESP",
+		headers = headers,
+	})
 end
 
 
@@ -348,6 +355,19 @@ function _strm(self, data)
 	return true
 end
 
+
+function _cont(self, data)
+	log:info("cont loop=", data.loop)
+
+	if data.loop then
+		self.stream:markLoop()
+	end
+
+	-- XXXX icy metainterval
+	-- XXXX wma guid's
+
+	self.autostart = (self.autostart == '2') and '0' or '1'
+end
 
 
 --[[

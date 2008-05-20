@@ -397,6 +397,9 @@ static int decode_start(lua_State *L) {
 }
 
 static int decode_status(lua_State *L) {
+	size_t size, usedbytes;
+	u32_t bytesL, bytesH;
+
 	lua_newtable(L);
 
 	fifo_lock(&decode_fifo);
@@ -416,11 +419,19 @@ static int decode_status(lua_State *L) {
 	fifo_unlock(&decode_fifo);
 
 
-	lua_pushinteger(L, streambuf_get_usedbytes());
+	streambuf_get_status(&size, &usedbytes, &bytesL, &bytesH);
+
+	lua_pushinteger(L, size);
+	lua_setfield(L, -2, "decodeSize");
+
+	lua_pushinteger(L, usedbytes);
 	lua_setfield(L, -2, "decodeFull");
 
-	lua_pushinteger(L, streambuf_get_size());
-	lua_setfield(L, -2, "decodeSize");
+	lua_pushinteger(L, bytesL);
+	lua_setfield(L, -2, "bytesReceivedL");
+
+	lua_pushinteger(L, bytesH);
+	lua_setfield(L, -2, "bytesReceivedH");
 
 
 	lua_pushinteger(L, current_decoder_state);

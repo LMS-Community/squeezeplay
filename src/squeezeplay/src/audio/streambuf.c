@@ -38,6 +38,7 @@ static struct fifo streambuf_fifo;
 static size_t streambuf_lptr = 0;
 static bool_t streambuf_loop = FALSE;
 static bool_t streambuf_streaming = FALSE;
+static u64_t streambuf_bytes_received = 0;
 
 
 size_t streambuf_get_size(void) {
@@ -68,6 +69,19 @@ size_t streambuf_get_usedbytes(void) {
 	fifo_unlock(&streambuf_fifo);
 
 	return n;
+}
+
+
+void streambuf_get_status(size_t *size, size_t *usedbytes, u32_t *bytesL, u32_t *bytesH) {
+
+	fifo_lock(&streambuf_fifo);
+
+	*size = STREAMBUF_SIZE;
+	*usedbytes = fifo_bytes_used(&streambuf_fifo);
+	*bytesL = streambuf_bytes_received & 0xFFFFFFFF;
+	*bytesH = streambuf_bytes_received >> 32;
+
+	fifo_unlock(&streambuf_fifo);
 }
 
 
@@ -120,6 +134,8 @@ void streambuf_feed(u8_t *buf, size_t size) {
 
 	streambuf_streaming = TRUE;
 
+	streambuf_bytes_received += size;
+
 	while (size) {
 		n = fifo_bytes_until_wptr_wrap(&streambuf_fifo);
 
@@ -166,6 +182,8 @@ size_t streambuf_feed_fd(int fd) {
 	}
 	else {
 		fifo_wptr_incby(&streambuf_fifo, n);
+
+		streambuf_bytes_received += n;
 	}
 
 	fifo_unlock(&streambuf_fifo);
@@ -223,7 +241,7 @@ struct stream {
 };
 
 
-int stream_connectL(lua_State *L) {
+static int stream_connectL(lua_State *L) {
 
 	/*
 	 * 1: self
@@ -294,11 +312,13 @@ int stream_connectL(lua_State *L) {
 	luaL_getmetatable(L, "squeezeplay.stream");
 	lua_setmetatable(L, -2);
 
+	streambuf_bytes_received = 0;
+
 	return 1;
 }
 
 
-int stream_disconnectL(lua_State *L) {
+static int stream_disconnectL(lua_State *L) {
 	struct stream *stream;
 
 	/*
@@ -307,22 +327,28 @@ int stream_disconnectL(lua_State *L) {
 
 	stream = lua_touserdata(L, 1);
 
+	if (stream->body) {
+		free(stream->body);
+	}
+
 	if (stream->fd) {
 		CLOSESOCKET(stream->fd);
 		stream->fd = 0;
 	}
 
+	streambuf_bytes_received = 0;
+
 	return 0;
 }
 
 
-int stream_flushL(lua_State *L) {
+static int stream_flushL(lua_State *L) {
 	streambuf_flush();
 	return 0;
 }
 
 
-int stream_getfdL(lua_State *L) {
+static int stream_getfdL(lua_State *L) {
 	struct stream *stream;
 
 	/*
@@ -341,14 +367,16 @@ int stream_getfdL(lua_State *L) {
 }
 
 
-int stream_readL(lua_State *L) {
+static int stream_readL(lua_State *L) {
 	struct stream *stream;
 	u8_t buf[1024];
 	u8_t *buf_ptr, *body_ptr;
-	int n, header_len;
+	size_t header_len;
+	int n;
 
 	/*
-	 * 1: self
+	 * 1: Stream (self)
+	 * 2: Playback (self)
 	 */
 
 	stream = lua_touserdata(L, 1);
@@ -433,8 +461,11 @@ int stream_readL(lua_State *L) {
 
 				//DEBUG_TRACE("headers %d %*s\n", header_len, header_len, stream->body);
 
-				// XXXX send end-of-header event
-				// XXXX send headers to SC
+				/* Send headers to SqueezeCenter */
+				lua_getfield(L, 2, "_streamHttpHeaders");
+				lua_pushvalue(L, 2);
+				lua_pushlstring(L, (char *)stream->body, header_len);
+				lua_call(L, 2, 0);
 
 				free(stream->body);
 				stream->body = NULL;
@@ -452,24 +483,24 @@ int stream_readL(lua_State *L) {
 	/* feed remaining buffer */
 	streambuf_feed(buf_ptr, n);
 
-
 	lua_pushboolean(L, TRUE);
 	return 1;
 }
 
 
-int stream_writeL(lua_State *L) {
+static int stream_writeL(lua_State *L) {
 	struct stream *stream;
 	const char *header;
 	int n, len;
 
 	/*
-	 * 1: self
-	 * 2: header
+	 * 1: Stream (self)
+	 * 2: Playback (self)
+	 * 3: header
 	 */
 
 	stream = lua_touserdata(L, 1);
-	header = luaL_checkstring(L, 2);
+	header = luaL_checkstring(L, 3);
 
 	len = strlen(header);
 	while (len > 0) {
@@ -499,6 +530,13 @@ int stream_writeL(lua_State *L) {
 }
 
 
+static int stream_mark_loopL(lua_State *L) {
+	streambuf_mark_loop();
+
+	return 0;
+}
+
+
 static const struct luaL_Reg stream_f[] = {
 	{ "connect", stream_connectL },
 	{ NULL, NULL }
@@ -511,6 +549,7 @@ static const struct luaL_Reg stream_m[] = {
 	{ "getfd", stream_getfdL },
 	{ "read", stream_readL },
 	{ "write", stream_writeL },
+	{ "markLoop", stream_mark_loopL },
 	{ NULL, NULL }
 };
 

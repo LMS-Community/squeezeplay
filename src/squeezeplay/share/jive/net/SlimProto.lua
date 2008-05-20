@@ -151,7 +151,8 @@ local opcodes = {
 		assert(#data.event == 4)
 		assert(data.decodeSize)
 		assert(data.decodeFull)
-		assert(data.bytesReceived)
+		assert(data.bytesReceivedL)
+		assert(data.bytesReceivedH)
 		assert(data.outputSize)
 		assert(data.outputFull)
 		assert(data.elapsed)
@@ -162,7 +163,8 @@ local opcodes = {
 			packNumber(0, 2), -- unused (mas parameters)
 			packNumber(data.decodeSize, 4),
 			packNumber(data.decodeFull, 4),
-			packNumber(data.bytesReceived, 8),
+			packNumber(data.bytesReceivedH, 4),
+			packNumber(data.bytesReceivedL, 4),
 			packNumber(data.signalStrength or 0, 2),
 			packNumber(data.jiffies, 4),
 			packNumber(data.outputSize, 4),
@@ -183,16 +185,27 @@ local opcodes = {
 		}
 	end,
 
+	RESP = function(self, data)
+		assert(data.headers)
+
+		return {
+			data.headers
+		}
+	end,
+
 	META = function(self, data)
 		-- XXXX
+		log:warn("TODO")
 	end,
 
 	BODY = function(self, data)
 		-- XXXX
+		log:warn("TODO")
 	end,
 
 	DSCO = function(self, data)
 		-- XXXX
+		log:warn("TODO")
 	end,
 
 	aude = function(self, packet)
@@ -252,22 +265,30 @@ local opcodes = {
 
 	body = function(self, packet)
 		-- XXXX
+		log:warn("TODO")
 	end,
 
 	cont = function(self, packet)
-		-- XXXX
+		return {
+			metainterval = unpackNumber(packet, 5, 4),
+			loop = unpackNumber(packet, 9, 1),
+			-- XXXX read wma guid's
+		}
 	end,
 
 	dsco = function(self, packet)
 		-- XXXX
+		log:warn("TODO")
 	end,
 
 	serv = function(self, packet)
 		-- XXXX
+		log:warn("TODO")
 	end,
 
 	http = function(self, packet)
 		-- XXXX
+		log:warn("TODO")
 	end,
 }
 
