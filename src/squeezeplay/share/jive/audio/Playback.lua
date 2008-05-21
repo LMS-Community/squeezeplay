@@ -189,8 +189,6 @@ function _timerCallback(self)
 	-- stream metadata
 	local metadata = Decode:streamMetadata()
 	if metadata then
-		debug.dump(metadata)
-
 		-- XXXX extend META with more data
 		self.slimproto:send({
 			opcode = "META",
