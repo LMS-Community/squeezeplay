@@ -36,7 +36,7 @@ SCREENSAVER_FLICKR_ERROR
 	ES	Error de Flickr
 	FR	Erreur Flickr
 	IT	Errore Flickr
-	NL	Flickr-fout
+	NL	Flickr-foutmelding
 
 SCREENSAVER_FLICKR_DELAY
 	DA	Hastighed
@@ -143,7 +143,7 @@ SCREENSAVER_FLICKR_FLICKR_ID_HELP
 	EN	Please enter your Flickr Username or your Email address
 	ES	Introduzca su nombre de usuario de Flickr o su dirección de correo electrónico
 	FR	Spécifiez votre nom d'utilisateur Flickr ou votre adresse électronique
-	IT	Immettere il nome utente flickr o l'indirizzo di posta elettronica
+	IT	Inserire il nome utente flickr o l'indirizzo di posta elettronica
 	NL	Voer je Flickr-gebruikersnaam of je e-mailadres in.
 
 SCREENSAVER_FLICKR_TRANSITION
@@ -224,7 +224,7 @@ SCREENSAVER_FLICKR_USERID_ERROR
 	EN	The entered flickr id could not be resolved to a flicker user account! Please correct your entry.\n\nPress any key to continue.
 	ES	El ID de Flickr indicado no se ha podido resolver en una cuenta de usuario de Flickr. Debe corregir el ID.\n\nPulse una tecla cualquiera para continuar.
 	FR	L'ID Flickr spécifié n'a pas pu être lié à un compte Flickr. Corrigez les informations spécifiées.\n\nAppuyez sur un bouton pour continuer.
-	IT	Impossibile risolvere l'ID flickr immesso in un account utente flickr. Correggere il valore immesso.\n\nPremere un tasto per continuare.
+	IT	Impossibile risolvere l'ID flickr inserito in un account utente flickr. Correggere il valore inserito.\n\nPremere un tasto per continuare.
 	NL	De ingevoerde Flickr-ID kan niet worden opgehaald voor een Flickr-gebruikersaccount! Corrigeer je invoer.\n\nDruk op een willekeurige knop om verder te gaan.
 
 SCREENSAVER_FLICKR_INVALID_DISPLAY_OPTION

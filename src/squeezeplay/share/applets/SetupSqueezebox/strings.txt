@@ -61,7 +61,7 @@ SQUEEZEBOX_FINDING_SOURCES
 	DA	Søger efter musikkilder
 	DE	Musikquellen werden gesucht
 	EN	Finding music sources
-	ES	Buscando fuentes de música
+	ES	Buscando orígenes de música
 	FR	Recherche de sources musicales
 	IT	Ricerca di sorgenti musicali
 	NL	Bezig met zoeken naar muziekbronnen
@@ -148,7 +148,7 @@ SQUEEZEBOX_PROBLEM_DHCP_ERROR
 	ES	(Error de DHCP).
 	FR	Erreur DHCP.
 	IT	Errore DHCP.
-	NL	(DHCP-fout).
+	NL	(DHCP-foutmelding).
 
 SQUEEZEBOX_PROBLEM_LOST_NETWORK
 	DA	(Netværk tabt).
@@ -172,7 +172,7 @@ SQUEEZEBOX_MUSIC_SOURCE
 	DA	Vælg musikkilde
 	DE	Musikquelle wählen
 	EN	Choose Music Source
-	ES	Elija fuente de música
+	ES	Elija origen de música
 	FR	Sélection d'une source musicale
 	IT	Scegliere la sorgente musicale
 	NL	Muziekbron kiezen
@@ -181,7 +181,7 @@ SQUEEZEBOX_MUSIC_SOURCE_HELP
 	DA	Squeezeboxen %s er tilsluttet dit netværk. Vælg en musikkilde.
 	DE	Die Squeezebox %s ist mit dem Netzwerk verbunden. Wählen Sie eine Musikquelle.
 	EN	The Squeezebox %s is connected to your network. Choose a music source.
-	ES	Squeezebox %s está conectado a la red. Elija una fuente de música.
+	ES	Squeezebox %s está conectado a la red. Elija un origen de música.
 	FR	La Squeezebox %s est connectée au réseau. Sélectionnez une source musicale.
 	IT	Squeezebox %s è connesso alla rete. Scegliere una sorgente musicale.
 	NL	De Squeezebox %s is met je netwerk verbonden. Kies een muziekbron.
@@ -201,7 +201,7 @@ SQUEEZEBOX_IP_ADDRESS_HELP
 	EN	Enter the IP address for this Squeezebox to use.
 	ES	Escriba la dirección IP que debe usar este Squeezebox.
 	FR	Spécifiez l'adresse IP à utiliser pour la Squeezebox.
-	IT	Immettere l'indirizzo IP da utilizzare con questo Squeezebox.
+	IT	Inserire l'indirizzo IP da utilizzare con questo Squeezebox.
 	NL	Voer het IP-adres in voor de Squeezebox die gebruikt moet worden.
 
 SQUEEZEBOX_BRIDGED_NAME
