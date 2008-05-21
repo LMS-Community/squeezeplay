@@ -9,7 +9,7 @@ SELECT_PLAYER
 	ES	Elegir reproductor
 	FR	Sélectionner une platine
 	IT	Scegli lettore
-	NL	Speler kiezen
+	NL	Muzieksysteem kiezen
 
 SQUEEZEBOX_SETUP
 	DA	Konfiguration af Squeezebox
