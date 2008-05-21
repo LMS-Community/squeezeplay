@@ -305,7 +305,8 @@ size_t streambuf_icy_filter(u8_t *buf, size_t min, size_t max, bool_t *streaming
 			assert(r == icy_len);
 
 			// XXXX queue metadata
-			DEBUG_TRACE("got icy metadata len=%d", icy_len);
+			DEBUG_TRACE("got icy metadata: %s", icy_buf);
+			assert( strstr( (char *)icy_buf, "StreamTitle" ) != NULL );
 			free(icy_buf);
 
 			icy_meta_remaining = icy_meta_interval;
