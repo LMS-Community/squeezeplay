@@ -184,6 +184,19 @@ function _timerCallback(self)
 			self.sentDecoderFullEvent = true
 		end
 	end
+
+
+	-- stream metadata
+	local metadata = Decode:streamMetadata()
+	if metadata then
+		debug.dump(metadata)
+
+		-- XXXX extend META with more data
+		self.slimproto:send({
+			opcode = "META",
+			metadata = metadata.metadata,
+		})
+	end
 end
 
 

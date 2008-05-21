@@ -10,6 +10,7 @@
 
 #include "audio/fifo.h"
 #include "audio/decode/decode.h"
+#include "audio/decode/decode_priv.h"
 
 
 #if defined(WIN32)
@@ -292,22 +293,28 @@ size_t streambuf_icy_filter(u8_t *buf, size_t min, size_t max, bool_t *streaming
 		}
 		else {
 			/* we're reading the metadata */
-			u32_t icy_len = -icy_meta_remaining;
-			u8_t *icy_buf;
+			struct decode_metadata *icy_buf;
+			size_t icy_len = -icy_meta_remaining;
 
 			if (avail < icy_len) {
 				/* wait for more data */
 				break;
 			}
 
-			icy_buf = malloc(icy_len);
-			r = streambuf_fast_read(icy_buf, icy_len, icy_len, NULL);
+			icy_buf = malloc(sizeof(struct decode_metadata) + icy_len - 1);
+
+			icy_buf->type = SHOUTCAST;
+			icy_buf->len = icy_len;
+
+			r = streambuf_fast_read(&icy_buf->data, icy_len, icy_len, NULL);
 			assert(r == icy_len);
 
 			// XXXX queue metadata
-			assert( strstr( (char *)icy_buf, "StreamTitle" ) != NULL );
-			DEBUG_TRACE("got icy metadata: %s", icy_buf);
-			free(icy_buf);
+			assert( strstr( (char *)&icy_buf->data, "StreamTitle" ) != NULL );
+			DEBUG_TRACE("got icy metadata: %s", (char *) &icy_buf->data);
+
+			decode_queue_metadata(icy_buf);
+			/* decode will free icy_buf */
 
 			icy_meta_remaining = icy_meta_interval;
 		}

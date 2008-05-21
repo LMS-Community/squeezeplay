@@ -194,8 +194,11 @@ local opcodes = {
 	end,
 
 	META = function(self, data)
-		-- XXXX
-		log:warn("TODO")
+		assert(data.metadata)
+
+		return  {
+			data.metadata
+		}
 	end,
 
 	BODY = function(self, data)

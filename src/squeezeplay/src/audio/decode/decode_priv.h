@@ -53,6 +53,24 @@ extern void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate);
 extern int decode_output_samplerate();
 
 
+/* Stream metadata */
+
+struct decode_metadata {
+	enum {
+		SHOUTCAST = 0,
+		WMA_GUID = 1,
+	} type;
+
+	u32_t timestamp;
+	size_t fullness;
+
+	size_t len;
+	u8_t data;
+};
+
+extern void decode_queue_metadata(struct decode_metadata *metadata);
+
+
 /* Audio output api */
 struct decode_audio {
 	void (*init)(void);

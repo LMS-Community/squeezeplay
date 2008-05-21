@@ -19,6 +19,7 @@
 
 #define DECODE_MQUEUE_SIZE 512
 
+#define DECODE_METADATA_SIZE 128
 
 /* decoder thread */
 static SDL_Thread *decode_thread;
@@ -44,6 +45,10 @@ struct fifo decode_fifo;
 /* decoder mqueue */
 struct mqueue decode_mqueue;
 static Uint32 decode_mqueue_buffer[DECODE_MQUEUE_SIZE / sizeof(Uint32)];
+
+
+/* meta data mqueue */
+struct decode_metadata *decode_metadata;
 
 
 /* audio instance */
@@ -240,6 +245,61 @@ static int decode_thread_execute(void *unused) {
 
 	return 0;
 }
+
+/*
+ * stream metadata interface
+ */
+void decode_queue_metadata(struct decode_metadata *metadata) {
+	fifo_lock(&decode_fifo);
+
+	if (decode_metadata) {
+		DEBUG_TRACE("Dropped metadata");
+		free(decode_metadata);
+	}
+
+	metadata->timestamp = SDL_GetTicks();
+	metadata->fullness = fifo_bytes_used(&decode_fifo);
+
+	decode_metadata = metadata;
+
+	fifo_unlock(&decode_fifo);
+}
+
+
+static int decode_stream_metadata(lua_State *L) {
+	/*
+	 * 1: self
+	 */
+
+	fifo_lock(&decode_fifo);
+
+	if (!decode_metadata) {
+		fifo_unlock(&decode_fifo);
+		return 0;
+	}
+
+	lua_newtable(L);
+
+	lua_pushinteger(L, decode_metadata->type);
+	lua_setfield(L, 2, "type");
+
+	lua_pushinteger(L, decode_metadata->timestamp);
+	lua_setfield(L, 2, "timestamp");
+
+	lua_pushinteger(L, decode_metadata->fullness);
+	lua_setfield(L, 2, "fullness");
+
+	lua_pushlstring(L, (char *) &decode_metadata->data, decode_metadata->len);
+	lua_setfield(L, 2, "metadata");
+
+	free(decode_metadata);
+	decode_metadata = NULL;
+
+	fifo_unlock(&decode_fifo);
+
+	return 1;
+}
+
 
 
 /*
@@ -451,6 +511,7 @@ static const struct luaL_Reg decode_f[] = {
 	{ "flush", decode_flush },
 	{ "start", decode_start },
 	{ "status", decode_status },
+	{ "streamMetadata", decode_stream_metadata },
 	{ NULL, NULL }
 };
 
