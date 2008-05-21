@@ -361,12 +361,13 @@ end
 function _cont(self, data)
 	log:info("cont loop=", data.loop)
 
-	if data.loop then
+	if data.loop == 1 then
+		log:warn("LOOP")
 		self.stream:markLoop()
 	end
 
 	-- icy metainterval
-	if data.icyMetaInterval then
+	if data.icyMetaInterval > 0 then
 		self.stream:icyMetaInterval(data.icyMetaInterval)
 	end
 

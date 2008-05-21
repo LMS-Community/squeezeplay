@@ -305,8 +305,8 @@ size_t streambuf_icy_filter(u8_t *buf, size_t min, size_t max, bool_t *streaming
 			assert(r == icy_len);
 
 			// XXXX queue metadata
-			DEBUG_TRACE("got icy metadata: %s", icy_buf);
 			assert( strstr( (char *)icy_buf, "StreamTitle" ) != NULL );
+			DEBUG_TRACE("got icy metadata: %s", icy_buf);
 			free(icy_buf);
 
 			icy_meta_remaining = icy_meta_interval;
@@ -400,6 +400,7 @@ static int stream_connectL(lua_State *L) {
 	luaL_getmetatable(L, "squeezeplay.stream");
 	lua_setmetatable(L, -2);
 
+	streambuf_clear_loop();
 	streambuf_bytes_received = 0;
 	streambuf_filter = NULL;
 
