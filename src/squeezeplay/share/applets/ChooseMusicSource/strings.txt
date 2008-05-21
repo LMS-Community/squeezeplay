@@ -35,7 +35,7 @@ SLIMSERVER_HELP
 	EN	Enter the IP address of the computer running SqueezeCenter
 	ES	Escriba la dirección IP del ordenador que ejecuta SqueezeCenter
 	FR	Spécifiez l'adresse IP de l'ordinateur exécutant le SqueezeCenter
-	IT	Immettere l'indirizzo IP del computer in cui è in esecuzione SqueezeCenter
+	IT	Inserire l'indirizzo IP del computer in cui è in esecuzione SqueezeCenter
 	NL	Voer het IP-adres in van de computer waarop SqueezeCenter wordt uitgevoerd
 
 SLIMSERVER_CONNECTING_TO
@@ -85,4 +85,9 @@ SQUEEZEBOX_TRY_AGAIN
 
 SQUEEZEBOX_PROBLEM_HELP
 	DA	Kunne ikke tilslutte %s til %s.
+	DE	Die Squeezebox konnte nicht mit dem kabellosen Netzwerk verbunden werden. Vergewissern Sie sich, dass sie sich in Reichweite befindet.
 	EN	Could not connect %s to %s.
+	ES	No se pudo conectar Squeezebox a la red inalámbrica. Compruebe que se encuentre dentro del radio de la red inalámbrica.
+	IT	Impossibile connettere Squeezebox alla rete senza fili. Verificare che si trovi entro la portata della rete senza fili.
+	NL	Je Squeezebox kan niet met je draadloze netwerk worden verbonden. Zorg dat het apparaat zich binnen het bereik van je draadloze netwerk bevindt.
+

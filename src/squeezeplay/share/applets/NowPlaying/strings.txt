@@ -22,12 +22,12 @@ SCREENSAVER_PAUSED
 
 SCREENSAVER_STOPPED
 	DA	Stop
-	DE	Angehalten
+	DE	Bei Pause
 	EN	Stopped
-	ES	Detenido
+	ES	Al detener
 	FR	Arrêté
-	IT	Arrestato
-	NL	Gestopt
+	IT	Quando la riproduzione è interrotta
+	NL	Wanneer gestopt
 
 SCREENSAVER_NOWPLAYING_SETTINGS
 	DA	Indstillinger for Afspiller nu

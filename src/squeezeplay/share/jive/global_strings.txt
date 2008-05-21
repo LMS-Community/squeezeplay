@@ -4,12 +4,12 @@
 
 WELCOME
 	DA	Velkommen
-	DE	Willkommen!
+	DE	Willkommen
 	EN	Welcome
-	ES	Bienvenido.
+	ES	Bienvenido
 	FR	Bienvenue!
 	IT	Benvenuti
-	NL	Welkom!
+	NL	Welkom
 
 SETTINGS
 	DA	Indstillinger

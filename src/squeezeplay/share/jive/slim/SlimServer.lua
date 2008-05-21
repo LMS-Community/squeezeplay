@@ -400,8 +400,8 @@ function connect(self)
 
 	if self.plumbing.mac and not self:isSqueezeNetwork() then
 		-- send WOL packet to SqueezeCenter
-		local wol = WakeOnLan(self.jnt)
-		wol:wakeOnLan(self.plumbing.mac)
+		--local wol = WakeOnLan(self.jnt)
+		--wol:wakeOnLan(self.plumbing.mac)
 	end
 
 	-- artwork pool connects on demand

@@ -81,10 +81,14 @@ SLIMBROWSER_CHOOSE_PLAYER
 	ES	Elegir reproductor
 	FR	Sélectionner lecteur
 	IT	Scegli lettore
-	NL	Speler kiezen
+	NL	Muzieksysteem kiezen
 
 SLIMBROWSER_PROBLEM_CONNECTING_HELP
+	DE	Probleme beim Verbinden von %s mit %s
 	EN	There is a problem connecting to %s
+	ES	%s tiene problemas para conectarse a %s
+	IT	Problema di connessione di %s a %s
+	NL	%s kan geen verbinding maken met %s
 
 SLIMBROWSER_NOTHING
 	DA	Intet
