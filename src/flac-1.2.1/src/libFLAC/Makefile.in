@@ -94,20 +94,9 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 @FLaC__CPU_PPC_TRUE@@FLaC__HAS_AS__TEMPORARILY_DISABLED_FALSE@@FLaC__HAS_GAS__TEMPORARILY_DISABLED_TRUE@@FLaC__HAS_NASM_FALSE@@FLaC__NO_ASM_FALSE@am__DEPENDENCIES_1 = ppc/gas/libFLAC-asm.la
 @FLaC__CPU_PPC_TRUE@@FLaC__HAS_AS__TEMPORARILY_DISABLED_TRUE@@FLaC__HAS_NASM_FALSE@@FLaC__NO_ASM_FALSE@am__DEPENDENCIES_1 = ppc/as/libFLAC-asm.la
 libFLAC_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am__libFLAC_la_SOURCES_DIST = bitmath.c bitreader.c bitwriter.c cpu.c \
-	crc.c fixed.c float.c format.c lpc.c md5.c memory.c \
-	metadata_iterators.c metadata_object.c stream_decoder.c \
-	stream_encoder.c stream_encoder_framing.c window.c \
-	ogg_decoder_aspect.c ogg_encoder_aspect.c ogg_helper.c \
-	ogg_mapping.c
-@FLaC__HAS_OGG_TRUE@am__objects_1 = ogg_decoder_aspect.lo \
-@FLaC__HAS_OGG_TRUE@	ogg_encoder_aspect.lo ogg_helper.lo \
-@FLaC__HAS_OGG_TRUE@	ogg_mapping.lo
 am_libFLAC_la_OBJECTS = bitmath.lo bitreader.lo bitwriter.lo cpu.lo \
 	crc.lo fixed.lo float.lo format.lo lpc.lo md5.lo memory.lo \
-	metadata_iterators.lo metadata_object.lo stream_decoder.lo \
-	stream_encoder.lo stream_encoder_framing.lo window.lo \
-	$(am__objects_1)
+	metadata_iterators.lo metadata_object.lo stream_decoder.lo
 libFLAC_la_OBJECTS = $(am_libFLAC_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -121,7 +110,7 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(libFLAC_la_SOURCES)
-DIST_SOURCES = $(am__libFLAC_la_SOURCES_DIST)
+DIST_SOURCES = $(libFLAC_la_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-exec-recursive install-info-recursive \
@@ -363,8 +352,8 @@ libFLAC_la_SOURCES = \
 	metadata_iterators.c \
 	metadata_object.c \
 	stream_decoder.c \
-	stream_encoder.c \
-	stream_encoder_framing.c \
+	#stream_encoder.c \
+	#stream_encoder_framing.c \
 	window.c \
 	$(extra_ogg_sources)
 
@@ -452,14 +441,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/metadata_iterators.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/metadata_object.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ogg_decoder_aspect.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ogg_encoder_aspect.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ogg_helper.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ogg_mapping.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stream_decoder.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stream_encoder.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stream_encoder_framing.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/window.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \

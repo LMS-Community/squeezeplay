@@ -72,10 +72,7 @@ RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	uninstall-recursive
 ETAGS = etags
 CTAGS = ctags
-DIST_SUBDIRS = libFLAC share flac metaflac monkeys_audio_utilities \
-	plugin_common plugin_xmms plugin_winamp2 test_grabbag \
-	test_libs_common test_libFLAC test_seeking test_streams \
-	libFLAC++ test_libFLAC++
+DIST_SUBDIRS = $(SUBDIRS)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ACLOCAL_AMFLAGS = @ACLOCAL_AMFLAGS@
@@ -254,18 +251,18 @@ target_alias = @target_alias@
 @FLaC__WITH_CPPLIBS_TRUE@CPPLIBS_DIRS = libFLAC++ test_libFLAC++
 SUBDIRS = \
 	libFLAC \
-	share \
-	flac \
-	metaflac \
-	monkeys_audio_utilities \
-	$(XMMS_DIRS) \
-	plugin_winamp2 \
-	test_grabbag \
-	test_libs_common \
-	test_libFLAC \
-	test_seeking \
-	test_streams \
-	$(CPPLIBS_DIRS)
+	#share \
+	#flac \
+	#metaflac \
+	#monkeys_audio_utilities \
+	#$(XMMS_DIRS) \
+	#plugin_winamp2 \
+	#test_grabbag \
+	#test_libs_common \
+	#test_libFLAC \
+	#test_seeking \
+	#test_streams \
+	#$(CPPLIBS_DIRS)
 
 EXTRA_DIST = \
 	Makefile.lite
