@@ -59,6 +59,7 @@ libjiveui_la_LIBADD = -ltolua++ -llua -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL
 
 libjiveaudio_la_SOURCES = \
 	src/audio/fifo.c \
+	src/audio/fixed_math.c \
 	src/audio/mqueue.c \
 	src/audio/streambuf.c \
 	src/audio/decode/decode.c \

@@ -86,9 +86,10 @@ CONFIG_HEADER = $(top_builddir)/src/config.h
 CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
 libjiveaudio_la_DEPENDENCIES =
-am_libjiveaudio_la_OBJECTS = fifo.lo mqueue.lo streambuf.lo decode.lo \
-	decode_flac.lo decode_mad.lo decode_output.lo decode_pcm.lo \
-	decode_portaudio.lo decode_tones.lo
+am_libjiveaudio_la_OBJECTS = fifo.lo fixed_math.lo mqueue.lo \
+	streambuf.lo decode.lo decode_flac.lo decode_mad.lo \
+	decode_output.lo decode_pcm.lo decode_portaudio.lo \
+	decode_tones.lo
 libjiveaudio_la_OBJECTS = $(am_libjiveaudio_la_OBJECTS)
 libjivenet_la_DEPENDENCIES =
 am_libjivenet_la_OBJECTS = jive_dns.lo
@@ -384,6 +385,7 @@ libjiveui_la_SOURCES = \
 libjiveui_la_LIBADD = -ltolua++ -llua -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL
 libjiveaudio_la_SOURCES = \
 	src/audio/fifo.c \
+	src/audio/fixed_math.c \
 	src/audio/mqueue.c \
 	src/audio/streambuf.c \
 	src/audio/decode/decode.c \
@@ -1038,6 +1040,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_portaudio.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_tones.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fifo.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fixed_math.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_audio.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_debug.Po@am__quote@
@@ -1091,6 +1094,13 @@ fifo.lo: src/audio/fifo.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/audio/fifo.c' object='fifo.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o fifo.lo `test -f 'src/audio/fifo.c' || echo '$(srcdir)/'`src/audio/fifo.c
+
+fixed_math.lo: src/audio/fixed_math.c
+@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT fixed_math.lo -MD -MP -MF "$(DEPDIR)/fixed_math.Tpo" -c -o fixed_math.lo `test -f 'src/audio/fixed_math.c' || echo '$(srcdir)/'`src/audio/fixed_math.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/fixed_math.Tpo" "$(DEPDIR)/fixed_math.Plo"; else rm -f "$(DEPDIR)/fixed_math.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/audio/fixed_math.c' object='fixed_math.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o fixed_math.lo `test -f 'src/audio/fixed_math.c' || echo '$(srcdir)/'`src/audio/fixed_math.c
 
 mqueue.lo: src/audio/mqueue.c
 @am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT mqueue.lo -MD -MP -MF "$(DEPDIR)/mqueue.Tpo" -c -o mqueue.lo `test -f 'src/audio/mqueue.c' || echo '$(srcdir)/'`src/audio/mqueue.c; \

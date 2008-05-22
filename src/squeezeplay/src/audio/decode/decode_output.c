@@ -9,6 +9,7 @@
 #include "common.h"
 
 #include "audio/fifo.h"
+#include "audio/fixed_math.h"
 #include "audio/decode/decode.h"
 #include "audio/decode/decode_priv.h"
 
@@ -19,6 +20,29 @@ static size_t track_start_point = 0;
 
 /* Has the audio output been initialized? */
 static bool_t output_started = FALSE;
+
+/* Track transition information */
+static u32_t decode_transition_type = 0;
+static u32_t decode_transition_period = 0;
+
+static bool_t crossfade_started;
+static size_t crossfade_ptr;
+static fft_fixed transition_gain;
+static fft_fixed transition_gain_step;
+static u32_t transition_sample_step;
+static u32_t transition_samples_in_step;
+
+
+#define TRANSITION_NONE         0x0
+#define TRANSITION_CROSSFADE    0x1
+#define TRANSITION_FADE_IN      0x2
+#define TRANSITION_FADE_OUT     0x4
+
+/* Transition steps per second should be a common factor
+ * of all supported sample rates.
+ */
+#define TRANSITION_STEPS_PER_SECOND 10
+#define TRANSITION_MINIMUM_SECONDS 1
 
 
 void decode_output_begin(void) {
@@ -38,6 +62,8 @@ void decode_output_begin(void) {
 
 
 void decode_output_end(void) {
+	// XXXX fifo mutex
+
 	output_started = FALSE;
 
 	decode_audio->stop();
@@ -93,6 +119,83 @@ bool_t decode_check_start_point(void) {
 }
 
 
+/* Determine whether we have enough audio in the output buffer to do
+ * a transition. Start at the requested transition interval and go
+ * down till we find an interval that we have enough audio for.
+ */
+static fft_fixed determine_transition_interval(int sample_rate, u32_t transition_period, u32_t *nbytes) {
+	u32_t bytes_used, sample_step_bytes;
+	fft_fixed interval, interval_step;
+
+	bytes_used = fifo_bytes_used(&decode_fifo);
+	*nbytes = SAMPLES_TO_BYTES(TRANSITION_MINIMUM_SECONDS * sample_rate);
+	if (bytes_used < *nbytes) {
+		return 0;
+	}
+
+	*nbytes = SAMPLES_TO_BYTES(transition_period * sample_rate);
+	transition_sample_step = sample_rate / TRANSITION_STEPS_PER_SECOND;
+	sample_step_bytes = SAMPLES_TO_BYTES(transition_sample_step);
+
+	interval = s32_to_fixed(transition_period);
+	interval_step = fixed_div(FIXED_ONE, TRANSITION_STEPS_PER_SECOND);
+
+	while (bytes_used < (*nbytes + sample_step_bytes)) {
+		*nbytes -= sample_step_bytes;
+		interval -= interval_step;
+	}
+
+	return interval;
+}
+
+/* How many bytes till we're done with the transition.
+ */
+static size_t decode_transition_bytes_remaining() {
+	return (crossfade_ptr >= decode_fifo.wptr) ? (crossfade_ptr - decode_fifo.wptr) : (decode_fifo.wptr - crossfade_ptr + decode_fifo.size);
+}
+
+
+/* Called to copy samples to the decode fifo when we are doing
+ * a transition - crossfade or fade in. This method applies gain
+ * to both the new signal and the one that's already in the fifo.
+ */
+static void decode_transition_copy_bytes(sample_t *buffer, int nbytes) {
+	sample_t chunk[nbytes * sizeof(sample_t)];
+	sample_t *chunk_ptr = chunk;
+	sample_t sample;
+	int nsamples, s;
+
+	// XXXX process in smaller buffers, of size transition_samples_in_step
+
+	nsamples = BYTES_TO_SAMPLES(nbytes);
+
+	if (crossfade_started) {
+		memcpy(chunk, decode_fifo_buf + decode_fifo.wptr, nbytes);
+	}
+	else {
+		memset(chunk, 0, nbytes);
+	}
+
+	fft_fixed in_gain = transition_gain;
+	fft_fixed out_gain = FIXED_ONE - in_gain;
+	for (s=0; s<nsamples * 2; s++) {
+		
+		sample = fixed_mul(out_gain, *chunk_ptr);
+		sample += fixed_mul(in_gain, *buffer++);
+		*chunk_ptr++ = sample;
+	}
+
+	transition_samples_in_step += nsamples;
+	while (transition_samples_in_step >= transition_sample_step) {
+		transition_samples_in_step -= transition_sample_step;
+		transition_gain += transition_gain_step;
+	}
+
+	memcpy(decode_fifo_buf + decode_fifo.wptr, chunk, nbytes);
+	fifo_wptr_incby(&decode_fifo, nbytes);
+}
+
+
 void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 			   bool_t need_scaling, bool_t start_immediately,
 			   bool_t copyright_asserted) {
@@ -113,8 +216,62 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 	fifo_lock(&decode_fifo);
 
 	if (decode_first_buffer) {
-		current_sample_rate = sample_rate;
+		crossfade_started = FALSE;
 		track_start_point = decode_fifo.wptr;
+		
+		if (decode_transition_type & TRANSITION_CROSSFADE) {
+			u32_t crossfadeBytes;
+
+			/* We are being asked to do a crossfade. Find out
+			 * if it is possible.
+			 */
+			fft_fixed interval = determine_transition_interval(sample_rate, decode_transition_period, &crossfadeBytes);
+
+			if (interval) {
+				printf("Starting CROSSFADE over %d seconds, requiring %d bytes\n", fixed_to_s32(interval), crossfadeBytes);
+
+				/* Buffer position to stop crossfade */
+				crossfade_ptr = decode_fifo.wptr;
+
+				/* Buffer position to start crossfade */
+				decode_fifo.wptr = (crossfadeBytes <= decode_fifo.wptr) ? (decode_fifo.wptr - crossfadeBytes) : (decode_fifo.wptr - crossfadeBytes + decode_fifo.size);
+
+				/* Gain steps */
+				transition_gain_step = fixed_div(FIXED_ONE, fixed_mul(interval, s32_to_fixed(TRANSITION_STEPS_PER_SECOND)));
+				transition_gain = 0;
+				transition_samples_in_step = 0;
+
+				crossfade_started = TRUE;
+				track_start_point = decode_fifo.wptr;
+			}
+			/* 
+			 * else there aren't enough leftover samples from the
+			 * previous track, so abort the transition.
+			 */
+		}
+		else if (decode_transition_type & TRANSITION_FADE_IN) {
+			u32_t transition_period;
+
+			/* The transition is a fade in. */
+
+			transition_period = decode_transition_period;
+
+			/* Halve the period if we're also fading out */
+			if (decode_transition_type & TRANSITION_FADE_OUT) {
+				transition_period >>= 1;
+			}
+
+			printf("Starting FADE_IN over %d seconds\n", transition_period);
+
+			/* Gain steps */
+			transition_gain_step = fixed_div(FIXED_ONE, s32_to_fixed(transition_period * TRANSITION_STEPS_PER_SECOND));
+			transition_gain = 0;
+			transition_sample_step = sample_rate / TRANSITION_STEPS_PER_SECOND;
+			transition_samples_in_step = 0;
+		}
+
+		current_sample_rate = sample_rate;
+
 		check_start_point = TRUE;
 		decode_first_buffer = FALSE;
 	}
@@ -122,17 +279,45 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 	bytes_out = SAMPLES_TO_BYTES(nsamples);
 
 	while (bytes_out) {
-		size_t wrap, bytes_write;
+		size_t wrap, bytes_write, bytes_remaining;
 
+		/* The size of the output write is limied by the
+		 * space untill our fifo wraps.
+		 */
 		wrap = fifo_bytes_until_wptr_wrap(&decode_fifo);
+
+		/* When crossfading limit the output write to the
+		 * end of the transition.
+		 */
+		if (crossfade_started) {
+			bytes_remaining = decode_transition_bytes_remaining();
+printf("bytes_till_end=%d\n", bytes_remaining);
+
+			if (bytes_remaining < wrap) {
+				wrap = bytes_remaining;
+			}
+		}
 
 		bytes_write = bytes_out;
 		if (bytes_write > wrap) {
 			bytes_write = wrap;
 		}
 
-		memcpy(decode_fifo_buf + decode_fifo.wptr, buffer, bytes_write);
-		fifo_wptr_incby(&decode_fifo, bytes_write);
+		if (transition_gain_step) {
+			decode_transition_copy_bytes(buffer, bytes_write);
+
+			if ((crossfade_started && decode_fifo.wptr == crossfade_ptr)
+			    || transition_gain >= FIXED_ONE) {
+				printf("Completed transition\n");
+
+				transition_gain_step = 0;
+				crossfade_started = FALSE;
+			}
+		}
+		else {
+			memcpy(decode_fifo_buf + decode_fifo.wptr, buffer, bytes_write);
+			fifo_wptr_incby(&decode_fifo, bytes_write);
+		}
 
 		buffer += (bytes_write / sizeof(sample_t));
 		bytes_out -= bytes_write;
@@ -210,4 +395,32 @@ void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate) {
 
 int decode_output_samplerate() {
 	return current_sample_rate;
+}
+
+
+void decode_set_transition(u32_t type, u32_t period) {
+	if (!period) {
+		decode_transition_type = TRANSITION_NONE;
+		return;
+	}
+
+	switch (type - '0') {
+	case 0:
+		decode_transition_type = TRANSITION_NONE;
+		break;
+	case 1:
+		decode_transition_type = TRANSITION_CROSSFADE;
+		break;
+	case 2:
+		decode_transition_type = TRANSITION_FADE_IN;
+		break;
+	case 3:
+		decode_transition_type = TRANSITION_FADE_OUT;
+		break;
+	case 4:
+		decode_transition_type = TRANSITION_FADE_IN | TRANSITION_FADE_OUT;
+		break;
+	}
+
+	decode_transition_period = period;
 }

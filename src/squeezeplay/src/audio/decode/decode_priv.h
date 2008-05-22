@@ -52,6 +52,8 @@ extern void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate);
 
 extern int decode_output_samplerate();
 
+extern void decode_set_transition(u32_t type, u32_t period);
+
 
 /* Stream metadata */
 
