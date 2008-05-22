@@ -4,7 +4,7 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-//#define RUNTIME_DEBUG 1
+#define RUNTIME_DEBUG 1
 
 #include "common.h"
 
@@ -166,7 +166,7 @@ static void decode_fade_out(void) {
 
 	interval = determine_transition_interval(current_sample_rate, decode_transition_period, &nbytes);
 
-	DEBUG_TRACE("Starting FADEOUT over %d seconds, requiring %d bytes\n", fixed_to_s32(interval), crossfadeBytes);
+	DEBUG_TRACE("Starting FADEOUT over %d seconds, requiring %d bytes\n", fixed_to_s32(interval), nbytes);
 
 	if (!interval) {
 		return;
@@ -185,7 +185,7 @@ static void decode_fade_out(void) {
 		sample_t *sptr;
 		int s;
 
-		bytes_read = SAMPLES_TO_BYTES(transition_sample_step);
+		bytes_read = SAMPLES_TO_BYTES(transition_sample_step - transition_samples_in_step);
 		wrap = fifo_bytes_until_wptr_wrap(&decode_fifo);
 		bytes_remaining = decode_transition_bytes_remaining(ptr);
 
@@ -208,8 +208,8 @@ static void decode_fade_out(void) {
 		fifo_wptr_incby(&decode_fifo, bytes_read);
 
 		transition_samples_in_step += samples_read;
-		while (transition_gain && transition_samples_in_step >= samples_read) {
-			transition_samples_in_step -= samples_read;
+		while (transition_gain && transition_samples_in_step >= transition_sample_step) {
+			transition_samples_in_step -= transition_sample_step;
 			transition_gain -= transition_gain_step;
 		}
 	}
@@ -223,39 +223,47 @@ static void decode_fade_out(void) {
  * to both the new signal and the one that's already in the fifo.
  */
 static void decode_transition_copy_bytes(sample_t *buffer, int nbytes) {
-	sample_t chunk[nbytes * sizeof(sample_t)];
-	sample_t *chunk_ptr = chunk;
-	sample_t sample;
+	sample_t sample, *sptr;
 	int nsamples, s;
+	size_t bytes_read;
+	fft_fixed in_gain, out_gain;
 
-	// XXXX process in smaller buffers, of size transition_samples_in_step
+	while (nbytes) {
+		bytes_read = SAMPLES_TO_BYTES(transition_sample_step - transition_samples_in_step);
 
-	nsamples = BYTES_TO_SAMPLES(nbytes);
+		if (bytes_read > nbytes) {
+			bytes_read = nbytes;
+		}
 
-	if (crossfade_started) {
-		memcpy(chunk, decode_fifo_buf + decode_fifo.wptr, nbytes);
+		nsamples = BYTES_TO_SAMPLES(bytes_read);
+
+		sptr = (sample_t *)(decode_fifo_buf + decode_fifo.wptr);
+
+		in_gain = transition_gain;
+		out_gain = FIXED_ONE - in_gain;
+
+		if (crossfade_started) {
+			for (s=0; s<nsamples * 2; s++) {
+				sample = fixed_mul(out_gain, *sptr);
+				sample += fixed_mul(in_gain, *buffer++);
+				*sptr++ = sample;
+			}
+		}
+		else {
+			for (s=0; s<nsamples * 2; s++) {
+				*sptr++ = fixed_mul(in_gain, *buffer++);
+			}
+		}
+
+		fifo_wptr_incby(&decode_fifo, bytes_read);
+		nbytes -= bytes_read;
+
+		transition_samples_in_step += nsamples;
+		while (transition_samples_in_step >= transition_sample_step) {
+			transition_samples_in_step -= transition_sample_step;
+			transition_gain += transition_gain_step;
+		}
 	}
-	else {
-		memset(chunk, 0, nbytes);
-	}
-
-	fft_fixed in_gain = transition_gain;
-	fft_fixed out_gain = FIXED_ONE - in_gain;
-	for (s=0; s<nsamples * 2; s++) {
-		
-		sample = fixed_mul(out_gain, *chunk_ptr);
-		sample += fixed_mul(in_gain, *buffer++);
-		*chunk_ptr++ = sample;
-	}
-
-	transition_samples_in_step += nsamples;
-	while (transition_samples_in_step >= transition_sample_step) {
-		transition_samples_in_step -= transition_sample_step;
-		transition_gain += transition_gain_step;
-	}
-
-	memcpy(decode_fifo_buf + decode_fifo.wptr, chunk, nbytes);
-	fifo_wptr_incby(&decode_fifo, nbytes);
 }
 
 
@@ -263,8 +271,6 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 			   bool_t need_scaling, bool_t start_immediately,
 			   bool_t copyright_asserted) {
 	size_t bytes_out;
-
-	DEBUG_TRACE("Got %d samples\n", samples);
 
 	/* Some decoders can pass no samples at the start of the track. Stop
 	 * early, otherwise we may send the track start event at the wrong
