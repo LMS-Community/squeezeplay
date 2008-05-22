@@ -50,9 +50,11 @@ extern void decode_output_samples(sample_t *buffer, u32_t samples, int sample_ra
 
 extern void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate);
 
-extern int decode_output_samplerate();
+extern int decode_output_samplerate(void);
 
-extern void decode_set_transition(u32_t type, u32_t period);
+extern void decode_output_song_ended(void);
+
+extern void decode_output_set_transition(u32_t type, u32_t period);
 
 
 /* Stream metadata */

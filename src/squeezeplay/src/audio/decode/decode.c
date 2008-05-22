@@ -200,11 +200,20 @@ static void decode_start_handler(void) {
 
 	decode_first_buffer = TRUE;
 	// XXXX decode_set_output_threshold(output_threshold);
-	decode_set_transition(transition_type, transition_period);
+	decode_output_set_transition(transition_type, transition_period);
 	// XXXX decode_set_track_gain((replay_gain) ? replay_gain : FILTER_VOLUME_ONE);
 	// XXXX decode_set_track_polarity_inversion(polarity_inversion);
 
 	decode_output_begin();
+}
+
+
+static void decode_song_ended_handler(void) {
+	mqueue_read_complete(&decode_mqueue);
+
+	DEBUG_TRACE("decode_song_ended_handler");
+
+	decode_output_song_ended();
 }
 
 
@@ -457,6 +466,25 @@ static int decode_start(lua_State *L) {
 	return 0;
 }
 
+
+static int decode_song_ended(lua_State *L) {
+	/* stack is:
+	 * 1: self
+	 */
+
+	DEBUG_TRACE("decode_sond_ended");
+
+	if (mqueue_write_request(&decode_mqueue, decode_song_ended_handler, 0)) {
+		mqueue_write_complete(&decode_mqueue);
+	}
+	else {
+		DEBUG_TRACE("Full message queue, dropped song ended message");
+	}
+
+	return 0;
+}
+
+
 static int decode_status(lua_State *L) {
 	size_t size, usedbytes;
 	u32_t bytesL, bytesH;
@@ -511,6 +539,7 @@ static const struct luaL_Reg decode_f[] = {
 	{ "stop", decode_stop },
 	{ "flush", decode_flush },
 	{ "start", decode_start },
+	{ "songEnded", decode_song_ended },
 	{ "status", decode_status },
 	{ "streamMetadata", decode_stream_metadata },
 	{ NULL, NULL }

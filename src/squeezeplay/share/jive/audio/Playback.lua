@@ -115,7 +115,7 @@ function _timerCallback(self)
 			self.sentDecoderUnderrunEvent = true
 			self.sentDecoderFullEvent = false
 
-			-- XXXX decode:songEnded()
+			Decode:songEnded()
 		end
 	else
 		self.sentDecoderUnderrunEvent = false

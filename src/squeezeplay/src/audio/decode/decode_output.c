@@ -150,8 +150,71 @@ static fft_fixed determine_transition_interval(int sample_rate, u32_t transition
 
 /* How many bytes till we're done with the transition.
  */
-static size_t decode_transition_bytes_remaining() {
-	return (crossfade_ptr >= decode_fifo.wptr) ? (crossfade_ptr - decode_fifo.wptr) : (decode_fifo.wptr - crossfade_ptr + decode_fifo.size);
+static size_t decode_transition_bytes_remaining(size_t ptr) {
+	return (ptr >= decode_fifo.wptr) ? (ptr - decode_fifo.wptr) : (decode_fifo.wptr - ptr + decode_fifo.size);
+}
+
+
+/* Called to fade out the already decoded track. Depending on how
+ * much of the track is left, we apply gain in place.
+ */
+static void decode_fade_out(void) {
+	size_t nbytes, ptr;
+	fft_fixed interval;
+
+	fifo_lock(&decode_fifo);
+
+	interval = determine_transition_interval(current_sample_rate, decode_transition_period, &nbytes);
+
+	DEBUG_TRACE("Starting FADEOUT over %d seconds, requiring %d bytes\n", fixed_to_s32(interval), crossfadeBytes);
+
+	if (!interval) {
+		return;
+	}
+
+	ptr = decode_fifo.wptr;
+	decode_fifo.wptr = (nbytes <= decode_fifo.wptr) ? (decode_fifo.wptr - nbytes) : (decode_fifo.wptr - nbytes + decode_fifo.size);
+
+	transition_gain_step = fixed_div(FIXED_ONE, fixed_mul(interval, s32_to_fixed(TRANSITION_STEPS_PER_SECOND)));
+	transition_gain = FIXED_ONE;
+	transition_sample_step = current_sample_rate / TRANSITION_STEPS_PER_SECOND;
+	transition_samples_in_step = 0;
+
+	while (decode_fifo.wptr != ptr) {
+		size_t bytes_read, samples_read, wrap, bytes_remaining;
+		sample_t *sptr;
+		int s;
+
+		bytes_read = SAMPLES_TO_BYTES(transition_sample_step);
+		wrap = fifo_bytes_until_wptr_wrap(&decode_fifo);
+		bytes_remaining = decode_transition_bytes_remaining(ptr);
+
+		if (bytes_remaining < wrap) {
+			wrap = bytes_remaining;
+		}
+
+		if (bytes_read > wrap) {
+			bytes_read = wrap;
+		}
+
+		samples_read = BYTES_TO_SAMPLES(bytes_read);
+
+		sptr = (sample_t *)(decode_fifo_buf + decode_fifo.wptr);
+		for (s = 0; s < samples_read * 2; s++) {
+			*sptr = fixed_mul(transition_gain, *sptr);
+			sptr++;
+		}
+
+		fifo_wptr_incby(&decode_fifo, bytes_read);
+
+		transition_samples_in_step += samples_read;
+		while (transition_gain && transition_samples_in_step >= samples_read) {
+			transition_samples_in_step -= samples_read;
+			transition_gain -= transition_gain_step;
+		}
+	}
+
+	fifo_unlock(&decode_fifo);
 }
 
 
@@ -228,7 +291,7 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 			fft_fixed interval = determine_transition_interval(sample_rate, decode_transition_period, &crossfadeBytes);
 
 			if (interval) {
-				printf("Starting CROSSFADE over %d seconds, requiring %d bytes\n", fixed_to_s32(interval), crossfadeBytes);
+				DEBUG_TRACE("Starting CROSSFADE over %d seconds, requiring %d bytes\n", fixed_to_s32(interval), crossfadeBytes);
 
 				/* Buffer position to stop crossfade */
 				crossfade_ptr = decode_fifo.wptr;
@@ -250,21 +313,12 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 			 */
 		}
 		else if (decode_transition_type & TRANSITION_FADE_IN) {
-			u32_t transition_period;
-
 			/* The transition is a fade in. */
 
-			transition_period = decode_transition_period;
-
-			/* Halve the period if we're also fading out */
-			if (decode_transition_type & TRANSITION_FADE_OUT) {
-				transition_period >>= 1;
-			}
-
-			printf("Starting FADE_IN over %d seconds\n", transition_period);
+			DEBUG_TRACE("Starting FADE_IN over %d seconds\n", decode_transition_period);
 
 			/* Gain steps */
-			transition_gain_step = fixed_div(FIXED_ONE, s32_to_fixed(transition_period * TRANSITION_STEPS_PER_SECOND));
+			transition_gain_step = fixed_div(FIXED_ONE, s32_to_fixed(decode_transition_period * TRANSITION_STEPS_PER_SECOND));
 			transition_gain = 0;
 			transition_sample_step = sample_rate / TRANSITION_STEPS_PER_SECOND;
 			transition_samples_in_step = 0;
@@ -290,9 +344,7 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 		 * end of the transition.
 		 */
 		if (crossfade_started) {
-			bytes_remaining = decode_transition_bytes_remaining();
-printf("bytes_till_end=%d\n", bytes_remaining);
-
+			bytes_remaining = decode_transition_bytes_remaining(crossfade_ptr);
 			if (bytes_remaining < wrap) {
 				wrap = bytes_remaining;
 			}
@@ -308,7 +360,7 @@ printf("bytes_till_end=%d\n", bytes_remaining);
 
 			if ((crossfade_started && decode_fifo.wptr == crossfade_ptr)
 			    || transition_gain >= FIXED_ONE) {
-				printf("Completed transition\n");
+				DEBUG_TRACE("Completed transition\n");
 
 				transition_gain_step = 0;
 				crossfade_started = FALSE;
@@ -393,16 +445,27 @@ void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate) {
 }
 
 
-int decode_output_samplerate() {
+int decode_output_samplerate(void) {
 	return current_sample_rate;
 }
 
 
-void decode_set_transition(u32_t type, u32_t period) {
+void decode_output_song_ended(void) {
+	if (decode_transition_type & TRANSITION_FADE_OUT
+	    && decode_transition_period
+	    && current_audio_state & DECODE_STATE_RUNNING) {
+		decode_fade_out();
+	}
+}
+
+
+void decode_output_set_transition(u32_t type, u32_t period) {
 	if (!period) {
 		decode_transition_type = TRANSITION_NONE;
 		return;
 	}
+
+	decode_transition_period = period;
 
 	switch (type - '0') {
 	case 0:
@@ -419,8 +482,9 @@ void decode_set_transition(u32_t type, u32_t period) {
 		break;
 	case 4:
 		decode_transition_type = TRANSITION_FADE_IN | TRANSITION_FADE_OUT;
+
+		/* Halve the period for fade in/fade out */
+		decode_transition_period >>= 1;
 		break;
 	}
-
-	decode_transition_period = period;
 }
