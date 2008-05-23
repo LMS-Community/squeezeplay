@@ -170,9 +170,9 @@ static bool_t decode_vorbis_callback(void *data) {
 					wptr = ((sample_t *)self->output_buffer) + (nsamples * 2);
 
 					for (i = 0; i < nsamples; i++) {
-						sample_t s = (*rptr--) << 16;
-						*wptr-- = s;
-						*wptr-- = s;
+						sample_t s = (*--rptr) << 16;
+						*--wptr = s;
+						*--wptr = s;
 					}
 				}
 				else {
@@ -183,8 +183,8 @@ static bool_t decode_vorbis_callback(void *data) {
 					wptr = ((sample_t *)self->output_buffer) + (nsamples * 2);
 
 					for (i = 0; i < nsamples; i++) {
-						*wptr-- = (*rptr--) << 16;
-						*wptr-- = (*rptr--) << 16;
+						*--wptr = (*--rptr) << 16;
+						*--wptr = (*--rptr) << 16;
 					}
 				}
 
