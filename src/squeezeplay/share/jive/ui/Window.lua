@@ -475,6 +475,39 @@ function getTitle(self)
 	return nil
 end
 
+--[[
+
+=head2 jive.ui.Window:getTitleWidget()
+
+Returns the window's title widget.
+
+=cut
+--]]
+function getTitleWidget(self)
+	if self.title then
+		return self.title
+	end
+	return nil
+end
+
+
+--[[
+
+=head2 jive.ui.Window:getTitleStyle()
+
+Returns the style of the title widget.
+
+=cut
+--]]
+function getTitleStyle(self)
+	if self.title then
+		if self.title:getWidget('text') then
+			return self.title:getWidget('text'):getStyle()
+		end
+	end
+	return nil
+end
+
 
 --[[
 
