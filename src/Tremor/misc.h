@@ -48,6 +48,10 @@ extern void _VDBG_free(void *ptr,char *file,long line);
 
 #include <sys/types.h>
 
+#if defined(_MSC_VER)
+#define inline __inline
+#endif //defined(_MSC_VER)
+
 #if BYTE_ORDER==LITTLE_ENDIAN
 union magic {
   struct {
@@ -56,9 +60,7 @@ union magic {
   } halves;
   ogg_int64_t whole;
 };
-#endif 
-
-#if BYTE_ORDER==BIG_ENDIAN
+#else
 union magic {
   struct {
     ogg_int32_t hi;
