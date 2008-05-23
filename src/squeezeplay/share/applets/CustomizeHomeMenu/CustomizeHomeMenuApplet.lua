@@ -197,7 +197,9 @@ function restoreDefaultsMenu(self, id)
 					-- fetch item by id
 					local item = jiveMain:getMenuItem(id)
 					-- replace to original node, remove customNode
-					jiveMain:setNode(item, item.node)
+					if item then
+						jiveMain:setNode(item, item.node)
+					end
 				end
 				self:storeSettings()
 				_goHome()

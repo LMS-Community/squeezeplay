@@ -1,5 +1,5 @@
 
-local assert, pairs, type = assert, pairs, type
+local assert, pairs, type, tostring, tonumber, setmetatable = assert, pairs, type, tostring, tonumber, setmetatable
 
 local oo            = require("loop.base")
 local table         = require("jive.utils.table")
@@ -16,6 +16,22 @@ local log           = require("jive.utils.log").logger("ui")
 -- our class
 module(..., oo.class)
 
+-- defines a new item that inherits from an existing item
+local function _uses(parent, value)
+	local item = {}
+	setmetatable(item, { __index = parent })
+
+	for k,v in pairs(value or {}) do
+		if type(v) == "table" and type(parent[k]) == "table" then
+		-- recursively inherrit from parent item
+			item[k] = _uses(parent[k], v)
+		else
+			item[k] = v
+		end
+	end
+
+	return item
+end
 
 -- create a new menu
 function __init(self, name, style, titleStyle)
@@ -24,6 +40,7 @@ function __init(self, name, style, titleStyle)
 		windowTitle = name,
 		menuTable = {},
 		nodeTable = {},
+		customMenuTable = {},
 		customNodes = {},
 	})
 
@@ -210,8 +227,6 @@ function addItemToNode(self, item, node)
 		if item.node ~= 'home' and node == 'home' then
 			local complexWeight = self:getComplexWeight(item.id, item)
 			item.weights = strings:split('%.', complexWeight)
-			-- non-home items on home get an indent
-			item.indent = #item.weights * 2
 		end
 	else
 		node = item.node
@@ -220,7 +235,14 @@ function addItemToNode(self, item, node)
 
 	if self.nodeTable[node] then
 		self.nodeTable[node].items[item.id] = item
-		self.nodeTable[node].menu:addItem(item)
+		local menuIdx = self.nodeTable[node].menu:addItem(item)
+		if node == 'home' and item.homeMenuText then
+			local labelText = item.homeMenuText
+			-- change the menu item's text by creating a new item table with different label text
+			local myItem = _uses(item, { text = labelText })
+			self.customMenuTable[myItem.id] = myItem
+			self.nodeTable[node].menu:replaceIndex(myItem, menuIdx)
+		end
 	end
 
 end
@@ -310,11 +332,19 @@ function removeItemFromNode(self, item, node)
 		node = item.node
 	end
 	assert(node)
+	if node == 'home' and self.customMenuTable[item.id] then
+		local myIdx = self.nodeTable[node].menu:getIdIndex(item.id)
+		local myItem = self.nodeTable[node].menu:getItem(myIdx)
+		self.nodeTable[node].menu:removeItem(myItem)
+	end
+
 	if self.nodeTable[node] then
 		self.nodeTable[node].items[item.id] = nil
 		self.nodeTable[node].menu:removeItem(item)
 		self:_checkRemoveNode(node)
 	end
+
+
 end
 
 -- remove an item from a menu by its index

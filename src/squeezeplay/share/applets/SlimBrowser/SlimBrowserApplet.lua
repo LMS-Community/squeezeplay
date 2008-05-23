@@ -814,8 +814,9 @@ local function _browseSink(step, chunk, err)
 			step.menu:setStyle(step.db:menuStyle())
 			if data.window then
 				-- if a titleStyle is being sent, we need to setTitleWidget completely
-				if data.window.titleStyle then
-					local titleText
+				if data.window.titleStyle or data.window['icon-id'] then
+					local titleText, titleStyle, titleIcon
+					local titleWidget = step.window:getTitleWidget()
 					-- set the title text if specified
 					if data.window.text then
 						titleText = data.window.text
@@ -827,8 +828,23 @@ local function _browseSink(step, chunk, err)
 							titleText = ''
 						end
 					end
-					local titleStyle = data.window.titleStyle .. 'title'
-					local newTitleWidget = Group(titleStyle, { text = Label("text", titleText), icon = Icon("icon") })	
+					if data.window.titleStyle then
+						titleStyle = data.window.titleStyle .. 'title'
+					else
+						titleStyle = step.window:getTitleStyle()
+					end
+					-- add the icon if it's been specified in the window params
+					if data.window['icon-id'] then
+						-- Fetch an image from SlimServer
+						titleIcon = Icon("icon")
+						_server:fetchArtworkThumb(data.window["icon-id"], titleIcon, THUMB_SIZE)
+					-- only allow the existing icon to stay if titleStyle isn't being changed
+					elseif not data.window.titleStyle and titleWidget:getWidget('icon') then
+						titleIcon = titleWidget:getWidget('icon')
+					else
+						titleIcon = Icon("icon")
+					end
+					local newTitleWidget = Group(titleStyle, { text = Label("text", titleText), icon = titleIcon })	
 					step.window:setTitleWidget(newTitleWidget)
 				-- change the text as specified if no titleStyle param was also sent
 				elseif data.window.text then

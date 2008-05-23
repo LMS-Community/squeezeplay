@@ -35,8 +35,6 @@ A simple menu widget, extends L<jive.ui.Menu>.
 
 The Label includes the following style parameters in addition to the widgets basic parameters.
 
-=over
-
 B<itemHeight> : the height of each menu item.
 
 =head1 METHODS
@@ -114,21 +112,6 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 	for i = 1,size do
 		if indexList[i] ~= nil then
 			local item = list[indexList[i]]
-			local labelText = item.text
-			-- FIXME
-			-- changing labelText for the item for the home menu
-			-- also changes it for its default location
-			-- label text needs to be changed on a contextual basis
-			-- question is how to determine context in _itemRenderer since self is not available
-			--[[
-			if item.homeMenuText then
-				labelText = item.homeMenuText
-			end
-			if item.indent then
-				local indent = _indent(item.indent)
-				labelText = indent .. tostring(labelText)
-			end
-			--]]
 
 			local icon = item.icon or menu.icons[i]
 			if icon == nil then
@@ -139,13 +122,13 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 
 			if widgetList[i] == nil then
 				widgetList[i] = Group(item.style or "item", {
-					text = Label("text", labelText),
+					text = Label("text", item.text),
 					check = Icon("check"),
 					icon = icon,
 				})
 			else
 				widgetList[i]:setStyle(item.style or "item")
-				widgetList[i]:setWidgetValue("text", labelText)
+				widgetList[i]:setWidgetValue("text", item.text)
 				widgetList[i]:setWidget("icon", icon)
 			end
 		end
@@ -201,6 +184,7 @@ Sets the menu comparator to I<comp> used to sort the menu items. By default
 the menu is not sorted and elements will be displayed in the order they are
 added.
 
+=cut
 --]]
 function setComparator(self, comp)
 	self.comparator = comp
@@ -217,6 +201,7 @@ end
 
 Item comparator to sort items alphabetically (i.e. using item.text).
 
+=cut
 --]]
 function itemComparatorAlpha(a, b)
 	return tostring(a.text) < tostring(b.text)
@@ -230,6 +215,7 @@ end
 Item comparator to sort items using item.weight as a primary key, and
 item.text as a secondary key.
 
+=cut
 --]]
 function itemComparatorWeightAlpha(a, b)
 	local w = a.weight - b.weight
@@ -247,6 +233,7 @@ end
 Item comparator to sort items using item.sortKey as a primary key, item.weight as a secondary key, and
 item.text as a tertiary key.
 
+=cut
 --]]
 function itemComparatorKeyWeightAlpha(a, b)
 	local an = tostring(a.sortKey)
@@ -271,6 +258,7 @@ end
 Item comparator to sort items using a complex a.b.c...n-style item.weights (table) as a primary key, and
 item.text as a secondary key.
 
+=cut
 --]]
 function itemComparatorComplexWeightAlpha(a, b)
 	if not a.weights then
@@ -606,7 +594,6 @@ function updatedIndex(self, index)
 
 	Menu.setItems(self, self.items, #self.items, index, index)
 end
-
 
 --[[
 
