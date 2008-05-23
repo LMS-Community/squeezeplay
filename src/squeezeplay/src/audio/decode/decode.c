@@ -66,6 +66,7 @@ static struct decode_module *all_decoders[] = {
 	&decode_pcm,
 	&decode_flac,
 	&decode_mad,
+	&decode_vorbis,
 #ifdef _WIN32
 	&decode_wma_win,
 #endif

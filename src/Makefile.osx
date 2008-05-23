@@ -160,8 +160,8 @@ tolua++:
 # squeezeplay
 #
 
-.PHONY: app portaudio flac libmad squeezeplay squeezeplay_desktop squeezeplay_test freefont
-app: portaudio flac libmad squeezeplay squeezeplay_desktop squeezeplay_test freefont
+.PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_test freefont
+app: portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_test freefont
 
 # portaudio
 portaudio_v19_1360/Makefile:
@@ -183,6 +183,14 @@ libmad-0.15.1b/Makefile:
 
 libmad: libmad-0.15.1b/Makefile
 	cd libmad-0.15.1b; make && make install
+
+# ogg
+Tremor/Makefile:
+	cd Tremor; ./configure --prefix=${PREFIX}
+
+tremor: Tremor/Makefile
+	cd Tremor; make && make install
+
 
 # squeezeplay
 squeezeplay/Makefile:

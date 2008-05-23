@@ -37,6 +37,7 @@ extern struct decode_module decode_tones;
 extern struct decode_module decode_pcm;
 extern struct decode_module decode_flac;
 extern struct decode_module decode_mad;
+extern struct decode_module decode_vorbis;
 #ifdef _WIN32
 extern struct decode_module decode_wma_win;
 #endif

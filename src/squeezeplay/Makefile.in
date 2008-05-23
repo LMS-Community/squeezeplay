@@ -89,7 +89,7 @@ libjiveaudio_la_DEPENDENCIES =
 am_libjiveaudio_la_OBJECTS = fifo.lo fixed_math.lo mqueue.lo \
 	streambuf.lo decode.lo decode_flac.lo decode_mad.lo \
 	decode_output.lo decode_pcm.lo decode_portaudio.lo \
-	decode_tones.lo
+	decode_tones.lo decode_vorbis.lo
 libjiveaudio_la_OBJECTS = $(am_libjiveaudio_la_OBJECTS)
 libjivenet_la_DEPENDENCIES =
 am_libjivenet_la_OBJECTS = jive_dns.lo
@@ -394,9 +394,10 @@ libjiveaudio_la_SOURCES = \
 	src/audio/decode/decode_output.c \
 	src/audio/decode/decode_pcm.c \
 	src/audio/decode/decode_portaudio.c \
-	src/audio/decode/decode_tones.c
+	src/audio/decode/decode_tones.c \
+	src/audio/decode/decode_vorbis.c
 
-libjiveaudio_la_LIBADD = -lSDL -lportaudio -lFLAC -lmad
+libjiveaudio_la_LIBADD = -lSDL -lportaudio -lFLAC -lmad -lvorbisidec
 libjivenet_la_SOURCES = \
 	src/net/jive_dns.c
 
@@ -1039,6 +1040,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_pcm.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_portaudio.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_tones.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_vorbis.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fifo.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fixed_math.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive.Po@am__quote@
@@ -1164,6 +1166,13 @@ decode_tones.lo: src/audio/decode/decode_tones.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/audio/decode/decode_tones.c' object='decode_tones.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o decode_tones.lo `test -f 'src/audio/decode/decode_tones.c' || echo '$(srcdir)/'`src/audio/decode/decode_tones.c
+
+decode_vorbis.lo: src/audio/decode/decode_vorbis.c
+@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT decode_vorbis.lo -MD -MP -MF "$(DEPDIR)/decode_vorbis.Tpo" -c -o decode_vorbis.lo `test -f 'src/audio/decode/decode_vorbis.c' || echo '$(srcdir)/'`src/audio/decode/decode_vorbis.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/decode_vorbis.Tpo" "$(DEPDIR)/decode_vorbis.Plo"; else rm -f "$(DEPDIR)/decode_vorbis.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/audio/decode/decode_vorbis.c' object='decode_vorbis.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o decode_vorbis.lo `test -f 'src/audio/decode/decode_vorbis.c' || echo '$(srcdir)/'`src/audio/decode/decode_vorbis.c
 
 jive_dns.lo: src/net/jive_dns.c
 @am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_dns.lo -MD -MP -MF "$(DEPDIR)/jive_dns.Tpo" -c -o jive_dns.lo `test -f 'src/net/jive_dns.c' || echo '$(srcdir)/'`src/net/jive_dns.c; \

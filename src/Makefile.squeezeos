@@ -139,8 +139,8 @@ tolua++:
 #
 # squeezeplay
 #
-.PHONY: squeezeplay-all portaudio flac libmad squeezeplay squeezeplay_jive freefont fonts-clock
-squeezeplay-all: portaudio flac libmad squeezeplay squeezeplay_jive freefont fonts-clock
+.PHONY: squeezeplay-all portaudio flac libmad tremor squeezeplay squeezeplay_jive freefont fonts-clock
+squeezeplay-all: portaudio flac libmad tremor squeezeplay squeezeplay_jive freefont fonts-clock
 
 
 # portaudio
@@ -163,6 +163,14 @@ libmad-0.15.1b/Makefile:
 
 libmad: libmad-0.15.1b/Makefile
 	cd libmad-0.15.1b; make && make install
+
+# ogg
+Tremor/Makefile:
+	cd Tremor; ./configure --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+
+tremor: Tremor/Makefile
+	cd Tremor; make && make install
+
 
 # squeezeplay
 squeezeplay/Makefile:
