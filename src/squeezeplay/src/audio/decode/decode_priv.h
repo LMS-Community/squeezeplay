@@ -15,6 +15,10 @@
  */
 typedef s32_t sample_t;
 
+#define SAMPLE_MAX (sample_t)0x7FFFFFFF
+#define SAMPLE_MIN (sample_t)0x80000000
+
+
 #define DECODER_MAX_PARAMS 32
 
 
@@ -55,6 +59,10 @@ extern int decode_output_samplerate(void);
 extern void decode_output_song_ended(void);
 
 extern void decode_output_set_transition(u32_t type, u32_t period);
+
+extern void decode_output_set_track_gain(u32_t replay_gain);
+
+extern void decode_set_track_polarity_inversion(u8_t inversion);
 
 
 /* Stream metadata */

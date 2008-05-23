@@ -201,8 +201,8 @@ static void decode_start_handler(void) {
 	decode_first_buffer = TRUE;
 	// XXXX decode_set_output_threshold(output_threshold);
 	decode_output_set_transition(transition_type, transition_period);
-	// XXXX decode_set_track_gain((replay_gain) ? replay_gain : FILTER_VOLUME_ONE);
-	// XXXX decode_set_track_polarity_inversion(polarity_inversion);
+	decode_output_set_track_gain(replay_gain);
+	decode_set_track_polarity_inversion(polarity_inversion);
 
 	decode_output_begin();
 }

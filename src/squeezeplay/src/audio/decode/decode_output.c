@@ -45,6 +45,12 @@ static u32_t transition_samples_in_step;
 #define TRANSITION_MINIMUM_SECONDS 1
 
 
+/* Per-track gain (ReplayGain) */
+static fft_fixed track_gain = FIXED_ONE;
+static sample_t track_clip_range[2] = { SAMPLE_MAX, SAMPLE_MIN };
+static s32_t track_inversion[2] = { 1, 1 };
+
+
 void decode_output_begin(void) {
 	// XXXX fifo mutex
 
@@ -119,6 +125,50 @@ bool_t decode_check_start_point(void) {
 }
 
 
+/* Apply track gain and polarity inversion
+ */
+static void volume_get_clip_range(fft_fixed gain, sample_t clip_range[2]) {
+	if (gain > FIXED_ONE) {
+		clip_range[0] = (sample_t)(SAMPLE_MAX / fixed_to_double(gain));
+		clip_range[1] = (sample_t)(SAMPLE_MIN / fixed_to_double(gain));
+	}
+	else {
+		clip_range[0] = SAMPLE_MAX;
+		clip_range[1] = SAMPLE_MIN;
+	}
+}
+
+
+static inline sample_t volume_mul(sample_t sample, fft_fixed gain, sample_t clip_range[2]) {
+	if (sample > clip_range[0]) {
+		return SAMPLE_MAX;
+	}
+	if (sample < clip_range[1]) {
+		return SAMPLE_MIN;
+	}
+
+	return fixed_mul(gain, sample);
+}
+
+
+static void decode_apply_track_gain(sample_t *buffer, int nsamples) {
+	int s;
+
+	if (track_gain == FIXED_ONE
+	    && track_inversion[0] == 1
+	    && track_inversion[1] == 1) {
+		return;
+	}
+
+	for (s = 0; s < nsamples; s++) {
+		*buffer = track_inversion[0] * volume_mul(*buffer, track_gain, track_clip_range);
+		buffer++;
+		*buffer = track_inversion[1] * volume_mul(*buffer, track_gain, track_clip_range);
+		buffer++;
+	}
+}
+
+
 /* Determine whether we have enough audio in the output buffer to do
  * a transition. Start at the requested transition interval and go
  * down till we find an interval that we have enough audio for.
@@ -166,7 +216,7 @@ static void decode_fade_out(void) {
 
 	interval = determine_transition_interval(current_sample_rate, decode_transition_period, &nbytes);
 
-	DEBUG_TRACE("Starting FADEOUT over %d seconds, requiring %d bytes\n", fixed_to_s32(interval), nbytes);
+	DEBUG_TRACE("Starting FADEOUT over %d seconds, requiring %d bytes", fixed_to_s32(interval), nbytes);
 
 	if (!interval) {
 		return;
@@ -297,7 +347,7 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 			fft_fixed interval = determine_transition_interval(sample_rate, decode_transition_period, &crossfadeBytes);
 
 			if (interval) {
-				DEBUG_TRACE("Starting CROSSFADE over %d seconds, requiring %d bytes\n", fixed_to_s32(interval), crossfadeBytes);
+				DEBUG_TRACE("Starting CROSSFADE over %d seconds, requiring %d bytes", fixed_to_s32(interval), crossfadeBytes);
 
 				/* Buffer position to stop crossfade */
 				crossfade_ptr = decode_fifo.wptr;
@@ -321,7 +371,7 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 		else if (decode_transition_type & TRANSITION_FADE_IN) {
 			/* The transition is a fade in. */
 
-			DEBUG_TRACE("Starting FADE_IN over %d seconds\n", decode_transition_period);
+			DEBUG_TRACE("Starting FADE_IN over %d seconds", decode_transition_period);
 
 			/* Gain steps */
 			transition_gain_step = fixed_div(FIXED_ONE, s32_to_fixed(decode_transition_period * TRANSITION_STEPS_PER_SECOND));
@@ -335,6 +385,8 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 		check_start_point = TRUE;
 		decode_first_buffer = FALSE;
 	}
+
+	decode_apply_track_gain(buffer, nsamples);
 
 	bytes_out = SAMPLES_TO_BYTES(nsamples);
 
@@ -366,7 +418,7 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 
 			if ((crossfade_started && decode_fifo.wptr == crossfade_ptr)
 			    || transition_gain >= FIXED_ONE) {
-				DEBUG_TRACE("Completed transition\n");
+				DEBUG_TRACE("Completed transition");
 
 				transition_gain_step = 0;
 				crossfade_started = FALSE;
@@ -493,4 +545,23 @@ void decode_output_set_transition(u32_t type, u32_t period) {
 		decode_transition_period >>= 1;
 		break;
 	}
+}
+
+
+void decode_output_set_track_gain(u32_t replay_gain) {
+	track_gain = (replay_gain) ? replay_gain : FIXED_ONE;
+
+	DEBUG_TRACE("Track gain %d", track_gain);
+
+	volume_get_clip_range(track_gain, track_clip_range);
+
+	DEBUG_TRACE("Track clip range %x %x", track_clip_range[0], track_clip_range[1]);
+}
+
+
+void decode_set_track_polarity_inversion(u8_t inversion) {
+	DEBUG_TRACE("Polarity inversion %d", inversion);
+
+	track_inversion[0] = (inversion & POLARITY_INVERSION_LEFT) ? -1 : 1;
+	track_inversion[1] = (inversion & POLARITY_INVERSION_RIGHT) ? -1 : 1;
 }
