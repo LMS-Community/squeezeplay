@@ -49,11 +49,11 @@ freetype: freetype-2.1.10/config.mk
 	cd freetype-2.1.10; make; make install
 
 # sdl
-SDL-1.2.11/Makefile:
-	cd SDL-1.2.11; ./configure  ${ENABLE_PROFILING} --prefix=${PREFIX}
+SDL-1.2.13/Makefile:
+	cd SDL-1.2.13; ./configure  ${ENABLE_PROFILING} --prefix=${PREFIX}
 
-sdl: SDL-1.2.11/Makefile
-	cd SDL-1.2.11; make && make install
+sdl: SDL-1.2.13/Makefile
+	cd SDL-1.2.13; make && make install
 
 # sdl_image (requires jpeg tiff png)
 SDL_image-1.2.5/Makefile:
@@ -155,7 +155,7 @@ portaudio: portaudio_v19_1360/Makefile
 
 # flac
 flac-1.2.1/Makefile:
-	cd flac-1.2.1; ./configure --disable-ogg --prefix=${PREFIX}
+	cd flac-1.2.1; ./configure --disable-ogg --disable-xmms-plugin --prefix=${PREFIX}
 
 flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install
@@ -207,7 +207,7 @@ freefont:
 .PHONY: clean
 clean:
 	-cd freetype-2.1.10; make distclean
-	-cd SDL-1.2.11; make distclean; rm -f include/SDL_config.h;
+	-cd SDL-1.2.13; make distclean; rm -f include/SDL_config.h;
 	-cd SDL_image-1.2.5; make distclean
 	-cd SDL_ttf-2.0.8; make distclean
 	-cd SDL_gfx-2.0.15; make distclean

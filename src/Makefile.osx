@@ -63,11 +63,11 @@ freetype: freetype-2.1.10/config.mk
 	cd freetype-2.1.10; make; make DESTDIR= install
 
 # sdl
-SDL-1.2.11/Makefile:
-	cd SDL-1.2.11; ./configure --prefix=${PREFIX} --disable-video-x11;
+SDL-1.2.13/Makefile:
+	cd SDL-1.2.13; ./configure --prefix=${PREFIX} --disable-video-x11;
 
-sdl: SDL-1.2.11/Makefile
-	cd SDL-1.2.11; make && make install
+sdl: SDL-1.2.13/Makefile
+	cd SDL-1.2.13; make && make install
 
 # sdl_image (requires jpeg tiff png)
 SDL_image-1.2.5/Makefile:
@@ -229,7 +229,7 @@ clean:
 	-cd squeezeplay; make distclean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL"
-	-cd SDL-1.2.11; make distclean; rm -f include/SDL_config.h;
+	-cd SDL-1.2.13; make distclean; rm -f include/SDL_config.h;
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL_image"
 	-cd SDL_image-1.2.5; make distclean
