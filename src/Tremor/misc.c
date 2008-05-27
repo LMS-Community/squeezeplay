@@ -117,7 +117,7 @@ static void *_insert(void *ptr,long bytes,char *file,long line){
 
   global_bytes+=(bytes-HEAD_ALIGN);
 
-  return((head *)ptr+HEAD_ALIGN);
+  return((char *)ptr+HEAD_ALIGN);
 }
 
 static void _ripremove(void *ptr){
@@ -190,7 +190,7 @@ void _VDBG_dump(void){
 extern void *_VDBG_malloc(void *ptr,long bytes,char *file,long line){
   bytes+=HEAD_ALIGN;
   if(ptr){
-    ((head *)ptr)-=HEAD_ALIGN;
+    ptr = (char *)ptr - HEAD_ALIGN;
     _ripremove(ptr);
     ptr=realloc(ptr,bytes);
   }else{
@@ -202,7 +202,7 @@ extern void *_VDBG_malloc(void *ptr,long bytes,char *file,long line){
 
 extern void _VDBG_free(void *ptr,char *file,long line){
   if(ptr){
-    ((head *)ptr)-=HEAD_ALIGN;
+    ptr = (char *)ptr - HEAD_ALIGN;
     _ripremove(ptr);
     free(ptr);
   }
