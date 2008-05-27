@@ -80,7 +80,8 @@ static const SDL_Rect checkres[] = {
 	{  0, 0,  640,  400 },		/*  8 bpp: 0x100, or 256 */
 	{  0, 0,  512,  384 },
 	{  0, 0,  320,  240 },
-	{  0, 0,  320,  200 }
+	{  0, 0,  320,  200 },
+	{  0, 0,  240,  320 },		/* PAD LCD */
 };
 static const struct {
 	int xres;
@@ -96,6 +97,7 @@ static const struct {
 	int vmode;
 } vesa_timings[] = {
 #ifdef USE_VESA_TIMINGS	/* Only tested on Matrox Millenium I */
+	{  240,  320, 287820000,  2, 2, 2,  1,  2, 2, 0, 0 },	/* PAD LCD */
 	{  640,  400, 39771,  48, 16, 39,  8,  96, 2, 2, 0 },	/* 70 Hz */
 	{  640,  480, 39683,  48, 16, 33, 10,  96, 2, 0, 0 },	/* 60 Hz */
 	{  768,  576, 26101, 144, 16, 28,  6, 112, 4, 0, 0 },	/* 60 Hz */
@@ -111,6 +113,7 @@ static const struct {
 	   the 'modeline2fb' perl script included with the fbset package.
 	   These timings were generated for Matrox Millenium I, 15" monitor.
 	*/
+	{  240,  320, 287820000,  2, 2, 2,  1,  2, 2, 0, 0 },	/* PAD LCD */
 	{  320,  200, 79440,  16, 16, 20,  4,  48, 1, 0, 2 },	/* 70 Hz */
 	{  320,  240, 63492,  16, 16, 16,  4,  48, 2, 0, 2 },	/* 72 Hz */
 	{  512,  384, 49603,  48, 16, 16,  1,  64, 3, 0, 0 },	/* 78 Hz */
