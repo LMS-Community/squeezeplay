@@ -21,3 +21,11 @@ TEST_KEYPAD_HELP
 	IT	Premere tutti i tasti e scorrere la rotellina per completare.
 	NL	Druk alle knoppen in en druk op het wiel om de test te voltooien.
 
+TEST_COMPLETE
+	DA	Test fuldført
+	DE	Test abgeschlossen
+	EN	Test Complete
+	ES	Prueba completada
+	FR	Test terminé
+	IT	Test completato
+	NL	Test voltooid
