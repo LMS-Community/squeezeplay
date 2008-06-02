@@ -132,16 +132,6 @@ local function _setPlayerName(self, playerName)
 	end
 end
 
-local function _setPlayerPlaylistSize(self, playlistSize)
-	log:debug("_setPlayerPlaylistSize")
-
-	if playlistSize != self.playlistSize then
-		self.playlistSize = tonumber(playlistSize)
-		self.jnt:notify('playerPlaylistSize', self, tonumber(playlistSize))
-	end
-end
-
-
 local function _setPlayerPower(self, power)
 	log:debug("_setPlayerPower")
 
@@ -778,14 +768,14 @@ function _process_status(self, event)
 	self.trackCorrection = 0
 	self.trackTime = event.data.time
 	self.trackDuration = event.data.duration
+	self.playlistSize = tonumber(event.data.playlist_tracks)
 
 	_setConnected(self, self.state["player_connected"])
-	_setPlayerPlaylistSize(self, tonumber(event.data.playlist_tracks))
 	_setPlayerPower(self, tonumber(event.data.power))
 
 	_setPlayerModeChange(self, event.data.mode)
 
-	if self.needsUpgrade ~= lastNeedsUpgrading or self.playerIsUpgrading ~= lastIsUpgrading then
+	if self.needsUpgrade ~= lastNeedsUpgrade or self.playerIsUpgrading ~= lastIsUpgrading then
 		self.jnt:notify('playerNeedsUpgrade', self, self:isNeedsUpgrade(), self:isUpgrading())
 	end
 
@@ -814,7 +804,6 @@ function _process_displaystatus(self, event)
 		local textValue = _formatShowBrieflyText(display['text'])
 		if type == 'song' then
 			s.textarea:setValue("")
-			log:warn(display['text'])
 			s.text:setValue(textValue)
 			s.artIcon:setStyle("icon")
 			if display['icon'] then

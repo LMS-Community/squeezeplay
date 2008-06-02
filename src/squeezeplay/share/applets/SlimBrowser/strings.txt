@@ -2,6 +2,15 @@
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
+SLIMBROWSER_PLAYLIST
+	DA	Spilleliste
+	DE	Wiedergabeliste
+	EN	Playlist
+	ES	Lista de reproducción
+	FR	Liste de lecture
+	IT	Elenco di riproduzione
+	NL	Playlist
+
 SLIMBROWSER_NOW_PLAYING
 	DA	Afspiller nu
 	DE	Aktueller Titel
