@@ -52,6 +52,7 @@ local Window         = require("jive.ui.Window")
 local Group          = require("jive.ui.Group")
 
 local debug          = require("jive.utils.debug")
+local strings        = require("jive.utils.strings")
 local log            = require("jive.utils.log").logger("player")
 
 local EVENT_KEY_ALL    = jive.ui.EVENT_KEY_ALL
@@ -131,16 +132,6 @@ local function _setPlayerName(self, playerName)
 	end
 end
 
-local function _setPlayerPlaylistSize(self, playlistSize)
-	log:debug("_setPlayerPlaylistSize")
-
-	if playlistSize != self.playlistSize then
-		self.playlistSize = tonumber(playlistSize)
-		self.jnt:notify('playerPlaylistSize', self, tonumber(playlistSize))
-	end
-end
-
-
 local function _setPlayerPower(self, power)
 	log:debug("_setPlayerPower")
 
@@ -151,6 +142,21 @@ local function _setPlayerPower(self, power)
 	end
 end
 
+local function _formatShowBrieflyText(msg)
+	log:debug("_formatShowBrieflyText")
+
+	-- showBrieflyText needs to deal with both \n instructions within a string 
+	-- and also adding newlines between table elements
+
+	-- first compress the table elements into a single string with newlines
+	local text = table.concat(msg, "\n")
+	-- then split the new string on \n instructions within the concatenated string, and into a table
+	local split = strings:split('\\n', text)
+	-- then compress the new table into a string with all newlines as needed
+	local text2 = table.concat(split, "\n")
+
+	return text2
+end
 
 -- _setPlayerModeChange()
 -- sends notifications when changes in the play mode (e.g., moves from play to paused)
@@ -762,14 +768,14 @@ function _process_status(self, event)
 	self.trackCorrection = 0
 	self.trackTime = event.data.time
 	self.trackDuration = event.data.duration
+	self.playlistSize = tonumber(event.data.playlist_tracks)
 
 	_setConnected(self, self.state["player_connected"])
-	_setPlayerPlaylistSize(self, tonumber(event.data.playlist_tracks))
 	_setPlayerPower(self, tonumber(event.data.power))
 
 	_setPlayerModeChange(self, event.data.mode)
 
-	if self.needsUpgrade ~= lastNeedsUpgrading or self.playerIsUpgrading ~= lastIsUpgrading then
+	if self.needsUpgrade ~= lastNeedsUpgrade or self.playerIsUpgrading ~= lastIsUpgrading then
 		self.jnt:notify('playerNeedsUpgrade', self, self:isNeedsUpgrade(), self:isUpgrading())
 	end
 
@@ -795,9 +801,10 @@ function _process_displaystatus(self, event)
 
 		local s = self.currentSong
 
+		local textValue = _formatShowBrieflyText(display['text'])
 		if type == 'song' then
 			s.textarea:setValue("")
-			s.text:setValue(table.concat(display["text"], "\n"))
+			s.text:setValue(textValue)
 			s.artIcon:setStyle("icon")
 			if display['icon'] then
 				self.slimServer:fetchArtworkURL(display['icon'], s.artIcon, 56)
@@ -808,7 +815,7 @@ function _process_displaystatus(self, event)
 			s.text:setValue('')
 			s.artIcon:setStyle("noimage")
 			s.artIcon:setValue(nil)
-			s.textarea:setValue(table.concat(display["text"], "\n"))
+			s.textarea:setValue(textValue)
 		end
 		s.window:showBriefly(3000, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
 	end

@@ -803,15 +803,47 @@ function settingsPowerDown(self, menuItem)
 			callback = function() window:hide() end
 		},
 		{ 
-			text = self:string("POWER_DOWN_CONFIRM"),
+			text = self:string("POWER_DOWN"),
 			sound = "SELECT",
 			callback = function() settingsPowerOff(self) end
+		},	
+		{ 
+			text = self:string("POWER_DOWN_SLEEP"),
+			sound = "SELECT",
+			callback = function() settingsSleep(self) end
 		}
 	}
 	menu:setItems(items)
 
 	window:show()
         return window
+end
+
+function settingsSleep(self)
+	-- disconnect from SqueezeCenter
+	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
+	slimDiscovery.serversObj:disconnect()
+
+	self.popup = Popup("popupIcon")
+
+	self.popup:addWidget(Icon("iconConnecting"))
+	self.popup:addWidget(Label("text", self:string("SLEEPING")))
+
+	-- make sure this popup remains on screen
+	self.popup:setAllowScreensaver(false)
+	self.popup:setAlwaysOnTop(true)
+	self.popup:setAutoHide(false)
+
+	self.popup:addTimer(10000, 
+		function()
+			self:_goToSleep()
+		end,
+		true
+	)
+
+	self.popup:show()
+
+	self.popup:playSound("SHUTDOWN")
 end
 
 
@@ -1118,6 +1150,16 @@ function _suspend(self)
 	self.suspendTask:addTask()
 end
 
+function _goToSleep(self)
+	log:info("Sleep begin")
+
+	self:_setBrightness(true, 0, 0)
+
+	-- give the user 10 seconds to put the thing down, otherwise the motion detector will just bring it right back out of sleep
+	self.popup:hide()
+	self:setPowerState('suspend')
+
+end
 
 function _powerOff(self)
 	log:info("Poweroff begin")

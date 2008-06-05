@@ -171,7 +171,7 @@ end
 
 
 function notify_playerTrackChange(self, player, nowPlaying)
-	log:warn("PLAYER TRACK NOTIFICATION RECEIVED")
+	log:info("Notification received that track has changed")
 
 	local thisPlayer = _isThisPlayer(self, player)
 	if not thisPlayer then return end
@@ -524,7 +524,7 @@ function openScreensaver(self, style, transition)
 
 	local playerStatus = self.player and self.player:getPlayerStatus()
 
-	log:warn("player=", self.player, " status=", playerStatus)
+	log:info("player=", self.player, " status=", playerStatus)
 
 	-- playlist_tracks needs to be > 0 or else defer back to SlimBrowser
 	if not self.player or not playerStatus 
@@ -605,7 +605,7 @@ function free(self)
 	-- when we leave NowPlaying, ditch the window
 	-- the screen can get loaded with two layouts, and by doing this
 	-- we force the recreation of the UI when re-entering the screen, possibly in a different mode
-	log:warn("NowPlaying.free()")
+	log:info("NowPlaying.free()")
 	self.player = false
 	self['ss'] = nil
 	self['browse'] = nil

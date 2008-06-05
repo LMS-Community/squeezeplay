@@ -138,6 +138,7 @@ function _addServerItem(self, server, address)
 
 	local id = server or address
 
+
 	-- remove existing entry
 	if self.serverList[id] then
 		self.serverMenu:removeItem(self.serverList[id])
@@ -174,6 +175,8 @@ function _addServerItem(self, server, address)
 	if currentPlayer and server == currentPlayer:getSlimServer() then
 		item.style = 'checkedNoAction'
 		item.callback = nil
+	elseif not currentPlayer or not currentPlayer:canConnectToServer() then
+		return
 	end
 
 	self.serverMenu:addItem(item)

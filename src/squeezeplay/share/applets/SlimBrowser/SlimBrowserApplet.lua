@@ -108,7 +108,7 @@ local _userUpdatePopup = false
 local _menuReceived = false
 
 local modeTokens = {	
-			play  = "SLIMBROWSER_NOW_PLAYING",
+			play  = "SLIMBROWSER_PLAYLIST",
 			pause = "SLIMBROWSER_PAUSED", 
 			stop  = "SLIMBROWSER_STOPPED",
 			off   = "SLIMBROWSER_OFF"
@@ -1926,7 +1926,7 @@ function showPlaylist()
 		-- current playlist should select currently playing item 
 		-- if there is only one item in the playlist, bring the selected item to top
 		local playerStatus = _player:getPlayerStatus()
-		local playlistSize = playerStatus and playerStatus.playlist_tracks
+		local playlistSize = _player:getPlaylistSize() 
 		local playerPower = _player:getPlayerPower()
 
 		if playerPower == 0 then
@@ -1972,35 +1972,6 @@ function showPlaylist()
 	end
 	return EVENT_UNUSED
 
-end
-
-function notify_playerPlaylistSize(self, player, playlistSize)
-	log:info('SlimBrowser.notify_playerPlaylistSize')
-	if _player ~= player then
-		return
-	end
-
-	local power = _player:getPlayerPower()
-	local step = _statusStep
-	local emptyStep = _emptyStep
-
-	-- display 'NOTHING' if the player is on and there aren't any tracks in the playlist
-	if power and playlistSize == 0 then
-		local customWindow = showEmptyPlaylist('SLIMBROWSER_NOTHING') 
-		if emptyStep then
-			customWindow:replace(emptyStep.window, Window.transitionFadeIn)
-		end
-		if step.window then
-			customWindow:replace(step.window, Window.transitionFadeIn)
-		end
-	-- make sure we have step.window replace emptyStep.window when there are tracks
-	elseif playlistSize and emptyStep then
-		if step.window then
-			step.window:replace(emptyStep.window, Window.transitionFadeIn)
-		end
-	
-	end
-	
 end
 
 function notify_playerPower(self, player, power)
@@ -2064,9 +2035,32 @@ function notify_playerPlaylistChange(self, player)
 		return
 	end
 
+	local power        = _player:getPlayerPower()
 	local playerStatus = player:getPlayerStatus()
-	local step = _statusStep
+	local playlistSize = _player:getPlaylistSize()
+	local step         = _statusStep
+	local emptyStep    = _emptyStep
 
+	-- display 'NOTHING' if the player is on and there aren't any tracks in the playlist
+	if power and playlistSize == 0 then
+		local customWindow = showEmptyPlaylist('SLIMBROWSER_NOTHING') 
+		if emptyStep then
+			customWindow:replace(emptyStep.window, Window.transitionFadeIn)
+		end
+		if step.window then
+			customWindow:replace(step.window, Window.transitionFadeIn)
+		end
+		-- we've done all we need to when the playlist is 0, so let's get outta here
+		return
+	-- make sure we have step.window replace emptyStep.window when there are tracks and emptyStep exists
+	elseif playlistSize and emptyStep then
+		if step.window then
+			step.window:replace(emptyStep.window, Window.transitionFadeIn)
+		end
+	
+	end
+
+	-- update the window
 	step.db:updateStatus(playerStatus)
 	step.menu:reLayout()
 
@@ -2184,7 +2178,7 @@ function notify_playerCurrent(self, player)
 		_newWindowSpec(
 			nil, 
 			{
-				text = _string("SLIMBROWSER_NOW_PLAYING"),
+				text = _string("SLIMBROWSER_PLAYLIST"),
 				window = { 
 					["menuStyle"] = "album", 
 				}

@@ -211,6 +211,9 @@ POWER_DOWN_CANCEL
 	IT	Annulla
 	NL	Annuleren
 
+POWER_DOWN_SLEEP
+	EN	Sleep
+
 POWER_DOWN_CONFIRM
 	DA	Bekræft
 	DE	Bestätigen
@@ -228,6 +231,9 @@ GOODBYE
 	FR	\nA bientôt
 	IT	\nA presto
 	NL	\nTot ziens
+
+SLEEPING
+	EN	\nSleeping
 
 POWER_DOWN_HELP
 	DA	Afbrud eller Bekræft slukning af din fjernbetjening.
