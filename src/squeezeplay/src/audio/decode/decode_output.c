@@ -318,7 +318,6 @@ static void decode_transition_copy_bytes(sample_t *buffer, int nbytes) {
 
 
 void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
-			   bool_t need_scaling, bool_t start_immediately,
 			   bool_t copyright_asserted) {
 	size_t bytes_out;
 
@@ -431,10 +430,6 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 
 		buffer += (bytes_write / sizeof(sample_t));
 		bytes_out -= bytes_write;
-	}
-
-	if (start_immediately) {
-		current_audio_state = DECODE_STATE_RUNNING;
 	}
 
 	fifo_unlock(&decode_fifo);

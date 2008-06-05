@@ -188,7 +188,7 @@ static bool_t decode_vorbis_callback(void *data) {
 					}
 				}
 
-				decode_output_samples((sample_t *)self->output_buffer, nsamples, self->sample_rate, FALSE, TRUE, FALSE);
+				decode_output_samples((sample_t *)self->output_buffer, nsamples, self->sample_rate, FALSE);
 
 				return TRUE;
 			}

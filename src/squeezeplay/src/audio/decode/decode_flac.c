@@ -117,8 +117,6 @@ static FLAC__StreamDecoderWriteStatus decode_flac_write_callback(
 	decode_output_samples(sbuf,
 			      frame->header.blocksize,
 			      frame->header.sample_rate,
-			      FALSE,
-			      TRUE,
 			      FALSE);
 
 	free(sbuf);

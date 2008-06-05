@@ -161,7 +161,7 @@ static bool_t decode_tones_callback(void *data) {
 			break;
 	}		
 
-	decode_output_samples(self->write_buffer, BLOCKSIZE / 2, self->sample_rate, FALSE, TRUE, FALSE);
+	decode_output_samples(self->write_buffer, BLOCKSIZE / 2, self->sample_rate, FALSE);
 					      
 	return TRUE;
 }		

@@ -297,8 +297,6 @@ static void decode_mad_output(struct decode_mad *self) {
 		decode_output_samples(self->output_buffer + (offset * sizeof(sample_t)),
 				      pcm->length - offset,
 				      self->sample_rate,
-				      FALSE,
-				      TRUE,
 				      FALSE);
 	}
 
