@@ -230,6 +230,8 @@ function _serverSink(self, data)
 
 	local ip, port = self.server:getIpPort()
 
+	local wallpaper = self:getSettings()[self.currentPlayerId]
+
 	if data.item_loop then
 		for _,entry in pairs(data.item_loop) do
 			log:info("server wallpaper: ", entry.name)
@@ -245,7 +247,8 @@ function _serverSink(self, data)
 										   if attr then
 											   self:setBackground(entry.file, self.currentPlayerId)
 										   end
-									   end
+									   end,
+									   wallpaper == entry.file
 								   ),
 					focusGained = function()
 									  local path = Framework:findFile(PREFIX) .. entry.file
