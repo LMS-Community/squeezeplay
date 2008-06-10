@@ -519,10 +519,7 @@ local function _connectingToPlayer(self)
 
 			if evtCode == KEY_BACK then
 				-- disconnect from player and go home
-				local manager = AppletManager:getAppletInstance("SlimDiscovery")
-				if manager then
-					manager:setCurrentPlayer(nil)
-				end
+				AppletManager:callService("setCurrentPlayer", nil)
 				popup:hide()
 			end
 			-- other keys are disabled when this popup is on screen
@@ -561,10 +558,7 @@ local function _userTriggeredUpdate(self)
 
 			if evtCode == KEY_BACK and type == EVENT_KEY_HOLD then
 				-- disconnect from player and go home
-				local manager = AppletManager:getAppletInstance("SlimDiscovery")
-				if manager then
-					manager:setCurrentPlayer(nil)
-				end
+				AppletManager:callService("setCurrentPlayer", nil)
 				window:hide()
 			end
 			-- other keys are disabled when this window is on screen
@@ -608,10 +602,7 @@ local function _updatingPlayer(self)
 
 			if evtCode == KEY_BACK then
 				-- disconnect from player and go home
-				local manager = AppletManager:getAppletInstance("SlimDiscovery")
-				if manager then
-					manager:setCurrentPlayer(nil)
-				end
+				AppletManager:callService("setCurrentPlayer", nil)
 				popup:hide()
 			end
 			-- other keys are disabled when this popup is on screen
@@ -2309,9 +2300,7 @@ function _problemConnecting(self, server)
 			     text = self:string("SLIMBROWSER_TRY_AGAIN"),
 			     callback = function()
 						server:connect()
-
-						local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
-						slimDiscovery:setCurrentPlayer(player)
+						AppletManager:callService("setCurrentPlayer", player)
 					end,
 		     })
 
@@ -2331,8 +2320,7 @@ function _problemConnecting(self, server)
 		menu:addItem({
 				     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
 				     callback = function()
-							local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
-							slimDiscovery:setCurrentPlayer(nil)
+							AppletManager:callService("setCurrentPlayer", nil)
 
 							local setupSqueezebox = appletManager:loadApplet("SetupSqueezebox")
 							setupSqueezebox:startSqueezeboxSetup(player:getMacAddress(), nil)
@@ -2341,12 +2329,12 @@ function _problemConnecting(self, server)
 	end
 
 	-- change player, only if multiple players
-	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
-	if slimDiscovery:countConnectedPlayers() > 1 and appletManager:hasApplet("SelectPlayer") then
+	local numPlayers = appletManager:callService("countConnectedPlayers")
+	if numPlayers > 1 and appletManager:hasApplet("SelectPlayer") then
 		menu:addItem({
 				     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
 				     callback = function()
-							slimDiscovery:setCurrentPlayer(nil)
+							AppletManager:callService("setCurrentPlayer", nil)
 
 							local selectPlayer = appletManager:loadApplet("SelectPlayer")
 							selectPlayer:setupShow()

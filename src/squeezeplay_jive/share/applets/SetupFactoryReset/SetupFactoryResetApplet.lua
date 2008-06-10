@@ -50,9 +50,8 @@ end
 
 
 function _factoryReset(self)
-	-- disconnect from SqueezeCenter
-	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
-	slimDiscovery.serversObj:disconnect()
+	-- disconnect from Player/SqueezeCenter
+	AppletManager:callService("disconnectPlayer")
 
 	local popup = Popup("popupIcon")
 	popup:addWidget(Icon("iconConnected"))

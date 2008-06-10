@@ -73,10 +73,7 @@ local function _updatingPlayer(self)
 
 			if evtCode == KEY_BACK then
 				-- disconnect from player and go home
-				local manager = AppletManager:getAppletInstance("SlimDiscovery")
-				if manager then
-					manager:setCurrentPlayer(nil)
-				end
+				AppletManager:callService("setCurrentPlayer", nil)
 				popup:hide()
 			end
 			-- other keys are disabled when this popup is on screen
@@ -106,9 +103,8 @@ function init(self)
 	self.seqno = math.random(65535)
 	self.lastActionTicks = Framework:getTicks()
 
-	self.slimdiscovery = AppletManager:getAppletInstance("SlimDiscovery")
-	if not self.slimdiscovery then
-		error("No slimdiscovery applet")
+	if not AppletManager:hasService("discoverPlayers") then
+		error("No player discovery")
 	end
 
 	if hasWireless then
@@ -335,10 +331,7 @@ function startSqueezeboxSetup(self, mac, adhoc, setupNext)
 
 	-- disconnect from current player, if any. after a successful setup
 	-- we will be connected to mac
-	local manager = AppletManager:getAppletInstance("SlimDiscovery")
-	if manager then
-		manager:setCurrentPlayer(player)
-	end
+	AppletManager:callService("setCurrentPlayer", nil)
 
 	if adhoc then
 		-- full configuration via adhoc network
@@ -870,8 +863,8 @@ function t_disconnectSlimserver(self)
 	-- access point or bridged.
 	assert(self.networkId, "jive not connected to network")
 
-	-- disconnect to slimserver
-	self.slimdiscovery.serversObj:disconnect()
+	-- disconnect from Player/SqueezeCenter
+	AppletManager:callService("disconnectPlayer")
 
 	_setAction(self, t_waitDisconnectSlimserver)
 end
@@ -883,7 +876,7 @@ function t_waitDisconnectSlimserver(self)
 
 	local connected = false
 
-	for i,server in self.slimdiscovery:allServers() do
+	for i,server in AppletManager:callService("iterateSqueezeCenters") do
 		connected = connected or server:isConnected()
 		log:info("server=", server:getName(), " connected=", connected)
 	end		
@@ -1144,8 +1137,8 @@ function t_waitJiveNetwork(self)
 			return
 		end
 
-		-- reconnect to slimserver
-		self.slimdiscovery.serversObj:connect()
+		-- reconnect to Player/SqueezeCenter
+		AppletManager:callService("connectPlayer")
 
 		_setAction(self, t_waitSqueezeboxNetwork)
 	end
@@ -1216,10 +1209,10 @@ end
 function _scanSlimservers(self)
 	-- scan for slimservers
 	log:info("in _scanSlimservers calling discover")
-	self.slimdiscovery:discover()
+	AppletManager:callService("discoverPlayers")
 
 	-- update slimserver list
-	for i,v in self.slimdiscovery:allServers() do
+	for i,v in AppletManager:callService("iterateSqueezeCenters") do
 		if self.slimservers[i] == nil then
 			local item = {
 				text = v:getName(),
@@ -1366,7 +1359,7 @@ function notify_playerNew(self, player)
 		end
 
 		-- player is connected to slimserver, set as current player
-		self.slimdiscovery:setCurrentPlayer(player)
+		AppletManager:callService("setCurrentPlayer", player)
 
 		-- and then we're done
 		_setupOK(self)

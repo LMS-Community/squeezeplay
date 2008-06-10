@@ -139,8 +139,7 @@ end
 
 
 function manageSelectPlayerMenu(self)
-        local sdApplet = AppletManager:getAppletInstance("SlimDiscovery")
-	local _numberOfPlayers = sdApplet and sdApplet:countPlayers() or 0
+	local _numberOfPlayers = AppletManager:callService("countPlayers") or 0
 
 	-- if _numberOfPlayers is > 1 and selectPlayerMenuItem doesn't exist, create it
 
@@ -326,20 +325,15 @@ function setupShow(self, setupNext)
 			window:hide(Window.transitionPushLeft)
 		end
 
-        self.discovery = AppletManager:getAppletInstance("SlimDiscovery")
-        if not self.discovery then
-		return
-	end
-
-	self.selectedPlayer = self.discovery:getCurrentPlayer()
-	for mac, player in self.discovery:allPlayers() do
+	self.selectedPlayer = AppletManager:callService("getCurrentPlayer")
+	for mac, player in AppletManager:callService("iteratePlayers") do
 		if player:isConnected() then
 			_addPlayerItem(self, player)
 		end
 	end
 
 	-- Display password protected servers
-	for id, server in self.discovery:allServers() do
+	for id, server in AppletManager:callService("iterateSqueezeCenters") do
 		_updateServerItem(self, server)
 	end
 
@@ -425,7 +419,7 @@ end
 
 function _scan(self)
 	-- SqueezeCenter and player discovery
-	self.discovery:discover()
+	AppletManager:callService("discoverPlayers")
 
 	-- udap discovery
 	local packet = Udap.createAdvancedDiscover(nil, 1)
@@ -485,10 +479,7 @@ function selectPlayer(self, player)
 	end
 
 	-- set the current player
-	local manager = AppletManager:getAppletInstance("SlimDiscovery")
-	if manager then
-		manager:setCurrentPlayer(player)
-	end
+	AppletManager:callService("setCurrentPlayer", player)
 
 	return true
 end

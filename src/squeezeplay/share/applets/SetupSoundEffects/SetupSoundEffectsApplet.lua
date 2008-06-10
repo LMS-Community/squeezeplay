@@ -279,15 +279,14 @@ end
 
 
 function _getCurrentServer(self)
-	local manager = AppletManager:getAppletInstance("SlimDiscovery")
-	local server
-	if manager and manager:getCurrentPlayer() then
-		server = manager:getCurrentPlayer():getSlimServer()
-		if server:isSqueezeNetwork() then
-			server = nil
+	local player = AppletManager:callService("getCurrentPlayer")
+	if player then
+		local server = player:getSlimServer()
+		if not server:isSqueezeNetwork() then
+			return server
 		end
 	end
-	return server
+	return nil
 end
 
 

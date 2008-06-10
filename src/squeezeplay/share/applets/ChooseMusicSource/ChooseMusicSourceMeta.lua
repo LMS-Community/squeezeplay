@@ -41,12 +41,9 @@ end
 
 
 function registerApplet(self)
-
 	-- set the poll list for discovery of slimservers based on our settings
-	local sdApplet = appletManager:loadApplet("SlimDiscovery")
-	
-	if sdApplet then
-		sdApplet:pollList(self:getSettings().poll)
+	if AppletManager:hasService("setPollList") then
+		AppletManager:callService("setPollList", self:getSettings().poll)
 		jiveMain:addItem(self:menuItem('appletSlimservers', 'settings', "SLIMSERVER_SERVERS", function(applet, ...) applet:settingsShow(...) end, 60))
 	end
 end

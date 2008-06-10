@@ -52,18 +52,14 @@ function menu(self, menuItem)
 	self:tieAndShowWindow(window)
 
 	-- find a server: server for current player, else first server
-	sd = AppletManager:getAppletInstance("SlimDiscovery")
-
-	if sd then
-		if sd:getCurrentPlayer() then
-			self.player = sd:getCurrentPlayer()
-			self.server = self.player:getSlimServer()
-		else
-			for _, server in sd:allServers() do
-				if server:isConnected() then
-					self.server = server
-					break
-				end
+	self.player = AppletManager:callService("getCurrentPlayer")
+	if self.player then
+		self.server = self.player:getSlimServer()
+	else
+		for _, server in AppletManager:callService("iterateSqueezeCenters") do
+			if server:isConnected() then
+				self.server = server
+				break
 			end
 		end
 	end

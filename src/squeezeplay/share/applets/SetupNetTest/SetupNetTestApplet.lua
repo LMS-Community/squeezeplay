@@ -62,10 +62,8 @@ local graphG  = 0x008000FF
 function open(self, menuItem)
 
 	-- find a server: server for current player, else first server
-	sd = AppletManager:getAppletInstance("SlimDiscovery")
-
-	if sd and sd:getCurrentPlayer() then
-		self.player = sd:getCurrentPlayer()
+	self.player = AppletManager:callService("getCurrentPlayer")
+	if self.player then
 		self.server = self.player:getSlimServer()
 	end
 

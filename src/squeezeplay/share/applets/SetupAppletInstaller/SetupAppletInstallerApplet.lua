@@ -64,17 +64,14 @@ function menu(self, menuItem)
 	self.window = Window("window", menuItem.text)
 	self.title = menuItem.text
 
-	sd = AppletManager:getAppletInstance("SlimDiscovery")
-
 	-- find a server
-	if sd then
-		if sd:getCurrentPlayer() then
-			self.server = sd:getCurrentPlayer():getSlimServer()
-		else
-			for _, server in sd:allServers() do
-				self.server = server
-				break
-			end
+	local player = AppletManager:callService("getCurrentPlayer")
+	if player then
+		self.server = player:getSlimServer()
+	else
+		for _, server in AppletManager:callService("iterateSqueezeCenters") do
+			self.server = server
+			break
 		end
 	end
 

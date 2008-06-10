@@ -116,9 +116,9 @@ function _activate(self, the_screensaver)
 
 	-- what screensaver, check the playmode of the current player
 	if the_screensaver == nil then
-		local sd = AppletManager:getAppletInstance("SlimDiscovery")
-		
-		if sd and sd:getCurrentPlayer() and sd:getCurrentPlayer():getPlayMode() == "play" then
+		local player = AppletManager:callService("getCurrentPlayer")
+
+		if player and player:getPlayMode() == "play" then
 			the_screensaver = self:getSettings()["whenPlaying"]
 		else
 			the_screensaver = self:getSettings()["whenStopped"]

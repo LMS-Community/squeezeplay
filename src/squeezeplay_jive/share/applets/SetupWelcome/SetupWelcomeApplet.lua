@@ -205,8 +205,7 @@ function step7(self)
 	log:info("step7")
 
 	-- skip this step if a player has been selected
-	local manager = AppletManager:getAppletInstance("SlimDiscovery")
-	if manager and manager:getCurrentPlayer() ~= nil then
+	if AppletManager:callService("getCurrentPlayer") then
 		return self:step8()
 	end
 

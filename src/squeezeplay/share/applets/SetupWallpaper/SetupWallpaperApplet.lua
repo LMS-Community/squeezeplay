@@ -121,7 +121,7 @@ function settingsShow(self)
 	local _playerName    = false
 
 	if not self.player then
-		self.player = _getCurrentPlayer()
+		self.player = AppletManager:callService("getCurrentPlayer")
 	end
 
 	if self.player then
@@ -200,14 +200,6 @@ function settingsShow(self)
 	return window
 end
 
-function _getCurrentPlayer(self)
-	local manager = AppletManager:getAppletInstance("SlimDiscovery")
-
-	if manager and manager:getCurrentPlayer() then
-		return manager:getCurrentPlayer()
-	end
-	return false
-end
 
 function _getCurrentServer(self)
 
@@ -215,8 +207,7 @@ function _getCurrentServer(self)
 	if self.player then
 		server = self.player:getSlimServer()
 	else
-		local manager = AppletManager:getAppletInstance("SlimDiscovery")
-		for _, s in manager:allServers() do
+		for _, s in AppletManager:callService("iterateSqueezeCenters") do
 			server = s
 			break
 		end

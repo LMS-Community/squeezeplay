@@ -821,8 +821,7 @@ end
 
 function settingsSleep(self)
 	-- disconnect from SqueezeCenter
-	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
-	slimDiscovery.serversObj:disconnect()
+	AppletManager:callService("disconnectPlayer")
 
 	self.popup = Popup("popupIcon")
 
@@ -849,8 +848,7 @@ end
 
 function settingsPowerOff(self)
 	-- disconnect from SqueezeCenter
-	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
-	slimDiscovery.serversObj:disconnect()
+	AppletManager:callService("disconnectPlayer")
 
 	local popup = Popup("popupIcon")
 
@@ -1043,12 +1041,6 @@ function _suspendTask(self)
 	local settings = self:getSettings()
 	local wakeAfter = settings.suspendWake and settings.suspendWake or ""
 
-	local slimDiscovery = appletManager:getAppletInstance("SlimDiscovery")
-	local slimServers
-	if slimDiscovery then
-		slimServers = slimDiscovery.serversObj
-	end
-
 	-- start timer to resume this task every second
 	self.suspendPopup:addTimer(1000,
 		function()
@@ -1057,22 +1049,19 @@ function _suspendTask(self)
 			end
 		end)
 
-	-- disconnect from all SlimServers
-	if slimServers then
-		local connected
-		repeat
-			slimServers:disconnect()
+	-- disconnect from all Players/SqueezeCenters
+	local connected
+	repeat
+		AppletManager:callService("disconnectPlayer")
 
-			connected = false
-			for i,server in slimServers:allServers() do
-				connected = connected or server:isConnected()
-				log:info("server=", server:getName(), " connected=", connected)
-			end
+		connected = false
+		for i,server in AppletManager:callService("iterateSqueezeCenters") do
+			connected = connected or server:isConnected()
+			log:info("server=", server:getName(), " connected=", connected)
+		end
 
-			Task:yield(false)
-		until not connected
-	end
-
+		Task:yield(false)
+	until not connected
 
 	-- suspend
 	os.execute("/etc/init.d/suspend " .. wakeAfter)

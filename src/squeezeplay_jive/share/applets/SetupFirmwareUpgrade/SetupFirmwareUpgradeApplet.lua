@@ -295,8 +295,7 @@ function _upgrade(self)
 
 	-- disconnect from SqueezeCenter, we don't want to up
 	-- interrupted during the firmware upgrade.
-	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
-	slimDiscovery.serversObj:disconnect()
+	AppletManager:callService("disconnectPlayer")
 
 	-- start the upgrade
 	self.upgrade = Upgrade(self.url)
@@ -313,8 +312,7 @@ function _upgradeFailed(self)
 	self.upgradeListener = nil
 
 	-- reconnect to server
-	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
-	slimDiscovery.serversObj:connect()
+	AppletManager:callService("connectPlayer")
 
 	local window = Window("window", self:string("UPDATE_FAILURE"))
 
