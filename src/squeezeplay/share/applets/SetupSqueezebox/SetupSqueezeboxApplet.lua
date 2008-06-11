@@ -14,7 +14,6 @@ local table                  = require("jive.utils.table")
 local debug                  = require("jive.utils.debug")
 
 local Applet                 = require("jive.Applet")
-local AppletManager          = require("jive.AppletManager")
 local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
@@ -73,7 +72,7 @@ local function _updatingPlayer(self)
 
 			if evtCode == KEY_BACK then
 				-- disconnect from player and go home
-				AppletManager:callService("setCurrentPlayer", nil)
+				appletManager:callService("setCurrentPlayer", nil)
 				popup:hide()
 			end
 			-- other keys are disabled when this popup is on screen
@@ -103,7 +102,7 @@ function init(self)
 	self.seqno = math.random(65535)
 	self.lastActionTicks = Framework:getTicks()
 
-	if not AppletManager:hasService("discoverPlayers") then
+	if not appletManager:hasService("discoverPlayers") then
 		error("No player discovery")
 	end
 
@@ -331,7 +330,7 @@ function startSqueezeboxSetup(self, mac, adhoc, setupNext)
 
 	-- disconnect from current player, if any. after a successful setup
 	-- we will be connected to mac
-	AppletManager:callService("setCurrentPlayer", nil)
+	appletManager:callService("setCurrentPlayer", nil)
 
 	if adhoc then
 		-- full configuration via adhoc network
@@ -864,7 +863,7 @@ function t_disconnectSlimserver(self)
 	assert(self.networkId, "jive not connected to network")
 
 	-- disconnect from Player/SqueezeCenter
-	AppletManager:callService("disconnectPlayer")
+	appletManager:callService("disconnectPlayer")
 
 	_setAction(self, t_waitDisconnectSlimserver)
 end
@@ -876,7 +875,7 @@ function t_waitDisconnectSlimserver(self)
 
 	local connected = false
 
-	for i,server in AppletManager:callService("iterateSqueezeCenters") do
+	for i,server in appletManager:callService("iterateSqueezeCenters") do
 		connected = connected or server:isConnected()
 		log:info("server=", server:getName(), " connected=", connected)
 	end		
@@ -1138,7 +1137,7 @@ function t_waitJiveNetwork(self)
 		end
 
 		-- reconnect to Player/SqueezeCenter
-		AppletManager:callService("connectPlayer")
+		appletManager:callService("connectPlayer")
 
 		_setAction(self, t_waitSqueezeboxNetwork)
 	end
@@ -1209,10 +1208,10 @@ end
 function _scanSlimservers(self)
 	-- scan for slimservers
 	log:info("in _scanSlimservers calling discover")
-	AppletManager:callService("discoverPlayers")
+	appletManager:callService("discoverPlayers")
 
 	-- update slimserver list
-	for i,v in AppletManager:callService("iterateSqueezeCenters") do
+	for i,v in appletManager:callService("iterateSqueezeCenters") do
 		if self.slimservers[i] == nil then
 			local item = {
 				text = v:getName(),
@@ -1359,7 +1358,7 @@ function notify_playerNew(self, player)
 		end
 
 		-- player is connected to slimserver, set as current player
-		AppletManager:callService("setCurrentPlayer", player)
+		appletManager:callService("setCurrentPlayer", player)
 
 		-- and then we're done
 		_setupOK(self)

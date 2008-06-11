@@ -32,7 +32,6 @@ local ltn12            = require("ltn12")
 local lfs              = require("lfs")
 
 local Applet           = require("jive.Applet")
-local AppletManager    = require("jive.AppletManager")
 local SlimServer       = require("jive.slim.SlimServer")
 
 local RequestHttp      = require("jive.net.RequestHttp")
@@ -65,11 +64,11 @@ function menu(self, menuItem)
 	self.title = menuItem.text
 
 	-- find a server
-	local player = AppletManager:callService("getCurrentPlayer")
+	local player = appletManager:callService("getCurrentPlayer")
 	if player then
 		self.server = player:getSlimServer()
 	else
-		for _, server in AppletManager:callService("iterateSqueezeCenters") do
+		for _, server in appletManager:callService("iterateSqueezeCenters") do
 			self.server = server
 			break
 		end

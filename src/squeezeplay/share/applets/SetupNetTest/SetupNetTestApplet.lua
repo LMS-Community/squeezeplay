@@ -20,8 +20,6 @@ local string        = require("string")
 
 local Applet        = require("jive.Applet")
 
-local AppletManager = require("jive.AppletManager")
-
 local Framework     = require("jive.ui.Framework")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
@@ -61,7 +59,7 @@ local graphG  = 0x008000FF
 function open(self, menuItem)
 
 	-- find a server: server for current player, else first server
-	self.player = AppletManager:callService("getCurrentPlayer")
+	self.player = appletManager:callService("getCurrentPlayer")
 	if self.player then
 		self.server = self.player:getSlimServer()
 	end

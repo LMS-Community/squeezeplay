@@ -24,7 +24,6 @@ local os                 = require("os")
 local string             = require("string")
 
 local Applet             = require("jive.Applet")
-local AppletManager      = require("jive.AppletManager")
 local SimpleMenu         = require("jive.ui.SimpleMenu")
 local RadioGroup         = require("jive.ui.RadioGroup")
 local RadioButton        = require("jive.ui.RadioButton")
@@ -47,7 +46,7 @@ local jiveMain           = jiveMain
 local appletManager      = appletManager
 
 -- load SetupWallpaper for use in previewing Wallpapers
-local SetupWallpaper = AppletManager:loadApplet("SetupWallpaper")
+local SetupWallpaper = appletManager:loadApplet("SetupWallpaper")
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
@@ -139,7 +138,7 @@ end
 
 
 function manageSelectPlayerMenu(self)
-	local _numberOfPlayers = AppletManager:callService("countPlayers") or 0
+	local _numberOfPlayers = appletManager:callService("countPlayers") or 0
 
 	-- if _numberOfPlayers is > 1 and selectPlayerMenuItem doesn't exist, create it
 
@@ -249,7 +248,7 @@ function _addSqueezeboxItem(self, mac, name)
 		text = name or self:string("SQUEEZEBOX_NAME", string.sub(mac, 7)),
 		sound = "WINDOWSHOW",
 		callback = function()
-				   local sbsetup = AppletManager:loadApplet("SetupSqueezebox")
+				   local sbsetup = appletManager:loadApplet("SetupSqueezebox")
 				   if not sbsetup then
 					   return
 				   end
@@ -293,7 +292,7 @@ function _updateServerItem(self, server)
 		text = server:getName(),
 		sound = "WINDOWSHOW",
 		callback = function()
-			local auth = AppletManager:loadApplet("HttpAuth")
+			local auth = appletManager:loadApplet("HttpAuth")
 			auth:squeezeCenterPassword(server)
 		end,
 		weight = SERVER_WEIGHT,
@@ -325,20 +324,20 @@ function setupShow(self, setupNext)
 			window:hide(Window.transitionPushLeft)
 		end
 
-	self.selectedPlayer = AppletManager:callService("getCurrentPlayer")
-	for mac, player in AppletManager:callService("iteratePlayers") do
+	self.selectedPlayer = appletManager:callService("getCurrentPlayer")
+	for mac, player in appletManager:callService("iteratePlayers") do
 		if player:isConnected() then
 			_addPlayerItem(self, player)
 		end
 	end
 
 	-- Display password protected servers
-	for id, server in AppletManager:callService("iterateSqueezeCenters") do
+	for id, server in appletManager:callService("iterateSqueezeCenters") do
 		_updateServerItem(self, server)
 	end
 
 	-- Bug 6130 add a Set up Squeezebox option, only in Setup not Settings
-	local sbsetup = AppletManager:loadApplet("SetupSqueezebox")
+	local sbsetup = appletManager:loadApplet("SetupSqueezebox")
 	if sbsetup and setupNext then
 		self.playerMenu:addItem({
 			text = self:string("SQUEEZEBOX_SETUP"),
@@ -419,7 +418,7 @@ end
 
 function _scan(self)
 	-- SqueezeCenter and player discovery
-	AppletManager:callService("discoverPlayers")
+	appletManager:callService("discoverPlayers")
 
 	-- udap discovery
 	local packet = Udap.createAdvancedDiscover(nil, 1)
@@ -479,7 +478,7 @@ function selectPlayer(self, player)
 	end
 
 	-- set the current player
-	AppletManager:callService("setCurrentPlayer", player)
+	appletManager:callService("setCurrentPlayer", player)
 
 	return true
 end
@@ -494,7 +493,7 @@ function free(self)
 		self:_showWallpaper('wallpaper')
 	end
 	
-	AppletManager:freeApplet("SetupWallpaper")
+	appletManager:freeApplet("SetupWallpaper")
 	-- Never free this applet
 	return false
 end

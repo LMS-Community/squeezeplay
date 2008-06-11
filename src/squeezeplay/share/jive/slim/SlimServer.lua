@@ -74,7 +74,7 @@ setmetatable(servers, { __mode = 'v' })
 local credentials = {}
 
 
--- class function to iterate over all SqueezeCentres
+-- class function to iterate over all SqueezeCenters
 function iterate(class)
 	return pairs(servers)
 end

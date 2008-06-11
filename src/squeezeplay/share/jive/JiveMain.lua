@@ -94,7 +94,7 @@ local function _homeHandler(event)
 
 		-- disconnect from player on press and hold left
 		if type == EVENT_KEY_HOLD then
-			AppletManager:callService("setCurrentPlayer", nil)
+			appletManager:callService("setCurrentPlayer", nil)
 		end
 
 		local windowStack = Framework.windowStack

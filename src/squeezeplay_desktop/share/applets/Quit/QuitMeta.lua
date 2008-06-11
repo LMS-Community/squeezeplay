@@ -44,7 +44,7 @@ function registerApplet(self)
 		text = self:string("QUIT"),
 		callback = function() 
 			-- disconnect from Player/SqueezeCenter
-			AppletManager:callService("disconnectPlayer")
+			appletManager:callService("disconnectPlayer")
 
 			return (EVENT_CONSUME | EVENT_QUIT)
 		end,

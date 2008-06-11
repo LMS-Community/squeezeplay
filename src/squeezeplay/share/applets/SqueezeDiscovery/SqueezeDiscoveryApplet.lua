@@ -10,7 +10,7 @@ searching: we are not connected to a player, in this state we connect
 
 connected: we are connected to a player, only a connection to our
  SC (or SN) is maintained. udp scanning is still performed in the
- background to update the SqueezeCentre list.
+ background to update the SqueezeCenter list.
 
 probing: we are connected to a player, but we must probe all SC/SN
  update our internal state. this is used for example in the choose
@@ -50,13 +50,13 @@ oo.class(_M, Applet)
 
 
 -- constants
-local PORT    = 3483             -- port used to discover SqueezeCentres
-local DISCOVERY_TIMEOUT = 120000 -- timeout (in milliseconds) before removing SqueezeCentres and Players
+local PORT    = 3483             -- port used to discover SqueezeCenters
+local DISCOVERY_TIMEOUT = 120000 -- timeout (in milliseconds) before removing SqueezeCenters and Players
 local DISCOVERY_PERIOD = 10000   -- discovery period
 
 
 
--- a ltn12 source that crafts a datagram suitable to discover SqueezeCentres
+-- a ltn12 source that crafts a datagram suitable to discover SqueezeCenters
 local function _slimDiscoverySource()
 	return table.concat {
 		"e",                                                           -- new discovery packet
@@ -112,7 +112,7 @@ end
 
 
 -- removes old servers
-local function _squeezeCentreCleanup(self)
+local function _squeezeCenterCleanup(self)
 	local now = Framework:getTicks()
 
 	local activeServer = self.currentPlayer and self.currentPlayer:getSlimServer()
@@ -170,7 +170,7 @@ end
 function _discover(self)
 	log:warn("#### DISCOVER")
 
-	-- Broadcast SqueezeCentre discovery
+	-- Broadcast SqueezeCenter discovery
 	for i, address in pairs(self.poll) do
 		log:debug("sending to address ", address)
 		self.socket:send(_slimDiscoverySource, address, PORT)
@@ -183,7 +183,7 @@ function _discover(self)
 	end
 
 	-- Remove SqueezeCenters that have not been seen for a while
-	_squeezeCentreCleanup(self)
+	_squeezeCenterCleanup(self)
 
 
 	if self.state == 'probing' and
@@ -280,7 +280,7 @@ function _idleDisconnect(self)
 end
 
 
--- restart discovery if the player is disconnect from SqueezeCentre
+-- restart discovery if the player is disconnect from SqueezeCenter
 function notify_playerDelete(self, player)
 	log:info("playerDelete")
 
@@ -289,7 +289,7 @@ function notify_playerDelete(self, player)
 end
 
 
--- restart discovery if SqueezeCentre disconnects
+-- restart discovery if SqueezeCenter disconnects
 function notify_serverDisconnected(self, slimserver)
 	log:info("serverDisconnected")
 

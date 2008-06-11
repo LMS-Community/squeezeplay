@@ -30,7 +30,6 @@ local table                  = require("jive.utils.table")
 local lfs                    = require("lfs")
 
 local Applet                 = require("jive.Applet")
-local AppletManager          = require("jive.AppletManager")
 local Framework              = require("jive.ui.Framework")
 local RadioButton            = require("jive.ui.RadioButton")
 local RadioGroup             = require("jive.ui.RadioGroup")
@@ -121,7 +120,7 @@ function settingsShow(self)
 	local _playerName    = false
 
 	if not self.player then
-		self.player = AppletManager:callService("getCurrentPlayer")
+		self.player = appletManager:callService("getCurrentPlayer")
 	end
 
 	if self.player then
@@ -207,7 +206,7 @@ function _getCurrentServer(self)
 	if self.player then
 		server = self.player:getSlimServer()
 	else
-		for _, s in AppletManager:callService("iterateSqueezeCenters") do
+		for _, s in appletManager:callService("iterateSqueezeCenters") do
 			server = s
 			break
 		end

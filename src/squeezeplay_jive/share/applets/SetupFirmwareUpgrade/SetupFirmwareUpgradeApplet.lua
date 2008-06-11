@@ -295,7 +295,7 @@ function _upgrade(self)
 
 	-- disconnect from SqueezeCenter, we don't want to up
 	-- interrupted during the firmware upgrade.
-	AppletManager:callService("disconnectPlayer")
+	appletManager:callService("disconnectPlayer")
 
 	-- start the upgrade
 	self.upgrade = Upgrade(self.url)
@@ -312,7 +312,7 @@ function _upgradeFailed(self)
 	self.upgradeListener = nil
 
 	-- reconnect to server
-	AppletManager:callService("connectPlayer")
+	appletManager:callService("connectPlayer")
 
 	local window = Window("window", self:string("UPDATE_FAILURE"))
 

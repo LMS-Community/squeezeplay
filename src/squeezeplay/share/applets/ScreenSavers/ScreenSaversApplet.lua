@@ -24,7 +24,6 @@ local ipairs, pairs, tostring = ipairs, pairs, tostring
 local oo               = require("loop.simple")
 
 local Applet           = require("jive.Applet")
-local AppletManager    = require("jive.AppletManager")
 local Timer            = require("jive.ui.Timer")
 local Framework        = require("jive.ui.Framework")
 local Window           = require("jive.ui.Window")
@@ -116,7 +115,7 @@ function _activate(self, the_screensaver)
 
 	-- what screensaver, check the playmode of the current player
 	if the_screensaver == nil then
-		local player = AppletManager:callService("getCurrentPlayer")
+		local player = appletManager:callService("getCurrentPlayer")
 
 		if player and player:getPlayMode() == "play" then
 			the_screensaver = self:getSettings()["whenPlaying"]

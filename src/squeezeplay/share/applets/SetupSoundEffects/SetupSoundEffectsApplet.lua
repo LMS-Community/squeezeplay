@@ -27,7 +27,6 @@ local os              = require("os")
 local io              = require("io")
 local lfs             = require("lfs")
 
-local AppletManager   = require("jive.AppletManager")
 local Applet          = require("jive.Applet")
 local Audio           = require("jive.ui.Audio")
 local Checkbox        = require("jive.ui.Checkbox")
@@ -279,7 +278,7 @@ end
 
 
 function _getCurrentServer(self)
-	local player = AppletManager:callService("getCurrentPlayer")
+	local player = appletManager:callService("getCurrentPlayer")
 	if player then
 		local server = player:getSlimServer()
 		if not server:isSqueezeNetwork() then

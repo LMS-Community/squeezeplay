@@ -20,8 +20,6 @@ local string        = require("string")
 
 local Applet        = require("jive.Applet")
 
-local AppletManager = require("jive.AppletManager")
-
 local Framework     = require("jive.ui.Framework")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
@@ -51,11 +49,11 @@ function menu(self, menuItem)
 	self:tieAndShowWindow(window)
 
 	-- find a server: server for current player, else first server
-	self.player = AppletManager:callService("getCurrentPlayer")
+	self.player = appletManager:callService("getCurrentPlayer")
 	if self.player then
 		self.server = self.player:getSlimServer()
 	else
-		for _, server in AppletManager:callService("iterateSqueezeCenters") do
+		for _, server in appletManager:callService("iterateSqueezeCenters") do
 			if server:isConnected() then
 				self.server = server
 				break

@@ -821,7 +821,7 @@ end
 
 function settingsSleep(self)
 	-- disconnect from SqueezeCenter
-	AppletManager:callService("disconnectPlayer")
+	appletManager:callService("disconnectPlayer")
 
 	self.popup = Popup("popupIcon")
 
@@ -848,7 +848,7 @@ end
 
 function settingsPowerOff(self)
 	-- disconnect from SqueezeCenter
-	AppletManager:callService("disconnectPlayer")
+	appletManager:callService("disconnectPlayer")
 
 	local popup = Popup("popupIcon")
 
@@ -1052,10 +1052,10 @@ function _suspendTask(self)
 	-- disconnect from all Players/SqueezeCenters
 	local connected
 	repeat
-		AppletManager:callService("disconnectPlayer")
+		appletManager:callService("disconnectPlayer")
 
 		connected = false
-		for i,server in AppletManager:callService("iterateSqueezeCenters") do
+		for i,server in appletManager:callService("iterateSqueezeCenters") do
 			connected = connected or server:isConnected()
 			log:info("server=", server:getName(), " connected=", connected)
 		end

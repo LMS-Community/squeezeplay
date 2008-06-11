@@ -27,7 +27,6 @@ local table                  = require("jive.utils.table")
 local string                 = require("string")
                              
 local Applet                 = require("jive.Applet")
-local AppletManager          = require("jive.AppletManager")
 local Player                 = require("jive.slim.Player")
 local SlimServer             = require("jive.slim.SlimServer")
 local Framework              = require("jive.ui.Framework")
@@ -253,12 +252,12 @@ end
 -- _getTimeFormat
 -- loads SetupDateTime and returns current setting for date time format
 local function _getTimeFormat()
-	local SetupDateTime = AppletManager:loadApplet("SetupDateTime")
+	local SetupDateTime = appletManager:loadApplet("SetupDateTime")
 	local format = '12'
 	if SetupDateTime and SetupDateTime:getSettings()['hours'] then
 		format = SetupDateTime:getSettings()['hours']
 	end
-	AppletManager:freeApplet("SetupDateTime")
+	appletManager:freeApplet("SetupDateTime")
 	return format
 end
 
@@ -519,7 +518,7 @@ local function _connectingToPlayer(self)
 
 			if evtCode == KEY_BACK then
 				-- disconnect from player and go home
-				AppletManager:callService("setCurrentPlayer", nil)
+				appletManager:callService("setCurrentPlayer", nil)
 				popup:hide()
 			end
 			-- other keys are disabled when this popup is on screen
@@ -558,7 +557,7 @@ local function _userTriggeredUpdate(self)
 
 			if evtCode == KEY_BACK and type == EVENT_KEY_HOLD then
 				-- disconnect from player and go home
-				AppletManager:callService("setCurrentPlayer", nil)
+				appletManager:callService("setCurrentPlayer", nil)
 				window:hide()
 			end
 			-- other keys are disabled when this window is on screen
@@ -602,7 +601,7 @@ local function _updatingPlayer(self)
 
 			if evtCode == KEY_BACK then
 				-- disconnect from player and go home
-				AppletManager:callService("setCurrentPlayer", nil)
+				appletManager:callService("setCurrentPlayer", nil)
 				popup:hide()
 			end
 			-- other keys are disabled when this popup is on screen
@@ -702,7 +701,7 @@ local function _goNowPlaying(transition)
 		transition = Window.transitionPushRight
 	end
 	Framework:playSound("WINDOWSHOW")
-	local NowPlaying = AppletManager:loadApplet("NowPlaying")
+	local NowPlaying = appletManager:loadApplet("NowPlaying")
 	NowPlaying:openScreensaver('browse', transition)
 end
 
@@ -2300,7 +2299,7 @@ function _problemConnecting(self, server)
 			     text = self:string("SLIMBROWSER_TRY_AGAIN"),
 			     callback = function()
 						server:connect()
-						AppletManager:callService("setCurrentPlayer", player)
+						appletManager:callService("setCurrentPlayer", player)
 					end,
 		     })
 
@@ -2309,7 +2308,7 @@ function _problemConnecting(self, server)
 		menu:addItem({
 			text = self:string("SLIMBROWSER_ENTER_PASSWORD"),
 			callback = function()
-				local auth = AppletManager:loadApplet("HttpAuth")
+				local auth = appletManager:loadApplet("HttpAuth")
 				auth:squeezeCenterPassword(server)
 			end,
 		})
@@ -2320,7 +2319,7 @@ function _problemConnecting(self, server)
 		menu:addItem({
 				     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
 				     callback = function()
-							AppletManager:callService("setCurrentPlayer", nil)
+							appletManager:callService("setCurrentPlayer", nil)
 
 							local setupSqueezebox = appletManager:loadApplet("SetupSqueezebox")
 							setupSqueezebox:startSqueezeboxSetup(player:getMacAddress(), nil)
@@ -2334,7 +2333,7 @@ function _problemConnecting(self, server)
 		menu:addItem({
 				     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
 				     callback = function()
-							AppletManager:callService("setCurrentPlayer", nil)
+							appletManager:callService("setCurrentPlayer", nil)
 
 							local selectPlayer = appletManager:loadApplet("SelectPlayer")
 							selectPlayer:setupShow()
