@@ -75,6 +75,12 @@ local players = {}
 setmetatable(players, { __mode = 'v' })
 
 
+-- class function to iterate over all players
+function iterate(class)
+	return pairs(players)
+end
+
+
 -- _getSink
 -- returns a sink with a closure to self
 -- cmd is passed in so we know what process function to call

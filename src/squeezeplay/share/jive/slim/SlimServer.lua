@@ -74,6 +74,12 @@ setmetatable(servers, { __mode = 'v' })
 local credentials = {}
 
 
+-- class function to iterate over all SqueezeCentres
+function iterate(class)
+	return pairs(servers)
+end
+
+
 -- _getSink
 -- returns a sink
 local function _getSink(self, name)
@@ -103,6 +109,8 @@ function _serverstatusSink(self, event, err)
 --	log:info(event)
 
 	local data = event.data
+
+	debug.dump(data, 3)
 
 	-- check we have a result 
 	if not data then
@@ -236,10 +244,14 @@ function __init(self, jnt, ip, port, name)
 	local id = self:idFor(ip, port, name)
 	local obj = servers[id]
 	if obj then
-		obj:connect(obj)
+		log:warn("UPDATE SERVER")
+		obj:updateFromUdp(ip, port, name)
+		-- XXXX
+		-- obj:connect(obj)
 		return obj
 	end
 
+	log:warn("NEW SERVER")
 
 	local obj = oo.rawnew(self, {
 
@@ -314,9 +326,12 @@ function __init(self, jnt, ip, port, name)
 		    )
 
 	-- long term connection to the server
-	obj:connect(obj)
+	-- XXXX
+	----obj:connect(obj)
 	
 	-- notify we're here by caller in SlimServers
+	-- XXXX
+	jnt:notify('serverNew', server)	
 	
 	-- task to fetch artwork while browsing
 	obj.artworkFetchTask = Task("artwork", obj, processArtworkQueue)
@@ -337,6 +352,8 @@ function free(self)
 	log:debug(self, ":free()")
 
 	-- notify we're gone by caller in SlimServers
+	-- XXXX
+	self.jnt:notify("serverDelete", server)
 		
 	-- clear cache
 	self.artworkCache:free()

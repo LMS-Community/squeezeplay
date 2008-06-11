@@ -54,6 +54,9 @@ local jnt
 -- loop detection
 local _sentinel = function () end
 
+-- applet services
+local _services = {}
+
 
 -- _init
 -- creates an AppletManager object
@@ -568,6 +571,39 @@ function _freeApplet(self, entry)
 	entry.appletEvaluated = false
 	entry.appletLoaded = false
 	package.loaded[entry.appletModule] = nil
+end
+
+
+function registerService(self, appletName, service)
+	log:warn("#### registerService appletName=", appletName, " service=", service)
+
+	_services[service] = appletName
+
+end
+
+
+function hasService(self, service)
+	log:warn("#### hasService service=", service)
+
+	return _services[service] ~= nil
+end
+
+
+function callService(self, service, ...)
+	log:warn("#### callService service=", service)
+
+	local _appletName = _services[service]
+
+	if not _appletName then
+		return
+	end
+
+	local _applet = self:loadApplet(_appletName)
+	if not _applet then
+		return
+	end
+
+	return _applet[service](_applet, ...)
 end
 
 

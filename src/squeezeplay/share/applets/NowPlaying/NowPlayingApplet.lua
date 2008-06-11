@@ -255,7 +255,7 @@ end
 function _isThisPlayer(self, player)
 
 	if not self.player and not self.player:getId() then
-		self.player = AppletManager:callService("getCurrentPlayer")
+		self.player = appletManager:callService("getCurrentPlayer")
 	end
 
 	if player.id ~= self.player:getId() then
@@ -562,7 +562,7 @@ function openScreensaver(self, style, transition)
 	log:debug("CREATING UI FOR NOWPLAYING")
 	self[windowStyle].window = _createUI(self)
 
-	self.player = AppletManager:callService("getCurrentPlayer")
+	self.player = appletManager:callService("getCurrentPlayer")
 
 	local transitionOn
 	if transition then

@@ -19,7 +19,6 @@ local table         = require("table")
 local string        = require("string")
 
 local Applet        = require("jive.Applet")
-local SlimServers   = require("jive.slim.SlimServers")
 
 local AppletManager = require("jive.AppletManager")
 

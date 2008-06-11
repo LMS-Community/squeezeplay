@@ -28,7 +28,6 @@ local string        = require("string")
 local table         = require("jive.utils.table")
 
 local Applet        = require("jive.Applet")
-local SlimServers   = require("jive.slim.SlimServers")
 
 local Framework     = require("jive.ui.Framework")
 local Checkbox      = require("jive.ui.Checkbox")

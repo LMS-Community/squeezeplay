@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.SlimDiscovery.SlimDiscoveryMeta - SlimDiscovery meta-info
+applets.SqueezeDiscovery.SqueezeDiscoveryMeta - SqueezeDiscovery meta-info
 
 =head1 DESCRIPTION
 
-See L<applets.SlimDiscovery.SlimDiscoveryApplet>.
+See L<applets.SqueezeDiscovery.SqueezeDiscoveryApplet>.
 
 =head1 FUNCTIONS
 
@@ -30,23 +30,41 @@ module(...)
 oo.class(_M, AppletMeta)
 
 
-function jiveVersion(self)
+function jiveVersion(meta)
 	return 1, 1
 end
 
 
-function defaultSettings(self)
+function defaultSettings(meta)
 	return {
 		currentPlayer = false
 	}
 end
 
 
-function registerApplet(self)
-	local settings = self:getSettings()
+function registerApplet(meta)
+	local settings = meta:getSettings()
 
-	-- SlimDiscovery is a resident Applet
-	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
+
+	meta:registerService("getCurrentPlayer")
+	meta:registerService("setCurrentPlayer")
+
+	meta:registerService("discoverPlayers")
+
+	meta:registerService("connectPlayer")
+	meta:registerService("disconnectPlayer")
+
+	meta:registerService("iteratePlayers")
+	meta:registerService("iterateSqueezeCenters")
+	meta:registerService("countConnectedPlayers")
+	meta:registerService("countPlayers")
+
+	meta:registerService("getPollList")
+	meta:registerService("setPollList")
+
+
+	-- SqueezeDiscovery is a resident Applet
+	local slimDiscovery = appletManager:loadApplet("SqueezeDiscovery")
 
 	-- With the MP firmware when SqueezeNetwork is selected a dummy player with an ff mac
 	-- address is selected, and then a firmware update starts. When this mac address is seen 
