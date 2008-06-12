@@ -590,7 +590,7 @@ end
 
 
 function registerService(self, appletName, service)
-	log:warn("#### registerService appletName=", appletName, " service=", service)
+	log:debug("registerService appletName=", appletName, " service=", service)
 
 	_services[service] = appletName
 
@@ -598,14 +598,14 @@ end
 
 
 function hasService(self, service)
-	log:warn("#### hasService service=", service)
+	log:debug("hasService service=", service)
 
 	return _services[service] ~= nil
 end
 
 
 function callService(self, service, ...)
-	log:warn("#### callService service=", service)
+	log:debug("callService service=", service)
 
 	local _appletName = _services[service]
 

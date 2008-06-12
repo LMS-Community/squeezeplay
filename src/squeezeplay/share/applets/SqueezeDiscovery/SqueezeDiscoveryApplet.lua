@@ -53,6 +53,8 @@ oo.class(_M, Applet)
 -- constants
 local PORT    = 3483             -- port used to discover SqueezeCenters
 local DISCOVERY_TIMEOUT = 120000 -- timeout (in milliseconds) before removing SqueezeCenters and Players
+
+-- XXXX 60000
 local DISCOVERY_PERIOD = 10000   -- discovery period
 
 
@@ -100,7 +102,11 @@ local function _slimDiscoverySink(self, chunk, err)
 	end
 
 	if name and ip and port then
-		local server = SlimServer(jnt, ip, port, name)
+		-- get instance for SqueezeCenter
+		local server = SlimServer(jnt, name)
+
+		-- update SqueezeCenter address
+		server:updateAddress(ip, port)
 
 		if self.state == 'searching'
 			or self.state == 'probing' then
@@ -169,7 +175,7 @@ end
 
 
 function _discover(self)
-	log:warn("#### DISCOVER")
+	log:debug("discover")
 
 	-- Broadcast SqueezeCenter discovery
 	for i, address in pairs(self.poll) do
@@ -242,14 +248,21 @@ end
 function _debug(self)
 	local now = Framework:getTicks()
 
-	log:warn("state=", self.state)
-	log:warn("currentPlayer=", self.currentPlayer)
+	log:warn("----")
+	log:warn("State: ", self.state)
+	log:warn("CurrentPlayer: ", self.currentPlayer)
 	if self.currentPlayer then
-		log:warn("activeServer=", self.currentPlayer:getSlimServer())
+		log:warn("ActiveServer: ", self.currentPlayer:getSlimServer())
 	end
+	log:warn("Servers:")
 	for i, server in SlimServer.iterate() do
-		log:warn(" server=", server:getName(), " connected=", server:isConnected(), " lastseen=", now - server:getLastSeen())
+		log:warn("\t", server:getName(), " connected=", server:isConnected(), " timeout=", DISCOVERY_TIMEOUT - (now - server:getLastSeen()))
 	end
+	log:warn("Players:")
+	for i, player in Player.iterate() do
+		log:warn("\t", player:getName(), " server=", player:getSlimServer())
+	end
+	log:warn("----")
 end
 
 
@@ -302,6 +315,19 @@ function notify_serverDisconnected(self, slimserver)
 
 	-- start discovery looking for the player
 	self:_setState('searching')
+end
+
+
+-- stop discovery if SqueezeCenter reconnects
+function notify_serverConnected(self, slimserver)
+	log:info("serverConnected")
+
+	if not self.currentPlayer or self.currentPlayer:getSlimServer() ~= slimserver then
+		return
+	end
+
+	-- start discovery looking for the player
+	self:_setState('connected')
 end
 
 

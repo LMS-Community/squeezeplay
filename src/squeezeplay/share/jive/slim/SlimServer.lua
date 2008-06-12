@@ -37,7 +37,6 @@ local pairs, ipairs, setmetatable = pairs, ipairs, setmetatable
 local os          = require("os")
 local table       = require("jive.utils.table")
 local string      = require("string")
-local debug       = require("jive.utils.debug")
 
 local oo          = require("loop.base")
 
@@ -54,29 +53,30 @@ local Framework   = require("jive.ui.Framework")
 
 local ArtworkCache = require("jive.slim.ArtworkCache")
 
+local debug       = require("jive.utils.debug")
 local log         = require("jive.utils.log").logger("slimserver")
 local logcache    = require("jive.utils.log").logger("slimserver.cache")
 
--- FIXME: squeezenetwork behaviour
 
 -- jive.slim.SlimServer is a base class
 module(..., oo.class)
 
--- our class constants
-local RETRY_UNREACHABLE = 120        -- Min delay (in s) before retrying a server unreachable
 
+-- list of servers index by id. this weak table is used to enforce
+-- object equality with the server name.
+local serverIds = {}
+setmetatable(serverIds, { __mode = 'v' })
 
--- list of servers index by id.
-local servers = {}
-setmetatable(servers, { __mode = 'v' })
+-- list of servers, that are active
+local serverList = {}
 
--- credential list
+-- credential list for http auth
 local credentials = {}
 
 
 -- class function to iterate over all SqueezeCenters
 function iterate(class)
-	return pairs(servers)
+	return pairs(serverList)
 end
 
 
@@ -106,10 +106,10 @@ end
 -- processes the result of the serverstatus call
 function _serverstatusSink(self, event, err)
 	log:debug(self, ":_serverstatusSink()")
---	log:info(event)
 
 	local data = event.data
 
+-- XXXX
 	debug.dump(data, 3)
 
 	-- check we have a result 
@@ -128,7 +128,7 @@ function _serverstatusSink(self, event, err)
 	
 	-- update in one shot
 	self.state = data
-	self.plumbing.lastSeen = Framework:getTicks()
+	self.lastSeen = Framework:getTicks()
 	
 	-- manage rescan
 	-- use tostring to handle nil case (in either server of self data)
@@ -168,10 +168,12 @@ function _serverstatusSink(self, event, err)
 			-- create new players
 			if not self.players[player_info.playerid] then
 			
+-- XXXX new constructor for player, don't pass server or player_info
 				player = Player(self.jnt, self, player_info)
 			
 			else
 				-- update existing players
+-- XXXX rename method for SC player update
 				self.players[player_info.playerid]:update(self, player_info)
 			end
 		end
@@ -183,6 +185,7 @@ function _serverstatusSink(self, event, err)
 	for k,v in pairs(selfPlayers) do
 		player = self.players[k]
 		-- wave player bye bye
+-- XXXX do we mean to free here, it should just unlink the player for SC
 		player:free(self)
 		self.players[k] = nil
 	end
@@ -233,60 +236,51 @@ of the server.
 
 =cut
 --]]
-function __init(self, jnt, ip, port, name)
-	log:debug("SlimServer:__init(", ip, ":", port, " ",name, ")")
-
-	_assert(ip, "Cannot create SlimServer without ip address")
-
+function __init(self, jnt, name)
 	-- Only create one server object per server. This avoids duplicates
 	-- following a server disconnect.
 
-	local id = self:idFor(ip, port, name)
-	local obj = servers[id]
-	if obj then
-		log:warn("UPDATE SERVER")
-		obj:updateFromUdp(ip, port, name)
-		-- XXXX
-		-- obj:connect(obj)
-		return obj
+	if serverIds[name] then
+		return serverIds[name]
 	end
 
-	log:warn("NEW SERVER")
+	log:debug("SlimServer:__init(", name, ")")
 
 	local obj = oo.rawnew(self, {
-
-		id = id,
+		id = name,
 		name = name,
 		jnt = jnt,
 
 		-- connection stuff
-		plumbing = {
-			lastSeen = Framework:getTicks(),
-			ip = ip,
-			port = port,
-		},
+		lastSeen = false,
+		ip = false,
+		port = false,
 
-		-- data from SS
+		-- data from SqueezeCenter
 		state = {},
 
 		-- players
 		players = {},
 
-		-- artwork http pool
-		artworkPool = HttpPool(jnt, name, ip, port, 2, 1, Task.PRIORITY_LOW),
+		-- our comet connection, initially not connected
+		comet = false,
+
+		-- are we connected to the server?
+		-- 'disconnected' = not connected
+		-- 'connecting' = trying to connect
+		-- 'connected' = connected
+		netstate = 'disconnected',
+
+		-- artwork state below here
+
+		-- artwork http pool, initially not connected
+		artworkPool = false,
 
 		-- artwork cache: Weak table storing a surface by iconId
 		artworkCache = ArtworkCache(),
+
 		-- Icons waiting for the given iconId
 		artworkThumbIcons = {},
-
-		-- our socket for long term connections, this will not
-		-- actually connect yet
-		comet = Comet(jnt, ip, port, '/cometd', name),
-
-		-- are we connected to the server?
-		active = false,
-		connecting = false,
 
 		-- queue of artwork to fetch
 		artworkFetchQueue = {},
@@ -298,45 +292,77 @@ function __init(self, jnt, ip, port, name)
 
 	setmetatable(obj.imageCache, { __mode = "kv" })
 
-	obj.id = obj:idFor(ip, port, name)
-	servers[obj.id] = obj
-
-	-- http authentication
-	local cred = credentials[name]
-	if cred then
-		SocketHttp:setCredentials({
-			ipport = { obj:getIpPort() },
-			realm = cred.realm,
-			username = cred.username,
-			password = cred.password,
-		})
-	end
+	serverIds[obj.id] = obj
 
 	-- subscribe to comet events
 	jnt:subscribe(obj)
 
-	-- subscribe to server status, timeout at 60 seconds.
-	-- get 50 players
-	-- FIXME: what if the server has more than 50 players?
-	obj.comet:aggressiveReconnect(true)
-	obj.comet:subscribe('/slim/serverstatus',
-			    _getSink(obj, '_serverstatusSink'),
-			    nil,
-			    { 'serverstatus', 0, 50, 'subscribe:60' }
-		    )
-
-	-- long term connection to the server
-	-- XXXX
-	----obj:connect(obj)
-	
-	-- notify we're here by caller in SlimServers
-	-- XXXX
-	jnt:notify('serverNew', server)	
-	
 	-- task to fetch artwork while browsing
 	obj.artworkFetchTask = Task("artwork", obj, processArtworkQueue)
 
+	-- notify we're here by caller in SlimServers
+	jnt:notify('serverNew', obj)
+	
 	return obj
+end
+
+
+--[[
+
+=head2 jive.slim.SlimServer:updateAddress(ip, port)
+
+Called to update (or initially set) the ip address and port for SqueezeCenter
+
+=cut
+--]]
+function updateAddress(self, ip, port)
+	if self.ip ~= ip or self.port ~= port then
+		log:info(self, ": address set to ", ip , ":", port, " netstate=", self.netstate)
+
+		local oldstate = self.netstate
+
+		-- close old connections
+		self:disconnect()
+
+		-- open new comet connection
+		self.ip = ip
+		self.port = port
+
+		-- http authentication
+		local cred = credentials[name]
+		if cred then
+			SocketHttp:setCredentials({
+				ipport = { obj:getIpPort() },
+				realm = cred.realm,
+				username = cred.username,
+				password = cred.password,
+			})
+		end
+
+		-- artwork http pool
+		self.artworkPool = HttpPool(self.jnt, self.name, ip, port, 2, 1, Task.PRIORITY_LOW)
+
+		-- commet
+		self.comet = Comet(self.jnt, ip, port, '/cometd', self.name)
+
+		-- subscribe to server status, max 50 players every 60 seconds.
+		-- FIXME: what if the server has more than 50 players?
+		self.comet:aggressiveReconnect(true)
+		self.comet:subscribe('/slim/serverstatus',
+				     _getSink(self, '_serverstatusSink'),
+				     nil,
+				     { 'serverstatus', 0, 50, 'subscribe:60' }
+			     )
+
+		-- reconnect, if we were already connected
+		if oldstate ~= 'disconnected' then
+			self:connect()
+		end
+	end
+
+	-- server is now active
+	serverList[self.id] = self
+	self.lastSeen = Framework:getTicks()
 end
 
 
@@ -349,11 +375,10 @@ Deletes a SlimServer object, frees memory and closes connections with the server
 =cut
 --]]
 function free(self)
-	log:debug(self, ":free()")
+	log:debug(self, ":free")
 
-	-- notify we're gone by caller in SlimServers
-	-- XXXX
-	self.jnt:notify("serverDelete", server)
+	-- notify we're gone
+	self.jnt:notify("serverDelete", self)
 		
 	-- clear cache
 	self.artworkCache:free()
@@ -361,16 +386,122 @@ function free(self)
 
 	-- delete players
 	for id, player in pairs(self.players) do
+-- XXXX should we delete the player?
 		player:free(self)
 	end
 	self.players = {}
 
-	-- delete connections
+	-- close connections
+	self.comet:disconnect()
+	self.artworkPool:close()
+
+	-- server is no longer active
+	serverList[self.id] = nil
+
+	-- don't remove the server from serverIds, the weak value means
+	-- this instance will be deleted when it is no longer referenced
+	-- by any other code
+end
+
+
+-- connect to SqueezeCenter
+function connect(self)
+	if self.netstate == 'connected' then
+		return
+	end
+
+	log:info(self, ":connect")
+
+	assert(self.comet)
+	assert(self.artworkPool)
+
+	self.netstate = 'connecting'
+
+	if self.mac and not self:isSqueezeNetwork() then
+		-- send WOL packet to SqueezeCenter
+		local wol = WakeOnLan(self.jnt)
+		wol:wakeOnLan(self.mac)
+	end
+
+	-- artwork pool connects on demand
+	self.comet:connect()
+end
+
+
+-- force disconnect to SqueezeCenter
+function disconnect(self)
+	if self.netstate == 'disconnected' then
+		return
+	end
+
+	log:info(self, ":disconnect")
+
+	self.netstate = 'disconnected'
+
 	self.artworkPool:close()
 	self.comet:disconnect()
 end
 
 
+-- force reconnection to SqueezeCenter
+function reconnect(self)
+	log:info(self, ":reconnect")
+
+	self:disconnect()
+	self:connect()
+end
+
+
+-- comet has connected to SC
+function notify_cometConnected(self, comet)
+	if self.comet ~= comet then
+		return
+	end
+
+	log:info(self, " connected")
+
+	self.netstate = 'connected'
+	self.jnt:notify('serverConnected', self)
+
+	-- auto discovery SqueezeCenter's mac address
+	self.jnt:arp(self.ip,
+		     function(chunk, err)
+			     if err then
+				     log:warn("arp: " .. err)
+			     else
+				     self.mac = chunk
+			     end
+		     end)
+end
+
+-- comet is disconnected from SC
+function notify_cometDisconnected(self, comet, numPendingRequests)
+	if self.comet ~= comet then
+		return
+	end
+
+	if self.netstate ~= 'connected' then
+		return
+	end
+
+	log:info(self, " disconnected")
+
+	self.netstate = 'connecting'
+	self.jnt:notify('serverDisconnected', self, numPendingRequests)
+end
+
+
+-- comet http error
+function notify_cometHttpError(self, comet, cometRequest)
+	if cometRequest:t_getResponseStatus() == 401 then
+		local authenticate = cometRequest:t_getResponseHeader("WWW-Authenticate")
+
+		self.realm = string.match(authenticate, 'Basic realm="(.*)"')
+	end
+end
+
+
+-- Returns true if the server is SqueezeNetwork
 function isSqueezeNetwork(self)
 	return self.name == "SqueezeNetwork"
 end
@@ -407,138 +538,6 @@ function linked(self, pin)
 			player.pin = nil
 		end
 	end
-end
-
-
-function connect(self)
-	log:info(self, ":connect()")
-
-	self.connecting = true
-
-	if self.plumbing.mac and not self:isSqueezeNetwork() then
-		-- send WOL packet to SqueezeCenter
-		local wol = WakeOnLan(self.jnt)
-		wol:wakeOnLan(self.plumbing.mac)
-	end
-
-	-- artwork pool connects on demand
-	self.comet:connect()
-end
-
-
-function disconnect(self)
-	log:info(self, ":disconnect()")
-
-	self.connecting = false
-
-	self.artworkPool:close()
-	self.comet:disconnect()
-end
-
-function reconnect(self)
-	log:info(self, ":reconnect()")
-
-	self:disconnect()
-	self:connect()
-end
-
--- comet has connected to SC
-function notify_cometConnected(self, comet)
-	if self.comet ~= comet then
-		return
-	end
-
-	log:info(self, " connected")
-	self.active = true
-	self.jnt:notify('serverConnected', self)
-
-	-- auto discovery SqueezeCenter's mac address
-	self.jnt:arp(self.plumbing.ip,
-		     function(chunk, err)
-			     if err then
-				     log:warn("arp: " .. err)
-			     else
-				     self.plumbing.mac = chunk
-			     end
-		     end)
-end
-
--- comet is disconnected from SC
-function notify_cometDisconnected(self, comet, numPendingRequests)
-	if self.comet ~= comet then
-		return
-	end
-
-	log:info(self, " disconnected")
-	self.active = false
-	self.jnt:notify('serverDisconnected', self, numPendingRequests)
-end
-
-
--- comet http error
-function notify_cometHttpError(self, comet, cometRequest)
-	if cometRequest:t_getResponseStatus() == 401 then
-		local authenticate = cometRequest:t_getResponseHeader("WWW-Authenticate")
-
-		self.realm = string.match(authenticate, 'Basic realm="(.*)"')
-	end
-end
-
-
---[[
-
-=head2 jive.slim.SlimServer:idFor(ip, port, name)
-
-Returns an identifier for a server named I<name> at IP address I<ip>:I<port>.
-
-=cut
---]]
-function idFor(self, ip, port, name)
-	-- XXXX remove this function and just use SC name
-	return name
-end
-
-
---[[
-
-=head2 jive.slim.SlimServer:updateFromUdp(name)
-
-The L<jive.slim.SlimServers> cache calls this method every time the server
-answers the discovery request. This method updates the server name if it has changed
-and manages retries of the server long term connection.
-
-=cut
---]]
-function updateFromUdp(self, ip, port, name)
-	log:debug(self, ":updateFromUdp()")
-
-	-- update the name in all cases
-	if self.name ~= name then
-		log:info(self, ": Renamed to ", name)
-		self.name = name
-	end
-
-	if self.plumbing.ip ~= ip or self.plumbing.port ~= port then
-		log:info(self, ": IP Address changed to ", ip , ":", port, " connecting=", self.connecting)
-
-		local connecting = self.connecting
-
-		-- close old comet connection
-		self:disconnect()
-
-		-- open new comet connection
-		self.plumbing.ip = ip
-		self.plumbing.port = port
-		self.artworkPool = HttpPool(self.jnt, name, ip, port, 2, 1, Task.PRIORITY_LOW)
-		self.comet = Comet(self.jnt, ip, port, '/cometd', name)
-
-		-- reconnect, if we were already connected
-		if connecting then
-			self:connect()
-		end
-	end
-
-	self.plumbing.lastSeen = Framework:getTicks()
 end
 
 
@@ -872,9 +871,7 @@ Returns the server version
 =cut
 --]]
 function getVersion(self)
-	if self.state then 
-		return self.state.version
-	end
+	return self.state.version
 end
 
 
@@ -887,7 +884,7 @@ Returns the server IP address and HTTP port
 =cut
 --]]
 function getIpPort(self)
-	return self.plumbing.ip, self.plumbing.port
+	return self.ip, self.port
 end
 
 
@@ -915,7 +912,7 @@ L<jive.slim.SlimServers> to delete old servers.
 =cut
 --]]
 function getLastSeen(self)
-	return self.plumbing.lastSeen
+	return self.lastSeen
 end
 
 
@@ -929,13 +926,13 @@ L<jive.slim.SlimServers> to delete old servers.
 =cut
 --]]
 function isConnected(self)
-	return self.active
+	return self.netstate == 'connected'
 end
 
 
 -- returns true if a password is needed
 function isPasswordProtected(self)
-	if self.realm and not self.active then
+	if self.realm and self.netstate ~= 'connected' then
 		return true, self.realm
 	else
 		return false
