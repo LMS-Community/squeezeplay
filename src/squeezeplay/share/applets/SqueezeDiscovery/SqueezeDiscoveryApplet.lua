@@ -38,6 +38,7 @@ local SocketUdp     = require("jive.net.SocketUdp")
 local Player        = require("jive.slim.Player")
 local SlimServer    = require("jive.slim.SlimServer")
 
+local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("applets.setup")
 
 local jnt           = jnt
@@ -239,13 +240,15 @@ end
 
 
 function _debug(self)
+	local now = Framework:getTicks()
+
 	log:warn("state=", self.state)
 	log:warn("currentPlayer=", self.currentPlayer)
 	if self.currentPlayer then
 		log:warn("activeServer=", self.currentPlayer:getSlimServer())
 	end
 	for i, server in SlimServer.iterate() do
-		log:warn(" server=", server:getName(), " connected=", server:isConnected())
+		log:warn(" server=", server:getName(), " connected=", server:isConnected(), " lastseen=", now - server:getLastSeen())
 	end
 end
 
