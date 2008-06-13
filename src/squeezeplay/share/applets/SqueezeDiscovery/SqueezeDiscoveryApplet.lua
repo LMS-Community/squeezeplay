@@ -39,7 +39,7 @@ local Player        = require("jive.slim.Player")
 local SlimServer    = require("jive.slim.SlimServer")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("applets.setup")
+local log           = require("jive.utils.log").logger("slimserver")
 
 local jnt           = jnt
 local jiveMain      = jiveMain
@@ -134,8 +134,9 @@ local function _squeezeCenterCleanup(self)
 		end
 	end
 
-	-- XXXX debug
-	self:_debug()
+	if log:isDebug() then
+		self:_debug()
+	end
 end
 
 
@@ -240,29 +241,30 @@ function _setState(self, state)
 		log:error("unknown state=", state)
 	end
 
-	-- XXXX debug
-	self:_debug()
+	if log:isDebug() then
+		self:_debug()
+	end
 end
 
 
 function _debug(self)
 	local now = Framework:getTicks()
 
-	log:warn("----")
-	log:warn("State: ", self.state)
-	log:warn("CurrentPlayer: ", self.currentPlayer)
+	log:info("----")
+	log:info("State: ", self.state)
+	log:info("CurrentPlayer: ", self.currentPlayer)
 	if self.currentPlayer then
-		log:warn("ActiveServer: ", self.currentPlayer:getSlimServer())
+		log:info("ActiveServer: ", self.currentPlayer:getSlimServer())
 	end
-	log:warn("Servers:")
+	log:info("Servers:")
 	for i, server in SlimServer.iterate() do
-		log:warn("\t", server:getName(), " connected=", server:isConnected(), " timeout=", DISCOVERY_TIMEOUT - (now - server:getLastSeen()))
+		log:info("\t", server:getName(), " connected=", server:isConnected(), " timeout=", DISCOVERY_TIMEOUT - (now - server:getLastSeen()))
 	end
-	log:warn("Players:")
+	log:info("Players:")
 	for i, player in Player.iterate() do
-		log:warn("\t", player:getName(), " server=", player:getSlimServer())
+		log:info("\t", player:getName(), " server=", player:getSlimServer(), " connected=", player:isConnected())
 	end
-	log:warn("----")
+	log:info("----")
 end
 
 
@@ -297,11 +299,32 @@ end
 
 
 -- restart discovery if the player is disconnect from SqueezeCenter
-function notify_playerDelete(self, player)
-	log:info("playerDelete")
+function notify_playerDisconnected(self, player)
+	log:info("playerDisconnected")
+
+	if self.currentPlayer ~= player then
+		return
+	end
 
 	-- start discovery looking for the player
 	self:_setState('searching')
+end
+
+
+-- stop discovery if the player is reconnects
+function notify_playerConnected(self, player)
+	log:info("playerConnected")
+
+	if self.currentPlayer ~= player then
+		return
+	end
+
+	-- stop discovery, we have the player
+	self:_setState('connected')
+
+	-- refresh the current player, this means that other applets don't
+	-- need to watch the player connection notifications
+	jnt:notify("playerCurrent", self.currentPlayer)
 end
 
 
@@ -326,8 +349,14 @@ function notify_serverConnected(self, slimserver)
 		return
 	end
 
-	-- start discovery looking for the player
+	-- stop discovery, we have the player
 	self:_setState('connected')
+
+	-- refresh the current player, this means that other applets don't
+	-- need to watch the server connection notifications
+	if self.currentPlayer then
+		jnt:notify("playerCurrent", self.currentPlayer)
+	end
 end
 
 
@@ -335,17 +364,20 @@ end
 function notify_networkConnected(self)
 	log:info("networkConnected")
 
-	if not self.currentPlayer or not self.currentPlayer:getSlimServer() then
-		-- force re-connection to all servers
-		self:_disconnect()
-		self:_connect()
-	else
+	if self.state == 'disconnected' then
+		return
+	end
+
+	if self.state == 'connected' then
 		-- force re-connection to the current player
 		self.currentPlayer:getSlimServer():disconnect()
 		self.currentPlayer:getSlimServer():connect()
+	else
+		-- force re-connection to all servers
+		self:_disconnect()
+		self:_connect()
 	end
 end
-
 
 
 function getCurrentPlayer(self)

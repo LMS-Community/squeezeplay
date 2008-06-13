@@ -1916,9 +1916,8 @@ function showPlaylist()
 		-- if there is only one item in the playlist, bring the selected item to top
 		local playerStatus = _player:getPlayerStatus()
 		local playlistSize = _player:getPlaylistSize() 
-		local playerPower = _player:getPlayerPower()
 
-		if playerPower == 0 then
+		if not _player:isPowerOn() then
 			_statusStep.window:setTitle(_string(modeTokens['off']))
 			_statusStep.window:setTitleStyle("currentplaylisttitle")
 		end
@@ -1983,12 +1982,12 @@ function notify_playerPower(self, player, power)
 
 	if step.menu then
 		-- show 'OFF' in playlist window title when the player is off
-		if power == 0 then
+		if not power then
 			if step.window then
 				step.window:setTitle(_string("SLIMBROWSER_OFF"))
 				step.window:setTitleStyle("currentplaylisttitle")
 			end
-		elseif power == 1 then
+		else
 			if step.window then
 				if emptyStep then
 					step.window:replace(emptyStep.window, Window.transitionFadeIn)
@@ -2007,9 +2006,8 @@ function notify_playerModeChange(self, player, mode)
 	end
 
 	local step = _statusStep
-	local power = player:getPlayerPower()
 	local token = mode
-	if mode != 'play' and power == 0 then
+	if mode != 'play' and not player:isPowerOn() then
 		token = 'off'
 	end
 
@@ -2024,14 +2022,13 @@ function notify_playerPlaylistChange(self, player)
 		return
 	end
 
-	local power        = _player:getPlayerPower()
 	local playerStatus = player:getPlayerStatus()
 	local playlistSize = _player:getPlaylistSize()
 	local step         = _statusStep
 	local emptyStep    = _emptyStep
 
 	-- display 'NOTHING' if the player is on and there aren't any tracks in the playlist
-	if power and playlistSize == 0 then
+	if _player:isPowerOn() and playlistSize == 0 then
 		local customWindow = showEmptyPlaylist('SLIMBROWSER_NOTHING') 
 		if emptyStep then
 			customWindow:replace(emptyStep.window, Window.transitionFadeIn)
@@ -2065,8 +2062,7 @@ function notify_playerTrackChange(self, player, nowplaying)
 		return
 	end
 
-	local power = player:getPlayerPower()
-	if power == 0 then
+	if not player:isPowerOn() then
 		return
 	end
 
@@ -2189,9 +2185,7 @@ function notify_playerCurrent(self, player)
 
 	-- look to see if the playlist has size and the state of player power
 	-- if playlistSize is 0 or power is off, we show and empty playlist
-	local playerPower = _player:getPlayerPower()
-	log:info('power: ', playerPower)
-	if playerPower == 0 then
+	if not _player:isPowerOn() then
 		if _statusStep.window then
 			_statusStep.window:setTitle(_string("SLIMBROWSER_OFF"))
 			_statusStep.window:setTitleStyle("currentplaylisttitle")
@@ -2252,6 +2246,7 @@ end
 
 
 function notify_serverDisconnected(self, server, numPendingRequests)
+
 	if _server ~= server then
 		return
 	end

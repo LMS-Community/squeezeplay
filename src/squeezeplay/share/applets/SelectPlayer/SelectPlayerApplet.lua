@@ -170,8 +170,8 @@ end
 
 
 function _addPlayerItem(self, player)
-	local mac = player.id
-	local playerName = player.name
+	local mac = player:getId()
+	local playerName = player:getName()
 	local playerWeight = PLAYER_WEIGHT
 
 	-- if waiting for a SN pin modify name

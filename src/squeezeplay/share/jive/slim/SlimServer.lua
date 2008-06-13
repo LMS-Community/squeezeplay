@@ -109,9 +109,6 @@ function _serverstatusSink(self, event, err)
 
 	local data = event.data
 
--- XXXX
-	debug.dump(data, 3)
-
 	-- check we have a result 
 	if not data then
 		log:error(self, ": chunk with no data ??!")
@@ -158,24 +155,22 @@ function _serverstatusSink(self, event, err)
 
 		for i, player_info in ipairs(serverPlayers) do
 
+			local playerId = player_info.playerid
+
 			if player_info.pin then
 				self.pin = player_info.pin
 			end
 
 			-- remove the player from our list since it is reported by the server
-			selfPlayers[player_info.playerid] = nil
+			selfPlayers[playerId] = nil
 	
 			-- create new players
-			if not self.players[player_info.playerid] then
-			
--- XXXX new constructor for player, don't pass server or player_info
-				player = Player(self.jnt, self, player_info)
-			
-			else
-				-- update existing players
--- XXXX rename method for SC player update
-				self.players[player_info.playerid]:update(self, player_info)
+			if not self.players[playerId] then
+				self.players[playerId] = Player(self.jnt, playerId)
 			end
+
+			-- update player state
+			self.players[player_info.playerid]:updatePlayerInfo(self, player_info)
 		end
 	else
 		log:info(self, ": has no players!")
@@ -195,13 +190,11 @@ end
 -- package private method to delete a player
 function _deletePlayer(self, player)
 	self.players[player:getId()] = nil
-	self.jnt:notify('playerDelete', player)
 end
 
 
 function _addPlayer(self, player)
 	self.players[player:getId()] = player
-	self.jnt:notify('playerNew', player)
 end
 
 
@@ -480,13 +473,13 @@ function notify_cometDisconnected(self, comet, numPendingRequests)
 		return
 	end
 
-	if self.netstate ~= 'connected' then
-		return
+	if self.netstate == 'connected' then
+		log:info(self, " disconnected")
+
+		self.netstate = 'connecting'
 	end
 
-	log:info(self, " disconnected")
-
-	self.netstate = 'connecting'
+	-- always send the notification
 	self.jnt:notify('serverDisconnected', self, numPendingRequests)
 end
 
