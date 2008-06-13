@@ -20,8 +20,10 @@ BlankScreenApplet overrides the following methods:
 -- stuff we use
 local oo               = require("loop.simple")
 
+--local jiveBSP          = require("jiveBSP")
 local Framework        = require("jive.ui.Framework")
 local Window           = require("jive.ui.Window")
+local Timer            = require("jive.ui.Timer")
 local Surface          = require("jive.ui.Surface")
 local Icon             = require("jive.ui.Icon")
 local debug            = require("jive.utils.debug")
@@ -51,8 +53,37 @@ function init(self)
 
 end
 
+function closeScreensaver(self)
+	_brightness(self.lcdLevel, self.keyLevel)
+end
+
 function openScreensaver(self, menuItem)
 	self.window:show(Window.transitionFadeIn)
+	local lcdTimer = Timer(2000,
+                function()
+			_brightness(0, 0)
+                end,
+                true)
+	lcdTimer:start()
+end
+
+function _brightness(lcdLevel, keyLevel)
+
+	--[[ FIXME, don't use ioctl calls here, 
+	but instead register some brightness services from SqueezeboxJive and use those
+	this will be added when the SlimDiscovery refactoring work is merged in
+
+	if lcdLevel ~= nil then
+		-- don't update the screen when the lcd is off
+		--Framework:setUpdateScreen(lcdLevel ~= 0)
+		jiveBSP.ioctl(11, lcdLevel * 2048)
+	end
+
+	if keyLevel ~= nil then
+		jiveBSP.ioctl(13, keyLevel * 512)
+	end
+	--]]
+
 end
 
 --[[

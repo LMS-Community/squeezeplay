@@ -45,7 +45,7 @@ function registerApplet(self)
 
 	if ssMgr ~= nil then
 		ssMgr:addScreenSaver(
-			self:string("SCREENSAVER_BLANKSCREEN"), "BlankScreen", "openScreensaver", _, _, 100
+			self:string("SCREENSAVER_BLANKSCREEN"), "BlankScreen", "openScreensaver", _, _, 100, "closeScreensaver"
 		)
 	end
 end
