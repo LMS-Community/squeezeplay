@@ -50,12 +50,12 @@ SQUEEZEBOX_ETHERNET
 
 SQUEEZEBOX_HELP
 	DA	Vælg hvilken Squeezebox Receiver du ønsker at indstille. Hvis den ikke er vist her skal du trykke og holde knappen på forsiden indtil den blinker.
-	DE	Wählen Sie die gewünschte SqueezeBox. Wird sie nicht angezeigt, halten Sie die Taste an der Vorderseite gedrückt, bis sie blinkt.
+	DE	Wählen Sie den gewünschten Squeezebox Receiver. Wird er nicht angezeigt, halten Sie die Taste an der Vorderseite gedrückt, bis sie blinkt.
 	EN	Choose the Squeezebox Receiver you want to set up. If you don't see it here, press and hold the button on the front until it flashes.
-	ES	Seleccione el dispositivo Squeezebox que desee configurar. Si no lo encuentra aquí, mantenga pulsado el botón en la parte frontal hasta que empiece a emitir destellos.
-	FR	Sélectionnez la Squeezebox à configurer. Si elle ne s'affiche pas, maintenez le bouton frontal enfoncé jusqu'à ce qu'il clignote.
-	IT	Selezionare il dispositivo Squeezebox che si desidera configurare. Se non è visualizzato, tenere premuto il pulsante sulla parte anteriore finché non lampeggia.
-	NL	Kies de Squeezebox die je wilt instellen. Staat deze niet in de lijst, houd dan de knop aan de voorkant ingedrukt totdat deze knippert.
+	ES	Seleccione el receptor Squeezebox que desee configurar. Si no lo encuentra aquí, mantenga pulsado el botón en la parte frontal hasta que empiece a emitir destellos.
+	FR	Sélectionnez le Squeezebox Receiver à configurer. S'il ne s'affiche pas, maintenez le bouton frontal enfoncé jusqu'à ce qu'il clignote.
+	IT	Selezionare il dispositivo Squeezebox Receiver che si desidera configurare. Se non è visualizzato, tenere premuto il pulsante sulla parte anteriore finché non lampeggia.
+	NL	Kies de Squeezebox Receiver die je wilt instellen. Staat deze niet in de lijst, houd dan de knop aan de voorkant ingedrukt totdat deze knippert.
 
 SQUEEZEBOX_FINDING_SOURCES
 	DA	Søger efter musikkilder
@@ -112,7 +112,12 @@ SQUEEZEBOX_PROBLEM_SKIP
 	NL	Deze stap overslaan
 
 SQUEEZEBOX_ETHERNET_PROBLEM_HELP
+	DE	Die Squeezebox konnte nicht mit dem Ethernet-Netzwerk verbunden werden.
 	EN	Couldn't connect your Squeezebox to your ethernet network.
+	ES	No se ha podido conectar Squeezebox a la red Ethernet.
+	FR	Impossible de connecter votre Squeezebox à votre réseau Ethernet.
+	IT	Impossibile connettere Squeezebox alla rete Ethernet.
+	NL	Kan je Squeezebox niet met je ethernetnetwerk verbinden.
 
 SQUEEZEBOX_PROBLEM_HELP
 	DA	Kunne ikke tilslutte din Squeezebox til dit trådløse netværk. Sikre dig at den er indenfor rækkevidde for dit trådløse netværk.
