@@ -1,24 +1,65 @@
 
 MACRO_PLAY
+	DE	Makros testen
 	EN	Test macros
+	ES	Macros de prueba
+	FR	Tester les macros
+	IT	Verifica macro
+	NL	Macro's testen
 
 MACRO_AUTOPLAY
+	DE	Automatische Tests
 	EN	Automatic tests
+	ES	Pruebas automáticas
+	FR	Tests automatiques
+	IT	Verifiche automatiche
+	NL	Automatische tests
 
 MACRO_AUTOPLAY_HELP
+	DE	Automatische Tests starten.
 	EN	Start automatic tests.
+	ES	Iniciar pruebas automáticas.
+	FR	Lancer les tests automatiques.
+	IT	Avvia verifiche automatiche.
+	NL	Start automatische tests.
 
 MACRO_AUTOSTART
+	DE	Automatische Tests
 	EN	Automatic tests
+	ES	Pruebas automáticas
+	FR	Tests automatiques
+	IT	Verifiche automatiche
+	NL	Automatische tests
 
 MACRO_AUTOSTART_HELP
+	DE	Start in %s Sekunden.
 	EN	Starting in %s seconds.
+	ES	Inicio en %s segundos.
+	FR	Démarrage dans %s secondes.
+	IT	Inizio previsto tra %s secondo/i.
+	NL	Begint over %s seconden.
 
 MACRO_AUTOSTART_COMPLETE
+	DE	Tests abgeschlossen.
 	EN	Tests complete.
+	ES	Pruebas completadas.
+	FR	Tests terminés.
+	IT	Verifiche completate.
+	NL	Tests voltooid.
 
 MACRO_START
+	DE	Start
 	EN	Start
+	ES	Iniciar
+	FR	Démarrage
+	IT	Inizia
+	NL	Starten
 
 MACRO_CANCEL
+	DE	Abbrechen
 	EN	Cancel
+	ES	Cancelar
+	FR	Annuler
+	IT	Annulla
+	NL	Annuleren
+

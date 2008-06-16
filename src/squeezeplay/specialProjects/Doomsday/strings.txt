@@ -3,32 +3,82 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 DOOMSDAY
+	DE	Der jüngste Tag
 	EN	Doomsday
-	DE	Doomstag
+	ES	El día del Juicio Final
+	FR	Fin du monde
+	IT	Il giorno del giudizio
+	NL	Dag des oordeels
 
 DOOMSDAY_OPTION1
+	DE	Warnung 1
 	EN	Dire Warning 1
+	ES	Advertencia grave 1
+	FR	Ultime avertissement 1
+	IT	Minaccia 1
+	NL	Onheilspellende waarschuwing 1
 
 DOOMSDAY_OPTION2
+	DE	Warnung 2
 	EN	Dire Warning 2
+	ES	Advertencia grave 2
+	FR	Ultime avertissement 2
+	IT	Minaccia 2
+	NL	Onheilspellende waarschuwing 2
 
 DOOMSDAY_OPTION3
+	DE	Warnung 3
 	EN	Dire Warning 3
+	ES	Advertencia grave 3
+	FR	Ultime avertissement 3
+	IT	Minaccia 3
+	NL	Onheilspellende waarschuwing 3
 
 DOOMSDAY_OPTION4
+	DE	Warnung 4
 	EN	Dire Warning 4
+	ES	Advertencia grave 4
+	FR	Ultime avertissement 4
+	IT	Minaccia 4
+	NL	Onheilspellende waarschuwing 4
 
 DOOMSDAY_MESSAGE0
+	DE	Die Angst geht um!
 	EN	Fear is in the air!
+	ES	¡Se puede oler el miedo!
+	FR	La peur est dans l'air!
+	IT	Atmosfera carica di paura!
+	NL	Je kunt de angst proeven!
 
 DOOMSDAY_MESSAGE1
+	DE	Das Ende ist nah!
 	EN	The End is Nigh!
+	ES	¡El fin está cerca!
+	FR	La fin est proche!
+	IT	La fine è prossima!
+	NL	Het einde is nabij!
 
 DOOMSDAY_MESSAGE2
+	DE	Nehmt die Beine in die Hand!
 	EN	Run for the hills!
+	ES	¡Escapa a las montañas!
+	FR	Sauve qui peut!
+	IT	Al riparo!
+	NL	Vlucht naar de heuvels!
 
 DOOMSDAY_MESSAGE3
+	DE	Bringt Eure Sachen in Ordnung!
 	EN	Get your affairs in order!
+	ES	¡Pon tus asuntos en orden!
+	FR	Mettez de l'ordre dans vos affaires!
+	IT	Metti la testa a posto!
+	NL	Stel orde op zaken!
 
 DOOMSDAY_MESSAGE4
+	DE	Deckung!
 	EN	DUCK!
+	ES	¡ESCÓNDETE!
+	FR	FILEZ VITE!
+	IT	ATTENTO!
+	NL	BUKKEN!
+

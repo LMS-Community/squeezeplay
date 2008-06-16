@@ -93,11 +93,12 @@ SLIMBROWSER_CHOOSE_PLAYER
 	NL	Muzieksysteem kiezen
 
 SLIMBROWSER_PROBLEM_CONNECTING_HELP
-	DE	Probleme beim Verbinden von %s mit %s
+	DE	Problem bei der Verbindung mit %s
 	EN	There is a problem connecting to %s
-	ES	%s tiene problemas para conectarse a %s
-	IT	Problema di connessione di %s a %s
-	NL	%s kan geen verbinding maken met %s
+	ES	Problema al conectar a %s
+	FR	%s ne peut se connecter à %s
+	IT	Problema di connessione a %s
+	NL	Probleem bij verbinden met %s
 
 SLIMBROWSER_NOTHING
 	DA	Intet
@@ -112,7 +113,7 @@ SLIMBROWSER_OFF
 	DA	Sluk
 	DE	Aus
 	EN	Off
-	ES	Apagado
+	ES	Desactivado
 	FR	Désactivé
 	IT	Disattivato
 	NL	Uit
@@ -121,7 +122,7 @@ SLIMBROWSER_CONNECTING_TO
 	DA	tilslutter til\n%s
 	DE	Verbindung mit %s
 	EN	Connecting to\n%s
-	ES	Conectando a %s
+	ES	Conectando a\n%s
 	FR	Connexion à %s
 	IT	Connessione a %s
 	NL	Er wordt een verbinding met %s gemaakt
@@ -137,12 +138,12 @@ SLIMBROWSER_VOLUME
 
 SLIMBROWSER_VOLUME_MUTED
 	DA	Lydstyrke (Lyd fra)
-	DE	Lautstärke (Stille)
+	DE	Lautstärke (Stumm)
 	EN	Volume (Muted)
-	ES	Volumen (Silenciado)
-	FR	Volume (En sourdine)
-	IT	Volume (Audio disattivato)
-	NL	Volume (Gedempt)
+	ES	Volumen (silenciado)
+	FR	Volume (SOURDINE)
+	IT	Volume (DISATTIVATO)
+	NL	Volume (gedempt)
 
 SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
 	DE	Squeezebox-Firmware wird aktualisiert
@@ -153,13 +154,34 @@ SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
 	NL	Squeezebox-firmware wordt bijgewerkt
 
 SLIMBROWSER_SCANNER
+	DE	Titelposition
 	EN	Song Position
+	ES	Ubicación de canción
+	FR	Emplacement du morceau
+	IT	Posizione brano
+	NL	Positie van nummer
 
 SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX
+	DE	Software-Update bereit für %s. Halten Sie die Helligkeitstaste auf der Original-Fernbedienung gedrückt.
 	EN	Software Update ready for %s. To begin, press and hold the Brightness button on your original IR remote.
+	ES	La actualización de software para %s está lista. Para iniciarla, mantenga pulsado el botón de brillo en el mando a distancia IR original.
+	FR	Mise à jour du logiciel prête pour %s. Pour commencer, appuyez sur le bouton Brightness de votre télécommande infrarouge d'origine et maintenez-le enfoncé.
+	IT	Aggiornamento software pronto per %s. Per iniziare, tenere premuto il tasto BRIGHTNESS sul telecomando IR originale.
+	NL	Software-update gereed voor %s. Houd de helderheidsknop op je oorspronkelijke IR-afstandsbediening ingedrukt om te beginnen.
 
 SLIMBROWSER_PLAYER_UPDATE_REQUIRED
+	DE	Player-Update
 	EN	Player Update
+	ES	Actualización de reproductor
+	FR	Mise à jour de la platine
+	IT	Aggiornamento lettore
+	NL	Update van muzieksysteem
 
 SLIMBROWSER_ENTER_PASSWORD
+	DE	Kennwort eingeben
 	EN	Enter Password
+	ES	Introduzca la contraseña
+	FR	Saisir le mot de passe
+	IT	Immettere password
+	NL	Wachtwoord invoeren
+

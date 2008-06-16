@@ -20,9 +20,9 @@ SQUEEZENETWORK_PIN_HELP
 	DA	Gå til \n%s\nog indtast din PIN for at tilslutte til din konto. Tryk midterknappen efter du har indtastet din PIN.
 	DE	Gehen Sie zu\n%s\nund geben Sie Ihre PIN ein, um eine Verbindung zum Konto herzustellen. Drücken Sie anschließend die mittlere Taste.
 	EN	Visit\n%s\nand enter your PIN to connect to your account.  Press the center button after you have entered your PIN.
-	ES	Visite\n%s\ne introduzca el PIN para conectarse a si cuenta. Cuando haya introducido el PIN, pulse el botón central.
+	ES	Visite\n%s\ne introduzca el PIN para conectarse a su cuenta. Cuando haya introducido el PIN, pulse el botón central.
 	FR	Rendez-vous sur\n%s\net spécifiez votre code PIN pour accéder à votre compte. Appuyez sur le bouton central une fois que vous avez spécifié le code PIN.
-	IT	Visitare il sito Web\n%s\ne immettere il PIN per accedere all'account. Premere il pulsante centrale dopo avere immesso il PIN.
+	IT	Visitare il sito Web\n%s\ne inserire il PIN per accedere all'account. Premere il pulsante centrale dopo avere inserito il PIN.
 	NL	Ga naar\n%s\nen voer je pincode in om naar je account te gaan. Druk op de middelste knop nadat je je pincode hebt ingevoerd.
 
 SQUEEZENETWORK_NOT_LINKED
@@ -42,5 +42,4 @@ SQUEEZENETWORK_GO_BACK
 	FR	Retour
 	IT	Indietro
 	NL	Terug
-
 

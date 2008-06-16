@@ -12,10 +12,20 @@ WALLPAPER
 	NL	Achtergrond
 
 WALLPAPER_HELP_PLAYER
+	DE	Wählen Sie den Hintergrund für %s
 	EN	Choose the screen background to be shown for %s
+	ES	Elija el fondo de pantalla que se mostrará para %s
+	FR	Sélectionnez l'arrière-plan d'écran à afficher pour %s
+	IT	Scegliere lo sfondo della schermata per %s
+	NL	Kies de schermachtergrond die moet worden weergegeven voor %s
 
 WALLPAPER_HELP_NO_PLAYER
+	DE	Wählen Sie den Standard-Hintergrund
 	EN	Choose the default screen background to be shown
+	ES	Elija el fondo de pantalla que se mostrará de forma predeterminada
+	FR	Sélectionnez l'arrière-plan d'écran à afficher par défaut.
+	IT	Scegliere lo sfondo della schermata predefinito
+	NL	Kies de standaard schermachtergrond die moet worden weergegeven
 
 CREDITS
 	DA	Krediteringer
@@ -180,16 +190,42 @@ FADETOBLACK
 	NL	Faden naar zwart
 
 WEATHEREDRED
+	DE	Verwittertes Rot
 	EN	Weathered Red
+	ES	Rojo desgastado
+	FR	Rouge patiné
+	IT	Rosso invecchiato
+	NL	Oudrood
 
 PURPLENOTE
+	DE	Violette Noten
 	EN	Purple Notes
+	ES	Notas moradas
+	FR	Notes violettes
+	IT	Note viola
+	NL	Paarse muzieknoten
 
 ORANGEMARBLE
+	DE	Orangefarbener Marmor
 	EN	Orange Marble
+	ES	Mármol naranja
+	FR	Orange marbré
+	IT	Marmo arancione
+	NL	Oranje marmer
 
 NOTE
+	DE	Noten
 	EN	Notes
+	ES	Notas
+	FR	Notes
+	IT	Note
+	NL	Muzieknoten
 
 GREENFLOWERS
+	DE	Grüne Blumen
 	EN	Green Flowers
+	ES	Flores verdes
+	FR	Fleurs vertes
+	IT	Fiori verdi
+	NL	Groene bloemen
+

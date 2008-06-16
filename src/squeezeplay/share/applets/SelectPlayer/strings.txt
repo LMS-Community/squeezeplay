@@ -13,12 +13,12 @@ SELECT_PLAYER
 
 SQUEEZEBOX_SETUP
 	DA	Konfiguration af Squeezebox
-	DE	Squeezebox einrichten
+	DE	Receiver einrichten
 	EN	Set Up Squeezebox
-	ES	Configuración de Squeezebox
-	FR	Configuration de la Squeezebox
-	IT	Configura Squeezebox
-	NL	Squeezebox instellen
+	ES	Configuración del receptor
+	FR	Configuration du Squeezebox Receiver
+	IT	Configura Receiver
+	NL	Ontvanger instellen
 
 SQUEEZEBOX_NAME
 	DA	Squeezebox %s
@@ -31,10 +31,10 @@ SQUEEZEBOX_NAME
 
 SQUEEZEBOX_ACTIVATE
 	DA	Aktiver %s
-	DE	%s
+	DE	%s aktivieren
 	EN	Activate %s
-	ES	%s
-	FR	%s
-	IT	%s
-	NL	%s
+	ES	Activar %s
+	FR	Activer %s
+	IT	Attiva %s
+	NL	%s activeren
 
