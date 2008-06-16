@@ -43,7 +43,7 @@ function registerApplet(self)
 end
 
 function notify_playerCurrent(self, player)
-	if player == nil or player.slimServer:isSqueezeNetwork() then
+	if player == nil or player:getSlimServer():isSqueezeNetwork() then
 		jiveMain:removeItem(self.menu)
 	else
 		jiveMain:addItem(self.menu)

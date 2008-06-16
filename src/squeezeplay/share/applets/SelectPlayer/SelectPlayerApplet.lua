@@ -71,7 +71,7 @@ end
 
 
 function notify_playerDelete(self, player)
-	local mac = player.id
+	local mac = player:getId()
 
 	manageSelectPlayerMenu(self)
 
@@ -90,7 +90,7 @@ end
 
 function notify_playerNew(self, player)
 	-- get number of players. if number of players is > 1, add menu item
-	local mac = player.id
+	local mac = player:getId()
 
 	manageSelectPlayerMenu(self)
 
@@ -182,7 +182,7 @@ function _addPlayerItem(self, player)
 			return
 		end
 
-		playerName = self:string("SQUEEZEBOX_ACTIVATE", player.name)
+		playerName = self:string("SQUEEZEBOX_ACTIVATE", player:getName())
 		playerWeight = ACTIVATE_WEIGHT
 	end
 
@@ -215,7 +215,7 @@ end
 
 
 function _refreshPlayerItem(self, player)
-	local mac = player.id
+	local mac = player:getId()
 
 	-- XXXX
 	if player:isAvailable() then

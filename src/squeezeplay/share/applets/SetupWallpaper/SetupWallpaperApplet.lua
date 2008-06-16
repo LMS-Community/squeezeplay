@@ -174,7 +174,7 @@ function settingsShow(self)
 	-- look for any server based wallpapers
 	if self.server then
 		log:info("found server - requesting wallpapers list")
-		self.server.comet:request(
+		self.server:request(
 			function(chunk, err)
 				if err then
 					log:debug(err)

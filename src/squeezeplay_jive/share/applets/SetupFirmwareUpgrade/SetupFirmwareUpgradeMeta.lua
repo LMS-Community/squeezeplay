@@ -43,7 +43,7 @@ function notify_playerCurrent(meta, player)
 	end
 
 	if meta.player and meta.player ~= player then
-		meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
+		meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player:getId())
 	end
 
 	meta.player = player
@@ -63,7 +63,7 @@ function notify_playerCurrent(meta, player)
 			-- store firmware upgrade url
 			-- Bug 6828, use a relative URL from SC to handle dual-homed servers
 			if chunk.data.relativeFirmwareUrl then
-				local ip, port = meta.player.slimServer:getIpPort()
+				local ip, port = meta.player:getSlimServer():getIpPort()
 				upgradeUrl[1] = 'http://' .. ip .. ':' .. port .. chunk.data.relativeFirmwareUrl
 				log:info("Relative Firmware URL=", upgradeUrl[1])
 			elseif chunk.data.firmwareUrl then
@@ -77,16 +77,16 @@ function notify_playerCurrent(meta, player)
 				local applet = appletManager:loadApplet("SetupFirmwareUpgrade")
 				applet:forceUpgrade(tonumber(chunk.data.firmwareOptional) == 1, upgradeUrl[1], chunk.data.firmwareHelp)
 
-				meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
+				meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player:getId())
 			end
 
 		end
 				
 	local fwcmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION, 'subscribe:0' }
 	player:subscribe(
-			 '/slim/firmwarestatus/' .. player.id,
+			 '/slim/firmwarestatus/' .. player:getId(),
 			 firmwareUpgradeSink,
-			 player.id,
+			 player:getId(),
 			 fwcmd
 		 )
 end

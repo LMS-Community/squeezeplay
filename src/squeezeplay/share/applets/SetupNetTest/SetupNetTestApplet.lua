@@ -94,7 +94,7 @@ function showMainWindow(self)
 
 	self.window:addWidget(Label("graphaxis", "0                                         100 %"))
 
-	self.window:addWidget(Textarea("help", tostring(self:string('SETUPNETTEST_TESTINGTO')) .. ' ' .. self.player.name .. "\n" .. tostring(self:string('SETUPNETTEST_INFO'))))
+	self.window:addWidget(Textarea("help", tostring(self:string('SETUPNETTEST_TESTINGTO')) .. ' ' .. self.player:getName() .. "\n" .. tostring(self:string('SETUPNETTEST_INFO'))))
 	
 	self.window:setAllowScreensaver(false)
 
@@ -166,7 +166,7 @@ end
 
 -- request status
 function requestStatus(self, sink)
-	self.server.comet:request(
+	self.server:request(
 		function(chunk, err)
 			if err then
 				log:debug(err)
@@ -174,7 +174,7 @@ function requestStatus(self, sink)
 				sink(self, chunk.data)
 			end
 		end,
-		self.player.id,
+		self.player:getId(),
 		{ 'nettest', self.rates and nil or 'rates' }
 	)
 end
@@ -212,14 +212,14 @@ end
 
 
 function startTest(self, rate)
-	self.server.comet:request(nil, self.player.id, { 'nettest', 'start', rate })
+	self.server:request(nil, self.player:getId(), { 'nettest', 'start', rate })
 	self.timer.callback()
 	self.timer:restart()
 end
 
 
 function stopTest(self)
-	self.server.comet:request(nil, self.player.id, { 'nettest', 'stop' })
+	self.server:request(nil, self.player:getId(), { 'nettest', 'stop' })
 end
 
 

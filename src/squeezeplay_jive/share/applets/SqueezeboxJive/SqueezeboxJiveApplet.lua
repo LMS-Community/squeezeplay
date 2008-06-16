@@ -287,7 +287,7 @@ function notify_playerCurrent(self, player)
                              self:setDate(chunk.data.date)
  		     end
  
-       self.server.comet:request(sink,
+       self.server:request(sink,
                        player:getId(),
                        { 'date' }
        )
@@ -296,7 +296,7 @@ function notify_playerCurrent(self, player)
        self.clockTimer = Timer(6000000, -- 1 hour
                                function()
                                        if self.player and self.server then
-                                               self.server.comet:request(sink,
+                                               self.server:request(sink,
                                                        self.player:getId(),
                                                        { 'date' }
                                                )

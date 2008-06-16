@@ -124,9 +124,9 @@ function _checkLinked(self, server, next, fail)
 	end
 			
 	-- make sure the server is connected
-	server.comet:connect()
+	server:connect()
 
-	server.comet:request( checkLinkedSink, nil, cmd )
+	server:request( checkLinkedSink, nil, cmd )
 end
 
 

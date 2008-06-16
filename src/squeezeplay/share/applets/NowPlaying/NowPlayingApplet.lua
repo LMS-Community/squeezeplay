@@ -258,7 +258,7 @@ function _isThisPlayer(self, player)
 		self.player = appletManager:callService("getCurrentPlayer")
 	end
 
-	if player.id ~= self.player:getId() then
+	if player:getId() ~= self.player:getId() then
 		log:warn("notification was not for this player")
 		log:warn("notification: ", player:getId(), "your player: ", self.player:getId())
 		return false

@@ -76,7 +76,7 @@ function menu(self, menuItem)
 
 	-- ask about its applets
 	if self.server then
-		self.server.comet:request(
+		self.server:request(
 			function(chunk, err)
 				if err then
 					log:debug(err)

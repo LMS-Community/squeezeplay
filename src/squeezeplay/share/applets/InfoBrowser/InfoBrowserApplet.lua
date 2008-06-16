@@ -71,7 +71,7 @@ end
 -- request for items
 function request(self, index, start, window, widget, list, prevmenu, locked)
 
-	self.server.comet:request(
+	self.server:request(
 		function(chunk, err)
 			if err then
 				log:debug(err)
@@ -79,7 +79,7 @@ function request(self, index, start, window, widget, list, prevmenu, locked)
 				self:response(chunk.data, window, widget, list, prevmenu, locked)
 			end
 		end,
-		self.player and self.player.id,
+		self.player and self.player:getId(),
 		{ 'infobrowser', 'items', start, gulp, index and ("item_id:" .. index) }
 	)
 end
