@@ -56,9 +56,7 @@ oo.class(_M, Applet)
 -- constants
 local PORT    = 3483             -- port used to discover SqueezeCenters
 local DISCOVERY_TIMEOUT = 120000 -- timeout (in milliseconds) before removing SqueezeCenters and Players
-
--- XXXX 60000
-local DISCOVERY_PERIOD = 10000   -- discovery period
+local DISCOVERY_PERIOD = 60000   -- discovery period
 
 
 
@@ -260,8 +258,8 @@ function _discover(self)
 
 	-- Special case Squeezenetwork
 	if jnt:getUUID() then
----- XXXX
-----		SlimServer(jnt, jnt:getSNHostname(), 9000, "SqueezeNetwork")
+		squeezenetwork = SlimServer(jnt, "SqueezeNetwork")
+		squeezenetwork:updateAddress(jnt:getSNHostname(), 9000)
 	end
 
 	-- Remove SqueezeCenters that have not been seen for a while
@@ -342,7 +340,7 @@ function _debug(self)
 	end
 	log:info("Players:")
 	for i, player in Player.iterate() do
-		log:info("\t", player:getName(), " [", player:getId(), "] server=", player:getSlimServer(), " connected=", player:isConnected(), " timeout=", DISCOVERY_TIMEOUT - (now - player:getLastSeen()))
+		log:info("\t", player:getName(), " [", player:getId(), "] server=", player:getSlimServer(), " connected=", player:isConnected(), " available=", player:isAvailable(), " timeout=", DISCOVERY_TIMEOUT - (now - player:getLastSeen()))
 	end
 	log:info("----")
 end

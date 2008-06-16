@@ -528,7 +528,7 @@ function linked(self, pin)
 
 	for id, player in pairs(self.players) do
 		if player:getPin() == pin then
-			player:getPin() = nil
+			player:clearPin()
 		end
 	end
 end

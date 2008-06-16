@@ -610,6 +610,13 @@ function getPin(self)
 	return self.info.pin
 end
 
+
+-- Clear the SN pin when the player is linked
+function clearPin(self)
+	self.info.pin = nil
+end
+
+
 --[[
 
 =head2 jive.slim.Player:getSlimServer()
