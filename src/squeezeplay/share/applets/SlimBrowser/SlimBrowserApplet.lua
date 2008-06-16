@@ -2323,7 +2323,7 @@ function _problemConnecting(self, server)
 	end
 
 	-- change player, only if multiple players
-	local numPlayers = appletManager:callService("countConnectedPlayers")
+	local numPlayers = appletManager:callService("countPlayers")
 	if numPlayers > 1 and appletManager:hasApplet("SelectPlayer") then
 		menu:addItem({
 				     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),

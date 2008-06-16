@@ -70,21 +70,20 @@ function init(self, ...)
 end
 
 
-function free(self)
-	jnt:unsubscribe(self)
-end
-
-
 function notify_playerDelete(self, player)
 	local mac = player.id
-	manageSelectPlayerMenu(self)
-	if self.playerMenu and self.playerItem[mac] then
-		self.playerMenu:removeItem(self.playerItem[mac])
-		self.playerItem[mac] = nil
-	end
 
-	if player:getSlimServer() then
-		self:_updateServerItem(player:getSlimServer())
+	manageSelectPlayerMenu(self)
+
+	if self.playerMenu then
+		if self.playerItem[mac] then
+			self.playerMenu:removeItem(self.playerItem[mac])
+			self.playerItem[mac] = nil
+		end
+
+		if player:getSlimServer() then
+			self:_updateServerItem(player:getSlimServer())
+		end
 	end
 end
 
@@ -94,12 +93,13 @@ function notify_playerNew(self, player)
 	local mac = player.id
 
 	manageSelectPlayerMenu(self)
+
 	if self.playerMenu then
 		self:_addPlayerItem(player)
-	end
 
-	if player:getSlimServer() then
-		self:_updateServerItem(player:getSlimServer())
+		if player:getSlimServer() then
+			self:_updateServerItem(player:getSlimServer())
+		end
 	end
 end
 
@@ -117,12 +117,14 @@ function notify_serverConnected(self, server)
 		return
 	end
 
+	self:_updateServerItem(server)
+
 	for id, player in server:allPlayers() do
 		self:_refreshPlayerItem(player)
 	end
-	self:manageSelectPlayerMenu()
 	
-	self:_updateServerItem(server)
+	self:manageSelectPlayerMenu()
+
 end
 
 
@@ -131,12 +133,13 @@ function notify_serverDisconnected(self, server)
 		return
 	end
 
+	self:_updateServerItem(server)
+
 	for id, player in server:allPlayers() do
 		self:_refreshPlayerItem(player)
 	end
-	self:manageSelectPlayerMenu()
 
-	self:_updateServerItem(server)
+	self:manageSelectPlayerMenu()
 end
 
 
@@ -167,11 +170,6 @@ function manageSelectPlayerMenu(self)
 end
 
 
-function _unifyMac(mac)
-	return string.upper(string.gsub(mac, "[^%x]", ""))
-end
-
-
 function _addPlayerItem(self, player)
 	local mac = player:getId()
 	local playerName = player:getName()
@@ -189,14 +187,14 @@ function _addPlayerItem(self, player)
 	end
 
 	local item = {
-		id = _unifyMac(mac),
+		id = mac,
 		text = playerName,
 		sound = "WINDOWSHOW",
 		callback = function()
-				   if self:selectPlayer(player) then
-					   self.setupNext()
-				   end
-			   end,
+			if self:selectPlayer(player) then
+				self.setupNext()
+			end
+		end,
 		focusGained = function(event)
 			self:_showWallpaper(mac)
 		end,
@@ -219,7 +217,8 @@ end
 function _refreshPlayerItem(self, player)
 	local mac = player.id
 
-	if player:isConnected() or player:needsMusicSource() then
+	-- XXXX
+	if player:isAvailable() then
 		local item = self.playerItem[mac]
 		if not item then
 			-- add player
@@ -241,40 +240,6 @@ function _refreshPlayerItem(self, player)
 			self.playerItem[mac] = nil
 		end
 	end
-end
-
-
--- add a squeezebox discovered using udap or an adhoc network
-function _addSqueezeboxItem(self, mac, name)
-	local item = {
-		id = _unifyMac(mac),
-		text = name or self:string("SQUEEZEBOX_NAME", string.sub(mac, 7)),
-		sound = "WINDOWSHOW",
-		callback = function()
-				   local sbsetup = appletManager:loadApplet("SetupSqueezebox")
-				   if not sbsetup then
-					   return
-				   end
-
-				   local adhoc = self.scanResults[mac].adhoc
-				   if self.scanResults[mac].udap then
-					   adhoc = nil
-				   end
-
-				   -- setup squeezebox, this will set current
-				   -- player on completion
-				   sbsetup:startSqueezeboxSetup(mac, adhoc,
-								function()
-									jiveMain:closeToHome()
-								end)
-			   end,
-		focusGained = function(event)
-			self:_showWallpaper(nil)
-		end,
-		weight =  1
-	}
-	self.playerMenu:addItem(item)
-	self.playerItem[mac] = item
 end
 
 
@@ -329,9 +294,7 @@ function setupShow(self, setupNext)
 
 	self.selectedPlayer = appletManager:callService("getCurrentPlayer")
 	for mac, player in appletManager:callService("iteratePlayers") do
-		if player:isConnected() or player:needsMusicSource() then
-			_addPlayerItem(self, player)
-		end
+		_addPlayerItem(self, player)
 	end
 
 	-- Display password protected servers
@@ -370,46 +333,6 @@ end
 function _scan(self)
 	-- SqueezeCenter and player discovery
 	appletManager:callService("discoverPlayers")
-
-	-- scan for players in setup state
-	if hasWireless then
-		self.wireless:scan(function(scanTable)
-					   _scanComplete(self, scanTable)
-				   end)
-	end
-
-	-- remove squeezeboxen not seen for 20 seconds
-	local now = os.time()
-	for mac, entry in pairs(self.scanResults) do
-		if os.difftime(now, entry.lastScan) > 20 then
-			self.playerMenu:removeItem(self.playerItem[mac])
-			self.playerItem[mac] = nil
-			self.scanResults[mac] = nil
-		end
-	end
-end
-
-
-function _scanComplete(self, scanTable, keepOldEntries)
-	local now = os.time()
-
-	for ssid, entry in pairs(scanTable) do
-		local mac, ether = SetupSqueezeboxApplet:ssidIsSqueezebox(ssid)
-
-		log:debug("MAC=", mac, " ETHER=", ether)
-
-		if mac and not self.scanResults[mac] and
-			-- FIXME Wireless class should be timing out entries
-			-- See bug 6860.
-			os.difftime(now, entry.lastScan) < 20 then
-			self.scanResults[mac] = {
-				lastScan = entry.lastScan,
-				adhoc = ssid,
-			}
-
-			self:_addSqueezeboxItem(mac, name)
-		end
-	end
 end
 
 
@@ -427,9 +350,22 @@ function selectPlayer(self, player)
 	-- set the current player
 	appletManager:callService("setCurrentPlayer", player)
 
+	-- network configuration needed?
+	if player:needsNetworkConfig() then
+		-- XXXX convert to applet service call
+		local sbsetup = appletManager:loadApplet("SetupSqueezebox")
+		sbsetup:startSqueezeboxSetup(player:getId(),
+					     player:getSSID(),
+					     function()
+						     jiveMain:closeToHome()
+					     end)
+		return false
+	end
+
 	-- udap setup needed?
 	if player:needsMusicSource() then
 		appletManager:callService("selectMusicSource")
+		return false
 	end
 
 	return true
@@ -437,6 +373,7 @@ end
 
 
 function free(self)
+	jnt:unsubscribe(self)
 
 	-- load the correct wallpaper on exit
 	if self.selectedPlayer and self.selectedPlayer:getId() then
@@ -446,6 +383,7 @@ function free(self)
 	end
 	
 	appletManager:freeApplet("SetupWallpaper")
+
 	-- Never free this applet
 	return false
 end

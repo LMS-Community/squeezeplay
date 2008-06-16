@@ -24,6 +24,8 @@ local Textinput              = require("jive.ui.Textinput")
 local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
 
+local Player                 = require("jive.slim.Player")
+
 local Udap                   = require("jive.net.Udap")
 local hasWireless, Wireless  = pcall(require, "jive.net.Wireless")
 
@@ -252,15 +254,15 @@ end
 
 
 function _scanComplete(self, scanTable, keepOldEntries)
-	local now = os.time()
+	local now = Framework:getTicks()
 
 	for ssid, entry in pairs(scanTable) do
-		local mac, ether = self:ssidIsSqueezebox(ssid)
+		local mac, ether = Player:ssidIsSqueezebox(ssid)
 		log:debug("ether=", ether, " mac=", mac)
 
 		if mac ~= nil then
-			mac = string.upper(mac)
-
+			mac = string.upper(string.gsub(mac, ":", ""))
+		
 			if not self.scanResults[mac] then
 				local item = {
 					text = self:string("SQUEEZEBOX_BRIDGED_NAME", string.sub(mac, 7)),
@@ -284,7 +286,7 @@ function _scanComplete(self, scanTable, keepOldEntries)
 			self.scanResults[mac].adhoc = true
 
 			-- remove networks not seen for 10 seconds
-			if keepOldEntries ~= true and os.difftime(now, entry.lastScan) > 10 then
+			if keepOldEntries ~= true and now - entry.lastScan > 10000 then
 				log:debug(mac, " not seen for 10 seconds")
 				self.scanResults[mac].adhoc = nil
 
@@ -299,17 +301,6 @@ end
 
 
 --[[
-Return the Squeezebox mac address from the ssid, or nil if the ssid is
-not from a Squeezebox in setup mode.
---]]
-function ssidIsSqueezebox(self, ssid)
-	local hasEthernet, mac = string.match(ssid, "logitech([%-%+])squeezebox[%-%+](%x+)")
-
-	return mac, hasEthernet
-end
-
-
---[[
 This function is the entry point after a squeezebox has been choosen
 for setup, may be called from outside this applet.
 
@@ -319,6 +310,8 @@ I<setupNext> if given, is a function to call once setup is complete
 
 --]]
 function startSqueezeboxSetup(self, mac, adhoc, setupNext)
+	mac = string.gsub(mac, ":", "")
+
 	if setupNext then
 		self.setupNext = setupNext
 	end
@@ -334,7 +327,7 @@ function startSqueezeboxSetup(self, mac, adhoc, setupNext)
 
 	if adhoc then
 		-- full configuration via adhoc network
-		local _, hasEthernet = self:ssidIsSqueezebox(adhoc)
+		local _, hasEthernet = Player:ssidIsSqueezebox(adhoc)
 
 		-- find jive network configuration
 		Task("readConfig", self,

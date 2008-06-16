@@ -180,6 +180,7 @@ function __init(self, jnt, playerId)
 		uuid = false,
 		slimServer = false,
 		config = false,
+		lastSeen = 0,
 
 		-- player info from SC
 		info = {},
@@ -250,7 +251,7 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 		-- callback happens.
 		oldInfo.connected = false
 
-		-- player is now active
+		-- player is now available
 		playerList[self.id] = self
 
 		-- add to new server
@@ -306,7 +307,49 @@ function updateUdap(self, udap)
 		self:free(self.slimServer)
 	end
 
-	-- player is now active
+	-- player is now available
+	playerList[self.id] = self
+
+	self.jnt:notify('playerNew', self)
+end
+
+
+-- return the Squeezebox mac address from the ssid, or nil if the ssid is
+-- not from a Squeezebox in setup mode.
+function ssidIsSqueezebox(self, ssid)
+	local hasEthernet, mac = string.match(ssid, "logitech([%-%+])squeezebox[%-%+](%x+)")
+
+	if mac then
+		mac = string.gsub(mac, "(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)", "%1:%2:%3:%4:%5:%6")
+	end
+
+	return mac, hasEthernet
+end
+
+
+-- Update player state from an SSID
+function updateSSID(self, ssid, lastScan)
+	local mac = ssidIsSqueezebox(self, ssid)
+
+	assert(self.id, mac)
+
+	-- stale wlan scan results?
+	if lastScan < self.lastSeen then
+		return
+	end
+
+	self.config = "needsNetwork"
+	self.configSSID = ssid
+	self.info.connected = false
+
+	self.lastSeen = lastScan
+
+	-- The player is no longer connected to SqueezeCenter
+	if self.slimServer then
+		self:free(self.slimServer)
+	end
+
+	-- player is now available
 	playerList[self.id] = self
 
 	self.jnt:notify('playerNew', self)
@@ -509,6 +552,16 @@ Returns the player id (in general the MAC address)
 --]]
 function getId(self)
 	return self.id
+end
+
+
+-- Returns the player ssid if in setup mode, or nil
+function getSSID(self)
+	if self.config == 'needsNetwork' then
+		return self.configSSID
+	else
+		return nil
+	end
 end
 
 
@@ -1112,6 +1165,18 @@ end
 
 function isConnected(self)
 	return self.slimServer and self.slimServer:isConnected() and self.info.connected
+end
+
+
+-- return true if the player is available, that is when it is connected
+-- to SqueezeCenter, or in configuration mode (udap or wlan adhoc)
+function isAvailable(self)
+	return self.config ~= false
+end
+
+
+function needsNetworkConfig(self)
+	return self.config == "needsNetwork"
 end
 
 

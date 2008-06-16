@@ -36,6 +36,8 @@ local Timer         = require("jive.ui.Timer")
 local SocketUdp     = require("jive.net.SocketUdp")
 local Udap          = require("jive.net.Udap")
 
+local hasWireless, Wireless  = pcall(require, "jive.net.Wireless")
+
 local Player        = require("jive.slim.Player")
 local SlimServer    = require("jive.slim.SlimServer")
 
@@ -119,6 +121,7 @@ local function _slimDiscoverySink(self, chunk, err)
 end
 
 
+-- udap packet received
 function _udapSink(self, chunk, err)
 	if chunk == nil then
 		return -- ignore errors
@@ -137,6 +140,19 @@ function _udapSink(self, chunk, err)
 
 	local player = Player(jnt, playerId)
 	player:updateUdap(pkt)
+end
+
+
+-- wireless scan complete
+function _scanComplete(self, scanTable)
+	for ssid, entry in pairs(scanTable) do
+		local playerId = Player:ssidIsSqueezebox(ssid)
+
+		if playerId then
+			local player = Player(jnt, playerId)
+			player:updateSSID(ssid, entry.lastScan)
+		end
+	end
 end
 
 
@@ -196,6 +212,11 @@ function __init(self, ...)
 			self:_udapSink(chunk, err)
 		end)
 
+	-- wireless discovery
+	if hasWireless then
+		obj.wireless = Wireless(jnt, "eth0")
+	end
+
 	-- discovery timer
 	obj.timer = Timer(DISCOVERY_PERIOD,
 			  function() obj:_discover() end)
@@ -227,6 +248,15 @@ function _discover(self)
 	local packet = Udap.createAdvancedDiscover(nil, 1)
 	log:debug("sending udap discovery to 255.255.255.255")
 	self.udap:send(function() return packet end, "255.255.255.255")
+
+	-- Wireless discovery, only in probing state
+	if self.state == 'probing' and hasWireless then
+		self.wireless:scan(
+			function(scanTable)
+				_scanComplete(self, scanTable)
+			end)
+	end
+
 
 	-- Special case Squeezenetwork
 	if jnt:getUUID() then
@@ -436,18 +466,17 @@ end
 
 
 function setCurrentPlayer(self, player)
-	if self.currentPlayer == player then
-		return -- no change
+	if self.currentPlayer ~= player then
+		-- update player
+		log:info("selected player: ", player)
+		self.currentPlayer = player
+
+		local settings = self:getSettings()
+		settings.currentPlayer = player and player:getId() or false
+		self:storeSettings()
 	end
 
-	-- update player
-	log:info("selected player: ", player)
-	self.currentPlayer = player
-
-	local settings = self:getSettings()
-	settings.currentPlayer = player and player:getId() or false
-	self:storeSettings()
-
+	-- note: notify even if the player has not changed
 	jnt:notify("playerCurrent", player)
 
 	-- restart discovery when we have no player
@@ -485,18 +514,6 @@ end
 
 function iterateSqueezeCenters(self)
 	return SlimServer:iterate()
-end
-
-
-function countConnectedPlayers(self)
-	local count = 0
-	for i, player in Player:iterate() do
-		if player:isConnected() then
-			count = count + 1
-		end
-	end
-
-	return count
 end
 
 

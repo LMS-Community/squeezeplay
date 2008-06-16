@@ -58,7 +58,6 @@ function registerApplet(meta)
 
 	meta:registerService("iteratePlayers")
 	meta:registerService("iterateSqueezeCenters")
-	meta:registerService("countConnectedPlayers")
 	meta:registerService("countPlayers")
 
 	meta:registerService("getPollList")
@@ -69,7 +68,9 @@ function registerApplet(meta)
 	local slimDiscovery = appletManager:loadApplet("SqueezeDiscovery")
 
 	-- Set current player
-	slimDiscovery:setCurrentPlayer(Player(jnt, settings.currentPlayer))
+	if settings.currentPlayer then
+		slimDiscovery:setCurrentPlayer(Player(jnt, settings.currentPlayer))
+	end
 
 	-- With the MP firmware when SqueezeNetwork is selected a dummy player with an ff mac
 	-- address is selected, and then a firmware update starts. When this mac address is seen 

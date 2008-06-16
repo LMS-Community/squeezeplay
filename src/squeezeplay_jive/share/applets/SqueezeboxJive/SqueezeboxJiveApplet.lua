@@ -263,11 +263,14 @@ end
 
 
 function notify_playerCurrent(self, player)
-	local server
-	if player then
-		self.player = player
-		self.server = player:getSlimServer()
-	else
+	if not player then
+		return
+	end
+
+	self.player = player
+	self.server = player:getSlimServer()
+	
+	if not self.server then
 		return
 	end
 

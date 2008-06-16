@@ -287,7 +287,7 @@ end
 
 function _scanComplete(self, scanTable)
 
-	local now = os.time()
+	local now = Framework:getTicks()
 
 	local associated = nil
 	for ssid, entry in pairs(scanTable) do
@@ -313,7 +313,7 @@ function _scanComplete(self, scanTable)
 			      self.scanMenu:updatedItem(item)
 
 			      -- remove networks not seen for 20 seconds
-			      if not entry.associated and os.difftime(now, entry.lastScan) > 20 then
+			      if not entry.associated and now - entry.lastScan > 20000 then
 				      self.scanMenu:removeItem(item)
 				      self.scanResults[ssid] = nil
 			      end

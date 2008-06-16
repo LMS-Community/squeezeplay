@@ -12,6 +12,7 @@ local ltn12       = require("ltn12")
 local debug       = require("jive.utils.debug")
 local log         = require("jive.utils.log").logger("net.socket")
 
+local Framework   = require("jive.ui.Framework")
 local Socket      = require("jive.net.Socket")
 local Task        = require("jive.ui.Task")
 local wireless    = require("jiveWireless")
@@ -206,7 +207,7 @@ function t_scan(self, callback)
 			level = level,
 			quality = quality,
 			associated = (ssid == associated),
-			lastScan = os.time()
+			lastScan = Framework:getTicks()
 		}
 	end
 
