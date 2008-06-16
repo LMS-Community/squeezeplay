@@ -443,6 +443,11 @@ function setCurrentPlayer(self, player)
 	-- update player
 	log:info("selected player: ", player)
 	self.currentPlayer = player
+
+	local settings = self:getSettings()
+	settings.currentPlayer = player and player:getId() or false
+	self:storeSettings()
+
 	jnt:notify("playerCurrent", player)
 
 	-- restart discovery when we have no player
