@@ -25,7 +25,7 @@ SCREENSAVER_STOPPED
 	DE	Bei Pause
 	EN	Stopped
 	ES	Al detener
-	FR	Arrêté
+	FR	A l'arrêt
 	IT	Quando la riproduzione è interrotta
 	NL	Wanneer gestopt
 
@@ -51,7 +51,8 @@ SCREENSAVER_OFF
 	DA	Slukket
 	DE	Aus
 	EN	Off
-	ES	Apagado
+	ES	Desactivado
 	FR	Désactivé
 	IT	Disattivato
 	NL	Uit
+

@@ -84,43 +84,109 @@ SOUND_VOLUME_HELP
 	NL	Gebruik het wiel om het volume van de geluidseffecten aan te passen.
 
 SOUND_CUSTOMIZE
+	DE	Sounds anpassen
 	EN	Customize Sounds
+	ES	Personalizar sonidos
+	FR	Personnaliser les sons
+	IT	Personalizza suoni
+	NL	Geluiden aanpassen
 
 SOUND_DEFAULT
+	DE	Standard
 	EN	Default
+	ES	Predeterminada
+	FR	Défaut
+	IT	Predefinito
+	NL	Standaard
 
 SOUND_BUMP
+	DE	Menü-Bump
 	EN	Menu Bump
+	ES	Menú Choque
+	FR	Bip de menu
+	IT	Voce di menu respinta
+	NL	Menu-bump
 
 SOUND_CLICK
+	DE	Klicken
 	EN	Click
+	ES	Clic
+	FR	Cliquer
+	IT	Clic
+	NL	Klikken
 
 SOUND_JUMP
+	DE	Jump (Springen)
 	EN	Jump
+	ES	Salto
+	FR	Jump (Saut)
+	IT	Jump (Salta)
+	NL	Springen
 
 SOUND_WINDOWSHOW
+	DE	Neues Fenster anzeigen
 	EN	Show New Window
+	ES	Mostrar nueva ventana
+	FR	Afficher une nouvelle fenêtre
+	IT	Mostra nuova finestra
+	NL	Nieuw venster weergeven
 
 SOUND_WINDOWHIDE
+	DE	Fenster ausblenden
 	EN	Hide Window
+	ES	Ocultar ventana
+	FR	Masquer la fenêtre
+	IT	Nascondi finestra
+	NL	Venster verbergen
 
 SOUND_SELECT
+	DE	Im Menü ausgewähltes Element
 	EN	Menu Select Item
+	ES	Seleccionar elemento de menú
+	FR	Menu Sélectionner un élément
+	IT	Selezione voce di menu
+	NL	Item voor menuselectie
 
 SOUND_PLAYBACK
 	EN	Playback
 
 SOUND_DOCKING
+	DE	Docking
 	EN	Docking
+	ES	Acoplamiento
+	FR	Connexion
+	IT	Alloggiamento
+	NL	Bezig met docken
 
 SOUND_STARTUP
+	DE	Start
 	EN	Startup
+	ES	Inicio
+	FR	Démarrage
+	IT	Avvio
+	NL	Opstarten
 
 SOUND_SHUTDOWN
+	DE	Herunterfahren
 	EN	Shutdown
+	ES	Apagar
+	FR	Arrêter
+	IT	Chiusura
+	NL	Afsluiten
 
 SOUND_CUSTOM_HELP
+	DE	Wählen Sie die anzupassende Aktion aus.
 	EN	Select the action that you would like to customize.
+	ES	Seleccione la acción que desea personalizar.
+	FR	Sélectionnez l'action que vous souhaitez personnaliser.
+	IT	Selezionare l'azione da personalizzare.
+	NL	Selecteer de actie die je wilt aanpassen.
 
 SOUND_CUSTOMSOUND_HELP
+	DE	Wählen Sie den Sound, der für diese Aktion verwendet werden soll.
 	EN	Select the sound you would like to use for this action.
+	ES	Seleccione el sonido que desea utilizar para esta acción.
+	FR	Sélectionnez le son que vous souhaitez utiliser pour cette action.
+	IT	Selezionare il suono da utilizzare per questa azione.
+	NL	Selecteer het geluid dat je voor deze actie wilt gebruiken.
+

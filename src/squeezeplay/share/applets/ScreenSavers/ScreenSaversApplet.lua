@@ -55,6 +55,7 @@ function init(self, ...)
 	self.timeout = self:getSettings()["timeout"]
 
 	self.active = {}
+	self.demoScreensaver = nil
 
 	-- wait for at least a minute after we start before activating a screensaver,
 	-- otherwise the screensaver may have started when you exit the bootscreen
@@ -137,6 +138,28 @@ function _activate(self, the_screensaver)
 end
 
 
+-- screensavers can have methods that are executed on close
+function _deactivate(self, window, the_screensaver)
+
+	local sd = AppletManager:getAppletInstance("SlimDiscovery")
+	if not the_screensaver then
+		if sd and sd:getCurrentPlayer() and sd:getCurrentPlayer():getPlayMode() == "play" then
+			the_screensaver = self:getSettings()["whenPlaying"]
+		else
+			the_screensaver = self:getSettings()["whenStopped"]
+		end
+	end
+	local screensaver = self.screensavers[the_screensaver]
+
+	if screensaver and screensaver.applet and screensaver.closeMethod then
+		local instance = appletManager:loadApplet(screensaver.applet)
+		instance[screensaver.closeMethod](instance)
+	end
+	window:hide(Window.transitionNone)
+	self.demoScreensaver = nil
+
+end
+
 -- switch screensavers on a player mode change
 function notify_playerModeChange(self, player, mode)
 	local oldActive = self.active
@@ -151,7 +174,7 @@ function notify_playerModeChange(self, player, mode)
 
 	-- close active screensaver
 	for i, window in ipairs(oldActive) do
-		window:hide(Window.transitionNone)
+		_deactivate(self, window, self.demoScreensaver)
 	end
 end
 
@@ -196,7 +219,7 @@ function screensaverWindow(self, window, hideOnMotion)
 
 				   -- close all screensaver windows
 				   for i,w in ipairs(self.active) do
-					   w:hide(Window.transitionNone)
+					_deactivate(self, w, self.demoScreensaver)
 				   end
 
 				   -- keys should close the screensaver, and not
@@ -217,21 +240,22 @@ function screensaverWindow(self, window, hideOnMotion)
 				   function(event)
 					   -- close all screensaver windows
 					   for i,w in ipairs(self.active) do
-						   w:hide(Window.transitionNone)
+						_deactivate(self, w, self.demoScreensaver)
 					   end
 				   end)
 	end
 end
 
 
-function addScreenSaver(self, displayName, applet, method, settingsName, settings, weight)
+function addScreenSaver(self, displayName, applet, method, settingsName, settings, weight, closeMethod )
 	local key = tostring(applet) .. ":" .. tostring(method)
 	self.screensavers[key] = {
 		applet = applet,
 		method = method,
 		displayName = displayName,
 		settings = settings,
-		weight = weight
+		weight = weight,
+		closeMethod = closeMethod
 	}
 
 	if settingsName then
@@ -274,6 +298,7 @@ function screensaverSetting(self, menuItem, mode)
 		button:addListener(EVENT_KEY_PRESS,
 			function(evt)
 				if evt:getKeycode() == KEY_PLAY then
+					self.demoScreensaver = key
 					self:_activate(key)
 					return EVENT_CONSUME
 				end

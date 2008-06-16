@@ -36,19 +36,19 @@ HELP
 
 DOWNLOADING
 	DA	\nHenter miniprogram
-	DE	Applets herunterladen
+	DE	\nApplets herunterladen
 	EN	\nDownloading Applets
-	ES	Descargando subprogramas
-	FR	Téléchargement des applets
-	IT	Download delle applet
-	NL	Applets worden gedownload
+	ES	\nDescargando subprogramas
+	FR	\nTéléchargement des applets
+	IT	\nDownload delle applet in corso
+	NL	\nApplets worden gedownload
 
 RESTART_APP
 	DA	Genstart programmet for at anvende nye miniprogram
 	DE	Zum Nutzen neuer Applets Anwendung neu starten
 	EN	Restart application to make use of new applets
 	ES	Reiniciar aplicación para utilizar nuevos subprogramas
-	FR	Redémarrez l'application pour utiliser les nouveaux applets.
+	FR	Redémarrez l'application pour utiliser les nouveaux applets
 	IT	Riavviare l'applicazione per usare le nuove applet
 	NL	Start de toepassing opnieuw om nieuwe applets te kunnen gebruiken
 
@@ -60,3 +60,4 @@ RESTART_JIVE
 	FR	\nRedémarrage
 	IT	\nRiavvio
 	NL	\nBezig met opnieuw starten
+

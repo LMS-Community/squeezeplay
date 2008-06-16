@@ -30,7 +30,6 @@ LANGUAGE_DA
 	IT	Dansk
 	NL	Dansk
 
-
 LANGUAGE_DE
 	DA	Deutsch
 	DE	Deutsch
@@ -96,9 +95,10 @@ CHOOSE_LANGUAGE_HELP
 
 LOADING_LANGUAGE
 	DA	Dansk
-	DE	Deutsch
+	DE	Englisch wird geladen
 	EN	Loading English
-	ES	Español
-	FR	Français
-	IT	Italiano
-	NL	Nederlands
+	ES	Cargando inglés
+	FR	Chargement de l'anglais
+	IT	Caricamento lingua inglese
+	NL	Engels wordt geladen
+

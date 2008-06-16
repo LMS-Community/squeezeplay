@@ -284,6 +284,12 @@ dist_applets_infobrowser_DATA = \
 	share/applets/InfoBrowser/InfoBrowserMeta.lua \
 	share/applets/InfoBrowser/strings.txt
 
+applets_blankscreendir = $(pkgdatadir)/applets/BlankScreen
+dist_applets_blankscreen_DATA = \
+	share/applets/BlankScreen/BlankScreenApplet.lua \
+	share/applets/BlankScreen/BlankScreenMeta.lua \
+	share/applets/BlankScreen/strings.txt
+
 applets_customizehomemenudir = $(pkgdatadir)/applets/CustomizeHomeMenu
 dist_applets_customizehomemenu_DATA = \
 	share/applets/CustomizeHomeMenu/CustomizeHomeMenuApplet.lua \
