@@ -32,7 +32,22 @@ function registerApplet(meta)
 
 	-- check for firmware upgrades when we connect to a new player
 	-- we don't want the firmware upgrade applets always loaded so
-	-- do this in a closure
+	-- do this in the meta class
+	jnt:subscribe(meta)
+end
+
+
+function notify_playerCurrent(meta, player)
+	if not player then
+		return
+	end
+
+	if meta.player and meta.player ~= player then
+		meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
+	end
+
+	meta.player = player
+	
 	local firmwareUpgradeSink =
 		function(chunk, err)
 			if err then
@@ -66,22 +81,6 @@ function registerApplet(meta)
 			end
 
 		end
-
-	jnt:subscribe(meta)
-
-end
-
-
-function notify_playerCurrent(meta, player)
-	if not player then
-		return
-	end
-
-	if meta.player and meta.player ~= player then
-		meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
-	end
-
-	meta.player = player
 				
 	local fwcmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION, 'subscribe:0' }
 	player:subscribe(
