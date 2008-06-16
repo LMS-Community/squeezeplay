@@ -67,31 +67,29 @@ function registerApplet(meta)
 
 		end
 
-	local monitor = {
-		notify_playerCurrent =
-			function(self, player)
-				if not player then
-					return
-				end
+	jnt:subscribe(meta)
 
-				if meta.player and meta.player ~= player then
-					meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
-				end
+end
 
-				meta.player = player
+
+function notify_playerCurrent(meta, player)
+	if not player then
+		return
+	end
+
+	if meta.player and meta.player ~= player then
+		meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
+	end
+
+	meta.player = player
 				
-				local fwcmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION, 'subscribe:0' }
-				player:subscribe(
-					'/slim/firmwarestatus/' .. player.id,
-					firmwareUpgradeSink,
-					player.id,
-					fwcmd
-				)
-			end,
-	}
-
-	jnt:subscribe(monitor)
-
+	local fwcmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION, 'subscribe:0' }
+	player:subscribe(
+			 '/slim/firmwarestatus/' .. player.id,
+			 firmwareUpgradeSink,
+			 player.id,
+			 fwcmd
+		 )
 end
 
 

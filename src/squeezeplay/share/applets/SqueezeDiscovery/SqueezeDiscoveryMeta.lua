@@ -76,31 +76,29 @@ function registerApplet(meta)
 		settings.currentPlayer = "ff:ff:ff:ff:ff:fe"
 
 		-- wait until SN is connected so we know the PIN
-		local monitor = {
-			notify_playerNew =
-				function(self, player)
-					if player:getId() ~= "ff:ff:ff:ff:ff:ff" then
-						return
-					end
+		jnt:subscribe(meta)
+	end
+end
 
-					-- unsubscribe monitor from future events
-					jnt:unsubscribe(self)
 
-					-- push Choose Player menu
-					local selectPlayer = appletManager:loadApplet("SelectPlayer")
-					if selectPlayer then
-						selectPlayer:setupShow(function() end)
-					end
+function notify_playerNew(meta, player)
+	if player:getId() ~= "ff:ff:ff:ff:ff:ff" then
+		return
+	end
 
-					-- push Active Squeezenetwork
-					local snPin = appletManager:loadApplet("SqueezeNetworkPIN")
-					if snPin then
-						snPin:forcePin(player)
-					end
-				end
-		}
+	-- unsubscribe monitor from future events
+	jnt:unsubscribe(meta)
 
-		jnt:subscribe(monitor)
+	-- push Choose Player menu
+	local selectPlayer = appletManager:loadApplet("SelectPlayer")
+	if selectPlayer then
+		selectPlayer:setupShow(function() end)
+	end
+
+	-- push Active Squeezenetwork
+	local snPin = appletManager:loadApplet("SqueezeNetworkPIN")
+	if snPin then
+		snPin:forcePin(player)
 	end
 end
 
