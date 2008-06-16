@@ -33,7 +33,6 @@ local Icon               = require("jive.ui.Icon")
 local Label              = require("jive.ui.Label")
 local Framework          = require("jive.ui.Framework")
 
-local Udap               = require("jive.net.Udap")
 local hasWireless, Wireless  = pcall(require, "jive.net.Wireless")
 
 local log                = require("jive.utils.log").logger("applets.setup")
@@ -76,34 +75,38 @@ function free(self)
 end
 
 
-function notify_playerDelete(self, playerObj)
-	local mac = playerObj.id
+function notify_playerDelete(self, player)
+	local mac = player.id
 	manageSelectPlayerMenu(self)
 	if self.playerMenu and self.playerItem[mac] then
 		self.playerMenu:removeItem(self.playerItem[mac])
 		self.playerItem[mac] = nil
 	end
 
-	self:_updateServerItem(playerObj:getSlimServer())
+	if player:getSlimServer() then
+		self:_updateServerItem(player:getSlimServer())
+	end
 end
 
 
-function notify_playerNew(self, playerObj)
+function notify_playerNew(self, player)
 	-- get number of players. if number of players is > 1, add menu item
-	local mac = playerObj.id
+	local mac = player.id
 
 	manageSelectPlayerMenu(self)
 	if self.playerMenu then
-		self:_addPlayerItem(playerObj)
+		self:_addPlayerItem(player)
 	end
 
-	self:_updateServerItem(playerObj:getSlimServer())
+	if player:getSlimServer() then
+		self:_updateServerItem(player:getSlimServer())
+	end
 end
 
 
-function notify_playerCurrent(self, playerObj)
+function notify_playerCurrent(self, player)
 	if self.playerMenu then
-		self.selectedPlayer = playerObj
+		self.selectedPlayer = player
 		self:manageSelectPlayerMenu()
 	end
 end
@@ -216,7 +219,7 @@ end
 function _refreshPlayerItem(self, player)
 	local mac = player.id
 
-	if player:isConnected() then
+	if player:isConnected() or player:needsMusicSource() then
 		local item = self.playerItem[mac]
 		if not item then
 			-- add player
@@ -326,7 +329,7 @@ function setupShow(self, setupNext)
 
 	self.selectedPlayer = appletManager:callService("getCurrentPlayer")
 	for mac, player in appletManager:callService("iteratePlayers") do
-		if player:isConnected() then
+		if player:isConnected() or player:needsMusicSource() then
 			_addPlayerItem(self, player)
 		end
 	end
@@ -356,13 +359,7 @@ function setupShow(self, setupNext)
 
 	window:addListener(EVENT_WINDOW_ACTIVE,
 			   function()
-				   self:_scanActive()
 				   self:_scan()
-			   end)
-
-	window:addListener(EVENT_WINDOW_INACTIVE,
-			   function()
-				   self:_scanInactive()
 			   end)
 
 	self:tieAndShowWindow(window)
@@ -370,59 +367,9 @@ function setupShow(self, setupNext)
 end
 
 
-function _scanActive(self)
-	-- socket for udap discovery
-	self.udap = Udap(jnt)
-	if not self.udapSink then
-		self.udapSink = self.udap:addSink(function(chunk, err)
-							  self:_udapSink(chunk, err)
-						  end)
-	end
-end
-
-
-function _scanInactive(self)
-	if self.udapSink then
-		self.udap:removeSink(self.udapSink)
-		self.udapSink = nil
-	end
-end
-
-
-function _udapSink(self, chunk, err)
-	if chunk == nil then
-		return -- ignore errors
-	end
-
-	local pkt = Udap.parseUdap(chunk.data)
-
-	if pkt.uapMethod ~= "adv_discover"
-		or pkt.ucp.device_status ~= "wait_slimserver"
-		or pkt.ucp.type ~= "squeezebox" then
-		-- we are only looking for squeezeboxen trying to connect to SC
-		return
-	end
-
-	local mac = pkt.source
-	local name = pkt.ucp.name ~= "" and pkt.ucp.name
-	if not self.scanResults[mac] then
-		self.scanResults[mac] = {
-			lastScan = os.time(),
-			udap = true,
-		}
-
-		self:_addSqueezeboxItem(mac, name)
-	end
-end
-
-
 function _scan(self)
 	-- SqueezeCenter and player discovery
 	appletManager:callService("discoverPlayers")
-
-	-- udap discovery
-	local packet = Udap.createAdvancedDiscover(nil, 1)
-	self.udap:send(function() return packet end, "255.255.255.255")
 
 	-- scan for players in setup state
 	if hasWireless then
@@ -479,6 +426,11 @@ function selectPlayer(self, player)
 
 	-- set the current player
 	appletManager:callService("setCurrentPlayer", player)
+
+	-- udap setup needed?
+	if player:needsMusicSource() then
+		appletManager:callService("selectMusicSource")
+	end
 
 	return true
 end

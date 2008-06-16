@@ -34,6 +34,7 @@ local Framework     = require("jive.ui.Framework")
 local Timer         = require("jive.ui.Timer")
 
 local SocketUdp     = require("jive.net.SocketUdp")
+local Udap          = require("jive.net.Udap")
 
 local Player        = require("jive.slim.Player")
 local SlimServer    = require("jive.slim.SlimServer")
@@ -118,6 +119,27 @@ local function _slimDiscoverySink(self, chunk, err)
 end
 
 
+function _udapSink(self, chunk, err)
+	if chunk == nil then
+		return -- ignore errors
+	end
+
+	local pkt = Udap.parseUdap(chunk.data)
+
+	if pkt.uapMethod ~= "adv_discover"
+		or pkt.ucp.device_status ~= "wait_slimserver"
+		or pkt.ucp.type ~= "squeezebox" then
+		-- we are only looking for squeezeboxen trying to connect to SC
+		return
+	end
+
+	local playerId = string.gsub(pkt.source, "(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)", "%1:%2:%3:%4:%5:%6")
+
+	local player = Player(jnt, playerId)
+	player:updateUdap(pkt)
+end
+
+
 -- removes old servers
 local function _squeezeCenterCleanup(self)
 	local now = Framework:getTicks()
@@ -129,16 +151,27 @@ local function _squeezeCenterCleanup(self)
 			activeServer ~= server and
 			now - server:getLastSeen() > DISCOVERY_TIMEOUT then
 		
-			log:info("Removing server ", server:getName())
+			log:info("Removing server ", server)
 			server:free()
 		end
 	end
-
-	if log:isDebug() then
-		self:_debug()
-	end
 end
 
+
+-- removes old unconfigured players
+local function _playerCleanup(self)
+	local now = Framework:getTicks()
+
+	for i, player in Player.iterate() do
+		if not player:getSlimServer() and
+			self.currentPlayer ~= player and
+			now - player:getLastSeen() > DISCOVERY_TIMEOUT then
+		
+			log:info("Removing player ", player)
+			player:free(false)
+		end
+	end
+end
 
 
 -- init
@@ -153,7 +186,15 @@ function __init(self, ...)
 
 	-- slim discovery socket
 	obj.socket = SocketUdp(jnt,
-			       function(...) _slimDiscoverySink(obj, ...) end)
+		function(...)
+			_slimDiscoverySink(obj, ...)
+		end)
+
+	-- udap discovery socket
+	obj.udap = Udap(jnt, 
+		function(chunk, err)
+			self:_udapSink(chunk, err)
+		end)
 
 	-- discovery timer
 	obj.timer = Timer(DISCOVERY_PERIOD,
@@ -176,13 +217,16 @@ end
 
 
 function _discover(self)
-	log:debug("discover")
-
 	-- Broadcast SqueezeCenter discovery
 	for i, address in pairs(self.poll) do
-		log:debug("sending to address ", address)
+		log:debug("sending slim discovery to ", address)
 		self.socket:send(_slimDiscoverySource, address, PORT)
 	end
+
+	-- UDAP discovery
+	local packet = Udap.createAdvancedDiscover(nil, 1)
+	log:debug("sending udap discovery to 255.255.255.255")
+	self.udap:send(function() return packet end, "255.255.255.255")
 
 	-- Special case Squeezenetwork
 	if jnt:getUUID() then
@@ -192,6 +236,9 @@ function _discover(self)
 
 	-- Remove SqueezeCenters that have not been seen for a while
 	_squeezeCenterCleanup(self)
+
+	-- Remove unconfigured Players that have not been seen for a while
+	_playerCleanup(self)
 
 
 	if self.state == 'probing' and
@@ -204,6 +251,9 @@ function _discover(self)
 		end
 	end
 
+	if log:isDebug() then
+		self:_debug()
+	end
 
 	self.timer:restart(DISCOVERY_PERIOD)
 end
@@ -262,7 +312,7 @@ function _debug(self)
 	end
 	log:info("Players:")
 	for i, player in Player.iterate() do
-		log:info("\t", player:getName(), " server=", player:getSlimServer(), " connected=", player:isConnected())
+		log:info("\t", player:getName(), " [", player:getId(), "] server=", player:getSlimServer(), " connected=", player:isConnected(), " timeout=", DISCOVERY_TIMEOUT - (now - player:getLastSeen()))
 	end
 	log:info("----")
 end

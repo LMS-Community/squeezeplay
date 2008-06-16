@@ -2131,13 +2131,13 @@ function notify_playerCurrent(self, player)
 		self.volume:setPlayer(player)
 	end
 
-    -- update the scanner object
-    self.scanner:setPlayer(player)
+	-- update the scanner object
+	self.scanner:setPlayer(player)
 
-	-- nothing to do if we don't have a player
+	-- nothing to do if we don't have a player or server
 	-- NOTE don't move this, the code above needs to run when disconnecting
 	-- for all players.
-	if not player then
+	if not player or not player:getSlimServer() then
 		return
 	end
 

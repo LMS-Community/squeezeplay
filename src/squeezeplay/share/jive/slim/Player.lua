@@ -51,6 +51,8 @@ local Textarea       = require("jive.ui.Textarea")
 local Window         = require("jive.ui.Window")
 local Group          = require("jive.ui.Group")
 
+local Udap           = require("jive.net.Udap")
+
 local debug          = require("jive.utils.debug")
 local strings        = require("jive.utils.strings")
 local log            = require("jive.utils.log").logger("player")
@@ -68,6 +70,13 @@ local MIN_KEY_INT    = 150  -- sending key rate limit in ms
 
 -- jive.slim.Player is a base class
 module(..., oo.class)
+
+
+local DEVICE_IDS = {
+	[4] = "squeezebox2",
+	[5] = "transporter",
+	[7] = "receiver",
+}
 
 
 -- list of players index by id. this weak table is used to enforce
@@ -170,6 +179,7 @@ function __init(self, jnt, playerId)
 
 		uuid = false,
 		slimServer = false,
+		config = false,
 
 		-- player info from SC
 		info = {},
@@ -211,6 +221,7 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 	self.info = {}
 
 	-- Update player info, cast to fix perl bugs :)
+	self.config = true
 	self.info.uuid = tostring(playerInfo.uuid)
 	self.info.name = tostring(playerInfo.name)
 	self.info.model = tostring(playerInfo.model)
@@ -220,8 +231,7 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 	self.info.isUpgrading = tonumber(playerInfo.player_is_upgrading) == 1
 	self.info.pin = tostring(playerInfo.pin)
 
--- XXXX
-	debug.dump(self.info)
+	self.lastSeen = Framework:getTicks()
 
 	-- PIN is removed from serverstatus after a player is linked
 	if self.info.pin and not playerInfo.pin then
@@ -235,7 +245,9 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 			self:free(self.slimServer)
 		end
 
-		-- the
+		-- modify the old state, as the player was not connected
+		-- to new SqueezeCenter. this makes sure the playerConnected
+		-- callback happens.
 		oldInfo.connected = false
 
 		-- player is now active
@@ -275,6 +287,32 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 end
 
 
+-- Update player state from a UDAP packet
+function updateUdap(self, udap)
+
+	self.config = "needsServer"
+	if udap.ucp.name == "" then
+		self.info.name = nil
+	else
+		self.info.name = tostring(udap.ucp.name)
+	end
+	self.info.model = DEVICE_IDS[tonumber(udap.ucp.device_id)]
+	self.info.connected = false
+
+	self.lastSeen = Framework:getTicks()
+
+	-- The player is no longer connected to SqueezeCenter
+	if self.slimServer then
+		self:free(self.slimServer)
+	end
+
+	-- player is now active
+	playerList[self.id] = self
+
+	self.jnt:notify('playerNew', self)
+end
+
+
 --[[
 
 =head2 jive.slim.Player:free(slimServer)
@@ -284,8 +322,6 @@ Deletes the player, if connect to the given slimServer
 =cut
 --]]
 function free(self, slimServer)
-	_assert(slimServer)
-
 	if self.slimServer ~= slimServer then
 		-- ignore, we are not connected to this server
 		return
@@ -298,9 +334,11 @@ function free(self, slimServer)
 
 	self.jnt:notify('playerDelete', self)
 
-	self.slimServer:_deletePlayer(self)
-	self:offStage()
-	self.slimServer = nil
+	if self.slimserver then
+		self.slimServer:_deletePlayer(self)
+		self:offStage()
+		self.slimServer = false
+	end
 
 	-- The global players table uses weak values, it will be removed
 	-- when all references are freed.
@@ -427,7 +465,7 @@ if I<aPlayer> is a L<jive.slim.Player>, prints
 =cut
 --]]
 function __tostring(self)
-	return "Player {" .. self.info.name .. "}"
+	return "Player {" .. self:getName() .. "}"
 end
 
 
@@ -440,7 +478,11 @@ Returns the player name
 =cut
 --]]
 function getName(self)
-	return self.info.name
+	if self.info.name then
+		return self.info.name
+	else
+		return "Squeezebox " .. string.gsub(string.sub(self.id, 10), ":", "")
+	end
 end
 
 
@@ -985,13 +1027,96 @@ end
 
 -- tell the player to connect to another server
 function connectToServer(self, server)
-	local ip, port = server:getIpPort()
-	self:send({'connect', ip})
+
+	log:warn("*******************")
+
+	if self.config == "needsServer" then
+		log:warn("UDAP ####################")
+
+		_udapConnect(self, server)
+		return
+
+	elseif self.slimServer then
+		local ip, port = server:getIpPort()
+		self:send({'connect', ip})
+		return true
+
+	else
+		log:warn("No method to connect ", self, " to ", server)
+		return false
+	end
+end
+
+
+function parseip(str)
+	local ip = 0
+	for w in string.gmatch(str, "%d+") do
+		ip = ip << 8
+		ip = ip | tonumber(w)
+	end
+	return ip
+end
+
+
+function _udapConnect(self, server)
+	local data = {}
+
+	if server:isSqueezeNetwork() then
+		local sn_hostname = jnt:getSNHostname()
+
+		if sn_hostname == "www.squeezenetwork.com" then
+			data.server_address = Udap.packNumber(1, 4)
+		elseif sn_hostname == "www.beta.squeezenetwork.com" then
+			data.server_address = Udap.packNumber(1, 4)
+			-- XXX the above should be this when "serv 2" in all firmware:
+			-- data.server_address = Udap.packNumber(2, 4)
+		else
+			-- for locally edited values (SN developers)
+			local ip = socket.dns.toip(sn_hostname)
+			data.server_address = Udap.packNumber(parseip(ip), 4)
+		end
+
+		log:info("SN server_address=", data.server_address)
+
+		-- set slimserver address to 0.0.0.1 to workaround a bug in
+		-- squeezebox firmware
+		data.slimserver_address = Udap.packNumber(parseip("0.0.0.1"), 4)
+	else
+		local serverip = server:getIpPort()
+
+		log:info("SC slimserver_address=", serverip)
+
+		data.server_address = Udap.packNumber(0, 4)
+		data.slimserver_address = Udap.packNumber(parseip(serverip), 4)
+	end
+
+	udap = Udap(self.jnt)
+
+	-- configure squeezebox network
+	-- XXXX move seqno management into Udap class
+	local seqno = 1
+	local packet = udap.createSetData(self.id, seqno, data)
+
+	-- send three udp packets in case the wireless network drops them
+	-- XXXX make udap class retry packets until ackd
+	udap:send(function() return packet end, "255.255.255.255")
+	udap:send(function() return packet end, "255.255.255.255")
+	udap:send(function() return packet end, "255.255.255.255")
+end
+
+
+function getLastSeen(self)
+	return self.lastSeen
 end
 
 
 function isConnected(self)
 	return self.slimServer and self.slimServer:isConnected() and self.info.connected
+end
+
+
+function needsMusicSource(self)
+	return self.config == "needsServer"
 end
 
 

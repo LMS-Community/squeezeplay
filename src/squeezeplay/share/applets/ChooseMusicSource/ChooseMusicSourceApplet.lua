@@ -54,6 +54,12 @@ oo.class(_M, Applet)
 local CONNECT_TIMEOUT = 30
 
 
+-- service to select server for a player
+function selectMusicSource(self)
+	self:settingsShow()
+end
+
+
 -- main setting menu
 function settingsShow(self)
 
@@ -62,17 +68,7 @@ function settingsShow(self)
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 	window:addWidget(menu)
 
-
-	-- Bug 7862
-	-- Workaround to allow changing music source using udap until
-	-- refactoring for bug 6683
 	local current = appletManager:callService("getCurrentPlayer")
-	if current and not current:isConnected() and current:canUdap() and appletManager:hasApplet("SetupSqueezebox") then
-		local setupSqueezebox = appletManager:loadApplet("SetupSqueezebox")
-		setupSqueezebox:startSqueezeboxSetup(current:getMacAddress(), nil)
-		return
-	end
-
 
 	self.serverMenu = menu
 	self.serverList = {}

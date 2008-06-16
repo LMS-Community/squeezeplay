@@ -108,8 +108,11 @@ local ucpStrings = {
 	uuid = _ucpString,
 }
 
-function __init(self, jnt)
+function __init(self, jnt, sink)
 	if _instance then
+		if sink then
+			_instance:addSink(sink)
+		end
 		return _instance
 	end
 
@@ -124,6 +127,12 @@ function __init(self, jnt)
 				       end
 				       return 1
 			       end)
+
+	if sink then
+		obj:addSink(sink)
+	end
+
+	_instance = obj
 
 	return obj
 end
@@ -289,6 +298,8 @@ function createUdap(mac, seq, ...)
 		bcast = 1
 		mac = "000000000000"
 	end
+
+	mac = string.gsub(mac, "[^%x]", "")
 
 	for i=1,12,2 do
 		macstr[#macstr + 1] = string.char(tonumber(string.sub(mac, i, i+1), 16))
