@@ -141,9 +141,10 @@ end
 -- screensavers can have methods that are executed on close
 function _deactivate(self, window, the_screensaver)
 
-	local sd = AppletManager:getAppletInstance("SlimDiscovery")
 	if not the_screensaver then
-		if sd and sd:getCurrentPlayer() and sd:getCurrentPlayer():getPlayMode() == "play" then
+		local player = appletManager:callService("getCurrentPlayer")
+		
+		if player and player:getPlayMode() == "play" then
 			the_screensaver = self:getSettings()["whenPlaying"]
 		else
 			the_screensaver = self:getSettings()["whenStopped"]
