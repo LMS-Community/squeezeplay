@@ -378,7 +378,6 @@ function free(self)
 
 	-- delete players
 	for id, player in pairs(self.players) do
--- XXXX should we delete the player?
 		player:free(self)
 	end
 	self.players = {}

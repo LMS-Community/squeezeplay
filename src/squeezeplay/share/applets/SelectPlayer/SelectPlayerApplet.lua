@@ -217,7 +217,6 @@ end
 function _refreshPlayerItem(self, player)
 	local mac = player:getId()
 
-	-- XXXX
 	if player:isAvailable() then
 		local item = self.playerItem[mac]
 		if not item then
