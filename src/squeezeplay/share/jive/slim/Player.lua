@@ -326,11 +326,6 @@ function updateUdap(self, udap)
 
 	self.lastSeen = Framework:getTicks()
 
-	-- The player is no longer connected to SqueezeCenter
-	if self.slimServer then
-		self:free(self.slimServer)
-	end
-
 	-- player is now available
 	playerList[self.id] = self
 
@@ -367,11 +362,6 @@ function updateSSID(self, ssid, lastScan)
 	self.info.connected = false
 
 	self.lastSeen = lastScan
-
-	-- The player is no longer connected to SqueezeCenter
-	if self.slimServer then
-		self:free(self.slimServer)
-	end
 
 	-- player is now available
 	playerList[self.id] = self
