@@ -377,7 +377,7 @@ function free(self, slimServer)
 
 	self.jnt:notify('playerDelete', self)
 
-	if self.slimserver then
+	if self.slimServer then
 		self.slimServer:_deletePlayer(self)
 		self:offStage()
 		self.slimServer = false
@@ -1088,11 +1088,7 @@ end
 -- tell the player to connect to another server
 function connectToServer(self, server)
 
-	log:warn("*******************")
-
 	if self.config == "needsServer" then
-		log:warn("UDAP ####################")
-
 		_udapConnect(self, server)
 		return
 

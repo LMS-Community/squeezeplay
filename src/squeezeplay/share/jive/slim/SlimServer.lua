@@ -170,7 +170,7 @@ function _serverstatusSink(self, event, err)
 			end
 
 			-- update player state
-			self.players[player_info.playerid]:updatePlayerInfo(self, player_info)
+			self.players[playerId]:updatePlayerInfo(self, player_info)
 		end
 	else
 		log:info(self, ": has no players!")
@@ -180,7 +180,6 @@ function _serverstatusSink(self, event, err)
 	for k,v in pairs(selfPlayers) do
 		player = self.players[k]
 		-- wave player bye bye
--- XXXX do we mean to free here, it should just unlink the player for SC
 		player:free(self)
 		self.players[k] = nil
 	end

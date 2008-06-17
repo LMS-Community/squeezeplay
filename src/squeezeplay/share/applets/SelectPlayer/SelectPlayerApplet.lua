@@ -201,7 +201,7 @@ function _addPlayerItem(self, player)
 		weight = playerWeight
 	}
 
-	if player == self.selectedPlayer then
+	if player == self.selectedPlayer and player:isConnected() then
 		item.style = "checked"
 	end
 
