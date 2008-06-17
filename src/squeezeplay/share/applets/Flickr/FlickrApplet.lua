@@ -282,6 +282,17 @@ function displaySetting(self, menuItem)
 	            ),
             },
             {
+                text = self:string("SCREENSAVER_FLICKR_DISPLAY_FAVORITES"),
+                icon = RadioButton(
+                    "radio",
+                    group,
+                    function()
+                        self:setDisplay("favorites")
+                    end,
+                    display == "favorites"
+	            ),
+            },           
+            {
                 text = self:string("SCREENSAVER_FLICKR_DISPLAY_CONTACTS"),
                 icon = RadioButton(
                     "radio",
@@ -353,7 +364,7 @@ end
 
 
 function setDisplay(self, display)
-	if self:getSettings()["flickr.id"] == "" and (display == "own" or display == "contacts") then
+	if self:getSettings()["flickr.id"] == "" and (display == "own" or display == "contacts" or display == "favorites") then
 		self:popupMessage(self:string("SCREENSAVER_FLICKR_ERROR"), self:string("SCREENSAVER_FLICKR_INVALID_DISPLAY_OPTION"))
 	else
 		self:getSettings()["flickr.display"] = display
@@ -434,6 +445,9 @@ function _requestPhoto(self)
 		args = { per_page = 100, extras = "owner_name", user_id = self:getSettings()["flickr.id"], include_self = 1 }
 	elseif displaysetting == "own" then
 		method = "flickr.people.getPublicPhotos"
+		args = { per_page = 100, extras = "owner_name", user_id = self:getSettings()["flickr.id"] }
+	elseif displaysetting == "favorites" then
+		method = "flickr.favorites.getPublicList"
 		args = { per_page = 100, extras = "owner_name", user_id = self:getSettings()["flickr.id"] }
 	else 
 		method = "flickr.interestingness.getList"
