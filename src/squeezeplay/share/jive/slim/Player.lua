@@ -766,6 +766,7 @@ function _process_status(self, event)
 	end
 
 	-- update our state in one go
+	local oldState = self.state
 	self.state = event.data
 
 	-- used for calculating getTrackElapsed(), getTrackRemaining()
@@ -792,6 +793,10 @@ function _process_status(self, event)
 
 	-- update track list
 	local nowPlaying = _whatsPlaying(event.data)
+
+	if self.state.mode ~= oldState.mode then
+		self.jnt:notify('playerModeChange', self, self.state.mode)
+	end
 
 	if self.nowPlaying ~= nowPlaying then
 		self.nowPlaying = nowPlaying

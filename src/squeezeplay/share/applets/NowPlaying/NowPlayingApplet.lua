@@ -168,16 +168,6 @@ function notify_playerPower(self, player, power)
 	end
 end
 
-function notify_playerDelete(self, player)
-	if player ~= self.player then
-		return
-	end
-	-- player has left the building, close Now Playing browse window
-	if self['browse'] and self['browse'].window then
-		self['browse'].window:hide()
-	end
-end
-
 
 function notify_playerTrackChange(self, player, nowPlaying)
 	log:info("Notification received that track has changed")
@@ -224,6 +214,16 @@ function notify_playerModeChange(self, player, mode)
 	self:_updateMode(mode)
 end
 
+-- players gone, close now playing
+function notify_playerDelete(self, player)
+	if player ~= self.player then
+		return
+	end
+
+	self:free()
+end
+
+-- players changed, add playing menu
 function notify_playerCurrent(self, player)
 
 	if self.player ~= player then
@@ -617,6 +617,16 @@ function free(self)
 	-- the screen can get loaded with two layouts, and by doing this
 	-- we force the recreation of the UI when re-entering the screen, possibly in a different mode
 	log:info("NowPlaying.free()")
+
+	-- player has left the building, close Now Playing browse window
+	if self['browse'] and self['browse'].window then
+		self['browse'].window:hide()
+	end
+
+	if self['ss'] and self['ss'].window then
+		self['ss'].window:hide()
+	end
+
 	self.player = false
 	self['ss'] = nil
 	self['browse'] = nil
