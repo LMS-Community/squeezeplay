@@ -57,6 +57,7 @@ oo.class(_M, Applet)
 local PORT    = 3483             -- port used to discover SqueezeCenters
 local DISCOVERY_TIMEOUT = 120000 -- timeout (in milliseconds) before removing SqueezeCenters and Players
 local DISCOVERY_PERIOD = 60000   -- discovery period
+local SEARCHING_PERIOD = 10000   -- searching period
 
 
 
@@ -158,11 +159,11 @@ end
 local function _squeezeCenterCleanup(self)
 	local now = Framework:getTicks()
 
-	local activeServer = self.currentPlayer and self.currentPlayer:getSlimServer()
+	local currentServer = self.currentPlayer and self.currentPlayer:getSlimServer()
 
 	for i, server in SlimServer.iterate() do
 		if not server:isConnected() and
-			activeServer ~= server and
+			currentServer ~= server and
 			now - server:getLastSeen() > DISCOVERY_TIMEOUT then
 		
 			log:info("Removing server ", server)
@@ -283,7 +284,11 @@ function _discover(self)
 		self:_debug()
 	end
 
-	self.timer:restart(DISCOVERY_PERIOD)
+	if self.state == 'connected' then
+		self.timer:restart(DISCOVERY_PERIOD)
+	else
+		self.timer:restart(SEARCHING_PERIOD)
+	end
 end
 
 
@@ -332,11 +337,11 @@ function _debug(self)
 	log:info("State: ", self.state)
 	log:info("CurrentPlayer: ", self.currentPlayer)
 	if self.currentPlayer then
-		log:info("ActiveServer: ", self.currentPlayer:getSlimServer())
+		log:info("CurrentServer: ", self.currentPlayer:getSlimServer())
 	end
 	log:info("Servers:")
 	for i, server in SlimServer.iterate() do
-		log:info("\t", server:getName(), " connected=", server:isConnected(), " timeout=", DISCOVERY_TIMEOUT - (now - server:getLastSeen()))
+		log:info("\t", server:getName(), " [", server:getIpPort(), "] connected=", server:isConnected(), " timeout=", DISCOVERY_TIMEOUT - (now - server:getLastSeen()))
 	end
 	log:info("Players:")
 	for i, player in Player.iterate() do
@@ -364,10 +369,10 @@ end
 
 -- disconnect from idle servers
 function _idleDisconnect(self)
-	local activeServer = self.currentPlayer and self.currentPlayer:getSlimServer()
+	local currentServer = self.currentPlayer and self.currentPlayer:getSlimServer()
 
 	for i, server in SlimServer:iterate() do
-		if server ~= activeServer then
+		if server ~= currentServer then
 			server:disconnect()
 		else
 			server:connect()

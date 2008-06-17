@@ -256,7 +256,7 @@ function __init(self, jnt, name)
 		players = {},
 
 		-- our comet connection, initially not connected
-		comet = false,
+		comet = Comet(jnt, name),
 
 		-- are we connected to the server?
 		-- 'disconnected' = not connected
@@ -282,6 +282,15 @@ function __init(self, jnt, name)
 		-- loaded images
 		imageCache = {},
 	})
+
+	-- subscribe to server status, max 50 players every 60 seconds.
+	-- FIXME: what if the server has more than 50 players?
+	obj.comet:aggressiveReconnect(true)
+	obj.comet:subscribe('/slim/serverstatus',
+		_getSink(obj, '_serverstatusSink'),
+		nil,
+		{ 'serverstatus', 0, 50, 'subscribe:60' }
+	)
 
 	setmetatable(obj.imageCache, { __mode = "kv" })
 
@@ -336,16 +345,7 @@ function updateAddress(self, ip, port)
 		self.artworkPool = HttpPool(self.jnt, self.name, ip, port, 2, 1, Task.PRIORITY_LOW)
 
 		-- commet
-		self.comet = Comet(self.jnt, ip, port, '/cometd', self.name)
-
-		-- subscribe to server status, max 50 players every 60 seconds.
-		-- FIXME: what if the server has more than 50 players?
-		self.comet:aggressiveReconnect(true)
-		self.comet:subscribe('/slim/serverstatus',
-				     _getSink(self, '_serverstatusSink'),
-				     nil,
-				     { 'serverstatus', 0, 50, 'subscribe:60' }
-			     )
+		self.comet:setEndpoint(ip, port, '/cometd')
 
 		-- reconnect, if we were already connected
 		if oldstate ~= 'disconnected' then
@@ -399,7 +399,7 @@ end
 
 -- connect to SqueezeCenter
 function connect(self)
-	if self.netstate == 'connected' then
+	if self.netstate == 'connected' or self.netstate == 'connecting' then
 		return
 	end
 
