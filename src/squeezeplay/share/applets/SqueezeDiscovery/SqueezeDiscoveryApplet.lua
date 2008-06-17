@@ -159,7 +159,8 @@ end
 local function _squeezeCenterCleanup(self)
 	local now = Framework:getTicks()
 
-	local currentServer = self.currentPlayer and self.currentPlayer:getSlimServer()
+	local currentPlayer = Player:getCurrentPlayer()
+	local currentServer = currentPlayer and currentPlayer:getSlimServer()
 
 	for i, server in SlimServer.iterate() do
 		if not server:isConnected() and
@@ -177,9 +178,11 @@ end
 local function _playerCleanup(self)
 	local now = Framework:getTicks()
 
+	local currentPlayer = Player:getCurrentPlayer()
+
 	for i, player in Player.iterate() do
 		if not player:getSlimServer() and
-			self.currentPlayer ~= player and
+			currentPlayer ~= player and
 			now - player:getLastSeen() > DISCOVERY_TIMEOUT then
 		
 			log:info("Removing player ", player)
@@ -221,7 +224,6 @@ function __init(self, ...)
 			  function() obj:_discover() end)
 
 	-- initial state
-	obj.currentPlayer = false
 	obj.state = 'searching'
 
 	-- start discovering
@@ -273,7 +275,9 @@ function _discover(self)
 	if self.state == 'probing' and
 		Framework:getTicks() > self.probeUntil then
 
-		if self.currentPlayer and self.currentPlayer:getSlimServer() then
+		local currentPlayer = Player:getCurrentPlayer()
+
+		if currentPlayer and currentPlayer:getSlimServer() then
 			self:_setState('connected')
 		else
 			self:_setState('searching')
@@ -333,11 +337,13 @@ end
 function _debug(self)
 	local now = Framework:getTicks()
 
+	local currentPlayer = Player:getCurrentPlayer()
+
 	log:info("----")
 	log:info("State: ", self.state)
-	log:info("CurrentPlayer: ", self.currentPlayer)
-	if self.currentPlayer then
-		log:info("CurrentServer: ", self.currentPlayer:getSlimServer())
+	log:info("CurrentPlayer: ", currentPlayer)
+	if currentPlayer then
+		log:info("CurrentServer: ", currentPlayer:getSlimServer())
 	end
 	log:info("Servers:")
 	for i, server in SlimServer.iterate() do
@@ -369,7 +375,8 @@ end
 
 -- disconnect from idle servers
 function _idleDisconnect(self)
-	local currentServer = self.currentPlayer and self.currentPlayer:getSlimServer()
+	local currentPlayer = Player:getCurrentPlayer()
+	local currentServer = currentPlayer and currentPlayer:getSlimServer()
 
 	for i, server in SlimServer:iterate() do
 		if server ~= currentServer then
@@ -385,7 +392,7 @@ end
 function notify_playerDisconnected(self, player)
 	log:info("playerDisconnected")
 
-	if self.currentPlayer ~= player then
+	if Player:getCurrentPlayer() ~= player then
 		return
 	end
 
@@ -398,7 +405,8 @@ end
 function notify_playerConnected(self, player)
 	log:info("playerConnected")
 
-	if self.currentPlayer ~= player then
+	local currentPlayer = Player:getCurrentPlayer()
+	if currentPlayer ~= player then
 		return
 	end
 
@@ -407,7 +415,7 @@ function notify_playerConnected(self, player)
 
 	-- refresh the current player, this means that other applets don't
 	-- need to watch the player connection notifications
-	jnt:notify("playerCurrent", self.currentPlayer)
+	Player:setCurrentPlayer(currentPlayer)
 end
 
 
@@ -415,7 +423,8 @@ end
 function notify_serverDisconnected(self, slimserver)
 	log:info("serverDisconnected")
 
-	if not self.currentPlayer or self.currentPlayer:getSlimServer() ~= slimserver then
+	local currentPlayer = Player:getCurrentPlayer()
+	if not currentPlayer or currentPlayer:getSlimServer() ~= slimserver then
 		return
 	end
 
@@ -428,7 +437,8 @@ end
 function notify_serverConnected(self, slimserver)
 	log:info("serverConnected")
 
-	if not self.currentPlayer or self.currentPlayer:getSlimServer() ~= slimserver then
+	local currentPlayer = Player:getCurrentPlayer()
+	if not currentPlayer or currentPlayer:getSlimServer() ~= slimserver then
 		return
 	end
 
@@ -437,8 +447,8 @@ function notify_serverConnected(self, slimserver)
 
 	-- refresh the current player, this means that other applets don't
 	-- need to watch the server connection notifications
-	if self.currentPlayer then
-		jnt:notify("playerCurrent", self.currentPlayer)
+	if currentPlayer then
+		Player:setCurrentPlayer(currentPlayer)
 	end
 end
 
@@ -453,8 +463,9 @@ function notify_networkConnected(self)
 
 	if self.state == 'connected' then
 		-- force re-connection to the current player
-		self.currentPlayer:getSlimServer():disconnect()
-		self.currentPlayer:getSlimServer():connect()
+		local currentPlayer = Player:getCurrentPlayer()
+		currentPlayer:getSlimServer():disconnect()
+		currentPlayer:getSlimServer():connect()
 	else
 		-- force re-connection to all servers
 		self:_disconnect()
@@ -463,31 +474,36 @@ function notify_networkConnected(self)
 end
 
 
-function getCurrentPlayer(self)
-	return self.currentPlayer
-end
+function notify_playerCurrent(self, player)
+	local settings = self:getSettings()
 
+	local playerId = player and player:getId() or false
 
-function setCurrentPlayer(self, player)
-	if self.currentPlayer ~= player then
+	if settings.currentPlayer ~= playerId then
 		-- update player
 		log:info("selected player: ", player)
-		self.currentPlayer = player
 
-		local settings = self:getSettings()
-		settings.currentPlayer = player and player:getId() or false
+		settings.currentPlayer = playerId
 		self:storeSettings()
 	end
 
-	-- note: notify even if the player has not changed
-	jnt:notify("playerCurrent", player)
-
 	-- restart discovery when we have no player
-	if self.currentPlayer and self.currentPlayer:getSlimServer() then
+	if player and player:getSlimServer() then
 		self:_setState('connected')
 	else
 		self:_setState('searching')
 	end
+
+end
+
+
+function getCurrentPlayer(self)
+	return Player:getCurrentPlayer()
+end
+
+
+function setCurrentPlayer(self, player)
+	Player:setCurrentPlayer(player)
 end
 
 
@@ -497,7 +513,9 @@ end
 
 
 function connectPlayer(self)
-	if self.currentPlayer and self.currentPlayer:getSlimServer() then
+	local player = Player:getCurrentPlayer()
+
+	if currentPlayer and currentPlayer:getSlimServer() then
 		self:_setState("connected")
 	else
 		self:_setState("searching")

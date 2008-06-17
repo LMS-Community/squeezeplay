@@ -61,6 +61,7 @@ local EVENT_KEY_ALL    = jive.ui.EVENT_KEY_ALL
 local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 
+local jnt            = jnt
 local iconbar        = iconbar
 
 
@@ -87,10 +88,33 @@ setmetatable(playerIds, { __mode = 'v' })
 -- list of player that are active
 local playerList = {}
 
+-- current player
+local currentPlayer = nil
 
--- class function to iterate over all players
+
+-- class method to iterate over all players
 function iterate(class)
 	return pairs(playerList)
+end
+
+
+-- class method, returns the current player
+function getCurrentPlayer(self)
+	return currentPlayer
+end
+
+
+-- class method, sets the current player
+function setCurrentPlayer(class, player)
+	-- is the current player still active?
+	if currentPlayer and currentPlayer.lastSeen == 0 then
+		playerList[currentPlayer.id] = nil
+	end
+
+	currentPlayer = player
+
+	-- notify even if the player has not changed
+	jnt:notify("playerCurrent", currentPlayer)
 end
 
 
@@ -370,6 +394,13 @@ function free(self, slimServer)
 		return
 	end
 
+	-- player is now longer seen
+	self.lastSeen = 0
+
+	if self == currentPlayer then
+		return
+	end
+
 	log:info(self, " delete for ", self.slimServer)
 
 	-- player is no longer active
@@ -382,6 +413,8 @@ function free(self, slimServer)
 		self:offStage()
 		self.slimServer = false
 	end
+
+
 
 	-- The global players table uses weak values, it will be removed
 	-- when all references are freed.
