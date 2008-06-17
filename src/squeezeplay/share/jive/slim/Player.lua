@@ -107,7 +107,7 @@ end
 -- class method, sets the current player
 function setCurrentPlayer(class, player)
 	-- is the current player still active?
-	if currentPlayer and currentPlayer.lastSeen == 0 then
+	if currentPlayer and currentPlayer ~= player and currentPlayer.lastSeen == 0 then
 		playerList[currentPlayer.id] = nil
 	end
 
@@ -397,24 +397,21 @@ function free(self, slimServer)
 	-- player is now longer seen
 	self.lastSeen = 0
 
-	if self == currentPlayer then
-		return
-	end
-
 	log:info(self, " delete for ", self.slimServer)
 
-	-- player is no longer active
-	playerList[self.id] = nil
-
-	self.jnt:notify('playerDelete', self)
-
-	if self.slimServer then
-		self.slimServer:_deletePlayer(self)
-		self:offStage()
-		self.slimServer = false
+	if self ~= currentPlayer then
+		-- player is no longer active
+		playerList[self.id] = nil
 	end
 
+	self.jnt:notify('playerDelete', self)
+	
+	if self.slimServer and self ~= currentPlayer then
+		self:offStage()
 
+		self.slimServer:_deletePlayer(self)
+		self.slimServer = false
+	end
 
 	-- The global players table uses weak values, it will be removed
 	-- when all references are freed.
