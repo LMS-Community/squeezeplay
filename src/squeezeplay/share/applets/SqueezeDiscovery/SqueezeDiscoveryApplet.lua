@@ -159,12 +159,8 @@ end
 local function _squeezeCenterCleanup(self)
 	local now = Framework:getTicks()
 
-	local currentPlayer = Player:getCurrentPlayer()
-	local currentServer = currentPlayer and currentPlayer:getSlimServer()
-
 	for i, server in SlimServer.iterate() do
 		if not server:isConnected() and
-			currentServer ~= server and
 			now - server:getLastSeen() > DISCOVERY_TIMEOUT then
 		
 			log:info("Removing server ", server)
@@ -342,9 +338,7 @@ function _debug(self)
 	log:info("----")
 	log:info("State: ", self.state)
 	log:info("CurrentPlayer: ", currentPlayer)
-	if currentPlayer then
-		log:info("CurrentServer: ", currentPlayer:getSlimServer())
-	end
+	log:info("CurrentServer: ", SlimServer:getCurrentServer())
 	log:info("Servers:")
 	for i, server in SlimServer.iterate() do
 		log:info("\t", server:getName(), " [", server:getIpPort(), "] connected=", server:isConnected(), " timeout=", DISCOVERY_TIMEOUT - (now - server:getLastSeen()))
@@ -375,8 +369,7 @@ end
 
 -- disconnect from idle servers
 function _idleDisconnect(self)
-	local currentPlayer = Player:getCurrentPlayer()
-	local currentServer = currentPlayer and currentPlayer:getSlimServer()
+	local currentServer = SlimServer:getCurrentServer()
 
 	for i, server in SlimServer:iterate() do
 		if server ~= currentServer then

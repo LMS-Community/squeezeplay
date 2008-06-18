@@ -32,7 +32,7 @@ Notifications:
 
 -- our stuff
 local _assert, assert, tostring, type, tonumber = _assert, assert, tostring, type, tonumber
-local pairs, ipairs, setmetatable = pairs, ipairs, setmetatable
+local pairs, ipairs, require, setmetatable = pairs, ipairs, require, setmetatable
 
 local os          = require("os")
 local table       = require("jive.utils.table")
@@ -42,7 +42,6 @@ local oo          = require("loop.base")
 
 local Comet       = require("jive.net.Comet")
 local HttpPool    = require("jive.net.HttpPool")
-local Player      = require("jive.slim.Player")
 local Surface     = require("jive.ui.Surface")
 local RequestHttp = require("jive.net.RequestHttp")
 local SocketHttp  = require("jive.net.SocketHttp")
@@ -62,6 +61,10 @@ local logcache    = require("jive.utils.log").logger("slimserver.cache")
 module(..., oo.class)
 
 
+-- we must load this after the module declartion to dependancy loops
+local Player      = require("jive.slim.Player")
+
+
 -- list of servers index by id. this weak table is used to enforce
 -- object equality with the server name.
 local serverIds = {}
@@ -70,6 +73,9 @@ setmetatable(serverIds, { __mode = 'v' })
 -- list of servers, that are active
 local serverList = {}
 
+-- current server
+local currentServer = nil
+
 -- credential list for http auth
 local credentials = {}
 
@@ -77,6 +83,25 @@ local credentials = {}
 -- class function to iterate over all SqueezeCenters
 function iterate(class)
 	return pairs(serverList)
+end
+
+
+-- class method to return current server
+function getCurrentServer(class)
+	return currentServer
+end
+
+
+-- class method to set the current server
+function setCurrentServer(class, server)
+	lastCurrentServer = currentServer
+
+	currentServer = server
+
+	-- is the current server still active, it not clean up?
+	if lastCurrentServer and lastCurrentServer.lastSeen == 0 then
+		lastCurrentServer:free()
+	end
 end
 
 
@@ -244,7 +269,7 @@ function __init(self, jnt, name)
 		jnt = jnt,
 
 		-- connection stuff
-		lastSeen = false,
+		lastSeen = 0,
 		ip = false,
 		port = false,
 
@@ -300,9 +325,6 @@ function __init(self, jnt, name)
 
 	-- task to fetch artwork while browsing
 	obj.artworkFetchTask = Task("artwork", obj, processArtworkQueue)
-
-	-- notify we're here by caller in SlimServers
-	jnt:notify('serverNew', obj)
 	
 	return obj
 end
@@ -352,9 +374,14 @@ function updateAddress(self, ip, port)
 		end
 	end
 
-	-- server is now active
-	serverList[self.id] = self
+	local oldLastSeen = self.lastSeen
 	self.lastSeen = Framework:getTicks()
+
+	-- server is now active
+	if oldLastSeen == 0  then
+		serverList[self.id] = self
+		self.jnt:notify('serverNew', self)
+	end
 end
 
 
@@ -369,22 +396,27 @@ Deletes a SlimServer object, frees memory and closes connections with the server
 function free(self)
 	log:debug(self, ":free")
 
-	-- notify we're gone
-	self.jnt:notify("serverDelete", self)
-		
 	-- clear cache
 	self.artworkCache:free()
 	self.artworkThumbIcons = {}
+
+	-- server is gone
+	self.lastSeen = 0
+	self.jnt:notify("serverDelete", self)
+		
+	-- close connections
+	self:disconnect()
+
+	if self == currentServer then
+		-- dont' delete state if this is the current server
+		return
+	end
 
 	-- delete players
 	for id, player in pairs(self.players) do
 		player:free(self)
 	end
 	self.players = {}
-
-	-- close connections
-	self.comet:disconnect()
-	self.artworkPool:close()
 
 	-- server is no longer active
 	serverList[self.id] = nil

@@ -31,7 +31,7 @@ Notifications:
 
 
 -- stuff we need
-local _assert, assert, setmetatable, tonumber, tostring, pairs, type = _assert, assert, setmetatable, tonumber, tostring, pairs, type
+local _assert, assert, require, setmetatable, tonumber, tostring, pairs, type = _assert, assert, require, setmetatable, tonumber, tostring, pairs, type
 
 local os             = require("os")
 local math           = require("math")
@@ -73,6 +73,10 @@ local MIN_KEY_INT    = 150  -- sending key rate limit in ms
 module(..., oo.class)
 
 
+-- we must load this after the module declartion to dependancy loops
+local SlimServer     = require("jive.slim.SlimServer")
+
+
 local DEVICE_IDS = {
 	[4] = "squeezebox2",
 	[5] = "transporter",
@@ -106,12 +110,15 @@ end
 
 -- class method, sets the current player
 function setCurrentPlayer(class, player)
-	-- is the current player still active?
-	if currentPlayer and currentPlayer ~= player and currentPlayer.lastSeen == 0 then
-		playerList[currentPlayer.id] = nil
-	end
+	local lastCurrentPlayer = currentPlayer
 
 	currentPlayer = player
+	SlimServer:setCurrentServer(currentPlayer and currentPlayer.slimServer or nil)
+
+	-- is the last current player still active?
+	if lastCurrentPlayer and lastCurrentPlayer.lastSeen == 0 then
+		lastCurrentPlayer:free()
+	end
 
 	-- notify even if the player has not changed
 	jnt:notify("playerCurrent", currentPlayer)
@@ -275,14 +282,13 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 		-- callback happens.
 		oldInfo.connected = false
 
-		-- player is now available
-		playerList[self.id] = self
-
 		-- add to new server
 		log:info(self, " new for ", slimServer)
 		self.slimServer = slimServer
 		self.slimServer:_addPlayer(self)
 
+		-- player is now available
+		playerList[self.id] = self
 		self.jnt:notify('playerNew', self)
 	end
 
@@ -328,7 +334,6 @@ function updateUdap(self, udap)
 
 	-- player is now available
 	playerList[self.id] = self
-
 	self.jnt:notify('playerNew', self)
 end
 
@@ -365,7 +370,6 @@ function updateSSID(self, ssid, lastScan)
 
 	-- player is now available
 	playerList[self.id] = self
-
 	self.jnt:notify('playerNew', self)
 end
 
@@ -384,19 +388,21 @@ function free(self, slimServer)
 		return
 	end
 
-	-- player is now longer seen
-	self.lastSeen = 0
-
 	log:info(self, " delete for ", self.slimServer)
 
-	if self ~= currentPlayer then
-		-- player is no longer active
-		playerList[self.id] = nil
+	-- player is gone
+	self.lastSeen = 0
+	self.jnt:notify('playerDelete', self)
+
+	if self == currentPlayer then
+		-- dont' delete state if this is the current player
+		return
 	end
 
-	self.jnt:notify('playerDelete', self)
+	-- player is no longer active
+	playerList[self.id] = nil
 	
-	if self.slimServer and self ~= currentPlayer then
+	if self.slimServer then
 		self:offStage()
 
 		self.slimServer:_deletePlayer(self)
