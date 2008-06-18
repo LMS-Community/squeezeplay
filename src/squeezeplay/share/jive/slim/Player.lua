@@ -287,6 +287,11 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 		self.slimServer = slimServer
 		self.slimServer:_addPlayer(self)
 
+		-- update current server
+		if currentPlayer == self then
+			SlimServer:setCurrentServer(slimServer)
+		end
+
 		-- player is now available
 		playerList[self.id] = self
 		self.jnt:notify('playerNew', self)

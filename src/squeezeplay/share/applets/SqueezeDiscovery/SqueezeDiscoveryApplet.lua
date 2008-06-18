@@ -414,7 +414,7 @@ end
 
 -- restart discovery if SqueezeCenter disconnects
 function notify_serverDisconnected(self, slimserver)
-	log:info("serverDisconnected")
+	log:info("serverDisconnected ", slimserver)
 
 	local currentPlayer = Player:getCurrentPlayer()
 	if not currentPlayer or currentPlayer:getSlimServer() ~= slimserver then
