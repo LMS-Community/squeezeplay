@@ -154,7 +154,7 @@ function settingsShow(self, keepOldEntries)
 			   end)
 
 	-- schedule network scan 
-	self.scanMenu:addTimer(2000, function()
+	self.scanMenu:addTimer(10000, function()
 					     -- only scan if this window is on top, not under a transparent popup
 					     if Framework.windowStack[1] ~= window then
 						     return
@@ -256,6 +256,8 @@ end
 function _scanComplete(self, scanTable, keepOldEntries)
 	local now = Framework:getTicks()
 
+	local seen = {}
+
 	for ssid, entry in pairs(scanTable) do
 		local mac, ether = Player:ssidIsSqueezebox(ssid)
 		log:debug("ether=", ether, " mac=", mac)
@@ -263,6 +265,8 @@ function _scanComplete(self, scanTable, keepOldEntries)
 		if mac ~= nil then
 			mac = string.upper(string.gsub(mac, ":", ""))
 		
+			seen[mac] = true
+
 			if not self.scanResults[mac] then
 				local item = {
 					text = self:string("SQUEEZEBOX_BRIDGED_NAME", string.sub(mac, 7)),
@@ -284,16 +288,17 @@ function _scanComplete(self, scanTable, keepOldEntries)
 
 			-- squeezebox available via adhoc
 			self.scanResults[mac].adhoc = true
+		end
+	end
 
-			-- remove networks not seen for 10 seconds
-			if keepOldEntries ~= true and now - entry.lastScan > 10000 then
-				log:debug(mac, " not seen for 10 seconds")
-				self.scanResults[mac].adhoc = nil
+	-- remove old networks
+	for mac, entry in pairs(self.scanResults) do
+		if not seen[mac] and not keepOldEntries then
+			entry.adhoc = nil
 
-				if self.scanResults[mac].udap ~= true then
-					self.scanMenu:removeItem(self.scanResults[mac].item)
-					self.scanResults[mac] = nil
-				end
+			if entry.udap ~= true then
+				self.scanMenu:removeItem(entry.item)
+				self.scanResults[mac] = nil
 			end
 		end
 	end

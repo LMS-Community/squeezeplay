@@ -311,13 +311,15 @@ function _scanComplete(self, scanTable)
 			      --assert(type(entry.quality) == "number", "Eh? quality is " .. tostring(entry.quality) .. " for " .. ssid)
 			      item.icon:setStyle("wirelessLevel" .. entry.quality)
 			      self.scanMenu:updatedItem(item)
-
-			      -- remove networks not seen for 20 seconds
-			      if not entry.associated and now - entry.lastScan > 20000 then
-				      self.scanMenu:removeItem(item)
-				      self.scanResults[ssid] = nil
-			      end
 		      end
+	end
+
+	-- remove old networks
+	for ssid, entry in pairs(self.scanResults) do
+		if not scanTable[ssid] then
+			self.scanMenu:removeItem(entry.item)
+			self.scanResults[ssid] = nil
+		end
 	end
 
 	-- update current ssid 
