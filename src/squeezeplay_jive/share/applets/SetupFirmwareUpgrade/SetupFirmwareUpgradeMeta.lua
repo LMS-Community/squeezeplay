@@ -37,12 +37,22 @@ function registerApplet(meta)
 end
 
 
-function notify_playerCurrent(meta, player)
-	if not player then
+function notify_playerDelete(meta, player)
+	if meta.player ~= player then
 		return
 	end
 
-	if meta.player and meta.player ~= player then
+	meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player:getId())
+	meta.player = false
+end
+
+
+function notify_playerCurrent(meta, player)
+	if not player or meta.player == player then
+		return
+	end
+
+	if meta.player then
 		meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player:getId())
 	end
 
@@ -81,7 +91,7 @@ function notify_playerCurrent(meta, player)
 			end
 
 		end
-				
+
 	local fwcmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION, 'subscribe:0' }
 	player:subscribe(
 			 '/slim/firmwarestatus/' .. player:getId(),

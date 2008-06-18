@@ -2149,7 +2149,7 @@ function notify_playerCurrent(self, player)
 
 	log:info('Subscribing to /slim/menustatus/', _playerId)
 	local cmd = { 'menustatus' }
-	_server.comet:subscribe(
+	_player:subscribe(
 		'/slim/menustatus/' .. _playerId,
 		_menuSink(sink, cmd),
 		_playerId,
@@ -2363,8 +2363,8 @@ function free(self)
 
 	-- unsubscribe from this player's menustatus
 	log:info("Unsubscribe /slim/menustatus/", _player:getId())
-	if _server and _player then
-		_server.comet:unsubscribe('/slim/menustatus/' .. _player:getId())
+	if _player then
+		_player:unsubscribe('/slim/menustatus/' .. _player:getId())
 	end
 
 	if _player then
