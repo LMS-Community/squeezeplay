@@ -312,7 +312,7 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 		self.jnt:notify('playerPower', self, self.info.power)
 	end
 
-	-- use tostring to handle nil case (in either)
+	-- Check if the player connected status has changed
 	if oldInfo.connected ~= self.info.connected then
 		if self.info.connected then
 			self.jnt:notify('playerConnected', self)

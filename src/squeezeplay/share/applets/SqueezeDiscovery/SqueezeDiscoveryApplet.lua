@@ -437,12 +437,6 @@ function notify_serverConnected(self, slimserver)
 
 	-- stop discovery, we have the player
 	self:_setState('connected')
-
-	-- refresh the current player, this means that other applets don't
-	-- need to watch the server connection notifications
-	if currentPlayer then
-		Player:setCurrentPlayer(currentPlayer)
-	end
 end
 
 
