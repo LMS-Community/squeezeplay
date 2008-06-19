@@ -19,9 +19,6 @@ local table         = require("table")
 local string        = require("string")
 
 local Applet        = require("jive.Applet")
-local SlimServers   = require("jive.slim.SlimServers")
-
-local AppletManager = require("jive.AppletManager")
 
 local Framework     = require("jive.ui.Framework")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
@@ -52,18 +49,14 @@ function menu(self, menuItem)
 	self:tieAndShowWindow(window)
 
 	-- find a server: server for current player, else first server
-	sd = AppletManager:getAppletInstance("SlimDiscovery")
-
-	if sd then
-		if sd:getCurrentPlayer() then
-			self.player = sd:getCurrentPlayer()
-			self.server = self.player:getSlimServer()
-		else
-			for _, server in sd:allServers() do
-				if server:isConnected() then
-					self.server = server
-					break
-				end
+	self.player = appletManager:callService("getCurrentPlayer")
+	if self.player then
+		self.server = self.player:getSlimServer()
+	else
+		for _, server in appletManager:callService("iterateSqueezeCenters") do
+			if server:isConnected() then
+				self.server = server
+				break
 			end
 		end
 	end
@@ -78,7 +71,7 @@ end
 -- request for items
 function request(self, index, start, window, widget, list, prevmenu, locked)
 
-	self.server.comet:request(
+	self.server:request(
 		function(chunk, err)
 			if err then
 				log:debug(err)
@@ -86,7 +79,7 @@ function request(self, index, start, window, widget, list, prevmenu, locked)
 				self:response(chunk.data, window, widget, list, prevmenu, locked)
 			end
 		end,
-		self.player and self.player.id,
+		self.player and self.player:getId(),
 		{ 'infobrowser', 'items', start, gulp, index and ("item_id:" .. index) }
 	)
 end

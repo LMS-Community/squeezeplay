@@ -31,7 +31,7 @@ Notifications:
 
 
 -- stuff we need
-local _assert, assert, setmetatable, tonumber, tostring, pairs, type = _assert, assert, setmetatable, tonumber, tostring, pairs, type
+local _assert, assert, require, setmetatable, tonumber, tostring, pairs, type = _assert, assert, require, setmetatable, tonumber, tostring, pairs, type
 
 local os             = require("os")
 local math           = require("math")
@@ -51,6 +51,8 @@ local Textarea       = require("jive.ui.Textarea")
 local Window         = require("jive.ui.Window")
 local Group          = require("jive.ui.Group")
 
+local Udap           = require("jive.net.Udap")
+
 local debug          = require("jive.utils.debug")
 local strings        = require("jive.utils.strings")
 local log            = require("jive.utils.log").logger("player")
@@ -59,6 +61,7 @@ local EVENT_KEY_ALL    = jive.ui.EVENT_KEY_ALL
 local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 
+local jnt            = jnt
 local iconbar        = iconbar
 
 
@@ -70,9 +73,56 @@ local MIN_KEY_INT    = 150  -- sending key rate limit in ms
 module(..., oo.class)
 
 
--- list of players index by id.
-local players = {}
-setmetatable(players, { __mode = 'v' })
+-- we must load this after the module declartion to dependancy loops
+local SlimServer     = require("jive.slim.SlimServer")
+
+
+local DEVICE_IDS = {
+	[4] = "squeezebox2",
+	[5] = "transporter",
+	[7] = "receiver",
+}
+
+
+-- list of players index by id. this weak table is used to enforce
+-- object equality with the server name.
+local playerIds = {}
+setmetatable(playerIds, { __mode = 'v' })
+
+-- list of player that are active
+local playerList = {}
+
+-- current player
+local currentPlayer = nil
+
+
+-- class method to iterate over all players
+function iterate(class)
+	return pairs(playerList)
+end
+
+
+-- class method, returns the current player
+function getCurrentPlayer(self)
+	return currentPlayer
+end
+
+
+-- class method, sets the current player
+function setCurrentPlayer(class, player)
+	local lastCurrentPlayer = currentPlayer
+
+	currentPlayer = player
+	SlimServer:setCurrentServer(currentPlayer and currentPlayer.slimServer or nil)
+
+	-- is the last current player still active?
+	if lastCurrentPlayer and lastCurrentPlayer.lastSeen == 0 then
+		lastCurrentPlayer:free()
+	end
+
+	-- notify even if the player has not changed
+	jnt:notify("playerCurrent", currentPlayer)
+end
 
 
 -- _getSink
@@ -99,49 +149,6 @@ local function _getSink(self, cmd)
 end
 
 
--- _setConnected(connected)
--- sets the connected state from the player
--- sends an appropriate notification on change
-local function _setConnected(self, connected)
-	log:debug("_setConnected(", connected, ")")
-	
-	-- use tostring to handle nil case (in either)
-	if tostring(connected) != tostring(self.connected) then
-		self.connected = connected
-		if connected == 1 then
-			self.jnt:notify('playerConnected', self)
-		else
-			self.jnt:notify('playerDisconnected', self)
-		end
-	end
-end
-
--- _setPlayerName()
--- sets the name of the player
--- sends an appropriate notification on change
-local function _setPlayerName(self, playerName)
-	log:debug("_setPlayerName(", playerName, ")")
-
-	-- convert to string, in case SC sends a nil player name
-	playerName = tostring(playerName)
-
-	-- make sure this is a new name
-	if playerName != self.name then
-		self.name = playerName
-		self.jnt:notify('playerNewName', self, playerName)
-	end
-end
-
-local function _setPlayerPower(self, power)
-	log:debug("_setPlayerPower")
-
-	power = tonumber(power)
-	if power != self.power then
-		self.power = power
-		self.jnt:notify('playerPower', self, power)
-	end
-end
-
 local function _formatShowBrieflyText(msg)
 	log:debug("_formatShowBrieflyText")
 
@@ -158,15 +165,6 @@ local function _formatShowBrieflyText(msg)
 	return text2
 end
 
--- _setPlayerModeChange()
--- sends notifications when changes in the play mode (e.g., moves from play to paused)
-local function _setPlayerModeChange(self, mode)
-	log:debug("_setPlayerModeChange")
-	if mode != self.mode then
-		self.mode = mode
-		self.jnt:notify('playerModeChange', self, mode)
-	end
-end
 
 -- _whatsPlaying(obj)
 -- returns the track_id from a playerstatus structure
@@ -186,80 +184,48 @@ local function _whatsPlaying(obj)
 	return whatsPlaying
 end
 
--- _setPlayerPlaylistChange()
--- sends notifications when anything gets sent about the playlist changing
-local function _setPlayerPlaylistChange(self, timestamp)
-	log:debug("Player:_setPlayerPlaylistChange")
-	if self.playlist_timestamp != timestamp then
-		self.playlist_timestamp = timestamp
-		self.jnt:notify('playerPlaylistChange', self)
-	end
-end
-
--- _setPlayerTrackChange()
--- sends notifications when a change occurs to the currently playing track
-local function _setPlayerTrackChange(self, nowPlaying)
-	log:debug("Player:_setPlayerTrackChange")
-
-	if self.nowPlaying != nowPlaying then
-		self.nowPlaying = nowPlaying
-		self.jnt:notify('playerTrackChange', self, nowPlaying)
-	end
-end
 
 --[[
 
-=head2 jive.slim.Player(server, jnt, playerInfo)
+=head2 jive.slim.Player(server, jnt, playerId)
 
-Create a Player object for server I<server>.
+Create a Player object with playerId.
 
 =cut
 --]]
-
-function __init(self, jnt, slimServer, playerInfo)
-	log:debug("Player:__init(", playerInfo.playerid, ")")
-
-	_assert(slimServer, "Needs slimServer")
-	_assert(playerInfo, "Needs playerInfo")
+function __init(self, jnt, playerId)
+	log:debug("Player:__init(", playerId, ")")
 
 	-- Only create one player object per id. This avoids duplicates
 	-- when moving between servers
 
-	local obj = players[playerInfo.playerid]
-	if  obj then
-		obj:update(slimServer, playerInfo)
-		return obj
+	if playerIds[playerId] then
+		return playerIds[playerId]
 	end
 
 	local obj = oo.rawnew(self,{
-		
-		slimServer = slimServer,
 		jnt = jnt,
 
-		id = playerInfo.playerid,
-		uuid = playerInfo.uuid,
-		name = tostring(playerInfo.name),
-		model = playerInfo.model,
-		connected = playerInfo.connected,
-		power = playerInfo.power,
-		needsUpgrade = (tonumber(playerInfo.player_needs_upgrade) == 1),
-		playerIsUpgrading = (tonumber(playerInfo.player_is_upgrading) == 1),
-		pin = playerInfo.pin,
+		id = playerId,
 
-		-- menu item of home menu that represents this player
-		homeMenuItem = false,
-		
+		uuid = false,
+		slimServer = false,
+		config = false,
+		lastSeen = 0,
+
+		-- player info from SC
+		info = {},
+
+		-- player state from SC
+		state = {},
+
 		isOnStage = false,
 
 		-- current song info
 		currentSong = {}
 	})
 
-	players[obj.id] = obj
-
-	-- notify of new player
-	log:info(obj, " new for ", obj.slimServer)
-	obj.slimServer:_addPlayer(obj)
+	playerIds[obj.id] = obj
 
 	return obj
 end
@@ -267,13 +233,14 @@ end
 
 --[[
 
-=head2 jive.slim.Player:update(playerInfo)
+=head2 jive.slim.Player:updatePlayerInfo(squeezeCenter, playerInfo)
 
 Updates the player with fresh data from SS.
 
 =cut
 --]]
-function update(self, slimServer, playerInfo)
+function updatePlayerInfo(self, slimServer, playerInfo)
+
 	-- ignore updates from a different server if the player
 	-- is not connected to it
 	if self.slimServer ~= slimServer 
@@ -281,44 +248,174 @@ function update(self, slimServer, playerInfo)
 		return
 	end
 
-	-- Update player state
-	local lastNeedsUpgrade = self.needsUpgrade
-	self.needsUpgrade = (tonumber(playerInfo.player_needs_upgrade) == 1)
-	local lastIsUpgrading = self.playerIsUpgrading
-	self.playerIsUpgrading = (tonumber(playerInfo.player_is_upgrading) == 1)
+	-- Save old player info
+	local oldInfo = self.info
+	self.info = {}
 
-	-- FIXME the object state needs setting before any notifications
-	-- this is now changed for needsUpgrade and playerIsUpgrading, but still needs to be done
-	-- for all other player state
+	-- Update player info, cast to fix perl bugs :)
+	self.config = true
+	self.info.uuid = tostring(playerInfo.uuid)
+	self.info.name = tostring(playerInfo.name)
+	self.info.model = tostring(playerInfo.model)
+	self.info.connected = tonumber(playerInfo.connected) == 1
+	self.info.power = tonumber(playerInfo.power) == 1
+	self.info.needsUpgrade = tonumber(playerInfo.player_needs_upgrade) == 1
+	self.info.isUpgrading = tonumber(playerInfo.player_is_upgrading) == 1
+	self.info.pin = tostring(playerInfo.pin)
 
+	self.lastSeen = Framework:getTicks()
 
-	-- Send player notifications
+	-- PIN is removed from serverstatus after a player is linked
+	if self.info.pin and not playerInfo.pin then
+		self.info.pin = nil
+	end
+
+	-- Check have we changed SqueezeCenter
 	if self.slimServer ~= slimServer then
 		-- delete from old server
 		if self.slimServer then
 			self:free(self.slimServer)
 		end
 
+		-- modify the old state, as the player was not connected
+		-- to new SqueezeCenter. this makes sure the playerConnected
+		-- callback happens.
+		oldInfo.connected = false
+
 		-- add to new server
+		log:info(self, " new for ", slimServer)
 		self.slimServer = slimServer
 		self.slimServer:_addPlayer(self)
-		log:info(self, " new for ", self.slimServer)
-	end
-	
-	self.model = playerInfo.model
 
-	if lastNeedsUpgrade != self.needsUpgrade or lastIsUpgrading != self.playerIsUpgrading then
+		-- update current server
+		if currentPlayer == self then
+			SlimServer:setCurrentServer(slimServer)
+		end
+
+		-- player is now available
+		playerList[self.id] = self
+		self.jnt:notify('playerNew', self)
+	end
+
+	-- Check for player firmware upgrades
+	if oldInfo.needsUpgrade ~= self.info.needsUpgrade or oldInfo.isUpgrading ~= self.info.isUpgrading then
 		self.jnt:notify('playerNeedsUpgrade', self, self:isNeedsUpgrade(), self:isUpgrading())
 	end
 
-	_setPlayerName(self, playerInfo.name)
-	_setPlayerPower(self, tonumber(playerInfo.power))
-	_setConnected(self, playerInfo.connected)
-
-	-- PIN is removed from serverstatus after a player is linked
-	if self.pin and not playerInfo.pin then
-		self.pin = nil
+	-- Check if the player name has changed
+	if oldInfo.playerName ~= self.state.playerName then
+		self.jnt:notify('playerNewName', self, self.info.playerName)
 	end
+
+	-- Check if the player power status has changed
+	if oldInfo.power ~= self.info.power then
+		self.jnt:notify('playerPower', self, self.info.power)
+	end
+
+	-- Check if the player connected status has changed
+	if oldInfo.connected ~= self.info.connected then
+		if self.info.connected then
+			self.jnt:notify('playerConnected', self)
+		else
+			self.jnt:notify('playerDisconnected', self)
+		end
+	end
+end
+
+
+-- Update player state from a UDAP packet
+function updateUdap(self, udap)
+
+	self.config = "needsServer"
+	if udap.ucp.name == "" then
+		self.info.name = nil
+	else
+		self.info.name = tostring(udap.ucp.name)
+	end
+	self.info.model = DEVICE_IDS[tonumber(udap.ucp.device_id)]
+	self.info.connected = false
+
+	self.lastSeen = Framework:getTicks()
+
+	-- player is now available
+	playerList[self.id] = self
+	self.jnt:notify('playerNew', self)
+end
+
+
+-- return the Squeezebox mac address from the ssid, or nil if the ssid is
+-- not from a Squeezebox in setup mode.
+function ssidIsSqueezebox(self, ssid)
+	local hasEthernet, mac = string.match(ssid, "logitech([%-%+])squeezebox[%-%+](%x+)")
+
+	if mac then
+		mac = string.gsub(mac, "(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)", "%1:%2:%3:%4:%5:%6")
+	end
+
+	return mac, hasEthernet
+end
+
+
+-- Update player state from an SSID
+function updateSSID(self, ssid, lastScan)
+	local mac = ssidIsSqueezebox(self, ssid)
+
+	assert(self.id, mac)
+
+	-- stale wlan scan results?
+	if lastScan < self.lastSeen then
+		return
+	end
+
+	self.config = "needsNetwork"
+	self.configSSID = ssid
+	self.info.connected = false
+
+	self.lastSeen = lastScan
+
+	-- player is now available
+	playerList[self.id] = self
+	self.jnt:notify('playerNew', self)
+end
+
+
+--[[
+
+=head2 jive.slim.Player:free(slimServer)
+
+Deletes the player, if connect to the given slimServer
+
+=cut
+--]]
+function free(self, slimServer)
+	if self.slimServer ~= slimServer then
+		-- ignore, we are not connected to this server
+		return
+	end
+
+	log:info(self, " delete for ", self.slimServer)
+
+	-- player is gone
+	self.lastSeen = 0
+	self.jnt:notify('playerDelete', self)
+
+	if self == currentPlayer then
+		-- dont' delete state if this is the current player
+		return
+	end
+
+	-- player is no longer active
+	playerList[self.id] = nil
+	
+	if self.slimServer then
+		self:offStage()
+
+		self.slimServer:_deletePlayer(self)
+		self.slimServer = false
+	end
+
+	-- The global players table uses weak values, it will be removed
+	-- when all references are freed.
 end
 
 
@@ -340,7 +437,6 @@ function unsubscribe(self, ...)
 
 	self.slimServer.comet:unsubscribe(...)
 end
-
 
 
 --[[
@@ -367,14 +463,14 @@ function getTrackElapsed(self)
 		local now = Framework:getTicks() / 1000
 
 		-- multiply by rate to allow for trick modes
-		self.trackCorrection = tonumber(self.state.rate) * (now - self.trackSeen)
+		self.trackCorrection = self.rate * (now - self.trackSeen)
 	end
 
 	if self.trackCorrection <= 0 then
-		return tonumber(self.trackTime), tonumber(self.trackDuration)
+		return self.trackTime, self.trackDuration
 	else
 		local trackElapsed = self.trackTime + self.trackCorrection
-		return tonumber(trackElapsed), tonumber(self.trackDuration)
+		return trackElapsed, self.trackDuration
 	end
 	
 end
@@ -393,6 +489,7 @@ function getPlaylistTimestamp(self)
 	return self.playlist_timestamp
 end
 
+
 --[[
 
 =head2 jive.slim.Player:getPlaylistSize()
@@ -402,8 +499,9 @@ returns the playlist size for a given player object
 =cut
 --]]
 function getPlaylistSize(self)
-	return tonumber(self.playlistSize)
+	return self.playlistSize
 end
+
 
 --[[
 
@@ -414,20 +512,7 @@ returns the playerMode for a given player object
 =cut
 --]]
 function getPlayerMode(self)
-	return self.mode
-end
-
-
---[[
-
-=head2 jive.slim.Player:getPlayerPower()
-
-returns the playerPower for a given player object
-
-=cut
---]]
-function getPlayerPower(self)
-	return tonumber(self.power)
+	return self.state.mode
 end
 
 
@@ -443,69 +528,6 @@ function getPlayerStatus(self)
 	return self.state
 end
 
---[[
-
-=head2 jive.slim.Player:free(slimServer)
-
-Deletes the player, if connect to the given slimServer
-
-=cut
---]]
-function free(self, slimServer)
-	_assert(slimServer)
-
-	if self.slimServer ~= slimServer then
-		-- ignore, we are not connected to this server
-		return
-	end
-
-	log:info(self, " delete for ", self.slimServer)
-	self.slimServer:_deletePlayer(self)
-	self:offStage()
-	self.slimServer = nil
-
-	-- The global players table uses weak values, it will be removed
-	-- when all references are freed.
-end
-
-
---[[
-
-=head2 jive.slim.Player:getHomeMenuItem()
-
-Returns the home menu menuItem that represents this player. This is
-used by L<jive.applet.SlimDiscovery> to remove the player from the menu
-if/when it disappears.
-
-=cut
---]]
-function getHomeMenuItem(self)
-	-- return nil if self.homeMenuItem is false
-	if self.homeMenuItem then
-		return self.homeMenuItem
-	end
-	return nil
-end
-
-
---[[
-
-=head2 jive.slim.Player:setHomeMenuItem(homeMenuItem)
-
-Stores the main home menuItem that represents this player. This is
-used by L<jive.applet.SlimDiscovery> to manage the home menu item.
-
-=cut
---]]
-function setHomeMenuItem(self, homeMenuItem)
-	-- set self.homeMenuItem to false if sent nil
-	if homeMenuItem then
-		self.homeMenuItem = homeMenuItem
-	else
-		self.homeMenuItem = false
-	end
-end
-
 
 --[[
 
@@ -517,7 +539,7 @@ if I<aPlayer> is a L<jive.slim.Player>, prints
 =cut
 --]]
 function __tostring(self)
-	return "Player {" .. self.name .. "}"
+	return "Player {" .. self:getName() .. "}"
 end
 
 
@@ -530,7 +552,11 @@ Returns the player name
 =cut
 --]]
 function getName(self)
-	return self.name
+	if self.info.name then
+		return self.info.name
+	else
+		return "Squeezebox " .. string.gsub(string.sub(self.id, 10), ":", "")
+	end
 end
 
 
@@ -543,7 +569,7 @@ Returns true if the player is powered on
 =cut
 --]]
 function isPowerOn(self)
-	return tonumber(self.power) == 1
+	return self.info.power
 end
 
 
@@ -560,6 +586,16 @@ function getId(self)
 end
 
 
+-- Returns the player ssid if in setup mode, or nil
+function getSSID(self)
+	if self.config == 'needsNetwork' then
+		return self.configSSID
+	else
+		return nil
+	end
+end
+
+
 --[[
 
 =head2 jive.slim.Player:getUuid()
@@ -569,7 +605,7 @@ Returns the player uuid.
 =cut
 --]]
 function getUuid(self)
-	return self.uuid
+	return self.info.uuid
 end
 
 
@@ -582,9 +618,9 @@ Returns the player mac address, or nil for http players.
 =cut
 --]]
 function getMacAddress(self)
-	if self.model == "squeezebox2"
-		or self.model == "receiver"
-		or self.model == "transporter" then
+	if self.info.model == "squeezebox2"
+		or self.info.model == "receiver"
+		or self.info.model == "transporter" then
 
 		return string.gsub(self.id, "[^%x]", "")
 	end
@@ -602,8 +638,15 @@ Returns the SqueezeNetwork PIN for this player, if it needs to be registered
 =cut
 --]]
 function getPin(self)
-	return self.pin
+	return self.info.pin
 end
+
+
+-- Clear the SN pin when the player is linked
+function clearPin(self)
+	self.info.pin = nil
+end
+
 
 --[[
 
@@ -731,7 +774,6 @@ function updateIconbar(self)
 	log:debug("Player:updateIconbar()")
 	
 	if self.isOnStage and self.state then
-
 		-- set the playmode (nil, stop, play, pause)
 		iconbar:setPlaymode(self.state["mode"])
 		
@@ -754,36 +796,50 @@ function _process_status(self, event)
 		return
 	end
 
-	-- update our cache in one go
+	-- update our state in one go
+	local oldState = self.state
 	self.state = event.data
 
-	-- Update player state
-	local lastNeedsUpgrade = (self.needsUpgrade == 1)
-	local lastIsUpgrading = (self.playerIsUpgrading == 1)
-	self.needsUpgrade = (tonumber(event.data.player_needs_upgrade) == 1)
-	self.playerIsUpgrading = (tonumber(event.data.player_is_upgrading) == 1)
-
 	-- used for calculating getTrackElapsed(), getTrackRemaining()
+	self.rate = tonumber(event.data.rate)
 	self.trackSeen = Framework:getTicks() / 1000
 	self.trackCorrection = 0
-	self.trackTime = event.data.time
-	self.trackDuration = event.data.duration
+	self.trackTime = tonumber(event.data.time)
+	self.trackDuration = tonumber(event.data.duration)
 	self.playlistSize = tonumber(event.data.playlist_tracks)
 
-	_setConnected(self, self.state["player_connected"])
-	_setPlayerPower(self, tonumber(event.data.power))
+	-- update our player state, and send notifications
+	-- create a playerInfo table, to allow code reuse
+	local playerInfo = {}
+	playerInfo.uuid = self.info.uuid
+	playerInfo.name = event.data.player_name
+	playerInfo.model = self.info.model
+	playerInfo.connected = event.data.player_connected
+	playerInfo.power = event.data.power
+	playerInfo.player_needs_upgrade = event.data.player_needs_upgrade
+	playerInfo.player_is_upgrading = event.data.player_is_upgrading
+	playerInfo.pin = self.info.pin
 
-	_setPlayerModeChange(self, event.data.mode)
+	self:updatePlayerInfo(self.slimServer, playerInfo)
 
-	if self.needsUpgrade ~= lastNeedsUpgrade or self.playerIsUpgrading ~= lastIsUpgrading then
-		self.jnt:notify('playerNeedsUpgrade', self, self:isNeedsUpgrade(), self:isUpgrading())
-	end
-
+	-- update track list
 	local nowPlaying = _whatsPlaying(event.data)
 
-	_setPlayerTrackChange(self, nowPlaying)
-	_setPlayerPlaylistChange(self, event.data.playlist_timestamp)
+	if self.state.mode ~= oldState.mode then
+		self.jnt:notify('playerModeChange', self, self.state.mode)
+	end
 
+	if self.nowPlaying ~= nowPlaying then
+		self.nowPlaying = nowPlaying
+		self.jnt:notify('playerTrackChange', self, nowPlaying)
+	end
+
+	if self.playlist_timestamp ~= timestamp then
+		self.playlist_timestamp = timestamp
+		self.jnt:notify('playerPlaylistChange', self)
+	end
+
+	-- update iconbar
 	self:updateIconbar()
 end
 
@@ -849,7 +905,7 @@ end
 --
 function isPaused(self)
 	if self.state then
-		return self.state["mode"] == 'pause'
+		return self.state.mode == 'pause'
 	end
 end
 
@@ -858,7 +914,7 @@ end
 --
 function getPlayMode(self)
 	if self.state then
-		return self.state["mode"]
+		return self.state.mode
 	end
 end
 
@@ -866,17 +922,17 @@ end
 --
 function isCurrent(self, index)
 	if self.state then
-		return self.state["playlist_cur_index"] == index - 1
+		return self.state.playlist_cur_index == index - 1
 	end
 end
 
 
 function isNeedsUpgrade(self)
-	return self.needsUpgrade
+	return self.info.needsUpgrade
 end
 
 function isUpgrading(self)
-	return self.playerIsUpgrading
+	return self.info.isUpgrading
 end
 
 -- play
@@ -890,7 +946,7 @@ function play(self)
 	end
 
 	self:call({'mode', 'play'})
-	self.state["mode"] = 'play'
+	self.state.mode = 'play'
 	self:updateIconbar()
 end
 
@@ -900,7 +956,7 @@ end
 function stop(self)
 	log:debug("Player:stop()")
 	self:call({'mode', 'stop'})
-	self.state["mode"] = 'stop'
+	self.state.mode = 'stop'
 	self:updateIconbar()
 end
 
@@ -1053,27 +1109,118 @@ end
 
 -- returns true if this player supports udap setup
 function canUdap(self)
-	return self.model == "receiver"
+	return self.info.model == "receiver"
 end
 
 
 -- returns true if this player can connect to another server
 function canConnectToServer(self)
-	return self.model == "squeezebox2"
-		or self.model == "receiver"
-		or self.model == "transporter"
+	return self.info.model == "squeezebox2"
+		or self.info.model == "receiver"
+		or self.info.model == "transporter"
 end
 
 
 -- tell the player to connect to another server
 function connectToServer(self, server)
-	local ip, port = server:getIpPort()
-	self:send({'connect', ip})
+
+	if self.config == "needsServer" then
+		_udapConnect(self, server)
+		return
+
+	elseif self.slimServer then
+		local ip, port = server:getIpPort()
+		self:send({'connect', ip})
+		return true
+
+	else
+		log:warn("No method to connect ", self, " to ", server)
+		return false
+	end
+end
+
+
+function parseip(str)
+	local ip = 0
+	for w in string.gmatch(str, "%d+") do
+		ip = ip << 8
+		ip = ip | tonumber(w)
+	end
+	return ip
+end
+
+
+function _udapConnect(self, server)
+	local data = {}
+
+	if server:isSqueezeNetwork() then
+		local sn_hostname = jnt:getSNHostname()
+
+		if sn_hostname == "www.squeezenetwork.com" then
+			data.server_address = Udap.packNumber(1, 4)
+		elseif sn_hostname == "www.beta.squeezenetwork.com" then
+			data.server_address = Udap.packNumber(1, 4)
+			-- XXX the above should be this when "serv 2" in all firmware:
+			-- data.server_address = Udap.packNumber(2, 4)
+		else
+			-- for locally edited values (SN developers)
+			local ip = socket.dns.toip(sn_hostname)
+			data.server_address = Udap.packNumber(parseip(ip), 4)
+		end
+
+		log:info("SN server_address=", data.server_address)
+
+		-- set slimserver address to 0.0.0.1 to workaround a bug in
+		-- squeezebox firmware
+		data.slimserver_address = Udap.packNumber(parseip("0.0.0.1"), 4)
+	else
+		local serverip = server:getIpPort()
+
+		log:info("SC slimserver_address=", serverip)
+
+		data.server_address = Udap.packNumber(0, 4)
+		data.slimserver_address = Udap.packNumber(parseip(serverip), 4)
+	end
+
+	udap = Udap(self.jnt)
+
+	-- configure squeezebox network
+	-- XXXX move seqno management into Udap class
+	local seqno = 1
+	local packet = udap.createSetData(self.id, seqno, data)
+
+	-- send three udp packets in case the wireless network drops them
+	-- XXXX make udap class retry packets until ackd
+	udap:send(function() return packet end, "255.255.255.255")
+	udap:send(function() return packet end, "255.255.255.255")
+	udap:send(function() return packet end, "255.255.255.255")
+end
+
+
+function getLastSeen(self)
+	return self.lastSeen
 end
 
 
 function isConnected(self)
-	return self.slimServer and self.slimServer:isConnected() and self.connected
+	return self.slimServer and self.slimServer:isConnected() and self.info.connected
+end
+
+
+-- return true if the player is available, that is when it is connected
+-- to SqueezeCenter, or in configuration mode (udap or wlan adhoc)
+function isAvailable(self)
+	return self.config ~= false
+end
+
+
+function needsNetworkConfig(self)
+	return self.config == "needsNetwork"
+end
+
+
+function needsMusicSource(self)
+	return self.config == "needsServer"
 end
 
 

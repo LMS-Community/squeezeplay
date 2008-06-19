@@ -24,7 +24,6 @@ local ipairs, pairs, tostring = ipairs, pairs, tostring
 local oo               = require("loop.simple")
 
 local Applet           = require("jive.Applet")
-local AppletManager    = require("jive.AppletManager")
 local Timer            = require("jive.ui.Timer")
 local Framework        = require("jive.ui.Framework")
 local Window           = require("jive.ui.Window")
@@ -117,9 +116,9 @@ function _activate(self, the_screensaver)
 
 	-- what screensaver, check the playmode of the current player
 	if the_screensaver == nil then
-		local sd = AppletManager:getAppletInstance("SlimDiscovery")
-		
-		if sd and sd:getCurrentPlayer() and sd:getCurrentPlayer():getPlayMode() == "play" then
+		local player = appletManager:callService("getCurrentPlayer")
+
+		if player and player:getPlayMode() == "play" then
 			the_screensaver = self:getSettings()["whenPlaying"]
 		else
 			the_screensaver = self:getSettings()["whenStopped"]
@@ -142,9 +141,10 @@ end
 -- screensavers can have methods that are executed on close
 function _deactivate(self, window, the_screensaver)
 
-	local sd = AppletManager:getAppletInstance("SlimDiscovery")
 	if not the_screensaver then
-		if sd and sd:getCurrentPlayer() and sd:getCurrentPlayer():getPlayMode() == "play" then
+		local player = appletManager:callService("getCurrentPlayer")
+		
+		if player and player:getPlayMode() == "play" then
 			the_screensaver = self:getSettings()["whenPlaying"]
 		else
 			the_screensaver = self:getSettings()["whenStopped"]

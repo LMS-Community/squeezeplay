@@ -32,7 +32,6 @@ local ltn12            = require("ltn12")
 local lfs              = require("lfs")
 
 local Applet           = require("jive.Applet")
-local AppletManager    = require("jive.AppletManager")
 local SlimServer       = require("jive.slim.SlimServer")
 
 local RequestHttp      = require("jive.net.RequestHttp")
@@ -64,23 +63,20 @@ function menu(self, menuItem)
 	self.window = Window("window", menuItem.text)
 	self.title = menuItem.text
 
-	sd = AppletManager:getAppletInstance("SlimDiscovery")
-
 	-- find a server
-	if sd then
-		if sd:getCurrentPlayer() then
-			self.server = sd:getCurrentPlayer():getSlimServer()
-		else
-			for _, server in sd:allServers() do
-				self.server = server
-				break
-			end
+	local player = appletManager:callService("getCurrentPlayer")
+	if player then
+		self.server = player:getSlimServer()
+	else
+		for _, server in appletManager:callService("iterateSqueezeCenters") do
+			self.server = server
+			break
 		end
 	end
 
 	-- ask about its applets
 	if self.server then
-		self.server.comet:request(
+		self.server:request(
 			function(chunk, err)
 				if err then
 					log:debug(err)

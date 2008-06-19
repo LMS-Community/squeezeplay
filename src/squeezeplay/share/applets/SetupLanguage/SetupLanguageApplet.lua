@@ -22,7 +22,6 @@ local ipairs, pairs, io, string = ipairs, pairs, io, string
 local oo               = require("loop.simple")
 
 local Applet           = require("jive.Applet")
-local AppletManager    = require("jive.AppletManager")
 local RadioGroup       = require("jive.ui.RadioGroup")
 local RadioButton      = require("jive.ui.RadioButton")
 local Framework        = require("jive.ui.Framework")
@@ -165,7 +164,7 @@ function setLang(self, choice, next)
 
 	-- FIXME SlimBrowser should use notification
 	-- if connected to a player, ask for the menu again
-	local player = _getCurrentPlayer(self)
+	local player = appletManager:callService("getCurrentPlayer")
 	if player then
 		local server = player:getSlimServer()
 		if server then
@@ -210,14 +209,6 @@ function setLang(self, choice, next)
 		 ):addTask()
 end
 
-function _getCurrentPlayer(self)
-	local manager = AppletManager:getAppletInstance("SlimDiscovery")
-
-	if manager and manager:getCurrentPlayer() then
-		return manager:getCurrentPlayer()
-	end
-	return false
-end
 
 --[[
 

@@ -267,7 +267,7 @@ function notify_playerCurrent(self, player)
 		     end
 
 	if player then
-		player.slimServer.comet:request(sink,
+		player:getSlimServer().comet:request(sink,
 					player:getId(),
 					{ 'date' }
 				)

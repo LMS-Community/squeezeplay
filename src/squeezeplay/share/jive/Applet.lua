@@ -144,6 +144,11 @@ function string(self, token, ...)
 end
 
 
+function registerService(self, service, closure)
+	AppletManager:registerService(self._entry.name, service, closure)
+end
+
+
 --[[
 
 =head1 LICENSE

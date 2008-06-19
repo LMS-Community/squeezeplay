@@ -32,7 +32,32 @@ function registerApplet(meta)
 
 	-- check for firmware upgrades when we connect to a new player
 	-- we don't want the firmware upgrade applets always loaded so
-	-- do this in a closure
+	-- do this in the meta class
+	jnt:subscribe(meta)
+end
+
+
+function notify_playerDelete(meta, player)
+	if meta.player ~= player then
+		return
+	end
+
+	meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player:getId())
+	meta.player = false
+end
+
+
+function notify_playerCurrent(meta, player)
+	if not player or meta.player == player then
+		return
+	end
+
+	if meta.player then
+		meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player:getId())
+	end
+
+	meta.player = player
+	
 	local firmwareUpgradeSink =
 		function(chunk, err)
 			if err then
@@ -48,7 +73,7 @@ function registerApplet(meta)
 			-- store firmware upgrade url
 			-- Bug 6828, use a relative URL from SC to handle dual-homed servers
 			if chunk.data.relativeFirmwareUrl then
-				local ip, port = meta.player.slimServer:getIpPort()
+				local ip, port = meta.player:getSlimServer():getIpPort()
 				upgradeUrl[1] = 'http://' .. ip .. ':' .. port .. chunk.data.relativeFirmwareUrl
 				log:info("Relative Firmware URL=", upgradeUrl[1])
 			elseif chunk.data.firmwareUrl then
@@ -62,36 +87,18 @@ function registerApplet(meta)
 				local applet = appletManager:loadApplet("SetupFirmwareUpgrade")
 				applet:forceUpgrade(tonumber(chunk.data.firmwareOptional) == 1, upgradeUrl[1], chunk.data.firmwareHelp)
 
-				meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
+				meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player:getId())
 			end
 
 		end
 
-	local monitor = {
-		notify_playerCurrent =
-			function(self, player)
-				if not player then
-					return
-				end
-
-				if meta.player and meta.player ~= player then
-					meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player.id)
-				end
-
-				meta.player = player
-				
-				local fwcmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION, 'subscribe:0' }
-				player:subscribe(
-					'/slim/firmwarestatus/' .. player.id,
-					firmwareUpgradeSink,
-					player.id,
-					fwcmd
-				)
-			end,
-	}
-
-	jnt:subscribe(monitor)
-
+	local fwcmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION, 'subscribe:0' }
+	player:subscribe(
+			 '/slim/firmwarestatus/' .. player:getId(),
+			 firmwareUpgradeSink,
+			 player:getId(),
+			 fwcmd
+		 )
 end
 
 

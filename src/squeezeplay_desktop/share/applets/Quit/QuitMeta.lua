@@ -43,9 +43,8 @@ function registerApplet(self)
 		node = 'home',
 		text = self:string("QUIT"),
 		callback = function() 
-			-- disconnect from SqueezeCenter
-			local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
-			slimDiscovery.serversObj:disconnect()
+			-- disconnect from Player/SqueezeCenter
+			appletManager:callService("disconnectPlayer")
 
 			return (EVENT_CONSUME | EVENT_QUIT)
 		end,

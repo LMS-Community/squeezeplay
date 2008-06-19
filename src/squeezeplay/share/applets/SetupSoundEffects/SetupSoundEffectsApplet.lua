@@ -27,7 +27,6 @@ local os              = require("os")
 local io              = require("io")
 local lfs             = require("lfs")
 
-local AppletManager   = require("jive.AppletManager")
 local Applet          = require("jive.Applet")
 local Audio           = require("jive.ui.Audio")
 local Checkbox        = require("jive.ui.Checkbox")
@@ -209,7 +208,7 @@ function settingsShow(self, menuItem)
 	-- look for any server based sounds
 	if self.server then
 		log:info("found server - requesting sounds list")
-		self.server.comet:request(
+		self.server:request(
 			function(chunk, err)
 				if err then
 					log:debug(err)
@@ -279,15 +278,14 @@ end
 
 
 function _getCurrentServer(self)
-	local manager = AppletManager:getAppletInstance("SlimDiscovery")
-	local server
-	if manager and manager:getCurrentPlayer() then
-		server = manager:getCurrentPlayer():getSlimServer()
-		if server:isSqueezeNetwork() then
-			server = nil
+	local player = appletManager:callService("getCurrentPlayer")
+	if player then
+		local server = player:getSlimServer()
+		if not server:isSqueezeNetwork() then
+			return server
 		end
 	end
-	return server
+	return nil
 end
 
 

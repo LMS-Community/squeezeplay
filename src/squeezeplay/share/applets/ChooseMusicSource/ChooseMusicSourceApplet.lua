@@ -28,7 +28,6 @@ local string        = require("string")
 local table         = require("jive.utils.table")
 
 local Applet        = require("jive.Applet")
-local SlimServers   = require("jive.slim.SlimServers")
 
 local Framework     = require("jive.ui.Framework")
 local Checkbox      = require("jive.ui.Checkbox")
@@ -55,6 +54,12 @@ oo.class(_M, Applet)
 local CONNECT_TIMEOUT = 30
 
 
+-- service to select server for a player
+function selectMusicSource(self)
+	self:settingsShow()
+end
+
+
 -- main setting menu
 function settingsShow(self)
 
@@ -63,23 +68,7 @@ function settingsShow(self)
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 	window:addWidget(menu)
 
-
-	self.sdApplet = appletManager:getAppletInstance("SlimDiscovery")
-	if not self.sdApplet then
-		return window:tieAndShowWindow()
-	end
-
-
-	-- Bug 7862
-	-- Workaround to allow changing music source using udap until
-	-- refactoring for bug 6683
-	local current = self.sdApplet:getCurrentPlayer()
-	if current and not current:isConnected() and current:canUdap() and appletManager:hasApplet("SetupSqueezebox") then
-		local setupSqueezebox = appletManager:loadApplet("SetupSqueezebox")
-		setupSqueezebox:startSqueezeboxSetup(current:getMacAddress(), nil)
-		return
-	end
-
+	local current = appletManager:callService("getCurrentPlayer")
 
 	self.serverMenu = menu
 	self.serverList = {}
@@ -89,12 +78,12 @@ function settingsShow(self)
 
 
 	-- Discover slimservers in this window
-	self.sdApplet:discover()
-	window:addTimer(1000, function() self.sdApplet:discover() end)
+	appletManager:callService("discoverPlayers")
+	window:addTimer(1000, function() appletManager:callService("discoverPlayers") end)
 
 
 	-- slimservers on the poll list
-	local poll = self.sdApplet:pollList()
+	local poll = appletManager:callService("getPollList")
 	for address,_ in pairs(poll) do
 		if address ~= "255.255.255.255" then
 			self:_addServerItem(nil, address)
@@ -103,7 +92,7 @@ function settingsShow(self)
 
 
 	-- discovered slimservers
-	for _,server in self.sdApplet:allServers() do
+	for _,server in appletManager:callService("iterateSqueezeCenters") do
 		self:_addServerItem(server)
 	end
 
@@ -147,7 +136,7 @@ function _addServerItem(self, server, address)
 		self.serverMenu:removeItem(self.serverList[server:getIpPort()])
 	end
 
-	local currentPlayer = self.sdApplet:getCurrentPlayer()
+	local currentPlayer = appletManager:callService("getCurrentPlayer")
 
 	-- new entry
 	local item
@@ -198,7 +187,7 @@ function _delServerItem(self, server, address)
 
 	-- new entry if server is on poll list
 	if server then
-		local poll = self.sdApplet:pollList()
+		local poll = appletManager:callService("getPollList")
 		local address = server:getIpPort()
 		if poll[address] then
 			self:_addServerItem(nil, address)
@@ -250,7 +239,7 @@ function notify_playerNew(self, player)
 		jiveMain:closeToHome()
 	end
 
-	local currentPlayer = self.sdApplet:getCurrentPlayer()
+	local currentPlayer = appletManager:callService("getCurrentPlayer")
 	if player ~= currentPlayer then
 		return
 	end
@@ -260,7 +249,7 @@ end
 
 
 function notify_playerDelete(self, player)
-	local currentPlayer = self.sdApplet:getCurrentPlayer()
+	local currentPlayer = appletManager:callService("getCurrentPlayer")
 	if player ~= currentPlayer then
 		return
 	end
@@ -305,7 +294,7 @@ function connectPlayer(self, player, server)
 	window:addTimer(1000,
 			function()
 				-- scan all servers waiting for the player
-				self.sdApplet:discover()
+				appletManager:callService("discoverPlayers")
 
 				-- we detect when the connect to the new server
 				-- with notify_playerNew
@@ -413,7 +402,7 @@ end
 
 
 function _getOtherServer(self)
-	local list = self.sdApplet:pollList()
+	local list = appletManager:callService("getPollList")
 	for i,v in pairs(list) do
 		if i ~= "255.255.255.255" then
 			return i
@@ -437,7 +426,7 @@ function _add(self, address)
 		[address] = address
 	}
 
-	self.sdApplet:pollList(list)
+	appletManager:callService("setPollList", list)
 	self:getSettings().poll = list
 end
 

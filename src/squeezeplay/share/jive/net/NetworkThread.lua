@@ -29,7 +29,7 @@ FIXME: Subscribe description
 
 
 -- stuff we use
-local _assert, tostring, table, ipairs, pairs, pcall, select, type  = _assert, tostring, table, ipairs, pairs, pcall, select, type
+local _assert, tostring, table, ipairs, pairs, pcall, select, setmetatable, type  = _assert, tostring, table, ipairs, pairs, pcall, select, setmetatable, type
 
 local io                = require("io")
 local os                = require("os")
@@ -386,6 +386,9 @@ function __init(self)
 
 		activeCount = 0,
 	})
+
+	-- subscriptions are gc weak
+	setmetatable(obj.subscribers, { __mode = 'k' })
 
 	-- create dns resolver
 	DNS(obj)

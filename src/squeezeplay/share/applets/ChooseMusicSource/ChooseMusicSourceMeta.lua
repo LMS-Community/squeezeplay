@@ -28,26 +28,25 @@ module(...)
 oo.class(_M, AppletMeta)
 
 
-function jiveVersion(self)
+function jiveVersion(meta)
 	return 1, 1
 end
 
 
-function defaultSettings(self)
+function defaultSettings(meta)
 	return {
 		poll = { ["255.255.255.255"] = "255.255.255.255" }
 	}
 end
 
 
-function registerApplet(self)
+function registerApplet(meta)
+	meta:registerService("selectMusicSource")
 
 	-- set the poll list for discovery of slimservers based on our settings
-	local sdApplet = appletManager:loadApplet("SlimDiscovery")
-	
-	if sdApplet then
-		sdApplet:pollList(self:getSettings().poll)
-		jiveMain:addItem(self:menuItem('appletSlimservers', 'settings', "SLIMSERVER_SERVERS", function(applet, ...) applet:settingsShow(...) end, 60))
+	if appletManager:hasService("setPollList") then
+		appletManager:callService("setPollList", meta:getSettings().poll)
+		jiveMain:addItem(meta:menuItem('appletSlimservers', 'settings', "SLIMSERVER_SERVERS", function(applet, ...) applet:settingsShow(...) end, 60))
 	end
 end
 

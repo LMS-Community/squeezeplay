@@ -110,9 +110,7 @@ local UNCONNECTING   = "UNCONNECTING"   -- disconnect request sent
 
 Creates A Comet socket named I<name> to interface with the given I<jnt> 
 (a L<jive.net.NetworkThread> instance). I<name> is used for debugging and
-defaults to "". I<ip> and I<port> are the IP address and port of the HTTP server.
-I<path> is the absolute path to the servers cometd handler and defaults to
-'/cometd'.
+defaults to "".
 
 Notifications:
 
@@ -121,20 +119,15 @@ Notifications:
 
 =cut
 --]]
-function __init(self, jnt, ip, port, path, name)
-	log:debug("Comet: __init(", name, ", ", ip, ", ", port, ", ", path, ")")
+function __init(self, jnt, name)
+	log:debug("Comet: __init(", name, ")")
 
 	-- init superclass
 	local obj = oo.rawnew( self, {} )
 	
-	obj.uri = 'http://' .. ip .. ':' .. port .. path
-	
-	-- Comet uses 2 pools, 1 for chunked responses and 1 for requests
-	obj.chttp          = SocketHttp(jnt, ip, port, name .. "_Chunked")
-	obj.rhttp          = SocketHttp(jnt, ip, port, name .. "_Request")
-
-	obj.chttp:setPriority(Task.PRIORITY_HIGH)
-	obj.rhttp:setPriority(Task.PRIORITY_HIGH)
+	obj.uri            = false
+	obj.chttp          = false
+	obj.rhttp          = false
 	
 	obj.jnt            = jnt
 	obj.name           = name
@@ -171,8 +164,38 @@ function aggressiveReconnect(self, aggressive)
 end
 
 
+-- setEndpoint:
+-- I<ip> and I<port> are the IP address and port of the HTTP server.
+-- I<path> is the absolute path to the servers cometd handler and defaults to
+-- '/cometd'.
+function setEndpoint(self, ip, port, path)
+	log:error(self, ": setEndpoint state=", self.state, ", ", ip, ", ", port, ", ", path)
+
+	local oldState = self.state
+
+	-- Force disconnection
+	_state(self, UNCONNECTED)
+	
+	self.uri = 'http://' .. ip .. ':' .. port .. path
+	
+	-- Comet uses 2 pools, 1 for chunked responses and 1 for requests
+	self.chttp = SocketHttp(self.jnt, ip, port, self.name .. "_Chunked")
+	self.rhttp = SocketHttp(self.jnt, ip, port, self.name .. "_Request")
+
+	self.chttp:setPriority(Task.PRIORITY_HIGH)
+	self.rhttp:setPriority(Task.PRIORITY_HIGH)
+
+	if oldState == CONNECTING or self.state == CONNECTED then
+		-- Reconnect
+		_handshake(self)
+	end
+end
+
+
 function connect(self)
 	log:debug(self, ": connect state=", self.state)
+
+	assert(self.uri)
 
 	self.isactive = true
 
@@ -510,6 +533,11 @@ _state = function(self, state)
 	-- Stop reconnect timer
 	self.reconnect_timer:stop()
 
+	-- Set the state before the notifications, so any re-rentrant calls
+	-- work correctly
+	self.state = state
+	log:debug(self, ": state is ", state)
+
 	if state == CONNECTED then
 		-- Reset error count
 		self.failures = 0
@@ -523,9 +551,6 @@ _state = function(self, state)
 
 		self.jnt:notify('cometDisconnected', self, #self.pending_reqs + #self.sent_reqs)
 	end
-
-	log:debug(self, ": state is ", state)
-	self.state = state
 end
 
 

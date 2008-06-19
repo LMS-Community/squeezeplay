@@ -263,11 +263,14 @@ end
 
 
 function notify_playerCurrent(self, player)
-	local server
-	if player then
-		self.player = player
-		self.server = player:getSlimServer()
-	else
+	if not player then
+		return
+	end
+
+	self.player = player
+	self.server = player:getSlimServer()
+	
+	if not self.server then
 		return
 	end
 
@@ -284,7 +287,7 @@ function notify_playerCurrent(self, player)
                              self:setDate(chunk.data.date)
  		     end
  
-       self.server.comet:request(sink,
+       self.server:request(sink,
                        player:getId(),
                        { 'date' }
        )
@@ -293,7 +296,7 @@ function notify_playerCurrent(self, player)
        self.clockTimer = Timer(6000000, -- 1 hour
                                function()
                                        if self.player and self.server then
-                                               self.server.comet:request(sink,
+                                               self.server:request(sink,
                                                        self.player:getId(),
                                                        { 'date' }
                                                )
@@ -821,8 +824,7 @@ end
 
 function settingsSleep(self)
 	-- disconnect from SqueezeCenter
-	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
-	slimDiscovery.serversObj:disconnect()
+	appletManager:callService("disconnectPlayer")
 
 	self.popup = Popup("popupIcon")
 
@@ -849,8 +851,7 @@ end
 
 function settingsPowerOff(self)
 	-- disconnect from SqueezeCenter
-	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
-	slimDiscovery.serversObj:disconnect()
+	appletManager:callService("disconnectPlayer")
 
 	local popup = Popup("popupIcon")
 
@@ -1043,12 +1044,6 @@ function _suspendTask(self)
 	local settings = self:getSettings()
 	local wakeAfter = settings.suspendWake and settings.suspendWake or ""
 
-	local slimDiscovery = appletManager:getAppletInstance("SlimDiscovery")
-	local slimServers
-	if slimDiscovery then
-		slimServers = slimDiscovery.serversObj
-	end
-
 	-- start timer to resume this task every second
 	self.suspendPopup:addTimer(1000,
 		function()
@@ -1057,22 +1052,19 @@ function _suspendTask(self)
 			end
 		end)
 
-	-- disconnect from all SlimServers
-	if slimServers then
-		local connected
-		repeat
-			slimServers:disconnect()
+	-- disconnect from all Players/SqueezeCenters
+	local connected
+	repeat
+		appletManager:callService("disconnectPlayer")
 
-			connected = false
-			for i,server in slimServers:allServers() do
-				connected = connected or server:isConnected()
-				log:info("server=", server:getName(), " connected=", connected)
-			end
+		connected = false
+		for i,server in appletManager:callService("iterateSqueezeCenters") do
+			connected = connected or server:isConnected()
+			log:info("server=", server:getName(), " connected=", connected)
+		end
 
-			Task:yield(false)
-		until not connected
-	end
-
+		Task:yield(false)
+	until not connected
 
 	-- suspend
 	os.execute("/etc/init.d/suspend " .. wakeAfter)
