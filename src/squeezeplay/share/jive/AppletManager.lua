@@ -54,6 +54,18 @@ local jnt
 -- loop detection
 local _sentinel = function () end
 
+-- applet services
+local _services = {}
+
+-- allowed applets, can be used for debugging to limit applets loaded
+--[[
+local allowedApplets = {
+	DefaultSkin = true,
+	SqueezeDiscovery = true,
+}
+--]]
+
+
 
 -- _init
 -- creates an AppletManager object
@@ -69,6 +81,10 @@ end
 local function _saveApplet(name, dir)
 	log:debug("Found applet ", name, " in ", dir)
 	
+	if allowedApplets and not allowedApplets[name] then
+		return
+	end
+
 	if not _appletsDb[name] then
 	
 		local newEntry = {
@@ -281,8 +297,10 @@ function discover(self)
 	-- sound is played without delay.
 	-- FIXME make the startup order of applet configurable
 	local soundEffectsEntry = _appletsDb["SetupSoundEffects"]
-	_loadMeta(soundEffectsEntry)
-	_evalMeta(soundEffectsEntry)
+	if soundEffectsEntry then
+		_loadMeta(soundEffectsEntry)
+		_evalMeta(soundEffectsEntry)
+	end
 
 	_loadMetas()
 	_evalMetas()
@@ -568,6 +586,39 @@ function _freeApplet(self, entry)
 	entry.appletEvaluated = false
 	entry.appletLoaded = false
 	package.loaded[entry.appletModule] = nil
+end
+
+
+function registerService(self, appletName, service)
+	log:debug("registerService appletName=", appletName, " service=", service)
+
+	_services[service] = appletName
+
+end
+
+
+function hasService(self, service)
+	log:debug("hasService service=", service)
+
+	return _services[service] ~= nil
+end
+
+
+function callService(self, service, ...)
+	log:debug("callService service=", service)
+
+	local _appletName = _services[service]
+
+	if not _appletName then
+		return
+	end
+
+	local _applet = self:loadApplet(_appletName)
+	if not _applet then
+		return
+	end
+
+	return _applet[service](_applet, ...)
 end
 
 

@@ -113,12 +113,12 @@ function setWirelessSignal(self, val)
 
 	self.wirelessSignal = val
 
-	if val == nil or val == "ERROR" then
-		self.iconWireless:setStyle("iconWireless" .. string.upper((val or "NONE")))
+	if val == "ERROR" then
+		self.iconWireless:setStyle("iconWireless" .. val)
 	elseif self.serverError == "ERROR" then
 		self.iconWireless:setStyle("iconWirelessSERVERERROR")
 	else
-		self.iconWireless:setStyle("iconWireless" .. val)
+		self.iconWireless:setStyle("iconWireless" .. (val or "NONE"))
 	end
 end
 

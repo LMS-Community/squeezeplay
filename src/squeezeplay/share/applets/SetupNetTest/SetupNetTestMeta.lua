@@ -34,7 +34,7 @@ end
 
 
 function notify_playerCurrent(meta, player)
-	if player == nil or player.slimServer:isSqueezeNetwork() then
+	if player == nil or player:getSlimServer():isSqueezeNetwork() then
 		jiveMain:removeItem(meta.menu)
 	else
 		jiveMain:addItem(meta.menu)

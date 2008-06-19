@@ -24,7 +24,6 @@ local os                 = require("os")
 local string             = require("string")
 
 local Applet             = require("jive.Applet")
-local AppletManager      = require("jive.AppletManager")
 local SimpleMenu         = require("jive.ui.SimpleMenu")
 local RadioGroup         = require("jive.ui.RadioGroup")
 local RadioButton        = require("jive.ui.RadioButton")
@@ -34,7 +33,6 @@ local Icon               = require("jive.ui.Icon")
 local Label              = require("jive.ui.Label")
 local Framework          = require("jive.ui.Framework")
 
-local Udap               = require("jive.net.Udap")
 local hasWireless, Wireless  = pcall(require, "jive.net.Wireless")
 
 local log                = require("jive.utils.log").logger("applets.setup")
@@ -47,7 +45,7 @@ local jiveMain           = jiveMain
 local appletManager      = appletManager
 
 -- load SetupWallpaper for use in previewing Wallpapers
-local SetupWallpaper = AppletManager:loadApplet("SetupWallpaper")
+local SetupWallpaper = appletManager:loadApplet("SetupWallpaper")
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
@@ -72,39 +70,43 @@ function init(self, ...)
 end
 
 
-function free(self)
-	jnt:unsubscribe(self)
-end
+function notify_playerDelete(self, player)
+	local mac = player:getId()
 
-
-function notify_playerDelete(self, playerObj)
-	local mac = playerObj.id
 	manageSelectPlayerMenu(self)
-	if self.playerMenu and self.playerItem[mac] then
-		self.playerMenu:removeItem(self.playerItem[mac])
-		self.playerItem[mac] = nil
-	end
 
-	self:_updateServerItem(playerObj:getSlimServer())
+	if self.playerMenu then
+		if self.playerItem[mac] then
+			self.playerMenu:removeItem(self.playerItem[mac])
+			self.playerItem[mac] = nil
+		end
+
+		if player:getSlimServer() then
+			self:_updateServerItem(player:getSlimServer())
+		end
+	end
 end
 
 
-function notify_playerNew(self, playerObj)
+function notify_playerNew(self, player)
 	-- get number of players. if number of players is > 1, add menu item
-	local mac = playerObj.id
+	local mac = player:getId()
 
 	manageSelectPlayerMenu(self)
-	if self.playerMenu then
-		self:_addPlayerItem(playerObj)
-	end
 
-	self:_updateServerItem(playerObj:getSlimServer())
+	if self.playerMenu then
+		self:_addPlayerItem(player)
+
+		if player:getSlimServer() then
+			self:_updateServerItem(player:getSlimServer())
+		end
+	end
 end
 
 
-function notify_playerCurrent(self, playerObj)
+function notify_playerCurrent(self, player)
 	if self.playerMenu then
-		self.selectedPlayer = playerObj
+		self.selectedPlayer = player
 		self:manageSelectPlayerMenu()
 	end
 end
@@ -115,12 +117,14 @@ function notify_serverConnected(self, server)
 		return
 	end
 
+	self:_updateServerItem(server)
+
 	for id, player in server:allPlayers() do
 		self:_refreshPlayerItem(player)
 	end
-	self:manageSelectPlayerMenu()
 	
-	self:_updateServerItem(server)
+	self:manageSelectPlayerMenu()
+
 end
 
 
@@ -129,18 +133,18 @@ function notify_serverDisconnected(self, server)
 		return
 	end
 
+	self:_updateServerItem(server)
+
 	for id, player in server:allPlayers() do
 		self:_refreshPlayerItem(player)
 	end
-	self:manageSelectPlayerMenu()
 
-	self:_updateServerItem(server)
+	self:manageSelectPlayerMenu()
 end
 
 
 function manageSelectPlayerMenu(self)
-        local sdApplet = AppletManager:getAppletInstance("SlimDiscovery")
-	local _numberOfPlayers = sdApplet and sdApplet:countPlayers() or 0
+	local _numberOfPlayers = appletManager:callService("countPlayers") or 0
 
 	-- if _numberOfPlayers is > 1 and selectPlayerMenuItem doesn't exist, create it
 
@@ -166,14 +170,9 @@ function manageSelectPlayerMenu(self)
 end
 
 
-function _unifyMac(mac)
-	return string.upper(string.gsub(mac, "[^%x]", ""))
-end
-
-
 function _addPlayerItem(self, player)
-	local mac = player.id
-	local playerName = player.name
+	local mac = player:getId()
+	local playerName = player:getName()
 	local playerWeight = PLAYER_WEIGHT
 
 	-- if waiting for a SN pin modify name
@@ -183,26 +182,26 @@ function _addPlayerItem(self, player)
 			return
 		end
 
-		playerName = self:string("SQUEEZEBOX_ACTIVATE", player.name)
+		playerName = self:string("SQUEEZEBOX_ACTIVATE", player:getName())
 		playerWeight = ACTIVATE_WEIGHT
 	end
 
 	local item = {
-		id = _unifyMac(mac),
+		id = mac,
 		text = playerName,
 		sound = "WINDOWSHOW",
 		callback = function()
-				   if self:selectPlayer(player) then
-					   self.setupNext()
-				   end
-			   end,
+			if self:selectPlayer(player) then
+				self.setupNext()
+			end
+		end,
 		focusGained = function(event)
 			self:_showWallpaper(mac)
 		end,
 		weight = playerWeight
 	}
 
-	if player == self.selectedPlayer then
+	if player == self.selectedPlayer and player:isConnected() then
 		item.style = "checked"
 	end
 
@@ -216,9 +215,9 @@ end
 
 
 function _refreshPlayerItem(self, player)
-	local mac = player.id
+	local mac = player:getId()
 
-	if player:isConnected() then
+	if player:isAvailable() then
 		local item = self.playerItem[mac]
 		if not item then
 			-- add player
@@ -243,40 +242,6 @@ function _refreshPlayerItem(self, player)
 end
 
 
--- add a squeezebox discovered using udap or an adhoc network
-function _addSqueezeboxItem(self, mac, name)
-	local item = {
-		id = _unifyMac(mac),
-		text = name or self:string("SQUEEZEBOX_NAME", string.sub(mac, 7)),
-		sound = "WINDOWSHOW",
-		callback = function()
-				   local sbsetup = AppletManager:loadApplet("SetupSqueezebox")
-				   if not sbsetup then
-					   return
-				   end
-
-				   local adhoc = self.scanResults[mac].adhoc
-				   if self.scanResults[mac].udap then
-					   adhoc = nil
-				   end
-
-				   -- setup squeezebox, this will set current
-				   -- player on completion
-				   sbsetup:startSqueezeboxSetup(mac, adhoc,
-								function()
-									jiveMain:closeToHome()
-								end)
-			   end,
-		focusGained = function(event)
-			self:_showWallpaper(nil)
-		end,
-		weight =  1
-	}
-	self.playerMenu:addItem(item)
-	self.playerItem[mac] = item
-end
-
-
 -- Add password protected servers
 function _updateServerItem(self, server)
 	local id = server:getName()
@@ -294,7 +259,7 @@ function _updateServerItem(self, server)
 		text = server:getName(),
 		sound = "WINDOWSHOW",
 		callback = function()
-			local auth = AppletManager:loadApplet("HttpAuth")
+			local auth = appletManager:loadApplet("HttpAuth")
 			auth:squeezeCenterPassword(server)
 		end,
 		weight = SERVER_WEIGHT,
@@ -326,25 +291,18 @@ function setupShow(self, setupNext)
 			window:hide(Window.transitionPushLeft)
 		end
 
-        self.discovery = AppletManager:getAppletInstance("SlimDiscovery")
-        if not self.discovery then
-		return
-	end
-
-	self.selectedPlayer = self.discovery:getCurrentPlayer()
-	for mac, player in self.discovery:allPlayers() do
-		if player:isConnected() then
-			_addPlayerItem(self, player)
-		end
+	self.selectedPlayer = appletManager:callService("getCurrentPlayer")
+	for mac, player in appletManager:callService("iteratePlayers") do
+		_addPlayerItem(self, player)
 	end
 
 	-- Display password protected servers
-	for id, server in self.discovery:allServers() do
+	for id, server in appletManager:callService("iterateSqueezeCenters") do
 		_updateServerItem(self, server)
 	end
 
 	-- Bug 6130 add a Set up Squeezebox option, only in Setup not Settings
-	local sbsetup = AppletManager:loadApplet("SetupSqueezebox")
+	local sbsetup = appletManager:loadApplet("SetupSqueezebox")
 	if sbsetup and setupNext then
 		self.playerMenu:addItem({
 			text = self:string("SQUEEZEBOX_SETUP"),
@@ -363,13 +321,7 @@ function setupShow(self, setupNext)
 
 	window:addListener(EVENT_WINDOW_ACTIVE,
 			   function()
-				   self:_scanActive()
 				   self:_scan()
-			   end)
-
-	window:addListener(EVENT_WINDOW_INACTIVE,
-			   function()
-				   self:_scanInactive()
 			   end)
 
 	self:tieAndShowWindow(window)
@@ -377,99 +329,9 @@ function setupShow(self, setupNext)
 end
 
 
-function _scanActive(self)
-	-- socket for udap discovery
-	self.udap = Udap(jnt)
-	if not self.udapSink then
-		self.udapSink = self.udap:addSink(function(chunk, err)
-							  self:_udapSink(chunk, err)
-						  end)
-	end
-end
-
-
-function _scanInactive(self)
-	if self.udapSink then
-		self.udap:removeSink(self.udapSink)
-		self.udapSink = nil
-	end
-end
-
-
-function _udapSink(self, chunk, err)
-	if chunk == nil then
-		return -- ignore errors
-	end
-
-	local pkt = Udap.parseUdap(chunk.data)
-
-	if pkt.uapMethod ~= "adv_discover"
-		or pkt.ucp.device_status ~= "wait_slimserver"
-		or pkt.ucp.type ~= "squeezebox" then
-		-- we are only looking for squeezeboxen trying to connect to SC
-		return
-	end
-
-	local mac = pkt.source
-	local name = pkt.ucp.name ~= "" and pkt.ucp.name
-	if not self.scanResults[mac] then
-		self.scanResults[mac] = {
-			lastScan = os.time(),
-			udap = true,
-		}
-
-		self:_addSqueezeboxItem(mac, name)
-	end
-end
-
-
 function _scan(self)
 	-- SqueezeCenter and player discovery
-	self.discovery:discover()
-
-	-- udap discovery
-	local packet = Udap.createAdvancedDiscover(nil, 1)
-	self.udap:send(function() return packet end, "255.255.255.255")
-
-	-- scan for players in setup state
-	if hasWireless then
-		self.wireless:scan(function(scanTable)
-					   _scanComplete(self, scanTable)
-				   end)
-	end
-
-	-- remove squeezeboxen not seen for 20 seconds
-	local now = os.time()
-	for mac, entry in pairs(self.scanResults) do
-		if os.difftime(now, entry.lastScan) > 20 then
-			self.playerMenu:removeItem(self.playerItem[mac])
-			self.playerItem[mac] = nil
-			self.scanResults[mac] = nil
-		end
-	end
-end
-
-
-function _scanComplete(self, scanTable, keepOldEntries)
-	local now = os.time()
-
-	for ssid, entry in pairs(scanTable) do
-		local mac, ether = SetupSqueezeboxApplet:ssidIsSqueezebox(ssid)
-
-		log:debug("MAC=", mac, " ETHER=", ether)
-
-		if mac and not self.scanResults[mac] and
-			-- FIXME Wireless class should be timing out entries
-			-- See bug 6860.
-			os.difftime(now, entry.lastScan) < 20 then
-			self.scanResults[mac] = {
-				lastScan = entry.lastScan,
-				adhoc = ssid,
-			}
-
-			self:_addSqueezeboxItem(mac, name)
-		end
-	end
+	appletManager:callService("discoverPlayers")
 end
 
 
@@ -485,9 +347,24 @@ function selectPlayer(self, player)
 	end
 
 	-- set the current player
-	local manager = AppletManager:getAppletInstance("SlimDiscovery")
-	if manager then
-		manager:setCurrentPlayer(player)
+	appletManager:callService("setCurrentPlayer", player)
+
+	-- network configuration needed?
+	if player:needsNetworkConfig() then
+		-- XXXX convert to applet service call
+		local sbsetup = appletManager:loadApplet("SetupSqueezebox")
+		sbsetup:startSqueezeboxSetup(player:getId(),
+					     player:getSSID(),
+					     function()
+						     jiveMain:closeToHome()
+					     end)
+		return false
+	end
+
+	-- udap setup needed?
+	if player:needsMusicSource() then
+		appletManager:callService("selectMusicSource")
+		return false
 	end
 
 	return true
@@ -495,6 +372,7 @@ end
 
 
 function free(self)
+	jnt:unsubscribe(self)
 
 	-- load the correct wallpaper on exit
 	if self.selectedPlayer and self.selectedPlayer:getId() then
@@ -503,7 +381,8 @@ function free(self)
 		self:_showWallpaper('wallpaper')
 	end
 	
-	AppletManager:freeApplet("SetupWallpaper")
+	appletManager:freeApplet("SetupWallpaper")
+
 	-- Never free this applet
 	return false
 end

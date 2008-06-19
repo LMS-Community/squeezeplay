@@ -14,7 +14,6 @@ local table                  = require("jive.utils.table")
 local debug                  = require("jive.utils.debug")
 
 local Applet                 = require("jive.Applet")
-local AppletManager          = require("jive.AppletManager")
 local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
@@ -24,6 +23,8 @@ local Textarea               = require("jive.ui.Textarea")
 local Textinput              = require("jive.ui.Textinput")
 local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
+
+local Player                 = require("jive.slim.Player")
 
 local Udap                   = require("jive.net.Udap")
 local hasWireless, Wireless  = pcall(require, "jive.net.Wireless")
@@ -73,10 +74,7 @@ local function _updatingPlayer(self)
 
 			if evtCode == KEY_BACK then
 				-- disconnect from player and go home
-				local manager = AppletManager:getAppletInstance("SlimDiscovery")
-				if manager then
-					manager:setCurrentPlayer(nil)
-				end
+				appletManager:callService("setCurrentPlayer", nil)
 				popup:hide()
 			end
 			-- other keys are disabled when this popup is on screen
@@ -106,9 +104,8 @@ function init(self)
 	self.seqno = math.random(65535)
 	self.lastActionTicks = Framework:getTicks()
 
-	self.slimdiscovery = AppletManager:getAppletInstance("SlimDiscovery")
-	if not self.slimdiscovery then
-		error("No slimdiscovery applet")
+	if not appletManager:hasService("discoverPlayers") then
+		error("No player discovery")
 	end
 
 	if hasWireless then
@@ -157,7 +154,7 @@ function settingsShow(self, keepOldEntries)
 			   end)
 
 	-- schedule network scan 
-	self.scanMenu:addTimer(2000, function()
+	self.scanMenu:addTimer(10000, function()
 					     -- only scan if this window is on top, not under a transparent popup
 					     if Framework.windowStack[1] ~= window then
 						     return
@@ -257,14 +254,18 @@ end
 
 
 function _scanComplete(self, scanTable, keepOldEntries)
-	local now = os.time()
+	local now = Framework:getTicks()
+
+	local seen = {}
 
 	for ssid, entry in pairs(scanTable) do
-		local mac, ether = self:ssidIsSqueezebox(ssid)
+		local mac, ether = Player:ssidIsSqueezebox(ssid)
 		log:debug("ether=", ether, " mac=", mac)
 
 		if mac ~= nil then
-			mac = string.upper(mac)
+			mac = string.upper(string.gsub(mac, ":", ""))
+		
+			seen[mac] = true
 
 			if not self.scanResults[mac] then
 				local item = {
@@ -287,30 +288,20 @@ function _scanComplete(self, scanTable, keepOldEntries)
 
 			-- squeezebox available via adhoc
 			self.scanResults[mac].adhoc = true
+		end
+	end
 
-			-- remove networks not seen for 10 seconds
-			if keepOldEntries ~= true and os.difftime(now, entry.lastScan) > 10 then
-				log:debug(mac, " not seen for 10 seconds")
-				self.scanResults[mac].adhoc = nil
+	-- remove old networks
+	for mac, entry in pairs(self.scanResults) do
+		if not seen[mac] and not keepOldEntries then
+			entry.adhoc = nil
 
-				if self.scanResults[mac].udap ~= true then
-					self.scanMenu:removeItem(self.scanResults[mac].item)
-					self.scanResults[mac] = nil
-				end
+			if entry.udap ~= true then
+				self.scanMenu:removeItem(entry.item)
+				self.scanResults[mac] = nil
 			end
 		end
 	end
-end
-
-
---[[
-Return the Squeezebox mac address from the ssid, or nil if the ssid is
-not from a Squeezebox in setup mode.
---]]
-function ssidIsSqueezebox(self, ssid)
-	local hasEthernet, mac = string.match(ssid, "logitech([%-%+])squeezebox[%-%+](%x+)")
-
-	return mac, hasEthernet
 end
 
 
@@ -324,6 +315,8 @@ I<setupNext> if given, is a function to call once setup is complete
 
 --]]
 function startSqueezeboxSetup(self, mac, adhoc, setupNext)
+	mac = string.gsub(mac, ":", "")
+
 	if setupNext then
 		self.setupNext = setupNext
 	end
@@ -335,14 +328,11 @@ function startSqueezeboxSetup(self, mac, adhoc, setupNext)
 
 	-- disconnect from current player, if any. after a successful setup
 	-- we will be connected to mac
-	local manager = AppletManager:getAppletInstance("SlimDiscovery")
-	if manager then
-		manager:setCurrentPlayer(player)
-	end
+	appletManager:callService("setCurrentPlayer", nil)
 
 	if adhoc then
 		-- full configuration via adhoc network
-		local _, hasEthernet = self:ssidIsSqueezebox(adhoc)
+		local _, hasEthernet = Player:ssidIsSqueezebox(adhoc)
 
 		-- find jive network configuration
 		Task("readConfig", self,
@@ -870,8 +860,8 @@ function t_disconnectSlimserver(self)
 	-- access point or bridged.
 	assert(self.networkId, "jive not connected to network")
 
-	-- disconnect to slimserver
-	self.slimdiscovery.serversObj:disconnect()
+	-- disconnect from Player/SqueezeCenter
+	appletManager:callService("disconnectPlayer")
 
 	_setAction(self, t_waitDisconnectSlimserver)
 end
@@ -883,7 +873,7 @@ function t_waitDisconnectSlimserver(self)
 
 	local connected = false
 
-	for i,server in self.slimdiscovery:allServers() do
+	for i,server in appletManager:callService("iterateSqueezeCenters") do
 		connected = connected or server:isConnected()
 		log:info("server=", server:getName(), " connected=", connected)
 	end		
@@ -1144,8 +1134,8 @@ function t_waitJiveNetwork(self)
 			return
 		end
 
-		-- reconnect to slimserver
-		self.slimdiscovery.serversObj:connect()
+		-- reconnect to Player/SqueezeCenter
+		appletManager:callService("connectPlayer")
 
 		_setAction(self, t_waitSqueezeboxNetwork)
 	end
@@ -1216,10 +1206,10 @@ end
 function _scanSlimservers(self)
 	-- scan for slimservers
 	log:info("in _scanSlimservers calling discover")
-	self.slimdiscovery:discover()
+	appletManager:callService("discoverPlayers")
 
 	-- update slimserver list
-	for i,v in self.slimdiscovery:allServers() do
+	for i,v in appletManager:callService("iterateSqueezeCenters") do
 		if self.slimservers[i] == nil then
 			local item = {
 				text = v:getName(),
@@ -1366,7 +1356,7 @@ function notify_playerNew(self, player)
 		end
 
 		-- player is connected to slimserver, set as current player
-		self.slimdiscovery:setCurrentPlayer(player)
+		appletManager:callService("setCurrentPlayer", player)
 
 		-- and then we're done
 		_setupOK(self)

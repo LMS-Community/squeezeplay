@@ -142,30 +142,20 @@ function notify_playerPower(self, player, power)
 	local mode = self.player:getPlayMode()
 
 	-- hide this window if the player is turned off
-	if power == 0 then
+	if not power then
 		if self['browse'] and self['browse'].window then
 			self['browse'].titleGroup:setWidgetValue("title", self:string(modeTokens['off']))
 		end
 		if self['ss'] and self['ss'].window then
 			self['ss'].titleGroup:setWidgetValue("title", self:string(modeTokens['off']))
 		end
-	elseif power == 1 then
+	else
 		if self['browse'] and self['browse'].window then
 			self['browse'].titleGroup:setWidgetValue("title", self:string(modeTokens[mode]))
 		end
 		if self['ss'] and self['ss'].window then
 			self['ss'].titleGroup:setWidgetValue("title", self:string(modeTokens[mode]))
 		end
-	end
-end
-
-function notify_playerDelete(self, player)
-	if player ~= self.player then
-		return
-	end
-	-- player has left the building, close Now Playing browse window
-	if self['browse'] and self['browse'].window then
-		self['browse'].window:hide()
 	end
 end
 
@@ -215,6 +205,16 @@ function notify_playerModeChange(self, player, mode)
 	self:_updateMode(mode)
 end
 
+-- players gone, close now playing
+function notify_playerDelete(self, player)
+	if player ~= self.player then
+		return
+	end
+
+	self:free()
+end
+
+-- players changed, add playing menu
 function notify_playerCurrent(self, player)
 
 	if self.player ~= player then
@@ -246,11 +246,10 @@ end
 function _isThisPlayer(self, player)
 
 	if not self.player and not self.player:getId() then
-		local discovery = appletManager:getAppletInstance("SlimDiscovery")
-		self.player = discovery:getCurrentPlayer()
+		self.player = appletManager:callService("getCurrentPlayer")
 	end
 
-	if player.id ~= self.player:getId() then
+	if player:getId() ~= self.player:getId() then
 		log:warn("notification was not for this player")
 		log:warn("notification: ", player:getId(), "your player: ", self.player:getId())
 		return false
@@ -365,11 +364,10 @@ function _updateMode(self, mode, ws)
 		return 
 	end
 
-	local power = self.player:getPlayerPower()
 	local token = mode
 	-- sometimes there is a race condition here between updating player mode and power, 
 	-- so only set the title to 'off' if the mode is also not 'play'
-	if token != 'play' and power == 0 then
+	if token != 'play' and not self.player:isPowerOn() then
 		token = 'off'
 	end
 	if ws.titleGroup then
@@ -551,8 +549,7 @@ function openScreensaver(self, style, transition)
 	log:debug("CREATING UI FOR NOWPLAYING")
 	self[windowStyle].window = _createUI(self)
 
-	local discovery = appletManager:getAppletInstance("SlimDiscovery")
-	self.player = discovery:getCurrentPlayer()
+	self.player = appletManager:callService("getCurrentPlayer")
 
 	local transitionOn
 	if transition then
@@ -606,6 +603,16 @@ function free(self)
 	-- the screen can get loaded with two layouts, and by doing this
 	-- we force the recreation of the UI when re-entering the screen, possibly in a different mode
 	log:info("NowPlaying.free()")
+
+	-- player has left the building, close Now Playing browse window
+	if self['browse'] and self['browse'].window then
+		self['browse'].window:hide()
+	end
+
+	if self['ss'] and self['ss'].window then
+		self['ss'].window:hide()
+	end
+
 	self.player = false
 	self['ss'] = nil
 	self['browse'] = nil

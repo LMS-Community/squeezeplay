@@ -27,7 +27,6 @@ local table                  = require("jive.utils.table")
 local string                 = require("string")
                              
 local Applet                 = require("jive.Applet")
-local AppletManager          = require("jive.AppletManager")
 local Player                 = require("jive.slim.Player")
 local SlimServer             = require("jive.slim.SlimServer")
 local Framework              = require("jive.ui.Framework")
@@ -254,12 +253,12 @@ end
 -- _getTimeFormat
 -- loads SetupDateTime and returns current setting for date time format
 local function _getTimeFormat()
-	local SetupDateTime = AppletManager:loadApplet("SetupDateTime")
+	local SetupDateTime = appletManager:loadApplet("SetupDateTime")
 	local format = '12'
 	if SetupDateTime and SetupDateTime:getSettings()['hours'] then
 		format = SetupDateTime:getSettings()['hours']
 	end
-	AppletManager:freeApplet("SetupDateTime")
+	appletManager:freeApplet("SetupDateTime")
 	return format
 end
 
@@ -520,10 +519,7 @@ local function _connectingToPlayer(self)
 
 			if evtCode == KEY_BACK then
 				-- disconnect from player and go home
-				local manager = AppletManager:getAppletInstance("SlimDiscovery")
-				if manager then
-					manager:setCurrentPlayer(nil)
-				end
+				appletManager:callService("setCurrentPlayer", nil)
 				popup:hide()
 			end
 			-- other keys are disabled when this popup is on screen
@@ -562,10 +558,7 @@ local function _userTriggeredUpdate(self)
 
 			if evtCode == KEY_BACK and type == EVENT_KEY_HOLD then
 				-- disconnect from player and go home
-				local manager = AppletManager:getAppletInstance("SlimDiscovery")
-				if manager then
-					manager:setCurrentPlayer(nil)
-				end
+				appletManager:callService("setCurrentPlayer", nil)
 				window:hide()
 			end
 			-- other keys are disabled when this window is on screen
@@ -609,10 +602,7 @@ local function _updatingPlayer(self)
 
 			if evtCode == KEY_BACK then
 				-- disconnect from player and go home
-				local manager = AppletManager:getAppletInstance("SlimDiscovery")
-				if manager then
-					manager:setCurrentPlayer(nil)
-				end
+				appletManager:callService("setCurrentPlayer", nil)
 				popup:hide()
 			end
 			-- other keys are disabled when this popup is on screen
@@ -712,7 +702,7 @@ local function _goNowPlaying(transition)
 		transition = Window.transitionPushRight
 	end
 	Framework:playSound("WINDOWSHOW")
-	local NowPlaying = AppletManager:loadApplet("NowPlaying")
+	local NowPlaying = appletManager:loadApplet("NowPlaying")
 	NowPlaying:openScreensaver('browse', transition)
 end
 
@@ -1927,9 +1917,8 @@ function showPlaylist()
 		-- if there is only one item in the playlist, bring the selected item to top
 		local playerStatus = _player:getPlayerStatus()
 		local playlistSize = _player:getPlaylistSize() 
-		local playerPower = _player:getPlayerPower()
 
-		if playerPower == 0 then
+		if not _player:isPowerOn() then
 			_statusStep.window:setTitle(_string(modeTokens['off']))
 			_statusStep.window:setTitleStyle("currentplaylisttitle")
 		end
@@ -1994,12 +1983,12 @@ function notify_playerPower(self, player, power)
 
 	if step.menu then
 		-- show 'OFF' in playlist window title when the player is off
-		if power == 0 then
+		if not power then
 			if step.window then
 				step.window:setTitle(_string("SLIMBROWSER_OFF"))
 				step.window:setTitleStyle("currentplaylisttitle")
 			end
-		elseif power == 1 then
+		else
 			if step.window then
 				if emptyStep then
 					step.window:replace(emptyStep.window, Window.transitionFadeIn)
@@ -2018,9 +2007,8 @@ function notify_playerModeChange(self, player, mode)
 	end
 
 	local step = _statusStep
-	local power = player:getPlayerPower()
 	local token = mode
-	if mode != 'play' and power == 0 then
+	if mode != 'play' and not player:isPowerOn() then
 		token = 'off'
 	end
 
@@ -2035,14 +2023,13 @@ function notify_playerPlaylistChange(self, player)
 		return
 	end
 
-	local power        = _player:getPlayerPower()
 	local playerStatus = player:getPlayerStatus()
 	local playlistSize = _player:getPlaylistSize()
 	local step         = _statusStep
 	local emptyStep    = _emptyStep
 
 	-- display 'NOTHING' if the player is on and there aren't any tracks in the playlist
-	if power and playlistSize == 0 then
+	if _player:isPowerOn() and playlistSize == 0 then
 		local customWindow = showEmptyPlaylist('SLIMBROWSER_NOTHING') 
 		if emptyStep then
 			customWindow:replace(emptyStep.window, Window.transitionFadeIn)
@@ -2076,8 +2063,7 @@ function notify_playerTrackChange(self, player, nowplaying)
 		return
 	end
 
-	local power = player:getPlayerPower()
-	if power == 0 then
+	if not player:isPowerOn() then
 		return
 	end
 
@@ -2146,13 +2132,13 @@ function notify_playerCurrent(self, player)
 		self.volume:setPlayer(player)
 	end
 
-    -- update the scanner object
-    self.scanner:setPlayer(player)
+	-- update the scanner object
+	self.scanner:setPlayer(player)
 
-	-- nothing to do if we don't have a player
+	-- nothing to do if we don't have a player or server
 	-- NOTE don't move this, the code above needs to run when disconnecting
 	-- for all players.
-	if not player then
+	if not player or not player:getSlimServer() then
 		return
 	end
 
@@ -2164,7 +2150,7 @@ function notify_playerCurrent(self, player)
 
 	log:info('Subscribing to /slim/menustatus/', _playerId)
 	local cmd = { 'menustatus' }
-	_server.comet:subscribe(
+	_player:subscribe(
 		'/slim/menustatus/' .. _playerId,
 		_menuSink(sink, cmd),
 		_playerId,
@@ -2200,9 +2186,7 @@ function notify_playerCurrent(self, player)
 
 	-- look to see if the playlist has size and the state of player power
 	-- if playlistSize is 0 or power is off, we show and empty playlist
-	local playerPower = _player:getPlayerPower()
-	log:info('power: ', playerPower)
-	if playerPower == 0 then
+	if not _player:isPowerOn() then
 		if _statusStep.window then
 			_statusStep.window:setTitle(_string("SLIMBROWSER_OFF"))
 			_statusStep.window:setTitleStyle("currentplaylisttitle")
@@ -2263,6 +2247,7 @@ end
 
 
 function notify_serverDisconnected(self, server, numPendingRequests)
+
 	if _server ~= server then
 		return
 	end
@@ -2310,9 +2295,7 @@ function _problemConnecting(self, server)
 			     text = self:string("SLIMBROWSER_TRY_AGAIN"),
 			     callback = function()
 						server:connect()
-
-						local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
-						slimDiscovery:setCurrentPlayer(player)
+						appletManager:callService("setCurrentPlayer", player)
 					end,
 		     })
 
@@ -2321,7 +2304,7 @@ function _problemConnecting(self, server)
 		menu:addItem({
 			text = self:string("SLIMBROWSER_ENTER_PASSWORD"),
 			callback = function()
-				local auth = AppletManager:loadApplet("HttpAuth")
+				local auth = appletManager:loadApplet("HttpAuth")
 				auth:squeezeCenterPassword(server)
 			end,
 		})
@@ -2332,8 +2315,7 @@ function _problemConnecting(self, server)
 		menu:addItem({
 				     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
 				     callback = function()
-							local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
-							slimDiscovery:setCurrentPlayer(nil)
+							appletManager:callService("setCurrentPlayer", nil)
 
 							local setupSqueezebox = appletManager:loadApplet("SetupSqueezebox")
 							setupSqueezebox:startSqueezeboxSetup(player:getMacAddress(), nil)
@@ -2342,12 +2324,12 @@ function _problemConnecting(self, server)
 	end
 
 	-- change player, only if multiple players
-	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
-	if slimDiscovery:countConnectedPlayers() > 1 and appletManager:hasApplet("SelectPlayer") then
+	local numPlayers = appletManager:callService("countPlayers")
+	if numPlayers > 1 and appletManager:hasApplet("SelectPlayer") then
 		menu:addItem({
 				     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
 				     callback = function()
-							slimDiscovery:setCurrentPlayer(nil)
+							appletManager:callService("setCurrentPlayer", nil)
 
 							local selectPlayer = appletManager:loadApplet("SelectPlayer")
 							selectPlayer:setupShow()
@@ -2382,8 +2364,8 @@ function free(self)
 
 	-- unsubscribe from this player's menustatus
 	log:info("Unsubscribe /slim/menustatus/", _player:getId())
-	if _server and _player then
-		_server.comet:unsubscribe('/slim/menustatus/' .. _player:getId())
+	if _player then
+		_player:unsubscribe('/slim/menustatus/' .. _player:getId())
 	end
 
 	if _player then

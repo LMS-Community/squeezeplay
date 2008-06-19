@@ -12,6 +12,7 @@ local ltn12       = require("ltn12")
 local debug       = require("jive.utils.debug")
 local log         = require("jive.utils.log").logger("net.socket")
 
+local Framework   = require("jive.ui.Framework")
 local Socket      = require("jive.net.Socket")
 local Task        = require("jive.ui.Task")
 local wireless    = require("jiveWireless")
@@ -21,6 +22,8 @@ local wireless    = require("jiveWireless")
 module("jive.net.Wireless")
 oo.class(_M, Socket)
 
+
+local SSID_TIMEOUT = 20000
 
 -- wpa scan results signal level -> quality
 -- FIXME tune with production boards
@@ -189,6 +192,8 @@ function t_scan(self, callback)
 
 	_scanResults = _scanResults or {}
 
+	local now = Framework:getTicks()
+
 	for bssid, level, flags, ssid in string.gmatch(scanResults, "([%x:]+)\t%d+\t(%d+)\t(%S*)\t([^\n]+)\n") do
 
 		local quality = 1
@@ -206,8 +211,14 @@ function t_scan(self, callback)
 			level = level,
 			quality = quality,
 			associated = (ssid == associated),
-			lastScan = os.time()
+			lastScan = now
 		}
+	end
+
+	for ssid, entry in pairs(_scanResults) do
+		if now - entry.lastScan > SSID_TIMEOUT then
+			_scanResults[ssid] = nil
+		end
 	end
 
 	-- Bug #5227 if we are associated use the same quality indicator

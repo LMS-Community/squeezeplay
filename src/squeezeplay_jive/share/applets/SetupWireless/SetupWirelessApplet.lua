@@ -287,7 +287,7 @@ end
 
 function _scanComplete(self, scanTable)
 
-	local now = os.time()
+	local now = Framework:getTicks()
 
 	local associated = nil
 	for ssid, entry in pairs(scanTable) do
@@ -311,13 +311,15 @@ function _scanComplete(self, scanTable)
 			      --assert(type(entry.quality) == "number", "Eh? quality is " .. tostring(entry.quality) .. " for " .. ssid)
 			      item.icon:setStyle("wirelessLevel" .. entry.quality)
 			      self.scanMenu:updatedItem(item)
-
-			      -- remove networks not seen for 20 seconds
-			      if not entry.associated and os.difftime(now, entry.lastScan) > 20 then
-				      self.scanMenu:removeItem(item)
-				      self.scanResults[ssid] = nil
-			      end
 		      end
+	end
+
+	-- remove old networks
+	for ssid, entry in pairs(self.scanResults) do
+		if not scanTable[ssid] then
+			self.scanMenu:removeItem(entry.item)
+			self.scanResults[ssid] = nil
+		end
 	end
 
 	-- update current ssid 

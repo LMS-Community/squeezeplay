@@ -177,7 +177,6 @@ luaslimdir = $(pkgdatadir)/jive/slim
 dist_luaslim_DATA = \
 	share/jive/slim/Player.lua  \
 	share/jive/slim/SlimServer.lua \
-	share/jive/slim/SlimServers.lua \
 	share/jive/slim/ArtworkCache.lua
 
 luautildir = $(pkgdatadir)/jive/utils
@@ -214,10 +213,10 @@ dist_applets_slimbrowser_DATA = \
 	share/applets/SlimBrowser/Scanner.lua \
 	share/applets/SlimBrowser/Volume.lua
 
-applets_slimdiscoverydir = $(pkgdatadir)/applets/SlimDiscovery
-dist_applets_slimdiscovery_DATA = \
-	share/applets/SlimDiscovery/SlimDiscoveryApplet.lua \
-	share/applets/SlimDiscovery/SlimDiscoveryMeta.lua
+applets_squeezediscoverydir = $(pkgdatadir)/applets/SqueezeDiscovery
+dist_applets_squeezediscovery_DATA = \
+	share/applets/SqueezeDiscovery/SqueezeDiscoveryApplet.lua \
+	share/applets/SqueezeDiscovery/SqueezeDiscoveryMeta.lua
 
 applets_flickrdir = $(pkgdatadir)/applets/Flickr
 dist_applets_flickr_DATA = \
