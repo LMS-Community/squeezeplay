@@ -101,6 +101,9 @@ SCREENSAVER_FLICKR_DISPLAY_OWN
 	IT	Immagini personali
 	NL	Mijn eigen foto's
 
+SCREENSAVER_FLICKR_DISPLAY_FAVORITES
+	EN	My favorites
+
 SCREENSAVER_FLICKR_DISPLAY_CONTACTS
 	DA	Mine kontakters billeder
 	DE	Bilder meiner Kontakte
