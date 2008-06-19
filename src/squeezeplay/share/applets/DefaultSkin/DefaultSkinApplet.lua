@@ -1072,6 +1072,35 @@ function skin(self, s)
 	s.locked.albumitem.play.frameRate = 4
 	s.locked.albumitem.play.frameWidth = 10
 
+
+	-- smallicon style, similar to album but smaller icon and single line on the screen
+	s.smalliconmenu = _uses(s.albummenu,
+		{
+			itemHeight = 27,
+		}
+	)
+
+	s.smalliconitem = _uses(s.albumitem,
+		{
+			icon = { w = 25, h = 25, border = { 6, 0, 0, 0 } }
+		}
+	)
+
+	s.smalliconitemNoAction          = _uses(s.albumitemNoAction)
+	s.selected.smalliconitemNoAction = _uses(s.smalliconitemNoAction, 
+		{
+		      bgImg = selectionBox,
+		      text = {
+			      fg = SELECT_COLOR,
+			      sh = SELECT_SH_COLOR
+			}
+		}
+	)
+
+	s.selected.smalliconitem         = _uses(s.selected.albumitem)
+	s.smalliconitemwaiting           = _uses(s.albumitemwaiting)
+	s.locked.smalliconitem           = _uses(s.locked.albumitem)
+
 	-- titles with artwork and song info
 	s.nowplayingtitle = {}
 	s.nowplayingtitle.position = LAYOUT_NORTH
