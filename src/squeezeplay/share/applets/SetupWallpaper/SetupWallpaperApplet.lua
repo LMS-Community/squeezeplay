@@ -46,6 +46,7 @@ local log                    = require("jive.utils.log").logger("applets.setup")
 local debug                  = require("jive.utils.debug")
 
 local jnt                    = jnt
+local appletManager          = appletManager
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
