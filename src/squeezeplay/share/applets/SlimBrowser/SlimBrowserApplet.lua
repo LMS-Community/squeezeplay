@@ -217,31 +217,37 @@ end
 -- updates a group widget with the artwork for item
 local function _artworkItem(item, group, menuAccel)
 	local icon = group and group:getWidget("icon")
+	local iconSize
+	if icon then
+		iconSize = icon:getSize()
+	else
+		iconSize = THUMB_SIZE
+	end
 
 	if item["icon-id"] then
-		if menuAccel and not _server:artworkThumbCached(item["icon-id"], THUMB_SIZE) then
+		if menuAccel and not _server:artworkThumbCached(item["icon-id"], iconSize) then
 			-- Don't load artwork while accelerated
 			_server:cancelArtwork(icon)
 		else
 			-- Fetch an image from SlimServer
-			_server:fetchArtworkThumb(item["icon-id"], icon, THUMB_SIZE)
+			_server:fetchArtworkThumb(item["icon-id"], icon, iconSize)
 		end
 
 	elseif item["icon"] then
-		if menuAccel and not _server:artworkThumbCached(item["icon"], THUMB_SIZE) then
+		if menuAccel and not _server:artworkThumbCached(item["icon"], iconSize) then
 			-- Don't load artwork while accelerated
 			_server:cancelArtwork(icon)
 		else
-			-- Fetch a remote image URL, sized to THUMB_SIZExTHUMB_SIZE (artwork from a streamed source)
-			_server:fetchArtworkURL(item["icon"], icon, THUMB_SIZE)
+			-- Fetch a remote image URL, sized to iconSize x iconSize (artwork from a streamed source)
+			_server:fetchArtworkURL(item["icon"], icon, iconSize)
 		end
 	elseif item["trackType"] == 'radio' and item["params"] and item["params"]["track_id"] then
-		if menuAccel and not _server:artworkThumbCached(item["params"]["track_id"], THUMB_SIZE) then
+		if menuAccel and not _server:artworkThumbCached(item["params"]["track_id"], iconSize) then
 			-- Don't load artwork while accelerated
 			_server:cancelArtwork(icon)
                	else
 			-- workaround: this needs to be png not jpg to allow for transparencies
-			_server:fetchArtworkThumb(item["params"]["track_id"], icon, THUMB_SIZE, 'png')
+			_server:fetchArtworkThumb(item["params"]["track_id"], icon, iconSize, 'png')
 		end
 	else
 		_server:cancelArtwork(icon)
@@ -826,7 +832,7 @@ local function _browseSink(step, chunk, err)
 					if data.window['icon-id'] then
 						-- Fetch an image from SlimServer
 						titleIcon = Icon("icon")
-						_server:fetchArtworkThumb(data.window["icon-id"], titleIcon, THUMB_SIZE)
+						_server:fetchArtworkThumb(data.window["icon-id"], titleIcon, iconSize)
 					-- only allow the existing icon to stay if titleStyle isn't being changed
 					elseif not data.window.titleStyle and titleWidget:getWidget('icon') then
 						titleIcon = titleWidget:getWidget('icon')
