@@ -47,6 +47,7 @@ local SocketHttp      = require("jive.net.SocketHttp")
 local log             = jul.logger("applets.setup")
 
 local jnt             = jnt
+local appletManager   = appletManager
 
 local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
 local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
