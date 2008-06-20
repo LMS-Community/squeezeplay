@@ -40,7 +40,7 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = jive$(EXEEXT)
 @TEST_PROGRAMS_TRUE@test_PROGRAMS = jiveblit$(EXEEXT)
-DIST_COMMON = $(am__configure_deps) \
+DIST_COMMON = $(am__configure_deps) $(dist_applets_blankscreen_DATA) \
 	$(dist_applets_choosemusicsource_DATA) \
 	$(dist_applets_clock_DATA) \
 	$(dist_applets_customizehomemenu_DATA) \
@@ -63,7 +63,7 @@ DIST_COMMON = $(am__configure_deps) \
 	$(dist_applets_setupwallpaper_DATA) \
 	$(dist_applets_setupwallpaper_wallpaper_DATA) \
 	$(dist_applets_slimbrowser_DATA) \
-	$(dist_applets_squeezediscovery_DATA) \
+	$(dist_applets_slimdiscovery_DATA) \
 	$(dist_applets_squeezenetworkpin_DATA) $(dist_jive_DATA) \
 	$(dist_jiveui_DATA) $(dist_luanet_DATA) $(dist_luaslim_DATA) \
 	$(dist_luautil_DATA) $(srcdir)/Makefile.am \
@@ -94,6 +94,7 @@ am_libjiveui_la_OBJECTS = jive_audio.lo jive_event.lo jive_font.lo \
 	jive_utils.lo jive_widget.lo jive_window.lo lua_jiveui.lo
 libjiveui_la_OBJECTS = $(am_libjiveui_la_OBJECTS)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" \
+	"$(DESTDIR)$(applets_blankscreendir)" \
 	"$(DESTDIR)$(applets_choosemusicsourcedir)" \
 	"$(DESTDIR)$(applets_clockdir)" \
 	"$(DESTDIR)$(applets_customizehomemenudir)" \
@@ -119,7 +120,7 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" \
 	"$(DESTDIR)$(applets_setupwallpaperdir)" \
 	"$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)" \
 	"$(DESTDIR)$(applets_slimbrowserdir)" \
-	"$(DESTDIR)$(applets_squeezediscoverydir)" \
+	"$(DESTDIR)$(applets_slimdiscoverydir)" \
 	"$(DESTDIR)$(applets_squeezenetworkpindir)" \
 	"$(DESTDIR)$(jivedir)" "$(DESTDIR)$(jiveuidir)" \
 	"$(DESTDIR)$(luanetdir)" "$(DESTDIR)$(luaslimdir)" \
@@ -154,6 +155,7 @@ am__vpath_adj = case $$p in \
     *) f=$$p;; \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
+dist_applets_blankscreenDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_choosemusicsourceDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_clockDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_customizehomemenuDATA_INSTALL = $(INSTALL_DATA)
@@ -179,14 +181,15 @@ dist_applets_setupsoundeffects_soundsDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupwallpaperDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupwallpaper_wallpaperDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_slimbrowserDATA_INSTALL = $(INSTALL_DATA)
-dist_applets_squeezediscoveryDATA_INSTALL = $(INSTALL_DATA)
+dist_applets_slimdiscoveryDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_squeezenetworkpinDATA_INSTALL = $(INSTALL_DATA)
 dist_jiveDATA_INSTALL = $(INSTALL_DATA)
 dist_jiveuiDATA_INSTALL = $(INSTALL_DATA)
 dist_luanetDATA_INSTALL = $(INSTALL_DATA)
 dist_luaslimDATA_INSTALL = $(INSTALL_DATA)
 dist_luautilDATA_INSTALL = $(INSTALL_DATA)
-DATA = $(dist_applets_choosemusicsource_DATA) \
+DATA = $(dist_applets_blankscreen_DATA) \
+	$(dist_applets_choosemusicsource_DATA) \
 	$(dist_applets_clock_DATA) \
 	$(dist_applets_customizehomemenu_DATA) \
 	$(dist_applets_defaultskin_DATA) \
@@ -208,7 +211,7 @@ DATA = $(dist_applets_choosemusicsource_DATA) \
 	$(dist_applets_setupwallpaper_DATA) \
 	$(dist_applets_setupwallpaper_wallpaper_DATA) \
 	$(dist_applets_slimbrowser_DATA) \
-	$(dist_applets_squeezediscovery_DATA) \
+	$(dist_applets_slimdiscovery_DATA) \
 	$(dist_applets_squeezenetworkpin_DATA) $(dist_jive_DATA) \
 	$(dist_jiveui_DATA) $(dist_luanet_DATA) $(dist_luaslim_DATA) \
 	$(dist_luautil_DATA)
@@ -489,10 +492,10 @@ dist_applets_slimbrowser_DATA = \
 	share/applets/SlimBrowser/Scanner.lua \
 	share/applets/SlimBrowser/Volume.lua
 
-applets_squeezediscoverydir = $(pkgdatadir)/applets/SqueezeDiscovery
-dist_applets_squeezediscovery_DATA = \
-	share/applets/SqueezeDiscovery/SqueezeDiscoveryApplet.lua \
-	share/applets/SqueezeDiscovery/SqueezeDiscoveryMeta.lua
+applets_slimdiscoverydir = $(pkgdatadir)/applets/SlimDiscovery
+dist_applets_slimdiscovery_DATA = \
+	share/applets/SlimDiscovery/SlimDiscoveryApplet.lua \
+	share/applets/SlimDiscovery/SlimDiscoveryMeta.lua
 
 applets_flickrdir = $(pkgdatadir)/applets/Flickr
 dist_applets_flickr_DATA = \
@@ -581,6 +584,12 @@ dist_applets_infobrowser_DATA = \
 	share/applets/InfoBrowser/InfoBrowserApplet.lua \
 	share/applets/InfoBrowser/InfoBrowserMeta.lua \
 	share/applets/InfoBrowser/strings.txt
+
+applets_blankscreendir = $(pkgdatadir)/applets/BlankScreen
+dist_applets_blankscreen_DATA = \
+	share/applets/BlankScreen/BlankScreenApplet.lua \
+	share/applets/BlankScreen/BlankScreenMeta.lua \
+	share/applets/BlankScreen/strings.txt
 
 applets_customizehomemenudir = $(pkgdatadir)/applets/CustomizeHomeMenu
 dist_applets_customizehomemenu_DATA = \
@@ -1226,6 +1235,23 @@ clean-libtool:
 distclean-libtool:
 	-rm -f libtool
 uninstall-info-am:
+install-dist_applets_blankscreenDATA: $(dist_applets_blankscreen_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(applets_blankscreendir)" || $(mkdir_p) "$(DESTDIR)$(applets_blankscreendir)"
+	@list='$(dist_applets_blankscreen_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(dist_applets_blankscreenDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_blankscreendir)/$$f'"; \
+	  $(dist_applets_blankscreenDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_blankscreendir)/$$f"; \
+	done
+
+uninstall-dist_applets_blankscreenDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_applets_blankscreen_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(applets_blankscreendir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(applets_blankscreendir)/$$f"; \
+	done
 install-dist_applets_choosemusicsourceDATA: $(dist_applets_choosemusicsource_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(applets_choosemusicsourcedir)" || $(mkdir_p) "$(DESTDIR)$(applets_choosemusicsourcedir)"
@@ -1651,22 +1677,22 @@ uninstall-dist_applets_slimbrowserDATA:
 	  echo " rm -f '$(DESTDIR)$(applets_slimbrowserdir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(applets_slimbrowserdir)/$$f"; \
 	done
-install-dist_applets_squeezediscoveryDATA: $(dist_applets_squeezediscovery_DATA)
+install-dist_applets_slimdiscoveryDATA: $(dist_applets_slimdiscovery_DATA)
 	@$(NORMAL_INSTALL)
-	test -z "$(applets_squeezediscoverydir)" || $(mkdir_p) "$(DESTDIR)$(applets_squeezediscoverydir)"
-	@list='$(dist_applets_squeezediscovery_DATA)'; for p in $$list; do \
+	test -z "$(applets_slimdiscoverydir)" || $(mkdir_p) "$(DESTDIR)$(applets_slimdiscoverydir)"
+	@list='$(dist_applets_slimdiscovery_DATA)'; for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  f=$(am__strip_dir) \
-	  echo " $(dist_applets_squeezediscoveryDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_squeezediscoverydir)/$$f'"; \
-	  $(dist_applets_squeezediscoveryDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_squeezediscoverydir)/$$f"; \
+	  echo " $(dist_applets_slimdiscoveryDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_slimdiscoverydir)/$$f'"; \
+	  $(dist_applets_slimdiscoveryDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_slimdiscoverydir)/$$f"; \
 	done
 
-uninstall-dist_applets_squeezediscoveryDATA:
+uninstall-dist_applets_slimdiscoveryDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(dist_applets_squeezediscovery_DATA)'; for p in $$list; do \
+	@list='$(dist_applets_slimdiscovery_DATA)'; for p in $$list; do \
 	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(applets_squeezediscoverydir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(applets_squeezediscoverydir)/$$f"; \
+	  echo " rm -f '$(DESTDIR)$(applets_slimdiscoverydir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(applets_slimdiscoverydir)/$$f"; \
 	done
 install-dist_applets_squeezenetworkpinDATA: $(dist_applets_squeezenetworkpin_DATA)
 	@$(NORMAL_INSTALL)
@@ -1822,7 +1848,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/ChooseMusicSource $(distdir)/share/applets/Clock $(distdir)/share/applets/CustomizeHomeMenu $(distdir)/share/applets/DefaultSkin $(distdir)/share/applets/DefaultSkin/images $(distdir)/share/applets/Flickr $(distdir)/share/applets/HttpAuth $(distdir)/share/applets/InfoBrowser $(distdir)/share/applets/LogSettings $(distdir)/share/applets/MacroPlay $(distdir)/share/applets/NowPlaying $(distdir)/share/applets/NowPlaying/images $(distdir)/share/applets/ScreenSavers $(distdir)/share/applets/Screenshot $(distdir)/share/applets/SelectPlayer $(distdir)/share/applets/SetupAppletInstaller $(distdir)/share/applets/SetupDateTime $(distdir)/share/applets/SetupLanguage $(distdir)/share/applets/SetupNetTest $(distdir)/share/applets/SetupSoundEffects $(distdir)/share/applets/SetupSoundEffects/sounds $(distdir)/share/applets/SetupSqueezebox $(distdir)/share/applets/SetupWallpaper $(distdir)/share/applets/SetupWallpaper/wallpaper $(distdir)/share/applets/SlimBrowser $(distdir)/share/applets/SqueezeDiscovery $(distdir)/share/applets/SqueezeNetworkPIN $(distdir)/share/jive $(distdir)/share/jive/net $(distdir)/share/jive/slim $(distdir)/share/jive/ui $(distdir)/share/jive/utils $(distdir)/src
+	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/BlankScreen $(distdir)/share/applets/ChooseMusicSource $(distdir)/share/applets/Clock $(distdir)/share/applets/CustomizeHomeMenu $(distdir)/share/applets/DefaultSkin $(distdir)/share/applets/DefaultSkin/images $(distdir)/share/applets/Flickr $(distdir)/share/applets/HttpAuth $(distdir)/share/applets/InfoBrowser $(distdir)/share/applets/LogSettings $(distdir)/share/applets/MacroPlay $(distdir)/share/applets/NowPlaying $(distdir)/share/applets/NowPlaying/images $(distdir)/share/applets/ScreenSavers $(distdir)/share/applets/Screenshot $(distdir)/share/applets/SelectPlayer $(distdir)/share/applets/SetupAppletInstaller $(distdir)/share/applets/SetupDateTime $(distdir)/share/applets/SetupLanguage $(distdir)/share/applets/SetupNetTest $(distdir)/share/applets/SetupSoundEffects $(distdir)/share/applets/SetupSoundEffects/sounds $(distdir)/share/applets/SetupSqueezebox $(distdir)/share/applets/SetupWallpaper $(distdir)/share/applets/SetupWallpaper/wallpaper $(distdir)/share/applets/SlimBrowser $(distdir)/share/applets/SlimDiscovery $(distdir)/share/applets/SqueezeNetworkPIN $(distdir)/share/jive $(distdir)/share/jive/net $(distdir)/share/jive/slim $(distdir)/share/jive/ui $(distdir)/share/jive/utils $(distdir)/src
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -1951,7 +1977,7 @@ check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" "$(DESTDIR)$(applets_choosemusicsourcedir)" "$(DESTDIR)$(applets_clockdir)" "$(DESTDIR)$(applets_customizehomemenudir)" "$(DESTDIR)$(applets_defaultskindir)" "$(DESTDIR)$(applets_defaultskin_imagesdir)" "$(DESTDIR)$(applets_flickrdir)" "$(DESTDIR)$(applets_httpauthdir)" "$(DESTDIR)$(applets_infobrowserdir)" "$(DESTDIR)$(applets_logdir)" "$(DESTDIR)$(applets_macroplaydir)" "$(DESTDIR)$(applets_nowplayingdir)" "$(DESTDIR)$(applets_nowplaying_imagesdir)" "$(DESTDIR)$(applets_screensaversdir)" "$(DESTDIR)$(applets_screenshotdir)" "$(DESTDIR)$(applets_selectplayerdir)" "$(DESTDIR)$(applets_setupSqueezeboxdir)" "$(DESTDIR)$(applets_setupappletinstallerdir)" "$(DESTDIR)$(applets_setupdatetimedir)" "$(DESTDIR)$(applets_setuplanguagedir)" "$(DESTDIR)$(applets_setupnettestdir)" "$(DESTDIR)$(applets_setupsoundeffectsdir)" "$(DESTDIR)$(applets_setupsoundeffects_soundsdir)" "$(DESTDIR)$(applets_setupwallpaperdir)" "$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)" "$(DESTDIR)$(applets_slimbrowserdir)" "$(DESTDIR)$(applets_squeezediscoverydir)" "$(DESTDIR)$(applets_squeezenetworkpindir)" "$(DESTDIR)$(jivedir)" "$(DESTDIR)$(jiveuidir)" "$(DESTDIR)$(luanetdir)" "$(DESTDIR)$(luaslimdir)" "$(DESTDIR)$(luautildir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" "$(DESTDIR)$(applets_blankscreendir)" "$(DESTDIR)$(applets_choosemusicsourcedir)" "$(DESTDIR)$(applets_clockdir)" "$(DESTDIR)$(applets_customizehomemenudir)" "$(DESTDIR)$(applets_defaultskindir)" "$(DESTDIR)$(applets_defaultskin_imagesdir)" "$(DESTDIR)$(applets_flickrdir)" "$(DESTDIR)$(applets_httpauthdir)" "$(DESTDIR)$(applets_infobrowserdir)" "$(DESTDIR)$(applets_logdir)" "$(DESTDIR)$(applets_macroplaydir)" "$(DESTDIR)$(applets_nowplayingdir)" "$(DESTDIR)$(applets_nowplaying_imagesdir)" "$(DESTDIR)$(applets_screensaversdir)" "$(DESTDIR)$(applets_screenshotdir)" "$(DESTDIR)$(applets_selectplayerdir)" "$(DESTDIR)$(applets_setupSqueezeboxdir)" "$(DESTDIR)$(applets_setupappletinstallerdir)" "$(DESTDIR)$(applets_setupdatetimedir)" "$(DESTDIR)$(applets_setuplanguagedir)" "$(DESTDIR)$(applets_setupnettestdir)" "$(DESTDIR)$(applets_setupsoundeffectsdir)" "$(DESTDIR)$(applets_setupsoundeffects_soundsdir)" "$(DESTDIR)$(applets_setupwallpaperdir)" "$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)" "$(DESTDIR)$(applets_slimbrowserdir)" "$(DESTDIR)$(applets_slimdiscoverydir)" "$(DESTDIR)$(applets_squeezenetworkpindir)" "$(DESTDIR)$(jivedir)" "$(DESTDIR)$(jiveuidir)" "$(DESTDIR)$(luanetdir)" "$(DESTDIR)$(luaslimdir)" "$(DESTDIR)$(luautildir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -2002,7 +2028,8 @@ info: info-am
 
 info-am:
 
-install-data-am: install-dist_applets_choosemusicsourceDATA \
+install-data-am: install-dist_applets_blankscreenDATA \
+	install-dist_applets_choosemusicsourceDATA \
 	install-dist_applets_clockDATA \
 	install-dist_applets_customizehomemenuDATA \
 	install-dist_applets_defaultskinDATA \
@@ -2027,7 +2054,7 @@ install-data-am: install-dist_applets_choosemusicsourceDATA \
 	install-dist_applets_setupwallpaperDATA \
 	install-dist_applets_setupwallpaper_wallpaperDATA \
 	install-dist_applets_slimbrowserDATA \
-	install-dist_applets_squeezediscoveryDATA \
+	install-dist_applets_slimdiscoveryDATA \
 	install-dist_applets_squeezenetworkpinDATA \
 	install-dist_jiveDATA install-dist_jiveuiDATA \
 	install-dist_luanetDATA install-dist_luaslimDATA \
@@ -2062,6 +2089,7 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-binPROGRAMS \
+	uninstall-dist_applets_blankscreenDATA \
 	uninstall-dist_applets_choosemusicsourceDATA \
 	uninstall-dist_applets_clockDATA \
 	uninstall-dist_applets_customizehomemenuDATA \
@@ -2087,7 +2115,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	uninstall-dist_applets_setupwallpaperDATA \
 	uninstall-dist_applets_setupwallpaper_wallpaperDATA \
 	uninstall-dist_applets_slimbrowserDATA \
-	uninstall-dist_applets_squeezediscoveryDATA \
+	uninstall-dist_applets_slimdiscoveryDATA \
 	uninstall-dist_applets_squeezenetworkpinDATA \
 	uninstall-dist_jiveDATA uninstall-dist_jiveuiDATA \
 	uninstall-dist_luanetDATA uninstall-dist_luaslimDATA \
@@ -2102,7 +2130,8 @@ uninstall-am: uninstall-binPROGRAMS \
 	distclean-libtool distclean-tags distcleancheck distdir \
 	distuninstallcheck dvi dvi-am html html-am info info-am \
 	install install-am install-binPROGRAMS install-data \
-	install-data-am install-dist_applets_choosemusicsourceDATA \
+	install-data-am install-dist_applets_blankscreenDATA \
+	install-dist_applets_choosemusicsourceDATA \
 	install-dist_applets_clockDATA \
 	install-dist_applets_customizehomemenuDATA \
 	install-dist_applets_defaultskinDATA \
@@ -2127,7 +2156,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	install-dist_applets_setupwallpaperDATA \
 	install-dist_applets_setupwallpaper_wallpaperDATA \
 	install-dist_applets_slimbrowserDATA \
-	install-dist_applets_squeezediscoveryDATA \
+	install-dist_applets_slimdiscoveryDATA \
 	install-dist_applets_squeezenetworkpinDATA \
 	install-dist_jiveDATA install-dist_jiveuiDATA \
 	install-dist_luanetDATA install-dist_luaslimDATA \
@@ -2137,7 +2166,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	maintainer-clean maintainer-clean-generic mostlyclean \
 	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
 	pdf pdf-am ps ps-am tags uninstall uninstall-am \
-	uninstall-binPROGRAMS \
+	uninstall-binPROGRAMS uninstall-dist_applets_blankscreenDATA \
 	uninstall-dist_applets_choosemusicsourceDATA \
 	uninstall-dist_applets_clockDATA \
 	uninstall-dist_applets_customizehomemenuDATA \
@@ -2163,7 +2192,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	uninstall-dist_applets_setupwallpaperDATA \
 	uninstall-dist_applets_setupwallpaper_wallpaperDATA \
 	uninstall-dist_applets_slimbrowserDATA \
-	uninstall-dist_applets_squeezediscoveryDATA \
+	uninstall-dist_applets_slimdiscoveryDATA \
 	uninstall-dist_applets_squeezenetworkpinDATA \
 	uninstall-dist_jiveDATA uninstall-dist_jiveuiDATA \
 	uninstall-dist_luanetDATA uninstall-dist_luaslimDATA \
