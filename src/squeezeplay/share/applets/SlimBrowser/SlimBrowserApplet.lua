@@ -220,6 +220,9 @@ local function _artworkItem(item, group, menuAccel)
 	local iconSize
 	if icon then
 		iconSize = icon:getSize()
+		if not iconSize or iconSize == 0 then
+			iconSize = THUMB_SIZE
+		end
 	else
 		iconSize = THUMB_SIZE
 	end
@@ -832,7 +835,7 @@ local function _browseSink(step, chunk, err)
 					if data.window['icon-id'] then
 						-- Fetch an image from SlimServer
 						titleIcon = Icon("icon")
-						_server:fetchArtworkThumb(data.window["icon-id"], titleIcon, iconSize)
+						_server:fetchArtworkThumb(data.window["icon-id"], titleIcon, THUMB_SIZE)
 					-- only allow the existing icon to stay if titleStyle isn't being changed
 					elseif not data.window.titleStyle and titleWidget:getWidget('icon') then
 						titleIcon = titleWidget:getWidget('icon')
