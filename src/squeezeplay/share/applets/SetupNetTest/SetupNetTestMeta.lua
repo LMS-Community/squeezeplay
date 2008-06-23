@@ -28,15 +28,17 @@ function registerApplet(meta)
 	jnt:subscribe(meta)
 
 	meta.menu = meta:menuItem('appletSetupNetTest', 'advancedSettings', meta:string('SETUPNETTEST'), function(applet, ...) applet:open(...) end, 100)
+		jiveMain:addItem(meta.menu)
 
 	jiveMain:loadSkin("SetupNetTest", "skin")
 end
 
 
 function notify_playerCurrent(meta, player)
-	if player == nil or player:getSlimServer():isSqueezeNetwork() then
+	if player == nil or ( player:getSlimServer() and player:getSlimServer():isSqueezeNetwork() ) then
 		jiveMain:removeItem(meta.menu)
 	else
 		jiveMain:addItem(meta.menu)
 	end
 end
+

@@ -42,6 +42,7 @@ local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
 
+local appletManager    = appletManager
 
 module(...)
 oo.class(_M, Applet)
@@ -285,3 +286,4 @@ function free(self)
 	self.timer:stop()
 	self:stopTest()
 end
+
