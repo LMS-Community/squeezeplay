@@ -51,6 +51,7 @@ local log              = require("jive.utils.log").logger("applets.setup")
 
 local debug            = require("jive.utils.debug")
 
+local appletManager    = appletManager
 local jiveMain         = jiveMain
 local jnt              = jnt
 
