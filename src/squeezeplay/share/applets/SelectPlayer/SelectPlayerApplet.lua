@@ -347,6 +347,7 @@ function selectPlayer(self, player)
 	end
 
 	-- set the current player
+	self.selectedPlayer = player
 	appletManager:callService("setCurrentPlayer", player)
 
 	-- network configuration needed?
