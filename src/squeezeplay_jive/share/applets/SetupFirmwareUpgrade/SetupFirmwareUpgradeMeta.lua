@@ -65,7 +65,7 @@ function notify_playerCurrent(meta, player)
 				return
 			end
 			
-			if not meta.player then
+			if not meta.player or not meta.player:getSlimServer() then
 				log:warn("Firmware upgrade response but not connected to server")
 				return
 			end
