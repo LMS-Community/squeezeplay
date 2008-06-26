@@ -55,14 +55,15 @@ end
 macroEvent(1000, EVENT_KEY_PRESS, KEY_GO)
 
 
--- Wireless Password
-if not macroScreenshot(1000, "WirelessPassword") then
-	return macroFail("WirelessPassword")
-end
-
 local wpa = macroParameter("wpa")
-macroTextInput(100, wpa)
-macroEvent(1000, EVENT_KEY_PRESS, KEY_GO)
+if wpa ~= '' then
+	-- Wireless Password
+	if not macroScreenshot(1000, "WirelessPassword") then
+		return macroFail("WirelessPassword")
+	end
+	macroTextInput(100, wpa)
+	macroEvent(1000, EVENT_KEY_PRESS, KEY_GO)
+end
 
 
 -- Connecting to <ssid> (allow 20 seconds)
