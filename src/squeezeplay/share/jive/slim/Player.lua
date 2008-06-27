@@ -303,8 +303,8 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 	end
 
 	-- Check if the player name has changed
-	if oldInfo.playerName ~= self.state.playerName then
-		self.jnt:notify('playerNewName', self, self.info.playerName)
+	if oldInfo.playerName ~= self.info.name then
+		self.jnt:notify('playerNewName', self, self.info.name)
 	end
 
 	-- Check if the player power status has changed
@@ -512,7 +512,7 @@ returns the playerMode for a given player object
 =cut
 --]]
 function getPlayerMode(self)
-	return self.mode
+	return self.state.mode
 end
 
 
@@ -797,6 +797,7 @@ function _process_status(self, event)
 	end
 
 	-- update our state in one go
+	local oldState = self.state
 	self.state = event.data
 
 	-- used for calculating getTrackElapsed(), getTrackRemaining()
@@ -824,8 +825,7 @@ function _process_status(self, event)
 	-- update track list
 	local nowPlaying = _whatsPlaying(event.data)
 
-	if self.state.mode ~= self.mode then
-		self.mode = self.state.mode
+	if self.state.mode ~= oldState.mode then
 		self.jnt:notify('playerModeChange', self, self.state.mode)
 	end
 
