@@ -48,9 +48,9 @@ end
 
 
 function notify_playerCurrent(meta, player)
-	if not player or meta.player == player then
-		return
-	end
+	-- FIXME
+	-- if the player remains the same we need to resubscribe. This should
+	-- not be needed when the player subscription bug 8587 is fixed.
 
 	if meta.player then
 		meta.player:unsubscribe('/slim/firmwarestatus/' .. meta.player:getId())
