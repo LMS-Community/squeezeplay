@@ -50,7 +50,7 @@ function notify_playerCurrent(meta, player)
 	if player == nil or not player:getSlimServer() or ( player:getSlimServer() and player:getSlimServer():isSqueezeNetwork() ) then
 		jiveMain:setNode(meta.menu, 'hidden')
 	else
-		jiveMain:setNode(meta.menu, 'home')
+		jiveMain:setNode(meta.menu, 'advancedSettings')
 	end
 end
 
