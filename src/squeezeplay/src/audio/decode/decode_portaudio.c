@@ -218,7 +218,7 @@ static void decode_portaudio_openstream(void) {
 }
 
 
-static void decode_portaudio_init(void) {
+static int decode_portaudio_init(void) {
 	PaError err;
 	int num_devices, i;
 	const PaDeviceInfo *device_info;
@@ -253,13 +253,18 @@ static void decode_portaudio_init(void) {
 		}
 	}
 
+	if (i >= num_devices) {
+		/* no suitable audio device found */
+		return 0;
+	}
+
 	/* high latency for robust playback */
 	outputParam.suggestedLatency = Pa_GetDeviceInfo(outputParam.device)->defaultHighOutputLatency;
-	return;
+	return 1;
 
  err:
 	DEBUG_ERROR("PA error %s", Pa_GetErrorText(err));
-	return;
+	return 0;
 }
 
 

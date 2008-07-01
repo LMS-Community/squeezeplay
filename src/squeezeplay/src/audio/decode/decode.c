@@ -550,7 +550,10 @@ static const struct luaL_Reg decode_f[] = {
 int luaopen_decode(lua_State *L) {
 	/* initialise audio output */
 	decode_audio = &decode_portaudio;
-	decode_audio->init();
+	if (!decode_audio->init()) {
+		DEBUG_ERROR("Failed to init audio");
+		return 0;
+	}
 
 	fifo_init(&decode_fifo, DECODE_FIFO_SIZE);
 
