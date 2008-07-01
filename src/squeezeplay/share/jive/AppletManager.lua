@@ -222,6 +222,8 @@ local function _evalMeta(entry)
 
 	if not entry.settings then
 		entry.settings = obj:defaultSettings()
+	else
+		entry.settings = obj:upgradeSettings(entry.settings)
 	end
 
 	obj._entry = entry

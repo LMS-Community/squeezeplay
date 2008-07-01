@@ -69,6 +69,18 @@ function defaultSettings(self)
 	return nil
 end
 
+--[[
+
+=head2 self:upgradeSettings()
+
+Returns a table with the upgraded settings for this applet, or the existing settings
+
+=cut
+--]]
+function upgradeSettings(self, settings)
+	return settings
+end
+
 
 --[[
 

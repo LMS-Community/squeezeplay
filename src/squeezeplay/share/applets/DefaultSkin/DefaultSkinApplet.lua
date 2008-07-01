@@ -342,6 +342,12 @@ function skin(self, s)
 	s.title.back.img = Surface:loadImage(imgpath .. "selection_left.png")
 	s.title.back.align = "left"
 
+--[[
+	s.title.icon = {}
+	s.title.icon.w = 56
+	s.title.icon.h = WH_FILL
+	s.title.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
+--]]
 
 	-- Menu with three basic styles: normal, selected and locked
 	-- First define the dimesions of the menu
@@ -954,7 +960,6 @@ function skin(self, s)
 
 
 
-
 	-- menus with artwork and song info
 	s.albummenu = {}
 	s.albummenu.padding = { 4, 2, 4, 2 }
@@ -1086,13 +1091,15 @@ function skin(self, s)
 		}
 	)
 
-	s.smalliconitemNoAction          = _uses(s.albumitemNoAction)
+	s.smalliconitemNoAction          = _uses(s.smalliconitem)
+
 	s.selected.smalliconitemNoAction = _uses(s.smalliconitemNoAction, 
 		{
-		      bgImg = selectionBox,
-		      text = {
-			      fg = SELECT_COLOR,
-			      sh = SELECT_SH_COLOR
+			order = { 'icon', 'text' },
+			bgImg = selectionBox,
+			text = {
+				fg = SELECT_COLOR,
+	 			sh = SELECT_SH_COLOR
 			}
 		}
 	)

@@ -161,7 +161,7 @@ function _addServerItem(self, server, address)
 	end
 
 	-- check current player
-	if currentPlayer and server == currentPlayer:getSlimServer() then
+	if currentPlayer and currentPlayer:getSlimServer() and server == currentPlayer:getSlimServer() then
 		item.style = 'checkedNoAction'
 		item.callback = nil
 	elseif not currentPlayer or not currentPlayer:canConnectToServer() then
@@ -171,7 +171,7 @@ function _addServerItem(self, server, address)
 	self.serverMenu:addItem(item)
 	self.serverList[id] = item
 
-	if currentPlayer and server == currentPlayer:getSlimServer() then
+	if currentPlayer and currentPlayer:getSlimServer() and server == currentPlayer:getSlimServer() then
 		self.serverMenu:setSelectedItem(item)
 	end
 end

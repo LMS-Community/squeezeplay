@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.SqueezeDiscovery.SqueezeDiscoveryMeta - SqueezeDiscovery meta-info
+applets.SlimDiscovery.SlimDiscoveryMeta - SlimDiscovery meta-info
 
 =head1 DESCRIPTION
 
-See L<applets.SqueezeDiscovery.SqueezeDiscoveryApplet>.
+See L<applets.SlimDiscovery.SlimDiscoveryApplet>.
 
 =head1 FUNCTIONS
 
@@ -64,8 +64,8 @@ function registerApplet(meta)
 	meta:registerService("setPollList")
 
 
-	-- SqueezeDiscovery is a resident Applet
-	local slimDiscovery = appletManager:loadApplet("SqueezeDiscovery")
+	-- SlimDiscovery is a resident Applet
+	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
 
 	-- Set current player
 	if settings.currentPlayer then

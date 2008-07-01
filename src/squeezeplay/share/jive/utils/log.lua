@@ -190,7 +190,7 @@ local categories = {
 	["jive.main"]                = jiveLogger(logging.INFO),
 	["jive.heap"]                = jiveLogger(logging.INFO),
 
-	["slimserver"]               = jiveLogger(logging.DEBUG),
+	["slimserver"]               = jiveLogger(logging.INFO),
 	["slimserver.cache"]         = jiveLogger(logging.INFO),
 	["player"]                   = jiveLogger(logging.INFO),
 	["player.browse"]            = jiveLogger(logging.INFO),

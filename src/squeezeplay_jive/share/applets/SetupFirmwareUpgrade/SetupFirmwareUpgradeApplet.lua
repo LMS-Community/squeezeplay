@@ -64,7 +64,7 @@ oo.class(_M, Applet)
 
 
 function _firmwareVersion(self, url)
-	local major, minor = string.match(url, "jive_([^_]+)_([^_]+)\.bin")
+	local major, minor = string.match(url, "\/jive_([^_]+)_([^_]+)\.bin")
 
 	if not major then
 		return

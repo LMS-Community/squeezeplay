@@ -303,8 +303,8 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 	end
 
 	-- Check if the player name has changed
-	if oldInfo.playerName ~= self.state.playerName then
-		self.jnt:notify('playerNewName', self, self.info.playerName)
+	if oldInfo.playerName ~= self.info.name then
+		self.jnt:notify('playerNewName', self, self.info.name)
 	end
 
 	-- Check if the player power status has changed
@@ -459,7 +459,7 @@ function getTrackElapsed(self)
 		return nil
 	end
 
-	if self.state.mode == "play" then
+	if self.mode == "play" then
 		local now = Framework:getTicks() / 1000
 
 		-- multiply by rate to allow for trick modes
@@ -512,7 +512,7 @@ returns the playerMode for a given player object
 =cut
 --]]
 function getPlayerMode(self)
-	return self.state.mode
+	return self.mode
 end
 
 
@@ -826,6 +826,9 @@ function _process_status(self, event)
 	local nowPlaying = _whatsPlaying(event.data)
 
 	if self.state.mode ~= oldState.mode then
+		-- self.mode is set immedidately by togglePause and stop methods to give immediate user feedback in e.g. iconbar
+		-- getPlayerMode method uses self.mode not self.state.mode, so we need to set self.mode again here to be certain it's correct                                          
+		self.mode = self.state.mode
 		self.jnt:notify('playerModeChange', self, self.state.mode)
 	end
 
@@ -884,7 +887,7 @@ function togglePause(self)
 
 	if not self.state then return end
 	
-	local paused = self.state["mode"]
+	local paused = self.mode
 	log:debug("Player:togglePause(", paused, ")")
 
 	if paused == 'stop' or paused == 'pause' then
@@ -892,10 +895,10 @@ function togglePause(self)
 		self.trackSeen = Framework:getTicks() / 1000
 
 		self:call({'pause', '0'})
-		self.state["mode"] = 'play'
+		self.mode = 'play'
 	elseif paused == 'play' then
 		self:call({'pause', '1'})
-		self.state["mode"] = 'pause'
+		self.mode = 'pause'
 	end
 	self:updateIconbar()
 end	
@@ -905,7 +908,7 @@ end
 --
 function isPaused(self)
 	if self.state then
-		return self.state.mode == 'pause'
+		return self.mode == 'pause'
 	end
 end
 
@@ -914,7 +917,7 @@ end
 --
 function getPlayMode(self)
 	if self.state then
-		return self.state.mode
+		return self.mode
 	end
 end
 
@@ -940,13 +943,13 @@ end
 function play(self)
 	log:debug("Player:play()")
 
-	if self.state.mode ~= 'play' then
+	if self.mode ~= 'play' then
 		-- reset the elapsed time epoch
 		self.trackSeen = Framework:getTicks()
 	end
 
 	self:call({'mode', 'play'})
-	self.state.mode = 'play'
+	self.mode = 'play'
 	self:updateIconbar()
 end
 
@@ -956,7 +959,7 @@ end
 function stop(self)
 	log:debug("Player:stop()")
 	self:call({'mode', 'stop'})
-	self.state.mode = 'stop'
+	self.mode = 'stop'
 	self:updateIconbar()
 end
 
