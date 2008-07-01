@@ -303,7 +303,7 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 	end
 
 	-- Check if the player name has changed
-	if oldInfo.playerName ~= self.info.name then
+	if oldInfo.name ~= self.info.name then
 		self.jnt:notify('playerNewName', self, self.info.name)
 	end
 
