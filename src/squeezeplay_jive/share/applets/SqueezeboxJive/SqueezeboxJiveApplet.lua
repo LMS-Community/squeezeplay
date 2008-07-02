@@ -547,18 +547,20 @@ end
 
 -- called to sleep jive
 function sleep(self)
-	if self.powerState == "active" then
+	-- don't sleep or suspend with a popup visible
+	-- e.g. Bug 6641 during a firmware upgrade
+	local topWindow = Framework.windowStack[1]
+	if not topWindow:canActivatePowersave()then
+		self:setPowerState("active")
+
+	elseif self.powerState == "active" then
 		self:setPowerState("dimmed")
+
 	elseif self.powerState == "locked" then
 		self:setPowerState("sleep")
+
 	else
-		-- don't sleep or suspend with a popup visible
-		-- e.g. Bug 6641 during a firmware upgrade
-		local topWindow = Framework.windowStack[1]
-		if not topWindow:canActivatePowersave()then
-			self:setPowerState("dimmed")
-			
-		elseif self.powerState == "dimmed" then
+		if self.powerState == "dimmed" then
 			self:setPowerState("sleep")
 		elseif self.powerState == "sleep" then
 			self:setPowerState("suspend")
