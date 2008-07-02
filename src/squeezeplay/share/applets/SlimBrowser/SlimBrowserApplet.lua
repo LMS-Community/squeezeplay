@@ -92,6 +92,8 @@ local _curStep = false
 local _statusStep = false
 local _emptyStep = false
 
+local _lockedItem = false
+
 -- Our main menu/handlers
 local _playerMenus = {}
 local _playerKeyHandler = false
@@ -982,7 +984,8 @@ local function _menuSink(self, cmd)
 									_curStep = step
 								else
 									from, qty = step.db:missing(step.menu and step.menu:isAccelerated())
-	
+
+									_lockedItem = item
 									jiveMain:lockItem(item,
 										  function()
 										  step.cancelled = true
@@ -991,6 +994,7 @@ local function _menuSink(self, cmd)
 									step.loaded = function()
 										      jiveMain:unlockItem(item)
 		
+										      _lockedItem = false
 										      _curStep = step
 										      step.window:show()
 									      end
@@ -2399,6 +2403,12 @@ function free(self)
 	_player = false
 	_server = false
 	_string = false
+
+	-- make sure any home menu itema are unlocked
+	if _lockedItem then
+		jiveMain:unlockItem(_lockedItem)
+		_lockedItem = false
+	end
 
 	-- walk down our path and close...
 	local step = _curStep
