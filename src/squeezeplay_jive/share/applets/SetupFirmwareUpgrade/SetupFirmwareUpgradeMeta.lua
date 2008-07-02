@@ -57,6 +57,10 @@ function notify_playerCurrent(meta, player)
 	end
 
 	meta.player = player
+
+	if not player then
+		return
+	end
 	
 	local firmwareUpgradeSink =
 		function(chunk, err)
