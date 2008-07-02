@@ -698,7 +698,7 @@ function getAllowPowersave(self)
 end
 
 
-function setAllowScreensaver(self, allowPowersave)
+function setAllowPowersave(self, allowPowersave)
 	_assert(type(allowPowersave) == "boolean" or type(allowPowersave) == "function")
 
 	self.allowPowersave = allowPowersave
