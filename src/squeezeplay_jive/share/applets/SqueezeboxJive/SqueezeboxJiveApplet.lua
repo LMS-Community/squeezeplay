@@ -420,6 +420,9 @@ function _setBrightness(self, fade, lcdLevel, keyLevel)
 	self.fadeTimer:start()
 end
 
+function getBrightness(self)
+	return self.lcdLevel, self.keyLevel
+end
 
 function setBrightness(self, level)
 	local settings = self:getSettings()

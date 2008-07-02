@@ -59,6 +59,10 @@ end
 
 function openScreensaver(self, menuItem)
 	self.window:show(Window.transitionFadeIn)
+
+	-- store existing brightness levels in self
+	self.lcdLevel, self.keyLevel = appletManager:callService("getBrightness")
+
 	local lcdTimer = Timer(2000,
                 function()
 			_brightness(0, 0)
@@ -68,22 +72,7 @@ function openScreensaver(self, menuItem)
 end
 
 function _brightness(lcdLevel, keyLevel)
-
-	--[[ FIXME, don't use ioctl calls here, 
-	but instead register some brightness services from SqueezeboxJive and use those
-	this will be added when the SlimDiscovery refactoring work is merged in
-
-	if lcdLevel ~= nil then
-		-- don't update the screen when the lcd is off
-		--Framework:setUpdateScreen(lcdLevel ~= 0)
-		jiveBSP.ioctl(11, lcdLevel * 2048)
-	end
-
-	if keyLevel ~= nil then
-		jiveBSP.ioctl(13, keyLevel * 512)
-	end
-	--]]
-
+	appletManager:callService("setBrightness", lcdLevel, keyLevel)
 end
 
 --[[
