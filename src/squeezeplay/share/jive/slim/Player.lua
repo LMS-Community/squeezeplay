@@ -837,8 +837,7 @@ function _process_status(self, event)
 		self.jnt:notify('playerTrackChange', self, nowPlaying)
 	end
 
-	if self.playlist_timestamp ~= timestamp then
-		self.playlist_timestamp = timestamp
+	if self.state.playlist_timestamp ~= oldState.playlist_timestamp then
 		self.jnt:notify('playerPlaylistChange', self)
 	end
 
