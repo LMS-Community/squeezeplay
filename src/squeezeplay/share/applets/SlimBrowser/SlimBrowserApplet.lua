@@ -630,6 +630,8 @@ local function _bigArtworkPopup(chunk, err)
 
 	log:debug("Rendering artwork")
 	local popup = Popup("popupArt")
+	popup:setAllowScreensaver(true)
+
 	local icon = Icon("artwork")
 
 	local screenW, screenH = Framework:getScreenSize()

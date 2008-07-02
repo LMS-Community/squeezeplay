@@ -554,9 +554,8 @@ function sleep(self)
 	else
 		-- don't sleep or suspend with a popup visible
 		-- e.g. Bug 6641 during a firmware upgrade
-		-- XXXX this needs reviewing
 		local topWindow = Framework.windowStack[1]
-		if oo.instanceof(topWindow, Popup) and not self.lockedPopup then
+		if not topWindow:canActivatePowersave()then
 			self:setPowerState("dimmed")
 			
 		elseif self.powerState == "dimmed" then

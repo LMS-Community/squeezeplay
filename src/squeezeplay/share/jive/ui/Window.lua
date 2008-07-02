@@ -693,6 +693,29 @@ function canActivateScreensaver(self)
 end
 
 
+function getAllowPowersave(self)
+	return self.allowPowersave
+end
+
+
+function setAllowScreensaver(self, allowPowersave)
+	_assert(type(allowPowersave) == "boolean" or type(allowPowersave) == "function")
+
+	self.allowPowersave = allowPowersave
+end
+
+
+function canActivatePowersave(self)
+	if self.allowPowersave == nil then
+		return true
+	elseif self.allowPowersave == "function" then
+		return self.allowPowersave()
+	else
+		return self.allowPowersave
+	end
+end
+
+
 function getAlwaysOnTop(self)
 	return self.alwaysOnTop
 end
