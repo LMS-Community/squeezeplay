@@ -216,25 +216,37 @@ function screensaverWindow(self, window, hideOnMotion)
 
 	-- key or scroll events quit the screensaver
 	window:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL,
-			   function(event)
+		function(event)
 
-				   -- close all screensaver windows
-				   for i,w in ipairs(self.active) do
-					_deactivate(self, w, self.demoScreensaver)
-				   end
+			-- close all screensaver windows
+			for i,w in ipairs(self.active) do
+				_deactivate(self, w, self.demoScreensaver)
+			end
 
-				   -- keys should close the screensaver, and not
-				   -- perform an action
-				   if event:getType() == EVENT_KEY_PRESS then
-					   local keycode = event:getKeycode()
+			-- keys should close the screensaver, and not
+			-- perform an action
+			if event:getType() == EVENT_KEY_PRESS then
+				local keycode = event:getKeycode()
 
-					   if keycode == KEY_GO or
-						   keycode == KEY_LEFT then
-						   return EVENT_CONSUME
-					   end
-				   end
-				   return EVENT_UNUSED
-			   end)
+				if keycode == KEY_GO or
+					keycode == KEY_LEFT then
+					return EVENT_CONSUME
+				end
+
+				-- make sure when exiting a screensaver we
+				-- really go home.
+				if keycode == KEY_HOME then
+					local windowStack = Framework.windowStack
+					Framework:playSound("JUMP")
+					while #windowStack > 1 do
+						windowStack[#windowStack - 1]:hide(Window.transitionNone)
+					end
+
+					return EVENT_CONSUME
+				end
+			end
+			return EVENT_UNUSED
+		end)
 
 	if hideOnMotion then
 		window:addListener(EVENT_MOTION,
