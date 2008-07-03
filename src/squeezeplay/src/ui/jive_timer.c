@@ -33,7 +33,13 @@ static Uint32 timer_callback(Uint32 interval, void *param) {
 	data->busy++;
 
 	if (data->once) {
-		return 0;
+		/* Changing interval is prone to race conditions in the
+		 * SDL_ThreadedTimerCheck (see the FIXME). Don't rely on
+		 * the timer being deleted if we return 0, instead change
+		 * this timer to inifinity. We remove it later in the
+		 * callback.
+		 */
+		return INT_MAX;
 	}
 	else {
 		return interval;
