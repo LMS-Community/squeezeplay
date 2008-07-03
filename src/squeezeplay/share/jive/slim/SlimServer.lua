@@ -403,14 +403,14 @@ function free(self)
 	-- server is gone
 	self.lastSeen = 0
 	self.jnt:notify("serverDelete", self)
-		
-	-- close connections
-	self:disconnect()
 
 	if self == currentServer then
 		-- dont' delete state if this is the current server
 		return
 	end
+
+	-- close connections
+	self:disconnect()
 
 	-- delete players
 	for id, player in pairs(self.players) do
