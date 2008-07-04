@@ -50,6 +50,7 @@ local Widget                  = require("jive.ui.Widget")
 local Event                   = require("jive.ui.Event")
 local Surface                 = require("jive.ui.Surface")
 
+local debug                   = require("jive.utils.debug")
 local log                     = require("jive.utils.log").logger("ui")
 
 local max                     = math.max
@@ -182,11 +183,16 @@ function show(self, transition)
 		Framework:_startTransition(_newTransition(transition, topwindow, self))
 
 		if not self.transparent then
-			-- the old window and widgets are no longer visible
-			topwindow:dispatchNewEvent(EVENT_HIDE)
+			-- top window is no longer visiable and it is inactive,
+			-- if the top window is transparent also dispatch 
+			-- events to the lower window(s)
+			local window = topwindow
+			while window do
+				window:dispatchNewEvent(EVENT_HIDE)
+				window:dispatchNewEvent(EVENT_WINDOW_INACTIVE)
 
-			-- the old window is inactive
-			topwindow:dispatchNewEvent(EVENT_WINDOW_INACTIVE)
+				window = window.transparent and window:getLowerWindow() or nil
+			end
 		end
 	end
 
@@ -352,11 +358,16 @@ function hide(self, transition)
 	end
 
 	if wasVisible and topwindow then
-		-- top window is now active
-		topwindow:dispatchNewEvent(EVENT_WINDOW_ACTIVE)
+		-- top window is now active and visible, if the top window
+		-- is transparent also dispatch events to the lower window(s)
+		local window = topwindow
+		while window do
+			window:dispatchNewEvent(EVENT_WINDOW_ACTIVE)
+			window:dispatchNewEvent(EVENT_SHOW)
 
-		-- top window and widgets are now visible
-		topwindow:dispatchNewEvent(EVENT_SHOW)
+			window = window.transparent and window:getLowerWindow() or nil
+		end
+
 		topwindow:reDraw()
 
 		-- push transitions
