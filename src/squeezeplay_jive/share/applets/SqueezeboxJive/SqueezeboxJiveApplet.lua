@@ -287,23 +287,25 @@ function notify_playerCurrent(self, player)
                              self:setDate(chunk.data.date)
  		     end
  
-       self.server:request(sink,
-                       player:getId(),
-                       { 'date' }
-       )
+	-- this is a background request
+	-- FIXME this should be a subscription
+	self.server:request(sink,
+			    player:getId(),
+			    { 'date' }
+		    )
 
-       -- start a recurring timer for synching to SC/SN
-       self.clockTimer = Timer(6000000, -- 1 hour
-                               function()
-                                       if self.player and self.server then
-                                               self.server:request(sink,
-                                                       self.player:getId(),
-                                                       { 'date' }
-                                               )
-                                       end
-                               end,
-			       false)
-       self.clockTimer:start()
+	-- start a recurring timer for synching to SC/SN
+	self.clockTimer = Timer(6000000, -- 1 hour
+		function()
+			if self.player and self.server then
+				self.server:request(sink,
+						    self.player:getId(),
+						    { 'date' }
+					    )
+			end
+		end,
+		false)
+	self.clockTimer:start()
 end
 
 

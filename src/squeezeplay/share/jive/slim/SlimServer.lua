@@ -23,7 +23,7 @@ Notifications:
  serverNew (performed by SlimServers)
  serverDelete (performed by SlimServers)
  serverConnected(self)
- serverDisconnected(self, numPendingRequests)
+ serverDisconnected(self, numUserRequests)
 
 =head1 FUNCTIONS
 
@@ -288,6 +288,9 @@ function __init(self, jnt, name)
 		-- 'connected' = connected
 		netstate = 'disconnected',
 
+		-- number of user activated requests
+		numUserRequests = 0,
+
 		-- artwork state below here
 
 		-- artwork http pool, initially not connected
@@ -427,6 +430,19 @@ function free(self)
 end
 
 
+function wakeOnLan(self)
+	if not self.mac or self:isSqueezeNetwork() then
+		return
+	end
+
+	log:info("Sending WOL to ", self.mac)
+
+	-- send WOL packet to SqueezeCenter
+	local wol = WakeOnLan(self.jnt)
+	wol:wakeOnLan(self.mac)
+end
+
+
 -- connect to SqueezeCenter
 function connect(self)
 	if self.netstate == 'connected' or self.netstate == 'connecting' then
@@ -439,12 +455,6 @@ function connect(self)
 	assert(self.artworkPool)
 
 	self.netstate = 'connecting'
-
-	if self.mac and not self:isSqueezeNetwork() then
-		-- send WOL packet to SqueezeCenter
-		local wol = WakeOnLan(self.jnt)
-		wol:wakeOnLan(self.mac)
-	end
 
 	-- artwork pool connects on demand
 	self.comet:connect()
@@ -498,7 +508,7 @@ function notify_cometConnected(self, comet)
 end
 
 -- comet is disconnected from SC
-function notify_cometDisconnected(self, comet, numPendingRequests)
+function notify_cometDisconnected(self, comet)
 	if self.comet ~= comet then
 		return
 	end
@@ -510,7 +520,7 @@ function notify_cometDisconnected(self, comet, numPendingRequests)
 	end
 
 	-- always send the notification
-	self.jnt:notify('serverDisconnected', self, numPendingRequests)
+	self.jnt:notify('serverDisconnected', self, self.numUserRequests)
 end
 
 
@@ -982,6 +992,29 @@ end
 
 -- Proxies
 
+
+-- user request. if not connected to SC, this will try to reconnect and also
+-- sends WOL
+function userRequest(self, func, ...)
+	if self.netstate ~= 'connected' then
+		self:wakeOnLan()
+		self:connect()
+	end
+
+	self.numUserRequests = self.numUserRequests + 1
+
+	self.comet:request(
+		function(...)
+			self.numUserRequests = self.numUserRequests - 1
+			if func then
+				func(...)
+			end
+		end,
+		...)
+end
+
+
+-- background request
 function request(self, ...)
 	self.comet:request(...)
 end

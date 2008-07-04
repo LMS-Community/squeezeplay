@@ -115,7 +115,7 @@ defaults to "".
 Notifications:
 
  cometConnected(self)
- cometDisconnected(self, numPendingRequests)
+ cometDisconnected(self)
 
 =cut
 --]]
@@ -467,7 +467,7 @@ function request(self, func, playerid, request, priority)
 	-- Send immediately unless we're batching queries
 	if self.state ~= CONNECTED or self.batch ~= 0 then
 		if self.state ~= CONNECTED then
-			self.jnt:notify('cometDisconnected', self, #self.pending_reqs + #self.sent_reqs)
+			self.jnt:notify('cometDisconnected', self)
 		end
 
 		return id
@@ -549,7 +549,7 @@ _state = function(self, state)
 		self.chttp:close()
 		self.rhttp:close()
 
-		self.jnt:notify('cometDisconnected', self, #self.pending_reqs + #self.sent_reqs)
+		self.jnt:notify('cometDisconnected', self)
 	end
 end
 

@@ -426,7 +426,7 @@ local function _performJSONAction(jsonAction, from, qty, step, sink)
 	end
 
 	-- send the command
-	_server:request(sink, playerid, request)
+	_server:userRequest(sink, playerid, request)
 end
 
 -- for a given step, rerun the json request that created that slimbrowser menu
@@ -446,7 +446,7 @@ local function _refreshJSONAction(step)
 		return
 	end
 
-	_server:request(step.sink, playerid, step.jsonAction)
+	_server:userRequest(step.sink, playerid, step.jsonAction)
 
 end
 
@@ -1025,6 +1025,8 @@ local function _requestStatus()
 
 	local from, qty = step.db:missing(step.menu:isAccelerated())
 	if from then
+		-- note, this is not a userRequest as the playlist is
+		-- updated when the playlist changes
 		_server:request(
 				step.sink,
 				_player:getId(),
@@ -2193,7 +2195,7 @@ function notify_playerCurrent(self, player)
 
 	-- showtime for the player
 	_server.comet:startBatch()
-	_server:request(sink, _playerId, { 'menu', 0, 100 })
+	_server:userRequest(sink, _playerId, { 'menu', 0, 100 })
 	_player:onStage()
 	_requestStatus()
 	_server.comet:endBatch()
@@ -2260,19 +2262,19 @@ function notify_serverConnected(self, server)
 end
 
 
-function notify_serverDisconnected(self, server, numPendingRequests)
-
+function notify_serverDisconnected(self, server, numUserRequests)
 	if _server ~= server then
 		return
 	end
 
 	iconbar:setServerError("ERROR")
 
-	if numPendingRequests == 0 or self.serverErrorWindow then
+	if numUserRequests == 0 or self.serverErrorWindow then
 		return
 	end
 
 	-- attempt to reconnect, this may send WOL
+	server:wakeOnLan()
 	server:connect()
 
 	-- popup
@@ -2308,6 +2310,7 @@ function _problemConnecting(self, server)
 	menu:addItem({
 			     text = self:string("SLIMBROWSER_TRY_AGAIN"),
 			     callback = function()
+						server:wakeOnLan()
 						server:connect()
 						appletManager:callService("setCurrentPlayer", player)
 					end,

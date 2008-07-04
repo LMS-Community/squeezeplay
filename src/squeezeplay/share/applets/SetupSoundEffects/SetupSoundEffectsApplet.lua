@@ -209,7 +209,7 @@ function settingsShow(self, menuItem)
 	-- look for any server based sounds
 	if self.server then
 		log:info("found server - requesting sounds list")
-		self.server:request(
+		self.server:userRequest(
 			function(chunk, err)
 				if err then
 					log:debug(err)

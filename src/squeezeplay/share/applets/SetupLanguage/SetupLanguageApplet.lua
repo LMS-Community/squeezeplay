@@ -168,7 +168,7 @@ function setLang(self, choice, next)
 	if player then
 		local server = player:getSlimServer()
 		if server then
-			 server:request(nil, player:getId(), { 'menu', 0, 100 })
+			 server:userRequest(nil, player:getId(), { 'menu', 0, 100 })
 		end
 	end
 

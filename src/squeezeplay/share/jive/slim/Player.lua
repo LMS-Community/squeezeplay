@@ -667,7 +667,7 @@ function call(self, cmd)
 	log:debug("Player:call():")
 --	log:debug(cmd)
 
-	local reqid = self.slimServer:request(
+	local reqid = self.slimServer:userRequest(
 		_getSink(self, cmd),
 		self.id,
 		cmd
@@ -683,7 +683,7 @@ function send(self, cmd)
 	log:debug("Player:send():")
 --	log:debug(cmd)
 
-	self.slimServer:request(
+	self.slimServer:userRequest(
 		nil,
 		self.id,
 		cmd

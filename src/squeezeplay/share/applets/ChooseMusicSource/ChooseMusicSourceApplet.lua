@@ -327,7 +327,7 @@ function connectPlayer(self, player, server)
 		end
 	end
 
-	server:request(playerRegisterSink, nil, cmd)
+	server:userRequest(playerRegisterSink, nil, cmd)
 end
 
 
