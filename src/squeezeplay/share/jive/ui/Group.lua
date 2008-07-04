@@ -109,11 +109,11 @@ function setWidget(self, key, widget)
 	end
 
 	if self.widgets[key] then
-		if self.visible then
-			self.widgets[key]:dispatchNewEvent(EVENT_HIDE)
-		end
-
 		if self.widgets[key].parent == self then
+			if self.visible then
+				self.widgets[key]:dispatchNewEvent(EVENT_HIDE)
+			end
+
 			self.widgets[key].parent = nil
 		end
 	end
