@@ -47,6 +47,9 @@ function init(self)
 	self.bgicon = Icon("background", self.bg)
 	self.window:addWidget(self.bgicon)
 
+	-- store existing brightness levels in self
+	self.brightness = appletManager:callService("getBrightness")
+
 	-- register window as a screensaver
 	local manager = appletManager:getAppletInstance("ScreenSavers")
 	manager:screensaverWindow(self.window, true)
@@ -54,25 +57,16 @@ function init(self)
 end
 
 function closeScreensaver(self)
-	_brightness(self.lcdLevel, self.keyLevel)
+	_brightness(self.brightness)
 end
 
 function openScreensaver(self, menuItem)
 	self.window:show(Window.transitionFadeIn)
-
-	-- store existing brightness levels in self
-	self.lcdLevel, self.keyLevel = appletManager:callService("getBrightness")
-
-	local lcdTimer = Timer(2000,
-                function()
-			_brightness(0, 0)
-                end,
-                true)
-	lcdTimer:start()
+	_brightness(0)
 end
 
-function _brightness(lcdLevel, keyLevel)
-	appletManager:callService("setBrightness", lcdLevel, keyLevel)
+function _brightness(brightness)
+	appletManager:callService("setBrightness", brightness)
 end
 
 --[[
