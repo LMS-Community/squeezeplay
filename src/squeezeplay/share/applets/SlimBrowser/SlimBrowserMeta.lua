@@ -41,6 +41,11 @@ function registerApplet(self)
 	jul.addCategory("player.browse.db", jul.WARN)
 	jul.addCategory("player.browse.data", jul.WARN)
 
+
+	self:registerService('goHome')
+	self:registerService('showTrackOne')
+	self:registerService('showPlaylist')
+
 	appletManager:loadApplet("SlimBrowser")
 
 end
