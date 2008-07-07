@@ -2094,8 +2094,6 @@ function notify_playerTrackChange(self, player, nowplaying)
 	end
 	step.menu:reLayout()
 
-        -- does the playlist need loading?
-        _requestStatus()
 end
 
 -- notify_playerNewName
