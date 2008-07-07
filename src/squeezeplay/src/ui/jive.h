@@ -263,6 +263,7 @@ extern Uint32 jive_origin;
 
 /* Util functions */
 void jive_print_stack(lua_State *L, char *str);
+void jive_debug_traceback(lua_State *L, int n);
 int jiveL_getframework(lua_State *L);
 int jive_getmethod(lua_State *L, int index, char *method) ;
 void *jive_getpeer(lua_State *L, int index, JivePeerMeta *peerMeta);

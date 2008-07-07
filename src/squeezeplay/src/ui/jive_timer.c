@@ -4,9 +4,10 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
+//#define RUNTIME_DEBUG 1
+
 #include "common.h"
 #include "jive.h"
-
 
 typedef struct {
 	SDL_TimerID timerId;
@@ -76,6 +77,7 @@ void jive_timer_dispatch_event(lua_State *L, void *param) {
 
 	/* if this timer is called once then unref the _timerData */
 	if (data && data->once) {
+		DEBUG_TRACE("RM ONCE TIMER %p: id=%p ref=%ld", lua_topointer(L, -1), data->timerId, data->ref);
 		SDL_RemoveTimer(data->timerId);
 		luaL_unref(L, LUA_REGISTRYINDEX, data->ref);
 
@@ -132,9 +134,18 @@ int jiveL_timer_add_timer(lua_State *L) {
 	lua_getfield(L, 1, "interval");
 	interval = lua_tointeger(L, -1);
 
+	/* If the interval is 0 treat this as a single shot timer. */
+	if (interval == 0) {
+		interval = 1;
+		data->once = 1;
+	}
+
 	lua_pushvalue(L, 1);
 	data->ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	data->timerId = SDL_AddTimer(interval, &timer_callback, data);
+
+	DEBUG_TRACE("ADD TIMER %p: id=%p ref=%ld int=%d once=%d", lua_topointer(L, 1), data->timerId, data->ref, interval, data->once);
+
 	data->busy = 0;
 
 	return 0;
@@ -155,6 +166,9 @@ int jiveL_timer_remove_timer(lua_State *L) {
 	}
 
 	data = (TimerData *) lua_touserdata(L, -1);
+
+	DEBUG_TRACE("RM TIMER %p: id=%p ref=%ld", lua_topointer(L, 1), data->timerId, data->ref);
+
 	SDL_RemoveTimer(data->timerId);
 	luaL_unref(L, LUA_REGISTRYINDEX, data->ref);
 

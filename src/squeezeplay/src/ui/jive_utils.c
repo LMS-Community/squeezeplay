@@ -45,6 +45,19 @@ void jive_print_stack(lua_State *L, char *str) {
 }
 
 
+void jive_debug_traceback(lua_State *L, int n) {
+	JIVEL_STACK_CHECK_BEGIN(L);
+
+	lua_getglobal(L, "debug");
+	lua_getfield(L, -1, "traceback");
+	lua_call(L, 0, 1);
+
+	printf("debug.traceback:%s\n", lua_tostring(L, -1));
+	lua_pop(L, 2);
+
+	JIVEL_STACK_CHECK_END(L);
+}
+
 int jiveL_getframework(lua_State *L) {
 	lua_getglobal(L, "jive");
 	lua_getfield(L, -1, "ui");
