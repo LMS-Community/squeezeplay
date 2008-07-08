@@ -466,10 +466,25 @@ function notify_playerCurrent(self, player)
 
 	local playerId = player and player:getId() or false
 
-	if settings.currentPlayer ~= playerId then
+	if settings.playerId ~= playerId then
 		-- update player
 		log:info("selected player: ", player)
 
+		settings.playerId = playerId
+		settings.playerInit = player and player:getInit()
+
+		local server = player and player:getSlimServer() or false
+		if server then
+			settings.squeezeNetwork = server:isSqueezeNetwork()
+
+			-- remember server if it's not SN
+			if not settings.squeezeNetwork then
+				settings.serverName = server:getName()
+				settings.serverInit = server:getInit()
+			end
+		end
+
+		-- legacy setting
 		settings.currentPlayer = playerId
 		self:storeSettings()
 	end

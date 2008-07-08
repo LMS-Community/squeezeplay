@@ -289,7 +289,7 @@ function __init(self, jnt, name)
 		netstate = 'disconnected',
 
 		-- number of user activated requests
-		numUserRequests = 0,
+		userRequests = {},
 
 		-- artwork state below here
 
@@ -330,6 +330,25 @@ function __init(self, jnt, name)
 	obj.artworkFetchTask = Task("artwork", obj, processArtworkQueue)
 	
 	return obj
+end
+
+
+-- Update server on start up
+function updateInit(self, init)
+	self.ip = init.ip
+	self.mac = init.mac
+
+	self.lastSeen = 0 -- don't timeout
+	serverList[self.id] = self
+end
+
+
+-- State needed for updateInit
+function getInit(self)
+	return {
+		ip = self.ip,
+		mac = self.mac,
+	}
 end
 
 
@@ -449,6 +468,11 @@ function connect(self)
 		return
 	end
 
+	if self.lastSeen == 0 then
+		log:debug("Server ip address is not known")
+		return
+	end
+
 	log:info(self, ":connect")
 
 	assert(self.comet)
@@ -520,7 +544,8 @@ function notify_cometDisconnected(self, comet)
 	end
 
 	-- always send the notification
-	self.jnt:notify('serverDisconnected', self, self.numUserRequests)
+	debug.dump(self.userRequests, 5)
+	self.jnt:notify('serverDisconnected', self, #self.userRequests)
 end
 
 
@@ -1001,11 +1026,12 @@ function userRequest(self, func, ...)
 		self:connect()
 	end
 
-	self.numUserRequests = self.numUserRequests + 1
+	local req = { func, ... }
+	table.insert(self.userRequests, req)
 
 	self.comet:request(
 		function(...)
-			self.numUserRequests = self.numUserRequests - 1
+			table.delete(self.userRequests, req)
 			if func then
 				func(...)
 			end

@@ -20,6 +20,7 @@ local oo            = require("loop.simple")
 local AppletMeta    = require("jive.AppletMeta")
 
 local Player        = require("jive.slim.Player")
+local SlimServer    = require("jive.slim.SlimServer")
 
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("applets.setup")
@@ -67,10 +68,33 @@ function registerApplet(meta)
 	-- SlimDiscovery is a resident Applet
 	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
 
-	-- Set current player
-	if settings.currentPlayer then
-		slimDiscovery:setCurrentPlayer(Player(jnt, settings.currentPlayer))
+	local player, server
+
+	-- Current server
+	if settings.serverName then
+		server = SlimServer(jnt, settings.serverName)
+		server:updateInit(settings.serverInit)
 	end
+
+	-- Current player
+	if settings.playerId then
+		player = Player(jnt, settings.playerId)
+
+		if settings.squeezeNetwork then
+			player:updateInit(nil, settings.playerInit)
+		else
+			player:updateInit(server, settings.playerInit)
+		end
+
+	elseif settings.currentPlayer then
+		-- legacy setting
+		player = Player(jnt, settings.currentPlayer)
+	end
+
+	if player then
+		slimDiscovery:setCurrentPlayer(player)
+	end
+
 
 	-- With the MP firmware when SqueezeNetwork is selected a dummy player with an ff mac
 	-- address is selected, and then a firmware update starts. When this mac address is seen 

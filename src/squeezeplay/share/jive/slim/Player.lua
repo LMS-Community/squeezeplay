@@ -218,6 +218,7 @@ function __init(self, jnt, playerId)
 
 		-- player state from SC
 		state = {},
+		mode = "off",
 
 		isOnStage = false,
 
@@ -228,6 +229,32 @@ function __init(self, jnt, playerId)
 	playerIds[obj.id] = obj
 
 	return obj
+end
+
+
+-- Update player on start up
+function updateInit(self, slimServer, init)
+	self.info.name = init.name
+	self.info.model = init.model
+	self.info.connected = false
+
+	self.lastSeen = 0 -- don't timeout
+	playerList[self.id] = self
+
+	if slimServer then
+		log:info(self, " new for ", slimServer)
+		self.slimServer = slimServer
+		self.slimServer:_addPlayer(self)
+	end
+end
+
+
+-- State needed for updateInit
+function getInit(self)
+	return {
+		name = self.info.name,
+		model = self.info.model,
+	}
 end
 
 
@@ -1125,6 +1152,9 @@ end
 
 -- tell the player to connect to another server
 function connectToServer(self, server)
+
+	-- make sure the server we are connecting to is awake
+	server:wakeOnLan()
 
 	if self.config == "needsServer" then
 		_udapConnect(self, server)
