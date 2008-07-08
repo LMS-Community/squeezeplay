@@ -44,11 +44,25 @@ function init(self)
 	self.bg  = Surface:newRGBA(self.sw, self.sh)
 	self.bg:filledRectangle(0, 0, self.sw, self.sh, 0x000000FF)
 
+	-- store existing brightness levels in self
+	self.brightness = appletManager:callService("getBrightness")
+
 	self.bgicon = Icon("background", self.bg)
 	self.window:addWidget(self.bgicon)
 
-	-- store existing brightness levels in self
-	self.brightness = appletManager:callService("getBrightness")
+	self.window:addListener(
+		EVENT_WINDOW_ACTIVE | EVENT_HIDE,
+		function(event)
+			local type = event:getType()
+			if type == EVENT_WINDOW_ACTIVE then
+				_brightness(0)
+			else
+				_brightness(self.brightness)
+			end
+			return EVENT_UNUSED
+		end,
+		true
+	)
 
 	-- register window as a screensaver
 	local manager = appletManager:getAppletInstance("ScreenSavers")
@@ -57,12 +71,11 @@ function init(self)
 end
 
 function closeScreensaver(self)
-	_brightness(self.brightness)
+	-- nothing to do here, brightness is refreshed via window event handler in init()
 end
 
 function openScreensaver(self, menuItem)
 	self.window:show(Window.transitionFadeIn)
-	_brightness(0)
 end
 
 function _brightness(brightness)
