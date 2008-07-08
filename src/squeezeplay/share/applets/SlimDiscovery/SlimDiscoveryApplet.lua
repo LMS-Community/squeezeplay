@@ -468,6 +468,7 @@ end
 
 function notify_playerCurrent(self, player)
 	local settings = self:getSettings()
+	local saveSettings = false
 
 	local playerId = player and player:getId() or false
 
@@ -478,19 +479,28 @@ function notify_playerCurrent(self, player)
 		settings.playerId = playerId
 		settings.playerInit = player and player:getInit()
 
-		local server = player and player:getSlimServer() or false
-		if server then
-			settings.squeezeNetwork = server:isSqueezeNetwork()
-
-			-- remember server if it's not SN
-			if not settings.squeezeNetwork then
-				settings.serverName = server:getName()
-				settings.serverInit = server:getInit()
-			end
-		end
-
 		-- legacy setting
 		settings.currentPlayer = playerId
+
+		saveSettings = true
+	end
+
+	local server = player and player:getSlimServer() or false
+	if server and 
+		( settings.squeezeNetwork ~= server:isSqueezeNetwork()
+		  or settings.serverName ~= server:getName() ) then
+		settings.squeezeNetwork = server:isSqueezeNetwork()
+
+		-- remember server if it's not SN
+		if not settings.squeezeNetwork then
+			settings.serverName = server:getName()
+			settings.serverInit = server:getInit()
+		end
+
+		saveSettings = true
+	end
+
+	if saveSettings then
 		self:storeSettings()
 	end
 
