@@ -2271,6 +2271,11 @@ function notify_serverDisconnected(self, server, numUserRequests)
 		return
 	end
 
+	self:_problemConnectingPopup(server)
+end
+
+
+function _problemConnectingPopup(self, server)
 	-- attempt to reconnect, this may send WOL
 	server:wakeOnLan()
 	server:connect()
@@ -2308,10 +2313,12 @@ function _problemConnecting(self, server)
 	menu:addItem({
 			     text = self:string("SLIMBROWSER_TRY_AGAIN"),
 			     callback = function()
-						server:wakeOnLan()
-						server:connect()
+						window:hide()
+
+						self:_problemConnectingPopup(server)
 						appletManager:callService("setCurrentPlayer", player)
 					end,
+			     sound = "WINDOWSHOW",
 		     })
 
 	if server:isPasswordProtected() then
@@ -2322,6 +2329,7 @@ function _problemConnecting(self, server)
 				local auth = appletManager:loadApplet("HttpAuth")
 				auth:squeezeCenterPassword(server)
 			end,
+			sound = "WINDOWSHOW",
 		})
 	end
 
@@ -2335,6 +2343,7 @@ function _problemConnecting(self, server)
 							local setupSqueezebox = appletManager:loadApplet("SetupSqueezebox")
 							setupSqueezebox:startSqueezeboxSetup(player:getMacAddress(), nil)
 						end,
+				     sound = "WINDOWSHOW",
 			     })
 	end
 
@@ -2349,6 +2358,7 @@ function _problemConnecting(self, server)
 							local selectPlayer = appletManager:loadApplet("SelectPlayer")
 							selectPlayer:setupShow()
 						end,
+				     sound = "WINDOWSHOW",
 			     })
 	end
 
