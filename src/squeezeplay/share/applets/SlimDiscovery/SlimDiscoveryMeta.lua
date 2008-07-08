@@ -64,9 +64,15 @@ function registerApplet(meta)
 	meta:registerService("getPollList")
 	meta:registerService("setPollList")
 
-
 	-- SlimDiscovery is a resident Applet
 	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
+
+
+	-- FIXME See Bug 8669
+	-- SlimBrowser needs to be loaded first, so it gets notifications from
+	-- the code below.
+	appletManager:loadApplet("SlimBrowser")
+
 
 	local player, server
 
