@@ -30,6 +30,7 @@ local Timer         = require("jive.ui.Timer")
 local log           = require("jive.utils.log").logger("applets.misc")
 local debug         = require("jive.utils.debug")
 
+local appletManager = appletManager
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
