@@ -112,7 +112,7 @@ function response(self, result, window, widget, list, prevmenu, locked)
 							   local newmenu = SimpleMenu("menu", newlist)
 							   newwindow:addWidget(newmenu)
 							   widget:lock()
-							   self:userRequest(entry.id, 0, newwindow, newmenu, newlist, widget, true)
+							   self:request(entry.id, 0, newwindow, newmenu, newlist, widget, true)
 						   end
 			}
 		elseif entry.description then
@@ -139,7 +139,7 @@ function response(self, result, window, widget, list, prevmenu, locked)
 						window:bumpRight()
 					end
 					-- fetch next item and update index on previous menu to match
-					self:userRequest(pre .. "." .. tostring(c), 0, window, widget, list, prevmenu)
+					self:request(pre .. "." .. tostring(c), 0, window, widget, list, prevmenu)
 					prevmenu:setSelectedIndex(c+1)
 					return EVENT_CONSUME
 				end)
@@ -151,7 +151,7 @@ function response(self, result, window, widget, list, prevmenu, locked)
 		widget:setItems(list)
 		local pre, c = _split(id)
 		if c < result.count - 1 then
-			self:userRequest(pre, c + 1, window, widget, list, prevmenu)
+			self:request(pre, c + 1, window, widget, list, prevmenu)
 		end
 	end
 end
