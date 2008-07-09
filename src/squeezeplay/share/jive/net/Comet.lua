@@ -341,19 +341,10 @@ end
 
 
 -- Send any pending subscriptions and requests
-_sendPendingRequests = function(self, addSentReqs)
+_sendPendingRequests = function(self)
 
 	-- add all pending unsub requests, and any others we need to send
 	local data = {}
-
-	if addSentReqs then
-		-- following re-connection we also need to include any
-		--  un-acknowledged requests to the outgoing data
-		for i, v in ipairs(self.sent_reqs) do
-			table.insert(data, v)
-		end
-	end
-
 	_addPendingRequests(self, data)
 	
 	-- Only continue if we have some data to send
@@ -678,12 +669,28 @@ _connect = function(self)
 		subscription = '/' .. self.clientId .. '/**',
 	} }
 
+	-- Add any un-acknowledged requests to the outgoing data
+	for i, v in ipairs(self.sent_reqs) do
+		table.insert(data, v)
+	end
+
+	-- Add any other pending requests to the outgoing data
+	_addPendingRequests(self, data)
+
+	if log:isDebug() then
+		log:debug("Sending pending request(s):")
+		debug.dump(data, 5)
+	end
+
+	-- This will be our last request on this connection, it is now only
+	-- for listening for responses
+
 	local req = CometRequest(
 			_getEventSink(self),
 			self.uri,
 			data
 		)
-
+	
 	self.chttp:fetch(req)
 end
 
@@ -709,14 +716,22 @@ _reconnect = function(self)
 		clientId       = self.clientId,
 		connectionType = 'streaming',
 	} }
+
+	-- Add any un-acknowledged requests to the outgoing data
+	for i, v in ipairs(self.sent_reqs) do
+		table.insert(data, v)
+	end
+
+	-- Add any other pending requests to the outgoing data
+	_addPendingRequests(self, data)
+
+	_state(self, CONNECTING)
 	
 	local req = CometRequest(
 			_getEventSink(self),
 			self.uri,
 			data
 		)
-
-	_state(self, CONNECTING)
 
 	self.chttp:fetch(req)
 end
@@ -792,7 +807,7 @@ _response = function(self, chunk)
 				_state(self, CONNECTED)
 
 				-- send any requests queued during connect
-				_sendPendingRequests(self, true)
+				_sendPendingRequests(self)
 			else
 				return _handleAdvice(self)
 			end
@@ -810,9 +825,6 @@ _response = function(self, chunk)
 		elseif event.channel == '/meta/reconnect' then
 			if event.successful then
 				_state(self, CONNECTED)
-
-				-- send any requests queued during re-connect
-				_sendPendingRequests(self, true)
 			else
 				return _handleAdvice(self)
 			end
@@ -948,7 +960,7 @@ end
 
 
 _handleTimer = function(self)
-	log:debug(self, ": handleTimer state=", self.state, " advice.reconnect=", self.advice.reconnect)
+	log:debug(self, ": handleTimer state=", self.state, " advice=", self.advice)
 
 	if self.state ~= UNCONNECTED then
 		log:debug(self, ": ignoring timer while ", self.state)
