@@ -41,9 +41,6 @@ local jnt                    = jnt
 local iconbar                = iconbar
 local appletManager          = appletManager
 
-local EVENT_ACTION           = jive.ui.EVENT_ACTION
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
-local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
 
@@ -54,27 +51,11 @@ local LAYOUT_WEST            = jive.ui.LAYOUT_WEST
 local LAYOUT_CENTER          = jive.ui.LAYOUT_CENTER
 local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
-local EVENT_KEY_DOWN         = jive.ui.EVENT_KEY_DOWN
-local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
-local EVENT_KEY_HOLD         = jive.ui.EVENT_KEY_HOLD
-local EVENT_ALL_INPUT        = jive.ui.EVENT_ALL_INPUT
-local EVENT_SCROLL           = jive.ui.EVENT_SCROLL
-local EVENT_SWITCH           = 0x400000 -- XXXX fixme when public
-local EVENT_MOTION           = 0x800000 -- XXXX fixme when public
-local EVENT_WINDOW_PUSH      = jive.ui.EVENT_WINDOW_PUSH
-local EVENT_VISIBLE_ALL      = jive.ui.EVENT_VISIBLE_ALL
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
-
-local KEY_ADD                = jive.ui.KEY_ADD
-local KEY_PLAY               = jive.ui.KEY_PLAY
-local KEY_HOME               = jive.ui.KEY_HOME
-
 local SW_AC_POWER            = 0
 local SW_PHONE_DETECT        = 1
 
 local squeezeboxjiveTitleStyle = 'settingstitle'
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
@@ -105,6 +86,30 @@ function init(self)
 
 	log:info("uuid=", uuid)
 	log:info("mac=", mac)
+
+	if not uuid or string.match(mac, "^00:40:20") then
+		local popup = Popup("errorWindow", self:string("INVALID_MAC_TITLE"))
+
+		popup:setAllowScreensaver(false)
+		popup:setAlwaysOnTop(true)
+		popup:setAutoHide(false)
+
+		local text = Textarea("textarea", self:string("INVALID_MAC_TEXT"))
+		local menu = SimpleMenu("menu", {
+			{
+				text = self:string("INVALID_MAC_CONTINUE"),
+				sound = "WINDOWHIDE",
+				callback = function()
+						   window:hide()
+					   end
+			},
+		})
+
+		popup:addWidget(text)
+		popup:addWidget(menu)
+		popup:show()
+	end
+
 
 	jnt:setUUID(uuid, mac)
 
@@ -139,6 +144,11 @@ function init(self)
 
 	-- wireless
 	self.wireless = Wireless(jnt, "eth0")
+
+	-- register network active function
+	jnt:registerNetworkActive(function(active)
+		self:_wlanPowerSave(active)
+	end)
 
 	iconbar.iconWireless:addTimer(5000,  -- every 5 seconds
 				      function() 
@@ -207,6 +217,9 @@ function init(self)
 				      return EVENT_UNUSED
 			      end)
 
+-- FIXME for POS slideshow:
+-- In the real SqueezeboxJiveApplet.lua, make this listener a remembered listener (self.homeKeyListener or something), then register a service to remove the listener
+-- then we don't need to copy a hacked SqueezeboxJiveApplet.lua, just call the listener removal service from SlideshowApplet.lua
 --[[
 	Framework:addListener(EVENT_KEY_HOLD,
 		function(event) 
@@ -255,23 +268,49 @@ end
 
 
 function notify_playerCurrent(self, player)
+	if not player then
+		return
+	end
+
+	self.player = player
+	self.server = player:getSlimServer()
+	
+	if not self.server then
+		return
+	end
+
+	if self.clockTimer then
+		self.clockTimer:stop()
+	end
+
 	local sink = function(chunk, err)
 			     if err then
 				     log:warn(err)
 				     return
 			     end
 
-			     self:setDate(chunk.data.date)
+                             self:setDate(chunk.data.date)
+ 		     end
+ 
+	-- this is a background request
+	-- FIXME this should be a subscription
+	self.server:request(sink,
+			    player:getId(),
+			    { 'date' }
+		    )
 
-			     -- FIXME schedule updates from server
-		     end
-
-	if player then
-		player:getSlimServer():request(sink,
-					player:getId(),
-					{ 'date' }
-				)
-	end
+	-- start a recurring timer for synching to SC/SN
+	self.clockTimer = Timer(6000000, -- 1 hour
+		function()
+			if self.player and self.server then
+				self.server:request(sink,
+						    self.player:getId(),
+						    { 'date' }
+					    )
+			end
+		end,
+		false)
+	self.clockTimer:start()
 end
 
 
@@ -388,6 +427,10 @@ function _setBrightness(self, fade, lcdLevel, keyLevel)
 	self.fadeTimer:start()
 end
 
+function getBrightness(self)
+	local settings = self:getSettings()
+	return settings.brightness
+end
 
 function setBrightness(self, level)
 	local settings = self:getSettings()
@@ -515,19 +558,20 @@ end
 
 -- called to sleep jive
 function sleep(self)
-	if self.powerState == "active" then
+	-- don't sleep or suspend with a popup visible
+	-- e.g. Bug 6641 during a firmware upgrade
+	local topWindow = Framework.windowStack[1]
+	if not topWindow:canActivatePowersave()then
+		self:setPowerState("active")
+
+	elseif self.powerState == "active" then
 		self:setPowerState("dimmed")
+
 	elseif self.powerState == "locked" then
 		self:setPowerState("sleep")
+
 	else
-		-- don't sleep or suspend with a popup visible
-		-- e.g. Bug 6641 during a firmware upgrade
-		-- XXXX this needs reviewing
-		local topWindow = Framework.windowStack[1]
-		if oo.instanceof(topWindow, Popup) and not self.lockedPopup then
-			self:setPowerState("dimmed")
-			
-		elseif self.powerState == "dimmed" then
+		if self.powerState == "dimmed" then
 			self:setPowerState("sleep")
 		elseif self.powerState == "sleep" then
 			self:setPowerState("suspend")
@@ -635,6 +679,9 @@ function setPowerState(self, state)
 		end
 	end
 
+	-- update wlan power save mode
+	self:_wlanPowerSave()
+
 	if interval > 0 then
 		self.powerTimer:setInterval(interval)
 		self.powerTimer:start()
@@ -653,12 +700,12 @@ function lockScreen(self)
 	-- FIXME change icon and text
 	popup:addWidget(Icon("iconLocked"))
 	popup:addWidget(Label("text", self:string("BSP_SCREEN_LOCKED")))
-	popup:addWidget(Textarea("help", self:string("BSP_SCREEN_LOCKED_HELP")))
+	popup:addWidget(Textarea("lockedHelp", self:string("BSP_SCREEN_LOCKED_HELP")))
 
 	popup:show()
 
 	self.lockedPopup = popup
-	self.lockedTimer = Timer(2000,
+	self.lockedTimer = Timer(5000,
 				 function()
 					 self:_setBrightness(true, 0, 0)
 					 self:_setCPUSpeed(false)
@@ -728,12 +775,10 @@ function batteryLowShow(self)
 					function(event)
 						Framework.wakeup()
 
-						--[[
 						-- allow power off
 						if event:getType() == EVENT_KEY_HOLD and event:getKeycode() == KEY_HOME then
 							self:settingsPowerOff()
 						end
-						--]]
 						return EVENT_CONSUME
 					end,
 					true)
@@ -773,9 +818,14 @@ function settingsPowerDown(self, menuItem)
 			callback = function() window:hide() end
 		},
 		{ 
-			text = self:string("POWER_DOWN_CONFIRM"),
+			text = self:string("POWER_DOWN"),
 			sound = "SELECT",
 			callback = function() settingsPowerOff(self) end
+		},	
+		{ 
+			text = self:string("POWER_DOWN_SLEEP"),
+			sound = "SELECT",
+			callback = function() settingsSleep(self) end
 		}
 	}
 	menu:setItems(items)
@@ -784,11 +834,36 @@ function settingsPowerDown(self, menuItem)
         return window
 end
 
+function settingsSleep(self)
+	-- disconnect from SqueezeCenter
+	appletManager:callService("disconnectPlayer")
+
+	self.popup = Popup("popupIcon")
+
+	self.popup:addWidget(Icon("iconConnecting"))
+	self.popup:addWidget(Label("text", self:string("SLEEPING")))
+
+	-- make sure this popup remains on screen
+	self.popup:setAllowScreensaver(false)
+	self.popup:setAlwaysOnTop(true)
+	self.popup:setAutoHide(false)
+
+	self.popup:addTimer(10000, 
+		function()
+			self:_goToSleep()
+		end,
+		true
+	)
+
+	self.popup:show()
+
+	self.popup:playSound("SHUTDOWN")
+end
+
 
 function settingsPowerOff(self)
 	-- disconnect from SqueezeCenter
-	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
-	slimDiscovery.serversObj:disconnect()
+	appletManager:callService("disconnectPlayer")
 
 	local popup = Popup("popupIcon")
 
@@ -851,7 +926,7 @@ function settingsTestSuspend(self, menuItem)
 				      sleepOptions,
 				      function(obj, selectedIndex)
 					      settings.sleepTimeout = sleepOptions[selectedIndex] * 1000
-					      log:warn("sleepTimeout = ", settings.sleepTimeout)
+					      log:info("sleepTimeout=", settings.sleepTimeout)
 				      end,
 				      sleepIndex
 			      )
@@ -863,7 +938,7 @@ function settingsTestSuspend(self, menuItem)
 				      suspendOptions,
 				      function(obj, selectedIndex)
 					      settings.suspendTimeout = suspendOptions[selectedIndex] * 1000
-					      log:warn("suspendTimeout = ", settings.suspendTimeout)
+					      log:info("suspendTimeout=", settings.suspendTimeout)
 				      end,
 				      suspendIndex
 			      )
@@ -874,7 +949,7 @@ function settingsTestSuspend(self, menuItem)
 				      "checkbox", 
 				      function(obj, isSelected)
 					      settings.suspendEnabled = isSelected
-					      log:warn("suspendEnalbed = ", settings.suspendEnabled)
+					      log:info("suspendEnabled=", settings.suspendEnabled)
 				      end,
 				      settings.suspendEnabled
 			      )
@@ -885,13 +960,26 @@ function settingsTestSuspend(self, menuItem)
 				      "checkbox", 
 				      function(obj, isSelected)
 					      settings.suspendWake = isSelected and 30 or nil
-					      log:warn("suspendWake = ", settings.suspendWake)
+					      log:info("suspendWake=", settings.suspendWake)
 				      end,
 				      settings.suspendWake ~= nil
 			      )
 		},
+		{
+			text = self:string("WLAN_POWER_SAVE"), 
+			icon = Checkbox(
+				      "checkbox", 
+				      function(obj, isSelected)
+					      settings.wlanPSEnabled = isSelected
+					      log:info("wlanPSEnabled=", settings.wlanPSEnabled)
+					      self:_wlanPowerSave()
+				      end,
+				      settings.wlanPSEnabled
+			      )
+		},
 	})
 
+	window:addWidget(Textarea("help", self:string("POWER_MANAGEMENT_SETTINGS_HELP")))
 	window:addWidget(menu)
 
 	window:addListener(EVENT_WINDOW_POP,
@@ -923,6 +1011,41 @@ function _setCPUSpeed(self, fast)
 end
 
 
+function _wlanPowerSave(self, active)
+	if active ~= nil then
+		-- update the network active state
+		self.networkActive = active
+	end
+
+	local settings = self:getSettings()
+	if not settings.wlanPSEnabled then
+		self.wireless:powerSave(false)
+		return
+	end
+
+	if self._wlanPowerSaveTimer == nil then
+		self._wlanPowerSaveTimer =
+			Timer(1000,
+			      function()
+				      self.wireless:powerSave(true)
+			      end,
+			      true)
+	end
+
+	-- disable PS mode when on ac power, or the network and device or
+	-- both active. when battery powered only disable PS mode when the
+	-- user is actively using the device.
+	if self.acpower or (self.networkActive and self.powerState == "active") then
+		self.wireless:powerSave(false)
+		self._wlanPowerSaveTimer:stop()
+	else
+		self._wlanPowerSaveTimer:start()
+	end
+
+	self.networkActive = active
+end
+
+
 function _suspendTask(self)
 	-- check existing network config
 	local status = self.wireless:t_wpaStatus()
@@ -933,12 +1056,6 @@ function _suspendTask(self)
 	local settings = self:getSettings()
 	local wakeAfter = settings.suspendWake and settings.suspendWake or ""
 
-	local slimDiscovery = appletManager:getAppletInstance("SlimDiscovery")
-	local slimServers
-	if slimDiscovery then
-		slimServers = slimDiscovery.serversObj
-	end
-
 	-- start timer to resume this task every second
 	self.suspendPopup:addTimer(1000,
 		function()
@@ -947,22 +1064,19 @@ function _suspendTask(self)
 			end
 		end)
 
-	-- disconnect from all SlimServers
-	if slimServers then
-		local connected
-		repeat
-			slimServers:disconnect()
+	-- disconnect from all Players/SqueezeCenters
+	local connected
+	repeat
+		appletManager:callService("disconnectPlayer")
 
-			connected = false
-			for i,server in slimServers:allServers() do
-				connected = connected or server:isConnected()
-				log:info("server=", server:getName(), " connected=", connected)
-			end
+		connected = false
+		for i,server in appletManager:callService("iterateSqueezeCenters") do
+			connected = connected or server:isConnected()
+			log:info("server=", server:getName(), " connected=", connected)
+		end
 
-			Task:yield(false)
-		until not connected
-	end
-
+		Task:yield(false)
+	until not connected
 
 	-- suspend
 	os.execute("/etc/init.d/suspend " .. wakeAfter)
@@ -1040,6 +1154,16 @@ function _suspend(self)
 	self.suspendTask:addTask()
 end
 
+function _goToSleep(self)
+	log:info("Sleep begin")
+
+	self:_setBrightness(true, 0, 0)
+
+	-- give the user 10 seconds to put the thing down, otherwise the motion detector will just bring it right back out of sleep
+	self.popup:hide()
+	self:setPowerState('suspend')
+
+end
 
 function _powerOff(self)
 	log:info("Poweroff begin")
