@@ -35,14 +35,14 @@ function registerApplet(meta)
 end
 
 function notify_playerDelete(meta, player)
-	jiveMain:setCustomNode('appletInfoBrowser', 'hidden')
+	jiveMain:removeItemFromNode(meta.menu, 'extras')
 end
 
 -- only show on the menu if a player is attached
 -- this allows SN to use the player id to select which information feeds to show
 function notify_playerCurrent(meta, player)
 	if player == nil then
-		jiveMain:setCustomNode('appletInfoBrowser', 'hidden')
+		jiveMain:removeItemFromNode(meta.menu, 'extras')
 	else
 		jiveMain:setCustomNode('appletInfoBrowser', 'extras')
 	end
