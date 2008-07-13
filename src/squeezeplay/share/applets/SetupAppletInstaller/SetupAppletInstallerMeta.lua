@@ -20,7 +20,7 @@ local oo            = require("loop.simple")
 
 local jiveMain      = jiveMain
 local AppletMeta    = require("jive.AppletMeta")
-local jul           = require("jive.utils.log")
+local log           = require("jive.utils.log").logger('applets.misc')
 
 local appletManager = appletManager
 local jnt           = jnt
@@ -39,13 +39,19 @@ end
 
 function registerApplet(self)
 	jnt:subscribe(self)
-	self.menu = self:menuItem('appletSetupAppletInstaller', 'advancedSettings', self:string("APPLET_INSTALLER"), function(applet, ...) applet:menu(...) end)
+	self.menu = self:menuItem('appletSetupAppletInstaller', 'hidden', self:string("APPLET_INSTALLER"), function(applet, ...) applet:menu(...) end)
+	-- to begin with, we place this in the 'hidden' node
+	jiveMain:addItem(self.menu)
+end
+
+function notify_playerDelete(self, player)
+	jiveMain:removeItemFromNode(self.menu, 'advancedSettings')
 end
 
 function notify_playerCurrent(self, player)
 	if player == nil or ( player:getSlimServer() and player:getSlimServer():isSqueezeNetwork() ) then
-		jiveMain:removeItem(self.menu)
+		jiveMain:removeItemFromNode(self.menu, 'advancedSettings')
 	else
-		jiveMain:addItem(self.menu)
+		jiveMain:setCustomNode('appletSetupAppletInstaller', 'advancedSettings')
 	end
 end
