@@ -428,7 +428,6 @@ function _installListeners(self, window)
 			if (keyPress == KEY_BACK and windowStyle == 'browse') then
 				-- back to Home
 				appletManager:callService("goHome")
-				return EVENT_CONSUME
 
 			elseif (keyPress == KEY_GO) then
 				if playlistSize == 1 then
@@ -438,7 +437,6 @@ function _installListeners(self, window)
 					-- show playlist
 					appletManager:callService("showPlaylist")
 				end
-				return EVENT_CONSUME
 			end
 			return EVENT_UNUSED
 		end
