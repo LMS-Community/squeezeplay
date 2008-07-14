@@ -245,40 +245,90 @@ POWER_DOWN_HELP
 	NL	Annuleer of bevestig het uitzetten van je controller
 
 PLEASE_WAIT
-	DE	\nVerbindung
+	DE	\nBitte warten
 	EN	\nPlease wait
-	ES	\nConectando
-	FR	\nConnexion
-	IT	\nConnessione...
-	NL	\nBezig met verbinden
+	ES	\nEspere un momento
+	FR	\nVeuillez patienter
+	IT	\nAttendere
+	NL	\nEen ogenblik geduld
 
 INVALID_MAC_TITLE
+	DE	Fehler
 	EN	Error
+	ES	Error
+	FR	Erreur
+	IT	Errore
+	NL	Fout
 
 INVALID_MAC_TEXT
+	DE	Ungültige MAC-Adresse oder UUID. Wenden Sie sich an den Kundendienst.
 	EN	Invalid mac address or uuid. Please contact support.
+	ES	Dirección MAC o UUID no válidos. Contacte con asistencia técnica.
+	FR	Adresse MAC ou UUID non valide. Veuillez contacter l'assistance.
+	IT	Indirizzo MAC o UUID non valido. Contattare il servizio di assistenza.
+	NL	MAC-adres of UUID ongeldig. Neem contact op met support.
 
 INVALID_MAC_CONTINUE
+	DE	Weiter
 	EN	Continue
-
+	ES	Continuar
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
 
 POWER_MANAGEMENT_SETTINGS
+	DE	Energieverwaltung
 	EN	Power management
+	ES	Administración de energía
+	FR	Gestion de l'alimentation
+	IT	Risparmio energia
+	NL	Energiebeheer
 
 SLEEP_TIMEOUT
+	DE	Energiesparmodus nach
 	EN	Sleep Timeout
+	ES	Tiempo de espera para suspensión
+	FR	Délai de mise en veille
+	IT	Timeout sospensione
+	NL	Sleep-timeout
 
 SUSPEND_TIMEOUT
+	DE	Zeitüberschreitung deaktivieren
 	EN	Suspend Timeout
+	ES	Suspender tiempo de espera
+	FR	Interrompre le délai
+	IT	Sospendi timeout
+	NL	Time-out onderbreken
 
 SUSPEND_ENABLED
+	DE	Anhalten aktiviert
 	EN	Suspend Enabled
+	ES	Suspensión habilitada
+	FR	Interruption activée
+	IT	Sospensione attivata
+	NL	Onderbreking ingeschakeld
 
 SUSPEND_WAKE
+	DE	Aufwachen deaktivieren
 	EN	Suspend Wake
+	ES	Suspender activación
+	FR	Interrompre la réactivation
+	IT	Sospendi attivazione
+	NL	Aanzetten onderbreken
 
 WLAN_POWER_SAVE
+	DE	Kabellos-Energiesparmodus
 	EN	Wireless Power Save
+	ES	Ahorro de energía inalámbrica
+	FR	Mode veille sans fil
+	IT	Risparmio energia senza fili
+	NL	Draadloze energiebesparing
 
 POWER_MANAGEMENT_SETTINGS_HELP
+	DE	Testeinstellungen für die Energieverwaltung. Wenn Sie diese Einstellungen ändern, könnte die Batterie schneller entladen werden.
 	EN	Power management test settings. Changing these settings may reduce your battery life.
+	ES	Configuración de prueba de administración de energía. Si cambia esta configuración puede que reduzca la duración de la pila.
+	FR	Paramètres de test de la gestion de l'alimentation. Leur modification risque de réduire la durée de vie des piles.
+	IT	Impostazioni verifica risparmio energia. La modifica di queste impostazioni potrebbe ridurre la durata delle batterie.
+	NL	Testinstellingen voor energiebeheer. Wanneer je deze instellingen wijzigt, gaan de batterijen misschien minder lang mee.
+

@@ -106,10 +106,10 @@ NETWORK_FORGOTTEN_NETWORK
 	DA	Glemt %s
 	DE	%s vergessen
 	EN	Forgotten %s
-	ES	Olvidando %s
+	ES	%s olvidada
 	FR	Ignorer %s
-	IT	%s ignorata
-	NL	%s wordt vergeten
+	IT	%s dimenticata
+	NL	%s vergeten
 
 NETWORK_NF
 	DA	NF:
@@ -149,8 +149,12 @@ NETWORK_SNR
 
 NETWORK_BITRATE
 	DA	Tx rate:
+	DE	Übertragungsrate:
 	EN	Tx rate:
-
+	ES	Velocidad Tx:
+	FR	Débit du transfert:
+	IT	Velocità trasferimento:
+	NL	Overdrachtssnelheid:
 
 NETWORK_STATE
 	DA	Tilstand:
@@ -239,7 +243,7 @@ NETWORK_WIRELESS_KEY_HELP
 	EN	Enter your wireless key. Scroll to change letters, press the center button to choose that letter. Press the center button twice to finish.
 	ES	Escriba la clave inalámbrica. Desplace la rueda para cambiar de letra y pulse el botón central para elegirla. Pulse dos veces el botón central para terminar.
 	FR	Entrer la clé sans fil. Faites défiler les lettres et appuyez sur le bouton central pour effectuer la sélection. Appuyez deux fois sur le bouton central pour terminer.
-	IT	Immettere la chiave della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare una lettera. Premere il pulsante centrale due volte per uscire.
+	IT	Inserire la chiave della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare una lettera. Premere il pulsante centrale due volte per uscire.
 	NL	Voer je draadloze sleutel in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
 
 NETWORK_REGION
@@ -415,12 +419,12 @@ NETWORK_WPA2
 
 NETWORK_WIRELESS_ENCRYPTION_HELP
 	DA	Vælg størrelsen på krypteringsnøglen dit netværk anvender. Nøglen kan bestå af tal 0-9 og bokstaver A-F. 64 Bit nøgler er 10 tegn lange, 128 Bit nøgler 26 tegn lange.
-	DE	Wählen Sie die im Netzwerk verwendete Verschlüsselung.
+	DE	Wählen Sie die Größe des im Netzwerk verwendeten Verschlüsselungsschlüssels. Der Schlüssel darf die Zahlen 0-9 und Buchstaben A-F enthalten. 64-Bit-Schlüssel haben 10, 128-Bit-Schlüssel 26 Stellen.
 	EN	Choose the size of encryption key that your network uses. The key may include digits 0-9 and letters A-F. 64-bit keys are 10 digits long, 128-bit networks are 26 digits long.
-	ES	Elija el tipo de cifrado que utiliza la red.
+	ES	Elija el tamaño de la clave de cifrado que utiliza la red. La clave puede incluir dígitos del 0 al 9 y letras de la A a la F. Las claves de 64 bits tienen 10 dígitos, mientras que las claves de 128 bits tienen 26 dígitos.
 	FR	Choisissez le type de chiffrement que votre réseau utilise.
-	IT	Scegliere il tipo di crittografia utilizzata dalla rete.
-	NL	Kies het type codering dat je netwerk gebruikt.
+	IT	Scegliere le dimensioni della chiave di crittografia utilizzata dalla rete. La chiave può essere composta dai numeri da 0 a 9 o dalle lettere da A a F. Le chiavi da 64 bit contengono 10 caratteri, quelle da 128 bit ne contengono 26.
+	NL	Kies de grootte van de coderingssleutel die je netwerk gebruikt. De sleutel kan cijfers (0-9) en letters (A-F) bevatten. 64-bits sleutels zijn 10 tekens lang, 128-bits sleutels zijn 26 tekens lang.
 
 NETWORK_WIRELESS_PASSWORD
 	DA	Trådløst kodeord
@@ -437,7 +441,7 @@ NETWORK_WIRELESS_PASSWORD_HELP
 	EN	Enter your wireless password. Scroll to change letters, press the center button to choose that letter. Press center button twice to finish.
 	ES	Escriba la contraseña para red inalámbrica. Desplácese para cambiar de letra y pulse el botón central para elegir una letra. Pulse dos veces el botón central para terminar.
 	FR	Saisissez un mot de passe pour votre réseau sans fil. Faites défiler les lettres et appuyez sur le bouton central pour sélectionner la lettre souhaitée. Appuyez deux fois sur le bouton central pour terminer.
-	IT	Immettere la password della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare la lettera. Premere il pulsante centrale due volte per completare l'operazione.
+	IT	Inserire la password della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare la lettera. Premere il pulsante centrale due volte per completare l'operazione.
 	NL	Voer je draadloze wachtwoord in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
 
 NETWORK_CONNECTING_TO
@@ -545,7 +549,7 @@ NETWORK_NETWORK_NAME_HELP
 	EN	Enter your wireless network name. Scroll to change letters, press the center button to choose that letter. Press center button twice to finish.
 	ES	Escriba el nombre de la red inalámbrica. Desplácese para cambiar de letra y pulse el botón central para elegir una letra. Pulse dos veces el botón central para terminar.
 	FR	Saisissez le nom de votre réseau sans fil. Faites défiler les lettres et appuyez sur le bouton central pour sélectionner la lettre souhaitée. Appuyez deux fois sur le bouton central pour terminer.
-	IT	Immettere il nome della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare la lettera. Premere il pulsante centrale due volte per completare l'operazione.
+	IT	Inserire il nome della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare la lettera. Premere il pulsante centrale due volte per completare l'operazione.
 	NL	Voer de naam van je draadloze netwerk in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
 
 NETWORK_ADDRESS_PROBLEM
@@ -617,7 +621,7 @@ NETWORK_IP_ADDRESS_HELP
 	EN	Enter the IP address for this remote.
 	ES	Escriba la dirección IP del mando.
 	FR	Entrer l'adresse IP de la télécommande.
-	IT	Immettere l'indirizzo IP del telecomando.
+	IT	Inserire l'indirizzo IP del telecomando.
 	NL	Voer het IP-adres voor deze afstandsbediening in.
 
 NETWORK_SUBNET
@@ -635,7 +639,7 @@ NETWORK_SUBNET_HELP
 	EN	Enter the subnet mask for your network.
 	ES	Escriba la máscara de subred de la red.
 	FR	Entrer le masque de sous-réseau du réseau.
-	IT	Immettere la subnet mask della rete.
+	IT	Inserire la subnet mask della rete.
 	NL	Voer het subnetmasker voor je netwerk in.
 
 NETWORK_GATEWAY
@@ -653,7 +657,7 @@ NETWORK_GATEWAY_HELP
 	EN	Enter the IP address or your router.
 	ES	Escriba la dirección IP del enrutador.
 	FR	Entrer l'adresse IP ou le routeur.
-	IT	Immettere l'indirizzo IP del router.
+	IT	Inserire l'indirizzo IP del router.
 	NL	Voer het IP-adres of je router in.
 
 NETWORK_DNS
@@ -671,7 +675,7 @@ NETWORK_DNS_HELP
 	EN	Enter the IP address of your DNS server.
 	ES	Escriba la dirección IP del servidor DNS.
 	FR	Entrer l'adresse IP du serveur DNS.
-	IT	Immettere l'indirizzo IP del server DNS.
+	IT	Inserire l'indirizzo IP del server DNS.
 	NL	Voer het IP-adres van je DNS-server in.
 
 NETWORK_PROBLEM
