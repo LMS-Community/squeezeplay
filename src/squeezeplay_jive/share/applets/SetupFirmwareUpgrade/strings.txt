@@ -102,13 +102,28 @@ UPDATE_REBOOT
 	NL	\nBezig met opnieuw starten
 
 UPDATE_BEGIN_UPGRADE
+	DE	Für diese Fernbedienung ist eine aktualisierte Software verfügbar. Die Aktualisierung auf Version %s kann ein paar Minuten dauern.
 	EN	Updated software is available for this remote. It may take a few minutes to update to version %s.
+	ES	Hay software actualizado disponible para este mando a distancia. Puede que la actualización a la versión %s tarde varios minutos.
+	FR	Une mise à jour de logiciel est disponible pour cette télécommande. La mise à jour à la version %s peut prendre quelques minutes.
+	IT	Per questo telecomando è disponibile software aggiornato. L'aggiornamento alla versione %s potrebbe richiedere alcuni minuti.
+	NL	Er is bijgewerkte software beschikbaar voor deze afstandsbediening. Het kan enkele minuten duren om bij te werken naar versie %s.
 
 UPDATE_BEGIN_REINSTALL
+	DE	Die Software für diese Fernbedienung ist aktuell. Wenn Sie Version %s erneut installieren möchten, wählen Sie 'Update starten'.
 	EN	The software for this remote is up to date. If you'd like to reinstall version %s, choose Begin Update.
+	ES	El software de este mando a distancia está actualizado. Si desea volver a instalar la versión %s, elija Iniciar actualización.
+	FR	Le logiciel de cette télécommande est à jour. Pour réinstaller la version %s, sélectionnez Démarrer la mise à jour.
+	IT	Il software di questo telecomando è aggiornato. Per reinstallare la versione %s, scegliere Inizia aggiornamento.
+	NL	De software voor deze afstandsbediening is up-to-date. Als je versie %s opnieuw wilt installeren, kies je 'Update starten'.
 
 UPDATE_BEGIN_SDCARD
+	DE	%s von SD-Karte installieren.
 	EN	Install %s from SD card.
+	ES	Instalar %s desde tarjeta SD.
+	FR	Installez %s à partir d'une carte SD.
+	IT	Installa %s dalla scheda SD.
+	NL	Installeer %s vanaf SD-kaart.
 
 UPDATE_BATTERY
 	DA	Oplad batteri

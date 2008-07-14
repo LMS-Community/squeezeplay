@@ -374,10 +374,10 @@ function updateAddress(self, ip, port)
 		self.port = port
 
 		-- http authentication
-		local cred = credentials[name]
+		local cred = credentials[self.name]
 		if cred then
 			SocketHttp:setCredentials({
-				ipport = { obj:getIpPort() },
+				ipport = { ip, port },
 				realm = cred.realm,
 				username = cred.username,
 				password = cred.password,

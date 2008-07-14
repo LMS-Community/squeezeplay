@@ -18,6 +18,6 @@ TEST_COMPLETE
 	EN	Test Complete
 	ES	Prueba completada
 	FR	Test terminé
-	IT	Test completato
+	IT	Verifica completata
 	NL	Test voltooid
 

@@ -8,6 +8,6 @@ TEST
 	EN	Test
 	ES	Prueba
 	FR	Test
-	IT	Test
+	IT	Verifica
 	NL	Test
 
