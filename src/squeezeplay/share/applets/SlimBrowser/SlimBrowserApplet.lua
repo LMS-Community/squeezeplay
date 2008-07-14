@@ -93,6 +93,8 @@ local _curStep = false
 local _statusStep = false
 local _emptyStep = false
 
+local _lockedItem = false
+
 -- Our main menu/handlers
 local _playerMenus = {}
 local _playerKeyHandler = false
@@ -425,7 +427,7 @@ local function _performJSONAction(jsonAction, from, qty, step, sink)
 	end
 
 	-- send the command
-	_server:request(sink, playerid, request)
+	_server:userRequest(sink, playerid, request)
 end
 
 -- for a given step, rerun the json request that created that slimbrowser menu
@@ -445,7 +447,7 @@ local function _refreshJSONAction(step)
 		return
 	end
 
-	_server:request(step.sink, playerid, step.jsonAction)
+	_server:userRequest(step.sink, playerid, step.jsonAction)
 
 end
 
@@ -631,6 +633,8 @@ local function _bigArtworkPopup(chunk, err)
 
 	log:debug("Rendering artwork")
 	local popup = Popup("popupArt")
+	popup:setAllowScreensaver(true)
+
 	local icon = Icon("artwork")
 
 	local screenW, screenH = Framework:getScreenSize()
@@ -981,7 +985,8 @@ local function _menuSink(self, cmd)
 									_curStep = step
 								else
 									from, qty = step.db:missing(step.menu and step.menu:isAccelerated())
-	
+
+									_lockedItem = item
 									jiveMain:lockItem(item,
 										  function()
 										  step.cancelled = true
@@ -990,6 +995,7 @@ local function _menuSink(self, cmd)
 									step.loaded = function()
 										      jiveMain:unlockItem(item)
 		
+										      _lockedItem = false
 										      _curStep = step
 										      step.window:show()
 									      end
@@ -1020,6 +1026,8 @@ local function _requestStatus()
 
 	local from, qty = step.db:missing(step.menu:isAccelerated())
 	if from then
+		-- note, this is not a userRequest as the playlist is
+		-- updated when the playlist changes
 		_server:request(
 				step.sink,
 				_player:getId(),
@@ -2087,8 +2095,6 @@ function notify_playerTrackChange(self, player, nowplaying)
 	end
 	step.menu:reLayout()
 
-        -- does the playlist need loading?
-        _requestStatus()
 end
 
 -- notify_playerNewName
@@ -2188,7 +2194,7 @@ function notify_playerCurrent(self, player)
 
 	-- showtime for the player
 	_server.comet:startBatch()
-	_server:request(sink, _playerId, { 'menu', 0, 100 })
+	_server:userRequest(sink, _playerId, { 'menu', 0, 100 })
 	_player:onStage()
 	_requestStatus()
 	_server.comet:endBatch()
@@ -2255,19 +2261,24 @@ function notify_serverConnected(self, server)
 end
 
 
-function notify_serverDisconnected(self, server, numPendingRequests)
-
+function notify_serverDisconnected(self, server, numUserRequests)
 	if _server ~= server then
 		return
 	end
 
 	iconbar:setServerError("ERROR")
 
-	if numPendingRequests == 0 or self.serverErrorWindow then
+	if numUserRequests == 0 or self.serverErrorWindow then
 		return
 	end
 
+	self:_problemConnectingPopup(server)
+end
+
+
+function _problemConnectingPopup(self, server)
 	-- attempt to reconnect, this may send WOL
+	server:wakeOnLan()
 	server:connect()
 
 	-- popup
@@ -2303,9 +2314,12 @@ function _problemConnecting(self, server)
 	menu:addItem({
 			     text = self:string("SLIMBROWSER_TRY_AGAIN"),
 			     callback = function()
-						server:connect()
+						window:hide()
+
+						self:_problemConnectingPopup(server)
 						appletManager:callService("setCurrentPlayer", player)
 					end,
+			     sound = "WINDOWSHOW",
 		     })
 
 	if server:isPasswordProtected() then
@@ -2316,6 +2330,7 @@ function _problemConnecting(self, server)
 				local auth = appletManager:loadApplet("HttpAuth")
 				auth:squeezeCenterPassword(server)
 			end,
+			sound = "WINDOWSHOW",
 		})
 	end
 
@@ -2329,6 +2344,7 @@ function _problemConnecting(self, server)
 							local setupSqueezebox = appletManager:loadApplet("SetupSqueezebox")
 							setupSqueezebox:startSqueezeboxSetup(player:getMacAddress(), nil)
 						end,
+				     sound = "WINDOWSHOW",
 			     })
 	end
 
@@ -2343,6 +2359,7 @@ function _problemConnecting(self, server)
 							local selectPlayer = appletManager:loadApplet("SelectPlayer")
 							selectPlayer:setupShow()
 						end,
+				     sound = "WINDOWSHOW",
 			     })
 	end
 
@@ -2398,6 +2415,12 @@ function free(self)
 	_player = false
 	_server = false
 	_string = false
+
+	-- make sure any home menu itema are unlocked
+	if _lockedItem then
+		jiveMain:unlockItem(_lockedItem)
+		_lockedItem = false
+	end
 
 	-- walk down our path and close...
 	local step = _curStep

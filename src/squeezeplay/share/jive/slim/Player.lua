@@ -218,6 +218,7 @@ function __init(self, jnt, playerId)
 
 		-- player state from SC
 		state = {},
+		mode = "off",
 
 		isOnStage = false,
 
@@ -228,6 +229,32 @@ function __init(self, jnt, playerId)
 	playerIds[obj.id] = obj
 
 	return obj
+end
+
+
+-- Update player on start up
+function updateInit(self, slimServer, init)
+	self.info.name = init.name
+	self.info.model = init.model
+	self.info.connected = false
+
+	self.lastSeen = 0 -- don't timeout
+	playerList[self.id] = self
+
+	if slimServer then
+		log:info(self, " new for ", slimServer)
+		self.slimServer = slimServer
+		self.slimServer:_addPlayer(self)
+	end
+end
+
+
+-- State needed for updateInit
+function getInit(self)
+	return {
+		name = self.info.name,
+		model = self.info.model,
+	}
 end
 
 
@@ -303,7 +330,7 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 	end
 
 	-- Check if the player name has changed
-	if oldInfo.playerName ~= self.info.name then
+	if oldInfo.name ~= self.info.name then
 		self.jnt:notify('playerNewName', self, self.info.name)
 	end
 
@@ -667,7 +694,7 @@ function call(self, cmd)
 	log:debug("Player:call():")
 --	log:debug(cmd)
 
-	local reqid = self.slimServer.comet:request(
+	local reqid = self.slimServer:userRequest(
 		_getSink(self, cmd),
 		self.id,
 		cmd
@@ -683,7 +710,7 @@ function send(self, cmd)
 	log:debug("Player:send():")
 --	log:debug(cmd)
 
-	self.slimServer.comet:request(
+	self.slimServer:userRequest(
 		nil,
 		self.id,
 		cmd
@@ -837,8 +864,7 @@ function _process_status(self, event)
 		self.jnt:notify('playerTrackChange', self, nowPlaying)
 	end
 
-	if self.playlist_timestamp ~= timestamp then
-		self.playlist_timestamp = timestamp
+	if self.state.playlist_timestamp ~= oldState.playlist_timestamp then
 		self.jnt:notify('playerPlaylistChange', self)
 	end
 
@@ -1126,6 +1152,9 @@ end
 
 -- tell the player to connect to another server
 function connectToServer(self, server)
+
+	-- make sure the server we are connecting to is awake
+	server:wakeOnLan()
 
 	if self.config == "needsServer" then
 		_udapConnect(self, server)

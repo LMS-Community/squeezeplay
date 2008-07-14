@@ -41,6 +41,9 @@ end
 
 
 function registerApplet(meta)
+	-- we depend on the SlimDiscovery applet
+	appletManager:loadApplet("SlimDiscovery")
+
 	meta:registerService("selectMusicSource")
 
 	-- set the poll list for discovery of slimservers based on our settings

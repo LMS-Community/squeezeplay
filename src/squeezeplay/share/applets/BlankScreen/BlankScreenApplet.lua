@@ -44,8 +44,25 @@ function init(self)
 	self.bg  = Surface:newRGBA(self.sw, self.sh)
 	self.bg:filledRectangle(0, 0, self.sw, self.sh, 0x000000FF)
 
+	-- store existing brightness levels in self
+	self.brightness = appletManager:callService("getBrightness")
+
 	self.bgicon = Icon("background", self.bg)
 	self.window:addWidget(self.bgicon)
+
+	self.window:addListener(
+		EVENT_WINDOW_ACTIVE | EVENT_HIDE,
+		function(event)
+			local type = event:getType()
+			if type == EVENT_WINDOW_ACTIVE then
+				_brightness(0)
+			else
+				_brightness(self.brightness)
+			end
+			return EVENT_UNUSED
+		end,
+		true
+	)
 
 	-- register window as a screensaver
 	local manager = appletManager:getAppletInstance("ScreenSavers")
@@ -54,36 +71,15 @@ function init(self)
 end
 
 function closeScreensaver(self)
-	_brightness(self.lcdLevel, self.keyLevel)
+	-- nothing to do here, brightness is refreshed via window event handler in init()
 end
 
 function openScreensaver(self, menuItem)
 	self.window:show(Window.transitionFadeIn)
-	local lcdTimer = Timer(2000,
-                function()
-			_brightness(0, 0)
-                end,
-                true)
-	lcdTimer:start()
 end
 
-function _brightness(lcdLevel, keyLevel)
-
-	--[[ FIXME, don't use ioctl calls here, 
-	but instead register some brightness services from SqueezeboxJive and use those
-	this will be added when the SlimDiscovery refactoring work is merged in
-
-	if lcdLevel ~= nil then
-		-- don't update the screen when the lcd is off
-		--Framework:setUpdateScreen(lcdLevel ~= 0)
-		jiveBSP.ioctl(11, lcdLevel * 2048)
-	end
-
-	if keyLevel ~= nil then
-		jiveBSP.ioctl(13, keyLevel * 512)
-	end
-	--]]
-
+function _brightness(brightness)
+	appletManager:callService("setBrightness", brightness)
 end
 
 --[[

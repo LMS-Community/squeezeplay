@@ -108,14 +108,19 @@ local function _slimDiscoverySink(self, chunk, err)
 		local server = SlimServer(jnt, name)
 
 		-- update SqueezeCenter address
-		server:updateAddress(ip, port)
+		self:_serverUpdateAddress(server, ip, port)
+	end
+end
 
-		if self.state == 'searching'
-			or self.state == 'probing' then
 
-			-- connect to server when searching or probing
-			server:connect()
-		end
+function _serverUpdateAddress(self, server, ip, port)
+	server:updateAddress(ip, port)
+
+	if self.state == 'searching'
+		or self.state == 'probing' then
+
+		-- connect to server when searching or probing
+		server:connect()
 	end
 end
 
@@ -258,7 +263,7 @@ function _discover(self)
 	-- Special case Squeezenetwork
 	if jnt:getUUID() then
 		squeezenetwork = SlimServer(jnt, "SqueezeNetwork")
-		squeezenetwork:updateAddress(jnt:getSNHostname(), 9000)
+		self:_serverUpdateAddress(squeezenetwork, jnt:getSNHostname(), 9000)
 	end
 
 	-- Remove SqueezeCenters that have not been seen for a while
@@ -273,7 +278,7 @@ function _discover(self)
 
 		local currentPlayer = Player:getCurrentPlayer()
 
-		if currentPlayer and currentPlayer:getSlimServer() then
+		if currentPlayer and currentPlayer:isConnected() then
 			self:_setState('connected')
 		else
 			self:_setState('searching')
@@ -463,14 +468,39 @@ end
 
 function notify_playerCurrent(self, player)
 	local settings = self:getSettings()
+	local saveSettings = false
 
 	local playerId = player and player:getId() or false
 
-	if settings.currentPlayer ~= playerId then
+	if settings.playerId ~= playerId then
 		-- update player
 		log:info("selected player: ", player)
 
+		settings.playerId = playerId
+		settings.playerInit = player and player:getInit()
+
+		-- legacy setting
 		settings.currentPlayer = playerId
+
+		saveSettings = true
+	end
+
+	local server = player and player:getSlimServer() or false
+	if server and 
+		( settings.squeezeNetwork ~= server:isSqueezeNetwork()
+		  or settings.serverName ~= server:getName() ) then
+		settings.squeezeNetwork = server:isSqueezeNetwork()
+
+		-- remember server if it's not SN
+		if not settings.squeezeNetwork then
+			settings.serverName = server:getName()
+			settings.serverInit = server:getInit()
+		end
+
+		saveSettings = true
+	end
+
+	if saveSettings then
 		self:storeSettings()
 	end
 

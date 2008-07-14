@@ -115,7 +115,7 @@ defaults to "".
 Notifications:
 
  cometConnected(self)
- cometDisconnected(self, numPendingRequests)
+ cometDisconnected(self)
 
 =cut
 --]]
@@ -467,7 +467,7 @@ function request(self, func, playerid, request, priority)
 	-- Send immediately unless we're batching queries
 	if self.state ~= CONNECTED or self.batch ~= 0 then
 		if self.state ~= CONNECTED then
-			self.jnt:notify('cometDisconnected', self, #self.pending_reqs + #self.sent_reqs)
+			self.jnt:notify('cometDisconnected', self)
 		end
 
 		return id
@@ -549,7 +549,7 @@ _state = function(self, state)
 		self.chttp:close()
 		self.rhttp:close()
 
-		self.jnt:notify('cometDisconnected', self, #self.pending_reqs + #self.sent_reqs)
+		self.jnt:notify('cometDisconnected', self)
 	end
 end
 
@@ -721,7 +721,10 @@ _reconnect = function(self)
 	for i, v in ipairs(self.sent_reqs) do
 		table.insert(data, v)
 	end
-	
+
+	-- Add any other pending requests to the outgoing data
+	_addPendingRequests(self, data)
+
 	_state(self, CONNECTING)
 	
 	local req = CometRequest(
@@ -756,31 +759,13 @@ _getRequestSink = function(self)
 		-- On error, print something...
 		if err then
 			log:info(self, ": _getRequestSink error: ", err)
-
-			if cometRequest:t_getResponseStatus() == 401 then
-				return _handleAdvice(self, cometRequest)
-			end
-
-			-- Resend any un-acknowledged requests
-			local data = {}
-			for i, v in ipairs(self.sent_reqs) do
-				table.insert(data, v)
-			end
-
-			-- Only continue if we have some data to send
-			if data[1] then
-				log:info(self, ": Resending requests: ", #self.sent_reqs)
-
-				local req = CometRequest(
-							 _getRequestSink(self),
-							 self.uri,
-							 data
-						 )
-				self.rhttp:fetch(req)
-			end
+			return _handleAdvice(self, cometRequest)
 		end
 
-		_response(self, chunk)
+		-- if we have data
+		if chunk then
+			_response(self, chunk)
+		end
 	end
 end
 

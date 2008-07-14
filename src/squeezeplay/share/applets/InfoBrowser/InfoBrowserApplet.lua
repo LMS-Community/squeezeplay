@@ -30,6 +30,7 @@ local Timer         = require("jive.ui.Timer")
 local log           = require("jive.utils.log").logger("applets.misc")
 local debug         = require("jive.utils.debug")
 
+local appletManager = appletManager
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
@@ -71,7 +72,7 @@ end
 -- request for items
 function request(self, index, start, window, widget, list, prevmenu, locked)
 
-	self.server:request(
+	self.server:userRequest(
 		function(chunk, err)
 			if err then
 				log:debug(err)

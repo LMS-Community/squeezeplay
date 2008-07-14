@@ -167,7 +167,7 @@ end
 
 -- request status
 function requestStatus(self, sink)
-	self.server:request(
+	self.server:userRequest(
 		function(chunk, err)
 			if err then
 				log:debug(err)
@@ -213,14 +213,14 @@ end
 
 
 function startTest(self, rate)
-	self.server:request(nil, self.player:getId(), { 'nettest', 'start', rate })
+	self.server:userRequest(nil, self.player:getId(), { 'nettest', 'start', rate })
 	self.timer.callback()
 	self.timer:restart()
 end
 
 
 function stopTest(self)
-	self.server:request(nil, self.player:getId(), { 'nettest', 'stop' })
+	self.server:userRequest(nil, self.player:getId(), { 'nettest', 'stop' })
 end
 
 

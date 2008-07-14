@@ -39,7 +39,7 @@ end
 
 -- hide menu item when player goes away
 function notify_playerDelete(meta, player)
-	jiveMain:setNode(meta.menu, 'hidden')
+	jiveMain:removeItemFromNode(meta.menu, 'advancedSettings')
 end
 
 function notify_playerCurrent(meta, player)
@@ -48,9 +48,9 @@ function notify_playerCurrent(meta, player)
 	--   b. isn't connected to a server (now possible)
 	--   c. connected to SN
 	if player == nil or not player:getSlimServer() or ( player:getSlimServer() and player:getSlimServer():isSqueezeNetwork() ) then
-		jiveMain:setNode(meta.menu, 'hidden')
+		jiveMain:removeItemFromNode(meta.menu, 'advancedSettings')
 	else
-		jiveMain:setNode(meta.menu, 'advancedSettings')
+		jiveMain:setCustomNode('appletSetupNetTest', 'advancedSettings')
 	end
 end
 

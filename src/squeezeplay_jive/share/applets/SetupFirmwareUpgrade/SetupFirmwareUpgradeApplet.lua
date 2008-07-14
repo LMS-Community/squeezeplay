@@ -271,6 +271,9 @@ function _upgrade(self)
 
 	self.popup = Popup("popupIcon")
 
+	-- don't allow power saving during upgrades
+	self.popup:setAllowPowersave(false)
+
 	self.icon = Icon("iconConnecting")
 	self.popup:addWidget(self.icon)
 

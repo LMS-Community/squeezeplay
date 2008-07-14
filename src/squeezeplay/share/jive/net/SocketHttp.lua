@@ -316,7 +316,7 @@ end
 -- send the headers, aggregates request and socket headers
 function t_sendRequest(self)
 	log:debug(self, ":t_sendRequest()")
-	
+
 	local source = function()
 		local line1 = string.format("%s HTTP/%s", self.t_httpSendRequest:t_getRequestString(), self.t_httpProtocol)
 
@@ -414,6 +414,8 @@ end
 -- removes a request from the queue
 function t_recvDequeue(self)
 	log:debug(self, ":t_recvDequeue() queueLength=", #self.t_httpRecvRequests)
+
+	_assert(not self.t_httpRecvRequest, "Already dequeued in t_recvDequeue")
 
 	self.t_httpRecvRequest = table.remove(self.t_httpRecvRequests, 1)
 
@@ -819,7 +821,7 @@ end
 function t_recvComplete(self)
 	self:socketInactive()
 
-	self.t_httpRecvRequest = nil
+	self.t_httpRecvRequest = false
 	self:t_nextRecvState(true, 't_recvDequeue')
 end
 
@@ -846,39 +848,42 @@ end
 function close(self, err)
 	log:debug(self, " closing with err: ", err)
 
-	-- error for send request
-	if self.t_httpSendRequest then
-		local errorSink = self.t_httpSendRequest:t_getResponseSink()
-		if errorSink then
-			errorSink(nil, err)
-		end
-		self.t_httpSendRequest = false
-	end
-
-	-- error for pipelined requests
-	for i, request in ipairs(self.t_httpRecvRequests) do
-		local errorSink = self.t_httpRecvRequest:t_getResponseSink()
-		if errorSink then
-			errorSink(nil, err)
-		end
-	end
-	self.t_httpRecvRequests = {}
-
-	-- error for recv request
-	if self.t_httpRecvRequest then
-		local errorSink = self.t_httpRecvRequest:t_getResponseSink()
-		if errorSink then
-			errorSink(nil, err)
-		end
-		self.t_httpRecvRequest = false
-	end
-
 	-- close the socket
 	SocketTcp.close(self)
+
+	-- cancel all requests 'on the wire'
+	local errorSendRequest = self.t_httpSendRequest
+	local errorRecvRequests = self.t_httpRecvRequests
+	if self.t_httpRecvRequest then
+		table.insert(errorRecvRequests, 1, self.t_httpRecvRequest)
+	end
+
+	self.t_httpSendRequest = false
+	self.t_httpRecvRequest = false
+	self.t_httpRecvRequests = {}
 
 	-- start again
 	self:t_nextSendState(true, 't_sendDequeue')
 	self:t_nextRecvState(true, 't_recvDequeue')
+
+	-- the http state must be updated before here, the errorSink's
+	-- may re-enter this object with a new http request
+
+	-- error for send requests
+	if errorSendRequest then
+		local errorSink = errorSendRequest:t_getResponseSink()
+		if errorSink then
+			errorSink(nil, err)
+		end
+	end
+
+	-- error for recv requests, including pipeline
+	for i, request in ipairs(errorRecvRequests) do
+		local errorSink = request:t_getResponseSink()
+		if errorSink then
+			errorSink(nil, err)
+		end
+	end
 end
 
 

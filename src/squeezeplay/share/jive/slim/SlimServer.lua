@@ -23,7 +23,7 @@ Notifications:
  serverNew (performed by SlimServers)
  serverDelete (performed by SlimServers)
  serverConnected(self)
- serverDisconnected(self, numPendingRequests)
+ serverDisconnected(self, numUserRequests)
 
 =head1 FUNCTIONS
 
@@ -288,6 +288,9 @@ function __init(self, jnt, name)
 		-- 'connected' = connected
 		netstate = 'disconnected',
 
+		-- number of user activated requests
+		userRequests = {},
+
 		-- artwork state below here
 
 		-- artwork http pool, initially not connected
@@ -327,6 +330,25 @@ function __init(self, jnt, name)
 	obj.artworkFetchTask = Task("artwork", obj, processArtworkQueue)
 	
 	return obj
+end
+
+
+-- Update server on start up
+function updateInit(self, init)
+	self.ip = init.ip
+	self.mac = init.mac
+
+	self.lastSeen = 0 -- don't timeout
+	serverList[self.id] = self
+end
+
+
+-- State needed for updateInit
+function getInit(self)
+	return {
+		ip = self.ip,
+		mac = self.mac,
+	}
 end
 
 
@@ -403,14 +425,14 @@ function free(self)
 	-- server is gone
 	self.lastSeen = 0
 	self.jnt:notify("serverDelete", self)
-		
-	-- close connections
-	self:disconnect()
 
 	if self == currentServer then
 		-- dont' delete state if this is the current server
 		return
 	end
+
+	-- close connections
+	self:disconnect()
 
 	-- delete players
 	for id, player in pairs(self.players) do
@@ -427,9 +449,27 @@ function free(self)
 end
 
 
+function wakeOnLan(self)
+	if not self.mac or self:isSqueezeNetwork() then
+		return
+	end
+
+	log:info("Sending WOL to ", self.mac)
+
+	-- send WOL packet to SqueezeCenter
+	local wol = WakeOnLan(self.jnt)
+	wol:wakeOnLan(self.mac)
+end
+
+
 -- connect to SqueezeCenter
 function connect(self)
 	if self.netstate == 'connected' or self.netstate == 'connecting' then
+		return
+	end
+
+	if self.lastSeen == 0 then
+		log:debug("Server ip address is not known")
 		return
 	end
 
@@ -439,12 +479,6 @@ function connect(self)
 	assert(self.artworkPool)
 
 	self.netstate = 'connecting'
-
-	if self.mac and not self:isSqueezeNetwork() then
-		-- send WOL packet to SqueezeCenter
-		local wol = WakeOnLan(self.jnt)
-		wol:wakeOnLan(self.mac)
-	end
 
 	-- artwork pool connects on demand
 	self.comet:connect()
@@ -498,7 +532,7 @@ function notify_cometConnected(self, comet)
 end
 
 -- comet is disconnected from SC
-function notify_cometDisconnected(self, comet, numPendingRequests)
+function notify_cometDisconnected(self, comet)
 	if self.comet ~= comet then
 		return
 	end
@@ -510,7 +544,8 @@ function notify_cometDisconnected(self, comet, numPendingRequests)
 	end
 
 	-- always send the notification
-	self.jnt:notify('serverDisconnected', self, numPendingRequests)
+	debug.dump(self.userRequests, 5)
+	self.jnt:notify('serverDisconnected', self, #self.userRequests)
 end
 
 
@@ -982,6 +1017,30 @@ end
 
 -- Proxies
 
+
+-- user request. if not connected to SC, this will try to reconnect and also
+-- sends WOL
+function userRequest(self, func, ...)
+	if self.netstate ~= 'connected' then
+		self:wakeOnLan()
+		self:connect()
+	end
+
+	local req = { func, ... }
+	table.insert(self.userRequests, req)
+
+	self.comet:request(
+		function(...)
+			table.delete(self.userRequests, req)
+			if func then
+				func(...)
+			end
+		end,
+		...)
+end
+
+
+-- background request
 function request(self, ...)
 	self.comet:request(...)
 end

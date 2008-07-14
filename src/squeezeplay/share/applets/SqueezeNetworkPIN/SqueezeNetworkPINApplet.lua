@@ -126,7 +126,7 @@ function _checkLinked(self, server, next, fail)
 	-- make sure the server is connected
 	server:connect()
 
-	server:request( checkLinkedSink, nil, cmd )
+	server:userRequest( checkLinkedSink, nil, cmd )
 end
 
 

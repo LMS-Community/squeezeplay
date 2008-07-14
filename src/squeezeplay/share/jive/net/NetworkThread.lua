@@ -246,7 +246,7 @@ function notify(self, event, ...)
 	for i=1, select('#', ...) do
 		a[i] = tostring(select(i, ...))
 	end
-	log:info("NOTIFY ", event, ": ", table.concat(a, ", "))
+	log:info("NOTIFY: ", event, "(", table.concat(a, ", "), ")")
 	
 	local method = "notify_" .. event
 	
