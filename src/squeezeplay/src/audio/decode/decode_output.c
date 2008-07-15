@@ -216,7 +216,7 @@ static void decode_fade_out(void) {
 
 	interval = determine_transition_interval(current_sample_rate, decode_transition_period, &nbytes);
 
-	DEBUG_TRACE("Starting FADEOUT over %d seconds, requiring %ld bytes", fixed_to_s32(interval), nbytes);
+	DEBUG_TRACE("Starting FADEOUT over %d seconds, requiring %d bytes", fixed_to_s32(interval), (unsigned int)nbytes);
 
 	if (!interval) {
 		return;
@@ -346,7 +346,7 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 			fft_fixed interval = determine_transition_interval(sample_rate, decode_transition_period, &crossfadeBytes);
 
 			if (interval) {
-				DEBUG_TRACE("Starting CROSSFADE over %d seconds, requiring %ld bytes", fixed_to_s32(interval), crossfadeBytes);
+				DEBUG_TRACE("Starting CROSSFADE over %d seconds, requiring %d bytes", fixed_to_s32(interval), (unsigned int)crossfadeBytes);
 
 				/* Buffer position to stop crossfade */
 				crossfade_ptr = decode_fifo.wptr;
@@ -475,7 +475,7 @@ void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate) {
 	buffer_size *= denominator;
 #endif
 
-	DEBUG_TRACE("Removing %ld bytes padding from buffer", buffer_size);
+	DEBUG_TRACE("Removing %d bytes padding from buffer", (unsigned int)buffer_size);
 
 	fifo_lock(&decode_fifo);
 
