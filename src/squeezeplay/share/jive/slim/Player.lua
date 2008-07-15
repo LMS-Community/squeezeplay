@@ -1138,7 +1138,9 @@ end
 
 -- returns true if this player supports udap setup
 function canUdap(self)
-	return self.info.model == "receiver"
+	return self.info.model == "squeezebox2"
+		or self.info.model == "receiver"
+		or self.info.model == "transporter"
 end
 
 
