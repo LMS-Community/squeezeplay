@@ -173,8 +173,8 @@ static void decode_apply_track_gain(sample_t *buffer, int nsamples) {
  * a transition. Start at the requested transition interval and go
  * down till we find an interval that we have enough audio for.
  */
-static fft_fixed determine_transition_interval(int sample_rate, u32_t transition_period, u32_t *nbytes) {
-	u32_t bytes_used, sample_step_bytes;
+static fft_fixed determine_transition_interval(int sample_rate, u32_t transition_period, size_t *nbytes) {
+	size_t bytes_used, sample_step_bytes;
 	fft_fixed interval, interval_step;
 
 	bytes_used = fifo_bytes_used(&decode_fifo);
@@ -216,7 +216,7 @@ static void decode_fade_out(void) {
 
 	interval = determine_transition_interval(current_sample_rate, decode_transition_period, &nbytes);
 
-	DEBUG_TRACE("Starting FADEOUT over %d seconds, requiring %d bytes", fixed_to_s32(interval), nbytes);
+	DEBUG_TRACE("Starting FADEOUT over %d seconds, requiring %ld bytes", fixed_to_s32(interval), nbytes);
 
 	if (!interval) {
 		return;
@@ -338,7 +338,7 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 		track_start_point = decode_fifo.wptr;
 		
 		if (decode_transition_type & TRANSITION_CROSSFADE) {
-			u32_t crossfadeBytes;
+			size_t crossfadeBytes;
 
 			/* We are being asked to do a crossfade. Find out
 			 * if it is possible.
@@ -346,7 +346,7 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 			fft_fixed interval = determine_transition_interval(sample_rate, decode_transition_period, &crossfadeBytes);
 
 			if (interval) {
-				DEBUG_TRACE("Starting CROSSFADE over %d seconds, requiring %d bytes", fixed_to_s32(interval), crossfadeBytes);
+				DEBUG_TRACE("Starting CROSSFADE over %d seconds, requiring %ld bytes", fixed_to_s32(interval), crossfadeBytes);
 
 				/* Buffer position to stop crossfade */
 				crossfade_ptr = decode_fifo.wptr;
@@ -475,7 +475,7 @@ void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate) {
 	buffer_size *= denominator;
 #endif
 
-	DEBUG_TRACE("Removing %d bytes padding from buffer", buffer_size);
+	DEBUG_TRACE("Removing %ld bytes padding from buffer", buffer_size);
 
 	fifo_lock(&decode_fifo);
 
