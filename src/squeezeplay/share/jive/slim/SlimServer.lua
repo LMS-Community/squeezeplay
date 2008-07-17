@@ -544,7 +544,6 @@ function notify_cometDisconnected(self, comet)
 	end
 
 	-- always send the notification
-	debug.dump(self.userRequests, 5)
 	self.jnt:notify('serverDisconnected', self, #self.userRequests)
 end
 
