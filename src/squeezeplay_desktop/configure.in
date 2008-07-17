@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(squeezeplay_desktop, 0.1, bugs@slimdevices.com)
+AC_INIT(jive, 0.1, bugs@slimdevices.com)
 AC_CONFIG_AUX_DIR([config])
 #AC_CONFIG_HEADER([src/config.h])
 
