@@ -236,12 +236,7 @@ function screensaverWindow(self, window, hideOnMotion)
 				-- make sure when exiting a screensaver we
 				-- really go home.
 				if keycode == KEY_HOME then
-					local windowStack = Framework.windowStack
-					Framework:playSound("JUMP")
-					while #windowStack > 1 do
-						windowStack[#windowStack - 1]:hide(Window.transitionNone)
-					end
-
+					appletManager:callService("goHome")
 					return EVENT_CONSUME
 				end
 			end
