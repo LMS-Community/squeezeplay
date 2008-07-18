@@ -102,7 +102,7 @@ function getRegion(self)
 	end
 	
 	-- check marvell region
-	local fh = assert(io.popen("/usr/sbin/iwpriv " .. self.interface .. " getregioncode"))
+	local fh = assert(io.popen("/sbin/iwpriv " .. self.interface .. " getregioncode"))
 	local line = fh:read("*a")
 	fh:close()
 
@@ -133,7 +133,7 @@ function setRegion(self, region)
 	fh:close()
 
 	-- set new region
-	local cmd = "/usr/sbin/iwpriv " .. self.interface .. " setregioncode " .. mapping[1]
+	local cmd = "/sbin/iwpriv " .. self.interface .. " setregioncode " .. mapping[1]
 	log:info("setRegion: ", cmd)
 	os.execute(cmd)
 end
@@ -496,7 +496,7 @@ end
 
 
 function getSNR(self)
-	local f = io.popen("/usr/sbin/iwpriv " .. self.interface .. " getSNR 1")
+	local f = io.popen("/sbin/iwpriv " .. self.interface .. " getSNR 1")
 	if f == nil then
 		return 0
 	end
@@ -509,7 +509,7 @@ end
 
 
 function getRSSI(self)
-	local f = io.popen("/usr/sbin/iwpriv " .. self.interface .. " getRSSI 1")
+	local f = io.popen("/sbin/iwpriv " .. self.interface .. " getRSSI 1")
 	if f == nil then
 		return 0
 	end
@@ -522,7 +522,7 @@ end
 
 
 function getNF(self)
-	local f = io.popen("/usr/sbin/iwpriv " .. self.interface .. " getNF 1")
+	local f = io.popen("/sbin/iwpriv " .. self.interface .. " getNF 1")
 	if f == nil then
 		return 0
 	end
@@ -535,7 +535,7 @@ end
 
 
 function getTxBitRate(self)
-	local f = io.popen("/usr/sbin/iwconfig " .. self.interface)
+	local f = io.popen("/sbin/iwconfig " .. self.interface)
 	if f == nil then
 		return "0"
 	end

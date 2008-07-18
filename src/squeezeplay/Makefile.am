@@ -9,12 +9,12 @@ TOLUA = tolua++
 	$(TOLUA) $(TOLUAFLAGS) $(AM_TOLUAFLAGS) -n jive -o $@ $^
 
 
-# Check lua syntax
-#check_lua:
-#	@rm -f badsyntax
-#	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
-#	@test \! -s badsyntax
-#	@rm -f badsyntax
+ Check lua syntax
+lua-lint:
+	@rm -f badsyntax
+	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
+	@test \! -s badsyntax
+	@rm -f badsyntax
 
 
 # Convenience library:
@@ -99,7 +99,6 @@ jive_SOURCES = \
 	src/jive_debug.c
 
 jive_LDADD = libjiveui.la libjiveaudio.la libjivenet.la -llua
-#jive_DEPENDENCIES = check_lua
 
 
 # Test program: jiveblit
