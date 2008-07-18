@@ -9,7 +9,7 @@ TOLUA = tolua++
 	$(TOLUA) $(TOLUAFLAGS) $(AM_TOLUAFLAGS) -n jive -o $@ $^
 
 
- Check lua syntax
+# Check lua syntax
 lua-lint:
 	@rm -f badsyntax
 	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
