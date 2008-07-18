@@ -195,7 +195,11 @@ function addNode(self, item)
 		window = Window("window", item.text)
 	end
 
-	local menu = SimpleMenu("menu", item)
+	local menuStyle = 'menu'
+	if item.window and item.window.menuStyle then
+		menuStyle = item.window.menuStyle .. 'menu'
+	end
+	local menu = SimpleMenu(menuStyle, item)
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
 	window:addWidget(menu)
