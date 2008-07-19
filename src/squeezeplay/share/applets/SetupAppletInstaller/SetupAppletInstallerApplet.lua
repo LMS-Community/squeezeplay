@@ -107,44 +107,48 @@ function menuSink(self, data)
 	local installed = self:getSettings()
 	local ip, port = self.server:getIpPort()
 
-	for _,entry in pairs(data.item_loop) do
+	if data.item_loop then
 
-		local version
-		local check = false
-		local url
+		for _,entry in pairs(data.item_loop) do
 
-		if entry.relurl then
-			url = 'http://' .. ip .. ':' .. port .. entry.relurl
-		else
-			url = entry.url
-		end
+			local version
+			local check = false
+			local url
 
-		if installed[entry.applet] then
-			version = installed[entry.applet] .. " > " .. entry.version
-			if entry.version > installed[entry.applet] then
+			if entry.relurl then
+				url = 'http://' .. ip .. ':' .. port .. entry.relurl
+			else
+				url = entry.url
+			end
+
+			if installed[entry.applet] then
+				version = installed[entry.applet] .. " > " .. entry.version
+				if entry.version > installed[entry.applet] then
+					self.todownload[entry.applet] = { url = url, ver = entry.version }
+					check = true
+				end
+			else
+				version = entry.version
 				self.todownload[entry.applet] = { url = url, ver = entry.version }
 				check = true
 			end
-		else
-			version = entry.version
-			self.todownload[entry.applet] = { url = url, ver = entry.version }
-			check = true
+			
+			self.menu:addItem( {
+				text = entry.name .. " [" .. version .. "]",
+				icon = Checkbox("checkbox",
+					  function(object, isSelected)
+						  if isSelected then
+							  self.todownload[entry.applet] = { url = url, ver = entry.version }
+						  else
+							  self.todownload[entry.applet] = nil
+						  end
+					  end,
+					  check
+				),
+				weight = check and 2 or 4 
+			})
 		end
 
-		self.menu:addItem( {
-			text = entry.name .. " [" .. version .. "]",
-			icon = Checkbox("checkbox",
-				function(object, isSelected)
-					if isSelected then
-						self.todownload[entry.applet] = { url = url, ver = entry.version }
-					else
-						self.todownload[entry.applet] = nil
-					end
-				end,
-				check
-			),
-			weight = check and 2 or 4 
-		})
 	end
 
 	if self.menu:numItems() > 0 then
