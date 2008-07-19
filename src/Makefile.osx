@@ -98,7 +98,7 @@ sdl-gfx: SDL_gfx-2.0.15/Makefile
 
 .PHONY: lua-all tolua++ luasocket slnunicode luajson loop lualogging luaexpat luafilesystem luaprofiler luazipfilter
 
-lua-all: lua tolua++ luasocket slnunicode luajson loop lualogging luaexpat luafilesystem luaprofiler
+lua-all: lua tolua++ luasocket slnunicode luajson loop lualogging luaexpat luafilesystem luaprofiler luazipfilter
 
 # lua (requires readline ncurses)
 lua:
@@ -234,6 +234,9 @@ clean:
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: luajson"
 	-cd luajson; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning luazipfilter"
+	-cd luazipfilter; make distclean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: tolua++"
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.a; rm *.o
