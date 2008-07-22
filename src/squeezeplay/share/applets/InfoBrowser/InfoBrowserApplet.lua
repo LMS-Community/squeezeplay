@@ -65,6 +65,10 @@ function menu(self, menuItem)
 	-- send first request if we have a server
 	if self.server then
 		self:request(nil, 0, window, menu, list)
+		self.timer = Timer(5000, function()
+									 window:addWidget(Textarea("help", self:string('INFOBROWSER_NORESPONSE')))
+								 end)
+		self.timer:start()
 	end
 end
 
@@ -91,10 +95,22 @@ function response(self, result, window, widget, list, prevmenu, locked)
 
 	local id
 
+	-- cancel the warning for no response
+	if self.timer then
+		self.timer:stop()
+		self.timer = nil
+	end
+
 	-- end previous menu animation and show new window
 	if locked then
 		prevmenu:unlock()
 		window:show()
+	end
+
+	-- display help if no feeds found
+	if result.loop_loop == nil then
+		window:addWidget(Textarea("help", self:string( 'INFOBROWSER_NOINFO_' .. (self.server:isSqueezeNetwork() and 'SN' or 'SC') ) ) )
+		return
 	end
 
 	-- itterate though response - handle leaves as well as branches

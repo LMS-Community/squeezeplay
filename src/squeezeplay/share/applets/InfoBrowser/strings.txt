@@ -9,3 +9,11 @@ INFOBROWSER
 	IT	Browser informazioni
 	NL	Informatiebrowser
 
+INFOBROWSER_NORESPONSE
+	EN	No information feeds found.  Please check the Information Browser plugin is enabled on your server.
+
+INFOBROWSER_NOINFO_SN
+	EN	No information feeds found.  Please login to your SqueezeNetwork account and add information feeds.
+
+INFOBROWSER_NOINFO_SC
+	EN	No information feeds found.  Please use the SqueezeCenter web interface to add information feeds under Extras/Info Browser.
