@@ -7,142 +7,190 @@ WELCOME
 	DE	Willkommen
 	EN	Welcome
 	ES	Bienvenido
+	FI	Tervetuloa
 	FR	Bienvenue
 	IT	Benvenuti
 	NL	Welkom
+	NO	Velkommen
+	SV	Välkommen!
 
 SETTINGS
 	DA	Indstillinger
 	DE	Einstellungen
 	EN	Settings
 	ES	Configuración
+	FI	Asetukset
 	FR	Paramètres
 	IT	Impostazioni
 	NL	Instellingen
+	NO	Innstillinger
+	SV	Inställningar
 
 REMOTE_SETTINGS
-	DA	Indstillinger for fjernbetjening
+	DA	Indstillinger for Controller
 	DE	Fernbedienungseinstellungen
 	EN	Controller Settings
 	ES	Configuración del mando
+	FI	Kaukosäätimen asetukset
 	FR	Parametres de la telecommande
 	IT	Impostazioni telecomando
 	NL	Afstandsbedieningsinstellingen
+	NO	Kontrollinnstillinger
+	SV	Controller-inställningar
 
 SCREEN_SETTINGS
 	DA	Skærm
 	DE	Anzeige
 	EN	Screen
 	ES	Pantalla
+	FI	Näyttö
 	FR	Affichage
 	IT	Visualizza
 	NL	Display
+	NO	Skjerm
+	SV	Skärm
 
 HOME
-	DA	Hovedmenu
+	DA	Startside
 	DE	Hauptmenü
 	EN	Home
 	ES	Inicio
+	FI	Koti
 	FR	Accueil
 	IT	Pagina iniziale
 	NL	Hoofdmenu
+	NO	Hovedmeny
+	SV	Hem
 
 ADVANCED_SETTINGS
 	DA	Avanceret
 	DE	Erweitert
 	EN	Advanced
 	ES	Avanzada
+	FI	Lisäasetukset
 	FR	Avancé
 	IT	Avanzate
 	NL	Geavanceerd
+	NO	Avansert
+	SV	Avancerad
 
 FACTORY_TEST
-	DA	Fabrikstest
+	DA	Test af standardindstillinger
 	DE	Fabriktest
 	EN	Factory Test
 	ES	Prueba de fábrica
+	FI	Tehdastesti
 	FR	Test d'usine
 	IT	Verifica in fabbrica
 	NL	Fabriekstest
+	NO	Fabrikktest
+	SV	Fabrikstestning
 
 DEBUG_LOG
-	DA	Logning
+	DA	Logføring
 	DE	Protokoll
 	EN	Logging
 	ES	Registrando
+	FI	Kirjaus
 	FR	Journalisation
 	IT	Registrazione in corso
 	NL	Loggen
+	NO	Loggføring
+	SV	Loggning
 
 EXTRAS
-	DA	Extras
+	DA	Ekstra
 	DE	Extras
 	EN	Extras
 	ES	Extras
+	FI	Muut
 	FR	Extras
 	IT	Extra
 	NL	Extra's
+	NO	Tillegg
+	SV	Extrafunktioner
 
 GAMES
 	DA	Spil
 	DE	Spiele
 	EN	Games
 	ES	Juegos
+	FI	Pelit
 	FR	Jeux
 	IT	Giochi
 	NL	Games
+	NO	Spill
+	SV	Spel
 
 INSERT
 	DA	Indsæt
 	DE	Einfügen
 	EN	Insert
 	ES	Insertar
+	FI	Lisää
 	FR	Insérer
 	IT	Inserisci
 	NL	Invoegen
+	NO	Sett inn
+	SV	Infoga
 
 DELETE
 	DA	Slet
 	DE	Löschen
 	EN	Delete
 	ES	Eliminar
+	FI	Poista
 	FR	Supprimer
 	IT	Elimina
 	NL	Verwijderen
+	NO	Fjern
+	SV	Ta bort
 
 ALLOWEDCHARS_NOCAPS
-	DA	 abcdefghijklmnopqrstuvwxyzæøå!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	DA	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	DE	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	EN	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	ES	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	FI	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	FR	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	IT	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	NL	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	NO	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	SV	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 
 ALLOWEDCHARS_CAPS
-	DA	 ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	DA	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	DE	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	EN	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	ES	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	FI	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	FR	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	IT	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	NL	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	NO	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	SV	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 
 ALLOWEDCHARS_WITHCAPS
-	DA	 abcdefghijklmnopqrstuvwxyzæøåABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	DA	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	DE	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	EN	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	ES	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	FI	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	FR	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	IT	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	NL	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	NO	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	SV	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 
 RETURN_TO_SETUP
-	DA	Tilbage til Indstillinger
+	DA	Tilbage til Konfiguration
 	DE	Zurück zum Setup
 	EN	Return to Setup
 	ES	Regresar a configuración
+	FI	Palaa asetuksiin
 	FR	Retour à la configuration
 	IT	Torna all'installazione
 	NL	Terug naar set-up
+	NO	Gå tilbake til konfigureringen
+	SV	Återgå till installationen
 

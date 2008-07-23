@@ -7,7 +7,10 @@ TEST_IR
 	DE	Infrarot
 	EN	Infrared
 	ES	Infrarrojos
+	FI	Infrapuna
 	FR	Infrarouge
 	IT	Infrarossi
 	NL	Infrarood
+	NO	Infrarød
+	SV	Infraröd
 

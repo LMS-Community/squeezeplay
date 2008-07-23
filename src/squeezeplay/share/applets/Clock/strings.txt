@@ -8,61 +8,82 @@ SCREENSAVER_CLOCK
 	DE	Uhr
 	EN	Clock
 	ES	Reloj
+	FI	Kello
 	FR	Horloge
 	IT	Orologio
 	NL	Klok
+	NO	Klokke
+	SV	Klocka
 
 SCREENSAVER_CLOCK_SETTINGS
-	DA	Indstillinger for Ur
+	DA	Indstillinger for ur
 	DE	Uhr Einstellungen
 	EN	Clock Settings
 	ES	Configuración de reloj
+	FI	Kellon asetukset
 	FR	Paramètres d'horloge
 	IT	Impostazioni orologio
 	NL	Klokinstellingen
+	NO	Tidsinnstillinger
+	SV	Klockinställningar
 
 SCREENSAVER_CLOCK_TYPE
-	DA	Ur type
+	DA	Urtype
 	DE	Uhr Typ
 	EN	Clock Type
 	ES	Tipo de reloj
+	FI	Kellon tyyppi
 	FR	Montre
 	IT	Tipo orologio
 	NL	Type klok
+	NO	Klokketype
+	SV	Typ av klocka
 
 SCREENSAVER_CLOCK_STYLE_ANALOG
-	DA	Analogt Ur
+	DA	Analogt ur
 	DE	Analoguhr
 	EN	Analog Clock
 	ES	Reloj analógico
+	FI	Analoginen kello
 	FR	Analogique
 	IT	Orologio analogico
 	NL	Analoge klok
+	NO	Analog klokke
+	SV	Analog klocka
 
 SCREENSAVER_CLOCK_STYLE_DIGITALSIMPLE
-	DA	Digitalt Ur
+	DA	Digitalt ur
 	DE	Digitaluhr
 	EN	Digital Clock
 	ES	Reloj digital
+	FI	Digitaalinen kello
 	FR	Numérique
 	IT	Orologio digitale
 	NL	Digitale klok
+	NO	Digital klokke
+	SV	Digitalklocka
 
 SCREENSAVER_CLOCK_STYLE_DIGITALSTYLED
-	DA	Elegant Ur
+	DA	Elegant ur
 	DE	Elegante Uhr
 	EN	Block Clock
 	ES	Reloj con estilo
+	FI	Harkkokello
 	FR	Stylisée
 	IT	Orologio elegante
 	NL	Gestileerde klok
+	NO	Blokk-klokke
+	SV	Blockklocka
 
 SCREENSAVER_CLOCK_STYLE_DIGITALDETAILED
-	DA	Klassisk Ur
+	DA	Klassisk ur
 	DE	Beschriftete Uhr
 	EN	Classic Clock
 	ES	Reloj detallado
+	FI	Perinteinen kello
 	FR	Détaillée
 	IT	Orologio dettagliato
 	NL	Gedetailleerde klok
+	NO	Klassisk klokke
+	SV	Klassisk klocka
 

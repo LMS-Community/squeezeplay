@@ -1,13 +1,16 @@
 #
 
 INFOBROWSER
-	DA	Informationslæser
+	DA	Informationsaflæser
 	DE	Informations-Browser
 	EN	Information Browser
 	ES	Navegador de información
+	FI	Informaatioselain
 	FR	Navigateur d'informations
 	IT	Browser informazioni
 	NL	Informatiebrowser
+	NO	Informasjonsleser
+	SV	Informationswebbläsare
 
 INFOBROWSER_NORESPONSE
 	EN	No information feeds found.  Please check the Information Browser plugin is enabled on your server.

@@ -3,82 +3,122 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 DOOMSDAY
+	DA	Dommedag
 	DE	Der jüngste Tag
 	EN	Doomsday
 	ES	El día del Juicio Final
+	FI	Tuomiopäivä
 	FR	Fin du monde
 	IT	Il giorno del giudizio
 	NL	Dag des oordeels
+	NO	Dommedag
+	SV	Domedagen
 
 DOOMSDAY_OPTION1
+	DA	Advarsel 1
 	DE	Warnung 1
 	EN	Dire Warning 1
 	ES	Advertencia grave 1
+	FI	Vakava varoitus 1
 	FR	Ultime avertissement 1
 	IT	Minaccia 1
 	NL	Onheilspellende waarschuwing 1
+	NO	Første seriøse advarsel
+	SV	Varning 1
 
 DOOMSDAY_OPTION2
+	DA	Advarsel 2
 	DE	Warnung 2
 	EN	Dire Warning 2
 	ES	Advertencia grave 2
+	FI	Vakava varoitus 2
 	FR	Ultime avertissement 2
 	IT	Minaccia 2
 	NL	Onheilspellende waarschuwing 2
+	NO	Andre seriøse advarsel
+	SV	Varning 2
 
 DOOMSDAY_OPTION3
+	DA	Advarsel 3
 	DE	Warnung 3
 	EN	Dire Warning 3
 	ES	Advertencia grave 3
+	FI	Vakava varoitus 3
 	FR	Ultime avertissement 3
 	IT	Minaccia 3
 	NL	Onheilspellende waarschuwing 3
+	NO	Tredje seriøse advarsel
+	SV	Varning 3
 
 DOOMSDAY_OPTION4
+	DA	Advarsel 4
 	DE	Warnung 4
 	EN	Dire Warning 4
 	ES	Advertencia grave 4
+	FI	Vakava varoitus 4
 	FR	Ultime avertissement 4
 	IT	Minaccia 4
 	NL	Onheilspellende waarschuwing 4
+	NO	Fjerde seriøse advarsel
+	SV	Varning 4
 
 DOOMSDAY_MESSAGE0
+	DA	Der er frygt i luften.
 	DE	Die Angst geht um!
 	EN	Fear is in the air!
 	ES	¡Se puede oler el miedo!
+	FI	Ilmassa on kauhua!
 	FR	La peur est dans l'air!
 	IT	Atmosfera carica di paura!
 	NL	Je kunt de angst proeven!
+	NO	Det er redsel å spore!
+	SV	Rädslan ligger i luften.
 
 DOOMSDAY_MESSAGE1
+	DA	Enden er nær!
 	DE	Das Ende ist nah!
 	EN	The End is Nigh!
 	ES	¡El fin está cerca!
+	FI	Loppu on lähellä!
 	FR	La fin est proche!
 	IT	La fine è prossima!
 	NL	Het einde is nabij!
+	NO	Enden er nær!
+	SV	Slutet är nära!
 
 DOOMSDAY_MESSAGE2
+	DA	Løb for livet.
 	DE	Nehmt die Beine in die Hand!
 	EN	Run for the hills!
 	ES	¡Escapa a las montañas!
+	FI	Paetkaa kukkuloille!
 	FR	Sauve qui peut!
 	IT	Al riparo!
 	NL	Vlucht naar de heuvels!
+	NO	Løp for livet!
+	SV	Spring för livet!
 
 DOOMSDAY_MESSAGE3
+	DA	Se at få styr på det!
 	DE	Bringt Eure Sachen in Ordnung!
 	EN	Get your affairs in order!
 	ES	¡Pon tus asuntos en orden!
+	FI	Pakka järjestykseen!
 	FR	Mettez de l'ordre dans vos affaires!
 	IT	Metti la testa a posto!
 	NL	Stel orde op zaken!
+	NO	Skriv testamente!
+	SV	Gör dig redo!
 
 DOOMSDAY_MESSAGE4
+	DA	Duk dig!
 	DE	Deckung!
 	EN	DUCK!
 	ES	¡ESCÓNDETE!
+	FI	VÄISTÄ!
 	FR	FILEZ VITE!
 	IT	ATTENTO!
 	NL	BUKKEN!
+	NO	DUKK!
+	SV	DUCKA!
 

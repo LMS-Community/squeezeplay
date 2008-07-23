@@ -7,34 +7,46 @@ SELECT_PLAYER
 	DE	Player wählen
 	EN	Choose Player
 	ES	Elegir reproductor
+	FI	Valitse soitin
 	FR	Sélectionner une platine
 	IT	Scegli lettore
 	NL	Muzieksysteem kiezen
+	NO	Velg spiller
+	SV	Välj spelare
 
 SQUEEZEBOX_SETUP
-	DA	Konfiguration af Squeezebox
+	DA	Konfiguration af Receiver
 	DE	Receiver einrichten
 	EN	Set Up Squeezebox
 	ES	Configuración del receptor
+	FI	Ota vastaanotin käyttöön
 	FR	Configuration du Squeezebox Receiver
 	IT	Configura Receiver
 	NL	Ontvanger instellen
+	NO	Konfigurer mottaker
+	SV	Konfigurera mottagare
 
 SQUEEZEBOX_NAME
 	DA	Squeezebox %s
 	DE	Squeezebox %s
 	EN	Squeezebox %s
 	ES	Squeezebox %s
+	FI	Squeezebox %s
 	FR	Squeezebox %s
 	IT	Squeezebox %s
 	NL	Squeezebox %s
+	NO	Squeezebox %s
+	SV	Squeezebox %s
 
 SQUEEZEBOX_ACTIVATE
 	DA	Aktiver %s
 	DE	%s aktivieren
 	EN	Activate %s
 	ES	Activar %s
+	FI	Aktivoi %s
 	FR	Activer %s
 	IT	Attiva %s
 	NL	%s activeren
+	NO	Aktiver %s
+	SV	Aktivera %s
 

@@ -3,52 +3,74 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 CUSTOMIZE_HOME
+	DA	Hovedmenu
 	DE	Hauptmenü
 	EN	Home Menu
 	ES	Menú Inicio
+	FI	Kotivalikko
 	FR	Personnalisation du Menu principal
 	IT	Menu iniziale
 	NL	Hoofdmenu
+	NO	Hovedmeny
+	SV	Hem-meny
 
 CUSTOMIZE_HIDDEN
+	DA	Skjult
 	DE	Versteckt
 	EN	Hidden
 	ES	Oculto
+	FI	Piilotettu
 	FR	Masqué
 	IT	Nascosto
 	NL	Verborgen
+	NO	Skjult
+	SV	Dold
 
 CUSTOMIZE_RESTORE_DEFAULTS
+	DA	Standardindstillinger
 	DE	Standardwerte wiederherstellen
 	EN	Restore Defaults
 	ES	Restaurar configuración predeterminada
+	FI	Palauta oletukset
 	FR	Restaurer les valeurs par défaut
 	IT	Ripristina impostazioni predefinite
 	NL	Standaardinstellingen
+	NO	Tilbakestill til standardinnstillinger
+	SV	Återställ standardinställningar
 
 CUSTOMIZE_CANCEL
-	DA	Afbryd
+	DA	Annuller
 	DE	Abbrechen
 	EN	Cancel
 	ES	Cancelar
+	FI	Peruuta
 	FR	Annuler
 	IT	Annulla
 	NL	Annuleren
+	NO	Avbryt
+	SV	Avbryt
 
 CUSTOMIZE_CONTINUE
 	DA	Fortsæt
 	DE	Weiter
 	EN	Continue
 	ES	Continuar
+	FI	Jatka
 	FR	Continuer
 	IT	Continua
 	NL	Verdergaan
+	NO	Fortsett
+	SV	Fortsätt
 
 CUSTOMIZE_RESTORE_DEFAULTS_HELP
+	DA	Vælg Fortsæt hvis du vil fjerne alle brugerdefinerede menuindstillinger
 	DE	Klicken Sie auf "Weiter", um sämtliche benutzerdefinierte Menüeinstellungen zu entfernen.
 	EN	Select "Continue" to remove all custom menu organization settings
 	ES	Seleccione "Continuar" para eliminar la configuración de organización del menú personalizada
+	FI	Poista kaikki mukautetut valikon järjestelyasetukset valitsemalla Jatka
 	FR	Sélectionnez "Continuer" pour supprimer tous les paramètres de menu personnalisés
 	IT	Selezionare Continua per rimuovere tutte le impostazioni relative all'organizzazione del menu personalizzato
 	NL	Selecteer 'Verdergaan' om alle aangepaste instellingen voor menuorganisatie te verwijderen
+	NO	Velg "Fortsett" for å fjerne alle egendefinerte innstillinger for menyorganisering.
+	SV	Välj Fortsätt om du vill ta bort alla anpassade inställningar för menyordning
 

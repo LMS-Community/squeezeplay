@@ -1,65 +1,97 @@
 
 MACRO_PLAY
+	DA	Test makroer
 	DE	Makros testen
 	EN	Test macros
 	ES	Macros de prueba
+	FI	Testaa makrot
 	FR	Tester les macros
 	IT	Verifica macro
 	NL	Macro's testen
+	NO	Testmakroer
+	SV	Testa makron
 
 MACRO_AUTOPLAY
+	DA	Automatiske test
 	DE	Automatische Tests
 	EN	Automatic tests
 	ES	Pruebas automáticas
+	FI	Automaattiset testit
 	FR	Tests automatiques
 	IT	Verifiche automatiche
 	NL	Automatische tests
+	NO	Automatiske tester
+	SV	Automatiska tester
 
 MACRO_AUTOPLAY_HELP
+	DA	Start automatiske test.
 	DE	Automatische Tests starten.
 	EN	Start automatic tests.
 	ES	Iniciar pruebas automáticas.
+	FI	Aloita automaattiset testit.
 	FR	Lancer les tests automatiques.
 	IT	Avvia verifiche automatiche.
 	NL	Start automatische tests.
+	NO	Start automatiske tester.
+	SV	Starta automatiska tester
 
 MACRO_AUTOSTART
+	DA	Automatiske test
 	DE	Automatische Tests
 	EN	Automatic tests
 	ES	Pruebas automáticas
+	FI	Automaattiset testit
 	FR	Tests automatiques
 	IT	Verifiche automatiche
 	NL	Automatische tests
+	NO	Automatiske tester
+	SV	Automatiska tester
 
 MACRO_AUTOSTART_HELP
+	DA	Starter om %s sekunder.
 	DE	Start in %s Sekunden.
 	EN	Starting in %s seconds.
 	ES	Inicio en %s segundos.
+	FI	Käynnistyy %s sekunnissa.
 	FR	Démarrage dans %s secondes.
 	IT	Inizio previsto tra %s secondo/i.
 	NL	Begint over %s seconden.
+	NO	Starter om %s sekunder.
+	SV	Startar om %s sekunder.
 
 MACRO_AUTOSTART_COMPLETE
+	DA	Testen er gennemført.
 	DE	Tests abgeschlossen.
 	EN	Tests complete.
 	ES	Pruebas completadas.
+	FI	Testi suoritettu.
 	FR	Tests terminés.
 	IT	Verifiche completate.
 	NL	Tests voltooid.
+	NO	Testene er fullført.
+	SV	Test har slutförts.
 
 MACRO_START
+	DA	Start
 	DE	Start
 	EN	Start
 	ES	Iniciar
+	FI	Aloita
 	FR	Démarrage
 	IT	Inizia
 	NL	Starten
+	NO	Start
+	SV	Starta
 
 MACRO_CANCEL
+	DA	Annuller
 	DE	Abbrechen
 	EN	Cancel
 	ES	Cancelar
+	FI	Peruuta
 	FR	Annuler
 	IT	Annulla
 	NL	Annuleren
+	NO	Avbryt
+	SV	Avbryt
 
