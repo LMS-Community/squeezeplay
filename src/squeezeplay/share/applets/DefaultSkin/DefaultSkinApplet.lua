@@ -332,15 +332,20 @@ function skin(self, s)
 	s.title.border = 4
 	s.title.position = LAYOUT_NORTH
 	s.title.bgImg = titleBox
-	s.title.order = { "back", "text" }
+	--FIXME: bug 8866
+	--s.title.order = { "back", "text" }
+	s.title.order = { "text" }
 	s.title.text = {}
 	s.title.text.padding = { 10, 8, 8, 8 }
 	s.title.text.align = "top-left"
 	s.title.text.font = FONT_BOLD_18px
 	s.title.text.fg = SELECT_COLOR
+--[[
+	--FIXME: bug 8866
 	s.title.back = {}
 	s.title.back.img = Surface:loadImage(imgpath .. "selection_left.png")
 	s.title.back.align = "left"
+--]]
 
 --[[
 	s.title.icon = {}
@@ -356,6 +361,9 @@ function skin(self, s)
 	s.menu.itemHeight = 27
 	s.menu.fg = {0xbb, 0xbb, 0xbb }
 	s.menu.font = FONT_BOLD_200px
+
+	-- s.splitmenu in default skin is a clone of s.menu
+	s.splitmenu = _uses(s.menu)
 
 	-- menu item
 	s.item = {}
@@ -784,7 +792,9 @@ function skin(self, s)
 	s.albumtitle = {}
 	s.albumtitle.position = LAYOUT_NORTH
 	s.albumtitle.bgImg = titleBox
-	s.albumtitle.order = { "back", "icon", "text" }
+	--FIXME: bug 8866
+	--s.albumtitle.order = { "back", "icon", "text" }
+	s.albumtitle.order = { "icon", "text" }
 	s.albumtitle.w = screenWidth
 	s.albumtitle.h = 60
 	s.albumtitle.border = 4
@@ -805,9 +815,11 @@ function skin(self, s)
 	s.albumtitle.icon.align = "left"
 	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumtitle.icon.padding = { 9, 0, 0, 0 }
+--[[ FIXME: bug 8866
 	s.albumtitle.back = {}
 	s.albumtitle.back.img = Surface:loadImage(imgpath .. "selection_left.png")
 	s.albumtitle.back.align = "left"
+--]]
 
 
 	-- titles with mini icons
@@ -823,7 +835,8 @@ function skin(self, s)
 	s.minititle.text.align    = 'top-left'
 	s.minititle.text.font     = FONT_BOLD_18px
 	s.minititle.text.fg       = SELECT_COLOR
-	s.minititle.order         = { "back", "text", "icon" }
+-- FIXME: bug 8866
+	s.minititle.order         = { "text", "icon" }
 	s.minititle.icon = {}
 	s.minititle.icon.padding  = { 0, 0, 8, 0 }
 	s.minititle.icon.align    = 'right'

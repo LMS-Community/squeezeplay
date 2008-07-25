@@ -44,7 +44,7 @@ function __init(self, name, style, titleStyle)
 		customNodes = {},
 	})
 
-	local menu = SimpleMenu("menu")
+	local menu = SimpleMenu("splitmenu")
 	menu:setComparator(SimpleMenu.itemComparatorComplexWeightAlpha)
 
 	-- home menu is not closeable
