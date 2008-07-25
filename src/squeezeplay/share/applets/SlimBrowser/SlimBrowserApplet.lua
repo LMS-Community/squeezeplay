@@ -321,7 +321,6 @@ end
 local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 	-- if item is a windowSpec, then the icon is kept in the spec for nothing (overhead)
 	-- however it guarantees the icon in the title is not shared with (the same) icon in the menu.
-
 	if not group then
 		group = Group("item", { text = Label("text", ""), icon = Icon("icon"), play = Icon("play"), back = Button(Icon("back"), function() group:getWindow():dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) return EVENT_CONSUME end) })
 	end
@@ -1532,9 +1531,14 @@ local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderS
 			if current then
 				style = "albumcurrent"
 			elseif item and item["style"] then
-				style = item["style"]
+				local menuStyle = menu:getStyle()
+				local menuPrefix = string.match(menuStyle, "(%a+)menu")
+				if menuPrefix then
+					style = menuPrefix .. item["style"]
+				else
+					style = item["style"]
+				end
 			end
-
 			widgets[widgetIndex] = _decoratedLabel(widget, style, item, db, menuAccel)
 		end
 	end
