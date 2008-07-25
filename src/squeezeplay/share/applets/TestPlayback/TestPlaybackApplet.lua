@@ -8,7 +8,7 @@ local string        = require("string")
 local table         = require("jive.utils.table")
 
 local Applet        = require("jive.Applet")
-local SlimServers   = require("jive.slim.SlimServers")
+local SlimServers   = require("jive.slim.SlimServer")
 
 local Framework     = require("jive.ui.Framework")
 local Checkbox      = require("jive.ui.Checkbox")
@@ -47,23 +47,17 @@ function settingsShow(self)
 	window:addWidget(menu)
 
 
-	self.sdApplet = appletManager:getAppletInstance("SlimDiscovery")
-	if not self.sdApplet then
-		return window:tieAndShowWindow()
-	end
-
-
 	self.serverMenu = menu
 	self.serverWindow = window
 
 
 	-- Discover slimservers in this window
-	self.sdApplet:discover()
-	window:addTimer(1000, function() self.sdApplet:discover() end)
+	appletManager:callService("discoverPlayers")
+	window:addTimer(1000, function() appletManager:callService("discoverPlayers") end)
 
 
 	-- slimservers on the poll list
-	local poll = self.sdApplet:pollList()
+	local poll = appletManager:callService("getPollList")
 	for address,_ in pairs(poll) do
 		if address ~= "255.255.255.255" then
 			self:_addServerItem(nil, address)
@@ -72,7 +66,7 @@ function settingsShow(self)
 
 
 	-- discovered slimservers
-	for _,server in self.sdApplet:allServers() do
+	for _,server in appletManager:callService("iterateSqueezeCenters") do
 		if not server:isSqueezeNetwork() then
 			self:_addServerItem(server)
 		end
@@ -124,9 +118,9 @@ function _connectToServer(self, server)
 	slimProto:connect()
 
 
-	for id, player in self.sdApplet:allPlayers() do
+	for id, player in appletManager:callService("iteratePlayers") do
 		if self.id == id then
-			self.sdApplet:setCurrentPlayer(player)
+			appletManager:callService("setCurrentPlayer", player)
 			return
 		end
 	end
@@ -137,7 +131,7 @@ end
 
 function notify_playerNew(self, player)
 	if self.id == player:getId() then
-		self.sdApplet:setCurrentPlayer(player)
+		appletManager:callService("setCurrentPlayer", player)
 		jnt:unsubscribe(self)
 	end
 end
