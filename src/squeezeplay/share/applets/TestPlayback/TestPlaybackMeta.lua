@@ -22,7 +22,7 @@ end
 
 
 function registerApplet(self)
-	jiveMain:addItem(self:menuItem('testPlayback', 'home', "TEST_PLAYBACK", function(applet, ...) applet:settingsShow(...) end, 1))
+	jiveMain:addItem(self:menuItem('testPlayback', 'advancedSettings', "TEST_PLAYBACK", function(applet, ...) applet:settingsShow(...) end, 1))
 end
 
 
