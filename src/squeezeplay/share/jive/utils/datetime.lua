@@ -276,6 +276,18 @@ function secondsFromMidnight(self, hhmm)
 		timeElements[i] = tonumber(element)
 		i = i+1
 	end
+	
+	-- convert ampm hours to 24h for method calculation
+	if string.find(_hhmm, 'p') then
+		if timeElements[1] ~= 12 then
+			timeElements[1] = timeElements[1] + 12
+		end
+	elseif string.find(_hhmm, 'a') then
+		if timeElements[1] == 12 then
+			timeElements[1] = 0
+		end
+	end
+
 	-- punt if this isn't a valid hh mm array
 	if (timeElements[1] > 23 or timeElements[2] > 59) then
 		return secondsFromMidnight
