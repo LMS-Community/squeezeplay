@@ -271,7 +271,6 @@ function secondsFromMidnight(self, hhmm)
 	local i = 1
 	local secondsFromMidnight = 0
 	local _hhmm = tostring(hhmm)
-	log:warn(_hhmm)
 	for element in string.gmatch(_hhmm, "(%d%d)") do
 		-- element 1 is hh, element 2 is mm
 		timeElements[i] = tonumber(element)
