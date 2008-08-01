@@ -117,7 +117,7 @@ static int l_syslog(lua_State *L)
 	const char *msg = luaL_checkstring(L, 2);	
 
 /*	printf("l_syslog(%d, %s)\n", priority, msg); */
-	syslog(priority, msg);
+	syslog(priority, "%s", msg);
 	return 0;
 }
 
