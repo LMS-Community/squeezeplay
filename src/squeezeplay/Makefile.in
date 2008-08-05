@@ -89,17 +89,17 @@ libjiveaudio_la_DEPENDENCIES =
 am_libjiveaudio_la_OBJECTS = fifo.lo fixed_math.lo mqueue.lo \
 	streambuf.lo decode.lo decode_flac.lo decode_mad.lo \
 	decode_output.lo decode_pcm.lo decode_portaudio.lo \
-	decode_tones.lo decode_vorbis.lo
+	decode_sample.lo decode_tones.lo decode_vorbis.lo
 libjiveaudio_la_OBJECTS = $(am_libjiveaudio_la_OBJECTS)
 libjivenet_la_DEPENDENCIES =
 am_libjivenet_la_OBJECTS = jive_dns.lo
 libjivenet_la_OBJECTS = $(am_libjivenet_la_OBJECTS)
 libjiveui_la_DEPENDENCIES =
-am_libjiveui_la_OBJECTS = jive_audio.lo jive_event.lo jive_font.lo \
-	jive_framework.lo jive_group.lo jive_icon.lo jive_label.lo \
-	jive_menu.lo jive_slider.lo jive_style.lo jive_surface.lo \
-	jive_textarea.lo jive_textinput.lo jive_tile.lo jive_timer.lo \
-	jive_utils.lo jive_widget.lo jive_window.lo lua_jiveui.lo
+am_libjiveui_la_OBJECTS = jive_event.lo jive_font.lo jive_framework.lo \
+	jive_group.lo jive_icon.lo jive_label.lo jive_menu.lo \
+	jive_slider.lo jive_style.lo jive_surface.lo jive_textarea.lo \
+	jive_textinput.lo jive_tile.lo jive_timer.lo jive_utils.lo \
+	jive_widget.lo jive_window.lo lua_jiveui.lo
 libjiveui_la_OBJECTS = $(am_libjiveui_la_OBJECTS)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" \
 	"$(DESTDIR)$(applets_blankscreendir)" \
@@ -261,6 +261,7 @@ CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DSYMUTIL = @DSYMUTIL@
 ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -281,6 +282,7 @@ LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
+NMEDIT = @NMEDIT@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -293,6 +295,7 @@ RANLIB = @RANLIB@
 SDL_CFLAGS = @SDL_CFLAGS@
 SDL_CONFIG = @SDL_CONFIG@
 SDL_LIBS = @SDL_LIBS@
+SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
@@ -358,7 +361,6 @@ BUILT_SOURCES = \
 	src/version.h
 
 libjiveui_la_SOURCES = \
-	src/ui/jive_audio.c \
 	src/ui/jive_event.c \
 	src/ui/jive_font.c \
 	src/ui/jive_framework.c \
@@ -390,6 +392,7 @@ libjiveaudio_la_SOURCES = \
 	src/audio/decode/decode_output.c \
 	src/audio/decode/decode_pcm.c \
 	src/audio/decode/decode_portaudio.c \
+	src/audio/decode/decode_sample.c \
 	src/audio/decode/decode_tones.c \
 	src/audio/decode/decode_vorbis.c
 
@@ -1039,12 +1042,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_output.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_pcm.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_portaudio.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_sample.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_tones.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_vorbis.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fifo.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fixed_math.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_audio.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_debug.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_dns.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_event.Plo@am__quote@
@@ -1160,6 +1163,13 @@ decode_portaudio.lo: src/audio/decode/decode_portaudio.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o decode_portaudio.lo `test -f 'src/audio/decode/decode_portaudio.c' || echo '$(srcdir)/'`src/audio/decode/decode_portaudio.c
 
+decode_sample.lo: src/audio/decode/decode_sample.c
+@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT decode_sample.lo -MD -MP -MF "$(DEPDIR)/decode_sample.Tpo" -c -o decode_sample.lo `test -f 'src/audio/decode/decode_sample.c' || echo '$(srcdir)/'`src/audio/decode/decode_sample.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/decode_sample.Tpo" "$(DEPDIR)/decode_sample.Plo"; else rm -f "$(DEPDIR)/decode_sample.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/audio/decode/decode_sample.c' object='decode_sample.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o decode_sample.lo `test -f 'src/audio/decode/decode_sample.c' || echo '$(srcdir)/'`src/audio/decode/decode_sample.c
+
 decode_tones.lo: src/audio/decode/decode_tones.c
 @am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT decode_tones.lo -MD -MP -MF "$(DEPDIR)/decode_tones.Tpo" -c -o decode_tones.lo `test -f 'src/audio/decode/decode_tones.c' || echo '$(srcdir)/'`src/audio/decode/decode_tones.c; \
 @am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/decode_tones.Tpo" "$(DEPDIR)/decode_tones.Plo"; else rm -f "$(DEPDIR)/decode_tones.Tpo"; exit 1; fi
@@ -1180,13 +1190,6 @@ jive_dns.lo: src/net/jive_dns.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/net/jive_dns.c' object='jive_dns.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_dns.lo `test -f 'src/net/jive_dns.c' || echo '$(srcdir)/'`src/net/jive_dns.c
-
-jive_audio.lo: src/ui/jive_audio.c
-@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_audio.lo -MD -MP -MF "$(DEPDIR)/jive_audio.Tpo" -c -o jive_audio.lo `test -f 'src/ui/jive_audio.c' || echo '$(srcdir)/'`src/ui/jive_audio.c; \
-@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/jive_audio.Tpo" "$(DEPDIR)/jive_audio.Plo"; else rm -f "$(DEPDIR)/jive_audio.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ui/jive_audio.c' object='jive_audio.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_audio.lo `test -f 'src/ui/jive_audio.c' || echo '$(srcdir)/'`src/ui/jive_audio.c
 
 jive_event.lo: src/ui/jive_event.c
 @am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_event.lo -MD -MP -MF "$(DEPDIR)/jive_event.Tpo" -c -o jive_event.lo `test -f 'src/ui/jive_event.c' || echo '$(srcdir)/'`src/ui/jive_event.c; \
@@ -2378,14 +2381,14 @@ lua-lint:
 	@rm -f badsyntax
 
 src/version.h: FORCE
-	echo '/* This file is automatically generated */' > src/version.h
-	echo '#ifndef SQUEEZEPLAY_RELEASE' >> src/version.h
-	echo '#define SQUEEZEPLAY_RELEASE "'`cat ../squeezeplay.version`'"' >> src/version.h
-	echo '#endif' >> src/version.h
-	echo '#ifndef SQUEEZEPLAY_REVISION' >> src/version.h
-	echo '#define SQUEEZEPLAY_REVISION "'`svnversion -n ..`'"' >> src/version.h
-	echo '#endif' >> src/version.h
-	echo '#define JIVE_VERSION SQUEEZEPLAY_RELEASE" r"SQUEEZEPLAY_REVISION' >> src/version.h
+	@echo '/* This file is automatically generated */' > src/version.h
+	@echo '#ifndef SQUEEZEPLAY_RELEASE' >> src/version.h
+	@echo '#define SQUEEZEPLAY_RELEASE "'`cat ../squeezeplay.version`'"' >> src/version.h
+	@echo '#endif' >> src/version.h
+	@echo '#ifndef SQUEEZEPLAY_REVISION' >> src/version.h
+	@echo '#define SQUEEZEPLAY_REVISION "'`svnversion -n ..`'"' >> src/version.h
+	@echo '#endif' >> src/version.h
+	@echo '#define JIVE_VERSION SQUEEZEPLAY_RELEASE" r"SQUEEZEPLAY_REVISION' >> src/version.h
 
 FORCE:
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

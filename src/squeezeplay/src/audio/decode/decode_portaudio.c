@@ -53,7 +53,11 @@ static int callback(const void *inputBuffer,
 	/* audio running? */
 	if (!(current_audio_state & DECODE_STATE_RUNNING)) {
 		memset(outputArray, 0, len);
-		return 0;
+
+		/* mix in sound effects */
+		decode_sample_mix(outputArray, len);
+
+		return paContinue;
 	}
 
 	fifo_lock(&decode_fifo);
@@ -69,7 +73,7 @@ static int callback(const void *inputBuffer,
 		memset(outputArray, 0, len);
 
 		fifo_unlock(&decode_fifo);
-		return 0;
+		return paContinue;
 	}
 
 	if (bytes_used < len) {
@@ -112,15 +116,9 @@ static int callback(const void *inputBuffer,
 
 
 static void finished_handler(void) {
-	PaError err;
-
 	mqueue_read_complete(&decode_mqueue);
-	decode_portaudio_openstream();
 
-	if ((err = Pa_StartStream(stream)) != paNoError) {
-		DEBUG_ERROR("PA error %s", Pa_GetErrorText(err));
-		return;
-	}
+	decode_portaudio_openstream();
 }
 
 
@@ -144,43 +142,19 @@ static void finished(void *userData) {
 
 
 static void decode_portaudio_start(void) {
-	PaError err;
-
 	DEBUG_TRACE("decode_portaudio_start");
 
-	if (!stream) {
-		decode_portaudio_openstream();
-	}
-
-	if (Pa_IsStreamActive(stream)) {
-		/* Stream has started, nothing else to do */
-		return;
-	}
-
-	if ((err = Pa_StartStream(stream)) != paNoError) {
-		DEBUG_ERROR("PA error %s", Pa_GetErrorText(err));
-		return;
-	}
+	decode_portaudio_openstream();
 }
 
 
 static void decode_portaudio_stop(void) {
-	PaError err;
-
 	DEBUG_TRACE("decode_portaudio_stop");
 
-	if (!stream) {
-		/* Already stopped */
-		return;
-	}
-
+	current_sample_rate = 44100;
 	change_sample_rate = false;
-	if ((err = Pa_CloseStream(stream)) != paNoError) {
-		DEBUG_ERROR("PA error %s", Pa_GetErrorText(err));
-		return;
-	}
 
-	stream = NULL;
+	decode_portaudio_openstream();
 }
 
 
@@ -215,6 +189,11 @@ static void decode_portaudio_openstream(void) {
 
 	DEBUG_TRACE("Stream latency %f", Pa_GetStreamInfo(stream)->outputLatency);
 	DEBUG_TRACE("Sample rate %f", Pa_GetStreamInfo(stream)->sampleRate);
+
+	if ((err = Pa_StartStream(stream)) != paNoError) {
+		DEBUG_ERROR("PA error %s", Pa_GetErrorText(err));
+		return;
+	}
 }
 
 
@@ -260,6 +239,10 @@ static int decode_portaudio_init(void) {
 
 	/* high latency for robust playback */
 	outputParam.suggestedLatency = Pa_GetDeviceInfo(outputParam.device)->defaultHighOutputLatency;
+
+	/* open stream */
+	decode_portaudio_openstream();
+
 	return 1;
 
  err:

@@ -21,7 +21,7 @@ local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
 local Framework     = require("jive.ui.Framework")
-local Audio           = require("jive.ui.Audio")
+local Sample        = require("squeezeplay.sample")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
@@ -37,7 +37,7 @@ end
 
 function defaultSettings(meta)
 	return {
-		_VOLUME = Audio.MAXVOLUME / 3
+		_VOLUME = Sample.MAXVOLUME / 3
 	}
 end
 
@@ -45,7 +45,7 @@ function registerApplet(meta)
 
 	-- set volume
 	local settings = meta:getSettings()
-	Audio:setEffectVolume(settings["_VOLUME"])
+	Sample:setEffectVolume(settings["_VOLUME"])
 
 	-- load sounds
 	local obj = appletManager:loadApplet("SetupSoundEffects")

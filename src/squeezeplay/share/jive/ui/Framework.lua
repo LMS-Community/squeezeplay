@@ -48,7 +48,6 @@ module(..., oo.class)
 
 local math          = require("math")
 
-local Audio         = require("jive.ui.Audio")
 local Checkbox      = require("jive.ui.Checkbox")
 local Choice        = require("jive.ui.Choice")
 local Event         = require("jive.ui.Event")
@@ -71,6 +70,7 @@ local Tile          = require("jive.ui.Tile")
 local Timer         = require("jive.ui.Timer")
 local Widget        = require("jive.ui.Widget")
 local Window        = require("jive.ui.Window")
+local Sample        = require("squeezeplay.sample")
 
 local log           = require("jive.utils.log").logger("ui")
 local logTask       = require("jive.utils.log").logger("ui.task")
@@ -412,7 +412,8 @@ Load the wav file I<file> to play on the mixer channel I<channel>. Currently two
 =cut
 --]]
 function loadSound(self, name, file, channel)
-	self.sound[name] = Audio:loadSound(file, channel)
+	self.sound[name] = Sample:loadSample(file, channel)
+log:warn("&&&&&&&&&&&&&&&&& name=", name, " sample=", self.sound[name])
 
 	if self.soundEnabled[name] ~= nil then
 		self.sound[name]:enable(self.soundEnabled[name])

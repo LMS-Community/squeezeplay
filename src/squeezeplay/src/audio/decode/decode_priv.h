@@ -101,6 +101,11 @@ extern void decode_output_flush(void);
 extern bool_t decode_check_start_point(void);
 
 
+/* Sample playback api (sound effects) */
+extern int decode_sample_init(lua_State *L);
+extern void decode_sample_mix(Uint8 *buffer, size_t buflen);
+
+
 /* Internal state */
 
 #define DECODE_FIFO_SIZE (10 * 2 * 44100 * sizeof(sample_t)) 
