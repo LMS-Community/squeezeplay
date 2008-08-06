@@ -295,6 +295,26 @@ local function _checkboxItem(item, db)
 	return item["_jive_button"]
 end
 
+-- _choiceItem
+-- returns a choice set for use on a given item
+local function _choiceItem(item, db)
+	local choiceFlag = tonumber(item["selectedIndex"])
+	local choiceActions = _safeDeref(item, 'actions', 'do', 'choices')
+
+	if choiceFlag and choiceActions and not item["_jive_button"] then
+		item["_jive_button"] = Choice(
+			"choice",
+			item['choiceStrings'],
+			function(_, index) 
+				log:info('Callback has been called: ', index) 
+				_actionHandler(nil, nil, db, nil, nil, 'do', item, index) 
+			end,
+			choiceFlag
+		)
+	end
+	return item["_jive_button"]
+end
+
 
 -- _radioItem
 -- returns a radio button for use on a given item
@@ -337,6 +357,10 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 		if item["radio"] then
 			group._type = "radio"
 			group:setWidget("icon", _radioItem(item, db))
+
+		elseif item['selectedIndex'] then
+			group._type = 'choice'
+			group:setWidget('icon', _choiceItem(item, db))
 
 		elseif item["checkbox"] then
 			group._type = "checkbox"
@@ -1177,16 +1201,17 @@ local _defaultActions = {
 
 -- _actionHandler
 -- sorts out the action business: item action, base action, default action...
-_actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
+_actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, selectedIndex)
 	log:debug("_actionHandler(", actionName, ")")
 
 	if logd:isDebug() then
 		debug.dump(item, 4)
 	end
 
+	local choiceAction
+
 	-- some actions work (f.e. pause) even with no item around
 	if item then
-	
 		local chunk = db:chunk()
 		local bAction
 		local iAction
@@ -1228,10 +1253,11 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 			onAction = _safeDeref(item, 'actions', 'on')
 			offAction = _safeDeref(item, 'actions', 'off')
 		end
-	
+
+		choiceAction = _safeDeref(item, 'actions', 'do', 'choices')
 		
 		-- now check for a run-of-the mill action
-		if not (iAction or bAction or onAction or offAction) then
+		if not (iAction or bAction or onAction or offAction or choiceAction) then
 			bAction = _safeDeref(chunk, 'base', 'actions', actionName)
 			iAction = _safeDeref(item, 'actions', actionName)
 		else
@@ -1242,13 +1268,15 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item)
 		
 		-- XXX: Fred: After an input box is used, chunk is nil, so base can't be used
 	
-		if iAction or bAction then
-	
+		if iAction or bAction or choiceAction then
 			-- the resulting action, if any
 			local jsonAction
 	
+			-- special case, handling a choice item action
+			if choiceAction and selectedIndex then
+				jsonAction = _safeDeref(item, 'actions', actionName, 'choices', selectedIndex)
 			-- process an item action first
-			if iAction then
+			elseif iAction then
 				log:debug("_actionHandler(", actionName, "): item action")
 			
 				-- found a json command
