@@ -22,6 +22,7 @@ local AppletMeta    = require("jive.AppletMeta")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
+local lfs           = require("lfs")
 
 
 module(...)
@@ -34,7 +35,11 @@ end
 
 
 function registerApplet(meta)
-	jiveMain:addItem(meta:menuItem('appletLogSettings', 'advancedSettings', 'DEBUG_LOG', function(applet, ...) applet:logSettings(...) end))
+	-- only make this available if an SD card is slotted in and a /mnt/mmc/log directory is present
+	local SDCARD_PATH = "/mnt/mmc/log"
+	if lfs.attributes(SDCARD_PATH, "mode") == "directory" then
+		jiveMain:addItem(meta:menuItem('appletLogSettings', 'advancedSettings', 'DEBUG_LOG', function(applet, ...) applet:logSettings(...) end))
+	end
 end
 
 
