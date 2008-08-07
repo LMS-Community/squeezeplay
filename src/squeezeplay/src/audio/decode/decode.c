@@ -91,6 +91,7 @@ static void decode_resume_handler(void) {
 
 	if (!fifo_empty(&decode_fifo)) {
 		current_audio_state = DECODE_STATE_RUNNING;
+		decode_audio->resume();
 	}
 
 	DEBUG_TRACE("resume decode state: %x audio state %x", current_decoder_state, current_audio_state);
@@ -109,6 +110,7 @@ static void decode_pause_handler(void) {
 
 	current_decoder_state &= ~DECODE_STATE_RUNNING;
 	current_audio_state &= ~DECODE_STATE_RUNNING;
+	decode_audio->pause();
 
 	DEBUG_TRACE("pause decode state: %x audio state %x", current_decoder_state, current_audio_state);
 }
@@ -548,8 +550,25 @@ static const struct luaL_Reg decode_f[] = {
 
 
 int luaopen_decode(lua_State *L) {
+
+	/* register sample playback */
+	decode_sample_init(L);
+
 	/* initialise audio output */
-	decode_audio = &decode_portaudio;
+#ifdef HAVE_LIBASOUND
+	decode_audio = &decode_alsa;
+#endif
+#ifdef HAVE_LIBPORTAUDIO
+	if (!decode_audio) {
+		decode_audio = &decode_portaudio;
+	}
+#endif
+	if (!decode_audio) {
+		/* no audio support */
+		DEBUG_ERROR("No audio support");
+		return 0;
+	}
+
 	if (!decode_audio->init()) {
 		DEBUG_ERROR("Failed to init audio");
 		return 0;
@@ -564,6 +583,9 @@ int luaopen_decode(lua_State *L) {
 
 	/* register lua functions */
 	luaL_register(L, "squeezeplay.decode", decode_f);
+
+	/* register sample playback */
+	decode_sample_init(L);
 
 	return 0;
 }

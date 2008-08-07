@@ -172,9 +172,6 @@ static int jiveL_init(lua_State *L) {
 	tolua_pushusertype(L, srf, "Surface");
 	lua_setfield(L, -2, "surface");
 
-	/* init audio */
-	jiveL_init_audio(L);
-
 	/* background image */
 	jive_background = jive_tile_fill_color(0x000000FF);
 
@@ -249,9 +246,6 @@ static int init_path(lua_State *L) {
 
 
 static int jiveL_quit(lua_State *L) {
-
-	/* free audio */
-	jiveL_free_audio(L);
 
 	/* de-reference all windows */
 	jiveL_getframework(L);

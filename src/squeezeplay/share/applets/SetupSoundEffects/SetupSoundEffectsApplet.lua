@@ -28,7 +28,6 @@ local io              = require("io")
 local lfs             = require("lfs")
 
 local Applet          = require("jive.Applet")
-local Audio           = require("jive.ui.Audio")
 local Checkbox        = require("jive.ui.Checkbox")
 local RadioButton     = require("jive.ui.RadioButton")
 local RadioGroup      = require("jive.ui.RadioGroup")
@@ -39,6 +38,7 @@ local Icon            = require("jive.ui.Icon")
 local Group           = require("jive.ui.Group")
 local Slider          = require("jive.ui.Slider")
 local Textarea        = require("jive.ui.Textarea")
+local Sample          = require("squeezeplay.sample")
 local jul             = require("jive.utils.log")
 
 local RequestHttp     = require("jive.net.RequestHttp")
@@ -230,13 +230,13 @@ end
 
 
 local VOLUME_STEPS = 20
-local VOLUME_STEP = Audio.MAXVOLUME / VOLUME_STEPS
+local VOLUME_STEP = Sample.MAXVOLUME / VOLUME_STEPS
 
 
 function _setVolume(self, value)
 	local settings = self:getSettings()
 
-	Audio:setEffectVolume(value * VOLUME_STEP)
+	Sample:setEffectVolume(value * VOLUME_STEP)
 
 	self.slider:setValue(value)
 	self.slider:playSound("CLICK")
@@ -248,7 +248,7 @@ end
 function volumeShow(self)
 	local window = Window("window", self:string("SOUND_EFFECTS_VOLUME"), "settingstitle")
 
-	self.slider = Slider("volume", 0, VOLUME_STEPS, Audio:getEffectVolume() / VOLUME_STEP,
+	self.slider = Slider("volume", 0, VOLUME_STEPS, Sample:getEffectVolume() / VOLUME_STEP,
 			     function(slider, value)
 				     self:_setVolume(value)
 			     end)
