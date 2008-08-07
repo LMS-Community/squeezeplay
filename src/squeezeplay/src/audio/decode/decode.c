@@ -584,6 +584,9 @@ int luaopen_decode(lua_State *L) {
 	/* register lua functions */
 	luaL_register(L, "squeezeplay.decode", decode_f);
 
+	/* register sample playback */
+	decode_sample_init(L);
+
 	return 0;
 }
 
