@@ -8,16 +8,30 @@ TEST_KEYPAD
 	DE	Tastenfeld
 	EN	Keypad
 	ES	Teclado
+	FI	Näppäimistö
 	FR	Pavé numérique
 	IT	Tastierino numerico
 	NL	Toetsenblok
+	NO	Taster
+	SV	Knappsats
 
 TEST_KEYPAD_HELP
-	DA	Tryk alle knapper og rullehjulet for at fuldføre.
+	DA	Tryk på alle knapperne og drej på hjulet for at færdiggøre konfigurationen.
 	DE	Zum Abschluss alle Tasten und Rad betätigen.
 	EN	Press all keys and scroll the wheel to complete.
 	ES	Pulse todos los botones y gire la rueda para completar la operación.
+	FI	Suorita loppuun painamalla kaikkia näppäimiä ja vierittämällä kiekolla.
 	FR	Appuyez sur tous les boutons et sur la molette pour terminer le test.
 	IT	Premere tutti i tasti e scorrere la rotellina per completare.
 	NL	Druk alle knoppen in en druk op het wiel om de test te voltooien.
+	NO	Trykk ned alle tastene og rull med hjulet for å fullføre.
+	SV	Slutför genom att trycka på samtliga knappar och rulla på hjulet.
 
+TEST_COMPLETE
+	DA	Test fuldført
+	DE	Test abgeschlossen
+	EN	Test Complete
+	ES	Prueba completada
+	FR	Test terminé
+	IT	Test completato
+	NL	Test voltooid

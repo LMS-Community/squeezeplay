@@ -3,190 +3,269 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SOUND_EFFECTS
-	DA	Lyd effekter
+	DA	Lydeffekter
 	DE	Soundeffekte
 	EN	Sound Effects
 	ES	Efectos de sonido
+	FI	Äänitehosteet
 	FR	Effets sonores
 	IT	Effetti sonori
 	NL	Geluidseffecten
+	NO	Lydeffekter
+	SV	Ljudeffekter
 
 SOUND_SCROLL
 	DA	Rul
 	DE	Scroll
 	EN	Scroll
 	ES	Desplazarse
+	FI	Vieritä
 	FR	Défiler
 	IT	Scorri
 	NL	Scrollen
+	NO	Bla
+	SV	Rullning
 
 SOUND_NAVIGATION
 	DA	Navigation
 	DE	Navigation
 	EN	Navigation
 	ES	Navegación
+	FI	Siirtyminen
 	FR	Navigation
 	IT	Esplorazione
 	NL	Navigatie
+	NO	Navigasjon
+	SV	Navigering
 
 SOUND_PLAYBACK
 	DA	Afspilning
 	DE	Wiedergabe
 	EN	Playback
 	ES	Reproducción
+	FI	Toisto
 	FR	Lecture
 	IT	Riproduzione
 	NL	Afspelen
+	NO	Avspilling
+	SV	Uppspelning
 
 SOUND_VOLUME
 	DA	Lydstyrke
 	DE	Lautstärke
 	EN	Volume
 	ES	Volumen
+	FI	Äänenvoimakkuus
 	FR	Volume
 	IT	Volume
 	NL	Volume
+	NO	Lydstyrke
+	SV	Volym
 
 SOUND_CHARGING
 	DA	Oplader
 	DE	Wird aufgeladen
 	EN	Charging
 	ES	Cargando
+	FI	Latauksessa
 	FR	Chargement en cours
 	IT	Caricamento
 	NL	Bezig met opladen
+	NO	Lader
+	SV	Laddar
 
 SOUND_NONE
 	DA	Ingen
 	DE	Kein
 	EN	None
 	ES	Ninguno
+	FI	Ei mitään
 	FR	Aucun
 	IT	Nessuno
 	NL	Geen
+	NO	Ingen
+	SV	Ingen
 
 SOUND_EFFECTS_VOLUME
 	DA	Lydstyrke for effekter
 	DE	Effektlautstärke
 	EN	Effects Volume
 	ES	Volumen de efectos
+	FI	Tehosteiden äänenvoimakkuus
 	FR	Volume des effets
 	IT	Volume effetti
 	NL	Volume van effecten
+	NO	Effektvolum
+	SV	Effektvolym
 
 SOUND_VOLUME_HELP
-	DA	Brug hjulet for at justere lydstyrken for lyd effekter.
+	DA	Brug drejeknappen til at justere styrken af lydeffekter.
 	DE	Passen Sie die Lautstärke der Effekte mit dem Rad an.
 	EN	Use the wheel to adjust the volume of the sound effects.
 	ES	Use la rueda para ajustar el volumen de los efectos de sonido.
+	FI	Säädä äänitehosteiden äänenvoimakkuutta kiekolla.
 	FR	Utilisez la molette pour régler le volume des effets sonores.
 	IT	Usare la rotellina per regolare il volume degli effetti sonori.
 	NL	Gebruik het wiel om het volume van de geluidseffecten aan te passen.
+	NO	Bruk hjulet til å justere volumet på lydeffektene.
+	SV	Justera volymen på ljudeffekterna med hjälp av rullningshjulet
 
 SOUND_CUSTOMIZE
+	DA	Tilpas lyde
 	DE	Sounds anpassen
 	EN	Customize Sounds
 	ES	Personalizar sonidos
+	FI	Mukauta äänet
 	FR	Personnaliser les sons
 	IT	Personalizza suoni
 	NL	Geluiden aanpassen
+	NO	Tilpass lyder
+	SV	Anpassa ljud
 
 SOUND_DEFAULT
+	DA	Standard
 	DE	Standard
 	EN	Default
 	ES	Predeterminada
+	FI	Oletus
 	FR	Défaut
 	IT	Predefinito
 	NL	Standaard
+	NO	Standard
+	SV	Standard
 
 SOUND_BUMP
+	DA	Menubump
 	DE	Menü-Bump
 	EN	Menu Bump
 	ES	Menú Choque
+	FI	Valikon tönäisy
 	FR	Bip de menu
 	IT	Voce di menu respinta
 	NL	Menu-bump
+	NO	Menystopp
+	SV	Ogiltigt menyval
 
 SOUND_CLICK
+	DA	Klik på
 	DE	Klicken
 	EN	Click
 	ES	Clic
+	FI	Napsauta
 	FR	Cliquer
 	IT	Clic
 	NL	Klikken
+	NO	Klikk
+	SV	Klickning
 
 SOUND_JUMP
+	DA	Spring
 	DE	Jump (Springen)
 	EN	Jump
 	ES	Salto
+	FI	Hyppy
 	FR	Jump (Saut)
 	IT	Jump (Salta)
 	NL	Springen
+	NO	Hopp
+	SV	Hopp
 
 SOUND_WINDOWSHOW
+	DA	Vis nyt vindue
 	DE	Neues Fenster anzeigen
 	EN	Show New Window
 	ES	Mostrar nueva ventana
+	FI	Näytä uusi ikkuna
 	FR	Afficher une nouvelle fenêtre
 	IT	Mostra nuova finestra
 	NL	Nieuw venster weergeven
+	NO	Vis nytt vindu
+	SV	Visa nytt fönster
 
 SOUND_WINDOWHIDE
+	DA	Skjul vindue
 	DE	Fenster ausblenden
 	EN	Hide Window
 	ES	Ocultar ventana
+	FI	Piilota ikkuna
 	FR	Masquer la fenêtre
 	IT	Nascondi finestra
 	NL	Venster verbergen
+	NO	Skjul vindu
+	SV	Dölj fönster
 
 SOUND_SELECT
+	DA	Vælg menupunkt
 	DE	Im Menü ausgewähltes Element
 	EN	Menu Select Item
 	ES	Seleccionar elemento de menú
+	FI	Valikkokohdan valinta
 	FR	Menu Sélectionner un élément
 	IT	Selezione voce di menu
 	NL	Item voor menuselectie
+	NO	Menyvalg
+	SV	Val av menyalternativ
 
 SOUND_PLAYBACK
 	EN	Playback
 
 SOUND_DOCKING
+	DA	Fastgørelse
 	DE	Docking
 	EN	Docking
 	ES	Acoplamiento
+	FI	Telakointi
 	FR	Connexion
 	IT	Alloggiamento
 	NL	Bezig met docken
+	NO	Dokking
+	SV	Dockning
 
 SOUND_STARTUP
+	DA	Programstart
 	DE	Start
 	EN	Startup
 	ES	Inicio
+	FI	Käynnistys
 	FR	Démarrage
 	IT	Avvio
 	NL	Opstarten
+	NO	Oppstart
+	SV	Start
 
 SOUND_SHUTDOWN
+	DA	Luk
 	DE	Herunterfahren
 	EN	Shutdown
 	ES	Apagar
+	FI	Sammuta
 	FR	Arrêter
 	IT	Chiusura
 	NL	Afsluiten
+	NO	Slå av
+	SV	Avstängning
 
 SOUND_CUSTOM_HELP
+	DA	Vælg den handling der skal tilpasses.
 	DE	Wählen Sie die anzupassende Aktion aus.
 	EN	Select the action that you would like to customize.
 	ES	Seleccione la acción que desea personalizar.
+	FI	Valitse toiminto, jota haluat mukauttaa.
 	FR	Sélectionnez l'action que vous souhaitez personnaliser.
 	IT	Selezionare l'azione da personalizzare.
 	NL	Selecteer de actie die je wilt aanpassen.
+	NO	Velg hendelsen du ønsker å tilpasse.
+	SV	Välj den åtgärd du vill anpassa.
 
 SOUND_CUSTOMSOUND_HELP
+	DA	Vælg den lyd der skal bruges ved denne handling.
 	DE	Wählen Sie den Sound, der für diese Aktion verwendet werden soll.
 	EN	Select the sound you would like to use for this action.
 	ES	Seleccione el sonido que desea utilizar para esta acción.
+	FI	Valitse ääni, jota haluat käyttää tämän toiminnon kanssa.
 	FR	Sélectionnez le son que vous souhaitez utiliser pour cette action.
 	IT	Selezionare il suono da utilizzare per questa azione.
 	NL	Selecteer het geluid dat je voor deze actie wilt gebruiken.
+	NO	Velg lyden du vil bruke for denne hendelsen.
+	SV	Välj ljud för den här åtgärden.
 

@@ -12,176 +12,242 @@ SLIMBROWSER_PLAYLIST
 	NL	Playlist
 
 SLIMBROWSER_NOW_PLAYING
-	DA	Afspiller nu
+	DA	Nu spiller
 	DE	Aktueller Titel
 	EN	Now Playing
 	ES	Reproduciendo
+	FI	Nyt soi
 	FR	Lecture en cours
 	IT	Riproduzione in corso
 	NL	Speelt nu
+	NO	Spilles nå
+	SV	Aktuellt spår
 
 SLIMBROWSER_CURRENT_PLAYLIST
-	DA	Aktiv spilleliste
+	DA	Nuværende afspilningsliste
 	DE	Aktuelle Wiedergabeliste
 	EN	Current Playlist
 	ES	Lista de reproducción actual
+	FI	Nykyinen soittoluettelo
 	FR	Liste de lecture en cours
 	IT	El. di riproduz. corrente
 	NL	Huidige playlist
+	NO	Gjeldende spilleliste
+	SV	Aktuell spellista
 
 SLIMBROWSER_PAUSED
 	DA	Pause
 	DE	Pause
 	EN	Paused
 	ES	En pausa
+	FI	Tauotettu
 	FR	En pause
 	IT	In pausa
 	NL	Gepauzeerd
+	NO	Pause
+	SV	Pausad
 
 SLIMBROWSER_STOPPED
-	DA	Stop
+	DA	Stoppet
 	DE	Angehalten
 	EN	Stopped
 	ES	Detenido
+	FI	Pysäytetty
 	FR	Arrêté
 	IT	Arrestato
 	NL	Gestopt
+	NO	Stoppet
+	SV	Stoppad
 
 SLIMBROWSER_SEARCH_HELP
-	DA	Brug rullehjulet for at skifte bokstav og midterknappen for at vælge bokstav. Tryk midterknappen igen for at begynde søgning.
+	DA	Brug drejeknappen til at skifte bogstav, og tryk på midterknappen for at vælge det. Tryk på midterknappen igen for at begynde søgningen.
 	DE	Wählen Sie den gewünschten Buchstaben mit dem Rad und drücken Sie zum Bestätigen die mittlere Taste. Drücken Sie zum Starten der Suche die mittlere Taste erneut.
 	EN	Use the scroll wheel to change letters, then press the center button to select that letter. Press the center button again to start your search.
 	ES	Cambie de letra con la rueda de desplazamiento y pulse el botón central para seleccionarla. Pulse de nuevo el botón central para iniciar la búsqueda.
+	FI	Voit vaihtaa kirjainta vierityskiekolla ja valita kirjaimen keskipainikkeella. Käynnistä haku painamalla keskipainiketta uudelleen.
 	FR	Utiliser le bidule pour choisir une lettre, plus appuyer sur le bouton central afin de la sélectionner. Appuyer à nouveau sur le bouton central pour démarrer la recherche.
 	IT	Usa la rotellina per cambiare le lettere e premi il pulsante centrale per selezionarle. Premi nuovamente il pulsante centrale per avviare la ricerca.
 	NL	Gebruik het scrollwiel om letters te wijzigen. Druk dan op de middelste knop om die letter te selecteren. Druk nogmaals op de middelste knop om je zoekopdracht te starten.
+	NO	Du kan endre bokstav med rullehjulet, og velge bokstav med midtknappen. Trykk på midtknappen på nytt for å starte søket.
+	SV	Markera en bokstav med rullningshjulet och tryck sedan på mittknappen för att välja bokstaven. Tryck på mittknappen igen när du vill börja söka.
 
 SLIMBROWSER_PROBLEM_CONNECTING
-	DA	Problem med tilslutning
+	DA	Problem med forbindelsen
 	DE	Verbindungsproblem
 	EN	Problem Connecting
 	ES	Problema de conexión
+	FI	Yhteyttä ei voi muodostaa
 	FR	Problème de connexion
 	IT	Problema di connessione
 	NL	Probleem bij verbinden
+	NO	Klarer ikke å kople til
+	SV	Det uppstod ett problem vid anslutningen
 
 SLIMBROWSER_TRY_AGAIN
-	DA	Forsøg igen
+	DA	Prøv igen
 	DE	Erneut versuchen
 	EN	Try Again
 	ES	Vuelva a intentarlo
+	FI	Yritä uudelleen
 	FR	Réessayer
 	IT	Riprova
 	NL	Opnieuw proberen
+	NO	Prøv igjen
+	SV	Försök igen
 
 SLIMBROWSER_CHOOSE_MUSIC_SOURCE
 	DA	Vælg musikkilde
 	DE	Musikquelle wählen
 	EN	Choose Music Source
 	ES	Elija origen de música
+	FI	Valitse musiikkilähde
 	FR	Sélection d'une source musicale
 	IT	Scegliere la sorgente musicale
 	NL	Muziekbron kiezen
+	NO	Velg musikkilde
+	SV	Välj musikkälla
 
 SLIMBROWSER_CHOOSE_PLAYER
 	DA	Vælg afspiller
 	DE	Player auswählen
 	EN	Choose Player
 	ES	Elegir reproductor
+	FI	Valitse soitin
 	FR	Sélectionner lecteur
 	IT	Scegli lettore
 	NL	Muzieksysteem kiezen
+	NO	Velg spiller
+	SV	Välj spelare
 
 SLIMBROWSER_PROBLEM_CONNECTING_HELP
+	DA	Der er problemer med at oprette forbindelse til %s
 	DE	Problem bei der Verbindung mit %s
 	EN	There is a problem connecting to %s
 	ES	Problema al conectar a %s
+	FI	Yhteyttä ei voida muodostaa kohteeseen %s
 	FR	%s ne peut se connecter à %s
 	IT	Problema di connessione a %s
 	NL	Probleem bij verbinden met %s
+	NO	Klarer ikke å kople til %s
+	SV	Det går inte att ansluta till %.
 
 SLIMBROWSER_NOTHING
 	DA	Intet
 	DE	Nichts
 	EN	Nothing
 	ES	Nada
+	FI	Ei mitään
 	FR	Rien
 	IT	Niente
 	NL	Niets
+	NO	Ingenting
+	SV	Ingenting
 
 SLIMBROWSER_OFF
-	DA	Sluk
+	DA	Fra
 	DE	Aus
 	EN	Off
 	ES	Desactivado
+	FI	Ei käytössä
 	FR	Désactivé
 	IT	Disattivato
 	NL	Uit
+	NO	Av
+	SV	Av
 
 SLIMBROWSER_CONNECTING_TO
-	DA	tilslutter til\n%s
+	DA	Etablerer forbindelse til\n%s
 	DE	Verbindung mit %s
 	EN	Connecting to\n%s
 	ES	Conectando a\n%s
+	FI	Yhdistetään kohteeseen\n%s
 	FR	Connexion à %s
 	IT	Connessione a %s
 	NL	Er wordt een verbinding met %s gemaakt
+	NO	Kopler til\n%s
+	SV	Ansluter till \n%s
 
 SLIMBROWSER_VOLUME
 	DA	Lydstyrke
 	DE	Lautstärke
 	EN	Volume
 	ES	Volumen
+	FI	Äänenvoimakkuus
 	FR	Volume
 	IT	Volume
 	NL	Volume
+	NO	Lydstyrke
+	SV	Volym
 
 SLIMBROWSER_VOLUME_MUTED
-	DA	Lydstyrke (Lyd fra)
+	DA	Volumen (lyden er slået fra)
 	DE	Lautstärke (Stumm)
 	EN	Volume (Muted)
 	ES	Volumen (silenciado)
+	FI	Äänenvoimakkuus (mykistetty)
 	FR	Volume (SOURDINE)
 	IT	Volume (DISATTIVATO)
 	NL	Volume (gedempt)
+	NO	Volum (av)
+	SV	Volym (av)
 
 SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
+	DA	Opdaterer Squeezebox-firmwaren
 	DE	Squeezebox-Firmware wird aktualisiert
 	EN	Updating Squeezebox firmware
 	ES	Actualizando firmware de Squeezebox
+	FI	Squeezeboxin laitteisto-ohjelmiston päivitys
 	FR	Mise à jour du micrologiciel Squeezebox
 	IT	Aggiornamento firmware Squeezebox
 	NL	Squeezebox-firmware wordt bijgewerkt
+	NO	Oppdaterer Squeezebox-fastvare
+	SV	Uppdaterar Squeezebox-spelarens inbyggda programvara
 
 SLIMBROWSER_SCANNER
+	DA	Nummerets placering
 	DE	Titelposition
 	EN	Song Position
 	ES	Ubicación de canción
+	FI	Kappaleen paikka
 	FR	Emplacement du morceau
 	IT	Posizione brano
 	NL	Positie van nummer
+	NO	Plassering i sangen
+	SV	Spårets placering
 
 SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX
+	DA	Softwareopdateringen til %s er klar. Hold lysstyrkeknappen (Brightness) på den originale fjernbetjening nede for at starte.
 	DE	Software-Update bereit für %s. Halten Sie die Helligkeitstaste auf der Original-Fernbedienung gedrückt.
 	EN	Software Update ready for %s. To begin, press and hold the Brightness button on your original IR remote.
 	ES	La actualización de software para %s está lista. Para iniciarla, mantenga pulsado el botón de brillo en el mando a distancia IR original.
+	FI	Ohjelmistopäivitys valmiina kohteelle %s. Aloita pitämällä alkuperäisen infrapunakaukosäätimen Brightness-painike pohjassa.
 	FR	Mise à jour du logiciel prête pour %s. Pour commencer, appuyez sur le bouton Brightness de votre télécommande infrarouge d'origine et maintenez-le enfoncé.
 	IT	Aggiornamento software pronto per %s. Per iniziare, tenere premuto il tasto BRIGHTNESS sul telecomando IR originale.
 	NL	Software-update gereed voor %s. Houd de helderheidsknop op je oorspronkelijke IR-afstandsbediening ingedrukt om te beginnen.
+	NO	Programvareoppdatering er klar for %s. Trykk og hold nede Brightness-knappen på den opprinnelige ir-fjernkontrollen for å starte.
+	SV	Det finns en programuppdatering för %s tillgänglig. Om du vill påbörja uppdateringen håller du knappen för ljusstyrka på originalfjärrkontrollen nedtryckt.
 
 SLIMBROWSER_PLAYER_UPDATE_REQUIRED
+	DA	Opdatering af afspiller
 	DE	Player-Update
 	EN	Player Update
 	ES	Actualización de reproductor
+	FI	Soittimen päivitys
 	FR	Mise à jour de la platine
 	IT	Aggiornamento lettore
 	NL	Update van muzieksysteem
+	NO	Spilleroppdatering
+	SV	Spelaruppdatering
 
 SLIMBROWSER_ENTER_PASSWORD
+	DA	Indtast adgangskode
 	DE	Kennwort eingeben
 	EN	Enter Password
 	ES	Introduzca la contraseña
+	FI	Anna salasana
 	FR	Saisir le mot de passe
 	IT	Immettere password
 	NL	Wachtwoord invoeren
+	NO	Skriv inn passord
+	SV	Ange lösenord
 

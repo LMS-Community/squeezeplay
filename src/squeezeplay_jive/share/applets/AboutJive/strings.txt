@@ -8,52 +8,70 @@ ABOUT_JIVE
 	DE	Über
 	EN	About
 	ES	Acerca de
+	FI	Tietoja
 	FR	A propos de
 	IT	Info
 	NL	Info
+	NO	Om
+	SV	Om
 
 ABOUT_COPYRIGHT
 	DA	Copyright 2007-2008, Logitech.
 	DE	Copyright 2007-2008, Logitech.
 	EN	Copyright 2007-2008, Logitech.
 	ES	Copyright 2007-2008, Logitech.
+	FI	Copyright 2007-2008, Logitech.
 	FR	Copyright 2007-2008, Logitech.
 	IT	Copyright 2007-2008, Logitech.
 	NL	Copyright 2007-2008, Logitech.
+	NO	Opphavsrett 2007–2008, Logitech.
+	SV	© 2007–2008 Logitech.
 
 ABOUT_MAC_ADDRESS
 	DA	MAC-adresse: %s
 	DE	MAC-Adresse: %s
 	EN	MAC Address: %s
 	ES	Dirección MAC: %s
+	FI	MAC-osoite: %s
 	FR	Adresse MAC: %s
 	IT	Indirizzo MAC: %s
 	NL	MAC-adres: %s
+	NO	MAC-adresse: %s
+	SV	MAC-adress: %s
 
 ABOUT_CREDITS
-	DA	Krediteringer:
+	DA	Tak til:
 	DE	Mitwirkende:
 	EN	Credits:
 	ES	Créditos:
+	FI	Tekijät:
 	FR	Crédits:
 	IT	Riconoscimenti:
 	NL	Credits:
+	NO	Bidragsytere:
+	SV	Erkännanden:
 
 ABOUT_VERSION
 	DA	Version:
 	DE	Version:
 	EN	Version:
 	ES	Versión:
+	FI	Versio:
 	FR	Version:
 	IT	Versione:
 	NL	Versie:
+	NO	Versjon:
+	SV	Version:
 
 ABOUT_ALL_RIGHTS_RESERVED
-	DA	Alle rettigheder reserveret
+	DA	Alle rettigheder forbeholdt.
 	DE	Alle Rechte vorbehalten
 	EN	All Rights Reserved
 	ES	Reservados todos los derechos
+	FI	Kaikki oikeudet pidätetään
 	FR	Tous droits réservés
 	IT	Tutti i diritti riservati
 	NL	Alle rechten voorbehouden
+	NO	Med enerett
+	SV	Med ensamrätt
 

@@ -1,11 +1,22 @@
 #
 
 INFOBROWSER
-	DA	Informationslæser
+	DA	Informationsaflæser
 	DE	Informations-Browser
 	EN	Information Browser
 	ES	Navegador de información
+	FI	Informaatioselain
 	FR	Navigateur d'informations
 	IT	Browser informazioni
 	NL	Informatiebrowser
+	NO	Informasjonsleser
+	SV	Informationswebbläsare
 
+INFOBROWSER_NORESPONSE
+	EN	No information feeds found.  Please check the Information Browser plugin is enabled on your server.
+
+INFOBROWSER_NOINFO_SN
+	EN	No information feeds found.  Please login to your SqueezeNetwork account and add information feeds.
+
+INFOBROWSER_NOINFO_SC
+	EN	No information feeds found.  Please use the SqueezeCenter web interface to add information feeds under Extras/Info Browser.

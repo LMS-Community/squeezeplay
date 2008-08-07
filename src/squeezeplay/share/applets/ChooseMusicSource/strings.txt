@@ -7,88 +7,118 @@ SLIMSERVER_SERVERS
 	DE	Musikquelle
 	EN	Music Source
 	ES	Origen de música
+	FI	Musiikkilähde
 	FR	Source musicale
 	IT	Sorgente musicale
 	NL	Muziekbron
+	NO	Musikkilde
+	SV	Musikkälla
 
 SLIMSERVER_ADD_SERVER
-	DA	Anden Server
+	DA	Anden server
 	DE	Anderer Server
 	EN	Other Server
 	ES	Otro servidor
+	FI	Toinen palvelin
 	FR	Autres services
 	IT	Altro server
 	NL	Andere server
+	NO	Annen server
+	SV	Annan server
 
 SLIMSERVER_SQUEEZENETWORK
 	DA	SqueezeNetwork
 	DE	SqueezeNetwork
 	EN	SqueezeNetwork
 	ES	SqueezeNetwork
+	FI	SqueezeNetwork
 	FR	SqueezeNetwork
 	IT	SqueezeNetwork
 	NL	SqueezeNetwork
+	NO	SqueezeNetwork
+	SV	SqueezeNetwork
 
 SLIMSERVER_HELP
-	DA	Indtast IP adressen på computeren som kører SqueezeCenter.
+	DA	Angiv IP-adressen på den computer hvor SqueezeCenter kører
 	DE	IP-Adresse des Computers mit SqueezeCenter eingeben
 	EN	Enter the IP address of the computer running SqueezeCenter
 	ES	Escriba la dirección IP del ordenador que ejecuta SqueezeCenter
+	FI	Anna sen tietokoneen IP-osoite, johon SqueezeCenter on asennettu
 	FR	Spécifiez l'adresse IP de l'ordinateur exécutant SqueezeCenter
 	IT	Inserire l'indirizzo IP del computer in cui è in esecuzione SqueezeCenter
 	NL	Voer het IP-adres in van de computer waarop SqueezeCenter wordt uitgevoerd
+	NO	Oppgi ip-adressen til datamaskinen som kjører SqueezeCenter
+	SV	Ange IP-adressen till datorn där SqueezeCenter körs
 
 SLIMSERVER_CONNECTING_TO
-	DA	Tilslutter til\n%s
+	DA	Etablerer forbindelse til\n%s
 	DE	Verbindung wird hergestellt mit\n%s
 	EN	Connecting to\n%s
 	ES	Conectando a\n%s
+	FI	Yhdistetään kohteeseen\n%s
 	FR	Connexion à\n%s
 	IT	Connessione a \n%s
 	NL	Bezig verbinding te maken met\n%s
+	NO	Kopler til\n%s
+	SV	Ansluter till \n%s
 
 SLIMSERVER_CONNECTED_TO
-	DA	Tilsluttet til \n%s
+	DA	Afspilleren er tilsluttet\n%s
 	DE	Verbunden mit\n%s
 	EN	Connected to\n%s
 	ES	Conexión a\n%s
+	FI	Yhdistetty kohteeseen\n%s
 	FR	Connecté à\n%s
 	IT	Connesso a\n%s
 	NL	Verbonden met\n%s
+	NO	Koplet til\n%s
+	SV	Ansluten till \n%s
 
 SQUEEZEBOX_PROBLEM
-	DA	Problem med tilslutning
+	DA	Problem med forbindelsen
 	DE	Verbindungsproblem
 	EN	Problem Connecting
 	ES	Problema de conexión
+	FI	Yhteyttä ei voi muodostaa
 	FR	Problème de connexion
 	IT	Problema di connessione
 	NL	Probleem bij verbinden
+	NO	Klarer ikke å kople til
+	SV	Det uppstod ett problem vid anslutningen
 
 SQUEEZEBOX_GO_BACK
-	DA	Tilbage
+	DA	Gå tilbage
 	DE	Zurück
 	EN	Go back
 	ES	Regresar
+	FI	Takaisin
 	FR	Retour
 	IT	Indietro
 	NL	Terug
+	NO	Gå tilbake
+	SV	Tillbaka
 
 SQUEEZEBOX_TRY_AGAIN
-	DA	Forsøg igen
+	DA	Prøv igen
 	DE	Erneut versuchen
 	EN	Try again
 	ES	Vuelva a intentarlo
+	FI	Yritä uudelleen
 	FR	Réessayer
 	IT	Riprova
 	NL	Opnieuw proberen
+	NO	Prøv igjen
+	SV	Försök igen
 
 SQUEEZEBOX_PROBLEM_HELP
-	DA	Kunne ikke tilslutte %s til %s.
+	DA	Squeezebox kunne ikke sluttes til dit trådløse netværk. Sørg for at afspilleren er inden for det trådløse netværks rækkevidde.
 	DE	Die Squeezebox konnte nicht mit dem kabellosen Netzwerk verbunden werden. Vergewissern Sie sich, dass sie sich in Reichweite befindet.
 	EN	Could not connect %s to %s.
 	ES	No se pudo conectar Squeezebox a la red inalámbrica. Compruebe que se encuentre dentro del radio de la red inalámbrica.
+	FI	Squeezeboxin ja langattoman verkon välille ei voitu muodostaa yhteyttä. Varmista, että laite on langattoman verkon kantamalla.
 	FR	Impossible de connecter la Squeezebox à un réseau sans fil. Vérifiez qu'elle est à portée du réseau.
 	IT	Impossibile connettere Squeezebox alla rete senza fili. Verificare che si trovi entro la portata della rete senza fili.
 	NL	Je Squeezebox kan niet met je draadloze netwerk worden verbonden. Zorg dat het apparaat zich binnen het bereik van je draadloze netwerk bevindt.
+	NO	Kunne ikke kople Squeezebox til det trådløse nettverket. Forsikre deg om at den er innenfor rekkevidden til det trådløse nettverket ditt.
+	SV	Det gick inte att ansluta Squeezebox till det trådlösa nätverket. Se till att spelaren är placerad inom räckvidden för det trådlösa nätverket.
 

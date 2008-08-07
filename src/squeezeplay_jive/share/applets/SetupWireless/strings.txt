@@ -8,594 +8,792 @@ NETWORK
 	DE	Kabelloses Netzwerk
 	EN	Wireless Network
 	ES	Red inalámbrica
+	FI	Langaton verkko
 	FR	Réseau sans fil
 	IT	Rete senza fili
 	NL	Draadloos netwerk
+	NO	Trådløst nettverk
+	SV	Trådlöst nätverk
 
 NETWORK_FINDING_NETWORKS
-	DA	\nSøger netværk
+	DA	\nSøger efter netværk
 	DE	\nNetzwerksuche
 	EN	\nFinding Networks
 	ES	\nBuscando redes
+	FI	\nEtsitään verkkoja
 	FR	\nRecherche de réseaux
 	IT	\nRilevamento delle reti
 	NL	\nBezig met zoeken naar netwerken
+	NO	\nFinner nettverk
+	SV	\nSöker efter nätverk
 
 NETWORK_BSSID
 	DA	BSSID:
 	DE	BSSID:
 	EN	BSSID:
 	ES	BSSID:
+	FI	BSSID:
 	FR	BSSID:
 	IT	BSSID:
 	NL	BSSID:
+	NO	BSSID:
+	SV	BSSID:
 
 NETWORK_ENCRYPTION
 	DA	Kryptering:
 	DE	Verschlüsselung:
 	EN	Encryption:
 	ES	Cifrado:
+	FI	Salaus:
 	FR	Chiffrement:
 	IT	Crittografia:
 	NL	Codering:
+	NO	Kryptering:
+	SV	Kryptering:
 
 NETWORK_CONNECT_TO_NETWORK
-	DA	Tilslut til netværk
+	DA	Opret forbindelse til netværk
 	DE	Verbindung zum Netzwerk herstellen
 	EN	Connect to network
 	ES	Conectar a red
+	FI	Muodosta yhteys verkkoon
 	FR	Connecter au réseau
 	IT	Connetti alla rete
 	NL	Verbinding met netwerk maken
+	NO	Kople til nettverk
+	SV	Anslut till nätverket
 
 NETWORK_ENTER_ANOTHER_NETWORK
 	DA	Andet netværk
 	DE	Anderes Netzwerk
 	EN	Other Network
 	ES	Otra red
+	FI	Toinen verkko
 	FR	Autre réseau
 	IT	Altra rete
 	NL	Ander netwerk
+	NO	Annet nettverk
+	SV	Annat nätverk
 
 NETWORK_FORGET_NETWORK
 	DA	Glem netværk
 	DE	Netzwerk vergessen
 	EN	Forget network
 	ES	Olvidar red
+	FI	Unohda verkko
 	FR	Ignorer le réseau
 	IT	Ignora rete
 	NL	Netwerk vergeten
+	NO	Glem nettverk
+	SV	Glöm nätverk
 
 NETWORK_FORGET_CANCEL
-	DA	Afbryd
+	DA	Annuller
 	DE	Abbrechen
 	EN	Cancel
 	ES	Cancelar
+	FI	Peruuta
 	FR	Annuler
 	IT	Annulla
 	NL	Annuleren
+	NO	Avbryt
+	SV	Avbryt
 
 NETWORK_FORGET_CONFIRM
 	DA	Glem %s
 	DE	%s vergessen
 	EN	Forget %s
 	ES	Olvidar %s
+	FI	Unohda %s
 	FR	Ignorer %s
 	IT	Ignora %s
 	NL	%s vergeten
+	NO	Glem %s
+	SV	Glöm %s
 
 NETWORK_FORGET_HELP
-	DA	Vælg Glem %s for at bekræfte at du vil fjerne indstillinger for dette netværk.
+	DA	Du skal vælge Glem %s for at bekræfte at indstillingerne for dette netværk skal slettes.
 	DE	Wählen Sie "%s vergessen", um zu bestätigen, dass diese Einstellungen nicht mehr relevant sind.
 	EN	Choose Forget %s to confirm that you want to forget the settings for this network.
 	ES	Elija Olvidar %s para confirmar que desea olvidar la configuración para esta red.
+	FI	Vahvista, että haluat unohtaa tämän verkon asetukset, valitsemalla Unohda %s.
 	FR	Sélectionnez Ignorer %s pour confirmer que vous souhaitez ignorer les paramètres du réseau.
 	IT	Scegliere Ignora %s per confermare che si desidera ignorare le impostazioni di questa rete.
 	NL	Kies '%s vergeten' om te bevestigen dat de instellingen voor dit netwerk vergeten moeten worden.
+	NO	Velg Glem %s for å bekrefte at du vil glemme innstillingene for dette nettverket.
+	SV	Välj Glöm %s för att bekräfta att du vill ta bort inställningarna för det här nätverket.
 
 NETWORK_FORGOTTEN
-	DA	Glemmmer
+	DA	Glemmer
 	DE	Vergessen
 	EN	Forgotting
 	ES	Olvidando
+	FI	Unohdetaan
 	FR	Ignorer
 	IT	Rete ignorata
 	NL	Bezig met vergeten
+	NO	Glemmer
+	SV	Glömmer
 
 NETWORK_FORGOTTEN_NETWORK
-	DA	Glemt %s
+	DA	Har glemt %s
 	DE	%s vergessen
 	EN	Forgotten %s
 	ES	%s olvidada
+	FI	Unohdettu %s
 	FR	Ignorer %s
 	IT	%s dimenticata
 	NL	%s vergeten
+	NO	Glemt %s
+	SV	%s glömt
 
 NETWORK_NF
 	DA	NF:
 	DE	NF:
 	EN	NF:
 	ES	No encontrada:
+	FI	NF:
 	FR	NF:
 	IT	NF:
 	NL	NF:
+	NO	NF:
+	SV	NF:
 
 NETWORK_RSSI
 	DA	RSSI:
 	DE	RSSI:
 	EN	RSSI:
 	ES	RSSI:
+	FI	RSSI:
 	FR	RSSI:
 	IT	RSSI:
 	NL	RSSI:
+	NO	RSSI:
+	SV	RSSI:
 
 NETWORK_SSID
 	DA	SSID:
 	DE	SSID:
 	EN	SSID:
 	ES	SSID:
+	FI	SSID:
 	FR	SSID:
 	IT	SSID:
 	NL	SSID:
+	NO	SSID:
+	SV	SSID:
 
 NETWORK_SNR
-	DA	SNR:
+	DA	Signal/støjforhold:
 	DE	SNR:
 	EN	SNR:
 	ES	SNR:
+	FI	SNR:
 	FR	SNR:
 	IT	SNR:
 	NL	SNR:
+	NO	SNR:
+	SV	Brusvärde:
 
 NETWORK_BITRATE
-	DA	Tx rate:
+	DA	Transmissionshastighed:
 	DE	Übertragungsrate:
 	EN	Tx rate:
 	ES	Velocidad Tx:
+	FI	Siirtonopeus:
 	FR	Débit du transfert:
 	IT	Velocità trasferimento:
 	NL	Overdrachtssnelheid:
+	NO	Overføringshastighet:
+	SV	Överföringshastighet:
 
 NETWORK_STATE
-	DA	Tilstand:
+	DA	Status:
 	DE	Zustand:
 	EN	State:
 	ES	Estado:
+	FI	Osavaltio:
 	FR	Etat:
 	IT	Stato:
 	NL	Status:
+	NO	Status:
+	SV	Status:
 
 NETWORK_STATE_DISCONNECTED
-	DA	Ikke tilsluttet
+	DA	Forbindelsen er afbrudt
 	DE	Getrennt
 	EN	Disconnected
 	ES	Desconectado
+	FI	Yhteys katkaistu
 	FR	Déconnecté
 	IT	Disconnesso
 	NL	Verbinding verbroken
+	NO	Frakoplet
+	SV	Frånkopplad
 
 NETWORK_STATE_SCANNING
-	DA	Søger...
+	DA	Søger
 	DE	Suche...
 	EN	Scanning
 	ES	Examinando
+	FI	Tarkistetaan
 	FR	Analyse
 	IT	Scansione in corso
 	NL	Bezig met scannen
+	NO	Søker
+	SV	Söker
 
 NETWORK_STATE_CONNECTING
-	DA	Tilslutter
+	DA	Opretter forbindelse...
 	DE	Verbindung
 	EN	Connecting
 	ES	Conectando
+	FI	Yhdistää
 	FR	Connexion
 	IT	Connessione...
 	NL	Bezig met verbinden
+	NO	Kopler til
+	SV	Ansluter
 
 NETWORK_STATE_HANDSHAKE
-	DA	Forhandler
+	DA	Handshake
 	DE	Handshake
 	EN	Handshake
 	ES	Enlace
+	FI	Kättely
 	FR	Connexion
 	IT	Handshake
 	NL	Handshake
+	NO	Handshake
+	SV	Handshake
 
 NETWORK_STATE_CONNECTED
 	DA	Tilsluttet
 	DE	Verbunden
 	EN	Connected
 	ES	Conectado
+	FI	Yhdistetty
 	FR	Connecté
 	IT	Connesso
 	NL	Verbonden
+	NO	Tilkoplet
+	SV	Ansluten
 
 NETWORK_STATUS
-	DA	Status for netværk
+	DA	Netværksstatus
 	DE	Netzwerkstatus
 	EN	Network Status
 	ES	Estado de red
+	FI	Verkon tila
 	FR	Statut du réseau
 	IT	Stato della rete
 	NL	Netwerkstatus
+	NO	Nettverksstatus
+	SV	Nätverksstatus
 
 NETWORK_UNSUPPORTED_TYPES_HELP
-	DA	WPA-EAP og WPA2-EAP er ikke understøttet.
+	DA	Krypteringstyperne WPA-EAP og WPA2-EAP understøttes ikke.
 	DE	WPA-EAP und WPA2-EAP werden nicht unterstützt.
 	EN	WPA-EAP and WPA2-EAP are not supported encryption types.
 	ES	WPA-EAP y WPA2-EAP no son tipos de cifrado admitidos.
+	FI	WPA-EAP ja WPA2-EAP eivät ole tuettuja salaustyyppejä.
 	FR	Les types de chiffrement WPA-EAP et WPA2-EAP ne sont pas pris en charge.
 	IT	I tipi di crittografia WPA-EAP e WPA2-EAP non sono supportati.
 	NL	De coderingstypen WPA-EAP en WPA2-EAP worden niet ondersteund.
+	NO	WPA-EAP og WPA2-EAP er ikke støttede krypteringstyper.
+	SV	Krypteringstyperna WPA-EAP och WPA2-EAP stöds inte.
 
 NETWORK_WIRELESS_KEY
-	DA	Trådløs nøgle
+	DA	Nøgle til trådløst netværk
 	DE	WEP-Schlüssel
 	EN	Wireless Key
 	ES	Clave inalámbrica
+	FI	Langaton avain
 	FR	Clé sans fil
 	IT	Chiave rete senza fili
 	NL	Draadloze sleutel
+	NO	Trådløst passord
+	SV	Trådlöst lösenord
 
 NETWORK_WIRELESS_KEY_HELP
-	DA	Indtast din trådløse nøgle. Rul for at skifte tegn, tryk midterknappen for at vælge tegn. Tryk midterknappen to gange for at afslutte.
+	DA	Angiv nøglen til det trådløse netværk. Brug drejeknappen til at skifte bogstav, og tryk på midterknappen for at vælge det. Tryk på midterknappen to gange for at afslutte.
 	DE	Geben Sie den WEP-Schlüssel ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der mittleren Taste. Drücken Sie zum Beenden die mittlere Taste zweimal.
 	EN	Enter your wireless key. Scroll to change letters, press the center button to choose that letter. Press the center button twice to finish.
 	ES	Escriba la clave inalámbrica. Desplace la rueda para cambiar de letra y pulse el botón central para elegirla. Pulse dos veces el botón central para terminar.
+	FI	Anna langattoman verkon avain. Vaihda kirjainta vierittämällä ja valitse kirjain keskipainikkeella. Lopeta painamalla keskipainiketta kahdesti.
 	FR	Entrer la clé sans fil. Faites défiler les lettres et appuyez sur le bouton central pour effectuer la sélection. Appuyez deux fois sur le bouton central pour terminer.
 	IT	Inserire la chiave della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare una lettera. Premere il pulsante centrale due volte per uscire.
 	NL	Voer je draadloze sleutel in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
+	NO	Angi trådløst passord. Bla for å endre bokstav, og trykk på midtknappen for å velge bokstav. Trykk midtknappen to ganger for å avslutte.
+	SV	Ange trådlöst lösenord. Markera en bokstav med rullningshjulet och tryck sedan på mittknappen för att välja bokstaven. Tryck två gånger på mittknappen för att slutföra.
 
 NETWORK_REGION
 	DA	Trådløst område
 	DE	Wireless-Region
 	EN	Wireless Region
 	ES	Región inalámbrica
+	FI	Langaton alue
 	FR	Zone sans fil
 	IT	Area senza fili
 	NL	Draadloze regio
+	NO	Trådløsregion
+	SV	Trådlös region
 
 NETWORK_REGION_US
 	DA	USA og Mexico
 	DE	USA und Mexiko
 	EN	United States & Mexico
 	ES	Estados Unidos y México
+	FI	Yhdysvallat ja Meksiko
 	FR	Etats-Unis et Mexique
 	IT	Stati Uniti e Messico
 	NL	Verenigde Staten en Mexico
+	NO	USA og Mexico
+	SV	USA och Mexiko
 
 NETWORK_REGION_CA
 	DA	Canada
 	DE	Kanada
 	EN	Canada
 	ES	Canadá
+	FI	Kanada
 	FR	Canada
 	IT	Canada
 	NL	Canada
+	NO	Canada
+	SV	Kanada
 
 NETWORK_REGION_EU
 	DA	Europa
 	DE	Europa
 	EN	Europe
 	ES	Europa
+	FI	Eurooppa
 	FR	Europe
 	IT	Europa
 	NL	Europa
+	NO	Europa
+	SV	Europa
 
 NETWORK_REGION_FR
-	DA	Frankrige
+	DA	Frankrig
 	DE	Frankreich
 	EN	France
 	ES	Francia
+	FI	Ranska
 	FR	France
 	IT	Francia
 	NL	Frankrijk
+	NO	Frankrike
+	SV	Frankrike
 
 NETWORK_REGION_AU
 	DA	Australien
 	DE	Australien
 	EN	Australia
 	ES	Australia
+	FI	Australia
 	FR	Australie
 	IT	Australia
 	NL	Australië
+	NO	Australia
+	SV	Australien
 
 NETWORK_REGION_JP
 	DA	Japan
 	DE	Japan
 	EN	Japan
 	ES	Japón
+	FI	Japani
 	FR	Japon
 	IT	Giappone
 	NL	Japan
+	NO	Japan
+	SV	Japan
 
 NETWORK_REGION_CH
 	DA	Kina
 	DE	China
 	EN	China
 	ES	China
+	FI	Kiina
 	FR	Chine
 	IT	Cina
 	NL	China
+	NO	Kina
+	SV	Kina
 
 NETWORK_REGION_TW
 	DA	Taiwan
 	DE	Taiwan
 	EN	Taiwan
 	ES	Taiwan
+	FI	Taiwan
 	FR	Taïwan
 	IT	Taiwan
 	NL	Taiwan
+	NO	Taiwan
+	SV	Taiwan
 
 NETWORK_REGION_HELP
-	DA	Vælg dit lokale område eller land.
+	DA	Vælg lokalområde eller land.
 	DE	Wählen Sie Region oder Land.
 	EN	Choose the local region or country.
 	ES	Elija la región o el país.
+	FI	Valitse alue tai maa.
 	FR	Choisissez votre zone ou pays local.
 	IT	Scegliere il paese o l'area geografica.
 	NL	Kies de regio of het land.
+	NO	Velg region eller land.
+	SV	Välj region eller land.
 
 NETWORK_WIRELESS_NETWORKS
 	DA	Trådløse netværk
 	DE	Kabellose Netzwerke
 	EN	Wireless Networks
 	ES	Redes inalámbricas
+	FI	Langattomat verkot
 	FR	Réseaux sans fil
 	IT	Reti senza fili
 	NL	Draadloze netwerken
+	NO	Trådløse nettverk
+	SV	Trådlöst nätverk
 
 NETWORK_SETTINGS_HELP
-	DA	For at skifte til, eller glemme, et netværk skal du vælge netværksnavnet. For at tilføje et netværk, vælg Andet netværk.
+	DA	Du skal vælge navnet på det netværk som du vil skifte til eller glemme. Hvis du vil tilføje et netværk som ikke er angivet ovenfor, skal du vælge Andet netværk.
 	DE	Wählen Sie den zu ändernden oder zu entfernenden Netzwerknamen aus. Wählen Sie "Anderes Netzwerk", um eines hinzuzufügen.
 	EN	To change to or forget about a network, select the network name. To add a network not listed above, choose Other Network.
 	ES	Para cambiar a una red u olvidar una red, seleccione el nombre de la red. Para agregar una red que no esté en la lista, elija Otra red.
+	FI	Jos haluat vaihtaa toiseen verkkoon tai unohtaa verkon, valitse verkon nimi. Jos haluat lisätä verkon, jota ei ole yllä olevassa luettelossa, valitse Toinen verkko.
 	FR	Pour basculer vers un réseau ou l'ignorer, sélectionnez son nom. Pour ajouter un réseau à la liste, sélectionnez Autre réseau.
 	IT	Per passare a una rete o ignorarla, selezionarne il nome. Per aggiungere una rete non elencata sopra, scegliere Altra rete.
 	NL	Selecteer de netwerknaam om een netwerk te wijzigen of te vergeten. Kies 'Ander netwerk' om een netwerk toe te voegen dat hierboven niet wordt genoemd.
+	NO	Velg et nettverksnavn for å endre eller glemme det. Velg Annet nettverk for å legge til et nettverk som ikke finnes i listen over.
+	SV	Om du vill byta till eller glömma bort ett nätverk markerar du nätverksnamnet. Om du vill lägga till ett nätverk som inte finns i listan väljer du Annat nätverk.
 
 NETWORK_SETUP_HELP
-	DA	Vælg dit trådløse netværk.
+	DA	Vælg trådløst netværk.
 	DE	Wählen Sie Ihr kabelloses Netzwerk.
 	EN	Choose your wireless network.
 	ES	Elija la red inalámbrica.
+	FI	Valitse langaton verkko.
 	FR	Choisissez votre réseau sans fil.
 	IT	Scegliere la rete senza fili.
 	NL	Kies je draadloze netwerk.
+	NO	Velg trådløst nettverk.
+	SV	Välj trådlöst nätverk.
 
 NETWORK_WIRELESS_ENCRYPTION
-	DA	Trådløs kryptering
+	DA	Kryptering for trådløst netværk
 	DE	Kabellose Verschlüsselung
 	EN	Wireless Encryption
 	ES	Cifrado inalámbrico
+	FI	Langattoman verkon salaus
 	FR	Chiffrement du réseau sans fil
 	IT	Crittografia senza fili
 	NL	Draadloze codering
+	NO	Trådløs kryptering
+	SV	Trådlös kryptering
 
 NETWORK_NO_ENCRYPTION
-	DA	Ingen kodeord/ingen kryptering
+	DA	Ingen adgangskode/ingen kryptering
 	DE	Kein Kennwort/keine Verschlüsselung
 	EN	No password/no encryption
 	ES	Sin contraseña/sin cifrado
+	FI	Ei salasanaa / ei salausta
 	FR	Aucun mot de passe/chiffrement
 	IT	Nessuna password/crittografia
 	NL	Geen wachtwoord/geen codering
+	NO	Ingen passord/kryptering
+	SV	Inget lösenord/ingen kryptering
 
 NETWORK_WEP_64
-	DA	64 Bit WEP
+	DA	64-bit WEP
 	DE	64-Bit-WEP
 	EN	64-bit WEP
 	ES	WEP de 64 bits
+	FI	64-bittinen WEP-avain
 	FR	WEP 64 bits
 	IT	WEP a 64 bit
 	NL	64-bits WEP
+	NO	64-biters WEP
+	SV	64-bitars WEP
 
 NETWORK_WEP_128
-	DA	128 Bit WEP
+	DA	128-bit WEP
 	DE	128-Bit-WEP
 	EN	128-bit WEP
 	ES	WEP de 128 bits
+	FI	128-bittinen WEP-avain
 	FR	WEP 128 bits
 	IT	WEP a 128 bit
 	NL	128-bits WEP
+	NO	128-bit WEP
+	SV	128-bit WEP
 
 NETWORK_WPA
-	DA	WPA Personlig
+	DA	WPA Personal
 	DE	WPA-Personal
 	EN	WPA Personal
 	ES	WPA personal
+	FI	WPA Personal
 	FR	WPA personnel
 	IT	WPA Personal
 	NL	WPA (persoonlijk)
+	NO	Personlig WPA
+	SV	WPA Personal
 
 NETWORK_WPA2
-	DA	WPA2 Personlig
+	DA	WPA2 Personal
 	DE	WPA2-Personal
 	EN	WPA2 Personal
 	ES	WPA2 personal
+	FI	WPA2 Personal
 	FR	WPA2 personnel
 	IT	WPA2 Personal
 	NL	WPA2 (persoonlijk)
+	NO	Personlig WPA2
+	SV	WPA2 Personal
 
 NETWORK_WIRELESS_ENCRYPTION_HELP
-	DA	Vælg størrelsen på krypteringsnøglen dit netværk anvender. Nøglen kan bestå af tal 0-9 og bokstaver A-F. 64 Bit nøgler er 10 tegn lange, 128 Bit nøgler 26 tegn lange.
+	DA	Vælg størrelsen på krypteringsnøglen der bruges på netværket. Nøglen kan bestå af cifrene 0-9 og bogstaverne A-F. 64-bit nøgler består af 10 tegn, 128-bit nøgler af 26 tegn.
 	DE	Wählen Sie die Größe des im Netzwerk verwendeten Verschlüsselungsschlüssels. Der Schlüssel darf die Zahlen 0-9 und Buchstaben A-F enthalten. 64-Bit-Schlüssel haben 10, 128-Bit-Schlüssel 26 Stellen.
 	EN	Choose the size of encryption key that your network uses. The key may include digits 0-9 and letters A-F. 64-bit keys are 10 digits long, 128-bit networks are 26 digits long.
 	ES	Elija el tamaño de la clave de cifrado que utiliza la red. La clave puede incluir dígitos del 0 al 9 y letras de la A a la F. Las claves de 64 bits tienen 10 dígitos, mientras que las claves de 128 bits tienen 26 dígitos.
+	FI	Valitse verkossa käytetyn salausavaimen koko. Avaimessa voidaan käyttää numeroita 0-9 ja kirjaimia A-F. 64-bittiset avaimet ovat 10 merkkiä pitkiä, 128-bittiset 26 merkkiä pitkiä.
 	FR	Choisissez le type de chiffrement que votre réseau utilise.
 	IT	Scegliere le dimensioni della chiave di crittografia utilizzata dalla rete. La chiave può essere composta dai numeri da 0 a 9 o dalle lettere da A a F. Le chiavi da 64 bit contengono 10 caratteri, quelle da 128 bit ne contengono 26.
 	NL	Kies de grootte van de coderingssleutel die je netwerk gebruikt. De sleutel kan cijfers (0-9) en letters (A-F) bevatten. 64-bits sleutels zijn 10 tekens lang, 128-bits sleutels zijn 26 tekens lang.
+	NO	Velg størrelsen på krypteringsnøkkel som ditt nettverk bruker. Nøkkelen kan inneholde tallene 0-9 og bokstavene A-F. 64-biters-nøkler er på 10 tegn, 128-biters-nøkler er på 26 tegn.
+	SV	Välj längden på krypteringsnyckeln som används i ditt nätverk. Nyckeln kan innehålla siffror (0–9) och bokstäver (A–F). 64-bitars nycklar är 10 tecken långa, 128-bitars nycklar 26 tecken.
 
 NETWORK_WIRELESS_PASSWORD
-	DA	Trådløst kodeord
+	DA	Adgangskode til trådløst netværk
 	DE	Netzwerkkennwort
 	EN	Wireless Password
 	ES	Contraseña para red inalámbrica
+	FI	Langattoman verkon salasana
 	FR	Mot de passe du réseau sans fil
 	IT	Password senza fili
 	NL	Draadloos wachtwoord
+	NO	Trådløst passord
+	SV	Trådlöst lösenord
 
 NETWORK_WIRELESS_PASSWORD_HELP
-	DA	Indtast trådløst kodeord. Rul for at skifte bokstaver, tryk midterknappen for at vælge. Tryk midterknappen to gange for at afslutte.
+	DA	Angiv adgangskoden til det trådløse netværk. Brug drejeknappen til at skifte bogstav, og tryk på midterknappen for at vælge det. Tryk på midterknappen to gange for at afslutte.
 	DE	Geben Sie Ihr Netzwerkkennwort ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der mittleren Taste. Drücken Sie die mittlere Taste zweimal zum Beenden.
 	EN	Enter your wireless password. Scroll to change letters, press the center button to choose that letter. Press center button twice to finish.
 	ES	Escriba la contraseña para red inalámbrica. Desplácese para cambiar de letra y pulse el botón central para elegir una letra. Pulse dos veces el botón central para terminar.
+	FI	Anna langattoman verkon salasana. Vaihda kirjainta vierittämällä ja valitse kirjain keskipainikkeella. Lopeta painamalla keskipainiketta kahdesti.
 	FR	Saisissez un mot de passe pour votre réseau sans fil. Faites défiler les lettres et appuyez sur le bouton central pour sélectionner la lettre souhaitée. Appuyez deux fois sur le bouton central pour terminer.
 	IT	Inserire la password della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare la lettera. Premere il pulsante centrale due volte per completare l'operazione.
 	NL	Voer je draadloze wachtwoord in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
+	NO	Angi trådløst passord. Rull for å endre bokstav, og trykk på midtknappen for å velge bokstav. Trykk på midtknappen to ganger for å avslutte.
+	SV	Ange lösenordet för det trådlösa nätverket. Markera en bokstav med rullningshjulet och tryck sedan på mittknappen för att välja bokstaven. Tryck två gånger på mittknappen för att slutföra.
 
 NETWORK_CONNECTING_TO
-	DA	Tilslutter til \n%s
+	DA	Etablerer forbindelse til\n%s
 	DE	Verbindung mit\n%s
 	EN	Connecting to\n%s
 	ES	Estableciendo conexión a\n%s
+	FI	Yhdistetään kohteeseen\n%s
 	FR	Connexion à\n%s
 	IT	Connessione a\n%s\nin corso
 	NL	Bezig verbinding te maken met\n%s
+	NO	Kopler til\n%s
+	SV	Ansluter till \n%s
 
 NETWORK_CONNECTED_TO
-	DA	Tilsluttet til \n%s
+	DA	Afspilleren er tilsluttet\n%s
 	DE	Verbunden mit\n%s
 	EN	Connected to\n%s
 	ES	Conexión a\n%s\nestablecida
+	FI	Yhdistetty kohteeseen\n%s
 	FR	Connecté à\n%s
 	IT	Connesso a\n%s
 	NL	Verbonden met\n%s
+	NO	Koplet til\n%s
+	SV	Ansluten till \n%s
 
 NETWORK_CONNECTION_PROBLEM
-	DA	Problem med tilslutning
+	DA	Forbindelsesfejl
 	DE	Verbindungsproblem
 	EN	Connection Problem
 	ES	Problema de conexión
+	FI	Yhteysongelma
 	FR	Problème de connexion
 	IT	Problema di connessione
 	NL	Verbindingsprobleem
+	NO	Tilkoplingsproblem
+	SV	Anslutningsproblem
 
 NETWORK_TRY_AGAIN
-	DA	Forsøg igen
+	DA	Prøv igen
 	DE	Erneut versuchen.
 	EN	Try again
 	ES	Vuelva a intentarlo
+	FI	Yritä uudelleen
 	FR	Réessayer
 	IT	Riprova
 	NL	Opnieuw proberen
+	NO	Prøv igjen
+	SV	Försök igen
 
 NETWORK_EDIT_WIRELESS_KEY
-	DA	Rediger trådløs nøgle
+	DA	Rediger nøglen til trådløst netværk
 	DE	WEP-Schlüssel ändern
 	EN	Edit wireless key
 	ES	Editar clave inalámbrica
+	FI	Muokkaa langatonta avainta
 	FR	Modifier la clé sans fil
 	IT	Modifica chiave senza fili
 	NL	Draadloze sleutel bew.
+	NO	Endre trådløst passord
+	SV	Redigera trådlöst lösenord
 
 NETWORK_TRY_DIFFERENT
-	DA	Forsøg et andet netværk
+	DA	Prøv et andet netværk
 	DE	Anderes Netzwerk versuchen
 	EN	Try different network
 	ES	Pruebe con otra red
+	FI	Kokeile eri verkkoa
 	FR	Essayez avec un réseau différent
 	IT	Prova una rete diversa
 	NL	Ander netwerk proberen
+	NO	Prøv et annet nettverk
+	SV	Försök med ett annat nätverk
 
 NETWORK_GO_BACK
-	DA	Tilbage
+	DA	Gå tilbage
 	DE	Zurück
 	EN	Go back
 	ES	Regresar
+	FI	Takaisin
 	FR	Retour
 	IT	Indietro
 	NL	Terug
+	NO	Gå tilbake
+	SV	Tillbaka
 
 NETWORK_CONNECTION_PROBLEM_HELP
-	DA	Der opstod et problem under tilslutning til dit trådløse netværk.
+	DA	Der opstod et problem da der skulle etableres forbindelse til det trådløse netværk.
 	DE	Problem beim Verbinden mit Ihrem kabellosen Netzwerk.
 	EN	There was a problem connecting to your wireless network.
 	ES	Problema al conectar a la red inalámbrica.
+	FI	Yhteyden muodostamisessa langattomaan verkkoon oli ongelma.
 	FR	Un problème est survenu lors de la connexion à votre réseau sans fil.
 	IT	Si è verificato un problema durante la connessione alla rete senza fili.
 	NL	Er is een probleem opgetreden tijdens het maken van een verbinding met je draadloze netwerk.
+	NO	Det oppsto et problem ved tilkopling til det trådløse nettverket.
+	SV	Det uppstod ett problem vid anslutningen till det trådlösa nätverket.
 
 NETWORK_PROBLEM_PASSWORD_INCORRECT
-	DA	Forkert kodeord.
+	DA	Adgangskoden er forkert.
 	DE	Falsches Kennwort.
 	EN	Your password was incorrect.
 	ES	Contraseña incorrecta.
+	FI	Virheellinen salasana.
 	FR	Votre mot de passe est incorrect.
 	IT	Password errata.
 	NL	Verkeerd wachtwoord.
+	NO	Passordet er feil.
+	SV	Lösenordet du angav är felaktigt.
 
 NETWORK_IP_ADDRESS
-	DA	IP adresse:
+	DA	IP-adresse
 	DE	IP-Adresse:
 	EN	IP Address
 	ES	Dirección IP:
+	FI	IP-osoite
 	FR	Adresse IP:
 	IT	Indirizzo IP:
 	NL	IP-adres:
+	NO	Ip-adresse
+	SV	IP-adress
 
 NETWORK_NETWORK_NAME
-	DA	Netværksnavn
+	DA	Netværkets navn
 	DE	Netzwerkname
 	EN	Network Name
 	ES	Nombre de red
+	FI	Verkon nimi
 	FR	Nom du réseau
 	IT	Nome della rete
 	NL	Netwerknaam
+	NO	Nettverksnavn
+	SV	Nätverksnamn
 
 NETWORK_NETWORK_NAME_HELP
-	DA	Indtast navn på det trådløse netværk. Rul for at skifte bokstav, tryk midterknappen for at vælge. Tryk midterknappen to gange for at afslutte.
+	DA	Angiv navnet på det trådløse netværk. Brug drejeknappen til at skifte bogstav, og tryk på midterknappen for at vælge det. Tryk på midterknappen to gange for at afslutte.
 	DE	Geben Sie den Namen des kabellosen Netzwerks ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der mittleren Taste. Drücken Sie die mittlere Taste zweimal zum Beenden.
 	EN	Enter your wireless network name. Scroll to change letters, press the center button to choose that letter. Press center button twice to finish.
 	ES	Escriba el nombre de la red inalámbrica. Desplácese para cambiar de letra y pulse el botón central para elegir una letra. Pulse dos veces el botón central para terminar.
+	FI	Anna langattoman verkon nimi. Vaihda kirjainta vierittämällä ja valitse kirjain keskipainikkeella. Lopeta painamalla keskipainiketta kahdesti.
 	FR	Saisissez le nom de votre réseau sans fil. Faites défiler les lettres et appuyez sur le bouton central pour sélectionner la lettre souhaitée. Appuyez deux fois sur le bouton central pour terminer.
 	IT	Inserire il nome della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare la lettera. Premere il pulsante centrale due volte per completare l'operazione.
 	NL	Voer de naam van je draadloze netwerk in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
+	NO	Angi navnet på det trådløse nettverket. Bla for å endre bokstav, og trykk på midtknappen for å velge bokstav. Trykk midtknappen to ganger for å avslutte.
+	SV	Ange namnet på det trådlösa nätverket. Markera en bokstav med rullningshjulet och tryck sedan på mittknappen för att välja bokstaven. Tryck två gånger på mittknappen för att slutföra.
 
 NETWORK_ADDRESS_PROBLEM
-	DA	Problem med adresse
+	DA	Adresseproblem
 	DE	Adressenproblem
 	EN	Address Problem
 	ES	Problema de dirección
+	FI	Osoiteongelma
 	FR	Problème d'adresse
 	IT	Problema di indirizzo
 	NL	Adresprobleem
+	NO	Adresseproblem
+	SV	Adressproblem
 
 NETWORK_ADDRESS_HELP
-	DA	Der opstod et problem under hentning af DHCP adresse på dit netværk.
+	DA	Der opstod et problem da DHCP-adressen skulle hentes på dit netværk.
 	DE	Problem bei Abfrage einer DHCP-Adresse in Ihrem Netzwerk.
 	EN	There was a problem obtaining a DHCP address on your network.
 	ES	Problema al obtener una dirección DHCP en la red.
+	FI	Verkon DHCP-osoitteen hankkimisessa oli ongelma.
 	FR	Un problème est survenu lors de l'obtention d'une adresse DHCP du réseau.
 	IT	Impossibile ottenere un indirizzo DHCP nella rete.
 	NL	Er is een probleem met het verkrijgen van een DHCP-adres op je netwerk.
+	NO	Det oppsto et problem med å finne en dhcp-adresse på nettverket.
+	SV	Det gick inte att erhålla en DHCP-adress på nätverket.
 
 NETWORK_ADDRESS_HELP_WEP
-	DA	Kunne ikke tilslutte til dit netværk. Grunden til dette kan være en forkert trådløs nøgle, eller et andet netværksproblem så som MAC filtrering eller manglede DHCP server.
+	DA	Der kunne ikke etableres forbindelse til dit netværk. Det kan skyldes at nøglen til det trådløse netværk er forkert, eller et andet netværksproblem, fx MAC-filtrering på routeren eller en manglede DHCP-server.
 	DE	Verbindung mit Netzwerk nicht möglich. Dies kann an einem falschen WEP-Schlüssel oder einem anderen Problem (MAC-Filter oder fehlernder DHCP-Server) liegen.
 	EN	Couldn't connect to your network. This may be caused by an incorrect wireless key or other network problem such as MAC filtering or missing DHCP server.
 	ES	No ha sido posible la conexión a su red. Puede ser debido a una clave inalámbrica incorrecta o a otro problema de red como, por ejemplo, el filtrado MAC o un servidor DHCP que no se encuentra.
+	FI	Verkkoyhteyttä ei voitu muodostaa. Tämän saattaa aiheuttaa virheellinen langattoman verkon avain tai jokin muu verkko-ongelma, esimerkiksi MAC-suodatus tai puuttuva DHCP-palvelin.
 	FR	Impossible de se connecter au réseau. Cela peut être dû à une clé sans fil incorrecte ou à un autre problème, tel que le filtrage MAC ou l'absence du serveur DHCP.
 	IT	Impossibile connettersi alla rete. È possibile che non sia stata utilizzata la chiave di rete senza fili corretta o che si sia verificato un altro problema, quale un filtraggio MAC o l'assenza di un server DHCP.
 	NL	Kan geen verbinding met je netwerk maken. Dit kan veroorzaakt worden door een onjuiste draadloze sleutel of een ander netwerkprobleem zoals MAC-filtering of een ontbrekende DHCP-server.
+	NO	Kunne ikke kople til nettverket. Dette kan skyldes feil trådløst passord eller et annet nettverksproblem, for eksempel mac-filtrering eller manglende dhcp-server.
+	SV	Det gick inte att ansluta till nätverket. Det kan bero på ett felaktigt trådlöst lösenord eller annat nätverksproblem, t.ex. MAC-filtrering eller att det saknas DHCP-server.
 
 ZEROCONF_ADDRESS
-	DA	Selvtilskrevet IP adresse
+	DA	Selvtildelt IP-adresse
 	DE	IP-Adresse selbst zuweisen
 	EN	Self-assign address
 	ES	Dirección autoasignada
+	FI	Määritä osoite itse
 	FR	Attribuer l'adresse automatiquement
 	IT	Indirizzo assegnato automaticamente
 	NL	Zelf-toewijzend adres
+	NO	Tildel adresse manuelt
+	SV	Tilldela adress manuellt
 
 STATIC_ADDRESS
 	DA	Brug en statisk adresse
 	DE	Statische Adresse verwenden
 	EN	Use a static address
 	ES	Usar una dirección estática
+	FI	Käytä staattista osoitetta
 	FR	Utiliser une adresse fixe
 	IT	Usa un indirizzo statico
 	NL	Statisch adres gebruiken
+	NO	Bruk en statisk ip-adresse
+	SV	Använd en statisk adress
 
 NETWORK_ADDRESS_HELP
 	DA	Der opstod et problem under hentning af DHCP adresse på dit netværk.
@@ -616,101 +814,134 @@ NETWORK_IP_ADDRESS
 	NL	IP-adres:
 
 NETWORK_IP_ADDRESS_HELP
-	DA	Indtast IP adressen for denne fjernbetjening.
+	DA	Angiv denne fjernbetjenings IP-adresse.
 	DE	Geben Sie die IP-Adresse für diese Fernbedienung ein.
 	EN	Enter the IP address for this remote.
 	ES	Escriba la dirección IP del mando.
+	FI	Syötä kaukosäätimen IP-osoite.
 	FR	Entrer l'adresse IP de la télécommande.
 	IT	Inserire l'indirizzo IP del telecomando.
 	NL	Voer het IP-adres voor deze afstandsbediening in.
+	NO	Angi ip-adressen for denne fjernkontrollen.
+	SV	Ange fjärrkontrollens IP-adress.
 
 NETWORK_SUBNET
-	DA	Subnet
+	DA	Undernet
 	DE	Subnetz
 	EN	Subnet
 	ES	Subred
+	FI	Aliverkko
 	FR	Sous-réseau
 	IT	Subnet
 	NL	Subnet
+	NO	Delnett
+	SV	Delnät
 
 NETWORK_SUBNET_HELP
-	DA	Indtast subnet-maske for dit netværk.
+	DA	Angiv undernetmasken for dette netværk.
 	DE	Geben Sie die Subnetzmaske für das Netzwerk ein.
 	EN	Enter the subnet mask for your network.
 	ES	Escriba la máscara de subred de la red.
+	FI	Anna verkon aliverkon peite.
 	FR	Entrer le masque de sous-réseau du réseau.
 	IT	Inserire la subnet mask della rete.
 	NL	Voer het subnetmasker voor je netwerk in.
+	NO	Angi nettverksmaske for dette nettverket.
+	SV	Ange nätmask för ditt nätverk.
 
 NETWORK_GATEWAY
-	DA	Adgangspunkt
+	DA	Gateway
 	DE	Gateway
 	EN	Gateway
 	ES	Puerta de enlace
+	FI	Yhdyskäytävä
 	FR	Passerelle
 	IT	Gateway
 	NL	Gateway
+	NO	Gateway
+	SV	Gateway
 
 NETWORK_GATEWAY_HELP
-	DA	Indtast IP adresse eller din ruter.
+	DA	Angiv routerens IP-adresse
 	DE	Geben Sie die IP-Adresse oder den Router ein.
 	EN	Enter the IP address or your router.
 	ES	Escriba la dirección IP del enrutador.
+	FI	Syötä IP-osoite tai reititin.
 	FR	Entrer l'adresse IP ou le routeur.
 	IT	Inserire l'indirizzo IP del router.
 	NL	Voer het IP-adres of je router in.
+	NO	Angi ip-adressen eller ruteren din.
+	SV	Ange routerns IP-adress.
 
 NETWORK_DNS
-	DA	DNS server
+	DA	DNS-server
 	DE	DNS-Server
 	EN	DNS Server
 	ES	Servidor DNS
+	FI	DNS-palvelin
 	FR	Serveur DNS:
 	IT	Server DNS
 	NL	DNS-server
+	NO	Dns-server
+	SV	DNS-server
 
 NETWORK_DNS_HELP
-	DA	Indtast IP adresse på din DNS server.
+	DA	Angiv din DNS-servers IP-adresse.
 	DE	Geben Sie die IP-Adresse für den DNS-Server ein.
 	EN	Enter the IP address of your DNS server.
 	ES	Escriba la dirección IP del servidor DNS.
+	FI	Anna DNS-palvelimen IP-osoite.
 	FR	Entrer l'adresse IP du serveur DNS.
 	IT	Inserire l'indirizzo IP del server DNS.
 	NL	Voer het IP-adres van je DNS-server in.
+	NO	Angi ip-adressen til dns-serveren.
+	SV	Ange DNS-serverns IP-adress.
 
 NETWORK_PROBLEM
 	DA	Netværksproblem
 	DE	Netwerkproblem
 	EN	Network Problem
 	ES	Problema de red
+	FI	Verkon ongelma
 	FR	Problème réseau
 	IT	Problema di rete
 	NL	Netwerkprobleem
+	NO	Nettverksproblem
+	SV	Nätverksproblem
 
 NETWORK_CHOOSE_NETWORK
 	DA	Vælg netværk
 	DE	Netzwerk wählen
 	EN	Choose Network
 	ES	Elegir red
+	FI	Valitse verkko
 	FR	Choisir un réseau
 	IT	Scegli rete
 	NL	Netwerk kiezen
+	NO	Velg nettverk
+	SV	Välj nätverk
 
 NETWORK_PROBLEM_HELP
-	DA	Denne fjernbetjening har problemer med at tilslutte til %s.
+	DA	Denne fjernbetjening kan ikke tilsluttes %s.
 	DE	Probleme beim Verbinden der Fernbedienung mit %s
 	EN	This remote is having trouble connecting to %s.
 	ES	Este mando tiene problemas para conectarse a %s.
+	FI	Kaukosäätimellä on vaikeuksia muodostaa yhteyttä kohteeseen %s.
 	FR	Cette télécommande ne peut se connecter à %s.
 	IT	Problema di connessione del telecomando a %s
 	NL	Deze afstandsbediening kan geen verbinding maken met %s.
+	NO	Denne fjernkontrollen klarer ikke å kople til %s.
+	SV	Det går inte att ansluta fjärrkontrollen till %.
 
 ALLOWEDCHARS_WPA
 	DA	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	DE	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	EN	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	ES	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	FI	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	FR	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	IT	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 	NL	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	NO	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
+	SV	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:\"'<>?-=,./~`[];0123456789
 

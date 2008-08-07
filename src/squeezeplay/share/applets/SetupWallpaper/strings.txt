@@ -3,229 +3,314 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 WALLPAPER
-	DA	Baggrund
+	DA	Tapet
 	DE	Hintergrundbild
 	EN	Wallpaper
 	ES	Papel tapiz
+	FI	Tausta
 	FR	Arrière-plan
 	IT	Sfondo
 	NL	Achtergrond
+	NO	Bakgrunn
+	SV	Tapet
 
 WALLPAPER_HELP_PLAYER
+	DA	Vælg den baggrund der skal vises for %s
 	DE	Wählen Sie den Hintergrund für %s
 	EN	Choose the screen background to be shown for %s
 	ES	Elija el fondo de pantalla que se mostrará para %s
+	FI	Valitse näytön taustakuva laitteelle %s
 	FR	Sélectionnez l'arrière-plan d'écran à afficher pour %s
 	IT	Scegliere lo sfondo della schermata per %s
 	NL	Kies de schermachtergrond die moet worden weergegeven voor %s
+	NO	Velg bakgrunnen som skal vises for %s
+	SV	Välj skärmbakgrund för %s
 
 WALLPAPER_HELP_NO_PLAYER
+	DA	Vælg den baggrund der skal vises som standard
 	DE	Wählen Sie den Standard-Hintergrund
 	EN	Choose the default screen background to be shown
 	ES	Elija el fondo de pantalla que se mostrará de forma predeterminada
+	FI	Valitse näytön oletustausta
 	FR	Sélectionnez l'arrière-plan d'écran à afficher par défaut.
 	IT	Scegliere lo sfondo della schermata predefinito
 	NL	Kies de standaard schermachtergrond die moet worden weergegeven
+	NO	Velg standardbakgrunnen som skal vises
+	SV	Välj standardbakgrund för skärmen
 
 CREDITS
-	DA	Krediteringer
+	DA	Tak til
 	DE	Mitwirkende
 	EN	Credits
 	ES	Créditos
+	FI	Tekijät
 	FR	Crédits
 	IT	Riconoscimenti
 	NL	Credits
+	NO	Bidragsytere
+	SV	Erkännanden
 
 CREATIVE_COMMONS
-	DA	Baggrundsbillederne er publiceret under Creative Commons Attribution licensen. Se http://creativecommons.org/licenses/by/3.0/.
+	DA	Baggrundsbillederne er underlagt en licens fra Creative Commons Attribution. Se http://creativecommons.org/licenses/by/3.0/.
 	DE	Die Hintergrundbilder unterliegen einer "Creative Commons Attribution"-Lizenz (siehe http://creativecommons.org/licenses/by/3.0/).
 	EN	The background images are under a Creative Commons Attribution license. See http://creativecommons.org/licenses/by/3.0/.
 	ES	Imágenes de fondo con licencia Creative Commons Attribution. Consulte http://creativecommons.org/licenses/by/3.0/.
+	FI	Taustakuvat kuuluvat Creative Commons Attribution -käyttöoikeusluvan alaisuuteen. Katso http://creativecommons.org/licenses/by/3.0/.
 	FR	Les images d'arrière-plan sont sous licence Creative Commons. Voir http://creativecommons.org/licenses/by/3.0/.
 	IT	Le immagini degli sfondi sono concesse in licenza da Creative Commons Attribution. Vedere http://creativecommons.org/licenses/by/3.0/.
 	NL	De achtergrondafbeeldingen zijn onderhevig aan een Creative Commons Attribution-licentie. Zie http://creativecommons.org/licenses/by/3.0/.
+	NO	Bakgrunnsbildene er underlagt en Creative Commons navngivelseslisens. Se http://creativecommons.org/licenses/by/3.0/.
+	SV	För bakgrundsbilderna gäller en Creative Commons-licens av typen Erkännande. Se http://creativecommons.org/licenses/by/3.0/.
 
 CREDITS_BY
 	DA	Billeder af:
 	DE	Bilder von:
 	EN	Pictures by:
 	ES	Imágenes de:
+	FI	Kuvaaja:
 	FR	Images de:
 	IT	Immagini di:
 	NL	Foto's door:
+	NO	Bilder av:
+	SV	Bilder av:
 
 CONCRETE
-	DA	Beton
+	DA	Cement
 	DE	Beton
 	EN	Concrete
 	ES	Hormigón
+	FI	Betoni
 	FR	Béton
 	IT	Cemento
 	NL	Beton
+	NO	Betong
+	SV	Betong
 
 MIDNIGHT
 	DA	Midnat
 	DE	Mitternacht
 	EN	Midnight
 	ES	Medianoche
+	FI	Keskiyö
 	FR	Minuit
 	IT	Mezzanotte
 	NL	Middernacht
+	NO	Midnatt
+	SV	Midnatt
 
 PEA
 	DA	Ært
 	DE	Erbse
 	EN	Pea
 	ES	Guisante
+	FI	Herne
 	FR	Poire
 	IT	Pisello
 	NL	Doperwt
+	NO	Ert
+	SV	Ärta
 
 BLACK
 	DA	Sort
 	DE	Schwarz
 	EN	Black
 	ES	Negro
+	FI	Musta
 	FR	Noir
 	IT	Nero
 	NL	Zwart
+	NO	Svart
+	SV	Svart
 
 STONE
 	DA	Sten
 	DE	Stein
 	EN	Stone
 	ES	Piedra
+	FI	Kivi
 	FR	Pierre
 	IT	Pietra
 	NL	Steen
+	NO	Stein
+	SV	Sten
 
 DUNES
-	DA	Klit
+	DA	Klitter
 	DE	Dünen
 	EN	Dunes
 	ES	Dunas
+	FI	Dyynit
 	FR	Dunes
 	IT	Dune
 	NL	Duinen
+	NO	Sanddyner
+	SV	Sanddyner
 
 IRIS
 	DA	Tulipan
 	DE	Tulpe
 	EN	Tulip
 	ES	Tulipán
+	FI	Tulppaani
 	FR	Tulipe
 	IT	Tulipano
 	NL	Tulp
+	NO	Tulipan
+	SV	Tulpan
 
 SMOKE
 	DA	Røg
 	DE	Rauch
 	EN	Smoke
 	ES	Humo
+	FI	Savu
 	FR	Fumée
 	IT	Fumo
 	NL	Rook
+	NO	Røyk
+	SV	Rök
 
 AMBER
 	DA	Rav
 	DE	Bernstein
 	EN	Amber
 	ES	Ámbar
+	FI	Keltainen
 	FR	Ambre
 	IT	Ambra
 	NL	Amber
+	NO	Gul
+	SV	Bärnsten
 
 FLAME
 	DA	Flamme
 	DE	Flamme
 	EN	Flame
 	ES	Llama
+	FI	Liekki
 	FR	Flamme
 	IT	Fiamma
 	NL	Vlam
+	NO	Flamme
+	SV	Flamma
 
 GRAFFITI
-	DA	Grafitti
+	DA	Graffiti
 	DE	Graffiti
 	EN	Graffiti
 	ES	Graffiti
+	FI	Graffiti
 	FR	Graffiti
 	IT	Graffiti
 	NL	Graffiti
+	NO	Graffiti
+	SV	Graffiti
 
 WEATHERED_WOOD
 	DA	Slidt træ
 	DE	Verwittertes Holz
 	EN	Weathered Wood
 	ES	Madera vieja
+	FI	Säänpieksemä metsä
 	FR	Bois patiné
 	IT	Legno invecchiato
 	NL	Verweerd hout
+	NO	Værbitt treverk
+	SV	Väderbitet trä
 
 SUNRISE
 	DA	Solopgang
 	DE	Sonnenaufgang
 	EN	Sun Rise
 	ES	Amanecer
+	FI	Auringonnousu
 	FR	Lever de soleil
 	IT	Alba
 	NL	Zonsopgang
+	NO	Soloppgang
+	SV	Soluppgång
 
 SUNLIGHT
 	DA	Sollys
 	DE	Sonnenschein
 	EN	Sun Light
 	ES	Sol
+	FI	Auringonvalo
 	FR	Rayon de soleil
 	IT	Luce solare
 	NL	Zonlicht
+	NO	Sollys
+	SV	Solsken
 
 FADETOBLACK
-	DA	Blød overgang til sort
+	DA	Går i sort
 	DE	Ausblenden
 	EN	Fade to Black
 	ES	Fundido a negro
+	FI	Häivytys mustaan
 	FR	Fondu au noir
 	IT	Verso il nero
 	NL	Faden naar zwart
+	NO	Ton til svart
+	SV	Svarttoning
 
 WEATHEREDRED
+	DA	Slidt rød
 	DE	Verwittertes Rot
 	EN	Weathered Red
 	ES	Rojo desgastado
+	FI	Säänpieksemä punainen
 	FR	Rouge patiné
 	IT	Rosso invecchiato
 	NL	Oudrood
+	NO	Værbitt rød
+	SV	Bleknat rött
 
 PURPLENOTE
+	DA	Lilla noter
 	DE	Violette Noten
 	EN	Purple Notes
 	ES	Notas moradas
+	FI	Violetit nuotit
 	FR	Notes violettes
 	IT	Note viola
 	NL	Paarse muzieknoten
+	NO	Lilla noter
+	SV	Lila noter
 
 ORANGEMARBLE
+	DA	Orange marmor
 	DE	Orangefarbener Marmor
 	EN	Orange Marble
 	ES	Mármol naranja
+	FI	Oranssi marmori
 	FR	Orange marbré
 	IT	Marmo arancione
 	NL	Oranje marmer
+	NO	Oransje marmor
+	SV	Orange kula
 
 NOTE
+	DA	Noter
 	DE	Noten
 	EN	Notes
 	ES	Notas
+	FI	Nuotit
 	FR	Notes
 	IT	Note
 	NL	Muzieknoten
+	NO	Noter
+	SV	Noter
 
 GREENFLOWERS
+	DA	Grønne blomster
 	DE	Grüne Blumen
 	EN	Green Flowers
 	ES	Flores verdes
+	FI	Vihreitä kukkia
 	FR	Fleurs vertes
 	IT	Fiori verdi
 	NL	Groene bloemen
+	NO	Grønne blomster
+	SV	Gröna blommor
 

@@ -3,56 +3,74 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SCREENSAVER_NOWPLAYING
-	DA	Afspiller nu
+	DA	Nu spiller
 	DE	Aktueller Titel
 	EN	Now Playing
 	ES	Reproduciendo
+	FI	Nyt soi
 	FR	Lecture en cours
 	IT	Riproduzione in corso
 	NL	Speelt nu
+	NO	Spilles nå
+	SV	Aktuellt spår
 
 SCREENSAVER_PAUSED
 	DA	Pause
 	DE	Pause
 	EN	Paused
 	ES	En pausa
+	FI	Tauotettu
 	FR	En pause
 	IT	In pausa
 	NL	Gepauzeerd
+	NO	Pause
+	SV	Pausad
 
 SCREENSAVER_STOPPED
-	DA	Stop
+	DA	På pause
 	DE	Bei Pause
 	EN	Stopped
 	ES	Al detener
+	FI	Keskeytettynä
 	FR	A l'arrêt
 	IT	Quando la riproduzione è interrotta
 	NL	Wanneer gestopt
+	NO	Ved stopp
+	SV	I stoppat läge
 
 SCREENSAVER_NOWPLAYING_SETTINGS
-	DA	Indstillinger for Afspiller nu
+	DA	Indstillinger for Nu spiller
 	DE	Aktueller Titel - Einstellung
 	EN	Now Playing Settings
 	ES	Configuración de reproducción en curso
+	FI	Nyt soi -asetukset
 	FR	Paramètres des éléments en cours de lecture
 	IT	Impostazioni della riproduzione in corso
 	NL	Instellingen Speelt nu
+	NO	Innstillinger for Spilles nå
+	SV	Inställningar för Aktuellt spår
 
 SCREENSAVER_NOWPLAYING_OF
 	DA	%s af %s
 	DE	%s von %s
 	EN	%s of %s
 	ES	%s de %s
+	FI	%s / %s
 	FR	%s de %s
 	IT	%s di %s
 	NL	%s van %s
+	NO	%s av %s
+	SV	%s av %s
 
 SCREENSAVER_OFF
-	DA	Slukket
+	DA	Fra
 	DE	Aus
 	EN	Off
 	ES	Desactivado
+	FI	Ei käytössä
 	FR	Désactivé
 	IT	Disattivato
 	NL	Uit
+	NO	Av
+	SV	Av
 

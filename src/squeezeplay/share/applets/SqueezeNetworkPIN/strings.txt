@@ -3,43 +3,58 @@ SQUEEZENETWORK_PIN_TITLE
 	DE	Konto aktivieren
 	EN	Activate Account
 	ES	Activar cuenta
+	FI	Aktivoi tili
 	FR	Activer le compte
 	IT	Attiva account
 	NL	Account activeren
+	NO	Aktiver konto
+	SV	Aktivera konto
 
 SQUEEZENETWORK_PIN
-	DA	Afspiller PIN: %s
+	DA	Afspillerens pinkode: %s
 	DE	Player-PIN: %s
 	EN	Player PIN: %s
 	ES	PIN de reproductor: %s
+	FI	Soittimen PIN: %s
 	FR	PIN de la platine: %s
 	IT	PIN lettore: %s
 	NL	Systeem-PIN: %s
+	NO	Pin-kode for spiller: %s
+	SV	PIN-kod för spelare: %s
 
 SQUEEZENETWORK_PIN_HELP
-	DA	Gå til \n%s\nog indtast din PIN for at tilslutte til din konto. Tryk midterknappen efter du har indtastet din PIN.
+	DA	Gå til\n%s\nog indtast pinkoden, så oprettes der forbindelse til din konto.  Tryk på midterknappen når du har indtastet pinkoden.
 	DE	Gehen Sie zu\n%s\nund geben Sie Ihre PIN ein, um eine Verbindung zum Konto herzustellen. Drücken Sie anschließend die mittlere Taste.
 	EN	Visit\n%s\nand enter your PIN to connect to your account.  Press the center button after you have entered your PIN.
 	ES	Visite\n%s\ne introduzca el PIN para conectarse a su cuenta. Cuando haya introducido el PIN, pulse el botón central.
+	FI	Muodosta yhteys tiliin käymällä osoitteessa\n%s\nja antamalla PIN-koodi.  Paina keskipainiketta, kun olet antanut PIN-koodin.
 	FR	Rendez-vous sur\n%s\net spécifiez votre code PIN pour accéder à votre compte. Appuyez sur le bouton central une fois que vous avez spécifié le code PIN.
 	IT	Visitare il sito Web\n%s\ne inserire il PIN per accedere all'account. Premere il pulsante centrale dopo avere inserito il PIN.
 	NL	Ga naar\n%s\nen voer je pincode in om naar je account te gaan. Druk op de middelste knop nadat je je pincode hebt ingevoerd.
+	NO	Gå til\n%s\n og skriv inn pin-koden for å kople til kontoen din.  Trykk på midtknappen etter at du har oppgitt pin-koden.
+	SV	Gå till\n%s\noch ange din PIN-kod för att ansluta till kontot.  Tryck på mittknappen när du har angett PIN-koden.
 
 SQUEEZENETWORK_NOT_LINKED
-	DA	Din PIN kunne ikke bekræftes. Har du indtastet den på web-siden?
+	DA	Pinkoden kunne ikke verificeres.  Har du angivet den på websiden?
 	DE	Ihre PIN konnte nicht bestätigt werden. Haben Sie sie auf der Website eingegeben?
 	EN	Could not verify your PIN.  Have you entered it on the website?
 	ES	No se ha podido verificar el PIN. ¿Lo ha introducido en el sitio Web?
+	FI	PIN-koodia ei voi vahvistaa.  Annoitko sen WWW-sivustolla?
 	FR	Impossible de vérifier le code PIN. Spécifiez le code sur le site Web.
 	IT	Impossibile verificare il PIN. È stato inserito nel sito Web?
 	NL	Pincode kan niet worden geverifieerd. Heb je deze op de website ingevoerd?
+	NO	Pin-koden ble ikke godkjent. Har du tastet den inn på nettsiden?
+	SV	Det gick inte att verifiera PIN-koden.  Har du angett koden på webbplatsen?
 
 SQUEEZENETWORK_GO_BACK
-	DA	Tilbage
+	DA	Gå tilbage
 	DE	Zurück
 	EN	Go back
 	ES	Regresar
+	FI	Takaisin
 	FR	Retour
 	IT	Indietro
 	NL	Terug
+	NO	Gå tilbake
+	SV	Tillbaka
 

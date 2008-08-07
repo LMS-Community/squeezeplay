@@ -7,99 +7,132 @@ SCREENSAVER_FLICKR
 	DE	Flickr
 	EN	Flickr
 	ES	Flickr
+	FI	Flickr
 	FR	Flickr
 	IT	Flickr
 	NL	Flickr
+	NO	Flickr
+	SV	Flickr
 
 SCREENSAVER_FLICKR_SETTINGS
 	DA	Indstillinger for Flickr
 	DE	Flickr Einstellungen
 	EN	Flickr Settings
 	ES	Configuración de Flickr
+	FI	Flickr-asetukset
 	FR	Paramètres Flickr
 	IT	Impostazioni Flickr
 	NL	Flickr-instellingen
+	NO	Flickr-innstillinger
+	SV	Flickr-inställningar
 
 SCREENSAVER_FLICKR_LOADING_PHOTO
 	DA	Flickr indlæser billede...
 	DE	Flickr lädt photo...
 	EN	Flickr loading photo...
 	ES	Flickr al cargar foto...
+	FI	Flickr lataa valokuvaa...
 	FR	Chargement de photo Flickr...
 	IT	Caricamento foto Flickr...
 	NL	Flickr is bezig met laden van foto...
+	NO	Flickr laster inn bilde...
+	SV	Flickr läser in foto ...
 
 SCREENSAVER_FLICKR_ERROR
-	DA	Flickr fejl
+	DA	Flickr-fejl
 	DE	Flickr Fehler
 	EN	Flickr error
 	ES	Error de Flickr
+	FI	Flickr-virhe
 	FR	Erreur Flickr
 	IT	Errore Flickr
 	NL	Flickr-foutmelding
+	NO	Flickr-feil
+	SV	Flickr-fel
 
 SCREENSAVER_FLICKR_DELAY
 	DA	Hastighed
 	DE	Geschwindigkeit
 	EN	Speed
 	ES	Velocidad
+	FI	Nopeus
 	FR	Vitesse
 	IT	Velocità
 	NL	Snelheid
+	NO	Hastighet
+	SV	Hastighet
 
 SCREENSAVER_FLICKR_DELAY_10_SEC
 	DA	10 sek.
 	DE	10 Sek.
 	EN	10 sec
 	ES	10 s
+	FI	10 s
 	FR	10 sec
 	IT	10 sec
 	NL	10 sec
+	NO	10 sek
+	SV	10 sek
 
 SCREENSAVER_FLICKR_DELAY_20_SEC
 	DA	20 sek.
 	DE	20 Sek.
 	EN	20 sec
 	ES	20 s
+	FI	20 s
 	FR	20 sec
 	IT	20 sec
 	NL	20 sec
+	NO	20 sek
+	SV	20 sek
 
 SCREENSAVER_FLICKR_DELAY_30_SEC
-	DA	20 sek.
+	DA	30 sek.
 	DE	30 Sek.
 	EN	30 sec
 	ES	30 s
+	FI	30 s
 	FR	30 sec
 	IT	30 sec
 	NL	30 sec
+	NO	30 sek
+	SV	30 sek
 
 SCREENSAVER_FLICKR_DELAY_1_MIN
 	DA	1 min.
 	DE	1 Min.
 	EN	1 min
 	ES	1 m
+	FI	1 min
 	FR	1 min
 	IT	1 min
 	NL	1 min
+	NO	1 min
+	SV	1 min
 
 SCREENSAVER_FLICKR_DISPLAY
-	DA	Skærm
+	DA	Display
 	DE	Anzeige
 	EN	Display
 	ES	Mostrar
+	FI	Näyttö
 	FR	Affichage
 	IT	Visualizza
 	NL	Weergeven
+	NO	Skjerm
+	SV	Display
 
 SCREENSAVER_FLICKR_DISPLAY_OWN
 	DA	Mine billeder
 	DE	Meine eigenen Bilder
 	EN	My own pictures
 	ES	Mis imágenes
+	FI	Omat kuvani
 	FR	Mes images
 	IT	Immagini personali
 	NL	Mijn eigen foto's
+	NO	Mine egne bilder
+	SV	Mina egna bilder
 
 SCREENSAVER_FLICKR_DISPLAY_FAVORITES
 	EN	My favorites
@@ -109,133 +142,178 @@ SCREENSAVER_FLICKR_DISPLAY_CONTACTS
 	DE	Bilder meiner Kontakte
 	EN	My contacts' pictures
 	ES	Imágenes de mis contactos
+	FI	Yhteyshenkilöiden kuvat
 	FR	Images de mes contacts
 	IT	Immagini dei contatti
 	NL	Foto's van mijn contacten
+	NO	Bilder fra mine kontakter
+	SV	Mina kontakters bilder
 
 SCREENSAVER_FLICKR_DISPLAY_INTERESTING
 	DA	Interessante billeder
 	DE	Interessante Bilder
 	EN	Interesting pictures
 	ES	Imágenes interesantes
+	FI	Kiinnostavia kuvia
 	FR	Images intéressantes
 	IT	Immagini interessanti
 	NL	Interessante foto's
+	NO	Interessante bilder
+	SV	Intressanta bilder
 
 SCREENSAVER_FLICKR_DISPLAY_RECENT
-	DA	Nylig tilføjede billeder
+	DA	Senest tilføjede billeder
 	DE	Neu hinzugefügte Bilder
 	EN	Recently added pictures
 	ES	Imágenes agregadas recientemente
+	FI	Äskettäin lisätyt kuvat
 	FR	Images ajoutées récemment
 	IT	Immagini aggiunte di recente
 	NL	Recent toegevoegde foto's
+	NO	Nylig opplastede bilder
+	SV	Nyligen tillagda bilder
 
 SCREENSAVER_FLICKR_FLICKR_ID
-	DA	Flickr bruger
+	DA	Flickr-bruger
 	DE	Flickr Benutzer
 	EN	Flickr User
 	ES	Usuario de Flickr
+	FI	Flickr-käyttäjä
 	FR	Utilisateur Flickr
 	IT	Utente flickr
 	NL	Flickr-gebruiker
+	NO	Flickr-bruker
+	SV	Flickr-användare
 
 SCREENSAVER_FLICKR_FLICKR_ID_HELP
-	DA	Indtast venligst dit Flickr brugernavn eller din e-post adresse.
+	DA	Indtast dit Flickr-brugernavn eller din e-post-adresse.
 	DE	Bitte geben Sie Ihren Flickr Benutzernamen oder Ihre Email-Adresse ein
 	EN	Please enter your Flickr Username or your Email address
 	ES	Introduzca su nombre de usuario de Flickr o su dirección de correo electrónico
+	FI	Anna Flickr-käyttäjätunnus tai sähköpostiosoitteesi
 	FR	Spécifiez votre nom d'utilisateur Flickr ou votre adresse électronique
 	IT	Inserire il nome utente flickr o l'indirizzo di posta elettronica
 	NL	Voer je Flickr-gebruikersnaam of je e-mailadres in.
+	NO	Angi ditt Flickr-brukernavn, eller e-postadressen din
+	SV	Ange ditt Flickr-användarnamn eller din e-postadress
 
 SCREENSAVER_FLICKR_TRANSITION
 	DA	Overgange
 	DE	Übergänge
 	EN	Transitions
 	ES	Transiciones
+	FI	Siirtymät
 	FR	Transitions
 	IT	Transizioni
 	NL	Overgangen
+	NO	Overganger
+	SV	Övergångar
 
 SCREENSAVER_FLICKR_TRANSITION_RANDOM
 	DA	Blandede overgange
 	DE	Zufällige Übergänge
 	EN	Random transitions
 	ES	Transiciones aleatorias
+	FI	Satunnaiset siirtymät
 	FR	Transitions aléatoires
 	IT	Transizioni casuali
 	NL	Willekeurige overgangen
+	NO	Tilfeldige overganger
+	SV	Slumpmässiga övergångar
 
 SCREENSAVER_FLICKR_TRANSITION_INSIDE_OUT
-	DA	Blød overgang indefra-ud
+	DA	Blød overgang indefra og ud
 	DE	von innen nach aussen
 	EN	Fade inside-out
 	ES	Fundido dentro-afuera
+	FI	Häivytys sisältä ulos
 	FR	Fondu inversé
 	IT	Dall'interno verso l'esterno
 	NL	Faden: binnen-buiten
+	NO	Ton fra midten og ut
+	SV	Tona inifrån och ut
 
 SCREENSAVER_FLICKR_TRANSITION_TOP_DOWN
-	DA	Blød overgang top-bund
+	DA	Blød overgang fra top til bund
 	DE	von oben nach unten
 	EN	Fade top-down
 	ES	Fundido arriba-abajo
+	FI	Häivytys ylhäältä alas
 	FR	Fondu de haut en bas
 	IT	Dall'alto verso il basso
 	NL	Faden: boven-onder
+	NO	Ton ovenfra og ned
+	SV	Tona uppifrån och ner
 
 SCREENSAVER_FLICKR_TRANSITION_BOTTOM_UP
-	DA	Blød overgang bund-top
+	DA	Blød overgang fra bund til top
 	DE	von unten nach oben
 	EN	Fade bottom-up
 	ES	Fundido abajo-arriba
+	FI	Häivytys alhaalta ylös
 	FR	Fondu de bas en haut
 	IT	Dal basso verso l'alto
 	NL	Faden: onder-boven
+	NO	Ton nedenfra og opp
+	SV	Tona nedifrån och upp
 
 SCREENSAVER_FLICKR_TRANSITION_LEFT_RIGHT
-	DA	Blød overgang venstre-højre
+	DA	Blød overgang fra venstre til højre
 	DE	von links nach rechts
 	EN	Fade left-right
 	ES	Fundido izquierda-derecha
+	FI	Häivytys vasemmalta oikealle
 	FR	Fondu de gauche à droite
 	IT	Da sinistra verso destra
 	NL	Faden: links-rechts
+	NO	Ton fra venstre mot høyre
+	SV	Tona från vänster till höger
 
 SCREENSAVER_FLICKR_TRANSITION_RIGHT_LEFT
-	DA	Blød overgang højre-venstre
+	DA	Blød overgang fra højre til venstre
 	DE	von rechts nach links
 	EN	Fade right-left
 	ES	Fundido derecha-izquierda
+	FI	Häivytys oikealta vasemmalle
 	FR	Fondu de droite à gauche
 	IT	Da destra verso sinistra
 	NL	Faden: rechts-links
+	NO	Ton fra høyre mot venstre
+	SV	Tona från höger till vänster
 
 SCREENSAVER_FLICKR_NETWORK_ERROR
-	DA	Der ser ud til at være problem med netværket.\n\nTryk en vilkårlig knap for at fortsætte.
+	DA	Der ser ud til at være problem med netværket.\n\nTryk på en vilkårlig knap for at fortsætte.
 	DE	Es scheint ein Netzwerk-Problem zu bestehen.\n\nBitte drücken Sie eine Taste für weiter.
 	EN	There seems to be a network problem.\n\nPress any key to continue.
 	ES	Parece haber un problema de red.\n\nPulse una tecla cualquiera para continuar.
+	FI	Verkon kanssa tuntuu olevan ongelma.\n\nJatka painamalla mitä tahansa näppäintä.
 	FR	Il semble y avoir des problèmes réseau.\n\nAppuyez sur un bouton pour continuer.
 	IT	Possibile problema di rete.\n\nPremere un tasto per continuare.
 	NL	Er is schijnbaar een netwerkprobleem.\n\nDruk op een willekeurige knop om verder te gaan.
+	NO	Det ser ut til å ha oppstått et nettverksproblem.\n\nTrykk en tast for å fortsette.
+	SV	Det verkar ha uppstått ett nätverksproblem.\n\nTryck på valfri tangent för att fortsätta.
 
 SCREENSAVER_FLICKR_USERID_ERROR
-	DA	Det indtastede Flickr ID kunne ikke identificeres med en Flickr brugerkonto. Korriger venligst din indtastning.\n\nTryk en vilkårlig tast for at fortsætte.
+	DA	Der blev ikke fundet en Flickr-brugerkonto som svarer til det indtastede Flickr-id. Du skal rette brugernavnet.\n\nTryk på en vilkårlig knap for at fortsætte.
 	DE	Für den eingegebenen Flickr Benutzernamen kann keine Flickr ID gefunden werden. Bitte korrigieren Sie ihre Eingabe.\n\nBitte drücken Sie eine Taste für weiter.
 	EN	The entered flickr id could not be resolved to a flicker user account! Please correct your entry.\n\nPress any key to continue.
 	ES	El ID de Flickr indicado no se ha podido resolver en una cuenta de usuario de Flickr. Debe corregir el ID.\n\nPulse una tecla cualquiera para continuar.
+	FI	Antamaasi flickr-tunnusta ei voitu käyttää flicker-tilin kanssa. Anna oikea tunnus.\n\nJatka painamalla mitä tahansa näppäintä.
 	FR	L'ID Flickr spécifié n'a pas pu être lié à un compte Flickr. Corrigez les informations spécifiées.\n\nAppuyez sur un bouton pour continuer.
 	IT	Impossibile risolvere l'ID flickr inserito in un account utente flickr. Correggere il valore inserito.\n\nPremere un tasto per continuare.
 	NL	De ingevoerde Flickr-ID kan niet worden opgehaald voor een Flickr-gebruikersaccount! Corrigeer je invoer.\n\nDruk op een willekeurige knop om verder te gaan.
+	NO	Flickr-id-en som ble oppgitt kunne ikke knyttes til en brukerkonto hos flickr. Angi riktig id. \n\nTrykk en tast for å fortsette.
+	SV	Det angivna Flickr-namnet överensstämde inte med något Flickr-användarkonto. Korrigera informationen.\n\nTryck på valfri tangent för att fortsätta.
 
 SCREENSAVER_FLICKR_INVALID_DISPLAY_OPTION
-	DA	Dit Flickr ID er ikke sat. Set venligst et gyldigt Flickr ID, eller vælg et andet visningsvalg.\n\nTryk en vilkårlig knap for at fortsætte.
+	DA	Dit Flickr-id er ikke defineret. Angiv et gyldigt Flickr-id, eller vælg en anden visningsmulighed.\n\nTryk på en tast for at fortsætte.
 	DE	Ihre Flickr ID ist noch nicht gesetzt. Bitte setzen Sie die Flickr ID, oder wählen Sie eine andere Anzeige-Option.\n\nBitte drücken Sie eine Taste für weiter.
 	EN	Your flickr id is not set yet. Please set a valid flickr id, or choose another display option.\n\nPress any key to continue.
 	ES	Aún no hay un ID de Flickr configurado. Indique un ID válido o elija otra opción de pantalla.\n\nPulse una tecla cualquiera para continuar.
+	FI	Flickr-tunnusta ei ole vielä määritetty. Määritä kelvollinen flickr-tunnus tai valitse jokin toinen näyttöasetus.\n\nJatka painamalla mitä tahansa näppäintä.
 	FR	Votre ID Flickr n'est pas encore défini. Définissez un ID Flickr valide ou choisissez une option d'affichage différente.\n\nAppuyez sur un bouton pour continuer.
 	IT	Non è stato ancora impostato un ID flickr. Impostare un ID flickr valido o scegliere un'altra opzione di visualizzazione.\n\nPremere un tasto per continuare.
 	NL	Je Flickr-ID is nog niet ingesteld. Stel een geldige Flickr-ID in of kies een andere weergaveoptie.\n\nDruk op een willekeurige knop om verder te gaan.
+	NO	Du har ikke angitt din flickr-id. Oppgi en gyldig flickr-id, eller velg et annet visningsvalg.\n\nTrykk en tast for å fortsette.
+	SV	Du har inte angett något Flickr-namn än. Ange ett giltigt Flickr-namn eller välj ett annat visningsalternativ.\n\nTryck på valfri tangent för att fortsätta.
 

@@ -3,38 +3,50 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 RESET_FACTORY_RESET
-	DA	Fabriksindstillinger
+	DA	Nulstil...
 	DE	Standardeinstellungen
 	EN	Factory Reset
 	ES	Configuración de fábrica
+	FI	Palauta tehdasasetukset
 	FR	Réinitialisation réglages d'usine
 	IT	Ripristino impostazioni fabbrica
 	NL	Fabrieksinstellingen
+	NO	Gjenopprett fabrikkinnstillinger
+	SV	Återställ fabriksinställningar
 
 RESET_CANCEL
-	DA	Afbryd
+	DA	Annuller
 	DE	Abbrechen
 	EN	Cancel
 	ES	Cancelar
+	FI	Peruuta
 	FR	Annuler
 	IT	Annulla
 	NL	Annuleren
+	NO	Avbryt
+	SV	Avbryt
 
 RESET_CONTINUE
 	DA	Fortsæt
 	DE	Weiter
 	EN	Continue
 	ES	Continuar
+	FI	Jatka
 	FR	Continuer
 	IT	Continua
 	NL	Verdergaan
+	NO	Fortsett
+	SV	Fortsätt
 
 RESET_RESETTING
 	DA	\nGenstarter
 	DE	\nNeustart
 	EN	\nRestarting
 	ES	\nReiniciando
+	FI	\nKäynnistetään uudelleen
 	FR	\nRedémarrage
 	IT	\nRiavvio
 	NL	\nBezig met opnieuw starten
+	NO	\nStarter på nytt
+	SV	\nStartar om
 

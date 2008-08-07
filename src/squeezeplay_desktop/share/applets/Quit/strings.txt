@@ -7,7 +7,10 @@ QUIT
 	DE	Beenden
 	EN	Quit
 	ES	Salir
+	FI	Lopeta
 	FR	Quitter
 	IT	Esci
 	NL	Stoppen
+	NO	Gi opp
+	SV	Avsluta
 

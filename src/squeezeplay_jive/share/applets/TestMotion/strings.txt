@@ -4,29 +4,38 @@
 
 
 TEST_MOTION
-	DA	Bevægelses-sensor
+	DA	Bevægelsessensor
 	DE	Bewegungsmelder
 	EN	Motion Detector
 	ES	Detector de movimiento
+	FI	Liikkeenhavaitsin
 	FR	Détecteur de mouvement
 	IT	Sensore movimento
 	NL	Bewegingsdetector
+	NO	Bevegelsessensor
+	SV	Rörelseavkänning
 
 TEST_MOTION_VALUE
 	DA	Værdi
 	DE	Wert
 	EN	Value
 	ES	Valor
+	FI	Arvo
 	FR	Valeur
 	IT	Valore
 	NL	Waarde
+	NO	Verdi
+	SV	Värde
 
 TEST_MOTION_MAX
-	DA	Max.
+	DA	Maks
 	DE	Max.
 	EN	Max
 	ES	Máx.
+	FI	Suurin
 	FR	Max
 	IT	Max
 	NL	Max
+	NO	Maks
+	SV	Max
 

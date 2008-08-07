@@ -9,207 +9,276 @@ BSP_SCREEN_LOCKED
 	DE	Gesperrt
 	EN	Locked
 	ES	Bloqueda
+	FI	Lukittu
 	FR	Verrouillé
 	IT	Bloccato
 	NL	Vergrendeld
+	NO	Låst
+	SV	Låst
 
 BSP_SCREEN_LOCKED_HELP
-	DA	For at låse op, tryk ADD og PLAY på samme tid.
+	DA	Du låser op ved at trykke samtidig på ADD og PLAY (tilføj og afspil).
 	DE	Drücken Sie zum Aufheben der Sperre gleichzeitig ADD und PLAY.
 	EN	To unlock, press the add and play buttons at the same time.
 	ES	Para desbloquear, pulse los botones ADD y PLAY simultáneamente.
+	FI	Vapauta lukitus painamalla lisäys- ja toistopainikkeita samaan aikaan.
 	FR	Pour déverrouiller, appuyez sur les boutons ADD et PLAY simultanément.
 	IT	Per sbloccare premere contemporaneamente i pulsanti ADD e PLAY.
 	NL	Druk de knoppen ADD en PLAY tegelijk in voor ontgrendeling.
+	NO	Trykk på Legg til- og Spill av-knappene samtidig for å låse opp.
+	SV	Tryck på plusknappen och uppspelningsknappen samtidigt när du vill avaktivera låset.
 
 BSP_BRIGHTNESS
 	DA	Lysstyrke
 	DE	Helligkeit
 	EN	Brightness
 	ES	Brillo
+	FI	Kirkkaus
 	FR	Luminosité
 	IT	Luminosità
 	NL	Helderheid
+	NO	Lysstyrke
+	SV	Ljusstyrka
 
 BSP_BRIGHTNESS_ADJUST_HELP
-	DA	Brug hjulet til at justere lysstyrken.
+	DA	Brug drejeknappen til at justere lysstyrken.
 	DE	Sie können die Helligkeit mit dem Rad anpassen
 	EN	Use the wheel to adjust the brightness.
 	ES	Use la rueda para ajustar el brillo.
+	FI	Voit säätää kirkkautta kiekolla.
 	FR	Utilisez la molette pour régler la luminosité.
 	IT	Usare la rotellina per regolare la luminosità.
 	NL	Gebruik het wiel om de helderheid van de verlichting aan te passen.
+	NO	Bruk hjulet til å justere lysstyrken.
+	SV	Justera ljusstyrkan med rullningshjulet.
 
 BSP_BACKLIGHT_TIMER
-	DA	LCD dæmpning
+	DA	Dæmpning af displayets lysstyrke
 	DE	LCD-Dimmer
 	EN	Screen Dimming
 	ES	Atenuación de pantalla
+	FI	Näytön himmennys
 	FR	Réduction de l'éclairage de l'écran
 	IT	Riduzione lumin. schermo
 	NL	Scherm dimmen
+	NO	Skjermdemping
+	SV	Dämpning av skärmens ljusstyrka
 
 BSP_BACKLIGHT_HIGH
 	DA	Høj
 	DE	Hoch
 	EN	High
 	ES	Alta
+	FI	Korkea
 	FR	Elevée
 	IT	Alta
 	NL	Hoog
+	NO	Høy
+	SV	Hög
 
 BSP_BACKLIGHT_MEDIUM
-	DA	Medium
+	DA	Mellem
 	DE	Mittel
 	EN	Medium
 	ES	Media
+	FI	Normaali
 	FR	Moyenne
 	IT	Media
 	NL	Gemiddeld
+	NO	Middels
+	SV	Medel
 
 BSP_BACKLIGHT_LOW
 	DA	Lav
 	DE	Niedrig
 	EN	Low
 	ES	Baja
+	FI	Heikko
 	FR	Faible
 	IT	Bassa
 	NL	Laag
+	NO	Lav
+	SV	Låg
 
 BSP_TIMER_OFF
-	DA	Slukket
+	DA	Fra
 	DE	Aus
 	EN	Off
 	ES	Apagado
+	FI	Ei käytössä
 	FR	Désactivé
 	IT	Disattivato
 	NL	Uit
+	NO	Av
+	SV	Av
 
 BSP_TIMER_ON
-	DA	Tændt
+	DA	Til
 	DE	Ein
 	EN	On
 	ES	Encendido
+	FI	Päällä
 	FR	Activé
 	IT	Attivato
 	NL	Aan
+	NO	På
+	SV	På
 
 BSP_TIMER_5_SEC
 	DA	5 sekunder
 	DE	5 Sekunden
 	EN	5 seconds
 	ES	5 segundos
+	FI	5 sekuntia
 	FR	5 secondes
 	IT	5 secondi
 	NL	5 seconden
+	NO	5 sekunder
+	SV	5 sekunder
 
 BSP_TIMER_10_SEC
 	DA	10 sekunder
 	DE	10 Sekunden
 	EN	10 seconds
 	ES	10 segundos
+	FI	10 sekuntia
 	FR	10 secondes
 	IT	10 secondi
 	NL	10 seconden
+	NO	10 sekunder
+	SV	10 sekunder
 
 BSP_TIMER_15_SEC
 	DA	15 sekunder
 	DE	15 Sekunden
 	EN	15 seconds
 	ES	15 segundos
+	FI	15 sekuntia
 	FR	15 secondes
 	IT	15 secondi
 	NL	15 seconden
+	NO	15 sekunder
+	SV	15 sekunder
 
 BSP_TIMER_20_SEC
 	DA	20 sekunder
 	DE	20 Sekunden
 	EN	20 seconds
 	ES	20 segundos
+	FI	20 sekuntia
 	FR	20 secondes
 	IT	20 secondi
 	NL	20 seconden
+	NO	20 sekunder
+	SV	20 sekunder
 
 BSP_TIMER_30_SEC
 	DA	30 sekunder
 	DE	30 Sekunden
 	EN	30 seconds
 	ES	30 segundos
+	FI	30 sekuntia
 	FR	30 secondes
 	IT	30 secondi
 	NL	30 seconden
+	NO	30 sekunder
+	SV	30 sekunder
 
 BSP_TIMER_1_MIN
 	DA	1 minut
 	DE	1 Minute
 	EN	1 minute
 	ES	1 minuto
+	FI	1 minuutti
 	FR	1 minute
 	IT	1 minuto
 	NL	1 minuut
+	NO	1 minutt
+	SV	1 minut
 
 BSP_TIMER_2_MIN
 	DA	2 minutter
 	DE	2 Minute
 	EN	2 minute
 	ES	2 minutos
+	FI	2 minuuttia
 	FR	2 minutes
 	IT	2 minuti
 	NL	2 minuten
+	NO	2 minutter
+	SV	2 minuter
 
 BSP_TIMER_5_MIN
 	DA	5 minutter
 	DE	5 Minute
 	EN	5 minute
 	ES	5 minutos
+	FI	5 minuuttia
 	FR	5 minutes
 	IT	5 minuti
 	NL	5 minuten
+	NO	5 minutter
+	SV	5 minuter
 
 BSP_TIMER_NEVER
 	DA	Aldrig
 	DE	Nie
 	EN	Never
 	ES	Nunca
+	FI	Ei koskaan
 	FR	Jamais
 	IT	Mai
 	NL	Nooit
+	NO	Aldri
+	SV	Aldrig
 
 DIM_WHEN_CHARGING
 	DA	Dæmp under opladning
 	DE	Beim Laden dimmen
 	EN	Dim when charging
 	ES	Atenuado durante carga
+	FI	Himmennä ladattaessa
 	FR	Réduction de l'éclairage en cours de charge
 	IT	Riduci lumin. in carica
 	NL	Dimmen tijdens opladen
+	NO	Demp lys under lading
+	SV	Dämpa skärmens ljusstyrka vid laddning
 
 BATTERY_LOW
-	DA	Lavt batteri\nOplad mig venligst
+	DA	Batteriet er næsten fladt\nDet skal lades op
 	DE	Batterie schwach\nBitte aufladen
 	EN	Battery Low\nPlease Charge Me
 	ES	Pila baja\nNecesita carga
+	FI	Vähäinen akun lataus\nLataa minut
 	FR	Batterie faible\nRechargez la télécommande
 	IT	Livello batteria insufficiente\nCaricare batteria
 	NL	Batterij bijna leeg\nOpladen alsjeblieft
+	NO	Lavt batterinivå\nLad meg opp
+	SV	Låg batterinivå\nLadda batteriet
 
 POWER_DOWN
 	DA	Sluk
 	DE	Herunterfahren
 	EN	Turn Off
 	ES	Apagar
+	FI	Sammuta
 	FR	Désactiver
 	IT	Disattivazione
 	NL	Uitzetten
+	NO	Slå av
+	SV	Stäng av
 
 POWER_DOWN_CANCEL
-	DA	Afbryd
+	DA	Annuller
 	DE	Abbrechen
 	EN	Cancel
 	ES	Cancelar
+	FI	Peruuta
 	FR	Annuler
 	IT	Annulla
 	NL	Annuleren
+	NO	Avbryt
+	SV	Avbryt
 
 POWER_DOWN_SLEEP
 	EN	Sleep
@@ -219,116 +288,169 @@ POWER_DOWN_CONFIRM
 	DE	Bestätigen
 	EN	Confirm
 	ES	Confirmar
+	FI	Vahvista
 	FR	Confirmer
 	IT	Conferma
 	NL	Bevestigen
+	NO	Bekreft
+	SV	Bekräfta
 
 GOODBYE
 	DA	\nFarvel
 	DE	\nAuf Wiedersehen
 	EN	\nGoodbye
 	ES	\nAdiós
+	FI	\nNäkemiin
 	FR	\nA bientôt
 	IT	\nA presto
 	NL	\nTot ziens
+	NO	\nFarvel
+	SV	\nHej då!
 
 SLEEPING
 	EN	\nSleeping
 
 POWER_DOWN_HELP
-	DA	Afbrud eller Bekræft slukning af din fjernbetjening.
+	DA	Annuller eller Bekræft at controlleren skal slukkes
 	DE	Herunterfahren der Fernbedienung Abbrechen oder Bestätigen
 	EN	Cancel or Confirm the power down of your controller
 	ES	Cancele o confirme el apagado del controlador
+	FI	Peruuta tai Vahvista kaukosäätimen sammuttaminen
 	FR	Annulez ou confirmez la désactivation du contrôleur.
 	IT	Annullare o confermare la disattivazione del telecomando
 	NL	Annuleer of bevestig het uitzetten van je controller
+	NO	Avbryt eller Bekreft at du vil slå av fjernkontrollen
+	SV	Avbryt eller bekräfta att du vill stänga av fjärrkontrollen
 
 PLEASE_WAIT
+	DA	\nVent lidt
 	DE	\nBitte warten
 	EN	\nPlease wait
 	ES	\nEspere un momento
+	FI	\nOdota
 	FR	\nVeuillez patienter
 	IT	\nAttendere
 	NL	\nEen ogenblik geduld
+	NO	\nVent litt
+	SV	\nVänta
 
 INVALID_MAC_TITLE
+	DA	Fejl
 	DE	Fehler
 	EN	Error
 	ES	Error
+	FI	Virhe
 	FR	Erreur
 	IT	Errore
 	NL	Fout
+	NO	Feil
+	SV	Fel
 
 INVALID_MAC_TEXT
+	DA	Ugyldig MAC-adresse eller UUID. Kontakt supportafdelingen.
 	DE	Ungültige MAC-Adresse oder UUID. Wenden Sie sich an den Kundendienst.
 	EN	Invalid mac address or uuid. Please contact support.
 	ES	Dirección MAC o UUID no válidos. Contacte con asistencia técnica.
+	FI	Virheellinen MAC-osoite tai UUID. Ota yhteyttä tekniseen tukeen.
 	FR	Adresse MAC ou UUID non valide. Veuillez contacter l'assistance.
 	IT	Indirizzo MAC o UUID non valido. Contattare il servizio di assistenza.
 	NL	MAC-adres of UUID ongeldig. Neem contact op met support.
+	NO	Ugyldig mac-adresse eller uuid. Vennligst ta kontakt med kundestøtte.
+	SV	Ogiltig MAC-adress eller ogiltigt UUID Kontakta supportavdelningen.
 
 INVALID_MAC_CONTINUE
+	DA	Fortsæt
 	DE	Weiter
 	EN	Continue
 	ES	Continuar
+	FI	Jatka
 	FR	Continuer
 	IT	Continua
 	NL	Verdergaan
+	NO	Fortsett
+	SV	Fortsätt
 
 POWER_MANAGEMENT_SETTINGS
+	DA	Strømstyring
 	DE	Energieverwaltung
 	EN	Power management
 	ES	Administración de energía
+	FI	Virranhallinta
 	FR	Gestion de l'alimentation
 	IT	Risparmio energia
 	NL	Energiebeheer
+	NO	Strømstyring
+	SV	Energisparfunktion
 
 SLEEP_TIMEOUT
+	DA	Dvale indtil
 	DE	Energiesparmodus nach
 	EN	Sleep Timeout
 	ES	Tiempo de espera para suspensión
+	FI	Lepotilan aikakatkaisu
 	FR	Délai de mise en veille
 	IT	Timeout sospensione
 	NL	Sleep-timeout
+	NO	Tidsavbrudd for hvilemodus
+	SV	Vilolägestimeout
 
 SUSPEND_TIMEOUT
+	DA	Standby om
 	DE	Zeitüberschreitung deaktivieren
 	EN	Suspend Timeout
 	ES	Suspender tiempo de espera
+	FI	Keskeytyksen aikakatkaisu
 	FR	Interrompre le délai
 	IT	Sospendi timeout
 	NL	Time-out onderbreken
+	NO	Gå til dvalemodus
+	SV	Fördröjningstimeout
 
 SUSPEND_ENABLED
+	DA	Standby er aktiveret
 	DE	Anhalten aktiviert
 	EN	Suspend Enabled
 	ES	Suspensión habilitada
+	FI	Keskeytys käytössä
 	FR	Interruption activée
 	IT	Sospensione attivata
 	NL	Onderbreking ingeschakeld
+	NO	Dvalemodus aktivert
+	SV	Fördröjning aktiverad
 
 SUSPEND_WAKE
+	DA	Standby indtil
 	DE	Aufwachen deaktivieren
 	EN	Suspend Wake
 	ES	Suspender activación
+	FI	Keskeytä herätys
 	FR	Interrompre la réactivation
 	IT	Sospendi attivazione
 	NL	Aanzetten onderbreken
+	NO	Gå ut av dvalemodus
+	SV	Aktivering från fördröjningsläge
 
 WLAN_POWER_SAVE
+	DA	Strømsparefunktion til trådløst netværkskort
 	DE	Kabellos-Energiesparmodus
 	EN	Wireless Power Save
 	ES	Ahorro de energía inalámbrica
+	FI	Langattoman verkon virransäästötila
 	FR	Mode veille sans fil
 	IT	Risparmio energia senza fili
 	NL	Draadloze energiebesparing
+	NO	Trådløs strømsparing
+	SV	Trådlös energisparfunktion
 
 POWER_MANAGEMENT_SETTINGS_HELP
+	DA	Testindstillinger for strømstyring. Hvis du ændrer indstillingerne, holder batteriet muligvis ikke så længe.
 	DE	Testeinstellungen für die Energieverwaltung. Wenn Sie diese Einstellungen ändern, könnte die Batterie schneller entladen werden.
 	EN	Power management test settings. Changing these settings may reduce your battery life.
 	ES	Configuración de prueba de administración de energía. Si cambia esta configuración puede que reduzca la duración de la pila.
+	FI	Virranhallinnan testiasetukset. Näiden asetuksien muuttaminen saattaa lyhentää akun käyttöikää.
 	FR	Paramètres de test de la gestion de l'alimentation. Leur modification risque de réduire la durée de vie des piles.
 	IT	Impostazioni verifica risparmio energia. La modifica di queste impostazioni potrebbe ridurre la durata delle batterie.
 	NL	Testinstellingen voor energiebeheer. Wanneer je deze instellingen wijzigt, gaan de batterijen misschien minder lang mee.
+	NO	Innstillinger for strømstyringstest. Endringer av disse innstillingene kan føre til redusert batterilevetid.
+	SV	Testinställningar för energisparfunktion. Om du ändrar de här inställningarna kan batteritiden förkortas.
 

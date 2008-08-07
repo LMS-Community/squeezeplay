@@ -2,74 +2,98 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 DATETIME_TITLE
-	DA	Dato & Tid
+	DA	Dato og klokkeslæt
 	DE	Datum & Zeit
 	EN	Date & Time
 	ES	Fecha & Hora
+	FI	Pvm ja aika
 	FR	Date & Heure
 	IT	Data & ora
 	NL	Datum & tijd
+	NO	Tid og dato
+	SV	Datum och tid
 
 DATETIME_TIMEFORMAT
-	DA	Format for tid
+	DA	Klokkeslætformat
 	DE	Zeit Format
 	EN	Time Format
 	ES	Formato de hora
+	FI	Ajan muoto
 	FR	Format de l'heure
 	IT	Formato ora
 	NL	Tijdnotatie
+	NO	Tidsformat
+	SV	Tidsformat
 
 DATETIME_TIMEFORMAT_12H
 	DA	12 timer
 	DE	12 Stunden
 	EN	12 hours
 	ES	12 horas
+	FI	12 tunnin kello
 	FR	12 heures
 	IT	12 ore
 	NL	12 uur
+	NO	12 timer
+	SV	12 timmar
 
 DATETIME_TIMEFORMAT_24H
 	DA	24 timer
 	DE	24 Stunden
 	EN	24 hours
 	ES	24 horas
+	FI	24 tunnin kello
 	FR	24 heures
 	IT	24 ore
 	NL	24 uur
+	NO	24 timer
+	SV	24 timmar
 
 DATETIME_DATEFORMAT
-	DA	Format for dato
+	DA	Datoformat
 	DE	Datums Format
 	EN	Date Format
 	ES	Formato de fecha
+	FI	Päivämäärämuoto
 	FR	Format de date
 	IT	Formato data
 	NL	Datumnotatie
+	NO	Datoformat
+	SV	Datumformat
 
 DATETIME_WEEKSTART
 	DA	Ugen starter
 	DE	Wochenstart
 	EN	Week Start
 	ES	La semana empieza el
+	FI	Viikon alku
 	FR	Début de la semaine
 	IT	Inizio settimana
 	NL	Begin van week
+	NO	Ukestart
+	SV	Veckostart
 
 DATETIME_MONDAY
 	DA	Mandag
 	DE	Montag
 	EN	Monday
 	ES	Lunes
+	FI	maanantai
 	FR	Lundi
 	IT	Lunedì
 	NL	Maandag
+	NO	mandag
+	SV	Måndag
 
 DATETIME_SUNDAY
 	DA	Søndag
 	DE	Sonntag
 	EN	Sunday
 	ES	Domingo
+	FI	sunnuntai
 	FR	Dimanche
 	IT	Domenica
 	NL	Zondag
+	NO	søndag
+	SV	Söndag
 
