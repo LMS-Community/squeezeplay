@@ -65,6 +65,7 @@ libjiveaudio_la_SOURCES = \
 	src/audio/mqueue.c \
 	src/audio/streambuf.c \
 	src/audio/decode/decode.c \
+	src/audio/decode/decode_alsa.c \
 	src/audio/decode/decode_flac.c \
 	src/audio/decode/decode_mad.c \
 	src/audio/decode/decode_output.c \
@@ -73,7 +74,7 @@ libjiveaudio_la_SOURCES = \
 	src/audio/decode/decode_tones.c \
 	src/audio/decode/decode_vorbis.c
 
-libjiveaudio_la_LIBADD = -lSDL -lportaudio -lFLAC -lmad -lvorbisidec
+libjiveaudio_la_LIBADD = -lSDL -lportaudio -lFLAC -lmad -lvorbisidec -lasound
 
 libjivenet_la_SOURCES = \
 	src/net/jive_dns.c

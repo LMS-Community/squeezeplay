@@ -16,6 +16,8 @@
 #include "audio/decode/decode_priv.h"
 
 
+#ifdef HAVE_LIBPORTAUDIO
+
 /* Portaudio stream */
 static PaStreamParameters outputParam;
 static PaStream *stream;
@@ -163,6 +165,11 @@ static void decode_portaudio_start(void) {
 	}
 }
 
+static void decode_portaudio_pause(void) {
+}
+
+static void decode_portaudio_resume(void) {
+}
 
 static void decode_portaudio_stop(void) {
 	PaError err;
@@ -271,5 +278,9 @@ static int decode_portaudio_init(void) {
 struct decode_audio decode_portaudio = {
 	decode_portaudio_init,
 	decode_portaudio_start,
+	decode_portaudio_pause,
+	decode_portaudio_resume,
 	decode_portaudio_stop,
 };
+
+#endif // HAVE_PORTAUDIO

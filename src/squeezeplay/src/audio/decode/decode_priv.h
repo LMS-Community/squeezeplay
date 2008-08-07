@@ -87,9 +87,12 @@ extern void decode_queue_metadata(struct decode_metadata *metadata);
 struct decode_audio {
 	int (*init)(void);
 	void (*start)(void);
+	void (*pause)(void);
+	void (*resume)(void);
 	void (*stop)(void);
 };
 
+extern struct decode_audio decode_alsa;
 extern struct decode_audio decode_portaudio;
 extern struct decode_audio *decode_audio;
 

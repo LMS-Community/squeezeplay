@@ -412,7 +412,7 @@ Load the wav file I<file> to play on the mixer channel I<channel>. Currently two
 =cut
 --]]
 function loadSound(self, name, file, channel)
-	self.sound[name] = Audio:loadSound(file, channel)
+	self.sound[name] = Sample:loadSample(file, channel)
 
 	if self.soundEnabled[name] ~= nil then
 		self.sound[name]:enable(self.soundEnabled[name])
