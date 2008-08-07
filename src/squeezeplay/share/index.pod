@@ -130,3 +130,4 @@ L<applets.SlimBrowser.SlimBrowserApplet|applets::SlimBrowser::SlimBrowserApplet>
 L<applets.SlimDiscovery.SlimDiscoveryApplet|applets::SlimDiscovery::SlimDiscoveryApplet>
 
 L<applets.Test.TestApplet|applets::Test::TestApplet>
+

@@ -87,9 +87,12 @@ extern void decode_queue_metadata(struct decode_metadata *metadata);
 struct decode_audio {
 	int (*init)(void);
 	void (*start)(void);
+	void (*pause)(void);
+	void (*resume)(void);
 	void (*stop)(void);
 };
 
+extern struct decode_audio decode_alsa;
 extern struct decode_audio decode_portaudio;
 extern struct decode_audio *decode_audio;
 
@@ -99,6 +102,11 @@ extern void decode_output_begin(void);
 extern void decode_output_end(void);
 extern void decode_output_flush(void);
 extern bool_t decode_check_start_point(void);
+
+
+/* Sample playback api (sound effects) */
+extern int decode_sample_init(lua_State *L);
+extern void decode_sample_mix(Uint8 *buffer, size_t buflen);
 
 
 /* Internal state */
