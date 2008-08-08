@@ -27,6 +27,42 @@ LANGUAGE
 	NO	Språk
 	SV	Språk
 
+LANGUAGE_NO
+	DA	Norsk
+	DE	Norsk
+	EN	Norsk
+	ES	Norsk
+	FI	Norsk
+	FR	Norsk
+	IT	Norsk
+	NL	Norsk
+	NO	Norsk
+	SV	Norsk
+
+LANGUAGE_SV
+	DA	Svenska
+	DE	Svenska
+	EN	Svenska
+	ES	Svenska
+	FI	Svenska
+	FR	Svenska
+	IT	Svenska
+	NL	Svenska
+	NO	Svenska
+	SV	Svenska
+
+LANGUAGE_FI
+	DA	Suomi
+	DE	Suomi
+	EN	Suomi
+	ES	Suomi
+	FI	Suomi
+	FR	Suomi
+	IT	Suomi
+	NL	Suomi
+	NO	Suomi
+	SV	Suomi
+
 LANGUAGE_DA
 	DA	Dansk
 	DE	Dansk
