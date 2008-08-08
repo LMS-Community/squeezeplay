@@ -8,8 +8,6 @@
 
 #include "common.h"
 
-#include "portaudio.h"
-
 #include "audio/fifo.h"
 #include "audio/mqueue.h"
 #include "audio/decode/decode.h"
@@ -17,6 +15,8 @@
 
 
 #ifdef HAVE_LIBPORTAUDIO
+
+#include "portaudio.h"
 
 /* Portaudio stream */
 static PaStreamParameters outputParam;
