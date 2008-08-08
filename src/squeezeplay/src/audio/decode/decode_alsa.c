@@ -8,7 +8,6 @@
 
 #include "common.h"
 
-#include "portaudio.h"
 #include <alsa/asoundlib.h>
 
 #include "audio/fifo.h"
