@@ -177,7 +177,7 @@ tremor: Tremor/Makefile
 
 # squeezeplay
 squeezeplay/Makefile:
-	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_PROFILING} --prefix=${PREFIX}
+	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_PROFILING} --prefix=${PREFIX} 
 
 squeezeplay: squeezeplay/Makefile
 	cd squeezeplay; make && make install
