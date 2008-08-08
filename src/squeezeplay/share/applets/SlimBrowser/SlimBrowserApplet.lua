@@ -650,6 +650,61 @@ local function _updatingPlayer(self)
 	_updatingPlayerPopup = popup
 end
 
+-- _renderSlider
+-- special case when SlimBrowse item is configured for a slider widget
+local function _renderSlider(step, item)
+
+	if not step and step.window then
+		return
+	end
+	_assert(item)
+	_assert(item.min)
+	_assert(item.max)
+	_assert(item.actions['do'])
+
+	if not item.adjust then
+		item.adjust = 0
+	end
+
+	local sliderInitial
+	if not item.initial then
+		sliderInitial = item.min + item.adjust
+	else
+		sliderInitial = item.initial + item.adjust
+	end
+
+	local sliderMin = tonumber(item.min) + tonumber(item.adjust)
+	local sliderMax = tonumber(item.max) + tonumber(item.adjust)
+
+	local slider = Slider("slider", sliderMin, sliderMax, sliderInitial,
+                function(slider, value, done)
+			local jsonAction = item.actions['do']
+			local valtag = _safeDeref(item, 'actions', 'do', 'params', 'valtag')
+			if valtag then
+				item.actions['do'].params[valtag] = value - item.adjust
+			end
+			_performJSONAction(jsonAction, nil, nil, nil, nil)
+
+                        if done then
+                                window:playSound("WINDOWSHOW")
+                                window:hide(Window.transitionPushLeft)
+                        end
+                end)
+
+	local help, text
+	if item.text then
+		text = Textarea("textarea", item.text)
+		step.window:addWidget(text)
+	end
+	if item.help then
+        	help = Textarea("help", item.help)
+		step.window:addWidget(help)
+	end
+
+        step.window:addWidget(slider)
+
+end
+
 -- _bigArtworkPopup
 -- special case sink that pops up big artwork
 local function _bigArtworkPopup(chunk, err)
@@ -828,6 +883,12 @@ local function _browseSink(step, chunk, err)
 			end
 			local textArea = Textarea("textarea", data.window.textArea)
 			step.window:addWidget(textArea)
+		elseif step.menu and data and data.count and data.count == 1 and data.item_loop and data.item_loop[1].slider then
+			-- no menus here, thankyouverymuch
+			if step.menu then
+				step.window:removeWidget(step.menu)
+			end
+			_renderSlider(step, data.item_loop[1])
 		-- avoid infinite request loop on count == 0
 		elseif step.menu and data and data.count and data.count == 0 then
 			-- this will render a blank menu, which is typically undesirable 
