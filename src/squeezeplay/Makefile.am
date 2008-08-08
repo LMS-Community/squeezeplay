@@ -74,7 +74,8 @@ libjiveaudio_la_SOURCES = \
 	src/audio/decode/decode_tones.c \
 	src/audio/decode/decode_vorbis.c
 
-libjiveaudio_la_LIBADD = -lSDL -lportaudio -lFLAC -lmad -lvorbisidec -lasound
+
+libjiveaudio_la_LIBADD = -lSDL -lFLAC -lmad -lvorbisidec
 
 libjivenet_la_SOURCES = \
 	src/net/jive_dns.c

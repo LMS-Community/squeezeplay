@@ -87,9 +87,10 @@ CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
 libjiveaudio_la_DEPENDENCIES =
 am_libjiveaudio_la_OBJECTS = fifo.lo fixed_math.lo mqueue.lo \
-	streambuf.lo decode.lo decode_flac.lo decode_mad.lo \
-	decode_output.lo decode_pcm.lo decode_portaudio.lo \
-	decode_sample.lo decode_tones.lo decode_vorbis.lo
+	streambuf.lo decode.lo decode_alsa.lo decode_flac.lo \
+	decode_mad.lo decode_output.lo decode_pcm.lo \
+	decode_portaudio.lo decode_sample.lo decode_tones.lo \
+	decode_vorbis.lo
 libjiveaudio_la_OBJECTS = $(am_libjiveaudio_la_OBJECTS)
 libjivenet_la_DEPENDENCIES =
 am_libjivenet_la_OBJECTS = jive_dns.lo
@@ -387,6 +388,7 @@ libjiveaudio_la_SOURCES = \
 	src/audio/mqueue.c \
 	src/audio/streambuf.c \
 	src/audio/decode/decode.c \
+	src/audio/decode/decode_alsa.c \
 	src/audio/decode/decode_flac.c \
 	src/audio/decode/decode_mad.c \
 	src/audio/decode/decode_output.c \
@@ -396,7 +398,7 @@ libjiveaudio_la_SOURCES = \
 	src/audio/decode/decode_tones.c \
 	src/audio/decode/decode_vorbis.c
 
-libjiveaudio_la_LIBADD = -lSDL -lportaudio -lFLAC -lmad -lvorbisidec
+libjiveaudio_la_LIBADD = -lSDL -lFLAC -lmad -lvorbisidec
 libjivenet_la_SOURCES = \
 	src/net/jive_dns.c
 
@@ -1037,6 +1039,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_alsa.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_flac.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_mad.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_output.Plo@am__quote@
@@ -1127,6 +1130,13 @@ decode.lo: src/audio/decode/decode.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/audio/decode/decode.c' object='decode.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o decode.lo `test -f 'src/audio/decode/decode.c' || echo '$(srcdir)/'`src/audio/decode/decode.c
+
+decode_alsa.lo: src/audio/decode/decode_alsa.c
+@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT decode_alsa.lo -MD -MP -MF "$(DEPDIR)/decode_alsa.Tpo" -c -o decode_alsa.lo `test -f 'src/audio/decode/decode_alsa.c' || echo '$(srcdir)/'`src/audio/decode/decode_alsa.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/decode_alsa.Tpo" "$(DEPDIR)/decode_alsa.Plo"; else rm -f "$(DEPDIR)/decode_alsa.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/audio/decode/decode_alsa.c' object='decode_alsa.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o decode_alsa.lo `test -f 'src/audio/decode/decode_alsa.c' || echo '$(srcdir)/'`src/audio/decode/decode_alsa.c
 
 decode_flac.lo: src/audio/decode/decode_flac.c
 @am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT decode_flac.lo -MD -MP -MF "$(DEPDIR)/decode_flac.Tpo" -c -o decode_flac.lo `test -f 'src/audio/decode/decode_flac.c' || echo '$(srcdir)/'`src/audio/decode/decode_flac.c; \
