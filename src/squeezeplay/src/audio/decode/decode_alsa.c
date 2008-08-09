@@ -8,8 +8,6 @@
 
 #include "common.h"
 
-#include <alsa/asoundlib.h>
-
 #include "audio/fifo.h"
 #include "audio/mqueue.h"
 #include "audio/decode/decode.h"
@@ -17,6 +15,8 @@
 
 
 #ifdef HAVE_LIBASOUND
+
+#include <alsa/asoundlib.h>
 
 /* Stream sample rate */
 static u32_t new_sample_rate;
