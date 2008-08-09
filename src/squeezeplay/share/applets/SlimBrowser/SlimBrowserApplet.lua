@@ -690,7 +690,6 @@ local function _renderSlider(step, item)
                                 window:hide(Window.transitionPushLeft)
                         end
                 end)
-
 	local help, text
 	if item.text then
 		text = Textarea("textarea", item.text)
@@ -701,7 +700,23 @@ local function _renderSlider(step, item)
 		step.window:addWidget(help)
 	end
 
-        step.window:addWidget(slider)
+	if item.sliderIcons == 'none' then
+        	step.window:addWidget(slider)
+	elseif item.sliderIcons == 'volume' then
+		step.window:addWidget(Group("sliderGroup", {
+			Icon("volumeMin"),
+			slider,
+			Icon("volumeMax")
+		}))
+	else
+		step.window:addWidget(Group("sliderGroup", {
+			Icon("sliderMin"),
+			slider,
+			Icon("sliderMax")
+		}))
+	end
+
+
 
 end
 
