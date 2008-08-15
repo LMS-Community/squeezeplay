@@ -65,8 +65,8 @@ oo.class(_M, Applet)
 
 
 -- Define useful variables for this skin
-local imgpath = "applets/SecretSkin/images/"
-local sndpath = "applets/SecretSkin/sounds/"
+local imgpath = "applets/Fab4Skin/images/"
+local sndpath = "applets/Fab4Skin/sounds/"
 local fontpath = "fonts/"
 local FONT_NAME = "FreeSans"
 local BOLD_PREFIX = "Bold"
@@ -160,7 +160,7 @@ function skin(self, s)
 				       imgpath .. "Screen Formats/Albums/menu_selection_box_album_l.png",
 			       })
 
--- FIXME: do these need updating for SecretSkin?
+-- FIXME: do these need updating for Fab4Skin?
 	local helpBox = 
 		Tile:loadTiles({
 				       imgpath .. "Screen Formats/Popup Menu/helpbox.png",
@@ -252,7 +252,7 @@ function skin(self, s)
 	local CHECK_PADDING  = { 2, 0, 6, 0 }
 	local CHECKBOX_RADIO_PADDING  = { 2, 8, 8, 0 }
 
-	--FIXME: paddings here need tweaking for SecretSkin
+	--FIXME: paddings here need tweaking for Fab4Skin
 
 	-- this is what they were
 	--local MENU_ALBUMITEM_PADDING = { 50, 0, 50, 0 }
@@ -908,7 +908,7 @@ function skin(self, s)
 
 
 	-- menus with artwork and song info
-	-- FIXME: this needs to be tweaked for SecretSkin
+	-- FIXME: this needs to be tweaked for Fab4Skin
 	s.albummenu = {}
 	s.albummenu.padding = { 0, 2, 4, 2 }
 	s.albummenu.itemHeight = 76
@@ -938,7 +938,7 @@ function skin(self, s)
 	s.albumitem.icon.w = 70
 	s.albumitem.icon.h = WH_FILL
 	s.albumitem.icon.align = "left"
--- FIXME: no_artwork image needed in correct size for SecretSkin; for now, disable it
+-- FIXME: no_artwork image needed in correct size for Fab4Skin; for now, disable it
 --	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
 	s.albumitem.icon.padding = 0
 
