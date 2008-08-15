@@ -260,6 +260,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\audio\decode\decode_sample.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\audio\decode\decode_tones.c"
 				>
 			</File>
@@ -285,10 +289,6 @@
 			</File>
 			<File
 				RelativePath="..\src\jive.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\ui\jive_audio.c"
 				>
 			</File>
 			<File
