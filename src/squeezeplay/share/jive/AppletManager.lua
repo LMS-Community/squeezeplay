@@ -102,7 +102,8 @@ local function _saveApplet(name, dir)
 
 			settings = false,
 			metaLoaded = false,
-			metaEvaluated = false,
+			metaRegistered = false,
+			metaConfigured = false,
 			appletLoaded = false,
 			appletEvaluated = false,
 		}
@@ -202,10 +203,10 @@ end
 
 -- _evalMeta
 -- evaluates the meta information of applet entry
-local function _evalMeta(entry)
+local function _registerMeta(entry)
 	log:debug("_evalMeta: ", entry.appletName)
 
-	entry.metaEvaluated = true
+	entry.metaRegistered = true
 
 	local class = require(entry.metaModule)
 	local obj = class()
@@ -230,48 +231,33 @@ local function _evalMeta(entry)
 	obj._settings = entry.settings
 	obj._stringsTable = entry.stringsTable
 
+	entry.metaObj = obj
+
 	-- we're good to go, the meta should now hook the applet
 	-- so it can be loaded on demand.
 	log:info("Registering: ", entry.appletName)
-	obj:registerApplet()
-
-	-- get rid of us
---	obj._stringsTable = nil
-	obj = nil
-
-	return true
+	entry.metaObj:registerApplet()
 end
 
 
--- _pevalMeta
--- pcall of _evalMeta
+local function _configureMeta(entry)
+	entry.metaConfiured = true
+
+	entry.metaObj:configureApplet()
+end
+
+
 local function _pevalMeta(entry)
---	log:debug("_pevalMeta(", entry.appletName, ")")
-	
-	local ok, resOrErr = pcall(_evalMeta, entry)
-	
-	-- trash the meta in all cases, it's done it's job
-	package.loaded[entry.metaModule] = nil
-	
-	-- remove strings eating up mucho valuable memory
---	entry.stringsTable = nil
-	
-	if not ok then
-		entry.metaEvaluated = false
-		entry.metaLoaded = false
-		log:error("Error while evaluating meta for ", entry.appletName, ":", resOrErr)
-		return nil
+	if entry.metaLoaded and not entry.metaRegistered then
+		local ok, resOrErr = pcall(_registerMeta, entry)
+		if not ok then
+			entry.metaConfigured = false
+			entry.metaRegistered = false
+			entry.metaLoaded = false
+			log:error("Error registering meta for ", entry.appletName, ":", resOrErr)
+			return nil
+		end
 	end
-	
-	-- at this point, we have loaded the meta, the applet strings and settings
-	-- performed the applet registration and we try to remove all traces of the 
-	-- meta but removing it from package.loaded, deleting the string table, etc.
-	
-	-- we keep settings around to that we minimize writing to flash. If we wanted to
-	-- trash them , we would need to store them here (to reload them if the applet ever runs)
-	-- because the meta might have changed them.
-	
-	return resOrErr
 end
 
 
@@ -281,9 +267,38 @@ local function _evalMetas()
 	log:debug("_evalMetas")
 
 	for name, entry in pairs(_appletsDb) do
-		if entry.metaLoaded and not entry.metaEvaluated then
-			_pevalMeta(entry)
+		_pevalMeta(entry)
+	end
+
+	for name, entry in pairs(_appletsDb) do
+		if entry.metaLoaded and not entry.metaConfigured then
+			local ok, resOrErr = pcall(_configureMeta, entry)
+			if not ok then
+				entry.metaConfigured = false
+				entry.metaRegistered = false
+				entry.metaLoaded = false
+				log:error("Error configuring meta for ", entry.appletName, ":", resOrErr)
+				return nil
+			end
 		end
+	end
+
+	-- at this point, we have loaded the meta, the applet strings and settings
+	-- performed the applet registration and we try to remove all traces of the 
+	-- meta by removing it from package.loaded, deleting the string table, etc.
+	
+	-- we keep settings around to that we minimize writing to flash. If we wanted to
+	-- trash them , we would need to store them here (to reload them if the applet ever runs)
+	-- because the meta might have changed them.
+
+	for name, entry in pairs(_appletsDb) do
+		entry.metaObj = nil
+
+		-- trash the meta in all cases, it's done it's job
+		package.loaded[entry.metaModule] = nil
+	
+		-- remove strings eating up mucho valuable memory
+--		entry.stringsTable = nil
 	end
 end
 
@@ -301,7 +316,8 @@ function discover(self)
 	local soundEffectsEntry = _appletsDb["SetupSoundEffects"]
 	if soundEffectsEntry then
 		_loadMeta(soundEffectsEntry)
-		_evalMeta(soundEffectsEntry)
+		_registerMeta(soundEffectsEntry)
+		_configureMeta(soundEffectsEntry)
 	end
 
 	_loadMetas()
@@ -424,7 +440,7 @@ function loadApplet(self, appletName)
 	end
 	
 	-- meta processed?
-	if not entry.metaEvaluated then
+	if not entry.metaRegistered then
 		if not entry.metaLoaded and not _ploadMeta(entry) then
 			return nil
 		end

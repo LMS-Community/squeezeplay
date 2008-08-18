@@ -44,7 +44,6 @@ int jiveL_widget_set_bounds(lua_State *L) {
 	lua_getfield(L, 1, "peer");
 	peer = lua_touserdata(L, -1);
 	if (!peer) {
-		peer = lua_touserdata(L, -1);
 		return 0;
 	}
 
@@ -379,7 +378,7 @@ int jiveL_widget_check_layout(lua_State *L) {
 				lua_pushvalue(L, 1);
 				lua_call(L, 1, 0);
 			}
-
+			
 			if (!peer) {
 				lua_getfield(L, 1, "peer");
 				peer = lua_touserdata(L, -1);

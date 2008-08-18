@@ -411,6 +411,11 @@ dist_applets_testplayback_DATA = \
 	share/applets/TestPlayback/TestPlaybackApplet.lua \
 	share/applets/TestPlayback/TestPlaybackMeta.lua
 
+applets_selectskindir = $(datadir)/jive/applets/SelectSkin
+dist_applets_selectskin_DATA = \
+	share/applets/SelectSkin/SelectSkinApplet.lua \
+	share/applets/SelectSkin/SelectSkinMeta.lua
+
 # Default skin
 applets_defaultskindir = $(pkgdatadir)/applets/DefaultSkin
 dist_applets_defaultskin_DATA = \
