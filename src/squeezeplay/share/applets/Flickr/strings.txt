@@ -135,7 +135,16 @@ SCREENSAVER_FLICKR_DISPLAY_OWN
 	SV	Mina egna bilder
 
 SCREENSAVER_FLICKR_DISPLAY_FAVORITES
+	DA	Favoritter
+	DE	Meine Favoriten
 	EN	My favorites
+	ES	Mis favoritos
+	FI	Suosikit
+	FR	Mes favoris
+	IT	I miei Preferiti
+	NL	Mijn favorieten
+	NO	Mine favoritter
+	SV	Mina favoriter
 
 SCREENSAVER_FLICKR_DISPLAY_CONTACTS
 	DA	Mine kontakters billeder

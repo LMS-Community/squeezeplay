@@ -59,7 +59,7 @@ SOUND_VOLUME
 	FR	Volume
 	IT	Volume
 	NL	Volume
-	NO	Lydstyrke
+	NO	Volum
 	SV	Volym
 
 SOUND_CHARGING
