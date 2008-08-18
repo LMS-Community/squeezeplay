@@ -3,4 +3,14 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SCREENSAVER_BLANKSCREEN
+	DA	Ingen pauseskærm
+	DE	LCD aus
 	EN	Screen off
+	ES	Pantalla desactivada
+	FI	Näyttö pois päältä
+	FR	Affichage éteint
+	IT	Schermo spento
+	NL	Scherm uit
+	NO	Skjerm av
+	SV	Display av
+
