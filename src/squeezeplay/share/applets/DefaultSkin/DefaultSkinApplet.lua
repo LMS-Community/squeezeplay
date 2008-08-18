@@ -98,7 +98,11 @@ end
 
 -- skin
 -- The meta arranges for this to be called to skin Jive.
-function skin(self, s)
+function skin(self, s, reload)
+	if not reload then
+		Framework:setVideoMode(240, 320, 16, false)
+	end
+
 	local screenWidth, screenHeight = Framework:getScreenSize()
 
 	-- Images and Tiles
@@ -370,6 +374,7 @@ function skin(self, s)
 	s.item.order = { "text", "icon" }
 	s.item.padding = { 9, 6, 6, 6 }
 	s.item.text = {}
+--	s.item.text.padding = { 1, 1, 1, 1 }
 	s.item.text.w = WH_FILL
 	s.item.text.font = FONT_BOLD_15px
 	s.item.text.fg = TEXT_COLOR

@@ -53,6 +53,7 @@ DIST_COMMON = $(am__configure_deps) $(dist_applets_blankscreen_DATA) \
 	$(dist_applets_screensavers_DATA) \
 	$(dist_applets_screenshot_DATA) \
 	$(dist_applets_selectplayer_DATA) \
+	$(dist_applets_selectskin_DATA) \
 	$(dist_applets_setupSqueezebox_DATA) \
 	$(dist_applets_setupappletinstaller_DATA) \
 	$(dist_applets_setupdatetime_DATA) \
@@ -119,6 +120,7 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" \
 	"$(DESTDIR)$(applets_screensaversdir)" \
 	"$(DESTDIR)$(applets_screenshotdir)" \
 	"$(DESTDIR)$(applets_selectplayerdir)" \
+	"$(DESTDIR)$(applets_selectskindir)" \
 	"$(DESTDIR)$(applets_setupSqueezeboxdir)" \
 	"$(DESTDIR)$(applets_setupappletinstallerdir)" \
 	"$(DESTDIR)$(applets_setupdatetimedir)" \
@@ -181,6 +183,7 @@ dist_applets_nowplaying_imagesDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_screensaversDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_screenshotDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_selectplayerDATA_INSTALL = $(INSTALL_DATA)
+dist_applets_selectskinDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupSqueezeboxDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupappletinstallerDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupdatetimeDATA_INSTALL = $(INSTALL_DATA)
@@ -213,6 +216,7 @@ DATA = $(dist_applets_blankscreen_DATA) \
 	$(dist_applets_screensavers_DATA) \
 	$(dist_applets_screenshot_DATA) \
 	$(dist_applets_selectplayer_DATA) \
+	$(dist_applets_selectskin_DATA) \
 	$(dist_applets_setupSqueezebox_DATA) \
 	$(dist_applets_setupappletinstaller_DATA) \
 	$(dist_applets_setupdatetime_DATA) \
@@ -718,6 +722,11 @@ applets_testplaybackdir = $(datadir)/jive/applets/TestPlayback
 dist_applets_testplayback_DATA = \
 	share/applets/TestPlayback/TestPlaybackApplet.lua \
 	share/applets/TestPlayback/TestPlaybackMeta.lua
+
+applets_selectskindir = $(datadir)/jive/applets/SelectSkin
+dist_applets_selectskin_DATA = \
+	share/applets/SelectSkin/SelectSkinApplet.lua \
+	share/applets/SelectSkin/SelectSkinMeta.lua
 
 
 # Default skin
@@ -1650,6 +1659,23 @@ uninstall-dist_applets_selectplayerDATA:
 	  echo " rm -f '$(DESTDIR)$(applets_selectplayerdir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(applets_selectplayerdir)/$$f"; \
 	done
+install-dist_applets_selectskinDATA: $(dist_applets_selectskin_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(applets_selectskindir)" || $(mkdir_p) "$(DESTDIR)$(applets_selectskindir)"
+	@list='$(dist_applets_selectskin_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(dist_applets_selectskinDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_selectskindir)/$$f'"; \
+	  $(dist_applets_selectskinDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_selectskindir)/$$f"; \
+	done
+
+uninstall-dist_applets_selectskinDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_applets_selectskin_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(applets_selectskindir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(applets_selectskindir)/$$f"; \
+	done
 install-dist_applets_setupSqueezeboxDATA: $(dist_applets_setupSqueezebox_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(applets_setupSqueezeboxdir)" || $(mkdir_p) "$(DESTDIR)$(applets_setupSqueezeboxdir)"
@@ -2025,7 +2051,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/BlankScreen $(distdir)/share/applets/ChooseMusicSource $(distdir)/share/applets/Clock $(distdir)/share/applets/CustomizeHomeMenu $(distdir)/share/applets/DefaultSkin $(distdir)/share/applets/DefaultSkin/images $(distdir)/share/applets/Flickr $(distdir)/share/applets/HttpAuth $(distdir)/share/applets/InfoBrowser $(distdir)/share/applets/LogSettings $(distdir)/share/applets/MacroPlay $(distdir)/share/applets/NowPlaying $(distdir)/share/applets/NowPlaying/images $(distdir)/share/applets/ScreenSavers $(distdir)/share/applets/Screenshot $(distdir)/share/applets/SelectPlayer $(distdir)/share/applets/SetupAppletInstaller $(distdir)/share/applets/SetupDateTime $(distdir)/share/applets/SetupLanguage $(distdir)/share/applets/SetupNetTest $(distdir)/share/applets/SetupSoundEffects $(distdir)/share/applets/SetupSoundEffects/sounds $(distdir)/share/applets/SetupSqueezebox $(distdir)/share/applets/SetupWallpaper $(distdir)/share/applets/SetupWallpaper/wallpaper $(distdir)/share/applets/SlimBrowser $(distdir)/share/applets/SlimDiscovery $(distdir)/share/applets/SqueezeNetworkPIN $(distdir)/share/applets/TestPlayback $(distdir)/share/jive $(distdir)/share/jive/audio $(distdir)/share/jive/net $(distdir)/share/jive/slim $(distdir)/share/jive/ui $(distdir)/share/jive/utils $(distdir)/src
+	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/BlankScreen $(distdir)/share/applets/ChooseMusicSource $(distdir)/share/applets/Clock $(distdir)/share/applets/CustomizeHomeMenu $(distdir)/share/applets/DefaultSkin $(distdir)/share/applets/DefaultSkin/images $(distdir)/share/applets/Flickr $(distdir)/share/applets/HttpAuth $(distdir)/share/applets/InfoBrowser $(distdir)/share/applets/LogSettings $(distdir)/share/applets/MacroPlay $(distdir)/share/applets/NowPlaying $(distdir)/share/applets/NowPlaying/images $(distdir)/share/applets/ScreenSavers $(distdir)/share/applets/Screenshot $(distdir)/share/applets/SelectPlayer $(distdir)/share/applets/SelectSkin $(distdir)/share/applets/SetupAppletInstaller $(distdir)/share/applets/SetupDateTime $(distdir)/share/applets/SetupLanguage $(distdir)/share/applets/SetupNetTest $(distdir)/share/applets/SetupSoundEffects $(distdir)/share/applets/SetupSoundEffects/sounds $(distdir)/share/applets/SetupSqueezebox $(distdir)/share/applets/SetupWallpaper $(distdir)/share/applets/SetupWallpaper/wallpaper $(distdir)/share/applets/SlimBrowser $(distdir)/share/applets/SlimDiscovery $(distdir)/share/applets/SqueezeNetworkPIN $(distdir)/share/applets/TestPlayback $(distdir)/share/jive $(distdir)/share/jive/audio $(distdir)/share/jive/net $(distdir)/share/jive/slim $(distdir)/share/jive/ui $(distdir)/share/jive/utils $(distdir)/src
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -2154,7 +2180,7 @@ check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" "$(DESTDIR)$(applets_blankscreendir)" "$(DESTDIR)$(applets_choosemusicsourcedir)" "$(DESTDIR)$(applets_clockdir)" "$(DESTDIR)$(applets_customizehomemenudir)" "$(DESTDIR)$(applets_defaultskindir)" "$(DESTDIR)$(applets_defaultskin_imagesdir)" "$(DESTDIR)$(applets_flickrdir)" "$(DESTDIR)$(applets_httpauthdir)" "$(DESTDIR)$(applets_infobrowserdir)" "$(DESTDIR)$(applets_logdir)" "$(DESTDIR)$(applets_macroplaydir)" "$(DESTDIR)$(applets_nowplayingdir)" "$(DESTDIR)$(applets_nowplaying_imagesdir)" "$(DESTDIR)$(applets_screensaversdir)" "$(DESTDIR)$(applets_screenshotdir)" "$(DESTDIR)$(applets_selectplayerdir)" "$(DESTDIR)$(applets_setupSqueezeboxdir)" "$(DESTDIR)$(applets_setupappletinstallerdir)" "$(DESTDIR)$(applets_setupdatetimedir)" "$(DESTDIR)$(applets_setuplanguagedir)" "$(DESTDIR)$(applets_setupnettestdir)" "$(DESTDIR)$(applets_setupsoundeffectsdir)" "$(DESTDIR)$(applets_setupsoundeffects_soundsdir)" "$(DESTDIR)$(applets_setupwallpaperdir)" "$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)" "$(DESTDIR)$(applets_slimbrowserdir)" "$(DESTDIR)$(applets_slimdiscoverydir)" "$(DESTDIR)$(applets_squeezenetworkpindir)" "$(DESTDIR)$(applets_testplaybackdir)" "$(DESTDIR)$(jivedir)" "$(DESTDIR)$(jiveuidir)" "$(DESTDIR)$(luaaudiodir)" "$(DESTDIR)$(luanetdir)" "$(DESTDIR)$(luaslimdir)" "$(DESTDIR)$(luautildir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)" "$(DESTDIR)$(applets_blankscreendir)" "$(DESTDIR)$(applets_choosemusicsourcedir)" "$(DESTDIR)$(applets_clockdir)" "$(DESTDIR)$(applets_customizehomemenudir)" "$(DESTDIR)$(applets_defaultskindir)" "$(DESTDIR)$(applets_defaultskin_imagesdir)" "$(DESTDIR)$(applets_flickrdir)" "$(DESTDIR)$(applets_httpauthdir)" "$(DESTDIR)$(applets_infobrowserdir)" "$(DESTDIR)$(applets_logdir)" "$(DESTDIR)$(applets_macroplaydir)" "$(DESTDIR)$(applets_nowplayingdir)" "$(DESTDIR)$(applets_nowplaying_imagesdir)" "$(DESTDIR)$(applets_screensaversdir)" "$(DESTDIR)$(applets_screenshotdir)" "$(DESTDIR)$(applets_selectplayerdir)" "$(DESTDIR)$(applets_selectskindir)" "$(DESTDIR)$(applets_setupSqueezeboxdir)" "$(DESTDIR)$(applets_setupappletinstallerdir)" "$(DESTDIR)$(applets_setupdatetimedir)" "$(DESTDIR)$(applets_setuplanguagedir)" "$(DESTDIR)$(applets_setupnettestdir)" "$(DESTDIR)$(applets_setupsoundeffectsdir)" "$(DESTDIR)$(applets_setupsoundeffects_soundsdir)" "$(DESTDIR)$(applets_setupwallpaperdir)" "$(DESTDIR)$(applets_setupwallpaper_wallpaperdir)" "$(DESTDIR)$(applets_slimbrowserdir)" "$(DESTDIR)$(applets_slimdiscoverydir)" "$(DESTDIR)$(applets_squeezenetworkpindir)" "$(DESTDIR)$(applets_testplaybackdir)" "$(DESTDIR)$(jivedir)" "$(DESTDIR)$(jiveuidir)" "$(DESTDIR)$(luaaudiodir)" "$(DESTDIR)$(luanetdir)" "$(DESTDIR)$(luaslimdir)" "$(DESTDIR)$(luautildir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -2221,6 +2247,7 @@ install-data-am: install-dist_applets_blankscreenDATA \
 	install-dist_applets_screensaversDATA \
 	install-dist_applets_screenshotDATA \
 	install-dist_applets_selectplayerDATA \
+	install-dist_applets_selectskinDATA \
 	install-dist_applets_setupSqueezeboxDATA \
 	install-dist_applets_setupappletinstallerDATA \
 	install-dist_applets_setupdatetimeDATA \
@@ -2283,6 +2310,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	uninstall-dist_applets_screensaversDATA \
 	uninstall-dist_applets_screenshotDATA \
 	uninstall-dist_applets_selectplayerDATA \
+	uninstall-dist_applets_selectskinDATA \
 	uninstall-dist_applets_setupSqueezeboxDATA \
 	uninstall-dist_applets_setupappletinstallerDATA \
 	uninstall-dist_applets_setupdatetimeDATA \
@@ -2325,6 +2353,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	install-dist_applets_screensaversDATA \
 	install-dist_applets_screenshotDATA \
 	install-dist_applets_selectplayerDATA \
+	install-dist_applets_selectskinDATA \
 	install-dist_applets_setupSqueezeboxDATA \
 	install-dist_applets_setupappletinstallerDATA \
 	install-dist_applets_setupdatetimeDATA \
@@ -2362,6 +2391,7 @@ uninstall-am: uninstall-binPROGRAMS \
 	uninstall-dist_applets_screensaversDATA \
 	uninstall-dist_applets_screenshotDATA \
 	uninstall-dist_applets_selectplayerDATA \
+	uninstall-dist_applets_selectskinDATA \
 	uninstall-dist_applets_setupSqueezeboxDATA \
 	uninstall-dist_applets_setupappletinstallerDATA \
 	uninstall-dist_applets_setupdatetimeDATA \

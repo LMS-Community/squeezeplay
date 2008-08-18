@@ -58,6 +58,20 @@ end
 
 --[[
 
+=head2 self:configureApplet()
+
+Called after all applets have been registered, this can be used to
+configure the applet.
+
+=cut
+--]]
+function configureApplet(self)
+	-- optional
+end
+
+
+--[[
+
 =head2 self:defaultSettings()
 
 Returns a table with the default settings for this applet, or nil
