@@ -81,6 +81,7 @@ local DEVICE_IDS = {
 	[4] = "squeezebox2",
 	[5] = "transporter",
 	[7] = "receiver",
+	[10] = "b",
 }
 
 
@@ -275,6 +276,12 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 		return
 	end
 
+	if log:isDebug() then
+		log:debug('Serverstatus update: ')
+		log:debug('--------------------')
+		debug.dump(playerInfo, 8)
+		log:debug('--------------------')
+	end
 	-- Save old player info
 	local oldInfo = self.info
 	self.info = {}
@@ -647,7 +654,8 @@ Returns the player mac address, or nil for http players.
 function getMacAddress(self)
 	if self.info.model == "squeezebox2"
 		or self.info.model == "receiver"
-		or self.info.model == "transporter" then
+		or self.info.model == "transporter" 
+		or self.info.model == "b" then
 
 		return string.gsub(self.id, "[^%x]", "")
 	end
@@ -817,6 +825,13 @@ end
 -- processes the playerstatus data and calls associated functions for notification
 function _process_status(self, event)
 	log:debug("Player:_process_playerstatus()")
+
+	if log:isDebug() then
+		log:debug('Playerstatus update: ')
+		log:debug('--------------------')
+		debug.dump(event.data, 8)
+		log:debug('--------------------')
+	end
 
 	if event.data.error then
 		-- ignore player status sent with an error
@@ -1141,6 +1156,7 @@ function canUdap(self)
 	return self.info.model == "squeezebox2"
 		or self.info.model == "receiver"
 		or self.info.model == "transporter"
+		or self.info.model == "b"
 end
 
 
@@ -1149,6 +1165,7 @@ function canConnectToServer(self)
 	return self.info.model == "squeezebox2"
 		or self.info.model == "receiver"
 		or self.info.model == "transporter"
+		or self.info.model == "b"
 end
 
 

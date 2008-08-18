@@ -6,13 +6,13 @@
 
 BSP_SCREEN_LOCKED
 	DA	Låst
-	DE	Gesperrt
+	DE	LCD gesperrt. Drücken Sie HINZUFÜGEN und WIEDERGABE.
 	EN	Locked
-	ES	Bloqueda
+	ES	Pantalla bloqueada. Pulse AGREGAR y REPRODUCIR para desbloquear.
 	FI	Lukittu
-	FR	Verrouillé
-	IT	Bloccato
-	NL	Vergrendeld
+	FR	Ecran verrouillé. Appuyez sur ADD et PLAY pour le déverrouiller.
+	IT	Schermo bloccato. Premere AGGIUNGI e RIPRODUCI per sbloccarlo.
+	NL	Scherm vergrendeld. Druk op TOEVOEGEN en AFSPELEN om het te ontgrendelen.
 	NO	Låst
 	SV	Låst
 
@@ -20,10 +20,10 @@ BSP_SCREEN_LOCKED_HELP
 	DA	Du låser op ved at trykke samtidig på ADD og PLAY (tilføj og afspil).
 	DE	Drücken Sie zum Aufheben der Sperre gleichzeitig ADD und PLAY.
 	EN	To unlock, press the add and play buttons at the same time.
-	ES	Para desbloquear, pulse los botones ADD y PLAY simultáneamente.
+	ES	Para desbloquear, pulse los botones de agregación y reproducción simultáneamente.
 	FI	Vapauta lukitus painamalla lisäys- ja toistopainikkeita samaan aikaan.
-	FR	Pour déverrouiller, appuyez sur les boutons ADD et PLAY simultanément.
-	IT	Per sbloccare premere contemporaneamente i pulsanti ADD e PLAY.
+	FR	Pour déverrouiller, appuyez sur les boutons AJOUTER et LECTURE simultanément.
+	IT	Per sbloccare, premere contemporaneamente i pulsanti di aggiunta e di riproduzione.
 	NL	Druk de knoppen ADD en PLAY tegelijk in voor ontgrendeling.
 	NO	Trykk på Legg til- og Spill av-knappene samtidig for å låse opp.
 	SV	Tryck på plusknappen och uppspelningsknappen samtidigt när du vill avaktivera låset.
@@ -281,7 +281,16 @@ POWER_DOWN_CANCEL
 	SV	Avbryt
 
 POWER_DOWN_SLEEP
+	DA	Slumre
+	DE	Schlafmodus
 	EN	Sleep
+	ES	Suspender
+	FI	Lepotila
+	FR	Veille
+	IT	Sospendi
+	NL	Sluimermodus
+	NO	Hvilemodus
+	SV	Viloläge
 
 POWER_DOWN_CONFIRM
 	DA	Bekræft
@@ -308,7 +317,16 @@ GOODBYE
 	SV	\nHej då!
 
 SLEEPING
+	DA	\nSlumrer
+	DE	\nSchlafmodus aktiv
 	EN	\nSleeping
+	ES	\nSuspensión
+	FI	\nUnitilassa
+	FR	\nMise en veille
+	IT	\nSospensione
+	NL	\nSluimermodus
+	NO	\nHviler
+	SV	\nI viloläge
 
 POWER_DOWN_HELP
 	DA	Annuller eller Bekræft at controlleren skal slukkes

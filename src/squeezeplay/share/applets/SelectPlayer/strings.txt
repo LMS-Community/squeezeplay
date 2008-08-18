@@ -15,13 +15,13 @@ SELECT_PLAYER
 	SV	Välj spelare
 
 SQUEEZEBOX_SETUP
-	DA	Konfiguration af Receiver
-	DE	Receiver einrichten
+	DA	Konfiguration af Squeezebox
+	DE	Squeezebox einrichten
 	EN	Set Up Squeezebox
 	ES	Configuración del receptor
 	FI	Ota vastaanotin käyttöön
-	FR	Configuration du Squeezebox Receiver
-	IT	Configura Receiver
+	FR	Configuration de la Squeezebox
+	IT	Configura Squeezebox
 	NL	Ontvanger instellen
 	NO	Konfigurer mottaker
 	SV	Konfigurera mottagare

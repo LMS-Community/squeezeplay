@@ -12,7 +12,7 @@ SCREENSAVER_NOWPLAYING
 	IT	Riproduzione in corso
 	NL	Speelt nu
 	NO	Spilles nå
-	SV	Aktuellt spår
+	SV	Nu spelas
 
 SCREENSAVER_PAUSED
 	DA	Pause
@@ -48,7 +48,7 @@ SCREENSAVER_NOWPLAYING_SETTINGS
 	IT	Impostazioni della riproduzione in corso
 	NL	Instellingen Speelt nu
 	NO	Innstillinger for Spilles nå
-	SV	Inställningar för Aktuellt spår
+	SV	Nu spelas-inställningar
 
 SCREENSAVER_NOWPLAYING_OF
 	DA	%s af %s

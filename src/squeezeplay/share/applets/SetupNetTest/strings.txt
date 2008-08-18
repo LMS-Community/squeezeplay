@@ -3,7 +3,7 @@
 SETUPNETTEST
 	DA	Test af netværk
 	DE	Netzwerktest
-	EN	Network Test	
+	EN	Network Test
 	ES	Prueba de red
 	FI	Verkkotesti
 	FR	Test réseau
@@ -39,7 +39,7 @@ SETUPNETTEST_TESTING
 SETUPNETTEST_CURRENT
 	DA	Nuværende
 	DE	Aktuell
-	EN	Current	
+	EN	Current
 	ES	Actual
 	FI	Nykyinen
 	FR	En cours
@@ -63,7 +63,7 @@ SETUPNETTEST_HISTORY
 SETUPNETTEST_TESTINGTO
 	DA	Tester
 	DE	Test für
-	EN	Testing to 
+	EN	Testing to
 	ES	Probando a
 	FI	Testataan
 	FR	Test de
