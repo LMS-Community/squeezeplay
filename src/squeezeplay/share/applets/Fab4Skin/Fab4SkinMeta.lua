@@ -35,7 +35,7 @@ end
 
 
 function registerApplet(self)
-	--jiveMain:loadSkin('SecretSkin', 'skin')
+	jiveMain:registerSkin(self:string("FAB4_SKIN"), "Fab4Skin", "skin")
 end
 
 
