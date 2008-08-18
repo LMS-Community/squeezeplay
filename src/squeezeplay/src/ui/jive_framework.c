@@ -723,11 +723,7 @@ int jiveL_set_video_mode(lua_State *L) {
 	screen_w = luaL_optinteger(L, 2, 0);
 	screen_h = luaL_optinteger(L, 3, 0);
 
-	/* redraw screen */
-	lua_pushcfunction(L, jiveL_redraw);
-	lua_pushvalue(L, 1);
-	lua_pushnil(L);
-	lua_call(L, 2, 0);
+	next_jive_origin++;
 
 	return 0;
 }

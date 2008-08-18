@@ -34,7 +34,7 @@ end
 
 
 function registerApplet(self)
---	jiveMain:loadSkin('FullscreenSkin', 'skin')
+	jiveMain:registerSkin(self:string("DESKTOP_SKIN"), 'FullscreenSkin', 'skin')
 end
 
 

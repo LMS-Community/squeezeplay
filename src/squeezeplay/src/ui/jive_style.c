@@ -538,19 +538,11 @@ JiveAlign jive_style_align(lua_State *L, int index, char *key, JiveAlign def) {
 void jive_style_insets(lua_State *L, int index, char *key, JiveInset *inset) {
 	JIVEL_STACK_CHECK_BEGIN(L);
 
-
 	lua_pushcfunction(L, jiveL_style_value);
 	lua_pushvalue(L, index);
 	lua_pushstring(L, key);
 	lua_pushnil(L);
 	lua_call(L, 3, 1);
-
-	if (lua_isnil(L, -1)) {
-		lua_pop(L, 1);
-
-		JIVEL_STACK_CHECK_ASSERT(L);
-		return;
-	}
 
 	if (lua_isinteger(L, -1)) {
 		int v = lua_tointeger(L, -1);

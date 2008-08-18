@@ -244,13 +244,79 @@ function JiveMain:reload()
 
 	-- manage applets
 	appletManager:discover()
-	
+
+	-- make sure a skin is selected
+	if not self.selectedSkin then
+		for askin in pairs(self.skins) do
+			self:setSelectedSkin(askin)
+			break
+		end
+	end
+	assert(self.selectedSkin, "No skin")
+end
+
+
+function JiveMain:registerSkin(name, appletName, method)
+	log:debug("registerSkin(", name, ",", appletName, ")")
+
+	self.skins[appletName] = { name, method }
+end
+
+
+function JiveMain:skinIterator()
+	local _f,_s,_var = pairs(self.skins)
+	return function(_s,_var)
+		local appletName, entry = _f(_s,_var)
+		if appletName then
+			return appletName, entry[1]
+		else
+			return nil
+		end
+	end,_s,_var
+end
+
+
+function JiveMain:getSelectedSkin()
+	return self.selectedSkin
+end
+
+
+local function _loadSkin(self, appletName, reload)
+	if not self.skins[appletName] then
+		return false
+	end
+
+	local name, method = unpack(self.skins[appletName])
+	local obj = appletManager:loadApplet(appletName)
+	assert(obj, "Cannot load skin " .. appletName)
+
+	-- reset the skin
+	jive.ui.style = {}
+
+	obj[method](obj, jive.ui.style, reload==nil and true or relaod)
+
 	Framework:styleChanged()
+
+	return true
+end
+
+
+function JiveMain:setSelectedSkin(appletName, reload)
+	if _loadSkin(self, appletName, false) then
+		self.selectedSkin = appletName
+	end
+end
+
+
+-- reloadSkin
+-- 
+function JiveMain:reloadSkin(reload)
+	_loadSkin(self, self.selectedSkin, true);
 end
 
 
 -- loadSkin
--- 
+-- XXXX deprecated, to be replaced with per window skinning
 function JiveMain:loadSkin(appletName, method)
 	log:debug("loadSkin(", appletName, ")")
 	
@@ -258,22 +324,6 @@ function JiveMain:loadSkin(appletName, method)
 	assert(obj, "Cannot load skin " .. appletName)
 
 	obj[method](obj, jive.ui.style)
-
-	self.skins[#self.skins + 1] = { obj, method }
-end
-
--- reloadSkin
--- 
-function JiveMain:reloadSkin()
-	-- reset the skin
-	jive.ui.style = {}
-
-	for i,v in ipairs(self.skins) do
-		local obj, method = v[1], v[2]
-		obj[method](obj, jive.ui.style)
-	end
-
-	Framework:styleChanged()
 end
 
 
