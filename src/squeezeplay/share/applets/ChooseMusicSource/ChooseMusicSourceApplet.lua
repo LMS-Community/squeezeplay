@@ -114,6 +114,7 @@ function settingsShow(self)
 		   )
 
 	self:tieAndShowWindow(window)
+	appletManager:callService("hideConnectingToPlayer")
 end
 
 

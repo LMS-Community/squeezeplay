@@ -495,16 +495,6 @@ local function _inputInProgress(self, msg)
 	popup:show()
 end
 
--- _hideConnectingToPlayer
--- hide the full screen popup that appears until menus are loaded
-local function _hideConnectingToPlayer()
-	if _connectingPopup then
-		log:info("_connectingToPlayer popup hide")
-		_connectingPopup:hide()
-		_connectingPopup = nil
-	end
-end
-
 -- _hideUserUpdatePopup
 -- hide the full screen popup that appears until player is updated
 local function _hideUserUpdatePopup()
@@ -1112,7 +1102,7 @@ local function _menuSink(self, cmd)
 			end
 		end
 		if _menuReceived then
-			_hideConnectingToPlayer()
+			hideConnectingToPlayer()
 		end
          end
 end
@@ -2478,7 +2468,15 @@ function _problemConnecting(self, server)
 	window:show()
 end
 
-
+-- hideConnectingToPlayer
+-- hide the full screen popup that appears until menus are loaded
+function hideConnectingToPlayer()
+	if _connectingPopup then
+		log:info("_connectingToPlayer popup hide")
+		_connectingPopup:hide()
+		_connectingPopup = nil
+	end
+end
 
 --[[
 
@@ -2511,7 +2509,7 @@ function free(self)
 	_playerMenus = {}
 
 	-- remove connecting popup
-	_hideConnectingToPlayer()
+	hideConnectingToPlayer()
 	_hidePlayerUpdating()
 	_hideUserUpdatePopup()
 
