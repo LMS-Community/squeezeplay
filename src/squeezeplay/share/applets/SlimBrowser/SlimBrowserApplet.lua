@@ -640,6 +640,22 @@ local function _updatingPlayer(self)
 	_updatingPlayerPopup = popup
 end
 
+-- _renderTextArea
+-- special case when single SlimBrowse item is a textarea
+local function _renderTextArea(step, item)
+
+	if not step and step.window then
+		return
+	end
+	_assert(item)
+	_assert(item.textArea)
+
+	local textArea = Textarea("textarea", item.textArea)
+	step.window:addWidget(textArea)
+
+end
+
+
 -- _renderSlider
 -- special case when SlimBrowse item is configured for a slider widget
 local function _renderSlider(step, item)
@@ -888,12 +904,18 @@ local function _browseSink(step, chunk, err)
 			end
 			local textArea = Textarea("textarea", data.window.textArea)
 			step.window:addWidget(textArea)
-		elseif step.menu and data and data.count and data.count == 1 and data.item_loop and data.item_loop[1].slider then
+		elseif step.menu and data and data.count and data.count == 1 and data.item_loop and (data.item_loop[1].slider or data.item_loop[1].textArea) then
 			-- no menus here, thankyouverymuch
 			if step.menu then
 				step.window:removeWidget(step.menu)
 			end
-			_renderSlider(step, data.item_loop[1])
+
+			if data.item_loop[1].slider then
+				_renderSlider(step, data.item_loop[1])
+			else
+				_renderTextArea(step, data.item_loop[1])
+			end
+
 		-- avoid infinite request loop on count == 0
 		elseif step.menu and data and data.count and data.count == 0 then
 			-- this will render a blank menu, which is typically undesirable 
