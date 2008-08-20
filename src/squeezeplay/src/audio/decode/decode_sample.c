@@ -188,7 +188,7 @@ static struct jive_sample *load_sound(char *filename, int mixer) {
 
 	/* Convert to signed 32 bit stereo, SDL does not support this format */
 	cvt.len_cvt *= 2;
-	for (i=cvt.len; i>0; i--) {
+	for (i=(cvt.len_cvt/4)-1; i>=0; i--) {
 		((Uint32 *)cvt.buf)[i] = ((Uint16 *)cvt.buf)[i] << 16;
 	}
 
