@@ -366,7 +366,7 @@ function updateUdap(self, udap)
 	else
 		self.info.name = tostring(udap.ucp.name)
 	end
-	self.info.model = DEVICE_IDS[tonumber(udap.ucp.device_id)]
+	self.info.model = DEVICE_IDS[tonumber(udap.ucp.device_id, 16)]
 	self.info.connected = false
 
 	self.lastSeen = Framework:getTicks()

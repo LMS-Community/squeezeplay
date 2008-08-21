@@ -45,6 +45,7 @@ function registerApplet(self)
 	self:registerService('goHome')
 	self:registerService('showTrackOne')
 	self:registerService('showPlaylist')
+	self:registerService('hideConnectingToPlayer')
 
 	appletManager:loadApplet("SlimBrowser")
 
