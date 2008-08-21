@@ -13,7 +13,7 @@ local Watchdog               = require("jiveWatchdog")
 local Wireless               = require("jive.net.Wireless")
 
 local Applet                 = require("jive.Applet")
-local Audio                  = require("jive.ui.Audio")
+local Sample                 = require("jive.ui.Sample")
 local Checkbox               = require("jive.ui.Checkbox")
 local Choice                 = require("jive.ui.Choice")
 local Font                   = require("jive.ui.Font")
@@ -595,7 +595,7 @@ function setPowerState(self, state)
 
 		if self.audioVolume ~= nil then
 			log:info("Restore effect volume ", self.audioVolume)
-			Audio:setEffectVolume(self.audioVolume)
+			Sample:setEffectVolume(self.audioVolume)
 			self.audioVolume = nil
 		end
 
@@ -628,7 +628,7 @@ function setPowerState(self, state)
 
 			if self.audioVolume ~= nil then
 				log:info("Restore effect volume ", self.audioVolume)
-				Audio:setEffectVolume(self.audioVolume)
+				Sample:setEffectVolume(self.audioVolume)
 				self.audioVolume = nil
 			end
 
@@ -640,7 +640,7 @@ function setPowerState(self, state)
 
 			if self.audioVolume ~= nil then
 				log:info("Restore effect volume ", self.audioVolume)
-				Audio:setEffectVolume(self.audioVolume)
+				Sample:setEffectVolume(self.audioVolume)
 				self.audioVolume = nil
 			end
 
@@ -658,9 +658,9 @@ function setPowerState(self, state)
 			self:_setCPUSpeed(false)
 
 			if not self.audioVolume then
-				self.audioVolume = Audio:getEffectVolume()
+				self.audioVolume = Sample:getEffectVolume()
 				log:info("Store effect volume ", self.audioVolume)
-				Audio:setEffectVolume(0)
+				Sample:setEffectVolume(0)
 			end
 
 			if state == "sleep" then
