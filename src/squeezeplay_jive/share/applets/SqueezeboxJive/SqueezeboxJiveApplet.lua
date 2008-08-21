@@ -13,7 +13,7 @@ local Watchdog               = require("jiveWatchdog")
 local Wireless               = require("jive.net.Wireless")
 
 local Applet                 = require("jive.Applet")
-local Sample                 = require("jive.ui.Sample")
+local Sample                 = require("squeezeplay.sample)
 local Checkbox               = require("jive.ui.Checkbox")
 local Choice                 = require("jive.ui.Choice")
 local Font                   = require("jive.ui.Font")
