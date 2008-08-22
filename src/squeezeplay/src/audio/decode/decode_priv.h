@@ -120,6 +120,7 @@ extern u32_t decode_num_tracks_started;
 extern u32_t decode_elapsed_samples;
 extern bool_t decode_first_buffer;
 extern u32_t current_sample_rate;
+extern u32_t skip_ahead_bytes;
 
 /* The fifo used to store decoded samples */
 extern u8_t decode_fifo_buf[DECODE_FIFO_SIZE];

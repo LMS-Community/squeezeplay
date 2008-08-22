@@ -35,6 +35,7 @@ u32_t decode_num_tracks_started = 0;
 u32_t decode_elapsed_samples = 0;
 bool_t decode_first_buffer = FALSE;
 u32_t current_sample_rate = 44100;
+u32_t skip_ahead_bytes = 0;
 
 
 /* decoder fifo used to store decoded samples */
@@ -123,8 +124,8 @@ static void decode_skip_ahead_handler(void) {
 	mqueue_read_complete(&decode_mqueue);
 
 	DEBUG_TRACE("decode_skip_ahead_handler interval=%d", interval);
-
-	// XXXX
+	
+	skip_ahead_bytes = SAMPLES_TO_BYTES((u32_t)((interval * current_sample_rate) / 1000));
 }
 
 

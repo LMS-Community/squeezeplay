@@ -40,7 +40,7 @@ static int callback(const void *inputBuffer,
 		    const PaStreamCallbackTimeInfo *timeInfo,
 		    PaStreamCallbackFlags statusFlags,
 		    void *userData) {
-	size_t bytes_used, len;
+	size_t bytes_used, len, skip_bytes = 0;
 	bool_t reached_start_point;
 	Uint8 *outputArray = (u8_t *)outputBuffer;
 
@@ -65,6 +65,13 @@ static int callback(const void *inputBuffer,
 	fifo_lock(&decode_fifo);
 
 	bytes_used = fifo_bytes_used(&decode_fifo);	
+
+	/* only skip if it will not cause an underrun */
+	if (bytes_used + skip_ahead_bytes >= len) {
+		skip_bytes = skip_ahead_bytes;
+		bytes_used -= skip_bytes;
+	}
+
 	if (bytes_used > len) {
 		bytes_used = len;
 	}
@@ -84,6 +91,25 @@ static int callback(const void *inputBuffer,
 	}
 	else {
 		current_audio_state &= ~DECODE_STATE_UNDERRUN;
+	}
+
+	if (skip_bytes) {
+		size_t wrap;
+
+		DEBUG_TRACE("Skipping %d bytes", skip_bytes);
+		
+		wrap = fifo_bytes_until_rptr_wrap(&decode_fifo);
+
+		if (wrap < skip_bytes) {
+			fifo_rptr_incby(&decode_fifo, wrap);
+			skip_bytes -= wrap;
+			skip_ahead_bytes -= wrap;
+			decode_elapsed_samples += BYTES_TO_SAMPLES(wrap);
+		}
+
+		fifo_rptr_incby(&decode_fifo, skip_bytes);
+		skip_ahead_bytes -= skip_bytes;
+		decode_elapsed_samples += BYTES_TO_SAMPLES(skip_bytes);
 	}
 
 	while (bytes_used) {
