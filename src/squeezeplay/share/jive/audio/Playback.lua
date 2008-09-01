@@ -12,6 +12,7 @@ local SlimProto              = require("jive.net.SlimProto")
 
 local Task                   = require("jive.ui.Task")
 local Timer                  = require("jive.ui.Timer")
+local Framework              = require("jive.ui.Framework")
 
 local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("audio")
@@ -62,6 +63,8 @@ function __init(self, jnt, slimproto)
 	self.threshold = 0
 	self.tracksStarted = 0
 
+	self.statusTimestamp = 0
+
 	self.sentResume = false
 	self.sentDecoderFullEvent = false
 	self.sentDecoderUnderrunEvent = false
@@ -79,6 +82,7 @@ function sendStatus(self, status, event, serverTimestamp)
 	status.serverTimestamp = serverTimestamp
 
 	self.slimproto:send(status)
+	self.statusTimestamp = Framework:getTicks()
 end
 
 
@@ -185,6 +189,11 @@ function _timerCallback(self)
 		end
 	end
 
+	if status.decodeState & DECODE_RUNNING and 
+		Framework:getTicks() > self.statusTimestamp + 1000
+	then
+		self:sendStatus(status, "STMt")
+	end
 
 	-- stream metadata
 	local metadata = Decode:streamMetadata()
@@ -283,7 +292,7 @@ end
 
 
 function _strm(self, data)
-	log:info("strm ", data.command)
+	if data.command ~= 't' then log:info("strm ", data.command)	end
 
 	if data.command == 's' then
 		-- start
@@ -313,7 +322,7 @@ function _strm(self, data)
 		self.threshold = data.threshold * 1024
 
 		self.sentResume = false
-		self.sentDecoderFullEvent = true
+		self.sentDecoderFullEvent = false
 		self.sentDecoderUnderrunEvent = false
 		self.sentOutputUnderrunEvent = false
 		self.sentAudioUnderrunEvent = false

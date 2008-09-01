@@ -42,7 +42,7 @@ static SDL_Thread *audio_thread;
  */
 static void callback(void *outputBuffer,
 		    unsigned long framesPerBuffer) {
-	size_t bytes_used, len;
+	size_t bytes_used, len, skip_bytes = 0;
 	bool_t reached_start_point;
 	Uint8 *outputArray = (u8_t *)outputBuffer;
 
@@ -60,7 +60,14 @@ static void callback(void *outputBuffer,
 		return;
 	}
 
-	bytes_used = fifo_bytes_used(&decode_fifo);	
+	bytes_used = fifo_bytes_used(&decode_fifo);
+	
+	/* only skip if it will not cause an underrun */
+	if (bytes_used + skip_ahead_bytes >= len) {
+		skip_bytes = skip_ahead_bytes;
+		bytes_used -= skip_bytes;
+	}
+
 	if (bytes_used > len) {
 		bytes_used = len;
 	}
@@ -69,6 +76,7 @@ static void callback(void *outputBuffer,
 	if (bytes_used == 0) {
 		current_audio_state |= DECODE_STATE_UNDERRUN;
 		memset(outputArray, 0, len);
+		DEBUG_ERROR("Audio underrun: used 0 bytes");
 
 		return;
 	}
@@ -76,9 +84,29 @@ static void callback(void *outputBuffer,
 	if (bytes_used < len) {
 		current_audio_state |= DECODE_STATE_UNDERRUN;
 		memset(outputArray + bytes_used, 0, len - bytes_used);
+		DEBUG_ERROR("Audio underrun: used %d bytes , requested %d bytes", bytes_used, len);
 	}
 	else {
 		current_audio_state &= ~DECODE_STATE_UNDERRUN;
+	}
+	
+	if (skip_bytes) {
+		size_t wrap;
+
+		DEBUG_TRACE("Skipping %d bytes", skip_bytes);
+		
+		wrap = fifo_bytes_until_rptr_wrap(&decode_fifo);
+
+		if (wrap < skip_bytes) {
+			fifo_rptr_incby(&decode_fifo, wrap);
+			skip_bytes -= wrap;
+			skip_ahead_bytes -= wrap;
+			decode_elapsed_samples += BYTES_TO_SAMPLES(wrap);
+		}
+
+		fifo_rptr_incby(&decode_fifo, skip_bytes);
+		skip_ahead_bytes -= skip_bytes;
+		decode_elapsed_samples += BYTES_TO_SAMPLES(skip_bytes);
 	}
 
 	while (bytes_used) {
