@@ -108,7 +108,7 @@ function _connectToServer(self, server)
 
 	local slimProto = SlimProto(jnt, ip, {
 		opcode = "HELO",
-		deviceID = "4",
+		deviceID = "12",
 		revision = "0",
 	})
 
