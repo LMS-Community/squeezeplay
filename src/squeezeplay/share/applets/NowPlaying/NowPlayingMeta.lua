@@ -21,6 +21,9 @@ function defaultSettings(self)
 end
 
 function registerApplet(self)
+
+	self:registerService('goNowPlaying')
+
 	local ssMgr = appletManager:loadApplet("ScreenSavers")
 	if ssMgr ~= nil then
 		ssMgr:addScreenSaver(
