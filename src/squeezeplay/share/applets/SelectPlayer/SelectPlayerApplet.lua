@@ -44,9 +44,6 @@ local jnt                = jnt
 local jiveMain           = jiveMain
 local appletManager      = appletManager
 
--- load SetupWallpaper for use in previewing Wallpapers
-local SetupWallpaper = appletManager:loadApplet("SetupWallpaper")
-
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
@@ -272,7 +269,7 @@ end
 
 function _showWallpaper(self, playerId)
 	log:info("previewing background wallpaper for ", playerId)
-	SetupWallpaper:showBackground(nil, playerId)
+	appletManager:callService("showBackground", nil, playerId)
 end
 
 
@@ -382,8 +379,6 @@ function free(self)
 		self:_showWallpaper('wallpaper')
 	end
 	
-	appletManager:freeApplet("SetupWallpaper")
-
 	-- Never free this applet
 	return false
 end

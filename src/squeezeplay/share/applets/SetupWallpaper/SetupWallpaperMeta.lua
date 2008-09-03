@@ -45,6 +45,7 @@ function registerApplet(meta)
 	local obj = appletManager:loadApplet("SetupWallpaper")
 	obj:setBackground(nil) -- nil is default from settings
 	appletManager:freeApplet("SetupWallpaper")
+	appletManager:registerService("showBackground")
 
 	-- add a menu item for configuration
 	jiveMain:addItem(meta:menuItem('appletSetupWallpaper', 'screenSettings', 'WALLPAPER', function(applet, ...) applet:settingsShow(...) end))
