@@ -260,10 +260,10 @@ function parseMtd(self)
 
 	self._mtd["zImage"] = string.match(mtd, "mtd(%d+):[^\n]*zimage[^\n]*\n")
 	self._mtd["root.cramfs"] = string.match(mtd, "mtd(%d+):[^\n]*cramfs[^\n]*\n")
-	self._mtd["yaffs"] = string.match(mtd, "mtd(%d+):[^\n]*yaffs[^\n]*\n")
+	self._mtd["jffs2"] = string.match(mtd, "mtd(%d+):[^\n]*jffs2[^\n]*\n")
 	self._mtd["env"] = string.match(mtd, "mtd(%d+):[^\n]*env[^\n]*\n")
 
-	for _, part in ipairs({"zImage", "root.cramfs", "yaffs", "env"}) do
+	for _, part in ipairs({"zImage", "root.cramfs", "jffs2", "env"}) do
 		if self._mtd[part] == nil then
 			return nil, "PROBLEM_PARSE_MTD"
 		else
