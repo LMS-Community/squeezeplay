@@ -1647,7 +1647,13 @@ local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderS
 			if current then
 				style = "albumcurrent"
 			elseif item and item["style"] then
-				style = item["style"]
+				local menuStyle = menu:getStyle()
+				local menuPrefix = string.match(menuStyle, "(%a+)menu")
+				if menuPrefix then
+					style = menuPrefix .. item["style"]
+				else
+					style = item["style"]
+				end
 			end
 
 			widgets[widgetIndex] = _decoratedLabel(widget, style, item, db, menuAccel)

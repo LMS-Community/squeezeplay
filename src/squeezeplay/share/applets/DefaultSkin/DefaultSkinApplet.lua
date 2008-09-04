@@ -986,6 +986,9 @@ function skin(self, s)
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
 	s.albumitem.icon.border = { 8, 0, 0, 0 }
 
+	s.albumitemplay = _uses(s.albumitem)
+	s.albumitemadd  = _uses(s.albumitem)
+
 	s.popupToast = _uses(s.albumitem, 
 		{
 			order = { 'icon', 'text', 'textarea' },
@@ -1044,6 +1047,13 @@ function skin(self, s)
 	s.selected.albumitem.play.img = Surface:loadImage(imgpath .. "selection_right.png")
 	s.selected.albumitem.play.border = { 0, 0, 5, 0 }
 
+	s.selected.albumitemplay = _uses(s.selected.albumitem, {
+			play = { img = Surface:loadImage(imgpath .. "selection_play.png") }
+	})
+	s.selected.albumitemadd = _uses(s.selected.albumitem, {
+			play = { img = Surface:loadImage(imgpath .. "selection_add.png") }
+	})
+	
 	-- locked item with artwork and song info
 	s.locked.albumitem = {}
 	s.locked.albumitem.text = {}
