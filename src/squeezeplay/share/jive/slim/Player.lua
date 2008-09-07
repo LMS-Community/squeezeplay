@@ -272,16 +272,10 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 	-- ignore updates from a different server if the player
 	-- is not connected to it
 	if self.slimServer ~= slimServer 
-		and playerInfo.connected ~= 1 then
+		and tonumber(playerInfo.connected) ~= 1 then
 		return
 	end
 
-	if log:isDebug() then
-		log:debug('Serverstatus update: ')
-		log:debug('--------------------')
-		debug.dump(playerInfo, 8)
-		log:debug('--------------------')
-	end
 	-- Save old player info
 	local oldInfo = self.info
 	self.info = {}
@@ -825,13 +819,6 @@ end
 -- processes the playerstatus data and calls associated functions for notification
 function _process_status(self, event)
 	log:debug("Player:_process_playerstatus()")
-
-	if log:isDebug() then
-		log:debug('Playerstatus update: ')
-		log:debug('--------------------')
-		debug.dump(event.data, 8)
-		log:debug('--------------------')
-	end
 
 	if event.data.error then
 		-- ignore player status sent with an error

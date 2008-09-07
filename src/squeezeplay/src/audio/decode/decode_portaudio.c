@@ -96,7 +96,7 @@ static int callback(const void *inputBuffer,
 	if (skip_bytes) {
 		size_t wrap;
 
-		DEBUG_TRACE("Skipping %d bytes", skip_bytes);
+		DEBUG_TRACE("Skipping %ld bytes", skip_bytes);
 		
 		wrap = fifo_bytes_until_rptr_wrap(&decode_fifo);
 
