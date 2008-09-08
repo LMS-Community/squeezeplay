@@ -102,10 +102,8 @@ end
 
 
 function notify_playerCurrent(self, player)
-	if self.playerMenu then
-		self.selectedPlayer = player
-		self:manageSelectPlayerMenu()
-	end
+	self.selectedPlayer = player
+	self:manageSelectPlayerMenu()
 end
 
 
@@ -142,10 +140,10 @@ end
 
 function manageSelectPlayerMenu(self)
 	local _numberOfPlayers = appletManager:callService("countPlayers") or 0
+	local currentPlayer    = appletManager:callService("getCurrentPlayer") or nil
 
 	-- if _numberOfPlayers is > 1 and selectPlayerMenuItem doesn't exist, create it
-
-	if _numberOfPlayers > 1 or not self.selectedPlayer then
+	if _numberOfPlayers > 1 or not currentPlayer then
 		if not self.selectPlayerMenuItem then
 			local menuItem = {
 				id = 'selectPlayer',
@@ -159,8 +157,8 @@ function manageSelectPlayerMenu(self)
 			self.selectPlayerMenuItem = menuItem
 		end
 
-	-- if numberOfPlayers < 2 and selectPlayerMenuItem exists, get rid of it
-	elseif _numberOfPlayers < 2 and self.selectPlayerMenuItem then
+	-- if numberOfPlayers < 2 and we're connected to a player and selectPlayerMenuItem exists, get rid of it
+	elseif _numberOfPlayers < 2 and currentPlayer and self.selectPlayerMenuItem then
 		jiveMain:removeItemById('selectPlayer')
 		self.selectPlayerMenuItem = nil
 	end
@@ -256,8 +254,7 @@ function _updateServerItem(self, server)
 		text = server:getName(),
 		sound = "WINDOWSHOW",
 		callback = function()
-			local auth = appletManager:loadApplet("HttpAuth")
-			auth:squeezeCenterPassword(server)
+			appletManager:callService("squeezeCenterPassword", server)
 		end,
 		weight = SERVER_WEIGHT,
 	}
@@ -299,13 +296,12 @@ function setupShow(self, setupNext)
 	end
 
 	-- Bug 6130 add a Set up Squeezebox option, only in Setup not Settings
-	local sbsetup = appletManager:loadApplet("SetupSqueezebox")
-	if sbsetup and setupNext then
+	if setupNext then
 		self.playerMenu:addItem({
 			text = self:string("SQUEEZEBOX_SETUP"),
 			sound = "WINDOWSHOW",
 			callback = function()
-				sbsetup:settingsShow()
+				appletManager:callService("setupSqueezeboxSettingsShow")
 			end,
 			weight = 10,
 		})
@@ -337,8 +333,7 @@ function selectPlayer(self, player)
 	if player:getPin() then
 		-- as we are not linked this is a dummy player, after we need linked we
 		-- need to return to the choose player screen 
-		local snpin = appletManager:loadApplet("SqueezeNetworkPIN")
-		snpin:enterPin(nil, player)
+		appletManager:callService("enterPin", nil, player)
 
 		return false
 	end
@@ -349,13 +344,13 @@ function selectPlayer(self, player)
 
 	-- network configuration needed?
 	if player:needsNetworkConfig() then
-		-- XXXX convert to applet service call
-		local sbsetup = appletManager:loadApplet("SetupSqueezebox")
-		sbsetup:startSqueezeboxSetup(player:getId(),
-					     player:getSSID(),
-					     function()
-						     jiveMain:closeToHome()
-					     end)
+		appletManager:callService("startSqueezeboxSetup", 
+			player:getId(),
+			player:getSSID(),
+			function()
+				jiveMain:closeToHome()
+			end
+		)
 		return false
 	end
 
@@ -370,7 +365,6 @@ end
 
 
 function free(self)
-	jnt:unsubscribe(self)
 
 	-- load the correct wallpaper on exit
 	if self.selectedPlayer and self.selectedPlayer:getId() then

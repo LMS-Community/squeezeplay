@@ -400,7 +400,7 @@ function _setCustom(self, sound, file)
 		settings["_CUSTOM"] = nil
 	end
 	
-	self:_loadSounds(sound)
+	self:loadSounds(sound)
 end
 
 
@@ -447,7 +447,7 @@ function _fetchFile(self, url, path, callback)
 end
 
 
-function _loadSounds(self, sound)
+function loadSounds(self, sound)
 	local settings = self:getSettings()
 
 	for k,v in pairs(sounds) do

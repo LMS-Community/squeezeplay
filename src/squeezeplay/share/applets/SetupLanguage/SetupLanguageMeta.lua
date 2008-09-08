@@ -46,6 +46,8 @@ function registerApplet(meta)
 	-- set the current locale from the applet settings
 	locale:setLocale(meta:getSettings().locale)
 	
+	meta:registerService("SetupLanguage")
+
 	-- add ourselves to the main menu
 	-- setupLanguage is the function that gets called from SetupLanguageApplet.lua when the menu item is selected
 	jiveMain:addItem(meta:menuItem('appletSetupLanguage', 'advancedSettings', "LANGUAGE", function(applet, ...) applet:settingsShow(...) end))

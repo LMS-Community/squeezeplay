@@ -42,13 +42,12 @@ function defaultSettings(self)
 end
 
 
-function registerApplet(self)
+function registerApplet(meta)
 
-	-- ScreenSaver is a resident Applet
-	appletManager:loadApplet("ScreenSavers")
-	
+	meta:registerService("addScreenSaver")
+
 	-- Menu for configuration
-	jiveMain:addItem(self:menuItem('appletScreenSavers', 'screenSettings', "SCREENSAVERS", function(applet, ...) applet:openSettings(...) end))
+	jiveMain:addItem(meta:menuItem('appletScreenSavers', 'screenSettings', "SCREENSAVERS", function(applet, ...) applet:openSettings(...) end))
 end
 
 

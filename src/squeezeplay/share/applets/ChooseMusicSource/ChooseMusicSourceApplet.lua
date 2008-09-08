@@ -126,8 +126,7 @@ end
 function _addServerItem(self, server, address)
 	log:debug("_addServerItem ", server, " " , port)
 
-	local id = server or address
-
+	local id = server:getIpPort() or address
 
 	-- remove existing entry
 	if self.serverList[id] then
@@ -166,6 +165,7 @@ function _addServerItem(self, server, address)
 		item.style = 'checkedNoAction'
 		item.callback = nil
 	elseif not currentPlayer or not currentPlayer:canConnectToServer() then
+	--elseif not currentPlayer then
 		return
 	end
 
@@ -268,12 +268,10 @@ end
 function connectPlayer(self, player, server)
 	-- if connecting to SqueezeNetwork, first check jive is linked
 	if server:getPin() then
-		local snpin = appletManager:loadApplet("SqueezeNetworkPIN")
-		snpin:enterPin(server, nil,
+		appletManager:callService("enterPin", server, nil,
 			       function()
 				       self:connectPlayer(player, server)
 			       end)
-
 		return
 	end
 

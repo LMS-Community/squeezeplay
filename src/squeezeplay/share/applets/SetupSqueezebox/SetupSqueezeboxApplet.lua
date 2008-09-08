@@ -127,7 +127,7 @@ end
 
 
 -- setup squeezebox
-function settingsShow(self, keepOldEntries)
+function setupSqueezeboxSettingsShow(self, keepOldEntries)
 	local window = Window("window", self:string("SQUEEZEBOX_SETUP"), setupsqueezeboxTitleStyle)
 
 	-- window to return to on completion of network settings
@@ -176,7 +176,7 @@ function setupAdhocShow(self, setupNext)
 	self.setupNext = setupNext
 	self.bridged = true
 
-	local window = settingsShow(self, true)
+	local window = setupSqueezeboxSettingsShow(self, true)
 	window:setAllowScreensaver(false)
 
 	return window
@@ -187,7 +187,7 @@ end
 function setupSqueezeboxShow(self, setupNext)
 	self.setupNext = setupNext
 
-	local window = settingsShow(self, true)
+	local window = setupSqueezeboxSettingsShow(self, true)
 	window:setAllowScreensaver(false)
 
 	self.scanMenu:addItem({
@@ -1274,12 +1274,10 @@ function _setSlimserver(self, slimserver)
 	-- if connecting to SqueezeNetwork, first check jive is linked
 	if slimserver:isSqueezeNetwork() then
 		if slimserver:getPin() then
-			local snpin = appletManager:loadApplet("SqueezeNetworkPIN")
-			snpin:enterPin(slimserver, nil,
+			appletManager:callService("enterPin", slimserver, nil,
 				       function()
 					       self:_registerPlayer(slimserver)
 				       end)
-
 			return
 		else
 			self:_registerPlayer(slimserver)

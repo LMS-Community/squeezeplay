@@ -24,17 +24,14 @@ function registerApplet(self)
 
 	self:registerService('goNowPlaying')
 
-	local ssMgr = appletManager:loadApplet("ScreenSavers")
-	if ssMgr ~= nil then
-		ssMgr:addScreenSaver(
-			self:string("SCREENSAVER_NOWPLAYING"), 
-			"NowPlaying", 
-			"openScreensaver", 
-			_, _, 
-			10
-		)
+	appletManager:callService("addScreenSaver",
+		self:string("SCREENSAVER_NOWPLAYING"), 
+		"NowPlaying", 
+		"openScreensaver", 
+		_, _, 
+		10
+	)
 
-	end
 	appletManager:loadApplet("NowPlaying")
 
 end
