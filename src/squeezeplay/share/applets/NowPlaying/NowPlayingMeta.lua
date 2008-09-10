@@ -32,6 +32,7 @@ function registerApplet(self)
 		10
 	)
 
+	-- NowPlaying is a resident applet
 	appletManager:loadApplet("NowPlaying")
 
 end

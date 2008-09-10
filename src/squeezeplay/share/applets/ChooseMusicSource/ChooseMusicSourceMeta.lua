@@ -52,8 +52,6 @@ end
 
 
 function registerApplet(meta)
-	-- we depend on the SlimDiscovery applet
-	appletManager:loadApplet("SlimDiscovery")
 
 	meta:registerService("selectMusicSource")
 
@@ -62,7 +60,7 @@ function registerApplet(meta)
 		appletManager:callService("setPollList", meta:getSettings().poll)
 		jiveMain:addItem(menuItem)
 
-end
+	end
 
 	jnt:subscribe(meta)
 

@@ -264,12 +264,11 @@ end
 -- _getTimeFormat
 -- loads SetupDateTime and returns current setting for date time format
 local function _getTimeFormat()
-	local SetupDateTime = appletManager:loadApplet("SetupDateTime")
+	local SetupDateTimeSettings = appletManager:callService("setupDateTimeSettings")
 	local format = '12'
-	if SetupDateTime and SetupDateTime:getSettings()['hours'] then
-		format = SetupDateTime:getSettings()['hours']
+	if SetupDateTimeSettings and SetupDateTimeSettings['hours'] then
+		format = SetupDateTimeSettings['hours']
 	end
-	appletManager:freeApplet("SetupDateTime")
 	return format
 end
 
