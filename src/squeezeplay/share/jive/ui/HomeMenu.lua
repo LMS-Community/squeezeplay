@@ -158,13 +158,15 @@ function _changeNode(self, id, node)
 		-- change menuitem's node
 		self.menuTable[id].node = node
 		-- add item to that node
-		addNode(self.menuTable[id])
+		self:addNode(self.menuTable[id])
 	end
 end
 
 function addNode(self, item)
-	assert(item.id)
-	assert(item.node)
+
+	if not item or not item.id or not item.node then
+		return
+	end
 
 	log:debug("JiveMain.addNode: Adding a non-root node, ", item.id)
 
@@ -361,6 +363,13 @@ function removeItem(self, item)
 	end
 
 	self:removeItemFromNode(item)
+
+	-- add this item to 'removed' node
+	-- this will allow an item to be removed without garbage collection 
+	-- killing the ability of some applet's meta files to get notification events
+	item.node = 'removed'
+	self:addItem(item)
+
 	-- if this item is co-located in home, get rid of it there too
 	self:removeItemFromNode(item, 'home')
 

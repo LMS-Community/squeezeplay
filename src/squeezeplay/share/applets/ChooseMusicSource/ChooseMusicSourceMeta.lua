@@ -19,21 +19,12 @@ See L<jive.AppletMeta> for a description of standard applet meta functions.
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
+local log           = require("jive.utils.log").logger("applets.setup")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
 local jnt           = jnt
 local _player       = false
-
-local menuItem      =	{ 
-				id       = 'appletSlimservers', 
-				node     = 'settings', 
-				text     = self:string("SLIMSERVER_SERVERS"), 
-				callback = function(applet, ...) 
-						applet:settingsShow(...) 
-					end, 
-				weight   = 60 
-			}
 
 module(...)
 oo.class(_M, AppletMeta)
@@ -58,7 +49,17 @@ function registerApplet(meta)
 	-- set the poll list for discovery of slimservers based on our settings
 	if appletManager:hasService("setPollList") then
 		appletManager:callService("setPollList", meta:getSettings().poll)
-		jiveMain:addItem(menuItem)
+		jiveMain:addItem(
+			meta:menuItem(
+				'appletSlimservers', 
+				'settings', 
+				"SLIMSERVER_SERVERS", 
+				function(applet, ...) 
+					applet:settingsShow(...) 
+				end, 
+				60
+			)
+		)
 
 	end
 
@@ -66,11 +67,21 @@ function registerApplet(meta)
 
 end
 
-function notify_playerCurrent(self, player)
+function notify_playerCurrent(meta, player)
 	if player == nil then
 		jiveMain:removeItemById('appletSlimservers')
 	else
-		jiveMain:addItem(menuItem)
+		jiveMain:addItem(
+			meta:menuItem(
+				'appletSlimservers', 
+				'settings', 
+				"SLIMSERVER_SERVERS", 
+				function(applet, ...) 
+					applet:settingsShow(...) 
+				end, 
+				60
+			)
+		)
 	end
 	_player = player
 end
