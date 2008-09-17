@@ -77,22 +77,27 @@ function settingsShow(self)
 	jnt:subscribe(self)
 
 
-	-- Discover slimservers in this window
+	-- Discover players in this window
 	appletManager:callService("discoverPlayers")
 	window:addTimer(1000, function() appletManager:callService("discoverPlayers") end)
 
 
-	-- slimservers on the poll list
+	-- squeezecenter on the poll list
+	log:debug("*****Polled Server List:")
 	local poll = appletManager:callService("getPollList")
 	for address,_ in pairs(poll) do
+		log:debug('Found: ', address)
 		if address ~= "255.255.255.255" then
+			log:debug('Add to menu: ', address)
 			self:_addServerItem(nil, address)
 		end
 	end
 
 
-	-- discovered slimservers
+	-- discovered squeezecenters
+	log:debug('*****Discovered Server List:')
 	for _,server in appletManager:callService("iterateSqueezeCenters") do
+		log:debug('discovered server: ', server)
 		self:_addServerItem(server)
 	end
 
@@ -124,9 +129,15 @@ end
 
 
 function _addServerItem(self, server, address)
-	log:debug("_addServerItem ", server, " " , port)
+	log:debug("\t_addServerItem ", server, " " , address)
 
-	local id = server:getIpPort() or address
+	local id
+	if server then
+		id = server:getIpPort()
+	else
+		id = address
+	end
+	log:debug("\tid for this server set to: ", id)
 
 	-- remove existing entry
 	if self.serverList[id] then
@@ -141,6 +152,7 @@ function _addServerItem(self, server, address)
 	-- new entry
 	local item
 	if server and currentPlayer and currentPlayer:canConnectToServer() then
+		log:debug("\tadd menu item with callback")
 		local f = function()
 				  self:connectPlayer(currentPlayer, server)
 			  end
@@ -153,6 +165,7 @@ function _addServerItem(self, server, address)
 			weight = 1
 		}
 	else
+		log:debug("\tadd menu item without callback")
 		item = {
 			text = server and server:getName() or address,
 			weight = 1,
@@ -162,11 +175,9 @@ function _addServerItem(self, server, address)
 
 	-- check current player
 	if currentPlayer and currentPlayer:getSlimServer() and server == currentPlayer:getSlimServer() then
+		log:debug("\tthis is the connected server, so remove callback for this item")
 		item.style = 'checkedNoAction'
 		item.callback = nil
-	elseif not currentPlayer or not currentPlayer:canConnectToServer() then
-	--elseif not currentPlayer then
-		return
 	end
 
 	self.serverMenu:addItem(item)

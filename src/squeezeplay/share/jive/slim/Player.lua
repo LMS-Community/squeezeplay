@@ -81,7 +81,7 @@ local DEVICE_IDS = {
 	[4] = "squeezebox2",
 	[5] = "transporter",
 	[7] = "receiver",
-	[10] = "b",
+	[10] = "boom",
 }
 
 
@@ -649,7 +649,7 @@ function getMacAddress(self)
 	if self.info.model == "squeezebox2"
 		or self.info.model == "receiver"
 		or self.info.model == "transporter" 
-		or self.info.model == "b" then
+		or self.info.model == "boom" then
 
 		return string.gsub(self.id, "[^%x]", "")
 	end
@@ -1143,7 +1143,7 @@ function canUdap(self)
 	return self.info.model == "squeezebox2"
 		or self.info.model == "receiver"
 		or self.info.model == "transporter"
-		or self.info.model == "b"
+		or self.info.model == "boom"
 end
 
 
@@ -1152,7 +1152,7 @@ function canConnectToServer(self)
 	return self.info.model == "squeezebox2"
 		or self.info.model == "receiver"
 		or self.info.model == "transporter"
-		or self.info.model == "b"
+		or self.info.model == "boom"
 end
 
 
