@@ -225,7 +225,6 @@ function JiveMain:jiveMainNodes(globalStrings)
 	end
 
 	jiveMain:addNode( { id = 'hidden', node = 'nowhere' } )
-	jiveMain:addNode( { id = 'removed', node = 'nowhere' } )
 	jiveMain:addNode( { id = 'extras', node = 'home', text = _globalStrings:str("EXTRAS"), weight = 50  } )
 	jiveMain:addNode( { id = 'games', node = 'extras', text = _globalStrings:str("GAMES"), weight = 70  } )
 	jiveMain:addNode( { id = 'settings', node = 'home', noCustom = 1, text = _globalStrings:str("SETTINGS"), weight = 70, titleStyle = 'settings' })

@@ -49,19 +49,19 @@ function registerApplet(meta)
 	-- set the poll list for discovery of slimservers based on our settings
 	if appletManager:hasService("setPollList") then
 		appletManager:callService("setPollList", meta:getSettings().poll)
-		jiveMain:addItem(
-			meta:menuItem(
-				'appletSlimservers', 
-				'settings', 
-				"SLIMSERVER_SERVERS", 
-				function(applet, ...) 
-					applet:settingsShow(...) 
-				end, 
-				60
-			)
-		)
-
 	end
+
+	-- add item, then immediately disable it. Music Source should only show up when playerCurrent notification comes through
+	jiveMain:addItem(
+		meta:menuItem(
+			'appletSlimservers', 
+			'settings', 
+			"SLIMSERVER_SERVERS", 
+			nil,
+			60
+		)
+	)
+	jiveMain:disableItemById('appletSlimservers')
 
 	jnt:subscribe(meta)
 
@@ -69,7 +69,7 @@ end
 
 function notify_playerCurrent(meta, player)
 	if player == nil then
-		jiveMain:removeItemById('appletSlimservers')
+		jiveMain:disableItemById('appletSlimservers')
 	else
 		jiveMain:addItem(
 			meta:menuItem(
@@ -88,7 +88,7 @@ end
 
 function notify_playerDelete(self, player)
 	if player == _player then
-		jiveMain:removeItemById('appletSlimservers')
+		jiveMain:disableItemById('appletSlimservers')
 	end
 end
 

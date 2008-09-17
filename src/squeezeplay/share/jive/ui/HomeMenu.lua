@@ -364,14 +364,42 @@ function removeItem(self, item)
 
 	self:removeItemFromNode(item)
 
-	-- add this item to 'removed' node
-	-- this will allow an item to be removed without garbage collection 
-	-- killing the ability of some applet's meta files to get notification events
-	item.node = 'removed'
+	-- if this item is co-located in home, get rid of it there too
+	self:removeItemFromNode(item, 'home')
+
+end
+
+function enableItem(self, item)
+	
+end
+
+--  disableItem differs from removeItem in that it drops the item into a removed node rather than eliminating it completely
+--  this is useful for situations where you would not want GC, e.g., a meta file that needs to continue to be in memory
+--  to handle jnt notification events
+
+function disableItem(self, item)
+	assert(item)
+	assert(item.node)
+
+	if self.menuTable[item.id] then
+		self.menuTable[item.id] = nil
+	end
+
+	self:removeItemFromNode(item)
+
+	item.node = 'hidden'
 	self:addItem(item)
 
 	-- if this item is co-located in home, get rid of it there too
 	self:removeItemFromNode(item, 'home')
+
+end
+
+function disableItemById(self, id)
+	if self.menuTable[id] then
+		local item = self.menuTable[id]
+		self:disableItem(item)
+	end
 
 end
 
