@@ -1,0 +1,44 @@
+################################################################################
+# Squeezeplay makefile for win32
+# Copyright 2008 Logitech
+################################################################################
+
+#
+# User specific stuff
+#
+
+VS_COMMON_BIN_DIR=C:/Programs/Microsoft Visual Studio 9.0/Common7/IDE
+BUILD_CONFIG="RELEASE|Win32"
+SOLUTION_FILE=Jive.sln
+
+#
+# Top level targets
+#
+#.PHONY: all
+all: app innosetup
+
+#
+# squeezeplay
+#
+
+app:
+	"${VS_COMMON_BIN_DIR}/devenv.com" /build ${BUILD_CONFIG} ${SOLUTION_FILE}
+
+
+clean-app:
+	"${VS_COMMON_BIN_DIR}/devenv.com" /clean ${BUILD_CONFIG} ${SOLUTION_FILE}
+
+innosetup:
+	./installer/win32/InnoSetup/iscc.exe ./installer/win32/SqueezePlay.iss
+
+clean-innosetup:
+	rm -rf ./installer/win32/Output/
+	
+#
+# clean
+#
+
+.PHONY: clean
+clean:
+	clean-app clean-installer
+
