@@ -6,8 +6,10 @@
 #
 # User specific stuff
 #
+VS_DIR=C:/Programs/Microsoft Visual Studio 9.0
 
-VS_COMMON_BIN_DIR=C:/Programs/Microsoft Visual Studio 9.0/Common7/IDE
+
+VS_COMMON_BIN_DIR=${VS_DIR}/Common7/IDE
 BUILD_CONFIG="RELEASE|Win32"
 SOLUTION_FILE=Jive.sln
 
