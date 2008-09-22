@@ -103,8 +103,7 @@ function step1(self)
 		end)
 
 	-- choose language
-	self.setupLanguage = assert(appletManager:loadApplet("SetupLanguage"))
-	self._topWindow = self.setupLanguage:setupShow(function() self:step2() end)
+	self._topWindow = appletManager:callService("setupShow", function() self:step2() end)
 
 	return self.topWindow
 end
@@ -120,8 +119,7 @@ function step3(self)
 	log:info("step3")
 
 	-- wireless region
-	self.setupWireless = assert(appletManager:loadApplet("SetupWireless"))
-	return self.setupWireless:setupRegionShow(function() self:step4() end)
+	return appletManager:callService("setupRegionShow", function() self:step4() end)
 end
 
 function step4(self)
@@ -162,9 +160,7 @@ function step51(self)
 	log:info("step51")
 
 	-- connect using squeezebox in adhoc mode
-	self.setupSqueezebox = assert(appletManager:loadApplet("SetupSqueezebox"))
-
-	return self.setupSqueezebox:setupAdhocShow(function() self:step8() end)
+	return appletManager:callService("setupAdhocShow", function() self:step8() end)
 end
 
 function step52(self)
@@ -195,9 +191,7 @@ function step61(self)
 	log:info("step61")
 
 	-- setup squeezebox
-	self.setupSqueezebox = assert(appletManager:loadApplet("SetupSqueezebox"))
-
-	return self.setupSqueezebox:setupSqueezeboxShow(function() self:step7() end)
+	return appletManager:callService("setupSqueezeboxShow", function() self:step7() end)
 end
 
 function step7(self)
@@ -209,8 +203,7 @@ function step7(self)
 	end
 
 	-- select player
-	self.setupPlayer = assert(appletManager:loadApplet("SelectPlayer"))
-	return self.setupPlayer:setupShow(function() self:step8() end)
+	return appletManager:callService("setupShow", function() self:step8() end)
 end
 
 function step8(self)

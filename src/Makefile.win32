@@ -1,0 +1,43 @@
+################################################################################
+# Squeezeplay makefile for win32
+# Copyright 2008 Logitech
+################################################################################
+
+
+#VS90COMNTOOLS env var should be automatically created after VS 2008 installation
+VS_IDE_TOOLS_DIR=${VS90COMNTOOLS}/../IDE
+
+BUILD_CONFIG="RELEASE|Win32"
+SOLUTION_FILE=Jive.sln
+
+#
+# Top level targets
+#
+#.PHONY: all
+all: app innosetup
+
+#
+# squeezeplay
+#
+
+app:
+	"${VS_IDE_TOOLS_DIR}/devenv.com" /build ${BUILD_CONFIG} ${SOLUTION_FILE}
+
+
+clean-app:
+	"${VS_IDE_TOOLS_DIR}/devenv.com" /clean ${BUILD_CONFIG} ${SOLUTION_FILE}
+
+innosetup:
+	./installer/win32/InnoSetup/iscc.exe ./installer/win32/SqueezePlay.iss
+
+clean-innosetup:
+	rm -rf ./installer/win32/Output/
+	
+#
+# clean
+#
+
+.PHONY: clean
+clean:
+	clean-app clean-installer
+

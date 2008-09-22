@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="libFLAC_dynamic"
 	ProjectGUID="{4CEFBC83-C215-11DB-8314-0800200C9A66}"
 	RootNamespace="libFLAC_dynamic"
 	Keyword="Win32Proj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -66,6 +67,8 @@
 				IgnoreDefaultLibraryNames="uuid.lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -85,9 +88,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -149,6 +149,8 @@
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				LinkTimeCodeGeneration="1"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -170,9 +172,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -186,11 +185,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\include\protected\all.h"
+				RelativePath=".\include\private\all.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\private\all.h"
+				RelativePath=".\include\protected\all.h"
 				>
 			</File>
 			<File
@@ -480,6 +479,7 @@
 		</File>
 		<File
 			RelativePath=".\release_static\BuildLog.htm"
+			DeploymentContent="true"
 			>
 		</File>
 		<File

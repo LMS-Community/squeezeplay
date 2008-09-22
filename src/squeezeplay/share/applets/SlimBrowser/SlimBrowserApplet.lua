@@ -264,12 +264,11 @@ end
 -- _getTimeFormat
 -- loads SetupDateTime and returns current setting for date time format
 local function _getTimeFormat()
-	local SetupDateTime = appletManager:loadApplet("SetupDateTime")
+	local SetupDateTimeSettings = appletManager:callService("setupDateTimeSettings")
 	local format = '12'
-	if SetupDateTime and SetupDateTime:getSettings()['hours'] then
-		format = SetupDateTime:getSettings()['hours']
+	if SetupDateTimeSettings and SetupDateTimeSettings['hours'] then
+		format = SetupDateTimeSettings['hours']
 	end
-	appletManager:freeApplet("SetupDateTime")
 	return format
 end
 
@@ -814,8 +813,7 @@ local function _goNowPlaying(transition)
 		transition = Window.transitionPushRight
 	end
 	Framework:playSound("WINDOWSHOW")
-	local NowPlaying = appletManager:loadApplet("NowPlaying")
-	NowPlaying:openScreensaver('browse', transition)
+	appletManager:callService('goNowPlaying', 'browse', transition)
 end
 
 -- _goPlaylist
@@ -2447,8 +2445,7 @@ function _problemConnecting(self, server)
 		menu:addItem({
 			text = self:string("SLIMBROWSER_ENTER_PASSWORD"),
 			callback = function()
-				local auth = appletManager:loadApplet("HttpAuth")
-				auth:squeezeCenterPassword(server)
+				appletManager:callService('squeezeCenterPassword', server)
 			end,
 			sound = "WINDOWSHOW",
 		})
@@ -2460,9 +2457,7 @@ function _problemConnecting(self, server)
 				     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
 				     callback = function()
 							appletManager:callService("setCurrentPlayer", nil)
-
-							local setupSqueezebox = appletManager:loadApplet("SetupSqueezebox")
-							setupSqueezebox:startSqueezeboxSetup(player:getMacAddress(), nil)
+							appletManager:callService('startSqueezeboxSetup', player:getMacAddress(), nil)
 						end,
 				     sound = "WINDOWSHOW",
 			     })
@@ -2475,9 +2470,7 @@ function _problemConnecting(self, server)
 				     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
 				     callback = function()
 							appletManager:callService("setCurrentPlayer", nil)
-
-							local selectPlayer = appletManager:loadApplet("SelectPlayer")
-							selectPlayer:setupShow()
+							appletManager:callService("setupShow")
 						end,
 				     sound = "WINDOWSHOW",
 			     })

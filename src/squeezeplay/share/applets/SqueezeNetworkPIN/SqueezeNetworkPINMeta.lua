@@ -17,6 +17,10 @@ function jiveVersion(meta)
 end
 
 function registerApplet(meta)
+
+	meta:registerService("enterPin")
+	meta:registerService("forcedPin")
+
 	-- check for SN PIN when we connect to a new player
 	-- this is needed after upgrading from the MP firmware if 
 	-- SqueezeNetwork was selected during Ray setup
@@ -27,8 +31,7 @@ end
 function notify_playerCurrent(self, player)
 	if player and player:getPin() then
 		log:debug("SqueezeNetworkPIN: player has a PIN")
-		local applet = appletManager:loadApplet("SqueezeNetworkPIN")
-		applet:forcePin(player)
+		appletManager:callService("forcePin", player)
 	end
 end
 
