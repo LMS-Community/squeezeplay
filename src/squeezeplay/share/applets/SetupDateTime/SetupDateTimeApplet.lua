@@ -217,6 +217,10 @@ function setHours(self, hours)
 	datetime:setHours(hours)
 end
 
+-- wrapper method to allow other applets to get these settings through service API
+function setupDateTimeSettings(self)
+	return self:getSettings()
+end
 
 --[[
 

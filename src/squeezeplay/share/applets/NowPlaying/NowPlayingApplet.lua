@@ -531,6 +531,12 @@ function _createUI(self)
 	return window
 end
 
+-- wrapper method to allow openScreensaver to remain as named so the "screensaver" 
+-- can be found by the Screensaver applet correctly,
+-- while allowing the method to be called via the service API
+function goNowPlaying(self, style, transition)
+	self:openScreensaver(style, transition)
+end
 
 function openScreensaver(self, style, transition)
 

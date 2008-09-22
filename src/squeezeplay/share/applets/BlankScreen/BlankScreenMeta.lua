@@ -41,13 +41,12 @@ end
 function registerApplet(self)
 
 	-- BlankScreen implements a screensaver
-	local ssMgr = appletManager:loadApplet("ScreenSavers")
-
-	if ssMgr ~= nil then
-		ssMgr:addScreenSaver(
-			self:string("SCREENSAVER_BLANKSCREEN"), "BlankScreen", "openScreensaver", _, _, 100, "closeScreensaver"
-		)
-	end
+	appletManager:callService("addScreenSaver",
+		self:string("SCREENSAVER_BLANKSCREEN"), 
+		"BlankScreen", 
+		"openScreensaver", _, _, 100, 
+		"closeScreensaver"
+	)
 end
 
 

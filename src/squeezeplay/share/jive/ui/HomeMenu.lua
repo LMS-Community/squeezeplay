@@ -158,13 +158,15 @@ function _changeNode(self, id, node)
 		-- change menuitem's node
 		self.menuTable[id].node = node
 		-- add item to that node
-		addNode(self.menuTable[id])
+		self:addNode(self.menuTable[id])
 	end
 end
 
 function addNode(self, item)
-	assert(item.id)
-	assert(item.node)
+
+	if not item or not item.id or not item.node then
+		return
+	end
 
 	log:debug("JiveMain.addNode: Adding a non-root node, ", item.id)
 
@@ -351,7 +353,7 @@ function removeItemFromNode(self, item, node)
 
 end
 
--- remove an item from a menu by its index
+-- remove an item from a menu
 function removeItem(self, item)
 	assert(item)
 	assert(item.node)
@@ -361,8 +363,43 @@ function removeItem(self, item)
 	end
 
 	self:removeItemFromNode(item)
+
 	-- if this item is co-located in home, get rid of it there too
 	self:removeItemFromNode(item, 'home')
+
+end
+
+function enableItem(self, item)
+	
+end
+
+--  disableItem differs from removeItem in that it drops the item into a removed node rather than eliminating it completely
+--  this is useful for situations where you would not want GC, e.g., a meta file that needs to continue to be in memory
+--  to handle jnt notification events
+
+function disableItem(self, item)
+	assert(item)
+	assert(item.node)
+
+	if self.menuTable[item.id] then
+		self.menuTable[item.id] = nil
+	end
+
+	self:removeItemFromNode(item)
+
+	item.node = 'hidden'
+	self:addItem(item)
+
+	-- if this item is co-located in home, get rid of it there too
+	self:removeItemFromNode(item, 'home')
+
+end
+
+function disableItemById(self, id)
+	if self.menuTable[id] then
+		local item = self.menuTable[id]
+		self:disableItem(item)
+	end
 
 end
 
@@ -370,14 +407,7 @@ end
 function removeItemById(self, id)
 	if self.menuTable[id] then
 		local item = self.menuTable[id]
-		if self.nodeTable[item.node] then
-			self.nodeTable[item.node].menu:removeItemById(id)
-			self.nodeTable[item.node].items[id] = nil
-		end
-		self.menuTable[id] = nil
-
-		self:_checkRemoveNode(item.node)
-
+		self:removeItem(item)
 	end
 end
 

@@ -38,6 +38,8 @@ end
 
 function registerApplet(meta)
 
+	meta:registerService('setupShow')
+
 	-- SelectPlayer is a resident Applet, Applet loads all menus necessary
         appletManager:loadApplet("SelectPlayer")
 

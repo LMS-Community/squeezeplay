@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.SlimServers.SlimServersMeta - SlimServers meta-info
+applets.ChooseMusicSource.ChooseMusicSourceMeta
 
 =head1 DESCRIPTION
 
-See L<applets.SlimServers.SlimServersApplet>.
+See L<applets.ChooseMusicSource.ChooseMusicSourceApplet>.
 
 =head1 FUNCTIONS
 
@@ -19,10 +19,12 @@ See L<jive.AppletMeta> for a description of standard applet meta functions.
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
+local log           = require("jive.utils.log").logger("applets.setup")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
-
+local jnt           = jnt
+local _player       = false
 
 module(...)
 oo.class(_M, AppletMeta)
@@ -41,18 +43,54 @@ end
 
 
 function registerApplet(meta)
-	-- we depend on the SlimDiscovery applet
-	appletManager:loadApplet("SlimDiscovery")
 
 	meta:registerService("selectMusicSource")
 
 	-- set the poll list for discovery of slimservers based on our settings
 	if appletManager:hasService("setPollList") then
 		appletManager:callService("setPollList", meta:getSettings().poll)
-		jiveMain:addItem(meta:menuItem('appletSlimservers', 'settings', "SLIMSERVER_SERVERS", function(applet, ...) applet:settingsShow(...) end, 60))
 	end
+
+	-- add item, then immediately disable it. Music Source should only show up when playerCurrent notification comes through
+	jiveMain:addItem(
+		meta:menuItem(
+			'appletSlimservers', 
+			'settings', 
+			"SLIMSERVER_SERVERS", 
+			nil,
+			60
+		)
+	)
+	jiveMain:disableItemById('appletSlimservers')
+
+	jnt:subscribe(meta)
+
 end
 
+function notify_playerCurrent(meta, player)
+	if player == nil then
+		jiveMain:disableItemById('appletSlimservers')
+	else
+		jiveMain:addItem(
+			meta:menuItem(
+				'appletSlimservers', 
+				'settings', 
+				"SLIMSERVER_SERVERS", 
+				function(applet, ...) 
+					applet:settingsShow(...) 
+				end, 
+				60
+			)
+		)
+	end
+	_player = player
+end
+
+function notify_playerDelete(self, player)
+	if player == _player then
+		jiveMain:disableItemById('appletSlimservers')
+	end
+end
 
 --[[
 

@@ -39,11 +39,15 @@ function defaultSettings(meta)
 end
 
 function registerApplet(meta)
+
+	meta:registerService('squeezeCenterPassword')
+
 	local settings = meta:getSettings()
 
 	for servername, cred in pairs(settings) do
 		SlimServer:setCredentials(cred, servername)
 	end
+
 end
 
 --[[

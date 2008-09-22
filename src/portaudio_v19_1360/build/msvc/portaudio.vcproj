@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="portaudio"
 	ProjectGUID="{0A18A071-125E-442F-AFF7-A3F68ABECF99}"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -50,7 +51,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\src\common,..\..\include,.\,..\..\src\os\win"
+				AdditionalIncludeDirectories="..\..\src\common;..\..\include;.\;..\..\src\os\win"
 				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -75,12 +76,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ksuser.lib"
+				AdditionalDependencies="ksuser.lib dsound.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\portaudio_x86.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\portaudio.def"
 				ProgramDatabaseFile="$(PlatformName)\$(ConfigurationName)\portaudio_x86.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(PlatformName)\$(ConfigurationName)\portaudio_x86.lib"
 				TargetMachine="1"
 			/>
@@ -103,105 +106,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="1"
-				TypeLibraryName=".\Debug_x86/portaudio.tlb"
-				HeaderFileName=""
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories="..\..\src\common,..\..\include,.\,..\..\src\os\win"
-				PreprocessorDefinitions="WIN32;_DEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				PrecompiledHeaderFile="$(PlatformName)\$(ConfigurationName)/portaudio.pch"
-				AssemblerListingLocation="$(PlatformName)\$(ConfigurationName)\"
-				ObjectFile="$(PlatformName)\$(ConfigurationName)\"
-				ProgramDataBaseFileName="$(PlatformName)\$(ConfigurationName)\"
-				WarningLevel="3"
-				SuppressStartupBanner="true"
-				DebugInformationFormat="4"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="ksuser.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\portaudio_x86.dll"
-				LinkIncremental="2"
-				SuppressStartupBanner="true"
-				ModuleDefinitionFile=".\portaudio.def"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(PlatformName)\$(ConfigurationName)\portaudio_x86.pdb"
-				ImportLibrary="$(PlatformName)\$(ConfigurationName)\portaudio_x86.lib"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-				SuppressStartupBanner="true"
-				OutputFile="$(PlatformName)\$(ConfigurationName)\portaudio.bsc"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -272,6 +176,8 @@
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\portaudio.def"
 				ProgramDatabaseFile="$(PlatformName)\$(ConfigurationName)/portaudio_x64.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(PlatformName)\$(ConfigurationName)/portaudio_x64.lib"
 				TargetMachine="17"
 			/>
@@ -296,7 +202,99 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="true"
+				SuppressStartupBanner="true"
+				TargetEnvironment="1"
+				TypeLibraryName=".\Debug_x86/portaudio.tlb"
+				HeaderFileName=""
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="C:\dxsdk\Include;..\..\src\common;..\..\include;.\;..\..\src\os\win"
+				PreprocessorDefinitions="WIN32;_DEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				PrecompiledHeaderFile="$(PlatformName)\$(ConfigurationName)/portaudio.pch"
+				AssemblerListingLocation="$(PlatformName)\$(ConfigurationName)\"
+				ObjectFile="$(PlatformName)\$(ConfigurationName)\"
+				ProgramDataBaseFileName="$(PlatformName)\$(ConfigurationName)\"
+				WarningLevel="3"
+				SuppressStartupBanner="true"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="ksuser.lib dsound.lib"
+				OutputFile="$(SolutionDir)$(ConfigurationName)\portaudio_x86.dll"
+				LinkIncremental="2"
+				SuppressStartupBanner="true"
+				ModuleDefinitionFile=".\portaudio.def"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(PlatformName)\$(ConfigurationName)\portaudio_x86.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				ImportLibrary="$(PlatformName)\$(ConfigurationName)\portaudio_x86.lib"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+				SuppressStartupBanner="true"
+				OutputFile="$(PlatformName)\$(ConfigurationName)\portaudio.bsc"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -368,6 +366,8 @@
 				ModuleDefinitionFile=".\portaudio.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(PlatformName)\$(ConfigurationName)/portaudio_x64.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(PlatformName)\$(ConfigurationName)\portaudio_x64.lib"
 				TargetMachine="17"
 			/>
@@ -390,9 +390,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -422,7 +419,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -431,7 +428,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|x64"
+						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -462,7 +459,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -471,7 +468,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|x64"
+						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -502,7 +499,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -511,7 +508,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|x64"
+						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -542,7 +539,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -551,7 +548,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|x64"
+						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -582,7 +579,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -591,7 +588,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|x64"
+						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -622,7 +619,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -631,7 +628,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|x64"
+						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -662,7 +659,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -671,7 +668,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|x64"
+						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -702,7 +699,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -711,7 +708,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|x64"
+						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -742,7 +739,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -751,7 +748,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|x64"
+						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -782,7 +779,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -791,7 +788,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|x64"
+						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -830,8 +827,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
+							Name="Release|x64"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -840,7 +836,8 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Release|x64"
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -875,8 +872,7 @@
 								/>
 							</FileConfiguration>
 							<FileConfiguration
-								Name="Debug|Win32"
-								ExcludedFromBuild="true"
+								Name="Release|x64"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -885,7 +881,8 @@
 								/>
 							</FileConfiguration>
 							<FileConfiguration
-								Name="Release|x64"
+								Name="Debug|Win32"
+								ExcludedFromBuild="true"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -917,8 +914,7 @@
 								/>
 							</FileConfiguration>
 							<FileConfiguration
-								Name="Debug|Win32"
-								ExcludedFromBuild="true"
+								Name="Release|x64"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -927,7 +923,8 @@
 								/>
 							</FileConfiguration>
 							<FileConfiguration
-								Name="Release|x64"
+								Name="Debug|Win32"
+								ExcludedFromBuild="true"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -959,8 +956,7 @@
 								/>
 							</FileConfiguration>
 							<FileConfiguration
-								Name="Debug|Win32"
-								ExcludedFromBuild="true"
+								Name="Release|x64"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -969,7 +965,8 @@
 								/>
 							</FileConfiguration>
 							<FileConfiguration
-								Name="Release|x64"
+								Name="Debug|Win32"
+								ExcludedFromBuild="true"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1001,8 +998,7 @@
 								/>
 							</FileConfiguration>
 							<FileConfiguration
-								Name="Debug|Win32"
-								ExcludedFromBuild="true"
+								Name="Release|x64"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1011,7 +1007,8 @@
 								/>
 							</FileConfiguration>
 							<FileConfiguration
-								Name="Release|x64"
+								Name="Debug|Win32"
+								ExcludedFromBuild="true"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1043,8 +1040,7 @@
 								/>
 							</FileConfiguration>
 							<FileConfiguration
-								Name="Debug|Win32"
-								ExcludedFromBuild="true"
+								Name="Release|x64"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1053,7 +1049,8 @@
 								/>
 							</FileConfiguration>
 							<FileConfiguration
-								Name="Release|x64"
+								Name="Debug|Win32"
+								ExcludedFromBuild="true"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1085,8 +1082,7 @@
 								/>
 							</FileConfiguration>
 							<FileConfiguration
-								Name="Debug|Win32"
-								ExcludedFromBuild="true"
+								Name="Release|x64"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1095,7 +1091,8 @@
 								/>
 							</FileConfiguration>
 							<FileConfiguration
-								Name="Release|x64"
+								Name="Debug|Win32"
+								ExcludedFromBuild="true"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1127,8 +1124,7 @@
 								/>
 							</FileConfiguration>
 							<FileConfiguration
-								Name="Debug|Win32"
-								ExcludedFromBuild="true"
+								Name="Release|x64"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1137,7 +1133,8 @@
 								/>
 							</FileConfiguration>
 							<FileConfiguration
-								Name="Release|x64"
+								Name="Debug|Win32"
+								ExcludedFromBuild="true"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1173,7 +1170,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Debug|Win32"
+							Name="Release|x64"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1182,7 +1179,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Release|x64"
+							Name="Debug|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1213,7 +1210,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Debug|Win32"
+							Name="Release|x64"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1222,7 +1219,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Release|x64"
+							Name="Debug|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1258,8 +1255,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
+							Name="Release|x64"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1268,7 +1264,8 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Release|x64"
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1304,8 +1301,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
+							Name="Release|x64"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1314,7 +1310,8 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Release|x64"
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1353,7 +1350,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Debug|Win32"
+							Name="Release|x64"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1362,7 +1359,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Release|x64"
+							Name="Debug|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1393,7 +1390,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Debug|Win32"
+							Name="Release|x64"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1402,7 +1399,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Release|x64"
+							Name="Debug|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1441,7 +1438,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Debug|Win32"
+							Name="Release|x64"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1450,7 +1447,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Release|x64"
+							Name="Debug|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"

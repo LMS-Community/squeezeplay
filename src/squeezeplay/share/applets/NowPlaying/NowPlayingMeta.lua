@@ -21,17 +21,18 @@ function defaultSettings(self)
 end
 
 function registerApplet(self)
-	local ssMgr = appletManager:loadApplet("ScreenSavers")
-	if ssMgr ~= nil then
-		ssMgr:addScreenSaver(
-			self:string("SCREENSAVER_NOWPLAYING"), 
-			"NowPlaying", 
-			"openScreensaver", 
-			_, _, 
-			10
-		)
 
-	end
+	self:registerService('goNowPlaying')
+
+	appletManager:callService("addScreenSaver",
+		self:string("SCREENSAVER_NOWPLAYING"), 
+		"NowPlaying", 
+		"openScreensaver", 
+		_, _, 
+		10
+	)
+
+	-- NowPlaying is a resident applet
 	appletManager:loadApplet("NowPlaying")
 
 end

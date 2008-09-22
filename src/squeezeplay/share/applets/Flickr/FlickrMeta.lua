@@ -47,16 +47,11 @@ end
 
 function registerApplet(self)
 
-	-- Flickr implements a screensaver
-	local ssMgr = appletManager:loadApplet("ScreenSavers")
-
-	if ssMgr ~= nil then
-		ssMgr:addScreenSaver(self:string("SCREENSAVER_FLICKR"), "Flickr", 
+	appletManager:callService("addScreenSaver", self:string("SCREENSAVER_FLICKR"), "Flickr", 
 "openScreensaver", self:string("SCREENSAVER_FLICKR_SETTINGS"), "openSettings", 90)
 
-		-- load our skin
-		jiveMain:loadSkin("Flickr", "skin")
-	end
+	-- load our skin
+	jiveMain:loadSkin("Flickr", "skin")
 end
 
 
