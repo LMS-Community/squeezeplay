@@ -378,6 +378,9 @@ function skin(self, s)
 	s.menu.fg = {0xbb, 0xbb, 0xbb }
 	s.menu.font = _boldfont(400)
 
+	-- splitmenu in FullScreenSkin is a clone of menu
+	s.splitmenu = _uses(s.menu)
+
 	-- menu item
 	s.item = {}
 	s.item.order = { "text", "icon" }
