@@ -693,10 +693,10 @@ function skin(self, s)
 	-- SlimBrowser applet
 
 	s.volumeMin = {}
-	s.volumeMin.img = Surface:loadImage(imgpath .. "icon_volume_min.png")
+	s.volumeMin.img = Surface:loadImage(imgpath .. "volume_speaker_l.png")
 	s.volumeMin.border = { 5, 0, 5, 0 }
 	s.volumeMax = {}
-	s.volumeMax.img = Surface:loadImage(imgpath .. "icon_volume_max.png")
+	s.volumeMax.img = Surface:loadImage(imgpath .. "volume_speaker_r.png")
 	s.volumeMax.border = { 5, 0, 5, 0 }
 
 	s.volume            = {}
