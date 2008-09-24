@@ -76,7 +76,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="winmm.lib dxguid.lib"
+				AdditionalDependencies="winmm.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)/SDL.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -174,7 +174,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="winmm.lib dxguid.lib"
+				AdditionalDependencies="winmm.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)/SDL.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
