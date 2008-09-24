@@ -116,104 +116,104 @@ end
 function skin(self, s)
 
 	-- XXXX for testing
-	Framework:setVideoMode(480, 272, 32, false)
+	Framework:setVideoMode(480, 272, 16, false)
 
 	local screenWidth, screenHeight = Framework:getScreenSize()
 
 	-- Images and Tiles
 	local titleBox =
 		Tile:loadTiles({
-				       imgpath .. "Screen Formats/Titlebar/titlebar.png",
-				       imgpath .. "Screen Formats/Titlebar/titlebar_tl.png",
-				       imgpath .. "Screen Formats/Titlebar/titlebar_t.png",
-				       imgpath .. "Screen Formats/Titlebar/titlebar_tr.png",
-				       imgpath .. "Screen Formats/Titlebar/titlebar_r.png",
-				       imgpath .. "Screen Formats/Titlebar/titlebar_br.png",
-				       imgpath .. "Screen Formats/Titlebar/titlebar_b.png",
-				       imgpath .. "Screen Formats/Titlebar/titlebar_bl.png",
-				       imgpath .. "Screen Formats/Titlebar/titlebar_l.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_tl.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_t.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_tr.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_r.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_br.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_b.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_bl.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_l.png",
 			       })
 
 	local selectionBox =
 		Tile:loadTiles({
-				       imgpath .. "Screen Formats/5 line lists/menu_selection_box.png",
-				       imgpath .. "Screen Formats/5 line lists/menu_selection_box_tl.png",
-				       imgpath .. "Screen Formats/5 line lists/menu_selection_box_t.png",
-				       imgpath .. "Screen Formats/5 line lists/menu_selection_box_tr.png",
-				       imgpath .. "Screen Formats/5 line lists/menu_selection_box_r.png",
-				       imgpath .. "Screen Formats/5 line lists/menu_selection_box_br.png",
-				       imgpath .. "Screen Formats/5 line lists/menu_selection_box_b.png",
-				       imgpath .. "Screen Formats/5 line lists/menu_selection_box_bl.png",
-				       imgpath .. "Screen Formats/5 line lists/menu_selection_box_l.png",
+				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box.png",
+				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_tl.png",
+				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_t.png",
+				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_tr.png",
+				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_r.png",
+				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_br.png",
+				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_b.png",
+				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_bl.png",
+				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_l.png",
 			       })
 
 	local albumSelectionBox =
 		Tile:loadTiles({
-				       imgpath .. "Screen Formats/Albums/menu_selection_box_album.png",
-				       imgpath .. "Screen Formats/Albums/menu_selection_box_album_tl.png",
-				       imgpath .. "Screen Formats/Albums/menu_selection_box_album_t.png",
-				       imgpath .. "Screen Formats/Albums/menu_selection_box_album_tr.png",
-				       imgpath .. "Screen Formats/Albums/menu_selection_box_album_r.png",
-				       imgpath .. "Screen Formats/Albums/menu_selection_box_album_br.png",
-				       imgpath .. "Screen Formats/Albums/menu_selection_box_album_b.png",
-				       imgpath .. "Screen Formats/Albums/menu_selection_box_album_bl.png",
-				       imgpath .. "Screen Formats/Albums/menu_selection_box_album_l.png",
+				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album.png",
+				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_tl.png",
+				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_t.png",
+				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_tr.png",
+				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_r.png",
+				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_br.png",
+				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_b.png",
+				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_bl.png",
+				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_l.png",
 			       })
 
 -- FIXME: do these need updating for Fab4Skin?
 	local helpBox = 
 		Tile:loadTiles({
-				       imgpath .. "Screen Formats/Popup Menu/helpbox.png",
-				       imgpath .. "Screen Formats/Popup Menu/helpbox_tl.png",
-				       imgpath .. "Screen Formats/Popup Menu/helpbox_t.png",
-				       imgpath .. "Screen Formats/Popup Menu/helpbox_tr.png",
-				       imgpath .. "Screen Formats/Popup Menu/helpbox_r.png",
-				       imgpath .. "Screen Formats/Popup Menu/helpbox_br.png",
-				       imgpath .. "Screen Formats/Popup Menu/helpbox_b.png",
-				       imgpath .. "Screen Formats/Popup Menu/helpbox_bl.png",
-				       imgpath .. "Screen Formats/Popup Menu/helpbox_l.png",
+				       imgpath .. "Screen_Formats/Popup_Menu/helpbox.png",
+				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_tl.png",
+				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_t.png",
+				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_tr.png",
+				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_r.png",
+				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_br.png",
+				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_b.png",
+				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_bl.png",
+				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_l.png",
 			       })
 
 	local scrollBackground =
 		Tile:loadVTiles({
-					imgpath .. "Screen Formats/Scroll Bar/scrollbar_bkgrd_t.png",
-					imgpath .. "Screen Formats/Scroll Bar/scrollbar_bkgrd.png",
-					imgpath .. "Screen Formats/Scroll Bar/scrollbar_bkgrd_b.png",
+					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_bkgrd_t.png",
+					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_bkgrd.png",
+					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_bkgrd_b.png",
 				})
 
 	local scrollBar = 
 		Tile:loadVTiles({
-					imgpath .. "Screen Formats/Scroll Bar/scrollbar_body_t.png",
-					imgpath .. "Screen Formats/Scroll Bar/scrollbar_body.png",
-					imgpath .. "Screen Formats/Scroll Bar/scrollbar_body_b.png",
+					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_body_t.png",
+					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_body.png",
+					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_body_b.png",
 			       })
 
 	local sliderBackground = 
 		Tile:loadHTiles({
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_bkgrd_l.png",
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_bkgrd.png",
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_bkgrd_r.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
 			       })
 
 	local sliderBar = 
 		Tile:loadHTiles({
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_fill_l.png",
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_fill.png",
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_fill_r.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png",
 			       })
 
 	local volumeBar =
 		Tile:loadHTiles({
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_fill_l.png",
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_fill.png",
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_fill_r.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png",
 			       })
 
 	local volumeBackground =
 		Tile:loadHTiles({
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_bkgrd_l.png",
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_bkgrd.png",
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_bkgrd_r.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
 				})
 
 		local popupMask = Tile:fillColor(0x000000e5)
@@ -222,7 +222,7 @@ function skin(self, s)
 		Tile:loadHTiles({
 				-- FIXME: need to use Noah's assets for this
 				--[[
-				       imgpath .. "Screen Formats/Text Entry/Classic/text_entry_bac",
+				       imgpath .. "Screen_Formats/Text_Entry/Classic/text_entry_bac",
 				--]]
 				       imgpath .. "text_entry_bkgrd_l.png",
 				       imgpath .. "text_entry_bkgrd.png",
@@ -1240,15 +1240,15 @@ function skin(self, s)
 
         local titleBox =
                 Tile:loadTiles({
-				       imgpath .. "Screen Formats/Titlebar/titlebar.png",
-				       imgpath .. "Screen Formats/Titlebar/titlebar_tl.png",
-				       imgpath .. "Screen Formats/Titlebar/titlebar_t.png",
-				       imgpath .. "Screen Formats/Titlebar/titlebar_tr.png",
-				       imgpath .. "Screen Formats/Titlebar/titlebar_r.png",
-				       imgpath .. "Screen Formats/Titlebar/titlebar_br.png",
-				       imgpath .. "Screen Formats/Titlebar/titlebar_b.png",
-				       imgpath .. "Screen Formats/Titlebar/titlebar_bl.png",
-				       imgpath .. "Screen Formats/Titlebar/titlebar_l.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_tl.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_t.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_tr.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_r.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_br.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_b.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_bl.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_l.png",
                                })
 
 	-- Title
@@ -1299,16 +1299,16 @@ function skin(self, s)
 	-- Progress bar
         local progressBackground =
                 Tile:loadHTiles({
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_bkgrd_l.png",
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_bkgrd.png",
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_bkgrd_r.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
                                })
 
         local progressBar =
                 Tile:loadHTiles({
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_fill_l.png",
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_fill.png",
-					imgpath .. "Screen Formats/Song Progress Bar/SP Bar Remote/rem_progbar_fill_r.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
+					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png",
                                })
 
 	s.ssprogress = {}

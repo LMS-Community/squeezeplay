@@ -593,3 +593,148 @@ dist_applets_defaultskin_images_DATA = \
 	share/applets/DefaultSkin/images/menu_check.png \
 	share/applets/DefaultSkin/images/menu_check_selected.png \
 	share/applets/DefaultSkin/images/selection_left.png 
+
+# Fab4 skin
+applets_fab4skindir = $(pkgdatadir)/applets/Fab4Skin
+dist_applets_fab4skin_DATA = \
+	share/applets/Fab4Skin/Fab4SkinApplet.lua \
+	share/applets/Fab4Skin/Fab4SkinMeta.lua
+
+applets_fab4skin_imagesdir = $(pkgdatadir)/applets/Fab4Skin/images
+dist_applets_fab4skin_images_DATA = \
+	share/applets/Fab4Skin/images/button_bl.png \
+	share/applets/Fab4Skin/images/button_b.png \
+	share/applets/Fab4Skin/images/button_br.png \
+	share/applets/Fab4Skin/images/button_l.png \
+	share/applets/Fab4Skin/images/button.png \
+	share/applets/Fab4Skin/images/button_r.png \
+	share/applets/Fab4Skin/images/button_tl.png \
+	share/applets/Fab4Skin/images/button_t.png \
+	share/applets/Fab4Skin/images/button_tr.png \
+	share/applets/Fab4Skin/images/head_home.png \
+	share/applets/Fab4Skin/images/icon_connecting.png \
+	share/applets/Fab4Skin/images/text_entry_letter.png \
+	share/applets/Fab4Skin/images/text_entry_select.png \
+	share/applets/Fab4Skin/images/menu_album_noartwork_125.png \
+	share/applets/Fab4Skin/images/navcluster.png \
+	share/applets/Fab4Skin/images/pointer_selector_L.png \
+	share/applets/Fab4Skin/images/popup_fav_heart_bkgrd.png \
+	share/applets/Fab4Skin/images/selection_add.png \
+	share/applets/Fab4Skin/images/selection_play.png \
+	share/applets/Fab4Skin/images/selection_wait.png \
+	share/applets/Fab4Skin/images/slider_icon_negative.png \
+	share/applets/Fab4Skin/images/slider_icon_positive.png \
+	share/applets/Fab4Skin/images/text_entry_bkgrd_l.png \
+	share/applets/Fab4Skin/images/text_entry_bkgrd.png \
+	share/applets/Fab4Skin/images/text_entry_bkgrd_r.png
+
+applets_fab4skin_images_alertsdir = $(pkgdatadir)/applets/Fab4Skin/images/Alerts
+dist_applets_fab4skin_images_alerts_DATA = \
+	share/applets/Fab4Skin/images/Alerts/connecting_success_icon.png \
+	share/applets/Fab4Skin/images/Alerts/popup_alarm_icon.png \
+	share/applets/Fab4Skin/images/Alerts/popup_locked_icon.png \
+	share/applets/Fab4Skin/images/Alerts/popup_shutdown_icon.png \
+	share/applets/Fab4Skin/images/Alerts/wifi_connecting.png
+
+applets_fab4skin_images_iconsdir = $(pkgdatadir)/applets/Fab4Skin/images/Icons
+dist_applets_fab4skin_images_icons_DATA = \
+	share/applets/Fab4Skin/images/Icons/checkbox_off.png \
+	share/applets/Fab4Skin/images/Icons/checkbox_on.png \
+	share/applets/Fab4Skin/images/Icons/icon_album_noartwork_336.png \
+	share/applets/Fab4Skin/images/Icons/icon_check_14x30.png \
+	share/applets/Fab4Skin/images/Icons/icon_check_selected_14x30.png \
+	share/applets/Fab4Skin/images/Icons/icon_check_selected.png \
+	share/applets/Fab4Skin/images/Icons/icon_nowplaying_indicator_b.png \
+	share/applets/Fab4Skin/images/Icons/icon_nowplaying_indicator_w.png \
+	share/applets/Fab4Skin/images/Icons/icon_wireless_1_shadow.png \
+	share/applets/Fab4Skin/images/Icons/icon_wireless_2_shadow.png \
+	share/applets/Fab4Skin/images/Icons/icon_wireless_3_shadow.png \
+	share/applets/Fab4Skin/images/Icons/icon_wireless_4_shadow.png \
+	share/applets/Fab4Skin/images/Icons/radiobutton_off.png \
+	share/applets/Fab4Skin/images/Icons/radiobutton_on.png \
+	share/applets/Fab4Skin/images/Icons/selection_right.png
+
+applets_fab4skin_images_icons_minidir = $(pkgdatadir)/applets/Fab4Skin/images/Icons/Mini
+dist_applets_fab4skin_images_icons_mini_DATA = \
+	share/applets/Fab4Skin/images/Icons/Mini/icon_album_new.png \
+	share/applets/Fab4Skin/images/Icons/Mini/icon_albums.png \
+	share/applets/Fab4Skin/images/Icons/Mini/icon_artist.png \
+	share/applets/Fab4Skin/images/Icons/Mini/icon_favorites.png \
+	share/applets/Fab4Skin/images/Icons/Mini/icon_genres.png \
+	share/applets/Fab4Skin/images/Icons/Mini/icon_home.png \
+	share/applets/Fab4Skin/images/Icons/Mini/icon_info_browser.png \
+	share/applets/Fab4Skin/images/Icons/Mini/icon_internet_radio.png \
+	share/applets/Fab4Skin/images/Icons/Mini/icon_music_folder.png \
+	share/applets/Fab4Skin/images/Icons/Mini/icon_music_library.png \
+	share/applets/Fab4Skin/images/Icons/Mini/icon_playlist.png \
+	share/applets/Fab4Skin/images/Icons/Mini/icon_quarter_note.png \
+	share/applets/Fab4Skin/images/Icons/Mini/icon_random.png \
+	share/applets/Fab4Skin/images/Icons/Mini/icon_search.png \
+	share/applets/Fab4Skin/images/Icons/Mini/icon_settings.png \
+	share/applets/Fab4Skin/images/Icons/Mini/icon_years.png
+
+applets_fab4skin_images_screenformats_albumsdir = $(pkgdatadir)/applets/Fab4Skin/images/Screen_Formats/Albums
+dist_applets_fab4skin_images_screenformats_albums_DATA = \
+	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album_bl.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album_b.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album_br.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album_l.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album_r.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album_tl.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album_t.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album_tr.png
+
+applets_fab4skin_images_screenformats_popmenudir = $(pkgdatadir)/applets/Fab4Skin/images/Screen_Formats/Popup_Menu
+dist_applets_fab4skin_images_screenformats_popmenu_DATA = \
+	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox_bl.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox_b.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox_br.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox_l.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox_r.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox_tl.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox_t.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox_tr.png
+
+applets_fab4skin_images_screenformats_scrollbardir = $(pkgdatadir)/applets/Fab4Skin/images/Screen_Formats/Scroll_Bar
+dist_applets_fab4skin_images_screenformats_scrollbar_DATA = \
+	share/applets/Fab4Skin/images/Screen_Formats/Scroll_Bar/scrollbar_bkgrd_b.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Scroll_Bar/scrollbar_bkgrd.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Scroll_Bar/scrollbar_bkgrd_t.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Scroll_Bar/scrollbar_body_b.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Scroll_Bar/scrollbar_body.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Scroll_Bar/scrollbar_body_t.png
+
+applets_fab4skin_images_screenformats_songprogressbardir = $(pkgdatadir)/applets/Fab4Skin/images/Screen_Formats/Song_Progress_Bar/SP_Bar_Remote
+dist_applets_fab4skin_images_screenformats_songprogressbar_DATA = \
+	share/applets/Fab4Skin/images/Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png
+
+applets_fab4skin_images_screenformats_titlebardir = $(pkgdatadir)/applets/Fab4Skin/images/Screen_Formats/Titlebar
+dist_applets_fab4skin_images_screenformats_titlebar_DATA = \
+	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar_bl.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar_b.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar_br.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar_l.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar_r.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar_tl.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar_t.png \
+	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar_tr.png
+
+applets_fab4skin_images_screenformats_5linelistsdir = $(pkgdatadir)/applets/Fab4Skin/images/Screen_Formats/5_line_lists
+dist_applets_fab4skin_images_screenformats_5linelists_DATA = \
+	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box_bl.png \
+	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box_b.png \
+	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box_br.png \
+	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box_l.png \
+	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box.png \
+	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box_r.png \
+	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box_tl.png \
+	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box_t.png \
+	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box_tr.png

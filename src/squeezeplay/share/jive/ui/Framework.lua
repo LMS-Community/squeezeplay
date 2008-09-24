@@ -92,7 +92,7 @@ sound = {} -- sounds
 soundEnabled = {} -- sound enabled state
 
 screen = {}
-screen.bounds = { 0, 0, 240, 320 }
+screen.bounds = { 0, 0, 480, 272 }
 screen.bpp = 16
 
 -- Put default global settings here
