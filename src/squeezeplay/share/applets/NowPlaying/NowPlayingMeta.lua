@@ -24,6 +24,11 @@ function registerApplet(self)
 
 	self:registerService('goNowPlaying')
 
+end
+
+
+function configureApplet(self)
+
 	appletManager:callService("addScreenSaver",
 		self:string("SCREENSAVER_NOWPLAYING"), 
 		"NowPlaying", 

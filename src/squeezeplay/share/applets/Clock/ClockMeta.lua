@@ -24,6 +24,10 @@ end
 
 function registerApplet(self)
 
+end
+
+function configureApplet(self)
+
 	appletManager:callService("addScreenSaver",
 		self:string("SCREENSAVER_CLOCK_STYLE_ANALOG"), 
 		"Clock", 
