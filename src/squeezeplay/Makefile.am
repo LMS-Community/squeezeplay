@@ -52,13 +52,13 @@ APP_NAME = SqueezePlay Beta
 BUNDLE_CONTENTS = $(BUNDLE_NAME)/Contents
 PLIST_FILE = $(BUNDLE_CONTENTS)/Info.plist
 
-#don't want it next line evualted on usage, not sure how to avoid other thatn this hack
 VERSION_TEXT = $(shell cat ../squeezeplay.version)r$(shell svnversion -n ..|sed "s/M$$//g")
 ICNS_NAME = icon.icns
 
 #todo: make clean work the right way(not the rm -rf hackery seen below)
 SqueezePlay_bundle: SqueezePlay
 	rm -rf $(BUNDLE_CONTENTS)/
+	rm -rf $(OSX_BUILD_DIR)/$(BUNDLE_NAME)
 	mkdir -p $(BUNDLE_CONTENTS)/MacOS
 	mkdir -p $(BUNDLE_CONTENTS)/Resources
 	mkdir -p $(BUNDLE_CONTENTS)/lib
@@ -96,6 +96,7 @@ SqueezePlay_bundle: SqueezePlay
 	echo "</plist>" >> $(PLIST_FILE)
 	chmod 644 $(BUNDLE_CONTENTS)/Resources/*
 	$(INSTALL_PROGRAM) $(JIVE_STATIC_PROGRAM) $(BUNDLE_CONTENTS)/MacOS/
+	cp -Rp $(BUNDLE_NAME) $(OSX_BUILD_DIR)
 
 
 # Convenience library:
