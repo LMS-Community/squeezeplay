@@ -458,6 +458,20 @@ bool_t decode_output_can_write(u32_t buffer_size, u32_t sample_rate) {
 	return FALSE;
 }
 
+u32_t decode_output_percent_used(void) {
+	size_t usedbytes;
+	size_t freebytes;
+
+	fifo_lock(&decode_fifo);
+
+	usedbytes = fifo_bytes_free(&decode_fifo);
+	freebytes = fifo_bytes_free(&decode_fifo);
+
+	fifo_unlock(&decode_fifo);
+
+	return (usedbytes * 100) / (usedbytes + freebytes);
+}
+
 
 /* This removes padding samples from the buffer (for gapless mp3 playback). */
 void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate) {

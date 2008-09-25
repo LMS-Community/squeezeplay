@@ -43,12 +43,15 @@ end
 function registerApplet(meta)
 	meta:registerService("showBackground")
 	meta:registerService("setBackground")
-	-- load default wallpaper before connecting to a player (nil will load default)
-	appletManager:callService("setBackground", nil)
-
 	-- add a menu item for configuration
 	jiveMain:addItem(meta:menuItem('appletSetupWallpaper', 'screenSettings', 'WALLPAPER', function(applet, ...) applet:settingsShow(...) end))
 
+end
+
+function configureApplet(meta)
+
+	-- load default wallpaper before connecting to a player (nil will load default)
+	appletManager:callService("setBackground", nil)
 end
 
 

@@ -42,7 +42,7 @@ static SDL_Thread *audio_thread;
  */
 static void callback(void *outputBuffer,
 		    unsigned long framesPerBuffer) {
-	size_t bytes_used, len, skip_bytes = 0;
+	size_t bytes_used, len, skip_bytes = 0, add_bytes = 0;
 	bool_t reached_start_point;
 	Uint8 *outputArray = (u8_t *)outputBuffer;
 
@@ -58,6 +58,16 @@ static void callback(void *outputBuffer,
 		decode_sample_mix(outputArray, len);
 
 		return;
+	}
+	
+	if (add_silence_bytes) {
+		add_bytes = add_silence_bytes;
+		if (add_bytes > len) add_bytes = len;
+		memset(outputBuffer, 0, add_bytes);
+		outputBuffer += add_bytes;
+		len -= add_bytes;
+		add_silence_bytes -= add_bytes;
+		if (!len) return;
 	}
 
 	bytes_used = fifo_bytes_used(&decode_fifo);
@@ -84,7 +94,7 @@ static void callback(void *outputBuffer,
 	if (bytes_used < len) {
 		current_audio_state |= DECODE_STATE_UNDERRUN;
 		memset(outputArray + bytes_used, 0, len - bytes_used);
-		DEBUG_ERROR("Audio underrun: used %d bytes , requested %d bytes", bytes_used, len);
+		DEBUG_ERROR("Audio underrun: used %d bytes , requested %d bytes", (int)bytes_used, (int)len);
 	}
 	else {
 		current_audio_state &= ~DECODE_STATE_UNDERRUN;
@@ -93,7 +103,7 @@ static void callback(void *outputBuffer,
 	if (skip_bytes) {
 		size_t wrap;
 
-		DEBUG_TRACE("Skipping %d bytes", skip_bytes);
+		DEBUG_TRACE("Skipping %d bytes", (int)skip_bytes);
 		
 		wrap = fifo_bytes_until_rptr_wrap(&decode_fifo);
 
@@ -369,6 +379,7 @@ static void decode_alsa_resume(void) {
 	if (pcm_sample_rate != current_sample_rate) {
 		new_sample_rate = current_sample_rate;
 	}
+	// snd_pcm_pause(handle, 1);
 	fifo_unlock(&decode_fifo);
 }
 
@@ -377,6 +388,7 @@ static void decode_alsa_pause(void) {
 	DEBUG_TRACE("decode_alsa_pause");
 
 	fifo_lock(&decode_fifo);
+//	snd_pcm_pause(handle, 0);
 	if (pcm_sample_rate != 44100) {
 		new_sample_rate = 44100;
 	}
@@ -416,6 +428,16 @@ static int decode_alsa_init(void) {
 	return 1;
 }
 
+static u32_t decode_alsa_delay(void)
+{
+    snd_pcm_status_t* status;
+    
+    snd_pcm_status_alloca(&status);
+    snd_pcm_status(handle, status);
+
+    return (u32_t)snd_pcm_status_get_delay(status);
+}
+
 
 struct decode_audio decode_alsa = {
 	decode_alsa_init,
@@ -423,6 +445,7 @@ struct decode_audio decode_alsa = {
 	decode_alsa_pause,
 	decode_alsa_resume,
 	decode_alsa_stop,
+	decode_alsa_delay,
 };
 
 #endif // HAVE_LIBASOUND
