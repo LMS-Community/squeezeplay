@@ -150,7 +150,7 @@ static int jiveL_init(lua_State *L) {
 	}
 
 	/* open window */
-	SDL_WM_SetCaption("SqueezePlay", "SqueezePlay");
+	SDL_WM_SetCaption("SqueezePlay Beta", "SqueezePlay Beta");
 
 
 	srf = jive_surface_set_video_mode(screen_w, screen_h, bpp, false);
