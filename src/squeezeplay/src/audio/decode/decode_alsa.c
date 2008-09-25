@@ -432,7 +432,12 @@ static u32_t decode_alsa_delay(void)
 {
     snd_pcm_status_t* status;
     
-    snd_pcm_status_alloca(&status);
+    /* dies with warning on GCC 4.2:
+     * snd_pcm_status_alloca(&status);
+     */
+    status = (snd_pcm_status_t *) alloca(snd_pcm_hw_params_sizeof());
+    memset(status, 0, snd_pcm_hw_params_sizeof());
+
     snd_pcm_status(handle, status);
 
     return (u32_t)snd_pcm_status_get_delay(status);
