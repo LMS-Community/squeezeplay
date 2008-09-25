@@ -156,6 +156,7 @@ local opcodes = {
 		assert(data.outputSize)
 		assert(data.outputFull)
 		assert(data.elapsed)
+		assert(data.elapsed_jiffies)
 
 		return {
 			data.event,
@@ -166,7 +167,7 @@ local opcodes = {
 			packNumber(data.bytesReceivedH, 4),
 			packNumber(data.bytesReceivedL, 4),
 			packNumber(data.signalStrength or 0, 2),
-			packNumber(data.jiffies, 4),
+			packNumber(data.elapsed_jiffies, 4),
 			packNumber(data.outputSize, 4),
 			packNumber(data.outputFull, 4),
 			packNumber(data.elapsed / 1000, 4),

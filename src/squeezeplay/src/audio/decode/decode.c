@@ -36,6 +36,7 @@ u32_t decode_elapsed_samples = 0;
 bool_t decode_first_buffer = FALSE;
 u32_t current_sample_rate = 44100;
 u32_t skip_ahead_bytes = 0;
+u32_t add_silence_bytes = 0;
 
 
 /* decoder fifo used to store decoded samples */
@@ -109,10 +110,13 @@ static void decode_pause_handler(void) {
 
 	DEBUG_TRACE("decode_pause_handler interval=%d", interval);
 
-	current_decoder_state &= ~DECODE_STATE_RUNNING;
-	current_audio_state &= ~DECODE_STATE_RUNNING;
-	decode_audio->pause();
-
+	if (interval) {
+		add_silence_bytes = SAMPLES_TO_BYTES((u32_t)((interval * current_sample_rate) / 1000));
+	} else {
+		current_decoder_state &= ~DECODE_STATE_RUNNING;
+		current_audio_state &= ~DECODE_STATE_RUNNING;
+		decode_audio->pause();
+	}
 	DEBUG_TRACE("pause decode state: %x audio state %x", current_decoder_state, current_audio_state);
 }
 
@@ -222,7 +226,15 @@ static void decode_song_ended_handler(void) {
 
 
 static Uint32 decode_timer_interval(void) {
+	size_t used;
+
 	if (decoder) {
+		used = decode_output_percent_used();
+		if (used > 80) {
+			return DECODE_MAX_INTERVAL;
+		} else if (used > 50) {
+			return DECODE_MAX_INTERVAL / 2;
+		}
 		return decoder->period(decoder_data);
 	}
 	return DECODE_MAX_INTERVAL;
@@ -492,7 +504,7 @@ static int decode_song_ended(lua_State *L) {
 static int decode_status(lua_State *L) {
 	size_t size, usedbytes;
 	u32_t bytesL, bytesH;
-
+	
 	lua_newtable(L);
 
 	fifo_lock(&decode_fifo);
@@ -502,10 +514,15 @@ static int decode_status(lua_State *L) {
 
 	lua_pushinteger(L, decode_fifo.size);
 	lua_setfield(L, -2, "outputSize");
-
-	lua_pushinteger(L, (u32_t)(((u64_t)decode_elapsed_samples * 1000) / current_sample_rate));
+	
+	lua_pushinteger(L, (u32_t)(((u64_t)(decode_elapsed_samples - 
+			(decode_audio->delay ? decode_audio->delay() : 0)) * 1000) / current_sample_rate));
 	lua_setfield(L, -2, "elapsed");
-
+	
+	/* get jiffies here so they correlate with "elapsed" as closely as possible */
+	lua_pushinteger(L, (u32_t)SDL_GetTicks());
+	lua_setfield(L, -2, "elapsed_jiffies");
+	
 	lua_pushinteger(L, decode_num_tracks_started);
 	lua_setfield(L, -2, "tracksStarted");
 
