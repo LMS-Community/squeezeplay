@@ -40,6 +40,9 @@ end
 
 function registerApplet(self)
 
+end
+
+function configureApplet(self)
 	-- BlankScreen implements a screensaver
 	appletManager:callService("addScreenSaver",
 		self:string("SCREENSAVER_BLANKSCREEN"), 

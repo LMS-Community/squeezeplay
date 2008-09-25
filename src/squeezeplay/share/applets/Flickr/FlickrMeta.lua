@@ -47,11 +47,16 @@ end
 
 function registerApplet(self)
 
+	-- load our skin
+	jiveMain:loadSkin("Flickr", "skin")
+
+end
+
+function configureApplet(self)
+
 	appletManager:callService("addScreenSaver", self:string("SCREENSAVER_FLICKR"), "Flickr", 
 "openScreensaver", self:string("SCREENSAVER_FLICKR_SETTINGS"), "openSettings", 90)
 
-	-- load our skin
-	jiveMain:loadSkin("Flickr", "skin")
 end
 
 

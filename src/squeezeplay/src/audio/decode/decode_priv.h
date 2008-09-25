@@ -49,6 +49,8 @@ extern u32_t current_audio_state;
 
 extern bool_t decode_output_can_write(u32_t buffer_size, u32_t sample_rate);
 
+extern u32_t decode_output_percent_used(void);
+
 extern void decode_output_samples(sample_t *buffer, u32_t samples, int sample_rate,
 				   bool_t copyright_asserted);
 
@@ -82,7 +84,6 @@ struct decode_metadata {
 
 extern void decode_queue_metadata(struct decode_metadata *metadata);
 
-
 /* Audio output api */
 struct decode_audio {
 	int (*init)(void);
@@ -90,6 +91,7 @@ struct decode_audio {
 	void (*pause)(void);
 	void (*resume)(void);
 	void (*stop)(void);
+	u32_t (*delay)(void);
 };
 
 extern struct decode_audio decode_alsa;
@@ -121,6 +123,7 @@ extern u32_t decode_elapsed_samples;
 extern bool_t decode_first_buffer;
 extern u32_t current_sample_rate;
 extern u32_t skip_ahead_bytes;
+extern u32_t add_silence_bytes;
 
 /* The fifo used to store decoded samples */
 extern u8_t decode_fifo_buf[DECODE_FIFO_SIZE];

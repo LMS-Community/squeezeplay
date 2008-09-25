@@ -46,6 +46,10 @@ function registerApplet(meta)
 
 	meta:registerService("selectMusicSource")
 
+end
+
+function configureApplet(meta)
+
 	-- set the poll list for discovery of slimservers based on our settings
 	if appletManager:hasService("setPollList") then
 		appletManager:callService("setPollList", meta:getSettings().poll)
