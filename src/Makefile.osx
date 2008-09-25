@@ -161,7 +161,7 @@ tolua++:
 #
 
 .PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_test freefont
-app: portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_test freefont
+app: portaudio flac libmad tremor libpng libjpeg squeezeplay squeezeplay_desktop squeezeplay_test freefont
 
 # portaudio
 portaudio_v19_1360/Makefile:
@@ -192,13 +192,29 @@ tremor: Tremor/Makefile
 	cd Tremor; make && make install
 
 
+# png also add clean
+libpng-1.2.32/Makefile:
+	cd libpng-1.2.32; ./configure  --prefix=${PREFIX}
+
+libpng: libpng-1.2.32/Makefile
+	cd libpng-1.2.32; make && make install
+
+
+# jpeg
+jpeg-6b/Makefile:
+	cd jpeg-6b; ./configure --enable-shared --enable-static --prefix=${PREFIX}
+
+libjpeg: jpeg-6b/Makefile
+	cd jpeg-6b; make && make install
+
+
 # squeezeplay
 squeezeplay/Makefile:
 	cd squeezeplay; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --prefix=${PREFIX}
 
 squeezeplay: squeezeplay/Makefile
 	export PATH=$(BUILD_TOP)/bin:$(PATH); \
-	cd squeezeplay; make && make install
+	cd squeezeplay; make && make install && make SqueezePlay_bundle
 
 squeezeplay_desktop/Makefile:
 	cd squeezeplay_desktop; SDL_CONFIG=${SDL_CONFIG} ./configure --prefix=${PREFIX}
@@ -228,6 +244,14 @@ clean:
 	@echo "Cleaning: squeezeplay"
 	-cd squeezeplay; make distclean
 	@echo "----------------------------------------------------------"
+	@echo "Cleaning: libpng"
+	-cd libpng-1.2.32; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: libjpeg"
+	@echo "----------------------------------------------------------"
+	-cd jpeg-6b; make distclean
+	@echo "Cleaning: squeezeplay"
+	-cd squeezeplay; make distclean
 	@echo "Cleaning: SDL"
 	-cd SDL-1.2.13; make distclean; rm -f include/SDL_config.h;
 	@echo "----------------------------------------------------------"
