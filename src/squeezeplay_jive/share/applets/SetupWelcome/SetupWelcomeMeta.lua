@@ -46,7 +46,7 @@ end
 
 function configureApplet(meta)
 	if not meta:getSettings().setupDone then
-		appletManager:callService("step1")
+		appletManager:loadApplet("SetupWelcome"):step1()
 	end
 end
 
