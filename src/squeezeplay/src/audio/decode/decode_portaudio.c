@@ -64,18 +64,18 @@ static int callback(const void *inputBuffer,
 
 	fifo_lock(&decode_fifo);
 
-	if (add_silence_bytes) {
-		add_bytes = add_silence_bytes;
-		if (add_bytes > len) add_bytes = len;
-		memset(outputBuffer, 0, add_bytes);
-		outputBuffer += add_bytes;
-		len -= add_bytes;
-		add_silence_bytes -= add_bytes;
-		if (!len) {
-			fifo_unlock(&decode_fifo);
-			return;
-		}
-	}
+	//if (add_silence_bytes) {
+	//	add_bytes = add_silence_bytes;
+	//	if (add_bytes > len) add_bytes = len;
+	//	memset(outputBuffer, 0, add_bytes);
+	//	outputBuffer += add_bytes;
+	//	len -= add_bytes;
+	//	add_silence_bytes -= add_bytes;
+	//	if (!len) {
+	//		fifo_unlock(&decode_fifo);
+	//		return;
+	//	}
+	//}
 
 	bytes_used = fifo_bytes_used(&decode_fifo);	
 
