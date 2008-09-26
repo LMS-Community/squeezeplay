@@ -54,6 +54,7 @@ PLIST_FILE = $(BUNDLE_CONTENTS)/Info.plist
 
 VERSION_TEXT = $(shell cat ../squeezeplay.version)r$(shell svnversion -n ..|sed "s/M$$//g")
 ICNS_NAME = icon.icns
+DMG_DIR = SqueezePlay_dmg
 
 #todo: make clean work the right way(not the rm -rf hackery seen below)
 SqueezePlay_bundle: SqueezePlay
@@ -97,6 +98,12 @@ SqueezePlay_bundle: SqueezePlay
 	chmod 644 $(BUNDLE_CONTENTS)/Resources/*
 	$(INSTALL_PROGRAM) $(JIVE_STATIC_PROGRAM) $(BUNDLE_CONTENTS)/MacOS/
 	cp -Rp $(BUNDLE_NAME) $(OSX_BUILD_DIR)
+
+SqueezePlay_dmg: SqueezePlay_bundle
+	mkdir -p $(DMG_DIR)
+	/Developer/Tools/CpMac -r $(BUNDLE_NAME) ./$(DMG_DIR)/
+	hdiutil create -srcfolder $(DMG_DIR) $(OSX_BUILD_DIR)/SqueezePlay.dmg
+	rm -rf $(DMG_DIR)
 
 
 # Convenience library:
