@@ -39,6 +39,7 @@ static SDL_Thread *audio_thread;
 /*
  * This function is called by portaudio when the stream is active to request
  * audio samples
+ * Called with fifo-lock held.
  */
 static void callback(void *outputBuffer,
 		    unsigned long framesPerBuffer) {
