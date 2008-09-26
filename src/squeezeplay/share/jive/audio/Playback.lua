@@ -179,6 +179,7 @@ function _timerCallback(self)
 			log:info("resume decodeFull=", status.decodeFull, " threshold=", self.threshold)
 			Decode:resume()
 			self.sentResume = true
+			self.sentDecoderFullEvent = true -- fake it so we don't send STMl with pause
 
 		elseif not self.sentDecoderFullEvent then
 			-- Tell SC decoder buffer is full
