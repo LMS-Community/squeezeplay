@@ -40,7 +40,8 @@ static int callback(const void *inputBuffer,
 		    const PaStreamCallbackTimeInfo *timeInfo,
 		    PaStreamCallbackFlags statusFlags,
 		    void *userData) {
-	size_t bytes_used, len, skip_bytes = 0, add_bytes = 0;
+	size_t bytes_used, len, skip_bytes = 0;
+	//, add_bytes = 0;
 	bool_t reached_start_point;
 	Uint8 *outputArray = (u8_t *)outputBuffer;
 
