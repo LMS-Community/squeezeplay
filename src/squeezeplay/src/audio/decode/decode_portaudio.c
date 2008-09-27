@@ -40,8 +40,7 @@ static int callback(const void *inputBuffer,
 		    const PaStreamCallbackTimeInfo *timeInfo,
 		    PaStreamCallbackFlags statusFlags,
 		    void *userData) {
-	size_t bytes_used, len, skip_bytes = 0;
-	//, add_bytes = 0;
+	size_t bytes_used, len, skip_bytes = 0, add_bytes = 0;
 	bool_t reached_start_point;
 	Uint8 *outputArray = (u8_t *)outputBuffer;
 
@@ -65,18 +64,18 @@ static int callback(const void *inputBuffer,
 
 	fifo_lock(&decode_fifo);
 
-	//if (add_silence_bytes) {
-	//	add_bytes = add_silence_bytes;
-	//	if (add_bytes > len) add_bytes = len;
-	//	memset(outputBuffer, 0, add_bytes);
-	//	outputBuffer += add_bytes;
-	//	len -= add_bytes;
-	//	add_silence_bytes -= add_bytes;
-	//	if (!len) {
-	//		fifo_unlock(&decode_fifo);
-	//		return;
-	//	}
-	//}
+	if (add_silence_bytes) {
+		add_bytes = add_silence_bytes;
+		if (add_bytes > len) add_bytes = len;
+		memset(outputArray, 0, add_bytes);
+		outputArray += add_bytes;
+		len -= add_bytes;
+		add_silence_bytes -= add_bytes;
+		if (!len) {
+			fifo_unlock(&decode_fifo);
+			return paContinue;
+		}
+	}
 
 	bytes_used = fifo_bytes_used(&decode_fifo);	
 
