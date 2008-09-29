@@ -52,13 +52,6 @@ dist_applets_setupSetupFirmwareUpgrade_DATA = \
 	share/applets/SetupFirmwareUpgrade/strings.txt
 
 
-applets_aboutJivedir = $(datadir)/jive/applets/AboutJive
-dist_applets_aboutJive_DATA = \
-	share/applets/AboutJive/AboutJiveApplet.lua \
-	share/applets/AboutJive/AboutJiveMeta.lua \
-	share/applets/AboutJive/strings.txt
-
-
 applets_testMotiondir = $(datadir)/jive/applets/TestMotion
 dist_applets_testMotion_DATA = \
 	share/applets/TestMotion/TestMotionApplet.lua \

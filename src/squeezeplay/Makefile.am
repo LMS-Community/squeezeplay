@@ -102,9 +102,9 @@ SqueezePlay_bundle: SqueezePlay
 SqueezePlay_dmg: SqueezePlay_bundle
 	mkdir -p $(DMG_DIR)
 	/Developer/Tools/CpMac -r $(BUNDLE_NAME) ./$(DMG_DIR)/
-	hdiutil create -srcfolder $(DMG_DIR) $(OSX_BUILD_DIR)/SqueezePlay.dmg
 	rm -rf $(DMG_DIR)
 
+	##hdiutil create -srcfolder $(DMG_DIR) $(OSX_BUILD_DIR)/SqueezePlay.dmg
 
 # Convenience library:
 noinst_LTLIBRARIES = libjiveui.la libjiveaudio.la libjivenet.la
@@ -284,6 +284,11 @@ dist_luautil_DATA = \
 	share/jive/utils/dumper.lua \
 	share/jive/utils/table.lua
 
+applets_aboutJivedir = $(datadir)/jive/applets/AboutJive
+dist_applets_aboutJive_DATA = \
+        share/applets/AboutJive/AboutJiveApplet.lua \
+        share/applets/AboutJive/AboutJiveMeta.lua \
+        share/applets/AboutJive/strings.txt
 
 applets_logdir = $(pkgdatadir)/applets/LogSettings
 dist_applets_log_DATA = \

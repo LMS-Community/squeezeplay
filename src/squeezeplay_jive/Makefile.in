@@ -41,7 +41,6 @@ DIST_COMMON = $(am__configure_deps) \
 	$(dist_applets_SetupFactoryReset_DATA) \
 	$(dist_applets_SetupSSH_DATA) \
 	$(dist_applets_SetupWelcome_DATA) \
-	$(dist_applets_aboutJive_DATA) \
 	$(dist_applets_setupSetupFirmwareUpgrade_DATA) \
 	$(dist_applets_setupWireless_DATA) \
 	$(dist_applets_squeezeboxjive_DATA) \
@@ -73,7 +72,6 @@ am__installdirs = "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(applets_SetupFactoryResetdir)" \
 	"$(DESTDIR)$(applets_SetupSSHdir)" \
 	"$(DESTDIR)$(applets_SetupWelcomedir)" \
-	"$(DESTDIR)$(applets_aboutJivedir)" \
 	"$(DESTDIR)$(applets_setupSetupFirmwareUpgradedir)" \
 	"$(DESTDIR)$(applets_setupWirelessdir)" \
 	"$(DESTDIR)$(applets_squeezeboxjivedir)" \
@@ -111,7 +109,6 @@ DIST_SOURCES = $(jiveBSP_la_SOURCES) $(jiveWatchdog_la_SOURCES) \
 dist_applets_SetupFactoryResetDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_SetupSSHDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_SetupWelcomeDATA_INSTALL = $(INSTALL_DATA)
-dist_applets_aboutJiveDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupSetupFirmwareUpgradeDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_setupWirelessDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_squeezeboxjiveDATA_INSTALL = $(INSTALL_DATA)
@@ -123,7 +120,6 @@ dist_jive_netDATA_INSTALL = $(INSTALL_DATA)
 DATA = $(dist_applets_SetupFactoryReset_DATA) \
 	$(dist_applets_SetupSSH_DATA) \
 	$(dist_applets_SetupWelcome_DATA) \
-	$(dist_applets_aboutJive_DATA) \
 	$(dist_applets_setupSetupFirmwareUpgrade_DATA) \
 	$(dist_applets_setupWireless_DATA) \
 	$(dist_applets_squeezeboxjive_DATA) \
@@ -284,12 +280,6 @@ dist_applets_setupSetupFirmwareUpgrade_DATA = \
 	share/applets/SetupFirmwareUpgrade/SetupFirmwareUpgradeMeta.lua \
 	share/applets/SetupFirmwareUpgrade/Upgrade.lua \
 	share/applets/SetupFirmwareUpgrade/strings.txt
-
-applets_aboutJivedir = $(datadir)/jive/applets/AboutJive
-dist_applets_aboutJive_DATA = \
-	share/applets/AboutJive/AboutJiveApplet.lua \
-	share/applets/AboutJive/AboutJiveMeta.lua \
-	share/applets/AboutJive/strings.txt
 
 applets_testMotiondir = $(datadir)/jive/applets/TestMotion
 dist_applets_testMotion_DATA = \
@@ -544,23 +534,6 @@ uninstall-dist_applets_SetupWelcomeDATA:
 	  echo " rm -f '$(DESTDIR)$(applets_SetupWelcomedir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(applets_SetupWelcomedir)/$$f"; \
 	done
-install-dist_applets_aboutJiveDATA: $(dist_applets_aboutJive_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(applets_aboutJivedir)" || $(mkdir_p) "$(DESTDIR)$(applets_aboutJivedir)"
-	@list='$(dist_applets_aboutJive_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_applets_aboutJiveDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_aboutJivedir)/$$f'"; \
-	  $(dist_applets_aboutJiveDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_aboutJivedir)/$$f"; \
-	done
-
-uninstall-dist_applets_aboutJiveDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_applets_aboutJive_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(applets_aboutJivedir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(applets_aboutJivedir)/$$f"; \
-	done
 install-dist_applets_setupSetupFirmwareUpgradeDATA: $(dist_applets_setupSetupFirmwareUpgrade_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(applets_setupSetupFirmwareUpgradedir)" || $(mkdir_p) "$(DESTDIR)$(applets_setupSetupFirmwareUpgradedir)"
@@ -749,7 +722,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/AboutJive $(distdir)/share/applets/SetupFactoryReset $(distdir)/share/applets/SetupFirmwareUpgrade $(distdir)/share/applets/SetupSSH $(distdir)/share/applets/SetupWelcome $(distdir)/share/applets/SetupWireless $(distdir)/share/applets/SqueezeboxJive $(distdir)/share/applets/TestDisplay $(distdir)/share/applets/TestIR $(distdir)/share/applets/TestKeypad $(distdir)/share/applets/TestMotion $(distdir)/share/jive/net $(distdir)/src
+	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/SetupFactoryReset $(distdir)/share/applets/SetupFirmwareUpgrade $(distdir)/share/applets/SetupSSH $(distdir)/share/applets/SetupWelcome $(distdir)/share/applets/SetupWireless $(distdir)/share/applets/SqueezeboxJive $(distdir)/share/applets/TestDisplay $(distdir)/share/applets/TestIR $(distdir)/share/applets/TestKeypad $(distdir)/share/applets/TestMotion $(distdir)/share/jive/net $(distdir)/src
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -877,7 +850,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(LTLIBRARIES) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(applets_SetupFactoryResetdir)" "$(DESTDIR)$(applets_SetupSSHdir)" "$(DESTDIR)$(applets_SetupWelcomedir)" "$(DESTDIR)$(applets_aboutJivedir)" "$(DESTDIR)$(applets_setupSetupFirmwareUpgradedir)" "$(DESTDIR)$(applets_setupWirelessdir)" "$(DESTDIR)$(applets_squeezeboxjivedir)" "$(DESTDIR)$(applets_testDisplaydir)" "$(DESTDIR)$(applets_testIRdir)" "$(DESTDIR)$(applets_testKeypaddir)" "$(DESTDIR)$(applets_testMotiondir)" "$(DESTDIR)$(jive_netdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(applets_SetupFactoryResetdir)" "$(DESTDIR)$(applets_SetupSSHdir)" "$(DESTDIR)$(applets_SetupWelcomedir)" "$(DESTDIR)$(applets_setupSetupFirmwareUpgradedir)" "$(DESTDIR)$(applets_setupWirelessdir)" "$(DESTDIR)$(applets_squeezeboxjivedir)" "$(DESTDIR)$(applets_testDisplaydir)" "$(DESTDIR)$(applets_testIRdir)" "$(DESTDIR)$(applets_testKeypaddir)" "$(DESTDIR)$(applets_testMotiondir)" "$(DESTDIR)$(jive_netdir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: install-am
@@ -929,7 +902,6 @@ info-am:
 install-data-am: install-dist_applets_SetupFactoryResetDATA \
 	install-dist_applets_SetupSSHDATA \
 	install-dist_applets_SetupWelcomeDATA \
-	install-dist_applets_aboutJiveDATA \
 	install-dist_applets_setupSetupFirmwareUpgradeDATA \
 	install-dist_applets_setupWirelessDATA \
 	install-dist_applets_squeezeboxjiveDATA \
@@ -969,7 +941,6 @@ ps-am:
 uninstall-am: uninstall-dist_applets_SetupFactoryResetDATA \
 	uninstall-dist_applets_SetupSSHDATA \
 	uninstall-dist_applets_SetupWelcomeDATA \
-	uninstall-dist_applets_aboutJiveDATA \
 	uninstall-dist_applets_setupSetupFirmwareUpgradeDATA \
 	uninstall-dist_applets_setupWirelessDATA \
 	uninstall-dist_applets_squeezeboxjiveDATA \
@@ -990,7 +961,6 @@ uninstall-am: uninstall-dist_applets_SetupFactoryResetDATA \
 	install-dist_applets_SetupFactoryResetDATA \
 	install-dist_applets_SetupSSHDATA \
 	install-dist_applets_SetupWelcomeDATA \
-	install-dist_applets_aboutJiveDATA \
 	install-dist_applets_setupSetupFirmwareUpgradeDATA \
 	install-dist_applets_setupWirelessDATA \
 	install-dist_applets_squeezeboxjiveDATA \
@@ -1007,7 +977,6 @@ uninstall-am: uninstall-dist_applets_SetupFactoryResetDATA \
 	uninstall-dist_applets_SetupFactoryResetDATA \
 	uninstall-dist_applets_SetupSSHDATA \
 	uninstall-dist_applets_SetupWelcomeDATA \
-	uninstall-dist_applets_aboutJiveDATA \
 	uninstall-dist_applets_setupSetupFirmwareUpgradeDATA \
 	uninstall-dist_applets_setupWirelessDATA \
 	uninstall-dist_applets_squeezeboxjiveDATA \

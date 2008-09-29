@@ -16,6 +16,9 @@ local Label                  = require("jive.ui.Label")
 local Textarea               = require("jive.ui.Textarea")
 local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
+local jnt                    = jnt
+
+local JIVE_VERSION           = jive.JIVE_VERSION
 
 local log                    = require("jive.utils.log").logger("applets.setup")
 
@@ -26,18 +29,9 @@ oo.class(_M, Applet)
 function settingsShow(self)
 	local window = Window("window", self:string("ABOUT_JIVE"), 'settingstitle')
 
-	local fh = io.open("/etc/squeezeos.version", "r")
-	local version = fh:read("*a")
-	fh:close()
+	local version = JIVE_VERSION
 
-	local fh = io.popen("/sbin/ifconfig eth0")
-	local ifconfig = fh:read("*a")
-	fh:close()
-
-	local hwaddr = string.match(ifconfig, "HWaddr%s+([%x:]+)")
-
-	log:warn("ifconfig=", ifconfig)
-	log:warn("hwaddr=", hwaddr)
+	local uuid, hwaddr = jnt:getUUID()
 
 	local about = {
 		tostring(self:string("ABOUT_VERSION")),
@@ -81,6 +75,7 @@ function settingsShow(self)
 		"     Fred Thomas",
 		"     Richard Titmuss",
 		"     Julien Venetz",
+		"     Tom Wadzinski",
 		"     Osama Zaidan",
 		"",
 		"",
