@@ -54,7 +54,10 @@ PLIST_FILE = $(BUNDLE_CONTENTS)/Info.plist
 
 VERSION_TEXT = $(shell cat ../squeezeplay.version)r$(shell svnversion -n ..|sed "s/M$$//g")
 ICNS_NAME = icon.icns
-DMG_DIR = SqueezePlay_dmg
+DMG_TEMP_DIR = temp-SqueezePlay_image
+DMG_IMAGE_DIR = SqueezePlay_image
+DMG_TMP_IMAGE_FILENAME = $(DMG_TEMP_DIR).dmg
+DMG_IMAGE_FILENAME = SqueezePlay.dmg
 
 #todo: make clean work the right way(not the rm -rf hackery seen below)
 SqueezePlay_bundle: SqueezePlay
@@ -100,11 +103,20 @@ SqueezePlay_bundle: SqueezePlay
 	cp -Rp $(BUNDLE_NAME) $(OSX_BUILD_DIR)
 
 SqueezePlay_dmg: SqueezePlay_bundle
-	mkdir -p $(DMG_DIR)
-	/Developer/Tools/CpMac -r $(BUNDLE_NAME) ./$(DMG_DIR)/
-	rm -rf $(DMG_DIR)
-
-	##hdiutil create -srcfolder $(DMG_DIR) $(OSX_BUILD_DIR)/SqueezePlay.dmg
+	##following image creation model basd on sc buildme.pl (might avoid build system hang on hdiutil cmd
+	rm -rf $(DMG_IMAGE_DIR)
+	rm -rf $(DMG_TEMP_DIR)
+	rm $(DMG_TMP_IMAGE_FILENAME)
+	mkdir -p $(DMG_TEMP_DIR)
+	-hdiutil detach "/Volumes/$(DMG_IMAGE_DIR)"
+	hdiutil create -fs HFS+ -volname "$(DMG_IMAGE_DIR)" -size 100m "$(DMG_TEMP_DIR)"
+	hdiutil mount "$(DMG_TMP_IMAGE_FILENAME)"
+	/Developer/Tools/CpMac -r $(BUNDLE_NAME) /Volumes/$(DMG_IMAGE_DIR)
+	hdiutil detach "/Volumes/$(DMG_IMAGE_DIR)"
+	hdiutil convert -ov -format UDZO "$(DMG_TMP_IMAGE_FILENAME)" -o "$(DMG_IMAGE_FILENAME)"
+	rm -rf $(DMG_IMAGE_DIR)
+	rm -rf $(DMG_TEMP_DIR)
+	rm $(DMG_TMP_IMAGE_FILENAME)
 
 # Convenience library:
 noinst_LTLIBRARIES = libjiveui.la libjiveaudio.la libjivenet.la
