@@ -106,7 +106,7 @@ SqueezePlay_dmg: SqueezePlay_bundle
 	##following image creation model basd on sc buildme.pl (might avoid build system hang on hdiutil cmd
 	rm -rf $(DMG_IMAGE_DIR)
 	rm -rf $(DMG_TEMP_DIR)
-	rm $(DMG_TMP_IMAGE_FILENAME)
+	-rm $(DMG_TMP_IMAGE_FILENAME)
 	mkdir -p $(DMG_TEMP_DIR)
 	-hdiutil detach "/Volumes/$(DMG_IMAGE_DIR)"
 	hdiutil create -fs HFS+ -volname "$(DMG_IMAGE_DIR)" -size 100m "$(DMG_TEMP_DIR)"
@@ -116,7 +116,7 @@ SqueezePlay_dmg: SqueezePlay_bundle
 	hdiutil convert -ov -format UDZO "$(DMG_TMP_IMAGE_FILENAME)" -o "$(DMG_IMAGE_FILENAME)"
 	rm -rf $(DMG_IMAGE_DIR)
 	rm -rf $(DMG_TEMP_DIR)
-	rm $(DMG_TMP_IMAGE_FILENAME)
+	-rm $(DMG_TMP_IMAGE_FILENAME)
 
 # Convenience library:
 noinst_LTLIBRARIES = libjiveui.la libjiveaudio.la libjivenet.la
