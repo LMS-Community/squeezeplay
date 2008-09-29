@@ -126,14 +126,14 @@ function step4(self)
 	log:info("step4")
 
 	-- finding networks
-	self.scanWindow = self.setupWireless:setupScanShow(function()
-								   self:step5()
-								   -- FIXME is this required:
-								   if self.scanWindow then
-									   self.scanWindow:hide()
-									   self.scanWindow = nil
-								   end
-							   end)
+	self.scanWindow = appletManager:callService("setupScanShow", function()
+							   self:step5()
+							   -- FIXME is this required:
+							   if self.scanWindow then
+								   self.scanWindow:hide()
+								   self.scanWindow = nil
+							   end
+						   end)
 	return self.scanWindow
 end
 
@@ -167,7 +167,7 @@ function step52(self)
 	log:info("step52")
 
 	-- connect using other wireless network
-	return self.setupWireless:setupNetworksShow(function() self:step6() end)
+	return appletManager:callService("setupNetworksShow", function() self:step6() end)
 end
 
 function step6(self)
