@@ -16,9 +16,11 @@ lua-lint:
 	@test \! -s badsyntax
 	@rm -f badsyntax
 
+##install-data-local:
+##	cp -pR share/ $(top_builddir)/../../build/twtemp/
 
-OSX_LIB_DIR = $(top_builddir)/../../build/osx/lib
-OSX_BUILD_DIR = $(top_builddir)/../../build/osx
+OSX_LIB_DIR = $(PREFIX)/lib
+OSX_BUILD_DIR = $(PREFIX)
 JIVE_DEPENDENCIES_LIB_DIR = $(top_builddir)/.libs
 JIVE_STATIC_PROGRAM = SqueezePlay
 
@@ -117,6 +119,7 @@ SqueezePlay_dmg: SqueezePlay_bundle
 	rm -rf $(DMG_IMAGE_DIR)
 	rm -rf $(DMG_TEMP_DIR)
 	-rm $(DMG_TMP_IMAGE_FILENAME)
+	cp -p $(DMG_IMAGE_FILENAME) $(OSX_BUILD_DIR)/
 
 # Convenience library:
 noinst_LTLIBRARIES = libjiveui.la libjiveaudio.la libjivenet.la
