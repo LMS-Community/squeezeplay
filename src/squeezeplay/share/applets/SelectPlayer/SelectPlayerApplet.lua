@@ -150,7 +150,7 @@ function manageSelectPlayerMenu(self)
 				node = 'home',
 				text = self:string("SELECT_PLAYER"),
 				sound = "WINDOWSHOW",
-				callback = function() self:setupShow() end,
+				callback = function() self:setupShowSelectPlayer() end,
 				weight = 80
 			}
 			jiveMain:addItem(menuItem)
@@ -270,7 +270,7 @@ function _showWallpaper(self, playerId)
 end
 
 
-function setupShow(self, setupNext)
+function setupShowSelectPlayer(self, setupNext)
 	-- get list of slimservers
 	local window = Window("window", self:string("SELECT_PLAYER"), 'settingstitle')
 	window:setAllowScreensaver(false)

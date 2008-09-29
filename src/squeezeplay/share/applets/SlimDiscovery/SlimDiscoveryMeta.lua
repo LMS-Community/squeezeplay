@@ -125,17 +125,10 @@ function notify_playerNew(meta, player)
 	-- unsubscribe monitor from future events
 	jnt:unsubscribe(meta)
 
-	-- push Choose Player menu
-	local selectPlayer = appletManager:loadApplet("SelectPlayer")
-	if selectPlayer then
-		selectPlayer:setupShow(function() end)
-	end
+	appletManager:callService("setupShowSelectPlayer", function() end)
 
-	-- push Active Squeezenetwork
-	local snPin = appletManager:loadApplet("SqueezeNetworkPIN")
-	if snPin then
-		snPin:forcePin(player)
-	end
+	appletManager:callService("forcePin", player)
+
 end
 
 

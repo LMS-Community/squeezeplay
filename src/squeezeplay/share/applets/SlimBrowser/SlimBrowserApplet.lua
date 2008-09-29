@@ -2470,7 +2470,7 @@ function _problemConnecting(self, server)
 				     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
 				     callback = function()
 							appletManager:callService("setCurrentPlayer", nil)
-							appletManager:callService("setupShow")
+							appletManager:callService("setupShowSelectPlayer")
 						end,
 				     sound = "WINDOWSHOW",
 			     })

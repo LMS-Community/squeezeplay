@@ -103,7 +103,7 @@ function step1(self)
 		end)
 
 	-- choose language
-	self._topWindow = appletManager:callService("setupShow", function() self:step2() end)
+	self._topWindow = appletManager:callService("setupShowSetupLanguage", function() self:step2() end)
 
 	return self.topWindow
 end
@@ -203,7 +203,7 @@ function step7(self)
 	end
 
 	-- select player
-	return appletManager:callService("setupShow", function() self:step8() end)
+	return appletManager:callService("setupShowSelectPlayer", function() self:step8() end)
 end
 
 function step8(self)

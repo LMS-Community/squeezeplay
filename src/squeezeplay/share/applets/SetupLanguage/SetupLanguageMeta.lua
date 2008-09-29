@@ -46,7 +46,7 @@ function registerApplet(meta)
 	-- set the current locale from the applet settings
 	locale:setLocale(meta:getSettings().locale)
 	
-	meta:registerService("SetupLanguage")
+	meta:registerService("setupShowSetupLanguage")
 
 	-- add ourselves to the main menu
 	-- setupLanguage is the function that gets called from SetupLanguageApplet.lua when the menu item is selected
