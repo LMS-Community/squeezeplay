@@ -1,5 +1,7 @@
 JIVE_BUILD_DIR = $(PREFIX)/share/jive/
 
+#touching to try to get jive_73 build to see this file
+
 jive-static-install:
 	##Copy selectively, currently overwrites all, not just newer
 	mkdir -p $(JIVE_BUILD_DIR)
