@@ -14,7 +14,6 @@
 
 @SET_MAKE@
 
-
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
@@ -46,8 +45,9 @@ DIST_COMMON = $(am__configure_deps) \
 	$(dist_applets_squeezeboxjive_DATA) \
 	$(dist_applets_testDisplay_DATA) $(dist_applets_testIR_DATA) \
 	$(dist_applets_testKeypad_DATA) \
-	$(dist_applets_testMotion_DATA) $(dist_jive_net_DATA) \
-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+	$(dist_applets_testMotion_DATA) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in \
+	$(top_srcdir)/../Makefile.am.jive-install.include \
 	$(top_srcdir)/configure $(top_srcdir)/src/config.h.in \
 	config/config.guess config/config.sub config/depcomp \
 	config/install-sh config/ltmain.sh config/missing
@@ -62,14 +62,15 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/src/config.h
 CONFIG_CLEAN_FILES =
+SOURCES =
+DIST_SOURCES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
     *) f=$$p;; \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(libdir)" \
-	"$(DESTDIR)$(applets_SetupFactoryResetdir)" \
+am__installdirs = "$(DESTDIR)$(applets_SetupFactoryResetdir)" \
 	"$(DESTDIR)$(applets_SetupSSHdir)" \
 	"$(DESTDIR)$(applets_SetupWelcomedir)" \
 	"$(DESTDIR)$(applets_setupSetupFirmwareUpgradedir)" \
@@ -78,34 +79,7 @@ am__installdirs = "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(applets_testDisplaydir)" \
 	"$(DESTDIR)$(applets_testIRdir)" \
 	"$(DESTDIR)$(applets_testKeypaddir)" \
-	"$(DESTDIR)$(applets_testMotiondir)" \
-	"$(DESTDIR)$(jive_netdir)"
-libLTLIBRARIES_INSTALL = $(INSTALL)
-LTLIBRARIES = $(lib_LTLIBRARIES)
-jiveBSP_la_LIBADD =
-am_jiveBSP_la_OBJECTS = jive_bsp.lo
-jiveBSP_la_OBJECTS = $(am_jiveBSP_la_OBJECTS)
-jiveWatchdog_la_LIBADD =
-am_jiveWatchdog_la_OBJECTS = jive_watchdog.lo
-jiveWatchdog_la_OBJECTS = $(am_jiveWatchdog_la_OBJECTS)
-jiveWireless_la_LIBADD =
-am_jiveWireless_la_OBJECTS = jive_wireless.lo wpa_ctrl.lo
-jiveWireless_la_OBJECTS = $(am_jiveWireless_la_OBJECTS)
-DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/src
-depcomp = $(SHELL) $(top_srcdir)/config/depcomp
-am__depfiles_maybe = depfiles
-COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
-	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) \
-	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
-	$(AM_CFLAGS) $(CFLAGS)
-CCLD = $(CC)
-LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(jiveBSP_la_SOURCES) $(jiveWatchdog_la_SOURCES) \
-	$(jiveWireless_la_SOURCES)
-DIST_SOURCES = $(jiveBSP_la_SOURCES) $(jiveWatchdog_la_SOURCES) \
-	$(jiveWireless_la_SOURCES)
+	"$(DESTDIR)$(applets_testMotiondir)"
 dist_applets_SetupFactoryResetDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_SetupSSHDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_SetupWelcomeDATA_INSTALL = $(INSTALL_DATA)
@@ -116,7 +90,6 @@ dist_applets_testDisplayDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_testIRDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_testKeypadDATA_INSTALL = $(INSTALL_DATA)
 dist_applets_testMotionDATA_INSTALL = $(INSTALL_DATA)
-dist_jive_netDATA_INSTALL = $(INSTALL_DATA)
 DATA = $(dist_applets_SetupFactoryReset_DATA) \
 	$(dist_applets_SetupSSH_DATA) \
 	$(dist_applets_SetupWelcome_DATA) \
@@ -125,9 +98,7 @@ DATA = $(dist_applets_SetupFactoryReset_DATA) \
 	$(dist_applets_squeezeboxjive_DATA) \
 	$(dist_applets_testDisplay_DATA) $(dist_applets_testIR_DATA) \
 	$(dist_applets_testKeypad_DATA) \
-	$(dist_applets_testMotion_DATA) $(dist_jive_net_DATA)
-ETAGS = etags
-CTAGS = ctags
+	$(dist_applets_testMotion_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -243,25 +214,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-AM_CFLAGS = -Wall -Werror -D_GNU_SOURCE
-lib_LTLIBRARIES = jiveBSP.la jiveWireless.la jiveWatchdog.la
-jiveBSP_la_LDFLAGS = -module -no-version
-jiveBSP_la_SOURCES = \
-	src/jive_bsp.c
-
-jiveWireless_la_LDFLAGS = -module -no-version
-jiveWireless_la_SOURCES = \
-	src/jive_wireless.c \
-	src/wpa_ctrl.c
-
-jiveWatchdog_la_LDFLAGS = -module -no-version
-jiveWatchdog_la_SOURCES = \
-	src/jive_watchdog.c
-
-jive_netdir = $(datadir)/jive/jive/net
-dist_jive_net_DATA = \
-	share/jive/net/Wireless.lua
-
+JIVE_BUILD_DIR = /tmp/$(PREFIX)/share/jive/
 applets_squeezeboxjivedir = $(datadir)/jive/applets/SqueezeboxJive
 dist_applets_squeezeboxjive_DATA = \
 	share/applets/SqueezeboxJive/SqueezeboxJiveApplet.lua \
@@ -329,10 +282,9 @@ dist_applets_SetupWelcome_DATA = \
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .lo .o .obj
 am--refresh:
 	@:
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/../Makefile.am.jive-install.include $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -380,99 +332,6 @@ $(top_srcdir)/src/config.h.in:  $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f src/config.h src/stamp-h1
-install-libLTLIBRARIES: $(lib_LTLIBRARIES)
-	@$(NORMAL_INSTALL)
-	test -z "$(libdir)" || $(mkdir_p) "$(DESTDIR)$(libdir)"
-	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
-	  if test -f $$p; then \
-	    f=$(am__strip_dir) \
-	    echo " $(LIBTOOL) --mode=install $(libLTLIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) '$$p' '$(DESTDIR)$(libdir)/$$f'"; \
-	    $(LIBTOOL) --mode=install $(libLTLIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) "$$p" "$(DESTDIR)$(libdir)/$$f"; \
-	  else :; fi; \
-	done
-
-uninstall-libLTLIBRARIES:
-	@$(NORMAL_UNINSTALL)
-	@set -x; list='$(lib_LTLIBRARIES)'; for p in $$list; do \
-	  p=$(am__strip_dir) \
-	  echo " $(LIBTOOL) --mode=uninstall rm -f '$(DESTDIR)$(libdir)/$$p'"; \
-	  $(LIBTOOL) --mode=uninstall rm -f "$(DESTDIR)$(libdir)/$$p"; \
-	done
-
-clean-libLTLIBRARIES:
-	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
-	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
-	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
-	  test "$$dir" != "$$p" || dir=.; \
-	  echo "rm -f \"$${dir}/so_locations\""; \
-	  rm -f "$${dir}/so_locations"; \
-	done
-jiveBSP.la: $(jiveBSP_la_OBJECTS) $(jiveBSP_la_DEPENDENCIES) 
-	$(LINK) -rpath $(libdir) $(jiveBSP_la_LDFLAGS) $(jiveBSP_la_OBJECTS) $(jiveBSP_la_LIBADD) $(LIBS)
-jiveWatchdog.la: $(jiveWatchdog_la_OBJECTS) $(jiveWatchdog_la_DEPENDENCIES) 
-	$(LINK) -rpath $(libdir) $(jiveWatchdog_la_LDFLAGS) $(jiveWatchdog_la_OBJECTS) $(jiveWatchdog_la_LIBADD) $(LIBS)
-jiveWireless.la: $(jiveWireless_la_OBJECTS) $(jiveWireless_la_DEPENDENCIES) 
-	$(LINK) -rpath $(libdir) $(jiveWireless_la_LDFLAGS) $(jiveWireless_la_OBJECTS) $(jiveWireless_la_LIBADD) $(LIBS)
-
-mostlyclean-compile:
-	-rm -f *.$(OBJEXT)
-
-distclean-compile:
-	-rm -f *.tab.c
-
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_bsp.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_watchdog.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_wireless.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wpa_ctrl.Plo@am__quote@
-
-.c.o:
-@am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
-@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(COMPILE) -c $<
-
-.c.obj:
-@am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ `$(CYGPATH_W) '$<'`; \
-@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
-
-.c.lo:
-@am__fastdepCC_TRUE@	if $(LTCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
-@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Plo"; else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
-
-jive_bsp.lo: src/jive_bsp.c
-@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_bsp.lo -MD -MP -MF "$(DEPDIR)/jive_bsp.Tpo" -c -o jive_bsp.lo `test -f 'src/jive_bsp.c' || echo '$(srcdir)/'`src/jive_bsp.c; \
-@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/jive_bsp.Tpo" "$(DEPDIR)/jive_bsp.Plo"; else rm -f "$(DEPDIR)/jive_bsp.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/jive_bsp.c' object='jive_bsp.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_bsp.lo `test -f 'src/jive_bsp.c' || echo '$(srcdir)/'`src/jive_bsp.c
-
-jive_watchdog.lo: src/jive_watchdog.c
-@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_watchdog.lo -MD -MP -MF "$(DEPDIR)/jive_watchdog.Tpo" -c -o jive_watchdog.lo `test -f 'src/jive_watchdog.c' || echo '$(srcdir)/'`src/jive_watchdog.c; \
-@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/jive_watchdog.Tpo" "$(DEPDIR)/jive_watchdog.Plo"; else rm -f "$(DEPDIR)/jive_watchdog.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/jive_watchdog.c' object='jive_watchdog.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_watchdog.lo `test -f 'src/jive_watchdog.c' || echo '$(srcdir)/'`src/jive_watchdog.c
-
-jive_wireless.lo: src/jive_wireless.c
-@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_wireless.lo -MD -MP -MF "$(DEPDIR)/jive_wireless.Tpo" -c -o jive_wireless.lo `test -f 'src/jive_wireless.c' || echo '$(srcdir)/'`src/jive_wireless.c; \
-@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/jive_wireless.Tpo" "$(DEPDIR)/jive_wireless.Plo"; else rm -f "$(DEPDIR)/jive_wireless.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/jive_wireless.c' object='jive_wireless.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_wireless.lo `test -f 'src/jive_wireless.c' || echo '$(srcdir)/'`src/jive_wireless.c
-
-wpa_ctrl.lo: src/wpa_ctrl.c
-@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT wpa_ctrl.lo -MD -MP -MF "$(DEPDIR)/wpa_ctrl.Tpo" -c -o wpa_ctrl.lo `test -f 'src/wpa_ctrl.c' || echo '$(srcdir)/'`src/wpa_ctrl.c; \
-@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/wpa_ctrl.Tpo" "$(DEPDIR)/wpa_ctrl.Plo"; else rm -f "$(DEPDIR)/wpa_ctrl.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/wpa_ctrl.c' object='wpa_ctrl.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o wpa_ctrl.lo `test -f 'src/wpa_ctrl.c' || echo '$(srcdir)/'`src/wpa_ctrl.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -653,76 +512,17 @@ uninstall-dist_applets_testMotionDATA:
 	  echo " rm -f '$(DESTDIR)$(applets_testMotiondir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(applets_testMotiondir)/$$f"; \
 	done
-install-dist_jive_netDATA: $(dist_jive_net_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(jive_netdir)" || $(mkdir_p) "$(DESTDIR)$(jive_netdir)"
-	@list='$(dist_jive_net_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_jive_netDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(jive_netdir)/$$f'"; \
-	  $(dist_jive_netDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(jive_netdir)/$$f"; \
-	done
-
-uninstall-dist_jive_netDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_jive_net_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(jive_netdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(jive_netdir)/$$f"; \
-	done
-
-ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
-	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
-	unique=`for i in $$list; do \
-	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
-	  done | \
-	  $(AWK) '    { files[$$0] = 1; } \
-	       END { for (i in files) print i; }'`; \
-	mkid -fID $$unique
 tags: TAGS
+TAGS:
 
-TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
-		$(TAGS_FILES) $(LISP)
-	tags=; \
-	here=`pwd`; \
-	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
-	unique=`for i in $$list; do \
-	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
-	  done | \
-	  $(AWK) '    { files[$$0] = 1; } \
-	       END { for (i in files) print i; }'`; \
-	if test -z "$(ETAGS_ARGS)$$tags$$unique"; then :; else \
-	  test -n "$$unique" || unique=$$empty_fix; \
-	  $(ETAGS) $(ETAGSFLAGS) $(AM_ETAGSFLAGS) $(ETAGS_ARGS) \
-	    $$tags $$unique; \
-	fi
 ctags: CTAGS
-CTAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
-		$(TAGS_FILES) $(LISP)
-	tags=; \
-	here=`pwd`; \
-	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
-	unique=`for i in $$list; do \
-	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
-	  done | \
-	  $(AWK) '    { files[$$0] = 1; } \
-	       END { for (i in files) print i; }'`; \
-	test -z "$(CTAGS_ARGS)$$tags$$unique" \
-	  || $(CTAGS) $(CTAGSFLAGS) $(AM_CTAGSFLAGS) $(CTAGS_ARGS) \
-	     $$tags $$unique
+CTAGS:
 
-GTAGS:
-	here=`$(am__cd) $(top_builddir) && pwd` \
-	  && cd $(top_srcdir) \
-	  && gtags -i $(GTAGS_ARGS) $$here
-
-distclean-tags:
-	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/SetupFactoryReset $(distdir)/share/applets/SetupFirmwareUpgrade $(distdir)/share/applets/SetupSSH $(distdir)/share/applets/SetupWelcome $(distdir)/share/applets/SetupWireless $(distdir)/share/applets/SqueezeboxJive $(distdir)/share/applets/TestDisplay $(distdir)/share/applets/TestIR $(distdir)/share/applets/TestKeypad $(distdir)/share/applets/TestMotion $(distdir)/share/jive/net $(distdir)/src
+	$(mkdir_p) $(distdir)/.. $(distdir)/config $(distdir)/share/applets/SetupFactoryReset $(distdir)/share/applets/SetupFirmwareUpgrade $(distdir)/share/applets/SetupSSH $(distdir)/share/applets/SetupWelcome $(distdir)/share/applets/SetupWireless $(distdir)/share/applets/SqueezeboxJive $(distdir)/share/applets/TestDisplay $(distdir)/share/applets/TestIR $(distdir)/share/applets/TestKeypad $(distdir)/share/applets/TestMotion $(distdir)/src
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -848,9 +648,9 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES) $(DATA)
+all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(applets_SetupFactoryResetdir)" "$(DESTDIR)$(applets_SetupSSHdir)" "$(DESTDIR)$(applets_SetupWelcomedir)" "$(DESTDIR)$(applets_setupSetupFirmwareUpgradedir)" "$(DESTDIR)$(applets_setupWirelessdir)" "$(DESTDIR)$(applets_squeezeboxjivedir)" "$(DESTDIR)$(applets_testDisplaydir)" "$(DESTDIR)$(applets_testIRdir)" "$(DESTDIR)$(applets_testKeypaddir)" "$(DESTDIR)$(applets_testMotiondir)" "$(DESTDIR)$(jive_netdir)"; do \
+	for dir in "$(DESTDIR)$(applets_SetupFactoryResetdir)" "$(DESTDIR)$(applets_SetupSSHdir)" "$(DESTDIR)$(applets_SetupWelcomedir)" "$(DESTDIR)$(applets_setupSetupFirmwareUpgradedir)" "$(DESTDIR)$(applets_setupWirelessdir)" "$(DESTDIR)$(applets_squeezeboxjivedir)" "$(DESTDIR)$(applets_testDisplaydir)" "$(DESTDIR)$(applets_testIRdir)" "$(DESTDIR)$(applets_testKeypaddir)" "$(DESTDIR)$(applets_testMotiondir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: install-am
@@ -879,15 +679,13 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
-	mostlyclean-am
+clean-am: clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
-distclean-am: clean-am distclean-compile distclean-generic \
-	distclean-hdr distclean-libtool distclean-tags
+distclean-am: clean-am distclean-generic distclean-hdr \
+	distclean-libtool
 
 dvi: dvi-am
 
@@ -899,7 +697,8 @@ info: info-am
 
 info-am:
 
-install-data-am: install-dist_applets_SetupFactoryResetDATA \
+install-data-am: install-data-local \
+	install-dist_applets_SetupFactoryResetDATA \
 	install-dist_applets_SetupSSHDATA \
 	install-dist_applets_SetupWelcomeDATA \
 	install-dist_applets_setupSetupFirmwareUpgradeDATA \
@@ -908,9 +707,9 @@ install-data-am: install-dist_applets_SetupFactoryResetDATA \
 	install-dist_applets_testDisplayDATA \
 	install-dist_applets_testIRDATA \
 	install-dist_applets_testKeypadDATA \
-	install-dist_applets_testMotionDATA install-dist_jive_netDATA
+	install-dist_applets_testMotionDATA
 
-install-exec-am: install-libLTLIBRARIES
+install-exec-am:
 
 install-info: install-info-am
 
@@ -921,14 +720,12 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-am
 
-mostlyclean-am: mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool
+mostlyclean-am: mostlyclean-generic mostlyclean-libtool
 
 pdf: pdf-am
 
@@ -947,18 +744,15 @@ uninstall-am: uninstall-dist_applets_SetupFactoryResetDATA \
 	uninstall-dist_applets_testDisplayDATA \
 	uninstall-dist_applets_testIRDATA \
 	uninstall-dist_applets_testKeypadDATA \
-	uninstall-dist_applets_testMotionDATA \
-	uninstall-dist_jive_netDATA uninstall-info-am \
-	uninstall-libLTLIBRARIES
+	uninstall-dist_applets_testMotionDATA uninstall-info-am
 
-.PHONY: CTAGS GTAGS all all-am am--refresh check check-am clean \
-	clean-generic clean-libLTLIBRARIES clean-libtool ctags dist \
-	dist-all dist-bzip2 dist-gzip dist-shar dist-tarZ dist-zip \
-	distcheck distclean distclean-compile distclean-generic \
-	distclean-hdr distclean-libtool distclean-tags distcleancheck \
-	distdir distuninstallcheck dvi dvi-am html html-am info \
-	info-am install install-am install-data install-data-am \
-	install-dist_applets_SetupFactoryResetDATA \
+.PHONY: all all-am am--refresh check check-am clean clean-generic \
+	clean-libtool dist dist-all dist-bzip2 dist-gzip dist-shar \
+	dist-tarZ dist-zip distcheck distclean distclean-generic \
+	distclean-hdr distclean-libtool distcleancheck distdir \
+	distuninstallcheck dvi dvi-am html html-am info info-am \
+	install install-am install-data install-data-am \
+	install-data-local install-dist_applets_SetupFactoryResetDATA \
 	install-dist_applets_SetupSSHDATA \
 	install-dist_applets_SetupWelcomeDATA \
 	install-dist_applets_setupSetupFirmwareUpgradeDATA \
@@ -967,13 +761,12 @@ uninstall-am: uninstall-dist_applets_SetupFactoryResetDATA \
 	install-dist_applets_testDisplayDATA \
 	install-dist_applets_testIRDATA \
 	install-dist_applets_testKeypadDATA \
-	install-dist_applets_testMotionDATA install-dist_jive_netDATA \
-	install-exec install-exec-am install-info install-info-am \
-	install-libLTLIBRARIES install-man install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	install-dist_applets_testMotionDATA install-exec \
+	install-exec-am install-info install-info-am install-man \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am \
+	uninstall uninstall-am \
 	uninstall-dist_applets_SetupFactoryResetDATA \
 	uninstall-dist_applets_SetupSSHDATA \
 	uninstall-dist_applets_SetupWelcomeDATA \
@@ -983,9 +776,7 @@ uninstall-am: uninstall-dist_applets_SetupFactoryResetDATA \
 	uninstall-dist_applets_testDisplayDATA \
 	uninstall-dist_applets_testIRDATA \
 	uninstall-dist_applets_testKeypadDATA \
-	uninstall-dist_applets_testMotionDATA \
-	uninstall-dist_jive_netDATA uninstall-info-am \
-	uninstall-libLTLIBRARIES
+	uninstall-dist_applets_testMotionDATA uninstall-info-am
 
 
 # Check lua syntax
@@ -994,6 +785,15 @@ lua-lint:
 	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
 	@test \! -s badsyntax
 	@rm -f badsyntax
+
+jive-static-install:
+	mkdir -p $(JIVE_BUILD_DIR)
+	cd share; tar -pcf  - \
+		`find . \( -name "*.jpg" -o -name "*.gif" -o -name "*.png" -o -name "*.wav" -o -name "*.txt" -o -name "*.lua" \)` \
+	    | tar -C $(JIVE_BUILD_DIR) -pxf -
+
+install-data-local: jive-static-install
+	rm -rf $(JIVE_BUILD_DIR)/jive/net/Wireless.lua
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
