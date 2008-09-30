@@ -54,7 +54,7 @@ APP_NAME = SqueezePlay Beta
 BUNDLE_CONTENTS = $(BUNDLE_NAME)/Contents
 PLIST_FILE = $(BUNDLE_CONTENTS)/Info.plist
 
-VERSION_TEXT = $(shell cat ../squeezeplay.version)r$(shell svnversion -n ..|sed "s/M$$//g")
+VERSION_TEXT = $(shell cat ../squeezeplay.version)r$(shell svnversion -n ..)
 ICNS_NAME = icon.icns
 DMG_TEMP_DIR = temp-SqueezePlay_image
 DMG_IMAGE_DIR = SqueezePlay_image
@@ -63,6 +63,13 @@ DMG_IMAGE_FILENAME = SqueezePlay.dmg
 
 #todo: make clean work the right way(not the rm -rf hackery seen below)
 SqueezePlay_bundle: SqueezePlay
+	echo "Troubleshooting build server svn issues..."
+	echo "PATH: $$PATH"
+	echo "svn version: `svn --version`"
+	echo "which svn: `which svn`"
+	echo "svnversion version: `svnversion --version`"
+	echo "which svnversion: `which svnversion`"
+	echo "svn info .: `svn info .`"
 	rm -rf $(BUNDLE_CONTENTS)/
 	rm -rf $(OSX_BUILD_DIR)/$(BUNDLE_NAME)
 	mkdir -p $(BUNDLE_CONTENTS)/MacOS
