@@ -2493,11 +2493,14 @@ SqueezePlay: $(jive_OBJECTS) $(jive_DEPENDENCIES)
 SqueezePlay_bundle: SqueezePlay
 	echo "Troubleshooting build server svn issues..."
 	echo "PATH: $$PATH"
-	echo "svn version: `svn --version`"
-	echo "which svn: `which svn`"
-	echo "svnversion version: `svnversion --version`"
-	echo "which svnversion: `which svnversion`"
-	echo "svn info .: `svn info .`"
+	-pwd
+	-svn --version
+	-which svn
+	-svnversion --version
+	-which svnversion
+	-svn info .
+	-svn info ..
+	-svnversion -n ..
 	rm -rf $(BUNDLE_CONTENTS)/
 	rm -rf $(OSX_BUILD_DIR)/$(BUNDLE_NAME)
 	mkdir -p $(BUNDLE_CONTENTS)/MacOS
