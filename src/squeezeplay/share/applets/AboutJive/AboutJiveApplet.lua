@@ -29,7 +29,7 @@ oo.class(_M, Applet)
 function settingsShow(self)
 	local window = Window("window", self:string("ABOUT_JIVE"), 'settingstitle')
 
-	local version = JIVE_VERSION:gsub("M$", "") --remove unneeded M in revision
+	local version = JIVE_VERSION
 
 	local uuid, hwaddr = jnt:getUUID()
 
