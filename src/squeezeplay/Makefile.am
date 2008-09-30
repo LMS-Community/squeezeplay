@@ -63,16 +63,6 @@ DMG_IMAGE_FILENAME = SqueezePlay.dmg
 
 #todo: make clean work the right way(not the rm -rf hackery seen below)
 SqueezePlay_bundle: SqueezePlay
-	echo "Troubleshooting build server svn issues..."
-	echo "PATH: $$PATH"
-	-pwd
-	-svn --version
-	-which svn
-	-svnversion --version
-	-which svnversion
-	-svn info .
-	-svn info ..
-	-svnversion -n ..
 	rm -rf $(BUNDLE_CONTENTS)/
 	rm -rf $(OSX_BUILD_DIR)/$(BUNDLE_NAME)
 	mkdir -p $(BUNDLE_CONTENTS)/MacOS
