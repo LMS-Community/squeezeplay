@@ -14,6 +14,10 @@
 
 @SET_MAKE@
 
+#Note: This include file is duplicated in squeezeplay/, squeezeplay_jive/, and squeezeplay_desktop/, so
+# if you are making changes to it consider making the changes in each of the locations.
+# The reason for the duplication (rather than a shared file) is that Poky checks out just subdirectory not the top level
+
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
@@ -37,11 +41,11 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in \
-	$(top_srcdir)/../Makefile.am.jive-install.include \
-	$(top_srcdir)/configure $(top_srcdir)/src/config.h.in \
-	config/config.guess config/config.sub config/depcomp \
-	config/install-sh config/ltmain.sh config/missing
+	$(srcdir)/Makefile.am.jive-install.include \
+	$(srcdir)/Makefile.in $(top_srcdir)/configure \
+	$(top_srcdir)/src/config.h.in config/config.guess \
+	config/config.sub config/depcomp config/install-sh \
+	config/ltmain.sh config/missing
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
@@ -225,7 +229,7 @@ all: all-am
 .SUFFIXES: .c .lo .o .obj
 am--refresh:
 	@:
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/../Makefile.am.jive-install.include $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(srcdir)/Makefile.am.jive-install.include $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -428,7 +432,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/.. $(distdir)/config $(distdir)/src
+	$(mkdir_p) $(distdir)/config $(distdir)/src
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -659,6 +663,8 @@ lua-lint:
 	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
 	@test \! -s badsyntax
 	@rm -f badsyntax
+
+#touching to try to get jive_73 build to see this file
 
 jive-static-install:
 	mkdir -p $(JIVE_BUILD_DIR)
