@@ -19,7 +19,7 @@ end
 function registerApplet(meta)
 
 	meta:registerService("enterPin")
-	meta:registerService("forcedPin")
+	meta:registerService("forcePin")
 
 	-- check for SN PIN when we connect to a new player
 	-- this is needed after upgrading from the MP firmware if 

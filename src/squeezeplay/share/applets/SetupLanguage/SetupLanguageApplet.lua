@@ -46,7 +46,7 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-function setupShow(self, setupNext)
+function setupShowSetupLanguage(self, setupNext)
 	local currentLocale = locale:getLocale()
 	log:info("locale currently is ", currentLocale)
 

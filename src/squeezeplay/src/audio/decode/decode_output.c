@@ -93,12 +93,13 @@ void decode_output_flush(void) {
 
 bool_t decode_check_start_point(void) {
 	bool_t reached_start_point;
+	long track_start_offset;
 
 	if (!check_start_point) {
 		/* We are past the start point */
 		return false;
 	}
-
+	
 	/* We mark the start point of a track in the decode FIFO. This function
 	 * tells us whether we've played past that point.
 	 */
@@ -115,11 +116,16 @@ bool_t decode_check_start_point(void) {
 		/* We have not reached the start point */
 		return false;
 	}
+	
+	track_start_offset = decode_fifo.rptr - track_start_point;
+	if (track_start_offset < 0) {
+		track_start_offset += DECODE_FIFO_SIZE;
+	}
 
 	/* Past the start point */
 	check_start_point = FALSE;
 	decode_num_tracks_started++;
-	decode_elapsed_samples = 0;
+	decode_elapsed_samples = BYTES_TO_SAMPLES(track_start_offset);
 
 	return true;
 }

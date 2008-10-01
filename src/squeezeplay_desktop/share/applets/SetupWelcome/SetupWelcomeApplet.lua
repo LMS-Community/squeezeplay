@@ -70,7 +70,8 @@ function step1(self)
 	}
 	jiveMain:addItem(returnToSetup)
 
-	self._topWindow = appletManager:callService("setupShow", function() self:step2() end)
+	self._topWindow = appletManager:callService("setupShowSetupLanguage", function() self:step2() end)
+
 	disableHomeKeyDuringSetup = 
 		Framework:addListener(EVENT_KEY_PRESS,
 		function(event)
@@ -103,7 +104,7 @@ function step2(self)
 end
 
 function step3(self)
-	return appletManager:callService("setupShow", function() self:step4() end)
+	return appletManager:callService("setupShowSelectPlayer", function() self:step4() end)
 end
 
 function step4(self)

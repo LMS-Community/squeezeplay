@@ -27,6 +27,14 @@ local DECODE_UNDERRUN       = (1 << 1)
 local DECODE_ERROR          = (1 << 2)
 local DECODE_NOT_SUPPORTED  = (1 << 3)
 
+-- disconnect codes
+local TCP_CLOSE_FIN           = 0
+local TCP_CLOSE_LOCAL_RST     = 1
+local TCP_CLOSE_REMOTE_RST    = 2
+local TCP_CLOSE_UNREACHABLE   = 3
+local TCP_CLOSE_LOCAL_TIMEOUT = 4
+
+
 
 function __init(self, jnt, slimproto)
 	assert(slimproto)
@@ -71,7 +79,8 @@ function __init(self, jnt, slimproto)
 	self.sentOutputUnderrunEvent = false
 	self.sentAudioUnderrunEvent = false
 
-
+	log:info("playback init")
+	
 	return obj
 end
 
@@ -161,8 +170,8 @@ function _timerCallback(self)
 	end
 
 
-	-- XXXX
-	if self.stream and (self.tracksStarted < status.tracksStarted) then
+	-- Cannot test of stream is not nil because stream may be complete (and closed) before track start
+	if status.decodeState & DECODE_RUNNING and (self.tracksStarted < status.tracksStarted) then
 
 		log:info("status TRACK STARTED")
 		self:sendStatus(status, "STMs")
@@ -179,6 +188,7 @@ function _timerCallback(self)
 			log:info("resume decodeFull=", status.decodeFull, " threshold=", self.threshold)
 			Decode:resume()
 			self.sentResume = true
+			self.sentDecoderFullEvent = true -- fake it so we don't send STMl with pause
 
 		elseif not self.sentDecoderFullEvent then
 			-- Tell SC decoder buffer is full
@@ -222,7 +232,7 @@ function _streamConnect(self, serverIp, serverPort)
 end
 
 
-function _streamDisconnect(self, flush)
+function _streamDisconnect(self, reason, flush)
 	if not self.stream then
 		return
 	end
@@ -239,14 +249,21 @@ function _streamDisconnect(self, flush)
 	self.stream = nil
 
 	-- Notify SqueezeCenter the stream is closed
-	self.slimproto:sendStatus('STMf')
+	if (flush) then
+		self.slimproto:sendStatus('STMf')
+	else
+		self.slimproto:send({
+			opcode = "DSCO",
+			reason = reason,
+		})
+	end
 end
 
 
 function _streamWrite(self, networkErr)
 	if networkErr then
 		log:error("write error: ", networkErr)
-		self:_streamDisconnect()
+		self:_streamDisconnect(TCP_CLOSE_LOCAL_RST)
 		return
 	end
 
@@ -262,7 +279,7 @@ end
 function _streamRead(self, networkErr)
 	if networkErr then
 		log:error("read error: ", networkErr)
-		self:_streamDisconnect()
+		self:_streamDisconnect(TCP_CLOSE_LOCAL_RST)
 		return
 	end
 
@@ -278,7 +295,7 @@ function _streamRead(self, networkErr)
 		n = self.stream:read(self)
 	end
 
-	self:_streamDisconnect()
+	self:_streamDisconnect((n == false) and TCP_CLOSE_FIN or TCP_CLOSE_LOCAL_RST)
 end
 
 
@@ -299,7 +316,7 @@ function _strm(self, data)
 
 		-- if we aborted the stream early, or there's any junk left 
 		-- over, flush out whatever's left.
-		self:_streamDisconnect(true)
+		self:_streamDisconnect(nil, true)
 
 		Decode:start(string.byte(data.mode),
 			     string.byte(data.transitionType),
@@ -334,7 +351,7 @@ function _strm(self, data)
 		-- quit
 		-- XXXX check against ip3k
 		Decode:stop()
-		self:_streamDisconnect()
+		self:_streamDisconnect(nil, true)
 
 		self.tracksStarted = 0
 

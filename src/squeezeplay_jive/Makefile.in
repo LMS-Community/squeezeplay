@@ -14,7 +14,6 @@
 
 @SET_MAKE@
 
-
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
@@ -37,18 +36,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-DIST_COMMON = $(am__configure_deps) \
-	$(dist_applets_SetupFactoryReset_DATA) \
-	$(dist_applets_SetupSSH_DATA) \
-	$(dist_applets_SetupWelcome_DATA) \
-	$(dist_applets_aboutJive_DATA) \
-	$(dist_applets_setupSetupFirmwareUpgrade_DATA) \
-	$(dist_applets_setupWireless_DATA) \
-	$(dist_applets_squeezeboxjive_DATA) \
-	$(dist_applets_testDisplay_DATA) $(dist_applets_testIR_DATA) \
-	$(dist_applets_testKeypad_DATA) \
-	$(dist_applets_testMotion_DATA) $(dist_jive_net_DATA) \
-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in \
+	$(top_srcdir)/../Makefile.am.jive-install.include \
 	$(top_srcdir)/configure $(top_srcdir)/src/config.h.in \
 	config/config.guess config/config.sub config/depcomp \
 	config/install-sh config/ltmain.sh config/missing
@@ -69,19 +59,7 @@ am__vpath_adj = case $$p in \
     *) f=$$p;; \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(libdir)" \
-	"$(DESTDIR)$(applets_SetupFactoryResetdir)" \
-	"$(DESTDIR)$(applets_SetupSSHdir)" \
-	"$(DESTDIR)$(applets_SetupWelcomedir)" \
-	"$(DESTDIR)$(applets_aboutJivedir)" \
-	"$(DESTDIR)$(applets_setupSetupFirmwareUpgradedir)" \
-	"$(DESTDIR)$(applets_setupWirelessdir)" \
-	"$(DESTDIR)$(applets_squeezeboxjivedir)" \
-	"$(DESTDIR)$(applets_testDisplaydir)" \
-	"$(DESTDIR)$(applets_testIRdir)" \
-	"$(DESTDIR)$(applets_testKeypaddir)" \
-	"$(DESTDIR)$(applets_testMotiondir)" \
-	"$(DESTDIR)$(jive_netdir)"
+am__installdirs = "$(DESTDIR)$(libdir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 jiveBSP_la_LIBADD =
@@ -108,28 +86,6 @@ SOURCES = $(jiveBSP_la_SOURCES) $(jiveWatchdog_la_SOURCES) \
 	$(jiveWireless_la_SOURCES)
 DIST_SOURCES = $(jiveBSP_la_SOURCES) $(jiveWatchdog_la_SOURCES) \
 	$(jiveWireless_la_SOURCES)
-dist_applets_SetupFactoryResetDATA_INSTALL = $(INSTALL_DATA)
-dist_applets_SetupSSHDATA_INSTALL = $(INSTALL_DATA)
-dist_applets_SetupWelcomeDATA_INSTALL = $(INSTALL_DATA)
-dist_applets_aboutJiveDATA_INSTALL = $(INSTALL_DATA)
-dist_applets_setupSetupFirmwareUpgradeDATA_INSTALL = $(INSTALL_DATA)
-dist_applets_setupWirelessDATA_INSTALL = $(INSTALL_DATA)
-dist_applets_squeezeboxjiveDATA_INSTALL = $(INSTALL_DATA)
-dist_applets_testDisplayDATA_INSTALL = $(INSTALL_DATA)
-dist_applets_testIRDATA_INSTALL = $(INSTALL_DATA)
-dist_applets_testKeypadDATA_INSTALL = $(INSTALL_DATA)
-dist_applets_testMotionDATA_INSTALL = $(INSTALL_DATA)
-dist_jive_netDATA_INSTALL = $(INSTALL_DATA)
-DATA = $(dist_applets_SetupFactoryReset_DATA) \
-	$(dist_applets_SetupSSH_DATA) \
-	$(dist_applets_SetupWelcome_DATA) \
-	$(dist_applets_aboutJive_DATA) \
-	$(dist_applets_setupSetupFirmwareUpgrade_DATA) \
-	$(dist_applets_setupWireless_DATA) \
-	$(dist_applets_squeezeboxjive_DATA) \
-	$(dist_applets_testDisplay_DATA) $(dist_applets_testIR_DATA) \
-	$(dist_applets_testKeypad_DATA) \
-	$(dist_applets_testMotion_DATA) $(dist_jive_net_DATA)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -262,87 +218,14 @@ jiveWatchdog_la_LDFLAGS = -module -no-version
 jiveWatchdog_la_SOURCES = \
 	src/jive_watchdog.c
 
-jive_netdir = $(datadir)/jive/jive/net
-dist_jive_net_DATA = \
-	share/jive/net/Wireless.lua
-
-applets_squeezeboxjivedir = $(datadir)/jive/applets/SqueezeboxJive
-dist_applets_squeezeboxjive_DATA = \
-	share/applets/SqueezeboxJive/SqueezeboxJiveApplet.lua \
-	share/applets/SqueezeboxJive/SqueezeboxJiveMeta.lua \
-	share/applets/SqueezeboxJive/strings.txt
-
-applets_setupWirelessdir = $(datadir)/jive/applets/SetupWireless
-dist_applets_setupWireless_DATA = \
-	share/applets/SetupWireless/SetupWirelessApplet.lua \
-	share/applets/SetupWireless/SetupWirelessMeta.lua \
-	share/applets/SetupWireless/strings.txt
-
-applets_setupSetupFirmwareUpgradedir = $(datadir)/jive/applets/SetupFirmwareUpgrade
-dist_applets_setupSetupFirmwareUpgrade_DATA = \
-	share/applets/SetupFirmwareUpgrade/SetupFirmwareUpgradeApplet.lua \
-	share/applets/SetupFirmwareUpgrade/SetupFirmwareUpgradeMeta.lua \
-	share/applets/SetupFirmwareUpgrade/Upgrade.lua \
-	share/applets/SetupFirmwareUpgrade/strings.txt
-
-applets_aboutJivedir = $(datadir)/jive/applets/AboutJive
-dist_applets_aboutJive_DATA = \
-	share/applets/AboutJive/AboutJiveApplet.lua \
-	share/applets/AboutJive/AboutJiveMeta.lua \
-	share/applets/AboutJive/strings.txt
-
-applets_testMotiondir = $(datadir)/jive/applets/TestMotion
-dist_applets_testMotion_DATA = \
-	share/applets/TestMotion/TestMotionApplet.lua \
-	share/applets/TestMotion/TestMotionMeta.lua \
-	share/applets/TestMotion/strings.txt
-
-applets_testDisplaydir = $(datadir)/jive/applets/TestDisplay
-dist_applets_testDisplay_DATA = \
-	share/applets/TestDisplay/TestDisplayApplet.lua \
-	share/applets/TestDisplay/TestDisplayMeta.lua \
-	share/applets/TestDisplay/strings.txt \
-	share/applets/TestDisplay/circle.jpg
-
-applets_testKeypaddir = $(datadir)/jive/applets/TestKeypad
-dist_applets_testKeypad_DATA = \
-	share/applets/TestKeypad/TestKeypadApplet.lua \
-	share/applets/TestKeypad/TestKeypadMeta.lua \
-	share/applets/TestKeypad/strings.txt \
-	share/applets/TestKeypad/Keypad.png
-
-applets_testIRdir = $(datadir)/jive/applets/TestIR
-dist_applets_testIR_DATA = \
-	share/applets/TestIR/TestIRApplet.lua \
-	share/applets/TestIR/TestIRMeta.lua \
-	share/applets/TestIR/strings.txt \
-	share/applets/TestIR/TestIR.png
-
-applets_SetupFactoryResetdir = $(datadir)/jive/applets/SetupFactoryReset
-dist_applets_SetupFactoryReset_DATA = \
-	share/applets/SetupFactoryReset/SetupFactoryResetApplet.lua \
-	share/applets/SetupFactoryReset/SetupFactoryResetMeta.lua \
-	share/applets/SetupFactoryReset/strings.txt
-
-applets_SetupSSHdir = $(datadir)/jive/applets/SetupSSH
-dist_applets_SetupSSH_DATA = \
-	share/applets/SetupSSH/SetupSSHApplet.lua \
-	share/applets/SetupSSH/SetupSSHMeta.lua \
-	share/applets/SetupSSH/strings.txt
-
-applets_SetupWelcomedir = $(datadir)/jive/applets/SetupWelcome
-dist_applets_SetupWelcome_DATA = \
-	share/applets/SetupWelcome/SetupWelcomeApplet.lua \
-	share/applets/SetupWelcome/SetupWelcomeMeta.lua \
-	share/applets/SetupWelcome/strings.txt
-
+JIVE_BUILD_DIR = $(PREFIX)/share/jive/
 all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
 am--refresh:
 	@:
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/../Makefile.am.jive-install.include $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -493,210 +376,6 @@ clean-libtool:
 distclean-libtool:
 	-rm -f libtool
 uninstall-info-am:
-install-dist_applets_SetupFactoryResetDATA: $(dist_applets_SetupFactoryReset_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(applets_SetupFactoryResetdir)" || $(mkdir_p) "$(DESTDIR)$(applets_SetupFactoryResetdir)"
-	@list='$(dist_applets_SetupFactoryReset_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_applets_SetupFactoryResetDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_SetupFactoryResetdir)/$$f'"; \
-	  $(dist_applets_SetupFactoryResetDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_SetupFactoryResetdir)/$$f"; \
-	done
-
-uninstall-dist_applets_SetupFactoryResetDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_applets_SetupFactoryReset_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(applets_SetupFactoryResetdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(applets_SetupFactoryResetdir)/$$f"; \
-	done
-install-dist_applets_SetupSSHDATA: $(dist_applets_SetupSSH_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(applets_SetupSSHdir)" || $(mkdir_p) "$(DESTDIR)$(applets_SetupSSHdir)"
-	@list='$(dist_applets_SetupSSH_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_applets_SetupSSHDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_SetupSSHdir)/$$f'"; \
-	  $(dist_applets_SetupSSHDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_SetupSSHdir)/$$f"; \
-	done
-
-uninstall-dist_applets_SetupSSHDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_applets_SetupSSH_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(applets_SetupSSHdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(applets_SetupSSHdir)/$$f"; \
-	done
-install-dist_applets_SetupWelcomeDATA: $(dist_applets_SetupWelcome_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(applets_SetupWelcomedir)" || $(mkdir_p) "$(DESTDIR)$(applets_SetupWelcomedir)"
-	@list='$(dist_applets_SetupWelcome_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_applets_SetupWelcomeDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_SetupWelcomedir)/$$f'"; \
-	  $(dist_applets_SetupWelcomeDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_SetupWelcomedir)/$$f"; \
-	done
-
-uninstall-dist_applets_SetupWelcomeDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_applets_SetupWelcome_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(applets_SetupWelcomedir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(applets_SetupWelcomedir)/$$f"; \
-	done
-install-dist_applets_aboutJiveDATA: $(dist_applets_aboutJive_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(applets_aboutJivedir)" || $(mkdir_p) "$(DESTDIR)$(applets_aboutJivedir)"
-	@list='$(dist_applets_aboutJive_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_applets_aboutJiveDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_aboutJivedir)/$$f'"; \
-	  $(dist_applets_aboutJiveDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_aboutJivedir)/$$f"; \
-	done
-
-uninstall-dist_applets_aboutJiveDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_applets_aboutJive_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(applets_aboutJivedir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(applets_aboutJivedir)/$$f"; \
-	done
-install-dist_applets_setupSetupFirmwareUpgradeDATA: $(dist_applets_setupSetupFirmwareUpgrade_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(applets_setupSetupFirmwareUpgradedir)" || $(mkdir_p) "$(DESTDIR)$(applets_setupSetupFirmwareUpgradedir)"
-	@list='$(dist_applets_setupSetupFirmwareUpgrade_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_applets_setupSetupFirmwareUpgradeDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_setupSetupFirmwareUpgradedir)/$$f'"; \
-	  $(dist_applets_setupSetupFirmwareUpgradeDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_setupSetupFirmwareUpgradedir)/$$f"; \
-	done
-
-uninstall-dist_applets_setupSetupFirmwareUpgradeDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_applets_setupSetupFirmwareUpgrade_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(applets_setupSetupFirmwareUpgradedir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(applets_setupSetupFirmwareUpgradedir)/$$f"; \
-	done
-install-dist_applets_setupWirelessDATA: $(dist_applets_setupWireless_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(applets_setupWirelessdir)" || $(mkdir_p) "$(DESTDIR)$(applets_setupWirelessdir)"
-	@list='$(dist_applets_setupWireless_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_applets_setupWirelessDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_setupWirelessdir)/$$f'"; \
-	  $(dist_applets_setupWirelessDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_setupWirelessdir)/$$f"; \
-	done
-
-uninstall-dist_applets_setupWirelessDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_applets_setupWireless_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(applets_setupWirelessdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(applets_setupWirelessdir)/$$f"; \
-	done
-install-dist_applets_squeezeboxjiveDATA: $(dist_applets_squeezeboxjive_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(applets_squeezeboxjivedir)" || $(mkdir_p) "$(DESTDIR)$(applets_squeezeboxjivedir)"
-	@list='$(dist_applets_squeezeboxjive_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_applets_squeezeboxjiveDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_squeezeboxjivedir)/$$f'"; \
-	  $(dist_applets_squeezeboxjiveDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_squeezeboxjivedir)/$$f"; \
-	done
-
-uninstall-dist_applets_squeezeboxjiveDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_applets_squeezeboxjive_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(applets_squeezeboxjivedir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(applets_squeezeboxjivedir)/$$f"; \
-	done
-install-dist_applets_testDisplayDATA: $(dist_applets_testDisplay_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(applets_testDisplaydir)" || $(mkdir_p) "$(DESTDIR)$(applets_testDisplaydir)"
-	@list='$(dist_applets_testDisplay_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_applets_testDisplayDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_testDisplaydir)/$$f'"; \
-	  $(dist_applets_testDisplayDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_testDisplaydir)/$$f"; \
-	done
-
-uninstall-dist_applets_testDisplayDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_applets_testDisplay_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(applets_testDisplaydir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(applets_testDisplaydir)/$$f"; \
-	done
-install-dist_applets_testIRDATA: $(dist_applets_testIR_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(applets_testIRdir)" || $(mkdir_p) "$(DESTDIR)$(applets_testIRdir)"
-	@list='$(dist_applets_testIR_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_applets_testIRDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_testIRdir)/$$f'"; \
-	  $(dist_applets_testIRDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_testIRdir)/$$f"; \
-	done
-
-uninstall-dist_applets_testIRDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_applets_testIR_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(applets_testIRdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(applets_testIRdir)/$$f"; \
-	done
-install-dist_applets_testKeypadDATA: $(dist_applets_testKeypad_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(applets_testKeypaddir)" || $(mkdir_p) "$(DESTDIR)$(applets_testKeypaddir)"
-	@list='$(dist_applets_testKeypad_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_applets_testKeypadDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_testKeypaddir)/$$f'"; \
-	  $(dist_applets_testKeypadDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_testKeypaddir)/$$f"; \
-	done
-
-uninstall-dist_applets_testKeypadDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_applets_testKeypad_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(applets_testKeypaddir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(applets_testKeypaddir)/$$f"; \
-	done
-install-dist_applets_testMotionDATA: $(dist_applets_testMotion_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(applets_testMotiondir)" || $(mkdir_p) "$(DESTDIR)$(applets_testMotiondir)"
-	@list='$(dist_applets_testMotion_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_applets_testMotionDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(applets_testMotiondir)/$$f'"; \
-	  $(dist_applets_testMotionDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(applets_testMotiondir)/$$f"; \
-	done
-
-uninstall-dist_applets_testMotionDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_applets_testMotion_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(applets_testMotiondir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(applets_testMotiondir)/$$f"; \
-	done
-install-dist_jive_netDATA: $(dist_jive_net_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(jive_netdir)" || $(mkdir_p) "$(DESTDIR)$(jive_netdir)"
-	@list='$(dist_jive_net_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_jive_netDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(jive_netdir)/$$f'"; \
-	  $(dist_jive_netDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(jive_netdir)/$$f"; \
-	done
-
-uninstall-dist_jive_netDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_jive_net_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(jive_netdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(jive_netdir)/$$f"; \
-	done
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -749,7 +428,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/config $(distdir)/share/applets/AboutJive $(distdir)/share/applets/SetupFactoryReset $(distdir)/share/applets/SetupFirmwareUpgrade $(distdir)/share/applets/SetupSSH $(distdir)/share/applets/SetupWelcome $(distdir)/share/applets/SetupWireless $(distdir)/share/applets/SqueezeboxJive $(distdir)/share/applets/TestDisplay $(distdir)/share/applets/TestIR $(distdir)/share/applets/TestKeypad $(distdir)/share/applets/TestMotion $(distdir)/share/jive/net $(distdir)/src
+	$(mkdir_p) $(distdir)/.. $(distdir)/config $(distdir)/src
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -875,9 +554,9 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES) $(DATA)
+all-am: Makefile $(LTLIBRARIES)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(applets_SetupFactoryResetdir)" "$(DESTDIR)$(applets_SetupSSHdir)" "$(DESTDIR)$(applets_SetupWelcomedir)" "$(DESTDIR)$(applets_aboutJivedir)" "$(DESTDIR)$(applets_setupSetupFirmwareUpgradedir)" "$(DESTDIR)$(applets_setupWirelessdir)" "$(DESTDIR)$(applets_squeezeboxjivedir)" "$(DESTDIR)$(applets_testDisplaydir)" "$(DESTDIR)$(applets_testIRdir)" "$(DESTDIR)$(applets_testKeypaddir)" "$(DESTDIR)$(applets_testMotiondir)" "$(DESTDIR)$(jive_netdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: install-am
@@ -926,17 +605,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-dist_applets_SetupFactoryResetDATA \
-	install-dist_applets_SetupSSHDATA \
-	install-dist_applets_SetupWelcomeDATA \
-	install-dist_applets_aboutJiveDATA \
-	install-dist_applets_setupSetupFirmwareUpgradeDATA \
-	install-dist_applets_setupWirelessDATA \
-	install-dist_applets_squeezeboxjiveDATA \
-	install-dist_applets_testDisplayDATA \
-	install-dist_applets_testIRDATA \
-	install-dist_applets_testKeypadDATA \
-	install-dist_applets_testMotionDATA install-dist_jive_netDATA
+install-data-am: install-data-local
 
 install-exec-am: install-libLTLIBRARIES
 
@@ -966,19 +635,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-dist_applets_SetupFactoryResetDATA \
-	uninstall-dist_applets_SetupSSHDATA \
-	uninstall-dist_applets_SetupWelcomeDATA \
-	uninstall-dist_applets_aboutJiveDATA \
-	uninstall-dist_applets_setupSetupFirmwareUpgradeDATA \
-	uninstall-dist_applets_setupWirelessDATA \
-	uninstall-dist_applets_squeezeboxjiveDATA \
-	uninstall-dist_applets_testDisplayDATA \
-	uninstall-dist_applets_testIRDATA \
-	uninstall-dist_applets_testKeypadDATA \
-	uninstall-dist_applets_testMotionDATA \
-	uninstall-dist_jive_netDATA uninstall-info-am \
-	uninstall-libLTLIBRARIES
+uninstall-am: uninstall-info-am uninstall-libLTLIBRARIES
 
 .PHONY: CTAGS GTAGS all all-am am--refresh check check-am clean \
 	clean-generic clean-libLTLIBRARIES clean-libtool ctags dist \
@@ -987,36 +644,13 @@ uninstall-am: uninstall-dist_applets_SetupFactoryResetDATA \
 	distclean-hdr distclean-libtool distclean-tags distcleancheck \
 	distdir distuninstallcheck dvi dvi-am html html-am info \
 	info-am install install-am install-data install-data-am \
-	install-dist_applets_SetupFactoryResetDATA \
-	install-dist_applets_SetupSSHDATA \
-	install-dist_applets_SetupWelcomeDATA \
-	install-dist_applets_aboutJiveDATA \
-	install-dist_applets_setupSetupFirmwareUpgradeDATA \
-	install-dist_applets_setupWirelessDATA \
-	install-dist_applets_squeezeboxjiveDATA \
-	install-dist_applets_testDisplayDATA \
-	install-dist_applets_testIRDATA \
-	install-dist_applets_testKeypadDATA \
-	install-dist_applets_testMotionDATA install-dist_jive_netDATA \
-	install-exec install-exec-am install-info install-info-am \
-	install-libLTLIBRARIES install-man install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am \
-	uninstall-dist_applets_SetupFactoryResetDATA \
-	uninstall-dist_applets_SetupSSHDATA \
-	uninstall-dist_applets_SetupWelcomeDATA \
-	uninstall-dist_applets_aboutJiveDATA \
-	uninstall-dist_applets_setupSetupFirmwareUpgradeDATA \
-	uninstall-dist_applets_setupWirelessDATA \
-	uninstall-dist_applets_squeezeboxjiveDATA \
-	uninstall-dist_applets_testDisplayDATA \
-	uninstall-dist_applets_testIRDATA \
-	uninstall-dist_applets_testKeypadDATA \
-	uninstall-dist_applets_testMotionDATA \
-	uninstall-dist_jive_netDATA uninstall-info-am \
-	uninstall-libLTLIBRARIES
+	install-data-local install-exec install-exec-am install-info \
+	install-info-am install-libLTLIBRARIES install-man \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags uninstall uninstall-am \
+	uninstall-info-am uninstall-libLTLIBRARIES
 
 
 # Check lua syntax
@@ -1025,6 +659,14 @@ lua-lint:
 	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
 	@test \! -s badsyntax
 	@rm -f badsyntax
+
+jive-static-install:
+	mkdir -p $(JIVE_BUILD_DIR)
+	cd share; tar -pcf  - \
+		`find . \( -name "*.jpg" -o -name "*.gif" -o -name "*.png" -o -name "*.wav" -o -name "*.txt" -o -name "*.lua" \)` \
+	    | tar -C $(JIVE_BUILD_DIR) -pxf -
+
+install-data-local: jive-static-install
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

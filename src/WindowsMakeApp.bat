@@ -1,0 +1,1 @@
+"%VS90COMNTOOLS%\..\IDE\devenv.com" /build "RELEASE|win32" Jive.sln
