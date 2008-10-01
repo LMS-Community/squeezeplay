@@ -1,7 +1,7 @@
 ## Makefile.am -- Process this file with automake to produce Makefile.in
 
 
-include $(top_srcdir)/../Makefile.am.jive-install.include
+include Makefile.am.jive-install.include
 
 install-data-local: jive-static-install
 	##eliminate anything we still want private
