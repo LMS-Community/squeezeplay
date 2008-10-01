@@ -216,7 +216,8 @@ function skin(self, s)
 					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
 				})
 
-		local popupMask = Tile:fillColor(0x000000e5)
+	local popupMask = Tile:fillColor(0x000000e5)
+	-- FIXME: no popupBox in Fab4? there is a defined popupBox in DefaultSkin...
 
 	local textinputBackground =
 		Tile:loadHTiles({
@@ -307,6 +308,7 @@ function skin(self, s)
 	s.title.text.font = _boldfont(TITLE_FONT_SIZE)
 	s.title.text.fg = TEXT_COLOR
 --[[
+	-- FIXME: path needs changing and I don't think this asset has been delivered for Fab4
 	s.title.back = {}
 	s.title.back.img = Surface:loadImage(imgpath .. "pointer_selector_L.png")
 	s.title.back.align = "left"
@@ -355,6 +357,7 @@ function skin(self, s)
 			      check = {
 					align = ITEM_ICON_ALIGN,
 					padding = CHECK_PADDING,
+					--FIXME: icon_check_14x30.png should probably be changed to something like icon_check.png
 				      img = Surface:loadImage(imgpath .. "Icons/icon_check_14x30.png")
 
 			      }
@@ -383,14 +386,16 @@ function skin(self, s)
 	s.selected.itemplay =
 		_uses(s.selected.item, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "selection_play.png")
+					--FIXME: need this image
+				      img = Surface:loadImage(imgpath .. "Icons/selection_play.png")
 			      }
 		      })
 
 	s.selected.itemadd =
 		_uses(s.selected.item, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "selection_add.png")
+					--FIXME: need this image
+				      img = Surface:loadImage(imgpath .. "Icons/selection_add.png")
 			      }
 		      })
 
@@ -435,7 +440,8 @@ function skin(self, s)
 	s.locked = {}
 	s.locked.item = _uses(s.selected.item, {
 					icon = {
-						img = Surface:loadImage(imgpath .. "selection_wait.png"),
+						-- FIXME: need this image
+						img = Surface:loadImage(imgpath .. "Icons/selection_wait.png"),
 						frameRate = 5,
 						frameWidth = 10
 					}
@@ -727,32 +733,6 @@ function skin(self, s)
 				icon = { img = Surface:loadImage(imgpath .. "Icons/Mini/icon_albums.png") }
 			}
 	)
---[[
-	s.albumtitle = {}
-	s.albumtitle.position = LAYOUT_NORTH
-	s.albumtitle.bgImg = titleBox
-	s.albumtitle.order = { "icon", "text" }
-	s.albumtitle.w = screenWidth
-	s.albumtitle.h = 130
-	s.albumtitle.border = 4
-	s.albumtitle.text = {}
-	s.albumtitle.text.padding = { 10, 15, 8, 10 }
-	s.albumtitle.text.align = "top-left"
-	s.albumtitle.text.font = _font(ALBUMMENU_FONT_SIZE)
-	s.albumtitle.text.lineHeight = ALBUMMENU_FONT_SIZE + 8
-	s.albumtitle.text.line = {
-		{
-			font = _boldfont(ALBUMMENU_FONT_SIZE),
-			height = ALBUMMENU_FONT_SIZE + 8,
-		}
-	}
-	s.albumtitle.text.fg = SELECT_COLOR
-	s.albumtitle.icon = {}
-	s.albumtitle.icon.h = WH_FILL
-	s.albumtitle.icon.align = "left"
-	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "Icons/Mini/icon_albums.png")
-	s.albumtitle.icon.padding = { 9, 0, 0, 0 }
---]]
 
 
 	-- titles with mini icons
@@ -1238,19 +1218,6 @@ function skin(self, s)
 
 	local NP_TRACK_FONT_SIZE = 26
 
-        local titleBox =
-                Tile:loadTiles({
-				       imgpath .. "Screen_Formats/Titlebar/titlebar.png",
-				       imgpath .. "Screen_Formats/Titlebar/titlebar_tl.png",
-				       imgpath .. "Screen_Formats/Titlebar/titlebar_t.png",
-				       imgpath .. "Screen_Formats/Titlebar/titlebar_tr.png",
-				       imgpath .. "Screen_Formats/Titlebar/titlebar_r.png",
-				       imgpath .. "Screen_Formats/Titlebar/titlebar_br.png",
-				       imgpath .. "Screen_Formats/Titlebar/titlebar_b.png",
-				       imgpath .. "Screen_Formats/Titlebar/titlebar_bl.png",
-				       imgpath .. "Screen_Formats/Titlebar/titlebar_l.png",
-                               })
-
 	-- Title
 	s.ssnptitle = _uses(s.title)
 
@@ -1293,6 +1260,7 @@ function skin(self, s)
 	s.ssnpartwork.artwork = {}
 	s.ssnpartwork.artwork.align = "center"
 	s.ssnpartwork.artwork.padding = 0
+	-- FIXME: change name to not be specific to icon width in filename
 	s.ssnpartwork.artwork.img = Surface:loadImage(imgpath .. "Icons/icon_album_noartwork_336.png")
 	s.browsenpartwork = _uses(s.ssnpartwork)
 
