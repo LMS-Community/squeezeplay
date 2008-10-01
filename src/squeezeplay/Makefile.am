@@ -16,6 +16,114 @@ lua-lint:
 	@test \! -s badsyntax
 	@rm -f badsyntax
 
+include Makefile.am.jive-install.include
+
+install-data-local: jive-static-install
+	##eliminate anything we still want private
+	rm -rf $(JIVE_BUILD_DIR)/strict.lua
+
+
+OSX_LIB_DIR = $(PREFIX)/lib
+OSX_BUILD_DIR = $(PREFIX)
+JIVE_DEPENDENCIES_LIB_DIR = $(top_builddir)/.libs
+JIVE_STATIC_PROGRAM = SqueezePlay
+
+OSX_STATIC_LIBS = `$(SDL_CONFIG) --static-libs` \
+	$(OSX_LIB_DIR)/liblua.a $(OSX_LIB_DIR)/libtolua++.a \
+	$(OSX_LIB_DIR)/libFLAC.a \
+	$(OSX_LIB_DIR)/libfreetype.a \
+	$(OSX_LIB_DIR)/libmad.a \
+	$(OSX_LIB_DIR)/libvorbisidec.a \
+	$(OSX_LIB_DIR)/libportaudio.a \
+	$(OSX_LIB_DIR)/libSDL.a \
+	$(OSX_LIB_DIR)/libSDL_gfx.a \
+	$(OSX_LIB_DIR)/libSDL_image.a \
+	$(OSX_LIB_DIR)/libSDL_ttf.a \
+	$(OSX_LIB_DIR)/libSDLmain.a \
+	$(OSX_LIB_DIR)/libpng.a \
+	$(OSX_LIB_DIR)/libjpeg.a \
+	$(JIVE_DEPENDENCIES_LIB_DIR)/libjiveaudio.a $(JIVE_DEPENDENCIES_LIB_DIR)/libjivenet.a $(JIVE_DEPENDENCIES_LIB_DIR)/libjiveui.a
+
+SqueezePlay: $(jive_OBJECTS) $(jive_DEPENDENCIES)
+	$(CXX) $(LDFLAGS) \
+	-force_cpusubtype_ALL \
+	-framework CoreAudio \
+	-o $(JIVE_STATIC_PROGRAM) $(jive_OBJECTS)   \
+	$(OSX_STATIC_LIBS) \
+	-lSystemStubs \
+	-lz
+
+BUNDLE_NAME = SqueezePlay.app
+APP_NAME = SqueezePlay Beta
+BUNDLE_CONTENTS = $(BUNDLE_NAME)/Contents
+PLIST_FILE = $(BUNDLE_CONTENTS)/Info.plist
+
+VERSION_TEXT = $(shell cat ../squeezeplay.version)r$(shell svnversion -n ..)
+ICNS_NAME = icon.icns
+DMG_TEMP_DIR = temp-SqueezePlay_image
+DMG_IMAGE_DIR = SqueezePlay_image
+DMG_TMP_IMAGE_FILENAME = $(DMG_TEMP_DIR).dmg
+DMG_IMAGE_FILENAME = SqueezePlay.dmg
+
+#todo: make clean work the right way(not the rm -rf hackery seen below)
+SqueezePlay_bundle: SqueezePlay
+	rm -rf $(BUNDLE_CONTENTS)/
+	rm -rf $(OSX_BUILD_DIR)/$(BUNDLE_NAME)
+	mkdir -p $(BUNDLE_CONTENTS)/MacOS
+	mkdir -p $(BUNDLE_CONTENTS)/Resources
+	mkdir -p $(BUNDLE_CONTENTS)/lib
+	echo "APPLSQPL" > $(BUNDLE_CONTENTS)/PkgInfo
+	cp -R $(OSX_BUILD_DIR)/share/ $(BUNDLE_CONTENTS)/share
+	cp -R $(OSX_BUILD_DIR)/lib/lua/ $(BUNDLE_CONTENTS)/lib/lua
+	cp rsc/$(ICNS_NAME) $(BUNDLE_CONTENTS)/Resources
+	echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > $(PLIST_FILE)
+	echo "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" >> $(PLIST_FILE)
+	echo "<plist version=\"1.0\">" >> $(PLIST_FILE)
+	echo "<dict>" >> $(PLIST_FILE)
+	echo "	<key>CFBundleDevelopmentRegion</key>" >> $(PLIST_FILE)
+	echo "	<string>English</string>" >> $(PLIST_FILE)
+	echo "	<key>CFBundleExecutable</key>" >> $(PLIST_FILE)
+	echo "	<string>$(JIVE_STATIC_PROGRAM)</string>" >> $(PLIST_FILE)
+	echo "	<key>CFBundleDisplayName</key>" >> $(PLIST_FILE)
+	echo "	<string>$(APP_NAME)</string>" >> $(PLIST_FILE)
+	echo "	<key>CFBundleIdentifier</key>" >> $(PLIST_FILE)
+	echo "	<string>com.logitech.squeezeplay</string>" >> $(PLIST_FILE)
+	echo "	<key>CFBundleIconFile</key>" >> $(PLIST_FILE)
+	echo "	<string>$(ICNS_NAME)</string>" >> $(PLIST_FILE)
+	echo "	<key>CFBundleInfoDictionaryVersion</key>" >> $(PLIST_FILE)
+	echo "	<string>6.0</string>" >> $(PLIST_FILE)
+	echo "	<key>CFBundlePackageType</key>" >> $(PLIST_FILE)
+	echo "	<string>APPL</string>" >> $(PLIST_FILE)
+	echo "	<key>CFBundleSignature</key>" >> $(PLIST_FILE)
+	echo "	<string>SQPL</string>" >> $(PLIST_FILE)
+	echo "	<key>CFBundleShortVersionString</key>" >> $(PLIST_FILE)
+	echo "	<string>$(VERSION_TEXT)</string>" >> $(PLIST_FILE)
+	echo "	<key>CFBundleVersion</key>" >> $(PLIST_FILE)
+	echo "	<string>$(VERSION_TEXT)</string>" >> $(PLIST_FILE)
+	echo "	<key>CFBundleGetInfoString</key>" >> $(PLIST_FILE)
+	echo "	<string>$(APP_NAME) $(VERSION_TEXT), Copyright 2008 Logitech</string>" >> $(PLIST_FILE)
+	echo "</dict>" >> $(PLIST_FILE)
+	echo "</plist>" >> $(PLIST_FILE)
+	chmod 644 $(BUNDLE_CONTENTS)/Resources/*
+	$(INSTALL_PROGRAM) $(JIVE_STATIC_PROGRAM) $(BUNDLE_CONTENTS)/MacOS/
+	cp -Rp $(BUNDLE_NAME) $(OSX_BUILD_DIR)
+
+SqueezePlay_dmg: SqueezePlay_bundle
+	##following image creation model basd on sc buildme.pl (might avoid build system hang on hdiutil cmd
+	rm -rf $(DMG_IMAGE_DIR)
+	rm -rf $(DMG_TEMP_DIR)
+	-rm $(DMG_TMP_IMAGE_FILENAME)
+	mkdir -p $(DMG_TEMP_DIR)
+	-hdiutil detach "/Volumes/$(DMG_IMAGE_DIR)"
+	hdiutil create -fs HFS+ -volname "$(DMG_IMAGE_DIR)" -size 100m "$(DMG_TEMP_DIR)"
+	hdiutil mount "$(DMG_TMP_IMAGE_FILENAME)"
+	/Developer/Tools/CpMac -r $(BUNDLE_NAME) /Volumes/$(DMG_IMAGE_DIR)
+	hdiutil detach "/Volumes/$(DMG_IMAGE_DIR)"
+	hdiutil convert -ov -format UDZO "$(DMG_TMP_IMAGE_FILENAME)" -o "$(DMG_IMAGE_FILENAME)"
+	rm -rf $(DMG_IMAGE_DIR)
+	rm -rf $(DMG_TEMP_DIR)
+	-rm $(DMG_TMP_IMAGE_FILENAME)
+	cp -p $(DMG_IMAGE_FILENAME) $(OSX_BUILD_DIR)/
 
 # Convenience library:
 noinst_LTLIBRARIES = libjiveui.la libjiveaudio.la libjivenet.la
@@ -108,633 +216,3 @@ jiveblit_SOURCES = \
 	src/jiveblit.c
 
 jiveblit_LDADD = -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL
-
-
-# Data: lua scripts
-jivedir = $(pkgdatadir)/jive
-dist_jive_DATA = \
-	share/jive/JiveMain.lua \
-	share/jive/Applet.lua \
-	share/jive/AppletManager.lua \
-	share/jive/AppletMeta.lua \
-	share/jive/Iconbar.lua \
-	share/jive/global_strings.txt \
-	share/jive/app.png \
-	share/jive/splash.png
-
-jiveuidir = $(pkgdatadir)/jive/ui
-dist_jiveui_DATA = \
-	share/jive/ui/Audio.lua \
-	share/jive/ui/Button.lua \
-	share/jive/ui/Checkbox.lua \
-	share/jive/ui/Choice.lua \
-	share/jive/ui/Event.lua \
-	share/jive/ui/Framework.lua \
-	share/jive/ui/Font.lua \
-	share/jive/ui/Group.lua \
-	share/jive/ui/HomeMenu.lua \
-	share/jive/ui/Icon.lua \
-	share/jive/ui/Label.lua \
-	share/jive/ui/Menu.lua \
-	share/jive/ui/Popup.lua \
-	share/jive/ui/RadioButton.lua \
-	share/jive/ui/RadioGroup.lua \
-	share/jive/ui/SimpleMenu.lua \
-	share/jive/ui/Scrollbar.lua \
-	share/jive/ui/ScrollAccel.lua \
-	share/jive/ui/ScrollWheel.lua \
-	share/jive/ui/Slider.lua \
-	share/jive/ui/Surface.lua \
-	share/jive/ui/Task.lua \
-	share/jive/ui/Textarea.lua \
-	share/jive/ui/Textinput.lua \
-	share/jive/ui/Tile.lua \
-	share/jive/ui/Timer.lua \
-	share/jive/ui/Widget.lua \
-	share/jive/ui/Window.lua
-
-luaaudiodir = $(pkgdatadir)/jive/audio
-dist_luaaudio_DATA = \
-	share/jive/audio/Playback.lua
-
-luanetdir = $(pkgdatadir)/jive/net
-dist_luanet_DATA = \
-	share/jive/net/Comet.lua \
-	share/jive/net/CometRequest.lua \
-	share/jive/net/DNS.lua \
-	share/jive/net/NetworkThread.lua \
-	share/jive/net/Process.lua \
-	share/jive/net/SlimProto.lua \
-	share/jive/net/SocketHttp.lua \
-	share/jive/net/SocketHttpQueue.lua \
-	share/jive/net/Socket.lua \
-	share/jive/net/SocketUdp.lua \
-	share/jive/net/SocketTcp.lua \
-	share/jive/net/RequestHttp.lua \
-	share/jive/net/RequestJsonRpc.lua \
-	share/jive/net/HttpPool.lua \
-	share/jive/net/Udap.lua \
-	share/jive/net/WakeOnLan.lua
-
-luaslimdir = $(pkgdatadir)/jive/slim
-dist_luaslim_DATA = \
-	share/jive/slim/Player.lua  \
-	share/jive/slim/SlimServer.lua \
-	share/jive/slim/ArtworkCache.lua
-
-luautildir = $(pkgdatadir)/jive/utils
-dist_luautil_DATA = \
-	share/jive/utils/coxpcall.lua \
-	share/jive/utils/datetime.lua \
-	share/jive/utils/debug.lua \
-	share/jive/utils/locale.lua \
-	share/jive/utils/log.lua \
-	share/jive/utils/strings.lua \
-	share/jive/utils/autotable.lua \
-	share/jive/utils/jsonfilters.lua \
-	share/jive/utils/dumper.lua \
-	share/jive/utils/table.lua
-
-
-applets_logdir = $(pkgdatadir)/applets/LogSettings
-dist_applets_log_DATA = \
-	share/applets/LogSettings/LogSettingsApplet.lua \
-	share/applets/LogSettings/LogSettingsMeta.lua
-
-applets_screensaversdir = $(pkgdatadir)/applets/ScreenSavers
-dist_applets_screensavers_DATA = \
-	share/applets/ScreenSavers/ScreenSaversApplet.lua \
-	share/applets/ScreenSavers/ScreenSaversMeta.lua \
-	share/applets/ScreenSavers/strings.txt
-
-applets_slimbrowserdir = $(pkgdatadir)/applets/SlimBrowser
-dist_applets_slimbrowser_DATA = \
-	share/applets/SlimBrowser/SlimBrowserApplet.lua \
-	share/applets/SlimBrowser/SlimBrowserMeta.lua \
-	share/applets/SlimBrowser/strings.txt \
-	share/applets/SlimBrowser/DB.lua \
-	share/applets/SlimBrowser/Scanner.lua \
-	share/applets/SlimBrowser/Volume.lua
-
-applets_slimdiscoverydir = $(pkgdatadir)/applets/SlimDiscovery
-dist_applets_slimdiscovery_DATA = \
-	share/applets/SlimDiscovery/SlimDiscoveryApplet.lua \
-	share/applets/SlimDiscovery/SlimDiscoveryMeta.lua
-
-applets_flickrdir = $(pkgdatadir)/applets/Flickr
-dist_applets_flickr_DATA = \
-	share/applets/Flickr/FlickrApplet.lua \
-	share/applets/Flickr/FlickrMeta.lua \
-	share/applets/Flickr/strings.txt
-
-applets_screenshotdir = $(pkgdatadir)/applets/Screenshot
-dist_applets_screenshot_DATA = \
-	share/applets/Screenshot/ScreenshotApplet.lua \
-	share/applets/Screenshot/ScreenshotMeta.lua
-
-applets_setupdatetimedir = $(pkgdatadir)/applets/SetupDateTime
-dist_applets_setupdatetime_DATA = \
-	share/applets/SetupDateTime/SetupDateTimeApplet.lua \
-	share/applets/SetupDateTime/SetupDateTimeMeta.lua \
-	share/applets/SetupDateTime/strings.txt
-
-applets_setupsoundeffectsdir = $(pkgdatadir)/applets/SetupSoundEffects
-dist_applets_setupsoundeffects_DATA = \
-	share/applets/SetupSoundEffects/SetupSoundEffectsApplet.lua \
-	share/applets/SetupSoundEffects/SetupSoundEffectsMeta.lua \
-	share/applets/SetupSoundEffects/strings.txt
-
-applets_setupsoundeffects_soundsdir = $(pkgdatadir)/applets/SetupSoundEffects/sounds
-dist_applets_setupsoundeffects_sounds_DATA = \
-	share/applets/SetupSoundEffects/sounds/bump.wav \
-	share/applets/SetupSoundEffects/sounds/click.wav \
-	share/applets/SetupSoundEffects/sounds/jump.wav \
-	share/applets/SetupSoundEffects/sounds/pushleft.wav \
-	share/applets/SetupSoundEffects/sounds/pushright.wav \
-	share/applets/SetupSoundEffects/sounds/select.wav \
-	share/applets/SetupSoundEffects/sounds/splash.wav \
-	share/applets/SetupSoundEffects/sounds/shutdown.wav \
-	share/applets/SetupSoundEffects/sounds/docking.wav
-
-applets_setuplanguagedir = $(pkgdatadir)/applets/SetupLanguage
-dist_applets_setuplanguage_DATA = \
-	share/applets/SetupLanguage/SetupLanguageApplet.lua \
-	share/applets/SetupLanguage/SetupLanguageMeta.lua \
-	share/applets/SetupLanguage/strings.txt
-
-applets_selectplayerdir = $(pkgdatadir)/applets/SelectPlayer
-dist_applets_selectplayer_DATA = \
-	share/applets/SelectPlayer/SelectPlayerApplet.lua \
-	share/applets/SelectPlayer/SelectPlayerMeta.lua \
-	share/applets/SelectPlayer/strings.txt
-
-applets_choosemusicsourcedir = $(pkgdatadir)/applets/ChooseMusicSource
-dist_applets_choosemusicsource_DATA = \
-	share/applets/ChooseMusicSource/ChooseMusicSourceApplet.lua \
-	share/applets/ChooseMusicSource/ChooseMusicSourceMeta.lua \
-	share/applets/ChooseMusicSource/strings.txt
-
-applets_squeezenetworkpindir = $(pkgdatadir)/applets/SqueezeNetworkPIN
-dist_applets_squeezenetworkpin_DATA = \
-	share/applets/SqueezeNetworkPIN/SqueezeNetworkPINApplet.lua \
-	share/applets/SqueezeNetworkPIN/SqueezeNetworkPINMeta.lua \
-	share/applets/SqueezeNetworkPIN/strings.txt
-
-applets_clockdir = $(pkgdatadir)/applets/Clock
-dist_applets_clock_DATA = \
-	share/applets/Clock/ClockApplet.lua \
-	share/applets/Clock/ClockMeta.lua \
-	share/applets/Clock/strings.txt \
-	share/applets/Clock/HourHand.png \
-	share/applets/Clock/MinuteHand.png \
-	share/applets/Clock/weekday_frame.png \
-	share/applets/Clock/clock_classic_bkgrd.png \
-	share/applets/Clock/clock_analog_bkgrd.png \
-	share/applets/Clock/ClockFace.png \
-	share/applets/Clock/Digital_dotmatrix_ghosted_0.png \
-	share/applets/Clock/Digital_dotmatrix_ghosted_1.png \
-	share/applets/Clock/Digital_dotmatrix_ghosted_2.png \
-	share/applets/Clock/Digital_dotmatrix_ghosted_3.png \
-	share/applets/Clock/Digital_dotmatrix_ghosted_4.png \
-	share/applets/Clock/Digital_dotmatrix_ghosted_5.png \
-	share/applets/Clock/Digital_dotmatrix_ghosted_6.png \
-	share/applets/Clock/Digital_dotmatrix_ghosted_7.png \
-	share/applets/Clock/Digital_dotmatrix_ghosted_8.png \
-	share/applets/Clock/Digital_dotmatrix_ghosted_9.png \
-	share/applets/Clock/clock_classic_time_dots.png
-
-applets_infobrowserdir = $(pkgdatadir)/applets/InfoBrowser
-dist_applets_infobrowser_DATA = \
-	share/applets/InfoBrowser/InfoBrowserApplet.lua \
-	share/applets/InfoBrowser/InfoBrowserMeta.lua \
-	share/applets/InfoBrowser/strings.txt
-
-applets_blankscreendir = $(pkgdatadir)/applets/BlankScreen
-dist_applets_blankscreen_DATA = \
-	share/applets/BlankScreen/BlankScreenApplet.lua \
-	share/applets/BlankScreen/BlankScreenMeta.lua \
-	share/applets/BlankScreen/strings.txt
-
-applets_customizehomemenudir = $(pkgdatadir)/applets/CustomizeHomeMenu
-dist_applets_customizehomemenu_DATA = \
-	share/applets/CustomizeHomeMenu/CustomizeHomeMenuApplet.lua \
-	share/applets/CustomizeHomeMenu/CustomizeHomeMenuMeta.lua \
-	share/applets/CustomizeHomeMenu/strings.txt
-
-applets_nowplayingdir = $(pkgdatadir)/applets/NowPlaying
-dist_applets_nowplaying_DATA = \
-	share/applets/NowPlaying/NowPlayingApplet.lua \
-	share/applets/NowPlaying/NowPlayingMeta.lua \
-	share/applets/NowPlaying/strings.txt \
-        share/applets/NowPlaying/progressbar_bkgrd.png \
-        share/applets/NowPlaying/progressbar_bkgrd_l.png \
-        share/applets/NowPlaying/progressbar_bkgrd_r.png \
-        share/applets/NowPlaying/progressbar_fill.png \
-        share/applets/NowPlaying/progressbar_fill_l.png \
-        share/applets/NowPlaying/progressbar_fill_r.png
-
-applets_macroplaydir = $(pkgdatadir)/applets/MacroPlay
-dist_applets_macroplay_DATA = \
-	share/applets/MacroPlay/MacroPlayApplet.lua \
-	share/applets/MacroPlay/MacroPlayMeta.lua \
-	share/applets/MacroPlay/pass.png \
-	share/applets/MacroPlay/fail.png \
-	share/applets/MacroPlay/strings.txt
-
-# Data: now playing
-applets_nowplaying_imagesdir = $(pkgdatadir)/applets/NowPlaying/images
-dist_applets_nowplaying_images_DATA = \
-	share/applets/NowPlaying/images/progressbar_bkgrd_l.png \
-	share/applets/NowPlaying/images/progressbar_bkgrd_r.png \
-	share/applets/NowPlaying/images/progressbar_bkgrd.png \
-	share/applets/NowPlaying/images/progressbar_fill_l.png \
-	share/applets/NowPlaying/images/progressbar_fill_r.png \
-	share/applets/NowPlaying/images/progressbar_fill.png 
-
-applets_setupappletinstallerdir = $(pkgdatadir)/applets/SetupAppletInstaller
-dist_applets_setupappletinstaller_DATA = \
-	share/applets/SetupAppletInstaller/SetupAppletInstallerApplet.lua \
-	share/applets/SetupAppletInstaller/SetupAppletInstallerMeta.lua \
-	share/applets/SetupAppletInstaller/strings.txt
-
-
-# Wallpaper
-applets_setupwallpaperdir = $(pkgdatadir)/applets/SetupWallpaper
-dist_applets_setupwallpaper_DATA = \
-	share/applets/SetupWallpaper/SetupWallpaperApplet.lua \
-	share/applets/SetupWallpaper/SetupWallpaperMeta.lua \
-	share/applets/SetupWallpaper/strings.txt
-
-applets_setupwallpaper_wallpaperdir = $(pkgdatadir)/applets/SetupWallpaper/wallpaper
-dist_applets_setupwallpaper_wallpaper_DATA = \
-	share/applets/SetupWallpaper/wallpaper/black.png \
-	share/applets/SetupWallpaper/wallpaper/Chapple_1.jpg \
-	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_1.jpg \
-	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_3.jpg \
-	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_4.jpg \
-	share/applets/SetupWallpaper/wallpaper/Clearly-Ambiguous_6.jpg \
-	share/applets/SetupWallpaper/wallpaper/concrete.png \
-	share/applets/SetupWallpaper/wallpaper/Los-Cardinalos_1.jpg \
-	share/applets/SetupWallpaper/wallpaper/midnight.png \
-	share/applets/SetupWallpaper/wallpaper/Orin-Optiglot_1.jpg \
-	share/applets/SetupWallpaper/wallpaper/pea.png \
-	share/applets/SetupWallpaper/wallpaper/stone.png \
-	share/applets/SetupWallpaper/wallpaper/fade_to_black.png \
-	share/applets/SetupWallpaper/wallpaper/sunlight.png \
-	share/applets/SetupWallpaper/wallpaper/sunrise.png \
-	share/applets/SetupWallpaper/wallpaper/flowersgreen.jpg \
-	share/applets/SetupWallpaper/wallpaper/note.jpg \
-	share/applets/SetupWallpaper/wallpaper/orangemarble.jpg \
-	share/applets/SetupWallpaper/wallpaper/purplenote.jpg \
-	share/applets/SetupWallpaper/wallpaper/redgrunge.jpg 
-
-applets_setupSqueezeboxdir = $(datadir)/jive/applets/SetupSqueezebox
-dist_applets_setupSqueezebox_DATA = \
-	share/applets/SetupSqueezebox/SetupSqueezeboxApplet.lua \
-	share/applets/SetupSqueezebox/SetupSqueezeboxMeta.lua \
-	share/applets/SetupSqueezebox/strings.txt
-
-applets_httpauthdir = $(datadir)/jive/applets/HttpAuth
-dist_applets_httpauth_DATA = \
-	share/applets/HttpAuth/HttpAuthApplet.lua \
-	share/applets/HttpAuth/HttpAuthMeta.lua \
-	share/applets/HttpAuth/strings.txt
-
-applets_setupnettestdir = $(datadir)/jive/applets/SetupNetTest
-dist_applets_setupnettest_DATA = \
-	share/applets/SetupNetTest/SetupNetTestApplet.lua \
-	share/applets/SetupNetTest/SetupNetTestMeta.lua \
-	share/applets/SetupNetTest/strings.txt	
-
-applets_testplaybackdir = $(datadir)/jive/applets/TestPlayback
-dist_applets_testplayback_DATA = \
-	share/applets/TestPlayback/TestPlaybackApplet.lua \
-	share/applets/TestPlayback/TestPlaybackMeta.lua
-
-applets_selectskindir = $(datadir)/jive/applets/SelectSkin
-dist_applets_selectskin_DATA = \
-	share/applets/SelectSkin/SelectSkinApplet.lua \
-	share/applets/SelectSkin/SelectSkinMeta.lua
-
-# Default skin
-applets_defaultskindir = $(pkgdatadir)/applets/DefaultSkin
-dist_applets_defaultskin_DATA = \
-	share/applets/DefaultSkin/DefaultSkinApplet.lua \
-	share/applets/DefaultSkin/DefaultSkinMeta.lua
-
-# Data: default skin
-applets_defaultskin_imagesdir = $(pkgdatadir)/applets/DefaultSkin/images
-dist_applets_defaultskin_images_DATA = \
-	share/applets/DefaultSkin/images/checkbox_off.png \
-	share/applets/DefaultSkin/images/checkbox_on.png \
-	share/applets/DefaultSkin/images/icon_mode_off.png \
-	share/applets/DefaultSkin/images/icon_mode_pause.png \
-	share/applets/DefaultSkin/images/icon_mode_play.png \
-	share/applets/DefaultSkin/images/icon_repeat.png \
-	share/applets/DefaultSkin/images/icon_repeat_song.png \
-	share/applets/DefaultSkin/images/icon_repeat_off.png \
-	share/applets/DefaultSkin/images/icon_shuffle.png \
-	share/applets/DefaultSkin/images/icon_shuffle_album.png \
-	share/applets/DefaultSkin/images/icon_shuffle_off.png \
-	share/applets/DefaultSkin/images/menu_album_noartwork.png \
-	share/applets/DefaultSkin/images/menu_selection_box_bl.png \
-	share/applets/DefaultSkin/images/menu_selection_box_b.png \
-	share/applets/DefaultSkin/images/menu_selection_box_br.png \
-	share/applets/DefaultSkin/images/menu_selection_box_l.png \
-	share/applets/DefaultSkin/images/menu_selection_box.png \
-	share/applets/DefaultSkin/images/menu_selection_box_r.png \
-	share/applets/DefaultSkin/images/menu_selection_box_tl.png \
-	share/applets/DefaultSkin/images/menu_selection_box_t.png \
-	share/applets/DefaultSkin/images/menu_selection_box_tr.png \
-	share/applets/DefaultSkin/images/note.png \
-	share/applets/DefaultSkin/images/radiobutton_off.png \
-	share/applets/DefaultSkin/images/radiobutton_on.png \
-	share/applets/DefaultSkin/images/scrollbar_bkgroundbottom.png \
-	share/applets/DefaultSkin/images/scrollbar_bkgroundmid.png \
-	share/applets/DefaultSkin/images/scrollbar_bkground.png \
-	share/applets/DefaultSkin/images/scrollbar_bkgroundtop.png \
-	share/applets/DefaultSkin/images/scrollbar_bodybottom.png \
-	share/applets/DefaultSkin/images/scrollbar_bodymid.png \
-	share/applets/DefaultSkin/images/scrollbar_bodytop.png \
-	share/applets/DefaultSkin/images/selection_right.png \
-	share/applets/DefaultSkin/images/selection_play.png \
-	share/applets/DefaultSkin/images/selection_add.png \
-	share/applets/DefaultSkin/images/selection_wait.png \
-	share/applets/DefaultSkin/images/titlebox_bl.png \
-	share/applets/DefaultSkin/images/titlebox_b.png \
-	share/applets/DefaultSkin/images/titlebox_br.png \
-	share/applets/DefaultSkin/images/titlebox_l.png \
-	share/applets/DefaultSkin/images/titlebox.png \
-	share/applets/DefaultSkin/images/titlebox_r.png \
-	share/applets/DefaultSkin/images/titlebox_tl.png \
-	share/applets/DefaultSkin/images/titlebox_t.png  \
-	share/applets/DefaultSkin/images/titlebox_tr.png \
-	share/applets/DefaultSkin/images/border.png \
-	share/applets/DefaultSkin/images/border_r.png \
-	share/applets/DefaultSkin/images/border_l.png \
-	share/applets/DefaultSkin/images/scrollbar_bkground_t.png \
-	share/applets/DefaultSkin/images/scrollbar_bkground_b.png \
-	share/applets/DefaultSkin/images/helpbox.png \
-	share/applets/DefaultSkin/images/helpbox_l.png \
-	share/applets/DefaultSkin/images/helpbox_r.png \
-	share/applets/DefaultSkin/images/helpbox_t.png \
-	share/applets/DefaultSkin/images/helpbox_tl.png \
-	share/applets/DefaultSkin/images/helpbox_tr.png \
-	share/applets/DefaultSkin/images/slider_bkgrd_l.png \
-	share/applets/DefaultSkin/images/slider_bkgrd.png \
-	share/applets/DefaultSkin/images/slider_bkgrd_r.png \
-	share/applets/DefaultSkin/images/slider_fill_l.png \
-	share/applets/DefaultSkin/images/slider_fill.png \
-	share/applets/DefaultSkin/images/slider_fill_r.png \
-	share/applets/DefaultSkin/images/popupbox_bl.png \
-	share/applets/DefaultSkin/images/popupbox_b.png \
-	share/applets/DefaultSkin/images/popupbox_br.png \
-	share/applets/DefaultSkin/images/popupbox_l.png \
-	share/applets/DefaultSkin/images/popupbox.png \
-	share/applets/DefaultSkin/images/popupbox_r.png \
-	share/applets/DefaultSkin/images/popupbox_tl.png \
-	share/applets/DefaultSkin/images/popupbox_t.png \
-	share/applets/DefaultSkin/images/popupbox_tr.png \
-	share/applets/DefaultSkin/images/text_entry_bkgrd.png \
-	share/applets/DefaultSkin/images/text_entry_bkgrd_l.png \
-	share/applets/DefaultSkin/images/text_entry_bkgrd_r.png \
-	share/applets/DefaultSkin/images/text_entry_letter.png \
-	share/applets/DefaultSkin/images/text_entry_select.png \
-	share/applets/DefaultSkin/images/popup_alarm_icon.png \
-	share/applets/DefaultSkin/images/popup_battery_low_icon.png \
-	share/applets/DefaultSkin/images/popup_fav_heart_bkgrd.png \
-	share/applets/DefaultSkin/images/popup_locked_icon.png \
-	share/applets/DefaultSkin/images/slider_icon_negative.png \
-	share/applets/DefaultSkin/images/slider_icon_positive.png \
-	share/applets/DefaultSkin/images/volume_bkgrd_l.png \
-	share/applets/DefaultSkin/images/volume_bkgrd.png \
-	share/applets/DefaultSkin/images/volume_bkgrd_r.png \
-	share/applets/DefaultSkin/images/volume_fill_l.png \
-	share/applets/DefaultSkin/images/volume_fill.png \
-	share/applets/DefaultSkin/images/volume_fill_r.png \
-	share/applets/DefaultSkin/images/volume_speaker_l.png \
-	share/applets/DefaultSkin/images/volume_speaker_r.png \
-	share/applets/DefaultSkin/images/icon_battery_0.png \
-	share/applets/DefaultSkin/images/icon_battery_1.png \
-	share/applets/DefaultSkin/images/icon_battery_2.png \
-	share/applets/DefaultSkin/images/icon_battery_3.png \
-	share/applets/DefaultSkin/images/icon_battery_4.png \
-	share/applets/DefaultSkin/images/icon_battery_ac.png \
-	share/applets/DefaultSkin/images/icon_battery_charging.png \
-	share/applets/DefaultSkin/images/icon_wireless_1.png \
-	share/applets/DefaultSkin/images/icon_wireless_2.png \
-	share/applets/DefaultSkin/images/icon_wireless_3.png \
-	share/applets/DefaultSkin/images/icon_wireless_4.png \
-	share/applets/DefaultSkin/images/icon_wireless_off.png \
-	share/applets/DefaultSkin/images/icon_wireless_noserver.png \
-	share/applets/DefaultSkin/images/icon_wireless_1_shadow.png \
-	share/applets/DefaultSkin/images/icon_wireless_2_shadow.png \
-	share/applets/DefaultSkin/images/icon_wireless_3_shadow.png \
-	share/applets/DefaultSkin/images/icon_wireless_4_shadow.png \
-	share/applets/DefaultSkin/images/icon_connecting.png \
-	share/applets/DefaultSkin/images/icon_connecting_44.png \
-	share/applets/DefaultSkin/images/icon_connected.png \
-        share/applets/DefaultSkin/images/bghighlight_r.png \
-        share/applets/DefaultSkin/images/bghighlight.png \
-        share/applets/DefaultSkin/images/bghighlight_bl.png \
-        share/applets/DefaultSkin/images/bghighlight_br.png \
-        share/applets/DefaultSkin/images/bghighlight_b.png \
-        share/applets/DefaultSkin/images/bghighlight_l.png \
-        share/applets/DefaultSkin/images/bghighlight_tr.png \
-        share/applets/DefaultSkin/images/bghighlight_tl.png \
-        share/applets/DefaultSkin/images/popup_shutdown_icon.png \
-        share/applets/DefaultSkin/images/popup_playlist_icon.png \
-        share/applets/DefaultSkin/images/button.png \
-        share/applets/DefaultSkin/images/button_b.png \
-        share/applets/DefaultSkin/images/button_l.png \
-        share/applets/DefaultSkin/images/button_r.png \
-        share/applets/DefaultSkin/images/button_t.png \
-        share/applets/DefaultSkin/images/button_br.png \
-        share/applets/DefaultSkin/images/button_bl.png \
-        share/applets/DefaultSkin/images/button_tl.png \
-        share/applets/DefaultSkin/images/button_tr.png \
-        share/applets/DefaultSkin/images/album_noartwork_56.png \
-        share/applets/DefaultSkin/images/album_noartwork_154.png \
-	share/applets/DefaultSkin/images/album_noartwork_166.png \
-	share/applets/DefaultSkin/images/album_noartwork_184.png \
-        share/applets/DefaultSkin/images/album_noartwork_186.png \
-	share/applets/DefaultSkin/images/album_shadow_166.png \
-	share/applets/DefaultSkin/images/album_shadow_184.png \
-	share/applets/DefaultSkin/images/menu_nowplaying.png \
-	share/applets/DefaultSkin/images/menu_nowplaying_selected.png \
-	share/applets/DefaultSkin/images/menu_playlist.png \
-	share/applets/DefaultSkin/images/mini_favorites.png \
-	share/applets/DefaultSkin/images/mini_home.png \
-	share/applets/DefaultSkin/images/mini_internet_radio.png \
-	share/applets/DefaultSkin/images/mini_music_library.png \
-	share/applets/DefaultSkin/images/mini_nowplaying.png \
-	share/applets/DefaultSkin/images/mini_quarter_note.png \
-	share/applets/DefaultSkin/images/mini_search.png \
-	share/applets/DefaultSkin/images/mini_settings.png \
-	share/applets/DefaultSkin/images/mini_albums.png \
-	share/applets/DefaultSkin/images/mini_artists.png \
-	share/applets/DefaultSkin/images/mini_genres.png \
-	share/applets/DefaultSkin/images/mini_infobrowser.png \
-	share/applets/DefaultSkin/images/mini_musicfolder.png \
-	share/applets/DefaultSkin/images/mini_newmusic.png \
-	share/applets/DefaultSkin/images/mini_playlist.png \
-	share/applets/DefaultSkin/images/mini_random.png \
-	share/applets/DefaultSkin/images/mini_years.png \
-	share/applets/DefaultSkin/images/menu_album_selection_bl.png \
-	share/applets/DefaultSkin/images/menu_album_selection_b.png \
-	share/applets/DefaultSkin/images/menu_album_selection_br.png \
-	share/applets/DefaultSkin/images/menu_album_selection_l.png \
-	share/applets/DefaultSkin/images/menu_album_selection.png \
-	share/applets/DefaultSkin/images/menu_album_selection_r.png \
-	share/applets/DefaultSkin/images/menu_album_selection_tl.png \
-	share/applets/DefaultSkin/images/menu_album_selection_t.png \
-	share/applets/DefaultSkin/images/menu_album_selection_tr.png \
-	share/applets/DefaultSkin/images/navcluster.png \
-	share/applets/DefaultSkin/images/menu_check.png \
-	share/applets/DefaultSkin/images/menu_check_selected.png \
-	share/applets/DefaultSkin/images/selection_left.png 
-
-# Fab4 skin
-applets_fab4skindir = $(pkgdatadir)/applets/Fab4Skin
-dist_applets_fab4skin_DATA = \
-	share/applets/Fab4Skin/Fab4SkinApplet.lua \
-	share/applets/Fab4Skin/Fab4SkinMeta.lua
-
-applets_fab4skin_imagesdir = $(pkgdatadir)/applets/Fab4Skin/images
-dist_applets_fab4skin_images_DATA = \
-	share/applets/Fab4Skin/images/button_bl.png \
-	share/applets/Fab4Skin/images/button_b.png \
-	share/applets/Fab4Skin/images/button_br.png \
-	share/applets/Fab4Skin/images/button_l.png \
-	share/applets/Fab4Skin/images/button.png \
-	share/applets/Fab4Skin/images/button_r.png \
-	share/applets/Fab4Skin/images/button_tl.png \
-	share/applets/Fab4Skin/images/button_t.png \
-	share/applets/Fab4Skin/images/button_tr.png \
-	share/applets/Fab4Skin/images/head_home.png \
-	share/applets/Fab4Skin/images/icon_connecting.png \
-	share/applets/Fab4Skin/images/text_entry_letter.png \
-	share/applets/Fab4Skin/images/text_entry_select.png \
-	share/applets/Fab4Skin/images/menu_album_noartwork_125.png \
-	share/applets/Fab4Skin/images/navcluster.png \
-	share/applets/Fab4Skin/images/pointer_selector_L.png \
-	share/applets/Fab4Skin/images/popup_fav_heart_bkgrd.png \
-	share/applets/Fab4Skin/images/selection_add.png \
-	share/applets/Fab4Skin/images/selection_play.png \
-	share/applets/Fab4Skin/images/selection_wait.png \
-	share/applets/Fab4Skin/images/slider_icon_negative.png \
-	share/applets/Fab4Skin/images/slider_icon_positive.png \
-	share/applets/Fab4Skin/images/text_entry_bkgrd_l.png \
-	share/applets/Fab4Skin/images/text_entry_bkgrd.png \
-	share/applets/Fab4Skin/images/text_entry_bkgrd_r.png
-
-applets_fab4skin_images_alertsdir = $(pkgdatadir)/applets/Fab4Skin/images/Alerts
-dist_applets_fab4skin_images_alerts_DATA = \
-	share/applets/Fab4Skin/images/Alerts/connecting_success_icon.png \
-	share/applets/Fab4Skin/images/Alerts/popup_alarm_icon.png \
-	share/applets/Fab4Skin/images/Alerts/popup_locked_icon.png \
-	share/applets/Fab4Skin/images/Alerts/popup_shutdown_icon.png \
-	share/applets/Fab4Skin/images/Alerts/wifi_connecting.png
-
-applets_fab4skin_images_iconsdir = $(pkgdatadir)/applets/Fab4Skin/images/Icons
-dist_applets_fab4skin_images_icons_DATA = \
-	share/applets/Fab4Skin/images/Icons/checkbox_off.png \
-	share/applets/Fab4Skin/images/Icons/checkbox_on.png \
-	share/applets/Fab4Skin/images/Icons/icon_album_noartwork_336.png \
-	share/applets/Fab4Skin/images/Icons/icon_check_14x30.png \
-	share/applets/Fab4Skin/images/Icons/icon_check_selected_14x30.png \
-	share/applets/Fab4Skin/images/Icons/icon_check_selected.png \
-	share/applets/Fab4Skin/images/Icons/icon_nowplaying_indicator_b.png \
-	share/applets/Fab4Skin/images/Icons/icon_nowplaying_indicator_w.png \
-	share/applets/Fab4Skin/images/Icons/icon_wireless_1_shadow.png \
-	share/applets/Fab4Skin/images/Icons/icon_wireless_2_shadow.png \
-	share/applets/Fab4Skin/images/Icons/icon_wireless_3_shadow.png \
-	share/applets/Fab4Skin/images/Icons/icon_wireless_4_shadow.png \
-	share/applets/Fab4Skin/images/Icons/radiobutton_off.png \
-	share/applets/Fab4Skin/images/Icons/radiobutton_on.png \
-	share/applets/Fab4Skin/images/Icons/selection_right.png
-
-applets_fab4skin_images_icons_minidir = $(pkgdatadir)/applets/Fab4Skin/images/Icons/Mini
-dist_applets_fab4skin_images_icons_mini_DATA = \
-	share/applets/Fab4Skin/images/Icons/Mini/icon_album_new.png \
-	share/applets/Fab4Skin/images/Icons/Mini/icon_albums.png \
-	share/applets/Fab4Skin/images/Icons/Mini/icon_artist.png \
-	share/applets/Fab4Skin/images/Icons/Mini/icon_favorites.png \
-	share/applets/Fab4Skin/images/Icons/Mini/icon_genres.png \
-	share/applets/Fab4Skin/images/Icons/Mini/icon_home.png \
-	share/applets/Fab4Skin/images/Icons/Mini/icon_info_browser.png \
-	share/applets/Fab4Skin/images/Icons/Mini/icon_internet_radio.png \
-	share/applets/Fab4Skin/images/Icons/Mini/icon_music_folder.png \
-	share/applets/Fab4Skin/images/Icons/Mini/icon_music_library.png \
-	share/applets/Fab4Skin/images/Icons/Mini/icon_playlist.png \
-	share/applets/Fab4Skin/images/Icons/Mini/icon_quarter_note.png \
-	share/applets/Fab4Skin/images/Icons/Mini/icon_random.png \
-	share/applets/Fab4Skin/images/Icons/Mini/icon_search.png \
-	share/applets/Fab4Skin/images/Icons/Mini/icon_settings.png \
-	share/applets/Fab4Skin/images/Icons/Mini/icon_years.png
-
-applets_fab4skin_images_screenformats_albumsdir = $(pkgdatadir)/applets/Fab4Skin/images/Screen_Formats/Albums
-dist_applets_fab4skin_images_screenformats_albums_DATA = \
-	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album_bl.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album_b.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album_br.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album_l.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album_r.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album_tl.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album_t.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Albums/menu_selection_box_album_tr.png
-
-applets_fab4skin_images_screenformats_popmenudir = $(pkgdatadir)/applets/Fab4Skin/images/Screen_Formats/Popup_Menu
-dist_applets_fab4skin_images_screenformats_popmenu_DATA = \
-	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox_bl.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox_b.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox_br.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox_l.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox_r.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox_tl.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox_t.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Popup_Menu/helpbox_tr.png
-
-applets_fab4skin_images_screenformats_scrollbardir = $(pkgdatadir)/applets/Fab4Skin/images/Screen_Formats/Scroll_Bar
-dist_applets_fab4skin_images_screenformats_scrollbar_DATA = \
-	share/applets/Fab4Skin/images/Screen_Formats/Scroll_Bar/scrollbar_bkgrd_b.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Scroll_Bar/scrollbar_bkgrd.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Scroll_Bar/scrollbar_bkgrd_t.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Scroll_Bar/scrollbar_body_b.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Scroll_Bar/scrollbar_body.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Scroll_Bar/scrollbar_body_t.png
-
-applets_fab4skin_images_screenformats_songprogressbardir = $(pkgdatadir)/applets/Fab4Skin/images/Screen_Formats/Song_Progress_Bar/SP_Bar_Remote
-dist_applets_fab4skin_images_screenformats_songprogressbar_DATA = \
-	share/applets/Fab4Skin/images/Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png
-
-applets_fab4skin_images_screenformats_titlebardir = $(pkgdatadir)/applets/Fab4Skin/images/Screen_Formats/Titlebar
-dist_applets_fab4skin_images_screenformats_titlebar_DATA = \
-	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar_bl.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar_b.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar_br.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar_l.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar_r.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar_tl.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar_t.png \
-	share/applets/Fab4Skin/images/Screen_Formats/Titlebar/titlebar_tr.png
-
-applets_fab4skin_images_screenformats_5linelistsdir = $(pkgdatadir)/applets/Fab4Skin/images/Screen_Formats/5_line_lists
-dist_applets_fab4skin_images_screenformats_5linelists_DATA = \
-	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box_bl.png \
-	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box_b.png \
-	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box_br.png \
-	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box_l.png \
-	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box.png \
-	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box_r.png \
-	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box_tl.png \
-	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box_t.png \
-	share/applets/Fab4Skin/images/Screen_Formats/5_line_lists/menu_selection_box_tr.png

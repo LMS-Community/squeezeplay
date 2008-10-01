@@ -103,7 +103,7 @@ function step1(self)
 		end)
 
 	-- choose language
-	self._topWindow = appletManager:callService("setupShow", function() self:step2() end)
+	self._topWindow = appletManager:callService("setupShowSetupLanguage", function() self:step2() end)
 
 	return self.topWindow
 end
@@ -126,14 +126,14 @@ function step4(self)
 	log:info("step4")
 
 	-- finding networks
-	self.scanWindow = self.setupWireless:setupScanShow(function()
-								   self:step5()
-								   -- FIXME is this required:
-								   if self.scanWindow then
-									   self.scanWindow:hide()
-									   self.scanWindow = nil
-								   end
-							   end)
+	self.scanWindow = appletManager:callService("setupScanShow", function()
+							   self:step5()
+							   -- FIXME is this required:
+							   if self.scanWindow then
+								   self.scanWindow:hide()
+								   self.scanWindow = nil
+							   end
+						   end)
 	return self.scanWindow
 end
 
@@ -167,7 +167,7 @@ function step52(self)
 	log:info("step52")
 
 	-- connect using other wireless network
-	return self.setupWireless:setupNetworksShow(function() self:step6() end)
+	return appletManager:callService("setupNetworksShow", function() self:step6() end)
 end
 
 function step6(self)
@@ -203,7 +203,7 @@ function step7(self)
 	end
 
 	-- select player
-	return appletManager:callService("setupShow", function() self:step8() end)
+	return appletManager:callService("setupShowSelectPlayer", function() self:step8() end)
 end
 
 function step8(self)

@@ -208,8 +208,11 @@ local opcodes = {
 	end,
 
 	DSCO = function(self, data)
-		-- XXXX
-		log:warn("TODO")
+		assert(data.reason)
+		
+		return {
+			packNumber(data.reason, 1),
+		}
 	end,
 
 	aude = function(self, packet)
