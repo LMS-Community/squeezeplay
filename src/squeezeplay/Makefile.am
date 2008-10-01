@@ -123,7 +123,7 @@ SqueezePlay_dmg: SqueezePlay_bundle
 	rm -rf $(DMG_IMAGE_DIR)
 	rm -rf $(DMG_TEMP_DIR)
 	-rm $(DMG_TMP_IMAGE_FILENAME)
-	cp -p $(DMG_IMAGE_FILENAME) $(OSX_BUILD_DIR)/
+	cp -p $(DMG_IMAGE_FILENAME) $(OSX_BUILD_DIR)/SqueezePlay-$(VERSION_TEXT).dmg
 
 # Convenience library:
 noinst_LTLIBRARIES = libjiveui.la libjiveaudio.la libjivenet.la
