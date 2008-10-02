@@ -235,15 +235,16 @@ function skin(self, s)
 
        local volumeBar =
                 Tile:loadHTiles({
-			imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
-			imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
+			imgpath .. "Screen_Formats/Volume_Bar/volume_fill_l.png",
+			imgpath .. "Screen_Formats/Volume_Bar/volume_fill.png",
+			imgpath .. "Screen_Formats/Volume_Bar/volume_fill_r.png",
 		})
 
         local volumeBackground =
                 Tile:loadHTiles({
-			imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
-			imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
-			imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
+			imgpath .. "Screen_Formats/Volume_Bar/volume_l.png",
+			imgpath .. "Screen_Formats/Volume_Bar/volume.png",
+			imgpath .. "Screen_Formats/Volume_Bar/volume_r.png",
 		})
 
 		local popupMask = Tile:fillColor(0x000000e5)
