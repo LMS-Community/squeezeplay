@@ -61,39 +61,13 @@ function configureApplet(meta)
 			'appletSlimservers', 
 			'settings', 
 			"SLIMSERVER_SERVERS", 
-			nil,
+			function(applet, ...) 
+				applet:settingsShow(...) 
+			end, 
 			60
 		)
 	)
-	jiveMain:disableItemById('appletSlimservers')
 
-	jnt:subscribe(meta)
-
-end
-
-function notify_playerCurrent(meta, player)
-	if player == nil then
-		jiveMain:disableItemById('appletSlimservers')
-	else
-		jiveMain:addItem(
-			meta:menuItem(
-				'appletSlimservers', 
-				'settings', 
-				"SLIMSERVER_SERVERS", 
-				function(applet, ...) 
-					applet:settingsShow(...) 
-				end, 
-				60
-			)
-		)
-	end
-	_player = player
-end
-
-function notify_playerDelete(self, player)
-	if player == _player then
-		jiveMain:disableItemById('appletSlimservers')
-	end
 end
 
 --[[
