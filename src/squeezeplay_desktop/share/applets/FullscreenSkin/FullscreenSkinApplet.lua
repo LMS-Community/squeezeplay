@@ -130,15 +130,15 @@ function skin(self, s)
 
 	local titleBox =
 		Tile:loadTiles({
-				       imgpath .. "header_M.png",
-				       imgpath .. "header_TL.png",
-				       imgpath .. "header_M.png",
-				       imgpath .. "header_TR.png",
-				       imgpath .. "header_M.png",
-				       imgpath .. "header_BR.png",
-				       imgpath .. "header_M.png",
-				       imgpath .. "header_BL.png",
-				       imgpath .. "header_M.png"
+				       imgpath .. "Screen_Formats/Titlebar/titlebar.png",
+                                       imgpath .. "Screen_Formats/Titlebar/titlebar_tl.png",
+                                       imgpath .. "Screen_Formats/Titlebar/titlebar.png",
+                                       imgpath .. "Screen_Formats/Titlebar/titlebar_tr.png",
+                                       imgpath .. "Screen_Formats/Titlebar/titlebar.png",
+                                       imgpath .. "Screen_Formats/Titlebar/titlebar_br.png",
+                                       imgpath .. "Screen_Formats/Titlebar/titlebar.png",
+                                       imgpath .. "Screen_Formats/Titlebar/titlebar_bl.png",
+                                       imgpath .. "Screen_Formats/Titlebar/titlebar.png",
 			       })
 
 	local selectionBox =
@@ -153,19 +153,31 @@ function skin(self, s)
 				       imgpath .. "selector_BL.png",
 				       imgpath .. "selector_M.png"
 			       })
+  local selectionBox =
+                Tile:loadTiles({
+                                       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box.png",
+                                       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_tl.png",
+                                       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box.png",
+                                       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_tr.png",
+                                       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box.png",
+                                       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_br.png",
+                                       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box.png",
+                                       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_bl.png",
+                                       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box.png",
+                               })
 
 	local albumSelectionBox =
-		Tile:loadTiles({
-				       imgpath .. "menu_album_selection.png",
-				       imgpath .. "menu_album_selection_tl.png",
-				       imgpath .. "menu_album_selection_t.png",
-				       imgpath .. "menu_album_selection_tr.png",
-				       imgpath .. "menu_album_selection_r.png",
-				       imgpath .. "menu_album_selection_br.png",
-				       imgpath .. "menu_album_selection_b.png",
-				       imgpath .. "menu_album_selection_bl.png",
-				       imgpath .. "menu_album_selection_l.png"
-			       })
+                Tile:loadTiles({
+                                       imgpath .. "Screen_Formats/Albums/menu_selection_box_album.png",
+                                       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_tl.png",
+                                       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_t.png",
+                                       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_tr.png",
+                                       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_r.png",
+                                       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_br.png",
+                                       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_b.png",
+                                       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_bl.png",
+                                       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_l.png",
+                               })
 
 	local helpBox = 
 		Tile:loadTiles({
@@ -180,52 +192,65 @@ function skin(self, s)
 				       imgpath .. "helpbox_l.png",
 			       })
 
-	local scrollBackground =
-		Tile:loadVTiles({
-					imgpath .. "scrollbar_T.png",
-					imgpath .. "scrollbar_M.png",
-					imgpath .. "scrollbar_B.png",
-				})
+     local helpBox =
+                Tile:loadTiles({
+                                       imgpath .. "Screen_Formats/Popup_Menu/helpbox.png",
+                                       imgpath .. "Screen_Formats/Popup_Menu/helpbox_tl.png",
+                                       imgpath .. "Screen_Formats/Popup_Menu/helpbox_t.png",
+                                       imgpath .. "Screen_Formats/Popup_Menu/helpbox_tr.png",
+                                       imgpath .. "Screen_Formats/Popup_Menu/helpbox_r.png",
+					nil,
+					nil,
+					nil,
+                                       imgpath .. "Screen_Formats/Popup_Menu/helpbox_l.png",
+                               })
 
-	local scrollBar = 
-		Tile:loadVTiles({
-					imgpath .. "scrollbar_thumb_T.png",
-					imgpath .. "scrollbar_thumb_M.png",
-					imgpath .. "scrollbar_thumb_B.png",
-			       })
+        local scrollBackground =
+                Tile:loadVTiles({
+                                        imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_bkgrd_t.png",
+                                        imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_bkgrd.png",
+                                        imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_bkgrd_b.png",
+                                })
 
-	local sliderBackground = 
+        local scrollBar =
+                Tile:loadVTiles({
+                                        imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_body_t.png",
+                                        imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_body.png",
+                                        imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_body_b.png",
+                               })
+
+        local sliderBackground = 
 		Tile:loadHTiles({
-					imgpath .. "slider_bkgrd_l.png",
-					imgpath .. "slider_bkgrd.png",
-					imgpath .. "slider_bkgrd_r.png",
-			       })
+			imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
+			imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
+			imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
+		})
 
-	local sliderBar = 
-		Tile:loadHTiles({
-					imgpath .. "slider_fill_l.png",
-					imgpath .. "slider_fill.png",
-					imgpath .. "slider_fill_r.png",
-			       })
+        local sliderBar =
+                Tile:loadHTiles({
+			imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
+			imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
+			imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png",
+                               })
 
-	local volumeBar =
-		Tile:loadHTiles({
-					imgpath .. "slider_volume_fill_L.png",
-					imgpath .. "slider_volume_fill_M.png",
-					--imgpath .. "slider_volume_thumb.png",
-			       })
+       local volumeBar =
+                Tile:loadHTiles({
+			imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
+			imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
+		})
 
-	local volumeBackground =
-		Tile:loadHTiles({
-					imgpath .. "slider_volume_L.png",
-					imgpath .. "slider_volume_M.png",
-					imgpath .. "slider_volume_R.png",
-				})
+        local volumeBackground =
+                Tile:loadHTiles({
+			imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
+			imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
+			imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
+		})
 
 		local popupMask = Tile:fillColor(0x000000e5)
 
 	local popupBox =
 		Tile:loadTiles({
+					--FIXME, these paths should likely change
 				       imgpath .. "toast_M.png",
 				       imgpath .. "toast_TL.png",
 				       imgpath .. "toast_M.png",
@@ -240,6 +265,7 @@ function skin(self, s)
 
 	local textinputBackground =
 		Tile:loadHTiles({
+					--FIXME, these paths should likely change
 				       imgpath .. "text_entry_bkgrd_l.png",
 				       imgpath .. "text_entry_bkgrd.png",
 				       imgpath .. "text_entry_bkgrd_r.png",
@@ -247,6 +273,7 @@ function skin(self, s)
 
 	local softButtonBackground =
 		Tile:loadTiles({
+					--FIXME, these paths should likely change
 				       imgpath .. "button.png",
 				       imgpath .. "button_tl.png",
 				       imgpath .. "button_t.png",
@@ -287,59 +314,6 @@ function skin(self, s)
 	local ITEM_ICON_PADDING = { 4, 5, 4, 2 }
 	local ITEM_ICON_ALIGN   = 'center'
 
---[[
-	-- Iconbar definitions, each icon needs an image and x,y
-	s.iconBackground = {}
-	s.iconBackground.x = 0
-	s.iconBackground.y = screenHeight - 30
-	s.iconBackground.w = screenWidth
-	s.iconBackground.h = 30
-	s.iconBackground.border = { 4, 0, 4, 0 }
-	s.iconBackground.bgImg = iconBackground
-	s.iconBackground.layer = LAYER_FRAME
-	s.iconBackground.position = LAYOUT_SOUTH
-
-	-- play/stop/pause
-	s.iconPlaymodeOFF = _icon(9, screenHeight - 30, "icon_mode_off.png")
-	s.iconPlaymodeSTOP = _icon(9, screenHeight - 30, "icon_mode_off.png")
-	s.iconPlaymodePLAY = _icon(9, screenHeight - 30, "icon_mode_play.png")
-	s.iconPlaymodePAUSE = _icon(9, screenHeight - 30, "icon_mode_pause.png")
-
-	-- repeat off/repeat track/repeat playlist
-	s.iconRepeatOFF = _icon(41, screenHeight - 30, "icon_repeat_off.png")
-	s.iconRepeat0 = _icon(41, screenHeight - 30, "icon_repeat_off.png")
-	s.iconRepeat1 = _icon(41, screenHeight - 30, "icon_repeat_song.png")
-	s.iconRepeat2 = _icon(41, screenHeight - 30, "icon_repeat.png")
-
-	-- shuffle off/shuffle album/shuffle playlist
-	s.iconShuffleOFF = _icon(75, screenHeight - 30, "icon_shuffle_off.png")
-	s.iconShuffle0 = _icon(75, screenHeight - 30, "icon_shuffle_off.png")
-	s.iconShuffle1 = _icon(75, screenHeight - 30, "icon_shuffle.png")
-	s.iconShuffle2 = _icon(75, screenHeight - 30, "icon_shuffle_album.png")
-
-	-- wireless status
-	s.iconWireless1 = _icon(107, screenHeight - 30, "icon_wireless_1.png")
-	s.iconWireless2 = _icon(107, screenHeight - 30, "icon_wireless_2.png")
-	s.iconWireless3 = _icon(107, screenHeight - 30, "icon_wireless_3.png")
-	s.iconWireless4 = _icon(107, screenHeight - 30, "icon_wireless_4.png")
-	s.iconWirelessERROR = _icon(107, screenHeight - 30, "icon_wireless_off.png")
-	s.iconWirelessSERVERERROR = _icon(107, screenHeight - 30, "icon_wireless_noserver.png")
-
-	-- battery status
-	s.iconBatteryAC = _icon(137, screenHeight - 30, "icon_battery_ac.png")
-
-	s.iconBatteryCHARGING = _icon(137, screenHeight - 30, "icon_battery_charging.png")
-	s.iconBattery0 = _icon(137, screenHeight - 30, "icon_battery_0.png")
-	s.iconBattery1 = _icon(137, screenHeight - 30, "icon_battery_1.png")
-	s.iconBattery2 = _icon(137, screenHeight - 30, "icon_battery_2.png")
-	s.iconBattery3 = _icon(137, screenHeight - 30, "icon_battery_3.png")
-	s.iconBattery4 = _icon(137, screenHeight - 30, "icon_battery_4.png")
-
-	s.iconBatteryCHARGING.frameRate = 1
-	s.iconBatteryCHARGING.frameWidth = 37
---]]
-
-
 	-- time (hidden off screen)
 	s.iconTime = {}
 	s.iconTime.x = screenWidth + 10
@@ -365,6 +339,7 @@ function skin(self, s)
 	s.title.text.font = _boldfont(TITLE_FONT_SIZE)
 	s.title.text.fg = TEXT_COLOR_BLACK
 	s.title.back = {}
+	--FIXME, this png path should likely change
 	s.title.back.img = Surface:loadImage(imgpath .. "pointer_selector_L.png")
 	s.title.back.align = "left"
 
@@ -409,8 +384,7 @@ function skin(self, s)
 			      check = {
 					align = ITEM_ICON_ALIGN,
 					padding = BUTTON_PADDING,
-				      img = Surface:loadImage(imgpath .. "menu_check.png")
-
+				      img = Surface:loadImage(imgpath .. "Icons/icon_check_14x30.png")
 			      }
 		      })
 
@@ -429,33 +403,33 @@ function skin(self, s)
 			      icon = {
 				      padding = BUTTON_PADDING,
 				      align = ITEM_ICON_ALIGN,
-				      img = Surface:loadImage(imgpath .. "pointer_selector_R.png")
+				      img = Surface:loadImage(imgpath .. "Icons/selection_right.png")
 			      }
 		      })
 
 	s.selected.itemplay =
 		_uses(s.selected.item, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "selection_play.png")
+				      img = Surface:loadImage(imgpath .. "Icons/selection_play.png")
 			      }
 		      })
 
 	s.selected.itemadd =
 		_uses(s.selected.item, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "selection_add.png")
+				      img = Surface:loadImage(imgpath .. "Icons/selection_add.png")
 			      }
 		      })
 
 	s.selected.checked = _uses(s.selected.item, {
 			      		order = { "text", "check", "icon" },
 					icon = {
-						img = Surface:loadImage(imgpath .. "selection_right.png")
+						img = Surface:loadImage(imgpath .. "Icons/selection_right.png")
 					},
 					check = {
 						align = ITEM_ICON_ALIGN,
 						padding = BUTTON_PADDING,
-						img = Surface:loadImage(imgpath .. "menu_check_selected.png")
+						img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
 					}
 				
 				})
@@ -479,7 +453,7 @@ function skin(self, s)
 			      check = {
 					align = ITEM_ICON_ALIGN,
 					padding = BUTTON_PADDING,
-					img = Surface:loadImage(imgpath .. "menu_check_selected.png")
+					img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
 			      }
 		      })
 
@@ -488,7 +462,7 @@ function skin(self, s)
 	s.locked = {}
 	s.locked.item = _uses(s.selected.item, {
 					icon = {
-						img = Surface:loadImage(imgpath .. "selection_wait.png"),
+						img = Surface:loadImage(imgpath .. "Icons/selection_wait.png"),
 						frameRate = 5,
 						frameWidth = 10
 					}
@@ -543,11 +517,10 @@ function skin(self, s)
 	s.scrollbar.img = scrollBar
 	s.scrollbar.layer = LAYER_CONTENT_ON_STAGE
 
-
 	-- Checkbox
 	s.checkbox = {}
-	s.checkbox.imgOn = Surface:loadImage(imgpath .. "checkbox_white_selected.png")
-	s.checkbox.imgOff = Surface:loadImage(imgpath .. "checkbox_white.png")
+	s.checkbox.imgOn = Surface:loadImage(imgpath .. "Icons/checkbox_on.png")
+	s.checkbox.imgOff = Surface:loadImage(imgpath .. "Icons/checkbox_off.png")
 	s.item.checkbox = {}
 	s.item.checkbox.padding = BUTTON_PADDING
 	s.item.checkbox.align = "right"
@@ -555,8 +528,8 @@ function skin(self, s)
 
 	-- Radio button
 	s.radio = {}
-	s.radio.imgOn = Surface:loadImage(imgpath .. "radio_white_selected.png")
-	s.radio.imgOff = Surface:loadImage(imgpath .. "radio_white.png")
+	s.radio.imgOn = Surface:loadImage(imgpath .. "Icons/radiobutton_on.png")
+	s.radio.imgOff = Surface:loadImage(imgpath .. "Icons/radiobutton_off.png")
 	s.item.radio = {}
 	s.item.radio.padding = BUTTON_PADDING
 	s.item.radio.align = "right"
@@ -591,7 +564,7 @@ function skin(self, s)
 	s.textinput.bgImg = textinputBackground
 	s.textinput.wheelImg = textinputWheel
 	s.textinput.cursorImg = textinputCursor
-	s.textinput.enterImg = Tile:loadImage(imgpath .. "selection_right.png")
+	s.textinput.enterImg = Tile:loadImage(imgpath .. "Icons/selection_right.png")
 
 	-- Help menu
 	s.help = {}
@@ -671,7 +644,7 @@ function skin(self, s)
 	s.popupIcon.text.position = LAYOUT_SOUTH
 
 	s.iconPower = {}
-	s.iconPower.img = Surface:loadImage(imgpath .. "popup_shutdown_icon.png")
+	s.iconPower.img = Surface:loadImage(imgpath .. "Alerts/popup_shutdown_icon.png")
 	s.iconPower.w = WH_FILL
 	s.iconPower.align = 'center'
 
@@ -682,29 +655,24 @@ function skin(self, s)
 
 	-- connecting/connected popup icon
 	s.iconConnecting = {}
-	s.iconConnecting.img = Surface:loadImage(imgpath .. "icon_connecting_161.png")
+	s.iconConnecting.img = Surface:loadImage(imgpath .. "Alerts/wifi_connecting.png")
 	s.iconConnecting.frameRate = 4
 	s.iconConnecting.frameWidth = 161
 	s.iconConnecting.w = WH_FILL
 	s.iconConnecting.align = "center"
 
 	s.iconConnected = {}
-	s.iconConnected.img = Surface:loadImage(imgpath .. "icon_connected_161.png")
+	s.iconConnected.img = Surface:loadImage(imgpath .. "Alerts/connecting_success_icon.png")
 	s.iconConnected.w = WH_FILL
 	s.iconConnected.align = "center"
 
 	s.iconLocked = {}
-	s.iconLocked.img = Surface:loadImage(imgpath .. "popup_locked_icon.png")
+	s.iconLocked.img = Surface:loadImage(imgpath .. "Alerts/popup_locked_icon.png")
 	s.iconLocked.w = WH_FILL
 	s.iconLocked.align = "center"
 
-	s.iconBatteryLow = {}
-	s.iconBatteryLow.img = Surface:loadImage(imgpath .. "popup_battery_low_icon.png")
-	s.iconBatteryLow.w = WH_FILL
-	s.iconBatteryLow.align = "center"
-
 	s.iconAlarm = {}
-	s.iconAlarm.img = Surface:loadImage(imgpath .. "popup_alarm_icon.png")
+	s.iconAlarm.img = Surface:loadImage(imgpath .. "Alerts/popup_alarm_icon.png")
 	s.iconAlarm.w = WH_FILL
 	s.iconAlarm.align = "center"
 
@@ -712,16 +680,16 @@ function skin(self, s)
 	-- wireless icons for menus
 	s.wirelessLevel1 = {}
 	s.wirelessLevel1.align = "right"
-	s.wirelessLevel1.img = Surface:loadImage(imgpath .. "icon_wireless_1_shadow.png")
+	s.wirelessLevel1.img = Surface:loadImage(imgpath .. "Icons/icon_wireless_1_shadow.png")
 	s.wirelessLevel2 = {}
 	s.wirelessLevel2.align = "right"
-	s.wirelessLevel2.img = Surface:loadImage(imgpath .. "icon_wireless_2_shadow.png")
+	s.wirelessLevel2.img = Surface:loadImage(imgpath .. "Icons/icon_wireless_2_shadow.png")
 	s.wirelessLevel3 = {}
 	s.wirelessLevel3.align = "right"
-	s.wirelessLevel3.img = Surface:loadImage(imgpath .. "icon_wireless_3_shadow.png")
+	s.wirelessLevel3.img = Surface:loadImage(imgpath .. "Icons/icon_wireless_3_shadow.png")
 	s.wirelessLevel4 = {}
 	s.wirelessLevel4.align = "right"
-	s.wirelessLevel4.img = Surface:loadImage(imgpath .. "icon_wireless_4_shadow.png")
+	s.wirelessLevel4.img = Surface:loadImage(imgpath .. "Icons/icon_wireless_4_shadow.png")
 
 	s.navcluster = {}
 	s.navcluster.img = Surface:loadImage(imgpath .. "navcluster.png")
@@ -750,10 +718,10 @@ function skin(self, s)
 	-- SlimBrowser applet
 
 	s.volumeMin = {}
-	s.volumeMin.img = Surface:loadImage(imgpath .. "icon_volume_min.png")
+	s.volumeMin.img = Surface:loadImage(imgpath .. "volume_speaker_l.png")
 	s.volumeMin.border = { 5, 0, 5, 0 }
 	s.volumeMax = {}
-	s.volumeMax.img = Surface:loadImage(imgpath .. "icon_volume_max.png")
+	s.volumeMax.img = Surface:loadImage(imgpath .. "volume_speaker_r.png")
 	s.volumeMax.border = { 5, 0, 5, 0 }
 
 	s.volume = {}
@@ -803,9 +771,11 @@ function skin(self, s)
 	s.albumtitle.icon = {}
 	s.albumtitle.icon.h = WH_FILL
 	s.albumtitle.icon.align = "left"
+	--FIXME, this path will likely change
 	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
 	s.albumtitle.icon.padding = { 9, 0, 0, 0 }
 	s.albumtitle.back = {}
+	--FIXME, this path will likely change
 	s.albumtitle.back.img = Surface:loadImage(imgpath .. "pointer_selector_L.png")
 	s.albumtitle.back.align = "left"
 
@@ -829,12 +799,11 @@ function skin(self, s)
 	s.minititle.icon.padding  = { 0, 0, 8, 0 }
 	s.minititle.icon.align    = 'right'
 
-
 	-- Based on s.title, this is for internetradio title style
 	s.internetradiotitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "head_internet_radio.png")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_internet_radio.png")
 			      }
 		      })
 
@@ -842,7 +811,7 @@ function skin(self, s)
 	s.favoritestitle = 
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "head_favorites.png")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_favorites.png")
 			      }
 		      })
 
@@ -850,7 +819,7 @@ function skin(self, s)
 	s.mymusictitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "head_music_library.png")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_music_library.png")
 			      }
 		      })
 
@@ -858,7 +827,7 @@ function skin(self, s)
 	s.searchtitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "head_search.png")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_searchpng")
 			      }
 		      })
 
@@ -866,7 +835,7 @@ function skin(self, s)
 	s.hometitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "head_home.png")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_home.png")
 			      }
 		      })
 
@@ -874,7 +843,7 @@ function skin(self, s)
 	s.settingstitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "head_settings.png")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_settings.png")
 			      }
 		      })
 
@@ -882,7 +851,7 @@ function skin(self, s)
 	s.newmusictitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "head_newmusic.png")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_album_new.png")
 			      }
 		      })
 
@@ -890,7 +859,7 @@ function skin(self, s)
 	s.infobrowsertitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "head_infobrowser.png")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_info_browser.png")
 			      }
 		      })
 
@@ -899,7 +868,7 @@ function skin(self, s)
 	s.albumlisttitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "head_albums.png")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_albums.png")
 			      }
 		      })
 
@@ -908,14 +877,14 @@ function skin(self, s)
 	s.artiststitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "head_artists.png")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_artist.png")
 			      }
 		      })
 	-- Based on s.title, this is for random title style
 	s.randomtitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "head_random.png")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_random.png")
 			      }
 		      })
 
@@ -923,7 +892,7 @@ function skin(self, s)
 	s.musicfoldertitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "head_musicfolder.png")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_music_folder.png")
 			      }
 		      })
 
@@ -931,7 +900,7 @@ function skin(self, s)
 	s.genrestitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "head_genres.png")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_genres.png")
 			      }
 		      })
 
@@ -939,14 +908,14 @@ function skin(self, s)
 	s.yearstitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "head_years.png")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_years.png")
 			      }
 		      })
 	-- Based on s.title, this is for playlist title style
 	s.playlisttitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "head_playlist.png")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_playlist.png")
 			      }
 		      })
 
@@ -954,7 +923,7 @@ function skin(self, s)
 	s.currentplaylisttitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "head_nowplaying.png")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_quarter_note.png")
 			      }
 		      })
 
@@ -992,6 +961,7 @@ function skin(self, s)
 	s.albumitem.icon = {}
 	s.albumitem.icon.h = WH_FILL
 	s.albumitem.icon.align = "left"
+	--FIXME, this path likely needs changing
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
 	s.albumitem.icon.padding = 0
 
@@ -1119,6 +1089,7 @@ function skin(self, s)
 	s.nowplayingitem.icon.w = 156
 	s.nowplayingitem.icon.h = 156
 	s.nowplayingitem.icon.align = "left"
+	--FIXME, this path likely needs changing
 	s.nowplayingitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
 	s.nowplayingitem.icon.padding = { 5, 0, 0, 0 }
 
@@ -1159,11 +1130,11 @@ function skin(self, s)
 	s.albumcurrent.icon = {}
 	s.albumcurrent.icon.h = WH_FILL
 	s.albumcurrent.icon.align = "left"
+	--FIXME, this path likely needs changing
 	s.albumcurrent.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
 	s.albumcurrent.play = {}
 	s.albumcurrent.play.align = 'center'
-	s.albumcurrent.play.img = Surface:loadImage(imgpath .. "icon_nowplaying.png")
-	
+	s.albumcurrent.play.img = Surface:loadImage(imgpath .. "Icons/icon_nowplaying_indicator_w.png")
 
 	-- selected now playing menu item
 	s.selected.albumcurrent = {}
@@ -1173,7 +1144,8 @@ function skin(self, s)
 	s.selected.albumcurrent.text.sh = SELECT_SH_COLOR
 	s.selected.albumcurrent.play = {}
 	s.selected.albumcurrent.play.align = 'center'
-	s.selected.albumcurrent.play.img = Surface:loadImage(imgpath .. "icon_nowplaying.png")
+	-- FIXME, might need an image in black for this
+	s.selected.albumcurrent.play.img = Surface:loadImage(imgpath .. "Icons/icon_nowplaying_indicator_w.png")
 
 
 	-- locked now playing menu item (with loading animation)
