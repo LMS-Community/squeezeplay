@@ -226,7 +226,7 @@ target_alias = @target_alias@
 # Rules for tolua++ binding files
 SUFFIXES = .pkg
 TOLUA = tolua++
-JIVE_BUILD_DIR = $(PREFIX)/share/jive/
+JIVE_BUILD_DIR = $(datarootdir)/jive/
 OSX_LIB_DIR = $(PREFIX)/lib
 OSX_BUILD_DIR = $(PREFIX)
 JIVE_DEPENDENCIES_LIB_DIR = $(top_builddir)/.libs
