@@ -134,7 +134,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-JIVE_BUILD_DIR = $(PREFIX)/share/jive/
+JIVE_BUILD_DIR = $(DESTDIR)/$(pkgdatadir)
 all: all-am
 
 .SUFFIXES:

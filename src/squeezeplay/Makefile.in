@@ -14,6 +14,8 @@
 
 @SET_MAKE@
 
+#tw touch for poky test
+
 #Note: This include file is duplicated in squeezeplay/, squeezeplay_jive/, and squeezeplay_desktop/, so
 # if you are making changes to it consider making the changes in each of the locations.
 # The reason for the duplication (rather than a shared file) is that Poky checks out just subdirectory not the top level
@@ -226,7 +228,7 @@ target_alias = @target_alias@
 # Rules for tolua++ binding files
 SUFFIXES = .pkg
 TOLUA = tolua++
-JIVE_BUILD_DIR = $(PREFIX)/share/jive/
+JIVE_BUILD_DIR = $(DESTDIR)/$(pkgdatadir)
 OSX_LIB_DIR = $(PREFIX)/lib
 OSX_BUILD_DIR = $(PREFIX)
 JIVE_DEPENDENCIES_LIB_DIR = $(top_builddir)/.libs
