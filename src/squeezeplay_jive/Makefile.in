@@ -222,7 +222,7 @@ jiveWatchdog_la_LDFLAGS = -module -no-version
 jiveWatchdog_la_SOURCES = \
 	src/jive_watchdog.c
 
-JIVE_BUILD_DIR = $(PREFIX)/share/jive/
+JIVE_BUILD_DIR = $(DESTDIR)/$(pkgdatadir)
 all: all-am
 
 .SUFFIXES:
