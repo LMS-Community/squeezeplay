@@ -1080,6 +1080,10 @@ function skin(self, s)
 	s.locked.albumitem.play.frameRate = 4
 	s.locked.albumitem.play.frameWidth = 10
 
+	-- Bug 9554: hack to allow 7.2.0 SC users to not have a problem with newer firmware
+	s.albumalbumitem = _uses(s.albumitem)
+	s.selected.albumalbumitem = _uses(s.selected.albumitem)
+	s.locked.albumalbumitem = _uses(s.locked.albumitem)
 
 	-- smallicon style, similar to album but smaller icon and single line on the screen
 	s.smalliconmenu = _uses(s.albummenu,
