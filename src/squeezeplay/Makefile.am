@@ -1,5 +1,6 @@
 ## Makefile.am -- Process this file with automake to produce Makefile.in
 
+#tw touch for poky test
 
 # Rules for tolua++ binding files
 SUFFIXES = .pkg
