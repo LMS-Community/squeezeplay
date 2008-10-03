@@ -134,7 +134,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-JIVE_BUILD_DIR = $(DESTDIR)/$(pkgdatadir)
+JIVE_BUILD_DIR = $(DESTDIR)$(pkgdatadir)
 all: all-am
 
 .SUFFIXES:
@@ -394,8 +394,6 @@ uninstall-am: uninstall-info-am
 	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
 	pdf-am ps ps-am uninstall uninstall-am uninstall-info-am
 
-
-#touching to try to get jive_73 build to see this file
 
 jive-static-install:
 	mkdir -p $(JIVE_BUILD_DIR)

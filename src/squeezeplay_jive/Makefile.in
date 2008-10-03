@@ -222,7 +222,7 @@ jiveWatchdog_la_LDFLAGS = -module -no-version
 jiveWatchdog_la_SOURCES = \
 	src/jive_watchdog.c
 
-JIVE_BUILD_DIR = $(DESTDIR)/$(pkgdatadir)
+JIVE_BUILD_DIR = $(DESTDIR)$(datadir)/jive
 all: all-am
 
 .SUFFIXES:
@@ -663,8 +663,6 @@ lua-lint:
 	@find . -name "*.lua" -and \( -exec luac -p '{}' \; -or -print \) > badsyntax
 	@test \! -s badsyntax
 	@rm -f badsyntax
-
-#touching to try to get jive_73 build to see this file
 
 jive-static-install:
 	mkdir -p $(JIVE_BUILD_DIR)

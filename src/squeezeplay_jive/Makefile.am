@@ -27,6 +27,8 @@ jiveWatchdog_la_SOURCES = \
 	src/jive_watchdog.c
 
 
+JIVE_BUILD_DIR = $(DESTDIR)$(datadir)/jive
+
 include Makefile.am.jive-install.include
 
 install-data-local: jive-static-install
