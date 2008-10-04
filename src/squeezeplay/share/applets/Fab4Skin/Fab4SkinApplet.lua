@@ -914,6 +914,113 @@ function skin(self, s)
 	s.albumitem.text.fg = TEXT_COLOR
 	s.albumitem.text.sh = TEXT_SH_COLOR
 
+	-- checked albummenu item
+	s.albumchecked =
+		_uses(s.albumitem, {
+			      order = { "icon", "text", "check" },
+			      check = {
+				      img = Surface:loadImage(imgpath .. "Icons/icon_check.png"),
+				      align = "right"
+
+			      }
+		      })
+
+	-- styles for choose player menu
+	s.chooseplayer = _uses(s.albumitem, {
+				text = { font = FONT_BOLD_13px }
+			})
+	s.transporter = _uses(s.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/transporter.png"),
+					w = 56,
+				}
+			})
+	s.transporterchecked = _uses(s.transporter, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+
+	s.squeezebox2 = _uses(s.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/squeezebox2.png"),
+				}
+			})
+	s.squeezebox2checked = _uses(s.squeezebox2, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+	s.boom = _uses(s.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/boom.png"),
+					w = 56,
+				}
+			})
+	s.boomchecked = _uses(s.boom, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+	s.slimp3 = _uses(s.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/slimp3.png"),
+				}
+			})
+	s.slimp3checked = _uses(s.slimp3, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+	s.softsqueeze = _uses(s.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/softsqueeze.png"),
+				}
+			})
+	s.softsqueezechecked = _uses(s.softsqueeze, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+	s.controller = _uses(s.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/controller.png"),
+				}
+			})
+	s.controllerchecked = _uses(s.controller, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+	s.receiver = _uses(s.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/receiver.png"),
+				}
+			})
+	s.receiverchecked = _uses(s.receiver, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+
+	s.albumitemplay = _uses(s.albumitem)
+	s.albumitemadd  = _uses(s.albumitem)
+
+
 	s.albumitem.icon = {}
 	s.albumitem.icon.w = 70
 	s.albumitem.icon.h = WH_FILL
@@ -1000,6 +1107,117 @@ function skin(self, s)
 	s.selected.albumitem.play.img = Surface:loadImage(imgpath .. "Icons/selection_right.png")
 	s.selected.albumitem.play.border = { 0, 0, 5, 0 }
 --]]
+	s.selected.albumchecked = _uses(s.selected.albumitem, {
+	      		order = { "icon", "text", "check", "play" },
+			play = {
+				img = Surface:loadImage(imgpath .. "Icons/selection_right.png")
+			},
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+
+	s.selected.chooseplayer = _uses(s.selected.albumitem, {
+			order = { "icon", "text", "play" },
+			play = {
+				img = Surface:loadImage(imgpath .. "Icons/selection_right.png")
+			},
+			text = { font = FONT_BOLD_13px }
+	})
+
+	s.selected.transporter = _uses(s.selected.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/transporter.png"),
+				}
+			})
+	s.selected.transporterchecked = _uses(s.selected.transporter, {
+	      		order = { "icon", "text", "check", "play" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+
+	s.selected.squeezebox2 = _uses(s.selected.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/squeezebox2.png"),
+				}
+			})
+	s.selected.squeezebox2checked = _uses(s.selected.squeezebox2, {
+	      		order = { "icon", "text", "check", "play" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+
+
+	s.selected.boom = _uses(s.selected.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/boom.png"),
+				}
+			})
+	s.selected.boomchecked = _uses(s.selected.boom, {
+	      		order = { "icon", "text", "check", "play" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+
+
+	s.selected.slimp3 = _uses(s.selected.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/slimp3.png"),
+				}
+			})
+
+	s.selected.slimp3checked = _uses(s.selected.slimp3, {
+	      		order = { "icon", "text", "check", "play" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+
+	s.selected.softsqueeze = _uses(s.selected.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/softsqueeze.png"),
+				}
+			})
+	s.selected.softsqueezechecked = _uses(s.selected.softsqueeze, {
+	      		order = { "icon", "text", "check", "play" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+	s.selected.controller = _uses(s.selected.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/controller.png"),
+				}
+			})
+	s.selected.controllerchecked = _uses(s.selected.controller, {
+	      		order = { "icon", "text", "check", "play" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+	s.selected.receiver = _uses(s.selected.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/receiver.png"),
+				}
+			})
+	s.selected.receiverchecked = _uses(s.selected.receiver, {
+	      		order = { "icon", "text", "check", "play" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+
 
 	-- locked item with artwork and song info
 	s.locked.albumitem = {}
