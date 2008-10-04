@@ -141,18 +141,6 @@ function skin(self, s)
                                        imgpath .. "Screen_Formats/Titlebar/titlebar.png",
 			       })
 
-	local selectionBox =
-		Tile:loadTiles({
-				       imgpath .. "selector_M.png",
-				       imgpath .. "selector_TL.png",
-				       imgpath .. "selector_M.png",
-				       imgpath .. "selector_TR.png",
-				       imgpath .. "selector_M.png",
-				       imgpath .. "selector_BR.png",
-				       imgpath .. "selector_M.png",
-				       imgpath .. "selector_BL.png",
-				       imgpath .. "selector_M.png"
-			       })
   local selectionBox =
                 Tile:loadTiles({
                                        imgpath .. "Screen_Formats/5_line_lists/menu_selection_box.png",
@@ -178,19 +166,6 @@ function skin(self, s)
                                        imgpath .. "Screen_Formats/Albums/menu_selection_box_album_bl.png",
                                        imgpath .. "Screen_Formats/Albums/menu_selection_box_album_l.png",
                                })
-
-	local helpBox = 
-		Tile:loadTiles({
-				       imgpath .. "helpbox.png",
-				       imgpath .. "helpbox_tl.png",
-				       imgpath .. "helpbox_t.png",
-				       imgpath .. "helpbox_tr.png",
-				       imgpath .. "helpbox_r.png",
-				       nil,
-				       nil,
-				       nil,
-				       imgpath .. "helpbox_l.png",
-			       })
 
      local helpBox =
                 Tile:loadTiles({
@@ -828,7 +803,7 @@ function skin(self, s)
 	s.searchtitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_searchpng")
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_search.png")
 			      }
 		      })
 
@@ -963,8 +938,11 @@ function skin(self, s)
 	s.albumitem.icon.h = WH_FILL
 	s.albumitem.icon.align = "left"
 	--FIXME, this path likely needs changing
-	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
+	--s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
 	s.albumitem.icon.padding = 0
+
+	s.albumitemplay = _uses(s.albumitem)
+	s.albumitemadd  = _uses(s.albumitem)
 
 	s.popupToast = _uses(s.albumitem, 
 		{
@@ -1017,6 +995,18 @@ function skin(self, s)
 	s.selected.albumitem.text.fg = SELECT_COLOR
 	s.selected.albumitem.text.sh = SELECT_SH_COLOR
 	s.selected.albumitem.bgImg = albumSelectionBox
+	
+	s.selected.albumitemplay = _uses(s.selected.albumitem)
+	s.selected.albumitemadd = _uses(s.selected.albumitem)
+
+--[[
+	s.selected.albumitemplay = _uses(s.selected.albumitem, {
+		play = { img = Surface:loadImage(imgpath .. "Icons/selection_play.png") }
+	})
+	s.selected.albumitemadd = _uses(s.selected.albumitem, {
+		play = { img = Surface:loadImage(imgpath .. "Icons/selection_add.png") }
+	})
+--]]
 
 
 	-- locked item with artwork and song info
@@ -1038,7 +1028,6 @@ function skin(self, s)
 	})
 
 	s.selected.albumitemwaiting = _uses(s.waiting)
-
 
 	-- titles with artwork and song info
 	s.nowplayingtitle = {}
@@ -1232,19 +1221,6 @@ function skin(self, s)
 	local SELECT_COLOR = { 0x00, 0x00, 0x00 }
 	local SELECT_SH_COLOR = { }
 
-
-        local titleBox =
-                Tile:loadTiles({
-					imgpath .. "header_M.png",
-					imgpath .. "header_TL.png",
-					imgpath .. "header_M.png",
-					imgpath .. "header_TR.png",
-					imgpath .. "header_M.png",
-					imgpath .. "header_BR.png",
-					imgpath .. "header_M.png",
-					imgpath .. "header_BL.png",
-					imgpath .. "header_M.png"
-                               })
 
 	-- Title
 	s.ssnptitle = _uses(s.title)
