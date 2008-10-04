@@ -32,6 +32,7 @@ local Group              = require("jive.ui.Group")
 local Icon               = require("jive.ui.Icon")
 local Label              = require("jive.ui.Label")
 local Framework          = require("jive.ui.Framework")
+local Surface            = require("jive.ui.Surface")
 
 local hasWireless, Wireless  = pcall(require, "jive.net.Wireless")
 
@@ -51,7 +52,6 @@ oo.class(_M, Applet)
 local PLAYER_WEIGHT = 1
 local SERVER_WEIGHT = 10
 local ACTIVATE_WEIGHT = 20
-
 
 function init(self, ...)
 	self.playerItem = {}
@@ -170,6 +170,8 @@ function _addPlayerItem(self, player)
 	local playerName = player:getName()
 	local playerWeight = PLAYER_WEIGHT
 
+	local playerModel = player:getModel() or 'softsqueeze'
+
 	-- if waiting for a SN pin modify name
 	if player:getPin() then
 		if not self.setupMode then
@@ -183,7 +185,8 @@ function _addPlayerItem(self, player)
 
 	local item = {
 		id = mac,
-		text = playerName,
+		style = playerModel,
+		text = "\n" .. playerName,
 		sound = "WINDOWSHOW",
 		callback = function()
 			if self:selectPlayer(player) then
@@ -197,7 +200,7 @@ function _addPlayerItem(self, player)
 	}
 
 	if player == self.selectedPlayer and player:isConnected() then
-		item.style = "checked"
+		item.style = playerModel .. "checked"
 	end
 
 	self.playerMenu:addItem(item)
@@ -275,7 +278,7 @@ function setupShowSelectPlayer(self, setupNext)
 	local window = Window("window", self:string("SELECT_PLAYER"), 'settingstitle')
 	window:setAllowScreensaver(false)
 
-        local menu = SimpleMenu("menu")
+        local menu = SimpleMenu("albummenu")
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
 	self.playerMenu = menu
