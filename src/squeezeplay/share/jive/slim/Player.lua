@@ -505,6 +505,18 @@ end
 
 --[[
 
+=head2 jive.slim.Player:getModel()
+
+returns the model of player
+
+=cut
+--]]
+function getModel(self)
+	return self.info.model
+end
+
+--[[
+
 =head2 jive.slim.Player:getPlaylistTimestamp()
 
 returns the playlist timestamp for a given player object
