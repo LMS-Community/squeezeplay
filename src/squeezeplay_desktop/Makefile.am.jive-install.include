@@ -2,10 +2,6 @@
 # if you are making changes to it consider making the changes in each of the locations.
 # The reason for the duplication (rather than a shared file) is that Poky checks out just subdirectory not the top level
 
-JIVE_BUILD_DIR = $(DESTDIR)/$(pkgdatadir)
-
-#touching to try to get jive_73 build to see this file
-
 jive-static-install:
 	##Copy selectively, currently overwrites all, not just newer
 	mkdir -p $(JIVE_BUILD_DIR)

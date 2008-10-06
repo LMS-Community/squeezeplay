@@ -17,6 +17,8 @@ lua-lint:
 	@test \! -s badsyntax
 	@rm -f badsyntax
 
+JIVE_BUILD_DIR = $(DESTDIR)$(pkgdatadir)
+
 include Makefile.am.jive-install.include
 
 install-data-local: jive-static-install
