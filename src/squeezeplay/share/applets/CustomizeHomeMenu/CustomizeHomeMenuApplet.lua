@@ -127,7 +127,8 @@ function menu(self, menuItem)
 			item.weights = { 2 }
 		end
 		local menuItem
-		if item.noCustom then
+
+		if not jiveMain:getCanCustomize(item) then
 			menuItem = {
 				text = title,
 				weights = item.weights,

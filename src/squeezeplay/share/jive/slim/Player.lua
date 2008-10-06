@@ -1166,6 +1166,7 @@ function canConnectToServer(self)
 		or self.info.model == "receiver"
 		or self.info.model == "transporter"
 		or self.info.model == "boom"
+		or self.info.model == "softsqueeze"
 end
 
 

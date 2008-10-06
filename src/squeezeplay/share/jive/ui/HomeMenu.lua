@@ -96,6 +96,14 @@ function getComplexWeight(self, id, item)
 	end
 end
 
+function getCanCustomize(self, item)
+	if item and item.noCustom then
+		return false
+	else
+		return true
+	end
+end
+
 function setTitle(self, title)
 	if title then
 		self.window:setTitle(title)
@@ -235,6 +243,7 @@ function addItemToNode(self, item, node)
 
 	if self.nodeTable[node] then
 		self.nodeTable[node].items[item.id] = item
+		log:debug('adding ', item.id, 'to ', node)
 		local menuIdx = self.nodeTable[node].menu:addItem(item)
 		if node == 'home' and item.homeMenuText then
 			local labelText = item.homeMenuText

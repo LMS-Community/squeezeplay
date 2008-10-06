@@ -1036,6 +1036,9 @@ local function _menuSink(self, cmd)
 
 			elseif choiceAction then
 
+				-- FIXME: Bug 9362, do not allow choice items to be promoted to home menu
+				item.noCustom = true
+
 				local selectedIndex = 1
 				if v.selectedIndex then
 					selectedIndex = tonumber(v.selectedIndex)
