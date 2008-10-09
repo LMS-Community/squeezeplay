@@ -1103,6 +1103,23 @@ AC_HELP_STRING([--enable-video-x11-dpms], [enable X11 DPMS extension [[default=y
                     AC_DEFINE(SDL_VIDEO_DRIVER_X11_DPMS)
                 fi
             fi
+            AC_ARG_ENABLE(video-x11-xf86-keysyms,
+[  --enable-video-x11-xf86-keysyms   use XFree86's Internet-Keyboard keysyms[default=yes]],
+                          , enable_video_x11_xf86_keysyms=yes)
+            if test x$enable_video_x11_xf86_keysyms = xyes; then
+                AC_MSG_CHECKING(for XFree86 Internet/MultiMedia Keyboard keysym support)
+                video_x11_xf86_keysyms=no
+                AC_TRY_COMPILE([
+                 #include <X11/XF86keysym.h>
+                ],[
+                ],[
+                video_x11_xf86_keysyms=yes
+                ])
+                AC_MSG_RESULT($video_x11_xf86_keysyms)
+                if test x$video_x11_xf86_keysyms = xyes; then
+                    EXTRA_CFLAGS="$EXTRA_CFLAGS -DXFREE86_KEYSYMS"
+                fi
+            fi
         fi
     fi
 }

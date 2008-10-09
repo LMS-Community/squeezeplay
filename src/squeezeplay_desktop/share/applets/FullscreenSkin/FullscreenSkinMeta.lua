@@ -34,9 +34,13 @@ end
 
 
 function registerApplet(self)
-	jiveMain:registerSkin(self:string("DESKTOP_SKIN"), 'FullscreenSkin', 'skin')
+	local params = {
+		THUMB_SIZE = 125,
+		nowPlayingBrowseArtworkSize = 350,
+		nowPlayingSSArtworkSize = 350,
+	}
+	jiveMain:registerSkin(self:string("DESKTOP_SKIN"), 'FullscreenSkin', 'skin', params)
 end
-
 
 --[[
 

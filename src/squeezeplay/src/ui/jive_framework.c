@@ -10,8 +10,10 @@
 
 #include <time.h>
 
+#include <SDL_syswm.h>
 
 int (*jive_sdlevent_pump)(lua_State *L);
+int (*jive_sdlfilter_pump)(const SDL_Event *event);
 
 char *jive_resource_path = NULL;
 
@@ -93,6 +95,7 @@ static struct jive_keymap keymap[] = {
 
 static int init_path(lua_State *L);
 static int process_event(lua_State *L, SDL_Event *event);
+static int filter_events(const SDL_Event *event);
 int jiveL_update_screen(lua_State *L);
 
 
@@ -148,6 +151,12 @@ static int jiveL_init(lua_State *L) {
 		SDL_Quit();
 		exit(-1);
 	}
+
+	/* Register callback for additional events (used for multimedia keys)*/
+	SDL_EventState(SDL_SYSWMEVENT,SDL_ENABLE);
+	SDL_SetEventFilter(filter_events);
+
+	jive_platform_init(L);
 
 	/* open window */
 	SDL_WM_SetCaption("SqueezePlay Beta", "SqueezePlay Beta");
@@ -244,6 +253,24 @@ static int init_path(lua_State *L) {
 	return 0;
 }
 
+static int filter_events(const SDL_Event *event)
+{
+	if (jive_sdlfilter_pump) {
+		return jive_sdlfilter_pump(event);
+	}
+	
+	return 1;
+}
+
+void jive_send_key_event(JiveEventType keyType, JiveKey keyCode) {
+	JiveEvent keyEvent;
+	memset(&keyEvent, 0, sizeof(JiveEvent));
+	
+	keyEvent.type = keyType;
+	keyEvent.ticks = SDL_GetTicks();
+	keyEvent.u.key.code = keyCode;
+	jive_queue_event(&keyEvent);
+}
 
 static int jiveL_quit(lua_State *L) {
 
