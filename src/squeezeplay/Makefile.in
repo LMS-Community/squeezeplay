@@ -75,10 +75,11 @@ am_libjivenet_la_OBJECTS = jive_dns.lo
 libjivenet_la_OBJECTS = $(am_libjivenet_la_OBJECTS)
 libjiveui_la_DEPENDENCIES =
 am_libjiveui_la_OBJECTS = jive_event.lo jive_font.lo jive_framework.lo \
-	jive_group.lo jive_icon.lo jive_label.lo jive_menu.lo \
-	jive_slider.lo jive_style.lo jive_surface.lo jive_textarea.lo \
-	jive_textinput.lo jive_tile.lo jive_timer.lo jive_utils.lo \
-	jive_widget.lo jive_window.lo lua_jiveui.lo
+	jive_framework_nonwindows.lo jive_group.lo jive_icon.lo \
+	jive_label.lo jive_menu.lo jive_slider.lo jive_style.lo \
+	jive_surface.lo jive_textarea.lo jive_textinput.lo \
+	jive_tile.lo jive_timer.lo jive_utils.lo jive_widget.lo \
+	jive_window.lo lua_jiveui.lo
 libjiveui_la_OBJECTS = $(am_libjiveui_la_OBJECTS)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
@@ -270,6 +271,7 @@ libjiveui_la_SOURCES = \
 	src/ui/jive_event.c \
 	src/ui/jive_font.c \
 	src/ui/jive_framework.c \
+	src/ui/jive_framework_nonwindows.c \
 	src/ui/jive_group.c \
 	src/ui/jive_icon.c \
 	src/ui/jive_label.c \
@@ -479,6 +481,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_event.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_font.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_framework.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_framework_nonwindows.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_group.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_icon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_label.Plo@am__quote@
@@ -644,6 +647,13 @@ jive_framework.lo: src/ui/jive_framework.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ui/jive_framework.c' object='jive_framework.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_framework.lo `test -f 'src/ui/jive_framework.c' || echo '$(srcdir)/'`src/ui/jive_framework.c
+
+jive_framework_nonwindows.lo: src/ui/jive_framework_nonwindows.c
+@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_framework_nonwindows.lo -MD -MP -MF "$(DEPDIR)/jive_framework_nonwindows.Tpo" -c -o jive_framework_nonwindows.lo `test -f 'src/ui/jive_framework_nonwindows.c' || echo '$(srcdir)/'`src/ui/jive_framework_nonwindows.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/jive_framework_nonwindows.Tpo" "$(DEPDIR)/jive_framework_nonwindows.Plo"; else rm -f "$(DEPDIR)/jive_framework_nonwindows.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ui/jive_framework_nonwindows.c' object='jive_framework_nonwindows.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_framework_nonwindows.lo `test -f 'src/ui/jive_framework_nonwindows.c' || echo '$(srcdir)/'`src/ui/jive_framework_nonwindows.c
 
 jive_group.lo: src/ui/jive_group.c
 @am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_group.lo -MD -MP -MF "$(DEPDIR)/jive_group.Tpo" -c -o jive_group.lo `test -f 'src/ui/jive_group.c' || echo '$(srcdir)/'`src/ui/jive_group.c; \

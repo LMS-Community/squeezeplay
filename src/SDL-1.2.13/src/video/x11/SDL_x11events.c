@@ -48,6 +48,9 @@
 #include "SDL_x11mouse_c.h"
 #include "SDL_x11events_c.h"
 
+#ifdef XFREE86_KEYSYMS
+#include <X11/XF86keysym.h>
+#endif
 
 /* Define this if you want to debug X11 events */
 /*#define DEBUG_XEVENTS*/
@@ -1092,6 +1095,90 @@ void X11_InitKeymap(void)
 	MISC_keymap[XK_Hyper_R&0xFF] = SDLK_MENU;   /* Windows "Menu" key */
 }
 
+#ifdef XFREE86_KEYSYMS
+/* Macro for trivial assignment from XFree86 value to SDL value */
+#define XF86_to_SDLK(x) \
+    case XF86XK_##x:    \
+        return SDLK_##x
+
+static SDLKey
+TranslateXFree86VendorSpecificKeysyms(KeySym xsym)
+{
+    switch (xsym) {
+        /* Keys found on some "Internet" keyboards. */
+        XF86_to_SDLK(Standby);
+        XF86_to_SDLK(AudioLowerVolume);
+        XF86_to_SDLK(AudioMute);
+        XF86_to_SDLK(AudioRaiseVolume);
+        XF86_to_SDLK(AudioPlay);
+        XF86_to_SDLK(AudioStop);
+        XF86_to_SDLK(AudioPrev);
+        XF86_to_SDLK(AudioNext);
+        XF86_to_SDLK(HomePage);
+        XF86_to_SDLK(Mail);
+        XF86_to_SDLK(Start);
+        XF86_to_SDLK(Search);
+        XF86_to_SDLK(AudioRecord);
+
+        /* These are sometimes found on PDA's (e.g. Palm, PocketPC or elsewhere) */
+        XF86_to_SDLK(Calculator);
+        XF86_to_SDLK(Memo);
+        XF86_to_SDLK(ToDoList);
+        XF86_to_SDLK(Calendar);
+        XF86_to_SDLK(PowerDown);
+        XF86_to_SDLK(ContrastAdjust);
+        XF86_to_SDLK(RockerUp);
+        XF86_to_SDLK(RockerDown);
+        XF86_to_SDLK(RockerEnter);
+
+        /* Some more "Internet" keyboard symbols */
+        XF86_to_SDLK(Back);
+        XF86_to_SDLK(Forward);
+        XF86_to_SDLK(Stop);
+        XF86_to_SDLK(Refresh);
+        XF86_to_SDLK(PowerOff);
+        XF86_to_SDLK(WakeUp);
+        XF86_to_SDLK(Eject);
+        XF86_to_SDLK(ScreenSaver);
+        XF86_to_SDLK(WWW);
+        XF86_to_SDLK(Sleep);
+        XF86_to_SDLK(Favorites);
+        XF86_to_SDLK(AudioPause);
+        XF86_to_SDLK(AudioMedia);
+        XF86_to_SDLK(MyComputer);
+        XF86_to_SDLK(VendorHome);
+        XF86_to_SDLK(LightBulb);
+        XF86_to_SDLK(Shop);
+        XF86_to_SDLK(History);
+        XF86_to_SDLK(OpenURL);
+        XF86_to_SDLK(AddFavorite);
+        XF86_to_SDLK(HotLinks);
+        XF86_to_SDLK(BrightnessAdjust);
+
+        XF86_to_SDLK(Launch0);
+        XF86_to_SDLK(Launch1);
+        XF86_to_SDLK(Launch2);
+        XF86_to_SDLK(Launch3);
+        XF86_to_SDLK(Launch4);
+        XF86_to_SDLK(Launch5);
+        XF86_to_SDLK(Launch7);
+        XF86_to_SDLK(Launch8);
+        XF86_to_SDLK(Launch9);
+        XF86_to_SDLK(LaunchA);
+        XF86_to_SDLK(LaunchB);
+        XF86_to_SDLK(LaunchC);
+        XF86_to_SDLK(LaunchD);
+        XF86_to_SDLK(LaunchE);
+        XF86_to_SDLK(LaunchF);
+
+        default:
+            return SDLK_UNKNOWN;
+    }
+}
+#endif
+
+
+
 /* Get the translated SDL virtual keysym */
 SDLKey X11_TranslateKeycode(Display *display, KeyCode kc)
 {
@@ -1138,6 +1225,12 @@ SDLKey X11_TranslateKeycode(Display *display, KeyCode kc)
 		    case 0xFF:
 			key = MISC_keymap[xsym&0xFF];
 			break;
+
+#ifdef XFREE86_KEYSYMS
+                    case 0x1008ff: /* XFree86 vendor specific keysyms from /usr/X11R6/include/X11/XF86keysym.h */
+                	key = TranslateXFree86VendorSpecificKeysyms(xsym);
+                	break;
+#endif
 		    default:
 			/*
 			fprintf(stderr, "X11: Unhandled xsym, sym = 0x%04x\n",

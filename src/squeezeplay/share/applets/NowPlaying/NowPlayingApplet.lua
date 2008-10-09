@@ -43,15 +43,6 @@ local jnt                    = jnt
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
-
--- FIXME: Bug 8479. workaround: this is hardcoded for now
-local ARTWORK_SIZE = 154
-
---[[ alternative skins
-local ARTWORK_SIZE = 190
-local ARTWORK_SIZE = 350
---]]
-
 local showProgressBar = true
 local modeTokens = {
 	off   = "SCREENSAVER_OFF",
@@ -99,12 +90,9 @@ local function _getIcon(self, item, icon, remote)
 	local server = self.player:getSlimServer()
 
 	if windowStyle == 'ss' then
-		-- without drop shadow
-		ARTWORK_SIZE = 186
-		-- with drop shadow
-		--ARTWORK_SIZE = 172
+		ARTWORK_SIZE = jiveMain:getSkinParam("nowPlayingSSArtworkSize")
 	else
-		ARTWORK_SIZE = 154
+		ARTWORK_SIZE = jiveMain:getSkinParam("nowPlayingBrowseArtworkSize")
 	end
 
 	if item and item["icon-id"] then

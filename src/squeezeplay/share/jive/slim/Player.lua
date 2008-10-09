@@ -62,6 +62,7 @@ local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 
 local jnt            = jnt
+local jiveMain       = jiveMain
 local iconbar        = iconbar
 
 
@@ -906,9 +907,9 @@ function _process_displaystatus(self, event)
 			s.text:setValue(textValue)
 			s.artIcon:setStyle("icon")
 			if display['icon'] then
-				self.slimServer:fetchArtworkURL(display['icon'], s.artIcon, 56)
+				self.slimServer:fetchArtworkURL(display['icon'], s.artIcon, jiveMain:getSkinParam('THUMB_SIZE'))
 			else
-				self.slimServer:fetchArtworkThumb(display["icon-id"], s.artIcon, 56, 'png')
+				self.slimServer:fetchArtworkThumb(display["icon-id"], s.artIcon, jiveMain:getSkinParam('THUMB_SIZE'), 'png')
 			end
 		else
 			s.text:setValue('')
