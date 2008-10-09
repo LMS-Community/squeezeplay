@@ -742,7 +742,11 @@ local function _bigArtworkPopup(chunk, err)
 	end
 
 	log:debug("Artwork width/height will be ", shortDimension)
-	_server:fetchArtworkThumb(chunk.data.artworkId, icon, shortDimension)
+	if chunk.data and chunk.data.artworkId then
+		_server:fetchArtworkThumb(chunk.data.artworkId, icon, shortDimension)
+	elseif chunk.data and chunk.data.artworkUrl then
+		_server:fetchArtworkURL(chunk.data.artworkUrl, icon, shortDimension)
+	end
 	popup:addWidget(icon)
 	popup:show()
 	return popup
