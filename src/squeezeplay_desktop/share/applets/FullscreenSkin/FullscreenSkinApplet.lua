@@ -938,7 +938,7 @@ function skin(self, s)
 	s.albumitem.icon.h = WH_FILL
 	s.albumitem.icon.align = "left"
 	--FIXME, this path likely needs changing
-	--s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
+	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
 	s.albumitem.icon.padding = 0
 
 	-- checked albummenu item
@@ -959,7 +959,7 @@ function skin(self, s)
 	s.transporter = _uses(s.chooseplayer, {
 				icon = {
 					img = Surface:loadImage(imgpath .. "Icons/Players/transporter.png"),
-					w = 56,
+					w = 125,
 				}
 			})
 	s.transporterchecked = _uses(s.transporter, {
@@ -985,7 +985,7 @@ function skin(self, s)
 	s.boom = _uses(s.chooseplayer, {
 				icon = {
 					img = Surface:loadImage(imgpath .. "Icons/Players/boom.png"),
-					w = 56,
+					w = 125,
 				}
 			})
 	s.boomchecked = _uses(s.boom, {
@@ -1238,7 +1238,7 @@ function skin(self, s)
 			--FIXME, need a resized icon_connecting.png image for the correct albumitem thumb size
 			img = Surface:loadImage(imgpath .. "icon_connecting.png"),
 			frameRate = 4,
-			frameWidth = 120
+			frameWidth = 125
 		}
 	})
 

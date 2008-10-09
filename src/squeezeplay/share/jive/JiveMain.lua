@@ -256,10 +256,15 @@ function JiveMain:reload()
 end
 
 
-function JiveMain:registerSkin(name, appletName, method)
+function JiveMain:registerSkin(name, appletName, method, params)
 	log:debug("registerSkin(", name, ",", appletName, ")")
-
 	self.skins[appletName] = { name, method }
+	local defaultParams = {
+		THUMB_SIZE = 56,
+	}
+	local params = params or defaultParams
+	JiveMain:setSkinParams(appletName, params)
+
 end
 
 
@@ -302,9 +307,34 @@ end
 
 
 function JiveMain:setSelectedSkin(appletName, reload)
+	log:warn(appletName)
 	if _loadSkin(self, appletName, false) then
-		self.selectedSkin = appletName
+		self.selectedSkin        = appletName
 	end
+end
+
+function JiveMain:getSkinParam(key)
+
+	local skinName = self.selectedSkin or "DefaultSkin"
+	
+	if key and self.skinParams and self.skinParams[skinName] and self.skinParams[skinName][key] then
+		return self.skinParams[skinName][key]
+	else
+		log:error('no value for skinParam ', key, ' found') 
+		return nil
+	end
+
+end
+
+-- service method to allow other applets to set skin-specific settings like THUMB_SIZE
+function JiveMain:setSkinParams(skinName, settings)
+
+	_assert(type(settings) == 'table')
+	if not self.skinParams then
+		self.skinParams = {}
+	end
+	self.skinParams[skinName] = settings
+
 end
 
 

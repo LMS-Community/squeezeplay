@@ -74,9 +74,6 @@ oo.class(_M, Applet)
 -- number of volume steps
 local VOLUME_STEPS = 20
 
--- defaults for thumbnail images
-local THUMB_SIZE = 56
-
 --==============================================================================
 -- Local variables (globals)
 --==============================================================================
@@ -221,6 +218,9 @@ end
 local function _artworkItem(item, group, menuAccel)
 	local icon = group and group:getWidget("icon")
 	local iconSize
+
+	local THUMB_SIZE = jiveMain:getSkinParam("THUMB_SIZE")
+
 	if icon then
 		iconSize = icon:getSize()
 		if not iconSize or iconSize == 0 then
@@ -949,7 +949,7 @@ local function _browseSink(step, chunk, err)
 					if data.window['icon-id'] then
 						-- Fetch an image from SlimServer
 						titleIcon = Icon("icon")
-						_server:fetchArtworkThumb(data.window["icon-id"], titleIcon, THUMB_SIZE)
+						_server:fetchArtworkThumb(data.window["icon-id"], titleIcon, jiveMain:getSkinParam("THUMB_SIZE"))
 					-- only allow the existing icon to stay if titleStyle isn't being changed
 					elseif not data.window.titleStyle and titleWidget:getWidget('icon') then
 						titleIcon = titleWidget:getWidget('icon')

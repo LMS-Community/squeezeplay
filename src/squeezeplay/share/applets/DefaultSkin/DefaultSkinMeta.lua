@@ -35,9 +35,14 @@ end
 
 function registerApplet(self)
 	-- load ourselves indirectly through jiveMain
-	jiveMain:registerSkin(self:string("CONTROLLER_SKIN"), "DefaultSkin", "skin")
-end
+	local params = {
+		THUMB_SIZE = 56,
+		nowPlayingBrowseArtworkSize = 154,
+		nowPlayingSSArtworkSize = 186,
+	}
+	jiveMain:registerSkin(self:string("CONTROLLER_SKIN"), "DefaultSkin", "skin", params)
 
+end
 
 --[[
 
