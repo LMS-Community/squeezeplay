@@ -64,6 +64,9 @@ int jiveL_event_new(lua_State *L) {
 		case JIVE_EVENT_MOUSE_DRAG:
 			event->u.mouse.x = lua_tointeger(L, 3);
 			event->u.mouse.y = lua_tointeger(L, 4);
+			event->u.mouse.finger_count = luaL_optinteger(L, 5, 0);
+			event->u.mouse.finger_width = luaL_optinteger(L, 6, 0);
+			event->u.mouse.finger_pressure = luaL_optinteger(L, 7, 0);
 			break;
     	
 		default:
@@ -152,7 +155,14 @@ int jiveL_event_get_mouse(lua_State *L) {
 	case JIVE_EVENT_MOUSE_DRAG:
 		lua_pushinteger(L, event->u.mouse.x);
 		lua_pushinteger(L, event->u.mouse.y);
-		return 2;
+		if (event->u.mouse.finger_count == 0) {
+			return 2;
+		}
+
+		lua_pushinteger(L, event->u.mouse.finger_count);
+		lua_pushinteger(L, event->u.mouse.finger_width);
+		lua_pushinteger(L, event->u.mouse.finger_pressure);
+		return 5;
 
 	default:
 		luaL_error(L, "Not a mouse event");
