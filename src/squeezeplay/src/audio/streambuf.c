@@ -78,7 +78,22 @@ size_t streambuf_get_usedbytes(void) {
 
 	return n;
 }
+/* returns true if the stream is still open but cannot yet supply the requested bytes */
+bool_t streambuf_would_wait_for(size_t bytes) {
+	size_t n;
+	
+	if (!streambuf_streaming) {
+		return TRUE;
+	}
 
+	fifo_lock(&streambuf_fifo);
+
+	n = fifo_bytes_used(&streambuf_fifo);
+
+	fifo_unlock(&streambuf_fifo);
+
+	return n < bytes;
+}
 
 void streambuf_get_status(size_t *size, size_t *usedbytes, u32_t *bytesL, u32_t *bytesH) {
 
