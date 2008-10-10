@@ -239,22 +239,52 @@ int jiveL_event_tostring(lua_State* L) {
 		break;
 		
 	case JIVE_EVENT_MOUSE_DOWN:
-		lua_pushfstring(L, "MOUSE_DOWN x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		if (event->u.mouse.finger_count) {
+			lua_pushfstring(L, "FINGER_DOWN x=%d,y=%d,n=%d,w=%d,p=%d", event->u.mouse.x, event->u.mouse.y, event->u.mouse.finger_count, event->u.mouse.finger_width, event->u.mouse.finger_pressure);
+		}
+		else {
+			lua_pushfstring(L, "MOUSE_DOWN x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		}
 		break;
 	case JIVE_EVENT_MOUSE_UP:
-		lua_pushfstring(L, "MOUSE_UP x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		if (event->u.mouse.finger_count) {
+			lua_pushfstring(L, "FINGER_UP x=%d,y=%d,n=%d,w=%d,p=%d", event->u.mouse.x, event->u.mouse.y, event->u.mouse.finger_count, event->u.mouse.finger_width, event->u.mouse.finger_pressure);
+		}
+		else {
+			lua_pushfstring(L, "MOUSE_UP x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		}
 		break;
 	case JIVE_EVENT_MOUSE_PRESS:
-		lua_pushfstring(L, "MOUSE_PRESS x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		if (event->u.mouse.finger_count) {
+			lua_pushfstring(L, "FINGER_PRESS x=%d,y=%d,n=%d,w=%d,p=%d", event->u.mouse.x, event->u.mouse.y, event->u.mouse.finger_count, event->u.mouse.finger_width, event->u.mouse.finger_pressure);
+		}
+		else {
+			lua_pushfstring(L, "MOUSE_PRESS x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		}
 		break;
 	case JIVE_EVENT_MOUSE_HOLD:
-		lua_pushfstring(L, "MOUSE_HOLD x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		if (event->u.mouse.finger_count) {
+			lua_pushfstring(L, "FINGER_HOLD x=%d,y=%d,n=%d,w=%d,p=%d", event->u.mouse.x, event->u.mouse.y, event->u.mouse.finger_count, event->u.mouse.finger_width, event->u.mouse.finger_pressure);
+		}
+		else {
+			lua_pushfstring(L, "MOUSE_HOLD x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		}
 		break;
 	case JIVE_EVENT_MOUSE_MOVE:
-		lua_pushfstring(L, "MOUSE_MOVE x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		if (event->u.mouse.finger_count) {
+			lua_pushfstring(L, "FINGER_MOVE x=%d,y=%d,n=%d,w=%d,p=%d", event->u.mouse.x, event->u.mouse.y, event->u.mouse.finger_count, event->u.mouse.finger_width, event->u.mouse.finger_pressure);
+		}
+		else {
+			lua_pushfstring(L, "MOUSE_MOVE x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		}
 		break;
 	case JIVE_EVENT_MOUSE_DRAG:
-		lua_pushfstring(L, "MOUSE_DRAG x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		if (event->u.mouse.finger_count) {
+			lua_pushfstring(L, "FINGER_DRAG x=%d,y=%d,n=%d,w=%d,p=%d", event->u.mouse.x, event->u.mouse.y, event->u.mouse.finger_count, event->u.mouse.finger_width, event->u.mouse.finger_pressure);
+		}
+		else {
+			lua_pushfstring(L, "MOUSE_DRAG x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		}
 		break;
 
 	case JIVE_EVENT_MOTION:
