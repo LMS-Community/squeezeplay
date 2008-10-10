@@ -159,6 +159,16 @@ static bool_t decode_flac_callback(void *data) {
 	if (! decode_output_can_write(2 * 4608 * sizeof(sample_t), self->sample_rate)) {
 		return FALSE;
 	}
+	
+	/* Because FLAC__stream_decoder_process_single() will keep calling the read
+	 * callback, in a hard loop, until it gets a full frame, we want to avoid calling
+	 * it unless it is likely to get a full frame. The absolute maximum size of a
+	 * FLAC frame is too large to use that, so we pick a value that will work most
+	 * of the time.
+	 */
+	if (streambuf_would_wait_for(25000)) {
+		return FALSE;
+	}
 
 	FLAC__stream_decoder_process_single(self->decoder);
 
