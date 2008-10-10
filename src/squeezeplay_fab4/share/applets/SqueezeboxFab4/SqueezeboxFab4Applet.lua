@@ -22,7 +22,7 @@ oo.class(_M, Applet)
 
 function init(self)
 	-- FIXME uuid
-	local uuid = nil
+	local uuid = "00000000000000000000000000000000"
 
 	-- read device mac
 	local f = io.popen("/sbin/ifconfig eth0")
