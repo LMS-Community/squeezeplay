@@ -1249,7 +1249,14 @@ local _globalActions = {
 		return self.volume:event(event)
 	end,
 
+	["volup"] = function(self, event)
+		return self.volume:event(event)
+	end,
+
 	["voldown-down"] = function(self, event)
+		return self.volume:event(event)
+	end,
+	["voldown"] = function(self, event)
 		return self.volume:event(event)
 	end,
 --[[	

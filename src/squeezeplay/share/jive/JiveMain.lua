@@ -56,6 +56,7 @@ local HomeMenu      = require("jive.ui.HomeMenu")
 local Framework     = require("jive.ui.Framework")
 local Task          = require("jive.ui.Task")
 local Timer         = require("jive.ui.Timer")
+local Event         = require("jive.ui.Event")
 
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("jive.main")
@@ -64,14 +65,26 @@ local logheap       = require("jive.utils.log").logger("jive.heap")
 
 local EVENT_KEY_ALL        = jive.ui.EVENT_KEY_ALL
 local EVENT_KEY_PRESS      = jive.ui.EVENT_KEY_PRESS
+local EVENT_CHAR_PRESS      = jive.ui.EVENT_CHAR_PRESS
 local EVENT_KEY_HOLD       = jive.ui.EVENT_KEY_HOLD
 local EVENT_SCROLL         = jive.ui.EVENT_SCROLL
 local EVENT_WINDOW_RESIZE  = jive.ui.EVENT_WINDOW_RESIZE
 local EVENT_UNUSED         = jive.ui.EVENT_UNUSED
 
 local KEY_HOME             = jive.ui.KEY_HOME
-local KEY_BACK             = jive.ui.KEY_BACK
-
+local KEY_FWD           = jive.ui.KEY_FWD
+local KEY_REW           = jive.ui.KEY_REW
+local KEY_GO            = jive.ui.KEY_GO
+local KEY_BACK          = jive.ui.KEY_BACK
+local KEY_UP            = jive.ui.KEY_UP
+local KEY_DOWN          = jive.ui.KEY_DOWN
+local KEY_LEFT          = jive.ui.KEY_LEFT
+local KEY_RIGHT         = jive.ui.KEY_RIGHT
+local KEY_PLAY          = jive.ui.KEY_PLAY
+local KEY_PAUSE         = jive.ui.KEY_PAUSE
+local KEY_VOLUME_UP     = jive.ui.KEY_VOLUME_UP
+local KEY_VOLUME_DOWN   = jive.ui.KEY_VOLUME_DOWN
+local KEY_ADD           = jive.ui.KEY_ADD
 
 -- Classes
 local JiveMain = oo.class({}, HomeMenu)
@@ -84,12 +97,45 @@ local _globalStrings
 -- should not need to have an id passed when creating it
 local _idTranslations = {}
 	
+local keyboardShortcuts = {	
+	["i"]  = KEY_UP,
+	["k"]  = KEY_DOWN,
+	["j"]  = KEY_LEFT,
+	["l"]  = KEY_RIGHT,
+	["h"]  = KEY_HOME,
+	["p"]  = KEY_PLAY,
+	["x"]  = KEY_PLAY,
+	["c"]  = KEY_PAUSE,
+	[" "]  = KEY_PAUSE,
+	["a"]  = KEY_ADD,
+	["z"]  = KEY_REW,
+	["<"]  = KEY_REW,
+	["b"]  = KEY_FWD,
+	[">"]  = KEY_FWD,
+	["+"]  = KEY_VOLUME_UP,
+	["="]  = KEY_VOLUME_UP,
+	["-"]  = KEY_VOLUME_DOWN,
+	["\b"]  = KEY_BACK, -- BACKSPACE
+	["\27"]  = KEY_BACK -- ESC
+}
 
 -- bring us to the home menu
 local function _homeHandler(event)
 	local type = event:getType()
 
-	if (( type == EVENT_KEY_PRESS and event:getKeycode() == KEY_HOME) or
+	if ( type == EVENT_CHAR_PRESS ) then
+		local keyboardEntry = string.char(event:getUnicode())
+		
+		log:debug("Keyboard entry: ", keyboardEntry)
+		
+		local keyCode = keyboardShortcuts[keyboardEntry]
+		if (keyCode) then
+			Framework:pushEvent(Event:new(EVENT_KEY_PRESS, keyCode))
+		end
+		
+		return EVENT_CONSUME
+
+	elseif (( type == EVENT_KEY_PRESS and event:getKeycode() == KEY_HOME) or
 	    ( type == EVENT_KEY_HOLD and event:getKeycode() == KEY_BACK)) then
 
 		-- disconnect from player on press and hold left
@@ -147,7 +193,7 @@ function JiveMain:__init()
 
 	-- home key handler, one for KEY_PRESS/HOME, one for KEY_HOLD/BACK
 	Framework:addListener(
-		EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+		EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_KEY_HOLD,
 		function(event)
 			_homeHandler(event)
 		end,

@@ -136,6 +136,23 @@ int jiveL_event_get_keycode(lua_State *L) {
 	return 0;
 }
 
+int jiveL_event_get_unicode(lua_State *L) {
+	JiveEvent* event = (JiveEvent*)lua_touserdata(L, 1);
+	if (event == NULL) {
+		luaL_error(L, "invalid Event");
+	}
+
+	switch (event->type) {
+	case JIVE_EVENT_CHAR_PRESS:
+		lua_pushinteger(L, event->u.text.unicode);
+		return 1;
+
+	default:
+		luaL_error(L, "Not a char event");
+	}
+	return 0;
+}
+
 
 int jiveL_event_get_mouse(lua_State *L) {
 	JiveEvent* event = (JiveEvent*)lua_touserdata(L, 1);
