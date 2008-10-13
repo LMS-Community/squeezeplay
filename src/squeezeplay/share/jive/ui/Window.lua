@@ -61,6 +61,7 @@ local EVENT_ALL               = jive.ui.EVENT_ALL
 local EVENT_ACTION            = jive.ui.EVENT_ACTION
 local EVENT_SCROLL            = jive.ui.EVENT_SCROLL
 local EVENT_KEY_PRESS         = jive.ui.EVENT_KEY_PRESS
+local EVENT_TEXT_PRESS         = jive.ui.EVENT_TEXT_PRESS
 local EVENT_WINDOW_PUSH       = jive.ui.EVENT_WINDOW_PUSH
 local EVENT_WINDOW_POP        = jive.ui.EVENT_WINDOW_POP
 local EVENT_WINDOW_ACTIVE     = jive.ui.EVENT_WINDOW_ACTIVE
@@ -317,7 +318,7 @@ function showBriefly(self, msecs, callback,
 
 	if self.brieflyHandler == nil then
 		self.brieflyHandler =
-			self:addListener(EVENT_KEY_PRESS | EVENT_SCROLL,
+			self:addListener(EVENT_TEXT_PRESS | EVENT_KEY_PRESS | EVENT_SCROLL,
 					 function(event)
 						 self:hide(popTransition, "NONE")
 						 return EVENT_CONSUME

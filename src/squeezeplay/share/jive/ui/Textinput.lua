@@ -18,6 +18,7 @@ local EVENT_ALL         = jive.ui.EVENT_ALL
 local EVENT_UNUSED      = jive.ui.EVENT_UNUSED
 
 local EVENT_KEY_PRESS   = jive.ui.EVENT_KEY_PRESS
+local EVENT_CHAR_PRESS   = jive.ui.EVENT_CHAR_PRESS
 local EVENT_SCROLL      = jive.ui.EVENT_SCROLL
 local EVENT_WINDOW_RESIZE = jive.ui.EVENT_WINDOW_RESIZE
 local EVENT_CONSUME     = jive.ui.EVENT_CONSUME
@@ -227,6 +228,41 @@ function _eventHandler(self, event)
 		_scroll(self, self.scroll:event(event, idx, idx, 1, #v))
 		return EVENT_CONSUME
 
+	elseif type == EVENT_CHAR_PRESS then
+		
+		--assuming ascii level values for now
+		local keyboardEntry = string.char(event:getUnicode())
+		if (keyboardEntry == "\b") then --backspace
+			if not _delete(self) then
+				self:playSound("BUMP")
+				self:getWindow():bumpRight()
+			end
+			return EVENT_CONSUME	
+		elseif (keyboardEntry == "\27") then --escape
+			self.cursor = 1
+			self:playSound("WINDOWHIDE")
+			self:hide()
+			return EVENT_CONSUME
+		elseif (not string.find(self:_getChars(), keyboardEntry)) then
+			--also check for possibility of uppercase match
+			if (string.find(keyboardEntry, "%l")) then
+				keyboardEntry = string.upper(keyboardEntry)
+			end
+			if (not string.find(self:_getChars(), keyboardEntry)) then
+				self:playSound("BUMP")
+				self:getWindow():bumpRight()
+				return EVENT_CONSUME
+			end
+		end
+		
+		local before = string.sub(tostring(self.value), 1, self.cursor - 1)
+		local after = string.sub(tostring(self.value), self.cursor + 1)
+		self:setValue(before .. keyboardEntry .. after)
+		
+		_moveCursor(self, 1)
+		
+		return EVENT_CONSUME
+		
 	elseif type == EVENT_WINDOW_RESIZE then
 		_moveCursor(self, 0)
 
@@ -350,7 +386,7 @@ function __init(self, style, value, closure, allowedChars)
 		_globalStrings:str("ALLOWEDCHARS_WITHCAPS")
 	obj.scroll = ScrollAccel()
 
-	obj:addListener(EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE,
+	obj:addListener(EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE,
 			function(event)
 				return _eventHandler(obj, event)
 			end)
