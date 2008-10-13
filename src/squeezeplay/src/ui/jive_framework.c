@@ -72,29 +72,13 @@ static struct jive_keymap keymap[] = {
 	{ SDLK_RIGHT,		JIVE_KEY_GO },
 	{ SDLK_RETURN,		JIVE_KEY_GO },
 	{ SDLK_LEFT,		JIVE_KEY_BACK },
-	{ SDLK_i,		JIVE_KEY_UP },
-	{ SDLK_k,		JIVE_KEY_DOWN },
-	{ SDLK_j,		JIVE_KEY_LEFT },
-	{ SDLK_l,		JIVE_KEY_RIGHT },
 	{ SDLK_HOME,		JIVE_KEY_HOME },
-	{ SDLK_p,		JIVE_KEY_PLAY },
-	{ SDLK_x,		JIVE_KEY_PLAY },
 	{ SDLK_AudioPlay,	JIVE_KEY_PLAY },
-	{ SDLK_c,		JIVE_KEY_PAUSE },
-	{ SDLK_SPACE,		JIVE_KEY_PAUSE },
 	{ SDLK_AudioPause,	JIVE_KEY_PAUSE },
-	{ SDLK_a,		JIVE_KEY_ADD },
 	{ SDLK_KP_PLUS,		JIVE_KEY_ADD },
-	{ SDLK_z,		JIVE_KEY_REW },
-	{ SDLK_LESS,		JIVE_KEY_REW },
 	{ SDLK_AudioPrev,	JIVE_KEY_REW },
-	{ SDLK_b,		JIVE_KEY_FWD },
-	{ SDLK_GREATER,		JIVE_KEY_FWD },
 	{ SDLK_AudioNext,	JIVE_KEY_FWD },
-	{ SDLK_PLUS,		JIVE_KEY_VOLUME_UP },
-	{ SDLK_EQUALS,		JIVE_KEY_VOLUME_UP },
 	{ SDLK_AudioRaiseVolume,JIVE_KEY_VOLUME_UP },
-	{ SDLK_MINUS,		JIVE_KEY_VOLUME_DOWN },
 	{ SDLK_AudioLowerVolume,JIVE_KEY_VOLUME_DOWN },
 	{ SDLK_UNKNOWN,		JIVE_KEY_NONE },
 };
@@ -168,7 +152,6 @@ static int jiveL_init(lua_State *L) {
 	/* open window */
 	SDL_WM_SetCaption("SqueezePlay Beta", "SqueezePlay Beta");
 
-
 	srf = jive_surface_set_video_mode(screen_w, screen_h, bpp, false);
 	if (!srf) {
 		SDL_Quit();
@@ -184,6 +167,7 @@ static int jiveL_init(lua_State *L) {
 
 //	SDL_ShowCursor (SDL_DISABLE);
 	SDL_EnableKeyRepeat (100, 100);
+	SDL_EnableUNICODE(1);
 
 	tolua_pushusertype(L, srf, "Surface");
 	lua_setfield(L, -2, "surface");
@@ -1095,10 +1079,26 @@ static int process_event(lua_State *L, SDL_Event *event) {
 			}
 			entry++;
 		}
+
 		if (entry->keysym == SDLK_UNKNOWN) {
+			// handle regular character keys ('a', 't', etc..)
+			SDLMod mod = event->key.keysym.mod;
+			if (event->type == SDL_KEYDOWN && (event->key.keysym.unicode != 0) && (mod == KMOD_NONE || mod == KMOD_LSHIFT || mod == KMOD_RSHIFT)) {
+				JiveEvent textEvent;
+
+				memset(&textEvent, 0, sizeof(JiveEvent));
+				textEvent.type = JIVE_EVENT_CHAR_PRESS;
+				textEvent.ticks = SDL_GetTicks();
+				if (event->key.keysym.sym == SDLK_BACKSPACE) {
+					//special case for Backspace, where value set is not ascii value, instead pass backspace ascii value
+					textEvent.u.text.unicode = 8;
+				} else {
+					textEvent.u.text.unicode = event->key.keysym.unicode;
+				}
+				jive_queue_event(&textEvent);
+			}
 			return 0;
 		}
-
 
 		if (event->type == SDL_KEYDOWN) {
 			if (key_mask & entry->keycode) {
@@ -1380,6 +1380,7 @@ static const struct luaL_Reg event_methods[] = {
 	{ "getTicks", jiveL_event_get_ticks },
 	{ "getScroll", jiveL_event_get_scroll },
 	{ "getKeycode", jiveL_event_get_keycode },
+	{ "getUnicode", jiveL_event_get_unicode },
 	{ "getMouse", jiveL_event_get_mouse },
 	{ "getMotion", jiveL_event_get_motion },
 	{ "getSwitch", jiveL_event_get_switch },

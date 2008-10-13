@@ -172,6 +172,7 @@ function constants(module)
 
 	module.EVENT_SCROLL = jive.ui.EVENT_SCROLL
 	module.EVENT_ACTION = jive.ui.EVENT_ACTION
+	module.EVENT_CHAR_PRESS = jive.ui.EVENT_CHAR_PRESS
 	module.EVENT_KEY_DOWN = jive.ui.EVENT_KEY_DOWN
 	module.EVENT_KEY_UP = jive.ui.EVENT_KEY_UP
 	module.EVENT_KEY_PRESS = jive.ui.EVENT_KEY_PRESS

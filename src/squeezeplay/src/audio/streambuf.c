@@ -83,7 +83,7 @@ bool_t streambuf_would_wait_for(size_t bytes) {
 	size_t n;
 	
 	if (!streambuf_streaming) {
-		return TRUE;
+		return FALSE;
 	}
 
 	fifo_lock(&streambuf_fifo);

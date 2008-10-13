@@ -58,6 +58,7 @@ local strings        = require("jive.utils.strings")
 local log            = require("jive.utils.log").logger("player")
 
 local EVENT_KEY_ALL    = jive.ui.EVENT_KEY_ALL
+local EVENT_CHAR_PRESS = jive.ui.EVENT_CHAR_PRESS
 local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 
@@ -778,7 +779,7 @@ function onStage(self)
 	      })
 
 	self.currentSong.window:addWidget(group)
-	self.currentSong.window:addListener(EVENT_KEY_ALL | EVENT_SCROLL,
+	self.currentSong.window:addListener(EVENT_CHAR_PRESS | EVENT_KEY_ALL | EVENT_SCROLL,
 		function(event)
 			local prev = self.currentSong.window:getLowerWindow()
 			if prev then

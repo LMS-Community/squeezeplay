@@ -152,6 +152,7 @@ function _timerCallback(self)
 			self.sentDecoderUnderrunEvent then
 
 			log:info("status AUDIO UNDERRUN")
+			Decode:stop() -- XXX need to let last buffer play out before stop
 			self:sendStatus(status, "STMu")
 
 			self.sentAudioUnderrunEvent = true
@@ -160,6 +161,7 @@ function _timerCallback(self)
 			self.stream then
 
 			log:info("status OUTPUT UNDERRUN")
+			Decode:pause(0) -- auto-pause to prevent glitches
 			self:sendStatus(status, "STMo")
 
 			self.sentOutputUnderrunEvent = true

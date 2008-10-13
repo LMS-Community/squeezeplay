@@ -216,6 +216,18 @@ function event(self, event)
 			return EVENT_CONSUME
 		end
 
+		--handle keyboard volume change
+		if (keycode == KEY_VOLUME_UP) then
+			self.delta = 1
+			_updateVolume(self)
+			self.delta = 0
+		end
+		if (keycode == KEY_VOLUME_DOWN) then
+			self.delta = -1
+			_updateVolume(self)
+			self.delta = 0
+		end
+					
 		return EVENT_CONSUME
 
 	else
