@@ -80,6 +80,8 @@ local KEY_DOWN             = jive.ui.KEY_DOWN
 local KEY_LEFT             = jive.ui.KEY_LEFT
 local KEY_RIGHT            = jive.ui.KEY_RIGHT
 local KEY_PLAY             = jive.ui.KEY_PLAY
+local KEY_PAGE_UP           = jive.ui.KEY_PAGE_UP
+local KEY_PAGE_DOWN         = jive.ui.KEY_PAGE_DOWN
 
 
 -- our class
@@ -165,6 +167,14 @@ local function _eventHandler(self, event)
 
 			elseif keycode == KEY_DOWN then
 				self:scrollBy( 1 )
+				return EVENT_CONSUME
+
+		    elseif keycode == KEY_PAGE_UP then 
+                self:scrollBy( -( self.numWidgets - 1 ), true);
+				return EVENT_CONSUME
+
+            elseif keycode == KEY_PAGE_DOWN then 
+                self:scrollBy( self.numWidgets - 1 , true);
 				return EVENT_CONSUME
 
 			elseif keycode == KEY_GO or 
@@ -504,13 +514,15 @@ end
 
 --[[
 
-=head2 jive.ui.Menu:scrollBy(scroll)
+=head2 jive.ui.Menu:scrollBy(scroll, allowMultiple)
 
-Scroll the menu by I<scroll> items. If I<scroll> is negative the menu scrolls up, otherwise the menu scrolls down.
+Scroll the menu by I<scroll> items. If I<scroll> is negative the menu scrolls up, otherwise the menu scrolls down. By
+ default, restricts to scrolling one item unless at the edge of the visible list. If I<allowMultiple> is non-nil,
+ ignore that behavior and scroll the requested scroll amount.
 
 =cut
 --]]
-function scrollBy(self, scroll)
+function scrollBy(self, scroll, allowMultiple)
 	_assert(type(scroll) == "number")
 
 	local selected = (self.selected or 1)
@@ -545,12 +557,12 @@ function scrollBy(self, scroll)
 	self.scrollLastT = now
 
 	-- restrict to scrolling one item unless at the edge of the
-	-- visible list
+	-- visible list, to stop it from visibly missing items when using the controller scroll wheel.
 	if scroll > 0 then
 		self.dir = 1
 		self.accel = scroll > 1
 
-		if selected < self.topItem + self.numWidgets - 2 then
+		if not allowMultiple and selected < self.topItem + self.numWidgets - 2 then
 			scroll = 1
 		end
 
@@ -558,7 +570,7 @@ function scrollBy(self, scroll)
 		self.dir = -1
 		self.accel = scroll < -1
 
-		if selected > self.topItem + 1 then
+		if not allowMultiple and selected > self.topItem + 1 then
 			scroll = -1
 		end
 	else

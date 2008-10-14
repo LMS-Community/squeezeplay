@@ -82,6 +82,8 @@ static struct jive_keymap keymap[] = {
 	{ SDLK_AudioNext,	JIVE_KEY_FWD },
 	{ SDLK_AudioRaiseVolume,JIVE_KEY_VOLUME_UP },
 	{ SDLK_AudioLowerVolume,JIVE_KEY_VOLUME_DOWN },
+	{ SDLK_PAGEUP,      JIVE_KEY_PAGE_UP },
+	{ SDLK_PAGEDOWN,    JIVE_KEY_PAGE_DOWN },
 	{ SDLK_UNKNOWN,		JIVE_KEY_NONE },
 };
 
@@ -1118,6 +1120,20 @@ static int process_event(lua_State *L, SDL_Event *event) {
 			return 0;
 		}
 
+		/* handle pgup/upgn as repeatable keys */
+		if (entry->keysym == SDLK_PAGEUP || entry->keysym == SDLK_PAGEDOWN) {
+			if (event->type == SDL_KEYDOWN) {
+				JiveEvent keypress;
+	
+				memset(&keypress, 0, sizeof(JiveEvent));
+				keypress.type = JIVE_EVENT_KEY_PRESS;
+				keypress.ticks = SDL_GetTicks();
+				keypress.u.key.code = entry->keycode;
+				jive_queue_event(&keypress);
+			}
+			return 0;
+		}
+		
 		if (event->type == SDL_KEYDOWN) {
 			if (key_mask & entry->keycode) {
 				// ignore key repeats

@@ -70,6 +70,8 @@ local KEY_UP          = jive.ui.KEY_UP
 local KEY_DOWN        = jive.ui.KEY_DOWN
 local KEY_LEFT        = jive.ui.KEY_LEFT
 local KEY_RIGHT       = jive.ui.KEY_RIGHT
+local KEY_PAGE_UP     = jive.ui.KEY_PAGE_UP
+local KEY_PAGE_DOWN   = jive.ui.KEY_PAGE_DOWN
 
 
 -- our class
@@ -199,7 +201,15 @@ function _eventHandler(self, event)
 		elseif keycode == KEY_DOWN then
 			self:scrollBy( self.visibleLines - 1 )
 			return EVENT_CONSUME
+			
+		elseif keycode == KEY_PAGE_UP then 
+			self:scrollBy( -(self.visibleLines - 1) )
+			return EVENT_CONSUME
 
+		elseif keycode == KEY_PAGE_DOWN then
+			self:scrollBy( self.visibleLines - 1 )
+			return EVENT_CONSUME
+		
 		elseif keycode == KEY_GO or
 			keycode == KEY_RIGHT then
 			self:playSound("BUMP")
