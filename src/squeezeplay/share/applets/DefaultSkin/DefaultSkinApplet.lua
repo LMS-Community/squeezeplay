@@ -98,10 +98,8 @@ end
 
 -- skin
 -- The meta arranges for this to be called to skin Jive.
-function skin(self, s, reload)
-	if not reload then
-		Framework:setVideoMode(240, 320, 16, false)
-	end
+function skin(self, s)
+	Framework:setVideoMode(240, 320, 16, false)
 
 	local screenWidth, screenHeight = Framework:getScreenSize()
 

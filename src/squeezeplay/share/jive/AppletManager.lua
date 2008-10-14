@@ -241,7 +241,7 @@ end
 
 
 local function _configureMeta(entry)
-	entry.metaConfiured = true
+	entry.metaConfigured = true
 
 	entry.metaObj:configureApplet()
 end

@@ -10,6 +10,7 @@ md %1\lua
 md %1\lua\applets
 xcopy squeezeplay\share\applets\*.* %1\lua\applets\*.* /S/Y
 xcopy squeezeplay_desktop\share\applets\*.* %1\lua\applets\*.* /S/Y
+xcopy squeezeplay_contrib\share\applets\*.* %1\lua\applets\*.* /S/Y
 
 md %1\lua\jive
 xcopy squeezeplay\share\jive\*.* %1\lua\jive\*.* /S/Y
