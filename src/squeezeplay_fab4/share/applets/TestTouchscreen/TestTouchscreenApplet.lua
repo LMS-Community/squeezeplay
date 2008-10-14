@@ -18,6 +18,7 @@ local Framework           = require("jive.ui.Framework")
 local Popup               = require("jive.ui.Popup")
 local Textarea            = require("jive.ui.Textarea")
 
+local FRAME_RATE          = jive.ui.FRAME_RATE
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
@@ -25,6 +26,7 @@ oo.class(_M, Applet)
 
 function init(self)
 	self.spot = {}
+	self.update = false
 end
 
 
@@ -100,18 +102,26 @@ function touchscreenTest(self)
 				end
 			elseif type == EVENT_MOUSE_UP then
 				self.spot.width = nil
-
-				self:_drawSpots()
+				self.update = true
+				
 				return EVENT_CONSUME
 
 			else -- MOUSE_DRAG or MOUSE_DOWN
 				self.spot.x, self.spot.y, self.spot.fingers, self.spot.width, self.spot.pressure = event:getMouse()
+				self.update = true
 
-				self:_drawSpots()
 				return EVENT_CONSUME
 			end
 		end
 	)
+
+	self.icon:addAnimation(
+		function()
+			if self.update then
+				self:_drawSpots()
+				self.update = false
+			end
+		end, FRAME_RATE)
 
 	self:tieAndShowWindow(self.window)
 	return window
