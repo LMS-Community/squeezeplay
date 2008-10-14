@@ -11,6 +11,7 @@
 
 
 static int clearpad_event_fd = -1;
+static int ir_event_fd = -1;
 
 /* touchpad state */
 static JiveEvent clearpad_event;
@@ -63,7 +64,7 @@ static int handle_clearpad_events(int fd) {
 			// how to handle gestures correctly
 			switch (ev[i].code) {
 			case REL_X:
-				if (ev[i].value < 0) {
+				if (ev[i].value > 0) {
 					JiveEvent event;
 
 					event.type = (JiveEventType) JIVE_EVENT_KEY_PRESS;
@@ -115,6 +116,32 @@ static int handle_clearpad_events(int fd) {
 }
 
 
+static int handle_ir_events(int fd) {
+	JiveEvent event;
+	struct input_event ev[64];
+	size_t rd;
+	int i;
+
+	rd = read(fd, ev, sizeof(struct input_event) * 64);
+
+	if (rd < (int) sizeof(struct input_event)) {
+		perror("read error");
+		return -1;
+	}
+
+	for (i = 0; i <= rd / sizeof(struct input_event); i++) {    
+		if (ev[i].type == EV_MSC) {
+			event.type = (JiveEventType) JIVE_EVENT_IR_PRESS;
+			event.u.ir.code = ev[i].value;
+			event.ticks = TIMEVAL_TO_TICKS(ev[i].time);
+			jive_queue_event(&event);
+		}
+		// ignore EV_SYN
+	}
+
+	return 0;
+}
+
 static int open_input_devices(void) {
 	char path[PATH_MAX];
 	struct stat sbuf;
@@ -148,6 +175,9 @@ static int open_input_devices(void) {
 			ioctl(fd, EVIOCGABS(ABS_Y), abs);
 			clearpad_max_y = abs[2];
 		}
+		else if (strstr(name, "FAB4 IR")) {
+			ir_event_fd = fd;
+		}
 		else {
 			close(fd);
 		}
@@ -167,6 +197,9 @@ static int event_pump(lua_State *L) {
 	if (clearpad_event_fd != -1) {
 		FD_SET(clearpad_event_fd, &fds);
 	}
+	if (ir_event_fd != -1) {
+		FD_SET(ir_event_fd, &fds);
+	}
 
 	if (select(FD_SETSIZE, &fds, NULL, NULL, &timeout) < 0) {
 		perror("jivebsp:");
@@ -175,6 +208,10 @@ static int event_pump(lua_State *L) {
 
 	if (clearpad_event_fd != -1 && FD_ISSET(clearpad_event_fd, &fds)) {
 		handle_clearpad_events(clearpad_event_fd);
+	}
+
+	if (ir_event_fd != -1 && FD_ISSET(ir_event_fd, &fds)) {
+		handle_ir_events(ir_event_fd);
 	}
 
 	return 0;
