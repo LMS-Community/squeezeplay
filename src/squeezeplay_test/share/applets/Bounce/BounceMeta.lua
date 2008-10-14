@@ -33,28 +33,22 @@ function jiveVersion(self)
 	return 1, 1
 end
 
-
 function registerApplet(self)
-
-	-- Bounce implements a screensaver
-	local ssMgr = appletManager:loadApplet("ScreenSavers")
-	if ssMgr ~= nil then
-		ssMgr:addScreenSaver(self:string('SCREENSAVER_BOUNCE'), "Bounce", "bounce", _, _, 110)
-
-		-- load our skin
-		jiveMain:loadSkin("Bounce", "skin")
-
-	end
+	-- load our skin
+	jiveMain:loadSkin("Bounce", "skin")
 end
 
+function configureApplet(self)
+	appletManager:callService("addScreenSaver", self:string("SCREENSAVER_BOUNCE"), "Bounce",
+"bounce", _, _, 90)
+end
 
 --[[
 
 =head1 LICENSE
 
-Copyright 2007 Logitech. All Rights Reserved.
-
-This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+This source code is public domain. It is intended for you to use as a starting
+point to create your own applet.
 
 =cut
 --]]

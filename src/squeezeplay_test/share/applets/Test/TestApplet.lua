@@ -612,9 +612,8 @@ end
 
 =head1 LICENSE
 
-Copyright 2007 Logitech. All Rights Reserved.
-
-This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+This source code is public domain. It is intended for you to use as a starting
+point to create your own applet.
 
 =cut
 --]]
