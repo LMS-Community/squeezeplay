@@ -1424,8 +1424,6 @@ function skin(self, s)
 	-- one for the Screensaver windowStyle (ss), one for the browse windowStyle (browse)
 	-- a lot of it can be recycled from one to the other
 
-	local npimgpath = "applets/NowPlaying/"
-
 	local screenWidth, screenHeight = Framework:getScreenSize()
 
 	local TEXT_COLOR = { 0xE7, 0xE7, 0xE7 }
@@ -1483,20 +1481,6 @@ function skin(self, s)
 	s.browsenpartwork = _uses(s.ssnpartwork)
 
 	-- Progress bar
-        local progressBackground =
-                Tile:loadHTiles({
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
-                               })
-
-        local progressBar =
-                Tile:loadHTiles({
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png",
-                               })
-
 	s.ssprogress = {}
 	s.ssprogress.position = LAYOUT_SOUTH
 	s.ssprogress.order = { "elapsed", "slider", "remain" }
@@ -1513,6 +1497,9 @@ function skin(self, s)
 	s.ssprogress.text.fg = { 0xe7,0xe7, 0xe7 }
 	s.ssprogress.text.sh = { 0x37, 0x37, 0x37 }
 
+	s.ssprogress.elapsed = _uses(s.ssprogress.text)
+	s.ssprogress.remain = _uses(s.ssprogress.text)
+
 	s.browseprogress = _uses(s.ssprogress)
 	-- browse has different positioning than ss windowStyle
 --[[
@@ -1528,8 +1515,8 @@ function skin(self, s)
 
 	s.ssprogressB             = {}
         s.ssprogressB.horizontal  = 1
-        s.ssprogressB.bgImg       = progressBackground
-        s.ssprogressB.img         = progressBar
+        s.ssprogressB.bgImg       = sliderBackground
+        s.ssprogressB.img         = sliderBar
 	s.ssprogressB.position    = LAYOUT_SOUTH
 	s.ssprogressB.padding     = { 0, 0, 0, 15 }
 
@@ -1547,6 +1534,8 @@ function skin(self, s)
 	s.ssprogressNB.text.font = _boldfont(18) 
 	s.ssprogressNB.text.fg = { 0xe7, 0xe7, 0xe7 }
 	s.ssprogressNB.text.sh = { 0x37, 0x37, 0x37 }
+
+	s.ssprogressNB.elapsed = _uses(s.ssprogressNB.text)
 
 	s.browseprogressNB = _uses(s.ssprogressNB)
 
