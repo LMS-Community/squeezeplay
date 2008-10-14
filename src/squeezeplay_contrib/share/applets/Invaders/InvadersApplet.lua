@@ -449,9 +449,9 @@ function Gameplay:__init(sw, sh)
 
 	obj.last_ufo = 0
 
-	obj.missle_snd = Audio:loadSound("applets/Invaders/missile.wav", 0)
-	obj.photon_snd = Audio:loadSound("applets/Invaders/photon.wav", 1)
-	obj.explosion_snd = Audio:loadSound("applets/Invaders/explosion.wav", 0)
+	obj.missle_snd = Framework:loadSound("applets/Invaders/missile.wav", 0)
+	obj.photon_snd = Framework:loadSound("applets/Invaders/photon.wav", 1)
+	obj.explosion_snd = Framework:loadSound("applets/Invaders/explosion.wav", 0)
 
 	return obj
 end

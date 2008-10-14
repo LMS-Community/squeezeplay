@@ -114,8 +114,6 @@ end
 -- skin
 -- The meta arranges for this to be called to skin Jive.
 function skin(self, s)
-
-	-- XXXX for testing
 	Framework:setVideoMode(800, 600, 32, false)
 
 	local screenWidth, screenHeight = Framework:getScreenSize()

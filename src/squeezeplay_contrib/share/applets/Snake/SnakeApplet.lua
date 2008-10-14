@@ -73,8 +73,8 @@ local POINT  = 1
 local SNAKE  = 2
 
 local MINLENGTH = 10
-local pointSound = Audio:loadSound("applets/Snake/point.wav", 1)
-local crashSound = Audio:loadSound("applets/Snake/crash.wav", 1)
+local pointSound = Framework:loadSound("applets/Snake/point.wav", 1)
+local crashSound = Framework:loadSound("applets/Snake/crash.wav", 1)
 local labelStatus = nil
 
 module(...)

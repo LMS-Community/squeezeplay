@@ -142,10 +142,6 @@ function bounce(self)
 		window:addWidget(sprit.icon)
 	end
 
-	-- register window as a screensaver
-	local manager = appletManager:getAppletInstance("ScreenSavers")
-	manager:screensaverWindow(obj.window)
-
 	self:tieAndShowWindow(window)
 	return window
 end
@@ -162,9 +158,8 @@ end
 
 =head1 LICENSE
 
-Copyright 2007 Logitech. All Rights Reserved.
-
-This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+This source code is public domain. It is intended for you to use as a starting
+point to create your own applet.
 
 =cut
 --]]

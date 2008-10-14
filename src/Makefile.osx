@@ -160,8 +160,8 @@ tolua++:
 # squeezeplay
 #
 
-.PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_test freefont squeezeplay_dmg
-app: portaudio flac libmad tremor libpng libjpeg squeezeplay squeezeplay_desktop squeezeplay_test freefont squeezeplay_dmg
+.PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_dmg
+app: portaudio flac libmad tremor libpng libjpeg squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_dmg
 
 # portaudio
 portaudio_v19_1360/Makefile:
@@ -222,8 +222,8 @@ squeezeplay_desktop/Makefile:
 squeezeplay_desktop: squeezeplay_desktop/Makefile
 	cd squeezeplay_desktop; make install
 
-squeezeplay_test:
-	cd squeezeplay_test; make PREFIX=${PREFIX}
+squeezeplay_contrib:
+	cd squeezeplay_contrib; make PREFIX=${PREFIX}
 
 # freefont
 freefont:
