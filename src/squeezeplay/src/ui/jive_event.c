@@ -68,6 +68,11 @@ int jiveL_event_new(lua_State *L) {
 			event->u.mouse.finger_width = luaL_optinteger(L, 6, 0);
 			event->u.mouse.finger_pressure = luaL_optinteger(L, 7, 0);
 			break;
+
+		case JIVE_EVENT_IR_PRESS:
+		case JIVE_EVENT_IR_HOLD:
+			event->u.ir.code = lua_tointeger(L, 3);
+			break;
     	
 		default:
 			break;
@@ -227,6 +232,25 @@ int jiveL_event_get_switch(lua_State *L) {
 }
 
 
+int jiveL_event_get_ircode(lua_State *L) {
+	JiveEvent* event = (JiveEvent*)lua_touserdata(L, 1);
+	if (event == NULL) {
+		luaL_error(L, "invalid Event");
+	}
+
+	switch (event->type) {
+	case JIVE_EVENT_IR_PRESS:
+	case JIVE_EVENT_IR_HOLD:
+		lua_pushinteger(L, event->u.ir.code);
+		return 1;
+
+	default:
+		luaL_error(L, "Not an IR event");
+	}
+	return 0;
+}
+
+
 int jiveL_event_tostring(lua_State* L) {
 	luaL_Buffer buf;
 
@@ -319,6 +343,13 @@ int jiveL_event_tostring(lua_State* L) {
 		break;
 	case JIVE_EVENT_SWITCH:
 		lua_pushfstring(L, "SWITCH code=%d,value=%d", event->u.sw.code, event->u.sw.value);
+		break;
+
+	case JIVE_EVENT_IR_PRESS:
+		lua_pushfstring(L, "IR_PRESS code=%08x", event->u.ir.code);
+		break;
+	case JIVE_EVENT_IR_HOLD:
+		lua_pushfstring(L, "IR_HOLD code=%08x", event->u.ir.code);
 		break;
     
 	case JIVE_EVENT_WINDOW_PUSH:

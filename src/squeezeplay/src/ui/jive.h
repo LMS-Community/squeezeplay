@@ -99,11 +99,14 @@ typedef enum {
 	JIVE_EVENT_MOTION		= 0x00800000,
 
 	JIVE_EVENT_CHAR_PRESS	= 0x02000000,
+	JIVE_EVENT_IR_PRESS             = 0x04000000,
+	JIVE_EVENT_IR_HOLD              = 0x08000000,
 	
 	JIVE_EVENT_CHAR_ALL 	= ( JIVE_EVENT_CHAR_PRESS),
+	JIVE_EVENT_IR_ALL               = ( JIVE_EVENT_IR_PRESS | JIVE_EVENT_IR_HOLD),
 	JIVE_EVENT_KEY_ALL		= ( JIVE_EVENT_KEY_DOWN | JIVE_EVENT_KEY_UP | JIVE_EVENT_KEY_PRESS | JIVE_EVENT_KEY_HOLD ),
 	JIVE_EVENT_MOUSE_ALL		= ( JIVE_EVENT_MOUSE_DOWN | JIVE_EVENT_MOUSE_UP | JIVE_EVENT_MOUSE_PRESS | JIVE_EVENT_MOUSE_HOLD | JIVE_EVENT_MOUSE_MOVE | JIVE_EVENT_MOUSE_DRAG ),
-	JIVE_EVENT_ALL_INPUT		= ( JIVE_EVENT_KEY_ALL | JIVE_EVENT_MOUSE_ALL | JIVE_EVENT_SCROLL | JIVE_EVENT_CHAR_ALL),
+	JIVE_EVENT_ALL_INPUT		= ( JIVE_EVENT_KEY_ALL | JIVE_EVENT_MOUSE_ALL | JIVE_EVENT_SCROLL | JIVE_EVENT_CHAR_ALL | JIVE_EVENT_IR_ALL),
 
 	JIVE_EVENT_VISIBLE_ALL		= ( JIVE_EVENT_SHOW | JIVE_EVENT_HIDE ),
 	JIVE_EVENT_ALL			= 0x7FFFFFFF,
@@ -220,6 +223,10 @@ struct jive_sw_event {
 	Uint16 value;
 };
 
+struct jive_ir_event {
+	Uint32 code;
+};
+
 struct jive_event {
 	JiveEventType type;
 	Uint32 ticks;
@@ -231,6 +238,7 @@ struct jive_event {
 		struct jive_mouse_event mouse;
 		struct jive_motion_event motion;
 		struct jive_sw_event sw;
+		struct jive_ir_event ir;
 	} u;
 };
 
@@ -402,6 +410,7 @@ int jiveL_event_get_unicode(lua_State *L);
 int jiveL_event_get_mouse(lua_State *L);
 int jiveL_event_get_motion(lua_State *L);
 int jiveL_event_get_switch(lua_State *L);
+int jiveL_event_get_ircode(lua_State *L);
 
 int jiveL_widget_set_bounds(lua_State *L);
 int jiveL_widget_get_bounds(lua_State *L);

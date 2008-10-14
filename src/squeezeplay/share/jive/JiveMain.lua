@@ -63,6 +63,9 @@ local log           = require("jive.utils.log").logger("jive.main")
 local logheap       = require("jive.utils.log").logger("jive.heap")
 --require("profiler")
 
+local EVENT_IR_ALL         = jive.ui.EVENT_IR_ALL
+local EVENT_IR_PRESS       = jive.ui.EVENT_IR_PRESS
+local EVENT_IR_HOLD        = jive.ui.EVENT_IR_HOLD
 local EVENT_KEY_ALL        = jive.ui.EVENT_KEY_ALL
 local EVENT_KEY_PRESS      = jive.ui.EVENT_KEY_PRESS
 local EVENT_CHAR_PRESS      = jive.ui.EVENT_CHAR_PRESS
@@ -119,6 +122,22 @@ local keyboardShortcuts = {
 	["\27"]  = KEY_BACK -- ESC
 }
 
+-- Squeezebox remote IR codes
+local irCodes = {
+	[ 0x7689e01f ] = KEY_UP,
+	[ 0x7689b04f ] = KEY_DOWN,
+	[ 0x7689906f ] = KEY_LEFT,
+	[ 0x7689d02f ] = KEY_RIGHT,
+	[ 0x768922dd ] = KEY_HOME,
+	[ 0x768910ef ] = KEY_PLAY,
+	[ 0x768920df ] = KEY_PAUSE,
+	[ 0x7689609f ] = KEY_ADD,
+	[ 0x7689c03f ] = KEY_REW,
+	[ 0x7689a05f ] = KEY_FWD,
+	[ 0x7689807f ] = KEY_VOLUME_UP,
+	[ 0x768900ff ] = KEY_VOLUME_DOWN,
+}
+
 -- bring us to the home menu
 local function _homeHandler(event)
 	local type = event:getType()
@@ -156,6 +175,22 @@ local function _homeHandler(event)
       end
       return EVENT_UNUSED
 end
+
+local function _irHandler(event)
+	local irCode = event:getIRCode()
+
+      	local keyCode = irCodes[irCode]
+      	if (keyCode) then
+		if event:getType() == EVENT_IR_PRESS then
+    			Framework:pushEvent(Event:new(EVENT_KEY_PRESS, keyCode))
+		else
+    			Framework:pushEvent(Event:new(EVENT_KEY_HOLD, keyCode))
+		end
+		return EVENT_CONSUME
+	end
+
+	return EVENT_UNUSED
+end		
 
 
 -- __init
@@ -197,6 +232,11 @@ function JiveMain:__init()
 		function(event)
 			_homeHandler(event)
 		end,
+		false
+	)
+
+	Framework:addListener(EVENT_IR_ALL,
+		function(event) _irHandler(event) end,
 		false
 	)
 

@@ -194,6 +194,9 @@ function constants(module)
 	module.EVENT_WINDOW_RESIZE = jive.ui.EVENT_WINDOW_RESIZE
 	module.EVENT_SWITCH = jive.ui.EVENT_SWITCH
 	module.EVENT_MOTION = jive.ui.EVENT_MOTION
+	module.EVENT_IR_PRESS = jive.ui.EVENT_IR_PRESS
+	module.EVENT_IR_HOLD = jive.ui.EVENT_IR_HOLD
+	module.EVENT_IR_ALL = jive.ui.EVENT_IR_ALL
 	module.EVENT_KEY_ALL = jive.ui.EVENT_KEY_ALL
 	module.EVENT_MOUSE_ALL = jive.ui.EVENT_MOUSE_ALL
 	module.EVENT_ALL_INPUT = jive.ui.EVENT_ALL_INPUT

@@ -1384,6 +1384,7 @@ static const struct luaL_Reg event_methods[] = {
 	{ "getMouse", jiveL_event_get_mouse },
 	{ "getMotion", jiveL_event_get_motion },
 	{ "getSwitch", jiveL_event_get_switch },
+	{ "getIRCode", jiveL_event_get_ircode },
 	{ "tostring", jiveL_event_tostring },
 	{ NULL, NULL }
 };
