@@ -486,9 +486,9 @@ function _createUI(self)
 		self[windowStyle].progressSlider:addTimer(1000, function() self:_updatePosition() end)
 
 		self[windowStyle].progressGroup = Group(components.progress, {
-					      elapsed = Label("text", ""),
+					      elapsed = Label("elapsed", ""),
 					      slider = self[windowStyle].progressSlider,
-					      remain = Label("text", "")
+					      remain = Label("remain", "")
 				      })
 	else
 		self[windowStyle].progressGroup = Group(components.progressNB, {

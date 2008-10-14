@@ -69,6 +69,7 @@ local imgpath = "applets/FullscreenSkin/images/"
 local sndpath = "applets/FullscreenSkin/sounds/"
 local fontpath = "fonts/"
 local FONT_NAME = "FreeSans"
+local FIXED_FONT_NAME = "FreeMono"
 local BOLD_PREFIX = "Bold"
 
 -- define a local function to make it easier to create icons.
@@ -1424,8 +1425,6 @@ function skin(self, s)
 	-- one for the Screensaver windowStyle (ss), one for the browse windowStyle (browse)
 	-- a lot of it can be recycled from one to the other
 
-	local npimgpath = "applets/NowPlaying/"
-
 	local screenWidth, screenHeight = Framework:getScreenSize()
 
 	local TEXT_COLOR = { 0xE7, 0xE7, 0xE7 }
@@ -1514,78 +1513,50 @@ function skin(self, s)
 --]]
 
 
---[[ leave this around in case it can be re-engineered for the "mouse-toast-controls"
 	-- Progress bar
-        local progressBackground =
-                Tile:loadHTiles({
-                                        npimgpath .. "progressbar_bkgrd_l.png",
-                                        npimgpath .. "progressbar_bkgrd.png",
-                                        npimgpath .. "progressbar_bkgrd_r.png",
-                               })
-
-        local progressBar =
-                Tile:loadHTiles({
-                                        npimgpath .. "progressbar_fill_l.png",
-                                        npimgpath .. "progressbar_fill.png",
-                                        npimgpath .. "progressbar_fill_r.png",
-                               })
-
 	s.ssprogress = {}
 	s.ssprogress.position = LAYOUT_SOUTH
 	s.ssprogress.order = { "elapsed", "slider", "remain" }
-	s.ssprogress.text = {}
-	s.ssprogress.text.w = 50
-	s.ssprogress.padding = { 0, 0, 0, 5 }
-	s.ssprogress.text.padding = { 8, 0, 8, 5 }
-	s.ssprogress.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
-	s.ssprogress.text.fg = { 0xe7,0xe7, 0xe7 }
-	s.ssprogress.text.sh = { 0x37, 0x37, 0x37 }
+	s.ssprogress.remain = {}
+	s.ssprogress.remain.w = 200
+	--s.ssprogress.text.w = 100
+	
+	s.ssprogress.padding = { 25, 0, 25, 25 }
+	s.ssprogress.remain.padding = { 35, 0, 8, 25 }
+	s.ssprogress.remain.font = _boldfont(24)
+	s.ssprogress.remain.fg = { 0xe7,0xe7, 0xe7 }
+	s.ssprogress.remain.sh = { 0x37, 0x37, 0x37 }
+
+	s.ssprogress.elapsed = _uses(s.ssprogress.remain, {
+					padding = { 100, 0, 8, 25 }
+				})
 
 	-- browse has different positioning than ss windowStyle
-	s.browseprogress = _uses(s.ssprogress,
-				{ 
-					padding = { 0, 0, 0, 25 },
-					text = {
-						padding = { 8, 0, 8, 25 },
-					}
-				}
-			)
+	s.browseprogress = _uses(s.ssprogress)
 
 	s.ssprogressB             = {}
         s.ssprogressB.horizontal  = 1
-        s.ssprogressB.bgImg       = progressBackground
-        s.ssprogressB.img         = progressBar
+        s.ssprogressB.bgImg       = sliderBackground
+        s.ssprogressB.img         = sliderBar
 	s.ssprogressB.position    = LAYOUT_SOUTH
-	s.ssprogressB.padding     = { 0, 0, 0, 5 }
+	s.ssprogressB.padding     = { 0, 0, 0, 25 }
 
-	s.browseprogressB = _uses(s.ssprogressB,
-					{
-					padding = { 0, 0, 0, 25 }
-					}
-				)
+	s.browseprogressB = _uses(s.ssprogressB)
 
 	-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
 	s.ssprogressNB = {}
 	s.ssprogressNB.position = LAYOUT_SOUTH
 	s.ssprogressNB.order = { "elapsed" }
-	s.ssprogressNB.text = {}
-	s.ssprogressNB.text.w = WH_FILL
-	s.ssprogressNB.text.align = "center"
-	s.ssprogressNB.padding = { 0, 0, 0, 5 }
-	s.ssprogressNB.text.padding = { 0, 0, 0, 5 }
-	s.ssprogressNB.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
-	s.ssprogressNB.text.fg = { 0xe7, 0xe7, 0xe7 }
-	s.ssprogressNB.text.sh = { 0x37, 0x37, 0x37 }
+	s.ssprogressNB.elapsed = {}
+	s.ssprogressNB.elapsed.w = WH_FILL
+	s.ssprogressNB.elapsed.align = "center"
+	s.ssprogressNB.padding = { 0, 0, 0, 25 }
+	s.ssprogressNB.elapsed.padding = { 0, 0, 0, 25 }
+	s.ssprogressNB.elapsed.font = _boldfont(24)
+	s.ssprogressNB.elapsed.fg = { 0xe7, 0xe7, 0xe7 }
+	s.ssprogressNB.elapsed.sh = { 0x37, 0x37, 0x37 }
 
-	s.browseprogressNB = _uses(s.ssprogressNB,
-				{ 
-					padding = { 0, 0, 0, 25 },
-					text = {
-						padding = { 0, 0, 0, 25 },
-					}
-				}
-			)
---]]
+	s.browseprogressNB = _uses(s.ssprogressNB)
 
 	-- background style should start at x,y = 0,0
         s.iconbg = {}

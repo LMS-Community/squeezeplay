@@ -18,7 +18,7 @@ SelectSkinApplet overrides the following methods:
 
 
 -- stuff we use
-local pairs = pairs
+local pairs, type = pairs, type
 
 local table           = require("table")
 
@@ -80,7 +80,6 @@ function selectSkin(self, menuItem)
 	self:tieAndShowWindow(window)
 	return window
 end
-
 
 --[[
 

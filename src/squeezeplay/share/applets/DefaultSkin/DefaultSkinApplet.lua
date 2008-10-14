@@ -1643,36 +1643,27 @@ function skin(self, s)
 	s.browsenpartwork = _uses(s.ssnpartwork, browsenpartwork)
 
 	-- Progress bar
-        local progressBackground =
-                Tile:loadHTiles({
-                                        imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
-                                        imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
-                                        imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
-                               })
-
-        local progressBar =
-                Tile:loadHTiles({
-                                        imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
-                                        imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
-                                        imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png",
-                               })
-
 	s.ssprogress = {}
 	s.ssprogress.position = LAYOUT_SOUTH
 	s.ssprogress.order = { "elapsed", "slider", "remain" }
-	s.ssprogress.text = {}
-	s.ssprogress.text.w = 50
+
+	s.ssprogress.remain = {}
+	s.ssprogress.remain.w = 50
 	s.ssprogress.padding = { 8, 0, 8, 5 }
-	s.ssprogress.text.padding = { 8, 0, 0, 5 }
-	s.ssprogress.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
-	s.ssprogress.text.fg = { 0xe7,0xe7, 0xe7 }
-	s.ssprogress.text.sh = { 0x37, 0x37, 0x37 }
+	s.ssprogress.remain.padding = { 8, 0, 0, 5 }
+	s.ssprogress.remain.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
+	s.ssprogress.remain.fg = { 0xe7,0xe7, 0xe7 }
+	s.ssprogress.remain.sh = { 0x37, 0x37, 0x37 }
+	s.ssprogress.elapsed = _uses(s.ssprogress.remain)
 
 	-- browse has different positioning than ss windowStyle
 	s.browseprogress = _uses(s.ssprogress,
 				{ 
 					padding = { 8, 0, 8, 25 },
-					text = {
+					elapsed = {
+						padding = { 8, 0, 0, 25 }
+					},
+					remain = {
 						padding = { 8, 0, 0, 25 }
 					}
 				}
@@ -1680,8 +1671,8 @@ function skin(self, s)
 
 	s.ssprogressB             = {}
         s.ssprogressB.horizontal  = 1
-        s.ssprogressB.bgImg       = progressBackground
-        s.ssprogressB.img         = progressBar
+        s.ssprogressB.bgImg       = sliderBackground
+        s.ssprogressB.img         = sliderBar
 	s.ssprogressB.position    = LAYOUT_SOUTH
 	s.ssprogressB.padding     = { 0, 0, 0, 5 }
 
@@ -1695,19 +1686,19 @@ function skin(self, s)
 	s.ssprogressNB = {}
 	s.ssprogressNB.position = LAYOUT_SOUTH
 	s.ssprogressNB.order = { "elapsed" }
-	s.ssprogressNB.text = {}
-	s.ssprogressNB.text.w = WH_FILL
-	s.ssprogressNB.text.align = "center"
+	s.ssprogressNB.elapsed = {}
+	s.ssprogressNB.elapsed.w = WH_FILL
+	s.ssprogressNB.elapsed.align = "center"
 	s.ssprogressNB.padding = { 0, 0, 0, 5 }
-	s.ssprogressNB.text.padding = { 0, 0, 0, 5 }
-	s.ssprogressNB.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
-	s.ssprogressNB.text.fg = { 0xe7, 0xe7, 0xe7 }
-	s.ssprogressNB.text.sh = { 0x37, 0x37, 0x37 }
+	s.ssprogressNB.elapsed.padding = { 0, 0, 0, 5 }
+	s.ssprogressNB.elapsed.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
+	s.ssprogressNB.elapsed.fg = { 0xe7, 0xe7, 0xe7 }
+	s.ssprogressNB.elapsed.sh = { 0x37, 0x37, 0x37 }
 
 	s.browseprogressNB = _uses(s.ssprogressNB,
 				{ 
 					padding = { 0, 0, 0, 25 },
-					text = {
+					elapsed = {
 						padding = { 0, 0, 0, 25 },
 					}
 				}
