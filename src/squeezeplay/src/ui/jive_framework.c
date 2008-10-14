@@ -40,7 +40,9 @@ static bool update_screen = true;
 
 static JiveTile *jive_background = NULL;
 
-static Uint16 screen_w, screen_h;
+static Uint16 screen_w, screen_h, screen_bpp;
+
+static bool screen_isfull = false;
 
 struct jive_keymap {
 	SDLKey keysym;
@@ -112,7 +114,6 @@ static int jiveL_init(lua_State *L) {
 	SDL_Rect r;
 	JiveSurface *srf, *splash, *icon;
 	Uint16 splash_w, splash_h;
-	int bpp;
 
 	init_path(L);
 
@@ -127,7 +128,7 @@ static int jiveL_init(lua_State *L) {
 	lua_pop(L, 1);
 
 	lua_getfield(L, -1, "bpp");
-	bpp = luaL_optint(L, -1, 16);
+	screen_bpp = luaL_optint(L, -1, 16);
 	lua_pop(L, 1);
 
 	screen_w = r.w;
@@ -152,7 +153,7 @@ static int jiveL_init(lua_State *L) {
 	/* open window */
 	SDL_WM_SetCaption("SqueezePlay Beta", "SqueezePlay Beta");
 
-	srf = jive_surface_set_video_mode(screen_w, screen_h, bpp, false);
+	srf = jive_surface_set_video_mode(screen_w, screen_h, screen_bpp, false);
 	if (!srf) {
 		SDL_Quit();
 		exit(-1);
@@ -714,6 +715,8 @@ int jiveL_dispatch_event(lua_State *L) {
 
 int jiveL_set_video_mode(lua_State *L) {
 	JiveSurface *srf;
+	Uint16 w, h, bpp;
+	bool isfull;
 
 	/* stack is:
 	 * 1: framework
@@ -723,8 +726,21 @@ int jiveL_set_video_mode(lua_State *L) {
 	 * 5: fullscreen
 	 */
 
+	w = luaL_optinteger(L, 2, 0);
+	h = luaL_optinteger(L, 3, 0);
+	bpp = luaL_optinteger(L, 4, 16);
+	isfull = lua_toboolean(L, 5);
+
+	if (w == screen_w &&
+	    h == screen_h &&
+	    bpp == screen_bpp &&
+	    isfull == screen_isfull) {
+		return 0;
+	}
+
+
 	/* update video mode */
-	srf = jive_surface_set_video_mode(luaL_optinteger(L, 2, 0), luaL_optinteger(L, 3, 0), luaL_optinteger(L, 4, 16), lua_toboolean(L, 5));
+	srf = jive_surface_set_video_mode(w, h, bpp, isfull);
 
 	/* store new screen surface */
 	lua_getfield(L, 1, "screen");
@@ -738,8 +754,10 @@ int jiveL_set_video_mode(lua_State *L) {
 	lua_rawseti(L, -2, 4);
 	lua_pop(L, 2);
 
-	screen_w = luaL_optinteger(L, 2, 0);
-	screen_h = luaL_optinteger(L, 3, 0);
+	screen_w = w;
+	screen_h = h;
+	screen_bpp = bpp;
+	screen_isfull = isfull;
 
 	next_jive_origin++;
 
