@@ -300,21 +300,20 @@ function skin(self, s)
 	s.title.padding = { 15, 5, 10, 0 }
 	s.title.position = LAYOUT_NORTH
 	s.title.bgImg = titleBox
-	s.title.order = { "icon", "text" }
+	s.title.order = { "back", "icon", "text" }
 	s.title.text = {}
         s.title.text.w = WH_FILL
 	s.title.text.padding = TITLE_PADDING
 	s.title.text.align = "center"
 	s.title.text.font = _boldfont(TITLE_FONT_SIZE)
 	s.title.text.fg = TEXT_COLOR
---[[
-	-- FIXME: path needs changing and I don't think this asset has been delivered for Fab4
+
 	s.title.back = {}
-	s.title.back.img = Surface:loadImage(imgpath .. "pointer_selector_L.png")
+	s.title.back.img = Surface:loadImage(imgpath .. "Icons/Mini/left_arrow.png")
 	s.title.back.align = "left"
---]]
-
-
+	s.title.back.w = 24
+	s.title.back.h = 24
+	s.title.back.padding = { 0, 0, 0, 5 }
 
 	-- Menu with three basic styles: normal, selected and locked
 	-- First define the dimesions of the menu
@@ -755,7 +754,7 @@ function skin(self, s)
 	s.minititle.text.align    = 'center'
 	s.minititle.text.font     = _boldfont(TITLE_FONT_SIZE)
 	s.minititle.text.fg       = TEXT_COLOR
-	s.minititle.order         = { "icon", "text" }
+	s.minititle.order         = { "back", "icon", "text" }
 	s.minititle.icon = {}
 	s.minititle.icon.padding  = { 0, 0, 0, 4 }
 	s.minititle.icon.align    = 'center'
