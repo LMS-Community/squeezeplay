@@ -2066,7 +2066,6 @@ function showPlaylist()
 
 		if not _player:isPowerOn() then
 			_statusStep.window:setTitle(_string(modeTokens['off']))
-			_statusStep.window:setTitleStyle("currentplaylisttitle")
 		end
 
 		if playlistSize == 0 then
@@ -2132,7 +2131,6 @@ function notify_playerPower(self, player, power)
 		if not power then
 			if step.window then
 				step.window:setTitle(_string("SLIMBROWSER_OFF"))
-				step.window:setTitleStyle("currentplaylisttitle")
 			end
 		else
 			if step.window then
@@ -2140,7 +2138,6 @@ function notify_playerPower(self, player, power)
 					step.window:replace(emptyStep.window, Window.transitionFadeIn)
 				end
 				step.window:setTitle(_string(modeTokens[mode]))
-				step.window:setTitleStyle("currentplaylisttitle")
 			end
 		end
 	end
@@ -2158,8 +2155,7 @@ function notify_playerModeChange(self, player, mode)
 		token = 'off'
 	end
 
-	local newTitleWidget = Group('currentplaylisttitle', { text = Label("text", _string(modeTokens[token])), icon = Icon("icon") })	
-	step.window:setTitleWidget(newTitleWidget)
+	step.window:setTitle(_string(modeTokens[token]))
 
 end
 
@@ -2312,7 +2308,8 @@ function notify_playerCurrent(self, player)
 				window = { 
 					["menuStyle"] = "album", 
 				}
-			}
+			},
+			'currentplaylist'
 		),
 		_statusSink
 	)
@@ -2333,7 +2330,6 @@ function notify_playerCurrent(self, player)
 	if not _player:isPowerOn() then
 		if _statusStep.window then
 			_statusStep.window:setTitle(_string("SLIMBROWSER_OFF"))
-			_statusStep.window:setTitleStyle("currentplaylisttitle")
 		end
 	end
 

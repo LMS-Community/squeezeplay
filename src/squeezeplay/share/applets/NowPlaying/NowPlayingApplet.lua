@@ -10,6 +10,7 @@ local Applet           = require("jive.Applet")
 local Font             = require("jive.ui.Font")
 local Framework        = require("jive.ui.Framework")
 local Icon             = require("jive.ui.Icon")
+local Button           = require("jive.ui.Button")
 local Choice           = require("jive.ui.Choice")
 local Label            = require("jive.ui.Label")
 local Group            = require("jive.ui.Group")
@@ -148,17 +149,17 @@ function notify_playerPower(self, player, power)
 	-- hide this window if the player is turned off
 	if not power then
 		if self['browse'] and self['browse'].window then
-			self['browse'].titleGroup:setWidgetValue("title", self:string(modeTokens['off']))
+			self['browse'].titleGroup:setWidgetValue("text", self:string(modeTokens['off']))
 		end
 		if self['ss'] and self['ss'].window then
-			self['ss'].titleGroup:setWidgetValue("title", self:string(modeTokens['off']))
+			self['ss'].titleGroup:setWidgetValue("text", self:string(modeTokens['off']))
 		end
 	else
 		if self['browse'] and self['browse'].window then
-			self['browse'].titleGroup:setWidgetValue("title", self:string(modeTokens[mode]))
+			self['browse'].titleGroup:setWidgetValue("text", self:string(modeTokens[mode]))
 		end
 		if self['ss'] and self['ss'].window then
-			self['ss'].titleGroup:setWidgetValue("title", self:string(modeTokens[mode]))
+			self['ss'].titleGroup:setWidgetValue("text", self:string(modeTokens[mode]))
 		end
 	end
 end
@@ -385,7 +386,7 @@ function _updateMode(self, mode, ws)
 		token = 'off'
 	end
 	if ws.titleGroup then
-		ws.titleGroup:setWidgetValue("title", self:string(modeTokens[token]))
+		ws.titleGroup:setWidgetValue("text", self:string(modeTokens[token]))
 	end
 end
 
@@ -465,15 +466,24 @@ function _createUI(self)
 		progress = "progress", 
 		progressNB = "progressNB",
 		npartwork = "npartwork" 
-	}
+	}	
+
 	for k, v in pairs(components) do
 		local new = windowStyle .. v
 		components[k] = new
 	end
+
 	self[windowStyle].titleGroup = Group(components.nptitle, {
-				   title = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
-				   playlist = Label("playlist", "")
-			   })
+		back = Button(
+				Icon("back"), 
+				function() 
+					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) 
+					return EVENT_CONSUME 
+				end
+			),
+		   text = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
+		   playlist = Label("playlist", "")
+	   })
 	
 
 	self[windowStyle].trackGroup = Group(components.nptrack, {

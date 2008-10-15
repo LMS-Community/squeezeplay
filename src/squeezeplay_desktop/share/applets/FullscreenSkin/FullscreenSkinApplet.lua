@@ -1435,7 +1435,25 @@ function skin(self, s)
 
 
 	-- Title
-	s.ssnptitle = _uses(s.title)
+	--s.ssnptitle = _uses(s.minititle)	
+
+     -- Title
+        s.ssnptitle = {}
+
+	setmetatable(s.ssnptitle, { __index = s.title })
+
+        s.ssnptitle.order = { "back", "text", "playlist" }
+
+	s.ssnptitle.back = {}
+	s.ssnptitle.back.img = Surface:loadImage(imgpath .. "pointer_selector_L.png")
+        s.ssnptitle.back.align = "left"
+
+        s.ssnptitle.playlist = {}
+        s.ssnptitle.playlist.padding = TITLE_PADDING
+        s.ssnptitle.playlist.font = _font(26)
+        s.ssnptitle.playlist.fg = TEXT_COLOR_BLACK
+        s.ssnptitle.playlist.text = {}
+        s.ssnptitle.playlist.text.align = "top-right"
 
 	-- nptitle style is the same for both windowStyles
 	s.browsenptitle = _uses(s.ssnptitle)

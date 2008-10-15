@@ -339,8 +339,8 @@ function skin(self, s)
 	s.title.position = LAYOUT_NORTH
 	s.title.bgImg = titleBox
 	--FIXME: bug 8866
-	--s.title.order = { "back", "text" }
-	s.title.order = { "text" }
+	s.title.order = { "back", "text" }
+	--s.title.order = { "text" }
 	s.title.text = {}
 	s.title.text.padding = { 10, 8, 8, 8 }
 	s.title.text.align = "top-left"
@@ -1578,7 +1578,7 @@ function skin(self, s)
 	s.ssnptitle.border = { 4, 4, 4, 0 }
 	s.ssnptitle.position = LAYOUT_NORTH
 	s.ssnptitle.bgImg = nptitleBox
-	s.ssnptitle.order = { "title", "playlist" }
+	s.ssnptitle.order = { "text", "playlist" }
 	s.ssnptitle.text = {}
 	s.ssnptitle.text.w = WH_FILL
 	s.ssnptitle.text.padding = { 10, 7, 10, 9 }
