@@ -934,11 +934,12 @@ function skin(self, s)
 	s.albumitem.text.fg = TEXT_COLOR
 	s.albumitem.text.sh = TEXT_SH_COLOR
 	s.albumitem.icon = {}
-	s.albumitem.icon.h = WH_FILL
+	s.albumitem.icon.h = 125
+	s.albumitem.icon.w = 125
 	s.albumitem.icon.align = "left"
 	--FIXME, this path likely needs changing
 	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
-	s.albumitem.icon.padding = 0
+	s.albumitem.icon.padding = { 0, 5, 0, 0}
 
 	-- checked albummenu item
 	s.albumchecked =
@@ -1463,7 +1464,7 @@ function skin(self, s)
 	s.ssnptrack.border = { 4, 0, 4, 0 }
 	s.ssnptrack.text = {}
 	s.ssnptrack.text.w = WH_FILL
-	s.ssnptrack.text.padding = { 20, 10, 20, 10 }
+	s.ssnptrack.text.padding = { 20, 0, 20, 0 }
 	s.ssnptrack.text.align = "center"
         s.ssnptrack.text.font = _font(TRACK_FONT_SIZE)
 	s.ssnptrack.text.lineHeight = TRACK_FONT_SIZE + 4
@@ -1539,14 +1540,14 @@ function skin(self, s)
 	s.ssprogress.remain.w = 200
 	--s.ssprogress.text.w = 100
 	
-	s.ssprogress.padding = { 25, 0, 25, 25 }
-	s.ssprogress.remain.padding = { 35, 0, 8, 25 }
+	s.ssprogress.padding = { 25, 0, 25, 60 }
+	s.ssprogress.remain.padding = { 35, 0, 8, 60 }
 	s.ssprogress.remain.font = _boldfont(24)
 	s.ssprogress.remain.fg = { 0xe7,0xe7, 0xe7 }
 	s.ssprogress.remain.sh = { 0x37, 0x37, 0x37 }
 
 	s.ssprogress.elapsed = _uses(s.ssprogress.remain, {
-					padding = { 100, 0, 8, 25 }
+					padding = { 100, 0, 8, 60 }
 				})
 
 	-- browse has different positioning than ss windowStyle
@@ -1557,7 +1558,7 @@ function skin(self, s)
         s.ssprogressB.bgImg       = sliderBackground
         s.ssprogressB.img         = sliderBar
 	s.ssprogressB.position    = LAYOUT_SOUTH
-	s.ssprogressB.padding     = { 0, 0, 0, 25 }
+	s.ssprogressB.padding     = { 0, 0, 0, 60 }
 
 	s.browseprogressB = _uses(s.ssprogressB)
 
