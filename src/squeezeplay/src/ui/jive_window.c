@@ -73,6 +73,7 @@ int jiveL_window_check_layout(lua_State *L) {
 	/* stack is:
 	 * 1: widget
 	 */
+	int safty = 5;
 
 	WindowWidget *peer = jive_getpeer(L, 1, &windowPeerMeta);
 
@@ -90,7 +91,7 @@ int jiveL_window_check_layout(lua_State *L) {
 	}
 	lua_pop(L, 1);
 
-	while (peer->w.child_origin != jive_origin) {
+	while (peer->w.child_origin != jive_origin && --safty > 0) {
 #if 0
 		/* debugging */
 		jive_getmethod(L, 1, "dump");

@@ -918,7 +918,8 @@ function _process_displaystatus(self, event)
 			s.artIcon:setValue(nil)
 			s.textarea:setValue(textValue)
 		end
-		s.window:showBriefly(3000, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
+		local duration = display['duration'] or 3000
+		s.window:showBriefly(duration, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
 	end
 end
 

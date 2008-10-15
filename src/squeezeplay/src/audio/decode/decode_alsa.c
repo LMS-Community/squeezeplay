@@ -61,13 +61,15 @@ static void callback(void *outputBuffer,
 		return;
 	}
 	
-	if (add_silence_bytes) {
-		add_bytes = add_silence_bytes;
+	if (add_silence_ms) {
+		add_bytes = SAMPLES_TO_BYTES((u32_t)((add_silence_ms * current_sample_rate) / 1000));
 		if (add_bytes > len) add_bytes = len;
 		memset(outputBuffer, 0, add_bytes);
 		outputBuffer += add_bytes;
 		len -= add_bytes;
-		add_silence_bytes -= add_bytes;
+		add_silence_ms -= (BYTES_TO_SAMPLES(add_bytes) * 1000) / current_sample_rate;
+		if (add_silence_ms < 2)
+			add_silence_ms = 0;
 		if (!len) return;
 	}
 
