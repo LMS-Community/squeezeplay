@@ -36,7 +36,7 @@ u32_t decode_elapsed_samples = 0;
 bool_t decode_first_buffer = FALSE;
 u32_t current_sample_rate = 44100;
 size_t skip_ahead_bytes = 0;
-size_t add_silence_bytes = 0;
+int add_silence_ms = 0;
 
 
 /* decoder fifo used to store decoded samples */
@@ -76,16 +76,22 @@ static struct decode_module *all_decoders[] = {
 
 
 static void decode_resume_handler(void) {
-	Uint32 start_jiffies;
+	int start_interval;
 
-	start_jiffies = mqueue_read_u32(&decode_mqueue);
+	start_interval = mqueue_read_u32(&decode_mqueue) - SDL_GetTicks();
 	mqueue_read_complete(&decode_mqueue);
-
-	DEBUG_TRACE("decode_resume_handler start_jiffies=%d", start_jiffies);
+	
+	if (start_interval < 0) {
+		start_interval = 0;
+	}
+	
+	DEBUG_TRACE("decode_resume_handler start_interval=%d", start_interval);
 
 	fifo_lock(&decode_fifo);
 
-	// XXXX handle start_jiffies
+	if (start_interval) {
+		add_silence_ms = start_interval;
+	}
 
 	if (decoder) {
 		current_decoder_state |= DECODE_STATE_RUNNING;
@@ -111,7 +117,7 @@ static void decode_pause_handler(void) {
 	DEBUG_TRACE("decode_pause_handler interval=%d", interval);
 
 	if (interval) {
-		add_silence_bytes = SAMPLES_TO_BYTES((u32_t)((interval * current_sample_rate) / 1000));
+		add_silence_ms = interval;
 	} else {
 		current_decoder_state &= ~DECODE_STATE_RUNNING;
 		current_audio_state &= ~DECODE_STATE_RUNNING;

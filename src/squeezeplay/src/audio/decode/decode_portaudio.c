@@ -64,13 +64,15 @@ static int callback(const void *inputBuffer,
 
 	fifo_lock(&decode_fifo);
 
-	if (add_silence_bytes) {
-		add_bytes = add_silence_bytes;
+	if (add_silence_ms) {
+		add_bytes = SAMPLES_TO_BYTES((u32_t)((add_silence_ms * current_sample_rate) / 1000));
 		if (add_bytes > len) add_bytes = len;
 		memset(outputArray, 0, add_bytes);
 		outputArray += add_bytes;
 		len -= add_bytes;
-		add_silence_bytes -= add_bytes;
+		add_silence_ms -= (BYTES_TO_SAMPLES(add_bytes) * 1000) / current_sample_rate;
+		if (add_silence_ms < 2)
+			add_silence_ms = 0;
 		if (!len) {
 			fifo_unlock(&decode_fifo);
 			return paContinue;
