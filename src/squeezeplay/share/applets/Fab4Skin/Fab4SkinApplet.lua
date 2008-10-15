@@ -324,9 +324,15 @@ function skin(self, s)
 	s.menu.fg = {0xbb, 0xbb, 0xbb }
 	s.menu.font = _boldfont(250)
 
+	-- FIXME: splitmenu will support large icons on the left in the future
+	-- for now, make it the same as s.menu
+	s.splitmenu = _uses(s.menu)
+
+	--[[
 	s.splitmenu = _uses(s.menu, {
 			padding = { 150, 2, 0, 2 }
 	})
+	--]]
 
 	-- menu item
 	s.item = {}
