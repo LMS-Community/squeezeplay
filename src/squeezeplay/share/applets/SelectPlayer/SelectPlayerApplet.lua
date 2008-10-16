@@ -225,8 +225,6 @@ function _refreshPlayerItem(self, player)
 			-- update player state
 			if player == self.selectedPlayer then
 				item.style = "checked"
-			else
-				item.style = nil
 			end
 		end
 
@@ -268,7 +266,7 @@ end
 
 
 function _showWallpaper(self, playerId)
-	log:info("previewing background wallpaper for ", playerId)
+	log:debug("previewing background wallpaper for ", playerId)
 	appletManager:callService("showBackground", nil, playerId)
 end
 
