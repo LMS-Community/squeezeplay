@@ -290,7 +290,7 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 				 end)
 	obj.scrollbar = Scrollbar("scrollbar",
 				  function(_, value)
-					  obj:setSelectedIndex(value)
+					  obj:setSelectedIndex(value + 1) -- value comes in zero based, one based is needed
 				  end)
 
 	obj.scrollbar.parent = obj
