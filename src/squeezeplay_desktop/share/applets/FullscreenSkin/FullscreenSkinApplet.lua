@@ -439,7 +439,7 @@ function skin(self, s)
 					icon = {
 						img = Surface:loadImage(imgpath .. "Icons/selection_wait.png"),
 						frameRate = 5,
-						frameWidth = 10
+						frameWidth = 29
 					}
 			})
 
@@ -1333,10 +1333,12 @@ function skin(self, s)
 	s.albumcurrent.text.fg = TEXT_COLOR
 	s.albumcurrent.text.sh = TEXT_SH_COLOR
 	s.albumcurrent.icon = {}
-	s.albumcurrent.icon.h = WH_FILL
+	s.albumcurrent.icon.h = 125
+	s.albumcurrent.icon.w = 125
 	s.albumcurrent.icon.align = "left"
 	--FIXME, this path likely needs changing
 	s.albumcurrent.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
+	s.albumcurrent.icon.padding = { 0, 5, 0, 0}
 	s.albumcurrent.play = {}
 	s.albumcurrent.play.align = 'center'
 	s.albumcurrent.play.img = Surface:loadImage(imgpath .. "Icons/icon_nowplaying_indicator_w.png")

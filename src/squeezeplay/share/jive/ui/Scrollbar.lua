@@ -94,14 +94,25 @@ end
 
 
 function _setSlider(self, percent)
-	local oldvalue = self.value
+	
+	--boundary guard, since value is often past border (e.g. when vertical slider drag y value moves above slider)  
+	if percent < 0 then
+		percent = 0
+	elseif percent >= 1 then
+		percent = .9999 
+	end
 
 	local pos = percent * (self.range)
 
 	self.value = math.floor(pos)
 	self:reDraw()
-		
-	if self.value ~= oldvalue and self.closure then
+	
+-- removed oldValue check (performance enhancement as far as I can see) because value (in menu case, for example) was
+-- being reset by the menu after setSelectedIndex was called, calling false positives here
+-- I would think that these would always have been the same, but was not the case,
+-- so in the future this discrepency could be resolved and this performance enhancement could be re-added.			
+--	if self.value ~= oldvalue and self.closure then
+	if self.closure then
 		self.closure(self, self.value, false)
 	end
 end
