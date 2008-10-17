@@ -1512,6 +1512,7 @@ function skin(self, s)
 
 	local ssnoartworkoffset = (screenWidth - ssArtWidth) / 2
 	s.ssnpartwork = {}
+	s.ssnpartwork.order = { 'artwork' }
 	s.ssnpartwork.w = ssArtWidth
 	s.ssnpartwork.border = { ssnoartworkoffset, 25, ssnoartworkoffset, 0 }
 	s.ssnpartwork.position = LAYOUT_CENTER
@@ -1520,7 +1521,40 @@ function skin(self, s)
 	s.ssnpartwork.artwork.align = "center"
 	s.ssnpartwork.artwork.padding = 0
 	s.ssnpartwork.artwork.img = Surface:loadImage(imgpath .. "album_noartwork_375.png")
+
 	s.browsenpartwork = _uses(s.ssnpartwork)
+
+	s.ssnpcontrols = {}
+	s.ssnpcontrols.order = { 'rew', 'play', 'fwd' }
+	s.ssnpcontrols.position = LAYOUT_WEST
+	-- FIXME: box is too big
+	--s.ssnpcontrols.bgImg = selectionBox
+
+        s.ssnpcontrols.w = ssArtWidth
+	local topPadding = screenHeight/2
+	local rightPadding = screenWidth - screenWidth/4
+        s.ssnpcontrols.border = { rightPadding, topPadding, 0, 0 }
+
+	s.ssnpcontrols.rew = {}
+	s.ssnpcontrols.rew.align = 'center'
+	s.ssnpcontrols.rew.padding = { 10, 0, 0, 0 }
+	s.ssnpcontrols.rew.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_rew_on.png")
+	s.ssnpcontrols.rew.bgImg = selectionBox
+
+	s.ssnpcontrols.play = {}
+	s.ssnpcontrols.play.align = 'center'
+	s.ssnpcontrols.play.padding = { 10, 0, 0, 0 }
+	s.ssnpcontrols.play.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_play_on.png")
+	s.ssnpcontrols.play.bgImg = selectionBox
+
+	s.ssnpcontrols.fwd = {}
+	s.ssnpcontrols.fwd.align = 'center'
+	s.ssnpcontrols.fwd.padding = { 10, 0, 0, 0 }
+	s.ssnpcontrols.fwd.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_ffwd_on.png")
+	s.ssnpcontrols.fwd.bgImg = selectionBox
+
+	s.browsenpcontrols = _uses(s.ssnpcontrols)
+
 
 --[[ right now these are the same in alberti
 	-- artwork layout is not the same between the two windowStyles

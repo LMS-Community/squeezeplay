@@ -465,7 +465,8 @@ function _createUI(self)
 		progressB = "progressB", 
 		progress = "progress", 
 		progressNB = "progressNB",
-		npartwork = "npartwork" 
+		npartwork = "npartwork",
+		npcontrols = 'npcontrols',
 	}	
 
 	for k, v in pairs(components) do
@@ -508,15 +509,41 @@ function _createUI(self)
 	end
 
 	self[windowStyle].artwork = Icon("artwork")
+
 	self[windowStyle].artworkGroup = Group(components.npartwork, {
-				     artwork = self[windowStyle].artwork    
-			     })
-	
+			artwork = self[windowStyle].artwork,
+	})
+
+	self[windowStyle].controlsGroup = Group(components.npcontrols, {
+		  	rew = Button(
+				Icon('rew'),
+				function() 
+					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_REW) 
+					return EVENT_CONSUME 
+				end
+			),
+		  	play = Button(
+				Icon('play'),
+				function() 
+					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_PAUSE) 
+					return EVENT_CONSUME 
+				end
+			),
+		  	fwd = Button(
+				Icon('fwd'),
+				function() 
+					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_REW) 
+					return EVENT_CONSUME 
+				end
+			),
+ 	})
+
 	self.preartwork = Icon("artwork") -- not disabled, used for preloading
 
 	window:addWidget(self[windowStyle].titleGroup)
 	window:addWidget(self[windowStyle].trackGroup)
 	window:addWidget(self[windowStyle].artworkGroup)
+	window:addWidget(self[windowStyle].controlsGroup)
 	window:addWidget(self[windowStyle].progressGroup)
 
 	window:focusWidget(self[windowStyle].trackGroup)
