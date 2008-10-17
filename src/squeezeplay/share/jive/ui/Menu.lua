@@ -65,6 +65,7 @@ local EVENT_FOCUS_GAINED   = jive.ui.EVENT_FOCUS_GAINED
 local EVENT_FOCUS_LOST     = jive.ui.EVENT_FOCUS_LOST
 local EVENT_MOUSE_PRESS    = jive.ui.EVENT_MOUSE_PRESS
 local EVENT_MOUSE_DOWN     = jive.ui.EVENT_MOUSE_DOWN
+local EVENT_MOUSE_UP       = jive.ui.EVENT_MOUSE_UP
 local EVENT_MOUSE_MOVE     = jive.ui.EVENT_MOUSE_MOVE
 local EVENT_MOUSE_DRAG     = jive.ui.EVENT_MOUSE_DRAG
 
@@ -222,7 +223,13 @@ local function _eventHandler(self, event)
 		evtype == EVENT_MOUSE_MOVE or
 		evtype == EVENT_MOUSE_DRAG then
 
-		if self.scrollbar:mouseInside(event) then
+		if self.scrollbar:mouseInside(event) or self.sliderDragInProgress then
+			if (evtype ~= EVENT_MOUSE_MOVE) then
+				--allows slider drag to continue even when listitem area is entered
+				-- a more comprehensive solution is needed so that drag of a slider is respected no matter
+				-- where the mouse cursor is on the screen
+				self.sliderDragInProgress = true
+			end
 			-- forward event to scrollbar
 			return self.scrollbar:_event(event)
 
@@ -239,6 +246,10 @@ local function _eventHandler(self, event)
 
 			return EVENT_CONSUME
 		end
+		
+	elseif evtype == EVENT_MOUSE_UP then
+		self.sliderDragInProgress = false
+		return EVENT_UNUSED
 
 	elseif evtype == EVENT_SHOW or
 		evtype == EVENT_HIDE then
@@ -279,7 +290,7 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 				 end)
 	obj.scrollbar = Scrollbar("scrollbar",
 				  function(_, value)
-					  obj:setSelectedIndex(value)
+					  obj:setSelectedIndex(value + 1) -- value comes in zero based, one based is needed
 				  end)
 
 	obj.scrollbar.parent = obj
