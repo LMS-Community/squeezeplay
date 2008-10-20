@@ -307,6 +307,8 @@ function skin(self, s)
 	s.title.position = LAYOUT_NORTH
 	s.title.bgImg = titleBox
 	s.title.order = { "back", "text" }
+	-- FIXME: for now playing button in title bar
+	--s.title.order = { "back", "text", 'nowplaying' }
 	s.title.text = {}
         s.title.text.w = WH_FILL
 	s.title.text.padding = TITLE_PADDING
@@ -317,6 +319,12 @@ function skin(self, s)
 	--FIXME, this png path should likely change
 	s.title.back.img = Surface:loadImage(imgpath .. "pointer_selector_L.png")
 	s.title.back.align = "left"
+--[[
+	s.title.nowplaying = {}
+	--FIXME, this png path should likely change
+	s.title.nowplaying.img = Surface:loadImage(imgpath .. "Icons/Mini/icon_quarter_note.png")
+	s.title.nowplaying.align = "left"
+--]]
 
 
 
@@ -769,7 +777,7 @@ function skin(self, s)
 	s.minititle.text.align    = 'top-left'
 	s.minititle.text.font     = _boldfont(TITLE_FONT_SIZE)
 	s.minititle.text.fg       = TEXT_COLOR_BLACK
-	s.minititle.order         = { "back", "text", "icon" }
+	s.minititle.order         = { "back", "text", "nowplaying", "icon" }
 	s.minititle.icon = {}
 	s.minititle.icon.padding  = { 0, 0, 8, 0 }
 	s.minititle.icon.align    = 'right'
@@ -970,6 +978,20 @@ function skin(self, s)
 			}
 	})
 
+	s.squeezebox = _uses(s.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/squeezebox.png"),
+				}
+			})
+	s.squeezeboxchecked = _uses(s.squeezebox, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+
+
 	s.squeezebox2 = _uses(s.chooseplayer, {
 				icon = {
 					img = Surface:loadImage(imgpath .. "Icons/Players/squeezebox2.png"),
@@ -982,6 +1004,7 @@ function skin(self, s)
 				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
 			}
 	})
+
 	s.boom = _uses(s.chooseplayer, {
 				icon = {
 					img = Surface:loadImage(imgpath .. "Icons/Players/boom.png"),
@@ -1142,6 +1165,20 @@ function skin(self, s)
 				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
 			}
 	})
+
+	s.selected.squeezebox = _uses(s.selected.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/squeezebox.png"),
+				}
+			})
+	s.selected.squeezeboxchecked = _uses(s.selected.squeezebox, {
+	      		order = { "icon", "text", "check", "play" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+
 
 	s.selected.squeezebox2 = _uses(s.selected.chooseplayer, {
 				icon = {
