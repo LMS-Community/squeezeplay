@@ -306,9 +306,7 @@ function skin(self, s)
 	s.title.padding = { 15, 5, 10, 0 }
 	s.title.position = LAYOUT_NORTH
 	s.title.bgImg = titleBox
-	s.title.order = { "back", "text" }
-	-- FIXME: for now playing button in title bar
-	--s.title.order = { "back", "text", 'nowplaying' }
+	s.title.order = { "back", "text", 'nowplaying' }
 	s.title.text = {}
         s.title.text.w = WH_FILL
 	s.title.text.padding = TITLE_PADDING
@@ -319,13 +317,10 @@ function skin(self, s)
 	--FIXME, this png path should likely change
 	s.title.back.img = Surface:loadImage(imgpath .. "pointer_selector_L.png")
 	s.title.back.align = "left"
---[[
 	s.title.nowplaying = {}
 	--FIXME, this png path should likely change
-	s.title.nowplaying.img = Surface:loadImage(imgpath .. "Icons/Mini/icon_quarter_note.png")
+	s.title.nowplaying.img = Surface:loadImage(imgpath .. "album_noartwork_56.png")
 	s.title.nowplaying.align = "left"
---]]
-
 
 
 	-- Menu with three basic styles: normal, selected and locked

@@ -133,7 +133,7 @@ end
 function init(self)
 
 	jnt:subscribe(self)
-	self.player = {}
+	self.player = false
 	self['browse'] = {}
 	self['ss'] = {}
 
@@ -560,7 +560,14 @@ end
 -- can be found by the Screensaver applet correctly,
 -- while allowing the method to be called via the service API
 function goNowPlaying(self, style, transition)
-	self:openScreensaver(style, transition)
+
+	if self.player then
+		self:openScreensaver(style, transition)
+		return true
+	else
+		return false
+
+	end
 end
 
 function openScreensaver(self, style, transition)
