@@ -948,6 +948,18 @@ function skin(self, s)
 			}
 	})
 
+	s.squeezebox = _uses(s.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/squeezebox.png"),
+				}
+			})
+	s.squeezeboxchecked = _uses(s.squeezebox, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
 	s.squeezebox2 = _uses(s.chooseplayer, {
 				icon = {
 					img = Surface:loadImage(imgpath .. "Icons/Players/squeezebox2.png"),
@@ -1143,6 +1155,20 @@ function skin(self, s)
 				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
 			}
 	})
+
+	s.selected.squeezebox = _uses(s.selected.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/squeezebox.png"),
+				}
+			})
+	s.selected.squeezeboxchecked = _uses(s.selected.squeezebox, {
+	      		order = { "icon", "text", "check", "play" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+
 
 	s.selected.squeezebox2 = _uses(s.selected.chooseplayer, {
 				icon = {
