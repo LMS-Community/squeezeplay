@@ -68,7 +68,9 @@ function configureApplet(meta)
 		server:updateInit(settings.serverInit)
 	end
 
-	meta.state.player:updateInit(server, settings.playerInit)
+	if settings.playerInit then
+		meta.state.player:updateInit(server, settings.playerInit)
+	end
 
 	-- Subscribe to changes in player status
 	jnt:subscribe(meta)
