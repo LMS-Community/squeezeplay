@@ -206,7 +206,7 @@ function notify_playerModeChange(self, player, mode)
 		return
 	end
 
-	log:debug("Player mode has been changed to: ", mode)
+	log:warn("Player mode has been changed to: ", mode)
 	self:_updateMode(mode)
 end
 
@@ -387,6 +387,14 @@ function _updateMode(self, mode, ws)
 	end
 	if ws.titleGroup then
 		ws.titleGroup:setWidgetValue("text", self:string(modeTokens[token]))
+	end
+	if ws.controlsGroup then
+		local playIcon = ws.controlsGroup:getWidget('play')
+		if token == 'play' then
+			playIcon:setStyle('pause')
+		else
+			playIcon:setStyle('play')
+		end
 	end
 end
 

@@ -654,7 +654,6 @@ function skin(self, s)
 	s.iconAlarm.w = WH_FILL
 	s.iconAlarm.align = "center"
 
-
 	-- wireless icons for menus
 	s.wirelessLevel1 = {}
 	s.wirelessLevel1.align = "right"
@@ -1584,13 +1583,17 @@ function skin(self, s)
 	s.ssnpcontrols.play.align = 'center'
 	s.ssnpcontrols.play.padding = 10
 	s.ssnpcontrols.play.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_play_on.png")
-	s.ssnpcontrols.play.bgImg = selectionBox
+
+	s.ssnpcontrols.pause = {}
+	s.ssnpcontrols.pause.align = 'center'
+	s.ssnpcontrols.pause.padding = 10
+	s.ssnpcontrols.pause.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_pause_on.png")
+
 
 	s.ssnpcontrols.fwd = {}
 	s.ssnpcontrols.fwd.align = 'center'
 	s.ssnpcontrols.fwd.padding = 10
 	s.ssnpcontrols.fwd.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_ffwd_on.png")
-	s.ssnpcontrols.fwd.bgImg = selectionBox
 
 	s.browsenpcontrols = _uses(s.ssnpcontrols)
 
