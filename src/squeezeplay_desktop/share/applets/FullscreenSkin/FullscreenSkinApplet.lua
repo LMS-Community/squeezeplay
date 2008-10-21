@@ -730,12 +730,13 @@ function skin(self, s)
 	s.albumtitle = {}
 	s.albumtitle.position = LAYOUT_NORTH
 	s.albumtitle.bgImg = titleBox
-	s.albumtitle.order = { "back", "icon", "text" }
+	s.albumtitle.order = { "back", "icon", "text", "nowplaying" }
 	s.albumtitle.w = screenWidth
 	s.albumtitle.h = 130
 	s.albumtitle.border = 4
 	s.albumtitle.text = {}
 	s.albumtitle.text.padding = { 10, 15, 8, 10 }
+	s.albumtitle.text.w = WH_FILL
 	s.albumtitle.text.align = "top-left"
 	s.albumtitle.text.font = _font(ALBUMMENU_FONT_SIZE)
 	s.albumtitle.text.lineHeight = ALBUMMENU_FONT_SIZE + 8
@@ -756,6 +757,11 @@ function skin(self, s)
 	--FIXME, this path will likely change
 	s.albumtitle.back.img = Surface:loadImage(imgpath .. "pointer_selector_L.png")
 	s.albumtitle.back.align = "left"
+	s.albumtitle.nowplaying = {}
+	--FIXME, this path will likely change
+	s.albumtitle.nowplaying.img = Surface:loadImage(imgpath .. "album_noartwork_56.png")
+	s.albumtitle.nowplaying.padding = { 5, 10, 15, 0 }
+	s.albumtitle.nowplaying.align = "top-right"
 
 
 	-- titles with mini icons
