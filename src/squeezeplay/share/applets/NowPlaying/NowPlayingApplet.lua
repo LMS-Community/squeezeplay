@@ -481,9 +481,17 @@ function _createUI(self)
 					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) 
 					return EVENT_CONSUME 
 				end
-			),
-		   text = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
-		   playlist = Label("playlist", "")
+		),
+
+		text = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
+
+		playlist = Button(
+				Label("playlist", ""), 
+				function() 
+					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_GO) 
+					return EVENT_CONSUME 
+				end
+		),
 	   })
 	
 

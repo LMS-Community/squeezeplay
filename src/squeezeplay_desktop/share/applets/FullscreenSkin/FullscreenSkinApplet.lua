@@ -1490,9 +1490,11 @@ function skin(self, s)
         s.ssnptitle.back.align = "left"
 
         s.ssnptitle.playlist = {}
-        s.ssnptitle.playlist.padding = TITLE_PADDING
+        s.ssnptitle.playlist.padding = 10
+        s.ssnptitle.playlist.border = { 0, 0, 0, 5 }
         s.ssnptitle.playlist.font = _font(26)
         s.ssnptitle.playlist.fg = TEXT_COLOR_BLACK
+        s.ssnptitle.playlist.bgImg = selectionBox
         s.ssnptitle.playlist.text = {}
         s.ssnptitle.playlist.text.align = "top-right"
 
