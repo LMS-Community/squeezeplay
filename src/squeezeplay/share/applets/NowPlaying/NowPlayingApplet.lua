@@ -133,7 +133,7 @@ end
 function init(self)
 
 	jnt:subscribe(self)
-	self.player = {}
+	self.player = false
 	self['browse'] = {}
 	self['ss'] = {}
 
@@ -388,6 +388,14 @@ function _updateMode(self, mode, ws)
 	if ws.titleGroup then
 		ws.titleGroup:setWidgetValue("text", self:string(modeTokens[token]))
 	end
+	if ws.controlsGroup then
+		local playIcon = ws.controlsGroup:getWidget('play')
+		if token == 'play' then
+			playIcon:setStyle('pause')
+		else
+			playIcon:setStyle('play')
+		end
+	end
 end
 
 
@@ -465,7 +473,8 @@ function _createUI(self)
 		progressB = "progressB", 
 		progress = "progress", 
 		progressNB = "progressNB",
-		npartwork = "npartwork" 
+		npartwork = "npartwork",
+		npcontrols = 'npcontrols',
 	}	
 
 	for k, v in pairs(components) do
@@ -480,9 +489,17 @@ function _createUI(self)
 					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) 
 					return EVENT_CONSUME 
 				end
-			),
-		   text = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
-		   playlist = Label("playlist", "")
+		),
+
+		text = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
+
+		playlist = Button(
+				Label("playlist", ""), 
+				function() 
+					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_GO) 
+					return EVENT_CONSUME 
+				end
+		),
 	   })
 	
 
@@ -508,15 +525,41 @@ function _createUI(self)
 	end
 
 	self[windowStyle].artwork = Icon("artwork")
+
 	self[windowStyle].artworkGroup = Group(components.npartwork, {
-				     artwork = self[windowStyle].artwork    
-			     })
-	
+			artwork = self[windowStyle].artwork,
+	})
+
+	self[windowStyle].controlsGroup = Group(components.npcontrols, {
+		  	rew = Button(
+				Icon('rew'),
+				function() 
+					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_REW) 
+					return EVENT_CONSUME 
+				end
+			),
+		  	play = Button(
+				Icon('play'),
+				function() 
+					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_PAUSE) 
+					return EVENT_CONSUME 
+				end
+			),
+		  	fwd = Button(
+				Icon('fwd'),
+				function() 
+					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_REW) 
+					return EVENT_CONSUME 
+				end
+			),
+ 	})
+
 	self.preartwork = Icon("artwork") -- not disabled, used for preloading
 
 	window:addWidget(self[windowStyle].titleGroup)
 	window:addWidget(self[windowStyle].trackGroup)
 	window:addWidget(self[windowStyle].artworkGroup)
+	window:addWidget(self[windowStyle].controlsGroup)
 	window:addWidget(self[windowStyle].progressGroup)
 
 	window:focusWidget(self[windowStyle].trackGroup)
@@ -533,7 +576,14 @@ end
 -- can be found by the Screensaver applet correctly,
 -- while allowing the method to be called via the service API
 function goNowPlaying(self, style, transition)
-	self:openScreensaver(style, transition)
+
+	if self.player then
+		self:openScreensaver(style, transition)
+		return true
+	else
+		return false
+
+	end
 end
 
 function openScreensaver(self, style, transition)

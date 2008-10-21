@@ -258,6 +258,8 @@ local function _pevalMeta(entry)
 			return nil
 		end
 	end
+
+	return true
 end
 
 

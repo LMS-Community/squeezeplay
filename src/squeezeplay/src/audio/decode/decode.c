@@ -532,6 +532,11 @@ static int decode_status(lua_State *L) {
 	lua_pushinteger(L, decode_num_tracks_started);
 	lua_setfield(L, -2, "tracksStarted");
 
+	if (decoder) {
+		lua_pushinteger(L, decoder->id);
+		lua_setfield(L, -2, "decoder");
+	}
+
 	fifo_unlock(&decode_fifo);
 
 

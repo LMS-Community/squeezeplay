@@ -170,7 +170,25 @@ function _addPlayerItem(self, player)
 	local playerName = player:getName()
 	local playerWeight = PLAYER_WEIGHT
 
-	local playerModel = player:getModel() or 'softsqueeze'
+	-- create a lookup table of valid models, 
+	-- so Choose Player does not attempt to render a style that doesn't exist
+	local validModel = {
+		softsqueeze = true,
+		transporter = true,
+		squeezebox2 = true,
+		squeezebox  = true,
+		slimp3      = true,
+		receiver    = true,
+		boom        = true,
+		controller  = true,
+	}
+
+	local playerModel = player:getModel()
+
+	if not validModel[playerModel] then
+		-- use a generic style when model lists as not valid
+		playerModel = 'softsqueeze'
+	end
 
 	-- if waiting for a SN pin modify name
 	if player:getPin() then

@@ -111,6 +111,7 @@ local modeTokens = {
 			stop  = "SLIMBROWSER_STOPPED",
 			off   = "SLIMBROWSER_OFF"
 }
+
 --==============================================================================
 -- Local functions
 --==============================================================================
@@ -341,7 +342,25 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 	-- if item is a windowSpec, then the icon is kept in the spec for nothing (overhead)
 	-- however it guarantees the icon in the title is not shared with (the same) icon in the menu.
 	if not group then
-		group = Group("item", { text = Label("text", ""), icon = Icon("icon"), play = Icon("play"), back = Button(Icon("back"), function() group:getWindow():dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) return EVENT_CONSUME end) })
+		group = Group("item", { 
+			text = Label("text", ""), 
+			icon = Icon("icon"), 
+			play = Icon("play"), 
+			back = Button(
+				Icon("back"), 
+				function() 
+					group:getWindow():dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) 
+					return EVENT_CONSUME 
+				end
+			), 
+			nowplaying = Button(
+				Icon("nowplaying"), 
+				function() 
+					group:getWindow():dispatchNewEvent(EVENT_KEY_PRESS, appletManager:callService('goNowPlaying', 'browse')) 
+					return EVENT_CONSUME 
+				end
+			), 
+			})
 	end
 
 	if item then
@@ -960,7 +979,25 @@ local function _browseSink(step, chunk, err)
 					else
 						titleIcon = Icon("icon")
 					end
-					local newTitleWidget = Group(titleStyle, { text = Label("text", titleText), icon = titleIcon })	
+					local newTitleWidget = 
+						Group(titleStyle, { 
+							text = Label("text", titleText), 
+							icon = titleIcon,
+							back = Button(
+								Icon("back"), 
+								function() 
+									step.window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) 
+									return EVENT_CONSUME 
+								end
+							), 
+							nowplaying = Button(
+								Icon("nowplaying"), 
+								function() 
+									step.window:dispatchNewEvent(EVENT_KEY_PRESS, appletManager:callService('goNowPlaying', 'browse')) 
+									return EVENT_CONSUME 
+								end
+							), 
+						})	
 					step.window:setTitleWidget(newTitleWidget)
 				-- change the text as specified if no titleStyle param was also sent
 				elseif data.window.text then

@@ -1,0 +1,53 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+AUDIO_PLAYBACK
+	EN	Audio Playback
+
+ENABLE_AUDIO
+	EN	Enable Playback (BETA)
+
+DEBUG_AUDIO
+	EN	Debug Playback
+
+TEST_TONES
+	EN	Test Tones
+
+FORMAT
+	EN	Format:
+
+DECODE_BUFFER
+	EN	Decode buffer:
+
+OUTPUT_BUFFER
+	EN	Output buffer:
+
+ELAPSED_SECS
+	EN	Elapsed Secs:
+
+NUM_TRACKS
+	EN	Num Tracks:
+
+DECODE_STATE
+	EN	Decode State:
+
+MULTITONE
+	EN	Multitone
+
+SINE_44.1k
+	EN	Sine 44.1k
+
+SINE_48k
+	EN	Sine 48k
+
+SINE_88.2K
+	EN	Sine 88.2k
+
+SINE_96K
+	EN	Sine 96k
+
+SINE_STOP
+	EN	Stop
+
+

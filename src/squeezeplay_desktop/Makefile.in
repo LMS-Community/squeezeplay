@@ -402,7 +402,6 @@ jive-static-install:
 	    | tar -C $(JIVE_BUILD_DIR) -pxf -
 
 install-data-local: jive-static-install
-	rm -rf $(JIVE_BUILD_DIR)/applets/TestDecode/
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

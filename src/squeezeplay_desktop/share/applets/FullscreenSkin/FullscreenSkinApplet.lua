@@ -173,9 +173,9 @@ function skin(self, s)
                                        imgpath .. "Screen_Formats/Popup_Menu/helpbox_t.png",
                                        imgpath .. "Screen_Formats/Popup_Menu/helpbox_tr.png",
                                        imgpath .. "Screen_Formats/Popup_Menu/helpbox_r.png",
-					nil,
-					nil,
-					nil,
+                                       imgpath .. "Screen_Formats/Popup_Menu/helpbox_br.png",
+                                       imgpath .. "Screen_Formats/Popup_Menu/helpbox_b.png",
+                                       imgpath .. "Screen_Formats/Popup_Menu/helpbox_bl.png",
                                        imgpath .. "Screen_Formats/Popup_Menu/helpbox_l.png",
                                })
 
@@ -306,7 +306,7 @@ function skin(self, s)
 	s.title.padding = { 15, 5, 10, 0 }
 	s.title.position = LAYOUT_NORTH
 	s.title.bgImg = titleBox
-	s.title.order = { "back", "text" }
+	s.title.order = { "back", "text", 'nowplaying' }
 	s.title.text = {}
         s.title.text.w = WH_FILL
 	s.title.text.padding = TITLE_PADDING
@@ -317,7 +317,10 @@ function skin(self, s)
 	--FIXME, this png path should likely change
 	s.title.back.img = Surface:loadImage(imgpath .. "pointer_selector_L.png")
 	s.title.back.align = "left"
-
+	s.title.nowplaying = {}
+	--FIXME, this png path should likely change
+	s.title.nowplaying.img = Surface:loadImage(imgpath .. "album_noartwork_56.png")
+	s.title.nowplaying.align = "left"
 
 
 	-- Menu with three basic styles: normal, selected and locked
@@ -651,7 +654,6 @@ function skin(self, s)
 	s.iconAlarm.w = WH_FILL
 	s.iconAlarm.align = "center"
 
-
 	-- wireless icons for menus
 	s.wirelessLevel1 = {}
 	s.wirelessLevel1.align = "right"
@@ -727,12 +729,13 @@ function skin(self, s)
 	s.albumtitle = {}
 	s.albumtitle.position = LAYOUT_NORTH
 	s.albumtitle.bgImg = titleBox
-	s.albumtitle.order = { "back", "icon", "text" }
+	s.albumtitle.order = { "back", "icon", "text", "nowplaying" }
 	s.albumtitle.w = screenWidth
 	s.albumtitle.h = 130
 	s.albumtitle.border = 4
 	s.albumtitle.text = {}
 	s.albumtitle.text.padding = { 10, 15, 8, 10 }
+	s.albumtitle.text.w = WH_FILL
 	s.albumtitle.text.align = "top-left"
 	s.albumtitle.text.font = _font(ALBUMMENU_FONT_SIZE)
 	s.albumtitle.text.lineHeight = ALBUMMENU_FONT_SIZE + 8
@@ -753,6 +756,11 @@ function skin(self, s)
 	--FIXME, this path will likely change
 	s.albumtitle.back.img = Surface:loadImage(imgpath .. "pointer_selector_L.png")
 	s.albumtitle.back.align = "left"
+	s.albumtitle.nowplaying = {}
+	--FIXME, this path will likely change
+	s.albumtitle.nowplaying.img = Surface:loadImage(imgpath .. "album_noartwork_56.png")
+	s.albumtitle.nowplaying.padding = { 5, 10, 15, 0 }
+	s.albumtitle.nowplaying.align = "top-right"
 
 
 	-- titles with mini icons
@@ -769,7 +777,7 @@ function skin(self, s)
 	s.minititle.text.align    = 'top-left'
 	s.minititle.text.font     = _boldfont(TITLE_FONT_SIZE)
 	s.minititle.text.fg       = TEXT_COLOR_BLACK
-	s.minititle.order         = { "back", "text", "icon" }
+	s.minititle.order         = { "back", "text", "nowplaying", "icon" }
 	s.minititle.icon = {}
 	s.minititle.icon.padding  = { 0, 0, 8, 0 }
 	s.minititle.icon.align    = 'right'
@@ -970,6 +978,20 @@ function skin(self, s)
 			}
 	})
 
+	s.squeezebox = _uses(s.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/squeezebox.png"),
+				}
+			})
+	s.squeezeboxchecked = _uses(s.squeezebox, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+
+
 	s.squeezebox2 = _uses(s.chooseplayer, {
 				icon = {
 					img = Surface:loadImage(imgpath .. "Icons/Players/squeezebox2.png"),
@@ -982,6 +1004,7 @@ function skin(self, s)
 				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
 			}
 	})
+
 	s.boom = _uses(s.chooseplayer, {
 				icon = {
 					img = Surface:loadImage(imgpath .. "Icons/Players/boom.png"),
@@ -1142,6 +1165,20 @@ function skin(self, s)
 				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
 			}
 	})
+
+	s.selected.squeezebox = _uses(s.selected.chooseplayer, {
+				icon = {
+					img = Surface:loadImage(imgpath .. "Icons/Players/squeezebox.png"),
+				}
+			})
+	s.selected.squeezeboxchecked = _uses(s.selected.squeezebox, {
+	      		order = { "icon", "text", "check", "play" },
+			check = {
+				align = "right",
+				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+			}
+	})
+
 
 	s.selected.squeezebox2 = _uses(s.selected.chooseplayer, {
 				icon = {
@@ -1362,28 +1399,40 @@ function skin(self, s)
 	s.locked.albumcurrent.text.fg = SELECT_COLOR
 	s.locked.albumcurrent.text.sh = SELECT_SH_COLOR
 
+	local POPUP_HEIGHT = 200
 	-- Popup window for current song info
 	s.currentsong = {}
+
 	s.currentsong.x = 0
-	s.currentsong.y = screenHeight - 93
-	s.currentsong.w = screenWidth
-	s.currentsong.h = 93
+	s.currentsong.y = screenHeight - POPUP_HEIGHT
+	s.currentsong.w = screenWidth 
+	s.currentsong.h = POPUP_HEIGHT
+
+	s.currentsong.padding = 12
 	s.currentsong.bgImg = helpBox
 	s.currentsong.albumitem = {}
 	s.currentsong.albumitem.border = { 4, 10, 4, 0 }
 	s.currentsong.albumitem.icon = { }
 	s.currentsong.albumitem.icon.align = "top"
 
-	local POPUP_HEIGHT = 200
+	--FIXME: nothing seems to work at positioning text in the currentsong popup
+	--[[
+	s.currentsong.text = {}
+	s.currentsong.text.w = WH_FILL
+	s.currentsong.text.h = POPUP_HEIGHT
+	s.currentsong.text.border = { 0, 0, 0, 100 }
+	s.currentsong.text.align = 'top-left'
+	--]]
+
 	-- Popup window for play/add without artwork
 	s.popupplay= {}
 	s.popupplay.x = 0
-	s.popupplay.y = screenHeight - 96
-	s.popupplay.w = screenWidth / 2
+	s.popupplay.y = screenHeight - POPUP_HEIGHT
+	s.popupplay.w = screenWidth
 	s.popupplay.h = POPUP_HEIGHT
 
 	-- for textarea properties in popupplay
-	s.popupplay.padding = { 12, 12, 12, 0 }
+	s.popupplay.padding = 12
 	s.popupplay.fg = TEXT_COLOR
 	s.popupplay.font = _font(TRACK_FONT_SIZE)
 	s.popupplay.align = "top-left"
@@ -1391,8 +1440,9 @@ function skin(self, s)
 	s.popupplay.scrollbar.w = 0
 
 	s.popupplay.text = {}
-	s.popupplay.text.w = screenWidth
+	s.popupplay.text.w = WH_FILL
 	s.popupplay.text.h = POPUP_HEIGHT
+	s.popupplay.text.align = 'top-left'
 	s.popupplay.text.padding = { 20, 20, 20, 20 }
 	s.popupplay.text.font = _font(TRACK_FONT_SIZE)
 	s.popupplay.text.lineHeight = TRACK_FONT_SIZE + 2
@@ -1409,12 +1459,12 @@ function skin(self, s)
 	-- Popup window for information display
 	s.popupinfo = {}
 	s.popupinfo.x = 0
-	s.popupinfo.y = screenHeight - 96
+	s.popupinfo.y = screenHeight - POPUP_HEIGHT
 	s.popupinfo.w = screenWidth
 	s.popupinfo.h = POPUP_HEIGHT
 	s.popupinfo.bgImg = helpBox
 	s.popupinfo.text = {}
-	s.popupinfo.text.w = screenWidth
+	s.popupinfo.text.w = WH_FILL
 	s.popupinfo.text.h = POPUP_HEIGHT
 	s.popupinfo.text.padding = { 14, 24, 14, 14 }
 	s.popupinfo.text.font = _boldfont(24)
@@ -1427,8 +1477,6 @@ function skin(self, s)
 	-- this skin is established in two forms,
 	-- one for the Screensaver windowStyle (ss), one for the browse windowStyle (browse)
 	-- a lot of it can be recycled from one to the other
-
-	local screenWidth, screenHeight = Framework:getScreenSize()
 
 	local TEXT_COLOR = { 0xE7, 0xE7, 0xE7 }
 	local TEXT_SH_COLOR = { 0x37, 0x37, 0x37 }
@@ -1452,9 +1500,11 @@ function skin(self, s)
         s.ssnptitle.back.align = "left"
 
         s.ssnptitle.playlist = {}
-        s.ssnptitle.playlist.padding = TITLE_PADDING
+        s.ssnptitle.playlist.padding = 10
+        s.ssnptitle.playlist.border = { 0, 0, 0, 5 }
         s.ssnptitle.playlist.font = _font(26)
         s.ssnptitle.playlist.fg = TEXT_COLOR_BLACK
+        s.ssnptitle.playlist.bgImg = selectionBox
         s.ssnptitle.playlist.text = {}
         s.ssnptitle.playlist.text.align = "top-right"
 
@@ -1512,6 +1562,7 @@ function skin(self, s)
 
 	local ssnoartworkoffset = (screenWidth - ssArtWidth) / 2
 	s.ssnpartwork = {}
+	s.ssnpartwork.order = { 'artwork' }
 	s.ssnpartwork.w = ssArtWidth
 	s.ssnpartwork.border = { ssnoartworkoffset, 25, ssnoartworkoffset, 0 }
 	s.ssnpartwork.position = LAYOUT_CENTER
@@ -1520,7 +1571,43 @@ function skin(self, s)
 	s.ssnpartwork.artwork.align = "center"
 	s.ssnpartwork.artwork.padding = 0
 	s.ssnpartwork.artwork.img = Surface:loadImage(imgpath .. "album_noartwork_375.png")
+
 	s.browsenpartwork = _uses(s.ssnpartwork)
+
+	s.ssnpcontrols = {}
+	s.ssnpcontrols.order = { 'rew', 'play', 'fwd' }
+	s.ssnpcontrols.position = LAYOUT_NONE
+	-- FIXME: box is too big
+
+	local topPadding = screenHeight/2
+	local rightPadding = screenWidth - screenWidth/4
+	s.ssnpcontrols.x = rightPadding
+	s.ssnpcontrols.y = topPadding
+	s.ssnpcontrols.bgImg = softButtonBackground
+
+	s.ssnpcontrols.rew = {}
+	s.ssnpcontrols.rew.align = 'center'
+	s.ssnpcontrols.rew.padding = 10
+	s.ssnpcontrols.rew.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_rew_on.png")
+
+	s.ssnpcontrols.play = {}
+	s.ssnpcontrols.play.align = 'center'
+	s.ssnpcontrols.play.padding = 10
+	s.ssnpcontrols.play.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_play_on.png")
+
+	s.ssnpcontrols.pause = {}
+	s.ssnpcontrols.pause.align = 'center'
+	s.ssnpcontrols.pause.padding = 10
+	s.ssnpcontrols.pause.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_pause_on.png")
+
+
+	s.ssnpcontrols.fwd = {}
+	s.ssnpcontrols.fwd.align = 'center'
+	s.ssnpcontrols.fwd.padding = 10
+	s.ssnpcontrols.fwd.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_ffwd_on.png")
+
+	s.browsenpcontrols = _uses(s.ssnpcontrols)
+
 
 --[[ right now these are the same in alberti
 	-- artwork layout is not the same between the two windowStyles

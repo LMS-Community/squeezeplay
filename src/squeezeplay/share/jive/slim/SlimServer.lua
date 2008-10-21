@@ -335,6 +335,11 @@ end
 
 -- Update server on start up
 function updateInit(self, init)
+	if serverList[self.id] then
+		-- already initialized
+		return
+	end
+
 	self.ip = init.ip
 	self.mac = init.mac
 
@@ -695,7 +700,7 @@ function processArtworkQueue(self)
 				-- XXXX manage pool of connections to remote server
 				local uri  = req:getURI()
 				local http = SocketHttp(self.jnt, uri.host, uri.port, uri.host)
-						    
+ 
 				http:fetch(req)
 			end
 

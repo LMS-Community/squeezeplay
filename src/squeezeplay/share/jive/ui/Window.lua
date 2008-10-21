@@ -90,6 +90,7 @@ local LAYOUT_WEST             = jive.ui.LAYOUT_WEST
 local LAYOUT_CENTER           = jive.ui.LAYOUT_CENTER
 local LAYOUT_NONE             = jive.ui.LAYOUT_NONE
 
+local appletManager           = require("jive.AppletManager")
 
 
 -- our class
@@ -126,10 +127,30 @@ function __init(self, style, title, titleStyle)
 	obj._DEFAULT_SHOW_TRANSITION = transitionPushLeft
 	obj._DEFAULT_HIDE_TRANSITION = transitionPushRight
 
-	if titleStyle then
-		obj:setTitleWidget(Group(titleStyle, { text = Label("text", title), icon = Icon("icon"), back = Button(Icon("back"), function() obj:dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) return EVENT_CONSUME end) }))
-	elseif title then
-		obj:setTitle(title)
+	if title then
+		obj:setTitleWidget(
+			Group(titleStyle or 'title', { 
+				text = Label("text", title), 
+				icon = Icon("icon"), 
+				back = Button(
+					Icon("back"), 
+					function() 
+						obj:dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) 
+						return EVENT_CONSUME 
+					end
+				), 
+				nowplaying = Button(
+					Icon("nowplaying"), 
+					function() 
+						-- check if player is connected
+						if appletManager then
+							obj:dispatchNewEvent(EVENT_KEY_PRESS, self:_goNowPlaying(obj))
+						end
+						return EVENT_CONSUME 
+					end
+				)
+			})
+		)
 	end
 
 	obj:addListener(EVENT_ALL,
@@ -140,6 +161,14 @@ function __init(self, style, title, titleStyle)
 	return obj
 end
 
+function _goNowPlaying(self, obj)
+	local worked = appletManager:callService("goNowPlaying", "browse")
+	log:warn(worked)
+	if not worked then
+		obj:playSound("BUMP")
+		obj:bumpRight()
+	end
+end
 
 --[[
 
