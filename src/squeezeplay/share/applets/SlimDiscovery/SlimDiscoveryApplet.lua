@@ -505,7 +505,7 @@ function notify_playerCurrent(self, player)
 	end
 
 	-- restart discovery when we have no player
-	if player and player:getSlimServer() then
+	if player and player:isConnected() then
 		self:_setState('connected')
 	else
 		self:_setState('searching')

@@ -302,22 +302,20 @@ local opcodes = {
 
 -- Create a slimproto connection object, to connect to SqueezeCenter at
 -- address. The heloPacket is sent on server (re)connection.
-function __init(self, jnt, serverip, heloPacket)
+function __init(self, jnt, heloPacket)
 	-- validate the heloPacket
 	assert(heloPacket.revision)
+	assert(heloPacket.mac)
+	assert(heloPacket.uuid)
 
 	local obj = oo.rawnew(self, {})
 
 	-- connection state UNCONNECTED / CONNECTED
 	obj.state          = UNCONNECTED
-	obj.serverip       = serverip
 
 	-- helo packet sent on connection
 	obj.heloPacket     = heloPacket
-
-	local uuid, mac = jnt:getUUID()
-	obj.heloPacket.mac = string.lower(mac)
-	obj.heloPacket.uuid = uuid
+	obj.heloPacket.mac = string.lower(obj.heloPacket.mac)
 
 	obj.statusCallback = _defaultStatusCallback
 
@@ -326,7 +324,6 @@ function __init(self, jnt, serverip, heloPacket)
 
 	-- network state
 	obj.jnt            = jnt
-	obj.socket         = SocketTcp(jnt, serverip, PORT, "SlimProto")
 
 	-- reconnect timer
 	obj.reconnectTimer = Timer(0, function() _handleTimer(obj) end, true)
@@ -348,7 +345,9 @@ end
 
 
 -- Open the slimproto connection to SqueezeCenter.
-function connect(self)
+function connect(self, serverip)
+	assert(serverip)
+
 	local pump = function(NetworkThreadErr)
 		if NetworkThreadErr then
 			return _handleDisconnect(self, NetworkThreadErr)
@@ -405,6 +404,9 @@ function connect(self)
 		end
 	end
 
+	self.serverip = serverip
+	self.socket = SocketTcp(self.jnt, serverip, PORT, "SlimProto")
+
 	-- connect
 	self.socket:t_connect()
 	self.socket:t_addRead(pump, 0) -- no timeout
@@ -418,8 +420,21 @@ end
 
 -- Disconnect from SqueezeCenter.
 function disconnect(self)
+	if self.state ~= CONNECTED then
+		return
+	end
+
 	self.state = UNCONNECTED
 	self.socket:close()
+
+	self.socket = nil
+	self.serverip = nil
+end
+
+
+-- Return true if slimproto is connected
+function isConnected(self)
+	 return self.state == CONNECTED
 end
 
 
