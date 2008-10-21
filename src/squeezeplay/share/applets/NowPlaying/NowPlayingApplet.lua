@@ -548,7 +548,7 @@ function _createUI(self)
 		  	fwd = Button(
 				Icon('fwd'),
 				function() 
-					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_REW) 
+					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_FWD) 
 					return EVENT_CONSUME 
 				end
 			),

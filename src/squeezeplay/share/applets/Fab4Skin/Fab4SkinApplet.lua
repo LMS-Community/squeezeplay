@@ -300,7 +300,7 @@ function skin(self, s)
 	s.title.padding = { 15, 5, 10, 0 }
 	s.title.position = LAYOUT_NORTH
 	s.title.bgImg = titleBox
-	s.title.order = { "back", "icon", "text" }
+	s.title.order = { "back", "icon", "text", "nowplaying" }
 	s.title.text = {}
         s.title.text.w = WH_FILL
 	s.title.text.padding = TITLE_PADDING
@@ -314,6 +314,11 @@ function skin(self, s)
 	s.title.back.w = 24
 	s.title.back.h = 24
 	s.title.back.padding = { 0, 0, 0, 5 }
+	s.title.nowplaying = {}
+	--FIXME, this png path should likely change
+	s.title.nowplaying.img = Surface:loadImage(imgpath .. "menu_album_noartwork_24.png")
+	s.title.nowplaying.bgImg = selectionBox
+	s.title.nowplaying.align = "right"
 
 	-- Menu with three basic styles: normal, selected and locked
 	-- First define the dimesions of the menu
@@ -735,7 +740,22 @@ function skin(self, s)
 
 -- titles with artwork and song info
 	s.albumtitle = _uses(s.title, {
-				icon = { img = Surface:loadImage(imgpath .. "Icons/Mini/icon_albums.png") }
+				icon = { 
+					img = Surface:loadImage(imgpath .. "Icons/Mini/icon_albums.png"),
+        				padding = { 10, 0, 0, 0 },
+				},
+				nowplaying = {
+        				img     = Surface:loadImage(imgpath .. "menu_album_noartwork_24.png"),
+        				padding = { 5, 10, 15, 5 },
+					align   = "top-right"
+				},
+				text = { 
+					align = 'left',  
+					lineHeight = TITLE_FONT_SIZE + 2,
+					padding = { 10, 5, 8, 5 }
+				},
+				-- FIXME: this needs a box like titleBox, but titleBox does not work for a style of this height
+				bgImg = false
 			}
 	)
 
@@ -754,10 +774,13 @@ function skin(self, s)
 	s.minititle.text.align    = 'center'
 	s.minititle.text.font     = _boldfont(TITLE_FONT_SIZE)
 	s.minititle.text.fg       = TEXT_COLOR
-	s.minititle.order         = { "back", "icon", "text" }
+	s.minititle.order         = { "back", "icon", "text", "nowplaying" }
 	s.minititle.icon = {}
 	s.minititle.icon.padding  = { 0, 0, 0, 4 }
 	s.minititle.icon.align    = 'center'
+	s.minititle.nowplaying = {}
+	s.minititle.nowplaying.img = Surface:loadImage(imgpath .. "menu_album_noartwork_24.png")
+	s.minititle.nowplaying.bgImg  = selectionBox
 
 
 	-- Based on s.title, this is for internetradio title style
@@ -1362,7 +1385,6 @@ function skin(self, s)
 	s.albumcurrent.icon.w = 70
 	s.albumcurrent.icon.h = WH_FILL
 	s.albumcurrent.icon.align = "left"
---	s.albumcurrent.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
 	s.albumcurrent.play = {}
 	s.albumcurrent.play.align = 'top-left'
 	s.albumcurrent.play.img = Surface:loadImage(imgpath .. "Icons/icon_nowplaying_indicator_w.png")
@@ -1455,8 +1477,6 @@ function skin(self, s)
 	-- one for the Screensaver windowStyle (ss), one for the browse windowStyle (browse)
 	-- a lot of it can be recycled from one to the other
 
-	local screenWidth, screenHeight = Framework:getScreenSize()
-
 	local TEXT_COLOR = { 0xE7, 0xE7, 0xE7 }
 	local TEXT_SH_COLOR = { 0x37, 0x37, 0x37 }
 
@@ -1466,7 +1486,17 @@ function skin(self, s)
 	local NP_TRACK_FONT_SIZE = 26
 
 	-- Title
-	s.ssnptitle = _uses(s.title)
+	s.ssnptitle = _uses(s.title, {
+				order     = { "back", "text", "playlist" },
+				playlist  = {
+						padding = { 10, 5, 10, 5 },
+						border  = { 0, 0, 0, 5},
+						font    = _font(14),
+						fg      = TEXT_COLOR_BLACK,
+						bgImg   = selectionBox,
+						align   = "top-right",
+				}
+	})
 
 	-- nptitle style is the same for both windowStyles
 	s.browsenptitle = _uses(s.ssnptitle)
@@ -1511,6 +1541,38 @@ function skin(self, s)
 	s.ssnpartwork.artwork.img = Surface:loadImage(imgpath .. "Icons/icon_album_noartwork_336.png")
 	s.browsenpartwork = _uses(s.ssnpartwork)
 
+	s.ssnpcontrols = {}
+	s.ssnpcontrols.order = { 'rew', 'play', 'fwd' }
+	s.ssnpcontrols.position = LAYOUT_NONE
+
+	local topPadding = screenHeight/2 + 10
+	local rightPadding = screenWidth - screenWidth/2
+	s.ssnpcontrols.x = rightPadding
+	s.ssnpcontrols.y = topPadding
+	s.ssnpcontrols.bgImg = softButtonBackground
+	
+	s.ssnpcontrols.rew = {}
+	s.ssnpcontrols.rew.align = 'center'
+	s.ssnpcontrols.rew.padding = 5
+	s.ssnpcontrols.rew.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_rew_on.png")
+	
+	s.ssnpcontrols.play = {}
+	s.ssnpcontrols.play.align = 'center'
+	s.ssnpcontrols.play.padding = 5
+	s.ssnpcontrols.play.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_play_on.png")
+	
+	s.ssnpcontrols.pause = {}
+	s.ssnpcontrols.pause.align = 'center'
+	s.ssnpcontrols.pause.padding = 5 
+	s.ssnpcontrols.pause.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_pause_on.png")
+	
+	
+	s.ssnpcontrols.fwd = {}
+	s.ssnpcontrols.fwd.align = 'center'
+	s.ssnpcontrols.fwd.padding = 5
+	s.ssnpcontrols.fwd.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_ffwd_on.png")
+	
+	s.browsenpcontrols = _uses(s.ssnpcontrols)
 	-- Progress bar
 	s.ssprogress = {}
 	s.ssprogress.position = LAYOUT_SOUTH
