@@ -79,9 +79,13 @@ function __init(self, jnt, slimproto)
 	self.sentOutputUnderrunEvent = false
 	self.sentAudioUnderrunEvent = false
 
-	log:info("playback init")
-	
 	return obj
+end
+
+
+function free(self)
+	Decode:stop()
+	self.timer:stop()
 end
 
 
