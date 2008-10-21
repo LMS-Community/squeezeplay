@@ -173,9 +173,9 @@ function skin(self, s)
                                        imgpath .. "Screen_Formats/Popup_Menu/helpbox_t.png",
                                        imgpath .. "Screen_Formats/Popup_Menu/helpbox_tr.png",
                                        imgpath .. "Screen_Formats/Popup_Menu/helpbox_r.png",
-					nil,
-					nil,
-					nil,
+                                       imgpath .. "Screen_Formats/Popup_Menu/helpbox_br.png",
+                                       imgpath .. "Screen_Formats/Popup_Menu/helpbox_b.png",
+                                       imgpath .. "Screen_Formats/Popup_Menu/helpbox_bl.png",
                                        imgpath .. "Screen_Formats/Popup_Menu/helpbox_l.png",
                                })
 
@@ -1399,28 +1399,40 @@ function skin(self, s)
 	s.locked.albumcurrent.text.fg = SELECT_COLOR
 	s.locked.albumcurrent.text.sh = SELECT_SH_COLOR
 
+	local POPUP_HEIGHT = 200
 	-- Popup window for current song info
 	s.currentsong = {}
+
 	s.currentsong.x = 0
-	s.currentsong.y = screenHeight - 93
-	s.currentsong.w = screenWidth
-	s.currentsong.h = 93
+	s.currentsong.y = screenHeight - POPUP_HEIGHT
+	s.currentsong.w = screenWidth 
+	s.currentsong.h = POPUP_HEIGHT
+
+	s.currentsong.padding = 12
 	s.currentsong.bgImg = helpBox
 	s.currentsong.albumitem = {}
 	s.currentsong.albumitem.border = { 4, 10, 4, 0 }
 	s.currentsong.albumitem.icon = { }
 	s.currentsong.albumitem.icon.align = "top"
 
-	local POPUP_HEIGHT = 200
+	--FIXME: nothing seems to work at positioning text in the currentsong popup
+	--[[
+	s.currentsong.text = {}
+	s.currentsong.text.w = WH_FILL
+	s.currentsong.text.h = POPUP_HEIGHT
+	s.currentsong.text.border = { 0, 0, 0, 100 }
+	s.currentsong.text.align = 'top-left'
+	--]]
+
 	-- Popup window for play/add without artwork
 	s.popupplay= {}
 	s.popupplay.x = 0
-	s.popupplay.y = screenHeight - 96
-	s.popupplay.w = screenWidth / 2
+	s.popupplay.y = screenHeight - POPUP_HEIGHT
+	s.popupplay.w = screenWidth
 	s.popupplay.h = POPUP_HEIGHT
 
 	-- for textarea properties in popupplay
-	s.popupplay.padding = { 12, 12, 12, 0 }
+	s.popupplay.padding = 12
 	s.popupplay.fg = TEXT_COLOR
 	s.popupplay.font = _font(TRACK_FONT_SIZE)
 	s.popupplay.align = "top-left"
@@ -1428,8 +1440,9 @@ function skin(self, s)
 	s.popupplay.scrollbar.w = 0
 
 	s.popupplay.text = {}
-	s.popupplay.text.w = screenWidth
+	s.popupplay.text.w = WH_FILL
 	s.popupplay.text.h = POPUP_HEIGHT
+	s.popupplay.text.align = 'top-left'
 	s.popupplay.text.padding = { 20, 20, 20, 20 }
 	s.popupplay.text.font = _font(TRACK_FONT_SIZE)
 	s.popupplay.text.lineHeight = TRACK_FONT_SIZE + 2
@@ -1446,12 +1459,12 @@ function skin(self, s)
 	-- Popup window for information display
 	s.popupinfo = {}
 	s.popupinfo.x = 0
-	s.popupinfo.y = screenHeight - 96
+	s.popupinfo.y = screenHeight - POPUP_HEIGHT
 	s.popupinfo.w = screenWidth
 	s.popupinfo.h = POPUP_HEIGHT
 	s.popupinfo.bgImg = helpBox
 	s.popupinfo.text = {}
-	s.popupinfo.text.w = screenWidth
+	s.popupinfo.text.w = WH_FILL
 	s.popupinfo.text.h = POPUP_HEIGHT
 	s.popupinfo.text.padding = { 14, 24, 14, 14 }
 	s.popupinfo.text.font = _boldfont(24)
@@ -1464,8 +1477,6 @@ function skin(self, s)
 	-- this skin is established in two forms,
 	-- one for the Screensaver windowStyle (ss), one for the browse windowStyle (browse)
 	-- a lot of it can be recycled from one to the other
-
-	local screenWidth, screenHeight = Framework:getScreenSize()
 
 	local TEXT_COLOR = { 0xE7, 0xE7, 0xE7 }
 	local TEXT_SH_COLOR = { 0x37, 0x37, 0x37 }
