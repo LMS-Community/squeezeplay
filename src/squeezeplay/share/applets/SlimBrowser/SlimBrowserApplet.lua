@@ -111,6 +111,7 @@ local modeTokens = {
 			stop  = "SLIMBROWSER_STOPPED",
 			off   = "SLIMBROWSER_OFF"
 }
+
 --==============================================================================
 -- Local functions
 --==============================================================================
@@ -978,7 +979,25 @@ local function _browseSink(step, chunk, err)
 					else
 						titleIcon = Icon("icon")
 					end
-					local newTitleWidget = Group(titleStyle, { text = Label("text", titleText), icon = titleIcon })	
+					local newTitleWidget = 
+						Group(titleStyle, { 
+							text = Label("text", titleText), 
+							icon = titleIcon,
+							back = Button(
+								Icon("back"), 
+								function() 
+									step.window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) 
+									return EVENT_CONSUME 
+								end
+							), 
+							nowplaying = Button(
+								Icon("nowplaying"), 
+								function() 
+									step.window:dispatchNewEvent(EVENT_KEY_PRESS, appletManager:callService('goNowPlaying', 'browse')) 
+									return EVENT_CONSUME 
+								end
+							), 
+						})	
 					step.window:setTitleWidget(newTitleWidget)
 				-- change the text as specified if no titleStyle param was also sent
 				elseif data.window.text then

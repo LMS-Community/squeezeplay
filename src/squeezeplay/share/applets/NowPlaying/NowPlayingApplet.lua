@@ -206,7 +206,7 @@ function notify_playerModeChange(self, player, mode)
 		return
 	end
 
-	log:warn("Player mode has been changed to: ", mode)
+	log:debug("Player mode has been changed to: ", mode)
 	self:_updateMode(mode)
 end
 
