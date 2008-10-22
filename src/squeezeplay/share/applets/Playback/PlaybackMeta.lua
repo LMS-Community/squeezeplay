@@ -1,5 +1,5 @@
 
-local getmetatable = getmetatable
+local assert, getmetatable = assert, getmetatable
 
 local oo            = require("loop.simple")
 
@@ -41,25 +41,25 @@ function registerApplet(meta)
 	-- this allows us to share state with the applet
 	meta.state = {}
 
-	local settings = meta:getSettings()
-
-	if settings.enableAudio & 1 == 1 then
-		-- Create player instance
-		local uuid, mac = jnt:getUUID()
-		meta.state.player = LocalPlayer(jnt, mac, uuid)
-	end
-
 	jiveMain:addItem(meta:menuItem('audioPlayback', 'advancedSettings', "AUDIO_PLAYBACK", function(applet, ...) applet:settingsShow(meta.state) end, 1))
 end
 
 
 function configureApplet(meta)
-	if not meta.state.player then
+	local settings = meta:getSettings()
+
+	if settings.enableAudio & 1 == 0 then
 		-- no audio playback
 		return
 	end
 
-	local settings = meta:getSettings()
+
+	-- Create player instance
+	local uuid, id = jnt:getUUID()
+	assert(uuid)
+	assert(id)
+
+	meta.state.player = LocalPlayer(jnt, id, uuid)
 
 	-- Connect player
 	local server = nil
@@ -68,7 +68,10 @@ function configureApplet(meta)
 		server:updateInit(settings.serverInit)
 	end
 
-	meta.state.player:updateInit(server, settings.playerInit)
+	-- Init player
+	if settings.playerInit then
+		meta.state.player:updateInit(server, settings.playerInit)
+	end
 
 	-- Subscribe to changes in player status
 	jnt:subscribe(meta)

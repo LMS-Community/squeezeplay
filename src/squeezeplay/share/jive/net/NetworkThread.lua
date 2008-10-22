@@ -45,6 +45,7 @@ local Task              = require("jive.ui.Task")
 local DNS               = require("jive.net.DNS")
 local Process           = require("jive.net.Process")
 
+local debug             = require("jive.utils.debug")
 local log               = require("jive.utils.log").logger("net.thread")
 
 local perfhook          = jive.perfhook
@@ -64,21 +65,22 @@ local function _add(sock, task, sockList, timeout)
 	if not sock then 
 		return
 	end
-	
+
 	if not sockList[sock] then
 		-- add us if we're not already in there
 		table.insert(sockList, sock)
+
+		sockList[sock] = {
+			lastSeen = Framework:getTicks()
+		}
 	else
 		-- else remove previous task
 		sockList[sock].task:removeTask()
 	end	
-	
+
 	-- remember the pump, the time and the desired timeout
-	sockList[sock] = {
-		task = task,
-		lastSeen = Framework:getTicks(),
-		timeout = (timeout or 60) * 1000
-	}
+	sockList[sock].task = task
+	sockList[sock].timeout = (timeout or 60) * 1000
 end
 
 

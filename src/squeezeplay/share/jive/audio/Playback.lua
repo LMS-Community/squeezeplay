@@ -35,6 +35,9 @@ local TCP_CLOSE_UNREACHABLE   = 3
 local TCP_CLOSE_LOCAL_TIMEOUT = 4
 
 
+local STREAM_READ_TIMEOUT = 30
+local STREAM_WRITE_TIMEOUT = 5
+
 
 function __init(self, jnt, slimproto)
 	assert(slimproto)
@@ -50,6 +53,8 @@ function __init(self, jnt, slimproto)
 		status.opcode = "STAT"
 		status.event = event
 		status.serverTimestamp = serverTimestamp
+		status.isStreaming = (obj.stream ~= nil)
+		status.isLooping = obj.isLooping
 		
 		return status
 	end)
@@ -105,7 +110,7 @@ function _timerCallback(self)
 
 	-- enable stream reads when decode buffer is not full
 	if status.decodeFull < status.decodeSize and self.stream then
-		self.jnt:t_addRead(self.stream, self.rtask, 0) -- XXXX timeout?
+		self.jnt:t_addRead(self.stream, self.rtask, STREAM_READ_TIMEOUT)
 	end
 
 	if status.decodeState & DECODE_UNDERRUN ~= 0 or
@@ -229,10 +234,10 @@ function _streamConnect(self, serverIp, serverPort)
 	log:info("connect streambuf")
 
 	local wtask = Task("streambufW", self, _streamWrite)
-	self.jnt:t_addWrite(self.stream, wtask, 5)
+	self.jnt:t_addWrite(self.stream, wtask, STREAM_WRITE_TIMEOUT)
 	
 	self.rtask = Task("streambufR", self, _streamRead)
-	self.jnt:t_addRead(self.stream, self.rtask, 0) -- XXXX timeout?
+	self.jnt:t_addRead(self.stream, self.rtask, STREAM_READ_TIMEOUT)
 
 	self.slimproto:sendStatus('STMc')
 end
@@ -349,6 +354,7 @@ function _strm(self, data)
 		self.sentDecoderUnderrunEvent = false
 		self.sentOutputUnderrunEvent = false
 		self.sentAudioUnderrunEvent = false
+		self.isLooping = false
 
 		-- connect to server
 		self:_streamConnect(serverIp, data.serverPort)
@@ -402,10 +408,10 @@ end
 
 
 function _cont(self, data)
-	log:info("cont loop=", data.loop)
+	log:debug("cont loop=", data.loop)
 
 	if data.loop == 1 then
-		log:warn("LOOP")
+		self.isLooping = true
 		self.stream:markLoop()
 	end
 

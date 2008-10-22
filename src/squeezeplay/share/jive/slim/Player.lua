@@ -202,6 +202,7 @@ function __init(self, jnt, playerId)
 	-- Only create one player object per id. This avoids duplicates
 	-- when moving between servers
 
+	playerId = string.lower(playerId)
 	if playerIds[playerId] then
 		return playerIds[playerId]
 	end

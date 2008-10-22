@@ -116,6 +116,7 @@ local decoders = {
 
 function _debugMenu(self)
 	local window = Window("window", self:string("DEBUG_AUDIO"))
+	window:setAllowScreensaver(false)
 
 	local values = {}
 	for i=1,6 do
@@ -136,7 +137,7 @@ function _debugMenu(self)
 	window:addTimer(1000, function()
 			local status = Decode:status()
 
-			values[1]:setValue(decoders[string.char(status.decoder or "")] or "?")
+			values[1]:setValue(decoders[string.char(status.decoder or 0)] or "?")
 			values[2]:setValue(string.format('%0.1f%%', status.decodeFull / status.decodeSize * 100))
 			values[3]:setValue(string.format('%0.1f%%', status.outputFull / status.outputSize * 100))
 			values[4]:setValue(status.elapsed)

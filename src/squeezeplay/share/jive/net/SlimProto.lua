@@ -77,6 +77,7 @@ local PORT = 3483
 
 local DEVICEID = 7 -- XXXX using recevier device id
 
+local READ_TIMEOUT = 35
 local WRITE_TIMEOUT = 10
 
 -- connection state
@@ -136,12 +137,18 @@ local opcodes = {
 			uuidp[#uuidp + 1] = string.char(tonumber(v, 16))
 		end
 
+		local wlanList = 0
+		if data.reconnect then
+		   	-- reconnection bit
+			wlanList = wlanList | 0x4000
+		end
+
 		return {
 			packNumber(data.deviceID or DEVICEID, 1),
 			packNumber(data.revision, 1),
 			table.concat(macp),
 			table.concat(uuidp),
-			packNumber(0, 2), -- XXXX reconnection bit
+			packNumber(wlanList, 2),
 			packNumber(0, 8), -- XXXX bytes received
 			"EN", -- XXXX language
 		}
@@ -346,8 +353,6 @@ end
 
 -- Open the slimproto connection to SqueezeCenter.
 function connect(self, serverip)
-	assert(serverip)
-
 	local pump = function(NetworkThreadErr)
 		if NetworkThreadErr then
 			return _handleDisconnect(self, NetworkThreadErr)
@@ -402,14 +407,31 @@ function connect(self, serverip)
 		if not statusSent then
 			self:sendStatus(opcode)
 		end
+
+		-- any future connections to this server are reconnects
+		self.reconnect = true
 	end
 
-	self.serverip = serverip
-	self.socket = SocketTcp(self.jnt, serverip, PORT, "SlimProto")
+	if serverip then
+		self.serverip = serverip
+		self.reconnect = false
+	end
+
+	self.socket = SocketTcp(self.jnt, self.serverip, PORT, "SlimProto")
 
 	-- connect
 	self.socket:t_connect()
-	self.socket:t_addRead(pump, 0) -- no timeout
+
+	-- SC and SN ping the player every 5 and 30 seconds respectively.
+	-- This timeout could be made shorter in the SC case.
+	self.socket:t_addRead(pump, READ_TIMEOUT)
+
+	-- the reconnect bit means that we have a running data connection
+	-- for this server or we're looping
+	local status = self.statusCallback(self, event, serverTimestamp)
+	self.heloPacket.reconnect =
+		self.reconnect and
+		(status.isStreaming or status.isLooping)
 
 	self.state = CONNECTED
 
@@ -428,7 +450,6 @@ function disconnect(self)
 	self.socket:close()
 
 	self.socket = nil
-	self.serverip = nil
 end
 
 
