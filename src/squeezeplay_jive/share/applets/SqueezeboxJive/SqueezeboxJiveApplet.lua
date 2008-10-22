@@ -175,11 +175,9 @@ function init(self)
 
 				      elseif sw == SW_PHONE_DETECT then
 					      if val == 1 then
-						      jiveBSP.mixer(0, 97, 97)
-						      jiveBSP.mixer(5, 0, 0)
+					      	      os.execute("amixer -q sset Endpoint Headphone")
 					      else
-						      jiveBSP.mixer(0, 0, 0)
-						      jiveBSP.mixer(5, 97, 97)
+					      	      os.execute("amixer -q sset Endpoint Speaker")
 					      end
 				      end
 
@@ -245,11 +243,9 @@ function init(self)
 	-- headphone or speaker
 	local headphone = jiveBSP.ioctl(18)
 	if headphone == 1 then
-		jiveBSP.mixer(0, 97, 97)
-		jiveBSP.mixer(5, 0, 0)
+      		os.execute("amixer -q sset Endpoint Headphone")
 	else
-		jiveBSP.mixer(0, 0, 0)
-		jiveBSP.mixer(5, 97, 97)
+     		os.execute("amixer -q sset Endpoint Speaker")
 	end
 
 	-- set initial state

@@ -18,11 +18,9 @@
 
 
 static const char *bsp_devname = "/dev/misc/jive_mgmt";
-static const char *mixer_devname = "/dev/mixer";
 
 
 static int bsp_fd = -1;
-static int mixer_fd = -1;
 static int switch_event_fd = -1;
 static int wheel_event_fd = -1;
 static int motion_event_fd = -1;
@@ -53,35 +51,6 @@ static int l_jivebsp_ioctl(lua_State *L) {
 
 	lua_pushinteger(L, v);
 	return 1;
-}
-
-
-static int l_jivebsp_mixer(lua_State *L) {
-	unsigned int channel, l, r, volume;
-
-	if (mixer_fd == -1) {
-		// silently fail
-		return 0;
-	}
-
-	channel = luaL_checkinteger(L, 1); // mixer
-	l = luaL_checkinteger(L, 2); // left
-	r = luaL_checkinteger(L, 3); // right
-
-	if (l > 100) {
-		l = 100;
-	}
-	if (r > 100) {
-		r = 100;
-	}
-
-	volume = l | (r << 8);
-	if (ioctl(mixer_fd, MIXER_WRITE(channel), &volume) == -1) {
-		lua_pushstring(L, "Mixer ioctl failed");
-		lua_error(L);
-	}
-
-	return 0;
 }
 
 
@@ -306,7 +275,6 @@ static int event_pump(lua_State *L) {
 
 static const struct luaL_Reg jivebsplib[] = {
 	{ "ioctl", l_jivebsp_ioctl },
-	{ "mixer", l_jivebsp_mixer },
 	{ NULL, NULL }
 };
 
@@ -314,11 +282,6 @@ int luaopen_jiveBSP(lua_State *L) {
 	bsp_fd = open(bsp_devname, O_RDWR);
 	if (bsp_fd == -1) {
 		perror("jivebsp:");
-	}
-
-	mixer_fd = open(mixer_devname, O_RDWR);
-	if (mixer_fd == -1) {
-		perror("jivebsp mixer:");
 	}
 
 	open_input_devices();
