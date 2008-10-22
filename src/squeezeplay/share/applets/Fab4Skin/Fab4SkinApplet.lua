@@ -1546,30 +1546,31 @@ function skin(self, s)
 	s.ssnpcontrols.position = LAYOUT_NONE
 
 	local topPadding = screenHeight/2 + 10
-	local rightPadding = screenWidth - screenWidth/2
+	local rightPadding = screenWidth/2 - 15
+	local buttonPadding = { 20, 5, 20, 5 }
 	s.ssnpcontrols.x = rightPadding
 	s.ssnpcontrols.y = topPadding
 	s.ssnpcontrols.bgImg = softButtonBackground
 	
 	s.ssnpcontrols.rew = {}
 	s.ssnpcontrols.rew.align = 'center'
-	s.ssnpcontrols.rew.padding = 5
+	s.ssnpcontrols.rew.padding = buttonPadding
 	s.ssnpcontrols.rew.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_rew_on.png")
 	
 	s.ssnpcontrols.play = {}
 	s.ssnpcontrols.play.align = 'center'
-	s.ssnpcontrols.play.padding = 5
+	s.ssnpcontrols.play.padding = buttonPadding
 	s.ssnpcontrols.play.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_play_on.png")
 	
 	s.ssnpcontrols.pause = {}
 	s.ssnpcontrols.pause.align = 'center'
-	s.ssnpcontrols.pause.padding = 5 
+	s.ssnpcontrols.pause.padding = buttonPadding
 	s.ssnpcontrols.pause.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_pause_on.png")
 	
 	
 	s.ssnpcontrols.fwd = {}
 	s.ssnpcontrols.fwd.align = 'center'
-	s.ssnpcontrols.fwd.padding = 5
+	s.ssnpcontrols.fwd.padding = buttonPadding
 	s.ssnpcontrols.fwd.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_ffwd_on.png")
 	
 	s.browsenpcontrols = _uses(s.ssnpcontrols)
