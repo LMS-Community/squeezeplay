@@ -45,8 +45,6 @@ function __init(self, jnt, id, uuid)
 	})
 	obj.playback = Playback(jnt, obj.slimproto)
 
-log:warn("******** ", DEVICE_MODEL, " ", deviceid, " ", obj.slimproto)
-
 	-- initialize with default values
 	obj:updateInit(nil, {
 		name = DEVICE_MODEL,
