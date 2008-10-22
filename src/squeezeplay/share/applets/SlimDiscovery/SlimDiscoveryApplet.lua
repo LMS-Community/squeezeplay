@@ -427,7 +427,9 @@ function notify_serverDisconnected(self, slimserver)
 	end
 
 	-- start discovery looking for the player
-	self:_setState('searching')
+	if self.state == 'connected' then
+		self:_setState('searching')
+	end
 end
 
 
@@ -532,7 +534,7 @@ end
 function connectPlayer(self)
 	local player = Player:getCurrentPlayer()
 
-	if currentPlayer and currentPlayer:getSlimServer() then
+	if currentPlayer and currentPlayer:isConnected() then
 		self:_setState("connected")
 	else
 		self:_setState("searching")
