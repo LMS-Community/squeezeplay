@@ -30,8 +30,8 @@ local device2id = {
 	["SqueezePlay"] = 12,
 }
 
-function __init(self, jnt, id, uuid)
-	local obj = oo.rawnew(self, Player(jnt, id))
+function __init(self, jnt, playerId, uuid)
+	local obj = oo.rawnew(self, Player(jnt, playerId))
 
 	local deviceid = device2id[DEVICE_MODEL]
 	assert(deviceid)
@@ -40,7 +40,7 @@ function __init(self, jnt, id, uuid)
 		opcode = "HELO",
 		deviceID = deviceid,
 	       	revision = 0,
-		mac = id,
+		mac = obj.id,
 		uuid = uuid,
 	})
 	obj.playback = Playback(jnt, obj.slimproto)
