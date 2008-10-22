@@ -395,7 +395,9 @@ function notify_playerDisconnected(self, player)
 	end
 
 	-- start discovery looking for the player
-	self:_setState('searching')
+	if self.state == 'connected' then
+		self:_setState('searching')
+	end
 end
 
 
