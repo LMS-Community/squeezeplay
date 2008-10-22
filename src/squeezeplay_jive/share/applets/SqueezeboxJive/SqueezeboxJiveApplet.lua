@@ -1092,6 +1092,9 @@ function _suspendTask(self)
 		if not wirelessWasConnected and status and status.wpa_state
 			or (status.wpa_state == "COMPLETED" and status.ip_address and (not string.match(status.ip_address, "^169.254.") or zeroconf)) then
 
+			-- restart discovery
+			appletManager:callService("connectPlayer")
+
 			-- force connection to SlimServer
 			if wirelessWasConnected then
 				jnt:notify("networkConnected")
