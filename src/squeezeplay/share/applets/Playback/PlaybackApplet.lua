@@ -116,6 +116,7 @@ local decoders = {
 
 function _debugMenu(self)
 	local window = Window("window", self:string("DEBUG_AUDIO"))
+	window:setAllowScreensaver(false)
 
 	local values = {}
 	for i=1,6 do
