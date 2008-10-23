@@ -128,7 +128,8 @@ then
     then
 	case "$host" in
 	    i386-*)           ;;
-	    i?86-*)           arch="-march=i486" ;;
+	    i?86-apple-*)     ;; #for universal binary
+	    i?86-*)           ;;
 	    arm*-empeg-*)     arch="-march=armv4 -mtune=strongarm1100" ;;
 	    armv4*-*)         arch="-march=armv4 -mtune=strongarm" ;;
 	    powerpc-*)        ;;
@@ -171,6 +172,13 @@ then
 		mips*-*)
 		    optimize="$optimize -fstrength-reduce"
 		    optimize="$optimize -finline-functions"
+		    ;;
+		i?86-apple-*) #for universal binary
+		    # this triggers an internal compiler error with gcc2
+		    : #optimize="$optimize -fstrength-reduce"
+
+		    # this is really only beneficial with gcc3
+		    : #optimize="$optimize -finline-functions"
 		    ;;
 		i?86-*)
 		    optimize="$optimize -fstrength-reduce"

@@ -3,30 +3,48 @@
 # Build Universal binaries on Mac OS X, thanks Ryan!
 #
 # Usage: ./configure CC="sh gcc-fat.sh" && make && rm -rf ppc x86
+# PowerPC compiler flags (10.3 runtime compatibility)
 
-# PowerPC compiler flags (10.2 runtime compatibility)
-GCC_COMPILE_PPC="gcc-3.3 -arch ppc \
--DMAC_OS_X_VERSION_MIN_REQUIRED=1020 \
+
+GCC_COMPILE_PPC="gcc-4.0 -arch ppc \
+-DMAC_OS_X_VERSION_MIN_REQUIRED=1040 \
 -nostdinc \
--F/Developer/SDKs/MacOSX10.2.8.sdk/System/Library/Frameworks \
--I/Developer/SDKs/MacOSX10.2.8.sdk/usr/include/gcc/darwin/3.3 \
--isystem /Developer/SDKs/MacOSX10.2.8.sdk/usr/include"
+-F/Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks \
+-I/Developer/SDKs/MacOSX10.4u.sdk/usr/lib/gcc/powerpc-apple-darwin9/4.0.1/include
+-isystem /Developer/SDKs/MacOSX10.4u.sdk/usr/include"
+
 
 GCC_LINK_PPC="\
--L/Developer/SDKs/MacOSX10.2.8.sdk/usr/lib/gcc/darwin/3.3 \
--F/Developer/SDKs/MacOSX10.2.8.sdk/System/Library/Frameworks \
--Wl,-syslibroot,/Developer/SDKs/MacOSX10.2.8.sdk"
+-mmacosx-version-min=10.3 \
+-L/Developer/SDKs/MacOSX10.4u.sdk/usr/lib/gcc/powerpc-apple-darwin9/4.0.1 \
+-F/Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks \
+-Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk"
+
+
+#GCC_COMPILE_PPC="gcc-4.0 -arch ppc \
+#-DMAC_OS_X_VERSION_MIN_REQUIRED=1030 \
+#-nostdinc \
+#-F/Developer/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks \
+#-I/Developer/SDKs/MacOSX10.3.9.sdk/usr/lib/gcc/powerpc-apple-darwin9/4.0.1/include
+#-isystem /Developer/SDKs/MacOSX10.3.9.sdk/usr/include"
+#
+#
+#GCC_LINK_PPC="\
+#-mmacosx-version-min=10.3 \
+#-L/Developer/SDKs/MacOSX10.3.9.sdk/usr/lib/gcc/powerpc-apple-darwin9/4.0.1 \
+#-F/Developer/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks \
+#-Wl,-syslibroot,/Developer/SDKs/MacOSX10.3.9.sdk"
 
 # Intel compiler flags (10.4 runtime compatibility)
 GCC_COMPILE_X86="gcc-4.0 -arch i386 -mmacosx-version-min=10.4 \
 -DMAC_OS_X_VERSION_MIN_REQUIRED=1040 \
 -nostdinc \
 -F/Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks \
--I/Developer/SDKs/MacOSX10.4u.sdk/usr/lib/gcc/i686-apple-darwin8/4.0.1/include \
+-I/Developer/SDKs/MacOSX10.4u.sdk/usr/lib/gcc/i686-apple-darwin9/4.0.1/include \
 -isystem /Developer/SDKs/MacOSX10.4u.sdk/usr/include"
 
 GCC_LINK_X86="\
--L/Developer/SDKs/MacOSX10.4u.sdk/usr/lib/gcc/i686-apple-darwin8/4.0.0 \
+-L/Developer/SDKs/MacOSX10.4u.sdk/usr/lib/gcc/i686-apple-darwin9/4.0.0 \
 -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk"
 
 # Output both PowerPC and Intel object files
@@ -78,6 +96,10 @@ while test x$1 != x; do
     fi
     shift
 done
+
+#echo "PPC\n" 
+#echo $GCC_COMPILE_PPC $ppc_args 
+
 $GCC_COMPILE_PPC $ppc_args || exit $?
 if test x"$output" != x; then
     cp $output ppc/$output
@@ -100,6 +122,10 @@ while test x$1 != x; do
     fi
     shift
 done
+
+#echo "X86\n"
+#echo $GCC_COMPILE_X86 $x86_args
+
 $GCC_COMPILE_X86 $x86_args || exit $?
 if test x"$output" != x; then
     cp $output x86/$output

@@ -48,7 +48,7 @@ OSX_STATIC_LIBS = `$(SDL_CONFIG) --static-libs` \
 	$(JIVE_DEPENDENCIES_LIB_DIR)/libjiveaudio.a $(JIVE_DEPENDENCIES_LIB_DIR)/libjivenet.a $(JIVE_DEPENDENCIES_LIB_DIR)/libjiveui.a
 
 SqueezePlay: $(jive_OBJECTS) $(jive_DEPENDENCIES)
-	$(CXX) $(LDFLAGS) \
+	$(CC) $(LDFLAGS) \
 	-force_cpusubtype_ALL \
 	-framework CoreAudio \
 	-o $(JIVE_STATIC_PROGRAM) $(jive_OBJECTS)   \
