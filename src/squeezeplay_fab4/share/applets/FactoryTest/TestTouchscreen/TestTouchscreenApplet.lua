@@ -30,6 +30,11 @@ function init(self)
 end
 
 
+function _drawBox(self, x, y, dx, dy)
+	local
+	self.canvas:rectangle(x, x + dx, y, y + dy, color)
+end
+
 function _drawTarget(self, spot, offset, r, col)
 	local x = spot.x + (offset * r)
 	local y = spot.y
