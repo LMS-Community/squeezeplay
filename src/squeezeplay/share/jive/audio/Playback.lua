@@ -67,6 +67,14 @@ function __init(self, jnt, slimproto)
 		return obj:_cont(data)
 	end)
 
+	obj.slimproto:subscribe("audg", function(_, data)
+		return obj:_audg(data)
+	end)
+
+	obj.slimproto:subscribe("aude", function(_, data)
+		return obj:_aude(data)
+	end)
+
 	obj.timer = Timer(100, function()
 		obj:_timerCallback()
 	end)
@@ -423,6 +431,16 @@ function _cont(self, data)
 	-- XXXX wma guid's
 
 	self.autostart = (self.autostart == '2') and '0' or '1'
+end
+
+
+function _aude(self, data)
+	 Decode:audioEnable(data.enable)
+end
+
+
+function _audg(self, data)
+	 Decode:audioGain(data.gainL, data.gainR)
 end
 
 

@@ -92,6 +92,7 @@ struct decode_audio {
 	void (*resume)(void);
 	void (*stop)(void);
 	u32_t (*delay)(void);
+	void (*gain)(s32_t lgain, s32_t rgain);
 };
 
 extern struct decode_audio decode_alsa;

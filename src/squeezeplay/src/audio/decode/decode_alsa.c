@@ -447,6 +447,12 @@ static u32_t decode_alsa_delay(void)
 }
 
 
+static void decode_alsa_gain(s32_t lgain, s32_t rgain)
+{
+	printf("fixme gain %d,%d\n", lgain, rgain);
+}
+
+
 struct decode_audio decode_alsa = {
 	decode_alsa_init,
 	decode_alsa_start,
@@ -454,6 +460,7 @@ struct decode_audio decode_alsa = {
 	decode_alsa_resume,
 	decode_alsa_stop,
 	decode_alsa_delay,
+	decode_alsa_gain,
 };
 
 #endif // HAVE_LIBASOUND
