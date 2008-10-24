@@ -7,17 +7,32 @@
 # User specific stuff
 #
 
-# This indicates where to find the libs on OS X. /opt/local is the MacPorts
-# default. Use /sw if you prefer to use Fink.
-export OSXPORTS =/opt/local
-
 #
 # OS X specific stuff
 #
 
-export MACOSX_DEPLOYMENT_TARGET=10.3
+#DEPLOYMEN_TARGET handled in ./gcc-fat
+#export MACOSX_DEPLOYMENT_TARGET=10.3
 ARCH = $(shell uname -m | grep i386)
-#echo ${ARCH}
+
+
+#UNIVERSAL BINARY NOTES:
+#
+# * In general Using CC=sh gcc-fat.sh idea from SDL (seemed cleanest way to deal with so many different type of 
+#    Makefile/config issues with different libraries) gcc-fat.sh came fm SDL_image
+# * Modified gcc-fat.sh it to avoid issue with attempts to do 10.2 compatibitity, and put it at top level for all modules to use
+# * For SDL core, using build-scripts/fatbuild.sh to get a universal binary that doesn't 
+#    have endian issues (all other techniques failed)
+# * For libmad - modified configure.ac to force the disabling of i386 optimizations for mac - if need 
+#    be, to get this optimization back for i386 mac, we could do some sort of fatbuild.sh way where two configures are run 
+# * 10.3 compatibilty turned off (in gcc-fat.sh) see bug 9790 - note lua compilation would need 10.3 support see lua/Makefile 
+# * Added -L/usr/lib to end of LDFLAGS to pick up univeraal version of libz
+# * mmx disabled in SDL_gfx
+
+#TODO: 
+#rm other gcc-fats
+# add SPUD change - do as a secondary check-in
+# rm these todos
 
 
 #
@@ -33,13 +48,13 @@ export BUILD_TOP=$(BASE_DIR)/build/osx
 
 export PREFIX=${BUILD_TOP}
 
-export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${OSXPORTS}/include -g
-export LDFLAGS=-L${PREFIX}/lib -L${OSXPORTS}/lib
-# make sure we include port directories for jpeg, png, etc..
+export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -g
+export LDFLAGS=-L${PREFIX}/lib -L/usr/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
 
 export SDL_CONFIG = sdl-config
+export CC=sh ${BASE_DIR}src/gcc-fat.sh
 
 #
 # Top level targets
@@ -52,40 +67,55 @@ all: sdl-all lua-all app
 # SDL
 #####
 
-.PHONY: sdl-all freetype sdl sdl-image sdl-ttf sdl-gfx
-sdl-all: freetype sdl sdl-image sdl-ttf sdl-gfx
+.PHONY: sdl-all freetype  libpng libjpeg sdl sdl-image sdl-ttf sdl-gfx
+sdl-all: freetype sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
 
 # freetype
 freetype-2.1.10/config.mk:
-	cd freetype-2.1.10; ./configure --enable-shared --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+	cd freetype-2.1.10; ./configure  --enable-shared --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} CC="'${CC}'"
 
 freetype: freetype-2.1.10/config.mk
 	cd freetype-2.1.10; make; make DESTDIR= install
 
-# sdl
-SDL-1.2.13/Makefile:
-	cd SDL-1.2.13; ./configure --prefix=${PREFIX} --disable-video-x11;
+# png also add clean
+libpng-1.2.32/Makefile:
+	cd libpng-1.2.32; ./configure  --prefix=${PREFIX}
 
-sdl: SDL-1.2.13/Makefile
-	cd SDL-1.2.13; make && make install
+libpng: libpng-1.2.32/Makefile
+	cd libpng-1.2.32; make && make install
+
+# jpeg
+jpeg-6b/Makefile:
+	-mkdir -p ${BUILD_TOP}/man/man1
+	cd jpeg-6b; ./configure --enable-shared --enable-static --prefix=${PREFIX}
+
+libjpeg: jpeg-6b/Makefile
+	cd jpeg-6b; make && make install
+	
+# sdl - check for existance of just one of the Makefiles to determine if we should reconfigure for each
+SDL-1.2.13/build/ppc/Makefile:
+	cd SDL-1.2.13; sh build-scripts/fatbuild.sh configure CONFIGURE_FLAGS_EXTRA="--disable-video-x11 --disable-nasm"
+
+sdl: SDL-1.2.13/build/ppc/Makefile
+	cd SDL-1.2.13; sh build-scripts/fatbuild.sh make && sh build-scripts/fatbuild.sh install
 
 # sdl_image (requires jpeg tiff png)
 SDL_image-1.2.5/Makefile:
-	cd SDL_image-1.2.5; ./configure --disable-tif --prefix=${PREFIX} SDL_CONFIG=${PREFIX}/bin/sdl-config
+	cd SDL_image-1.2.5; ./configure  --disable-sdltest --disable-tif --prefix=${PREFIX} SDL_CONFIG=${PREFIX}/bin/sdl-config
 
 sdl-image: SDL_image-1.2.5/Makefile
 	cd SDL_image-1.2.5; make && make install
 
 # sdl_ttf
 SDL_ttf-2.0.8/Makefile:
-	cd SDL_ttf-2.0.8; SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config ./configure --prefix=${PREFIX}
+	cd SDL_ttf-2.0.8; SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config ./configure  --prefix=${PREFIX}
 
 sdl-ttf: SDL_ttf-2.0.8/Makefile
 	cd SDL_ttf-2.0.8; make SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config && make install
 
 # sdl_gfx
 SDL_gfx-2.0.15/Makefile:
-	@if [ x$(ARCH) == xi386 ]; then cd SDL_gfx-2.0.15; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --prefix=${PREFIX}; fi
+	@if [ x$(ARCH) == xi386 ]; then cd SDL_gfx-2.0.15; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure  --prefix=${PREFIX} --disable-mmx; fi
 	@if [ x$(ARCH) == x ]; then cd SDL_gfx-2.0.15; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --prefix=${PREFIX} --disable-mmx; fi
 
 sdl-gfx: SDL_gfx-2.0.15/Makefile
@@ -138,7 +168,7 @@ lualogging:
 	cd lualogging-1.1.2; make install LUA_DIR=${PREFIX}/share/lua/5.1
 
 luaexpat: lua
-	cd luaexpat-1.0.2; make PREFIX=${PREFIX} PLATFORM=osx && make install PREFIX=${PREFIX} PLATFORM=osx
+	cd luaexpat-1.0.2; make PREFIX=${PREFIX} PLATFORM=osx CC="cc -arch i386 -arch ppc" && make install PREFIX=${PREFIX} PLATFORM=osx
 
 luafilesystem:
 	cd luafilesystem-1.2; make install PREFIX=${PREFIX} PLATFORM=osx
@@ -148,7 +178,7 @@ luaprofiler:
 
 # just compile the library for to tolua++
 tolua++:
-	cd tolua++-1.0.92/src/lib; cc -I../../include -pedantic -Wall -O2 -fno-common ${CFLAGS} -c *.c
+	cd tolua++-1.0.92/src/lib; cc -arch i386 -arch ppc -I../../include -pedantic -Wall -O2 -fno-common ${CFLAGS} -c *.c
 	cd tolua++-1.0.92/src/lib; ar -rcu libtolua++.a tolua_event.o tolua_is.o tolua_map.o tolua_push.o tolua_to.o 
 	mkdir -p ${PREFIX}/lib
 	install tolua++-1.0.92/include/tolua++.h ${PREFIX}/include
@@ -161,11 +191,11 @@ tolua++:
 #
 
 .PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_dmg
-app: portaudio flac libmad tremor libpng libjpeg squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_dmg
+app: portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_dmg
 
 # portaudio
 portaudio_v19_1360/Makefile:
-	cd portaudio_v19_1360; ./configure --prefix=${PREFIX}
+	cd portaudio_v19_1360; ./configure CC= --prefix=${PREFIX}
 
 portaudio: portaudio_v19_1360/Makefile
 	cd portaudio_v19_1360; make && make install
@@ -179,7 +209,7 @@ flac: flac-1.2.1/Makefile
 
 # libmad
 libmad-0.15.1b/Makefile:
-	cd libmad-0.15.1b; ./configure --prefix=${PREFIX}
+	cd libmad-0.15.1b; ./configure --enable-fpm=default  --prefix=${PREFIX}
 
 libmad: libmad-0.15.1b/Makefile
 	cd libmad-0.15.1b; make && make install
@@ -190,22 +220,6 @@ Tremor/Makefile:
 
 tremor: Tremor/Makefile
 	cd Tremor; make && make install
-
-
-# png also add clean
-libpng-1.2.32/Makefile:
-	cd libpng-1.2.32; ./configure  --prefix=${PREFIX}
-
-libpng: libpng-1.2.32/Makefile
-	cd libpng-1.2.32; make && make install
-
-
-# jpeg
-jpeg-6b/Makefile:
-	cd jpeg-6b; ./configure --enable-shared --enable-static --prefix=${PREFIX}
-
-libjpeg: jpeg-6b/Makefile
-	cd jpeg-6b; make && make install
 
 
 # squeezeplay
@@ -244,54 +258,70 @@ squeezeplay_dmg: squeezeplay/Makefile
 clean:
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: squeezeplay"
-	-cd squeezeplay; make distclean
+	-cd squeezeplay; make distclean ; rm -rf x86; rm -rf ppc
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: portaudio"
+	-cd portaudio_v19_1360; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: tremor"
+	-cd Tremor; make distclean ; rm -rf x86; rm -rf ppc
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: mad"
+	-cd libmad-0.15.1b; make distclean ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libpng"
-	-cd libpng-1.2.32; make distclean
+	-cd libpng-1.2.32; make distclean ; rm -rf x86; rm -rf ppc
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: libflac"
+	-cd flac-1.2.1; make distclean ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libjpeg"
+	-cd jpeg-6b; make distclean ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
-	-cd jpeg-6b; make distclean
 	@echo "Cleaning: squeezeplay"
-	-cd squeezeplay; make distclean
+	-cd squeezeplay; make distclean ; rm -rf x86; rm -rf ppc
+	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL"
-	-cd SDL-1.2.13; make distclean; rm -f include/SDL_config.h;
+	-cd SDL-1.2.13; rm -f include/SDL_config.h;  rm -rf build/x86; rm -rf build/ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL_image"
-	-cd SDL_image-1.2.5; make distclean
+	-cd SDL_image-1.2.5; make distclean ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL_ttf"
-	-cd SDL_ttf-2.0.8; make distclean
+	-cd SDL_ttf-2.0.8; make distclean ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL_gfx"
-	-cd SDL_gfx-2.0.15; make distclean
+	-cd SDL_gfx-2.0.15; make distclean ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: freetype"
-	-cd freetype-2.1.10; make distclean
+	-cd freetype-2.1.10; make distclean ; rm -rf builds/unix/x86; rm -rf builds/unix/ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: lua"
-	-cd lua-5.1.1; make clean
+	-cd lua-5.1.1; make clean ; rm -rf src/x86; rm -rf src/ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: luasocket"
-	-cd luasocket-2.0.1; make clean PLATFORM=osx
+	-cd luasocket-2.0.1; make clean PLATFORM=osx ; rm -rf src/x86; rm -rf src/ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: luaprofiler"
-	-cd luaprofiler-2.0; make -f Makefile.darwin clean
+	-cd luaprofiler-2.0; make -f Makefile.darwin clean ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: slnunicode"
-	-cd slnunicode-1.1; make clean PLATFORM=osx
+	-cd slnunicode-1.1; make clean PLATFORM=osx ; rm -rf src/x86; rm -rf src/ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: luaexpat"
 	-cd luaexpat-1.0.2; make clean PLATFORM=osx
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: luafilesystem"
-	-cd luafilesystem-1.2; make clean PLATFORM=osx
+	-cd luafilesystem-1.2; make clean PLATFORM=osx ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: luajson"
-	-cd luajson; make distclean
+	-cd luajson; make distclean ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning luazipfilter"
-	-cd luazipfilter; make distclean
+	-cd luazipfilter; make distclean ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: tolua++"
-	-cd tolua++-1.0.92/src/lib; rm libtolua++.a; rm *.o
+	-cd tolua++-1.0.92/src/lib; rm libtolua++.a; rm *.o ; rm -rf x86; rm -rf ppc
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: Build dir"
+	-cd $(BASE_DIR)/build; rm -rf osx

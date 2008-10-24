@@ -48,7 +48,7 @@ OSX_STATIC_LIBS = `$(SDL_CONFIG) --static-libs` \
 	$(JIVE_DEPENDENCIES_LIB_DIR)/libjiveaudio.a $(JIVE_DEPENDENCIES_LIB_DIR)/libjivenet.a $(JIVE_DEPENDENCIES_LIB_DIR)/libjiveui.a
 
 SqueezePlay: $(jive_OBJECTS) $(jive_DEPENDENCIES)
-	$(CXX) $(LDFLAGS) \
+	$(CC) $(LDFLAGS) \
 	-force_cpusubtype_ALL \
 	-framework CoreAudio \
 	-o $(JIVE_STATIC_PROGRAM) $(jive_OBJECTS)   \
@@ -118,7 +118,7 @@ SqueezePlay_dmg: SqueezePlay_bundle
 	-rm $(DMG_TMP_IMAGE_FILENAME)
 	mkdir -p $(DMG_TEMP_DIR)
 	-hdiutil detach "/Volumes/$(DMG_IMAGE_DIR)"
-	hdiutil create -fs HFS+ -volname "$(DMG_IMAGE_DIR)" -size 100m "$(DMG_TEMP_DIR)"
+	hdiutil create -fs HFS+ -layout SPUD -volname "$(DMG_IMAGE_DIR)" -size 100m "$(DMG_TEMP_DIR)"
 	hdiutil mount "$(DMG_TMP_IMAGE_FILENAME)"
 	/Developer/Tools/CpMac -r $(BUNDLE_NAME) /Volumes/$(DMG_IMAGE_DIR)
 	hdiutil detach "/Volumes/$(DMG_IMAGE_DIR)"

@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # Build a fat binary on Mac OS X, thanks Ryan!
-
+prefix=$PREFIX
 # Number of CPUs (for make -j)
 NCPU=`sysctl -n hw.ncpu`
 NJOB=$NCPU
@@ -202,7 +202,7 @@ done
 #
 if test x$configure_ppc = xyes; then
     (cd build/ppc && \
-     sh ../../configure $CONFIG_PPC CC="$CC_PPC" CXX="$CXX_PPC" CFLAGS="$CFLAGS $CFLAGS_PPC" CPPFLAGS="$CPPFLAGS_PPC" LDFLAGS="$LFLAGS_PPC") || exit 2
+     sh ../../configure $CONFIGURE_FLAGS_EXTRA --prefix=$PREFIX $CONFIG_PPC CC="$CC_PPC" CXX="$CXX_PPC" CFLAGS="$CFLAGS $CFLAGS_PPC" CPPFLAGS="$CPPFLAGS_PPC" LDFLAGS="$LFLAGS_PPC") || exit 2
 fi
 if test x$make_ppc = xyes; then
     (cd build/ppc && ls include && make -j$NJOB) || exit 3
@@ -213,7 +213,7 @@ fi
 #
 if test x$configure_x86 = xyes; then
     (cd build/x86 && \
-     sh ../../configure $CONFIG_X86 CC="$CC_X86" CXX="$CXX_X86" CFLAGS="$CFLAGS $CFLAGS_X86" CPPFLAGS="$CPPFLAGS_X86" LDFLAGS="$LFLAGS_X86") || exit 2
+     sh ../../configure $CONFIGURE_FLAGS_EXTRA --prefix=$PREFIX $CONFIG_X86 CC="$CC_X86" CXX="$CXX_X86" CFLAGS="$CFLAGS $CFLAGS_X86" CPPFLAGS="$CPPFLAGS_X86" LDFLAGS="$LFLAGS_X86") || exit 2
 fi
 if test x$make_x86 = xyes; then
     (cd build/x86 && make -j$NJOB) || exit 3
