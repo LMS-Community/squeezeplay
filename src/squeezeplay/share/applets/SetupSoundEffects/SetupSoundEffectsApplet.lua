@@ -353,27 +353,27 @@ function _customSoundMenu(self, sound, custom)
 	for _,v in pairs(custom) do
 		menu:addItem({
 			weight = 10,
-			text = v.name,
+			text = v.title,
 			icon = RadioButton("radio",
 							   group,
 							   function()
-								   local path = Framework:findFile(PATH) .. v.file
+								   local path = Framework:findFile(PATH) .. v.name
 								   local attr = lfs.attributes(path)
 								   if attr then
-									   log:info("setting ", v.file, " as active sound for ", sound)
-									   self:_setCustom(sound, v.file)
+									   log:info("setting ", v.name, " as active sound for ", sound)
+									   self:_setCustom(sound, v.name)
 									   Framework:playSound(sound)
 								   end
 							   end,
-							   settings["_CUSTOM"] ~= nil and settings["_CUSTOM"][sound] == v.file
+							   settings["_CUSTOM"] ~= nil and settings["_CUSTOM"][sound] == v.name
 						   ),
 			focusGained = function()
-							  local path = Framework:findFile(PATH) .. v.file
+							  local path = Framework:findFile(PATH) .. v.name
 							  local attr = lfs.attributes(path)
 							  if attr and os.time() - attr.modification < REFRESH_TIME then
-								  log:info("using local copy of: ", v.file)
+								  log:info("using local copy of: ", v.name)
 							  else
-								  log:info("fetching: ", v.file)
+								  log:info("fetching: ", v.name)
 								  self:_fetchFile(v.url, path, function() end)
 							  end
 						  end

@@ -225,41 +225,43 @@ function _serverSink(self, data)
 
 	if data.item_loop then
 		for _,entry in pairs(data.item_loop) do
-			log:info("server wallpaper: ", entry.name)
+			log:info("server wallpaper: ", entry.title)
 			self.menu:addItem(
 				{
 					weight = 50,	  
-					text = entry.name,
+					text = entry.title,
 					icon = RadioButton("radio",
 									   self.group,
 									   function()
-										   local path = Framework:findFile(PREFIX) .. entry.file
+										   local path = Framework:findFile(PREFIX) .. entry.name
 										   local attr = lfs.attributes(path)
 										   if attr then
-											   self:setBackground(entry.file, self.currentPlayerId)
+											   self:setBackground(entry.name, self.currentPlayerId)
 										   end
 									   end,
-									   wallpaper == entry.file
+									   wallpaper == entry.name
 								   ),
 					focusGained = function()
-									  local path = Framework:findFile(PREFIX) .. entry.file
+									  local path = Framework:findFile(PREFIX) .. entry.name
 									  local attr = lfs.attributes(path)
 									  if attr and os.time() - attr.modification < REFRESH_TIME then
-										  log:info("using local copy of: ", entry.file)
-										  self:showBackground(entry.file, self.currentPlayerId)
+										  log:info("using local copy of: ", entry.name)
+										  self:showBackground(entry.name, self.currentPlayerId)
 									  else
-										  log:info("fetching: ", entry.file)
 										  local url
 										  if entry.relurl then
 											  url = 'http://' .. ip .. ':' .. port .. entry.relurl
 										  else
 											  url = entry.url
 										  end
-										  self:_fetchFile(url, path, function() self:showBackground(entry.file, self.currentPlayerId) end)
+										  self:_fetchFile(url, path, function() self:showBackground(entry.name, self.currentPlayerId) end)
 									  end
 								  end
 				}
 			)
+			if wallpaper == entry.name then
+				self.menu:setSelectedIndex(self.menu:numItems() - 1)
+			end
 		end
 	end
 end
@@ -297,6 +299,8 @@ function _fetchFile(self, url, path, callback)
 	if self.fetch[path] then
 		log:warn("already fetching ", path, " not fetching again")
 		return
+	else
+		log:info("fetching ", path, " ", url)
 	end
 	self.fetch[path] = 1
 
