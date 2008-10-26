@@ -21,7 +21,7 @@ SetupWallpaperApplet overrides the following methods:
 
 
 -- stuff we use
-local ipairs, pairs, type, print, tostring = ipairs, pairs, type, print, tostring
+local ipairs, pairs, type, print, tostring, string = ipairs, pairs, type, print, tostring, string
 
 local oo                     = require("loop.simple")
 local io                     = require("io")
@@ -90,11 +90,17 @@ local localwallpapers = {
 local authors = { "Chapple", "Scott Robinson", "Los Cardinalos", "Orin Optiglot", "Ryan McD", "Robbie Fisher" }
 
 local PREFIX = "applets/SetupWallpaper/wallpaper/"
+local prefix
 
 local REFRESH_TIME = 300 -- only fetch remote wallpapers while browsing if the file is older than this (seconds)
 
 function init(self)
 	jnt:subscribe(self)
+
+	-- find where to store wallpapers
+	-- we need to look for an actual file here as findFile can't find directories on windows, so try a known wallpaper
+	prefix = string.match(Framework:findFile(PREFIX .. "sunrise.png"), "(.*)sunrise.png")
+	log:info("prefix: ", prefix)
 end
 
 -- notify_playerCurrent
@@ -233,7 +239,7 @@ function _serverSink(self, data)
 					icon = RadioButton("radio",
 									   self.group,
 									   function()
-										   local path = Framework:findFile(PREFIX) .. entry.name
+										   local path = prefix .. entry.name
 										   local attr = lfs.attributes(path)
 										   if attr then
 											   self:setBackground(entry.name, self.currentPlayerId)
@@ -242,7 +248,7 @@ function _serverSink(self, data)
 									   wallpaper == entry.name
 								   ),
 					focusGained = function()
-									  local path = Framework:findFile(PREFIX) .. entry.name
+									  local path = prefix .. entry.name
 									  local attr = lfs.attributes(path)
 									  if attr and os.time() - attr.modification < REFRESH_TIME then
 										  log:info("using local copy of: ", entry.name)
@@ -350,7 +356,7 @@ function showBackground(self, wallpaper, playerId)
 	end
 	self.currentWallpaper = wallpaper
 
-	local srf = Tile:loadImage(PREFIX .. wallpaper)
+	local srf = Tile:loadImage(prefix .. wallpaper)
 	if srf ~= nil then
 		Framework:setBackground(srf)
 	end
