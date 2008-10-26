@@ -18,7 +18,7 @@ SetupSoundEffectsApplet overrides the following methods:
 
 
 -- stuff we use
-local ipairs, pairs, tostring = ipairs, pairs, tostring
+local ipairs, pairs, tostring, string = ipairs, pairs, tostring, string
 
 local table           = require("table")
 
@@ -61,8 +61,8 @@ local KEY_VOLUME_DOWN        = jive.ui.KEY_VOLUME_DOWN
 module(...)
 oo.class(_M, Applet)
 
-
-local PATH = "applets/SetupSoundEffects/sounds/"
+local path = string.match(Framework:findFile("applets/SetupSoundEffects/sounds/bump.wav"), "(.*)bump.wav")
+log:info("path: ", path)
 
 local REFRESH_TIME = 300
 
@@ -357,7 +357,7 @@ function _customSoundMenu(self, sound, custom)
 			icon = RadioButton("radio",
 							   group,
 							   function()
-								   local path = Framework:findFile(PATH) .. v.name
+								   local path = path .. v.name
 								   local attr = lfs.attributes(path)
 								   if attr then
 									   log:info("setting ", v.name, " as active sound for ", sound)
@@ -368,7 +368,7 @@ function _customSoundMenu(self, sound, custom)
 							   settings["_CUSTOM"] ~= nil and settings["_CUSTOM"][sound] == v.name
 						   ),
 			focusGained = function()
-							  local path = Framework:findFile(PATH) .. v.name
+							  local path = path .. v.name
 							  local attr = lfs.attributes(path)
 							  if attr and os.time() - attr.modification < REFRESH_TIME then
 								  log:info("using local copy of: ", v.name)
@@ -453,7 +453,7 @@ function loadSounds(self, sound)
 	for k,v in pairs(sounds) do
 		if sound == nil or sound == k then
 			local file = settings["_CUSTOM"] and settings["_CUSTOM"][k] or sounds[k]["default"]
-			Framework:loadSound(k, PATH .. file, sounds[k]["chan"])
+			Framework:loadSound(k,path .. file, sounds[k]["chan"])
 
 			local enabled = settings[k]
 			if enabled == nil then
