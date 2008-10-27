@@ -119,6 +119,8 @@ local keyboardShortcuts = {
 	["\27"]  = KEY_BACK -- ESC
 }
 
+local _defaultSkin
+
 -- bring us to the home menu
 local function _homeHandler(event)
 	local type = event:getType()
@@ -361,7 +363,7 @@ end
 
 function JiveMain:getSkinParam(key)
 
-	local skinName = self.selectedSkin or "DefaultSkin"
+	local skinName = self.selectedSkin or JiveMain:getDefaultSkin()
 	
 	if key and self.skinParams and self.skinParams[skinName] and self.skinParams[skinName][key] then
 		return self.skinParams[skinName][key]
@@ -402,6 +404,14 @@ function JiveMain:loadSkin(appletName, method)
 	obj[method](obj, jive.ui.style)
 end
 
+function JiveMain:setDefaultSkin(appletName)
+	log:debug("setDefaultSkin(", appletName, ")")
+	_defaultSkin = appletName
+end
+
+function JiveMain:getDefaultSkin()
+	return _defaultSkin or "DefaultSkin"
+end
 
 -----------------------------------------------------------------------------
 -- main()

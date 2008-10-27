@@ -36,9 +36,7 @@ end
 
 
 function defaultSettings(meta)
-	return { 
-		skin = "DefaultSkin",
-	}
+	return {}
 end
 
 
@@ -48,6 +46,10 @@ end
 
 
 function configureApplet(meta)
+	if (not meta:getSettings().skin) then
+		meta:getSettings().skin = jiveMain:getDefaultSkin()
+	end
+
 	local skin = meta:getSettings().skin
 	jiveMain:setSelectedSkin(skin)
 
