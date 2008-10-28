@@ -955,9 +955,8 @@ function skin(self, s)
 		_uses(s.albumitem, {
 			      order = { "icon", "text", "check" },
 			      check = {
-				      img = Surface:loadImage(imgpath .. "Icons/icon_check_14x30.png")
+				      img = Surface:loadImage(imgpath .. "Icons/icon_check_14x30.png"),
 				      align = "right"
-
 			      }
 		      })
 
