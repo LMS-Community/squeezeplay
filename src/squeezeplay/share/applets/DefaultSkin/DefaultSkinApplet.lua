@@ -295,11 +295,11 @@ function skin(self, s)
 
 	-- repeat off/repeat track/repeat playlist
 	s.iconPlaylistModeOFF = _icon(41, screenHeight - 30, "icon_repeat_off.png")
-	s.iconPlaylistMode0 = _icon(41, screenHeight - 30, "icon_repeat_off.png")
+	s.iconPlaylistModeDISABLED = _icon(41, screenHeight - 30, "icon_repeat_off.png")
 
 	-- FIXME, needs official artwork
-	s.iconPlaylistMode1 = _icon(41, screenHeight - 30, "icon_playlistMode_on.png")
-	s.iconPlaylistMode2 = _icon(41, screenHeight - 30, "icon_repeat.png")
+	s.iconPlaylistModeON = _icon(41, screenHeight - 30, "icon_playlistMode_on.png")
+	s.iconPlaylistModePARTY = _icon(41, screenHeight - 30, "icon_repeat_off.png")
 
 	-- shuffle off/shuffle album/shuffle playlist
 	s.iconShuffleOFF = _icon(75, screenHeight - 30, "icon_shuffle_off.png")
