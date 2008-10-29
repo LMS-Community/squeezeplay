@@ -753,6 +753,7 @@ function skin(self, s)
 	s.albumtitle.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
 	s.albumtitle.icon.padding = { 9, 0, 0, 0 }
 	s.albumtitle.back = {}
+	s.albumtitle.back.padding = { 9, 0, 0, 0 }
 	--FIXME, this path will likely change
 	s.albumtitle.back.img = Surface:loadImage(imgpath .. "pointer_selector_L.png")
 	s.albumtitle.back.align = "left"
@@ -954,9 +955,8 @@ function skin(self, s)
 		_uses(s.albumitem, {
 			      order = { "icon", "text", "check" },
 			      check = {
-				      img = Surface:loadImage(imgpath .. "Icons/icon_check.png"),
+				      img = Surface:loadImage(imgpath .. "Icons/icon_check_14x30.png"),
 				      align = "right"
-
 			      }
 		      })
 

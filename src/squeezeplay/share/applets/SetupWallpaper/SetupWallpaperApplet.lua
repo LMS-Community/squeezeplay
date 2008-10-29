@@ -21,7 +21,7 @@ SetupWallpaperApplet overrides the following methods:
 
 
 -- stuff we use
-local ipairs, pairs, type, print, tostring = ipairs, pairs, type, print, tostring
+local ipairs, pairs, type, print, tostring, string = ipairs, pairs, type, print, tostring, string
 
 local oo                     = require("loop.simple")
 local io                     = require("io")
@@ -90,11 +90,17 @@ local localwallpapers = {
 local authors = { "Chapple", "Scott Robinson", "Los Cardinalos", "Orin Optiglot", "Ryan McD", "Robbie Fisher" }
 
 local PREFIX = "applets/SetupWallpaper/wallpaper/"
+local prefix
 
 local REFRESH_TIME = 300 -- only fetch remote wallpapers while browsing if the file is older than this (seconds)
 
 function init(self)
 	jnt:subscribe(self)
+
+	-- find where to store wallpapers
+	-- we need to look for an actual file here as findFile can't find directories on windows, so try a known wallpaper
+	prefix = string.match(Framework:findFile(PREFIX .. "sunrise.png"), "(.*)sunrise.png")
+	log:info("prefix: ", prefix)
 end
 
 -- notify_playerCurrent
@@ -225,41 +231,43 @@ function _serverSink(self, data)
 
 	if data.item_loop then
 		for _,entry in pairs(data.item_loop) do
-			log:info("server wallpaper: ", entry.name)
+			log:info("server wallpaper: ", entry.title)
 			self.menu:addItem(
 				{
 					weight = 50,	  
-					text = entry.name,
+					text = entry.title,
 					icon = RadioButton("radio",
 									   self.group,
 									   function()
-										   local path = Framework:findFile(PREFIX) .. entry.file
+										   local path = prefix .. entry.name
 										   local attr = lfs.attributes(path)
 										   if attr then
-											   self:setBackground(entry.file, self.currentPlayerId)
+											   self:setBackground(entry.name, self.currentPlayerId)
 										   end
 									   end,
-									   wallpaper == entry.file
+									   wallpaper == entry.name
 								   ),
 					focusGained = function()
-									  local path = Framework:findFile(PREFIX) .. entry.file
+									  local path = prefix .. entry.name
 									  local attr = lfs.attributes(path)
 									  if attr and os.time() - attr.modification < REFRESH_TIME then
-										  log:info("using local copy of: ", entry.file)
-										  self:showBackground(entry.file, self.currentPlayerId)
+										  log:info("using local copy of: ", entry.name)
+										  self:showBackground(entry.name, self.currentPlayerId)
 									  else
-										  log:info("fetching: ", entry.file)
 										  local url
 										  if entry.relurl then
 											  url = 'http://' .. ip .. ':' .. port .. entry.relurl
 										  else
 											  url = entry.url
 										  end
-										  self:_fetchFile(url, path, function() self:showBackground(entry.file, self.currentPlayerId) end)
+										  self:_fetchFile(url, path, function() self:showBackground(entry.name, self.currentPlayerId) end)
 									  end
 								  end
 				}
 			)
+			if wallpaper == entry.name then
+				self.menu:setSelectedIndex(self.menu:numItems() - 1)
+			end
 		end
 	end
 end
@@ -297,6 +305,8 @@ function _fetchFile(self, url, path, callback)
 	if self.fetch[path] then
 		log:warn("already fetching ", path, " not fetching again")
 		return
+	else
+		log:info("fetching ", path, " ", url)
 	end
 	self.fetch[path] = 1
 
@@ -346,7 +356,7 @@ function showBackground(self, wallpaper, playerId)
 	end
 	self.currentWallpaper = wallpaper
 
-	local srf = Tile:loadImage(PREFIX .. wallpaper)
+	local srf = Tile:loadImage(prefix .. wallpaper)
 	if srf ~= nil then
 		Framework:setBackground(srf)
 	end

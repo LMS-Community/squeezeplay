@@ -98,26 +98,32 @@ local _globalStrings
 local _idTranslations = {}
 	
 local keyboardShortcuts = {	
-	["i"]  = KEY_UP,
-	["k"]  = KEY_DOWN,
-	["j"]  = KEY_LEFT,
-	["l"]  = KEY_RIGHT,
-	["h"]  = KEY_HOME,
-	["p"]  = KEY_PLAY,
-	["x"]  = KEY_PLAY,
-	["c"]  = KEY_PAUSE,
-	[" "]  = KEY_PAUSE,
-	["a"]  = KEY_ADD,
-	["z"]  = KEY_REW,
-	["<"]  = KEY_REW,
-	["b"]  = KEY_FWD,
-	[">"]  = KEY_FWD,
-	["+"]  = KEY_VOLUME_UP,
-	["="]  = KEY_VOLUME_UP,
-	["-"]  = KEY_VOLUME_DOWN,
-	["\b"]  = KEY_BACK, -- BACKSPACE
-	["\27"]  = KEY_BACK -- ESC
+	["i"]  = { keyCode = KEY_UP,   event = EVENT_KEY_PRESS },
+	["k"]  = { keyCode = KEY_DOWN, event = EVENT_KEY_PRESS },
+	["j"]  = { keyCode = KEY_LEFT, event = EVENT_KEY_PRESS },
+	["l"]  = { keyCode = KEY_RIGHT, event = EVENT_KEY_PRESS },
+	["h"]  = { keyCode = KEY_HOME, event = EVENT_KEY_PRESS },
+	["p"]  = { keyCode = KEY_PLAY, event = EVENT_KEY_PRESS },
+	["P"]  = { keyCode = KEY_PLAY, event = EVENT_KEY_HOLD },
+	["x"]  = { keyCode = KEY_PLAY, event = EVENT_KEY_PRESS },
+	["c"]  = { keyCode = KEY_PAUSE, event = EVENT_KEY_PRESS },
+	[" "]  = { keyCode = KEY_PAUSE, event = EVENT_KEY_PRESS },
+	["a"]  = { keyCode = KEY_ADD, event = EVENT_KEY_PRESS },
+	["A"]  = { keyCode = KEY_ADD, event = EVENT_KEY_HOLD },
+	["z"]  = { keyCode = KEY_REW, event = EVENT_KEY_PRESS },
+	["Z"]  = { keyCode = KEY_REW, event = EVENT_KEY_HOLD },
+	["<"]  = { keyCode = KEY_REW, event = EVENT_KEY_PRESS },
+	["b"]  = { keyCode = KEY_FWD, event = EVENT_KEY_PRESS },
+	["B"]  = { keyCode = KEY_FWD, event = EVENT_KEY_HOLD },
+	[">"]  = { keyCode = KEY_FWD, event = EVENT_KEY_PRESS },
+	["+"]  = { keyCode = KEY_VOLUME_UP, event = EVENT_KEY_PRESS },
+	["="]  = { keyCode = KEY_VOLUME_UP, event = EVENT_KEY_PRESS },
+	["-"]  = { keyCode = KEY_VOLUME_DOWN, event = EVENT_KEY_PRESS },
+	["\b"]  = { keyCode = KEY_BACK, event = EVENT_KEY_PRESS }, -- BACKSPACE
+	["\27"]  = { keyCode = KEY_BACK, event = EVENT_KEY_PRESS } -- ESC
 }
+
+local _defaultSkin
 
 -- bring us to the home menu
 local function _homeHandler(event)
@@ -128,9 +134,9 @@ local function _homeHandler(event)
 		
 		log:debug("Keyboard entry: ", keyboardEntry)
 		
-		local keyCode = keyboardShortcuts[keyboardEntry]
+		local keyCode = keyboardShortcuts[keyboardEntry].keyCode
 		if (keyCode) then
-			Framework:pushEvent(Event:new(EVENT_KEY_PRESS, keyCode))
+			Framework:pushEvent(Event:new(keyboardShortcuts[keyboardEntry].event, keyCode))
 		end
 		
 		return EVENT_CONSUME
@@ -361,7 +367,7 @@ end
 
 function JiveMain:getSkinParam(key)
 
-	local skinName = self.selectedSkin or "DefaultSkin"
+	local skinName = self.selectedSkin or JiveMain:getDefaultSkin()
 	
 	if key and self.skinParams and self.skinParams[skinName] and self.skinParams[skinName][key] then
 		return self.skinParams[skinName][key]
@@ -402,6 +408,14 @@ function JiveMain:loadSkin(appletName, method)
 	obj[method](obj, jive.ui.style)
 end
 
+function JiveMain:setDefaultSkin(appletName)
+	log:debug("setDefaultSkin(", appletName, ")")
+	_defaultSkin = appletName
+end
+
+function JiveMain:getDefaultSkin()
+	return _defaultSkin or "DefaultSkin"
+end
 
 -----------------------------------------------------------------------------
 -- main()

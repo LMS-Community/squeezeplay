@@ -37,28 +37,28 @@ typedef s32_t fft_fixed;
 #define FIXED_ONE 0x10000
 #define FIXED_FRAC_BITS 16
 
-inline s32_t fixed_to_s32(fft_fixed x) {
+static inline s32_t fixed_to_s32(fft_fixed x) {
 	return x >> 16;
 }
 
-inline fft_fixed s32_to_fixed(s32_t x) {
+static inline fft_fixed s32_to_fixed(s32_t x) {
 	return x << 16;
 }
 
-inline double fixed_to_double(fft_fixed x) {
+static inline double fixed_to_double(fft_fixed x) {
 	return ((double)((x) / (double) (1L << 16)));
 }
 
-inline fft_fixed double_to_fixed(double x) {
+static inline fft_fixed double_to_fixed(double x) {
 	return ((fft_fixed) ((x) * (double) (1L << 16) + 0.5));
 }
 
-inline fft_fixed fixed_mul(fft_fixed x, fft_fixed y) {
+static inline fft_fixed fixed_mul(fft_fixed x, fft_fixed y) {
 	s64_t z = (s64_t)x * (s64_t)y;
 	return (s32_t) (z >> 16);
 }
 
-inline fft_fixed fixed_div(fft_fixed x, fft_fixed y) {
+static inline fft_fixed fixed_div(fft_fixed x, fft_fixed y) {
 	s64_t z = ((s64_t)x << 32);
 	return (s32_t) ((z / y) >> 16);
 }

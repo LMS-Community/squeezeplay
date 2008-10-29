@@ -299,12 +299,20 @@ static int decode_portaudio_init(void) {
 }
 
 
+static void decode_portaudio_gain(s32_t lgain, s32_t rgain)
+{
+	printf("fixme gain %d,%d\n", lgain, rgain);
+}
+
+
 struct decode_audio decode_portaudio = {
 	decode_portaudio_init,
 	decode_portaudio_start,
 	decode_portaudio_pause,
 	decode_portaudio_resume,
 	decode_portaudio_stop,
+	NULL,
+	decode_portaudio_gain,
 };
 
 #endif // HAVE_PORTAUDIO

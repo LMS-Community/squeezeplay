@@ -57,6 +57,21 @@ function setPlaymode(self, val)
 	self.iconPlaymode:setStyle("iconPlaymode" .. string.upper((val or "OFF")))
 end
 
+--[[
+
+=head2 Iconbar:setPlaylistMode(val)
+
+Set the playlistmode of the iconbar. Values are nil (no mode), 1 for playlist mode and 2 for party mode.
+When not 1 or 2, setRepeat()
+
+=cut
+--]]
+function setPlaylistMode(self, val)
+	log:debug("Iconbar:setPlaylistMode(", val, ")")
+	-- FIXME: need new styles for playlist and party mode
+	self.iconPlaylistMode:setStyle("iconPlaylistMode" .. string.upper((val or "OFF")))
+end
+
 
 --[[
 
@@ -168,6 +183,7 @@ function __init(self)
 		iconBackground = Label("iconBackground", ""),
 		iconPlaymode = Icon("iconPlaymodeOFF"),
 		iconRepeat = Icon("iconRepeatOFF"),
+		iconPlaylistMode = Icon("iconPlaylistModeOFF"),
 		iconShuffle = Icon("iconShuffleOFF"),
 		iconBattery = Icon("iconBatteryNONE"),
 		iconWireless = Icon("iconWirelessNONE"),
@@ -180,6 +196,7 @@ function __init(self)
 	Framework:addWidget(obj.iconBackground)
 	Framework:addWidget(obj.iconPlaymode)
 	Framework:addWidget(obj.iconRepeat)
+	Framework:addWidget(obj.iconPlaylistMode)
 	Framework:addWidget(obj.iconShuffle)
 	Framework:addWidget(obj.iconBattery)
 	Framework:addWidget(obj.iconWireless)
