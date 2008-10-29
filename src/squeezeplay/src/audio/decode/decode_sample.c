@@ -7,6 +7,7 @@
 
 #include "common.h"
 #include "ui/jive.h"
+#include "audio/fixed_math.h"
 
 
 struct jive_sample {
@@ -21,10 +22,11 @@ struct jive_sample {
 
 /* mixer channels */
 #define MAX_SAMPLES 2
-struct jive_sample *sample[MAX_SAMPLES];
+static struct jive_sample *sample[MAX_SAMPLES];
 
 #define MAXVOLUME 100
-int effect_volume = MAXVOLUME;
+static fft_fixed effect_gain = FIXED_ONE;
+static int effect_volume;
 
 
 static void sample_free(struct jive_sample *sample) {
@@ -44,6 +46,7 @@ void decode_sample_mix(Uint8 *buffer, size_t buflen) {
 	const Sint64 min_sample = -0x80000000LL;
 	int i;
 
+	/* fixme: this crudely mixes the samples onto the buffer */
 	for (i=0; i<MAX_SAMPLES; i++) {
 		Sint32 *s, *d;
 		size_t len;
@@ -61,17 +64,17 @@ void decode_sample_mix(Uint8 *buffer, size_t buflen) {
 		s = (Sint32 *) (sample[i]->data + sample[i]->pos);
 		d = (Sint32 *) buffer;
 		for (j=0; j<len>>2; j++) {
-			Sint64 t = s[j];
-			t = (t * effect_volume) / MAXVOLUME;
-			t += d[j];
+			Sint64 tmp = *(s++);
+			tmp = fixed_mul(effect_gain, tmp);
+			tmp += *d;
 
-			if (t >= max_sample) {
-				t = max_sample;
+			if (tmp >= max_sample) {
+				tmp = max_sample;
 			}
-			else if (t <= min_sample) {
-				t = min_sample;
+			else if (tmp <= min_sample) {
+				tmp = min_sample;
 			}
-			d[j] = t;
+			*(d++) = tmp;
 		}
 
 		sample[i]->pos += len;
@@ -253,12 +256,16 @@ static int decode_sample_set_effect_volume(lua_State *L) {
 	 */
 
 	effect_volume = lua_tointeger(L, 2);
-	//if (effect_volume > 0) {
-	//	open_audio();
-	//}
-	//else {
-	//	close_audio();
-	//}
+
+	if (effect_volume < 0) {
+		effect_volume = 0;
+	}
+	if (effect_volume > MAXVOLUME) {
+		effect_volume = MAXVOLUME;
+	}
+
+	effect_gain = fixed_div(s32_to_fixed(effect_volume),
+				s32_to_fixed(MAXVOLUME));
 
 	return 0;
 }

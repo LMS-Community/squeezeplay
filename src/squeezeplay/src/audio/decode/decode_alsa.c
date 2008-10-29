@@ -61,22 +61,24 @@ static void callback(void *outputBuffer,
 	if (!(current_audio_state & DECODE_STATE_RUNNING)) {
 		memset(outputArray, 0, len);
 
-		/* mix in sound effects */
-		decode_sample_mix(outputArray, len);
-
-		return;
+		goto mixin_effects;
 	}
 	
 	if (add_silence_ms) {
 		add_bytes = SAMPLES_TO_BYTES((u32_t)((add_silence_ms * current_sample_rate) / 1000));
-		if (add_bytes > len) add_bytes = len;
-		memset(outputBuffer, 0, add_bytes);
-		outputBuffer += add_bytes;
+		if (add_bytes > len) {
+			add_bytes = len;
+		}
+		memset(outputArray, 0, add_bytes);
+		outputArray += add_bytes;
 		len -= add_bytes;
 		add_silence_ms -= (BYTES_TO_SAMPLES(add_bytes) * 1000) / current_sample_rate;
-		if (add_silence_ms < 2)
+		if (add_silence_ms < 2) {
 			add_silence_ms = 0;
-		if (!len) return;
+		}
+		if (!len) {
+			goto mixin_effects;
+		}
 	}
 
 	bytes_used = fifo_bytes_used(&decode_fifo);
@@ -97,7 +99,7 @@ static void callback(void *outputBuffer,
 		memset(outputArray, 0, len);
 		DEBUG_ERROR("Audio underrun: used 0 bytes");
 
-		return;
+		goto mixin_effects;
 	}
 
 	if (bytes_used < len) {
@@ -159,6 +161,10 @@ static void callback(void *outputBuffer,
 	if (reached_start_point && current_sample_rate != pcm_sample_rate) {
 		new_sample_rate = current_sample_rate;
 	}
+
+ mixin_effects:
+	/* mix in sound effects */
+	decode_sample_mix(outputBuffer, SAMPLES_TO_BYTES(framesPerBuffer));
 
 	return;
 }
