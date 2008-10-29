@@ -63,7 +63,7 @@ local BLOCKSIZE = 4096
 
 -- timeout for socket operations
 local SOCKET_CONNECT_TIMEOUT = 10 -- connect in 10 seconds
-local SOCKET_TIMEOUT = 70 -- response in 70 seconds
+local SOCKET_BODY_TIMEOUT = 70 -- response in 70 seconds
 
 -- http authentication credentials
 local credentials = {}
@@ -520,7 +520,7 @@ function t_rcvHeaders(self)
 		end
 	end
 	
-	self:t_addRead(pump, SOCKET_CONNECT_TIMEOUT)
+	self:t_addRead(pump, SOCKET_BODY_TIMEOUT)
 end
 
 
@@ -814,7 +814,7 @@ function t_rcvResponse(self)
 		end
 	end
 	
-	self:t_addRead(pump, SOCKET_TIMEOUT)
+	self:t_addRead(pump, SOCKET_BODY_TIMEOUT)
 end
 
 
