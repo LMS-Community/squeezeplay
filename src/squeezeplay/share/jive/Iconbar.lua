@@ -67,7 +67,7 @@ When not 1 or 2, setRepeat()
 =cut
 --]]
 function setPlaylistMode(self, val)
-	log:debug("Iconbar:setPlaylistMode(", string.upper(val), ")")
+	log:debug("Iconbar:setPlaylistMode(", val, ")")
 	-- FIXME: need new styles for playlist and party mode
 	self.iconPlaylistMode:setStyle("iconPlaylistMode" .. string.upper((val or "OFF")))
 end
