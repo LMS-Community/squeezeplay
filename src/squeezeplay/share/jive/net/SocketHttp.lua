@@ -468,9 +468,9 @@ function t_rcvHeaders(self)
 	local pump = function (NetworkThreadErr)
 		log:debug(self, ":t_rcvHeaders.pump()")
 		if NetworkThreadErr then
-			log:error(self, ":t_rcvHeaders.pump:", err)
+			log:error(self, ":t_rcvHeaders.pump:", NetworkThreadErr)
 			--self:t_removeRead()
-			self:close(err)
+			self:close(NetworkThreadErr)
 			return
 		end
 
@@ -520,7 +520,7 @@ function t_rcvHeaders(self)
 		end
 	end
 	
-	self:t_addRead(pump, SOCKET_TIMEOUT)
+	self:t_addRead(pump, SOCKET_CONNECT_TIMEOUT)
 end
 
 
