@@ -134,8 +134,8 @@ local function _homeHandler(event)
 		
 		log:debug("Keyboard entry: ", keyboardEntry)
 		
-		local keyCode = keyboardShortcuts[keyboardEntry].keyCode
-		if (keyCode) then
+		if keyboardShortcuts[keyboardEntry] then
+			local keyCode = keyboardShortcuts[keyboardEntry].keyCode
 			Framework:pushEvent(Event:new(keyboardShortcuts[keyboardEntry].event, keyCode))
 		end
 		
