@@ -9,6 +9,7 @@
 #include "common.h"
 
 #include "audio/fifo.h"
+#include "audio/fixed_math.h"
 #include "audio/mqueue.h"
 #include "audio/decode/decode.h"
 #include "audio/decode/decode_priv.h"
@@ -16,6 +17,7 @@
 
 #ifdef HAVE_LIBASOUND
 
+#include <pthread.h>
 #include <alsa/asoundlib.h>
 
 /* Stream sample rate */
@@ -25,15 +27,19 @@ static u32_t pcm_sample_rate;
 
 /* alsa */
 static char *device = "default";
+//static char *device = "plughw:0,0";
 
 static snd_output_t *output;
 static snd_pcm_t *handle;
 static snd_pcm_hw_params_t *hwparams;
 
 static snd_pcm_sframes_t period_size;
+static fft_fixed lgain, rgain;
 
-static SDL_Thread *audio_thread;
+static pthread_t audio_thread;
 
+
+static void decode_alsa_gain(s32_t lgain, s32_t rgain);
 
 
 /*
@@ -123,7 +129,8 @@ static void callback(void *outputBuffer,
 	}
 
 	while (bytes_used) {
-		size_t wrap, bytes_write;
+		size_t wrap, bytes_write, samples_write;
+		sample_t *output_ptr, *decode_ptr;
 
 		wrap = fifo_bytes_until_rptr_wrap(&decode_fifo);
 
@@ -132,7 +139,15 @@ static void callback(void *outputBuffer,
 			bytes_write = wrap;
 		}
 
-		memcpy(outputArray, decode_fifo_buf + decode_fifo.rptr, bytes_write);
+		samples_write = BYTES_TO_SAMPLES(bytes_write);
+
+		output_ptr = (sample_t *)outputArray;
+		decode_ptr = (sample_t *)(decode_fifo_buf + decode_fifo.rptr);
+		while (samples_write--) {
+			*(output_ptr++) = fixed_mul(lgain, *(decode_ptr++));
+			*(output_ptr++) = fixed_mul(rgain, *(decode_ptr++));
+		}
+
 		fifo_rptr_incby(&decode_fifo, bytes_write);
 		decode_elapsed_samples += BYTES_TO_SAMPLES(bytes_write);
 
@@ -152,17 +167,17 @@ static void callback(void *outputBuffer,
 static int pcm_open() {
 	int err, dir;
 	snd_pcm_uframes_t size;
-	unsigned int buffer_time = 250000; // FIXME low latency
-	unsigned int period_time = buffer_time / 4;
+#define BUFFER_SIZE (8291 / 4)
+#define PERIOD_SIZE (BUFFER_SIZE / 8)
 
 	/* Close existing pcm (if any) */
 	if (handle) {
 		if ((err = snd_pcm_drain(handle)) < 0) {
-			DEBUG_ERROR("Drain error: %s", snd_strerror(err));
+			DEBUG_ERROR("snd_pcm_drain error: %s", snd_strerror(err));
 		}
 
 		if ((err = snd_pcm_close(handle)) < 0) {
-			DEBUG_ERROR("Drain error: %s", snd_strerror(err));
+			DEBUG_ERROR("snd_pcm_close error: %s", snd_strerror(err));
 		}
 
 		handle = NULL;
@@ -216,13 +231,15 @@ static int pcm_open() {
 	}
 
 	/* set buffer and period times */
-	if ((err = snd_pcm_hw_params_set_buffer_time_near(handle, hwparams, &buffer_time, &dir)) < 0) {
-		DEBUG_ERROR("Unable to set  buffer time %s", snd_strerror(err));
+	size = BUFFER_SIZE;
+	if ((err = snd_pcm_hw_params_set_buffer_size_near(handle, hwparams, &size)) < 0) {
+		DEBUG_ERROR("Unable to set  buffer size %s", snd_strerror(err));
 		return err;
 	}
 
-	if ((err = snd_pcm_hw_params_set_period_time_near(handle, hwparams, &period_time, &dir)) < 0) {
-		DEBUG_ERROR("Unable to set period time %s", snd_strerror(err));
+	size = PERIOD_SIZE;
+	if ((err = snd_pcm_hw_params_set_period_size_near(handle, hwparams, &size, &dir)) < 0) {
+		DEBUG_ERROR("Unable to set period size %s", snd_strerror(err));
 		return err;
 	}
 
@@ -266,7 +283,7 @@ static int xrun_recovery(snd_pcm_t *handle, int err) {
 }
 
 
-static int audio_thread_execute(void *unused) {
+static void *audio_thread_execute(void *unused) {
 	snd_pcm_state_t state;
 	const snd_pcm_channel_area_t *areas;
 	snd_pcm_uframes_t offset;
@@ -285,7 +302,7 @@ static int audio_thread_execute(void *unused) {
 		if (new_sample_rate) {
 			if ((err = pcm_open()) < 0) {
 				DEBUG_ERROR("Open failed: %s", snd_strerror(err));
-				return -1;
+				return (void *)-1;
 			}
 			first = 1;
 		}
@@ -412,6 +429,8 @@ static void decode_alsa_stop(void) {
 
 static int decode_alsa_init(void) {
 	int err;
+	pthread_attr_t thread_attr;
+	struct sched_param thread_param;
 
 	if ((err = snd_output_stdio_attach(&output, stdout, 0)) < 0) {
 		DEBUG_ERROR("Output failed: %s", snd_strerror(err));
@@ -425,8 +444,34 @@ static int decode_alsa_init(void) {
 	}
 
 	/* start audio thread */
-	// XXXX fixme thread priority
-	audio_thread = SDL_CreateThread(audio_thread_execute, NULL);
+	if ((err = pthread_attr_init(&thread_attr)) != 0) {
+		DEBUG_ERROR("pthread_attr_init: %s", strerror(err));
+		return 0;
+	}
+
+	if ((err = pthread_attr_setdetachstate(&thread_attr, PTHREAD_CREATE_DETACHED)) != 0) {
+		DEBUG_ERROR("pthread_attr_setdetachstate: %s", strerror(err));
+		return 0;
+	}
+
+	if ((err = pthread_create(&audio_thread, &thread_attr, audio_thread_execute, NULL)) != 0) {
+		DEBUG_ERROR("pthread_create: %s", strerror(err));
+		return 0;
+	}
+
+	/* set realtime scheduler policy, with a high priority */
+	thread_param.sched_priority = sched_get_priority_max(SCHED_FIFO);
+
+	err = pthread_setschedparam(audio_thread, SCHED_FIFO, &thread_param);
+	if (err) {
+		if (err == EPERM) {
+			DEBUG_ERROR("Can't set audio thread priority\n");
+		}
+		else {
+			DEBUG_ERROR("pthread_create: %s", strerror(err));
+			return 0;
+		}
+	}
 
 	return 1;
 }
@@ -447,9 +492,10 @@ static u32_t decode_alsa_delay(void)
 }
 
 
-static void decode_alsa_gain(s32_t lgain, s32_t rgain)
+static void decode_alsa_gain(s32_t left_gain, s32_t right_gain)
 {
-	printf("fixme gain %d,%d\n", lgain, rgain);
+	lgain = left_gain;
+	rgain = right_gain;
 }
 
 
