@@ -284,7 +284,7 @@ static void decode_mad_output(struct decode_mad *self) {
 	}
 	else {
 		/* Bug 9046, don't allow sample rate to change mid stream */
-		if (self->sample_rate != self->frame.header.samplerate) {
+		if (self->frames > 2 && self->sample_rate != self->frame.header.samplerate) {
 			DEBUG_TRACE("Sample rate changed from %d to %d, discarding PCM", self->sample_rate, self->frame.header.samplerate);
 			return;
 		}
