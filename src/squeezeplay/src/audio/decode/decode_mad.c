@@ -255,6 +255,15 @@ static void decode_mad_output(struct decode_mad *self) {
 
 	/* parse xing header */
 	if (self->frames++ == 0) {
+		/* Bug 5720, files with CRC will have the ptr in the
+		 * wrong place
+		 */
+		if (self->frame.header.flags & MAD_FLAG_PROTECTION) {
+			if (self->stream.anc_ptr.byte > self->stream.buffer + 2) {
+				self->stream.anc_ptr.byte = self->stream.anc_ptr.byte - 2;
+			}
+		}
+
 		xing_parse(self);
 		self->encoder_delay *= pcm->channels;
 	}
