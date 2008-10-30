@@ -22,6 +22,8 @@
 
 #define OUTPUT_BUFFER_SIZE (2*32*36 * sizeof(sample_t))
 
+#define ID3_TAG_FLAG_FOOTERPRESENT 0x10
+
 
 struct decode_mad {
 	struct mad_stream stream;
@@ -152,6 +154,52 @@ static void xing_parse(struct decode_mad *self) {
 }
 
 
+static u32_t tagtype(const unsigned char *data, u32_t length) {
+        if (length >= 3 && data[0] == 'T' && data[1] == 'A' && data[2] == 'G') {
+                DEBUG_TRACE("ID3v1 tag detected");
+                return 128;
+        }
+        
+        if (length >= 10 &&
+                (data[0] == 'I' && data[1] == 'D' && data[2] == '3') &&
+                data[3] < 0xff && data[4] < 0xff &&
+                data[6] < 0x80 && data[7] < 0x80 && data[8] < 0x80 && data[9] < 0x80)
+        {
+                DEBUG_TRACE("ID3v2 tag detected");
+                
+                u32_t size = 10 + (data[6]<<21) + (data[7]<<14) + (data[8]<<7) + data[9];
+                if (data[5] & ID3_TAG_FLAG_FOOTERPRESENT) {
+                        size += 10;
+                }
+                for (; size < length && !data[size]; ++size);  /* Consume padding */
+                return size;
+        }
+        
+        return 0;
+}
+
+
+static bool_t consume_id3_tags(struct decode_mad *self) {
+        bool_t rc = FALSE;      
+        u32_t tagsize;
+        u32_t remaining = self->stream.bufend - self->stream.next_frame;
+        
+        if ( (tagsize = tagtype(self->stream.this_frame, remaining)) ) {
+                DEBUG_TRACE("ID3 tag detected, skipping %d bytes before next frame", tagsize);
+                mad_stream_skip(&self->stream, tagsize);
+                rc = TRUE;
+        }
+        
+        /* We know that a valid frame hasn't been found yet
+          * so help libmad out and go back into frame seek mode.
+          * This is true whether an ID3 tag was found or not.
+          */
+        mad_stream_sync(&self->stream);
+        
+        return rc;
+}
+
+
 static void decode_mad_frame(struct decode_mad *self) {
 	size_t read_max, read_num, remaining;
 	u8_t *read_start;
@@ -210,6 +258,10 @@ static void decode_mad_frame(struct decode_mad *self) {
 
 		if (mad_frame_decode(&self->frame, &self->stream)) {
 			if (MAD_RECOVERABLE(self->stream.error)) {
+				if (consume_id3_tags(self)) {
+					continue;
+				}
+
 				if (self->stream.error != MAD_ERROR_LOSTSYNC ||
 				    self->stream.this_frame != self->guard_pointer) {
 					continue;
@@ -279,8 +331,6 @@ static void decode_mad_output(struct decode_mad *self) {
 
 		xing_parse(self);
 		self->encoder_delay *= pcm->channels;
-
-		self->sample_rate = self->frame.header.samplerate;
 	}
 	else {
 		/* Bug 9046, don't allow sample rate to change mid stream */
@@ -288,6 +338,7 @@ static void decode_mad_output(struct decode_mad *self) {
 			DEBUG_TRACE("Sample rate changed from %d to %d, discarding PCM", self->sample_rate, self->frame.header.samplerate);
 			return;
 		}
+		self->sample_rate = self->frame.header.samplerate;
 
 		buf = self->output_buffer;
 
