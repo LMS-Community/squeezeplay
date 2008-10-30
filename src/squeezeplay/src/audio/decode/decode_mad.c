@@ -261,8 +261,6 @@ static void decode_mad_output(struct decode_mad *self) {
 
 	pcm = &self->synth.pcm;
 
-	self->sample_rate = self->frame.header.samplerate;
-
 	if (!decode_output_can_write(pcm->length * 2 * sizeof(sample_t), self->sample_rate)) {
 		self->state = MAD_STATE_PCM_READY;
 		return;
@@ -281,8 +279,16 @@ static void decode_mad_output(struct decode_mad *self) {
 
 		xing_parse(self);
 		self->encoder_delay *= pcm->channels;
+
+		self->sample_rate = self->frame.header.samplerate;
 	}
 	else {
+		/* Bug 9046, don't allow sample rate to change mid stream */
+		if (self->sample_rate != self->frame.header.samplerate) {
+			DEBUG_TRACE("Sample rate changed from %d to %d, discarding PCM", self->sample_rate, self->frame.header.samplerate);
+			return;
+		}
+
 		buf = self->output_buffer;
 
 		left = pcm->samples[0];
