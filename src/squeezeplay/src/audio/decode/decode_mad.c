@@ -56,6 +56,13 @@ struct decode_mad {
 #define XING_TOC    	0x04
 #define XING_SCALE  	0x08
 
+/* Not much documentation exists about the MAD decoder delay, but
+   we apparently need to skip the first 529 samples
+   http://www.hydrogenaudio.org/forums/lofiversion/index.php/t20083.html
+*/
+#define MAD_DECODER_DELAY 529
+
+
 static void xing_parse(struct decode_mad *self) {
 	struct mad_bitptr ptr = self->stream.anc_ptr;
 	unsigned int bitlen = self->stream.anc_bitlen;
@@ -129,11 +136,19 @@ static void xing_parse(struct decode_mad *self) {
 
 	mad_bit_skip(&ptr, 96);
 
-	self->encoder_delay = mad_bit_read(&ptr, 12);
+	self->encoder_delay += mad_bit_read(&ptr, 12);
 	self->encoder_padding = mad_bit_read(&ptr, 12);
 
-	DEBUG_TRACE("encoder delay %d", self->encoder_delay);
+	DEBUG_TRACE("encoder delay %d", self->encoder_delay - MAD_DECODER_DELAY);
 	DEBUG_TRACE("encoder padding %d", self->encoder_padding);
+
+	/* Remove MAD decoder delay of 529 samples from the end too */
+	if (self->encoder_padding > MAD_DECODER_DELAY) {
+		self->encoder_padding -= MAD_DECODER_DELAY;
+	}
+	else {
+		self->encoder_padding = 0;
+	}
 }
 
 
@@ -303,7 +318,7 @@ static void decode_mad_output(struct decode_mad *self) {
 			DEBUG_TRACE("Skip encoder_delay=%d pcm->length=%d offset=%d", self->encoder_delay, pcm->length, offset);
 		}
 		
-		decode_output_samples(self->output_buffer + (offset * sizeof(sample_t)),
+		decode_output_samples(self->output_buffer + (offset * 2 * sizeof(sample_t)),
 				      pcm->length - offset,
 				      self->sample_rate,
 				      FALSE);
@@ -382,6 +397,7 @@ static void *decode_mad_start(u8_t *params, u32_t num_params) {
 
 	/* Assume we aren't changing sample rates until proven wrong */
 	self->sample_rate = decode_output_samplerate();
+	self->encoder_delay = MAD_DECODER_DELAY;
 
 	/* Don't check for CRC errors (bug #2527) */
 	// XXXX this needs a patch to libmad
