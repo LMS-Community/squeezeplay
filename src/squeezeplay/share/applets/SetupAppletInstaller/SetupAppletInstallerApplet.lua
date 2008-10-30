@@ -20,7 +20,7 @@ Assumptions:
 =cut
 --]]
 
-local next, pairs, type, package = next, pairs, type, package
+local next, pairs, type, package, string = next, pairs, type, package, string
 
 local oo               = require("loop.simple")
 local debug            = require("jive.utils.debug")
@@ -55,6 +55,8 @@ local appletManager    = appletManager
 local jiveMain         = jiveMain
 local jnt              = jnt
 
+local JIVE_VERSION     = jive.JIVE_VERSION
+
 module(...)
 oo.class(_M, Applet)
 
@@ -86,7 +88,7 @@ function menu(self, menuItem)
 				end
 			end,
 			false,
-			{ "jiveapplets" }
+			{ "jiveapplets", "target:jive", "version:" .. string.match(JIVE_VERSION, "(%d%.%d)") }
 		)
 	end
 
@@ -107,6 +109,8 @@ function menuSink(self, data)
 	local installed = self:getSettings()
 	local ip, port = self.server:getIpPort()
 
+	local arrow = string.char(0xE2, 0x86, 0x92)
+
 	if data.item_loop then
 
 		for _,entry in pairs(data.item_loop) do
@@ -121,26 +125,26 @@ function menuSink(self, data)
 				url = entry.url
 			end
 
-			if installed[entry.applet] then
-				version = installed[entry.applet] .. " > " .. entry.version
-				if entry.version > installed[entry.applet] then
-					self.todownload[entry.applet] = { url = url, ver = entry.version }
+			if installed[entry.name] then
+				version = installed[entry.name] .. arrow .. entry.version
+				if entry.version > installed[entry.name] then
+					self.todownload[entry.name] = { url = url, ver = entry.version }
 					check = true
 				end
 			else
 				version = entry.version
-				self.todownload[entry.applet] = { url = url, ver = entry.version }
+				self.todownload[entry.name] = { url = url, ver = entry.version }
 				check = true
 			end
 			
 			self.menu:addItem( {
-				text = entry.name .. " [" .. version .. "]",
+				text = entry.title .. " [" .. version .. "]",
 				icon = Checkbox("checkbox",
 					  function(object, isSelected)
 						  if isSelected then
-							  self.todownload[entry.applet] = { url = url, ver = entry.version }
+							  self.todownload[entry.name] = { url = url, ver = entry.version }
 						  else
-							  self.todownload[entry.applet] = nil
+							  self.todownload[entry.name] = nil
 						  end
 					  end,
 					  check

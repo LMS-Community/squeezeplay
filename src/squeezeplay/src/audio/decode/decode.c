@@ -564,6 +564,27 @@ static int decode_status(lua_State *L) {
 	return 1;
 }
 
+static int decode_audio_enable(lua_State *L) {
+	int enable;
+
+	enable = lua_toboolean(L, 2);
+
+	// FIXME
+
+	return 0;
+}
+
+static int decode_audio_gain(lua_State *L) {
+	s32_t lgain, rgain;
+
+	lgain = lua_tointeger(L, 2);
+	rgain = lua_tointeger(L, 3);
+
+	decode_audio->gain(lgain, rgain);
+
+	return 0;
+}
+
 static const struct luaL_Reg decode_f[] = {
 	{ "resume", decode_resume },
 	{ "pause", decode_pause },
@@ -574,6 +595,8 @@ static const struct luaL_Reg decode_f[] = {
 	{ "songEnded", decode_song_ended },
 	{ "status", decode_status },
 	{ "streamMetadata", decode_stream_metadata },
+	{ "audioEnable", decode_audio_enable },
+	{ "audioGain", decode_audio_gain },
 	{ NULL, NULL }
 };
 

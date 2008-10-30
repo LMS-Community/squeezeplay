@@ -1060,7 +1060,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 	case SDL_MOUSEMOTION:
 		if (event->motion.state & SDL_BUTTON(1)) {
-			if ( (mouse_state == MOUSE_STATE_DOWN
+			if ( ( (mouse_state == MOUSE_STATE_DOWN || mouse_state == MOUSE_STATE_SENT)
 			       && (abs(mouse_origin_x - event->motion.x) > 10
 				   || abs(mouse_origin_y - event->motion.y) > 10))
 			     || mouse_state == MOUSE_STATE_DRAG) {

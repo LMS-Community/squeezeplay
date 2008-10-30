@@ -259,7 +259,8 @@ end
 
 
 function notify_playerCurrent(self, player)
-	if not player then
+	-- if not passed a player, or if player hasn't change, exit
+	if not player or self.player == player then
 		return
 	end
 
@@ -270,40 +271,36 @@ function notify_playerCurrent(self, player)
 		return
 	end
 
-	if self.clockTimer then
-		self.clockTimer:stop()
-	end
-
 	local sink = function(chunk, err)
 			     if err then
 				     log:warn(err)
 				     return
 			     end
-
+				log:debug('Date being synched from player to controller: ', chunk.data.date)
                              self:setDate(chunk.data.date)
  		     end
- 
-	-- this is a background request
-	-- FIXME this should be a subscription
-	self.server:request(sink,
-			    player:getId(),
-			    { 'date' }
-		    )
 
-	-- start a recurring timer for synching to SC/SN
-	self.clockTimer = Timer(6000000, -- 1 hour
-		function()
-			if self.player and self.server then
-				self.server:request(sink,
-						    self.player:getId(),
-						    { 'date' }
-					    )
-			end
-		end,
-		false)
-	self.clockTimer:start()
+ 
+	-- setup a once/hour
+        player:subscribe(
+                         '/slim/datestatus/' .. self.player:getId(),
+                         sink,
+                         self.player:getId(),
+                         { 'date', 'subscribe:3600' }
+	)
+
 end
 
+function notify_playerDelete(self, player)
+	if self.player ~= player then
+		return
+	end
+
+	log:warn('unsubscribing from datestatus/', self.player:getId())
+	self.player:unsubscribe('/slim/datestatus/' .. self.player:getId())
+	self.player = false
+
+end
 
 function setDate(self, date)
 	-- matches date format 2007-09-08T20:40:42+00:00

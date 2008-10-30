@@ -821,11 +821,18 @@ function updateIconbar(self)
 		-- set the playmode (nil, stop, play, pause)
 		iconbar:setPlaymode(self.state["mode"])
 		
-		-- set the repeat (nil, 0=off, 1=track, 2=playlist)
-		iconbar:setRepeat(self.state["playlist repeat"])
-	
 		-- set the shuffle (nil, 0=off, 1=by song, 2=by album)
 		iconbar:setShuffle(self.state["playlist shuffle"])
+
+		-- set the playlist mode (nil, 0=off, 1=playlist, 2=party)
+		if self.state['playlist mode'] and self.state['playlist mode'] > 0 then
+			iconbar:setRepeat(0)
+			iconbar:setPlaylistMode(self.state["playlist mode"])
+		else
+			-- set the repeat (nil, 0=off, 1=track, 2=playlist)
+			iconbar:setPlaylistMode(0)
+			iconbar:setRepeat(self.state["playlist repeat"])
+		end
 	end
 end
 

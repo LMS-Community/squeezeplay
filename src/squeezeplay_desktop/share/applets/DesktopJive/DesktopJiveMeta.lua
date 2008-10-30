@@ -89,6 +89,8 @@ function registerApplet(meta)
 
 	-- set uuid
 	jnt:setUUID(settings.uuid, settings.mac)
+	
+	jiveMain:setDefaultSkin("FullscreenSkin")
 end
 
 
