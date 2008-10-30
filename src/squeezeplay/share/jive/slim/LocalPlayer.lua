@@ -8,6 +8,7 @@ local assert = assert
 
 local oo             = require("loop.simple")
 
+local Framework      = require("jive.ui.Framework")
 local Player         = require("jive.slim.Player")
 
 local SlimProto      = require("jive.net.SlimProto")
@@ -107,6 +108,12 @@ function connectToServer(self, server)
 		local serverip = server:getIpPort()
 		self.slimproto:connect(serverip)
 	end
+end
+
+
+function getLastSeen(self)
+	-- never timeout a local player
+	return Framework:getTicks()
 end
 
 
