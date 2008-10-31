@@ -30,7 +30,7 @@ static char *device = "default";
 //static char *device = "plughw:0,0";
 
 static snd_output_t *output;
-static snd_pcm_t *handle;
+static snd_pcm_t *handle = NULL;
 static snd_pcm_hw_params_t *hwparams;
 
 static snd_pcm_sframes_t period_size;
@@ -173,8 +173,8 @@ static void callback(void *outputBuffer,
 static int pcm_open() {
 	int err, dir;
 	snd_pcm_uframes_t size;
-#define BUFFER_SIZE (8291 / 4)
-#define PERIOD_SIZE (BUFFER_SIZE / 8)
+#define BUFFER_SIZE 8192 /*(8291 / 4)*/
+#define PERIOD_SIZE (BUFFER_SIZE / 4) /*(BUFFER_SIZE / 8)*/
 
 	/* Close existing pcm (if any) */
 	if (handle) {
