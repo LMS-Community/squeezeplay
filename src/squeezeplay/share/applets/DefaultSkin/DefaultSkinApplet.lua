@@ -56,6 +56,7 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 local WH_FILL                = jive.ui.WH_FILL
 
 local appletManager          = appletManager
+local jiveMain               = jiveMain
 
 
 module(..., Framework.constants)
@@ -99,7 +100,7 @@ end
 -- skin
 -- The meta arranges for this to be called to skin Jive.
 function skin(self, s)
-	Framework:setVideoMode(240, 320, 16, false)
+	Framework:setVideoMode(240, 320, 16, jiveMain:isFullscreen())
 
 	local screenWidth, screenHeight = Framework:getScreenSize()
 

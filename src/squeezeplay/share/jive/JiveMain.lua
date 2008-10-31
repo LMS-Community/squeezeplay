@@ -124,6 +124,7 @@ local keyboardShortcuts = {
 }
 
 local _defaultSkin
+local _fullscreen
 
 -- bring us to the home menu
 local function _homeHandler(event)
@@ -355,6 +356,15 @@ local function _loadSkin(self, appletName, reload)
 	Framework:styleChanged()
 
 	return true
+end
+
+
+function JiveMain:isFullscreen()
+	return _fullscreen
+end
+
+function JiveMain:setFullscreen(fullscreen)
+	_fullscreen = fullscreen
 end
 
 
