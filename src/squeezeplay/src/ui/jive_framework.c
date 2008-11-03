@@ -1093,7 +1093,6 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 	case SDL_KEYUP: {
 		struct jive_keymap *entry = keymap;
-		fprintf(stderr, "event keysym: %d\n", event->key.keysym);
 		
 		while (entry->keysym != SDLK_UNKNOWN) {
 			if (entry->keysym == event->key.keysym.sym) {
@@ -1105,7 +1104,6 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		if (entry->keysym == SDLK_UNKNOWN) {
 			// handle regular character keys ('a', 't', etc..)
 			SDLMod mod = event->key.keysym.mod;
-			fprintf(stderr, "event mod %d\n", event->key.keysym.mod);
 			if (event->type == SDL_KEYDOWN && event->key.keysym.unicode != 0) {
 				JiveEvent textEvent;
 
@@ -1118,7 +1116,6 @@ static int process_event(lua_State *L, SDL_Event *event) {
 				} else {
 					textEvent.u.text.unicode = event->key.keysym.unicode;
 				}
-				fprintf(stderr, "unicode %d\n", event->key.keysym.unicode);
 				jive_queue_event(&textEvent);
 			}
 			return 0;
