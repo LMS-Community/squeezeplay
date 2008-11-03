@@ -1,1 +1,1 @@
-loadPrioritySettings={loadPriority=1,configureAtLoadTime=true}
+loadPriority=1

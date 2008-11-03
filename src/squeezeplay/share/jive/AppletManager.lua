@@ -91,7 +91,6 @@ local function _saveApplet(name, dir)
 
 	if not _appletsDb[name] then
 	
-		local loadPrioritySettings= _getLoadPrioritySettings(dir.. "/" .. name)
 		local newEntry = {
 			appletName = name,
 
@@ -111,8 +110,7 @@ local function _saveApplet(name, dir)
 			metaConfigured = false,
 			appletLoaded = false,
 			appletEvaluated = false,
-			loadPriority = loadPrioritySettings.loadPriority,
-			configureAtLoadTime = loadPrioritySettings.configureAtLoadTime,  
+			loadPriority = _getLoadPriority(dir.. "/" .. name)
 		}
 		_appletsDb[name] = newEntry
 	end
@@ -194,6 +192,18 @@ local function _ploadMeta(entry)
 	return resOrErr
 end
 
+
+-- _loadMetas
+-- loads the meta-information of all applets
+local function _loadMetas()
+	log:debug("_loadMetas")
+
+	for name, entry in pairs(getSortedAppletDb(_appletsDb)) do
+		if not entry.metaLoaded then
+			_ploadMeta(entry)
+		end
+	end
+end
 
 
 -- _evalMeta
@@ -285,26 +295,6 @@ local function _pevalMeta(entry)
 	end
 
 	return true
-end
-
--- _loadMetas
--- loads the meta-information of all applets
-local function _loadMetas()
-	log:debug("_loadMetas")
-
-	for name, entry in pairs(getSortedAppletDb(_appletsDb)) do
-		if not entry.metaLoaded then
-			_ploadMeta(entry)
-		end
-		if entry.configureAtLoadTime then
-			if not entry.metaRegistered then
-				_registerMeta(entry)
-			end
-			if not entry.metaConfigured then
-				_configureMeta(entry)
-			end
-		end
-	end
 end
 
 
@@ -594,16 +584,16 @@ function _loadSettings(entry)
 	end
 end
 
--- _getLoadPrioritySettings
+-- _getLoadPriority
 --
-function _getLoadPrioritySettings(appletDir)
+function _getLoadPriority(appletDir)
 
-	log:debug("_getLoadPrioritySettings: ", appletDir)
+	log:debug("_getLoadPriority: ", appletDir)
 
 	local fh = io.open(appletDir .. "/" .. "loadPriority.lua")
 	if fh == nil then
-		-- no loadPriority file, retrun default priority settings
-		return {loadPriority=100,configureAtLoadTime=false}
+		-- no loadPriority file, retrun default priority
+		return 100
 	end
 
 	local f, err = load(function() return fh:read() end)
@@ -616,10 +606,8 @@ function _getLoadPrioritySettings(appletDir)
 		local env = {}
 		setfenv(f, env)
 		f()
-		if log:isDebug() then
-			debug.dump(env)
-		end
-		return env.loadPrioritySettings
+
+		return env.loadPriority
 	end
 end
 
