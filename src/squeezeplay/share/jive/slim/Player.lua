@@ -80,10 +80,31 @@ local SlimServer     = require("jive.slim.SlimServer")
 
 
 local DEVICE_IDS = {
+	[2] = "squeezebox",
+	[3] = "softsqueeze",
 	[4] = "squeezebox2",
 	[5] = "transporter",
+	[6] = "softsqueeze3",
 	[7] = "receiver",
+	[8] = "squeezeslave",
+	[9] = "controller",
 	[10] = "boom",
+	[11] = "softboom",
+	[12] = "squeezeplay",
+}
+
+local DEVICE_TYPE = {
+	[ "squeezebox" ] = "ip2k",
+	[ "softsqueeze" ] = "softsqueeze",
+	[ "squeezebox2" ] = "ip3k",
+	[ "transporter" ] = "ip3k",
+	[ "softsqueeze3" ] = "softsqueeze",
+	[ "receiver" ] = "ip3k",
+	[ "squeezeslave" ] = "squeezeslave",
+	[ "controller" ] = "squeezeplay",
+	[ "boom" ] = "ip3k",
+	[ "softboom" ] = "softsqueeze",
+	[ "squeezeplay" ] = "squeezeplay",
 }
 
 
@@ -661,11 +682,8 @@ Returns the player mac address, or nil for http players.
 =cut
 --]]
 function getMacAddress(self)
-	if self.info.model == "squeezebox2"
-		or self.info.model == "receiver"
-		or self.info.model == "transporter" 
-		or self.info.model == "boom" then
-
+	if DEVICE_TYPE[self.info.model] == "ip3k"
+	   or DEVICE_TYPE[self.info.model] == "squeezeplay" then
 		return string.gsub(self.id, "[^%x]", "")
 	end
 
@@ -1164,19 +1182,15 @@ end
 
 -- returns true if this player supports udap setup
 function canUdap(self)
-	return self.info.model == "squeezebox2"
-		or self.info.model == "receiver"
-		or self.info.model == "transporter"
-		or self.info.model == "boom"
+	return DEVICE_TYPE[self.info.model] == "ip3k"
+	   or DEVICE_TYPE[self.info.model] == "squeezeplay"
 end
 
 
 -- returns true if this player can connect to another server
 function canConnectToServer(self)
-	return self.info.model == "squeezebox2"
-		or self.info.model == "receiver"
-		or self.info.model == "transporter"
-		or self.info.model == "boom"
+	return DEVICE_TYPE[self.info.model] == "ip3k"
+	   or DEVICE_TYPE[self.info.model] == "squeezeplay"
 end
 
 

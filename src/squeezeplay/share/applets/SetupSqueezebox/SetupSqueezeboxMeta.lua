@@ -18,6 +18,7 @@ end
 
 function registerApplet(meta)
 	meta:registerService("startSqueezeboxSetup")
+	meta:registerService("setupSqueezeboxShow")
 	meta:registerService("setupAdhocShow")
 end
 

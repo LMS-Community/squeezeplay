@@ -165,9 +165,11 @@ static u32_t tagtype(const unsigned char *data, u32_t length) {
                 data[3] < 0xff && data[4] < 0xff &&
                 data[6] < 0x80 && data[7] < 0x80 && data[8] < 0x80 && data[9] < 0x80)
         {
-                DEBUG_TRACE("ID3v2 tag detected");
+                u32_t size;
+				
+				DEBUG_TRACE("ID3v2 tag detected");
                 
-                u32_t size = 10 + (data[6]<<21) + (data[7]<<14) + (data[8]<<7) + data[9];
+                size = 10 + (data[6]<<21) + (data[7]<<14) + (data[8]<<7) + data[9];
                 if (data[5] & ID3_TAG_FLAG_FOOTERPRESENT) {
                         size += 10;
                 }
