@@ -9,6 +9,7 @@
 #include "common.h"
 
 #include "audio/fifo.h"
+#include "audio/fixed_math.h"
 #include "audio/mqueue.h"
 #include "audio/decode/decode.h"
 #include "audio/decode/decode_priv.h"
@@ -25,6 +26,8 @@ static PaStream *stream;
 /* Stream sample rate */
 static bool_t change_sample_rate;
 static u32_t stream_sample_rate;
+
+static fft_fixed lgain, rgain;
 
 
 static void decode_portaudio_openstream(void);
@@ -57,9 +60,7 @@ static int callback(const void *inputBuffer,
 		memset(outputArray, 0, len);
 
 		/* mix in sound effects */
-		decode_sample_mix(outputArray, len);
-
-		return paContinue;
+		goto mixin_effects;
 	}
 
 	fifo_lock(&decode_fifo);
@@ -74,8 +75,7 @@ static int callback(const void *inputBuffer,
 		if (add_silence_ms < 2)
 			add_silence_ms = 0;
 		if (!len) {
-			fifo_unlock(&decode_fifo);
-			return paContinue;
+			goto unlock_mixin_effects;
 		}
 	}
 
@@ -96,8 +96,7 @@ static int callback(const void *inputBuffer,
 		current_audio_state |= DECODE_STATE_UNDERRUN;
 		memset(outputArray, 0, len);
 
-		fifo_unlock(&decode_fifo);
-		return paContinue;
+		goto unlock_mixin_effects;
 	}
 
 	if (bytes_used < len) {
@@ -128,7 +127,8 @@ static int callback(const void *inputBuffer,
 	}
 
 	while (bytes_used) {
-		size_t wrap, bytes_write;
+		size_t wrap, bytes_write, samples_write;
+		sample_t *output_ptr, *decode_ptr;
 
 		wrap = fifo_bytes_until_rptr_wrap(&decode_fifo);
 
@@ -137,7 +137,15 @@ static int callback(const void *inputBuffer,
 			bytes_write = wrap;
 		}
 
-		memcpy(outputArray, decode_fifo_buf + decode_fifo.rptr, bytes_write);
+		samples_write = BYTES_TO_SAMPLES(bytes_write);
+
+		output_ptr = (sample_t *)outputArray;
+		decode_ptr = (sample_t *)(decode_fifo_buf + decode_fifo.rptr);
+		while (samples_write--) {
+			*(output_ptr++) = fixed_mul(lgain, *(decode_ptr++));
+			*(output_ptr++) = fixed_mul(rgain, *(decode_ptr++));
+		}
+
 		fifo_rptr_incby(&decode_fifo, bytes_write);
 		decode_elapsed_samples += BYTES_TO_SAMPLES(bytes_write);
 
@@ -148,12 +156,15 @@ static int callback(const void *inputBuffer,
 	reached_start_point = decode_check_start_point();
 	if (reached_start_point && current_sample_rate != stream_sample_rate) {
 		change_sample_rate = true;
-
-		fifo_unlock(&decode_fifo);
-		return paComplete;
 	}
 
+ unlock_mixin_effects:
 	fifo_unlock(&decode_fifo);
+
+ mixin_effects:
+	/* mix in sound effects */
+	decode_sample_mix(outputBuffer, SAMPLES_TO_BYTES(framesPerBuffer));
+
 	return paContinue;
 }
 
@@ -299,9 +310,10 @@ static int decode_portaudio_init(void) {
 }
 
 
-static void decode_portaudio_gain(s32_t lgain, s32_t rgain)
+static void decode_portaudio_gain(s32_t left_gain, s32_t right_gain)
 {
-	printf("fixme gain %d,%d\n", lgain, rgain);
+	lgain = left_gain;
+	rgain = right_gain;
 }
 
 

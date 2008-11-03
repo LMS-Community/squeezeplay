@@ -28,6 +28,8 @@ local logging         = require("logging")
 local Applet          = require("jive.Applet")
 local RadioButton     = require("jive.ui.RadioButton")
 local RadioGroup      = require("jive.ui.RadioGroup")
+local Checkbox      = require("jive.ui.Checkbox")
+
 local SimpleMenu      = require("jive.ui.SimpleMenu")
 local Window          = require("jive.ui.Window")
 local Framework       = require("jive.ui.Framework")
@@ -66,6 +68,17 @@ function selectSkin(self, menuItem)
 			)
 		})
 	end
+	menu:addItem({
+		text = self:string("FULLSCREEN_MODE"),
+		icon = Checkbox(
+			"checkbox", 
+			function(object, isSelected)
+				JiveMain:setFullscreen(isSelected)
+				JiveMain:reloadSkin()
+			end,
+			JiveMain:isFullscreen()
+		)
+	})
 
 	window:addWidget(menu)
 
