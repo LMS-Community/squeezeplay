@@ -1103,7 +1103,6 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 		if (entry->keysym == SDLK_UNKNOWN) {
 			// handle regular character keys ('a', 't', etc..)
-			SDLMod mod = event->key.keysym.mod;
 			if (event->type == SDL_KEYDOWN && event->key.keysym.unicode != 0) {
 				JiveEvent textEvent;
 
