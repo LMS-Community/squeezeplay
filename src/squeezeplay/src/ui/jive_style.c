@@ -50,20 +50,22 @@ static int search_path(lua_State *L, int widget, char *path, const char *key) {
 static int jiveL_style_find_value(lua_State *L) {
 	/* stack is:
 	 * 1: widget
-	 * 2: path
-	 * 3: key
+	 * 2: skin
+	 * 3: path
+	 * 4: key
 	 */
 
-	const char *path = lua_tostring(L, 2);
-	const char *key = lua_tostring(L, 3);
+	const char *path = lua_tostring(L, 3);
+	const char *key = lua_tostring(L, 4);
 
 	char *ptr = (char *) path;
 	while (ptr) {
 		char *tmp = strdup(ptr);
 
-		get_jive_ui_style(L);
+		lua_pushvalue(L, 2);
 		if (search_path(L, 1, tmp, key) && !lua_isnil(L, -1)) {
 			free(tmp);
+
 			lua_remove(L, -2);
 			return 1;
 		}
@@ -79,6 +81,24 @@ static int jiveL_style_find_value(lua_State *L) {
 	lua_pushnil(L);
 	return 1;
 }
+
+#if RUNTIME_DEBUG
+static void debug_style(lua_State *L, const char *path, const char *key) {
+	lua_getglobal(L, "tostring");
+	lua_pushvalue(L, -2);
+	lua_call(L, 1, 1);
+
+	lua_getglobal(L, "tostring");
+	lua_pushvalue(L, 1);
+	lua_call(L, 1, 1);
+
+	DEBUG_TRACE("style: [%s] %s : %s = %s", lua_tostring(L, -1), path, key, lua_tostring(L, -2));
+	lua_pop(L, 2);
+}
+#else
+static void debug_style(lua_State *L, const char *path, const char *key) {
+}
+#endif
 
 static int STYLE_VALUE_NIL;
 
@@ -113,7 +133,6 @@ int jiveL_style_rawvalue(lua_State *L) {
 	pathidx = lua_gettop(L);
 	path = lua_tostring(L, -1);
 
-
 	/* check cache */
 	lua_getfield(L, LUA_REGISTRYINDEX, "jiveStyleCache");
 	if (lua_isnil(L, -1)) {
@@ -143,9 +162,10 @@ int jiveL_style_rawvalue(lua_State *L) {
 		// find value
 		lua_pushcfunction(L, jiveL_style_find_value);
 		lua_pushvalue(L, 1); // widget
+		get_jive_ui_style(L); // skin
 		lua_pushvalue(L, pathidx);
 		lua_pushvalue(L, 2); // key
-		lua_call(L, 3, 1);
+		lua_call(L, 4, 1);
 
 		if (lua_isnil(L, -1)) {
 			/* use a marker for nil */
@@ -156,14 +176,7 @@ int jiveL_style_rawvalue(lua_State *L) {
 		}
 		lua_setfield(L, -3, key);
 
-#if RUNTIME_DEBUG
-		lua_getglobal(L, "tostring");
-		lua_pushvalue(L, -2);
-		lua_call(L, 1, 1);
-
-		DEBUG_TRACE("style: %s : %s = %s", path, key, lua_tostring(L, -1));
-		lua_pop(L, 1);
-#endif
+		debug_style(L, path, key);
 	}
 
 	/* nil marker */
@@ -174,13 +187,40 @@ int jiveL_style_rawvalue(lua_State *L) {
 	}
 	lua_pop(L, 1);
 
-	/* default value */
-	if (lua_isnil(L, -1)) {
-
-		lua_pop(L, 1);
-		lua_pushvalue(L, 3);
-
+	if (!lua_isnil(L, -1)) {
+		/* return skin value */
+		return 1;
 	}
+
+	/* per widget skin */
+	if (jive_getmethod(L, 1, "getWindow")) {
+		lua_pushvalue(L, 1);
+		lua_call(L, 1, 1);
+
+		if (!lua_isnil(L, -1)) {
+			lua_getfield(L, -1, "skin");
+			if (!lua_isnil(L, -1)) {
+				lua_pushcfunction(L, jiveL_style_find_value);
+				lua_pushvalue(L, 1); // widget
+				lua_pushvalue(L, -3); // skin
+				lua_pushvalue(L, pathidx);
+				lua_pushvalue(L, 2); // key
+				lua_call(L, 4, 1);
+
+				if (!lua_isnil(L, -1)) {
+					debug_style(L, path, key);
+
+					return 1;
+				}
+				lua_pop(L, 1);
+			}
+		}
+		lua_pop(L, 1);
+	}
+
+	/* default value */
+	lua_pop(L, 1);
+	lua_pushvalue(L, 3);
 
 	return 1;
 }

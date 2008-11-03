@@ -46,10 +46,6 @@ end
 
 
 function registerApplet(self)
-
-	-- load our skin
-	jiveMain:loadSkin("Flickr", "skin")
-
 end
 
 function configureApplet(self)

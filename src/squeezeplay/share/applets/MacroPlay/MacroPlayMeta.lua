@@ -53,7 +53,5 @@ function registerApplet(meta)
 
 	-- menu item to start
 	jiveMain:addItem(meta:menuItem('macroPlay', 'extras', 'MACRO_PLAY', function(applet, ...) applet:settingsShow(...) end))
-
-	jiveMain:loadSkin("MacroPlay", "skin")
 end
 
