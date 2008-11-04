@@ -675,7 +675,7 @@ function skin(self, s)
 	-- connecting/connected popup icon
 	s.iconConnecting = {}
 	s.iconConnecting.img = Surface:loadImage(imgpath .. "Alerts/wifi_connecting.png")
-	s.iconConnecting.frameRate = 4
+	s.iconConnecting.frameRate = 8
 	s.iconConnecting.frameWidth = 161
 	s.iconConnecting.w = WH_FILL
 	s.iconConnecting.align = "center"
