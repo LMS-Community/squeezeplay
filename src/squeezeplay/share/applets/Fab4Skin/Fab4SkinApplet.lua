@@ -824,6 +824,16 @@ function skin(self, s)
 		      })
 
 	-- Based on s.title, this is for settings title style
+	s.setuptitle =
+		_uses(s.minititle, {
+				order = { 'back', 'text', 'nowplaying', 'icon' },
+				nowplaying = { img = false  },
+			      icon = {
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_settings.png")
+			      }
+		      })
+
+	-- Based on s.title, this is for settings title style
 	s.settingstitle =
 		_uses(s.minititle, {
 			      icon = {
