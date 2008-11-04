@@ -70,7 +70,7 @@ function settingsShow(self, metaState)
 					end
 
 
-					metaState.player:free(metaState.player:getSlimServer())
+					metaState.player:destroy(metaState.player:getSlimServer())
 					metaState.player = nil
 
 					settings.serverName = nil

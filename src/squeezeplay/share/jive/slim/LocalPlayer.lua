@@ -56,7 +56,7 @@ function __init(self, jnt, playerId, uuid)
 end
 
 
-function free(self, server)
+function destroy(self, server)
 	-- close any previous connection
 	if self.slimproto then
 		self.slimproto:disconnect()
@@ -69,7 +69,6 @@ function free(self, server)
 	end
 
 	Player.free(self, server)
-
 end
 
 

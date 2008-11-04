@@ -1248,7 +1248,7 @@ function _setSlimserver(self, slimserver)
 
 		if sn_hostname == "www.squeezenetwork.com" then
 			self.data2.server_address = Udap.packNumber(1, 4)
-		elseif sn_hostname == "www.beta.squeezenetwork.com" then
+		elseif sn_hostname == "www.test.squeezenetwork.com" then
 			self.data2.server_address = Udap.packNumber(1, 4)
 			-- XXX the above should be this when "serv 2" in all firmware:
 			-- self.data2.server_address = Udap.packNumber(2, 4)
