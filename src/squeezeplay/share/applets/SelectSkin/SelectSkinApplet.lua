@@ -69,7 +69,7 @@ function selectSkin(self, menuItem)
 		})
 	end
 	menu:addItem({
-		text = self:string("FULLSCREEN_MODE"),
+		text = self:string("FULLSCREEN"),
 		icon = Checkbox(
 			"checkbox", 
 			function(object, isSelected)
