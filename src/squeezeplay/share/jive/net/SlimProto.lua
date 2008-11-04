@@ -392,7 +392,7 @@ function connect(self, serverip)
 		local opcode = string.sub(data, 1, 4)
 		log:debug("read opcode=", opcode, " #", #data)
 
-		_hexDump(opcode, data)
+		--_hexDump(opcode, data)
 		
 		-- decode packet
 		local packet
