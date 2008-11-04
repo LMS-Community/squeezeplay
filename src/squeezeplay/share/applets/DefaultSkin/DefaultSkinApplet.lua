@@ -363,13 +363,6 @@ function skin(self, s)
 	s.title.back.align = "left"
 --]]
 
---[[
-	s.title.icon = {}
-	s.title.icon.w = 56
-	s.title.icon.h = WH_FILL
-	s.title.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
---]]
-
 	-- Menu with three basic styles: normal, selected and locked
 	-- First define the dimesions of the menu
 	s.menu = {}
@@ -1019,7 +1012,7 @@ function skin(self, s)
 	s.albumitem.icon.w = 56
 	s.albumitem.icon.h = WH_FILL
 	s.albumitem.icon.align = "center"
-	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
+	s.albumitem.icon.img = Surface:loadImage(imgpath .. "album_noartwork_56.png")
 	s.albumitem.icon.border = { 8, 0, 0, 0 }
 
 	-- checked albummenu item
@@ -1409,9 +1402,6 @@ function skin(self, s)
 	s.nowplayingtitle.text.fg = SELECT_COLOR
 	s.nowplayingtitle.icon = {}
 	s.nowplayingtitle.icon.hide = 1
---	s.nowplayingtitle.icon.align = "center"
---	s.nowplayingtitle.icon.img = Surface:loadImage(imgpath .. "menu_nowplaying_noartwork.png")
---	s.nowplayingtitle.icon.padding = { 6, 0, 0, 0 }
 
 
 	-- menus with artwork and song info
@@ -1442,7 +1432,7 @@ function skin(self, s)
 	s.nowplayingitem.icon.w = 156
 	s.nowplayingitem.icon.h = 156
 	s.nowplayingitem.icon.align = "left"
-	s.nowplayingitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
+	s.nowplayingitem.icon.img = Surface:loadImage(imgpath .. "album_noartwork_56.png")
 	s.nowplayingitem.icon.padding = { 5, 0, 0, 0 }
 
 
@@ -1483,7 +1473,7 @@ function skin(self, s)
 	s.albumcurrent.icon.w = 56
 	s.albumcurrent.icon.h = WH_FILL
 	s.albumcurrent.icon.align = "center"
-	s.albumcurrent.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork.png")
+	s.albumcurrent.icon.img = Surface:loadImage(imgpath .. "album_noartwork_56.png")
 	s.albumcurrent.icon.border = { 8, 0, 0, 0 }
 	s.albumcurrent.play = {}
 	s.albumcurrent.play.img = Surface:loadImage(imgpath .. "Icons/icon_nowplaying_indicator_w.png")
