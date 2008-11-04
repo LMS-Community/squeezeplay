@@ -193,19 +193,6 @@ local function _ploadMeta(entry)
 end
 
 
--- _loadMetas
--- loads the meta-information of all applets
-local function _loadMetas()
-	log:debug("_loadMetas")
-
-	for name, entry in pairs(getSortedAppletDb(_appletsDb)) do
-		if not entry.metaLoaded then
-			_ploadMeta(entry)
-		end
-	end
-end
-
-
 -- _evalMeta
 -- evaluates the meta information of applet entry
 local function _registerMeta(entry)
@@ -282,7 +269,7 @@ local function _configureMeta(entry)
 end
 
 
-local function _pevalMeta(entry)
+local function _pregisterMeta(entry)
 	if entry.metaLoaded and not entry.metaRegistered then
 		local ok, resOrErr = pcall(_registerMeta, entry)
 		if not ok then
@@ -297,15 +284,25 @@ local function _pevalMeta(entry)
 	return true
 end
 
+-- _loadAndRegisterMetas
+-- loads and registers the meta-information of all applets
+local function _loadAndRegisterMetas()
+	log:debug("_loadAndRegisterMetas")
 
+	for name, entry in pairs(getSortedAppletDb(_appletsDb)) do
+		if not entry.metaLoaded then
+			_ploadMeta(entry)
+			if not entry.metaRegistered then
+				_pregisterMeta(entry)
+			end
+		end
+	end
+
+end
 -- _evalMetas
 -- evaluates the meta-information of all applets
 local function _evalMetas()
 	log:debug("_evalMetas")
-
-	for name, entry in pairs(getSortedAppletDb(_appletsDb)) do
-		_pevalMeta(entry)
-	end
 
 	for name, entry in pairs(getSortedAppletDb(_appletsDb)) do
 		if entry.metaLoaded and not entry.metaConfigured then
@@ -346,7 +343,7 @@ function discover(self)
 	log:debug("AppletManager:loadApplets")
 
 	_findApplets()
-	_loadMetas()
+	_loadAndRegisterMetas()
 	_evalMetas()
 end
 
