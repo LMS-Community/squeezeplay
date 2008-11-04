@@ -55,8 +55,6 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
 local firmwareupgradeTitleStyle = 'settingstitle'
 
-local DEFAULT_FIRMWARE_URL = "http://www.slimdevices.com/update/firmware/7.0/jive.bin"
-
 local SDCARD_PATH = "/mnt/mmc/"
 
 module(..., Framework.constants)
@@ -94,22 +92,25 @@ end
 function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
 	local help = Textarea("help", "")
 
-	local version = self:_firmwareVersion(url)
-	menu:addItem({
-		text = self:string("BEGIN_UPDATE"),
-		sound = "WINDOWSHOW",
-		callback = function()
-			self.url = url
-			self:_upgrade()
-		end,
-		focusGained = function()
-			if _versionCompare(JIVE_VERSION, version) <= 0 then
-				help:setValue(self:string(urlHelp or "UPDATE_BEGIN_REINSTALL", version or "?"))
-			else
-				help:setValue(self:string(urlHelp or "UPDATE_BEGIN_UPGRADE", version or "?"))
+	if url then
+		local version = self:_firmwareVersion(url)
+		local networkUpdateItem = {
+			text = self:string("BEGIN_UPDATE"),
+			sound = "WINDOWSHOW",
+			callback = function()
+				self.url = url
+				self:_upgrade()
+			end,
+			focusGained = function()
+				if _versionCompare(JIVE_VERSION, version) <= 0 then
+					help:setValue(self:string(urlHelp or "UPDATE_BEGIN_REINSTALL", version or "?"))
+				else
+					help:setValue(self:string(urlHelp or "UPDATE_BEGIN_UPGRADE", version or "?"))
+				end
 			end
-		end
-	})
+		}
+		menu:addItem(networkUpdateItem)
+	end
 
 	for entry in lfs.dir(SDCARD_PATH) do
 		local fileurl = "file:" .. SDCARD_PATH .. entry
@@ -148,6 +149,10 @@ function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
 	window:addWidget(menu)
 end
 
+-- when the server disconnects we clear the upgrade Url 
+function clearUpgradeUrl(self)
+	upgradeUrl = { false }
+end
 
 function forceUpgrade(self, optional, upgUrl, urlHelp)
 	local url = upgUrl
@@ -155,7 +160,7 @@ function forceUpgrade(self, optional, upgUrl, urlHelp)
 		url = upgradeUrl[1]
 	end
 	if not url then
-		url = DEFAULT_FIRMWARE_URL
+		return
 	end
 
 	local window = Window("window", self:string("UPDATE"), firmwareupgradeTitleStyle)
@@ -182,7 +187,6 @@ function forceUpgrade(self, optional, upgUrl, urlHelp)
 	return window
 end
 
-
 function settingsShow(self)
 	local window = Window("window", self:string("UPDATE"), firmwareupgradeTitleStyle)
 
@@ -190,7 +194,7 @@ function settingsShow(self)
 
 	local url = upgradeUrl[1]
 	if not url then
-		url = DEFAULT_FIRMWARE_URL
+		url = false
 	end
 
 	self:_makeUpgradeItems(window, menu, true, url)
