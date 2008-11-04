@@ -784,6 +784,18 @@ function skin(self, s)
 	s.minititle.icon.padding  = { 0, 0, 8, 0 }
 	s.minititle.icon.align    = 'right'
 
+
+	-- Based on s.title, this is for setup title style
+	s.setuptitle =
+		_uses(s.minititle, {
+				order = { 'back', 'text', 'nowplaying', 'icon' },
+				nowplaying = { img = false  },
+			      icon = {
+				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_settings.png")
+			      }
+		      })
+
+
 	-- Based on s.title, this is for internetradio title style
 	s.internetradiotitle =
 		_uses(s.minititle, {
@@ -831,6 +843,7 @@ function skin(self, s)
 				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_settings.png")
 			      }
 		      })
+
 
 	-- Based on s.title, this is for newmusic title style
 	s.newmusictitle =
