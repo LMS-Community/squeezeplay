@@ -311,7 +311,7 @@ static void *audio_thread_execute(void *unused) {
 		fifo_lock(&decode_fifo);
 
 		if (new_sample_rate) {
-			if ((err = pcm_open()) < 0) {
+			if ((err = pcm_open(new_sample_rate)) < 0) {
 				DEBUG_ERROR("Open failed: %s", snd_strerror(err));
 				return (void *)-1;
 			}
