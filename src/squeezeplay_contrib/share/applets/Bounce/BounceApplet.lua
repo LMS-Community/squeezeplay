@@ -98,6 +98,12 @@ function bounce(self)
 	local window = Window("bounce")
 	local w, h = Framework:getScreenSize()
 
+	window:setSkin({
+		bounce = {
+			layout = Window.noLayout,
+		}
+	})
+
 	self.sprits = {}
 
 	-- squeezebox string
@@ -144,13 +150,6 @@ function bounce(self)
 
 	self:tieAndShowWindow(window)
 	return window
-end
-
-
--- applet skin
-function skin(self, s)
-	s.bounce = {}
-	s.bounce.layout = Window.noLayout
 end
 
 

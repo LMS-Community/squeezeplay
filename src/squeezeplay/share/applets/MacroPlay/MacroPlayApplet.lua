@@ -106,6 +106,15 @@ function autoplayShow(self, countdown)
 	local menu = SimpleMenu("menu", items)
 	local help = Textarea("textarea", "")
 
+	window:setSkin({
+		macroPass = {
+			img = Surface:loadImage("applets/MacroPlay/pass.png"),
+		},
+		macroFail = {
+			img = Surface:loadImage("applets/MacroPlay/fail.png"),
+		},
+	})
+
 	window:addWidget(help)
 	window:addWidget(menu)
 
@@ -516,16 +525,6 @@ function macroFail(msg)
 	self.macro.failed = os.date()
 
 	self:saveConfig()
-end
-
-
-function skin(self, s)
-	s.macroPass = {
-		img = Surface:loadImage("applets/MacroPlay/pass.png")
-	}
-	s.macroFail = {
-		img = Surface:loadImage("applets/MacroPlay/fail.png")
-	}
 end
 
 

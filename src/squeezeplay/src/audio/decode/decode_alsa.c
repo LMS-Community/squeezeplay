@@ -170,11 +170,15 @@ static void callback(void *outputBuffer,
 }
 
 
-static int pcm_open() {
+static int pcm_open(u32_t sample_rate) {
 	int err, dir;
 	snd_pcm_uframes_t size;
 #define BUFFER_SIZE 8192 /*(8291 / 4)*/
 #define PERIOD_SIZE (BUFFER_SIZE / 4) /*(BUFFER_SIZE / 8)*/
+
+	if (handle && sample_rate == pcm_sample_rate) {
+		return 0;
+	}
 
 	/* Close existing pcm (if any) */
 	if (handle) {
@@ -231,7 +235,7 @@ static int pcm_open() {
 	}
 
 	/* set the stream rate */
-	if ((err = snd_pcm_hw_params_set_rate_near(handle, hwparams, &new_sample_rate, 0)) < 0) {
+	if ((err = snd_pcm_hw_params_set_rate_near(handle, hwparams, &sample_rate, 0)) < 0) {
 		DEBUG_ERROR("Rate not available: %s", snd_strerror(err));
 		return err;
 	}
@@ -261,8 +265,11 @@ static int pcm_open() {
 		return err;
 	}
 
-	pcm_sample_rate = new_sample_rate;
-	new_sample_rate = 0;
+#ifdef RUNTIME_DEBUG
+	snd_pcm_dump(handle, output);
+#endif
+
+	pcm_sample_rate = sample_rate;
 
 	return 0;
 }
@@ -300,16 +307,16 @@ static void *audio_thread_execute(void *unused) {
 
 	DEBUG_TRACE("audio_thread_execute");
 
-	new_sample_rate = 44100;
-
 	while (1) {
 		fifo_lock(&decode_fifo);
 
 		if (new_sample_rate) {
-			if ((err = pcm_open()) < 0) {
+			if ((err = pcm_open(new_sample_rate)) < 0) {
 				DEBUG_ERROR("Open failed: %s", snd_strerror(err));
 				return (void *)-1;
 			}
+
+			new_sample_rate = 0;
 			first = 1;
 		}
 
@@ -445,7 +452,7 @@ static int decode_alsa_init(void) {
 
 	DEBUG_TRACE("Playback device: %s\n", device);
 
-	if (pcm_open() < 0) {
+	if (pcm_open(44100) < 0) {
 		return 0;
 	}
 

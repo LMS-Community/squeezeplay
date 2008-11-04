@@ -1948,10 +1948,20 @@ local function _installPlayerKeyHandler(self)
 	end
 
 	_playerKeyHandler = Framework:addListener(
-		EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+		EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_CHAR_PRESS,
 		function(event)
 			local type = event:getType()
 
+			if type == EVENT_CHAR_PRESS then
+				local keyboardEntry = string.char(event:getUnicode())
+				if keyboardEntry == "/" then
+					_goSearch()
+					return EVENT_CONSUME
+				else
+					return EVENT_UNUSED
+				end
+			end
+			
 			local actionName = _keycodeActionName[event:getKeycode()]
 			if not actionName then
 				return EVENT_UNUSED
@@ -1986,6 +1996,13 @@ local function _removePlayerKeyHandler(self)
 	_playerKeyHandler = false
 end
 
+function _goSearch()
+	--bring up music library search
+	if jiveMain:getMenuTable().myMusicSearch then
+		Framework:playSound("JUMP")
+		jiveMain:getMenuTable().myMusicSearch.callback()
+	end
+end
 
 --==============================================================================
 -- SlimBrowserApplet public methods
