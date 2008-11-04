@@ -53,18 +53,13 @@ function registerApplet(meta)
 	-- add a menu to load us
 	jiveMain:addItem(meta:menuItem('appletSetupSoundEffects', 'advancedSettings', "SOUND_EFFECTS", function(applet, ...) applet:settingsShow(...) end))
 
-end
-
-function configureApplet(self)
-
 	-- The startup sound needs to be played with the minimum
 	-- delay, load and play it first
 	appletManager:callService("loadSounds", "STARTUP")
 	Framework:playSound("STARTUP")
 
 	-- Load all other sounds
-	appletManager:callService("loadSounds", nil) -- nil is default from settings
-
+	appletManager:callService("loadSounds", nil) -- nil is default from settingsend
 end
 
 

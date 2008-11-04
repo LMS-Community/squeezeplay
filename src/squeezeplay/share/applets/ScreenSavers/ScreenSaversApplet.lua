@@ -50,7 +50,7 @@ oo.class(_M, Applet)
 function init(self, ...)
 	self.screensavers = {}
 	self.screensaverSettings = {}
-	self:addScreenSaver(self:string("SCREENSAVER_NONE"), nil, nil, _, _, 100)
+	self:addScreenSaver(self:string("SCREENSAVER_NONE"), false, false, _, _, 100)
 
 	self.timeout = self:getSettings()["timeout"]
 
@@ -126,7 +126,7 @@ function _activate(self, the_screensaver)
 	end
 
 	local screensaver = self.screensavers[the_screensaver]
-	if screensaver == nil or screensaver.applet == nil then
+	if not screensaver or not screensaver.applet then
 		-- no screensaver, do nothing
 		return
 	end

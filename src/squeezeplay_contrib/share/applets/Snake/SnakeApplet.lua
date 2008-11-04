@@ -165,10 +165,6 @@ function drawField(self)
 	self.bg:reDraw()
 end
 
-function skin(self, s)
-	s.snake.layout = Window.noLayout
-end
-
 function gameOver()
 	gameover = true
 	local popup = Popup("popup", "\n \nGame over!\n \n \nYour score: " .. score)

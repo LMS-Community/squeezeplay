@@ -33,8 +33,6 @@ function registerApplet(meta)
 	-- add the menu item to homeMenu but 'hidden', or else the playerCurrent notification method below quits happening (not sure why this is the case, but it is)
 	-- item will be made visible by moving it to advancedSettings in the playerCurrent notification below
 	jiveMain:addItem(meta.menu)
-
-	jiveMain:loadSkin("SetupNetTest", "skin")
 end
 
 -- hide menu item when player goes away

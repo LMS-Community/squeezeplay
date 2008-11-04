@@ -32,6 +32,7 @@ local debug            = require("jive.utils.debug")
 local log              = require("jive.utils.log").logger("applets.misc")
 local locale           = require("jive.utils.locale")
 local dumper           = require("jive.utils.dumper")
+local table            = require("jive.utils.table")
 
 local JIVE_VERSION     = jive.JIVE_VERSION
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
@@ -56,6 +57,9 @@ local _sentinel = function () end
 
 -- applet services
 local _services = {}
+
+local _defaultSettingsByAppletName = {}
+--work in progress-- local _overrideSettingsByAppletName = {}
 
 -- allowed applets, can be used for debugging to limit applets loaded
 --[[
@@ -106,6 +110,7 @@ local function _saveApplet(name, dir)
 			metaConfigured = false,
 			appletLoaded = false,
 			appletEvaluated = false,
+			loadPriority = _getLoadPriority(dir.. "/" .. name)
 		}
 		_appletsDb[name] = newEntry
 	end
@@ -193,7 +198,7 @@ end
 local function _loadMetas()
 	log:debug("_loadMetas")
 
-	for name, entry in pairs(_appletsDb) do
+	for name, entry in pairs(getSortedAppletDb(_appletsDb)) do
 		if not entry.metaLoaded then
 			_ploadMeta(entry)
 		end
@@ -223,10 +228,40 @@ local function _registerMeta(entry)
 
 	if not entry.settings then
 		entry.settings = obj:defaultSettings()
+
+		--apply global defaults
+		local globalDefaultSettings = _getDefaultSettings(entry.appletName)
+	
+		if globalDefaultSettings then		
+			if not entry.settings then
+				entry.settings = {}
+			end
+			
+			for settingName, settingValue in pairs(globalDefaultSettings) do
+				--global defaults override applet default settings
+				log:error("Setting global default", settingName, "=", settingValue)
+				entry.settings[settingName] = settingValue
+			end
+		end
+
 	else
 		entry.settings = obj:upgradeSettings(entry.settings)
 	end
 
+	--apply global overrides
+--	local overrideSettings = _getOverrideSettings(entry.appletName)
+--
+--	if defaultSettings then
+--		if not entry.settings then
+--			entry.settings = {}
+--		end
+--		
+--		for settingName, settingValue in pairs(defaultSettings) do
+--			--global defaults override applet default settings
+--			entry.settings[settingName] = settingValue
+--		end
+--	end
+	
 	obj._entry = entry
 	obj._settings = entry.settings
 	obj._stringsTable = entry.stringsTable
@@ -268,11 +303,11 @@ end
 local function _evalMetas()
 	log:debug("_evalMetas")
 
-	for name, entry in pairs(_appletsDb) do
+	for name, entry in pairs(getSortedAppletDb(_appletsDb)) do
 		_pevalMeta(entry)
 	end
 
-	for name, entry in pairs(_appletsDb) do
+	for name, entry in pairs(getSortedAppletDb(_appletsDb)) do
 		if entry.metaLoaded and not entry.metaConfigured then
 			local ok, resOrErr = pcall(_configureMeta, entry)
 			if not ok then
@@ -293,7 +328,7 @@ local function _evalMetas()
 	-- trash them , we would need to store them here (to reload them if the applet ever runs)
 	-- because the meta might have changed them.
 
-	for name, entry in pairs(_appletsDb) do
+	for name, entry in pairs(getSortedAppletDb(_appletsDb)) do
 		entry.metaObj = nil
 
 		-- trash the meta in all cases, it's done it's job
@@ -311,19 +346,26 @@ function discover(self)
 	log:debug("AppletManager:loadApplets")
 
 	_findApplets()
-
-	-- load the sound effects applet first so the startup
-	-- sound is played without delay.
-	-- FIXME make the startup order of applet configurable
-	local soundEffectsEntry = _appletsDb["SetupSoundEffects"]
-	if soundEffectsEntry then
-		_loadMeta(soundEffectsEntry)
-		_registerMeta(soundEffectsEntry)
-		_configureMeta(soundEffectsEntry)
-	end
-
 	_loadMetas()
 	_evalMetas()
+end
+
+
+function getSortedAppletDb(hash)
+    local sortedTable = {};
+    for k, value in pairs(hash) do
+        table.insert(sortedTable, value);
+    end
+    table.sort(sortedTable, _comparatorLoadPriorityThenAlphabetic)
+    return sortedTable;
+end
+
+function _comparatorLoadPriorityThenAlphabetic(a, b)
+	if (a.loadPriority ~= b.loadPriority) then
+		return a.loadPriority < b.loadPriority
+	else
+		return a.appletName < b.appletName				
+	end	
 end
 
 
@@ -542,6 +584,33 @@ function _loadSettings(entry)
 	end
 end
 
+-- _getLoadPriority
+--
+function _getLoadPriority(appletDir)
+
+	log:debug("_getLoadPriority: ", appletDir)
+
+	local fh = io.open(appletDir .. "/" .. "loadPriority.lua")
+	if fh == nil then
+		-- no loadPriority file, retrun default priority
+		return 100
+	end
+
+	local f, err = load(function() return fh:read() end)
+	fh:close()
+
+	if not f then
+		log:error("Error reading ", appletDir, " loadPriority: ", err)
+	else
+		-- evalulate in a sandbox
+		local env = {}
+		setfenv(f, env)
+		f()
+
+		return env.loadPriority
+	end
+end
+
 
 -- _storeSettings
 --
@@ -606,6 +675,25 @@ function _freeApplet(self, entry)
 	entry.appletEvaluated = false
 	entry.appletLoaded = false
 	package.loaded[entry.appletModule] = nil
+end
+
+
+function _getDefaultSettings(appletName)
+	return _defaultSettingsByAppletName[appletName]
+end
+
+function _setDefaultSettings(appletName, settings)
+	if not _defaultSettingsByAppletName[appletName] then
+		_defaultSettingsByAppletName[appletName] = {}
+	end
+	_defaultSettingsByAppletName[appletName] = settings
+end
+
+function addDefaultSetting(self, appletName, settingName, settingValue)
+	if not _defaultSettingsByAppletName[appletName] then
+		_defaultSettingsByAppletName[appletName] = {}
+	end
+	_defaultSettingsByAppletName[appletName][settingName] = settingValue
 end
 
 

@@ -479,6 +479,13 @@ end
 function _window(self, ...)
 	local window = Window("flickr")
 
+	window:setSkin({
+		flickr = {
+		       layout = Window.noLayout,
+		       font = Font:load("fonts/FreeSans.ttf", 10)
+		}
+	})
+
 	-- black window background
 	window:setShowFrameworkWidgets(false)
 
@@ -876,15 +883,6 @@ function transitionRightLeft(oldWindow, newWindow)
             Framework:_killTransition()
         end
     end
-end
-
-
--- applet skin
-function skin(self, s)
-	s.flickr = {
-		layout = Window.noLayout,
-		font = Font:load("fonts/FreeSans.ttf", 10)
-	}
 end
 
 

@@ -34,8 +34,6 @@ function jiveVersion(self)
 end
 
 function registerApplet(self)
-	-- load our skin
-	jiveMain:loadSkin("Bounce", "skin")
 end
 
 function configureApplet(self)

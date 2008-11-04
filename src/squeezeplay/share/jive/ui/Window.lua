@@ -799,6 +799,16 @@ function setTransparent(self, transparent)
 end
 
 
+function setSkin(self, skin)
+	 self.skin = skin
+end
+
+
+function getSkin(self)
+	 return self.skin
+end
+
+
 function __tostring(self)
 	if self.title then
 		return "Window(" .. tostring(self.title) .. ")"

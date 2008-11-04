@@ -66,6 +66,21 @@ function open(self, menuItem)
 	end
 
 	self.window = Window("nettest", self:string('SETUPNETTEST_TESTING'))
+	self.window:setSkin({
+		nettest = {
+			icon = {
+				padding = { 20, 3, 20, 1 }
+			},
+			graphtitle = {
+				padding = { 20, 7, 0, 0 },
+				fg = { 0xE7, 0xE7, 0xE7 }
+			},
+			graphaxis = {
+				  padding = { 20, 1, 0, 0 },
+				  fg = { 0xE7, 0xE7, 0xE7 }
+			}
+		}
+	})
 
 	self:tieAndShowWindow(self.window)
 
@@ -154,7 +169,7 @@ end
 
 
 function showHelpWindow(self)
-	local window = Window("nettest", self:string('SETUPNETTEST_HELPTITLE'))
+	local window = Window("window", self:string('SETUPNETTEST_HELPTITLE'))
 	local help = Textarea("textarea", self:string('SETUPNETTEST_HELP'))
 
 	window:addWidget(help)
@@ -262,23 +277,6 @@ function graph2Update(self, distrib)
 			graph:filledRectangle((i-1) * bar, h - (v / count * 100), i * bar - 2, h, color)
 		end
 	end
-end
-
-
-function skin(self, s)
-	s.nettest = {
-		icon = {
-			padding = { 20, 3, 20, 1 }
-		},
-		graphtitle = {
-			padding = { 20, 7, 0, 0 },
-			fg = { 0xE7, 0xE7, 0xE7 }
-		},
-		graphaxis = {
-			padding = { 20, 1, 0, 0 },
-			fg = { 0xE7, 0xE7, 0xE7 }
-		}
-	}
 end
 
 
