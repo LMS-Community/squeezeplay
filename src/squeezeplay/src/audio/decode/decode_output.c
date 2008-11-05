@@ -258,7 +258,7 @@ static void decode_fade_out(void) {
 
 		samples_read = BYTES_TO_SAMPLES(bytes_read);
 
-		sptr = (sample_t *)(decode_fifo_buf + decode_fifo.wptr);
+		sptr = (sample_t *)(void *)(decode_fifo_buf + decode_fifo.wptr);
 		for (s = 0; s < samples_read * 2; s++) {
 			*sptr = fixed_mul(transition_gain, *sptr);
 			sptr++;
@@ -296,7 +296,7 @@ static void decode_transition_copy_bytes(sample_t *buffer, size_t nbytes) {
 
 		nsamples = BYTES_TO_SAMPLES(bytes_read);
 
-		sptr = (sample_t *)(decode_fifo_buf + decode_fifo.wptr);
+		sptr = (sample_t *)(void *)(decode_fifo_buf + decode_fifo.wptr);
 
 		in_gain = transition_gain;
 		out_gain = FIXED_ONE - in_gain;

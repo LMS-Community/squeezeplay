@@ -166,8 +166,8 @@ static bool_t decode_vorbis_callback(void *data) {
 					nsamples = bytes / 2;
 
 					/* mono */
-					rptr = ((s16_t *)self->output_buffer) + nsamples;
-					wptr = ((sample_t *)self->output_buffer) + (nsamples * 2);
+					rptr = ((s16_t *)(void *)self->output_buffer) + nsamples;
+					wptr = ((sample_t *)(void *)self->output_buffer) + (nsamples * 2);
 
 					for (i = 0; i < nsamples; i++) {
 						sample_t s = (*--rptr) << 16;
@@ -179,8 +179,8 @@ static bool_t decode_vorbis_callback(void *data) {
 					nsamples = bytes / 4;
 
 					/* stereo */
-					rptr = ((s16_t *)self->output_buffer) + (nsamples * 2);
-					wptr = ((sample_t *)self->output_buffer) + (nsamples * 2);
+					rptr = ((s16_t *)(void *)self->output_buffer) + (nsamples * 2);
+					wptr = ((sample_t *)(void *)self->output_buffer) + (nsamples * 2);
 
 					for (i = 0; i < nsamples; i++) {
 						*--wptr = (*--rptr) << 16;
@@ -188,7 +188,7 @@ static bool_t decode_vorbis_callback(void *data) {
 					}
 				}
 
-				decode_output_samples((sample_t *)self->output_buffer, nsamples, self->sample_rate, FALSE);
+				decode_output_samples((sample_t *)(void *)self->output_buffer, nsamples, self->sample_rate, FALSE);
 
 				return TRUE;
 			}

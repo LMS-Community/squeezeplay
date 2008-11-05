@@ -138,7 +138,7 @@ static sample_t pcm_read32bitBE(u8_t *pos) {
 static sample_t pcm_read32bitLE(u8_t *pos) { 
 	sample_t sample;
 
-	sample = *((s32_t *)pos);
+	sample = *((s32_t *)(void *)pos);
 	return sample;
 }
 
