@@ -73,6 +73,10 @@ void decode_output_end(void) {
 	output_started = FALSE;
 
 	decode_audio->stop();
+
+	crossfade_started = FALSE;
+	transition_gain_step = 0;
+	decode_elapsed_samples = 0;
 }
 
 
