@@ -70,7 +70,7 @@ static FLAC__StreamDecoderWriteStatus decode_flac_write_callback(
 	struct decode_flac *self = (struct decode_flac *) data;
 	const FLAC__int32 *lptr, *rptr;
 	sample_t *sbuf, *sptr;
-	int i;
+	unsigned int i;
 
 	if (self->error_occurred) {
 		return FLAC__STREAM_DECODER_WRITE_STATUS_ABORT;

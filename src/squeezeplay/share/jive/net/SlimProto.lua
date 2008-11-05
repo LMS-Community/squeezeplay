@@ -277,11 +277,6 @@ local opcodes = {
 		}
 	end,
 
-	body = function(self, packet)
-		-- XXXX
-		log:warn("TODO")
-	end,
-
 	cont = function(self, packet)
 		return {
 			icyMetaInterval = unpackNumber(packet, 5, 4),
@@ -291,16 +286,21 @@ local opcodes = {
 	end,
 
 	dsco = function(self, packet)
-		-- XXXX
-		log:warn("TODO")
+		return { }
 	end,
 
 	serv = function(self, packet)
+		return {
+			serverip = unpackNumber(packet, 5, 4),
+		}
+	end,
+
+	http = function(self, packet)
 		-- XXXX
 		log:warn("TODO")
 	end,
 
-	http = function(self, packet)
+	body = function(self, packet)
 		-- XXXX
 		log:warn("TODO")
 	end,
@@ -334,6 +334,25 @@ function __init(self, jnt, heloPacket)
 
 	-- reconnect timer
 	obj.reconnectTimer = Timer(0, function() _handleTimer(obj) end, true)
+
+	-- subscriptions
+	obj:subscribe("dsco", function(_, data)
+		log:info("server told us to disconnect")
+		obj:disconnect()
+	end)
+
+	obj:subscribe("serv", function(_, data)
+		local server = data.serverip
+
+		if server == 1 then
+			server = "www.squeezenetwork.com"
+		else
+			server = "www.test.squeezenetwork.com"
+		end
+
+		log:info("server told us to connect to ", server)
+		obj:connect(server)
+	end)
 
 	return obj
 end
@@ -416,6 +435,10 @@ function connect(self, serverip)
 		self.serverip = serverip
 		self.reconnect = false
 	end
+
+	-- Bug 9900
+	-- Don't allow connections to SN yet
+	assert(not string.match(self.serverip, "squeezenetwork.com"))
 
 	self.socket = SocketTcp(self.jnt, self.serverip, PORT, "SlimProto")
 

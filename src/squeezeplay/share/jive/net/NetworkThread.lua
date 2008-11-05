@@ -29,7 +29,7 @@ FIXME: Subscribe description
 
 
 -- stuff we use
-local _assert, tostring, table, ipairs, pairs, pcall, select, setmetatable, type  = _assert, tostring, table, ipairs, pairs, pcall, select, setmetatable, type
+local _assert, next, tostring, table, ipairs, pairs, pcall, select, setmetatable, type  = _assert, next, tostring, table, ipairs, pairs, pcall, select, setmetatable, type
 
 local io                = require("io")
 local os                = require("os")
@@ -261,32 +261,80 @@ end
 
 
 -- Called by the network layer when the network is active
-function networkActive(self)
-	if self.activeCount == 0 then
-		if self.activeCallback then
-			self.activeCallback(true)
-		end
-	end
+function networkActive(self, obj)
+	self.networkActiveCount[obj] = 1
 
-	self.activeCount = self.activeCount + 1
+	local isempty = next(self.networkActiveCount)
+
+	if isempty and not self.networkIsActive then
+		if self.networkActiveCallback then
+			self.networkActiveCallback(true)
+		end
+
+		self.networkIsActive = true
+	end
 end
 
 
 -- Called by the network layer when the network is inactive
-function networkInactive(self)
-	self.activeCount = self.activeCount - 1
+function networkInactive(self, obj)
+	self.networkActiveCount[obj] = nil
 
-	if self.activeCount == 0 then
-		if self.activeCallback then
-			self.activeCallback(false)
+	local isempty = next(self.networkActiveCount)
+
+	if not isempty and self.networkIsActive then
+		if self.networkActiveCallback then
+			self.networkActiveCallback(false)
 		end
+
+		self.networkIsActive = false
 	end
 end
 
 
 -- Register a network active callback for power management
 function registerNetworkActive(self, callback)
-	self.activeCallback = callback
+	self.networkActiveCallback = callback
+end
+
+
+-- Called by the network layer when the cpu is active (used for audio
+-- playback)
+function cpuActive(self, obj)
+	self.cpuActiveCount[obj] = 1
+
+	local isempty = next(self.cpuActiveCount)
+
+	if isempty and not self.cpuIsActive then
+		if self.cpuActiveCallback then
+			self.cpuActiveCallback(true)
+		end
+
+		self.cpuIsActive = true
+	end
+end
+
+
+-- Called by the network layer when the cpu is inactive (used for audio
+-- playback)
+function cpuInactive(self, obj)
+	self.cpuActiveCount[obj] = nil
+
+	local isempty = next(self.cpuActiveCount)
+
+	if not isempty and self.cpuIsActive then
+		if self.cpuActiveCallback then
+			self.cpuActiveCallback(false)
+		end
+
+		self.cpuIsActive = false
+	end
+end
+
+
+-- Register a cpu active callback for power management
+function registerCpuActive(self, callback)
+	self.cpuActiveCallback = callback
 end
 
 
@@ -386,7 +434,11 @@ function __init(self)
 		-- list of objects for notify
 		subscribers = {},
 
-		activeCount = 0,
+		networkActiveCount = {},
+		networkIsActive = false,
+
+		cpuActiveCount = {},
+		cpuIsActive = false,
 	})
 
 	-- subscriptions are gc weak

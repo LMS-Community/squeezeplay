@@ -270,7 +270,7 @@ struct jive_perfwarn {
 	Uint32 layout;
 	Uint32 draw;
 	Uint32 event;
-	Uint32 queue;
+	int queue;
 	Uint32 garbage;
 };
 
@@ -364,7 +364,7 @@ JiveFont *jive_font_load(const char *name, Uint16 size);
 JiveFont *jive_font_ref(JiveFont *font);
 void jive_font_free(JiveFont *font);
 int jive_font_width(JiveFont *font, const char *str);
-int jive_font_nwidth(JiveFont *font, const char *str, int len);
+int jive_font_nwidth(JiveFont *font, const char *str, size_t len);
 int jive_font_height(JiveFont *font);
 int jive_font_capheight(JiveFont *font);
 int jive_font_ascend(JiveFont *font);

@@ -50,7 +50,7 @@ local KEY_HOME         = jive.ui.KEY_HOME
 
 local jiveMain         = jiveMain
 
-local welcomeTitleStyle = 'settingstitle'
+local welcomeTitleStyle = 'setuptitle'
 local disableHomeKeyDuringSetup
 local freeAppletWhenEscapingSetup
 
@@ -70,7 +70,7 @@ function step1(self)
 	}
 	jiveMain:addItem(returnToSetup)
 
-	self._topWindow = appletManager:callService("setupShowSetupLanguage", function() self:step2() end)
+	self._topWindow = appletManager:callService("setupShowSetupLanguage", function() self:step2() end, 'setuptitle')
 
 	disableHomeKeyDuringSetup = 
 		Framework:addListener(EVENT_KEY_PRESS,
@@ -104,7 +104,7 @@ function step2(self)
 end
 
 function step3(self)
-	return appletManager:callService("setupShowSelectPlayer", function() self:step4() end)
+	return appletManager:callService("setupShowSelectPlayer", function() self:step4() end, 'setuptitle')
 end
 
 function step4(self)

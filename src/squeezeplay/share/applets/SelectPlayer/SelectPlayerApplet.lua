@@ -289,9 +289,13 @@ function _showWallpaper(self, playerId)
 end
 
 
-function setupShowSelectPlayer(self, setupNext)
+function setupShowSelectPlayer(self, setupNext, windowStyle)
+
+	if not windowStyle then
+		windowStyle = 'settingstitle'
+	end
 	-- get list of slimservers
-	local window = Window("window", self:string("SELECT_PLAYER"), 'settingstitle')
+	local window = Window("window", self:string("SELECT_PLAYER"), windowStyle)
 	window:setAllowScreensaver(false)
 
         local menu = SimpleMenu("albummenu")

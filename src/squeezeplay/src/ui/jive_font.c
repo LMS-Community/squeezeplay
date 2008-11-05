@@ -107,7 +107,7 @@ int jive_font_width(JiveFont *font, const char *str) {
 	return font->width(font, str);
 }
 
-int jive_font_nwidth(JiveFont *font, const char *str, int len) {
+int jive_font_nwidth(JiveFont *font, const char *str, size_t len) {
 	int w;
 	char *tmp;
 

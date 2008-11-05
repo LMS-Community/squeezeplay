@@ -49,8 +49,7 @@ void decode_sample_mix(Uint8 *buffer, size_t buflen) {
 	/* fixme: this crudely mixes the samples onto the buffer */
 	for (i=0; i<MAX_SAMPLES; i++) {
 		Sint32 *s, *d;
-		size_t len;
-		int j;
+		size_t j, len;
 
 		if (!sample[i]) {
 			continue;
