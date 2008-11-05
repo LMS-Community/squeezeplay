@@ -168,7 +168,8 @@ char *dirname(char *path) {
 */
 static void paths_setup(lua_State *L, char *app) {
 	char *temp, *binpath, *path, *userpath;
-
+	const char *home;
+	
 	DEBUG_TRACE("Setting up paths");
 
 	temp = malloc(PATH_MAX+1);
@@ -211,7 +212,7 @@ static void paths_setup(lua_State *L, char *app) {
 
 	DEBUG_TRACE("* Jive binary directory: %s", binpath);
 
-    const char *home = getenv("HOME");
+    home = getenv("HOME");
 	if (home != NULL) {
 		strcpy(userpath, home);
 	} else{
