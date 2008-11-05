@@ -40,10 +40,10 @@ function drawDisplay(self)
 	if self.state == 1 then
 		log:info("DisplayTest: White Frame")
 		srf:filledRectangle(0, 0, w, h, 0x000000FF)
-		srf:line(   4,   4, 236,   4, 0xFFFFFFFF)
-		srf:line( 236,   4, 236, 316, 0xFFFFFFFF)
-		srf:line( 236, 316,   4, 316, 0xFFFFFFFF)
-		srf:line(   4, 316,   4,   4, 0xFFFFFFFF)
+		srf:line(   4,   4, w-4,   4, 0xFFFFFFFF)
+		srf:line( w-4,   4, w-4, h-4, 0xFFFFFFFF)
+		srf:line( w-4, h-4,   4, h-4, 0xFFFFFFFF)
+		srf:line(   4, h-4,   4,   4, 0xFFFFFFFF)
 
 	elseif self.state == 2 then
 		log:info("DisplayTest: RED")
