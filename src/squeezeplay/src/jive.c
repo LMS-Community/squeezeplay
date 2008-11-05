@@ -167,7 +167,7 @@ char *dirname(char *path) {
 ** relative to this executable.
 */
 static void paths_setup(lua_State *L, char *app) {
-	char *temp, *binpath, *path;
+	char *temp, *binpath, *path, *userpath;
 
 	DEBUG_TRACE("Setting up paths");
 
@@ -184,6 +184,11 @@ static void paths_setup(lua_State *L, char *app) {
 	path = malloc(PATH_MAX+1);
 	if (!path) {
 		l_message("Error", "malloc failure for path");
+		exit(-1);
+	}
+	userpath = malloc(PATH_MAX+1);
+	if (!userpath) {
+		l_message("Error", "malloc failure for userpath");
 		exit(-1);
 	}
 
@@ -206,6 +211,20 @@ static void paths_setup(lua_State *L, char *app) {
 
 	DEBUG_TRACE("* Jive binary directory: %s", binpath);
 
+    const char *home = getenv("HOME");
+	if (home != NULL) {
+		strcpy(userpath, home);
+	} else{
+	    const char *homepath = getenv("HOMEPATH");
+		if (homepath != NULL) {
+			strcpy(userpath, homepath);		
+		} else {
+			l_message("Error", "No user home directory found, looking for HOME and HOMEPATH env vars...");
+			exit(-1);
+		}
+	}
+	
+	strcat(userpath, "/.squeezeplay/userpath");
 
 	// set paths in lua (package.path & package cpath)
 	lua_getglobal(L, "package");
@@ -239,6 +258,11 @@ static void paths_setup(lua_State *L, char *app) {
 		luaL_addstring(&b, path);
 		luaL_addstring(&b, DIR_SEPARATOR_STR "?.lua;");
 
+		luaL_addstring(&b, userpath);
+		luaL_addstring(&b, DIR_SEPARATOR_STR "?.lua;");
+		luaL_addstring(&b, userpath);
+		luaL_addstring(&b, DIR_SEPARATOR_STR "?" DIR_SEPARATOR_STR "?.lua;");
+		
 		// set lua path
 		luaL_pushresult(&b);
 
@@ -289,6 +313,7 @@ static void paths_setup(lua_State *L, char *app) {
 	free(temp);
 	free(binpath);
 	free(path);
+	free(userpath);	
 }
 
 
