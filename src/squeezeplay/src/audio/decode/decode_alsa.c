@@ -376,7 +376,7 @@ static void *audio_thread_execute(void *unused) {
 
 			fifo_lock(&decode_fifo);
 
-			buf = areas[0].addr + (areas[0].first + offset * areas[0].step) / 8;
+			buf = ((u8_t *)areas[0].addr) + (areas[0].first + offset * areas[0].step) / 8;
 			callback(buf, frames);
 
 			fifo_unlock(&decode_fifo);

@@ -176,8 +176,7 @@ void streambuf_feed(u8_t *buf, size_t size) {
 
 
 ssize_t streambuf_feed_fd(int fd) {
-	size_t size;
-	ssize_t n;
+	ssize_t n, size;
 
 	fifo_lock(&streambuf_fifo);
 
@@ -524,7 +523,7 @@ static int stream_readL(lua_State *L) {
 
 	/* read buffer, but we must not overflow the stream fifo */
 	n = streambuf_get_freebytes();
-	if (n > sizeof(buf)) {
+	if (n > (ssize_t)sizeof(buf)) {
 		n = sizeof(buf);
 	}
 

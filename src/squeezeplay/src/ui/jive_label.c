@@ -66,8 +66,7 @@ static void jive_label_gc_formats(LabelWidget *format);
 int jiveL_label_skin(lua_State *L) {
 	LabelWidget *peer;
 	JiveTile *bg_tile;
-	size_t num_format;
-	int i;
+	size_t i, num_format;
 
 	/* stack is:
 	 * 1: widget
@@ -122,7 +121,7 @@ static void prepare(lua_State *L) {
 	Uint16 width, height, offset;
 	int max_width = 0;
 	int total_height = 0;
-	int num_lines = 0;
+	size_t num_lines = 0;
 	const char *str, *ptr;
 
 	peer = jive_getpeer(L, 1, &labelPeerMeta);
@@ -221,7 +220,7 @@ static void prepare(lua_State *L) {
 int jiveL_label_layout(lua_State *L) {
 	LabelWidget *peer;
 	Uint16 y;
-	int i;
+	size_t i;
 
 	/* stack is:
 	 * 1: widget
@@ -327,7 +326,7 @@ int jiveL_label_animate(lua_State *L) {
 
 
 int jiveL_label_draw(lua_State *L) {
-	int i;
+	size_t i;
 
 	/* stack is:
 	 * 1: widget
@@ -431,7 +430,7 @@ int jiveL_label_get_preferred_bounds(lua_State *L) {
 
 
 static void jive_label_gc_lines(LabelWidget *peer) {
-	int i;
+	size_t i;
 
 	if (!peer->num_lines) {
 		return;
@@ -460,7 +459,7 @@ static void jive_label_gc_format(LabelFormat *format) {
 
 
 static void jive_label_gc_formats(LabelWidget *peer) {
-	int i;
+	size_t i;
 
 	jive_label_gc_format(&peer->base);
 	for (i=0; i<peer->num_format; i++) {

@@ -80,7 +80,7 @@ int jiveL_event_get_type(lua_State *L) {
 		luaL_error(L, "invalid Event");
 	}
 
-	lua_pushinteger(L, event->type);
+	lua_pushinteger(L, (lua_Integer)event->type);
 
 	return 1;
 }
@@ -92,7 +92,7 @@ int jiveL_event_get_ticks(lua_State *L) {
 		luaL_error(L, "invalid Event");
 	}
 
-	lua_pushinteger(L, event->ticks);
+	lua_pushinteger(L, (lua_Integer)event->ticks);
 
 	return 1;
 }
@@ -127,7 +127,7 @@ int jiveL_event_get_keycode(lua_State *L) {
 	case JIVE_EVENT_KEY_UP:
 	case JIVE_EVENT_KEY_PRESS:
 	case JIVE_EVENT_KEY_HOLD:
-		lua_pushinteger(L, event->u.key.code);
+		lua_pushinteger(L, (lua_Integer)event->u.key.code);
 		return 1;
 
 	default:
