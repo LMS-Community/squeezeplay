@@ -143,8 +143,8 @@ static void callback(void *outputBuffer,
 
 		samples_write = BYTES_TO_SAMPLES(bytes_write);
 
-		output_ptr = (sample_t *)outputArray;
-		decode_ptr = (sample_t *)(decode_fifo_buf + decode_fifo.rptr);
+		output_ptr = (sample_t *)(void *)outputArray;
+		decode_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_fifo.rptr);
 		while (samples_write--) {
 			*(output_ptr++) = fixed_mul(lgain, *(decode_ptr++));
 			*(output_ptr++) = fixed_mul(rgain, *(decode_ptr++));

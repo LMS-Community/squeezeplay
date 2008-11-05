@@ -60,8 +60,8 @@ void decode_sample_mix(Uint8 *buffer, size_t buflen) {
 			len = buflen;
 		}
 
-		s = (Sint32 *) (sample[i]->data + sample[i]->pos);
-		d = (Sint32 *) buffer;
+		s = (Sint32 *)(void *)(sample[i]->data + sample[i]->pos);
+		d = (Sint32 *)(void *)buffer;
 		for (j=0; j<len>>2; j++) {
 			Sint64 tmp = *(s++);
 			tmp = fixed_mul(effect_gain, tmp);
@@ -191,7 +191,7 @@ static struct jive_sample *load_sound(char *filename, int mixer) {
 	/* Convert to signed 32 bit stereo, SDL does not support this format */
 	cvt.len_cvt *= 2;
 	for (i=(cvt.len_cvt/4)-1; i>=0; i--) {
-		((Uint32 *)cvt.buf)[i] = ((Uint16 *)cvt.buf)[i] << 16;
+		((Uint32 *)(void *)cvt.buf)[i] = ((Uint16 *)(void *)cvt.buf)[i] << 16;
 	}
 
 	snd = malloc(sizeof(struct jive_sample));
