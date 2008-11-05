@@ -175,8 +175,9 @@ void streambuf_feed(u8_t *buf, size_t size) {
 }
 
 
-size_t streambuf_feed_fd(int fd) {
-	size_t n, size;
+ssize_t streambuf_feed_fd(int fd) {
+	size_t size;
+	ssize_t n;
 
 	fifo_lock(&streambuf_fifo);
 
@@ -484,7 +485,7 @@ static int stream_readL(lua_State *L) {
 	u8_t buf[1024];
 	u8_t *buf_ptr, *body_ptr;
 	size_t header_len;
-	int n;
+	ssize_t n;
 
 	/*
 	 * 1: Stream (self)
@@ -520,7 +521,6 @@ static int stream_readL(lua_State *L) {
 		lua_pushinteger(L, n);
 		return 1;
 	}
-
 
 	/* read buffer, but we must not overflow the stream fifo */
 	n = streambuf_get_freebytes();
@@ -603,7 +603,8 @@ static int stream_readL(lua_State *L) {
 static int stream_writeL(lua_State *L) {
 	struct stream *stream;
 	const char *header;
-	int n, len;
+	ssize_t n;
+	size_t len;
 
 	/*
 	 * 1: Stream (self)

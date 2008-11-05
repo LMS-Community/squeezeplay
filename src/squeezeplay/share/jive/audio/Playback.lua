@@ -332,7 +332,7 @@ function _streamRead(self, networkErr)
 		n = self.stream:read(self)
 	end
 
-	self:_streamDisconnect((n == false) and TCP_CLOSE_FIN or TCP_CLOSE_LOCAL_RST)
+	self:_streamDisconnect((n == false) and TCP_CLOSE_FIN or TCP_CLOSE_REMOTE_RST)
 end
 
 
