@@ -18,7 +18,7 @@ TODO
 --]]
 
 -- stuff we use
-local package, pairs, error, load, loadfile, io, assert = package, pairs, error, load, loadfile, io, assert
+local package, pairs, error, load, loadfile, io, assert, os = package, pairs, error, load, loadfile, io, assert, os
 local setfenv, getfenv, require, pcall, unpack = setfenv, getfenv, require, pcall, unpack
 local tostring, tonumber, collectgarbage = tostring, tonumber, collectgarbage
 
@@ -76,9 +76,37 @@ local allowedApplets = {
 -- this just for the side effect of assigning our jnt local
 function __init(self, thejnt)
 	jnt = thejnt
+	_initUserpathdir()
 	return oo.rawnew(self, {})
 end
 
+
+function _initUserpathdir()
+	local homedir
+	local home = os.getenv("HOME")
+	if home then
+		homedir = home
+	else
+		local homepath = os.getenv("HOMEPATH")
+		homedir = homepath
+	end
+	
+	
+	local userdir = homedir .. "/.squeezeplay"
+	_userpathdir = userdir .. "/userpath"
+	_mkdirIfMissing(userdir)
+	_mkdirIfMissing(_userpathdir)
+	
+end
+
+function _mkdirIfMissing(dir)
+	if lfs.attributes(dir) == nil then
+		local created, err = lfs.mkdir(dir)
+		if not created then
+			error (string.format ("error creating dir '%s' (%s)", dir, err))
+		end	
+	end
+end
 
 -- _saveApplet
 -- creates entries for appletsDb, calculates paths and module names
@@ -98,7 +126,8 @@ local function _saveApplet(name, dir)
 			metaFilepath = dir .. "/" .. name .. "/" .. name .. "Meta.lua",
 			appletFilepath = dir .. "/" .. name .. "/" .. name .. "Applet.lua",
 			stringsFilepath = dir .. "/" .. name .. "/" .. "strings.txt",
-			settingsFilepath = dir .. "/" .. name .. "/" .. "settings.lua",
+			settingsFilepath = _userpathdir .. "/" .. name .. "_" .. "settings.lua",
+			settingsFilepathLegacy = dir .. "/" .. name .. "/" .. "settings.lua",
 
 			-- lua paths
 			appletModule = "applets." .. name .. "." .. name .. "Applet",
@@ -193,19 +222,6 @@ local function _ploadMeta(entry)
 end
 
 
--- _loadMetas
--- loads the meta-information of all applets
-local function _loadMetas()
-	log:debug("_loadMetas")
-
-	for name, entry in pairs(getSortedAppletDb(_appletsDb)) do
-		if not entry.metaLoaded then
-			_ploadMeta(entry)
-		end
-	end
-end
-
-
 -- _evalMeta
 -- evaluates the meta information of applet entry
 local function _registerMeta(entry)
@@ -282,7 +298,7 @@ local function _configureMeta(entry)
 end
 
 
-local function _pevalMeta(entry)
+local function _pregisterMeta(entry)
 	if entry.metaLoaded and not entry.metaRegistered then
 		local ok, resOrErr = pcall(_registerMeta, entry)
 		if not ok then
@@ -297,15 +313,25 @@ local function _pevalMeta(entry)
 	return true
 end
 
+-- _loadAndRegisterMetas
+-- loads and registers the meta-information of all applets
+local function _loadAndRegisterMetas()
+	log:debug("_loadAndRegisterMetas")
 
+	for name, entry in pairs(getSortedAppletDb(_appletsDb)) do
+		if not entry.metaLoaded then
+			_ploadMeta(entry)
+			if not entry.metaRegistered then
+				_pregisterMeta(entry)
+			end
+		end
+	end
+
+end
 -- _evalMetas
 -- evaluates the meta-information of all applets
 local function _evalMetas()
 	log:debug("_evalMetas")
-
-	for name, entry in pairs(getSortedAppletDb(_appletsDb)) do
-		_pevalMeta(entry)
-	end
 
 	for name, entry in pairs(getSortedAppletDb(_appletsDb)) do
 		if entry.metaLoaded and not entry.metaConfigured then
@@ -346,7 +372,7 @@ function discover(self)
 	log:debug("AppletManager:loadApplets")
 
 	_findApplets()
-	_loadMetas()
+	_loadAndRegisterMetas()
 	_evalMetas()
 end
 
@@ -565,6 +591,37 @@ function _loadSettings(entry)
 
 	local fh = io.open(entry.settingsFilepath)
 	if fh == nil then
+		-- no settings file, look for legacy settings - remove legacy usage after in two public releases
+		return _loadSettingsLegacy(entry)
+	end
+
+	local f, err = load(function() return fh:read() end)
+	fh:close()
+
+	if not f then
+		log:error("Error reading ", entry.appletName, " settings: ", err)
+	else
+		-- evalulate the settings in a sandbox
+		local env = {}
+		setfenv(f, env)
+		f()
+
+		entry.settings = env.settings
+	end
+end
+
+-- _loadSettingsLegacy - remove legacy usage after in two public releases
+--
+function _loadSettingsLegacy(entry)
+	if entry.settings then
+		-- already loaded
+		return
+	end
+
+	log:debug("_loadSettingsLegacy: ", entry.appletName)
+
+	local fh = io.open(entry.settingsFilepathLegacy)
+	if fh == nil then
 		-- no settings file
 		return
 	end
@@ -573,7 +630,7 @@ function _loadSettings(entry)
 	fh:close()
 
 	if not f then
-		log:error("Error reading ", entry.appletName, " settings: ", err)
+		log:error("Error reading ", entry.appletName, " legacy settings: ", err)
 	else
 		-- evalulate the settings in a sandbox
 		local env = {}

@@ -90,8 +90,8 @@ static ov_callbacks vorbis_callbacks = {
 static bool_t decode_vorbis_callback(void *data) {
 	struct decode_vorbis *self = (struct decode_vorbis *) data;
 	vorbis_info *vi;
-	size_t nsamples;
-	int i, r, buffer_size;
+	size_t i, nsamples;
+	int r, buffer_size;
 	long bytes;
 	s16_t *rptr;
 	sample_t *wptr;

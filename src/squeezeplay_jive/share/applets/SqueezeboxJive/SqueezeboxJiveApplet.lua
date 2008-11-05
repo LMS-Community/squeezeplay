@@ -150,6 +150,10 @@ function init(self)
 		self:_wlanPowerSave(active)
 	end)
 
+	jnt:registerCpuActive(function(active)
+		self:_cpuPowerOverride(active)
+	end)
+
 	iconbar.iconWireless:addTimer(5000,  -- every 5 seconds
 				      function() 
 					      self:update()
@@ -584,7 +588,7 @@ function setPowerState(self, state)
 
 	if self.acpower then
 		-- charging
-		self:_setCPUSpeed(true)
+		self:_cpuPowerSave(true)
 
 		if self.audioVolume ~= nil then
 			log:info("Restore effect volume ", self.audioVolume)
@@ -616,7 +620,7 @@ function setPowerState(self, state)
 		-- battery
 
 		if state == "active" then
-			self:_setCPUSpeed(true)
+			self:_cpuPowerSave(true)
 			self:setBrightness()
 
 			if self.audioVolume ~= nil then
@@ -628,7 +632,7 @@ function setPowerState(self, state)
 			interval = settings.dimmedTimeout
 
 		elseif state == "locked" then
-			self:_setCPUSpeed(true)
+			self:_cpuPowerSave(true)
 			self:setBrightness()
 
 			if self.audioVolume ~= nil then
@@ -641,14 +645,14 @@ function setPowerState(self, state)
 			interval = settings.dimmedTimeout
 
 		elseif state == "dimmed" then
-			self:_setCPUSpeed(true)
+			self:_cpuPowerSave(true)
 			self:_setBrightness(true, 8, 0)
 
 			interval = settings.sleepTimeout
 
 		else
 			self:_setBrightness(true, 0, 0)
-			self:_setCPUSpeed(false)
+			self:_cpuPowerSave(false)
 
 			if not self.audioVolume then
 				self.audioVolume = Sample:getEffectVolume()
@@ -696,7 +700,7 @@ function lockScreen(self)
 	self.lockedTimer = Timer(5000,
 				 function()
 					 self:_setBrightness(true, 0, 0)
-					 self:_setCPUSpeed(false)
+					 self:_cpuPowerSave(false)
 				 end,
 				 true)
 
@@ -981,6 +985,20 @@ function settingsTestSuspend(self, menuItem)
 end
 
 
+function _cpuPowerSave(self, active)
+	self.cpuActive = active
+
+	self:_setCPUSpeed(self.cpuActive or self.cpuOverride)
+end
+
+
+function _cpuPowerOverride(self, active)
+	self.cpuOverride = active
+
+	self:_setCPUSpeed(self.cpuActive or self.cpuOverride)
+end
+
+
 function _setCPUSpeed(self, fast)
 	local filename = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed"
 
@@ -1023,14 +1041,12 @@ function _wlanPowerSave(self, active)
 	-- disable PS mode when on ac power, or the network and device or
 	-- both active. when battery powered only disable PS mode when the
 	-- user is actively using the device.
-	if self.acpower or (self.networkActive and self.powerState == "active") then
+	if self.acpower or self.networkActive then
 		self.wireless:powerSave(false)
 		self._wlanPowerSaveTimer:stop()
 	else
 		self._wlanPowerSaveTimer:start()
 	end
-
-	self.networkActive = active
 end
 
 
@@ -1132,7 +1148,7 @@ function _suspend(self)
 	self.suspendPopup = popup
 
 	-- make sure the cpu is fast when we resume
-	self:_setCPUSpeed(true)
+	self:_cpuPowerSave(true)
 
 	-- enable frame updates
 	Framework:setUpdateScreen(true)

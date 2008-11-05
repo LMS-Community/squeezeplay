@@ -73,6 +73,10 @@ void decode_output_end(void) {
 	output_started = FALSE;
 
 	decode_audio->stop();
+
+	crossfade_started = FALSE;
+	transition_gain_step = 0;
+	decode_elapsed_samples = 0;
 }
 
 
@@ -237,9 +241,8 @@ static void decode_fade_out(void) {
 	transition_samples_in_step = 0;
 
 	while (decode_fifo.wptr != ptr) {
-		size_t bytes_read, samples_read, wrap, bytes_remaining;
+		size_t s, bytes_read, samples_read, wrap, bytes_remaining;
 		sample_t *sptr;
-		int s;
 
 		bytes_read = SAMPLES_TO_BYTES(transition_sample_step - transition_samples_in_step);
 		wrap = fifo_bytes_until_wptr_wrap(&decode_fifo);
@@ -278,7 +281,7 @@ static void decode_fade_out(void) {
  * a transition - crossfade or fade in. This method applies gain
  * to both the new signal and the one that's already in the fifo.
  */
-static void decode_transition_copy_bytes(sample_t *buffer, int nbytes) {
+static void decode_transition_copy_bytes(sample_t *buffer, size_t nbytes) {
 	sample_t sample, *sptr;
 	int nsamples, s;
 	size_t bytes_read;

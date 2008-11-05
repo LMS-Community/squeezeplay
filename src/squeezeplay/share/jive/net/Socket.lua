@@ -116,7 +116,7 @@ end
 function socketActive(self)
 	if not self.active then
 		self.active = true
-		self.jnt:networkActive()
+		self.jnt:networkActive(self)
 	end
 end
 
@@ -124,7 +124,7 @@ end
 function socketInactive(self)
 	if self.active then
 		self.active = false
-		self.jnt:networkInactive()
+		self.jnt:networkInactive(self)
 	end
 end
 

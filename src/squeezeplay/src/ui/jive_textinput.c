@@ -124,8 +124,7 @@ int jiveL_textinput_draw(lua_State *L) {
 	bool drawLayer = luaL_optinteger(L, 3, JIVE_LAYER_ALL) & peer->w.layer;
 
 	const char *text;
-	size_t text_len;
-	int cursor;
+	size_t cursor, text_len;
 	int indent;
 	SDL_Rect old_clip, new_clip;
 	Uint16 text_h, text_x, text_y, text_cy, text_w, cursor_x, cursor_w, cursor_h;

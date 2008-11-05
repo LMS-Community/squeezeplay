@@ -290,6 +290,7 @@ function _upgrade(self)
 	self.popup:setAllowScreensaver(false)
 	self.popup:setAlwaysOnTop(true)
 	self.popup:setAutoHide(false)
+	self.popup:setTransparency(false)
 
 	-- no way to exit this popup
 	self.upgradeListener =

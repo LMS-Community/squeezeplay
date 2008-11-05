@@ -46,16 +46,20 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-function setupShowSetupLanguage(self, setupNext)
+function setupShowSetupLanguage(self, setupNext, windowStyle)
 	local currentLocale = locale:getLocale()
 	log:info("locale currently is ", currentLocale)
+
+	if not windowStyle then
+		windowStyle = 'settingstitle'
+	end
 
 	-- this uses private data/methods from Applet and locale. don't do this elsewhere,
 	-- but it's needed for speed here
 	self.allStrings = locale:loadAllStrings(self._entry.stringsFilepath)
 
 	-- setup menu
-	local window = Window("window", self:string("CHOOSE_LANGUAGE"), 'settingstitle')
+	local window = Window("window", self:string("CHOOSE_LANGUAGE"), windowStyle)
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu")

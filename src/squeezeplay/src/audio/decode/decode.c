@@ -510,7 +510,8 @@ static int decode_song_ended(lua_State *L) {
 static int decode_status(lua_State *L) {
 	size_t size, usedbytes;
 	u32_t bytesL, bytesH;
-	
+	u64_t elapsed, delay;
+
 	lua_newtable(L);
 
 	fifo_lock(&decode_fifo);
@@ -521,8 +522,15 @@ static int decode_status(lua_State *L) {
 	lua_pushinteger(L, decode_fifo.size);
 	lua_setfield(L, -2, "outputSize");
 	
-	lua_pushinteger(L, (u32_t)(((u64_t)(decode_elapsed_samples - 
-			(decode_audio->delay ? decode_audio->delay() : 0)) * 1000) / current_sample_rate));
+
+	elapsed = decode_elapsed_samples;
+	delay = decode_audio->delay ? decode_audio->delay() : 0;
+	if (elapsed > delay) {
+		elapsed -= delay;
+	}
+	elapsed = (elapsed * 1000) / current_sample_rate;
+
+	lua_pushinteger(L, (u32_t)elapsed);
 	lua_setfield(L, -2, "elapsed");
 	
 	/* get jiffies here so they correlate with "elapsed" as closely as possible */

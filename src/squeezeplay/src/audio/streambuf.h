@@ -38,7 +38,7 @@ extern int streambuf_getfdL(lua_State *L);
 
 extern void streambuf_feed(u8_t *buf, size_t size);
 
-extern size_t streambuf_feed_fd(int fd);
+extern ssize_t streambuf_feed_fd(int fd);
 
 extern int streambuf_readL(lua_State *L);
 

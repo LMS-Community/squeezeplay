@@ -45,7 +45,7 @@ struct decode_mad {
 		MAD_STATE_ERROR,
 	} state;
 
-	int sample_rate;
+	u32_t sample_rate;
 };
 
 

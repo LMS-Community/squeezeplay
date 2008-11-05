@@ -255,8 +255,8 @@ function _isThisPlayer(self, player)
 	end
 
 	if player:getId() ~= self.player:getId() then
-		log:warn("notification was not for this player")
-		log:warn("notification: ", player:getId(), "your player: ", self.player:getId())
+		log:info("notification was not for this player")
+		log:info("notification: ", player:getId(), "your player: ", self.player:getId())
 		return false
 	else
 		return true
@@ -530,6 +530,16 @@ function _createUI(self)
 			artwork = self[windowStyle].artwork,
 	})
 
+	local playIcon = Button(Icon('play'),
+				function() 
+				window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_PAUSE) 
+				return EVENT_CONSUME 
+			end
+			)
+	if playerStatus and playerStatus.mode == 'play' then
+		playIcon:setStyle('pause')
+	end
+
 	self[windowStyle].controlsGroup = Group(components.npcontrols, {
 		  	rew = Button(
 				Icon('rew'),
@@ -538,14 +548,8 @@ function _createUI(self)
 					return EVENT_CONSUME 
 				end
 			),
-		  	play = Button(
-				Icon('play'),
-				function() 
-					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_PAUSE) 
-					return EVENT_CONSUME 
-				end
-			),
-		  	fwd = Button(
+		  	play = playIcon,
+		  	fwd  = Button(
 				Icon('fwd'),
 				function() 
 					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_FWD) 
