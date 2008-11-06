@@ -88,6 +88,24 @@ static void l_message (const char *pname, const char *msg) {
 /* Code below is specific to jive                                       */
 /******************************************************************************/
 
+static void get_user_dir(char *userdir) {
+	const char *home = getenv("HOME");
+	if (home != NULL) {
+		strcpy(userdir, home);
+	} else{
+	    const char *homepath = getenv("HOMEPATH");
+		if (homepath != NULL) {
+			strcpy(userdir, homepath);		
+		} else {
+			l_message("Error", "No user home directory found, looking for HOME and HOMEPATH env vars...");
+			exit(-1);
+		}
+	}
+	strcat(userdir, "/.squeezeplay");
+	
+}
+
+
 /* openlibs
 ** open the libraries we want to use
 */
@@ -168,7 +186,6 @@ char *dirname(char *path) {
 */
 static void paths_setup(lua_State *L, char *app) {
 	char *temp, *binpath, *path, *userpath;
-	const char *home;
 	
 	DEBUG_TRACE("Setting up paths");
 
@@ -212,20 +229,8 @@ static void paths_setup(lua_State *L, char *app) {
 
 	DEBUG_TRACE("* Jive binary directory: %s", binpath);
 
-    home = getenv("HOME");
-	if (home != NULL) {
-		strcpy(userpath, home);
-	} else{
-	    const char *homepath = getenv("HOMEPATH");
-		if (homepath != NULL) {
-			strcpy(userpath, homepath);		
-		} else {
-			l_message("Error", "No user home directory found, looking for HOME and HOMEPATH env vars...");
-			exit(-1);
-		}
-	}
-	
-	strcat(userpath, "/.squeezeplay/userpath");
+	get_user_dir(userpath);
+	strcat(userpath, "/userpath");
 
 	// set paths in lua (package.path & package cpath)
 	lua_getglobal(L, "package");
@@ -500,6 +505,41 @@ struct Smain {
 };
 
 
+#ifdef NO_STDIO_REDIRECT
+static void get_stdout_file_path(char *path) {
+	get_user_dir(path);
+	strcat(path, "/stdout.txt");
+}
+
+static void get_stderr_file_path(char *path) {
+	get_user_dir(path);
+	strcat(path, "/stderr.txt");
+}
+
+static void redirect_stdio() {
+	char *stdoutpath, *stderrpath;
+	
+	stdoutpath = malloc(PATH_MAX+1);
+	if (!stdoutpath) {
+		l_message("Error", "malloc failure for stdoutpath");
+		exit(-1);
+	}
+	stderrpath = malloc(PATH_MAX+1);
+	if (!stderrpath) {
+		l_message("Error", "stderrpath failure for binpath");
+		exit(-1);
+	}
+	get_stdout_file_path(stdoutpath);
+    get_stderr_file_path(stderrpath);
+    	
+	freopen(stdoutpath, TEXT("w"), stdout);
+	freopen(stderrpath, TEXT("w"), stderr);
+	
+	free(stdoutpath);
+	free(stderrpath);
+}
+#endif
+
 /* pmain
 ** our main, called in lua protected mode by main
 */
@@ -524,6 +564,11 @@ static int pmain (lua_State *L) {
 
 	// setup our paths
 	paths_setup(L, argv[0]);
+
+#ifdef NO_STDIO_REDIRECT
+	/* SDL not redirecting. Instead, put console output in user writable directory - used for Vista, for instance which disallows writing to app dir */ 
+	redirect_stdio();	
+#endif
 
 	// do we have an argument?
 	if (argv[1] != NULL) {
