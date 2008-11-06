@@ -20,25 +20,25 @@
 
 #define DEBUG_ERROR(fmt, ...) fprintf(stderr, "%s:%d ERROR " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__);
 
-#ifdef RUNTIME_DEBUG
+#if RUNTIME_DEBUG
 #define DEBUG_TRACE(fmt, ...) fprintf(stderr, "%s:%d DEBUG " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__);
 #else
 #define DEBUG_TRACE(fmt, ...)
 #endif
 
-#ifdef RUNTIME_DEBUG_GARBAGE
+#if RUNTIME_DEBUG_GARBAGE
 #define DEBUG_GARBAGE(fmt, ...) fprintf(stderr, "%s:%d DEBUG " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__);
 #else
 #define DEBUG_GARBAGE(fmt, ...)
 #endif
 
-#ifdef RUNTIME_DEBUG_VERBOSE
+#if RUNTIME_DEBUG_VERBOSE
 #define DEBUG_VERBOSE(fmt, ...) fprintf(stderr, "%s:%d VERBOSE " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__);
 #else
 #define DEBUG_VERBOSE(fmt, ...)
 #endif
 
-#ifdef RUNTIME_DEBUG_DRAW
+#if RUNTIME_DEBUG_DRAW
 #define DEBUG_DRAW(fmt, ...) fprintf(stderr, "%s:%d DRAW " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__);
 #else
 #define DEBUG_DRAW(fmt, ...)
