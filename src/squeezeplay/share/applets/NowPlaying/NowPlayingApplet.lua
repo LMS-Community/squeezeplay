@@ -519,7 +519,7 @@ function _createUI(self)
 				      })
 	else
 		self[windowStyle].progressGroup = Group(components.progressNB, {
-					      elapsed = Label("text", "")
+					      elapsed = Label("elapsed", "")
 				      })
 		self[windowStyle].progressGroup:addTimer(1000, function() self:_updatePosition() end)
 	end
