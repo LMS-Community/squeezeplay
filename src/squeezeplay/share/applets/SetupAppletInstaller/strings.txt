@@ -10,6 +10,9 @@ APPLET_INSTALLER
 	NO	Installering av tilleggsprogrammer
 	SV	Installationsprogram för appletprogram
 
+APPLET_FETCHING
+	EN	Fetching Applet List
+
 INSTALL
 	DA	Installer
 	DE	Installieren
