@@ -231,7 +231,7 @@ function JiveMain:__init()
 								Framework:setUpdateScreen(true)
 								return EVENT_UNUSED
 							    end)
-	local splashTimer = Timer(5000 - (os.time() - initTime),
+	local splashTimer = Timer(2000 - (os.time() - initTime),
 		function()
 			Framework:setUpdateScreen(true)
 			Framework:removeListener(splashHandler)
