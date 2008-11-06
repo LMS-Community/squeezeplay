@@ -133,8 +133,6 @@ function menuSink(self, data)
 				end
 			else
 				version = entry.version
-				self.todownload[entry.name] = { url = url, ver = entry.version }
-				check = true
 			end
 			
 			self.menu:addItem( {
