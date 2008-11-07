@@ -196,7 +196,7 @@ function _timerCallback(self)
 			self.stream then
 
 			log:info("status OUTPUT UNDERRUN")
-			Decode:pause(0) -- auto-pause to prevent glitches
+			Decode:pauseAudio(0) -- auto-pause to prevent glitches
 			self:sendStatus(status, "STMo")
 
 			self.sentOutputUnderrunEvent = true
@@ -216,14 +216,29 @@ function _timerCallback(self)
 		self.tracksStarted = status.tracksStarted
 	end
 
-
-	-- XXXX
-	if status.decodeFull > self.threshold and
+	-- Start the decoder when some encoded data is buffered
+	-- FIXME the threshold could be decoder specific?
+	if status.decodeFull > 2048 and
+		(self.autostart == '0' or self.autostart == '1') and
 		status.decodeState & DECODE_RUNNING == 0 then
 
+		log:debug("resumeDecoder")
+		Decode:resumeDecoder()
+	end
+
+	-- Start the audio when enough encoded data is been received
+	if status.bytesReceivedL > self.threshold and
+		status.outputTime > 50 and
+		status.audioState & DECODE_RUNNING == 0 then
+
+--	FIXME in a future release we may change the the threshold to use
+--	the amount of audio buffered, see Bug 6442
+--	if status.outputTime / 10 > self.threshold and
+--		status.audioState & DECODE_RUNNING == 0 then
+
 		if self.autostart == '1' and not self.sentResume then
-			log:info("resume decodeFull=", status.decodeFull, " threshold=", self.threshold)
-			Decode:resume()
+			log:info("resume bytesReceivedL=", status.bytesReceivedL, " outputTime=", status.outputTime, " threshold=", self.threshold)
+			Decode:resumeAudio()
 			self.sentResume = true
 			self.sentDecoderFullEvent = true -- fake it so we don't send STMl with pause
 
@@ -404,7 +419,7 @@ function _strm(self, data)
 		-- pause
 		local interval_ms = data.replayGain
 
-		Decode:pause(interval_ms)
+		Decode:pauseAudio(interval_ms)
 		if interval_ms == 0 then
 			self.slimproto:sendStatus('STMp')
 		end
@@ -419,7 +434,7 @@ function _strm(self, data)
 		-- unpause
 		local interval_ms = data.replayGain
 
-		Decode:resume(interval_ms)
+		Decode:resumeAudio(interval_ms)
 		self.slimproto:sendStatus('STMr')
 
 	elseif data.command == 't' then

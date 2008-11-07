@@ -75,7 +75,15 @@ static struct decode_module *all_decoders[] = {
 };
 
 
-static void decode_resume_handler(void) {
+static void decode_resume_decoder_handler(void) {
+	mqueue_read_complete(&decode_mqueue);
+
+	current_decoder_state = DECODE_STATE_RUNNING;
+	DEBUG_TRACE("resume_decoder decode state: %x audio state %x", current_decoder_state, current_audio_state);
+}
+
+
+static void decode_resume_audio_handler(void) {
 	int start_interval;
 
 	start_interval = mqueue_read_u32(&decode_mqueue) - SDL_GetTicks();
@@ -85,7 +93,7 @@ static void decode_resume_handler(void) {
 		start_interval = 0;
 	}
 	
-	DEBUG_TRACE("decode_resume_handler start_interval=%d", start_interval);
+	DEBUG_TRACE("decode_resume_audio_handler start_interval=%d", start_interval);
 
 	fifo_lock(&decode_fifo);
 
@@ -93,22 +101,18 @@ static void decode_resume_handler(void) {
 		add_silence_ms = start_interval;
 	}
 
-	if (decoder) {
-		current_decoder_state |= DECODE_STATE_RUNNING;
-	}
-
 	if (!fifo_empty(&decode_fifo)) {
 		current_audio_state = DECODE_STATE_RUNNING;
 		decode_audio->resume();
 	}
 
-	DEBUG_TRACE("resume decode state: %x audio state %x", current_decoder_state, current_audio_state);
-
 	fifo_unlock(&decode_fifo);
+
+	DEBUG_TRACE("resume_audio decode state: %x audio state %x", current_decoder_state, current_audio_state);
 }
 
 
-static void decode_pause_handler(void) {
+static void decode_pause_audio_handler(void) {
 	Uint32 interval;
 
 	interval = mqueue_read_u32(&decode_mqueue);
@@ -116,14 +120,18 @@ static void decode_pause_handler(void) {
 
 	DEBUG_TRACE("decode_pause_handler interval=%d", interval);
 
+	fifo_lock(&decode_fifo);
+
 	if (interval) {
 		add_silence_ms = interval;
 	} else {
-		current_decoder_state &= ~DECODE_STATE_RUNNING;
 		current_audio_state &= ~DECODE_STATE_RUNNING;
 		decode_audio->pause();
 	}
-	DEBUG_TRACE("pause decode state: %x audio state %x", current_decoder_state, current_audio_state);
+
+	fifo_unlock(&decode_fifo);
+
+	DEBUG_TRACE("pause_audio decode state: %x audio state %x", current_decoder_state, current_audio_state);
 }
 
 
@@ -337,8 +345,25 @@ static int decode_stream_metadata(lua_State *L) {
 /*
  * lua decoder interface
  */
+static int decode_resume_decoder(lua_State *L) {
 
-static int decode_resume(lua_State *L) {
+	/* stack is:
+	 * 1: self
+	 */
+
+	DEBUG_TRACE("decode_resume_decoder");
+
+	if (mqueue_write_request(&decode_mqueue, decode_resume_decoder_handler, 0)) {
+		mqueue_write_complete(&decode_mqueue);
+	}
+	else {
+		DEBUG_TRACE("Full message queue, dropped resume message");
+	}
+
+	return 0;
+}
+
+static int decode_resume_audio(lua_State *L) {
 	Uint32 start_jiffies;
 
 	/* stack is:
@@ -347,9 +372,9 @@ static int decode_resume(lua_State *L) {
 	 */
 
 	start_jiffies = (Uint32) luaL_optinteger(L, 2, 0);
-	DEBUG_TRACE("decode_resume start_jiffies=%d", start_jiffies);
+	DEBUG_TRACE("decode_resume_audio start_jiffies=%d", start_jiffies);
 
-	if (mqueue_write_request(&decode_mqueue, decode_resume_handler, sizeof(Uint32))) {
+	if (mqueue_write_request(&decode_mqueue, decode_resume_audio_handler, sizeof(Uint32))) {
 		mqueue_write_u32(&decode_mqueue, start_jiffies);
 		mqueue_write_complete(&decode_mqueue);
 	}
@@ -361,7 +386,7 @@ static int decode_resume(lua_State *L) {
 }
 
 
-static int decode_pause(lua_State *L) {
+static int decode_pause_audio(lua_State *L) {
 	Uint32 interval_ms;
 
 	/* stack is:
@@ -370,9 +395,9 @@ static int decode_pause(lua_State *L) {
 	 */
 
 	interval_ms = (Uint32) luaL_optinteger(L, 2, 0);
-	DEBUG_TRACE("decode_pause interval_ms=%d", interval_ms);
+	DEBUG_TRACE("decode_pause_audio interval_ms=%d", interval_ms);
 
-	if (mqueue_write_request(&decode_mqueue, decode_pause_handler, sizeof(Uint32))) {
+	if (mqueue_write_request(&decode_mqueue, decode_pause_audio_handler, sizeof(Uint32))) {
 		mqueue_write_u32(&decode_mqueue, interval_ms);
 		mqueue_write_complete(&decode_mqueue);
 	}
@@ -510,7 +535,7 @@ static int decode_song_ended(lua_State *L) {
 static int decode_status(lua_State *L) {
 	size_t size, usedbytes;
 	u32_t bytesL, bytesH;
-	u64_t elapsed, delay;
+	u64_t elapsed, delay, output;
 
 	lua_newtable(L);
 
@@ -521,7 +546,11 @@ static int decode_status(lua_State *L) {
 
 	lua_pushinteger(L, decode_fifo.size);
 	lua_setfield(L, -2, "outputSize");
-	
+
+	output = fifo_bytes_used(&decode_fifo);
+	output = (BYTES_TO_SAMPLES(output) * 1000) / current_sample_rate;
+	lua_pushinteger(L, (u32_t)output);
+	lua_setfield(L, -2, "outputTime");
 
 	elapsed = decode_elapsed_samples;
 	delay = decode_audio->delay ? decode_audio->delay() : 0;
@@ -594,8 +623,9 @@ static int decode_audio_gain(lua_State *L) {
 }
 
 static const struct luaL_Reg decode_f[] = {
-	{ "resume", decode_resume },
-	{ "pause", decode_pause },
+	{ "resumeDecoder", decode_resume_decoder },
+	{ "resumeAudio", decode_resume_audio },
+	{ "pauseAudio", decode_pause_audio },
 	{ "skipAhead", decode_skip_ahead },
 	{ "stop", decode_stop },
 	{ "flush", decode_flush },

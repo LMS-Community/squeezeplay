@@ -441,9 +441,6 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
 		bytes_out -= bytes_write;
 	}
 
-	/* start immediately */
-	current_audio_state |= DECODE_STATE_RUNNING;
-
 	fifo_unlock(&decode_fifo);
 }
 
