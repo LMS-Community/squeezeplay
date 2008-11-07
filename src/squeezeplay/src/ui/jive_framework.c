@@ -1018,7 +1018,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 		if (event->type == SDL_MOUSEBUTTONDOWN) {
 			if (mouse_state == MOUSE_STATE_NONE) {
-				int param;
+				unsigned int * param = malloc(sizeof(unsigned int));
 
 				mouse_state = MOUSE_STATE_DOWN;
 
@@ -1026,8 +1026,8 @@ static int process_event(lua_State *L, SDL_Event *event) {
 					SDL_RemoveTimer(mouse_timer);
 				}
 
-				param = (event->button.y << 16) | event->button.x;
-				mouse_timer = SDL_AddTimer(HOLD_TIMEOUT, &mousehold_callback, (void *) param);
+				*param = (event->button.y << 16) | event->button.x;
+				mouse_timer = SDL_AddTimer(HOLD_TIMEOUT, &mousehold_callback, param);
 
 				mouse_origin_x = event->button.x;
 				mouse_origin_y = event->button.y;
@@ -1235,9 +1235,10 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		case JIVE_USER_EVENT_MOUSE_HOLD:
 			if (mouse_state == MOUSE_STATE_DOWN) {
 				jevent.type = JIVE_EVENT_MOUSE_HOLD;
-				jevent.u.mouse.x = (unsigned int) event->user.data1 & 0xFFFF;
-				jevent.u.mouse.y = ((unsigned int) event->user.data1 >> 16) & 0xFFFF;
+				jevent.u.mouse.x = *((unsigned int *) event->user.data1) & 0xFFFF;
+				jevent.u.mouse.y = ( *((unsigned int *) event->user.data1) >> 16) & 0xFFFF;
 				mouse_state = MOUSE_STATE_SENT;
+				free(event->user.data1);
 			}
 			break;
 
