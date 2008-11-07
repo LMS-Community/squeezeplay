@@ -171,7 +171,7 @@ static struct jive_sample *load_sound(char *filename, int mixer) {
 
 	/* Convert to signed 16 bit stereo */
 	if (SDL_BuildAudioCVT(&cvt, wave.format, wave.channels, wave.freq,
-			      AUDIO_S16, 2, 44100) < 0) {
+			      AUDIO_S16SYS, 2, 44100) < 0) {
 		fprintf(stderr, "Couldn't build audio converter: %s\n", SDL_GetError());
 		SDL_FreeWAV(data);
 		return NULL;
