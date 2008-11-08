@@ -108,7 +108,7 @@ function DisplayTest(self)
 	self.state = 1
 	self:drawDisplay()
 	
-	window:addListener(EVENT_KEY_PRESS | EVENT_MOUSE_UP,
+	window:addListener(EVENT_KEY_PRESS | EVENT_MOUSE_DOWN,
 		function(event)
 			local type = event:getType()
 
@@ -119,7 +119,7 @@ function DisplayTest(self)
 					return EVENT_CONSUME
 				end
 
-			elseif type == EVENT_MOUSE_UP then
+			elseif type == EVENT_MOUSE_DOWN then
 				window:playSound("WINDOWSHOW")
 				self:drawDisplay()
 				return EVENT_CONSUME
