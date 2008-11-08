@@ -117,10 +117,6 @@ function DisplayTest(self)
 					window:playSound("WINDOWHIDE")
 					window:hide()
 					return EVENT_CONSUME
-				else
-					window:playSound("WINDOWSHOW")
-					self:drawDisplay()
-					return EVENT_CONSUME
 				end
 
 			elseif type == EVENT_MOUSE_UP then
