@@ -17,7 +17,7 @@ end
 
 function defaultSettings(self)
 	return {
-    		[ "screeensaverArtworkSize" ] = "ss"
+    		screensaverArtworkSize = "ss"
 	}
 end
 

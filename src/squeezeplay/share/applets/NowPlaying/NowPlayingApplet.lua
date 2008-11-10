@@ -57,7 +57,7 @@ local modeTokens = {
 --
 
 local windowStyle
-local customStyle
+local customStyle = 'ss'
 
 -- defines a new style that inherits from an existing style
 local function _uses(parent, value)
