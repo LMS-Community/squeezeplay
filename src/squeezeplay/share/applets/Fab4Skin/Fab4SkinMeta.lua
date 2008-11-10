@@ -38,7 +38,8 @@ function registerApplet(self)
 	local params = {
 		THUMB_SIZE = 70,
 		nowPlayingBrowseArtworkSize = 190,
-		nowPlayingSSArtworkSize = 190,
+		nowPlayingSSArtworkSize     = 190,
+		nowPlayingLargeArtworkSize  = 190,
         }
 	jiveMain:registerSkin(self:string("FAB4_SKIN"), "Fab4Skin", "skin", params)
 end

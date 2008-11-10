@@ -1508,8 +1508,9 @@ function skin(self, s)
 				}
 	})
 
-	-- nptitle style is the same for both windowStyles
+	-- nptitle style is the same for all windowStyles
 	s.browsenptitle = _uses(s.ssnptitle)
+	s.largenptitle  = _uses(s.ssnptitle)
 
 	-- Song
 	s.ssnptrack = {}
@@ -1529,15 +1530,15 @@ function skin(self, s)
 	}
 	s.ssnptrack.text.fg = TEXT_COLOR
 
-	-- nptrack is identical between the two windowStyles
+	-- nptrack is identical between all windowStyles
 	s.browsenptrack = _uses(s.ssnptrack)
+	s.largenptrack  = _uses(s.ssnptrack)
 
 	-- Artwork
 	local ARTWORK_SIZE = 190
 	local browseArtWidth = ARTWORK_SIZE
 	local ssArtWidth = ARTWORK_SIZE
 
---	local ssnoartworkoffset = (screenWidth - ssArtWidth) / 2
 	s.ssnpartwork = {}
 
 	s.ssnpartwork.w = ssArtWidth
@@ -1550,6 +1551,7 @@ function skin(self, s)
 	-- FIXME: change name to not be specific to icon width in filename
 	s.ssnpartwork.artwork.img = Surface:loadImage(imgpath .. "Icons/icon_album_noartwork_336.png")
 	s.browsenpartwork = _uses(s.ssnpartwork)
+	s.largenpartwork = _uses(s.ssnpartwork)
 
 	s.ssnpcontrols = {}
 	s.ssnpcontrols.order = { 'rew', 'play', 'fwd' }
@@ -1584,6 +1586,8 @@ function skin(self, s)
 	s.ssnpcontrols.fwd.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_ffwd_on.png")
 	
 	s.browsenpcontrols = _uses(s.ssnpcontrols)
+	s.largenpcontrols  = _uses(s.ssnpcontrols)
+
 	-- Progress bar
 	s.ssprogress = {}
 	s.ssprogress.position = LAYOUT_SOUTH
@@ -1605,17 +1609,7 @@ function skin(self, s)
 	s.ssprogress.remain = _uses(s.ssprogress.text)
 
 	s.browseprogress = _uses(s.ssprogress)
-	-- browse has different positioning than ss windowStyle
---[[
-	s.browseprogress = _uses(s.ssprogress,
-				{ 
-					padding = { 0, 0, 0, 25 },
-					text = {
-						padding = { 8, 0, 8, 25 },
-					}
-				}
-			)
---]]
+	s.largeprogress  = _uses(s.ssprogress)
 
 	s.ssprogressB             = {}
         s.ssprogressB.horizontal  = 1
@@ -1625,6 +1619,7 @@ function skin(self, s)
 	s.ssprogressB.padding     = { 0, 0, 0, 15 }
 
 	s.browseprogressB = _uses(s.ssprogressB)
+	s.largeprogressB  = _uses(s.ssprogressB)
 
 	-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
 	s.ssprogressNB = {}
@@ -1642,6 +1637,7 @@ function skin(self, s)
 	s.ssprogressNB.elapsed = _uses(s.ssprogressNB.text)
 
 	s.browseprogressNB = _uses(s.ssprogressNB)
+	s.largeprogressNB  = _uses(s.ssprogressNB)
 
 	-- background style should start at x,y = 0,0
         s.iconbg = {}
