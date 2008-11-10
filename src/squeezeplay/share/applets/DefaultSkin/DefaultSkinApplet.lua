@@ -99,10 +99,15 @@ end
 
 -- skin
 -- The meta arranges for this to be called to skin Jive.
-function skin(self, s)
-	Framework:setVideoMode(240, 320, 16, jiveMain:isFullscreen())
-
+function skin(self, s, reload, useDefaultSize)
 	local screenWidth, screenHeight = Framework:getScreenSize()
+	if useDefaultSize or screenWidth < 240 or screenHeight < 320 then
+		screenWidth = 240
+		screenHeight = 320
+		log:warn("******* RESIZING")
+	end
+
+	Framework:setVideoMode(screenWidth, screenHeight, 16, jiveMain:isFullscreen())
 
 	-- Images and Tiles
 	local iconBackground = 

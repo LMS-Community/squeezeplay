@@ -1275,6 +1275,9 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		next_jive_origin++;
 
 		jevent.type = JIVE_EVENT_WINDOW_RESIZE;
+		
+		/* Avoid mouse_up causing a mouse press event to occur */
+		mouse_state = MOUSE_STATE_NONE;
 		break;
 
 	}
