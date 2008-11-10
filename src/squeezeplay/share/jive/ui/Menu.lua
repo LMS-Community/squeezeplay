@@ -234,14 +234,18 @@ local function _eventHandler(self, event)
 			return self.scrollbar:_event(event)
 
 		else
-			-- menu selection follows mouse
+			--mouse is inside menu region
 			local x,y,w,h = self:mouseBounds(event)
 			local i = y / self.itemHeight --(h / self.numWidgets)
 
-			self:setSelectedIndex(self.topItem + math.floor(i))
-
+			local itemShift = math.floor(i)
+			
 			if evtype == EVENT_MOUSE_DRAG then
+				self:setSelectedIndex(self.topItem + itemShift)
 				_scrollList(self)
+			elseif (itemShift >= 0 and itemShift < self.numWidgets) then 
+				-- menu selection follows mouse, but no scrolling occurs
+				self:setSelectedIndex(self.topItem + itemShift)
 			end
 
 			return EVENT_CONSUME
