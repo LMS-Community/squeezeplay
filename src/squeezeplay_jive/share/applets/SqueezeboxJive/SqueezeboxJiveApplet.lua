@@ -264,16 +264,15 @@ end
 
 function notify_playerCurrent(self, player)
 	-- if not passed a player, or if player hasn't change, exit
-	if not player or self.player == player then
+	if not player or not player:isConnected() then
+		return
+	end
+
+	if self.player == player then
 		return
 	end
 
 	self.player = player
-	self.server = player:getSlimServer()
-	
-	if not self.server then
-		return
-	end
 
 	local sink = function(chunk, err)
 			     if err then
