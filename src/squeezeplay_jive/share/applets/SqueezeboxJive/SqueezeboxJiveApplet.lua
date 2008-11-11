@@ -116,7 +116,7 @@ function init(self)
 	-- watchdog timer
 	self.watchdog = Watchdog:open()
 	if self.watchdog then
-		self.watchdog:setTimeout(10) -- 10 seconds
+		self.watchdog:setTimeout(15) -- 15 seconds
 		local timer = Timer(2000, -- 2 seconds
 				    function()
 					    self.watchdog:keepAlive()
