@@ -8,6 +8,7 @@
 #include "common.h"
 #include "ui/jive.h"
 #include "audio/fixed_math.h"
+#include "audio/decode/decode_priv.h"
 
 
 struct jive_sample {
@@ -110,17 +111,17 @@ static int decode_sample_obj_play(lua_State *L) {
 		return 0;
 	}
 
-	// lock
+	fifo_lock(&decode_fifo);
 
 	if (sample[snd->mixer] != NULL) {
 		/* slot if not free */
-		// unlock
+		fifo_unlock(&decode_fifo);
 		return 0;
 	}
 
 	sample[snd->mixer] = snd;
 	sample[snd->mixer]->refcount++;
-	// unlock
+	fifo_unlock(&decode_fifo);
 
 	return 0;
 }

@@ -52,7 +52,7 @@ static s32_t track_inversion[2] = { 1, 1 };
 
 
 void decode_output_begin(void) {
-	// XXXX fifo mutex
+	/* call with the decode fifo locked */
 
 	decode_audio->start();
 
@@ -68,7 +68,7 @@ void decode_output_begin(void) {
 
 
 void decode_output_end(void) {
-	// XXXX fifo mutex
+	/* call with the decode fifo locked */
 
 	output_started = FALSE;
 
@@ -81,7 +81,7 @@ void decode_output_end(void) {
 
 
 void decode_output_flush(void) {
-	// XXXX fifo mutex
+	/* call with the decode fifo locked */
 
 	if (check_start_point) {
 		decode_fifo.wptr = track_start_point;
@@ -481,22 +481,9 @@ u32_t decode_output_percent_used(void) {
 
 /* This removes padding samples from the buffer (for gapless mp3 playback). */
 void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate) {
-#if 0
-	int numerator, denominator;
-	u32_t resampled_rate;
-#endif
 	size_t buffer_size;
 
 	buffer_size = SAMPLES_TO_BYTES(nsamples);
-
-#if 0
-	// XXXX full port from ip3k
-	u32_t resampled_rate = decode_output_scaled_samplerate(sample_rate, &numerator, &denominator);
-	if (numerator != 1) {
-		buffer_size /= numerator;
-	}
-	buffer_size *= denominator;
-#endif
 
 	DEBUG_TRACE("Removing %d bytes padding from buffer", (unsigned int)buffer_size);
 

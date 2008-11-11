@@ -152,6 +152,8 @@ static void decode_stop_handler(void) {
 
 	DEBUG_TRACE("decode_stop_handler");
 
+	fifo_lock(&decode_fifo);
+
 	current_decoder_state = 0;
 	current_audio_state = 0;
 
@@ -167,6 +169,8 @@ static void decode_stop_handler(void) {
 	decode_output_end();
 
 	streambuf_flush();
+
+	fifo_unlock(&decode_fifo);
 }
 
 
@@ -174,6 +178,8 @@ static void decode_flush_handler(void) {
 	mqueue_read_complete(&decode_mqueue);
 
 	DEBUG_TRACE("decode_flush_handler");
+
+	fifo_lock(&decode_fifo);
 
 	current_decoder_state = 0;
 
@@ -186,6 +192,8 @@ static void decode_flush_handler(void) {
 
 	decode_first_buffer = FALSE;
 	decode_output_flush();
+
+	fifo_unlock(&decode_fifo);
 }
 
 
@@ -212,6 +220,8 @@ static void decode_start_handler(void) {
 
 	DEBUG_TRACE("decode_start_handler decoder=%x num_params=%d", decoder_id, num_params);
 
+	fifo_lock(&decode_fifo);
+
 	for (i = 0; i < sizeof(all_decoders); i++) {
 		if (all_decoders[i]->id == decoder_id) {
 			decoder = all_decoders[i];
@@ -227,6 +237,8 @@ static void decode_start_handler(void) {
 	decode_set_track_polarity_inversion(polarity_inversion);
 
 	decode_output_begin();
+
+	fifo_unlock(&decode_fifo);
 }
 
 
@@ -235,7 +247,11 @@ static void decode_song_ended_handler(void) {
 
 	DEBUG_TRACE("decode_song_ended_handler");
 
+	fifo_lock(&decode_fifo);
+
 	decode_output_song_ended();
+
+	fifo_unlock(&decode_fifo);
 }
 
 
@@ -659,12 +675,14 @@ int luaopen_decode(lua_State *L) {
 		return 0;
 	}
 
+	fifo_init(&decode_fifo, DECODE_FIFO_SIZE);
+
 	if (!decode_audio->init()) {
 		DEBUG_ERROR("Failed to init audio");
+
+		fifo_free(&decode_fifo);
 		return 0;
 	}
-
-	fifo_init(&decode_fifo, DECODE_FIFO_SIZE);
 
 	mqueue_init(&decode_mqueue, decode_mqueue_buffer, sizeof(decode_mqueue_buffer));
 
