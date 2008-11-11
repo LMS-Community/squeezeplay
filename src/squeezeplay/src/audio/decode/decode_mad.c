@@ -20,7 +20,8 @@
  */
 #define INPUT_BUFFER_SIZE 2890
 
-#define OUTPUT_BUFFER_SIZE (2*32*36 * sizeof(sample_t))
+#define OUTPUT_BUFFER_FRAMES 2*32*36
+#define OUTPUT_BUFFER_BYTES (OUTPUT_BUFFER_FRAMES * sizeof(sample_t))
 
 #define ID3_TAG_FLAG_FOOTERPRESENT 0x10
 
@@ -61,6 +62,9 @@ struct decode_mad {
 /* Not much documentation exists about the MAD decoder delay, but
    we apparently need to skip the first 529 samples
    http://www.hydrogenaudio.org/forums/lofiversion/index.php/t20083.html
+
+   See also
+   http://lame.sourceforge.net/tech-FAQ.txt
 */
 #define MAD_DECODER_DELAY 529
 
@@ -127,7 +131,7 @@ static void xing_parse(struct decode_mad *self) {
 	mad_bit_skip(&ptr, 40);
 	bitlen -= 72;
 
-	DEBUG_TRACE("lame magic %x", magic);
+	DEBUG_TRACE("lame magic %x bitlen %d", magic, bitlen);
 	if (magic != LAME_MAGIC) {
 		return;
 	}
@@ -315,7 +319,7 @@ static void decode_mad_output(struct decode_mad *self) {
 
 	pcm = &self->synth.pcm;
 
-	if (!decode_output_can_write(pcm->length * 2 * sizeof(sample_t), self->sample_rate)) {
+	if (!decode_output_can_write(SAMPLES_TO_BYTES(pcm->length), self->sample_rate)) {
 		self->state = MAD_STATE_PCM_READY;
 		return;
 	}
@@ -332,7 +336,6 @@ static void decode_mad_output(struct decode_mad *self) {
 		}
 
 		xing_parse(self);
-		self->encoder_delay *= pcm->channels;
 	}
 	else {
 		/* Bug 9046, don't allow sample rate to change mid stream */
@@ -349,6 +352,8 @@ static void decode_mad_output(struct decode_mad *self) {
 
 		if (pcm->channels == 2) {
 			/* stero */
+			assert(SAMPLES_TO_BYTES(pcm->length) <= OUTPUT_BUFFER_BYTES);
+
 			for (i=0; i<pcm->length; i++) {
 				*buf++ = mad_fixed_to_32bit(*left++);
 				*buf++ = mad_fixed_to_32bit(*right++);
@@ -357,6 +362,8 @@ static void decode_mad_output(struct decode_mad *self) {
 		else {
 			/* mono */
 			sample_t s;
+
+			assert(SAMPLES_TO_BYTES(pcm->length * 2) <= OUTPUT_BUFFER_BYTES);
 
 			for (i=0; i<pcm->length; i++) {
 				s = mad_fixed_to_32bit(*left++);
@@ -376,8 +383,8 @@ static void decode_mad_output(struct decode_mad *self) {
 
 			DEBUG_TRACE("Skip encoder_delay=%d pcm->length=%d offset=%d", self->encoder_delay, pcm->length, offset);
 		}
-		
-		decode_output_samples(self->output_buffer + (offset * 2 * sizeof(sample_t)),
+
+		decode_output_samples(self->output_buffer + (offset * 2),
 				      pcm->length - offset,
 				      self->sample_rate,
 				      FALSE);
@@ -410,7 +417,7 @@ static bool_t decode_mad_callback(void *data) {
 		return FALSE;
 	}
 
-	if (!decode_output_can_write(OUTPUT_BUFFER_SIZE, self->sample_rate)) {
+	if (!decode_output_can_write(OUTPUT_BUFFER_BYTES, self->sample_rate)) {
 		return 0;
 	}
 
@@ -447,7 +454,7 @@ static void *decode_mad_start(u8_t *params, u32_t num_params) {
 	memset(self, 0, sizeof(struct decode_mad));
 
 	self->input_buffer = malloc(INPUT_BUFFER_SIZE + MAD_BUFFER_GUARD);
-	self->output_buffer = malloc(OUTPUT_BUFFER_SIZE);
+	self->output_buffer = malloc(OUTPUT_BUFFER_BYTES);
 	self->guard_pointer = NULL;
 
 	mad_stream_init(&self->stream);
