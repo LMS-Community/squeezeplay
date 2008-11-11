@@ -255,7 +255,7 @@ local function _registerMeta(entry)
 			
 			for settingName, settingValue in pairs(globalDefaultSettings) do
 				--global defaults override applet default settings
-				log:error("Setting global default", settingName, "=", settingValue)
+				log:debug("Setting global default: ", settingName, "=", settingValue)
 				entry.settings[settingName] = settingValue
 			end
 		end
@@ -734,6 +734,9 @@ function _freeApplet(self, entry)
 	package.loaded[entry.appletModule] = nil
 end
 
+function getUserPath(self)
+    return _userpathdir
+end
 
 function _getDefaultSettings(appletName)
 	return _defaultSettingsByAppletName[appletName]
