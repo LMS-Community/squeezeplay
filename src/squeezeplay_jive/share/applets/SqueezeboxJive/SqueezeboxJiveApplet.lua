@@ -116,8 +116,8 @@ function init(self)
 	-- watchdog timer
 	self.watchdog = Watchdog:open()
 	if self.watchdog then
-		self.watchdog:setTimeout(30) -- 30 seconds
-		local timer = Timer(10000, -- 10 seconds
+		self.watchdog:setTimeout(10) -- 10 seconds
+		local timer = Timer(2000, -- 2 seconds
 				    function()
 					    self.watchdog:keepAlive()
 				    end)
@@ -127,14 +127,14 @@ function init(self)
 	end
 
 	-- sync clock to hw clock every 10 minutes
-	local clockSyncTimer = Timer(600000, -- 10 minutes
-					function()
-						local systemTime = os.date()
-						log:info('syncing system clock to hw clock: ', systemTime)
-						os.execute("hwclock -s")
-						systemTime = os.date()
-						log:info('system clock now synced to hw clock: ', systemTime)
-					end)
+	clockSyncTimer = Timer(600000, -- 10 minutes
+		function()
+			local systemTime = os.date()
+			log:info('syncing system clock to hw clock: ', systemTime)
+			os.execute("hwclock -s")
+			systemTime = os.date()
+			log:info('system clock now synced to hw clock: ', systemTime)
+		end)
 	clockSyncTimer:start()
 
 	-- register wakeup function
