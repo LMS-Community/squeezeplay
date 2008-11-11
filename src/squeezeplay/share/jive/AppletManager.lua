@@ -87,7 +87,7 @@ function _initUserpathdir()
 	if home then
 		homedir = home
 	else
-		local homepath = os.getenv("HOMEPATH")
+		local homepath = os.getenv("USERPROFILE")
 		homedir = homepath
 	end
 	
