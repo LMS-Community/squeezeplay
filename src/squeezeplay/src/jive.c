@@ -93,11 +93,11 @@ static void get_user_dir(char *userdir) {
 	if (home != NULL) {
 		strcpy(userdir, home);
 	} else{
-	    const char *homepath = getenv("HOMEPATH");
+	    const char *homepath = getenv("USERPROFILE");
 		if (homepath != NULL) {
 			strcpy(userdir, homepath);		
 		} else {
-			l_message("Error", "No user home directory found, looking for HOME and HOMEPATH env vars...");
+			l_message("Error", "No user home directory found, looking for HOME and USERPROFILE env vars...");
 			exit(-1);
 		}
 	}
@@ -517,8 +517,13 @@ static void get_stderr_file_path(char *path) {
 }
 
 static void redirect_stdio() {
-	char *stdoutpath, *stderrpath;
-	
+	char *userdir, *stdoutpath, *stderrpath;
+
+	userdir = malloc(PATH_MAX+1);
+	if (!userdir) {
+		l_message("Error", "malloc failure for userdir");
+		exit(-1);
+	}
 	stdoutpath = malloc(PATH_MAX+1);
 	if (!stdoutpath) {
 		l_message("Error", "malloc failure for stdoutpath");
@@ -529,12 +534,16 @@ static void redirect_stdio() {
 		l_message("Error", "stderrpath failure for binpath");
 		exit(-1);
 	}
+	get_user_dir(userdir);
+	mkdir(userdir, 755);
+
 	get_stdout_file_path(stdoutpath);
     get_stderr_file_path(stderrpath);
     	
 	freopen(stdoutpath, TEXT("w"), stdout);
 	freopen(stderrpath, TEXT("w"), stderr);
 	
+	free(userdir);
 	free(stdoutpath);
 	free(stderrpath);
 }
