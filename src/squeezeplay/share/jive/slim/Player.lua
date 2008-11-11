@@ -402,6 +402,7 @@ function ssidIsSqueezebox(self, ssid)
 
 	if mac then
 		mac = string.gsub(mac, "(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)", "%1:%2:%3:%4:%5:%6")
+		mac = string.lower(mac)
 	end
 
 	return mac, hasEthernet
