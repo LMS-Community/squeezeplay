@@ -108,12 +108,13 @@ Sets or replaces a widget in this group.
 =cut
 --]]
 function setWidget(self, key, widget)
-	if self.widgets[key] == widget then
+	if self.widgets[key] == widget
+		and self.widgets[key].parent == self then
 		return
 	end
 
 	if self.widgets[key] then
-		if self.widgets[key].parent == self then
+		if self.widgets[key].parent ~= self then
 			if self.visible then
 				self.widgets[key]:dispatchNewEvent(EVENT_HIDE)
 			end

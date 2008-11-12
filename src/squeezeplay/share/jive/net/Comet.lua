@@ -89,6 +89,7 @@ local _handshake
 local _getHandshakeSink
 local _connect
 local _reconnect
+local _connected
 local _getEventSink
 local _getRequestSink
 local _response
@@ -669,19 +670,6 @@ _connect = function(self)
 		subscription = '/' .. self.clientId .. '/**',
 	} }
 
-	-- Add any un-acknowledged requests to the outgoing data
-	for i, v in ipairs(self.sent_reqs) do
-		table.insert(data, v)
-	end
-
-	-- Add any other pending requests to the outgoing data
-	_addPendingRequests(self, data)
-
-	if log:isDebug() then
-		log:debug("Sending pending request(s):")
-		debug.dump(data, 5)
-	end
-
 	-- This will be our last request on this connection, it is now only
 	-- for listening for responses
 
@@ -717,14 +705,6 @@ _reconnect = function(self)
 		connectionType = 'streaming',
 	} }
 
-	-- Add any un-acknowledged requests to the outgoing data
-	for i, v in ipairs(self.sent_reqs) do
-		table.insert(data, v)
-	end
-
-	-- Add any other pending requests to the outgoing data
-	_addPendingRequests(self, data)
-
 	_state(self, CONNECTING)
 	
 	local req = CometRequest(
@@ -734,6 +714,38 @@ _reconnect = function(self)
 		)
 
 	self.chttp:fetch(req)
+end
+
+
+_connected = function(self)
+	_state(self, CONNECTED)
+
+	local data = { }
+
+	-- Add any un-acknowledged requests to the outgoing data
+	for i, v in ipairs(self.sent_reqs) do
+		table.insert(data, v)
+	end
+
+	-- Add any other pending requests to the outgoing data
+	_addPendingRequests(self, data)
+
+	-- Only continue if we have some data to send
+	if data[1] then
+
+		if log:isDebug() then
+			log:debug("Sending pending request(s):")
+			debug.dump(data, 5)
+		end
+
+		local req = CometRequest(
+			_getEventSink(self),
+			self.uri,
+			data
+		)
+
+		self.rhttp:fetch(req)
+	end
 end
 
 
@@ -804,10 +816,7 @@ _response = function(self, chunk)
 		-- Handle response
 		if event.channel == '/meta/connect' then
 		 	if event.successful then
-				_state(self, CONNECTED)
-
-				-- send any requests queued during connect
-				_sendPendingRequests(self)
+				_connected(self)
 			else
 				return _handleAdvice(self)
 			end
@@ -824,7 +833,7 @@ _response = function(self, chunk)
 			end
 		elseif event.channel == '/meta/reconnect' then
 			if event.successful then
-				_state(self, CONNECTED)
+				_connected(self)
 			else
 				return _handleAdvice(self)
 			end

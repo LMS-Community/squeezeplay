@@ -461,10 +461,12 @@ function downloadingSoftware(self, menuItem)
 
 	local popup = Popup("popupIcon")
 
+	popup:setTransparent(false)
+
 	--FIXME, this window does not layout correctly (Bug 5412)
 	local icon = Icon("iconConnecting")
 	local text = Label("text", "\nDownloading Firmware")
-	local label = Label("downloading", "0%")
+	local label = Label("text", "0%")
 
 	popup:addWidget(label)
 	popup:addWidget(icon)
