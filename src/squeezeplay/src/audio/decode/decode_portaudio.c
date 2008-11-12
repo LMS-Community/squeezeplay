@@ -82,9 +82,11 @@ static int callback(const void *inputBuffer,
 	bytes_used = fifo_bytes_used(&decode_fifo);	
 
 	/* only skip if it will not cause an underrun */
-	if (bytes_used + skip_ahead_bytes >= len) {
-		skip_bytes = skip_ahead_bytes;
-		bytes_used -= skip_bytes;
+	if (bytes_used >= len && skip_ahead_bytes > 0) {
+		skip_bytes = bytes_used - len;
+		if (skip_bytes > skip_ahead_bytes) {
+			skip_bytes = skip_ahead_bytes;			
+		}
 	}
 
 	if (bytes_used > len) {
