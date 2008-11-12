@@ -218,7 +218,7 @@ int jiveL_group_layout(lua_State *L) {
 
 
 static int draw_closure(lua_State *L) {
-	boolean is_parent;
+	bool is_parent;
 
 	/* Only draw the widget if we are it's parent. This fixes a
 	 * rendering error when a widget (eg choice) is used in the
@@ -226,7 +226,7 @@ static int draw_closure(lua_State *L) {
 	 */
 	lua_getfield(L, 1, "parent");
 	lua_pushvalue(L, lua_upvalueindex(1)); // group widget
-	is_parent = (lua_equal(L, -1, -2) == 0);
+	is_parent = (lua_equal(L, -1, -2) == 1);
 	lua_pop(L, 2);
 
 	if (is_parent && jive_getmethod(L, 1, "draw")) {
