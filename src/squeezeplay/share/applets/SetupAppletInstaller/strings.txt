@@ -10,6 +10,9 @@ APPLET_INSTALLER
 	NO	Installering av tilleggsprogrammer
 	SV	Installationsprogram för appletprogram
 
+APPLET_FETCHING
+	EN	Fetching Applet List
+
 INSTALL
 	DA	Installer
 	DE	Installieren
@@ -35,16 +38,7 @@ NONE_FOUND
 	SV	Det gick inte att hitta några appletprogram
 
 HELP
-	DA	Vælg det underprogram som skal installeres fra SqueezeCenter, og vælg derefter Installer
-	DE	Wählen Sie die aus SqueezeCenter zu installierenden Applets und anschließend 'Installieren'
-	EN	Choose applets to be installed from SqueezeCenter and then select Install
-	ES	Elija los subprogramas que instalar desde SqueezeCenter y seleccione Instalar
-	FI	Valitse SqueezeCenteristä asennettavat sovelmat ja valitse Asenna
-	FR	Sélectionnez les applets à installer à partir du SqueezeCenter, puis sélectionnez Installer.
-	IT	Scegliere le applet da installare da SqueezeCenter, quindi selezionare Installa
-	NL	Kies de applets die vanuit SqueezeCenter geïnstalleerd moeten worden en selecteer dan Installeren
-	NO	Velg tilleggsprogrammene som skal installeres fra SqueezeCenter, og velg så Installer
-	SV	Välj de appletprogram du vill installera från SqueezeCenter och välj sedan Installera
+	EN	Choose applets to be installed and then select Install
 
 DOWNLOADING
 	DA	\nHenter underprogrammer

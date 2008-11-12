@@ -99,10 +99,15 @@ end
 
 -- skin
 -- The meta arranges for this to be called to skin Jive.
-function skin(self, s)
-	Framework:setVideoMode(240, 320, 16, jiveMain:isFullscreen())
-
+function skin(self, s, reload, useDefaultSize)
 	local screenWidth, screenHeight = Framework:getScreenSize()
+	if useDefaultSize or screenWidth < 240 or screenHeight < 320 then
+		screenWidth = 240
+		screenHeight = 320
+		log:warn("******* RESIZING")
+	end
+
+	Framework:setVideoMode(screenWidth, screenHeight, 16, jiveMain:isFullscreen())
 
 	-- Images and Tiles
 	local iconBackground = 
@@ -1616,8 +1621,9 @@ function skin(self, s)
 	s.ssnptitle.playlist.textAlign = "top-right"
 
 
-	-- nptitle style is the same for both windowStyles
-	s.browsenptitle = _uses(s.ssnptitle, browsenptitle)
+	-- nptitle style is the same for all windowStyles
+	s.browsenptitle = _uses(s.ssnptitle)
+	s.largenptitle  = _uses(s.ssnptitle)
 
 
 	-- Song
@@ -1638,33 +1644,42 @@ function skin(self, s)
 	}
 	s.ssnptrack.text.fg = { 0x00, 0x00, 0x00 }
 
-	-- nptrack is identical between the two windowStyles
+	-- nptrack is identical between all np styles
 	s.browsenptrack = _uses(s.ssnptrack)
+	s.largenptrack  = _uses(s.ssnptrack, {
+					text = {
+						padding = { 10, 6, 8, 0 }
+					}
+				}
+			)
 
 	-- Artwork
-	local browseArtWidth = 154
-	local ssArtWidth = 186
 
 	s.ssnpartwork = {}
 	s.ssnpartwork.w = WH_FILL
 	-- 8 pixel padding below artwork in browse mode
 	s.ssnpartwork.border = { 0, 10, 0, 8 }
---	s.ssnpartwork.bgImg = Tile:loadImage(imgpath .. "album_shadow_" .. ssArtWidth .. ".png")
 	s.ssnpartwork.artwork = {}
 	s.ssnpartwork.artwork.padding = 0 
 	s.ssnpartwork.artwork.w = WH_FILL
 	s.ssnpartwork.artwork.align = "center"
 	s.ssnpartwork.artwork.img = Surface:loadImage(imgpath .. "Icons/icon_album_noartwork_npss.png")
 
-	-- artwork layout is not the same between the two windowStyles
+	-- artwork layout for browse NP page
 	local browsenpartwork = {
 		-- 10 pixel padding below artwork in browse mode
 		w = WH_FILL,
 		border = { 0, 10, 0, 10 },
-		--bgImg = Tile:loadImage(imgpath .. "album_shadow_" .. browseArtWidth .. ".png"),
+		artwork = { padding = 0, img = Surface:loadImage(imgpath .. "Icons/icon_album_noartwork_browse.png") }
+	}
+	-- artwork layout for large NP page
+	local largenpartwork = {
+		w = WH_FILL,
+		border = { 0, 4, 0, 0 },
 		artwork = { padding = 0, img = Surface:loadImage(imgpath .. "Icons/icon_album_noartwork_browse.png") }
 	}
 	s.browsenpartwork = _uses(s.ssnpartwork, browsenpartwork)
+	s.largenpartwork = _uses(s.ssnpartwork, largenpartwork)
 
 	-- Progress bar
 	s.ssprogress = {}
@@ -1692,6 +1707,16 @@ function skin(self, s)
 					}
 				}
 			)
+	s.largeprogress = _uses(s.ssprogress,
+				{
+					padding = { 8, 2, 8, 2 },
+					elapsed = {
+						padding = { 8, 2, 0, 5 }
+					},
+					remain = {
+						padding = { 8, 2, 0, 5 }
+					}
+				})
 
 	s.ssprogressB             = {}
         s.ssprogressB.horizontal  = 1
@@ -1704,6 +1729,11 @@ function skin(self, s)
 					{
 					padding = { 0, 0, 0, 25 }
 					}
+				)
+	s.largeprogressB = _uses(s.ssprogressB, 
+				{
+					padding = { 0, 0, 0, 2 }
+				}
 				)
 
 	-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
@@ -1724,6 +1754,14 @@ function skin(self, s)
 					padding = { 0, 0, 0, 25 },
 					elapsed = {
 						padding = { 0, 0, 0, 25 },
+					}
+				}
+			)
+	s.largeprogressNB = _uses(s.ssprogressNB,
+				{
+					padding = { 0, 0, 0, 0 },
+					elapsed = {
+						padding = { 0, 0, 0, 0 },
 					}
 				}
 			)

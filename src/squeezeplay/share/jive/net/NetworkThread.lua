@@ -362,7 +362,7 @@ Sets the UUID and Mac address of this device.
 --]]
 function setUUID(self, uuid, mac)
 	self.uuid = uuid
-	self.mac = mac
+	self.mac = string.lower(mac)
 end
 
 --[[

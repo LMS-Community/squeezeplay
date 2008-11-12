@@ -231,7 +231,7 @@ function JiveMain:__init()
 								Framework:setUpdateScreen(true)
 								return EVENT_UNUSED
 							    end)
-	local splashTimer = Timer(5000 - (os.time() - initTime),
+	local splashTimer = Timer(2000 - (os.time() - initTime),
 		function()
 			Framework:setUpdateScreen(true)
 			Framework:removeListener(splashHandler)
@@ -351,7 +351,7 @@ local function _loadSkin(self, appletName, reload)
 	-- reset the skin
 	jive.ui.style = {}
 
-	obj[method](obj, jive.ui.style, reload==nil and true or relaod)
+	obj[method](obj, jive.ui.style, reload==nil and true or relaod, useDefaultSize)
 
 	Framework:styleChanged()
 
@@ -368,9 +368,9 @@ function JiveMain:setFullscreen(fullscreen)
 end
 
 
-function JiveMain:setSelectedSkin(appletName, reload)
+function JiveMain:setSelectedSkin(appletName)
 	log:warn(appletName)
-	if _loadSkin(self, appletName, false) then
+	if _loadSkin(self, appletName, false, true) then
 		self.selectedSkin        = appletName
 	end
 end

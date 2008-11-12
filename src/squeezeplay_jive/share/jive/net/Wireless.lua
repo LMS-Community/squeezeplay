@@ -206,7 +206,7 @@ function t_scan(self, callback)
 		end
 
 		_scanResults[ssid] = {
-			bssid = bssid,
+			bssid = string.lower(bssid),
 			flags = flags,
 			level = level,
 			quality = quality,
