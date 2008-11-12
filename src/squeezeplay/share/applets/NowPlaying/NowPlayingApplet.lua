@@ -57,6 +57,7 @@ local modeTokens = {
 --
 
 local windowStyle
+local customStyle = 'ss'
 
 -- defines a new style that inherits from an existing style
 local function _uses(parent, value)
@@ -90,10 +91,14 @@ end
 local function _getIcon(self, item, icon, remote)
 	local server = self.player:getSlimServer()
 
-	if windowStyle == 'ss' then
-		ARTWORK_SIZE = jiveMain:getSkinParam("nowPlayingSSArtworkSize")
-	else
+	if windowStyle == 'browse' or ( windowStyle == 'ss' and customStyle == 'browse' ) then
 		ARTWORK_SIZE = jiveMain:getSkinParam("nowPlayingBrowseArtworkSize")
+	else
+		if customStyle == 'ss' then
+			ARTWORK_SIZE = jiveMain:getSkinParam("nowPlayingSSArtworkSize")
+		elseif customStyle == 'large' then
+			ARTWORK_SIZE = jiveMain:getSkinParam("nowPlayingLargeArtworkSize")
+		end
 	end
 
 	if item and item["icon-id"] then
@@ -216,14 +221,16 @@ function notify_playerDelete(self, player)
 		return
 	end
 
-	self:free()
+	log:warn('you are here')
+	self:freeAndClear()
 end
 
 -- players changed, add playing menu
 function notify_playerCurrent(self, player)
 
 	if self.player ~= player then
-		self:free()
+	log:warn('you are here')
+		self:freeAndClear()
 	end
 
 	self.player = player
@@ -308,7 +315,14 @@ end
 
 function _updateTrack(self, trackinfo, pos, length, ws)
 	if not ws then ws = self[windowStyle] end
-	ws.trackGroup:setWidgetValue("text", trackinfo);
+	if ws.trackGroup then
+		if customStyle == 'large' and 
+			windowStyle == 'ss' and 
+			jiveMain:getSelectedSkin() == 'DefaultSkin' then
+				trackinfo = string.gsub(trackinfo, "\n", " - ")
+		end
+		ws.trackGroup:setWidgetValue("text", trackinfo);
+	end
 end
 
 function _updateProgress(self, data, ws)
@@ -352,10 +366,12 @@ function _updatePosition(self)
 		strRemain = "-" .. _secondsToString(duration - elapsed)
 	end
 
-	self[windowStyle].progressGroup:setWidgetValue("elapsed", strElapsed)
-	if showProgressBar then
-		self[windowStyle].progressGroup:setWidgetValue("remain", strRemain)
-		self[windowStyle].progressSlider:setValue(elapsed)
+	if self[windowStyle].progressGroup then
+		self[windowStyle].progressGroup:setWidgetValue("elapsed", strElapsed)
+		if showProgressBar then
+			self[windowStyle].progressGroup:setWidgetValue("remain", strRemain)
+			self[windowStyle].progressSlider:setValue(elapsed)
+		end
 	end
 end
 
@@ -454,8 +470,12 @@ end
 function _createUI(self)
 	local window = Window("window")
 
+	customStyle = windowStyle
 	if windowStyle == 'ss' then
-		window:setShowFrameworkWidgets(false)
+        	customStyle = self:getSettings()["screensaverArtworkSize"]
+		if customStyle ~= 'browse' then
+			window:setShowFrameworkWidgets(false)
+		end
 	end
 
 	local playerStatus = self.player:getPlayerStatus()
@@ -478,7 +498,8 @@ function _createUI(self)
 	}	
 
 	for k, v in pairs(components) do
-		local new = windowStyle .. v
+		local new = customStyle .. v
+		log:warn(new)
 		components[k] = new
 	end
 
@@ -503,24 +524,31 @@ function _createUI(self)
 	   })
 	
 
-	self[windowStyle].trackGroup = Group(components.nptrack, {
-				   text = Label("text", "\n\n\n")
-			   })
-	
+
+	if customStyle == 'large' then
+
+		self[windowStyle].trackGroup = Group(components.nptrack, {
+			   text = Label("text", "")
+		})
+	else
+		self[windowStyle].trackGroup = Group(components.nptrack, {
+			   text = Label("text", "\n\n\n")
+		})
+	end
 	
 	if showProgressBar then
 		self[windowStyle].progressSlider = Slider(components.progressB, 0, 100, 0)
 		self[windowStyle].progressSlider:addTimer(1000, function() self:_updatePosition() end)
 
 		self[windowStyle].progressGroup = Group(components.progress, {
-					      elapsed = Label("elapsed", ""),
-					      slider = self[windowStyle].progressSlider,
-					      remain = Label("remain", "")
-				      })
+				      elapsed = Label("elapsed", ""),
+				      slider = self[windowStyle].progressSlider,
+				      remain = Label("remain", "")
+			      })
 	else
 		self[windowStyle].progressGroup = Group(components.progressNB, {
-					      elapsed = Label("text", "")
-				      })
+			      elapsed = Label("elapsed", "")
+		})
 		self[windowStyle].progressGroup:addTimer(1000, function() self:_updatePosition() end)
 	end
 
@@ -567,6 +595,7 @@ function _createUI(self)
 	window:addWidget(self[windowStyle].progressGroup)
 
 	window:focusWidget(self[windowStyle].trackGroup)
+
 	-- register window as a screensaver, unless we are explicitly not in that mode
 	if windowStyle == 'ss' then
 		local manager = appletManager:getAppletInstance("ScreenSavers")
@@ -590,10 +619,73 @@ function goNowPlaying(self, style, transition)
 	end
 end
 
+function displaySizeSetting(self, menuItem)
+
+	local window  = Window("window", menuItem.text, 'settingstitle')
+        local group   = RadioGroup()
+        local current = self:getSettings()["screensaverArtworkSize"]
+
+	window:addWidget(
+		SimpleMenu(
+			"menu",
+				{
+					{
+						text  = self:string("SCREENSAVER_ARTWORK_SMALL"),
+						sound = "WINDOWSHOW",
+						icon = RadioButton(
+								"radio", 
+								group, 
+								function(event, menuItem)
+									self:setArtworkSize("browse")
+								end,
+								current == 'browse')
+					},
+					{
+						text  = self:string("SCREENSAVER_ARTWORK_MEDIUM"),
+						sound = "WINDOWSHOW",
+						icon = RadioButton(
+								"radio", 
+								group, 
+								function(event, menuItem)
+									self:setArtworkSize("ss")
+								end,
+								current == 'ss')
+					},
+					{
+						text  = self:string("SCREENSAVER_ARTWORK_LARGE"),
+						sound = "WINDOWSHOW",
+						icon = RadioButton(
+								"radio", 
+								group, 
+								function(event, menuItem)
+									self:setArtworkSize("large")
+								end,
+								current == 'large')
+					},
+				}
+		)
+	)
+
+        self:tieAndShowWindow(window)
+        return window
+end
+
+function setArtworkSize(self, size)
+	log:warn(size)
+	self:getSettings()['screensaverArtworkSize'] = size
+	self:storeSettings()
+end
+
 function openScreensaver(self, style, transition)
+
+	-- if we're opening this after freeing the applet, grab the player again
+	if not self.player then
+		self.player = appletManager:callService("getCurrentPlayer")
+	end
 
 	local playerStatus = self.player and self.player:getPlayerStatus()
 
+	log:info("style=", style)
 	log:info("player=", self.player, " status=", playerStatus)
 
 	-- playlist_tracks needs to be > 0 or else defer back to SlimBrowser
@@ -604,8 +696,9 @@ function openScreensaver(self, style, transition)
 		browser:showPlaylist()
 		return
 	end
-	-- this is to show the window to be opened in two modes: 
-	-- ss and browse
+
+	-- this is to show the window to be opened in one of three modes: 
+	-- browse, ss, and large (i.e., small med & large)
 
 	--convenience
 	local _thisTrack
@@ -614,6 +707,11 @@ function openScreensaver(self, style, transition)
 	end
 
 	if not style then style = 'ss' end
+
+	-- if opening the screensaver, then use the setting for screensaverArtworkSize
+	if style == 'ss' then
+		transition = Window.transitionFadeIn
+	end
 
 	windowStyle = style
 	if not self[windowStyle] then self[windowStyle] = {} end
@@ -672,11 +770,21 @@ function openScreensaver(self, style, transition)
 
 end
 
+function freeAndClear(self)
+	self.player = false
+	self['ss'] = nil
+	self['browse'] = nil
+	jiveMain:removeItemById('appletNowPlaying')
+	self:free()
+
+end
+
 function free(self)
 	-- when we leave NowPlaying, ditch the window
 	-- the screen can get loaded with two layouts, and by doing this
 	-- we force the recreation of the UI when re-entering the screen, possibly in a different mode
 	log:info("NowPlaying.free()")
+	log:info(self.player)
 
 	-- player has left the building, close Now Playing browse window
 	if self['browse'] and self['browse'].window then
@@ -687,10 +795,7 @@ function free(self)
 		self['ss'].window:hide()
 	end
 
-	self.player = false
-	self['ss'] = nil
-	self['browse'] = nil
-	jiveMain:removeItemById('appletNowPlaying')
+	return true
 end
 
 

@@ -17,6 +17,7 @@ end
 
 function defaultSettings(self)
 	return {
+    		screensaverArtworkSize = "ss"
 	}
 end
 
@@ -33,7 +34,8 @@ function configureApplet(self)
 		self:string("SCREENSAVER_NOWPLAYING"), 
 		"NowPlaying", 
 		"openScreensaver", 
-		_, _, 
+		self:string("SCREENSAVER_ARTWORK_SIZE"), 
+		"displaySizeSetting", 
 		10
 	)
 

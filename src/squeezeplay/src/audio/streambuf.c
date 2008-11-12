@@ -441,6 +441,8 @@ static int stream_disconnectL(lua_State *L) {
 
 	if (stream->body) {
 		free(stream->body);
+		stream->body = NULL;
+		stream->body_len = 0;
 	}
 
 	if (stream->fd) {

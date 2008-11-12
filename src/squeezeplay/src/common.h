@@ -72,6 +72,7 @@
 #define PATH_SEPARATOR_CHAR	';'
 #define PATH_SEPARATOR_STR	";"
 #define LIBRARY_EXT		"dll"
+#define mkdir(path,mode) _mkdir (path)
 typedef _W64 int   ssize_t;
 #endif /* WIN32 */
 

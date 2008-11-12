@@ -92,11 +92,23 @@ function menu(self, menuItem)
 		)
 	end
 
-	self:tieAndShowWindow(self.window)
+	-- create animiation to show while we get data from the server
+	local popup = Popup("popupIcon")
+	local icon  = Icon("iconConnecting")
+	local label = Label("text", self:string("APPLET_FETCHING"))
+	popup:addWidget(icon)
+	popup:addWidget(label)
+	self:tieAndShowWindow(popup)
+
+	self.popup = popup
 end
 
 
 function menuSink(self, data)
+
+	self:tieWindow(self.window)
+	self.popup:hide()
+	self.window:show()
 
 	self.help = Textarea("help", self:string("HELP"))
 	self.menu = SimpleMenu("menu")
@@ -133,8 +145,6 @@ function menuSink(self, data)
 				end
 			else
 				version = entry.version
-				self.todownload[entry.name] = { url = url, ver = entry.version }
-				check = true
 			end
 			
 			self.menu:addItem( {

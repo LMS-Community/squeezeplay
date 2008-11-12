@@ -116,8 +116,8 @@ function init(self)
 	-- watchdog timer
 	self.watchdog = Watchdog:open()
 	if self.watchdog then
-		self.watchdog:setTimeout(30) -- 30 seconds
-		local timer = Timer(10000, -- 10 seconds
+		self.watchdog:setTimeout(15) -- 15 seconds
+		local timer = Timer(2000, -- 2 seconds
 				    function()
 					    self.watchdog:keepAlive()
 				    end)
@@ -127,14 +127,14 @@ function init(self)
 	end
 
 	-- sync clock to hw clock every 10 minutes
-	local clockSyncTimer = Timer(600000, -- 10 minutes
-					function()
-						local systemTime = os.date()
-						log:info('syncing system clock to hw clock: ', systemTime)
-						os.execute("hwclock -s")
-						systemTime = os.date()
-						log:info('system clock now synced to hw clock: ', systemTime)
-					end)
+	clockSyncTimer = Timer(600000, -- 10 minutes
+		function()
+			local systemTime = os.date()
+			log:info('syncing system clock to hw clock: ', systemTime)
+			os.execute("hwclock -s")
+			systemTime = os.date()
+			log:info('system clock now synced to hw clock: ', systemTime)
+		end)
 	clockSyncTimer:start()
 
 	-- register wakeup function
@@ -264,16 +264,15 @@ end
 
 function notify_playerCurrent(self, player)
 	-- if not passed a player, or if player hasn't change, exit
-	if not player or self.player == player then
+	if not player or not player:isConnected() then
+		return
+	end
+
+	if self.player == player then
 		return
 	end
 
 	self.player = player
-	self.server = player:getSlimServer()
-	
-	if not self.server then
-		return
-	end
 
 	local sink = function(chunk, err)
 			     if err then

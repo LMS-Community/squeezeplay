@@ -50,3 +50,12 @@ SQUEEZEBOX_ACTIVATE
 	NO	Aktiver %s
 	SV	Aktivera %s
 
+LOCAL
+	EN	Local
+
+LOCAL_PLAYER
+	EN	Local Player
+
+THIS_PLAYER
+	EN	This Player
+

@@ -238,10 +238,10 @@ int jiveL_widget_mouse_bounds(lua_State *L) {
 		return 1;
 	}
 
-	lua_pushinteger(L, event->u.mouse.x - peer->bounds.x);
-	lua_pushinteger(L, event->u.mouse.y - peer->bounds.y - peer->padding.top - peer->padding.bottom);
-	lua_pushinteger(L, peer->bounds.w);
-	lua_pushinteger(L, peer->bounds.h);
+	lua_pushinteger(L, event->u.mouse.x - peer->bounds.x - peer->padding.left);
+	lua_pushinteger(L, event->u.mouse.y - peer->bounds.y - peer->padding.top);
+	lua_pushinteger(L, peer->bounds.w - peer->padding.left - peer->padding.right);
+	lua_pushinteger(L, peer->bounds.h - peer->padding.top - peer->padding.bottom);
 	return 4;
 }
 

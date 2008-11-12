@@ -115,10 +115,16 @@ end
 
 -- skin
 -- The meta arranges for this to be called to skin Jive.
-function skin(self, s)
-	Framework:setVideoMode(800, 600, 32, jiveMain:isFullscreen())
-	
+function skin(self, s, reload, useDefaultSize)
 	local screenWidth, screenHeight = Framework:getScreenSize()
+ 
+	if screenWidth < 800 or screenHeight < 600 then
+		screenWidth = 800
+		screenHeight = 600
+		log:warn("******* RESIZING")
+	end
+
+	Framework:setVideoMode(screenWidth, screenHeight, 32, jiveMain:isFullscreen())
 
 	-- Images and Tiles
 	local iconBackground = 
@@ -1498,11 +1504,6 @@ function skin(self, s)
 	local SELECT_COLOR = { 0x00, 0x00, 0x00 }
 	local SELECT_SH_COLOR = { }
 
-
-	-- Title
-	--s.ssnptitle = _uses(s.minititle)	
-
-     -- Title
         s.ssnptitle = {}
 
 	setmetatable(s.ssnptitle, { __index = s.title })
@@ -1522,8 +1523,9 @@ function skin(self, s)
         s.ssnptitle.playlist.text = {}
         s.ssnptitle.playlist.text.align = "top-right"
 
-	-- nptitle style is the same for both windowStyles
+	-- nptitle style is the same for all windowStyles
 	s.browsenptitle = _uses(s.ssnptitle)
+	s.largenptitle = _uses(s.ssnptitle)
 
 	-- Song
 	s.ssnptrack = {}
@@ -1543,8 +1545,9 @@ function skin(self, s)
 	}
 	s.ssnptrack.text.fg = TEXT_COLOR
 
-	-- nptrack is identical between the two windowStyles
+	-- nptrack is identical between all window styles
 	s.browsenptrack = _uses(s.ssnptrack)
+	s.largenptrack  = _uses(s.ssnptrack)
 
 	local arrowPaddingBottom = s.ssnptitle.text.padding[4]
 
@@ -1557,6 +1560,7 @@ function skin(self, s)
 	s.ssleftarrow.img = Surface:loadImage(imgpath .. "pointer_nowplaying_L.png")
 
 	s.browseleftarrow = _uses(s.ssleftarrow)
+	s.largeleftarrow = _uses(s.ssleftarrow)
 
 
 	-- Right Arrow
@@ -1568,11 +1572,11 @@ function skin(self, s)
 	s.ssrightarrow.img = Surface:loadImage(imgpath .. "pointer_nowplaying_R.png")
 
 	s.browserightarrow = _uses(s.ssrightarrow)
+	s.largerightarrow = _uses(s.ssrightarrow)
 
 	-- Artwork
-	local ARTWORK_SIZE = 350
-	local browseArtWidth = ARTWORK_SIZE
-	local ssArtWidth = ARTWORK_SIZE
+	-- FIXME: get this width from settings instead
+	local ssArtWidth = 350
 
 	local ssnoartworkoffset = (screenWidth - ssArtWidth) / 2
 	s.ssnpartwork = {}
@@ -1587,6 +1591,7 @@ function skin(self, s)
 	s.ssnpartwork.artwork.img = Surface:loadImage(imgpath .. "album_noartwork_375.png")
 
 	s.browsenpartwork = _uses(s.ssnpartwork)
+	s.largenpartwork = _uses(s.ssnpartwork)
 
 	s.ssnpcontrols = {}
 	s.ssnpcontrols.order = { 'rew', 'play', 'fwd' }
@@ -1621,19 +1626,7 @@ function skin(self, s)
 	s.ssnpcontrols.fwd.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_ffwd_on.png")
 
 	s.browsenpcontrols = _uses(s.ssnpcontrols)
-
-
---[[ right now these are the same in alberti
-	-- artwork layout is not the same between the two windowStyles
-	local browsenoartworkoffset = (screenWidth - browseArtWidth) / 2
-	local browsenpartwork = {
-		w = browseArtWidth,
-		border = { browsenoartworkoffset, 25, browsenoartworkoffset, 25 },
-		artwork = { padding = 0, img = Surface:loadImage(imgpath .. "album_noartwork_" .. browseArtWidth .. ".png") }
-	}
-	s.browsenpartwork = _uses(s.ssnpartwork, browsenpartwork)
---]]
-
+	s.largenpcontrols = _uses(s.ssnpcontrols)
 
 	-- Progress bar
 	s.ssprogress = {}
@@ -1641,7 +1634,6 @@ function skin(self, s)
 	s.ssprogress.order = { "elapsed", "slider", "remain" }
 	s.ssprogress.remain = {}
 	s.ssprogress.remain.w = 200
-	--s.ssprogress.text.w = 100
 	
 	s.ssprogress.padding = { 25, 0, 25, 60 }
 	s.ssprogress.remain.padding = { 35, 0, 8, 60 }
@@ -1653,8 +1645,8 @@ function skin(self, s)
 					padding = { 100, 0, 8, 60 }
 				})
 
-	-- browse has different positioning than ss windowStyle
 	s.browseprogress = _uses(s.ssprogress)
+	s.largeprogress  = _uses(s.ssprogress)
 
 	s.ssprogressB             = {}
         s.ssprogressB.horizontal  = 1
@@ -1664,6 +1656,7 @@ function skin(self, s)
 	s.ssprogressB.padding     = { 0, 0, 0, 60 }
 
 	s.browseprogressB = _uses(s.ssprogressB)
+	s.largeprogressB = _uses(s.ssprogressB)
 
 	-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
 	s.ssprogressNB = {}
@@ -1679,6 +1672,7 @@ function skin(self, s)
 	s.ssprogressNB.elapsed.sh = { 0x37, 0x37, 0x37 }
 
 	s.browseprogressNB = _uses(s.ssprogressNB)
+	s.largeprogressNB  = _uses(s.ssprogressNB)
 
 	-- background style should start at x,y = 0,0
         s.iconbg = {}

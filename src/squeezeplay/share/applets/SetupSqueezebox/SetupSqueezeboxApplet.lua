@@ -227,7 +227,7 @@ function t_scanDiscover(self, pkt)
 		return
 	end
 	
-	local mac = string.upper(pkt.source)
+	local mac = string.lower(pkt.source)
 			      
 	if not self.scanResults[mac] then
 		local item = {
@@ -263,8 +263,6 @@ function _scanComplete(self, scanTable, keepOldEntries)
 		log:debug("ether=", ether, " mac=", mac)
 
 		if mac ~= nil then
-			mac = string.upper(string.gsub(mac, ":", ""))
-		
 			seen[mac] = true
 
 			if not self.scanResults[mac] then
@@ -894,7 +892,8 @@ function t_connectJiveAdhoc(self)
 	local request, response, id
 
 	-- connect to squeezebox ah-hoc network
-	local ssid = 'logitech' .. self.ether .. 'squeezebox' .. self.ether .. self.mac
+	-- Note we must use upper case mac addresses in the ad-hoc ssid
+	local ssid = 'logitech' .. self.ether .. 'squeezebox' .. self.ether .. string.upper(self.mac)
 	local option = {
 		ibss = true,
 		encryption = "none"
@@ -1332,7 +1331,7 @@ end
 function notify_playerNew(self, player)
 	local playerId = string.gsub(player:getId(), ":", "")
 
-	if string.lower(playerId) == string.lower(self.mac) then
+	if playerId == self.mac then
 
 		-- wait until the player is connected before continuing
 		if not player:isConnected() then
