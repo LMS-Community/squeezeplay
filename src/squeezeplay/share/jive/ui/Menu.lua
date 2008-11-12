@@ -262,6 +262,7 @@ local function _eventHandler(self, event)
 			widget:_event(event)
 		end
 
+		self:reLayout()
 		return EVENT_UNUSED
 	end
 
