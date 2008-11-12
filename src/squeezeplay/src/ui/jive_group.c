@@ -218,10 +218,21 @@ int jiveL_group_layout(lua_State *L) {
 
 
 static int draw_closure(lua_State *L) {
-	if (jive_getmethod(L, 1, "draw")) {
+	bool is_parent;
+
+	/* Only draw the widget if we are it's parent. This fixes a
+	 * rendering error when a widget (eg choice) is used in the
+	 * home menu customization (Bug 9362).
+	 */
+	lua_getfield(L, 1, "parent");
+	lua_pushvalue(L, lua_upvalueindex(1)); // group widget
+	is_parent = (lua_equal(L, -1, -2) == 1);
+	lua_pop(L, 2);
+
+	if (is_parent && jive_getmethod(L, 1, "draw")) {
 		lua_pushvalue(L, 1); // widget
-		lua_pushvalue(L, lua_upvalueindex(1)); // surface
-		lua_pushvalue(L, lua_upvalueindex(2)); // layer
+		lua_pushvalue(L, lua_upvalueindex(2)); // surface
+		lua_pushvalue(L, lua_upvalueindex(3)); // layer
 		lua_call(L, 3, 0);
 	}
 
@@ -251,9 +262,10 @@ int jiveL_group_draw(lua_State *L) {
 	if (jive_getmethod(L, 1, "iterate")) {
 		lua_pushvalue(L, 1); // widget
 
+		lua_pushvalue(L, 1); // widget
 		lua_pushvalue(L, 2); // surface
 		lua_pushvalue(L, 3); // layer
-		lua_pushcclosure(L, draw_closure, 2);
+		lua_pushcclosure(L, draw_closure, 3);
 
 		lua_call(L, 2, 0);
 	}

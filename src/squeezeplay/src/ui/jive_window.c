@@ -203,39 +203,45 @@ int jiveL_window_draw(lua_State *L) {
 	WindowWidget *peer = jive_getpeer(L, 1, &windowPeerMeta);
 	JiveSurface *srf = tolua_tousertype(L, 2, 0);
 	Uint32 layer = luaL_optinteger(L, 3, JIVE_LAYER_ALL);
+	bool_t is_transparent, is_mask;
 
 	lua_getfield(L, 1, "transparent");
-	if (lua_toboolean(L, -1)) {
-		/* draw underneath a popup */
-		if (jive_getmethod(L, 1, "getLowerWindow")) {
-			lua_pushvalue(L, 1);
-			lua_call(L, 1, 1);
+	is_transparent = lua_toboolean(L, -1);
+	lua_pop(L, 1);
 
-			if ((layer & JIVE_LAYER_LOWER) && jive_getmethod(L, -1, "draw")) {
-				lua_pushvalue(L, -2);
-				lua_pushvalue(L, 2);
-				lua_pushinteger(L, JIVE_LAYER_ALL);
+	is_mask = (layer & peer->w.layer) && peer->mask_tile;
+
+	if ((is_transparent || is_mask) &&
+	    jive_getmethod(L, 1, "getLowerWindow")) {
+		lua_pushvalue(L, 1);
+		lua_call(L, 1, 1);
+
+		/* draw window underneath a popup */
+		if (is_transparent && (layer & JIVE_LAYER_LOWER)
+		    && jive_getmethod(L, -1, "draw")) {
+			lua_pushvalue(L, -2);
+			lua_pushvalue(L, 2);
+			lua_pushinteger(L, JIVE_LAYER_ALL);
 				
-				lua_call(L, 3, 0);
+			lua_call(L, 3, 0);
+		}
+
+		/* draw mask under a popup */
+		if (is_mask && !lua_isnil(L, -1)) {
+			JiveWidget *peer2;
+
+			lua_getfield(L, -1, "peer");
+			if (!lua_isnil(L, -1)) {
+				peer2 = lua_touserdata(L, -1);
+
+				jive_tile_blit(peer->mask_tile, srf, peer2->bounds.x, peer2->bounds.y, peer2->bounds.w, peer2->bounds.h);
 			}
-
-			if ((layer & peer->w.layer) && !lua_isnil(L, -1) && peer->mask_tile) {
-				JiveWidget *peer2;
-
-				lua_getfield(L, -1, "peer");
-				if (!lua_isnil(L, -1)) {
-					peer2 = lua_touserdata(L, -1);
-
-					jive_tile_blit(peer->mask_tile, srf, peer2->bounds.x, peer2->bounds.y, peer2->bounds.w, peer2->bounds.h);
-				}
 				
-				lua_pop(L, 1);
-			}
-
 			lua_pop(L, 1);
 		}
+
+		lua_pop(L, 1);
 	}
-	lua_pop(L, 1);
 
 	/* window background */
 	if ((layer & peer->w.layer) && peer->bg_tile) {

@@ -116,11 +116,17 @@ function init(self)
 	-- watchdog timer
 	self.watchdog = Watchdog:open()
 	if self.watchdog then
-		self.watchdog:setTimeout(15) -- 15 seconds
+		-- allow 30 seconds to boot
+		self.watchdog:setTimeout(30)
 		local timer = Timer(2000, -- 2 seconds
-				    function()
-					    self.watchdog:keepAlive()
-				    end)
+			function()
+				-- 10 second when running
+				if not self.watchdogRunning then
+					self.watchdog:setTimeout(10)
+					self.watchdogRunning = true
+				end
+				self.watchdog:keepAlive()
+			end)
 		timer:start()
 	else
 		log:warn("Watchdog timer is disabled")
