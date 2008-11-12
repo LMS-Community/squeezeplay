@@ -131,7 +131,6 @@ function getCurrentPlayer(self)
 	return currentPlayer
 end
 
-
 -- class method, sets the current player
 function setCurrentPlayer(class, player)
 	local lastCurrentPlayer = currentPlayer
@@ -821,6 +820,7 @@ function offStage(self)
 	iconbar:setPlaymode(nil)
 	iconbar:setRepeat(nil)
 	iconbar:setShuffle(nil)
+	iconbar:setPlaylistMode(nil)
 	
 	-- unsubscribe from playerstatus and displaystatus events
 	self.slimServer.comet:startBatch()
