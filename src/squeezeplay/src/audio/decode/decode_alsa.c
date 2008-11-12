@@ -26,7 +26,7 @@ static u32_t pcm_sample_rate;
 
 
 /* alsa */
-static char *device = "plughw:0,0";
+static char *device = "default";
 //static char *device = "plughw:0,0";
 
 static snd_output_t *output;
