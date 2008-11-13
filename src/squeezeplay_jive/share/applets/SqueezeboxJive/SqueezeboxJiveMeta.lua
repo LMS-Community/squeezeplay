@@ -40,6 +40,9 @@ function registerApplet(meta)
 		settings.suspendTimeout	= 3600000 -- 1 hour
 	end
 
+	-- Set player device type
+	LocalPlayer:setDeviceType("Controller")
+
 	-- SqueezeboxJive is a resident Applet
 	appletManager:loadApplet("SqueezeboxJive")
 
