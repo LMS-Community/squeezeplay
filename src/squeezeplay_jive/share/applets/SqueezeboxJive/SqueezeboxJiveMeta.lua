@@ -2,6 +2,7 @@
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
+local LocalPlayer   = require("jive.slim.LocalPlayer")
 local jul           = require("jive.utils.log")
 
 local appletManager = appletManager
