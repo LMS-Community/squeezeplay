@@ -49,3 +49,5 @@ Name: {group}\{cm:UninstallProgram, {#MyAppName}}; Filename: {uninstallexe}
 
 [Run]
 Filename: {app}\{#MyAppExeName}; Description: {cm:LaunchProgram,{#MyAppName}}; Flags: nowait postinstall skipifsilent
+[InstallDelete]
+Name: {app}\lua\*; Type: filesandordirs; Languages: 
