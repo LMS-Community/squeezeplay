@@ -100,7 +100,7 @@ function _mkdirRecursive(dir)
    
     local newPath = ""
     for i, element in pairs(strings:split('/', dir)) do
-        newPath = newPath .. element  .. "/"
+        newPath = newPath .. element
         if i ~= 1 then --first element is (for full path): blank for unix , "<drive-letter>:" for windows
             if lfs.attributes(newPath, "mode") == nil then
                 log:warn("Making directory: " , newPath)
@@ -110,7 +110,7 @@ function _mkdirRecursive(dir)
                 end	
             end
         end
-        
+        newPath = newPath .. "/"
     end
     
 end
