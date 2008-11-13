@@ -14,6 +14,7 @@
 
 int (*jive_sdlevent_pump)(lua_State *L);
 int (*jive_sdlfilter_pump)(const SDL_Event *event);
+void (*get_app_home_dir_platform)(char *path);
 
 char *jive_resource_path = NULL;
 
@@ -852,6 +853,33 @@ int jiveL_get_ticks(lua_State *L) {
 	return 1;
 }
 
+int jiveL_get_user_path(lua_State *L) {
+
+	char *userpath = malloc(PATH_MAX);
+    
+    get_user_path(userpath);
+    
+    lua_pushstring(L, userpath);
+	free(userpath);
+
+	return 1;
+}
+
+
+void get_app_home_dir(char *path) {
+    const char *sphome = getenv("SQUEEZEPLAY_HOME");
+    if (sphome != NULL) {
+        strcpy(path, sphome);    
+    } else {
+        get_app_home_dir_platform(path);
+    }
+}
+
+void get_user_path(char *path) {
+    get_app_home_dir(path);
+    strcat(path, "/userpath");
+}
+
 
 int jiveL_thread_time(lua_State *L) {
 	lua_pushinteger(L, (int)(clock() * 1000 / CLOCKS_PER_SEC));
@@ -1444,6 +1472,7 @@ static const struct luaL_Reg core_methods[] = {
 	{ "styleChanged", jiveL_style_changed },
 	{ "perfwarn", jiveL_perfwarn },
 	{ "_event", jiveL_event },
+	{ "getUserPath", jiveL_get_user_path },
 	{ NULL, NULL }
 };
 

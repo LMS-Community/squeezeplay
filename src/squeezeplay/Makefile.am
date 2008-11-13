@@ -151,7 +151,8 @@ libjiveui_la_SOURCES = \
 	src/ui/jive_event.c \
 	src/ui/jive_font.c \
 	src/ui/jive_framework.c \
-	src/ui/jive_framework_nonwindows.c \
+	src/ui/jive_framework_osx.c \
+	src/ui/jive_framework_linux.c \
 	src/ui/jive_group.c \
 	src/ui/jive_icon.c \
 	src/ui/jive_label.c \

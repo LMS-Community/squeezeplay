@@ -23,6 +23,7 @@ local setfenv, getfenv, require, pcall, unpack = setfenv, getfenv, require, pcal
 local tostring, tonumber, collectgarbage = tostring, tonumber, collectgarbage
 
 local string           = require("string")
+local strings          = require("jive.utils.strings")
                        
 local oo               = require("loop.simple")
 local io               = require("io")
@@ -33,6 +34,7 @@ local log              = require("jive.utils.log").logger("applets.misc")
 local locale           = require("jive.utils.locale")
 local dumper           = require("jive.utils.dumper")
 local table            = require("jive.utils.table")
+local Framework        = require("jive.ui.Framework")
 
 local JIVE_VERSION     = jive.JIVE_VERSION
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
@@ -82,30 +84,35 @@ end
 
 
 function _initUserpathdir()
-	local homedir
-	local home = os.getenv("HOME")
-	if home then
-		homedir = home
-	else
-		local homepath = os.getenv("USERPROFILE")
-		homedir = homepath
-	end
+	_userpathdir = Framework.getUserPath()
+	_usersettingsdir = _userpathdir .. "/settings"
 	
+	log:info("User Path: ", _userpathdir)
 	
-	local userdir = homedir .. "/.squeezeplay"
-	_userpathdir = userdir .. "/userpath"
-	_mkdirIfMissing(userdir)
-	_mkdirIfMissing(_userpathdir)
+	_mkdirRecursive(_userpathdir)
+	_mkdirRecursive(_usersettingsdir)
 	
 end
 
-function _mkdirIfMissing(dir)
-	if lfs.attributes(dir) == nil then
-		local created, err = lfs.mkdir(dir)
-		if not created then
-			error (string.format ("error creating dir '%s' (%s)", dir, err))
-		end	
-	end
+function _mkdirRecursive(dir)
+    --normalize to "/"
+    local dir = dir:gsub("\\", "/")
+   
+    local newPath = ""
+    for i, element in pairs(strings:split('/', dir)) do
+        newPath = newPath .. element  .. "/"
+        if i ~= 1 then --first element is (for full path): blank for unix , "<drive-letter>:" for windows
+            if lfs.attributes(newPath, "mode") == nil then
+                log:warn("Making directory: " , newPath)
+                local created, err = lfs.mkdir(newPath)
+                if not created then
+                    error (string.format ("error creating dir '%s' (%s)", newPath, err))
+                end	
+            end
+        end
+        
+    end
+    
 end
 
 -- _saveApplet
@@ -126,7 +133,7 @@ local function _saveApplet(name, dir)
 			metaFilepath = dir .. "/" .. name .. "/" .. name .. "Meta.lua",
 			appletFilepath = dir .. "/" .. name .. "/" .. name .. "Applet.lua",
 			stringsFilepath = dir .. "/" .. name .. "/" .. "strings.txt",
-			settingsFilepath = _userpathdir .. "/" .. name .. "_" .. "settings.lua",
+			settingsFilepath = _usersettingsdir .. "/" .. name .. ".lua",
 			settingsFilepathLegacy = dir .. "/" .. name .. "/" .. "settings.lua",
 
 			-- lua paths
