@@ -35,8 +35,6 @@ void fifo_init(struct fifo *fifo, size_t size) {
 }
 
 void fifo_free(struct fifo *fifo) {
-	ASSERT_LOCKED();
-
 	SDL_DestroyCond(fifo->cond);
 	SDL_DestroyMutex(fifo->mutex);
 	fifo->rptr = 0;
