@@ -88,23 +88,6 @@ static void l_message (const char *pname, const char *msg) {
 /* Code below is specific to jive                                       */
 /******************************************************************************/
 
-static void get_user_dir(char *userdir) {
-	const char *home = getenv("HOME");
-	if (home != NULL) {
-		strcpy(userdir, home);
-	} else{
-	    const char *homepath = getenv("USERPROFILE");
-		if (homepath != NULL) {
-			strcpy(userdir, homepath);		
-		} else {
-			l_message("Error", "No user home directory found, looking for HOME and USERPROFILE env vars...");
-			exit(-1);
-		}
-	}
-	strcat(userdir, "/.squeezeplay");
-	
-}
-
 
 /* openlibs
 ** open the libraries we want to use
@@ -185,7 +168,7 @@ char *dirname(char *path) {
 ** relative to this executable.
 */
 static void paths_setup(lua_State *L, char *app) {
-	char *temp, *binpath, *path, *userpath;
+	char *temp, *binpath, *path;
 	
 	DEBUG_TRACE("Setting up paths");
 
@@ -204,12 +187,6 @@ static void paths_setup(lua_State *L, char *app) {
 		l_message("Error", "malloc failure for path");
 		exit(-1);
 	}
-	userpath = malloc(PATH_MAX+1);
-	if (!userpath) {
-		l_message("Error", "malloc failure for userpath");
-		exit(-1);
-	}
-
 
 	// full path to jive binary
 	if (app[0] == '/') {
@@ -228,9 +205,6 @@ static void paths_setup(lua_State *L, char *app) {
 	strcpy(binpath, dirname(path));
 
 	DEBUG_TRACE("* Jive binary directory: %s", binpath);
-
-	get_user_dir(userpath);
-	strcat(userpath, "/userpath");
 
 	// set paths in lua (package.path & package cpath)
 	lua_getglobal(L, "package");
@@ -264,10 +238,6 @@ static void paths_setup(lua_State *L, char *app) {
 		luaL_addstring(&b, path);
 		luaL_addstring(&b, DIR_SEPARATOR_STR "?.lua;");
 
-		luaL_addstring(&b, userpath);
-		luaL_addstring(&b, DIR_SEPARATOR_STR "?.lua;");
-		luaL_addstring(&b, userpath);
-		luaL_addstring(&b, DIR_SEPARATOR_STR "?" DIR_SEPARATOR_STR "?.lua;");
 		
 		// set lua path
 		luaL_pushresult(&b);
@@ -319,7 +289,6 @@ static void paths_setup(lua_State *L, char *app) {
 	free(temp);
 	free(binpath);
 	free(path);
-	free(userpath);	
 }
 
 
@@ -506,24 +475,23 @@ struct Smain {
 
 
 #ifdef NO_STDIO_REDIRECT
+static void get_temp_dir(char *path) {
+	strcpy(path, getenv("TEMP"));	
+}
+
 static void get_stdout_file_path(char *path) {
-	get_user_dir(path);
-	strcat(path, "/stdout.txt");
+	get_temp_dir(path);
+	strcat(path, "/stdout-SqueezePlay.txt");
 }
 
 static void get_stderr_file_path(char *path) {
-	get_user_dir(path);
-	strcat(path, "/stderr.txt");
+	get_temp_dir(path);
+	strcat(path, "/stderr-SqueezePlay.txt");
 }
 
 static void redirect_stdio() {
-	char *userdir, *stdoutpath, *stderrpath;
+	char *stdoutpath, *stderrpath;
 
-	userdir = malloc(PATH_MAX+1);
-	if (!userdir) {
-		l_message("Error", "malloc failure for userdir");
-		exit(-1);
-	}
 	stdoutpath = malloc(PATH_MAX+1);
 	if (!stdoutpath) {
 		l_message("Error", "malloc failure for stdoutpath");
@@ -534,8 +502,6 @@ static void redirect_stdio() {
 		l_message("Error", "stderrpath failure for binpath");
 		exit(-1);
 	}
-	get_user_dir(userdir);
-	mkdir(userdir, 755);
 
 	get_stdout_file_path(stdoutpath);
     get_stderr_file_path(stderrpath);
@@ -543,7 +509,6 @@ static void redirect_stdio() {
 	freopen(stdoutpath, TEXT("w"), stdout);
 	freopen(stderrpath, TEXT("w"), stderr);
 	
-	free(userdir);
 	free(stdoutpath);
 	free(stderrpath);
 }

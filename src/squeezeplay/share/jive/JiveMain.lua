@@ -183,9 +183,14 @@ local function _homeHandler(event)
       return EVENT_UNUSED
 end
 
+local function _addUserPathToLuaPath()
+    local dirSeparator = package.path:match( "(%p)%?%." )
+    package.path = package.path .. Framework.getUserPath() .. dirSeparator .."?.lua;"
+    package.path = package.path .. Framework.getUserPath() .. dirSeparator .. "?" .. dirSeparator .. "?.lua;"
+end
+
 local function _irHandler(event)
 	local irCode = event:getIRCode()
-
       	local keyCode = irCodes[irCode]
       	if (keyCode) then
 		if event:getType() == EVENT_IR_PRESS then
@@ -211,6 +216,8 @@ function JiveMain:__init()
 
 	-- Initialise UI
 	Framework:init()
+
+    _addUserPathToLuaPath()
 
 	-- Singleton instances (globals)
 	jnt = NetworkThread()

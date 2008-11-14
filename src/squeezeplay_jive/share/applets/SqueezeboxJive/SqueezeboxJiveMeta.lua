@@ -2,6 +2,7 @@
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
+local LocalPlayer   = require("jive.slim.LocalPlayer")
 local jul           = require("jive.utils.log")
 
 local appletManager = appletManager
@@ -39,6 +40,9 @@ function registerApplet(meta)
 	if not settings.suspendTimeout then
 		settings.suspendTimeout	= 3600000 -- 1 hour
 	end
+
+	-- Set player device type
+	LocalPlayer:setDeviceType("Controller")
 
 	-- SqueezeboxJive is a resident Applet
 	appletManager:loadApplet("SqueezeboxJive")

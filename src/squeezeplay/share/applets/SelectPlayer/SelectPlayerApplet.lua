@@ -176,6 +176,7 @@ function _addPlayerItem(self, player)
 		softsqueeze = true,
 		transporter = true,
 		squeezebox2 = true,
+		squeezebox3 = true,
 		squeezebox  = true,
 		slimp3      = true,
 		receiver    = true,

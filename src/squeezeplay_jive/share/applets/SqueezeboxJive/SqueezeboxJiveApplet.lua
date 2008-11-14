@@ -1139,6 +1139,7 @@ function _suspend(self)
 	popup:setAllowScreensaver(false)
 	popup:setAlwaysOnTop(true)
 	popup:setAutoHide(false)
+	popup:setTransparent(false)
 
 	popup:addWidget(Icon("iconConnecting"))
 	popup:addWidget(Label("text", self:string("PLEASE_WAIT")))

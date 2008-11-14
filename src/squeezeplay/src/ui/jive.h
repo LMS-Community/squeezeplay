@@ -279,6 +279,9 @@ struct jive_perfwarn {
 extern int (*jive_sdlevent_pump)(lua_State *L);
 
 extern int (*jive_sdlfilter_pump)(const SDL_Event *event);
+extern void (*get_app_home_dir_platform)(char *path);
+void get_user_path(char *path);
+void get_app_home_dir(char *path);
 void jive_platform_init(lua_State *L);
 void jive_send_key_event(JiveEventType keyType, JiveKey keyCode);
 
