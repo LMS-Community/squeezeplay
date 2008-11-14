@@ -71,12 +71,29 @@ local fontpath = "fonts/"
 local FONT_NAME = "FreeSans"
 local BOLD_PREFIX = "Bold"
 
+
+function init(self)
+	self.images = {}
+end
+
+
+-- reuse images instead of loading them twice
+-- FIXME can be removed after Bug 10001 is fixed
+local function _loadImage(self, file)
+	if not self.images[file] then
+		self.images[file] = Surface:loadImage(imgpath .. file)
+	end
+
+	return self.images[file]
+end
+
+
 -- define a local function to make it easier to create icons.
 local function _icon(x, y, img)
 	local var = {}
 	var.x = x
 	var.y = y
-	var.img = Surface:loadImage(imgpath .. img)
+	var.img = _loadImage(self, img)
 	var.layer = LAYER_FRAME
 	var.position = LAYOUT_SOUTH
 
@@ -309,14 +326,14 @@ function skin(self, s)
 	s.title.text.fg = TEXT_COLOR
 
 	s.title.back = {}
-	s.title.back.img = Surface:loadImage(imgpath .. "Icons/Mini/left_arrow.png")
+	s.title.back.img = _loadImage(self, "Icons/Mini/left_arrow.png")
 	s.title.back.align = "left"
 	s.title.back.w = 24
 	s.title.back.h = 24
 	s.title.back.padding = { 0, 0, 0, 5 }
 	s.title.nowplaying = {}
 	--FIXME, this png path should likely change
-	s.title.nowplaying.img = Surface:loadImage(imgpath .. "menu_album_noartwork_24.png")
+	s.title.nowplaying.img = _loadImage(self, "menu_album_noartwork_24.png")
 	s.title.nowplaying.bgImg = selectionBox
 	s.title.nowplaying.align = "right"
 
@@ -368,7 +385,7 @@ function skin(self, s)
 					align = ITEM_ICON_ALIGN,
 					padding = CHECK_PADDING,
 					--FIXME: icon_check_14x30.png should probably be changed to something like icon_check.png
-				      img = Surface:loadImage(imgpath .. "Icons/icon_check_14x30.png")
+				      img = _loadImage(self, "Icons/icon_check_14x30.png")
 
 			      }
 		      })
@@ -388,7 +405,7 @@ function skin(self, s)
 			      icon = {
 				      padding = BUTTON_PADDING,
 				      align = ITEM_ICON_ALIGN,
-				      img = Surface:loadImage(imgpath .. "Icons/selection_right.png")
+				      img = _loadImage(self, "Icons/selection_right.png")
 			      }
 		      })
 
@@ -397,7 +414,7 @@ function skin(self, s)
 		_uses(s.selected.item, {
 			      icon = {
 					--FIXME: need this image
-				      img = Surface:loadImage(imgpath .. "Icons/selection_play.png")
+				      img = _loadImage(self, "Icons/selection_play.png")
 			      }
 		      })
 
@@ -405,19 +422,19 @@ function skin(self, s)
 		_uses(s.selected.item, {
 			      icon = {
 					--FIXME: need this image
-				      img = Surface:loadImage(imgpath .. "Icons/selection_add.png")
+				      img = _loadImage(self, "Icons/selection_add.png")
 			      }
 		      })
 
 	s.selected.checked = _uses(s.selected.item, {
 			      		order = { "text", "check", "icon" },
 					icon = {
-						img = Surface:loadImage(imgpath .. "Icons/selection_right.png")
+						img = _loadImage(self, "Icons/selection_right.png")
 					},
 					check = {
 						align = ITEM_ICON_ALIGN,
 						padding = CHECK_PADDING,
-						img = Surface:loadImage(imgpath .. "Icons/icon_check_selected_14x30.png")
+						img = _loadImage(self, "Icons/icon_check_selected_14x30.png")
 					}
 				
 				})
@@ -441,7 +458,7 @@ function skin(self, s)
 			      check = {
 					align = ITEM_ICON_ALIGN,
 					padding = BUTTON_PADDING,
-					img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+					img = _loadImage(self, "Icons/icon_check_selected.png")
 			      }
 		      })
 
@@ -451,7 +468,7 @@ function skin(self, s)
 	s.locked.item = _uses(s.selected.item, {
 					icon = {
 						-- FIXME: need this image
-						img = Surface:loadImage(imgpath .. "Icons/selection_wait.png"),
+						img = _loadImage(self, "Icons/selection_wait.png"),
 						frameRate = 5,
 						frameWidth = 10
 					}
@@ -509,8 +526,8 @@ function skin(self, s)
 
 	-- Checkbox
 	s.checkbox = {}
-	s.checkbox.imgOn = Surface:loadImage(imgpath .. "Icons/checkbox_on.png")
-	s.checkbox.imgOff = Surface:loadImage(imgpath .. "Icons/checkbox_off.png")
+	s.checkbox.imgOn = _loadImage(self, "Icons/checkbox_on.png")
+	s.checkbox.imgOff = _loadImage(self, "Icons/checkbox_off.png")
 	s.item.checkbox = {}
 	s.item.checkbox.padding = CHECKBOX_RADIO_PADDING
 	s.item.checkbox.align = "right"
@@ -518,8 +535,8 @@ function skin(self, s)
 
 	-- Radio button
 	s.radio = {}
-	s.radio.imgOn = Surface:loadImage(imgpath .. "Icons/radiobutton_on.png")
-	s.radio.imgOff = Surface:loadImage(imgpath .. "Icons/radiobutton_off.png")
+	s.radio.imgOn = _loadImage(self, "Icons/radiobutton_on.png")
+	s.radio.imgOff = _loadImage(self, "Icons/radiobutton_off.png")
 	s.item.radio = {}
 	s.item.radio.padding = CHECKBOX_RADIO_PADDING
 	s.item.radio.align = "right"
@@ -532,10 +549,10 @@ function skin(self, s)
 	s.slider.img = sliderBar
 
 	s.sliderMin = {}
-	s.sliderMin.img = Surface:loadImage(imgpath .. "slider_icon_negative.png")
+	s.sliderMin.img = _loadImage(self, "slider_icon_negative.png")
 	s.sliderMin.border = { 5, 0, 5, 0 }
 	s.sliderMax = {}
-	s.sliderMax.img = Surface:loadImage(imgpath .. "slider_icon_positive.png")
+	s.sliderMax.img = _loadImage(self, "slider_icon_positive.png")
 	s.sliderMax.border = { 5, 0, 5, 0 }
 
 	s.sliderGroup = {}
@@ -634,36 +651,36 @@ function skin(self, s)
 	s.popupIcon.text.position = LAYOUT_SOUTH
 
 	s.iconPower = {}
-	s.iconPower.img = Surface:loadImage(imgpath .. "Alerts/popup_shutdown_icon.png")
+	s.iconPower.img = _loadImage(self, "Alerts/popup_shutdown_icon.png")
 	s.iconPower.w = WH_FILL
 	s.iconPower.align = 'center'
 
 --FIXME: is this style used anywhere?
 	s.iconFavorites = {}
-	s.iconFavorites.img = Surface:loadImage(imgpath .. "popup_fav_heart_bkgrd.png")
+	s.iconFavorites.img = _loadImage(self, "popup_fav_heart_bkgrd.png")
 	s.iconFavorites.frameWidth = 161
 	s.iconFavorites.align = 'center'
 
 	-- connecting/connected popup icon
 	s.iconConnecting = {}
-	s.iconConnecting.img = Surface:loadImage(imgpath .. "Alerts/wifi_connecting.png")
+	s.iconConnecting.img = _loadImage(self, "Alerts/wifi_connecting.png")
 	s.iconConnecting.frameRate = 4
 	s.iconConnecting.frameWidth = 161
 	s.iconConnecting.w = WH_FILL
 	s.iconConnecting.align = "center"
 
 	s.iconConnected = {}
-	s.iconConnected.img = Surface:loadImage(imgpath .. "Alerts/connecting_success_icon.png")
+	s.iconConnected.img = _loadImage(self, "Alerts/connecting_success_icon.png")
 	s.iconConnected.w = WH_FILL
 	s.iconConnected.align = "center"
 
 	s.iconLocked = {}
-	s.iconLocked.img = Surface:loadImage(imgpath .. "Alerts/popup_locked_icon.png")
+	s.iconLocked.img = _loadImage(self, "Alerts/popup_locked_icon.png")
 	s.iconLocked.w = WH_FILL
 	s.iconLocked.align = "center"
 
 	s.iconAlarm = {}
-	s.iconAlarm.img = Surface:loadImage(imgpath .. "Alerts/popup_alarm_icon.png")
+	s.iconAlarm.img = _loadImage(self, "Alerts/popup_alarm_icon.png")
 	s.iconAlarm.w = WH_FILL
 	s.iconAlarm.align = "center"
 
@@ -671,19 +688,19 @@ function skin(self, s)
 	-- wireless icons for menus
 	s.wirelessLevel1 = {}
 	s.wirelessLevel1.align = "right"
-	s.wirelessLevel1.img = Surface:loadImage(imgpath .. "Icons/icon_wireless_1_shadow.png")
+	s.wirelessLevel1.img = _loadImage(self, "Icons/icon_wireless_1_shadow.png")
 	s.wirelessLevel2 = {}
 	s.wirelessLevel2.align = "right"
-	s.wirelessLevel2.img = Surface:loadImage(imgpath .. "Icons/icon_wireless_2_shadow.png")
+	s.wirelessLevel2.img = _loadImage(self, "Icons/icon_wireless_2_shadow.png")
 	s.wirelessLevel3 = {}
 	s.wirelessLevel3.align = "right"
-	s.wirelessLevel3.img = Surface:loadImage(imgpath .. "Icons/icon_wireless_3_shadow.png")
+	s.wirelessLevel3.img = _loadImage(self, "Icons/icon_wireless_3_shadow.png")
 	s.wirelessLevel4 = {}
 	s.wirelessLevel4.align = "right"
-	s.wirelessLevel4.img = Surface:loadImage(imgpath .. "Icons/icon_wireless_4_shadow.png")
+	s.wirelessLevel4.img = _loadImage(self, "Icons/icon_wireless_4_shadow.png")
 
 	s.navcluster = {}
-	s.navcluster.img = Surface:loadImage(imgpath .. "navcluster.png")
+	s.navcluster.img = _loadImage(self, "navcluster.png")
 	s.navcluster.align = "center"
 	s.navcluster.w = WH_FILL
 
@@ -701,7 +718,7 @@ function skin(self, s)
 
 	s.home.window.title.icon.img = 
 		function(widget)
-			return Surface:loadImage(imgpath .. "head_home.png")
+			return _loadImage(self, "head_home.png")
 		end
 --]]
 
@@ -709,10 +726,10 @@ function skin(self, s)
 	-- SlimBrowser applet
 
 	s.volumeMin = {}
-	s.volumeMin.img = Surface:loadImage(imgpath .. "volume_speaker_l.png")
+	s.volumeMin.img = _loadImage(self, "volume_speaker_l.png")
 	s.volumeMin.border = { 5, 0, 5, 0 }
 	s.volumeMax = {}
-	s.volumeMax.img = Surface:loadImage(imgpath .. "volume_speaker_r.png")
+	s.volumeMax.img = _loadImage(self, "volume_speaker_r.png")
 	s.volumeMax.border = { 5, 0, 5, 0 }
 
 	s.volume            = {}
@@ -741,11 +758,11 @@ function skin(self, s)
 -- titles with artwork and song info
 	s.albumtitle = _uses(s.title, {
 				icon = { 
-					img = Surface:loadImage(imgpath .. "Icons/Mini/icon_albums.png"),
+					img = _loadImage(self, "Icons/Mini/icon_albums.png"),
         				padding = { 10, 0, 0, 0 },
 				},
 				nowplaying = {
-        				img     = Surface:loadImage(imgpath .. "menu_album_noartwork_24.png"),
+        				img     = _loadImage(self, "menu_album_noartwork_24.png"),
         				padding = { 5, 10, 15, 5 },
 					align   = "top-right"
 				},
@@ -779,7 +796,7 @@ function skin(self, s)
 	s.minititle.icon.padding  = { 0, 0, 0, 4 }
 	s.minititle.icon.align    = 'center'
 	s.minititle.nowplaying = {}
-	s.minititle.nowplaying.img = Surface:loadImage(imgpath .. "menu_album_noartwork_24.png")
+	s.minititle.nowplaying.img = _loadImage(self, "menu_album_noartwork_24.png")
 	s.minititle.nowplaying.bgImg  = selectionBox
 
 
@@ -787,7 +804,7 @@ function skin(self, s)
 	s.internetradiotitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_internet_radio.png")
+				      img = _loadImage(self, "Icons/Mini/icon_internet_radio.png")
 			      }
 		      })
 
@@ -795,7 +812,7 @@ function skin(self, s)
 	s.favoritestitle = 
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_favorites.png")
+				      img = _loadImage(self, "Icons/Mini/icon_favorites.png")
 			      }
 		      })
 
@@ -803,7 +820,7 @@ function skin(self, s)
 	s.mymusictitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_music_library.png")
+				      img = _loadImage(self, "Icons/Mini/icon_music_library.png")
 			      }
 		      })
 
@@ -811,7 +828,7 @@ function skin(self, s)
 	s.searchtitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_search.png")
+				      img = _loadImage(self, "Icons/Mini/icon_search.png")
 			      }
 		      })
 
@@ -819,7 +836,7 @@ function skin(self, s)
 	s.hometitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_home.png")
+				      img = _loadImage(self, "Icons/Mini/icon_home.png")
 			      }
 		      })
 
@@ -829,7 +846,7 @@ function skin(self, s)
 				order = { 'back', 'text', 'nowplaying', 'icon' },
 				nowplaying = { img = false  },
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_settings.png")
+				      img = _loadImage(self, "Icons/Mini/icon_settings.png")
 			      }
 		      })
 
@@ -837,7 +854,7 @@ function skin(self, s)
 	s.settingstitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_settings.png")
+				      img = _loadImage(self, "Icons/Mini/icon_settings.png")
 			      }
 		      })
 
@@ -845,7 +862,7 @@ function skin(self, s)
 	s.newmusictitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_album_new.png")
+				      img = _loadImage(self, "Icons/Mini/icon_album_new.png")
 			      }
 		      })
 
@@ -853,7 +870,7 @@ function skin(self, s)
 	s.infobrowsertitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_info_browser.png")
+				      img = _loadImage(self, "Icons/Mini/icon_info_browser.png")
 			      }
 		      })
 
@@ -862,7 +879,7 @@ function skin(self, s)
 	s.albumlisttitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_albums.png")
+				      img = _loadImage(self, "Icons/Mini/icon_albums.png")
 			      }
 		      })
 
@@ -871,14 +888,14 @@ function skin(self, s)
 	s.artiststitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_artist.png")
+				      img = _loadImage(self, "Icons/Mini/icon_artist.png")
 			      }
 		      })
 	-- Based on s.title, this is for random title style
 	s.randomtitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_random.png")
+				      img = _loadImage(self, "Icons/Mini/icon_random.png")
 			      }
 		      })
 
@@ -886,7 +903,7 @@ function skin(self, s)
 	s.musicfoldertitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_music_folder.png")
+				      img = _loadImage(self, "Icons/Mini/icon_music_folder.png")
 			      }
 		      })
 
@@ -894,7 +911,7 @@ function skin(self, s)
 	s.genrestitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_genres.png")
+				      img = _loadImage(self, "Icons/Mini/icon_genres.png")
 			      }
 		      })
 
@@ -902,14 +919,14 @@ function skin(self, s)
 	s.yearstitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_years.png")
+				      img = _loadImage(self, "Icons/Mini/icon_years.png")
 			      }
 		      })
 	-- Based on s.title, this is for playlist title style
 	s.playlisttitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_playlist.png")
+				      img = _loadImage(self, "Icons/Mini/icon_playlist.png")
 			      }
 		      })
 
@@ -917,7 +934,7 @@ function skin(self, s)
 	s.currentplaylisttitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = Surface:loadImage(imgpath .. "Icons/Mini/icon_quarter_note.png")
+				      img = _loadImage(self, "Icons/Mini/icon_quarter_note.png")
 			      }
 		      })
 
@@ -957,7 +974,7 @@ function skin(self, s)
 		_uses(s.albumitem, {
 			      order = { "icon", "text", "check" },
 			      check = {
-				      img = Surface:loadImage(imgpath .. "Icons/icon_check.png"),
+				      img = _loadImage(self, "Icons/icon_check.png"),
 				      align = "right"
 
 			      }
@@ -969,7 +986,7 @@ function skin(self, s)
 			})
 	s.transporter = _uses(s.chooseplayer, {
 				icon = {
-					img = Surface:loadImage(imgpath .. "Icons/Players/transporter.png"),
+					img = _loadImage(self, "Icons/Players/transporter.png"),
 					w = 56,
 				}
 			})
@@ -977,37 +994,37 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 
 	s.squeezebox = _uses(s.chooseplayer, {
 				icon = {
-					img = Surface:loadImage(imgpath .. "Icons/Players/squeezebox.png"),
+					img = _loadImage(self, "Icons/Players/squeezebox.png"),
 				}
 			})
 	s.squeezeboxchecked = _uses(s.squeezebox, {
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 	s.squeezebox2 = _uses(s.chooseplayer, {
 				icon = {
-					img = Surface:loadImage(imgpath .. "Icons/Players/squeezebox2.png"),
+					img = _loadImage(self, "Icons/Players/squeezebox2.png"),
 				}
 			})
 	s.squeezebox2checked = _uses(s.squeezebox2, {
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 	s.boom = _uses(s.chooseplayer, {
 				icon = {
-					img = Surface:loadImage(imgpath .. "Icons/Players/boom.png"),
+					img = _loadImage(self, "Icons/Players/boom.png"),
 					w = 56,
 				}
 			})
@@ -1015,55 +1032,55 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 	s.slimp3 = _uses(s.chooseplayer, {
 				icon = {
-					img = Surface:loadImage(imgpath .. "Icons/Players/slimp3.png"),
+					img = _loadImage(self, "Icons/Players/slimp3.png"),
 				}
 			})
 	s.slimp3checked = _uses(s.slimp3, {
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 	s.softsqueeze = _uses(s.chooseplayer, {
 				icon = {
-					img = Surface:loadImage(imgpath .. "Icons/Players/softsqueeze.png"),
+					img = _loadImage(self, "Icons/Players/softsqueeze.png"),
 				}
 			})
 	s.softsqueezechecked = _uses(s.softsqueeze, {
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 	s.controller = _uses(s.chooseplayer, {
 				icon = {
-					img = Surface:loadImage(imgpath .. "Icons/Players/controller.png"),
+					img = _loadImage(self, "Icons/Players/controller.png"),
 				}
 			})
 	s.controllerchecked = _uses(s.controller, {
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 	s.receiver = _uses(s.chooseplayer, {
 				icon = {
-					img = Surface:loadImage(imgpath .. "Icons/Players/receiver.png"),
+					img = _loadImage(self, "Icons/Players/receiver.png"),
 				}
 			})
 	s.receiverchecked = _uses(s.receiver, {
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 
@@ -1076,7 +1093,7 @@ function skin(self, s)
 	s.albumitem.icon.h = WH_FILL
 	s.albumitem.icon.align = "left"
 -- FIXME: no_artwork image needed in correct size for Fab4Skin; for now, disable it
---	s.albumitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
+--	s.albumitem.icon.img = _loadImage(self, "menu_album_noartwork_125.png")
 	s.albumitem.icon.padding = 0
 
 	s.popupToast = _uses(s.albumitem, 
@@ -1137,7 +1154,7 @@ function skin(self, s)
 		play = {
 			h      = WH_FILL,
 			align  = "right",
-			img    = Surface:loadImage(imgpath .. "Icons/selection_right.png"),
+			img    = _loadImage(self, "Icons/selection_right.png"),
 		},
 		icon = {
 			w = 70,
@@ -1154,86 +1171,86 @@ function skin(self, s)
 	s.selected.albumitem.play = {}
 	s.selected.albumitem.play.h = WH_FILL
 	s.selected.albumitem.play.align = "center"
-	s.selected.albumitem.play.img = Surface:loadImage(imgpath .. "Icons/selection_right.png")
+	s.selected.albumitem.play.img = _loadImage(self, "Icons/selection_right.png")
 	s.selected.albumitem.play.border = { 0, 0, 5, 0 }
 --]]
 	s.selected.albumchecked = _uses(s.selected.albumitem, {
 	      		order = { "icon", "text", "check", "play" },
 			play = {
-				img = Surface:loadImage(imgpath .. "Icons/selection_right.png")
+				img = _loadImage(self, "Icons/selection_right.png")
 			},
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 
 	s.selected.chooseplayer = _uses(s.selected.albumitem, {
 			order = { "icon", "text", "play" },
 			play = {
-				img = Surface:loadImage(imgpath .. "Icons/selection_right.png")
+				img = _loadImage(self, "Icons/selection_right.png")
 			},
 			text = { font = FONT_BOLD_13px }
 	})
 
 	s.selected.transporter = _uses(s.selected.chooseplayer, {
 				icon = {
-					img = Surface:loadImage(imgpath .. "Icons/Players/transporter.png"),
+					img = _loadImage(self, "Icons/Players/transporter.png"),
 				}
 			})
 	s.selected.transporterchecked = _uses(s.selected.transporter, {
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 
 	s.selected.squeezebox = _uses(s.selected.chooseplayer, {
 				icon = {
-					img = Surface:loadImage(imgpath .. "Icons/Players/squeezebox.png"),
+					img = _loadImage(self, "Icons/Players/squeezebox.png"),
 				}
 			})
 	s.selected.squeezeboxchecked = _uses(s.selected.squeezebox, {
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 
 
 	s.selected.squeezebox2 = _uses(s.selected.chooseplayer, {
 				icon = {
-					img = Surface:loadImage(imgpath .. "Icons/Players/squeezebox2.png"),
+					img = _loadImage(self, "Icons/Players/squeezebox2.png"),
 				}
 			})
 	s.selected.squeezebox2checked = _uses(s.selected.squeezebox2, {
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 
 
 	s.selected.boom = _uses(s.selected.chooseplayer, {
 				icon = {
-					img = Surface:loadImage(imgpath .. "Icons/Players/boom.png"),
+					img = _loadImage(self, "Icons/Players/boom.png"),
 				}
 			})
 	s.selected.boomchecked = _uses(s.selected.boom, {
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 
 
 	s.selected.slimp3 = _uses(s.selected.chooseplayer, {
 				icon = {
-					img = Surface:loadImage(imgpath .. "Icons/Players/slimp3.png"),
+					img = _loadImage(self, "Icons/Players/slimp3.png"),
 				}
 			})
 
@@ -1241,44 +1258,44 @@ function skin(self, s)
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 
 	s.selected.softsqueeze = _uses(s.selected.chooseplayer, {
 				icon = {
-					img = Surface:loadImage(imgpath .. "Icons/Players/softsqueeze.png"),
+					img = _loadImage(self, "Icons/Players/softsqueeze.png"),
 				}
 			})
 	s.selected.softsqueezechecked = _uses(s.selected.softsqueeze, {
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 	s.selected.controller = _uses(s.selected.chooseplayer, {
 				icon = {
-					img = Surface:loadImage(imgpath .. "Icons/Players/controller.png"),
+					img = _loadImage(self, "Icons/Players/controller.png"),
 				}
 			})
 	s.selected.controllerchecked = _uses(s.selected.controller, {
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 	s.selected.receiver = _uses(s.selected.chooseplayer, {
 				icon = {
-					img = Surface:loadImage(imgpath .. "Icons/Players/receiver.png"),
+					img = _loadImage(self, "Icons/Players/receiver.png"),
 				}
 			})
 	s.selected.receiverchecked = _uses(s.selected.receiver, {
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = Surface:loadImage(imgpath .. "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
 
@@ -1295,7 +1312,7 @@ function skin(self, s)
 	s.albumitemwaiting = _uses(s.albumitem, {
 		icon = {
 			--FIXME, need a resized icon_connecting.png image for the correct albumitem thumb size
-			img = Surface:loadImage(imgpath .. "icon_connecting.png"),
+			img = _loadImage(self, "icon_connecting.png"),
 			frameRate = 4,
 			frameWidth = 120
 		}
@@ -1354,7 +1371,7 @@ function skin(self, s)
 	s.nowplayingitem.icon.w = 125
 	s.nowplayingitem.icon.h = 125
 	s.nowplayingitem.icon.align = "left"
---	s.nowplayingitem.icon.img = Surface:loadImage(imgpath .. "menu_album_noartwork_125.png")
+--	s.nowplayingitem.icon.img = _loadImage(self, "menu_album_noartwork_125.png")
 	s.nowplayingitem.icon.padding = { 5, 0, 0, 0 }
 
 
@@ -1397,7 +1414,7 @@ function skin(self, s)
 	s.albumcurrent.icon.align = "left"
 	s.albumcurrent.play = {}
 	s.albumcurrent.play.align = 'top-left'
-	s.albumcurrent.play.img = Surface:loadImage(imgpath .. "Icons/icon_nowplaying_indicator_w.png")
+	s.albumcurrent.play.img = _loadImage(self, "Icons/icon_nowplaying_indicator_w.png")
 	s.albumcurrent.play.padding = { 2, 8, 0, 0 }
 	
 
@@ -1409,7 +1426,7 @@ function skin(self, s)
 	s.selected.albumcurrent.text.sh = SELECT_SH_COLOR
 	s.selected.albumcurrent.play = {}
 	s.selected.albumcurrent.play.align = 'top-left'
-	s.selected.albumcurrent.play.img = Surface:loadImage(imgpath .. "Icons/icon_nowplaying_indicator_b.png")
+	s.selected.albumcurrent.play.img = _loadImage(self, "Icons/icon_nowplaying_indicator_b.png")
 	s.selected.albumcurrent.play.padding = { 2, 8, 0, 0 }
 
 
@@ -1549,7 +1566,7 @@ function skin(self, s)
 	s.ssnpartwork.artwork.align = "center"
 	s.ssnpartwork.artwork.padding = 0
 	-- FIXME: change name to not be specific to icon width in filename
-	s.ssnpartwork.artwork.img = Surface:loadImage(imgpath .. "Icons/icon_album_noartwork_336.png")
+	s.ssnpartwork.artwork.img = _loadImage(self, "Icons/icon_album_noartwork_336.png")
 	s.browsenpartwork = _uses(s.ssnpartwork)
 	s.largenpartwork = _uses(s.ssnpartwork)
 
@@ -1567,23 +1584,23 @@ function skin(self, s)
 	s.ssnpcontrols.rew = {}
 	s.ssnpcontrols.rew.align = 'center'
 	s.ssnpcontrols.rew.padding = buttonPadding
-	s.ssnpcontrols.rew.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_rew_on.png")
+	s.ssnpcontrols.rew.img = _loadImage(self, "Screen_Formats/Player_Controls/Cyan/icon_toolbar_rew_on.png")
 	
 	s.ssnpcontrols.play = {}
 	s.ssnpcontrols.play.align = 'center'
 	s.ssnpcontrols.play.padding = buttonPadding
-	s.ssnpcontrols.play.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_play_on.png")
+	s.ssnpcontrols.play.img = _loadImage(self, "Screen_Formats/Player_Controls/Cyan/icon_toolbar_play_on.png")
 	
 	s.ssnpcontrols.pause = {}
 	s.ssnpcontrols.pause.align = 'center'
 	s.ssnpcontrols.pause.padding = buttonPadding
-	s.ssnpcontrols.pause.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_pause_on.png")
+	s.ssnpcontrols.pause.img = _loadImage(self, "Screen_Formats/Player_Controls/Cyan/icon_toolbar_pause_on.png")
 	
 	
 	s.ssnpcontrols.fwd = {}
 	s.ssnpcontrols.fwd.align = 'center'
 	s.ssnpcontrols.fwd.padding = buttonPadding
-	s.ssnpcontrols.fwd.img = Surface:loadImage(imgpath .. "Screen_Formats/Player_Controls/Cyan/icon_toolbar_ffwd_on.png")
+	s.ssnpcontrols.fwd.img = _loadImage(self, "Screen_Formats/Player_Controls/Cyan/icon_toolbar_ffwd_on.png")
 	
 	s.browsenpcontrols = _uses(s.ssnpcontrols)
 	s.largenpcontrols  = _uses(s.ssnpcontrols)
