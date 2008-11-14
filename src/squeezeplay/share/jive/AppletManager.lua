@@ -521,7 +521,7 @@ function loadApplet(self, appletName)
 		if not entry.metaLoaded and not _ploadMeta(entry) then
 			return nil
 		end
-		if not _pevalMeta(entry) then
+		if not _pregisterMeta(entry) then
 			return nil
 		end
 	end
