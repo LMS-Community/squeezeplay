@@ -499,7 +499,6 @@ function _createUI(self)
 
 	for k, v in pairs(components) do
 		local new = customStyle .. v
-		log:warn(new)
 		components[k] = new
 	end
 

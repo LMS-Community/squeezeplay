@@ -14,7 +14,8 @@
 struct jive_sample {
 	unsigned int refcount;
 	Uint8 *data;
-	size_t len;
+	size_t frames;
+	int channels;
 	size_t pos;
 	int mixer;
 	bool enabled;
@@ -45,26 +46,37 @@ static void sample_free(struct jive_sample *sample) {
 void decode_sample_mix(Uint8 *buffer, size_t buflen) {
 	const Sint64 max_sample = 0x7fffffffLL;
 	const Sint64 min_sample = -0x80000000LL;
+	size_t buf_frames;
 	int i;
+
+	buf_frames = BYTES_TO_SAMPLES(buflen);
 
 	/* fixme: this crudely mixes the samples onto the buffer */
 	for (i=0; i<MAX_SAMPLES; i++) {
-		Sint32 *s, *d;
-		size_t j, len;
+		Sint16 *s;
+		Sint32 *d;
+		size_t j, frames;
 
 		if (!sample[i]) {
 			continue;
 		}
 
-		len = sample[i]->len - sample[i]->pos;
-		if (len > buflen) {
-			len = buflen;
+		frames = sample[i]->frames - sample[i]->pos;
+		if (frames > buf_frames) {
+			frames = buf_frames;
 		}
 
-		s = (Sint32 *)(void *)(sample[i]->data + sample[i]->pos);
 		d = (Sint32 *)(void *)buffer;
-		for (j=0; j<len>>2; j++) {
-			Sint64 tmp = *(s++);
+		s = (Sint16 *)(void *)sample[i]->data;
+		s += (sample[i]->pos * sample[i]->channels);
+
+		for (j=0; j<frames*2; j++) {
+			Sint64 tmp = *s << 16;
+
+			if (sample[i]->channels == 2 || (j & 1)) {
+				s++;
+			}
+
 			tmp = fixed_mul(effect_gain, tmp);
 			tmp += *d;
 
@@ -77,9 +89,9 @@ void decode_sample_mix(Uint8 *buffer, size_t buflen) {
 			*(d++) = tmp;
 		}
 
-		sample[i]->pos += len;
+		sample[i]->pos += frames;
 
-		if (sample[i]->pos == sample[i]->len) {
+		if (sample[i]->pos == sample[i]->frames) {
 			sample[i]->pos = 0;
 
 			sample_free(sample[i]);
@@ -91,6 +103,7 @@ void decode_sample_mix(Uint8 *buffer, size_t buflen) {
 
 static int decode_sample_obj_gc(lua_State *L) {
 	struct jive_sample *sample = *(struct jive_sample **)lua_touserdata(L, 1);
+
 	if (sample) {
 		sample_free(sample);
 	}
@@ -162,7 +175,6 @@ static struct jive_sample *load_sound(char *filename, int mixer) {
 	SDL_AudioCVT cvt;
 	Uint8 *data;
 	Uint32 len;
-	int i;
 
 	// FIXME rewrite to not use SDL
 	if (SDL_LoadWAV(filename, &wave, &data, &len) == NULL) {
@@ -170,14 +182,14 @@ static struct jive_sample *load_sound(char *filename, int mixer) {
 		return NULL;
 	}
 
-	/* Convert to signed 16 bit stereo */
+	/* Convert to signed 16 bit stereo/mono */
 	if (SDL_BuildAudioCVT(&cvt, wave.format, wave.channels, wave.freq,
-			      AUDIO_S16SYS, 2, 44100) < 0) {
+			      AUDIO_S16SYS, wave.channels, 44100) < 0) {
 		fprintf(stderr, "Couldn't build audio converter: %s\n", SDL_GetError());
 		SDL_FreeWAV(data);
 		return NULL;
 	}
-	cvt.buf = malloc(len * cvt.len_mult * 2);
+	cvt.buf = malloc(len * cvt.len_mult);
 	memcpy(cvt.buf, data, len);
 	cvt.len = len;
 	
@@ -189,16 +201,11 @@ static struct jive_sample *load_sound(char *filename, int mixer) {
 	}
 	SDL_FreeWAV(data);
 
-	/* Convert to signed 32 bit stereo, SDL does not support this format */
-	cvt.len_cvt *= 2;
-	for (i=(cvt.len_cvt/4)-1; i>=0; i--) {
-		((Uint32 *)(void *)cvt.buf)[i] = ((Uint16 *)(void *)cvt.buf)[i] << 16;
-	}
-
 	snd = malloc(sizeof(struct jive_sample));
 	snd->refcount = 1;
 	snd->data = cvt.buf;
-	snd->len = cvt.len_cvt;
+	snd->frames = cvt.len_cvt / 2 /* 16 bit */ / wave.channels;
+	snd->channels = wave.channels;
 	snd->pos = 0;
 	snd->mixer = mixer;
 	snd->enabled = true;

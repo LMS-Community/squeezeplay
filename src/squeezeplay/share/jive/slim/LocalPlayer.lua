@@ -20,6 +20,7 @@ local log            = require("jive.utils.log").logger("player")
 
 -- can be overridden by hardware specific classes
 local DEVICE_MODEL   = "SqueezePlay"
+local DEVICE_NAME    = "SqueezePlay"
 
 
 module(...)
@@ -30,6 +31,16 @@ local device2id = {
 	["Controller"] = 9,
 	["SqueezePlay"] = 12,
 }
+
+
+-- class method to set the device type
+function setDeviceType(self, model, name)
+	 assert(device2id[model])
+
+	 DEVICE_MODEL = model
+	 DEVICE_NAME = name or model
+end
+
 
 function __init(self, jnt, playerId, uuid)
 	local obj = oo.rawnew(self, Player(jnt, playerId))
@@ -48,7 +59,7 @@ function __init(self, jnt, playerId, uuid)
 
 	-- initialize with default values
 	obj:updateInit(nil, {
-		name = DEVICE_MODEL,
+		name = DEVICE_NAME,
 		model = DEVICE_MODEL,
 	})
 
