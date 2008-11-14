@@ -1665,9 +1665,18 @@ function skin(self, s, reload, useDefaultSize)
 	s.ssnptitle.playlist.textAlign = "top-right"
 
 
+	local nplargetitleBox = Tile:loadTiles({ imgpath .. "Screen_Formats/Titlebar/titlebar.png" })
+
 	-- nptitle style is the same for all windowStyles
 	s.browsenptitle = _uses(s.ssnptitle)
-	s.largenptitle  = _uses(s.ssnptitle)
+	s.largenptitle  = _uses(s.ssnptitle, {
+				bgImg = nplargetitleBox,
+				border = { 0, 0, 0, 0 },
+				text = {
+						padding = { 4, 7, 10, 9 }
+				}
+			}
+	)
 
 
 	-- Song
@@ -1688,11 +1697,16 @@ function skin(self, s, reload, useDefaultSize)
 	}
 	s.ssnptrack.text.fg = { 0x00, 0x00, 0x00 }
 
+        local largeHighlightBox = Tile:loadTiles({ imgpath .. "bghighlight.png" })
+
+
 	-- nptrack is identical between all np styles
 	s.browsenptrack = _uses(s.ssnptrack)
 	s.largenptrack  = _uses(s.ssnptrack, {
+					bgImg = largeHighlightBox,
+					border = { 0, 0, 0, 0 },
 					text = {
-						padding = { 10, 6, 8, 0 }
+						padding = { 4, 6, 4, 0 }
 					}
 				}
 			)
@@ -1753,12 +1767,14 @@ function skin(self, s, reload, useDefaultSize)
 			)
 	s.largeprogress = _uses(s.ssprogress,
 				{
-					padding = { 8, 2, 8, 2 },
+					padding = { 0, 0, 0, 0 },
 					elapsed = {
-						padding = { 8, 2, 0, 5 }
+						padding = { 0, 2, 8, 7 },
+						align = 'right',
 					},
 					remain = {
-						padding = { 8, 2, 0, 5 }
+						padding = { 8, 2, 0, 7 },
+						align = 'left',
 					}
 				})
 
@@ -1776,7 +1792,7 @@ function skin(self, s, reload, useDefaultSize)
 				)
 	s.largeprogressB = _uses(s.ssprogressB, 
 				{
-					padding = { 0, 0, 0, 2 }
+					padding = { 0, 0, 0, 3 }
 				}
 				)
 
