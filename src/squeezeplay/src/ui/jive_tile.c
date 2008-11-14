@@ -9,6 +9,9 @@
 #include "jive.h"
 
 
+void jive_surface_get_tile_blit(JiveSurface *srf, SDL_Surface **sdl, Sint16 *x, Sint16 *y);
+
+
 struct jive_tile {
 	Uint32 refcount;
 
@@ -264,70 +267,74 @@ static __inline__ void blit_area(SDL_Surface *src, SDL_Surface *dst, int dx, int
 
 static void _blit_tile(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh) {
 	int ox=0, oy=0, ow=0, oh=0;
+	Sint16 dst_offset_x, dst_offset_y;
+	SDL_Surface *dst_srf;
 
 	if (tile->is_bg) {
 		jive_surface_boxColor(dst, dx, dy, dx + dw - 1, dy + dh - 1, tile->bg);
 		return;
 	}
 
-	dx += dst->offset_x;
-	dy += dst->offset_y;
+	jive_surface_get_tile_blit(dst, &dst_srf, &dst_offset_x, &dst_offset_y);
+
+	dx += dst_offset_x;
+	dy += dst_offset_y;
 
 	/* top left */
 	if (tile->srf[1]) {
 		ox = MIN(tile->w[0], dw);
 		oy = MIN(tile->h[0], dh);
-		blit_area(tile->srf[1], dst->sdl, dx, dy, ox, oy);
+		blit_area(tile->srf[1], dst_srf, dx, dy, ox, oy);
 	}
 
 	/* top right */
 	if (tile->srf[3]) {
 		ow = MIN(tile->w[1], dw);
 		oy = MIN(tile->h[0], dh);
-		blit_area(tile->srf[3], dst->sdl, dx + dw - ow, dy, ow, oy);
+		blit_area(tile->srf[3], dst_srf, dx + dw - ow, dy, ow, oy);
 	}
 
 	/* bottom right */
 	if (tile->srf[5]) {
 		ow = MIN(tile->w[1], dw);
 		oh = MIN(tile->h[1], dh);
-		blit_area(tile->srf[5], dst->sdl, dx + dw - ow, dy + dh - oh, ow, oh);
+		blit_area(tile->srf[5], dst_srf, dx + dw - ow, dy + dh - oh, ow, oh);
 	}
 
 	/* bottom left */
 	if (tile->srf[7]) {
 		ox = MIN(tile->w[0], dw);
 		oh = MIN(tile->h[1], dh);
-		blit_area(tile->srf[7], dst->sdl, dx, dy + dh - oh, ox, oh);
+		blit_area(tile->srf[7], dst_srf, dx, dy + dh - oh, ox, oh);
 	}
 
 	/* top */
 	if (tile->srf[2]) {
 		oy = MIN(tile->h[0], dh);
-		blit_area(tile->srf[2], dst->sdl, dx + ox, dy, dw - ox - ow, oy);
+		blit_area(tile->srf[2], dst_srf, dx + ox, dy, dw - ox - ow, oy);
 	}
 
 	/* right */
 	if (tile->srf[4]) {
 		ow = MIN(tile->w[1], dw);
-		blit_area(tile->srf[4], dst->sdl, dx + dw - ow, dy + oy, ow, dh - oy - oh);
+		blit_area(tile->srf[4], dst_srf, dx + dw - ow, dy + oy, ow, dh - oy - oh);
 	}
 
 	/* bottom */
 	if (tile->srf[6]) {
 		oh = MIN(tile->h[1], dh);
-		blit_area(tile->srf[6], dst->sdl, dx + ox, dy + dh - oh, dw - ox - ow, oh);
+		blit_area(tile->srf[6], dst_srf, dx + ox, dy + dh - oh, dw - ox - ow, oh);
 	}
 
 	/* left */
 	if (tile->srf[8]) {
 		ox = MIN(tile->w[0], dw);
-		blit_area(tile->srf[8], dst->sdl, dx, dy + oy, ox, dh - oy - oh);
+		blit_area(tile->srf[8], dst_srf, dx, dy + oy, ox, dh - oy - oh);
 	}
 
 	/* center */
 	if (tile->srf[0]) {
-		blit_area(tile->srf[0], dst->sdl, dx + ox, dy + oy, dw - ox - ow, dh - oy - oh);
+		blit_area(tile->srf[0], dst_srf, dx + ox, dy + oy, dw - ox - ow, dh - oy - oh);
 	}
 }
 

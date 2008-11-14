@@ -183,13 +183,6 @@ struct jive_widget {
 	Uint8 layer;
 };
 
-struct jive_surface {
-	Uint32 refcount;
-	
-	SDL_Surface *sdl;
-	Sint16 offset_x, offset_y;	
-};
-
 struct jive_scroll_event {
 	int rel;
 };
@@ -294,9 +287,11 @@ int jive_traceback (lua_State *L);
 JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fullscreen);
 JiveSurface *jive_surface_newRGB(Uint16 w, Uint16 h);
 JiveSurface *jive_surface_newRGBA(Uint16 w, Uint16 h);
+JiveSurface *jive_surface_new_SDLSurface(SDL_Surface *sdl_surface);
 JiveSurface *jive_surface_ref(JiveSurface *srf);
 JiveSurface *jive_surface_load_image(const char *path);
 JiveSurface *jive_surface_load_image_data(const char *data, size_t len);
+int jive_surface_set_wm_icon(JiveSurface *srf);
 int jive_surface_save_bmp(JiveSurface *srf, const char *file);
 int jive_surface_cmp(JiveSurface *a, JiveSurface *b, Uint32 key);
 void jive_surface_set_offset(JiveSurface *src, Sint16 x, Sint16 y);
