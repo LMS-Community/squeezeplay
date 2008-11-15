@@ -1011,6 +1011,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.albummenu.fg = {0xbb, 0xbb, 0xbb }
 	s.albummenu.font = FONT_BOLD_200px
 
+	s.multilinemenu = _uses(s.albummenu)
 
 	-- items with artwork and song info
 	--s.albumitem.h = 60
@@ -1037,6 +1038,10 @@ function skin(self, s, reload, useDefaultSize)
 	s.albumitem.icon.img = _loadImage(self, "album_noartwork_56.png")
 	s.albumitem.icon.border = { 8, 0, 0, 0 }
 
+	s.multilineitem = _uses(s.albumitem, {
+				order = {'text', 'play'}
+			})
+
 	-- checked albummenu item
 	s.albumchecked =
 		_uses(s.albumitem, {
@@ -1047,6 +1052,9 @@ function skin(self, s, reload, useDefaultSize)
 
 			      }
 		      })
+	s.multilinechecked = _uses(s.albumchecked, {
+				order = { 'text', 'check' },
+			})
 
 	-- styles for choose player menu
 	s.chooseplayer = _uses(s.albumitem, {
@@ -1205,6 +1213,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.albumitemNoAction.text.fg = TEXT_COLOR
 	s.albumitemNoAction.text.sh = TEXT_SH_COLOR
 
+	s.multilineitemNoAction = _uses(s.albumitemNoAction)
 
 --FIXME: albumitemNoAction can't use _uses because it sticks an icon on the screen
 --[[
@@ -1214,6 +1223,7 @@ function skin(self, s, reload, useDefaultSize)
 				})
 --]]
 	s.selected.albumitemNoAction = _uses(s.albumitemNoAction)
+	s.selected.multilineitemNoAction = _uses(s.multilineitemNoAction)
 
 	-- selected item with artwork and song info
 	s.selected.albumitem = {}
@@ -1228,12 +1238,17 @@ function skin(self, s, reload, useDefaultSize)
 	s.selected.albumitem.play.img = _loadImage(self, "Icons/selection_right.png")
 	s.selected.albumitem.play.border = { 0, 0, 5, 0 }
 
+	s.selected.multilineitem = _uses(s.selected.albumitem)
+
 	s.selected.albumitemplay = _uses(s.selected.albumitem, {
 			play = { img = _loadImage(self, "Icons/selection_play.png") }
 	})
+	s.selected.multilineitemplay = _uses(s.selected.albumitemplay)
+
 	s.selected.albumitemadd = _uses(s.selected.albumitem, {
 			play = { img = _loadImage(self, "Icons/selection_add.png") }
 	})
+	s.selected.mulitlineadd = _uses(s.selected.albumitemadd)
 
 	s.selected.albumchecked = _uses(s.selected.albumitem, {
 	      		order = { "icon", "text", "check", "play" },
