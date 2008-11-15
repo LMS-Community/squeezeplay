@@ -950,6 +950,8 @@ function skin(self, s)
 	s.albummenu.fg = {0xbb, 0xbb, 0xbb }
 	s.albummenu.font = _boldfont(250)
 
+	s.multilinemenu = _uses(s.albummenu)
+
 	-- items with artwork and song info
 	s.albumitem = {}
 	s.albumitem.order = { "icon", "text", "play" }
@@ -969,6 +971,9 @@ function skin(self, s)
 	s.albumitem.text.fg = TEXT_COLOR
 	s.albumitem.text.sh = TEXT_SH_COLOR
 
+	s.multilineitem = _uses(s.albumitem, {
+					order = {'text', 'play'}
+				})
 	-- checked albummenu item
 	s.albumchecked =
 		_uses(s.albumitem, {
@@ -979,6 +984,10 @@ function skin(self, s)
 
 			      }
 		      })
+
+	s.multilinechecked = _uses(s.albumchecked, {
+					order = {'text', 'check' },
+				})
 
 	-- styles for choose player menu
 	s.chooseplayer = _uses(s.albumitem, {
@@ -1134,6 +1143,7 @@ function skin(self, s)
 	s.albumitemNoAction.text.fg = TEXT_COLOR
 	s.albumitemNoAction.text.sh = TEXT_SH_COLOR
 
+	s.multilineitemNoAction = _uses(s.albumitemNoAction)
 
 --FIXME: albumitemNoAction can't use _uses because it sticks an icon on the screen
 --[[
@@ -1143,6 +1153,7 @@ function skin(self, s)
 				})
 --]]
 	s.selected.albumitemNoAction = _uses(s.albumitemNoAction)
+	s.selected.multilineitemNoAction = _uses(s.multilineitemNoAction)
 
 	-- selected item with artwork and song info
 	s.selected.albumitem = _uses(s.albumitem, {
@@ -1161,21 +1172,22 @@ function skin(self, s)
 			h = 70
 		}
 	})
---[[
-	s.selected.albumitem = {}
-	s.selected.albumitem.text = {}
-	s.selected.albumitem.text.fg = SELECT_COLOR
-	s.selected.albumitem.text.sh = SELECT_SH_COLOR
-	s.selected.albumitem.bgImg = albumSelectionBox
+	s.selected.multilineitem = _uses(s.selected.albumitem, {
+				order = { 'text', 'play' },
+			})
 
-	s.selected.albumitem.play = {}
-	s.selected.albumitem.play.h = WH_FILL
-	s.selected.albumitem.play.align = "center"
-	s.selected.albumitem.play.img = _loadImage(self, "Icons/selection_right.png")
-	s.selected.albumitem.play.border = { 0, 0, 5, 0 }
---]]
 	s.selected.albumchecked = _uses(s.selected.albumitem, {
 	      		order = { "icon", "text", "check", "play" },
+			play = {
+				img = _loadImage(self, "Icons/selection_right.png")
+			},
+			check = {
+				align = "right",
+				img = _loadImage(self, "Icons/icon_check_selected.png")
+			}
+	})
+	s.selected.multilinechecked = _uses(s.selected.multilineitem, {
+	      		order = { "text", "check", "play" },
 			play = {
 				img = _loadImage(self, "Icons/selection_right.png")
 			},
