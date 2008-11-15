@@ -321,8 +321,8 @@ function skin(self, s, reload, useDefaultSize)
 	s.iconPlaylistModeDISABLED = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
 
 	-- FIXME, needs official artwork
-	s.iconPlaylistModeON = _icon(self, 41, screenHeight - 30, "icon_playlistMode_on.png")
-	s.iconPlaylistModePARTY = _icon(self, 41, screenHeight - 30, "icon_partyhat.png")
+	s.iconPlaylistModeON = _icon(self, 41, screenHeight - 30, "icon_mode_playlist.png")
+	s.iconPlaylistModePARTY = _icon(self, 41, screenHeight - 30, "icon_mode_party.png")
 
 	-- shuffle off/shuffle album/shuffle playlist
 	s.iconShuffleOFF = _icon(self, 75, screenHeight - 30, "icon_shuffle_off.png")
