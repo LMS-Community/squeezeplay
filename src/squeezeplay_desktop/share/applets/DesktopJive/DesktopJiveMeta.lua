@@ -32,6 +32,9 @@ end
 
 
 function registerApplet(meta)
+    --disable arp to avoid os calls, which is problematic on windows - popups, vista permissions -  disabling disables WOL functionality
+    jnt:setArpEnabled(false)
+    
 	local settings = meta:getSettings()
 
 	local store = false

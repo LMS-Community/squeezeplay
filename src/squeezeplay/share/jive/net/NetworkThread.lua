@@ -53,6 +53,8 @@ local perfhook          = jive.perfhook
 local EVENT_SERVICE_JNT = jive.ui.EVENT_SERVICE_JNT
 local EVENT_CONSUME     = jive.ui.EVENT_CONSUME
 
+--allow for not making arp calls
+local _isArpEnabled = true
 
 -- jive.net.NetworkThread is a base class
 module(..., oo.class)
@@ -363,6 +365,15 @@ Sets the UUID and Mac address of this device.
 function setUUID(self, uuid, mac)
 	self.uuid = uuid
 	self.mac = string.lower(mac)
+end
+
+
+function isArpEnabled(self)
+    return _isArpEnabled
+end
+
+function setArpEnabled(self, enabled)
+    _isArpEnabled = enabled
 end
 
 --[[
