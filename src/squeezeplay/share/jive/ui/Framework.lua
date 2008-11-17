@@ -137,6 +137,10 @@ Find a file on the lua path. Returns the full path of the file, or nil if it was
 
 Return the number of milliseconds since the Jive initialization.
 
+=head2 jive.ui.Framework:getMacAddress()
+
+Return the first Mac address found on the current system.
+
 =head2 jive.ui.Framework:getUserPath()
 
 Return the user-specific path that holds settings, 3rd-party applets, wallpaper, etc. THe path is aprt of the overall Lua path.

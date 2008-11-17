@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib"
+				AdditionalDependencies="ws2_32.lib Iphlpapi.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="C:\WMSDK\WMFSDK11\lib"
 				GenerateDebugInformation="true"

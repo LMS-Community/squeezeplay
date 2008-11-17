@@ -6,6 +6,7 @@ local string        = require("string")
 local table         = require("jive.utils.table")
 
 local AppletMeta    = require("jive.AppletMeta")
+local Framework     = require("jive.ui.Framework")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
@@ -47,29 +48,11 @@ function registerApplet(meta)
 	end
 
 	if not settings.mac then
-		local f = io.popen("ifconfig")
-		if f then
-			local ifconfig = f:read("*a")
-			f:close()
-
+	    local mac = Framework:getMacAddress()
+        if mac then
 			store = true
-			settings.mac = string.match(ifconfig, "HWaddr%s([%x:]+)")
-		end
-	end
-
-	if not settings.mac then
-		local f = io.popen("ipconfig /all")
-		if f then
-			local ipconfig = f:read("*a")
-			f:close()
-
-			store = true
-			local mac = string.match(ipconfig, "Physical Address[ %.%-]-:%s([%x%-]+)")
-
-			if mac then
-				settings.mac = string.gsub(mac, "%-", ":")
-			end
-		end
+            settings.mac = mac
+        end
 	end
 
 	if not settings.mac then
@@ -84,6 +67,8 @@ function registerApplet(meta)
 	end
 
 	if store then
+	    log:debug("UUID: ", settings.uuid)
+	    log:debug("Mac Address: ", settings.mac)
 		meta:storeSettings()
 	end
 
