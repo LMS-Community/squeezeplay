@@ -688,7 +688,9 @@ function setPowerState(self, state)
 
 		elseif state == "dimmed" then
 			self:_cpuPowerSave(true)
-			self:_setBrightness(true, 8, 0)
+			if settings.dimmedTimeout > 0 then
+				self:_setBrightness(true, 8, 0)
+			end
 
 			interval = settings.sleepTimeout
 
