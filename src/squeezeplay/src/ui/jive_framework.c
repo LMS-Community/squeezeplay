@@ -162,12 +162,10 @@ static int jiveL_init(lua_State *L) {
 		exit(-1);
 	}
 
-  /* load the icon */
-  icon = jive_surface_load_image("jive/app.png");
-  if (icon->sdl)
-	  SDL_WM_SetIcon(icon->sdl, NULL);
-  else
-		fprintf(stderr, "SDL_WM_SetIcon(jive/jiveapp.png): %s\n", SDL_GetError());
+	/* load the icon */
+	icon = jive_surface_load_image("jive/app.png");
+	jive_surface_set_wm_icon(icon);
+	jive_surface_free(icon);
 
 //	SDL_ShowCursor (SDL_DISABLE);
 	SDL_EnableKeyRepeat (100, 100);

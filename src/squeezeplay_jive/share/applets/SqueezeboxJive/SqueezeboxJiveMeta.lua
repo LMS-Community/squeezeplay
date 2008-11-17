@@ -42,7 +42,7 @@ function registerApplet(meta)
 	end
 
 	-- Set player device type
-	LocalPlayer:setDeviceType("Controller")
+	LocalPlayer:setDeviceType("controller", "Controller")
 
 	-- SqueezeboxJive is a resident Applet
 	appletManager:loadApplet("SqueezeboxJive")

@@ -6,7 +6,7 @@ local oo                     = require("loop.base")
 
 local string                 = require("string")
 
-local Decode                 = require("squeezeplay.decode")
+local hasDecode, Decode      = pcall(require, "squeezeplay.decode")
 local Stream                 = require("squeezeplay.stream")
 local SlimProto              = require("jive.net.SlimProto")
 

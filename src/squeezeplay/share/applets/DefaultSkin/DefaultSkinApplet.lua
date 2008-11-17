@@ -321,8 +321,8 @@ function skin(self, s, reload, useDefaultSize)
 	s.iconPlaylistModeDISABLED = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
 
 	-- FIXME, needs official artwork
-	s.iconPlaylistModeON = _icon(self, 41, screenHeight - 30, "icon_playlistMode_on.png")
-	s.iconPlaylistModePARTY = _icon(self, 41, screenHeight - 30, "icon_partyhat.png")
+	s.iconPlaylistModeON = _icon(self, 41, screenHeight - 30, "icon_mode_playlist.png")
+	s.iconPlaylistModePARTY = _icon(self, 41, screenHeight - 30, "icon_mode_party.png")
 
 	-- shuffle off/shuffle album/shuffle playlist
 	s.iconShuffleOFF = _icon(self, 75, screenHeight - 30, "icon_shuffle_off.png")
@@ -1011,6 +1011,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.albummenu.fg = {0xbb, 0xbb, 0xbb }
 	s.albummenu.font = FONT_BOLD_200px
 
+	s.multilinemenu = _uses(s.albummenu)
 
 	-- items with artwork and song info
 	--s.albumitem.h = 60
@@ -1037,6 +1038,10 @@ function skin(self, s, reload, useDefaultSize)
 	s.albumitem.icon.img = _loadImage(self, "album_noartwork_56.png")
 	s.albumitem.icon.border = { 8, 0, 0, 0 }
 
+	s.multilineitem = _uses(s.albumitem, {
+				order = {'text', 'play'}
+			})
+
 	-- checked albummenu item
 	s.albumchecked =
 		_uses(s.albumitem, {
@@ -1047,6 +1052,9 @@ function skin(self, s, reload, useDefaultSize)
 
 			      }
 		      })
+	s.multilinechecked = _uses(s.albumchecked, {
+				order = { 'text', 'check' },
+			})
 
 	-- styles for choose player menu
 	s.chooseplayer = _uses(s.albumitem, {
@@ -1205,6 +1213,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.albumitemNoAction.text.fg = TEXT_COLOR
 	s.albumitemNoAction.text.sh = TEXT_SH_COLOR
 
+	s.multilineitemNoAction = _uses(s.albumitemNoAction)
 
 --FIXME: albumitemNoAction can't use _uses because it sticks an icon on the screen
 --[[
@@ -1214,6 +1223,7 @@ function skin(self, s, reload, useDefaultSize)
 				})
 --]]
 	s.selected.albumitemNoAction = _uses(s.albumitemNoAction)
+	s.selected.multilineitemNoAction = _uses(s.multilineitemNoAction)
 
 	-- selected item with artwork and song info
 	s.selected.albumitem = {}
@@ -1228,12 +1238,17 @@ function skin(self, s, reload, useDefaultSize)
 	s.selected.albumitem.play.img = _loadImage(self, "Icons/selection_right.png")
 	s.selected.albumitem.play.border = { 0, 0, 5, 0 }
 
+	s.selected.multilineitem = _uses(s.selected.albumitem)
+
 	s.selected.albumitemplay = _uses(s.selected.albumitem, {
 			play = { img = _loadImage(self, "Icons/selection_play.png") }
 	})
+	s.selected.multilineitemplay = _uses(s.selected.albumitemplay)
+
 	s.selected.albumitemadd = _uses(s.selected.albumitem, {
 			play = { img = _loadImage(self, "Icons/selection_add.png") }
 	})
+	s.selected.mulitlineadd = _uses(s.selected.albumitemadd)
 
 	s.selected.albumchecked = _uses(s.selected.albumitem, {
 	      		order = { "icon", "text", "check", "play" },
@@ -1665,9 +1680,18 @@ function skin(self, s, reload, useDefaultSize)
 	s.ssnptitle.playlist.textAlign = "top-right"
 
 
+	local nplargetitleBox = Tile:loadTiles({ imgpath .. "Screen_Formats/Titlebar/titlebar.png" })
+
 	-- nptitle style is the same for all windowStyles
 	s.browsenptitle = _uses(s.ssnptitle)
-	s.largenptitle  = _uses(s.ssnptitle)
+	s.largenptitle  = _uses(s.ssnptitle, {
+				bgImg = nplargetitleBox,
+				border = { 0, 0, 0, 0 },
+				text = {
+						padding = { 4, 7, 10, 9 }
+				}
+			}
+	)
 
 
 	-- Song
@@ -1688,11 +1712,16 @@ function skin(self, s, reload, useDefaultSize)
 	}
 	s.ssnptrack.text.fg = { 0x00, 0x00, 0x00 }
 
+        local largeHighlightBox = Tile:loadTiles({ imgpath .. "bghighlight.png" })
+
+
 	-- nptrack is identical between all np styles
 	s.browsenptrack = _uses(s.ssnptrack)
 	s.largenptrack  = _uses(s.ssnptrack, {
+					bgImg = largeHighlightBox,
+					border = { 0, 0, 0, 0 },
 					text = {
-						padding = { 10, 6, 8, 0 }
+						padding = { 4, 6, 4, 0 }
 					}
 				}
 			)
@@ -1753,12 +1782,14 @@ function skin(self, s, reload, useDefaultSize)
 			)
 	s.largeprogress = _uses(s.ssprogress,
 				{
-					padding = { 8, 2, 8, 2 },
+					padding = { 0, 0, 0, 0 },
 					elapsed = {
-						padding = { 8, 2, 0, 5 }
+						padding = { 0, 2, 8, 7 },
+						align = 'right',
 					},
 					remain = {
-						padding = { 8, 2, 0, 5 }
+						padding = { 8, 2, 0, 7 },
+						align = 'left',
 					}
 				})
 
@@ -1776,7 +1807,7 @@ function skin(self, s, reload, useDefaultSize)
 				)
 	s.largeprogressB = _uses(s.ssprogressB, 
 				{
-					padding = { 0, 0, 0, 2 }
+					padding = { 0, 0, 0, 3 }
 				}
 				)
 
