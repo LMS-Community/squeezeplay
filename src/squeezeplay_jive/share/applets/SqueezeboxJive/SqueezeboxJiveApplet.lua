@@ -11,6 +11,7 @@ local io                     = require("io")
 local jiveBSP                = require("jiveBSP")
 local Watchdog               = require("jiveWatchdog")
 local Wireless               = require("jive.net.Wireless")
+local LocalPlayer            = require("jive.slim.LocalPlayer")
 
 local Applet                 = require("jive.Applet")
 local Sample                 = require("squeezeplay.sample")
@@ -184,11 +185,7 @@ function init(self)
 					      end
 
 				      elseif sw == SW_PHONE_DETECT then
-					      if val == 1 then
-					      	      os.execute("amixer -q sset Endpoint Headphone")
-					      else
-					      	      os.execute("amixer -q sset Endpoint Speaker")
-					      end
+				              headphoneJack(self, val)
 				      end
 
 				      return EVENT_CONSUME
@@ -251,12 +248,8 @@ function init(self)
 	end
 
 	-- headphone or speaker
-	local headphone = jiveBSP.ioctl(18)
-	if headphone == 1 then
-      		os.execute("amixer -q sset Endpoint Headphone")
-	else
-     		os.execute("amixer -q sset Endpoint Speaker")
-	end
+	local headphoneInserted = jiveBSP.ioctl(18)
+	self:headphoneJack(headphoneInserted)
 
 	-- set initial state
 	self:update()
@@ -269,6 +262,11 @@ end
 
 
 function notify_playerCurrent(self, player)
+	-- track changes to the remote player selection for headphone jack
+	if not oo.instanceof(player, LocalPlayer) then
+		self.remotePlayer = player
+	end
+
 	-- if not passed a player, or if player hasn't change, exit
 	if not player or not player:isConnected() then
 		return
@@ -360,6 +358,45 @@ function update(self)
 	-- wireless strength
 	local quality = self.wireless:getLinkQuality()
 	iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
+end
+
+
+function headphoneJack(self, inserted)
+	-- switch between headphone and speaker
+	if inserted == 1 then
+		os.execute("amixer -q sset Endpoint Headphone")
+	else
+		os.execute("amixer -q sset Endpoint Speaker")
+	end
+
+	-- automatically select internal player
+	if inserted == 1 then
+		local localPlayer
+
+		if appletManager:hasService("iteratePlayers") then
+			for _, player in appletManager:callService("iteratePlayers") do
+				if oo.instanceof(player, LocalPlayer) then
+					localPlayer = player
+					break
+				end
+			end
+		end
+
+		if localPlayer then
+
+			local currentPlayer = appletManager:callService("getCurrentPlayer")
+			if currentPlayer ~= localPlayer then
+				self.remotePlayer = currentPlayer
+				appletManager:callService("setCurrentPlayer", localPlayer)
+			end
+		end
+	else
+		-- switch back to remote player
+		if self.remotePlayer then
+			appletManager:callService("setCurrentPlayer", self.remotePlayer)
+			self.remotePlayer = nil
+		end
+	end
 end
 
 
