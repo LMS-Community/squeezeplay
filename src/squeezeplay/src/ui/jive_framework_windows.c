@@ -9,6 +9,8 @@
 #include "jive.h"
 
 #include <SDL_syswm.h>
+#include <intrin.h>
+#include <iphlpapi.h>
 
 #ifndef WM_APPCOMMAND
 #define WM_APPCOMMAND	0x0319
