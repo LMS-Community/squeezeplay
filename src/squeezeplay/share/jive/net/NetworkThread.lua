@@ -399,6 +399,10 @@ is called when the hardware address is known, or with an error.
 =cut
 --]]
 function arp(self, host, sink)
+    if not self:isArpEnabled() then
+        return sink(nil, "Arp disabled")
+    end
+
 	local arp = ""
 
 	local cmd = "arp " .. host
@@ -409,7 +413,7 @@ function arp(self, host, sink)
 	local proc = Process(self, cmd)
 	proc:read(function(chunk, err)
 			if err then
-					return sink(err)
+					return sink(nil, err)
 			end
 
 			if chunk then
