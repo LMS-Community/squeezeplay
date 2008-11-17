@@ -1803,6 +1803,11 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 			local timeFormat = _getTimeFormat()
 			local _v = DateTime:timeFromSFM(v, timeFormat)
 			v = Textinput.timeValue(_v, timeFormat)
+		elseif inputStyle == 'ip' then
+			if not initialText then
+				initialText = '0.0.0.0'
+			end
+			v = Textinput.ipAddressValue(initialText)
 		end
 
 		-- create a text input

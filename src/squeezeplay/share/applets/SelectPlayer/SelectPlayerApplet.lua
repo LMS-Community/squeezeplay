@@ -28,6 +28,7 @@ local SimpleMenu         = require("jive.ui.SimpleMenu")
 local RadioGroup         = require("jive.ui.RadioGroup")
 local RadioButton        = require("jive.ui.RadioButton")
 local Window             = require("jive.ui.Window")
+local Popup              = require("jive.ui.Popup")
 local Group              = require("jive.ui.Group")
 local Icon               = require("jive.ui.Icon")
 local Label              = require("jive.ui.Label")
@@ -333,7 +334,10 @@ function setupShowSelectPlayer(self, setupNext, windowStyle)
 
 	window:addWidget(menu)
 
-	window:addTimer(5000, function() self:_scan() end)
+	window:addTimer(5000, function() 
+				self:_scan() 
+				self:_hidePopulatingPlayersPopup()
+			end)
 
 
 	window:addListener(EVENT_WINDOW_ACTIVE,
@@ -342,9 +346,55 @@ function setupShowSelectPlayer(self, setupNext, windowStyle)
 			   end)
 
 	self:tieAndShowWindow(window)
+
+	if self.setupMode then
+		self.populatingPlayers = self:_showPopulatingPlayersPopup()
+	end
+
 	return window
 end
 
+function _hidePopulatingPlayersPopup(self, timer)
+
+	if self.populatingPlayers then
+		self.populatingPlayers:hide()
+		self.populatingPlayers = false
+	end
+
+end
+
+function _showPopulatingPlayersPopup(self, timer)
+
+        if self.populatingPlayers then
+                -- don't open this popup twice or when firmware update windows are on screen
+                return
+        end
+
+        local popup = Popup("popupIcon")
+        local icon  = Icon("iconConnecting")
+        local label = Label("text", self:string("SEARCHING"))
+        popup:addWidget(icon)
+        popup:addWidget(label)
+        popup:setAlwaysOnTop(true)
+
+        -- add a listener for KEY_PRESS that disconnects from the player and returns to home
+        popup:addListener(
+                EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+                function(event)
+                        local evtCode = event:getKeycode()
+
+                        if evtCode == KEY_BACK then
+                                popup:hide()
+                        end
+                        -- other keys are disabled when this popup is on screen
+                        return EVENT_CONSUME
+                end
+        )
+
+        popup:show()
+	return popup
+
+end
 
 function _scan(self)
 	-- SqueezeCenter and player discovery

@@ -9,6 +9,14 @@
 #include "jive.h"
 
 
+struct jive_surface {
+	Uint32 refcount;
+	
+	SDL_Surface *sdl;
+	Sint16 offset_x, offset_y;	
+};
+
+
 JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fullscreen) {
 	JiveSurface *srf;
 	SDL_Surface *sdl;
@@ -89,6 +97,17 @@ JiveSurface *jive_surface_newRGBA(Uint16 w, Uint16 h) {
 }
 
 
+JiveSurface *jive_surface_new_SDLSurface(SDL_Surface *sdl_surface) {
+	JiveSurface *srf;
+
+	srf = calloc(sizeof(JiveSurface), 1);
+	srf->refcount = 1;
+	srf->sdl = sdl_surface;
+
+	return srf;
+}
+
+
 JiveSurface *jive_surface_ref(JiveSurface *srf) {
 	if (srf) {
 		srf->refcount++;
@@ -161,6 +180,13 @@ JiveSurface *jive_surface_load_image_data(const char *data, size_t len) {
 
 	return jive_surface_display_format(srf);
 }
+
+
+int jive_surface_set_wm_icon(JiveSurface *srf) {
+	SDL_WM_SetIcon(srf->sdl, NULL);
+	return 1;
+}
+
 
 int jive_surface_save_bmp(JiveSurface *srf, const char *file) {
 	return SDL_SaveBMP(srf->sdl, file);
@@ -304,6 +330,14 @@ void jive_surface_get_clip_arg(JiveSurface *srf, Uint16 *x, Uint16 *y, Uint16 *w
 
 void jive_surface_flip(JiveSurface *srf) {
 	SDL_Flip(srf->sdl);
+}
+
+
+/* this function must only be used for blitting tiles */
+void jive_surface_get_tile_blit(JiveSurface *srf, SDL_Surface **sdl, Sint16 *x, Sint16 *y) {
+	*sdl = srf->sdl;
+	*x = srf->offset_x;
+	*y = srf->offset_y;
 }
 
 

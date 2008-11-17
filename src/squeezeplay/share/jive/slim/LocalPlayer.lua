@@ -19,7 +19,7 @@ local log            = require("jive.utils.log").logger("player")
 
 
 -- can be overridden by hardware specific classes
-local DEVICE_MODEL   = "SqueezePlay"
+local DEVICE_MODEL   = "squeezeplay"
 local DEVICE_NAME    = "SqueezePlay"
 
 
@@ -28,8 +28,8 @@ oo.class(_M, Player)
 
 
 local device2id = {
-	["Controller"] = 9,
-	["SqueezePlay"] = 12,
+	["controller"] = 9,
+	["squeezeplay"] = 12,
 }
 
 

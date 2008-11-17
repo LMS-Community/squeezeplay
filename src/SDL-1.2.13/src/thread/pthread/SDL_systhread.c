@@ -52,6 +52,7 @@ static void *RunThread(void *data)
 int SDL_SYS_CreateThread(SDL_Thread *thread, void *args)
 {
 	pthread_attr_t type;
+	size_t stacksize;
 
 	/* Set the thread attributes */
 	if ( pthread_attr_init(&type) != 0 ) {
@@ -59,6 +60,10 @@ int SDL_SYS_CreateThread(SDL_Thread *thread, void *args)
 		return(-1);
 	}
 	pthread_attr_setdetachstate(&type, PTHREAD_CREATE_JOINABLE);
+
+	/* set stack size to 64k */
+	stacksize = 64 * 1024;
+	pthread_attr_setstacksize(&type, stacksize);
 
 	/* Create the thread and go! */
 	if ( pthread_create(&thread->handle, &type, RunThread, args) != 0 ) {

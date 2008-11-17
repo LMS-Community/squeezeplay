@@ -17,9 +17,9 @@ static int windows_filter_pump(const SDL_Event *event);
 static void windows_get_app_home_dir(char *path);
 
 static void windows_get_app_home_dir(char *path) {
-    const char *home = getenv("USERPROFILE");
+    const char *home = getenv("APPDATA");
     strcpy(path, home);
-    strcat(path, "/.squeezeplay");
+    strcat(path, "/SqueezePlay");
 }
 
 static int windows_filter_pump(const SDL_Event *event) {

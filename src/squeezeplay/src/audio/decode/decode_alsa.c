@@ -446,6 +446,7 @@ static int decode_alsa_init(void) {
 	int err;
 	pthread_attr_t thread_attr;
 	struct sched_param thread_param;
+	size_t stacksize;
 
 	if ((err = snd_output_stdio_attach(&output, stdout, 0)) < 0) {
 		DEBUG_ERROR("Output failed: %s", snd_strerror(err));
@@ -467,6 +468,11 @@ static int decode_alsa_init(void) {
 	if ((err = pthread_attr_setdetachstate(&thread_attr, PTHREAD_CREATE_DETACHED)) != 0) {
 		DEBUG_ERROR("pthread_attr_setdetachstate: %s", strerror(err));
 		return 0;
+	}
+
+	stacksize = 32 * 1024; /* 32k stack, we don't do much here */
+	if ((err = pthread_attr_setstacksize(&thread_attr, stacksize)) != 0) {
+		DEBUG_ERROR("pthread_attr_setstacksize: %s", strerror(err));
 	}
 
 	if ((err = pthread_create(&audio_thread, &thread_attr, audio_thread_execute, NULL)) != 0) {

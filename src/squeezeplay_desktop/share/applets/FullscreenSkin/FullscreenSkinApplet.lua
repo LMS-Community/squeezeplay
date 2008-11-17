@@ -959,6 +959,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.albummenu.fg = {0xbb, 0xbb, 0xbb }
 	s.albummenu.font = _boldfont(400)
 
+	s.multilinemenu = _uses(s.albummenu)
 
 	-- items with artwork and song info
 	s.albumitem = {}
@@ -986,6 +987,10 @@ function skin(self, s, reload, useDefaultSize)
 	s.albumitem.icon.img = _loadImage(self, "menu_album_noartwork_125.png")
 	s.albumitem.icon.padding = { 0, 5, 0, 0}
 
+	s.multilineitem = _uses(s.albumitem, {
+					order = {'text', 'play'}
+				})
+
 	-- checked albummenu item
 	s.albumchecked =
 		_uses(s.albumitem, {
@@ -995,6 +1000,9 @@ function skin(self, s, reload, useDefaultSize)
 				      align = "right"
 			      }
 		      })
+	s.multilinechecked = _uses(s.albumchecked, {
+					order = { 'text', 'check' }
+				})
 
 	-- styles for choose player menu
 	s.chooseplayer = _uses(s.albumitem, {
@@ -1119,6 +1127,9 @@ function skin(self, s, reload, useDefaultSize)
 	s.albumitemplay = _uses(s.albumitem)
 	s.albumitemadd  = _uses(s.albumitem)
 
+	s.multilineitemplay = _uses(s.multilineitem)
+	s.multilineitemadd = _uses(s.multilineitem)
+
 	s.popupToast = _uses(s.albumitem, 
 		{
 			order = { 'icon', 'text', 'textarea' },
@@ -1164,6 +1175,8 @@ function skin(self, s, reload, useDefaultSize)
 --]]
 	s.selected.albumitemNoAction = _uses(s.albumitemNoAction)
 
+	s.selected.multilineitemNoAction = _uses(s.multilineitemNoAction)
+
 	-- selected item with artwork and song info
 	s.selected.albumitem = {}
 	s.selected.albumitem.text = {}
@@ -1173,6 +1186,7 @@ function skin(self, s, reload, useDefaultSize)
 	
 	s.selected.albumitemplay = _uses(s.selected.albumitem)
 	s.selected.albumitemadd = _uses(s.selected.albumitem)
+	s.selected.multilineitem = _uses(s.selected.albumitem)
 
 --[[
 	s.selected.albumitemplay = _uses(s.selected.albumitem, {
@@ -1192,6 +1206,9 @@ function skin(self, s, reload, useDefaultSize)
 				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
+	s.selected.multilinechecked = _uses(s.selected.albumchecked, {
+					order = { 'text', 'check', 'play' },
+			})
 
 	s.selected.chooseplayer = _uses(s.selected.albumitem, {
 			order = { "icon", "text", "play" },
