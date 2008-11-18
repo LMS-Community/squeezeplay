@@ -623,6 +623,10 @@ end
 -- while allowing the method to be called via the service API
 function goNowPlaying(self, style, transition)
 
+	if not self.player then
+		self.player = appletManager:callService("getCurrentPlayer")
+	end
+
 	if self.player then
 		self:openScreensaver(style, transition)
 		return true
