@@ -346,7 +346,7 @@ function JiveMain:getSelectedSkin()
 end
 
 
-local function _loadSkin(self, appletName, reload)
+local function _loadSkin(self, appletName, reload, useDefaultSize)
 	if not self.skins[appletName] then
 		return false
 	end
