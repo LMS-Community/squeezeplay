@@ -529,7 +529,7 @@ function notify_cometConnected(self, comet)
     self.jnt:arp(self.ip,
              function(chunk, err)
                  if err then
-                     log:warn("arp: " .. err)
+                     log:info("arp: " .. err)
                  else
                      self.mac = chunk
                  end
