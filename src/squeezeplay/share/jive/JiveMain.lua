@@ -211,15 +211,15 @@ function JiveMain:__init()
 		function(event)
 			_homeHandler(event)
 		end,
-		false
-	)
+		10)
 
 	-- global listener: resize window (only desktop versions)
 	Framework:addListener(EVENT_WINDOW_RESIZE,
-				      function(event)
-					      jiveMain:reloadSkin()
-					      return EVENT_UNUSED
-				      end)
+		function(event)
+			jiveMain:reloadSkin()
+			return EVENT_UNUSED
+		end,
+		10)
 
 	-- show our window!
 	jiveMain.window:show()

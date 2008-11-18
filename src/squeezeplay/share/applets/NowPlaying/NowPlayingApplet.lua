@@ -439,15 +439,26 @@ function _installListeners(self, window)
 	local playlistSize = self.player and self.player:getPlaylistSize()
 
 	window:addListener(
-		EVENT_KEY_ALL | EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+		EVENT_KEY_PRESS | EVENT_KEY_HOLD,
 		function(event)
+
 			local type = event:getType()
 			local keyPress = event:getKeycode()
-			if (keyPress == KEY_BACK and windowStyle == 'browse') then
-				-- back to Home
-				appletManager:callService("goHome")
 
-			elseif (keyPress == KEY_GO) then
+			if keyPress == KEY_BACK and windowStyle == 'browse' then
+				window:playSound("WINDOWHIDE")
+				window:hide()
+				return EVENT_CONSUME
+			end
+
+			if keyPress == KEY_HOME then
+				-- make sure home goes home
+				appletManager:callService("goHome")
+				return EVENT_CONSUME
+
+			elseif keyPress == KEY_GO then
+				window:playSound("WINDOWSHOW")
+
 				if playlistSize == 1 then
 					-- use special showTrackOne method from SlimBrowser
 					appletManager:callService("showTrackOne")
@@ -455,6 +466,8 @@ function _installListeners(self, window)
 					-- show playlist
 					appletManager:callService("showPlaylist")
 				end
+				return EVENT_CONSUME
+
 			end
 			return EVENT_UNUSED
 		end

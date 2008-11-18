@@ -1278,8 +1278,10 @@ function _event(self, event)
 	local r = self:_eventHandler(event)
 
 	if r & EVENT_CONSUME == 0 then
-		Widget._event(self, event)
+		r = Widget._event(self, event)
 	end
+
+	return r
 end
 
 
