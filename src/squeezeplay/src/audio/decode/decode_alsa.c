@@ -304,10 +304,13 @@ static void *audio_thread_execute(void *unused) {
 	snd_pcm_uframes_t offset;
 	snd_pcm_uframes_t frames, size;
 	snd_pcm_sframes_t avail, commitres;
+	snd_pcm_status_t *status;
 	int err, first = 1;
 	void *buf;
 
 	DEBUG_TRACE("audio_thread_execute");
+	
+	status = malloc(snd_pcm_hw_params_sizeof());
 
 	while (1) {
 		fifo_lock(&decode_fifo);
@@ -346,6 +349,11 @@ static void *audio_thread_execute(void *unused) {
 			continue;
 		}
 
+		/* this is needed to ensure the sound works on resume */
+		if (( err = snd_pcm_status(handle, status)) < 0) {
+			printf("snd_pcm_status err=%d\n", err);
+		}
+
 		if (avail < period_size) {
 			if (first) {
 				first = 0;
@@ -354,7 +362,8 @@ static void *audio_thread_execute(void *unused) {
 				}
 			}
 			else {
-				if ((err = snd_pcm_wait(handle, -1)) < 0) {
+				if ((err = snd_pcm_wait(handle, 500)) < 0) {
+				  printf("err=%d\n", err);
 					if ((err = xrun_recovery(handle, avail)) < 0) {
 						DEBUG_ERROR("PCM wait failed: %s", snd_strerror(err));
 					}
