@@ -79,6 +79,7 @@ function registerApplet(meta)
 	jnt:setUUID(settings.uuid, settings.mac)
 	
 	appletManager:addDefaultSetting("ScreenSavers", "whenStopped", "false:false")
+	appletManager:addDefaultSetting("Playback", "enableAudio", 1)
 
 	jiveMain:setDefaultSkin("FullscreenSkin")
 end

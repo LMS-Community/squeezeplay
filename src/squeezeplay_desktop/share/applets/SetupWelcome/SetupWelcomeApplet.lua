@@ -31,11 +31,14 @@ local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Surface          = require("jive.ui.Surface")
 local Textarea         = require("jive.ui.Textarea")
 local Window           = require("jive.ui.Window")
+local Player           = require("jive.slim.Player")
+local LocalPlayer      = require("jive.slim.LocalPlayer")
 
 local log              = require("jive.utils.log").logger("applets.setup")
 local locale           = require("jive.utils.locale")
 local table            = require("jive.utils.table")
 
+local jnt               = jnt
 local appletManager    = appletManager
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
 local EVENT_KEY_HOLD   = jive.ui.EVENT_KEY_HOLD
@@ -56,6 +59,20 @@ local freeAppletWhenEscapingSetup
 
 module(...)
 oo.class(_M, Applet)
+
+function init(self, ...)
+	jnt:subscribe(self)
+end
+
+function notify_playerCurrent(self, player)
+    if not self:getSettings().setupDone then
+        if player and not player:needsMusicSource() then
+            log:debug("notify_playerCurrent called with a source, so finishing setup")
+            self:step4()
+        end
+    end
+end
+
 
 function step1(self)
 	-- put Return to Setup menu item on jiveMain menu
@@ -104,16 +121,23 @@ function step2(self)
 end
 
 function step3(self)
-	return appletManager:callService("setupShowSelectPlayer", function() self:step4() end, 'setuptitle')
+	for i, player in Player.iterate() do
+        if oo.instanceof(player, LocalPlayer) then
+            --auto select local player
+        	return appletManager:callService("selectPlayer", player)
+        end
+	end
+	return appletManager:callService("setupShowSelectPlayer", function() end, 'setuptitle')
 end
 
 function step4(self)
 	return self:setupDone(function()
-			self._topWindow:hideToTop(Window.transitionPushLeft) 
 
 			self:getSettings().setupDone = true
 			jiveMain:removeItemById('returnToSetup')
 			self:storeSettings()
+
+	        jiveMain:closeToHome(true, Window.transitionPushLeft)
 		end)
 end
 

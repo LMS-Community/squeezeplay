@@ -34,6 +34,7 @@ local Icon               = require("jive.ui.Icon")
 local Label              = require("jive.ui.Label")
 local Framework          = require("jive.ui.Framework")
 local Surface            = require("jive.ui.Surface")
+local LocalPlayer        = require("jive.slim.LocalPlayer")
 
 local hasWireless, Wireless  = pcall(require, "jive.net.Wireless")
 
@@ -50,7 +51,8 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-local PLAYER_WEIGHT = 1
+local LOCAL_PLAYER_WEIGHT = 1
+local PLAYER_WEIGHT = 5
 local SERVER_WEIGHT = 10
 local ACTIVATE_WEIGHT = 20
 
@@ -192,6 +194,10 @@ function _addPlayerItem(self, player)
 		playerModel = 'softsqueeze'
 	end
 
+    if oo.instanceof(player, LocalPlayer) then
+        playerWeight = LOCAL_PLAYER_WEIGHT
+    end
+    
 	-- if waiting for a SN pin modify name
 	if player:getPin() then
 		if not self.setupMode then

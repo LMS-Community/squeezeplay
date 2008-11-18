@@ -131,7 +131,7 @@ Close all windows to expose the home menu. By default alwaysOnTop windows
 are not hidden.
 
 --]]
-function closeToHome(self, hideAlwaysOnTop)
+function closeToHome(self, hideAlwaysOnTop, transition)
 	local stack = Framework.windowStack
 
 	local k = 1
@@ -142,7 +142,7 @@ function closeToHome(self, hideAlwaysOnTop)
 
 		if stack[i] == self.window then
 			for j = i - 1, k, -1 do
-				stack[j]:hide()
+				stack[j]:hide(transition)
 			end
 		end
 	end
