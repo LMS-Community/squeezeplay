@@ -215,7 +215,7 @@ function screensaverWindow(self, window, hideOnMotion)
 			   end)
 
 	-- key or scroll events quit the screensaver
-	window:addListener(EVENT_CHAR_PRESS | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_ALL,
+	window:addListener(EVENT_CHAR_PRESS | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD,
 		function(event)
 
 			-- close all screensaver windows

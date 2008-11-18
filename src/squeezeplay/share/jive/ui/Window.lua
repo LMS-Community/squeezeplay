@@ -152,11 +152,6 @@ function __init(self, style, title, titleStyle)
 			})
 		)
 	end
-
-	obj:addListener(EVENT_ALL,
-			 function(event)
-			 	return obj:_eventHandler(event)
-			 end)
 	
 	return obj
 end
@@ -1278,6 +1273,14 @@ function borderLayout(self, fitWindow)
 	self:setBounds(wx, wy, ww, wh)
 end
 
+
+function _event(self, event)
+	local r = self:_eventHandler(event)
+
+	if r & EVENT_CONSUME == 0 then
+		Widget._event(self, event)
+	end
+end
 
 
 --[[ C optimized:

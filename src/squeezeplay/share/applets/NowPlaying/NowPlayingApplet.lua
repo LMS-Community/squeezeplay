@@ -187,7 +187,6 @@ function notify_playerTrackChange(self, player, nowPlaying)
 		local window = _createUI(self)
 		if self[windowStyle].window then
 			window:replace(self[windowStyle].window, Window.transitionFadeIn)
-			self:_installListeners(window)
 		end
 		self[windowStyle].window = window
 
@@ -421,8 +420,7 @@ end
 		
 function _installListeners(self, window)
 
-	self[windowStyle].listeners = {}
-	self[windowStyle].listeners[1] = window:addListener(
+	window:addListener(
 		EVENT_WINDOW_ACTIVE,
 		function(event)
 			local stack = Framework.windowStack
@@ -440,8 +438,8 @@ function _installListeners(self, window)
 
 	local playlistSize = self.player and self.player:getPlaylistSize()
 
-	self[windowStyle].listeners[2] = window:addListener(
-		EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+	window:addListener(
+		EVENT_KEY_ALL | EVENT_KEY_PRESS | EVENT_KEY_HOLD,
 		function(event)
 			local type = event:getType()
 			local keyPress = event:getKeycode()
@@ -600,6 +598,9 @@ function _createUI(self)
 		local manager = appletManager:getAppletInstance("ScreenSavers")
 		manager:screensaverWindow(window)
 	end
+
+	-- install some listeners to the window
+	self:_installListeners(window)
 
 	return window
 end
@@ -763,8 +764,6 @@ function openScreensaver(self, style, transition)
 
 	-- Initialize with current data from Player
 	self[windowStyle].window:show(transitionOn)
-	-- install some listeners to the window after it's shown
-	self:_installListeners(self[windowStyle].window)
 	self:_updateAll(self[windowStyle])
 
 end
