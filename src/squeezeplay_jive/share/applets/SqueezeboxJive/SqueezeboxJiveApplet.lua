@@ -263,7 +263,7 @@ end
 
 function notify_playerCurrent(self, player)
 	-- track changes to the remote player selection for headphone jack
-	if not oo.instanceof(player, LocalPlayer) then
+	if not player:isLocal() then
 		self.remotePlayer = player
 	end
 
@@ -375,7 +375,7 @@ function headphoneJack(self, inserted)
 
 		if appletManager:hasService("iteratePlayers") then
 			for _, player in appletManager:callService("iteratePlayers") do
-				if oo.instanceof(player, LocalPlayer) then
+				if player:isLocal() then
 					localPlayer = player
 					break
 				end

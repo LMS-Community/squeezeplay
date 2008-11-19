@@ -122,10 +122,10 @@ end
 
 function step3(self)
 	for i, player in Player.iterate() do
-        if oo.instanceof(player, LocalPlayer) then
-            --auto select local player
-        	return appletManager:callService("selectPlayer", player)
-        end
+		--auto select local player
+		if player:isLocal() then
+        		return appletManager:callService("selectPlayer", player)
+	        end
 	end
 	return appletManager:callService("setupShowSelectPlayer", function() end, 'setuptitle')
 end
