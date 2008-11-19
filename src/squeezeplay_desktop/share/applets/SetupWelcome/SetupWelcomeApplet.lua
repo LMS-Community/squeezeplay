@@ -151,9 +151,7 @@ function setupWelcome(self, setupNext)
 	window:addWidget(textarea)
 	window:addWidget(help)
 
-	window:focusWidget(textarea)
-
-	textarea:addListener(EVENT_KEY_PRESS,
+	window:addListener(EVENT_KEY_PRESS,
 		function(event)
 			local keycode = event:getKeycode()
 			if keycode == KEY_GO then

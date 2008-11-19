@@ -74,6 +74,8 @@ local EVENT_CONSUME           = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED            = jive.ui.EVENT_UNUSED
 
 local KEY_BACK                = jive.ui.KEY_BACK
+local KEY_GO                  = jive.ui.KEY_GO
+local KEY_RIGHT               = jive.ui.KEY_RIGHT
 
 local FRAME_RATE              = jive.ui.FRAME_RATE
 local LAYER_ALL               = jive.ui.LAYER_ALL
@@ -153,6 +155,21 @@ function __init(self, style, title, titleStyle)
 		)
 	end
 	
+	-- by default bump the window on GO or RIGHT, add this as a
+	-- listener to allow other handlers to act on these events
+	-- first
+	obj:addListener(EVENT_KEY_PRESS,
+		function(event)
+			local keycode = event:getKeycode()
+			if keycode  == KEY_GO or
+				keycode == KEY_RIGHT then
+				obj:playSound("BUMP")
+				obj:getWindow():bumpRight()
+				return EVENT_CONSUME
+			end
+		end)
+
+
 	return obj
 end
 
