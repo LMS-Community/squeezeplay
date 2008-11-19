@@ -235,6 +235,12 @@ function _addPlayerItem(self, player)
 	if self.selectedPlayer == player then
 		self.playerMenu:setSelectedItem(item)
 	end
+
+	-- we already have a player in the menu, set a flag to not use the scanning popup
+	self.playersFound = true
+	-- and hide it if it's already on screen
+	self:_hidePopulatingPlayersPopup()
+
 end
 
 
@@ -342,9 +348,11 @@ function setupShowSelectPlayer(self, setupNext, windowStyle)
 
 	window:addTimer(5000, function() 
 				self:_scan() 
-				self:_hidePopulatingPlayersPopup()
 			end)
 
+	window:addTimer(10000, function() 
+				self:_hidePopulatingPlayersPopup()
+			end)
 
 	window:addListener(EVENT_WINDOW_ACTIVE,
 			   function()
@@ -371,8 +379,7 @@ end
 
 function _showPopulatingPlayersPopup(self, timer)
 
-        if self.populatingPlayers then
-                -- don't open this popup twice or when firmware update windows are on screen
+        if self.populatingPlayers or self.playersFound then
                 return
         end
 
