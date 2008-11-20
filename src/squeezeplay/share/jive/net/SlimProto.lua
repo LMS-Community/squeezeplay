@@ -437,7 +437,7 @@ function connect(self, server)
 	end
 
 	-- the server may have moved, get a fresh ip address
-	self.serverip = server:getIpPort()
+	self.serverip = self.server:getIpPort()
 
 	-- Bug 9900
 	-- Don't allow connections to SN yet
