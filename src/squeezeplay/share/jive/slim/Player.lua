@@ -454,6 +454,7 @@ function free(self, slimServer)
 
 	-- player is gone
 	self.lastSeen = 0
+	self.info.connected = false
 	self.jnt:notify('playerDelete', self)
 
 	if self == currentPlayer then
