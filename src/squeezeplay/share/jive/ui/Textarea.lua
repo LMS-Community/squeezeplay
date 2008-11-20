@@ -210,12 +210,6 @@ function _eventHandler(self, event)
 			self:scrollBy( self.visibleLines - 1 )
 			return EVENT_CONSUME
 		
-		elseif keycode == KEY_GO or
-			keycode == KEY_RIGHT then
-			self:playSound("BUMP")
-			self:getWindow():bumpRight()
-			return EVENT_CONSUME
-
 		elseif keycode == KEY_BACK or
 			keycode == KEY_LEFT then
 			self:playSound("WINDOWHIDE")

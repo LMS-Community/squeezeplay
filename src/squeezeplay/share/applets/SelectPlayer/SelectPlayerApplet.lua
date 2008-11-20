@@ -34,6 +34,7 @@ local Icon               = require("jive.ui.Icon")
 local Label              = require("jive.ui.Label")
 local Framework          = require("jive.ui.Framework")
 local Surface            = require("jive.ui.Surface")
+local LocalPlayer        = require("jive.slim.LocalPlayer")
 
 local hasWireless, Wireless  = pcall(require, "jive.net.Wireless")
 
@@ -50,7 +51,8 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-local PLAYER_WEIGHT = 1
+local LOCAL_PLAYER_WEIGHT = 1
+local PLAYER_WEIGHT = 5
 local SERVER_WEIGHT = 10
 local ACTIVATE_WEIGHT = 20
 
@@ -192,6 +194,10 @@ function _addPlayerItem(self, player)
 		playerModel = 'softsqueeze'
 	end
 
+    if oo.instanceof(player, LocalPlayer) then
+        playerWeight = LOCAL_PLAYER_WEIGHT
+    end
+    
 	-- if waiting for a SN pin modify name
 	if player:getPin() then
 		if not self.setupMode then
@@ -229,6 +235,12 @@ function _addPlayerItem(self, player)
 	if self.selectedPlayer == player then
 		self.playerMenu:setSelectedItem(item)
 	end
+
+	-- we already have a player in the menu, set a flag to not use the scanning popup
+	self.playersFound = true
+	-- and hide it if it's already on screen
+	self:_hidePopulatingPlayersPopup()
+
 end
 
 
@@ -336,9 +348,11 @@ function setupShowSelectPlayer(self, setupNext, windowStyle)
 
 	window:addTimer(5000, function() 
 				self:_scan() 
-				self:_hidePopulatingPlayersPopup()
 			end)
 
+	window:addTimer(10000, function() 
+				self:_hidePopulatingPlayersPopup()
+			end)
 
 	window:addListener(EVENT_WINDOW_ACTIVE,
 			   function()
@@ -365,8 +379,7 @@ end
 
 function _showPopulatingPlayersPopup(self, timer)
 
-        if self.populatingPlayers then
-                -- don't open this popup twice or when firmware update windows are on screen
+        if self.populatingPlayers or self.playersFound then
                 return
         end
 

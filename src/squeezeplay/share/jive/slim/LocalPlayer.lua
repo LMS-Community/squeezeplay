@@ -92,6 +92,11 @@ function updateInit(self, server, init)
 end
 
 
+function isLocal(self)
+	return true
+end
+
+
 function needsNetworkConfig(self)
 	return false
 end
@@ -115,8 +120,7 @@ function connectToServer(self, server)
 	server:wakeOnLan()
 
 	if server then
-		local serverip = server:getIpPort()
-		self.slimproto:connect(serverip)
+		self.slimproto:connect(server)
 	end
 end
 

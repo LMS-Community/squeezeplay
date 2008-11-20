@@ -124,9 +124,16 @@ function Clock:__init()
 	obj.window = Window("Clock")
 	obj:_createSurface()
 
+	obj.window:addListener(
+		EVENT_MOTION,
+		function()
+			obj.window:hide()
+			return EVENT_CONSUME
+		end)
+
 	-- register window as a screensaver
 	local manager = appletManager:getAppletInstance("ScreenSavers")
-	manager:screensaverWindow(obj.window, true)
+	manager:screensaverWindow(obj.window)
 
 	return obj
 end

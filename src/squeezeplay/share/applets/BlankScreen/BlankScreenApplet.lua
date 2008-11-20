@@ -64,9 +64,16 @@ function init(self)
 		true
 	)
 
+	self.window:addListener(
+		EVENT_MOTION,
+		function()
+			self.window:hide()
+			return EVENT_CONSUME
+		end)
+
 	-- register window as a screensaver
 	local manager = appletManager:getAppletInstance("ScreenSavers")
-	manager:screensaverWindow(self.window, true)
+	manager:screensaverWindow(self.window)
 
 end
 

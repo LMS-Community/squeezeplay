@@ -921,6 +921,8 @@ function skin(self, s, reload, useDefaultSize)
 			      }
 		      })
 
+	s.setuptitle = _uses(s.settingstitle)
+
 	-- Based on s.title, this is for newmusic title style
 	s.newmusictitle =
 		_uses(s.minititle, {

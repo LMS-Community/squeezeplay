@@ -75,7 +75,7 @@ local MIN_KEY_INT    = 150  -- sending key rate limit in ms
 module(..., oo.class)
 
 
--- we must load this after the module declartion to dependancy loops
+-- we must load these after the module declartion to avoid dependancy loops
 local SlimServer     = require("jive.slim.SlimServer")
 
 
@@ -129,6 +129,11 @@ end
 -- class method, returns the current player
 function getCurrentPlayer(self)
 	return currentPlayer
+end
+
+-- class method, returns whether the player is local 
+function isLocal(self)
+	return false
 end
 
 -- class method, sets the current player
@@ -449,6 +454,7 @@ function free(self, slimServer)
 
 	-- player is gone
 	self.lastSeen = 0
+	self.info.connected = false
 	self.jnt:notify('playerDelete', self)
 
 	if self == currentPlayer then

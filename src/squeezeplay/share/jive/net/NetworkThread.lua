@@ -53,6 +53,8 @@ local perfhook          = jive.perfhook
 local EVENT_SERVICE_JNT = jive.ui.EVENT_SERVICE_JNT
 local EVENT_CONSUME     = jive.ui.EVENT_CONSUME
 
+--allow for not making arp calls
+local _isArpEnabled = true
 
 -- jive.net.NetworkThread is a base class
 module(..., oo.class)
@@ -365,6 +367,15 @@ function setUUID(self, uuid, mac)
 	self.mac = string.lower(mac)
 end
 
+
+function isArpEnabled(self)
+    return _isArpEnabled
+end
+
+function setArpEnabled(self, enabled)
+    _isArpEnabled = enabled
+end
+
 --[[
 
 =head2 getSNHostname()
@@ -388,6 +399,10 @@ is called when the hardware address is known, or with an error.
 =cut
 --]]
 function arp(self, host, sink)
+    if not self:isArpEnabled() then
+        return sink(nil, "Arp disabled")
+    end
+
 	local arp = ""
 
 	local cmd = "arp " .. host
@@ -398,7 +413,7 @@ function arp(self, host, sink)
 	local proc = Process(self, cmd)
 	proc:read(function(chunk, err)
 			if err then
-					return sink(err)
+					return sink(nil, err)
 			end
 
 			if chunk then

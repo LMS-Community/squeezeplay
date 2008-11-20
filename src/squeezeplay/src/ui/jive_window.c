@@ -127,6 +127,8 @@ int jiveL_window_check_layout(lua_State *L) {
 
 
 int jiveL_window_iterate(lua_State *L) {
+	int r = 0;
+
 	/* stack is:
 	 * 1: widget
 	 * 2: closure
@@ -141,9 +143,10 @@ int jiveL_window_iterate(lua_State *L) {
 		while (lua_next(L, -2) != 0) {
 			lua_pushvalue(L, 2);
 			lua_pushvalue(L, -2);
-			lua_call(L, 1, 0);
+			lua_call(L, 1, 1);
 			
-			lua_pop(L, 1);
+			r = r | luaL_optinteger(L, -1, 0);
+			lua_pop(L, 2);
 		}
 		lua_pop(L, 2);
 	}
@@ -155,13 +158,15 @@ int jiveL_window_iterate(lua_State *L) {
 	while (lua_next(L, -2) != 0) {
 		lua_pushvalue(L, 2);
 		lua_pushvalue(L, -2);
-		lua_call(L, 1, 0);
+		lua_call(L, 1, 1);
 
-		lua_pop(L, 1);
+		r = r | luaL_optinteger(L, -1, 0);
+		lua_pop(L, 2);
 	}
 	lua_pop(L, 1);
 
-	return 0;
+	lua_pushinteger(L, r);
+	return 1;
 }
 
 
@@ -313,9 +318,8 @@ static int mouse_closure(lua_State *L) {
 			lua_pushvalue(L, 1); /* widget */
 			lua_pushvalue(L, lua_upvalueindex(1)); /* event */
 			lua_call(L, 2, 1);
-			
-			// FIXME return value
-			lua_pop(L, 1);
+
+			return 1;
 		}
 	}
 
@@ -368,11 +372,11 @@ int jiveL_window_event_handler(lua_State *L) {
 			lua_pushvalue(L, 2); // event
 			lua_pushcclosure(L, mouse_closure, 1);
 
-			lua_call(L, 2, 0);
+			lua_call(L, 2, 1);
 		}
-		// FIXME r
-
-		lua_pushinteger(L, r);
+		else {
+			lua_pushinteger(L, r);
+		}
 		return 1;
 
 	case JIVE_EVENT_WINDOW_ACTIVE:

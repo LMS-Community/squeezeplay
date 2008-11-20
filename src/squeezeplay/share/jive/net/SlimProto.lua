@@ -371,7 +371,7 @@ end
 
 
 -- Open the slimproto connection to SqueezeCenter.
-function connect(self, serverip)
+function connect(self, server)
 	local pump = function(NetworkThreadErr)
 		if NetworkThreadErr then
 			return _handleDisconnect(self, NetworkThreadErr)
@@ -431,10 +431,13 @@ function connect(self, serverip)
 		self.reconnect = true
 	end
 
-	if serverip then
-		self.serverip = serverip
+	if server then
+		self.server = server
 		self.reconnect = false
 	end
+
+	-- the server may have moved, get a fresh ip address
+	self.serverip = server:getIpPort()
 
 	-- Bug 9900
 	-- Don't allow connections to SN yet

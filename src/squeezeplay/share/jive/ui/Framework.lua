@@ -33,6 +33,8 @@ local _assert, collectgarbage, jive, ipairs, load, pairs, require, setfenv, stri
 local oo            = require("loop.simple")
 local table         = require("jive.utils.table")
 
+local debug         = require("jive.utils.debug")
+
 local EVENT_SHOW    = jive.ui.EVENT_SHOW
 local EVENT_HIDE    = jive.ui.EVENT_HIDE
 local EVENT_CONSUME = jive.ui.EVENT_CONSUME
@@ -136,6 +138,10 @@ Find a file on the lua path. Returns the full path of the file, or nil if it was
 =head2 jive.ui.Framework:getTicks()
 
 Return the number of milliseconds since the Jive initialization.
+
+=head2 jive.ui.Framework:getMacAddress()
+
+Return the first Mac address found on the current system.
 
 =head2 jive.ui.Framework:getUserPath()
 
@@ -487,7 +493,7 @@ end
 
 =head2 jive.ui.Framework:addListener(mask, listener, priority)
 
-Add a global event listener I<listener>. The listener is called for events that match the event mask I<mask>. By default the listener is called before any widget event listeners, and can stop event processing by returned EVENT_CONSUME. If priority is false then the listener is only called if no other global or widget listeners have processed the event. Returns a I<handle> to use in removeEventListener().
+Add a global event listener I<listener>. The listener is called for events that match the event mask I<mask>. By default the listener is called before any widget event listeners, and can stop event processing by returned EVENT_CONSUME. If priority is negative then it is called before any other listeners, otherwise if it is posible then the listener is only called after the widget listeners have processed the event. Returns a I<handle> to use in removeEventListener().
 
 =cut
 --]]
@@ -495,12 +501,33 @@ function addListener(self, mask, listener, priority)
 	_assert(type(mask) == "number")
 	_assert(type(listener) == "function")
 
-	local handle = { mask, listener }
-	if priority == false then
-		table.insert(self.unusedListeners, 1, handle)
-	else
-		table.insert(self.globalListeners, 1, handle)
+	-- compatilibty with older api
+	if priority == nil or priority == true then
+		priority = -1
+	elseif priority == false then
+		priority = 1
 	end
+
+	_assert(type(priority) == "number")
+
+	local handle = { mask, listener, math.abs(priority), self:getTicks() }
+
+	local listeners
+	if priority < 0 then
+		listeners = self.globalListeners
+	else
+		listeners = self.unusedListeners
+	end
+
+	table.insert(listeners, handle)
+	table.sort(listeners,
+		function(a, b)
+			-- stable sort, most recent first
+			if a[3] == b[3] then
+				return a[4] < b[4]
+			end
+			return a[3] < b[3]
+		end)
 
 	return handle
 end

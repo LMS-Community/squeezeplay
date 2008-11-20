@@ -525,15 +525,15 @@ function notify_cometConnected(self, comet)
 	self.netstate = 'connected'
 	self.jnt:notify('serverConnected', self)
 
-	-- auto discovery SqueezeCenter's mac address
-	self.jnt:arp(self.ip,
-		     function(chunk, err)
-			     if err then
-				     log:warn("arp: " .. err)
-			     else
-				     self.mac = chunk
-			     end
-		     end)
+    -- auto discovery SqueezeCenter's mac address
+    self.jnt:arp(self.ip,
+             function(chunk, err)
+                 if err then
+                     log:info("arp: " .. err)
+                 else
+                     self.mac = chunk
+                 end
+             end)
 end
 
 -- comet is disconnected from SC

@@ -137,7 +137,16 @@ function _addServerItem(self, server, address)
 	else
 		id = address
 	end
+
 	log:debug("\tid for this server set to: ", id)
+
+	local currentPlayer    = appletManager:callService("getCurrentPlayer")
+
+	-- local players cannot connect to SN
+	if server and server:isSqueezeNetwork() and 
+		currentPlayer and currentPlayer:isLocal() then
+			return
+	end
 
 	-- remove existing entry
 	if self.serverList[id] then
@@ -147,7 +156,6 @@ function _addServerItem(self, server, address)
 		self.serverMenu:removeItem(self.serverList[server:getIpPort()])
 	end
 
-	local currentPlayer = appletManager:callService("getCurrentPlayer")
 
 	-- new entry
 	local item
