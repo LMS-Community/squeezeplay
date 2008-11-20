@@ -246,8 +246,7 @@ function JiveMain:__init()
 		function(event)
 			_homeHandler(event)
 		end,
-		false
-	)
+		10)
 
 	Framework:addListener(EVENT_IR_ALL,
 		function(event) _irHandler(event) end,
@@ -256,10 +255,11 @@ function JiveMain:__init()
 
 	-- global listener: resize window (only desktop versions)
 	Framework:addListener(EVENT_WINDOW_RESIZE,
-				      function(event)
-					      jiveMain:reloadSkin()
-					      return EVENT_UNUSED
-				      end)
+		function(event)
+			jiveMain:reloadSkin()
+			return EVENT_UNUSED
+		end,
+		10)
 
 	-- show our window!
 	jiveMain.window:show()
@@ -386,7 +386,7 @@ function JiveMain:getSelectedSkin()
 end
 
 
-local function _loadSkin(self, appletName, reload)
+local function _loadSkin(self, appletName, reload, useDefaultSize)
 	if not self.skins[appletName] then
 		return false
 	end

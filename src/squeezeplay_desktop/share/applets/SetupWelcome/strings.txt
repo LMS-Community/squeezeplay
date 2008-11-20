@@ -38,7 +38,7 @@ WELCOME_WALKTHROUGH
 WELCOME_HELP
 	DA	Tryk på midterknappen når du er klar til at gå videre.
 	DE	Drücken Sie die mittlere Taste, wenn Sie so weit sind.
-	EN	Press the center button when you are ready to move on.
+	EN	Press the right arrow key when you are ready to move on.
 	ES	Pulse el botón central cuando esté listo para continuar.
 	FI	Paina keskipainiketta, kun olet valmis jatkamaan.
 	FR	Appuyez sur le bouton central pour continuer.
@@ -74,7 +74,7 @@ DONE_CONTINUE
 DONE_HELP
 	DA	Nu kan du bruge Squeezebox Controller til at håndtere al din musik. Tryk på midterknappen for at fortsætte.
 	DE	Jetzt können Sie mit der Squeezebox Controller auf Ihre Musik zugreifen. Drücken Sie zum Fortfahren die mittlere Taste.
-	EN	Now you can use your Squeezebox Controller to access all your music. Press the center button to continue.
+	EN	Now you can use SqueezePlay to access all your music. Press the right arrow key to continue.
 	ES	Ya puede usar Squeezebox Controller para acceder a toda su música. Pulse el botón central para continuar.
 	FI	Voit nyt ohjata kaikkia musiikkitiedostojasi Squeezebox-kaukosäätimelläsi. Jatka painamalla keskipainiketta.
 	FR	Vous pouvez maintenant accéder à votre musique avec la Squeezebox Controller. Appuyez sur le bouton central pour continuer.

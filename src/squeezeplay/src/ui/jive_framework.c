@@ -15,6 +15,7 @@
 int (*jive_sdlevent_pump)(lua_State *L);
 int (*jive_sdlfilter_pump)(const SDL_Event *event);
 void (*get_app_home_dir_platform)(char *path);
+void (*get_mac_address)(char *address);
 
 char *jive_resource_path = NULL;
 
@@ -851,6 +852,18 @@ int jiveL_get_ticks(lua_State *L) {
 	return 1;
 }
 
+int jiveL_get_mac_address(lua_State *L) {
+
+	char *macaddress = malloc(100);
+    
+    get_mac_address(macaddress);
+    
+    lua_pushstring(L, macaddress);
+	free(macaddress);
+
+	return 1;
+}
+
 int jiveL_get_user_path(lua_State *L) {
 
 	char *userpath = malloc(PATH_MAX);
@@ -1472,6 +1485,7 @@ static const struct luaL_Reg core_methods[] = {
 	{ "perfwarn", jiveL_perfwarn },
 	{ "_event", jiveL_event },
 	{ "getUserPath", jiveL_get_user_path },
+	{ "getMacAddress", jiveL_get_mac_address },
 	{ NULL, NULL }
 };
 

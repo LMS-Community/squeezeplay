@@ -263,7 +263,7 @@ end
 
 function notify_playerCurrent(self, player)
 	-- track changes to the remote player selection for headphone jack
-	if not oo.instanceof(player, LocalPlayer) then
+	if player and not player:isLocal() then
 		self.remotePlayer = player
 	end
 
@@ -364,6 +364,7 @@ end
 function headphoneJack(self, inserted)
 	-- switch between headphone and speaker
 	if inserted == 1 then
+		os.execute("amixer -q sset Headphone 92%")
 		os.execute("amixer -q sset Endpoint Headphone")
 	else
 		os.execute("amixer -q sset Endpoint Speaker")
@@ -375,7 +376,7 @@ function headphoneJack(self, inserted)
 
 		if appletManager:hasService("iteratePlayers") then
 			for _, player in appletManager:callService("iteratePlayers") do
-				if oo.instanceof(player, LocalPlayer) then
+				if player and player:isLocal() then
 					localPlayer = player
 					break
 				end
@@ -688,7 +689,9 @@ function setPowerState(self, state)
 
 		elseif state == "dimmed" then
 			self:_cpuPowerSave(true)
-			self:_setBrightness(true, 8, 0)
+			if settings.dimmedTimeout > 0 then
+				self:_setBrightness(true, 8, 0)
+			end
 
 			interval = settings.sleepTimeout
 

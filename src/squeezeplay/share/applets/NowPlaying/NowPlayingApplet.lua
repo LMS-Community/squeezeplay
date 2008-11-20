@@ -187,7 +187,6 @@ function notify_playerTrackChange(self, player, nowPlaying)
 		local window = _createUI(self)
 		if self[windowStyle].window then
 			window:replace(self[windowStyle].window, Window.transitionFadeIn)
-			self:_installListeners(window)
 		end
 		self[windowStyle].window = window
 
@@ -421,8 +420,7 @@ end
 		
 function _installListeners(self, window)
 
-	self[windowStyle].listeners = {}
-	self[windowStyle].listeners[1] = window:addListener(
+	window:addListener(
 		EVENT_WINDOW_ACTIVE,
 		function(event)
 			local stack = Framework.windowStack
@@ -440,16 +438,27 @@ function _installListeners(self, window)
 
 	local playlistSize = self.player and self.player:getPlaylistSize()
 
-	self[windowStyle].listeners[2] = window:addListener(
+	window:addListener(
 		EVENT_KEY_PRESS | EVENT_KEY_HOLD,
 		function(event)
+
 			local type = event:getType()
 			local keyPress = event:getKeycode()
-			if (keyPress == KEY_BACK and windowStyle == 'browse') then
-				-- back to Home
-				appletManager:callService("goHome")
 
-			elseif (keyPress == KEY_GO) then
+			if keyPress == KEY_BACK and windowStyle == 'browse' then
+				window:playSound("WINDOWHIDE")
+				window:hide()
+				return EVENT_CONSUME
+			end
+
+			if keyPress == KEY_HOME then
+				-- make sure home goes home
+				appletManager:callService("goHome")
+				return EVENT_CONSUME
+
+			elseif keyPress == KEY_GO then
+				window:playSound("WINDOWSHOW")
+
 				if playlistSize == 1 then
 					-- use special showTrackOne method from SlimBrowser
 					appletManager:callService("showTrackOne")
@@ -457,6 +466,8 @@ function _installListeners(self, window)
 					-- show playlist
 					appletManager:callService("showPlaylist")
 				end
+				return EVENT_CONSUME
+
 			end
 			return EVENT_UNUSED
 		end
@@ -601,6 +612,9 @@ function _createUI(self)
 		manager:screensaverWindow(window)
 	end
 
+	-- install some listeners to the window
+	self:_installListeners(window)
+
 	return window
 end
 
@@ -608,6 +622,10 @@ end
 -- can be found by the Screensaver applet correctly,
 -- while allowing the method to be called via the service API
 function goNowPlaying(self, style, transition)
+
+	if not self.player then
+		self.player = appletManager:callService("getCurrentPlayer")
+	end
 
 	if self.player then
 		self:openScreensaver(style, transition)
@@ -763,8 +781,6 @@ function openScreensaver(self, style, transition)
 
 	-- Initialize with current data from Player
 	self[windowStyle].window:show(transitionOn)
-	-- install some listeners to the window after it's shown
-	self:_installListeners(self[windowStyle].window)
 	self:_updateAll(self[windowStyle])
 
 end

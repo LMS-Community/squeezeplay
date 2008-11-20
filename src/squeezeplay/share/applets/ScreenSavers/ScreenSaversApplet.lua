@@ -73,6 +73,43 @@ function init(self, ...)
 		true
 	)
 
+	-- listener to quit screensaver
+	Framework:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD,
+		function(event)
+			-- screensaver is not active
+			if #self.active == 0 then
+				return EVENT_UNUSED
+			end
+
+			log:debug("Closing screensaver event=", event:tostring())
+
+			-- close all screensaver windows
+			for i,w in ipairs(self.active) do
+				_deactivate(self, w, self.demoScreensaver)
+			end
+
+			-- keys should close the screensaver, and not
+			-- perform an action
+			if event:getType() == EVENT_KEY_PRESS then
+				local keycode = event:getKeycode()
+
+				if keycode == KEY_GO or
+					keycode == KEY_LEFT then
+					return EVENT_CONSUME
+				end
+
+				-- make sure when exiting a screensaver we
+				-- really go home.
+				if keycode == KEY_HOME then
+					appletManager:callService("goHome")
+					return EVENT_CONSUME
+				end
+			end
+			return EVENT_UNUSED
+		end,
+		100 -- process after all other event handlers
+	)
+
 	jnt:subscribe(self)
 
 	return self
@@ -140,6 +177,7 @@ end
 
 -- screensavers can have methods that are executed on close
 function _deactivate(self, window, the_screensaver)
+	log:debug("Screensaver deactivate")
 
 	if not the_screensaver then
 		local player = appletManager:callService("getCurrentPlayer")
@@ -190,7 +228,7 @@ behaviour.
 
 =cut
 --]]
-function screensaverWindow(self, window, hideOnMotion)
+function screensaverWindow(self, window)
 	-- the screensaver is active when this window is pushed to the window stack
 	window:addListener(EVENT_WINDOW_PUSH,
 			   function(event)
@@ -213,45 +251,6 @@ function screensaverWindow(self, window, hideOnMotion)
 				   log:debug("screensaver closed ", #self.active)
 				   return EVENT_UNUSED
 			   end)
-
-	-- key or scroll events quit the screensaver
-	window:addListener(EVENT_CHAR_PRESS | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_ALL,
-		function(event)
-
-			-- close all screensaver windows
-			for i,w in ipairs(self.active) do
-				_deactivate(self, w, self.demoScreensaver)
-			end
-
-			-- keys should close the screensaver, and not
-			-- perform an action
-			if event:getType() == EVENT_KEY_PRESS then
-				local keycode = event:getKeycode()
-
-				if keycode == KEY_GO or
-					keycode == KEY_LEFT then
-					return EVENT_CONSUME
-				end
-
-				-- make sure when exiting a screensaver we
-				-- really go home.
-				if keycode == KEY_HOME then
-					appletManager:callService("goHome")
-					return EVENT_CONSUME
-				end
-			end
-			return EVENT_UNUSED
-		end)
-
-	if hideOnMotion then
-		window:addListener(EVENT_MOTION,
-				   function(event)
-					   -- close all screensaver windows
-					   for i,w in ipairs(self.active) do
-						_deactivate(self, w, self.demoScreensaver)
-					   end
-				   end)
-	end
 end
 
 
