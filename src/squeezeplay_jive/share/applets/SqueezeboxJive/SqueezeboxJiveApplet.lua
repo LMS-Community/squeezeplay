@@ -364,6 +364,7 @@ end
 function headphoneJack(self, inserted)
 	-- switch between headphone and speaker
 	if inserted == 1 then
+		os.execute("amixer -q sset Headphone 92%")
 		os.execute("amixer -q sset Endpoint Headphone")
 	else
 		os.execute("amixer -q sset Endpoint Speaker")
