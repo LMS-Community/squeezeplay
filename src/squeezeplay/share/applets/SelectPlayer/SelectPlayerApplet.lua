@@ -185,10 +185,11 @@ function _addPlayerItem(self, player)
 		receiver    = true,
 		boom        = true,
 		controller  = true,
+		squeezeplay = true,
+		stream      = true,
 	}
 
 	local playerModel = player:getModel()
-
 	if not validModel[playerModel] then
 		-- use a generic style when model lists as not valid
 		playerModel = 'softsqueeze'
