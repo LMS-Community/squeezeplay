@@ -77,7 +77,6 @@ module(..., oo.class)
 
 -- we must load these after the module declartion to avoid dependancy loops
 local SlimServer     = require("jive.slim.SlimServer")
-local LocalPlayer    = require("jive.slim.LocalPlayer")
 
 
 local DEVICE_IDS = {
@@ -134,10 +133,6 @@ end
 
 -- class method, returns whether the player is local 
 function isLocal(self)
-	if oo.instanceof(self, LocalPlayer) then
-		return true
-	end
-
 	return false
 end
 

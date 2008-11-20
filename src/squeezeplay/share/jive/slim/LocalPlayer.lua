@@ -92,6 +92,11 @@ function updateInit(self, server, init)
 end
 
 
+function isLocal(self)
+	return true
+end
+
+
 function needsNetworkConfig(self)
 	return false
 end
