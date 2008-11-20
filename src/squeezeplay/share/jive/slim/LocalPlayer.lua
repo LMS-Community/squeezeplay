@@ -120,8 +120,7 @@ function connectToServer(self, server)
 	server:wakeOnLan()
 
 	if server then
-		local serverip = server:getIpPort()
-		self.slimproto:connect(serverip)
+		self.slimproto:connect(server)
 	end
 end
 
