@@ -28,7 +28,8 @@ static struct jive_sample *sample[MAX_SAMPLES];
 
 #define MAXVOLUME 100
 static fft_fixed effect_gain = FIXED_ONE;
-static int effect_volume;
+static int effect_volume = MAXVOLUME;
+static int effect_attn = MAXVOLUME;
 
 
 static void sample_free(struct jive_sample *sample) {
@@ -271,8 +272,11 @@ static int decode_sample_set_effect_volume(lua_State *L) {
 		effect_volume = MAXVOLUME;
 	}
 
-	effect_gain = fixed_div(s32_to_fixed(effect_volume),
-				s32_to_fixed(MAXVOLUME));
+	effect_gain = fixed_mul(fixed_div(s32_to_fixed(effect_volume),
+					  s32_to_fixed(MAXVOLUME)),
+				fixed_div(s32_to_fixed(effect_attn),
+					  s32_to_fixed(MAXVOLUME))
+				);
 
 	return 0;
 }
@@ -281,6 +285,31 @@ static int decode_sample_set_effect_volume(lua_State *L) {
 static int decode_sample_get_effect_volume(lua_State *L) {
 	lua_pushinteger(L, effect_volume);
 	return 1;
+}
+
+
+static int decode_sample_set_effect_attenuation(lua_State *L) {
+	/* stack is:
+	 * 1: sound
+	 * 2: attenuation
+	 */
+
+	effect_attn = lua_tointeger(L, 2);
+
+	if (effect_attn < 0) {
+		effect_attn = 0;
+	}
+	if (effect_attn > MAXVOLUME) {
+		effect_attn = MAXVOLUME;
+	}
+
+	effect_gain = fixed_mul(fixed_div(s32_to_fixed(effect_volume),
+					  s32_to_fixed(MAXVOLUME)),
+				fixed_div(s32_to_fixed(effect_attn),
+					  s32_to_fixed(MAXVOLUME))
+				);
+
+	return 0;
 }
 
 
@@ -296,6 +325,7 @@ static const struct luaL_Reg sample_f[] = {
 	{ "loadSample", decode_sample_load },
 	{ "setEffectVolume", decode_sample_set_effect_volume },
 	{ "getEffectVolume", decode_sample_get_effect_volume },
+	{ "setEffectAttenuation", decode_sample_set_effect_attenuation },
 	{ NULL, NULL }
 };
 
