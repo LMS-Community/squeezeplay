@@ -399,6 +399,59 @@ function updateUdap(self, udap)
 end
 
 
+-- parse a mac address and try to guess the player model based on known ranges
+-- this is primarily intended for identifying players that are sitting on the network
+-- waiting to be setup in ad-hoc mode
+-- NOTE: this method will need updating when new mac address ranges are allocated
+function macToModel(self, mac)
+
+	if not mac then
+		return false
+	end
+	local prefix, a, b, c = string.match(mac, "(%x%x:%x%x:%x%x):(%x%x):(%x%x):(%x%x)")
+
+	-- further split b chars
+	local d, e = string.match(b, "(%x)(%x)")
+
+	-- if we're guessing and it's not a slim vendor id, guess that it's squeezeplay
+	if prefix ~= "00:04:20" then
+		return 'squeezeplay'
+	end
+
+	if a == '04' then
+		return "slimp3"
+	elseif a == '05' then
+		-- more complex code for SB1/SB2 discernment
+		-- b between 00 and 9F is an SB1
+		if string.find(d, "%a") then
+			return 'squeezebox2'
+		else
+			return 'squeezebox'
+		end
+	elseif a == '06' or a == '07' then
+		return 'squeezebox3'
+	elseif a == '08' then
+		if b == '01' then
+			return 'boom'
+		end
+	elseif a == '10' or a == '11' then
+		return 'transporter'
+	elseif a == '12' or a == '13' or a == '14' or a == '15' then
+		return "squeezebox3"
+	elseif a == '16' or a == '17' or a == '18' or a == '19' then
+		return "receiver"
+	elseif a == '1a' or a == '1b' or a == '1c' or a == '1d' then
+		return "controller"
+	elseif a == '1e' or a == '1f' or a == '20' or a == '21' then
+		return "boom"
+	end
+
+	-- it's a slim product but doesn't fall within these ranges
+	-- punt and call it a receiver
+	return 'receiver'
+
+end
+
 -- return the Squeezebox mac address from the ssid, or nil if the ssid is
 -- not from a Squeezebox in setup mode.
 function ssidIsSqueezebox(self, ssid)
