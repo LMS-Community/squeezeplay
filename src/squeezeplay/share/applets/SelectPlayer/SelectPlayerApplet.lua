@@ -185,18 +185,26 @@ function _addPlayerItem(self, player)
 		receiver    = true,
 		boom        = true,
 		controller  = true,
+		squeezeplay = true,
+		stream      = true,
 	}
 
 	local playerModel = player:getModel()
 
-	if not validModel[playerModel] then
-		-- use a generic style when model lists as not valid
-		playerModel = 'softsqueeze'
+	-- guess model by mac address if we don't have one available
+	-- this is primarily used for players on the network waiting to be setup
+	if playerModel == nil then
+		playerModel = player:macToModel(mac)
 	end
 
-    if oo.instanceof(player, LocalPlayer) then
-        playerWeight = LOCAL_PLAYER_WEIGHT
-    end
+	if not validModel[playerModel] then
+		-- use a generic style when model lists as not valid
+		playerModel = 'squeezeplay'
+	end
+
+	if player:isLocal() then
+		playerWeight = LOCAL_PLAYER_WEIGHT
+	end
     
 	-- if waiting for a SN pin modify name
 	if player:getPin() then
