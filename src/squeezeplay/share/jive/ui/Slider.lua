@@ -229,7 +229,9 @@ function _eventHandler(self, event)
 			keycode == KEY_RIGHT or
 			keycode == KEY_FWD then
 
-			self.closure(self, self.size, true)
+			if self.closure then
+				self.closure(self, self.size, true)
+			end
 			return EVENT_CONSUME
 		end
 	end

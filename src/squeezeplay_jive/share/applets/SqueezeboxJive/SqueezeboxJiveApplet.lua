@@ -366,8 +366,10 @@ function headphoneJack(self, inserted)
 	if inserted == 1 then
 		os.execute("amixer -q sset Headphone 92%")
 		os.execute("amixer -q sset Endpoint Headphone")
+		Sample:setEffectAttenuation(Sample.MAXVOLUME / 4)
 	else
 		os.execute("amixer -q sset Endpoint Speaker")
+		Sample:setEffectAttenuation(Sample.MAXVOLUME)
 	end
 
 	-- automatically select internal player

@@ -220,7 +220,6 @@ function notify_playerDelete(self, player)
 		return
 	end
 
-	log:warn('you are here')
 	self:freeAndClear()
 end
 
@@ -228,7 +227,6 @@ end
 function notify_playerCurrent(self, player)
 
 	if self.player ~= player then
-	log:warn('you are here')
 		self:freeAndClear()
 	end
 
@@ -417,24 +415,19 @@ end
 -----------------------------------------------------------------------------------------
 -- Settings
 --
-		
+
 function _installListeners(self, window)
 
-	window:addListener(
-		EVENT_WINDOW_ACTIVE,
-		function(event)
-			local stack = Framework.windowStack
-			if self['browse'] and self['browse'].window == stack[1] then
+	if windowStyle == 'browse' then
+		window:addListener(
+			EVENT_WINDOW_ACTIVE,
+			function(event)
 				windowStyle = 'browse'
-			elseif self['ss'] and self['ss'].window == stack[1] then
-				windowStyle = 'ss'
+				self:_updateAll(self[windowStyle])
+				return EVENT_UNUSED
 			end
-
-			self:_updateAll(self[windowStyle])
-
-			return EVENT_UNUSED
-		end
-	)
+		)
+	end
 
 	local playlistSize = self.player and self.player:getPlaylistSize()
 
@@ -688,7 +681,6 @@ function displaySizeSetting(self, menuItem)
 end
 
 function setArtworkSize(self, size)
-	log:warn(size)
 	self:getSettings()['screensaverArtworkSize'] = size
 	self:storeSettings()
 end
@@ -733,7 +725,6 @@ function openScreensaver(self, style, transition)
 	windowStyle = style
 	if not self[windowStyle] then self[windowStyle] = {} end
 
-	log:debug("CREATING UI FOR NOWPLAYING")
 	self[windowStyle].window = _createUI(self)
 
 	self.player = appletManager:callService("getCurrentPlayer")
