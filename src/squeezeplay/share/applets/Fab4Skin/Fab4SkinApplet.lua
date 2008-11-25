@@ -1021,7 +1021,7 @@ function skin(self, s)
 	})
 	s.squeezebox2 = _uses(s.chooseplayer, {
 				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox2.png"),
+					img = _loadImage(self, "Icons/Players/squeezebox.png"),
 				}
 			})
 	s.squeezebox2checked = _uses(s.squeezebox2, {
@@ -1031,6 +1031,19 @@ function skin(self, s)
 				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
+	s.squeezebox3 = _uses(s.chooseplayer, {
+				icon = {
+					img = _loadImage(self, "Icons/Players/squeezebox3.png"),
+				}
+			})
+	s.squeezebox3checked = _uses(s.squeezebox3, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				align = "right",
+				img = _loadImage(self, "Icons/icon_check_selected.png")
+			}
+	})
+
 	s.boom = _uses(s.chooseplayer, {
 				icon = {
 					img = _loadImage(self, "Icons/Players/boom.png"),
@@ -1092,7 +1105,31 @@ function skin(self, s)
 				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
-
+	s.squeezeplay = _uses(s.chooseplayer, {
+				icon = {
+					img = _loadImage(self, "Icons/Players/squeezeplay.png"),
+				}
+			})
+	s.squeezeplaychecked = _uses(s.squeezeplay, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				align = "right",
+				img = _loadImage(self, "Icons/icon_check_selected.png")
+			}
+	})
+	s.stream = _uses(s.chooseplayer, {
+				icon = {
+					img = _loadImage(self, "Icons/Players/stream.png"),
+				}
+			})
+	s.streamchecked = _uses(s.stream, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				align = "right",
+				img = _loadImage(self, "Icons/icon_check_selected.png")
+			}
+	})
+	
 	s.albumitemplay = _uses(s.albumitem)
 	s.albumitemadd  = _uses(s.albumitem)
 
@@ -1234,10 +1271,23 @@ function skin(self, s)
 
 	s.selected.squeezebox2 = _uses(s.selected.chooseplayer, {
 				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox2.png"),
+					img = _loadImage(self, "Icons/Players/squeezebox.png"),
 				}
 			})
 	s.selected.squeezebox2checked = _uses(s.selected.squeezebox2, {
+	      		order = { "icon", "text", "check", "play" },
+			check = {
+				align = "right",
+				img = _loadImage(self, "Icons/icon_check_selected.png")
+			}
+	})
+
+	s.selected.squeezebox3 = _uses(s.selected.chooseplayer, {
+				icon = {
+					img = _loadImage(self, "Icons/Players/squeezebox3.png"),
+				}
+			})
+	s.selected.squeezebox3checked = _uses(s.selected.squeezebox3, {
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
@@ -1310,7 +1360,31 @@ function skin(self, s)
 				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
-
+	s.selected.squeezeplay = _uses(s.selected.chooseplayer, {
+				icon = {
+					img = _loadImage(self, "Icons/Players/squeezeplay.png"),
+				}
+			})
+	s.selected.squeezeplaychecked = _uses(s.selected.squeezeplay, {
+	      		order = { "icon", "text", "check", "play" },
+			check = {
+				align = "right",
+				img = _loadImage(self, "Icons/icon_check_selected.png")
+			}
+	})
+	s.selected.stream = _uses(s.selected.chooseplayer, {
+				icon = {
+					img = _loadImage(self, "Icons/Players/stream.png"),
+				}
+			})
+	s.selected.streamchecked = _uses(s.selected.stream, {
+	      		order = { "icon", "text", "check", "play" },
+			check = {
+				align = "right",
+				img = _loadImage(self, "Icons/icon_check_selected.png")
+			}
+	})
+	
 
 	-- locked item with artwork and song info
 	s.locked.albumitem = {}
