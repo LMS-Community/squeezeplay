@@ -11,11 +11,17 @@ lua-lint:
 
 AM_CFLAGS = -Wall -Werror -D_GNU_SOURCE
 
-lib_LTLIBRARIES = jiveBSP.la
+lib_LTLIBRARIES = jiveWireless.la jiveWatchdog.la
 
-jiveBSP_la_LDFLAGS = -module -no-version
-jiveBSP_la_SOURCES = \
-	src/jive_bsp.c
+jiveWireless_la_LDFLAGS = -module -no-version
+jiveWireless_la_SOURCES = \
+	src/wireless.c \
+	src/wpa_ctrl.c
+
+jiveWatchdog_la_LDFLAGS = -module -no-version
+jiveWatchdog_la_SOURCES = \
+	src/watchdog.c
+
 
 JIVE_BUILD_DIR = $(DESTDIR)$(datadir)/jive
 
