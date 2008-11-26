@@ -947,6 +947,13 @@ local function _browseSink(step, chunk, err)
 
 			-- update the window properties
 			step.menu:setStyle(step.db:menuStyle())
+			local titleBar = step.window:getTitleWidget()
+			-- styling both the menu and title with icons is problematic to the layout
+			if step.db:menuStyle() == 'albummenu' and titleBar:getStyle() == 'albumtitle' then
+				titleBar:setWidget('icon', nil)
+				step.window:setTitleStyle('title')
+			end
+
 			if data.window then
 				-- if a titleStyle is being sent, we need to setTitleWidget completely
 				if data.window.titleStyle or data.window['icon-id'] then

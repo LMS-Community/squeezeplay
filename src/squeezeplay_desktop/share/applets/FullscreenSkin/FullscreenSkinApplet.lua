@@ -1134,12 +1134,12 @@ function skin(self, s, reload, useDefaultSize)
 				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
-	s.stream = _uses(s.chooseplayer, {
+	s.http = _uses(s.chooseplayer, {
 				icon = {
-					img = _loadImage(self, "Icons/Players/stream.png"),
+					img = _loadImage(self, "Icons/Players/http.png"),
 				}
 			})
-	s.streamchecked = _uses(s.stream, {
+	s.httpchecked = _uses(s.http, {
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
@@ -1370,12 +1370,12 @@ function skin(self, s, reload, useDefaultSize)
 				img = _loadImage(self, "Icons/icon_check_selected.png")
 			}
 	})
-	s.selected.stream = _uses(s.selected.chooseplayer, {
+	s.selected.http = _uses(s.selected.chooseplayer, {
 				icon = {
-					img = _loadImage(self, "Icons/Players/stream.png"),
+					img = _loadImage(self, "Icons/Players/http.png"),
 				}
 			})
-	s.selected.streamchecked = _uses(s.selected.stream, {
+	s.selected.httpchecked = _uses(s.selected.http, {
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
