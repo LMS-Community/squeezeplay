@@ -1,0 +1,15 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+SELECT_SKIN
+	EN	Select Skin
+
+CONTROLLER_SKIN
+	EN	Controller Skin
+
+DESKTOP_SKIN
+	EN	Desktop Skin
+
+FULLSCREEN_MODE
+	EN	Fullscreen
