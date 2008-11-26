@@ -104,7 +104,9 @@ static int handle_wheel_events(int fd) {
 			event.ticks = TIMEVAL_TO_TICKS(ev[0].time);
 
 			/* changed direction? */
-			if (scroll != 0 && abs(scroll) != abs(last_value)) {
+			if ((scroll < 0 && last_value > 0) ||
+			    (scroll > 0 && last_value < 0)
+			    ) {
 				event.u.scroll.rel = scroll;
 				jive_queue_event(&event);
 
