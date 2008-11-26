@@ -204,6 +204,9 @@ function _definePath(self, c1, c2)
 	return p1, p2, p3, p4, p5, p6
 end
 
+
+-- Should replace _inCircle and _inPolygon with _inMask defined by a region mask
+
 function _inCircle(self, s, c) 
 
 	if not s.x then
