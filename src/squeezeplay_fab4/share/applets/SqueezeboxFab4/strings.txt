@@ -1,0 +1,40 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+#
+
+INVALID_MAC_TITLE
+	DA	Fejl
+	DE	Fehler
+	EN	Error
+	ES	Error
+	FI	Virhe
+	FR	Erreur
+	IT	Errore
+	NL	Fout
+	NO	Feil
+	SV	Fel
+
+INVALID_MAC_TEXT
+	DA	Ugyldig MAC-adresse eller UUID. Kontakt supportafdelingen.
+	DE	Ungültige MAC-Adresse oder UUID. Wenden Sie sich an den Kundendienst.
+	EN	Invalid mac address or uuid. Please contact support.
+	ES	Dirección MAC o UUID no válidos. Contacte con asistencia técnica.
+	FI	Virheellinen MAC-osoite tai UUID. Ota yhteyttä tekniseen tukeen.
+	FR	Adresse MAC ou UUID non valide. Veuillez contacter l'assistance.
+	IT	Indirizzo MAC o UUID non valido. Contattare il servizio di assistenza.
+	NL	MAC-adres of UUID ongeldig. Neem contact op met support.
+	NO	Ugyldig mac-adresse eller uuid. Vennligst ta kontakt med kundestøtte.
+	SV	Ogiltig MAC-adress eller ogiltigt UUID Kontakta supportavdelningen.
+
+INVALID_MAC_CONTINUE
+	DA	Fortsæt
+	DE	Weiter
+	EN	Continue
+	ES	Continuar
+	FI	Jatka
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+	NO	Fortsett
+	SV	Fortsätt
