@@ -34,7 +34,8 @@ local log              = require("jive.utils.log").logger("applets.misc")
 local locale           = require("jive.utils.locale")
 local dumper           = require("jive.utils.dumper")
 local table            = require("jive.utils.table")
-local Framework        = require("jive.ui.Framework")
+
+local System           = require("jive.System")
 
 local JIVE_VERSION     = jive.JIVE_VERSION
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
@@ -84,7 +85,7 @@ end
 
 
 function _initUserpathdir()
-	_userpathdir = Framework.getUserPath()
+	_userpathdir = System.getUserDir()
 	_usersettingsdir = _userpathdir .. "/settings"
 	
 	log:info("User Path: ", _userpathdir)
@@ -739,10 +740,6 @@ function _freeApplet(self, entry)
 	entry.appletEvaluated = false
 	entry.appletLoaded = false
 	package.loaded[entry.appletModule] = nil
-end
-
-function getUserPath(self)
-    return _userpathdir
 end
 
 function _getDefaultSettings(appletName)

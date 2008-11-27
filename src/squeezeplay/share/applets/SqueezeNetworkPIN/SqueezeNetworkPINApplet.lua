@@ -7,6 +7,7 @@ local string                 = require("string")
 local table                  = require("jive.utils.table")
 
 local Applet                 = require("jive.Applet")
+local System                 = require("jive.System")
 local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
@@ -90,7 +91,7 @@ end
 
 function _checkLinked(self, server, next, fail)
 	-- When the user clicks the button, ask SN if we're registered
-	local uuid, mac = jnt:getUUID()
+	local uuid = System:getUUID()
 	local cmd = { 'islinked', uuid }
 
 	local checkLinkedSink = function(chunk, err)

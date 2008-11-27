@@ -49,6 +49,7 @@ local oo            = require("loop.simple")
 local NetworkThread = require("jive.net.NetworkThread")
 local Iconbar       = require("jive.Iconbar")
 local AppletManager = require("jive.AppletManager")
+local System        = require("jive.System")
 local locale        = require("jive.utils.locale")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
@@ -166,8 +167,8 @@ end
 
 local function _addUserPathToLuaPath()
     local dirSeparator = package.path:match( "(%p)%?%." )
-    package.path = package.path .. Framework.getUserPath() .. dirSeparator .."?.lua;"
-    package.path = package.path .. Framework.getUserPath() .. dirSeparator .. "?" .. dirSeparator .. "?.lua;"
+    package.path = package.path .. System.getUserDir() .. dirSeparator .."?.lua;"
+    package.path = package.path .. System.getUserDir() .. dirSeparator .. "?" .. dirSeparator .. "?.lua;"
 end
 
 -- __init

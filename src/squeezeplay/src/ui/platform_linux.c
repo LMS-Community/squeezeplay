@@ -3,6 +3,7 @@
 **
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
+
 #ifndef __APPLE__
 
 #include "common.h"
@@ -10,27 +11,33 @@
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/utsname.h>
 #include <netinet/in.h>
 #include <linux/if.h>
 
-static void linux_get_app_home_dir(char *path);
-void linux_get_mac_address(char *address);
 
-static void linux_get_app_home_dir(char *path) {
+char *platform_get_home_dir() {
+    char *dir;
     const char *home = getenv("HOME");
-    strcpy(path, home);
-    strcat(path, "/.squeezeplay");
+
+    dir = malloc(strlen(home) + 14);
+    strcpy(dir, home);
+    strcat(dir, "/.squeezeplay");
+
+    return dir;
 }
-void linux_get_mac_address(char *address) {
+
+char *platform_get_mac_address() {
     struct ifreq ifr;
     struct ifreq *IFR;
     struct ifconf ifc;
     char buf[1024];
+    char *macaddr = NULL;
     int s, i;
 
     s = socket(AF_INET, SOCK_DGRAM, 0);
     if (s==-1) {
-        return ;
+        return NULL;
     }
 
     ifc.ifc_len = sizeof(buf);
@@ -47,7 +54,9 @@ void linux_get_mac_address(char *address) {
                     //take the first found address.
                     //todo: can we be smarter about which is the correct address
                     unsigned char * ptr = (unsigned char *) ifr.ifr_hwaddr.sa_data;
-                    sprintf(address, "%02x:%02x:%02x:%02x:%02x:%02x", *ptr,*(ptr+1), *(ptr+2),*(ptr+3), *(ptr+4), *(ptr+5));
+
+		    macaddr = malloc(18);
+                    sprintf(macaddr, "%02x:%02x:%02x:%02x:%02x:%02x", *ptr,*(ptr+1), *(ptr+2),*(ptr+3), *(ptr+4), *(ptr+5));
                     break;
                 }
             }
@@ -55,11 +64,21 @@ void linux_get_mac_address(char *address) {
     }
 
     close(s);
+
+    return macaddr;
 }
 
-void jive_platform_init(lua_State *L) {
-	get_app_home_dir_platform = linux_get_app_home_dir;
-	get_mac_address = linux_get_mac_address;
+char *platform_get_arch() {
+    struct utsname name;
+    char *arch;
+
+    uname(&name);
+
+    arch = strdup(name.machine);
+    return arch;
+}
+
+void platform_init(lua_State *L) {
 }
 
 #endif

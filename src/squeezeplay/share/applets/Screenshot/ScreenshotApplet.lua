@@ -23,6 +23,7 @@ local string           = require("string")
 local lfs              = require("lfs")
 
 local Applet           = require("jive.Applet")
+local System           = require("jive.System")
 local Framework        = require("jive.ui.Framework")
 local Surface          = require("jive.ui.Surface")
 local Window           = require("jive.ui.Window")
@@ -41,7 +42,7 @@ local function _keyHold(self, event)
 		Framework:playSound("CLICK")
 
 		-- write to /media/*/log/squeezeplayXXXX.bmp or userpath
-		local path = Framework.getUserPath()
+		local path = System.getUserDir()
 		for dir in lfs.dir("/media") do
 			local tmp = "/media/" .. dir .. "/log"
 			if lfs.attributes(tmp, "mode") == "directory" then

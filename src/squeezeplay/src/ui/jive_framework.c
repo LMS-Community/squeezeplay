@@ -14,10 +14,6 @@
 
 int (*jive_sdlevent_pump)(lua_State *L);
 int (*jive_sdlfilter_pump)(const SDL_Event *event);
-void (*get_app_home_dir_platform)(char *path);
-void (*get_mac_address)(char *address);
-
-char *jive_resource_path = NULL;
 
 SDL_Rect jive_dirty_region;
 
@@ -90,7 +86,6 @@ static struct jive_keymap keymap[] = {
 };
 
 
-static int init_path(lua_State *L);
 static int process_event(lua_State *L, SDL_Event *event);
 static int filter_events(const SDL_Event *event);
 int jiveL_update_screen(lua_State *L);
@@ -118,8 +113,6 @@ static int jiveL_init(lua_State *L) {
 	SDL_Rect r;
 	JiveSurface *srf, *splash, *icon;
 	Uint16 splash_w, splash_h;
-
-	init_path(L);
 
 	/* screen properties */
 	lua_getfield(L, 1, "screen");
@@ -152,7 +145,7 @@ static int jiveL_init(lua_State *L) {
 	SDL_EventState(SDL_SYSWMEVENT,SDL_ENABLE);
 	SDL_SetEventFilter(filter_events);
 
-	jive_platform_init(L);
+	platform_init(L);
 
 	/* open window */
 	SDL_WM_SetCaption("SqueezePlay Beta", "SqueezePlay Beta");
@@ -196,57 +189,6 @@ static int jiveL_init(lua_State *L) {
 	return 0;
 }
 
-static int init_path(lua_State *L) {
-	const char *lua_path;
-	char *ptr;
-
-	/* set jiveui_path from lua path */
-	lua_getglobal(L, "package");
-	if (!lua_istable(L, -1)) {
-		lua_pop(L, 1);
-		return 0;
-	}
-	
-	lua_getfield(L, -1, "path");
-	if (!lua_isstring(L, -1)) {
-		lua_pop(L, 2);
-		return 0;
-	}
-
-	lua_path = lua_tostring(L, -1);
-
-	if (jive_resource_path) {
-		free(jive_resource_path);
-	}
-	jive_resource_path = malloc(strlen(lua_path) + 1);
-
-	/* convert from lua path into jive path */
-	ptr = jive_resource_path;
-	while (*lua_path) {
-		switch (*lua_path) {
-		case '?':
-			while (*lua_path && *lua_path != ';') {
-				lua_path++;
-			}
-			break;
-			
-		case ';':
-			*ptr++ = ';';
-			while (*lua_path && *lua_path == ';') {
-				lua_path++;
-			}
-			break;
-			
-		default:
-			*ptr++ = *lua_path++;
-		}
-	}
-	*ptr = '\0';
-	
-	lua_pop(L, 2);
-	return 0;
-}
-
 static int filter_events(const SDL_Event *event)
 {
 	if (jive_sdlfilter_pump) {
@@ -276,8 +218,6 @@ static int jiveL_quit(lua_State *L) {
 
 	/* force lua GC */
 	lua_gc(L, LUA_GCCOLLECT, 0);
-
-	free(jive_resource_path);
 
 	/* quit SDL */
 	SDL_Quit();
@@ -847,125 +787,16 @@ int jiveL_event(lua_State *L) {
 	return 1;
 }
 
+
 int jiveL_get_ticks(lua_State *L) {
 	lua_pushinteger(L, SDL_GetTicks());
 	return 1;
-}
-
-int jiveL_get_mac_address(lua_State *L) {
-
-	char *macaddress = malloc(100);
-    
-    get_mac_address(macaddress);
-    
-    lua_pushstring(L, macaddress);
-	free(macaddress);
-
-	return 1;
-}
-
-int jiveL_get_user_path(lua_State *L) {
-
-	char *userpath = malloc(PATH_MAX);
-    
-    get_user_path(userpath);
-    
-    lua_pushstring(L, userpath);
-	free(userpath);
-
-	return 1;
-}
-
-
-void get_app_home_dir(char *path) {
-    const char *sphome = getenv("SQUEEZEPLAY_HOME");
-    if (sphome != NULL) {
-        strcpy(path, sphome);    
-    } else {
-        get_app_home_dir_platform(path);
-    }
-}
-
-void get_user_path(char *path) {
-    get_app_home_dir(path);
-    strcat(path, "/userpath");
 }
 
 
 int jiveL_thread_time(lua_State *L) {
 	lua_pushinteger(L, (int)(clock() * 1000 / CLOCKS_PER_SEC));
 	return 1;
-}
-
-
-int jiveL_find_file(lua_State *L) {
-	/* stack is:
-	 * 1: framework
-	 * 2: path
-	 */
-
-	const char *path = luaL_checkstring(L, 2);
-	char *fullpath = malloc(PATH_MAX);
-
-	if (jive_find_file(path, fullpath)) {
-		lua_pushstring(L, fullpath);
-	}
-	else {
-		lua_pushnil(L);
-	}
-	free(fullpath);
-
-	return 1;
-}
-
-
-int jive_find_file(const char *path, char *fullpath) {
-	char *resource_path, *ptr;
-	FILE *fp;
-
-	/* absolute/relative path */
-	fp = fopen(path, "r");
-	if (fp) {
-		fclose(fp);
-		strcpy(fullpath, path);
-		return 1;
-	}
-
-	/* search lua path */
-	resource_path = strdup(jive_resource_path);
-	ptr = strtok(resource_path, ";");
-	while (ptr) {
-#if defined(WIN32)
-		char *tmp;
-#endif
-
-		strcpy(fullpath, ptr);
-		strcat(fullpath, path);
-
-#if defined(WIN32)
-		/* Convert from UNIX style paths */
-		tmp = fullpath;
-		while (*tmp) {
-			if (*tmp == '/') {
-				*tmp = '\\';
-			}
-			++tmp;
-		}
-#endif
-
-		fp = fopen(fullpath, "r");
-		if (fp) {
-			fclose(fp);
-			free(resource_path);
-			return 1;
-		}
-
-		ptr = strtok(NULL, ";");
-	}
-
-	free(resource_path);
-	printf("NOT FOUND %s\n", path);
-	return 0;
 }
 
 
@@ -1474,7 +1305,6 @@ static const struct luaL_Reg core_methods[] = {
 	{ "reDraw", jiveL_redraw },
 	{ "pushEvent", jiveL_push_event },
 	{ "dispatchEvent", jiveL_dispatch_event },
-	{ "findFile", jiveL_find_file },
 	{ "getTicks", jiveL_get_ticks },
 	{ "threadTime", jiveL_thread_time },
 	{ "setVideoMode", jiveL_set_video_mode },
@@ -1483,14 +1313,14 @@ static const struct luaL_Reg core_methods[] = {
 	{ "styleChanged", jiveL_style_changed },
 	{ "perfwarn", jiveL_perfwarn },
 	{ "_event", jiveL_event },
-	{ "getUserPath", jiveL_get_user_path },
-	{ "getMacAddress", jiveL_get_mac_address },
 	{ NULL, NULL }
 };
 
 
 
 static int jiveL_core_init(lua_State *L) {
+
+	squeezeplayL_system_init(L);
 
 	lua_getglobal(L, "jive");
 	lua_getfield(L, -1, "ui");
@@ -1521,7 +1351,7 @@ static int jiveL_core_init(lua_State *L) {
 	luaL_register(L, NULL, menu_methods);
 	lua_pop(L, 1);
 
-	lua_getfield(L, -1, "Textarea");
+	lua_getfield(L, 2, "Textarea");
 	luaL_register(L, NULL, textarea_methods);
 	lua_pop(L, 1);
 
@@ -1541,7 +1371,7 @@ static int jiveL_core_init(lua_State *L) {
 	luaL_register(L, NULL, timer_methods);
 	lua_pop(L, 1);
 
-	lua_getfield(L, -1, "Event");
+	lua_getfield(L, 2, "Event");
 	luaL_register(L, NULL, event_methods);
 	lua_pop(L, 1);
 

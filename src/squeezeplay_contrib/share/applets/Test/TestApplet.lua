@@ -27,6 +27,7 @@ local string                 = require("string")
 local table                  = require("jive.utils.table")
 
 local Applet                 = require("jive.Applet")
+local System                 = require("jive.System")
 local Checkbox               = require("jive.ui.Checkbox")
 local Choice                 = require("jive.ui.Choice")
 local Framework              = require("jive.ui.Framework")
@@ -267,7 +268,7 @@ function textWindow(self, menuItem, filename)
 
 	local window = Window("window", menuItem.text)
 
-	filename = Framework:findFile(filename)
+	filename = System:findFile(filename)
 	local fh = io.open(filename, "rb")
 	if fh == nil then
 		-- FIXME error dialog

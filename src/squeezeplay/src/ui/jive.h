@@ -260,12 +260,16 @@ struct jive_perfwarn {
 extern int (*jive_sdlevent_pump)(lua_State *L);
 
 extern int (*jive_sdlfilter_pump)(const SDL_Event *event);
-extern void (*get_app_home_dir_platform)(char *path);
-extern void (*get_mac_address)(char *address);
-void get_user_path(char *path);
-void get_app_home_dir(char *path);
-void jive_platform_init(lua_State *L);
 void jive_send_key_event(JiveEventType keyType, JiveKey keyCode);
+
+
+/* platform functions */
+void platform_init(lua_State *L);
+char *platform_get_mac_address();
+char *platform_get_home_dir();
+char *platform_get_arch();
+
+int squeezeplayL_system_init(lua_State *L);
 
 
 /* global counter used to invalidate widget */
@@ -475,7 +479,6 @@ int jiveL_style_font(lua_State *L);
 
 int jiveL_timer_add_timer(lua_State *L);
 int jiveL_timer_remove_timer(lua_State *L);
-
 
 
 #define JIVEL_STACK_CHECK_BEGIN(L) { int _sc = lua_gettop((L));

@@ -8,6 +8,7 @@ local string        = require("string")
 local table         = require("jive.utils.table")
 
 local Applet        = require("jive.Applet")
+local System        = require("jive.System")
 local SlimServer    = require("jive.slim.SlimServer")
 local LocalPlayer   = require("jive.slim.LocalPlayer")
 
@@ -59,8 +60,9 @@ function settingsShow(self, metaState)
 
 				if isSelected then
 					-- Create player instance
-					local uuid, mac = jnt:getUUID()
-					metaState.player = LocalPlayer(jnt, mac, uuid)
+					local uuid = System:getUUID()
+					local playerid = System:getMacAddress()
+					metaState.player = LocalPlayer(jnt, playerid, uuid)
 
 				else
 					-- Disconnect and free player

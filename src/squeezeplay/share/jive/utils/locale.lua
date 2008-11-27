@@ -21,7 +21,8 @@ readStringsFile(thisPath)
 local ipairs, pairs, io, select, setmetatable, string, tostring = ipairs, pairs, io, select, setmetatable, string, tostring
 
 local log              = require("jive.utils.log").logger("utils")
-local Framework        = require("jive.ui.Framework")
+
+local System           = require("jive.System")
 local Task             = require("jive.ui.Task")
 
 module(...)
@@ -104,7 +105,7 @@ that is returned. The strings are for the current locale.
 --]]
 
 function readGlobalStringsFile(self)
-	local globalStringsPath = Framework:findFile("jive/global_strings.txt")
+	local globalStringsPath = System:findFile("jive/global_strings.txt")
 	if globalStringsPath == nil then
 		return globalStrings
 	end

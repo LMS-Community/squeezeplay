@@ -14,6 +14,8 @@ local Wireless               = require("jive.net.Wireless")
 local LocalPlayer            = require("jive.slim.LocalPlayer")
 
 local Applet                 = require("jive.Applet")
+local System                 = require("jive.System")
+
 local Sample                 = require("squeezeplay.sample")
 local Checkbox               = require("jive.ui.Checkbox")
 local Choice                 = require("jive.ui.Choice")
@@ -75,18 +77,14 @@ function init(self)
 
 		uuid = string.match(printenv, "serial#=(%x+)")
 	end
-	
-	-- read device mac
-	local f = io.popen("/sbin/ifconfig eth0")
-	if f then
-		local ifconfig = f:read("*all")
-		f:close()
 
-		mac = string.match(ifconfig, "HWaddr%s(%x%x:%x%x:%x%x:%x%x:%x%x:%x%x)")
-	end
+	System:init({
+		uuid = uuid,
+		machine = "jive",
+	})
 
-	log:info("uuid=", uuid)
-	log:info("mac=", mac)
+	mac = System:getMacAddress()
+	uuid = System:getUUID()
 
 	if not uuid or string.match(mac, "^00:40:20") then
 		local popup = Popup("errorWindow", self:string("INVALID_MAC_TITLE"))
@@ -111,8 +109,6 @@ function init(self)
 		popup:show()
 	end
 
-
-	jnt:setUUID(uuid, mac)
 
 	-- watchdog timer
 	self.watchdog = Watchdog:open()

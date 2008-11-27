@@ -20,6 +20,7 @@ local os                     = require("os")
 local coroutine               = require("coroutine")
 
 local Applet                 = require("jive.Applet")
+local System                 = require("jive.System")
 local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
@@ -62,7 +63,9 @@ oo.class(_M, Applet)
 
 
 function _firmwareVersion(self, url)
-	local major, minor = string.match(url, "\/jive_([^_]+)_([^_]+)\.bin")
+	local machine = System:getMachine()
+
+	local major, minor = string.match(url, "\/" .. machine .. "_([^_]+)_([^_]+)\.bin")
 
 	if not major then
 		return
@@ -90,6 +93,8 @@ end
 
 
 function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
+	local machine = System:getMachine()
+
 	local help = Textarea("help", "")
 
 	if url then
@@ -119,7 +124,7 @@ function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
 			local fileurl = "file:" .. path .. entry
 			local version = self:_firmwareVersion(fileurl)
 	
-			if version or entry == "jive.bin" then
+			if version or entry == machine .. ".bin" then
 				menu:addItem({
 					text = self:string("UPDATE_CONTINUE_SDCARD"),
 				     	sound = "WINDOWSHOW",

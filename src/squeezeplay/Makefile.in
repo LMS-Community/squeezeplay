@@ -75,11 +75,11 @@ am_libjivenet_la_OBJECTS = jive_dns.lo
 libjivenet_la_OBJECTS = $(am_libjivenet_la_OBJECTS)
 libjiveui_la_DEPENDENCIES =
 am_libjiveui_la_OBJECTS = jive_event.lo jive_font.lo jive_framework.lo \
-	jive_framework_osx.lo jive_framework_linux.lo jive_group.lo \
-	jive_icon.lo jive_label.lo jive_menu.lo jive_slider.lo \
-	jive_style.lo jive_surface.lo jive_textarea.lo \
-	jive_textinput.lo jive_tile.lo jive_timer.lo jive_utils.lo \
-	jive_widget.lo jive_window.lo lua_jiveui.lo
+	jive_group.lo jive_icon.lo jive_label.lo jive_menu.lo \
+	platform_osx.lo platform_linux.lo jive_slider.lo jive_style.lo \
+	jive_surface.lo system.lo jive_textarea.lo jive_textinput.lo \
+	jive_tile.lo jive_timer.lo jive_utils.lo jive_widget.lo \
+	jive_window.lo lua_jiveui.lo
 libjiveui_la_OBJECTS = $(am_libjiveui_la_OBJECTS)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
@@ -274,15 +274,16 @@ libjiveui_la_SOURCES = \
 	src/ui/jive_event.c \
 	src/ui/jive_font.c \
 	src/ui/jive_framework.c \
-	src/ui/jive_framework_osx.c \
-	src/ui/jive_framework_linux.c \
 	src/ui/jive_group.c \
 	src/ui/jive_icon.c \
 	src/ui/jive_label.c \
 	src/ui/jive_menu.c \
+	src/ui/platform_osx.c \
+	src/ui/platform_linux.c \
 	src/ui/jive_slider.c \
 	src/ui/jive_style.c \
 	src/ui/jive_surface.c \
+	src/ui/system.c \
 	src/ui/jive_textarea.c \
 	src/ui/jive_textinput.c \
 	src/ui/jive_tile.c \
@@ -485,8 +486,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_event.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_font.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_framework.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_framework_linux.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_framework_osx.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_group.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_icon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_label.Plo@am__quote@
@@ -504,7 +503,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jiveblit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lua_jiveui.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mqueue.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/platform_linux.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/platform_osx.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/streambuf.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/system.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
@@ -653,20 +655,6 @@ jive_framework.lo: src/ui/jive_framework.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_framework.lo `test -f 'src/ui/jive_framework.c' || echo '$(srcdir)/'`src/ui/jive_framework.c
 
-jive_framework_osx.lo: src/ui/jive_framework_osx.c
-@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_framework_osx.lo -MD -MP -MF "$(DEPDIR)/jive_framework_osx.Tpo" -c -o jive_framework_osx.lo `test -f 'src/ui/jive_framework_osx.c' || echo '$(srcdir)/'`src/ui/jive_framework_osx.c; \
-@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/jive_framework_osx.Tpo" "$(DEPDIR)/jive_framework_osx.Plo"; else rm -f "$(DEPDIR)/jive_framework_osx.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ui/jive_framework_osx.c' object='jive_framework_osx.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_framework_osx.lo `test -f 'src/ui/jive_framework_osx.c' || echo '$(srcdir)/'`src/ui/jive_framework_osx.c
-
-jive_framework_linux.lo: src/ui/jive_framework_linux.c
-@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_framework_linux.lo -MD -MP -MF "$(DEPDIR)/jive_framework_linux.Tpo" -c -o jive_framework_linux.lo `test -f 'src/ui/jive_framework_linux.c' || echo '$(srcdir)/'`src/ui/jive_framework_linux.c; \
-@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/jive_framework_linux.Tpo" "$(DEPDIR)/jive_framework_linux.Plo"; else rm -f "$(DEPDIR)/jive_framework_linux.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ui/jive_framework_linux.c' object='jive_framework_linux.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_framework_linux.lo `test -f 'src/ui/jive_framework_linux.c' || echo '$(srcdir)/'`src/ui/jive_framework_linux.c
-
 jive_group.lo: src/ui/jive_group.c
 @am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_group.lo -MD -MP -MF "$(DEPDIR)/jive_group.Tpo" -c -o jive_group.lo `test -f 'src/ui/jive_group.c' || echo '$(srcdir)/'`src/ui/jive_group.c; \
 @am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/jive_group.Tpo" "$(DEPDIR)/jive_group.Plo"; else rm -f "$(DEPDIR)/jive_group.Tpo"; exit 1; fi
@@ -695,6 +683,20 @@ jive_menu.lo: src/ui/jive_menu.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_menu.lo `test -f 'src/ui/jive_menu.c' || echo '$(srcdir)/'`src/ui/jive_menu.c
 
+platform_osx.lo: src/ui/platform_osx.c
+@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT platform_osx.lo -MD -MP -MF "$(DEPDIR)/platform_osx.Tpo" -c -o platform_osx.lo `test -f 'src/ui/platform_osx.c' || echo '$(srcdir)/'`src/ui/platform_osx.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/platform_osx.Tpo" "$(DEPDIR)/platform_osx.Plo"; else rm -f "$(DEPDIR)/platform_osx.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ui/platform_osx.c' object='platform_osx.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o platform_osx.lo `test -f 'src/ui/platform_osx.c' || echo '$(srcdir)/'`src/ui/platform_osx.c
+
+platform_linux.lo: src/ui/platform_linux.c
+@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT platform_linux.lo -MD -MP -MF "$(DEPDIR)/platform_linux.Tpo" -c -o platform_linux.lo `test -f 'src/ui/platform_linux.c' || echo '$(srcdir)/'`src/ui/platform_linux.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/platform_linux.Tpo" "$(DEPDIR)/platform_linux.Plo"; else rm -f "$(DEPDIR)/platform_linux.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ui/platform_linux.c' object='platform_linux.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o platform_linux.lo `test -f 'src/ui/platform_linux.c' || echo '$(srcdir)/'`src/ui/platform_linux.c
+
 jive_slider.lo: src/ui/jive_slider.c
 @am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_slider.lo -MD -MP -MF "$(DEPDIR)/jive_slider.Tpo" -c -o jive_slider.lo `test -f 'src/ui/jive_slider.c' || echo '$(srcdir)/'`src/ui/jive_slider.c; \
 @am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/jive_slider.Tpo" "$(DEPDIR)/jive_slider.Plo"; else rm -f "$(DEPDIR)/jive_slider.Tpo"; exit 1; fi
@@ -715,6 +717,13 @@ jive_surface.lo: src/ui/jive_surface.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ui/jive_surface.c' object='jive_surface.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_surface.lo `test -f 'src/ui/jive_surface.c' || echo '$(srcdir)/'`src/ui/jive_surface.c
+
+system.lo: src/ui/system.c
+@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT system.lo -MD -MP -MF "$(DEPDIR)/system.Tpo" -c -o system.lo `test -f 'src/ui/system.c' || echo '$(srcdir)/'`src/ui/system.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/system.Tpo" "$(DEPDIR)/system.Plo"; else rm -f "$(DEPDIR)/system.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ui/system.c' object='system.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o system.lo `test -f 'src/ui/system.c' || echo '$(srcdir)/'`src/ui/system.c
 
 jive_textarea.lo: src/ui/jive_textarea.c
 @am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_textarea.lo -MD -MP -MF "$(DEPDIR)/jive_textarea.Tpo" -c -o jive_textarea.lo `test -f 'src/ui/jive_textarea.c' || echo '$(srcdir)/'`src/ui/jive_textarea.c; \
