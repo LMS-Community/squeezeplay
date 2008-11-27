@@ -55,7 +55,7 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
 local firmwareupgradeTitleStyle = 'settingstitle'
 
-local SDCARD_PATH = "/mnt/mmc/"
+local MEDIA_PATH = "/media/"
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
@@ -112,22 +112,26 @@ function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
 		menu:addItem(networkUpdateItem)
 	end
 
-	for entry in lfs.dir(SDCARD_PATH) do
-		local fileurl = "file:" .. SDCARD_PATH .. entry
-		local version = self:_firmwareVersion(fileurl)
+	for media in lfs.dir(MEDIA_PATH) do
+		local path = MEDIA_PATH .. media .. "/"
+
+		for entry in lfs.dir(path) do
+			local fileurl = "file:" .. path .. entry
+			local version = self:_firmwareVersion(fileurl)
 	
-		if version or entry == "jive.bin" then
-			menu:addItem({
-				     text = self:string("UPDATE_CONTINUE_SDCARD"),
-				     sound = "WINDOWSHOW",
-				     callback = function()
-							self.url = fileurl
-							self:_upgrade()
-						end,
-				     focusGained = function()
-							   help:setValue(self:string("UPDATE_BEGIN_SDCARD", version or ""))
-						   end
-			     })
+			if version or entry == "jive.bin" then
+				menu:addItem({
+					text = self:string("UPDATE_CONTINUE_SDCARD"),
+				     	sound = "WINDOWSHOW",
+				     	callback = function()
+						self.url = fileurl
+						self:_upgrade()
+					end,
+					focusGained = function()
+						help:setValue(self:string("UPDATE_BEGIN_SDCARD", version or ""))
+					end
+			     	})
+			end
 		end
 	end
 
