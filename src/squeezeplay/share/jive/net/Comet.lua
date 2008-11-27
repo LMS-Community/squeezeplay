@@ -62,6 +62,7 @@ local assert, ipairs, table, pairs, string, tonumber = assert, ipairs, table, pa
 local oo            = require("loop.simple")
 local math          = require("math")
 
+local System        = require("jive.System")
 local CometRequest  = require("jive.net.CometRequest")
 local HttpPool      = require("jive.net.HttpPool")
 local SocketHttp    = require("jive.net.SocketHttp")
@@ -575,17 +576,14 @@ _handshake = function(self)
 	-- Reset clientId
 	self.clientId  = nil
 
-
-	local uuid, mac = self.jnt:getUUID()
-	
 	local data = { {
 		channel                  = '/meta/handshake',
 		version                  = '1.0',
 		supportedConnectionTypes = { 'streaming' },
 		ext                      = {
 			rev = JIVE_VERSION,
-			mac = mac,
-			uuid = uuid
+			mac = System:getMacAddress(),
+			uuid = System:getUUID(),
 		},
 	} }
 

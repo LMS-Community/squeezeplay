@@ -30,6 +30,7 @@ local table                  = require("jive.utils.table")
 local lfs                    = require("lfs")
 
 local Applet                 = require("jive.Applet")
+local System                 = require("jive.System")
 local Framework              = require("jive.ui.Framework")
 local RadioButton            = require("jive.ui.RadioButton")
 local RadioGroup             = require("jive.ui.RadioGroup")
@@ -99,7 +100,7 @@ function init(self)
 
 	-- find where to store wallpapers
 	-- we need to look for an actual file here as findFile can't find directories on windows, so try a known wallpaper
-	prefix = string.match(Framework:findFile(PREFIX .. "sunrise.png"), "(.*)sunrise.png")
+	prefix = string.match(System:findFile(PREFIX .. "sunrise.png"), "(.*)sunrise.png")
 	log:info("prefix: ", prefix)
 end
 

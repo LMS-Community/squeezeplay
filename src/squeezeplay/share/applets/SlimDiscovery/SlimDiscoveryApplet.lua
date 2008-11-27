@@ -29,6 +29,7 @@ local string        = require("string")
 local table         = require("jive.utils.table")
 
 local Applet        = require("jive.Applet")
+local System        = require("jive.System")
 
 local Framework     = require("jive.ui.Framework")
 local Timer         = require("jive.ui.Timer")
@@ -261,7 +262,7 @@ function _discover(self)
 
 
 	-- Special case Squeezenetwork
-	if jnt:getUUID() then
+	if System:getUUID() then
 		squeezenetwork = SlimServer(jnt, "SqueezeNetwork")
 		self:_serverUpdateAddress(squeezenetwork, jnt:getSNHostname(), 9000)
 	end

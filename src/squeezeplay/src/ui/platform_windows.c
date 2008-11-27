@@ -15,24 +15,27 @@
 #ifndef WM_APPCOMMAND
 #define WM_APPCOMMAND	0x0319
 #endif
-static int windows_filter_pump(const SDL_Event *event);
-static void windows_get_app_home_dir(char *path);
-void windows_get_mac_address(char *address);
 
-static void windows_get_app_home_dir(char *path) {
+char *platform_get_home_dir() {
+    char *dir;
     const char *home = getenv("APPDATA");
-    strcpy(path, home);
-    strcat(path, "/SqueezePlay");
+
+    dir = malloc(strlen(home) + strlen("/SqueezePlay") + 1);
+    strcpy(dir, home);
+    strcat(dir, "/SqueezePlay");
+
+    return dir;
 }
 
-void windows_get_mac_address(char *address) {
+char *platform_get_mac_address() {
     PIP_ADAPTER_INFO pAdapterInfo;
     IP_ADAPTER_INFO AdapterInfo[32];
     DWORD dwBufLen = sizeof( AdapterInfo );
+    char *macaddr = NULL;
     
     DWORD dwStatus = GetAdaptersInfo( AdapterInfo, &dwBufLen );
     if ( dwStatus != ERROR_SUCCESS )
-      return; // no adapters.
+      return NULL; // no adapters.
     
     pAdapterInfo = AdapterInfo;
     while ( pAdapterInfo )
@@ -40,10 +43,13 @@ void windows_get_mac_address(char *address) {
         //take the first found address. 
         //todo: can we be smarter about which is the correct address
         unsigned char * ptr = (unsigned char *) pAdapterInfo->Address;
-        sprintf(address, "%02x:%02x:%02x:%02x:%02x:%02x", *ptr,*(ptr+1), *(ptr+2),*(ptr+3), *(ptr+4), *(ptr+5));
+	macaddr = malloc(18);
+        sprintf(macaddr, "%02x:%02x:%02x:%02x:%02x:%02x", *ptr,*(ptr+1), *(ptr+2),*(ptr+3), *(ptr+4), *(ptr+5));
         break;
         //pAdapterInfo = pAdapterInfo->Next;
-    }    
+    }
+
+    return macaddr;
 }
 
 static int windows_filter_pump(const SDL_Event *event) {
@@ -80,8 +86,11 @@ static int windows_filter_pump(const SDL_Event *event) {
 	return 1;
 }
 
+char *platform_get_arch() {
+    // FIXME
+    return NULL;
+}
+
 void jive_platform_init(lua_State *L) {
 	jive_sdlfilter_pump = windows_filter_pump;
-	get_app_home_dir_platform = windows_get_app_home_dir;
-	get_mac_address = windows_get_mac_address;
 }

@@ -50,6 +50,7 @@ module(..., oo.class)
 
 local math          = require("math")
 
+local System        = require("jive.System")
 local Checkbox      = require("jive.ui.Checkbox")
 local Choice        = require("jive.ui.Choice")
 local Event         = require("jive.ui.Event")
@@ -131,21 +132,9 @@ Push an event onto the event queue for later processing. This can be called from
 
 Dispatch an event I<event> to the listeners of the widget I<widget>. Any global event listeners are called first. If I<widget> is nil then the event will be sent to the top most window. This can only be called from the main thread.
 
-=head2 jive.ui.Framework.findFile(path)
-
-Find a file on the lua path. Returns the full path of the file, or nil if it was not found.
-
 =head2 jive.ui.Framework:getTicks()
 
 Return the number of milliseconds since the Jive initialization.
-
-=head2 jive.ui.Framework:getMacAddress()
-
-Return the first Mac address found on the current system.
-
-=head2 jive.ui.Framework:getUserPath()
-
-Return the user-specific path that holds settings, 3rd-party applets, wallpaper, etc. THe path is aprt of the overall Lua path.
 
 =head2 jive.ui.Framework:threadTicks()
 
@@ -566,7 +555,7 @@ function getGlobalSetting(self, key)
 		-- One-shot initialization, the first
 		-- time someone accesses a Global Setting
 
-		global_settings_file = self:findFile("jive/JiveMain.lua"):sub(1,-13)
+		global_settings_file = System:findFile("jive/JiveMain.lua"):sub(1,-13)
 			.. "global_settings.txt"
 
 		local fh = io.open(global_settings_file)

@@ -20,6 +20,7 @@ local os                     = require("os")
 local coroutine               = require("coroutine")
 
 local Applet                 = require("jive.Applet")
+local System                 = require("jive.System")
 local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
@@ -55,14 +56,16 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
 local firmwareupgradeTitleStyle = 'settingstitle'
 
-local SDCARD_PATH = "/mnt/mmc/"
+local MEDIA_PATH = "/media/"
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
 function _firmwareVersion(self, url)
-	local major, minor = string.match(url, "\/jive_([^_]+)_([^_]+)\.bin")
+	local machine = System:getMachine()
+
+	local major, minor = string.match(url, "\/" .. machine .. "_([^_]+)_([^_]+)\.bin")
 
 	if not major then
 		return
@@ -90,6 +93,8 @@ end
 
 
 function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
+	local machine = System:getMachine()
+
 	local help = Textarea("help", "")
 
 	if url then
@@ -112,22 +117,26 @@ function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
 		menu:addItem(networkUpdateItem)
 	end
 
-	for entry in lfs.dir(SDCARD_PATH) do
-		local fileurl = "file:" .. SDCARD_PATH .. entry
-		local version = self:_firmwareVersion(fileurl)
+	for media in lfs.dir(MEDIA_PATH) do
+		local path = MEDIA_PATH .. media .. "/"
+
+		for entry in lfs.dir(path) do
+			local fileurl = "file:" .. path .. entry
+			local version = self:_firmwareVersion(fileurl)
 	
-		if version or entry == "jive.bin" then
-			menu:addItem({
-				     text = self:string("UPDATE_CONTINUE_SDCARD"),
-				     sound = "WINDOWSHOW",
-				     callback = function()
-							self.url = fileurl
-							self:_upgrade()
-						end,
-				     focusGained = function()
-							   help:setValue(self:string("UPDATE_BEGIN_SDCARD", version or ""))
-						   end
-			     })
+			if version or entry == machine .. ".bin" then
+				menu:addItem({
+					text = self:string("UPDATE_CONTINUE_SDCARD"),
+				     	sound = "WINDOWSHOW",
+				     	callback = function()
+						self.url = fileurl
+						self:_upgrade()
+					end,
+					focusGained = function()
+						help:setValue(self:string("UPDATE_BEGIN_SDCARD", version or ""))
+					end
+			     	})
+			end
 		end
 	end
 

@@ -39,6 +39,7 @@ local table             = require("jive.utils.table")
 local debug             = require("jive.utils.debug")
 local oo                = require("loop.base")
 
+local System            = require("jive.System")
 local Event             = require("jive.ui.Event")
 local Framework         = require("jive.ui.Framework")
 local Task              = require("jive.ui.Task")
@@ -340,31 +341,14 @@ function registerCpuActive(self, callback)
 end
 
 
-
---[[
-
-=head2 getUUID()
-
-Returns the UUID and Mac address of this device.
-
-=cut
---]]
+-- deprecated
 function getUUID(self)
-	return self.uuid, self.mac
+	return System:getUUID(), System:getMacAddress()
 end
 
 
---[[
-
-=head2 setUUID(uuid, mac)
-
-Sets the UUID and Mac address of this device.
-
-=cut
---]]
 function setUUID(self, uuid, mac)
-	self.uuid = uuid
-	self.mac = string.lower(mac)
+	_assert(false, "NetworkThread:setUUID is deprecated")
 end
 
 

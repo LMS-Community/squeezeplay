@@ -28,6 +28,7 @@ local io              = require("io")
 local lfs             = require("lfs")
 
 local Applet          = require("jive.Applet")
+local System          = require("jive.System")
 local Checkbox        = require("jive.ui.Checkbox")
 local RadioButton     = require("jive.ui.RadioButton")
 local RadioGroup      = require("jive.ui.RadioGroup")
@@ -61,7 +62,7 @@ local KEY_VOLUME_DOWN        = jive.ui.KEY_VOLUME_DOWN
 module(...)
 oo.class(_M, Applet)
 
-local path = string.match(Framework:findFile("applets/SetupSoundEffects/sounds/bump.wav"), "(.*)bump.wav")
+local path = string.match(System:findFile("applets/SetupSoundEffects/sounds/bump.wav"), "(.*)bump.wav")
 log:info("path: ", path)
 
 local REFRESH_TIME = 300

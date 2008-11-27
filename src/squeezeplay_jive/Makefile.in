@@ -69,12 +69,6 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 jiveBSP_la_LIBADD =
 am_jiveBSP_la_OBJECTS = jive_bsp.lo
 jiveBSP_la_OBJECTS = $(am_jiveBSP_la_OBJECTS)
-jiveWatchdog_la_LIBADD =
-am_jiveWatchdog_la_OBJECTS = jive_watchdog.lo
-jiveWatchdog_la_OBJECTS = $(am_jiveWatchdog_la_OBJECTS)
-jiveWireless_la_LIBADD =
-am_jiveWireless_la_OBJECTS = jive_wireless.lo wpa_ctrl.lo
-jiveWireless_la_OBJECTS = $(am_jiveWireless_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/src
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
@@ -86,10 +80,8 @@ LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(jiveBSP_la_SOURCES) $(jiveWatchdog_la_SOURCES) \
-	$(jiveWireless_la_SOURCES)
-DIST_SOURCES = $(jiveBSP_la_SOURCES) $(jiveWatchdog_la_SOURCES) \
-	$(jiveWireless_la_SOURCES)
+SOURCES = $(jiveBSP_la_SOURCES)
+DIST_SOURCES = $(jiveBSP_la_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -124,6 +116,7 @@ CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DSYMUTIL = @DSYMUTIL@
 ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -144,6 +137,7 @@ LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
+NMEDIT = @NMEDIT@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -156,6 +150,7 @@ RANLIB = @RANLIB@
 SDL_CFLAGS = @SDL_CFLAGS@
 SDL_CONFIG = @SDL_CONFIG@
 SDL_LIBS = @SDL_LIBS@
+SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
@@ -208,19 +203,10 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AM_CFLAGS = -Wall -Werror -D_GNU_SOURCE
-lib_LTLIBRARIES = jiveBSP.la jiveWireless.la jiveWatchdog.la
+lib_LTLIBRARIES = jiveBSP.la
 jiveBSP_la_LDFLAGS = -module -no-version
 jiveBSP_la_SOURCES = \
 	src/jive_bsp.c
-
-jiveWireless_la_LDFLAGS = -module -no-version
-jiveWireless_la_SOURCES = \
-	src/jive_wireless.c \
-	src/wpa_ctrl.c
-
-jiveWatchdog_la_LDFLAGS = -module -no-version
-jiveWatchdog_la_SOURCES = \
-	src/jive_watchdog.c
 
 JIVE_BUILD_DIR = $(DESTDIR)$(datadir)/jive
 all: all-am
@@ -306,10 +292,6 @@ clean-libLTLIBRARIES:
 	done
 jiveBSP.la: $(jiveBSP_la_OBJECTS) $(jiveBSP_la_DEPENDENCIES) 
 	$(LINK) -rpath $(libdir) $(jiveBSP_la_LDFLAGS) $(jiveBSP_la_OBJECTS) $(jiveBSP_la_LIBADD) $(LIBS)
-jiveWatchdog.la: $(jiveWatchdog_la_OBJECTS) $(jiveWatchdog_la_DEPENDENCIES) 
-	$(LINK) -rpath $(libdir) $(jiveWatchdog_la_LDFLAGS) $(jiveWatchdog_la_OBJECTS) $(jiveWatchdog_la_LIBADD) $(LIBS)
-jiveWireless.la: $(jiveWireless_la_OBJECTS) $(jiveWireless_la_DEPENDENCIES) 
-	$(LINK) -rpath $(libdir) $(jiveWireless_la_LDFLAGS) $(jiveWireless_la_OBJECTS) $(jiveWireless_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -318,9 +300,6 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_bsp.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_watchdog.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_wireless.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wpa_ctrl.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
@@ -349,27 +328,6 @@ jive_bsp.lo: src/jive_bsp.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/jive_bsp.c' object='jive_bsp.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_bsp.lo `test -f 'src/jive_bsp.c' || echo '$(srcdir)/'`src/jive_bsp.c
-
-jive_watchdog.lo: src/jive_watchdog.c
-@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_watchdog.lo -MD -MP -MF "$(DEPDIR)/jive_watchdog.Tpo" -c -o jive_watchdog.lo `test -f 'src/jive_watchdog.c' || echo '$(srcdir)/'`src/jive_watchdog.c; \
-@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/jive_watchdog.Tpo" "$(DEPDIR)/jive_watchdog.Plo"; else rm -f "$(DEPDIR)/jive_watchdog.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/jive_watchdog.c' object='jive_watchdog.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_watchdog.lo `test -f 'src/jive_watchdog.c' || echo '$(srcdir)/'`src/jive_watchdog.c
-
-jive_wireless.lo: src/jive_wireless.c
-@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_wireless.lo -MD -MP -MF "$(DEPDIR)/jive_wireless.Tpo" -c -o jive_wireless.lo `test -f 'src/jive_wireless.c' || echo '$(srcdir)/'`src/jive_wireless.c; \
-@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/jive_wireless.Tpo" "$(DEPDIR)/jive_wireless.Plo"; else rm -f "$(DEPDIR)/jive_wireless.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/jive_wireless.c' object='jive_wireless.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_wireless.lo `test -f 'src/jive_wireless.c' || echo '$(srcdir)/'`src/jive_wireless.c
-
-wpa_ctrl.lo: src/wpa_ctrl.c
-@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT wpa_ctrl.lo -MD -MP -MF "$(DEPDIR)/wpa_ctrl.Tpo" -c -o wpa_ctrl.lo `test -f 'src/wpa_ctrl.c' || echo '$(srcdir)/'`src/wpa_ctrl.c; \
-@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/wpa_ctrl.Tpo" "$(DEPDIR)/wpa_ctrl.Plo"; else rm -f "$(DEPDIR)/wpa_ctrl.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/wpa_ctrl.c' object='wpa_ctrl.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o wpa_ctrl.lo `test -f 'src/wpa_ctrl.c' || echo '$(srcdir)/'`src/wpa_ctrl.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

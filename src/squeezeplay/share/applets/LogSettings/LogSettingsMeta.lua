@@ -35,9 +35,17 @@ end
 
 
 function registerApplet(meta)
-	-- only make this available if an SD card is slotted in and a /mnt/mmc/log directory is present
-	local SDCARD_PATH = "/mnt/mmc/log"
-	if lfs.attributes(SDCARD_PATH, "mode") == "directory" then
+	-- only make this available if an SD card is slotted in and
+	-- a /media/*/log directory is present
+	local media = false
+	for dir in lfs.dir("/media") do
+		if lfs.attributes("/media/" .. dir .. "/log", "mode") == "directory" then
+			media = true
+			break
+		end
+	end
+
+	if media then
 		jiveMain:addItem(meta:menuItem('appletLogSettings', 'advancedSettings', 'DEBUG_LOG', function(applet, ...) applet:logSettings(...) end))
 	end
 end

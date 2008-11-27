@@ -4,6 +4,7 @@ local assert, getmetatable = assert, getmetatable
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
+local System        = require("jive.System")
 
 local LocalPlayer   = require("jive.slim.LocalPlayer")
 local SlimServer    = require("jive.slim.SlimServer")
@@ -55,11 +56,12 @@ function configureApplet(meta)
 
 
 	-- Create player instance
-	local uuid, id = jnt:getUUID()
+	local uuid = System:getUUID()
+	local playerid = System:getMacAddress()
 	assert(uuid)
-	assert(id)
+	assert(playerid)
 
-	meta.state.player = LocalPlayer(jnt, id, uuid)
+	meta.state.player = LocalPlayer(jnt, playerid, uuid)
 
 	-- Connect player
 	local server = nil

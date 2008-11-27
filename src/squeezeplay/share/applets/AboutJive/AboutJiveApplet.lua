@@ -11,6 +11,7 @@ local table                  = require("jive.utils.table")
 local io                     = require("io")
 
 local Applet                 = require("jive.Applet")
+local System                 = require("jive.System")
 local Framework              = require("jive.ui.Framework")
 local Label                  = require("jive.ui.Label")
 local Textarea               = require("jive.ui.Textarea")
@@ -31,13 +32,11 @@ function settingsShow(self)
 
 	local version = JIVE_VERSION
 
-	local uuid, hwaddr = jnt:getUUID()
-
 	local about = {
 		tostring(self:string("ABOUT_VERSION")),
 		version,
 		"",
-		tostring(self:string("ABOUT_MAC_ADDRESS", hwaddr)),
+		tostring(self:string("ABOUT_MAC_ADDRESS", System:getMacAddress()) or ""),
 		"",
 		tostring(self:string("ABOUT_CREDITS")),
 		"     Sean Adams",

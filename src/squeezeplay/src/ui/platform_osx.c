@@ -14,20 +14,27 @@
 #include <ifaddrs.h>
 #include <net/if_types.h>
 
-static void osx_get_app_home_dir(char *path);
-void osx_get_mac_address(char *address);
 
-static void osx_get_app_home_dir(char *path) {
+#define PREF_DIR "/Library/Preferences/SqueezePlay"
+
+char *platform_get_home_dir() {
+    char *dir;
     const char *home = getenv("HOME");
+
+    dir = malloc(strlen(home) + strlen(PREF_DIR) + 1);
     strcpy(path, home);
-    strcat(path, "/Library/Preferences/SqueezePlay");
+    strcat(path, PREF_DIR);
+
+    return dir;
 }
 
-void osx_get_mac_address(char *address) {
+char *platform_get_mac_address() {
     struct ifaddrs* ifaphead;
     struct ifaddrs* ifap;
+    char *macaddr = NULL;
+
     if ( getifaddrs( &ifaphead ) != 0 )
-      return;
+      return NULL;
     
     // iterate over the net interfaces
     for ( ifap = ifaphead; ifap; ifap = ifap->ifa_next )
@@ -38,20 +45,23 @@ void osx_get_mac_address(char *address) {
             //take the first found address. 
             //todo: can we be smarter about which is the correct address
             unsigned char * ptr = (unsigned char *)LLADDR(sdl);
-            sprintf(address, "%02x:%02x:%02x:%02x:%02x:%02x", *ptr,*(ptr+1), *(ptr+2),*(ptr+3), *(ptr+4), *(ptr+5));
+	    macaddr = malloc(18);
+            sprintf(macaddr, "%02x:%02x:%02x:%02x:%02x:%02x", *ptr,*(ptr+1), *(ptr+2),*(ptr+3), *(ptr+4), *(ptr+5));
             break;
         }
     }
     
     freeifaddrs( ifaphead );
+
+    return macaddr;
 }
 
+char *platform_get_arch() {
+    // FIXME
+    return NULL;
+}
 
-void jive_platform_init(lua_State *L) {
-	get_app_home_dir_platform = osx_get_app_home_dir;
-	get_mac_address = osx_get_mac_address;
+void platform_init(lua_State *L) {
 }
 
 #endif
-
-

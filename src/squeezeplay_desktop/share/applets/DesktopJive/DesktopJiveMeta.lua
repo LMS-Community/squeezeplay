@@ -7,6 +7,7 @@ local table         = require("jive.utils.table")
 
 local AppletMeta    = require("jive.AppletMeta")
 local Framework     = require("jive.ui.Framework")
+local System        = require("jive.System")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
@@ -32,9 +33,10 @@ end
 
 
 function registerApplet(meta)
-    --disable arp to avoid os calls, which is problematic on windows - popups, vista permissions -  disabling disables WOL functionality
-    jnt:setArpEnabled(false)
-    
+	--disable arp to avoid os calls, which is problematic on windows - popups, vista permissions -  disabling disables WOL functionality
+	jnt:setArpEnabled(false)
+
+
 	local settings = meta:getSettings()
 
 	local store = false
@@ -51,11 +53,8 @@ function registerApplet(meta)
 	end
 
 	if not settings.mac then
-	    local mac = Framework:getMacAddress()
-        if mac then
-			store = true
-            settings.mac = mac
-        end
+		settings.mac = System:getMacAddress()
+		store = true
 	end
 
 	if not settings.mac then
@@ -70,13 +69,16 @@ function registerApplet(meta)
 	end
 
 	if store then
-	    log:debug("UUID: ", settings.uuid)
-	    log:debug("Mac Address: ", settings.mac)
+		log:debug("Mac Address: ", settings.mac)
 		meta:storeSettings()
 	end
 
-	-- set uuid
-	jnt:setUUID(settings.uuid, settings.mac)
+	-- set mac address and uuid
+	System:init({
+		macAddress = settings.mac,
+		uuid = settings.uuid,
+	})
+
 	
 	appletManager:addDefaultSetting("ScreenSavers", "whenStopped", "false:false")
 	appletManager:addDefaultSetting("Playback", "enableAudio", 1)

@@ -270,6 +270,8 @@ end
 
 
 function _streamConnect(self, serverIp, serverPort)
+
+log:warn("CONNECT TO ", serverIp)
 	self.stream = Stream:connect(serverIp, serverPort)
 
 	log:info("connect streambuf")

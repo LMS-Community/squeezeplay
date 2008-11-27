@@ -20,9 +20,10 @@ ScreenshotApplet overrides the following methods:
 -- stuff we use
 local oo               = require("loop.simple")
 local string           = require("string")
-local io               = io
+local lfs              = require("lfs")
 
 local Applet           = require("jive.Applet")
+local System           = require("jive.System")
 local Framework        = require("jive.ui.Framework")
 local Surface          = require("jive.ui.Surface")
 local Window           = require("jive.ui.Window")
@@ -40,23 +41,19 @@ local function _keyHold(self, event)
 	if event:getKeycode() == (KEY_REW | KEY_PAUSE) then
 		Framework:playSound("CLICK")
 
-		local file = string.format("jive%04d.bmp", self.number)
-		self.number = self.number + 1
-		
-		local mounts = io.open('/proc/mounts')
-		while true do
-			local line = mounts:read()
-
-			if not line then
+		-- write to /media/*/log/squeezeplayXXXX.bmp or userpath
+		local path = System.getUserDir()
+		for dir in lfs.dir("/media") do
+			local tmp = "/media/" .. dir .. "/log"
+			if lfs.attributes(tmp, "mode") == "directory" then
+				path = tmp
 				break
 			end
-
-			if string.match(line, '/mnt/mmc') then
-				file = '/mnt/mmc/'..file
-			end
 		end
-		mounts:close()
 
+		local file = path .. string.format("/squeezeplay%04d.bmp", self.number)
+		self.number = self.number + 1
+		
 		log:warn("Taking screenshot " .. file)
 
 		-- take screenshot
