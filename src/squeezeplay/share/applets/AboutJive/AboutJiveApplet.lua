@@ -36,7 +36,7 @@ function settingsShow(self)
 		tostring(self:string("ABOUT_VERSION")),
 		version,
 		"",
-		tostring(self:string("ABOUT_MAC_ADDRESS", System:getMacAddress())),
+		tostring(self:string("ABOUT_MAC_ADDRESS", System:getMacAddress()) or ""),
 		"",
 		tostring(self:string("ABOUT_CREDITS")),
 		"     Sean Adams",

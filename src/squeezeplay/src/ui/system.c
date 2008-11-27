@@ -75,10 +75,18 @@ static int system_init(lua_State *L) {
 
 	lua_getfield(L, 2, "macAddress");
 	if (!lua_isnil(L, -1)) {
+		char *ptr;
+
 		if (mac_address) {
 			free(mac_address);
 		}
 		mac_address = strdup(lua_tostring(L, -1));
+
+		ptr = mac_address;
+		while (*ptr) {
+			*ptr = tolower(*ptr);
+			ptr++;
+		}
 	}
 	lua_pop(L, 1);
 
@@ -241,8 +249,17 @@ static const struct luaL_Reg squeezeplay_system_methods[] = {
 
 int squeezeplayL_system_init(lua_State *L) {
 	const char *homeenv = getenv("SQUEEZEPLAY_HOME");
+	char *ptr;
 
 	mac_address = platform_get_mac_address();
+	if (mac_address) {
+		ptr = mac_address;
+		while (*ptr) {
+			*ptr = tolower(*ptr);
+			ptr++;
+		}
+	}
+
 	arch = platform_get_arch();
 	machine = strdup("squeezeplay");
 	if (homeenv) {
