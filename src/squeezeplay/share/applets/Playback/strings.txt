@@ -3,51 +3,194 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 AUDIO_PLAYBACK
+	DA	Lydafspilning
+	DE	Audio-Wiedergabe
 	EN	Audio Playback
+	ES	Reproducción de audio
+	FI	Äänentoisto
+	FR	Lecture audio
+	IT	Riproduzione audio
+	NL	Audio afspelen
+	NO	Lydavspilling
+	SV	Ljuduppspelning
 
 ENABLE_AUDIO
+	DA	Aktiver afspilning (BETA)
+	DE	Wiedergabe aktivieren (BETA)
 	EN	Enable Playback (BETA)
+	ES	Activar reproducción (BETA)
+	FI	Ota käyttöön toisto (BETA)
+	FR	Activer la lecture (BETA)
+	IT	Attiva riproduzione (BETA)
+	NL	Afspelen inschakelen (BETA)
+	NO	Aktiver avspilling (beta)
+	SV	Aktivera uppspelning (BETA)
 
 DEBUG_AUDIO
+	DA	Fejlfinding ved afspilning
+	DE	Wiedergabe-Debug
 	EN	Debug Playback
+	ES	Depurar reproducción
+	FI	Virheenkorjaustoisto
+	FR	Débogage de la lecture
+	IT	Debug riproduzione
+	NL	Afspelen debuggen
+	NO	Feilsøk avspilling
+	SV	Felsök uppspelning
 
 TEST_TONES
+	DA	Testtoner
+	DE	Testtöne
 	EN	Test Tones
+	ES	Tonos de prueba
+	FI	Testiäänet
+	FR	Tester sons
+	IT	Prova toni
+	NL	Testtonen
+	NO	Testtoner
+	SV	Testtoner
 
 FORMAT
+	DA	Format:
+	DE	Format:
 	EN	Format:
+	ES	Formato:
+	FI	Muoto:
+	FR	Format:
+	IT	Formato:
+	NL	Indeling:
+	NO	Format:
+	SV	Format:
 
 DECODE_BUFFER
+	DA	Afkodningsbuffer:
+	DE	Decode-Puffer
 	EN	Decode buffer:
+	ES	Búfer de descodificador:
+	FI	Purkupuskuri:
+	FR	Tampon de décodage:
+	IT	Buffer decodifica:
+	NL	Decoderingsbuffer:
+	NO	Dekoder buffer:
+	SV	Avkodningsbuffert:
 
 OUTPUT_BUFFER
+	DA	Outputbuffer:
+	DE	Ausgabe-Puffer
 	EN	Output buffer:
+	ES	Búfer de salida:
+	FI	Toistopuskuri:
+	FR	Tampon de sortie:
+	IT	Buffer di output:
+	NL	Uitvoerbuffer:
+	NO	Utsignalbuffer:
+	SV	Utgångsbuffert:
 
 ELAPSED_SECS
+	DA	Forløbet (sek.):
+	DE	Vergangene Sek.:
 	EN	Elapsed Secs:
+	ES	Segundos transcurridos:
+	FI	Kuluneet sekunnit:
+	FR	Secs écoulées:
+	IT	Secondi trascorsi:
+	NL	Verstreken seconden:
+	NO	Sekunder gått:
+	SV	Sekunder som förflutit:
 
 NUM_TRACKS
+	DA	Antal numre:
+	DE	Anzahl Titel:
 	EN	Num Tracks:
+	ES	Número de pistas:
+	FI	Raitojen määrä:
+	FR	Pistes num:
+	IT	N. brani:
+	NL	Tracknummers:
+	NO	Ant. spor:
+	SV	Antal spår:
 
 DECODE_STATE
+	DA	Afkodningsstatus:
+	DE	Dekodierstatus:
 	EN	Decode State:
+	ES	Estado de descodificación:
+	FI	Purkutila:
+	FR	Etat de décodage:
+	IT	Stato decodifica:
+	NL	Decoderingsstatus:
+	NO	Omkodingsstatus:
+	SV	Avkodningsstatus:
 
 MULTITONE
+	DA	Flertoners
+	DE	Multiton
 	EN	Multitone
+	ES	Multitono
+	FI	Moniääni
+	FR	Multisons
+	IT	Multitono
+	NL	Meerdere tonen
+	NO	Multitone
+	SV	Flera toner
 
-SINE_44.1k
+SINE_44	DA	Sinus 44,1 k
+	DE	Sinus 44.1k
 	EN	Sine 44.1k
+	ES	Seno 44,1 kHz
+	FI	Sini 44,1 k
+	FR	Sinus 44,1k
+	IT	Seno di 44,1 k
+	NL	Sinus 44.1 k
+	NO	Sinus 44.1k
+	SV	Sinus 44,1 k
+.1k
 
 SINE_48k
+	DA	Sinus 48 k
+	DE	Sinus 48k
 	EN	Sine 48k
+	ES	Seno 48 kHz
+	FI	Sini 48 k
+	FR	Sinus 48k
+	IT	Seno di 48 k
+	NL	Sinus 48 k
+	NO	Sinus 48k
+	SV	Sinus 48 k
 
-SINE_88.2K
+SINE_88	DA	Sinus 88,2 k
+	DE	Sinus 88.2k
 	EN	Sine 88.2k
+	ES	Seno 88,2 kHz
+	FI	Sini 88,2 k
+	FR	Sinus 88,2k
+	IT	Seno di 88,2 k
+	NL	Sinus 88.2 k
+	NO	Sinus 88.2k
+	SV	Sinus 88,2 k
+.2K
 
 SINE_96K
+	DA	Sinus 96 k
+	DE	Sinus 96k
 	EN	Sine 96k
+	ES	Seno 96 kHz
+	FI	Sini 96 k
+	FR	Sinus 96k
+	IT	Seno di 96 k
+	NL	Sinus 96 k
+	NO	Sinus 96k
+	SV	Sinus 96 k
 
 SINE_STOP
+	DA	Stop
+	DE	Stopp
 	EN	Stop
-
+	ES	Detener
+	FI	Seis
+	FR	Arrêt
+	IT	Arresta
+	NL	Stoppen
+	NO	Stopp
+	SV	Stoppa
 

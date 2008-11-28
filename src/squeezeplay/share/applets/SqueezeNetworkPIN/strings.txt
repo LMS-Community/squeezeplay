@@ -32,7 +32,7 @@ SQUEEZENETWORK_PIN_HELP
 	IT	Visitare il sito Web\n%s\ne inserire il PIN per accedere all'account. Premere il pulsante centrale dopo avere inserito il PIN.
 	NL	Ga naar\n%s\nen voer je pincode in om naar je account te gaan. Druk op de middelste knop nadat je je pincode hebt ingevoerd.
 	NO	Gå til\n%s\n og skriv inn pin-koden for å kople til kontoen din.  Trykk på midtknappen etter at du har oppgitt pin-koden.
-	SV	Gå till\n%s\noch ange din PIN-kod för att ansluta till kontot.  Tryck på mittknappen när du har angett PIN-koden.
+	SV	Gå till\n%s\noch ange din PIN-kod för att ansluta till kontot.  Tryck på mittenknappen när du har angett PIN-koden.
 
 SQUEEZENETWORK_NOT_LINKED
 	DA	Pinkoden kunne ikke verificeres.  Har du angivet den på websiden?

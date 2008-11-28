@@ -72,7 +72,7 @@ SLIMBROWSER_SEARCH_HELP
 	IT	Usa la rotellina per cambiare le lettere e premi il pulsante centrale per selezionarle. Premi nuovamente il pulsante centrale per avviare la ricerca.
 	NL	Gebruik het scrollwiel om letters te wijzigen. Druk dan op de middelste knop om die letter te selecteren. Druk nogmaals op de middelste knop om je zoekopdracht te starten.
 	NO	Du kan endre bokstav med rullehjulet, og velge bokstav med midtknappen. Trykk på midtknappen på nytt for å starte søket.
-	SV	Markera en bokstav med rullningshjulet och tryck sedan på mittknappen för att välja bokstaven. Tryck på mittknappen igen när du vill börja söka.
+	SV	Markera en bokstav med rullningshjulet och tryck sedan på mittenknappen för att välja bokstaven. Tryck på mittenknappen igen när du vill börja söka.
 
 SLIMBROWSER_PROBLEM_CONNECTING
 	DA	Problem med forbindelsen
@@ -132,7 +132,7 @@ SLIMBROWSER_PROBLEM_CONNECTING_HELP
 	IT	Problema di connessione a %s
 	NL	Probleem bij verbinden met %s
 	NO	Klarer ikke å kople til %s
-	SV	Det går inte att ansluta till %.
+	SV	Det går inte att ansluta till %s.
 
 SLIMBROWSER_NOTHING
 	DA	Intet

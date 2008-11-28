@@ -57,7 +57,7 @@ SCREENSAVER_SELECT_HELP
 	IT	Premere il pulsante centrale per selezionare uno screen saver e il pulsante di riproduzione per vederne l'anteprima.
 	NL	Druk op de middelste knop om een schermbeveiliger te kiezen. Druk op PLAY om een voorbeeld te bekijken.
 	NO	Trykk på den midterste knappen for å velge en skjermsparer, og trykk så på Spill av for å forhåndsvise.
-	SV	Tryck på mittknappen om du vill välja en skärmsläckare eller på Spela upp om du vill förhandsgranska.
+	SV	Tryck på mittenknappen om du vill välja en skärmsläckare eller på Spela upp om du vill förhandsgranska.
 
 DELAY_10_SEC
 	DA	10 sekunder
