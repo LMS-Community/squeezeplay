@@ -4,6 +4,8 @@ local error, tonumber = error, tonumber
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
+local System        = require("jive.System")
+
 local jul           = require("jive.utils.log")
 local log           = require("jive.utils.log").logger("applets.setup")
 local debug         = require("jive.utils.debug")
@@ -98,7 +100,12 @@ function notify_playerCurrent(meta, player)
 
 		end
 
-	local fwcmd = { 'firmwareupgrade', 'firmwareVersion:' .. JIVE_VERSION, 'subscribe:0' }
+	local fwcmd = {
+		'firmwareupgrade',
+		'firmwareVersion:' .. JIVE_VERSION,
+		'machine:' .. System:getMachine(),
+		'subscribe:0'
+	}
 	player:subscribe(
 			 '/slim/firmwarestatus/' .. player:getId(),
 			 firmwareUpgradeSink,

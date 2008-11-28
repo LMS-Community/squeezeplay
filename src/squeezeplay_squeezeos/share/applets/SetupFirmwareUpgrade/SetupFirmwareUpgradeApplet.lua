@@ -97,7 +97,7 @@ function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
 
 	local help = Textarea("help", "")
 
-	if url then
+	if url and string.match(url, machine) then
 		local version = self:_firmwareVersion(url)
 		local networkUpdateItem = {
 			text = self:string("BEGIN_UPDATE"),
@@ -260,12 +260,15 @@ end
 function _t_upgrade(self)
 	Task:yield(true)
 
-	local t, err = self.upgrade:start(function(...)
-						  self:_t_setText(...)
-					  end)
+	local upgrade = Upgrade()
+	local t, err = upgrade:start(self.url,
+		function(...)
+			self:_t_setText(...)
+		end)
 
-	if t == nil then
+	if not t then
 		-- error
+		log:error("Upgrade failed: ", err)
 		self:_upgradeFailed():showInstead()
 
 		if self.popup then
@@ -315,7 +318,6 @@ function _upgrade(self)
 	appletManager:callService("disconnectPlayer")
 
 	-- start the upgrade
-	self.upgrade = Upgrade(self.url)
 	Task("upgrade", self, _t_upgrade, _upgradeFailed):addTask()
 
 	self:tieAndShowWindow(self.popup)
