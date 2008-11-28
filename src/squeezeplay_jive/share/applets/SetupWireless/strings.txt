@@ -325,7 +325,7 @@ NETWORK_WIRELESS_KEY_HELP
 	IT	Inserire la chiave della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare una lettera. Premere il pulsante centrale due volte per uscire.
 	NL	Voer je draadloze sleutel in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
 	NO	Angi trådløst passord. Bla for å endre bokstav, og trykk på midtknappen for å velge bokstav. Trykk midtknappen to ganger for å avslutte.
-	SV	Ange trådlöst lösenord. Markera en bokstav med rullningshjulet och tryck sedan på mittknappen för att välja bokstaven. Tryck två gånger på mittknappen för att slutföra.
+	SV	Ange trådlöst lösenord. Markera en bokstav med rullningshjulet och tryck sedan på mittenknappen för att välja bokstaven. Tryck två gånger på mittenknappen för att slutföra.
 
 NETWORK_REGION
 	DA	Trådløst område
@@ -589,7 +589,7 @@ NETWORK_WIRELESS_PASSWORD_HELP
 	IT	Inserire la password della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare la lettera. Premere il pulsante centrale due volte per completare l'operazione.
 	NL	Voer je draadloze wachtwoord in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
 	NO	Angi trådløst passord. Rull for å endre bokstav, og trykk på midtknappen for å velge bokstav. Trykk på midtknappen to ganger for å avslutte.
-	SV	Ange lösenordet för det trådlösa nätverket. Markera en bokstav med rullningshjulet och tryck sedan på mittknappen för att välja bokstaven. Tryck två gånger på mittknappen för att slutföra.
+	SV	Ange lösenordet för det trådlösa nätverket. Markera en bokstav med rullningshjulet och tryck sedan på mittenknappen för att välja bokstaven. Tryck två gånger på mittenknappen för att slutföra.
 
 NETWORK_CONNECTING_TO
 	DA	Etablerer forbindelse til\n%s
@@ -700,7 +700,7 @@ NETWORK_PROBLEM_PASSWORD_INCORRECT
 	SV	Lösenordet du angav är felaktigt.
 
 NETWORK_IP_ADDRESS
-	DA	IP-adresse
+	DA	IP adresse
 	DE	IP-Adresse:
 	EN	IP Address
 	ES	Dirección IP:
@@ -708,7 +708,7 @@ NETWORK_IP_ADDRESS
 	FR	Adresse IP:
 	IT	Indirizzo IP:
 	NL	IP-adres:
-	NO	Ip-adresse
+	NO	IP-adresse
 	SV	IP-adress
 
 NETWORK_NETWORK_NAME
@@ -733,7 +733,7 @@ NETWORK_NETWORK_NAME_HELP
 	IT	Inserire il nome della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare la lettera. Premere il pulsante centrale due volte per completare l'operazione.
 	NL	Voer de naam van je draadloze netwerk in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
 	NO	Angi navnet på det trådløse nettverket. Bla for å endre bokstav, og trykk på midtknappen for å velge bokstav. Trykk midtknappen to ganger for å avslutte.
-	SV	Ange namnet på det trådlösa nätverket. Markera en bokstav med rullningshjulet och tryck sedan på mittknappen för att välja bokstaven. Tryck två gånger på mittknappen för att slutföra.
+	SV	Ange namnet på det trådlösa nätverket. Markera en bokstav med rullningshjulet och tryck sedan på mittenknappen för att välja bokstaven. Tryck två gånger på mittenknappen för att slutföra.
 
 NETWORK_ADDRESS_PROBLEM
 	DA	Adresseproblem
@@ -748,7 +748,7 @@ NETWORK_ADDRESS_PROBLEM
 	SV	Adressproblem
 
 NETWORK_ADDRESS_HELP
-	DA	Der opstod et problem da DHCP-adressen skulle hentes på dit netværk.
+	DA	Der opstod et problem under hentning af DHCP adresse på dit netværk.
 	DE	Problem bei Abfrage einer DHCP-Adresse in Ihrem Netzwerk.
 	EN	There was a problem obtaining a DHCP address on your network.
 	ES	Problema al obtener una dirección DHCP en la red.
@@ -756,7 +756,7 @@ NETWORK_ADDRESS_HELP
 	FR	Un problème est survenu lors de l'obtention d'une adresse DHCP du réseau.
 	IT	Impossibile ottenere un indirizzo DHCP nella rete.
 	NL	Er is een probleem met het verkrijgen van een DHCP-adres op je netwerk.
-	NO	Det oppsto et problem med å finne en dhcp-adresse på nettverket.
+	NO	Det oppsto et problem med å finne en DHCP-adresse på nettverket.
 	SV	Det gick inte att erhålla en DHCP-adress på nätverket.
 
 NETWORK_ADDRESS_HELP_WEP
@@ -931,7 +931,7 @@ NETWORK_PROBLEM_HELP
 	IT	Problema di connessione del telecomando a %s
 	NL	Deze afstandsbediening kan geen verbinding maken met %s.
 	NO	Denne fjernkontrollen klarer ikke å kople til %s.
-	SV	Det går inte att ansluta fjärrkontrollen till %.
+	SV	Det går inte att ansluta fjärrkontrollen till %s.
 
 ALLOWEDCHARS_WPA
 	DA	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789

@@ -157,17 +157,17 @@ CHOOSE_LANGUAGE_HELP
 	IT	Utilizzare la ghiera per scegliere la lingua. Premere il pulsante centrale per continuare.
 	NL	Gebruik het wiel om je taal te kiezen. Druk op de middelste knop om verder te gaan.
 	NO	Bruk hjulet for å velge språk. Trykk på den midterste knappen for å komme videre.
-	SV	Välj språk med hjälp av rullningshjulet. Tryck på mittknappen för att gå vidare.
+	SV	Välj språk med hjälp av rullningshjulet. Tryck på mittenknappen för att gå vidare.
 
 LOADING_LANGUAGE
 	DA	Indlæser dansk
-	DE	Englisch wird geladen
+	DE	Deutsch wird geladen
 	EN	Loading English
-	ES	Cargando inglés
-	FI	Ladataan englanti
-	FR	Chargement de l'anglais
-	IT	Caricamento lingua inglese
-	NL	Engels wordt geladen
+	ES	Cargando español
+	FI	Ladataan suomi
+	FR	Chargement du français
+	IT	Caricamento lingua italiano
+	NL	Nederlands wordt geladen
 	NO	Laster inn norsk
-	SV	Läser in engelska
+	SV	Läser in svenska
 

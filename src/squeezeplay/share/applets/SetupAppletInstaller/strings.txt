@@ -11,7 +11,16 @@ APPLET_INSTALLER
 	SV	Installationsprogram för appletprogram
 
 APPLET_FETCHING
+	DA	Henter liste med underprogrammer
+	DE	Laden der Applet-Liste
 	EN	Fetching Applet List
+	ES	Obteniendo lista de subprogramas
+	FI	Noudetaan sovelmaluetteloa
+	FR	Récupération de la liste d'applets
+	IT	Recupero elenco applet in corso
+	NL	Appletlijst wordt opgehaald
+	NO	Henter liste over tilleggsprogram
+	SV	Hämtar lista över appletar
 
 INSTALL
 	DA	Installer
@@ -38,7 +47,16 @@ NONE_FOUND
 	SV	Det gick inte att hitta några appletprogram
 
 HELP
+	DA	Vælg det underprogram som skal installeres, og vælg derefter Installer
+	DE	Wählen Sie die zu installierenden Applets und anschließend 'Installieren'.
 	EN	Choose applets to be installed and then select Install
+	ES	Elija los subprogramas que instalar y seleccione Instalar
+	FI	Valitse asennettavat sovelmat ja sitten Asenna
+	FR	Sélectionnez les applets à installer, puis sélectionnez Installer.
+	IT	Scegliere le applet da installare, quindi selezionare Installa
+	NL	Kies applets om te installeren, en selecteer dan 'Installeren'
+	NO	Velg tilleggsprogrammene som skal installeres, og velg så Installer
+	SV	Välj de appletar du vill installera och välj sedan Installera
 
 DOWNLOADING
 	DA	\nHenter underprogrammer

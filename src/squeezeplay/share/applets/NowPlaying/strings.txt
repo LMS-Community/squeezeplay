@@ -75,14 +75,50 @@ SCREENSAVER_OFF
 	SV	Av
 
 SCREENSAVER_ARTWORK_SIZE
+	DA	Størrelse af albumcover ved Nu spiller
+	DE	Plattenhüllen-Größe der aktuellen Wiedergabe
 	EN	Now Playing Artwork Size
+	ES	Tamaño de carátula de Reproduciendo
+	FI	Nyt soi -kansitaiteen koko
+	FR	Taille Lecture
+	IT	Dimensioni copertina brano in riproduzione
+	NL	Grootte hoesafbeelding bij 'Speelt nu'
+	NO	Omslagsstørrelse på Spiller av nå
+	SV	Storlek på omslag för album som spelas
 
 SCREENSAVER_ARTWORK_SMALL
+	DA	Lille
+	DE	Klein
 	EN	Small
+	ES	Pequeño
+	FI	Pieni
+	FR	Petit
+	IT	Piccola
+	NL	Klein
+	NO	Lite
+	SV	Liten
 
 SCREENSAVER_ARTWORK_MEDIUM
+	DA	Mellem
+	DE	Mittel
 	EN	Medium
+	ES	Medio
+	FI	Normaali
+	FR	Moyenne
+	IT	Media
+	NL	Gemiddeld
+	NO	Middels
+	SV	Medel
 
 SCREENSAVER_ARTWORK_LARGE
+	DA	Stort
+	DE	Groß
 	EN	Large
+	ES	Grande
+	FI	Suuri
+	FR	Grand
+	IT	Grande
+	NL	Groot
+	NO	Stort
+	SV	Stor
 

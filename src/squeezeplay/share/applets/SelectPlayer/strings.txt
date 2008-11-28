@@ -15,14 +15,14 @@ SELECT_PLAYER
 	SV	Välj spelare
 
 SQUEEZEBOX_SETUP
-	DA	Konfiguration af Squeezebox
+	DA	Indstillinger for Receiver
 	DE	Squeezebox einrichten
-	EN	Set Up Squeezebox
-	ES	Configuración del receptor
+	EN	Set Up Receiver
+	ES	Configuración de Squeezebox
 	FI	Ota vastaanotin käyttöön
 	FR	Configuration de la Squeezebox
 	IT	Configura Squeezebox
-	NL	Ontvanger instellen
+	NL	Squeezebox instellen
 	NO	Konfigurer mottaker
 	SV	Konfigurera mottagare
 
@@ -51,13 +51,40 @@ SQUEEZEBOX_ACTIVATE
 	SV	Aktivera %s
 
 LOCAL
+	DA	Lokal
+	DE	Lokal
 	EN	Local
+	ES	Local
+	FI	Paikallinen
+	FR	Local
+	IT	Locale
+	NL	Lokaal
+	NO	Lokal
+	SV	Lokal
 
 LOCAL_PLAYER
+	DA	Lokal afspiller
+	DE	Lokaler Player
 	EN	Local Player
+	ES	Reproductor local
+	FI	Paikallinen soitin
+	FR	Platine locale
+	IT	Lettore locale
+	NL	Lokaal muzieksysteem
+	NO	Lokal spiller
+	SV	Lokal spelare
 
 THIS_PLAYER
+	DA	Denne afspiller
+	DE	Dieser Player
 	EN	This Player
+	ES	Este reproductor
+	FI	Tämä soitin
+	FR	Cette platine
+	IT	Questo lettore
+	NL	Dit muzieksysteem
+	NO	Denne spilleren
+	SV	Den här spelaren
 
 SEARCHING
 	DA	Søger...
