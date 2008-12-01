@@ -311,10 +311,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\ui\jive_framework_windows.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\ui\jive_group.c"
 				>
 			</File>
@@ -379,7 +375,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\ui\platform_windows.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\audio\streambuf.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\ui\system.c"
 				>
 			</File>
 		</Filter>
