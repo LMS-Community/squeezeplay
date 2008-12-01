@@ -22,8 +22,8 @@ char *platform_get_home_dir() {
     const char *home = getenv("HOME");
 
     dir = malloc(strlen(home) + strlen(PREF_DIR) + 1);
-    strcpy(path, home);
-    strcat(path, PREF_DIR);
+    strcpy(dir, home);
+    strcat(dir, PREF_DIR);
 
     return dir;
 }
