@@ -63,7 +63,7 @@ static int handle_clearpad_events(int fd) {
 			// FIXME just temporary until we've worked out
 			// how to handle gestures correctly
 			switch (ev[i].code) {
-			case REL_X:
+			case REL_RX:
 				if (ev[i].value > 0) {
 					JiveEvent event;
 
