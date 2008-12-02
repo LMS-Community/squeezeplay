@@ -161,8 +161,7 @@ function _addServerItem(self, server, address)
 	local item
 	if server and currentPlayer and currentPlayer:canConnectToServer() then
 		log:debug("\tadd menu item with callback")
-		local f
-            f = function()
+		local f = function()
                     if server:isPasswordProtected() then
                         appletManager:callService("squeezeCenterPassword", server)
         		    else
