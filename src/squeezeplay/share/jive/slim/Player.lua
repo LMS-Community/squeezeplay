@@ -97,6 +97,7 @@ local DEVICE_TYPE = {
 	[ "squeezebox" ] = "ip2k",
 	[ "softsqueeze" ] = "softsqueeze",
 	[ "squeezebox2" ] = "ip3k",
+	[ "squeezebox3" ] = "ip3k",
 	[ "transporter" ] = "ip3k",
 	[ "softsqueeze3" ] = "softsqueeze",
 	[ "receiver" ] = "ip3k",
