@@ -91,6 +91,6 @@ char *platform_get_arch() {
     return NULL;
 }
 
-void jive_platform_init(lua_State *L) {
+void platform_init(lua_State *L) {
 	jive_sdlfilter_pump = windows_filter_pump;
 }
