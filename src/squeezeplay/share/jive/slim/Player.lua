@@ -154,6 +154,18 @@ function setCurrentPlayer(class, player)
 end
 
 
+function getLastBrowse(self, key)
+	if self.browseHistory[key] then
+		return self.browseHistory[key]
+	else
+		return nil
+	end
+end
+
+function setLastBrowse(self, key, lastBrowse)
+	self.browseHistory[key] = lastBrowse
+end
+
 -- _getSink
 -- returns a sink with a closure to self
 -- cmd is passed in so we know what process function to call
@@ -253,7 +265,10 @@ function __init(self, jnt, playerId)
 		isOnStage = false,
 
 		-- current song info
-		currentSong = {}
+		currentSong = {},
+
+		-- browse history
+		browseHistory = {}
 	})
 
 	playerIds[obj.id] = obj
@@ -368,6 +383,8 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 	if oldInfo.power ~= self.info.power then
 		self.jnt:notify('playerPower', self, self.info.power)
 	end
+
+	log:debug('oldInfo.connected says: ', oldInfo.connected, ' self.info.connected says: ', self.info.connected)
 
 	-- Check if the player connected status has changed
 	if oldInfo.connected ~= self.info.connected then
