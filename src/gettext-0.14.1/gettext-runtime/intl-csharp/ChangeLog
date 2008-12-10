@@ -1,0 +1,9 @@
+2004-01-28  Bruno Haible  <bruno@clisp.org>
+
+	* gettext-0.14 released.
+
+2003-12-26  Bruno Haible  <bruno@clisp.org>
+
+	* intl.cs: New file.
+	* Makefile.am: New file.
+
