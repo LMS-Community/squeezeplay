@@ -26,6 +26,7 @@
 
 #ifndef SDL_PANGO_H
 #define SDL_PANGO_H
+#define SDL_PANGO_HAS_GC_EXTENSIONS
 
 #include "SDL.h"
 
@@ -46,57 +47,27 @@ typedef struct _SDLPango_Matrix {
     Uint8 m[4][4];  /*! Matrix variables */
 } SDLPango_Matrix;
 
-const SDLPango_Matrix _MATRIX_WHITE_BACK
-    = {255, 0, 0, 0,
-       255, 0, 0, 0,
-       255, 0, 0, 0,
-       255, 255, 0, 0,};
-
 /*!
     Specifies white back and black letter.
 */
-const SDLPango_Matrix *MATRIX_WHITE_BACK = &_MATRIX_WHITE_BACK;
-
-const SDLPango_Matrix _MATRIX_BLACK_BACK
-    = {0, 255, 0, 0,
-       0, 255, 0, 0,
-       0, 255, 0, 0,
-       255, 255, 0, 0,};
+extern const SDLPango_Matrix *MATRIX_WHITE_BACK;
 /*!
     Specifies black back and white letter.
 */
-const SDLPango_Matrix *MATRIX_BLACK_BACK = &_MATRIX_BLACK_BACK;
-
-const SDLPango_Matrix _MATRIX_TRANSPARENT_BACK_BLACK_LETTER
-    = {0, 0, 0, 0,
-       0, 0, 0, 0,
-       0, 0, 0, 0,
-       0, 255, 0, 0,};
+extern const SDLPango_Matrix *MATRIX_BLACK_BACK;
 /*!
     Specifies transparent back and black letter.
 */
-const SDLPango_Matrix *MATRIX_TRANSPARENT_BACK_BLACK_LETTER = &_MATRIX_TRANSPARENT_BACK_BLACK_LETTER;
-
-const SDLPango_Matrix _MATRIX_TRANSPARENT_BACK_WHITE_LETTER
-    = {255, 255, 0, 0,
-       255, 255, 0, 0,
-       255, 255, 0, 0,
-       0, 255, 0, 0,};
+extern const SDLPango_Matrix *MATRIX_TRANSPARENT_BACK_BLACK_LETTER;
 /*!
     Specifies transparent back and white letter.
 */
-const SDLPango_Matrix *MATRIX_TRANSPARENT_BACK_WHITE_LETTER = &_MATRIX_TRANSPARENT_BACK_WHITE_LETTER;
-
-const SDLPango_Matrix _MATRIX_TRANSPARENT_BACK_TRANSPARENT_LETTER
-    = {255, 255, 0, 0,
-       255, 255, 0, 0,
-       255, 255, 0, 0,
-       0, 0, 0, 0,};
+extern const SDLPango_Matrix *MATRIX_TRANSPARENT_BACK_WHITE_LETTER;
 /*!
     Specifies transparent back and transparent letter.
     This is useful for KARAOKE like rendering.
 */
-const SDLPango_Matrix *MATRIX_TRANSPARENT_BACK_TRANSPARENT_LETTER = &_MATRIX_TRANSPARENT_BACK_TRANSPARENT_LETTER;
+extern const SDLPango_Matrix *MATRIX_TRANSPARENT_BACK_TRANSPARENT_LETTER;
 
 /*!
     Specifies direction of text. See Pango reference for detail
@@ -109,12 +80,20 @@ typedef enum {
     SDLPANGO_DIRECTION_NEUTRAL	/*! Neutral */
 } SDLPango_Direction;
 
-
+/*!
+    Specifies alignment of text. See Pango reference for detail
+*/
+typedef enum {
+    SDLPANGO_ALIGN_LEFT,
+    SDLPANGO_ALIGN_CENTER,
+    SDLPANGO_ALIGN_RIGHT
+} SDLPango_Alignment;
 
 extern DECLSPEC int SDLCALL SDLPango_Init();
 
 extern DECLSPEC int SDLCALL SDLPango_WasInit();
 
+extern DECLSPEC SDLPango_Context* SDLCALL SDLPango_CreateContext_GivenFontDesc(const char* font_desc);
 extern DECLSPEC SDLPango_Context* SDLCALL SDLPango_CreateContext();
 
 extern DECLSPEC void SDLCALL SDLPango_FreeContext(
@@ -156,6 +135,12 @@ extern DECLSPEC void SDLCALL SDLPango_SetMarkup(
     SDLPango_Context *context,
     const char *markup,
     int length);
+
+extern DECLSPEC void SDLCALL SDLPango_SetText_GivenAlignment(
+    SDLPango_Context *context,
+    const char *text,
+    int length,
+    SDLPango_Alignment alignment);
 
 extern DECLSPEC void SDLCALL SDLPango_SetText(
     SDLPango_Context *context,

@@ -286,6 +286,59 @@ typedef struct _contextImpl {
 } contextImpl;
 
 
+const SDLPango_Matrix _MATRIX_WHITE_BACK
+    = {255, 0, 0, 0,
+       255, 0, 0, 0,
+       255, 0, 0, 0,
+       255, 255, 0, 0,};
+
+/*!
+    Specifies white back and black letter.
+*/
+const SDLPango_Matrix *MATRIX_WHITE_BACK = &_MATRIX_WHITE_BACK;
+
+const SDLPango_Matrix _MATRIX_BLACK_BACK
+    = {0, 255, 0, 0,
+       0, 255, 0, 0,
+       0, 255, 0, 0,
+       255, 255, 0, 0,};
+/*!
+    Specifies black back and white letter.
+*/
+const SDLPango_Matrix *MATRIX_BLACK_BACK = &_MATRIX_BLACK_BACK;
+
+const SDLPango_Matrix _MATRIX_TRANSPARENT_BACK_BLACK_LETTER
+    = {0, 0, 0, 0,
+       0, 0, 0, 0,
+       0, 0, 0, 0,
+       0, 255, 0, 0,};
+/*!
+    Specifies transparent back and black letter.
+*/
+const SDLPango_Matrix *MATRIX_TRANSPARENT_BACK_BLACK_LETTER = &_MATRIX_TRANSPARENT_BACK_BLACK_LETTER;
+
+const SDLPango_Matrix _MATRIX_TRANSPARENT_BACK_WHITE_LETTER
+    = {255, 255, 0, 0,
+       255, 255, 0, 0,
+       255, 255, 0, 0,
+       0, 255, 0, 0,};
+/*!
+    Specifies transparent back and white letter.
+*/
+const SDLPango_Matrix *MATRIX_TRANSPARENT_BACK_WHITE_LETTER = &_MATRIX_TRANSPARENT_BACK_WHITE_LETTER;
+
+const SDLPango_Matrix _MATRIX_TRANSPARENT_BACK_TRANSPARENT_LETTER
+    = {255, 255, 0, 0,
+       255, 255, 0, 0,
+       255, 255, 0, 0,
+       0, 0, 0, 0,};
+/*!
+    Specifies transparent back and transparent letter.
+    This is useful for KARAOKE like rendering.
+*/
+const SDLPango_Matrix *MATRIX_TRANSPARENT_BACK_TRANSPARENT_LETTER = &_MATRIX_TRANSPARENT_BACK_TRANSPARENT_LETTER;
+
+
 /*!
     Initialize the Glib and Pango API.
     This must be called before using other functions in this library,
@@ -672,16 +725,23 @@ SDLPango_CopyFTBitmapToSurface(
     int x = rect->x;
     int y = rect->y;
 
+    if(x < 0) {
+	width += x; x = 0;
+    }
     if(x + width > surface->w) {
 	width = surface->w - x;
-	if(width <= 0)
-	    return;
+    }
+    if(width <= 0)
+	return;
+
+    if(y < 0) {
+	height += y; y = 0;
     }
     if(y + height > surface->h) {
 	height = surface->h - y;
-	if(height <= 0)
-	    return;
     }
+    if(height <= 0)
+	return;
 
     if(SDL_LockSurface(surface)) {
 	SDL_SetError("surface lock failed");
@@ -723,13 +783,9 @@ SDLPango_CopyFTBitmapToSurface(
     SDL_UnlockSurface(surface);
 }
 
-/*!
-    Create a context which contains Pango objects.
 
-    @return A pointer to the context as a SDLPango_Context*.
-*/
 SDLPango_Context*
-SDLPango_CreateContext()
+SDLPango_CreateContext_GivenFontDesc(const char* font_desc)
 {
     SDLPango_Context *context = g_malloc(sizeof(SDLPango_Context));
     G_CONST_RETURN char *charset;
@@ -743,8 +799,7 @@ SDLPango_CreateContext()
     pango_context_set_language (context->context, pango_language_from_string (charset));
     pango_context_set_base_dir (context->context, PANGO_DIRECTION_LTR);
 
-    context->font_desc = pango_font_description_from_string(
-	MAKE_FONT_NAME (DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE));
+    context->font_desc = pango_font_description_from_string(font_desc);
 
     context->layout = pango_layout_new (context->context);
 
@@ -759,6 +814,17 @@ SDLPango_CreateContext()
     context->min_width = 0;
 
     return context;
+}
+
+/*!
+    Create a context which contains Pango objects.
+
+    @return A pointer to the context as a SDLPango_Context*.
+*/
+SDLPango_Context*
+SDLPango_CreateContext()
+{
+    SDLPango_CreateContext_GivenFontDesc(MAKE_FONT_NAME(DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE));
 }
 
 /*!
@@ -873,7 +939,9 @@ SDLPango_Draw(
     width = PANGO_PIXELS (logical_rect.width);
     height = PANGO_PIXELS (logical_rect.height);
 
-    SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, 0, 0, 0, 0));
+    if (width && height) {
+        SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, 0, 0, 0, 0));
+    }
 
     if((! context->tmp_ftbitmap) || context->tmp_ftbitmap->width < width
 	|| context->tmp_ftbitmap->rows < height)
@@ -1053,6 +1121,20 @@ SDLPango_SetMarkup(
     pango_layout_set_font_description (context->layout, context->font_desc);
 }
 
+void
+SDLPango_SetText_GivenAlignment(
+    SDLPango_Context *context,
+    const char *text,
+    int length,
+    SDLPango_Alignment alignment)
+{
+    pango_layout_set_attributes(context->layout, NULL);
+    pango_layout_set_text (context->layout, text, length);
+    pango_layout_set_auto_dir (context->layout, TRUE);
+    pango_layout_set_alignment (context->layout, alignment);
+    pango_layout_set_font_description (context->layout, context->font_desc);
+}
+
 /*!
     Set plain text to context.
     Text must be utf-8.
@@ -1067,11 +1149,7 @@ SDLPango_SetText(
     const char *text,
     int length)
 {
-    pango_layout_set_attributes(context->layout, NULL);
-    pango_layout_set_text (context->layout, text, length);
-    pango_layout_set_auto_dir (context->layout, TRUE);
-    pango_layout_set_alignment (context->layout, PANGO_ALIGN_LEFT);
-    pango_layout_set_font_description (context->layout, context->font_desc);
+    SDLPango_SetText_GivenAlignment(context, text, length, SDLPANGO_ALIGN_LEFT);
 }
 
 /*!
