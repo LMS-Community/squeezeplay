@@ -1,0 +1,10 @@
+To compile and install SDL_Pango:
+
+	In Un*x, run 'configure; make; make install'.
+
+	In Windows, I strongly recommend you to use pre-built MSI package.
+	If you try to compile anyway, you should use .\VisualC2003\SDL_Pango.sln.
+
+	Look at the example programs in ./test.
+
+NAKAMURA Ken'ichi <nakamura@sbp.fp.a.u-tokyo.ac.jp>
