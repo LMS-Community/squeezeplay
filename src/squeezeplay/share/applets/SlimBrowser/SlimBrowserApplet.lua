@@ -156,14 +156,12 @@ local function _stringifyJsonRequest(jsonAction)
 	-- jsonActions can be uniquely identified by the cmd and params components
 	if jsonAction.cmd then
 		for i, v in ipairs(jsonAction.cmd) do
-			log:warn('cmd ', i, ': ', v)
 			command[#command + 1] = ' ' .. v
 		end
 	end
 	if jsonAction.params then
 		local sortedParams = table.sort(jsonAction.params)
 		for k in table.pairsByKeys (jsonAction.params) do
-			log:warn('key: ', k, ' val: ', jsonAction.params[k])
 			command[#command + 1] = ' ' .. k .. ":" .. jsonAction.params[k]
 		end
 	end
