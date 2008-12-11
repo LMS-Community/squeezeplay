@@ -816,6 +816,11 @@ function skin(self, s, reload, useDefaultSize)
 				      img = _loadImage(self, "Icons/Mini/icon_settings.png")
 			      }
 		      })
+	s.setupfirsttitle =
+		_uses(s.setuptitle, {
+				back       = { img = false  },
+		      })
+
 
 
 	-- Based on s.title, this is for internetradio title style
