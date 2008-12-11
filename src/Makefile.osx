@@ -48,7 +48,8 @@ export BUILD_TOP=$(BASE_DIR)/build/osx
 
 export PREFIX=${BUILD_TOP}
 
-export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -g
+export CFLAGS=  -I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/pango-1.0 \
+  -I${PREFIX}/include -I${PREFIX}/include/glib-2.0 -I${PREFIX}/lib/glib-2.0/include -I${PREFIX}/include/cairo  -g
 export LDFLAGS=-L${PREFIX}/lib -L/usr/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
@@ -67,15 +68,15 @@ all: sdl-all lua-all app
 # SDL
 #####
 
-.PHONY: sdl-all freetype  libpng libjpeg sdl sdl-image sdl-ttf sdl-gfx
-sdl-all: freetype sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
+.PHONY: sdl-all freetype libpng libjpeg expat gettext glib2 fontconfig pixman cairo pango sdl sdl-image sdl-ttf sdl-gfx sdl-pango 
+sdl-all: freetype libpng libjpeg expat gettext glib2 fontconfig pixman cairo pango sdl sdl-image sdl-ttf sdl-gfx sdl-pango
 
 # freetype
-freetype-2.1.10/config.mk:
-	cd freetype-2.1.10; ./configure  --enable-shared --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} CC="'${CC}'"
+freetype-2.3.5/config.mk:
+	cd freetype-2.3.5; ./configure  --enable-shared --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} 
 
-freetype: freetype-2.1.10/config.mk
-	cd freetype-2.1.10; make; make DESTDIR= install
+freetype: freetype-2.3.5/config.mk
+	cd freetype-2.3.5; make; make DESTDIR= install
 
 # png also add clean
 libpng-1.2.32/Makefile:
@@ -113,6 +114,13 @@ SDL_ttf-2.0.8/Makefile:
 sdl-ttf: SDL_ttf-2.0.8/Makefile
 	cd SDL_ttf-2.0.8; make SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config && make install
 
+# sdl-pango
+SDL_Pango-0.1.2/Makefile:
+	cd SDL_Pango-0.1.2; PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config ./configure  --prefix=${PREFIX}
+
+sdl-pango: SDL_Pango-0.1.2/Makefile
+	cd SDL_Pango-0.1.2; make SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config && make install
+	
 # sdl_gfx
 SDL_gfx-2.0.15/Makefile:
 	@if [ x$(ARCH) == xi386 ]; then cd SDL_gfx-2.0.15; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure  --prefix=${PREFIX} --disable-mmx; fi
@@ -121,6 +129,70 @@ SDL_gfx-2.0.15/Makefile:
 sdl-gfx: SDL_gfx-2.0.15/Makefile
 	cd SDL_gfx-2.0.15; make SDL_CONFIG=${PREFIX}/bin/sdl-config && make install
 
+# expat
+expat-2.0.0/Makefile:
+	cd expat-2.0.0; ./configure  --enable-shared --prefix=${PREFIX}
+	
+expat: expat-2.0.0/Makefile
+	cd expat-2.0.0; make && make install
+
+# gettext
+gettext-0.14.1/Makefile:
+	cd gettext-0.14.1; ./configure  --enable-shared --prefix=${PREFIX} --disable-csharp --without-emacs \
+	 --with-included-gettext --with-included-glib --with-included-libcroco --with-included-libxml
+
+gettext: gettext-0.14.1/Makefile
+	cd gettext-0.14.1; make && make install
+	
+# glib2
+glib-2.16.4/Makefile:
+	cd glib-2.16.4; ./configure  --enable-shared --prefix=${PREFIX} LDFLAGS="${LDFLAGS} -L${PREFIX}/lib/gettext"
+
+glib2: glib-2.16.4/Makefile
+	cd glib-2.16.4; make && make install
+
+#fontconfig
+fontconfig-2.6.0/Makefile:
+	cd fontconfig-2.6.0; ./configure  --enable-shared \
+	--with-add-fonts=../share/jive/fonts/ \
+	--sysconfdir=/tmp/splocal/etc \
+	--localstatedir=/tmp/splocal/var \
+	--prefix=${PREFIX} 
+
+#	--with-add-fonts=/usr/X11R6/lib/X11/fonts,/Library/Fonts,/Network/Library/Fonts,/System/Library/Fonts \
+
+fontconfig: fontconfig-2.6.0/Makefile
+	cd fontconfig-2.6.0; make && make install
+	
+	
+# pixman
+pixman-0.10.0/Makefile:
+	cd pixman-0.10.0; ./configure  --enable-shared --disable-docs \
+	--disable-gtk \
+	--prefix=${PREFIX}
+
+pixman: pixman-0.10.0/Makefile
+	cd pixman-0.10.0; make && make install
+	
+# cairo
+cairo-1.6.4/Makefile:
+	cd cairo-1.6.4; ./configure  --enable-shared --disable-docs \
+	--disable-glitz --disable-xcb --enable-freetype  --disable-xlib --disable-xlib-xrender --without-x --disable-atsui \
+	--prefix=${PREFIX}
+
+cairo: cairo-1.6.4/Makefile
+	cd cairo-1.6.4; make && make install
+
+# pango
+pango-1.18.3/Makefile:
+	export PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig; cd pango-1.18.3; ./configure  --enable-shared --disable-docs \
+	--without-x \
+	--sysconfdir=/tmp/splocal/etc \
+	--localstatedir=/tmp/splocal/var \
+	--prefix=${PREFIX}
+
+pango: pango-1.18.3/Makefile
+	cd pango-1.18.3; make && make install
 
 #####
 # lua
@@ -290,11 +362,35 @@ clean:
 	@echo "Cleaning: SDL_ttf"
 	-cd SDL_ttf-2.0.8; make distclean ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
+	@echo "Cleaning: SDL_Pango"
+	-cd SDL_Pango-0.1.2; make distclean ; rm -rf x86; rm -rf ppc
+	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL_gfx"
 	-cd SDL_gfx-2.0.15; make distclean ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: freetype"
-	-cd freetype-2.1.10; make distclean ; rm -rf builds/unix/x86; rm -rf builds/unix/ppc
+	-cd freetype-2.3.5; make distclean ; rm -rf builds/unix/x86; rm -rf builds/unix/ppc
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: fontconfig"
+	-cd fontconfig-2.6.0; make distclean ; rm -rf x86; rm -rf ppc
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: expat"
+	-cd expat-2.0.0; make distclean ; rm -rf x86; rm -rf ppc
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: gettext"
+	-cd gettext-0.14.1; make distclean ; rm -rf x86; rm -rf ppc
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: glib"
+	-cd glib-2.16.4; make distclean ; rm -rf x86; rm -rf ppc
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: cairo"
+	-cd cairo-1.6.4; make distclean ; rm -rf x86; rm -rf ppc
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: pango"
+	-cd pango-1.18.3; make distclean ; rm -rf x86; rm -rf ppc
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: pixman"
+	-cd pixman-0.10.0; make distclean ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: lua"
 	-cd lua-5.1.1; make clean ; rm -rf src/x86; rm -rf src/ppc
