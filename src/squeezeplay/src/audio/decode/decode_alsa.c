@@ -175,8 +175,9 @@ static void callback(void *outputBuffer,
 static int pcm_open(u32_t sample_rate) {
 	int err, dir;
 	snd_pcm_uframes_t size;
-#define BUFFER_SIZE 8192 /*(8291 / 4)*/
-#define PERIOD_SIZE (BUFFER_SIZE / 4) /*(BUFFER_SIZE / 8)*/
+	unsigned int val;
+#define BUFFER_TIME 30000
+#define PERIOD_COUNT 3
 
 	if (handle && sample_rate == pcm_sample_rate) {
 		return 0;
@@ -243,14 +244,14 @@ static int pcm_open(u32_t sample_rate) {
 	}
 
 	/* set buffer and period times */
-	size = BUFFER_SIZE;
-	if ((err = snd_pcm_hw_params_set_buffer_size_near(handle, hwparams, &size)) < 0) {
-		DEBUG_ERROR("Unable to set  buffer size %s", snd_strerror(err));
+	val = BUFFER_TIME;
+	if ((err = snd_pcm_hw_params_set_buffer_time_near(handle, hwparams, &val, &dir)) < 0) {
+		DEBUG_ERROR("Unable to set  buffer time %s", snd_strerror(err));
 		return err;
 	}
 
-	size = PERIOD_SIZE;
-	if ((err = snd_pcm_hw_params_set_period_size_near(handle, hwparams, &size, &dir)) < 0) {
+	val = PERIOD_COUNT;
+	if ((err = snd_pcm_hw_params_set_periods_near(handle, hwparams, &val, &dir)) < 0) {
 		DEBUG_ERROR("Unable to set period size %s", snd_strerror(err));
 		return err;
 	}
