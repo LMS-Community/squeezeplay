@@ -293,6 +293,7 @@ function skin(self, s)
 	local TEXTMENU_FONT_SIZE = 24
 	local TRACK_FONT_SIZE = 18
 	local TEXTAREA_FONT_SIZE = 18
+	local CENTERED_TEXTAREA_FONT_SIZE = 28
 	local TEXTINPUT_FONT_SIZE = 18
 	local TEXTINPUT_SELECTED_FONT_SIZE = 28
 	local HELP_FONT_SIZE = 18
@@ -314,7 +315,7 @@ function skin(self, s)
 	-- Window title, this is a Label
 	s.title = {}
 	s.title.border = 4
-	s.title.padding = { 15, 5, 10, 0 }
+	s.title.padding = { 5, 5, 10, 0 }
 	s.title.position = LAYOUT_NORTH
 	s.title.bgImg = titleBox
 	s.title.order = { "back", "icon", "text", "nowplaying" }
@@ -328,9 +329,8 @@ function skin(self, s)
 	s.title.back = {}
 	s.title.back.img = _loadImage(self, "Icons/Mini/left_arrow.png")
 	s.title.back.align = "left"
-	s.title.back.w = 24
-	s.title.back.h = 24
-	s.title.back.padding = { 0, 0, 0, 5 }
+	s.title.back.padding = { 0, 0, 5, 5 }
+
 	s.title.nowplaying = {}
 	--FIXME, this png path should likely change
 	s.title.nowplaying.img = _loadImage(self, "menu_album_noartwork_24.png")
@@ -512,7 +512,16 @@ function skin(self, s)
 	s.textarea.sh = TEXT_SH_COLOR
 	s.textarea.align = "left"
 	
-
+	-- Text for centering on the screen
+	s.centeredtextarea = {}
+	s.centeredtextarea.position = LAYOUT_CENTER
+	s.centeredtextarea.w = screenWidth
+	s.centeredtextarea.padding = TEXTAREA_PADDING 
+	s.centeredtextarea.font = _boldfont(CENTERED_TEXTAREA_FONT_SIZE)
+	s.centeredtextarea.fg = TEXT_COLOR
+	s.centeredtextarea.sh = TEXT_SH_COLOR
+	s.centeredtextarea.align = "center"
+	
 	-- Scrollbar
 	s.scrollbar = {}
 	s.scrollbar.w = 24
@@ -688,6 +697,15 @@ function skin(self, s)
 	s.iconAlarm.w = WH_FILL
 	s.iconAlarm.align = "center"
 
+	s.touchButton = {}
+        s.touchButton.padding = 10
+        s.touchButton.font = _font(22)
+        s.touchButton.fg = TEXT_COLOR_BLACK
+        s.touchButton.bgImg = selectionBox
+        s.touchButton.align = 'center'
+        s.touchButton.text = {}
+        s.touchButton.text.align = "center"
+	s.touchButton.position = LAYOUT_CENTER
 
 	-- wireless icons for menus
 	s.wirelessLevel1 = {}
@@ -853,6 +871,13 @@ function skin(self, s)
 				      img = _loadImage(self, "Icons/Mini/icon_settings.png")
 			      }
 		      })
+
+	-- first setup page has no back button
+	s.setupfirsttitle = 
+		_uses(s.setuptitle, {
+				back = { img = false },
+		
+		})
 
 	-- Based on s.title, this is for settings title style
 	s.settingstitle =
