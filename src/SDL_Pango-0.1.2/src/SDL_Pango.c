@@ -720,6 +720,7 @@ SDLPango_CopyFTBitmapToSurface(
     int i;
     Uint8 *p_ft;
     Uint8 *p_sdl;
+    Uint32 lookup[256];
     int width = rect->w;
     int height = rect->h;
     int x = rect->x;
@@ -751,25 +752,32 @@ SDLPango_CopyFTBitmapToSurface(
 
     p_ft = (Uint8 *)bitmap->buffer + (bitmap->pitch * y);
     p_sdl = (Uint8 *)surface->pixels + (surface->pitch * y);
+    
+    
+    for (i = 0; i < 256; i++) {
+      Uint8 pixel[4];
+    
+      int n;  
+      for (n = 0; n < 4; n++) {
+              Uint16 w;
+              w = ((Uint16)matrix->m[n][0] * (256 - i)) + ((Uint16)matrix->m[n][1] * i);
+    
+              pixel[n] = (Uint8)(w >> 8);
+      }
+    
+      lookup[i] = SDL_MapRGBA(surface->format, pixel[0], pixel[1], pixel[2], pixel[3]);
+    }
+
     for(i = 0; i < height; i ++) {
 	int k;
 	for(k = 0; k < width; k ++) {
-	    /* TODO: rewrite by matrix calculation library */
-	    Uint8 pixel[4];	/* 4: RGBA */
-	    int n;
-
-	    for(n = 0; n < 4; n ++) {
-		Uint16 w;
-		w = ((Uint16)matrix->m[n][0] * (256 - p_ft[k + x])) + ((Uint16)matrix->m[n][1] * p_ft[k + x]);
-		pixel[n] = (Uint8)(w >> 8);
-	    }
 
 	    switch(surface->format->BytesPerPixel) {
 	    case 2:
-		((Uint16 *)p_sdl)[k + x] = (Uint16)SDL_MapRGBA(surface->format, pixel[0], pixel[1], pixel[2], pixel[3]);
+	        ((Uint16 *)p_sdl)[k + x] = lookup[p_ft[k + x]];
 		break;
 	    case 4:
-		((Uint32 *)p_sdl)[k + x] = SDL_MapRGBA(surface->format, pixel[0], pixel[1], pixel[2], pixel[3]);
+	        ((Uint32 *)p_sdl)[k + x] = lookup[p_ft[k + x]];
 		break;
 	    default:
 		SDL_SetError("surface->format->BytesPerPixel is invalid value");
@@ -888,7 +896,8 @@ SDL_Surface * SDLPango_CreateSurfaceDraw(
     PangoRectangle logical_rect;
     SDL_Surface *surface;
     int width, height;
-
+	const SDL_VideoInfo *video_info;
+	
     pango_layout_get_extents (context->layout, NULL, &logical_rect);
     width = PANGO_PIXELS (logical_rect.width);
     height = PANGO_PIXELS (logical_rect.height);
@@ -897,13 +906,17 @@ SDL_Surface * SDLPango_CreateSurfaceDraw(
     if(height < context->min_height)
 	height = context->min_height;
 
-    surface = SDL_CreateRGBSurface(
-	context->surface_args.flags,
-	width, height, context->surface_args.depth,
-	context->surface_args.Rmask,
-	context->surface_args.Gmask,
-	context->surface_args.Bmask,
-	context->surface_args.Amask);
+    /* Use optimium pixel masks for the video hardware */
+	video_info = SDL_GetVideoInfo();
+	if (video_info->vfmt->Rmask < video_info->vfmt->Bmask) {
+		surface = SDL_AllocSurface(SDL_SWSURFACE, width, height, 32,
+					   0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+	}
+	else {
+		surface = SDL_AllocSurface(SDL_SWSURFACE, width, height, 32,
+					   0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+	}
+	
 
     SDLPango_Draw(context, surface, 0, 0);
 
