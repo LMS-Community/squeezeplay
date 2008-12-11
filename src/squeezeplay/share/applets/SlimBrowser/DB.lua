@@ -47,7 +47,6 @@ module(..., oo.class)
 
 local BLOCK_SIZE = 200
 
-
 -- init
 -- creates an empty database object
 function __init(self, windowSpec)
@@ -83,6 +82,9 @@ function labelItemStyle(self)
 	return self.windowSpec.labelItemStyle
 end
 
+function getBlockSize(self)
+	return BLOCK_SIZE
+end
 
 -- getRadioGroup
 -- either returns self.radioGroup or creates and returns it
@@ -176,7 +178,13 @@ function menuItems(self, chunk)
 	end
 
 	-- store chunk
-	local key = math.modf(cFrom / BLOCK_SIZE)
+	local key = math.floor(cFrom/BLOCK_SIZE)
+
+	-- helpful debug flags to show what chunk key and range is being loaded
+	log:debug('********************************* loading key number ', key)
+	log:debug('********************************* cFrom: ', cFrom)
+	log:debug('********************************* cTo:   ', cTo)
+
 	self.store[key] = chunk["item_loop"]
 
 	return self, self.count, cFrom, cTo
@@ -218,8 +226,8 @@ function size(self)
 end
 
 
-function missing(self, accel, dir, index)
-	log:debug(self, " missing accel=", accel, " index=", index, " dir=", dir)
+-- the missing method's job is to identify the next chunk to load
+function missing(self, index)
 
 	-- use our cached result
 	if self.complete then
@@ -227,52 +235,102 @@ function missing(self, accel, dir, index)
 		return
 	end
 
-	-- load first chunk
-	if not self.store[0] then
+	-- if index isn't defined we load first chunk, last chunk, then all middle chunks from the top down
+	-- otherwise we load the chunk that contains index, then chunks on either side of it back-and-forth until top and bottom chunks are filled
+	if not self.last_chunk or not self.last_chunk.count then
 		return 0, BLOCK_SIZE
 	end
-	
+
 	local count = tonumber(self.last_chunk.count)
 
-	-- load last chunk
+	-- determine the key for the last chunk in the chunk list
 	local lastKey = 0
 	if count > BLOCK_SIZE then
 		lastKey = math.modf(count / BLOCK_SIZE)
 		if lastKey * BLOCK_SIZE == count then
 			lastKey = lastKey - 1
 		end
+	end
+	
+	local firstChunkFrom = 0
+	local firstChunkKey  = 0
+
+	if not index then
+		-- load first chunk if we don't have it
+		if not self.store[0] then
+			return 0, BLOCK_SIZE
+		end
+		-- load the last chunk if we don't have it
 		if not self.store[lastKey] then
 			return lastKey * BLOCK_SIZE, BLOCK_SIZE
 		end
-	end
-
-	-- otherwise load in the direction of scrolling
-	local fromKey, toKey, step = 1, lastKey, 1
-	if dir < 0 then
-		fromKey, toKey, step = toKey, fromKey, -1
+		-- up is done, so start searching downward
+		self.searchDirection = 'down'
+		self.upCompleted  = true
 	end
 
 	-- search for chunks to load
-	for key = fromKey, toKey, step do
-		if not self.store[key] then
-			local idx = key * BLOCK_SIZE
-
-			log:debug(self, " missing ", BLOCK_SIZE, " items from pos ", idx)
-			return idx, BLOCK_SIZE
-		end
+	-- get key for first chunk if we don't have it
+	if index then
+		firstChunkFrom = index - ( index % BLOCK_SIZE )
+		firstChunkKey  = math.floor(firstChunkFrom/BLOCK_SIZE)
 	end
 
-	-- if we reach here we're complete (for next time)
-	log:debug(self, " complete (calculated)")
-	self.complete = true
-	return
-end
+	-- don't search down if the first chunk loaded is also the last chunk
+	if firstChunkFrom + BLOCK_SIZE >= count then
+		self.downCompleted = true
+		self.searchDirection = 'up'
+	end
 
+	-- if both down and up are done, then we are done
+	if self.downCompleted and self.upCompleted then
+		-- if we reach here we're complete (for next time)
+		log:warn(self, " scan complete (calculated)")
+		self.complete = true
+		return
+	end
+
+	-- go up and down around firstChunkKey until we have self.store[0] and self.store[lastKey]
+	if not self.searchDirection then
+		self.searchDirection = 'up'
+	end
+	if self.searchDirection == 'up' and not self.upCompleted then
+		-- start with previous key to first chunk, go to beginning
+		local fromKey, toKey, step = firstChunkKey-1, 0, -1
+
+		if not self.downCompleted then
+			self.searchDirection = 'down'
+		end
+		-- search for chunks to load
+		for key = fromKey, toKey, step do
+			if not self.store[key] then
+				local thisChunkFrom = key * BLOCK_SIZE
+				return thisChunkFrom, BLOCK_SIZE
+			end
+		end
+		self.upCompleted = true
+	end
+
+	if self.searchDirection == 'down' and not self.downCompleted then
+		if not self.upCompleted then
+			self.searchDirection = 'up'
+		end
+		-- start with next key from first chunk, go to end
+		local fromKey, toKey, step = firstChunkKey+1, lastKey, 1
+		for key = fromKey, toKey, step do
+			if not self.store[key] then
+				local thisChunkFrom = key * BLOCK_SIZE
+				return thisChunkFrom, BLOCK_SIZE
+			end
+		end
+		self.downCompleted = true
+	end
+
+end
 
 function __tostring(self)
 	return "DB {" .. tostring(self.windowSpec.text) .. "}"
 end
-
 
 --[[
 
