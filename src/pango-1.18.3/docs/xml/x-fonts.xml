@@ -1,0 +1,719 @@
+<refentry id="pango-X-Fonts-and-Rendering">
+<refmeta>
+<refentrytitle role="top_of_page">Deprecated X font backend</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>PANGO Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Deprecated X font backend</refname>
+<refpurpose>Font handling and rendering with the deprecated X font backend</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+
+
+
+#define             <link linkend="PANGO-RENDER-TYPE-X:CAPS">PANGO_RENDER_TYPE_X</link>
+<link linkend="PangoContext">PangoContext</link>*       <link linkend="pango-x-get-context">pango_x_get_context</link>                 (<link linkend="Display">Display</link> *display);
+<link linkend="void">void</link>                <link linkend="pango-x-context-set-funcs">pango_x_context_set_funcs</link>           (<link linkend="PangoContext">PangoContext</link> *context,
+                                                         <link linkend="PangoGetGCFunc">PangoGetGCFunc</link> get_gc_func,
+                                                         <link linkend="PangoFreeGCFunc">PangoFreeGCFunc</link> free_gc_func);
+<link linkend="GC:CAPS">GC</link>                  (<link linkend="PangoGetGCFunc">*PangoGetGCFunc</link>)                   (<link linkend="PangoContext">PangoContext</link> *context,
+                                                         <link linkend="PangoColor">PangoColor</link> *color,
+                                                         <link linkend="GC:CAPS">GC</link> base_gc);
+<link linkend="void">void</link>                (<link linkend="PangoFreeGCFunc">*PangoFreeGCFunc</link>)                  (<link linkend="PangoContext">PangoContext</link> *context,
+                                                         <link linkend="GC:CAPS">GC</link> gc);
+<link linkend="void">void</link>                <link linkend="pango-x-render">pango_x_render</link>                      (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="Drawable">Drawable</link> d,
+                                                         <link linkend="GC:CAPS">GC</link> gc,
+                                                         <link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyphString">PangoGlyphString</link> *glyphs,
+                                                         <link linkend="gint">gint</link> x,
+                                                         <link linkend="gint">gint</link> y);
+<link linkend="void">void</link>                <link linkend="pango-x-render-layout-line">pango_x_render_layout_line</link>          (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="Drawable">Drawable</link> drawable,
+                                                         <link linkend="GC:CAPS">GC</link> gc,
+                                                         <link linkend="PangoLayoutLine">PangoLayoutLine</link> *line,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);
+<link linkend="void">void</link>                <link linkend="pango-x-render-layout">pango_x_render_layout</link>               (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="Drawable">Drawable</link> drawable,
+                                                         <link linkend="GC:CAPS">GC</link> gc,
+                                                         <link linkend="PangoLayout">PangoLayout</link> *layout,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);
+typedef             <link linkend="PangoXSubfont">PangoXSubfont</link>;
+#define             <link linkend="PANGO-X-MAKE-GLYPH:CAPS">PANGO_X_MAKE_GLYPH</link>                  (subfont,index_)
+#define             <link linkend="PANGO-X-GLYPH-SUBFONT:CAPS">PANGO_X_GLYPH_SUBFONT</link>               (glyph)
+#define             <link linkend="PANGO-X-GLYPH-INDEX:CAPS">PANGO_X_GLYPH_INDEX</link>                 (glyph)
+<link linkend="PangoFont">PangoFont</link>*          <link linkend="pango-x-load-font">pango_x_load_font</link>                   (<link linkend="Display">Display</link> *display,
+                                                         const <link linkend="gchar">gchar</link> *spec);
+<link linkend="PangoGlyph">PangoGlyph</link>          <link linkend="pango-x-get-unknown-glyph">pango_x_get_unknown_glyph</link>           (<link linkend="PangoFont">PangoFont</link> *font);
+<link linkend="gboolean">gboolean</link>            <link linkend="pango-x-has-glyph">pango_x_has_glyph</link>                   (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyph">PangoGlyph</link> glyph);
+<link linkend="int">int</link>                 <link linkend="pango-x-list-subfonts">pango_x_list_subfonts</link>               (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="char">char</link> **charsets,
+                                                         <link linkend="int">int</link> n_charsets,
+                                                         <link linkend="PangoXSubfont">PangoXSubfont</link> **subfont_ids,
+                                                         <link linkend="int">int</link> **subfont_charsets);
+<link linkend="PangoFontMap">PangoFontMap</link>*       <link linkend="pango-x-font-map-for-display">pango_x_font_map_for_display</link>        (<link linkend="Display">Display</link> *display);
+<link linkend="void">void</link>                <link linkend="pango-x-shutdown-display">pango_x_shutdown_display</link>            (<link linkend="Display">Display</link> *display);
+<link linkend="PangoXFontCache">PangoXFontCache</link>*    <link linkend="pango-x-font-map-get-font-cache">pango_x_font_map_get_font_cache</link>     (<link linkend="PangoFontMap">PangoFontMap</link> *font_map);
+<link linkend="char">char</link>*               <link linkend="pango-x-font-subfont-xlfd">pango_x_font_subfont_xlfd</link>           (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoXSubfont">PangoXSubfont</link> subfont_id);
+<link linkend="gboolean">gboolean</link>            <link linkend="pango-x-find-first-subfont">pango_x_find_first_subfont</link>          (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="char">char</link> **charsets,
+                                                         <link linkend="int">int</link> n_charsets,
+                                                         <link linkend="PangoXSubfont">PangoXSubfont</link> *rfont);
+<link linkend="PangoGlyph">PangoGlyph</link>          <link linkend="pango-x-font-get-unknown-glyph">pango_x_font_get_unknown_glyph</link>      (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="gunichar">gunichar</link> wc);
+<link linkend="gboolean">gboolean</link>            <link linkend="pango-x-apply-ligatures">pango_x_apply_ligatures</link>             (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoXSubfont">PangoXSubfont</link> subfont,
+                                                         <link linkend="gunichar">gunichar</link> **glyphs,
+                                                         <link linkend="int">int</link> *n_glyphs,
+                                                         <link linkend="int">int</link> **clusters);
+<link linkend="void">void</link>                <link linkend="pango-x-fallback-shape">pango_x_fallback_shape</link>              (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyphString">PangoGlyphString</link> *glyphs,
+                                                         const <link linkend="char">char</link> *text,
+                                                         <link linkend="int">int</link> n_chars);
+                    <link linkend="PangoXFontCache">PangoXFontCache</link>;
+<link linkend="PangoXFontCache">PangoXFontCache</link>*    <link linkend="pango-x-font-cache-new">pango_x_font_cache_new</link>              (<link linkend="Display">Display</link> *display);
+<link linkend="void">void</link>                <link linkend="pango-x-font-cache-free">pango_x_font_cache_free</link>             (<link linkend="PangoXFontCache">PangoXFontCache</link> *cache);
+<link linkend="XFontStruct">XFontStruct</link>*        <link linkend="pango-x-font-cache-load">pango_x_font_cache_load</link>             (<link linkend="PangoXFontCache">PangoXFontCache</link> *cache,
+                                                         const <link linkend="char">char</link> *xlfd);
+<link linkend="void">void</link>                <link linkend="pango-x-font-cache-unload">pango_x_font_cache_unload</link>           (<link linkend="PangoXFontCache">PangoXFontCache</link> *cache,
+                                                         <link linkend="XFontStruct">XFontStruct</link> *fs);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 role="desc">
+<title role="desc.title">Description</title>
+<para>
+The functions and macros in this section are for use with the old
+X font backend which used server-side bitmap fonts. This font backend
+is no longer supported, and attempts to use it will produce
+unpredictable results. Use the <link linkend="pango-Xft-Fonts-and-Rendering">Xft</link>
+or <link linkend="pango-Cairo-Rendering">Cairo</link> backend instead.
+</para>
+</refsect1>
+
+<refsect1 role="details">
+<title role="details.title">Details</title>
+<refsect2>
+<title><anchor id="PANGO-RENDER-TYPE-X:CAPS" role="macro" condition="deprecated:"/>PANGO_RENDER_TYPE_X</title>
+<indexterm role="deprecated"><primary>PANGO_RENDER_TYPE_X</primary></indexterm><programlisting>#define PANGO_RENDER_TYPE_X "PangoRenderX"
+</programlisting>
+<warning><para><literal>PANGO_RENDER_TYPE_X</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+A string constant identifying the X renderer. The associated quark (see 
+<link linkend="g-quark-from-string"><function>g_quark_from_string()</function></link>) is used to identify the renderer in <link linkend="pango-find-map"><function>pango_find_map()</function></link>. 
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-x-get-context" role="function" condition="deprecated:"/>pango_x_get_context ()</title>
+<indexterm role="deprecated"><primary>pango_x_get_context</primary></indexterm><programlisting><link linkend="PangoContext">PangoContext</link>*       pango_x_get_context                 (<link linkend="Display">Display</link> *display);</programlisting>
+<warning><para><literal>pango_x_get_context</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Retrieves a <link linkend="PangoContext"><type>PangoContext</type></link> appropriate for rendering with X fonts on the
+given display.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara> an X display (As returned by <link linkend="XOpenDisplay"><function>XOpenDisplay()</function></link>.)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the new <link linkend="PangoContext"><type>PangoContext</type></link>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-context-set-funcs" role="function" condition="deprecated:"/>pango_x_context_set_funcs ()</title>
+<indexterm role="deprecated"><primary>pango_x_context_set_funcs</primary></indexterm><programlisting><link linkend="void">void</link>                pango_x_context_set_funcs           (<link linkend="PangoContext">PangoContext</link> *context,
+                                                         <link linkend="PangoGetGCFunc">PangoGetGCFunc</link> get_gc_func,
+                                                         <link linkend="PangoFreeGCFunc">PangoFreeGCFunc</link> free_gc_func);</programlisting>
+<warning><para><literal>pango_x_context_set_funcs</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Sets the functions that will be used to get GC's in various colors when
+rendering layouts with this context.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoContext"><type>PangoContext</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>get_gc_func</parameter>&nbsp;:</term>
+<listitem><simpara> function called to create a new GC for a given color.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>free_gc_func</parameter>&nbsp;:</term>
+<listitem><simpara> function called to free a GC created with <parameter>get_gc_func</parameter>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="PangoGetGCFunc" role="function" condition="deprecated:"/>PangoGetGCFunc ()</title>
+<indexterm role="deprecated"><primary>PangoGetGCFunc</primary></indexterm><programlisting><link linkend="GC:CAPS">GC</link>                  (*PangoGetGCFunc)                   (<link linkend="PangoContext">PangoContext</link> *context,
+                                                         <link linkend="PangoColor">PangoColor</link> *color,
+                                                         <link linkend="GC:CAPS">GC</link> base_gc);</programlisting>
+<warning><para><literal>PangoGetGCFunc</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Specifies the type of the function used to create a new GC for a given
+color. 
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara>a <link linkend="PangoContext"><type>PangoContext</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>color</parameter>&nbsp;:</term>
+<listitem><simpara>the color to create a new GC for.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_gc</parameter>&nbsp;:</term>
+<listitem><simpara>the GC to base the new GC on.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>the new GC.
+
+
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="PangoFreeGCFunc" role="function" condition="deprecated:"/>PangoFreeGCFunc ()</title>
+<indexterm role="deprecated"><primary>PangoFreeGCFunc</primary></indexterm><programlisting><link linkend="void">void</link>                (*PangoFreeGCFunc)                  (<link linkend="PangoContext">PangoContext</link> *context,
+                                                         <link linkend="GC:CAPS">GC</link> gc);</programlisting>
+<warning><para><literal>PangoFreeGCFunc</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Specifies the type of the function used to free a GC created with 
+the corresponding <link linkend="PangoGetGCFunc"><type>PangoGetGCFunc</type></link> function.
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara>a <link linkend="PangoContext"><type>PangoContext</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>gc</parameter>&nbsp;:</term>
+<listitem><simpara>the GC to free.
+
+
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-render" role="function" condition="deprecated:"/>pango_x_render ()</title>
+<indexterm role="deprecated"><primary>pango_x_render</primary></indexterm><programlisting><link linkend="void">void</link>                pango_x_render                      (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="Drawable">Drawable</link> d,
+                                                         <link linkend="GC:CAPS">GC</link> gc,
+                                                         <link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyphString">PangoGlyphString</link> *glyphs,
+                                                         <link linkend="gint">gint</link> x,
+                                                         <link linkend="gint">gint</link> y);</programlisting>
+<warning><para><literal>pango_x_render</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Renders a <link linkend="PangoGlyphString"><type>PangoGlyphString</type></link> onto an X drawable.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara> the X display.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>d</parameter>&nbsp;:</term>
+<listitem><simpara>       the drawable on which to draw string.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>gc</parameter>&nbsp;:</term>
+<listitem><simpara>      the graphics context.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara>    the font in which to draw the string.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>glyphs</parameter>&nbsp;:</term>
+<listitem><simpara>  the glyph string to draw.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara>       the x position of start of string (in pixels).
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara>       the y position of baseline (in pixels).
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-render-layout-line" role="function" condition="deprecated:"/>pango_x_render_layout_line ()</title>
+<indexterm role="deprecated"><primary>pango_x_render_layout_line</primary></indexterm><programlisting><link linkend="void">void</link>                pango_x_render_layout_line          (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="Drawable">Drawable</link> drawable,
+                                                         <link linkend="GC:CAPS">GC</link> gc,
+                                                         <link linkend="PangoLayoutLine">PangoLayoutLine</link> *line,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);</programlisting>
+<warning><para><literal>pango_x_render_layout_line</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Renders a <link linkend="PangoLayoutLine"><type>PangoLayoutLine</type></link> onto an X drawable.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara>   the X display.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>drawable</parameter>&nbsp;:</term>
+<listitem><simpara>  the drawable on which to draw.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>gc</parameter>&nbsp;:</term>
+<listitem><simpara>        GC to use for uncolored drawing.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>line</parameter>&nbsp;:</term>
+<listitem><simpara>      a <link linkend="PangoLayoutLine"><type>PangoLayoutLine</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara>         the x position of start of string (in pixels).
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara>         the y position of baseline (in pixels).
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-render-layout" role="function" condition="deprecated:"/>pango_x_render_layout ()</title>
+<indexterm role="deprecated"><primary>pango_x_render_layout</primary></indexterm><programlisting><link linkend="void">void</link>                pango_x_render_layout               (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="Drawable">Drawable</link> drawable,
+                                                         <link linkend="GC:CAPS">GC</link> gc,
+                                                         <link linkend="PangoLayout">PangoLayout</link> *layout,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);</programlisting>
+<warning><para><literal>pango_x_render_layout</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Renders a <link linkend="PangoLayout"><type>PangoLayout</type></link> onto an X drawable.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara>   the X display.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>drawable</parameter>&nbsp;:</term>
+<listitem><simpara>  the drawable on which to draw.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>gc</parameter>&nbsp;:</term>
+<listitem><simpara>        GC to use for uncolored drawing.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>layout</parameter>&nbsp;:</term>
+<listitem><simpara>    a <link linkend="PangoLayout"><type>PangoLayout</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara>         the x position of the left of the layout (in pixels).
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara>         the y position of the top of the layout (in pixels).
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="PangoXSubfont" role="typedef" condition="deprecated:"/>PangoXSubfont</title>
+<indexterm role="deprecated"><primary>PangoXSubfont</primary></indexterm><programlisting>typedef guint16 PangoXSubfont;
+</programlisting>
+<warning><para><literal>PangoXSubfont</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+The <link linkend="PangoXSubFont"><type>PangoXSubFont</type></link> type is an integer ID that identifies one
+particular X font within the fonts referenced in a <link linkend="PangoFont"><type>PangoFont</type></link>.
+</para></refsect2>
+<refsect2>
+<title><anchor id="PANGO-X-MAKE-GLYPH:CAPS" role="macro" condition="deprecated:"/>PANGO_X_MAKE_GLYPH()</title>
+<indexterm role="deprecated"><primary>PANGO_X_MAKE_GLYPH</primary></indexterm><programlisting>#define PANGO_X_MAKE_GLYPH(subfont,index_) ((subfont)&lt;&lt;16 | (index_))
+</programlisting>
+<warning><para><literal>PANGO_X_MAKE_GLYPH</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Make a glyph index from a <link linkend="PangoXSubFont"><type>PangoXSubFont</type></link> index and a index
+of a character with the corresponding X font.
+</para><variablelist role="params">
+<varlistentry><term><parameter>subfont</parameter>&nbsp;:</term>
+<listitem><simpara>a <link linkend="PangoXSubfont"><type>PangoXSubfont</type></link> index
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>index_</parameter>&nbsp;:</term>
+<listitem><simpara>the index of a character within an X font.
+
+
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="PANGO-X-GLYPH-SUBFONT:CAPS" role="macro" condition="deprecated:"/>PANGO_X_GLYPH_SUBFONT()</title>
+<indexterm role="deprecated"><primary>PANGO_X_GLYPH_SUBFONT</primary></indexterm><programlisting>#define PANGO_X_GLYPH_SUBFONT(glyph) ((glyph)&gt;&gt;16)
+</programlisting>
+<warning><para><literal>PANGO_X_GLYPH_SUBFONT</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Extract the subfont index from a glyph index.
+</para><variablelist role="params">
+<varlistentry><term><parameter>glyph</parameter>&nbsp;:</term>
+<listitem><simpara>a <link linkend="PangoGlyphIndex"><type>PangoGlyphIndex</type></link>
+
+
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="PANGO-X-GLYPH-INDEX:CAPS" role="macro" condition="deprecated:"/>PANGO_X_GLYPH_INDEX()</title>
+<indexterm role="deprecated"><primary>PANGO_X_GLYPH_INDEX</primary></indexterm><programlisting>#define PANGO_X_GLYPH_INDEX(glyph) ((glyph) &amp; 0xffff)
+</programlisting>
+<warning><para><literal>PANGO_X_GLYPH_INDEX</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Extract the character index within the X font from a
+glyph index.
+</para><variablelist role="params">
+<varlistentry><term><parameter>glyph</parameter>&nbsp;:</term>
+<listitem><simpara>a <link linkend="PangoGlyphIndex"><type>PangoGlyphIndex</type></link>
+
+
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-load-font" role="function" condition="deprecated:"/>pango_x_load_font ()</title>
+<indexterm role="deprecated"><primary>pango_x_load_font</primary></indexterm><programlisting><link linkend="PangoFont">PangoFont</link>*          pango_x_load_font                   (<link linkend="Display">Display</link> *display,
+                                                         const <link linkend="gchar">gchar</link> *spec);</programlisting>
+<warning><para><literal>pango_x_load_font</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Loads up a logical font based on a "fontset" style text
+specification. This is not remotely useful (Pango API's generally
+work in terms of <link linkend="PangoFontDescription"><type>PangoFontDescription</type></link>) and the result may not
+work correctly in all circumstances. Use of this function should
+be avoided.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara> the X display.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>spec</parameter>&nbsp;:</term>
+<listitem><simpara>    a comma-separated list of XLFD's.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>a new <link linkend="PangoFont"><type>PangoFont</type></link>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-get-unknown-glyph" role="function" condition="deprecated:"/>pango_x_get_unknown_glyph ()</title>
+<indexterm role="deprecated"><primary>pango_x_get_unknown_glyph</primary></indexterm><programlisting><link linkend="PangoGlyph">PangoGlyph</link>          pango_x_get_unknown_glyph           (<link linkend="PangoFont">PangoFont</link> *font);</programlisting>
+<warning><para><literal>pango_x_get_unknown_glyph</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Returns the index of a glyph suitable for drawing unknown characters;
+you should generally use <link linkend="PANGO-GET-UNKNOWN-GLYPH:CAPS"><function>PANGO_GET_UNKNOWN_GLYPH()</function></link> instead,
+since that may return a glyph that provides a better representation
+of a particular char. (E.g., by showing hex digits, or a glyph
+representative of a certain Unicode range.)</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a glyph index into <parameter>font</parameter>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-has-glyph" role="function" condition="deprecated:"/>pango_x_has_glyph ()</title>
+<indexterm role="deprecated"><primary>pango_x_has_glyph</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            pango_x_has_glyph                   (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyph">PangoGlyph</link> glyph);</programlisting>
+<warning><para><literal>pango_x_has_glyph</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Checks if the given glyph is present in a X font.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link> which must be from the X backend.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>glyph</parameter>&nbsp;:</term>
+<listitem><simpara> the index of a glyph in the font. (Formed
+        using the <link linkend="PANGO-X-MAKE-GLYPH:CAPS"><type>PANGO_X_MAKE_GLYPH</type></link> macro)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the glyph is present.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-list-subfonts" role="function" condition="deprecated:"/>pango_x_list_subfonts ()</title>
+<indexterm role="deprecated"><primary>pango_x_list_subfonts</primary></indexterm><programlisting><link linkend="int">int</link>                 pango_x_list_subfonts               (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="char">char</link> **charsets,
+                                                         <link linkend="int">int</link> n_charsets,
+                                                         <link linkend="PangoXSubfont">PangoXSubfont</link> **subfont_ids,
+                                                         <link linkend="int">int</link> **subfont_charsets);</programlisting>
+<warning><para><literal>pango_x_list_subfonts</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Lists the subfonts of a given font. The result is ordered first by charset,
+and then within each charset, by the order of fonts in the font specification.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>charsets</parameter>&nbsp;:</term>
+<listitem><simpara> the charsets to list subfonts for.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>n_charsets</parameter>&nbsp;:</term>
+<listitem><simpara> the number of charsets in <parameter>charsets</parameter>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>subfont_ids</parameter>&nbsp;:</term>
+<listitem><simpara> location to store a pointer to an array of subfont IDs for each found subfont;
+              the result must be freed using <link linkend="g-free"><function>g_free()</function></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>subfont_charsets</parameter>&nbsp;:</term>
+<listitem><simpara> location to store a pointer to an array of subfont IDs for each found subfont;
+              the result must be freed using <link linkend="g-free"><function>g_free()</function></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> length of the arrays stored in <parameter>subfont_ids</parameter> and
+<parameter>subfont_charsets</parameter>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-font-map-for-display" role="function" condition="deprecated:"/>pango_x_font_map_for_display ()</title>
+<indexterm role="deprecated"><primary>pango_x_font_map_for_display</primary></indexterm><programlisting><link linkend="PangoFontMap">PangoFontMap</link>*       pango_x_font_map_for_display        (<link linkend="Display">Display</link> *display);</programlisting>
+<warning><para><literal>pango_x_font_map_for_display</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Returns a <link linkend="PangoXFontMap"><type>PangoXFontMap</type></link> for <parameter>display</parameter>. Font maps are cached and should
+not be freed. If the font map for a display is no longer needed, it can
+be released with <link linkend="pango-x-shutdown-display"><function>pango_x_shutdown_display()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara> an X <link linkend="Display"><type>Display</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a <link linkend="PangoXFontMap"><type>PangoXFontMap</type></link> for <parameter>display</parameter>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-shutdown-display" role="function" condition="deprecated:"/>pango_x_shutdown_display ()</title>
+<indexterm role="deprecated"><primary>pango_x_shutdown_display</primary></indexterm><programlisting><link linkend="void">void</link>                pango_x_shutdown_display            (<link linkend="Display">Display</link> *display);</programlisting>
+<warning><para><literal>pango_x_shutdown_display</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Free cached resources for the given X display structure.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara> an X <link linkend="Display"><type>Display</type></link>
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-font-map-get-font-cache" role="function" condition="deprecated:"/>pango_x_font_map_get_font_cache ()</title>
+<indexterm role="deprecated"><primary>pango_x_font_map_get_font_cache</primary></indexterm><programlisting><link linkend="PangoXFontCache">PangoXFontCache</link>*    pango_x_font_map_get_font_cache     (<link linkend="PangoFontMap">PangoFontMap</link> *font_map);</programlisting>
+<warning><para><literal>pango_x_font_map_get_font_cache</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Obtains the font cache associated with the given font map.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font_map</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoXFontMap"><type>PangoXFontMap</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the <link linkend="PangoXFontCache"><type>PangoXFontCache</type></link> of <parameter>font_map</parameter>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-font-subfont-xlfd" role="function" condition="deprecated:"/>pango_x_font_subfont_xlfd ()</title>
+<indexterm role="deprecated"><primary>pango_x_font_subfont_xlfd</primary></indexterm><programlisting><link linkend="char">char</link>*               pango_x_font_subfont_xlfd           (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoXSubfont">PangoXSubfont</link> subfont_id);</programlisting>
+<warning><para><literal>pango_x_font_subfont_xlfd</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Determines the X Logical Font Description for the specified
+subfont.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link> which must be from the X backend.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>subfont_id</parameter>&nbsp;:</term>
+<listitem><simpara> the id of a subfont within the font.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A newly-allocated string containing the XLFD for the
+subfont. This string must be freed with <link linkend="g-free"><function>g_free()</function></link>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-find-first-subfont" role="function" condition="deprecated:"/>pango_x_find_first_subfont ()</title>
+<indexterm role="deprecated"><primary>pango_x_find_first_subfont</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            pango_x_find_first_subfont          (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="char">char</link> **charsets,
+                                                         <link linkend="int">int</link> n_charsets,
+                                                         <link linkend="PangoXSubfont">PangoXSubfont</link> *rfont);</programlisting>
+<warning><para><literal>pango_x_find_first_subfont</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Looks for subfonts with the <parameter>charset</parameter> charset,
+in <parameter>font</parameter>, and puts the first one in *<parameter>rfont</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> A <link linkend="PangoFont"><type>PangoFont</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>charsets</parameter>&nbsp;:</term>
+<listitem><simpara> An array of charsets.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>n_charsets</parameter>&nbsp;:</term>
+<listitem><simpara> The number of charsets in <parameter>charsets</parameter>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>rfont</parameter>&nbsp;:</term>
+<listitem><simpara> A pointer to a <link linkend="PangoXSubfont"><type>PangoXSubfont</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if *<parameter>rfont</parameter> now contains a font.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-font-get-unknown-glyph" role="function" condition="deprecated:"/>pango_x_font_get_unknown_glyph ()</title>
+<indexterm role="deprecated"><primary>pango_x_font_get_unknown_glyph</primary></indexterm><programlisting><link linkend="PangoGlyph">PangoGlyph</link>          pango_x_font_get_unknown_glyph      (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="gunichar">gunichar</link> wc);</programlisting>
+<warning><para><literal>pango_x_font_get_unknown_glyph</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Returns the index of a glyph suitable for drawing <parameter>wc</parameter> as an
+unknown character.
+</para>
+<para>
+Use <link linkend="PANGO-GET-UNKNOWN-GLYPH:CAPS"><function>PANGO_GET_UNKNOWN_GLYPH()</function></link> instead.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wc</parameter>&nbsp;:</term>
+<listitem><simpara> the Unicode character for which a glyph is needed.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a glyph index into <parameter>font</parameter>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-apply-ligatures" role="function" condition="deprecated:"/>pango_x_apply_ligatures ()</title>
+<indexterm role="deprecated"><primary>pango_x_apply_ligatures</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            pango_x_apply_ligatures             (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoXSubfont">PangoXSubfont</link> subfont,
+                                                         <link linkend="gunichar">gunichar</link> **glyphs,
+                                                         <link linkend="int">int</link> *n_glyphs,
+                                                         <link linkend="int">int</link> **clusters);</programlisting>
+<warning><para><literal>pango_x_apply_ligatures</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Previously did subfont-specific ligation. Now a no-op.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> unused
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>subfont</parameter>&nbsp;:</term>
+<listitem><simpara> unused
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>glyphs</parameter>&nbsp;:</term>
+<listitem><simpara> unused
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>n_glyphs</parameter>&nbsp;:</term>
+<listitem><simpara> unused
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>clusters</parameter>&nbsp;:</term>
+<listitem><simpara> unused
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>, always.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-fallback-shape" role="function" condition="deprecated:"/>pango_x_fallback_shape ()</title>
+<indexterm role="deprecated"><primary>pango_x_fallback_shape</primary></indexterm><programlisting><link linkend="void">void</link>                pango_x_fallback_shape              (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyphString">PangoGlyphString</link> *glyphs,
+                                                         const <link linkend="char">char</link> *text,
+                                                         <link linkend="int">int</link> n_chars);</programlisting>
+<warning><para><literal>pango_x_fallback_shape</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+This is a simple fallback shaper, that can be used
+if no subfont that supports a given script is found.
+For every character in <parameter>text</parameter>, it puts the unknown glyph.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> A <link linkend="PangoFont"><type>PangoFont</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>glyphs</parameter>&nbsp;:</term>
+<listitem><simpara> A pointer to a <link linkend="PangoGlyphString"><type>PangoGlyphString</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>text</parameter>&nbsp;:</term>
+<listitem><simpara> UTF-8 string.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>n_chars</parameter>&nbsp;:</term>
+<listitem><simpara> Number of UTF-8 seqs in <parameter>text</parameter>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="PangoXFontCache" role="struct" condition="deprecated:"/>PangoXFontCache</title>
+<indexterm role="deprecated"><primary>PangoXFontCache</primary></indexterm><programlisting>typedef struct _PangoXFontCache PangoXFontCache;</programlisting>
+<warning><para><literal>PangoXFontCache</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+A <link linkend="PangoXFontCache"><type>PangoXFontCache</type></link> caches
+<type>XFontStructs</type> for a single display by their XLFD name. 
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-x-font-cache-new" role="function" condition="deprecated:"/>pango_x_font_cache_new ()</title>
+<indexterm role="deprecated"><primary>pango_x_font_cache_new</primary></indexterm><programlisting><link linkend="PangoXFontCache">PangoXFontCache</link>*    pango_x_font_cache_new              (<link linkend="Display">Display</link> *display);</programlisting>
+<warning><para><literal>pango_x_font_cache_new</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Creates a font cache for the specified display.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara> an X display.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The newly allocated <link linkend="PangoXFontCache"><type>PangoXFontCache</type></link>, which should be
+              freed with <link linkend="pango-x-font-cache-free"><function>pango_x_font_cache_free()</function></link>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-font-cache-free" role="function" condition="deprecated:"/>pango_x_font_cache_free ()</title>
+<indexterm role="deprecated"><primary>pango_x_font_cache_free</primary></indexterm><programlisting><link linkend="void">void</link>                pango_x_font_cache_free             (<link linkend="PangoXFontCache">PangoXFontCache</link> *cache);</programlisting>
+<warning><para><literal>pango_x_font_cache_free</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Frees a <link linkend="PangoXFontCache"><type>PangoXFontCache</type></link> and all associated memory. All fonts loaded
+through this font cache will be freed along with the cache.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>cache</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoXFontCache"><type>PangoXFontCache</type></link>
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-font-cache-load" role="function" condition="deprecated:"/>pango_x_font_cache_load ()</title>
+<indexterm role="deprecated"><primary>pango_x_font_cache_load</primary></indexterm><programlisting><link linkend="XFontStruct">XFontStruct</link>*        pango_x_font_cache_load             (<link linkend="PangoXFontCache">PangoXFontCache</link> *cache,
+                                                         const <link linkend="char">char</link> *xlfd);</programlisting>
+<warning><para><literal>pango_x_font_cache_load</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Loads a <link linkend="XFontStruct"><type>XFontStruct</type></link> from a X Logical Font Description. The
+result may be newly loaded, or it may have been previously
+stored.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>cache</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoXFontCache"><type>PangoXFontCache</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>xlfd</parameter>&nbsp;:</term>
+<listitem><simpara> the X Logical Font Description to load.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The font structure, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if the font could
+not be loaded. In order to free this structure, you must call
+<link linkend="pango-x-font-cache-unload"><function>pango_x_font_cache_unload()</function></link>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-x-font-cache-unload" role="function" condition="deprecated:"/>pango_x_font_cache_unload ()</title>
+<indexterm role="deprecated"><primary>pango_x_font_cache_unload</primary></indexterm><programlisting><link linkend="void">void</link>                pango_x_font_cache_unload           (<link linkend="PangoXFontCache">PangoXFontCache</link> *cache,
+                                                         <link linkend="XFontStruct">XFontStruct</link> *fs);</programlisting>
+<warning><para><literal>pango_x_font_cache_unload</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Frees a font structure previously loaded with <link linkend="pango-x-font-cache-load"><function>pango_x_font_cache_load()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>cache</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoXFontCache"><type>PangoXFontCache</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>fs</parameter>&nbsp;:</term>
+<listitem><simpara> the font structure to unload
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

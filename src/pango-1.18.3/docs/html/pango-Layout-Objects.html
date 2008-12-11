@@ -1,0 +1,3402 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Layout Objects</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Pango Reference Manual">
+<link rel="up" href="pango.html" title="Basic Pango Interfaces">
+<link rel="prev" href="PangoMarkupFormat.html" title="Text Attribute Markup">
+<link rel="next" href="pango-Scripts.html" title="Scripts">
+<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="pango.html" title="Basic Pango Interfaces">
+<link rel="chapter" href="rendering.html" title="Rendering with Pango">
+<link rel="chapter" href="lowlevel.html" title="Low Level Functionality">
+<link rel="chapter" href="tools.html" title="Pango Tools">
+<link rel="chapter" href="pango-hierarchy.html" title="Object Hierarchy">
+<link rel="index" href="index-all.html" title="Index">
+<link rel="index" href="index-deprecated.html" title="Index of deprecated symbols">
+<link rel="index" href="index-1.2.html" title="Index of new symbols in 1.2">
+<link rel="index" href="index-1.4.html" title="Index of new symbols in 1.4">
+<link rel="index" href="index-1.6.html" title="Index of new symbols in 1.6">
+<link rel="index" href="index-1.8.html" title="Index of new symbols in 1.8">
+<link rel="index" href="index-1.10.html" title="Index of new symbols in 1.10">
+<link rel="index" href="index-1.12.html" title="Index of new symbols in 1.12">
+<link rel="index" href="index-1.14.html" title="Index of new symbols in 1.14">
+<link rel="index" href="index-1.16.html" title="Index of new symbols in 1.16">
+<link rel="index" href="index-1.18.html" title="Index of new symbols in 1.18">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="PangoMarkupFormat.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="pango.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Pango Reference Manual</th>
+<td><a accesskey="n" href="pango-Scripts.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3106955" class="shortcut">Top</a>
+                  &#160;|&#160;
+                  <a href="#id3110589" class="shortcut">Description</a>
+                  &#160;|&#160;
+                  <a href="#id3110564" class="shortcut">Object Hierarchy</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="pango-Layout-Objects"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2>
+<a name="id3106955"></a><span class="refentrytitle">Layout Objects</span>
+</h2>
+<p>Layout Objects &#8212; High-level layout driver objects</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<h2>Synopsis</h2>
+<a name="PangoLayout"></a><pre class="synopsis">
+
+
+
+                    <a class="link" href="pango-Layout-Objects.html#PangoLayout-struct">PangoLayout</a>;
+                    <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a>;
+<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a>*        <a class="link" href="pango-Layout-Objects.html#pango-layout-new">pango_layout_new</a>                    (<a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a> *context);
+<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a>*        <a class="link" href="pango-Layout-Objects.html#pango-layout-copy">pango_layout_copy</a>                   (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *src);
+<a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a>*       <a class="link" href="pango-Layout-Objects.html#pango-layout-get-context">pango_layout_get_context</a>            (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-context-changed">pango_layout_context_changed</a>        (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-set-text">pango_layout_set_text</a>               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         const char *text,
+                                                         int length);
+const char*         <a class="link" href="pango-Layout-Objects.html#pango-layout-get-text">pango_layout_get_text</a>               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-set-markup">pango_layout_set_markup</a>             (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         const char *markup,
+                                                         int length);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-set-markup-with-accel">pango_layout_set_markup_with_accel</a>  (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         const char *markup,
+                                                         int length,
+                                                         <a
+href="../glib/glib-Unicode-Manipulation.html#gunichar"
+>gunichar</a> accel_marker,
+                                                         <a
+href="../glib/glib-Unicode-Manipulation.html#gunichar"
+>gunichar</a> *accel_char);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-set-attributes">pango_layout_set_attributes</a>         (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a class="link" href="pango-Text-Attributes.html#PangoAttrList">PangoAttrList</a> *attrs);
+<a class="link" href="pango-Text-Attributes.html#PangoAttrList">PangoAttrList</a>*      <a class="link" href="pango-Layout-Objects.html#pango-layout-get-attributes">pango_layout_get_attributes</a>         (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-set-font-description">pango_layout_set_font_description</a>   (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* <a class="link" href="pango-Layout-Objects.html#pango-layout-get-font-description">pango_layout_get_font_description</a>
+                                                        (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-set-width">pango_layout_set_width</a>              (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int width);
+int                 <a class="link" href="pango-Layout-Objects.html#pango-layout-get-width">pango_layout_get_width</a>              (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-set-wrap">pango_layout_set_wrap</a>               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoWrapMode">PangoWrapMode</a> wrap);
+<a class="link" href="pango-Layout-Objects.html#PangoWrapMode">PangoWrapMode</a>       <a class="link" href="pango-Layout-Objects.html#pango-layout-get-wrap">pango_layout_get_wrap</a>               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Layout-Objects.html#pango-layout-is-wrapped">pango_layout_is_wrapped</a>             (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+enum                <a class="link" href="pango-Layout-Objects.html#PangoWrapMode">PangoWrapMode</a>;
+#define             <a class="link" href="pango-Layout-Objects.html#PANGO-TYPE-WRAP-MODE:CAPS">PANGO_TYPE_WRAP_MODE</a>
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-set-ellipsize">pango_layout_set_ellipsize</a>          (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoEllipsizeMode">PangoEllipsizeMode</a> ellipsize);
+<a class="link" href="pango-Layout-Objects.html#PangoEllipsizeMode">PangoEllipsizeMode</a>  <a class="link" href="pango-Layout-Objects.html#pango-layout-get-ellipsize">pango_layout_get_ellipsize</a>          (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Layout-Objects.html#pango-layout-is-ellipsized">pango_layout_is_ellipsized</a>          (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+enum                <a class="link" href="pango-Layout-Objects.html#PangoEllipsizeMode">PangoEllipsizeMode</a>;
+#define             <a class="link" href="pango-Layout-Objects.html#PANGO-TYPE-ELLIPSIZE-MODE:CAPS">PANGO_TYPE_ELLIPSIZE_MODE</a>
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-set-indent">pango_layout_set_indent</a>             (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int indent);
+int                 <a class="link" href="pango-Layout-Objects.html#pango-layout-get-indent">pango_layout_get_indent</a>             (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+int                 <a class="link" href="pango-Layout-Objects.html#pango-layout-get-spacing">pango_layout_get_spacing</a>            (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-set-spacing">pango_layout_set_spacing</a>            (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int spacing);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-set-justify">pango_layout_set_justify</a>            (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> justify);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Layout-Objects.html#pango-layout-get-justify">pango_layout_get_justify</a>            (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-set-auto-dir">pango_layout_set_auto_dir</a>           (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> auto_dir);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Layout-Objects.html#pango-layout-get-auto-dir">pango_layout_get_auto_dir</a>           (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-set-alignment">pango_layout_set_alignment</a>          (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoAlignment">PangoAlignment</a> alignment);
+<a class="link" href="pango-Layout-Objects.html#PangoAlignment">PangoAlignment</a>      <a class="link" href="pango-Layout-Objects.html#pango-layout-get-alignment">pango_layout_get_alignment</a>          (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-set-tabs">pango_layout_set_tabs</a>               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a class="link" href="pango-Tab-Stops.html#PangoTabArray">PangoTabArray</a> *tabs);
+<a class="link" href="pango-Tab-Stops.html#PangoTabArray">PangoTabArray</a>*      <a class="link" href="pango-Layout-Objects.html#pango-layout-get-tabs">pango_layout_get_tabs</a>               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-set-single-paragraph-mode">pango_layout_set_single_paragraph_mode</a>
+                                                        (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> setting);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Layout-Objects.html#pango-layout-get-single-paragraph-mode">pango_layout_get_single_paragraph_mode</a>
+                                                        (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+enum                <a class="link" href="pango-Layout-Objects.html#PangoAlignment">PangoAlignment</a>;
+#define             <a class="link" href="pango-Layout-Objects.html#PANGO-TYPE-ALIGNMENT:CAPS">PANGO_TYPE_ALIGNMENT</a>
+int                 <a class="link" href="pango-Layout-Objects.html#pango-layout-get-unknown-glyphs-count">pango_layout_get_unknown_glyphs_count</a>
+                                                        (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-get-log-attrs">pango_layout_get_log_attrs</a>          (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a class="link" href="pango-Text-Processing.html#PangoLogAttr">PangoLogAttr</a> **attrs,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> *n_attrs);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-index-to-pos">pango_layout_index_to_pos</a>           (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int index_,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *pos);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-index-to-line-x">pango_layout_index_to_line_x</a>        (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int index_,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> trailing,
+                                                         int *line,
+                                                         int *x_pos);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Layout-Objects.html#pango-layout-xy-to-index">pango_layout_xy_to_index</a>            (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int x,
+                                                         int y,
+                                                         int *index_,
+                                                         int *trailing);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-get-cursor-pos">pango_layout_get_cursor_pos</a>         (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int index_,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *strong_pos,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *weak_pos);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-move-cursor-visually">pango_layout_move_cursor_visually</a>   (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> strong,
+                                                         int old_index,
+                                                         int old_trailing,
+                                                         int direction,
+                                                         int *new_index,
+                                                         int *new_trailing);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-get-extents">pango_layout_get_extents</a>            (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-get-pixel-extents">pango_layout_get_pixel_extents</a>      (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-get-size">pango_layout_get_size</a>               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int *width,
+                                                         int *height);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-get-pixel-size">pango_layout_get_pixel_size</a>         (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int *width,
+                                                         int *height);
+int                 <a class="link" href="pango-Layout-Objects.html#pango-layout-get-line-count">pango_layout_get_line_count</a>         (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a>*    <a class="link" href="pango-Layout-Objects.html#pango-layout-get-line">pango_layout_get_line</a>               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int line);
+<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a>*    <a class="link" href="pango-Layout-Objects.html#pango-layout-get-line-readonly">pango_layout_get_line_readonly</a>      (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int line);
+<a
+href="../glib/glib-Singly-Linked-Lists.html#GSList"
+>GSList</a>*             <a class="link" href="pango-Layout-Objects.html#pango-layout-get-lines">pango_layout_get_lines</a>              (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+<a
+href="../glib/glib-Singly-Linked-Lists.html#GSList"
+>GSList</a>*             <a class="link" href="pango-Layout-Objects.html#pango-layout-get-lines-readonly">pango_layout_get_lines_readonly</a>     (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a>*    <a class="link" href="pango-Layout-Objects.html#pango-layout-get-iter">pango_layout_get_iter</a>               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-free">pango_layout_iter_free</a>              (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-next-run">pango_layout_iter_next_run</a>          (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-next-char">pango_layout_iter_next_char</a>         (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-next-cluster">pango_layout_iter_next_cluster</a>      (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-next-line">pango_layout_iter_next_line</a>         (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-at-last-line">pango_layout_iter_at_last_line</a>      (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);
+int                 <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-index">pango_layout_iter_get_index</a>         (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);
+int                 <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-baseline">pango_layout_iter_get_baseline</a>      (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);
+<a class="link" href="pango-Layout-Objects.html#PangoLayoutRun">PangoLayoutRun</a>*     <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-run">pango_layout_iter_get_run</a>           (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);
+<a class="link" href="pango-Layout-Objects.html#PangoLayoutRun">PangoLayoutRun</a>*     <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-run-readonly">pango_layout_iter_get_run_readonly</a>  (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);
+<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a>*    <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-line">pango_layout_iter_get_line</a>          (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);
+<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a>*    <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-line-readonly">pango_layout_iter_get_line_readonly</a> (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-char-extents">pango_layout_iter_get_char_extents</a>  (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-cluster-extents">pango_layout_iter_get_cluster_extents</a>
+                                                        (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-run-extents">pango_layout_iter_get_run_extents</a>   (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-line-yrange">pango_layout_iter_get_line_yrange</a>   (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter,
+                                                         int *y0_,
+                                                         int *y1_);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-line-extents">pango_layout_iter_get_line_extents</a>  (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-layout-extents">pango_layout_iter_get_layout_extents</a>
+                                                        (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);
+
+                    <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a>;
+typedef             <a class="link" href="pango-Layout-Objects.html#PangoLayoutRun">PangoLayoutRun</a>;
+<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a>*    <a class="link" href="pango-Layout-Objects.html#pango-layout-line-ref">pango_layout_line_ref</a>               (<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-line-unref">pango_layout_line_unref</a>             (<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-line-get-extents">pango_layout_line_get_extents</a>       (<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-line-get-pixel-extents">pango_layout_line_get_pixel_extents</a> (<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *layout_line,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-line-index-to-x">pango_layout_line_index_to_x</a>        (<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line,
+                                                         int index_,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> trailing,
+                                                         int *x_pos);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Layout-Objects.html#pango-layout-line-x-to-index">pango_layout_line_x_to_index</a>        (<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line,
+                                                         int x_pos,
+                                                         int *index_,
+                                                         int *trailing);
+void                <a class="link" href="pango-Layout-Objects.html#pango-layout-line-get-x-ranges">pango_layout_line_get_x_ranges</a>      (<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line,
+                                                         int start_index,
+                                                         int end_index,
+                                                         int **ranges,
+                                                         int *n_ranges);
+
+
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3110564"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+
+  <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+>GObject</a>
+   +----PangoLayout
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3110589"></a><h2>Description</h2>
+<p>
+While complete access to the layout capabilities of Pango is provided
+using the detailed interfaces for itemization and shaping, using
+that functionality directly involves writing a fairly large amount
+of code. The objects and functions in this section provide a
+high-level driver for formatting entire paragraphs of text
+at once.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3110609"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="id3110619"></a><h3>
+<a name="PangoLayout-struct"></a>PangoLayout</h3>
+<a class="indexterm" name="id3110632"></a><pre class="programlisting">typedef struct _PangoLayout PangoLayout;</pre>
+<p>
+The <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> structure represents and entire paragraph
+of text. It is initialized with a <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a>, UTF-8 string
+and set of attributes for that string. Once that is done, the
+set of formatted lines can be extracted from the object,
+the layout can be rendered, and conversion between logical
+character positions within the layout's text, and the physical
+position of the resulting glyphs can be made.
+</p>
+<p>
+There are also a number of parameters to adjust the formatting
+of a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>, which are illustrated in <a class="xref" href="pango-Layout-Objects.html#parameters" title="Figure&#160;1.&#160;Adjustable parameters for a PangoLayout">Figure&#160;1, &#8220;Adjustable parameters for a PangoLayout&#8221;</a>.
+It is possible, as well, to ignore the 2-D setup, and simply
+treat the results of a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> as a list of lines.
+</p>
+<div class="figure">
+<a name="parameters"></a><p class="title"><b>Figure&#160;1.&#160;Adjustable parameters for a PangoLayout</b></p>
+<div class="figure-contents"><div><img src="layout.gif" alt="Adjustable parameters for a PangoLayout"></div></div>
+</div>
+<br class="figure-break"><p>
+The <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> structure is opaque, and has no user-visible
+fields.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3110731"></a><h3>
+<a name="PangoLayoutIter"></a>PangoLayoutIter</h3>
+<a class="indexterm" name="id3110744"></a><pre class="programlisting">typedef struct _PangoLayoutIter PangoLayoutIter;</pre>
+<p>
+A <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a> structure can be used to
+iterate over the visual extents of a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>. 
+</p>
+<p>
+The <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a> structure is opaque, and 
+has no user-visible fields.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3110789"></a><h3>
+<a name="pango-layout-new"></a>pango_layout_new ()</h3>
+<a class="indexterm" name="id3110802"></a><pre class="programlisting"><a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a>*        pango_layout_new                    (<a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a> *context);</pre>
+<p>
+Create a new <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> object with attributes initialized to
+default values for a particular <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the newly allocated <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>, with a reference
+              count of one, which should be freed with
+              <a
+href="../gobject/gobject-The-Base-Object-Type.html#g-object-unref"
+><code class="function">g_object_unref()</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3110908"></a><h3>
+<a name="pango-layout-copy"></a>pango_layout_copy ()</h3>
+<a class="indexterm" name="id3110922"></a><pre class="programlisting"><a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a>*        pango_layout_copy                   (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *src);</pre>
+<p>
+Does a deep copy-by-value of the <em class="parameter"><code>src</code></em> layout. The attribute list,
+tab array, and text from the original layout are all copied by
+value.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>src</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the newly allocated <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>, with a reference
+              count of one, which should be freed with
+              <a
+href="../gobject/gobject-The-Base-Object-Type.html#g-object-unref"
+><code class="function">g_object_unref()</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3111016"></a><h3>
+<a name="pango-layout-get-context"></a>pango_layout_get_context ()</h3>
+<a class="indexterm" name="id3111029"></a><pre class="programlisting"><a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a>*       pango_layout_get_context            (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Retrieves the <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> used for this layout.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> for the layout. This does not
+have an additional refcount added, so if you want to keep
+a copy of this around, you must reference it yourself.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3111117"></a><h3>
+<a name="pango-layout-context-changed"></a>pango_layout_context_changed ()</h3>
+<a class="indexterm" name="id3111130"></a><pre class="programlisting">void                pango_layout_context_changed        (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Forces recomputation of any state in the <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> that
+might depend on the layout's context. This function should
+be called if you make changes to the context subsequent
+to creating the layout.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3111199"></a><h3>
+<a name="pango-layout-set-text"></a>pango_layout_set_text ()</h3>
+<a class="indexterm" name="id3111212"></a><pre class="programlisting">void                pango_layout_set_text               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         const char *text,
+                                                         int length);</pre>
+<p>
+Sets the text of the layout.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em>&#160;:</span></p></td>
+<td> a valid UTF-8 string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em>&#160;:</span></p></td>
+<td> maximum length of <em class="parameter"><code>text</code></em>, in bytes. -1 indicates that
+         the string is nul-terminated and the length should be
+         calculated.  The text will also be truncated on
+         encountering a nul-termination even when <em class="parameter"><code>length</code></em> is
+         positive.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3111328"></a><h3>
+<a name="pango-layout-get-text"></a>pango_layout_get_text ()</h3>
+<a class="indexterm" name="id3111342"></a><pre class="programlisting">const char*         pango_layout_get_text               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Gets the text in the layout. The returned text should not
+be freed or modified.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the text in the <em class="parameter"><code>layout</code></em>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3111418"></a><h3>
+<a name="pango-layout-set-markup"></a>pango_layout_set_markup ()</h3>
+<a class="indexterm" name="id3111431"></a><pre class="programlisting">void                pango_layout_set_markup             (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         const char *markup,
+                                                         int length);</pre>
+<p>
+Same as <a class="link" href="pango-Layout-Objects.html#pango-layout-set-markup-with-accel"><code class="function">pango_layout_set_markup_with_accel()</code></a>, but
+the markup text isn't scanned for accelerators.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>markup</code></em>&#160;:</span></p></td>
+<td> marked-up text
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em>&#160;:</span></p></td>
+<td> length of marked-up text in bytes, or -1 if <em class="parameter"><code>markup</code></em> is
+nul-terminated
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3111552"></a><h3>
+<a name="pango-layout-set-markup-with-accel"></a>pango_layout_set_markup_with_accel ()</h3>
+<a class="indexterm" name="id3111565"></a><pre class="programlisting">void                pango_layout_set_markup_with_accel  (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         const char *markup,
+                                                         int length,
+                                                         <a
+href="../glib/glib-Unicode-Manipulation.html#gunichar"
+>gunichar</a> accel_marker,
+                                                         <a
+href="../glib/glib-Unicode-Manipulation.html#gunichar"
+>gunichar</a> *accel_char);</pre>
+<p>
+Sets the layout text and attribute list from marked-up text (see
+<a class="link" href="PangoMarkupFormat.html" title="Text Attribute Markup">markup format</a>). Replaces
+the current text and attribute list.
+</p>
+<p>
+If <em class="parameter"><code>accel_marker</code></em> is nonzero, the given character will mark the
+character following it as an accelerator. For example, <em class="parameter"><code>accel_marker</code></em>
+might be an ampersand or underscore. All characters marked
+as an accelerator will receive a <a class="link" href="pango-Text-Attributes.html#PANGO-UNDERLINE-LOW:CAPS"><code class="literal">PANGO_UNDERLINE_LOW</code></a> attribute,
+and the first character so marked will be returned in <em class="parameter"><code>accel_char</code></em>.
+Two <em class="parameter"><code>accel_marker</code></em> characters following each other produce a single
+literal <em class="parameter"><code>accel_marker</code></em> character.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>markup</code></em>&#160;:</span></p></td>
+<td> marked-up text
+(see <a class="link" href="PangoMarkupFormat.html" title="Text Attribute Markup">markup format</a>)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em>&#160;:</span></p></td>
+<td> length of marked-up text in bytes, or -1 if <em class="parameter"><code>markup</code></em> is
+nul-terminated
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>accel_marker</code></em>&#160;:</span></p></td>
+<td> marker for accelerators in the text
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>accel_char</code></em>&#160;:</span></p></td>
+<td> return location for first located accelerator, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3111793"></a><h3>
+<a name="pango-layout-set-attributes"></a>pango_layout_set_attributes ()</h3>
+<a class="indexterm" name="id3111807"></a><pre class="programlisting">void                pango_layout_set_attributes         (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a class="link" href="pango-Text-Attributes.html#PangoAttrList">PangoAttrList</a> *attrs);</pre>
+<p>
+Sets the text attributes for a layout object.
+References <em class="parameter"><code>attrs</code></em>, so the caller can unref its reference.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>attrs</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Text-Attributes.html#PangoAttrList"><span class="type">PangoAttrList</span></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3111901"></a><h3>
+<a name="pango-layout-get-attributes"></a>pango_layout_get_attributes ()</h3>
+<a class="indexterm" name="id3111914"></a><pre class="programlisting"><a class="link" href="pango-Text-Attributes.html#PangoAttrList">PangoAttrList</a>*      pango_layout_get_attributes         (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Gets the attribute list for the layout, if any.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Text-Attributes.html#PangoAttrList"><span class="type">PangoAttrList</span></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3111990"></a><h3>
+<a name="pango-layout-set-font-description"></a>pango_layout_set_font_description ()</h3>
+<a class="indexterm" name="id3112005"></a><pre class="programlisting">void                pango_layout_set_font_description   (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Sets the default font description for the layout. If no font
+description is set on the layout, the font description from
+the layout's context is used.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> the new <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to unset the
+       current font description
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3112107"></a><h3>
+<a name="pango-layout-get-font-description"></a>pango_layout_get_font_description ()</h3>
+<a class="indexterm" name="id3112123"></a><pre class="programlisting">const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* pango_layout_get_font_description
+                                                        (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Gets the font description for the layout, if any.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a pointer to the layout's font description,
+ or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if the font description from the layout's
+ context is inherited. This value is owned by the layout
+ and must not be modified or freed.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.8
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3112214"></a><h3>
+<a name="pango-layout-set-width"></a>pango_layout_set_width ()</h3>
+<a class="indexterm" name="id3112227"></a><pre class="programlisting">void                pango_layout_set_width              (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int width);</pre>
+<p>
+Sets the width to which the lines of the <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> should wrap.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>width</code></em>&#160;:</span></p></td>
+<td> the desired width in Pango units, or -1 to indicate that no
+        wrapping should be performed.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3112316"></a><h3>
+<a name="pango-layout-get-width"></a>pango_layout_get_width ()</h3>
+<a class="indexterm" name="id3112329"></a><pre class="programlisting">int                 pango_layout_get_width              (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Gets the width to which the lines of the <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> should wrap.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the width, or -1 if no width set.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3112406"></a><h3>
+<a name="pango-layout-set-wrap"></a>pango_layout_set_wrap ()</h3>
+<a class="indexterm" name="id3112419"></a><pre class="programlisting">void                pango_layout_set_wrap               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoWrapMode">PangoWrapMode</a> wrap);</pre>
+<p>
+Sets the wrap mode; the wrap mode only has effect if a width
+is set on the layout with <a class="link" href="pango-Layout-Objects.html#pango-layout-set-width"><code class="function">pango_layout_set_width()</code></a>. To turn off wrapping,
+set the width to -1.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>wrap</code></em>&#160;:</span></p></td>
+<td> the wrap mode
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3112512"></a><h3>
+<a name="pango-layout-get-wrap"></a>pango_layout_get_wrap ()</h3>
+<a class="indexterm" name="id3112525"></a><pre class="programlisting"><a class="link" href="pango-Layout-Objects.html#PangoWrapMode">PangoWrapMode</a>       pango_layout_get_wrap               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Gets the wrap mode for the layout.
+</p>
+<p>
+Use <a class="link" href="pango-Layout-Objects.html#pango-layout-is-wrapped"><code class="function">pango_layout_is_wrapped()</code></a> to query whether any paragraphs
+were actually wrapped.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> active wrap mode.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3112609"></a><h3>
+<a name="pango-layout-is-wrapped"></a>pango_layout_is_wrapped ()</h3>
+<a class="indexterm" name="id3112624"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_layout_is_wrapped             (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Queries whether the layout had to wrap any paragraphs.
+</p>
+<p>
+This returns <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if a positive width is set on <em class="parameter"><code>layout</code></em>,
+ellipsization mode of <em class="parameter"><code>layout</code></em> is set to <a class="link" href="pango-Layout-Objects.html#PANGO-ELLIPSIZE-NONE:CAPS"><code class="literal">PANGO_ELLIPSIZE_NONE</code></a>,
+and there are paragraphs exceeding the layout width that have
+to be wrapped.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if any paragraphs had to be wrapped, <a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>
+otherwise.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3112761"></a><h3>
+<a name="PangoWrapMode"></a>enum PangoWrapMode</h3>
+<a class="indexterm" name="id3112774"></a><pre class="programlisting">typedef enum {
+  PANGO_WRAP_WORD,
+  PANGO_WRAP_CHAR,
+  PANGO_WRAP_WORD_CHAR
+} PangoWrapMode;
+</pre>
+<p>
+A <a class="link" href="pango-Layout-Objects.html#PangoWrapMode"><span class="type">PangoWrapMode</span></a> describes how to wrap the lines of a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> to the desired width.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a name="PANGO-WRAP-WORD:CAPS"></a><code class="literal">PANGO_WRAP_WORD</code></span></p></td>
+<td>wrap lines at word boundaries.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-WRAP-CHAR:CAPS"></a><code class="literal">PANGO_WRAP_CHAR</code></span></p></td>
+<td>wrap lines at character boundaries.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-WRAP-WORD-CHAR:CAPS"></a><code class="literal">PANGO_WRAP_WORD_CHAR</code></span></p></td>
+<td>wrap lines at word boundaries, but fall back to character boundaries if there is not 
+enough space for a full word.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3112882"></a><h3>
+<a name="PANGO-TYPE-WRAP-MODE:CAPS"></a>PANGO_TYPE_WRAP_MODE</h3>
+<a class="indexterm" name="id3112895"></a><pre class="programlisting">#define PANGO_TYPE_WRAP_MODE (pango_wrap_mode_get_type())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Layout-Objects.html#PangoWrapMode"><span class="type">PangoWrapMode</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3112927"></a><h3>
+<a name="pango-layout-set-ellipsize"></a>pango_layout_set_ellipsize ()</h3>
+<a class="indexterm" name="id3112944"></a><pre class="programlisting">void                pango_layout_set_ellipsize          (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoEllipsizeMode">PangoEllipsizeMode</a> ellipsize);</pre>
+<p>
+Sets the type of ellipsization being performed for <em class="parameter"><code>layout</code></em>.
+Depending on the ellipsization mode <em class="parameter"><code>ellipsize</code></em> text is
+removed from the start, middle, or end of lines so they
+fit within the width of layout set with <a class="link" href="pango-Layout-Objects.html#pango-layout-set-width"><code class="function">pango_layout_set_width()</code></a>.
+</p>
+<p>
+If the layout contains characters such as newlines that
+force it to be layed out in multiple lines, then each line
+is ellipsized separately.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ellipsize</code></em>&#160;:</span></p></td>
+<td> the new ellipsization mode for <em class="parameter"><code>layout</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3113067"></a><h3>
+<a name="pango-layout-get-ellipsize"></a>pango_layout_get_ellipsize ()</h3>
+<a class="indexterm" name="id3113083"></a><pre class="programlisting"><a class="link" href="pango-Layout-Objects.html#PangoEllipsizeMode">PangoEllipsizeMode</a>  pango_layout_get_ellipsize          (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Gets the type of ellipsization being performed for <em class="parameter"><code>layout</code></em>.
+See <a class="link" href="pango-Layout-Objects.html#pango-layout-set-ellipsize"><code class="function">pango_layout_set_ellipsize()</code></a></p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the current ellipsization mode for <em class="parameter"><code>layout</code></em>.
+
+Use <a class="link" href="pango-Layout-Objects.html#pango-layout-is-ellipsized"><code class="function">pango_layout_is_ellipsized()</code></a> to query whether any paragraphs
+were actually ellipsized.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3113193"></a><h3>
+<a name="pango-layout-is-ellipsized"></a>pango_layout_is_ellipsized ()</h3>
+<a class="indexterm" name="id3113208"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_layout_is_ellipsized          (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Queries whether the layout had to ellipsize any paragraphs.
+</p>
+<p>
+This returns <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if the ellipsization mode for <em class="parameter"><code>layout</code></em>
+is not <a class="link" href="pango-Layout-Objects.html#PANGO-ELLIPSIZE-NONE:CAPS"><code class="literal">PANGO_ELLIPSIZE_NONE</code></a>, a positive width is set on <em class="parameter"><code>layout</code></em>,
+and there are paragraphs exceeding that width that have to be
+ellipsized.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if any paragraphs had to be ellipsized, <a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>
+otherwise.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3113343"></a><h3>
+<a name="PangoEllipsizeMode"></a>enum PangoEllipsizeMode</h3>
+<a class="indexterm" name="id3113357"></a><pre class="programlisting">typedef enum {
+  PANGO_ELLIPSIZE_NONE,
+  PANGO_ELLIPSIZE_START,
+  PANGO_ELLIPSIZE_MIDDLE,
+  PANGO_ELLIPSIZE_END
+} PangoEllipsizeMode;
+</pre>
+<p>
+The <a class="link" href="pango-Layout-Objects.html#PangoEllipsizeMode"><span class="type">PangoEllipsizeMode</span></a> type describes what sort of (if any)
+ellipsization should be applied to a line of text. In
+the ellipsization process characters are removed from the
+text in order to make it fit to a given width and replaced
+with an ellipsis.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a name="PANGO-ELLIPSIZE-NONE:CAPS"></a><code class="literal">PANGO_ELLIPSIZE_NONE</code></span></p></td>
+<td> No ellipsization
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-ELLIPSIZE-START:CAPS"></a><code class="literal">PANGO_ELLIPSIZE_START</code></span></p></td>
+<td> Omit characters at the start of the text
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-ELLIPSIZE-MIDDLE:CAPS"></a><code class="literal">PANGO_ELLIPSIZE_MIDDLE</code></span></p></td>
+<td> Omit characters in the middle of the text
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-ELLIPSIZE-END:CAPS"></a><code class="literal">PANGO_ELLIPSIZE_END</code></span></p></td>
+<td> Omit characters at the end of the text
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3113485"></a><h3>
+<a name="PANGO-TYPE-ELLIPSIZE-MODE:CAPS"></a>PANGO_TYPE_ELLIPSIZE_MODE</h3>
+<a class="indexterm" name="id3113499"></a><pre class="programlisting">#define PANGO_TYPE_ELLIPSIZE_MODE (pango_ellipsize_mode_get_type())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Layout-Objects.html#PangoEllipsizeMode"><span class="type">PangoEllipsizeMode</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3113531"></a><h3>
+<a name="pango-layout-set-indent"></a>pango_layout_set_indent ()</h3>
+<a class="indexterm" name="id3113545"></a><pre class="programlisting">void                pango_layout_set_indent             (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int indent);</pre>
+<p>
+Sets the width in Pango units to indent each paragraph. A negative value
+of <em class="parameter"><code>indent</code></em> will produce a hanging indentation. That is, the first line will
+have the full width, and subsequent lines will be indented by the
+absolute value of <em class="parameter"><code>indent</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>indent</code></em>&#160;:</span></p></td>
+<td> the amount by which to indent.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3113638"></a><h3>
+<a name="pango-layout-get-indent"></a>pango_layout_get_indent ()</h3>
+<a class="indexterm" name="id3113652"></a><pre class="programlisting">int                 pango_layout_get_indent             (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Gets the paragraph indent width in Pango units. A negative value
+indicates a hanging indentation.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the indent.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3113721"></a><h3>
+<a name="pango-layout-get-spacing"></a>pango_layout_get_spacing ()</h3>
+<a class="indexterm" name="id3113734"></a><pre class="programlisting">int                 pango_layout_get_spacing            (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Gets the amount of spacing in <a class="link" href="pango-Glyph-Storage.html#PangoGlyphUnit"><span class="type">PangoGlyphUnit</span></a> between the lines of the
+layout.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the spacing.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3113811"></a><h3>
+<a name="pango-layout-set-spacing"></a>pango_layout_set_spacing ()</h3>
+<a class="indexterm" name="id3113824"></a><pre class="programlisting">void                pango_layout_set_spacing            (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int spacing);</pre>
+<p>
+Sets the amount of spacing in <a class="link" href="pango-Glyph-Storage.html#PangoGlyphUnit"><span class="type">PangoGlyphUnit</span></a> between the lines of the
+layout.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>spacing</code></em>&#160;:</span></p></td>
+<td> the amount of spacing
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3113912"></a><h3>
+<a name="pango-layout-set-justify"></a>pango_layout_set_justify ()</h3>
+<a class="indexterm" name="id3113925"></a><pre class="programlisting">void                pango_layout_set_justify            (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> justify);</pre>
+<p>
+Sets whether each complete line should be stretched to
+fill the entire width of the layout. This stretching is typically
+done by adding whitespace, but for some scripts (such as Arabic),
+the justification may be done in more complex ways, like extending
+the characters.
+</p>
+<p>
+Note that this setting is not implemented and so is ignored in Pango
+older than 1.18.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>justify</code></em>&#160;:</span></p></td>
+<td> whether the lines in the layout should be justified.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3114014"></a><h3>
+<a name="pango-layout-get-justify"></a>pango_layout_get_justify ()</h3>
+<a class="indexterm" name="id3114028"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_layout_get_justify            (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Gets whether each complete line should be stretched to fill the entire
+width of the layout.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the justify.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3114097"></a><h3>
+<a name="pango-layout-set-auto-dir"></a>pango_layout_set_auto_dir ()</h3>
+<a class="indexterm" name="id3114113"></a><pre class="programlisting">void                pango_layout_set_auto_dir           (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> auto_dir);</pre>
+<p>
+Sets whether to calculate the bidirectional base direction
+for the layout according to the contents of the layout;
+when this flag is on (the default), then paragraphs in
+   <em class="parameter"><code>layout</code></em> that begin with strong right-to-left characters
+(Arabic and Hebrew principally), will have right-to-left
+layout, paragraphs with letters from other scripts will
+have left-to-right layout. Paragraphs with only neutral
+characters get their direction from the surrounding paragraphs.
+</p>
+<p>
+When <a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>, the choice between left-to-right and
+right-to-left layout is done according to the base direction
+of the layout's <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a>. (See <a class="link" href="pango-Text-Processing.html#pango-context-set-base-dir"><code class="function">pango_context_set_base_dir()</code></a>).
+</p>
+<p>
+When the auto-computed direction of a paragraph differs from the
+base direction of the context, the interpretation of
+<a class="link" href="pango-Layout-Objects.html#PANGO-ALIGN-LEFT:CAPS"><code class="literal">PANGO_ALIGN_LEFT</code></a> and <a class="link" href="pango-Layout-Objects.html#PANGO-ALIGN-RIGHT:CAPS"><code class="literal">PANGO_ALIGN_RIGHT</code></a> are swapped.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>auto_dir</code></em>&#160;:</span></p></td>
+<td> if <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a>, compute the bidirectional base direction
+  from the layout's contents.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.4
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3114288"></a><h3>
+<a name="pango-layout-get-auto-dir"></a>pango_layout_get_auto_dir ()</h3>
+<a class="indexterm" name="id3114304"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_layout_get_auto_dir           (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Gets whether to calculate the bidirectional base direction
+for the layout according to the contents of the layout.
+See <a class="link" href="pango-Layout-Objects.html#pango-layout-set-auto-dir"><code class="function">pango_layout_set_auto_dir()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if the bidirectional base direction
+  is computed from the layout's contents, <a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a> otherwise.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.4
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3114412"></a><h3>
+<a name="pango-layout-set-alignment"></a>pango_layout_set_alignment ()</h3>
+<a class="indexterm" name="id3114426"></a><pre class="programlisting">void                pango_layout_set_alignment          (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoAlignment">PangoAlignment</a> alignment);</pre>
+<p>
+Sets the alignment for the layout: how partial lines are
+positioned within the horizontal space available.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>alignment</code></em>&#160;:</span></p></td>
+<td> the alignment
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3114507"></a><h3>
+<a name="pango-layout-get-alignment"></a>pango_layout_get_alignment ()</h3>
+<a class="indexterm" name="id3114521"></a><pre class="programlisting"><a class="link" href="pango-Layout-Objects.html#PangoAlignment">PangoAlignment</a>      pango_layout_get_alignment          (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Gets the alignment for the layout: how partial lines are
+positioned within the horizontal space available.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the alignment.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3114590"></a><h3>
+<a name="pango-layout-set-tabs"></a>pango_layout_set_tabs ()</h3>
+<a class="indexterm" name="id3114603"></a><pre class="programlisting">void                pango_layout_set_tabs               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a class="link" href="pango-Tab-Stops.html#PangoTabArray">PangoTabArray</a> *tabs);</pre>
+<p>
+Sets the tabs to use for <em class="parameter"><code>layout</code></em>, overriding the default tabs
+(by default, tabs are every 8 spaces). If <em class="parameter"><code>tabs</code></em> is <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>, the default
+tabs are reinstated. <em class="parameter"><code>tabs</code></em> is copied into the layout; you must
+free your copy of <em class="parameter"><code>tabs</code></em> yourself.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>tabs</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Tab-Stops.html#PangoTabArray"><span class="type">PangoTabArray</span></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3114727"></a><h3>
+<a name="pango-layout-get-tabs"></a>pango_layout_get_tabs ()</h3>
+<a class="indexterm" name="id3114740"></a><pre class="programlisting"><a class="link" href="pango-Tab-Stops.html#PangoTabArray">PangoTabArray</a>*      pango_layout_get_tabs               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Gets the current <a class="link" href="pango-Tab-Stops.html#PangoTabArray"><span class="type">PangoTabArray</span></a> used by this layout. If no
+<a class="link" href="pango-Tab-Stops.html#PangoTabArray"><span class="type">PangoTabArray</span></a> has been set, then the default tabs are in use
+and <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> is returned. Default tabs are every 8 spaces.
+The return value should be freed with <a class="link" href="pango-Tab-Stops.html#pango-tab-array-free"><code class="function">pango_tab_array_free()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a copy of the tabs for this layout, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3114859"></a><h3>
+<a name="pango-layout-set-single-paragraph-mode"></a>pango_layout_set_single_paragraph_mode ()</h3>
+<a class="indexterm" name="id3114873"></a><pre class="programlisting">void                pango_layout_set_single_paragraph_mode
+                                                        (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> setting);</pre>
+<p>
+If <em class="parameter"><code>setting</code></em> is <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a>, do not treat newlines and similar characters
+as paragraph separators; instead, keep all text in a single paragraph,
+and display a glyph for paragraph separator characters. Used when
+you want to allow editing of newlines on a single text line.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>setting</code></em>&#160;:</span></p></td>
+<td> new setting
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3114974"></a><h3>
+<a name="pango-layout-get-single-paragraph-mode"></a>pango_layout_get_single_paragraph_mode ()</h3>
+<a class="indexterm" name="id3114988"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_layout_get_single_paragraph_mode
+                                                        (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Obtains the value set by <a class="link" href="pango-Layout-Objects.html#pango-layout-set-single-paragraph-mode"><code class="function">pango_layout_set_single_paragraph_mode()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if the layout does not break paragraphs at
+paragraph separator characters, <a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a> otherwise.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3115091"></a><h3>
+<a name="PangoAlignment"></a>enum PangoAlignment</h3>
+<a class="indexterm" name="id3115104"></a><pre class="programlisting">typedef enum {
+  PANGO_ALIGN_LEFT,
+  PANGO_ALIGN_CENTER,
+  PANGO_ALIGN_RIGHT
+} PangoAlignment;
+</pre>
+<p>
+A <a class="link" href="pango-Layout-Objects.html#PangoAlignment"><span class="type">PangoAlignment</span></a> describes how to align the lines of a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> within the
+available space. If the <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> is set to justify
+using <a class="link" href="pango-Layout-Objects.html#pango-layout-set-justify"><code class="function">pango_layout_set_justify()</code></a>, this only has effect for partial lines.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a name="PANGO-ALIGN-LEFT:CAPS"></a><code class="literal">PANGO_ALIGN_LEFT</code></span></p></td>
+<td>Put all available space on the right
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-ALIGN-CENTER:CAPS"></a><code class="literal">PANGO_ALIGN_CENTER</code></span></p></td>
+<td>Center the line within the available space
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-ALIGN-RIGHT:CAPS"></a><code class="literal">PANGO_ALIGN_RIGHT</code></span></p></td>
+<td>Put all available space on the left
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3115231"></a><h3>
+<a name="PANGO-TYPE-ALIGNMENT:CAPS"></a>PANGO_TYPE_ALIGNMENT</h3>
+<a class="indexterm" name="id3115244"></a><pre class="programlisting">#define PANGO_TYPE_ALIGNMENT (pango_alignment_get_type())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Layout-Objects.html#PangoAlignment"><span class="type">PangoAlignment</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3115276"></a><h3>
+<a name="pango-layout-get-unknown-glyphs-count"></a>pango_layout_get_unknown_glyphs_count ()</h3>
+<a class="indexterm" name="id3115292"></a><pre class="programlisting">int                 pango_layout_get_unknown_glyphs_count
+                                                        (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Counts the number unknown glyphs in <em class="parameter"><code>layout</code></em>.  That is, zero if
+glyphs for all characters in the layout text were found, or more
+than zero otherwise.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> The number of unknown glyphs in <em class="parameter"><code>layout</code></em>.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3115382"></a><h3>
+<a name="pango-layout-get-log-attrs"></a>pango_layout_get_log_attrs ()</h3>
+<a class="indexterm" name="id3115396"></a><pre class="programlisting">void                pango_layout_get_log_attrs          (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a class="link" href="pango-Text-Processing.html#PangoLogAttr">PangoLogAttr</a> **attrs,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> *n_attrs);</pre>
+<p>
+Retrieves an array of logical attributes for each character in
+the <em class="parameter"><code>layout</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>attrs</code></em>&#160;:</span></p></td>
+<td> location to store a pointer to an array of logical attributes
+        This value must be freed with <a
+href="../glib/glib-Memory-Allocation.html#g-free"
+><code class="function">g_free()</code></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>n_attrs</code></em>&#160;:</span></p></td>
+<td> location to store the number of the attributes in the
+          array. (The stored value will be one more than the total number
+          of characters in the layout, since there need to be attributes
+          corresponding to both the position before the first character
+          and the position after the last character.)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3115520"></a><h3>
+<a name="pango-layout-index-to-pos"></a>pango_layout_index_to_pos ()</h3>
+<a class="indexterm" name="id3115534"></a><pre class="programlisting">void                pango_layout_index_to_pos           (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int index_,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *pos);</pre>
+<p>
+Converts from an index within a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> to the onscreen position
+corresponding to the grapheme at that index, which is represented
+as rectangle.  Note that <code class="literal">pos-&gt;x</code> is always the leading
+edge of the grapheme and <code class="literal">pos-&gt;x + pos-&gt;width</code> the trailing
+edge of the grapheme. If the directionality of the grapheme is right-to-left,
+then <code class="literal">pos-&gt;width</code> will be negative.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index_</code></em>&#160;:</span></p></td>
+<td> byte index within <em class="parameter"><code>layout</code></em>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pos</code></em>&#160;:</span></p></td>
+<td> rectangle in which to store the position of the grapheme
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3115671"></a><h3>
+<a name="pango-layout-index-to-line-x"></a>pango_layout_index_to_line_x ()</h3>
+<a class="indexterm" name="id3115684"></a><pre class="programlisting">void                pango_layout_index_to_line_x        (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int index_,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> trailing,
+                                                         int *line,
+                                                         int *x_pos);</pre>
+<p>
+Converts from byte <em class="parameter"><code>index_</code></em> within the <em class="parameter"><code>layout</code></em> to line and X position.
+(X position is measured from the left edge of the line)</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td>    a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index_</code></em>&#160;:</span></p></td>
+<td>    the byte index of a grapheme within the layout.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>trailing</code></em>&#160;:</span></p></td>
+<td>  an integer indicating the edge of the grapheme to retrieve the
+            position of. If 0, the trailing edge of the grapheme, if &gt; 0,
+            the leading of the grapheme.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>line</code></em>&#160;:</span></p></td>
+<td>      location to store resulting line index. (which will
+            between 0 and pango_layout_get_line_count(layout) - 1)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x_pos</code></em>&#160;:</span></p></td>
+<td>     location to store resulting position within line
+            (<a class="link" href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS"><code class="literal">PANGO_SCALE</code></a> units per device unit)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3115860"></a><h3>
+<a name="pango-layout-xy-to-index"></a>pango_layout_xy_to_index ()</h3>
+<a class="indexterm" name="id3115873"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_layout_xy_to_index            (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int x,
+                                                         int y,
+                                                         int *index_,
+                                                         int *trailing);</pre>
+<p>
+Converts from X and Y position within a layout to the byte
+index to the character at that logical position. If the
+Y position is not inside the layout, the closest position is chosen
+(the position will be clamped inside the layout). If the
+X position is not within the layout, then the start or the
+end of the line is chosen as  described for <code class="function">pango_layout_x_to_index()</code>.
+If either the X or Y positions were not inside the layout, then the
+function returns <a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>; on an exact hit, it returns <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td>    a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em>&#160;:</span></p></td>
+<td>         the X offset (in <a class="link" href="pango-Glyph-Storage.html#PangoGlyphUnit"><span class="type">PangoGlyphUnit</span></a>)
+            from the left edge of the layout.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em>&#160;:</span></p></td>
+<td>         the Y offset (in <a class="link" href="pango-Glyph-Storage.html#PangoGlyphUnit"><span class="type">PangoGlyphUnit</span></a>)
+            from the top edge of the layout
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index_</code></em>&#160;:</span></p></td>
+<td>    location to store calculated byte index
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>trailing</code></em>&#160;:</span></p></td>
+<td>  location to store a integer indicating where
+            in the grapheme the user clicked. It will either
+            be zero, or the number of characters in the
+            grapheme. 0 represents the trailing edge of the grapheme.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if the coordinates were inside text, <a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a> otherwise.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3116109"></a><h3>
+<a name="pango-layout-get-cursor-pos"></a>pango_layout_get_cursor_pos ()</h3>
+<a class="indexterm" name="id3116123"></a><pre class="programlisting">void                pango_layout_get_cursor_pos         (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int index_,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *strong_pos,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *weak_pos);</pre>
+<p>
+Given an index within a layout, determines the positions that of the
+strong and weak cursors if the insertion point is at that
+index. The position of each cursor is stored as a zero-width
+rectangle. The strong cursor location is the location where
+characters of the directionality equal to the base direction of the
+layout are inserted.  The weak cursor location is the location
+where characters of the directionality opposite to the base
+direction of the layout are inserted.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index_</code></em>&#160;:</span></p></td>
+<td> the byte index of the cursor
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>strong_pos</code></em>&#160;:</span></p></td>
+<td> location to store the strong cursor position (may be <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>weak_pos</code></em>&#160;:</span></p></td>
+<td> location to store the weak cursor position (may be <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3116275"></a><h3>
+<a name="pango-layout-move-cursor-visually"></a>pango_layout_move_cursor_visually ()</h3>
+<a class="indexterm" name="id3116289"></a><pre class="programlisting">void                pango_layout_move_cursor_visually   (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> strong,
+                                                         int old_index,
+                                                         int old_trailing,
+                                                         int direction,
+                                                         int *new_index,
+                                                         int *new_trailing);</pre>
+<p>
+Computes a new cursor position from an old position and
+a count of positions to move visually. If <em class="parameter"><code>direction</code></em> is positive,
+then the new strong cursor position will be one position
+to the right of the old cursor position. If <em class="parameter"><code>direction</code></em> is negative,
+then the new strong cursor position will be one position
+to the left of the old cursor position.
+</p>
+<p>
+In the presence of bidirectional text, the correspondence
+between logical and visual order will depend on the direction
+of the current run, and there may be jumps when the cursor
+is moved off of the end of a run.
+</p>
+<p>
+Motion here is in cursor positions, not in characters, so a
+single call to <a class="link" href="pango-Layout-Objects.html#pango-layout-move-cursor-visually"><code class="function">pango_layout_move_cursor_visually()</code></a> may move the
+cursor over multiple characters when multiple characters combine
+to form a single grapheme.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td>       a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>strong</code></em>&#160;:</span></p></td>
+<td>       whether the moving cursor is the strong cursor or the
+               weak cursor. The strong cursor is the cursor corresponding
+               to text insertion in the base direction for the layout.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>old_index</code></em>&#160;:</span></p></td>
+<td>    the byte index of the grapheme for the old index
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>old_trailing</code></em>&#160;:</span></p></td>
+<td> if 0, the cursor was at the trailing edge of the
+               grapheme indicated by <em class="parameter"><code>old_index</code></em>, if &gt; 0, the cursor
+               was at the leading edge.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>direction</code></em>&#160;:</span></p></td>
+<td>    direction to move cursor. A negative
+               value indicates motion to the left.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>new_index</code></em>&#160;:</span></p></td>
+<td>    location to store the new cursor byte index. A value of -1
+               indicates that the cursor has been moved off the beginning
+               of the layout. A value of <a
+href="../glib/glib-Limits-of-Basic-Types.html#G-MAXINT:CAPS"
+><code class="literal">G_MAXINT</code></a> indicates that
+               the cursor has been moved off the end of the layout.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>new_trailing</code></em>&#160;:</span></p></td>
+<td> number of characters to move forward from the location returned
+               for <em class="parameter"><code>new_index</code></em> to get the position where the cursor should
+               be displayed. This allows distinguishing the position at
+               the beginning of one line from the position at the end
+               of the preceding line. <em class="parameter"><code>new_index</code></em> is always on the line
+               where the cursor should be displayed.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3116564"></a><h3>
+<a name="pango-layout-get-extents"></a>pango_layout_get_extents ()</h3>
+<a class="indexterm" name="id3116577"></a><pre class="programlisting">void                pango_layout_get_extents            (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);</pre>
+<p>
+Computes the logical and ink extents of <em class="parameter"><code>layout</code></em>. Logical extents
+are usually what you want for positioning things.  Note that both extents
+may have non-zero x and y.  You may want to use those to offset where you
+render the layout.  Not doing that is a very typical bug that shows up as
+right-to-left layouts not being correctly positioned in a layout with
+a set width.
+</p>
+<p>
+The extents are given in layout coordinates and in Pango units; layout
+coordinates begin at the top left corner of the layout.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td>   a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ink_rect</code></em>&#160;:</span></p></td>
+<td> rectangle used to store the extents of the layout as drawn
+           or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to indicate that the result is not needed.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>logical_rect</code></em>&#160;:</span></p></td>
+<td> rectangle used to store the logical extents of the layout
+		 or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to indicate that the result is not needed.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3116720"></a><h3>
+<a name="pango-layout-get-pixel-extents"></a>pango_layout_get_pixel_extents ()</h3>
+<a class="indexterm" name="id3116734"></a><pre class="programlisting">void                pango_layout_get_pixel_extents      (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);</pre>
+<p>
+Computes the logical and ink extents of <em class="parameter"><code>layout</code></em> in device units.
+This function just calls <a class="link" href="pango-Layout-Objects.html#pango-layout-get-extents"><code class="function">pango_layout_get_extents()</code></a> followed by
+<a class="link" href="pango-Glyph-Storage.html#pango-extents-to-pixels"><code class="function">pango_extents_to_pixels()</code></a>.
+</p>
+<p>
+See <a class="link" href="pango-Glyph-Storage.html#pango-extents-to-pixels"><code class="function">pango_extents_to_pixels()</code></a> for details of how ink and logical rectangles
+are rounded to pixels.  In certain situations you may want to use
+<a class="link" href="pango-Layout-Objects.html#pango-layout-get-extents"><code class="function">pango_layout_get_extents()</code></a> directly and pass the resulting logical
+rectangle to <a class="link" href="pango-Glyph-Storage.html#pango-extents-to-pixels"><code class="function">pango_extents_to_pixels()</code></a> as an ink <code class="function">rectangle()</code>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td>   a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ink_rect</code></em>&#160;:</span></p></td>
+<td> rectangle used to store the extents of the layout as drawn
+           or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to indicate that the result is not needed.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>logical_rect</code></em>&#160;:</span></p></td>
+<td> rectangle used to store the logical extents of the
+             layout or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to indicate that the result is not needed.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3116940"></a><h3>
+<a name="pango-layout-get-size"></a>pango_layout_get_size ()</h3>
+<a class="indexterm" name="id3116954"></a><pre class="programlisting">void                pango_layout_get_size               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int *width,
+                                                         int *height);</pre>
+<p>
+Determines the logical width and height of a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+in Pango units (device units scaled by <a class="link" href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS"><code class="literal">PANGO_SCALE</code></a>). This
+is simply a convenience function around <a class="link" href="pango-Layout-Objects.html#pango-layout-get-extents"><code class="function">pango_layout_get_extents()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>width</code></em>&#160;:</span></p></td>
+<td> location to store the logical width, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>height</code></em>&#160;:</span></p></td>
+<td> location to store the logical height, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3117105"></a><h3>
+<a name="pango-layout-get-pixel-size"></a>pango_layout_get_pixel_size ()</h3>
+<a class="indexterm" name="id3117119"></a><pre class="programlisting">void                pango_layout_get_pixel_size         (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int *width,
+                                                         int *height);</pre>
+<p>
+Determines the logical width and height of a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+in device units. (<a class="link" href="pango-Layout-Objects.html#pango-layout-get-size"><code class="function">pango_layout_get_size()</code></a> returns the width
+and height scaled by <a class="link" href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS"><code class="literal">PANGO_SCALE</code></a>.) This
+is simply a convenience function around
+<a class="link" href="pango-Layout-Objects.html#pango-layout-get-pixel-extents"><code class="function">pango_layout_get_pixel_extents()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>width</code></em>&#160;:</span></p></td>
+<td> location to store the logical width, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>height</code></em>&#160;:</span></p></td>
+<td> location to store the logical height, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3117282"></a><h3>
+<a name="pango-layout-get-line-count"></a>pango_layout_get_line_count ()</h3>
+<a class="indexterm" name="id3117296"></a><pre class="programlisting">int                 pango_layout_get_line_count         (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Retrieves the count of lines for the <em class="parameter"><code>layout</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the line count.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3117370"></a><h3>
+<a name="pango-layout-get-line"></a>pango_layout_get_line ()</h3>
+<a class="indexterm" name="id3117383"></a><pre class="programlisting"><a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a>*    pango_layout_get_line               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int line);</pre>
+<p>
+Retrieves a particular line from a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>.
+</p>
+<p>
+Use the faster <a class="link" href="pango-Layout-Objects.html#pango-layout-get-line-readonly"><code class="function">pango_layout_get_line_readonly()</code></a> if you do not plan
+to modify the contents of the line (glyphs, glyph widths, etc.).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>line</code></em>&#160;:</span></p></td>
+<td> the index of a line, which must be between 0 and
+       <code class="literal">pango_layout_get_line_count(layout) - 1</code>, inclusive.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the requested <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a>, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if the
+              index is out of range. This layout line can
+              be ref'ed and retained, but will become invalid
+              if changes are made to the <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3117533"></a><h3>
+<a name="pango-layout-get-line-readonly"></a>pango_layout_get_line_readonly ()</h3>
+<a class="indexterm" name="id3117549"></a><pre class="programlisting"><a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a>*    pango_layout_get_line_readonly      (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int line);</pre>
+<p>
+Retrieves a particular line from a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>.
+</p>
+<p>
+This is a faster alternative to <a class="link" href="pango-Layout-Objects.html#pango-layout-get-line"><code class="function">pango_layout_get_line()</code></a>,
+but the user is not expected
+to modify the contents of the line (glyphs, glyph widths, etc.).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>line</code></em>&#160;:</span></p></td>
+<td> the index of a line, which must be between 0 and
+       <code class="literal">pango_layout_get_line_count(layout) - 1</code>, inclusive.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the requested <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a>, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if the
+              index is out of range. This layout line can
+              be ref'ed and retained, but will become invalid
+              if changes are made to the <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>.
+              No changes should be made to the line.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3117708"></a><h3>
+<a name="pango-layout-get-lines"></a>pango_layout_get_lines ()</h3>
+<a class="indexterm" name="id3117721"></a><pre class="programlisting"><a
+href="../glib/glib-Singly-Linked-Lists.html#GSList"
+>GSList</a>*             pango_layout_get_lines              (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Returns the lines of the <em class="parameter"><code>layout</code></em> as a list.
+</p>
+<p>
+Use the faster <a class="link" href="pango-Layout-Objects.html#pango-layout-get-lines-readonly"><code class="function">pango_layout_get_lines_readonly()</code></a> if you do not plan
+to modify the contents of the lines (glyphs, glyph widths, etc.).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a <a
+href="../glib/glib-Singly-Linked-Lists.html#GSList"
+><span class="type">GSList</span></a> containing the lines in the layout. This
+points to internal data of the <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> and must be used with
+care. It will become invalid on any change to the layout's
+text or properties.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3117830"></a><h3>
+<a name="pango-layout-get-lines-readonly"></a>pango_layout_get_lines_readonly ()</h3>
+<a class="indexterm" name="id3117846"></a><pre class="programlisting"><a
+href="../glib/glib-Singly-Linked-Lists.html#GSList"
+>GSList</a>*             pango_layout_get_lines_readonly     (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Returns the lines of the <em class="parameter"><code>layout</code></em> as a list.
+</p>
+<p>
+This is a faster alternative to <a class="link" href="pango-Layout-Objects.html#pango-layout-get-lines"><code class="function">pango_layout_get_lines()</code></a>,
+but the user is not expected
+to modify the contents of the lines (glyphs, glyph widths, etc.).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a <a
+href="../glib/glib-Singly-Linked-Lists.html#GSList"
+><span class="type">GSList</span></a> containing the lines in the layout. This
+points to internal data of the <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> and must be used with
+care. It will become invalid on any change to the layout's
+text or properties.  No changes should be made to the lines.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3117963"></a><h3>
+<a name="pango-layout-get-iter"></a>pango_layout_get_iter ()</h3>
+<a class="indexterm" name="id3117976"></a><pre class="programlisting"><a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a>*    pango_layout_get_iter               (<a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout);</pre>
+<p>
+Returns an iterator to iterate over the visual extents of the layout.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the new <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a> that should be freed using
+              <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-free"><code class="function">pango_layout_iter_free()</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3118065"></a><h3>
+<a name="pango-layout-iter-free"></a>pango_layout_iter_free ()</h3>
+<a class="indexterm" name="id3118078"></a><pre class="programlisting">void                pango_layout_iter_free              (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);</pre>
+<p>
+Frees an iterator that's no longer in use.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3118137"></a><h3>
+<a name="pango-layout-iter-next-run"></a>pango_layout_iter_next_run ()</h3>
+<a class="indexterm" name="id3118151"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_layout_iter_next_run          (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);</pre>
+<p>
+Moves <em class="parameter"><code>iter</code></em> forward to the next run in visual order. If <em class="parameter"><code>iter</code></em> was
+already at the end of the layout, returns <a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> whether motion was possible.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3118242"></a><h3>
+<a name="pango-layout-iter-next-char"></a>pango_layout_iter_next_char ()</h3>
+<a class="indexterm" name="id3118256"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_layout_iter_next_char         (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);</pre>
+<p>
+Moves <em class="parameter"><code>iter</code></em> forward to the next character in visual order. If <em class="parameter"><code>iter</code></em> was already at
+the end of the layout, returns <a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> whether motion was possible.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3118348"></a><h3>
+<a name="pango-layout-iter-next-cluster"></a>pango_layout_iter_next_cluster ()</h3>
+<a class="indexterm" name="id3118362"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_layout_iter_next_cluster      (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);</pre>
+<p>
+Moves <em class="parameter"><code>iter</code></em> forward to the next cluster in visual order. If <em class="parameter"><code>iter</code></em>
+was already at the end of the layout, returns <a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> whether motion was possible.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3118454"></a><h3>
+<a name="pango-layout-iter-next-line"></a>pango_layout_iter_next_line ()</h3>
+<a class="indexterm" name="id3118468"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_layout_iter_next_line         (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);</pre>
+<p>
+Moves <em class="parameter"><code>iter</code></em> forward to the start of the next line. If <em class="parameter"><code>iter</code></em> is
+already on the last line, returns <a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> whether motion was possible.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3118560"></a><h3>
+<a name="pango-layout-iter-at-last-line"></a>pango_layout_iter_at_last_line ()</h3>
+<a class="indexterm" name="id3118574"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_layout_iter_at_last_line      (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);</pre>
+<p>
+Determines whether <em class="parameter"><code>iter</code></em> is on the last line of the layout.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>iter</code></em> is on the last line.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3118665"></a><h3>
+<a name="pango-layout-iter-get-index"></a>pango_layout_iter_get_index ()</h3>
+<a class="indexterm" name="id3118679"></a><pre class="programlisting">int                 pango_layout_iter_get_index         (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);</pre>
+<p>
+Gets the current byte index. Note that iterating forward by char
+moves in visual order, not logical order, so indexes may not be
+sequential. Also, the index may be equal to the length of the text
+in the layout, if on the <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> run (see <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-run"><code class="function">pango_layout_iter_get_run()</code></a>).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> current byte index.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3118772"></a><h3>
+<a name="pango-layout-iter-get-baseline"></a>pango_layout_iter_get_baseline ()</h3>
+<a class="indexterm" name="id3118785"></a><pre class="programlisting">int                 pango_layout_iter_get_baseline      (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);</pre>
+<p>
+Gets the Y position of the current line's baseline, in layout
+coordinates (origin at top left of the entire layout).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> baseline of current line.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3118855"></a><h3>
+<a name="pango-layout-iter-get-run"></a>pango_layout_iter_get_run ()</h3>
+<a class="indexterm" name="id3118869"></a><pre class="programlisting"><a class="link" href="pango-Layout-Objects.html#PangoLayoutRun">PangoLayoutRun</a>*     pango_layout_iter_get_run           (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);</pre>
+<p>
+Gets the current run. When iterating by run, at the end of each
+line, there's a position with a <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> run, so this function can return
+<a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>. The <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> run at the end of each line ensures that all lines have
+at least one run, even lines consisting of only a newline.
+</p>
+<p>
+Use the faster <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-run-readonly"><code class="function">pango_layout_iter_get_run_readonly()</code></a> if you do not plan
+to modify the contents of the run (glyphs, glyph widths, etc.).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the current run.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3118989"></a><h3>
+<a name="pango-layout-iter-get-run-readonly"></a>pango_layout_iter_get_run_readonly ()</h3>
+<a class="indexterm" name="id3119005"></a><pre class="programlisting"><a class="link" href="pango-Layout-Objects.html#PangoLayoutRun">PangoLayoutRun</a>*     pango_layout_iter_get_run_readonly  (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);</pre>
+<p>
+Gets the current run. When iterating by run, at the end of each
+line, there's a position with a <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> run, so this function can return
+<a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>. The <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> run at the end of each line ensures that all lines have
+at least one run, even lines consisting of only a newline.
+</p>
+<p>
+This is a faster alternative to <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-run"><code class="function">pango_layout_iter_get_run()</code></a>,
+but the user is not expected
+to modify the contents of the run (glyphs, glyph widths, etc.).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the current run, that should not be modified.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3119132"></a><h3>
+<a name="pango-layout-iter-get-line"></a>pango_layout_iter_get_line ()</h3>
+<a class="indexterm" name="id3119146"></a><pre class="programlisting"><a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a>*    pango_layout_iter_get_line          (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);</pre>
+<p>
+Gets the current line.
+</p>
+<p>
+Use the faster <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-line-readonly"><code class="function">pango_layout_iter_get_line_readonly()</code></a> if you do not plan
+to modify the contents of the line (glyphs, glyph widths, etc.).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the current line.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3119232"></a><h3>
+<a name="pango-layout-iter-get-line-readonly"></a>pango_layout_iter_get_line_readonly ()</h3>
+<a class="indexterm" name="id3119248"></a><pre class="programlisting"><a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a>*    pango_layout_iter_get_line_readonly (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter);</pre>
+<p>
+Gets the current line for read-only access.
+</p>
+<p>
+This is a faster alternative to <a class="link" href="pango-Layout-Objects.html#pango-layout-iter-get-line"><code class="function">pango_layout_iter_get_line()</code></a>,
+but the user is not expected
+to modify the contents of the line (glyphs, glyph widths, etc.).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the current line, that should not be modified.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3119342"></a><h3>
+<a name="pango-layout-iter-get-char-extents"></a>pango_layout_iter_get_char_extents ()</h3>
+<a class="indexterm" name="id3119356"></a><pre class="programlisting">void                pango_layout_iter_get_char_extents  (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);</pre>
+<p>
+Gets the extents of the current character, in layout coordinates
+(origin is the top left of the entire layout). Only logical extents
+can sensibly be obtained for characters; ink extents make sense only
+down to the level of clusters.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>logical_rect</code></em>&#160;:</span></p></td>
+<td> rectangle to fill with logical extents
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3119440"></a><h3>
+<a name="pango-layout-iter-get-cluster-extents"></a>pango_layout_iter_get_cluster_extents ()</h3>
+<a class="indexterm" name="id3119454"></a><pre class="programlisting">void                pango_layout_iter_get_cluster_extents
+                                                        (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);</pre>
+<p>
+Gets the extents of the current cluster, in layout coordinates
+(origin is the top left of the entire layout).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ink_rect</code></em>&#160;:</span></p></td>
+<td> rectangle to fill with ink extents, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>logical_rect</code></em>&#160;:</span></p></td>
+<td> rectangle to fill with logical extents, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3119581"></a><h3>
+<a name="pango-layout-iter-get-run-extents"></a>pango_layout_iter_get_run_extents ()</h3>
+<a class="indexterm" name="id3119596"></a><pre class="programlisting">void                pango_layout_iter_get_run_extents   (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);</pre>
+<p>
+Gets the extents of the current run in layout coordinates
+(origin is the top left of the entire layout).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ink_rect</code></em>&#160;:</span></p></td>
+<td> rectangle to fill with ink extents, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>logical_rect</code></em>&#160;:</span></p></td>
+<td> rectangle to fill with logical extents, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3119721"></a><h3>
+<a name="pango-layout-iter-get-line-yrange"></a>pango_layout_iter_get_line_yrange ()</h3>
+<a class="indexterm" name="id3119735"></a><pre class="programlisting">void                pango_layout_iter_get_line_yrange   (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter,
+                                                         int *y0_,
+                                                         int *y1_);</pre>
+<p>
+Divides the vertical space in the <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> being iterated over
+between the lines in the layout, and returns the space belonging to
+the current line.  A line's range includes the line's logical
+extents, plus half of the spacing above and below the line, if
+<a class="link" href="pango-Layout-Objects.html#pango-layout-set-spacing"><code class="function">pango_layout_set_spacing()</code></a> has been called to set layout spacing.
+The Y positions are in layout coordinates (origin at top left of the
+entire layout).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y0_</code></em>&#160;:</span></p></td>
+<td> start of line
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y1_</code></em>&#160;:</span></p></td>
+<td> end of line
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3119860"></a><h3>
+<a name="pango-layout-iter-get-line-extents"></a>pango_layout_iter_get_line_extents ()</h3>
+<a class="indexterm" name="id3119874"></a><pre class="programlisting">void                pango_layout_iter_get_line_extents  (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);</pre>
+<p>
+Obtains the extents of the current line. <em class="parameter"><code>ink_rect</code></em> or <em class="parameter"><code>logical_rect</code></em>
+can be <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if you aren't interested in them. Extents are in layout
+coordinates (origin is the top-left corner of the entire
+<a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>).  Thus the extents returned by this function will be
+the same width/height but not at the same x/y as the extents
+returned from <a class="link" href="pango-Layout-Objects.html#pango-layout-line-get-extents"><code class="function">pango_layout_line_get_extents()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ink_rect</code></em>&#160;:</span></p></td>
+<td> rectangle to fill with ink extents, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>logical_rect</code></em>&#160;:</span></p></td>
+<td> rectangle to fill with logical extents, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3120043"></a><h3>
+<a name="pango-layout-iter-get-layout-extents"></a>pango_layout_iter_get_layout_extents ()</h3>
+<a class="indexterm" name="id3120058"></a><pre class="programlisting">void                pango_layout_iter_get_layout_extents
+                                                        (<a class="link" href="pango-Layout-Objects.html#PangoLayoutIter">PangoLayoutIter</a> *iter,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);</pre>
+<p>
+Obtains the extents of the <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> being iterated
+over. <em class="parameter"><code>ink_rect</code></em> or <em class="parameter"><code>logical_rect</code></em> can be <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if you
+aren't interested in them.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutIter"><span class="type">PangoLayoutIter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ink_rect</code></em>&#160;:</span></p></td>
+<td> rectangle to fill with ink extents, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>logical_rect</code></em>&#160;:</span></p></td>
+<td> rectangle to fill with logical extents, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3120214"></a><h3>
+<a name="PangoLayoutLine"></a>PangoLayoutLine</h3>
+<a class="indexterm" name="id3120227"></a><pre class="programlisting">typedef struct {
+  PangoLayout *layout;
+  gint         start_index;     /* start of line as byte index into layout-&gt;text */
+  gint         length;		/* length of line in bytes */
+  GSList      *runs;
+  guint        is_paragraph_start : 1;  /* TRUE if this is the first line of the paragraph */
+  guint        resolved_dir : 3;  /* Resolved PangoDirection of line */
+} PangoLayoutLine;
+</pre>
+<p>
+The <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a> structure represents one of the lines resulting
+from laying out a paragraph via <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>. <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a>
+structures are obtained by calling <a class="link" href="pango-Layout-Objects.html#pango-layout-get-line"><code class="function">pango_layout_get_line()</code></a> and
+are only valid until the text, attributes, or settings of the
+parent <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> are modified.
+</p>
+<p>
+Routines for rendering PangoLayout objects are provided in
+code specific to each rendering system.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a>&#160;*<em class="structfield"><code>layout</code></em>;</span></p></td>
+<td>the parent layout for this line
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a>&#160;<em class="structfield"><code>start_index</code></em>;</span></p></td>
+<td>the start of the line as byte index into <em class="parameter"><code>layout-&gt;text</code></em>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a>&#160;<em class="structfield"><code>length</code></em>;</span></p></td>
+<td>the length of the line in bytes
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a
+href="../glib/glib-Singly-Linked-Lists.html#GSList"
+>GSList</a>&#160;*<em class="structfield"><code>runs</code></em>;</span></p></td>
+<td>a list containing the runs of the line in visual order
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a
+href="../glib/glib-Basic-Types.html#guint"
+>guint</a>&#160;<em class="structfield"><code>is_paragraph_start</code></em>&#160;:&#160;1;</span></p></td>
+<td>
+<a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if this is the first line of the paragraph
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a
+href="../glib/glib-Basic-Types.html#guint"
+>guint</a>&#160;<em class="structfield"><code>resolved_dir</code></em>&#160;:&#160;3;</span></p></td>
+<td>the resolved <a class="link" href="pango-Text-Processing.html#PangoDirection"><span class="type">PangoDirection</span></a> of the line
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3120464"></a><h3>
+<a name="PangoLayoutRun"></a>PangoLayoutRun</h3>
+<a class="indexterm" name="id3120477"></a><pre class="programlisting">typedef PangoGlyphItem PangoLayoutRun;
+</pre>
+<p>
+The <a class="link" href="pango-Layout-Objects.html#PangoLayoutRun"><span class="type">PangoLayoutRun</span></a> structure represents a single run within
+a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a>; it is simply an alternate name for
+<a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem"><span class="type">PangoGlyphItem</span></a>, present for backwards compatibility.
+See the <a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem"><span class="type">PangoGlyphItem</span></a> docs for details on the fields.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3120528"></a><h3>
+<a name="pango-layout-line-ref"></a>pango_layout_line_ref ()</h3>
+<a class="indexterm" name="id3120544"></a><pre class="programlisting"><a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a>*    pango_layout_line_ref               (<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line);</pre>
+<p>
+Increase the reference count of a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a> by one.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>line</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the line passed in.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.10
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3120629"></a><h3>
+<a name="pango-layout-line-unref"></a>pango_layout_line_unref ()</h3>
+<a class="indexterm" name="id3120642"></a><pre class="programlisting">void                pango_layout_line_unref             (<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line);</pre>
+<p>
+Decrease the reference count of a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a> by one.
+If the result is zero, the line and all associated memory
+will be freed.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>line</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3120710"></a><h3>
+<a name="pango-layout-line-get-extents"></a>pango_layout_line_get_extents ()</h3>
+<a class="indexterm" name="id3120724"></a><pre class="programlisting">void                pango_layout_line_get_extents       (<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);</pre>
+<p>
+Computes the logical and ink extents of a layout line. See
+<a class="link" href="pango-Fonts.html#pango-font-get-glyph-extents"><code class="function">pango_font_get_glyph_extents()</code></a> for details about the interpretation
+of the rectangles.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>line</code></em>&#160;:</span></p></td>
+<td>     a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ink_rect</code></em>&#160;:</span></p></td>
+<td> rectangle used to store the extents of the glyph string
+           as drawn, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>logical_rect</code></em>&#160;:</span></p></td>
+<td> rectangle used to store the logical extents of the glyph
+           string, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3120862"></a><h3>
+<a name="pango-layout-line-get-pixel-extents"></a>pango_layout_line_get_pixel_extents ()</h3>
+<a class="indexterm" name="id3120877"></a><pre class="programlisting">void                pango_layout_line_get_pixel_extents (<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *layout_line,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);</pre>
+<p>
+Computes the logical and ink extents of <em class="parameter"><code>layout_line</code></em> in device units.
+This function just calls <a class="link" href="pango-Layout-Objects.html#pango-layout-line-get-extents"><code class="function">pango_layout_line_get_extents()</code></a> followed by
+<a class="link" href="pango-Glyph-Storage.html#pango-extents-to-pixels"><code class="function">pango_extents_to_pixels()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout_line</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ink_rect</code></em>&#160;:</span></p></td>
+<td>    rectangle used to store the extents of the glyph string
+              as drawn, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>logical_rect</code></em>&#160;:</span></p></td>
+<td> rectangle used to store the logical extents of the glyph
+              string, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3121031"></a><h3>
+<a name="pango-layout-line-index-to-x"></a>pango_layout_line_index_to_x ()</h3>
+<a class="indexterm" name="id3121045"></a><pre class="programlisting">void                pango_layout_line_index_to_x        (<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line,
+                                                         int index_,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> trailing,
+                                                         int *x_pos);</pre>
+<p>
+Converts an index within a line to a X position.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>line</code></em>&#160;:</span></p></td>
+<td>     a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index_</code></em>&#160;:</span></p></td>
+<td>   byte offset of a grapheme within the layout
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>trailing</code></em>&#160;:</span></p></td>
+<td> an integer indicating the edge of the grapheme to retrieve
+           the position of. If &gt; 0, the trailing edge of the grapheme,
+           if 0, the leading of the grapheme.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x_pos</code></em>&#160;:</span></p></td>
+<td> location to store the x_offset (in <a class="link" href="pango-Glyph-Storage.html#PangoGlyphUnit"><span class="type">PangoGlyphUnit</span></a>)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3121180"></a><h3>
+<a name="pango-layout-line-x-to-index"></a>pango_layout_line_x_to_index ()</h3>
+<a class="indexterm" name="id3121194"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_layout_line_x_to_index        (<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line,
+                                                         int x_pos,
+                                                         int *index_,
+                                                         int *trailing);</pre>
+<p>
+Converts from x offset to the byte index of the corresponding
+character within the text of the layout. If <em class="parameter"><code>x_pos</code></em> is outside the line,
+<em class="parameter"><code>index_</code></em> and <em class="parameter"><code>trailing</code></em> will point to the very first or very last position
+in the line. This determination is based on the resolved direction
+of the paragraph; for example, if the resolved direction is
+right-to-left, then an X position to the right of the line (after it)
+results in 0 being stored in <em class="parameter"><code>index_</code></em> and <em class="parameter"><code>trailing</code></em>. An X position to the
+left of the line results in <em class="parameter"><code>index_</code></em> pointing to the (logical) last
+grapheme in the line and <em class="parameter"><code>trailing</code></em> being set to the number of characters
+in that grapheme. The reverse is true for a left-to-right line.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>line</code></em>&#160;:</span></p></td>
+<td>      a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x_pos</code></em>&#160;:</span></p></td>
+<td>     the X offset (in <a class="link" href="pango-Glyph-Storage.html#PangoGlyphUnit"><span class="type">PangoGlyphUnit</span></a>)
+            from the left edge of the line.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index_</code></em>&#160;:</span></p></td>
+<td>    location to store calculated byte index for
+            the grapheme in which the user clicked.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>trailing</code></em>&#160;:</span></p></td>
+<td>  location to store an integer indicating where
+            in the grapheme the user clicked. It will either
+            be zero, or the number of characters in the
+            grapheme. 0 represents the leading edge of the grapheme.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> <a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a> if <em class="parameter"><code>x_pos</code></em> was outside the line, <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if inside
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3121419"></a><h3>
+<a name="pango-layout-line-get-x-ranges"></a>pango_layout_line_get_x_ranges ()</h3>
+<a class="indexterm" name="id3121433"></a><pre class="programlisting">void                pango_layout_line_get_x_ranges      (<a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line,
+                                                         int start_index,
+                                                         int end_index,
+                                                         int **ranges,
+                                                         int *n_ranges);</pre>
+<p>
+Gets a list of visual ranges corresponding to a given logical range.
+This list is not necessarily minimal - there may be consecutive
+ranges which are adjacent. The ranges will be sorted from left to
+right. The ranges are with respect to the left edge of the entire
+layout, not with respect to the line.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>line</code></em>&#160;:</span></p></td>
+<td>        a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>start_index</code></em>&#160;:</span></p></td>
+<td> Start byte index of the logical range. If this value
+              is less than the start index for the line, then
+              the first range will extend all the way to the leading
+              edge of the layout. Otherwise it will start at the
+              leading edge of the first character.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>end_index</code></em>&#160;:</span></p></td>
+<td>   Ending byte index of the logical range. If this value
+              is greater than the end index for the line, then
+              the last range will extend all the way to the trailing
+              edge of the layout. Otherwise, it will end at the
+              trailing edge of the last character.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ranges</code></em>&#160;:</span></p></td>
+<td>      location to store a pointer to an array of ranges.
+              The array will be of length <code class="literal">2*n_ranges</code>,
+              with each range starting at <code class="literal">(*ranges)[2*n]</code>
+              and of width <code class="literal">(*ranges)[2*n + 1] - (*ranges)[2*n]</code>.
+              This array must be freed with <a
+href="../glib/glib-Memory-Allocation.html#g-free"
+><code class="function">g_free()</code></a>. The coordinates are relative
+              to the layout and are in <a class="link" href="pango-Glyph-Storage.html#PangoGlyphUnit"><span class="type">PangoGlyphUnit</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>n_ranges</code></em>&#160;:</span></p></td>
+<td> The number of ranges stored in <em class="parameter"><code>ranges</code></em>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+</body>
+</html>

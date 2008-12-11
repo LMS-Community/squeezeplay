@@ -1,0 +1,897 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>FreeType Fonts and Rendering</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Pango Reference Manual">
+<link rel="up" href="rendering.html" title="Rendering with Pango">
+<link rel="prev" href="pango-Win32-Fonts-and-Rendering.html" title="Win32 Fonts and Rendering">
+<link rel="next" href="pango-Xft-Fonts-and-Rendering.html" title="Xft Fonts and Rendering">
+<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="pango.html" title="Basic Pango Interfaces">
+<link rel="chapter" href="rendering.html" title="Rendering with Pango">
+<link rel="chapter" href="lowlevel.html" title="Low Level Functionality">
+<link rel="chapter" href="tools.html" title="Pango Tools">
+<link rel="chapter" href="pango-hierarchy.html" title="Object Hierarchy">
+<link rel="index" href="index-all.html" title="Index">
+<link rel="index" href="index-deprecated.html" title="Index of deprecated symbols">
+<link rel="index" href="index-1.2.html" title="Index of new symbols in 1.2">
+<link rel="index" href="index-1.4.html" title="Index of new symbols in 1.4">
+<link rel="index" href="index-1.6.html" title="Index of new symbols in 1.6">
+<link rel="index" href="index-1.8.html" title="Index of new symbols in 1.8">
+<link rel="index" href="index-1.10.html" title="Index of new symbols in 1.10">
+<link rel="index" href="index-1.12.html" title="Index of new symbols in 1.12">
+<link rel="index" href="index-1.14.html" title="Index of new symbols in 1.14">
+<link rel="index" href="index-1.16.html" title="Index of new symbols in 1.16">
+<link rel="index" href="index-1.18.html" title="Index of new symbols in 1.18">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="pango-Win32-Fonts-and-Rendering.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="rendering.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Pango Reference Manual</th>
+<td><a accesskey="n" href="pango-Xft-Fonts-and-Rendering.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3150214" class="shortcut">Top</a>
+                  &#160;|&#160;
+                  <a href="#id3150960" class="shortcut">Description</a>
+                  &#160;|&#160;
+                  <a href="#id3150920" class="shortcut">Object Hierarchy</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="pango-FreeType-Fonts-and-Rendering"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2>
+<a name="id3150214"></a><span class="refentrytitle">FreeType Fonts and Rendering</span>
+</h2>
+<p>FreeType Fonts and Rendering &#8212; Functions for shape engines to manipulate FreeType fonts</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<h2>Synopsis</h2>
+<a name="PangoFT2FontMap"></a><pre class="synopsis">
+
+
+
+                    <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap-struct">PangoFT2FontMap</a>;
+#define             <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PANGO-RENDER-TYPE-FT2:CAPS">PANGO_RENDER_TYPE_FT2</a>
+<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a>*       <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-font-map-new">pango_ft2_font_map_new</a>              (void);
+void                <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-font-map-set-resolution">pango_ft2_font_map_set_resolution</a>   (<a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap">PangoFT2FontMap</a> *fontmap,
+                                                         double dpi_x,
+                                                         double dpi_y);
+<a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a>*       <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-font-map-create-context">pango_ft2_font_map_create_context</a>   (<a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap">PangoFT2FontMap</a> *fontmap);
+void                (<a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2SubstituteFunc">*PangoFT2SubstituteFunc</a>)           (FcPattern *pattern,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gpointer"
+>gpointer</a> data);
+void                <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-font-map-set-default-substitute">pango_ft2_font_map_set_default_substitute</a>
+                                                        (<a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap">PangoFT2FontMap</a> *fontmap,
+                                                         <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2SubstituteFunc">PangoFT2SubstituteFunc</a> func,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gpointer"
+>gpointer</a> data,
+                                                         <a
+href="../glib/glib-Datasets.html#GDestroyNotify"
+>GDestroyNotify</a> notify);
+void                <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-font-map-substitute-changed">pango_ft2_font_map_substitute_changed</a>
+                                                        (<a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap">PangoFT2FontMap</a> *fontmap);
+<a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a>*       <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-get-context">pango_ft2_get_context</a>               (double dpi_x,
+                                                         double dpi_y);
+void                <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-render">pango_ft2_render</a>                    (FT_Bitmap *bitmap,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> x,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> y);
+void                <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-render-transformed">pango_ft2_render_transformed</a>        (FT_Bitmap *bitmap,
+                                                         const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         int x,
+                                                         int y);
+void                <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-render-layout-line">pango_ft2_render_layout_line</a>        (FT_Bitmap *bitmap,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line,
+                                                         int x,
+                                                         int y);
+void                <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-render-layout-line-subpixel">pango_ft2_render_layout_line_subpixel</a>
+                                                        (FT_Bitmap *bitmap,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line,
+                                                         int x,
+                                                         int y);
+void                <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-render-layout">pango_ft2_render_layout</a>             (FT_Bitmap *bitmap,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int x,
+                                                         int y);
+void                <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-render-layout-subpixel">pango_ft2_render_layout_subpixel</a>    (FT_Bitmap *bitmap,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int x,
+                                                         int y);
+<a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a>          <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-get-unknown-glyph">pango_ft2_get_unknown_glyph</a>         (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);
+int                 <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-font-get-kerning">pango_ft2_font_get_kerning</a>          (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a> left,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a> right);
+FT_Face             <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-font-get-face">pango_ft2_font_get_face</a>             (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);
+<a class="link" href="pango-Coverage-Maps.html#PangoCoverage">PangoCoverage</a>*      <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-font-get-coverage">pango_ft2_font_get_coverage</a>         (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Text-Attributes.html#PangoLanguage">PangoLanguage</a> *language);
+<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a>*       <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-font-map-for-display">pango_ft2_font_map_for_display</a>      (void);
+void                <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-shutdown-display">pango_ft2_shutdown_display</a>          (void);
+
+
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3150920"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+
+  <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+>GObject</a>
+   +----<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a>
+         +----<a class="link" href="PangoFcFontMap.html" title="PangoFcFontMap">PangoFcFontMap</a>
+               +----PangoFT2FontMap
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3150960"></a><h2>Description</h2>
+<p>
+The macros and functions in this section are used to access fonts and render
+text to bitmaps using the FreeType 2 library.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3150977"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="id3150987"></a><h3>
+<a name="PangoFT2FontMap-struct"></a>PangoFT2FontMap</h3>
+<a class="indexterm" name="id3151000"></a><pre class="programlisting">typedef struct _PangoFT2FontMap PangoFT2FontMap;</pre>
+<p>
+The <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap"><span class="type">PangoFT2FontMap</span></a> is the <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a> implementation for FreeType fonts.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3151033"></a><h3>
+<a name="PANGO-RENDER-TYPE-FT2:CAPS"></a>PANGO_RENDER_TYPE_FT2</h3>
+<a class="indexterm" name="id3151048"></a><pre class="programlisting">#define PANGO_RENDER_TYPE_FT2 "PangoRenderFT2"
+</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">PANGO_RENDER_TYPE_FT2</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+A string constant that was used to identify shape engines that work
+with the FreeType backend. See <a class="link" href="PangoFcFont.html#PANGO-RENDER-TYPE-FC:CAPS"><code class="literal">PANGO_RENDER_TYPE_FC</code></a> for the replacement.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3151092"></a><h3>
+<a name="pango-ft2-font-map-new"></a>pango_ft2_font_map_new ()</h3>
+<a class="indexterm" name="id3151107"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a>*       pango_ft2_font_map_new              (void);</pre>
+<p>
+Create a new <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap"><span class="type">PangoFT2FontMap</span></a> object; a fontmap is used
+to cache information about available fonts, and holds
+certain global parameters such as the resolution and
+the default substitute function (see
+<a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-font-map-set-default-substitute"><code class="function">pango_ft2_font_map_set_default_substitute()</code></a>).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the newly created fontmap object. Unref
+with <a
+href="../gobject/gobject-The-Base-Object-Type.html#g-object-unref"
+><code class="function">g_object_unref()</code></a> when you are finished with it.
+
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since  1.2
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3151188"></a><h3>
+<a name="pango-ft2-font-map-set-resolution"></a>pango_ft2_font_map_set_resolution ()</h3>
+<a class="indexterm" name="id3151205"></a><pre class="programlisting">void                pango_ft2_font_map_set_resolution   (<a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap">PangoFT2FontMap</a> *fontmap,
+                                                         double dpi_x,
+                                                         double dpi_y);</pre>
+<p>
+Sets the horizontal and vertical resolutions for the fontmap.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fontmap</code></em>&#160;:</span></p></td>
+<td> a <span class="type">PangoFT2Fontmap</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>dpi_x</code></em>&#160;:</span></p></td>
+<td> dots per inch in the X direction
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>dpi_y</code></em>&#160;:</span></p></td>
+<td> dots per inch in the Y direction
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.2
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3151316"></a><h3>
+<a name="pango-ft2-font-map-create-context"></a>pango_ft2_font_map_create_context ()</h3>
+<a class="indexterm" name="id3151332"></a><pre class="programlisting"><a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a>*       pango_ft2_font_map_create_context   (<a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap">PangoFT2FontMap</a> *fontmap);</pre>
+<p>
+Create a <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> for the given fontmap.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fontmap</code></em>&#160;:</span></p></td>
+<td> a <span class="type">PangoFT2Fontmap</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the newly created context; free with <a
+href="../gobject/gobject-The-Base-Object-Type.html#g-object-unref"
+><code class="function">g_object_unref()</code></a>.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.2
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3151427"></a><h3>
+<a name="PangoFT2SubstituteFunc"></a>PangoFT2SubstituteFunc ()</h3>
+<a class="indexterm" name="id3151440"></a><pre class="programlisting">void                (*PangoFT2SubstituteFunc)           (FcPattern *pattern,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gpointer"
+>gpointer</a> data);</pre>
+<p>
+Function type for doing final config tweaking on prepared FcPatterns.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pattern</code></em>&#160;:</span></p></td>
+<td>the <span class="type">FcPattern</span> to tweak.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em>&#160;:</span></p></td>
+<td>user data.
+
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3151514"></a><h3>
+<a name="pango-ft2-font-map-set-default-substitute"></a>pango_ft2_font_map_set_default_substitute ()</h3>
+<a class="indexterm" name="id3151531"></a><pre class="programlisting">void                pango_ft2_font_map_set_default_substitute
+                                                        (<a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap">PangoFT2FontMap</a> *fontmap,
+                                                         <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2SubstituteFunc">PangoFT2SubstituteFunc</a> func,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gpointer"
+>gpointer</a> data,
+                                                         <a
+href="../glib/glib-Datasets.html#GDestroyNotify"
+>GDestroyNotify</a> notify);</pre>
+<p>
+Sets a function that will be called to do final configuration
+substitution on a <span class="type">FcPattern</span> before it is used to load
+the font. This function can be used to do things like set
+hinting and antialiasing options.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fontmap</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap"><span class="type">PangoFT2FontMap</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>func</code></em>&#160;:</span></p></td>
+<td> function to call to to do final config tweaking
+       on <span class="type">FcPattern</span> objects.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em>&#160;:</span></p></td>
+<td> data to pass to <em class="parameter"><code>func</code></em>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>notify</code></em>&#160;:</span></p></td>
+<td> function to call when <em class="parameter"><code>data</code></em> is no longer used.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.2
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3151695"></a><h3>
+<a name="pango-ft2-font-map-substitute-changed"></a>pango_ft2_font_map_substitute_changed ()</h3>
+<a class="indexterm" name="id3151711"></a><pre class="programlisting">void                pango_ft2_font_map_substitute_changed
+                                                        (<a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap">PangoFT2FontMap</a> *fontmap);</pre>
+<p>
+Call this function any time the results of the
+default substitution function set with
+<a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-font-map-set-default-substitute"><code class="function">pango_ft2_font_map_set_default_substitute()</code></a> change.
+That is, if your substitution function will return different
+results for the same input pattern, you must call this function.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>fontmap</code></em>&#160;:</span></p></td>
+<td> a <span class="type">PangoFT2Fontmap</span>
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since  1.2
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3151793"></a><h3>
+<a name="pango-ft2-get-context"></a>pango_ft2_get_context ()</h3>
+<a class="indexterm" name="id3151808"></a><pre class="programlisting"><a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a>*       pango_ft2_get_context               (double dpi_x,
+                                                         double dpi_y);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_ft2_get_context</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Retrieves a <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> for the default PangoFT2 fontmap
+(see <code class="function">pango_ft2_fontmap_get_for_display()</code>) and sets the resolution
+for the default fontmap to <em class="parameter"><code>dpi_x</code></em> by <em class="parameter"><code>dpi_y</code></em>.
+</p>
+<p>
+Use of this function is deprecated; see <code class="function">pango_ft2_fontmap_create_context()</code>
+instead.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>dpi_x</code></em>&#160;:</span></p></td>
+<td>  the horizontal DPI of the target device
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>dpi_y</code></em>&#160;:</span></p></td>
+<td>  the vertical DPI of the target device
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the new <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3151964"></a><h3>
+<a name="pango-ft2-render"></a>pango_ft2_render ()</h3>
+<a class="indexterm" name="id3151977"></a><pre class="programlisting">void                pango_ft2_render                    (FT_Bitmap *bitmap,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> x,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> y);</pre>
+<p>
+Renders a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a> onto a FreeType2 bitmap.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>bitmap</code></em>&#160;:</span></p></td>
+<td>  the FreeType2 bitmap onto which to draw the string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td>    the font in which to draw the string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyphs</code></em>&#160;:</span></p></td>
+<td>  the glyph string to draw
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em>&#160;:</span></p></td>
+<td>       the x position of the start of the string (in pixels)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em>&#160;:</span></p></td>
+<td>       the y position of the baseline (in pixels)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3152125"></a><h3>
+<a name="pango-ft2-render-transformed"></a>pango_ft2_render_transformed ()</h3>
+<a class="indexterm" name="id3152141"></a><pre class="programlisting">void                pango_ft2_render_transformed        (FT_Bitmap *bitmap,
+                                                         const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         int x,
+                                                         int y);</pre>
+<p>
+Renders a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a> onto a FreeType2 bitmap, possibly
+transforming the layed-out coordinates through a transformation
+matrix. Note that the transformation matrix for <em class="parameter"><code>font</code></em> is not
+changed, so to produce correct rendering results, the <em class="parameter"><code>font</code></em>
+must have been loaded using a <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> with an identical
+transformation matrix to that passed in to this function.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>bitmap</code></em>&#160;:</span></p></td>
+<td>  the FreeType2 bitmap onto which to draw the string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>matrix</code></em>&#160;:</span></p></td>
+<td>  a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to use an identity transformation
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td>    the font in which to draw the string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyphs</code></em>&#160;:</span></p></td>
+<td>  the glyph string to draw
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em>&#160;:</span></p></td>
+<td>       the x position of the start of the string (in Pango
+          units in user space coordinates)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em>&#160;:</span></p></td>
+<td>       the y position of the baseline (in Pango units
+          in user space coordinates)
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3152361"></a><h3>
+<a name="pango-ft2-render-layout-line"></a>pango_ft2_render_layout_line ()</h3>
+<a class="indexterm" name="id3152375"></a><pre class="programlisting">void                pango_ft2_render_layout_line        (FT_Bitmap *bitmap,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line,
+                                                         int x,
+                                                         int y);</pre>
+<p>
+Render a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a> onto a FreeType2 bitmap</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>bitmap</code></em>&#160;:</span></p></td>
+<td>    a <span class="type">FT_Bitmap</span> to render the line onto
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>line</code></em>&#160;:</span></p></td>
+<td>      a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em>&#160;:</span></p></td>
+<td>         the x position of start of string (in pixels)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em>&#160;:</span></p></td>
+<td>         the y position of baseline (in pixels)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3152511"></a><h3>
+<a name="pango-ft2-render-layout-line-subpixel"></a>pango_ft2_render_layout_line_subpixel ()</h3>
+<a class="indexterm" name="id3152528"></a><pre class="programlisting">void                pango_ft2_render_layout_line_subpixel
+                                                        (FT_Bitmap *bitmap,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line,
+                                                         int x,
+                                                         int y);</pre>
+<p>
+Render a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a> onto a FreeType2 bitmap, with he
+location specified in fixed-point Pango units rather than
+pixels. (Using this will avoid extra inaccuracies from
+rounding to integer pixels multiple times, even if the
+final glyph positions are integers.)</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>bitmap</code></em>&#160;:</span></p></td>
+<td>    a <span class="type">FT_Bitmap</span> to render the line onto
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>line</code></em>&#160;:</span></p></td>
+<td>      a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em>&#160;:</span></p></td>
+<td>         the x position of start of string (in Pango units)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em>&#160;:</span></p></td>
+<td>         the y position of baseline (in Pango units)
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3152675"></a><h3>
+<a name="pango-ft2-render-layout"></a>pango_ft2_render_layout ()</h3>
+<a class="indexterm" name="id3152688"></a><pre class="programlisting">void                pango_ft2_render_layout             (FT_Bitmap *bitmap,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int x,
+                                                         int y);</pre>
+<p>
+Render a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> onto a FreeType2 bitmap</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>bitmap</code></em>&#160;:</span></p></td>
+<td>    a <span class="type">FT_Bitmap</span> to render the layout onto
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td>    a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em>&#160;:</span></p></td>
+<td>         the X position of the left of the layout (in pixels)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em>&#160;:</span></p></td>
+<td>         the Y position of the top of the layout (in pixels)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3152824"></a><h3>
+<a name="pango-ft2-render-layout-subpixel"></a>pango_ft2_render_layout_subpixel ()</h3>
+<a class="indexterm" name="id3152840"></a><pre class="programlisting">void                pango_ft2_render_layout_subpixel    (FT_Bitmap *bitmap,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int x,
+                                                         int y);</pre>
+<p>
+Render a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> onto a FreeType2 bitmap, with he
+location specified in fixed-point Pango units rather than
+pixels. (Using this will avoid extra inaccuracies from
+rounding to integer pixels multiple times, even if the
+final glyph positions are integers.)</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>bitmap</code></em>&#160;:</span></p></td>
+<td>    a <span class="type">FT_Bitmap</span> to render the layout onto
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td>    a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em>&#160;:</span></p></td>
+<td>         the X position of the left of the layout (in Pango units)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em>&#160;:</span></p></td>
+<td>         the Y position of the top of the layout (in Pango units)
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3152985"></a><h3>
+<a name="pango-ft2-get-unknown-glyph"></a>pango_ft2_get_unknown_glyph ()</h3>
+<a class="indexterm" name="id3153001"></a><pre class="programlisting"><a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a>          pango_ft2_get_unknown_glyph         (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_ft2_get_unknown_glyph</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Return the index of a glyph suitable for drawing unknown characters with
+<em class="parameter"><code>font</code></em>, or <a class="link" href="pango-Glyph-Storage.html#PANGO-GLYPH-EMPTY:CAPS"><code class="literal">PANGO_GLYPH_EMPTY</code></a> if no suitable glyph found.
+</p>
+<p>
+If you want to draw an unknown-box for a character that is not covered
+by the font,
+use <a class="link" href="pango-Glyph-Storage.html#PANGO-GET-UNKNOWN-GLYPH:CAPS"><code class="function">PANGO_GET_UNKNOWN_GLYPH()</code></a> instead.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a glyph index into <em class="parameter"><code>font</code></em>, or <a class="link" href="pango-Glyph-Storage.html#PANGO-GLYPH-EMPTY:CAPS"><code class="literal">PANGO_GLYPH_EMPTY</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3153133"></a><h3>
+<a name="pango-ft2-font-get-kerning"></a>pango_ft2_font_get_kerning ()</h3>
+<a class="indexterm" name="id3153148"></a><pre class="programlisting">int                 pango_ft2_font_get_kerning          (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a> left,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a> right);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_ft2_font_get_kerning</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Retrieves kerning information for a combination of two glyphs.
+</p>
+<p>
+Use <a class="link" href="PangoFcFont.html#pango-fc-font-kern-glyphs"><code class="function">pango_fc_font_kern_glyphs()</code></a> instead.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>left</code></em>&#160;:</span></p></td>
+<td> the left <a class="link" href="pango-Glyph-Storage.html#PangoGlyph"><span class="type">PangoGlyph</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>right</code></em>&#160;:</span></p></td>
+<td> the right <a class="link" href="pango-Glyph-Storage.html#PangoGlyph"><span class="type">PangoGlyph</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> The amount of kerning (in Pango units) to apply for
+the given combination of glyphs.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3153305"></a><h3>
+<a name="pango-ft2-font-get-face"></a>pango_ft2_font_get_face ()</h3>
+<a class="indexterm" name="id3153320"></a><pre class="programlisting">FT_Face             pango_ft2_font_get_face             (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_ft2_font_get_face</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Returns the native FreeType2 <span class="type">FT_Face</span> structure used for this <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>.
+This may be useful if you want to use FreeType2 functions directly.
+</p>
+<p>
+Use <a class="link" href="PangoFcFont.html#pango-fc-font-lock-face"><code class="function">pango_fc_font_lock_face()</code></a> instead; when you are done with a
+face from <a class="link" href="PangoFcFont.html#pango-fc-font-lock-face"><code class="function">pango_fc_font_lock_face()</code></a> you must call
+<a class="link" href="PangoFcFont.html#pango-fc-font-unlock-face"><code class="function">pango_fc_font_unlock_face()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a pointer to a <span class="type">FT_Face</span> structure, with the size set correctly
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3153458"></a><h3>
+<a name="pango-ft2-font-get-coverage"></a>pango_ft2_font_get_coverage ()</h3>
+<a class="indexterm" name="id3153474"></a><pre class="programlisting"><a class="link" href="pango-Coverage-Maps.html#PangoCoverage">PangoCoverage</a>*      pango_ft2_font_get_coverage         (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Text-Attributes.html#PangoLanguage">PangoLanguage</a> *language);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_ft2_font_get_coverage</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Gets the <a class="link" href="pango-Coverage-Maps.html#PangoCoverage"><span class="type">PangoCoverage</span></a> for a <span class="type">PangoFT2Font</span>. Use <a class="link" href="pango-Fonts.html#pango-font-get-coverage"><code class="function">pango_font_get_coverage()</code></a> instead.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <span class="type">PangoFT2Font</span>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>language</code></em>&#160;:</span></p></td>
+<td> a language tag.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Coverage-Maps.html#PangoCoverage"><span class="type">PangoCoverage</span></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3153614"></a><h3>
+<a name="pango-ft2-font-map-for-display"></a>pango_ft2_font_map_for_display ()</h3>
+<a class="indexterm" name="id3153630"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a>*       pango_ft2_font_map_for_display      (void);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_ft2_font_map_for_display</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Returns a <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap"><span class="type">PangoFT2FontMap</span></a>. This font map is cached and should
+not be freed. If the font map is no longer needed, it can
+be released with <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-shutdown-display"><code class="function">pango_ft2_shutdown_display()</code></a>. Use of the
+global PangoFT2 fontmap is deprecated; use <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-font-map-new"><code class="function">pango_ft2_font_map_new()</code></a>
+instead.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap"><span class="type">PangoFT2FontMap</span></a>.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3153724"></a><h3>
+<a name="pango-ft2-shutdown-display"></a>pango_ft2_shutdown_display ()</h3>
+<a class="indexterm" name="id3153740"></a><pre class="programlisting">void                pango_ft2_shutdown_display          (void);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_ft2_shutdown_display</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Free the global fontmap. (See <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#pango-ft2-font-map-for-display"><code class="function">pango_ft2_font_map_for_display()</code></a>)
+Use of the global PangoFT2 fontmap is deprecated.</p>
+<p>
+
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>

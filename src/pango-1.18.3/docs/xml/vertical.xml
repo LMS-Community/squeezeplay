@@ -1,0 +1,243 @@
+<refentry id="pango-Vertical-Text">
+<refmeta>
+<refentrytitle role="top_of_page">Vertical Text</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>PANGO Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Vertical Text</refname>
+<refpurpose>Laying text out in vertical directions</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+
+
+
+enum                <link linkend="PangoGravity">PangoGravity</link>;
+#define             <link linkend="PANGO-TYPE-GRAVITY:CAPS">PANGO_TYPE_GRAVITY</link>
+enum                <link linkend="PangoGravityHint">PangoGravityHint</link>;
+#define             <link linkend="PANGO-TYPE-GRAVITY-HINT:CAPS">PANGO_TYPE_GRAVITY_HINT</link>
+#define             <link linkend="PANGO-GRAVITY-IS-VERTICAL:CAPS">PANGO_GRAVITY_IS_VERTICAL</link>           (gravity)
+<link linkend="PangoGravity">PangoGravity</link>        <link linkend="pango-gravity-get-for-matrix">pango_gravity_get_for_matrix</link>        (const <link linkend="PangoMatrix">PangoMatrix</link> *matrix);
+<link linkend="PangoGravity">PangoGravity</link>        <link linkend="pango-gravity-get-for-script">pango_gravity_get_for_script</link>        (<link linkend="PangoScript">PangoScript</link> script,
+                                                         <link linkend="PangoGravity">PangoGravity</link> base_gravity,
+                                                         <link linkend="PangoGravityHint">PangoGravityHint</link> hint);
+
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 role="desc">
+<title role="desc.title">Description</title>
+<para>
+Since 1.16, Pango is able to correctly lay vertical text out.  In fact, it can
+set layouts of mixed vertical and non-vertical text.  This section describes
+the types used for setting vertical text parameters.
+</para>
+<para>
+The way this is implemented is through the concept of
+<firstterm>gravity</firstterm>.  Gravity of normal Latin text is south.  A
+gravity value of east means that glyphs will be rotated ninety degrees
+counterclockwise.  So, to render vertical text one needs to set the gravity
+and rotate the layout using the matrix machinery already in place.  This has
+the huge advantage that most algorithms working on a <link linkend="PangoLayout"><type>PangoLayout</type></link> do not need
+any change as the assumption that lines run in the X direction and stack in
+the Y direction holds even for vertical text layouts.
+</para>
+<para>
+Applications should only need to set base gravity on <link linkend="PangoContext"><type>PangoContext</type></link> in use, and
+let Pango decide the gravity assigned to each run of text.  This automatically
+handles text with mixed scripts.  A very common use is to set the context base
+gravity to auto and rotate the layout normally.  Pango will make sure that
+Asian languages take the right form, while other scripts are rotated normally.
+</para>
+</refsect1>
+
+<refsect1 role="details">
+<title role="details.title">Details</title>
+<refsect2>
+<title><anchor id="PangoGravity" role="enum" condition="since:1.16"/>enum PangoGravity</title>
+<indexterm role="1.16"><primary>PangoGravity</primary></indexterm><programlisting>typedef enum {
+  PANGO_GRAVITY_SOUTH,
+  PANGO_GRAVITY_EAST,
+  PANGO_GRAVITY_NORTH,
+  PANGO_GRAVITY_WEST,
+  PANGO_GRAVITY_AUTO
+} PangoGravity;
+</programlisting>
+<para>
+The <link linkend="PangoGravity"><type>PangoGravity</type></link> type represents the orientation of glyphs in a segment
+of text.  This is useful when rendering vertical text layouts.  In
+those situations, the layout is rotated using a non-identity PangoMatrix,
+and then glyph orientation is controlled using <link linkend="PangoGravity"><type>PangoGravity</type></link>.
+Not every value in this enumeration makes sense for every usage of
+<link linkend="PangoGravity"><type>PangoGravity</type></link>; for example, <link linkend="PANGO-GRAVITY-AUTO:CAPS"><literal>PANGO_GRAVITY_AUTO</literal></link> only can be passed to
+<link linkend="pango-context-set-base-gravity"><function>pango_context_set_base_gravity()</function></link> and can only be returned by
+<link linkend="pango-context-get-base-gravity"><function>pango_context_get_base_gravity()</function></link>.
+</para>
+<para>
+See also: <link linkend="PangoGravityHint"><type>PangoGravityHint</type></link></para>
+<para>
+
+</para><variablelist role="enum">
+<varlistentry>
+<term><anchor id="PANGO-GRAVITY-SOUTH:CAPS" role="constant"/><literal>PANGO_GRAVITY_SOUTH</literal></term>
+<listitem><simpara> Glyphs stand upright (default)
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><anchor id="PANGO-GRAVITY-EAST:CAPS" role="constant"/><literal>PANGO_GRAVITY_EAST</literal></term>
+<listitem><simpara> Glyphs are rotated 90 degrees clockwise
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><anchor id="PANGO-GRAVITY-NORTH:CAPS" role="constant"/><literal>PANGO_GRAVITY_NORTH</literal></term>
+<listitem><simpara> Glyphs are upside-down
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><anchor id="PANGO-GRAVITY-WEST:CAPS" role="constant"/><literal>PANGO_GRAVITY_WEST</literal></term>
+<listitem><simpara> Glyphs are rotated 90 degrees counter-clockwise
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><anchor id="PANGO-GRAVITY-AUTO:CAPS" role="constant"/><literal>PANGO_GRAVITY_AUTO</literal></term>
+<listitem><simpara> Gravity is resolved from the context matrix
+</simpara></listitem>
+</varlistentry>
+</variablelist><para role="since">Since  1.16
+</para></refsect2>
+<refsect2>
+<title><anchor id="PANGO-TYPE-GRAVITY:CAPS" role="macro"/>PANGO_TYPE_GRAVITY</title>
+<indexterm><primary>PANGO_TYPE_GRAVITY</primary></indexterm><programlisting>#define PANGO_TYPE_GRAVITY (pango_gravity_get_type())
+</programlisting>
+<para>
+The <link linkend="GObject"><type>GObject</type></link> type for <link linkend="PangoGravity"><type>PangoGravity</type></link>.
+</para></refsect2>
+<refsect2>
+<title><anchor id="PangoGravityHint" role="enum" condition="since:1.16"/>enum PangoGravityHint</title>
+<indexterm role="1.16"><primary>PangoGravityHint</primary></indexterm><programlisting>typedef enum {
+  PANGO_GRAVITY_HINT_NATURAL,
+  PANGO_GRAVITY_HINT_STRONG,
+  PANGO_GRAVITY_HINT_LINE
+} PangoGravityHint;
+</programlisting>
+<para>
+The <link linkend="PangoGravityHint"><type>PangoGravityHint</type></link> defines how horizontal scripts should behave in a
+vertical context.  That is, English excerpt in a vertical paragraph for
+example.
+</para>
+<para>
+See <link linkend="PangoGravity"><type>PangoGravity</type></link>.</para>
+<para>
+
+</para><variablelist role="enum">
+<varlistentry>
+<term><anchor id="PANGO-GRAVITY-HINT-NATURAL:CAPS" role="constant"/><literal>PANGO_GRAVITY_HINT_NATURAL</literal></term>
+<listitem><simpara> scripts will take their natural gravity based
+on the base gravity and the script.  This is the default.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><anchor id="PANGO-GRAVITY-HINT-STRONG:CAPS" role="constant"/><literal>PANGO_GRAVITY_HINT_STRONG</literal></term>
+<listitem><simpara> always use the base gravity set, regardless of
+the script.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><anchor id="PANGO-GRAVITY-HINT-LINE:CAPS" role="constant"/><literal>PANGO_GRAVITY_HINT_LINE</literal></term>
+<listitem><simpara> for scripts not in their natural direction (eg.
+Latin in East gravity), choose per-script gravity such that every script
+respects the line progression.  This means, Latin and Arabic will take
+opposite gravities and both flow top-to-bottom for example.
+</simpara></listitem>
+</varlistentry>
+</variablelist><para role="since">Since  1.16
+</para></refsect2>
+<refsect2>
+<title><anchor id="PANGO-TYPE-GRAVITY-HINT:CAPS" role="macro"/>PANGO_TYPE_GRAVITY_HINT</title>
+<indexterm><primary>PANGO_TYPE_GRAVITY_HINT</primary></indexterm><programlisting>#define PANGO_TYPE_GRAVITY_HINT (pango_gravity_hint_get_type())
+</programlisting>
+<para>
+The <link linkend="GObject"><type>GObject</type></link> type for <link linkend="PangoGravity"><type>PangoGravity</type></link>.
+</para></refsect2>
+<refsect2>
+<title><anchor id="PANGO-GRAVITY-IS-VERTICAL:CAPS" role="macro" condition="since:1.16"/>PANGO_GRAVITY_IS_VERTICAL()</title>
+<indexterm role="1.16"><primary>PANGO_GRAVITY_IS_VERTICAL</primary></indexterm><programlisting>#define             PANGO_GRAVITY_IS_VERTICAL(gravity)</programlisting>
+<para>
+Whether a <link linkend="PangoGravity"><type>PangoGravity</type></link> represents vertical writing directions.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>gravity</parameter>&nbsp;:</term>
+<listitem><simpara> the <link linkend="PangoGravity"><type>PangoGravity</type></link> to check
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.16
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-gravity-get-for-matrix" role="function" condition="since:1.16"/>pango_gravity_get_for_matrix ()</title>
+<indexterm role="1.16"><primary>pango_gravity_get_for_matrix</primary></indexterm><programlisting><link linkend="PangoGravity">PangoGravity</link>        pango_gravity_get_for_matrix        (const <link linkend="PangoMatrix">PangoMatrix</link> *matrix);</programlisting>
+<para>
+Finds the gravity that best matches the rotation component
+in a <link linkend="PangoMatrix"><type>PangoMatrix</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>matrix</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoMatrix"><type>PangoMatrix</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the gravity of <parameter>matrix</parameter>, which will never be
+<link linkend="PANGO-GRAVITY-AUTO:CAPS"><literal>PANGO_GRAVITY_AUTO</literal></link>, or <link linkend="PANGO-GRAVITY-SOUTH:CAPS"><literal>PANGO_GRAVITY_SOUTH</literal></link> if <parameter>matrix</parameter> is <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.16
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-gravity-get-for-script" role="function" condition="since:1.16"/>pango_gravity_get_for_script ()</title>
+<indexterm role="1.16"><primary>pango_gravity_get_for_script</primary></indexterm><programlisting><link linkend="PangoGravity">PangoGravity</link>        pango_gravity_get_for_script        (<link linkend="PangoScript">PangoScript</link> script,
+                                                         <link linkend="PangoGravity">PangoGravity</link> base_gravity,
+                                                         <link linkend="PangoGravityHint">PangoGravityHint</link> hint);</programlisting>
+<para>
+Based on the script, base gravity, and hint, returns actual gravity
+to use in laying out a single <link linkend="PangoItem"><type>PangoItem</type></link>.
+</para>
+<para>
+If <parameter>base_gravity</parameter> is <link linkend="PANGO-GRAVITY-AUTO:CAPS"><literal>PANGO_GRAVITY_AUTO</literal></link>, it is first replaced with the
+preferred gravity of <parameter>script</parameter>.  To get the preferred gravity of a script,
+pass <link linkend="PANGO-GRAVITY-AUTO:CAPS"><literal>PANGO_GRAVITY_AUTO</literal></link> and <link linkend="PANGO-GRAVITY-HINT-STRONG:CAPS"><literal>PANGO_GRAVITY_HINT_STRONG</literal></link> in.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>script</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="PangoScript"><type>PangoScript</type></link> to query
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_gravity</parameter>&nbsp;:</term>
+<listitem><simpara> base gravity of the paragraph
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>hint</parameter>&nbsp;:</term>
+<listitem><simpara> orientation hint
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> resolved gravity suitable to use for a run of text
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.16
+</para></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

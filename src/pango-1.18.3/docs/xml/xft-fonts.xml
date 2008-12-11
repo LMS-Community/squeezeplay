@@ -1,0 +1,758 @@
+<refentry id="pango-Xft-Fonts-and-Rendering">
+<refmeta>
+<refentrytitle role="top_of_page">Xft Fonts and Rendering</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>PANGO Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Xft Fonts and Rendering</refname>
+<refpurpose>Font handling and rendering with the Xft backend</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+<anchor id="PangoXftFont"/><anchor id="PangoXftFontMap"/><anchor id="PangoXftRenderer"/>
+<synopsis>
+
+
+
+                    <link linkend="PangoXftFont-struct">PangoXftFont</link>;
+                    <link linkend="PangoXftFontMap-struct">PangoXftFontMap</link>;
+#define             <link linkend="PANGO-RENDER-TYPE-XFT:CAPS">PANGO_RENDER_TYPE_XFT</link>
+<link linkend="PangoContext">PangoContext</link>*       <link linkend="pango-xft-get-context">pango_xft_get_context</link>               (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="int">int</link> screen);
+<link linkend="PangoFontMap">PangoFontMap</link>*       <link linkend="pango-xft-get-font-map">pango_xft_get_font_map</link>              (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="int">int</link> screen);
+<link linkend="void">void</link>                <link linkend="pango-xft-set-default-substitute">pango_xft_set_default_substitute</link>    (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="int">int</link> screen,
+                                                         <link linkend="PangoXftSubstituteFunc">PangoXftSubstituteFunc</link> func,
+                                                         <link linkend="gpointer">gpointer</link> data,
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> notify);
+<link linkend="void">void</link>                (<link linkend="PangoXftSubstituteFunc">*PangoXftSubstituteFunc</link>)           (<link linkend="FcPattern">FcPattern</link> *pattern,
+                                                         <link linkend="gpointer">gpointer</link> data);
+<link linkend="void">void</link>                <link linkend="pango-xft-substitute-changed">pango_xft_substitute_changed</link>        (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="int">int</link> screen);
+<link linkend="void">void</link>                <link linkend="pango-xft-shutdown-display">pango_xft_shutdown_display</link>          (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="int">int</link> screen);
+<link linkend="XftFont">XftFont</link>*            <link linkend="pango-xft-font-get-font">pango_xft_font_get_font</link>             (<link linkend="PangoFont">PangoFont</link> *font);
+<link linkend="Display">Display</link>*            <link linkend="pango-xft-font-get-display">pango_xft_font_get_display</link>          (<link linkend="PangoFont">PangoFont</link> *font);
+<link linkend="gboolean">gboolean</link>            <link linkend="pango-xft-font-has-char">pango_xft_font_has_char</link>             (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="gunichar">gunichar</link> wc);
+<link linkend="FT-Face">FT_Face</link>             <link linkend="pango-xft-font-lock-face">pango_xft_font_lock_face</link>            (<link linkend="PangoFont">PangoFont</link> *font);
+<link linkend="void">void</link>                <link linkend="pango-xft-font-unlock-face">pango_xft_font_unlock_face</link>          (<link linkend="PangoFont">PangoFont</link> *font);
+<link linkend="guint">guint</link>               <link linkend="pango-xft-font-get-glyph">pango_xft_font_get_glyph</link>            (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="gunichar">gunichar</link> wc);
+<link linkend="PangoGlyph">PangoGlyph</link>          <link linkend="pango-xft-font-get-unknown-glyph">pango_xft_font_get_unknown_glyph</link>    (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="gunichar">gunichar</link> wc);
+                    <link linkend="PangoXftRenderer-struct">PangoXftRenderer</link>;
+                    <link linkend="PangoXftRendererClass">PangoXftRendererClass</link>;
+<link linkend="PangoRenderer">PangoRenderer</link>*      <link linkend="pango-xft-renderer-new">pango_xft_renderer_new</link>              (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="int">int</link> screen);
+<link linkend="void">void</link>                <link linkend="pango-xft-renderer-set-draw">pango_xft_renderer_set_draw</link>         (<link linkend="PangoXftRenderer">PangoXftRenderer</link> *xftrenderer,
+                                                         <link linkend="XftDraw">XftDraw</link> *draw);
+<link linkend="void">void</link>                <link linkend="pango-xft-renderer-set-default-color">pango_xft_renderer_set_default_color</link>
+                                                        (<link linkend="PangoXftRenderer">PangoXftRenderer</link> *xftrenderer,
+                                                         <link linkend="PangoColor">PangoColor</link> *default_color);
+<link linkend="void">void</link>                <link linkend="pango-xft-render">pango_xft_render</link>                    (<link linkend="XftDraw">XftDraw</link> *draw,
+                                                         <link linkend="XftColor">XftColor</link> *color,
+                                                         <link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyphString">PangoGlyphString</link> *glyphs,
+                                                         <link linkend="gint">gint</link> x,
+                                                         <link linkend="gint">gint</link> y);
+<link linkend="void">void</link>                <link linkend="pango-xft-picture-render">pango_xft_picture_render</link>            (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="Picture">Picture</link> src_picture,
+                                                         <link linkend="Picture">Picture</link> dest_picture,
+                                                         <link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyphString">PangoGlyphString</link> *glyphs,
+                                                         <link linkend="gint">gint</link> x,
+                                                         <link linkend="gint">gint</link> y);
+<link linkend="void">void</link>                <link linkend="pango-xft-render-transformed">pango_xft_render_transformed</link>        (<link linkend="XftDraw">XftDraw</link> *draw,
+                                                         <link linkend="XftColor">XftColor</link> *color,
+                                                         <link linkend="PangoMatrix">PangoMatrix</link> *matrix,
+                                                         <link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyphString">PangoGlyphString</link> *glyphs,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);
+<link linkend="void">void</link>                <link linkend="pango-xft-render-layout-line">pango_xft_render_layout_line</link>        (<link linkend="XftDraw">XftDraw</link> *draw,
+                                                         <link linkend="XftColor">XftColor</link> *color,
+                                                         <link linkend="PangoLayoutLine">PangoLayoutLine</link> *line,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);
+<link linkend="void">void</link>                <link linkend="pango-xft-render-layout">pango_xft_render_layout</link>             (<link linkend="XftDraw">XftDraw</link> *draw,
+                                                         <link linkend="XftColor">XftColor</link> *color,
+                                                         <link linkend="PangoLayout">PangoLayout</link> *layout,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);
+
+
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 role="object_hierarchy">
+<title role="object_hierarchy.title">Object Hierarchy</title>
+<synopsis>
+
+  <link linkend="GObject">GObject</link>
+   +----<link linkend="PangoFont">PangoFont</link>
+         +----<link linkend="PangoFcFont">PangoFcFont</link>
+               +----PangoXftFont
+</synopsis>
+<synopsis>
+
+  <link linkend="GObject">GObject</link>
+   +----<link linkend="PangoFontMap">PangoFontMap</link>
+         +----<link linkend="PangoFcFontMap">PangoFcFontMap</link>
+               +----PangoXftFontMap
+</synopsis>
+<synopsis>
+
+  <link linkend="GObject">GObject</link>
+   +----<link linkend="PangoRenderer">PangoRenderer</link>
+         +----PangoXftRenderer
+</synopsis>
+
+</refsect1>
+
+
+
+
+
+<refsect1 role="properties">
+<title role="properties.title">Properties</title>
+<synopsis>
+
+  &quot;<link linkend="PangoXftRenderer--display">display</link>&quot;                  <link linkend="gpointer">gpointer</link>              : Write / Construct Only
+  &quot;<link linkend="PangoXftRenderer--screen">screen</link>&quot;                   <link linkend="gint">gint</link>                  : Write / Construct Only
+</synopsis>
+</refsect1>
+
+
+
+<refsect1 role="desc">
+<title role="desc.title">Description</title>
+<para>
+The Xft library is a library for displaying fonts on the X window
+system; internally it uses the fontconfig library to locate font
+files, and the FreeType library to load and render fonts. The
+Xft backend is the recommended Pango font backend for screen
+display with X. (The <link linkend="pango-Cairo-Rendering">Cairo back end</link> is another possibility.)
+</para>
+<para>
+Using the Xft backend is generally straightforward;
+<link linkend="pango-xft-get-context"><function>pango_xft_get_context()</function></link> creates a context for a specified display
+and screen. You can then create a <link linkend="PangoLayout"><type>PangoLayout</type></link> with that context
+and render it with <link linkend="pango-xft-render-layout"><function>pango_xft_render_layout()</function></link>. At a more advanced
+level, the low-level fontconfig options used for rendering fonts
+can be affected using <link linkend="pango-xft-set-default-substitute"><function>pango_xft_set_default_substitute()</function></link>, and
+<link linkend="pango-xft-substitute-changed"><function>pango_xft_substitute_changed()</function></link>.
+</para>
+<para>
+A range of functions for drawing pieces of a layout, such as
+individual layout lines and glyphs strings are provided.  You can also
+directly create a <link linkend="PangoXftRenderer"><type>PangoXftRenderer</type></link>. Finally, in some advanced cases, it
+is useful to derive from <link linkend="PangoXftRenderer"><type>PangoXftRenderer</type></link>. Deriving from
+<link linkend="PangoXftRenderer"><type>PangoXftRenderer</type></link> is useful for two reasons. One reason is be to
+support custom attributes by overriding <link linkend="PangoRendererClass"><type>PangoRendererClass</type></link> virtual
+functions like 'prepare_run' or 'draw_shape'. The reason is to
+customize exactly how the final bits are drawn to the destination by
+overriding the <link linkend="PangoXftRendererClass"><type>PangoXftRendererClass</type></link> virtual functions
+'composite_glyphs' and 'composite_trapezoids'.
+</para>
+</refsect1>
+
+<refsect1 role="details">
+<title role="details.title">Details</title>
+<refsect2>
+<title><anchor id="PangoXftFont-struct" role="struct"/>PangoXftFont</title>
+<indexterm><primary>PangoXftFont</primary></indexterm><programlisting>typedef struct _PangoXftFont PangoXftFont;</programlisting>
+<para>
+<link linkend="PangoXftFont"><type>PangoXftFont</type></link> is an implementation of <link linkend="PangoFcFont"><type>PangoFcFont</type></link> using the Xft
+library for rendering.  It is used in conjunction with <link linkend="PangoXftFontMap"><type>PangoXftFontMap</type></link>.
+</para></refsect2>
+<refsect2>
+<title><anchor id="PangoXftFontMap-struct" role="struct"/>PangoXftFontMap</title>
+<indexterm><primary>PangoXftFontMap</primary></indexterm><programlisting>typedef struct _PangoXftFontMap PangoXftFontMap;</programlisting>
+<para>
+<link linkend="PangoXftFontMap"><type>PangoXftFontMap</type></link> is an implementation of <link linkend="PangoFcFontMap"><type>PangoFcFontMap</type></link> suitable for
+the Xft library as the renderer.  It is used in to create fonts of
+type <link linkend="PangoXftFont"><type>PangoXftFont</type></link>.
+</para></refsect2>
+<refsect2>
+<title><anchor id="PANGO-RENDER-TYPE-XFT:CAPS" role="macro" condition="deprecated:"/>PANGO_RENDER_TYPE_XFT</title>
+<indexterm role="deprecated"><primary>PANGO_RENDER_TYPE_XFT</primary></indexterm><programlisting>#define PANGO_RENDER_TYPE_XFT "PangoRenderXft"
+</programlisting>
+<warning><para><literal>PANGO_RENDER_TYPE_XFT</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+A string constant that was used to identify shape engines that work
+with the Xft backend. See <link linkend="PANGO-RENDER-TYPE-FC:CAPS"><literal>PANGO_RENDER_TYPE_FC</literal></link> for the replacement.
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-get-context" role="function"/>pango_xft_get_context ()</title>
+<indexterm><primary>pango_xft_get_context</primary></indexterm><programlisting><link linkend="PangoContext">PangoContext</link>*       pango_xft_get_context               (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="int">int</link> screen);</programlisting>
+<para>
+Retrieves a <link linkend="PangoContext"><type>PangoContext</type></link> appropriate for rendering with
+Xft fonts on the given screen of the given display.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara> an X display.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>screen</parameter>&nbsp;:</term>
+<listitem><simpara> an X screen.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the new <link linkend="PangoContext"><type>PangoContext</type></link>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-get-font-map" role="function" condition="since:1.2"/>pango_xft_get_font_map ()</title>
+<indexterm role="1.2"><primary>pango_xft_get_font_map</primary></indexterm><programlisting><link linkend="PangoFontMap">PangoFontMap</link>*       pango_xft_get_font_map              (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="int">int</link> screen);</programlisting>
+<para>
+Returns the <link linkend="PangoXftFontmap"><type>PangoXftFontmap</type></link> for the given display and screen.
+The fontmap is owned by Pango and will be valid until
+the display is closed.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara> an X display
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>screen</parameter>&nbsp;:</term>
+<listitem><simpara> the screen number of a screen within <parameter>display</parameter>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a <link linkend="PangoFontMap"><type>PangoFontMap</type></link> object, owned by Pango.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.2
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-set-default-substitute" role="function" condition="since:1.2"/>pango_xft_set_default_substitute ()</title>
+<indexterm role="1.2"><primary>pango_xft_set_default_substitute</primary></indexterm><programlisting><link linkend="void">void</link>                pango_xft_set_default_substitute    (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="int">int</link> screen,
+                                                         <link linkend="PangoXftSubstituteFunc">PangoXftSubstituteFunc</link> func,
+                                                         <link linkend="gpointer">gpointer</link> data,
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> notify);</programlisting>
+<para>
+Sets a function that will be called to do final configuration
+substitution on a <link linkend="FcPattern"><type>FcPattern</type></link> before it is used to load
+the font. This function can be used to do things like set
+hinting and antialiasing options.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara> an X Display
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>screen</parameter>&nbsp;:</term>
+<listitem><simpara> the screen number of a screen within <parameter>display</parameter>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>func</parameter>&nbsp;:</term>
+<listitem><simpara> function to call to to do final config tweaking
+       on <link linkend="FcPattern"><type>FcPattern</type></link> objects.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&nbsp;:</term>
+<listitem><simpara> data to pass to <parameter>func</parameter>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>notify</parameter>&nbsp;:</term>
+<listitem><simpara> function to call when <parameter>data</parameter> is no longer used.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.2
+</para></refsect2>
+<refsect2>
+<title><anchor id="PangoXftSubstituteFunc" role="function"/>PangoXftSubstituteFunc ()</title>
+<indexterm><primary>PangoXftSubstituteFunc</primary></indexterm><programlisting><link linkend="void">void</link>                (*PangoXftSubstituteFunc)           (<link linkend="FcPattern">FcPattern</link> *pattern,
+                                                         <link linkend="gpointer">gpointer</link> data);</programlisting>
+<para>
+Function type for doing final config tweaking on prepared FcPatterns.
+</para><variablelist role="params">
+<varlistentry><term><parameter>pattern</parameter>&nbsp;:</term>
+<listitem><simpara>the FcPattern to tweak.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&nbsp;:</term>
+<listitem><simpara>user data.
+
+
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-substitute-changed" role="function" condition="since:1.2"/>pango_xft_substitute_changed ()</title>
+<indexterm role="1.2"><primary>pango_xft_substitute_changed</primary></indexterm><programlisting><link linkend="void">void</link>                pango_xft_substitute_changed        (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="int">int</link> screen);</programlisting>
+<para>
+Call this function any time the results of the
+default substitution function set with
+<link linkend="pango-xft-set-default-substitute"><function>pango_xft_set_default_substitute()</function></link> change.
+That is, if your substitution function will return different
+results for the same input pattern, you must call this function.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara> an X Display
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>screen</parameter>&nbsp;:</term>
+<listitem><simpara> the screen number of a screen within <parameter>display</parameter>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.2
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-shutdown-display" role="function" condition="since:1.2"/>pango_xft_shutdown_display ()</title>
+<indexterm role="1.2"><primary>pango_xft_shutdown_display</primary></indexterm><programlisting><link linkend="void">void</link>                pango_xft_shutdown_display          (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="int">int</link> screen);</programlisting>
+<para>
+Release any resources that have been cached for the
+combination of <parameter>display</parameter> and <parameter>screen</parameter>. Note that when the
+X display is closed, resources are released automatically,
+without needing to call this function.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara> an X display
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>screen</parameter>&nbsp;:</term>
+<listitem><simpara> the screen number of a screen within <parameter>display</parameter>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.2
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-font-get-font" role="function"/>pango_xft_font_get_font ()</title>
+<indexterm><primary>pango_xft_font_get_font</primary></indexterm><programlisting><link linkend="XftFont">XftFont</link>*            pango_xft_font_get_font             (<link linkend="PangoFont">PangoFont</link> *font);</programlisting>
+<para>
+Returns the XftFont of a font.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the XftFont associated to <parameter>font</parameter>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-font-get-display" role="function"/>pango_xft_font_get_display ()</title>
+<indexterm><primary>pango_xft_font_get_display</primary></indexterm><programlisting><link linkend="Display">Display</link>*            pango_xft_font_get_display          (<link linkend="PangoFont">PangoFont</link> *font);</programlisting>
+<para>
+Returns the X display of the XftFont of a font.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the X display of the XftFont associated to <parameter>font</parameter>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-font-has-char" role="function" condition="deprecated:|since:1.2"/>pango_xft_font_has_char ()</title>
+<indexterm role="deprecated"><primary>pango_xft_font_has_char</primary></indexterm><indexterm role="1.2"><primary>pango_xft_font_has_char</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            pango_xft_font_has_char             (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="gunichar">gunichar</link> wc);</programlisting>
+<warning><para><literal>pango_xft_font_has_char</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Determines whether <parameter>font</parameter> has a glyph for the codepoint <parameter>wc</parameter>.
+</para>
+<para>
+Use <link linkend="pango-fc-font-has-char"><function>pango_fc_font_has_char()</function></link> instead.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link> for the Xft backend
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wc</parameter>&nbsp;:</term>
+<listitem><simpara> Unicode codepoint to look up
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>font</parameter> has the requested codepoint.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.2
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-font-lock-face" role="function" condition="deprecated:|since:1.2"/>pango_xft_font_lock_face ()</title>
+<indexterm role="deprecated"><primary>pango_xft_font_lock_face</primary></indexterm><indexterm role="1.2"><primary>pango_xft_font_lock_face</primary></indexterm><programlisting><link linkend="FT-Face">FT_Face</link>             pango_xft_font_lock_face            (<link linkend="PangoFont">PangoFont</link> *font);</programlisting>
+<warning><para><literal>pango_xft_font_lock_face</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Gets the FreeType <type>FT_Face</type> associated with a font,
+This face will be kept around until you call
+<link linkend="pango-xft-font-unlock-face"><function>pango_xft_font_unlock_face()</function></link>.
+</para>
+<para>
+Use <link linkend="pango-fc-font-lock-face"><function>pango_fc_font_lock_face()</function></link> instead.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the FreeType <type>FT_Face</type> associated with <parameter>font</parameter>.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.2
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-font-unlock-face" role="function" condition="deprecated:|since:1.2"/>pango_xft_font_unlock_face ()</title>
+<indexterm role="deprecated"><primary>pango_xft_font_unlock_face</primary></indexterm><indexterm role="1.2"><primary>pango_xft_font_unlock_face</primary></indexterm><programlisting><link linkend="void">void</link>                pango_xft_font_unlock_face          (<link linkend="PangoFont">PangoFont</link> *font);</programlisting>
+<warning><para><literal>pango_xft_font_unlock_face</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Releases a font previously obtained with
+<link linkend="pango-xft-font-lock-face"><function>pango_xft_font_lock_face()</function></link>.
+</para>
+<para>
+Use <link linkend="pango-fc-font-unlock-face"><function>pango_fc_font_unlock_face()</function></link> instead.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link>.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.2
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-font-get-glyph" role="function" condition="deprecated:|since:1.2"/>pango_xft_font_get_glyph ()</title>
+<indexterm role="deprecated"><primary>pango_xft_font_get_glyph</primary></indexterm><indexterm role="1.2"><primary>pango_xft_font_get_glyph</primary></indexterm><programlisting><link linkend="guint">guint</link>               pango_xft_font_get_glyph            (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="gunichar">gunichar</link> wc);</programlisting>
+<warning><para><literal>pango_xft_font_get_glyph</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Gets the glyph index for a given Unicode character
+for <parameter>font</parameter>. If you only want to determine
+whether the font has the glyph, use <link linkend="pango-xft-font-has-char"><function>pango_xft_font_has_char()</function></link>.
+</para>
+<para>
+Use <link linkend="pango-fc-font-get-glyph"><function>pango_fc_font_get_glyph()</function></link> instead.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link> for the Xft backend
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wc</parameter>&nbsp;:</term>
+<listitem><simpara> Unicode codepoint to look up
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the glyph index, or 0, if the Unicode
+ character does not exist in the font.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.2
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-font-get-unknown-glyph" role="function" condition="deprecated:"/>pango_xft_font_get_unknown_glyph ()</title>
+<indexterm role="deprecated"><primary>pango_xft_font_get_unknown_glyph</primary></indexterm><programlisting><link linkend="PangoGlyph">PangoGlyph</link>          pango_xft_font_get_unknown_glyph    (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="gunichar">gunichar</link> wc);</programlisting>
+<warning><para><literal>pango_xft_font_get_unknown_glyph</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Returns the index of a glyph suitable for drawing <parameter>wc</parameter> as an
+unknown character.
+</para>
+<para>
+Use <link linkend="PANGO-GET-UNKNOWN-GLYPH:CAPS"><function>PANGO_GET_UNKNOWN_GLYPH()</function></link> instead.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wc</parameter>&nbsp;:</term>
+<listitem><simpara> the Unicode character for which a glyph is needed.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a glyph index into <parameter>font</parameter>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="PangoXftRenderer-struct" role="struct"/>PangoXftRenderer</title>
+<indexterm role="1.8"><primary>PangoXftRenderer</primary></indexterm><programlisting>typedef struct _PangoXftRenderer PangoXftRenderer;</programlisting>
+<para>
+<link linkend="PangoXftRenderer"><type>PangoXftRenderer</type></link> is a subclass of <link linkend="PangoRenderer"><type>PangoRenderer</type></link> used for rendering
+with Pango's Xft backend. It can be used directly, or it can be
+further subclassed to modify exactly how drawing of individual
+elements occurs.</para>
+<para>
+
+</para><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="PangoXftRendererClass" role="struct" condition="since:1.8"/>PangoXftRendererClass</title>
+<indexterm role="1.8"><primary>PangoXftRendererClass</primary></indexterm><programlisting>typedef struct {
+  void (*composite_trapezoids) (PangoXftRenderer *xftrenderer,
+				PangoRenderPart   part,
+				XTrapezoid       *trapezoids,
+				int               n_trapezoids);
+  void (*composite_glyphs)     (PangoXftRenderer *xftrenderer,
+				XftFont          *xft_font,
+				XftGlyphSpec     *glyphs,
+				int               n_glyphs);
+} PangoXftRendererClass;
+</programlisting>
+<para>
+The class structure for <link linkend="PangoXftRenderer"><type>PangoXftRenderer</type></link></para>
+<para>
+
+</para><variablelist role="struct">
+<varlistentry>
+<term><structfield>composite_trapezoids</structfield>&nbsp;()</term>
+<listitem><simpara> draw the specified trapezoids using
+  the current color and other attributes for <parameter>part</parameter>
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>composite_glyphs</structfield>&nbsp;()</term>
+<listitem><simpara> draw the specified glyphs using
+  the current foreground color and other foreground
+  attributes
+</simpara></listitem>
+</varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-renderer-new" role="function" condition="since:1.8"/>pango_xft_renderer_new ()</title>
+<indexterm role="1.8"><primary>pango_xft_renderer_new</primary></indexterm><programlisting><link linkend="PangoRenderer">PangoRenderer</link>*      pango_xft_renderer_new              (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="int">int</link> screen);</programlisting>
+<para>
+Create a new <link linkend="PangoXftRenderer"><type>PangoXftRenderer</type></link> to allow rendering Pango objects
+with the Xft library. You must call <link linkend="pango-xft-renderer-set-draw"><function>pango_xft_renderer_set_draw()</function></link> before
+using the renderer.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara> an X display
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>screen</parameter>&nbsp;:</term>
+<listitem><simpara>   the index of the screen for <parameter>display</parameter> to which rendering will be done
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the newly created <link linkend="PangoXftRenderer"><type>PangoXftRenderer</type></link>, which should
+              be freed with <link linkend="g-object-unref"><function>g_object_unref()</function></link>.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-renderer-set-draw" role="function" condition="since:1.8"/>pango_xft_renderer_set_draw ()</title>
+<indexterm role="1.8"><primary>pango_xft_renderer_set_draw</primary></indexterm><programlisting><link linkend="void">void</link>                pango_xft_renderer_set_draw         (<link linkend="PangoXftRenderer">PangoXftRenderer</link> *xftrenderer,
+                                                         <link linkend="XftDraw">XftDraw</link> *draw);</programlisting>
+<para>
+Sets the <link linkend="XftDraw"><type>XftDraw</type></link> object that the renderer is drawing to.
+The renderer must not be currently active.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>xftrenderer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoXftRenderer"><type>PangoXftRenderer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>draw</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="XftDraw"><type>XftDraw</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-renderer-set-default-color" role="function" condition="since:1.8"/>pango_xft_renderer_set_default_color ()</title>
+<indexterm role="1.8"><primary>pango_xft_renderer_set_default_color</primary></indexterm><programlisting><link linkend="void">void</link>                pango_xft_renderer_set_default_color
+                                                        (<link linkend="PangoXftRenderer">PangoXftRenderer</link> *xftrenderer,
+                                                         <link linkend="PangoColor">PangoColor</link> *default_color);</programlisting>
+<para>
+Sets the default foreground color for a <link linkend="XftRenderer"><type>XftRenderer</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>xftrenderer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="XftRenderer"><type>XftRenderer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>default_color</parameter>&nbsp;:</term>
+<listitem><simpara> the default foreground color
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-render" role="function"/>pango_xft_render ()</title>
+<indexterm><primary>pango_xft_render</primary></indexterm><programlisting><link linkend="void">void</link>                pango_xft_render                    (<link linkend="XftDraw">XftDraw</link> *draw,
+                                                         <link linkend="XftColor">XftColor</link> *color,
+                                                         <link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyphString">PangoGlyphString</link> *glyphs,
+                                                         <link linkend="gint">gint</link> x,
+                                                         <link linkend="gint">gint</link> y);</programlisting>
+<para>
+Renders a <link linkend="PangoGlyphString"><type>PangoGlyphString</type></link> onto an <type>XftDraw</type> object wrapping an X drawable.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>draw</parameter>&nbsp;:</term>
+<listitem><simpara>    the <type>XftDraw</type> object.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>color</parameter>&nbsp;:</term>
+<listitem><simpara>   the color in which to draw the string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara>    the font in which to draw the string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>glyphs</parameter>&nbsp;:</term>
+<listitem><simpara>  the glyph string to draw
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara>       the x position of start of string (in pixels)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara>       the y position of baseline (in pixels)
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-picture-render" role="function"/>pango_xft_picture_render ()</title>
+<indexterm><primary>pango_xft_picture_render</primary></indexterm><programlisting><link linkend="void">void</link>                pango_xft_picture_render            (<link linkend="Display">Display</link> *display,
+                                                         <link linkend="Picture">Picture</link> src_picture,
+                                                         <link linkend="Picture">Picture</link> dest_picture,
+                                                         <link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyphString">PangoGlyphString</link> *glyphs,
+                                                         <link linkend="gint">gint</link> x,
+                                                         <link linkend="gint">gint</link> y);</programlisting>
+<para>
+Renders a <link linkend="PangoGlyphString"><type>PangoGlyphString</type></link> onto an Xrender <type>Picture</type> object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara>      an X display
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>src_picture</parameter>&nbsp;:</term>
+<listitem><simpara>  the source picture to draw the string with
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>dest_picture</parameter>&nbsp;:</term>
+<listitem><simpara> the destination picture to draw the string onto
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara>         the font in which to draw the string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>glyphs</parameter>&nbsp;:</term>
+<listitem><simpara>       the glyph string to draw
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara>            the x position of start of string (in pixels)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara>            the y position of baseline (in pixels)
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-render-transformed" role="function" condition="since:1.8"/>pango_xft_render_transformed ()</title>
+<indexterm role="1.8"><primary>pango_xft_render_transformed</primary></indexterm><programlisting><link linkend="void">void</link>                pango_xft_render_transformed        (<link linkend="XftDraw">XftDraw</link> *draw,
+                                                         <link linkend="XftColor">XftColor</link> *color,
+                                                         <link linkend="PangoMatrix">PangoMatrix</link> *matrix,
+                                                         <link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyphString">PangoGlyphString</link> *glyphs,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);</programlisting>
+<para>
+Renders a <link linkend="PangoGlyphString"><type>PangoGlyphString</type></link> onto a <link linkend="XftDraw"><type>XftDraw</type></link>, possibly
+transforming the layed-out coordinates through a transformation
+matrix. Note that the transformation matrix for <parameter>font</parameter> is not
+changed, so to produce correct rendering results, the <parameter>font</parameter>
+must have been loaded using a <link linkend="PangoContext"><type>PangoContext</type></link> with an identical
+transformation matrix to that passed in to this function.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>draw</parameter>&nbsp;:</term>
+<listitem><simpara>    an <link linkend="XftDraw"><type>XftDraw</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>color</parameter>&nbsp;:</term>
+<listitem><simpara>   the color in which to draw the glyphs
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>matrix</parameter>&nbsp;:</term>
+<listitem><simpara>  a <link linkend="PangoMatrix"><type>PangoMatrix</type></link>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to use an identity transformation
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara>    the font in which to draw the string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>glyphs</parameter>&nbsp;:</term>
+<listitem><simpara>  the glyph string to draw
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara>       the x position of the start of the string (in Pango
+          units in user space coordinates)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara>       the y position of the baseline (in Pango units
+          in user space coordinates)
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-render-layout-line" role="function" condition="since:1.8"/>pango_xft_render_layout_line ()</title>
+<indexterm role="1.8"><primary>pango_xft_render_layout_line</primary></indexterm><programlisting><link linkend="void">void</link>                pango_xft_render_layout_line        (<link linkend="XftDraw">XftDraw</link> *draw,
+                                                         <link linkend="XftColor">XftColor</link> *color,
+                                                         <link linkend="PangoLayoutLine">PangoLayoutLine</link> *line,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);</programlisting>
+<para>
+Render a <link linkend="PangoLayoutLine"><type>PangoLayoutLine</type></link> onto a <link linkend="XftDraw"><type>XftDraw</type></link></para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>draw</parameter>&nbsp;:</term>
+<listitem><simpara>      an <link linkend="XftDraw"><type>XftDraw</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>color</parameter>&nbsp;:</term>
+<listitem><simpara>     the foreground color in which to draw the layout line
+            (may be overridden by color attributes)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>line</parameter>&nbsp;:</term>
+<listitem><simpara>      a <link linkend="PangoLayoutLine"><type>PangoLayoutLine</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara>         the x position of start of string (in Pango units)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara>         the y position of baseline (in Pango units)
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-xft-render-layout" role="function" condition="since:1.8"/>pango_xft_render_layout ()</title>
+<indexterm role="1.8"><primary>pango_xft_render_layout</primary></indexterm><programlisting><link linkend="void">void</link>                pango_xft_render_layout             (<link linkend="XftDraw">XftDraw</link> *draw,
+                                                         <link linkend="XftColor">XftColor</link> *color,
+                                                         <link linkend="PangoLayout">PangoLayout</link> *layout,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);</programlisting>
+<para>
+Render a <link linkend="PangoLayout"><type>PangoLayout</type></link> onto a <link linkend="XftDraw"><type>XftDraw</type></link></para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>draw</parameter>&nbsp;:</term>
+<listitem><simpara>      an <link linkend="XftDraw"><type>XftDraw</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>color</parameter>&nbsp;:</term>
+<listitem><simpara>     the foreground color in which to draw the layout
+            (may be overridden by color attributes)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>layout</parameter>&nbsp;:</term>
+<listitem><simpara>    a <link linkend="PangoLayout"><type>PangoLayout</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara>         the X position of the left of the layout (in Pango units)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara>         the Y position of the top of the layout (in Pango units)
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+
+</refsect1>
+<refsect1 role="property_details">
+<title role="property_details.title">Property Details</title>
+<refsect2><title><anchor id="PangoXftRenderer--display"/>The &quot;<literal>display</literal>&quot; property</title>
+<indexterm><primary>PangoXftRenderer:display</primary></indexterm><programlisting>  &quot;display&quot;                  <link linkend="gpointer">gpointer</link>              : Write / Construct Only</programlisting>
+<para>The display being rendered to.</para></refsect2>
+<refsect2><title><anchor id="PangoXftRenderer--screen"/>The &quot;<literal>screen</literal>&quot; property</title>
+<indexterm><primary>PangoXftRenderer:screen</primary></indexterm><programlisting>  &quot;screen&quot;                   <link linkend="gint">gint</link>                  : Write / Construct Only</programlisting>
+<para>The screen being rendered to.</para><para>Allowed values: &gt;= 0</para>
+<para>Default value: 0</para>
+</refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

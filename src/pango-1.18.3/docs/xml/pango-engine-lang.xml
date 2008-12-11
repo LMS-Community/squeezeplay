@@ -1,0 +1,157 @@
+<refentry id="PangoEngineLang">
+<refmeta>
+<refentrytitle role="top_of_page">PangoEngineLang</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>PANGO Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>PangoEngineLang</refname>
+<refpurpose>Rendering-system independent script engines</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+<refsect1>
+<title>Stability Level</title>
+Unstable, unless otherwise indicated
+</refsect1>
+
+<refsynopsisdiv role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+
+
+
+                    <link linkend="PangoEngineLang-struct">PangoEngineLang</link>;
+                    <link linkend="PangoEngineLangClass">PangoEngineLangClass</link>;
+#define             <link linkend="PANGO-ENGINE-TYPE-LANG:CAPS">PANGO_ENGINE_TYPE_LANG</link>
+#define             <link linkend="PANGO-ENGINE-LANG-DEFINE-TYPE:CAPS">PANGO_ENGINE_LANG_DEFINE_TYPE</link>       (name, prefix, class_init, instance_init)
+
+
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 role="object_hierarchy">
+<title role="object_hierarchy.title">Object Hierarchy</title>
+<synopsis>
+
+  <link linkend="GObject">GObject</link>
+   +----<link linkend="PangoEngine">PangoEngine</link>
+         +----PangoEngineLang
+</synopsis>
+
+</refsect1>
+
+
+
+
+
+
+
+
+<refsect1 role="desc">
+<title role="desc.title">Description</title>
+<para>
+The <firstterm>language engines</firstterm> are rendering-system independent
+engines that determine line, word, and character breaks for character strings.
+These engines are used in <link linkend="pango-break"><function>pango_break()</function></link>.
+</para>
+</refsect1>
+
+<refsect1 role="details">
+<title role="details.title">Details</title>
+<refsect2>
+<title><anchor id="PangoEngineLang-struct" role="struct"/>PangoEngineLang</title>
+<indexterm><primary>PangoEngineLang</primary></indexterm><programlisting>typedef struct _PangoEngineLang PangoEngineLang;</programlisting>
+<para>
+The <link linkend="PangoEngineLang"><type>PangoEngineLang</type></link> class is implemented by engines that
+customize the rendering-system independent part of the
+Pango pipeline for a particular script or language. For
+instance, a custom <link linkend="PangoEngineLang"><type>PangoEngineLang</type></link> could be provided for
+Thai to implement the dictionary-based word boundary
+lookups needed for that language.</para>
+<para>
+</para></refsect2>
+<refsect2>
+<title><anchor id="PangoEngineLangClass" role="struct"/>PangoEngineLangClass</title>
+<indexterm><primary>PangoEngineLangClass</primary></indexterm><programlisting>typedef struct {
+  void (*script_break) (PangoEngineLang *engine,
+			const char    *text,
+			int            len,
+			PangoAnalysis *analysis,
+			PangoLogAttr  *attrs,
+			int            attrs_len);
+} PangoEngineLangClass;
+</programlisting>
+<para>
+Class structure for <link linkend="PangoEngineLang"><type>PangoEngineLang</type></link></para>
+<para>
+
+</para><variablelist role="struct">
+<varlistentry>
+<term><structfield>script_break</structfield>&nbsp;()</term>
+<listitem><simpara> Provides a custom implementation of <link linkend="pango-break"><function>pango_break()</function></link>.
+If <link linkend="NULL:CAPS"><literal>NULL</literal></link>, <link linkend="pango-default-break"><function>pango_default_break()</function></link> is used instead. If not <link linkend="NULL:CAPS"><literal>NULL</literal></link>, for
+Pango versions before 1.16 (module interface version before 1.6.0),
+this was called instead of <link linkend="pango-default-break"><function>pango_default_break()</function></link>, but in newer versions,
+<link linkend="pango-default-break"><function>pango_default_break()</function></link> is always called and this is called after that to
+allow tailoring the breaking results.
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="PANGO-ENGINE-TYPE-LANG:CAPS" role="macro"/>PANGO_ENGINE_TYPE_LANG</title>
+<indexterm><primary>PANGO_ENGINE_TYPE_LANG</primary></indexterm><programlisting>#define PANGO_ENGINE_TYPE_LANG "PangoEngineLang"
+</programlisting>
+<para>
+A string constant defining the engine type
+for language engines.
+These engines derive from <link linkend="PangoEngineLang"><type>PangoEngineLang</type></link>.
+</para></refsect2>
+<refsect2>
+<title><anchor id="PANGO-ENGINE-LANG-DEFINE-TYPE:CAPS" role="macro"/>PANGO_ENGINE_LANG_DEFINE_TYPE()</title>
+<indexterm><primary>PANGO_ENGINE_LANG_DEFINE_TYPE</primary></indexterm><programlisting>#define             PANGO_ENGINE_LANG_DEFINE_TYPE(name, prefix, class_init, instance_init)</programlisting>
+<para>
+Outputs the necessary code for GObject type registration for a
+<link linkend="PangoEngineLang"><type>PangoEngineLang</type></link> class defined in a module. Two static symbols
+are defined.
+</para>
+<para>
+<programlisting>
+ static GType <replaceable>prefix</replaceable>_type;
+ static void <replaceable>prefix</replaceable>_register_type (GTypeModule module);
+</programlisting>
+</para>
+<para>
+The <function><replaceable>prefix</replaceable><link linkend="register-type"><function>_register_type()</function></link></function>
+function should be called in your <link linkend="script-engine-init"><function>script_engine_init()</function></link> function for
+each type that your module implements, and then your <link linkend="script-engine-create"><function>script_engine_create()</function></link>
+function can create instances of the object as follows:
+</para>
+<para>
+<informalexample><programlisting>
+ PangoEngine *engine = g_object_new (<replaceable>prefix</replaceable>_type, NULL);
+</programlisting></informalexample></para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> Name of the the type to register (for example:, <literal>ArabicEngineFc</literal>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>prefix</parameter>&nbsp;:</term>
+<listitem><simpara> Prefix for symbols that will be defined (for example:, <literal>arabic_engine_fc</literal>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>class_init</parameter>&nbsp;:</term>
+<listitem><simpara> Class initialization function for the new type, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>instance_init</parameter>&nbsp;:</term>
+<listitem><simpara> Instance initialization function for the new type, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

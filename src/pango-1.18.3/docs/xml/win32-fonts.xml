@@ -1,0 +1,579 @@
+<refentry id="pango-Win32-Fonts-and-Rendering">
+<refmeta>
+<refentrytitle role="top_of_page">Win32 Fonts and Rendering</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>PANGO Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Win32 Fonts and Rendering</refname>
+<refpurpose>Functions for shape engines to manipulate Win32 fonts</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+
+
+
+#define             <link linkend="PANGO-RENDER-TYPE-WIN32:CAPS">PANGO_RENDER_TYPE_WIN32</link>
+<link linkend="PangoContext">PangoContext</link>*       <link linkend="pango-win32-get-context">pango_win32_get_context</link>             (void);
+<link linkend="void">void</link>                <link linkend="pango-win32-render">pango_win32_render</link>                  (<link linkend="HDC:CAPS">HDC</link> hdc,
+                                                         <link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyphString">PangoGlyphString</link> *glyphs,
+                                                         <link linkend="gint">gint</link> x,
+                                                         <link linkend="gint">gint</link> y);
+<link linkend="void">void</link>                <link linkend="pango-win32-render-transformed">pango_win32_render_transformed</link>      (<link linkend="HDC:CAPS">HDC</link> hdc,
+                                                         const <link linkend="PangoMatrix">PangoMatrix</link> *matrix,
+                                                         <link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyphString">PangoGlyphString</link> *glyphs,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);
+<link linkend="void">void</link>                <link linkend="pango-win32-render-layout-line">pango_win32_render_layout_line</link>      (<link linkend="HDC:CAPS">HDC</link> hdc,
+                                                         <link linkend="PangoLayoutLine">PangoLayoutLine</link> *line,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);
+<link linkend="void">void</link>                <link linkend="pango-win32-render-layout">pango_win32_render_layout</link>           (<link linkend="HDC:CAPS">HDC</link> hdc,
+                                                         <link linkend="PangoLayout">PangoLayout</link> *layout,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);
+<link linkend="PangoGlyph">PangoGlyph</link>          <link linkend="pango-win32-get-unknown-glyph">pango_win32_get_unknown_glyph</link>       (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="gunichar">gunichar</link> wc);
+<link linkend="gint">gint</link>                <link linkend="pango-win32-font-get-glyph-index">pango_win32_font_get_glyph_index</link>    (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="gunichar">gunichar</link> wc);
+<link linkend="gboolean">gboolean</link>            <link linkend="pango-win32-font-select-font">pango_win32_font_select_font</link>        (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="HDC:CAPS">HDC</link> hdc);
+<link linkend="void">void</link>                <link linkend="pango-win32-font-done-font">pango_win32_font_done_font</link>          (<link linkend="PangoFont">PangoFont</link> *font);
+<link linkend="double">double</link>              <link linkend="pango-win32-font-get-metrics-factor">pango_win32_font_get_metrics_factor</link> (<link linkend="PangoFont">PangoFont</link> *font);
+<link linkend="gboolean">gboolean</link>            <link linkend="pango-win32-get-debug-flag">pango_win32_get_debug_flag</link>          (void);
+<link linkend="HDC:CAPS">HDC</link>                 <link linkend="pango-win32-get-dc">pango_win32_get_dc</link>                  (void);
+                    <link linkend="PangoWin32FontCache">PangoWin32FontCache</link>;
+<link linkend="PangoWin32FontCache">PangoWin32FontCache</link>* <link linkend="pango-win32-font-cache-new">pango_win32_font_cache_new</link>         (void);
+<link linkend="void">void</link>                <link linkend="pango-win32-font-cache-free">pango_win32_font_cache_free</link>         (<link linkend="PangoWin32FontCache">PangoWin32FontCache</link> *cache);
+<link linkend="HFONT:CAPS">HFONT</link>               <link linkend="pango-win32-font-cache-load">pango_win32_font_cache_load</link>         (<link linkend="PangoWin32FontCache">PangoWin32FontCache</link> *cache,
+                                                         const <link linkend="LOGFONTA:CAPS">LOGFONTA</link> *logfont);
+<link linkend="HFONT:CAPS">HFONT</link>               <link linkend="pango-win32-font-cache-loadw">pango_win32_font_cache_loadw</link>        (<link linkend="PangoWin32FontCache">PangoWin32FontCache</link> *cache,
+                                                         const <link linkend="LOGFONTW:CAPS">LOGFONTW</link> *logfont);
+<link linkend="void">void</link>                <link linkend="pango-win32-font-cache-unload">pango_win32_font_cache_unload</link>       (<link linkend="PangoWin32FontCache">PangoWin32FontCache</link> *cache,
+                                                         <link linkend="HFONT:CAPS">HFONT</link> hfont);
+<link linkend="PangoFontMap">PangoFontMap</link>*       <link linkend="pango-win32-font-map-for-display">pango_win32_font_map_for_display</link>    (void);
+<link linkend="void">void</link>                <link linkend="pango-win32-shutdown-display">pango_win32_shutdown_display</link>        (void);
+<link linkend="PangoWin32FontCache">PangoWin32FontCache</link>* <link linkend="pango-win32-font-map-get-font-cache">pango_win32_font_map_get_font_cache</link>
+                                                        (<link linkend="PangoFontMap">PangoFontMap</link> *font_map);
+<link linkend="LOGFONTA:CAPS">LOGFONTA</link>*           <link linkend="pango-win32-font-logfont">pango_win32_font_logfont</link>            (<link linkend="PangoFont">PangoFont</link> *font);
+<link linkend="LOGFONTW:CAPS">LOGFONTW</link>*           <link linkend="pango-win32-font-logfontw">pango_win32_font_logfontw</link>           (<link linkend="PangoFont">PangoFont</link> *font);
+<link linkend="PangoFontDescription">PangoFontDescription</link>* <link linkend="pango-win32-font-description-from-logfont">pango_win32_font_description_from_logfont</link>
+                                                        (const <link linkend="LOGFONTA:CAPS">LOGFONTA</link> *lfp);
+<link linkend="PangoFontDescription">PangoFontDescription</link>* <link linkend="pango-win32-font-description-from-logfontw">pango_win32_font_description_from_logfontw</link>
+                                                        (const <link linkend="LOGFONTW:CAPS">LOGFONTW</link> *lfp);
+
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 role="desc">
+<title role="desc.title">Description</title>
+<para>
+The macros and functions in this section are used to access fonts natively on
+Win32 systems and to render text in conjunction with Win32 APIs.
+</para>
+</refsect1>
+
+<refsect1 role="details">
+<title role="details.title">Details</title>
+<refsect2>
+<title><anchor id="PANGO-RENDER-TYPE-WIN32:CAPS" role="macro"/>PANGO_RENDER_TYPE_WIN32</title>
+<indexterm><primary>PANGO_RENDER_TYPE_WIN32</primary></indexterm><programlisting>#define PANGO_RENDER_TYPE_WIN32 "PangoRenderWin32"
+</programlisting>
+<para>
+A string constant identifying the Win32 renderer. The associated quark (see
+<link linkend="g-quark-from-string"><function>g_quark_from_string()</function></link>) is used to identify the renderer in <link linkend="pango-find-map"><function>pango_find_map()</function></link>.
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-get-context" role="function"/>pango_win32_get_context ()</title>
+<indexterm><primary>pango_win32_get_context</primary></indexterm><programlisting><link linkend="PangoContext">PangoContext</link>*       pango_win32_get_context             (void);</programlisting>
+<para>
+Retrieves a <link linkend="PangoContext"><type>PangoContext</type></link> appropriate for rendering with Windows fonts.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the new <link linkend="PangoContext"><type>PangoContext</type></link>
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-render" role="function"/>pango_win32_render ()</title>
+<indexterm><primary>pango_win32_render</primary></indexterm><programlisting><link linkend="void">void</link>                pango_win32_render                  (<link linkend="HDC:CAPS">HDC</link> hdc,
+                                                         <link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyphString">PangoGlyphString</link> *glyphs,
+                                                         <link linkend="gint">gint</link> x,
+                                                         <link linkend="gint">gint</link> y);</programlisting>
+<para>
+Render a <link linkend="PangoGlyphString"><type>PangoGlyphString</type></link> onto a Windows DC</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>hdc</parameter>&nbsp;:</term>
+<listitem><simpara>     the device context
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara>    the font in which to draw the string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>glyphs</parameter>&nbsp;:</term>
+<listitem><simpara>  the glyph string to draw
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara>       the x position of start of string (in pixels)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara>       the y position of baseline (in pixels)
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-render-transformed" role="function"/>pango_win32_render_transformed ()</title>
+<indexterm><primary>pango_win32_render_transformed</primary></indexterm><programlisting><link linkend="void">void</link>                pango_win32_render_transformed      (<link linkend="HDC:CAPS">HDC</link> hdc,
+                                                         const <link linkend="PangoMatrix">PangoMatrix</link> *matrix,
+                                                         <link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyphString">PangoGlyphString</link> *glyphs,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);</programlisting>
+<para>
+Renders a <link linkend="PangoGlyphString"><type>PangoGlyphString</type></link> onto a windows DC, possibly
+transforming the layed-out coordinates through a transformation
+matrix. Note that the transformation matrix for <parameter>font</parameter> is not
+changed, so to produce correct rendering results, the <parameter>font</parameter>
+must have been loaded using a <link linkend="PangoContext"><type>PangoContext</type></link> with an identical
+transformation matrix to that passed in to this function.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>hdc</parameter>&nbsp;:</term>
+<listitem><simpara>     a windows device context
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>matrix</parameter>&nbsp;:</term>
+<listitem><simpara>  a <link linkend="PangoMatrix"><type>PangoMatrix</type></link>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to use an identity transformation
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara>    the font in which to draw the string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>glyphs</parameter>&nbsp;:</term>
+<listitem><simpara>  the glyph string to draw
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara>       the x position of the start of the string (in Pango
+          units in user space coordinates)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara>       the y position of the baseline (in Pango units
+          in user space coordinates)
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-render-layout-line" role="function"/>pango_win32_render_layout_line ()</title>
+<indexterm><primary>pango_win32_render_layout_line</primary></indexterm><programlisting><link linkend="void">void</link>                pango_win32_render_layout_line      (<link linkend="HDC:CAPS">HDC</link> hdc,
+                                                         <link linkend="PangoLayoutLine">PangoLayoutLine</link> *line,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);</programlisting>
+<para>
+Render a <link linkend="PangoLayoutLine"><type>PangoLayoutLine</type></link> onto a device context. For underlining to
+work property the text alignment of the DC should have TA_BASELINE
+and TA_LEFT.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>hdc</parameter>&nbsp;:</term>
+<listitem><simpara>       DC to use for uncolored drawing
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>line</parameter>&nbsp;:</term>
+<listitem><simpara>      a <link linkend="PangoLayoutLine"><type>PangoLayoutLine</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara>         the x position of start of string (in pixels)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara>         the y position of baseline (in pixels)
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-render-layout" role="function"/>pango_win32_render_layout ()</title>
+<indexterm><primary>pango_win32_render_layout</primary></indexterm><programlisting><link linkend="void">void</link>                pango_win32_render_layout           (<link linkend="HDC:CAPS">HDC</link> hdc,
+                                                         <link linkend="PangoLayout">PangoLayout</link> *layout,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);</programlisting>
+<para>
+Render a <link linkend="PangoLayoutLine"><type>PangoLayoutLine</type></link> onto an X drawable</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>hdc</parameter>&nbsp;:</term>
+<listitem><simpara>       HDC to use for uncolored drawing
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>layout</parameter>&nbsp;:</term>
+<listitem><simpara>    a <link linkend="PangoLayout"><type>PangoLayout</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara>         the X position of the left of the layout (in pixels)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara>         the Y position of the top of the layout (in pixels)
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-get-unknown-glyph" role="function" condition="deprecated:"/>pango_win32_get_unknown_glyph ()</title>
+<indexterm role="deprecated"><primary>pango_win32_get_unknown_glyph</primary></indexterm><programlisting><link linkend="PangoGlyph">PangoGlyph</link>          pango_win32_get_unknown_glyph       (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="gunichar">gunichar</link> wc);</programlisting>
+<warning><para><literal>pango_win32_get_unknown_glyph</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<para>
+Returns the index of a glyph suitable for drawing <parameter>wc</parameter> as an
+unknown character.
+</para>
+<para>
+Use <link linkend="PANGO-GET-UNKNOWN-GLYPH:CAPS"><function>PANGO_GET_UNKNOWN_GLYPH()</function></link> instead.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wc</parameter>&nbsp;:</term>
+<listitem><simpara> the Unicode character for which a glyph is needed.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a glyph index into <parameter>font</parameter>
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-font-get-glyph-index" role="function"/>pango_win32_font_get_glyph_index ()</title>
+<indexterm><primary>pango_win32_font_get_glyph_index</primary></indexterm><programlisting><link linkend="gint">gint</link>                pango_win32_font_get_glyph_index    (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="gunichar">gunichar</link> wc);</programlisting>
+<para>
+Obtains the index of the glyph for <parameter>wc</parameter> in <parameter>font</parameter>, or 0, if not
+covered.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wc</parameter>&nbsp;:</term>
+<listitem><simpara> a Unicode character.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the glyph index for <parameter>wc</parameter>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-font-select-font" role="function"/>pango_win32_font_select_font ()</title>
+<indexterm><primary>pango_win32_font_select_font</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            pango_win32_font_select_font        (<link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="HDC:CAPS">HDC</link> hdc);</programlisting>
+<para>
+Selects the font into the specified DC and changes the mapping mode
+and world transformation of the DC appropriately for the font.
+You may want to surround the use of this function with calls
+to <link linkend="SaveDC"><function>SaveDC()</function></link> and <link linkend="RestoreDC"><function>RestoreDC()</function></link>. Call <link linkend="pango-win32-font-done-font"><function>pango_win32_font_done_font()</function></link> when
+you are done using the DC to release allocated resources.
+</para>
+<para>
+See <link linkend="pango-win32-font-get-metrics-factor"><function>pango_win32_font_get_metrics_factor()</function></link> for information about
+converting from the coordinate space used by this function
+into Pango units.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link> from the Win32 backend
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>hdc</parameter>&nbsp;:</term>
+<listitem><simpara> a windows device context
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the operation succeeded.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-font-done-font" role="function"/>pango_win32_font_done_font ()</title>
+<indexterm><primary>pango_win32_font_done_font</primary></indexterm><programlisting><link linkend="void">void</link>                pango_win32_font_done_font          (<link linkend="PangoFont">PangoFont</link> *font);</programlisting>
+<para>
+Releases any resources allocated by <link linkend="pango-win32-font-done-font"><function>pango_win32_font_done_font()</function></link></para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link> from the win32 backend
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-font-get-metrics-factor" role="function"/>pango_win32_font_get_metrics_factor ()</title>
+<indexterm><primary>pango_win32_font_get_metrics_factor</primary></indexterm><programlisting><link linkend="double">double</link>              pango_win32_font_get_metrics_factor (<link linkend="PangoFont">PangoFont</link> *font);</programlisting>
+<para>
+Returns the scale factor from logical units in the coordinate
+space used by <link linkend="pango-win32-font-select-font"><function>pango_win32_font_select_font()</function></link> to Pango units
+in user space.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link> from the win32 backend
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> factor to multiply logical units by to get Pango
+              units.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-get-debug-flag" role="function" condition="since:1.2"/>pango_win32_get_debug_flag ()</title>
+<indexterm role="1.2"><primary>pango_win32_get_debug_flag</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            pango_win32_get_debug_flag          (void);</programlisting>
+<para>
+Returns whether debugging is turned on.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if debugging is turned on.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.2
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-get-dc" role="function"/>pango_win32_get_dc ()</title>
+<indexterm><primary>pango_win32_get_dc</primary></indexterm><programlisting><link linkend="HDC:CAPS">HDC</link>                 pango_win32_get_dc                  (void);</programlisting>
+<para>
+Obtains a handle to the Windows device context that is used by Pango.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A handle to the Windows device context that is used by Pango.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="PangoWin32FontCache" role="struct"/>PangoWin32FontCache</title>
+<indexterm><primary>PangoWin32FontCache</primary></indexterm><programlisting>typedef struct _PangoWin32FontCache PangoWin32FontCache;</programlisting>
+<para>
+A <link linkend="PangoWin32FontCache"><type>PangoWin32FontCache</type></link> caches
+HFONTs by their LOGFONT descriptions. 
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-font-cache-new" role="function"/>pango_win32_font_cache_new ()</title>
+<indexterm><primary>pango_win32_font_cache_new</primary></indexterm><programlisting><link linkend="PangoWin32FontCache">PangoWin32FontCache</link>* pango_win32_font_cache_new         (void);</programlisting>
+<para>
+Creates a font cache.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The new font cache. This must be freed with
+<link linkend="pango-win32-font-cache-free"><function>pango_win32_font_cache_free()</function></link>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-font-cache-free" role="function"/>pango_win32_font_cache_free ()</title>
+<indexterm><primary>pango_win32_font_cache_free</primary></indexterm><programlisting><link linkend="void">void</link>                pango_win32_font_cache_free         (<link linkend="PangoWin32FontCache">PangoWin32FontCache</link> *cache);</programlisting>
+<para>
+Frees a <link linkend="PangoWin32FontCache"><type>PangoWin32FontCache</type></link> and all associated memory. All fonts loaded
+through this font cache will be freed along with the cache.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>cache</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoWin32FontCache"><type>PangoWin32FontCache</type></link>
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-font-cache-load" role="function"/>pango_win32_font_cache_load ()</title>
+<indexterm><primary>pango_win32_font_cache_load</primary></indexterm><programlisting><link linkend="HFONT:CAPS">HFONT</link>               pango_win32_font_cache_load         (<link linkend="PangoWin32FontCache">PangoWin32FontCache</link> *cache,
+                                                         const <link linkend="LOGFONTA:CAPS">LOGFONTA</link> *logfont);</programlisting>
+<para>
+Creates a HFONT from a LOGFONTA. The
+result may be newly loaded, or it may have been previously
+stored</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>cache</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoWin32FontCache"><type>PangoWin32FontCache</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>logfont</parameter>&nbsp;:</term>
+<listitem><simpara> a pointer to a LOGFONTA structure describing the font to load.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The font structure, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if the font could
+not be loaded. In order to free this structure, you must call
+<link linkend="pango-win32-font-cache-unload"><function>pango_win32_font_cache_unload()</function></link>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-font-cache-loadw" role="function" condition="since:1.16"/>pango_win32_font_cache_loadw ()</title>
+<indexterm role="1.16"><primary>pango_win32_font_cache_loadw</primary></indexterm><programlisting><link linkend="HFONT:CAPS">HFONT</link>               pango_win32_font_cache_loadw        (<link linkend="PangoWin32FontCache">PangoWin32FontCache</link> *cache,
+                                                         const <link linkend="LOGFONTW:CAPS">LOGFONTW</link> *logfont);</programlisting>
+<para>
+Creates a HFONT from a LOGFONTW. The
+result may be newly loaded, or it may have been previously
+stored</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>cache</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoWin32FontCache"><type>PangoWin32FontCache</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>logfont</parameter>&nbsp;:</term>
+<listitem><simpara> a pointer to a LOGFONTW structure describing the font to load.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The font structure, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if the font could
+not be loaded. In order to free this structure, you must call
+<link linkend="pango-win32-font-cache-unload"><function>pango_win32_font_cache_unload()</function></link>.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.16
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-font-cache-unload" role="function"/>pango_win32_font_cache_unload ()</title>
+<indexterm><primary>pango_win32_font_cache_unload</primary></indexterm><programlisting><link linkend="void">void</link>                pango_win32_font_cache_unload       (<link linkend="PangoWin32FontCache">PangoWin32FontCache</link> *cache,
+                                                         <link linkend="HFONT:CAPS">HFONT</link> hfont);</programlisting>
+<para>
+Frees a font structure previously loaded with <link linkend="pango-win32-font-cache-load"><function>pango_win32_font_cache_load()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>cache</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoWin32FontCache"><type>PangoWin32FontCache</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>hfont</parameter>&nbsp;:</term>
+<listitem><simpara> the HFONT to unload
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-font-map-for-display" role="function"/>pango_win32_font_map_for_display ()</title>
+<indexterm><primary>pango_win32_font_map_for_display</primary></indexterm><programlisting><link linkend="PangoFontMap">PangoFontMap</link>*       pango_win32_font_map_for_display    (void);</programlisting>
+<para>
+Returns a <link linkend="PangoWin32FontMap"><type>PangoWin32FontMap</type></link>. Font maps are cached and should
+not be freed. If the font map is no longer needed, it can
+be released with <link linkend="pango-win32-shutdown-display"><function>pango_win32_shutdown_display()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a <link linkend="PangoFontMap"><type>PangoFontMap</type></link>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-shutdown-display" role="function"/>pango_win32_shutdown_display ()</title>
+<indexterm><primary>pango_win32_shutdown_display</primary></indexterm><programlisting><link linkend="void">void</link>                pango_win32_shutdown_display        (void);</programlisting>
+<para>
+Free cached resources.</para>
+<para>
+
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-font-map-get-font-cache" role="function"/>pango_win32_font_map_get_font_cache ()</title>
+<indexterm><primary>pango_win32_font_map_get_font_cache</primary></indexterm><programlisting><link linkend="PangoWin32FontCache">PangoWin32FontCache</link>* pango_win32_font_map_get_font_cache
+                                                        (<link linkend="PangoFontMap">PangoFontMap</link> *font_map);</programlisting>
+<para>
+Obtains the font cache associated with the given font map.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font_map</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoWin32FontMap"><type>PangoWin32FontMap</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the <link linkend="PangoWin32FontCache"><type>PangoWin32FontCache</type></link> of <parameter>font_map</parameter>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-font-logfont" role="function"/>pango_win32_font_logfont ()</title>
+<indexterm><primary>pango_win32_font_logfont</primary></indexterm><programlisting><link linkend="LOGFONTA:CAPS">LOGFONTA</link>*           pango_win32_font_logfont            (<link linkend="PangoFont">PangoFont</link> *font);</programlisting>
+<para>
+Determine the LOGFONTA struct for the specified font. Note that
+Pango internally uses LOGFONTW structs, so if converting the UTF-16
+face name in the LOGFONTW struct to system codepage fails, the
+returned LOGFONTA will have an emppty face name. To get the
+LOGFONTW of a PangoFont, use <link linkend="pango-win32-font-logfontw"><function>pango_win32_font_logfontw()</function></link>. It
+is recommended to do that always even if you don't expect
+to come across fonts with odd names.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link> which must be from the Win32 backend
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A newly allocated LOGFONTA struct. It must be
+freed with <link linkend="g-free"><function>g_free()</function></link>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-font-logfontw" role="function" condition="since:1.16"/>pango_win32_font_logfontw ()</title>
+<indexterm role="1.16"><primary>pango_win32_font_logfontw</primary></indexterm><programlisting><link linkend="LOGFONTW:CAPS">LOGFONTW</link>*           pango_win32_font_logfontw           (<link linkend="PangoFont">PangoFont</link> *font);</programlisting>
+<para>
+Determine the LOGFONTW struct for the specified font.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link> which must be from the Win32 backend
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A newly allocated LOGFONTW struct. It must be
+freed with <link linkend="g-free"><function>g_free()</function></link>.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.16
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-font-description-from-logfont" role="function" condition="since:1.12"/>pango_win32_font_description_from_logfont ()</title>
+<indexterm role="1.12"><primary>pango_win32_font_description_from_logfont</primary></indexterm><programlisting><link linkend="PangoFontDescription">PangoFontDescription</link>* pango_win32_font_description_from_logfont
+                                                        (const <link linkend="LOGFONTA:CAPS">LOGFONTA</link> *lfp);</programlisting>
+<para>
+Creates a <link linkend="PangoFontDescription"><type>PangoFontDescription</type></link> that matches the specified LOGFONTA.
+</para>
+<para>
+The face name, italicness and weight fields in the LOGFONTA are used
+to set up the resulting <link linkend="PangoFontDescription"><type>PangoFontDescription</type></link>. If the face name in
+the LOGFONTA contains non-ASCII characters the font is temporarily
+loaded (using <link linkend="CreateFontIndirect"><function>CreateFontIndirect()</function></link>) and an ASCII (usually English)
+name for it is looked up from the font name tables in the font
+data. If that doesn't work, the face name is converted from the
+system codepage to UTF-8 and that is used.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>lfp</parameter>&nbsp;:</term>
+<listitem><simpara> a LOGFONTA
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the newly allocated <link linkend="PangoFontDescription"><type>PangoFontDescription</type></link>, which
+ should be freed using <link linkend="pango-font-description-free"><function>pango_font_description_free()</function></link>
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-win32-font-description-from-logfontw" role="function" condition="since:1.16"/>pango_win32_font_description_from_logfontw ()</title>
+<indexterm role="1.16"><primary>pango_win32_font_description_from_logfontw</primary></indexterm><programlisting><link linkend="PangoFontDescription">PangoFontDescription</link>* pango_win32_font_description_from_logfontw
+                                                        (const <link linkend="LOGFONTW:CAPS">LOGFONTW</link> *lfp);</programlisting>
+<para>
+Creates a <link linkend="PangoFontDescription"><type>PangoFontDescription</type></link> that matches the specified LOGFONTW.
+</para>
+<para>
+The face name, italicness and weight fields in the LOGFONTW are used
+to set up the resulting <link linkend="PangoFontDescription"><type>PangoFontDescription</type></link>. If the face name in
+the LOGFONTW contains non-ASCII characters the font is temporarily
+loaded (using <link linkend="CreateFontIndirect"><function>CreateFontIndirect()</function></link>) and an ASCII (usually English)
+name for it is looked up from the font name tables in the font
+data. If that doesn't work, the face name is converted from UTF-16
+to UTF-8 and that is used.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>lfp</parameter>&nbsp;:</term>
+<listitem><simpara> a LOGFONTW
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the newly allocated <link linkend="PangoFontDescription"><type>PangoFontDescription</type></link>, which
+ should be freed using <link linkend="pango-font-description-free"><function>pango_font_description_free()</function></link>
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.16
+</para></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

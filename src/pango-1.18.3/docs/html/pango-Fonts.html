@@ -1,0 +1,3551 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Fonts</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Pango Reference Manual">
+<link rel="up" href="pango.html" title="Basic Pango Interfaces">
+<link rel="prev" href="pango-Glyph-Storage.html" title="Glyph Storage">
+<link rel="next" href="pango-Text-Attributes.html" title="Text Attributes">
+<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="pango.html" title="Basic Pango Interfaces">
+<link rel="chapter" href="rendering.html" title="Rendering with Pango">
+<link rel="chapter" href="lowlevel.html" title="Low Level Functionality">
+<link rel="chapter" href="tools.html" title="Pango Tools">
+<link rel="chapter" href="pango-hierarchy.html" title="Object Hierarchy">
+<link rel="index" href="index-all.html" title="Index">
+<link rel="index" href="index-deprecated.html" title="Index of deprecated symbols">
+<link rel="index" href="index-1.2.html" title="Index of new symbols in 1.2">
+<link rel="index" href="index-1.4.html" title="Index of new symbols in 1.4">
+<link rel="index" href="index-1.6.html" title="Index of new symbols in 1.6">
+<link rel="index" href="index-1.8.html" title="Index of new symbols in 1.8">
+<link rel="index" href="index-1.10.html" title="Index of new symbols in 1.10">
+<link rel="index" href="index-1.12.html" title="Index of new symbols in 1.12">
+<link rel="index" href="index-1.14.html" title="Index of new symbols in 1.14">
+<link rel="index" href="index-1.16.html" title="Index of new symbols in 1.16">
+<link rel="index" href="index-1.18.html" title="Index of new symbols in 1.18">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="pango-Glyph-Storage.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="pango.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Pango Reference Manual</th>
+<td><a accesskey="n" href="pango-Text-Attributes.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3053885" class="shortcut">Top</a>
+                  &#160;|&#160;
+                  <a href="#id3056360" class="shortcut">Description</a>
+                  &#160;|&#160;
+                  <a href="#id3056216" class="shortcut">Object Hierarchy</a>
+                  &#160;|&#160;
+                  <a href="#id3056335" class="shortcut">Known Derived Interfaces</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="pango-Fonts"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2>
+<a name="id3053885"></a><span class="refentrytitle">Fonts</span>
+</h2>
+<p>Fonts &#8212; Structures representing abstract fonts</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<h2>Synopsis</h2>
+<a name="PangoFont"></a><a name="PangoFontFamily"></a><a name="PangoFontFace"></a><a name="PangoFontMap"></a><a name="PangoFontset"></a><a name="PangoFontsetSimple"></a><pre class="synopsis">
+
+
+
+                    <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>;
+#define             <a class="link" href="pango-Fonts.html#PANGO-TYPE-FONT-DESCRIPTION:CAPS">PANGO_TYPE_FONT_DESCRIPTION</a>
+enum                <a class="link" href="pango-Fonts.html#PangoStyle">PangoStyle</a>;
+#define             <a class="link" href="pango-Fonts.html#PANGO-TYPE-STYLE:CAPS">PANGO_TYPE_STYLE</a>
+enum                <a class="link" href="pango-Fonts.html#PangoWeight">PangoWeight</a>;
+#define             <a class="link" href="pango-Fonts.html#PANGO-TYPE-WEIGHT:CAPS">PANGO_TYPE_WEIGHT</a>
+enum                <a class="link" href="pango-Fonts.html#PangoVariant">PangoVariant</a>;
+#define             <a class="link" href="pango-Fonts.html#PANGO-TYPE-VARIANT:CAPS">PANGO_TYPE_VARIANT</a>
+enum                <a class="link" href="pango-Fonts.html#PangoStretch">PangoStretch</a>;
+#define             <a class="link" href="pango-Fonts.html#PANGO-TYPE-STRETCH:CAPS">PANGO_TYPE_STRETCH</a>
+enum                <a class="link" href="pango-Fonts.html#PangoFontMask">PangoFontMask</a>;
+#define             <a class="link" href="pango-Fonts.html#PANGO-TYPE-FONT-MASK:CAPS">PANGO_TYPE_FONT_MASK</a>
+<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* <a class="link" href="pango-Fonts.html#pango-font-description-new">pango_font_description_new</a>        (void);
+<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* <a class="link" href="pango-Fonts.html#pango-font-description-copy">pango_font_description_copy</a>       (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* <a class="link" href="pango-Fonts.html#pango-font-description-copy-static">pango_font_description_copy_static</a>
+                                                        (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+<a
+href="../glib/glib-Basic-Types.html#guint"
+>guint</a>               <a class="link" href="pango-Fonts.html#pango-font-description-hash">pango_font_description_hash</a>         (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Fonts.html#pango-font-description-equal">pango_font_description_equal</a>        (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc1,
+                                                         const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc2);
+void                <a class="link" href="pango-Fonts.html#pango-font-description-free">pango_font_description_free</a>         (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+void                <a class="link" href="pango-Fonts.html#pango-font-descriptions-free">pango_font_descriptions_free</a>        (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> **descs,
+                                                         int n_descs);
+void                <a class="link" href="pango-Fonts.html#pango-font-description-set-family">pango_font_description_set_family</a>   (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         const char *family);
+void                <a class="link" href="pango-Fonts.html#pango-font-description-set-family-static">pango_font_description_set_family_static</a>
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         const char *family);
+const char*         <a class="link" href="pango-Fonts.html#pango-font-description-get-family">pango_font_description_get_family</a>   (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+void                <a class="link" href="pango-Fonts.html#pango-font-description-set-style">pango_font_description_set_style</a>    (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         <a class="link" href="pango-Fonts.html#PangoStyle">PangoStyle</a> style);
+<a class="link" href="pango-Fonts.html#PangoStyle">PangoStyle</a>          <a class="link" href="pango-Fonts.html#pango-font-description-get-style">pango_font_description_get_style</a>    (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+void                <a class="link" href="pango-Fonts.html#pango-font-description-set-variant">pango_font_description_set_variant</a>  (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         <a class="link" href="pango-Fonts.html#PangoVariant">PangoVariant</a> variant);
+<a class="link" href="pango-Fonts.html#PangoVariant">PangoVariant</a>        <a class="link" href="pango-Fonts.html#pango-font-description-get-variant">pango_font_description_get_variant</a>  (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+void                <a class="link" href="pango-Fonts.html#pango-font-description-set-weight">pango_font_description_set_weight</a>   (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         <a class="link" href="pango-Fonts.html#PangoWeight">PangoWeight</a> weight);
+<a class="link" href="pango-Fonts.html#PangoWeight">PangoWeight</a>         <a class="link" href="pango-Fonts.html#pango-font-description-get-weight">pango_font_description_get_weight</a>   (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+void                <a class="link" href="pango-Fonts.html#pango-font-description-set-stretch">pango_font_description_set_stretch</a>  (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         <a class="link" href="pango-Fonts.html#PangoStretch">PangoStretch</a> stretch);
+<a class="link" href="pango-Fonts.html#PangoStretch">PangoStretch</a>        <a class="link" href="pango-Fonts.html#pango-font-description-get-stretch">pango_font_description_get_stretch</a>  (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+void                <a class="link" href="pango-Fonts.html#pango-font-description-set-size">pango_font_description_set_size</a>     (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> size);
+<a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a>                <a class="link" href="pango-Fonts.html#pango-font-description-get-size">pango_font_description_get_size</a>     (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+void                <a class="link" href="pango-Fonts.html#pango-font-description-set-absolute-size">pango_font_description_set_absolute_size</a>
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         double size);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Fonts.html#pango-font-description-get-size-is-absolute">pango_font_description_get_size_is_absolute</a>
+                                                        (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+void                <a class="link" href="pango-Fonts.html#pango-font-description-set-gravity">pango_font_description_set_gravity</a>  (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         <a class="link" href="pango-Vertical-Text.html#PangoGravity">PangoGravity</a> gravity);
+<a class="link" href="pango-Vertical-Text.html#PangoGravity">PangoGravity</a>        <a class="link" href="pango-Fonts.html#pango-font-description-get-gravity">pango_font_description_get_gravity</a>  (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+<a class="link" href="pango-Fonts.html#PangoFontMask">PangoFontMask</a>       <a class="link" href="pango-Fonts.html#pango-font-description-get-set-fields">pango_font_description_get_set_fields</a>
+                                                        (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+void                <a class="link" href="pango-Fonts.html#pango-font-description-unset-fields">pango_font_description_unset_fields</a> (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         <a class="link" href="pango-Fonts.html#PangoFontMask">PangoFontMask</a> to_unset);
+void                <a class="link" href="pango-Fonts.html#pango-font-description-merge">pango_font_description_merge</a>        (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc_to_merge,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> replace_existing);
+void                <a class="link" href="pango-Fonts.html#pango-font-description-merge-static">pango_font_description_merge_static</a> (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc_to_merge,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> replace_existing);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Fonts.html#pango-font-description-better-match">pango_font_description_better_match</a> (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *old_match,
+                                                         const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *new_match);
+<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* <a class="link" href="pango-Fonts.html#pango-font-description-from-string">pango_font_description_from_string</a>
+                                                        (const char *str);
+char*               <a class="link" href="pango-Fonts.html#pango-font-description-to-string">pango_font_description_to_string</a>    (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+char*               <a class="link" href="pango-Fonts.html#pango-font-description-to-filename">pango_font_description_to_filename</a>  (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+
+                    <a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a>;
+#define             <a class="link" href="pango-Fonts.html#PANGO-TYPE-FONT-METRICS:CAPS">PANGO_TYPE_FONT_METRICS</a>
+<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a>*   <a class="link" href="pango-Fonts.html#pango-font-metrics-ref">pango_font_metrics_ref</a>              (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);
+void                <a class="link" href="pango-Fonts.html#pango-font-metrics-unref">pango_font_metrics_unref</a>            (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);
+int                 <a class="link" href="pango-Fonts.html#pango-font-metrics-get-ascent">pango_font_metrics_get_ascent</a>       (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);
+int                 <a class="link" href="pango-Fonts.html#pango-font-metrics-get-descent">pango_font_metrics_get_descent</a>      (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);
+int                 <a class="link" href="pango-Fonts.html#pango-font-metrics-get-approximate-char-width">pango_font_metrics_get_approximate_char_width</a>
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);
+int                 <a class="link" href="pango-Fonts.html#pango-font-metrics-get-approximate-digit-width">pango_font_metrics_get_approximate_digit_width</a>
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);
+int                 <a class="link" href="pango-Fonts.html#pango-font-metrics-get-underline-thickness">pango_font_metrics_get_underline_thickness</a>
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);
+int                 <a class="link" href="pango-Fonts.html#pango-font-metrics-get-underline-position">pango_font_metrics_get_underline_position</a>
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);
+int                 <a class="link" href="pango-Fonts.html#pango-font-metrics-get-strikethrough-thickness">pango_font_metrics_get_strikethrough_thickness</a>
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);
+int                 <a class="link" href="pango-Fonts.html#pango-font-metrics-get-strikethrough-position">pango_font_metrics_get_strikethrough_position</a>
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);
+
+                    <a class="link" href="pango-Fonts.html#PangoFont-struct">PangoFont</a>;
+#define             <a class="link" href="pango-Fonts.html#PANGO-TYPE-FONT:CAPS">PANGO_TYPE_FONT</a>
+#define             <a class="link" href="pango-Fonts.html#PANGO-FONT:CAPS">PANGO_FONT</a>                          (object)
+#define             <a class="link" href="pango-Fonts.html#PANGO-IS-FONT:CAPS">PANGO_IS_FONT</a>                       (object)
+<a class="link" href="PangoEngineShape.html" title="PangoEngineShape">PangoEngineShape</a>*   <a class="link" href="pango-Fonts.html#pango-font-find-shaper">pango_font_find_shaper</a>              (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Text-Attributes.html#PangoLanguage">PangoLanguage</a> *language,
+                                                         <a
+href="../glib/glib-Basic-Types.html#guint32"
+>guint32</a> ch);
+<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* <a class="link" href="pango-Fonts.html#pango-font-describe">pango_font_describe</a>               (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);
+<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* <a class="link" href="pango-Fonts.html#pango-font-describe-with-absolute-size">pango_font_describe_with_absolute_size</a>
+                                                        (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);
+<a class="link" href="pango-Coverage-Maps.html#PangoCoverage">PangoCoverage</a>*      <a class="link" href="pango-Fonts.html#pango-font-get-coverage">pango_font_get_coverage</a>             (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Text-Attributes.html#PangoLanguage">PangoLanguage</a> *language);
+void                <a class="link" href="pango-Fonts.html#pango-font-get-glyph-extents">pango_font_get_glyph_extents</a>        (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a> glyph,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);
+<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a>*   <a class="link" href="pango-Fonts.html#pango-font-get-metrics">pango_font_get_metrics</a>              (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Text-Attributes.html#PangoLanguage">PangoLanguage</a> *language);
+<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a>*       <a class="link" href="pango-Fonts.html#pango-font-get-font-map">pango_font_get_font_map</a>             (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);
+
+                    <a class="link" href="pango-Fonts.html#PangoFontFamily-struct">PangoFontFamily</a>;
+#define             <a class="link" href="pango-Fonts.html#PANGO-TYPE-FONT-FAMILY:CAPS">PANGO_TYPE_FONT_FAMILY</a>
+#define             <a class="link" href="pango-Fonts.html#PANGO-FONT-FAMILY:CAPS">PANGO_FONT_FAMILY</a>                   (object)
+#define             <a class="link" href="pango-Fonts.html#PANGO-IS-FONT-FAMILY:CAPS">PANGO_IS_FONT_FAMILY</a>                (object)
+const char*         <a class="link" href="pango-Fonts.html#pango-font-family-get-name">pango_font_family_get_name</a>          (<a class="link" href="pango-Fonts.html#PangoFontFamily">PangoFontFamily</a> *family);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Fonts.html#pango-font-family-is-monospace">pango_font_family_is_monospace</a>      (<a class="link" href="pango-Fonts.html#PangoFontFamily">PangoFontFamily</a> *family);
+void                <a class="link" href="pango-Fonts.html#pango-font-family-list-faces">pango_font_family_list_faces</a>        (<a class="link" href="pango-Fonts.html#PangoFontFamily">PangoFontFamily</a> *family,
+                                                         <a class="link" href="pango-Fonts.html#PangoFontFace">PangoFontFace</a> ***faces,
+                                                         int *n_faces);
+
+                    <a class="link" href="pango-Fonts.html#PangoFontFace-struct">PangoFontFace</a>;
+#define             <a class="link" href="pango-Fonts.html#PANGO-TYPE-FONT-FACE:CAPS">PANGO_TYPE_FONT_FACE</a>
+#define             <a class="link" href="pango-Fonts.html#PANGO-FONT-FACE:CAPS">PANGO_FONT_FACE</a>                     (object)
+#define             <a class="link" href="pango-Fonts.html#PANGO-IS-FONT-FACE:CAPS">PANGO_IS_FONT_FACE</a>                  (object)
+const char*         <a class="link" href="pango-Fonts.html#pango-font-face-get-face-name">pango_font_face_get_face_name</a>       (<a class="link" href="pango-Fonts.html#PangoFontFace">PangoFontFace</a> *face);
+void                <a class="link" href="pango-Fonts.html#pango-font-face-list-sizes">pango_font_face_list_sizes</a>          (<a class="link" href="pango-Fonts.html#PangoFontFace">PangoFontFace</a> *face,
+                                                         int **sizes,
+                                                         int *n_sizes);
+<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* <a class="link" href="pango-Fonts.html#pango-font-face-describe">pango_font_face_describe</a>          (<a class="link" href="pango-Fonts.html#PangoFontFace">PangoFontFace</a> *face);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Fonts.html#pango-font-face-is-synthesized">pango_font_face_is_synthesized</a>      (<a class="link" href="pango-Fonts.html#PangoFontFace">PangoFontFace</a> *face);
+
+                    <a class="link" href="pango-Fonts.html#PangoFontMap-struct">PangoFontMap</a>;
+#define             <a class="link" href="pango-Fonts.html#PANGO-TYPE-FONT-MAP:CAPS">PANGO_TYPE_FONT_MAP</a>
+#define             <a class="link" href="pango-Fonts.html#PANGO-FONT-MAP:CAPS">PANGO_FONT_MAP</a>                      (object)
+#define             <a class="link" href="pango-Fonts.html#PANGO-IS-FONT-MAP:CAPS">PANGO_IS_FONT_MAP</a>                   (object)
+                    <a class="link" href="pango-Fonts.html#PangoFontMapClass">PangoFontMapClass</a>;
+#define             <a class="link" href="pango-Fonts.html#PANGO-FONT-MAP-CLASS:CAPS">PANGO_FONT_MAP_CLASS</a>                (klass)
+#define             <a class="link" href="pango-Fonts.html#PANGO-IS-FONT-MAP-CLASS:CAPS">PANGO_IS_FONT_MAP_CLASS</a>             (klass)
+#define             <a class="link" href="pango-Fonts.html#PANGO-FONT-MAP-GET-CLASS:CAPS">PANGO_FONT_MAP_GET_CLASS</a>            (obj)
+<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a>*          <a class="link" href="pango-Fonts.html#pango-font-map-load-font">pango_font_map_load_font</a>            (<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a> *fontmap,
+                                                         <a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a> *context,
+                                                         const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);
+<a class="link" href="pango-Fonts.html#PangoFontset">PangoFontset</a>*       <a class="link" href="pango-Fonts.html#pango-font-map-load-fontset">pango_font_map_load_fontset</a>         (<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a> *fontmap,
+                                                         <a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a> *context,
+                                                         const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         <a class="link" href="pango-Text-Attributes.html#PangoLanguage">PangoLanguage</a> *language);
+void                <a class="link" href="pango-Fonts.html#pango-font-map-list-families">pango_font_map_list_families</a>        (<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a> *fontmap,
+                                                         <a class="link" href="pango-Fonts.html#PangoFontFamily">PangoFontFamily</a> ***families,
+                                                         int *n_families);
+const char*         <a class="link" href="pango-Fonts.html#pango-font-map-get-shape-engine-type">pango_font_map_get_shape_engine_type</a>
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a> *fontmap);
+
+                    <a class="link" href="pango-Fonts.html#PangoFontset-struct">PangoFontset</a>;
+#define             <a class="link" href="pango-Fonts.html#PANGO-TYPE-FONTSET:CAPS">PANGO_TYPE_FONTSET</a>
+                    <a class="link" href="pango-Fonts.html#PangoFontsetClass">PangoFontsetClass</a>;
+<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a>*          <a class="link" href="pango-Fonts.html#pango-fontset-get-font">pango_fontset_get_font</a>              (<a class="link" href="pango-Fonts.html#PangoFontset">PangoFontset</a> *fontset,
+                                                         <a
+href="../glib/glib-Basic-Types.html#guint"
+>guint</a> wc);
+<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a>*   <a class="link" href="pango-Fonts.html#pango-fontset-get-metrics">pango_fontset_get_metrics</a>           (<a class="link" href="pango-Fonts.html#PangoFontset">PangoFontset</a> *fontset);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            (<a class="link" href="pango-Fonts.html#PangoFontsetForeachFunc">*PangoFontsetForeachFunc</a>)          (<a class="link" href="pango-Fonts.html#PangoFontset">PangoFontset</a> *fontset,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gpointer"
+>gpointer</a> data);
+void                <a class="link" href="pango-Fonts.html#pango-fontset-foreach">pango_fontset_foreach</a>               (<a class="link" href="pango-Fonts.html#PangoFontset">PangoFontset</a> *fontset,
+                                                         <a class="link" href="pango-Fonts.html#PangoFontsetForeachFunc">PangoFontsetForeachFunc</a> func,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gpointer"
+>gpointer</a> data);
+                    <a class="link" href="pango-Fonts.html#PangoFontsetSimple-struct">PangoFontsetSimple</a>;
+#define             <a class="link" href="pango-Fonts.html#PANGO-TYPE-FONTSET-SIMPLE:CAPS">PANGO_TYPE_FONTSET_SIMPLE</a>
+<a class="link" href="pango-Fonts.html#PangoFontsetSimple">PangoFontsetSimple</a>* <a class="link" href="pango-Fonts.html#pango-fontset-simple-new">pango_fontset_simple_new</a>            (<a class="link" href="pango-Text-Attributes.html#PangoLanguage">PangoLanguage</a> *language);
+void                <a class="link" href="pango-Fonts.html#pango-fontset-simple-append">pango_fontset_simple_append</a>         (<a class="link" href="pango-Fonts.html#PangoFontsetSimple">PangoFontsetSimple</a> *fontset,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);
+int                 <a class="link" href="pango-Fonts.html#pango-fontset-simple-size">pango_fontset_simple_size</a>           (<a class="link" href="pango-Fonts.html#PangoFontsetSimple">PangoFontsetSimple</a> *fontset);
+
+
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3056216"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+
+  <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+>GObject</a>
+   +----PangoFont
+         +----<a class="link" href="PangoFcFont.html" title="PangoFcFont">PangoFcFont</a>
+</pre>
+<pre class="synopsis">
+
+  <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+>GObject</a>
+   +----PangoFontFamily
+</pre>
+<pre class="synopsis">
+
+  <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+>GObject</a>
+   +----PangoFontFace
+</pre>
+<pre class="synopsis">
+
+  <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+>GObject</a>
+   +----PangoFontMap
+         +----<a class="link" href="PangoFcFontMap.html" title="PangoFcFontMap">PangoFcFontMap</a>
+</pre>
+<pre class="synopsis">
+
+  <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+>GObject</a>
+   +----PangoFontset
+         +----<a class="link" href="pango-Fonts.html#PangoFontsetSimple">PangoFontsetSimple</a>
+</pre>
+<pre class="synopsis">
+
+  <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+>GObject</a>
+   +----<a class="link" href="pango-Fonts.html#PangoFontset">PangoFontset</a>
+         +----PangoFontsetSimple
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3056335"></a><h2>Known Derived Interfaces</h2>
+<p>
+PangoFontMap is required by
+ <a class="link" href="pango-Cairo-Rendering.html#PangoCairoFontMap">PangoCairoFontMap</a>.</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3056360"></a><h2>Description</h2>
+<p>
+Pango supports a flexible architecture where a
+particular rendering architecture can supply an
+implementation of fonts. The <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> structure
+represents an abstract rendering-system-independent font.
+Pango provides routines to list available fonts, and
+to load a font of a given description.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3056387"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="id3056397"></a><h3>
+<a name="PangoFontDescription"></a>PangoFontDescription</h3>
+<a class="indexterm" name="id3056410"></a><pre class="programlisting">typedef struct _PangoFontDescription PangoFontDescription;</pre>
+<p>
+The <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a> structure represents the description
+of an ideal font. These structures are used both to list
+what fonts are available on the system and also for specifying
+the characteristics of a font to load.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3056439"></a><h3>
+<a name="PANGO-TYPE-FONT-DESCRIPTION:CAPS"></a>PANGO_TYPE_FONT_DESCRIPTION</h3>
+<a class="indexterm" name="id3056453"></a><pre class="programlisting">#define PANGO_TYPE_FONT_DESCRIPTION (pango_font_description_get_type ())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3056486"></a><h3>
+<a name="PangoStyle"></a>enum PangoStyle</h3>
+<a class="indexterm" name="id3056498"></a><pre class="programlisting">typedef enum {
+  PANGO_STYLE_NORMAL,
+  PANGO_STYLE_OBLIQUE,
+  PANGO_STYLE_ITALIC
+} PangoStyle;
+</pre>
+<p>
+An enumeration specifying the various slant styles possible for a font.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a name="PANGO-STYLE-NORMAL:CAPS"></a><code class="literal">PANGO_STYLE_NORMAL</code></span></p></td>
+<td> the font is upright.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-STYLE-OBLIQUE:CAPS"></a><code class="literal">PANGO_STYLE_OBLIQUE</code></span></p></td>
+<td> the font is slanted, but in a roman style.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-STYLE-ITALIC:CAPS"></a><code class="literal">PANGO_STYLE_ITALIC</code></span></p></td>
+<td> the font is slanted in an italic style.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3056592"></a><h3>
+<a name="PANGO-TYPE-STYLE:CAPS"></a>PANGO_TYPE_STYLE</h3>
+<a class="indexterm" name="id3056605"></a><pre class="programlisting">#define PANGO_TYPE_STYLE (pango_style_get_type())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Fonts.html#PangoStyle"><span class="type">PangoStyle</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3056637"></a><h3>
+<a name="PangoWeight"></a>enum PangoWeight</h3>
+<a class="indexterm" name="id3056649"></a><pre class="programlisting">typedef enum {
+  PANGO_WEIGHT_ULTRALIGHT = 200,
+  PANGO_WEIGHT_LIGHT = 300,
+  PANGO_WEIGHT_NORMAL = 400,
+  PANGO_WEIGHT_SEMIBOLD = 600,
+  PANGO_WEIGHT_BOLD = 700,
+  PANGO_WEIGHT_ULTRABOLD = 800,
+  PANGO_WEIGHT_HEAVY = 900
+} PangoWeight;
+</pre>
+<p>
+An enumeration specifying the weight (boldness) of a font. This is a numerical
+value ranging from 100 to 900, but there are some predefined values:
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a name="PANGO-WEIGHT-ULTRALIGHT:CAPS"></a><code class="literal">PANGO_WEIGHT_ULTRALIGHT</code></span></p></td>
+<td>the ultralight weight (= 200)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-WEIGHT-LIGHT:CAPS"></a><code class="literal">PANGO_WEIGHT_LIGHT</code></span></p></td>
+<td> the light weight (=300)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-WEIGHT-NORMAL:CAPS"></a><code class="literal">PANGO_WEIGHT_NORMAL</code></span></p></td>
+<td>the default weight (= 400)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-WEIGHT-SEMIBOLD:CAPS"></a><code class="literal">PANGO_WEIGHT_SEMIBOLD</code></span></p></td>
+<td>a weight intermediate between normal and bold (=600)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-WEIGHT-BOLD:CAPS"></a><code class="literal">PANGO_WEIGHT_BOLD</code></span></p></td>
+<td>the bold weight (= 700)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-WEIGHT-ULTRABOLD:CAPS"></a><code class="literal">PANGO_WEIGHT_ULTRABOLD</code></span></p></td>
+<td>the ultrabold weight (= 800)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-WEIGHT-HEAVY:CAPS"></a><code class="literal">PANGO_WEIGHT_HEAVY</code></span></p></td>
+<td>the heavy weight (= 900)
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3056832"></a><h3>
+<a name="PANGO-TYPE-WEIGHT:CAPS"></a>PANGO_TYPE_WEIGHT</h3>
+<a class="indexterm" name="id3056846"></a><pre class="programlisting">#define PANGO_TYPE_WEIGHT (pango_weight_get_type())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Fonts.html#PangoWeight"><span class="type">PangoWeight</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3056878"></a><h3>
+<a name="PangoVariant"></a>enum PangoVariant</h3>
+<a class="indexterm" name="id3056890"></a><pre class="programlisting">typedef enum {
+  PANGO_VARIANT_NORMAL,
+  PANGO_VARIANT_SMALL_CAPS
+} PangoVariant;
+</pre>
+<p>
+An enumeration specifying capitalization variant of the font.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a name="PANGO-VARIANT-NORMAL:CAPS"></a><code class="literal">PANGO_VARIANT_NORMAL</code></span></p></td>
+<td>A normal font.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-VARIANT-SMALL-CAPS:CAPS"></a><code class="literal">PANGO_VARIANT_SMALL_CAPS</code></span></p></td>
+<td>A font with the lower case characters
+  replaced by smaller variants of the capital characters.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3056958"></a><h3>
+<a name="PANGO-TYPE-VARIANT:CAPS"></a>PANGO_TYPE_VARIANT</h3>
+<a class="indexterm" name="id3056972"></a><pre class="programlisting">#define PANGO_TYPE_VARIANT (pango_variant_get_type())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Fonts.html#PangoVariant"><span class="type">PangoVariant</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3057004"></a><h3>
+<a name="PangoStretch"></a>enum PangoStretch</h3>
+<a class="indexterm" name="id3057017"></a><pre class="programlisting">typedef enum {
+  PANGO_STRETCH_ULTRA_CONDENSED,
+  PANGO_STRETCH_EXTRA_CONDENSED,
+  PANGO_STRETCH_CONDENSED,
+  PANGO_STRETCH_SEMI_CONDENSED,
+  PANGO_STRETCH_NORMAL,
+  PANGO_STRETCH_SEMI_EXPANDED,
+  PANGO_STRETCH_EXPANDED,
+  PANGO_STRETCH_EXTRA_EXPANDED,
+  PANGO_STRETCH_ULTRA_EXPANDED
+} PangoStretch;
+</pre>
+<p>
+An enumeration specifying the width of the font relative to other designs
+within a family.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a name="PANGO-STRETCH-ULTRA-CONDENSED:CAPS"></a><code class="literal">PANGO_STRETCH_ULTRA_CONDENSED</code></span></p></td>
+<td>ultra condensed width
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-STRETCH-EXTRA-CONDENSED:CAPS"></a><code class="literal">PANGO_STRETCH_EXTRA_CONDENSED</code></span></p></td>
+<td>extra condensed width
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-STRETCH-CONDENSED:CAPS"></a><code class="literal">PANGO_STRETCH_CONDENSED</code></span></p></td>
+<td>condensed width
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-STRETCH-SEMI-CONDENSED:CAPS"></a><code class="literal">PANGO_STRETCH_SEMI_CONDENSED</code></span></p></td>
+<td>semi condensed width
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-STRETCH-NORMAL:CAPS"></a><code class="literal">PANGO_STRETCH_NORMAL</code></span></p></td>
+<td>the normal width
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-STRETCH-SEMI-EXPANDED:CAPS"></a><code class="literal">PANGO_STRETCH_SEMI_EXPANDED</code></span></p></td>
+<td>semi expanded width
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-STRETCH-EXPANDED:CAPS"></a><code class="literal">PANGO_STRETCH_EXPANDED</code></span></p></td>
+<td>expanded width
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-STRETCH-EXTRA-EXPANDED:CAPS"></a><code class="literal">PANGO_STRETCH_EXTRA_EXPANDED</code></span></p></td>
+<td>extra expanded width
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-STRETCH-ULTRA-EXPANDED:CAPS"></a><code class="literal">PANGO_STRETCH_ULTRA_EXPANDED</code></span></p></td>
+<td>ultra expanded width
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3057247"></a><h3>
+<a name="PANGO-TYPE-STRETCH:CAPS"></a>PANGO_TYPE_STRETCH</h3>
+<a class="indexterm" name="id3057260"></a><pre class="programlisting">#define PANGO_TYPE_STRETCH (pango_stretch_get_type())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Fonts.html#PangoStretch"><span class="type">PangoStretch</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3057292"></a><h3>
+<a name="PangoFontMask"></a>enum PangoFontMask</h3>
+<a class="indexterm" name="id3057305"></a><pre class="programlisting">typedef enum {
+  PANGO_FONT_MASK_FAMILY  = 1 &lt;&lt; 0,
+  PANGO_FONT_MASK_STYLE   = 1 &lt;&lt; 1,
+  PANGO_FONT_MASK_VARIANT = 1 &lt;&lt; 2,
+  PANGO_FONT_MASK_WEIGHT  = 1 &lt;&lt; 3,
+  PANGO_FONT_MASK_STRETCH = 1 &lt;&lt; 4,
+  PANGO_FONT_MASK_SIZE    = 1 &lt;&lt; 5,
+  PANGO_FONT_MASK_GRAVITY = 1 &lt;&lt; 6
+} PangoFontMask;
+</pre>
+<p>
+The bits in a <a class="link" href="pango-Fonts.html#PangoFontMask"><span class="type">PangoFontMask</span></a> correspond to fields in a  
+<a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a> that have been set.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a name="PANGO-FONT-MASK-FAMILY:CAPS"></a><code class="literal">PANGO_FONT_MASK_FAMILY</code></span></p></td>
+<td>the font family is specified.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-FONT-MASK-STYLE:CAPS"></a><code class="literal">PANGO_FONT_MASK_STYLE</code></span></p></td>
+<td>the font style is specified.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-FONT-MASK-VARIANT:CAPS"></a><code class="literal">PANGO_FONT_MASK_VARIANT</code></span></p></td>
+<td>the font variant is specified.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-FONT-MASK-WEIGHT:CAPS"></a><code class="literal">PANGO_FONT_MASK_WEIGHT</code></span></p></td>
+<td>the font weight is specified.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-FONT-MASK-STRETCH:CAPS"></a><code class="literal">PANGO_FONT_MASK_STRETCH</code></span></p></td>
+<td>the font stretch is specified.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-FONT-MASK-SIZE:CAPS"></a><code class="literal">PANGO_FONT_MASK_SIZE</code></span></p></td>
+<td>the font size is specified.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a name="PANGO-FONT-MASK-GRAVITY:CAPS"></a><code class="literal">PANGO_FONT_MASK_GRAVITY</code></span></p></td>
+<td>the font gravity is specified (Since: 1.16.)
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3057514"></a><h3>
+<a name="PANGO-TYPE-FONT-MASK:CAPS"></a>PANGO_TYPE_FONT_MASK</h3>
+<a class="indexterm" name="id3057527"></a><pre class="programlisting">#define PANGO_TYPE_FONT_MASK (pango_font_mask_get_type())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Fonts.html#PangoFontMask"><span class="type">PangoFontMask</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3057559"></a><h3>
+<a name="pango-font-description-new"></a>pango_font_description_new ()</h3>
+<a class="indexterm" name="id3057572"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* pango_font_description_new        (void);</pre>
+<p>
+Creates a new font description structure with all fields unset.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the newly allocated <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>, which
+              should be freed using <a class="link" href="pango-Fonts.html#pango-font-description-free"><code class="function">pango_font_description_free()</code></a>.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3057634"></a><h3>
+<a name="pango-font-description-copy"></a>pango_font_description_copy ()</h3>
+<a class="indexterm" name="id3057647"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* pango_font_description_copy       (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Make a copy of a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the newly allocated <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>, which should
+              be freed with <a class="link" href="pango-Fonts.html#pango-font-description-free"><code class="function">pango_font_description_free()</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3057746"></a><h3>
+<a name="pango-font-description-copy-static"></a>pango_font_description_copy_static ()</h3>
+<a class="indexterm" name="id3057760"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* pango_font_description_copy_static
+                                                        (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Like <a class="link" href="pango-Fonts.html#pango-font-description-copy"><code class="function">pango_font_description_copy()</code></a>, but only a shallow copy is made
+of the family name and other allocated fields. The result can only
+be used until <em class="parameter"><code>desc</code></em> is modified or freed. This is meant to be used
+when the copy is only needed temporarily.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the newly allocated <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>, which should
+              be freed with <a class="link" href="pango-Fonts.html#pango-font-description-free"><code class="function">pango_font_description_free()</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3057872"></a><h3>
+<a name="pango-font-description-hash"></a>pango_font_description_hash ()</h3>
+<a class="indexterm" name="id3057885"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#guint"
+>guint</a>               pango_font_description_hash         (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Computes a hash of a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a> structure suitable
+to be used, for example, as an argument to <a
+href="../glib/glib-Hash-Tables.html#g-hash-table-new"
+><code class="function">g_hash_table_new()</code></a>.
+The hash value is independent of <em class="parameter"><code>desc-&gt;mask</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the hash value.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3057982"></a><h3>
+<a name="pango-font-description-equal"></a>pango_font_description_equal ()</h3>
+<a class="indexterm" name="id3057995"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_font_description_equal        (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc1,
+                                                         const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc2);</pre>
+<p>
+Compares two font descriptions for equality. Two font descriptions
+are considered equal if the fonts they describe are provably identical.
+This means that their masks do not have to match, as long as other fields
+are all the same. (Two font descriptions may result in identical fonts
+being loaded, but still compare <a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>.)</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc1</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc2</code></em>&#160;:</span></p></td>
+<td> another <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if the two font descriptions are identical,
+	 <a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a> otherwise.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3058132"></a><h3>
+<a name="pango-font-description-free"></a>pango_font_description_free ()</h3>
+<a class="indexterm" name="id3058146"></a><pre class="programlisting">void                pango_font_description_free         (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Frees a font description.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3058215"></a><h3>
+<a name="pango-font-descriptions-free"></a>pango_font_descriptions_free ()</h3>
+<a class="indexterm" name="id3058228"></a><pre class="programlisting">void                pango_font_descriptions_free        (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> **descs,
+                                                         int n_descs);</pre>
+<p>
+Frees a list of font descriptions from <code class="function">pango_font_map_list_fonts()</code></p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>descs</code></em>&#160;:</span></p></td>
+<td> a pointer to an array of <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>n_descs</code></em>&#160;:</span></p></td>
+<td> number of font descriptions in <em class="parameter"><code>descs</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3058337"></a><h3>
+<a name="pango-font-description-set-family"></a>pango_font_description_set_family ()</h3>
+<a class="indexterm" name="id3058352"></a><pre class="programlisting">void                pango_font_description_set_family   (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         const char *family);</pre>
+<p>
+Sets the family name field of a font description. The family
+name represents a family of related font styles, and will
+resolve to a particular <a class="link" href="pango-Fonts.html#PangoFontFamily"><span class="type">PangoFontFamily</span></a>. In some uses of
+<a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>, it is also possible to use a comma
+separated list of family names for this field.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>family</code></em>&#160;:</span></p></td>
+<td> a string representing the family name.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3058453"></a><h3>
+<a name="pango-font-description-set-family-static"></a>pango_font_description_set_family_static ()</h3>
+<a class="indexterm" name="id3058468"></a><pre class="programlisting">void                pango_font_description_set_family_static
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         const char *family);</pre>
+<p>
+Like <a class="link" href="pango-Fonts.html#pango-font-description-set-family"><code class="function">pango_font_description_set_family()</code></a>, except that no
+copy of <em class="parameter"><code>family</code></em> is made. The caller must make sure that the
+string passed in stays around until <em class="parameter"><code>desc</code></em> has been freed
+or the name is set again. This function can be used if
+<em class="parameter"><code>family</code></em> is a static string such as a C string literal, or
+if <em class="parameter"><code>desc</code></em> is only needed temporarily.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>family</code></em>&#160;:</span></p></td>
+<td> a string representing the family name.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3058589"></a><h3>
+<a name="pango-font-description-get-family"></a>pango_font_description_get_family ()</h3>
+<a class="indexterm" name="id3058603"></a><pre class="programlisting">const char*         pango_font_description_get_family   (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Gets the family name field of a font description. See
+<a class="link" href="pango-Fonts.html#pango-font-description-set-family"><code class="function">pango_font_description_set_family()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the family name field for the font description, or
+              <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if not previously set.  This has the same life-time
+              as the font description itself and should not be freed.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3058699"></a><h3>
+<a name="pango-font-description-set-style"></a>pango_font_description_set_style ()</h3>
+<a class="indexterm" name="id3058712"></a><pre class="programlisting">void                pango_font_description_set_style    (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         <a class="link" href="pango-Fonts.html#PangoStyle">PangoStyle</a> style);</pre>
+<p>
+Sets the style field of a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>. The
+<a class="link" href="pango-Fonts.html#PangoStyle"><span class="type">PangoStyle</span></a> enumeration describes whether the font is slanted and
+the manner in which it is slanted; it can be either
+<a class="link" href="pango-Fonts.html#PANGO-STYLE-NORMAL:CAPS"><span class="type">PANGO_STYLE_NORMAL</span></a>, <a class="link" href="pango-Fonts.html#PANGO-STYLE-ITALIC:CAPS"><span class="type">PANGO_STYLE_ITALIC</span></a>, or <a class="link" href="pango-Fonts.html#PANGO-STYLE-OBLIQUE:CAPS"><span class="type">PANGO_STYLE_OBLIQUE</span></a>.
+Most fonts will either have a italic style or an oblique
+style, but not both, and font matching in Pango will
+match italic specifications with oblique fonts and vice-versa
+if an exact match is not found.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>style</code></em>&#160;:</span></p></td>
+<td> the style for the font description
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3058844"></a><h3>
+<a name="pango-font-description-get-style"></a>pango_font_description_get_style ()</h3>
+<a class="indexterm" name="id3058858"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoStyle">PangoStyle</a>          pango_font_description_get_style    (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Gets the style field of a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>. See
+<a class="link" href="pango-Fonts.html#pango-font-description-set-style"><code class="function">pango_font_description_set_style()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the style field for the font description.
+  Use <a class="link" href="pango-Fonts.html#pango-font-description-get-set-fields"><code class="function">pango_font_description_get_set_fields()</code></a> to find out if
+  the field was explicitly set or not.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3058961"></a><h3>
+<a name="pango-font-description-set-variant"></a>pango_font_description_set_variant ()</h3>
+<a class="indexterm" name="id3058975"></a><pre class="programlisting">void                pango_font_description_set_variant  (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         <a class="link" href="pango-Fonts.html#PangoVariant">PangoVariant</a> variant);</pre>
+<p>
+Sets the variant field of a font description. The <a class="link" href="pango-Fonts.html#PangoVariant"><span class="type">PangoVariant</span></a>
+can either be <a class="link" href="pango-Fonts.html#PANGO-VARIANT-NORMAL:CAPS"><code class="literal">PANGO_VARIANT_NORMAL</code></a> or <a class="link" href="pango-Fonts.html#PANGO-VARIANT-SMALL-CAPS:CAPS"><code class="literal">PANGO_VARIANT_SMALL_CAPS</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>variant</code></em>&#160;:</span></p></td>
+<td> the variant type for the font description.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3059090"></a><h3>
+<a name="pango-font-description-get-variant"></a>pango_font_description_get_variant ()</h3>
+<a class="indexterm" name="id3059104"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoVariant">PangoVariant</a>        pango_font_description_get_variant  (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Gets the variant field of a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>. See
+<a class="link" href="pango-Fonts.html#pango-font-description-set-variant"><code class="function">pango_font_description_set_variant()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the variant field for the font description. Use
+  <a class="link" href="pango-Fonts.html#pango-font-description-get-set-fields"><code class="function">pango_font_description_get_set_fields()</code></a> to find out if
+  the field was explicitly set or not.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3059208"></a><h3>
+<a name="pango-font-description-set-weight"></a>pango_font_description_set_weight ()</h3>
+<a class="indexterm" name="id3059221"></a><pre class="programlisting">void                pango_font_description_set_weight   (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         <a class="link" href="pango-Fonts.html#PangoWeight">PangoWeight</a> weight);</pre>
+<p>
+Sets the weight field of a font description. The weight field
+specifies how bold or light the font should be. In addition
+to the values of the <a class="link" href="pango-Fonts.html#PangoWeight"><span class="type">PangoWeight</span></a> enumeration, other intermediate
+numeric values are possible.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>weight</code></em>&#160;:</span></p></td>
+<td> the weight for the font description.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3059313"></a><h3>
+<a name="pango-font-description-get-weight"></a>pango_font_description_get_weight ()</h3>
+<a class="indexterm" name="id3059328"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoWeight">PangoWeight</a>         pango_font_description_get_weight   (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Gets the weight field of a font description. See
+<a class="link" href="pango-Fonts.html#pango-font-description-set-weight"><code class="function">pango_font_description_set_weight()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the weight field for the font description. Use
+  <a class="link" href="pango-Fonts.html#pango-font-description-get-set-fields"><code class="function">pango_font_description_get_set_fields()</code></a> to find out if
+  the field was explicitly set or not.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3059422"></a><h3>
+<a name="pango-font-description-set-stretch"></a>pango_font_description_set_stretch ()</h3>
+<a class="indexterm" name="id3059436"></a><pre class="programlisting">void                pango_font_description_set_stretch  (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         <a class="link" href="pango-Fonts.html#PangoStretch">PangoStretch</a> stretch);</pre>
+<p>
+Sets the stretch field of a font description. The stretch field
+specifies how narrow or wide the font should be.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>stretch</code></em>&#160;:</span></p></td>
+<td> the stretch for the font description
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3059519"></a><h3>
+<a name="pango-font-description-get-stretch"></a>pango_font_description_get_stretch ()</h3>
+<a class="indexterm" name="id3059534"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoStretch">PangoStretch</a>        pango_font_description_get_stretch  (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Gets the stretch field of a font description.
+See <a class="link" href="pango-Fonts.html#pango-font-description-set-stretch"><code class="function">pango_font_description_set_stretch()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the stretch field for the font description. Use
+  <a class="link" href="pango-Fonts.html#pango-font-description-get-set-fields"><code class="function">pango_font_description_get_set_fields()</code></a> to find out if
+  the field was explicitly set or not.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3059629"></a><h3>
+<a name="pango-font-description-set-size"></a>pango_font_description_set_size ()</h3>
+<a class="indexterm" name="id3059642"></a><pre class="programlisting">void                pango_font_description_set_size     (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> size);</pre>
+<p>
+Sets the size field of a font description in fractional points. This is mutually
+exclusive with <a class="link" href="pango-Fonts.html#pango-font-description-set-absolute-size"><code class="function">pango_font_description_set_absolute_size()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>size</code></em>&#160;:</span></p></td>
+<td> the size of the font in points, scaled by PANGO_SCALE. (That is,
+       a <em class="parameter"><code>size</code></em> value of 10 * PANGO_SCALE is a 10 point font. The conversion
+       factor between points and device units depends on system configuration
+       and the output device. For screen display, a logical DPI of 96 is
+       common, in which case a 10 point font corresponds to a 10 * (96 / 72) = 13.3
+       pixel font. Use <a class="link" href="pango-Fonts.html#pango-font-description-set-absolute-size"><code class="function">pango_font_description_set_absolute_size()</code></a> if you need
+       a particular size in device units.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3059761"></a><h3>
+<a name="pango-font-description-get-size"></a>pango_font_description_get_size ()</h3>
+<a class="indexterm" name="id3059774"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a>                pango_font_description_get_size     (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Gets the size field of a font description.
+See <a class="link" href="pango-Fonts.html#pango-font-description-set-size"><code class="function">pango_font_description_set_size()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the size field for the font description in points or device units.
+  You must call <a class="link" href="pango-Fonts.html#pango-font-description-get-size-is-absolute"><code class="function">pango_font_description_get_size_is_absolute()</code></a>
+  to find out which is the case. Returns 0 if the size field has not
+  previously been set or it has been set to 0 explicitly.
+  Use <a class="link" href="pango-Fonts.html#pango-font-description-get-set-fields"><code class="function">pango_font_description_get_set_fields()</code></a> to
+  find out if the field was explicitly set or not.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3059884"></a><h3>
+<a name="pango-font-description-set-absolute-size"></a>pango_font_description_set_absolute_size ()</h3>
+<a class="indexterm" name="id3059900"></a><pre class="programlisting">void                pango_font_description_set_absolute_size
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         double size);</pre>
+<p>
+Sets the size field of a font description, in device units. This is mutually
+exclusive with <a class="link" href="pango-Fonts.html#pango-font-description-set-size"><code class="function">pango_font_description_set_size()</code></a> which sets the font size
+in points.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>size</code></em>&#160;:</span></p></td>
+<td> the new size, in Pango units. There are <a class="link" href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS"><code class="literal">PANGO_SCALE</code></a> Pango units in one
+  device unit. For an output backend where a device unit is a pixel, a <em class="parameter"><code>size</code></em>
+  value of 10 * PANGO_SCALE gives a 10 pixel font.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.8
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3060022"></a><h3>
+<a name="pango-font-description-get-size-is-absolute"></a>pango_font_description_get_size_is_absolute ()</h3>
+<a class="indexterm" name="id3060038"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_font_description_get_size_is_absolute
+                                                        (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Determines whether the size of the font is in points (not absolute) or device units (absolute).
+See <a class="link" href="pango-Fonts.html#pango-font-description-set-size"><code class="function">pango_font_description_set_size()</code></a> and <a class="link" href="pango-Fonts.html#pango-font-description-set-absolute-size"><code class="function">pango_font_description_set_absolute_size()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> whether the size for the font description is in
+  points or device units.  Use <a class="link" href="pango-Fonts.html#pango-font-description-get-set-fields"><code class="function">pango_font_description_get_set_fields()</code></a> to
+  find out if the size field of the font description was explicitly set or not.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.8
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3060154"></a><h3>
+<a name="pango-font-description-set-gravity"></a>pango_font_description_set_gravity ()</h3>
+<a class="indexterm" name="id3060170"></a><pre class="programlisting">void                pango_font_description_set_gravity  (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         <a class="link" href="pango-Vertical-Text.html#PangoGravity">PangoGravity</a> gravity);</pre>
+<p>
+Sets the gravity field of a font description. The gravity field
+specifies how the glyphs should be rotated.  If <em class="parameter"><code>gravity</code></em> is
+<a class="link" href="pango-Vertical-Text.html#PANGO-GRAVITY-AUTO:CAPS"><code class="literal">PANGO_GRAVITY_AUTO</code></a>, this actually unsets the gravity mask on
+the font description.
+</p>
+<p>
+This function is seldom useful to the user.  Gravity should normally
+be set on a <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>gravity</code></em>&#160;:</span></p></td>
+<td> the gravity for the font description.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3060290"></a><h3>
+<a name="pango-font-description-get-gravity"></a>pango_font_description_get_gravity ()</h3>
+<a class="indexterm" name="id3060307"></a><pre class="programlisting"><a class="link" href="pango-Vertical-Text.html#PangoGravity">PangoGravity</a>        pango_font_description_get_gravity  (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Gets the gravity field of a font description. See
+<a class="link" href="pango-Fonts.html#pango-font-description-set-gravity"><code class="function">pango_font_description_set_gravity()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the gravity field for the font description. Use
+  <a class="link" href="pango-Fonts.html#pango-font-description-get-set-fields"><code class="function">pango_font_description_get_set_fields()</code></a> to find out if
+  the field was explicitly set or not.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3060410"></a><h3>
+<a name="pango-font-description-get-set-fields"></a>pango_font_description_get_set_fields ()</h3>
+<a class="indexterm" name="id3060424"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontMask">PangoFontMask</a>       pango_font_description_get_set_fields
+                                                        (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Determines which fields in a font description have been set.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a bitmask with bits set corresponding to the
+  fields in <em class="parameter"><code>desc</code></em> that have been set.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3060503"></a><h3>
+<a name="pango-font-description-unset-fields"></a>pango_font_description_unset_fields ()</h3>
+<a class="indexterm" name="id3060516"></a><pre class="programlisting">void                pango_font_description_unset_fields (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         <a class="link" href="pango-Fonts.html#PangoFontMask">PangoFontMask</a> to_unset);</pre>
+<p>
+Unsets some of the fields in a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>.  The unset
+fields will get back to their default values.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>to_unset</code></em>&#160;:</span></p></td>
+<td> bitmask of fields in the <em class="parameter"><code>desc</code></em> to unset.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3060613"></a><h3>
+<a name="pango-font-description-merge"></a>pango_font_description_merge ()</h3>
+<a class="indexterm" name="id3060627"></a><pre class="programlisting">void                pango_font_description_merge        (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc_to_merge,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> replace_existing);</pre>
+<p>
+Merges the fields that are set in <em class="parameter"><code>desc_to_merge</code></em> into the fields in
+<em class="parameter"><code>desc</code></em>.  If <em class="parameter"><code>replace_existing</code></em> is <a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>, only fields in <em class="parameter"><code>desc</code></em> that
+are not already set are affected. If <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a>, then fields that are
+already set will be replaced as well.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc_to_merge</code></em>&#160;:</span></p></td>
+<td> the <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a> to merge from
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>replace_existing</code></em>&#160;:</span></p></td>
+<td> if <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a>, replace fields in <em class="parameter"><code>desc</code></em> with the
+  corresponding values from <em class="parameter"><code>desc_to_merge</code></em>, even if they
+  are already exist.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3060810"></a><h3>
+<a name="pango-font-description-merge-static"></a>pango_font_description_merge_static ()</h3>
+<a class="indexterm" name="id3060824"></a><pre class="programlisting">void                pango_font_description_merge_static (<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc_to_merge,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> replace_existing);</pre>
+<p>
+Like <a class="link" href="pango-Fonts.html#pango-font-description-merge"><code class="function">pango_font_description_merge()</code></a>, but only a shallow copy is made
+of the family name and other allocated fields. <em class="parameter"><code>desc</code></em> can only be
+used until <em class="parameter"><code>desc_to_merge</code></em> is modified or freed. This is meant
+to be used when the merged font description is only needed temporarily.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc_to_merge</code></em>&#160;:</span></p></td>
+<td> the <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a> to merge from
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>replace_existing</code></em>&#160;:</span></p></td>
+<td> if <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a>, replace fields in <em class="parameter"><code>desc</code></em> with the
+  corresponding values from <em class="parameter"><code>desc_to_merge</code></em>, even if they
+  are already exist.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3060987"></a><h3>
+<a name="pango-font-description-better-match"></a>pango_font_description_better_match ()</h3>
+<a class="indexterm" name="id3061001"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_font_description_better_match (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *old_match,
+                                                         const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *new_match);</pre>
+<p>
+Determines if the style attributes of <em class="parameter"><code>new_match</code></em> are a closer match
+for <em class="parameter"><code>desc</code></em> than <em class="parameter"><code>old_match</code></em>, or if <em class="parameter"><code>old_match</code></em> is <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>, determines if
+<em class="parameter"><code>new_match</code></em> is a match at all. Approximate matching is done for
+weight and style; other attributes must match exactly.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>old_match</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>new_match</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>new_match</code></em> is a better match
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3061201"></a><h3>
+<a name="pango-font-description-from-string"></a>pango_font_description_from_string ()</h3>
+<a class="indexterm" name="id3061215"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* pango_font_description_from_string
+                                                        (const char *str);</pre>
+<p>
+Creates a new font description from a string representation in the
+form "[FAMILY-LIST] [STYLE-OPTIONS] [SIZE]", where FAMILY-LIST is a
+comma separated list of families optionally terminated by a comma,
+STYLE_OPTIONS is a whitespace separated list of words where each WORD
+describes one of style, variant, weight, stretch, or gravity, and SIZE
+is a decimal number (size in points) or optionally followed by the
+unit modifier "px" for absolute size. Any one of the options may
+be absent.  If FAMILY-LIST is absent, then the family_name field of
+the resulting font description will be initialized to <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>.  If
+STYLE-OPTIONS is missing, then all style options will be set to the
+default values. If SIZE is missing, the size in the resulting font
+description will be set to 0.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em>&#160;:</span></p></td>
+<td> string representation of a font description.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a new <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3061309"></a><h3>
+<a name="pango-font-description-to-string"></a>pango_font_description_to_string ()</h3>
+<a class="indexterm" name="id3061323"></a><pre class="programlisting">char*               pango_font_description_to_string    (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Creates a string representation of a font description. See
+<a class="link" href="pango-Fonts.html#pango-font-description-from-string"><code class="function">pango_font_description_from_string()</code></a> for a description of the
+format of the string representation. The family list in the
+string description will only have a terminating comma if the
+last word of the list is a valid style option.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a new string that must be freed with <a
+href="../glib/glib-Memory-Allocation.html#g-free"
+><code class="function">g_free()</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3061419"></a><h3>
+<a name="pango-font-description-to-filename"></a>pango_font_description_to_filename ()</h3>
+<a class="indexterm" name="id3061433"></a><pre class="programlisting">char*               pango_font_description_to_filename  (const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Creates a filename representation of a font description. The
+filename is identical to the result from calling
+<a class="link" href="pango-Fonts.html#pango-font-description-to-string"><code class="function">pango_font_description_to_string()</code></a>, but with underscores instead of
+characters that are untypical in filenames, and in lower case only.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a new string that must be freed with <a
+href="../glib/glib-Memory-Allocation.html#g-free"
+><code class="function">g_free()</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3061527"></a><h3>
+<a name="PangoFontMetrics"></a>PangoFontMetrics</h3>
+<a class="indexterm" name="id3061540"></a><pre class="programlisting">typedef struct {
+  guint ref_count;
+
+  int ascent;
+  int descent;
+  int approximate_char_width;
+  int approximate_digit_width;
+  int underline_position;
+  int underline_thickness;
+  int strikethrough_position;
+  int strikethrough_thickness;
+} PangoFontMetrics;
+</pre>
+<p>
+A <a class="link" href="pango-Fonts.html#PangoFontMetrics"><span class="type">PangoFontMetrics</span></a> structure holds the overall metric information
+for a font (possibly restricted to a script). The fields of this
+structure are private to implementations of a font backend. See
+the documentation of the corresponding getters for documentation
+of their meaning.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a
+href="../glib/glib-Basic-Types.html#guint"
+>guint</a>&#160;<em class="structfield"><code>ref_count</code></em>;</span></p></td>
+<td>reference count.  Used internally.  See <a class="link" href="pango-Fonts.html#pango-font-metrics-ref"><code class="function">pango_font_metrics_ref()</code></a>
+            and <a class="link" href="pango-Fonts.html#pango-font-metrics-unref"><code class="function">pango_font_metrics_unref()</code></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term">int&#160;<em class="structfield"><code>ascent</code></em>;</span></p></td>
+<td>the distance from the baseline to the highest point of the glyphs of
+	 the font. This is positive in practically all fonts.
+</td>
+</tr>
+<tr>
+<td><p><span class="term">int&#160;<em class="structfield"><code>descent</code></em>;</span></p></td>
+<td>the distance from the baseline to the lowest point of the glyphs of
+	 the font. This is positive in practically all fonts.
+</td>
+</tr>
+<tr>
+<td><p><span class="term">int&#160;<em class="structfield"><code>approximate_char_width</code></em>;</span></p></td>
+<td>approximate average width of the regular glyphs of
+         the font.
+</td>
+</tr>
+<tr>
+<td><p><span class="term">int&#160;<em class="structfield"><code>approximate_digit_width</code></em>;</span></p></td>
+<td>approximate average width of the glyphs for digits
+         of the font.
+</td>
+</tr>
+<tr>
+<td><p><span class="term">int&#160;<em class="structfield"><code>underline_position</code></em>;</span></p></td>
+<td>position of the underline. This is normally negative.
+</td>
+</tr>
+<tr>
+<td><p><span class="term">int&#160;<em class="structfield"><code>underline_thickness</code></em>;</span></p></td>
+<td>thickness of the underline.
+</td>
+</tr>
+<tr>
+<td><p><span class="term">int&#160;<em class="structfield"><code>strikethrough_position</code></em>;</span></p></td>
+<td>position of the strikethrough line. This is
+	 normally positive.
+</td>
+</tr>
+<tr>
+<td><p><span class="term">int&#160;<em class="structfield"><code>strikethrough_thickness</code></em>;</span></p></td>
+<td>thickness of the strikethrough line.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3061787"></a><h3>
+<a name="PANGO-TYPE-FONT-METRICS:CAPS"></a>PANGO_TYPE_FONT_METRICS</h3>
+<a class="indexterm" name="id3061800"></a><pre class="programlisting">#define PANGO_TYPE_FONT_METRICS  (pango_font_metrics_get_type ())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Fonts.html#PangoFontMetrics"><span class="type">PangoFontMetrics</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3061833"></a><h3>
+<a name="pango-font-metrics-ref"></a>pango_font_metrics_ref ()</h3>
+<a class="indexterm" name="id3061846"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a>*   pango_font_metrics_ref              (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);</pre>
+<p>
+Increase the reference count of a font metrics structure by one.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metrics</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMetrics"><span class="type">PangoFontMetrics</span></a> structure
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> <em class="parameter"><code>metrics</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3061921"></a><h3>
+<a name="pango-font-metrics-unref"></a>pango_font_metrics_unref ()</h3>
+<a class="indexterm" name="id3061934"></a><pre class="programlisting">void                pango_font_metrics_unref            (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);</pre>
+<p>
+Decrease the reference count of a font metrics structure by one. If
+the result is zero, frees the structure and any associated
+memory.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>metrics</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMetrics"><span class="type">PangoFontMetrics</span></a> structure
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3061994"></a><h3>
+<a name="pango-font-metrics-get-ascent"></a>pango_font_metrics_get_ascent ()</h3>
+<a class="indexterm" name="id3062008"></a><pre class="programlisting">int                 pango_font_metrics_get_ascent       (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);</pre>
+<p>
+Gets the ascent from a font metrics structure. The ascent is
+the distance from the baseline to the logical top of a line
+of text. (The logical top may be above or below the top of the
+actual drawn ink. It is necessary to lay out the text to figure
+where the ink will be.)</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metrics</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMetrics"><span class="type">PangoFontMetrics</span></a> structure
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the ascent, in Pango units. (1 point == <a class="link" href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS"><code class="literal">PANGO_SCALE</code></a> Pango units.)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3062092"></a><h3>
+<a name="pango-font-metrics-get-descent"></a>pango_font_metrics_get_descent ()</h3>
+<a class="indexterm" name="id3062106"></a><pre class="programlisting">int                 pango_font_metrics_get_descent      (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);</pre>
+<p>
+Gets the descent from a font metrics structure. The descent is
+the distance from the baseline to the logical bottom of a line
+of text. (The logical bottom may be above or below the bottom of the
+actual drawn ink. It is necessary to lay out the text to figure
+where the ink will be.)</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metrics</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMetrics"><span class="type">PangoFontMetrics</span></a> structure
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the descent, in Pango units. (1 point == <a class="link" href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS"><code class="literal">PANGO_SCALE</code></a> Pango units.)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3062190"></a><h3>
+<a name="pango-font-metrics-get-approximate-char-width"></a>pango_font_metrics_get_approximate_char_width ()</h3>
+<a class="indexterm" name="id3062204"></a><pre class="programlisting">int                 pango_font_metrics_get_approximate_char_width
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);</pre>
+<p>
+Gets the approximate character width for a font metrics structure.
+This is merely a representative value useful, for example, for
+determining the initial size for a window. Actual characters in
+text will be wider and narrower than this.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metrics</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMetrics"><span class="type">PangoFontMetrics</span></a> structure
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the character width, in Pango units. (1 point == <a class="link" href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS"><code class="literal">PANGO_SCALE</code></a> Pango units.)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3062289"></a><h3>
+<a name="pango-font-metrics-get-approximate-digit-width"></a>pango_font_metrics_get_approximate_digit_width ()</h3>
+<a class="indexterm" name="id3062303"></a><pre class="programlisting">int                 pango_font_metrics_get_approximate_digit_width
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);</pre>
+<p>
+Gets the approximate digit width for a font metrics structure.
+This is merely a representative value useful, for example, for
+determining the initial size for a window. Actual digits in
+text can be wider or narrower than this, though this value
+is generally somewhat more accurate than the result of
+<a class="link" href="pango-Fonts.html#pango-font-metrics-get-approximate-char-width"><code class="function">pango_font_metrics_get_approximate_char_width()</code></a> for digits.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metrics</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMetrics"><span class="type">PangoFontMetrics</span></a> structure
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the digit width, in Pango units. (1 point == <a class="link" href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS"><code class="literal">PANGO_SCALE</code></a> Pango units.)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3062402"></a><h3>
+<a name="pango-font-metrics-get-underline-thickness"></a>pango_font_metrics_get_underline_thickness ()</h3>
+<a class="indexterm" name="id3062419"></a><pre class="programlisting">int                 pango_font_metrics_get_underline_thickness
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);</pre>
+<p>
+Gets the suggested thickness to draw for the underline.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metrics</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMetrics"><span class="type">PangoFontMetrics</span></a> structure
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the suggested underline thickness, in Pango units.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3062496"></a><h3>
+<a name="pango-font-metrics-get-underline-position"></a>pango_font_metrics_get_underline_position ()</h3>
+<a class="indexterm" name="id3062513"></a><pre class="programlisting">int                 pango_font_metrics_get_underline_position
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);</pre>
+<p>
+Gets the suggested position to draw the underline.
+The value returned is the distance <span class="emphasis"><em>above</em></span> the
+baseline of the top of the underline. Since most fonts have
+underline positions beneath the baseline, this value is typically
+negative.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metrics</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMetrics"><span class="type">PangoFontMetrics</span></a> structure
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the suggested underline position, in Pango units.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3062596"></a><h3>
+<a name="pango-font-metrics-get-strikethrough-thickness"></a>pango_font_metrics_get_strikethrough_thickness ()</h3>
+<a class="indexterm" name="id3062613"></a><pre class="programlisting">int                 pango_font_metrics_get_strikethrough_thickness
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);</pre>
+<p>
+Gets the suggested thickness to draw for the strikethrough.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metrics</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMetrics"><span class="type">PangoFontMetrics</span></a> structure
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the suggested strikethrough thickness, in Pango units.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3062691"></a><h3>
+<a name="pango-font-metrics-get-strikethrough-position"></a>pango_font_metrics_get_strikethrough_position ()</h3>
+<a class="indexterm" name="id3062708"></a><pre class="programlisting">int                 pango_font_metrics_get_strikethrough_position
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a> *metrics);</pre>
+<p>
+Gets the suggested position to draw the strikethrough.
+The value returned is the distance <span class="emphasis"><em>above</em></span> the
+baseline of the top of the strikethrough.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metrics</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMetrics"><span class="type">PangoFontMetrics</span></a> structure
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the suggested strikethrough position, in Pango units.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3062791"></a><h3>
+<a name="PangoFont-struct"></a>PangoFont</h3>
+<a class="indexterm" name="id3062804"></a><pre class="programlisting">typedef struct _PangoFont PangoFont;</pre>
+<p>
+The <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> structure is used to represent
+a font in a rendering-system-independent matter.
+To create an implementation of a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>,
+the rendering-system specific code should allocate
+a larger structure that contains a nested
+<a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>, fill in the <em class="structfield"><code>klass</code></em> member of
+the nested <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> with a pointer to
+a appropriate <span class="type">PangoFontClass</span>, then call
+<code class="function">pango_font_init()</code> on the structure.
+</p>
+<p>
+The <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> structure contains one member
+which the implementation fills in.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3062893"></a><h3>
+<a name="PANGO-TYPE-FONT:CAPS"></a>PANGO_TYPE_FONT</h3>
+<a class="indexterm" name="id3062907"></a><pre class="programlisting">#define PANGO_TYPE_FONT              (pango_font_get_type ())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3062939"></a><h3>
+<a name="PANGO-FONT:CAPS"></a>PANGO_FONT()</h3>
+<a class="indexterm" name="id3062951"></a><pre class="programlisting">#define PANGO_FONT(object)           (G_TYPE_CHECK_INSTANCE_CAST ((object), PANGO_TYPE_FONT, PangoFont))
+</pre>
+<p>
+Casts a <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> to a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>object</code></em>&#160;:</span></p></td>
+<td>a <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a>.
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3063009"></a><h3>
+<a name="PANGO-IS-FONT:CAPS"></a>PANGO_IS_FONT()</h3>
+<a class="indexterm" name="id3063022"></a><pre class="programlisting">#define PANGO_IS_FONT(object)        (G_TYPE_CHECK_INSTANCE_TYPE ((object), PANGO_TYPE_FONT))
+</pre>
+<p>
+Returns <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>object</code></em> is a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>object</code></em>&#160;:</span></p></td>
+<td>a <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a>.
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3063089"></a><h3>
+<a name="pango-font-find-shaper"></a>pango_font_find_shaper ()</h3>
+<a class="indexterm" name="id3063102"></a><pre class="programlisting"><a class="link" href="PangoEngineShape.html" title="PangoEngineShape">PangoEngineShape</a>*   pango_font_find_shaper              (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Text-Attributes.html#PangoLanguage">PangoLanguage</a> *language,
+                                                         <a
+href="../glib/glib-Basic-Types.html#guint32"
+>guint32</a> ch);</pre>
+<p>
+Finds the best matching shaper for a font for a particular
+language tag and character point.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>language</code></em>&#160;:</span></p></td>
+<td> the language tag
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ch</code></em>&#160;:</span></p></td>
+<td> a Unicode character.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the best matching shaper.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3063216"></a><h3>
+<a name="pango-font-describe"></a>pango_font_describe ()</h3>
+<a class="indexterm" name="id3063229"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* pango_font_describe               (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);</pre>
+<p>
+Returns a description of the font, with font size set in points.
+Use <a class="link" href="pango-Fonts.html#pango-font-describe-with-absolute-size"><code class="function">pango_font_describe_with_absolute_size()</code></a> if you want the font
+size in device units.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a newly-allocated <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a> object.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3063320"></a><h3>
+<a name="pango-font-describe-with-absolute-size"></a>pango_font_describe_with_absolute_size ()</h3>
+<a class="indexterm" name="id3063336"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* pango_font_describe_with_absolute_size
+                                                        (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);</pre>
+<p>
+Returns a description of the font, with absolute font size set
+(in device units). Use <a class="link" href="pango-Fonts.html#pango-font-describe"><code class="function">pango_font_describe()</code></a> if you want the font
+size in points.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a newly-allocated <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a> object.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.14
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3063434"></a><h3>
+<a name="pango-font-get-coverage"></a>pango_font_get_coverage ()</h3>
+<a class="indexterm" name="id3063448"></a><pre class="programlisting"><a class="link" href="pango-Coverage-Maps.html#PangoCoverage">PangoCoverage</a>*      pango_font_get_coverage             (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Text-Attributes.html#PangoLanguage">PangoLanguage</a> *language);</pre>
+<p>
+Computes the coverage map for a given font and language tag.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>language</code></em>&#160;:</span></p></td>
+<td> the language tag
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a newly-allocated <a class="link" href="pango-Coverage-Maps.html#PangoCoverage"><span class="type">PangoCoverage</span></a> object.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3063547"></a><h3>
+<a name="pango-font-get-glyph-extents"></a>pango_font_get_glyph_extents ()</h3>
+<a class="indexterm" name="id3063561"></a><pre class="programlisting">void                pango_font_get_glyph_extents        (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a> glyph,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);</pre>
+<p>
+Gets the logical and ink extents of a glyph within a font. The
+coordinate system for each rectangle has its origin at the
+base line and horizontal origin of the character with increasing
+coordinates extending to the right and down. The macros <a class="link" href="pango-Glyph-Storage.html#PANGO-ASCENT:CAPS"><code class="function">PANGO_ASCENT()</code></a>,
+<a class="link" href="pango-Glyph-Storage.html#PANGO-DESCENT:CAPS"><code class="function">PANGO_DESCENT()</code></a>, <a class="link" href="pango-Glyph-Storage.html#PANGO-LBEARING:CAPS"><code class="function">PANGO_LBEARING()</code></a>, and <a class="link" href="pango-Glyph-Storage.html#PANGO-RBEARING:CAPS"><code class="function">PANGO_RBEARING()</code></a> can be used to convert
+from the extents rectangle to more traditional font metrics. The units
+of the rectangles are in 1/PANGO_SCALE of a device unit.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyph</code></em>&#160;:</span></p></td>
+<td> the glyph index
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ink_rect</code></em>&#160;:</span></p></td>
+<td> rectangle used to store the extents of the glyph as drawn
+           or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to indicate that the result is not needed.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>logical_rect</code></em>&#160;:</span></p></td>
+<td> rectangle used to store the logical extents of the glyph
+           or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to indicate that the result is not needed.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3063757"></a><h3>
+<a name="pango-font-get-metrics"></a>pango_font_get_metrics ()</h3>
+<a class="indexterm" name="id3063770"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a>*   pango_font_get_metrics              (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Text-Attributes.html#PangoLanguage">PangoLanguage</a> *language);</pre>
+<p>
+Gets overall metric information for a font. Since the metrics may be
+substantially different for different scripts, a language tag can
+be provided to indicate that the metrics should be retrieved that
+correspond to the script(s) used by that language.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>language</code></em>&#160;:</span></p></td>
+<td> language tag used to determine which script to get the metrics
+           for, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to indicate to get the metrics for the entire
+           font.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMetrics"><span class="type">PangoFontMetrics</span></a> object. The caller must call <a class="link" href="pango-Fonts.html#pango-font-metrics-unref"><code class="function">pango_font_metrics_unref()</code></a>
+  when finished using the object.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3063897"></a><h3>
+<a name="pango-font-get-font-map"></a>pango_font_get_font_map ()</h3>
+<a class="indexterm" name="id3063912"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a>*       pango_font_get_font_map             (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);</pre>
+<p>
+Gets the font map for which the font was created.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a> for the font
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.10
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3063996"></a><h3>
+<a name="PangoFontFamily-struct"></a>PangoFontFamily</h3>
+<a class="indexterm" name="id3064010"></a><pre class="programlisting">typedef struct _PangoFontFamily PangoFontFamily;</pre>
+<p>
+The <a class="link" href="pango-Fonts.html#PangoFontFamily"><span class="type">PangoFontFamily</span></a> structure is used to represent a family of related 
+font faces. The faces in a family share a common design, but differ in 
+slant, weight, width and other aspects.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3064037"></a><h3>
+<a name="PANGO-TYPE-FONT-FAMILY:CAPS"></a>PANGO_TYPE_FONT_FAMILY</h3>
+<a class="indexterm" name="id3064050"></a><pre class="programlisting">#define PANGO_TYPE_FONT_FAMILY              (pango_font_family_get_type ())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Fonts.html#PangoFontFamily"><span class="type">PangoFontFamily</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3064082"></a><h3>
+<a name="PANGO-FONT-FAMILY:CAPS"></a>PANGO_FONT_FAMILY()</h3>
+<a class="indexterm" name="id3064096"></a><pre class="programlisting">#define PANGO_FONT_FAMILY(object)           (G_TYPE_CHECK_INSTANCE_CAST ((object), PANGO_TYPE_FONT_FAMILY, PangoFontFamily))
+</pre>
+<p>
+Casts a <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> to a <a class="link" href="pango-Fonts.html#PangoFontFamily"><span class="type">PangoFontFamily</span></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>object</code></em>&#160;:</span></p></td>
+<td>a <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a>.
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3064155"></a><h3>
+<a name="PANGO-IS-FONT-FAMILY:CAPS"></a>PANGO_IS_FONT_FAMILY()</h3>
+<a class="indexterm" name="id3064168"></a><pre class="programlisting">#define PANGO_IS_FONT_FAMILY(object)        (G_TYPE_CHECK_INSTANCE_TYPE ((object), PANGO_TYPE_FONT_FAMILY))
+</pre>
+<p>
+Returns <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>object</code></em> is a <a class="link" href="pango-Fonts.html#PangoFontFamily"><span class="type">PangoFontFamily</span></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>object</code></em>&#160;:</span></p></td>
+<td>a <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a>.
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3064235"></a><h3>
+<a name="pango-font-family-get-name"></a>pango_font_family_get_name ()</h3>
+<a class="indexterm" name="id3064249"></a><pre class="programlisting">const char*         pango_font_family_get_name          (<a class="link" href="pango-Fonts.html#PangoFontFamily">PangoFontFamily</a> *family);</pre>
+<p>
+Gets the name of the family. The name is unique among all
+fonts for the font backend and can be used in a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>
+to specify that a face from this family is desired.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>family</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontFamily"><span class="type">PangoFontFamily</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the name of the family. This string is owned
+  by the family object and must not be modified or freed.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3064331"></a><h3>
+<a name="pango-font-family-is-monospace"></a>pango_font_family_is_monospace ()</h3>
+<a class="indexterm" name="id3064347"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_font_family_is_monospace      (<a class="link" href="pango-Fonts.html#PangoFontFamily">PangoFontFamily</a> *family);</pre>
+<p>
+A monospace font is a font designed for text display where the the
+characters form a regular grid. For Western languages this would
+mean that the advance width of all characters are the same, but
+this categorization also includes Asian fonts which include
+double-width characters: characters that occupy two grid cells.
+<a
+href="../glib/glib-Unicode-Manipulation.html#g-unichar-iswide"
+><code class="function">g_unichar_iswide()</code></a> returns a result that indicates whether a
+character is typically double-width in a monospace font.
+</p>
+<p>
+The best way to find out the grid-cell size is to call
+<a class="link" href="pango-Fonts.html#pango-font-metrics-get-approximate-digit-width"><code class="function">pango_font_metrics_get_approximate_digit_width()</code></a>, since the results
+of <a class="link" href="pango-Fonts.html#pango-font-metrics-get-approximate-char-width"><code class="function">pango_font_metrics_get_approximate_char_width()</code></a> may be affected
+by double-width characters.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>family</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontFamily"><span class="type">PangoFontFamily</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if the family is monospace.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.4
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3064481"></a><h3>
+<a name="pango-font-family-list-faces"></a>pango_font_family_list_faces ()</h3>
+<a class="indexterm" name="id3064495"></a><pre class="programlisting">void                pango_font_family_list_faces        (<a class="link" href="pango-Fonts.html#PangoFontFamily">PangoFontFamily</a> *family,
+                                                         <a class="link" href="pango-Fonts.html#PangoFontFace">PangoFontFace</a> ***faces,
+                                                         int *n_faces);</pre>
+<p>
+Lists the different font faces that make up <em class="parameter"><code>family</code></em>. The faces
+in a family share a common design, but differ in slant, weight,
+width and other aspects.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>family</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontFamily"><span class="type">PangoFontFamily</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>faces</code></em>&#160;:</span></p></td>
+<td> location to store an array of pointers to <a class="link" href="pango-Fonts.html#PangoFontFace"><span class="type">PangoFontFace</span></a>
+  objects, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>. This array should be freed with <a
+href="../glib/glib-Memory-Allocation.html#g-free"
+><code class="function">g_free()</code></a>
+  when it is no longer needed.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>n_faces</code></em>&#160;:</span></p></td>
+<td> location to store number of elements in <em class="parameter"><code>faces</code></em>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3064641"></a><h3>
+<a name="PangoFontFace-struct"></a>PangoFontFace</h3>
+<a class="indexterm" name="id3064654"></a><pre class="programlisting">typedef struct _PangoFontFace PangoFontFace;</pre>
+<p>
+The <a class="link" href="pango-Fonts.html#PangoFontFace"><span class="type">PangoFontFace</span></a> structure is used to represent a group of fonts with 
+the same family, slant, weight, width, but varying sizes.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3064680"></a><h3>
+<a name="PANGO-TYPE-FONT-FACE:CAPS"></a>PANGO_TYPE_FONT_FACE</h3>
+<a class="indexterm" name="id3064693"></a><pre class="programlisting">#define PANGO_TYPE_FONT_FACE              (pango_font_face_get_type ())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Fonts.html#PangoFontFace"><span class="type">PangoFontFace</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3064726"></a><h3>
+<a name="PANGO-FONT-FACE:CAPS"></a>PANGO_FONT_FACE()</h3>
+<a class="indexterm" name="id3064740"></a><pre class="programlisting">#define PANGO_FONT_FACE(object)           (G_TYPE_CHECK_INSTANCE_CAST ((object), PANGO_TYPE_FONT_FACE, PangoFontFace))
+</pre>
+<p>
+Casts a <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> to a <a class="link" href="pango-Fonts.html#PangoFontFace"><span class="type">PangoFontFace</span></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>object</code></em>&#160;:</span></p></td>
+<td>a <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a>.
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3064799"></a><h3>
+<a name="PANGO-IS-FONT-FACE:CAPS"></a>PANGO_IS_FONT_FACE()</h3>
+<a class="indexterm" name="id3064811"></a><pre class="programlisting">#define PANGO_IS_FONT_FACE(object)        (G_TYPE_CHECK_INSTANCE_TYPE ((object), PANGO_TYPE_FONT_FACE))
+</pre>
+<p>
+Returns <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>object</code></em> is a <a class="link" href="pango-Fonts.html#PangoFontFace"><span class="type">PangoFontFace</span></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>object</code></em>&#160;:</span></p></td>
+<td>a <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a>.
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3064878"></a><h3>
+<a name="pango-font-face-get-face-name"></a>pango_font_face_get_face_name ()</h3>
+<a class="indexterm" name="id3064892"></a><pre class="programlisting">const char*         pango_font_face_get_face_name       (<a class="link" href="pango-Fonts.html#PangoFontFace">PangoFontFace</a> *face);</pre>
+<p>
+Gets a name representing the style of this face among the
+different faces in the <a class="link" href="pango-Fonts.html#PangoFontFamily"><span class="type">PangoFontFamily</span></a> for the face. This
+name is unique among all faces in the family and is suitable
+for displaying to users.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>face</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontFace"><span class="type">PangoFontFace</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the face name for the face. This string is
+  owned by the face object and must not be modified or freed.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3064974"></a><h3>
+<a name="pango-font-face-list-sizes"></a>pango_font_face_list_sizes ()</h3>
+<a class="indexterm" name="id3064990"></a><pre class="programlisting">void                pango_font_face_list_sizes          (<a class="link" href="pango-Fonts.html#PangoFontFace">PangoFontFace</a> *face,
+                                                         int **sizes,
+                                                         int *n_sizes);</pre>
+<p>
+List the available sizes for a font. This is only applicable to bitmap
+fonts. For scalable fonts, stores <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> at the location pointed to by
+<em class="parameter"><code>sizes</code></em> and 0 at the location pointed to by <em class="parameter"><code>n_sizes</code></em>. The sizes returned
+are in Pango units and are sorted in ascending order.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>face</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontFace"><span class="type">PangoFontFace</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>sizes</code></em>&#160;:</span></p></td>
+<td> location to store a pointer to an array of int. This array
+        should be freed with <a
+href="../glib/glib-Memory-Allocation.html#g-free"
+><code class="function">g_free()</code></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>n_sizes</code></em>&#160;:</span></p></td>
+<td> location to store the number of elements in <em class="parameter"><code>sizes</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.4
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3065140"></a><h3>
+<a name="pango-font-face-describe"></a>pango_font_face_describe ()</h3>
+<a class="indexterm" name="id3065154"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* pango_font_face_describe          (<a class="link" href="pango-Fonts.html#PangoFontFace">PangoFontFace</a> *face);</pre>
+<p>
+Returns the family, style, variant, weight and stretch of
+a <a class="link" href="pango-Fonts.html#PangoFontFace"><span class="type">PangoFontFace</span></a>. The size field of the resulting font description
+will be unset.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>face</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontFace"><span class="type">PangoFontFace</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a newly-created <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a> structure
+ holding the description of the face. Use <a class="link" href="pango-Fonts.html#pango-font-description-free"><code class="function">pango_font_description_free()</code></a>
+ to free the result.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3065254"></a><h3>
+<a name="pango-font-face-is-synthesized"></a>pango_font_face_is_synthesized ()</h3>
+<a class="indexterm" name="id3065270"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_font_face_is_synthesized      (<a class="link" href="pango-Fonts.html#PangoFontFace">PangoFontFace</a> *face);</pre>
+<p>
+Returns whether a <a class="link" href="pango-Fonts.html#PangoFontFace"><span class="type">PangoFontFace</span></a> is synthesized by the underlying
+font rendering engine from another face, perhaps by shearing, emboldening,
+or lightening it.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>face</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontFace"><span class="type">PangoFontFace</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> whether <em class="parameter"><code>face</code></em> is synthesized.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.18
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3065362"></a><h3>
+<a name="PangoFontMap-struct"></a>PangoFontMap</h3>
+<a class="indexterm" name="id3065375"></a><pre class="programlisting">typedef struct _PangoFontMap PangoFontMap;</pre>
+<p>
+The <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a> represents the set of fonts available for a
+particular rendering system. This is a virtual object with
+implementations being specific to particular rendering systems.  To
+create an implementation of a <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a>, the rendering-system
+specific code should allocate a larger structure that contains a nested
+<a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a>, fill in the <em class="structfield"><code>klass</code></em> member of the nested <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a> with a
+pointer to a appropriate <a class="link" href="pango-Fonts.html#PangoFontMapClass"><span class="type">PangoFontMapClass</span></a>, then call
+<code class="function">pango_font_map_init()</code> on the structure.
+</p>
+<p>
+The <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a> structure contains one member which the implementation
+fills in.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3065467"></a><h3>
+<a name="PANGO-TYPE-FONT-MAP:CAPS"></a>PANGO_TYPE_FONT_MAP</h3>
+<a class="indexterm" name="id3065481"></a><pre class="programlisting">#define PANGO_TYPE_FONT_MAP              (pango_font_map_get_type ())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3065513"></a><h3>
+<a name="PANGO-FONT-MAP:CAPS"></a>PANGO_FONT_MAP()</h3>
+<a class="indexterm" name="id3065525"></a><pre class="programlisting">#define PANGO_FONT_MAP(object)           (G_TYPE_CHECK_INSTANCE_CAST ((object), PANGO_TYPE_FONT_MAP, PangoFontMap))
+</pre>
+<p>
+Casts a <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> to a <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a>. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>object</code></em>&#160;:</span></p></td>
+<td>a <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a>.
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3065584"></a><h3>
+<a name="PANGO-IS-FONT-MAP:CAPS"></a>PANGO_IS_FONT_MAP()</h3>
+<a class="indexterm" name="id3065598"></a><pre class="programlisting">#define PANGO_IS_FONT_MAP(object)        (G_TYPE_CHECK_INSTANCE_TYPE ((object), PANGO_TYPE_FONT_MAP))
+</pre>
+<p>
+Returns <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>object</code></em> is a <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>object</code></em>&#160;:</span></p></td>
+<td>a <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a>.
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3065665"></a><h3>
+<a name="PangoFontMapClass"></a>PangoFontMapClass</h3>
+<a class="indexterm" name="id3065678"></a><pre class="programlisting">typedef struct {
+  GObjectClass parent_class;
+
+
+  PangoFont *   (*load_font)     (PangoFontMap               *fontmap,
+				  PangoContext               *context,
+				  const PangoFontDescription *desc);
+  void          (*list_families) (PangoFontMap               *fontmap,
+				  PangoFontFamily          ***families,
+				  int                        *n_families);
+  PangoFontset *(*load_fontset)  (PangoFontMap               *fontmap,
+				  PangoContext               *context,
+				  const PangoFontDescription *desc,
+				  PangoLanguage              *language);
+
+  const char *shape_engine_type;
+} PangoFontMapClass;
+</pre>
+<p>
+The <a class="link" href="pango-Fonts.html#PangoFontMapClass"><span class="type">PangoFontMapClass</span></a> structure holds the virtual functions for
+a particular <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a> implementation.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a
+href="../gobject/gobject-The-Base-Object-Type.html#GObjectClass"
+>GObjectClass</a>&#160;<em class="structfield"><code>parent_class</code></em>;</span></p></td>
+<td>parent <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObjectClass"
+><span class="type">GObjectClass</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code>load_font</code></em>&#160;()</span></p></td>
+<td>a function to load a font with a given description. See
+            <a class="link" href="pango-Fonts.html#pango-font-map-load-font"><code class="function">pango_font_map_load_font()</code></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code>list_families</code></em>&#160;()</span></p></td>
+<td>A function to list available font families. See
+                <a class="link" href="pango-Fonts.html#pango-font-map-list-families"><code class="function">pango_font_map_list_families()</code></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code>load_fontset</code></em>&#160;()</span></p></td>
+<td>a function to load a fontset with a given given description
+             suitable for a particular language. See
+	     <a class="link" href="pango-Fonts.html#pango-font-map-load-fontset"><code class="function">pango_font_map_load_fontset()</code></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term">const&#160;char&#160;*<em class="structfield"><code>shape_engine_type</code></em>;</span></p></td>
+<td>the type of rendering-system-dependent engines that
+             can handle fonts of this fonts loaded with this fontmap.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3065857"></a><h3>
+<a name="PANGO-FONT-MAP-CLASS:CAPS"></a>PANGO_FONT_MAP_CLASS()</h3>
+<a class="indexterm" name="id3065869"></a><pre class="programlisting">#define PANGO_FONT_MAP_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST ((klass), PANGO_TYPE_FONT_MAP, PangoFontMapClass))
+</pre>
+<p>
+Casts a <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> to a <a class="link" href="pango-Fonts.html#PangoFontMapClass"><span class="type">PangoFontMapClass</span></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>klass</code></em>&#160;:</span></p></td>
+<td>a <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a>.
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3065929"></a><h3>
+<a name="PANGO-IS-FONT-MAP-CLASS:CAPS"></a>PANGO_IS_FONT_MAP_CLASS()</h3>
+<a class="indexterm" name="id3065942"></a><pre class="programlisting">#define PANGO_IS_FONT_MAP_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE ((klass), PANGO_TYPE_FONT_MAP))
+</pre>
+<p>
+Returns <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>klass</code></em> is a subtype of <a class="link" href="pango-Fonts.html#PangoFontMapClass"><span class="type">PangoFontMapClass</span></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>klass</code></em>&#160;:</span></p></td>
+<td>a <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a>.
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3066010"></a><h3>
+<a name="PANGO-FONT-MAP-GET-CLASS:CAPS"></a>PANGO_FONT_MAP_GET_CLASS()</h3>
+<a class="indexterm" name="id3066023"></a><pre class="programlisting">#define PANGO_FONT_MAP_GET_CLASS(obj)    (G_TYPE_INSTANCE_GET_CLASS ((obj), PANGO_TYPE_FONT_MAP, PangoFontMapClass))
+</pre>
+<p>
+Returns the type of a <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>obj</code></em>&#160;:</span></p></td>
+<td>a <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a>.
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3066075"></a><h3>
+<a name="pango-font-map-load-font"></a>pango_font_map_load_font ()</h3>
+<a class="indexterm" name="id3066088"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a>*          pango_font_map_load_font            (<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a> *fontmap,
+                                                         <a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a> *context,
+                                                         const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc);</pre>
+<p>
+Load the font in the fontmap that is the closest match for <em class="parameter"><code>desc</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fontmap</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em>&#160;:</span></p></td>
+<td> the <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> the font will be used with
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a> describing the font to load
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td>the font loaded, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if no font matched.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3066235"></a><h3>
+<a name="pango-font-map-load-fontset"></a>pango_font_map_load_fontset ()</h3>
+<a class="indexterm" name="id3066249"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontset">PangoFontset</a>*       pango_font_map_load_fontset         (<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a> *fontmap,
+                                                         <a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a> *context,
+                                                         const <a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a> *desc,
+                                                         <a class="link" href="pango-Text-Attributes.html#PangoLanguage">PangoLanguage</a> *language);</pre>
+<p>
+Load a set of fonts in the fontmap that can be used to render
+a font matching <em class="parameter"><code>desc</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fontmap</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em>&#160;:</span></p></td>
+<td> the <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> the font will be used with
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desc</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a> describing the font to load
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>language</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Text-Attributes.html#PangoLanguage"><span class="type">PangoLanguage</span></a> the fonts will be used for
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td>the fontset, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if no font matched.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3066428"></a><h3>
+<a name="pango-font-map-list-families"></a>pango_font_map_list_families ()</h3>
+<a class="indexterm" name="id3066442"></a><pre class="programlisting">void                pango_font_map_list_families        (<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a> *fontmap,
+                                                         <a class="link" href="pango-Fonts.html#PangoFontFamily">PangoFontFamily</a> ***families,
+                                                         int *n_families);</pre>
+<p>
+List all families for a fontmap.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fontmap</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>families</code></em>&#160;:</span></p></td>
+<td> location to store a pointer to an array of <a class="link" href="pango-Fonts.html#PangoFontFamily"><span class="type">PangoFontFamily</span></a> *.
+           This array should be freed with <a
+href="../glib/glib-Memory-Allocation.html#g-free"
+><code class="function">g_free()</code></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>n_families</code></em>&#160;:</span></p></td>
+<td> location to store the number of elements in <em class="parameter"><code>families</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3066570"></a><h3>
+<a name="pango-font-map-get-shape-engine-type"></a>pango_font_map_get_shape_engine_type ()</h3>
+<a class="indexterm" name="id3066586"></a><pre class="programlisting">const char*         pango_font_map_get_shape_engine_type
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a> *fontmap);</pre>
+<p>
+Returns the render ID for shape engines for this fontmap.
+See the <em class="structfield"><code>render_type</code></em> field of
+<a class="link" href="pango-Engines.html#PangoEngineInfo"><span class="type">PangoEngineInfo</span></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fontmap</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the ID string for shape engines for
+ this fontmap. Owned by Pango, should not be modified
+ or freed.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.4
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3066679"></a><h3>
+<a name="PangoFontset-struct"></a>PangoFontset</h3>
+<a class="indexterm" name="id3066692"></a><pre class="programlisting">typedef struct _PangoFontset PangoFontset;</pre>
+<p>
+A <a class="link" href="pango-Fonts.html#PangoFontset"><span class="type">PangoFontset</span></a> represents a set of <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> to use
+when rendering text. It is the result of resolving a
+<a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a> against a particular <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a>.
+It has operations for finding the component font for
+a particular Unicode character, and for finding a composite
+set of metrics for the entire fontset.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3066745"></a><h3>
+<a name="PANGO-TYPE-FONTSET:CAPS"></a>PANGO_TYPE_FONTSET</h3>
+<a class="indexterm" name="id3066758"></a><pre class="programlisting">#define PANGO_TYPE_FONTSET              (pango_fontset_get_type ())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Fonts.html#PangoFontset"><span class="type">PangoFontset</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3066791"></a><h3>
+<a name="PangoFontsetClass"></a>PangoFontsetClass</h3>
+<a class="indexterm" name="id3066803"></a><pre class="programlisting">typedef struct {
+  GObjectClass parent_class;
+
+
+  PangoFont *       (*get_font)     (PangoFontset     *fontset,
+				     guint             wc);
+
+  PangoFontMetrics *(*get_metrics)  (PangoFontset     *fontset);
+  PangoLanguage *   (*get_language) (PangoFontset     *fontset);
+  void              (*foreach)      (PangoFontset           *fontset,
+				     PangoFontsetForeachFunc func,
+				     gpointer                data);
+} PangoFontsetClass;
+</pre>
+<p>
+The <a class="link" href="pango-Fonts.html#PangoFontsetClass"><span class="type">PangoFontsetClass</span></a> structure holds the virtual functions for
+a particular <a class="link" href="pango-Fonts.html#PangoFontset"><span class="type">PangoFontset</span></a> implementation.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a
+href="../gobject/gobject-The-Base-Object-Type.html#GObjectClass"
+>GObjectClass</a>&#160;<em class="structfield"><code>parent_class</code></em>;</span></p></td>
+<td>parent <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObjectClass"
+><span class="type">GObjectClass</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code>get_font</code></em>&#160;()</span></p></td>
+<td>a function to get the font in the fontset that contains the 
+   best glyph for the given Unicode character; see <a class="link" href="pango-Fonts.html#pango-fontset-get-font"><code class="function">pango_fontset_get_font()</code></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code>get_metrics</code></em>&#160;()</span></p></td>
+<td>a function to get overall metric information for the fonts 
+   in the fontset; see <a class="link" href="pango-Fonts.html#pango-fontset-get-metrics"><code class="function">pango_fontset_get_metrics()</code></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code>get_language</code></em>&#160;()</span></p></td>
+<td>a function to get the language of the fontset.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code>foreach</code></em>&#160;()</span></p></td>
+<td>a function to loop over the fonts in the fontset. See
+   <a class="link" href="pango-Fonts.html#pango-fontset-foreach"><code class="function">pango_fontset_foreach()</code></a>.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3066968"></a><h3>
+<a name="pango-fontset-get-font"></a>pango_fontset_get_font ()</h3>
+<a class="indexterm" name="id3066982"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a>*          pango_fontset_get_font              (<a class="link" href="pango-Fonts.html#PangoFontset">PangoFontset</a> *fontset,
+                                                         <a
+href="../glib/glib-Basic-Types.html#guint"
+>guint</a> wc);</pre>
+<p>
+Returns the font in the fontset that contains the best glyph for the
+Unicode character <em class="parameter"><code>wc</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fontset</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontset"><span class="type">PangoFontset</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>wc</code></em>&#160;:</span></p></td>
+<td> a Unicode character
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>. The caller must call g_object_unref when finished
+         with the font.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3067088"></a><h3>
+<a name="pango-fontset-get-metrics"></a>pango_fontset_get_metrics ()</h3>
+<a class="indexterm" name="id3067101"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontMetrics">PangoFontMetrics</a>*   pango_fontset_get_metrics           (<a class="link" href="pango-Fonts.html#PangoFontset">PangoFontset</a> *fontset);</pre>
+<p>
+Get overall metric information for the fonts in the fontset.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fontset</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontset"><span class="type">PangoFontset</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMetrics"><span class="type">PangoFontMetrics</span></a> object. The caller must call <a class="link" href="pango-Fonts.html#pango-font-metrics-unref"><code class="function">pango_font_metrics_unref()</code></a>
+  when finished using the object.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3067190"></a><h3>
+<a name="PangoFontsetForeachFunc"></a>PangoFontsetForeachFunc ()</h3>
+<a class="indexterm" name="id3067205"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            (*PangoFontsetForeachFunc)          (<a class="link" href="pango-Fonts.html#PangoFontset">PangoFontset</a> *fontset,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gpointer"
+>gpointer</a> data);</pre>
+<p>
+A callback function used by <a class="link" href="pango-Fonts.html#pango-fontset-foreach"><code class="function">pango_fontset_foreach()</code></a> when enumerating
+the fonts in a fontset.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fontset</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontset"><span class="type">PangoFontset</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a font from <em class="parameter"><code>fontset</code></em>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em>&#160;:</span></p></td>
+<td> callback data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> if <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a>, stop iteration and return immediately.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.4
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3067353"></a><h3>
+<a name="pango-fontset-foreach"></a>pango_fontset_foreach ()</h3>
+<a class="indexterm" name="id3067368"></a><pre class="programlisting">void                pango_fontset_foreach               (<a class="link" href="pango-Fonts.html#PangoFontset">PangoFontset</a> *fontset,
+                                                         <a class="link" href="pango-Fonts.html#PangoFontsetForeachFunc">PangoFontsetForeachFunc</a> func,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gpointer"
+>gpointer</a> data);</pre>
+<p>
+Iterates through all the fonts in a fontset, calling <em class="parameter"><code>func</code></em> for
+each one. If <em class="parameter"><code>func</code></em> returns <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a>, that stops the iteration.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fontset</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontset"><span class="type">PangoFontset</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>func</code></em>&#160;:</span></p></td>
+<td> Callback function
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em>&#160;:</span></p></td>
+<td> data to pass to the callback function
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.4
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3067501"></a><h3>
+<a name="PangoFontsetSimple-struct"></a>PangoFontsetSimple</h3>
+<a class="indexterm" name="id3067515"></a><pre class="programlisting">typedef struct _PangoFontsetSimple PangoFontsetSimple;</pre>
+<p>
+<a class="link" href="pango-Fonts.html#PangoFontsetSimple"><span class="type">PangoFontsetSimple</span></a> is a implementation of the abstract
+<a class="link" href="pango-Fonts.html#PangoFontset"><span class="type">PangoFontset</span></a> base class in terms of an array of fonts,
+which the creator provides when constructing the
+<a class="link" href="pango-Fonts.html#PangoFontsetSimple"><span class="type">PangoFontsetSimple</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3067558"></a><h3>
+<a name="PANGO-TYPE-FONTSET-SIMPLE:CAPS"></a>PANGO_TYPE_FONTSET_SIMPLE</h3>
+<a class="indexterm" name="id3067572"></a><pre class="programlisting">#define PANGO_TYPE_FONTSET_SIMPLE       (pango_fontset_simple_get_type ())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Fonts.html#PangoFontsetSimple"><span class="type">PangoFontsetSimple</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3067604"></a><h3>
+<a name="pango-fontset-simple-new"></a>pango_fontset_simple_new ()</h3>
+<a class="indexterm" name="id3067617"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontsetSimple">PangoFontsetSimple</a>* pango_fontset_simple_new            (<a class="link" href="pango-Text-Attributes.html#PangoLanguage">PangoLanguage</a> *language);</pre>
+<p>
+Creates a new <a class="link" href="pango-Fonts.html#PangoFontsetSimple"><span class="type">PangoFontsetSimple</span></a> for the given language.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>language</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Text-Attributes.html#PangoLanguage"><span class="type">PangoLanguage</span></a> tag
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the newly allocated <a class="link" href="pango-Fonts.html#PangoFontsetSimple"><span class="type">PangoFontsetSimple</span></a>, which should
+              be freed with <a
+href="../gobject/gobject-The-Base-Object-Type.html#g-object-unref"
+><code class="function">g_object_unref()</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3067715"></a><h3>
+<a name="pango-fontset-simple-append"></a>pango_fontset_simple_append ()</h3>
+<a class="indexterm" name="id3067728"></a><pre class="programlisting">void                pango_fontset_simple_append         (<a class="link" href="pango-Fonts.html#PangoFontsetSimple">PangoFontsetSimple</a> *fontset,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);</pre>
+<p>
+Adds a font to the fontset.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fontset</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontsetSimple"><span class="type">PangoFontsetSimple</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3067816"></a><h3>
+<a name="pango-fontset-simple-size"></a>pango_fontset_simple_size ()</h3>
+<a class="indexterm" name="id3067830"></a><pre class="programlisting">int                 pango_fontset_simple_size           (<a class="link" href="pango-Fonts.html#PangoFontsetSimple">PangoFontsetSimple</a> *fontset);</pre>
+<p>
+Returns the number of fonts in the fontset.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fontset</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontsetSimple"><span class="type">PangoFontsetSimple</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the size of <em class="parameter"><code>fontset</code></em>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+</body>
+</html>

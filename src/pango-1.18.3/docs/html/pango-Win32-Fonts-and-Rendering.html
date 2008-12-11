@@ -1,0 +1,938 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Win32 Fonts and Rendering</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Pango Reference Manual">
+<link rel="up" href="rendering.html" title="Rendering with Pango">
+<link rel="prev" href="rendering.html" title="Rendering with Pango">
+<link rel="next" href="pango-FreeType-Fonts-and-Rendering.html" title="FreeType Fonts and Rendering">
+<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="pango.html" title="Basic Pango Interfaces">
+<link rel="chapter" href="rendering.html" title="Rendering with Pango">
+<link rel="chapter" href="lowlevel.html" title="Low Level Functionality">
+<link rel="chapter" href="tools.html" title="Pango Tools">
+<link rel="chapter" href="pango-hierarchy.html" title="Object Hierarchy">
+<link rel="index" href="index-all.html" title="Index">
+<link rel="index" href="index-deprecated.html" title="Index of deprecated symbols">
+<link rel="index" href="index-1.2.html" title="Index of new symbols in 1.2">
+<link rel="index" href="index-1.4.html" title="Index of new symbols in 1.4">
+<link rel="index" href="index-1.6.html" title="Index of new symbols in 1.6">
+<link rel="index" href="index-1.8.html" title="Index of new symbols in 1.8">
+<link rel="index" href="index-1.10.html" title="Index of new symbols in 1.10">
+<link rel="index" href="index-1.12.html" title="Index of new symbols in 1.12">
+<link rel="index" href="index-1.14.html" title="Index of new symbols in 1.14">
+<link rel="index" href="index-1.16.html" title="Index of new symbols in 1.16">
+<link rel="index" href="index-1.18.html" title="Index of new symbols in 1.18">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="rendering.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="rendering.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Pango Reference Manual</th>
+<td><a accesskey="n" href="pango-FreeType-Fonts-and-Rendering.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3143171" class="shortcut">Top</a>
+                  &#160;|&#160;
+                  <a href="#id3143888" class="shortcut">Description</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="pango-Win32-Fonts-and-Rendering"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2>
+<a name="id3143171"></a><span class="refentrytitle">Win32 Fonts and Rendering</span>
+</h2>
+<p>Win32 Fonts and Rendering &#8212; Functions for shape engines to manipulate Win32 fonts</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<h2>Synopsis</h2>
+<pre class="synopsis">
+
+
+
+#define             <a class="link" href="pango-Win32-Fonts-and-Rendering.html#PANGO-RENDER-TYPE-WIN32:CAPS">PANGO_RENDER_TYPE_WIN32</a>
+<a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a>*       <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-get-context">pango_win32_get_context</a>             (void);
+void                <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-render">pango_win32_render</a>                  (HDC hdc,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> x,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> y);
+void                <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-render-transformed">pango_win32_render_transformed</a>      (HDC hdc,
+                                                         const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         int x,
+                                                         int y);
+void                <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-render-layout-line">pango_win32_render_layout_line</a>      (HDC hdc,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line,
+                                                         int x,
+                                                         int y);
+void                <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-render-layout">pango_win32_render_layout</a>           (HDC hdc,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int x,
+                                                         int y);
+<a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a>          <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-get-unknown-glyph">pango_win32_get_unknown_glyph</a>       (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a
+href="../glib/glib-Unicode-Manipulation.html#gunichar"
+>gunichar</a> wc);
+<a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a>                <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-get-glyph-index">pango_win32_font_get_glyph_index</a>    (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a
+href="../glib/glib-Unicode-Manipulation.html#gunichar"
+>gunichar</a> wc);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-select-font">pango_win32_font_select_font</a>        (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         HDC hdc);
+void                <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-done-font">pango_win32_font_done_font</a>          (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);
+double              <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-get-metrics-factor">pango_win32_font_get_metrics_factor</a> (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-get-debug-flag">pango_win32_get_debug_flag</a>          (void);
+HDC                 <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-get-dc">pango_win32_get_dc</a>                  (void);
+                    <a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache">PangoWin32FontCache</a>;
+<a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache">PangoWin32FontCache</a>* <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-cache-new">pango_win32_font_cache_new</a>         (void);
+void                <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-cache-free">pango_win32_font_cache_free</a>         (<a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache">PangoWin32FontCache</a> *cache);
+HFONT               <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-cache-load">pango_win32_font_cache_load</a>         (<a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache">PangoWin32FontCache</a> *cache,
+                                                         const LOGFONTA *logfont);
+HFONT               <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-cache-loadw">pango_win32_font_cache_loadw</a>        (<a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache">PangoWin32FontCache</a> *cache,
+                                                         const LOGFONTW *logfont);
+void                <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-cache-unload">pango_win32_font_cache_unload</a>       (<a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache">PangoWin32FontCache</a> *cache,
+                                                         HFONT hfont);
+<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a>*       <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-map-for-display">pango_win32_font_map_for_display</a>    (void);
+void                <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-shutdown-display">pango_win32_shutdown_display</a>        (void);
+<a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache">PangoWin32FontCache</a>* <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-map-get-font-cache">pango_win32_font_map_get_font_cache</a>
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a> *font_map);
+LOGFONTA*           <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-logfont">pango_win32_font_logfont</a>            (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);
+LOGFONTW*           <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-logfontw">pango_win32_font_logfontw</a>           (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);
+<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-description-from-logfont">pango_win32_font_description_from_logfont</a>
+                                                        (const LOGFONTA *lfp);
+<a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-description-from-logfontw">pango_win32_font_description_from_logfontw</a>
+                                                        (const LOGFONTW *lfp);
+
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3143888"></a><h2>Description</h2>
+<p>
+The macros and functions in this section are used to access fonts natively on
+Win32 systems and to render text in conjunction with Win32 APIs.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3143904"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="id3143914"></a><h3>
+<a name="PANGO-RENDER-TYPE-WIN32:CAPS"></a>PANGO_RENDER_TYPE_WIN32</h3>
+<a class="indexterm" name="id3143929"></a><pre class="programlisting">#define PANGO_RENDER_TYPE_WIN32 "PangoRenderWin32"
+</pre>
+<p>
+A string constant identifying the Win32 renderer. The associated quark (see
+<a
+href="../glib/glib-Quarks.html#g-quark-from-string"
+><code class="function">g_quark_from_string()</code></a>) is used to identify the renderer in <a class="link" href="pango-Modules.html#pango-find-map"><code class="function">pango_find_map()</code></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3143970"></a><h3>
+<a name="pango-win32-get-context"></a>pango_win32_get_context ()</h3>
+<a class="indexterm" name="id3143984"></a><pre class="programlisting"><a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a>*       pango_win32_get_context             (void);</pre>
+<p>
+Retrieves a <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> appropriate for rendering with Windows fonts.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the new <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3144041"></a><h3>
+<a name="pango-win32-render"></a>pango_win32_render ()</h3>
+<a class="indexterm" name="id3144055"></a><pre class="programlisting">void                pango_win32_render                  (HDC hdc,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> x,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> y);</pre>
+<p>
+Render a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a> onto a Windows DC</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>hdc</code></em>&#160;:</span></p></td>
+<td>     the device context
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td>    the font in which to draw the string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyphs</code></em>&#160;:</span></p></td>
+<td>  the glyph string to draw
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em>&#160;:</span></p></td>
+<td>       the x position of start of string (in pixels)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em>&#160;:</span></p></td>
+<td>       the y position of baseline (in pixels)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3144201"></a><h3>
+<a name="pango-win32-render-transformed"></a>pango_win32_render_transformed ()</h3>
+<a class="indexterm" name="id3144214"></a><pre class="programlisting">void                pango_win32_render_transformed      (HDC hdc,
+                                                         const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         int x,
+                                                         int y);</pre>
+<p>
+Renders a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a> onto a windows DC, possibly
+transforming the layed-out coordinates through a transformation
+matrix. Note that the transformation matrix for <em class="parameter"><code>font</code></em> is not
+changed, so to produce correct rendering results, the <em class="parameter"><code>font</code></em>
+must have been loaded using a <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> with an identical
+transformation matrix to that passed in to this function.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>hdc</code></em>&#160;:</span></p></td>
+<td>     a windows device context
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>matrix</code></em>&#160;:</span></p></td>
+<td>  a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to use an identity transformation
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td>    the font in which to draw the string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyphs</code></em>&#160;:</span></p></td>
+<td>  the glyph string to draw
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em>&#160;:</span></p></td>
+<td>       the x position of the start of the string (in Pango
+          units in user space coordinates)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em>&#160;:</span></p></td>
+<td>       the y position of the baseline (in Pango units
+          in user space coordinates)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3144427"></a><h3>
+<a name="pango-win32-render-layout-line"></a>pango_win32_render_layout_line ()</h3>
+<a class="indexterm" name="id3144440"></a><pre class="programlisting">void                pango_win32_render_layout_line      (HDC hdc,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line,
+                                                         int x,
+                                                         int y);</pre>
+<p>
+Render a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a> onto a device context. For underlining to
+work property the text alignment of the DC should have TA_BASELINE
+and TA_LEFT.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>hdc</code></em>&#160;:</span></p></td>
+<td>       DC to use for uncolored drawing
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>line</code></em>&#160;:</span></p></td>
+<td>      a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em>&#160;:</span></p></td>
+<td>         the x position of start of string (in pixels)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em>&#160;:</span></p></td>
+<td>         the y position of baseline (in pixels)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3144574"></a><h3>
+<a name="pango-win32-render-layout"></a>pango_win32_render_layout ()</h3>
+<a class="indexterm" name="id3144588"></a><pre class="programlisting">void                pango_win32_render_layout           (HDC hdc,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int x,
+                                                         int y);</pre>
+<p>
+Render a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a> onto an X drawable</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>hdc</code></em>&#160;:</span></p></td>
+<td>       HDC to use for uncolored drawing
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td>    a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em>&#160;:</span></p></td>
+<td>         the X position of the left of the layout (in pixels)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em>&#160;:</span></p></td>
+<td>         the Y position of the top of the layout (in pixels)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3144718"></a><h3>
+<a name="pango-win32-get-unknown-glyph"></a>pango_win32_get_unknown_glyph ()</h3>
+<a class="indexterm" name="id3144734"></a><pre class="programlisting"><a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a>          pango_win32_get_unknown_glyph       (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a
+href="../glib/glib-Unicode-Manipulation.html#gunichar"
+>gunichar</a> wc);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_win32_get_unknown_glyph</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Returns the index of a glyph suitable for drawing <em class="parameter"><code>wc</code></em> as an
+unknown character.
+</p>
+<p>
+Use <a class="link" href="pango-Glyph-Storage.html#PANGO-GET-UNKNOWN-GLYPH:CAPS"><code class="function">PANGO_GET_UNKNOWN_GLYPH()</code></a> instead.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>wc</code></em>&#160;:</span></p></td>
+<td> the Unicode character for which a glyph is needed.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a glyph index into <em class="parameter"><code>font</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3144865"></a><h3>
+<a name="pango-win32-font-get-glyph-index"></a>pango_win32_font_get_glyph_index ()</h3>
+<a class="indexterm" name="id3144878"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a>                pango_win32_font_get_glyph_index    (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a
+href="../glib/glib-Unicode-Manipulation.html#gunichar"
+>gunichar</a> wc);</pre>
+<p>
+Obtains the index of the glyph for <em class="parameter"><code>wc</code></em> in <em class="parameter"><code>font</code></em>, or 0, if not
+covered.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>wc</code></em>&#160;:</span></p></td>
+<td> a Unicode character.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the glyph index for <em class="parameter"><code>wc</code></em>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3144986"></a><h3>
+<a name="pango-win32-font-select-font"></a>pango_win32_font_select_font ()</h3>
+<a class="indexterm" name="id3145000"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_win32_font_select_font        (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         HDC hdc);</pre>
+<p>
+Selects the font into the specified DC and changes the mapping mode
+and world transformation of the DC appropriately for the font.
+You may want to surround the use of this function with calls
+to <code class="function">SaveDC()</code> and <code class="function">RestoreDC()</code>. Call <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-done-font"><code class="function">pango_win32_font_done_font()</code></a> when
+you are done using the DC to release allocated resources.
+</p>
+<p>
+See <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-get-metrics-factor"><code class="function">pango_win32_font_get_metrics_factor()</code></a> for information about
+converting from the coordinate space used by this function
+into Pango units.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> from the Win32 backend
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>hdc</code></em>&#160;:</span></p></td>
+<td> a windows device context
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if the operation succeeded.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3145155"></a><h3>
+<a name="pango-win32-font-done-font"></a>pango_win32_font_done_font ()</h3>
+<a class="indexterm" name="id3145169"></a><pre class="programlisting">void                pango_win32_font_done_font          (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);</pre>
+<p>
+Releases any resources allocated by <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-done-font"><code class="function">pango_win32_font_done_font()</code></a></p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> from the win32 backend
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3145237"></a><h3>
+<a name="pango-win32-font-get-metrics-factor"></a>pango_win32_font_get_metrics_factor ()</h3>
+<a class="indexterm" name="id3145251"></a><pre class="programlisting">double              pango_win32_font_get_metrics_factor (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);</pre>
+<p>
+Returns the scale factor from logical units in the coordinate
+space used by <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-select-font"><code class="function">pango_win32_font_select_font()</code></a> to Pango units
+in user space.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> from the win32 backend
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> factor to multiply logical units by to get Pango
+              units.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3145333"></a><h3>
+<a name="pango-win32-get-debug-flag"></a>pango_win32_get_debug_flag ()</h3>
+<a class="indexterm" name="id3145350"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_win32_get_debug_flag          (void);</pre>
+<p>
+Returns whether debugging is turned on.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if debugging is turned on.
+
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since  1.2
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3145406"></a><h3>
+<a name="pango-win32-get-dc"></a>pango_win32_get_dc ()</h3>
+<a class="indexterm" name="id3145420"></a><pre class="programlisting">HDC                 pango_win32_get_dc                  (void);</pre>
+<p>
+Obtains a handle to the Windows device context that is used by Pango.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> A handle to the Windows device context that is used by Pango.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3145461"></a><h3>
+<a name="PangoWin32FontCache"></a>PangoWin32FontCache</h3>
+<a class="indexterm" name="id3145474"></a><pre class="programlisting">typedef struct _PangoWin32FontCache PangoWin32FontCache;</pre>
+<p>
+A <a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache"><span class="type">PangoWin32FontCache</span></a> caches
+HFONTs by their LOGFONT descriptions. 
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3145499"></a><h3>
+<a name="pango-win32-font-cache-new"></a>pango_win32_font_cache_new ()</h3>
+<a class="indexterm" name="id3145513"></a><pre class="programlisting"><a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache">PangoWin32FontCache</a>* pango_win32_font_cache_new         (void);</pre>
+<p>
+Creates a font cache.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> The new font cache. This must be freed with
+<a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-cache-free"><code class="function">pango_win32_font_cache_free()</code></a>.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3145564"></a><h3>
+<a name="pango-win32-font-cache-free"></a>pango_win32_font_cache_free ()</h3>
+<a class="indexterm" name="id3145578"></a><pre class="programlisting">void                pango_win32_font_cache_free         (<a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache">PangoWin32FontCache</a> *cache);</pre>
+<p>
+Frees a <a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache"><span class="type">PangoWin32FontCache</span></a> and all associated memory. All fonts loaded
+through this font cache will be freed along with the cache.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>cache</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache"><span class="type">PangoWin32FontCache</span></a>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3145646"></a><h3>
+<a name="pango-win32-font-cache-load"></a>pango_win32_font_cache_load ()</h3>
+<a class="indexterm" name="id3145660"></a><pre class="programlisting">HFONT               pango_win32_font_cache_load         (<a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache">PangoWin32FontCache</a> *cache,
+                                                         const LOGFONTA *logfont);</pre>
+<p>
+Creates a HFONT from a LOGFONTA. The
+result may be newly loaded, or it may have been previously
+stored</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cache</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache"><span class="type">PangoWin32FontCache</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>logfont</code></em>&#160;:</span></p></td>
+<td> a pointer to a LOGFONTA structure describing the font to load.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> The font structure, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if the font could
+not be loaded. In order to free this structure, you must call
+<a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-cache-unload"><code class="function">pango_win32_font_cache_unload()</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3145775"></a><h3>
+<a name="pango-win32-font-cache-loadw"></a>pango_win32_font_cache_loadw ()</h3>
+<a class="indexterm" name="id3145791"></a><pre class="programlisting">HFONT               pango_win32_font_cache_loadw        (<a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache">PangoWin32FontCache</a> *cache,
+                                                         const LOGFONTW *logfont);</pre>
+<p>
+Creates a HFONT from a LOGFONTW. The
+result may be newly loaded, or it may have been previously
+stored</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cache</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache"><span class="type">PangoWin32FontCache</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>logfont</code></em>&#160;:</span></p></td>
+<td> a pointer to a LOGFONTW structure describing the font to load.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> The font structure, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if the font could
+not be loaded. In order to free this structure, you must call
+<a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-cache-unload"><code class="function">pango_win32_font_cache_unload()</code></a>.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3145915"></a><h3>
+<a name="pango-win32-font-cache-unload"></a>pango_win32_font_cache_unload ()</h3>
+<a class="indexterm" name="id3145928"></a><pre class="programlisting">void                pango_win32_font_cache_unload       (<a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache">PangoWin32FontCache</a> *cache,
+                                                         HFONT hfont);</pre>
+<p>
+Frees a font structure previously loaded with <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-cache-load"><code class="function">pango_win32_font_cache_load()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cache</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache"><span class="type">PangoWin32FontCache</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>hfont</code></em>&#160;:</span></p></td>
+<td> the HFONT to unload
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3146020"></a><h3>
+<a name="pango-win32-font-map-for-display"></a>pango_win32_font_map_for_display ()</h3>
+<a class="indexterm" name="id3146033"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a>*       pango_win32_font_map_for_display    (void);</pre>
+<p>
+Returns a <span class="type">PangoWin32FontMap</span>. Font maps are cached and should
+not be freed. If the font map is no longer needed, it can
+be released with <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-shutdown-display"><code class="function">pango_win32_shutdown_display()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a>.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3146104"></a><h3>
+<a name="pango-win32-shutdown-display"></a>pango_win32_shutdown_display ()</h3>
+<a class="indexterm" name="id3146118"></a><pre class="programlisting">void                pango_win32_shutdown_display        (void);</pre>
+<p>
+Free cached resources.</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3146143"></a><h3>
+<a name="pango-win32-font-map-get-font-cache"></a>pango_win32_font_map_get_font_cache ()</h3>
+<a class="indexterm" name="id3146158"></a><pre class="programlisting"><a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache">PangoWin32FontCache</a>* pango_win32_font_map_get_font_cache
+                                                        (<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a> *font_map);</pre>
+<p>
+Obtains the font cache associated with the given font map.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font_map</code></em>&#160;:</span></p></td>
+<td> a <span class="type">PangoWin32FontMap</span>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the <a class="link" href="pango-Win32-Fonts-and-Rendering.html#PangoWin32FontCache"><span class="type">PangoWin32FontCache</span></a> of <em class="parameter"><code>font_map</code></em>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3146242"></a><h3>
+<a name="pango-win32-font-logfont"></a>pango_win32_font_logfont ()</h3>
+<a class="indexterm" name="id3146255"></a><pre class="programlisting">LOGFONTA*           pango_win32_font_logfont            (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);</pre>
+<p>
+Determine the LOGFONTA struct for the specified font. Note that
+Pango internally uses LOGFONTW structs, so if converting the UTF-16
+face name in the LOGFONTW struct to system codepage fails, the
+returned LOGFONTA will have an emppty face name. To get the
+LOGFONTW of a PangoFont, use <a class="link" href="pango-Win32-Fonts-and-Rendering.html#pango-win32-font-logfontw"><code class="function">pango_win32_font_logfontw()</code></a>. It
+is recommended to do that always even if you don't expect
+to come across fonts with odd names.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> which must be from the Win32 backend
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> A newly allocated LOGFONTA struct. It must be
+freed with <a
+href="../glib/glib-Memory-Allocation.html#g-free"
+><code class="function">g_free()</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3146352"></a><h3>
+<a name="pango-win32-font-logfontw"></a>pango_win32_font_logfontw ()</h3>
+<a class="indexterm" name="id3146368"></a><pre class="programlisting">LOGFONTW*           pango_win32_font_logfontw           (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);</pre>
+<p>
+Determine the LOGFONTW struct for the specified font.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> which must be from the Win32 backend
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> A newly allocated LOGFONTW struct. It must be
+freed with <a
+href="../glib/glib-Memory-Allocation.html#g-free"
+><code class="function">g_free()</code></a>.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3146455"></a><h3>
+<a name="pango-win32-font-description-from-logfont"></a>pango_win32_font_description_from_logfont ()</h3>
+<a class="indexterm" name="id3146473"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* pango_win32_font_description_from_logfont
+                                                        (const LOGFONTA *lfp);</pre>
+<p>
+Creates a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a> that matches the specified LOGFONTA.
+</p>
+<p>
+The face name, italicness and weight fields in the LOGFONTA are used
+to set up the resulting <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>. If the face name in
+the LOGFONTA contains non-ASCII characters the font is temporarily
+loaded (using <code class="function">CreateFontIndirect()</code>) and an ASCII (usually English)
+name for it is looked up from the font name tables in the font
+data. If that doesn't work, the face name is converted from the
+system codepage to UTF-8 and that is used.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>lfp</code></em>&#160;:</span></p></td>
+<td> a LOGFONTA
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the newly allocated <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>, which
+ should be freed using <a class="link" href="pango-Fonts.html#pango-font-description-free"><code class="function">pango_font_description_free()</code></a>
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3146602"></a><h3>
+<a name="pango-win32-font-description-from-logfontw"></a>pango_win32_font_description_from_logfontw ()</h3>
+<a class="indexterm" name="id3146619"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontDescription">PangoFontDescription</a>* pango_win32_font_description_from_logfontw
+                                                        (const LOGFONTW *lfp);</pre>
+<p>
+Creates a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a> that matches the specified LOGFONTW.
+</p>
+<p>
+The face name, italicness and weight fields in the LOGFONTW are used
+to set up the resulting <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>. If the face name in
+the LOGFONTW contains non-ASCII characters the font is temporarily
+loaded (using <code class="function">CreateFontIndirect()</code>) and an ASCII (usually English)
+name for it is looked up from the font name tables in the font
+data. If that doesn't work, the face name is converted from UTF-16
+to UTF-8 and that is used.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>lfp</code></em>&#160;:</span></p></td>
+<td> a LOGFONTW
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the newly allocated <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>, which
+ should be freed using <a class="link" href="pango-Fonts.html#pango-font-description-free"><code class="function">pango_font_description_free()</code></a>
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>

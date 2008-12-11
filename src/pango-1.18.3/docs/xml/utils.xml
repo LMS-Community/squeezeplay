@@ -1,0 +1,562 @@
+<refentry id="pango-Miscellaneous-Utilities">
+<refmeta>
+<refentrytitle role="top_of_page">Miscellaneous Utilities</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>PANGO Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Miscellaneous Utilities</refname>
+<refpurpose>Various convenience and utility functions</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+
+
+
+<link linkend="char">char</link>**              <link linkend="pango-split-file-list">pango_split_file_list</link>               (const <link linkend="char">char</link> *str);
+<link linkend="char">char</link>*               <link linkend="pango-trim-string">pango_trim_string</link>                   (const <link linkend="char">char</link> *str);
+<link linkend="gint">gint</link>                <link linkend="pango-read-line">pango_read_line</link>                     (<link linkend="FILE:CAPS">FILE</link> *stream,
+                                                         <link linkend="GString">GString</link> *str);
+<link linkend="gboolean">gboolean</link>            <link linkend="pango-skip-space">pango_skip_space</link>                    (const <link linkend="char">char</link> **pos);
+<link linkend="gboolean">gboolean</link>            <link linkend="pango-scan-word">pango_scan_word</link>                     (const <link linkend="char">char</link> **pos,
+                                                         <link linkend="GString">GString</link> *out);
+<link linkend="gboolean">gboolean</link>            <link linkend="pango-scan-string">pango_scan_string</link>                   (const <link linkend="char">char</link> **pos,
+                                                         <link linkend="GString">GString</link> *out);
+<link linkend="gboolean">gboolean</link>            <link linkend="pango-scan-int">pango_scan_int</link>                      (const <link linkend="char">char</link> **pos,
+                                                         <link linkend="int">int</link> *out);
+<link linkend="char">char</link>*               <link linkend="pango-config-key-get">pango_config_key_get</link>                (const <link linkend="char">char</link> *key);
+<link linkend="void">void</link>                <link linkend="pango-lookup-aliases">pango_lookup_aliases</link>                (const <link linkend="char">char</link> *fontname,
+                                                         <link linkend="char">char</link> ***families,
+                                                         <link linkend="int">int</link> *n_families);
+<link linkend="gboolean">gboolean</link>            <link linkend="pango-parse-enum">pango_parse_enum</link>                    (<link linkend="GType">GType</link> type,
+                                                         const <link linkend="char">char</link> *str,
+                                                         <link linkend="int">int</link> *value,
+                                                         <link linkend="gboolean">gboolean</link> warn,
+                                                         <link linkend="char">char</link> **possible_values);
+<link linkend="gboolean">gboolean</link>            <link linkend="pango-parse-style">pango_parse_style</link>                   (const <link linkend="char">char</link> *str,
+                                                         <link linkend="PangoStyle">PangoStyle</link> *style,
+                                                         <link linkend="gboolean">gboolean</link> warn);
+<link linkend="gboolean">gboolean</link>            <link linkend="pango-parse-variant">pango_parse_variant</link>                 (const <link linkend="char">char</link> *str,
+                                                         <link linkend="PangoVariant">PangoVariant</link> *variant,
+                                                         <link linkend="gboolean">gboolean</link> warn);
+<link linkend="gboolean">gboolean</link>            <link linkend="pango-parse-weight">pango_parse_weight</link>                  (const <link linkend="char">char</link> *str,
+                                                         <link linkend="PangoWeight">PangoWeight</link> *weight,
+                                                         <link linkend="gboolean">gboolean</link> warn);
+<link linkend="gboolean">gboolean</link>            <link linkend="pango-parse-stretch">pango_parse_stretch</link>                 (const <link linkend="char">char</link> *str,
+                                                         <link linkend="PangoStretch">PangoStretch</link> *stretch,
+                                                         <link linkend="gboolean">gboolean</link> warn);
+const <link linkend="char">char</link>*         <link linkend="pango-get-sysconf-subdirectory">pango_get_sysconf_subdirectory</link>      (void);
+const <link linkend="char">char</link>*         <link linkend="pango-get-lib-subdirectory">pango_get_lib_subdirectory</link>          (void);
+<link linkend="guint8">guint8</link>*             <link linkend="pango-log2vis-get-embedding-levels">pango_log2vis_get_embedding_levels</link>  (const <link linkend="gchar">gchar</link> *text,
+                                                         <link linkend="int">int</link> length,
+                                                         <link linkend="PangoDirection">PangoDirection</link> *pbase_dir);
+<link linkend="PangoLanguage">PangoLanguage</link>*      <link linkend="pango-language-get-default">pango_language_get_default</link>          (void);
+const <link linkend="char">char</link>*         <link linkend="pango-language-get-sample-string">pango_language_get_sample_string</link>    (<link linkend="PangoLanguage">PangoLanguage</link> *language);
+<link linkend="gboolean">gboolean</link>            <link linkend="pango-is-zero-width">pango_is_zero_width</link>                 (<link linkend="gunichar">gunichar</link> ch);
+<link linkend="void">void</link>                <link linkend="pango-quantize-line-geometry">pango_quantize_line_geometry</link>        (<link linkend="int">int</link> *thickness,
+                                                         <link linkend="int">int</link> *position);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 role="desc">
+<title role="desc.title">Description</title>
+<para>
+The functions and utilities in this section are mostly used from Pango
+backends and modules, but may be useful for other purposes too.
+</para>
+</refsect1>
+
+<refsect1 role="details">
+<title role="details.title">Details</title>
+<refsect2>
+<title><anchor id="pango-split-file-list" role="function"/>pango_split_file_list ()</title>
+<indexterm><primary>pango_split_file_list</primary></indexterm><programlisting><link linkend="char">char</link>**              pango_split_file_list               (const <link linkend="char">char</link> *str);</programlisting>
+<para>
+Splits a <link linkend="G-SEARCHPATH-SEPARATOR:CAPS"><literal>G_SEARCHPATH_SEPARATOR</literal></link>-separated list of files, stripping
+white space and substituting ~/ with $HOME/.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>str</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="G-SEARCHPATH-SEPARATOR:CAPS"><literal>G_SEARCHPATH_SEPARATOR</literal></link> separated list of filenames
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a list of strings to be freed with <link linkend="g-strfreev"><function>g_strfreev()</function></link>
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-trim-string" role="function"/>pango_trim_string ()</title>
+<indexterm><primary>pango_trim_string</primary></indexterm><programlisting><link linkend="char">char</link>*               pango_trim_string                   (const <link linkend="char">char</link> *str);</programlisting>
+<para>
+Trims leading and trailing whitespace from a string.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>str</parameter>&nbsp;:</term>
+<listitem><simpara> a string
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A newly-allocated string that must be freed with <link linkend="g-free"><function>g_free()</function></link>
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-read-line" role="function"/>pango_read_line ()</title>
+<indexterm><primary>pango_read_line</primary></indexterm><programlisting><link linkend="gint">gint</link>                pango_read_line                     (<link linkend="FILE:CAPS">FILE</link> *stream,
+                                                         <link linkend="GString">GString</link> *str);</programlisting>
+<para>
+Reads an entire line from a file into a buffer. Lines may
+be delimited with '\n', '\r', '\n\r', or '\r\n'. The delimiter
+is not written into the buffer. Text after a '#' character is treated as
+a comment and skipped. '\' can be used to escape a # character.
+'\' proceeding a line delimiter combines adjacent lines. A '\' proceeding
+any other character is ignored and written into the output buffer
+unmodified.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>stream</parameter>&nbsp;:</term>
+<listitem><simpara> a stdio stream
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>str</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="GString"><type>GString</type></link> buffer into which to write the result
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> 0 if the stream was already at an <link linkend="EOF:CAPS"><literal>EOF</literal></link> character, otherwise
+              the number of lines read (this is useful for maintaining
+              a line number counter which doesn't combine lines with '\')
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-skip-space" role="function"/>pango_skip_space ()</title>
+<indexterm><primary>pango_skip_space</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            pango_skip_space                    (const <link linkend="char">char</link> **pos);</programlisting>
+<para>
+Skips 0 or more characters of white space.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>pos</parameter>&nbsp;:</term>
+<listitem><simpara> in/out string position
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> if skipping the white space leaves
+the position at a '\0' character.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-scan-word" role="function"/>pango_scan_word ()</title>
+<indexterm><primary>pango_scan_word</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            pango_scan_word                     (const <link linkend="char">char</link> **pos,
+                                                         <link linkend="GString">GString</link> *out);</programlisting>
+<para>
+Scans a word into a <link linkend="GString"><type>GString</type></link> buffer. A word consists
+of [A-Za-z_] followed by zero or more [A-Za-z_0-9]
+Leading white space is skipped.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>pos</parameter>&nbsp;:</term>
+<listitem><simpara> in/out string position
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>out</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GString"><type>GString</type></link> into which to write the result
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> if a parse error occurred.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-scan-string" role="function"/>pango_scan_string ()</title>
+<indexterm><primary>pango_scan_string</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            pango_scan_string                   (const <link linkend="char">char</link> **pos,
+                                                         <link linkend="GString">GString</link> *out);</programlisting>
+<para>
+Scans a string into a <link linkend="GString"><type>GString</type></link> buffer. The string may either
+be a sequence of non-white-space characters, or a quoted
+string with '"'. Instead a quoted string, '\"' represents
+a literal quote. Leading white space outside of quotes is skipped.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>pos</parameter>&nbsp;:</term>
+<listitem><simpara> in/out string position
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>out</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GString"><type>GString</type></link> into which to write the result
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> if a parse error occurred.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-scan-int" role="function"/>pango_scan_int ()</title>
+<indexterm><primary>pango_scan_int</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            pango_scan_int                      (const <link linkend="char">char</link> **pos,
+                                                         <link linkend="int">int</link> *out);</programlisting>
+<para>
+Scans an integer.
+Leading white space is skipped.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>pos</parameter>&nbsp;:</term>
+<listitem><simpara> in/out string position
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>out</parameter>&nbsp;:</term>
+<listitem><simpara> an int into which to write the result
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> if a parse error occurred.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-config-key-get" role="function"/>pango_config_key_get ()</title>
+<indexterm><primary>pango_config_key_get</primary></indexterm><programlisting><link linkend="char">char</link>*               pango_config_key_get                (const <link linkend="char">char</link> *key);</programlisting>
+<para>
+Looks up a key in the Pango config database
+(pseudo-win.ini style, read from $sysconfdir/pango/pangorc,
+ ~/.pangorc, and getenv (PANGO_RC_FILE).)</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>key</parameter>&nbsp;:</term>
+<listitem><simpara> Key to look up, in the form "SECTION/KEY".
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the value, if found, otherwise <link linkend="NULL:CAPS"><literal>NULL</literal></link>. The value is a
+newly-allocated string and must be freed with <link linkend="g-free"><function>g_free()</function></link>.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-lookup-aliases" role="function"/>pango_lookup_aliases ()</title>
+<indexterm><primary>pango_lookup_aliases</primary></indexterm><programlisting><link linkend="void">void</link>                pango_lookup_aliases                (const <link linkend="char">char</link> *fontname,
+                                                         <link linkend="char">char</link> ***families,
+                                                         <link linkend="int">int</link> *n_families);</programlisting>
+<para>
+Look up all user defined aliases for the alias <parameter>fontname</parameter>.
+The resulting font family names will be stored in <parameter>families</parameter>,
+and the number of families in <parameter>n_families</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>fontname</parameter>&nbsp;:</term>
+<listitem><simpara> an ascii string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>families</parameter>&nbsp;:</term>
+<listitem><simpara> will be set to an array of font family names.
+   this array is owned by pango and should not be freed.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>n_families</parameter>&nbsp;:</term>
+<listitem><simpara> will be set to the length of the <parameter>families</parameter> array.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-parse-enum" role="function" condition="since:1.16"/>pango_parse_enum ()</title>
+<indexterm role="1.16"><primary>pango_parse_enum</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            pango_parse_enum                    (<link linkend="GType">GType</link> type,
+                                                         const <link linkend="char">char</link> *str,
+                                                         <link linkend="int">int</link> *value,
+                                                         <link linkend="gboolean">gboolean</link> warn,
+                                                         <link linkend="char">char</link> **possible_values);</programlisting>
+<para>
+Parses an enum type and stored the result in <parameter>value</parameter>.
+</para>
+<para>
+If <parameter>str</parameter> does not match the nick name of any of the possible values for the
+enum, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> is returned, a warning is issued if <parameter>warn</parameter> is <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, and a
+string representing the list of possible values is stored in
+<parameter>possible_values</parameter>.  The list is slash-separated, eg.
+"none/start/middle/end".  If failed and <parameter>possible_values</parameter> is not <link linkend="NULL:CAPS"><literal>NULL</literal></link>,
+returned string should be freed using <link linkend="g-free"><function>g_free()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>type</parameter>&nbsp;:</term>
+<listitem><simpara> enum type to parse, eg. <link linkend="PANGO-TYPE-ELLIPSIZE-MODE:CAPS"><literal>PANGO_TYPE_ELLIPSIZE_MODE</literal></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>str</parameter>&nbsp;:</term>
+<listitem><simpara> string to parse.  May be <link linkend="NULL:CAPS"><literal>NULL</literal></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>value</parameter>&nbsp;:</term>
+<listitem><simpara> integer to store the result in, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>warn</parameter>&nbsp;:</term>
+<listitem><simpara> if <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, issue a <link linkend="g-warning"><function>g_warning()</function></link> on bad input.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>possible_values</parameter>&nbsp;:</term>
+<listitem><simpara> place to store list of possible values on failure, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>str</parameter> was successfully parsed.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.16
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-parse-style" role="function"/>pango_parse_style ()</title>
+<indexterm><primary>pango_parse_style</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            pango_parse_style                   (const <link linkend="char">char</link> *str,
+                                                         <link linkend="PangoStyle">PangoStyle</link> *style,
+                                                         <link linkend="gboolean">gboolean</link> warn);</programlisting>
+<para>
+Parses a font style. The allowed values are "normal",
+"italic" and "oblique", case variations being
+ignored.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>str</parameter>&nbsp;:</term>
+<listitem><simpara> a string to parse.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>style</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoStyle"><type>PangoStyle</type></link> to store the result in.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>warn</parameter>&nbsp;:</term>
+<listitem><simpara> if <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, issue a <link linkend="g-warning"><function>g_warning()</function></link> on bad input.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>str</parameter> was successfully parsed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-parse-variant" role="function"/>pango_parse_variant ()</title>
+<indexterm><primary>pango_parse_variant</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            pango_parse_variant                 (const <link linkend="char">char</link> *str,
+                                                         <link linkend="PangoVariant">PangoVariant</link> *variant,
+                                                         <link linkend="gboolean">gboolean</link> warn);</programlisting>
+<para>
+Parses a font variant. The allowed values are "normal"
+and "smallcaps" or "small_caps", case variations being
+ignored.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>str</parameter>&nbsp;:</term>
+<listitem><simpara> a string to parse.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>variant</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoVariant"><type>PangoVariant</type></link> to store the result in.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>warn</parameter>&nbsp;:</term>
+<listitem><simpara> if <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, issue a <link linkend="g-warning"><function>g_warning()</function></link> on bad input.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>str</parameter> was successfully parsed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-parse-weight" role="function"/>pango_parse_weight ()</title>
+<indexterm><primary>pango_parse_weight</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            pango_parse_weight                  (const <link linkend="char">char</link> *str,
+                                                         <link linkend="PangoWeight">PangoWeight</link> *weight,
+                                                         <link linkend="gboolean">gboolean</link> warn);</programlisting>
+<para>
+Parses a font weight. The allowed values are "heavy",
+"ultrabold", "bold", "normal", "light", "ultraleight"
+and integers. Case variations are ignored.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>str</parameter>&nbsp;:</term>
+<listitem><simpara> a string to parse.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>weight</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoWeight"><type>PangoWeight</type></link> to store the result in.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>warn</parameter>&nbsp;:</term>
+<listitem><simpara> if <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, issue a <link linkend="g-warning"><function>g_warning()</function></link> on bad input.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>str</parameter> was successfully parsed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-parse-stretch" role="function"/>pango_parse_stretch ()</title>
+<indexterm><primary>pango_parse_stretch</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            pango_parse_stretch                 (const <link linkend="char">char</link> *str,
+                                                         <link linkend="PangoStretch">PangoStretch</link> *stretch,
+                                                         <link linkend="gboolean">gboolean</link> warn);</programlisting>
+<para>
+Parses a font stretch. The allowed values are
+"ultra_condensed", "extra_condensed", "condensed",
+"semi_condensed", "normal", "semi_expanded", "expanded",
+"extra_expanded" and "ultra_expanded". Case variations are
+ignored and the '_' characters may be omitted.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>str</parameter>&nbsp;:</term>
+<listitem><simpara> a string to parse.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>stretch</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoStretch"><type>PangoStretch</type></link> to store the result in.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>warn</parameter>&nbsp;:</term>
+<listitem><simpara> if <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, issue a <link linkend="g-warning"><function>g_warning()</function></link> on bad input.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>str</parameter> was successfully parsed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-get-sysconf-subdirectory" role="function"/>pango_get_sysconf_subdirectory ()</title>
+<indexterm><primary>pango_get_sysconf_subdirectory</primary></indexterm><programlisting>const <link linkend="char">char</link>*         pango_get_sysconf_subdirectory      (void);</programlisting>
+<para>
+On Unix, returns the name of the "pango" subdirectory of SYSCONFDIR
+(which is set at compile time). On Win32, returns a subdirectory of
+the Pango installation directory (which is deduced at run time from
+the DLL's location, or stored in the Registry).</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the Pango sysconf directory. The returned string should
+not be freed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-get-lib-subdirectory" role="function"/>pango_get_lib_subdirectory ()</title>
+<indexterm><primary>pango_get_lib_subdirectory</primary></indexterm><programlisting>const <link linkend="char">char</link>*         pango_get_lib_subdirectory          (void);</programlisting>
+<para>
+On Unix, returns the name of the "pango" subdirectory of LIBDIR
+(which is set at compile time). On Win32, returns the Pango
+installation directory (which is deduced at run time from the DLL's
+location, or stored in the Registry). The returned string should
+not be freed.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the Pango lib directory. The returned string should
+not be freed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-log2vis-get-embedding-levels" role="function" condition="since:1.4"/>pango_log2vis_get_embedding_levels ()</title>
+<indexterm role="1.4"><primary>pango_log2vis_get_embedding_levels</primary></indexterm><programlisting><link linkend="guint8">guint8</link>*             pango_log2vis_get_embedding_levels  (const <link linkend="gchar">gchar</link> *text,
+                                                         <link linkend="int">int</link> length,
+                                                         <link linkend="PangoDirection">PangoDirection</link> *pbase_dir);</programlisting>
+<para>
+This will return the bidirectional embedding levels of the input paragraph
+as defined by the Unicode Bidirectional Algorithm available at:
+</para>
+<para>
+  http://www.unicode.org/reports/tr9/
+</para>
+<para>
+If the input base direction is a weak direction, the direction of the
+characters in the text will determine the final resolved direction.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>text</parameter>&nbsp;:</term>
+<listitem><simpara>      the text to itemize.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>length</parameter>&nbsp;:</term>
+<listitem><simpara>    the number of bytes (not characters) to process, or -1
+            if <parameter>text</parameter> is nul-terminated and the length should be calculated.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>pbase_dir</parameter>&nbsp;:</term>
+<listitem><simpara> input base direction, and output resolved direction.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a newly allocated array of embedding levels, one item per
+              character (not byte), that should be freed using g_free.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.4
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-language-get-default" role="function" condition="since:1.16"/>pango_language_get_default ()</title>
+<indexterm role="1.16"><primary>pango_language_get_default</primary></indexterm><programlisting><link linkend="PangoLanguage">PangoLanguage</link>*      pango_language_get_default          (void);</programlisting>
+<para>
+Returns the <link linkend="PangoLanguage"><type>PangoLanguage</type></link> for the current locale of the process.
+Note that this can change over the life of an application.
+</para>
+<para>
+On Unix systems, this is the return value is derived from
+<literal>setlocale(LC_CTYPE, NULL)</literal>, and the user can
+affect this through the environment variables LC_ALL, LC_CTYPE or
+LANG (checked in that order). The locale string typically is in
+the form lang_COUNTRY, where lang is an ISO-639 language code, and
+COUNTRY is an ISO-3166 country code. For instance, sv_FI for
+Swedish as written in Finland or pt_BR for Portuguese as written in
+Brazil.
+</para>
+<para>
+On Windows, the C library does not use any such environment
+variables, and setting them won't affect the behavior of functions
+like <link linkend="ctime"><function>ctime()</function></link>. The user sets the locale through the Regional Options
+in the Control Panel. The C library (in the <link linkend="setlocale"><function>setlocale()</function></link> function)
+does not use country and language codes, but country and language
+names spelled out in English.
+However, this function does check the above environment
+variables, and does return a Unix-style locale string based on
+either said environment variables or the thread's current locale.
+</para>
+<para>
+Your application should call <literal>setlocale(LC_ALL, "");</literal>
+for the user settings to take effect.  Gtk+ does this in its initialization
+functions automatically (by calling <link linkend="gtk-set-locale"><function>gtk_set_locale()</function></link>).
+See <literal>man setlocale</literal> for more details.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the default language as a <link linkend="PangoLanguage"><type>PangoLanguage</type></link>, must not be
+              freed.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.16
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-language-get-sample-string" role="function"/>pango_language_get_sample_string ()</title>
+<indexterm><primary>pango_language_get_sample_string</primary></indexterm><programlisting>const <link linkend="char">char</link>*         pango_language_get_sample_string    (<link linkend="PangoLanguage">PangoLanguage</link> *language);</programlisting>
+<para>
+Get a string that is representative of the characters needed to
+render a particular language. This function is a bad hack for
+internal use by renderers and Pango.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>language</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoLanguage"><type>PangoLanguage</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the sample string. This value is owned by Pango
+  and must not be freed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="pango-is-zero-width" role="function" condition="since:1.10"/>pango_is_zero_width ()</title>
+<indexterm role="1.10"><primary>pango_is_zero_width</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            pango_is_zero_width                 (<link linkend="gunichar">gunichar</link> ch);</programlisting>
+<para>
+Checks <parameter>ch</parameter> to see if it is a character that should not be
+normally rendered on the screen.  This includes all Unicode characters
+with "ZERO WIDTH" in their name, as well as <firstterm>bidi</firstterm> formatting characters, and
+a few other ones.  This is totally different from <link linkend="g-unichar-iszerowidth"><function>g_unichar_iszerowidth()</function></link>
+and is at best misnamed.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>ch</parameter>&nbsp;:</term>
+<listitem><simpara> a Unicode character
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>ch</parameter> is a zero-width character, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> otherwise
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.10
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-quantize-line-geometry" role="function" condition="since:1.12"/>pango_quantize_line_geometry ()</title>
+<indexterm role="1.12"><primary>pango_quantize_line_geometry</primary></indexterm><programlisting><link linkend="void">void</link>                pango_quantize_line_geometry        (<link linkend="int">int</link> *thickness,
+                                                         <link linkend="int">int</link> *position);</programlisting>
+<para>
+Quantizes the thickness and position of a line, typically an
+underline or strikethrough, to whole device pixels, that is integer
+multiples of <link linkend="PANGO-SCALE:CAPS"><literal>PANGO_SCALE</literal></link>. The purpose of this function is to avoid
+such lines looking blurry.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>thickness</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to the thickness of a line, in Pango scaled units
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>position</parameter>&nbsp;:</term>
+<listitem><simpara> corresponding position
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.12
+</para></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

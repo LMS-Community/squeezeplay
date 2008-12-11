@@ -1,0 +1,682 @@
+<refentry id="PangoRenderer">
+<refmeta>
+<refentrytitle role="top_of_page">PangoRenderer</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>PANGO Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>PangoRenderer</refname>
+<refpurpose>Rendering driver base class</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+
+
+
+                    <link linkend="PangoRenderer-struct">PangoRenderer</link>;
+enum                <link linkend="PangoRenderPart">PangoRenderPart</link>;
+#define             <link linkend="PANGO-TYPE-RENDER-PART:CAPS">PANGO_TYPE_RENDER_PART</link>
+                    <link linkend="PangoRendererClass">PangoRendererClass</link>;
+<link linkend="void">void</link>                <link linkend="pango-renderer-draw-layout">pango_renderer_draw_layout</link>          (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoLayout">PangoLayout</link> *layout,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);
+<link linkend="void">void</link>                <link linkend="pango-renderer-draw-layout-line">pango_renderer_draw_layout_line</link>     (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoLayoutLine">PangoLayoutLine</link> *line,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);
+<link linkend="void">void</link>                <link linkend="pango-renderer-draw-glyphs">pango_renderer_draw_glyphs</link>          (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyphString">PangoGlyphString</link> *glyphs,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);
+<link linkend="void">void</link>                <link linkend="pango-renderer-draw-rectangle">pango_renderer_draw_rectangle</link>       (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoRenderPart">PangoRenderPart</link> part,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y,
+                                                         <link linkend="int">int</link> width,
+                                                         <link linkend="int">int</link> height);
+<link linkend="void">void</link>                <link linkend="pango-renderer-draw-error-underline">pango_renderer_draw_error_underline</link> (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y,
+                                                         <link linkend="int">int</link> width,
+                                                         <link linkend="int">int</link> height);
+<link linkend="void">void</link>                <link linkend="pango-renderer-draw-trapezoid">pango_renderer_draw_trapezoid</link>       (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoRenderPart">PangoRenderPart</link> part,
+                                                         <link linkend="double">double</link> y1_,
+                                                         <link linkend="double">double</link> x11,
+                                                         <link linkend="double">double</link> x21,
+                                                         <link linkend="double">double</link> y2,
+                                                         <link linkend="double">double</link> x12,
+                                                         <link linkend="double">double</link> x22);
+<link linkend="void">void</link>                <link linkend="pango-renderer-draw-glyph">pango_renderer_draw_glyph</link>           (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyph">PangoGlyph</link> glyph,
+                                                         <link linkend="double">double</link> x,
+                                                         <link linkend="double">double</link> y);
+<link linkend="void">void</link>                <link linkend="pango-renderer-activate">pango_renderer_activate</link>             (<link linkend="PangoRenderer">PangoRenderer</link> *renderer);
+<link linkend="void">void</link>                <link linkend="pango-renderer-deactivate">pango_renderer_deactivate</link>           (<link linkend="PangoRenderer">PangoRenderer</link> *renderer);
+<link linkend="void">void</link>                <link linkend="pango-renderer-part-changed">pango_renderer_part_changed</link>         (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoRenderPart">PangoRenderPart</link> part);
+<link linkend="void">void</link>                <link linkend="pango-renderer-set-color">pango_renderer_set_color</link>            (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoRenderPart">PangoRenderPart</link> part,
+                                                         const <link linkend="PangoColor">PangoColor</link> *color);
+<link linkend="PangoColor">PangoColor</link>*         <link linkend="pango-renderer-get-color">pango_renderer_get_color</link>            (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoRenderPart">PangoRenderPart</link> part);
+<link linkend="void">void</link>                <link linkend="pango-renderer-set-matrix">pango_renderer_set_matrix</link>           (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         const <link linkend="PangoMatrix">PangoMatrix</link> *matrix);
+const <link linkend="PangoMatrix">PangoMatrix</link>*  <link linkend="pango-renderer-get-matrix">pango_renderer_get_matrix</link>           (<link linkend="PangoRenderer">PangoRenderer</link> *renderer);
+
+
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 role="object_hierarchy">
+<title role="object_hierarchy.title">Object Hierarchy</title>
+<synopsis>
+
+  <link linkend="GObject">GObject</link>
+   +----PangoRenderer
+         +----<link linkend="PangoXftRenderer">PangoXftRenderer</link>
+</synopsis>
+
+</refsect1>
+
+
+
+
+
+
+
+
+<refsect1 role="desc">
+<title role="desc.title">Description</title>
+<para>
+<link linkend="PangoRenderer"><type>PangoRenderer</type></link> is a base class that contains the necessary logic for
+rendering a <link linkend="PangoLayout"><type>PangoLayout</type></link> or <link linkend="PangoLayoutLine"><type>PangoLayoutLine</type></link>. By subclassing
+<link linkend="PangoRenderer"><type>PangoRenderer</type></link> and overriding operations such as <parameter>draw_glyphs</parameter> and
+<parameter>draw_rectangle</parameter>, renderers for particular font backends and
+destinations can be created.
+</para>
+</refsect1>
+
+<refsect1 role="details">
+<title role="details.title">Details</title>
+<refsect2>
+<title><anchor id="PangoRenderer-struct" role="struct"/>PangoRenderer</title>
+<indexterm role="1.8"><primary>PangoRenderer</primary></indexterm><programlisting>typedef struct {
+  PangoMatrix *matrix;		/* May be NULL */
+} PangoRenderer;
+</programlisting>
+<para>
+<link linkend="PangoRenderer"><type>PangoRenderer</type></link> is a base class for objects that are used to
+render Pango objects such as <link linkend="PangoGlyphString"><type>PangoGlyphString</type></link> and
+<link linkend="PangoLayout"><type>PangoLayout</type></link>.</para>
+<para>
+
+</para><variablelist role="struct">
+<varlistentry>
+<term><link linkend="PangoMatrix">PangoMatrix</link>&nbsp;*<structfield>matrix</structfield>;</term>
+<listitem><simpara> the current transformation matrix for the Renderer; may
+   be <link linkend="NULL:CAPS"><literal>NULL</literal></link>, which should be treated the same as the identity matrix.
+</simpara></listitem>
+</varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="PangoRenderPart" role="enum" condition="since:1.8"/>enum PangoRenderPart</title>
+<indexterm role="1.8"><primary>PangoRenderPart</primary></indexterm><programlisting>typedef enum
+{
+  PANGO_RENDER_PART_FOREGROUND,
+  PANGO_RENDER_PART_BACKGROUND,
+  PANGO_RENDER_PART_UNDERLINE,
+  PANGO_RENDER_PART_STRIKETHROUGH
+} PangoRenderPart;
+</programlisting>
+<para>
+<link linkend="PangoRenderPart"><type>PangoRenderPart</type></link> defines different items to render for such
+purposes as setting colors.</para>
+<para>
+
+</para><variablelist role="enum">
+<varlistentry>
+<term><anchor id="PANGO-RENDER-PART-FOREGROUND:CAPS" role="constant"/><literal>PANGO_RENDER_PART_FOREGROUND</literal></term>
+<listitem><simpara> the text itself
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><anchor id="PANGO-RENDER-PART-BACKGROUND:CAPS" role="constant"/><literal>PANGO_RENDER_PART_BACKGROUND</literal></term>
+<listitem><simpara> the area behind the text
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><anchor id="PANGO-RENDER-PART-UNDERLINE:CAPS" role="constant"/><literal>PANGO_RENDER_PART_UNDERLINE</literal></term>
+<listitem><simpara> underlines
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><anchor id="PANGO-RENDER-PART-STRIKETHROUGH:CAPS" role="constant"/><literal>PANGO_RENDER_PART_STRIKETHROUGH</literal></term>
+<listitem><simpara> strikethrough lines
+</simpara></listitem>
+</varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="PANGO-TYPE-RENDER-PART:CAPS" role="macro"/>PANGO_TYPE_RENDER_PART</title>
+<indexterm><primary>PANGO_TYPE_RENDER_PART</primary></indexterm><programlisting>#define PANGO_TYPE_RENDER_PART (pango_render_part_get_type())
+</programlisting>
+<para>
+The <link linkend="GObject"><type>GObject</type></link> type for <link linkend="PangoRenderPart"><type>PangoRenderPart</type></link>.
+</para></refsect2>
+<refsect2>
+<title><anchor id="PangoRendererClass" role="struct" condition="since:1.8"/>PangoRendererClass</title>
+<indexterm role="1.8"><primary>PangoRendererClass</primary></indexterm><programlisting>typedef struct {
+  /* All of the following have default implementations
+   * and take as coordinates user coordinates in Pango units
+   */
+  void (*draw_glyphs) (PangoRenderer     *renderer,
+		       PangoFont         *font,
+		       PangoGlyphString  *glyphs,
+		       int                x,
+		       int                y);
+  void (*draw_rectangle) (PangoRenderer     *renderer,
+			  PangoRenderPart    part,
+			  int                x,
+			  int                y,
+			  int                width,
+			  int                height);
+  void (*draw_error_underline) (PangoRenderer     *renderer,
+				int                x,
+				int                y,
+				int                width,
+				int                height);
+
+  /* Nothing is drawn for shaped glyphs unless this is implemented */
+  void (*draw_shape) (PangoRenderer  *renderer,
+		      PangoAttrShape *attr,
+		      int             x,
+		      int             y);
+
+  /* These two must be implemented and take coordinates in
+   * device space as doubles.
+   */
+  void (*draw_trapezoid) (PangoRenderer  *renderer,
+			  PangoRenderPart part,
+			  double          y1_,
+			  double          x11,
+			  double          x21,
+			  double          y2,
+			  double          x12,
+			  double          x22);
+  void (*draw_glyph) (PangoRenderer *renderer,
+		      PangoFont     *font,
+		      PangoGlyph     glyph,
+		      double         x,
+		      double         y);
+
+  /* Notification of change in rendering attributes
+   */
+  void (*part_changed) (PangoRenderer   *renderer,
+			PangoRenderPart  part);
+
+  /* Paired around drawing operations
+   */
+  void (*begin) (PangoRenderer *renderer);
+  void (*end)   (PangoRenderer *renderer);
+
+  /* Hooks into the details of layout rendering
+   */
+  void (*prepare_run) (PangoRenderer  *renderer,
+		       PangoLayoutRun *run);
+} PangoRendererClass;
+</programlisting>
+<para>
+Class structure for <link linkend="PangoRenderer"><type>PangoRenderer</type></link>.</para>
+<para>
+
+</para><variablelist role="struct">
+<varlistentry>
+<term><structfield>draw_glyphs</structfield>&nbsp;()</term>
+<listitem><simpara> draws a <link linkend="PangoGlyphString"><type>PangoGlyphString</type></link>
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>draw_rectangle</structfield>&nbsp;()</term>
+<listitem><simpara> draws a rectangle
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>draw_error_underline</structfield>&nbsp;()</term>
+<listitem><simpara> draws a squiggly line that approximately
+covers the given rectangle in the style of an underline used to
+indicate a spelling error.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>draw_shape</structfield>&nbsp;()</term>
+<listitem><simpara> draw content for a glyph shaped with <link linkend="PangoAttrShape"><type>PangoAttrShape</type></link>.
+  <parameter>x</parameter>, <parameter>y</parameter> are the coordinates of the left edge of the baseline,
+  in user coordinates.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>draw_trapezoid</structfield>&nbsp;()</term>
+<listitem><simpara> draws a trapezoidal filled area
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>draw_glyph</structfield>&nbsp;()</term>
+<listitem><simpara> draws a single glyph
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>part_changed</structfield>&nbsp;()</term>
+<listitem><simpara> do renderer specific processing when rendering
+ attributes change
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>begin</structfield>&nbsp;()</term>
+<listitem><simpara> Do renderer-specific initialization before drawing
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>end</structfield>&nbsp;()</term>
+<listitem><simpara> Do renderer-specific cleanup after drawing
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>prepare_run</structfield>&nbsp;()</term>
+<listitem><simpara> updates the renderer for a new run
+</simpara></listitem>
+</varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-renderer-draw-layout" role="function" condition="since:1.8"/>pango_renderer_draw_layout ()</title>
+<indexterm role="1.8"><primary>pango_renderer_draw_layout</primary></indexterm><programlisting><link linkend="void">void</link>                pango_renderer_draw_layout          (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoLayout">PangoLayout</link> *layout,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);</programlisting>
+<para>
+Draws <parameter>layout</parameter> with the specified <link linkend="PangoRenderer"><type>PangoRenderer</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>renderer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoRenderer"><type>PangoRenderer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>layout</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoLayout"><type>PangoLayout</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara> X position of left edge of baseline, in user space coordinates
+  in Pango units.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara> Y position of left edge of baseline, in user space coordinates
+   in Pango units.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-renderer-draw-layout-line" role="function" condition="since:1.8"/>pango_renderer_draw_layout_line ()</title>
+<indexterm role="1.8"><primary>pango_renderer_draw_layout_line</primary></indexterm><programlisting><link linkend="void">void</link>                pango_renderer_draw_layout_line     (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoLayoutLine">PangoLayoutLine</link> *line,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);</programlisting>
+<para>
+Draws <parameter>line</parameter> with the specified <link linkend="PangoRenderer"><type>PangoRenderer</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>renderer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoRenderer"><type>PangoRenderer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>line</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoLayoutLine"><type>PangoLayoutLine</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara> X position of left edge of baseline, in user space coordinates
+  in Pango units.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara> Y position of left edge of baseline, in user space coordinates
+   in Pango units.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-renderer-draw-glyphs" role="function" condition="since:1.8"/>pango_renderer_draw_glyphs ()</title>
+<indexterm role="1.8"><primary>pango_renderer_draw_glyphs</primary></indexterm><programlisting><link linkend="void">void</link>                pango_renderer_draw_glyphs          (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyphString">PangoGlyphString</link> *glyphs,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y);</programlisting>
+<para>
+Draws the glyphs in <parameter>glyphs</parameter> with the specified <link linkend="PangoRenderer"><type>PangoRenderer</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>renderer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoRenderer"><type>PangoRenderer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>glyphs</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoGlyphString"><type>PangoGlyphString</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara> X position of left edge of baseline, in user space coordinates
+  in Pango units.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara> Y position of left edge of baseline, in user space coordinates
+   in Pango units.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-renderer-draw-rectangle" role="function" condition="since:1.8"/>pango_renderer_draw_rectangle ()</title>
+<indexterm role="1.8"><primary>pango_renderer_draw_rectangle</primary></indexterm><programlisting><link linkend="void">void</link>                pango_renderer_draw_rectangle       (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoRenderPart">PangoRenderPart</link> part,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y,
+                                                         <link linkend="int">int</link> width,
+                                                         <link linkend="int">int</link> height);</programlisting>
+<para>
+Draws an axis-aligned rectangle in user space coordinates with the
+specified <link linkend="PangoRenderer"><type>PangoRenderer</type></link>.
+</para>
+<para>
+This should be called while <parameter>renderer</parameter> is already active.  Use
+<link linkend="pango-renderer-activate"><function>pango_renderer_activate()</function></link> to activate a renderer.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>renderer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoRenderer"><type>PangoRenderer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>part</parameter>&nbsp;:</term>
+<listitem><simpara> type of object this rectangle is part of
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara> X position at which to draw rectangle, in user space coordinates in Pango units
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara> Y position at which to draw rectangle, in user space coordinates in Pango units
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>width</parameter>&nbsp;:</term>
+<listitem><simpara> width of rectangle in Pango units in user space coordinates
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>height</parameter>&nbsp;:</term>
+<listitem><simpara> height of rectangle in Pango units in user space coordinates
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-renderer-draw-error-underline" role="function" condition="since:1.8"/>pango_renderer_draw_error_underline ()</title>
+<indexterm role="1.8"><primary>pango_renderer_draw_error_underline</primary></indexterm><programlisting><link linkend="void">void</link>                pango_renderer_draw_error_underline (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="int">int</link> x,
+                                                         <link linkend="int">int</link> y,
+                                                         <link linkend="int">int</link> width,
+                                                         <link linkend="int">int</link> height);</programlisting>
+<para>
+Draw a squiggly line that approximately covers the given rectangle
+in the style of an underline used to indicate a spelling error.
+(The width of the underline is rounded to an integer number
+of up/down segments and the resulting rectangle is centered
+in the original rectangle)
+</para>
+<para>
+This should be called while <parameter>renderer</parameter> is already active.  Use
+<link linkend="pango-renderer-activate"><function>pango_renderer_activate()</function></link> to activate a renderer.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>renderer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoRenderer"><type>PangoRenderer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara> X coordinate of underline, in Pango units in user coordinate system
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara> Y coordinate of underline, in Pango units in user coordinate system
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>width</parameter>&nbsp;:</term>
+<listitem><simpara> width of underline, in Pango units in user coordinate system
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>height</parameter>&nbsp;:</term>
+<listitem><simpara> height of underline, in Pango units in user coordinate system
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-renderer-draw-trapezoid" role="function" condition="since:1.8"/>pango_renderer_draw_trapezoid ()</title>
+<indexterm role="1.8"><primary>pango_renderer_draw_trapezoid</primary></indexterm><programlisting><link linkend="void">void</link>                pango_renderer_draw_trapezoid       (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoRenderPart">PangoRenderPart</link> part,
+                                                         <link linkend="double">double</link> y1_,
+                                                         <link linkend="double">double</link> x11,
+                                                         <link linkend="double">double</link> x21,
+                                                         <link linkend="double">double</link> y2,
+                                                         <link linkend="double">double</link> x12,
+                                                         <link linkend="double">double</link> x22);</programlisting>
+<para>
+Draws a trapezoid with the parallel sides aligned with the X axis
+using the given <link linkend="PangoRenderer"><type>PangoRenderer</type></link>; coordinates are in device space.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>renderer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoRenderer"><type>PangoRenderer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>part</parameter>&nbsp;:</term>
+<listitem><simpara> type of object this trapezoid is part of
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y1_</parameter>&nbsp;:</term>
+<listitem><simpara> Y coordinate of top of trapezoid
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x11</parameter>&nbsp;:</term>
+<listitem><simpara> X coordinate of left end of top of trapezoid
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x21</parameter>&nbsp;:</term>
+<listitem><simpara> X coordinate of right end of top of trapezoid
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y2</parameter>&nbsp;:</term>
+<listitem><simpara> Y coordinate of bottom of trapezoid
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x12</parameter>&nbsp;:</term>
+<listitem><simpara> X coordinate of left end of bottom of trapezoid
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x22</parameter>&nbsp;:</term>
+<listitem><simpara> X coordinate of right end of bottom of trapezoid
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-renderer-draw-glyph" role="function" condition="since:1.8"/>pango_renderer_draw_glyph ()</title>
+<indexterm role="1.8"><primary>pango_renderer_draw_glyph</primary></indexterm><programlisting><link linkend="void">void</link>                pango_renderer_draw_glyph           (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoFont">PangoFont</link> *font,
+                                                         <link linkend="PangoGlyph">PangoGlyph</link> glyph,
+                                                         <link linkend="double">double</link> x,
+                                                         <link linkend="double">double</link> y);</programlisting>
+<para>
+Draws a single glyph with coordinates in device space.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>renderer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoRenderer"><type>PangoRenderer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>font</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoFont"><type>PangoFont</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>glyph</parameter>&nbsp;:</term>
+<listitem><simpara> the glyph index of a single glyph
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara> X coordinate of left edge of baseline of glyph
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara> Y coordinate of left edge of baseline of glyph
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-renderer-activate" role="function" condition="since:1.8"/>pango_renderer_activate ()</title>
+<indexterm role="1.8"><primary>pango_renderer_activate</primary></indexterm><programlisting><link linkend="void">void</link>                pango_renderer_activate             (<link linkend="PangoRenderer">PangoRenderer</link> *renderer);</programlisting>
+<para>
+Does initial setup before rendering operations on <parameter>renderer</parameter>.
+<link linkend="pango-renderer-deactivate"><function>pango_renderer_deactivate()</function></link> should be called when done drawing.
+Calls such as <link linkend="pango-renderer-draw-layout"><function>pango_renderer_draw_layout()</function></link> automatically
+activate the layout before drawing on it. Calls to
+<link linkend="pango-renderer-activate"><function>pango_renderer_activate()</function></link> and <link linkend="pango-renderer-deactivate"><function>pango_renderer_deactivate()</function></link> can
+be nested and the renderer will only be initialized and
+deinitialized once.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>renderer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoRenderer"><type>PangoRenderer</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-renderer-deactivate" role="function" condition="since:1.8"/>pango_renderer_deactivate ()</title>
+<indexterm role="1.8"><primary>pango_renderer_deactivate</primary></indexterm><programlisting><link linkend="void">void</link>                pango_renderer_deactivate           (<link linkend="PangoRenderer">PangoRenderer</link> *renderer);</programlisting>
+<para>
+Cleans up after rendering operations on <parameter>renderer</parameter>. See
+docs for <link linkend="pango-renderer-activate"><function>pango_renderer_activate()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>renderer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoRenderer"><type>PangoRenderer</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-renderer-part-changed" role="function" condition="since:1.8"/>pango_renderer_part_changed ()</title>
+<indexterm role="1.8"><primary>pango_renderer_part_changed</primary></indexterm><programlisting><link linkend="void">void</link>                pango_renderer_part_changed         (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoRenderPart">PangoRenderPart</link> part);</programlisting>
+<para>
+Informs Pango that the way that the rendering is done
+for <parameter>part</parameter> has changed in a way that would prevent multiple
+pieces being joined together into one drawing call. For
+instance, if a subclass of <link linkend="PangoRenderer"><type>PangoRenderer</type></link> was to add a stipple
+option for drawing underlines, it needs to call
+</para>
+<para>
+<informalexample><programlisting>
+pango_renderer_part_changed (render, PANGO_RENDER_PART_UNDERLINE);
+</programlisting></informalexample>
+</para>
+<para>
+When the stipple changes or underlines with different stipples
+might be joined together. Pango automatically calls this for
+changes to colors. (See <link linkend="pango-renderer-set-color"><function>pango_renderer_set_color()</function></link>)</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>renderer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoRenderer"><type>PangoRenderer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>part</parameter>&nbsp;:</term>
+<listitem><simpara> the part for which rendering has changed.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-renderer-set-color" role="function" condition="since:1.8"/>pango_renderer_set_color ()</title>
+<indexterm role="1.8"><primary>pango_renderer_set_color</primary></indexterm><programlisting><link linkend="void">void</link>                pango_renderer_set_color            (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoRenderPart">PangoRenderPart</link> part,
+                                                         const <link linkend="PangoColor">PangoColor</link> *color);</programlisting>
+<para>
+Sets the color for part of the rendering.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>renderer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoRenderer"><type>PangoRenderer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>part</parameter>&nbsp;:</term>
+<listitem><simpara> the part to change the color of
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>color</parameter>&nbsp;:</term>
+<listitem><simpara> the new color or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to unset the current color
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-renderer-get-color" role="function" condition="since:1.8"/>pango_renderer_get_color ()</title>
+<indexterm role="1.8"><primary>pango_renderer_get_color</primary></indexterm><programlisting><link linkend="PangoColor">PangoColor</link>*         pango_renderer_get_color            (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         <link linkend="PangoRenderPart">PangoRenderPart</link> part);</programlisting>
+<para>
+Gets the current rendering color for the specified part.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>renderer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoRenderer"><type>PangoRenderer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>part</parameter>&nbsp;:</term>
+<listitem><simpara> the part to get the color for
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the color for the specified part, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+ if it hasn't been set and should be inherited from the
+ environment.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-renderer-set-matrix" role="function" condition="since:1.8"/>pango_renderer_set_matrix ()</title>
+<indexterm role="1.8"><primary>pango_renderer_set_matrix</primary></indexterm><programlisting><link linkend="void">void</link>                pango_renderer_set_matrix           (<link linkend="PangoRenderer">PangoRenderer</link> *renderer,
+                                                         const <link linkend="PangoMatrix">PangoMatrix</link> *matrix);</programlisting>
+<para>
+Sets the transformation matrix that will be applied when rendering.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>renderer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoRenderer"><type>PangoRenderer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>matrix</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoMatrix"><type>PangoMatrix</type></link>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to unset any existing matrix.
+ (No matrix set is the same as setting the identity matrix.)
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="pango-renderer-get-matrix" role="function" condition="since:1.8"/>pango_renderer_get_matrix ()</title>
+<indexterm role="1.8"><primary>pango_renderer_get_matrix</primary></indexterm><programlisting>const <link linkend="PangoMatrix">PangoMatrix</link>*  pango_renderer_get_matrix           (<link linkend="PangoRenderer">PangoRenderer</link> *renderer);</programlisting>
+<para>
+Gets the transformation matrix that will be applied when
+rendering. See <link linkend="pango-renderer-set-matrix"><function>pango_renderer_set_matrix()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>renderer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="PangoRenderer"><type>PangoRenderer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the matrix, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if no matrix has been set
+ (which is the same as the identity matrix). The returned
+ matrix is owned by Pango and must not be modified or
+ freed.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  1.8
+</para></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

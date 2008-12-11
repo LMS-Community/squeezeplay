@@ -1,0 +1,1240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Deprecated X font backend</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Pango Reference Manual">
+<link rel="up" href="rendering.html" title="Rendering with Pango">
+<link rel="prev" href="pango-ATSUI-Fonts.html" title="ATSUI Fonts">
+<link rel="next" href="lowlevel.html" title="Low Level Functionality">
+<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="pango.html" title="Basic Pango Interfaces">
+<link rel="chapter" href="rendering.html" title="Rendering with Pango">
+<link rel="chapter" href="lowlevel.html" title="Low Level Functionality">
+<link rel="chapter" href="tools.html" title="Pango Tools">
+<link rel="chapter" href="pango-hierarchy.html" title="Object Hierarchy">
+<link rel="index" href="index-all.html" title="Index">
+<link rel="index" href="index-deprecated.html" title="Index of deprecated symbols">
+<link rel="index" href="index-1.2.html" title="Index of new symbols in 1.2">
+<link rel="index" href="index-1.4.html" title="Index of new symbols in 1.4">
+<link rel="index" href="index-1.6.html" title="Index of new symbols in 1.6">
+<link rel="index" href="index-1.8.html" title="Index of new symbols in 1.8">
+<link rel="index" href="index-1.10.html" title="Index of new symbols in 1.10">
+<link rel="index" href="index-1.12.html" title="Index of new symbols in 1.12">
+<link rel="index" href="index-1.14.html" title="Index of new symbols in 1.14">
+<link rel="index" href="index-1.16.html" title="Index of new symbols in 1.16">
+<link rel="index" href="index-1.18.html" title="Index of new symbols in 1.18">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="pango-ATSUI-Fonts.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="rendering.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Pango Reference Manual</th>
+<td><a accesskey="n" href="lowlevel.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3175699" class="shortcut">Top</a>
+                  &#160;|&#160;
+                  <a href="#id3177624" class="shortcut">Description</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="pango-X-Fonts-and-Rendering"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2>
+<a name="id3175699"></a><span class="refentrytitle">Deprecated X font backend</span>
+</h2>
+<p>Deprecated X font backend &#8212; Font handling and rendering with the deprecated X font backend</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<h2>Synopsis</h2>
+<pre class="synopsis">
+
+
+
+#define             <a class="link" href="pango-X-Fonts-and-Rendering.html#PANGO-RENDER-TYPE-X:CAPS">PANGO_RENDER_TYPE_X</a>
+<a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a>*       <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-get-context">pango_x_get_context</a>                 (Display *display);
+void                <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-context-set-funcs">pango_x_context_set_funcs</a>           (<a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a> *context,
+                                                         <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoGetGCFunc">PangoGetGCFunc</a> get_gc_func,
+                                                         <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoFreeGCFunc">PangoFreeGCFunc</a> free_gc_func);
+GC                  (<a class="link" href="pango-X-Fonts-and-Rendering.html#PangoGetGCFunc">*PangoGetGCFunc</a>)                   (<a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a> *context,
+                                                         <a class="link" href="pango-Text-Attributes.html#PangoColor">PangoColor</a> *color,
+                                                         GC base_gc);
+void                (<a class="link" href="pango-X-Fonts-and-Rendering.html#PangoFreeGCFunc">*PangoFreeGCFunc</a>)                  (<a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a> *context,
+                                                         GC gc);
+void                <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-render">pango_x_render</a>                      (Display *display,
+                                                         Drawable d,
+                                                         GC gc,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> x,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> y);
+void                <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-render-layout-line">pango_x_render_layout_line</a>          (Display *display,
+                                                         Drawable drawable,
+                                                         GC gc,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line,
+                                                         int x,
+                                                         int y);
+void                <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-render-layout">pango_x_render_layout</a>               (Display *display,
+                                                         Drawable drawable,
+                                                         GC gc,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int x,
+                                                         int y);
+typedef             <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXSubfont">PangoXSubfont</a>;
+#define             <a class="link" href="pango-X-Fonts-and-Rendering.html#PANGO-X-MAKE-GLYPH:CAPS">PANGO_X_MAKE_GLYPH</a>                  (subfont,index_)
+#define             <a class="link" href="pango-X-Fonts-and-Rendering.html#PANGO-X-GLYPH-SUBFONT:CAPS">PANGO_X_GLYPH_SUBFONT</a>               (glyph)
+#define             <a class="link" href="pango-X-Fonts-and-Rendering.html#PANGO-X-GLYPH-INDEX:CAPS">PANGO_X_GLYPH_INDEX</a>                 (glyph)
+<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a>*          <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-load-font">pango_x_load_font</a>                   (Display *display,
+                                                         const <a
+href="../glib/glib-Basic-Types.html#gchar"
+>gchar</a> *spec);
+<a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a>          <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-get-unknown-glyph">pango_x_get_unknown_glyph</a>           (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-has-glyph">pango_x_has_glyph</a>                   (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a> glyph);
+int                 <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-list-subfonts">pango_x_list_subfonts</a>               (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         char **charsets,
+                                                         int n_charsets,
+                                                         <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXSubfont">PangoXSubfont</a> **subfont_ids,
+                                                         int **subfont_charsets);
+<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a>*       <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-font-map-for-display">pango_x_font_map_for_display</a>        (Display *display);
+void                <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-shutdown-display">pango_x_shutdown_display</a>            (Display *display);
+<a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache">PangoXFontCache</a>*    <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-font-map-get-font-cache">pango_x_font_map_get_font_cache</a>     (<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a> *font_map);
+char*               <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-font-subfont-xlfd">pango_x_font_subfont_xlfd</a>           (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXSubfont">PangoXSubfont</a> subfont_id);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-find-first-subfont">pango_x_find_first_subfont</a>          (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         char **charsets,
+                                                         int n_charsets,
+                                                         <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXSubfont">PangoXSubfont</a> *rfont);
+<a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a>          <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-font-get-unknown-glyph">pango_x_font_get_unknown_glyph</a>      (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a
+href="../glib/glib-Unicode-Manipulation.html#gunichar"
+>gunichar</a> wc);
+<a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-apply-ligatures">pango_x_apply_ligatures</a>             (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXSubfont">PangoXSubfont</a> subfont,
+                                                         <a
+href="../glib/glib-Unicode-Manipulation.html#gunichar"
+>gunichar</a> **glyphs,
+                                                         int *n_glyphs,
+                                                         int **clusters);
+void                <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-fallback-shape">pango_x_fallback_shape</a>              (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         const char *text,
+                                                         int n_chars);
+                    <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache">PangoXFontCache</a>;
+<a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache">PangoXFontCache</a>*    <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-font-cache-new">pango_x_font_cache_new</a>              (Display *display);
+void                <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-font-cache-free">pango_x_font_cache_free</a>             (<a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache">PangoXFontCache</a> *cache);
+XFontStruct*        <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-font-cache-load">pango_x_font_cache_load</a>             (<a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache">PangoXFontCache</a> *cache,
+                                                         const char *xlfd);
+void                <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-font-cache-unload">pango_x_font_cache_unload</a>           (<a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache">PangoXFontCache</a> *cache,
+                                                         XFontStruct *fs);
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3177624"></a><h2>Description</h2>
+<p>
+The functions and macros in this section are for use with the old
+X font backend which used server-side bitmap fonts. This font backend
+is no longer supported, and attempts to use it will produce
+unpredictable results. Use the <a class="link" href="pango-Xft-Fonts-and-Rendering.html" title="Xft Fonts and Rendering">Xft</a>
+or <a class="link" href="pango-Cairo-Rendering.html" title="Cairo Rendering">Cairo</a> backend instead.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3177659"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="id3177670"></a><h3>
+<a name="PANGO-RENDER-TYPE-X:CAPS"></a>PANGO_RENDER_TYPE_X</h3>
+<a class="indexterm" name="id3177685"></a><pre class="programlisting">#define PANGO_RENDER_TYPE_X "PangoRenderX"
+</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">PANGO_RENDER_TYPE_X</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+A string constant identifying the X renderer. The associated quark (see 
+<a
+href="../glib/glib-Quarks.html#g-quark-from-string"
+><code class="function">g_quark_from_string()</code></a>) is used to identify the renderer in <a class="link" href="pango-Modules.html#pango-find-map"><code class="function">pango_find_map()</code></a>. 
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3177736"></a><h3>
+<a name="pango-x-get-context"></a>pango_x_get_context ()</h3>
+<a class="indexterm" name="id3177751"></a><pre class="programlisting"><a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a>*       pango_x_get_context                 (Display *display);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_get_context</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Retrieves a <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> appropriate for rendering with X fonts on the
+given display.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>display</code></em>&#160;:</span></p></td>
+<td> an X display (As returned by <code class="function">XOpenDisplay()</code>.)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the new <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3177853"></a><h3>
+<a name="pango-x-context-set-funcs"></a>pango_x_context_set_funcs ()</h3>
+<a class="indexterm" name="id3177869"></a><pre class="programlisting">void                pango_x_context_set_funcs           (<a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a> *context,
+                                                         <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoGetGCFunc">PangoGetGCFunc</a> get_gc_func,
+                                                         <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoFreeGCFunc">PangoFreeGCFunc</a> free_gc_func);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_context_set_funcs</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Sets the functions that will be used to get GC's in various colors when
+rendering layouts with this context.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>get_gc_func</code></em>&#160;:</span></p></td>
+<td> function called to create a new GC for a given color.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>free_gc_func</code></em>&#160;:</span></p></td>
+<td> function called to free a GC created with <em class="parameter"><code>get_gc_func</code></em>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3177993"></a><h3>
+<a name="PangoGetGCFunc"></a>PangoGetGCFunc ()</h3>
+<a class="indexterm" name="id3178008"></a><pre class="programlisting">GC                  (*PangoGetGCFunc)                   (<a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a> *context,
+                                                         <a class="link" href="pango-Text-Attributes.html#PangoColor">PangoColor</a> *color,
+                                                         GC base_gc);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">PangoGetGCFunc</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Specifies the type of the function used to create a new GC for a given
+color. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em>&#160;:</span></p></td>
+<td>a <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>color</code></em>&#160;:</span></p></td>
+<td>the color to create a new GC for.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>base_gc</code></em>&#160;:</span></p></td>
+<td>the GC to base the new GC on.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td>the new GC.
+
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3178131"></a><h3>
+<a name="PangoFreeGCFunc"></a>PangoFreeGCFunc ()</h3>
+<a class="indexterm" name="id3178146"></a><pre class="programlisting">void                (*PangoFreeGCFunc)                  (<a class="link" href="pango-Text-Processing.html#PangoContext">PangoContext</a> *context,
+                                                         GC gc);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">PangoFreeGCFunc</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Specifies the type of the function used to free a GC created with 
+the corresponding <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoGetGCFunc"><span class="type">PangoGetGCFunc</span></a> function.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em>&#160;:</span></p></td>
+<td>a <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>gc</code></em>&#160;:</span></p></td>
+<td>the GC to free.
+
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3178244"></a><h3>
+<a name="pango-x-render"></a>pango_x_render ()</h3>
+<a class="indexterm" name="id3178260"></a><pre class="programlisting">void                pango_x_render                      (Display *display,
+                                                         Drawable d,
+                                                         GC gc,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> x,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> y);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_render</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Renders a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a> onto an X drawable.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>display</code></em>&#160;:</span></p></td>
+<td> the X display.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>d</code></em>&#160;:</span></p></td>
+<td>       the drawable on which to draw string.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>gc</code></em>&#160;:</span></p></td>
+<td>      the graphics context.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td>    the font in which to draw the string.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyphs</code></em>&#160;:</span></p></td>
+<td>  the glyph string to draw.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em>&#160;:</span></p></td>
+<td>       the x position of start of string (in pixels).
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em>&#160;:</span></p></td>
+<td>       the y position of baseline (in pixels).
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3178463"></a><h3>
+<a name="pango-x-render-layout-line"></a>pango_x_render_layout_line ()</h3>
+<a class="indexterm" name="id3178479"></a><pre class="programlisting">void                pango_x_render_layout_line          (Display *display,
+                                                         Drawable drawable,
+                                                         GC gc,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine">PangoLayoutLine</a> *line,
+                                                         int x,
+                                                         int y);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_render_layout_line</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Renders a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a> onto an X drawable.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>display</code></em>&#160;:</span></p></td>
+<td>   the X display.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>drawable</code></em>&#160;:</span></p></td>
+<td>  the drawable on which to draw.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>gc</code></em>&#160;:</span></p></td>
+<td>        GC to use for uncolored drawing.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>line</code></em>&#160;:</span></p></td>
+<td>      a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em>&#160;:</span></p></td>
+<td>         the x position of start of string (in pixels).
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em>&#160;:</span></p></td>
+<td>         the y position of baseline (in pixels).
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3178667"></a><h3>
+<a name="pango-x-render-layout"></a>pango_x_render_layout ()</h3>
+<a class="indexterm" name="id3178683"></a><pre class="programlisting">void                pango_x_render_layout               (Display *display,
+                                                         Drawable drawable,
+                                                         GC gc,
+                                                         <a class="link" href="pango-Layout-Objects.html#PangoLayout">PangoLayout</a> *layout,
+                                                         int x,
+                                                         int y);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_render_layout</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Renders a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> onto an X drawable.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>display</code></em>&#160;:</span></p></td>
+<td>   the X display.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>drawable</code></em>&#160;:</span></p></td>
+<td>  the drawable on which to draw.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>gc</code></em>&#160;:</span></p></td>
+<td>        GC to use for uncolored drawing.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>layout</code></em>&#160;:</span></p></td>
+<td>    a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em>&#160;:</span></p></td>
+<td>         the x position of the left of the layout (in pixels).
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em>&#160;:</span></p></td>
+<td>         the y position of the top of the layout (in pixels).
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3178871"></a><h3>
+<a name="PangoXSubfont"></a>PangoXSubfont</h3>
+<a class="indexterm" name="id3178886"></a><pre class="programlisting">typedef guint16 PangoXSubfont;
+</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">PangoXSubfont</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+The <span class="type">PangoXSubFont</span> type is an integer ID that identifies one
+particular X font within the fonts referenced in a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3178932"></a><h3>
+<a name="PANGO-X-MAKE-GLYPH:CAPS"></a>PANGO_X_MAKE_GLYPH()</h3>
+<a class="indexterm" name="id3178948"></a><pre class="programlisting">#define PANGO_X_MAKE_GLYPH(subfont,index_) ((subfont)&lt;&lt;16 | (index_))
+</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">PANGO_X_MAKE_GLYPH</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Make a glyph index from a <span class="type">PangoXSubFont</span> index and a index
+of a character with the corresponding X font.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>subfont</code></em>&#160;:</span></p></td>
+<td>a <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXSubfont"><span class="type">PangoXSubfont</span></a> index
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index_</code></em>&#160;:</span></p></td>
+<td>the index of a character within an X font.
+
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3179028"></a><h3>
+<a name="PANGO-X-GLYPH-SUBFONT:CAPS"></a>PANGO_X_GLYPH_SUBFONT()</h3>
+<a class="indexterm" name="id3179043"></a><pre class="programlisting">#define PANGO_X_GLYPH_SUBFONT(glyph) ((glyph)&gt;&gt;16)
+</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">PANGO_X_GLYPH_SUBFONT</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Extract the subfont index from a glyph index.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>glyph</code></em>&#160;:</span></p></td>
+<td>a <span class="type">PangoGlyphIndex</span>
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3179101"></a><h3>
+<a name="PANGO-X-GLYPH-INDEX:CAPS"></a>PANGO_X_GLYPH_INDEX()</h3>
+<a class="indexterm" name="id3179117"></a><pre class="programlisting">#define PANGO_X_GLYPH_INDEX(glyph) ((glyph) &amp; 0xffff)
+</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">PANGO_X_GLYPH_INDEX</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Extract the character index within the X font from a
+glyph index.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>glyph</code></em>&#160;:</span></p></td>
+<td>a <span class="type">PangoGlyphIndex</span>
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3179173"></a><h3>
+<a name="pango-x-load-font"></a>pango_x_load_font ()</h3>
+<a class="indexterm" name="id3179188"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a>*          pango_x_load_font                   (Display *display,
+                                                         const <a
+href="../glib/glib-Basic-Types.html#gchar"
+>gchar</a> *spec);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_load_font</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Loads up a logical font based on a "fontset" style text
+specification. This is not remotely useful (Pango API's generally
+work in terms of <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>) and the result may not
+work correctly in all circumstances. Use of this function should
+be avoided.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>display</code></em>&#160;:</span></p></td>
+<td> the X display.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>spec</code></em>&#160;:</span></p></td>
+<td>    a comma-separated list of XLFD's.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td>a new <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3179303"></a><h3>
+<a name="pango-x-get-unknown-glyph"></a>pango_x_get_unknown_glyph ()</h3>
+<a class="indexterm" name="id3179320"></a><pre class="programlisting"><a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a>          pango_x_get_unknown_glyph           (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_get_unknown_glyph</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Returns the index of a glyph suitable for drawing unknown characters;
+you should generally use <a class="link" href="pango-Glyph-Storage.html#PANGO-GET-UNKNOWN-GLYPH:CAPS"><code class="function">PANGO_GET_UNKNOWN_GLYPH()</code></a> instead,
+since that may return a glyph that provides a better representation
+of a particular char. (E.g., by showing hex digits, or a glyph
+representative of a certain Unicode range.)</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a glyph index into <em class="parameter"><code>font</code></em>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3179422"></a><h3>
+<a name="pango-x-has-glyph"></a>pango_x_has_glyph ()</h3>
+<a class="indexterm" name="id3179438"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_x_has_glyph                   (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a> glyph);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_has_glyph</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Checks if the given glyph is present in a X font.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> which must be from the X backend.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyph</code></em>&#160;:</span></p></td>
+<td> the index of a glyph in the font. (Formed
+        using the <a class="link" href="pango-X-Fonts-and-Rendering.html#PANGO-X-MAKE-GLYPH:CAPS"><span class="type">PANGO_X_MAKE_GLYPH</span></a> macro)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if the glyph is present.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3179560"></a><h3>
+<a name="pango-x-list-subfonts"></a>pango_x_list_subfonts ()</h3>
+<a class="indexterm" name="id3179575"></a><pre class="programlisting">int                 pango_x_list_subfonts               (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         char **charsets,
+                                                         int n_charsets,
+                                                         <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXSubfont">PangoXSubfont</a> **subfont_ids,
+                                                         int **subfont_charsets);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_list_subfonts</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Lists the subfonts of a given font. The result is ordered first by charset,
+and then within each charset, by the order of fonts in the font specification.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>charsets</code></em>&#160;:</span></p></td>
+<td> the charsets to list subfonts for.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>n_charsets</code></em>&#160;:</span></p></td>
+<td> the number of charsets in <em class="parameter"><code>charsets</code></em>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>subfont_ids</code></em>&#160;:</span></p></td>
+<td> location to store a pointer to an array of subfont IDs for each found subfont;
+              the result must be freed using <a
+href="../glib/glib-Memory-Allocation.html#g-free"
+><code class="function">g_free()</code></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>subfont_charsets</code></em>&#160;:</span></p></td>
+<td> location to store a pointer to an array of subfont IDs for each found subfont;
+              the result must be freed using <a
+href="../glib/glib-Memory-Allocation.html#g-free"
+><code class="function">g_free()</code></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> length of the arrays stored in <em class="parameter"><code>subfont_ids</code></em> and
+<em class="parameter"><code>subfont_charsets</code></em>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3179787"></a><h3>
+<a name="pango-x-font-map-for-display"></a>pango_x_font_map_for_display ()</h3>
+<a class="indexterm" name="id3179803"></a><pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a>*       pango_x_font_map_for_display        (Display *display);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_font_map_for_display</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Returns a <span class="type">PangoXFontMap</span> for <em class="parameter"><code>display</code></em>. Font maps are cached and should
+not be freed. If the font map for a display is no longer needed, it can
+be released with <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-shutdown-display"><code class="function">pango_x_shutdown_display()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>display</code></em>&#160;:</span></p></td>
+<td> an X <span class="type">Display</span>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a <span class="type">PangoXFontMap</span> for <em class="parameter"><code>display</code></em>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3179927"></a><h3>
+<a name="pango-x-shutdown-display"></a>pango_x_shutdown_display ()</h3>
+<a class="indexterm" name="id3179942"></a><pre class="programlisting">void                pango_x_shutdown_display            (Display *display);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_shutdown_display</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Free cached resources for the given X display structure.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>display</code></em>&#160;:</span></p></td>
+<td> an X <span class="type">Display</span>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3180013"></a><h3>
+<a name="pango-x-font-map-get-font-cache"></a>pango_x_font_map_get_font_cache ()</h3>
+<a class="indexterm" name="id3180029"></a><pre class="programlisting"><a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache">PangoXFontCache</a>*    pango_x_font_map_get_font_cache     (<a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a> *font_map);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_font_map_get_font_cache</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Obtains the font cache associated with the given font map.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font_map</code></em>&#160;:</span></p></td>
+<td> a <span class="type">PangoXFontMap</span>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache"><span class="type">PangoXFontCache</span></a> of <em class="parameter"><code>font_map</code></em>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3180126"></a><h3>
+<a name="pango-x-font-subfont-xlfd"></a>pango_x_font_subfont_xlfd ()</h3>
+<a class="indexterm" name="id3180142"></a><pre class="programlisting">char*               pango_x_font_subfont_xlfd           (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXSubfont">PangoXSubfont</a> subfont_id);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_font_subfont_xlfd</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Determines the X Logical Font Description for the specified
+subfont.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> which must be from the X backend.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>subfont_id</code></em>&#160;:</span></p></td>
+<td> the id of a subfont within the font.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> A newly-allocated string containing the XLFD for the
+subfont. This string must be freed with <a
+href="../glib/glib-Memory-Allocation.html#g-free"
+><code class="function">g_free()</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3180258"></a><h3>
+<a name="pango-x-find-first-subfont"></a>pango_x_find_first_subfont ()</h3>
+<a class="indexterm" name="id3180275"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_x_find_first_subfont          (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         char **charsets,
+                                                         int n_charsets,
+                                                         <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXSubfont">PangoXSubfont</a> *rfont);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_find_first_subfont</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Looks for subfonts with the <em class="parameter"><code>charset</code></em> charset,
+in <em class="parameter"><code>font</code></em>, and puts the first one in *<em class="parameter"><code>rfont</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> A <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>charsets</code></em>&#160;:</span></p></td>
+<td> An array of charsets.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>n_charsets</code></em>&#160;:</span></p></td>
+<td> The number of charsets in <em class="parameter"><code>charsets</code></em>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>rfont</code></em>&#160;:</span></p></td>
+<td> A pointer to a <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXSubfont"><span class="type">PangoXSubfont</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> <a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if *<em class="parameter"><code>rfont</code></em> now contains a font.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3180469"></a><h3>
+<a name="pango-x-font-get-unknown-glyph"></a>pango_x_font_get_unknown_glyph ()</h3>
+<a class="indexterm" name="id3180485"></a><pre class="programlisting"><a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a>          pango_x_font_get_unknown_glyph      (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a
+href="../glib/glib-Unicode-Manipulation.html#gunichar"
+>gunichar</a> wc);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_font_get_unknown_glyph</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Returns the index of a glyph suitable for drawing <em class="parameter"><code>wc</code></em> as an
+unknown character.
+</p>
+<p>
+Use <a class="link" href="pango-Glyph-Storage.html#PANGO-GET-UNKNOWN-GLYPH:CAPS"><code class="function">PANGO_GET_UNKNOWN_GLYPH()</code></a> instead.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>wc</code></em>&#160;:</span></p></td>
+<td> the Unicode character for which a glyph is needed.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a glyph index into <em class="parameter"><code>font</code></em>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3180616"></a><h3>
+<a name="pango-x-apply-ligatures"></a>pango_x_apply_ligatures ()</h3>
+<a class="indexterm" name="id3180631"></a><pre class="programlisting"><a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            pango_x_apply_ligatures             (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXSubfont">PangoXSubfont</a> subfont,
+                                                         <a
+href="../glib/glib-Unicode-Manipulation.html#gunichar"
+>gunichar</a> **glyphs,
+                                                         int *n_glyphs,
+                                                         int **clusters);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_apply_ligatures</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Previously did subfont-specific ligation. Now a no-op.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> unused
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>subfont</code></em>&#160;:</span></p></td>
+<td> unused
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyphs</code></em>&#160;:</span></p></td>
+<td> unused
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>n_glyphs</code></em>&#160;:</span></p></td>
+<td> unused
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>clusters</code></em>&#160;:</span></p></td>
+<td> unused
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> <a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>, always.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3180801"></a><h3>
+<a name="pango-x-fallback-shape"></a>pango_x_fallback_shape ()</h3>
+<a class="indexterm" name="id3180817"></a><pre class="programlisting">void                pango_x_fallback_shape              (<a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         const char *text,
+                                                         int n_chars);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_fallback_shape</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+This is a simple fallback shaper, that can be used
+if no subfont that supports a given script is found.
+For every character in <em class="parameter"><code>text</code></em>, it puts the unknown glyph.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td> A <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyphs</code></em>&#160;:</span></p></td>
+<td> A pointer to a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em>&#160;:</span></p></td>
+<td> UTF-8 string.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>n_chars</code></em>&#160;:</span></p></td>
+<td> Number of UTF-8 seqs in <em class="parameter"><code>text</code></em>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3180974"></a><h3>
+<a name="PangoXFontCache"></a>PangoXFontCache</h3>
+<a class="indexterm" name="id3180989"></a><pre class="programlisting">typedef struct _PangoXFontCache PangoXFontCache;</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">PangoXFontCache</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+A <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache"><span class="type">PangoXFontCache</span></a> caches
+<span class="type">XFontStructs</span> for a single display by their XLFD name. 
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3181030"></a><h3>
+<a name="pango-x-font-cache-new"></a>pango_x_font_cache_new ()</h3>
+<a class="indexterm" name="id3181046"></a><pre class="programlisting"><a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache">PangoXFontCache</a>*    pango_x_font_cache_new              (Display *display);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_font_cache_new</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Creates a font cache for the specified display.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>display</code></em>&#160;:</span></p></td>
+<td> an X display.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> The newly allocated <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache"><span class="type">PangoXFontCache</span></a>, which should be
+              freed with <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-font-cache-free"><code class="function">pango_x_font_cache_free()</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3181140"></a><h3>
+<a name="pango-x-font-cache-free"></a>pango_x_font_cache_free ()</h3>
+<a class="indexterm" name="id3181155"></a><pre class="programlisting">void                pango_x_font_cache_free             (<a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache">PangoXFontCache</a> *cache);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_font_cache_free</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Frees a <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache"><span class="type">PangoXFontCache</span></a> and all associated memory. All fonts loaded
+through this font cache will be freed along with the cache.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>cache</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache"><span class="type">PangoXFontCache</span></a>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3181236"></a><h3>
+<a name="pango-x-font-cache-load"></a>pango_x_font_cache_load ()</h3>
+<a class="indexterm" name="id3181252"></a><pre class="programlisting">XFontStruct*        pango_x_font_cache_load             (<a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache">PangoXFontCache</a> *cache,
+                                                         const char *xlfd);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_font_cache_load</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Loads a <span class="type">XFontStruct</span> from a X Logical Font Description. The
+result may be newly loaded, or it may have been previously
+stored.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cache</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache"><span class="type">PangoXFontCache</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xlfd</code></em>&#160;:</span></p></td>
+<td> the X Logical Font Description to load.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> The font structure, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if the font could
+not be loaded. In order to free this structure, you must call
+<a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-font-cache-unload"><code class="function">pango_x_font_cache_unload()</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3181387"></a><h3>
+<a name="pango-x-font-cache-unload"></a>pango_x_font_cache_unload ()</h3>
+<a class="indexterm" name="id3181403"></a><pre class="programlisting">void                pango_x_font_cache_unload           (<a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache">PangoXFontCache</a> *cache,
+                                                         XFontStruct *fs);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">pango_x_font_cache_unload</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Frees a font structure previously loaded with <a class="link" href="pango-X-Fonts-and-Rendering.html#pango-x-font-cache-load"><code class="function">pango_x_font_cache_load()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cache</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-X-Fonts-and-Rendering.html#PangoXFontCache"><span class="type">PangoXFontCache</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fs</code></em>&#160;:</span></p></td>
+<td> the font structure to unload
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+</body>
+</html>

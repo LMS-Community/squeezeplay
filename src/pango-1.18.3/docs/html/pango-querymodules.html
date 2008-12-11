@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>pango-querymodules</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Pango Reference Manual">
+<link rel="up" href="tools.html" title="Pango Tools">
+<link rel="prev" href="tools.html" title="Pango Tools">
+<link rel="next" href="pango-hierarchy.html" title="Object Hierarchy">
+<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="pango.html" title="Basic Pango Interfaces">
+<link rel="chapter" href="rendering.html" title="Rendering with Pango">
+<link rel="chapter" href="lowlevel.html" title="Low Level Functionality">
+<link rel="chapter" href="tools.html" title="Pango Tools">
+<link rel="chapter" href="pango-hierarchy.html" title="Object Hierarchy">
+<link rel="index" href="index-all.html" title="Index">
+<link rel="index" href="index-deprecated.html" title="Index of deprecated symbols">
+<link rel="index" href="index-1.2.html" title="Index of new symbols in 1.2">
+<link rel="index" href="index-1.4.html" title="Index of new symbols in 1.4">
+<link rel="index" href="index-1.6.html" title="Index of new symbols in 1.6">
+<link rel="index" href="index-1.8.html" title="Index of new symbols in 1.8">
+<link rel="index" href="index-1.10.html" title="Index of new symbols in 1.10">
+<link rel="index" href="index-1.12.html" title="Index of new symbols in 1.12">
+<link rel="index" href="index-1.14.html" title="Index of new symbols in 1.14">
+<link rel="index" href="index-1.16.html" title="Index of new symbols in 1.16">
+<link rel="index" href="index-1.18.html" title="Index of new symbols in 1.18">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
+<td><a accesskey="p" href="tools.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="tools.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Pango Reference Manual</th>
+<td><a accesskey="n" href="pango-hierarchy.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="refentry" lang="en">
+<a name="pango-querymodules"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle">pango-querymodules</span></h2>
+<p>pango-querymodules &#8212; Module registration utility</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<h2>Synopsis</h2>
+<div class="cmdsynopsis"><p><code class="command">pango-querymodules</code>  [module...]</p></div>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3235804"></a><h2>Description</h2>
+<p>
+<span class="command"><strong>pango-querymodules</strong></span> collects information about loadable 
+modules for Pango and writes it to <code class="filename">stdout</code>. 
+</p>
+<p>
+If called without arguments, it looks for modules in the Pango module path.  
+</p>
+<p>
+If called with arguments, it looks for the specified modules. The arguments
+may be absolute or relative paths.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3235836"></a><h2>Environment</h2>
+<p>
+The Pango module path is specified by the key
+<code class="literal">Pango/ModulesPath</code> in the Pango config database, which is
+read from
+      <code class="filename"><em class="replaceable"><code>sysconfdir</code></em>/pango/pangorc</code>,
+      <code class="filename">~/.pangorc</code> and the file specified in the environment
+      variable <code class="envar">PANGO_RC_FILE</code>. 
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3235871"></a><h2>Bugs</h2>
+<p>
+None known yet.
+</p>
+</div>
+</div>
+</body>
+</html>

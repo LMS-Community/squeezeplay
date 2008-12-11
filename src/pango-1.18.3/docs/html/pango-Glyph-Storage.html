@@ -1,0 +1,1962 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Glyph Storage</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Pango Reference Manual">
+<link rel="up" href="pango.html" title="Basic Pango Interfaces">
+<link rel="prev" href="pango-Text-Processing.html" title="Rendering">
+<link rel="next" href="pango-Fonts.html" title="Fonts">
+<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="pango.html" title="Basic Pango Interfaces">
+<link rel="chapter" href="rendering.html" title="Rendering with Pango">
+<link rel="chapter" href="lowlevel.html" title="Low Level Functionality">
+<link rel="chapter" href="tools.html" title="Pango Tools">
+<link rel="chapter" href="pango-hierarchy.html" title="Object Hierarchy">
+<link rel="index" href="index-all.html" title="Index">
+<link rel="index" href="index-deprecated.html" title="Index of deprecated symbols">
+<link rel="index" href="index-1.2.html" title="Index of new symbols in 1.2">
+<link rel="index" href="index-1.4.html" title="Index of new symbols in 1.4">
+<link rel="index" href="index-1.6.html" title="Index of new symbols in 1.6">
+<link rel="index" href="index-1.8.html" title="Index of new symbols in 1.8">
+<link rel="index" href="index-1.10.html" title="Index of new symbols in 1.10">
+<link rel="index" href="index-1.12.html" title="Index of new symbols in 1.12">
+<link rel="index" href="index-1.14.html" title="Index of new symbols in 1.14">
+<link rel="index" href="index-1.16.html" title="Index of new symbols in 1.16">
+<link rel="index" href="index-1.18.html" title="Index of new symbols in 1.18">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="pango-Text-Processing.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="pango.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Pango Reference Manual</th>
+<td><a accesskey="n" href="pango-Fonts.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3039172" class="shortcut">Top</a>
+                  &#160;|&#160;
+                  <a href="#id3040388" class="shortcut">Description</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="pango-Glyph-Storage"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2>
+<a name="id3039172"></a><span class="refentrytitle">Glyph Storage</span>
+</h2>
+<p>Glyph Storage &#8212; Structures for storing information about glyphs</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<h2>Synopsis</h2>
+<pre class="synopsis">
+
+
+
+#define             <a class="link" href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS">PANGO_SCALE</a>
+#define             <a class="link" href="pango-Glyph-Storage.html#PANGO-PIXELS:CAPS">PANGO_PIXELS</a>                        (d)
+#define             <a class="link" href="pango-Glyph-Storage.html#PANGO-PIXELS-FLOOR:CAPS">PANGO_PIXELS_FLOOR</a>                  (d)
+#define             <a class="link" href="pango-Glyph-Storage.html#PANGO-PIXELS-CEIL:CAPS">PANGO_PIXELS_CEIL</a>                   (d)
+#define             <a class="link" href="pango-Glyph-Storage.html#PANGO-UNITS-ROUND:CAPS">PANGO_UNITS_ROUND</a>                   (d)
+double              <a class="link" href="pango-Glyph-Storage.html#pango-units-to-double">pango_units_to_double</a>               (int i);
+int                 <a class="link" href="pango-Glyph-Storage.html#pango-units-from-double">pango_units_from_double</a>             (double d);
+                    <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a>;
+#define             <a class="link" href="pango-Glyph-Storage.html#PANGO-ASCENT:CAPS">PANGO_ASCENT</a>                        (rect)
+#define             <a class="link" href="pango-Glyph-Storage.html#PANGO-DESCENT:CAPS">PANGO_DESCENT</a>                       (rect)
+#define             <a class="link" href="pango-Glyph-Storage.html#PANGO-LBEARING:CAPS">PANGO_LBEARING</a>                      (rect)
+#define             <a class="link" href="pango-Glyph-Storage.html#PANGO-RBEARING:CAPS">PANGO_RBEARING</a>                      (rect)
+void                <a class="link" href="pango-Glyph-Storage.html#pango-extents-to-pixels">pango_extents_to_pixels</a>             (<a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);
+                    <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a>;
+#define             <a class="link" href="pango-Glyph-Storage.html#PANGO-TYPE-MATRIX:CAPS">PANGO_TYPE_MATRIX</a>
+#define             <a class="link" href="pango-Glyph-Storage.html#PANGO-MATRIX-INIT:CAPS">PANGO_MATRIX_INIT</a>
+<a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a>*        <a class="link" href="pango-Glyph-Storage.html#pango-matrix-copy">pango_matrix_copy</a>                   (const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-matrix-free">pango_matrix_free</a>                   (<a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-matrix-translate">pango_matrix_translate</a>              (<a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         double tx,
+                                                         double ty);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-matrix-scale">pango_matrix_scale</a>                  (<a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         double scale_x,
+                                                         double scale_y);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-matrix-rotate">pango_matrix_rotate</a>                 (<a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         double degrees);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-matrix-concat">pango_matrix_concat</a>                 (<a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *new_matrix);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-matrix-transform-point">pango_matrix_transform_point</a>        (const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         double *x,
+                                                         double *y);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-matrix-transform-distance">pango_matrix_transform_distance</a>     (const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         double *dx,
+                                                         double *dy);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-matrix-transform-rectangle">pango_matrix_transform_rectangle</a>    (const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *rect);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-matrix-transform-pixel-rectangle">pango_matrix_transform_pixel_rectangle</a>
+                                                        (const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *rect);
+double              <a class="link" href="pango-Glyph-Storage.html#pango-matrix-get-font-scale-factor">pango_matrix_get_font_scale_factor</a>  (const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix);
+typedef             <a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a>;
+#define             <a class="link" href="pango-Glyph-Storage.html#PANGO-GLYPH-EMPTY:CAPS">PANGO_GLYPH_EMPTY</a>
+#define             <a class="link" href="pango-Glyph-Storage.html#PANGO-GLYPH-UNKNOWN-FLAG:CAPS">PANGO_GLYPH_UNKNOWN_FLAG</a>
+#define             <a class="link" href="pango-Glyph-Storage.html#PANGO-GET-UNKNOWN-GLYPH:CAPS">PANGO_GET_UNKNOWN_GLYPH</a>             (wc)
+                    <a class="link" href="pango-Glyph-Storage.html#PangoGlyphInfo">PangoGlyphInfo</a>;
+                    <a class="link" href="pango-Glyph-Storage.html#PangoGlyphGeometry">PangoGlyphGeometry</a>;
+typedef             <a class="link" href="pango-Glyph-Storage.html#PangoGlyphUnit">PangoGlyphUnit</a>;
+                    <a class="link" href="pango-Glyph-Storage.html#PangoGlyphVisAttr">PangoGlyphVisAttr</a>;
+                    <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a>;
+                    <a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem">PangoGlyphItem</a>;
+#define             <a class="link" href="pango-Glyph-Storage.html#PANGO-TYPE-GLYPH-STRING:CAPS">PANGO_TYPE_GLYPH_STRING</a>
+<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a>*   <a class="link" href="pango-Glyph-Storage.html#pango-glyph-string-new">pango_glyph_string_new</a>              (void);
+<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a>*   <a class="link" href="pango-Glyph-Storage.html#pango-glyph-string-copy">pango_glyph_string_copy</a>             (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *string);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-glyph-string-set-size">pango_glyph_string_set_size</a>         (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *string,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> new_len);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-glyph-string-free">pango_glyph_string_free</a>             (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *string);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-glyph-string-extents">pango_glyph_string_extents</a>          (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-glyph-string-extents-range">pango_glyph_string_extents_range</a>    (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         int start,
+                                                         int end,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);
+int                 <a class="link" href="pango-Glyph-Storage.html#pango-glyph-string-get-width">pango_glyph_string_get_width</a>        (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-glyph-string-index-to-x">pango_glyph_string_index_to_x</a>       (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         char *text,
+                                                         int length,
+                                                         <a class="link" href="pango-Text-Processing.html#PangoAnalysis">PangoAnalysis</a> *analysis,
+                                                         int index_,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> trailing,
+                                                         int *x_pos);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-glyph-string-x-to-index">pango_glyph_string_x_to_index</a>       (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         char *text,
+                                                         int length,
+                                                         <a class="link" href="pango-Text-Processing.html#PangoAnalysis">PangoAnalysis</a> *analysis,
+                                                         int x_pos,
+                                                         int *index_,
+                                                         int *trailing);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-glyph-string-get-logical-widths">pango_glyph_string_get_logical_widths</a>
+                                                        (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         const char *text,
+                                                         int length,
+                                                         int embedding_level,
+                                                         int *logical_widths);
+<a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem">PangoGlyphItem</a>*     <a class="link" href="pango-Glyph-Storage.html#pango-glyph-item-split">pango_glyph_item_split</a>              (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem">PangoGlyphItem</a> *orig,
+                                                         const char *text,
+                                                         int split_index);
+<a
+href="../glib/glib-Singly-Linked-Lists.html#GSList"
+>GSList</a>*             <a class="link" href="pango-Glyph-Storage.html#pango-glyph-item-apply-attrs">pango_glyph_item_apply_attrs</a>        (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem">PangoGlyphItem</a> *glyph_item,
+                                                         const char *text,
+                                                         <a class="link" href="pango-Text-Attributes.html#PangoAttrList">PangoAttrList</a> *list);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-glyph-item-letter-space">pango_glyph_item_letter_space</a>       (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem">PangoGlyphItem</a> *glyph_item,
+                                                         const char *text,
+                                                         <a class="link" href="pango-Text-Processing.html#PangoLogAttr">PangoLogAttr</a> *log_attrs,
+                                                         int letter_spacing);
+void                <a class="link" href="pango-Glyph-Storage.html#pango-glyph-item-free">pango_glyph_item_free</a>               (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem">PangoGlyphItem</a> *glyph_item);
+
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3040388"></a><h2>Description</h2>
+<p>
+<a class="link" href="pango-Text-Processing.html#pango-shape"><code class="function">pango_shape()</code></a> produces a string of glyphs which
+can be measured or drawn to the screen. The following
+structures are used to store information about
+glyphs.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3040416"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="id3040426"></a><h3>
+<a name="PANGO-SCALE:CAPS"></a>PANGO_SCALE</h3>
+<a class="indexterm" name="id3040438"></a><pre class="programlisting">#define PANGO_SCALE 1024
+</pre>
+<p>
+The <a class="link" href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS"><code class="literal">PANGO_SCALE</code></a> macro represents the scale between dimensions used
+for Pango distances and device units. (The definition of device
+units is dependent on the output device; it will typically be pixels
+for a screen, and points for a printer.) <a class="link" href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS"><code class="literal">PANGO_SCALE</code></a> is currently
+1024, but this may be changed in the future.
+</p>
+<p>
+When setting font sizes, device units are always considered to be
+points (as in "12 point font"), rather than pixels. 
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3040485"></a><h3>
+<a name="PANGO-PIXELS:CAPS"></a>PANGO_PIXELS()</h3>
+<a class="indexterm" name="id3040497"></a><pre class="programlisting">#define PANGO_PIXELS(d) (((int)(d) + 512) &gt;&gt; 10)
+</pre>
+<p>
+Converts a dimension to device units by rounding.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>d</code></em>&#160;:</span></p></td>
+<td>a dimension in Pango units.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td>rounded dimension in device units.
+
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3040543"></a><h3>
+<a name="PANGO-PIXELS-FLOOR:CAPS"></a>PANGO_PIXELS_FLOOR()</h3>
+<a class="indexterm" name="id3040559"></a><pre class="programlisting">#define PANGO_PIXELS_FLOOR(d) (((int)(d)) &gt;&gt; 10)
+</pre>
+<p>
+Converts a dimension to device units by flooring.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>d</code></em>&#160;:</span></p></td>
+<td>a dimension in Pango units.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td>floored dimension in device units.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 1.14
+
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3040612"></a><h3>
+<a name="PANGO-PIXELS-CEIL:CAPS"></a>PANGO_PIXELS_CEIL()</h3>
+<a class="indexterm" name="id3040628"></a><pre class="programlisting">#define PANGO_PIXELS_CEIL(d) (((int)(d) + 1023) &gt;&gt; 10)
+</pre>
+<p>
+Converts a dimension to device units by ceiling.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>d</code></em>&#160;:</span></p></td>
+<td>a dimension in Pango units.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td>ceiled dimension in device units.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 1.14
+
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3040681"></a><h3>
+<a name="PANGO-UNITS-ROUND:CAPS"></a>PANGO_UNITS_ROUND()</h3>
+<a class="indexterm" name="id3040696"></a><pre class="programlisting">#define             PANGO_UNITS_ROUND(d)</pre>
+<p>
+Rounds a dimension to whole device units, but does not
+convert it to device units.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>d</code></em>&#160;:</span></p></td>
+<td>a dimension in Pango units.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td>rounded dimension in Pango units.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 1.18
+
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3040750"></a><h3>
+<a name="pango-units-to-double"></a>pango_units_to_double ()</h3>
+<a class="indexterm" name="id3040764"></a><pre class="programlisting">double              pango_units_to_double               (int i);</pre>
+<p>
+Converts a number in Pango units to floating-point: divides
+it by <a class="link" href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS"><code class="literal">PANGO_SCALE</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>i</code></em>&#160;:</span></p></td>
+<td> value in Pango units
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the double value.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3040842"></a><h3>
+<a name="pango-units-from-double"></a>pango_units_from_double ()</h3>
+<a class="indexterm" name="id3040857"></a><pre class="programlisting">int                 pango_units_from_double             (double d);</pre>
+<p>
+Converts a floating-point number to Pango units: multiplies
+it by <a class="link" href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS"><code class="literal">PANGO_SCALE</code></a> and rounds to nearest integer.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>d</code></em>&#160;:</span></p></td>
+<td> double floating-point value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the value in Pango units.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3040937"></a><h3>
+<a name="PangoRectangle"></a>PangoRectangle</h3>
+<a class="indexterm" name="id3040950"></a><pre class="programlisting">typedef struct {
+  int x;
+  int y;
+  int width;
+  int height;
+} PangoRectangle;
+</pre>
+<p>
+The <a class="link" href="pango-Glyph-Storage.html#PangoRectangle"><span class="type">PangoRectangle</span></a> structure represents a rectangle. It is frequently
+used to represent the logical or ink extents of a single glyph or section
+of text. (See, for instance, <a class="link" href="pango-Fonts.html#pango-font-get-glyph-extents"><code class="function">pango_font_get_glyph_extents()</code></a>)
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">int&#160;<em class="structfield"><code>x</code></em>;</span></p></td>
+<td>X coordinate of the left side of the rectangle.
+</td>
+</tr>
+<tr>
+<td><p><span class="term">int&#160;<em class="structfield"><code>y</code></em>;</span></p></td>
+<td>Y coordinate of the the top side of the rectangle.
+</td>
+</tr>
+<tr>
+<td><p><span class="term">int&#160;<em class="structfield"><code>width</code></em>;</span></p></td>
+<td>width of the rectangle.
+</td>
+</tr>
+<tr>
+<td><p><span class="term">int&#160;<em class="structfield"><code>height</code></em>;</span></p></td>
+<td>height of the rectangle.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3041074"></a><h3>
+<a name="PANGO-ASCENT:CAPS"></a>PANGO_ASCENT()</h3>
+<a class="indexterm" name="id3041086"></a><pre class="programlisting">#define PANGO_ASCENT(rect) (-(rect).y)
+</pre>
+<p>
+Extracts the <em class="firstterm">ascent</em> from a <a class="link" href="pango-Glyph-Storage.html#PangoRectangle"><span class="type">PangoRectangle</span></a>
+representing glyph extents. The ascent is the distance from the
+baseline to the highest point of the character. This is positive if the
+glyph ascends above the baseline.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>rect</code></em>&#160;:</span></p></td>
+<td>a <a class="link" href="pango-Glyph-Storage.html#PangoRectangle"><span class="type">PangoRectangle</span></a>
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3041143"></a><h3>
+<a name="PANGO-DESCENT:CAPS"></a>PANGO_DESCENT()</h3>
+<a class="indexterm" name="id3041155"></a><pre class="programlisting">#define PANGO_DESCENT(rect) ((rect).y + (rect).height)
+</pre>
+<p>
+Extracts the <em class="firstterm">descent</em> from a <a class="link" href="pango-Glyph-Storage.html#PangoRectangle"><span class="type">PangoRectangle</span></a>
+representing glyph extents. The descent is the distance from the
+baseline to the lowest point of the character. This is positive if the
+glyph descends below the baseline.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>rect</code></em>&#160;:</span></p></td>
+<td>a <a class="link" href="pango-Glyph-Storage.html#PangoRectangle"><span class="type">PangoRectangle</span></a>
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3041212"></a><h3>
+<a name="PANGO-LBEARING:CAPS"></a>PANGO_LBEARING()</h3>
+<a class="indexterm" name="id3041225"></a><pre class="programlisting">#define PANGO_LBEARING(rect) ((rect).x)
+</pre>
+<p>
+Extracts the <em class="firstterm">left bearing</em> from a <a class="link" href="pango-Glyph-Storage.html#PangoRectangle"><span class="type">PangoRectangle</span></a>
+representing glyph extents. The left bearing is the distance from the
+horizontal origin to the farthest left point of the character.
+This is positive for characters drawn completely to the right of the
+glyph origin.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>rect</code></em>&#160;:</span></p></td>
+<td>a <a class="link" href="pango-Glyph-Storage.html#PangoRectangle"><span class="type">PangoRectangle</span></a>
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3041282"></a><h3>
+<a name="PANGO-RBEARING:CAPS"></a>PANGO_RBEARING()</h3>
+<a class="indexterm" name="id3041295"></a><pre class="programlisting">#define PANGO_RBEARING(rect) ((rect).x + (rect).width)
+</pre>
+<p>
+Extracts the <em class="firstterm">right bearing</em> from a <a class="link" href="pango-Glyph-Storage.html#PangoRectangle"><span class="type">PangoRectangle</span></a>
+representing glyph extents. The right bearing is the distance from the
+horizontal origin to the farthest right point of the character.
+This is positive except for characters drawn completely to the left of the
+horizontal origin.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>rect</code></em>&#160;:</span></p></td>
+<td>a <a class="link" href="pango-Glyph-Storage.html#PangoRectangle"><span class="type">PangoRectangle</span></a>
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3041353"></a><h3>
+<a name="pango-extents-to-pixels"></a>pango_extents_to_pixels ()</h3>
+<a class="indexterm" name="id3041368"></a><pre class="programlisting">void                pango_extents_to_pixels             (<a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);</pre>
+<p>
+Converts extents from Pango units to device units, dividing by the
+<a class="link" href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS"><code class="literal">PANGO_SCALE</code></a> factor and performing rounding.
+</p>
+<p>
+The ink rectangle is converted by flooring the x/y coordinates and extending
+width/height, such that the final rectangle completely includes the original
+rectangle.
+</p>
+<p>
+The logical rectangle is converted by rounding the coordinates
+of the rectangle to the nearest device unit.
+</p>
+<p>
+Note that in certain situations you may want pass a logical extents
+rectangle to this function as <em class="parameter"><code>ink_rect</code></em>.  The rule is: if you want the
+resulting device-space rectangle to completely contain the original
+rectangle, pass it in as <em class="parameter"><code>ink_rect</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ink_rect</code></em>&#160;:</span></p></td>
+<td> ink rectangle to convert, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>logical_rect</code></em>&#160;:</span></p></td>
+<td> logical rectangle to convert, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3041511"></a><h3>
+<a name="PangoMatrix"></a>PangoMatrix</h3>
+<a class="indexterm" name="id3041525"></a><pre class="programlisting">typedef struct {
+  double xx;
+  double xy;
+  double yx;
+  double yy;
+  double x0;
+  double y0;
+} PangoMatrix;
+</pre>
+<p>
+A structure specifying a transformation between user-space
+coordinates and device coordinates. The transformation
+is given by
+</p>
+<p>
+</p>
+<pre class="programlisting">
+x_device = x_user * matrix-&gt;xx + y_user * matrix-&gt;xy + matrix-&gt;x0;
+y_device = x_user * matrix-&gt;yx + y_user * matrix-&gt;yy + matrix-&gt;y0;
+</pre>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">double&#160;<em class="structfield"><code>xx</code></em>;</span></p></td>
+<td> 1st component of the transformation matrix
+</td>
+</tr>
+<tr>
+<td><p><span class="term">double&#160;<em class="structfield"><code>xy</code></em>;</span></p></td>
+<td> 2nd component of the transformation matrix
+</td>
+</tr>
+<tr>
+<td><p><span class="term">double&#160;<em class="structfield"><code>yx</code></em>;</span></p></td>
+<td> 3rd component of the transformation matrix
+</td>
+</tr>
+<tr>
+<td><p><span class="term">double&#160;<em class="structfield"><code>yy</code></em>;</span></p></td>
+<td> 4th component of the transformation matrix
+</td>
+</tr>
+<tr>
+<td><p><span class="term">double&#160;<em class="structfield"><code>x0</code></em>;</span></p></td>
+<td> x translation
+</td>
+</tr>
+<tr>
+<td><p><span class="term">double&#160;<em class="structfield"><code>y0</code></em>;</span></p></td>
+<td> y translation
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3041693"></a><h3>
+<a name="PANGO-TYPE-MATRIX:CAPS"></a>PANGO_TYPE_MATRIX</h3>
+<a class="indexterm" name="id3041707"></a><pre class="programlisting">#define PANGO_TYPE_MATRIX (pango_matrix_get_type ())
+</pre>
+<p>
+The GObject type for <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a></p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3041732"></a><h3>
+<a name="PANGO-MATRIX-INIT:CAPS"></a>PANGO_MATRIX_INIT</h3>
+<a class="indexterm" name="id3041748"></a><pre class="programlisting">#define PANGO_MATRIX_INIT { 1., 0., 0., 1., 0., 0. }
+</pre>
+<p>
+Constant that can be used to initialize a PangoMatrix to
+the identity transform.
+</p>
+<p>
+</p>
+<div class="informalexample"><pre class="programlisting">
+PangoMatrix matrix = PANGO_MATRIX_INIT;
+pango_matrix_rotate (&amp;matrix, 45.);
+</pre></div>
+<p>
+
+</p>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3041786"></a><h3>
+<a name="pango-matrix-copy"></a>pango_matrix_copy ()</h3>
+<a class="indexterm" name="id3041801"></a><pre class="programlisting"><a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a>*        pango_matrix_copy                   (const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix);</pre>
+<p>
+Copies a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>matrix</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>, can be <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the newly allocated <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>, which should
+              be freed with <a class="link" href="pango-Glyph-Storage.html#pango-matrix-free"><code class="function">pango_matrix_free()</code></a>, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if
+              <em class="parameter"><code>matrix</code></em> was <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3041939"></a><h3>
+<a name="pango-matrix-free"></a>pango_matrix_free ()</h3>
+<a class="indexterm" name="id3041955"></a><pre class="programlisting">void                pango_matrix_free                   (<a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix);</pre>
+<p>
+Free a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a> created with <a class="link" href="pango-Glyph-Storage.html#pango-matrix-copy"><code class="function">pango_matrix_copy()</code></a>.
+Does nothing if <em class="parameter"><code>matrix</code></em> is <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>matrix</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3042063"></a><h3>
+<a name="pango-matrix-translate"></a>pango_matrix_translate ()</h3>
+<a class="indexterm" name="id3042078"></a><pre class="programlisting">void                pango_matrix_translate              (<a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         double tx,
+                                                         double ty);</pre>
+<p>
+Changes the transformation represented by <em class="parameter"><code>matrix</code></em> to be the
+transformation given by first translating by (<em class="parameter"><code>tx</code></em>, <em class="parameter"><code>ty</code></em>)
+then applying the original transformation.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>matrix</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>tx</code></em>&#160;:</span></p></td>
+<td> amount to translate in the X direction
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ty</code></em>&#160;:</span></p></td>
+<td> amount to translate in the Y direction
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3042206"></a><h3>
+<a name="pango-matrix-scale"></a>pango_matrix_scale ()</h3>
+<a class="indexterm" name="id3042221"></a><pre class="programlisting">void                pango_matrix_scale                  (<a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         double scale_x,
+                                                         double scale_y);</pre>
+<p>
+Changes the transformation represented by <em class="parameter"><code>matrix</code></em> to be the
+transformation given by first scaling by <em class="parameter"><code>sx</code></em> in the X direction
+and <em class="parameter"><code>sy</code></em> in the Y direction then applying the original
+transformation.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>matrix</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>scale_x</code></em>&#160;:</span></p></td>
+<td> amount to scale by in X direction
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>scale_y</code></em>&#160;:</span></p></td>
+<td> amount to scale by in Y direction
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3042350"></a><h3>
+<a name="pango-matrix-rotate"></a>pango_matrix_rotate ()</h3>
+<a class="indexterm" name="id3042365"></a><pre class="programlisting">void                pango_matrix_rotate                 (<a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         double degrees);</pre>
+<p>
+Changes the transformation represented by <em class="parameter"><code>matrix</code></em> to be the
+transformation given by first rotating by <em class="parameter"><code>degrees</code></em> degrees
+counter-clockwise then applying the original transformation.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>matrix</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>degrees</code></em>&#160;:</span></p></td>
+<td> degrees to rotate counter-clockwise
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3042465"></a><h3>
+<a name="pango-matrix-concat"></a>pango_matrix_concat ()</h3>
+<a class="indexterm" name="id3042481"></a><pre class="programlisting">void                pango_matrix_concat                 (<a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *new_matrix);</pre>
+<p>
+Changes the transformation represented by <em class="parameter"><code>matrix</code></em> to be the
+transformation given by first applying transformation
+given by <em class="parameter"><code>new_matrix</code></em> then applying the original transformation.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>matrix</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>new_matrix</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3042588"></a><h3>
+<a name="pango-matrix-transform-point"></a>pango_matrix_transform_point ()</h3>
+<a class="indexterm" name="id3042603"></a><pre class="programlisting">void                pango_matrix_transform_point        (const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         double *x,
+                                                         double *y);</pre>
+<p>
+Transforms the point (<em class="parameter"><code>x</code></em>, <em class="parameter"><code>y</code></em>) by <em class="parameter"><code>matrix</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>matrix</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em>&#160;:</span></p></td>
+<td> in/out X position
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em>&#160;:</span></p></td>
+<td> in/out Y position
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3042738"></a><h3>
+<a name="pango-matrix-transform-distance"></a>pango_matrix_transform_distance ()</h3>
+<a class="indexterm" name="id3042754"></a><pre class="programlisting">void                pango_matrix_transform_distance     (const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         double *dx,
+                                                         double *dy);</pre>
+<p>
+Transforms the distance vector (<em class="parameter"><code>dx</code></em>,<em class="parameter"><code>dy</code></em>) by <em class="parameter"><code>matrix</code></em>. This is
+similar to <a class="link" href="pango-Glyph-Storage.html#pango-matrix-transform-point"><code class="function">pango_matrix_transform_point()</code></a> except that the translation
+components of the transformation are ignored. The calculation of
+the returned vector is as follows:
+</p>
+<p>
+</p>
+<pre class="programlisting">
+dx2 = dx1 * xx + dy1 * xy;
+dy2 = dx1 * yx + dy1 * yy;
+</pre>
+<p>
+</p>
+<p>
+Affine transformations are position invariant, so the same vector
+always transforms to the same vector. If (<em class="parameter"><code>x1</code></em>,<em class="parameter"><code>y1</code></em>) transforms
+to (<em class="parameter"><code>x2</code></em>,<em class="parameter"><code>y2</code></em>) then (<em class="parameter"><code>x1</code></em>+<em class="parameter"><code>dx1</code></em>,<em class="parameter"><code>y1</code></em>+<em class="parameter"><code>dy1</code></em>) will transform to
+(<em class="parameter"><code>x1</code></em>+<em class="parameter"><code>dx2</code></em>,<em class="parameter"><code>y1</code></em>+<em class="parameter"><code>dy2</code></em>) for all values of <em class="parameter"><code>x1</code></em> and <em class="parameter"><code>x2</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>matrix</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>dx</code></em>&#160;:</span></p></td>
+<td> in/out X component of a distance vector
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>dy</code></em>&#160;:</span></p></td>
+<td> yn/out Y component of a distance vector
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3042999"></a><h3>
+<a name="pango-matrix-transform-rectangle"></a>pango_matrix_transform_rectangle ()</h3>
+<a class="indexterm" name="id3043015"></a><pre class="programlisting">void                pango_matrix_transform_rectangle    (const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *rect);</pre>
+<p>
+First transforms <em class="parameter"><code>rect</code></em> using <em class="parameter"><code>matrix</code></em>, then calculates the bounding box
+of the transformed rectangle.  The rectangle should be in Pango units.
+</p>
+<p>
+This function is useful for example when you want to draw a rotated
+<em class="parameter"><code>PangoLayout</code></em> to an image buffer, and want to know how large the image
+should be and how much you should shift the layout when rendering.
+</p>
+<p>
+If you have a rectangle in device units (pixels), use
+<a class="link" href="pango-Glyph-Storage.html#pango-matrix-transform-pixel-rectangle"><code class="function">pango_matrix_transform_pixel_rectangle()</code></a>.
+</p>
+<p>
+If you have the rectangle in Pango units and want to convert to
+transformed pixel bounding box, it is more accurate to transform it first
+(using this function) and pass the result to <a class="link" href="pango-Glyph-Storage.html#pango-extents-to-pixels"><code class="function">pango_extents_to_pixels()</code></a>,
+as <em class="parameter"><code>ink_rect</code></em>.  However, there is a reason that you may want to convert
+to pixels first and then transform, and that is when the transformed
+coordinates may overflow in Pango units (large matrix translation for
+example).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>matrix</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>rect</code></em>&#160;:</span></p></td>
+<td> in/out bounding box in Pango units, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3043191"></a><h3>
+<a name="pango-matrix-transform-pixel-rectangle"></a>pango_matrix_transform_pixel_rectangle ()</h3>
+<a class="indexterm" name="id3043207"></a><pre class="programlisting">void                pango_matrix_transform_pixel_rectangle
+                                                        (const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *rect);</pre>
+<p>
+First transforms the <em class="parameter"><code>rect</code></em> using <em class="parameter"><code>matrix</code></em>, then calculates the bounding box
+of the transformed rectangle.  The rectangle should be in device units
+(pixels).
+</p>
+<p>
+This function is useful for example when you want to draw a rotated
+<em class="parameter"><code>PangoLayout</code></em> to an image buffer, and want to know how large the image
+should be and how much you should shift the layout when rendering.
+</p>
+<p>
+For better accuracy, you should use <a class="link" href="pango-Glyph-Storage.html#pango-matrix-transform-rectangle"><code class="function">pango_matrix_transform_rectangle()</code></a> on
+original rectangle in Pango units and convert to pixels afterward
+using <a class="link" href="pango-Glyph-Storage.html#pango-extents-to-pixels"><code class="function">pango_extents_to_pixels()</code></a> as <em class="parameter"><code>ink_rect</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>matrix</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>rect</code></em>&#160;:</span></p></td>
+<td> in/out bounding box in device units, or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.16
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3043376"></a><h3>
+<a name="pango-matrix-get-font-scale-factor"></a>pango_matrix_get_font_scale_factor ()</h3>
+<a class="indexterm" name="id3043392"></a><pre class="programlisting">double              pango_matrix_get_font_scale_factor  (const <a class="link" href="pango-Glyph-Storage.html#PangoMatrix">PangoMatrix</a> *matrix);</pre>
+<p>
+Returns the scale factor of a matrix on the height of the font.
+That is, the scale factor in the direction perpendicular to the
+vector that the X coordinate is mapped to.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>matrix</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>, may be <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the scale factor of <em class="parameter"><code>matrix</code></em> on the height of the font,
+or 1.0 if <em class="parameter"><code>matrix</code></em> is <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a>.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3043502"></a><h3>
+<a name="PangoGlyph"></a>PangoGlyph</h3>
+<a class="indexterm" name="id3043514"></a><pre class="programlisting">typedef guint32 PangoGlyph;
+</pre>
+<p>
+A <a class="link" href="pango-Glyph-Storage.html#PangoGlyph"><span class="type">PangoGlyph</span></a> represents a single glyph in the output form of a string.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3043538"></a><h3>
+<a name="PANGO-GLYPH-EMPTY:CAPS"></a>PANGO_GLYPH_EMPTY</h3>
+<a class="indexterm" name="id3043552"></a><pre class="programlisting">#define PANGO_GLYPH_EMPTY           ((PangoGlyph)0x0FFFFFFF)
+</pre>
+<p>
+The <a class="link" href="pango-Glyph-Storage.html#PANGO-GLYPH-EMPTY:CAPS"><code class="literal">PANGO_GLYPH_EMPTY</code></a> macro represents a <a class="link" href="pango-Glyph-Storage.html#PangoGlyph"><span class="type">PangoGlyph</span></a> value that has a
+special meaning, which is a zero-width empty glyph.  This is useful for
+example in shaper modules, to use as the glyph for various zero-width
+Unicode characters (those passing <a class="link" href="pango-Miscellaneous-Utilities.html#pango-is-zero-width"><code class="function">pango_is_zero_width()</code></a>).
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3043601"></a><h3>
+<a name="PANGO-GLYPH-UNKNOWN-FLAG:CAPS"></a>PANGO_GLYPH_UNKNOWN_FLAG</h3>
+<a class="indexterm" name="id3043615"></a><pre class="programlisting">#define PANGO_GLYPH_UNKNOWN_FLAG    ((PangoGlyph)0x10000000)
+</pre>
+<p>
+The <a class="link" href="pango-Glyph-Storage.html#PANGO-GLYPH-UNKNOWN-FLAG:CAPS"><code class="literal">PANGO_GLYPH_UNKNOWN_FLAG</code></a> macro is a flag value that can be added to
+a <a
+href="../glib/glib-Unicode-Manipulation.html#gunichar"
+><span class="type">gunichar</span></a> value of a valid Unicode character, to produce a <a class="link" href="pango-Glyph-Storage.html#PangoGlyph"><span class="type">PangoGlyph</span></a>
+value, representing an unknown-character glyph for the respective <a
+href="../glib/glib-Unicode-Manipulation.html#gunichar"
+><span class="type">gunichar</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3043668"></a><h3>
+<a name="PANGO-GET-UNKNOWN-GLYPH:CAPS"></a>PANGO_GET_UNKNOWN_GLYPH()</h3>
+<a class="indexterm" name="id3043682"></a><pre class="programlisting">#define PANGO_GET_UNKNOWN_GLYPH(wc) ((PangoGlyph)(wc)|PANGO_GLYPH_UNKNOWN_FLAG)
+</pre>
+<p>
+Returns a <a class="link" href="pango-Glyph-Storage.html#PangoGlyph"><span class="type">PangoGlyph</span></a> value that means no glyph was found for <em class="parameter"><code>wc</code></em>.
+The way this unknown glyphs are rendered is backend specific.  For example,
+a box with the hexadecimal Unicode code-point of the character written in it
+is what is done in the most common backends.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>wc</code></em>&#160;:</span></p></td>
+<td>a Unicode character
+
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3043734"></a><h3>
+<a name="PangoGlyphInfo"></a>PangoGlyphInfo</h3>
+<a class="indexterm" name="id3043747"></a><pre class="programlisting">typedef struct {
+  PangoGlyph    glyph;
+  PangoGlyphGeometry geometry;
+  PangoGlyphVisAttr  attr;
+} PangoGlyphInfo;
+</pre>
+<p>
+The <a class="link" href="pango-Glyph-Storage.html#PangoGlyphInfo"><span class="type">PangoGlyphInfo</span></a> structure represents a single glyph together with
+positioning information and visual attributes.
+It contains the following fields.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a class="link" href="pango-Glyph-Storage.html#PangoGlyph">PangoGlyph</a>&#160;<em class="structfield"><code>glyph</code></em>;</span></p></td>
+<td>the glyph itself.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="pango-Glyph-Storage.html#PangoGlyphGeometry">PangoGlyphGeometry</a>&#160;<em class="structfield"><code>geometry</code></em>;</span></p></td>
+<td>the positional information about the glyph.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="pango-Glyph-Storage.html#PangoGlyphVisAttr">PangoGlyphVisAttr</a>&#160;<em class="structfield"><code>attr</code></em>;</span></p></td>
+<td>the visual attributes of the glyph.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3043842"></a><h3>
+<a name="PangoGlyphGeometry"></a>PangoGlyphGeometry</h3>
+<a class="indexterm" name="id3043854"></a><pre class="programlisting">typedef struct {
+  PangoGlyphUnit width;
+  PangoGlyphUnit x_offset;
+  PangoGlyphUnit y_offset;
+} PangoGlyphGeometry;
+</pre>
+<p>
+The <a class="link" href="pango-Glyph-Storage.html#PangoGlyphGeometry"><span class="type">PangoGlyphGeometry</span></a> structure contains width and positioning
+information for a single glyph. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a class="link" href="pango-Glyph-Storage.html#PangoGlyphUnit">PangoGlyphUnit</a>&#160;<em class="structfield"><code>width</code></em>;</span></p></td>
+<td>the logical width to use for the the character.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="pango-Glyph-Storage.html#PangoGlyphUnit">PangoGlyphUnit</a>&#160;<em class="structfield"><code>x_offset</code></em>;</span></p></td>
+<td>horizontal offset from nominal character position.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="pango-Glyph-Storage.html#PangoGlyphUnit">PangoGlyphUnit</a>&#160;<em class="structfield"><code>y_offset</code></em>;</span></p></td>
+<td>vertical offset from nominal character position.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3043949"></a><h3>
+<a name="PangoGlyphUnit"></a>PangoGlyphUnit</h3>
+<a class="indexterm" name="id3043961"></a><pre class="programlisting">typedef gint32 PangoGlyphUnit;
+</pre>
+<p>
+The <a class="link" href="pango-Glyph-Storage.html#PangoGlyphUnit"><span class="type">PangoGlyphUnit</span></a> type is used to store dimensions within
+Pango. Dimensions are stored in 1/<a class="link" href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS"><code class="literal">PANGO_SCALE</code></a> of a device unit.
+(A device unit might be a pixel for screen display, or
+a point on a printer.) <a class="link" href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS"><code class="literal">PANGO_SCALE</code></a> is currently 1024, and
+may change in the future (unlikely though), but you should not
+depend on its exact value. The <a class="link" href="pango-Glyph-Storage.html#PANGO-PIXELS:CAPS"><code class="function">PANGO_PIXELS()</code></a> macro can be used
+to convert from glyph units into device units with correct rounding.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3044023"></a><h3>
+<a name="PangoGlyphVisAttr"></a>PangoGlyphVisAttr</h3>
+<a class="indexterm" name="id3044035"></a><pre class="programlisting">typedef struct {
+  guint is_cluster_start : 1;
+} PangoGlyphVisAttr;
+</pre>
+<p>
+The PangoGlyphVisAttr is used to communicate information between
+the shaping phase and the rendering phase.  More attributes may be
+added in the future.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><a
+href="../glib/glib-Basic-Types.html#guint"
+>guint</a>&#160;<em class="structfield"><code>is_cluster_start</code></em>&#160;:&#160;1;</span></p></td>
+<td>set for the first logical glyph in each cluster. (Clusters
+		   are stored in visual order, within the cluster, glyphs
+		   are always ordered in logical order, since visual
+		   order is meaningless; that is, in Arabic text, accent glyphs
+		   follow the glyphs for the base character.)
+
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3044084"></a><h3>
+<a name="PangoGlyphString"></a>PangoGlyphString</h3>
+<a class="indexterm" name="id3044096"></a><pre class="programlisting">typedef struct {
+  gint num_glyphs;
+
+  PangoGlyphInfo *glyphs;
+
+  /* This is a memory inefficient way of representing the information
+   * here - each value gives the byte index within the text
+   * corresponding to the glyph string of the start of the cluster to
+   * which the glyph belongs.
+   */
+  gint *log_clusters;
+} PangoGlyphString;
+</pre>
+<p>
+The <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a> structure is used to store strings
+of glyphs with geometry and visual attribute information.
+The storage for the glyph information is owned
+by the structure which simplifies memory management.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a>&#160;<em class="structfield"><code>num_glyphs</code></em>;</span></p></td>
+<td>the number of glyphs in the string.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="pango-Glyph-Storage.html#PangoGlyphInfo">PangoGlyphInfo</a>&#160;*<em class="structfield"><code>glyphs</code></em>;</span></p></td>
+<td>an array of <a class="link" href="pango-Glyph-Storage.html#PangoGlyphInfo"><span class="type">PangoGlyphInfo</span></a> structures of length <em class="structfield"><code>num_glyphs</code></em>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a>&#160;*<em class="structfield"><code>log_clusters</code></em>;</span></p></td>
+<td>for each glyph, byte index of the starting character for the
+cluster. The indices are relative to the start of the text
+corresponding to the PangoGlyphString.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3044209"></a><h3>
+<a name="PangoGlyphItem"></a>PangoGlyphItem</h3>
+<a class="indexterm" name="id3044222"></a><pre class="programlisting">typedef struct {
+  PangoItem        *item;
+  PangoGlyphString *glyphs;
+} PangoGlyphItem;
+</pre>
+<p>
+A <a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem"><span class="type">PangoGlyphItem</span></a> is a pair of a <a class="link" href="pango-Text-Processing.html#PangoItem"><span class="type">PangoItem</span></a> and the glyphs
+resulting from shaping the text corresponding to an item.
+As an example of the usage of <a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem"><span class="type">PangoGlyphItem</span></a>, the results
+of shaping text with <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> is a list of <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a>,
+each of which contains a list of <a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem"><span class="type">PangoGlyphItem</span></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a class="link" href="pango-Text-Processing.html#PangoItem">PangoItem</a>&#160;*<em class="structfield"><code>item</code></em>;</span></p></td>
+<td>a <a class="link" href="pango-Text-Processing.html#PangoItem"><span class="type">PangoItem</span></a> structure that provides information
+       about a segment of text.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a>&#160;*<em class="structfield"><code>glyphs</code></em>;</span></p></td>
+<td>the glyphs obtained by shaping the text
+         corresponding to <em class="parameter"><code>item</code></em>.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3044353"></a><h3>
+<a name="PANGO-TYPE-GLYPH-STRING:CAPS"></a>PANGO_TYPE_GLYPH_STRING</h3>
+<a class="indexterm" name="id3044368"></a><pre class="programlisting">#define PANGO_TYPE_GLYPH_STRING (pango_glyph_string_get_type ())
+</pre>
+<p>
+The <a
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a> type for <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a>.
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3044400"></a><h3>
+<a name="pango-glyph-string-new"></a>pango_glyph_string_new ()</h3>
+<a class="indexterm" name="id3044413"></a><pre class="programlisting"><a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a>*   pango_glyph_string_new              (void);</pre>
+<p>
+Create a new <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the newly allocated <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a>, which
+              should be freed with <a class="link" href="pango-Glyph-Storage.html#pango-glyph-string-free"><code class="function">pango_glyph_string_free()</code></a>.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3044481"></a><h3>
+<a name="pango-glyph-string-copy"></a>pango_glyph_string_copy ()</h3>
+<a class="indexterm" name="id3044494"></a><pre class="programlisting"><a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a>*   pango_glyph_string_copy             (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *string);</pre>
+<p>
+Copy a glyph string and associated storage.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>string</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the newly allocated <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a>, which
+              should be freed with <a class="link" href="pango-Glyph-Storage.html#pango-glyph-string-free"><code class="function">pango_glyph_string_free()</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3044583"></a><h3>
+<a name="pango-glyph-string-set-size"></a>pango_glyph_string_set_size ()</h3>
+<a class="indexterm" name="id3044596"></a><pre class="programlisting">void                pango_glyph_string_set_size         (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *string,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gint"
+>gint</a> new_len);</pre>
+<p>
+Resize a glyph string to the given length.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>string</code></em>&#160;:</span></p></td>
+<td>    a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>new_len</code></em>&#160;:</span></p></td>
+<td>   the new length of the string.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3044677"></a><h3>
+<a name="pango-glyph-string-free"></a>pango_glyph_string_free ()</h3>
+<a class="indexterm" name="id3044689"></a><pre class="programlisting">void                pango_glyph_string_free             (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *string);</pre>
+<p>
+Free a glyph string and associated storage.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>string</code></em>&#160;:</span></p></td>
+<td>    a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a>.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3044749"></a><h3>
+<a name="pango-glyph-string-extents"></a>pango_glyph_string_extents ()</h3>
+<a class="indexterm" name="id3044762"></a><pre class="programlisting">void                pango_glyph_string_extents          (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);</pre>
+<p>
+Compute the logical and ink extents of a glyph string. See the documentation
+for <a class="link" href="pango-Fonts.html#pango-font-get-glyph-extents"><code class="function">pango_font_get_glyph_extents()</code></a> for details about the interpretation
+of the rectangles.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyphs</code></em>&#160;:</span></p></td>
+<td>   a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td>     a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ink_rect</code></em>&#160;:</span></p></td>
+<td> rectangle used to store the extents of the glyph string as drawn
+           or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to indicate that the result is not needed.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>logical_rect</code></em>&#160;:</span></p></td>
+<td> rectangle used to store the logical extents of the glyph string
+           or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to indicate that the result is not needed.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3044932"></a><h3>
+<a name="pango-glyph-string-extents-range"></a>pango_glyph_string_extents_range ()</h3>
+<a class="indexterm" name="id3044945"></a><pre class="programlisting">void                pango_glyph_string_extents_range    (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         int start,
+                                                         int end,
+                                                         <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a> *font,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *ink_rect,
+                                                         <a class="link" href="pango-Glyph-Storage.html#PangoRectangle">PangoRectangle</a> *logical_rect);</pre>
+<p>
+Computes the extents of a sub-portion of a glyph string. The extents are
+relative to the start of the glyph string range (the origin of their
+coordinate system is at the start of the range, not at the start of the entire
+glyph string).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyphs</code></em>&#160;:</span></p></td>
+<td>   a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>start</code></em>&#160;:</span></p></td>
+<td>    start index
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>end</code></em>&#160;:</span></p></td>
+<td>      end index (the range is the set of bytes with
+	      indices such that start &lt;= index &lt; end)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>font</code></em>&#160;:</span></p></td>
+<td>     a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ink_rect</code></em>&#160;:</span></p></td>
+<td> rectangle used to store the extents of the glyph string range as drawn
+           or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to indicate that the result is not needed.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>logical_rect</code></em>&#160;:</span></p></td>
+<td> rectangle used to store the logical extents of the glyph string range
+           or <a
+href="../glib/glib-Standard-Macros.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to indicate that the result is not needed.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3045151"></a><h3>
+<a name="pango-glyph-string-get-width"></a>pango_glyph_string_get_width ()</h3>
+<a class="indexterm" name="id3045167"></a><pre class="programlisting">int                 pango_glyph_string_get_width        (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs);</pre>
+<p>
+Computes the logical width of the glyph string as can also be computed
+using <a class="link" href="pango-Glyph-Storage.html#pango-glyph-string-extents"><code class="function">pango_glyph_string_extents()</code></a>.  However, since this only computes the
+width, it's much faster.  This is in fact only a convenience function that
+computes the sum of geometry.width for each glyph in the <em class="parameter"><code>glyphs</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyphs</code></em>&#160;:</span></p></td>
+<td>   a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the logical width of the glyph string.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.14
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3045264"></a><h3>
+<a name="pango-glyph-string-index-to-x"></a>pango_glyph_string_index_to_x ()</h3>
+<a class="indexterm" name="id3045277"></a><pre class="programlisting">void                pango_glyph_string_index_to_x       (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         char *text,
+                                                         int length,
+                                                         <a class="link" href="pango-Text-Processing.html#PangoAnalysis">PangoAnalysis</a> *analysis,
+                                                         int index_,
+                                                         <a
+href="../glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> trailing,
+                                                         int *x_pos);</pre>
+<p>
+Converts from character position to x position. (X position
+is measured from the left edge of the run). Character positions
+are computed by dividing up each cluster into equal portions.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyphs</code></em>&#160;:</span></p></td>
+<td>    the glyphs return from <a class="link" href="pango-Text-Processing.html#pango-shape"><code class="function">pango_shape()</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em>&#160;:</span></p></td>
+<td>      the text for the run
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em>&#160;:</span></p></td>
+<td>    the number of bytes (not characters) in <em class="parameter"><code>text</code></em>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>analysis</code></em>&#160;:</span></p></td>
+<td>  the analysis information return from <a class="link" href="pango-Text-Processing.html#pango-itemize"><code class="function">pango_itemize()</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index_</code></em>&#160;:</span></p></td>
+<td>    the byte index within <em class="parameter"><code>text</code></em>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>trailing</code></em>&#160;:</span></p></td>
+<td>  whether we should compute the result for the beginning (<a
+href="../glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>)
+            or end (<a
+href="../glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a>) of the character.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x_pos</code></em>&#160;:</span></p></td>
+<td>     location to store result
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3045516"></a><h3>
+<a name="pango-glyph-string-x-to-index"></a>pango_glyph_string_x_to_index ()</h3>
+<a class="indexterm" name="id3045529"></a><pre class="programlisting">void                pango_glyph_string_x_to_index       (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         char *text,
+                                                         int length,
+                                                         <a class="link" href="pango-Text-Processing.html#PangoAnalysis">PangoAnalysis</a> *analysis,
+                                                         int x_pos,
+                                                         int *index_,
+                                                         int *trailing);</pre>
+<p>
+Convert from x offset to character position. Character positions
+are computed by dividing up each cluster into equal portions.
+In scripts where positioning within a cluster is not allowed
+(such as Thai), the returned value may not be a valid cursor
+position; the caller must combine the result with the logical
+attributes for the text to compute the valid cursor position.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyphs</code></em>&#160;:</span></p></td>
+<td>    the glyphs returned from <a class="link" href="pango-Text-Processing.html#pango-shape"><code class="function">pango_shape()</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em>&#160;:</span></p></td>
+<td>      the text for the run
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em>&#160;:</span></p></td>
+<td>    the number of bytes (not characters) in text.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>analysis</code></em>&#160;:</span></p></td>
+<td>  the analysis information return from <a class="link" href="pango-Text-Processing.html#pango-itemize"><code class="function">pango_itemize()</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x_pos</code></em>&#160;:</span></p></td>
+<td>     the x offset (in <a class="link" href="pango-Glyph-Storage.html#PangoGlyphUnit"><span class="type">PangoGlyphUnit</span></a>)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index_</code></em>&#160;:</span></p></td>
+<td>    location to store calculated byte index within <em class="parameter"><code>text</code></em>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>trailing</code></em>&#160;:</span></p></td>
+<td>  location to store a boolean indicating
+            whether the user clicked on the leading or trailing
+            edge of the character.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3045753"></a><h3>
+<a name="pango-glyph-string-get-logical-widths"></a>pango_glyph_string_get_logical_widths ()</h3>
+<a class="indexterm" name="id3045767"></a><pre class="programlisting">void                pango_glyph_string_get_logical_widths
+                                                        (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphString">PangoGlyphString</a> *glyphs,
+                                                         const char *text,
+                                                         int length,
+                                                         int embedding_level,
+                                                         int *logical_widths);</pre>
+<p>
+Given a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a> resulting from <a class="link" href="pango-Text-Processing.html#pango-shape"><code class="function">pango_shape()</code></a> and the corresponding
+text, determine the screen width corresponding to each character. When
+multiple characters compose a single cluster, the width of the entire
+cluster is divided equally among the characters.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyphs</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em>&#160;:</span></p></td>
+<td> the text corresponding to the glyphs
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em>&#160;:</span></p></td>
+<td> the length of <em class="parameter"><code>text</code></em>, in bytes
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>embedding_level</code></em>&#160;:</span></p></td>
+<td> the embedding level of the string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>logical_widths</code></em>&#160;:</span></p></td>
+<td> an array whose length is g_utf8_strlen (text, length)
+                 to be filled in with the resulting character widths.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3045944"></a><h3>
+<a name="pango-glyph-item-split"></a>pango_glyph_item_split ()</h3>
+<a class="indexterm" name="id3045959"></a><pre class="programlisting"><a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem">PangoGlyphItem</a>*     pango_glyph_item_split              (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem">PangoGlyphItem</a> *orig,
+                                                         const char *text,
+                                                         int split_index);</pre>
+<p>
+Modifies <em class="parameter"><code>orig</code></em> to cover only the text after <em class="parameter"><code>split_index</code></em>, and
+returns a new item that covers the text before <em class="parameter"><code>split_index</code></em> that
+used to be in <em class="parameter"><code>orig</code></em>. You can think of <em class="parameter"><code>split_index</code></em> as the length of
+the returned item. <em class="parameter"><code>split_index</code></em> may not be 0, and it may not be
+greater than or equal to the length of <em class="parameter"><code>orig</code></em> (that is, there must
+be at least one byte assigned to each item, you can't create a
+zero-length item).
+</p>
+<p>
+This function is similar in function to <a class="link" href="pango-Text-Processing.html#pango-item-split"><code class="function">pango_item_split()</code></a> (and uses
+it internally.)</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>orig</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Text-Processing.html#PangoItem"><span class="type">PangoItem</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em>&#160;:</span></p></td>
+<td> text to which positions in <em class="parameter"><code>orig</code></em> apply
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>split_index</code></em>&#160;:</span></p></td>
+<td> byte index of position to split item, relative to the start of the item
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> the newly allocated item representing text before
+              <em class="parameter"><code>split_index</code></em>, which should be freed
+              with <a class="link" href="pango-Glyph-Storage.html#pango-glyph-item-free"><code class="function">pango_glyph_item_free()</code></a>.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.2
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3046165"></a><h3>
+<a name="pango-glyph-item-apply-attrs"></a>pango_glyph_item_apply_attrs ()</h3>
+<a class="indexterm" name="id3046180"></a><pre class="programlisting"><a
+href="../glib/glib-Singly-Linked-Lists.html#GSList"
+>GSList</a>*             pango_glyph_item_apply_attrs        (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem">PangoGlyphItem</a> *glyph_item,
+                                                         const char *text,
+                                                         <a class="link" href="pango-Text-Attributes.html#PangoAttrList">PangoAttrList</a> *list);</pre>
+<p>
+Splits a shaped item (PangoGlyphItem) into multiple items based
+on an attribute list. The idea is that if you have attributes
+that don't affect shaping, such as color or underline, to avoid
+affecting shaping, you filter them out (<a class="link" href="pango-Text-Attributes.html#pango-attr-list-filter"><code class="function">pango_attr_list_filter()</code></a>),
+apply the shaping process and then reapply them to the result using
+this function.
+</p>
+<p>
+All attributes that start or end inside a cluster are applied
+to that cluster; for instance, if half of a cluster is underlined
+and the other-half strikethrough, then the cluster will end
+up with both underline and strikethrough attributes. In these
+cases, it may happen that item-&gt;extra_attrs for some of the
+result items can have multiple attributes of the same type.
+</p>
+<p>
+This function takes ownership of <em class="parameter"><code>glyph_item</code></em>; it will be reused
+as one of the elements in the list.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyph_item</code></em>&#160;:</span></p></td>
+<td> a shaped item
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em>&#160;:</span></p></td>
+<td> text that <em class="parameter"><code>list</code></em> applies to
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Text-Attributes.html#PangoAttrList"><span class="type">PangoAttrList</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> a list of glyph items resulting from splitting
+  <em class="parameter"><code>glyph_item</code></em>. Free the elements using <a class="link" href="pango-Glyph-Storage.html#pango-glyph-item-free"><code class="function">pango_glyph_item_free()</code></a>,
+  the list using <a
+href="../glib/glib-Singly-Linked-Lists.html#g-slist-free"
+><code class="function">g_slist_free()</code></a>.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.2
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3046373"></a><h3>
+<a name="pango-glyph-item-letter-space"></a>pango_glyph_item_letter_space ()</h3>
+<a class="indexterm" name="id3046389"></a><pre class="programlisting">void                pango_glyph_item_letter_space       (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem">PangoGlyphItem</a> *glyph_item,
+                                                         const char *text,
+                                                         <a class="link" href="pango-Text-Processing.html#PangoLogAttr">PangoLogAttr</a> *log_attrs,
+                                                         int letter_spacing);</pre>
+<p>
+Adds spacing between the graphemes of <em class="parameter"><code>glyph_item</code></em> to
+give the effect of typographic letter spacing.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>glyph_item</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem"><span class="type">PangoGlyphItem</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em>&#160;:</span></p></td>
+<td> text that <em class="parameter"><code>glyph_item</code></em> corresponds to
+  (glyph_item-&gt;item-&gt;offset is an offset from the
+   start of <em class="parameter"><code>text</code></em>)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>log_attrs</code></em>&#160;:</span></p></td>
+<td> logical attributes for the item (the
+  first logical attribute refers to the position
+  before the first character in the item)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>letter_spacing</code></em>&#160;:</span></p></td>
+<td> amount of letter spacing to add
+  in Pango units. May be negative, though too large
+  negative values will give ugly results.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3046544"></a><h3>
+<a name="pango-glyph-item-free"></a>pango_glyph_item_free ()</h3>
+<a class="indexterm" name="id3046559"></a><pre class="programlisting">void                pango_glyph_item_free               (<a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem">PangoGlyphItem</a> *glyph_item);</pre>
+<p>
+Frees a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem"><span class="type">PangoGlyphItem</span></a> and memory to which it points.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>glyph_item</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem"><span class="type">PangoGlyphItem</span></a>
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since  1.6
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>
