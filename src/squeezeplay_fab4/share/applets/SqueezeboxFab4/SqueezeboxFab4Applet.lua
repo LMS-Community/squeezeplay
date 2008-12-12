@@ -50,7 +50,9 @@ function init(self)
 	mac = System:getMacAddress()
 	uuid = System:getUUID()
 
-	if not uuid or string.match(mac, "^00:40:20") then
+	if not uuid or string.match(mac, "^00:40:20") 
+		or uuid == "00000000-0000-0000-0000-000000000000"
+		or mac == "00:04:20:ff:ff:01" then
 		local popup = Popup("errorWindow", self:string("INVALID_MAC_TITLE"))
 
 		popup:setAllowScreensaver(false)
