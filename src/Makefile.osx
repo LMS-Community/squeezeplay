@@ -138,21 +138,16 @@ expat-2.0.0/Makefile:
 expat: expat-2.0.0/Makefile
 	cd expat-2.0.0; make && make install
 
-# gettext - with ugly touch hack to get around aclocal issues so I can get on to more pressing matters...
-gettext-0.14.1/Makefile:
-	touch gettext-0.14.1/gettext-runtime/Makefile.am
-	touch gettext-0.14.1/gettext-runtime/aclocal.m4
-	touch gettext-0.14.1/gettext-runtime/configure
-	touch gettext-0.14.1/gettext-runtime/Makefile.in
-	touch gettext-0.14.1/gettext-tools/Makefile.am
-	touch gettext-0.14.1/gettext-tools/aclocal.m4
-	touch gettext-0.14.1/gettext-tools/configure
-	touch gettext-0.14.1/gettext-tools/Makefile.in
-	cd gettext-0.14.1; ./configure  --enable-shared --prefix=${PREFIX} --disable-csharp --without-emacs \
+# gettext 
+generated/gettext-0.14.1/configure:
+	mkdir -p generated; cd generated; tar xvf ../gettext-0.14.1.tar.gz
+	
+generated/gettext-0.14.1/Makefile: 
+	cd generated/gettext-0.14.1; ./configure  --enable-shared --prefix=${PREFIX} --disable-csharp --without-emacs \
 	 --with-included-gettext --with-included-glib --with-included-libcroco --with-included-libxml
 
-gettext: gettext-0.14.1/Makefile
-	cd gettext-0.14.1; make && make install
+gettext: generated/gettext-0.14.1/configure generated/gettext-0.14.1/Makefile
+	cd generated/gettext-0.14.1; make && make install
 	
 # glib2
 glib-2.16.4/Makefile:
