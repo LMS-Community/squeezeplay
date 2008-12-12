@@ -14,6 +14,7 @@
 #include <SDL_ttf.h>
 #include <SDL_gfxPrimitives.h>
 #include <SDL_rotozoom.h>
+#include <SDL_Pango.h>
 
 
 /* target frame rate 14 fps - may be tuned per platform, should be /2 */
@@ -274,6 +275,9 @@ int squeezeplayL_system_init(lua_State *L);
 
 /* global counter used to invalidate widget */
 extern Uint32 jive_origin;
+
+/*hack - global sdl_pango context*/
+extern SDLPango_Context *pangocontext;
 
 /* Util functions */
 void jive_print_stack(lua_State *L, char *str);

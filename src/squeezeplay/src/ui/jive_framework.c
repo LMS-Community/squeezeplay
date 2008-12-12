@@ -25,6 +25,7 @@ static Uint32 next_jive_origin = 0;
 /* performance warning thresholds, 0 = disabled */
 struct jive_perfwarn perfwarn = { 0, 0, 0, 0, 0, 0 };
 
+SDLPango_Context *pangocontext;
 
 /* Frame rate calculations */
 //static Uint32 framedue = 0;
@@ -140,7 +141,19 @@ static int jiveL_init(lua_State *L) {
 		SDL_Quit();
 		exit(-1);
 	}
+	if (SDLPango_Init() == -1) {
+		fprintf(stderr, "SDLPango Init failed.\n");
+		SDL_Quit();
+		exit(-1);
+	}
 
+	pangocontext = SDLPango_CreateContext_GivenFontDesc("FreeSans Bold 15");
+    
+    SDLPango_SetDpi(pangocontext, 75.0, 75.0);
+	
+	SDLPango_SetDefaultColor(pangocontext, MATRIX_TRANSPARENT_BACK_WHITE_LETTER);
+	SDLPango_SetMinimumSize(pangocontext, 0, 0);
+	
 	/* Register callback for additional events (used for multimedia keys)*/
 	SDL_EventState(SDL_SYSWMEVENT,SDL_ENABLE);
 	SDL_SetEventFilter(filter_events);

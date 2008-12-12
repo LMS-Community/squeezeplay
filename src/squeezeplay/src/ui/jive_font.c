@@ -7,6 +7,7 @@
 
 #include "common.h"
 #include "jive.h"
+//#include <pango/pango.h>
 
 
 static const char *JIVE_FONT_MAGIC = "Font";
@@ -250,12 +251,41 @@ static SDL_Surface *draw_ttf_font(JiveFont *font, Uint32 color, const char *str)
 }
 
 JiveSurface *jive_font_draw_text(JiveFont *font, Uint32 color, const char *str) {
-	assert(font && font->magic == JIVE_FONT_MAGIC);
+	JiveSurface *jive_surface;
+//	PangoAttrList *attr_list;
+//    PangoAttribute *attr;
+//    GSList *open_attrs, *attr_walk;
 
-	return jive_surface_new_SDLSurface(str ? font->draw(font, color, str) : NULL);
+//	attr_list = pango_attr_list_new();
+
+//	char *markedup;
+//
+//	markedup = malloc(strlen(str) + 200);
+//	if (color == 926365695) {
+//		//	    fprintf(stderr, "shadow: %d", color);
+//		sprintf(markedup, "%s%s%s", "<span foreground=\"#373737\" letter_spacing=\"-400\">", str, "</span>");
+////		sprintf(markedup, "%s%s%s", "<span foreground=\"#373737\"  weight=\"bold\" stretch=\"ultracondensed\" font_family=\"FreeSans\" size=\"15000\">", str, "</span>");
+//	} else {
+//		//	    fprintf(stderr, "whitish: %d", color);
+//		sprintf(markedup, "%s%s%s", "<span foreground=\"#E7E7E7\" letter_spacing=\"-400\">", str, "</span>");
+////		sprintf(markedup, "%s%s%s", "<span foreground=\"#E7E7E7\"  weight=\"bold\" stretch=\"ultraexpanded\" font_family=\"FreeSans\" size=\"15000\">", str, "</span>");
+//
+//	}
+//	SDLPango_SetMarkup(pangocontext, markedup, -1);
+	
+	SDLPango_SetText(pangocontext, str, -1);
+	assert(font && font->magic == JIVE_FONT_MAGIC);
+	jive_surface = jive_surface_new_SDLSurface(str ? SDLPango_CreateSurfaceDraw (pangocontext) : NULL);
+//	return jive_surface_new_SDLSurface(str ? font->draw(font, color, str) : NULL);
+
+//	pango_layout_set_attributes(pangocontext->layout, attr_list);
+//	pango_attr_list_unref(attr_list);
+	
+	return jive_surface;
+
 }
 
-JiveSurface *jive_font_ndraw_text(JiveFont *font, Uint32 color, const char *str, size_t len) {
+JiveSurface *jive_font_ndraw_text(JiveFont *font, Uint32 color, const char *str, size_t len) {	
 	JiveSurface *srf;
 	char *tmp;
 
