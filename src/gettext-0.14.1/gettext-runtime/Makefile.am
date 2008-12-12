@@ -186,3 +186,4 @@ intl/libgnuintl.h.msvc-shared: intl/libgnuintl.h.in windows/dllexport.h
 all-local: intl/libgnuintl.h.msvc-static intl/libgnuintl.h.msvc-shared
 
 EXTRA_DIST += README.woe32 Makefile.msvc config.h.msvc windows/dllexport.h windows/intl.rc
+### File generated at: Fri Dec 12 10:27:24 CST 2008
