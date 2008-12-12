@@ -176,14 +176,16 @@ fontconfig: fontconfig-2.6.0/Makefile
 	cd fontconfig-2.6.0; make && make install
 	
 	
-# pixman
-pixman-0.10.0/Makefile:
-	cd pixman-0.10.0; ./configure  --enable-shared --disable-docs \
-	--disable-gtk \
-	--prefix=${PREFIX}
+# pixman 
+generated/pixman-0.12.0/configure:
+	mkdir -p generated; cd generated; tar xvf ../pixman-0.12.0.tar.gz
+	
+generated/pixman-0.12.0/Makefile: 
+	cd generated/pixman-0.12.0; ./configure  --enable-shared --disable-gtk --prefix=${PREFIX}
 
-pixman: pixman-0.10.0/Makefile
-	cd pixman-0.10.0; make && make install
+pixman: generated/pixman-0.12.0/configure generated/pixman-0.12.0/Makefile
+	cd generated/pixman-0.12.0; make && make install
+		
 	
 # cairo
 cairo-1.6.4/Makefile:
@@ -401,7 +403,7 @@ clean:
 	-cd pango-1.18.3; make distclean ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: pixman"
-	-cd pixman-0.10.0; make distclean ; rm -rf x86; rm -rf ppc
+	-cd pixman-0.12.0; make distclean ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: lua"
 	-cd lua-5.1.1; make clean ; rm -rf src/x86; rm -rf src/ppc
