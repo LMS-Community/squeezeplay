@@ -49,7 +49,7 @@ export BUILD_TOP=$(BASE_DIR)/build/osx
 export PREFIX=${BUILD_TOP}
 
 export CFLAGS=  -I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/pango-1.0 \
-  -I${PREFIX}/include -I${PREFIX}/include/glib-2.0 -I${PREFIX}/lib/glib-2.0/include -I${PREFIX}/include/cairo  -g
+  -I${PREFIX}/include -I${PREFIX}/include/glib-2.0 -I${PREFIX}/lib/glib-2.0/include -I${PREFIX}/include/cairo -g
 export LDFLAGS=-L${PREFIX}/lib -L/usr/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
@@ -151,17 +151,23 @@ glib-2.16.4/Makefile:
 glib2: glib-2.16.4/Makefile
 	cd glib-2.16.4; make && make install
 
+#hardcoding temp system-singleton locations for now to tmp until we resolve a location/alternative
 #fontconfig
 fontconfig-2.6.0/Makefile:
 	cd fontconfig-2.6.0; ./configure  --enable-shared \
-	--with-add-fonts=../share/jive/fonts/ \
+	--with-add-fonts=/tmp/splocal/fonts/ \
 	--sysconfdir=/tmp/splocal/etc \
 	--localstatedir=/tmp/splocal/var \
 	--prefix=${PREFIX} 
 
+# relative dir works, but is relative to app working directory
+#	--with-add-fonts=../share/jive/fonts/ \
+
 #	--with-add-fonts=/usr/X11R6/lib/X11/fonts,/Library/Fonts,/Network/Library/Fonts,/System/Library/Fonts \
 
 fontconfig: fontconfig-2.6.0/Makefile
+	-mkdir -p /tmp/splocal/fonts/
+	cp freefont-20060126/Free*ttf /tmp/splocal/fonts/
 	cd fontconfig-2.6.0; make && make install
 	
 	
