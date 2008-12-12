@@ -54,6 +54,8 @@ export LDFLAGS=-L${PREFIX}/lib -L/usr/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
 
+export PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig
+
 export SDL_CONFIG = sdl-config
 export CC=sh ${BASE_DIR}src/gcc-fat.sh
 
@@ -116,7 +118,7 @@ sdl-ttf: SDL_ttf-2.0.8/Makefile
 
 # sdl-pango
 SDL_Pango-0.1.2/Makefile:
-	cd SDL_Pango-0.1.2; PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config ./configure  --prefix=${PREFIX}
+	cd SDL_Pango-0.1.2; SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config ./configure  --prefix=${PREFIX}
 
 sdl-pango: SDL_Pango-0.1.2/Makefile
 	cd SDL_Pango-0.1.2; make SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config && make install
@@ -136,8 +138,16 @@ expat-2.0.0/Makefile:
 expat: expat-2.0.0/Makefile
 	cd expat-2.0.0; make && make install
 
-# gettext
+# gettext - with ugly touch hack to get around aclocal issues so I can get on to more pressing matters...
 gettext-0.14.1/Makefile:
+	touch gettext-0.14.1/gettext-runtime/Makefile.am
+	touch gettext-0.14.1/gettext-runtime/aclocal.m4
+	touch gettext-0.14.1/gettext-runtime/configure
+	touch gettext-0.14.1/gettext-runtime/Makefile.in
+	touch gettext-0.14.1/gettext-tools/Makefile.am
+	touch gettext-0.14.1/gettext-tools/aclocal.m4
+	touch gettext-0.14.1/gettext-tools/configure
+	touch gettext-0.14.1/gettext-tools/Makefile.in
 	cd gettext-0.14.1; ./configure  --enable-shared --prefix=${PREFIX} --disable-csharp --without-emacs \
 	 --with-included-gettext --with-included-glib --with-included-libcroco --with-included-libxml
 
@@ -191,7 +201,7 @@ cairo: cairo-1.6.4/Makefile
 
 # pango
 pango-1.18.3/Makefile:
-	export PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig; cd pango-1.18.3; ./configure  --enable-shared --disable-docs \
+	cd pango-1.18.3; ./configure  --enable-shared --disable-docs \
 	--without-x \
 	--sysconfdir=/tmp/splocal/etc \
 	--localstatedir=/tmp/splocal/var \
