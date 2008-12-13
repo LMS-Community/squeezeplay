@@ -151,7 +151,7 @@ gettext: generated/gettext-0.14.1/configure generated/gettext-0.14.1/Makefile
 	
 # glib2
 glib-2.16.4/Makefile:
-	cd glib-2.16.4; ./configure  --enable-shared --prefix=${PREFIX} LDFLAGS="${LDFLAGS} -L${PREFIX}/lib/gettext"
+	PATH=${PREFIX}/bin:${PATH}; cd glib-2.16.4; ./configure  --enable-shared --prefix=${PREFIX} LDFLAGS="${LDFLAGS} -L${PREFIX}/lib/gettext"
 
 glib2: glib-2.16.4/Makefile
 	cd glib-2.16.4; make && make install
@@ -197,15 +197,18 @@ cairo: cairo-1.6.4/Makefile
 	cd cairo-1.6.4; make && make install
 
 # pango
-pango-1.18.3/Makefile:
-	cd pango-1.18.3; ./configure  --enable-shared --disable-docs \
+generated/pango-1.21.2/configure:
+	mkdir -p generated; cd generated; tar xvf ../pango-1.21.2.tar.gz
+	
+generated/pango-1.21.2/Makefile: 
+	cd generated/pango-1.21.2; ./configure  --enable-shared --disable-docs \
 	--without-x \
 	--sysconfdir=/tmp/splocal/etc \
 	--localstatedir=/tmp/splocal/var \
 	--prefix=${PREFIX}
 
-pango: pango-1.18.3/Makefile
-	cd pango-1.18.3; make && make install
+pango: generated/pango-1.21.2/configure generated/pango-1.21.2/Makefile
+	PATH=${PREFIX}/bin:${PATH}; cd generated/pango-1.21.2; make && make install
 
 #####
 # lua
