@@ -119,101 +119,56 @@ int jiveL_label_skin(lua_State *L) {
 static void prepare(lua_State *L) {
 	LabelWidget *peer;
 	Uint16 width, height, offset;
-	int max_width = 0;
-	int total_height = 0;
-	size_t num_lines = 0;
-	const char *str, *ptr;
+	const char *str;
+
+	LabelLine *line;
+	JiveFont *font;
+	Uint32 fg, sh;
+	bool is_sh;
 
 	peer = jive_getpeer(L, 1, &labelPeerMeta);
-
 
 	/* free existing text surfaces */
 	jive_label_gc_lines(peer);
 
-	/* split multi-line text */
 	lua_getglobal(L, "tostring");
 	lua_getfield(L, 1, "value");
 	lua_call(L, 1, 1);
 
-	ptr = str = lua_tostring(L, -1);
+	str = lua_tostring(L, -1);
 
-	if (!ptr || *ptr == '\0') {
+	if (!str || *str == '\0') {
 		return;
 	}
 
-	do {
-		char *tmp;
-		LabelLine *line;
-		JiveFont *font;
-		Uint32 fg, sh;
-		bool is_sh;
+	peer->num_lines = 1;
+	peer->line = realloc(peer->line, sizeof(LabelLine));
+	
+	font = peer->base.font;
+	offset = peer->base.textOffset;;
+	fg = peer->base.fg;
+	sh = peer->base.sh;
+	is_sh = peer->base.is_sh;
 
-		/* find line ending */
-		/* FIXME correct utf8 handling! */
-		if (*ptr != '\0' && *ptr != '\n' && *ptr != '\r') {
-			continue;
-		}
+	line = &peer->line[0];
+	line->lineHeight = height;
+	line->textOffset = offset;
+	line->text_sh = is_sh ? jive_font_draw_text(font, sh, str) : NULL;
+	line->text_fg = jive_font_draw_text(font, fg, str);
 
-		peer->num_lines = num_lines + 1;
-		peer->line = realloc(peer->line, peer->num_lines * sizeof(LabelLine));
 
-		/* format for line */
-		font = peer->base.font;
-		height = peer->base.lineHeight;
-		offset = peer->base.textOffset;
-		fg = peer->base.fg;
-		sh = peer->base.sh;
-		is_sh = peer->base.is_sh;
-
-		if (num_lines < peer->num_format) {
-			LabelFormat *format = &peer->format[num_lines];
-
-			if (format->font) {
-				font = format->font;
-				height = format->lineHeight;
-				offset = format->textOffset;
-			}
-			if (format->is_fg) {
-				fg = format->fg;
-			}
-			if (format->is_sh) {
-				sh = format->sh;
-			}
-		}
-
-		line = &peer->line[num_lines++];
-
-		/* shadow and foreground text */
-		//tmp = strndup(str, ptr - str);
-		tmp = malloc(ptr - str + 1);
-		strncpy(tmp, str, ptr - str + 1);
-		tmp[ptr - str] = '\0';
-
-		line->text_sh = is_sh ? jive_font_draw_text(font, sh, tmp) : NULL;
-		line->text_fg = jive_font_draw_text(font, fg, tmp);
-		free(tmp);
-
-		/* label dimensions */
-		jive_surface_get_size(line->text_fg, &width, NULL);
-		max_width = MAX(max_width, width);
-		total_height += height;
-
-		line->lineHeight = height;
-		line->textOffset = offset;
-
-		/* skip white space */
-		while (*ptr == '\n' || *ptr == '\r' || *ptr == ' ') {
-			ptr++;
-		}
-		str = ptr;
-	} while (*ptr++ != '\0');
-
+	/* label dimensions */
+	jive_surface_get_size(line->text_fg, &width, &height);
+	//Note: pango height being returned is higher than peer->base.lineHeight, why? for now commenting out next line because of this
+	//	height = MAX(peer->base.lineHeight, height);
+	
 	/* text width and height */
-	peer->text_h = total_height;
-	peer->text_w = max_width;
+	peer->text_h = height;
+	peer->text_w = width;
 
 	/* reset scroll position */
 	peer->scroll_offset = SCROLL_PAD_START;
+
 }
 
 
