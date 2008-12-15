@@ -7,7 +7,7 @@
 
 #include "common.h"
 #include "jive.h"
-//#include <pango/pango.h>
+#include <pango/pango.h>
 
 
 static const char *JIVE_FONT_MAGIC = "Font";
@@ -252,34 +252,60 @@ static SDL_Surface *draw_ttf_font(JiveFont *font, Uint32 color, const char *str)
 
 JiveSurface *jive_font_draw_text(JiveFont *font, Uint32 color, const char *str) {
 	JiveSurface *jive_surface;
-//	PangoAttrList *attr_list;
-//    PangoAttribute *attr;
-//    GSList *open_attrs, *attr_walk;
+	PangoAttrList *attr_list;
+	PangoAttribute *size, *fgcolor, *family, *weight, *letter_spacing;
 
-//	attr_list = pango_attr_list_new();
+	assert(font && font->magic == JIVE_FONT_MAGIC);
+
+	attr_list = pango_attr_list_new();
+	
+	size = pango_attr_size_new (font->size * 1000);
+	size->start_index = 0;
+	size->end_index = strlen(str);
+    pango_attr_list_insert (attr_list, size);
+    	
+	fgcolor = pango_attr_foreground_new (256 * ((color >> 24) & 0xFF), 256 * ((color >> 16) & 0xFF) , 256 * ((color >> 8) & 0xFF));
+	fgcolor->start_index = 0;
+	fgcolor->end_index = strlen(str);
+    pango_attr_list_insert (attr_list, fgcolor);
+	
+	family = pango_attr_family_new ("FreeSans");
+	family->start_index = 0;
+	family->end_index = strlen(str);
+    pango_attr_list_insert (attr_list, family);
+    	
+    if (strstr(font->name, "Bold") != NULL) {	
+		weight = pango_attr_weight_new (PANGO_WEIGHT_BOLD);
+		weight->start_index = 0;
+		weight->end_index = strlen(str);
+		pango_attr_list_insert (attr_list, weight);
+	}
+        	
+    letter_spacing = pango_attr_letter_spacing_new (-600);
+	letter_spacing->start_index = 0;
+	letter_spacing->end_index = strlen(str);
+    pango_attr_list_insert (attr_list, letter_spacing);
+
 
 //	char *markedup;
 //
 //	markedup = malloc(strlen(str) + 200);
 //	if (color == 926365695) {
-//		//	    fprintf(stderr, "shadow: %d", color);
 //		sprintf(markedup, "%s%s%s", "<span foreground=\"#373737\" letter_spacing=\"-400\">", str, "</span>");
-////		sprintf(markedup, "%s%s%s", "<span foreground=\"#373737\"  weight=\"bold\" stretch=\"ultracondensed\" font_family=\"FreeSans\" size=\"15000\">", str, "</span>");
 //	} else {
 //		//	    fprintf(stderr, "whitish: %d", color);
 //		sprintf(markedup, "%s%s%s", "<span foreground=\"#E7E7E7\" letter_spacing=\"-400\">", str, "</span>");
-////		sprintf(markedup, "%s%s%s", "<span foreground=\"#E7E7E7\"  weight=\"bold\" stretch=\"ultraexpanded\" font_family=\"FreeSans\" size=\"15000\">", str, "</span>");
 //
 //	}
 //	SDLPango_SetMarkup(pangocontext, markedup, -1);
-	
-	SDLPango_SetText(pangocontext, str, -1);
-	assert(font && font->magic == JIVE_FONT_MAGIC);
-	jive_surface = jive_surface_new_SDLSurface(str ? SDLPango_CreateSurfaceDraw (pangocontext) : NULL);
-//	return jive_surface_new_SDLSurface(str ? font->draw(font, color, str) : NULL);
 
-//	pango_layout_set_attributes(pangocontext->layout, attr_list);
-//	pango_attr_list_unref(attr_list);
+
+	pango_layout_set_attributes(SDLPango_GetPangoLayout(pangocontext), attr_list);
+	pango_layout_set_text (SDLPango_GetPangoLayout(pangocontext), str, -1);
+
+	jive_surface = jive_surface_new_SDLSurface(str ? SDLPango_CreateSurfaceDraw (pangocontext) : NULL);
+
+	pango_attr_list_unref(attr_list);
 	
 	return jive_surface;
 
