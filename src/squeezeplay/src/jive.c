@@ -23,10 +23,8 @@
 #include "common.h"
 #include "version.h"
 
-
 #include "audio/streambuf.h"
 #include "audio/decode/decode.h"
-
 
 #if defined (_MSC_VER)
 #include <windows.h>
