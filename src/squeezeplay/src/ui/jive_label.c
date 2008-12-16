@@ -15,15 +15,6 @@
 #define SCROLL_PAD_START  -60
 
 
-typedef struct label_line {
-	JiveSurface *text_sh;
-	JiveSurface *text_fg;
-	Uint16 label_x, label_y; // line position
-	Uint16 lineHeight;       // line height
-	Uint16 textOffset;
-} LabelLine;
-
-
 typedef struct label_format {
 	JiveFont *font;
 	bool is_sh, is_fg;
@@ -40,15 +31,14 @@ typedef struct label_widget {
 	Uint16 label_w;
 	JiveAlign text_align;
 	JiveTile *bg_tile;
-	size_t num_format;
-	LabelFormat *format;
 	LabelFormat base;
 
-	// prepared lines
 	int scroll_offset;
-	size_t num_lines;
+	Uint16 label_x, label_y; // line position
 	Uint16 text_w, text_h; // maximum label width and height
-	LabelLine *line;
+
+	JiveSurface *text_sh;
+	JiveSurface *text_fg;
 } LabelWidget;
 
 
@@ -66,7 +56,6 @@ static void jive_label_gc_formats(LabelWidget *format);
 int jiveL_label_skin(lua_State *L) {
 	LabelWidget *peer;
 	JiveTile *bg_tile;
-	size_t i, num_format;
 
 	/* stack is:
 	 * 1: widget
@@ -89,20 +78,6 @@ int jiveL_label_skin(lua_State *L) {
 	peer->base.fg = jive_style_color(L, 1, "fg", JIVE_COLOR_BLACK, NULL);
 	peer->base.sh = jive_style_color(L, 1, "sh", JIVE_COLOR_WHITE, &(peer->base.is_sh));
 
-	num_format = jive_style_array_size(L, 1, "line");
-	peer->format = calloc(num_format, sizeof(LabelFormat));
-	peer->num_format = num_format;
-
-	for (i=0; i<num_format; i++) {
-		peer->format[i].font = jive_font_ref(jive_style_array_font(L, 1, "line", i+1, "font"));
-		if (peer->format[i].font) {
-			peer->format[i].lineHeight = jive_style_array_int(L, 1, "line", i+1, "height", jive_font_capheight(peer->format[i].font));
-			peer->format[i].textOffset = jive_font_offset(peer->base.font);
-		}
-//		peer->format[i].fg = jive_style_color(L, 1, "fg", JIVE_COLOR_BLACK, &(peer->format[i].is_fg);
-//		peer->format[i].sh = jive_style_color(L, 1, "sh", JIVE_COLOR_BLACK, &(peer->format[i].is_sh);
-	}
-
 	bg_tile = jive_style_tile(L, 1, "bgImg", NULL);
 	if (bg_tile != peer->bg_tile) {
 		if (peer->bg_tile) {
@@ -121,7 +96,6 @@ static void prepare(lua_State *L) {
 	Uint16 width, height, offset;
 	const char *str;
 
-	LabelLine *line;
 	JiveFont *font;
 	Uint32 fg, sh;
 	bool is_sh;
@@ -141,26 +115,15 @@ static void prepare(lua_State *L) {
 		return;
 	}
 
-	peer->num_lines = 1;
-	peer->line = realloc(peer->line, sizeof(LabelLine));
-	
-	font = peer->base.font;
-	offset = peer->base.textOffset;;
-	fg = peer->base.fg;
-	sh = peer->base.sh;
-	is_sh = peer->base.is_sh;
-
-	line = &peer->line[0];
-	line->lineHeight = height;
-	line->textOffset = offset;
-	line->text_sh = is_sh ? jive_font_draw_text(font, sh, str) : NULL;
-	line->text_fg = jive_font_draw_text(font, fg, str);
+	peer->text_sh = peer->base.is_sh ? jive_font_draw_text(peer->base.font, peer->base.sh, str) : NULL;
+	peer->text_fg = jive_font_draw_text(peer->base.font, peer->base.fg, str);
 
 
 	/* label dimensions */
-	jive_surface_get_size(line->text_fg, &width, &height);
-	//Note: pango height being returned is higher than peer->base.lineHeight, why? for now commenting out next line because of this
+	jive_surface_get_size(peer->text_fg, &width, &height);
+	//Note: surface height being returned is higher than peer->base.lineHeight, why? for now commenting out next line because of this
 	//	height = MAX(peer->base.lineHeight, height);
+	height = peer->base.lineHeight;
 	
 	/* text width and height */
 	peer->text_h = height;
@@ -176,6 +139,7 @@ int jiveL_label_layout(lua_State *L) {
 	LabelWidget *peer;
 	Uint16 y;
 	size_t i;
+	Uint16 w, h;
 
 	/* stack is:
 	 * 1: widget
@@ -186,20 +150,18 @@ int jiveL_label_layout(lua_State *L) {
 
 	peer = jive_getpeer(L, 1, &labelPeerMeta);
 
-
 	/* align the label, minus the widget width */
 	y = jive_widget_valign((JiveWidget *)peer, peer->text_align, peer->text_h);
+	
+	if (peer->text_fg ) {
 
-	for (i=0; i<peer->num_lines; i++) {
-		LabelLine *line = &peer->line[i];
-		Uint16 w, h;
-
-		jive_surface_get_size(line->text_fg, &w, &h);
-
-		line->label_x = jive_widget_halign((JiveWidget *)peer, peer->text_align, w);
-		line->label_y = y - line->textOffset;
-
-		y += line->lineHeight;
+		jive_surface_get_size(peer->text_fg, &w, &h);
+	
+		peer->label_x = jive_widget_halign((JiveWidget *)peer, peer->text_align, w);
+		peer->label_y = y - peer->base.textOffset;
+	
+		y += peer->base.lineHeight;
+	
 	}
 
 	/* maximum render width */
@@ -289,6 +251,9 @@ int jiveL_label_draw(lua_State *L) {
 	 * 3: layer
 	 */
 
+	Uint16 w, h, o, s;
+	Uint16 text_w;
+
 	LabelWidget *peer = jive_getpeer(L, 1, &labelPeerMeta);
 	JiveSurface *srf = tolua_tousertype(L, 2, 0);
 	bool drawLayer = luaL_optinteger(L, 3, JIVE_LAYER_ALL) & peer->w.layer;
@@ -300,48 +265,43 @@ int jiveL_label_draw(lua_State *L) {
 	//jive_surface_boxColor(srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.x + peer->w.bounds.w-1, peer->w.bounds.y + peer->w.bounds.h-1, 0x00FF007F);
 
 	/* draw text label */
-	if (!(drawLayer && peer->num_lines)) {
+	if (!(drawLayer && peer->text_fg)) {
 		return 0;
 	}
 
-	for (i = 0; i < peer->num_lines; i++) {
-		Uint16 w, h, o, s;
-		Uint16 text_w;
-		LabelLine *line = &peer->line[i];
 
-		jive_surface_get_size(line->text_fg, &w, &h);
+	jive_surface_get_size(peer->text_fg, &w, &h);
 
-		/* second text when scrolling */
-		o = (peer->scroll_offset < 0) ? 0 : peer->scroll_offset;
-		if (w < peer->label_w) {
-			o = 0;
-		}
+	/* second text when scrolling */
+	o = (peer->scroll_offset < 0) ? 0 : peer->scroll_offset;
+	if (w < peer->label_w) {
+		o = 0;
+	}
 
-		s = peer->text_w - o + SCROLL_PAD_RIGHT;
-		text_w = peer->label_w;
+	s = peer->text_w - o + SCROLL_PAD_RIGHT;
+	text_w = peer->label_w;
 
-		/* shadow text */
-		if (line->text_sh) {
-			jive_surface_blit_clip(line->text_sh, o, 0, text_w, h,
-					       srf, peer->w.bounds.x + line->label_x + 1, peer->w.bounds.y + line->label_y + 1);
-
-			if (o && s < text_w) {
-				Uint16 len = MAX(0, text_w - s);
-				jive_surface_blit_clip(line->text_sh, 0, 0, len, h,
-						       srf, peer->w.bounds.x + line->label_x + s + 1, peer->w.bounds.y + line->label_y + 1);
-			} 
-		}
-
-		/* foreground text */
-		jive_surface_blit_clip(line->text_fg, o, 0, text_w, h,
-				       srf, peer->w.bounds.x + line->label_x, peer->w.bounds.y + line->label_y);
+	/* shadow text */
+	if (peer->text_sh) {
+		jive_surface_blit_clip(peer->text_sh, o, 0, text_w, h,
+					   srf, peer->w.bounds.x + peer->label_x + 1, peer->w.bounds.y + peer->label_y + 1);
 
 		if (o && s < text_w) {
 			Uint16 len = MAX(0, text_w - s);
-			jive_surface_blit_clip(line->text_fg, 0, 0, len, h,
-					       srf, peer->w.bounds.x + line->label_x + s, peer->w.bounds.y + line->label_y);
+			jive_surface_blit_clip(peer->text_sh, 0, 0, len, h,
+						   srf, peer->w.bounds.x + peer->label_x + s + 1, peer->w.bounds.y + peer->label_y + 1);
 		} 
 	}
+
+	/* foreground text */
+	jive_surface_blit_clip(peer->text_fg, o, 0, text_w, h,
+				   srf, peer->w.bounds.x + peer->label_x, peer->w.bounds.y + peer->label_y);
+
+	if (o && s < text_w) {
+		Uint16 len = MAX(0, text_w - s);
+		jive_surface_blit_clip(peer->text_fg, 0, 0, len, h,
+					   srf, peer->w.bounds.x + peer->label_x + s, peer->w.bounds.y + peer->label_y);
+	} 
 
 	return 0;
 }
@@ -385,23 +345,12 @@ int jiveL_label_get_preferred_bounds(lua_State *L) {
 
 
 static void jive_label_gc_lines(LabelWidget *peer) {
-	size_t i;
-
-	if (!peer->num_lines) {
-		return;
+	if (peer->text_sh) {
+		jive_surface_free(peer->text_sh);
 	}
-
-	for (i=0; i<peer->num_lines; i++) {
-		if (peer->line[i].text_sh) {
-			jive_surface_free(peer->line[i].text_sh);
-		}
-		if (peer->line[i].text_fg) {
-			jive_surface_free(peer->line[i].text_fg);
-		}
+	if (peer->text_fg) {
+		jive_surface_free(peer->text_fg);
 	}
-	free(peer->line);
-	peer->line = NULL;
-	peer->num_lines = 0;
 }
 
 
@@ -414,15 +363,7 @@ static void jive_label_gc_format(LabelFormat *format) {
 
 
 static void jive_label_gc_formats(LabelWidget *peer) {
-	size_t i;
-
 	jive_label_gc_format(&peer->base);
-	for (i=0; i<peer->num_format; i++) {
-		jive_label_gc_format(&peer->format[i]);
-	}
-	free(peer->format);
-	peer->format = NULL;
-	peer->num_format = 0;
 }
 
 
