@@ -159,7 +159,7 @@ gettext: generated/${GETTEXT_DIR}/configure generated/${GETTEXT_DIR}/Makefile
 	cd generated/${GETTEXT_DIR}; make && make install
 	
 # glib2
-GLIB2_DIR = glib-2.16.4
+GLIB2_DIR = glib-2.18.2
 generated/${GLIB2_DIR}/configure:
 	mkdir -p generated; cd generated; tar xvf ../${GLIB2_DIR}.tar.gz
 	
@@ -218,7 +218,7 @@ cairo: generated/${CAIRO_DIR}/configure generated/${CAIRO_DIR}/Makefile
 	cd generated/${CAIRO_DIR}; make && make install
 	
 # pango
-PANGO_DIR = pango-1.21.2
+PANGO_DIR = pango-1.22.3
 generated/${PANGO_DIR}/configure:
 	mkdir -p generated; cd generated; tar xvf ../${PANGO_DIR}.tar.gz
 	
