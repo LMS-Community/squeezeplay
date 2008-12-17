@@ -17,7 +17,6 @@
 //#define RUNTIME_DEBUG_VERBOSE
 //#define RUNTIME_DEBUG_DRAW
 
-
 #define DEBUG_ERROR(fmt, ...) fprintf(stderr, "%s:%d ERROR " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__);
 
 #if RUNTIME_DEBUG
