@@ -249,64 +249,81 @@ static SDL_Surface *draw_ttf_font(JiveFont *font, Uint32 color, const char *str)
 
 	return srf;
 }
+JiveSurface *jive_font_draw_text(JiveFont *font, Uint32 color, const char *str ) {
+    return jive_font_draw_text_wrap(font, color, str, -1 );
+}
 
-JiveSurface *jive_font_draw_text(JiveFont *font, Uint32 color, const char *str) {
+/**
+ * if wrapping_width == -1, no wrapping will be done
+ */
+JiveSurface *jive_font_draw_text_wrap(JiveFont *font, Uint32 color, const char *str, Uint16 wrapping_width ) {
 	JiveSurface *jive_surface;
 	PangoAttrList *attr_list;
 	PangoAttribute *size, *fgcolor, *family, *weight, *letter_spacing;
-
+    GError *err = NULL;
+    char *text = NULL;
+    
 	assert(font && font->magic == JIVE_FONT_MAGIC);
 
-	attr_list = pango_attr_list_new();
+    PangoLayout *layout = SDLPango_GetPangoLayout(pangocontext);
+
+    if ( !pango_parse_markup(str, -1, 0, &attr_list, &text, NULL, &err)) {
+        fprintf(stderr, "pango_parse_markup error: %s\n", err->message);
+        g_error_free(err); 
+    	
+    	//Fall back to using non-marked up set_text which is more forgiving and will replace illegal chars with '?' 
+    	attr_list = pango_attr_list_new();
+    	pango_layout_set_text (layout, str, -1);
+    } else {
+    	pango_layout_set_text (layout, text, -1);    
+    }
+    
 	
 	size = pango_attr_size_new (font->size * 1000);
 	size->start_index = 0;
 	size->end_index = strlen(str);
-    pango_attr_list_insert (attr_list, size);
+    pango_attr_list_insert_before (attr_list, size);
     	
 	fgcolor = pango_attr_foreground_new (256 * ((color >> 24) & 0xFF), 256 * ((color >> 16) & 0xFF) , 256 * ((color >> 8) & 0xFF));
 	fgcolor->start_index = 0;
 	fgcolor->end_index = strlen(str);
-    pango_attr_list_insert (attr_list, fgcolor);
+    pango_attr_list_insert_before (attr_list, fgcolor);
 	
 	family = pango_attr_family_new ("FreeSans");
 	family->start_index = 0;
 	family->end_index = strlen(str);
-    pango_attr_list_insert (attr_list, family);
+    pango_attr_list_insert_before (attr_list, family);
     	
     if (strstr(font->name, "Bold") != NULL) {	
 		weight = pango_attr_weight_new (PANGO_WEIGHT_BOLD);
 		weight->start_index = 0;
 		weight->end_index = strlen(str);
-		pango_attr_list_insert (attr_list, weight);
+		pango_attr_list_insert_before (attr_list, weight);
 	}
         	
-    letter_spacing = pango_attr_letter_spacing_new (-600);
-	letter_spacing->start_index = 0;
-	letter_spacing->end_index = strlen(str);
-    pango_attr_list_insert (attr_list, letter_spacing);
+//    letter_spacing = pango_attr_letter_spacing_new (-600);
+//	letter_spacing->start_index = 0;
+//	letter_spacing->end_index = strlen(str);
+//    pango_attr_list_insert_before (attr_list, letter_spacing);
 
 
-//	char *markedup;
-//
-//	markedup = malloc(strlen(str) + 200);
-//	if (color == 926365695) {
-//		sprintf(markedup, "%s%s%s", "<span foreground=\"#373737\" letter_spacing=\"-400\">", str, "</span>");
-//	} else {
-//		//	    fprintf(stderr, "whitish: %d", color);
-//		sprintf(markedup, "%s%s%s", "<span foreground=\"#E7E7E7\" letter_spacing=\"-400\">", str, "</span>");
-//
-//	}
-//	SDLPango_SetMarkup(pangocontext, markedup, -1);
+	pango_layout_set_attributes(layout, attr_list);
+	pango_layout_context_changed(layout);
+	pango_attr_list_unref(attr_list);
+    g_free (text);
 
 
-	pango_layout_set_attributes(SDLPango_GetPangoLayout(pangocontext), attr_list);
-	pango_layout_set_text (SDLPango_GetPangoLayout(pangocontext), str, -1);
-
+	if (wrapping_width == -1) {
+	    //don't wrap
+        pango_layout_set_width(layout, (guint) -1);
+    } else {
+        pango_layout_set_width(layout, (guint) wrapping_width * PANGO_SCALE);
+    }
+    pango_layout_set_wrap(layout, PANGO_WRAP_WORD);
+    //pango_layout_set_height (SDLPango_GetPangoLayout(pangocontext), 300* PANGO_SCALE);
+    
 	jive_surface = jive_surface_new_SDLSurface(str ? SDLPango_CreateSurfaceDraw (pangocontext) : NULL);
 
-	pango_attr_list_unref(attr_list);
-	
 	return jive_surface;
 
 }
