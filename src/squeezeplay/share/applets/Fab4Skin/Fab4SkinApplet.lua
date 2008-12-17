@@ -176,6 +176,18 @@ function skin(self, s)
 				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_bl.png",
 				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_l.png",
 			       })
+	local buttonBox =
+		Tile:loadTiles({
+					imgpath .. "Buttons/button_selection_box.png",
+					imgpath .. "Buttons/button_sbox_tl.png",
+					imgpath .. "Buttons/button_sbox_t.png",
+					imgpath .. "Buttons/button_sbox_tr.png",
+					imgpath .. "Buttons/button_sbox_r.png",
+					imgpath .. "Buttons/button_sbox_br.png",
+					imgpath .. "Buttons/button_sbox_b.png",
+					imgpath .. "Buttons/button_sbox_bl.png",
+					imgpath .. "Buttons/button_sbox_l.png",
+				})
 
 -- FIXME: do these need updating for Fab4Skin?
 	local helpBox = 
@@ -291,6 +303,8 @@ function skin(self, s)
 	local TITLE_FONT_SIZE = 18
 	local ALBUMMENU_FONT_SIZE = 18
 	local TEXTMENU_FONT_SIZE = 24
+	local POPUP_TEXT_SIZE_1 = 24
+	local POPUP_TEXT_SIZE_2 = 12
 	local TRACK_FONT_SIZE = 18
 	local TEXTAREA_FONT_SIZE = 18
 	local CENTERED_TEXTAREA_FONT_SIZE = 28
@@ -328,6 +342,7 @@ function skin(self, s)
 
 	s.title.back = {}
 	s.title.back.img = _loadImage(self, "Icons/Mini/left_arrow.png")
+	s.title.back.bgImg = buttonBox
 	s.title.back.align = "left"
 	s.title.back.padding = { 0, 0, 5, 5 }
 
@@ -649,19 +664,21 @@ function skin(self, s)
 
 	s.popupIcon.text = {}
 	s.popupIcon.text.border = 15
-	s.popupIcon.text.line = {
-		{
-			font = _boldfont(24),
-			height = 24,
-		},
-		{
-			font = _boldfont(20),
-		},
-	}
+	s.popupIcon.text.font = _boldfont(POPUP_TEXT_SIZE_1)
 	s.popupIcon.text.fg = TEXT_COLOR
+	s.popupIcon.text.lineHeight = POPUP_TEXT_SIZE_1 + 2
 	s.popupIcon.text.sh = TEXT_SH_COLOR
 	s.popupIcon.text.align = "center"
-	s.popupIcon.text.position = LAYOUT_SOUTH
+	s.popupIcon.text.position = LAYOUT_NORTH
+
+	s.popupIcon.text2 = {}
+	s.popupIcon.text2.border = 15
+	s.popupIcon.text2.font = _boldfont(POPUP_TEXT_SIZE_2)
+	s.popupIcon.text2.fg = TEXT_COLOR
+	s.popupIcon.text2.sh = TEXT_SH_COLOR
+	s.popupIcon.text2.align = "center"
+	s.popupIcon.text2.position = LAYOUT_SOUTH
+
 
 	s.iconPower = {}
 	s.iconPower.img = _loadImage(self, "Alerts/popup_shutdown_icon.png")
@@ -679,8 +696,10 @@ function skin(self, s)
 	s.iconConnecting.img = _loadImage(self, "Alerts/wifi_connecting.png")
 	s.iconConnecting.frameRate = 4
 	s.iconConnecting.frameWidth = 161
-	s.iconConnecting.w = WH_FILL
-	s.iconConnecting.align = "center"
+	s.iconConnecting.w = 161
+	s.iconConnecting.align = "left"
+	s.iconConnecting.padding = { 25, 0, 0, 0 }
+	s.iconConnecting.position = LAYOUT_WEST
 
 	s.iconConnected = {}
 	s.iconConnected.img = _loadImage(self, "Alerts/connecting_success_icon.png")
@@ -705,7 +724,48 @@ function skin(self, s)
         s.touchButton.align = 'center'
         s.touchButton.text = {}
         s.touchButton.text.align = "center"
-	s.touchButton.position = LAYOUT_CENTER
+	s.touchButton.position = LAYOUT_NONE
+	s.touchButton.x = screenWidth/2
+	s.touchButton.y = screenHeight - 80
+
+	-- wired/wireless text for setup
+	s.networkchoiceText = {}
+	s.networkchoiceText.order = { 'wifi', 'wired' }
+	s.networkchoiceText.position = LAYOUT_NONE
+
+	s.networkchoiceText.x = 0
+	s.networkchoiceText.y = screenHeight - 225
+	
+	s.networkchoiceText.wifi = {}
+	s.networkchoiceText.wifi.align = 'center'
+	s.networkchoiceText.wifi.font = _boldfont(22)
+	s.networkchoiceText.wifi.fg = TEXT_COLOR
+	s.networkchoiceText.wifi.w = WH_FILL
+	
+	s.networkchoiceText.wired = {}
+	s.networkchoiceText.wired.align = 'center'
+	s.networkchoiceText.wired.font = _boldfont(22)
+	s.networkchoiceText.wired.fg = TEXT_COLOR
+	s.networkchoiceText.wired.w = WH_FILL
+
+
+	-- wired/wireless buttons for setup
+	s.networkchoice = {}
+	s.networkchoice.order = { 'wifi', 'wired' }
+	s.networkchoice.position = LAYOUT_NONE
+
+	s.networkchoice.x = screenWidth - 450
+	s.networkchoice.y = screenHeight - 200
+	
+	s.networkchoice.wifi = {}
+	s.networkchoice.wifi.align = 'center'
+	s.networkchoice.wifi.padding = { 0, 0, 10, 0 }
+	s.networkchoice.wifi.img = _loadImage(self, "Setup/wifi.png")
+	
+	s.networkchoice.wired = {}
+	s.networkchoice.wired.align = 'center'
+	s.networkchoice.wired.padding = { 10, 0, 0, 0 }
+	s.networkchoice.wired.img = _loadImage(self, "Setup/wired.png")
 
 	-- wireless icons for menus
 	s.wirelessLevel1 = {}
@@ -865,10 +925,11 @@ function skin(self, s)
 	-- Based on s.title, this is for settings title style
 	s.setuptitle =
 		_uses(s.minititle, {
-				order = { 'back', 'text', 'nowplaying', 'icon' },
+				order = { 'back', 'icon', 'text', 'nowplaying' },
 				nowplaying = { img = false  },
 			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_settings.png")
+				      --img = _loadImage(self, "Icons/Mini/icon_settings.png")
+				      img = false
 			      }
 		      })
 
@@ -1008,7 +1069,7 @@ function skin(self, s)
 		_uses(s.albumitem, {
 			      order = { "icon", "text", "check" },
 			      check = {
-				      img = _loadImage(self, "Icons/icon_check.png"),
+				      img = _loadImage(self, "Icons/icon_check_selected.png"),
 				      align = "right"
 
 			      }
