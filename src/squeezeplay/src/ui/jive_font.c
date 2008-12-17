@@ -7,7 +7,6 @@
 
 #include "common.h"
 #include "jive.h"
-#include <pango/pango.h>
 
 
 static const char *JIVE_FONT_MAGIC = "Font";
@@ -254,18 +253,20 @@ JiveSurface *jive_font_draw_text(JiveFont *font, Uint32 color, const char *str )
 }
 
 /**
- * if wrapping_width == -1, no wrapping will be done
+ * if wrapping_width == 0, no wrapping will be done
  */
 JiveSurface *jive_font_draw_text_wrap(JiveFont *font, Uint32 color, const char *str, Uint16 wrapping_width ) {
 	JiveSurface *jive_surface;
 	PangoAttrList *attr_list;
-	PangoAttribute *size, *fgcolor, *family, *weight, *letter_spacing;
+	PangoAttribute *size, *fgcolor, *family, *weight;
+	//PangoAttribute *letter_spacing;
     GError *err = NULL;
     char *text = NULL;
+    PangoLayout *layout;
     
 	assert(font && font->magic == JIVE_FONT_MAGIC);
 
-    PangoLayout *layout = SDLPango_GetPangoLayout(pangocontext);
+    layout = SDLPango_GetPangoLayout(pangocontext);
 
     if ( !pango_parse_markup(str, -1, 0, &attr_list, &text, NULL, &err)) {
         fprintf(stderr, "pango_parse_markup error: %s\n", err->message);
@@ -313,7 +314,7 @@ JiveSurface *jive_font_draw_text_wrap(JiveFont *font, Uint32 color, const char *
     g_free (text);
 
 
-	if (wrapping_width == -1) {
+	if (wrapping_width == 0) {
 	    //don't wrap
         pango_layout_set_width(layout, (guint) -1);
     } else {

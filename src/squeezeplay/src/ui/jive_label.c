@@ -93,12 +93,9 @@ int jiveL_label_skin(lua_State *L) {
 
 static void prepare(lua_State *L) {
 	LabelWidget *peer;
-	Uint16 width, height, offset;
+	Uint16 width, height;
 	const char *str;
 
-	JiveFont *font;
-	Uint32 fg, sh;
-	bool is_sh;
 
 	peer = jive_getpeer(L, 1, &labelPeerMeta);
 
@@ -138,7 +135,6 @@ static void prepare(lua_State *L) {
 int jiveL_label_layout(lua_State *L) {
 	LabelWidget *peer;
 	Uint16 y;
-	size_t i;
 	Uint16 w, h;
 
 	/* stack is:
@@ -243,7 +239,6 @@ int jiveL_label_animate(lua_State *L) {
 
 
 int jiveL_label_draw(lua_State *L) {
-	size_t i;
 
 	/* stack is:
 	 * 1: widget

@@ -10,6 +10,7 @@
 
 #include "common.h"
 
+#include <pango/pango.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_gfxPrimitives.h>
@@ -23,8 +24,13 @@
 /* print profile information for blit's */
 #undef JIVE_PROFILE_BLIT
 
+#ifndef MIN
 #define MIN(a,b) (((a)<(b))?(a):(b))
+#endif
+
+#ifndef MAX
 #define MAX(a,b) (((a)>(b))?(a):(b))
+#endif
 
 #define JIVE_COLOR_WHITE 0xFFFFFFFF
 #define JIVE_COLOR_BLACK 0x000000FF

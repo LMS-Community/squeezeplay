@@ -22186,9 +22186,7 @@ echo "${ECHO_T}${enable_profiling-no}" >&6; }
 
 if test x"$GCC" = x"yes"
 then
-#	CFLAGS="$CFLAGS -Wall -Wextra -Werror -Wdeclaration-after-statement -Wpointer-arith -Wcast-align -Wno-unused-parameter"
-# commented out Werror until gutil.h warning is resolved
-	CFLAGS="$CFLAGS -Wall -Wextra -Wdeclaration-after-statement -Wpointer-arith -Wcast-align -Wno-unused-parameter"
+CFLAGS="$CFLAGS -Wall -Wextra -Werror -Wdeclaration-after-statement -Wpointer-arith -Wcast-align -Wno-unused-parameter"
 fi
 
 
