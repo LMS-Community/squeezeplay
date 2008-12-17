@@ -155,45 +155,6 @@ function georgeStep4(self)
 	return self.scanWindow
 end
 
-function setupScanShow(self, setupNext, windowTitleStyle)
-	local window = Popup("popupIcon")
-	window:setAllowScreensaver(false)
-
-	window:addWidget(Icon("iconConnecting"))
-	window:addWidget(Label("text", self:string("NETWORK_SCANNING")))
-	local status = Label("text2", self:string("NETWORK_FOUND_NETWORKS", 0))
-	window:addWidget(status)
-
-        -- or timeout after 5 seconds if no networks are found
-        window:addTimer(5000, function() setupNext() end)
-	local state = 1
-        window:addTimer(1000, function()
-                                       if state == 1 then
-                                               status:setValue(self:string("NETWORK_FOUND_NETWORKS", 1))
-                                       elseif state == 2 then
-                                               status:setValue(self:string("NETWORK_FOUND_NETWORKS", 4))
-                                       elseif state == 3 then
-                                               status:setValue(self:string("NETWORK_FOUND_NETWORKS", 5))
-                                       elseif state == 4 then
-                                               status:setValue(self:string("NETWORK_FOUND_NETWORKS", 8))
-                                       elseif state == 5 then
-                                               status:setValue(self:string("NETWORK_FOUND_NETWORKS", 10))
-                                       elseif state == 6 then
-                                               status:setValue(self:string("NETWORK_FOUND_NETWORKS", 11))
-                                       elseif state == 7 then
-                                               status:setValue(self:string("NETWORK_FOUND_NETWORKS", 4000))
-                                       elseif state == 8 then
-                                               status:setValue(self:string("NETWORK_FOUND_NETWORKS", 'just kidding'))
-                                       elseif state == 9 then
-                                               status:setValue(self:string("NETWORK_FOUND_NETWORKS", 11))
-                                       end
-                                       state = state + 1
-                               end)
-
-        self:tieAndShowWindow(window)
-        return window
-end
-
 function georgeStep5(self)
 	log:info("georgeStep5")
 
