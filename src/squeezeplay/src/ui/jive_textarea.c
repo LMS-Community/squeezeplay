@@ -307,6 +307,7 @@ int jiveL_textarea_draw(lua_State *L) {
 	for (i = top_line; i < bottom_line; i++) {
 		JiveSurface *tsrf;
 		int x;
+		int width;
 
 		int line = peer->lines[i];
 		int next = peer->lines[i+1];
@@ -324,15 +325,18 @@ int jiveL_textarea_draw(lua_State *L) {
 			x = jive_widget_halign((JiveWidget *)peer, peer->align, line_width);
 		}
 
+        //todo: get actual width - think this is wrong
+        width = peer->w.bounds.w - peer->w.padding.left - peer->w.padding.right;
+
 		/* shadow text */
 		if (peer->is_sh) {
-			tsrf = jive_font_draw_text(peer->font, peer->sh, &text[line]);
+			tsrf = jive_font_draw_text_wrap(peer->font, peer->sh, &text[line], width);
 			jive_surface_blit(tsrf, srf, x + 1, y + 1);
 			jive_surface_free(tsrf);
 		}
 
 		/* foreground text */
-		tsrf = jive_font_draw_text(peer->font, peer->fg, &text[line]);
+		tsrf = jive_font_draw_text_wrap(peer->font, peer->fg, &text[line], width);
 		jive_surface_blit(tsrf, srf, x, y);
 		jive_surface_free(tsrf);
 
@@ -439,20 +443,20 @@ static void wordwrap(TextareaWidget *peer, unsigned char *text, int visible_line
 		unsigned code = utf8decode(&next);
 
 		switch (code) {
-		case '\n':
-			// Line break
-			ptr = next;
-			word_break = NULL;
-
-			if (max_lines == num_lines) {
-				max_lines += 100;
-				lines = realloc(lines, sizeof(int) * max_lines);
-			}
-
-			line_start = ptr;
-			lines[num_lines++] = (ptr - text);
-			line_width = 0;
-			continue;
+//		case '\n':
+//			// Line break
+//			ptr = next;
+//			word_break = NULL;
+//
+//			if (max_lines == num_lines) {
+//				max_lines += 100;
+//				lines = realloc(lines, sizeof(int) * max_lines);
+//			}
+//
+//			line_start = ptr;
+//			lines[num_lines++] = (ptr - text);
+//			line_width = 0;
+//			continue;
 
 		case ' ':
 		case ',':
@@ -467,6 +471,9 @@ static void wordwrap(TextareaWidget *peer, unsigned char *text, int visible_line
 		*next = '\0';
 		line_width += jive_font_width(peer->font, (char *)ptr);
 		*next = c;
+
+        ptr = next;
+        continue;
 
 		// Line is less than widget width
 		if (line_width < width) {
