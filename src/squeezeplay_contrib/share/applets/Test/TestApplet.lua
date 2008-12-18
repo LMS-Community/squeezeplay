@@ -355,8 +355,17 @@ function keyboardWindow(self, menuItem)
 
 	local window = Window("window", menuItem.text)
 
-	local keyboard = Keyboard("qwerty")
-	window:addWidget(keyboard)
+	local v = Textinput.textValue("", 8, 10)
+
+	window:addWidget(Textinput("textinput", v,
+		function(_, value)
+			log:warn("Input ", value)
+
+			window:playSound("WINDOWSHOW")
+			window:hide(Window.transitionPushLeft)
+			return true
+		end))
+	window:addWidget(Keyboard("qwerty"))
 
 	self:tieAndShowWindow(window)
 	return window

@@ -45,8 +45,10 @@ local table             = require("jive.utils.table")
 local debug             = require("jive.utils.debug")
 local log               = require("jive.utils.log").logger("ui")
 
+
 module(..., Framework.constants)
-oo.class(_M, Widget)
+
+oo.class(_M, Group)
 
 -- accepted keyboard types
 local kbTypes = { 
@@ -97,18 +99,15 @@ debug.dump(obj.widgets)
 	return obj
 end
 
-function _skin(self)
-	_assert(true)
-end
 
 --
 function _layout(self)
 
 	-- call Button:setPosition() for each key for layout
-	local x, y = 5, 25
+	local x, y = 5, 45
 	for k, button in pairs(self.widgets) do
-		button:setPosition(x, y)
-		x = x + 10
+		button:setBounds(x, y, 35, 35)
+		x = x + 40
 	end
 
 end
