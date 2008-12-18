@@ -44,6 +44,7 @@ local Textarea               = require("jive.ui.Textarea")
 local Textinput              = require("jive.ui.Textinput")
 local Window                 = require("jive.ui.Window")
 local Timer                  = require("jive.ui.Timer")
+local Keyboard               = require("jive.ui.Keyboard")
 
 local log                    = require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
 
@@ -61,6 +62,12 @@ function menu(self, menuItem)
 	-- Menu	
 	local menu = SimpleMenu("menu",
 		{
+			{ text = "Keyboard input",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:keyboardWindow(menuItem)
+				end
+			},
 			{ text = "Text input",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -344,6 +351,16 @@ function errorWindow(self)
 	return window
 end
 
+function keyboardWindow(self, menuItem)
+
+	local window = Window("window", menuItem.text)
+
+	local keyboard = Keyboard("qwerty")
+	window:addWidget(keyboard)
+
+	self:tieAndShowWindow(window)
+	return window
+end
 
 function textinputWindow(self, menuItem)
 
