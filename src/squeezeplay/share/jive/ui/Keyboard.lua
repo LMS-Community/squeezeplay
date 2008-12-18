@@ -51,10 +51,10 @@ module(..., Framework.constants)
 oo.class(_M, Group)
 
 -- accepted keyboard types
-local kbTypes = { 
-	['qwerty']  = true, 
-	['hex']     = true, 
-	['numeric'] = true
+local keyboards = { 
+	['qwerty']  = { 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
+	['hex']     = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' },
+	['numeric'] = { }
  }
 
 --[[
@@ -65,11 +65,11 @@ Constructs a new Keyboard widget. I<style> is the widgets style.
 
 =cut
 --]]
-function __init(self, style)
+function __init(self, style, kbType)
 	_assert(type(style) == "string")
 
 	local obj = oo.rawnew(self, Widget(style))
-	local widgets = obj:_getWidgetTable(style)
+	local widgets = obj:_getWidgetTable(kbType)
 
 	obj.widgets = widgets
 debug.dump(obj.widgets)
@@ -113,19 +113,20 @@ function _layout(self)
 end
 
 --Sets up the keys to lay out in the keyboard
-function _getWidgetTable(self, style)
-	-- allow only defined 
-	_assert(type(style) == "string" and kbTypes[style] )
+function _getWidgetTable(self, kbType)
+
+	-- user defined keyboard
+	if type(kbType) == 'table' then
+
+		-- make buttons from table of custom keys
 
 	-- qwerty keyboard
-	if style == 'qwerty' then
-
-		local firstRow  = { 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' }
+	elseif kbType == 'qwerty' then
 
 		--local secondRow = { 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L' }
 		--local thirdRow  = { 'Z', 'X', 'C', 'V', 'B', 'N', 'M' }
 
-		local firstRowButtons = self:_buttonsFromChars(firstRow)
+		local firstRowButtons = self:_buttonsFromChars(keyboards[kbType])
 
 		--local secondRowButtons = self:_buttonsFromChars(secondRow)
 		--local thirdRowButtons = self:_buttonsFromChars(thirdRow)
@@ -133,8 +134,14 @@ function _getWidgetTable(self, style)
 		return firstRowButtons
 
 	-- other keyboards
-	elseif style == 'hex' then
-	elseif style == 'numeric' then
+	elseif kbType == 'hex' then
+
+		-- make buttons for hex keyboard
+
+	elseif kbType == 'numeric' then
+
+		-- make buttons for numeric keyboard
+
 	end
 
 end

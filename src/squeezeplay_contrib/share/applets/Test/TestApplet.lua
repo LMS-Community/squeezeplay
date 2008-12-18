@@ -365,7 +365,7 @@ function keyboardWindow(self, menuItem)
 			window:hide(Window.transitionPushLeft)
 			return true
 		end))
-	window:addWidget(Keyboard("qwerty"))
+	window:addWidget(Keyboard('keyboard', 'qwerty'))
 
 	self:tieAndShowWindow(window)
 	return window
