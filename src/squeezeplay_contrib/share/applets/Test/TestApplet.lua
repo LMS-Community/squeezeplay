@@ -62,10 +62,22 @@ function menu(self, menuItem)
 	-- Menu	
 	local menu = SimpleMenu("menu",
 		{
-			{ text = "Keyboard input",
+			{ text = "Keyboard alpha input",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
-					self:keyboardWindow(menuItem)
+					self:keyboardWindow(menuItem, 'qwerty')
+				end
+			},
+			{ text = "Keyboard hex input",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:keyboardWindow(menuItem, 'hex')
+				end
+			},
+			{ text = "Keyboard numeric input",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:keyboardWindow(menuItem, 'numeric')
 				end
 			},
 			{ text = "Text input",
@@ -351,11 +363,11 @@ function errorWindow(self)
 	return window
 end
 
-function keyboardWindow(self, menuItem)
+function keyboardWindow(self, menuItem, style)
 
 	local window = Window("window", menuItem.text)
 
-	local v = Textinput.textValue("", 8, 10)
+	local v = Textinput.textValue("", 8, 20)
 
 	window:addWidget(Textinput("textinput", v,
 		function(_, value)
@@ -365,7 +377,7 @@ function keyboardWindow(self, menuItem)
 			window:hide(Window.transitionPushLeft)
 			return true
 		end))
-	window:addWidget(Keyboard('keyboard', 'qwerty'))
+	window:addWidget(Keyboard('keyboard', style))
 
 	self:tieAndShowWindow(window)
 	return window

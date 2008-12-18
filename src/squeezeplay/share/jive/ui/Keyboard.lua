@@ -53,9 +53,20 @@ oo.class(_M, Group)
 
 -- accepted keyboard types
 local keyboards = { 
-	['qwerty']  = { 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
-	['hex']     = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' },
-	['numeric'] = { }
+	['qwerty']  = { 
+			{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
+			{ 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L' },
+			{ 'Z', 'X', 'C', 'V', 'B', 'N', 'M' }
+	} ,
+	['hex']     = { 
+			{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' },
+			{ },
+			{'A', 'B', 'C', 'D', 'E', 'F' }
+	},
+	['numeric'] = { 
+			{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' },
+			{ '.', ',', '@' },
+	}
  }
 
 --[[
@@ -70,9 +81,11 @@ function __init(self, style, kbType)
 	_assert(type(style) == "string")
 
 	local obj = oo.rawnew(self, Widget(style))
-	local widgets = obj:_getWidgetTable(kbType)
+	local keyboard, widgets = obj:_setupKeyboard(kbType)
 
-	obj.widgets = widgets
+	obj.keyboard = keyboard
+	obj.widgets  = widgets
+--debug.dump(obj.keyboard)
 debug.dump(obj.widgets)
 
 	for _,widget in pairs(obj.widgets) do
@@ -84,14 +97,17 @@ debug.dump(obj.widgets)
 			 function(event)
 				 local notMouse = (event:getType() & EVENT_MOUSE_ALL) == 0
 
-				 for _,widget in pairs(obj.widgets) do
-					 if notMouse or widget:mouseInside(event) then
-						 local r = widget:_event(event)
-						 if r ~= EVENT_UNUSED then
-							 return r
+				 for _,row in pairs(obj.keyboard) do
+				 	for _,key in pairs(row) do
+						 if notMouse or key:mouseInside(event) then
+							 local r = key:_event(event)
+							 if r ~= EVENT_UNUSED then
+								 return r
+							 end
 						 end
-					 end
+					end
 				 end
+	
 				 return EVENT_UNUSED
 			 end)
 
@@ -105,45 +121,46 @@ end
 function _layout(self)
 
 	-- call Button:setPosition() for each key for layout
-	local x, y, w, h = self:getBounds()
+	local startX, startY, w, h = self:getBounds()
+	local x, y = startX, startY
 
-	for k, button in pairs(self.widgets) do
-		button:setBounds(x, y, 35, 35)
-		x = x + 40
+	for _, row in pairs(self.keyboard) do
+		for _, key in pairs(row) do
+			key:setBounds(x, y, 35, 35)
+			x = x + 40
+		end
+		y = y + 40
+		x = startX
 	end
 
 end
 
 --Sets up the keys to lay out in the keyboard
-function _getWidgetTable(self, kbType)
+function _setupKeyboard(self, kbType)
 
+	local keyboardTable = {}
+	local widgetTable   = {}
 	-- user defined keyboard
 	if type(kbType) == 'table' then
 
 		-- make buttons from table of custom keys
 
 	-- qwerty keyboard
-	elseif kbType == 'qwerty' then
+	elseif type(kbType) == 'string' then
 
-		--local secondRow = { 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L' }
-		--local thirdRow  = { 'Z', 'X', 'C', 'V', 'B', 'N', 'M' }
+		_assert(keyboards[kbType])
 
-		local firstRowButtons = self:_buttonsFromChars(keyboards[kbType])
+		local j = 1
+		for i,row in pairs(keyboards[kbType]) do
+			local rowButtons = self:_buttonsFromChars(row)
+			keyboardTable[i] = rowButtons
+			for _, widget in pairs(rowButtons) do
+				widgetTable[j] = widget
+				j = j + 1
+			end
+		end
 
-		--local secondRowButtons = self:_buttonsFromChars(secondRow)
-		--local thirdRowButtons = self:_buttonsFromChars(thirdRow)
-
-		return firstRowButtons
-
-	-- other keyboards
-	elseif kbType == 'hex' then
-
-		-- make buttons for hex keyboard
-
-	elseif kbType == 'numeric' then
-
-		-- make buttons for numeric keyboard
-
+		return keyboardTable, widgetTable
 	end
 
 end
@@ -155,16 +172,20 @@ function _buttonsFromChars(self, charTable)
 	local buttonTable = {}
 
 	for k, v in pairs(charTable) do
-		local label  = Label("touchButton", v)
-		local button = Button(
-				label, 
-				function()
-					local e = Event:new(EVENT_CHAR_PRESS, string.byte(v))
-					Framework:dispatchEvent(nil, e) 
-					return EVENT_CONSUME 
-				end
-		)
-		buttonTable[k] = button
+		-- FIXME: add support special keys (shift, go, etc)
+		if type(v) == 'function' then
+		else
+			local label  = Label("keyboardButton", v)
+			local button = Button(
+					label, 
+					function()
+						local e = Event:new(EVENT_CHAR_PRESS, string.byte(v))
+						Framework:dispatchEvent(nil, e) 
+						return EVENT_CONSUME 
+					end
+			)
+			buttonTable[k] = button
+		end
 	end
 	return buttonTable
 end
