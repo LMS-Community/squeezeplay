@@ -35,6 +35,7 @@ The Keyboard includes the following style parameters in addition to the widgets 
 local _assert, pairs, string, tostring, type = _assert, pairs, string, tostring, type
 
 local oo                = require("loop.simple")
+local Event             = require("jive.ui.Event")
 local Widget            = require("jive.ui.Widget")
 local Button            = require("jive.ui.Button")
 local Group             = require("jive.ui.Group")
@@ -104,7 +105,8 @@ end
 function _layout(self)
 
 	-- call Button:setPosition() for each key for layout
-	local x, y = 5, 45
+	local x, y, w, h = self:getBounds()
+
 	for k, button in pairs(self.widgets) do
 		button:setBounds(x, y, 35, 35)
 		x = x + 40
@@ -157,7 +159,8 @@ function _buttonsFromChars(self, charTable)
 		local button = Button(
 				label, 
 				function()
-					Framework:dispatchNewEvent(EVENT_CHAR_PRESS, v) 
+					local e = Event:new(EVENT_CHAR_PRESS, string.byte(v))
+					Framework:dispatchEvent(nil, e) 
 					return EVENT_CONSUME 
 				end
 		)

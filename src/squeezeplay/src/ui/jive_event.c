@@ -56,6 +56,10 @@ int jiveL_event_new(lua_State *L) {
 			event->u.key.code = lua_tointeger(L, 3);
 			break;
 		
+		case JIVE_EVENT_CHAR_PRESS:
+			event->u.text.unicode = lua_tointeger(L, 3);
+			break;
+		
 		case JIVE_EVENT_MOUSE_DOWN:
 		case JIVE_EVENT_MOUSE_UP:
 		case JIVE_EVENT_MOUSE_PRESS:
@@ -289,6 +293,10 @@ int jiveL_event_tostring(lua_State* L) {
 		lua_pushfstring(L, "KEY_HOLD code=%d", event->u.key.code);
 		break;
 		
+	case JIVE_EVENT_CHAR_PRESS:
+		lua_pushfstring(L, "CHAR_PRESS code=%d", event->u.text.unicode);
+		break;
+
 	case JIVE_EVENT_MOUSE_DOWN:
 		if (event->u.mouse.finger_count) {
 			lua_pushfstring(L, "FINGER_DOWN x=%d,y=%d,n=%d,w=%d,p=%d", event->u.mouse.x, event->u.mouse.y, event->u.mouse.finger_count, event->u.mouse.finger_width, event->u.mouse.finger_pressure);

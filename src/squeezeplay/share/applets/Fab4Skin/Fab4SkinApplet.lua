@@ -584,6 +584,7 @@ function skin(self, s)
 
 	-- Text input
 	s.textinput = {}
+	s.textinput.h = 55
 	s.textinput.border = { 8, -5, 8, 0 }
 	s.textinput.padding = { 6, 0, 6, 0 }
 	s.textinput.font = _font(TEXTINPUT_FONT_SIZE)
@@ -593,9 +594,15 @@ function skin(self, s)
 	s.textinput.fg = SELECT_COLOR
 	s.textinput.wh = { 0x55, 0x55, 0x55 }
 	s.textinput.bgImg = textinputBackground
-	s.textinput.wheelImg = textinputWheel
+--	s.textinput.wheelImg = textinputWheel
 	s.textinput.cursorImg = textinputCursor
 	s.textinput.enterImg = Tile:loadImage(imgpath .. "Icons/selection_right.png")
+
+	-- Keyboard
+	s.keyboard = {}
+	s.keyboard.w = WH_FILL
+	s.keyboard.w = WH_FILL
+	s.keyboard.border = { 8, -5, 8, 0 }
 
 	-- Help menu
 	s.help = {}
