@@ -348,6 +348,7 @@ function setupShowSelectPlayer(self, setupNext, windowStyle)
 			callback = function()
 				appletManager:callService("setupSqueezeboxSettingsShow")
 			end,
+			style = 'receiver',
 			weight = 10,
 		})
 	end
