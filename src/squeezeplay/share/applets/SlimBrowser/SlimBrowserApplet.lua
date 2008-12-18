@@ -653,6 +653,19 @@ local function _userTriggeredUpdate(self)
 		return
 	end
 
+
+	-- only show this window if the player has a brightness button available
+	local playerModel = _player:getModel()
+	if playerModel == 'receiver' 
+		or playerModel == 'softsqueeze'
+		or playerModel == 'softsqueeze3'
+		or playerModel == 'controller'
+		or playerModel == 'squeezeplay'
+		or playerModel == 'squeezeslave'
+		then
+			return
+	end
+
 	local window = Window("window", self:string('SLIMBROWSER_PLAYER_UPDATE_REQUIRED'))
 	local label = Textarea("textarea", self:string('SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX', _player:getName()))
 	window:addWidget(label)
