@@ -121,16 +121,28 @@ end
 function _layout(self)
 
 	-- call Button:setPosition() for each key for layout
-	local startX, startY, w, h = self:getBounds()
-	local x, y = startX, startY
+	local x, y, w, h = self:getBounds()
+
+	local keyWidth = 35
+
+	-- find row with most keys to determine interkey spacing
+	local maxRowKeys = 0
+	for _, row in pairs(self.keyboard) do
+		local numOfKeys = #row
+		if numOfKeys >= maxRowKeys then
+			maxRowKeys = numOfKeys
+		end
+	end
+	local keySpacing = ( w - ( keyWidth * maxRowKeys ) ) / ( maxRowKeys + 1 ) 
 
 	for _, row in pairs(self.keyboard) do
+		-- center row
+		x = ( w - ( (keyWidth * #row) + ( keySpacing * (#row - 1) ) ) ) / 2
 		for _, key in pairs(row) do
 			key:setBounds(x, y, 35, 35)
-			x = x + 40
+			x = x + keyWidth + keySpacing
 		end
 		y = y + 40
-		x = startX
 	end
 
 end
