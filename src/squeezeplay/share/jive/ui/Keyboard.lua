@@ -85,8 +85,6 @@ function __init(self, style, kbType)
 
 	obj.keyboard = keyboard
 	obj.widgets  = widgets
---debug.dump(obj.keyboard)
-debug.dump(obj.widgets)
 
 	for _,widget in pairs(obj.widgets) do
 		widget.parent = obj
@@ -97,15 +95,13 @@ debug.dump(obj.widgets)
 			 function(event)
 				 local notMouse = (event:getType() & EVENT_MOUSE_ALL) == 0
 
-				 for _,row in pairs(obj.keyboard) do
-				 	for _,key in pairs(row) do
-						 if notMouse or key:mouseInside(event) then
-							 local r = key:_event(event)
-							 if r ~= EVENT_UNUSED then
-								 return r
-							 end
+				 for _,widget in pairs(obj.widgets) do
+					 if notMouse or widget:mouseInside(event) then
+						 local r = widget:_event(event)
+						 if r ~= EVENT_UNUSED then
+							 return r
 						 end
-					end
+					 end
 				 end
 	
 				 return EVENT_UNUSED
@@ -123,7 +119,8 @@ function _layout(self)
 	-- call Button:setPosition() for each key for layout
 	local x, y, w, h = self:getBounds()
 
-	local keyWidth = 35
+	local keyWidth  = 35
+	local keyHeight = 35
 
 	-- find row with most keys to determine interkey spacing
 	local maxRowKeys = 0
@@ -139,7 +136,7 @@ function _layout(self)
 		-- center row
 		x = ( w - ( (keyWidth * #row) + ( keySpacing * (#row - 1) ) ) ) / 2
 		for _, key in pairs(row) do
-			key:setBounds(x, y, 35, 35)
+			key:setBounds(x, y, keyWidth, keyHeight)
 			x = x + keyWidth + keySpacing
 		end
 		y = y + 40
