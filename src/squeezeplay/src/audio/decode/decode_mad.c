@@ -20,7 +20,7 @@
  */
 #define INPUT_BUFFER_SIZE 2890
 
-#define OUTPUT_BUFFER_FRAMES 2*32*36
+#define OUTPUT_BUFFER_FRAMES 2048
 #define OUTPUT_BUFFER_BYTES (OUTPUT_BUFFER_FRAMES * sizeof(sample_t))
 
 #define ID3_TAG_FLAG_FOOTERPRESENT 0x10
@@ -313,7 +313,7 @@ static inline sample_t mad_fixed_to_32bit(mad_fixed_t fixed)
 
 static void decode_mad_output(struct decode_mad *self) {
 	struct mad_pcm *pcm;
-	sample_t *buf;
+	sample_t *buf, *buf_end;
 	mad_fixed_t *left, *right;
 	int i, offset = 0;
 
@@ -346,31 +346,17 @@ static void decode_mad_output(struct decode_mad *self) {
 		self->sample_rate = self->frame.header.samplerate;
 
 		buf = self->output_buffer;
+		buf_end = self->output_buffer + OUTPUT_BUFFER_FRAMES;
 
 		left = pcm->samples[0];
-		right = pcm->samples[1];
 
 		if (pcm->channels == 2) {
-			/* stero */
-			assert(SAMPLES_TO_BYTES(pcm->length) <= OUTPUT_BUFFER_BYTES);
-
-			for (i=0; i<pcm->length; i++) {
-				*buf++ = mad_fixed_to_32bit(*left++);
-				*buf++ = mad_fixed_to_32bit(*right++);
-			}
+			/* stereo */
+			right = pcm->samples[1];
 		}
 		else {
 			/* mono */
-			sample_t s;
-
-			assert(SAMPLES_TO_BYTES(pcm->length * 2) <= OUTPUT_BUFFER_BYTES);
-
-			for (i=0; i<pcm->length; i++) {
-				s = mad_fixed_to_32bit(*left++);
-
-				*buf++ = s;
-				*buf++ = s;
-			}
+			right = pcm->samples[0];
 		}
 
 		/* skip samples for the encoder delay */
@@ -384,8 +370,22 @@ static void decode_mad_output(struct decode_mad *self) {
 			DEBUG_TRACE("Skip encoder_delay=%d pcm->length=%d offset=%d", self->encoder_delay, pcm->length, offset);
 		}
 
-		decode_output_samples(self->output_buffer + (offset * 2),
-				      pcm->length - offset,
+		for (i=offset; i<pcm->length; i++) {
+			*buf++ = mad_fixed_to_32bit(*left++);
+			*buf++ = mad_fixed_to_32bit(*right++);
+
+			if (buf == buf_end) {
+				decode_output_samples(self->output_buffer,
+						      (buf - self->output_buffer) / 2,
+						      self->sample_rate,
+						      FALSE);
+
+				buf = self->output_buffer;
+			}
+		}
+
+		decode_output_samples(self->output_buffer,
+				      (buf - self->output_buffer) / 2,
 				      self->sample_rate,
 				      FALSE);
 	}
