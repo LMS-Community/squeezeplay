@@ -601,8 +601,8 @@ function skin(self, s)
 	-- Keyboard
 	s.keyboard = {}
 	s.keyboard.w = WH_FILL
-	s.keyboard.w = WH_FILL
-	s.keyboard.border = { 8, -5, 8, 0 }
+	s.keyboard.h = WH_FILL
+	s.keyboard.border = { 8, 0, 8, 0 }
 
 	-- Help menu
 	s.help = {}

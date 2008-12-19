@@ -32,7 +32,7 @@ The Keyboard includes the following style parameters in addition to the widgets 
 --]]
 
 
-local _assert, pairs, string, tostring, type = _assert, pairs, string, tostring, type
+local _assert, pairs, string, tostring, type, ipairs = _assert, pairs, string, tostring, type, ipairs
 
 local oo                = require("loop.simple")
 local Event             = require("jive.ui.Event")
@@ -86,7 +86,7 @@ function __init(self, style, kbType)
 	obj.keyboard = keyboard
 	obj.widgets  = widgets
 
-	for _,widget in pairs(obj.widgets) do
+	for _,widget in ipairs(obj.widgets) do
 		widget.parent = obj
 	end
 
@@ -95,7 +95,7 @@ function __init(self, style, kbType)
 			 function(event)
 				 local notMouse = (event:getType() & EVENT_MOUSE_ALL) == 0
 
-				 for _,widget in pairs(obj.widgets) do
+				 for _, widget in ipairs(obj.widgets) do
 					 if notMouse or widget:mouseInside(event) then
 						 local r = widget:_event(event)
 						 if r ~= EVENT_UNUSED then
@@ -124,7 +124,7 @@ function _layout(self)
 
 	-- find row with most keys to determine interkey spacing
 	local maxRowKeys = 0
-	for _, row in pairs(self.keyboard) do
+	for _, row in ipairs(self.keyboard) do
 		local numOfKeys = #row
 		if numOfKeys >= maxRowKeys then
 			maxRowKeys = numOfKeys
@@ -132,14 +132,14 @@ function _layout(self)
 	end
 	local keySpacing = ( w - ( keyWidth * maxRowKeys ) ) / ( maxRowKeys + 1 ) 
 
-	for _, row in pairs(self.keyboard) do
+	for _, row in ipairs(self.keyboard) do
 		-- center row
 		x = ( w - ( (keyWidth * #row) + ( keySpacing * (#row - 1) ) ) ) / 2
-		for _, key in pairs(row) do
+		for _, key in ipairs(row) do
 			key:setBounds(x, y, keyWidth, keyHeight)
 			x = x + keyWidth + keySpacing
 		end
-		y = y + 40
+		y = y + 50
 	end
 
 end
@@ -159,10 +159,10 @@ function _setupKeyboard(self, kbType)
 
 		_assert(keyboards[kbType])
 
-		for i,row in pairs(keyboards[kbType]) do
+		for i,row in ipairs(keyboards[kbType]) do
 			local rowButtons = self:_buttonsFromChars(row)
 			keyboardTable[i] = rowButtons
-			for _, widget in pairs(rowButtons) do
+			for _, widget in ipairs(rowButtons) do
 				table.insert(widgetTable, widget)
 			end
 		end
@@ -178,7 +178,7 @@ function _buttonsFromChars(self, charTable)
 
 	local buttonTable = {}
 
-	for k, v in pairs(charTable) do
+	for k, v in ipairs(charTable) do
 		-- FIXME: add support special keys (shift, go, etc)
 		if type(v) == 'function' then
 		else
