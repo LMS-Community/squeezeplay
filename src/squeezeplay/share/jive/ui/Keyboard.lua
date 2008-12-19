@@ -51,24 +51,6 @@ module(..., Framework.constants)
 
 oo.class(_M, Group)
 
--- accepted keyboard types
-local keyboards = { 
-	['qwerty']  = { 
-			{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
-			{ 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L' },
-			{ 'Z', 'X', 'C', 'V', 'B', 'N', 'M' }
-	} ,
-	['hex']     = { 
-			{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' },
-			{ },
-			{'A', 'B', 'C', 'D', 'E', 'F' }
-	},
-	['numeric'] = { 
-			{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' },
-			{ '.', ',', '@' },
-	}
- }
-
 --[[
 
 =head2 jive.ui.Keyboard(style, widgets)
@@ -81,6 +63,10 @@ function __init(self, style, kbType)
 	_assert(type(style) == "string")
 
 	local obj = oo.rawnew(self, Widget(style))
+
+	-- accepted keyboard types
+	obj.keyboards           = obj:_predefinedKeyboards()
+
 	local keyboard, widgets = obj:_setupKeyboard(kbType)
 
 	obj.keyboard = keyboard
@@ -93,7 +79,11 @@ function __init(self, style, kbType)
 	-- forward events to contained widgets
 	obj:addListener(EVENT_ALL,
 			 function(event)
-				 local notMouse = (event:getType() & EVENT_MOUSE_ALL) == 0
+				local eventType = event:getType()
+				 local notMouse = (eventType & EVENT_MOUSE_ALL) == 0
+				if (eventType == EVENT_KEY_PRESS) then
+					return EVENT_UNUSED
+				end
 
 				 for _, widget in ipairs(obj.widgets) do
 					 if notMouse or widget:mouseInside(event) then
@@ -110,6 +100,54 @@ function __init(self, style, kbType)
 	obj:_layout()
 
 	return obj
+end
+
+function _predefinedKeyboards(self)
+	return { 
+		['qwerty']  = { 
+				{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
+				{ 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L' },
+				{ 'Z', 'X', 'C', 'V', 'B', 'N', 'M' },
+				{ 
+					self:_switchKeyboardButton(style, 'numeric', '123'), 
+					self:_spaceBar(), 
+					self:_switchKeyboardButton(style, 'qwertyLower', 'abc'), 
+					self:_go() 
+				}
+		} ,
+		['qwertyLower']  = { 
+				{ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
+				{ 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l' },
+				{ 'z', 'x', 'c', 'v', 'b', 'n', 'm' },
+				{ 
+					self:_switchKeyboardButton(style, 'numeric', '123'), 
+					self:_spaceBar(), 
+					self:_switchKeyboardButton(style, 'qwerty', 'ABC'), 
+					self:_go() 
+				}
+		} ,
+		['hex']     = { 
+				{ 'A', 'B', 'C', 'D', 'E', 'F' },
+				{ '0', '1', '2', '3', '4' }, 
+				{ '5', '6', '7', '8', '9' },
+				{ 
+					self:_switchKeyboardButton(style, 'numeric', '123'), 
+					self:_switchKeyboardButton(style, 'qwerty', 'ABC'), 
+					self:_switchKeyboardButton(style, 'qwertyLower', 'abc'), 
+					self:_go() 
+				}
+		},
+		['numeric'] = { 
+				{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' },
+				{ '.', ',', '@' },
+				{ 
+					self:_switchKeyboardButton(style, 'qwerty', 'ABC'), 
+					self:_spaceBar(), 
+					self:_switchKeyboardButton(style, 'qwertyLower', 'abc'), 
+					self:_go()
+				}
+		}
+	}
 end
 
 
@@ -157,9 +195,9 @@ function _setupKeyboard(self, kbType)
 	-- qwerty keyboard
 	elseif type(kbType) == 'string' then
 
-		_assert(keyboards[kbType])
+		_assert(self.keyboards[kbType])
 
-		for i,row in ipairs(keyboards[kbType]) do
+		for i,row in ipairs(self.keyboards[kbType]) do
 			local rowButtons = self:_buttonsFromChars(row)
 			keyboardTable[i] = rowButtons
 			for _, widget in ipairs(rowButtons) do
@@ -179,11 +217,21 @@ function _buttonsFromChars(self, charTable)
 	local buttonTable = {}
 
 	for k, v in ipairs(charTable) do
+		local button
 		-- FIXME: add support special keys (shift, go, etc)
-		if type(v) == 'function' then
+		if type(v) == 'table' then
+			local keyStyle = v.style or 'keyboardButton'
+			local label    = Label(keyStyle, v.text)
+			local callback = v.callback or 
+					function()
+						local e = Event:new(EVENT_CHAR_PRESS, string.byte(v.text))
+						Framework:dispatchEvent(nil, e) 
+						return EVENT_CONSUME 
+					end
+			button   = Button(label, callback)
 		else
 			local label  = Label("keyboardButton", v)
-			local button = Button(
+			button = Button(
 					label, 
 					function()
 						local e = Event:new(EVENT_CHAR_PRESS, string.byte(v))
@@ -191,10 +239,49 @@ function _buttonsFromChars(self, charTable)
 						return EVENT_CONSUME 
 					end
 			)
-			buttonTable[k] = button
 		end
+		table.insert(buttonTable, button)
 	end
 	return buttonTable
+end
+
+function _switchKeyboard(style, kbType)
+	log:warn('Not yet functional')
+end
+
+function _switchKeyboardButton(self, style, kbType, keyText)
+	return {	
+		text     = keyText,
+		callback = function()
+			_switchKeyboard(style, kbType)
+			return EVENT_CONSUME 
+		end
+	}
+end
+
+-- return a table that can be used as a space bar in keyboards
+function _go(self)
+	return {	
+		text     = 'GO',
+		callback = function()
+			local e = Event:new(EVENT_KEY_PRESS, KEY_GO)
+			Framework:dispatchEvent(nil, e) 
+			return EVENT_CONSUME 
+		end
+	}
+end
+
+
+-- return a table that can be used as a space bar in keyboards
+function _spaceBar(self)
+	return {	
+		text     = 'SPACE',
+		callback = function()
+			local e = Event:new(EVENT_CHAR_PRESS, string.byte(' '))
+			Framework:dispatchEvent(nil, e) 
+			return EVENT_CONSUME 
+		end
+	}
 end
 
 --[[
