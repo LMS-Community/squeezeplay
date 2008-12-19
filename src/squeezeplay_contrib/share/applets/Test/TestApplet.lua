@@ -62,10 +62,16 @@ function menu(self, menuItem)
 	-- Menu	
 	local menu = SimpleMenu("menu",
 		{
-			{ text = "Keyboard alpha input",
+			{ text = "Keyboard UPPERCASE input",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:keyboardWindow(menuItem, 'qwerty')
+				end
+			},
+			{ text = "Keyboard lowercase input",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:keyboardWindow(menuItem, 'qwertyLower')
 				end
 			},
 			{ text = "Keyboard hex input",
