@@ -35,6 +35,8 @@ SDLPango_Context *pangocontext;
 /* button hold threshold 1 seconds */
 #define HOLD_TIMEOUT 1000
 
+#define POINTER_TIMEOUT 20000
+
 static bool update_screen = true;
 
 static JiveTile *jive_background = NULL;
@@ -66,6 +68,8 @@ static JiveKey key_mask = 0;
 static SDL_TimerID key_timer = NULL;
 
 static SDL_TimerID mouse_timer = NULL;
+
+static SDL_TimerID pointer_timer = NULL;
 
 static Uint16 mouse_origin_x, mouse_origin_y;
 
@@ -174,7 +178,7 @@ static int jiveL_init(lua_State *L) {
 	jive_surface_set_wm_icon(icon);
 	jive_surface_free(icon);
 
-//	SDL_ShowCursor (SDL_DISABLE);
+	SDL_ShowCursor(SDL_DISABLE);
 	SDL_EnableKeyRepeat (100, 100);
 	SDL_EnableUNICODE(1);
 
@@ -840,6 +844,12 @@ static Uint32 mousehold_callback(Uint32 interval, void *param) {
 	return 0;
 }
 
+static Uint32 pointer_callback(Uint32 interval, void *param) {
+	SDL_ShowCursor(SDL_DISABLE);
+
+	return 0;
+}
+
 
 static int do_dispatch_event(lua_State *L, JiveEvent *jevent) {
 	int r;
@@ -942,6 +952,14 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		break;
 
 	case SDL_MOUSEMOTION:
+
+		/* show mouse cursor */
+		if (pointer_timer) {
+			SDL_RemoveTimer(pointer_timer);
+		}
+		SDL_ShowCursor(SDL_ENABLE);
+		SDL_AddTimer(POINTER_TIMEOUT, &pointer_callback, NULL);
+
 		if (event->motion.state & SDL_BUTTON(1)) {
 			if ( ( (mouse_state == MOUSE_STATE_DOWN || mouse_state == MOUSE_STATE_SENT)
 			       && (abs(mouse_origin_x - event->motion.x) > 10
