@@ -116,7 +116,7 @@ extern void decode_sample_mix(Uint8 *buffer, size_t buflen);
 
 #define DECODE_FIFO_SIZE (10 * 2 * 44100 * sizeof(sample_t)) 
 #define SAMPLES_TO_BYTES(n)  (2 * (n) * sizeof(sample_t))
-#define BYTES_TO_SAMPLES(n)  (n / (2 * sizeof(sample_t)))
+#define BYTES_TO_SAMPLES(n)  ((n) / (2 * sizeof(sample_t)))
 
 /* State variables for the current track */
 extern u32_t decode_num_tracks_started;
