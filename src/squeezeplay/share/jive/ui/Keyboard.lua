@@ -159,13 +159,11 @@ function _setupKeyboard(self, kbType)
 
 		_assert(keyboards[kbType])
 
-		local j = 1
 		for i,row in pairs(keyboards[kbType]) do
 			local rowButtons = self:_buttonsFromChars(row)
 			keyboardTable[i] = rowButtons
 			for _, widget in pairs(rowButtons) do
-				widgetTable[j] = widget
-				j = j + 1
+				table.insert(widgetTable, widget)
 			end
 		end
 
