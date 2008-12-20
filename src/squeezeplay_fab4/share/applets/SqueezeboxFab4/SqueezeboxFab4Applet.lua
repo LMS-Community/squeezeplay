@@ -94,6 +94,66 @@ function init(self)
 	else
 		log:warn("Watchdog timer is disabled")
 	end
+
+	-- find out when we connect to player
+	jnt:subscribe(self)
+end
+
+
+function notify_playerCurrent(self, player)
+	-- if not passed a player, or if player hasn't change, exit
+	if not player or not player:isConnected() then
+		return
+	end
+
+	if self.player == player then
+		return
+	end
+	self.player = player
+
+	local sink = function(chunk, err)
+		if err then
+			log:warn(err)
+			return
+		end
+		log:debug('date sync: ', chunk.data.date)
+                self:setDate(chunk.data.date)
+ 	end
+ 
+	-- setup a once/hour
+        player:subscribe(
+		'/slim/datestatus/' .. player:getId(),
+		sink,
+		player:getId(),
+		{ 'date', 'subscribe:3600' }
+	)
+end
+
+
+function notify_playerDelete(self, player)
+	if self.player ~= player then
+		return
+	end
+	self.player = false
+
+	log:debug('unsubscribing from datestatus/', player:getId())
+	player:unsubscribe('/slim/datestatus/' .. player:getId())
+end
+
+
+function setDate(self, date)
+	-- matches date format 2007-09-08T20:40:42+00:00
+	local CCYY, MM, DD, hh, mm, ss, TZ = string.match(date, "(%d%d%d%d)%-(%d%d)%-(%d%d)T(%d%d):(%d%d):(%d%d)([-+]%d%d:%d%d)")
+
+	log:debug("CCYY=", CCYY, " MM=", MM, " DD=", DD, " hh=", hh, " mm=", mm, " ss=", ss, " TZ=", TZ)
+
+	-- set system date
+	os.execute("/bin/date " .. MM..DD..hh..mm..CCYY.."."..ss)
+
+	-- set RTC to system time
+	os.execute("/sbin/hwclock -w")
+
+	iconbar:update()
 end
 
 
