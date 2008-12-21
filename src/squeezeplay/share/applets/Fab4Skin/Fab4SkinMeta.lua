@@ -41,7 +41,7 @@ function registerApplet(self)
 		nowPlayingSSArtworkSize     = 190,
 		nowPlayingLargeArtworkSize  = 190,
         }
-	jiveMain:registerSkin(self:string("FAB4_SKIN"), "Fab4Skin", "skin", params)
+	jiveMain:registerSkin(self:string("SQUEEZEBOX_SKIN"), "Fab4Skin", "skin", params)
 end
 
 

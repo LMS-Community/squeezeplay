@@ -736,6 +736,7 @@ function skin(self, s)
 	s.touchButton.y = screenHeight - 80
 
 	s.keyboardButton = _uses(s.touchButton, { padding = 2 } )
+	s.keyboardSpaceBar = _uses(s.touchButton, { w = WH_FILL } )
 
 	-- wired/wireless text for setup
 	s.networkchoiceText = {}
