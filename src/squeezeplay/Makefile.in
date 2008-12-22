@@ -251,6 +251,32 @@ OSX_STATIC_LIBS = `$(SDL_CONFIG) --static-libs` \
 	$(OSX_LIB_DIR)/libSDLmain.a \
 	$(OSX_LIB_DIR)/libpng.a \
 	$(OSX_LIB_DIR)/libjpeg.a \
+	$(OSX_LIB_DIR)/libcairo.a \
+	$(OSX_LIB_DIR)/libexpat.a \
+	$(OSX_LIB_DIR)/libfontconfig.a \
+	$(OSX_LIB_DIR)/libgettextpo.a \
+	$(OSX_LIB_DIR)/libgio-2.0.a \
+	$(OSX_LIB_DIR)/libglib-2.0.a \
+	$(OSX_LIB_DIR)/libgmodule-2.0.a \
+	$(OSX_LIB_DIR)/libgobject-2.0.a \
+	$(OSX_LIB_DIR)/libgthread-2.0.a \
+	$(OSX_LIB_DIR)/libintl.a \
+	$(OSX_LIB_DIR)/libpango-1.0.a \
+	$(OSX_LIB_DIR)/libpangocairo-1.0.a \
+	$(OSX_LIB_DIR)/libpangoft2-1.0.a \
+	$(OSX_LIB_DIR)/libpixman-1.a \
+	$(OSX_LIB_DIR)/libSDL_Pango.a \
+    $(OSX_LIB_DIR)/pango/1.6.0/modules/pango-arabic-fc.a \
+    $(OSX_LIB_DIR)/pango/1.6.0/modules/pango-arabic-lang.a \
+    $(OSX_LIB_DIR)/pango/1.6.0/modules/pango-basic-fc.a \
+    $(OSX_LIB_DIR)/pango/1.6.0/modules/pango-hangul-fc.a \
+    $(OSX_LIB_DIR)/pango/1.6.0/modules/pango-hebrew-fc.a \
+    $(OSX_LIB_DIR)/pango/1.6.0/modules/pango-indic-fc.a \
+    $(OSX_LIB_DIR)/pango/1.6.0/modules/pango-indic-lang.a \
+    $(OSX_LIB_DIR)/pango/1.6.0/modules/pango-khmer-fc.a \
+    $(OSX_LIB_DIR)/pango/1.6.0/modules/pango-syriac-fc.a \
+    $(OSX_LIB_DIR)/pango/1.6.0/modules/pango-thai-fc.a \
+    $(OSX_LIB_DIR)/pango/1.6.0/modules/pango-tibetan-fc.a \
 	$(JIVE_DEPENDENCIES_LIB_DIR)/libjiveaudio.a $(JIVE_DEPENDENCIES_LIB_DIR)/libjivenet.a $(JIVE_DEPENDENCIES_LIB_DIR)/libjiveui.a
 
 BUNDLE_NAME = SqueezePlay.app
@@ -1140,7 +1166,7 @@ SqueezePlay: $(jive_OBJECTS) $(jive_DEPENDENCIES)
 	-o $(JIVE_STATIC_PROGRAM) $(jive_OBJECTS)   \
 	$(OSX_STATIC_LIBS) \
 	-lSystemStubs \
-	-lz
+	-lz -liconv
 
 #todo: make clean work the right way(not the rm -rf hackery seen below)
 SqueezePlay_bundle: SqueezePlay
