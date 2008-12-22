@@ -25,6 +25,11 @@ typedef struct textarea_widget {
 	Uint32 sh;
 	Uint32 fg;
 	JiveTile *bg_tile;
+	bool is_prepared;
+
+    JiveSurface *text_surface; //todo:free me
+    int text_surface_y;
+	
 } TextareaWidget;
 
 
@@ -68,7 +73,9 @@ int jiveL_textarea_skin(lua_State *L) {
 		peer->bg_tile = jive_tile_ref(bg_tile);
 	}
 
-	peer->line_height = jive_style_int(L, 1, "lineHeight", jive_font_height(peer->font));
+    //todo: line height no longer constant - refactor this
+    peer->line_height = jive_style_int(L, 1, "lineHeight", jive_font_height(peer->font));
+    		
 	peer->text_offset = jive_font_offset(peer->font);
 
 	peer->align = jive_style_align(L, 1, "textAlign", JIVE_ALIGN_LEFT);
@@ -104,8 +111,14 @@ int jiveL_textarea_get_preferred_bounds(lua_State *L) {
 	}
 
 	w = peer->w.bounds.w + peer->w.padding.left + peer->w.padding.right;
+    fprintf(stderr, "peer->w.bounds.h: %d\n", peer->w.bounds.h);
+    //how to get the h value - want full space but bounds not yet set
+//	h = peer->w.bounds.h;
 	h = (peer->num_lines * peer->line_height) + peer->w.padding.top + peer->w.padding.bottom;
-
+    
+    //todo: fix - hack by exceeding screen size until we can get the full space value
+    h = 600;
+	
 	if (peer->w.preferred_bounds.x == JIVE_XY_NIL) {
 		lua_pushnil(L);
 	}
@@ -124,6 +137,65 @@ int jiveL_textarea_get_preferred_bounds(lua_State *L) {
 	return 4;
 }
 
+static void prepare(lua_State *L) {
+	TextareaWidget *peer;
+	Uint16 width;
+	const char *str;
+    
+
+	peer = jive_getpeer(L, 1, &textareaPeerMeta);
+
+    //this will go away when prepare/layout are only called once per real layout (currently is called 4 times)
+    if (peer->is_prepared) {
+        fprintf(stderr, "ALREADY PREPARED\n");
+        return;
+    }
+    
+    peer->is_prepared = true;
+	
+	
+	/* free existing text surfaces - this seems odd, shoudl regular gc associated with the window 
+	be the place to deal with this rather than here in prepare*/
+	//jive_textarea_gc_lines(peer); - remember to free sdlpango context, etc, but why here in prepare
+
+    
+    lua_getglobal(L, "tostring");
+	lua_getfield(L, 1, "text");
+	lua_call(L, 1, 1);
+
+	str = (char *) lua_tostring(L, -1);
+
+    width = peer->w.bounds.w - peer->w.padding.left - peer->w.padding.right;
+    peer->text_surface = jive_font_draw_text_wrap(peer->font, peer->fg, str, width);
+	peer->text_surface_y = 0;
+	
+	//todo: apply shadow surface - blit to text_surface?
+	
+    return;
+//	if (!str || *str == '\0') {
+//		return;
+//	}
+//
+//	peer->text_sh = peer->base.is_sh ? jive_font_draw_text(peer->base.font, peer->base.sh, str) : NULL;
+//	peer->text_fg = jive_font_draw_text(peer->base.font, peer->base.fg, str);
+//
+//
+//	/* label dimensions */
+//	jive_surface_get_size(peer->text_fg, &width, &height);
+//	//Note: surface height being returned is higher than peer->base.lineHeight, why? for now commenting out next line because of this
+//	//	height = MAX(peer->base.lineHeight, height);
+//	height = peer->base.lineHeight;
+//	
+//	/* text width and height */
+//	peer->text_h = height;
+//	peer->text_w = width;
+//
+//	/* reset scroll position */
+//	peer->scroll_offset = SCROLL_PAD_START;
+
+}
+
+
 
 int jiveL_textarea_layout(lua_State *L) {
 	TextareaWidget *peer;
@@ -135,9 +207,13 @@ int jiveL_textarea_layout(lua_State *L) {
 	/* stack is:
 	 * 1: widget
 	 */
-
 	peer = jive_getpeer(L, 1, &textareaPeerMeta);
 
+    if (peer->w.bounds.w != 0) {
+        //"if check" is a hack until I understand more - prepare needs  w.bounds.w to render the pango with w.bounds.w 
+        // isn't set during first jiveL_textarea_layout call (not clear to me why)
+        prepare(L);
+    }
 
 	/* scrollbar size */
 	sw = 0;
@@ -257,11 +333,42 @@ int jiveL_textarea_layout(lua_State *L) {
 	return 0;
 }
 
+int jiveL_textarea_scroll(lua_State *L) {
+	/* stack is:
+	 * 1: widget
+	 * 2: scroll_amount
+	 */
+	TextareaWidget *peer;
+    int scroll_amount;
+    Uint16 bottom;
+    Uint16 srf_w, srf_h;
+    
+    peer = jive_getpeer(L, 1, &textareaPeerMeta);
+	scroll_amount = tolua_tointeger(L, 2, 0);
+	
+    peer->text_surface_y += scroll_amount;
+    
+    if (peer->text_surface_y < 0) {
+        peer->text_surface_y = 0;
+    }
+    
+    //todo: factor in padding?
+    jive_surface_get_size(peer->text_surface, &srf_w, &srf_h);
+    bottom = srf_h - peer->w.bounds.h;
+    if (peer->text_surface_y > bottom) {
+        peer->text_surface_y = bottom;
+    }
+
+    return 0;
+}
+
 
 int jiveL_textarea_draw(lua_State *L) {
-	char *text;
-	Uint16 y;
-	int i, top_line, visible_lines, bottom_line;
+	Uint16 x, y;
+//	int i;
+	int top_line, visible_lines;
+//	int bottom_line;
+    Uint16 srf_w, srf_h;
 
 	/* stack is:
 	 * 1: widget
@@ -281,16 +388,7 @@ int jiveL_textarea_draw(lua_State *L) {
 		jive_tile_blit(peer->bg_tile, srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.w, peer->w.bounds.h);
 	}
 
-	lua_getglobal(L, "tostring");
-	lua_getfield(L, 1, "text");
-	if (lua_isnil(L, -1) && !peer->font) {
-		lua_pop(L, 2);
-		return 0;
-	}
-	lua_call(L, 1, 1);
-
-	text = (char *) lua_tostring(L, -1);
-
+    x = peer->w.bounds.x + peer->w.padding.left;
 	y = peer->w.bounds.y + peer->w.padding.top - peer->text_offset;
 
 	lua_getfield(L, 1, "topLine");
@@ -302,49 +400,52 @@ int jiveL_textarea_draw(lua_State *L) {
 	lua_pop(L, 1);
 
 
-	bottom_line = top_line + visible_lines;
+    jive_surface_get_size(srf, &srf_w, &srf_h);
+    
+    jive_surface_blit_clip(peer->text_surface, 0, peer->text_surface_y, srf_w, srf_h, srf, x, y);
 
-	for (i = top_line; i < bottom_line; i++) {
-		JiveSurface *tsrf;
-		int x;
-		int width;
-
-		int line = peer->lines[i];
-		int next = peer->lines[i+1];
-
-		unsigned char b = text[(next - 1)];
-		unsigned char c = text[next];
-		text[next] = '\0';
-		if (b == '\n') {
-			text[(next - 1)] = '\0';
-		}
-
-		x = peer->w.bounds.x + peer->w.padding.left;
-		if (peer->align != JIVE_ALIGN_LEFT) {
-			Uint16 line_width = jive_font_width(peer->font, &text[line]);
-			x = jive_widget_halign((JiveWidget *)peer, peer->align, line_width);
-		}
-
-        //todo: get actual width - think this is wrong
-        width = peer->w.bounds.w - peer->w.padding.left - peer->w.padding.right;
-
-		/* shadow text */
-		if (peer->is_sh) {
-			tsrf = jive_font_draw_text_wrap(peer->font, peer->sh, &text[line], width);
-			jive_surface_blit(tsrf, srf, x + 1, y + 1);
-			jive_surface_free(tsrf);
-		}
-
-		/* foreground text */
-		tsrf = jive_font_draw_text_wrap(peer->font, peer->fg, &text[line], width);
-		jive_surface_blit(tsrf, srf, x, y);
-		jive_surface_free(tsrf);
-
-		text[next] = c;
-		text[(next - 1)] = b;
-
-		y += peer->line_height;
-	}
+//	bottom_line = top_line + visible_lines;
+//	for (i = top_line; i < bottom_line; i++) {
+//		JiveSurface *tsrf;
+//		int x;
+//		int width;
+//
+//		int line = peer->lines[i];
+//		int next = peer->lines[i+1];
+//
+//		unsigned char b = text[(next - 1)];
+//		unsigned char c = text[next];
+//		text[next] = '\0';
+//		if (b == '\n') {
+//			text[(next - 1)] = '\0';
+//		}
+//
+//		x = peer->w.bounds.x + peer->w.padding.left;
+//		if (peer->align != JIVE_ALIGN_LEFT) {
+//			Uint16 line_width = jive_font_width(peer->font, &text[line]);
+//			x = jive_widget_halign((JiveWidget *)peer, peer->align, line_width);
+//		}
+//
+//        //todo: get actual width - think this is wrong
+//        width = peer->w.bounds.w - peer->w.padding.left - peer->w.padding.right;
+//
+//		/* shadow text */
+//		if (peer->is_sh) {
+//			tsrf = jive_font_draw_text_wrap(peer->font, peer->sh, &text[line], width);
+//			jive_surface_blit(tsrf, srf, x + 1, y + 1);
+//			jive_surface_free(tsrf);
+//		}
+//
+//		/* foreground text */
+//		tsrf = jive_font_draw_text_wrap(peer->font, peer->fg, &text[line], width);
+//		jive_surface_blit(tsrf, srf, x, y);
+//		jive_surface_free(tsrf);
+//
+//		text[next] = c;
+//		text[(next - 1)] = b;
+//
+//		y += peer->line_height;
+//	}
 
 	/* draw scrollbar */
 	if (peer->has_scrollbar) {

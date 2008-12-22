@@ -167,6 +167,7 @@ typedef struct jive_event JiveEvent;
 
 typedef struct jive_font JiveFont;
 
+typedef struct jive_pango_context JivePangoContext;
 
 struct jive_peer_meta {
 	size_t size;
@@ -253,6 +254,11 @@ struct jive_font {
 	const char *magic;
 };
 
+struct jive_pango_context {
+    PangoContext *context;
+    PangoFontMap *font_map;
+};
+
 struct jive_perfwarn {
 	Uint32 screen;
 	Uint32 layout;
@@ -267,6 +273,7 @@ struct jive_perfwarn {
 extern int (*jive_sdlevent_pump)(lua_State *L);
 
 extern int (*jive_sdlfilter_pump)(const SDL_Event *event);
+SDLPango_Context * jive_create_sdl_pango_context();
 void jive_send_key_event(JiveEventType keyType, JiveKey keyCode);
 
 
@@ -284,6 +291,7 @@ extern Uint32 jive_origin;
 
 /*hack - global sdl_pango context*/
 extern SDLPango_Context *pangocontext;
+extern JivePangoContext *jive_pango_context;
 
 /* Util functions */
 void jive_print_stack(lua_State *L, char *str);
@@ -466,6 +474,7 @@ int jiveL_textarea_get_preferred_bounds(lua_State *L);
 int jiveL_textarea_skin(lua_State *L);
 int jiveL_textarea_layout(lua_State *L);
 int jiveL_textarea_draw(lua_State *L);
+int jiveL_textarea_scroll(lua_State *L);
 int jiveL_textarea_gc(lua_State *L);
 
 int jiveL_window_skin(lua_State *L);

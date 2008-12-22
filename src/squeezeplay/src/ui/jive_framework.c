@@ -26,6 +26,7 @@ static Uint32 next_jive_origin = 0;
 struct jive_perfwarn perfwarn = { 0, 0, 0, 0, 0, 0 };
 
 SDLPango_Context *pangocontext;
+JivePangoContext *jive_pango_context;
 
 /* Frame rate calculations */
 //static Uint32 framedue = 0;
@@ -151,13 +152,20 @@ static int jiveL_init(lua_State *L) {
 		exit(-1);
 	}
 
-	pangocontext = SDLPango_CreateContext_GivenFontDesc("FreeSans Bold 15");
+//future
+//    jive_pango_context = malloc(sizeof(JivePangoContext));
+//    jive_pango_context->font_map = pango_ft2_font_map_new ();
+//    pango_ft2_font_map_set_resolution (PANGO_FT2_FONT_MAP (context->font_map), 75.0, 75.0);
+//
+//    context->context = pango_ft2_font_map_create_context (PANGO_FT2_FONT_MAP (context->font_map));
     
-    SDLPango_SetDpi(pangocontext, 75.0, 75.0);
-	
-	SDLPango_SetDefaultColor(pangocontext, MATRIX_TRANSPARENT_BACK_WHITE_LETTER);
-	SDLPango_SetMinimumSize(pangocontext, 0, 0);
-	
+    
+    //will likely be replaced
+	pangocontext = jive_create_sdl_pango_context();
+    
+    
+    
+    
 	/* Register callback for additional events (used for multimedia keys)*/
 	SDL_EventState(SDL_SYSWMEVENT,SDL_ENABLE);
 	SDL_SetEventFilter(filter_events);
@@ -204,6 +212,17 @@ static int jiveL_init(lua_State *L) {
 	lua_pop(L, 2);
 
 	return 0;
+}
+
+SDLPango_Context * jive_create_sdl_pango_context() {
+    SDLPango_Context *context = SDLPango_CreateContext_GivenFontDesc("FreeSans Bold 15");
+    
+    SDLPango_SetDpi(context, 75.0, 75.0);
+	
+	SDLPango_SetDefaultColor(context, MATRIX_TRANSPARENT_BACK_WHITE_LETTER);
+	SDLPango_SetMinimumSize(context, 0, 0);
+	
+	return context;
 }
 
 static int filter_events(const SDL_Event *event)
@@ -1273,6 +1292,7 @@ static const struct luaL_Reg textarea_methods[] = {
 	{ "_skin", jiveL_textarea_skin },
 	{ "_layout", jiveL_textarea_layout },
 	{ "draw", jiveL_textarea_draw },
+	{ "scroll", jiveL_textarea_scroll },
 	{ NULL, NULL }
 };
 

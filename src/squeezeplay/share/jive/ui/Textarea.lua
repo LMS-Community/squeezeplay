@@ -58,6 +58,9 @@ local log       = require("jive.utils.log").logger("ui")
 local EVENT_SCROLL	= jive.ui.EVENT_SCROLL
 local EVENT_KEY_PRESS	= jive.ui.EVENT_KEY_PRESS
 local EVENT_MOUSE_DRAG	= jive.ui.EVENT_MOUSE_DRAG
+local EVENT_MOUSE_DOWN	= jive.ui.EVENT_MOUSE_DOWN
+local EVENT_MOUSE_UP	= jive.ui.EVENT_MOUSE_UP
+local EVENT_MOUSE_HOLD	= jive.ui.EVENT_MOUSE_HOLD
 
 local EVENT_CONSUME	= jive.ui.EVENT_CONSUME
 local EVENT_UNUSED	= jive.ui.EVENT_UNUSED
@@ -101,8 +104,10 @@ function __init(self, style, text)
 	obj.topLine = 0
 	obj.visibleLines = 0
 	obj.text = text
+    obj.dragOrigin = {} 
 
-	obj:addListener(EVENT_SCROLL | EVENT_KEY_PRESS | EVENT_MOUSE_DRAG,
+    
+    obj:addListener(EVENT_SCROLL | EVENT_KEY_PRESS | EVENT_MOUSE_DRAG | EVENT_MOUSE_DOWN| EVENT_MOUSE_UP ,
 			 function (event)
 				return obj:_eventHandler(event)
 			 end)
@@ -161,8 +166,9 @@ Scroll the Textarea by I<scroll> items. If I<scroll> is negative the text scroll
 --]]
 function scrollBy(self, scroll)
 	_assert(type(scroll) == "number")
-
-	self:_scrollTo(self.topLine + scroll)
+    
+    self:scroll(scroll);
+	--self:_scrollTo(self.topLine + scroll)
 end
 
 function _scrollTo(self, topLine)
@@ -178,18 +184,45 @@ function _scrollTo(self, topLine)
 	self:reDraw()
 end
 
-
 function _eventHandler(self, event)
 	local type = event:getType()
 
 	if type == EVENT_SCROLL then
 
 		self:scrollBy(event:getScroll())
-		return EVENT_CONSUME
+		return EVENT_CONSUME 
+
+	elseif type == EVENT_MOUSE_DOWN then
+	    if (not self.scrollbar:mouseInside(event)) then
+	        self.dragOrigin.x, self.dragOrigin.y = event:getMouse();
+
+        --else - todo: handle scrollbar case, but what are we doing with textarea scrollbars in new model
+        end
+        
+        return EVENT_CONSUME
+    
+	elseif type == EVENT_MOUSE_UP then
+        self.dragOrigin.x, self.dragOrigin.y = nil, nil;
+
+        return EVENT_CONSUME
 
 	elseif type == EVENT_MOUSE_DRAG then
-
-		return self.scrollbar:_event(event)
+	    if ( self.dragOrigin.y == nil) then
+	        --might have started drag outside of this textarea's bounds, so reset origin
+	        self.dragOrigin.x, self.dragOrigin.y = event:getMouse();	        
+	    end
+	    
+        local mouseX, mouseY = event:getMouse()
+        
+        local dragAmountY = self.dragOrigin.y - mouseY
+        self:scroll(dragAmountY);
+        
+        --reset origin
+        self.dragOrigin.x, self.dragOrigin.y = mouseX, mouseY
+        
+        self:reDraw();
+        
+		return EVENT_CONSUME
 		
 	elseif type == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()
