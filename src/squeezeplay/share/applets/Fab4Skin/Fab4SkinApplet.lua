@@ -2,16 +2,16 @@
 --[[
 =head1 NAME
 
-applets.FullscreenSkin.FullscreenSkinApplet - The Jive skin for the Fullscreen desktop application
+applets.SqueezeboxSkin.SqueezeboxSkinApplet - The squeezeplay skin for the Squeezebox Touch
 
 =head1 DESCRIPTION
 
-This applet implements the fullscreen Jive skin. 
+This applet implements the Squeezebox skin
 
 =head1 FUNCTIONS
 
 Applet related methods are described in L<jive.Applet>. 
-FullscreenSkin overrides the following methods:
+SqueezeboxSkin overrides the following methods:
 
 =cut
 --]]
@@ -735,7 +735,8 @@ function skin(self, s)
 	s.touchButton.x = screenWidth/2
 	s.touchButton.y = screenHeight - 80
 
-	s.keyboardButton   = _uses(s.touchButton, { padding = 2 } )
+	s.keyboardButton   = _uses(s.touchButton, { padding = 2, w = 35, h = 35 } )
+	s.keyboardSpace    = _uses(s.touchButton, { padding = 2, w = 100, h = 35 } )
 	s.keyboardBack     = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/left_arrow.png") } )
 	-- FIXME: icon_search.png is incorrect here
 	s.keyboardGo       = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/icon_search.png") } )
