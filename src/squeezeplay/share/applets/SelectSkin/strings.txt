@@ -13,3 +13,4 @@ DESKTOP_SKIN
 
 FULLSCREEN_MODE
 	EN	Fullscreen
+

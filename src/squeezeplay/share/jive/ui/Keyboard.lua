@@ -218,7 +218,6 @@ function _buttonsFromChars(self, charTable)
 
 	for k, v in ipairs(charTable) do
 		local button
-		-- FIXME: add support special keys (shift, go, etc)
 		if type(v) == 'table' then
 			local keyStyle = v.style or 'keyboardButton'
 			local label
@@ -267,7 +266,7 @@ end
 -- return a table that can be used as a space bar in keyboards
 function _go(self)
 	return {	
-		text     = 'GO',
+		icon	 = Icon("keyboardGo"),
 		callback = function()
 			local e = Event:new(EVENT_KEY_PRESS, KEY_GO)
 			Framework:dispatchEvent(nil, e) 

@@ -46,7 +46,7 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-function setupShowSetupLanguage(self, setupNext, windowStyle)
+function setupShowSetupLanguage(self, setupNext, windowStyle, hideHelp)
 	local currentLocale = locale:getLocale()
 	log:info("locale currently is ", currentLocale)
 
@@ -80,7 +80,9 @@ function setupShowSetupLanguage(self, setupNext, windowStyle)
 	end
 
 
-	window:addWidget(Textarea("help", self:string("CHOOSE_LANGUAGE_HELP")))
+	if not hideHelp then
+		window:addWidget(Textarea("help", self:string("CHOOSE_LANGUAGE_HELP")))
+	end
 	window:addWidget(menu)
 
 	-- Store the selected language when the menu is exited

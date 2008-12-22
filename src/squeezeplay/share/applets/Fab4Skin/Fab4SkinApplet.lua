@@ -737,6 +737,9 @@ function skin(self, s)
 
 	s.keyboardButton   = _uses(s.touchButton, { padding = 2 } )
 	s.keyboardBack     = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/left_arrow.png") } )
+	-- FIXME: icon_search.png is incorrect here
+	s.keyboardGo       = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/icon_search.png") } )
+	s.keyboardSearch   = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/icon_search.png") } )
 	s.keyboardSpaceBar = _uses(s.touchButton, { w = WH_FILL } )
 
 	-- wired/wireless text for setup
