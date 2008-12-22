@@ -375,15 +375,18 @@ function keyboardWindow(self, menuItem, style)
 
 	local v = Textinput.textValue("", 8, 20)
 
-	window:addWidget(Textinput("textinput", v,
+	local textinput = Textinput("textinput", v,
 		function(_, value)
 			log:warn("Input ", value)
 
 			window:playSound("WINDOWSHOW")
 			window:hide(Window.transitionPushLeft)
 			return true
-		end))
+		end)
+
+	window:addWidget(textinput)
 	window:addWidget(Keyboard('keyboard', style))
+	window:focusWidget(textinput)
 
 	self:tieAndShowWindow(window)
 	return window
