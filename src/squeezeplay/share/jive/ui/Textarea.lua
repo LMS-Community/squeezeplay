@@ -167,7 +167,8 @@ Scroll the Textarea by I<scroll> items. If I<scroll> is negative the text scroll
 function scrollBy(self, scroll)
 	_assert(type(scroll) == "number")
     
-    self:scroll(scroll);
+    self:scroll(scroll)
+	self:reDraw()    
 	--self:_scrollTo(self.topLine + scroll)
 end
 
@@ -219,8 +220,6 @@ function _eventHandler(self, event)
         
         --reset origin
         self.dragOrigin.x, self.dragOrigin.y = mouseX, mouseY
-        
-        self:reDraw();
         
 		return EVENT_CONSUME
 		
