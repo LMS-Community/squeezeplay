@@ -38,6 +38,7 @@ local oo                = require("loop.simple")
 local Event             = require("jive.ui.Event")
 local Widget            = require("jive.ui.Widget")
 local Button            = require("jive.ui.Button")
+local Icon              = require("jive.ui.Icon")
 local Group             = require("jive.ui.Group")
 local Label             = require("jive.ui.Label")
 local Framework         = require("jive.ui.Framework")
@@ -107,7 +108,7 @@ function _predefinedKeyboards(self)
 		['qwerty']  = { 
 				{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
 				{ 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L' },
-				{ 'Z', 'X', 'C', 'V', 'B', 'N', 'M' },
+				{ 'Z', 'X', 'C', 'V', 'B', 'N', 'M', self:_backspaceButton()  },
 				{ 
 					self:_switchKeyboardButton(style, 'numeric', '123'), 
 					self:_spaceBar(), 
@@ -118,7 +119,7 @@ function _predefinedKeyboards(self)
 		['qwertyLower']  = { 
 				{ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
 				{ 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l' },
-				{ 'z', 'x', 'c', 'v', 'b', 'n', 'm' },
+				{ 'z', 'x', 'c', 'v', 'b', 'n', 'm', self:_backspaceButton() },
 				{ 
 					self:_switchKeyboardButton(style, 'numeric', '123'), 
 					self:_spaceBar(), 
@@ -127,9 +128,8 @@ function _predefinedKeyboards(self)
 				}
 		} ,
 		['hex']     = { 
-				{ 'A', 'B', 'C', 'D', 'E', 'F' },
-				{ '0', '1', '2', '3', '4' }, 
-				{ '5', '6', '7', '8', '9' },
+				{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' } ,
+				{ 'A', 'B', 'C', 'D', 'E', 'F', self:_backspaceButton() },
 				{ 
 					self:_switchKeyboardButton(style, 'numeric', '123'), 
 					self:_switchKeyboardButton(style, 'qwerty', 'ABC'), 
@@ -139,7 +139,7 @@ function _predefinedKeyboards(self)
 		},
 		['numeric'] = { 
 				{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' },
-				{ '.', ',', '@' },
+				{ '.', ',', '@', self:_backspaceButton() },
 				{ 
 					self:_switchKeyboardButton(style, 'qwerty', 'ABC'), 
 					self:_spaceBar(), 
@@ -221,7 +221,12 @@ function _buttonsFromChars(self, charTable)
 		-- FIXME: add support special keys (shift, go, etc)
 		if type(v) == 'table' then
 			local keyStyle = v.style or 'keyboardButton'
-			local label    = Label(keyStyle, v.text)
+			local label
+			if v.icon then
+				label = v.icon
+			else
+				label    = Label(keyStyle, v.text)
+			end
 			local callback = v.callback or 
 					function()
 						local e = Event:new(EVENT_CHAR_PRESS, string.byte(v.text))
@@ -265,6 +270,18 @@ function _go(self)
 		text     = 'GO',
 		callback = function()
 			local e = Event:new(EVENT_KEY_PRESS, KEY_GO)
+			Framework:dispatchEvent(nil, e) 
+			return EVENT_CONSUME 
+		end
+	}
+end
+
+-- return a table that can be used as a backspace bar in keyboards
+function _backspaceButton(self)
+	return {	
+		icon	 = Icon("keyboardBack"),
+		callback = function()
+			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
 			Framework:dispatchEvent(nil, e) 
 			return EVENT_CONSUME 
 		end

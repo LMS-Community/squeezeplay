@@ -735,7 +735,8 @@ function skin(self, s)
 	s.touchButton.x = screenWidth/2
 	s.touchButton.y = screenHeight - 80
 
-	s.keyboardButton = _uses(s.touchButton, { padding = 2 } )
+	s.keyboardButton   = _uses(s.touchButton, { padding = 2 } )
+	s.keyboardBack     = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/left_arrow.png") } )
 	s.keyboardSpaceBar = _uses(s.touchButton, { w = WH_FILL } )
 
 	-- wired/wireless text for setup
