@@ -216,7 +216,7 @@ function _eventHandler(self, event)
         local mouseX, mouseY = event:getMouse()
         
         local dragAmountY = self.dragOrigin.y - mouseY
-        self:scroll(dragAmountY);
+        self:scrollBy(dragAmountY);
         
         --reset origin
         self.dragOrigin.x, self.dragOrigin.y = mouseX, mouseY
