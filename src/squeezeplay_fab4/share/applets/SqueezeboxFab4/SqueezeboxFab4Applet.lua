@@ -3,6 +3,7 @@
 local fab4_bsp               = require("fab4_bsp")
 
 local oo                     = require("loop.simple")
+local os                     = require("os")
 local io                     = require("io")
 local string                 = require("string")
 
@@ -20,7 +21,9 @@ local Watchdog               = require("jiveWatchdog")
 local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("applets.setup")
 
+
 local jnt                    = jnt
+local iconbar                = iconbar
 
 
 module(..., Framework.constants)
@@ -149,9 +152,6 @@ function setDate(self, date)
 
 	-- set system date
 	os.execute("/bin/date " .. MM..DD..hh..mm..CCYY.."."..ss)
-
-	-- set RTC to system time
-	os.execute("/sbin/hwclock -w")
 
 	iconbar:update()
 end
