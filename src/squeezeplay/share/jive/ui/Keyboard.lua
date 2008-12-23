@@ -19,6 +19,8 @@ A keyboard widget, extends L<jive.ui.Widget>, it is a container for other widget
  -- Create a new hex keyboard (WEP passwords)
  local keyboard = jive.ui.Keyboard("hex")
 
+ -- switch an existing keyboard to hex
+ keyboard:setKeyboard('hex')
 
 =head1 STYLE
 
@@ -66,45 +68,32 @@ function __init(self, style, kbType)
 	local obj = oo.rawnew(self, Widget(style))
 
 	-- accepted keyboard types
-	obj.keyboards           = obj:_predefinedKeyboards()
+	obj.keyboard = {}
+	obj.widgets  = {}
 
-	local keyboard, widgets = obj:_setupKeyboard(kbType)
+	obj:_predefinedKeyboards()
 
-	obj.keyboard = keyboard
-	obj.widgets  = widgets
-
-	for _,widget in ipairs(obj.widgets) do
-		widget.parent = obj
-	end
+	local keyboard, widgets = obj:setKeyboard(kbType)
 
 	-- forward events to contained widgets
-	obj:addListener(EVENT_ALL,
+	obj:addListener(EVENT_MOUSE_ALL,
 			 function(event)
-				local eventType = event:getType()
-				 local notMouse = (eventType & EVENT_MOUSE_ALL) == 0
-				if (eventType == EVENT_KEY_PRESS) then
-					return EVENT_UNUSED
-				end
-
-				 for _, widget in ipairs(obj.widgets) do
-					 if notMouse or widget:mouseInside(event) then
+				for _, widget in ipairs(obj.widgets) do
+					if notMouse or widget:mouseInside(event) then
 						 local r = widget:_event(event)
 						 if r ~= EVENT_UNUSED then
 							 return r
 						 end
 					 end
 				 end
-	
 				 return EVENT_UNUSED
 			 end)
-
-	obj:_layout()
-
 	return obj
+
 end
 
 function _predefinedKeyboards(self)
-	return { 
+	self.keyboards = { 
 		['qwerty']  = { 
 				{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
 				{ 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L' },
@@ -182,8 +171,28 @@ function _layout(self)
 
 end
 
+--[[
+
+=head2 jive.ui.Keyboard:setKeyboard(kbType)
+
+Changes Keyboard widget to I<type>, where type is either a pre-defined keyboard ('qwerty', 'qwertyLower', 'numeric', 'hex'),
+or a user-defined table of keys to render
+
+=cut
+--]]
+
 --Sets up the keys to lay out in the keyboard
-function _setupKeyboard(self, kbType)
+function setKeyboard(self, kbType)
+
+	-- unlink any current widgets to their parents
+	-- clear object's widgets and keyboard tables
+	if self.widgets then
+		for _, widget in ipairs(self.widgets) do
+			widget.parent = nil
+		end
+		self.widgets  = {}
+		self.keyboard = {}
+	end
 
 	local keyboardTable = {}
 	local widgetTable   = {}
@@ -210,7 +219,14 @@ function _setupKeyboard(self, kbType)
 		end
 	end
 
-	return keyboardTable, widgetTable
+	self.keyboard = keyboardTable
+	self.widgets  = widgetTable
+
+	for _,widget in ipairs(self.widgets) do
+		widget.parent = self
+	end
+
+	self:reLayout()
 
 end
 
@@ -255,15 +271,11 @@ function _buttonsFromChars(self, charTable)
 	return buttonTable
 end
 
-function _switchKeyboard(style, kbType)
-	log:warn('Not yet functional')
-end
-
 function _switchKeyboardButton(self, style, kbType, keyText)
 	return {	
 		text     = keyText,
 		callback = function()
-			_switchKeyboard(style, kbType)
+			self:setKeyboard(kbType)
 			return EVENT_CONSUME 
 		end
 	}
