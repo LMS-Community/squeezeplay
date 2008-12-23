@@ -372,6 +372,50 @@ SDLPango_WasInit()
     return IS_INITIALIZED;
 }
 
+
+/*!
+    Draw glyphs on rect, usnig a layout, if layoutcontext is not null.
+
+    @param *context [in] Context
+    @param *surface [out] Surface to draw on it
+    @param *color_matrix [in] Foreground and background color
+    @param *font [in] Innter variable of Pango
+    @param *glyphs [in] Innter variable of Pango
+    @param *rect [in] Draw on this area
+    @param baseline [in] Horizontal location of glyphs
+*/
+static void
+drawGlyphStringWithLayout(
+    SDLPango_Context *context,
+    SDL_Surface *surface,
+    SDLPango_Matrix *color_matrix,
+    PangoFont *font,
+    PangoGlyphString *glyphs,
+    SDL_Rect *rect,
+    int baseline,
+    SDLPango_Layout_Context *layoutcontext)
+{
+    FT_Bitmap *ftbitmap;
+    if (!layoutcontext) {
+        ftbitmap = context->tmp_ftbitmap;
+    } else {
+        ftbitmap = layoutcontext->tmp_ftbitmap;   
+    }
+
+    //is kerning already done?
+    pango_fc_font_kern_glyphs(font, glyphs);
+ 
+    pango_ft2_render(ftbitmap, font, glyphs, rect->x, rect->y + baseline);
+
+    SDLPango_CopyFTBitmapToSurface(
+	ftbitmap,
+	surface,
+	color_matrix,
+	rect);
+
+    clearFTBitmap(ftbitmap);
+}
+
 /*!
     Draw glyphs on rect.
 
@@ -391,18 +435,12 @@ drawGlyphString(
     PangoFont *font,
     PangoGlyphString *glyphs,
     SDL_Rect *rect,
-    int baseline)
+    int baseline,
+    SDLPango_Layout_Context layoutcontext)
 {
-    pango_ft2_render(context->tmp_ftbitmap, font, glyphs, rect->x, rect->y + baseline);
-
-    SDLPango_CopyFTBitmapToSurface(
-	context->tmp_ftbitmap,
-	surface,
-	color_matrix,
-	rect);
-
-    clearFTBitmap(context->tmp_ftbitmap);
+    drawGlyphStringWithLayout(context, surface, color_matrix, font, glyphs, rect, baseline, NULL);
 }
+
 
 /*!
     Draw horizontal line of a pixel.
@@ -464,7 +502,7 @@ static void drawHLine(
 }
 
 /*!
-    Draw a line.
+    Draw a line, using the passed in layout context, if not null.
 
     @param *context [in] Context
     @param *surface [out] Surface to draw on it
@@ -475,15 +513,23 @@ static void drawHLine(
     @param baseline [in] Rise / sink of line (for super/subscript)
 */
 static void
-drawLine(
+drawLineWithLayout(
     SDLPango_Context *context,
     SDL_Surface *surface,
     PangoLayoutLine *line,
     gint x, 
     gint y, 
     gint height,
-    gint baseline)
+    gint baseline,
+    SDLPango_Layout_Context *layoutcontext)
 {
+    PangoLayout *layout;
+    if (!layoutcontext) {
+        layout = context->layout;
+    } else {
+        layout = layoutcontext->layout;   
+    }
+
     GSList *tmp_list = line->runs;
     PangoColor fg_color, bg_color;
     PangoRectangle logical_rect;
@@ -527,6 +573,13 @@ drawLine(
 	}
 
 	if(! shape_set) {
+    	FT_Bitmap *ftbitmap;
+        if (layoutcontext == NULL) {
+            ftbitmap = context->tmp_ftbitmap;
+        } else {
+            ftbitmap = layoutcontext->tmp_ftbitmap;   
+        }
+        
 	    if (uline == PANGO_UNDERLINE_NONE)
 		pango_glyph_string_extents (run->glyphs, run->item->analysis.font,
 					    NULL, &logical_rect);
@@ -539,16 +592,21 @@ drawLine(
 	    d_rect.x = (Uint16)(x + PANGO_PIXELS (x_off));
 	    d_rect.y = (Uint16)(risen_y - baseline);
 
+
 	    if((! context->tmp_ftbitmap) || d_rect.w + d_rect.x > context->tmp_ftbitmap->width
 		|| d_rect.h + d_rect.y > context->tmp_ftbitmap->rows)
 	    {
-		freeFTBitmap(context->tmp_ftbitmap);
-		context->tmp_ftbitmap = createFTBitmap(d_rect.w + d_rect.x, d_rect.h + d_rect.y);
+    		freeFTBitmap(context->tmp_ftbitmap);
+            if (layoutcontext == NULL) {
+                context->tmp_ftbitmap = createFTBitmap(d_rect.w + d_rect.x, d_rect.h + d_rect.y);
+            } else {
+                layoutcontext->tmp_ftbitmap = createFTBitmap(d_rect.w + d_rect.x, d_rect.h + d_rect.y);
+            }
 	    }
 
-	    drawGlyphString(context, surface, 
+	    drawGlyphStringWithLayout(context, surface, 
 		&color_matrix, 
-		run->item->analysis.font, run->glyphs, &d_rect, baseline);
+		run->item->analysis.font, run->glyphs, &d_rect, baseline, layoutcontext);
 	}
         switch (uline) {
 	case PANGO_UNDERLINE_NONE:
@@ -604,6 +662,30 @@ drawLine(
 
 	x_off += logical_rect.width;
     }
+}
+
+/*!
+    Draw a line.
+
+    @param *context [in] Context
+    @param *surface [out] Surface to draw on it
+    @param *line [in] Innter variable of Pango
+    @param x [in] X location of line
+    @param y [in] Y location of line
+    @param height [in] Height of line
+    @param baseline [in] Rise / sink of line (for super/subscript)
+*/
+static void
+drawLine(
+    SDLPango_Context *context,
+    SDL_Surface *surface,
+    PangoLayoutLine *line,
+    gint x, 
+    gint y, 
+    gint height,
+    gint baseline)
+{
+    drawLineWithLayout(context, surface, line, x, y, height, baseline, NULL);
 }
 
 /*!
@@ -890,15 +972,22 @@ SDLPango_SetSurfaceCreateArgs(
     @param *context [in] Context
     @return A newly created surface
 */
-SDL_Surface * SDLPango_CreateSurfaceDraw(
-    SDLPango_Context *context)
+SDL_Surface * SDLPango_CreateSurfaceDrawWithLayout(
+    SDLPango_Context *context, SDLPango_Layout_Context *layoutcontext)
 {
+    PangoLayout *layout;
+    if (!layoutcontext) {
+        layout = context->layout;
+    } else {
+        layout = layoutcontext->layout;
+    }
+    
     PangoRectangle logical_rect;
     SDL_Surface *surface;
     int width, height;
 	const SDL_VideoInfo *video_info;
 	
-    pango_layout_get_extents (context->layout, NULL, &logical_rect);
+    pango_layout_get_extents (layout, NULL, &logical_rect);
     width = PANGO_PIXELS (logical_rect.width);
     height = PANGO_PIXELS (logical_rect.height);
     if(width < context->min_width)
@@ -918,9 +1007,22 @@ SDL_Surface * SDLPango_CreateSurfaceDraw(
 	}
 	
 
-    SDLPango_Draw(context, surface, 0, 0);
+    SDLPango_DrawWithLayout(context, surface, 0, 0, layoutcontext);
 
     return surface;
+}
+
+/*!
+    Create a surface and draw text on it.
+    The size of surface is same as lauout size.
+
+    @param *context [in] Context
+    @return A newly created surface
+*/
+SDL_Surface * SDLPango_CreateSurfaceDraw(
+    SDLPango_Context *context)
+{
+    return SDLPango_CreateSurfaceDrawWithLayout(context, NULL);
 }
 
 /*!
@@ -937,6 +1039,34 @@ SDLPango_Draw(
     SDL_Surface *surface,
     int x, int y)
 {
+    SDLPango_DrawWithLayout(context, surface, x, y, NULL);
+    
+}
+
+/*!
+    Draw text on a existing surface, using the passed in layout context, if not null.
+
+    @param *context [in] Context
+    @param *surface [i/o] Surface to draw on it
+    @param x [in] X of left-top of drawing area
+    @param y [in] Y of left-top of drawing area
+*/
+void
+SDLPango_DrawWithLayout(
+    SDLPango_Context *context,
+    SDL_Surface *surface,
+    int x, int y, SDLPango_Layout_Context *layoutcontext)
+{
+    PangoLayout *layout;
+    FT_Bitmap *ftbitmap;
+    if (!layoutcontext) {
+        layout = context->layout;
+        ftbitmap = context->tmp_ftbitmap;
+    } else {
+        layout = layoutcontext->layout;
+        ftbitmap = layoutcontext->tmp_ftbitmap;   
+    }
+            
     PangoLayoutIter *iter;
     PangoRectangle logical_rect;
     int width, height;
@@ -946,9 +1076,9 @@ SDLPango_Draw(
 	return;
     }
 
-    iter = pango_layout_get_iter (context->layout);
+    iter = pango_layout_get_iter (layout);
 
-    pango_layout_get_extents (context->layout, NULL, &logical_rect);
+    pango_layout_get_extents (layout, NULL, &logical_rect);
     width = PANGO_PIXELS (logical_rect.width);
     height = PANGO_PIXELS (logical_rect.height);
 
@@ -956,11 +1086,15 @@ SDLPango_Draw(
         SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, 0, 0, 0, 0));
     }
 
-    if((! context->tmp_ftbitmap) || context->tmp_ftbitmap->width < width
-	|| context->tmp_ftbitmap->rows < height)
+    if((! ftbitmap) || ftbitmap->width < width
+	|| ftbitmap->rows < height)
     {
-	freeFTBitmap(context->tmp_ftbitmap);
-        context->tmp_ftbitmap = createFTBitmap(width, height);
+	    freeFTBitmap(ftbitmap);
+        if (layoutcontext == NULL) {
+            context->tmp_ftbitmap = createFTBitmap(width, height);
+        } else {
+            layoutcontext->tmp_ftbitmap = createFTBitmap(width, height);
+        }
     }
 
     do {
@@ -972,14 +1106,15 @@ SDLPango_Draw(
 	pango_layout_iter_get_line_extents (iter, NULL, &logical_rect);
 	baseline = pango_layout_iter_get_baseline (iter);
 
-	drawLine(
+	drawLineWithLayout(
 	    context,
 	    surface,
 	    line,
 	    x + PANGO_PIXELS (logical_rect.x),
 	    y + PANGO_PIXELS (logical_rect.y),
 	    PANGO_PIXELS (logical_rect.height),
-	    PANGO_PIXELS (baseline - logical_rect.y));
+	    PANGO_PIXELS (baseline - logical_rect.y),
+	    layoutcontext);
     } while (pango_layout_iter_next_line (iter));
 
     pango_layout_iter_free (iter);
@@ -1263,4 +1398,16 @@ PangoLayout* SDLCALL SDLPango_GetPangoLayout(
     SDLPango_Context *context)
 {
     return context->layout;
+}
+
+/*!
+    Create a new layout from context.
+
+    @param *context [in] Context
+    @return Layout
+*/
+PangoLayout* SDLCALL SDLPango_CreatePangoLayout(
+    SDLPango_Context *context)
+{
+    return pango_layout_new(context->context);
 }

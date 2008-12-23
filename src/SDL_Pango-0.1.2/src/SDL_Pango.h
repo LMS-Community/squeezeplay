@@ -47,6 +47,12 @@ typedef struct _SDLPango_Matrix {
     Uint8 m[4][4];  /*! Matrix variables */
 } SDLPango_Matrix;
 
+typedef struct _SDLPango_Layout_Context {
+    PangoLayout *layout;
+    FT_Bitmap *tmp_ftbitmap;
+} SDLPango_Layout_Context;
+
+
 /*!
     Specifies white back and black letter.
 */
@@ -107,11 +113,19 @@ extern DECLSPEC void SDLCALL SDLPango_SetSurfaceCreateArgs(
 
 extern DECLSPEC SDL_Surface * SDLCALL SDLPango_CreateSurfaceDraw(
     SDLPango_Context *context);
+    
+extern DECLSPEC SDL_Surface * SDLCALL SDLPango_CreateSurfaceDrawWithLayout(
+    SDLPango_Context *context, SDLPango_Layout_Context *layoutcontext);
 
 extern DECLSPEC void SDLCALL SDLPango_Draw(
     SDLPango_Context *context,
     SDL_Surface *surface,
     int x, int y);
+
+extern DECLSPEC void SDLCALL SDLPango_DrawWithLayout(
+    SDLPango_Context *context,
+    SDL_Surface *surface,
+    int x, int y, SDLPango_Layout_Context *layoutcontext);
 
 extern DECLSPEC void SDLCALL SDLPango_SetDpi(
     SDLPango_Context *context,
@@ -176,6 +190,9 @@ extern DECLSPEC PangoFontDescription* SDLCALL SDLPango_GetPangoFontDescription(
     SDLPango_Context *context);
 
 extern DECLSPEC PangoLayout* SDLCALL SDLPango_GetPangoLayout(
+    SDLPango_Context *context);
+
+extern DECLSPEC PangoLayout* SDLCALL SDLPango_CreatePangoLayout(
     SDLPango_Context *context);
 
 #endif /* __PANGO_H__ */
