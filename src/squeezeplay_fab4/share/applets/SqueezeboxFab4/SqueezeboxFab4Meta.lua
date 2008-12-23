@@ -28,6 +28,17 @@ function registerApplet(meta)
 
 	-- BSP is a resident Applet
 	appletManager:loadApplet("SqueezeboxFab4")
+
+
+	-- audio playback defaults
+	appletManager:addDefaultSetting("Playback", "enableAudio", 1)
+
+	appletManager:addDefaultSetting("Playback", "alsaPlaybackDevice", "default")
+	appletManager:addDefaultSetting("Playback", "alsaPlaybackBufferTime", 30000)
+	appletManager:addDefaultSetting("Playback", "alsaPlaybackPeriodCount", 3)
+	appletManager:addDefaultSetting("Playback", "alsaEffectsDevice", "plughw:2,0")
+	appletManager:addDefaultSetting("Playback", "alsaEffectsBufferTime", 30000)
+	appletManager:addDefaultSetting("Playback", "alsaEffectsPeriodCount", 3)
 end
 
 
