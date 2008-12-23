@@ -181,7 +181,7 @@ Categories are strings. The following are the default categories:
 
 -- table to contain all the loggers indexed by category
 local categories = {
-	["applets.setup"]            = jiveLogger(logging.DEBUG),
+	["applets.setup"]            = jiveLogger(logging.INFO),
 	["applets.browser"]          = jiveLogger(logging.INFO),
 	["applets.games"]            = jiveLogger(logging.INFO),
 	["applets.screensavers"]     = jiveLogger(logging.INFO),
