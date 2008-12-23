@@ -29,7 +29,7 @@ typedef struct textarea_widget {
 
     JiveSurface *text_surface; //todo:free me
     int text_surface_y;
-	
+    SDLPango_Layout_Context *layoutcontext; //todo:free me	
 } TextareaWidget;
 
 
@@ -111,7 +111,6 @@ int jiveL_textarea_get_preferred_bounds(lua_State *L) {
 	}
 
 	w = peer->w.bounds.w + peer->w.padding.left + peer->w.padding.right;
-    fprintf(stderr, "peer->w.bounds.h: %d\n", peer->w.bounds.h);
     //how to get the h value - want full space but bounds not yet set
 //	h = peer->w.bounds.h;
 	h = (peer->num_lines * peer->line_height) + peer->w.padding.top + peer->w.padding.bottom;
@@ -154,10 +153,15 @@ static void prepare(lua_State *L) {
     peer->is_prepared = true;
 	
 	
+	
 	/* free existing text surfaces - this seems odd, shoudl regular gc associated with the window 
 	be the place to deal with this rather than here in prepare*/
 	//jive_textarea_gc_lines(peer); - remember to free sdlpango context, etc, but why here in prepare
 
+    
+    peer->layoutcontext = malloc(sizeof(SDLPango_Layout_Context));
+    peer->layoutcontext->tmp_ftbitmap = NULL;
+    peer->layoutcontext->layout = SDLPango_CreatePangoLayout(pangocontext);
     
     lua_getglobal(L, "tostring");
 	lua_getfield(L, 1, "text");
@@ -166,7 +170,7 @@ static void prepare(lua_State *L) {
 	str = (char *) lua_tostring(L, -1);
 
     width = peer->w.bounds.w - peer->w.padding.left - peer->w.padding.right;
-    peer->text_surface = jive_font_draw_text_wrap(peer->font, peer->fg, str, width);
+    peer->text_surface = jive_font_draw_text_wrap(peer->font, peer->fg, str, width, peer->layoutcontext);
 	peer->text_surface_y = 0;
 	
 	//todo: apply shadow surface - blit to text_surface?
@@ -333,18 +337,9 @@ int jiveL_textarea_layout(lua_State *L) {
 	return 0;
 }
 
-int jiveL_textarea_scroll(lua_State *L) {
-	/* stack is:
-	 * 1: widget
-	 * 2: scroll_amount
-	 */
-	TextareaWidget *peer;
-    int scroll_amount;
+static void jive_textarea_scroll(TextareaWidget *peer, int scroll_amount) {
     Uint16 bottom;
     Uint16 srf_w, srf_h;
-    
-    peer = jive_getpeer(L, 1, &textareaPeerMeta);
-	scroll_amount = tolua_tointeger(L, 2, 0);
 	
     peer->text_surface_y += scroll_amount;
     
@@ -358,9 +353,78 @@ int jiveL_textarea_scroll(lua_State *L) {
     if (peer->text_surface_y > bottom) {
         peer->text_surface_y = bottom;
     }
+}
+
+
+int jiveL_textarea_scroll(lua_State *L) {
+	/* stack is:
+	 * 1: widget
+	 * 2: scroll_amount
+	 */
+	TextareaWidget *peer;
+    int scroll_amount;
+    
+    peer = jive_getpeer(L, 1, &textareaPeerMeta);
+	scroll_amount = tolua_tointeger(L, 2, 0);
+
+    jive_textarea_scroll(peer,  scroll_amount);
+    
+    return 0;
+}
+
+int jiveL_textarea_scroll_lines(lua_State *L) {
+	/* stack is:
+	 * 1: widget
+	 * 2: scroll_lines
+	 */
+	TextareaWidget *peer;
+    int scroll_lines;
+    int byte_index, trailing, line, x_pos;
+    int new_line_index, scroll_amount;
+    
+    peer = jive_getpeer(L, 1, &textareaPeerMeta);
+	scroll_lines = tolua_tointeger(L, 2, 0);
+	
+	//todo: currently calculates scroll amount based on top lines' height, should be based on bottom lines' height when scrolling down
+	
+	pango_layout_xy_to_index(peer->layoutcontext->layout,
+                                                         0,
+                                                         peer->text_surface_y * PANGO_SCALE,
+                                                         &byte_index,
+                                                         &trailing);
+	pango_layout_index_to_line_x(peer->layoutcontext->layout,
+                                                         byte_index,
+                                                         trailing,
+                                                         &line,
+                                                         &x_pos);
+	
+	new_line_index = line + scroll_lines;
+	if (new_line_index <= 0) {
+	    scroll_amount = -1 * peer->text_surface_y;
+    } else {
+        PangoLayoutLine*    line;
+        PangoRectangle pos;
+        int new_byte_index;
+        
+        int line_count = pango_layout_get_line_count(peer->layoutcontext->layout);
+        if (new_line_index > line_count - 1) {
+            new_line_index = line_count;        
+        }
+        line = pango_layout_get_line(peer->layoutcontext->layout, new_line_index);
+        
+        pango_layout_line_x_to_index(line, 0, &new_byte_index, &trailing);
+                                                         
+        pango_layout_index_to_pos(peer->layoutcontext->layout,new_byte_index,&pos); 
+        
+        
+        scroll_amount = PANGO_PIXELS(pos.y) - peer->text_surface_y;
+    }
+	
+	jive_textarea_scroll(peer, scroll_amount);
 
     return 0;
 }
+
 
 
 int jiveL_textarea_draw(lua_State *L) {

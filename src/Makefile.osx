@@ -49,7 +49,7 @@ export BUILD_TOP=$(BASE_DIR)/build/osx
 export PREFIX=${BUILD_TOP}
 
 export CFLAGS=  -I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/pango-1.0 \
-  -I${PREFIX}/include -I${PREFIX}/include/glib-2.0 -I${PREFIX}/lib/glib-2.0/include -I${PREFIX}/include/cairo -g
+  -I${PREFIX}/include -I${PREFIX}/include/glib-2.0  -I${PREFIX}/include/freetype2 -I${PREFIX}/lib/glib-2.0/include -I${PREFIX}/include/cairo -g
 export LDFLAGS=-L${PREFIX}/lib -L/usr/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
@@ -189,7 +189,9 @@ generated/${FONTCONFIG_DIR}/Makefile:
 
 fontconfig: generated/${FONTCONFIG_DIR}/configure generated/${FONTCONFIG_DIR}/Makefile
 	-mkdir -p /tmp/splocal/fonts/
-	cp freefont-20060126/Free*ttf /tmp/splocal/fonts/
+	cp freefont-20080912/Free*ttf /tmp/splocal/fonts/
+	#cp DroidFonts/*Fallback*ttf /tmp/splocal/fonts/
+	#cp DroidFonts/*ttf /tmp/splocal/fonts/
 	cd generated/${FONTCONFIG_DIR}; make && make install
 	
 # pixman 
@@ -352,8 +354,8 @@ squeezeplay_contrib:
 # freefont
 freefont:
 	mkdir -p ${PREFIX}/share/jive/fonts
-	cp freefont-20060126/FreeSans.ttf ${PREFIX}/share/jive/fonts
-	cp freefont-20060126/FreeSansBold.ttf ${PREFIX}/share/jive/fonts
+	cp freefont-20080912/FreeSans.ttf ${PREFIX}/share/jive/fonts
+	cp freefont-20080912/FreeSansBold.ttf ${PREFIX}/share/jive/fonts
 # fonts for clock screensaver
 	cp fonts-clock/Digital.ttf ${PREFIX}/share/jive/fonts
 	cp fonts-clock/DigitalItalic.ttf ${PREFIX}/share/jive/fonts

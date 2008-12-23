@@ -26,7 +26,6 @@ static Uint32 next_jive_origin = 0;
 struct jive_perfwarn perfwarn = { 0, 0, 0, 0, 0, 0 };
 
 SDLPango_Context *pangocontext;
-JivePangoContext *jive_pango_context;
 
 /* Frame rate calculations */
 //static Uint32 framedue = 0;
@@ -152,15 +151,7 @@ static int jiveL_init(lua_State *L) {
 		exit(-1);
 	}
 
-//future
-//    jive_pango_context = malloc(sizeof(JivePangoContext));
-//    jive_pango_context->font_map = pango_ft2_font_map_new ();
-//    pango_ft2_font_map_set_resolution (PANGO_FT2_FONT_MAP (context->font_map), 75.0, 75.0);
-//
-//    context->context = pango_ft2_font_map_create_context (PANGO_FT2_FONT_MAP (context->font_map));
     
-    
-    //will likely be replaced
 	pangocontext = jive_create_sdl_pango_context();
     
     
@@ -1293,6 +1284,7 @@ static const struct luaL_Reg textarea_methods[] = {
 	{ "_layout", jiveL_textarea_layout },
 	{ "draw", jiveL_textarea_draw },
 	{ "scroll", jiveL_textarea_scroll },
+	{ "scrollLines", jiveL_textarea_scroll_lines },
 	{ NULL, NULL }
 };
 

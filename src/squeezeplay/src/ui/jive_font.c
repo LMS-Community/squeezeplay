@@ -249,27 +249,27 @@ static SDL_Surface *draw_ttf_font(JiveFont *font, Uint32 color, const char *str)
 	return srf;
 }
 JiveSurface *jive_font_draw_text(JiveFont *font, Uint32 color, const char *str ) {
-    return jive_font_draw_text_wrap(font, color, str, -1 );
+    return jive_font_draw_text_wrap(font, color, str, -1, NULL);
 }
 
-/**
- * if wrapping_width == 0, no wrapping will be done
- */
-JiveSurface *jive_font_draw_text_wrap(JiveFont *font, Uint32 color, const char *str, Uint16 wrapping_width ) {
-	JiveSurface *jive_surface;
-	PangoAttrList *attr_list;
+void jive_font_parse_text_wrap(JiveFont *font, Uint32 color, const char *str, Uint16 wrapping_width, SDLPango_Layout_Context *layoutcontext) {
+    PangoAttrList *attr_list;
 	PangoAttribute *size, *fgcolor, *family, *weight;
 	//PangoAttribute *letter_spacing;
     GError *err = NULL;
     char *text = NULL;
     PangoLayout *layout;
-    
-	assert(font && font->magic == JIVE_FONT_MAGIC);
+	assert(font);
 
-    layout = SDLPango_GetPangoLayout(pangocontext);
+    if (layoutcontext == NULL) {
+        //todo:this might go away, still here for labels;
+        layout = SDLPango_GetPangoLayout(pangocontext);
+    } else {
+        layout = layoutcontext->layout; 
+    }
 
     if ( !pango_parse_markup(str, -1, 0, &attr_list, &text, NULL, &err)) {
-        fprintf(stderr, "pango_parse_markup error: %s\n", err->message);
+        fprintf(stderr, "pango_parse_markup error on text (%s): %s\n", str, err->message);
         g_error_free(err); 
     	
     	//Fall back to using non-marked up set_text which is more forgiving and will replace illegal chars with '?' 
@@ -321,10 +321,22 @@ JiveSurface *jive_font_draw_text_wrap(JiveFont *font, Uint32 color, const char *
         pango_layout_set_width(layout, (guint) wrapping_width * PANGO_SCALE);
     }
     pango_layout_set_wrap(layout, PANGO_WRAP_WORD);
-    //pango_layout_set_height (SDLPango_GetPangoLayout(pangocontext), 300* PANGO_SCALE);
+    //pango_layout_set_height (layout, 300* PANGO_SCALE);
     
-	jive_surface = jive_surface_new_SDLSurface(str ? SDLPango_CreateSurfaceDraw (pangocontext) : NULL);
 
+}
+
+/**
+ * if wrapping_width == 0, no wrapping will be done
+ */
+JiveSurface *jive_font_draw_text_wrap(JiveFont *font, Uint32 color, const char *str, Uint16 wrapping_width, SDLPango_Layout_Context *layoutcontext ) {
+	JiveSurface *jive_surface;
+
+    jive_font_parse_text_wrap(font, color, str, wrapping_width, layoutcontext);
+    
+	jive_surface = jive_surface_new_SDLSurface(str ? SDLPango_CreateSurfaceDrawWithLayout(pangocontext, layoutcontext) : NULL);
+
+    //todo: free SDLPango_Layout_Context
 	return jive_surface;
 
 }

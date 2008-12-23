@@ -190,7 +190,8 @@ function _eventHandler(self, event)
 
 	if type == EVENT_SCROLL then
 
-		self:scrollBy(event:getScroll())
+		self:scrollLines(event:getScroll())
+		self:reDraw()
 		return EVENT_CONSUME 
 
 	elseif type == EVENT_MOUSE_DOWN then
@@ -227,11 +228,14 @@ function _eventHandler(self, event)
 		local keycode = event:getKeycode()
 
 		if keycode == KEY_UP then
-			self:scrollBy( -(self.visibleLines - 1) )
+		    
+			self:scrollLines( -1 )
+			self:reDraw()
 			return EVENT_CONSUME
 
 		elseif keycode == KEY_DOWN then
-			self:scrollBy( self.visibleLines - 1 )
+			self:scrollLines( 1 )
+			self:reDraw()
 			return EVENT_CONSUME
 			
 		elseif keycode == KEY_PAGE_UP then 

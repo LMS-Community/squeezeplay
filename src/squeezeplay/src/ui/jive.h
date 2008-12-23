@@ -11,6 +11,7 @@
 #include "common.h"
 
 #include <pango/pango.h>
+#include <pango/pangoft2.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_gfxPrimitives.h>
@@ -254,11 +255,6 @@ struct jive_font {
 	const char *magic;
 };
 
-struct jive_pango_context {
-    PangoContext *context;
-    PangoFontMap *font_map;
-};
-
 struct jive_perfwarn {
 	Uint32 screen;
 	Uint32 layout;
@@ -379,7 +375,8 @@ int jive_font_capheight(JiveFont *font);
 int jive_font_ascend(JiveFont *font);
 int jive_font_offset(JiveFont *font);
 JiveSurface *jive_font_draw_text(JiveFont *font, Uint32 color, const char *str);
-JiveSurface *jive_font_draw_text_wrap(JiveFont *font, Uint32 color, const char *str, Uint16 surface_width);
+JiveSurface *jive_font_draw_text_wrap(JiveFont *font, Uint32 color, const char *str, Uint16 surface_width, SDLPango_Layout_Context *layoutcontext);
+void jive_font_parse_text_wrap(JiveFont *font, Uint32 color, const char *str, Uint16 surface_width, SDLPango_Layout_Context *layoutcontext);
 JiveSurface *jive_font_ndraw_text(JiveFont *font, Uint32 color, const char *str, size_t len);
 
 
@@ -475,6 +472,7 @@ int jiveL_textarea_skin(lua_State *L);
 int jiveL_textarea_layout(lua_State *L);
 int jiveL_textarea_draw(lua_State *L);
 int jiveL_textarea_scroll(lua_State *L);
+int jiveL_textarea_scroll_lines(lua_State *L);
 int jiveL_textarea_gc(lua_State *L);
 
 int jiveL_window_skin(lua_State *L);
