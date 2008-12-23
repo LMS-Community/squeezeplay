@@ -23,6 +23,7 @@ local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
 local Button                 = require("jive.ui.Button")
 local Group                  = require("jive.ui.Group")
+local Keyboard               = require("jive.ui.Keyboard")
 local Tile                   = require("jive.ui.Tile")
 local RadioButton            = require("jive.ui.RadioButton")
 local RadioGroup             = require("jive.ui.RadioGroup")
@@ -54,7 +55,7 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
 -- configuration
 local CONNECT_TIMEOUT = 30
-local wirelessTitleStyle = 'settingstitle'
+local wirelessTitleStyle = 'setuptitle'
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
@@ -66,14 +67,10 @@ function init(self)
 end
 
 
-function georgeSetupRegionShow(self, setupNext, windowTitleStyle)
+function georgeSetupRegionShow(self, setupNext)
 	local wlan = self.t_ctrl
 
-	if not windowTitleStyle then
-		windowTitleStyle = wirelessTitleStyle
-	end
-
-	local window = Window("window", self:string("NETWORK_REGION"), windowTitleStyle)
+	local window = Window("window", self:string("NETWORK_REGION"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
 	local region = wlan:getRegion()
@@ -214,31 +211,36 @@ function georgeSetupScanShow(self, setupNext)
 end
 
 
-function georgeSetupNetworksShow(self, setupNext, windowTitleStyle)
+function georgeSetupNetworksShow(self, setupNext)
 	self.setupNext = setupNext
 
-	if not windowTitleStyle then
-		windowTitleStyle = wirelessTitleStyle
-	end
-
-	local window = _networksShow(self, self:string("NETWORK_WIRELESS_NETWORKS"), self:string("NETWORK_SETUP_HELP"), windowTitleStyle)
+	local window = _networksShow(self, self:string("NETWORK_WIRELESS_NETWORKS"), self:string("NETWORK_SETUP_HELP"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
 	return window
 end
 
-function georgeSetupConnectionType(self, setupNextWireless, setupNextWired, windowTitleStyle)
-	log:warn('georgeSetupConnectionType')
-	if not windowTitleStyle then
-		windowTitleStyle = wirelessTitleStyle
-	end
+function georgeSetupConnectionHelp(self)
 
-	local window = Window("window", self:string("NETWORK_CONNECTION_TYPE"), windowTitleStyle)
+	local window = Window("window", self:string("NETWORK_CONNECTION_HELP"), 'setuptitle')
+
+	local textarea = Textarea("textarea", "this is just a placeholder for a bunch of text that we may put in to describe the vagaries of network connections, including terms such as 'cat5', 'SSID', and 'distributed denial of service attack'. It could be this window presents menu options or the like, but for starters I'm just throwing a textarea in here. Press the back button in the upper left to go back.")
+	window:addWidget(textarea)
+	self:tieAndShowWindow(window)
+
+	return window
+end
+
+function georgeSetupConnectionType(self, setupNextWireless, setupNextWired)
+	log:warn('georgeSetupConnectionType')
+
+	local window = Window("window", self:string("NETWORK_CONNECTION_TYPE"), wirelessTitleStyle)
 
 	local wirelessLabel  = Label("wifi", self:string("NETWORK_CONNECTION_TYPE_WIRELESS"))
 	local wiredLabel     = Label("wired", self:string("NETWORK_CONNECTION_TYPE_WIRED"))
-	local wirelessButton = Button( Icon( "wifi" ), setupNextWireless )
-	local wiredButton    = Button( Icon( "wired"    ), setupNextWired )
+	local wirelessButton = Button( Icon( "wifi"  ), setupNextWireless )
+	local wiredButton    = Button( Icon( "wired" ), setupNextWired )
+	local helpButton     = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:georgeSetupConnectionHelp() end )
 
 	local choiceText = Group("networkchoiceText", {
                         wifi   = wirelessLabel,
@@ -253,6 +255,7 @@ function georgeSetupConnectionType(self, setupNextWireless, setupNextWired, wind
 
 	window:addWidget(choiceText)
 	window:addWidget(choiceButtons)
+	window:addWidget(helpButton)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -269,13 +272,9 @@ function settingsNetworksShow(self)
 end
 
 
-function _networksShow(self, title, help, windowTitleStyle)
+function _networksShow(self, title, help)
 
-	if not windowTitleStyle then
-		windowTitleStyle = wirelessTitleStyle
-	end
-
-	local window = Window("window", title, windowTitleStyle)
+	local window = Window("window", title, wirelessTitleStyle)
 
 	-- window to return to on completion of network settings
 	self.topWindow = window
@@ -430,8 +429,15 @@ function openNetwork(self, ssid)
 	end
 end
 
+function enterSSIDHelp(self)
+	local window = Window("window", self:string("NETWORK_NETWORK_NAME"), wirelessTitleStyle)
+	window:addWidget(Textarea("textarea", self:string("NETWORK_NETWORK_NAME_HELP")))
+	self:tieAndShowWindow(window)
+	return window
+end
 
 function enterSSID(self)
+
 	local window = Window("window", self:string("NETWORK_NETWORK_NAME"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -450,11 +456,12 @@ function enterSSID(self)
 				    end
 			    )
 
-	window:addWidget(Textarea("softHelp", self:string("NETWORK_NETWORK_NAME_HELP")))
-	window:addWidget(Label("softButton1", self:string("INSERT")))
-	window:addWidget(Label("softButton2", self:string("DELETE")))
+	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:enterSSIDHelp() end )
 
 	window:addWidget(textinput)
+	window:addWidget(Keyboard("keyboard", 'qwerty'))
+	window:addWidget(helpButton)
+	window:focusWidget(texintput)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -462,13 +469,14 @@ end
 
 
 function enterPassword(self)
+
 	assert(self.ssid, "No SSID selected")
 
 	if self.scanResults[self.ssid] == nil then
 		return chooseEncryption(self)
 	end
-
 	local flags = self.scanResults[self.ssid].flags
+
 	log:warn("ssid is ", self.ssid, "flags is ", flags)
 
 	if flags == "" then
@@ -490,7 +498,7 @@ function enterPassword(self)
 		return chooseWEPLength(self)
 
 	elseif string.find(flags, "WPA%-EAP") or string.find(flags, "WPA2%-EAP") then
-		local window = Window("window", self:string("NETWORK_CONNECTION_PROBLEM"), wirelessTitleStyle)
+		local window = Window("window", self:string("NETWORK_CONNECTION_PROBLEM"))
 		window:setAllowScreensaver(false)
 
 		local menu = SimpleMenu("menu",
@@ -578,6 +586,7 @@ end
 
 
 function chooseWEPLength(self)
+
 	local window = Window("window", self:string("NETWORK_WIRELESS_ENCRYPTION"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -611,6 +620,7 @@ end
 
 
 function enterWEPKey(self)
+
 	local window = Window("window", self:string("NETWORK_WIRELESS_KEY"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -665,14 +675,24 @@ function enterWEPKey(self)
 				    end
 			    )
 
-	window:addWidget(Textarea("help", self:string("NETWORK_WIRELESS_KEY_HELP")))
-
+--	window:addWidget(Textarea("help", self:string("NETWORK_WIRELESS_KEY_HELP")))
+	local helpButton     = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:enterWirelessKeyHelp() end )
 	window:addWidget(textinput)
+	window:addWidget(Keyboard('keyboard', 'hex'))
+	window:addWidget(helpButton)
 
 	self:tieAndShowWindow(window)
 	return window
 end
 
+function enterWirelessKeyHelp(self)
+	local window = Window("window", self:string("NETWORK_WIRELESS_KEY"), wirelessTitleStyle)
+	window:setAllowScreensaver(false)
+	window:addWidget(Textarea("textarea", self:string("NETWORK_WIRELESS_KEY_HELP")))
+
+	self:tieAndShowWindow(window)
+	return window
+end
 
 function enterPSK(self)
 	local window = Window("window", self:string("NETWORK_WIRELESS_PASSWORD"), wirelessTitleStyle)

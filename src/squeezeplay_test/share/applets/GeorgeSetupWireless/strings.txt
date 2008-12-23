@@ -316,16 +316,7 @@ NETWORK_WIRELESS_KEY
 	SV	Trådlöst lösenord
 
 NETWORK_WIRELESS_KEY_HELP
-	DA	Angiv nøglen til det trådløse netværk. Brug drejeknappen til at skifte bogstav, og tryk på midterknappen for at vælge det. Tryk på midterknappen to gange for at afslutte.
-	DE	Geben Sie den WEP-Schlüssel ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der mittleren Taste. Drücken Sie zum Beenden die mittlere Taste zweimal.
-	EN	Enter your wireless key. Scroll to change letters, press the center button to choose that letter. Press the center button twice to finish.
-	ES	Escriba la clave inalámbrica. Desplace la rueda para cambiar de letra y pulse el botón central para elegirla. Pulse dos veces el botón central para terminar.
-	FI	Anna langattoman verkon avain. Vaihda kirjainta vierittämällä ja valitse kirjain keskipainikkeella. Lopeta painamalla keskipainiketta kahdesti.
-	FR	Entrer la clé sans fil. Faites défiler les lettres et appuyez sur le bouton central pour effectuer la sélection. Appuyez deux fois sur le bouton central pour terminer.
-	IT	Inserire la chiave della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare una lettera. Premere il pulsante centrale due volte per uscire.
-	NL	Voer je draadloze sleutel in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
-	NO	Angi trådløst passord. Bla for å endre bokstav, og trykk på midtknappen for å velge bokstav. Trykk midtknappen to ganger for å avslutte.
-	SV	Ange trådlöst lösenord. Markera en bokstav med rullningshjulet och tryck sedan på mittknappen för att välja bokstaven. Tryck två gånger på mittknappen för att slutföra.
+	EN	Enter your wireless key. (MORE TEXT NEEDED HERE FOR FAB4)
 
 NETWORK_REGION
 	DA	Trådløst område
@@ -574,16 +565,7 @@ NETWORK_WIRELESS_PASSWORD
 	SV	Trådlöst lösenord
 
 NETWORK_WIRELESS_PASSWORD_HELP
-	DA	Angiv adgangskoden til det trådløse netværk. Brug drejeknappen til at skifte bogstav, og tryk på midterknappen for at vælge det. Tryk på midterknappen to gange for at afslutte.
-	DE	Geben Sie Ihr Netzwerkkennwort ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der mittleren Taste. Drücken Sie die mittlere Taste zweimal zum Beenden.
-	EN	Enter your wireless password. Scroll to change letters, press the center button to choose that letter. Press center button twice to finish.
-	ES	Escriba la contraseña para red inalámbrica. Desplácese para cambiar de letra y pulse el botón central para elegir una letra. Pulse dos veces el botón central para terminar.
-	FI	Anna langattoman verkon salasana. Vaihda kirjainta vierittämällä ja valitse kirjain keskipainikkeella. Lopeta painamalla keskipainiketta kahdesti.
-	FR	Saisissez un mot de passe pour votre réseau sans fil. Faites défiler les lettres et appuyez sur le bouton central pour sélectionner la lettre souhaitée. Appuyez deux fois sur le bouton central pour terminer.
-	IT	Inserire la password della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare la lettera. Premere il pulsante centrale due volte per completare l'operazione.
-	NL	Voer je draadloze wachtwoord in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
-	NO	Angi trådløst passord. Rull for å endre bokstav, og trykk på midtknappen for å velge bokstav. Trykk på midtknappen to ganger for å avslutte.
-	SV	Ange lösenordet för det trådlösa nätverket. Markera en bokstav med rullningshjulet och tryck sedan på mittknappen för att välja bokstaven. Tryck två gånger på mittknappen för att slutföra.
+	EN	Enter your wireless password. (FAB4 SPECIFIC TEXT NEEDED)
 
 NETWORK_CONNECTING_TO
 	DA	Etablerer forbindelse til\n%s
@@ -718,16 +700,7 @@ NETWORK_NETWORK_NAME
 	SV	Nätverksnamn
 
 NETWORK_NETWORK_NAME_HELP
-	DA	Angiv navnet på det trådløse netværk. Brug drejeknappen til at skifte bogstav, og tryk på midterknappen for at vælge det. Tryk på midterknappen to gange for at afslutte.
-	DE	Geben Sie den Namen des kabellosen Netzwerks ein. Scrollen Sie durch die Buchstaben und wählen Sie sie mit der mittleren Taste. Drücken Sie die mittlere Taste zweimal zum Beenden.
-	EN	Enter your wireless network name. Scroll to change letters, press the center button to choose that letter. Press center button twice to finish.
-	ES	Escriba el nombre de la red inalámbrica. Desplácese para cambiar de letra y pulse el botón central para elegir una letra. Pulse dos veces el botón central para terminar.
-	FI	Anna langattoman verkon nimi. Vaihda kirjainta vierittämällä ja valitse kirjain keskipainikkeella. Lopeta painamalla keskipainiketta kahdesti.
-	FR	Saisissez le nom de votre réseau sans fil. Faites défiler les lettres et appuyez sur le bouton central pour sélectionner la lettre souhaitée. Appuyez deux fois sur le bouton central pour terminer.
-	IT	Inserire il nome della rete senza fili. Scorrere per cambiare lettera, premere il pulsante centrale per selezionare la lettera. Premere il pulsante centrale due volte per completare l'operazione.
-	NL	Voer de naam van je draadloze netwerk in. Scroll naar een andere letter, en druk op de middelste knop om die letter te selecteren. Druk tweemaal op de middelste knop wanneer je klaar bent.
-	NO	Angi navnet på det trådløse nettverket. Bla for å endre bokstav, og trykk på midtknappen for å velge bokstav. Trykk midtknappen to ganger for å avslutte.
-	SV	Ange namnet på det trådlösa nätverket. Markera en bokstav med rullningshjulet och tryck sedan på mittknappen för att välja bokstaven. Tryck två gånger på mittknappen för att slutföra.
+	EN	Enter your wireless network name, also known as an SSID. (FAB4 TEXT HERE)
 
 NETWORK_ADDRESS_PROBLEM
 	DA	Adresseproblem
@@ -951,3 +924,5 @@ NETWORK_CONNECTION_TYPE_WIRELESS
 NETWORK_CONNECTION_TYPE_WIRED
 	EN	Wired
 
+NETWORK_CONNECTION_HELP
+	EN	Help

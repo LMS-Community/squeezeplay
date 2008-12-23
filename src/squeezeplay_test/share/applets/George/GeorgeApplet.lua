@@ -33,6 +33,7 @@ local Surface          = require("jive.ui.Surface")
 local Textarea         = require("jive.ui.Textarea")
 local Window           = require("jive.ui.Window")
 local Popup            = require("jive.ui.Popup")
+local localPlayer      = require("jive.slim.LocalPlayer")
 
 --local Wireless         = require("jive.net.Wireless")
 local Wireless         = require("jive.net.georgeWireless")
@@ -115,14 +116,15 @@ function georgeStep2(self)
 	log:info("georgeStep2")
 
 	-- welcome!
-	return self:setupWelcomeShow( function() self:georgeStep3() end , welcomeTitleStyle)
+	return self:setupWelcomeShow( function() self:georgeStep3() end)
 end
 
 function georgeStep3(self)
 	log:info("georgeStep3")
 
+	log:warn(self.windowTitleStyle)
 	-- wireless region
-	return appletManager:callService("georgeSetupRegionShow", function() self:georgeStep3a() end, welcomeTitleStyle)
+	return appletManager:callService("georgeSetupRegionShow", function() self:georgeStep3a() end, self.windowTitleStyle)
 	
 end
 
@@ -239,7 +241,7 @@ end
 
 
 function setupWelcomeShow(self, setupNext)
-	local window = Window("window", self:string("WELCOME"), welcomeTitleStyle)
+	local window = Window("window", self:string("WELCOME"), self.windowTitleStyle)
 	window:setAllowScreensaver(false)
 
 	local textarea = Textarea("centeredtextarea", self:string("WELCOME_WALKTHROUGH"))
@@ -320,6 +322,7 @@ end
 
 function init(self)
 	log:info("subscribe")
+	self.windowTitleStyle = welcomeTitleStyle
 	jnt:subscribe(self)
 end
 
