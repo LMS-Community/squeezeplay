@@ -187,28 +187,34 @@ function _setupKeyboard(self, kbType)
 
 	local keyboardTable = {}
 	local widgetTable   = {}
+
+	local keyboard
+
 	-- user defined keyboard
 	if type(kbType) == 'table' then
+		keyboard = kbType
 
-		-- make buttons from table of custom keys
-
-	-- qwerty keyboard
+	-- pre-defined keyboard
 	elseif type(kbType) == 'string' then
+		keyboard = self.keyboards[kbType]
 
-		_assert(self.keyboards[kbType])
-
-		for i,row in ipairs(self.keyboards[kbType]) do
-			local rowButtons = self:_buttonsFromChars(row)
-			keyboardTable[i] = rowButtons
-			for _, widget in ipairs(rowButtons) do
-				table.insert(widgetTable, widget)
-			end
-		end
-
-		return keyboardTable, widgetTable
 	end
 
+	_assert(keyboard)
+
+	for i,row in ipairs(keyboard) do
+		local rowButtons = self:_buttonsFromChars(row)
+		table.insert(keyboardTable, rowButtons)
+		for _, widget in ipairs(rowButtons) do
+			table.insert(widgetTable, widget)
+		end
+	end
+
+	return keyboardTable, widgetTable
+
 end
+
+
 
 -- turn the key in a row into Group widgets with Button widgets
 function _buttonsFromChars(self, charTable)
