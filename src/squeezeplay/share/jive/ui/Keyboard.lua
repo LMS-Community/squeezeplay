@@ -49,7 +49,6 @@ local table             = require("jive.utils.table")
 local debug             = require("jive.utils.debug")
 local log               = require("jive.utils.log").logger("ui")
 
-
 module(..., Framework.constants)
 
 oo.class(_M, Group)
@@ -72,6 +71,7 @@ function __init(self, style, kbType)
 	obj.widgets  = {}
 
 	obj:_predefinedKeyboards()
+	obj:_specialKeyWidths()
 
 	local keyboard, widgets = obj:setKeyboard(kbType)
 
@@ -90,6 +90,13 @@ function __init(self, style, kbType)
 			 end)
 	return obj
 
+end
+
+function _specialKeyWidths(self)
+	self.specialKeyWidths = {
+		['keyboardSpace'] = 150,
+		['keyboardShift'] = 60,
+	}
 end
 
 function _predefinedKeyboards(self)
@@ -119,20 +126,22 @@ function _predefinedKeyboards(self)
 		['hex']     = { 
 				{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' } ,
 				{ 'A', 'B', 'C', 'D', 'E', 'F', self:_backspaceButton() },
+				{},
 				{ 
 					self:_switchKeyboardButton(style, 'numeric', '123'), 
+					self:_spaceBar(), 
 					self:_switchKeyboardButton(style, 'qwerty', 'ABC'), 
-					self:_switchKeyboardButton(style, 'qwertyLower', 'abc'), 
 					self:_go() 
 				}
 		},
 		['numeric'] = { 
 				{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' },
 				{ '.', ',', '@', self:_backspaceButton() },
+				{},
 				{ 
-					self:_switchKeyboardButton(style, 'qwerty', 'ABC'), 
+					self:_switchKeyboardButton(style, 'hex', 'hex'), 
 					self:_spaceBar(), 
-					self:_switchKeyboardButton(style, 'qwertyLower', 'abc'), 
+					self:_switchKeyboardButton(style, 'qwerty', 'ABC'), 
 					self:_go()
 				}
 		}
@@ -146,24 +155,47 @@ function _layout(self)
 	-- call Button:setPosition() for each key for layout
 	local x, y, w, h = self:getBounds()
 
-	local keyWidth  = 35
-	local keyHeight = 35
+	local keyWidth
 
 	-- find row with most keys to determine interkey spacing
 	local maxRowKeys = 0
+	local maxWidth   = 0
+	local rowWidths  = {}
+
 	for _, row in ipairs(self.keyboard) do
+		local rowWidth = 0
+		for _, key in ipairs(row) do
+			local style = key:getStyle()
+			if self.specialKeyWidths[style] then
+				keyWidth = self.specialKeyWidths[style]
+			else
+				keyWidth = 35
+			end
+			rowWidth = rowWidth + keyWidth
+		end
+		table.insert(rowWidths, rowWidth)
+		if rowWidth > maxWidth then
+			maxWidth = rowWidth
+		end
 		local numOfKeys = #row
-		if numOfKeys >= maxRowKeys then
+		if numOfKeys > maxRowKeys then
 			maxRowKeys = numOfKeys
 		end
 	end
-	local keySpacing = ( w - ( keyWidth * maxRowKeys ) ) / ( maxRowKeys + 1 ) 
 
-	for _, row in ipairs(self.keyboard) do
+	local keySpacing = ( w - ( maxWidth ) ) / ( maxRowKeys + 1 ) 
+
+	for i, row in ipairs(self.keyboard) do
 		-- center row
-		x = ( w - ( (keyWidth * #row) + ( keySpacing * (#row - 1) ) ) ) / 2
+		x = ( w - ( (rowWidths[i]) + ( keySpacing * (#row - 1) ) ) ) / 2
 		for _, key in ipairs(row) do
-			key:setBounds(x, y, keyWidth, keyHeight)
+			local style = key:getStyle()
+			if self.specialKeyWidths[style] then
+				keyWidth = self.specialKeyWidths[style]
+			else
+				keyWidth = 35
+			end
+			key:setBounds(x, y, keyWidth, 35)
 			x = x + keyWidth + keySpacing
 		end
 		y = y + 50
@@ -274,6 +306,7 @@ end
 function _switchKeyboardButton(self, style, kbType, keyText)
 	return {	
 		text     = keyText,
+		style    = 'keyboardShift',
 		callback = function()
 			self:setKeyboard(kbType)
 			return EVENT_CONSUME 
@@ -309,7 +342,8 @@ end
 -- return a table that can be used as a space bar in keyboards
 function _spaceBar(self)
 	return {	
-		text     = 'SPACE',
+		style    = 'keyboardSpace',
+		text     = ' ',
 		callback = function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte(' '))
 			Framework:dispatchEvent(nil, e) 

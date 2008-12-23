@@ -750,6 +750,7 @@ function skin(self, s)
 
 	
 	s.keyboardButton   = _uses(s.touchButton, { padding = 2, w = 35, h = 35 } )
+	s.keyboardShift    = _uses(s.touchButton, { padding = 2, w = 75, h = 35 } )
 	s.keyboardSpace    = _uses(s.touchButton, { padding = 2, w = 100, h = 35 } )
 	s.keyboardBack     = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/left_arrow.png") } )
 	-- FIXME: icon_search.png is incorrect here
