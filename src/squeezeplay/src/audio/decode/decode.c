@@ -22,7 +22,7 @@
 #define DECODE_METADATA_SIZE 128
 
 /* decoder thread */
-static SDL_Thread *decode_thread;
+static SDL_Thread *decode_thread = NULL;
 
 
 /* current decoder state */
@@ -103,7 +103,9 @@ static void decode_resume_audio_handler(void) {
 
 	if (!fifo_empty(&decode_fifo)) {
 		current_audio_state = DECODE_STATE_RUNNING;
-		decode_audio->resume();
+		if (decode_audio) {
+			decode_audio->resume();
+		}
 	}
 
 	fifo_unlock(&decode_fifo);
@@ -126,7 +128,9 @@ static void decode_pause_audio_handler(void) {
 		add_silence_ms = interval;
 	} else {
 		current_audio_state &= ~DECODE_STATE_RUNNING;
-		decode_audio->pause();
+		if (decode_audio) {
+			decode_audio->pause();
+		}
 	}
 
 	fifo_unlock(&decode_fifo);
@@ -569,7 +573,7 @@ static int decode_status(lua_State *L) {
 	lua_setfield(L, -2, "outputTime");
 
 	elapsed = decode_elapsed_samples;
-	delay = decode_audio->delay ? decode_audio->delay() : 0;
+	delay = (decode_audio && decode_audio->delay) ? decode_audio->delay() : 0;
 	if (elapsed > delay) {
 		elapsed -= delay;
 	}
@@ -633,12 +637,52 @@ static int decode_audio_gain(lua_State *L) {
 	lgain = lua_tointeger(L, 2);
 	rgain = lua_tointeger(L, 3);
 
-	decode_audio->gain(lgain, rgain);
+	if (decode_audio) {
+		decode_audio->gain(lgain, rgain);
+	}
 
 	return 0;
 }
 
+
+static int decode_audio_open(lua_State *L) {
+	/* initialise audio output */
+#ifdef HAVE_LIBASOUND
+	decode_audio = &decode_alsa;
+#endif
+#ifdef HAVE_LIBPORTAUDIO
+	if (!decode_audio) {
+		decode_audio = &decode_portaudio;
+	}
+#endif
+	if (!decode_audio) {
+		/* no audio support */
+		lua_pushnil(L);
+		lua_pushstring(L, "No audio support");
+		return 2;
+	}
+
+	if (!decode_audio->init(L)) {
+		/* audio init failed */
+		decode_audio = NULL;
+
+		lua_pushnil(L);
+		lua_pushstring(L, "Error in audio init");
+		return 2;
+	}
+
+	/* start decoder thread */
+	if (!decode_thread) {
+		decode_thread = SDL_CreateThread(decode_thread_execute, NULL);
+	}
+
+	lua_pushboolean(L, 1);
+	return 1;
+}
+
+
 static const struct luaL_Reg decode_f[] = {
+	{ "open", decode_audio_open },
 	{ "resumeDecoder", decode_resume_decoder },
 	{ "resumeAudio", decode_resume_audio },
 	{ "pauseAudio", decode_pause_audio },
@@ -660,34 +704,9 @@ int luaopen_decode(lua_State *L) {
 	/* register sample playback */
 	decode_sample_init(L);
 
-	/* initialise audio output */
-#ifdef HAVE_LIBASOUND
-	decode_audio = &decode_alsa;
-#endif
-#ifdef HAVE_LIBPORTAUDIO
-	if (!decode_audio) {
-		decode_audio = &decode_portaudio;
-	}
-#endif
-	if (!decode_audio) {
-		/* no audio support */
-		DEBUG_ERROR("No audio support");
-		return 0;
-	}
-
 	fifo_init(&decode_fifo, DECODE_FIFO_SIZE);
 
-	if (!decode_audio->init()) {
-		DEBUG_ERROR("Failed to init audio");
-
-		fifo_free(&decode_fifo);
-		return 0;
-	}
-
 	mqueue_init(&decode_mqueue, decode_mqueue_buffer, sizeof(decode_mqueue_buffer));
-
-	/* start decoder thread */
-	decode_thread = SDL_CreateThread(decode_thread_execute, NULL);
 
 	/* register lua functions */
 	luaL_register(L, "squeezeplay.decode", decode_f);

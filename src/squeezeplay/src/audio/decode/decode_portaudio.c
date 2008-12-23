@@ -258,7 +258,7 @@ static void decode_portaudio_openstream(void) {
 }
 
 
-static int decode_portaudio_init(void) {
+static int decode_portaudio_init(lua_State *L) {
 	PaError err;
 	int num_devices, i;
 	const PaDeviceInfo *device_info;
