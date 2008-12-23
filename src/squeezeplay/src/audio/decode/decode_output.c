@@ -54,7 +54,9 @@ static s32_t track_inversion[2] = { 1, 1 };
 void decode_output_begin(void) {
 	/* call with the decode fifo locked */
 
-	decode_audio->start();
+	if (decode_audio) {
+		decode_audio->start();
+	}
 
 	if (output_started) {
 		return;
@@ -72,7 +74,9 @@ void decode_output_end(void) {
 
 	output_started = FALSE;
 
-	decode_audio->stop();
+	if (decode_audio) {
+		decode_audio->stop();
+	}
 
 	crossfade_started = FALSE;
 	transition_gain_step = 0;
@@ -90,7 +94,9 @@ void decode_output_flush(void) {
 		decode_fifo.rptr = decode_fifo.wptr;
 
 		/* abort audio playback */
-		decode_audio->stop();
+		if (decode_audio) {
+			decode_audio->stop();
+		}
 	}
 }
 

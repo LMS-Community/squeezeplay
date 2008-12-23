@@ -86,7 +86,7 @@ extern void decode_queue_metadata(struct decode_metadata *metadata);
 
 /* Audio output api */
 struct decode_audio {
-	int (*init)(void);
+	int (*init)(lua_State *L);
 	void (*start)(void);
 	void (*pause)(void);
 	void (*resume)(void);
