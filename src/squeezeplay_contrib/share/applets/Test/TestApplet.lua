@@ -386,7 +386,6 @@ function keyboardWindow(self, menuItem, style)
 
 	window:addWidget(textinput)
 	window:addWidget(Keyboard('keyboard', style))
-	window:focusWidget(textinput)
 
 	self:tieAndShowWindow(window)
 	return window

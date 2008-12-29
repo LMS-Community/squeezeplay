@@ -455,7 +455,6 @@ function enterSSID(self)
 	window:addWidget(textinput)
 	window:addWidget(Keyboard("keyboard", 'qwerty'))
 	window:addWidget(helpButton)
-	window:focusWidget(textinput)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -651,7 +650,6 @@ function enterWEPKey(self)
 	window:addWidget(textinput)
 	window:addWidget(Keyboard('keyboard', 'hex'))
 	window:addWidget(helpButton)
-	window:focusWidget(textinput)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -680,7 +678,6 @@ function enterPSK(self)
 	window:addWidget(Keyboard('keyboard', 'qwerty'))
 
 
-	window:focusWidget(textinput)
 
 	self:tieAndShowWindow(window)
 	return window
