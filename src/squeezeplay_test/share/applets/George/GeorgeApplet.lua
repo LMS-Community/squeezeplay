@@ -122,9 +122,8 @@ end
 function georgeStep3(self)
 	log:info("georgeStep3")
 
-	log:warn(self.windowTitleStyle)
 	-- wireless region
-	return appletManager:callService("georgeSetupRegionShow", function() self:georgeStep3a() end, self.windowTitleStyle)
+	return appletManager:callService("georgeSetupRegionShow", function() self:georgeStep3a() end, welcomeTitleStyle)
 	
 end
 
@@ -241,7 +240,7 @@ end
 
 
 function setupWelcomeShow(self, setupNext)
-	local window = Window("window", self:string("WELCOME"), self.windowTitleStyle)
+	local window = Window("window", self:string("WELCOME"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
 	local textarea = Textarea("centeredtextarea", self:string("WELCOME_WALKTHROUGH"))
@@ -322,7 +321,6 @@ end
 
 function init(self)
 	log:info("subscribe")
-	self.windowTitleStyle = welcomeTitleStyle
 	jnt:subscribe(self)
 end
 

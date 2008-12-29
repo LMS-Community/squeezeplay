@@ -60,14 +60,39 @@ local REGION_CODE_MAPPING = {
 --]]
 
 local FAKE_NET = {
-	['george'] = {
+	['openNetwork'] = {
 			bssid = '00:09:5b:53:91:58',
 			flags = '',
 			level = 180,
 			quality = 3,
 			associated = true,
 			lastScan = now
-	}
+	},
+	['wepNetwork'] = {
+			bssid = '00:09:5b:53:91:59',
+			flags = 'WEP',
+			level = 120,
+			quality = 2,
+			associated = false,
+			lastScan = now
+	},
+	['wpa2Network'] = {
+			bssid = '00:09:5b:53:91:0a',
+			flags = 'WPA2-PSK',
+			level = 120,
+			quality = 2,
+			associated = false,
+			lastScan = now
+	},
+	['wpaNetwork'] = {
+			bssid = '00:09:5b:53:91:0a',
+			flags = 'WPA-PSK',
+			level = 120,
+			quality = 2,
+			associated = false,
+			lastScan = now
+	},
+
 }
 	
 -- global wireless network scan results

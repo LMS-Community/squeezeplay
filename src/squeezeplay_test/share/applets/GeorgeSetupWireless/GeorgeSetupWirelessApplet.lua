@@ -430,19 +430,12 @@ function openNetwork(self, ssid)
 	end
 end
 
-function enterSSIDHelp(self)
-	local window = Window("window", self:string("NETWORK_NETWORK_NAME"), wirelessTitleStyle)
-	window:addWidget(Textarea("textarea", self:string("NETWORK_NETWORK_NAME_HELP")))
-	self:tieAndShowWindow(window)
-	return window
-end
-
 function enterSSID(self)
 
 	local window = Window("window", self:string("NETWORK_NETWORK_NAME"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	local textinput = Textinput("textinput", self.ssid or "",
+	local textinput = Textinput("textinput", "",
 				    function(widget, value)
 					    if #value == 0 then
 						    return false
@@ -457,12 +450,12 @@ function enterSSID(self)
 				    end
 			    )
 
-	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:enterSSIDHelp() end )
+	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_NETWORK_NAME', 'NETWORK_NETWORK_NAME_HELP') end )
 
 	window:addWidget(textinput)
 	window:addWidget(Keyboard("keyboard", 'qwerty'))
 	window:addWidget(helpButton)
-	window:focusWidget(texintput)
+	window:focusWidget(textinput)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -577,13 +570,23 @@ function chooseEncryption(self)
 					},
 				})
 
-	local help = Textarea("help", self:string("NETWORK_WIRELESS_ENCRYPTION_HELP"))
-	window:addWidget(help)
+	local helpButton     = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_WIRELESS_ENCRYPTION', 'NETWORK_WIRELESS_ENCRYPTION_HELP') end )
+	window:addWidget(helpButton)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
 	return window
 end
+
+function helpWindow(self, title, token)
+	local window = Window("window", self:string("NETWORK_WIRELESS_KEY"), wirelessTitleStyle)
+	window:setAllowScreensaver(false)
+	window:addWidget(Textarea("textarea", self:string(token)))
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
 
 
 function chooseWEPLength(self)
@@ -625,45 +628,13 @@ function enterWEPKey(self)
 	local window = Window("window", self:string("NETWORK_WIRELESS_KEY"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	-- create an object to hold the hex value. the methods are used
-	-- by the text input widget.
-	local v = {}
-	setmetatable(v, {
-			     __tostring =
-				     function(e)
-					     return table.concat(e, " ")
-				     end,
-
-			     __index = {
-				     setValue =
-					     function(value, str)
-						     local i = 1
-						     for dd in string.gmatch(str, "%x%x") do
-							     value[i] = dd
-							     i = i + 1
-						     end
-						     
-					     end,
-
-				     getValue =
-					     function(value)
-						     return table.concat(value)
-					     end,
-
-				     getChars = 
-					     function(value, cursor)
-						     return "0123456789ABCDEF"
-					     end,
-			     }
-		     })
-
+	local v
 	-- set the initial value
 	if self.encryption == "wep40" then
-		v:setValue("0000000000")
+		v = Textinput.textValue("0000000000", 10, 10)
 	else
-		v:setValue("00000000000000000000000000")
+		v = Textinput.textValue("00000000000000000000000000", 26, 26)
 	end
-
 
 	local textinput = Textinput("textinput", v,
 				    function(widget, value)
@@ -676,21 +647,11 @@ function enterWEPKey(self)
 				    end
 			    )
 
---	window:addWidget(Textarea("help", self:string("NETWORK_WIRELESS_KEY_HELP")))
-	local helpButton     = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:enterWirelessKeyHelp() end )
+	local helpButton     = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_WIRELESS_KEY', 'NETWORK_WIRELESS_KEY_HELP') end )
 	window:addWidget(textinput)
 	window:addWidget(Keyboard('keyboard', 'hex'))
 	window:addWidget(helpButton)
 	window:focusWidget(textinput)
-
-	self:tieAndShowWindow(window)
-	return window
-end
-
-function enterWirelessKeyHelp(self)
-	local window = Window("window", self:string("NETWORK_WIRELESS_KEY"), wirelessTitleStyle)
-	window:setAllowScreensaver(false)
-	window:addWidget(Textarea("textarea", self:string("NETWORK_WIRELESS_KEY_HELP")))
 
 	self:tieAndShowWindow(window)
 	return window
@@ -712,12 +673,14 @@ function enterPSK(self)
 				    end,
 				    self:string("ALLOWEDCHARS_WPA")
 			    )
+	local helpButton     = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_WIRELESS_PASSWORD', 'NETWORK_WIRELESS_PASSWORD_HELP') end )
 
-	window:addWidget(Textarea("softHelp", self:string("NETWORK_WIRELESS_PASSWORD_HELP")))
-	window:addWidget(Label("softButton1", self:string("INSERT")))
-	window:addWidget(Label("softButton2", self:string("DELETE")))
-
+	window:addWidget(helpButton)
 	window:addWidget(textinput)
+	window:addWidget(Keyboard('keyboard', 'qwerty'))
+
+
+	window:focusWidget(textinput)
 
 	self:tieAndShowWindow(window)
 	return window
