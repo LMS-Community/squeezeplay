@@ -331,7 +331,7 @@ function _backspaceButton(self)
 	return {	
 		icon	 = Icon("keyboardBack"),
 		callback = function()
-			local e = Event:new(EVENT_KEY_PRESS, KEY_BACK)
+			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
 			Framework:dispatchEvent(nil, e) 
 			return EVENT_CONSUME 
 		end
