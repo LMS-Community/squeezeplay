@@ -54,7 +54,8 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
 
 -- configuration
-local CONNECT_TIMEOUT = 30
+-- quicker for george
+local CONNECT_TIMEOUT = 3
 local wirelessTitleStyle = 'setuptitle'
 
 module(..., Framework.constants)
@@ -190,7 +191,7 @@ function georgeSetupScanShow(self, setupNext)
 	window:addWidget(status)
 
 	-- fake wait for network scan (in task)
-	window:addTimer(5000, function() self.t_ctrl:scan(setupNext) end)
+	window:addTimer(100, function() self.t_ctrl:scan(setupNext) end)
 
         local state = 1
         window:addTimer(1000, function()
@@ -680,6 +681,7 @@ function enterWEPKey(self)
 	window:addWidget(textinput)
 	window:addWidget(Keyboard('keyboard', 'hex'))
 	window:addWidget(helpButton)
+	window:focusWidget(textinput)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -739,14 +741,17 @@ end
 
 
 function _connectTimer(self)
-	-- the connection is completed when we connected to the wireless
-	-- network, and have an ip address. if dhcp failed this address
-	-- will be self assigned.
+
 	Task("networkConnect", self,
 	     function()
 		     log:warn("connectTimeout=", self.connectTimeout, " dhcpTimeout=", self.dhcpTimeout)
 
-		     local status = self.t_ctrl:t_wpaStatus()
+		     --local status = self.t_ctrl:t_wpaStatus()
+		-- for george, fake the status
+		     local status = {
+					wpa_state = 'COMPLETED',
+					ip_address = '192.168.1.254',
+			}
 
 		     log:warn("wpa_state=", status.wpa_state)
 		     log:warn("ip_address=", status.ip_address)
@@ -778,6 +783,7 @@ function _connectTimer(self)
 			     self:connectOK()
 		     end
 	     end):addTask()
+	
 end
 
 
@@ -828,7 +834,8 @@ function connect(self, keepConfig)
 
 		-- Select/add the network in a background task
 		log:warn("SSID=", self.ssid)
-		Task("networkSelect", self, t_selectNetwork):addTask(self.ssid)
+		-- don't really do this in george
+		--Task("networkSelect", self, t_selectNetwork):addTask(self.ssid)
 	end
 
 	-- Progress window
@@ -841,16 +848,6 @@ function connect(self, keepConfig)
 	window:addWidget(icon)
 
 	window:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO", self.ssid)))
-
-	-- FIXME back handler...
-
-
---[[
-	window:addListener(EVENT_KEY_PRESS,
-			   function(event)
-				   return EVENT_CONSUME
-			   end)
---]]
 
 	self:tieAndShowWindow(window)
 	return window
