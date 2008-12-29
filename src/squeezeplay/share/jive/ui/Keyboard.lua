@@ -79,7 +79,7 @@ function __init(self, style, kbType)
 	obj:addListener(EVENT_MOUSE_ALL,
 			 function(event)
 				for _, widget in ipairs(obj.widgets) do
-					if notMouse or widget:mouseInside(event) then
+					if widget:mouseInside(event) then
 						 local r = widget:_event(event)
 						 if r ~= EVENT_UNUSED then
 							 return r
@@ -331,7 +331,7 @@ function _backspaceButton(self)
 	return {	
 		icon	 = Icon("keyboardBack"),
 		callback = function()
-			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+			local e = Event:new(EVENT_KEY_PRESS, KEY_BACK)
 			Framework:dispatchEvent(nil, e) 
 			return EVENT_CONSUME 
 		end
