@@ -42,6 +42,7 @@ ARCH = $(shell uname -m | grep i386)
 # OSX 10.4 has GNU Make 3.8, which does not support realpath (need Make 3.81).
 # Perl does...
 SRC_DIR=$(shell perl -e "use Cwd 'realpath'; print realpath('$(PWD)');")
+HOME_DIR=$(shell perl -e "use Cwd 'realpath'; print realpath('$(HOME)');")
 BASE_DIR = $(dir $(SRC_DIR))
 
 export BUILD_TOP=$(BASE_DIR)/build/osx
@@ -70,8 +71,8 @@ all: sdl-all lua-all app
 # SDL
 #####
 
-.PHONY: sdl-all freetype libpng libjpeg expat gettext glib2 fontconfig pixman cairo pango sdl sdl-image sdl-ttf sdl-gfx sdl-pango 
-sdl-all: freetype libpng libjpeg expat gettext glib2 fontconfig pixman cairo pango sdl sdl-image sdl-ttf sdl-gfx sdl-pango
+.PHONY: sdl-all freetype libpng libjpeg expat gettext glib2 fontconfig  pango sdl sdl-image sdl-ttf sdl-gfx sdl-pango 
+sdl-all: freetype libpng libjpeg expat gettext glib2 fontconfig  pango sdl sdl-image sdl-ttf sdl-gfx sdl-pango
 
 # freetype
 FREETYPE_DIR=freetype-2.3.5
@@ -170,6 +171,11 @@ glib2: generated/${GLIB2_DIR}/configure generated/${GLIB2_DIR}/Makefile
 	cd generated/${GLIB2_DIR}; make && make install
 
 #hardcoding temp system-singleton locations for now to tmp until we determine a location/alternative
+SPLOCAL_DIR=${HOME_DIR}/splocal
+SYSCONF_DIR=${SPLOCAL_DIR}/etc
+LOCALSTATE_DIR=${SPLOCAL_DIR}/var
+FONTS_DIR=${SPLOCAL_DIR}/fonts
+
 #fontconfig
 FONTCONFIG_DIR = fontconfig-2.6.0
 generated/${FONTCONFIG_DIR}/configure:
@@ -177,9 +183,9 @@ generated/${FONTCONFIG_DIR}/configure:
 	
 generated/${FONTCONFIG_DIR}/Makefile: 
 	PATH=${PREFIX}/bin:${PATH}; cd generated/${FONTCONFIG_DIR}; ./configure  --enable-shared \
-	--with-add-fonts=/tmp/splocal/fonts/ \
-	--sysconfdir=/tmp/splocal/etc \
-	--localstatedir=/tmp/splocal/var \
+	--with-add-fonts=${FONTS_DIR} \
+	--sysconfdir=${SYSCONF_DIR} \
+	--localstatedir=${LOCALSTATE_DIR} \
 	--prefix=${PREFIX} 
 
 # relative dir works, but is relative to app working directory
@@ -188,13 +194,14 @@ generated/${FONTCONFIG_DIR}/Makefile:
 #	--with-add-fonts=/usr/X11R6/lib/X11/fonts,/Library/Fonts,/Network/Library/Fonts,/System/Library/Fonts \
 
 fontconfig: generated/${FONTCONFIG_DIR}/configure generated/${FONTCONFIG_DIR}/Makefile
-	-mkdir -p /tmp/splocal/fonts/
-	cp freefont-20080912/Free*ttf /tmp/splocal/fonts/
-	#cp DroidFonts/*Fallback*ttf /tmp/splocal/fonts/
-	#cp DroidFonts/*ttf /tmp/splocal/fonts/
+	-mkdir -p ${FONTS_DIR}
+	cp freefont-20080912/Free*ttf ${FONTS_DIR}/
+	#cp DroidFonts/*Fallback*ttf ${FONTS_DIR}/
+	#cp DroidFonts/*ttf ${FONTS_DIR}/
 	cd generated/${FONTCONFIG_DIR}; make && make install
 	
-# pixman 
+	
+# pixman - not used, is a cairo dependency
 PIXMAN_DIR = pixman-0.12.0
 generated/${PIXMAN_DIR}/configure:
 	mkdir -p generated; cd generated; tar xvf ../${PIXMAN_DIR}.tar.gz
@@ -206,7 +213,7 @@ pixman: generated/${PIXMAN_DIR}/configure generated/${PIXMAN_DIR}/Makefile
 	cd generated/${PIXMAN_DIR}; make && make install
 		
 	
-# cairo
+# cairo - not used - pango doesn't require it if cairo not found in lib path and we don't want it yet.
 CAIRO_DIR = cairo-1.6.4
 generated/${CAIRO_DIR}/configure:
 	mkdir -p generated; cd generated; tar xvf ../${CAIRO_DIR}.tar.gz
@@ -219,13 +226,15 @@ generated/${CAIRO_DIR}/Makefile:
 cairo: generated/${CAIRO_DIR}/configure generated/${CAIRO_DIR}/Makefile
 	cd generated/${CAIRO_DIR}; make && make install
 	
+	
+	
 # pango
 PANGO_DIR = pango-1.22.4
 generated/${PANGO_DIR}/configure:
 	mkdir -p generated; cd generated; tar xvf ../${PANGO_DIR}.tar.gz
 	
 generated/${PANGO_DIR}/Makefile: 
-	cd generated/${PANGO_DIR}; ./configure  --enable-shared --disable-docs \
+	cd generated/${PANGO_DIR}; ./configure  --enable-shared --enable-static --disable-docs \
 	--without-x \
 	--sysconfdir=/tmp/splocal/etc \
 	--localstatedir=/tmp/splocal/var \
