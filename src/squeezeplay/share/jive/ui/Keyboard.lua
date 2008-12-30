@@ -76,11 +76,6 @@ function __init(self, style, kbType)
 	local keyboard, widgets = obj:setKeyboard(kbType)
 
 	-- forward events to contained widgets
-	obj:addListener(EVENT_KEY_PRESS,
-				function(event)
-					return _eventHandler(obj, event)
-				end)
-
 	obj:addListener(EVENT_MOUSE_ALL,
 			 function(event)
 				return _eventHandler(obj, event)
@@ -91,26 +86,15 @@ end
 
 function _eventHandler(self, event)
 	local evtType = event:getType()
-	if evtType == EVENT_KEY_PRESS then
-		local keycode = event:getKeycode()
-		if keycode == KEY_BACK or keycode == KEY_LEFT then
-			self:getWindow():hide()
-			return EVENT_CONSUME
-		else
-			return EVENT_UNUSED
-		end
-	else
-		for _, widget in ipairs(self.widgets) do
-			if widget:mouseInside(event) then
-				local r = widget:_event(event)
-				 if r ~= EVENT_UNUSED then
-					 return r
-				 end
+	for _, widget in ipairs(self.widgets) do
+		if widget:mouseInside(event) then
+			local r = widget:_event(event)
+			 if r ~= EVENT_UNUSED then
+				 return r
 			 end
 		 end
-	end
+	 end
 	return EVENT_UNUSED
-
 end
 
 function _specialKeyWidths(self)
