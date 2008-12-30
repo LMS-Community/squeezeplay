@@ -253,10 +253,9 @@ function georgeSetupConnectionType(self, setupNextWireless, setupNextWired)
                         wired  = wiredButton
         })
 
-
+	window:addWidget(helpButton)
 	window:addWidget(choiceText)
 	window:addWidget(choiceButtons)
-	window:addWidget(helpButton)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -453,8 +452,9 @@ function enterSSID(self)
 	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_NETWORK_NAME', 'NETWORK_NETWORK_NAME_HELP') end )
 
 	window:addWidget(textinput)
-	window:addWidget(Keyboard("keyboard", 'qwerty'))
 	window:addWidget(helpButton)
+	window:addWidget(Keyboard("keyboard", 'qwerty'))
+	window:focusWidget(textinput)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -646,10 +646,13 @@ function enterWEPKey(self)
 				    end
 			    )
 
+	local keyboard = Keyboard('keyboard', 'hex')
 	local helpButton     = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_WIRELESS_KEY', 'NETWORK_WIRELESS_KEY_HELP') end )
+
 	window:addWidget(textinput)
-	window:addWidget(Keyboard('keyboard', 'hex'))
 	window:addWidget(helpButton)
+	window:addWidget(keyboard)
+	window:focusWidget(textinput)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -676,6 +679,7 @@ function enterPSK(self)
 	window:addWidget(helpButton)
 	window:addWidget(textinput)
 	window:addWidget(Keyboard('keyboard', 'qwerty'))
+	window:focusWidget(textinput)
 
 
 
