@@ -170,8 +170,15 @@ function __init(self, style, title, titleStyle)
 			-- other handlers can act on this event first
 			elseif keycode == KEY_LEFT or
 				keycode == KEY_BACK then
-				obj:playSound("WINDOWHIDE")
-				obj:getWindow():hide()
+				local stack = Framework.windowStack
+				if #stack == 1 then
+					obj:playSound("BUMP")
+					obj:getWindow():bumpRight()
+				else
+					obj:playSound("WINDOWHIDE")
+					obj:getWindow():hide()
+				end
+				return EVENT_CONSUME
 			end
 		end)
 
