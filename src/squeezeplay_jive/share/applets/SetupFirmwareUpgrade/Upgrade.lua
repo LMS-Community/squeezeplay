@@ -33,6 +33,7 @@ function __init(self, url)
 				      _mtd = {},
 				      _size = {},
 				      _checksum = "",
+				      _boardVersion = "",
 			      })
 
 	return obj
@@ -49,6 +50,13 @@ function start(self, callback)
 
 	callback(false, "UPDATE_DOWNLOAD", "")
 
+	-- parse the board revision
+	t, err = self:parseCpuInfo()
+	if not t then
+		log:warn("parseCpuInfo failed")
+		return nil, err
+	end
+
 	-- parse the flash devices
 	t, err = self:parseMtd()
 	if not t then
@@ -56,15 +64,6 @@ function start(self, callback)
 		return nil, err
 	end
 			    
-	-- parse the kernel version
-	self._zImageExtraVersion = "zImage-P7"
-	self._mtd[self._zImageExtraVersion] = self._mtd["zImage"]
-	t, err = self:parseVersion()
-	if not t then
-		log:warn("parseVersion failed")
-		return nil, err
-	end
-
 	-- disable VOL+ on boot
 	t, err = self:fw_setenv({ sw7 = "" })
 	if not t then
@@ -73,7 +72,7 @@ function start(self, callback)
 	end
 
 	-- erase flash
-	t, err = self:flashErase(self._zImageExtraVersion)
+	t, err = self:flashErase("zImage")
 	if not t then
 		log:warn("flash kernel failed")
 		return nil, err
@@ -95,7 +94,7 @@ function start(self, callback)
 	callback(false, "UPDATE_VERIFY")
 
 	-- checksum kernel
-	t, err = self:checksum(self._zImageExtraVersion)
+	t, err = self:checksum("zImage")
 	if not t then
 		log:warn("flash checksum failed")
 		return nil, err
@@ -187,6 +186,9 @@ function upgradeSink(self)
 			       elseif action == "checksum" then
 				       -- store checksum
 				       self._checksum = self._checksum .. chunk
+
+			       elseif action == "board.version" then
+			               self._boardVersion = self._boardVersion .. chunk
 			       end
 
 			       return 1
@@ -209,9 +211,9 @@ function upgradeSink(self)
 
 		       if type(chunk) == "table" then
 			       -- new file
-			       if chunk.filename == self._zImageExtraVersion then
+			       if string.match(chunk.filename, "^zImage") then
 				       -- kernel
-				       part = self._zImageExtraVersion
+				       part = "zImage"
 
 			       elseif chunk.filename == "root.cramfs" then
 				       -- cramfs
@@ -221,13 +223,20 @@ function upgradeSink(self)
 				       -- md5 checksums
 				       action = "checksum"
 
+			       elseif chunk.filename == "board.version" then
+			               action = "board.version"
+
 			       else
 				       action = nil
 			       end
 
-
 			       -- open file handle
 			       if part ~= nil then
+			               if not self:verifyPlatformRevision() then
+				               self.sinkErr = "Incompatible firmware"
+				               return nil
+				       end
+
 				       action = "store"
 				       length = 0
 
@@ -244,6 +253,56 @@ function upgradeSink(self)
 		       -- should never get here
 		       return nil
 	       end
+end
+
+
+-- utility function to parse /dev/cpuinfo
+function parseCpuInfo(self)
+	local fh, err = io.open("/proc/cpuinfo")
+	if fh == nil then
+		return fh, err
+	end
+
+	while true do
+		local line = fh:read()
+		if line == nil then
+			break
+		end
+
+		if string.match(line, "Hardware") then
+			self._platform = string.lower(string.match(line, ".+:%s+([^%s]+)"))
+		elseif string.match(line, "Revision") then
+			self._revision = tonumber(string.match(line, ".+:%s+([^%s]+)"))
+		end
+
+	end
+	fh:close()
+
+	return 1
+end
+
+
+function verifyPlatformRevision(self)
+	for platform, revision in string.gmatch(self._boardVersion, "(%a+):(%d+)") do
+		platform = string.lower(platform)
+		revision = tonumber(revision)
+
+		if string.match(platform, self._platform)
+			and revision == self._revision then
+				return true
+		end
+	end
+
+	-- backwards compatibility for initial jive boards
+	if self._boardVersion == ""
+		and self._platform == "jive"
+		and self._revision == 0 then
+		return true
+	end
+
+	log:warn("Firmware is not compatible with ", self._platform, ":", self._revision)
+
+	return false
 end
 
 
@@ -296,36 +355,6 @@ function parseMtd(self)
 	end
 
 	log:info("mtdset=", mtdset, " nextKernelblock=", self.nextKernelblock, " nextMtdset=", self.nextMtdset)
-
-	Task:yield(true)
-
-	return 1
-end
-
-
--- parse kernel extraversion
-function parseVersion(self)
-
-	local fh, err = io.open("/proc/version")
-	if fh == nil then
-		return fh, err
-	end
-
-	local version = fh:read("*all")
-	fh:close()
-
-	local extraversion = string.match(version, "Linux version [%d%.]+(%-[^%s]+)") or ""
-
-	-- backwards compatibility
-	if extraversion == "-P4" then
-		extraversion = ""
-	end
-
-	log:info("extraversion=", extraversion)
-
-	-- select kernel to use
-	self._zImageExtraVersion = "zImage" .. extraversion
-	self._mtd[self._zImageExtraVersion] = self._mtd["zImage"]
 
 	Task:yield(true)
 
@@ -410,16 +439,16 @@ function download(self, callback)
 			end
 			Task:yield(true)
 		end
-
-		if self.sinkErr then
-			log:info("sinkErr=", self.sinkErr)
-			return false, self.sinkErr
-		end
-
-		return true
 	else
 		return false, "Unsupported url scheme"
 	end
+
+	if self.sinkErr then
+		log:info("sinkErr=", self.sinkErr)
+		return false, self.sinkErr
+	end
+
+	return true
 end
 
 

@@ -101,7 +101,7 @@ function init(self)
 				text = self:string("INVALID_MAC_CONTINUE"),
 				sound = "WINDOWHIDE",
 				callback = function()
-						   window:hide()
+						   popup:hide()
 					   end
 			},
 		})
