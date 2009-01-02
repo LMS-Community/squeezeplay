@@ -1769,9 +1769,16 @@ function skin(self, s, reload, useDefaultSize)
 	s.browsenptrack = _uses(s.ssnptrack)
 	s.largenptrack  = _uses(s.ssnptrack, {
 					bgImg = largeHighlightBox,
+					
 					border = { 0, 0, 0, 0 },
 					text = {
-						padding = { 4, 6, 4, 0 }
+						padding = { 4, 6, 4, 0 },
+						lineHeight = 24,
+						font = Font:load(fontpath .. "FreeSansBold.ttf", 22),
+						line = {
+							font = Font:load(fontpath .. "FreeSansBold.ttf", 22),
+							height = 24
+						},
 					}
 				}
 			)
@@ -1798,7 +1805,7 @@ function skin(self, s, reload, useDefaultSize)
 	-- artwork layout for large NP page
 	local largenpartwork = {
 		w = WH_FILL,
-		border = { 0, 4, 0, 0 },
+		border = { 0, 0, 0, 0 },
 		artwork = { padding = 0, img = _loadImage(self, "Icons/icon_album_noartwork_browse.png") }
 	}
 	s.browsenpartwork = _uses(s.ssnpartwork, browsenpartwork)
