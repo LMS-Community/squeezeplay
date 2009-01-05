@@ -32,6 +32,7 @@ function __init(self)
 		_file = {},
 		_size = {},
 		_checksum = "",
+		_boardVersion = "",
 	})
 
 	return obj
@@ -51,6 +52,13 @@ end
 function _upgrade(self)
 
 	self._callback(false, "UPDATE_DOWNLOAD", "")
+
+	-- parse the board revision
+	t, err = self:parseCpuInfo()
+	if not t then
+		log:warn("parseCpuInfo failed")
+		return nil, err
+	end
 
 	-- remove old image
 	self:rmvol("kernel_bak")
@@ -95,6 +103,48 @@ function _upgrade(self)
 	return true
 end
 
+
+-- utility function to parse /dev/cpuinfo
+function parseCpuInfo(self)
+	local fh, err = io.open("/proc/cpuinfo")
+	if fh == nil then
+		return fh, err
+	end
+
+	while true do
+		local line = fh:read()
+		if line == nil then
+			break
+		end
+
+		if string.match(line, "Hardware") then
+			self._platform = string.lower(string.match(line, ".+:%s+([^%s]+)"))
+		elseif string.match(line, "Revision") then
+			self._revision = tonumber(string.match(line, ".+:%s+([^%s]+)"))
+		end
+
+	end
+	fh:close()
+
+	return 1
+end
+
+
+function verifyPlatformRevision(self)
+	for platform, revision in string.gmatch(self._boardVersion, "(%a+):(%d+)") do
+		platform = string.lower(platform)
+		revision = tonumber(revision)
+
+		if string.match(platform, self._platform)
+			and revision == self._revision then
+				return true
+		end
+	end
+
+	log:warn("Firmware is not compatible with ", self._platform, ":", self._revision)
+
+	return false
+ end
 
 -- utility function to parse /dev/mtd
 function parseMtd(self)
@@ -174,6 +224,10 @@ function upgradeSink(self)
 			elseif _action == "checksum" then
 				-- store checksum
 				self._checksum = self._checksum .. chunk
+
+			elseif _action == "board.version" then
+				self._boardVersion = self._boardVersion .. chunk
+
 			end
 			return 1
 		end
@@ -195,6 +249,11 @@ function upgradeSink(self)
 			local filename = chunk.filename
 
 			if string.match(filename, "^zImage") then
+				if not self:verifyPlatformRevision() then
+					self.sinkErr = "Incompatible firmware"
+					return nil
+				end
+
 				_action = "store"
 				_fhsink, err = self:updatevol("kernel_upg", filename, chunk.uncompressed_size)
 				if not _fhsink then
@@ -202,6 +261,11 @@ function upgradeSink(self)
 				end
 
 			elseif filename == "root.cramfs" then
+				if not self:verifyPlatformRevision() then
+					self.sinkErr = "Incompatible firmware"
+					return nil
+				end
+
 				_action = "store"
 				_fhsink = self:updatevol("cramfs_upg", filename, chunk.uncompressed_size)
 				if not _fhsink then
@@ -210,6 +274,9 @@ function upgradeSink(self)
 
 			elseif filename == "upgrade.md5" then
 				_action = "checksum"
+
+			elseif chunk.filename == "board.version" then
+				_action = "board.version"
 
 			else
 				-- ignore file
@@ -279,12 +346,12 @@ function download(self)
 			end
 			Task:yield(true)
 		end
-
-		if self.sinkErr then
-			error(self.sinkErr, 0)
-		end
 	else
 		error("Unsupported url scheme", 0)
+	end
+
+	if self.sinkErr then
+		error(self.sinkErr, 0)
 	end
 end
 
