@@ -144,6 +144,73 @@ local function _safeDeref(struct, ...)
 	return res
 end
 
+-- turns a jsonAction table into a string that can be saved for a browseHistory key
+local function _stringifyJsonRequest(jsonAction)
+
+	if not jsonAction then
+		return nil
+	end
+
+	local command = {}
+
+	-- jsonActions can be uniquely identified by the cmd and params components
+	if jsonAction.cmd then
+		for i, v in ipairs(jsonAction.cmd) do
+			command[#command + 1] = ' ' .. v
+		end
+	end
+	if jsonAction.params then
+		local sortedParams = table.sort(jsonAction.params)
+		for k in table.pairsByKeys (jsonAction.params) do
+			command[#command + 1] = ' ' .. k .. ":" .. jsonAction.params[k]
+		end
+	end
+
+	return table.concat(command)
+end
+
+local function _getNewStartValue(index)
+	-- start with the first item if we have no history
+	if not index then
+		return 0
+	end
+	local BLOCK_SIZE = DB:getBlockSize()
+
+	-- if we have history, we want what is going to be the selected item to be included in the first chunk requested
+	return math.floor(index/BLOCK_SIZE) * BLOCK_SIZE
+end
+
+
+-- _decideFirstChunk
+-- figures out the from values for performJSONAction, including logic for finding the previous browse index in this list
+local function _decideFirstChunk(db, jsonAction)
+	local qty           = DB:getBlockSize()
+	local commandString = _stringifyJsonRequest(jsonAction)
+	local lastBrowse    = _player:getLastBrowse(commandString)
+
+	if not lastBrowse then
+		_player.menuAnchor = nil
+	end
+
+	local from = 0
+
+	log:debug('Saving this json command to browse history table:')
+	log:debug(commandString)
+
+	if lastBrowse then
+		from = _getNewStartValue(lastBrowse.index)
+		_player.menuAnchor = lastBrowse.index 
+	else
+		lastBrowse = { index = 1 }
+		_player:setLastBrowse(commandString, lastBrowse)
+	end
+
+	log:debug('We\'ve been here before, lastBrowse index was: ', lastBrowse.index)
+	_player.lastKeyTable = lastBrowse
+	
+	return from, qty
+
+end
 
 -- _priorityAssign(key, defaultValue, table1, table2, ...)
 -- returns the first non nil value of table1[key], table2[key], etc.
@@ -412,6 +479,7 @@ end
 -- performs the JSON action...
 local function _performJSONAction(jsonAction, from, qty, step, sink)
 	log:debug("_performJSONAction(from:", from, ", qty:", qty, "):")
+
 	local cmdArray = jsonAction["cmd"]
 	
 	-- sanity check
@@ -957,6 +1025,9 @@ local function _browseSink(step, chunk, err)
 			-- count == 0 responses should not be typical
 		elseif step.menu then
 			step.menu:setItems(step.db:menuItems(data))
+			if _player.menuAnchor then
+				step.menu:setSelectedIndex(_player.menuAnchor)
+			end
 
 			-- update the window properties
 			step.menu:setStyle(step.db:menuStyle())
@@ -1026,7 +1097,7 @@ local function _browseSink(step, chunk, err)
 			end
 
 			-- what's missing?
-			local from, qty = step.db:missing(step.menu:isAccelerated())
+			local from, qty = step.db:missing(_player.menuAnchor)
 		
 			if from then
 				_performJSONAction(step.data, from, qty, step, step.sink)
@@ -1154,7 +1225,7 @@ local function _menuSink(self, cmd)
 									step.window:show()
 									_curStep = step
 								else
-									from, qty = step.db:missing(step.menu and step.menu:isAccelerated())
+									from, qty = _decideFirstChunk(step.db, jsonAction)
 
 									_lockedItem = item
 									jiveMain:lockItem(item,
@@ -1194,7 +1265,7 @@ end
 local function _requestStatus()
 	local step = _statusStep
 
-	local from, qty = step.db:missing(step.menu:isAccelerated())
+	local from, qty = step.db:missing()
 	if from then
 		-- note, this is not a userRequest as the playlist is
 		-- updated when the playlist changes
@@ -1525,7 +1596,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					or ( item['addAction'] == 'go' and actionName == 'add' ) then
 					step, sink = _newDestination(_curStep, item, _newWindowSpec(db, item), _browseSink, jsonAction)
 					if step.menu then
-						from, qty = step.db:missing(step.menu:isAccelerated())
+						from, qty = _decideFirstChunk(step.db, jsonAction)
 					end
 				end
 
@@ -1600,10 +1671,22 @@ local _keycodeActionName = {
 -- _browseMenuListener
 -- called 
 local function _browseMenuListener(menu, db, menuItem, dbIndex, event)
+	log:debug("_browseMenuListener(", event:tostring(), ", " , index, ")")
+	
 
 	-- ok so joe did press a key while in our menu...
 	-- figure out the item action...
 	local evtType = event:getType()
+
+	local currentlySelectedIndex = _curStep.menu:getSelectedIndex()
+	if _player.lastKeyTable and evtType == EVENT_FOCUS_GAINED then
+		if currentlySelectedIndex then
+			_player.lastKeyTable.index = currentlySelectedIndex 
+		else
+			_player.lastKeyTable.index = 1
+		end
+	end
+
 
 	-- we don't care about focus: we get one everytime we change current item
 	-- and it just pollutes our logging.
@@ -1614,8 +1697,6 @@ local function _browseMenuListener(menu, db, menuItem, dbIndex, event)
 		return EVENT_UNUSED
 	end
 
-	log:debug("_browseMenuListener(", event:tostring(), ", " , index, ")")
-	
 	-- we don't care about events not on the current window
 	-- assumption for event handling code: _curStep corresponds to current window!
 	if _curStep.menu != menu then
