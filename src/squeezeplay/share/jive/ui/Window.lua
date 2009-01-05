@@ -166,19 +166,6 @@ function __init(self, style, title, titleStyle)
 				obj:playSound("BUMP")
 				obj:getWindow():bumpRight()
 				return EVENT_CONSUME
-			-- the left key by default should close the window
-			-- other handlers can act on this event first
-			elseif keycode == KEY_LEFT or
-				keycode == KEY_BACK then
-				local stack = Framework.windowStack
-				if #stack == 1 then
-					obj:playSound("BUMP")
-					obj:getWindow():bumpRight()
-				else
-					obj:playSound("WINDOWHIDE")
-					obj:getWindow():hide()
-				end
-				return EVENT_CONSUME
 			end
 		end)
 

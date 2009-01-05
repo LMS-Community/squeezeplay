@@ -86,14 +86,24 @@ end
 
 function _eventHandler(self, event)
 	local evtType = event:getType()
-	for _, widget in ipairs(self.widgets) do
-		if widget:mouseInside(event) then
-			local r = widget:_event(event)
-			 if r ~= EVENT_UNUSED then
-				 return r
+	if evtType == EVENT_KEY_PRESS then
+		local keycode = event:getKeycode()
+		if keycode == KEY_BACK or keycode == KEY_LEFT then
+			self:getWindow():hide()
+			return EVENT_CONSUME
+		else
+			return EVENT_UNUSED
+		end
+	else
+		for _, widget in ipairs(self.widgets) do
+			if widget:mouseInside(event) then
+				local r = widget:_event(event)
+				 if r ~= EVENT_UNUSED then
+					 return r
+				 end
 			 end
 		 end
-	 end
+	end
 	return EVENT_UNUSED
 end
 
