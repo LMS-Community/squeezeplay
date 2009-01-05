@@ -1,6 +1,6 @@
 
 
-local assert, error, pairs, type, pcall = assert, error, pairs, type, pcall
+local assert, error, pairs, pcall, tonumber, type = assert, error, pairs, pcall, tonumber, type
 
 local oo          = require("loop.base")
 local io          = require("io")
@@ -118,9 +118,9 @@ function parseCpuInfo(self)
 		end
 
 		if string.match(line, "Hardware") then
-			self._platform = string.lower(string.match(line, ".+:%s+([^%s]+)"))
+			self._platform = string.lower(string.match(line, ".+:%s+(.+)"))
 		elseif string.match(line, "Revision") then
-			self._revision = tonumber(string.match(line, ".+:%s+([^%s]+)"))
+			self._revision = tonumber(string.match(line, ".+:%s+(.+)"))
 		end
 
 	end
@@ -131,11 +131,11 @@ end
 
 
 function verifyPlatformRevision(self)
-	for platform, revision in string.gmatch(self._boardVersion, "(%a+):(%d+)") do
+	for platform, revision in string.gmatch(self._boardVersion, "(%w+):(%d+)") do
 		platform = string.lower(platform)
 		revision = tonumber(revision)
 
-		if string.match(platform, self._platform)
+		if string.find(self._platform, platform)
 			and revision == self._revision then
 				return true
 		end
