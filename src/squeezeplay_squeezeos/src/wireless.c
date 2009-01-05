@@ -17,25 +17,26 @@
 
 
 struct wlan_data {
+	char *iface;
 	struct wpa_ctrl *ctrl;
 	int fd;
 };
 
 
 static int jive_net_wpa_ctrl_open(lua_State *L) {
-	const char *ctrl_path;
+	char ctrl_path[PATH_MAX];
 	struct wlan_data *data;
 	int err;
 
 	/* stack is:
-	 * 1: JiveWPA
-	 * 2: ctrl_path
+	 * 1: Wireless class
+	 * 2: iface
 	 */
 
-	// FIXME allow variable control path
-	ctrl_path = "/var/run/wpa_supplicant/eth0";
-
 	data = lua_newuserdata(L, sizeof(struct wlan_data));
+
+	data->iface = strdup(lua_tostring(L, 2));
+	sprintf(ctrl_path, "/var/run/wpa_supplicant/%s", data->iface);
 
 	data->ctrl = wpa_ctrl_open(ctrl_path);
 	if (data->ctrl == NULL) {
@@ -88,6 +89,11 @@ static int jive_net_wpa_ctrl_close(lua_State *L) {
 	if (data->fd) {
 		close(data->fd);
 		data->fd = 0;
+	}
+
+	if (data->iface) {
+		free(data->iface);
+		data->iface = 0;
 	}
 
 	return 0;
@@ -187,7 +193,7 @@ static int jive_net_wlan_get_power(lua_State *L) {
 		return 2;
 	}
 
-	strncpy(wrq.ifr_ifrn.ifrn_name, "eth0", IFNAMSIZ);
+	strncpy(wrq.ifr_ifrn.ifrn_name, data->iface, IFNAMSIZ);
 	wrq.u.power.flags = 0;
 
 	if (ioctl(data->fd, SIOCGIWPOWER, &wrq) < 0) {
@@ -219,7 +225,7 @@ static int jive_net_wlan_set_power(lua_State *L) {
 		return 2;
 	}
 
-	strncpy(wrq.ifr_ifrn.ifrn_name, "eth0", IFNAMSIZ);
+	strncpy(wrq.ifr_ifrn.ifrn_name, data->iface, IFNAMSIZ);
 
 	if (lua_toboolean(L, 2)) {
 		wrq.u.power.disabled = 0;

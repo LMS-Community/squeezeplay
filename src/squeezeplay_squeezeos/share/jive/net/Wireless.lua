@@ -574,7 +574,7 @@ function open(self)
 	end
 
 	local err
-	self.t_sock, err = wireless:open()
+	self.t_sock, err = wireless:open("eth0")
 	if err then
 		log:warn(err)
 
