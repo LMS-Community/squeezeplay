@@ -40,106 +40,35 @@ static u32_t pcm_sample_widths[] = {
 
 
 static sample_t pcm_read8bitBE(u8_t *pos) { 
-	sample_t sample;
-	struct { s32_t sign_extend:8; } s;
-
-	/* XXXX: REVIEW */
-
-	sample = *pos;
-
-	sample = s.sign_extend = sample;
-	return sample << 24;
+	return (sample_t) (*pos << 24);
 }
-
 
 static sample_t pcm_read8bitLE(u8_t *pos) { 
-	sample_t sample;
-	struct { s32_t sign_extend:8; } s;
-
-	/* XXXX: REVIEW */
-
-	sample = *pos;
-
-	sample = s.sign_extend = sample;
-	return sample << 24;
+	return (sample_t) (*pos << 24);
 }
-
 
 static sample_t pcm_read16bitBE(u8_t *pos) { 
-	sample_t sample;
-	struct { s32_t sign_extend:16; } s;
-
-	/* XXXX: REVIEW */
-
-	sample = *pos++ << 8;
-	sample = *pos;
-
-	sample = s.sign_extend = sample;
-	return sample << 16;
+	return (sample_t) (*pos << 24) | (*++pos << 16);
 }
-
 
 static sample_t pcm_read16bitLE(u8_t *pos) {
-	sample_t sample;
-	struct { s32_t sign_extend:16; } s;
-
-	sample = *pos++;
-	sample = *pos << 8;
-
-	sample = s.sign_extend = sample;
-	return sample << 16;
+	return (sample_t) (*pos << 16) | (*++pos << 24);
 }
 
-
-static sample_t pcm_read24bitBE(u8_t *pos) { 
-	sample_t sample;
-	struct { s32_t sign_extend:24; } s;
-
-	/* XXXX: REVIEW */
-
-	sample = *pos++ << 16;
-	sample |= *pos++ << 8;
-	sample |= *pos;
-
-	sample = s.sign_extend = sample;
-	return sample << 8;
+static sample_t pcm_read24bitBE(u8_t *pos) {
+	return (sample_t) (*pos << 24) | (*++pos << 16) | (*++pos << 8);
 }
 
-
-static sample_t pcm_read24bitLE(u8_t *pos) { 
-	sample_t sample;
-	struct { s32_t sign_extend:24; } s;
-
-	sample = *pos++;
-	sample |= *pos++ << 8;
-	sample |= *pos << 16;
-
-	sample = s.sign_extend = sample;
-	return sample << 8;
+static sample_t pcm_read24bitLE(u8_t *pos) {
+	return (sample_t) (*pos << 8) | (*++pos << 16) | (*++pos << 24);
 }
 
-
-static sample_t pcm_read32bitBE(u8_t *pos) { 
-	sample_t sample;
-	struct { s32_t sign_extend:32; } s;
-
-	/* XXXX: REVIEW */
-
-	sample = *pos++ << 24;
-	sample |= *pos++ << 16;
-	sample |= *pos++ << 8;
-	sample |= *pos;
-
-	sample = s.sign_extend = sample;
-	return sample;
+static sample_t pcm_read32bitBE(u8_t *pos) {
+	return (sample_t) (*pos << 24) | (*++pos << 16) | (*++pos << 8) | (*++pos);
 }
-
 
 static sample_t pcm_read32bitLE(u8_t *pos) { 
-	sample_t sample;
-
-	sample = *((s32_t *)(void *)pos);
-	return sample;
+	return *((sample_t *)(void *)pos);
 }
 
 
