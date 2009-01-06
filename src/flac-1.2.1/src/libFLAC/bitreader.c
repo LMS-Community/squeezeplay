@@ -1057,7 +1057,7 @@ break2:
 			 * us data a byte at a time (unlikely), br->consumed_bits may not
 			 * be zero.
 			 */
-			if(br->bytes) {
+			if(br->bytes*8 > cbits) {
 				const unsigned end = br->bytes * 8;
 				brword b = (br->buffer[cwords] & ~(FLAC__WORD_ALL_ONES >> end)) << cbits;
 				if(b) {
@@ -1070,7 +1070,7 @@ break2:
 				}
 				else {
 					uval += end - cbits;
-					cbits += end;
+					cbits = end;
 					FLAC__ASSERT(cbits < FLAC__BITS_PER_WORD);
 					/* didn't find stop bit yet, have to keep going... */
 				}
