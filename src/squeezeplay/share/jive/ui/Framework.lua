@@ -524,7 +524,7 @@ function addListener(self, mask, listener, priority)
 		function(a, b)
 			-- stable sort, most recent first
 			if a[3] == b[3] then
-				return a[4] < b[4]
+				return a[4] > b[4]
 			end
 			return a[3] < b[3]
 		end)
