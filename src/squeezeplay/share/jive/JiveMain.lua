@@ -102,6 +102,7 @@ local _globalStrings
 local _idTranslations = {}
 	
 local keyboardShortcuts = {	
+	["S"]  = { keyCode = KEY_REW | KEY_PAUSE ,  event = EVENT_KEY_HOLD },
 	["i"]  = { keyCode = KEY_UP,   event = EVENT_KEY_PRESS },
 	["k"]  = { keyCode = KEY_DOWN, event = EVENT_KEY_PRESS },
 	["j"]  = { keyCode = KEY_LEFT, event = EVENT_KEY_PRESS },

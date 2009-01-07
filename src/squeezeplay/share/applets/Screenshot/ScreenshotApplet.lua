@@ -43,14 +43,16 @@ local function _keyHold(self, event)
 
 		-- write to /media/*/log/squeezeplayXXXX.bmp or userpath
 		local path = System.getUserDir()
-		for dir in lfs.dir("/media") do
-			local tmp = "/media/" .. dir .. "/log"
-			if lfs.attributes(tmp, "mode") == "directory" then
-				path = tmp
-				break
-			end
-		end
-
+        if lfs.attributes("/media", "mode") ~= nil then
+            for dir in lfs.dir("/media") do
+                local tmp = "/media/" .. dir .. "/log"
+                if lfs.attributes(tmp, "mode") == "directory" then
+                    path = tmp
+                    break
+                end
+            end
+        end
+        
 		local file = path .. string.format("/squeezeplay%04d.bmp", self.number)
 		self.number = self.number + 1
 		
