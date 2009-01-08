@@ -112,6 +112,7 @@ function georgeSettingsRegionShow(self)
 	local wlan = self.t_ctrl
 
 	local window = Window("window", self:string("NETWORK_REGION"), wirelessTitleStyle)
+	window:setAllowScreensaver(false)
 
 	local region = wlan:getRegion()
 
@@ -224,6 +225,7 @@ end
 function georgeSetupConnectionHelp(self)
 
 	local window = Window("window", self:string("NETWORK_CONNECTION_HELP"), 'setuptitle')
+	window:setAllowScreensaver(false)
 
 	local textarea = Textarea("textarea", "this is just a placeholder for a bunch of text that we may put in to describe the vagaries of network connections, including terms such as 'cat5', 'SSID', and 'distributed denial of service attack'. It could be this window presents menu options or the like, but for starters I'm just throwing a textarea in here. Press the back button in the upper left to go back.")
 	window:addWidget(textarea)
@@ -236,6 +238,7 @@ function georgeSetupConnectionType(self, setupNextWireless, setupNextWired)
 	log:warn('georgeSetupConnectionType')
 
 	local window = Window("window", self:string("NETWORK_CONNECTION_TYPE"), wirelessTitleStyle)
+	window:setAllowScreensaver(false)
 
 	local wirelessLabel  = Label("wifi", self:string("NETWORK_CONNECTION_TYPE_WIRELESS"))
 	local wiredLabel     = Label("wired", self:string("NETWORK_CONNECTION_TYPE_WIRED"))
@@ -275,6 +278,7 @@ end
 function _networksShow(self, title, help)
 
 	local window = Window("window", title, wirelessTitleStyle)
+	window:setAllowScreensaver(false)
 
 	-- window to return to on completion of network settings
 	self.topWindow = window
@@ -1277,6 +1281,7 @@ end
 
 function connectOrDelete(self, ssid)
 	local window = Window("window", ssid, wirelessTitleStyle)
+	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu",
 				{
@@ -1306,6 +1311,7 @@ end
 
 function deleteConfirm(self, ssid)
 	local window = Window("window", self:string("NETWORK_FORGET_NETWORK"), wirelessTitleStyle)
+	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu",
 				{
@@ -1380,6 +1386,7 @@ end
 
 function networkStatusShow(self)
 	local window = Window("window", self:string("NETWORK_STATUS"), wirelessTitleStyle)
+	window:setAllowScreensaver(false)
 
 	local values = {}
 	for i=1,7 do
