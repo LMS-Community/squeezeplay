@@ -122,10 +122,10 @@ function init(self)
 		local timer = Timer(2000, -- 2 seconds
 			function()
 				-- 10 second when running
-				if not self.watchdogRunning then
-					self.watchdog:setTimeout(10)
-					self.watchdogRunning = true
-				end
+				--if not self.watchdogRunning then
+				--	self.watchdog:setTimeout(10)
+				--	self.watchdogRunning = true
+				--end
 				self.watchdog:keepAlive()
 			end)
 		timer:start()
