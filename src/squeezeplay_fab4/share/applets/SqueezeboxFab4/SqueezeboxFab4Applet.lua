@@ -1,4 +1,6 @@
 
+local tonumber, tostring = tonumber, tostring
+
 -- board specific driver
 local fab4_bsp               = require("fab4_bsp")
 
@@ -11,10 +13,14 @@ local Applet                 = require("jive.Applet")
 local System                 = require("jive.System")
 
 local Framework              = require("jive.ui.Framework")
+local Group                  = require("jive.ui.Group")
+local Icon                   = require("jive.ui.Icon")
 local Popup                  = require("jive.ui.Popup")
-local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Textarea               = require("jive.ui.Textarea")
 local Timer                  = require("jive.ui.Timer")
+local SimpleMenu             = require("jive.ui.SimpleMenu")
+local Slider                 = require("jive.ui.Slider")
+local Window                 = require("jive.ui.Window")
 
 local Watchdog               = require("jiveWatchdog")
 
@@ -32,6 +38,8 @@ oo.class(_M, Applet)
 
 function init(self)
 	local uuid, mac
+
+	local settings = self:getSettings()
 
 	-- read device uuid
 	local f = io.open("/proc/cpuinfo")
@@ -98,6 +106,8 @@ function init(self)
 		log:warn("Watchdog timer is disabled")
 	end
 
+	self:setBrightness(settings.brightness or 64)
+
 	-- find out when we connect to player
 	jnt:subscribe(self)
 end
@@ -154,6 +164,57 @@ function setDate(self, date)
 	os.execute("/bin/date " .. MM..DD..hh..mm..CCYY.."."..ss)
 
 	iconbar:update()
+end
+
+
+function getBrightness (self)
+	local f = io.open("/sys/class/backlight/mxc_ipu_bl.0/brightness", "r")
+	local level = f:read("*a")
+	f:close()
+
+	return tonumber(level)
+end
+
+
+function setBrightness (self, level)
+	local f = io.open("/sys/class/backlight/mxc_ipu_bl.0/brightness", "w")
+	f:write(tostring(level * 4))
+	f:close()
+end
+
+
+function settingsBrightnessShow (self, menuItem)
+	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
+
+	local settings = self:getSettings()
+	local level = self:getBrightness()
+
+	local slider = Slider("slider", 1, 64, level,
+			      function(slider, value, done)
+				      self:setBrightness(value)
+				      settings.brightness = value
+
+				      if done then
+					      window:playSound("WINDOWSHOW")
+					      window:hide(Window.transitionPushLeft)
+				      end
+			      end)
+
+	window:addWidget(Textarea("help", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
+	window:addWidget(Group("sliderGroup", {
+				       Icon("sliderMin"),
+				       slider,
+				       Icon("sliderMax")
+			       }))
+
+	window:addListener(EVENT_WINDOW_POP,
+		function()
+			self:storeSettings()
+		end
+	)
+
+	window:show()
+	return window
 end
 
 

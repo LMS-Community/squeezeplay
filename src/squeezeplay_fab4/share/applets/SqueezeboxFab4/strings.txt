@@ -38,3 +38,27 @@ INVALID_MAC_CONTINUE
 	NL	Verdergaan
 	NO	Fortsett
 	SV	Fortsätt
+
+BSP_BRIGHTNESS
+	DA	Lysstyrke
+	DE	Helligkeit
+	EN	Brightness
+	ES	Brillo
+	FI	Kirkkaus
+	FR	Luminosité
+	IT	Luminosità
+	NL	Helderheid
+	NO	Lysstyrke
+	SV	Ljusstyrka
+
+BSP_BRIGHTNESS_ADJUST_HELP
+	DA	Brug drejeknappen til at justere lysstyrken.
+	DE	Sie können die Helligkeit mit dem Rad anpassen
+	EN	Use the wheel to adjust the brightness.
+	ES	Use la rueda para ajustar el brillo.
+	FI	Voit säätää kirkkautta kiekolla.
+	FR	Utilisez la molette pour régler la luminosité.
+	IT	Usare la rotellina per regolare la luminosità.
+	NL	Gebruik het wiel om de helderheid van de verlichting aan te passen.
+	NO	Bruk hjulet til å justere lysstyrken.
+	SV	Justera ljusstyrkan med rullningshjulet.

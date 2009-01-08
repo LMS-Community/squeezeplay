@@ -39,6 +39,15 @@ function registerApplet(meta)
 	appletManager:addDefaultSetting("Playback", "alsaEffectsDevice", "plughw:2,0")
 	appletManager:addDefaultSetting("Playback", "alsaEffectsBufferTime", 30000)
 	appletManager:addDefaultSetting("Playback", "alsaEffectsPeriodCount", 3)
+
+
+	-- settings
+	jiveMain:addItem(meta:menuItem('brightnessSetting', 'screenSettings', "BSP_BRIGHTNESS", function(applet, ...) applet:settingsBrightnessShow(...) end))
+
+
+	-- services
+	meta:registerService("getBrightness")
+	meta:registerService("setBrightness")
 end
 
 
