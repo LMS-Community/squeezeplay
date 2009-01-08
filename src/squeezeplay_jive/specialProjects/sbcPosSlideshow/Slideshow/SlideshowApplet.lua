@@ -71,7 +71,11 @@ function startSlideshow(self, menuItem)
 	local relPath = 'applets/Slideshow/images/'
 
 	local cmd = 'ls ' .. imageDir .. '/*.*'
-	local filePattern = '%d%d%d_%a%a%p%a%a%a'
+	-- filename search format:
+	-- two or more digits, followed by an _, 
+	-- followed by two or more alphanumeric chars, 
+	-- followed by a file extension, e.g. ".png"
+	local filePattern = '%d%d+_%a%a+%p%a%a%a'
         local proc = Process(jnt, cmd)
         proc:read(
                 function(chunk, err)
