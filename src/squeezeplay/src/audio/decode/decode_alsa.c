@@ -479,7 +479,7 @@ static int decode_alsa_init(void) {
 		return 0;
 	}
 
-	stacksize = 32 * 1024; /* 32k stack, we don't do much here */
+	stacksize = 64 * 1024; /* 64k stack, we don't do much here */
 	if ((err = pthread_attr_setstacksize(&thread_attr, stacksize)) != 0) {
 		DEBUG_ERROR("pthread_attr_setstacksize: %s", strerror(err));
 	}
