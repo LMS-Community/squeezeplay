@@ -61,8 +61,8 @@ int SDL_SYS_CreateThread(SDL_Thread *thread, void *args)
 	}
 	pthread_attr_setdetachstate(&type, PTHREAD_CREATE_JOINABLE);
 
-	/* set stack size to 64k */
-	stacksize = 64 * 1024;
+	/* set stack size to 128k */
+	stacksize = 128 * 1024;
 	pthread_attr_setstacksize(&type, stacksize);
 
 	/* Create the thread and go! */
