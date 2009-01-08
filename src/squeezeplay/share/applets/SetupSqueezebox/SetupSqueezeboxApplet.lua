@@ -27,7 +27,7 @@ local Popup                  = require("jive.ui.Popup")
 local Player                 = require("jive.slim.Player")
 
 local Udap                   = require("jive.net.Udap")
-local hasWireless, Wireless  = pcall(require, "jive.net.Wireless")
+local hasNetworking, Networking  = pcall(require, "jive.net.Networking")
 
 local log                    = require("jive.utils.log").logger("applets.setup")
 
@@ -108,8 +108,11 @@ function init(self)
 		error("No player discovery")
 	end
 
-	if hasWireless then
-		self.wireless = Wireless(jnt, "eth0")
+	if hasNetworking then
+		local wirelessInterface = Networking:wirelessInterface()
+		if wirelessInterface then
+			self.wireless = Networking(jnt, wirelessInterface)
+		end
 	end
 
 	-- socket for udap discovery
@@ -143,7 +146,7 @@ function setupSqueezeboxSettingsShow(self, keepOldEntries)
 	-- note we keep old entries so this list the window is not empty
 	-- during initial setup. if this becomes a problem a "finding
 	-- squeezeboxen" screen will need to be added.
-	if hasWireless then
+	if self.wireless then
 		self:_scanComplete(self.wireless:scanResults(), keepOldEntries)
 	end
 
@@ -203,7 +206,7 @@ end
 
 
 function _scan(self)
-	if hasWireless then
+	if self.wireless then
 		self.wireless:scan(function(scanTable)
 					   _scanComplete(self, scanTable)
 				   end)

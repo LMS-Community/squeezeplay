@@ -10,7 +10,7 @@ local io                     = require("io")
 
 local jiveBSP                = require("jiveBSP")
 local Watchdog               = require("jiveWatchdog")
-local Wireless               = require("jive.net.Wireless")
+local Networking             = require("jive.net.Networking")
 local LocalPlayer            = require("jive.slim.LocalPlayer")
 
 local Applet                 = require("jive.Applet")
@@ -146,7 +146,8 @@ function init(self)
 				 end)
 
 	-- wireless
-	self.wireless = Wireless(jnt, "eth0")
+	local wireless = Networking:wirelessInterface()
+	self.wireless = Networking(jnt, wireless)
 
 	-- register network active function
 	jnt:registerNetworkActive(function(active)

@@ -37,7 +37,7 @@ local Timer         = require("jive.ui.Timer")
 local SocketUdp     = require("jive.net.SocketUdp")
 local Udap          = require("jive.net.Udap")
 
-local hasWireless, Wireless  = pcall(require, "jive.net.Wireless")
+local hasNetworking, Networking  = pcall(require, "jive.net.Networking")
 
 local Player        = require("jive.slim.Player")
 local SlimServer    = require("jive.slim.SlimServer")
@@ -217,8 +217,11 @@ function __init(self, ...)
 		end)
 
 	-- wireless discovery
-	if hasWireless then
-		obj.wireless = Wireless(jnt, "eth0")
+	if hasNetworking then
+		local wirelessInterface = Networking:wirelessInterface()
+		if wirelessInterface then
+			obj.wireless = Networking(jnt, wirelessInterface)
+		end
 	end
 
 	-- discovery timer
@@ -253,7 +256,7 @@ function _discover(self)
 	self.udap:send(function() return packet end, "255.255.255.255")
 
 	-- Wireless discovery, only in probing state
-	if self.state == 'probing' and hasWireless then
+	if self.state == 'probing' and self.wireless then
 		self.wireless:scan(
 			function(scanTable)
 				_scanComplete(self, scanTable)
