@@ -44,6 +44,14 @@ Returns the keycode for EVENT_KEY_* events.
 
 Returns the mouse x,y position for EVENT_MOUSE_* events.
 
+=head2 jive.ui.Event:getAction()
+
+Returns the action name for ACTION events.
+
+=head2 jive.ui.Event:getActionInternal()
+
+Returns the internal representation of the action name for ACTION events. Used by getAction(), should not be needed for general use.
+
 =back
 
 
@@ -189,13 +197,23 @@ The following keys are used in EVENT_KEY_* events. Multiple key detection is sup
 =cut
 --]]
 
+local require = require
 
 local oo        = require("loop.base")
 
 module(..., oo.class)
 
+local Framework		= require("jive.ui.Framework")
 
--- C implementation
+
+
+function getAction(self)
+    local actionIndex = self:getActionInternal()
+    return Framework:getActionEventNameByIndex(actionIndex)
+end
+
+-- the rest is C implementation
+
 --[[
 
 =head1 LICENSE

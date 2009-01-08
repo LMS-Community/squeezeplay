@@ -65,6 +65,7 @@ local logheap       = require("jive.utils.log").logger("jive.heap")
 --require("profiler")
 
 local EVENT_KEY_ALL        = jive.ui.EVENT_KEY_ALL
+local ACTION               = jive.ui.ACTION
 local EVENT_KEY_PRESS      = jive.ui.EVENT_KEY_PRESS
 local EVENT_CHAR_PRESS      = jive.ui.EVENT_CHAR_PRESS
 local EVENT_KEY_HOLD       = jive.ui.EVENT_KEY_HOLD
@@ -102,6 +103,7 @@ local keyboardShortcuts = {
 	["i"]  = { keyCode = KEY_UP,   event = EVENT_KEY_PRESS },
 	["k"]  = { keyCode = KEY_DOWN, event = EVENT_KEY_PRESS },
 	["j"]  = { keyCode = KEY_LEFT, event = EVENT_KEY_PRESS },
+	["J"]  = { keyCode = KEY_LEFT, event = EVENT_KEY_HOLD },
 	["l"]  = { keyCode = KEY_RIGHT, event = EVENT_KEY_PRESS },
 	["h"]  = { keyCode = KEY_HOME, event = EVENT_KEY_PRESS },
 	["p"]  = { keyCode = KEY_PLAY, event = EVENT_KEY_PRESS },
@@ -124,8 +126,35 @@ local keyboardShortcuts = {
 	["\27"]  = { keyCode = KEY_BACK, event = EVENT_KEY_PRESS } -- ESC
 }
 
+local keyActionMappingsPress = {
+    [KEY_LEFT] = "arrow_left.press"  -- using button naming convention from SC default.map, though these are action events
+}
+
+
+local keyActionMappingsHold = {
+    [KEY_LEFT] = "arrow_left.hold",
+    [KEY_REW | KEY_PAUSE] = "take_screenshot"  -- a stab at how to handle multi-press
+}
+
 local _defaultSkin
 local _fullscreen
+
+local function _goHome() 
+		local windowStack = Framework.windowStack
+
+		if #windowStack > 1 then
+			Framework:playSound("JUMP")
+			jiveMain:closeToHome(true)
+		else
+			Framework:playSound("BUMP")
+			windowStack[1]:bumpLeft()
+		end
+end
+
+local function _disconnectPlayer(self, event) --self, event not used in our case, could be left out
+    appletManager:callService("setCurrentPlayer", nil)
+    _goHome()
+end
 
 -- bring us to the home menu
 local function _homeHandler(event)
@@ -143,23 +172,10 @@ local function _homeHandler(event)
 		
 		return EVENT_CONSUME
 
-	elseif (( type == EVENT_KEY_PRESS and event:getKeycode() == KEY_HOME) or
-	    ( type == EVENT_KEY_HOLD and event:getKeycode() == KEY_BACK)) then
+	elseif ( type == EVENT_KEY_PRESS and event:getKeycode() == KEY_HOME) then
 
-		-- disconnect from player on press and hold left
-		if type == EVENT_KEY_HOLD then
-			appletManager:callService("setCurrentPlayer", nil)
-		end
-
-		local windowStack = Framework.windowStack
-
-		if #windowStack > 1 then
-			Framework:playSound("JUMP")
-			jiveMain:closeToHome(true)
-		else
-			Framework:playSound("BUMP")
-			windowStack[1]:bumpLeft()
-		end
+        _goHome()
+        
 		return EVENT_CONSUME
       end
       return EVENT_UNUSED
@@ -170,6 +186,34 @@ local function _addUserPathToLuaPath()
     package.path = package.path .. System.getUserDir() .. dirSeparator .."?.lua;"
     package.path = package.path .. System.getUserDir() .. dirSeparator .. "?" .. dirSeparator .. "?.lua;"
 end
+
+-- transform user input events (key, etc) to a matching action name
+local function getAction(event)
+    --naive implementation for demonstration - will be more involved later
+
+    local eventType = event:getType()
+    local action = nil
+    
+    if eventType == EVENT_KEY_PRESS then
+        action = keyActionMappingsPress[event:getKeycode()]
+    elseif eventType == EVENT_KEY_HOLD then
+        action = keyActionMappingsHold[event:getKeycode()]
+    end
+    
+    return action
+    
+end
+
+function registerDefaultActions()
+    for key, action in pairs(keyActionMappingsPress) do 
+        Framework:registerAction(action)
+    end
+    for key, action in pairs(keyActionMappingsHold) do 
+        Framework:registerAction(action)
+    end
+
+end
+
 
 -- __init
 -- creates our JiveMain main object
@@ -222,6 +266,33 @@ function JiveMain:__init()
 		end,
 		10)
 
+    registerDefaultActions()
+
+	-- action mapping listener, should be last listener in chain to allow for direct access to keys/other input types if needed.
+	--todo add other input types
+	Framework:addListener(EVENT_KEY_ALL,
+		function(event)
+		    local action = getAction(event)
+		    if not action then
+		        return EVENT_UNUSED
+		    end
+		    
+		    local actionEvent = Framework:newActionEvent(action)
+		    if not actionEvent then
+		        log:error("Odd, newActionEvent returned nil, but should always return a result when match was found for action: ", action)
+		        return EVENT_UNUSED
+		    end
+		    
+		    log:debug("Pushing action event (", action, ") - event:getAction: " , actionEvent:getAction())
+	        Framework:pushEvent(actionEvent)
+			return EVENT_CONSUMED
+		end,
+		9999)
+		
+	
+    -- disconnect from player on press and hold left
+    Framework:addActionListener("arrow_left.hold", self, _disconnectPlayer)
+	
 	-- show our window!
 	jiveMain.window:show()
 

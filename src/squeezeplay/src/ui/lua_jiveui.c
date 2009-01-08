@@ -2203,6 +2203,7 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"EVENT_SWITCH",JIVE_EVENT_SWITCH);
    tolua_constant(tolua_S,"EVENT_MOTION",JIVE_EVENT_MOTION);
    tolua_constant(tolua_S,"EVENT_KEY_ALL",JIVE_EVENT_KEY_ALL);
+   tolua_constant(tolua_S,"ACTION",JIVE_ACTION);
    tolua_constant(tolua_S,"EVENT_MOUSE_ALL",JIVE_EVENT_MOUSE_ALL);
    tolua_constant(tolua_S,"EVENT_ALL_INPUT",JIVE_EVENT_ALL_INPUT);
    tolua_constant(tolua_S,"EVENT_VISIBLE_ALL",JIVE_EVENT_VISIBLE_ALL);
