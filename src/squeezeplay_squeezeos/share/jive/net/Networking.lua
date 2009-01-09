@@ -131,8 +131,8 @@ function interfaces(self)
 
 	log:debug('scanning /proc/net/dev for interfaces...')
 
-	for i, v in ipairs(interfaceTable) do
-		if i then
+	for interface, _ in pairs(interfaceTable) do
+		if interface then
 			return interfaceTable
 		end
 	end
@@ -141,6 +141,7 @@ function interfaces(self)
 
         local f = io.popen("cat /proc/net/dev")
         if f == nil then
+		log:error('`cat /proc/net/dev` produced no results')
                 return interfaces
         end
 
@@ -181,10 +182,10 @@ function wirelessInterface(self)
 
         self:interfaces()
 
-	for _, v in ipairs(interfaceTable) do
-		if self:isWireless(v) then
-			log:debug('Wireless interface found: ', v)
-			return v
+	for interface, _ in pairs(interfaceTable) do
+		if self:isWireless(interface) then
+			log:debug('Wireless interface found: ', interface)
+			return interface
 		end
 	end
 
@@ -208,9 +209,9 @@ function wiredInterface(self)
 
         self:interfaces()
 
-	for _, v in ipairs(interfaceTable) do
-		if not self:isWireless(v) then
-			return v
+	for interface, _ in pairs(interfaceTable) do
+		if not self:isWireless(interface) then
+			return interface 
 		end
 	end
 	return false
@@ -246,9 +247,10 @@ function isWireless(self, interface)
 		if line == nil then
 			break
 		end
+
 		local doesWireless = string.match(line, "^(%w+)%s+")
 		if interface == doesWireless then
-			interfaceTable[interface]['isWireless'] = true
+			interfaceTable[interface] = { isWireless = true }
 			f:close()
 			return true
 		end
