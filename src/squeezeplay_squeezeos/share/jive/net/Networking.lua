@@ -1,5 +1,27 @@
+--[[
+=head1 NAME
 
-local assert, ipairs, pairs, pcall, tonumber, tostring = assert, ipairs, pairs, pcall, tonumber, tostring
+jive.net.Networking 
+
+=head1 DESCRIPTION
+
+This class implements methods for administering network interfaces.
+
+Much of the methods in this class need to be done through Task. These methods are by convention prefixed with t_
+
+=head1 SYNOPSIS
+
+pull in networking object to manipulate wireless interface
+
+	local wirelessInterface = Networking:wirelessInterface()
+	local wireless = Networking(jnt, wirelessInterface)
+
+=head1 FUNCTIONS
+
+=cut
+--]]
+
+local assert, ipairs, pairs, pcall, tonumber, tostring, type = assert, ipairs, pairs, pcall, tonumber, tostring, type
 
 local oo          = require("loop.simple")
 
@@ -18,8 +40,7 @@ local Task        = require("jive.ui.Task")
 local wireless    = require("jiveWireless")
 
 
-
-module("jive.net.Wireless")
+module("jive.net.Networking")
 oo.class(_M, Socket)
 
 
@@ -57,21 +78,37 @@ local REGION_CODE_MAPPING = {
 }
 
 
+-- global for storing data on available network interfaces
+local interfaceTable = {}
+
 -- global wireless network scan results
 local _scanResults = {}
 
 -- singleton wireless instance per interface
 local _instance = {}
 
+--[[
+
+=head2 jive.net.Networking(jnt, interface, name)
+
+Constructs an object for administration of a network interface
+
+=cut
+--]]
 
 function __init(self, jnt, interface, name)
+
 	if _instance[interface] then
 		return _instance[interface]
 	end
 
 	local obj = oo.rawnew(self, Socket(jnt, name))
 
-	obj.interface = interface
+	obj.interface     = interface
+	obj.isWireless    = ( interfaceTable[interface] and interfaceTable[interface].isWireless ) 
+				or obj:isWireless(interface)
+	log:debug('Interface : ', obj.interface)
+	log:debug('isWireless: ', obj.isWireless)
 	obj.responseQueue = {}
 
 	obj:open()
@@ -80,14 +117,172 @@ function __init(self, jnt, interface, name)
 	return obj
 end
 
+--[[
 
--- returns available region names
+=head2 jive.net.Networking:interfaces()
+
+returns a table of existing interfaces on a device
+
+=cut
+--]]
+
+
+function interfaces(self)
+
+	log:debug('scanning /proc/net/dev for interfaces...')
+
+	for i, v in ipairs(interfaceTable) do
+		if i then
+			return interfaceTable
+		end
+	end
+
+        local interfaces = {}
+
+        local f = io.popen("cat /proc/net/dev")
+        if f == nil then
+                return interfaces
+        end
+
+	while true do
+        	local line = f:read("*l")
+		if line == nil then
+			break
+		end
+		local interface = string.match(line, "^%s*(%w+):")
+		if interface ~= nil and interface ~= 'lo' then
+			table.insert(interfaces, interface)
+		end
+	end
+
+	for _, interface in ipairs(interfaces) do
+		if not interfaceTable[interface] then
+			interfaceTable[interface] = {}
+		end
+		self:isWireless(interface)
+	end
+
+        f:close()
+        return interfaces
+
+end
+
+--[[
+
+=head2 jive.net.Networking:wirelessInterface()
+
+returns the first interface (if any) from the interface table capable of wireless
+
+=cut
+--]]
+
+
+function wirelessInterface(self)
+
+        self:interfaces()
+
+	for _, v in ipairs(interfaceTable) do
+		if self:isWireless(v) then
+			log:debug('Wireless interface found: ', v)
+			return v
+		end
+	end
+
+	log:error('Error: interfaceTable shows no wireless interface. returning eth0, the default wireless on SBC')
+	return 'eth0'
+
+end
+
+
+--[[
+
+=head2 jive.net.Networking:wiredInterface()
+
+returns the first available interface (if any) from the interface table that does not do wireless
+
+=cut
+--]]
+
+
+function wiredInterface(self)
+
+        self:interfaces()
+
+	for _, v in ipairs(interfaceTable) do
+		if not self:isWireless(v) then
+			return v
+		end
+	end
+	return false
+end
+
+--[[
+
+=head2 jive.net.Networking:isWireless(interface)
+
+returns true if the named I<interface> is wireless
+
+=cut
+--]]
+
+function isWireless(self, interface)
+
+	if not interface then
+		return false
+	end
+
+	-- look to see if we've cached this already
+	if interfaceTable[interface] and interfaceTable[interface].isWireless then
+		return true
+	end
+
+	local f = io.popen("/sbin/iwconfig " .. interface .. " 2>/dev/null")
+        if f == nil then
+                return false
+        end
+
+	while true do
+        	local line = f:read("*l")
+		if line == nil then
+			break
+		end
+		local doesWireless = string.match(line, "^(%w+)%s+")
+		if interface == doesWireless then
+			interfaceTable[interface]['isWireless'] = true
+			f:close()
+			return true
+		end
+	end
+
+        f:close()
+
+	return false
+	
+end
+
+--[[
+
+=head2 jive.net.Networking:getRegionNames()
+
+returns the available wireless region names
+
+=cut
+--]]
+
 function getRegionNames(self)
 	return pairs(REGION_CODE_MAPPING)
 end
 
+--[[
 
--- returns the current region
+=head2 jive.net.Networking:getRegion()
+
+returns the current region
+
+=cut
+--]]
+
+
 function getRegion(self)
 	-- check config file
 	local fh = io.open("/etc/network/config")
@@ -118,9 +313,19 @@ function getRegion(self)
 	return nil
 end
 
+--[[
 
--- sets the current region
+=head2 jive.net.Networking:setRegion(region)
+
+sets the current region
+
+=cut
+--]]
+
 function setRegion(self, region)
+	if type(self.interface) ~= "string" then
+		return
+	end
 	local mapping = REGION_CODE_MAPPING[region]
 	if not mapping then
 		return
@@ -139,21 +344,44 @@ function setRegion(self, region)
 end
 
 
--- returns the region code for Marvell on Jive
+--[[
+
+=head2 jive.net.Networking:getMarvellRegionCode()
+
+returns the region code for Marvell on Jive
+
+=cut
+--]]
+
 function getMarvellRegionCode(self)
 	local mapping = REGION_CODE_MAPPING[region or self:getRegion()]
 	return mapping and mapping[1] or 0
 end
 
+--[[
 
--- returns the region code for Atheros on Squeezebox
+=head2 jive.net.Networking:getAtherosRegionCode()
+
+returns the region code for Atheros on Squeezebox
+
+=cut
+--]]
+
+
 function getAtherosRegionCode(self)
 	local mapping = REGION_CODE_MAPPING[region or self:getRegion()]
 	return mapping and mapping[2] or 0
 end
 
+--[[
 
--- start a network scan in a new task
+=head2 jive.net.Networking:scan(callback)
+
+start a wireless network scan in a new task
+
+=cut
+--]]
+
 function scan(self, callback)
 	Task("networkScan", self,
 	     function()
@@ -161,17 +389,32 @@ function scan(self, callback)
 	     end):addTask()
 end
 
+--[[
 
--- returns scan results, or nil if a network scan has not been performed.
+=head2 jive.net.Networking:scanResults()
+
+returns wireless scan results, or nil if a network scan has not been performed.
+
+=cut
+--]]
+
 function scanResults(self)
 	return _scanResults
 end
 
+--[[
 
--- network scanning. this can take a little time so we do this in 
--- the network thread so the ui is not bocked.
+=head2 jive.net.Networking:t_scan(callback)
+
+network scanning. this can take a little time so we do this in 
+the network thread so the ui is not blocked.
+
+=cut
+--]]
+
+
 function t_scan(self, callback)
-	assert(Task:running(), "Wireless:scan must be called in a Task")
+	assert(Task:running(), "Networking:scan must be called in a Task")
 
 	local status, err = self:request("SCAN")
 	if err then
@@ -234,10 +477,17 @@ function t_scan(self, callback)
 	self.scanTask = nil
 end
 
+--[[
 
--- parse and return wpa status
+=head2 jive.net.Networking:t_wpaStatus()
+
+parse and return wpa status
+
+=cut
+--]]
+
 function t_wpaStatus(self)
-	assert(Task:running(), "Wireless:wpaStatus must be called in a Task")
+	assert(Task:running(), "Networking:wpaStatus must be called in a Task")
 
 	local statusStr = self:request("STATUS")
 
@@ -249,9 +499,18 @@ function t_wpaStatus(self)
 	return status
 end
 
+--[[
+
+=head2 jive.net.Networking:t_addNetwork(ssid, option)
+
+adds a network to the list of discovered networks
+
+=cut
+--]]
+
 
 function t_addNetwork(self, ssid, option)
-	assert(Task:running(), "Wireless:addNetwork must be called in a Task")
+	assert(Task:running(), "Networking:addNetwork must be called in a Task")
 
 	local request, response
 
@@ -342,9 +601,17 @@ function t_addNetwork(self, ssid, option)
 	return id
 end
 
+--[[
+
+=head2 jive.net.Networking:t_removeNetwork(ssid)
+
+forgets a previously discovered network 
+
+=cut
+--]]
 
 function t_removeNetwork(self, ssid)
-	assert(Task:running(), "Wireless:removeNetwork must be called in a Task")
+	assert(Task:running(), "Networking:removeNetwork must be called in a Task")
 
 	local networkResults = self:request("LIST_NETWORKS")
 
@@ -369,21 +636,42 @@ function t_removeNetwork(self, ssid)
 	self:_editNetworkInterfaces(ssid)
 end
 
+--[[
+
+=head2 jive.net.Networking:t_disconnectNetwork()
+
+brings down a network interface. If wireless, then force the wireless disconnect as well
+
+=cut
+--]]
 
 function t_disconnectNetwork(self)
-	assert(Task:running(), "Wireless:disconnectNetwork must be called in a Task")
+
+	assert(type(self.interface) == 'string')
+	assert(Task:running(), "Networking:disconnectNetwork must be called in a Task")
 
 	-- Force disconnect from existing network
 	local request = 'DISCONNECT'
 	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
 	-- Force the interface down
-	os.execute("/sbin/ifdown -f eth0")
+	local ifDown = "/sbin/ifdown -f " .. self.interface
+	os.execute(ifDown)
 end
+
+--[[
+
+=head2 jive.net.Networking:t_selectNetwork(ssid)
+
+selects a network to connect to. wireless only
+
+=cut
+--]]
 
 
 function t_selectNetwork(self, ssid)
-	assert(Task:running(), "Wireless:selectNetwork must be called in a Task")
+
+	assert(Task:running(), "Networking:selectNetwork must be called in a Task")
 
 	local networkResults = self:request("LIST_NETWORKS")
 	log:info("list results ", networkResults)
@@ -419,10 +707,24 @@ function t_selectNetwork(self, ssid)
 end
 
 
+--[[
+
+=head2 jive.net.Networking:t_setStaticIp(ssid, ipAddress, ipSubnet, ipGateway, ipDNS)
+
+apply IP address and associated configuration parameters to a network interface
+
+=cut
+--]]
+
+
 function t_setStaticIP(self, ssid, ipAddress, ipSubnet, ipGateway, ipDNS)
+	assert(type(self.interface) == 'string')
 	-- Reset the network
-	os.execute("kill -TERM `cat /var/run/udhcpc.eth0.pid`")
-	os.execute("/sbin/ifconfig eth0 0.0.0.0")
+	local killCommand   = "kill -TERM `cat /var/run/udhcpc." .. self.interface .. "pid`"
+	local configCommand = "/sbin/ifconfig " .. self.interface .. " 0.0.0.0"
+
+	os.execute(killCommand)
+	os.execute(configCommand)
 
 	-- Set static ip configuration for network
 	self:_editNetworkInterfaces(ssid, "static",
@@ -434,7 +736,8 @@ function t_setStaticIP(self, ssid, ipAddress, ipSubnet, ipGateway, ipDNS)
 			    )
 
 	-- Bring up the network
-	local status = os.execute("/sbin/ifup eth0")
+	local ifUp = "/sbin/ifup " .. interface
+	local status = os.execute(ifUp)
 	log:info("ifup status=", status)
 end
 
@@ -475,8 +778,23 @@ function _editNetworkInterfaces(self, ssid, method, ...)
 	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
 end
 
+--[[
+
+=head2 jive.net.Networking:getLinkQuality()
+
+returns "quality" of wireless interface
+used for dividing SNR values into categorical levels of signal quality
+
+	quality of 1 indicates SNR of 0
+	quality of 2 indicates SNR <= 10
+	quality of 3 indicates SNR <= 18
+	quality of 4 indicates SNR <= 25
+
+=cut
+--]]
 
 function getLinkQuality(self)
+
 	local snr = self:getSNR()
 
 	if snr == nil or snr == 0 then
@@ -494,8 +812,20 @@ function getLinkQuality(self)
 	return quality
 end
 
+--[[
+
+=head2 jive.net.Networking:getSNR()
+
+returns signal to noise ratio of wireless link
+
+=cut
+--]]
+
 
 function getSNR(self)
+	if type(self.interface) ~= 'string' then
+		return 0
+	end
 	local f = io.popen("/sbin/iwpriv " .. self.interface .. " getSNR 1")
 	if f == nil then
 		return 0
@@ -507,8 +837,18 @@ function getSNR(self)
 	return tonumber(string.match(t, ":(%d+)"))
 end
 
+--[[
+
+=head2 jive.net.Networking:getRSSI()
+
+returns Received Signal Strength Indication (signal power) of a wireless interface
+=cut
+--]]
 
 function getRSSI(self)
+	if type(self.interface) ~= 'string' then
+		return 0
+	end
 	local f = io.popen("/sbin/iwpriv " .. self.interface .. " getRSSI 1")
 	if f == nil then
 		return 0
@@ -520,8 +860,20 @@ function getRSSI(self)
 	return tonumber(string.match(t, ":(%-?%d+)"))
 end
 
+--[[
+
+=head2 jive.net.Networking:getNF()
+
+returns NF (?) of a wireless interface
+
+=cut
+--]]
+
 
 function getNF(self)
+	if type(self.interface) ~= 'string' then
+		return 0
+	end
 	local f = io.popen("/sbin/iwpriv " .. self.interface .. " getNF 1")
 	if f == nil then
 		return 0
@@ -533,8 +885,19 @@ function getNF(self)
 	return tonumber(string.match(t, ":(%-?%d+)"))
 end
 
+--[[
+
+=head2 jive.net.Networking:getTxBitRate()
+
+returns bitrate of a wireless interface
+
+=cut
+--]]
 
 function getTxBitRate(self)
+	if type(self.interface) ~= 'string' then
+		return "0"
+	end
 	local f = io.popen("/sbin/iwconfig " .. self.interface)
 	if f == nil then
 		return "0"
@@ -545,6 +908,15 @@ function getTxBitRate(self)
 
 	return string.match(t, "Bit Rate:(%d+%s[^%s]+)")
 end
+
+--[[
+
+=head2 jive.net.Networking:powerSave(enable)
+
+sets wireless power save state
+
+=cut
+--]]
 
 
 function powerSave(self, enable)
@@ -566,6 +938,16 @@ function powerSave(self, enable)
 	end
 end
 
+--[[
+
+=head2 jive.net.Networking:open()
+
+opens a socket to pick up network events
+
+=cut
+--]]
+
+
 
 function open(self)
 	if self.t_sock then
@@ -574,48 +956,61 @@ function open(self)
 	end
 
 	local err
-	self.t_sock, err = wireless:open("eth0")
-	if err then
-		log:warn(err)
 
-		self:close()
-		return false
-	end
+	if self.isWireless then
+		log:debug('Open wireless socket')
+		self.t_sock, err = wireless:open(self.interface)
+		if err then
+			log:warn(err)
+	
+			self:close()
+			return false
+		end
 
-	local source = function()
-			       return self.t_sock:receive()
-		       end
-
-	local sink = function(chunk, err)
-			     if chunk and string.sub(chunk, 1, 1) == "<" then
-				     -- wpa event message
-				     if self.eventSink  then
-					     Task("wirelessEvent", nil,
-						  function()
-							  self.eventSink(chunk, err)
-						  end):addTask()
-				     end
-			     else
-				     -- request response
-				     local task = table.remove(self.responseQueue, 1)
-				     if task then
-					     task:addTask(chunk, err)
+		local source = function()
+				       return self.t_sock:receive()
+			       end
+	
+		local sink = function(chunk, err)
+				     if chunk and string.sub(chunk, 1, 1) == "<" then
+					     -- wpa event message
+					     if self.eventSink  then
+						     Task("wirelessEvent", nil,
+							  function()
+								  self.eventSink(chunk, err)
+							  end):addTask()
+					     end
+				     else
+					     -- request response
+					     local task = table.remove(self.responseQueue, 1)
+					     if task then
+						     task:addTask(chunk, err)
+					     end
 				     end
 			     end
-		     end
-
-	self:t_addRead(function()
-			       -- XXXX handle timeout
-			       local status, err = ltn12.pump.step(source, sink)
-			       if err then
-				       log:warn(err)
-				       self:close()
-			       end
-		       end,
-		       0) -- no timeout
+	
+		self:t_addRead(function()
+				       -- XXXX handle timeout
+				       local status, err = ltn12.pump.step(source, sink)
+				       if err then
+					       log:warn(err)
+					       self:close()
+				       end
+			       end,
+	       0) -- no timeout
+	end
 
 	return true
 end
+
+--[[
+
+=head2 jive.net.Networking:close()
+
+closes existing socket
+
+=cut
+--]]
 
 
 function close(self)
@@ -628,10 +1023,19 @@ function close(self)
 	Socket.close(self)
 end
 
+--[[
+
+=head2 jive.net.Networking:request()
+
+pushes request to open socket
+
+=cut
+--]]
+
 
 function request(self, ...)
 	local task = Task:running()
-	assert(task, "Wireless:request must be called in a Task")
+	assert(task, "Networking:request must be called in a Task")
 
 	log:info("REQUEST: ", ...)
 
@@ -683,7 +1087,7 @@ end
 
 =head1 LICENSE
 
-Copyright 2007 Logitech. All Rights Reserved.
+Copyright 2009 Logitech. All Rights Reserved.
 
 This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 

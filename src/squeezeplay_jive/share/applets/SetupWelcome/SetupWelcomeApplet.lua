@@ -32,7 +32,7 @@ local Surface          = require("jive.ui.Surface")
 local Textarea         = require("jive.ui.Textarea")
 local Window           = require("jive.ui.Window")
 
-local Wireless         = require("jive.net.Wireless")
+local Networking       = require("jive.net.Networking")
 
 local log              = require("jive.utils.log").logger("applets.setup")
 local locale           = require("jive.utils.locale")
@@ -141,7 +141,7 @@ function step5(self)
 	log:info("step5")
 
 	-- wireless connection, using squeezebox?
-	local scanResults = Wireless.scanResults()
+	local scanResults = Networking.scanResults()
 
 	for ssid,_ in pairs(scanResults) do
 		log:warn("checking ssid ", ssid)
@@ -174,7 +174,7 @@ function step6(self)
 	log:info("step6")
 
 	-- wireless connection, using squeezebox?
-	local scanResults = Wireless.scanResults()
+	local scanResults = Networking.scanResults()
 
 	for ssid,_ in pairs(scanResults) do
 		log:warn("checking ssid ", ssid)

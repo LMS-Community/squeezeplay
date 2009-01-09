@@ -49,6 +49,10 @@ int jiveL_event_new(lua_State *L) {
 			event->u.scroll.rel = lua_tointeger(L, 3);
 			break;
 		
+		case JIVE_ACTION:
+			event->u.action.index = lua_tointeger(L, 3);
+			break;
+		
 		case JIVE_EVENT_KEY_DOWN:
 		case JIVE_EVENT_KEY_UP:
 		case JIVE_EVENT_KEY_PRESS:
@@ -196,6 +200,23 @@ int jiveL_event_get_mouse(lua_State *L) {
 	return 0;
 }
 
+int jiveL_event_get_action_internal(lua_State *L) {
+	JiveEvent* event = (JiveEvent*)lua_touserdata(L, 1);
+	if (event == NULL) {
+		luaL_error(L, "invalid Event");
+	}
+
+	switch (event->type) {
+	case JIVE_ACTION:
+		lua_pushinteger(L, event->u.action.index);
+		return 1;
+
+	default:
+		luaL_error(L, "Not an action event");
+	}
+	return 0;
+}
+
 
 int jiveL_event_get_motion(lua_State *L) {
         JiveEvent* event = (JiveEvent*)lua_touserdata(L, 1);
@@ -291,6 +312,11 @@ int jiveL_event_tostring(lua_State* L) {
 		break;
 	case JIVE_EVENT_KEY_HOLD:
 		lua_pushfstring(L, "KEY_HOLD code=%d", event->u.key.code);
+		break;
+
+	case JIVE_ACTION:
+	    //todo: also show actionEventName - convert index to actionEventName by calling Framework:getActionEventNameByIndex
+		lua_pushfstring(L, "ACTION actionIndex=%d", event->u.action.index);
 		break;
 		
 	case JIVE_EVENT_CHAR_PRESS:

@@ -10,7 +10,7 @@ local io                     = require("io")
 
 local jiveBSP                = require("jiveBSP")
 local Watchdog               = require("jiveWatchdog")
-local Wireless               = require("jive.net.Wireless")
+local Networking             = require("jive.net.Networking")
 
 local Applet                 = require("jive.Applet")
 local Audio                  = require("jive.ui.Audio")
@@ -143,7 +143,8 @@ function init(self)
 				 end)
 
 	-- wireless
-	self.wireless = Wireless(jnt, "eth0")
+	local wireless = Networking:wirelessInterface()
+	self.wireless = Networking(jnt, wireless)
 
 	-- register network active function
 	jnt:registerNetworkActive(function(active)
@@ -1012,6 +1013,7 @@ end
 
 
 function _wlanPowerSave(self, active)
+
 	if active ~= nil then
 		-- update the network active state
 		self.networkActive = active

@@ -98,11 +98,12 @@ typedef enum {
 	JIVE_EVENT_SWITCH		= 0x00400000,
 	JIVE_EVENT_MOTION		= 0x00800000,
 
-	JIVE_EVENT_CHAR_PRESS	= 0x02000000,
+	JIVE_EVENT_CHAR_PRESS           = 0x02000000,
 	JIVE_EVENT_IR_PRESS             = 0x04000000,
 	JIVE_EVENT_IR_HOLD              = 0x08000000,
+	JIVE_ACTION                     = 0x10000000,
 	
-	JIVE_EVENT_CHAR_ALL 	= ( JIVE_EVENT_CHAR_PRESS),
+	JIVE_EVENT_CHAR_ALL             = ( JIVE_EVENT_CHAR_PRESS),
 	JIVE_EVENT_IR_ALL               = ( JIVE_EVENT_IR_PRESS | JIVE_EVENT_IR_HOLD),
 	JIVE_EVENT_KEY_ALL		= ( JIVE_EVENT_KEY_DOWN | JIVE_EVENT_KEY_UP | JIVE_EVENT_KEY_PRESS | JIVE_EVENT_KEY_HOLD ),
 	JIVE_EVENT_MOUSE_ALL		= ( JIVE_EVENT_MOUSE_DOWN | JIVE_EVENT_MOUSE_UP | JIVE_EVENT_MOUSE_PRESS | JIVE_EVENT_MOUSE_HOLD | JIVE_EVENT_MOUSE_MOVE | JIVE_EVENT_MOUSE_DRAG ),
@@ -190,6 +191,10 @@ struct jive_scroll_event {
 	int rel;
 };
 
+struct jive_action_event {
+	int index;
+};
+
 struct jive_key_event {
 	JiveKey code;
 };
@@ -228,6 +233,7 @@ struct jive_event {
 
 	union {
 		struct jive_scroll_event scroll;
+		struct jive_action_event action;
 		struct jive_key_event key;
 		struct jive_char_event text;
 		struct jive_mouse_event mouse;
@@ -413,6 +419,7 @@ int jiveL_event_get_scroll(lua_State *L);
 int jiveL_event_get_keycode(lua_State *L);
 int jiveL_event_get_unicode(lua_State *L);
 int jiveL_event_get_mouse(lua_State *L);
+int jiveL_event_get_action_internal(lua_State *L);
 int jiveL_event_get_motion(lua_State *L);
 int jiveL_event_get_switch(lua_State *L);
 int jiveL_event_get_ircode(lua_State *L);

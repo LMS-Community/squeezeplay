@@ -10,7 +10,7 @@ local io                     = require("io")
 
 local jiveBSP                = require("jiveBSP")
 local Watchdog               = require("jiveWatchdog")
-local Wireless               = require("jive.net.Wireless")
+local Networking             = require("jive.net.Networking")
 local LocalPlayer            = require("jive.slim.LocalPlayer")
 
 local Applet                 = require("jive.Applet")
@@ -118,10 +118,10 @@ function init(self)
 		local timer = Timer(2000, -- 2 seconds
 			function()
 				-- 10 second when running
-				--if not self.watchdogRunning then
-				--	self.watchdog:setTimeout(10)
-				--	self.watchdogRunning = true
-				--end
+				if not self.watchdogRunning then
+					self.watchdog:setTimeout(10)
+					self.watchdogRunning = true
+				end
 				self.watchdog:keepAlive()
 			end)
 		timer:start()
@@ -146,7 +146,8 @@ function init(self)
 				 end)
 
 	-- wireless
-	self.wireless = Wireless(jnt, "eth0")
+	local wireless = Networking:wirelessInterface()
+	self.wireless = Networking(jnt, wireless)
 
 	-- register network active function
 	jnt:registerNetworkActive(function(active)
