@@ -36,7 +36,7 @@ local Framework          = require("jive.ui.Framework")
 local Surface            = require("jive.ui.Surface")
 local LocalPlayer        = require("jive.slim.LocalPlayer")
 
-local hasWireless, Wireless  = pcall(require, "jive.net.Wireless")
+local hasNetworking, Networking  = pcall(require, "jive.net.Networking")
 
 local log                = require("jive.utils.log").logger("applets.setup")
 local debug              = require("jive.utils.debug")
@@ -61,8 +61,11 @@ function init(self, ...)
 	self.serverItem = {}
 	self.scanResults = {}
 
-	if hasWireless then
-		self.wireless = Wireless(jnt, "eth0")
+	if hasNetworking then
+		local wirelessInterface = Networking:wirelessInterface()
+		if wirelessInterface then
+			self.wireless = Networking(jnt, wirelessInterface)
+		end
 	end
 
 	jnt:subscribe(self)

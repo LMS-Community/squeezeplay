@@ -39,6 +39,7 @@ local EVENT_SHOW    = jive.ui.EVENT_SHOW
 local EVENT_HIDE    = jive.ui.EVENT_HIDE
 local EVENT_CONSUME = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED  = jive.ui.EVENT_UNUSED
+local ACTION        = jive.ui.ACTION
 
 local FRAME_RATE    = jive.ui.FRAME_RATE
 
@@ -97,6 +98,9 @@ soundEnabled = {} -- sound enabled state
 screen = {}
 screen.bounds = { 0, 0, 240, 320 }
 screen.bpp = 16
+
+actionsByName = {}
+actionsByIndex = {}
 
 -- Put default global settings here
 default_global_settings = {
@@ -537,6 +541,100 @@ function removeListener(self, handle)
 	table.delete(self.unusedListeners, handle)
 end
 
+function dumpActions(self)
+    local result = "Available Actions: " 
+    for action in table.pairsByKeys(self.actionsByName) do
+        result = result .. " " .. action
+    end
+    return result
+end
+
+function _getActionEventIndexByName(self, name)
+    if (self.actionsByName[name] == nil) then
+        return nil   
+    end
+    
+    return self.actionsByName[name].index
+end
+
+function getActionEventNameByIndex(self, index)
+    if (index > #self.actionsByIndex) then
+        log:error("action event index out of bounds: " , index)
+        return nil   
+    end
+    
+    return self.actionsByIndex[index].name
+end
+
+--[[
+
+=head2 jive.ui.Framework:newActionEvent(action)
+
+Returns a new ACTION event or nil if no matching action has been registered.
+
+=cut
+--]]
+function newActionEvent(self, action)
+    local actionIndex = self:_getActionEventIndexByName(action)
+    if not actionIndex then
+        log:error("action name not registered: (" , action, "). Available actions: ", self:dumpActions() )
+        return nil
+    end
+    
+    return Event:new(ACTION, actionIndex)
+    
+end
+
+--[[
+
+=head2 jive.ui.Framework:registerAction(action)
+
+Register an action. action is a unique string that represents an action.
+Each action must be registered before listeners using it can be created (for typo prevention, and other future uses). 
+
+=cut
+--]]
+function registerAction(self, actionName)
+    if (self.actionsByName[actionName]) then
+        log:error("Action already registered, doing nothing")
+        return
+    end
+    
+    local actionEventDefinition = { name = actionName, index = #self.actionsByIndex + 1 }
+
+    log:debug("Registering action: ", actionEventDefinition.name, " with index: ", actionEventDefinition.index)
+    self.actionsByName[actionName] = actionEventDefinition
+    table.insert(self.actionsByIndex, actionEventDefinition)
+    
+end
+
+
+--example: addActionListener("play", self, playAction)
+function addActionListener(self, action, obj, listener)
+	_assert(type(listener) == "function")
+
+
+    if not self:_getActionEventIndexByName(action) then
+        log:error("action name not registered:(" , action, "). Available actions: ", self:dumpActions() )
+        return 
+    end
+
+    log:debug("Creating action listener for action: (" , action, ") from source: todo would be nice to be able to display the source of the listener in a meaningful way for debugging")
+    
+	self:addListener(ACTION,
+		function(event)
+		    local eventAction = event:getAction()
+		    if eventAction != action then
+		        return EVENT_UNUSED
+		    end
+
+            local listenerResult = listener(obj, event)
+            --default to consume unless the listener specifically wants to set a specific event return
+            return listenerResult and listenerResult or EVENT_CONSUME
+		end
+	)
+    
+end
 
 --[[
 

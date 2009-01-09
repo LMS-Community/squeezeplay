@@ -32,7 +32,7 @@ local Textinput              = require("jive.ui.Textinput")
 local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
 
-local Wireless               = require("jive.net.Wireless")
+local Networking             = require("jive.net.Networking")
 
 local log                    = require("jive.utils.log").logger("applets.setup")
 
@@ -59,7 +59,10 @@ oo.class(_M, Applet)
 
 
 function init(self)
-	self.t_ctrl = Wireless(jnt, "eth0")
+
+	local wirelessInterface = Networking:wirelessInterface()
+	self.t_ctrl = Networking(jnt, wirelessInterface)
+
 end
 
 
@@ -702,7 +705,7 @@ end
 
 
 -- FIXME this function and associated attach/detach functions should
--- be refactored into Wireless.lua with callbacks on approriate events.
+-- be refactored into Networking.lua with callbacks on approriate events.
 function _eventSink(self, chunk)
 	log:warn("wpa-cli event: ", chunk)
 
