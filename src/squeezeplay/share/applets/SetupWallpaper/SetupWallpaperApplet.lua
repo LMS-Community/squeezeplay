@@ -181,7 +181,15 @@ function settingsShow(self)
 
 	-- look for any server based wallpapers
 	if self.server then
-		log:info("found server - requesting wallpapers list")
+
+		local x, y = Framework:getScreenSize()
+		local screen = x .. "x" .. y
+		if screen ~= "480x272" and screen ~= "240x320" then
+			screen = nil
+		end
+
+		log:info("found server - requesting wallpapers list ", screen)
+
 		self.server:userRequest(
 			function(chunk, err)
 				if err then
@@ -191,7 +199,7 @@ function settingsShow(self)
 				end
 			end,
 			false,
-			{ "jivewallpapers" }
+			screen and { "jivewallpapers", "target:" .. screen } or { "jivewallpapers" }
 		)
 	end
 
