@@ -8,6 +8,9 @@
 
 #include "common.h"
 #include "jive.h"
+
+#include <signal.h>
+#include <syslog.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -125,7 +128,26 @@ char *platform_get_arch() {
     return arch;
 }
 
+
+#if defined(__arm__)
+/* temporary code to log a segfault to syslog */
+void bt_sighandler(int sig, siginfo_t *info, void *context) {
+	syslog(LOG_CRIT, (sig == SIGSEGV) ? "SEGFAULT" : "SIGBUS");
+	exit(0);
+}
+#endif
+
 void platform_init(lua_State *L) {
+#if defined(__arm__)
+	struct sigaction sa;
+
+	sa.sa_sigaction = (void *)bt_sighandler;
+	sigemptyset (&sa.sa_mask);
+	sa.sa_flags = SA_RESTART | SA_SIGINFO;
+
+	sigaction(SIGSEGV, &sa, NULL);
+	sigaction(SIGBUS, &sa, NULL);
+#endif
 }
 
 #endif
