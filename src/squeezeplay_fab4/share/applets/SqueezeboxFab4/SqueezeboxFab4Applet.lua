@@ -172,7 +172,7 @@ function getBrightness (self)
 	local level = f:read("*a")
 	f:close()
 
-	return tonumber(level)
+	return tonumber(level / 4)
 end
 
 
