@@ -44,9 +44,6 @@ function init(self)
 	self.bg  = Surface:newRGBA(self.sw, self.sh)
 	self.bg:filledRectangle(0, 0, self.sw, self.sh, 0x000000FF)
 
-	-- store existing brightness levels in self
-	self.brightness = appletManager:callService("getBrightness")
-
 	self.bgicon = Icon("background", self.bg)
 	self.window:addWidget(self.bgicon)
 
@@ -55,9 +52,10 @@ function init(self)
 		function(event)
 			local type = event:getType()
 			if type == EVENT_WINDOW_ACTIVE then
-				_brightness(0)
+				self:_getBrightness()
+				self:_setBrightness(0)
 			else
-				_brightness(self.brightness)
+				self:_setBrightness(self.brightness)
 			end
 			return EVENT_UNUSED
 		end,
@@ -85,7 +83,12 @@ function openScreensaver(self, menuItem)
 	self.window:show(Window.transitionFadeIn)
 end
 
-function _brightness(brightness)
+function _getBrightness(self)
+	-- store existing brightness levels in self
+	self.brightness = appletManager:callService("getBrightness")
+end
+
+function _setBrightness(self, brightness)
 	appletManager:callService("setBrightness", brightness)
 end
 
