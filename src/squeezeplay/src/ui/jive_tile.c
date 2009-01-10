@@ -55,6 +55,9 @@ JiveTile *jive_tile_load_image(const char *path) {
 	tmp = IMG_Load(fullpath);
 	if (!tmp) {
 		fprintf(stderr, "Error in jive_file_load_image: %s\n", IMG_GetError());
+		free(fullpath);
+		free(tile);
+		return NULL;
 	}
 	else {
 		if (tmp->format->Amask) {

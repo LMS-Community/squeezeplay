@@ -802,9 +802,9 @@ function skin(self, s, reload, useDefaultSize)
 	s.scannerGroup.text = {}
 	s.scannerGroup.text.fg = TEXT_COLOR
 	s.scannerGroup.text.font = FONT_13px
-	s.scannerGroup.text.w = 55
-	-- s.scannerGroup.padding = { 0, 0, 0, 0 }
-	s.scannerGroup.text.padding = { 8, 0, 0, 0}
+	s.scannerGroup.text.w = 60
+	s.scannerGroup.text.align = "right"
+	s.scannerGroup.text.padding = { 0, 0, 4, 0}
 
 	s.scannerPopup = {}
 	s.scannerPopup.x = 0
