@@ -533,6 +533,10 @@ function skin(self, s)
 	s.centeredtextarea.w = screenWidth
 	s.centeredtextarea.padding = TEXTAREA_PADDING 
 	s.centeredtextarea.font = _boldfont(CENTERED_TEXTAREA_FONT_SIZE)
+	s.centeredtextarea.text = {}
+	s.centeredtextarea.text.align = 'center'
+	s.centeredtextarea.align = 'center'
+	s.centeredtextarea.lineHeight = 50
 	s.centeredtextarea.fg = TEXT_COLOR
 	s.centeredtextarea.sh = TEXT_SH_COLOR
 	s.centeredtextarea.align = "center"
@@ -724,15 +728,21 @@ function skin(self, s)
 	s.iconAlarm.align = "center"
 
 	s.touchButton = {}
-        s.touchButton.padding = 10
+        s.touchButton.padding = { 4, 10, 0, 10 }
         s.touchButton.font = _font(22)
         s.touchButton.fg = TEXT_COLOR_BLACK
         s.touchButton.bgImg = selectionBox
         s.touchButton.align = 'center'
-        s.touchButton.text = {}
-        s.touchButton.text.align = "center"
+	s.touchButton.order = { 'text', 'icon' }
+        s.touchButton.text  = { align = 'center' }
+        s.touchButton.text.padding = { 0, 15, 0, 15 }
+	s.touchButton.icon = { 
+			img = _loadImage(self, "Icons/selection_right.png"), 
+			padding = { 0, 15, 5, 15 },
+			align = 'center' 
+	}
 	s.touchButton.position = LAYOUT_NONE
-	s.touchButton.x = screenWidth/2
+	s.touchButton.x = screenWidth/2 - 80
 	s.touchButton.y = screenHeight - 80
 
 	s.helpTouchButton = {}
