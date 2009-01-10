@@ -48,10 +48,15 @@ local ACCELERATION_INTERVAL_SLOW = 200  -- but less so unless faster than this
 module(..., oo.class)
 
 local function _secondsToString(seconds)
-	local min = math.floor(seconds / 60)
-	local sec = math.floor(seconds - (min*60))
-
-	return string.format("%d:%02d", min, sec)
+	local hrs  = math.floor(seconds / 3600 )
+	local mins = math.floor((seconds % 3600) / 60)
+	local secs = seconds % 60
+	
+	if hrs > 0 then
+		return string.format("%d:%02d:%02d", hrs, mins, secs)
+	end
+	
+	return string.format("%d:%02d", mins, secs)
 end
 
 local function _updateDisplay(self)
