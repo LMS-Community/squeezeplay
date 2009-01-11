@@ -25,9 +25,7 @@ local ipairs, pairs, type, print, tostring, string = ipairs, pairs, type, print,
 
 local oo                     = require("loop.simple")
 local io                     = require("io")
-local os                     = require("os")
 local table                  = require("jive.utils.table")
-local lfs                    = require("lfs")
 
 local Applet                 = require("jive.Applet")
 local System                 = require("jive.System")
@@ -90,24 +88,25 @@ local localwallpapers = {
 
 local authors = { "Chapple", "Scott Robinson", "Los Cardinalos", "Orin Optiglot", "Ryan McD", "Robbie Fisher" }
 
-local PREFIX = "applets/SetupWallpaper/wallpaper/"
-local prefix
+local firmwarePrefix = "applets/SetupWallpaper/wallpaper/"
+local downloadPrefix
 
-local REFRESH_TIME = 300 -- only fetch remote wallpapers while browsing if the file is older than this (seconds)
 
 function init(self)
 	jnt:subscribe(self)
 
-	-- find where to store wallpapers
-	-- we need to look for an actual file here as findFile can't find directories on windows, so try a known wallpaper
-	prefix = string.match(System:findFile(PREFIX .. "sunrise.png"), "(.*)sunrise.png")
-	log:info("prefix: ", prefix)
+	downloadPrefix = System.getUserDir().. "/wallpapers/"
+	appletManager._mkdirRecursive(downloadPrefix)
+
+	log:info("downloaded wallpapers stored at: ", downloadPrefix)
+
+	self.download = {}
 end
 
 -- notify_playerCurrent
 -- this is called when the current player changes (possibly from no player)
 function notify_playerCurrent(self, player)
-        log:info("SetupWallpaper:notify_playerCurrent(", player, ")")
+	log:info("SetupWallpaper:notify_playerCurrent(", player, ")")
 	if player == self.player then
 		return
 	end
@@ -119,6 +118,7 @@ function notify_playerCurrent(self, player)
 		self:setBackground(nil, 'wallpaper')
 	end
 end
+
 
 function settingsShow(self)
 	local window = Window("window", self:string('WALLPAPER'), 'settingstitle')
@@ -179,7 +179,7 @@ function settingsShow(self)
 
 	self.menu:addItem(self:_licenseMenuItem())
 
-	-- look for any server based wallpapers
+	-- get list of downloadable wallpapers from the server
 	if self.server then
 
 		local x, y = Framework:getScreenSize()
@@ -208,6 +208,7 @@ function settingsShow(self)
 		function()
 			self:showBackground(nil, self.currentPlayerId)
 			self:storeSettings()
+			self.download = {}
 		end
 	)
 
@@ -240,7 +241,13 @@ function _serverSink(self, data)
 
 	if data.item_loop then
 		for _,entry in pairs(data.item_loop) do
-			log:info("server wallpaper: ", entry.title)
+			local url
+			if entry.relurl then
+				url = 'http://' .. ip .. ':' .. port .. entry.relurl
+			else
+				url = entry.url
+			end
+			log:info("remote wallpaper: ", entry.title, " ", url)
 			self.menu:addItem(
 				{
 					weight = 50,	  
@@ -248,33 +255,30 @@ function _serverSink(self, data)
 					icon = RadioButton("radio",
 									   self.group,
 									   function()
-										   local path = prefix .. entry.name
-										   local attr = lfs.attributes(path)
-										   if attr then
-											   self:setBackground(entry.name, self.currentPlayerId)
+										   if self.download[url] then
+											   self:setBackground(url, self.currentPlayerId)
 										   end
 									   end,
-									   wallpaper == entry.name
+									   wallpaper == url
 								   ),
 					focusGained = function()
-									  local path = prefix .. entry.name
-									  local attr = lfs.attributes(path)
-									  if attr and os.time() - attr.modification < REFRESH_TIME then
-										  log:info("using local copy of: ", entry.name)
-										  self:showBackground(entry.name, self.currentPlayerId)
+									  if self.download[url] and self.download[url] ~= "fetch" and self.download[url] ~= "fetchset" then
+										  log:info("using cached: ", url)
+										  self:showBackground(url, self.currentPlayerId)
 									  else
-										  local url
-										  if entry.relurl then
-											  url = 'http://' .. ip .. ':' .. port .. entry.relurl
-										  else
-											  url = entry.url
-										  end
-										  self:_fetchFile(url, path, function() self:showBackground(entry.name, self.currentPlayerId) end)
+										  self:_fetchFile(url, 
+														  function(set) 
+															  if set then
+																  self:setBackground(url, self.currentPlayerId)
+															  else
+																  self:showBackground(url, self.currentPlayerId)
+															  end
+														  end )
 									  end
 								  end
 				}
 			)
-			if wallpaper == entry.name then
+			if wallpaper == url then
 				self.menu:setSelectedIndex(self.menu:numItems() - 1)
 			end
 		end
@@ -305,37 +309,32 @@ function _licenseMenuItem(self)
 end
 
 
-function _fetchFile(self, url, path, callback)
-	self.last = path
+function _fetchFile(self, url, callback)
+	self.last = url
 
-	if self.fetch == nil then
-		self.fetch = {}
-	end
-	if self.fetch[path] then
-		log:warn("already fetching ", path, " not fetching again")
+	if self.download[url] then
+		log:warn("already fetching ", url, " not fetching again")
 		return
 	else
-		log:info("fetching ", path, " ", url)
+		log:info("fetching background: ", url)
 	end
-	self.fetch[path] = 1
+	self.download[url] = "fetch"
+
+	-- FIXME
+	-- need something here to contrain size of self.download
 
 	local req = RequestHttp(
 		function(chunk, err)
-			self.fetch[path] = nil
 			if err then
-				log:error("error fetching background from server: ", path, " ", url)
+				log:error("error fetching background: ", url)
+				self.download[url] = nil
 			end
-			if chunk then
-				log:info("fetched background from server: ", path, " ", url)
-				local fh = io.open(path, "wb")
-				if fh then
-					fh:write(chunk)
-					fh:close()
-					if path == self.last then
-						callback()
-					end
-				else
-					log:error("unable to open ", path, " for writing")
+			local state = self.download[url]
+			if chunk and (state == "fetch" or state == "fetchset") then
+				log:info("fetched background: ", url)
+				self.download[url] = chunk
+				if url == self.last then
+					callback(state == "fetchset")
 				end
 			end
 		end,
@@ -365,7 +364,20 @@ function showBackground(self, wallpaper, playerId)
 	end
 	self.currentWallpaper = wallpaper
 
-	local srf = Tile:loadImage(prefix .. wallpaper)
+	local srf
+	if self.download[wallpaper] then
+		-- image in download cache
+		if self.download[wallpaper] ~= "fetch" and self.download[url] ~= "fetchset" then
+			local data = self.download[wallpaper]
+			srf = Tile:loadImageData(data, #data)
+		end
+	elseif string.match(wallpaper, "http://(.*)") then
+		-- saved remote image for this player
+		srf = Tile:loadImage(downloadPrefix .. playerId)
+	else
+		-- try firmware wallpaper
+		srf = Tile:loadImage(firmwarePrefix .. wallpaper)
+	end
 	if srf ~= nil then
 		Framework:setBackground(srf)
 	end
@@ -373,13 +385,29 @@ end
 
 
 function setBackground(self, wallpaper, playerId)
-
 	if not playerId then 
 		playerId = 'wallpaper' 
 	end
+
 	log:info('SetupWallpaper, setting wallpaper for ', playerId)
+
 	-- set the new wallpaper, or use the existing setting
 	if wallpaper then
+
+		if self.download[wallpaper] then
+			if self.download[wallpaper] == "fetch" then
+				self.download[wallpaper] = "fetchset"
+				return
+			end
+			local path = downloadPrefix .. playerId
+			local fh = io.open(path, "wb")
+			if fh then
+				log:info("saving image to ", path)
+				fh:write(self.download[wallpaper])
+				fh:close()
+			end
+		end
+
 		self:getSettings()[playerId] = wallpaper
 	end
 
