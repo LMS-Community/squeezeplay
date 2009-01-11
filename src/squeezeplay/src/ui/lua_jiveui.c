@@ -1657,6 +1657,39 @@ static int tolua_jive_jive_ui_Tile_loadImage00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
+/* method: jive_surface_load_image_data of class  Title - manually added by Triode */
+#ifndef TOLUA_DISABLE_tolua_jive_jive_ui_Tile_loadImageData00
+static int tolua_jive_jive_ui_Tile_loadImageData00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+ !tolua_isusertable(tolua_S,1,"Tile",0,&tolua_err) ||
+ !tolua_isstring(tolua_S,2,0,&tolua_err) ||
+ !tolua_isinteger(tolua_S,3,0,&tolua_err) ||
+ !tolua_isnoobj(tolua_S,4,&tolua_err)
+ )
+ goto tolua_lerror;
+ else
+#endif
+ {
+  const char* data = ((const char*)  tolua_tostring(tolua_S,2,0));
+  unsigned int len = (( unsigned int)  tolua_tointeger(tolua_S,3,0));
+ {
+  tolua_create Tile* tolua_ret = (tolua_create Tile*)  jive_tile_load_image_data(data,len);
+ tolua_pushusertype_and_takeownership(tolua_S,(void *)tolua_ret,"Tile");
+ }
+ }
+ return 1;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'loadImageData'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+
 /* method: jive_tile_load_tiles of class  Tile */
 #ifndef TOLUA_DISABLE_tolua_jive_jive_ui_Tile_loadTiles00
 static int tolua_jive_jive_ui_Tile_loadTiles00(lua_State* tolua_S)
@@ -2275,6 +2308,7 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_beginmodule(tolua_S,"Tile");
     tolua_function(tolua_S,"fillColor",tolua_jive_jive_ui_Tile_fillColor00);
     tolua_function(tolua_S,"loadImage",tolua_jive_jive_ui_Tile_loadImage00);
+    tolua_function(tolua_S,"loadImageData",tolua_jive_jive_ui_Tile_loadImageData00);
     tolua_function(tolua_S,"loadTiles",tolua_jive_jive_ui_Tile_loadTiles00);
     tolua_function(tolua_S,"loadVTiles",tolua_jive_jive_ui_Tile_loadVTiles00);
     tolua_function(tolua_S,"loadHTiles",tolua_jive_jive_ui_Tile_loadHTiles00);

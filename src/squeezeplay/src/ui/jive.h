@@ -357,6 +357,7 @@ void jive_surface_filledTrigonColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint
 /* Tile functions */
 JiveTile *jive_tile_fill_color(Uint32 col);
 JiveTile *jive_tile_load_image(const char *path);
+JiveTile *jive_tile_load_image_data(const char *data, size_t len);
 JiveTile *jive_tile_load_tiles(char *path[9]);
 JiveTile *jive_tile_load_vtiles(char *path[3]);
 JiveTile *jive_tile_load_htiles(char *path[3]);

@@ -78,6 +78,41 @@ JiveTile *jive_tile_load_image(const char *path) {
 	return tile;
 }
 
+
+JiveTile *jive_tile_load_image_data(const char *data, size_t len) {
+	JiveTile *tile;
+	SDL_Surface *tmp;
+	SDL_RWops *src ;
+
+	tile = calloc(sizeof(JiveTile), 1);
+	tile->refcount = 1;
+
+	src = SDL_RWFromConstMem(data, (int) len);
+	tmp = IMG_Load_RW(src, 1);
+
+	if (!tmp) {
+		fprintf(stderr, "Error in jive_tile_load_image_data: %s\n", IMG_GetError());
+		free(tile);
+		return NULL;
+	}
+	else {
+		if (tmp->format->Amask) {
+			tile->srf[0] = SDL_DisplayFormatAlpha(tmp);
+		}
+		else {
+			tile->srf[0] = SDL_DisplayFormat(tmp);
+		}
+		SDL_FreeSurface(tmp);
+	}
+
+	/* tile sizes */
+	tile->w[0] = tile->srf[0]->w;
+	tile->h[0] = tile->srf[0]->h;
+
+	return tile;
+}
+
+
 JiveTile *jive_tile_load_tiles(char *path[9]) {
 	JiveTile *tile;
 	char *fullpath;
