@@ -95,8 +95,9 @@ local downloadPrefix
 function init(self)
 	jnt:subscribe(self)
 
-	downloadPrefix = System.getUserDir().. "/wallpapers/"
+	downloadPrefix = System.getUserDir().. "/wallpapers"
 	appletManager._mkdirRecursive(downloadPrefix)
+	downloadPrefix = downloadPrefix .. "/"
 
 	log:info("downloaded wallpapers stored at: ", downloadPrefix)
 
