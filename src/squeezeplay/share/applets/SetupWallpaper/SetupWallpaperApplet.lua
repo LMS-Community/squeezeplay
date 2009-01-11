@@ -374,7 +374,7 @@ function showBackground(self, wallpaper, playerId)
 		end
 	elseif string.match(wallpaper, "http://(.*)") then
 		-- saved remote image for this player
-		srf = Tile:loadImage(downloadPrefix .. playerId)
+		srf = Tile:loadImage(downloadPrefix .. playerId:gsub(":", "-"))
 	else
 		-- try firmware wallpaper
 		srf = Tile:loadImage(firmwarePrefix .. wallpaper)
@@ -400,12 +400,14 @@ function setBackground(self, wallpaper, playerId)
 				self.download[wallpaper] = "fetchset"
 				return
 			end
-			local path = downloadPrefix .. playerId
+			local path = downloadPrefix .. playerId:gsub(":", "-")
 			local fh = io.open(path, "wb")
 			if fh then
 				log:info("saving image to ", path)
 				fh:write(self.download[wallpaper])
 				fh:close()
+			else
+				log:warn("unable to same image to ", path)
 			end
 		end
 
