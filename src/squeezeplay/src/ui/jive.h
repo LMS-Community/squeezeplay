@@ -141,8 +141,8 @@ typedef enum {
 
 enum {
 	/* reserved: 0x00000001 */
-	JIVE_USER_EVENT_KEY_HOLD       	= 0x00000002,
-	JIVE_USER_EVENT_MOUSE_HOLD  	= 0x00000003,
+	/* reserved: 0x00000002 */
+	/* reserved: 0x00000003 */
 	JIVE_USER_EVENT_EVENT		= 0x00000004,
 };
 

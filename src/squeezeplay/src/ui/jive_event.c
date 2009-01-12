@@ -276,6 +276,10 @@ int jiveL_event_tostring(lua_State* L) {
 		lua_pushfstring(L, "KEY_HOLD code=%d", event->u.key.code);
 		break;
 
+	case JIVE_EVENT_CHAR_PRESS:
+		lua_pushfstring(L, "CHAR_PRESS code=%d", event->u.text.unicode);
+		break;
+
 	case JIVE_ACTION:
 	    //todo: also show actionEventName - convert index to actionEventName by calling Framework:getActionEventNameByIndex
 		lua_pushfstring(L, "ACTION actionIndex=%d", event->u.action.index);
