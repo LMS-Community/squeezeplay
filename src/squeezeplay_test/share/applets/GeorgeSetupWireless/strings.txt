@@ -319,22 +319,13 @@ NETWORK_WIRELESS_KEY_HELP
 	EN	Enter your wireless key. (MORE TEXT NEEDED HERE FOR FAB4)
 
 NETWORK_REGION
-	DA	Trådløst område
-	DE	Wireless-Region
-	EN	Wireless Region
-	ES	Región inalámbrica
-	FI	Langaton alue
-	FR	Zone sans fil
-	IT	Area senza fili
-	NL	Draadloze regio
-	NO	Trådløsregion
-	SV	Trådlös region
+	EN	Choose Region
 
 NETWORK_REGION_US
 	EN	North America
 
 NETWORK_REGION_XX
-	EN	Rest of World
+	EN	All Other Regions
 
 NETWORK_REGION_CA
 	DA	Canada
@@ -421,16 +412,7 @@ NETWORK_REGION_TW
 	SV	Taiwan
 
 NETWORK_REGION_HELP
-	DA	Vælg lokalområde eller land.
-	DE	Wählen Sie Region oder Land.
-	EN	Choose the local region or country.
-	ES	Elija la región o el país.
-	FI	Valitse alue tai maa.
-	FR	Choisissez votre zone ou pays local.
-	IT	Scegliere il paese o l'area geografica.
-	NL	Kies de regio of het land.
-	NO	Velg region eller land.
-	SV	Välj region eller land.
+	EN	When using the Squeezebox wireless interface, this setting is used to determine the correct radio frequency channels to use.
 
 NETWORK_WIRELESS_NETWORKS
 	DA	Trådløse netværk

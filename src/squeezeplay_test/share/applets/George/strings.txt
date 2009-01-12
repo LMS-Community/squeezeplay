@@ -89,8 +89,8 @@ DONE_CONTINUE
 	IT	Continua
 	NL	Verdergaan
 
-TOUCH_TO_CONTINUE
-	EN	Touch to Continue
+PRESS_TO_CONTINUE
+	EN	Press to Continue
 
 DONE_HELP
 	DA	Du kan nu anvende din Squeezebox Controller til at tilgå al din musik. Tryk midterknappen for at fortsætte.

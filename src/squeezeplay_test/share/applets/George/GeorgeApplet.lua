@@ -27,6 +27,7 @@ local RadioButton      = require("jive.ui.RadioButton")
 local Framework        = require("jive.ui.Framework")
 local Label            = require("jive.ui.Label")
 local Icon             = require("jive.ui.Icon")
+local Group            = require("jive.ui.Group")
 local Button           = require("jive.ui.Button")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Surface          = require("jive.ui.Surface")
@@ -244,8 +245,20 @@ function setupWelcomeShow(self, setupNext)
 	window:setAllowScreensaver(false)
 
 	local textarea = Textarea("centeredtextarea", self:string("WELCOME_WALKTHROUGH"))
+--[[
 	local continue = Button(
-                             Label("touchButton", self:string("TOUCH_TO_CONTINUE")),
+                             Label("touchButton", self:string("PRESS_TO_CONTINUE")),
+                                function()
+                                        window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_GO)
+                                        return EVENT_CONSUME
+                                end
+	)
+--]]
+	local continue = Button(
+				Group("touchButton", {
+					text = Label("touchButton", self:string("PRESS_TO_CONTINUE")),
+					icon = Icon("icon"),
+				}),
                                 function()
                                         window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_GO)
                                         return EVENT_CONSUME

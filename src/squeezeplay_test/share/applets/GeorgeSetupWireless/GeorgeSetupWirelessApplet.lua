@@ -71,17 +71,17 @@ end
 function georgeSetupRegionShow(self, setupNext)
 	local wlan = self.t_ctrl
 
-	local window = Window("window", self:string("NETWORK_REGION"), wirelessTitleStyle)
+	local window = Window("regionWindow", self:string("NETWORK_REGION"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
 	local region = wlan:getRegion()
 
-	local menu = SimpleMenu("menu")
-	menu:setComparator(SimpleMenu.itemComparatorAlpha)
+	local menu = SimpleMenu("buttonmenu")
 
 	for name in wlan:getRegionNames() do
 		local item = {
 			text = self:string("NETWORK_REGION_" .. name),
+			style = 'buttonitem',
 			sound = "WINDOWSHOW",
 			callback = function()
 					   if region ~= name then
@@ -100,7 +100,9 @@ function georgeSetupRegionShow(self, setupNext)
 	end
 
 
-	window:addWidget(Textarea("help", self:string("NETWORK_REGION_HELP")))
+	--window:addWidget(Textarea("help", self:string("NETWORK_REGION_HELP")))
+	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_REGION', 'NETWORK_REGION_HELP') end )
+	window:addWidget(helpButton)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -116,13 +118,14 @@ function georgeSettingsRegionShow(self)
 
 	local region = wlan:getRegion()
 
-	local menu = SimpleMenu("menu")
+	local menu = SimpleMenu("buttonmenu")
 	menu:setComparator(SimpleMenu.itemComparatorAlpha)
 
 	local group = RadioGroup()
 	for name in wlan:getRegionNames() do
 		log:warn("region=", region, " name=", name)
 		menu:addItem({
+					style = 'buttonitem',
 				     text = self:string("NETWORK_REGION_" .. name),
 				     icon = RadioButton("radio", group,
 							function() wlan:setRegion(name) end,
@@ -240,25 +243,31 @@ function georgeSetupConnectionType(self, setupNextWireless, setupNextWired)
 	local window = Window("window", self:string("NETWORK_CONNECTION_TYPE"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	local wirelessLabel  = Label("wifi", self:string("NETWORK_CONNECTION_TYPE_WIRELESS"))
-	local wiredLabel     = Label("wired", self:string("NETWORK_CONNECTION_TYPE_WIRED"))
-	local wirelessButton = Button( Icon( "wifi"  ), setupNextWireless )
-	local wiredButton    = Button( Icon( "wired" ), setupNextWired )
+	local connectionMenu = SimpleMenu("buttonmenu")
+
+	connectionMenu:addItem({
+					style = 'buttonitem',
+				      text = (self:string("NETWORK_CONNECTION_TYPE_WIRELESS")),
+				      sound = "WINDOWSHOW",
+				      callback = function()
+							 setupNextWireless()
+						 end,
+				      weight = 1
+			      })
+	
+	connectionMenu:addItem({
+					style = 'buttonitem',
+				      text = (self:string("NETWORK_CONNECTION_TYPE_WIRED")),
+				      sound = "WINDOWSHOW",
+				      callback = function()
+							 setupNextWired()
+						 end,
+				      weight = 2
+			      })
+	
 	local helpButton     = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:georgeSetupConnectionHelp() end )
-
-	local choiceText = Group("networkchoiceText", {
-                        wifi   = wirelessLabel,
-                        wired  = wiredLabel
-        })
-
-	local choiceButtons = Group("networkchoice", {
-                        wifi   = wirelessButton,
-                        wired  = wiredButton
-        })
-
 	window:addWidget(helpButton)
-	window:addWidget(choiceText)
-	window:addWidget(choiceButtons)
+	window:addWidget(connectionMenu)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -582,7 +591,7 @@ function chooseEncryption(self)
 end
 
 function helpWindow(self, title, token)
-	local window = Window("window", self:string("NETWORK_WIRELESS_KEY"), wirelessTitleStyle)
+	local window = Window("window", self:string(title), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 	window:addWidget(Textarea("textarea", self:string(token)))
 
