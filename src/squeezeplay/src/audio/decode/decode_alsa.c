@@ -49,7 +49,7 @@ struct decode_alsa {
 
 
 #define ALSA_DEFAULT_DEVICE "default"
-#define ALSA_DEFAULT_BUFFER_TIME 500000
+#define ALSA_DEFAULT_BUFFER_TIME 30000
 #define ALSA_DEFAULT_PERIOD_COUNT 3
 
 
@@ -223,6 +223,7 @@ static int pcm_close(struct decode_alsa *state) {
 
 static int pcm_open(struct decode_alsa *state) {
 	int err, dir;
+	unsigned int val;
 	snd_pcm_uframes_t size;
 
 	/* Close existing pcm (if any) */
@@ -278,13 +279,21 @@ static int pcm_open(struct decode_alsa *state) {
 	}
 
 	/* set buffer and period times */
-	if ((err = snd_pcm_hw_params_set_buffer_time_near(state->pcm, state->hw_params, &state->buffer_time, &dir)) < 0) {
+	val = state->buffer_time;
+	if ((err = snd_pcm_hw_params_set_buffer_time_near(state->pcm, state->hw_params, &val, &dir)) < 0) {
 		DEBUG_ERROR("Unable to set  buffer time %s", snd_strerror(err));
 		return err;
 	}
 
-	if ((err = snd_pcm_hw_params_set_periods_near(state->pcm, state->hw_params, &state->period_count, &dir)) < 0) {
+	val = state->period_count;
+	if ((err = snd_pcm_hw_params_set_periods_near(state->pcm, state->hw_params, &val, &dir)) < 0) {
 		DEBUG_ERROR("Unable to set period size %s", snd_strerror(err));
+		return err;
+	}
+
+	/* set hardware parameters */
+	if ((err = snd_pcm_hw_params(state->pcm, state->hw_params)) < 0) {
+		DEBUG_ERROR("Unable to set hw params: %s", snd_strerror(err));
 		return err;
 	}
 
@@ -293,12 +302,6 @@ static int pcm_open(struct decode_alsa *state) {
 		return err;
 	}
 	state->period_size = size;
-
-	/* set hardware parameters */
-	if ((err = snd_pcm_hw_params(state->pcm, state->hw_params)) < 0) {
-		DEBUG_ERROR("Unable to set hw params: %s", snd_strerror(err));
-		return err;
-	}
 
 #ifdef RUNTIME_DEBUG
 	snd_pcm_dump(state->pcm, output);
@@ -411,7 +414,6 @@ static void *audio_thread_execute(void *data) {
 			}
 			else {
 				if ((err = snd_pcm_wait(state->pcm, 500)) < 0) {
-				  printf("err=%d\n", err);
 					if ((err = xrun_recovery(state, avail)) < 0) {
 						DEBUG_ERROR("PCM wait failed: %s", snd_strerror(err));
 					}

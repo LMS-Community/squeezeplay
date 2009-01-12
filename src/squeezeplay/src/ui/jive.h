@@ -148,9 +148,9 @@ typedef enum {
 
 
 enum {
-	JIVE_USER_EVENT_TIMER		= 0x00000001,
-	JIVE_USER_EVENT_KEY_HOLD       	= 0x00000002,
-	JIVE_USER_EVENT_MOUSE_HOLD  	= 0x00000003,
+	/* reserved: 0x00000001 */
+	/* reserved: 0x00000002 */
+	/* reserved: 0x00000003 */
 	JIVE_USER_EVENT_EVENT		= 0x00000004,
 };
 
@@ -406,8 +406,6 @@ int jive_style_array_int(lua_State *L, int index, const char *array, int n, cons
 JiveFont *jive_style_array_font(lua_State *L, int index, const char *array, int n, const char *key);
 Uint32 jive_style_array_color(lua_State *L, int index, const char *array, int n, const char *key, Uint32 def, bool *is_set);
 
-void jive_timer_dispatch_event(lua_State *L, void *param);
-
 
 /* lua functions */
 int jiveL_get_background(lua_State *L);
@@ -501,9 +499,6 @@ int jiveL_style_value(lua_State *L);
 int jiveL_style_rawvalue(lua_State *L);
 int jiveL_style_color(lua_State *L);
 int jiveL_style_font(lua_State *L);
-
-int jiveL_timer_add_timer(lua_State *L);
-int jiveL_timer_remove_timer(lua_State *L);
 
 
 #define JIVEL_STACK_CHECK_BEGIN(L) { int _sc = lua_gettop((L));

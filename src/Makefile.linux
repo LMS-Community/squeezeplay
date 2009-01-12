@@ -41,6 +41,10 @@ all: sdl-all lua-all app
 .PHONY: sdl-all freetype sdl sdl-image sdl-tff sdl-gfx c-ares
 sdl-all: freetype sdl sdl-ttf sdl-image sdl-gfx
 
+generated:
+	mkdir -p generated
+
+
 # freetype
 freetype-2.1.10/config.mk:
 	cd freetype-2.1.10; ./configure --enable-shared ${ENABLE_PROFILING} --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
@@ -143,7 +147,7 @@ tolua++: lua
 # squeezeplay
 #
 
-.PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont freefont-debian
+.PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib squeezeplay_private freefont freefont-debian axtls
 app: portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont
 
 # portaudio
@@ -175,6 +179,19 @@ tremor: Tremor/Makefile
 	cd Tremor; make && make install
 
 
+# axTLS
+AXTLS_DIR = generated/axTLS
+AXTLS_TAR = axTLS-1.2.0.tar.gz
+${AXTLS_DIR}/Makefile: generated
+	cd generated; tar xvf ../${AXTLS_TAR}
+	cp axTLS.config ${AXTLS_DIR}/config/.config
+	echo "PREFIX=\"${PREFIX}\"" >> ${AXTLS_DIR}/config/.config
+
+axtls: ${AXTLS_DIR}/Makefile
+	cd ${AXTLS_DIR}; make oldconfig && make && make install
+
+
+
 # squeezeplay
 squeezeplay/Makefile:
 	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_PROFILING} --prefix=${PREFIX} 
@@ -191,6 +208,14 @@ squeezeplay_desktop: squeezeplay_desktop/Makefile
 squeezeplay_contrib: squeezeplay/Makefile
 	cd squeezeplay_contrib; make PREFIX=${PREFIX}
 
+squeezeplay_private/Makefile:
+	cd squeezeplay_private; SDL_CONFIG=${SDL_CONFIG} ./configure --prefix=${PREFIX}
+
+squeezeplay_private: axtls squeezeplay_private/Makefile
+	cd squeezeplay_private; make CFLAGS="${CFLAGS} -I${SRC_DIR}/squeezeplay/src" PREFIX=${PREFIX} install
+	rm ${PREFIX}/lib/spprivate.*
+	cp squeezeplay_private/.libs/spprivate.so ${PREFIX}/lib/lua/5.1/spprivate.so
+
 # freefont
 freefont:
 	mkdir -p ${PREFIX}/share/jive/fonts
@@ -206,6 +231,7 @@ freefont:
 
 .PHONY: clean
 clean:
+	-rm -rf generated
 	-cd freetype-2.1.10; make distclean
 	-cd SDL-1.2.13; make distclean; rm -f include/SDL_config.h;
 	-cd SDL_image-1.2.5; make distclean
