@@ -5,6 +5,9 @@
 */
 
 
+/* streambuf filter, used to parse metadata */
+typedef ssize_t (*streambuf_filter_t)(u8_t *buf, size_t min, size_t max, bool_t *streaming);
+
 extern size_t streambuf_get_size(void);
 
 extern size_t streambuf_get_freebytes(void);
@@ -39,6 +42,8 @@ extern int streambuf_getfdL(lua_State *L);
 extern void streambuf_feed(u8_t *buf, size_t size);
 
 extern ssize_t streambuf_feed_fd(int fd);
+
+extern void streambuf_set_filter(streambuf_filter_t filter);
 
 extern int streambuf_readL(lua_State *L);
 

@@ -7,6 +7,7 @@ local oo                     = require("loop.base")
 local string                 = require("string")
 
 local hasDecode, Decode      = pcall(require, "squeezeplay.decode")
+local hasSprivate, spprivate = pcall(require, "spprivate")
 local Stream                 = require("squeezeplay.stream")
 local SlimProto              = require("jive.net.SlimProto")
 
@@ -80,6 +81,9 @@ function __init(self, jnt, slimproto)
 	end)
 	obj.timer:start()
 
+	if hasSprivate then
+		spprivate.initAudio(slimproto)
+	end
 
 	self.threshold = 0
 	self.tracksStarted = 0
@@ -270,8 +274,6 @@ end
 
 
 function _streamConnect(self, serverIp, serverPort)
-
-log:warn("CONNECT TO ", serverIp)
 	self.stream = Stream:connect(serverIp, serverPort)
 
 	log:info("connect streambuf")

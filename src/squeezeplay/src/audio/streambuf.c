@@ -9,6 +9,7 @@
 #include "common.h"
 
 #include "audio/fifo.h"
+#include "audio/streambuf.h"
 #include "audio/decode/decode.h"
 #include "audio/decode/decode_priv.h"
 
@@ -42,7 +43,8 @@ static bool_t streambuf_streaming = FALSE;
 static u64_t streambuf_bytes_received = 0;
 
 /* streambuf filter, used to parse metadata */
-static size_t (*streambuf_filter)(u8_t *buf, size_t min, size_t max, bool_t *streaming);
+static streambuf_filter_t streambuf_filter;
+static streambuf_filter_t streambuf_next_filter;
 
 /* shoutcast metadata state */
 static u32_t icy_meta_interval;
@@ -249,13 +251,19 @@ size_t streambuf_fast_read(u8_t *buf, size_t min, size_t max, bool_t *streaming)
 
 
 size_t streambuf_read(u8_t *buf, size_t min, size_t max, bool_t *streaming) {
-	size_t n;
+	ssize_t n;
 
 	fifo_lock(&streambuf_fifo);
 
 	if (streambuf_filter) {
 		/* filters are called with the streambuf locked */
 		n = streambuf_filter(buf, min, max, streaming);
+
+		if (n < 0) {
+			/* filter returned an error */
+			current_decoder_state |= DECODE_STATE_ERROR;
+			n = 0;
+		}
 	}
 	else {
 		n = streambuf_fast_read(buf, min, max, streaming);
@@ -267,7 +275,16 @@ size_t streambuf_read(u8_t *buf, size_t min, size_t max, bool_t *streaming) {
 }
 
 
-size_t streambuf_icy_filter(u8_t *buf, size_t min, size_t max, bool_t *streaming) {
+void streambuf_set_filter(streambuf_filter_t filter) {
+	fifo_lock(&streambuf_fifo);
+
+	streambuf_next_filter = filter;
+
+	fifo_unlock(&streambuf_fifo);
+}
+
+
+ssize_t streambuf_icy_filter(u8_t *buf, size_t min, size_t max, bool_t *streaming) {
 	size_t avail, r, n = 0;
 	
 	/* streambuf is locked */
@@ -424,7 +441,8 @@ static int stream_connectL(lua_State *L) {
 
 	streambuf_clear_loop();
 	streambuf_bytes_received = 0;
-	streambuf_filter = NULL;
+	streambuf_filter = streambuf_next_filter;
+	streambuf_next_filter = NULL;
 
 	return 1;
 }
@@ -631,6 +649,7 @@ static int stream_writeL(lua_State *L) {
 		len -= n;
 	}
 
+	/*
 	if (shutdown(stream->fd, SHUT_WR) != 0) {
 		CLOSESOCKET(stream->fd);
 
@@ -638,6 +657,7 @@ static int stream_writeL(lua_State *L) {
 		lua_pushstring(L, strerror(SOCKETERROR));
 		return 2;
 	}
+	*/
 
 	lua_pushboolean(L, TRUE);
 	return 1;
