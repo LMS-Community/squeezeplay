@@ -78,9 +78,7 @@ Starts the timer.
 
 function start(self)
 	local now = Framework:getTicks()
-
-	self.expires = now + self.interval
-	self:_insertTimer()
+	self:_insertTimer(now + self.interval)
 end
 
 
@@ -153,7 +151,12 @@ end
 
 
 -- insert the timer into timer queue
-function _insertTimer(self)
+function _insertTimer(self, expires)
+	if self.expires then
+		table.delete(timers, self)
+	end
+	self.expires = expires
+
 	for i, timer in ipairs(timers) do
 		if self.expires < timer.expires then
 	 		table.insert(timers, i, self)
@@ -166,13 +169,17 @@ end
 
 -- process timer queue
 function _runTimer(self, now)
+	if timers[1] and not timers[1].expires then
+		log:error("stopped timer in timer list")
+		debug.dump(timers)
+	end
+
 	while timers[1] and timers[1].expires <= now do
 		local timer = table.remove(timers, 1)
 
 		-- call back may modify the timer so update it first
 		if not timer.once then
-			timer.expires = timer.expires + timer.interval
-			timer:_insertTimer()
+			timer:_insertTimer(timer.expires + timer.interval)
 		end
 
 		local status, err = pcall(timer.callback)
