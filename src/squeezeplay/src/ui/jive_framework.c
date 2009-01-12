@@ -1108,12 +1108,6 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 	case SDL_USEREVENT:
 		switch ( (int) event->user.code) {
-		case JIVE_USER_EVENT_TIMER:
-			JIVEL_STACK_CHECK_BEGIN(L);
-			jive_timer_dispatch_event(L, event->user.data1);
-			JIVEL_STACK_CHECK_END(L);
-			return 0;
-
 		case JIVE_USER_EVENT_KEY_HOLD:
 			jevent.type = JIVE_EVENT_KEY_HOLD;
 			jevent.u.key.code = (JiveKey) event->user.data1;
@@ -1294,12 +1288,6 @@ static const struct luaL_Reg window_methods[] = {
 	{ NULL, NULL }
 };
 
-static const struct luaL_Reg timer_methods[] = {
-	{ "start", jiveL_timer_add_timer },
-	{ "stop", jiveL_timer_remove_timer },
-	{ NULL, NULL }
-};
-
 static const struct luaL_Reg event_methods[] = {
 	{ "new", jiveL_event_new },
 	{ "getType", jiveL_event_get_type },
@@ -1384,10 +1372,6 @@ static int jiveL_core_init(lua_State *L) {
 
 	lua_getfield(L, 2, "Slider");
 	luaL_register(L, NULL, slider_methods);
-	lua_pop(L, 1);
-
-	lua_getfield(L, 2, "Timer");
-	luaL_register(L, NULL, timer_methods);
 	lua_pop(L, 1);
 
 	lua_getfield(L, 2, "Event");

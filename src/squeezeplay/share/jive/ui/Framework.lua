@@ -294,6 +294,7 @@ function eventLoop(self, netTask)
 			collectgarbage("step")
 
 			-- process ui event once per frame
+			Timer:_runTimer(now)
 			running = eventTask:resume()
 
 			-- when is the next frame due?
