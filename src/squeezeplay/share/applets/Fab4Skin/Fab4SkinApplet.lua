@@ -246,6 +246,11 @@ function skin(self, s)
 				})
 
 	local popupMask = Tile:fillColor(0x000000e5)
+
+	local regionMask = Tile:loadTiles({
+					imgpath .. "Screen_Formats/Setup/overlay_region_map.png"
+				})
+
 	-- FIXME: no popupBox in Fab4? there is a defined popupBox in DefaultSkin...
 
 	local textinputBackground =
@@ -658,6 +663,10 @@ function skin(self, s)
 	s.window.w = screenWidth
 	s.window.h = screenHeight
 
+	s.regionWindow = _uses(s.window, { 
+					bgImg = regionMask
+				})
+
 	s.errorWindow = {}
 	s.errorWindow.w = screenWidth
 	s.errorWindow.h = screenHeight
@@ -1069,8 +1078,28 @@ function skin(self, s)
 		      })
 
 
+	-- "buttonlike" menu. all items with selection box and icon
+	s.buttonmenu = {}
+	s.buttonmenu.padding = { 60, 30, 80, 2 }
+	s.buttonmenu.itemHeight = 90
 
-
+	-- items with artwork and song info
+	s.buttonitem = {}
+	s.buttonitem.order = { "text", "icon" }
+	s.buttonitem.padding = { 0, 10, 0, 10 }
+	s.buttonitem.bgImg = selectionBox
+	s.buttonitem.text = {}
+	s.buttonitem.text.w = WH_FILL
+	s.buttonitem.text.padding = { 26, 10, 0, 10 }
+	s.buttonitem.text.align = "left"
+	s.buttonitem.text.font = _boldfont(24)
+	s.buttonitem.text.fg = SELECT_COLOR
+	s.buttonitem.text.sh = SELECT_SH_COLOR
+	s.buttonitem.icon = {
+			img   = _loadImage(self, "Icons/selection_right.png"), 
+			h     = WH_FILL,
+			padding = 25
+	}
 
 	-- menus with artwork and song info
 	-- FIXME: this needs to be tweaked for Fab4Skin
