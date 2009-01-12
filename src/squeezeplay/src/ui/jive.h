@@ -187,6 +187,13 @@ struct jive_widget {
 	Uint8 layer;
 };
 
+struct jive_surface {
+	Uint32 refcount;
+	
+	SDL_Surface *sdl;
+	Sint16 offset_x, offset_y;	
+};
+
 struct jive_scroll_event {
 	int rel;
 };

@@ -9,14 +9,6 @@
 #include "jive.h"
 
 
-struct jive_surface {
-	Uint32 refcount;
-	
-	SDL_Surface *sdl;
-	Sint16 offset_x, offset_y;	
-};
-
-
 JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fullscreen) {
 	JiveSurface *srf;
 	SDL_Surface *sdl;
