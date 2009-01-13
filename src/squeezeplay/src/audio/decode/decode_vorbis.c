@@ -233,6 +233,7 @@ static void decode_vorbis_stop(void *data) {
 
 struct decode_module decode_vorbis = {
 	'o',
+	"ogg",
 	decode_vorbis_start,
 	decode_vorbis_stop,
 	decode_vorbis_period,

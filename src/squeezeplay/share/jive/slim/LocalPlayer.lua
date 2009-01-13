@@ -54,6 +54,8 @@ function __init(self, jnt, playerId, uuid)
 	       	revision = 0,
 		mac = obj.id,
 		uuid = uuid,
+		model = DEVICE_MODEL,
+		modelName = DEVICE_NAME,
 	})
 	obj.playback = Playback(jnt, obj.slimproto)
 

@@ -25,6 +25,7 @@ typedef s32_t sample_t;
 /* Decode interface */
 struct decode_module {
 	u32_t id;
+	char *name;
 	void *(*start)(u8_t *params, u32_t num_params);
 	void (*stop)(void *data);
 	u32_t (*period)(void *data);
@@ -93,6 +94,7 @@ struct decode_audio {
 	void (*stop)(void);
 	u32_t (*delay)(void);
 	void (*gain)(s32_t lgain, s32_t rgain);
+	void (*info)(unsigned int *rate_max);
 };
 
 extern struct decode_audio decode_alsa;
