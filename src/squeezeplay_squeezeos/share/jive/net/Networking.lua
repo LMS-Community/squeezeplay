@@ -36,9 +36,11 @@ local log         = require("jive.utils.log").logger("net.socket")
 
 local Framework   = require("jive.ui.Framework")
 local Socket      = require("jive.net.Socket")
+local Process     = require("jive.net.Process")
 local Task        = require("jive.ui.Task")
 local wireless    = require("jiveWireless")
 
+local jnt         = jnt
 
 module("jive.net.Networking")
 oo.class(_M, Socket)
@@ -523,7 +525,7 @@ function t_addNetwork(self, ssid, option)
 	local flags = (_scanResults[ssid] and _scanResults[ssid].flags) or ""
 
 	-- Set to use dhcp by default
-	self:_editNetworkInterfaces(ssid, "dhcp", "script /etc/network/udhcpc_action")
+	self:_editNetworkInterfaces(self.interface, ssid, "dhcp", "script /etc/network/udhcpc_action")
 
 	response = self:request("ADD_NETWORK")
 	local id = string.match(response, "%d+")
@@ -635,7 +637,7 @@ function t_removeNetwork(self, ssid)
 	end
 
 	-- Remove dhcp/static ip configuration for network
-	self:_editNetworkInterfaces(ssid)
+	self:_editNetworkInterfaces(self.interface, ssid)
 end
 
 --[[
@@ -647,18 +649,24 @@ brings down a network interface. If wireless, then force the wireless disconnect
 =cut
 --]]
 
-function t_disconnectNetwork(self)
+function t_disconnectNetwork(self, interface)
 
-	assert(type(self.interface) == 'string')
+	if not interface then
+		interface = self.interface
+	end
+
+	assert(type(interface) == 'string')
 	assert(Task:running(), "Networking:disconnectNetwork must be called in a Task")
 
-	-- Force disconnect from existing network
-	local request = 'DISCONNECT'
-	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+	if isWireless(interface) then
+		-- Force disconnect from existing network
+		local request = 'DISCONNECT'
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+	end
 
 	-- Force the interface down
-	local ifDown = "/sbin/ifdown -f " .. self.interface
-	os.execute(ifDown)
+	local result = self:t_ifDown(interface)
+
 end
 
 --[[
@@ -706,6 +714,10 @@ function t_selectNetwork(self, ssid)
 	-- Save configuration
 	request = 'SAVE_CONFIG'
 	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+	-- bring the inteface up
+	self:t_ifUp(self.interface)
+
 end
 
 
@@ -729,48 +741,106 @@ function t_setStaticIP(self, ssid, ipAddress, ipSubnet, ipGateway, ipDNS)
 	os.execute(configCommand)
 
 	-- Set static ip configuration for network
-	self:_editNetworkInterfaces(ssid, "static",
+	self:_editNetworkInterfaces(self.interface,
+					ssid, 
+					"static",
 				    "address " .. ipAddress,
 				    "netmask " .. ipSubnet,
 				    "gateway " .. ipGateway,
 				    "dns " .. ipDNS,
 				    "up echo 'nameserver " .. ipDNS .. "' > /etc/resolv.conf"
 			    )
+	self:t_ifUp(interface)
+end
 
-	-- Bring up the network
-	local ifUp = "/sbin/ifup " .. interface
-	local status = os.execute(ifUp)
-	log:info("ifup status=", status)
+--[[
+
+=head2 jive.net.Networking:t_ifUp(interface)
+
+brings I<interface> up, and all others (except loopback) down
+writes to /etc/network/interfaces and configures i<interface> 
+to be the only interface brought up at next boot time
+
+=cut
+--]]
+
+function t_ifUp(self, interface)
+
+	-- bring interface up
+	self:_toggleInterface(interface, 'up')
+
+	-- for now at least, bring down all other interfaces
+	for otherInterface, _ in pairs(interfaceTable) do
+		if otherInterface ~= 'lo' and otherInterface ~= interface then
+			log:debug('Bringing down ', otherInterface)
+			self:t_ifDown(otherInterface)
+		end
+	end
+	-- set auto lines for this interface in /etc/network/interface so it comes up on next boot
+	self:_editAutoInterfaces(interface)
+
+end
+
+--[[
+
+=head2 jive.net.Networking:t_ifDown(interface)
+
+brings I<interface> down
+=cut
+--]]
+
+function t_ifDown(self, interface)
+	local result = self:_toggleInterface(interface, 'down -f')
 end
 
 
-function _editNetworkInterfaces(self, ssid, method, ...)
-	-- the interfaces file uses " \t" as word breaks so munge the ssid
-	-- FIXME ssid's with \n are not supported
-	assert(ssid, debug.traceback())
-	ssid = string.gsub(ssid, "[ \t]", "_")
-	log:info("munged ssid=", ssid)
+function _toggleInterface(self, interface, direction)
+
+	local ifCmd = "/sbin/if" .. direction .. ' ' .. interface
+	local proc = Process(jnt, ifCmd)
+        proc:read(
+		function(chunk, err)
+			if err then
+				log:error("if command failed: ", err)
+				return false
+			end
+			if chunk ~= nil then
+			end
+                        return 1
+	end)
+end
+
+function _editNetworkInterfacesBlock( self, fo, iface_name, method, ...)
+	if method then
+		fo:write("iface " .. iface_name .. " inet " .. method .. "\n")
+		for _,v in ipairs{...} do
+			fo:write("\t" .. v .. "\n")
+		end
+	end
+end
+
+function _editAutoInterfaces(self, enabledInterface)
 
 	local fi = assert(io.open("/etc/network/interfaces", "r+"))
 	local fo = assert(io.open("/etc/network/interfaces.tmp", "w"))
-
-	local network = ""
+	local autoSet = false
 	for line in fi:lines() do
 		if string.match(line, "^mapping%s") or string.match(line, "^auto%s") then
-			network = ""
+			-- if the interface is to be enabled, it should be set to auto 
+			if (string.match(line, enabledInterface)) then
+				fo:write(line .. "\n")
+				autoSet = true
+			else
+				log:debug('This interface is not the enabled interface, so do not configure it to come up on boot')
+			end
 		elseif string.match(line, "^iface%s") then
-			network = string.match(line, "^iface%s([^%s]+)%s")
-		end
-
-		if network ~= ssid then
+			if not autoSet and string.match(line, enabledInterface) then
+				fo:write("auto " .. enabledInterface .. "\n")
+				autoSet = true
+			end
 			fo:write(line .. "\n")
-		end
-	end
-
-	if method then
-		fo:write("iface " .. ssid .. " inet " .. method .. "\n")
-		for _,v in ipairs{...} do
-			fo:write("\t" .. v .. "\n")
+		else
+			fo:write(line .. "\n")
 		end
 	end
 
@@ -780,8 +850,56 @@ function _editNetworkInterfaces(self, ssid, method, ...)
 	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
 end
 
---[[
+function _editNetworkInterfaces( self, interface, ssid, method, ...)
+	-- the interfaces file uses " \t" as word breaks so munge the ssid
+	-- FIXME ssid's with \n are not supported
+---	assert(ssid, debug.traceback())
+	ssid = string.gsub(ssid, "[ \t]", "_")
+---	log:info("munged ssid=", ssid)
 
+	log:debug('interface: ', interface, ', ssid: ', ssid , ' method: ', method)
+
+	local fi = assert(io.open("/etc/network/interfaces", "r+"))
+	local fo = assert(io.open("/etc/network/interfaces.tmp", "w"))
+
+	local iface_name = ""
+
+	local network = ""
+	local network_block_next = 0
+	for line in fi:lines() do
+	
+		if string.match(line, "^mapping%s") or string.match(line, "^auto%s") then
+			network = ""
+			if network_block_next == 1 then
+				network_block_next = 2
+				self:_editNetworkInterfacesBlock( fo, interface, method, ...)
+			end
+		elseif string.match(line, "^iface%s") then
+			network = string.match(line, "^iface%s([^%s]+)%s")
+			if network_block_next == 1 then
+				network_block_next = 2
+				self:_editNetworkInterfacesBlock( fo, interface, method, ...)
+			end
+		end
+
+		if network ~= interface then
+			fo:write(line .. "\n")
+		else
+			network_block_next = 1
+		end
+	end
+
+	if network_block_next != 2 then
+		self:_editNetworkInterfacesBlock( fo, interface, method, ...)
+	end
+
+	fi:close()
+	fo:close()
+
+	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
+end
+
+--[[
 =head2 jive.net.Networking:getLinkQuality()
 
 returns "quality" of wireless interface
