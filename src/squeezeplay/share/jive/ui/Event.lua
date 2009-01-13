@@ -208,10 +208,8 @@ local Framework		= require("jive.ui.Framework")
 
 
 function getAction(self)
-    --local actionIndex = self:getActionInternal()
-    --return Framework:getActionEventNameByIndex(actionIndex)
-
-    return null
+    local actionIndex = self:getActionInternal()
+    return Framework:getActionEventNameByIndex(actionIndex)
 end
 
 -- the rest is C implementation
