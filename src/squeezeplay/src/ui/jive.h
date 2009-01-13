@@ -101,10 +101,12 @@ typedef enum {
 	JIVE_EVENT_CHAR_PRESS           = 0x02000000,
 	JIVE_EVENT_IR_PRESS             = 0x04000000,
 	JIVE_EVENT_IR_HOLD              = 0x08000000,
-	JIVE_EVENT_IR_UP                = 0x10000000,
+	JIVE_EVENT_IR_UP                = 0x00000004,
 	JIVE_EVENT_IR_DOWN              = 0x20000000,
 	JIVE_EVENT_IR_REPEAT            = 0x40000000,
-	JIVE_ACTION                     = 0x80000000,
+	JIVE_ACTION                     = 0x10000000,
+	
+	//Note: don't use 0x80000000, 0x40000000 is the highest usable value
 	
 	JIVE_EVENT_CHAR_ALL 	= ( JIVE_EVENT_CHAR_PRESS),
 	JIVE_EVENT_IR_ALL               = ( JIVE_EVENT_IR_PRESS | JIVE_EVENT_IR_HOLD | JIVE_EVENT_IR_UP | JIVE_EVENT_IR_DOWN | JIVE_EVENT_IR_REPEAT),
