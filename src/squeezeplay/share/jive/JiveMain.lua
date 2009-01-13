@@ -156,6 +156,7 @@ local keyActionMappingsPress = {
 
 local keyActionMappingsHold = {
     [KEY_LEFT] = "arrow_left.hold",
+    [KEY_BACK] = "arrow_back.hold",
     [KEY_REW | KEY_PAUSE] = "take_screenshot"  -- a stab at how to handle multi-press
 }
 
@@ -338,6 +339,7 @@ function JiveMain:__init()
 	
     -- disconnect from player on press and hold left
     Framework:addActionListener("arrow_left.hold", self, _disconnectPlayer)
+        Framework:addActionListener("arrow_back.hold", self, _disconnectPlayer)
 	
 	-- show our window!
 	jiveMain.window:show()
