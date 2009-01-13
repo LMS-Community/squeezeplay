@@ -64,7 +64,7 @@ function init(self, ...)
 
 	-- listener to restart screensaver timer
 	Framework:addListener(
-		EVENT_CHAR_PRESS | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION,
+		EVENT_CHAR_PRESS | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION | EVENT_IR_ALL,
 		function(event)
 			-- restart timer if it is running
 			self.timer:setInterval(self.timeout)
@@ -74,7 +74,7 @@ function init(self, ...)
 	)
 
 	-- listener to quit screensaver
-	Framework:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD,
+	Framework:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_IR_ALL,
 		function(event)
 			-- screensaver is not active
 			if #self.active == 0 then

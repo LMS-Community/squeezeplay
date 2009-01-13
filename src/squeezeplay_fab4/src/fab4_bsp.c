@@ -3,11 +3,14 @@
 **
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
+#define RUNTIME_DEBUG 1
 
 #include "common.h"
 #include "jive.h"
 
 #include <linux/input.h>
+#include <sys/time.h>
+#include <time.h>
 
 
 static int clearpad_event_fd = -1;
@@ -17,6 +20,33 @@ static int ir_event_fd = -1;
 static JiveEvent clearpad_event;
 static int clearpad_state = 0;
 static int clearpad_max_x, clearpad_max_y;
+
+/* button hold threshold .9 seconds - HOLD event is sent when a new ir code is received after IR_HOLD_TIMEOUT ms*/
+#define IR_HOLD_TIMEOUT 900
+
+
+/* time after which, if no additional ir code is received, a button input is considered complete */
+#define IR_KEYUP_TIME 128
+
+/* This ir code used by some remotes, such as the boom remote, to indicate that a code is repeating */
+#define IR_REPEAT_CODE 0
+
+/* time that new ir input has occurred (using the input_event time as the time source) */
+Uint32 ir_down_millis = 0;
+
+/* time that the last ir input was received (using the input_event time as the time source)*/
+Uint32 ir_last_input_millis = 0;
+
+/* last ir code received */
+Uint32 ir_last_code = 0;
+
+bool ir_received_this_loop = false;
+ 
+static enum jive_ir_state {
+	IR_STATE_NONE,
+	IR_STATE_DOWN,
+	IR_STATE_HOLD_SENT,
+} ir_state = IR_STATE_NONE;
 
 
 #define TIMEVAL_TO_TICKS(tv) ((tv.tv_sec * 1000) + (tv.tv_usec / 1000))
@@ -115,9 +145,64 @@ static int handle_clearpad_events(int fd) {
 	return 0;
 }
 
+static Uint32 bsp_get_realtime_millis() {
+    Uint32 millis;
+    struct timespec now;
+    clock_gettime(CLOCK_REALTIME,&now);
+    millis=now.tv_sec*1000+now.tv_nsec/1000000;
+    return(millis);
+}
+        
+static Uint32 queue_ir_event(Uint32 ticks, Uint32 code, JiveEventType type) {
+    JiveEvent event;
+    
+/*    
+    switch(type) {
+        case JIVE_EVENT_IR_UP: fprintf(stderr,"Queuing JIVE_EVENT_IR_UP event\n"); break;
+        case JIVE_EVENT_IR_DOWN: fprintf(stderr,"Queuing JIVE_EVENT_IR_DOWN event\n"); break;
+        case JIVE_EVENT_IR_PRESS: fprintf(stderr,"Queuing JIVE_EVENT_IR_PRESS event\n"); break;
+        case JIVE_EVENT_IR_HOLD: fprintf(stderr,"Queuing JIVE_EVENT_IR_HOLD event\n"); break;
+        case JIVE_EVENT_IR_REPEAT: fprintf(stderr,"Queuing JIVE_EVENT_IR_REPEAT event\n"); break;
+        default: fprintf(stderr,"Invalid IR JiveEventType Value");
+    }
+*/
+
+    memset(&event, 0, sizeof(JiveEvent));
+
+    event.type = type;
+    event.u.ir.code = code;
+    event.ticks = ticks;
+    jive_queue_event(&event);
+
+    return 0;
+}
+
+static int ir_handle_up() {
+    if (ir_state != IR_STATE_HOLD_SENT) {
+        //odd to use sdl_getTicks here, since other ir events sent input_event time - code using PRESS and UP shouldn't care yet about the time....
+        queue_ir_event(SDL_GetTicks(), ir_last_code, (JiveEventType) JIVE_EVENT_IR_PRESS);
+    }
+
+    ir_state = IR_STATE_NONE;
+    queue_ir_event(SDL_GetTicks(), ir_last_code, (JiveEventType) JIVE_EVENT_IR_UP);
+    
+    ir_down_millis = 0;
+    ir_last_input_millis = 0;
+    ir_last_code = 0;
+    
+    return 0;
+}
+
+static int ir_handle_down(Uint32 code, Uint32 time) {
+    ir_state = IR_STATE_DOWN;
+    ir_down_millis = time;
+
+    queue_ir_event(time, code, (JiveEventType) JIVE_EVENT_IR_DOWN);
+                    
+    return 0;
+}
 
 static int handle_ir_events(int fd) {
-	JiveEvent event;
 	struct input_event ev[64];
 	size_t rd;
 	int i;
@@ -131,10 +216,61 @@ static int handle_ir_events(int fd) {
 
 	for (i = 0; i <= rd / sizeof(struct input_event); i++) {    
 		if (ev[i].type == EV_MSC) {
-			event.type = (JiveEventType) JIVE_EVENT_IR_PRESS;
-			event.u.ir.code = ev[i].value;
-			event.ticks = TIMEVAL_TO_TICKS(ev[i].time);
-			jive_queue_event(&event);
+            bool repeatCodeSent = false;
+            		    
+		    ir_received_this_loop = true;
+            //TIMEVAL_TO_TICKS doesn't not really return ticks since these ev times are jiffies, but we won't be comparing against real ticks.
+            Uint32 input_time = TIMEVAL_TO_TICKS(ev[i].time);
+            Uint32 ir_code = ev[i].value;
+            
+            if (ir_code == IR_REPEAT_CODE) {
+                if (ir_state == IR_STATE_NONE) {
+                    //ignore, since we have no way to know what key was sent
+                    continue;
+                } else {
+                    ir_code = ir_last_code;   
+                    repeatCodeSent = true;
+                }
+            }
+
+            //fprintf(stderr,"ir code: %x %d %d\n", ir_code, input_time, SDL_GetTicks());
+            
+            //did ir code change, if so complete the old code
+            if (ir_state != IR_STATE_NONE && ir_code != ir_last_code) {
+                //fprintf(stderr,"******************************UP triggered by code switch\n");
+                ir_handle_up();
+            }
+
+            switch (ir_state) {
+                case IR_STATE_NONE:
+                    ir_handle_down(ir_code, input_time);
+                    break;
+
+                case IR_STATE_DOWN:
+                case IR_STATE_HOLD_SENT: 
+                    //pump's up check might not have kicked in yet, so we need the check for a quick second press
+                    if (!repeatCodeSent && input_time >= ir_last_input_millis + IR_KEYUP_TIME) {
+                        //quick second press of same key occurred: complete the first, start the second.
+                        // though if repeat code is sent, we always know that it is not a quick 
+                        
+                        //fprintf(stderr,"******************************UP triggered by quick second press\n");
+                        ir_handle_up();
+                        ir_handle_down(ir_code, input_time);
+                        break;
+                    }
+                    
+                    queue_ir_event(input_time, ir_code, (JiveEventType) JIVE_EVENT_IR_REPEAT);
+
+                    if (ir_state == IR_STATE_DOWN && input_time >= ir_down_millis + IR_HOLD_TIMEOUT) {
+                        ir_state = IR_STATE_HOLD_SENT;
+                        queue_ir_event(input_time, ir_code, (JiveEventType) JIVE_EVENT_IR_HOLD);
+                    }
+                    break;
+
+            }
+
+            ir_last_input_millis = input_time;
+            ir_last_code = ir_code;
 		}
 		// ignore EV_SYN
 	}
@@ -191,6 +327,8 @@ static int event_pump(lua_State *L) {
 	fd_set fds;
 	struct timeval timeout;
 
+    Uint32 now;
+    
 	FD_ZERO(&fds);
 	memset(&timeout, 0, sizeof(timeout));
 
@@ -210,10 +348,19 @@ static int event_pump(lua_State *L) {
 		handle_clearpad_events(clearpad_event_fd);
 	}
 
+    now = bsp_get_realtime_millis();
+
+    ir_received_this_loop = false;
 	if (ir_event_fd != -1 && FD_ISSET(ir_event_fd, &fds)) {
 		handle_ir_events(ir_event_fd);
 	}
-
+	
+	// Now that we've handled the ir input, determine if ir input has stopped
+    if (!ir_received_this_loop && ir_last_input_millis && (now >= IR_KEYUP_TIME + ir_last_input_millis)) {
+        //fprintf(stderr,"******************************UP triggered by pump check\n");
+        ir_handle_up();
+    }
+    
 	return 0;
 }
 

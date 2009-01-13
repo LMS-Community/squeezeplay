@@ -264,7 +264,10 @@ int jiveL_event_get_ircode(lua_State *L) {
 	}
 
 	switch (event->type) {
+	case JIVE_EVENT_IR_UP:
+	case JIVE_EVENT_IR_DOWN:
 	case JIVE_EVENT_IR_PRESS:
+	case JIVE_EVENT_IR_REPEAT:
 	case JIVE_EVENT_IR_HOLD:
 		lua_pushinteger(L, event->u.ir.code);
 		return 1;
@@ -379,11 +382,20 @@ int jiveL_event_tostring(lua_State* L) {
 		lua_pushfstring(L, "SWITCH code=%d,value=%d", event->u.sw.code, event->u.sw.value);
 		break;
 
+	case JIVE_EVENT_IR_DOWN:
+		lua_pushfstring(L, "IR_DOWN code=%p", event->u.ir.code);
+		break;
+	case JIVE_EVENT_IR_UP:
+		lua_pushfstring(L, "IR_UP code=%p", event->u.ir.code);
+		break;
+	case JIVE_EVENT_IR_REPEAT:
+		lua_pushfstring(L, "IR_REPEAT code=%p", event->u.ir.code);
+		break;
 	case JIVE_EVENT_IR_PRESS:
-		lua_pushfstring(L, "IR_PRESS code=%08x", event->u.ir.code);
+		lua_pushfstring(L, "IR_PRESS code=%p", event->u.ir.code);
 		break;
 	case JIVE_EVENT_IR_HOLD:
-		lua_pushfstring(L, "IR_HOLD code=%08x", event->u.ir.code);
+		lua_pushfstring(L, "IR_HOLD code=%p", event->u.ir.code);
 		break;
     
 	case JIVE_EVENT_WINDOW_PUSH:

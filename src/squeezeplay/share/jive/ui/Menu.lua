@@ -47,6 +47,7 @@ local Event                = require("jive.ui.Event")
 local Widget               = require("jive.ui.Widget")
 local Scrollbar            = require("jive.ui.Scrollbar")
 local ScrollAccel          = require("jive.ui.ScrollAccel")
+local IRMenuAccel          = require("jive.ui.IRMenuAccel")
 local Timer                = require("jive.ui.Timer")
 
 local log                  = require("jive.utils.log").logger("ui")
@@ -57,6 +58,8 @@ local math                 = require("math")
 local EVENT_ALL            = jive.ui.EVENT_ALL
 local EVENT_ACTION         = jive.ui.EVENT_ACTION
 local EVENT_SCROLL         = jive.ui.EVENT_SCROLL
+local EVENT_IR_DOWN        = jive.ui.EVENT_IR_DOWN
+local EVENT_IR_REPEAT      = jive.ui.EVENT_IR_REPEAT
 local EVENT_KEY_PRESS      = jive.ui.EVENT_KEY_PRESS
 local EVENT_SHOW           = jive.ui.EVENT_SHOW
 local EVENT_HIDE           = jive.ui.EVENT_HIDE
@@ -140,6 +143,14 @@ local function _eventHandler(self, event)
 			return EVENT_CONSUME
 		end
 
+	elseif evtype == EVENT_IR_DOWN or evtype == EVENT_IR_REPEAT then
+	    if event:getIRCode() == 0x7689b04f or event:getIRCode() == 0x7689e01f then -- DOWN/UP - todo: make lookup table for codes
+            if self.locked == nil then
+                self:scrollBy(self.irAccel:event(event, self.topItem, self.selected or 1, self.numWidgets, self.listSize), true, evtype == EVENT_IR_DOWN)
+                return EVENT_CONSUME
+            end
+        end
+        
 	elseif evtype == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()
 
@@ -286,6 +297,8 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 	_assert(itemAvailable == nil or type(itemAvailable) == "function")
 
 	local obj = oo.rawnew(self, Widget(style))
+	obj.irAccel = IRMenuAccel(0x7689b04f, 0x7689e01f) -- UP/down - todo: make lookup table for codes
+	
 	obj.scroll = ScrollAccel(function(...)
 					 if itemAvailable then
 						 
@@ -538,7 +551,7 @@ Scroll the menu by I<scroll> items. If I<scroll> is negative the menu scrolls up
 
 =cut
 --]]
-function scrollBy(self, scroll, allowMultiple)
+function scrollBy(self, scroll, allowMultiple, isNewOperation)
 	_assert(type(scroll) == "number")
 
 	local selected = (self.selected or 1)
@@ -603,33 +616,48 @@ function scrollBy(self, scroll, allowMultiple)
 
 	selected = selected  + scroll
 
-	-- virtual barrier when scrolling off the ends of the list
-	if self.barrier and Framework:getTicks() > self.barrier + 1000 then
-		self.barrier = nil
-	end
-
-	if selected > self.listSize then
-		selected = self.listSize
-		if self.barrier == nil then
-			self.barrier = Framework:getTicks()
-		elseif Framework:getTicks() > self.barrier + 500 then
-			selected = _coerce(1, self.listSize)
-			self.barrier = nil
-		end
-
-	elseif selected < 1 then
-		selected = _coerce(1, self.listSize)
-		if self.barrier == nil then
-			self.barrier = Framework:getTicks()
-		elseif Framework:getTicks() > self.barrier + 500 then
-			selected = self.listSize
-			self.barrier = nil
-		end
-
-	else
-		self.barrier = nil
-	end
-
+    --for input sources such as ir remote, follow the "ir remote" list behavior seen on classic players
+    if isNewOperation == false then
+        if selected > self.listSize then
+            selected = self.listSize
+        elseif selected < 1 then
+            selected = _coerce(1, self.listSize)
+        end    
+    elseif isNewOperation == true then
+        if selected > self.listSize then
+            selected = _coerce(1, self.listSize)
+        elseif selected < 1 then
+                selected = self.listSize
+        end    
+           
+    else -- isNewOperation nil, so use breakthrough barrier
+        -- virtual barrier when scrolling off the ends of the list
+        if self.barrier and Framework:getTicks() > self.barrier + 1000 then
+            self.barrier = nil
+        end
+    
+        if selected > self.listSize then
+            selected = self.listSize
+            if self.barrier == nil then
+                self.barrier = Framework:getTicks()
+            elseif Framework:getTicks() > self.barrier + 500 then
+                selected = _coerce(1, self.listSize)
+                self.barrier = nil
+            end
+    
+        elseif selected < 1 then
+            selected = _coerce(1, self.listSize)
+            if self.barrier == nil then
+                self.barrier = Framework:getTicks()
+            elseif Framework:getTicks() > self.barrier + 500 then
+                selected = self.listSize
+                self.barrier = nil
+            end
+    
+        else
+            self.barrier = nil
+        end
+    end
 	
 
 	-- if selection has change, play click and redraw

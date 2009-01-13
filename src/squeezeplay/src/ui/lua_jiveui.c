@@ -2236,6 +2236,9 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"EVENT_SWITCH",JIVE_EVENT_SWITCH);
    tolua_constant(tolua_S,"EVENT_MOTION",JIVE_EVENT_MOTION);
    tolua_constant(tolua_S,"EVENT_IR_PRESS",JIVE_EVENT_IR_PRESS);
+   tolua_constant(tolua_S,"EVENT_IR_UP",JIVE_EVENT_IR_UP);
+   tolua_constant(tolua_S,"EVENT_IR_DOWN",JIVE_EVENT_IR_DOWN);
+   tolua_constant(tolua_S,"EVENT_IR_REPEAT",JIVE_EVENT_IR_REPEAT);
    tolua_constant(tolua_S,"EVENT_IR_HOLD",JIVE_EVENT_IR_HOLD);
    tolua_constant(tolua_S,"EVENT_IR_ALL",JIVE_EVENT_IR_ALL);
    tolua_constant(tolua_S,"EVENT_KEY_ALL",JIVE_EVENT_KEY_ALL);

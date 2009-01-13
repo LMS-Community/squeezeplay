@@ -66,6 +66,8 @@ local logheap       = require("jive.utils.log").logger("jive.heap")
 
 local EVENT_IR_ALL         = jive.ui.EVENT_IR_ALL
 local EVENT_IR_PRESS       = jive.ui.EVENT_IR_PRESS
+local EVENT_IR_DOWN        = jive.ui.EVENT_IR_DOWN
+local EVENT_IR_REPEAT      = jive.ui.EVENT_IR_REPEAT
 local EVENT_IR_HOLD        = jive.ui.EVENT_IR_HOLD
 local EVENT_KEY_ALL        = jive.ui.EVENT_KEY_ALL
 local ACTION               = jive.ui.ACTION
@@ -210,11 +212,13 @@ end
 
 local function _irHandler(event)
 	local irCode = event:getIRCode()
-      	local keyCode = irCodes[irCode]
-      	if (keyCode) then
-		if event:getType() == EVENT_IR_PRESS then
+    local keyCode = irCodes[irCode]
+    if (keyCode) then
+        log:debug("IR event: ", event:tostring())
+        --includes temp hack for up/down to allow Menu, etc to have direct IR event access 
+		if event:getType() == EVENT_IR_PRESS and (keyCode ~= KEY_UP and keyCode ~= KEY_DOWN) then
     			Framework:pushEvent(Event:new(EVENT_KEY_PRESS, keyCode))
-		else
+        elseif event:getType() == EVENT_IR_HOLD then
     			Framework:pushEvent(Event:new(EVENT_KEY_HOLD, keyCode))
 		end
 		return EVENT_CONSUME
