@@ -6,7 +6,7 @@
 #define RUNTIME_DEBUG 1
 
 #include "common.h"
-#include "jive.h"
+#include "ui/jive.h"
 
 #include <linux/input.h>
 #include <sys/time.h>
