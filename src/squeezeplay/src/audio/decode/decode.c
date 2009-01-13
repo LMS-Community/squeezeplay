@@ -64,14 +64,15 @@ static void *decoder_data;
 
 /* installed decoders */
 static struct decode_module *all_decoders[] = {
-	&decode_tones,
-	&decode_pcm,
-	&decode_flac,
-	&decode_mad,
-	&decode_vorbis,
+	/* in order of perference */
 #ifdef _WIN32
 	&decode_wma_win,
 #endif
+	&decode_vorbis,
+	&decode_flac,
+	&decode_pcm,
+	&decode_mad,
+	&decode_tones,
 };
 
 
@@ -645,6 +646,39 @@ static int decode_audio_gain(lua_State *L) {
 }
 
 
+static int decode_init_audio(lua_State *L) {
+	size_t i;
+
+	/* stack is:
+	 * 1: decode
+	 * 2: slimproto
+	 */
+
+	/* register codecs */
+	for (i=0; i<(sizeof(all_decoders)/sizeof(struct decode_module *)); i++) {
+		lua_getfield(L, 2, "capability");
+		lua_pushvalue(L, 2);
+		lua_pushstring(L, all_decoders[i]->name);
+		lua_call(L, 2, 0);
+	}
+
+	/* max sample rate */
+	if (decode_audio) {
+		unsigned int rate_max;
+
+		decode_audio->info(&rate_max);
+
+		lua_getfield(L, 2, "capability");
+		lua_pushvalue(L, 2);
+		lua_pushstring(L, "MaxSampleRate");
+		lua_pushinteger(L, rate_max);
+		lua_call(L, 3, 0);
+	}
+
+	return 0;
+}
+
+
 static int decode_audio_open(lua_State *L) {
 	/* initialise audio output */
 #ifdef HAVE_LIBASOUND
@@ -683,6 +717,7 @@ static int decode_audio_open(lua_State *L) {
 
 static const struct luaL_Reg decode_f[] = {
 	{ "open", decode_audio_open },
+	{ "initAudio", decode_init_audio },
 	{ "resumeDecoder", decode_resume_decoder },
 	{ "resumeAudio", decode_resume_audio },
 	{ "pauseAudio", decode_pause_audio },

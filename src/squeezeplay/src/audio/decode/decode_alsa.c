@@ -31,6 +31,7 @@ struct decode_alsa {
 	u32_t flags;
 	unsigned int buffer_time;
 	unsigned int period_count;
+	unsigned int rate_max;
 
 	/* alsa state */
 	snd_pcm_t *pcm;
@@ -248,6 +249,18 @@ static int pcm_open(struct decode_alsa *state) {
 		return err;
 	}
 
+	/* Find maximum supported hardware rate */
+	if ((err = snd_pcm_hw_params_set_rate_resample(state->pcm, state->hw_params, 0)) < 0) {
+		DEBUG_ERROR("Resampling setup failed: %s\n", snd_strerror(err));
+		return err;
+	}
+
+	if ((err = snd_pcm_hw_params_get_rate_max(state->hw_params, &val, &dir)) < 0) {
+		DEBUG_ERROR("hwparam rate max error: %s", snd_strerror(err));
+		return err;
+	}
+	state->rate_max = val;
+
 	/* set hardware resampling */
 	if ((err = snd_pcm_hw_params_set_rate_resample(state->pcm, state->hw_params, 1)) < 0) {
 		DEBUG_ERROR("Resampling setup failed: %s\n", snd_strerror(err));
@@ -326,6 +339,7 @@ static int pcm_test(const char *name) {
 	if ((err = pcm_open(&tmp_state)) < 0) {
 		return err;
 	}
+
 	pcm_close(&tmp_state);
 
 	return 0;
@@ -604,6 +618,11 @@ static void decode_alsa_gain(s32_t left_gain, s32_t right_gain) {
 }
 
 
+static void decode_alsa_info(unsigned int *rate_max) {
+	*rate_max = playback_state->rate_max;
+}
+
+
 static int decode_alsa_init(lua_State *L) {
 	int err;
 	const char *playback_device;
@@ -679,6 +698,7 @@ struct decode_audio decode_alsa = {
 	decode_alsa_stop,
 	decode_alsa_delay,
 	decode_alsa_gain,
+	decode_alsa_info,
 };
 
 #endif // HAVE_LIBASOUND

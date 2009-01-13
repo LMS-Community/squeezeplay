@@ -6,7 +6,7 @@ local oo                     = require("loop.base")
 
 local string                 = require("string")
 
-local hasDecode, Decode      = pcall(require, "squeezeplay.decode")
+local hasDecode, decode      = pcall(require, "squeezeplay.decode")
 local hasSprivate, spprivate = pcall(require, "spprivate")
 local Stream                 = require("squeezeplay.stream")
 local SlimProto              = require("jive.net.SlimProto")
@@ -49,7 +49,7 @@ function __init(self, jnt, slimproto)
 	obj.slimproto = slimproto
 
 	obj.slimproto:statusPacketCallback(function(_, event, serverTimestamp)
-		local status = Decode:status()
+		local status = decode:status()
 
 		status.opcode = "STAT"
 		status.event = event
@@ -82,8 +82,9 @@ function __init(self, jnt, slimproto)
 	obj.timer:start()
 
 	if hasSprivate then
-		spprivate.initAudio(slimproto)
+		spprivate:initAudio(slimproto)
 	end
+	decode:initAudio(slimproto)
 
 	self.threshold = 0
 	self.tracksStarted = 0
@@ -101,7 +102,7 @@ end
 
 
 function free(self)
-	Decode:stop()
+	decode:stop()
 	self.timer:stop()
 end
 
@@ -117,7 +118,7 @@ end
 
 
 function _timerCallback(self)
-	local status = Decode:status()
+	local status = decode:status()
 
 	-- cpu power saving
 	local outputFullness = status.outputFull / status.outputSize * 100
@@ -167,7 +168,7 @@ function _timerCallback(self)
 			self.sentDecoderUnderrunEvent = true
 			self.sentDecoderFullEvent = false
 
-			Decode:songEnded()
+			decode:songEnded()
 		end
 	else
 		self.sentDecoderUnderrunEvent = false
@@ -191,7 +192,7 @@ function _timerCallback(self)
 			self.sentDecoderUnderrunEvent then
 
 			log:info("status AUDIO UNDERRUN")
-			Decode:stop() -- XXX need to let last buffer play out before stop
+			decode:stop() -- XXX need to let last buffer play out before stop
 			self:sendStatus(status, "STMu")
 
 			self.sentAudioUnderrunEvent = true
@@ -200,7 +201,7 @@ function _timerCallback(self)
 			self.stream then
 
 			log:info("status OUTPUT UNDERRUN")
-			Decode:pauseAudio(0) -- auto-pause to prevent glitches
+			decode:pauseAudio(0) -- auto-pause to prevent glitches
 			self:sendStatus(status, "STMo")
 
 			self.sentOutputUnderrunEvent = true
@@ -227,7 +228,7 @@ function _timerCallback(self)
 		status.decodeState & DECODE_RUNNING == 0 then
 
 		log:debug("resumeDecoder")
-		Decode:resumeDecoder()
+		decode:resumeDecoder()
 	end
 
 	-- Start the audio when enough encoded data is been received
@@ -242,7 +243,7 @@ function _timerCallback(self)
 
 		if self.autostart == '1' and not self.sentResume then
 			log:info("resume bytesReceivedL=", status.bytesReceivedL, " outputTime=", status.outputTime, " threshold=", self.threshold)
-			Decode:resumeAudio()
+			decode:resumeAudio()
 			self.sentResume = true
 			self.sentDecoderFullEvent = true -- fake it so we don't send STMl with pause
 
@@ -262,7 +263,7 @@ function _timerCallback(self)
 	end
 
 	-- stream metadata
-	local metadata = Decode:streamMetadata()
+	local metadata = decode:streamMetadata()
 	if metadata then
 		-- XXXX extend META with more data
 		self.slimproto:send({
@@ -374,7 +375,7 @@ function _strm(self, data)
 		-- over, flush out whatever's left.
 		self:_streamDisconnect(nil, true)
 
-		Decode:start(string.byte(data.mode),
+		decode:start(string.byte(data.mode),
 			     string.byte(data.transitionType),
 			     data.transitionPeriod,
 			     data.replayGain,
@@ -407,14 +408,14 @@ function _strm(self, data)
 	elseif data.command == 'q' then
 		-- quit
 		-- XXXX check against ip3k
-		Decode:stop()
+		decode:stop()
 		self:_streamDisconnect(nil, true)
 
 		self.tracksStarted = 0
 
 	elseif data.command == 'f' then
 		-- flush
-		Decode:flush()
+		decode:flush()
 		if self.stream then
 			self.stream:flush()
 		end
@@ -423,7 +424,7 @@ function _strm(self, data)
 		-- pause
 		local interval_ms = data.replayGain
 
-		Decode:pauseAudio(interval_ms)
+		decode:pauseAudio(interval_ms)
 		if interval_ms == 0 then
 			self.slimproto:sendStatus('STMp')
 		end
@@ -432,13 +433,13 @@ function _strm(self, data)
 		-- skip ahead
 		local interval_ms = data.replayGain
 
-		Decode:skipAhead(interval_ms)
+		decode:skipAhead(interval_ms)
 
 	elseif data.command == 'u' then
 		-- unpause
 		local interval_ms = data.replayGain
 
-		Decode:resumeAudio(interval_ms)
+		decode:resumeAudio(interval_ms)
 		self.slimproto:sendStatus('STMr')
 
 	elseif data.command == 't' then
@@ -472,12 +473,12 @@ end
 
 
 function _aude(self, data)
-	 Decode:audioEnable(data.enable)
+	 decode:audioEnable(data.enable)
 end
 
 
 function _audg(self, data)
-	 Decode:audioGain(data.gainL, data.gainR)
+	 decode:audioGain(data.gainL, data.gainR)
 end
 
 

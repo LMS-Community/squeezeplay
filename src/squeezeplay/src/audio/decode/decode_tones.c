@@ -239,6 +239,7 @@ static void decode_tones_stop(void *data) {
 
 struct decode_module decode_tones = {
 	't',
+	"tone",
 	decode_tones_start,
 	decode_tones_stop,
 	decode_tones_period,

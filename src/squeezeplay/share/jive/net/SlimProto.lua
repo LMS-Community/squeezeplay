@@ -151,6 +151,7 @@ local opcodes = {
 			packNumber(wlanList, 2),
 			packNumber(0, 8), -- XXXX bytes received
 			"EN", -- XXXX language
+			table.concat(self.capabilities, ",")
 		}
 	end,
 
@@ -314,15 +315,21 @@ function __init(self, jnt, heloPacket)
 	assert(heloPacket.revision)
 	assert(heloPacket.mac)
 	assert(heloPacket.uuid)
+	assert(heloPacket.model)
+	assert(heloPacket.modelName)
 
 	local obj = oo.rawnew(self, {})
 
 	-- connection state UNCONNECTED / CONNECTED
 	obj.state          = UNCONNECTED
+	obj.capabilities  = {}
 
 	-- helo packet sent on connection
 	obj.heloPacket     = heloPacket
 	obj.heloPacket.mac = string.lower(obj.heloPacket.mac)
+
+	obj:capability("model", obj.heloPacket.model)
+	obj:capability("modelName", obj.heloPacket.modelName)
 
 	obj.statusCallback = _defaultStatusCallback
 
@@ -491,6 +498,15 @@ function statusPacketCallback(self, callback)
 end
 
 
+-- Register capability
+function capability(self, key, value)
+	if value then
+		key = key .. "=" .. value
+	end
+	table.insert(self.capabilities, key)
+end
+
+
 -- Subscribe subscription function to a slimproto opocde.
 function subscribe(self, opcode, subscription)
 	if not self.subscriptions[opcode] then
@@ -535,7 +551,7 @@ function send(self, packet)
 		body
 	})
 
-	--_hexDump("STAT", data)
+	--_hexDump(packet.opcode, data)
 
 	local pump = function(NetworkThreadErr)
 		if (NetworkThreadErr) then

@@ -490,6 +490,7 @@ static void decode_mad_stop(void *data) {
 
 struct decode_module decode_mad = {
 	'm',
+	"mp3",
 	decode_mad_start,
 	decode_mad_stop,
 	decode_mad_period,

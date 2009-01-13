@@ -319,6 +319,12 @@ static void decode_portaudio_gain(s32_t left_gain, s32_t right_gain)
 }
 
 
+static void decode_portaudio_info(unsigned int *rate_max) {
+	// FIXME
+	*rate_max = 48000;
+}
+
+
 struct decode_audio decode_portaudio = {
 	decode_portaudio_init,
 	decode_portaudio_start,
@@ -327,6 +333,7 @@ struct decode_audio decode_portaudio = {
 	decode_portaudio_stop,
 	NULL,
 	decode_portaudio_gain,
+	decode_portaudio_info,
 };
 
 #endif // HAVE_PORTAUDIO
