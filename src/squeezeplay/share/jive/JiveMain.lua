@@ -213,14 +213,14 @@ end
 
 local function _irHandler(event)
 	local irCode = event:getIRCode()
-    local keyCode = irCodes[irCode]
-    if (keyCode) then
-        log:debug("IR event: ", event:tostring())
-        --includes temp hack for up/down to allow Menu, etc to have direct IR event access 
+	local keyCode = irCodes[irCode]
+	if (keyCode) then
+	log:debug("IR event: ", event:tostring())
+	--includes temp hack for up/down to allow Menu, etc to have direct IR event access 
 		if event:getType() == EVENT_IR_PRESS and (keyCode ~= KEY_UP and keyCode ~= KEY_DOWN) then
-    			Framework:pushEvent(Event:new(EVENT_KEY_PRESS, keyCode))
-        elseif event:getType() == EVENT_IR_HOLD then
-    			Framework:pushEvent(Event:new(EVENT_KEY_HOLD, keyCode))
+			Framework:pushEvent(Event:new(EVENT_KEY_PRESS, keyCode))
+		elseif event:getType() == EVENT_IR_HOLD then
+			Framework:pushEvent(Event:new(EVENT_KEY_HOLD, keyCode))
 		end
 		return EVENT_CONSUME
 	end

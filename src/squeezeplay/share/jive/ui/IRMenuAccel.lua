@@ -40,12 +40,12 @@ negativeCode indicate the ir code that will trigger negative acceleration
 function __init(self, positiveCode, negativeCode)
 	local obj = oo.rawnew(self, {})
 
-    obj.positiveCode = positiveCode
-    obj.negativeCode = negativeCode
+	obj.positiveCode = positiveCode
+	obj.negativeCode = negativeCode
 	obj.listIndex   = 1
-    obj.lastItemChangeT = 0
-    obj.itemChangePeriod = INITIAL_ITEM_CHANGE_PERIOD
-    obj.itemChangeCycles = 0
+	obj.lastItemChangeT = 0
+	obj.itemChangePeriod = INITIAL_ITEM_CHANGE_PERIOD
+	obj.itemChangeCycles = 0
 	return obj
 end
 
@@ -65,66 +65,66 @@ I<listSize> is the total number of items in the list.
 --]]
 function event(self, event, listTop, listIndex, listVisible, listSize)
 
-    local dir = nil
-    if event:getIRCode() == self.positiveCode then 
-        dir = 1
-    elseif event:getIRCode() == self.negativeCode then
-        dir = -1
-    else
-        log:error("Unexpected irCode: " , event:getIRCode())
-    end
-        
+	local dir = nil
+	if event:getIRCode() == self.positiveCode then 
+		dir = 1
+	elseif event:getIRCode() == self.negativeCode then
+		dir = -1
+	else
+		log:error("Unexpected irCode: " , event:getIRCode())
+	end
+		
 
 	-- update state
 	local now = event:getTicks()
 
 	self.listIndex   = listIndex or 1
 
-    --restart accelaration if new DOWN event seen
-    if event:getType() == EVENT_IR_DOWN then
+	--restart accelaration if new DOWN event seen
+	if event:getType() == EVENT_IR_DOWN then
 		self.itemChangeCycles = 1
 		self.itemChangePeriod = INITIAL_ITEM_CHANGE_PERIOD
 		self.lastItemChangeT = now
 		
 		--always move just one on a IR_DOWN
 		local scrollBy = 1
-	    log:debug("IR Acceleration params -- scrollBy: " , scrollBy, " dir: ", dir, " itemChangePeriod: ", self.itemChangePeriod, " itemChangeCycles: ", self.itemChangeCycles)
+		log:debug("IR Acceleration params -- scrollBy: " , scrollBy, " dir: ", dir, " itemChangePeriod: ", self.itemChangePeriod, " itemChangeCycles: ", self.itemChangeCycles)
 		return scrollBy * dir
 	end
 
 	-- apply the acceleration, purely time based, not "amount of input" based
-    -- Initial technique: increase the "item change rate" initially and move just by one, later increase scrollBy amount - not quite as sophisticated as SC accel
+	-- Initial technique: increase the "item change rate" initially and move just by one, later increase scrollBy amount - not quite as sophisticated as SC accel
 
 	if now > self.itemChangePeriod + self.lastItemChangeT then
-	    self.lastItemChangeT = now
+		self.lastItemChangeT = now
 		self.itemChangeCycles = self.itemChangeCycles + 1
 		
 		local scrollBy = 1
-        --early on, only move one item at a time, but increase item change period
-        if self.itemChangeCycles == 3 then
-            self.itemChangePeriod = self.itemChangePeriod / 2
-        elseif self.itemChangeCycles == 9 then
-            self.itemChangePeriod = self.itemChangePeriod / 2
-        elseif self.itemChangeCycles > 50 then
-            scrollBy = 32
-        elseif self.itemChangeCycles > 40 then
-            scrollBy = 16
-        elseif self.itemChangeCycles > 30 then
-            scrollBy = 8
-        elseif self.itemChangeCycles > 20 then
-            scrollBy = 4
-        elseif self.itemChangeCycles > 12 then
-            scrollBy = 2
-	    end
-	    
-	    --don't move move than half a list
-	    if scrollBy > listSize / 2 then
-	        scrollBy = listSize / 2
-	    end
+		--early on, only move one item at a time, but increase item change period
+		if self.itemChangeCycles == 3 then
+			self.itemChangePeriod = self.itemChangePeriod / 2
+		elseif self.itemChangeCycles == 9 then
+			self.itemChangePeriod = self.itemChangePeriod / 2
+		elseif self.itemChangeCycles > 50 then
+			scrollBy = 32
+		elseif self.itemChangeCycles > 40 then
+			scrollBy = 16
+		elseif self.itemChangeCycles > 30 then
+			scrollBy = 8
+		elseif self.itemChangeCycles > 20 then
+			scrollBy = 4
+		elseif self.itemChangeCycles > 12 then
+		scrollBy = 2
+		end
+		
+		--don't move move than half a list
+		if scrollBy > listSize / 2 then
+			scrollBy = listSize / 2
+		end
 
-        log:debug("IR Acceleration params -- scrollBy: " , scrollBy, " dir: ", dir, " itemChangePeriod: ", self.itemChangePeriod, " itemChangeCycles: ", self.itemChangeCycles)
-		            
-	    return scrollBy * dir
+		log:debug("IR Acceleration params -- scrollBy: " , scrollBy, " dir: ", dir, " itemChangePeriod: ", self.itemChangePeriod, " itemChangeCycles: ", self.itemChangeCycles)
+					
+		return scrollBy * dir
 	end
 	
 	return 0

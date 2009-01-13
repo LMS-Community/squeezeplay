@@ -144,13 +144,13 @@ local function _eventHandler(self, event)
 		end
 
 	elseif evtype == EVENT_IR_DOWN or evtype == EVENT_IR_REPEAT then
-	    if event:getIRCode() == 0x7689b04f or event:getIRCode() == 0x7689e01f then -- DOWN/UP - todo: make lookup table for codes
-            if self.locked == nil then
-                self:scrollBy(self.irAccel:event(event, self.topItem, self.selected or 1, self.numWidgets, self.listSize), true, evtype == EVENT_IR_DOWN)
-                return EVENT_CONSUME
-            end
-        end
-        
+		if event:getIRCode() == 0x7689b04f or event:getIRCode() == 0x7689e01f then -- DOWN/UP - todo: make lookup table for codes
+			if self.locked == nil then
+				self:scrollBy(self.irAccel:event(event, self.topItem, self.selected or 1, self.numWidgets, self.listSize), true, evtype == EVENT_IR_DOWN)
+				return EVENT_CONSUME
+			end
+		end
+
 	elseif evtype == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()
 
@@ -616,48 +616,48 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation)
 
 	selected = selected  + scroll
 
-    --for input sources such as ir remote, follow the "ir remote" list behavior seen on classic players
-    if isNewOperation == false then
-        if selected > self.listSize then
-            selected = self.listSize
-        elseif selected < 1 then
-            selected = _coerce(1, self.listSize)
-        end    
-    elseif isNewOperation == true then
-        if selected > self.listSize then
-            selected = _coerce(1, self.listSize)
-        elseif selected < 1 then
-                selected = self.listSize
-        end    
-           
-    else -- isNewOperation nil, so use breakthrough barrier
-        -- virtual barrier when scrolling off the ends of the list
-        if self.barrier and Framework:getTicks() > self.barrier + 1000 then
-            self.barrier = nil
-        end
-    
-        if selected > self.listSize then
-            selected = self.listSize
-            if self.barrier == nil then
-                self.barrier = Framework:getTicks()
-            elseif Framework:getTicks() > self.barrier + 500 then
-                selected = _coerce(1, self.listSize)
-                self.barrier = nil
-            end
-    
-        elseif selected < 1 then
-            selected = _coerce(1, self.listSize)
-            if self.barrier == nil then
-                self.barrier = Framework:getTicks()
-            elseif Framework:getTicks() > self.barrier + 500 then
-                selected = self.listSize
-                self.barrier = nil
-            end
-    
-        else
-            self.barrier = nil
-        end
-    end
+	--for input sources such as ir remote, follow the "ir remote" list behavior seen on classic players
+	if isNewOperation == false then
+		if selected > self.listSize then
+			selected = self.listSize
+		elseif selected < 1 then
+			selected = _coerce(1, self.listSize)
+		end	
+	elseif isNewOperation == true then
+		if selected > self.listSize then
+			selected = _coerce(1, self.listSize)
+		elseif selected < 1 then
+			selected = self.listSize
+		end	
+		   
+	else -- isNewOperation nil, so use breakthrough barrier
+		-- virtual barrier when scrolling off the ends of the list
+		if self.barrier and Framework:getTicks() > self.barrier + 1000 then
+			self.barrier = nil
+		end
+	
+		if selected > self.listSize then
+			selected = self.listSize
+			if self.barrier == nil then
+				self.barrier = Framework:getTicks()
+			elseif Framework:getTicks() > self.barrier + 500 then
+				selected = _coerce(1, self.listSize)
+				self.barrier = nil
+			end
+	
+		elseif selected < 1 then
+			selected = _coerce(1, self.listSize)
+			if self.barrier == nil then
+				self.barrier = Framework:getTicks()
+			elseif Framework:getTicks() > self.barrier + 500 then
+				selected = self.listSize
+				self.barrier = nil
+			end
+	
+		else
+			self.barrier = nil
+		end
+	end
 	
 
 	-- if selection has change, play click and redraw
