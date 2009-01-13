@@ -202,6 +202,17 @@ static int ir_handle_down(Uint32 code, Uint32 time) {
 	return 0;
 }
 
+
+/**
+
+IR input will cause the following events to be sent:
+EVENT_IR_DOWN - sent as soon as a new code has been sent
+EVENT_IR_REPEAT - sent out as fast as ir codes are received after IR_DOWN occurs
+EVENT_IR_PRESS - sent when no new codes are received (or a new key is pressed) prior to the IR_HOLD_TIMEOUT time
+EVENT_IR_HOLD - sent once when ir input occurs and the IR_HOLD_TIMEOUT time has been exceeded
+EVENT_IR_UP - sent when input stops (IR_KEYUP_TIME exceeded) or the ir code changes
+
+*/
 static int handle_ir_events(int fd) {
 	struct input_event ev[64];
 	size_t rd;
