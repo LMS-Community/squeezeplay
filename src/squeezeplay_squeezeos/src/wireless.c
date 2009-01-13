@@ -6,7 +6,6 @@
 
 
 #include "common.h"
-#include "jive.h"
 #include "wpa_ctrl.h"
 
 

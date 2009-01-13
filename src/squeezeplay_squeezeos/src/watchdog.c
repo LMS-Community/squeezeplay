@@ -5,7 +5,6 @@
 */
 
 #include "common.h"
-#include "jive.h"
 #include <linux/watchdog.h>
 
 
