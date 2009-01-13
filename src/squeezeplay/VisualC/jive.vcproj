@@ -351,10 +351,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\ui\jive_timer.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\ui\jive_utils.c"
 				>
 			</File>
