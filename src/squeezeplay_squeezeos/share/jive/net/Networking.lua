@@ -107,10 +107,10 @@ function __init(self, jnt, interface, name)
 	local obj = oo.rawnew(self, Socket(jnt, name))
 
 	obj.interface     = interface
-	obj.isWireless    = ( interfaceTable[interface] and interfaceTable[interface].isWireless ) 
+	obj.wireless      = ( interfaceTable[interface] and interfaceTable[interface].wireless ) 
 				or obj:isWireless(interface)
 	log:debug('Interface : ', obj.interface)
-	log:debug('isWireless: ', obj.isWireless)
+	log:debug('isWireless: ', obj.wireless)
 	obj.responseQueue = {}
 
 	obj:open()
@@ -235,7 +235,7 @@ function isWireless(self, interface)
 	end
 
 	-- look to see if we've cached this already
-	if interfaceTable[interface] and interfaceTable[interface].isWireless then
+	if interfaceTable[interface] and interfaceTable[interface].wireless then
 		return true
 	end
 
@@ -252,7 +252,7 @@ function isWireless(self, interface)
 
 		local doesWireless = string.match(line, "^(%w+)%s+")
 		if interface == doesWireless then
-			interfaceTable[interface] = { isWireless = true }
+			interfaceTable[interface] = { wireless = true }
 			f:close()
 			return true
 		end
@@ -658,7 +658,7 @@ function t_disconnectNetwork(self, interface)
 	assert(type(interface) == 'string')
 	assert(Task:running(), "Networking:disconnectNetwork must be called in a Task")
 
-	if isWireless(interface) then
+	if self:isWireless(interface) then
 		-- Force disconnect from existing network
 		local request = 'DISCONNECT'
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
@@ -1122,7 +1122,7 @@ function open(self)
 
 	local err
 
-	if self.isWireless then
+	if self.wireless then
 		log:debug('Open wireless socket')
 		self.t_sock, err = wireless:open(self.interface)
 		if err then
