@@ -52,8 +52,7 @@ extern bool_t decode_output_can_write(u32_t buffer_size, u32_t sample_rate);
 
 extern u32_t decode_output_percent_used(void);
 
-extern void decode_output_samples(sample_t *buffer, u32_t samples, int sample_rate,
-				   bool_t copyright_asserted);
+extern void decode_output_samples(sample_t *buffer, u32_t samples, int sample_rate);
 
 extern void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate);
 

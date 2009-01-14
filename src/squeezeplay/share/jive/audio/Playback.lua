@@ -320,6 +320,8 @@ function _streamWrite(self, networkErr)
 		return
 	end
 
+log:warn("######## ", self.header)
+
 	local status, err = self.stream:write(self, self.header)
 	self.jnt:t_removeWrite(self.stream)
 

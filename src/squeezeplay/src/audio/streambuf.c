@@ -46,6 +46,8 @@ static u64_t streambuf_bytes_received = 0;
 static streambuf_filter_t streambuf_filter;
 static streambuf_filter_t streambuf_next_filter;
 
+static bool_t streambuf_copyright;
+
 /* shoutcast metadata state */
 static u32_t icy_meta_interval;
 static s32_t icy_meta_remaining;
@@ -275,6 +277,16 @@ size_t streambuf_read(u8_t *buf, size_t min, size_t max, bool_t *streaming) {
 }
 
 
+bool_t streambuf_is_copyright() {
+	return streambuf_copyright;
+}
+
+
+void streambuf_set_copyright() {
+	streambuf_copyright = TRUE;
+}
+
+
 void streambuf_set_filter(streambuf_filter_t filter) {
 	fifo_lock(&streambuf_fifo);
 
@@ -462,6 +474,7 @@ static int stream_disconnectL(lua_State *L) {
 	}
 
 	streambuf_bytes_received = 0;
+	streambuf_copyright = FALSE;
 
 	return 0;
 }
