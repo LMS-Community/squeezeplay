@@ -543,7 +543,7 @@ end
 
 --[[
 
-=head2 jive.ui.Menu:scrollBy(scroll, allowMultiple)
+=head2 jive.ui.Menu:scrollBy(scroll, allowMultiple, allowMultiple, isNewOperation)
 
 Scroll the menu by I<scroll> items. If I<scroll> is negative the menu scrolls up, otherwise the menu scrolls down. By
  default, restricts to scrolling one item unless at the edge of the visible list. If I<allowMultiple> is non-nil,
