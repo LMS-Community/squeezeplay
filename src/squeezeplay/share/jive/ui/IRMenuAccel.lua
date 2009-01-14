@@ -20,7 +20,9 @@ local log                  = require("jive.utils.log").logger("ui")
 local EVENT_IR_DOWN        = jive.ui.EVENT_IR_DOWN
 local EVENT_IR_REPEAT      = jive.ui.EVENT_IR_REPEAT
 
+local DOUBLE_CLICK_HOLD_TIME = 400 -- ms
 local INITIAL_ITEM_CHANGE_PERIOD = 350 -- ms
+local CYCLES_BEFORE_ACCELERATION_STARTS = 8
 
 -- our class
 module(..., oo.class)
@@ -46,6 +48,7 @@ function __init(self, positiveCode, negativeCode)
 	obj.lastItemChangeT = 0
 	obj.itemChangePeriod = INITIAL_ITEM_CHANGE_PERIOD
 	obj.itemChangeCycles = 0
+	obj.lastDownT = nil
 	return obj
 end
 
@@ -82,40 +85,60 @@ function event(self, event, listTop, listIndex, listVisible, listSize)
 
 	--restart accelaration if new DOWN event seen
 	if event:getType() == EVENT_IR_DOWN then
-		self.itemChangeCycles = 1
-		self.itemChangePeriod = INITIAL_ITEM_CHANGE_PERIOD
+		if self.lastDownT and (now - self.lastDownT < DOUBLE_CLICK_HOLD_TIME) then
+			--make the acceleration kick in faster on a quick second down
+			self.lastDownT = nil
+			self.itemChangeCycles = CYCLES_BEFORE_ACCELERATION_STARTS - 1
+			self.itemChangePeriod = INITIAL_ITEM_CHANGE_PERIOD
+		else
+			self.lastDownT = now
+			self.itemChangeCycles = 1
+			self.itemChangePeriod = INITIAL_ITEM_CHANGE_PERIOD
+		end
+
 		self.lastItemChangeT = now
-		
+			
 		--always move just one on a IR_DOWN
 		local scrollBy = 1
 		log:debug("IR Acceleration params -- scrollBy: " , scrollBy, " dir: ", dir, " itemChangePeriod: ", self.itemChangePeriod, " itemChangeCycles: ", self.itemChangeCycles)
 		return scrollBy * dir
 	end
 
-	-- apply the acceleration, purely time based, not "amount of input" based
+	-- apply the acceleration, based on number of "itemChange" cycles, not based on "amount of input" 
 	-- Initial technique: increase the "item change rate" initially and move just by one, later increase scrollBy amount - not quite as sophisticated as SC accel
 
 	if now > self.itemChangePeriod + self.lastItemChangeT then
 		self.lastItemChangeT = now
-		self.itemChangeCycles = self.itemChangeCycles + 1
 		
 		local scrollBy = 1
 		--early on, only move one item at a time, but increase item change period
-		if self.itemChangeCycles == 3 then
-			self.itemChangePeriod = self.itemChangePeriod / 2
-		elseif self.itemChangeCycles == 9 then
-			self.itemChangePeriod = self.itemChangePeriod / 2
-		elseif self.itemChangeCycles > 50 then
-			scrollBy = 32
-		elseif self.itemChangeCycles > 40 then
+		 
+		--currently when you lift the ir button, the last repeat seem to be coming in later, so the menu doesn't 
+		 -- stop on the item seen on the screen, maybe due to the event loop lag, maybe not
+  		 -- It is then important to go slowly enough early on so that when the ir button is 
+		 -- lifted that the item stays on the current item. If a faster initial scroll occurs,
+		 -- then the ui usually stops on the item after the selected item.
+		 -- Ideally this can be optimized, to give the best of both worlds.
+		   
+		 -- todo: the acceleration algorithm could be listSize based (i.e. scroll faster soon on a longer list)
+		   
+		if self.itemChangeCycles == CYCLES_BEFORE_ACCELERATION_STARTS then
+			self.itemChangePeriod = self.itemChangePeriod / 4 
+		elseif self.itemChangeCycles > 80 then
+			scrollBy = 64
+		elseif self.itemChangeCycles > 60 then
 			scrollBy = 16
-		elseif self.itemChangeCycles > 30 then
+		elseif self.itemChangeCycles > 50 then
 			scrollBy = 8
-		elseif self.itemChangeCycles > 20 then
+		elseif self.itemChangeCycles > 40 then
 			scrollBy = 4
-		elseif self.itemChangeCycles > 12 then
-		scrollBy = 2
+		elseif self.itemChangeCycles > 30 then
+			scrollBy = 2
+		elseif self.itemChangeCycles > 16 then
+			self.itemChangePeriod = 0 --full speed
 		end
+
+		self.itemChangeCycles = self.itemChangeCycles + 1
 		
 		--don't move move than half a list
 		if scrollBy > listSize / 2 then

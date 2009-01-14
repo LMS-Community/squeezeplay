@@ -6,6 +6,8 @@ local string, tonumber, tostring, type, unpack = string, tonumber, tostring, typ
 local oo                = require("loop.simple")
 local Widget            = require("jive.ui.Widget")
 local ScrollAccel       = require("jive.ui.ScrollAccel")
+local IRMenuAccel       = require("jive.ui.IRMenuAccel")
+local Timer             = require("jive.ui.Timer")
 
 local math              = require("math")
 local string            = require("string")
@@ -17,6 +19,8 @@ local debug             = require("jive.utils.debug")
 local EVENT_ALL         = jive.ui.EVENT_ALL
 local EVENT_UNUSED      = jive.ui.EVENT_UNUSED
 
+local EVENT_IR_DOWN     = jive.ui.EVENT_IR_DOWN
+local EVENT_IR_REPEAT   = jive.ui.EVENT_IR_REPEAT
 local EVENT_KEY_PRESS   = jive.ui.EVENT_KEY_PRESS
 local EVENT_CHAR_PRESS   = jive.ui.EVENT_CHAR_PRESS
 local EVENT_SCROLL      = jive.ui.EVENT_SCROLL
@@ -39,6 +43,19 @@ local KEY_ADD           = jive.ui.KEY_ADD
 module(...)
 oo.class(_M, Widget)
 
+-- layout is from SC
+local numberLettersMixed = {
+	[0x76899867] = {' ','0'}, -- 0
+	[0x7689f00f] = {'.',',',"'",'?','!','@','-','1'}, -- 1
+	[0x768908f7] = {'a','b','c','A','B','C','2'}, 	   -- 2
+	[0x76898877] = {'d','e','f','D','E','F','3'}, 	   -- 3
+	[0x768948b7] = {'g','h','i','G','H','I','4'}, 	   -- 4
+	[0x7689c837] = {'j','k','l','J','K','L','5'}, 	   -- 5
+	[0x768928d7] = {'m','n','o','M','N','O','6'}, 	   -- 6
+	[0x7689a857] = {'p','q','r','s','P','Q','R','S','7'}, 	-- 7
+	[0x76896897] = {'t','u','v','T','U','V','8'}, 		-- 8
+	[0x7689e817] = {'w','x','y','z','W','X','Y','Z','9'}   -- 9
+}
 
 -- return valid characters at cursor position.
 function _getChars(self)
@@ -107,11 +124,26 @@ function setValue(self, value)
 end
 
 
-function _scroll(self, dir)
+--[[
+
+=head2 jive.ui.Textinput:_scroll(value)
+
+Param chars may optionally be set to use an alternative set of chars rather than from self:_getChars(), which
+ is useful for numberLetter scrolling, for instance.
+ 
+Param restart may optionally be set. If true, _scroll() will always use the first char found in in the list of characters to scroll.
+
+
+=cut
+--]]
+function _scroll(self, dir, chars, restart)
+	if dir == 0 then
+		return
+	end	
 	local cursor = self.cursor
 	local str = tostring(self.value)
 
-	local v = self:_getChars()
+	local v = chars and chars or self:_getChars()
 	if #v == 0 then
 		return
 	end
@@ -120,7 +152,7 @@ function _scroll(self, dir)
 	local s2 = string.sub(str, cursor, cursor)
 	local s3 = string.sub(str, cursor + 1)
 
-	if s2 == "" then
+	if not restart and s2 == "" then
 		-- new char, keep cursor near the last letter
 		if cursor > 1 then
 			s2 = string.sub(str, cursor - 1, cursor - 1)
@@ -132,8 +164,13 @@ function _scroll(self, dir)
 		end
 	end
 
-	-- find current character
-	local i = string.find(v, s2, 1, true)
+	-- find current character, unless overriden by optional restart param 
+	local i = nil
+	if restart then
+		i = 0
+	else
+		i = string.find(v, s2, 1, true)
+	end
 
 	-- move dir characters
 	i = i + dir
@@ -216,12 +253,65 @@ function _insert(self)
 	return true
 end
 
+function _getMatchingChars(self, charsTable)
+	local validChars = ""
+	for i,char in ipairs(charsTable) do
+		if string.find(self:_getChars(), char, 1, true) then
+			validChars = validChars .. char
+		end
+	end
+
+	return validChars
+end
+
+function _cursorAtEnd(self)
+	return self.cursor > #tostring(self.value)
+end
 
 function _eventHandler(self, event)
 	local type = event:getType()
-
-	if type == EVENT_SCROLL then
+	if type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT then
+		local irCode = event:getIRCode()
+		--first check for IR DOWN/UP
+		if event:getIRCode() == 0x7689b04f or event:getIRCode() == 0x7689e01f then -- DOWN/UP - todo: make lookup table for codes
+			self.numberLetterTimer:stop()
+			if self.locked == nil then
+				local chars = self:_getChars()
+				local idx = string.find(chars, string.sub(tostring(self.value), self.cursor, self.cursor), 1, true)			
+				local initialIndex = 
+				_scroll(self, self.irAccel:event(event, idx, idx, 1, #chars))
+				return EVENT_CONSUME
+			end
+		end 
+		
+		if type == EVENT_IR_DOWN then
+			local timerWasRunning = self.numberLetterTimer:isRunning()
+			self.numberLetterTimer:stop()
+		
+			local numberLetters = numberLettersMixed[irCode]
+			if numberLetters then
+				if timerWasRunning and self.lastNumberLetterIrCode and irCode != self.lastNumberLetterIrCode then
+					_moveCursor(self, 1)
+					self:reDraw()
+					
+					_scroll(self, 1, _getMatchingChars(self, numberLetters), true)
+				else
+					local restartNumberLetters = not timerWasRunning or self:_cursorAtEnd()
+					_scroll(self, 1, _getMatchingChars(self, numberLetters), restartNumberLetters)
+				end
+				
+				self.lastNumberLetterIrCode = irCode
+				
+				self.numberLetterTimer:restart()
+							
+				return EVENT_CONSUME
+				
+			end
+		end
+		
+	elseif type == EVENT_SCROLL then
 		-- XXX optimize by caching v and i in _scroll?
+		self.numberLetterTimer:stop()
 		local v = self:_getChars()
 		local idx = string.find(v, string.sub(tostring(self.value), self.cursor, self.cursor), 1, true)
 
@@ -229,6 +319,7 @@ function _eventHandler(self, event)
 		return EVENT_CONSUME
 
 	elseif type == EVENT_CHAR_PRESS then
+		self.numberLetterTimer:stop()
 		
 		--assuming ascii level values for now
 		local keyboardEntry = string.char(event:getUnicode())
@@ -264,9 +355,11 @@ function _eventHandler(self, event)
 		return EVENT_CONSUME
 		
 	elseif type == EVENT_WINDOW_RESIZE then
+		self.numberLetterTimer:stop()
 		_moveCursor(self, 0)
 
 	elseif type == EVENT_KEY_PRESS then
+		self.numberLetterTimer:stop()
 		local keycode = event:getKeycode()
 
 		if keycode == KEY_UP then
@@ -385,8 +478,19 @@ function __init(self, style, value, closure, allowedChars)
 	obj.allowedChars = allowedChars or
 		_globalStrings:str("ALLOWEDCHARS_WITHCAPS")
 	obj.scroll = ScrollAccel()
-
-	obj:addListener(EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE,
+	obj.irAccel = IRMenuAccel(0x7689b04f, 0x7689e01f) -- UP/down - todo: make lookup table for codes
+	obj.lastNumberLetterIrCode = nil
+	obj.numberLetterTimer = Timer(1000,     
+					function() 
+						obj.lastNumberLetterIrCode = nil
+						obj:_moveCursor(1) 
+						obj:reDraw()
+						
+						obj.numberLetterTimer:stop() -- seems to be a bug - should not need this for "once" timer but isRunning() returns false without it
+					end, 
+					true)
+	
+	obj:addListener(EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE | EVENT_IR_DOWN | EVENT_IR_REPEAT,
 			function(event)
 				return _eventHandler(obj, event)
 			end)
