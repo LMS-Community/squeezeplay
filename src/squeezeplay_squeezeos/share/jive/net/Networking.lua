@@ -789,13 +789,6 @@ function t_ifUp(self, interface, ssid)
 	end
 	--]]
 
-	-- set auto lines for this interface in /etc/network/interface so it comes up on next boot
-	if ssid then
-		self:_editAutoInterfaces(ssid)
-	else
-		self:_editAutoInterfaces(interface)
-	end
-
 end
 
 --[[
@@ -831,37 +824,51 @@ end
 function _editNetworkInterfacesBlock( self, fo, iface_name, method, ...)
 	if method then
 		fo:write("iface " .. iface_name .. " inet " .. method .. "\n")
+		log:debug("WRITING: ", "iface ", iface_name, " inet ", method)
 		for _,v in ipairs{...} do
 			fo:write("\t" .. v .. "\n")
+			log:debug("WRITING:\t", v)
 		end
 	end
 end
 
-function _editAutoInterfaces(self, enabledInterface)
+function _editAutoInterfaces(self, interface, ssid)
+
+	-- for the `auto interface[=<ssid>]` line
+	local enabledInterface = interface
+	-- for the `iface <interface|ssid> inet ...` line
+	local iface_name = interface
+
+	if ssid then
+		enabledInterface = interface .. "=" .. ssid
+		iface_name = ssid
+	end
+
+	log:debug('EDITING THE AUTO LINES IN /etc/network/interfaces, enabledInterface is: ', enabledInterface)
 
 	local fi = assert(io.open("/etc/network/interfaces", "r+"))
 	local fo = assert(io.open("/etc/network/interfaces.tmp", "w"))
 	local autoSet = false
 	for line in fi:lines() do
 		if string.match(line, "^mapping%s") or string.match(line, "^auto%s") then
-			-- if the interface is to be enabled, it should be set to auto 
+			-- if the interface is to be enabled, it should continue to be set to auto 
 			if (string.match(line, enabledInterface)) then
+				log:debug('WRITING: ', line)
 				fo:write(line .. "\n")
 				autoSet = true
 			else
 				log:debug('This interface is not the enabled interface, so do not configure it to come up on boot')
 			end
 		elseif string.match(line, "^iface%s") then
-			if not autoSet and string.match(line, enabledInterface) then
-				if self:isWireless(enabledInterface) then
-					fo:write("auto " .. enabledInterface .. "=" .. self.ssid .. "\n")
-				else
-					fo:write("auto " .. enabledInterface .. "\n")
-				end
+			if not autoSet and string.match(line, iface_name) then
+				log:debug('WRITING: auto ' .. enabledInterface)
+				fo:write("auto " .. enabledInterface .. "\n")
 				autoSet = true
 			end
+			log:debug('WRITING: ', line)
 			fo:write(line .. "\n")
 		else
+			log:debug('WRITING: ', line)
 			fo:write(line .. "\n")
 		end
 	end
@@ -870,6 +877,9 @@ function _editAutoInterfaces(self, enabledInterface)
 	fo:close()
 
 	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
+	-- FIXME: workaround until filesystem write issue resolved
+	os.execute("sync")
+
 end
 
 function _editNetworkInterfaces( self, interface, ssid, method, ...)
@@ -879,7 +889,7 @@ function _editNetworkInterfaces( self, interface, ssid, method, ...)
 	ssid = string.gsub(ssid, "[ \t]", "_")
 ---	log:info("munged ssid=", ssid)
 
-	log:debug('interface: ', interface, ', ssid: ', ssid , ' method: ', method)
+	log:debug('Writing /etc/network/interfaces for interface: ', interface, ', ssid: ', ssid , ' method: ', method)
 
 	local fi = assert(io.open("/etc/network/interfaces", "r+"))
 	local fo = assert(io.open("/etc/network/interfaces.tmp", "w"))
@@ -911,6 +921,7 @@ function _editNetworkInterfaces( self, interface, ssid, method, ...)
 		end
 
 		if network ~= interface then
+			log:debug('WRITING: ', line)
 			fo:write(line .. "\n")
 		else
 			network_block_next = 1
@@ -926,7 +937,10 @@ function _editNetworkInterfaces( self, interface, ssid, method, ...)
 
 	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
 
-	self:_editAutoInterfaces(interface)
+	-- FIXME: workaround until filesystem write issue resolved
+	os.execute("sync")
+
+	self:_editAutoInterfaces(interface, ssid)
 
 end
 
