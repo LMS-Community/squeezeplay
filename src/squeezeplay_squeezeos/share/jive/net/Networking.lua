@@ -706,17 +706,20 @@ function t_selectNetwork(self, ssid)
 
 	local request = 'SELECT_NETWORK ' .. id
 	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+	log:debug('##### wpa_cli select_network ', id , ' complete')
 
 	-- Allow association
 	request = 'REASSOCIATE'
 	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+	log:debug('##### wpa_cli reassociate complete')
 
 	-- Save configuration
 	request = 'SAVE_CONFIG'
 	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+	log:debug('##### wpa_cli save_config complete')
 
 	-- bring the inteface up
-	self:t_ifUp(self.interface)
+	self:t_ifUp(self.interface, ssid)
 
 end
 
@@ -750,25 +753,33 @@ function t_setStaticIP(self, ssid, ipAddress, ipSubnet, ipGateway, ipDNS)
 				    "dns " .. ipDNS,
 				    "up echo 'nameserver " .. ipDNS .. "' > /etc/resolv.conf"
 			    )
-	self:t_ifUp(interface)
+	self:t_ifUp(interface, ssid)
 end
 
 --[[
 
-=head2 jive.net.Networking:t_ifUp(interface)
+=head2 jive.net.Networking:t_ifUp(interface, ssid)
 
 brings I<interface> up, and all others (except loopback) down
 writes to /etc/network/interfaces and configures i<interface> 
 to be the only interface brought up at next boot time
 
+if the optional ssid argument is given, correct use of ifup I<interface>=I<ssid> is used
+
 =cut
 --]]
 
-function t_ifUp(self, interface)
+function t_ifUp(self, interface, ssid)
+
+	local iface_name = interface
+	if ssid then
+		iface_name = interface .. "=" .. ssid
+	end
 
 	-- bring interface up
-	self:_toggleInterface(interface, 'up')
+	self:_toggleInterface(iface_name, 'up')
 
+	--[[
 	-- for now at least, bring down all other interfaces
 	for otherInterface, _ in pairs(interfaceTable) do
 		if otherInterface ~= 'lo' and otherInterface ~= interface then
@@ -776,8 +787,14 @@ function t_ifUp(self, interface)
 			self:t_ifDown(otherInterface)
 		end
 	end
+	--]]
+
 	-- set auto lines for this interface in /etc/network/interface so it comes up on next boot
-	self:_editAutoInterfaces(interface)
+	if ssid then
+		self:_editAutoInterfaces(ssid)
+	else
+		self:_editAutoInterfaces(interface)
+	end
 
 end
 
@@ -804,6 +821,7 @@ function _toggleInterface(self, interface, direction)
 				log:error("if command failed: ", err)
 				return false
 			end
+			-- FIXME: if command was ifup and command succeeded, bring down other interfaces
 			if chunk ~= nil then
 			end
                         return 1
@@ -835,7 +853,11 @@ function _editAutoInterfaces(self, enabledInterface)
 			end
 		elseif string.match(line, "^iface%s") then
 			if not autoSet and string.match(line, enabledInterface) then
-				fo:write("auto " .. enabledInterface .. "\n")
+				if self:isWireless(enabledInterface) then
+					fo:write("auto " .. enabledInterface .. "=" .. self.ssid .. "\n")
+				else
+					fo:write("auto " .. enabledInterface .. "\n")
+				end
 				autoSet = true
 			end
 			fo:write(line .. "\n")
@@ -862,7 +884,13 @@ function _editNetworkInterfaces( self, interface, ssid, method, ...)
 	local fi = assert(io.open("/etc/network/interfaces", "r+"))
 	local fo = assert(io.open("/etc/network/interfaces.tmp", "w"))
 
-	local iface_name = ""
+	local iface_name
+
+	if ssid then
+		iface_name = ssid
+	else
+		iface_name = interface
+	end
 
 	local network = ""
 	local network_block_next = 0
@@ -872,13 +900,13 @@ function _editNetworkInterfaces( self, interface, ssid, method, ...)
 			network = ""
 			if network_block_next == 1 then
 				network_block_next = 2
-				self:_editNetworkInterfacesBlock( fo, interface, method, ...)
+				self:_editNetworkInterfacesBlock( fo, iface_name, method, ...)
 			end
 		elseif string.match(line, "^iface%s") then
 			network = string.match(line, "^iface%s([^%s]+)%s")
 			if network_block_next == 1 then
 				network_block_next = 2
-				self:_editNetworkInterfacesBlock( fo, interface, method, ...)
+				self:_editNetworkInterfacesBlock( fo, iface_name, method, ...)
 			end
 		end
 
@@ -890,13 +918,16 @@ function _editNetworkInterfaces( self, interface, ssid, method, ...)
 	end
 
 	if network_block_next != 2 then
-		self:_editNetworkInterfacesBlock( fo, interface, method, ...)
+		self:_editNetworkInterfacesBlock( fo, iface_name, method, ...)
 	end
 
 	fi:close()
 	fo:close()
 
 	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
+
+	self:_editAutoInterfaces(interface)
+
 end
 
 --[[
