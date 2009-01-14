@@ -8,6 +8,11 @@ lua-lint:
 	@test \! -s badsyntax
 	@rm -f badsyntax
 
+jive-static-install:
+	mkdir -p $(JIVE_BUILD_DIR)
+	cd share; tar -pcf  - \
+		`find . \( -name "*.jpg" -o -name "*.gif" -o -name "*.png" -o -name "*.wav" -o -name "*.txt" -o -name "*.lua" \)` \
+		| tar -C $(JIVE_BUILD_DIR) -pxf -
 
 AM_CFLAGS = -Wall -Werror -D_GNU_SOURCE
 

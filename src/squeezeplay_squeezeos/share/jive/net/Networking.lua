@@ -66,17 +66,11 @@ local WIRELESS_SNR = {
 	25,
 }
 
--- FIXME check this region mapping is correct for Marvell and Atheros
+-- FIXME: reduce to two regions, and make sure XX is the correct code for all other regions
 local REGION_CODE_MAPPING = {
 	-- name, marvell code, atheros code
 	[ "US" ] = { 0x10, 4  }, -- ch 1-11
-	[ "CA" ] = { 0x20, 6  }, -- ch 1-11
-	[ "EU" ] = { 0x30, 14 }, -- ch 1-13
-	[ "FR" ] = { 0x30, 13 }, -- ch 1-13
-	[ "CH" ] = { 0x30, 23 }, -- ch 1-13
-	[ "TW" ] = { 0x30, 21 }, -- ch 1-13
-	[ "AU" ] = { 0x10, 7  }, -- ch 1-11
-	[ "JP" ] = { 0x41, 16 }, -- ch 1-13
+	[ "XX" ] = { 0x30, 14 }, -- ch 1-13
 }
 
 
