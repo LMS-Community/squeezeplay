@@ -245,7 +245,7 @@ function setupConnectWiredInterface(self, setupNext)
 end
 
 function setupConnectionType(self, setupNextWireless, setupNextWired)
-	log:warn('georgeSetupConnectionType')
+	log:warn('setupConnectionType')
 
 	local window = Window("window", self:string("NETWORK_CONNECTION_TYPE"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
@@ -272,7 +272,7 @@ function setupConnectionType(self, setupNextWireless, setupNextWired)
 				      weight = 2
 			      })
 	
-	local helpButton     = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:georgeSetupConnectionHelp() end )
+	local helpButton     = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:setupConnectionHelp() end )
 	window:addWidget(helpButton)
 	window:addWidget(connectionMenu)
 
