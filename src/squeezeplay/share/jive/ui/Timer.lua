@@ -180,6 +180,8 @@ function _runTimer(self, now)
 		-- call back may modify the timer so update it first
 		if not timer.once then
 			timer:_insertTimer(timer.expires + timer.interval)
+		else
+			timer.expires = nil
 		end
 
 		local status, err = pcall(timer.callback)

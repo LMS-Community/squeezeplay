@@ -129,7 +129,7 @@ static bool_t decode_pcm_callback(void *data) {
 	}
 
 	if (num_samples) {
-		decode_output_samples(self->write_buffer, self->stereo ? num_samples / 2 : num_samples, self->sample_rate, FALSE);
+		decode_output_samples(self->write_buffer, self->stereo ? num_samples / 2 : num_samples, self->sample_rate);
 	}
 
 	self->leftover = sz - (read_pos - self->read_buffer);

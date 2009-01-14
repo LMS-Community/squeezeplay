@@ -377,8 +377,7 @@ static void decode_mad_output(struct decode_mad *self) {
 			if (buf == buf_end) {
 				decode_output_samples(self->output_buffer,
 						      (buf - self->output_buffer) / 2,
-						      self->sample_rate,
-						      FALSE);
+						      self->sample_rate);
 
 				buf = self->output_buffer;
 			}
@@ -386,8 +385,7 @@ static void decode_mad_output(struct decode_mad *self) {
 
 		decode_output_samples(self->output_buffer,
 				      (buf - self->output_buffer) / 2,
-				      self->sample_rate,
-				      FALSE);
+				      self->sample_rate);
 	}
 
 	/* If we've come to the guard pointer, we're done */

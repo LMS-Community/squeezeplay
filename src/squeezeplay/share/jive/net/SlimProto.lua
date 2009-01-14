@@ -202,14 +202,6 @@ local opcodes = {
 		}
 	end,
 
-	META = function(self, data)
-		assert(data.metadata)
-
-		return  {
-			data.metadata
-		}
-	end,
-
 	BODY = function(self, data)
 		-- XXXX
 		log:warn("TODO")
@@ -536,14 +528,18 @@ function send(self, packet)
 	end
 
 	assert(packet.opcode)
-	assert(opcodes[packet.opcode], "Unknown opcode")
 	packet.jiffies = Framework:getTicks()
 
 	log:debug("send opcode=", packet.opcode)
 
 	-- encode packet
 	local fn = opcodes[packet.opcode]
-	local body = table.concat(fn(self, packet))
+	local body
+	if fn then
+		body = table.concat(fn(self, packet))
+	else
+		body = packet.data
+	end
 
 	local data = table.concat({
 		packet.opcode,
