@@ -262,14 +262,10 @@ function _timerCallback(self)
 		self:sendStatus(status, "STMt")
 	end
 
-	-- stream metadata
-	local metadata = decode:streamMetadata()
-	if metadata then
-		-- XXXX extend META with more data
-		self.slimproto:send({
-			opcode = "META",
-			metadata = metadata.metadata,
-		})
+	-- stream metadata or status codes
+	local packet = decode:dequeuePacket()
+	if packet then
+		self.slimproto:send(packet)
 	end
 end
 
@@ -323,6 +319,8 @@ function _streamWrite(self, networkErr)
 		self:_streamDisconnect(TCP_CLOSE_LOCAL_RST)
 		return
 	end
+
+log:warn("######## ", self.header)
 
 	local status, err = self.stream:write(self, self.header)
 	self.jnt:t_removeWrite(self.stream)

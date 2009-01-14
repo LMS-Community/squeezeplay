@@ -332,8 +332,7 @@ static void decode_transition_copy_bytes(sample_t *buffer, size_t nbytes) {
 }
 
 
-void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate,
-			   bool_t copyright_asserted) {
+void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 	size_t bytes_out;
 
 	/* Some decoders can pass no samples at the start of the track. Stop

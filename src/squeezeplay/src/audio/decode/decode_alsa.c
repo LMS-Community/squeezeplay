@@ -11,6 +11,7 @@
 #include "audio/fifo.h"
 #include "audio/fixed_math.h"
 #include "audio/mqueue.h"
+#include "audio/streambuf.h"
 #include "audio/decode/decode.h"
 #include "audio/decode/decode_priv.h"
 
@@ -33,10 +34,14 @@ struct decode_alsa {
 	unsigned int period_count;
 	unsigned int rate_max;
 
-	/* alsa state */
+	/* alsa pcm state */
 	snd_pcm_t *pcm;
 	snd_pcm_hw_params_t *hw_params;
 	snd_pcm_sframes_t period_size;
+
+	/* alsa control state */
+	snd_hctl_t *hctl;
+	snd_hctl_elem_t *iec958_elem;
 
 	/* playback state */
 	u32_t new_sample_rate;
@@ -61,6 +66,8 @@ static snd_output_t *output;
 static struct decode_alsa *playback_state;
 static struct decode_alsa *effects_state;
 
+
+static void decode_alsa_copyright(bool_t copyright);
 
 
 /*
@@ -183,8 +190,12 @@ static void playback_callback(struct decode_alsa *state,
 	}
 
 	reached_start_point = decode_check_start_point();
-	if (reached_start_point && current_sample_rate != state->pcm_sample_rate) {
-		state->new_sample_rate = current_sample_rate;
+	if (reached_start_point) {
+		if (current_sample_rate != state->pcm_sample_rate) {
+			state->new_sample_rate = current_sample_rate;
+		}
+
+		decode_alsa_copyright(streambuf_is_copyright());
 	}
 }
 
@@ -203,21 +214,26 @@ static void effects_callback(struct decode_alsa *state,
 static int pcm_close(struct decode_alsa *state) {
 	int err;
 
-	if (!state->pcm) {
-		return 0;
+	if (state->pcm) {
+		if ((err = snd_pcm_drain(state->pcm)) < 0) {
+			DEBUG_ERROR("snd_pcm_drain error: %s", snd_strerror(err));
+		}
+
+		if ((err = snd_pcm_close(state->pcm)) < 0) {
+			DEBUG_ERROR("snd_pcm_close error: %s", snd_strerror(err));
+		}
+
+		snd_pcm_hw_params_free(state->hw_params);
+
+		state->pcm = NULL;
 	}
 
-	if ((err = snd_pcm_drain(state->pcm)) < 0) {
-		DEBUG_ERROR("snd_pcm_drain error: %s", snd_strerror(err));
+	if (state->hctl) {
+		snd_hctl_close(state->hctl);
+		state->hctl = NULL;
+		state->iec958_elem = NULL;
 	}
 
-	if ((err = snd_pcm_close(state->pcm)) < 0) {
-		DEBUG_ERROR("snd_pcm_close error: %s", snd_strerror(err));
-	}
-
-	snd_pcm_hw_params_free(state->hw_params);
-
-	state->pcm = NULL;
 	return 0;
 }
 
@@ -226,6 +242,7 @@ static int pcm_open(struct decode_alsa *state) {
 	int err, dir;
 	unsigned int val;
 	snd_pcm_uframes_t size;
+	snd_ctl_elem_id_t *id;
 
 	/* Close existing pcm (if any) */
 	if (state->pcm) {
@@ -315,6 +332,29 @@ static int pcm_open(struct decode_alsa *state) {
 		return err;
 	}
 	state->period_size = size;
+
+	/* iec958 control */
+	if ((err = snd_hctl_open(&state->hctl, state->name, 0)) < 0) {
+		DEBUG_ERROR("snd_hctl_open failed: %s", snd_strerror(err));
+		goto skip_iec958;
+	}
+
+	if ((err = snd_hctl_load(state->hctl)) < 0) {
+		DEBUG_ERROR("snd_hctl_load failed: %s", snd_strerror(err));
+		goto skip_iec958;
+	}
+
+	/* dies with warning on GCC 4.2:
+	 * snd_ctl_elem_id_alloca(&id);
+	 */
+	id = (snd_ctl_elem_id_t *) alloca(snd_ctl_elem_id_sizeof());
+	memset(id, 0, snd_ctl_elem_id_sizeof());
+	snd_ctl_elem_id_set_interface(id, SND_CTL_ELEM_IFACE_MIXER);
+	snd_ctl_elem_id_set_name(id, "IEC958 Playback Default");
+
+	state->iec958_elem = snd_hctl_find_elem(state->hctl, id);
+
+ skip_iec958:
 
 #ifdef RUNTIME_DEBUG
 	snd_pcm_dump(state->pcm, output);
@@ -615,6 +655,51 @@ static void decode_alsa_stop(void) {
 static void decode_alsa_gain(s32_t left_gain, s32_t right_gain) {
 	playback_state->lgain = left_gain;
 	playback_state->rgain = right_gain;
+}
+
+
+static void decode_alsa_copyright(bool_t copyright) {
+	snd_ctl_elem_value_t *control;
+	snd_aes_iec958_t iec958;
+	int err;
+
+	DEBUG_TRACE("copyright %s asserted", (copyright)?"is":"not");
+
+	if (!playback_state->iec958_elem) {
+		/* not supported */
+		return;
+	}
+
+	/* dies with warning on GCC 4.2:
+	 * snd_ctl_elem_value_alloca(&control);
+	 */
+	control = (snd_ctl_elem_value_t *) alloca(snd_ctl_elem_value_sizeof());
+	memset(control, 0, snd_ctl_elem_value_sizeof());
+
+	if ((err = snd_hctl_elem_read(playback_state->iec958_elem, control)) < 0) {
+		DEBUG_ERROR("snd_hctl_elem_read error: %s", snd_strerror(err));
+		return;
+	}
+
+	snd_ctl_elem_value_get_iec958(control, &iec958);
+
+	/* 0 = copyright, 1 = not copyright */
+	if (copyright) {
+		iec958.status[0] &= ~(1<<2);
+	}
+	else {
+		iec958.status[0] |= (1<<2);
+	}
+
+	snd_ctl_elem_value_set_iec958(control, &iec958);
+
+	DEBUG_TRACE("iec958 status: %02x %02x %02x %02x\n",
+		    iec958.status[0], iec958.status[1], iec958.status[2], iec958.status[3]);
+
+	if ((err = snd_hctl_elem_write(playback_state->iec958_elem, control)) < 0) {
+		DEBUG_ERROR("snd_hctl_elem_write error: %s", snd_strerror(err));
+		return;
+	}
 }
 
 

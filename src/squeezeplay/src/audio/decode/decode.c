@@ -29,7 +29,6 @@ static SDL_Thread *decode_thread = NULL;
 u32_t current_decoder_state = 0;
 u32_t current_audio_state = 0;
 
-
 /* state variables for the current track */
 u32_t decode_num_tracks_started = 0;
 u32_t decode_elapsed_samples = 0;
@@ -50,7 +49,8 @@ static Uint32 decode_mqueue_buffer[DECODE_MQUEUE_SIZE / sizeof(Uint32)];
 
 
 /* meta data mqueue */
-struct decode_metadata *decode_metadata;
+static void *packet_data = NULL;
+static size_t packet_len = 0;
 
 
 /* audio instance */
@@ -310,51 +310,56 @@ static int decode_thread_execute(void *unused) {
 /*
  * stream metadata interface
  */
-void decode_queue_metadata(struct decode_metadata *metadata) {
+void decode_queue_metadata(enum metadata_type type, u8_t *metadata, size_t metadata_len) {
+	char *buf;
+
+	buf = malloc(metadata_len + 4);
+	strncpy(buf, "META", 4);
+	memcpy(buf + 4, metadata, metadata_len);
+
+	decode_queue_packet(buf, metadata_len + 4);
+	/* decode_queue_packet will free buf */
+}
+
+
+void decode_queue_packet(void *data, size_t len) {
 	fifo_lock(&decode_fifo);
 
-	if (decode_metadata) {
-		DEBUG_TRACE("Dropped metadata");
-		free(decode_metadata);
+	if (packet_data) {
+		/* if this happens often we need to implement a queue */
+		DEBUG_ERROR("dropped queued packet");
+		free(packet_data);
 	}
 
-	metadata->timestamp = SDL_GetTicks();
-	metadata->fullness = fifo_bytes_used(&decode_fifo);
-
-	decode_metadata = metadata;
+	packet_data = data;
+	packet_len = len;
 
 	fifo_unlock(&decode_fifo);
 }
 
 
-static int decode_stream_metadata(lua_State *L) {
+static int decode_dequeue_packet(lua_State *L) {
 	/*
 	 * 1: self
 	 */
 
 	fifo_lock(&decode_fifo);
 
-	if (!decode_metadata) {
+	if (!packet_data) {
 		fifo_unlock(&decode_fifo);
 		return 0;
 	}
 
 	lua_newtable(L);
 
-	lua_pushinteger(L, decode_metadata->type);
-	lua_setfield(L, 2, "type");
+	lua_pushlstring(L, (const char *)packet_data, 4);
+	lua_setfield(L, 2, "opcode");
 
-	lua_pushinteger(L, decode_metadata->timestamp);
-	lua_setfield(L, 2, "timestamp");
+	lua_pushlstring(L, (const char *)packet_data + 4, packet_len - 4);
+	lua_setfield(L, 2, "data");
 
-	lua_pushinteger(L, decode_metadata->fullness);
-	lua_setfield(L, 2, "fullness");
-
-	lua_pushlstring(L, (char *) &decode_metadata->data, decode_metadata->len);
-	lua_setfield(L, 2, "metadata");
-
-	free(decode_metadata);
-	decode_metadata = NULL;
+	free(packet_data);
+	packet_data = NULL;
 
 	fifo_unlock(&decode_fifo);
 
@@ -727,7 +732,7 @@ static const struct luaL_Reg decode_f[] = {
 	{ "start", decode_start },
 	{ "songEnded", decode_song_ended },
 	{ "status", decode_status },
-	{ "streamMetadata", decode_stream_metadata },
+	{ "dequeuePacket", decode_dequeue_packet },
 	{ "audioEnable", decode_audio_enable },
 	{ "audioGain", decode_audio_gain },
 	{ NULL, NULL }
