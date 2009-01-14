@@ -262,14 +262,10 @@ function _timerCallback(self)
 		self:sendStatus(status, "STMt")
 	end
 
-	-- stream metadata
-	local metadata = decode:streamMetadata()
-	if metadata then
-		-- XXXX extend META with more data
-		self.slimproto:send({
-			opcode = "META",
-			metadata = metadata.metadata,
-		})
+	-- stream metadata or status codes
+	local packet = decode:dequeuePacket()
+	if packet then
+		self.slimproto:send(packet)
 	end
 end
 

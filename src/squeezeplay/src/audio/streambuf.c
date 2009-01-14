@@ -325,7 +325,7 @@ ssize_t streambuf_icy_filter(u8_t *buf, size_t min, size_t max, bool_t *streamin
 		}
 		else {
 			/* we're reading the metadata */
-			struct decode_metadata *icy_buf;
+			u8_t *icy_buf;
 			size_t icy_len = -icy_meta_remaining;
 
 			if (avail < icy_len) {
@@ -333,20 +333,13 @@ ssize_t streambuf_icy_filter(u8_t *buf, size_t min, size_t max, bool_t *streamin
 				break;
 			}
 
-			icy_buf = malloc(sizeof(struct decode_metadata) + icy_len - 1);
-
-			icy_buf->type = SHOUTCAST;
-			icy_buf->len = icy_len;
-
-			r = streambuf_fast_read(&icy_buf->data, icy_len, icy_len, NULL);
+			icy_buf = alloca(icy_len);
+			r = streambuf_fast_read(icy_buf, icy_len, icy_len, NULL);
 			assert(r == icy_len);
+			assert( strstr( (char *)icy_buf, "StreamTitle" ) != NULL );
+			DEBUG_TRACE("got icy metadata: %s", (char *) icy_buf);
 
-			// XXXX queue metadata
-			assert( strstr( (char *)&icy_buf->data, "StreamTitle" ) != NULL );
-			DEBUG_TRACE("got icy metadata: %s", (char *) &icy_buf->data);
-
-			decode_queue_metadata(icy_buf);
-			/* decode will free icy_buf */
+			decode_queue_metadata(SHOUTCAST, icy_buf, icy_len);
 
 			icy_meta_remaining = icy_meta_interval;
 		}

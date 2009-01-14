@@ -68,23 +68,6 @@ extern void decode_output_set_track_gain(u32_t replay_gain);
 extern void decode_set_track_polarity_inversion(u8_t inversion);
 
 
-/* Stream metadata */
-
-struct decode_metadata {
-	enum {
-		SHOUTCAST = 0,
-		WMA_GUID = 1,
-	} type;
-
-	u32_t timestamp;
-	size_t fullness;
-
-	size_t len;
-	u8_t data;
-};
-
-extern void decode_queue_metadata(struct decode_metadata *metadata);
-
 /* Audio output api */
 struct decode_audio {
 	int (*init)(lua_State *L);

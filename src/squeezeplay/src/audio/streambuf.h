@@ -8,6 +8,20 @@
 /* streambuf filter, used to parse metadata */
 typedef ssize_t (*streambuf_filter_t)(u8_t *buf, size_t min, size_t max, bool_t *streaming);
 
+
+/* Stream metadata */
+
+enum metadata_type {
+	SHOUTCAST = 0,
+	WMA_GUID = 1,
+};
+
+extern void decode_queue_metadata(enum metadata_type type, u8_t *metadata, size_t metadata_len);
+
+extern void decode_queue_packet(void *data, size_t len);
+
+/* Stream buffer */
+
 extern size_t streambuf_get_size(void);
 
 extern size_t streambuf_get_freebytes(void);
@@ -31,20 +45,8 @@ extern size_t streambuf_fast_read(u8_t *buf, size_t min, size_t max, bool_t *str
 
 extern size_t streambuf_read(u8_t *buf, size_t min, size_t max, bool_t *streaming);
 
-extern int streambuf_openL(lua_State *L);
-
-extern int streambuf_closeL(lua_State *L);
-
-extern int streambuf_flushL(lua_State *L);
-
-extern int streambuf_getfdL(lua_State *L);
-
-extern void streambuf_feed(u8_t *buf, size_t size);
-
 extern ssize_t streambuf_feed_fd(int fd);
 
 extern void streambuf_set_filter(streambuf_filter_t filter);
-
-extern int streambuf_readL(lua_State *L);
 
 extern int luaopen_streambuf(lua_State *L);
