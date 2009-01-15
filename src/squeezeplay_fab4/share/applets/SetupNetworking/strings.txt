@@ -570,7 +570,7 @@ NETWORK_WIRELESS_PASSWORD
 NETWORK_WIRELESS_PASSWORD_HELP
 	EN	Enter your wireless password. (FAB4 SPECIFIC TEXT NEEDED)
 
-NETWORK_CONNECTING_TO
+NETWORK_CONNECTING_TO_SSID
 	DA	Etablerer forbindelse til\n%s
 	DE	Verbindung mit\n%s
 	EN	Connecting to\n%s
@@ -581,6 +581,9 @@ NETWORK_CONNECTING_TO
 	NL	Bezig verbinding te maken met\n%s
 	NO	Kopler til\n%s
 	SV	Ansluter till \n%s
+
+NETWORK_CONNECTING_TO_ETHERNET
+	EN	Connecting to\nEthernet
 
 NETWORK_CONNECTED_TO
 	DA	Afspilleren er tilsluttet\n%s
@@ -929,3 +932,6 @@ NETWORK_CONNECTION_TYPE_WIRED
 
 NETWORK_CONNECTION_HELP
 	EN	Help
+
+NETWORK_CONNECTION_HELP_BODY
+	EN	this is just a placeholder for a bunch of text that we may put in to describe the vagaries of network connections, including terms such as 'cat5', 'SSID', and 'distributed denial of service attack'. It could be this window presents menu options or the like, but for starters I'm just throwing a textarea in here. Press the back button in the upper left to go back.

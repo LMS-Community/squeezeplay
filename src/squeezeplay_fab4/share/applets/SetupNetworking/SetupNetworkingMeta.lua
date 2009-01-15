@@ -23,10 +23,9 @@ function registerApplet(meta)
 	jul.addCategory("applet.networking", jul.DEBUG)
 	
 	meta:registerService("setupRegionShow")
+	meta:registerService("setupConnectionType")
 	meta:registerService("setupScanShow")
 	meta:registerService("setupNetworksShow")
-	meta:registerService("setupConnectionType")
-	meta:registerService("setupConnectWiredInterface")
 
 	jiveMain:addItem(meta:menuItem('networkSettings', 'advancedSettings', "NETWORK", function(applet, ...) applet:settingsNetworksShow(...) end))
 	jiveMain:addItem(meta:menuItem('networkRegion', 'advancedSettings', "NETWORK_REGION", function(applet, ...) applet:settingsRegionShow(...) end))

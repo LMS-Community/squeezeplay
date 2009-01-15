@@ -70,7 +70,7 @@ end
 
 
 function setupRegionShow(self, setupNext)
-	local wlan = self.t_ctrl
+	local wlan = self.wlanIface
 
 	local window = Window("regionWindow", self:string("NETWORK_REGION"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
@@ -110,8 +110,9 @@ function setupRegionShow(self, setupNext)
 	return window
 end
 
+
 function settingsRegionShow(self)
-	local wlan = self.t_ctrl
+	local wlan = self.wlanIface
 
 	local window = Window("window", self:string("NETWORK_REGION"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
@@ -141,6 +142,66 @@ function settingsRegionShow(self)
 end
 
 
+function setupConnectionHelp(self)
+	local window = Window("window", self:string("NETWORK_CONNECTION_HELP"), 'setuptitle')
+	window:setAllowScreensaver(false)
+
+	local textarea = Textarea("textarea", self:string("NETWORK_CONNECTION_HELP_BODY"))
+	window:addWidget(textarea)
+	self:tieAndShowWindow(window)
+
+	return window
+end
+
+
+function setupConnectionType(self, setupNext)
+	log:warn('setupConnectionType')
+
+	assert(self.wlanIface or self.ethIface)
+
+	-- short cut if only one interface is available
+	if not self.wlanIface then
+		setupNext(self.ethIface)
+	elseif not self.ethIface then
+		setupNext(self.wlanIface)
+	end
+
+	-- ask the user to choose
+	local window = Window("window", self:string("NETWORK_CONNECTION_TYPE"), wirelessTitleStyle)
+	window:setAllowScreensaver(false)
+
+	local connectionMenu = SimpleMenu("buttonmenu")
+
+	connectionMenu:addItem({
+		style = 'buttonitem',
+		text = (self:string("NETWORK_CONNECTION_TYPE_WIRELESS")),
+		sound = "WINDOWSHOW",
+		callback = function()
+			setupNext(self.wlanIface)
+		end,
+		weight = 1
+	})
+	
+	connectionMenu:addItem({
+		style = 'buttonitem',
+		text = (self:string("NETWORK_CONNECTION_TYPE_WIRED")),
+		sound = "WINDOWSHOW",
+		callback = function()
+			setupNext(self.ethIface)
+		end,
+		weight = 2
+	})
+	
+	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:setupConnectionHelp() end )
+
+	window:addWidget(helpButton)
+	window:addWidget(connectionMenu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
 function _setCurrentSSID(self, ssid)
 	if self.currentSSID == ssid then
 		return
@@ -162,14 +223,14 @@ function _setCurrentSSID(self, ssid)
 end
 
 
-function _addNetwork(self, ssid)
+function _addNetwork(self, iface, ssid)
 	local item = {
 		text = ssid,
 		icon = Icon("icon"),
 		sound = "WINDOWSHOW",
 		callback = function()
-				   openNetwork(self, ssid)
-			   end,
+			openNetwork(self, iface, ssid)
+		end,
 		weight = 1
 	}
 		      
@@ -184,7 +245,17 @@ function _addNetwork(self, ssid)
 end
 
 
-function setupScanShow(self, setupNext)
+-- Scan on interface iface
+function setupScanShow(self, iface, setupNext)
+	assert(iface)
+
+	-- short cut if interface does not support scanning
+	if not iface:isWireless() then
+		return setupNext()
+	end
+
+	-- start scanning
+	iface:scan(setupNext)
 
 	local window = Popup("popupIcon")
 	window:setAllowScreensaver(false)
@@ -195,11 +266,8 @@ function setupScanShow(self, setupNext)
 	local status = Label("text2", self:string("NETWORK_FOUND_NETWORKS", 0))
 	window:addWidget(status)
 
-	-- wait for network scan (in task)
-	self.t_ctrl:scan(setupNext)
-
         window:addTimer(1000, function()
-			local results = self.t_ctrl:scanResults()
+			local results = iface:scanResults()
 			local numNetworks = 0
 			for k, v in pairs(results) do
 				numNetworks = numNetworks + 1
@@ -210,77 +278,34 @@ function setupScanShow(self, setupNext)
 		end)
 
 	-- or timeout after 10 seconds if no networks are found
-	window:addTimer(10000, function() setupNext() end)
+	window:addTimer(10000,
+		function()
+			setupNext()
+		end)
 
 	self:tieAndShowWindow(window)
 	return window
-
 end
 
 
-function setupNetworksShow(self, setupNext)
+function setupNetworksShow(self, iface, setupNext)
 	self.setupNext = setupNext
 
-	local window = _networksShow(self, self:string("NETWORK_WIRELESS_NETWORKS"), self:string("NETWORK_SETUP_HELP"), wirelessTitleStyle)
+	log:warn("setupNetworksShow ", iface.interface)
+
+	if not iface:isWireless() then
+		return self:createAndConnect(iface, nil)
+	end
+
+	local window = _networksShow(
+		self,
+		self:string("NETWORK_WIRELESS_NETWORKS"),
+		self:string("NETWORK_SETUP_HELP"),
+		wirelessTitleStyle
+	)
 	window:setAllowScreensaver(false)
 
 	return window
-end
-
-
-function setupConnectionHelp(self)
-	local window = Window("window", self:string("NETWORK_CONNECTION_HELP"), 'setuptitle')
-	window:setAllowScreensaver(false)
-
-	local textarea = Textarea("textarea", "this is just a placeholder for a bunch of text that we may put in to describe the vagaries of network connections, including terms such as 'cat5', 'SSID', and 'distributed denial of service attack'. It could be this window presents menu options or the like, but for starters I'm just throwing a textarea in here. Press the back button in the upper left to go back.")
-	window:addWidget(textarea)
-	self:tieAndShowWindow(window)
-
-	return window
-end
-
-
-function setupConnectWiredInterface(self, setupNext)
-	log:warn('bringing ', self.ethIface, ' up')
-	self.ethIface:t_ifUp()
-end
-
-
-function setupConnectionType(self, setupNextWireless, setupNextWired)
-	log:warn('setupConnectionType')
-
-	local window = Window("window", self:string("NETWORK_CONNECTION_TYPE"), wirelessTitleStyle)
-	window:setAllowScreensaver(false)
-
-	local connectionMenu = SimpleMenu("buttonmenu")
-
-	connectionMenu:addItem({
-					style = 'buttonitem',
-				      text = (self:string("NETWORK_CONNECTION_TYPE_WIRELESS")),
-				      sound = "WINDOWSHOW",
-				      callback = function()
-							 setupNextWireless()
-						 end,
-				      weight = 1
-			      })
-	
-	connectionMenu:addItem({
-					style = 'buttonitem',
-				      text = (self:string("NETWORK_CONNECTION_TYPE_WIRED")),
-				      sound = "WINDOWSHOW",
-				      callback = function()
-							 setupNextWired()
-						 end,
-				      weight = 2
-			      })
-	
-	local helpButton     = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:setupConnectionHelp() end )
-	window:addWidget(helpButton)
-	window:addWidget(connectionMenu)
-
-	self:tieAndShowWindow(window)
-	return window
-
 end
 
 
@@ -288,9 +313,14 @@ function settingsNetworksShow(self)
 	self.setupNext = nil
 
 	return setupScanShow(self,
-			     function()
-				     _networksShow(self, self:string("NETWORK"), self:string("NETWORK_SETTINGS_HELP"))
-			     end)
+		function()
+			_networksShow(
+				self,
+				self:string("NETWORK"),
+				self:string("NETWORK_SETTINGS_HELP")
+			)
+		end
+	)
 end
 
 
@@ -305,27 +335,26 @@ function _networksShow(self, title, help)
 	self.scanMenu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
 	self.scanMenu:addItem({
-				      text = self:string("NETWORK_ENTER_ANOTHER_NETWORK"),
-				      sound = "WINDOWSHOW",
-				      callback = function()
-							 enterSSID(self)
-						 end,
-				      weight = 2
-			      })
-	
+		text = self:string("NETWORK_ENTER_ANOTHER_NETWORK"),
+		sound = "WINDOWSHOW",
+		callback = function()
+			enterSSID(self, self.wlanIface)
+		end,
+		weight = 2
+	})
 	
 	self.scanResults = {}
 
 	-- load known networks (in network thread)
-	Task("networkList", self, t_listNetworks):addTask()
+	Task("networkList", self, listNetworksTask):addTask()
 
 	-- process existing scan results
-	self:_scanComplete(self.t_ctrl:scanResults())
+	self:_scanComplete(self.wlanIface)
 
 	-- schedule network scan 
 	self.scanMenu:addTimer(5000,
 			       function()
-				       self:scan()
+				       self:scan(self.wlanIface)
 			       end)
 
 	local help = Textarea("help", help)
@@ -338,15 +367,17 @@ end
 
 
 -- load known networks from wpa supplicant into scan menu
-function t_listNetworks(self)
-	local networkResults = self.t_ctrl:request("LIST_NETWORKS")
+function listNetworksTask(self)
+	local iface = self.wlanIface
+
+	local networkResults = iface:request("LIST_NETWORKS")
 	log:warn("list results ", networkResults)
 
 	for id, ssid, flags in string.gmatch(networkResults, "([%d]+)\t([^\t]*)\t[^\t]*\t([^\t]*)\n") do
 		if not string.match(ssid, "logitech[%-%+%*]squeezebox[%-%+%*](%x+)") then
 
 			if not self.scanResults[ssid] then
-				_addNetwork(self, ssid)
+				_addNetwork(self, iface, ssid)
 			end
 			self.scanResults[ssid].id = id
 
@@ -359,15 +390,17 @@ function t_listNetworks(self)
 end
 
 
-function scan(self)
-	self.t_ctrl:scan(function(scanTable)
-				 _scanComplete(self, scanTable)
-			 end)
+function scan(self, iface)
+	iface:scan(function()
+		_scanComplete(self, iface)
+	end)
 end
 
 
-function _scanComplete(self, scanTable)
+function _scanComplete(self, iface)
 	local now = Framework:getTicks()
+
+	local scanTable = self.wlanIface:scanResults()
 
 	local associated = nil
 	for ssid, entry in pairs(scanTable) do
@@ -375,7 +408,7 @@ function _scanComplete(self, scanTable)
 		      if not string.match(ssid, "logitech[%-%+%*]squeezebox[%-%+%*](%x+)") then
 
 			      if not self.scanResults[ssid] then
-				      _addNetwork(self, ssid)
+				      _addNetwork(self, iface, ssid)
 			      end
 
 			      -- always update the bssid and flags
@@ -428,7 +461,7 @@ function _hideToTop(self, dontSetupNext)
 end
 
 
-function openNetwork(self, ssid)
+function openNetwork(self, iface, ssid)
 	if ssid == self.currentSSID then
 		-- current network, show status
 		if type(self.setupNext) == "function" then
@@ -440,17 +473,17 @@ function openNetwork(self, ssid)
 	elseif self.scanResults[ssid] and
 		self.scanResults[ssid].id ~= nil then
 		-- known network, give options
+		-- XXXX
 		return connectOrDelete(self, ssid)
 
 	else
 		-- unknown network, enter password
-		self.ssid = ssid
-		return enterPassword(self)
+		return enterPassword(self, iface, ssid)
 	end
 end
 
 
-function enterSSID(self)
+function enterSSID(self, iface)
 	local window = Window("window", self:string("NETWORK_NETWORK_NAME"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -460,10 +493,8 @@ function enterSSID(self)
 						    return false
 					    end
 
-					    self.ssid = value
-
 					    widget:playSound("WINDOWSHOW")
-					    enterPassword(self)
+					    enterPassword(self, iface, value)
 
 					    return true
 				    end
@@ -481,33 +512,33 @@ function enterSSID(self)
 end
 
 
-function enterPassword(self)
-	assert(self.ssid, "No SSID selected")
+function enterPassword(self, iface, ssid)
+	assert(ssid, "No SSID selected")
 
-	if self.scanResults[self.ssid] == nil then
-		return chooseEncryption(self)
+	if self.scanResults[ssid] == nil then
+		return chooseEncryption(self, iface, ssid)
 	end
-	local flags = self.scanResults[self.ssid].flags
+	local flags = self.scanResults[ssid].flags
 
-	log:warn("ssid is: ", self.ssid, " flags are: ", flags)
+	log:warn("ssid is: ", ssid, " flags are: ", flags)
 
 	if flags == "" then
 		self.encryption = "none"
-		return createAndConnect(self)
+		return createAndConnect(self, iface, ssid)
 
 	elseif string.find(flags, "WPA2%-PSK") then
 		log:warn("**** WPA2")
 		self.encryption = "wpa2"
-		return enterPSK(self)
+		return enterPSK(self, iface, ssid)
 
 	elseif string.find(flags, "WPA%-PSK") then
 		log:warn("**** WPA")
 		self.encryption = "wpa"
-		return enterPSK(self)
+		return enterPSK(self, iface, ssid)
 
 	elseif string.find(flags, "WEP") then
 		log:warn("**** WEP")
-		return chooseWEPLength(self)
+		return chooseWEPLength(self, iface, ssid)
 
 	elseif string.find(flags, "WPA%-EAP") or string.find(flags, "WPA2%-EAP") then
 		local window = Window("window", self:string("NETWORK_CONNECTION_PROBLEM"))
@@ -534,13 +565,13 @@ function enterPassword(self)
 		return window
 
 	else
-		return chooseEncryption(self)
+		return chooseEncryption(self, iface, ssid)
 
 	end
 end
 
 
-function chooseEncryption(self)
+function chooseEncryption(self, iface, ssid)
 	local window = Window("window", self:string("NETWORK_WIRELESS_ENCRYPTION"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -551,7 +582,7 @@ function chooseEncryption(self)
 						sound = "WINDOWSHOW",
 						callback = function()
 								   self.encryption = "none"
-								   createAndConnect(self)
+								   createAndConnect(self, iface, ssid)
 							   end
 					},
 					{
@@ -559,7 +590,7 @@ function chooseEncryption(self)
 						sound = "WINDOWSHOW",
 						callback = function()
 								   self.encryption = "wep40"
-								   enterWEPKey(self)
+								   enterWEPKey(self, iface, ssid)
 							   end
 					},
 					{
@@ -567,7 +598,7 @@ function chooseEncryption(self)
 						sound = "WINDOWSHOW",
 						callback = function()
 								   self.encryption = "wep104"
-								   enterWEPKey(self)
+								   enterWEPKey(self, iface, ssid)
 							   end
 					},
 					{
@@ -575,7 +606,7 @@ function chooseEncryption(self)
 						sound = "WINDOWSHOW",
 						callback = function()
 								   self.encryption = "wpa"
-								   enterPSK(self)
+								   enterPSK(self, iface, ssid)
 							   end
 					},
 					{
@@ -583,7 +614,7 @@ function chooseEncryption(self)
 						sound = "WINDOWSHOW",
 						callback = function()
 								   self.encryption = "wpa2"
-								   enterPSK(self)
+								   enterPSK(self, iface, ssid)
 							   end
 					},
 				})
@@ -607,7 +638,7 @@ function helpWindow(self, title, token)
 end
 
 
-function chooseWEPLength(self)
+function chooseWEPLength(self, iface, ssid)
 	local window = Window("window", self:string("NETWORK_WIRELESS_ENCRYPTION"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -618,7 +649,7 @@ function chooseWEPLength(self)
 						sound = "WINDOWSHOW",
 						callback = function()
 								   self.encryption = "wep40"
-								   enterWEPKey(self)
+								   enterWEPKey(self, iface, ssid)
 							   end
 					},
 					{
@@ -626,7 +657,7 @@ function chooseWEPLength(self)
 						sound = "WINDOWSHOW",
 						callback = function()
 								   self.encryption = "wep104"
-								   enterWEPKey(self)
+								   enterWEPKey(self, iface, ssid)
 							   end
 					},
 				})
@@ -640,7 +671,7 @@ function chooseWEPLength(self)
 end
 
 
-function enterWEPKey(self)
+function enterWEPKey(self, iface, ssid)
 	local window = Window("window", self:string("NETWORK_WIRELESS_KEY"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -657,7 +688,7 @@ function enterWEPKey(self)
 					    self.key = value:getValue()
 
 					    widget:playSound("WINDOWSHOW")
-					    createAndConnect(self)
+					    createAndConnect(self, iface, ssid)
 
 					    return true
 				    end
@@ -676,7 +707,7 @@ function enterWEPKey(self)
 end
 
 
-function enterPSK(self)
+function enterPSK(self, iface, ssid)
 	local window = Window("window", self:string("NETWORK_WIRELESS_PASSWORD"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -686,7 +717,7 @@ function enterPSK(self)
 					    self.psk = tostring(value)
 
 					    widget:playSound("WINDOWSHOW")
-					    createAndConnect(self)
+					    createAndConnect(self, iface, ssid)
 
 					    return true
 				    end,
@@ -706,8 +737,8 @@ function enterPSK(self)
 end
 
 
-function t_addNetwork(self)
-	assert(self.t_ctrl, "No WPA supplicant")
+function addNetworkTask(self, iface, ssid)
+	assert(iface, "no interface")
 
 	local option = {
 		encryption = self.encryption,
@@ -715,12 +746,12 @@ function t_addNetwork(self)
 		key = self.key
 	}
 
-	log:warn('ADDING NETWORK: ', self.ssid)
-	local id = self.t_ctrl:t_addNetwork(self.ssid, option)
+	log:warn('ADDING NETWORK: ', ssid)
+	local id = iface:t_addNetwork(ssid, option)
 	log:warn('returned id: ', id)
 
 	self.addNetwork = true
-	self.scanResults[self.ssid].id = id
+	self.scanResults[ssid].id = id
 end
 
 
@@ -765,36 +796,40 @@ function _connectTimer(self)
 end
 
 
-function t_selectNetwork(self, ssid)
+function selectNetworkTask(self, iface, ssid)
 	local request
 
-	self.t_ctrl:t_disconnectNetwork(self.wifiInterface)
+	iface:t_disconnectNetwork()
 
 	if self.createNetwork == ssid then
 		-- remove the network config
-		self:t_removeNetwork(ssid)
+		self:removeNetworkTask(iface, ssid)
 	end
 
-	if self.scanResults[ssid] == nil then
-		-- ensure the network state exists
-		_addNetwork(self, ssid)
+	-- XXXX does wired need pre-populating in scanResults?
+	if iface:isWireless() then
+		if self.scanResults[ssid] == nil then
+			-- ensure the network state exists
+			_addNetwork(self, iface, ssid)
+		end
+
+		local id = self.scanResults[ssid].id
+		if id == nil then
+			-- create the network config
+			self:addNetworkTask(iface, ssid)
+		end
 	end
 
-	log:warn("SSID=", self.ssid, " SR=", self.scanResults)
-	local id = self.scanResults[ssid].id
-	log:warn("t_selectNetwork ssid=", ssid, " id=", id)
-
-	if id == nil then
-		-- create the network config
-		self:t_addNetwork()
-	end
-
-	self.t_ctrl:t_selectNetwork(ssid)	
+	iface:t_selectNetwork(ssid)	
 end
 
 
-function createAndConnect(self)
-	log:warn("createAndConnect ", self.ssid)
+-- XXXX prototype changed
+function createAndConnect(self, iface, ssid)
+	log:warn("createAndConnect ", iface, " ", ssid)
+
+	self.iface = iface
+	self.ssid = ssid
 
 	self.createNetwork = self.ssid
 	connect(self)
@@ -812,7 +847,7 @@ function connect(self, keepConfig)
 
 		-- Select/add the network in a background task
 		log:warn("SSID=", self.ssid)
-		Task("networkSelect", self, t_selectNetwork):addTask(self.ssid)
+		Task("networkSelect", self, selectNetworkTask):addTask(self.iface, self.ssid)
 	end
 
 	-- Progress window
@@ -824,14 +859,22 @@ function connect(self, keepConfig)
 			    end)
 	window:addWidget(icon)
 
-	window:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO", self.ssid)))
+	local str
+	if self.ssid then
+		str = self:string("NETWORK_CONNECTING_TO_SSID", self.ssid)
+	else
+		str = self:string("NETWORK_CONNECTING_TO_ETHERNET")
+	end
+
+	window:addWidget(Label("text", str))
 
 	self:tieAndShowWindow(window)
 	return window
 end
 
 
-function t_connectFailed(self)
+-- YYYY iface
+function t_connectFailed(self, iface)
 	local request
 
 	-- Stop trying to connect to the network
@@ -840,7 +883,7 @@ function t_connectFailed(self)
 	log:warn("addNetwork=", self.addNetwork)
 	if self.addNetwork then
 		-- Remove failed network
-		self:t_removeNetwork(self.ssid)
+		self:removeNetworkTask(iface, self.ssid)
 		self.addNetwork = nil
 	end
 end
@@ -1256,8 +1299,8 @@ function setStaticIP(self)
 end
 
 
-function t_removeNetwork(self, ssid)
-	self.t_ctrl:t_removeNetwork(ssid)
+function removeNetworkTask(self, iface, ssid)
+	iface:t_removeNetwork(ssid)
 
 	if self.scanResults[ssid] then
 		-- remove from menu

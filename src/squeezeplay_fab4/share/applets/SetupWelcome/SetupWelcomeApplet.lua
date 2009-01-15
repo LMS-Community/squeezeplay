@@ -112,6 +112,7 @@ function step1(self)
 	return self.topWindow
 end
 
+
 function step2(self)
 	log:info("step2")
 
@@ -119,48 +120,37 @@ function step2(self)
 	return self:setupWelcomeShow( function() self:step3() end)
 end
 
+
 function step3(self)
 	log:info("step3")
 
 	-- wireless region
-	return appletManager:callService("setupRegionShow", function() self:step3a() end, welcomeTitleStyle)
-	
+	return appletManager:callService(
+		"setupRegionShow",
+		function()
+			self:step3a()
+		end,
+		welcomeTitleStyle
+	)
 end
 
-function step3a(self)
 
+function step3a(self)
 	log:info("step3a")
 
 	-- network connection type
-	return appletManager:callService("setupConnectionType", 
-					function() self:step4a() end, 
-					function() self:step4b() end, 
-					welcomeTitleStyle)
-
-end
-
-function step4a(self)
-	log:info("step4a")
-
-	-- finding networks
-	self.scanWindow = appletManager:callService("setupScanShow", function()
-							   self:step5()
-							   -- FIXME is this required:
-							   if self.scanWindow then
-								   self.scanWindow:hide()
-								   self.scanWindow = nil
-							   end
-						end,
-						welcomeTitleStyle
+	return appletManager:callService(
+		"setupConnectionType", 
+		function(iface)
+			self:step4a(iface)
+		end, 
+		welcomeTitleStyle
 	)
-	return self.scanWindow
 end
 
-function step4b(self)
-	log:warn("step4b")
 
-	appletManager:callService("setupConnectWiredInterface")
-	self:step6()
+function step4a(self, iface)
+	log:info("step4a")
 
 	--[[ FIXME: create a popup that comes on screen until wired comes online
 	-- connect to wired interface
@@ -176,76 +166,61 @@ function step4b(self)
 	)
 	return self.connectingWindow
 	--]]
+
+	self:step4b(iface)
 end
 
-function step5(self)
+
+function step4b(self, iface)
+	log:info("step4b")
+
+	-- scan for networks
+	self.scanWindow = appletManager:callService(
+		"setupScanShow",
+		iface,
+		function()
+			self:step5(iface)
+			-- FIXME is this required:
+			if self.scanWindow then
+				self.scanWindow:hide()
+				self.scanWindow = nil
+			end
+		end,
+		welcomeTitleStyle
+	)
+end
+
+
+function step5(self, iface)
 	log:info("step5")
 
-	-- wireless connection, using squeezebox?
-	local scanResults = self.wireless:scanResults()
-
-	for ssid,_ in pairs(scanResults) do
-		log:warn("******************************checking ssid ", ssid)
-
-		if string.match(ssid, "logitech%+squeezebox%+%x+") then
-			return self:setupConnectionShow(function() self:step51() end,
-							function() self:step52() end
-						)
-		end
-	end
-
-	return self:step52()
-end
-
-function step51(self)
-	log:info("step51")
-
-	-- connect using squeezebox in adhoc mode
-	return appletManager:callService("setupAdhocShow", function() self:step8() end)
-end
-
-function step52(self)
-	log:info("step52")
-
 	-- connect using other wireless network
-	return appletManager:callService("setupNetworksShow", function() self:step6() end, welcomeTitleStyle)
+	return appletManager:callService(
+		"setupNetworksShow",
+		iface,
+		function()
+			self:step6()
+		end,
+		welcomeTitleStyle
+	)
 end
+
 
 function step6(self)
 	log:info("step6")
 
-	-- wireless connection, using squeezebox?
-	local scanResults = self.wireless:scanResults()
-
-	for ssid,_ in pairs(scanResults) do
-		log:warn("checking ssid ", ssid)
-
-		if string.match(ssid, "logitech[%-%+]squeezebox[%-%+]%x+") then
-			return self:step61()
-		end
-	end
-
-	return self:step7()
+	-- XXXX select this squeezebox as a player
+	self:step7()
 end
 
-function step61(self)
-	log:info("step61")
-
-	-- setup squeezebox
-	return appletManager:callService("setupSqueezeboxShow", function() self:step7() end)
-end
 
 function step7(self)
 	log:info("step7")
 
-	-- skip this step if a player has been selected
-	if appletManager:callService("getCurrentPlayer") then
-		return self:step8()
-	end
-
-	-- select player
-	return appletManager:callService("setupShowSelectPlayer", function() self:step8() end, welcomeTitleStyle)
+	-- XXXX choose music source
+	self:step8()
 end
+
 
 function step8(self)
 	log:info("step8")
@@ -302,31 +277,6 @@ function setupWelcomeShow(self, setupNext)
 end
 
 
-function setupConnectionShow(self, setupSqueezebox, setupNetwork)
-	local window = Window("window", self:string("WIRELESS_CONNECTION"), welcomeTitleStyle)
-	window:setAllowScreensaver(false)
-
-	local menu = SimpleMenu("menu")
-
-	menu:addItem({
-			     text = self:string("CONNECT_USING_SQUEEZEBOX"),
-			     sound = "WINDOWSHOW",
-			     callback = setupSqueezebox,
-		     })
-	menu:addItem({
-			     text = self:string("CONNECT_USING_NETWORK"),
-			     sound = "WINDOWSHOW",
-			     callback = setupNetwork,
-		     })
-	
-	window:addWidget(Textarea("help", self:string("CONNECT_HELP")))
-	window:addWidget(menu)
-
-	self:tieAndShowWindow(window)
-	return window
-end
-
-
 function setupDoneShow(self, setupNext)
 	local window = Window("window", self:string("DONE"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
@@ -349,8 +299,6 @@ end
 function init(self)
 	log:info("subscribe")
 	jnt:subscribe(self)
-
-	self.wireless = Networking:wirelessInterface(jnt)
 end
 
 

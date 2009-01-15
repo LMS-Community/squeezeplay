@@ -357,7 +357,7 @@ end
 
 =head2 jive.net.Networking:scan(callback)
 
-start a wireless network scan in a new task
+Start a wireless network scan in a new task.
 
 =cut
 --]]
@@ -367,10 +367,9 @@ function scan(self, callback)
 		return
 	end
 
-	Task("networkScan", self,
-	     function()
-		     _scan_task(self, callback)
-	     end):addTask()
+	Task("networkScan", self, function()
+		_scan_task(self, callback)
+	end):addTask()
 end
 
 
@@ -512,6 +511,8 @@ adds a network to the list of discovered networks
 function t_addNetwork(self, ssid, option)
 	assert(Task:running(), "Networking:addNetwork must be called in a Task")
 
+log:warn("************************** ADD ", self.interface, " ssid=", ssid)
+
 	local request, response
 
 	-- make sure this ssid is not in any configuration
@@ -613,6 +614,13 @@ forgets a previously discovered network
 function t_removeNetwork(self, ssid)
 	assert(Task:running(), "Networking:removeNetwork must be called in a Task")
 
+log:warn("************************** REMOVE ", self.interface, " ssid=", ssid)
+
+	if not self.wireless then
+		-- no action for ethernet
+		return
+	end
+
 	local networkResults = self:request("LIST_NETWORKS")
 
 	local id = false
@@ -651,6 +659,8 @@ function t_disconnectNetwork(self, interface)
 		interface = self.interface
 	end
 
+log:warn("************************** DISCONNECT ", self.interface)
+
 	assert(type(interface) == 'string')
 	assert(Task:running(), "Networking:disconnectNetwork must be called in a Task")
 
@@ -679,44 +689,45 @@ function t_selectNetwork(self, ssid)
 
 	assert(Task:running(), "Networking:selectNetwork must be called in a Task")
 
-	local networkResults = self:request("LIST_NETWORKS")
-	log:info("list results ", networkResults)
 
-	local id = false
-	for nid, nssid in string.gmatch(networkResults, "([%d]+)\t([^\t]*).-\n") do
-		log:info("id=", nid, " ssid=", nssid)
-		if nssid == ssid then
-			id = nid
-			break
+log:warn("************************** SELECT ", self.interface, " ssid=", ssid)
+
+	if self.wireless then
+		local networkResults = self:request("LIST_NETWORKS")
+		log:info("list results ", networkResults)
+
+		local id = false
+		for nid, nssid in string.gmatch(networkResults, "([%d]+)\t([^\t]*).-\n") do
+			log:info("id=", nid, " ssid=", nssid)
+			if nssid == ssid then
+				id = nid
+				break
+			end
 		end
+
+		-- Select network
+		if not id then
+			log:warn("can't find network ", ssid)
+			return
+		end
+
+		-- Disconnect from existing network
+		self:t_disconnectNetwork()
+
+		local request = 'SELECT_NETWORK ' .. id
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+		-- Allow association
+		request = 'REASSOCIATE'
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+		-- Save configuration
+		request = 'SAVE_CONFIG'
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 	end
-
-	-- Select network
-	if not id then
-		log:warn("can't find network ", ssid)
-		return
-	end
-
-	-- Disconnect from existing network
-	self:t_disconnectNetwork()
-
-	local request = 'SELECT_NETWORK ' .. id
-	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-	log:debug('##### wpa_cli select_network ', id , ' complete')
-
-	-- Allow association
-	request = 'REASSOCIATE'
-	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-	log:debug('##### wpa_cli reassociate complete')
-
-	-- Save configuration
-	request = 'SAVE_CONFIG'
-	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-	log:debug('##### wpa_cli save_config complete')
 
 	-- bring the inteface up
 	self:t_ifUp(self.interface, ssid)
-
 end
 
 
