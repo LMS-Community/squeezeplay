@@ -892,9 +892,11 @@ function _editAutoInterfaces(self, ssid)
 	for line in fi:lines() do
 		if string.match(line, "^auto%s") then
 			-- if the interface is to be enabled, it should continue to be set to auto 
-			if (string.match(line, autoInterface) or string.match(line, "lo")) then
+			if string.match(line, autoInterface) then
 				fo:write(line .. "\n")
 				autoSet = true
+			elseif string.match(line, "lo") then
+				fo:write(line .. "\n")
 			else
 				log:debug('disabling interface: ', line)
 			end
