@@ -247,7 +247,7 @@ end
 
 -- Scan on interface iface
 function setupScanShow(self, iface, setupNext)
-	assert(iface)
+	assert(iface, debug.traceback())
 
 	-- short cut if interface does not support scanning
 	if not iface:isWireless() then
@@ -294,7 +294,7 @@ function setupNetworksShow(self, iface, setupNext)
 	log:warn("setupNetworksShow ", iface.interface)
 
 	if not iface:isWireless() then
-		return self:createAndConnect(iface, nil)
+		return self:createAndConnect(iface, "eth0")
 	end
 
 	local window = _networksShow(
@@ -346,7 +346,7 @@ function _networksShow(self, title, help)
 	self.scanResults = {}
 
 	-- load known networks (in network thread)
-	Task("networkList", self, listNetworksTask):addTask()
+	Task("networkList", self, _listNetworksTask):addTask()
 
 	-- process existing scan results
 	self:_scanComplete(self.wlanIface)
@@ -367,7 +367,7 @@ end
 
 
 -- load known networks from wpa supplicant into scan menu
-function listNetworksTask(self)
+function _listNetworksTask(self)
 	local iface = self.wlanIface
 
 	local networkResults = iface:request("LIST_NETWORKS")
@@ -462,6 +462,8 @@ end
 
 
 function openNetwork(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	if ssid == self.currentSSID then
 		-- current network, show status
 		if type(self.setupNext) == "function" then
@@ -474,7 +476,7 @@ function openNetwork(self, iface, ssid)
 		self.scanResults[ssid].id ~= nil then
 		-- known network, give options
 		-- XXXX
-		return connectOrDelete(self, ssid)
+		return connectOrDelete(self, iface, ssid)
 
 	else
 		-- unknown network, enter password
@@ -484,6 +486,8 @@ end
 
 
 function enterSSID(self, iface)
+	assert(iface, debug.traceback())
+
 	local window = Window("window", self:string("NETWORK_NETWORK_NAME"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -513,7 +517,7 @@ end
 
 
 function enterPassword(self, iface, ssid)
-	assert(ssid, "No SSID selected")
+	assert(iface and ssid, debug.traceback())
 
 	if self.scanResults[ssid] == nil then
 		return chooseEncryption(self, iface, ssid)
@@ -572,6 +576,8 @@ end
 
 
 function chooseEncryption(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	local window = Window("window", self:string("NETWORK_WIRELESS_ENCRYPTION"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -639,6 +645,8 @@ end
 
 
 function chooseWEPLength(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	local window = Window("window", self:string("NETWORK_WIRELESS_ENCRYPTION"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -672,6 +680,8 @@ end
 
 
 function enterWEPKey(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	local window = Window("window", self:string("NETWORK_WIRELESS_KEY"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -708,6 +718,8 @@ end
 
 
 function enterPSK(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	local window = Window("window", self:string("NETWORK_WIRELESS_PASSWORD"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -737,8 +749,8 @@ function enterPSK(self, iface, ssid)
 end
 
 
-function addNetworkTask(self, iface, ssid)
-	assert(iface, "no interface")
+function _addNetworkTask(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
 
 	local option = {
 		encryption = self.encryption,
@@ -755,12 +767,14 @@ function addNetworkTask(self, iface, ssid)
 end
 
 
-function _connectTimer(self)
+function _connectTimer(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	Task("networkConnect", self,
 	     function()
 		     log:warn("connectTimeout=", self.connectTimeout, " dhcpTimeout=", self.dhcpTimeout)
 
-		     local status = self.t_ctrl:t_wpaStatus()
+		     local status = iface:t_wpaStatus()
 
 		     log:warn("wpa_state=", status.wpa_state)
 		     log:warn("ip_address=", status.ip_address)
@@ -774,7 +788,7 @@ function _connectTimer(self)
 			     end
 
 			     -- connection timed out
-			     self:connectFailed("timeout")
+			     self:connectFailed(iface, ssid, "timeout")
 			     return
 		     end
 			    
@@ -786,18 +800,17 @@ function _connectTimer(self)
 			     end
 
 			     -- dhcp timed out
-			     self:failedDHCP()
+			     self:failedDHCP(iface, ssid)
 		     else
 			     -- dhcp completed
-			     self:connectOK()
+			     self:connectOK(iface, ssid)
 		     end
 	     end):addTask()
-	
 end
 
 
 function selectNetworkTask(self, iface, ssid)
-	local request
+	assert(iface and ssid, debug.traceback())
 
 	iface:t_disconnectNetwork()
 
@@ -816,7 +829,7 @@ function selectNetworkTask(self, iface, ssid)
 		local id = self.scanResults[ssid].id
 		if id == nil then
 			-- create the network config
-			self:addNetworkTask(iface, ssid)
+			self:_addNetworkTask(iface, ssid)
 		end
 	end
 
@@ -824,20 +837,18 @@ function selectNetworkTask(self, iface, ssid)
 end
 
 
--- XXXX prototype changed
 function createAndConnect(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	log:warn("createAndConnect ", iface, " ", ssid)
 
-	self.iface = iface
-	self.ssid = ssid
-
 	self.createNetwork = self.ssid
-	connect(self)
+	connect(self, iface, ssid)
 end
 
 
-function connect(self, keepConfig)
-	local request
+function connect(self, iface, ssid, keepConfig)
+	assert(iface and ssid, debug.traceback())
 
 	self.connectTimeout = 0
 	self.dhcpTimeout = 0
@@ -846,22 +857,23 @@ function connect(self, keepConfig)
 		self:_setCurrentSSID(nil)
 
 		-- Select/add the network in a background task
-		log:warn("SSID=", self.ssid)
-		Task("networkSelect", self, selectNetworkTask):addTask(self.iface, self.ssid)
+		log:warn("SSID=", ssid)
+		Task("networkSelect", self, selectNetworkTask):addTask(iface, ssid)
 	end
 
 	-- Progress window
 	local window = Popup("popupIcon")
 
 	local icon  = Icon("iconConnecting")
-	icon:addTimer(1000, function()
-				    self:_connectTimer()
-			    end)
+	icon:addTimer(1000,
+		function()
+			self:_connectTimer(iface, ssid)
+		end)
 	window:addWidget(icon)
 
 	local str
-	if self.ssid then
-		str = self:string("NETWORK_CONNECTING_TO_SSID", self.ssid)
+	if iface:isWireless() then
+		str = self:string("NETWORK_CONNECTING_TO_SSID", ssid)
 	else
 		str = self:string("NETWORK_CONNECTING_TO_ETHERNET")
 	end
@@ -873,28 +885,27 @@ function connect(self, keepConfig)
 end
 
 
--- YYYY iface
-function t_connectFailed(self, iface)
-	local request
-
+function _connectFailedTask(self, iface)
 	-- Stop trying to connect to the network
-	self.t_ctrl:t_disconnectNetwork(self)
+	iface:t_disconnectNetwork(self)
 
 	log:warn("addNetwork=", self.addNetwork)
 	if self.addNetwork then
 		-- Remove failed network
-		self:removeNetworkTask(iface, self.ssid)
+		self:_removeNetworkTask(iface, self.ssid)
 		self.addNetwork = nil
 	end
 end
 
 
-function connectFailed(self, reason)
+function connectFailed(self, iface, ssid, reason)
+	assert(iface and ssid, debug.traceback())
+
 	log:warn("connection failed")
 
 	-- Stop trying to connect to the network, if this network is
 	-- being added this will also remove the network configuration
-	Task("networkFailed", self, t_connectFailed):addTask()
+	Task("networkFailed", self, _connectFailedTask):addTask(iface)
 
 	-- Message based on failure type
 	local helpText = self:string("NETWORK_CONNECTION_PROBLEM_HELP")
@@ -914,7 +925,7 @@ function connectFailed(self, reason)
 						text = self:string("NETWORK_TRY_AGAIN"),
 						sound = "WINDOWHIDE",
 						callback = function()
-								   connect(self)
+								   connect(self, iface, ssid)
 								   window:hide(Window.transitionNone)
 							   end
 					},
@@ -947,15 +958,17 @@ function connectFailed(self, reason)
 end
 
 
-function connectOK(self)
-	if self.ssid == nil then
+function connectOK(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
+	if ssid == nil then
 		-- make sure we are still trying to connect
 		return
 	end
 
-	log:warn("connection OK ", self.ssid)
+	log:warn("connection OK ", ssid)
 
-	self:_setCurrentSSID(self.ssid)
+	self:_setCurrentSSID(ssid)
 
 	-- forget connection state
 	self.ssid = nil
@@ -1068,20 +1081,24 @@ function _sigusr1(process)
 end
 
 
-function failedDHCP(self)
+function failedDHCP(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	log:warn("self.encryption=", self.encryption)
 
 	if self.encryption and string.match(self.encryption, "^wep.*") then
 		-- use different error screen for WEP, the failure may
 		-- be due to a bad WEP passkey, not DHCP.
-		return failedDHCPandWEP(self)
+		return failedDHCPandWEP(self, iface, ssid)
 	else
-		return failedDHCPandWPA(self)
+		return failedDHCPandWPA(self, iface, ssid)
 	end
 end
 
 
-function failedDHCPandWPA(self)
+function failedDHCPandWPA(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	local window = Window("window", self:string("NETWORK_ADDRESS_PROBLEM"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -1093,7 +1110,7 @@ function failedDHCPandWPA(self)
 						callback = function()
 								   -- poke udhcpto try again
 								   _sigusr1("udhcpc")
-								   connect(self, true)
+								   connect(self, iface, ssid, true)
 								   window:hide(Window.transitionNone)
 							   end
 					},
@@ -1102,14 +1119,14 @@ function failedDHCPandWPA(self)
 						sound = "WINDOWSHOW",
 						callback = function()
 								   -- already have a self assigned address, we're done
-								   connectOK(self)
+								   connectOK(self, iface, ssid)
 							   end
 					},
 					{
 						text = self:string("STATIC_ADDRESS"),
 						sound = "WINDOWSHOW",
 						callback = function()
-								   enterIP(self)
+								   enterIP(self, iface, ssid)
 							   end
 					},
 				})
@@ -1125,7 +1142,9 @@ function failedDHCPandWPA(self)
 end
 
 
-function failedDHCPandWEP(self)
+function failedDHCPandWEP(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	local window = Window("window", self:string("NETWORK_CONNECTION_PROBLEM"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -1137,7 +1156,7 @@ function failedDHCPandWEP(self)
 						callback = function()
 								   -- poke udhcpto try again
 								   _sigusr1("udhcpc")
-								   connect(self, true)
+								   connect(self, iface, ssid, true)
 								   window:hide(Window.transitionNone)
 							   end
 					},
@@ -1159,14 +1178,14 @@ function failedDHCPandWEP(self)
 						sound = "WINDOWSHOW",
 						callback = function()
 								   -- already have a self assigned address, we're done
-								   connectOK(self)
+								   connectOK(self, iface, ssid)
 							   end
 					},
 					{
 						text = self:string("STATIC_ADDRESS"),
 						sound = "WINDOWSHOW",
 						callback = function()
-								   enterIP(self)
+								   enterIP(self, iface, ssid)
 							   end
 					},
 				})
@@ -1182,7 +1201,9 @@ function failedDHCPandWEP(self)
 end
 
 
-function enterIP(self)
+function enterIP(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	local v = Textinput.ipAddressValue(self.ipAddress or "0.0.0.0")
 
 	local window = Window("window", self:string("NETWORK_IP_ADDRESS"), wirelessTitleStyle)
@@ -1200,7 +1221,7 @@ function enterIP(self)
 					   self.ipSubnet = _subnet(self)
 
 					   widget:playSound("WINDOWSHOW")
-					   self:enterSubnet()
+					   self:enterSubnet(iface, ssid)
 					   return true
 				   end))
 
@@ -1209,7 +1230,9 @@ function enterIP(self)
 end
 
 
-function enterSubnet(self)
+function enterSubnet(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	local v = Textinput.ipAddressValue(self.ipSubnet)
 
 	local window = Window("window", self:string("NETWORK_SUBNET"), wirelessTitleStyle)
@@ -1224,7 +1247,7 @@ function enterSubnet(self)
 					   self.ipGateway = _gateway(self)
 
 					   widget:playSound("WINDOWSHOW")
-					   self:enterGateway()
+					   self:enterGateway(iface, ssid)
 					   return true
 				   end))
 
@@ -1233,7 +1256,9 @@ function enterSubnet(self)
 end
 
 
-function enterGateway(self)
+function enterGateway(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	local v = Textinput.ipAddressValue(self.ipGateway)
 
 	local window = Window("window", self:string("NETWORK_GATEWAY"), wirelessTitleStyle)
@@ -1252,7 +1277,7 @@ function enterGateway(self)
 					   self.ipDNS = self.ipGateway
 
 					   widget:playSound("WINDOWSHOW")
-					   self:enterDNS()
+					   self:enterDNS(iface, ssid)
 					   return true
 				   end))
 
@@ -1261,7 +1286,9 @@ function enterGateway(self)
 end
 
 
-function enterDNS(self)
+function enterDNS(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	local v = Textinput.ipAddressValue(self.ipDNS)
 
 	local window = Window("window", self:string("NETWORK_DNS"), wirelessTitleStyle)
@@ -1279,7 +1306,7 @@ function enterDNS(self)
 					   self.ipDNS = value
 
 					   widget:playSound("WINDOWSHOW")
-					   self:setStaticIP()
+					   self:setStaticIP(iface, ssid)
 					   return true
 				   end))
 
@@ -1288,18 +1315,22 @@ function enterDNS(self)
 end
 
 
-function setStaticIP(self)
+function setStaticIP(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	log:warn("setStaticIP addr=", self.ipAddress, " subnet=", self.ipSubnet, " gw=", self.ipGateway, " dns=", self.ipDNS)
 
 	Task("networkStatic", self,
 	     function()
-		     self.t_ctrl:t_setStaticIP(self.ssid, self.ipAddress, self.ipSubnet, self.ipGateway, self.ipDNS)
-		     connectOK(self)
+		     iface:t_setStaticIP(ssid, self.ipAddress, self.ipSubnet, self.ipGateway, self.ipDNS)
+		     connectOK(self, iface, ssid)
 	     end):addTask()
 end
 
 
-function removeNetworkTask(self, iface, ssid)
+function _removeNetworkTask(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	iface:t_removeNetwork(ssid)
 
 	if self.scanResults[ssid] then
@@ -1313,9 +1344,11 @@ function removeNetworkTask(self, iface, ssid)
 end
 
 
-function removeNetwork(self, ssid)
+function removeNetwork(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	-- forget the network
-	Task("networkRemove", self, t_removeNetwork):addTask(ssid)
+	Task("networkRemove", self, _removeNetworkTask):addTask(iface, ssid)
 
 	-- popup confirmation
 	local window = Popup("popupIcon")
@@ -1331,7 +1364,9 @@ function removeNetwork(self, ssid)
 end
 
 
-function connectOrDelete(self, ssid)
+function connectOrDelete(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	local window = Window("window", ssid, wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -1341,15 +1376,14 @@ function connectOrDelete(self, ssid)
 						text = self:string("NETWORK_CONNECT_TO_NETWORK"), nil,
 						sound = "WINDOWSHOW",
 						callback = function()
-								   self.ssid = ssid
-								   connect(self)
+								   connect(self, iface, ssid)
 							   end
 					},
 					{
 						text = self:string("NETWORK_FORGET_NETWORK"), nil,
 						sound = "WINDOWSHOW",
 						callback = function()
-								   deleteConfirm(self, ssid)
+								   deleteConfirm(self, iface, ssid)
 							   end
 					},
 				})
@@ -1361,7 +1395,9 @@ function connectOrDelete(self, ssid)
 end
 
 
-function deleteConfirm(self, ssid)
+function deleteConfirm(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
 	local window = Window("window", self:string("NETWORK_FORGET_NETWORK"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -1378,7 +1414,7 @@ function deleteConfirm(self, ssid)
 						text = self:string("NETWORK_FORGET_CONFIRM", ssid), nil,
 						sound = "WINDOWSHOW",
 						callback = function()
-								   removeNetwork(self, ssid)
+								   removeNetwork(self, iface, ssid)
 							   end
 					},
 				})
@@ -1460,7 +1496,7 @@ function networkStatusShow(self)
 					   text = self:string("NETWORK_FORGET_NETWORK"), nil,
 					   sound = "WINDOWSHOW",
 					   callback = function()
-							      deleteConfirm(self, self.currentSSID)
+							      deleteConfirm(self, iface, self.currentSSID)
 						      end
 				   },
 				})
