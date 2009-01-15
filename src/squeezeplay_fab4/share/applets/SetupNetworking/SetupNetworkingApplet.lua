@@ -63,9 +63,6 @@ oo.class(_M, Applet)
 function init(self)
 	self.wlanIface = Networking:wirelessInterface(jnt)
 	self.ethIface = Networking:wiredInterface(jnt)
-
-	-- XXXX write out t_ctrl
-	self.t_ctrl = self.wlanIface
 end
 
 
@@ -842,7 +839,7 @@ function createAndConnect(self, iface, ssid)
 
 	log:warn("createAndConnect ", iface, " ", ssid)
 
-	self.createNetwork = self.ssid
+	self.createNetwork = ssid
 	connect(self, iface, ssid)
 end
 
@@ -892,7 +889,7 @@ function _connectFailedTask(self, iface)
 	log:warn("addNetwork=", self.addNetwork)
 	if self.addNetwork then
 		-- Remove failed network
-		self:_removeNetworkTask(iface, self.ssid)
+		self:_removeNetworkTask(iface, ssid)
 		self.addNetwork = nil
 	end
 end
@@ -905,7 +902,7 @@ function connectFailed(self, iface, ssid, reason)
 
 	-- Stop trying to connect to the network, if this network is
 	-- being added this will also remove the network configuration
-	Task("networkFailed", self, _connectFailedTask):addTask(iface)
+	Task("networkFailed", self, _connectFailedTask):addTask(iface, ssid)
 
 	-- Message based on failure type
 	local helpText = self:string("NETWORK_CONNECTION_PROBLEM_HELP")
@@ -971,7 +968,6 @@ function connectOK(self, iface, ssid)
 	self:_setCurrentSSID(ssid)
 
 	-- forget connection state
-	self.ssid = nil
 	self.encryption = nil
 	self.psk = nil
 	self.key = nil
@@ -1440,10 +1436,10 @@ local stateTxt = {
 
 
 function t_networkStatusTimer(self, values)
-	local status = self.t_ctrl:t_wpaStatus()
+	local status = self.wlanIface:t_wpaStatus()
 
-	local snr = self.t_ctrl:getSNR()
-	local bitrate = self.t_ctrl:getTxBitRate()
+	local snr = self.wlanIface:getSNR()
+	local bitrate = self.wlanIface:getTxBitRate()
 
 	local wpa_state = stateTxt[status.wpa_state] or "NETWORK_STATE_UNKNOWN"
 
