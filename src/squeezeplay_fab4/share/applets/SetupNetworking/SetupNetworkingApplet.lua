@@ -817,17 +817,19 @@ function selectNetworkTask(self, iface, ssid)
 	end
 
 	-- XXXX does wired need pre-populating in scanResults?
+	local id = nil
 	if iface:isWireless() then
 		if self.scanResults[ssid] == nil then
 			-- ensure the network state exists
 			_addNetwork(self, iface, ssid)
 		end
 
-		local id = self.scanResults[ssid].id
-		if id == nil then
-			-- create the network config
-			self:_addNetworkTask(iface, ssid)
-		end
+		id = self.scanResults[ssid].id
+	end
+
+	if id == nil then
+		-- create the network config
+		self:_addNetworkTask(iface, ssid)
 	end
 
 	iface:t_selectNetwork(ssid)

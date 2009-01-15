@@ -21,6 +21,38 @@ pull in networking object to manipulate wireless interface
 =cut
 --]]
 
+--[[
+
+The file modifies the /etc/network/interfaces file, as described below:
+
+    # Local loopback - always needed
+    auto lo
+    iface lo inet loopback
+
+    # Wired interface
+    # start / stop using 'ifup eth0' and 'ifdown eth0'
+    # 'auto eth0' brings this interface up automatically on boot
+    auto eth0
+    iface eth0 inet dhcp
+    	script /etc/network/udhcpc_action
+
+    # Wireless interface
+    # the mapping file is used by the network scripts, and must not be changed
+    mapping wlan0
+        script /etc/network/if_mapping
+
+    # in this file you must use '_' instead of ' ' in ssid
+    # start / stop using 'ifup wlan0=<SSID>' and 'ifdown wlan0=<SSID>
+    # the wireless configuration must be in /etc/wpa_supplicant.conf
+    auto wlan0=<SSID>
+    iface <SSID> inet dhcp
+        script /etc/network/udhcpc_action
+
+This file also contains any static-ip configuration.
+
+--]]
+
+
 local assert, ipairs, pairs, pcall, tonumber, tostring, type = assert, ipairs, pairs, pcall, tonumber, tostring, type
 
 local oo          = require("loop.simple")
@@ -616,6 +648,7 @@ function t_addNetwork(self, ssid, option)
 	return id
 end
 
+
 --[[
 
 =head2 jive.net.Networking:t_removeNetwork(ssid)
@@ -628,28 +661,25 @@ forgets a previously discovered network
 function t_removeNetwork(self, ssid)
 	assert(Task:running(), "Networking:removeNetwork must be called in a Task")
 
-	if not self.wireless then
-		-- no action for ethernet
-		return
-	end
+	if self.wireless then
+		local networkResults = self:request("LIST_NETWORKS")
 
-	local networkResults = self:request("LIST_NETWORKS")
-
-	local id = false
-	for nid, nssid in string.gmatch(networkResults, "([%d]+)\t([^\t]*).-\n") do
-		if nssid == ssid then
-			id = nid
-			break
+		local id = false
+		for nid, nssid in string.gmatch(networkResults, "([%d]+)\t([^\t]*).-\n") do
+			if nssid == ssid then
+				id = nid
+				break
+			end
 		end
-	end
 
-	-- Remove ssid from wpa supplicant
-	if id then
-		local request = 'REMOVE_NETWORK ' .. id
-		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+		-- Remove ssid from wpa supplicant
+		if id then
+			local request = 'REMOVE_NETWORK ' .. id
+			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
-		request = 'SAVE_CONFIG'
-		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+			request = 'SAVE_CONFIG'
+			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+		end
 	end
 
 	-- Remove dhcp/static ip configuration for network
@@ -726,7 +756,7 @@ function t_selectNetwork(self, ssid)
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 	end
 
-	-- XXXX set as auto network
+	-- set as auto network
 	self:_editAutoInterfaces(ssid)
 
 	-- bring the interface up
@@ -781,9 +811,6 @@ if the optional ssid argument is given, correct use of ifup I<interface>=I<ssid>
 --]]
 
 function _ifUp(self, ssid)
-
-log:warn("**************************************************** >")
-
 	-- bring down all other interfaces
 	for _, interface in pairs(interfaceTable) do
 		if interface ~= self then
@@ -794,14 +821,11 @@ log:warn("**************************************************** >")
 	-- bring interface up
 	local iface = self.interface
 	if self.wireless then
-		-- XXXX munge ssid
+		ssid = string.gsub(ssid, "[ \t]", "_")
 		iface = iface .. "=" .. ssid
 	end
 
 	self:_ifUpDown("/sbin/ifup " .. iface)
-
-log:warn("**************************************************** <")
-
 end
 
 
@@ -846,9 +870,6 @@ end
 
 
 function _editAutoInterfaces(self, ssid)
-
-log:warn("************ _editAutoInterfaces ", ssid)
-
 	local interface = self.interface
 
 	-- for the `auto interface[=<ssid>]` line
@@ -895,7 +916,6 @@ log:warn("************ _editAutoInterfaces ", ssid)
 
 	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
 	_sync()
-
 end
 
 
@@ -912,18 +932,14 @@ end
 
 
 function _editNetworkInterfaces( self, ssid, method, ...)
-
-log:warn("************ _editNetworkInterfaces ", ssid, " ", method)
-
-	local interface = self.interface
+	local iface = self.interface
 
 	-- the interfaces file uses " \t" as word breaks so munge the ssid
 	-- FIXME ssid's with \n are not supported
----	assert(ssid, debug.traceback())
+	assert(ssid, debug.traceback())
 	ssid = string.gsub(ssid, "[ \t]", "_")
----	log:info("munged ssid=", ssid)
 
-	log:debug('Writing /etc/network/interfaces for interface: ', interface, ', ssid: ', ssid , ' method: ', method)
+	log:debug('writing /etc/network/interfaces for ', iface, ', ssid: ', ssid , ' method: ', method)
 
 	local fi = assert(io.open("/etc/network/interfaces", "r+"))
 	local fo = assert(io.open("/etc/network/interfaces.tmp", "w"))
@@ -933,7 +949,7 @@ log:warn("************ _editNetworkInterfaces ", ssid, " ", method)
 	if ssid then
 		iface_name = ssid
 	else
-		iface_name = interface
+		iface_name = iface
 	end
 
 	local network = ""
@@ -955,7 +971,6 @@ log:warn("************ _editNetworkInterfaces ", ssid, " ", method)
 		end
 
 		if network ~= interface then
-			log:debug('WRITING: ', line)
 			fo:write(line .. "\n")
 		else
 			network_block_next = 1
@@ -970,9 +985,6 @@ log:warn("************ _editNetworkInterfaces ", ssid, " ", method)
 	fo:close()
 
 	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
-
-	self:_editAutoInterfaces(interface, ssid)
-
 	_sync()
 end
 
