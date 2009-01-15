@@ -21,6 +21,7 @@ local EVENT_UNUSED      = jive.ui.EVENT_UNUSED
 
 local EVENT_IR_DOWN     = jive.ui.EVENT_IR_DOWN
 local EVENT_IR_REPEAT   = jive.ui.EVENT_IR_REPEAT
+local EVENT_IR_HOLD     = jive.ui.EVENT_IR_HOLD
 local EVENT_KEY_PRESS   = jive.ui.EVENT_KEY_PRESS
 local EVENT_CHAR_PRESS   = jive.ui.EVENT_CHAR_PRESS
 local EVENT_SCROLL      = jive.ui.EVENT_SCROLL
@@ -272,21 +273,22 @@ end
 
 function _eventHandler(self, event)
 	local type = event:getType()
-	if type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT then
+	if type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT or type == EVENT_IR_HOLD then
 		local irCode = event:getIRCode()
-		--first check for IR DOWN/UP
-		if event:getIRCode() == 0x7689b04f or event:getIRCode() == 0x7689e01f then -- DOWN/UP - todo: make lookup table for codes
-			self.numberLetterTimer:stop()
-			if self.locked == nil then
-				local chars = self:_getChars()
-				local idx = string.find(chars, string.sub(tostring(self.value), self.cursor, self.cursor), 1, true)			
-				local initialIndex = 
-				_scroll(self, self.irAccel:event(event, idx, idx, 1, #chars))
-				return EVENT_CONSUME
-			end
-		end 
-		
-		if type == EVENT_IR_DOWN then
+		if type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT then
+			--first check for IR DOWN/UP
+			if event:getIRCode() == 0x7689b04f or event:getIRCode() == 0x7689e01f then -- DOWN/UP - todo: make lookup table for codes
+				self.numberLetterTimer:stop()
+				if self.locked == nil then
+					local chars = self:_getChars()
+					local idx = string.find(chars, string.sub(tostring(self.value), self.cursor, self.cursor), 1, true)			
+					local initialIndex = 
+					_scroll(self, self.irAccel:event(event, idx, idx, 1, #chars))
+					return EVENT_CONSUME
+				end
+			end 
+		end
+		if type == EVENT_IR_DOWN or type == EVENT_IR_HOLD then
 			local timerWasRunning = self.numberLetterTimer:isRunning()
 			self.numberLetterTimer:stop()
 		
@@ -296,7 +298,7 @@ function _eventHandler(self, event)
 					_moveCursor(self, 1)
 					self:reDraw()
 					
-					_scroll(self, 1, _getMatchingChars(self, numberLetters), true)
+					_scroll(self, 1, tostring(_getMatchingChars(self, numberLetters)), true)
 				else
 					---First check for "overshoot"
 					if self.lastNumberLetterT then
@@ -311,9 +313,24 @@ function _eventHandler(self, event)
 						end
 					end
 
-					--continue scroll if timer was active, otherwise start new scroll 
-					local restartNumberLetters = not timerWasRunning or self:_cursorAtEnd()
-					_scroll(self, 1, _getMatchingChars(self, numberLetters), restartNumberLetters)
+					----continue scroll if timer was active, otherwise start new scroll
+					
+					local availableNumberLetters = tostring(_getMatchingChars(self, numberLetters))
+					
+					local lastCharacterIfNumber = string.match(availableNumberLetters, "%d$")
+					if type == EVENT_IR_HOLD and lastCharacterIfNumber then
+						-- on hold, select the number character directly (always the last character), if it is available
+						
+						_scroll(self, 1, tostring(lastCharacterIfNumber), true)
+
+						_moveCursor(self, 1)
+						self.lastNumberLetterIrCode = nil
+						
+						return EVENT_CONSUME
+					end
+					
+					local resetNumberLettersIndex = not timerWasRunning or self:_cursorAtEnd()
+					_scroll(self, 1, availableNumberLetters, resetNumberLettersIndex)
 				end
 				
 				self.lastNumberLetterIrCode = irCode
@@ -507,7 +524,7 @@ function __init(self, style, value, closure, allowedChars)
 					end, 
 					true)
 	
-	obj:addListener(EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE | EVENT_IR_DOWN | EVENT_IR_REPEAT,
+	obj:addListener(EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE | EVENT_IR_DOWN | EVENT_IR_REPEAT | EVENT_IR_HOLD,
 			function(event)
 				return _eventHandler(obj, event)
 			end)
