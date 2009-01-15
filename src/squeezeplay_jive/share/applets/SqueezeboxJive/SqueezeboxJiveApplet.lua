@@ -146,8 +146,7 @@ function init(self)
 				 end)
 
 	-- wireless
-	local wireless = Networking:wirelessInterface()
-	self.wireless = Networking(jnt, wireless)
+	self.wireless = Networking:wirelessInterface(jnt)
 
 	-- register network active function
 	jnt:registerNetworkActive(function(active)

@@ -218,10 +218,7 @@ function __init(self, ...)
 
 	-- wireless discovery
 	if hasNetworking then
-		local wirelessInterface = Networking:wirelessInterface()
-		if wirelessInterface then
-			obj.wireless = Networking(jnt, wirelessInterface)
-		end
+		obj.wireless = Networking:wirelessInterface(jnt)
 	end
 
 	-- discovery timer

@@ -182,7 +182,7 @@ function step5(self)
 	log:info("step5")
 
 	-- wireless connection, using squeezebox?
-	local scanResults = Networking.scanResults()
+	local scanResults = self.wireless:scanResults()
 
 	for ssid,_ in pairs(scanResults) do
 		log:warn("******************************checking ssid ", ssid)
@@ -215,7 +215,7 @@ function step6(self)
 	log:info("step6")
 
 	-- wireless connection, using squeezebox?
-	local scanResults = Networking.scanResults()
+	local scanResults = self.wireless:scanResults()
 
 	for ssid,_ in pairs(scanResults) do
 		log:warn("checking ssid ", ssid)
@@ -349,6 +349,8 @@ end
 function init(self)
 	log:info("subscribe")
 	jnt:subscribe(self)
+
+	self.wireless = Networking:wirelessInterface(jnt)
 end
 
 

@@ -61,9 +61,11 @@ oo.class(_M, Applet)
 
 
 function init(self)
-	self.wifiInterface  = Networking:wirelessInterface()
-	self.wiredInterface = Networking:wiredInterface()
-	self.t_ctrl = Networking(jnt, self.wifiInterface)
+	self.wlanIface = Networking:wirelessInterface(jnt)
+	self.ethIface = Networking:wiredInterface(jnt)
+
+	-- XXXX write out t_ctrl
+	self.t_ctrl = self.wlanIface
 end
 
 
@@ -239,8 +241,8 @@ end
 
 
 function setupConnectWiredInterface(self, setupNext)
-	log:warn('bringing ', self.wiredInterface, ' up')
-	self.wiredInterface:t_ifUp()
+	log:warn('bringing ', self.ethIface, ' up')
+	self.ethIface:t_ifUp()
 end
 
 

@@ -62,10 +62,7 @@ function init(self, ...)
 	self.scanResults = {}
 
 	if hasNetworking then
-		local wirelessInterface = Networking:wirelessInterface()
-		if wirelessInterface then
-			self.wireless = Networking(jnt, wirelessInterface)
-		end
+		self.wireless = Networking:wirelessInterface(jnt)
 	end
 
 	jnt:subscribe(self)

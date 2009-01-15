@@ -40,7 +40,6 @@ local Process     = require("jive.net.Process")
 local Task        = require("jive.ui.Task")
 local wireless    = require("jiveWireless")
 
-local jnt         = jnt
 
 module("jive.net.Networking")
 oo.class(_M, Socket)
@@ -74,71 +73,65 @@ local REGION_CODE_MAPPING = {
 }
 
 
--- global for storing data on available network interfaces
+-- global for interface objects
 local interfaceTable = {}
 
 -- global wireless network scan results
+-- XXXX move into interface object
 local _scanResults = {}
 
--- singleton wireless instance per interface
-local _instance = {}
+
 
 --[[
 
 =head2 jive.net.Networking(jnt, interface, name)
 
-Constructs an object for administration of a network interface
+Constructs an object for administration of a network interface. This
+methods should not be called from the application code directly, instead
+one of the factory methods below should be used.
 
 =cut
 --]]
 
-function __init(self, jnt, interface, name)
-
-	if _instance[interface] then
-		return _instance[interface]
-	end
-
-	local obj = oo.rawnew(self, Socket(jnt, name))
+function __init(self, jnt, interface, isWireless)
+	local obj = oo.rawnew(self, Socket(jnt, interface))
 
 	obj.interface     = interface
-	obj.wireless      = ( interfaceTable[interface] and interfaceTable[interface].wireless ) 
-				or obj:isWireless(interface)
-	log:debug('Interface : ', obj.interface)
-	log:debug('isWireless: ', obj.wireless)
-	obj.responseQueue = {}
+	obj.wireless      = isWireless
 
+	obj.responseQueue = {}
 	obj:open()
 
-	_instance[interface] = obj
 	return obj
 end
 
+
 --[[
 
-=head2 jive.net.Networking:interfaces()
+=head2 jive.net.Networking:interfaces(jnt)
 
-returns a table of existing interfaces on a device
+Factory method to return a table of interfaces on a device.
 
 =cut
 --]]
 
+function interfaces(self, jnt)
+log:debug(debug.traceback())
+	assert(jnt)
 
-function interfaces(self)
-
-	log:debug('scanning /proc/net/dev for interfaces...')
-
+	-- only scan once
 	for interface, _ in pairs(interfaceTable) do
-		if interface then
-			return interfaceTable
-		end
+		return interfaceTable
 	end
 
-        local interfaces = {}
+	log:debug('looking for network interfaces')
+
+	local interfaces = {}
 
         local f = io.popen("cat /proc/net/dev")
         if f == nil then
-		log:error('`cat /proc/net/dev` produced no results')
-                return interfaces
+		log:error("Can't read /proc/net/dev")
+		return
         end
 
 	while true do
@@ -146,121 +139,106 @@ function interfaces(self)
 		if line == nil then
 			break
 		end
+
 		local interface = string.match(line, "^%s*(%w+):")
+		log:debug("found: ", interface)
+
 		if interface ~= nil and interface ~= 'lo' then
 			table.insert(interfaces, interface)
 		end
 	end
 
-	for _, interface in ipairs(interfaces) do
-		if not interfaceTable[interface] then
-			interfaceTable[interface] = {}
+	log:debug('looking for wireless interfaces')
+	-- XXXX replace iwconfig with ioctl lookup
+
+	local wireless = {}
+
+	local f = io.popen("/sbin/iwconfig 2> /dev/null")
+        if f ~= nil then
+		while true do
+        		local line = f:read("*l")
+			if line == nil then
+				break
+			end
+
+			local interface = string.match(line, "^(%w+)%s+")
+			if interface then
+				log:debug("found wireless: ", interface)
+				wireless[interface] = true
+			end
 		end
-		self:isWireless(interface)
+
+        	f:close()
 	end
 
-        f:close()
-        return interfaces
+	-- create Networking interface objects
+	for _, interface in ipairs(interfaces) do
+		interfaceTable[interface] = self(jnt, interface, wireless[interface])
+	end
 
+	debug.dump(interfaceTable)
 end
+
 
 --[[
 
-=head2 jive.net.Networking:wirelessInterface()
+=head2 jive.net.Networking:wirelessInterface(jnt)
 
-returns the first interface (if any) from the interface table capable of wireless
+Convience method to return first wireless interface object.
 
 =cut
 --]]
 
+function wirelessInterface(self, jnt)
+        self:interfaces(jnt)
 
-function wirelessInterface(self)
-
-        self:interfaces()
-
-	for interface, _ in pairs(interfaceTable) do
-		if self:isWireless(interface) then
-			log:debug('Wireless interface found: ', interface)
+	for _, interface in pairs(interfaceTable) do
+		if interface.wireless then
 			return interface
 		end
 	end
-
-	log:error('Error: interfaceTable shows no wireless interface. returning eth0, the default wireless on SBC')
-	return 'eth0'
-
+	return nil
 end
 
 
 --[[
 
-=head2 jive.net.Networking:wiredInterface()
+=head2 jive.net.Networking:wiredInterface(jnt)
 
-returns the first available interface (if any) from the interface table that does not do wireless
+Convience method to return first wired interface object.
 
 =cut
 --]]
 
+function wiredInterface(self, jnt)
+        self:interfaces(jnt)
 
-function wiredInterface(self)
-
-        self:interfaces()
-
-	for interface, _ in pairs(interfaceTable) do
-		if not self:isWireless(interface) then
+	for _, interface in pairs(interfaceTable) do
+		if not interface.wireless  then
 			return interface 
 		end
 	end
-	return false
+	return nil
 end
+
 
 --[[
 
-=head2 jive.net.Networking:isWireless(interface)
+=head2 networking:isWireless(self)
 
-returns true if the named I<interface> is wireless
+Return true if the I<interface> is wireless
 
 =cut
 --]]
 
-function isWireless(self, interface)
-
-	if not interface then
-		return false
-	end
-
-	-- look to see if we've cached this already
-	if interfaceTable[interface] and interfaceTable[interface].wireless then
-		return true
-	end
-
-	local f = io.popen("/sbin/iwconfig " .. interface .. " 2>/dev/null")
-        if f == nil then
-                return false
-        end
-
-	while true do
-        	local line = f:read("*l")
-		if line == nil then
-			break
-		end
-
-		local doesWireless = string.match(line, "^(%w+)%s+")
-		if interface == doesWireless then
-			interfaceTable[interface] = { wireless = true }
-			f:close()
-			return true
-		end
-	end
-
-        f:close()
-
-	return false
-	
+function isWireless(self)
+	return self.wireless
 end
+
 
 --[[
 
-=head2 jive.net.Networking:getRegionNames()
+=head2 networking:getRegionNames()
 
 returns the available wireless region names
 
@@ -271,15 +249,15 @@ function getRegionNames(self)
 	return pairs(REGION_CODE_MAPPING)
 end
 
+
 --[[
 
-=head2 jive.net.Networking:getRegion()
+=head2 networking:getRegion()
 
-returns the current region
+Returns the current region for this interface
 
 =cut
 --]]
-
 
 function getRegion(self)
 	-- check config file
@@ -311,11 +289,12 @@ function getRegion(self)
 	return nil
 end
 
+
 --[[
 
-=head2 jive.net.Networking:setRegion(region)
+=head2 networking:setRegion(region)
 
-sets the current region
+Sets the current region for this interface
 
 =cut
 --]]
@@ -339,6 +318,8 @@ function setRegion(self, region)
 	local cmd = "/sbin/iwpriv " .. self.interface .. " setregioncode " .. mapping[1]
 	log:info("setRegion: ", cmd)
 	os.execute(cmd)
+
+	_sync()
 end
 
 
@@ -356,6 +337,7 @@ function getMarvellRegionCode(self)
 	return mapping and mapping[1] or 0
 end
 
+
 --[[
 
 =head2 jive.net.Networking:getAtherosRegionCode()
@@ -365,11 +347,11 @@ returns the region code for Atheros on Squeezebox
 =cut
 --]]
 
-
 function getAtherosRegionCode(self)
 	local mapping = REGION_CODE_MAPPING[region or self:getRegion()]
 	return mapping and mapping[2] or 0
 end
+
 
 --[[
 
@@ -381,11 +363,16 @@ start a wireless network scan in a new task
 --]]
 
 function scan(self, callback)
+	if not self.wireless then
+		return
+	end
+
 	Task("networkScan", self,
 	     function()
-		     t_scan(self, callback)
+		     _scan_task(self, callback)
 	     end):addTask()
 end
+
 
 --[[
 
@@ -397,12 +384,19 @@ returns wireless scan results, or nil if a network scan has not been performed.
 --]]
 
 function scanResults(self)
+	assert(self, debug.traceback())
+
+	if not self.wireless then
+		return {}
+	end
+
 	return _scanResults
 end
 
+
 --[[
 
-=head2 jive.net.Networking:t_scan(callback)
+=head2 jive.net.Networking:_scan_task(callback)
 
 network scanning. this can take a little time so we do this in 
 the network thread so the ui is not blocked.
@@ -410,8 +404,7 @@ the network thread so the ui is not blocked.
 =cut
 --]]
 
-
-function t_scan(self, callback)
+function _scan_task(self, callback)
 	assert(Task:running(), "Networking:scan must be called in a Task")
 
 	local status, err = self:request("SCAN")
@@ -475,6 +468,7 @@ function t_scan(self, callback)
 	self.scanTask = nil
 end
 
+
 --[[
 
 =head2 jive.net.Networking:t_wpaStatus()
@@ -484,6 +478,7 @@ parse and return wpa status
 =cut
 --]]
 
+-- XXXX rename to just status()
 function t_wpaStatus(self)
 	assert(Task:running(), "Networking:wpaStatus must be called in a Task")
 
@@ -494,8 +489,16 @@ function t_wpaStatus(self)
 		status[k] = v
 	end
 
+debug.dump(status)
+
 	return status
 end
+
+
+
+-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX REVIEWED TO HERE
+
+
 
 --[[
 
@@ -505,7 +508,6 @@ adds a network to the list of discovered networks
 
 =cut
 --]]
-
 
 function t_addNetwork(self, ssid, option)
 	assert(Task:running(), "Networking:addNetwork must be called in a Task")
@@ -801,7 +803,7 @@ end
 function _toggleInterface(self, interface, direction)
 
 	local ifCmd = "/sbin/if" .. direction .. ' ' .. interface
-	local proc = Process(jnt, ifCmd)
+	local proc = Process(self.jnt, ifCmd)
         proc:read(
 		function(chunk, err)
 			if err then
@@ -871,8 +873,7 @@ function _editAutoInterfaces(self, interface, ssid)
 	fo:close()
 
 	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
-	-- FIXME: workaround until filesystem write issue resolved
-	os.execute("sync")
+	_sync()
 
 end
 
@@ -931,11 +932,9 @@ function _editNetworkInterfaces( self, interface, ssid, method, ...)
 
 	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
 
-	-- FIXME: workaround until filesystem write issue resolved
-	os.execute("sync")
-
 	self:_editAutoInterfaces(interface, ssid)
 
+	_sync()
 end
 
 --[[
@@ -1239,6 +1238,12 @@ end
 
 function detach(self)
 	self.eventSink = nil
+end
+
+
+function _sync()
+	-- FIXME: workaround until filesystem write issue resolved
+	os.execute("sync")
 end
 
 

@@ -109,10 +109,7 @@ function init(self)
 	end
 
 	if hasNetworking then
-		local wirelessInterface = Networking:wirelessInterface()
-		if wirelessInterface then
-			self.wireless = Networking(jnt, wirelessInterface)
-		end
+		self.wireless = Networking:wirelessInterface(jnt)
 	end
 
 	-- socket for udap discovery

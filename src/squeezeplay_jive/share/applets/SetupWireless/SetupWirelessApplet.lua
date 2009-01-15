@@ -59,10 +59,7 @@ oo.class(_M, Applet)
 
 
 function init(self)
-
-	local wirelessInterface = Networking:wirelessInterface()
-	self.t_ctrl = Networking(jnt, wirelessInterface)
-
+	self.t_ctrl = Networking:wirelessInterface(jnt)
 end
 
 
