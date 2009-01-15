@@ -123,7 +123,7 @@ function event(self, event, listTop, listIndex, listVisible, listSize)
 		 -- todo: the acceleration algorithm could be listSize based (i.e. scroll faster soon on a longer list)
 		   
 		if self.itemChangeCycles == CYCLES_BEFORE_ACCELERATION_STARTS then
-			self.itemChangePeriod = self.itemChangePeriod / 4 
+			self.itemChangePeriod = self.itemChangePeriod / 2 
 		elseif self.itemChangeCycles > 80 then
 			scrollBy = 64
 		elseif self.itemChangeCycles > 60 then
