@@ -6,7 +6,7 @@
 
 
 #include "common.h"
-#include "jive.h"
+#include "ui/jive.h"
 
 #include <linux/input.h>
 #include <sys/soundcard.h>
