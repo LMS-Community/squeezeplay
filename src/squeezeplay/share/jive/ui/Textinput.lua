@@ -38,6 +38,8 @@ local KEY_RIGHT         = jive.ui.KEY_RIGHT
 local KEY_PLAY          = jive.ui.KEY_PLAY
 local KEY_ADD           = jive.ui.KEY_ADD
 
+local NUMBER_LETTER_OVERSHOOT_TIME = 150 --ms
+local NUMBER_LETTER_TIMER_TIME = 1100 --ms
 
 -- our class
 module(...)
@@ -296,12 +298,27 @@ function _eventHandler(self, event)
 					
 					_scroll(self, 1, _getMatchingChars(self, numberLetters), true)
 				else
+					---First check for "overshoot"
+					if self.lastNumberLetterT then
+						local numberLetterTimeDelta = event:getTicks() - self.lastNumberLetterT
+						if not timerWasRunning and numberLetterTimeDelta > NUMBER_LETTER_TIMER_TIME and 
+								numberLetterTimeDelta < NUMBER_LETTER_TIMER_TIME + NUMBER_LETTER_OVERSHOOT_TIME then
+							--If timer has just fired and another press on the same key is entered, 
+							 -- follow observed SC behavior: don't use the input, making for
+							 -- less unexpected input due to the key press happening right
+							 -- as the timer fired even though the user meant for the press to refer to the last letter.
+							return EVENT_CONSUME				
+						end
+					end
+
+					--continue scroll if timer was active, otherwise start new scroll 
 					local restartNumberLetters = not timerWasRunning or self:_cursorAtEnd()
 					_scroll(self, 1, _getMatchingChars(self, numberLetters), restartNumberLetters)
 				end
 				
 				self.lastNumberLetterIrCode = irCode
 				
+				self.lastNumberLetterT = event:getTicks()
 				self.numberLetterTimer:restart()
 							
 				return EVENT_CONSUME
@@ -480,13 +497,13 @@ function __init(self, style, value, closure, allowedChars)
 	obj.scroll = ScrollAccel()
 	obj.irAccel = IRMenuAccel(0x7689b04f, 0x7689e01f) -- UP/down - todo: make lookup table for codes
 	obj.lastNumberLetterIrCode = nil
-	obj.numberLetterTimer = Timer(1000,     
+	obj.lastNumberLetterT = nil
+	obj.numberLetterTimer = Timer(NUMBER_LETTER_TIMER_TIME,     
 					function() 
+						log:error("Fired")
 						obj.lastNumberLetterIrCode = nil
 						obj:_moveCursor(1) 
 						obj:reDraw()
-						
-						obj.numberLetterTimer:stop() -- seems to be a bug - should not need this for "once" timer but isRunning() returns false without it
 					end, 
 					true)
 	
