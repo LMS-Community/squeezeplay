@@ -320,8 +320,8 @@ function __init(self, jnt, heloPacket)
 	obj.heloPacket     = heloPacket
 	obj.heloPacket.mac = string.lower(obj.heloPacket.mac)
 
-	obj:capability("model", obj.heloPacket.model)
-	obj:capability("modelName", obj.heloPacket.modelName)
+	obj:capability("Model", obj.heloPacket.model)
+	obj:capability("ModelName", obj.heloPacket.modelName)
 
 	obj.statusCallback = _defaultStatusCallback
 
