@@ -67,11 +67,14 @@ local logheap       = require("jive.utils.log").logger("jive.heap")
 local EVENT_IR_ALL         = jive.ui.EVENT_IR_ALL
 local EVENT_IR_PRESS       = jive.ui.EVENT_IR_PRESS
 local EVENT_IR_DOWN        = jive.ui.EVENT_IR_DOWN
+local EVENT_IR_UP          = jive.ui.EVENT_IR_UP
 local EVENT_IR_REPEAT      = jive.ui.EVENT_IR_REPEAT
 local EVENT_IR_HOLD        = jive.ui.EVENT_IR_HOLD
 local EVENT_KEY_ALL        = jive.ui.EVENT_KEY_ALL
 local ACTION               = jive.ui.ACTION
 local EVENT_KEY_PRESS      = jive.ui.EVENT_KEY_PRESS
+local EVENT_KEY_UP         = jive.ui.EVENT_KEY_UP
+local EVENT_KEY_DOWN       = jive.ui.EVENT_KEY_DOWN
 local EVENT_CHAR_PRESS      = jive.ui.EVENT_CHAR_PRESS
 local EVENT_KEY_HOLD       = jive.ui.EVENT_KEY_HOLD
 local EVENT_SCROLL         = jive.ui.EVENT_SCROLL
@@ -213,14 +216,18 @@ end
 
 local function _irHandler(event)
 	local irCode = event:getIRCode()
+	log:debug("IR event: ", event:tostring())
 	local keyCode = irCodes[irCode]
 	if (keyCode) then
-	log:debug("IR event: ", event:tostring())
 	--includes temp hack for up/down to allow Menu, etc to have direct IR event access 
 		if event:getType() == EVENT_IR_PRESS and (keyCode ~= KEY_UP and keyCode ~= KEY_DOWN) then
 			Framework:pushEvent(Event:new(EVENT_KEY_PRESS, keyCode))
 		elseif event:getType() == EVENT_IR_HOLD then
 			Framework:pushEvent(Event:new(EVENT_KEY_HOLD, keyCode))
+		elseif event:getType() == EVENT_IR_DOWN and (keyCode ~= KEY_UP and keyCode ~= KEY_DOWN) then
+			Framework:pushEvent(Event:new(EVENT_KEY_DOWN, keyCode))
+		elseif event:getType() == EVENT_IR_UP and (keyCode ~= KEY_UP and keyCode ~= KEY_DOWN) then
+			Framework:pushEvent(Event:new(EVENT_KEY_UP, keyCode))
 		end
 		return EVENT_CONSUME
 	end
@@ -288,6 +295,8 @@ function JiveMain:__init()
 
 	-- menu nodes to add...these are menu items that are used by applets
 	JiveMain:jiveMainNodes(_globalStrings)
+
+	--Framework:initIRCodeMappings()
 
 	-- init our listeners
 	jiveMain.skins = {}
