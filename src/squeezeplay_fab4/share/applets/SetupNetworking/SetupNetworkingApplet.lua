@@ -225,8 +225,8 @@ function setupNetworksShow(self, setupNext)
 	return window
 end
 
-function setupConnectionHelp(self)
 
+function setupConnectionHelp(self)
 	local window = Window("window", self:string("NETWORK_CONNECTION_HELP"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
@@ -237,12 +237,12 @@ function setupConnectionHelp(self)
 	return window
 end
 
+
 function setupConnectWiredInterface(self, setupNext)
-
 	log:warn('bringing ', self.wiredInterface, ' up')
-	Networking:t_ifUp(self.wiredInterface)
-
+	self.wiredInterface:t_ifUp()
 end
+
 
 function setupConnectionType(self, setupNextWireless, setupNextWired)
 	log:warn('setupConnectionType')
@@ -281,6 +281,7 @@ function setupConnectionType(self, setupNextWireless, setupNextWired)
 
 end
 
+
 function settingsNetworksShow(self)
 	self.setupNext = nil
 
@@ -292,7 +293,6 @@ end
 
 
 function _networksShow(self, title, help)
-
 	local window = Window("window", title, wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -365,7 +365,6 @@ end
 
 
 function _scanComplete(self, scanTable)
-
 	local now = Framework:getTicks()
 
 	local associated = nil
@@ -428,7 +427,6 @@ end
 
 
 function openNetwork(self, ssid)
-
 	if ssid == self.currentSSID then
 		-- current network, show status
 		if type(self.setupNext) == "function" then
@@ -449,8 +447,8 @@ function openNetwork(self, ssid)
 	end
 end
 
-function enterSSID(self)
 
+function enterSSID(self)
 	local window = Window("window", self:string("NETWORK_NETWORK_NAME"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -482,7 +480,6 @@ end
 
 
 function enterPassword(self)
-
 	assert(self.ssid, "No SSID selected")
 
 	if self.scanResults[self.ssid] == nil then
@@ -597,6 +594,7 @@ function chooseEncryption(self)
 	return window
 end
 
+
 function helpWindow(self, title, token)
 	local window = Window("window", self:string(title), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
@@ -607,9 +605,7 @@ function helpWindow(self, title, token)
 end
 
 
-
 function chooseWEPLength(self)
-
 	local window = Window("window", self:string("NETWORK_WIRELESS_ENCRYPTION"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -643,7 +639,6 @@ end
 
 
 function enterWEPKey(self)
-
 	local window = Window("window", self:string("NETWORK_WIRELESS_KEY"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -677,6 +672,7 @@ function enterWEPKey(self)
 	self:tieAndShowWindow(window)
 	return window
 end
+
 
 function enterPSK(self)
 	local window = Window("window", self:string("NETWORK_WIRELESS_PASSWORD"), wirelessTitleStyle)
@@ -727,7 +723,6 @@ end
 
 
 function _connectTimer(self)
-
 	Task("networkConnect", self,
 	     function()
 		     log:warn("connectTimeout=", self.connectTimeout, " dhcpTimeout=", self.dhcpTimeout)
