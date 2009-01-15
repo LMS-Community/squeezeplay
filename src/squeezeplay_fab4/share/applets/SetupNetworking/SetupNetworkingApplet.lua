@@ -813,7 +813,7 @@ function selectNetworkTask(self, iface, ssid)
 
 	if self.createNetwork == ssid then
 		-- remove the network config
-		self:removeNetworkTask(iface, ssid)
+		self:_removeNetworkTask(iface, ssid)
 	end
 
 	-- XXXX does wired need pre-populating in scanResults?

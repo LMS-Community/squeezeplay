@@ -873,40 +873,39 @@ function _editAutoInterfaces(self, ssid)
 	local interface = self.interface
 
 	-- for the `auto interface[=<ssid>]` line
-	local enabledInterface = interface
+	local autoInterface = interface
+
 	-- for the `iface <interface|ssid> inet ...` line
 	local iface_name = interface
 
 	if ssid then
-		enabledInterface = interface .. "=" .. ssid
+		ssid = string.gsub(ssid, "[ \t]", "_")
+		autoInterface = interface .. "=" .. ssid
 		iface_name = ssid
 	end
 
-	log:debug('EDITING THE AUTO LINES IN /etc/network/interfaces, enabledInterface is: ', enabledInterface)
+	log:debug('writing /etc/network/interfaces, enabling auto for ', autoInterface)
 
 	local fi = assert(io.open("/etc/network/interfaces", "r+"))
 	local fo = assert(io.open("/etc/network/interfaces.tmp", "w"))
 	local autoSet = false
 	for line in fi:lines() do
-		if string.match(line, "^mapping%s") or string.match(line, "^auto%s") then
+		if string.match(line, "^auto%s") then
 			-- if the interface is to be enabled, it should continue to be set to auto 
-			if (string.match(line, enabledInterface)) then
-				log:debug('WRITING: ', line)
+			if (string.match(line, autoInterface) or string.match(line, "lo")) then
 				fo:write(line .. "\n")
 				autoSet = true
 			else
-				log:debug('This interface is not the enabled interface, so do not configure it to come up on boot')
+				log:debug('disabling interface: ', line)
 			end
 		elseif string.match(line, "^iface%s") then
 			if not autoSet and string.match(line, iface_name) then
-				log:debug('WRITING: auto ' .. enabledInterface)
-				fo:write("auto " .. enabledInterface .. "\n")
+				log:debug('enabling interface:', autoInterface)
+				fo:write("auto " .. autoInterface .. "\n")
 				autoSet = true
 			end
-			log:debug('WRITING: ', line)
 			fo:write(line .. "\n")
 		else
-			log:debug('WRITING: ', line)
 			fo:write(line .. "\n")
 		end
 	end
