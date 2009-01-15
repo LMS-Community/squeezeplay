@@ -116,8 +116,7 @@ Factory method to return a table of interfaces on a device.
 --]]
 
 function interfaces(self, jnt)
-log:debug(debug.traceback())
-	assert(jnt)
+	assert(jnt, debug.traceback())
 
 	-- only scan once
 	for interface, _ in pairs(interfaceTable) do
@@ -481,22 +480,34 @@ parse and return wpa status
 function t_wpaStatus(self)
 	assert(Task:running(), "Networking:wpaStatus must be called in a Task")
 
-	local statusStr = self:request("STATUS")
-
 	local status = {}
-	for k,v in string.gmatch(statusStr, "([^=]+)=([^\n]+)\n") do
-		status[k] = v
+
+	if self.wireless then
+		local statusStr = self:request("STATUS")
+
+		for k,v in string.gmatch(statusStr, "([^=]+)=([^\n]+)\n") do
+			status[k] = v
+		end
+	else
+		log:warn("ifconfig ", self.interface)
+
+		local f, err = io.popen("/sbin/ifconfig " .. self.interface)
+		if f == nil then
+			log:error("Can't read ifconfig: ", err)
+		else
+			local ifconfig = f:read("*all")
+			f:close()
+
+			local ipaddr = string.match(ifconfig, "inet addr:([%d\.]+)")
+
+			status.wpa_state = "COMPLETED"
+			status.ip_address = ipaddr
+		end
 	end
 
-debug.dump(status)
-
+	debug.dump(status)
 	return status
 end
-
-
-
--- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX REVIEWED TO HERE
-
 
 
 --[[
@@ -511,18 +522,21 @@ adds a network to the list of discovered networks
 function t_addNetwork(self, ssid, option)
 	assert(Task:running(), "Networking:addNetwork must be called in a Task")
 
-log:warn("************************** ADD ", self.interface, " ssid=", ssid)
-
-	local request, response
-
 	-- make sure this ssid is not in any configuration
 	self:t_removeNetwork(ssid)
+
+	-- Set to use dhcp by default
+	self:_editNetworkInterfaces(ssid, "dhcp", "script /etc/network/udhcpc_action")
+
+	if not self.wireless then
+		-- no further action for ethernet
+		return
+	end
 
 	log:info("Connect to ", ssid)
 	local flags = (_scanResults[ssid] and _scanResults[ssid].flags) or ""
 
-	-- Set to use dhcp by default
-	self:_editNetworkInterfaces(self.interface, ssid, "dhcp", "script /etc/network/udhcpc_action")
+	local request, response
 
 	response = self:request("ADD_NETWORK")
 	local id = string.match(response, "%d+")
@@ -614,8 +628,6 @@ forgets a previously discovered network
 function t_removeNetwork(self, ssid)
 	assert(Task:running(), "Networking:removeNetwork must be called in a Task")
 
-log:warn("************************** REMOVE ", self.interface, " ssid=", ssid)
-
 	if not self.wireless then
 		-- no action for ethernet
 		return
@@ -641,8 +653,9 @@ log:warn("************************** REMOVE ", self.interface, " ssid=", ssid)
 	end
 
 	-- Remove dhcp/static ip configuration for network
-	self:_editNetworkInterfaces(self.interface, ssid)
+	self:_editNetworkInterfaces(ssid)
 end
+
 
 --[[
 
@@ -653,27 +666,19 @@ brings down a network interface. If wireless, then force the wireless disconnect
 =cut
 --]]
 
-function t_disconnectNetwork(self, interface)
-
-	if not interface then
-		interface = self.interface
-	end
-
-log:warn("************************** DISCONNECT ", self.interface)
-
-	assert(type(interface) == 'string')
+function t_disconnectNetwork(self)
 	assert(Task:running(), "Networking:disconnectNetwork must be called in a Task")
 
-	if self:isWireless(interface) then
+	if self.wireless then
 		-- Force disconnect from existing network
 		local request = 'DISCONNECT'
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 	end
 
 	-- Force the interface down
-	local result = self:t_ifDown(interface)
-
+	self:_ifDown()
 end
+
 
 --[[
 
@@ -684,13 +689,8 @@ selects a network to connect to. wireless only
 =cut
 --]]
 
-
 function t_selectNetwork(self, ssid)
-
 	assert(Task:running(), "Networking:selectNetwork must be called in a Task")
-
-
-log:warn("************************** SELECT ", self.interface, " ssid=", ssid)
 
 	if self.wireless then
 		local networkResults = self:request("LIST_NETWORKS")
@@ -726,8 +726,11 @@ log:warn("************************** SELECT ", self.interface, " ssid=", ssid)
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 	end
 
-	-- bring the inteface up
-	self:t_ifUp(self.interface, ssid)
+	-- XXXX set as auto network
+	self:_editAutoInterfaces(ssid)
+
+	-- bring the interface up
+	self:_ifUp(ssid)
 end
 
 
@@ -751,21 +754,22 @@ function t_setStaticIP(self, ssid, ipAddress, ipSubnet, ipGateway, ipDNS)
 	os.execute(configCommand)
 
 	-- Set static ip configuration for network
-	self:_editNetworkInterfaces(self.interface,
-					ssid, 
-					"static",
-				    "address " .. ipAddress,
-				    "netmask " .. ipSubnet,
-				    "gateway " .. ipGateway,
-				    "dns " .. ipDNS,
-				    "up echo 'nameserver " .. ipDNS .. "' > /etc/resolv.conf"
-			    )
-	self:t_ifUp(interface, ssid)
+	self:_editNetworkInterfaces(ssid, 
+		"static",
+		"address " .. ipAddress,
+		"netmask " .. ipSubnet,
+		"gateway " .. ipGateway,
+		"dns " .. ipDNS,
+		"up echo 'nameserver " .. ipDNS .. "' > /etc/resolv.conf"
+	)
+
+	self:_ifUp(ssid)
 end
+
 
 --[[
 
-=head2 jive.net.Networking:t_ifUp(interface, ssid)
+=head2 jive.net.Networking:_ifUp(ssid)
 
 brings I<interface> up, and all others (except loopback) down
 writes to /etc/network/interfaces and configures i<interface> 
@@ -776,70 +780,76 @@ if the optional ssid argument is given, correct use of ifup I<interface>=I<ssid>
 =cut
 --]]
 
-function t_ifUp(self, interface, ssid)
+function _ifUp(self, ssid)
 
-	local iface_name = interface
-	if ssid then
-		iface_name = interface .. "=" .. ssid
+log:warn("**************************************************** >")
+
+	-- bring down all other interfaces
+	for _, interface in pairs(interfaceTable) do
+		if interface ~= self then
+			interface:_ifDown()
+		end
 	end
 
 	-- bring interface up
-	self:_toggleInterface(iface_name, 'up')
-
-	--[[
-	-- for now at least, bring down all other interfaces
-	for otherInterface, _ in pairs(interfaceTable) do
-		if otherInterface ~= 'lo' and otherInterface ~= interface then
-			log:debug('Bringing down ', otherInterface)
-			self:t_ifDown(otherInterface)
-		end
+	local iface = self.interface
+	if self.wireless then
+		-- XXXX munge ssid
+		iface = iface .. "=" .. ssid
 	end
-	--]]
+
+	self:_ifUpDown("/sbin/ifup " .. iface)
+
+log:warn("**************************************************** <")
 
 end
 
+
 --[[
 
-=head2 jive.net.Networking:t_ifDown(interface)
+=head2 networking:_ifDown()
 
 brings I<interface> down
 =cut
 --]]
 
-function t_ifDown(self, interface)
-	local result = self:_toggleInterface(interface, 'down -f')
+function _ifDown(self)
+	-- bring interface down
+	local iface = self.interface
+
+	self:_ifUpDown("/sbin/ifdown " .. iface .. " -f")
 end
 
 
-function _toggleInterface(self, interface, direction)
+function _ifUpDown(self, cmd)
+	log:warn(cmd)
 
-	local ifCmd = "/sbin/if" .. direction .. ' ' .. interface
-	local proc = Process(self.jnt, ifCmd)
-        proc:read(
+	local proc = Process(self.jnt, cmd)
+	proc:read(
 		function(chunk, err)
 			if err then
 				log:error("if command failed: ", err)
 				return false
 			end
-			-- FIXME: if command was ifup and command succeeded, bring down other interfaces
-			if chunk ~= nil then
-			end
+                       	-- FIXME: if command was ifup and command succeeded, bring down other interfaces
+                       	if chunk ~= nil then
+                       	end
                         return 1
-	end)
-end
+       		end)
 
-function _editNetworkInterfacesBlock( self, fo, iface_name, method, ...)
-	if method then
-		fo:write("iface " .. iface_name .. " inet " .. method .. "\n")
-		log:debug("WRITING: ", "iface ", iface_name, " inet ", method)
-		for _,v in ipairs{...} do
-			fo:write("\t" .. v .. "\n")
-			log:debug("WRITING:\t", v)
-		end
+	while proc:status() ~= "dead" do
+		-- wait for the process to complete
+		Task:yield()
 	end
 end
 
-function _editAutoInterfaces(self, interface, ssid)
+
+
+function _editAutoInterfaces(self, ssid)
+
+log:warn("************ _editAutoInterfaces ", ssid)
+
+	local interface = self.interface
 
 	-- for the `auto interface[=<ssid>]` line
 	local enabledInterface = interface
@@ -888,7 +898,25 @@ function _editAutoInterfaces(self, interface, ssid)
 
 end
 
-function _editNetworkInterfaces( self, interface, ssid, method, ...)
+
+function _editNetworkInterfacesBlock( self, fo, iface_name, method, ...)
+	if method then
+		fo:write("iface " .. iface_name .. " inet " .. method .. "\n")
+		log:debug("WRITING: ", "iface ", iface_name, " inet ", method)
+		for _,v in ipairs{...} do
+			fo:write("\t" .. v .. "\n")
+			log:debug("WRITING:\t", v)
+		end
+	end
+end
+
+
+function _editNetworkInterfaces( self, ssid, method, ...)
+
+log:warn("************ _editNetworkInterfaces ", ssid, " ", method)
+
+	local interface = self.interface
+
 	-- the interfaces file uses " \t" as word breaks so munge the ssid
 	-- FIXME ssid's with \n are not supported
 ---	assert(ssid, debug.traceback())
@@ -948,6 +976,7 @@ function _editNetworkInterfaces( self, interface, ssid, method, ...)
 	_sync()
 end
 
+
 --[[
 =head2 jive.net.Networking:getLinkQuality()
 
@@ -981,6 +1010,7 @@ function getLinkQuality(self)
 	return quality
 end
 
+
 --[[
 
 =head2 jive.net.Networking:getSNR()
@@ -989,7 +1019,6 @@ returns signal to noise ratio of wireless link
 
 =cut
 --]]
-
 
 function getSNR(self)
 	if type(self.interface) ~= 'string' then
@@ -1005,6 +1034,7 @@ function getSNR(self)
 
 	return tonumber(string.match(t, ":(%d+)"))
 end
+
 
 --[[
 
@@ -1029,6 +1059,7 @@ function getRSSI(self)
 	return tonumber(string.match(t, ":(%-?%d+)"))
 end
 
+
 --[[
 
 =head2 jive.net.Networking:getNF()
@@ -1037,7 +1068,6 @@ returns NF (?) of a wireless interface
 
 =cut
 --]]
-
 
 function getNF(self)
 	if type(self.interface) ~= 'string' then
@@ -1053,6 +1083,7 @@ function getNF(self)
 
 	return tonumber(string.match(t, ":(%-?%d+)"))
 end
+
 
 --[[
 
@@ -1078,6 +1109,7 @@ function getTxBitRate(self)
 	return string.match(t, "Bit Rate:(%d+%s[^%s]+)")
 end
 
+
 --[[
 
 =head2 jive.net.Networking:powerSave(enable)
@@ -1086,7 +1118,6 @@ sets wireless power save state
 
 =cut
 --]]
-
 
 function powerSave(self, enable)
 	if self._powerSaveState == enable then
@@ -1107,6 +1138,7 @@ function powerSave(self, enable)
 	end
 end
 
+
 --[[
 
 =head2 jive.net.Networking:open()
@@ -1115,8 +1147,6 @@ opens a socket to pick up network events
 
 =cut
 --]]
-
-
 
 function open(self)
 	if self.t_sock then
@@ -1172,6 +1202,7 @@ function open(self)
 	return true
 end
 
+
 --[[
 
 =head2 jive.net.Networking:close()
@@ -1180,7 +1211,6 @@ closes existing socket
 
 =cut
 --]]
-
 
 function close(self)
 	-- cancel queued requests
@@ -1192,6 +1222,7 @@ function close(self)
 	Socket.close(self)
 end
 
+
 --[[
 
 =head2 jive.net.Networking:request()
@@ -1200,7 +1231,6 @@ pushes request to open socket
 
 =cut
 --]]
-
 
 function request(self, ...)
 	local task = Task:running()

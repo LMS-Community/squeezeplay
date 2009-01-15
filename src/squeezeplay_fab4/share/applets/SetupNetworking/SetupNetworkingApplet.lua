@@ -215,7 +215,7 @@ function _setCurrentSSID(self, ssid)
 
 	self.currentSSID = ssid
 
-	if self.currentSSID then
+	if self.currentSSID and self.scanResults[self.currentSSID] then
 		local item = self.scanResults[self.currentSSID].item
 		item.style = "checked"
 		self.scanMenu:updatedItem(item)
@@ -833,7 +833,7 @@ function selectNetworkTask(self, iface, ssid)
 		end
 	end
 
-	iface:t_selectNetwork(ssid)	
+	iface:t_selectNetwork(ssid)
 end
 
 
@@ -887,7 +887,7 @@ end
 
 function _connectFailedTask(self, iface)
 	-- Stop trying to connect to the network
-	iface:t_disconnectNetwork(self)
+	iface:t_disconnectNetwork()
 
 	log:warn("addNetwork=", self.addNetwork)
 	if self.addNetwork then
