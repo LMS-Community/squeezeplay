@@ -940,7 +940,7 @@ function _editNetworkInterfaces( self, ssid, method, ...)
 	assert(ssid, debug.traceback())
 	ssid = string.gsub(ssid, "[ \t]", "_")
 
-	log:debug('writing /etc/network/interfaces for ', iface, ', ssid: ', ssid , ' method: ', method)
+	log:debug('WRITING /etc/network/interfaces for ', iface, ', ssid: ', ssid , ' method: ', method)
 
 	local fi = assert(io.open("/etc/network/interfaces", "r+"))
 	local fo = assert(io.open("/etc/network/interfaces.tmp", "w"))
@@ -954,31 +954,30 @@ function _editNetworkInterfaces( self, ssid, method, ...)
 	end
 
 	local network = ""
-	local network_block_next = 0
+	local done = false
+
 	for line in fi:lines() do
-	
+		-- this cues a new block, so clear the network variable
 		if string.match(line, "^mapping%s") or string.match(line, "^auto%s") then
 			network = ""
-			if network_block_next == 1 then
-				network_block_next = 2
-				self:_editNetworkInterfacesBlock( fo, iface_name, method, ...)
-			end
+		-- this also cues a new block, possibly for iface_name
 		elseif string.match(line, "^iface%s") then
 			network = string.match(line, "^iface%s([^%s]+)%s")
-			if network_block_next == 1 then
-				network_block_next = 2
-				self:_editNetworkInterfacesBlock( fo, iface_name, method, ...)
+			-- when network is iface_name, write a new block for it
+			if network == iface_name then
+				self:_editNetworkInterfacesBlock( fo, network, method, ...)
+				-- mark that we're done writing the iface_name block
+				done = true
 			end
 		end
-
-		if network ~= interface then
+		-- write any line except what previously existed for the iface_name block
+		if network ~= iface_name then
 			fo:write(line .. "\n")
-		else
-			network_block_next = 1
 		end
 	end
 
-	if network_block_next != 2 then
+	-- if we haven't written the block for iface_name, do it now
+	if not done then
 		self:_editNetworkInterfacesBlock( fo, iface_name, method, ...)
 	end
 
