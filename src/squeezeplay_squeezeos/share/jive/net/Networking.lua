@@ -680,10 +680,10 @@ function t_removeNetwork(self, ssid)
 			request = 'SAVE_CONFIG'
 			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 		end
-	end
 
-	-- Remove dhcp/static ip configuration for network
-	self:_editNetworkInterfaces(ssid)
+		-- Remove dhcp/static ip configuration for network
+		self:_editNetworkInterfaces(ssid)
+	end
 end
 
 
@@ -878,7 +878,7 @@ function _editAutoInterfaces(self, ssid)
 	-- for the `iface <interface|ssid> inet ...` line
 	local iface_name = interface
 
-	if ssid then
+	if ssid and self.wireless then
 		ssid = string.gsub(ssid, "[ \t]", "_")
 		autoInterface = interface .. "=" .. ssid
 		iface_name = ssid
@@ -955,29 +955,23 @@ function _editNetworkInterfaces( self, ssid, method, ...)
 
 	local network = ""
 	local done = false
-	local keepEthConfig = false
 
 	for line in fi:lines() do
 		-- this cues a new block, so clear the network variable
 		if string.match(line, "^mapping%s") or string.match(line, "^auto%s") then
 			network = ""
-			keepEthConfig = false
 		-- this also cues a new block, possibly for iface_name
 		elseif string.match(line, "^iface%s") then
 			network = string.match(line, "^iface%s([^%s]+)%s")
-			-- special case to preserve eth block when removeNetwork() has been called
-			keepEthConfig = network == iface_name and not self.wireless and not method
 			-- when network is iface_name, write a new block for it
 			if network == iface_name then
-				if not keepEthConfig then
-					self:_editNetworkInterfacesBlock( fo, network, method, ...)
-				end
+				self:_editNetworkInterfacesBlock( fo, network, method, ...)
 				-- mark that we're done writing the iface_name block
 				done = true
 			end
 		end
 		-- write any line except what previously existed for the iface_name block
-		if network ~= iface_name or keepEthConfig then
+		if network ~= iface_name then
 			fo:write(line .. "\n")
 		end
 	end
