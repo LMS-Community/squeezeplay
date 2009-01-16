@@ -26,15 +26,23 @@ A timer object.
 
 
 -- stuff we use
-local _assert, string, tostring, type = _assert, string, tostring, type
+local _assert, ipairs, pcall, string, tostring, type = _assert, ipairs, pcall, string, tostring, type
 
 local oo	= require("loop.base")
+local table	= require("jive.utils.table")
+
+local Framework = require("jive.ui.Framework")
+
 local debug	= require("jive.utils.debug")
+local log       = require("jive.utils.log").logger("ui")
 
 
 -- our class
 module(..., oo.class)
 
+
+-- sorted list of running timers
+local timers = {}
 
 
 --[[
@@ -68,7 +76,10 @@ Starts the timer.
 =cut
 --]]
 
--- C implementation
+function start(self)
+	local now = Framework:getTicks()
+	self:_insertTimer(now + self.interval)
+end
 
 
 --[[
@@ -80,7 +91,10 @@ Stops the timer.
 =cut
 --]]
 
--- C implementation
+function stop(self)
+	 table.delete(timers, self)
+	 self.expires = nil
+end
 
 
 --[[
@@ -115,9 +129,10 @@ it is already running.
 function setInterval(self, interval)
 	_assert(type(interval) == "number")
 
-	self.interval = interval
-	if self._timerData then
-		self:restart()
+	if self.expires then
+		self:restart(interval)
+	else
+		self.interval = interval
 	end
 end
 
@@ -131,9 +146,50 @@ Returns true if the timer is running.
 =cut
 --]]
 function isRunning(self)
-	return self._timerData ~= nil
+	return self.expires ~= nil
 end
 
+
+-- insert the timer into timer queue
+function _insertTimer(self, expires)
+	if self.expires then
+		table.delete(timers, self)
+	end
+	self.expires = expires
+
+	for i, timer in ipairs(timers) do
+		if self.expires < timer.expires then
+	 		table.insert(timers, i, self)
+			return
+		end
+	end
+	table.insert(timers, self)
+end
+
+
+-- process timer queue
+function _runTimer(self, now)
+	if timers[1] and not timers[1].expires then
+		log:error("stopped timer in timer list")
+		debug.dump(timers)
+	end
+
+	while timers[1] and timers[1].expires <= now do
+		local timer = table.remove(timers, 1)
+
+		-- call back may modify the timer so update it first
+		if not timer.once then
+			timer:_insertTimer(timer.expires + timer.interval)
+		else
+			timer.expires = nil
+		end
+
+		local status, err = pcall(timer.callback)
+		if not status then
+			log:warn("timer error: ", err)
+		end
+	end
+end
 
 
 --[[

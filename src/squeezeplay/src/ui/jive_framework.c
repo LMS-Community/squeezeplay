@@ -66,9 +66,10 @@ static enum jive_mouse_state {
 
 static JiveKey key_mask = 0;
 
-static SDL_TimerID key_timer = NULL;
+static Uint32 key_timeout = 0;
 
-static SDL_TimerID mouse_timer = NULL;
+static Uint32 mouse_timeout = 0;
+static Uint32 mouse_timeout_arg;
 
 static Uint16 mouse_origin_x, mouse_origin_y;
 
@@ -84,14 +85,15 @@ static struct jive_keymap keymap[] = {
 	{ SDLK_AudioNext,	JIVE_KEY_FWD },
 	{ SDLK_AudioRaiseVolume,JIVE_KEY_VOLUME_UP },
 	{ SDLK_AudioLowerVolume,JIVE_KEY_VOLUME_DOWN },
-	{ SDLK_PAGEUP,      JIVE_KEY_PAGE_UP },
-	{ SDLK_PAGEDOWN,    JIVE_KEY_PAGE_DOWN },
+	{ SDLK_PAGEUP,		JIVE_KEY_PAGE_UP },
+	{ SDLK_PAGEDOWN,	JIVE_KEY_PAGE_DOWN },
 	{ SDLK_UNKNOWN,		JIVE_KEY_NONE },
 };
 
 
 static int init_path(lua_State *L);
 static int process_event(lua_State *L, SDL_Event *event);
+static void process_timers(lua_State *L);
 static int filter_events(const SDL_Event *event);
 int jiveL_update_screen(lua_State *L);
 
@@ -142,7 +144,7 @@ static int jiveL_init(lua_State *L) {
 	SDL_putenv("SDL_NOMOUSE=1");
 
 	/* initialise SDL */
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		fprintf(stderr, "SDL_Init(V|T|A): %s\n", SDL_GetError());
 		SDL_Quit();
 		exit(-1);
@@ -322,6 +324,7 @@ static int jiveL_process_events(lua_State *L) {
 	}
 
 	/* process events */
+	process_timers(L);
 	while (SDL_PeepEvents(&event, 1, SDL_GETEVENT, SDL_ALLEVENTS) > 0 ) {
 		r |= process_event(L, &event);
 	}
@@ -969,34 +972,6 @@ int jive_find_file(const char *path, char *fullpath) {
 }
 
 
-static Uint32 keyhold_callback(Uint32 interval, void *param) {
-	SDL_Event user_event;
-	memset(&user_event, 0, sizeof(SDL_Event));
-
-	user_event.type = SDL_USEREVENT;
-	user_event.user.code = JIVE_USER_EVENT_KEY_HOLD;
-	user_event.user.data1 = param;
-
-	SDL_PushEvent(&user_event);
-
-	return 0;
-}
-
-
-static Uint32 mousehold_callback(Uint32 interval, void *param) {
-	SDL_Event user_event;
-	memset(&user_event, 0, sizeof(SDL_Event));
-
-	user_event.type = SDL_USEREVENT;
-	user_event.user.code = JIVE_USER_EVENT_MOUSE_HOLD;
-	user_event.user.data1 = param;
-
-	SDL_PushEvent(&user_event);
-
-	return 0;
-}
-
-
 static int do_dispatch_event(lua_State *L, JiveEvent *jevent) {
 	int r;
 
@@ -1016,9 +991,10 @@ static int do_dispatch_event(lua_State *L, JiveEvent *jevent) {
 
 static int process_event(lua_State *L, SDL_Event *event) {
 	JiveEvent jevent;
+	Uint32 now;
 
 	memset(&jevent, 0, sizeof(JiveEvent));
-	jevent.ticks = SDL_GetTicks();
+	jevent.ticks = now = SDL_GetTicks();
 
 	switch (event->type) {
 	case SDL_QUIT:
@@ -1057,16 +1033,9 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 		if (event->type == SDL_MOUSEBUTTONDOWN) {
 			if (mouse_state == MOUSE_STATE_NONE) {
-				unsigned int * param = malloc(sizeof(unsigned int));
-
 				mouse_state = MOUSE_STATE_DOWN;
-
-				if (mouse_timer) {
-					SDL_RemoveTimer(mouse_timer);
-				}
-
-				*param = (event->button.y << 16) | event->button.x;
-				mouse_timer = SDL_AddTimer(HOLD_TIMEOUT, &mousehold_callback, param);
+				mouse_timeout_arg = (event->button.y << 16) | event->button.x;
+				mouse_timeout = now + HOLD_TIMEOUT;
 
 				mouse_origin_x = event->button.x;
 				mouse_origin_y = event->button.y;
@@ -1088,11 +1057,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 				jive_queue_event(&up);
 			}
 
-			if (mouse_timer) {
-				SDL_RemoveTimer(mouse_timer);
-				mouse_timer = NULL;
-			}
-
+			mouse_timeout = 0;
 			mouse_state = MOUSE_STATE_NONE;
 		}
 		break;
@@ -1143,37 +1108,26 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		if (entry->keysym == SDLK_UNKNOWN) {
 			// handle regular character keys ('a', 't', etc..)
 			if (event->type == SDL_KEYDOWN && event->key.keysym.unicode != 0) {
-				JiveEvent textEvent;
-
-				memset(&textEvent, 0, sizeof(JiveEvent));
-				textEvent.type = JIVE_EVENT_CHAR_PRESS;
-				textEvent.ticks = SDL_GetTicks();
+				jevent.type = JIVE_EVENT_CHAR_PRESS;
 				if (event->key.keysym.sym == SDLK_BACKSPACE) {
 					//special case for Backspace, where value set is not ascii value, instead pass backspace ascii value
-					textEvent.u.text.unicode = 8;
+					jevent.u.text.unicode = 8;
 				} else {
-					textEvent.u.text.unicode = event->key.keysym.unicode;
+					jevent.u.text.unicode = event->key.keysym.unicode;
 				}
-				jive_queue_event(&textEvent);
 			}
-			return 0;
 		}
 
 		/* handle pgup/upgn as repeatable keys */
-		if (entry->keysym == SDLK_PAGEUP || entry->keysym == SDLK_PAGEDOWN) {
+		else if (entry->keysym == SDLK_PAGEUP || entry->keysym == SDLK_PAGEDOWN) {
 			if (event->type == SDL_KEYDOWN) {
-				JiveEvent keypress;
-	
-				memset(&keypress, 0, sizeof(JiveEvent));
-				keypress.type = JIVE_EVENT_KEY_PRESS;
-				keypress.ticks = SDL_GetTicks();
-				keypress.u.key.code = entry->keycode;
-				jive_queue_event(&keypress);
+				jevent.type = JIVE_EVENT_KEY_PRESS;
+				jevent.ticks = SDL_GetTicks();
+				jevent.u.key.code = entry->keycode;
 			}
-			return 0;
 		}
 		
-		if (event->type == SDL_KEYDOWN) {
+		else if (event->type == SDL_KEYDOWN) {
 			if (key_mask & entry->keycode) {
 				// ignore key repeats
 				return 0;
@@ -1193,11 +1147,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 				jevent.type = JIVE_EVENT_KEY_DOWN;
 				jevent.u.key.code = entry->keycode;
 
-				if (key_timer) {
-					SDL_RemoveTimer(key_timer);
-				}
-
-				key_timer = SDL_AddTimer(HOLD_TIMEOUT, &keyhold_callback, (void *)key_mask);
+				key_timeout = now + HOLD_TIMEOUT;
 				break;
 			 }
 
@@ -1244,11 +1194,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 			}
 			}
 
-			if (key_timer) {
-				SDL_RemoveTimer(key_timer);
-				key_timer = NULL;
-			}
-
+			key_timeout = 0;
 			key_mask &= ~(entry->keycode);
 			if (key_mask == 0) {
 				key_state = KEY_STATE_NONE;
@@ -1258,34 +1204,10 @@ static int process_event(lua_State *L, SDL_Event *event) {
 	}
 
 	case SDL_USEREVENT:
-		switch ( (int) event->user.code) {
-		case JIVE_USER_EVENT_TIMER:
-			JIVEL_STACK_CHECK_BEGIN(L);
-			jive_timer_dispatch_event(L, event->user.data1);
-			JIVEL_STACK_CHECK_END(L);
-			return 0;
+		assert(event->user.code == JIVE_USER_EVENT_EVENT);
 
-		case JIVE_USER_EVENT_KEY_HOLD:
-			jevent.type = JIVE_EVENT_KEY_HOLD;
-			jevent.u.key.code = (JiveKey) event->user.data1;
-			key_state = KEY_STATE_SENT;
-			break;
-
-		case JIVE_USER_EVENT_MOUSE_HOLD:
-			if (mouse_state == MOUSE_STATE_DOWN) {
-				jevent.type = JIVE_EVENT_MOUSE_HOLD;
-				jevent.u.mouse.x = *((unsigned int *) event->user.data1) & 0xFFFF;
-				jevent.u.mouse.y = ( *((unsigned int *) event->user.data1) >> 16) & 0xFFFF;
-				mouse_state = MOUSE_STATE_SENT;
-				free(event->user.data1);
-			}
-			break;
-
-		case JIVE_USER_EVENT_EVENT:
-			memcpy(&jevent, event->user.data1, sizeof(JiveEvent));
-			free(event->user.data1);
-			break;
-		}
+		memcpy(&jevent, event->user.data1, sizeof(JiveEvent));
+		free(event->user.data1);
 		break;
 
 	case SDL_VIDEORESIZE: {
@@ -1326,6 +1248,37 @@ static int process_event(lua_State *L, SDL_Event *event) {
 	}
 
 	return do_dispatch_event(L, &jevent);
+}
+
+
+static void process_timers(lua_State *L) {
+	JiveEvent jevent;
+	Uint32 now;
+
+	memset(&jevent, 0, sizeof(JiveEvent));
+	jevent.ticks = now = SDL_GetTicks();
+
+	if (mouse_timeout && mouse_timeout < now) {
+		if (mouse_state == MOUSE_STATE_DOWN) {
+			jevent.type = JIVE_EVENT_MOUSE_HOLD;
+			jevent.u.mouse.x = (mouse_timeout_arg >> 0) & 0xFFFF;
+			jevent.u.mouse.y = (mouse_timeout_arg >> 16) & 0xFFFF;
+			mouse_state = MOUSE_STATE_SENT;
+
+			do_dispatch_event(L, &jevent);
+		}
+		mouse_timeout = 0;
+	}
+
+	if (key_timeout && key_timeout < now) {
+		jevent.type = JIVE_EVENT_KEY_HOLD;
+		jevent.u.key.code = key_mask;
+		key_state = KEY_STATE_SENT;
+
+		do_dispatch_event(L, &jevent);
+
+		key_timeout = 0;
+	}
 }
 
 
@@ -1445,12 +1398,6 @@ static const struct luaL_Reg window_methods[] = {
 	{ NULL, NULL }
 };
 
-static const struct luaL_Reg timer_methods[] = {
-	{ "start", jiveL_timer_add_timer },
-	{ "stop", jiveL_timer_remove_timer },
-	{ NULL, NULL }
-};
-
 static const struct luaL_Reg event_methods[] = {
 	{ "new", jiveL_event_new },
 	{ "getType", jiveL_event_get_type },
@@ -1535,10 +1482,6 @@ static int jiveL_core_init(lua_State *L) {
 
 	lua_getfield(L, 2, "Slider");
 	luaL_register(L, NULL, slider_methods);
-	lua_pop(L, 1);
-
-	lua_getfield(L, 2, "Timer");
-	luaL_register(L, NULL, timer_methods);
 	lua_pop(L, 1);
 
 	lua_getfield(L, -1, "Event");
