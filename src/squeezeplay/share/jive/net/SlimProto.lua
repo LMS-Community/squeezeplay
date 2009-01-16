@@ -62,6 +62,7 @@ local string      = require("string")
 local table       = require("jive.utils.table")
 
 local Framework   = require("jive.ui.Framework")
+local Task        = require("jive.ui.Task")
 local Timer       = require("jive.ui.Timer")
 
 local SocketTcp   = require("jive.net.SocketTcp")
@@ -319,6 +320,7 @@ function __init(self, jnt, heloPacket)
 
 	-- connection state UNCONNECTED / CONNECTED
 	obj.state          = UNCONNECTED
+	obj.txqueue  = {}
 
 	-- helo packet sent on connection
 	obj.heloPacket     = heloPacket
@@ -431,6 +433,17 @@ function connect(self, server)
 		self.reconnect = true
 	end
 
+	self.writePump = function(NetworkThreadErr)
+		if (NetworkThreadErr) then
+			return _handleDisconnect(NetworkThreadErr)
+		end
+
+		self.socket.t_sock:send(table.concat(self.txqueue))
+		self.socket:t_removeWrite()
+
+		self.txqueue = {}
+	end
+
 	if server then
 		self.server = server
 		self.reconnect = false
@@ -537,16 +550,9 @@ function send(self, packet)
 
 	--_hexDump("STAT", data)
 
-	local pump = function(NetworkThreadErr)
-		if (NetworkThreadErr) then
-			return _handleDisconnect(NetworkThreadErr)
-		end
+	table.insert(self.txqueue, data)
 
-		self.socket.t_sock:send(data)
-		self.socket:t_removeWrite()
-	end
-
-	self.socket:t_addWrite(pump, WRITE_TIMEOUT)
+	self.socket:t_addWrite(self.writePump, WRITE_TIMEOUT)
 
 	return true
 end
