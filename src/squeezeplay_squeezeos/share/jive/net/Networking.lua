@@ -955,23 +955,29 @@ function _editNetworkInterfaces( self, ssid, method, ...)
 
 	local network = ""
 	local done = false
+	local keepEthConfig = false
 
 	for line in fi:lines() do
 		-- this cues a new block, so clear the network variable
 		if string.match(line, "^mapping%s") or string.match(line, "^auto%s") then
 			network = ""
+			keepEthConfig = false
 		-- this also cues a new block, possibly for iface_name
 		elseif string.match(line, "^iface%s") then
 			network = string.match(line, "^iface%s([^%s]+)%s")
+			-- special case to preserve eth block when removeNetwork() has been called
+			keepEthConfig = network == iface_name and not self.wireless and not method
 			-- when network is iface_name, write a new block for it
 			if network == iface_name then
-				self:_editNetworkInterfacesBlock( fo, network, method, ...)
+				if not keepEthConfig then
+					self:_editNetworkInterfacesBlock( fo, network, method, ...)
+				end
 				-- mark that we're done writing the iface_name block
 				done = true
 			end
 		end
 		-- write any line except what previously existed for the iface_name block
-		if network ~= iface_name then
+		if network ~= iface_name or keepEthConfig then
 			fo:write(line .. "\n")
 		end
 	end
