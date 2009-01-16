@@ -115,50 +115,45 @@ function _specialKeyWidths(self)
 end
 
 function _predefinedKeyboards(self)
-	self.keyboards = { 
+		local bottomRow = { 
+					self:_switchKeyboardButton(style, 'numeric', '123'), 
+					self:_switchKeyboardButton(style, 'hex', 'hex'), 
+					self:_spaceBar(), 
+					self:_switchKeyboardButton(style, 'chars', '!@&'), 
+					self:_switchKeyboardButton(style, 'qwerty', 'ABC'), 
+					self:_switchKeyboardButton(style, 'qwertyLower', 'abc'), 
+					self:_go() 
+		}
+		self.keyboards = { 
 		['qwerty']  = { 
 				{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
 				{ 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L' },
 				{ 'Z', 'X', 'C', 'V', 'B', 'N', 'M', self:_backspaceButton()  },
-				{ 
-					self:_switchKeyboardButton(style, 'numeric', '123'), 
-					self:_spaceBar(), 
-					self:_switchKeyboardButton(style, 'qwertyLower', 'abc'), 
-					self:_go() 
-				}
+				bottomRow
 		} ,
 		['qwertyLower']  = { 
 				{ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
 				{ 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l' },
 				{ 'z', 'x', 'c', 'v', 'b', 'n', 'm', self:_backspaceButton() },
-				{ 
-					self:_switchKeyboardButton(style, 'numeric', '123'), 
-					self:_spaceBar(), 
-					self:_switchKeyboardButton(style, 'qwerty', 'ABC'), 
-					self:_go() 
-				}
+				bottomRow
 		} ,
 		['hex']     = { 
 				{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' } ,
 				{ 'A', 'B', 'C', 'D', 'E', 'F', self:_backspaceButton() },
 				{},
-				{ 
-					self:_switchKeyboardButton(style, 'numeric', '123'), 
-					self:_spaceBar(), 
-					self:_switchKeyboardButton(style, 'qwerty', 'ABC'), 
-					self:_go() 
-				}
+				bottomRow
 		},
 		['numeric'] = { 
 				{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' },
-				{ '.', ',', '@', self:_backspaceButton() },
+				{ '.', ',', '@', '$', '+', ':', '_', '-', self:_backspaceButton() },
 				{},
-				{ 
-					self:_switchKeyboardButton(style, 'hex', 'hex'), 
-					self:_spaceBar(), 
-					self:_switchKeyboardButton(style, 'qwerty', 'ABC'), 
-					self:_go()
-				}
+				bottomRow
+		},
+		['chars'] = {
+				{ '.', ',', '@', '!', '#', '$', '%', '^', '&', '*' },
+				{ '(', ')', '_', '+', '{', '}', '|', ':', '~', '?' }, 
+				{ '-', '=', '/', '\\', '`', '[', ']', self:_backspaceButton() },
+				bottomRow
 		}
 	}
 end
@@ -173,11 +168,14 @@ function _layout(self)
 	local keyWidth
 
 	-- find row with most keys to determine interkey spacing
-	local maxRowKeys = 0
-	local maxWidth   = 0
-	local rowWidths  = {}
+	local maxRowKeys     = 0
+	local maxWidth       = 0
+	-- bottom row is treated differently for layout
+	local bottomRowWidth = 0
+	local bottomRowKeys  = 0
+	local rowWidths      = {}
 
-	for _, row in ipairs(self.keyboard) do
+	for i, row in ipairs(self.keyboard) do
 		local rowWidth = 0
 		for _, key in ipairs(row) do
 			local style = key:getStyle()
@@ -186,23 +184,31 @@ function _layout(self)
 			else
 				keyWidth = 35
 			end
-			rowWidth = rowWidth + keyWidth
+				rowWidth = rowWidth + keyWidth
 		end
 		table.insert(rowWidths, rowWidth)
-		if rowWidth > maxWidth then
+		if rowWidth > maxWidth and i ~= #self.keyboard then
 			maxWidth = rowWidth
 		end
-		local numOfKeys = #row
+			local numOfKeys = #row
 		if numOfKeys > maxRowKeys then
 			maxRowKeys = numOfKeys
+		end
+		if i == #self.keyboard then
+			bottomRowWidth = rowWidth
+			bottomRowKeys  = numOfKeys
 		end
 	end
 
 	local keySpacing = ( w - ( maxWidth ) ) / ( maxRowKeys + 1 ) 
 
 	for i, row in ipairs(self.keyboard) do
+		local rowKeySpacing = keySpacing
+		if i == #self.keyboard then
+			rowKeySpacing = ( w - ( bottomRowWidth ) ) / ( bottomRowKeys + 1 ) 
+		end
 		-- center row
-		x = ( w - ( (rowWidths[i]) + ( keySpacing * (#row - 1) ) ) ) / 2
+		x = ( w - ( (rowWidths[i]) + ( rowKeySpacing * (#row - 1) ) ) ) / 2
 		for _, key in ipairs(row) do
 			local style = key:getStyle()
 			if self.specialKeyWidths[style] then
@@ -211,7 +217,7 @@ function _layout(self)
 				keyWidth = 35
 			end
 			key:setBounds(x, y, keyWidth, 35)
-			x = x + keyWidth + keySpacing
+			x = x + keyWidth + rowKeySpacing
 		end
 		y = y + 50
 	end
@@ -358,7 +364,7 @@ end
 function _spaceBar(self)
 	return {	
 		style    = 'keyboardSpace',
-		text     = ' ',
+		text     = 'SPACE',
 		callback = function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte(' '))
 			Framework:dispatchEvent(nil, e) 

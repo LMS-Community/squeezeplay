@@ -62,6 +62,12 @@ function menu(self, menuItem)
 	-- Menu	
 	local menu = SimpleMenu("menu",
 		{
+			{ text = "Button Menu",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:menuWindow(menuItem, 'button')
+				end 
+			},
 			{ text = "Keyboard UPPERCASE input",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -84,6 +90,12 @@ function menu(self, menuItem)
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:keyboardWindow(menuItem, 'numeric')
+				end
+			},
+			{ text = "Keyboard special char input",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:keyboardWindow(menuItem, 'chars')
 				end
 			},
 			{ text = "Text input",
@@ -271,15 +283,22 @@ function sortedMenuWindow(self, menuItem)
 	return window
 end
 
-
-function menuWindow(self, menuItem)
+function menuWindow(self, menuItem, style)
+	local itemStyle, menuStyle
+	if not style then
+		menuStyle = 'menu'
+		itemStyle = 'item'
+	else
+		menuStyle = style .. "menu"
+		itemStyle = style .. "item"
+	end
 	local window = Window("window", menuItem.text)
-	local menu = SimpleMenu("menu")
+	local menu = SimpleMenu(menuStyle)
 	window:addWidget(menu)
 
 	local items = {}
 	for i=1,2000 do
-		items[#items + 1] = { text = "Artist " .. i }
+		items[#items + 1] = { text = "Artist " .. i, style = itemStyle  }
 	end
 
 	menu:setItems(items)
