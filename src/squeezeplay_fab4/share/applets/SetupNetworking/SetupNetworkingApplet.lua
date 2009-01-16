@@ -312,6 +312,7 @@ function settingsNetworksShow(self)
 	self.setupNext = nil
 
 	return setupScanShow(self,
+		self.wlanIface,
 		function()
 			_networksShow(
 				self,
