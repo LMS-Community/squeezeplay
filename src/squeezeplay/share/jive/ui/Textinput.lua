@@ -277,7 +277,7 @@ function _eventHandler(self, event)
 		local irCode = event:getIRCode()
 		if type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT then
 			--first check for IR DOWN/UP
-			if event:getIRCode() == 0x7689b04f or event:getIRCode() == 0x7689e01f then -- DOWN/UP - todo: make lookup table for codes
+			if event:isIRCode("up") or event:isIRCode("down") then
 				self.numberLetterTimer:stop()
 				if self.locked == nil then
 					local chars = self:_getChars()
@@ -290,10 +290,10 @@ function _eventHandler(self, event)
 		end
 		if type == EVENT_IR_DOWN or type == EVENT_IR_HOLD then
 			local timerWasRunning = self.numberLetterTimer:isRunning()
-			self.numberLetterTimer:stop()
 		
 			local numberLetters = numberLettersMixed[irCode]
 			if numberLetters then
+				self.numberLetterTimer:stop()
 				if timerWasRunning and self.lastNumberLetterIrCode and irCode != self.lastNumberLetterIrCode then
 					_moveCursor(self, 1)
 					self:reDraw()
@@ -512,7 +512,7 @@ function __init(self, style, value, closure, allowedChars)
 	obj.allowedChars = allowedChars or
 		_globalStrings:str("ALLOWEDCHARS_WITHCAPS")
 	obj.scroll = ScrollAccel()
-	obj.irAccel = IRMenuAccel(0x7689b04f, 0x7689e01f) -- UP/down - todo: make lookup table for codes
+	obj.irAccel = IRMenuAccel("down", "up")
 	obj.lastNumberLetterIrCode = nil
 	obj.lastNumberLetterT = nil
 	obj.numberLetterTimer = Timer(NUMBER_LETTER_TIMER_TIME,     

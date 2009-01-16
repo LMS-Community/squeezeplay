@@ -212,6 +212,13 @@ function getAction(self)
     return Framework:getActionEventNameByIndex(actionIndex)
 end
 
+
+function isIRCode(self, buttonName)
+	local irCode = self:getIRCode()
+	return (Framework:isIRCode(buttonName, irCode))
+end
+
+
 -- the rest is C implementation
 
 --[[

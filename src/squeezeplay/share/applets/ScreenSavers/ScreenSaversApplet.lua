@@ -66,6 +66,12 @@ function init(self, ...)
 	Framework:addListener(
 		EVENT_CHAR_PRESS | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION | EVENT_IR_ALL,
 		function(event)
+			if (event:getType() & EVENT_IR_ALL) > 0 then
+				if (not Framework:isValidIRCode(event:getIRCode())) then
+					return EVENT_UNUSED
+				end
+			end
+			
 			-- restart timer if it is running
 			self.timer:setInterval(self.timeout)
 			return EVENT_UNUSED
@@ -79,6 +85,12 @@ function init(self, ...)
 			-- screensaver is not active
 			if #self.active == 0 then
 				return EVENT_UNUSED
+			end
+
+			if (event:getType() & EVENT_IR_ALL) > 0 then
+				if (not Framework:isValidIRCode(event:getIRCode())) then
+					return EVENT_UNUSED
+				end
 			end
 
 			log:debug("Closing screensaver event=", event:tostring())

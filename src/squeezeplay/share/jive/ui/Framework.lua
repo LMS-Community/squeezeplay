@@ -28,7 +28,7 @@ User interface framework
 
 
 -- stuff we use
-local _assert, collectgarbage, jive, ipairs, load, pairs, require, setfenv, string, tostring, type = _assert, collectgarbage, jive, ipairs, load, pairs, require, setfenv, string, tostring, type
+local _assert, collectgarbage, jive, ipairs, load, pairs, require, setfenv, string, tostring, type, loadfile = _assert, collectgarbage, jive, ipairs, load, pairs, require, setfenv, string, tostring, type, loadfile
 
 local oo            = require("loop.simple")
 local table         = require("jive.utils.table")
@@ -638,6 +638,142 @@ function addActionListener(self, action, obj, listener)
 		end
 	)
     
+end
+
+
+function _loadIRMap(file)
+	log:error("_loadIRMap: ", file)
+
+	if not file then 
+		return nil
+	end
+	
+	local f, err = loadfile(file)
+	if not f then
+		log:error(string.format ("error loading IR map file `%s' (%s)", file, err))
+		return nil
+	end
+	log:error("_loadIRMap: ", file)
+	
+	-- evaluate the settings in a sandbox
+	local env = {}
+	setfenv(f, env)
+	f()
+	return env.irMap
+end
+
+
+function initIRCodeMappings(self)
+	self.irMaps = {}
+	
+	-- location of mapping file not yet set - might want to be in user area so users can modify and add more for other remotes
+        local defaultMapPath = System:findFile("jive/irMap_default.lua")
+        local defaultMapWrapper = _loadIRMap(defaultMapPath)
+        
+        
+        if not defaultMapWrapper then
+                log:error("Unable to load IR mapping file: ", defaultMapWrapper)
+                return nil
+        end
+        
+        --just doing default for now, todo: add other remote, and warn if duplicate ir codes exist across the mappings
+        local mapWrapper = defaultMapWrapper
+        self.irMaps[mapWrapper.name] = {}
+        self.irMaps[mapWrapper.name].byCode = mapWrapper.map
+
+        self.irMaps[mapWrapper.name].byName = {}
+        for irCode, buttonName in pairs(mapWrapper.map) do
+	        self.irMaps[mapWrapper.name].byName[buttonName] = irCode
+        end
+        
+        
+	
+end
+
+function _dumpIrButtonNames(self)
+	local result = "Available IR Button Names: " 
+	for mapName, map in pairs(self.irMaps) do
+		result = result .. " (from " .. mapName .. ")"
+		for name, code in table.pairsByKeys(map.byName) do
+			result = result .. " " .. name
+		end
+	end
+	return result
+end
+
+
+function isIRCode(self, buttonName, seekingIRCode)
+	for mapName, irCode in pairs(self:getIRCodes(buttonName)) do
+		if seekingIRCode == irCode then
+			return true
+		end
+	end
+	
+	return false
+end
+
+
+--[[
+
+=head2 jive.ui.Framework:getIRCodes(buttonName)
+
+Get the IR codes associated with buttonName in a dict keyed by mapName, returns empty table if none found.
+
+=cut
+--]]
+function getIRCodes(self, buttonName)
+	local irCodes = {}
+	local matchFound = false
+	for mapName, map in pairs(self.irMaps) do
+		local irCode = map.byName[buttonName]
+		if irCode then
+			irCodes[mapName] = irCode
+			matchFound = true
+			break
+		end
+	end
+	
+	if not matchFound then
+		log:error("No IR code exists for requested button name (", buttonName, "). ", self:_dumpIrButtonNames())
+		log:error("Source of the incorrect button name request: (", debug.traceback())
+	end
+	
+	return irCodes
+end
+
+--[[
+
+=head2 jive.ui.Framework:getIRButtonName(irCode)
+
+return the button name associated with the irCode 
+
+=cut
+--]]
+function getIRButtonName(self, irCode)
+	local buttonName
+	
+	for mapName, map in pairs(self.irMaps) do
+		buttonName = map.byCode[irCode]
+		if buttonName then
+			log:error("Mapping for ", buttonName, " found (", irCode, ") in mapName (", mapName, ")")
+			break
+		end
+	end
+	
+	return buttonName
+end
+
+--[[
+
+=head2 jive.ui.Framework:isValidIRCode(irCode)
+
+return true if any loaded IR map file contains a mapping for the given irCode. Useful to filter out irCode from 
+other IR remote controls that the user might have.
+
+=cut
+--]]
+function isValidIRCode(self, irCode)
+	return self:getIRButtonName(irCode) ~= nil
 end
 
 --[[

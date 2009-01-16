@@ -39,11 +39,11 @@ negativeCode indicate the ir code that will trigger negative acceleration
 
 =cut
 --]]
-function __init(self, positiveCode, negativeCode)
+function __init(self, positiveButtonName, negativeButtonName)
 	local obj = oo.rawnew(self, {})
 
-	obj.positiveCode = positiveCode
-	obj.negativeCode = negativeCode
+	obj.positiveButtonName = positiveButtonName
+	obj.negativeButtonName = negativeButtonName
 	obj.listIndex   = 1
 	obj.lastItemChangeT = 0
 	obj.itemChangePeriod = INITIAL_ITEM_CHANGE_PERIOD
@@ -69,9 +69,9 @@ I<listSize> is the total number of items in the list.
 function event(self, event, listTop, listIndex, listVisible, listSize)
 
 	local dir = nil
-	if event:getIRCode() == self.positiveCode then 
+	if event:isIRCode(self.positiveButtonName) then 
 		dir = 1
-	elseif event:getIRCode() == self.negativeCode then
+	elseif event:isIRCode(self.negativeButtonName) then
 		dir = -1
 	else
 		log:error("Unexpected irCode: " , event:getIRCode())

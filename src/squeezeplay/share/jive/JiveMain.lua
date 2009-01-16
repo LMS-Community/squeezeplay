@@ -214,9 +214,19 @@ local function _addUserPathToLuaPath()
     package.path = package.path .. System.getUserDir() .. dirSeparator .. "?" .. dirSeparator .. "?.lua;"
 end
 
+--fallback IR->KEY handler after widgets have had a chance to listen for ir - probably will be removed
 local function _irHandler(event)
 	local irCode = event:getIRCode()
-	log:debug("IR event: ", event:tostring())
+	local buttonName = Framework:getIRButtonName(irCode)
+	
+	if log:isDebug() then
+		log:debug("IR event in fallback _irHandler: ", event:tostring(), " button:", buttonName )
+	end
+	if not buttonName then
+		--code may have come from a "foreign" remote that the user is using
+		return EVENT_CONSUME
+	end
+	
 	local keyCode = irCodes[irCode]
 	if (keyCode) then
 	--includes temp hack for up/down to allow Menu, etc to have direct IR event access 
@@ -296,7 +306,7 @@ function JiveMain:__init()
 	-- menu nodes to add...these are menu items that are used by applets
 	JiveMain:jiveMainNodes(_globalStrings)
 
-	--Framework:initIRCodeMappings()
+	Framework:initIRCodeMappings()
 
 	-- init our listeners
 	jiveMain.skins = {}
