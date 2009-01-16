@@ -63,6 +63,8 @@ oo.class(_M, Applet)
 function init(self)
 	self.wlanIface = Networking:wirelessInterface(jnt)
 	self.ethIface = Networking:wiredInterface(jnt)
+
+	self.scanResults = {}
 end
 
 
@@ -760,7 +762,9 @@ function _addNetworkTask(self, iface, ssid)
 	log:warn('returned id: ', id)
 
 	self.addNetwork = true
-	self.scanResults[ssid].id = id
+	if self.scanResults[ssid] then
+		self.scanResults[ssid].id = id
+	end
 end
 
 
