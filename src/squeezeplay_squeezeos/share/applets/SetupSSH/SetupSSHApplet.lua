@@ -93,10 +93,12 @@ end
 function _getIPAddress()
 	local ipaddr
 
-	local cmd = io.popen("/sbin/ifconfig eth0")
+	local cmd = io.popen("/sbin/ifconfig")
 	for line in cmd:lines() do
 		ipaddr = string.match(line, "inet addr:([%d%.]+)")
-		if ipaddr ~= nil then break end
+		if ipaddr ~= nil and not string.match(ipaddr, "127.") then
+			break
+		end
 	end
 	cmd:close()
 
