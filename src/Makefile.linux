@@ -148,7 +148,7 @@ tolua++: lua
 #
 
 .PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib squeezeplay_private freefont freefont-debian axtls
-app: portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont
+app: portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont axtls
 
 # portaudio
 portaudio_v19_1360/Makefile:
@@ -211,7 +211,7 @@ squeezeplay_contrib: squeezeplay/Makefile
 squeezeplay_private/Makefile:
 	cd squeezeplay_private; SDL_CONFIG=${SDL_CONFIG} ./configure --prefix=${PREFIX}
 
-squeezeplay_private: axtls squeezeplay_private/Makefile
+squeezeplay_private: squeezeplay_private/Makefile
 	cd squeezeplay_private; make CFLAGS="${CFLAGS} -I${SRC_DIR}/squeezeplay/src" PREFIX=${PREFIX} install
 	rm ${PREFIX}/lib/spprivate.*
 	cp squeezeplay_private/.libs/spprivate.so ${PREFIX}/lib/lua/5.1/spprivate.so
