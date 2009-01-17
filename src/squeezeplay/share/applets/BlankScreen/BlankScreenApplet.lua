@@ -52,10 +52,13 @@ function init(self)
 		function(event)
 			local type = event:getType()
 			if type == EVENT_WINDOW_ACTIVE then
-				self:_getBrightness()
+				if not self.brightness then
+					self.brightness = self:_getBrightness()
+				end
 				self:_setBrightness(0)
 			else
 				self:_setBrightness(self.brightness)
+				self.brightness = nil
 			end
 			return EVENT_UNUSED
 		end,
@@ -85,7 +88,7 @@ end
 
 function _getBrightness(self)
 	-- store existing brightness levels in self
-	self.brightness = appletManager:callService("getBrightness")
+	return appletManager:callService("getBrightness")
 end
 
 function _setBrightness(self, brightness)
