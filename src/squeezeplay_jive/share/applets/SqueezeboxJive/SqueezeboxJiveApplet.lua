@@ -114,11 +114,14 @@ function init(self)
 	self.watchdog = Watchdog:open()
 	if self.watchdog then
 		-- allow 30 seconds to boot
+		log:info("watchdog timeout 30")
 		self.watchdog:setTimeout(30)
+
 		local timer = Timer(2000, -- 2 seconds
 			function()
-				-- 10 second when running
+				-- allow 10 seconds after boot
 				if not self.watchdogRunning then
+					log:info("watchdog timeout 10")
 					self.watchdog:setTimeout(10)
 					self.watchdogRunning = true
 				end
@@ -584,6 +587,11 @@ function wakeup(self)
 	if self.powerState == "active" then
 		self.powerTimer:restart()
 	else
+		-- the system clock drifts in sleep mode, reset it
+		if self.powerState == "sleep" or self.powerState == "suspend" then
+			os.execute("hwclock -s")
+		end
+
 		self:setPowerState("active")
 	end
 end
@@ -1057,6 +1065,15 @@ function _setCPUSpeed(self, fast)
 
 	fh:write(speed)
 	fh:close()
+
+	-- the system clock runs slow in low power mode, so we need
+	-- to modify watchdog interval based on cpu speed
+	if self.watchdogRunning then
+		local timeout = fast and 10 or 30
+
+		log:info("watchdog timeout ", timeout)
+		self.watchdog:setTimeout(timeout)
+	end
 end
 
 

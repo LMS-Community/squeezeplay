@@ -87,32 +87,6 @@ function init(self)
 	log:info("uuid=", uuid)
 	log:info("mac=", mac)
 
-	if not uuid or string.match(mac, "^00:40:20") then
-		local popup = Popup("errorWindow", self:string("INVALID_MAC_TITLE"))
-
-		popup:setAllowScreensaver(false)
-		popup:setAlwaysOnTop(true)
-		popup:setAutoHide(false)
-
-		local text = Textarea("textarea", self:string("INVALID_MAC_TEXT"))
-		local menu = SimpleMenu("menu", {
-			{
-				text = self:string("INVALID_MAC_CONTINUE"),
-				sound = "WINDOWHIDE",
-				callback = function()
-						   window:hide()
-					   end
-			},
-		})
-
-		popup:addWidget(text)
-		popup:addWidget(menu)
-		popup:show()
-	end
-
-
-	jnt:setUUID(uuid, mac)
-
 	-- watchdog timer
 	self.watchdog = Watchdog:open()
 	if self.watchdog then
