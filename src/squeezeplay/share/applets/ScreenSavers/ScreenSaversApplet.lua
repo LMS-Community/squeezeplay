@@ -67,7 +67,7 @@ function init(self, ...)
 		EVENT_CHAR_PRESS | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION | EVENT_IR_ALL,
 		function(event)
 			if (event:getType() & EVENT_IR_ALL) > 0 then
-				if (not Framework:isValidIRCode(event:getIRCode())) then
+				if (not Framework:isValidIRCode(event)) then
 					return EVENT_UNUSED
 				end
 			end
@@ -88,7 +88,7 @@ function init(self, ...)
 			end
 
 			if (event:getType() & EVENT_IR_ALL) > 0 then
-				if (not Framework:isValidIRCode(event:getIRCode())) then
+				if (not Framework:isValidIRCode(event)) then
 					return EVENT_UNUSED
 				end
 			end

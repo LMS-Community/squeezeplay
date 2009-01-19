@@ -755,7 +755,7 @@ function getIRButtonName(self, irCode)
 	for mapName, map in pairs(self.irMaps) do
 		buttonName = map.byCode[irCode]
 		if buttonName then
-			log:error("Mapping for ", buttonName, " found (", irCode, ") in mapName (", mapName, ")")
+			log:debug("Mapping for ", buttonName, " found (", irCode, ") in mapName (", mapName, ")")
 			break
 		end
 	end
@@ -765,15 +765,15 @@ end
 
 --[[
 
-=head2 jive.ui.Framework:isValidIRCode(irCode)
+=head2 jive.ui.Framework:isValidIRCode(irEvent)
 
-return true if any loaded IR map file contains a mapping for the given irCode. Useful to filter out irCode from 
+return true if any loaded IR map file contains a mapping for the given irEvent. Useful to filter out IR signals from 
 other IR remote controls that the user might have.
 
 =cut
 --]]
-function isValidIRCode(self, irCode)
-	return self:getIRButtonName(irCode) ~= nil
+function isValidIRCode(self, irEvent)
+	return self:getIRButtonName(irEvent:getIRCode()) ~= nil
 end
 
 --[[

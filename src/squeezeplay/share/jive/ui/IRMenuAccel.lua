@@ -29,12 +29,14 @@ module(..., oo.class)
 
 
 --[[
-=head2 IrMenuAccel(positiveCode, negativeCode)
+=head2 IrMenuAccel(positiveButtonName, negativeButtonName)
 
-Creates a filter for accelerated ir events.
+Creates a filter for accelerated ir events, using ir button names "arrow_down" and "arrow_up" for 
+the positive and negative IR event triggers, unless overridden by positiveCode and negativeCode.
 
-positiveCode indicate the ir code that will trigger positive acceleration
-negativeCode indicate the ir code that will trigger negative acceleration
+Option param:
+positiveCode indicate the ir button name that will trigger positive acceleration
+negativeCode indicate the ir button name that will trigger negative acceleration
 
 
 =cut
@@ -42,8 +44,8 @@ negativeCode indicate the ir code that will trigger negative acceleration
 function __init(self, positiveButtonName, negativeButtonName)
 	local obj = oo.rawnew(self, {})
 
-	obj.positiveButtonName = positiveButtonName
-	obj.negativeButtonName = negativeButtonName
+	obj.positiveButtonName = positiveButtonName and positiveButtonName or "arrow_down"
+	obj.negativeButtonName = negativeButtonName and negativeButtonName or "arrow_up"
 	obj.listIndex   = 1
 	obj.lastItemChangeT = 0
 	obj.itemChangePeriod = INITIAL_ITEM_CHANGE_PERIOD

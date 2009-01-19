@@ -277,7 +277,7 @@ function _eventHandler(self, event)
 		local irCode = event:getIRCode()
 		if type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT then
 			--first check for IR DOWN/UP
-			if event:isIRCode("up") or event:isIRCode("down") then
+			if event:isIRCode("arrow_up") or event:isIRCode("arrow_down") then
 				self.numberLetterTimer:stop()
 				if self.locked == nil then
 					local chars = self:_getChars()
@@ -512,7 +512,7 @@ function __init(self, style, value, closure, allowedChars)
 	obj.allowedChars = allowedChars or
 		_globalStrings:str("ALLOWEDCHARS_WITHCAPS")
 	obj.scroll = ScrollAccel()
-	obj.irAccel = IRMenuAccel("down", "up")
+	obj.irAccel = IRMenuAccel()
 	obj.lastNumberLetterIrCode = nil
 	obj.lastNumberLetterT = nil
 	obj.numberLetterTimer = Timer(NUMBER_LETTER_TIMER_TIME,     

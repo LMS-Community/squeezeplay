@@ -144,7 +144,7 @@ local function _eventHandler(self, event)
 		end
 
 	elseif evtype == EVENT_IR_DOWN or evtype == EVENT_IR_REPEAT then
-		if event:isIRCode("up") or event:isIRCode("down") then
+		if event:isIRCode("arrow_up") or event:isIRCode("arrow_down") then
 			if self.locked == nil then
 				self:scrollBy(self.irAccel:event(event, self.topItem, self.selected or 1, self.numWidgets, self.listSize), true, evtype == EVENT_IR_DOWN)
 				return EVENT_CONSUME
@@ -297,7 +297,7 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 	_assert(itemAvailable == nil or type(itemAvailable) == "function")
 
 	local obj = oo.rawnew(self, Widget(style))
-	obj.irAccel = IRMenuAccel("down", "up")
+	obj.irAccel = IRMenuAccel()
 	
 	obj.scroll = ScrollAccel(function(...)
 					 if itemAvailable then
