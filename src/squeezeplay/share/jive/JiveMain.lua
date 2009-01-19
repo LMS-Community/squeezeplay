@@ -130,20 +130,20 @@ local keyboardShortcuts = {
 
 local charActionMappings = {}
 charActionMappings.press = {
-    ["/"] = "go_search"
+	["/"] = "go_search"
 }
 
 
 local keyActionMappings = {}
 keyActionMappings.press = {
-    [KEY_HOME] = "go_home"
+	[KEY_HOME] = "go_home"
 }
 
 
 keyActionMappings.hold = {
-    [KEY_BACK] = "disconnect_player",
-    [KEY_LEFT] = "go_home",
-    [KEY_REW | KEY_PAUSE] = "take_screenshot"  -- a stab at how to handle multi-press
+	[KEY_BACK] = "disconnect_player",
+	[KEY_LEFT] = "go_home",
+	[KEY_REW | KEY_PAUSE] = "take_screenshot"  -- a stab at how to handle multi-press
 }
 
 local _defaultSkin
@@ -162,8 +162,8 @@ local function _goHome()
 end
 
 local function _disconnectPlayer(self, event) --self, event not used in our case, could be left out
-    appletManager:callService("setCurrentPlayer", nil)
-    _goHome()
+	appletManager:callService("setCurrentPlayer", nil)
+	_goHome()
 end
 
 -- bring us to the home menu
@@ -186,11 +186,11 @@ local function _homeHandler(event)
 
 	elseif ( type == EVENT_KEY_PRESS and event:getKeycode() == KEY_HOME) then
 
-        _goHome()
-        
+		_goHome()
+		
 		return EVENT_CONSUME
-      end
-      return EVENT_UNUSED
+	  end
+	  return EVENT_UNUSED
 end
 
 local function _addUserPathToLuaPath()
@@ -201,33 +201,33 @@ end
 
 -- transform user input events (key, etc) to a matching action name
 local function getAction(event)
-    --naive implementation for demonstration - will be more involved later
+	--naive implementation for demonstration - will be more involved later
 
-    local eventType = event:getType()
-    local action = nil
-    
-    if eventType == EVENT_KEY_PRESS then
-        action = keyActionMappings.press[event:getKeycode()]
-    elseif eventType == EVENT_KEY_HOLD then
-        action = keyActionMappings.hold[event:getKeycode()]
-    elseif eventType == EVENT_CHAR_PRESS then
-        action = charActionMappings.press[string.char(event:getUnicode())]
-    end
-    
-    return action
-    
+	local eventType = event:getType()
+	local action = nil
+	
+	if eventType == EVENT_KEY_PRESS then
+		action = keyActionMappings.press[event:getKeycode()]
+	elseif eventType == EVENT_KEY_HOLD then
+		action = keyActionMappings.hold[event:getKeycode()]
+	elseif eventType == EVENT_CHAR_PRESS then
+		action = charActionMappings.press[string.char(event:getUnicode())]
+	end
+	
+	return action
+	
 end
 
 function registerDefaultActions()
-    for key, action in pairs(keyActionMappings.press) do 
-        Framework:registerAction(action)
-    end
-    for key, action in pairs(keyActionMappings.hold) do 
-        Framework:registerAction(action)
-    end
-    for key, action in pairs(charActionMappings.press) do 
-        Framework:registerAction(action)
-    end
+	for key, action in pairs(keyActionMappings.press) do 
+		Framework:registerAction(action)
+	end
+	for key, action in pairs(keyActionMappings.hold) do 
+		Framework:registerAction(action)
+	end
+	for key, action in pairs(charActionMappings.press) do 
+		Framework:registerAction(action)
+	end
 
 end
 

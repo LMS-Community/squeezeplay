@@ -544,28 +544,28 @@ function removeListener(self, handle)
 end
 
 function dumpActions(self)
-    local result = "Available Actions: " 
-    for action in table.pairsByKeys(self.actions.byName) do
-        result = result .. " " .. action
-    end
-    return result
+	local result = "Available Actions: " 
+	for action in table.pairsByKeys(self.actions.byName) do
+		result = result .. " " .. action
+	end
+	return result
 end
 
 function _getActionEventIndexByName(self, name)
-    if (self.actions.byName[name] == nil) then
-        return nil   
-    end
-    
-    return self.actions.byName[name].index
+	if (self.actions.byName[name] == nil) then
+		return nil   
+	end
+	
+	return self.actions.byName[name].index
 end
 
 function getActionEventNameByIndex(self, index)
-    if (index > #self.actions.byIndex) then
-        log:error("action event index out of bounds: " , index)
-        return nil   
-    end
-    
-    return self.actions.byIndex[index].name
+	if (index > #self.actions.byIndex) then
+		log:error("action event index out of bounds: " , index)
+		return nil   
+	end
+	
+	return self.actions.byIndex[index].name
 end
 
 --[[
@@ -577,14 +577,14 @@ Returns a new ACTION event or nil if no matching action has been registered.
 =cut
 --]]
 function newActionEvent(self, action)
-    local actionIndex = self:_getActionEventIndexByName(action)
-    if not actionIndex then
-        log:error("action name not registered: (" , action, "). Available actions: ", self:dumpActions() )
-        return nil
-    end
-    
-    return Event:new(ACTION, actionIndex)
-    
+	local actionIndex = self:_getActionEventIndexByName(action)
+	if not actionIndex then
+		log:error("action name not registered: (" , action, "). Available actions: ", self:dumpActions() )
+		return nil
+	end
+	
+	return Event:new(ACTION, actionIndex)
+	
 end
 
 --[[
@@ -597,17 +597,17 @@ Each action must be registered before listeners using it can be created (for typ
 =cut
 --]]
 function registerAction(self, actionName)
-    if (self.actions.byName[actionName]) then
-        log:error("Action already registered, doing nothing: ", actionName)
-        return
-    end
-    
-    local actionEventDefinition = { name = actionName, index = #self.actions.byIndex + 1 }
+	if (self.actions.byName[actionName]) then
+		log:error("Action already registered, doing nothing: ", actionName)
+		return
+	end
+	
+	local actionEventDefinition = { name = actionName, index = #self.actions.byIndex + 1 }
 
-    log:debug("Registering action: ", actionEventDefinition.name, " with index: ", actionEventDefinition.index)
-    self.actions.byName[actionName] = actionEventDefinition
-    table.insert(self.actions.byIndex, actionEventDefinition)
-    
+	log:debug("Registering action: ", actionEventDefinition.name, " with index: ", actionEventDefinition.index)
+	self.actions.byName[actionName] = actionEventDefinition
+	table.insert(self.actions.byIndex, actionEventDefinition)
+	
 end
 
 
@@ -616,26 +616,26 @@ function addActionListener(self, action, obj, sourceBreadCrumb, listener)
 	_assert(type(listener) == "function")
 
 
-    if not self:_getActionEventIndexByName(action) then
-        log:error("action name not registered:(" , action, "). Available actions: ", self:dumpActions() )
-        return 
-    end
-    log:debug("Creating action listener for action: (" , action, ") from source: ", sourceBreadCrumb)
-    
+	if not self:_getActionEventIndexByName(action) then
+		log:error("action name not registered:(" , action, "). Available actions: ", self:dumpActions() )
+		return 
+	end
+	log:debug("Creating action listener for action: (" , action, ") from source: ", sourceBreadCrumb)
+	
 	self:addListener(ACTION,
 		function(event)
-		    local eventAction = event:getAction()
-		    if eventAction != action then
-		        return EVENT_UNUSED
-		    end
-	    log:debug("Calling action listener for action: (" , action, ") from source: ", sourceBreadCrumb)
+			local eventAction = event:getAction()
+			if eventAction != action then
+				return EVENT_UNUSED
+			end
+			log:debug("Calling action listener for action: (" , action, ") from source: ", sourceBreadCrumb)
 		
-            local listenerResult = listener(obj, event)
-            --default to consume unless the listener specifically wants to set a specific event return
-            return listenerResult and listenerResult or EVENT_CONSUME
+			local listenerResult = listener(obj, event)
+			--default to consume unless the listener specifically wants to set a specific event return
+			return listenerResult and listenerResult or EVENT_CONSUME
 		end
 	)
-    
+	
 end
 
 --[[
