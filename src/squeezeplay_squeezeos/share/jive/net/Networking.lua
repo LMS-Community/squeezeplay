@@ -709,7 +709,7 @@ function t_addNetwork(self, ssid, option)
 	end
 
 	-- Disconnect from existing network
-	self:t_disconnectNetwork()
+	self:_ifDown()
 
 	-- Use select network to disable all other networks
 	request = 'SELECT_NETWORK ' .. id
@@ -766,25 +766,14 @@ end
 
 
 --[[
-
 =head2 jive.net.Networking:t_disconnectNetwork()
 
 brings down a network interface. If wireless, then force the wireless disconnect as well
 
 =cut
 --]]
-
 function t_disconnectNetwork(self)
-	assert(Task:running(), "Networking:disconnectNetwork must be called in a Task")
-
-	if self.wireless then
-		-- Force disconnect from existing network
-		local request = 'DISCONNECT'
-		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-	end
-
-	-- Force the interface down
-	self:_ifDown()
+	 self:_ifDown()
 end
 
 
@@ -799,40 +788,6 @@ selects a network to connect to. wireless only
 
 function t_selectNetwork(self, ssid)
 	assert(Task:running(), "Networking:selectNetwork must be called in a Task")
-
-	if self.wireless then
-		local networkResults = self:request("LIST_NETWORKS")
-		log:info("list results ", networkResults)
-
-		local id = false
-		for nid, nssid in string.gmatch(networkResults, "([%d]+)\t([^\t]*).-\n") do
-			log:info("id=", nid, " ssid=", nssid)
-			if nssid == ssid then
-				id = nid
-				break
-			end
-		end
-
-		-- Select network
-		if not id then
-			log:warn("can't find network ", ssid)
-			return
-		end
-
-		-- Disconnect from existing network
-		self:t_disconnectNetwork()
-
-		local request = 'SELECT_NETWORK ' .. id
-		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-		-- Allow association
-		request = 'REASSOCIATE'
-		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-		-- Save configuration
-		request = 'SAVE_CONFIG'
-		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-	end
 
 	-- set as auto network
 	self:_editAutoInterfaces(ssid)
@@ -896,6 +851,46 @@ function _ifUp(self, ssid)
 		end
 	end
 
+	-- associate
+	if self.wireless then
+		-- FIXME this should be handled by the ifup scripts
+
+		local networkResults = self:request("LIST_NETWORKS")
+		log:info("list results ", networkResults)
+
+		local id = false
+		for nid, nssid in string.gmatch(networkResults, "([%d]+)\t([^\t]*).-\n") do
+			log:info("id=", nid, " ssid=", nssid)
+			if nssid == ssid then
+				id = nid
+				break
+			end
+		end
+
+		-- Select network
+		if not id then
+			log:warn("can't find network ", ssid)
+			return
+		end
+
+		-- Disconnect from existing network
+		local request = 'DISCONNECT'
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+		local request = 'SELECT_NETWORK ' .. id
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+		-- Allow association
+		request = 'REASSOCIATE'
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+		-- Save configuration
+		request = 'SAVE_CONFIG'
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+		_sync()
+	end
+
 	-- bring interface up
 	local iface = self.interface
 	if self.wireless then
@@ -927,6 +922,40 @@ function _ifDown(self)
 
 		log:info("ifdown ", iface)
 		self:_ifUpDown("/sbin/ifdown " .. iface .. " -f")
+
+		if not self.wireless then
+			return
+		end
+
+		-- FIXME this should be handled by the ifdown scripts
+
+		-- disconnect
+		local networkResults = self:request("LIST_NETWORKS")
+
+		local id = false
+		for nid, nssid in string.gmatch(networkResults, "([%d]+)\t([^\t]*).-\n") do
+			log:info("id=", nid, " ssid=", nssid)
+			if nssid == active then
+				id = nid
+				break
+			end
+		end
+
+		if id then
+			-- Disconnect from existing network
+			local request = 'DISCONNECT'
+			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+			-- Disable network
+			local request = 'DISABLE_NETWORK ' .. id
+			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+			-- Save configuration
+			request = 'SAVE_CONFIG'
+			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+			_sync()
+		end
 	end
 end
 
