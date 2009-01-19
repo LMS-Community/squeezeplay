@@ -830,6 +830,11 @@ function skin(self, s)
 	s.wirelessLevel4.align = "right"
 	s.wirelessLevel4.img = _loadImage(self, "Icons/icon_wireless_4_shadow.png")
 
+	-- XXXX need artwork
+	s.wiredEthernet = {}
+	s.wiredEthernet.align = "right"
+	s.wiredEthernet.img = _loadImage(self, "Icons/icon_nowplaying_indicator_w.png")
+
 	s.navcluster = {}
 	s.navcluster.img = _loadImage(self, "navcluster.png")
 	s.navcluster.align = "center"

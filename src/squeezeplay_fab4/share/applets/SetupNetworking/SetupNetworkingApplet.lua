@@ -79,6 +79,8 @@ function setupRegionShow(self, setupNext)
 	local menu = SimpleMenu("buttonmenu")
 
 	for name in wlan:getRegionNames() do
+		log:debug("region=", region, " name=", name)
+
 		local item = {
 			text = self:string("NETWORK_REGION_" .. name),
 			style = 'buttonitem',
@@ -93,10 +95,8 @@ function setupRegionShow(self, setupNext)
 
 		menu:addItem(item)
 		if region == name then
-			log:warn("setSelectedItem=", menu:numItems())
 			menu:setSelectedItem(item)
 		end
-		log:warn("region=", region, " name=", name)
 	end
 
 
@@ -123,7 +123,7 @@ function settingsRegionShow(self)
 
 	local group = RadioGroup()
 	for name in wlan:getRegionNames() do
-		log:warn("region=", region, " name=", name)
+		log:debug("region=", region, " name=", name)
 		menu:addItem({
 				     text = self:string("NETWORK_REGION_" .. name),
 				     icon = RadioButton("radio", group,
@@ -154,7 +154,7 @@ end
 
 
 function setupConnectionType(self, setupNext)
-	log:warn('setupConnectionType')
+	log:debug('setupConnectionType')
 
 	assert(self.wlanIface or self.ethIface)
 
@@ -224,17 +224,18 @@ end
 
 function _addNetwork(self, iface, ssid)
 	local item = {
-		text = ssid,
+		text = iface:isWireless() and ssid or tostring(self:string("NETWORK_ETHERNET")),
 		icon = Icon("icon"),
 		sound = "WINDOWSHOW",
 		callback = function()
 			openNetwork(self, iface, ssid)
 		end,
-		weight = 1
+		weight = iface:isWireless() and 1 or 2
 	}
 		      
 	self.scanResults[ssid] = {
 		item = item,            -- menu item
+		iface = iface,		-- interface
 		-- flags = nil,         -- beacon flags
 		-- bssid = nil,         -- bssid if know from scan
 		-- id = nil             -- wpa_ctrl id if configured
@@ -246,15 +247,25 @@ end
 
 -- Scan on interface iface
 function setupScanShow(self, iface, setupNext)
-	assert(iface, debug.traceback())
-
-	-- short cut if interface does not support scanning
-	if not iface:isWireless() then
-		return setupNext()
+	local interfaces
+	if iface == nil then
+		interfaces = Networking:interfaces(jnt)
+	else
+		interfaces = { dummy = iface }
 	end
 
 	-- start scanning
-	iface:scan(setupNext)
+	local ifaceCount = 0
+	for name, iface in pairs(interfaces) do
+		ifaceCount = ifaceCount + 1
+
+		iface:scan(function()
+			ifaceCount = ifaceCount - 1
+			if ifaceCount == 0 then
+				setupNext()
+			end
+		end)
+	end
 
 	local window = Popup("popupIcon")
 	window:setAllowScreensaver(false)
@@ -266,19 +277,22 @@ function setupScanShow(self, iface, setupNext)
 	window:addWidget(status)
 
         window:addTimer(1000, function()
-			local results = iface:scanResults()
 			local numNetworks = 0
-			for k, v in pairs(results) do
-				numNetworks = numNetworks + 1
+
+			for name, iface in pairs(interfaces) do
+				local results = iface:scanResults()
+				for k, v in pairs(results) do
+					numNetworks = numNetworks + 1
+				end
 			end
-			if numNetworks >= 1 then
-				status:setValue(self:string("NETWORK_FOUND_NETWORKS", tostring(numNetworks) ) )
-			end
+
+			status:setValue(self:string("NETWORK_FOUND_NETWORKS", tostring(numNetworks) ) )
 		end)
 
 	-- or timeout after 10 seconds if no networks are found
 	window:addTimer(10000,
 		function()
+			ifaceCount = 0
 			setupNext()
 		end)
 
@@ -290,17 +304,14 @@ end
 function setupNetworksShow(self, iface, setupNext)
 	self.setupNext = setupNext
 
-	log:warn("setupNetworksShow ", iface.interface)
-
 	if not iface:isWireless() then
 		return self:createAndConnect(iface, "eth0")
 	end
 
-	local window = _networksShow(
-		self,
+	local window = self:_networksShow(
+		iface,
 		self:string("NETWORK_WIRELESS_NETWORKS"),
-		self:string("NETWORK_SETUP_HELP"),
-		wirelessTitleStyle
+		self:string("NETWORK_SETUP_HELP")
 	)
 	window:setAllowScreensaver(false)
 
@@ -312,10 +323,10 @@ function settingsNetworksShow(self)
 	self.setupNext = nil
 
 	return setupScanShow(self,
-		self.wlanIface,
+		nil, -- all interfaces
 		function()
-			_networksShow(
-				self,
+			self:_networksShow(
+				nil,
 				self:string("NETWORK"),
 				self:string("NETWORK_SETTINGS_HELP")
 			)
@@ -324,7 +335,15 @@ function settingsNetworksShow(self)
 end
 
 
-function _networksShow(self, title, help)
+function _networksShow(self, iface, title, help)
+	local interfaces
+
+	if iface == nil then
+		interfaces = Networking:interfaces(jnt)
+	else
+		interfaces = { dummy = iface }
+	end
+
 	local window = Window("window", title, wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -334,28 +353,33 @@ function _networksShow(self, title, help)
 	self.scanMenu = SimpleMenu("menu")
 	self.scanMenu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
-	self.scanMenu:addItem({
-		text = self:string("NETWORK_ENTER_ANOTHER_NETWORK"),
-		sound = "WINDOWSHOW",
-		callback = function()
-			enterSSID(self, self.wlanIface)
-		end,
-		weight = 2
-	})
-	
 	self.scanResults = {}
 
-	-- load known networks (in network thread)
-	Task("networkList", self, _listNetworksTask):addTask()
+	for name, iface in pairs(interfaces) do
+		if iface:isWireless() then
+			-- add hidden ssid menu
+			-- XXXX hidden ssid menu will move to help?
+			self.scanMenu:addItem({
+				text = self:string("NETWORK_ENTER_ANOTHER_NETWORK"),
+				sound = "WINDOWSHOW",
+				callback = function()
+					enterSSID(self, iface)
+				end,
+				weight = 3
+			})
+		end
 
-	-- process existing scan results
-	self:_scanComplete(self.wlanIface)
+		-- process existing scan results
+		self:_scanComplete(iface)
+	end
 
 	-- schedule network scan 
 	self.scanMenu:addTimer(5000,
-			       function()
-				       self:scan(self.wlanIface)
-			       end)
+		function()
+			for name, iface in pairs(interfaces) do
+				self:scan(iface)
+			end
+		end)
 
 	local help = Textarea("help", help)
 	window:addWidget(help)
@@ -363,30 +387,6 @@ function _networksShow(self, title, help)
 
 	self:tieAndShowWindow(window)
 	return window
-end
-
-
--- load known networks from wpa supplicant into scan menu
-function _listNetworksTask(self)
-	local iface = self.wlanIface
-
-	local networkResults = iface:request("LIST_NETWORKS")
-	log:warn("list results ", networkResults)
-
-	for id, ssid, flags in string.gmatch(networkResults, "([%d]+)\t([^\t]*)\t[^\t]*\t([^\t]*)\n") do
-		if not string.match(ssid, "logitech[%-%+%*]squeezebox[%-%+%*](%x+)") then
-
-			if not self.scanResults[ssid] then
-				_addNetwork(self, iface, ssid)
-			end
-			self.scanResults[ssid].id = id
-
-			if string.match(flags, "%[CURRENT%]") then
-				self:_setCurrentSSID(ssid)
-				self.scanMenu:setSelectedItem(self.scanResults[ssid].item)
-			end
-		end
-	end
 end
 
 
@@ -400,36 +400,38 @@ end
 function _scanComplete(self, iface)
 	local now = Framework:getTicks()
 
-	local scanTable = self.wlanIface:scanResults()
+	local scanTable = iface:scanResults()
 
-	local associated = nil
+	local associated = self.currentSSID
 	for ssid, entry in pairs(scanTable) do
-		      -- hide squeezebox ad-hoc networks
-		      if not string.match(ssid, "logitech[%-%+%*]squeezebox[%-%+%*](%x+)") then
+		-- hide squeezebox ad-hoc networks
+		if not string.match(ssid, "logitech[%-%+%*]squeezebox[%-%+%*](%x+)") then
 
-			      if not self.scanResults[ssid] then
-				      _addNetwork(self, iface, ssid)
-			      end
+			if not self.scanResults[ssid] then
+				_addNetwork(self, iface, ssid)
+			end
 
-			      -- always update the bssid and flags
-			      self.scanResults[ssid].bssid = entry.bssid
-			      self.scanResults[ssid].flags = entry.flags
+			-- always update the id, bssid and flags
+			self.scanResults[ssid].id = entry.id
+			self.scanResults[ssid].bssid = entry.bssid
+			self.scanResults[ssid].flags = entry.flags
 
-			      if entry.associated then
-				      associated = ssid
-			      end
+			if entry.associated then
+				associated = ssid
+			end
 
-			      local item = self.scanResults[ssid].item
+			local itemStyle = iface:isWireless() and ("wirelessLevel" .. entry.quality) or "wiredEthernet"
 
-			      --assert(type(entry.quality) == "number", "Eh? quality is " .. tostring(entry.quality) .. " for " .. ssid)
-			      item.icon:setStyle("wirelessLevel" .. entry.quality)
-			      self.scanMenu:updatedItem(item)
-		      end
+			local item = self.scanResults[ssid].item
+			item.icon:setStyle(itemStyle)
+
+			self.scanMenu:updatedItem(item)
+		end
 	end
 
 	-- remove old networks
 	for ssid, entry in pairs(self.scanResults) do
-		if not scanTable[ssid] then
+		if entry.iface == iface and not scanTable[ssid] then
 			self.scanMenu:removeItem(entry.item)
 			self.scanResults[ssid] = nil
 		end
@@ -446,7 +448,7 @@ function _hideToTop(self, dontSetupNext)
 	end
 
 	while #Framework.windowStack > 2 and Framework.windowStack[2] ~= self.topWindow do
-		log:warn("hiding=", Framework.windowStack[2], " topWindow=", self.topWindow)
+		log:debug("hiding=", Framework.windowStack[2], " topWindow=", self.topWindow)
 		Framework.windowStack[2]:hide(Window.transitionPushLeft)
 	end
 
@@ -469,7 +471,7 @@ function openNetwork(self, iface, ssid)
 		if type(self.setupNext) == "function" then
 			return self.setupNext()
 		else
-			return networkStatusShow(self)
+			return networkStatusShow(self, iface)
 		end
 
 	elseif self.scanResults[ssid] and
@@ -524,24 +526,25 @@ function enterPassword(self, iface, ssid)
 	end
 	local flags = self.scanResults[ssid].flags
 
-	log:warn("ssid is: ", ssid, " flags are: ", flags)
+	log:debug("ssid is: ", ssid, " flags are: ", flags)
 
 	if flags == "" then
 		self.encryption = "none"
 		return createAndConnect(self, iface, ssid)
 
+	elseif string.find(flags, "ETH") then
+		self.encryption = "none"
+		return createAndConnect(self, iface, ssid)
+
 	elseif string.find(flags, "WPA2%-PSK") then
-		log:warn("**** WPA2")
 		self.encryption = "wpa2"
 		return enterPSK(self, iface, ssid)
 
 	elseif string.find(flags, "WPA%-PSK") then
-		log:warn("**** WPA")
 		self.encryption = "wpa"
 		return enterPSK(self, iface, ssid)
 
 	elseif string.find(flags, "WEP") then
-		log:warn("**** WEP")
 		return chooseWEPLength(self, iface, ssid)
 
 	elseif string.find(flags, "WPA%-EAP") or string.find(flags, "WPA2%-EAP") then
@@ -758,9 +761,7 @@ function _addNetworkTask(self, iface, ssid)
 		key = self.key
 	}
 
-	log:warn('ADDING NETWORK: ', ssid)
 	local id = iface:t_addNetwork(ssid, option)
-	log:warn('returned id: ', id)
 
 	self.addNetwork = true
 	if self.scanResults[ssid] then
@@ -774,12 +775,12 @@ function _connectTimer(self, iface, ssid)
 
 	Task("networkConnect", self,
 	     function()
-		     log:warn("connectTimeout=", self.connectTimeout, " dhcpTimeout=", self.dhcpTimeout)
+		     log:debug("connectTimeout=", self.connectTimeout, " dhcpTimeout=", self.dhcpTimeout)
 
 		     local status = iface:t_wpaStatus()
 
-		     log:warn("wpa_state=", status.wpa_state)
-		     log:warn("ip_address=", status.ip_address)
+		     log:debug("wpa_state=", status.wpa_state)
+		     log:debug("ip_address=", status.ip_address)
 
 		     if not (status.wpa_state == "COMPLETED" and status.ip_address) then
 			     -- not connected yet
@@ -844,7 +845,7 @@ end
 function createAndConnect(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	log:warn("createAndConnect ", iface, " ", ssid)
+	log:debug("createAndConnect ", iface, " ", ssid)
 
 	self.createNetwork = ssid
 	connect(self, iface, ssid)
@@ -861,7 +862,6 @@ function connect(self, iface, ssid, keepConfig)
 		self:_setCurrentSSID(nil)
 
 		-- Select/add the network in a background task
-		log:warn("SSID=", ssid)
 		Task("networkSelect", self, selectNetworkTask):addTask(iface, ssid)
 	end
 
@@ -875,14 +875,8 @@ function connect(self, iface, ssid, keepConfig)
 		end)
 	window:addWidget(icon)
 
-	local str
-	if iface:isWireless() then
-		str = self:string("NETWORK_CONNECTING_TO_SSID", ssid)
-	else
-		str = self:string("NETWORK_CONNECTING_TO_ETHERNET")
-	end
-
-	window:addWidget(Label("text", str))
+	local name = self.scanResults[ssid].item.text
+	window:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", name)))
 
 	self:tieAndShowWindow(window)
 	return window
@@ -893,7 +887,6 @@ function _connectFailedTask(self, iface)
 	-- Stop trying to connect to the network
 	iface:t_disconnectNetwork()
 
-	log:warn("addNetwork=", self.addNetwork)
 	if self.addNetwork then
 		-- Remove failed network
 		self:_removeNetworkTask(iface, ssid)
@@ -905,7 +898,7 @@ end
 function connectFailed(self, iface, ssid, reason)
 	assert(iface and ssid, debug.traceback())
 
-	log:warn("connection failed")
+	log:debug("connection failed")
 
 	-- Stop trying to connect to the network, if this network is
 	-- being added this will also remove the network configuration
@@ -970,7 +963,7 @@ function connectOK(self, iface, ssid)
 		return
 	end
 
-	log:warn("connection OK ", ssid)
+	log:debug("connection OK ", ssid)
 
 	self:_setCurrentSSID(ssid)
 
@@ -986,7 +979,8 @@ function connectOK(self, iface, ssid)
 	local window = Popup("popupIcon")
 	window:addWidget(Icon("iconConnected"))
 
-	local text = Label("text", self:string("NETWORK_CONNECTED_TO", self.currentSSID))
+	local name = self.scanResults[ssid].item.text
+	local text = Label("text", self:string("NETWORK_CONNECTED_TO", name))
 	window:addWidget(text)
 
 	window:addTimer(2000,
@@ -1066,8 +1060,6 @@ function _sigusr1(process)
 
 	local pattern = "%s*(%d+).*" .. process
 
-	log:warn("pattern is ", pattern)
-
 	local cmd = io.popen("/bin/ps")
 	for line in cmd:lines() do
 		pid = string.match(line, pattern)
@@ -1076,7 +1068,7 @@ function _sigusr1(process)
 	cmd:close()
 
 	if pid then
-		log:warn("kill -usr1 ", pid)
+		log:debug("kill -usr1 ", pid)
 		os.execute("kill -usr1 " .. pid)
 	else
 		log:error("cannot sigusr1 ", process)
@@ -1087,7 +1079,7 @@ end
 function failedDHCP(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	log:warn("self.encryption=", self.encryption)
+	log:debug("self.encryption=", self.encryption)
 
 	if self.encryption and string.match(self.encryption, "^wep.*") then
 		-- use different error screen for WEP, the failure may
@@ -1321,7 +1313,7 @@ end
 function setStaticIP(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	log:warn("setStaticIP addr=", self.ipAddress, " subnet=", self.ipSubnet, " gw=", self.ipGateway, " dns=", self.ipDNS)
+	log:debug("setStaticIP addr=", self.ipAddress, " subnet=", self.ipSubnet, " gw=", self.ipGateway, " dns=", self.ipDNS)
 
 	Task("networkStatic", self,
 	     function()
@@ -1442,11 +1434,16 @@ local stateTxt = {
 }
 
 
-function t_networkStatusTimer(self, values)
-	local status = self.wlanIface:t_wpaStatus()
+function networkStatusTask(self, iface, values)
+	local status = iface:t_wpaStatus()
+	values[5]:setValue(tostring(status.ip_address))
 
-	local snr = self.wlanIface:getSNR()
-	local bitrate = self.wlanIface:getTxBitRate()
+	if not iface:isWireless() then
+		return
+	end
+
+	local snr = iface:getSNR()
+	local bitrate = iface:getTxBitRate()
 
 	local wpa_state = stateTxt[status.wpa_state] or "NETWORK_STATE_UNKNOWN"
 
@@ -1461,21 +1458,18 @@ function t_networkStatusTimer(self, values)
 	values[2]:setValue(tostring(status.ssid))
 	values[3]:setValue(tostring(status.bssid))
 	values[4]:setValue(tostring(encryption))
-	values[5]:setValue(tostring(status.ip_address))
 	values[6]:setValue(tostring(snr))
 	values[7]:setValue(tostring(bitrate))
 end
 
 
-function networkStatusTimer(self, values)
-	Task("networkStatus", self,
-	     function()
-		     self:t_networkStatusTimer(values)
-	     end):addTask()
+function networkStatusTimer(self, iface, values)
+	local t = Task("networkStatus", self, networkStatusTask)
+	t:addTask(iface, values)
 end
 
 
-function networkStatusShow(self)
+function networkStatusShow(self, iface)
 	local window = Window("window", self:string("NETWORK_STATUS"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -1484,31 +1478,40 @@ function networkStatusShow(self)
 		values[i] = Label("value", "")
 	end
 
-	-- FIXME format this nicely
-	local menu = SimpleMenu("menu",
-				{
-				   { text = self:string("NETWORK_STATE"), icon = values[1] },
-				   { text = self:string("NETWORK_SSID"), icon = values[2] },
-				   { text = self:string("NETWORK_BSSID"), icon = values[3] },
-				   { text = self:string("NETWORK_ENCRYPTION"), icon = values[4] },
-				   { text = self:string("NETWORK_IP_ADDRESS"), icon = values[5] },
-				   { text = self:string("NETWORK_SNR"), icon = values[6] },
-				   { text = self:string("NETWORK_BITRATE"), icon = values[7] },
+	local items
+	if iface:isWireless() then
+		items = {
+			{ text = self:string("NETWORK_STATE"), icon = values[1] },
+			{ text = self:string("NETWORK_SSID"), icon = values[2] },
+			{ text = self:string("NETWORK_BSSID"), icon = values[3] },
+			{ text = self:string("NETWORK_ENCRYPTION"), icon = values[4] },
+			{ text = self:string("NETWORK_IP_ADDRESS"), icon = values[5] },
+			{ text = self:string("NETWORK_SNR"), icon = values[6] },
+			{ text = self:string("NETWORK_BITRATE"), icon = values[7] },
+		}
+	else
+		items = {
+			{ text = self:string("NETWORK_IP_ADDRESS"), icon = values[5] },
+		}
+	end
 
-				   {
-					   text = self:string("NETWORK_FORGET_NETWORK"), nil,
-					   sound = "WINDOWSHOW",
-					   callback = function()
-							      deleteConfirm(self, iface, self.currentSSID)
-						      end
-				   },
-				})
+	items[#items + 1] = {
+		text = self:string("NETWORK_FORGET_NETWORK"), nil,
+		sound = "WINDOWSHOW",
+		callback = function()
+			deleteConfirm(self, iface, self.currentSSID)
+		end
+	}
+
+	-- FIXME format this nicely
+	local menu = SimpleMenu("menu", items)
 	window:addWidget(menu)
 
-	self:networkStatusTimer(values)
-	window:addTimer(1000, function()
-				      self:networkStatusTimer(values)
-			      end)
+	self:networkStatusTimer(iface, values)
+	window:addTimer(1000,
+		function()
+			self:networkStatusTimer(iface, values)
+		end)
 
 	self:tieAndShowWindow(window)
 	return window

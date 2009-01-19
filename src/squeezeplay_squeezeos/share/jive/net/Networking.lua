@@ -108,10 +108,6 @@ local REGION_CODE_MAPPING = {
 -- global for interface objects
 local interfaceTable = {}
 
--- global wireless network scan results
--- XXXX move into interface object
-local _scanResults = {}
-
 
 
 --[[
@@ -131,6 +127,7 @@ function __init(self, jnt, interface, isWireless)
 	obj.interface     = interface
 	obj.wireless      = isWireless
 
+	obj._scanResults = {}
 	obj.responseQueue = {}
 	obj:open()
 
@@ -159,12 +156,7 @@ function interfaces(self, jnt)
 
 	local interfaces = {}
 
-        local f = io.popen("cat /proc/net/dev")
-        if f == nil then
-		log:error("Can't read /proc/net/dev")
-		return
-        end
-
+        local f = assert(io.open("/proc/net/dev"))
 	while true do
         	local line = f:read("*l")
 		if line == nil then
@@ -178,12 +170,13 @@ function interfaces(self, jnt)
 			table.insert(interfaces, interface)
 		end
 	end
+	f:close()
 
 	log:debug('looking for wireless interfaces')
-	-- XXXX replace iwconfig with ioctl lookup
 
 	local wireless = {}
 
+	-- XXXX replace iwconfig with ioctl lookup
 	local f = io.popen("/sbin/iwconfig 2> /dev/null")
         if f ~= nil then
 		while true do
@@ -417,12 +410,12 @@ Start a wireless network scan in a new task.
 --]]
 
 function scan(self, callback)
-	if not self.wireless then
-		return
-	end
-
 	Task("networkScan", self, function()
-		_scan_task(self, callback)
+		if self.wireless then
+			_wirelessScanTask(self, callback)
+		else
+			_ethernetScanTask(self, callback)
+		end
 	end):addTask()
 end
 
@@ -439,11 +432,7 @@ returns wireless scan results, or nil if a network scan has not been performed.
 function scanResults(self)
 	assert(self, debug.traceback())
 
-	if not self.wireless then
-		return {}
-	end
-
-	return _scanResults
+	return self._scanResults
 end
 
 
@@ -457,7 +446,7 @@ the network thread so the ui is not blocked.
 =cut
 --]]
 
-function _scan_task(self, callback)
+function _wirelessScanTask(self, callback)
 	assert(Task:running(), "Networking:scan must be called in a Task")
 
 	local status, err = self:request("SCAN")
@@ -465,23 +454,33 @@ function _scan_task(self, callback)
 		return
 	end
 
-	local status, err = self:request("STATUS")
+	-- get the active interface mapping (ssid)
+	local active = self:_ifstate()
+
+	-- get the associated network
+	local associated = false
+	if active then
+		local status, err = self:request("STATUS")
+		if err then
+			return
+		end
+
+		associated = string.match(status, "\nssid=([^\n]+)")
+	end
+ 
+	-- load configured networks from wpa supplicant
+	local networks = self:request("LIST_NETWORKS")
+
+	-- get scan results
+	local scan, err = self:request("SCAN_RESULTS")
 	if err then
 		return
 	end
-
-	local associated = string.match(status, "\nssid=([^\n]+)")
-
-	local scanResults, err = self:request("SCAN_RESULTS")
-	if err then
-		return
-	end
-
-	_scanResults = _scanResults or {}
 
 	local now = Framework:getTicks()
 
-	for bssid, level, flags, ssid in string.gmatch(scanResults, "([%x:]+)\t%d+\t(%d+)\t(%S*)\t([^\n]+)\n") do
+	-- process scan results
+	for bssid, level, flags, ssid in string.gmatch(scan, "([%x:]+)\t%d+\t(%d+)\t(%S*)\t([^\n]+)\n") do
 
 		local quality = 1
 		level = tonumber(level)
@@ -492,34 +491,93 @@ function _scan_task(self, callback)
 			quality = i
 		end
 
-		_scanResults[ssid] = {
+		self._scanResults[ssid] = {
 			bssid = string.lower(bssid),
 			flags = flags,
 			level = level,
 			quality = quality,
-			associated = (ssid == associated),
+			associated = (ssid == active),
 			lastScan = now
 		}
 	end
 
-	for ssid, entry in pairs(_scanResults) do
+	-- process configured networks
+	for id, ssid, flags in string.gmatch(networks, "([%d]+)\t([^\t]*)\t[^\t]*\t([^\t]*)\n") do
+		if not self._scanResults[ssid] then
+			self._scanResults[ssid] = {
+				bssid = false,
+				flags = "",
+				level = 0,
+				quality = 0,
+				associated = false,
+			}
+		end
+
+		self._scanResults[ssid].id = id
+		self._scanResults[ssid].lastScan = now
+	end
+
+	-- timeout networks
+	for ssid, entry in pairs(self._scanResults) do
 		if now - entry.lastScan > SSID_TIMEOUT then
-			_scanResults[ssid] = nil
+			self._scanResults[ssid] = nil
 		end
 	end
 
 	-- Bug #5227 if we are associated use the same quality indicator
 	-- as the icon bar
-	if associated and _scanResults[associated] then
-		_scanResults[associated].quality = self:getLinkQuality()
+	if associated and self._scanResults[associated] then
+		self._scanResults[associated].quality = self:getLinkQuality()
 	end
 
 	if callback then
-		callback(_scanResults)
+		callback(self._scanResults)
 	end
 
 	self.scanTask = nil
 end
+
+
+function _ethernetScanTask(self, callback)
+	-- XXXX check link status
+
+	local active = self:_ifstate()
+
+	self._scanResults[self.interface] = {
+		flags = "[ETH]",
+		lastScan = Framework:getTicks(),
+		associated = (self.interface == active)
+	}
+
+	callback(self._scanResults)
+
+	return
+end
+
+
+-- check the ifup interface state. returns true if the interface is enabled
+-- or the enabled ssid for wireless interfaces.
+function _ifstate(self)
+	 local active = false
+
+	 local f = assert(io.open("/var/run/ifstate"))
+	 while true do
+	 	local line = f:read("*l")
+		if line == nil then
+			break
+		end
+
+		local iface, mapping = string.match(line, "([^=]+)=?(.*)")
+		if iface == self.interface then
+			active = mapping or true
+			break
+		end
+	end
+	f:close()
+
+	return active
+end
+
 
 
 --[[
@@ -544,8 +602,6 @@ function t_wpaStatus(self)
 			status[k] = v
 		end
 	else
-		log:warn("ifconfig ", self.interface)
-
 		local f, err = io.popen("/sbin/ifconfig " .. self.interface)
 		if f == nil then
 			log:error("Can't read ifconfig: ", err)
@@ -588,7 +644,7 @@ function t_addNetwork(self, ssid, option)
 	end
 
 	log:info("Connect to ", ssid)
-	local flags = (_scanResults[ssid] and _scanResults[ssid].flags) or ""
+	local flags = (self._scanResults[ssid] and self._scanResults[ssid].flags) or ""
 
 	local request, response
 
@@ -647,7 +703,7 @@ function t_addNetwork(self, ssid, option)
 	-- If we have not scanned the ssid then enable scanning with ssid 
 	-- specific probe requests. This allows us to find APs with hidden
 	-- SSIDS
-	if not _scanResults[ssid] then
+	if not self._scanResults[ssid] then
 		request = 'SET_NETWORK ' .. id .. ' scan_ssid 1'
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 	end
@@ -847,6 +903,7 @@ function _ifUp(self, ssid)
 		iface = iface .. "=" .. ssid
 	end
 
+	log:info("ifup ", iface)
 	self:_ifUpDown("/sbin/ifup " .. iface)
 end
 
@@ -863,13 +920,18 @@ function _ifDown(self)
 	-- bring interface down
 	local iface = self.interface
 
-	self:_ifUpDown("/sbin/ifdown " .. iface .. " -f")
+	local active = self:_ifstate()
+
+	if active then
+		iface = iface .. "=" .. active
+
+		log:info("ifdown ", iface)
+		self:_ifUpDown("/sbin/ifdown " .. iface .. " -f")
+	end
 end
 
 
 function _ifUpDown(self, cmd)
-	log:warn(cmd)
-
 	-- reading the output of ifup causes the process to block, we
 	-- don't need the output, so send to /dev/null
 	local proc = Process(self.jnt, cmd .. " 2>1 > /dev/null")

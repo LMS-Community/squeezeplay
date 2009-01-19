@@ -582,8 +582,8 @@ NETWORK_CONNECTING_TO_SSID
 	NO	Kopler til\n%s
 	SV	Ansluter till \n%s
 
-NETWORK_CONNECTING_TO_ETHERNET
-	EN	Connecting to\nEthernet
+NETWORK_ETHERNET
+	EN	Ethernet
 
 NETWORK_CONNECTED_TO
 	DA	Afspilleren er tilsluttet\n%s
