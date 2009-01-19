@@ -206,6 +206,8 @@ function interfaces(self, jnt)
 	for _, interface in ipairs(interfaces) do
 		interfaceTable[interface] = self(jnt, interface, wireless[interface])
 	end
+
+	return interfaceTable
 end
 
 
@@ -262,6 +264,29 @@ Return true if the I<interface> is wireless
 
 function isWireless(self)
 	return self.wireless
+end
+
+
+--[[
+
+=head2 networking:getIP(self, interface)
+
+Returns the ip address, if any, of the object I<interface>
+
+=cut
+--]]
+
+function getIP(self, interfaceObj)
+	local ipaddr
+	local cmd = io.popen("/sbin/ifconfig " .. interfaceObj.interface)
+	for line in cmd:lines() do
+		ipaddr = string.match(line, "inet addr:([%d%.]+)")
+		if ipaddr ~= nil then 
+			break 
+		end
+	end
+	cmd:close()
+	return ipaddr
 end
 
 

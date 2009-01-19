@@ -1,6 +1,6 @@
 
 -- stuff we use
-local tostring,unpack = tostring, unpack
+local tostring, unpack, pairs = tostring, unpack, pairs
 
 local oo                     = require("loop.simple")
 local io                     = require("io")
@@ -18,8 +18,10 @@ local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Textarea               = require("jive.ui.Textarea")
 local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
+local Networking             = require("jive.net.Networking")
 
 local log                    = require("jive.utils.log").logger("applets.setup")
+local jnt                    = jnt
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
@@ -93,14 +95,14 @@ end
 function _getIPAddress()
 	local ipaddr
 
-	local cmd = io.popen("/sbin/ifconfig")
-	for line in cmd:lines() do
-		ipaddr = string.match(line, "inet addr:([%d%.]+)")
-		if ipaddr ~= nil and not string.match(ipaddr, "127.") then
+	local interfaces = Networking:interfaces(jnt)
+
+	for interface, ifObj in pairs(interfaces) do
+		ipaddr = Networking:getIP(ifObj)
+		if ipaddr then
 			break
 		end
 	end
-	cmd:close()
 
 	return ipaddr or "?.?.?.?"
 end
