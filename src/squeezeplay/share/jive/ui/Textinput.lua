@@ -273,7 +273,23 @@ end
 
 function _eventHandler(self, event)
 	local type = event:getType()
-	if type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT or type == EVENT_IR_HOLD then
+	if type == EVENT_IR_PRESS then
+		--play is delete, add is insert, just like jive
+		if event:isIRCode("play") then
+			if not _delete(self) then
+				self:playSound("BUMP")
+				self:getWindow():bumpRight()
+			end
+			return EVENT_CONSUME
+		end
+		if event:isIRCode("add") then
+			if not _insert(self) then
+				self:playSound("BUMP")
+				self:getWindow():bumpRight()
+			end
+			return EVENT_CONSUME
+		end
+	elseif type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT or type == EVENT_IR_HOLD then
 		local irCode = event:getIRCode()
 		if type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT then
 			--first check for IR DOWN/UP
@@ -517,7 +533,6 @@ function __init(self, style, value, closure, allowedChars)
 	obj.lastNumberLetterT = nil
 	obj.numberLetterTimer = Timer(NUMBER_LETTER_TIMER_TIME,     
 					function() 
-						log:error("Fired")
 						obj.lastNumberLetterIrCode = nil
 						obj:_moveCursor(1) 
 						obj:reDraw()
