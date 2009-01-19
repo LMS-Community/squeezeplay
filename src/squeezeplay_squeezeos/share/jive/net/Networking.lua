@@ -206,8 +206,6 @@ function interfaces(self, jnt)
 	for _, interface in ipairs(interfaces) do
 		interfaceTable[interface] = self(jnt, interface, wireless[interface])
 	end
-
-	debug.dump(interfaceTable)
 end
 
 
@@ -537,7 +535,6 @@ function t_wpaStatus(self)
 		end
 	end
 
-	debug.dump(status)
 	return status
 end
 
@@ -848,7 +845,9 @@ end
 function _ifUpDown(self, cmd)
 	log:warn(cmd)
 
-	local proc = Process(self.jnt, cmd)
+	-- reading the output of ifup causes the process to block, we
+	-- don't need the output, so send to /dev/null
+	local proc = Process(self.jnt, cmd .. " 2>1 > /dev/null")
 	proc:read(
 		function(chunk, err)
 			if err then
