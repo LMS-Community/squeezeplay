@@ -99,8 +99,9 @@ screen = {}
 screen.bounds = { 0, 0, 240, 320 }
 screen.bpp = 16
 
-actionsByName = {}
-actionsByIndex = {}
+actions = {}
+actions.byName = {}
+actions.byIndex = {}
 
 -- Put default global settings here
 default_global_settings = {
@@ -544,27 +545,27 @@ end
 
 function dumpActions(self)
     local result = "Available Actions: " 
-    for action in table.pairsByKeys(self.actionsByName) do
+    for action in table.pairsByKeys(self.actions.byName) do
         result = result .. " " .. action
     end
     return result
 end
 
 function _getActionEventIndexByName(self, name)
-    if (self.actionsByName[name] == nil) then
+    if (self.actions.byName[name] == nil) then
         return nil   
     end
     
-    return self.actionsByName[name].index
+    return self.actions.byName[name].index
 end
 
 function getActionEventNameByIndex(self, index)
-    if (index > #self.actionsByIndex) then
+    if (index > #self.actions.byIndex) then
         log:error("action event index out of bounds: " , index)
         return nil   
     end
     
-    return self.actionsByIndex[index].name
+    return self.actions.byIndex[index].name
 end
 
 --[[
@@ -588,30 +589,30 @@ end
 
 --[[
 
-=head2 jive.ui.Framework:registerAction(action)
+=head2 jive.ui.Framework:registerAction(actionName)
 
-Register an action. action is a unique string that represents an action.
+Register an action. actionName is a unique string that represents an action.
 Each action must be registered before listeners using it can be created (for typo prevention, and other future uses). 
 
 =cut
 --]]
 function registerAction(self, actionName)
-    if (self.actionsByName[actionName]) then
-        log:error("Action already registered, doing nothing")
+    if (self.actions.byName[actionName]) then
+        log:error("Action already registered, doing nothing: ", actionName)
         return
     end
     
-    local actionEventDefinition = { name = actionName, index = #self.actionsByIndex + 1 }
+    local actionEventDefinition = { name = actionName, index = #self.actions.byIndex + 1 }
 
     log:debug("Registering action: ", actionEventDefinition.name, " with index: ", actionEventDefinition.index)
-    self.actionsByName[actionName] = actionEventDefinition
-    table.insert(self.actionsByIndex, actionEventDefinition)
+    self.actions.byName[actionName] = actionEventDefinition
+    table.insert(self.actions.byIndex, actionEventDefinition)
     
 end
 
 
---example: addActionListener("play", self, playAction)
-function addActionListener(self, action, obj, listener)
+--example: addActionListener("disconnect_player", self, "MyApplet" disconnectPlayerAction)
+function addActionListener(self, action, obj, sourceBreadCrumb, listener)
 	_assert(type(listener) == "function")
 
 
@@ -619,8 +620,7 @@ function addActionListener(self, action, obj, listener)
         log:error("action name not registered:(" , action, "). Available actions: ", self:dumpActions() )
         return 
     end
-
-    log:debug("Creating action listener for action: (" , action, ") from source: todo would be nice to be able to display the source of the listener in a meaningful way for debugging")
+    log:debug("Creating action listener for action: (" , action, ") from source: ", sourceBreadCrumb)
     
 	self:addListener(ACTION,
 		function(event)
@@ -628,7 +628,8 @@ function addActionListener(self, action, obj, listener)
 		    if eventAction != action then
 		        return EVENT_UNUSED
 		    end
-
+	    log:debug("Calling action listener for action: (" , action, ") from source: ", sourceBreadCrumb)
+		
             local listenerResult = listener(obj, event)
             --default to consume unless the listener specifically wants to set a specific event return
             return listenerResult and listenerResult or EVENT_CONSUME

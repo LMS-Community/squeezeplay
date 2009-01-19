@@ -2054,19 +2054,9 @@ local function _installPlayerKeyHandler(self)
 	end
 
 	_playerKeyHandler = Framework:addListener(
-		EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_CHAR_PRESS,
+		EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD,
 		function(event)
 			local type = event:getType()
-
-			if type == EVENT_CHAR_PRESS then
-				local keyboardEntry = string.char(event:getUnicode())
-				if keyboardEntry == "/" then
-					_goSearch()
-					return EVENT_CONSUME
-				else
-					return EVENT_UNUSED
-				end
-			end
 			
 			local actionName = _keycodeActionName[event:getKeycode()]
 			if not actionName then
@@ -2509,6 +2499,8 @@ function notify_playerCurrent(self, player)
 
 	jiveMain:setTitle(_player:getName())
 	_installPlayerKeyHandler(self)
+	
+	Framework:addActionListener("go_search", self, "SlimBrowser", _goSearch)
 end
 
 function notify_playerNeedsUpgrade(self, player, needsUpgrade, isUpgrading)
