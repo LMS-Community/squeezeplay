@@ -40,6 +40,7 @@ local Choice                 = require("jive.ui.Choice")
 local Slider                 = require("jive.ui.Slider")
 local Timer                  = require("jive.ui.Timer")
 local Textinput              = require("jive.ui.Textinput")
+local Keyboard               = require("jive.ui.Keyboard")
 local Textarea               = require("jive.ui.Textarea")
 local RadioGroup             = require("jive.ui.RadioGroup")
 local RadioButton            = require("jive.ui.RadioButton")
@@ -1946,6 +1947,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 			inputSpec.allowedChars
 		)
 
+		--[[ FIXME: removing help (all platforms) for purposes of Fab4.
 		-- fix up help
 		local helpText
 		if inputSpec.help then
@@ -1976,8 +1978,12 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		if softButtons[2] then
 			window:addWidget(Label("softButton2", softButtons[2]))
 		end
+		--]]
 		
+		local keyboard = Keyboard("keyboard", "qwerty")
 		window:addWidget(input)
+		window:addWidget(keyboard)
+		window:focusWidget(input)
 
 	-- special case for sending over textArea
 	elseif item and item['textArea'] then

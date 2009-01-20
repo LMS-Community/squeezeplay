@@ -603,6 +603,11 @@ function skin(self, s, reload, useDefaultSize)
 	s.textinput.cursorImg = textinputCursor
 	s.textinput.enterImg = Tile:loadImage(imgpath .. "Icons/selection_right.png")
 
+        -- Keyboard
+        s.keyboard = {}
+        s.keyboard.w = 0
+        s.keyboard.h = 0
+
 	-- Help menu
 	s.help = {}
 	s.help.w = screenWidth - 6
