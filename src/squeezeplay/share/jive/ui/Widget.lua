@@ -409,6 +409,32 @@ function addListener(self, mask, listener)
 end
 
 
+function addActionListener(self, action, obj, sourceBreadCrumb, listener)
+	_assert(type(listener) == "function")
+	
+	
+	if not Framework:_getActionEventIndexByName(action) then
+		log:error("action name not registered:(" , action, "). Available actions: ", self:dumpActions() )
+		return 
+	end
+	log:debug("Creating widget action listener for action: (" , action, ") from source: ", sourceBreadCrumb)
+	
+	self:addListener(ACTION,
+			function(event)
+				local eventAction = event:getAction()
+				if eventAction != action then
+					return EVENT_UNUSED
+				end
+				log:debug("Calling widget action listener for action: (" , action, ") from source: ", sourceBreadCrumb)
+				
+				local listenerResult = listener(obj, event)
+				--default to consume unless the listener specifically wants to set a specific event return
+				return listenerResult and listenerResult or EVENT_CONSUME
+			end
+	)
+    
+end
+
 --[[
 
 =head2 jive.ui.Widget:removeListener(handle)
