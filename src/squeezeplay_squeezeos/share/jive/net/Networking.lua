@@ -632,6 +632,8 @@ adds a network to the list of discovered networks
 function t_addNetwork(self, ssid, option)
 	assert(Task:running(), "Networking:addNetwork must be called in a Task")
 
+	log:info("add network ", ssid)
+
 	-- make sure this ssid is not in any configuration
 	self:t_removeNetwork(ssid)
 
@@ -683,11 +685,8 @@ function t_addNetwork(self, ssid, option)
 		request = 'SET_NETWORK ' .. id .. ' proto WPA2'
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
-		-- Setting the PSK can timeout
-		pcall(function()
-			      request = 'SET_NETWORK ' .. id .. ' psk "' .. option.psk .. '"'
-			      assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-		      end)
+		request = 'SET_NETWORK ' .. id .. ' psk "' .. option.psk .. '"'
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 	else
 		request = 'SET_NETWORK ' .. id .. ' key_mgmt NONE'
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
@@ -739,6 +738,8 @@ forgets a previously discovered network
 function t_removeNetwork(self, ssid)
 	assert(Task:running(), "Networking:removeNetwork must be called in a Task")
 
+	log:info("remove network ", ssid)
+
 	if self.wireless then
 		local networkResults = self:request("LIST_NETWORKS")
 
@@ -788,6 +789,8 @@ selects a network to connect to. wireless only
 
 function t_selectNetwork(self, ssid)
 	assert(Task:running(), "Networking:selectNetwork must be called in a Task")
+
+	log:info("select network ", ssid)
 
 	-- set as auto network
 	self:_editAutoInterfaces(ssid)
@@ -856,11 +859,9 @@ function _ifUp(self, ssid)
 		-- FIXME this should be handled by the ifup scripts
 
 		local networkResults = self:request("LIST_NETWORKS")
-		log:info("list results ", networkResults)
 
 		local id = false
 		for nid, nssid in string.gmatch(networkResults, "([%d]+)\t([^\t]*).-\n") do
-			log:info("id=", nid, " ssid=", nssid)
 			if nssid == ssid then
 				id = nid
 				break
@@ -1393,7 +1394,7 @@ function request(self, ...)
 		return "", err
 	end
 
-	log:info("REPLY:", reply)
+	log:info("REPLY:", reply, " for ", ...)
 	return reply
 end
 

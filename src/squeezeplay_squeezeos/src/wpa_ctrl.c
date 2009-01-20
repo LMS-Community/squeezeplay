@@ -223,11 +223,11 @@ int wpa_ctrl_request(struct wpa_ctrl *ctrl, const char *cmd, size_t cmd_len,
 	}
 
 	for (;;) {
-		/* Richard 30 May 2007
-		 * Increased timeout to 10 seconds. The previous 2 seconds
+		/* Richard 19 Jan 2009
+		 * Increased timeout to 30 seconds. The previous 2 seconds
 		 * timeout was often reached on the ARM platform.
 		 */
-		tv.tv_sec = 10;
+		tv.tv_sec = 30;
 		tv.tv_usec = 0;
 		FD_ZERO(&rfds);
 		FD_SET(ctrl->s, &rfds);

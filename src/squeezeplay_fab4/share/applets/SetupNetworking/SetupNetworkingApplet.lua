@@ -209,7 +209,9 @@ function _setCurrentSSID(self, ssid)
 	if self.currentSSID and self.scanResults[self.currentSSID] then
 		local item = self.scanResults[self.currentSSID].item
 		item.style = nil
-		self.scanMenu:updatedItem(item)
+		if self.scanMenu then
+			self.scanMenu:updatedItem(item)
+		end
 	end
 
 	self.currentSSID = ssid
@@ -217,7 +219,9 @@ function _setCurrentSSID(self, ssid)
 	if self.currentSSID and self.scanResults[self.currentSSID] then
 		local item = self.scanResults[self.currentSSID].item
 		item.style = "checked"
-		self.scanMenu:updatedItem(item)
+		if self.scanMenu then
+			self.scanMenu:updatedItem(item)
+		end
 	end
 end
 
@@ -241,7 +245,9 @@ function _addNetwork(self, iface, ssid)
 		-- id = nil             -- wpa_ctrl id if configured
 	}
 
-	self.scanMenu:addItem(item)
+	if self.scanMenu then
+		self.scanMenu:addItem(item)
+	end
 end
 
 
@@ -305,6 +311,9 @@ function setupNetworksShow(self, iface, setupNext)
 	self.setupNext = setupNext
 
 	if not iface:isWireless() then
+		self.scanResults = {}
+		self:_scanComplete(iface)
+
 		return self:createAndConnect(iface, "eth0")
 	end
 
@@ -425,14 +434,18 @@ function _scanComplete(self, iface)
 			local item = self.scanResults[ssid].item
 			item.icon:setStyle(itemStyle)
 
-			self.scanMenu:updatedItem(item)
+			if self.scanMenu then
+				self.scanMenu:updatedItem(item)
+			end
 		end
 	end
 
 	-- remove old networks
 	for ssid, entry in pairs(self.scanResults) do
 		if entry.iface == iface and not scanTable[ssid] then
-			self.scanMenu:removeItem(entry.item)
+			if self.scanMenu then
+				self.scanMenu:removeItem(entry.item)
+			end
 			self.scanResults[ssid] = nil
 		end
 	end
@@ -822,16 +835,12 @@ function selectNetworkTask(self, iface, ssid)
 		self:_removeNetworkTask(iface, ssid)
 	end
 
-	-- XXXX does wired need pre-populating in scanResults?
-	local id = nil
-	if iface:isWireless() then
-		if self.scanResults[ssid] == nil then
-			-- ensure the network state exists
-			_addNetwork(self, iface, ssid)
-		end
-
-		id = self.scanResults[ssid].id
+	if self.scanResults[ssid] == nil then
+		-- ensure the network state exists
+		_addNetwork(self, iface, ssid)
 	end
+
+	local id = self.scanResults[ssid].id
 
 	if id == nil then
 		-- create the network config
@@ -883,7 +892,7 @@ function connect(self, iface, ssid, keepConfig)
 end
 
 
-function _connectFailedTask(self, iface)
+function _connectFailedTask(self, iface, ssid)
 	-- Stop trying to connect to the network
 	iface:t_disconnectNetwork()
 
@@ -1331,7 +1340,9 @@ function _removeNetworkTask(self, iface, ssid)
 	if self.scanResults[ssid] then
 		-- remove from menu
 		local item = self.scanResults[ssid].item
-		self.scanMenu:removeItem(item)
+		if self.scanMenu then
+			self.scanMenu:removeItem(item)
+		end
 
 		-- clear entry
 		self.scanResults[ssid] = nil
