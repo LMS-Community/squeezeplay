@@ -80,6 +80,7 @@ local EVENT_KEY_HOLD       = jive.ui.EVENT_KEY_HOLD
 local EVENT_SCROLL         = jive.ui.EVENT_SCROLL
 local EVENT_WINDOW_RESIZE  = jive.ui.EVENT_WINDOW_RESIZE
 local EVENT_UNUSED         = jive.ui.EVENT_UNUSED
+local EVENT_CONSUME        = jive.ui.EVENT_CONSUME
 
 local KEY_HOME             = jive.ui.KEY_HOME
 local KEY_FWD           = jive.ui.KEY_FWD
@@ -135,6 +136,7 @@ local keyboardShortcuts = {
 	["\27"]  = { keyCode = KEY_BACK, event = EVENT_KEY_PRESS } -- ESC
 }
 
+
 -- Squeezebox remote IR codes
 local irCodes = {
 	[ 0x7689e01f ] = KEY_UP,
@@ -152,15 +154,22 @@ local irCodes = {
 }
 
 
-local keyActionMappingsPress = {
-    [KEY_LEFT] = "arrow_left.press"  -- using button naming convention from SC default.map, though these are action events
+local charActionMappings = {}
+charActionMappings.press = {
+	["/"] = "go_search"
 }
 
 
-local keyActionMappingsHold = {
-    [KEY_LEFT] = "arrow_left.hold",
-    [KEY_BACK] = "arrow_back.hold",
-    [KEY_REW | KEY_PAUSE] = "take_screenshot"  -- a stab at how to handle multi-press
+local keyActionMappings = {}
+keyActionMappings.press = {
+	[KEY_HOME] = "go_home"
+}
+
+
+keyActionMappings.hold = {
+	[KEY_BACK] = "disconnect_player",
+	[KEY_LEFT] = "go_home",
+	[KEY_REW | KEY_PAUSE] = "take_screenshot"  -- a stab at how to handle multi-press
 }
 
 local _defaultSkin
@@ -179,8 +188,8 @@ local function _goHome()
 end
 
 local function _disconnectPlayer(self, event) --self, event not used in our case, could be left out
-    appletManager:callService("setCurrentPlayer", nil)
-    _goHome()
+	appletManager:callService("setCurrentPlayer", nil)
+	_goHome()
 end
 
 -- bring us to the home menu
@@ -192,20 +201,22 @@ local function _homeHandler(event)
 		
 		log:debug("Keyboard entry: ", keyboardEntry)
 		
-		if keyboardShortcuts[keyboardEntry] then
-			local keyCode = keyboardShortcuts[keyboardEntry].keyCode
-			Framework:pushEvent(Event:new(keyboardShortcuts[keyboardEntry].event, keyCode))
+		if not keyboardShortcuts[keyboardEntry] then
+			return EVENT_UNUSED
 		end
+
+		local keyCode = keyboardShortcuts[keyboardEntry].keyCode
+		Framework:pushEvent(Event:new(keyboardShortcuts[keyboardEntry].event, keyCode))
 		
 		return EVENT_CONSUME
 
 	elseif ( type == EVENT_KEY_PRESS and event:getKeycode() == KEY_HOME) then
 
-        _goHome()
-        
+		_goHome()
+		
 		return EVENT_CONSUME
-      end
-      return EVENT_UNUSED
+	  end
+	  return EVENT_UNUSED
 end
 
 local function _addUserPathToLuaPath()
@@ -248,28 +259,33 @@ end
 
 -- transform user input events (key, etc) to a matching action name
 local function getAction(event)
-    --naive implementation for demonstration - will be more involved later
+	--naive implementation for demonstration - will be more involved later
 
-    local eventType = event:getType()
-    local action = nil
-    
-    if eventType == EVENT_KEY_PRESS then
-        action = keyActionMappingsPress[event:getKeycode()]
-    elseif eventType == EVENT_KEY_HOLD then
-        action = keyActionMappingsHold[event:getKeycode()]
-    end
-    
-    return action
-    
+	local eventType = event:getType()
+	local action = nil
+	
+	if eventType == EVENT_KEY_PRESS then
+		action = keyActionMappings.press[event:getKeycode()]
+	elseif eventType == EVENT_KEY_HOLD then
+		action = keyActionMappings.hold[event:getKeycode()]
+	elseif eventType == EVENT_CHAR_PRESS then
+		action = charActionMappings.press[string.char(event:getUnicode())]
+	end
+	
+	return action
+	
 end
 
 function registerDefaultActions()
-    for key, action in pairs(keyActionMappingsPress) do 
-        Framework:registerAction(action)
-    end
-    for key, action in pairs(keyActionMappingsHold) do 
-        Framework:registerAction(action)
-    end
+	for key, action in pairs(keyActionMappings.press) do 
+		Framework:registerAction(action)
+	end
+	for key, action in pairs(keyActionMappings.hold) do 
+		Framework:registerAction(action)
+	end
+	for key, action in pairs(charActionMappings.press) do 
+		Framework:registerAction(action)
+	end
 
 end
 
@@ -332,11 +348,11 @@ function JiveMain:__init()
 		end,
 		10)
 
-    registerDefaultActions()
+	registerDefaultActions()
 
 	-- action mapping listener, should be last listener in chain to allow for direct access to keys/other input types if needed.
 	--todo add other input types
-	Framework:addListener(EVENT_KEY_ALL,
+	Framework:addListener(EVENT_KEY_ALL | EVENT_CHAR_PRESS ,
 		function(event)
 		    local action = getAction(event)
 		    if not action then
@@ -351,13 +367,13 @@ function JiveMain:__init()
 		    
 		    log:debug("Pushing action event (", action, ") - event:getAction: " , actionEvent:getAction())
 	        Framework:pushEvent(actionEvent)
-			return EVENT_CONSUMED
+			return EVENT_CONSUME
 		end,
 		9999)
 		
 	
-    -- disconnect from player on press and hold left
-    Framework:addActionListener("arrow_left.hold", self, _disconnectPlayer)
+	-- disconnect from player on press and hold left
+	Framework:addActionListener("disconnect_player", self, "JiveMain", _disconnectPlayer)
         Framework:addActionListener("arrow_back.hold", self, _disconnectPlayer)
 	
 	-- show our window!
