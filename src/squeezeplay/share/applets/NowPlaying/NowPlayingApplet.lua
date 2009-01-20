@@ -29,15 +29,6 @@ local datetime         = require("jive.utils.datetime")
 
 local appletManager    = appletManager
 
-
-local WH_FILL                = jive.ui.WH_FILL
-local LAYOUT_NORTH           = jive.ui.LAYOUT_NORTH
-local LAYOUT_EAST            = jive.ui.LAYOUT_EAST
-local LAYOUT_SOUTH           = jive.ui.LAYOUT_SOUTH
-local LAYOUT_WEST            = jive.ui.LAYOUT_WEST
-local LAYOUT_CENTER          = jive.ui.LAYOUT_CENTER
-local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
-
 local jiveMain               = jiveMain
 local jnt                    = jnt
 
@@ -438,7 +429,7 @@ function _installListeners(self, window)
 			local type = event:getType()
 			local keyPress = event:getKeycode()
 
-			if keyPress == KEY_BACK and windowStyle == 'browse' then
+			if (keyPress == KEY_BACK or keyPress == KEY_LEFT) and windowStyle == 'browse' then
 				window:playSound("WINDOWHIDE")
 				window:hide()
 				return EVENT_CONSUME
@@ -449,7 +440,7 @@ function _installListeners(self, window)
 				appletManager:callService("goHome")
 				return EVENT_CONSUME
 
-			elseif keyPress == KEY_GO then
+			elseif keyPress == KEY_GO or keyPress == KEY_RIGHT then
 				window:playSound("WINDOWSHOW")
 
 				if playlistSize == 1 then
