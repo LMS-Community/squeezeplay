@@ -538,9 +538,24 @@ function _createUI(self)
 			   text = Label("text", "\n\n\n")
 		})
 	end
-	
+
 	if showProgressBar then
-		self[windowStyle].progressSlider = Slider(components.progressB, 0, 100, 0)
+		if not self.gotoTimer then
+			self.gotoTimer = Timer(400,
+				function()
+					if self.gotoElapsed then
+						self.player:gototime(self.gotoElapsed)
+						self.gotoElapsed = nil
+					end
+				end,
+				true)
+		end
+	
+		self[windowStyle].progressSlider = Slider(components.progressB, 0, 100, 0,
+			function(slider, value, done)
+				self.gotoElapsed = value
+				self.gotoTimer:restart()
+			end)
 		self[windowStyle].progressSlider:addTimer(1000, function() self:_updatePosition() end)
 
 		self[windowStyle].progressGroup = Group(components.progress, {

@@ -434,7 +434,7 @@ function connect(self, server)
 
 	self.writePump = function(NetworkThreadErr)
 		if (NetworkThreadErr) then
-			return _handleDisconnect(NetworkThreadErr)
+			return _handleDisconnect(self, NetworkThreadErr)
 		end
 
 		self.socket.t_sock:send(table.concat(self.txqueue))
