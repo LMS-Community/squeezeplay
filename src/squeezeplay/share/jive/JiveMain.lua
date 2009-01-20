@@ -374,7 +374,6 @@ function JiveMain:__init()
 	
 	-- disconnect from player on press and hold left
 	Framework:addActionListener("disconnect_player", self, "JiveMain", _disconnectPlayer)
-        Framework:addActionListener("arrow_back.hold", self, _disconnectPlayer)
 	
 	-- show our window!
 	jiveMain.window:show()
