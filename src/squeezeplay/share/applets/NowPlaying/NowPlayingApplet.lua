@@ -587,6 +587,13 @@ function _createUI(self)
 					return EVENT_CONSUME 
 				end
 			),
+		  	vol  = Button(
+				Icon('vol'),
+				function() 
+					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_VOLUME_DOWN) 
+					return EVENT_CONSUME 
+				end
+			),
  	})
 
 	self.preartwork = Icon("artwork") -- not disabled, used for preloading

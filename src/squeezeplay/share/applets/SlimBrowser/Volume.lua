@@ -72,7 +72,11 @@ local function _openPopup(self)
 	popup:addWidget(title)
 
 	local slider = Slider("volume")
-	slider:setRange(-1, 100, self.volume)
+	local slider = Slider("slider", -1, 100, self.volume,
+                              function(slider, value, done)
+					self.delta = value - self.volume
+					self:_updateVolume(false, value)
+                              end)
 	popup:addWidget(Group("volumeGroup", {
 				      Icon("volumeMin"),
 				      slider,
@@ -94,7 +98,7 @@ local function _openPopup(self)
 
 	_updateDisplay(self)
 
-	popup:showBriefly(2000,
+	popup:showBriefly(3000,
 		function()
 			self.popup = nil
 		end,
@@ -104,7 +108,7 @@ local function _openPopup(self)
 end
 
 
-local function _updateVolume(self, mute)
+function _updateVolume(self, mute, directSet)
 	if not self.popup then
 		self.timer:stop()
 		return
@@ -125,20 +129,26 @@ local function _updateVolume(self, mute)
 		return _updateDisplay(self)
 	end
 
-	-- accelation
-	local now = Framework:getTicks()
-	if self.accelDelta ~= self.delta or (now - self.lastUpdate) > 350 then
-		self.accelCount = 0
-	end
+	local new
 
-	self.accelCount = math.min(self.accelCount + 1, 20)
-	self.accelDelta = self.delta
-	self.lastUpdate = now
-
-	-- change volume
-	local accel = self.accelCount / 4
-	local new = math.abs(self.volume) + self.delta * accel * VOLUME_STEP
+	if directSet then
+		new = math.floor(directSet)
+	else
+		-- accelation
+		local now = Framework:getTicks()
+		if self.accelDelta ~= self.delta or (now - self.lastUpdate) > 350 then
+			self.accelCount = 0
+		end
 	
+		self.accelCount = math.min(self.accelCount + 1, 20)
+		self.accelDelta = self.delta
+		self.lastUpdate = now
+	
+		-- change volume
+		local accel = self.accelCount / 4
+		new = math.floor(math.abs(self.volume) + self.delta * accel * VOLUME_STEP)
+	end
+		
 	if new > 100 then 
 		new = 100
 	elseif new < 0 then

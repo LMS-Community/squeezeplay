@@ -1821,12 +1821,12 @@ function skin(self, s)
 	s.largenpartwork = _uses(s.ssnpartwork)
 
 	s.ssnpcontrols = {}
-	s.ssnpcontrols.order = { 'rew', 'play', 'fwd' }
+	s.ssnpcontrols.order = { 'rew', 'play', 'fwd', 'vol' }
 	s.ssnpcontrols.position = LAYOUT_NONE
 
 	local topPadding = screenHeight/2 + 10
 	local rightPadding = screenWidth/2 - 15
-	local buttonPadding = { 20, 5, 20, 5 }
+	local buttonPadding = { 10, 5, 10, 5 }
 	s.ssnpcontrols.x = rightPadding
 	s.ssnpcontrols.y = topPadding
 	s.ssnpcontrols.bgImg = softButtonBackground
@@ -1834,23 +1834,28 @@ function skin(self, s)
 	s.ssnpcontrols.rew = {}
 	s.ssnpcontrols.rew.align = 'center'
 	s.ssnpcontrols.rew.padding = buttonPadding
-	s.ssnpcontrols.rew.img = _loadImage(self, "Screen_Formats/Player_Controls/Cyan/icon_toolbar_rew_on.png")
+	s.ssnpcontrols.rew.img = _loadImage(self, "Screen_Formats/Player_Controls/icon_toolbar_rew.png")
 	
 	s.ssnpcontrols.play = {}
 	s.ssnpcontrols.play.align = 'center'
 	s.ssnpcontrols.play.padding = buttonPadding
-	s.ssnpcontrols.play.img = _loadImage(self, "Screen_Formats/Player_Controls/Cyan/icon_toolbar_play_on.png")
+	s.ssnpcontrols.play.img = _loadImage(self, "Screen_Formats/Player_Controls/icon_toolbar_play.png")
 	
 	s.ssnpcontrols.pause = {}
 	s.ssnpcontrols.pause.align = 'center'
 	s.ssnpcontrols.pause.padding = buttonPadding
-	s.ssnpcontrols.pause.img = _loadImage(self, "Screen_Formats/Player_Controls/Cyan/icon_toolbar_pause_on.png")
+	s.ssnpcontrols.pause.img = _loadImage(self, "Screen_Formats/Player_Controls/icon_toolbar_pause.png")
 	
 	
 	s.ssnpcontrols.fwd = {}
 	s.ssnpcontrols.fwd.align = 'center'
 	s.ssnpcontrols.fwd.padding = buttonPadding
-	s.ssnpcontrols.fwd.img = _loadImage(self, "Screen_Formats/Player_Controls/Cyan/icon_toolbar_ffwd_on.png")
+	s.ssnpcontrols.fwd.img = _loadImage(self, "Screen_Formats/Player_Controls/icon_toolbar_ffwd.png")
+
+	s.ssnpcontrols.vol = {}
+	s.ssnpcontrols.vol.align = 'center'
+	s.ssnpcontrols.vol.padding = buttonPadding
+	s.ssnpcontrols.vol.img = _loadImage(self, "Screen_Formats/Player_Controls/icon_toolbar_vol_up.png")
 	
 	s.browsenpcontrols = _uses(s.ssnpcontrols)
 	s.largenpcontrols  = _uses(s.ssnpcontrols)
