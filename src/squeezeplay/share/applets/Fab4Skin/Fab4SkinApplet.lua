@@ -536,12 +536,12 @@ function skin(self, s)
 	s.centeredtextarea = {}
 	s.centeredtextarea.position = LAYOUT_CENTER
 	s.centeredtextarea.w = screenWidth
-	s.centeredtextarea.padding = TEXTAREA_PADDING 
+	s.centeredtextarea.padding = { 50, 20, 20, 2 }
 	s.centeredtextarea.font = _boldfont(CENTERED_TEXTAREA_FONT_SIZE)
 	s.centeredtextarea.text = {}
 	s.centeredtextarea.text.align = 'center'
 	s.centeredtextarea.align = 'center'
-	s.centeredtextarea.lineHeight = 50
+	s.centeredtextarea.lineHeight = 40
 	s.centeredtextarea.fg = TEXT_COLOR
 	s.centeredtextarea.sh = TEXT_SH_COLOR
 	s.centeredtextarea.align = "center"
@@ -1085,7 +1085,7 @@ function skin(self, s)
 
 	-- "buttonlike" menu. all items with selection box and icon
 	s.buttonmenu = {}
-	s.buttonmenu.padding = { 60, 30, 80, 2 }
+	s.buttonmenu.padding = { 60, 2, 80, 2 }
 	s.buttonmenu.itemHeight = 90
 
 	-- items with artwork and song info
@@ -1105,6 +1105,11 @@ function skin(self, s)
 			h     = WH_FILL,
 			padding = 25
 	}
+
+	-- two button menu specifically for laying out two button menu nicely on fab4 screen
+	s.twobuttonmenu = _uses(s.buttonmenu, {
+				padding = { 60, 30, 80, 2 }
+	})
 
 	-- menus with artwork and song info
 	-- FIXME: this needs to be tweaked for Fab4Skin

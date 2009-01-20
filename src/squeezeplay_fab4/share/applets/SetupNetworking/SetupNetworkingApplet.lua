@@ -76,7 +76,7 @@ function setupRegionShow(self, setupNext)
 
 	local region = wlan:getRegion()
 
-	local menu = SimpleMenu("buttonmenu")
+	local menu = SimpleMenu("twobuttonmenu")
 
 	for name in wlan:getRegionNames() do
 		log:debug("region=", region, " name=", name)
@@ -169,7 +169,7 @@ function setupConnectionType(self, setupNext)
 	local window = Window("window", self:string("NETWORK_CONNECTION_TYPE"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	local connectionMenu = SimpleMenu("buttonmenu")
+	local connectionMenu = SimpleMenu("twobuttonmenu")
 
 	connectionMenu:addItem({
 		style = 'buttonitem',

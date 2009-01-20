@@ -242,19 +242,21 @@ function setupWelcomeShow(self, setupNext)
 
 	local textarea = Textarea("centeredtextarea", self:string("WELCOME_WALKTHROUGH"))
 
-	local continue = Button(
-				Group("touchButton", {
-					text = Label("touchButton", self:string("PRESS_TO_CONTINUE")),
-					icon = Icon("icon"),
-				}),
-                                function()
-                                        window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_GO)
-                                        return EVENT_CONSUME
-                                end
-	)
+	local continueButton = SimpleMenu("buttonmenu")
 
+	continueButton:addItem({
+		style = 'buttonitem',
+		text = (self:string("PRESS_TO_CONTINUE")),
+		sound = "WINDOWSHOW",
+		callback = function()
+			setupNext()
+			return EVENT_CONSUME
+		end,
+		weight = 1
+	})
+	
 	window:addWidget(textarea)
-	window:addWidget(continue)
+	window:addWidget(continueButton)
 
 	window:addListener(EVENT_KEY_PRESS,
 		function(event)
