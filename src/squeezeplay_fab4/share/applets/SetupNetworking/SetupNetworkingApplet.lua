@@ -429,7 +429,12 @@ function _scanComplete(self, iface)
 				associated = ssid
 			end
 
-			local itemStyle = iface:isWireless() and ("wirelessLevel" .. entry.quality) or "wiredEthernet"
+			local itemStyle
+			if iface:isWireless() then
+				itemStyle = "wirelessLevel" .. entry.quality
+			else
+				itemStyle = entry.link and "wiredEthernetLink" or "wiredEthernetNoLink"
+			end
 
 			local item = self.scanResults[ssid].item
 			item.icon:setStyle(itemStyle)
@@ -1447,30 +1452,38 @@ local stateTxt = {
 
 function networkStatusTask(self, iface, values)
 	local status = iface:t_wpaStatus()
-	values[5]:setValue(tostring(status.ip_address))
 
-	if not iface:isWireless() then
-		return
+	if iface:isWireless() then
+		local snr = iface:getSNR()
+		local bitrate = iface:getTxBitRate()
+
+		local wpa_state = stateTxt[status.wpa_state] or "NETWORK_STATE_UNKNOWN"
+
+		local encryption = status.key_mgmt
+		-- white lie :)
+		if string.match(status.pairwise_cipher, "WEP") then
+			encryption = "WEP"
+		end
+
+		-- update the ui
+		values[1]:setValue(self:string(wpa_state))
+		values[2]:setValue(tostring(status.ssid))
+		values[3]:setValue(tostring(status.bssid))
+		values[4]:setValue(tostring(encryption))
+		values[5]:setValue(tostring(status.ip_address))
+		values[6]:setValue(tostring(snr))
+		values[7]:setValue(tostring(bitrate))
+	else
+		if status.link then
+			values[1]:setValue(status.fullduplex and self:string("NETWORK_ETH_CONNECTED") or self:string("NETWORK_ETH_HALF_DUPLEX"))
+			values[2]:setValue(self:string("NETWORK_ETH_MBPS", status.speed))
+			values[3]:setValue(tostring(status.ip_address))
+		else
+			values[1]:setValue(self:string("NETWORK_ETH_NOT_CONNECTED"))
+			values[2]:setValue("")
+			values[3]:setValue("")
+		end
 	end
-
-	local snr = iface:getSNR()
-	local bitrate = iface:getTxBitRate()
-
-	local wpa_state = stateTxt[status.wpa_state] or "NETWORK_STATE_UNKNOWN"
-
-	local encryption = status.key_mgmt
-	-- white lie :)
-	if string.match(status.pairwise_cipher, "WEP") then
-		encryption = "WEP"
-	end
-
-	-- update the ui
-	values[1]:setValue(self:string(wpa_state))
-	values[2]:setValue(tostring(status.ssid))
-	values[3]:setValue(tostring(status.bssid))
-	values[4]:setValue(tostring(encryption))
-	values[6]:setValue(tostring(snr))
-	values[7]:setValue(tostring(bitrate))
 end
 
 
@@ -1502,7 +1515,9 @@ function networkStatusShow(self, iface)
 		}
 	else
 		items = {
-			{ text = self:string("NETWORK_IP_ADDRESS"), icon = values[5] },
+			{ text = self:string("NETWORK_ETH_STATUS"), icon = values[1] },
+			{ text = self:string("NETWORK_ETH_SPEED"), icon = values[2] },
+			{ text = self:string("NETWORK_IP_ADDRESS"), icon = values[3] },
 		}
 	end
 

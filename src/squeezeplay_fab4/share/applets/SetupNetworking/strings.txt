@@ -935,3 +935,21 @@ NETWORK_CONNECTION_HELP
 
 NETWORK_CONNECTION_HELP_BODY
 	EN	this is just a placeholder for a bunch of text that we may put in to describe the vagaries of network connections, including terms such as 'cat5', 'SSID', and 'distributed denial of service attack'. It could be this window presents menu options or the like, but for starters I'm just throwing a textarea in here. Press the back button in the upper left to go back.
+
+NETWORK_ETH_STATUS
+	EN	Status
+
+NETWORK_ETH_SPEED
+	EN	Speed
+
+NETWORK_ETH_MBPS
+	EN	%s Mbps
+
+NETWORK_ETH_CONNECTED
+	EN	Connected
+
+NETWORK_ETH_NOT_CONNECTED
+	EN	Not connected
+
+NETWORK_ETH_HALF_DUPLEX
+	EN	Half Duplex
