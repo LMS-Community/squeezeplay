@@ -671,10 +671,11 @@ function chooseWEPLength(self, iface, ssid)
 	local window = Window("window", self:string("NETWORK_WIRELESS_ENCRYPTION"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	local menu = SimpleMenu("menu",
+	local menu = SimpleMenu("twobuttonmenu",
 				{
 					{
 						text = self:string("NETWORK_WEP_64"),
+						style = 'buttonitem',
 						sound = "WINDOWSHOW",
 						callback = function()
 								   self.encryption = "wep40"
@@ -683,6 +684,7 @@ function chooseWEPLength(self, iface, ssid)
 					},
 					{
 						text = self:string("NETWORK_WEP_128"),
+						style = 'buttonitem',
 						sound = "WINDOWSHOW",
 						callback = function()
 								   self.encryption = "wep104"
@@ -691,8 +693,8 @@ function chooseWEPLength(self, iface, ssid)
 					},
 				})
 
-	local help = Textarea("help", self:string("NETWORK_WIRELESS_ENCRYPTION_HELP"))
-	window:addWidget(help)
+	local helpButton     = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_WIRELESS_ENCRYPTION', 'NETWORK_WIRELESS_ENCRYPTION_HELP') end )
+	window:addWidget(helpButton)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

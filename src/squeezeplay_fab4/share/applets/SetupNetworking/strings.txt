@@ -496,28 +496,10 @@ NETWORK_NO_ENCRYPTION
 	SV	Inget lösenord/ingen kryptering
 
 NETWORK_WEP_64
-	DA	64-bit WEP
-	DE	64-Bit-WEP
-	EN	64-bit WEP
-	ES	WEP de 64 bits
-	FI	64-bittinen WEP-avain
-	FR	WEP 64 bits
-	IT	WEP a 64 bit
-	NL	64-bits WEP
-	NO	64-biters WEP
-	SV	64-bitars WEP
+	EN	64-bit\n(10 Characters)
 
 NETWORK_WEP_128
-	DA	128-bit WEP
-	DE	128-Bit-WEP
-	EN	128-bit WEP
-	ES	WEP de 128 bits
-	FI	128-bittinen WEP-avain
-	FR	WEP 128 bits
-	IT	WEP a 128 bit
-	NL	128-bits WEP
-	NO	128-bit WEP
-	SV	128-bit WEP
+	EN	128-bit\n(26 Characters)
 
 NETWORK_WPA
 	DA	WPA Personal
