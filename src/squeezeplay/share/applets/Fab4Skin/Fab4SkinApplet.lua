@@ -831,9 +831,13 @@ function skin(self, s)
 	s.wirelessLevel4.img = _loadImage(self, "Icons/icon_wireless_4_shadow.png")
 
 	-- XXXX need artwork
-	s.wiredEthernet = {}
-	s.wiredEthernet.align = "right"
-	s.wiredEthernet.img = _loadImage(self, "Icons/icon_nowplaying_indicator_w.png")
+	s.wiredEthernetLink = {}
+	s.wiredEthernetLink.align = "right"
+	s.wiredEthernetLink.img = _loadImage(self, "Icons/icon_nowplaying_indicator_w.png")
+
+	s.wiredEthernetNoLink = {}
+	s.wiredEthernetNoLink.align = "right"
+	s.wiredEthernetNoLink.img = _loadImage(self, "Icons/icon_nowplaying_indicator_b.png")
 
 	s.navcluster = {}
 	s.navcluster.img = _loadImage(self, "navcluster.png")
