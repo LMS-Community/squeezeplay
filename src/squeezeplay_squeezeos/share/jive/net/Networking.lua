@@ -70,7 +70,7 @@ local Framework   = require("jive.ui.Framework")
 local Socket      = require("jive.net.Socket")
 local Process     = require("jive.net.Process")
 local Task        = require("jive.ui.Task")
-local wireless    = require("jiveWireless")
+local network     = require("jiveWireless")
 
 
 module("jive.net.Networking")
@@ -539,15 +539,15 @@ end
 
 
 function _ethernetScanTask(self, callback)
-	-- XXXX check link status
+	local status = self.t_sock:ethStatus()
 
 	local active = self:_ifstate()
 
-	self._scanResults[self.interface] = {
-		flags = "[ETH]",
-		lastScan = Framework:getTicks(),
-		associated = (self.interface == active)
-	}
+	status.flags  = "[ETH]"
+	status.lastScan = Framework:getTicks()
+	status.associated = (self.interface == active)
+
+	self._scanResults[self.interface] = status
 
 	callback(self._scanResults)
 
@@ -602,6 +602,8 @@ function t_wpaStatus(self)
 			status[k] = v
 		end
 	else
+		status = self.t_sock:ethStatus()
+
 		local f, err = io.popen("/sbin/ifconfig " .. self.interface)
 		if f == nil then
 			log:error("Can't read ifconfig: ", err)
@@ -1284,16 +1286,16 @@ function open(self)
 
 	local err
 
-	if self.wireless then
-		log:debug('Open wireless socket')
-		self.t_sock, err = wireless:open(self.interface)
-		if err then
-			log:warn(err)
+	log:debug('Open wireless socket')
+	self.t_sock, err = network:open(self.interface, self.wireless)
+	if err then
+		log:warn(err)
 	
-			self:close()
-			return false
-		end
+		self:close()
+		return false
+	end
 
+	if self.wireless then
 		local source = function()
 				       return self.t_sock:receive()
 			       end
