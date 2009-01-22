@@ -143,8 +143,8 @@ local keyboardShortcuts = {
 local irCodes = {
 	[ 0x7689e01f ] = KEY_UP,
 	[ 0x7689b04f ] = KEY_DOWN,
-	[ 0x7689906f ] = KEY_LEFT,
-	[ 0x7689d02f ] = KEY_RIGHT,
+	[ 0x7689906f ] = KEY_BACK,
+	[ 0x7689d02f ] = KEY_GO,
 	[ 0x768922dd ] = KEY_HOME,
 	[ 0x768910ef ] = KEY_PLAY,
 	[ 0x768920df ] = KEY_PAUSE,
@@ -155,24 +155,6 @@ local irCodes = {
 	[ 0x768900ff ] = KEY_VOLUME_DOWN,
 }
 
-
-local charActionMappings = {}
-charActionMappings.press = {
-	["/"] = "go_search"
-}
-
-
-local keyActionMappings = {}
-keyActionMappings.press = {
-	[KEY_HOME] = "go_home"
-}
-
-
-keyActionMappings.hold = {
-	[KEY_BACK] = "disconnect_player",
-	[KEY_LEFT] = "go_home",
-	[KEY_REW | KEY_PAUSE] = "take_screenshot"  -- a stab at how to handle multi-press
-}
 
 local _defaultSkin
 local _fullscreen
@@ -271,6 +253,8 @@ local function getAction(event)
 		action = inputToActionMap.keyActionMappings.hold[event:getKeycode()]
 	elseif eventType == EVENT_CHAR_PRESS then
 		action = inputToActionMap.charActionMappings.press[string.char(event:getUnicode())]
+	elseif eventType == EVENT_IR_PRESS then
+		action = inputToActionMap.irActionMappings.press[Framework:getIRButtonName(event:getIRCode())]
 	end
 	
 	return action
@@ -285,6 +269,9 @@ function _registerDefaultActions()
 		Framework:registerAction(action)
 	end
 	for key, action in pairs(inputToActionMap.charActionMappings.press) do 
+		Framework:registerAction(action)
+	end
+	for key, action in pairs(inputToActionMap.irActionMappings.press) do 
 		Framework:registerAction(action)
 	end
 
@@ -368,7 +355,7 @@ function JiveMain:__init()
 
 	-- action mapping listener, should be last listener in chain to allow for direct access to keys/other input types if needed.
 	--todo add other input types
-	Framework:addListener(EVENT_KEY_ALL | EVENT_CHAR_PRESS ,
+	Framework:addListener(EVENT_KEY_ALL | EVENT_CHAR_PRESS | EVENT_IR_ALL,
 		function(event)
 			local action = getAction(event)
 			if not action then

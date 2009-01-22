@@ -52,3 +52,17 @@ keyActionMappings.hold = {
 	[KEY_REW | KEY_PAUSE] = "take_screenshot"  -- a stab at how to handle multi-press
 }
 
+irActionMappings = {}
+irActionMappings.press = {
+	["home"]   = "go_home",
+	["search"]   = "go_search",
+	["now_playing"]  = "go_now_playing",
+	["size"]  = "go_playlist",
+	["browse"]  = "go_music_library",
+	["favorites"]  = "go_favorites",
+	["brightness"]  = "go_rhapsody",
+	["shuffle"]  = "shuffle_toggle",
+	["repeat"]  = "repeat_toggle",
+}
+
+
