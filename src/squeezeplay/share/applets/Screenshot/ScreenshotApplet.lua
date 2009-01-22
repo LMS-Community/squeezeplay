@@ -37,12 +37,12 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-local function _keyHold(self, event)
-	if event:getKeycode() == (KEY_REW | KEY_PAUSE) then
-		Framework:playSound("CLICK")
+local function _takeScreenshotAction(self)
+	Framework:playSound("CLICK")
 
-		-- write to /media/*/log/squeezeplayXXXX.bmp or userpath
-		local path = System.getUserDir()
+	-- write to /media/*/log/squeezeplayXXXX.bmp or userpath
+	local path = System.getUserDir()
+	if lfs.attributes("/media", "mode") ~= nil then
 		for dir in lfs.dir("/media") do
 			local tmp = "/media/" .. dir .. "/log"
 			if lfs.attributes(tmp, "mode") == "directory" then
@@ -50,28 +50,27 @@ local function _keyHold(self, event)
 				break
 			end
 		end
-
-		local file = path .. string.format("/squeezeplay%04d.bmp", self.number)
-		self.number = self.number + 1
-		
-		log:warn("Taking screenshot " .. file)
-
-		-- take screenshot
-		local sw, sh = Framework:getScreenSize()
-
-		local window = Framework.windowStack[1]
-		local bg = Framework.getBackground()
-
-		local srf = Surface:newRGB(sw, sh)
-		bg:blit(srf, 0, 0, sw, sh)
-		window:draw(srf, JIVE_LAYER_ALL)
-
-		srf:saveBMP(file)
-
-		return EVENT_CONSUME
 	end
 
-	return EVENT_UNUSED
+
+	local file = path .. string.format("/squeezeplay%04d.bmp", self.number)
+	self.number = self.number + 1
+	
+	log:warn("Taking screenshot " .. file)
+
+	-- take screenshot
+	local sw, sh = Framework:getScreenSize()
+
+	local window = Framework.windowStack[1]
+	local bg = Framework.getBackground()
+
+	local srf = Surface:newRGB(sw, sh)
+	bg:blit(srf, 0, 0, sw, sh)
+	window:draw(srf, JIVE_LAYER_ALL)
+
+	srf:saveBMP(file)
+
+	return EVENT_CONSUME
 end
 
 
@@ -81,11 +80,7 @@ function __init(self, ...)
 	local obj = oo.rawnew(self, Applet(...))
 	obj.number = 1
 	
-	Framework:addListener(EVENT_KEY_HOLD,
-		function(...)
-			return _keyHold(obj, ...)
-		end
-	)
+	Framework:addActionListener("take_screenshot", obj, _takeScreenshotAction)
 	
 	return obj
 end

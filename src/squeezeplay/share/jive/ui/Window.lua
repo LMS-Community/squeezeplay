@@ -103,6 +103,12 @@ oo.class(_M, Widget)
 local Framework = require("jive.ui.Framework")
 
 
+function _bump(self)
+	self:playSound("BUMP")
+	self:getWindow():bumpRight()
+	return EVENT_CONSUME
+end
+
 --[[
 
 =head2 jive.ui.Window(style, title, titleStyle)
@@ -137,6 +143,9 @@ function __init(self, style, title, titleStyle)
 				back = Button(
 					Icon("back"), 
 					function() 
+						--todo: might like to do the following, but would break back-compatibility
+						--Framework:dispatchEvent(obj, Framework:newActionEvent("back")) 
+						
 						obj:dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) 
 						return EVENT_CONSUME 
 					end
@@ -146,6 +155,8 @@ function __init(self, style, title, titleStyle)
 					function() 
 						-- check if player is connected
 						if appletManager then
+							--todo use this once we resolve bump handling
+							--Framework:dispatchEvent(obj, Framework:newActionEvent("go_now_playing"))
 							obj:dispatchNewEvent(EVENT_KEY_PRESS, self:_goNowPlaying(obj))
 						end
 						return EVENT_CONSUME 
@@ -155,7 +166,9 @@ function __init(self, style, title, titleStyle)
 		)
 	end
 	
-	-- by default bump the window on GO or RIGHT, add this as a
+	obj:addActionListener("go", obj, _bump)
+	obj:addActionListener("back", obj, _bump)
+	-- by default bump the window on GO or BACK actions, add this as a
 	-- listener to allow other handlers to act on these events
 	-- first
 	obj:addListener(EVENT_KEY_PRESS,

@@ -1160,6 +1160,15 @@ function button(self, buttonName)
 	end
 end
 
+function repeatToggle(self)
+	self:button('repeat')
+end
+
+function shuffleToggle(self)
+	self:button('shuffle')
+end
+
+
 -- scan_rew
 -- what to do for the rew button when held
 -- use button so that the reverse scan mode is triggered.
