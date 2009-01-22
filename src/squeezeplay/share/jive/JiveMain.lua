@@ -59,6 +59,8 @@ local Task          = require("jive.ui.Task")
 local Timer         = require("jive.ui.Timer")
 local Event         = require("jive.ui.Event")
 
+local inputToActionMap = require("jive.InputToActionMap")
+
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("jive.main")
 local logheap       = require("jive.utils.log").logger("jive.heap")
@@ -259,36 +261,49 @@ end
 
 -- transform user input events (key, etc) to a matching action name
 local function getAction(event)
-	--naive implementation for demonstration - will be more involved later
 
 	local eventType = event:getType()
 	local action = nil
 	
 	if eventType == EVENT_KEY_PRESS then
-		action = keyActionMappings.press[event:getKeycode()]
+		action = inputToActionMap.keyActionMappings.press[event:getKeycode()]
 	elseif eventType == EVENT_KEY_HOLD then
-		action = keyActionMappings.hold[event:getKeycode()]
+		action = inputToActionMap.keyActionMappings.hold[event:getKeycode()]
 	elseif eventType == EVENT_CHAR_PRESS then
-		action = charActionMappings.press[string.char(event:getUnicode())]
+		action = inputToActionMap.charActionMappings.press[string.char(event:getUnicode())]
 	end
 	
 	return action
 	
 end
 
-function registerDefaultActions()
-	for key, action in pairs(keyActionMappings.press) do 
+function _registerDefaultActions()
+	for key, action in pairs(inputToActionMap.keyActionMappings.press) do 
 		Framework:registerAction(action)
 	end
-	for key, action in pairs(keyActionMappings.hold) do 
+	for key, action in pairs(inputToActionMap.keyActionMappings.hold) do 
 		Framework:registerAction(action)
 	end
-	for key, action in pairs(charActionMappings.press) do 
+	for key, action in pairs(inputToActionMap.charActionMappings.press) do 
 		Framework:registerAction(action)
 	end
 
 end
 
+
+
+
+--local lastResortActionToKeyMap = {	
+--	["back"]  = { keyCode = KEY_LEFT, event = EVENT_KEY_PRESS },
+--	["disconnect_player "]  = { keyCode = KEY_BACK, event = EVENT_KEY_HOLD },
+--	["go_home"]  = { keyCode = KEY_HOME, event = EVENT_KEY_PRESS },
+--	["play"]  = { keyCode = KEY_PLAY, event = EVENT_KEY_HOLD },
+--	["create_mix"]  = { keyCode = KEY_PLAY, event = EVENT_KEY_HOLD },
+--	["pause"]  = { keyCode = KEY_PAUSE, event = EVENT_KEY_PRESS },
+--	["stop"]  = { keyCode = KEY_PAUSE, event = EVENT_KEY_HOLD },
+--	["addEnd"]  = { keyCode = KEY_ADD, event = EVENT_KEY_PRESS },
+--	["addNext"]  = { keyCode = KEY_ADD, event = EVENT_KEY_HOLD },
+--}
 
 -- __init
 -- creates our JiveMain main object
@@ -313,6 +328,8 @@ function JiveMain:__init()
 	-- Singleton instances (locals)
 	_globalStrings = locale:readGlobalStringsFile()
 
+	_registerDefaultActions()
+
 	-- create the main menu
 	jiveMain = oo.rawnew(self, HomeMenu(_globalStrings:str("HOME"), nil, "hometitle"))
 
@@ -331,7 +348,7 @@ function JiveMain:__init()
 	Framework:addListener(
 		EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_KEY_HOLD,
 		function(event)
-			_homeHandler(event)
+			return _homeHandler(event)
 		end,
 		10)
 
@@ -348,32 +365,62 @@ function JiveMain:__init()
 		end,
 		10)
 
-	registerDefaultActions()
 
 	-- action mapping listener, should be last listener in chain to allow for direct access to keys/other input types if needed.
 	--todo add other input types
 	Framework:addListener(EVENT_KEY_ALL | EVENT_CHAR_PRESS ,
 		function(event)
-		    local action = getAction(event)
-		    if not action then
-		        return EVENT_UNUSED
-		    end
-		    
-		    local actionEvent = Framework:newActionEvent(action)
-		    if not actionEvent then
-		        log:error("Odd, newActionEvent returned nil, but should always return a result when match was found for action: ", action)
-		        return EVENT_UNUSED
-		    end
-		    
-		    log:debug("Pushing action event (", action, ") - event:getAction: " , actionEvent:getAction())
-	        Framework:pushEvent(actionEvent)
+			local action = getAction(event)
+			if not action then
+				return EVENT_UNUSED
+			end
+			
+			local actionEvent = Framework:newActionEvent(action)
+			if not actionEvent then
+				log:error("Odd, newActionEvent returned nil, but should always return a result when match was found for action: ", action)
+				return EVENT_UNUSED
+			end
+			
+			--getmetatable(actionEvent).sourceEvent = event 
+
+			log:debug("Pushing action event (", action, "), triggered from source event:", event:tostring())
+			Framework:pushEvent(actionEvent)
 			return EVENT_CONSUME
 		end,
 		9999)
-		
+
+
 	
+	--"Last Resort" action listener - provides backwords compatibility for applets that only respond to KEY events
+	-- This listeners says, "in no one has use an ACTION, send a key event that matchs that action"
+	-- This is needed, for instance, for keyboard shortcut input, which now only creates action events
+---- DOESN"T WORK! new action listeners will pick up the action events before the old KEY style listeners will get a chance
+--	Framework:addListener(ACTION,
+--		function(actionEvent)
+--			local sourceEvent = getmetatable(actionEvent).sourceEvent
+--			
+--			if (sourceEvent:getType() & EVENT_KEY_ALL) == 0 then
+--				--Only do last resort key event if source event was not a key event (key event s would cause infinite loop)
+--				local action = actionEvent:getAction()
+--				if not lastResortActionToKeyMap[action] then
+--					return EVENT_UNUSED
+--				end
+--		
+--				local keyCode = lastResortActionToKeyMap[action].keyCode
+--				local keyEvent = lastResortActionToKeyMap[action].event
+--				log:debug("Pushing last resort key event for unused action (", action, ")")
+--				Framework:pushEvent(Event:new(keyEvent, keyCode))
+--					
+--				return EVENT_CONSUME
+--			end
+--			
+--			return EVENT_UNUSED
+--		end,
+--		10000)
+		
+				
 	-- disconnect from player on press and hold left
-	Framework:addActionListener("disconnect_player", self, "JiveMain", _disconnectPlayer)
+	Framework:addActionListener("disconnect_player", self, _disconnectPlayer)
 	
 	-- show our window!
 	jiveMain.window:show()

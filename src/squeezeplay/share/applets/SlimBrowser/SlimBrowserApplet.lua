@@ -1396,6 +1396,110 @@ local _globalActions = {
 }
 
 
+function _goMenuTableItem(key)
+	if jiveMain:getMenuTable()[key] then
+		Framework:playSound("JUMP")
+		jiveMain:getMenuTable()[key].callback()
+	end
+
+end
+
+function _goNowPlayingAction()
+	appletManager:callService("goNowPlaying", "browse")
+end
+
+function _goSearchAction()
+	_goMenuTableItem("myMusicSearch")
+end
+
+function _goMusicLibraryAction()
+	_goMenuTableItem("myMusic")
+end
+
+
+function _goPlaylistAction()
+	_goPlaylist()
+end
+
+
+function _goFavoritesAction()
+	_goMenuTableItem("favorites")
+end
+
+
+function _goPlaylistsAction()
+	_goMenuTableItem("myMusicPlaylists")
+end
+
+
+function _goRhapsodyAction()
+	_goMenuTableItem("opmlrhapsodydirect")
+end
+
+
+function _goRepeatToggleAction()
+	_player:repeatToggle()
+end
+
+function _goShuffleToggleAction()
+	_player:shuffleToggle()
+end
+
+
+function _goCurrentTrackDetailsAction()
+	--todo -get menu object, iterate through to current, select it - doh, harder than I thought for something that's not yet a requirement
+end
+
+-- _globalActions
+-- provides a function for default button behaviour, called outside of the context of the browser
+--TRANSITIONING from old _globalAction style to new system wide action event model, will rename this when old one is eliminated
+--not sure yet how to deal with things like rew and vol which need up/down/press considerations
+local _globalActionsNEW = {
+
+	["go_now_playing"] = _goNowPlayingAction,
+	["go_playlist"] = _goPlaylistAction,
+	["go_search"] = _goSearchAction,
+	["go_favorites"] = _goFavoritesAction,
+	["go_playlists"] = _goPlaylistsAction,
+	["go_music_library"] = _goMusicLibraryAction,
+	["go_rhapsody"] = _goRhapsodyAction,
+	["go_current_track_details"] = _goCurrentTrackDetailsAction,
+	["repeat_toggle"] = _goRepeatToggleAction,
+	["shuffle_toggle"] = _goShuffleToggleAction,
+	["go_home"] = function()
+		local windowStack = Framework.windowStack
+			   
+		-- are we in home?
+		if #windowStack > 1 then
+			_goNow('home')
+		else
+			_goNow('nowPlaying', Window.transitionPushLeft)
+		end
+				
+		return EVENT_CONSUME
+	end,
+
+	["play"] = function()
+	        Framework:playSound("PLAYBACK")
+		_player:play()
+		return EVENT_CONSUME
+	end,
+
+	["pause"] = function()
+	        Framework:playSound("PLAYBACK")
+		_player:togglePause()
+		return EVENT_CONSUME
+	end,
+
+	["stop"] = function()
+	        Framework:playSound("PLAYBACK")
+		_player:stop()
+		return EVENT_CONSUME
+	end,
+
+}
+
+
 -- _defaultActions
 -- provides a function for each actionName for which Jive provides a default behaviour
 -- the function prototype is the same than _actionHandler (i.e. the whole shebang to cover all cases)
@@ -2098,13 +2202,32 @@ local function _removePlayerKeyHandler(self)
 	_playerKeyHandler = false
 end
 
-function _goSearch()
-	--bring up music library search
-	if jiveMain:getMenuTable().myMusicSearch then
-		Framework:playSound("JUMP")
-		jiveMain:getMenuTable().myMusicSearch.callback()
+local function _installActionListeners(self)
+	if _actionListenerHandles  then
+		return
 	end
+	
+	_actionListenerHandles = {}
+	
+	for action, func in pairs( _globalActionsNEW ) do
+		local handle = Framework:addActionListener(action, self, func)
+		table.insert(_actionListenerHandles, handle)
+	end
+	
 end
+
+local function _removeActionListeners(self)
+	if not _actionListenerHandles then
+		return
+	end
+
+	for i, handle in ipairs( _actionListenerHandles ) do
+		Framework:removeListener(handle)
+	end
+
+	_actionListenerHandles = false
+end
+
 
 --==============================================================================
 -- SlimBrowserApplet public methods
@@ -2504,9 +2627,9 @@ function notify_playerCurrent(self, player)
 	_connectingToPlayer(self)
 
 	jiveMain:setTitle(_player:getName())
+	_installActionListeners(self)
 	_installPlayerKeyHandler(self)
 	
-	Framework:addActionListener("go_search", self, "SlimBrowser", _goSearch)
 end
 
 function notify_playerNeedsUpgrade(self, player, needsUpgrade, isUpgrading)
@@ -2685,7 +2808,8 @@ function free(self)
 	end
 
 	_removePlayerKeyHandler(self)
-
+	_removeActionListeners(self)
+	
 	-- remove player menus
 	jiveMain:setTitle(nil)
 	for id, v in pairs(_playerMenus) do

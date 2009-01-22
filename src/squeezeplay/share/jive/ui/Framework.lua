@@ -488,6 +488,29 @@ end
 
 
 --[[
+=head2 jive.ui.Framework:callerToString()
+
+Returns source:lineNumber information about the caller from the Lua call stack 
+
+=cut
+--]]
+function callerToString(self)
+	local info = debug.getinfo(3, "Sl")
+	if not info then 
+		return "No caller found" 
+	end
+	
+	if info.what == "C" then
+		return "C function"
+	end		
+
+	
+	-- else is a Lua function
+	return string.format("[%s]:%d", info.short_src, info.currentline)
+end
+
+
+--[[
 
 =head2 jive.ui.Framework:addListener(mask, listener, priority)
 
@@ -614,28 +637,36 @@ function registerAction(self, actionName)
 end
 
 
---example: addActionListener("disconnect_player", self, "MyApplet" disconnectPlayerAction)
-function addActionListener(self, action, obj, sourceBreadCrumb, listener)
+--example: addActionListener("disconnect_player", self, disconnectPlayerAction)
+function addActionListener(self, action, obj, listener)
 	_assert(type(listener) == "function")
 
+	local callerInfo = "N/A"
+	if log:isDebug() then
+		callerInfo = self:callerToString()
+	end
 
 	if not self:_getActionEventIndexByName(action) then
 		log:error("action name not registered:(" , action, "). Available actions: ", self:dumpActions() )
 		return 
 	end
-	log:debug("Creating action listener for action: (" , action, ") from source: ", sourceBreadCrumb)
+	log:debug("Creating action listener for action: (" , action, ") from source: ", callerInfo)
 	
-	self:addListener(ACTION,
+	return self:addListener(ACTION,
 		function(event)
 			local eventAction = event:getAction()
 			if eventAction != action then
 				return EVENT_UNUSED
 			end
-			log:debug("Calling action listener for action: (" , action, ") from source: ", sourceBreadCrumb)
+			log:debug("Calling action listener for action: (" , action, ") from source: ", callerInfo)
 		
 			local listenerResult = listener(obj, event)
 			--default to consume unless the listener specifically wants to set a specific event return
-			return listenerResult and listenerResult or EVENT_CONSUME
+			local eventResult = listenerResult and listenerResult or EVENT_CONSUME
+			if eventResult == EVENT_CONSUME then
+				log:debug("Action (" , action, ") consumed by source: ", callerInfo)
+			end
+			return eventResult
 		end
 	)
 	
