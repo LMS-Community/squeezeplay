@@ -81,6 +81,7 @@ local EVENT_SHOW    = jive.ui.EVENT_SHOW
 local EVENT_HIDE    = jive.ui.EVENT_HIDE
 local EVENT_UPDATE  = jive.ui.EVENT_UPDATE
 local EVENT_CONSUME = jive.ui.EVENT_CONSUME
+local ACTION        = jive.ui.ACTION
 
 
 -- our class
@@ -409,27 +410,36 @@ function addListener(self, mask, listener)
 end
 
 
-function addActionListener(self, action, obj, sourceBreadCrumb, listener)
+function addActionListener(self, action, obj, listener)
 	_assert(type(listener) == "function")
 	
+	local callerInfo = "N/A"
+	if log:isDebug() then
+		callerInfo = Framework:callerToString()
+	end
 	
 	if not Framework:_getActionEventIndexByName(action) then
-		log:error("action name not registered:(" , action, "). Available actions: ", self:dumpActions() )
+		log:error("action name not registered:(" , action, "). Available actions: ", Framework:dumpActions() )
 		return 
 	end
-	log:debug("Creating widget action listener for action: (" , action, ") from source: ", sourceBreadCrumb)
+	log:debug("Creating widget action listener for action: (" , action, ") from source: ", callerInfo)
 	
-	self:addListener(ACTION,
+	return self:addListener(ACTION,
 			function(event)
 				local eventAction = event:getAction()
 				if eventAction != action then
 					return EVENT_UNUSED
 				end
-				log:debug("Calling widget action listener for action: (" , action, ") from source: ", sourceBreadCrumb)
+				log:debug("Calling widget action listener for action: (" , action, ") from source: ", callerInfo)
 				
 				local listenerResult = listener(obj, event)
 				--default to consume unless the listener specifically wants to set a specific event return
-				return listenerResult and listenerResult or EVENT_CONSUME
+				local eventResult = listenerResult and listenerResult or EVENT_CONSUME
+				if eventResult == EVENT_CONSUME then
+					log:debug("Action (" , action, ") consumed by widget source: ", callerInfo)
+				end
+				return eventResult
+
 			end
 	)
     
