@@ -135,6 +135,9 @@
 /* Define if using the dmalloc debugging malloc package */
 #undef WITH_DMALLOC
 
+/* Define if using spprivate package */
+#undef WITH_SPPRIVATE
+
 /* Define to empty if `const' does not conform to ANSI C. */
 #undef const
 

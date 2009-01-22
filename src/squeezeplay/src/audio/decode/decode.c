@@ -14,6 +14,9 @@
 #include "audio/decode/decode.h"
 #include "audio/decode/decode_priv.h"
 
+#ifdef WITH_SPPRIVATE
+extern int luaopen_spprivate(lua_State *L);
+#endif
 
 #define DECODE_MAX_INTERVAL 100
 
@@ -753,6 +756,10 @@ int luaopen_decode(lua_State *L) {
 
 	/* register sample playback */
 	decode_sample_init(L);
+
+#ifdef WITH_SPPRIVATE
+	luaopen_spprivate(L);
+#endif
 
 	return 0;
 }

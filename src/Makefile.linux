@@ -25,6 +25,14 @@ export SDL_CONFIG = ${BUILD_TOP}/bin/sdl-config
 ENABLE_PROFILING=--enable-profiling --disable-shared
 USE_MMX=--disable-mmx
 
+# Override to yes to build closed source squeezeplay libraries 
+SPPRIVATE=no
+
+ifeq ($(SPPRIVATE),yes)
+	ENABLE_SPPRIVATE=--with-spprivate
+	SPPRIVATE_TARGETS=axtls squeezeplay_private
+endif
+
 
 #
 # Top level targets
@@ -148,7 +156,7 @@ tolua++: lua
 #
 
 .PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib squeezeplay_private freefont freefont-debian axtls
-app: portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont axtls
+app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont
 
 # portaudio
 portaudio_v19_1360/Makefile:
@@ -194,7 +202,7 @@ axtls: ${AXTLS_DIR}/Makefile
 
 # squeezeplay
 squeezeplay/Makefile:
-	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_PROFILING} --prefix=${PREFIX} 
+	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --prefix=${PREFIX} 
 
 squeezeplay: squeezeplay/Makefile
 	cd squeezeplay; make && make install
@@ -212,9 +220,7 @@ squeezeplay_private/Makefile:
 	cd squeezeplay_private; SDL_CONFIG=${SDL_CONFIG} ./configure --prefix=${PREFIX}
 
 squeezeplay_private: squeezeplay_private/Makefile
-	cd squeezeplay_private; make CFLAGS="${CFLAGS} -I${SRC_DIR}/squeezeplay/src" PREFIX=${PREFIX} install
-	rm ${PREFIX}/lib/spprivate.*
-	cp squeezeplay_private/.libs/spprivate.so ${PREFIX}/lib/lua/5.1/spprivate.so
+	cd squeezeplay_private; make PREFIX=${PREFIX} install
 
 # freefont
 freefont:
@@ -247,3 +253,4 @@ clean:
 	-cd luaprofiler-2.0; make -f Makefile.linux clean
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
 	-cd squeezeplay; make distclean
+	-cd squeezeplay_private; make distclean
