@@ -34,6 +34,8 @@ local Label           = require("jive.ui.Label")
 local Choice          = require("jive.ui.Choice")
 local Textarea        = require("jive.ui.Textarea")
 local Textinput       = require("jive.ui.Textinput")
+local Keyboard        = require("jive.ui.Keyboard")
+local Button          = require("jive.ui.Button")
 
 local SocketHttp      = require("jive.net.SocketHttp")
 
@@ -43,8 +45,14 @@ module(...)
 oo.class(_M, Applet)
 
 
-function squeezeCenterPassword(self, server)
+function squeezeCenterPassword(self, server, setupNext, titleStyle)
 	self.server = server
+	if setupNext then
+		self.setupNext = setupNext
+	end
+	if titleStyle then
+		self.titleStyle = titleStyle
+	end
 
 	self.topWindow = self:_enterTextWindow("username", "HTTP_AUTH_USERNAME", "HTTP_AUTH_USERNAME_HELP", _enterPassword)
 end
@@ -78,13 +86,24 @@ function _enterDone(self)
 	self.password = nil
 
 	-- FIXME delay here to check if the username/password are correct
+	if self.setupNext then
+		return self.setupNext()
+	end
 
 	self.topWindow:hideToTop(Window.transitionPushLeft)
 end
 
+function _helpWindow(self, title, token)
+	local window = Window("window", self:string(title), self.titleStyle)
+	window:setAllowScreensaver(false)
+	window:addWidget(Textarea("textarea", self:string(token)))
+
+	self:tieAndShowWindow(window)
+	return window
+end
 
 function _enterTextWindow(self, key, title, help, next)
-	local window = Window("window", self:string(title))
+	local window = Window("window", self:string(title), self.titleStyle)
 
 	local input = Textinput("textinput", self[key] or "",
 				function(_, value)
@@ -95,10 +114,22 @@ function _enterTextWindow(self, key, title, help, next)
 					return true
 				end)
 
-	window:addWidget(Textarea("softHelp", self:string(help)))
-	window:addWidget(Label("softButton1", "Insert"))
-	window:addWidget(Label("softButton2", "Delete"))
+	local helpButton = Button( 
+				Label( 
+					'helpTouchButton', 
+					self:string("HTTP_AUTH_HELP")
+				), 
+				function() 
+					self:_helpWindow('HTTP_AUTH', help) 
+				end 
+	)
+
+	local keyboard = Keyboard("keyboard", "qwerty")
+
+        window:addWidget(helpButton)
 	window:addWidget(input)
+	window:addWidget(keyboard)
+	window:focusWidget(input)
 
 	self:tieAndShowWindow(window)
 	return window

@@ -142,37 +142,15 @@ function step3a(self)
 	return appletManager:callService(
 		"setupConnectionType", 
 		function(iface)
-			self:step4a(iface)
+			self:step4(iface)
 		end, 
 		welcomeTitleStyle
 	)
 end
 
 
-function step4a(self, iface)
-	log:info("step4a")
-
-	--[[ FIXME: create a popup that comes on screen until wired comes online
-	-- connect to wired interface
-	self.connectingWindow = appletManager:callService("setupConnectWiredInterface", function()
-							   self:step6()
-							   -- FIXME is this required:
-							   if self.scanWindow then
-								   self.scanWindow:hide()
-								   self.scanWindow = nil
-							   end
-						end,
-						welcomeTitleStyle
-	)
-	return self.connectingWindow
-	--]]
-
-	self:step4b(iface)
-end
-
-
-function step4b(self, iface)
-	log:info("step4b")
+function step4(self, iface)
+	log:info("step4")
 
 	-- scan for networks
 	self.scanWindow = appletManager:callService(
@@ -209,30 +187,36 @@ end
 function step6(self)
 	log:info("step6")
 
-	-- XXXX select this squeezebox as a player
-	self:step7()
+	-- automatically setup local player as selected player
+	for mac, player in appletManager:callService("iteratePlayers") do
+		if player:isLocal() then
+			appletManager:callService("setCurrentPlayer", player)
+			break
+		end
+        end
+
+	return appletManager:callService("selectMusicSource", function() self:step7() end, welcomeTitleStyle )
+
 end
 
 
 function step7(self)
 	log:info("step7")
 
-	-- XXXX choose music source
-	self:step8()
-end
-
-
-function step8(self)
-	log:info("step8")
-
 	-- all done
 	self:getSettings().setupDone = true
 	jiveMain:removeItemById('returnToSetup')
---	self:storeSettings()
+	self:storeSettings()
 
-	return self:setupDoneShow(function()
-			self._topWindow:hideToTop(Window.transitionPushLeft) 
-		end)
+	return self:setupDoneShow( 
+				function() 
+					-- FIXME, hideToTop() isn't working because after networks are found window stack to top is broken
+					-- for now use goHome
+					--self._topWindow:hideToTop(Window.transitionPushLeft) 
+					appletManager:callService("goHome", Window.transitionPushLeft) 
+				end 
+	)
+
 end
 
 
@@ -248,31 +232,12 @@ function setupWelcomeShow(self, setupNext)
 		style = 'buttonitem',
 		text = (self:string("PRESS_TO_CONTINUE")),
 		sound = "WINDOWSHOW",
-		callback = function()
-			setupNext()
-			return EVENT_CONSUME
-		end,
+		callback = setupNext,
 		weight = 1
 	})
 	
 	window:addWidget(textarea)
 	window:addWidget(continueButton)
-
-	window:addListener(EVENT_KEY_PRESS,
-		function(event)
-			local keycode = event:getKeycode()
-			if keycode == KEY_GO or
-				keycode == KEY_FWD then
-				window:playSound("WINDOWSHOW")
-				setupNext()
-			elseif keycode == KEY_BACK or
-				keycode == KEY_REW then
-				window:playSound("WINDOWHIDE")
-				window:hide()
-			end
-
-			return EVENT_CONSUME
-		end)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -280,18 +245,25 @@ end
 
 
 function setupDoneShow(self, setupNext)
+	log:info('setupDoneShow()')
 	local window = Window("window", self:string("DONE"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
-	local menu = SimpleMenu("menu")
+	local textarea = Textarea("centeredtextarea", self:string("DONE_HELP"))
 
-	menu:addItem({ text = self:string("DONE_CONTINUE"),
-		       sound = "WINDOWSHOW",
-		       callback = setupNext
-		     })
+	local continueButton = SimpleMenu("buttonmenu")
 
-	window:addWidget(Textarea("help", self:string("DONE_HELP")))
-	window:addWidget(menu)
+	continueButton:addItem({
+		style = 'buttonitem',
+		text = (self:string("PRESS_TO_CONTINUE")),
+		sound = "WINDOWSHOW",
+		callback = setupNext,
+		weight = 1
+	})
+	
+	window:addWidget(textarea)
+	window:addWidget(continueButton)
+
 
 	self:tieAndShowWindow(window)
 	return window

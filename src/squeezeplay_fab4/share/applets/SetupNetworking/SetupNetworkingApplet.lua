@@ -100,7 +100,6 @@ function setupRegionShow(self, setupNext)
 	end
 
 
-	--window:addWidget(Textarea("help", self:string("NETWORK_REGION_HELP")))
 	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_REGION', 'NETWORK_REGION_HELP') end )
 	window:addWidget(helpButton)
 	window:addWidget(menu)

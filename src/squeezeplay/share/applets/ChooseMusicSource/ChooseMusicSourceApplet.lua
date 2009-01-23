@@ -55,7 +55,13 @@ local CONNECT_TIMEOUT = 30
 
 
 -- service to select server for a player
-function selectMusicSource(self)
+function selectMusicSource(self, setupNext, titleStyle)
+	if setupNext then
+		self.setupNext = setupNext
+	end
+	if titleStyle then
+		self.titleStyle = titleStyle
+	end
 	self:settingsShow()
 end
 
@@ -63,7 +69,7 @@ end
 -- main setting menu
 function settingsShow(self)
 
-	local window = Window("window", self:string("SLIMSERVER_SERVERS"))
+	local window = Window("window", self:string("SLIMSERVER_SERVERS"), self.titleStyle)
 	local menu = SimpleMenu("menu", items)
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 	window:addWidget(menu)
@@ -98,7 +104,7 @@ function settingsShow(self)
 	log:debug('*****Discovered Server List:')
 	for _,server in appletManager:callService("iterateSqueezeCenters") do
 		log:debug('discovered server: ', server)
-		self:_addServerItem(server)
+		self:_addServerItem(server, _)
 	end
 
 	local item = {
@@ -114,12 +120,16 @@ function settingsShow(self)
 	-- Store the applet settings when the window is closed
 	window:addListener(EVENT_WINDOW_POP,
 			   function()
-				   self:storeSettings()
-			   end
-		   )
+				self:storeSettings()
+				if self.setupNext then
+					self.setupNext()
+				end
+		   	end
+	)
 
 	self:tieAndShowWindow(window)
 	appletManager:callService("hideConnectingToPlayer")
+
 end
 
 
@@ -159,13 +169,14 @@ function _addServerItem(self, server, address)
 
 	-- new entry
 	local item
+
 	if server and currentPlayer and currentPlayer:canConnectToServer() then
 		log:debug("\tadd menu item with callback")
 		local f = function()
                     if server:isPasswordProtected() then
-                        appletManager:callService("squeezeCenterPassword", server)
-        		    else
-                        self:connectPlayer(currentPlayer, server)
+				appletManager:callService("squeezeCenterPassword", server, self.setupNext, self.titleStyle)
+			else
+	                        self:connectPlayer(currentPlayer, server)
                     end
                 end
                 
@@ -189,7 +200,7 @@ function _addServerItem(self, server, address)
 	if currentPlayer and currentPlayer:getSlimServer() and server == currentPlayer:getSlimServer() then
 		log:debug("\tthis is the connected server, so remove callback for this item")
 		item.style = 'checkedNoAction'
-		item.callback = nil
+		item.callback = self.setupNext
 	end
 
 	self.serverMenu:addItem(item)

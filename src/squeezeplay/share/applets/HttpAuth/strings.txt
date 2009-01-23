@@ -38,6 +38,9 @@ HTTP_AUTH_PASSWORD
 	NO	Passord
 	SV	Lösenord
 
+HTTP_AUTH_HELP
+	EN	Help
+
 HTTP_AUTH_USERNAME_HELP
 	DA	Angiv det brugernavn som bruges sammen med adgangskoden til at beskytte SqueezeCenter
 	DE	Geben Sie den für den SqueezeCenter-Kennwortschutz konfigurierten Benutzernamen ein
