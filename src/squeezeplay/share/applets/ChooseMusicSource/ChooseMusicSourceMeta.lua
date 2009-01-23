@@ -45,6 +45,7 @@ end
 function registerApplet(meta)
 
 	meta:registerService("selectMusicSource")
+	meta:registerService("connectPlayerToServer")
 
 end
 

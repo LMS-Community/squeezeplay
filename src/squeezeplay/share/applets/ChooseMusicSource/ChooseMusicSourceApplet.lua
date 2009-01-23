@@ -121,9 +121,6 @@ function settingsShow(self)
 	window:addListener(EVENT_WINDOW_POP,
 			   function()
 				self:storeSettings()
-				if self.setupNext then
-					self.setupNext()
-				end
 		   	end
 	)
 
@@ -176,7 +173,10 @@ function _addServerItem(self, server, address)
                     if server:isPasswordProtected() then
 				appletManager:callService("squeezeCenterPassword", server, self.setupNext, self.titleStyle)
 			else
-	                        self:connectPlayer(currentPlayer, server)
+                        	self:connectPlayerToServer(currentPlayer, server)
+				if self.setupNext then
+					self.setupNext()
+				end
                     end
                 end
                 
@@ -299,12 +299,13 @@ end
 
 
 -- connect player to server
-function connectPlayer(self, player, server)
+function connectPlayerToServer(self, player, server)
+	log:warn('connectPlayerToServer()')
 	-- if connecting to SqueezeNetwork, first check jive is linked
 	if server:getPin() then
 		appletManager:callService("enterPin", server, nil,
 			       function()
-				       self:connectPlayer(player, server)
+				       self:connectPlayerToServer(player, server)
 			       end)
 		return
 	end
@@ -418,7 +419,7 @@ function _connectPlayerFailed(self, player, server)
 						text = self:string("SQUEEZEBOX_TRY_AGAIN"),
 						sound = "WINDOWSHOW",
 						callback = function()
-								   self:connectPlayer(player, server)
+								   self:connectPlayerToServer(player, server)
 								   window:hide()
 							   end
 					},

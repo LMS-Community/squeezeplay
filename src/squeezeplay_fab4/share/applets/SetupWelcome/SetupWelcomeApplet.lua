@@ -39,6 +39,7 @@ local localPlayer      = require("jive.slim.LocalPlayer")
 local Networking       = require("jive.net.Networking")
 
 local log              = require("jive.utils.log").logger("applets.setup")
+local debug              = require("jive.utils.debug")
 local locale           = require("jive.utils.locale")
 local table            = require("jive.utils.table")
 
@@ -211,9 +212,9 @@ function step7(self)
 	return self:setupDoneShow( 
 				function() 
 					-- FIXME, hideToTop() isn't working because after networks are found window stack to top is broken
-					-- for now use goHome
-					--self._topWindow:hideToTop(Window.transitionPushLeft) 
-					appletManager:callService("goHome", Window.transitionPushLeft) 
+					-- for now use closeToHome
+					Framework:playSound("PUSH")
+					jiveMain:closeToHome(true, Window.transitionPushLeft)
 				end 
 	)
 
