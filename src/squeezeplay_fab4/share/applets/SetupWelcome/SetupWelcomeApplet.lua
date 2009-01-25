@@ -57,16 +57,15 @@ oo.class(_M, Applet)
 
 function notify_playerCurrent(self, player)
 	log:info("setup complete")
+    if not self:getSettings().setupDone then
 
-	-- setup is completed when a player is selected
-	self:getSettings().setupDone = true
-	self:storeSettings()
+        if player and not player:needsMusicSource() then
+            log:debug("notify_playerCurrent called with a source, so finishing setup")
+            
+            self:step7()
+        end
+    end
 
-	-- remove Return to Setup from JiveMain
-	jiveMain:removeItemById('returnToSetup')
-
-	log:info("unsubscribe")
-	jnt:unsubscribe(self)
 end
 
 
@@ -191,33 +190,28 @@ function step6(self)
 	-- automatically setup local player as selected player
 	for mac, player in appletManager:callService("iteratePlayers") do
 		if player:isLocal() then
-			appletManager:callService("setCurrentPlayer", player)
-			break
+			log:error("found local player")
+
+			return appletManager:callService("selectPlayer", player)
+
 		end
         end
 
-	return appletManager:callService("selectMusicSource", function() self:step7() end, welcomeTitleStyle )
-
+	return appletManager:callService("setupShowSelectPlayer", function() end, 'setuptitle')
 end
 
 
 function step7(self)
 	log:info("step7")
+	return self:setupDoneShow(function()
 
-	-- all done
-	self:getSettings().setupDone = true
-	jiveMain:removeItemById('returnToSetup')
-	self:storeSettings()
+			self:getSettings().setupDone = true
+			jiveMain:removeItemById('returnToSetup')
+			self:storeSettings()
 
-	return self:setupDoneShow( 
-				function() 
-					-- FIXME, hideToTop() isn't working because after networks are found window stack to top is broken
-					-- for now use closeToHome
-					Framework:playSound("PUSH")
-					jiveMain:closeToHome(true, Window.transitionPushLeft)
-				end 
-	)
-
+	        jiveMain:closeToHome(true, Window.transitionPushLeft)
+		end)
+		
 end
 
 
@@ -276,10 +270,9 @@ function init(self)
 	jnt:subscribe(self)
 end
 
-
 -- remove listeners when leaving this applet
 function free(self)
-	log:info("free")
+	log:debug("                         ******************* free******************")
 	Framework:removeListener(self.disableHomeKeyDuringSetup)
 	Framework:removeListener(self.freeAppletWhenEscapingSetup)
 end

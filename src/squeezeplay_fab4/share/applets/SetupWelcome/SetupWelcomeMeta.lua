@@ -45,7 +45,12 @@ end
 function registerApplet(meta)
 	meta:registerService(startingStep)
 	-- for development, add a menu item for this
-	jiveMain:addItem(meta:menuItem('appletSetupWelcome', 'home', "SETUP_DEVELOPMENT", function(applet, ...) applet:step1(...) end, 100))
+	jiveMain:addItem(meta:menuItem('appletSetupWelcome', 'home', "SETUP_DEVELOPMENT",
+		function(applet, ...)
+			applet:getSettings().setupDone = false
+			applet:step1(...)
+		end
+		, 100))
 
 end
 

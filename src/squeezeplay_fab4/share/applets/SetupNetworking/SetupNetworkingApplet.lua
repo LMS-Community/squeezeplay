@@ -460,16 +460,16 @@ end
 
 
 function _hideToTop(self, dontSetupNext)
-	if Framework.windowStack[1] == self.topWindow then
-		return
-	end
-
-	while #Framework.windowStack > 2 and Framework.windowStack[2] ~= self.topWindow do
-		log:debug("hiding=", Framework.windowStack[2], " topWindow=", self.topWindow)
-		Framework.windowStack[2]:hide(Window.transitionPushLeft)
-	end
-
-	Framework.windowStack[1]:hide(Window.transitionPushLeft)
+--	if Framework.windowStack[1] == self.topWindow then
+--		return
+--	end
+--
+--	while #Framework.windowStack > 2 and Framework.windowStack[2] ~= self.topWindow do
+--		log:debug("hiding=", Framework.windowStack[2], " topWindow=", self.topWindow)
+--		Framework.windowStack[2]:hide(Window.transitionPushLeft)
+--	end
+--
+--	Framework.windowStack[1]:hide(Window.transitionPushLeft)
 
 	-- we have successfully setup the network, so hide any open network
 	-- settings windows before advancing during setup.
@@ -1000,11 +1000,15 @@ function connectOK(self, iface, ssid)
 
 	window:addTimer(2000,
 			function(event)
+			log:debug("CALLING TIMER")
+				window:hide()
 				_hideToTop(self)
-			end)
+			end,
+			true)
 
 	window:addListener(EVENT_KEY_PRESS,
 			   function(event)
+				window:hide()
 				   _hideToTop(self)
 				   return EVENT_CONSUME
 			   end)
