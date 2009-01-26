@@ -125,15 +125,19 @@ function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
 			local version = self:_firmwareVersion(fileurl)
 	
 			if version or entry == machine .. ".bin" then
+				local textString = self:string("UPDATE_FROM_REMOVABLE_MEDIA")
+				if version then
+					textString = self:string("UPDATE_TO_X", version)
+				end
 				menu:addItem({
-					text = self:string("UPDATE_CONTINUE_SDCARD"),
+					text = textString,
 				     	sound = "WINDOWSHOW",
 				     	callback = function()
 						self.url = fileurl
 						self:_upgrade()
 					end,
 					focusGained = function()
-						help:setValue(self:string("UPDATE_BEGIN_SDCARD", version or ""))
+						help:setValue(self:string("UPDATE_BEGIN_REMOVABLE_MEDIA", version or ""))
 					end
 			     	})
 			end

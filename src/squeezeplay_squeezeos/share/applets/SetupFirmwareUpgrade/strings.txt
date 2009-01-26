@@ -62,6 +62,12 @@ UPDATE_CONTINUE_SDCARD
 	NO	Oppdatering fra sd-kort
 	SV	Uppdatera från SD-kort.
 
+UPDATE_FROM_REMOVABLE_MEDIA
+	EN	Update from removable media
+
+UPDATE_TO_X
+	EN	Update to %s
+
 UPDATE_FAILURE
 	DA	Opgraderingen mislykkedes
 	DE	Aktualisierungsfehler
@@ -169,6 +175,9 @@ UPDATE_BEGIN_SDCARD
 	NL	Installeer %s vanaf SD-kaart.
 	NO	Installer %s fra sd-kort.
 	SV	Installera %s från SD-kort.
+
+UPDATE_BEGIN_REMOVABLE_MEDIA
+	EN	Install %s from removable media.
 
 UPDATE_BATTERY
 	DA	Lad batteriet op
