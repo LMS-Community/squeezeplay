@@ -333,7 +333,11 @@ static int pcm_open(struct decode_alsa *state) {
 	}
 	state->period_size = size;
 
-	/* iec958 control */
+	/* iec958 control for playback device only */
+	if (!(state->flags & FLAG_STREAM_PLAYBACK)) {
+		goto skip_iec958;	  
+	}
+
 	if ((err = snd_hctl_open(&state->hctl, state->name, 0)) < 0) {
 		DEBUG_ERROR("snd_hctl_open failed: %s", snd_strerror(err));
 		goto skip_iec958;
@@ -488,7 +492,7 @@ static void *audio_thread_execute(void *data) {
 			frames = size;
 
 			if ((err = snd_pcm_mmap_begin(state->pcm, &areas, &offset, &frames)) < 0) {
-				if ((err = xrun_recovery(state, avail)) < 0) {
+				if ((err = xrun_recovery(state, err)) < 0) {
 					DEBUG_ERROR("mmap begin failed: %s", snd_strerror(err));
 				}
 				first = 1;
@@ -512,7 +516,7 @@ static void *audio_thread_execute(void *data) {
 
 			commitres = snd_pcm_mmap_commit(state->pcm, offset, frames); 
 			if (commitres < 0 || (snd_pcm_uframes_t)commitres != frames) { 
-				if ((err = xrun_recovery(state, avail)) < 0) {
+				if ((err = xrun_recovery(state, commitres)) < 0) {
 					DEBUG_ERROR("mmap commit failed: %s", snd_strerror(err));
 				}
 				first = 1;
