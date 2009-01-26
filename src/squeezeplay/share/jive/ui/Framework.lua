@@ -316,27 +316,6 @@ function eventLoop(self, netTask)
 end
 
 
-
-
---[[
-
-=head2 jive.ui.Framework:setEmulation(w, h, bpp)
-
-Sets the screen size I<w, h>, and bbp I<bpp>. This must be called before jive.ui.Framework:init(). This has no effect on a hardware platform.
-
-=cut
---]]
-function setScreenSize(self, w, h, bpp)
-	_assert(type(w) == "number")
-	_assert(type(h) == "number")
-	_assert(type(bpp) == "number")
-
-	screen.bounds[3] = w
-	screen.bounds[4] = h
-	screen.bpp = bpp
-end
-
-
 --[[
 
 =head2 jive.ui.Framework:getScreenSize()
