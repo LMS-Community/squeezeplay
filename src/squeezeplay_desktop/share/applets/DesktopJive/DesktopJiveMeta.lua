@@ -6,6 +6,7 @@ local string        = require("string")
 local table         = require("jive.utils.table")
 
 local AppletMeta    = require("jive.AppletMeta")
+local LocalPlayer   = require("jive.slim.LocalPlayer")
 local Framework     = require("jive.ui.Framework")
 local System        = require("jive.System")
 
@@ -67,6 +68,11 @@ function registerApplet(meta)
 		store = true
 		settings.mac = table.concat(mac, ":")
 	end
+
+	-- Set player device type
+	--LocalPlayer:setDeviceType("controller", "Controller")
+
+	settings.mac = "00:04:20:ff:ff:10"
 
 	if store then
 		log:debug("Mac Address: ", settings.mac)

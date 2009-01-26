@@ -4,6 +4,7 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
+#define RUNTIME_DEBUG 1
 
 #include "common.h"
 #include "jive.h"
@@ -117,6 +118,7 @@ int jive_traceback (lua_State *L) {
 
 static int jiveL_init(lua_State *L) {
 	SDL_Rect r;
+	const SDL_VideoInfo *video_info;
 	JiveSurface *srf, *splash, *icon;
 	Uint16 splash_w, splash_h;
 
@@ -146,6 +148,11 @@ static int jiveL_init(lua_State *L) {
 		SDL_Quit();
 		exit(-1);
 	}
+
+	/* report video info */
+	video_info = SDL_GetVideoInfo();
+	DEBUG_TRACE("%d bits per pixel [R<<%d G<<%d B<<%d]", video_info->vfmt->BitsPerPixel, video_info->vfmt->Rshift, video_info->vfmt->Gshift, video_info->vfmt->Bshift)
+	DEBUG_TRACE("Hardware acceleration %s available", video_info->hw_available?"is":"is not");
 
 	/* Register callback for additional events (used for multimedia keys)*/
 	SDL_EventState(SDL_SYSWMEVENT,SDL_ENABLE);
