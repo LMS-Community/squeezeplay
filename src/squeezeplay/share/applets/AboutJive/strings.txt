@@ -16,16 +16,16 @@ ABOUT_JIVE
 	SV	Om
 
 ABOUT_COPYRIGHT
-	DA	Copyright 2007-2008, Logitech.
-	DE	Copyright 2007-2008, Logitech.
-	EN	Copyright 2007-2008, Logitech.
-	ES	Copyright 2007-2008, Logitech.
-	FI	Copyright 2007-2008, Logitech.
-	FR	Copyright 2007-2008, Logitech.
-	IT	Copyright 2007-2008, Logitech.
-	NL	Copyright 2007-2008, Logitech.
-	NO	Opphavsrett 2007–2008, Logitech.
-	SV	© 2007–2008 Logitech.
+	DA	Copyright 2007-2009, Logitech.
+	DE	Copyright 2007-2009, Logitech.
+	EN	Copyright 2007-2009, Logitech.
+	ES	Copyright 2007-2009, Logitech.
+	FI	Copyright 2007-2009, Logitech.
+	FR	Copyright 2007-2009, Logitech.
+	IT	Copyright 2007-2009, Logitech.
+	NL	Copyright 2007-2009, Logitech.
+	NO	Opphavsrett 2007–2009, Logitech.
+	SV	© 2007–2009 Logitech.
 
 ABOUT_MAC_ADDRESS
 	DA	MAC-adresse: %s
@@ -74,4 +74,16 @@ ABOUT_ALL_RIGHTS_RESERVED
 	NL	Alle rechten voorbehouden
 	NO	Med enerett
 	SV	Med ensamrätt
+
+UPTIME
+	EN	Uptime:
+
+UPTIME_DAYS
+	EN	%s days
+
+UPTIME_HOURS
+	EN	%s hours
+
+UPTIME_MINUTES
+	EN	%s minutes
 
