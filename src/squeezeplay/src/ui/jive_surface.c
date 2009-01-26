@@ -9,6 +9,9 @@
 #include "jive.h"
 
 
+Uint16 default_bpp;
+
+
 JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fullscreen) {
 	JiveSurface *srf;
 	SDL_Surface *sdl;
@@ -28,12 +31,11 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 		return NULL;
 	}
 
-	if ( (sdl->flags & SDL_HWSURFACE) == 0) {
-		printf("Not using a hardware surface\n");
+	if ( (sdl->flags & SDL_HWSURFACE) && !(sdl->flags & SDL_DOUBLEBUF)) {
+		DEBUG_ERROR("WARNING: Not using a hardware double buffer\n");
 	}
-	else if ( (sdl->flags & SDL_DOUBLEBUF) == 0) {
-		printf("WARNING: Not using a hardware double buffer\n");
-	}
+
+	default_bpp = bpp;
 
 	srf = calloc(sizeof(JiveSurface), 1);
 	srf->refcount = 1;
@@ -46,7 +48,7 @@ JiveSurface *jive_surface_newRGB(Uint16 w, Uint16 h) {
 	JiveSurface *srf;
 	SDL_Surface *sdl;
 
-	sdl = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 16, 0, 0, 0, 0);
+	sdl = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, default_bpp, 0, 0, 0, 0);
 
 	/* Opaque surface */
 	SDL_SetAlpha(sdl, SDL_SRCALPHA, SDL_ALPHA_OPAQUE);

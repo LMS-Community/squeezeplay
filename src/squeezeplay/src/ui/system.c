@@ -61,6 +61,32 @@ static int system_get_machine(lua_State *L) {
 }
 
 
+static int system_get_uptime(lua_State *L) {
+	Uint32 uptime;
+	int updays, upminutes, uphours;
+
+	// FIXME wraps around after 49.7 days
+	uptime = SDL_GetTicks() / 1000;
+
+	updays = (int) uptime / (60*60*24);
+        upminutes = (int) uptime / 60;
+        uphours = (upminutes / 60) % 24;
+        upminutes %= 60;
+
+	lua_newtable(L);
+	lua_pushinteger(L, updays);
+	lua_setfield(L, -2, "days");
+
+	lua_pushinteger(L, uphours);
+	lua_setfield(L, -2, "hours");
+
+	lua_pushinteger(L, upminutes);
+	lua_setfield(L, -2, "minutes");
+
+	return 1;
+}
+
+
 static int system_get_user_dir(lua_State *L) {
 	lua_pushfstring(L, "%s/userpath", homedir);
 	return 1;
@@ -240,6 +266,7 @@ static const struct luaL_Reg squeezeplay_system_methods[] = {
 	{ "getMachine", system_get_machine },
 	{ "getMacAddress", system_get_mac_address },
 	{ "getUUID", system_get_uuid },
+	{ "getUptime", system_get_uptime },
 	{ "getUserDir", system_get_user_dir },
 	{ "findFile", system_find_file },
 	{ "init", system_init },
