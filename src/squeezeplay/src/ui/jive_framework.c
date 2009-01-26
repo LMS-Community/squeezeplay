@@ -134,7 +134,7 @@ static int jiveL_init(lua_State *L) {
 	lua_pop(L, 1);
 
 	lua_getfield(L, -1, "bpp");
-	screen_bpp = luaL_optint(L, -1, 16);
+	screen_bpp = luaL_optint(L, -1, 0);
 	lua_pop(L, 1);
 
 	screen_w = r.w;
@@ -159,7 +159,7 @@ static int jiveL_init(lua_State *L) {
     
 	/* report video info */
 	video_info = SDL_GetVideoInfo();
-	DEBUG_TRACE("%d bits per pixel [R<<%d G<<%d B<<%d]", video_info->vfmt->BitsPerPixel, video_info->vfmt->Rshift, video_info->vfmt->Gshift, video_info->vfmt->Bshift)
+	DEBUG_TRACE("%d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", video_info->vfmt->BitsPerPixel, video_info->vfmt->BytesPerPixel, video_info->vfmt->Rshift, video_info->vfmt->Gshift, video_info->vfmt->Bshift)
 	DEBUG_TRACE("Hardware acceleration %s available", video_info->hw_available?"is":"is not");
 
 	/* Register callback for additional events (used for multimedia keys)*/
