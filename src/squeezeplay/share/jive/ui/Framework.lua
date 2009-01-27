@@ -97,7 +97,6 @@ soundEnabled = {} -- sound enabled state
 
 screen = {}
 screen.bounds = { 0, 0, 480, 272 }
-screen.bpp = 16
 
 actions = {}
 actions.byName = {}
