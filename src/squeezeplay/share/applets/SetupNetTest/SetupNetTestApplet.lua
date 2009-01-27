@@ -114,6 +114,7 @@ function showMainWindow(self)
 	
 	self.window:setAllowScreensaver(false)
 
+	self.window:focusWidget(nil)
 	self.window:addListener(EVENT_SCROLL | EVENT_KEY_PRESS,
 		function(event)
 			return _event_handler(self, event)
