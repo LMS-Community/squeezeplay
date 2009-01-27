@@ -44,7 +44,7 @@ local function _takeScreenshotAction(self)
 	local path = System.getUserDir()
 	if lfs.attributes("/media", "mode") ~= nil then
 		for dir in lfs.dir("/media") do
-			local tmp = "/media/" .. dir .. "/log"
+			local tmp = "/media/" .. dir 
 			if lfs.attributes(tmp, "mode") == "directory" then
 				path = tmp
 				break

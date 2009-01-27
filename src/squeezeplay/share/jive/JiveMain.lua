@@ -99,6 +99,8 @@ local KEY_VOLUME_UP     = jive.ui.KEY_VOLUME_UP
 local KEY_VOLUME_DOWN   = jive.ui.KEY_VOLUME_DOWN
 local KEY_ADD           = jive.ui.KEY_ADD
 
+local JIVE_VERSION      = jive.JIVE_VERSION
+
 -- Classes
 local JiveMain = oo.class({}, HomeMenu)
 
@@ -295,7 +297,7 @@ end
 -- __init
 -- creates our JiveMain main object
 function JiveMain:__init()
-	log:debug("__init()")
+	log:info("SqueezePlay version ", JIVE_VERSION)
 
 	-- Seed the rng
 	local initTime = os.time()
@@ -304,7 +306,7 @@ function JiveMain:__init()
 	-- Initialise UI
 	Framework:init()
 
-    _addUserPathToLuaPath()
+	_addUserPathToLuaPath()
 
 	-- Singleton instances (globals)
 	jnt = NetworkThread()
