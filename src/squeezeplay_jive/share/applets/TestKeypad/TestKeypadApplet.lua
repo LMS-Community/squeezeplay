@@ -79,13 +79,20 @@ function drawKeypad(self)
 	self.background:blit(srf, 0, 0)
 	self.icon:setValue(srf)
 
+	local started = false
+
 	for i,k in ipairs(keymap) do
 		local state = keyState[k.key]
 		if state ~= nil then
+			started = true
 			srf:filledCircle(k.x, k.y, 10, stateToColor[state])
 		else
 			srf:circle(k.x, k.y, 10, 0x00FF00FF)
 		end
+	end
+
+	if started then
+		self.window:removeWidget(self.help)
 	end
 
 	return EVENT_CONSUME
@@ -131,10 +138,13 @@ function KeypadTest(self)
 
 	self.icon = Icon("icon")
 	window:addWidget(self.icon)
-	window:addWidget(Textarea("help", self:string("TEST_KEYPAD_HELP")))
+
+	self.help = Textarea("help", self:string("TEST_KEYPAD_HELP"))
+	window:addWidget(self.help)
 
 	self:drawKeypad()
 
+	self.window:focusWidget(nil)
 	window:addListener(EVENT_KEY_ALL | EVENT_SCROLL,
 		function(event)
 			local eventtype = event:getType()
