@@ -56,6 +56,11 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 local CONNECT_TIMEOUT = 30
 local wirelessTitleStyle = 'setuptitle'
 
+-- 01/27/09 - fm - WPS - begin
+local WPS_WALK_TIMEOUT = 130		-- WPS walk timeout
+-- 01/27/09 - fm - WPS - end
+
+
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
@@ -436,6 +441,13 @@ function _scanComplete(self, iface)
 			end
 
 			local item = self.scanResults[ssid].item
+
+-- 01/27/09 - fm - WPS - begin
+-- TODO: Need nice icons here for WEP, WPA/WPA2 and WPS
+			item.text = iface:isWireless() and ssid or tostring(self:string("NETWORK_ETHERNET"))
+			item.text = item.text .. " " .. entry.flags
+-- 01/27/09 - fm - WPS - end
+
 			item.icon:setStyle(itemStyle)
 
 			if self.scanMenu then
@@ -552,6 +564,12 @@ function enterPassword(self, iface, ssid)
 	elseif string.find(flags, "ETH") then
 		self.encryption = "none"
 		return createAndConnect(self, iface, ssid)
+
+-- 01/27/09 - fm - WPS - begin
+	elseif string.find(flags, "WPS") then
+		self.encryption = "wpa2"
+		return chooseWPS(self, iface, ssid)
+-- 01/27/09 - fm - WPS - end
 
 	elseif string.find(flags, "WPA2%-PSK") then
 		self.encryption = "wpa2"
@@ -1547,6 +1565,176 @@ function networkStatusShow(self, iface)
 	self:tieAndShowWindow(window)
 	return window
 end
+
+
+-- 01/27/09 - fm - WPS - begin
+function setupWPSHelp(self)
+	local window = Window("window", self:string("NETWORK_WPS_HELP"), 'setuptitle')
+	window:setAllowScreensaver(false)
+
+	local textarea = Textarea("textarea", self:string("NETWORK_WPS_HELP_BODY"))
+	window:addWidget(textarea)
+	self:tieAndShowWindow(window)
+
+	return window
+end
+
+
+function chooseWPS(self, iface, ssid)
+	log:debug('chooseWPS')
+
+	-- ask the user to choose
+	local window = Window("window", self:string("NETWORK_WPS_METHOD"), wirelessTitleStyle)
+	window:setAllowScreensaver(false)
+
+	local connectionMenu = SimpleMenu("twobuttonmenu")
+
+	connectionMenu:addItem({
+		style = 'buttonitem',
+		text = (self:string("NETWORK_WPS_METHOD_PBC")),
+		sound = "WINDOWSHOW",
+		callback = function()
+			processWPS(self, iface, ssid, "pbc")
+		end,
+		weight = 1
+	})
+
+	connectionMenu:addItem({
+		style = 'buttonitem',
+		text = (self:string("NETWORK_WPS_METHOD_PIN")),
+		sound = "WINDOWSHOW",
+		callback = function()
+-- TODO: add pin method
+--			processWPS(self, iface, ssid, "pin", wpspin)
+		end,
+		weight = 2
+	})
+
+	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_WPS_HELP")), function() self:setupWPSHelp() end )
+
+	window:addWidget(helpButton)
+	window:addWidget(connectionMenu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+function processWPS(self, iface, ssid, wpsmethod)
+	assert(iface and ssid and wpsmethod, debug.traceback())
+
+	self.processWPSTimeout = 0
+
+	-- Stop wpa_supplicant - cannot run while wpsapp is running
+	iface:stopWPASupplicant()
+	-- Remove wps.conf, (re-)start wpsapp
+	iface:startWPSApp(wpsmethod)
+
+	-- Progress window
+	local window = Popup("popupIcon")
+
+	local icon  = Icon("iconConnecting")
+	icon:addTimer(1000,
+		function()
+			self:_timerWPS(iface, ssid)
+		end)
+	window:addWidget(icon)
+
+	local description = "Getting data"
+	window:addWidget(Label("text", self:string("NETWORK_WPS_PROGRESS", description)))
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+function _timerWPS(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
+	Task("networkWPS", self,
+		function()
+			log:debug("processWPSTimeout=", self.processWPSTimeout)
+
+			local status = iface:t_wpsStatus()
+			if not (status.wps_state == "COMPLETED") then
+				self.processWPSTimeout = self.processWPSTimeout + 1
+				if self.processWPSTimeout ~= WPS_WALK_TIMEOUT then
+					return
+				end
+
+				-- WPS walk timeout
+				self:processWPSFailed(iface, ssid, "timeout")
+				return
+			else
+				-- Make sure wpa supplicant is running again
+				iface:startWPASupplicant()
+
+				-- Set credentials from WPS
+				self.encryption = status.wps_encryption
+				self.psk = status.wps_psk
+				createAndConnect(self, iface, ssid)
+			end
+
+		end):addTask()
+end
+
+
+function processWPSFailed(self, iface, ssid, reason)
+	assert(iface and ssid, debug.traceback())
+
+	log:debug("processWPSFailed")
+
+-- TODO: Remove later (should not be necessary)
+	iface:stopWPSApp()
+
+	iface:startWPASupplicant()
+
+-- TODO: Add string according to reason
+	-- Message based on failure type
+	local helpText = self:string("NETWORK_WPS_PROBLEM_HELP")
+
+	-- popup failure
+	local window = Window("window", self:string("NETWORK_WPS_PROBLEM"), wirelessTitleStyle)
+	window:setAllowScreensaver(false)
+
+	local menu = SimpleMenu("menu",
+				{
+-- TODO: more options needed?
+--					{
+--						text = self:string("NETWORK_TRY_AGAIN"),
+--						sound = "WINDOWHIDE",
+--						callback = function()
+--								   connect(self, iface, ssid)
+--								   window:hide(Window.transitionNone)
+--							   end
+--					},
+--					{
+--						text = self:string("NETWORK_TRY_DIFFERENT"),
+--						sound = "WINDOWSHOW",
+--						callback = function()
+--								   _hideToTop(self, true)
+--							   end
+--					},
+					{
+						text = self:string("NETWORK_GO_BACK"),
+						sound = "WINDOWHIDE",
+						callback = function()
+								   window:hide()
+							   end
+					},
+				})
+
+	local help = Textarea("help", helpText)
+
+	window:addWidget(help)
+	window:addWidget(menu)
+
+	self:tieWindow(window)
+	window:show()
+
+	return window
+end
+-- 01/27/09 - fm - WPS - end
 
 
 --[[

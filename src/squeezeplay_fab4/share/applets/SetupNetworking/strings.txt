@@ -935,3 +935,31 @@ NETWORK_ETH_NOT_CONNECTED
 
 NETWORK_ETH_HALF_DUPLEX
 	EN	Half Duplex
+
+NETWORK_WPS_METHOD
+	EN	What WPS method to use?
+
+NETWORK_WPS_METHOD_PBC
+	EN	Push Button Method
+
+NETWORK_WPS_METHOD_PIN
+	EN	PIN Method
+	
+NETWORK_WPS_METHOD_PASSPHRASE
+	EN	Passphrase Method
+
+NETWORK_WPS_HELP
+	EN	Help
+
+NETWORK_WPS_HELP_BODY
+	EN	this is just a placeholder for a bunch of text that we may put in to describe Wi-Fi Protected Setup (WPS), push button method, pin method etc.
+
+NETWORK_WPS_PROGRESS
+	EN	WPS in progress
+	
+NETWORK_WPS_PROBLEM_HELP
+	EN	There was a problem with the WPS process. Did you start the WPS process on your router?
+	
+NETWORK_WPS_PROBLEM
+	EN	WPS Problem
+
