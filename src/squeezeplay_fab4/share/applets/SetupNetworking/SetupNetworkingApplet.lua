@@ -1232,7 +1232,6 @@ function failedDHCPandWEP(self, iface, ssid)
 	return window
 end
 
-
 function enterIP(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
@@ -1241,8 +1240,7 @@ function enterIP(self, iface, ssid)
 	local window = Window("window", self:string("NETWORK_IP_ADDRESS"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	window:addWidget(Textarea("help", self:string("NETWORK_IP_ADDRESS_HELP")))
-	window:addWidget(Textinput("textinput", v,
+	local textinput = Textinput("textinput", v,
 				   function(widget, value)
 					   value = value:getValue()
 					   if not _validip(value) then
@@ -1255,7 +1253,14 @@ function enterIP(self, iface, ssid)
 					   widget:playSound("WINDOWSHOW")
 					   self:enterSubnet(iface, ssid)
 					   return true
-				   end))
+				   end)
+	local keyboard = Keyboard("keyboard", "numeric")
+	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_IP_ADDRESS', 'NETWORK_IP_ADDRESS_HELP') end )
+
+	window:addWidget(helpButton)
+	window:addWidget(textinput)
+	window:addWidget(keyboard)
+	window:focusWidget(textinput)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -1270,8 +1275,7 @@ function enterSubnet(self, iface, ssid)
 	local window = Window("window", self:string("NETWORK_SUBNET"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	window:addWidget(Textarea("help", self:string("NETWORK_SUBNET_HELP")))
-	window:addWidget(Textinput("textinput", v,
+	local textinput = Textinput("textinput", v,
 				   function(widget, value)
 					   value = value:getValue()
 
@@ -1281,7 +1285,15 @@ function enterSubnet(self, iface, ssid)
 					   widget:playSound("WINDOWSHOW")
 					   self:enterGateway(iface, ssid)
 					   return true
-				   end))
+				   end)
+	local keyboard = Keyboard("keyboard", "numeric")
+	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_SUBNET', 'NETWORK_SUBNET_HELP') end )
+
+	window:addWidget(helpButton)
+	window:addWidget(textinput)
+	window:addWidget(keyboard)
+	window:focusWidget(textinput)
+
 
 	self:tieAndShowWindow(window)
 	return window
@@ -1296,8 +1308,7 @@ function enterGateway(self, iface, ssid)
 	local window = Window("window", self:string("NETWORK_GATEWAY"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	window:addWidget(Textarea("help", self:string("NETWORK_GATEWAY_HELP")))
-	window:addWidget(Textinput("textinput", v,
+	local textinput = Textinput("textinput", v,
 				   function(widget, value)
 					   value = value:getValue()
 
@@ -1311,7 +1322,15 @@ function enterGateway(self, iface, ssid)
 					   widget:playSound("WINDOWSHOW")
 					   self:enterDNS(iface, ssid)
 					   return true
-				   end))
+				   end)
+
+	local keyboard = Keyboard("keyboard", "numeric")
+	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_GATEWAY', 'NETWORK_GATEWAY_HELP') end )
+
+	window:addWidget(helpButton)
+	window:addWidget(textinput)
+	window:addWidget(keyboard)
+	window:focusWidget(textinput)
 
 	self:tieAndShowWindow(window)
 	return window
@@ -1326,8 +1345,7 @@ function enterDNS(self, iface, ssid)
 	local window = Window("window", self:string("NETWORK_DNS"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	window:addWidget(Textarea("help", self:string("NETWORK_DNS_HELP")))
-	window:addWidget(Textinput("textinput", v,
+	local textinput = Textinput("textinput", v,
 				   function(widget, value)
 					   value = value:getValue()
 
@@ -1340,7 +1358,14 @@ function enterDNS(self, iface, ssid)
 					   widget:playSound("WINDOWSHOW")
 					   self:setStaticIP(iface, ssid)
 					   return true
-				   end))
+				   end)
+	local keyboard = Keyboard("keyboard", "numeric")
+	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_DNS', 'NETWORK_DNS_HELP') end )
+
+	window:addWidget(helpButton)
+	window:addWidget(textinput)
+	window:addWidget(keyboard)
+	window:focusWidget(textinput)
 
 	self:tieAndShowWindow(window)
 	return window
