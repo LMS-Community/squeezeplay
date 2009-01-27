@@ -124,20 +124,6 @@ end
 function step3(self)
 	log:info("step3")
 
-	-- wireless region
-	return appletManager:callService(
-		"setupRegionShow",
-		function()
-			self:step3a()
-		end,
-		welcomeTitleStyle
-	)
-end
-
-
-function step3a(self)
-	log:info("step3a")
-
 	-- network connection type
 	return appletManager:callService(
 		"setupConnectionType", 
