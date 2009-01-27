@@ -1418,6 +1418,113 @@ function _sync()
 end
 
 
+-- 01/27/09 - fm - WPS - begin
+
+--[[
+
+=head2 jive.net.Networking:startWPSApp()
+
+Starts the wpsapp (Marvell) to get passphrase etc. via WPS
+Removes old wps.conf file
+
+=cut
+--]]
+
+function startWPSApp(self, wpsmethod)
+	assert(wpsmethod, debug.traceback())
+
+	log:warn("startWPSApp")
+	self:stopWPSApp()
+	os.execute("rm /usr/sbin/wps/wps.conf")
+	os.execute("cd /usr/sbin/wps; ./wpsapp " .. self.interface .. " " .. wpsmethod .. " & > /dev/null")
+end
+
+--[[
+
+=head2 jive.net.Networking:stopWPSApp()
+
+Stops the wpsapp (Marvell) to get passphrase etc. via WPS
+
+=cut
+--]]
+
+function stopWPSApp(self)
+	log:warn("stopWPSApp")
+	os.execute("killall wpsapp")
+end
+
+--[[
+
+=head2 jive.net.Networking:startWPASupplicant()
+
+Starts wpa supplicant
+
+=cut
+--]]
+
+function startWPASupplicant(self)
+	log:warn("startWPASupplicant")
+	os.execute("/usr/sbin/wpa_supplicant -B -Dmarvell -i" .. self.interface .. " -c/etc/wpa_supplicant.conf")
+end
+
+--[[
+
+=head2 jive.net.Networking:startWPASupplicant()
+
+Stops wpa supplicant
+
+=cut
+--]]
+
+function stopWPASupplicant(self)
+	log:warn("stopWPASupplicant")
+	os.execute("killall wpa_supplicant")
+	self:close()
+end
+
+--[[
+
+=head2 jive.net.Networking:t_wpsStatus()
+
+Returns data from wps.conf if present
+
+=cut
+--]]
+
+function t_wpsStatus(self)
+	assert(Task:running(), "Networking:t_wpsStatus must be called in a Task")
+
+	local status = {}
+
+	local fh = io.open("/usr/sbin/wps/wps.conf", "r")
+	if fh == nil then
+		status.wps_state = "IN_PROGRESS"
+	else
+		local wpsconf = fh:read("*all")
+		fh:close()
+
+		local proto = string.match(wpsconf, "proto=([^%s]+)")
+		local psk = string.match(wpsconf, "psk=\"([^%s]+)\"")
+
+--		log:warn("**** Proto: " .. proto)
+--		log:warn("**** PSK " .. psk)
+
+-- TODO: needed
+		if proto == "WPA" then
+			status.wps_encryption = "wpa"
+		else
+			status.wps_encryption = "wpa2"
+		end
+
+		status.wps_psk = psk
+		status.wps_state = "COMPLETED"
+	end
+
+	return status
+end
+-- 01/27/09 - fm - WPS - end
+
+
 --[[
 
 =head1 LICENSE
