@@ -342,7 +342,7 @@ function JiveMain:__init()
 		10)
 
 	Framework:addListener(EVENT_IR_ALL,
-		function(event) _irHandler(event) end,
+		function(event) return _irHandler(event) end,
 		false
 	)
 
