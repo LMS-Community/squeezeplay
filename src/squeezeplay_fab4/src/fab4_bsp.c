@@ -98,7 +98,7 @@ static int handle_clearpad_events(int fd) {
 					JiveEvent event;
 
 					event.type = (JiveEventType) JIVE_EVENT_KEY_PRESS;
-					event.u.key.code = JIVE_KEY_BACK;
+					event.u.key.code = JIVE_KEY_HOME;
 					event.ticks = TIMEVAL_TO_TICKS(ev[i].time);
 					jive_queue_event(&event);
 				}
