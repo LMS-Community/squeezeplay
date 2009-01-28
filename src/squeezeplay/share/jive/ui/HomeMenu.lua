@@ -3,7 +3,7 @@ local assert, pairs, type, tostring, tonumber, setmetatable = assert, pairs, typ
 
 local oo            = require("loop.base")
 local table         = require("jive.utils.table")
-local strings       = require("jive.utils.strings")
+local string        = require("jive.utils.string")
 
 local Framework     = require("jive.ui.Framework")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
@@ -232,7 +232,7 @@ function addItemToNode(self, item, node)
 		self.customNodes[item.id] = node
 		if item.node ~= 'home' and node == 'home' then
 			local complexWeight = self:getComplexWeight(item.id, item)
-			item.weights = strings:split('%.', complexWeight)
+			item.weights = string.split('%.', complexWeight)
 		end
 	else
 		node = item.node

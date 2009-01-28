@@ -22,8 +22,7 @@ local package, pairs, error, load, loadfile, io, assert, os = package, pairs, er
 local setfenv, getfenv, require, pcall, unpack = setfenv, getfenv, require, pcall, unpack
 local tostring, tonumber, collectgarbage = tostring, tonumber, collectgarbage
 
-local string           = require("string")
-local strings          = require("jive.utils.strings")
+local string           = require("jive.utils.string")
                        
 local oo               = require("loop.simple")
 local io               = require("io")
@@ -100,7 +99,7 @@ function _mkdirRecursive(dir)
     local dir = dir:gsub("\\", "/")
    
     local newPath = ""
-    for i, element in pairs(strings:split('/', dir)) do
+    for i, element in pairs(string.split('/', dir)) do
         newPath = newPath .. element
         if i ~= 1 then --first element is (for full path): blank for unix , "<drive-letter>:" for windows
             if lfs.attributes(newPath, "mode") == nil then
