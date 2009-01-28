@@ -10,15 +10,17 @@ local Applet                 = require("jive.Applet")
 local Framework              = require("jive.ui.Framework")
 local Font                   = require("jive.ui.Font")
 local Label                  = require("jive.ui.Label")
+local Menu                   = require("jive.ui.Menu")
+local SimpleMenu             = require("jive.ui.SimpleMenu")
+local Choice                 = require("jive.ui.Choice")
 local Window                 = require("jive.ui.Window")
 local Button                 = require("jive.ui.Button")
+local RadioButton            = require("jive.ui.RadioButton")
+local RadioGroup             = require("jive.ui.RadioGroup")
 local Tile                   = require("jive.ui.Tile")
 
 local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 local log                    = require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
-
-local BIG_FONT = Font:load("fonts/FreeSans.ttf", 24)
-local TEXT_COLOR = { 0xE7, 0xE7, 0xE7 }
 
 local SYSPATH = "/sys/bus/i2c/devices/0-0039/"
 
@@ -26,39 +28,40 @@ local tChannel0 = {
 	min = -1,
 	max = -1,
 	cur = -1,
-	label = nil,
+	item = nil,
 	valid = false,
+	text = "Channel 0: ",
 }
 
 local tChannel1 = {
 	min = -1,
 	max = -1,
 	cur = -1,
-	label = nil,
+	item = nil,
 	valid = false,
+	text = "Channel 1: ",
 }
 local tLux = {
 	min = -1,
 	max = -1,
 	cur = -1,
-	label = nil,
+	item = nil,
 	valid = false,
+	text = "Lux: ",
 }
+
+local mainMenu = nil
 
 -- Integration Stuff
-
-local integrationButton = nil
-local integrationLabel = nil
-
 local IntegrationTimes = {
-	"Integ: 13.7ms", "Integ: 100ms", "Integ: 402ms"
+	"13.7ms", "100ms", "402ms"
 }
+
+local integrationItem = nil
 local curIntegrationTime = 2
 
 -- Gain Stuff
-local gainButton = nil
-local gainLabel  = nil
-
+local gainItem  = nil
 local curGain = false
 
 module(...)
@@ -87,7 +90,8 @@ function _updateLabel(self, channel, newValue)
 		channel.cur = tonumber(newValue)
 	end
 
-	channel.label:setValue(channel.cur .. "(min:" .. channel.min .. " / max:" .. channel.max .. ")")
+	channel.item.text = channel.text .. channel.cur .. "(min:" .. channel.min .. " / max:" .. channel.max .. ")"
+	mainMenu:updatedItem(channel.item)
 end
 
 function _update(self)
@@ -114,121 +118,143 @@ function _update(self)
 	self:_updateLabel(tLux, valueLux)
 end
 
-function _changeIntegrationTime(self)
+function _changeIntegrationTime(self, newValue)
 
-	curIntegrationTime = curIntegrationTime + 1
-	if curIntegrationTime > 2 then
-		curIntegrationTime = 0
-	end
-
-	integrationLabel:setValue(IntegrationTimes[curIntegrationTime+1])
+	curIntegrationTime = newValue	
 
 	-- Send The Command
 	local f = io.open(SYSPATH .. "integration", "w")
 	f:write(tostring(curIntegrationTime))
 	f:close()
 
+	-- Update Main Menu Entry
+	if integrationItem != nil then
+		integrationItem.text = "Change Integration Time (" .. IntegrationTimes[curIntegrationTime+1] .. ")"
+	end
 end
 
-function _changeGain(self)
+function _changeGain(self, newValue)
 
 	local f = io.open(SYSPATH .. "gain", "w")
+	local text = nil
+
+	curGain = newValue;
 
 	if curGain == true then
-		curGain = false
-		f:write("0")
-
-		gainLabel:setValue("Gain: Off")
-	else
-		curGain = true
 		f:write("1")
-
-		gainLabel:setValue("Gain: On")
+		text = "Change Gain (Currently On)"
+	else
+		f:write("0")
+		text = "Change Gain (Currently Off)"
 	end
 
 	f:close()
 
+	-- Update Main Menu Entry
+	if gainItem != nil then 
+		gainItem.text = text
+	end
+end
 
+function menuSetGain(self)
+	local window = Window("window", "Set Gain...")
+	local group = RadioGroup()
+
+        local menu = SimpleMenu("menu", {          
+                {                                  
+                        text = "Gain On",
+                        icon = RadioButton("radio", group, function(event, menuItem)
+					self:_changeGain(true)              
+                                end,                                                
+                        curGain == true)
+                },                                                                  
+                {                                          
+                        text = "Gain Off",
+                        icon = RadioButton("radio", group, function(event, menuItem)
+                                        self:_changeGain(false)                      
+                                end,                                                
+                        curGain == false)
+                },                                                                  
+        }) 
+
+	window:addWidget(menu)
+        self:tieAndShowWindow(window)
+end
+
+function menuSetIntegration(self)
+	local window = Window("window", "Change Integration Time...")
+	local group = RadioGroup()
+
+        local menu = SimpleMenu("menu", {          
+                {
+                        text = "Integration Time: " .. IntegrationTimes[1],
+                        icon = RadioButton("radio", group, function(event, menuItem)
+					self:_changeIntegrationTime(0)
+                                end,                                                
+                        curIntegrationTime == 0)
+                },                                                             
+                {
+                        text = "Integration Time: " .. IntegrationTimes[2],
+                        icon = RadioButton("radio", group, function(event, menuItem)
+					self:_changeIntegrationTime(1)					          
+                                end,                                                
+                        curIntegrationTime == 1)
+                },
+		{
+                        text = "Integration Time: " .. IntegrationTimes[3],
+                        icon = RadioButton("radio", group, function(event, menuItem)
+					self:_changeIntegrationTime(2)					          
+                                end,                                                
+                        curIntegrationTime == 2)
+                },
+        }) 
+
+	window:addWidget(menu)	
+        self:tieAndShowWindow(window)
 end
 
 function openWindow(self)
-	local window = Window("ambientWindow", 'FactoryTest: Ambient Light Sensor')
+	local window = Window("window", 'FactoryTest: Ambient Light Sensor')
 
-	local imgpath = "applets/Fab4Skin/images/"
+	-- Initialize Gain and Integration Time to Default Values of this Applet
+	self:_changeGain(curGain)
+	self:_changeIntegrationTime(curIntegrationTime)
 
-        window:setSkin({
-		ambientWindow = {
-	                Channel0Text = {
-				fg = TEXT_COLOR,
-				position = LAYOUT_NONE,
-				font = BIG_FONT,
-				x = 10,
-				y = 100
-	        	},
-	                Channel1Text = {
-				fg = TEXT_COLOR,
-				position = LAYOUT_NONE,
-				font = BIG_FONT,
-				x = 10,
-				y = 130
-	        	},
-	                LuxText = {
-				fg = TEXT_COLOR,
-				position = LAYOUT_NONE,
-				font = BIG_FONT,
-				x = 10,
-				y = 160
-	        	},
-	                Channel0Value = {
-				fg = TEXT_COLOR,
-				position = LAYOUT_NONE,
-				font = BIG_FONT,
-				x = 200,
-				y = 100
-			},
-	                Channel1Value = {
-				fg = TEXT_COLOR,
-				position = LAYOUT_NONE,
-				font = BIG_FONT,
-				x = 200,
-				y = 130
-			},
-	                LuxValue = {
-				fg = TEXT_COLOR,
-				position = LAYOUT_NONE,
-				font = BIG_FONT,
-				x = 200,
-				y = 160
-			},
-		}
-        })
+	mainMenu = SimpleMenu("menu")
 
-	log:warn("WTF")
+	tChannel0.item = {
+		text = "Channel 0"
+	}
 
-	local c0text = Label("Channel0Text", "Channel0:")
-	window:addWidget(c0text)
-	
-	local c1text = Label("Channel1Text", "Channel1:")
-	window:addWidget(c1text)
+	tChannel1.item = {
+		text = "Channel 1"
+	}
 
-	local luxtext = Label("LuxText", "Lux:")
-	window:addWidget(luxtext)
+	tLux.item = {
+		text = "Lux"
+	}
 
-	tChannel0.label = Label("Channel0Value", "n/a")
-	tChannel1.label = Label("Channel1Value", "n/a")
-	tLux.label      = Label("LuxValue", "n/a")
+	gainItem = {
+		text = "Change Gain (Currently Off)",
+		callback = function(event, index) 
+			self:menuSetGain()
+			end
+	}
 
-	integrationLabel = Label('softButton1', 'Integ: 402ms')
-	integrationButton = Button(integrationLabel, function() self:_changeIntegrationTime() end )	
+	integrationItem = {
+		text = "Change Integration Time (402ms)",
+		callback = function(event, index) 
+			self:menuSetIntegration()
+			end
+	}
 
-	gainLabel = Label('softButton2', 'Gain: Off')
-	gainButton = Button(gainLabel, function() self:_changeGain() end )
+	mainMenu:addItem(tChannel0.item)
+	mainMenu:addItem(tChannel1.item)
+	mainMenu:addItem(tLux.item)
+	mainMenu:addItem(gainItem)
+	mainMenu:addItem(integrationItem)
 
-	window:addWidget(tChannel0.label)
-	window:addWidget(tChannel1.label)
-	window:addWidget(tLux.label)
-	window:addWidget(integrationButton)
-	window:addWidget(gainButton)
+	window:addWidget(mainMenu)
 
 	window:addAnimation(
 		function()
