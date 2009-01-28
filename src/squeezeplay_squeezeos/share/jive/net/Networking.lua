@@ -815,7 +815,7 @@ apply IP address and associated configuration parameters to a network interface
 function t_setStaticIP(self, ssid, ipAddress, ipSubnet, ipGateway, ipDNS)
 	assert(type(self.interface) == 'string')
 	-- Reset the network
-	local killCommand   = "kill -TERM `cat /var/run/udhcpc." .. self.interface .. "pid`"
+	local killCommand   = "kill -TERM `cat /var/run/udhcpc." .. self.interface .. ".pid`"
 	local configCommand = "/sbin/ifconfig " .. self.interface .. " 0.0.0.0"
 
 	os.execute(killCommand)

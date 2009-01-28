@@ -128,12 +128,29 @@ function step3(self)
 	return appletManager:callService(
 		"setupConnectionType", 
 		function(iface)
-			self:step4(iface)
+			self:step3a(iface)
 		end, 
 		welcomeTitleStyle
 	)
 end
 
+function step3a(self, iface)
+	log:info("step3a")
+
+	if iface:isWireless() then
+		-- wireless region
+		return appletManager:callService(
+			"setupRegionShow",
+			function(iface)
+				self:step4(iface)
+			end,
+			iface
+		)
+	else
+		return self:step4(iface)
+	end
+
+end
 
 function step4(self, iface)
 	log:info("step4")

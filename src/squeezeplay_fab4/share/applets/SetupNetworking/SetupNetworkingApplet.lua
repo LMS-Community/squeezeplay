@@ -73,9 +73,7 @@ function init(self)
 end
 
 
-function setupRegionShow(self, setupNext)
-	local wlan = self.wlanIface
-
+function setupRegionShow(self, setupNext, wlan)
 	local window = Window("regionWindow", self:string("NETWORK_REGION"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -91,10 +89,12 @@ function setupRegionShow(self, setupNext)
 			style = 'buttonitem',
 			sound = "WINDOWSHOW",
 			callback = function()
-					   if region ~= name then
-						   wlan:setRegion(name)
-					   end
-					   setupNext()
+					if region ~= name then
+						wlan:setRegion(name)
+					end
+					self:getSettings()['region'] = name
+                       			self:storeSettings()
+					setupNext(wlan)
 				   end
 		}
 
@@ -131,7 +131,11 @@ function settingsRegionShow(self)
 		menu:addItem({
 				     text = self:string("NETWORK_REGION_" .. name),
 				     icon = RadioButton("radio", group,
-							function() wlan:setRegion(name) end,
+							function() 
+								self:getSettings().region = name
+		                        			self:storeSettings()
+								wlan:setRegion(name) 
+							end,
 							region == name
 						)
 			     })
@@ -333,6 +337,18 @@ end
 
 
 function settingsNetworksShow(self)
+	local region = self:getSettings()['region']
+	log:warn('region: ', region)
+
+	if not region then
+		return self:setupRegionShow(
+				function() 
+					self:settingsNetworksShow() 
+				end, 
+				self.wlanIface
+		)
+	end
+
 	self.setupNext = nil
 
 	return setupScanShow(self,
