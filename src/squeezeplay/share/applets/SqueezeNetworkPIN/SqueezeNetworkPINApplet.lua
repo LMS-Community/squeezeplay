@@ -152,13 +152,7 @@ function displayNotLinked(self)
 	window:addWidget(textarea)
 	window:addWidget(menu)
 
-	window:addListener(EVENT_KEY_PRESS,
-		function(event)
-			window:hide()
-
-			return EVENT_CONSUME
-		end
-	)
+	obj:hideOnAllButtonInput()
 
 	self:tieAndShowWindow(window)
 	return window

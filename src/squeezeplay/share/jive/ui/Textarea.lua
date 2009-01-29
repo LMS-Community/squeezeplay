@@ -61,6 +61,7 @@ local EVENT_MOUSE_DRAG	= jive.ui.EVENT_MOUSE_DRAG
 
 local EVENT_CONSUME	= jive.ui.EVENT_CONSUME
 local EVENT_UNUSED	= jive.ui.EVENT_UNUSED
+local ACTION    	= jive.ui.ACTION
 
 local KEY_FWD		= jive.ui.KEY_FWD
 local KEY_REW		= jive.ui.KEY_REW
@@ -102,7 +103,11 @@ function __init(self, style, text)
 	obj.visibleLines = 0
 	obj.text = text
 
-	obj:addListener(EVENT_SCROLL | EVENT_KEY_PRESS | EVENT_MOUSE_DRAG,
+	obj:addActionListener("page_up", obj, _pageUpAction)
+	obj:addActionListener("page_down", obj, _pageDownAction)
+	--up/down coming in as scroll events
+
+	obj:addListener(EVENT_SCROLL | EVENT_MOUSE_DRAG,
 			 function (event)
 				return obj:_eventHandler(event)
 			 end)
@@ -151,6 +156,16 @@ function isScrollable(self)
 end
 
 
+function _pageUpAction(self)
+	self:scrollBy( -(self.visibleLines - 1) )
+end
+
+
+function _pageDownAction(self)
+	self:scrollBy( self.visibleLines - 1 )
+end
+
+
 --[[
 
 =head2 jive.ui.Textarea:scrollBy(scroll)
@@ -190,32 +205,6 @@ function _eventHandler(self, event)
 	elseif type == EVENT_MOUSE_DRAG then
 
 		return self.scrollbar:_event(event)
-		
-	elseif type == EVENT_KEY_PRESS then
-		local keycode = event:getKeycode()
-
-		if keycode == KEY_UP then
-			self:scrollBy( -(self.visibleLines - 1) )
-			return EVENT_CONSUME
-
-		elseif keycode == KEY_DOWN then
-			self:scrollBy( self.visibleLines - 1 )
-			return EVENT_CONSUME
-			
-		elseif keycode == KEY_PAGE_UP then 
-			self:scrollBy( -(self.visibleLines - 1) )
-			return EVENT_CONSUME
-
-		elseif keycode == KEY_PAGE_DOWN then
-			self:scrollBy( self.visibleLines - 1 )
-			return EVENT_CONSUME
-		
-		elseif keycode == KEY_BACK or
-			keycode == KEY_LEFT then
-			self:playSound("WINDOWHIDE")
-			self:hide()
-			return EVENT_CONSUME
-		end
 
 	end
 

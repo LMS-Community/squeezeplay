@@ -16,6 +16,7 @@ charActionMappings.press = {
 	["'"]  = "go_rhapsody",
 	[","]  = "shuffle_toggle",
 	["."]  = "repeat_toggle",
+	["|"]  = "sleep",
 	["Q"]  = "power",
 
 --END temp shortcuts to test action framework
@@ -23,32 +24,78 @@ charActionMappings.press = {
 	["/"]   = "go_search",
 	["h"]   = "go_home",
 	["J"]   = "go_home",
+	["D"]   = "disconnect_player",
 	["x"]   = "play",
 	["p"]   = "play",
 	["P"]   = "create_mix",
 	[" "]   = "pause",
 	["c"]   = "pause",
 	["C"]   = "stop",
-	["a"]   = "addEnd",
+	["a"]   = "add",
 	["A"]   = "addNext",
 	["\b"]  = "back", -- BACKSPACE
 	["\27"] = "back", -- ESC
 	["j"]   = "back",
 	["l"]   = "go",
 	["S"]   = "take_screenshot",
-	
+	["z"]  = "jump_rew",
+	["<"]  = "jump_rew",
+	["Z"]  = "scanner_rew",
+	["b"]  = "jump_fwd",
+	[">"]  = "jump_fwd",
+	["B"]  = "scanner_fwd",
+	["+"]  = "volume_up",
+	["="]  = "volume_up",
+	["-"]  = "volume_down",
+	["0"]  = "play_favorite_0",
+	["1"]  = "play_favorite_1",
+	["2"]  = "play_favorite_2",
+	["3"]  = "play_favorite_3",
+	["4"]  = "play_favorite_4",
+	["5"]  = "play_favorite_5",
+	["6"]  = "play_favorite_6",
+	["7"]  = "play_favorite_7",
+	["8"]  = "play_favorite_8",
+	["9"]  = "play_favorite_9",
+
 }
 
 
 keyActionMappings = {}
 keyActionMappings.press = {
-	[KEY_HOME] = "go_home"
+	[KEY_HOME] = "go_home",
+	[KEY_BACK] = "back",
+	[KEY_LEFT] = "back",
+	[KEY_GO] = "go",
+	[KEY_RIGHT] = "go",
+	[KEY_PAUSE] = "pause",
+	[KEY_PAGE_UP] = "page_up",
+	[KEY_PAGE_DOWN] = "page_down",
+	[KEY_FWD] = "jump_fwd",
+	[KEY_REW] = "jump_rew",
+	[KEY_VOLUME_UP] = "volume_up",
+	[KEY_VOLUME_DOWN] = "volume_down",
 }
+
+--Hmm, this won't work yet since we still look for KEY_PRESS in a lot of places, and would get double responses
+--keyActionMappings = {}
+--keyActionMappings.down = {
+--	[KEY_LEFT] = "back",
+--	[KEY_BACK] = "back",
+--}
 
 
 keyActionMappings.hold = {
+	[KEY_HOME] = "shutdown",
 	[KEY_BACK] = "disconnect_player",
-	[KEY_LEFT] = "go_home",
-	[KEY_REW | KEY_PAUSE] = "take_screenshot"  -- a stab at how to handle multi-press
+	[KEY_LEFT] = "disconnect_player",
+	[KEY_GO] = "go_hold", --has no default assignment yet
+	[KEY_RIGHT] = "go",
+	[KEY_PAUSE] = "pause",
+	[KEY_FWD] = "scanner_fwd",
+	[KEY_REW] = "scanner_rew",
+	[KEY_VOLUME_UP] = "volume_up",
+	[KEY_VOLUME_DOWN] = "volume_down",
+	[KEY_REW | KEY_PAUSE] = "take_screenshot",  -- a stab at how to handle multi-press
 }
 

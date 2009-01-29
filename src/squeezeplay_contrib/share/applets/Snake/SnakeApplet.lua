@@ -41,6 +41,7 @@ local KEY_LEFT         = jive.ui.KEY_LEFT
 local KEY_RIGHT        = jive.ui.KEY_RIGHT
 local KEY_UP           = jive.ui.KEY_UP
 local KEY_DOWN         = jive.ui.KEY_DOWN
+local ACTION           = jive.ui.ACTION
 
 local FRAMERATE        = 5
 local BLOCKSIZE        = 8
@@ -168,7 +169,7 @@ end
 function gameOver()
 	gameover = true
 	local popup = Popup("popup", "\n \nGame over!\n \n \nYour score: " .. score)
-	popup:addListener(EVENT_KEY_PRESS,
+	popup:addListener(ACTION,
 		function(evt)
 			window:hideToTop(Window.transitionPushLeft)
 		end
@@ -283,14 +284,6 @@ function _window(self, ...)
 	srf = Surface:newRGBA(w, h)
 	srf:filledRectangle(0, 0, w, h, 0x000000FF)
 	self.bg = Icon("background", srf)
-
-	window:addListener(EVENT_KEY_PRESS, 
-		function(evt)
-			if evt:getKeycode() == KEY_BACK then
-				window:hide()
-			end
-		end
-	)
 
 	window:addListener(EVENT_KEY_DOWN, 
 		function(evt)

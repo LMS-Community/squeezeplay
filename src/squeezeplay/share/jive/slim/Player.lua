@@ -60,6 +60,7 @@ local EVENT_KEY_ALL    = jive.ui.EVENT_KEY_ALL
 local EVENT_CHAR_PRESS = jive.ui.EVENT_CHAR_PRESS
 local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
+local ACTION           = jive.ui.ACTION
 
 local jnt            = jnt
 local jiveMain       = jiveMain
@@ -873,7 +874,7 @@ function onStage(self)
 	      })
 
 	self.currentSong.window:addWidget(group)
-	self.currentSong.window:addListener(EVENT_CHAR_PRESS | EVENT_KEY_ALL | EVENT_SCROLL,
+	self.currentSong.window:addListener(ACTION | EVENT_CHAR_PRESS | EVENT_KEY_ALL | EVENT_SCROLL,
 		function(event)
 			local prev = self.currentSong.window:getLowerWindow()
 			if prev then
@@ -1163,8 +1164,19 @@ function repeatToggle(self)
 	self:button('repeat')
 end
 
+
+function sleepToggle(self)
+	self:button('sleep')
+end
+
+
 function shuffleToggle(self)
 	self:button('shuffle')
+end
+
+-- used to play favorites
+function numberHold(self, number)
+	self:button(number .. '.hold')
 end
 
 

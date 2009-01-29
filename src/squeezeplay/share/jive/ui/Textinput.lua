@@ -217,6 +217,46 @@ function _insert(self)
 end
 
 
+function _deleteAction(self)
+	if not _delete(self) then
+		self:playSound("BUMP")
+		self:getWindow():bumpRight()
+	end
+	return EVENT_CONSUME
+
+end
+
+
+function _insertAction(self)
+	if not _insert(self) then
+		self:playSound("BUMP")
+		self:getWindow():bumpRight()
+	end
+	return EVENT_CONSUME
+end
+
+function _goAction(self)
+	if _isEntered(self) then
+		local valid = false
+
+		if self.closure then
+			valid = self.closure(self, self:getValue())
+		end
+
+		if not valid then
+			self:playSound("BUMP")
+			self:getWindow():bumpRight()
+		end
+	elseif self.cursor <= #tostring(self.value) then
+		_moveCursor(self, 1)
+		self:reDraw()
+	else
+		self:playSound("BUMP")
+		self:getWindow():bumpRight()
+	end
+	return EVENT_CONSUME
+end
+
 function _eventHandler(self, event)
 	local type = event:getType()
 
@@ -233,11 +273,8 @@ function _eventHandler(self, event)
 		--assuming ascii level values for now
 		local keyboardEntry = string.char(event:getUnicode())
 		if (keyboardEntry == "\b") then --backspace
-			if not _delete(self) then
-				self:playSound("BUMP")
-				self:getWindow():bumpRight()
-			end
-			return EVENT_CONSUME	
+			return _deleteAction(self)
+
 		elseif (keyboardEntry == "\27") then --escape
 			self.cursor = 1
 			self:playSound("WINDOWHIDE")
@@ -269,64 +306,7 @@ function _eventHandler(self, event)
 	elseif type == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()
 
-		if keycode == KEY_UP then
-			_scroll(self, 1)
-			return EVENT_CONSUME
-
-		elseif keycode == KEY_DOWN then
-			_scroll(self, -1)
-			return EVENT_CONSUME
-
-		elseif keycode == KEY_PLAY then
-			if not _delete(self) then
-				self:playSound("BUMP")
-				self:getWindow():bumpRight()
-			end
-			return EVENT_CONSUME
-
-		elseif keycode == KEY_ADD then
-			if not _insert(self) then
-				self:playSound("BUMP")
-				self:getWindow():bumpRight()
-			end
-			return EVENT_CONSUME
-
-		elseif keycode == KEY_GO or
-			keycode == KEY_RIGHT then
-
-			if _isEntered(self) then
-				local valid = false
-
-				if self.closure then
-					valid = self.closure(self, self:getValue())
-				end
-
-				if not valid then
-					self:playSound("BUMP")
-					self:getWindow():bumpRight()
-				end
-			elseif self.cursor <= #tostring(self.value) then
-				_moveCursor(self, 1)
-				self:reDraw()
-			else
-				self:playSound("BUMP")
-				self:getWindow():bumpRight()
-			end
-			return EVENT_CONSUME
-
-		elseif keycode == KEY_BACK or
-			keycode == KEY_LEFT then
-
-			if self.cursor == 1 then
-				self:playSound("WINDOWHIDE")
-				self:hide()
-			else
-				_moveCursor(self, -1)
-				self:reDraw()
-			end
-			return EVENT_CONSUME
-
-		elseif keycode == KEY_REW then
+		if keycode == KEY_REW then
 			self.cursor = 1
 			self:playSound("WINDOWHIDE")
 			self:hide()
@@ -385,6 +365,10 @@ function __init(self, style, value, closure, allowedChars)
 	obj.allowedChars = allowedChars or
 		_globalStrings:str("ALLOWEDCHARS_WITHCAPS")
 	obj.scroll = ScrollAccel()
+
+	obj:addActionListener("play", obj, _deleteAction)
+	obj:addActionListener("add", obj, _insertAction)
+	obj:addActionListener("go", obj, _goAction)
 
 	obj:addListener(EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE,
 			function(event)

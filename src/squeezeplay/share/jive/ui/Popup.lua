@@ -46,6 +46,7 @@ local log             = require("jive.utils.log").logger("ui")
 
 local EVENT_ACTION    = jive.ui.EVENT_ACTION
 local EVENT_KEY_PRESS = jive.ui.EVENT_KEY_PRESS
+local ACTION          = jive.ui.ACTION
 local EVENT_CONSUME   = jive.ui.EVENT_CONSUME
 
 
@@ -66,12 +67,7 @@ function __init(self, style, title)
 	obj:setTransparent(true)
 
 	-- by default close popup on keypress
-	obj:addListener(EVENT_KEY_PRESS,
-			function(event)
-				obj:playSound("WINDOWHIDE")
-				obj:hide()
-				return EVENT_CONSUME
-			end)
+	obj:hideOnAllButtonInput()
 
 	return obj
 end

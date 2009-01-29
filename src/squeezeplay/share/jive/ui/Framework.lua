@@ -174,6 +174,7 @@ function constants(module)
 	module.EVENT_QUIT = jive.ui.EVENT_QUIT
 
 	module.EVENT_SCROLL = jive.ui.EVENT_SCROLL
+	module.ACTION = jive.ui.ACTION
 	module.EVENT_ACTION = jive.ui.EVENT_ACTION
 	module.EVENT_CHAR_PRESS = jive.ui.EVENT_CHAR_PRESS
 	module.EVENT_KEY_DOWN = jive.ui.EVENT_KEY_DOWN
@@ -216,6 +217,8 @@ function constants(module)
 	module.KEY_PAUSE = jive.ui.KEY_PAUSE
 	module.KEY_REW = jive.ui.KEY_REW
 	module.KEY_FWD = jive.ui.KEY_FWD 
+	module.KEY_PAGE_UP = jive.ui.KEY_PAGE_UP
+	module.KEY_PAGE_DOWN = jive.ui.KEY_PAGE_DOWN
 	module.KEY_VOLUME_UP = jive.ui.KEY_VOLUME_UP
 	module.KEY_VOLUME_DOWN = jive.ui.KEY_VOLUME_DOWN
 end
@@ -588,18 +591,32 @@ function newActionEvent(self, action)
 	
 end
 
+
+--[[
+
+=head2 jive.ui.Framework:pushAction(actionName)
+
+Push the action for actionName onto the event queue.
+
+=cut
+--]]
+function pushAction(self, actionName)
+	self:pushEvent(self:newActionEvent(actionName))
+end
+
+
 --[[
 
 =head2 jive.ui.Framework:registerAction(actionName)
 
 Register an action. actionName is a unique string that represents an action.
 Each action must be registered before listeners using it can be created (for typo prevention, and other future uses). 
-
+By default, a bump listener is added so that if nothing else responds, a bump will occur
 =cut
 --]]
 function registerAction(self, actionName)
 	if (self.actions.byName[actionName]) then
-		log:error("Action already registered, doing nothing: ", actionName)
+		log:info("Action already registered, doing nothing: ", actionName)
 		return
 	end
 	
@@ -609,11 +626,91 @@ function registerAction(self, actionName)
 	self.actions.byName[actionName] = actionEventDefinition
 	table.insert(self.actions.byIndex, actionEventDefinition)
 	
+	--Bump as default (in case no one is handling this action)
+	self:addActionListener(actionName, self, bump, 9999)
+	
+end
+
+
+-- transform user input events (key, etc) to a matching action name
+function getAction(self, event)
+	local eventType = event:getType()
+	local action = nil
+
+	if eventType == jive.ui.EVENT_KEY_PRESS then
+		action = self.inputToActionMap.keyActionMappings.press[event:getKeycode()]
+	elseif eventType == jive.ui.EVENT_KEY_HOLD then
+		action = self.inputToActionMap.keyActionMappings.hold[event:getKeycode()]
+	elseif eventType == jive.ui.EVENT_CHAR_PRESS then
+		action = self.inputToActionMap.charActionMappings.press[string.char(event:getUnicode())]
+	end
+
+	return action
+
+end
+
+
+function setInputToActionMap(self, map)
+	self.inputToActionMap = map
+end
+
+
+function registerDefaultActions(self)
+	for key, action in pairs(self.inputToActionMap.keyActionMappings.press) do
+		self:registerAction(action)
+	end
+	for key, action in pairs(self.inputToActionMap.keyActionMappings.hold) do
+		self:registerAction(action)
+	end
+	for key, action in pairs(self.inputToActionMap.charActionMappings.press) do
+		self:registerAction(action)
+	end
+
+end
+
+
+function bump(self)
+	self:playSound("BUMP")
+	self.windowStack[1]:bumpLeft()
+end
+
+
+-- If an action is associated with the inputEvent, queue the corresponding action event and return EVENT_CONSUME, otherwise EVENT_UNUSED nil if no corresponding action was found
+function convertInputToAction(self, inputEvent)
+
+	local action = self:getAction(inputEvent)
+	if not action then
+		return EVENT_UNUSED
+	end
+
+	local actionEvent = self:newActionEvent(action)
+	if not actionEvent then
+		log:error("Odd, newActionEvent returned nil, but should always return a result when match was found for action: ", action)
+		return EVENT_UNUSED
+	end
+
+	--getmetatable(actionEvent).sourceEvent = inputEvent
+
+	log:debug("Pushing action event (", action, "), triggered from source event:", inputEvent:tostring())
+	self:pushEvent(actionEvent)
+
+	return EVENT_CONSUME
+
+end
+
+--if the passed in actionName is not a registered action, an error is logged and false is returned. 
+function assertActionName(self, actionName)
+	if not self:_getActionEventIndexByName(actionName) then
+		log:error("action name not registered:(" , actionName, "). Available actions: ", self:dumpActions() )
+		return false
+	end
+
+	return true
 end
 
 
 --example: addActionListener("disconnect_player", self, disconnectPlayerAction)
-function addActionListener(self, action, obj, listener)
+function addActionListener(self, action, obj, listener, priority)
 	_assert(type(listener) == "function")
 
 	local callerInfo = "N/A"
@@ -621,10 +718,10 @@ function addActionListener(self, action, obj, listener)
 		callerInfo = self:callerToString()
 	end
 
-	if not self:_getActionEventIndexByName(action) then
-		log:error("action name not registered:(" , action, "). Available actions: ", self:dumpActions() )
-		return 
+	if not self:assertActionName(action) then
+		return
 	end
+
 	log:debug("Creating action listener for action: (" , action, ") from source: ", callerInfo)
 	
 	return self:addListener(ACTION,
@@ -642,9 +739,25 @@ function addActionListener(self, action, obj, listener)
 				log:debug("Action (" , action, ") consumed by source: ", callerInfo)
 			end
 			return eventResult
-		end
+		end,
+		priority
 	)
 	
+end
+
+
+function isAnActionTriggeringKeyEvent(self, event, keyEventMask)
+	if (event:getType() & keyEventMask > 0) then
+		local keycode = event:getKeycode()
+		if keycode == KEY_UP or keycode == KEY_DOWN or keycode == KEY_FWD or keycode == KEY_REW 
+				or keycode == KEY_VOLUME_DOWN or keycode == KEY_VOLUME_UP then
+			return false
+		else
+			return true
+		end
+	end
+	
+	return false
 end
 
 --[[

@@ -22,6 +22,7 @@ local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
 local EVENT_KEY_DOWN   = jive.ui.EVENT_KEY_DOWN
 local EVENT_KEY_UP     = jive.ui.EVENT_KEY_UP
+local ACTION           = jive.ui.ACTION
 
 local KEY_GO		= jive.ui.KEY_GO
 local KEY_UP		= jive.ui.KEY_UP
@@ -528,7 +529,7 @@ end
 
 function Gameplay:gameOver()
 	local popup = Popup("popup", "Congratulations!\nYou lost!\n---\nFinal Score: " .. self.score.score)
-	popup:addListener(EVENT_KEY_PRESS,
+	popup:addListener(ACTION,
 		function(evt)
 			self.window:hideToTop(Window.transitionPushLeft)
 		end

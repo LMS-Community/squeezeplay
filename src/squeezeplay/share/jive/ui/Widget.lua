@@ -412,7 +412,7 @@ end
 
 function addActionListener(self, action, obj, listener)
 	_assert(type(listener) == "function")
-	
+
 	local callerInfo = "N/A"
 	if log:isDebug() then
 		callerInfo = Framework:callerToString()

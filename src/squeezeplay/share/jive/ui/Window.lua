@@ -58,6 +58,12 @@ local max                     = math.max
 local min                     = math.min
 
 local EVENT_ALL               = jive.ui.EVENT_ALL
+local EVENT_ALL_INPUT         = jive.ui.EVENT_ALL_INPUT
+local ACTION                  = jive.ui.ACTION
+local EVENT_KEY_ALL           = jive.ui.EVENT_KEY_ALL
+local EVENT_MOUSE_HOLD        = jive.ui.EVENT_MOUSE_HOLD
+local EVENT_MOUSE_PRESS       = jive.ui.EVENT_MOUSE_PRESS
+local EVENT_MOUSE_DOWN        = jive.ui.EVENT_MOUSE_DOWN
 local EVENT_ACTION            = jive.ui.EVENT_ACTION
 local EVENT_SCROLL            = jive.ui.EVENT_SCROLL
 local EVENT_KEY_PRESS         = jive.ui.EVENT_KEY_PRESS
@@ -109,6 +115,14 @@ function _bump(self)
 	return EVENT_CONSUME
 end
 
+function upAction(self)
+	self:playSound("WINDOWHIDE")
+	self:getWindow():hide()
+
+	return EVENT_CONSUME
+end
+
+
 --[[
 
 =head2 jive.ui.Window(style, title, titleStyle)
@@ -143,11 +157,8 @@ function __init(self, style, title, titleStyle)
 				back = Button(
 					Icon("back"), 
 					function() 
-						--todo: might like to do the following, but would break back-compatibility
-						--Framework:dispatchEvent(obj, Framework:newActionEvent("back")) 
-						
-						obj:dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) 
-						return EVENT_CONSUME 
+						Framework:pushAction("back")
+						return EVENT_CONSUME
 					end
 				), 
 				nowplaying = Button(
@@ -155,9 +166,7 @@ function __init(self, style, title, titleStyle)
 					function() 
 						-- check if player is connected
 						if appletManager then
-							--todo use this once we resolve bump handling
-							--Framework:dispatchEvent(obj, Framework:newActionEvent("go_now_playing"))
-							obj:dispatchNewEvent(EVENT_KEY_PRESS, self:_goNowPlaying(obj))
+							Framework:pushAction("go_now_playing")
 						end
 						return EVENT_CONSUME 
 					end
@@ -166,24 +175,117 @@ function __init(self, style, title, titleStyle)
 		)
 	end
 	
-	obj:addActionListener("go", obj, _bump)
-	obj:addActionListener("back", obj, _bump)
-	-- by default bump the window on GO or BACK actions, add this as a
-	-- listener to allow other handlers to act on these events
-	-- first
-	obj:addListener(EVENT_KEY_PRESS,
-		function(event)
-			local keycode = event:getKeycode()
-			if keycode  == KEY_GO or
-				keycode == KEY_RIGHT then
-				obj:playSound("BUMP")
-				obj:getWindow():bumpRight()
-				return EVENT_CONSUME
-			end
-		end)
+	-- by default, hide the window on BACK actions, add this as a
+	-- listener to allow other handlers to act on these events first
+	self.defaultActionListenerHandles = {}
+	table.insert(self.defaultActionListenerHandles, obj:addActionListener("back", obj, upAction))
 
 
 	return obj
+end
+
+-- If an action is associated with the inputEvent, create and push the corresponding action onto the queue.  returns false if no matching action was found
+local function convertToActionAndPush(self, inputEvent)
+	local actionEvent = Framework:convertInputToAction(inputEvent)
+	if not actionEvent then
+		return false
+	end
+
+	log:debug("Pushing action event (", actionEvent:getAction(), "), triggered from source event:", inputEvent:tostring())
+	_event(self, actionEvent)
+	return true
+end
+
+
+local function ignoreAllInputListener(self, event, excludedActions)
+	log:debug("ignoreAllInputListener: ", event:tostring())
+
+	if event:getType() == ACTION then
+		local action = event:getAction()
+		if excludedActions then
+			for i, excludedAction in ipairs(excludedActions) do
+				Framework:assertActionName(excludedAction)
+				
+				if action == excludedAction then
+					log:debug("action excluded from ignoreAllInputListener: ", action)
+
+					return EVENT_UNUSED
+				end
+			end
+		end
+
+		log:debug("Discarding unconsumed action")
+		return EVENT_CONSUME
+	end
+
+	--else try to convert to action to allow this window the chance to handle actions
+	Framework:convertInputToAction(event)
+
+	return EVENT_CONSUME
+
+end
+
+function ignoreAllInputExcept(self, excludedActions)
+	if not self.ignoreAllInputHandle then
+		--also need to remove any hideOnAllButtonInputHandle, since in the ignoreAllInput case
+		-- we want excluded actions to be seen by global listeners. Leaving hideOnAllButtonInputHandle in place would
+		-- prevent the event from getting to global listeners
+		log:error(self.hideOnAllButtonInputHandle)
+
+		if self.hideOnAllButtonInputHandle then
+			self:removeListener(self.hideOnAllButtonInputHandle)
+			self.hideOnAllButtonInputHandle = false
+		end
+
+	
+		self.ignoreAllInputHandle = self:addListener(EVENT_ALL_INPUT,
+								function(event)
+									return ignoreAllInputListener(self, event, excludedActions)
+								end)
+	end
+
+end
+
+local function hideOnAllButtonInputListener(self, event)
+
+	if event:getType() == ACTION then
+		log:error("Hiding on unconsumed action")
+
+		self:playSound("WINDOWHIDE")
+		self:hide()
+
+		return EVENT_CONSUME
+	end
+
+	--else convert to action to allow this window the chance to handle actions
+	if Framework:convertInputToAction(event) == EVENT_UNUSED then
+		--no action was found, so no need to further process it, just hide
+		self:playSound("WINDOWHIDE")
+		self:hide()
+	end
+
+	return EVENT_CONSUME
+
+end
+
+function hideOnAllButtonInput(self)
+	if not self.hideOnAllButtonInputHandle then
+		self.hideOnAllButtonInputHandle = self:addListener(ACTION | EVENT_KEY_ALL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD,
+								function(event)
+									return hideOnAllButtonInputListener(self, event)
+								end)
+
+	end
+
+end
+
+function removeDefaultActionListeners(self)
+	if self.defaultActionListenerHandles then
+		for i, handle in ipairs(self.defaultActionListenerHandles) do
+				self:removeListener(handle)		
+		end
+	end
+	self.defaultActionListenerHandles = {}
 end
 
 function _goNowPlaying(self, obj)
@@ -372,7 +474,7 @@ function showBriefly(self, msecs, callback,
 
 	if self.brieflyHandler == nil then
 		self.brieflyHandler =
-			self:addListener(EVENT_CHAR_PRESS | EVENT_KEY_PRESS | EVENT_SCROLL,
+			self:addListener(ACTION | EVENT_CHAR_PRESS | EVENT_KEY_PRESS | EVENT_SCROLL,
 					 function(event)
 						 self:hide(popTransition, "NONE")
 						 return EVENT_CONSUME
@@ -590,7 +692,12 @@ function setTitle(self, title)
 	if self.title then
 		self.title:setWidgetValue("text", title)
 	else
-		self.title = Group("title", { text = Label("text", title), icon = Icon("icon"), back = Button(Icon("back"), function() self:dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) return EVENT_CONSUME end) })
+		self.title = Group("title",
+					{ text = Label("text", title),
+					icon = Icon("icon"),
+					back = Button(Icon("back"), 
+						Framework:pushAction("back"))
+					})
 		self:_addWidget(self.title)
 		self.title:_event(Event:new(EVENT_FOCUS_GAINED))
 	end

@@ -55,6 +55,7 @@ local math                 = require("math")
 
 
 local EVENT_ALL            = jive.ui.EVENT_ALL
+local ACTION               = jive.ui.ACTION
 local EVENT_ACTION         = jive.ui.EVENT_ACTION
 local EVENT_SCROLL         = jive.ui.EVENT_SCROLL
 local EVENT_KEY_PRESS      = jive.ui.EVENT_KEY_PRESS
@@ -140,12 +141,11 @@ local function _eventHandler(self, event)
 			return EVENT_CONSUME
 		end
 
-	elseif evtype == EVENT_KEY_PRESS then
-		local keycode = event:getKeycode()
+	elseif evtype == ACTION then
+		local action = event:getAction()
 
 		if self.locked ~= nil then
-			if keycode == KEY_BACK or
-				keycode == KEY_LEFT then
+			if action == "back" then
 
 				if type(self.locked) == "function" then
 					self.locked(self)
@@ -155,32 +155,22 @@ local function _eventHandler(self, event)
 				return EVENT_CONSUME
 			end
 		else
-			-- first send keys to selected widgets
+			-- first send actions to selected widgets
 			local r = _itemListener(self, _selectedItem(self), event)
 			if r ~= EVENT_UNUSED then
 				return r
 			end
 
 			-- otherwise try default behaviour
-			if keycode == KEY_UP then
-				self:scrollBy( -1 )
+			if action == "page_up" then
+				self:scrollBy( -( self.numWidgets - 1 ), true);
 				return EVENT_CONSUME
 
-			elseif keycode == KEY_DOWN then
-				self:scrollBy( 1 )
+			elseif action == "page_down" then
+				self:scrollBy( self.numWidgets - 1 , true);
 				return EVENT_CONSUME
 
-		    elseif keycode == KEY_PAGE_UP then 
-                self:scrollBy( -( self.numWidgets - 1 ), true);
-				return EVENT_CONSUME
-
-            elseif keycode == KEY_PAGE_DOWN then 
-                self:scrollBy( self.numWidgets - 1 , true);
-				return EVENT_CONSUME
-
-			elseif keycode == KEY_GO or 
-				keycode == KEY_PLAY or
-				 keycode == KEY_RIGHT then
+			elseif action == "go" or action == "play" then
 
 				r = self:dispatchNewEvent(EVENT_ACTION)
 
@@ -190,8 +180,7 @@ local function _eventHandler(self, event)
 				end
 				return r
 
-			elseif keycode == KEY_BACK or
-				keycode == KEY_LEFT then
+			elseif action == "back" then
 				if self.closeable then
 					self:playSound("WINDOWHIDE")
 					self:hide()
@@ -200,6 +189,17 @@ local function _eventHandler(self, event)
 					self:playSound("BUMP")
 					self:getWindow():bumpLeft()
 				end
+			end
+		end
+
+	elseif evtype == EVENT_KEY_PRESS then
+		local keycode = event:getKeycode()
+
+		if self.locked == nil then
+			-- send keys to selected widgets, otherwise ignore, will return as actions
+			local r = _itemListener(self, _selectedItem(self), event)
+			if r ~= EVENT_UNUSED then
+				return r
 			end
 		end
 

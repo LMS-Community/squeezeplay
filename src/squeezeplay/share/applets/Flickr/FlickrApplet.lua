@@ -94,9 +94,10 @@ function popupMessage(self, title, msg)
 	local text = Textarea("textarea", msg)
 	popup:addWidget(text)
 
-	popup:addListener(EVENT_KEY_PRESS | EVENT_SCROLL,
+	popup:addListener(EVENT_SCROLL,
 			  function()
-				  popup:hide()
+				popup:playSound("WINDOWHIDE")
+				popup:hide()
 			  end)
 
 	self:tieAndShowWindow(popup)
@@ -617,6 +618,11 @@ function _loadedComments(self, comments)
 	self.commentText:setValue(table.concat(text, "\n"))
 end
 
+function _showDetailsAction(self)
+	self.window:playSound("WINDOWSHOW")
+	self:_detailsShow()
+	return EVENT_CONSUME
+end
 
 function _loadedPhoto(self, lastWindow, photo, srf)
 	log:debug("photo loaded")
@@ -633,16 +639,7 @@ function _loadedPhoto(self, lastWindow, photo, srf)
 
 	self.window = self:_window(icon)
 
-	self.window:addListener(EVENT_KEY_PRESS,
-				function(event)
-					if event:getKeycode() ~= KEY_GO then
-						return EVENT_UNUSED
-					end
-
-					self.window:playSound("WINDOWSHOW")
-					self:_detailsShow()
-					return EVENT_CONSUME
-				end)
+	self.window:addActionListener("go", self, _showDetailsAction)
 
 	local transition
 	local trans = self:getSettings()["flickr.transition"]

@@ -813,7 +813,7 @@ function connect(self, keepConfig)
 				   return EVENT_UNUSED
 			   end)
 
-	window:addListener(EVENT_KEY_PRESS,
+	window:addListener(ACTION | EVENT_KEY_PRESS,
 			   function(event)
 				   return EVENT_CONSUME
 			   end)
@@ -927,7 +927,7 @@ function connectOK(self)
 				_hideToTop(self)
 			end)
 
-	window:addListener(EVENT_KEY_PRESS,
+	window:addListener(ACTION| EVENT_KEY_PRESS,
 			   function(event)
 				   _hideToTop(self)
 				   return EVENT_CONSUME

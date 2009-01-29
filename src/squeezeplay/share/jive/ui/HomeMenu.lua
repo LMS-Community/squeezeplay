@@ -33,6 +33,14 @@ local function _uses(parent, value)
 	return item
 end
 
+local function bumpAction(self)
+	self.window:playSound("BUMP")
+	self.window:bumpLeft()
+
+	return EVENT_CONSUME
+
+end
+
 -- create a new menu
 function __init(self, name, style, titleStyle)
 	local obj = oo.rawnew(self, {
@@ -55,6 +63,9 @@ function __init(self, name, style, titleStyle)
 		menu = menu, 
 		items = {}
 	}
+	
+	--Avoid inadvertantly quitting the app.
+	obj.window:addActionListener("back", obj, bumpAction)
 
 	return obj
 end

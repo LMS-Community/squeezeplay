@@ -21,6 +21,7 @@ local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("player")
 
 
+local ACTION                 = jive.ui.ACTION
 local EVENT_KEY_ALL          = jive.ui.EVENT_KEY_ALL
 local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
 local EVENT_KEY_HOLD         = jive.ui.EVENT_KEY_HOLD
@@ -109,7 +110,7 @@ local function _openPopup(self)
 					      remain = Label("text", "")
 				      })
 	popup:addWidget(self.scannerGroup)
-	popup:addListener(EVENT_KEY_ALL | EVENT_SCROLL,
+	popup:addListener(ACTION | EVENT_KEY_ALL | EVENT_SCROLL,
 			  function(event)
 				  return self:event(event)
 			  end)
@@ -241,20 +242,59 @@ function event(self, event)
 		end
 		_updateSelectedTime(self)
 
-	elseif type == EVENT_KEY_PRESS then
-		local keycode = event:getKeycode()
+	elseif type == ACTION then
+		local action = event:getAction()
 
 		-- GO closes the popup & executes any pending change
-		if keycode & KEY_GO ~= 0 then
+		if action == "go" then
 			if self.autoInvokeTimer:isRunning() then _gotoTime(self) end
 			self.popup:showBriefly(0)
 			return EVENT_CONSUME
 		-- BACK closes the popup & cancels any pending change
-		elseif keycode & KEY_BACK ~= 0 then
+		elseif action == "back" then
 			self.autoInvokeTimer:stop()
 			self.popup:showBriefly(0)
                         return EVENT_CONSUME
 		end
+		if action == "scanner_fwd" then
+			self.delta = 1
+
+			self.holdTimer:restart()
+			if onscreen then
+				_updateSelectedTime(self)
+			end
+
+			self.delta = 0
+			return EVENT_CONSUME
+		end
+		if action == "scanner_rew" then
+			self.delta = -1
+
+			self.holdTimer:restart()
+			if onscreen then
+				_updateSelectedTime(self)
+			end
+
+			self.delta = 0
+			return EVENT_CONSUME
+		end
+
+		-- any other actions forward to the lower window
+		local lower = self.popup:getLowerWindow()
+		if lower then
+			Framework:dispatchEvent(lower, event)
+		end
+
+		self.popup:showBriefly(0)
+		return EVENT_CONSUME
+
+	elseif type == EVENT_KEY_PRESS then
+		if Framework:isAnActionTriggeringKeyEvent(event, EVENT_KEY_ALL) then
+			--will come back as an ACTION, let's respond to it then to give other action listeners a chance
+			return 	EVENT_UNUSED
+		end
+
+		local keycode = event:getKeycode()
 
 		-- any other keys forward to the lower window
 		if keycode & (KEY_FWD|KEY_REW) == 0 then

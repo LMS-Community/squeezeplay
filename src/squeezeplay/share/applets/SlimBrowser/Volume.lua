@@ -25,6 +25,7 @@ local EVENT_KEY_DOWN         = jive.ui.EVENT_KEY_DOWN
 local EVENT_KEY_UP           = jive.ui.EVENT_KEY_UP
 local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
 local EVENT_SCROLL           = jive.ui.EVENT_SCROLL
+local ACTION                 = jive.ui.ACTION
 
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
@@ -79,7 +80,7 @@ local function _openPopup(self)
 				      Icon("volumeMax")
 			      }))
 
-	popup:addListener(EVENT_KEY_ALL | EVENT_SCROLL,
+	popup:addListener(ACTION | EVENT_KEY_ALL | EVENT_SCROLL,
 			  function(event)
 				  return self:event(event)
 			  end)
@@ -190,14 +191,39 @@ function event(self, event)
 		end
 		_updateVolume(self)
 
-	elseif type == EVENT_KEY_PRESS then
-		local keycode = event:getKeycode()
+	elseif type == ACTION then
+		local action = event:getAction()
+		if action == "volume_up" then
+			self.delta = 1
+			_updateVolume(self)
+			self.delta = 0
+			return EVENT_CONSUME
+		end
+		if action == "volume_down" then
+			self.delta = -1
+			_updateVolume(self)
+			self.delta = 0
+			return EVENT_CONSUME
+		end
 
 		-- GO closes the volume popup
-		if keycode & KEY_GO ~= 0 then
+		if action == "go" then
 			self.popup:showBriefly(0)
 			return EVENT_CONSUME
 		end
+
+		-- any other actions forward to the lower window
+		local lower = self.popup:getLowerWindow()
+		if lower then
+			Framework:dispatchEvent(lower, event)
+		end
+
+		self.popup:showBriefly(0)
+		return EVENT_CONSUME
+
+	elseif type == EVENT_KEY_PRESS then
+		local keycode = event:getKeycode()
+
 
 		-- volume + and - for mute
 		if keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) == (KEY_VOLUME_UP|KEY_VOLUME_DOWN) then
