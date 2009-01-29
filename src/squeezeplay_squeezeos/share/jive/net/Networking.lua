@@ -1433,8 +1433,8 @@ Removes old wps.conf file
 function startWPSApp(self, wpsmethod)
 	assert(wpsmethod, debug.traceback())
 
-	log:warn("startWPSApp")
 	self:stopWPSApp()
+	log:warn("startWPSApp")
 	os.execute("rm /usr/sbin/wps/wps.conf")
 	os.execute("cd /usr/sbin/wps; ./wpsapp " .. self.interface .. " " .. wpsmethod .. " & > /dev/null")
 end
