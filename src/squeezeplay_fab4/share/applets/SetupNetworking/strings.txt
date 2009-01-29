@@ -955,11 +955,15 @@ NETWORK_WPS_HELP_BODY
 	EN	this is just a placeholder for a bunch of text that we may put in to describe Wi-Fi Protected Setup (WPS), push button method, pin method etc.
 
 NETWORK_WPS_PROGRESS
-	EN	WPS in progress
+	EN	WPS in progress - activate your router
 	
 NETWORK_WPS_PROBLEM_HELP
 	EN	There was a problem with the WPS process. Did you start the WPS process on your router?
 	
 NETWORK_WPS_PROBLEM
 	EN	WPS Problem
+
+NETWORK_WPS_REMAINING_WALK_TIME
+	EN	Remaining walk time: %s seconds
+
 

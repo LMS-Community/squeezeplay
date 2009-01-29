@@ -57,7 +57,7 @@ local CONNECT_TIMEOUT = 30
 local wirelessTitleStyle = 'setuptitle'
 
 -- 01/27/09 - fm - WPS - begin
-local WPS_WALK_TIMEOUT = 130		-- WPS walk timeout
+local WPS_WALK_TIMEOUT = 120		-- WPS walk timeout
 -- 01/27/09 - fm - WPS - end
 
 
@@ -1673,16 +1673,32 @@ function processWPS(self, iface, ssid, wpsmethod)
 
 	-- Progress window
 	local window = Popup("popupIcon")
+	window:setAllowScreensaver(false)
 
-	local icon  = Icon("iconConnecting")
-	icon:addTimer(1000,
-		function()
+	window:addWidget(Icon("iconConnecting"))
+	window:addWidget(Label("text", self:string("NETWORK_WPS_PROGRESS")))
+
+	local status = Label("text2", self:string("NETWORK_WPS_REMAINING_WALK_TIME", tostring(WPS_WALK_TIMEOUT)))
+	window:addWidget(status)
+
+	window:addTimer(1000, function()
 			self:_timerWPS(iface, ssid)
-		end)
-	window:addWidget(icon)
 
-	local description = "Getting data"
-	window:addWidget(Label("text", self:string("NETWORK_WPS_PROGRESS", description)))
+			local remaining_walk_time = WPS_WALK_TIMEOUT - self.processWPSTimeout
+			status:setValue(self:string("NETWORK_WPS_REMAINING_WALK_TIME", tostring(remaining_walk_time)))
+		end)
+
+	window:addListener(EVENT_KEY_PRESS,
+		function(event)
+			local keycode = event:getKeycode()
+			if keycode == KEY_BACK then
+				iface:stopWPSApp()
+				iface:startWPASupplicant()
+			else
+				return EVENT_CONSUME
+			end
+			return EVENT_UNUSED
+		end)
 
 	self:tieAndShowWindow(window)
 	return window
