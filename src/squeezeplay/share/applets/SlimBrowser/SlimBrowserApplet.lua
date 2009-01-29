@@ -1767,9 +1767,13 @@ local _keycodeActionName = {
 local _actionToActionName = {
 	["go_home"] = 'home',
 	["pause"]   = 'pause', 
+	["stop"]   = 'pause-hold',
 	["play"]    = 'play',
+	["custom_mix"]    = 'play-hold',
 	["add"]     = 'add',
+	["add_next"]     = 'add-hold',
 	["go"]      = 'go',
+	["go_hold"]      = 'go-hold',
 
 }
 
