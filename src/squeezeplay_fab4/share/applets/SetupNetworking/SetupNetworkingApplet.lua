@@ -457,13 +457,6 @@ function _scanComplete(self, iface)
 			end
 
 			local item = self.scanResults[ssid].item
-
--- 01/27/09 - fm - WPS - begin
--- TODO: Need nice icons here for WEP, WPA/WPA2 and WPS
-			item.text = iface:isWireless() and ssid or tostring(self:string("NETWORK_ETHERNET"))
-			item.text = item.text .. " " .. entry.flags
--- 01/27/09 - fm - WPS - end
-
 			item.icon:setStyle(itemStyle)
 
 			if self.scanMenu then
