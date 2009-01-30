@@ -673,11 +673,9 @@ function t_addNetwork(self, ssid, option)
 		request = 'SET_NETWORK ' .. id .. ' proto WPA'
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
-		-- Setting the PSK can timeout
-		pcall(function()
-			      request = 'SET_NETWORK ' .. id .. ' psk "' .. option.psk .. '"'
-			      assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-		      end)
+		request = 'SET_NETWORK ' .. id .. ' psk "' .. option.psk .. '"'
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
 	elseif option.encryption == "wpa2" then
 		log:info("encryption WPA2")
 
