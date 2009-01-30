@@ -1433,8 +1433,8 @@ function startWPSApp(self, wpsmethod)
 
 	self:stopWPSApp()
 	log:warn("startWPSApp")
-	os.execute("rm /usr/sbin/wps/wps.conf > /dev/null &")
-	os.execute("cd /usr/sbin/wps; ./wpsapp " .. self.interface .. " " .. wpsmethod .. " > /dev/null &")
+	os.execute("rm /usr/sbin/wps/wps.conf 2>1 > /dev/null &")
+	os.execute("cd /usr/sbin/wps; ./wpsapp " .. self.interface .. " " .. wpsmethod .. " 2>1 > /dev/null &")
 end
 
 --[[
@@ -1448,7 +1448,7 @@ Stops the wpsapp (Marvell) to get passphrase etc. via WPS
 
 function stopWPSApp(self)
 	log:warn("stopWPSApp")
-	os.execute("killall wpsapp > /dev/null &")
+	os.execute("killall wpsapp 2>1 > /dev/null &")
 end
 
 --[[
@@ -1476,7 +1476,7 @@ Stops wpa supplicant
 
 function stopWPASupplicant(self)
 	log:warn("stopWPASupplicant")
-	os.execute("killall wpa_supplicant > /dev/null &")
+	os.execute("killall wpa_supplicant 2>1 > /dev/null &")
 	self:close()
 end
 
