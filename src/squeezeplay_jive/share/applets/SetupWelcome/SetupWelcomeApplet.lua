@@ -51,6 +51,10 @@ oo.class(_M, Applet)
 
 
 function notify_playerCurrent(self, player)
+	if player == nil then
+		return
+	end
+
 	log:info("setup complete")
 
 	-- setup is completed when a player is selected
