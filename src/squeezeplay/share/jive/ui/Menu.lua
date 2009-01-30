@@ -188,6 +188,7 @@ local function _eventHandler(self, event)
 				else
 					self:playSound("BUMP")
 					self:getWindow():bumpLeft()
+					return EVENT_CONSUME
 				end
 			end
 		end
