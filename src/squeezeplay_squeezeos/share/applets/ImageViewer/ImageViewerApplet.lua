@@ -99,38 +99,6 @@ function startSlideshow(self, menuItem)
 				end, 
 			true)
 	timer:start()
-	
-	self.listener = Framework:addListener(EVENT_MOUSE_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD ,
-		function(event)
-			local type = event:getType()
-			local keyPress
-			if type == EVENT_KEY_PRESS or type == EVENT_KEY_HOLD then
-				keyPress = event:getKeycode()
-				if type == EVENT_KEY_HOLD and ( keyPress == KEY_LEFT or keyPress == KEY_BACK ) then
-					self:free()
-					return EVENT_UNUSED
-				end
-			end
-
-			if type == EVENT_MOUSE_DOWN 
-				or ( keyPress and keyPress == KEY_RIGHT or keyPress == KEY_GO ) then
-					self:displaySlide()
-					return EVENT_CONSUME
-			elseif keyPress and ( keyPress == KEY_BACK or keyPress == KEY_LEFT ) then
-				-- exit applet
-				if self.previousImage == 0 then
-					self:free()
-					return EVENT_CONSUME
-				else
-					self.nextImage = self.previousImage
-					self:displaySlide()
-					return EVENT_CONSUME
-				end
-                        end
-
-			return EVENT_UNUSED
-                end
-	)
 end
 
 function free(self)
@@ -138,7 +106,6 @@ function free(self)
 	self.thisImage = 0
 	self.nextImage = 1
 	self.window = nil
-	Framework:removeListener(self.listener)
 	return true
 
 end
@@ -158,13 +125,50 @@ function displaySlide(self)
 
 	local window = Window('window')
 	window:addWidget(Icon("background", image))
+	window:addListener(EVENT_MOUSE_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_PRESS,
+		function(event)
+			local type = event:getType()
+			local keyPress
+
+			-- next slide on touch 
+			if type == EVENT_MOUSE_DOWN then
+				self:displaySlide()
+				return EVENT_CONSUME
+			end
+
+			-- IR events
+			if type == EVENT_IR_PRESS then
+				-- exit applet on left arrow or home
+				if event:isIRCode('arrow_left') or event:isIRCode('home') then
+					self:free()
+					return EVENT_CONSUME
+				-- next slide on IR right, up, or center
+				elseif event:isIRCode('arrow_right') or event:isIRCode('play') or event:isIRCode('arrow_up') then
+					self:displaySlide()
+					return EVENT_CONSUME
+				-- previous slide is down arrow
+				elseif event:isIRCode('arrow_down') then
+					if self.previousImage == 0 then
+						--bump
+						window:playSound("BUMP")
+						window:bumpRight()
+						return EVENT_CONSUME
+					else
+						self.nextImage = self.previousImage
+						self:displaySlide()
+						return EVENT_CONSUME
+					end
+        			end
+			end
+
+			return EVENT_UNUSED
+                end
+	)
 
 	-- replace the window if it's already there
 	if self.window then
 		window:showInstead(Window.transitionFadeIn)
 		self.window = window
-	        local event = Event:new(EVENT_KEY_PRESS)
-		Framework:dispatchEvent(self.window, event)
 	-- otherwise it's new
 	else
 		self.window = window
