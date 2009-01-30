@@ -192,9 +192,10 @@ end
 function _callClosureAction(self, event)
 	if self.closure then
 		self.closure(self, self.size, true)
+		return EVENT_CONSUME
 	end
 
-	return EVENT_CONSUME
+	return EVENT_UNUSED
 end
 
 
@@ -203,7 +204,7 @@ function _eventHandler(self, event)
 
 	if type == EVENT_SCROLL then
 		self:_moveSlider(event:getScroll())
-		return EVENT_CONSUME
+		return EVENT_UNUSED --current usages need this so they can handle the scroll directly
 
 	elseif type == EVENT_MOUSE_DOWN or
 		type == EVENT_MOUSE_DRAG then
@@ -217,7 +218,7 @@ function _eventHandler(self, event)
 			-- vertical
 			self:_setSlider(y / h)
 		end
-		return EVENT_CONSUME
+		return EVENT_UNUSED --current usages need this so they can handle the scroll directly
 
 	elseif type == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()

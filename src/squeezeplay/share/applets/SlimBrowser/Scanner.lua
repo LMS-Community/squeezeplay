@@ -52,11 +52,16 @@ local function _secondsToString(seconds)
 	local hrs  = math.floor(seconds / 3600 )
 	local mins = math.floor((seconds % 3600) / 60)
 	local secs = seconds % 60
+
+	if secs > 0 and secs < 1 then
+		-- the string.format fails if value > 0 and < 1
+		secs = 0
+	end
 	
 	if hrs > 0 then
 		return string.format("%d:%02d:%02d", hrs, mins, secs)
 	end
-	
+
 	return string.format("%d:%02d", mins, secs)
 end
 
@@ -128,7 +133,7 @@ local function _openPopup(self)
 	if self.player:isRemote() then
 		self.autoinvokeTime = AUTOINVOKE_INTERVAL_REMOTE
 	else
-		self.autoinvokeTime = AUTOINVOKE_INTERVAL_LOCAL	
+		self.autoinvokeTime = AUTOINVOKE_INTERVAL_LOCAL
 	end
 
 	_updateDisplay(self)
@@ -259,23 +264,19 @@ function event(self, event)
 		if action == "scanner_fwd" then
 			self.delta = 1
 
-			self.holdTimer:restart()
 			if onscreen then
 				_updateSelectedTime(self)
 			end
 
-			self.delta = 0
 			return EVENT_CONSUME
 		end
 		if action == "scanner_rew" then
 			self.delta = -1
 
-			self.holdTimer:restart()
 			if onscreen then
 				_updateSelectedTime(self)
 			end
 
-			self.delta = 0
 			return EVENT_CONSUME
 		end
 
