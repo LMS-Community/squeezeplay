@@ -184,6 +184,12 @@ local function _eventHandler(self, event)
 		self.highlightSelectedItem = true
 	end
 
+	if self.flickTimer and (evtype & (EVENT_IR_ALL | EVENT_KEY_ALL | EVENT_SCROLL | EVENT_SHOW | EVENT_HIDE)) > 0 then
+		--only all input other than mouse input, stop flick (mouse input will also stop flick but has special handling)
+		log:debug("Flick stopped due to input: ", event:tostring())
+		self:stopFlick()
+	end
+
 	if self.selectItemAfterFingerDownTimer and (evtype & EVENT_ALL_INPUT ) > 0 then
 		self.selectItemAfterFingerDownTimer:stop()
 	end
@@ -274,9 +280,9 @@ local function _eventHandler(self, event)
 			self.scrollbar:_event(event)
 
 		else
-			if self.flickInterrupted then
+			if self.flickInterruptedByFinger then
 				--flick just stopped (on the down event), so ignore this press - do the same for hold when implemented
-				self.flickInterrupted = nil
+				self.flickInterruptedByFinger = nil
 				return EVENT_CONSUME
 			end
 
@@ -312,8 +318,8 @@ local function _eventHandler(self, event)
 
 		if evtype == EVENT_MOUSE_DOWN then
 			if self.flickTimer:isRunning() then
-				self.flickInterrupted = true
-				self.flickTimer:stop()
+				self.flickInterruptedByFinger = true
+				self:stopFlick()
 				return EVENT_CONSUME
 			end
 
@@ -452,10 +458,17 @@ function isTouchMouseEvent(self, mouseEvent)
 	return fingerCount ~= nil
 end
 
+
+function stopFlick(self)
+	self.flickTimer:stop()
+	resetFlickData(self.flickData)
+end
+
+
 function updateFlickData(flickData, mouseEvent)
 	local x, y = mouseEvent:getMouse()
 	local ticks = mouseEvent:getTicks()
-	log:debug("Flick current mouse data:  y: ", y, "  ticks: ", ticks )
+	log:debug("Flick current mouse data:  y: ", y, "  ticks: ", ticks, "  #flickData.points: ", #flickData.points )
 
 	--hack until reason for 0 ticks is resolved
 	if (ticks == 0) then
@@ -508,7 +521,7 @@ end
 --if initialSpeed nil, then continue any existing flick. If non nil, start a new flick at that rate
 function flick(self, initialSpeed, direction)
 	if initialSpeed then
-		self.flickTimer:stop()
+		self:stopFlick()
 		if initialSpeed < FLICK_THRESHOLD_START_SPEED then
 			log:debug("Under threshold, not flicking: ", initialSpeed )
 
@@ -544,8 +557,8 @@ function flick(self, initialSpeed, direction)
 		self.flickCurrentSpeed = self.flickInitialSpeed + (self.flickAccelRate * elapsedTime)
 
 		if self.flickCurrentSpeed <= FLICK_STOP_SPEED then
-			log:debug("*******Stopping Flick")
-			self.flickTimer:stop()
+			log:debug("*******Stopping Flick at slow down point")
+			self:stopFlick()
 			return
 		end
 	end
@@ -563,7 +576,7 @@ function flick(self, initialSpeed, direction)
 		if self.selected == self.listSize or self.selected == 1 then
 			--stop at boundaries
 			log:debug("*******Stopping Flick at boundary")
-			self.flickTimer:stop()
+			self:stopFlick()
 		end
 
 	end
@@ -1141,11 +1154,6 @@ function _updateWidgets(self)
 --	log:warn("_update menu:\n", self:dump())
 end
 
-function free(self)
-	if self.flickTimer then
-		self.flickTimer:stop()
-	end
-end
 
 function __tostring(self)
 	return "Menu(" .. self.listSize .. ")"
