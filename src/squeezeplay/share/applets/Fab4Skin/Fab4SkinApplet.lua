@@ -485,16 +485,14 @@ function skin(self, s)
 	s.locked = {}
 	s.locked.item = _uses(s.selected.item, {
 					icon = {
-						-- FIXME: need this image
-						img = _loadImage(self, "Icons/selection_wait.png"),
+						img = _loadImage(self, "Icons/selection_waiting.png"),
 						frameRate = 5,
-						frameWidth = 10
+						frameWidth = 30
 					}
 			})
 
-	--FIXME, locked menu item for these should show something other than the same icon as selected
-	s.locked.itemplay = _uses(s.selected.itemplay)
-	s.locked.itemadd = _uses(s.selected.itemadd)
+	s.locked.itemplay = _uses(s.locked.item)
+	s.locked.itemadd = _uses(s.locked.item)
 
 	-- menu item choice
 	s.item.choice = {}
@@ -1569,7 +1567,7 @@ function skin(self, s)
 	s.albumitemwaiting = _uses(s.albumitem, {
 		icon = {
 			--FIXME, need a resized icon_connecting.png image for the correct albumitem thumb size
-			img = _loadImage(self, "icon_connecting.png"),
+			img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
 			frameRate = 4,
 			frameWidth = 120
 		}
