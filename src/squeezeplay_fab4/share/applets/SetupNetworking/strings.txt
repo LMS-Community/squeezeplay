@@ -940,11 +940,14 @@ NETWORK_WPS_METHOD
 	EN	What WPS method to use?
 
 NETWORK_WPS_METHOD_PBC
-	EN	Push Button Method
+	EN	Push Button Config
 
 NETWORK_WPS_METHOD_PIN
-	EN	PIN Method
+	EN	PIN - %s
 	
+NETWORK_WPS_METHOD_PSK
+	EN	Password
+
 NETWORK_WPS_METHOD_PASSPHRASE
 	EN	Passphrase Method
 
@@ -954,11 +957,14 @@ NETWORK_WPS_HELP
 NETWORK_WPS_HELP_BODY
 	EN	this is just a placeholder for a bunch of text that we may put in to describe Wi-Fi Protected Setup (WPS), push button method, pin method etc.
 
-NETWORK_WPS_PROGRESS
-	EN	WPS in progress - activate your router
-	
+NETWORK_WPS_PROGRESS_PBC
+	EN	WPS PBC in progress\nActivate your router
+
+NETWORK_WPS_PROGRESS_PIN
+	EN	WPS PIN in progress\nActivate your router\nPIN: %s
+
 NETWORK_WPS_PROBLEM_HELP
-	EN	There was a problem with the WPS process. Did you start the WPS process on your router?
+	EN	There was a problem with the WPS process.\nDid you start the WPS process on your router?
 	
 NETWORK_WPS_PROBLEM
 	EN	WPS Problem

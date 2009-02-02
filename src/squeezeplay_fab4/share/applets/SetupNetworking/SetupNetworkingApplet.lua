@@ -519,8 +519,8 @@ function openNetwork(self, iface, ssid)
 		return connectOrDelete(self, iface, ssid)
 
 	else
-		-- unknown network, enter password
-		return enterPassword(self, iface, ssid)
+		-- unknown network, enter password, include check for WPS
+		return enterPassword(self, iface, ssid, true)
 	end
 end
 
@@ -538,7 +538,8 @@ function enterSSID(self, iface)
 					    end
 
 					    widget:playSound("WINDOWSHOW")
-					    enterPassword(self, iface, value)
+					    -- include check for WPS
+					    enterPassword(self, iface, value, true)
 
 					    return true
 				    end
@@ -556,7 +557,7 @@ function enterSSID(self, iface)
 end
 
 
-function enterPassword(self, iface, ssid)
+function enterPassword(self, iface, ssid, checkWPS)
 	assert(iface and ssid, debug.traceback())
 
 	if self.scanResults[ssid] == nil then
@@ -575,7 +576,7 @@ function enterPassword(self, iface, ssid)
 		return createAndConnect(self, iface, ssid)
 
 -- 01/27/09 - fm - WPS - begin
-	elseif string.find(flags, "WPS") then
+	elseif checkWPS and string.find(flags, "WPS") then
 		self.encryption = "wpa2"
 		return chooseWPS(self, iface, ssid)
 -- 01/27/09 - fm - WPS - end
@@ -1617,6 +1618,8 @@ end
 function chooseWPS(self, iface, ssid)
 	log:debug('chooseWPS')
 
+	local wpspin = iface:generateWPSPin()
+
 	-- ask the user to choose
 	local window = Window("window", self:string("NETWORK_WPS_METHOD"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
@@ -1635,13 +1638,26 @@ function chooseWPS(self, iface, ssid)
 
 	connectionMenu:addItem({
 		style = 'buttonitem',
-		text = (self:string("NETWORK_WPS_METHOD_PIN")),
+		text = (self:string("NETWORK_WPS_METHOD_PIN", tostring(wpspin))),
 		sound = "WINDOWSHOW",
 		callback = function()
--- TODO: add pin method
---			processWPS(self, iface, ssid, "pin", wpspin)
+			processWPS(self, iface, ssid, "pin", wpspin)
 		end,
 		weight = 2
+	})
+
+-- TODO: Remove if we decide not to offer regular psk entry for WPS capable routers / APs
+	connectionMenu:addItem({
+		style = 'buttonitem',
+		text = (self:string("NETWORK_WPS_METHOD_PSK")),
+		sound = "WINDOWSHOW",
+		callback = function()
+			-- Calling regular enter password function (which determinds the
+			--  encryption) but do not check flags for WPS anymore to prevent
+			--  ending up in this function again
+			enterPassword(self, iface, ssid, false)
+		end,
+		weight = 3
 	})
 
 	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_WPS_HELP")), function() self:setupWPSHelp() end )
@@ -1654,7 +1670,7 @@ function chooseWPS(self, iface, ssid)
 end
 
 
-function processWPS(self, iface, ssid, wpsmethod)
+function processWPS(self, iface, ssid, wpsmethod, wpspin)
 	assert(iface and ssid and wpsmethod, debug.traceback())
 
 	self.processWPSTimeout = 0
@@ -1662,14 +1678,18 @@ function processWPS(self, iface, ssid, wpsmethod)
 	-- Stop wpa_supplicant - cannot run while wpsapp is running
 	iface:stopWPASupplicant()
 	-- Remove wps.conf, (re-)start wpsapp
-	iface:startWPSApp(wpsmethod)
+	iface:startWPSApp(wpsmethod, wpspin)
 
 	-- Progress window
 	local window = Popup("popupIcon")
 	window:setAllowScreensaver(false)
 
 	window:addWidget(Icon("iconConnecting"))
-	window:addWidget(Label("text", self:string("NETWORK_WPS_PROGRESS")))
+	if wpsmethod == "pbc" then
+		window:addWidget(Label("text", self:string("NETWORK_WPS_PROGRESS_PBC")))
+	else
+		window:addWidget(Label("text", self:string("NETWORK_WPS_PROGRESS_PIN", tostring(wpspin))))
+	end
 
 	local status = Label("text2", self:string("NETWORK_WPS_REMAINING_WALK_TIME", tostring(WPS_WALK_TIMEOUT)))
 	window:addWidget(status)
