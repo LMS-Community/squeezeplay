@@ -72,6 +72,9 @@ local Process     = require("jive.net.Process")
 local Task        = require("jive.ui.Task")
 local network     = require("jiveWireless")
 
+-- 01/27/09 - fm - WPS - begin
+local math        = require("math")
+-- 01/27/09 - fm - WPS - end
 
 module("jive.net.Networking")
 oo.class(_M, Socket)
@@ -1420,6 +1423,58 @@ end
 
 --[[
 
+=head2 jive.net.Networking:computeWPSChecksum()
+
+Computes last digit of WPS pin
+
+=cut
+--]]
+
+function computeWPSChecksum( pin)
+	local accum = 0
+	local digit
+	local pin = pin * 10
+
+	accum = accum + 3 * (math.floor(pin / 10000000) % 10)
+	accum = accum + 1 * (math.floor(pin / 1000000) % 10)
+	accum = accum + 3 * (math.floor(pin / 100000) % 10)
+	accum = accum + 1 * (math.floor(pin / 10000) % 10)
+	accum = accum + 3 * (math.floor(pin / 1000) % 10)
+	accum = accum + 1 * (math.floor(pin / 100) % 10)
+	accum = accum + 3 * (math.floor(pin / 10) % 10)
+	digit = (accum % 10)
+
+	return (10 - digit) % 10
+end
+
+
+--[[
+
+=head2 jive.net.Networking:generateWPSPin()
+
+Returns 8 digit generated WPS pin
+
+=cut
+--]]
+
+function generateWPSPin(self)
+	local wps_pin
+
+-- TODO: Needed? Seem to be different after each reboot already
+--	math.randomseed(os.time())
+	wps_pin = math.random(0,10000000) % 10000000
+
+	if wps_pin < 1000000 then
+		wps_pin = wps_pin + 1000000
+	end
+
+	wps_pin = wps_pin * 10 + computeWPSChecksum( wps_pin)
+
+	return wps_pin
+end
+
+--[[
+
 =head2 jive.net.Networking:startWPSApp()
 
 Starts the wpsapp (Marvell) to get passphrase etc. via WPS
@@ -1428,13 +1483,18 @@ Removes old wps.conf file
 =cut
 --]]
 
-function startWPSApp(self, wpsmethod)
+function startWPSApp(self, wpsmethod, wpspin)
 	assert(wpsmethod, debug.traceback())
 
 	self:stopWPSApp()
 	log:warn("startWPSApp")
 	os.execute("rm /usr/sbin/wps/wps.conf 2>1 > /dev/null &")
-	os.execute("cd /usr/sbin/wps; ./wpsapp " .. self.interface .. " " .. wpsmethod .. " 2>1 > /dev/null &")
+	if( wpsmethod == "pbc") then
+		os.execute("cd /usr/sbin/wps; ./wpsapp " .. self.interface .. " " .. wpsmethod .. " 2>1 > /dev/null &")
+	else
+		assert( wpspin, debug.traceback())
+		os.execute("cd /usr/sbin/wps; ./wpsapp " .. self.interface .. " " .. wpsmethod .. " " .. wpspin .. " 2>1 > /dev/null &")
+	end
 end
 
 --[[
