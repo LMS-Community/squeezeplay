@@ -56,10 +56,13 @@ local math                 = require("math")
 
 
 local EVENT_ALL            = jive.ui.EVENT_ALL
+local EVENT_ALL_INPUT      = jive.ui.EVENT_ALL_INPUT
 local EVENT_ACTION         = jive.ui.EVENT_ACTION
 local EVENT_SCROLL         = jive.ui.EVENT_SCROLL
+local EVENT_IR_ALL         = jive.ui.EVENT_IR_ALL
 local EVENT_IR_DOWN        = jive.ui.EVENT_IR_DOWN
 local EVENT_IR_REPEAT      = jive.ui.EVENT_IR_REPEAT
+local EVENT_KEY_ALL        = jive.ui.EVENT_KEY_ALL
 local EVENT_KEY_PRESS      = jive.ui.EVENT_KEY_PRESS
 local EVENT_SHOW           = jive.ui.EVENT_SHOW
 local EVENT_HIDE           = jive.ui.EVENT_HIDE
@@ -71,6 +74,7 @@ local EVENT_MOUSE_DOWN     = jive.ui.EVENT_MOUSE_DOWN
 local EVENT_MOUSE_UP       = jive.ui.EVENT_MOUSE_UP
 local EVENT_MOUSE_MOVE     = jive.ui.EVENT_MOUSE_MOVE
 local EVENT_MOUSE_DRAG     = jive.ui.EVENT_MOUSE_DRAG
+local EVENT_MOUSE_ALL      = jive.ui.EVENT_MOUSE_ALL
 
 local EVENT_CONSUME        = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED         = jive.ui.EVENT_UNUSED
@@ -87,6 +91,20 @@ local KEY_PLAY             = jive.ui.KEY_PLAY
 local KEY_PAGE_UP           = jive.ui.KEY_PAGE_UP
 local KEY_PAGE_DOWN         = jive.ui.KEY_PAGE_DOWN
 
+--speed (items/ms) that must be surpassed for flick to start.
+local FLICK_THRESHOLD_START_SPEED = 2/1000
+
+--speed (item/ms) at which flick scrolling will stop
+local FLICK_STOP_SPEED = 1.5/1000
+
+--if initial speed is greater than this, "letter" accelerators will occur for the flick
+local FLICK_FORCE_ACCEL_SPEED = 30/1000
+
+--time after flick starts that decel occurs
+local FLICK_DECEL_START_TIME = 750
+
+--time from decel start to scroll stop
+local FLICK_DECEL_TOTAL_TIME = 1000
 
 -- our class
 module(...)
@@ -131,11 +149,44 @@ local function _itemListener(self, item, event)
 	return r
 end
 
+
+function _selectAndHighlightItemUnderPointer(self, event)
+	local x,y,w,h = self:mouseBounds(event)
+	local i = y / self.itemHeight --(h / self.numWidgets)
+
+	local itemShift = math.floor(i)
+	if itemShift >= 0 and itemShift < self.numWidgets then
+		--select item under cursor
+		local selectedIndex = self.topItem + itemShift
+		if selectedIndex <= self.listSize then
+			self:setSelectedIndex(selectedIndex)
+			self.highlightSelectedItem = true
+		else
+			--outside of any menu item
+			return false
+		end
+	else
+		--outside of any menu item
+		return false
+
+	end
+
+	return true
+end
+
 -- _eventHandler
 -- manages all menu events
 local function _eventHandler(self, event)
 
 	local evtype = event:getType()
+
+	if (evtype & (EVENT_IR_ALL | EVENT_KEY_ALL | EVENT_SCROLL | EVENT_SHOW )) > 0 then
+		self.highlightSelectedItem = true
+	end
+
+	if self.selectItemAfterFingerDownTimer and (evtype & EVENT_ALL_INPUT ) > 0 then
+		self.selectItemAfterFingerDownTimer:stop()
+	end
 
 	if evtype == EVENT_SCROLL then
 		if self.locked == nil then
@@ -144,6 +195,7 @@ local function _eventHandler(self, event)
 		end
 
 	elseif evtype == EVENT_IR_DOWN or evtype == EVENT_IR_REPEAT then
+		--todo add lock cancelling like in key press - let action hanlding take care of this
 		if event:isIRCode("arrow_up") or event:isIRCode("arrow_down") then
 			if self.locked == nil then
 				self:scrollBy(self.irAccel:event(event, self.topItem, self.selected or 1, self.numWidgets, self.listSize), true, evtype == EVENT_IR_DOWN)
@@ -193,7 +245,7 @@ local function _eventHandler(self, event)
 				keycode == KEY_PLAY or
 				 keycode == KEY_RIGHT then
 
-				r = self:dispatchNewEvent(EVENT_ACTION)
+				local r = self:dispatchNewEvent(EVENT_ACTION)
 
 				if r == EVENT_UNUSED then
 					self:playSound("BUMP")
@@ -214,6 +266,7 @@ local function _eventHandler(self, event)
 			end
 		end
 
+
 	elseif evtype == EVENT_MOUSE_PRESS then
 
 		if self.scrollbar:mouseInside(event) then
@@ -221,18 +274,50 @@ local function _eventHandler(self, event)
 			self.scrollbar:_event(event)
 
 		else
-			r = self:dispatchNewEvent(EVENT_ACTION)
-
-			if r == EVENT_UNUSED then
-				self:playSound("BUMP")
-				self:getWindow():bumpRight()
+			if self.flickInterrupted then
+				--flick just stopped (on the down event), so ignore this press - do the same for hold when implemented
+				self.flickInterrupted = nil
+				return EVENT_CONSUME
 			end
-			return r
+
+			if not self:_selectAndHighlightItemUnderPointer(event) then
+				return EVENT_CONSUME
+			end
+
+			--relayout so selected item is shown during transition
+			self:reLayout()
+
+			--need to allow screen to be repainted before event is sent, so put on a 0-length timer
+
+			local tempDispatchTimer = Timer(0,
+			       function()
+					local r = self:dispatchNewEvent(EVENT_ACTION)
+					if r == EVENT_UNUSED then
+						self:playSound("BUMP")
+						self:getWindow():bumpRight()
+					end
+			       end,
+			       true)
+
+			tempDispatchTimer:start()
+			
+			--returning event_unused after a bump here seems like a bug, so I'm not returning it (plus it would break the 0-length timer idea)
+--			return r
+			return EVENT_CONSUME
 		end
 
 	elseif evtype == EVENT_MOUSE_DOWN or
 		evtype == EVENT_MOUSE_MOVE or
 		evtype == EVENT_MOUSE_DRAG then
+
+		if evtype == EVENT_MOUSE_DOWN then
+			if self.flickTimer:isRunning() then
+				self.flickInterrupted = true
+				self.flickTimer:stop()
+				return EVENT_CONSUME
+			end
+
+		end
 
 		if self.scrollbar:mouseInside(event) or self.sliderDragInProgress then
 			if (evtype ~= EVENT_MOUSE_MOVE) then
@@ -250,19 +335,98 @@ local function _eventHandler(self, event)
 			local i = y / self.itemHeight --(h / self.numWidgets)
 
 			local itemShift = math.floor(i)
-			
-			if evtype == EVENT_MOUSE_DRAG then
-				self:setSelectedIndex(self.topItem + itemShift)
-				_scrollList(self)
-			elseif (itemShift >= 0 and itemShift < self.numWidgets) then 
-				-- menu selection follows mouse, but no scrolling occurs
-				self:setSelectedIndex(self.topItem + itemShift)
-			end
 
+			if not self:isTouchMouseEvent(event) then
+
+				if evtype == EVENT_MOUSE_DRAG then
+					self:setSelectedIndex(self.topItem + itemShift)
+					_scrollList(self)
+				elseif (itemShift >= 0 and itemShift < self.numWidgets) then
+					-- menu selection follows mouse, but no scrolling occurs
+					self:setSelectedIndex(self.topItem + itemShift)
+				end
+			else --touchpad - for now to test on desktop mouse Right-Click acts as single finger touch
+
+				if evtype == EVENT_MOUSE_DOWN then
+					self.dragOrigin.x, self.dragOrigin.y = event:getMouse();
+					self.dragYSinceShift = 0
+					self.currentShiftDirection = 0
+
+					resetFlickData(self.flickData)
+
+					--don't highlight item right away (to avoid highlighting when finger go off screen and then
+					-- on screen during a drag
+					  -- first unhighlight last selected item
+	                                self.highlightSelectedItem = false
+	                                self:reLayout()
+
+					if self.selectItemAfterFingerDownTimer then
+						self.selectItemAfterFingerDownTimer:stop()
+					end
+					self.selectItemAfterFingerDownTimer = Timer(100,
+							       function()
+									self:_selectAndHighlightItemUnderPointer(event)
+							       end,
+							       true)
+				       self.selectItemAfterFingerDownTimer:start()
+
+				elseif evtype == EVENT_MOUSE_DRAG then
+					self.highlightSelectedItem = false
+					if ( self.dragOrigin.y == nil) then
+						--might have started drag outside of this textarea's bounds, so reset origin
+						self.dragOrigin.x, self.dragOrigin.y = event:getMouse();
+					end
+
+					local mouseX, mouseY = event:getMouse()
+
+					local dragAmountY = self.dragOrigin.y - mouseY
+
+					--reset origin
+					self.dragOrigin.x, self.dragOrigin.y = mouseX, mouseY
+
+					updateFlickData(self.flickData, event)
+
+					self.dragYSinceShift = self.dragYSinceShift + dragAmountY
+
+					if (self.dragYSinceShift > 0 and math.floor(self.dragYSinceShift / self.itemHeight) > 0) or
+							(self.dragYSinceShift < 0 and math.floor(self.dragYSinceShift / self.itemHeight) < 0) then
+						itemShift = math.floor(self.dragYSinceShift / self.itemHeight)
+						self.dragYSinceShift = self.dragYSinceShift % self.itemHeight
+
+						if itemShift > 0 and self.currentShiftDirection <= 0 then
+							--changing shift direction, move cursor so scroll wil occur
+							self:setSelectedIndex(self.topItem + self.numWidgets - 2)
+							self.currentShiftDirection = 1
+						elseif itemShift < 0 and self.currentShiftDirection >= 0 then
+							--changing shift direction, move cursor so scroll wil occur
+							self:setSelectedIndex(self.topItem + 1)
+							self.currentShiftDirection = -1
+						end
+
+						self:scrollBy( itemShift )
+
+					end
+                               end
+			end
 			return EVENT_CONSUME
 		end
 		
 	elseif evtype == EVENT_MOUSE_UP then
+
+		--todo: UP not called if we are outside widget bounds, need this widget to handle events when drag in progress
+		self.dragOrigin.x, self.dragOrigin.y = nil, nil;
+		self.dragYSinceShift = 0
+		self.currentShiftDirection = 0
+
+		local flickSpeed, flickDirection = getFlickSpeed(self.flickData, self.itemHeight)
+
+		if flickSpeed then
+			self:flick(flickSpeed, flickDirection)
+		end
+
+		resetFlickData(self.flickData)
+
+
 		self.sliderDragInProgress = false
 		return EVENT_UNUSED
 
@@ -281,6 +445,130 @@ local function _eventHandler(self, event)
 	return _itemListener(self, _selectedItem(self), event)
 end
 
+
+function isTouchMouseEvent(self, mouseEvent)
+	local x, y, fingerCount = mouseEvent:getMouse()
+
+	return fingerCount ~= nil
+end
+
+function updateFlickData(flickData, mouseEvent)
+	local x, y = mouseEvent:getMouse()
+	local ticks = mouseEvent:getTicks()
+	log:debug("Flick current mouse data:  y: ", y, "  ticks: ", ticks )
+
+	--hack until reason for 0 ticks is resolved
+	if (ticks == 0) then
+		return
+	end
+
+	--hack until reason for false "far out of range" ticks is happening
+
+	if #flickData.points >=1 then
+		local previousTicks = flickData.points[#flickData.points].ticks
+		if math.abs(ticks - previousTicks ) > 10000 then
+			log:error("Erroneous tick value occurred, ignoring : ", ticks, "  after previuos tick value of: ", previousTicks)
+			return
+		end
+	end
+
+	table.insert(flickData.points, {y = y, ticks = ticks})
+	if #flickData.points >= 20 then
+		--only keep last 10 values
+		table.remove(flickData.points, 1)
+	end
+
+end
+
+function resetFlickData(flickData)
+	flickData.points = {}
+end
+
+function getFlickSpeed(flickData, itemHeight)
+	if not flickData.points or #flickData.points < 2 then
+		return nil
+	end
+
+	
+	local distance = flickData.points[#flickData.points].y - flickData.points[1].y
+	local time = flickData.points[#flickData.points].ticks - flickData.points[1].ticks
+
+	--speed = pixels/ms
+	local speed = distance/time
+
+	--for discrete movement, change speed to menu items per ms
+	speed = speed / itemHeight
+
+	log:debug("Flick info: speed: ", speed, "  distance: ", distance, "  time: ", time )
+
+	local direction = speed >= 0 and -1 or 1
+	return math.abs(speed), direction
+end
+
+--if initialSpeed nil, then continue any existing flick. If non nil, start a new flick at that rate
+function flick(self, initialSpeed, direction)
+	if initialSpeed then
+		self.flickTimer:stop()
+		if initialSpeed < FLICK_THRESHOLD_START_SPEED then
+			log:debug("Under threshold, not flicking: ", initialSpeed )
+
+			return
+		end
+
+		self.flickInitialSpeed = initialSpeed
+		self.flickCurrentSpeed = self.flickInitialSpeed
+		self.flickDirection = direction
+		self.flickTimer:start()
+		self.flickInitialScrollT = Framework:getTicks()
+
+		self.flickLastScrollT = self.flickInitialScrollT
+		self.flickInitialDecelerationScrollT = nil
+
+		self.flickAccelRate = -self.flickInitialSpeed / FLICK_DECEL_TOTAL_TIME
+
+		log:debug("*****Starting flick")
+	end
+
+	--continue flick
+	local now = Framework:getTicks()
+
+	--slow speed if past decel time
+	if self.flickInitialDecelerationScrollT == nil and now - self.flickInitialScrollT > FLICK_DECEL_START_TIME then
+		log:debug("*****Starting flick slow down")
+		self.flickInitialDecelerationScrollT = now
+	end
+
+	if self.flickInitialDecelerationScrollT then
+		--v = v0 + at
+		local elapsedTime = now - self.flickInitialDecelerationScrollT
+		self.flickCurrentSpeed = self.flickInitialSpeed + (self.flickAccelRate * elapsedTime)
+
+		if self.flickCurrentSpeed <= FLICK_STOP_SPEED then
+			log:debug("*******Stopping Flick")
+			self.flickTimer:stop()
+			return
+		end
+	end
+
+
+	if now - self.flickLastScrollT > (1/self.flickCurrentSpeed)  then
+		--slowing algorithm - go at initial speed for 750 ms then deceleration to stop in 1 more second
+		log:debug("Flick continuation is scroling at speed: ", self.flickCurrentSpeed)
+
+		local forceAccelerator = self.flickInitialSpeed > FLICK_FORCE_ACCEL_SPEED
+
+		self:scrollBy(self.flickDirection, false, false, forceAccelerator)
+		self.flickLastScrollT = now
+
+		if self.selected == self.listSize or self.selected == 1 then
+			--stop at boundaries
+			log:debug("*******Stopping Flick at boundary")
+			self.flickTimer:stop()
+		end
+
+	end
+		
+end
 
 --[[
 
@@ -336,6 +624,15 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 	obj.accel = false       -- true if the window is accelerated
 	obj.dir = 0             -- last direction of scrolling
 
+	obj.highlightSelectedItem = true
+
+	obj.dragOrigin = {}
+	obj.dragYSinceShift = 0
+	obj.currentShiftDirection = 0
+
+	obj.flickData = {}
+	obj.flickData.points = {}
+
 	-- timer to drop out of accelerated mode
 	obj.accelTimer = Timer(200,
 			       function()
@@ -350,6 +647,10 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 						obj:reLayout()	
 					end,
 					true)
+	obj.flickTimer = Timer(50,
+			       function()
+			                obj:flick()
+			       end)
 
 	obj:addListener(EVENT_ALL,
 			 function (event)
@@ -543,7 +844,7 @@ end
 
 --[[
 
-=head2 jive.ui.Menu:scrollBy(scroll, allowMultiple, allowMultiple, isNewOperation)
+=head2 jive.ui.Menu:scrollBy(scroll, allowMultiple, allowMultiple, isNewOperation, forceAccel)
 
 Scroll the menu by I<scroll> items. If I<scroll> is negative the menu scrolls up, otherwise the menu scrolls down. By
  default, restricts to scrolling one item unless at the edge of the visible list. If I<allowMultiple> is non-nil,
@@ -551,7 +852,7 @@ Scroll the menu by I<scroll> items. If I<scroll> is negative the menu scrolls up
 
 =cut
 --]]
-function scrollBy(self, scroll, allowMultiple, isNewOperation)
+function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 	_assert(type(scroll) == "number")
 
 	local selected = (self.selected or 1)
@@ -605,6 +906,10 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation)
 	else
 		self.dir = 0
 		self.accel = false
+	end
+
+	if forceAccel then
+		self.accel = true
 	end
 
 	if self.accel then
@@ -735,9 +1040,10 @@ function _updateWidgets(self)
 
 	local lastSelected = self._lastSelected
 	local lastSelectedIndex = self._lastSelectedIndex
+	local lastHighlightedIndex = self._lastHighlightedIndex
 	local nextSelectedIndex = self.selected or 1
 
-	-- clear focus
+	-- clear focus -- todo support "no highlight scroll"
 	if lastSelectedIndex ~= nextSelectedIndex then
 		if lastSelected then
 			lastSelected:setStyleModifier(nil)
@@ -810,16 +1116,23 @@ function _updateWidgets(self)
 		if self.locked then
 			nextSelected:setStyleModifier("locked")
 		else
-			nextSelected:setStyleModifier("selected")
+			if self.highlightSelectedItem then
+				nextSelected:setStyleModifier("selected")
+			else
+				nextSelected:setStyleModifier(nil)
+			end
 		end
 
-		if lastSelectedIndex ~= nextSelectedIndex then
+		if self.highlightSelectedItem and lastHighlightedIndex ~= nextSelectedIndex then
 			_itemListener(self, nextSelected, Event:new(EVENT_FOCUS_GAINED))
 		end
 	end
 
 	self._lastSelected = nextSelected
 	self._lastSelectedIndex = nextSelectedIndex
+	if self.highlightSelectedItem then
+		self._lastHighlightedIndex = nextSelectedIndex
+	end
 	self._lastSelectedOffset = self.selected and self.selected - self.topItem + 1 or self.topItem
 
 	-- update scrollbar
@@ -828,6 +1141,11 @@ function _updateWidgets(self)
 --	log:warn("_update menu:\n", self:dump())
 end
 
+function free(self)
+	if self.flickTimer then
+		self.flickTimer:stop()
+	end
+end
 
 function __tostring(self)
 	return "Menu(" .. self.listSize .. ")"
