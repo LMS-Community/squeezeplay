@@ -747,9 +747,11 @@ function t_removeNetwork(self, ssid)
 		local networkResults = self:request("LIST_NETWORKS")
 
 		local id = false
-		for nid, nssid in string.gmatch(networkResults, "([%d]+)\t([^\t]*).-\n") do
+		local flags = false
+		for nid, nssid, nbssid, nflags in string.gmatch(networkResults, "([%d]+)\t([^\t]*)\t([^\t]*)\t(.-)\n") do
 			if nssid == ssid then
 				id = nid
+				flags = nflags
 				break
 			end
 		end
@@ -761,6 +763,13 @@ function t_removeNetwork(self, ssid)
 
 			request = 'SAVE_CONFIG'
 			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+		end
+
+		-- Bug 10869: Make sure only one dhcp client is running on the wireless interface
+		-- If we are forgetting the currently used wireless connection, also disconnect
+		-- This in turn calls ifdown and stops the dhcp client daemon
+		if flags and flags == "[CURRENT]" then
+			self:t_disconnectNetwork()
 		end
 
 		-- Remove dhcp/static ip configuration for network
