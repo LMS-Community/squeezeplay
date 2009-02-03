@@ -73,6 +73,7 @@ function settingsShow(self)
 	local menu = SimpleMenu("menu", items)
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 	window:addWidget(menu)
+	window:setAllowScreensaver(false)
 
 	local current = appletManager:callService("getCurrentPlayer")
 
