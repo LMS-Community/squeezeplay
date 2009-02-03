@@ -1739,6 +1739,8 @@ function _timerWPS(self, iface, ssid)
 				-- Set credentials from WPS
 				self.encryption = status.wps_encryption
 				self.psk = status.wps_psk
+				self.key = status.wps_key
+
 				createAndConnect(self, iface, ssid)
 			end
 
