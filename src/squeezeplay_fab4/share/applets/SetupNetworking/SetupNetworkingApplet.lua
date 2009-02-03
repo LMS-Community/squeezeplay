@@ -1701,7 +1701,7 @@ function processWPS(self, iface, ssid, wpsmethod, wpspin)
 			status:setValue(self:string("NETWORK_WPS_REMAINING_WALK_TIME", tostring(remaining_walk_time)))
 		end)
 
-	window:addListener(EVENT_KEY_PRESS,
+	window:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD,
 		function(event)
 			local keycode = event:getKeycode()
 			if keycode == KEY_BACK then
