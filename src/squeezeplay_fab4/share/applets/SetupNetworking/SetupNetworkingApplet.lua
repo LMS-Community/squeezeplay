@@ -132,7 +132,7 @@ function settingsRegionShow(self)
 				     text = self:string("NETWORK_REGION_" .. name),
 				     icon = RadioButton("radio", group,
 							function() 
-								self:getSettings().region = name
+								self:getSettings()['region'] = name
 		                        			self:storeSettings()
 								wlan:setRegion(name) 
 							end,
@@ -196,6 +196,49 @@ function setupConnectionType(self, setupNext)
 		callback = function()
 			setupNext(self.ethIface)
 		end,
+		weight = 2
+	})
+	
+	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:setupConnectionHelp() end )
+
+	window:addWidget(helpButton)
+	window:addWidget(connectionMenu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+function settingsConnectionType(self)
+	log:debug('setupConnectionType')
+
+	assert(self.wlanIface or self.ethIface)
+
+	-- short cut if only one interface is available
+	if not self.wlanIface then
+		self:setupScanShow(self.ethIface, self:settingsNetworksShow(self.ethIface) )
+	elseif not self.ethIface then
+		self:setupRegionShow(function() self:settingsNetworksShow() end, self.wlanIface)
+	end
+
+	-- ask the user to choose
+	local window = Window("window", self:string("NETWORK_CONNECTION_TYPE"), wirelessTitleStyle)
+	window:setAllowScreensaver(false)
+
+	local connectionMenu = SimpleMenu("twobuttonmenu")
+
+	connectionMenu:addItem({
+		style = 'buttonitem',
+		text = (self:string("NETWORK_CONNECTION_TYPE_WIRELESS")),
+		sound = "WINDOWSHOW",
+		callback = function() self:settingsNetworksShow(self.wlanIface) end,
+		weight = 1
+	})
+	
+	connectionMenu:addItem({
+		style = 'buttonitem',
+		text = (self:string("NETWORK_CONNECTION_TYPE_WIRED")),
+		sound = "WINDOWSHOW",
+		callback = function() self:setupScanShow( self.ethIface, function() self:settingsNetworksShow(self.ethIface) end ) end,
 		weight = 2
 	})
 	
@@ -336,9 +379,17 @@ function setupNetworksShow(self, iface, setupNext)
 end
 
 
-function settingsNetworksShow(self)
+function settingsNetworksShow(self, iface)
 	local region = self:getSettings()['region']
 	log:warn('region: ', region)
+
+	-- if ethernet interface is passed to this method, connect it
+	if iface and not iface:isWireless() then
+		self.scanResults = {}
+		self:_scanComplete(iface)
+
+		return self:createAndConnect(iface, "eth0")
+	end
 
 	if not region then
 		return self:setupRegionShow(

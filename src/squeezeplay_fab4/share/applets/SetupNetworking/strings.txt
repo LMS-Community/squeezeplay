@@ -15,6 +15,9 @@ NETWORK
 	NO	Trådløst nettverk
 	SV	Trådlöst nätverk
 
+NETWORK_SETUP_NETWORKING
+	EN	Setup Networking
+
 NETWORK_FINDING_NETWORKS
 	DA	\nSøger efter netværk
 	DE	\nNetzwerksuche

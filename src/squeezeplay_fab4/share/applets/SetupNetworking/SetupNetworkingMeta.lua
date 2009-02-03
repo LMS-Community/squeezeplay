@@ -33,7 +33,7 @@ function registerApplet(meta)
 	meta:registerService("setupScanShow")
 	meta:registerService("setupNetworksShow")
 
-	jiveMain:addItem(meta:menuItem('networkSettings', 'advancedSettings', "NETWORK", function(applet, ...) applet:settingsNetworksShow(...) end))
+	jiveMain:addItem(meta:menuItem('networkSettings', 'advancedSettings', "NETWORK_SETUP_NETWORKING", function(applet, ...) applet:settingsConnectionType(...) end))
 	jiveMain:addItem(meta:menuItem('networkRegion', 'advancedSettings', "NETWORK_REGION", function(applet, ...) applet:settingsRegionShow(...) end))
 end
 
