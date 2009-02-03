@@ -1588,17 +1588,28 @@ function t_wpsStatus(self)
 
 		local proto = string.match(wpsconf, "proto=([^%s]+)")
 		local psk = string.match(wpsconf, "psk=\"([^%s]+)\"")
+		local key = string.match(wpsconf, "wep_key0=([^%s]+)")
 
---		log:warn("**** Proto: " .. proto)
---		log:warn("**** PSK " .. psk)
-
-		if proto == "WPA" then
+		-- No encryption
+		if proto == nil and psk == nil and key == nil then
+			status.wps_encryption = "none"
+		-- WEP 64
+		elseif key ~= nil and #key <= 10 then
+			status.wps_encryption = "wep40"
+		-- WEP 128
+		elseif key ~= nil then
+			status.wps_encryption = "wep104"
+		-- WPA
+		elseif proto == "WPA" then
 			status.wps_encryption = "wpa"
+		-- WPA2
 		else
 			status.wps_encryption = "wpa2"
 		end
 
 		status.wps_psk = psk
+		status.wps_key = key
+
 		status.wps_state = "COMPLETED"
 	end
 
