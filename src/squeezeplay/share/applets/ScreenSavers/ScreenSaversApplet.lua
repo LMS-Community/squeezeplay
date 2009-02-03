@@ -80,7 +80,7 @@ function init(self, ...)
 	)
 
 	-- listener to quit screensaver
-	Framework:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_DRAG | EVENT_MOUSE_HOLD | EVENT_IR_ALL,
+	Framework:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_DRAG | EVENT_MOUSE_HOLD | EVENT_IR_PRESS | EVENT_IR_HOLD , -- temp IR change, can be removed from action merge
 		function(event)
 			-- screensaver is not active
 			if #self.active == 0 then

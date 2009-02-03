@@ -166,21 +166,11 @@ function __init(self, style, title, titleStyle)
 		)
 	end
 	
-	obj:addActionListener("go", obj, _bump)
-	obj:addActionListener("back", obj, _bump)
 	-- by default bump the window on GO or BACK actions, add this as a
 	-- listener to allow other handlers to act on these events
 	-- first
-	obj:addListener(EVENT_KEY_PRESS,
-		function(event)
-			local keycode = event:getKeycode()
-			if keycode  == KEY_GO or
-				keycode == KEY_RIGHT then
-				obj:playSound("BUMP")
-				obj:getWindow():bumpRight()
-				return EVENT_CONSUME
-			end
-		end)
+	obj:addActionListener("go", obj, _bump)
+	obj:addActionListener("back", obj, _bump)
 
 
 	return obj

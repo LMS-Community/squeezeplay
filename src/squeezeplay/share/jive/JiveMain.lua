@@ -229,14 +229,17 @@ local function _irHandler(event)
 	--includes temp hack for up/down to allow Menu, etc to have direct IR event access 
 		if event:getType() == EVENT_IR_PRESS and (keyCode ~= KEY_UP and keyCode ~= KEY_DOWN) then
 			Framework:pushEvent(Event:new(EVENT_KEY_PRESS, keyCode))
+			return EVENT_CONSUME -- temp fix can be removed when merge occurs
 		elseif event:getType() == EVENT_IR_HOLD then
 			Framework:pushEvent(Event:new(EVENT_KEY_HOLD, keyCode))
+			return EVENT_CONSUME -- temp fix can be removed when merge occurs
 		elseif event:getType() == EVENT_IR_DOWN and (keyCode ~= KEY_UP and keyCode ~= KEY_DOWN) then
 			Framework:pushEvent(Event:new(EVENT_KEY_DOWN, keyCode))
+			return EVENT_CONSUME -- temp fix can be removed when merge occurs
 		elseif event:getType() == EVENT_IR_UP and (keyCode ~= KEY_UP and keyCode ~= KEY_DOWN) then
 			Framework:pushEvent(Event:new(EVENT_KEY_UP, keyCode))
+			return EVENT_CONSUME -- temp fix can be removed when merge occurs
 		end
-		return EVENT_CONSUME
 	end
 
 	return EVENT_UNUSED

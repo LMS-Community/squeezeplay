@@ -200,6 +200,8 @@ function constants(module)
 	module.EVENT_IR_PRESS = jive.ui.EVENT_IR_PRESS
 	module.EVENT_IR_HOLD = jive.ui.EVENT_IR_HOLD
 	module.EVENT_IR_ALL = jive.ui.EVENT_IR_ALL
+	module.EVENT_IR_DOWN = jive.ui.EVENT_IR_DOWN
+	module.EVENT_IR_UP = jive.ui.EVENT_IR_UP
 	module.EVENT_KEY_ALL = jive.ui.EVENT_KEY_ALL
 	module.EVENT_MOUSE_ALL = jive.ui.EVENT_MOUSE_ALL
 	module.EVENT_ALL_INPUT = jive.ui.EVENT_ALL_INPUT
