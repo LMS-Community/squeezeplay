@@ -58,6 +58,9 @@ static int handle_clearpad_events(int fd) {
 	size_t rd;
 	int i;
 
+	int flick_y = 0;
+	int flick_x = 0;
+
 	rd = read(fd, ev, sizeof(struct input_event) * 64);
 
 	if (rd < (int) sizeof(struct input_event)) {
@@ -94,26 +97,49 @@ static int handle_clearpad_events(int fd) {
 			// how to handle gestures correctly
 			switch (ev[i].code) {
 			case REL_RX:
-				if (ev[i].value > 0) {
-					JiveEvent event;
-
-					event.type = (JiveEventType) JIVE_EVENT_KEY_PRESS;
-					event.u.key.code = JIVE_KEY_HOME;
-					event.ticks = TIMEVAL_TO_TICKS(ev[i].time);
-					jive_queue_event(&event);
-				}
-				if (ev[i].value < 0) {
-					JiveEvent event;
-
-					event.type = (JiveEventType) JIVE_EVENT_CHAR_PRESS;
-					event.u.text.unicode = '['; // '[' the temporary go_now_playing shortcut 
-					event.ticks = TIMEVAL_TO_TICKS(ev[i].time);
-					jive_queue_event(&event);
-				}
+				flick_x = ev[i].value;
+				break;
+			case REL_RY:
+				flick_y = ev[i].value;
 				break;
 			}
 		}
 		else if (ev[i].type == EV_SYN) {
+			if (flick_x != 0) {
+				if (abs(flick_x) > abs(flick_y)) { //must have more x than y component to be considered a vertical gesture
+					if (flick_x > 0) {
+						JiveEvent event;
+
+						event.type = (JiveEventType) JIVE_EVENT_KEY_PRESS;
+						event.u.key.code = JIVE_KEY_HOME;
+						event.ticks = TIMEVAL_TO_TICKS(ev[i].time);
+						jive_queue_event(&event);
+					}
+					if (flick_x < 0) {
+						JiveEvent event;
+
+						event.type = (JiveEventType) JIVE_EVENT_CHAR_PRESS;
+						event.u.text.unicode = '['; // '[' the temporary go_now_playing shortcut
+						event.ticks = TIMEVAL_TO_TICKS(ev[i].time);
+						jive_queue_event(&event);
+					}
+				}
+
+				//reset flick data
+				flick_x = 0;
+				flick_y = 0;
+
+			}
+			else if (flick_y != 0) {
+
+				//no y_click handling yet, so just ignore y flick data, still need to reset
+				//reset flick data
+				flick_x = 0;
+				flick_y = 0;
+
+			}
+
+
 			/* We must move more than 10 pixels to enter a 
 			 * finger drag.
 			 */
