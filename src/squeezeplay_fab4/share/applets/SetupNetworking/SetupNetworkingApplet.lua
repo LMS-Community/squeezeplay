@@ -1624,10 +1624,9 @@ function chooseWPS(self, iface, ssid)
 	local window = Window("window", self:string("NETWORK_WPS_METHOD"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	local connectionMenu = SimpleMenu("twobuttonmenu")
+	local connectionMenu = SimpleMenu("menu")
 
 	connectionMenu:addItem({
-		style = 'buttonitem',
 		text = (self:string("NETWORK_WPS_METHOD_PBC")),
 		sound = "WINDOWSHOW",
 		callback = function()
@@ -1637,7 +1636,6 @@ function chooseWPS(self, iface, ssid)
 	})
 
 	connectionMenu:addItem({
-		style = 'buttonitem',
 		text = (self:string("NETWORK_WPS_METHOD_PIN", tostring(wpspin))),
 		sound = "WINDOWSHOW",
 		callback = function()
@@ -1648,7 +1646,6 @@ function chooseWPS(self, iface, ssid)
 
 -- TODO: Remove if we decide not to offer regular psk entry for WPS capable routers / APs
 	connectionMenu:addItem({
-		style = 'buttonitem',
 		text = (self:string("NETWORK_WPS_METHOD_PSK")),
 		sound = "WINDOWSHOW",
 		callback = function()
