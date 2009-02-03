@@ -82,6 +82,12 @@ oo.class(_M, Socket)
 
 local SSID_TIMEOUT = 20000
 
+-- 01/27/09 - fm - WPS - begin
+-- TODO: Remove when wpsapp is replaced with WPS capable wpa_supplicant
+local wpaSupplicantRunning = true
+-- 01/27/09 - fm - WPS - end
+
+
 -- wpa scan results signal level -> quality
 -- FIXME tune with production boards
 local WIRELESS_LEVEL = {
@@ -1376,6 +1382,14 @@ function request(self, ...)
 	local task = Task:running()
 	assert(task, "Networking:request must be called in a Task")
 
+-- 01/27/09 - fm - WPS - begin
+-- TODO: Remove when wpsapp is replaced with WPS capable wpa_supplicant
+	if wpaSupplicantRunning == false then
+		return "", "not running"
+	end
+-- 01/27/09 - fm - WPS - end
+
+
 	log:info("REQUEST: ", ...)
 
 	-- open the socket if it is closed
@@ -1532,6 +1546,7 @@ Starts wpa supplicant
 function startWPASupplicant(self)
 	log:warn("startWPASupplicant")
 	os.execute("/usr/sbin/wpa_supplicant -B -Dmarvell -i" .. self.interface .. " -c/etc/wpa_supplicant.conf")
+	wpaSupplicantRunning = true
 end
 
 --[[
@@ -1545,6 +1560,7 @@ Stops wpa supplicant
 
 function stopWPASupplicant(self)
 	log:warn("stopWPASupplicant")
+	wpaSupplicantRunning = false
 	os.execute("killall wpa_supplicant 2>1 > /dev/null &")
 	self:close()
 end
@@ -1576,7 +1592,6 @@ function t_wpsStatus(self)
 --		log:warn("**** Proto: " .. proto)
 --		log:warn("**** PSK " .. psk)
 
--- TODO: needed
 		if proto == "WPA" then
 			status.wps_encryption = "wpa"
 		else
