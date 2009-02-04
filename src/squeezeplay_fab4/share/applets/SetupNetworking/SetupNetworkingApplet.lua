@@ -211,6 +211,8 @@ end
 function settingsConnectionType(self)
 	log:debug('setupConnectionType')
 
+	self.setupNext = nil
+
 	assert(self.wlanIface or self.ethIface)
 
 	-- short cut if only one interface is available
@@ -230,7 +232,14 @@ function settingsConnectionType(self)
 		style = 'buttonitem',
 		text = (self:string("NETWORK_CONNECTION_TYPE_WIRELESS")),
 		sound = "WINDOWSHOW",
-		callback = function() self:settingsNetworksShow(self.wlanIface) end,
+		callback = function() 
+				self:setupScanShow( 
+					self.wlanIface, 
+					function() 
+						self:settingsNetworksShow(self.wlanIface) 
+					end 
+				) 
+			end,
 		weight = 1
 	})
 	
@@ -238,7 +247,18 @@ function settingsConnectionType(self)
 		style = 'buttonitem',
 		text = (self:string("NETWORK_CONNECTION_TYPE_WIRED")),
 		sound = "WINDOWSHOW",
-		callback = function() self:setupScanShow( self.ethIface, function() self:settingsNetworksShow(self.ethIface) end ) end,
+		callback = function() 
+				self.setupNext = self:openNetwork(self.ethIface, "eth0")
+				self:setupScanShow( 
+					self.ethIface, 
+					function() 
+						self:settingsNetworksShow(
+							self.ethIface, 
+							self.setupNext 
+						) 
+					end 
+				) 
+			end,
 		weight = 2
 	})
 	
@@ -379,7 +399,7 @@ function setupNetworksShow(self, iface, setupNext)
 end
 
 
-function settingsNetworksShow(self, iface)
+function settingsNetworksShow(self, iface, callback)
 	local region = self:getSettings()['region']
 	log:warn('region: ', region)
 
@@ -400,7 +420,7 @@ function settingsNetworksShow(self, iface)
 		)
 	end
 
-	self.setupNext = nil
+	self.setupNext = callback
 
 	return setupScanShow(self,
 		nil, -- all interfaces
@@ -410,7 +430,8 @@ function settingsNetworksShow(self, iface)
 				self:string("NETWORK"),
 				self:string("NETWORK_SETTINGS_HELP")
 			)
-		end
+		end,
+		callback
 	)
 end
 
@@ -532,16 +553,20 @@ end
 
 
 function _hideToTop(self, dontSetupNext)
---	if Framework.windowStack[1] == self.topWindow then
---		return
---	end
---
---	while #Framework.windowStack > 2 and Framework.windowStack[2] ~= self.topWindow do
---		log:debug("hiding=", Framework.windowStack[2], " topWindow=", self.topWindow)
---		Framework.windowStack[2]:hide(Window.transitionPushLeft)
---	end
---
---	Framework.windowStack[1]:hide(Window.transitionPushLeft)
+	log:info('_hideToTop')
+	if not self.setupNext then
+		log:info('no setupNext callback, so hide windows up to the top')
+		if Framework.windowStack[1] == self.topWindow then
+			return
+		end
+	
+		while #Framework.windowStack > 2 and Framework.windowStack[2] ~= self.topWindow do
+			log:debug("hiding=", Framework.windowStack[2], " topWindow=", self.topWindow)
+			Framework.windowStack[2]:hide(Window.transitionPushLeft)
+		end
+	
+		Framework.windowStack[1]:hide(Window.transitionPushLeft)
+	end
 
 	-- we have successfully setup the network, so hide any open network
 	-- settings windows before advancing during setup.
@@ -554,8 +579,7 @@ end
 
 function openNetwork(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
-
-	if ssid == self.currentSSID then
+	if ( iface and not iface:isWireless() ) or ssid == self.currentSSID then
 		-- current network, show status
 		if type(self.setupNext) == "function" then
 			return self.setupNext()
@@ -1088,8 +1112,8 @@ function connectOK(self, iface, ssid)
 	window:addListener(EVENT_KEY_PRESS,
 			   function(event)
 				window:hide()
-				   _hideToTop(self)
-				   return EVENT_CONSUME
+				_hideToTop(self)
+				return EVENT_CONSUME
 			   end)
 
 
