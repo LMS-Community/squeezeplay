@@ -399,20 +399,6 @@ function _showPopulatingPlayersPopup(self, timer)
         popup:addWidget(label)
         popup:setAlwaysOnTop(true)
 
-        -- add a listener for KEY_PRESS that disconnects from the player and returns to home
-        popup:addListener(
-                EVENT_KEY_PRESS | EVENT_KEY_HOLD,
-                function(event)
-                        local evtCode = event:getKeycode()
-
-                        if evtCode == KEY_BACK then
-                                popup:hide()
-                        end
-                        -- other keys are disabled when this popup is on screen
-                        return EVENT_CONSUME
-                end
-        )
-
         popup:show()
 	return popup
 

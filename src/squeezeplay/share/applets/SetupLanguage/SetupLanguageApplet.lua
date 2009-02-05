@@ -183,19 +183,12 @@ function setLang(self, choice, next)
 	self.popup:setAllowScreensaver(false)
 	self.popup:setAlwaysOnTop(true)
 	self.popup:setAutoHide(false)
+	self.popup:ignoreAllInputExcept({"disconnect_player"})
 
 	self.popup:addWidget(Icon("iconConnecting"))
   	local stringChoice = "LOADING_LANGUAGE"
 	self.popup:addWidget(Label("text", self:string(stringChoice)))
    	self.popup:show()
-
-	-- no way to exit this popup
-	local listener =
-		Framework:addListener(EVENT_ALL_INPUT,
-				      function()
-					      return EVENT_CONSUME
-				      end,
-				      true)
 
 	self.task = Task('setLang', self, 
 			 function(self)
@@ -205,7 +198,6 @@ function setLang(self, choice, next)
 				 jiveMain:jiveMainNodes()
 				 Framework:styleChanged()
 
-				 Framework:removeListener(listener)
 				 self.popup:hide()
 
 				 if next then

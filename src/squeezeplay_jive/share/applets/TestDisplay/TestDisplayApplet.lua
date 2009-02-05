@@ -103,28 +103,13 @@ function DisplayTest(self)
 	self.state = 1
 	self:drawDisplay()
 	
-	-- any button to exit
-	window:addListener(
-		EVENT_KEY_PRESS,
-		function(event)
-		    local key = event:getKeycode()
+	local _drawDisplayAction = function (self)
+		window:playSound("WINDOWSHOW")
+		self:drawDisplay()
+		return EVENT_CONSUME
+	end
 
-			log:warn("DisplayTest: key: ".. key)
-
-			if key == KEY_BACK then
-				window:playSound("WINDOWHIDE")
-				window:hide()
-				return EVENT_CONSUME
-
-			elseif key == KEY_GO then
-				window:playSound("WINDOWSHOW")
-				self:drawDisplay()
-				return EVENT_CONSUME
-
-			end
-			return EVENT_UNUSED
-		end
-	)
+	window:addActionListener("go", self, _drawDisplayAction)
 
 	self:tieAndShowWindow(window)
 	return window

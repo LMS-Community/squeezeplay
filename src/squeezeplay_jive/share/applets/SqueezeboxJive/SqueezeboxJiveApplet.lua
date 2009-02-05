@@ -207,7 +207,7 @@ function init(self)
 			      end)
 
 	Framework:addListener(EVENT_KEY_PRESS,
-			      function(event) 
+			      function(event)
 				      local keycode = event:getKeycode()
 
 				      -- key lock

@@ -74,6 +74,19 @@ function notify_playerCurrent(self, player)
 end
 
 
+function _ignoreHomeAction(self)
+	log:warn("HOME KEY IS DISABLED IN SETUP. USE PRESS-HOLD BACK BUTTON INSTEAD")
+	-- don't allow this event to continue
+	return EVENT_CONSUME
+
+end
+
+function _freeAction(self)
+	free(self)
+	return EVENT_UNUSED
+
+end
+
 function step1(self)
 	-- put Return to Setup menu item on jiveMain menu
 	local returnToSetup = {
@@ -89,26 +102,9 @@ function step1(self)
 
 	self._topWindow = appletManager:callService("setupShowSetupLanguage", function() self:step2() end, 'setupfirsttitle')
 
-	disableHomeKeyDuringSetup = 
-		Framework:addListener(EVENT_KEY_PRESS,
-		function(event)
-			local keycode = event:getKeycode()
-			if keycode == KEY_HOME then
-				log:warn("HOME KEY IS DISABLED IN SETUP. USE PRESS-HOLD BACK BUTTON INSTEAD")
-				-- don't allow this event to continue
-				return EVENT_CONSUME
-			end
-			return EVENT_UNUSED
-		end)
-	freeAppletWhenEscapingSetup =
- 		Framework:addListener(EVENT_KEY_HOLD,
-		function(event)
-			local keycode = event:getKeycode()
-			if keycode == KEY_BACK then
-				free()
-			end
-			return EVENT_UNUSED
-		end)
+	disableHomeKeyDuringSetup = Framework:addActionListener("go_home", self, _ignoreHomeAction)
+
+	freeAppletWhenEscapingSetup = Framework:addActionListener("disconnect_player", self, _freeAction)
 
 	return self.topWindow
 
@@ -151,17 +147,13 @@ function setupWelcome(self, setupNext)
 	window:addWidget(textarea)
 	window:addWidget(help)
 
-	window:addListener(EVENT_KEY_PRESS,
-		function(event)
-			local keycode = event:getKeycode()
-			if keycode == KEY_GO then
-				setupNext()
-			elseif keycode == KEY_BACK then
-				window:hide()
-			end
+        local setupNextAction = function (self)
+		window:playSound("WINDOWSHOW")
+        	setupNext()
+        	return EVENT_CONSUME
+        end
 
-			return EVENT_CONSUME
-		end)
+	window:addActionListener("go", self, setupNextAction)
 
 	self:tieAndShowWindow(window)
 	return window

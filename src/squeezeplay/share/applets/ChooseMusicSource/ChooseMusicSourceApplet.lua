@@ -319,11 +319,9 @@ function connectPlayerToServer(self, player, server)
 	local statusLabel = Label("text", self:string("SLIMSERVER_CONNECTING_TO", server:getName()))
 	window:addWidget(statusLabel)
 
-	-- disable key presses
-	window:addListener(EVENT_KEY_PRESS,
-			   function(event)
-				   return EVENT_CONSUME
-			   end)
+	-- disable input, but still allow disconnect_player
+	window:ignoreAllInputExcept({"disconnect_player"})
+
 
 	local timeout = 1
 	window:addTimer(1000,

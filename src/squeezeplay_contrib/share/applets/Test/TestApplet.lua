@@ -47,6 +47,7 @@ local Timer                  = require("jive.ui.Timer")
 local Keyboard               = require("jive.ui.Keyboard")
 
 local log                    = require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
+local appletManager = appletManager
 
 
 module(..., Framework.constants)
@@ -192,6 +193,11 @@ function menu(self, menuItem)
 				callback = function(event, menuItem)
 					self:downloadingSoftware(menuItem)
 			end },
+			{ text = "'Ignore all Input' Popup",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:ignoreAllInputPopup(menuItem)
+				end },
 			{ text = "Connecting Popup",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -568,6 +574,31 @@ function downloadingSoftware(self, menuItem)
 	return popup
 end
 
+local function localBackAction(self, event)
+	log:warn("In localBackAction: ", event:tostring())
+	return self:upAction()
+end
+
+function ignoreAllInputPopup(self, menuItem)
+
+	local popup = Popup("popupIcon")
+
+	local icon = Icon("iconConnecting")
+	local label = Label("text", "All input is ignored, except:\n'disconnect_player', 'back', 'go'")
+
+	popup:addWidget(icon)
+	popup:addWidget(label)
+
+	-- disable input, but still allow disconnect_player
+	popup:ignoreAllInputExcept({"disconnect_player", "back"})
+
+	--try some local listeners (comment out to see global handling - back should still work
+	popup:addActionListener("back", popup, localBackAction)
+	popup:addActionListener("go", popup, localBackAction)
+
+	self:tieAndShowWindow(popup)
+	return popup
+end
 
 function connectingPopup(self, menuItem)
 
@@ -627,12 +658,9 @@ function imageWindow(self, menuItem, filename)
 	log:debug("w = " .. w .. " h = " .. h)
 	
 	window:addWidget(Icon("image", image))
-	window:addListener(EVENT_KEY_PRESS | EVENT_MOUSE_PRESS,
-		function(event)
-			window:hide()
-			return EVENT_CONSUME
-		end
-	)
+
+	-- by default close popup on keypress
+	window:hideOnAllButtonInput()
 
 	self:tieAndShowWindow(window)
 	return window

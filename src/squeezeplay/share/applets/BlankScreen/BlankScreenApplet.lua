@@ -47,8 +47,7 @@ function init(self)
 	self.bgicon = Icon("background", self.bg)
 	self.window:addWidget(self.bgicon)
 
-	self.window:addListener(
-		EVENT_WINDOW_ACTIVE | EVENT_HIDE,
+	self.window:addListener(EVENT_WINDOW_ACTIVE | EVENT_HIDE,
 		function(event)
 			local type = event:getType()
 			if type == EVENT_WINDOW_ACTIVE then
@@ -65,8 +64,7 @@ function init(self)
 		true
 	)
 
-	self.window:addListener(
-		EVENT_MOTION,
+	self.window:addListener(EVENT_MOTION,
 		function()
 			self.window:hide()
 			return EVENT_CONSUME

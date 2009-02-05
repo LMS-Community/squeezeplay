@@ -20,7 +20,7 @@ Applet related methods are described in L<jive.Applet>.
 local tostring, tonumber, pairs, ipairs, table = tostring, tonumber, pairs, ipairs, table
 local oo                     = require("loop.simple")
 local string                 = require("string")
-local strings                = require("jive.utils.strings")
+local string                = require("jive.utils.string")
 local table                  = require("jive.utils.table")
 
 local Applet                 = require("jive.Applet")
@@ -92,7 +92,7 @@ function menu(self, menuItem)
 
 		local complexWeight = jiveMain:getComplexWeight(id, item)
 		local weights = {}
-		item.weights = strings:split('%.', complexWeight, weights)
+		item.weights = string.split('%.', complexWeight, weights)
 
 		-- if this is a home item and setting = 'hidden', then unselect
 		if self.currentSettings[id] and self.currentSettings[id] == 'hidden' and item.node == 'home' then

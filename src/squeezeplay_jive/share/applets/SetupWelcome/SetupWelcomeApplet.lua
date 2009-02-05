@@ -51,6 +51,10 @@ oo.class(_M, Applet)
 
 
 function notify_playerCurrent(self, player)
+	if player == nil then
+		return
+	end
+
 	log:info("setup complete")
 
 	-- setup is completed when a player is selected
@@ -232,21 +236,13 @@ function setupWelcomeShow(self, setupNext)
 	window:addWidget(navcluster)
 	window:addWidget(help)
 
-	window:addListener(EVENT_KEY_PRESS,
-		function(event)
-			local keycode = event:getKeycode()
-			if keycode == KEY_GO or
-				keycode == KEY_FWD then
-				window:playSound("WINDOWSHOW")
-				setupNext()
-			elseif keycode == KEY_BACK or
-				keycode == KEY_REW then
-				window:playSound("WINDOWHIDE")
-				window:hide()
-			end
+        local setupNextAction = function (self)
+                window:playSound("WINDOWSHOW")
+        	setupNext()
+        	return EVENT_CONSUME
+        end
 
-			return EVENT_CONSUME
-		end)
+	window:addActionListener("go", self, setupNextAction)
 
 	self:tieAndShowWindow(window)
 	return window
