@@ -86,6 +86,7 @@ function startSlideshow(self, menuItem)
 					return 1
 			end)
 	
+			self.thisImage = 0
 			self.nextImage = 1
 	
 		end
@@ -100,14 +101,9 @@ function startSlideshow(self, menuItem)
 	timer:start()
 end
 
-function free(self)
-	self.window:hide()
-	self.thisImage = 0
-	self.nextImage = 1
-	self.window = nil
-	return true
 
-end
+
+
 
 function displaySlide(self)
 
@@ -124,6 +120,32 @@ function displaySlide(self)
 
 	local window = Window('window')
 	window:addWidget(Icon("background", image))
+
+	local nextSlideAction = function (self)
+		self:displaySlide()
+		return EVENT_CONSUME
+	end
+
+
+	local previousSlideAction = function (self)
+		if self.previousImage == 0 then
+			--bump
+			window:playSound("BUMP")
+			window:bumpRight()
+			return EVENT_CONSUME
+		else
+			self.nextImage = self.previousImage
+			self:displaySlide()
+			return EVENT_CONSUME
+		end
+
+	end
+	
+	window:addActionListener("go", self, nextSlideAction)
+	window:addActionListener("up", self, nextSlideAction)
+	window:addActionListener("play", self, nextSlideAction)
+	window:addActionListener("down", self, previousSlideAction)
+
 	window:addListener(EVENT_MOUSE_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_PRESS,
 		function(event)
 			local type = event:getType()
@@ -135,43 +157,19 @@ function displaySlide(self)
 				return EVENT_CONSUME
 			end
 
-			-- IR events
-			if type == EVENT_IR_PRESS then
-				-- exit applet on left arrow or home
-				if event:isIRCode('arrow_left') or event:isIRCode('home') then
-					self:free()
-					return EVENT_CONSUME
-				-- next slide on IR right, up, or center
-				elseif event:isIRCode('arrow_right') or event:isIRCode('play') or event:isIRCode('arrow_up') then
-					self:displaySlide()
-					return EVENT_CONSUME
-				-- previous slide is down arrow
-				elseif event:isIRCode('arrow_down') then
-					if self.previousImage == 0 then
-						--bump
-						window:playSound("BUMP")
-						window:bumpRight()
-						return EVENT_CONSUME
-					else
-						self.nextImage = self.previousImage
-						self:displaySlide()
-						return EVENT_CONSUME
-					end
-        			end
-			end
-
 			return EVENT_UNUSED
                 end
 	)
 
 	-- replace the window if it's already there
 	if self.window then
+		self:tieWindow(window)
 		window:showInstead(Window.transitionFadeIn)
 		self.window = window
 	-- otherwise it's new
 	else
 		self.window = window
-		self.window:show()
+		self:tieAndShowWindow(window)
 	end
 
 	-- no screensavers por favor
