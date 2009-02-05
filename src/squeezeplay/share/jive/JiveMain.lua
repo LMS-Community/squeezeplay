@@ -196,9 +196,10 @@ local function getAction(event)
 	for key, action in pairs(inputToActionMap.irActionMappings.press) do 
 		Framework:registerAction(action)
 	end
+end
 
 
---local lastResortActionToKeyMap = {	
+--local lastResortActionToKeyMap = {
 --	["back"]  = { keyCode = KEY_LEFT, event = EVENT_KEY_PRESS },
 --	["disconnect_player "]  = { keyCode = KEY_BACK, event = EVENT_KEY_HOLD },
 --	["go_home"]  = { keyCode = KEY_HOME, event = EVENT_KEY_PRESS },
