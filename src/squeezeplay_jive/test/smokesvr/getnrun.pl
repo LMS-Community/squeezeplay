@@ -10,7 +10,7 @@ use warnings;
 use LWP::UserAgent;
 
 my $debug = 1;
-my $url = 'https://eng.slimdevices.com/images/fab4/';
+my $url = 'https://eng.slimdevices.com/images/jive/';
 
 my $response; # Web page object NOT raw html
 my $content; # web html goes in here
@@ -48,7 +48,7 @@ debug ("looking for version $target_version, build $target_build");
 
 if ($target_version =~ "help") {
 	print "getnrun [version] [build]\n\n";
-	print "https://eng.slimdevices.com/images/fab4/ for more info\n";
+	print "https://eng.slimdevices.com/images/jive/ for more info\n";
 	print "If no arguments are entered, the default is 'most recent'.\n";
 	exit 1;
 }
