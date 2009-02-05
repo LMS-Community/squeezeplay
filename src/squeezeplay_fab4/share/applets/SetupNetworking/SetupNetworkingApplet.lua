@@ -248,7 +248,7 @@ function settingsConnectionType(self)
 		text = (self:string("NETWORK_CONNECTION_TYPE_WIRED")),
 		sound = "WINDOWSHOW",
 		callback = function() 
-				self.setupNext = self:openNetwork(self.ethIface, "eth0")
+				self.setupNext = self:openNetwork(self.ethIface, self.ethIface:getName())
 				self:setupScanShow( 
 					self.ethIface, 
 					function() 
@@ -385,7 +385,7 @@ function setupNetworksShow(self, iface, setupNext)
 		self.scanResults = {}
 		self:_scanComplete(iface)
 
-		return self:createAndConnect(iface, "eth0")
+		return self:createAndConnect(iface, iface:getName() )
 	end
 
 	local window = self:_networksShow(
@@ -408,7 +408,7 @@ function settingsNetworksShow(self, iface, callback)
 		self.scanResults = {}
 		self:_scanComplete(iface)
 
-		return self:createAndConnect(iface, "eth0")
+		return self:createAndConnect(iface, iface:getName() )
 	end
 
 	if not region then

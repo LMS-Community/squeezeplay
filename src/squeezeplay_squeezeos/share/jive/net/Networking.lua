@@ -257,6 +257,20 @@ end
 
 --[[
 
+=head2 networking:getName(self, interface)
+
+Returns the interface name of interface object
+
+=cut
+--]]
+
+function getName(self)
+	return self.interface
+end
+
+
+--[[
+
 =head2 networking:isWireless(self)
 
 Return true if the I<interface> is wireless
