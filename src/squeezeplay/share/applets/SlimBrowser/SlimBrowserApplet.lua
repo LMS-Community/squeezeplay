@@ -33,6 +33,7 @@ local Framework              = require("jive.ui.Framework")
 local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
 local Group                  = require("jive.ui.Group")
+local Event                  = require("jive.ui.Event")
 local Menu                   = require("jive.ui.Menu")
 local Label                  = require("jive.ui.Label")
 local Icon                   = require("jive.ui.Icon")
@@ -47,7 +48,7 @@ local Checkbox               = require("jive.ui.Checkbox")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Button                 = require("jive.ui.Button")
 local DateTime               = require("jive.utils.datetime")
-                             
+
 local DB                     = require("applets.SlimBrowser.DB")
 local Volume                 = require("applets.SlimBrowser.Volume")
 local Scanner                = require("applets.SlimBrowser.Scanner")
@@ -415,15 +416,16 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 			play = Icon("play"), 
 			back = Button(
 				Icon("back"), 
-				function() 
-					group:getWindow():dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) 
-					return EVENT_CONSUME 
+				function()
+					Framework:pushAction("back")
+
+					return EVENT_CONSUME
 				end
 			), 
 			nowplaying = Button(
 				Icon("nowplaying"), 
 				function() 
-					group:getWindow():dispatchNewEvent(EVENT_KEY_PRESS, appletManager:callService('goNowPlaying', 'browse')) 
+					Framework:pushAction("go_now_playing")
 					return EVENT_CONSUME 
 				end
 			), 
@@ -622,22 +624,13 @@ local function _connectingToPlayer(self)
 	popup:setAlwaysOnTop(true)
 
 	-- add a listener for KEY_PRESS that disconnects from the player and returns to home
-	popup:addListener(
-		EVENT_KEY_PRESS | EVENT_KEY_HOLD,
-		function(event)
-			local evtCode = event:getKeycode()
+	local disconnectPlayer = function()
+		appletManager:callService("setCurrentPlayer", nil)
+		popup:hide()
+	end
 
-			if evtCode == KEY_BACK then
-				-- disconnect from player and go home
-				appletManager:callService("setCurrentPlayer", nil)
-				popup:hide()
-			end
-			-- other keys are disabled when this popup is on screen
-			return EVENT_CONSUME
-
-		end
-	)
-	
+	popup:addActionListener("back", self, disconnectPlayer)
+		
 	popup:show()
 
 	_connectingPopup = popup
@@ -673,23 +666,13 @@ local function _userTriggeredUpdate(self)
 	window:setAllowScreensaver(false)
 
 	-- add a listener for KEY_HOLD that disconnects from the player and returns to home
-	window:addListener(
-		EVENT_KEY_PRESS | EVENT_KEY_HOLD,
-		function(event)
-			local type = event:getType()
-	 		local evtCode = event:getKeycode()
+	local disconnectPlayer = function()
+		appletManager:callService("setCurrentPlayer", nil)
+		window:hide()
+	end
 
-			if evtCode == KEY_BACK and type == EVENT_KEY_HOLD then
-				-- disconnect from player and go home
-				appletManager:callService("setCurrentPlayer", nil)
-				window:hide()
-			end
-			-- other keys are disabled when this window is on screen
-			return EVENT_CONSUME
+	window:addActionListener("back", self, disconnectPlayer)
 
-		end
-	)
-	
 	window:show()
 
 	_userUpdatePopup = window
@@ -718,22 +701,13 @@ local function _updatingPlayer(self)
 	popup:setAlwaysOnTop(true)
 
 	-- add a listener for KEY_PRESS that disconnects from the player and returns to home
-	popup:addListener(
-		EVENT_KEY_PRESS | EVENT_KEY_HOLD,
-		function(event)
-			local evtCode = event:getKeycode()
+	local disconnectPlayer = function()
+		appletManager:callService("setCurrentPlayer", nil)
+		popup:hide()
+	end
 
-			if evtCode == KEY_BACK then
-				-- disconnect from player and go home
-				appletManager:callService("setCurrentPlayer", nil)
-				popup:hide()
-			end
-			-- other keys are disabled when this popup is on screen
-			return EVENT_CONSUME
+	popup:addActionListener("back", self, disconnectPlayer)
 
-		end
-	)
-	
 	popup:show()
 
 	_updatingPlayerPopup = popup
@@ -1076,16 +1050,17 @@ local function _browseSink(step, chunk, err)
 							icon = titleIcon,
 							back = Button(
 								Icon("back"), 
-								function() 
-									step.window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) 
-									return EVENT_CONSUME 
+								function()
+									Framework:pushAction("back")
+
+									return EVENT_CONSUME
 								end
 							), 
 							nowplaying = Button(
 								Icon("nowplaying"), 
 								function() 
-									step.window:dispatchNewEvent(EVENT_KEY_PRESS, appletManager:callService('goNowPlaying', 'browse')) 
-									return EVENT_CONSUME 
+									Framework:pushAction("go_now_playing")
+									return EVENT_CONSUME
 								end
 							), 
 						})	
@@ -1322,37 +1297,6 @@ end
 -- _globalActions
 -- provides a function for default button behaviour, called outside of the context of the browser
 local _globalActions = {
-	["home"] = function()
-		local windowStack = Framework.windowStack
-			   
-		-- are we in home?
-		if #windowStack > 1 then
-			_goNow('home')
-		else
-			_goNow('nowPlaying', Window.transitionPushLeft)
-		end
-				
-		return EVENT_CONSUME
-	end,
-
-	["play"] = function()
-	        Framework:playSound("PLAYBACK")
-		_player:play()
-		return EVENT_CONSUME
-	end,
-
-	["pause"] = function()
-	        Framework:playSound("PLAYBACK")
-		_player:togglePause()
-		return EVENT_CONSUME
-	end,
-
-	["pause-hold"] = function()
-	        Framework:playSound("PLAYBACK")
-		_player:stop()
-		return EVENT_CONSUME
-	end,
-
 	["rew"] = function()
 	        Framework:playSound("PLAYBACK")
 		_player:rew()
@@ -1400,53 +1344,85 @@ function _goMenuTableItem(key)
 		Framework:playSound("JUMP")
 		jiveMain:getMenuTable()[key].callback()
 	end
-
 end
 
 function _goNowPlayingAction()
-	appletManager:callService("goNowPlaying", "browse")
+	_goNow('nowPlaying')
+	return EVENT_CONSUME
 end
 
 function _goSearchAction()
 	_goMenuTableItem("myMusicSearch")
+	return EVENT_CONSUME
 end
 
 function _goMusicLibraryAction()
 	_goMenuTableItem("myMusic")
+	return EVENT_CONSUME
 end
 
 
 function _goPlaylistAction()
 	_goPlaylist()
+	return EVENT_CONSUME
 end
 
 
 function _goFavoritesAction()
 	_goMenuTableItem("favorites")
+	return EVENT_CONSUME
 end
 
 
 function _goPlaylistsAction()
 	_goMenuTableItem("myMusicPlaylists")
+	return EVENT_CONSUME
 end
 
 
 function _goRhapsodyAction()
 	_goMenuTableItem("opmlrhapsodydirect")
+	return EVENT_CONSUME
 end
 
 
 function _goRepeatToggleAction()
 	_player:repeatToggle()
+	return EVENT_CONSUME
 end
+
 
 function _goShuffleToggleAction()
 	_player:shuffleToggle()
+	return EVENT_CONSUME
+end
+
+
+function _goSleepAction()
+	_player:sleepToggle()
+	return EVENT_CONSUME
+end
+
+
+function _goPlayFavoriteAction(self, event)
+	local action = event:getAction()
+	local number = string.sub(action, -1 , -1)
+	if not number or not string.find(number, "%d") then
+		log:error("Expected last character of action string would be numeric, for action :", action)
+		return EVENT_CONSUME
+	end
+
+	_player:numberHold(number)
+
+	return EVENT_CONSUME
 end
 
 
 function _goCurrentTrackDetailsAction()
 	--todo -get menu object, iterate through to current, select it - doh, harder than I thought for something that's not yet a requirement
+--	showPlaylist()
+--	Framework:pushAction( "go")
+	return EVENT_CONSUME
 end
 
 -- _globalActions
@@ -1465,16 +1441,28 @@ local _globalActionsNEW = {
 	["go_current_track_details"] = _goCurrentTrackDetailsAction,
 	["repeat_toggle"] = _goRepeatToggleAction,
 	["shuffle_toggle"] = _goShuffleToggleAction,
+	["sleep"] = _goSleepAction,
+	["play_favorite_0"] = _goPlayFavoriteAction,
+	["play_favorite_1"] = _goPlayFavoriteAction,
+	["play_favorite_2"] = _goPlayFavoriteAction,
+	["play_favorite_3"] = _goPlayFavoriteAction,
+	["play_favorite_4"] = _goPlayFavoriteAction,
+	["play_favorite_5"] = _goPlayFavoriteAction,
+	["play_favorite_6"] = _goPlayFavoriteAction,
+	["play_favorite_7"] = _goPlayFavoriteAction,
+	["play_favorite_8"] = _goPlayFavoriteAction,
+	["play_favorite_9"] = _goPlayFavoriteAction,
+	
 	["go_home"] = function()
 		local windowStack = Framework.windowStack
-			   
+
 		-- are we in home?
 		if #windowStack > 1 then
 			_goNow('home')
 		else
 			_goNow('nowPlaying', Window.transitionPushLeft)
 		end
-				
+
 		return EVENT_CONSUME
 	end,
 
@@ -1496,6 +1484,33 @@ local _globalActionsNEW = {
 		return EVENT_CONSUME
 	end,
 
+	["volume_up"] = function(self, event)
+		return self.volume:event(event)
+	end,
+
+	["volume_down"] = function(self, event)
+		return self.volume:event(event)
+	end,
+
+	["jump_rew"] = function()
+	        Framework:playSound("PLAYBACK")
+		_player:rew()
+		return EVENT_CONSUME
+	end,
+	["jump_fwd"] = function()
+	        Framework:playSound("PLAYBACK")
+		_player:fwd()
+		return EVENT_CONSUME
+	end,
+
+
+	["scanner_rew"] = function(self, event)
+		return self.scanner:event(event)
+	end,
+
+	["scanner_fwd"] = function(self, event)
+		return self.scanner:event(event)
+	end,
 }
 
 
@@ -1739,36 +1754,29 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 end
 
 
---  Go           right, return, mouse middle button
---  Back         left, mouse right button
---  Scroll up    up, mouse wheel
---  Scroll down  down, mouse wheel
---  Up           i
---  Down         k
---  Left         j
---  Right        l
---  Play         x p, mouse left button
---  Pause        c space
---  Add          a
---  Rew          z <
---  Fwd          b >
---  Home         h
---  Volume up    + =
---  Volume down  -
-
 
 -- map from a key to an actionName
 local _keycodeActionName = {
 	[KEY_VOLUME_UP] = 'volup', 
 	[KEY_VOLUME_DOWN] = 'voldown', 
-	[KEY_HOME] = 'home', 
-	[KEY_PAUSE] = 'pause', 
-	[KEY_PLAY]  = 'play',
 	[KEY_FWD]   = 'fwd',
 	[KEY_REW]   = 'rew',
-	[KEY_ADD]   = 'add',
-	[KEY_GO]    = 'go',
 }
+
+-- map from a key to an actionName
+local _actionToActionName = {
+	["go_home"] = 'home',
+	["pause"]   = 'pause', 
+	["stop"]   = 'pause-hold',
+	["play"]    = 'play',
+	["custom_mix"]    = 'play-hold',
+	["add"]     = 'add',
+	["add_next"]     = 'add-hold',
+	["go"]      = 'go',
+	["go_hold"]      = 'go-hold',
+
+}
+
 -- internal actionNames:
 --				  'inputDone'
 
@@ -1834,6 +1842,15 @@ local function _browseMenuListener(menu, db, menuItem, dbIndex, event)
 		
 			-- otherwise, check for a handler
 			return _actionHandler(menu, menuItem, db, dbIndex, event, 'go', item)
+		end
+
+	elseif evtType == ACTION then
+		log:debug("_browseMenuListener: ACTION")
+		local action = event:getAction()
+		local actionName = _actionToActionName[action]
+
+		if actionName then
+			return _actionHandler(menu, menuItem, db, dbIndex, event, actionName, item)
 		end
 
 	elseif evtType == EVENT_KEY_PRESS then
@@ -2127,8 +2144,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	log:debug("new step: " , step)
 	
 	-- make sure closing our windows do keep the path alive!
-	window:addListener(
-		EVENT_WINDOW_POP,
+	window:addListener(EVENT_WINDOW_POP,
 		function(evt)
 			-- clear it if present, so we can start again the textinput
 			if item then
@@ -2157,8 +2173,7 @@ local function _installPlayerKeyHandler(self)
 		return
 	end
 
-	_playerKeyHandler = Framework:addListener(
-		EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+	_playerKeyHandler = Framework:addListener(EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD,
 		function(event)
 			local type = event:getType()
 			
@@ -2204,7 +2219,7 @@ local function _installActionListeners(self)
 	_actionListenerHandles = {}
 	
 	for action, func in pairs( _globalActionsNEW ) do
-		local handle = Framework:addActionListener(action, self, func)
+		local handle = Framework:addActionListener(action, self, func, false)
 		table.insert(_actionListenerHandles, handle)
 	end
 	
@@ -2241,7 +2256,7 @@ end
 -- showTrackOne
 --
 -- pushes the song info window for track one on stage
--- this method is used solely by NowPlaying Applet for 
+-- this method is used solely by NowPlaying Applet for
 -- skipping the playlist screen when the playlist size == 1
 function showTrackOne()
 	local playerStatus = _player:getPlayerStatus()
@@ -2288,15 +2303,7 @@ function showTrackOne()
 	}		
 
 	local step, sink = _newDestination(nil, item, newWindowSpec, _browseSink)
-	step.window:addListener(EVENT_KEY_PRESS,
-		function(event)
-			local evtCode = event:getKeycode()
-			if evtCode == KEY_BACK then
-				_goNow('nowPlaying')
-				return EVENT_CONSUME
-			end
-		end
-	)
+	step.window:addActionListener("back", step, _goNowPlayingAction)
 	step.window:show()
 	_curStep = step
 
@@ -2323,6 +2330,19 @@ function showEmptyPlaylist(token)
 	return window
 
 end
+
+function _leavePlayListAction()
+	local windowStack = Framework.windowStack
+	-- if this window is #2 on the stack there is no NowPlaying window
+	-- (e.g., when playlist is empty)
+	if #windowStack == 2 then
+		_goNow('home')
+	else
+		_goNow('nowPlaying')
+	end
+	return EVENT_CONSUME
+end
+
 
 -- showPlaylist
 --
@@ -2355,22 +2375,7 @@ function showPlaylist()
 			_statusStep.menu:setSelectedIndex(_statusStep.menu:getItems().currentIndex)
 		end
 
-		_statusStep.window:addListener(EVENT_KEY_PRESS,
-			function(event)
-				local evtCode = event:getKeycode()
-				if evtCode == KEY_BACK then
-					local windowStack = Framework.windowStack
-					-- if this window is #2 on the stack there is no NowPlaying window 
-					-- (e.g., when playlist is empty)
-					if #windowStack == 2 then
-						_goNow('home')
-					else
-						_goNow('nowPlaying')
-					end
-					return EVENT_CONSUME
-				end
-			end
-		)
+		_statusStep.window:addActionListener("back", _statusStep, _leavePlayListAction)
 
 		_statusStep.window:show()
 

@@ -36,6 +36,7 @@ local appletManager          = appletManager
 local socket                 = require("socket")
 
 local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
+local ACTION                 = jive.ui.ACTION
 local EVENT_WINDOW_ACTIVE    = jive.ui.EVENT_WINDOW_ACTIVE
 local EVENT_WINDOW_INACTIVE  = jive.ui.EVENT_WINDOW_INACTIVE
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
@@ -66,22 +67,13 @@ local function _updatingPlayer(self)
 	popup:addWidget(label)
 	popup:setAlwaysOnTop(true)
 
-	-- add a listener for KEY_PRESS that disconnects from the player and returns to home
-	popup:addListener(
-		EVENT_KEY_PRESS | EVENT_KEY_HOLD,
-		function(event)
-			local evtCode = event:getKeycode()
+	local disconnectPlayerAction = function (self, event) 
+		appletManager:callService("setCurrentPlayer", nil)
+		popup:hide()
+	end
 
-			if evtCode == KEY_BACK then
-				-- disconnect from player and go home
-				appletManager:callService("setCurrentPlayer", nil)
-				popup:hide()
-			end
-			-- other keys are disabled when this popup is on screen
-			return EVENT_CONSUME
-
-		end
-	)
+	-- add a listener for back that disconnects from the player and returns to home
+	popup:addActionListener("back", self, disconnectPlayerAction)
 	
 	popup:show()
 
@@ -1472,10 +1464,7 @@ function _setupSqueezebox(self)
 				statusLabel:setValue(self.statusText)
 			end)
 
-	window:addListener(EVENT_KEY_PRESS,
-			   function(event)
-				   return EVENT_CONSUME
-			   end)
+	window:ignoreAllInputExcept({"disconnect_player"})
 
 	-- subscribe to the jnt so that we get notifications of players added
 	window:addListener(EVENT_WINDOW_ACTIVE,
@@ -1507,7 +1496,7 @@ function _setupOK(self)
 				self:_setupDone()
 			end)
 
-	window:addListener(EVENT_KEY_PRESS,
+	window:addListener(ACTION,
 			   function(event)
 				   self:_setupDone()
 				   return EVENT_CONSUME

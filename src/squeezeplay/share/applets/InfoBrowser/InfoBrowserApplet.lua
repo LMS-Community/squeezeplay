@@ -140,25 +140,25 @@ function response(self, result, window, widget, list, prevmenu, locked)
 				window:addWidget(widget)
 			end
 			widget:setValue(entry.description)
-			widget:addListener(EVENT_KEY_PRESS,
-				function(event)
-					local key = event:getKeycode()
-					if key ~= KEY_ADD and key ~= KEY_PLAY then
-						return EVENT_UNUSED
-					end
-					local pre, c = _split(id)
-					if key == KEY_PLAY and c+1 < prevmenu.listSize then
-						c = c + 1
-					elseif key == KEY_ADD and c > 0 then
-						c = c - 1
-					else
-						window:bumpRight()
-					end
-					-- fetch next item and update index on previous menu to match
-					self:request(pre .. "." .. tostring(c), 0, window, widget, list, prevmenu)
-					prevmenu:setSelectedIndex(c+1)
-					return EVENT_CONSUME
-				end)
+
+                        local _navigateEntriesAction =  function (self, event)
+                        	local pre, c = _split(id)
+                        	if event:getAction() == "play" and c+1 < prevmenu.listSize then
+                        		c = c + 1
+                        	elseif event:getAction() == "add" and c > 0 then
+                        		c = c - 1
+                        	else
+                        		window:bumpRight()
+                        	end
+                        	-- fetch next item and update index on previous menu to match
+                        	self:request(pre .. "." .. tostring(c), 0, window, widget, list, prevmenu)
+                        	prevmenu:setSelectedIndex(c+1)
+                        	return EVENT_CONSUME
+                        
+                        end
+			
+			widget:addActionListener("play", self, _navigateEntriesAction)
+			widget:addActionListener("add", self, _navigateEntriesAction)
 		end
 	end
 

@@ -82,28 +82,12 @@ oo.class(_M, Label)
 local function _keyPress(self, event)
 --	log:debug("Choice:_keyPress() - ", debug.traceback())
 
-	local newSelectedIndex = self.selectedIndex + 1
-
 	local eventType = event:getType()
 
 	if eventType == EVENT_ACTION then
 
-		self:setSelectedIndex(newSelectedIndex)
-		self:playSound("SELECT")
+		return _changeAndselectChoiceAction(self, event)
 
-		return EVENT_CONSUME
-
-	elseif eventType == EVENT_KEY_PRESS then
-		local keycode = event:getKeycode()
-
-		if keycode == KEY_GO
-			or keycode == KEY_RIGHT then
-
-			self:setSelectedIndex(newSelectedIndex)
-			self:playSound("SELECT")
-
-			return EVENT_CONSUME
-		end
 	end
 
 	return EVENT_UNUSED
@@ -134,7 +118,8 @@ function __init(self, style, options, closure, selectedIndex)
 	obj.options = options
 	obj.closure = closure
 
-	obj:addListener(EVENT_ACTION | EVENT_KEY_PRESS,
+	obj:addActionListener("go", obj, _changeAndselectChoiceAction)
+	obj:addListener(EVENT_ACTION,
 			 function(event)
 				 return _keyPress(obj, event)
 			 end)
@@ -142,6 +127,14 @@ function __init(self, style, options, closure, selectedIndex)
 	return obj
 end
 
+function _changeAndselectChoiceAction(self, event)
+	local newSelectedIndex = self.selectedIndex + 1
+
+	self:setSelectedIndex(newSelectedIndex)
+	self:playSound("SELECT")
+
+	return EVENT_CONSUME
+end
 
 --[[
 

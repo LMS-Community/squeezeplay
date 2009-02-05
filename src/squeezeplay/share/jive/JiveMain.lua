@@ -59,7 +59,7 @@ local Task          = require("jive.ui.Task")
 local Timer         = require("jive.ui.Timer")
 local Event         = require("jive.ui.Event")
 
-local inputToActionMap = require("jive.InputToActionMap")
+local _inputToActionMap = require("jive.InputToActionMap")
 
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("jive.main")
@@ -103,34 +103,6 @@ local _globalStrings
 -- several submenus created by applets (settings, controller settings, extras)
 -- should not need to have an id passed when creating it
 local _idTranslations = {}
-	
-local keyboardShortcuts = {	
-	["i"]  = { keyCode = KEY_UP,   event = EVENT_KEY_PRESS },
-	["k"]  = { keyCode = KEY_DOWN, event = EVENT_KEY_PRESS },
-	["j"]  = { keyCode = KEY_LEFT, event = EVENT_KEY_PRESS },
-	["J"]  = { keyCode = KEY_LEFT, event = EVENT_KEY_HOLD },
-	["l"]  = { keyCode = KEY_RIGHT, event = EVENT_KEY_PRESS },
-	["h"]  = { keyCode = KEY_HOME, event = EVENT_KEY_PRESS },
-	["p"]  = { keyCode = KEY_PLAY, event = EVENT_KEY_PRESS },
-	["P"]  = { keyCode = KEY_PLAY, event = EVENT_KEY_HOLD },
-	["x"]  = { keyCode = KEY_PLAY, event = EVENT_KEY_PRESS },
-	["c"]  = { keyCode = KEY_PAUSE, event = EVENT_KEY_PRESS },
-	[" "]  = { keyCode = KEY_PAUSE, event = EVENT_KEY_PRESS },
-	["a"]  = { keyCode = KEY_ADD, event = EVENT_KEY_PRESS },
-	["A"]  = { keyCode = KEY_ADD, event = EVENT_KEY_HOLD },
-	["z"]  = { keyCode = KEY_REW, event = EVENT_KEY_PRESS },
-	["Z"]  = { keyCode = KEY_REW, event = EVENT_KEY_HOLD },
-	["<"]  = { keyCode = KEY_REW, event = EVENT_KEY_PRESS },
-	["b"]  = { keyCode = KEY_FWD, event = EVENT_KEY_PRESS },
-	["B"]  = { keyCode = KEY_FWD, event = EVENT_KEY_HOLD },
-	[">"]  = { keyCode = KEY_FWD, event = EVENT_KEY_PRESS },
-	["+"]  = { keyCode = KEY_VOLUME_UP, event = EVENT_KEY_PRESS },
-	["="]  = { keyCode = KEY_VOLUME_UP, event = EVENT_KEY_PRESS },
-	["-"]  = { keyCode = KEY_VOLUME_DOWN, event = EVENT_KEY_PRESS },
-	["\b"]  = { keyCode = KEY_BACK, event = EVENT_KEY_PRESS }, -- BACKSPACE
-	["\27"]  = { keyCode = KEY_BACK, event = EVENT_KEY_PRESS } -- ESC
-}
-
 
 local _defaultSkin
 local _fullscreen
@@ -152,32 +124,6 @@ local function _disconnectPlayer(self, event) --self, event not used in our case
 	_goHome()
 end
 
--- bring us to the home menu
-local function _homeHandler(event)
-	local type = event:getType()
-
-	if ( type == EVENT_CHAR_PRESS ) then
-		local keyboardEntry = string.char(event:getUnicode())
-		
-		log:debug("Keyboard entry: ", keyboardEntry)
-		
-		if not keyboardShortcuts[keyboardEntry] then
-			return EVENT_UNUSED
-		end
-
-		local keyCode = keyboardShortcuts[keyboardEntry].keyCode
-		Framework:pushEvent(Event:new(keyboardShortcuts[keyboardEntry].event, keyCode))
-		
-		return EVENT_CONSUME
-
-	elseif ( type == EVENT_KEY_PRESS and event:getKeycode() == KEY_HOME) then
-
-		_goHome()
-		
-		return EVENT_CONSUME
-	  end
-	  return EVENT_UNUSED
-end
 
 local function _addUserPathToLuaPath()
     local dirSeparator = package.path:match( "(%p)%?%." )
@@ -185,36 +131,6 @@ local function _addUserPathToLuaPath()
     package.path = package.path .. System.getUserDir() .. dirSeparator .. "?" .. dirSeparator .. "?.lua;"
 end
 
--- transform user input events (key, etc) to a matching action name
-local function getAction(event)
-
-	local eventType = event:getType()
-	local action = nil
-	
-	if eventType == EVENT_KEY_PRESS then
-		action = inputToActionMap.keyActionMappings.press[event:getKeycode()]
-	elseif eventType == EVENT_KEY_HOLD then
-		action = inputToActionMap.keyActionMappings.hold[event:getKeycode()]
-	elseif eventType == EVENT_CHAR_PRESS then
-		action = inputToActionMap.charActionMappings.press[string.char(event:getUnicode())]
-	end
-	
-	return action
-	
-end
-
-function _registerDefaultActions()
-	for key, action in pairs(inputToActionMap.keyActionMappings.press) do 
-		Framework:registerAction(action)
-	end
-	for key, action in pairs(inputToActionMap.keyActionMappings.hold) do 
-		Framework:registerAction(action)
-	end
-	for key, action in pairs(inputToActionMap.charActionMappings.press) do 
-		Framework:registerAction(action)
-	end
-
-end
 
 
 
@@ -227,9 +143,16 @@ end
 --	["create_mix"]  = { keyCode = KEY_PLAY, event = EVENT_KEY_HOLD },
 --	["pause"]  = { keyCode = KEY_PAUSE, event = EVENT_KEY_PRESS },
 --	["stop"]  = { keyCode = KEY_PAUSE, event = EVENT_KEY_HOLD },
---	["addEnd"]  = { keyCode = KEY_ADD, event = EVENT_KEY_PRESS },
+--	["add"]  = { keyCode = KEY_ADD, event = EVENT_KEY_PRESS },
 --	["addNext"]  = { keyCode = KEY_ADD, event = EVENT_KEY_HOLD },
 --}
+
+
+function _goHomeAction()
+	_goHome()
+
+	return EVENT_CONSUME
+end
 
 -- __init
 -- creates our JiveMain main object
@@ -254,7 +177,8 @@ function JiveMain:__init()
 	-- Singleton instances (locals)
 	_globalStrings = locale:readGlobalStringsFile()
 
-	_registerDefaultActions()
+	-- register the default actions
+	Framework:registerActions(_inputToActionMap)
 
 	-- create the main menu
 	jiveMain = oo.rawnew(self, HomeMenu(_globalStrings:str("HOME"), nil, "hometitle"))
@@ -268,13 +192,6 @@ function JiveMain:__init()
 	-- init our listeners
 	jiveMain.skins = {}
 
-	-- home key handler, one for KEY_PRESS/HOME, one for KEY_HOLD/BACK
-	Framework:addListener(
-		EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_KEY_HOLD,
-		function(event)
-			return _homeHandler(event)
-		end,
-		10)
 
 	-- global listener: resize window (only desktop versions)
 	Framework:addListener(EVENT_WINDOW_RESIZE,
@@ -282,64 +199,12 @@ function JiveMain:__init()
 			jiveMain:reloadSkin()
 			return EVENT_UNUSED
 		end,
-		10)
+		10)		
 
+	Framework:addActionListener("go_home", self, _goHomeAction, 10)
 
-	-- action mapping listener, should be last listener in chain to allow for direct access to keys/other input types if needed.
-	--todo add other input types
-	Framework:addListener(EVENT_KEY_ALL | EVENT_CHAR_PRESS ,
-		function(event)
-			local action = getAction(event)
-			if not action then
-				return EVENT_UNUSED
-			end
-			
-			local actionEvent = Framework:newActionEvent(action)
-			if not actionEvent then
-				log:error("Odd, newActionEvent returned nil, but should always return a result when match was found for action: ", action)
-				return EVENT_UNUSED
-			end
-			
-			--getmetatable(actionEvent).sourceEvent = event 
-
-			log:debug("Pushing action event (", action, "), triggered from source event:", event:tostring())
-			Framework:pushEvent(actionEvent)
-			return EVENT_CONSUME
-		end,
-		9999)
-
-
-	
-	--"Last Resort" action listener - provides backwords compatibility for applets that only respond to KEY events
-	-- This listeners says, "in no one has use an ACTION, send a key event that matchs that action"
-	-- This is needed, for instance, for keyboard shortcut input, which now only creates action events
----- DOESN"T WORK! new action listeners will pick up the action events before the old KEY style listeners will get a chance
---	Framework:addListener(ACTION,
---		function(actionEvent)
---			local sourceEvent = getmetatable(actionEvent).sourceEvent
---			
---			if (sourceEvent:getType() & EVENT_KEY_ALL) == 0 then
---				--Only do last resort key event if source event was not a key event (key event s would cause infinite loop)
---				local action = actionEvent:getAction()
---				if not lastResortActionToKeyMap[action] then
---					return EVENT_UNUSED
---				end
---		
---				local keyCode = lastResortActionToKeyMap[action].keyCode
---				local keyEvent = lastResortActionToKeyMap[action].event
---				log:debug("Pushing last resort key event for unused action (", action, ")")
---				Framework:pushEvent(Event:new(keyEvent, keyCode))
---					
---				return EVENT_CONSUME
---			end
---			
---			return EVENT_UNUSED
---		end,
---		10000)
-		
-				
 	-- disconnect from player on press and hold left
-	Framework:addActionListener("disconnect_player", self, _disconnectPlayer)
+	Framework:addActionListener("disconnect_player", self, _disconnectPlayer, false)
 	
 	-- show our window!
 	jiveMain.window:show()
@@ -353,7 +218,7 @@ function JiveMain:__init()
 
 	-- show splash screen for five seconds, or until key/scroll events
 	Framework:setUpdateScreen(false)
-	local splashHandler = Framework:addListener(EVENT_KEY_ALL | EVENT_SCROLL,
+	local splashHandler = Framework:addListener(ACTION | EVENT_CHAR_PRESS | EVENT_KEY_ALL | EVENT_SCROLL,
 							    function()
 								Framework:setUpdateScreen(true)
 								return EVENT_UNUSED

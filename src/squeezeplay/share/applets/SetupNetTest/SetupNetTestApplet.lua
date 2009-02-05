@@ -41,6 +41,7 @@ local KEY_ADD          = jive.ui.KEY_ADD
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
+local ACTION           = jive.ui.ACTION
 
 local appletManager    = appletManager
 
@@ -111,11 +112,13 @@ function showMainWindow(self)
 	self.window:addWidget(Label("graphaxis", "0                                         100 %"))
 
 	self.window:addWidget(Textarea("help", tostring(self:string('SETUPNETTEST_TESTINGTO')) .. ' ' .. self.player:getName() .. "\n" .. tostring(self:string('SETUPNETTEST_INFO'))))
-	
+
 	self.window:setAllowScreensaver(false)
 
 	self.window:focusWidget(nil)
-	self.window:addListener(EVENT_SCROLL | EVENT_KEY_PRESS,
+	self.window:addActionListener("add", self, _event_handler)
+	self.window:addActionListener("go", self, _event_handler)
+	self.window:addListener(EVENT_SCROLL,
 		function(event)
 			return _event_handler(self, event)
 		end
@@ -131,7 +134,7 @@ function _event_handler(self, event)
 	if self.rates == nil or #self.rates == 0 then
 		return
 	end
-	
+
 	local type = event:getType()
 
 	if type == EVENT_SCROLL then
@@ -145,20 +148,17 @@ function _event_handler(self, event)
 		end
 
 		self:startTest(self.rates[index])
-		
+
 		return EVENT_CONSUME
 	end
 
-	if type == EVENT_KEY_PRESS then
-		local key = event:getKeycode()
-		
-		if key == KEY_BACK then
-			self.window:hide()
-		end
-		if key == KEY_ADD then
+	if type == ACTION then
+		local action = event:getAction()
+
+		if action == "add" then
 			self:startTest(self.rate)
 		end
-		if key == KEY_GO then
+		if action == "go" then
 			self:showHelpWindow()
 		end
 

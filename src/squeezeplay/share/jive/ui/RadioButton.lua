@@ -113,15 +113,8 @@ function __init(self, style, group, closure, selected)
 				 return obj:_action()
 			 end)
 
-	obj:addListener(EVENT_KEY_PRESS,
-			function(event)
-				local keycode = event:getKeycode()
-				if keycode == KEY_PLAY then
-					return obj:_action()
-				end
-				return EVENT_UNUSED
-			end)
-
+	obj:addActionListener("play", obj, _action)
+	
 	return obj
 end
 

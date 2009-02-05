@@ -64,6 +64,7 @@ local EVENT_MOUSE_HOLD	= jive.ui.EVENT_MOUSE_HOLD
 
 local EVENT_CONSUME	= jive.ui.EVENT_CONSUME
 local EVENT_UNUSED	= jive.ui.EVENT_UNUSED
+local ACTION    	= jive.ui.ACTION
 
 local KEY_FWD		= jive.ui.KEY_FWD
 local KEY_REW		= jive.ui.KEY_REW
@@ -106,8 +107,12 @@ function __init(self, style, text)
 	obj.text = text
     obj.dragOrigin = {} 
 
-    
-    obj:addListener(EVENT_SCROLL | EVENT_KEY_PRESS | EVENT_MOUSE_DRAG | EVENT_MOUSE_DOWN| EVENT_MOUSE_UP ,
+	obj:addListener(EVENT_SCROLL | EVENT_KEY_PRESS | EVENT_MOUSE_DRAG,
+	obj:addActionListener("page_up", obj, _pageUpAction)
+	obj:addActionListener("page_down", obj, _pageDownAction)
+	--up/down coming in as scroll events
+
+	obj:addListener(EVENT_SCROLL | EVENT_MOUSE_DRAG,
 			 function (event)
 				return obj:_eventHandler(event)
 			 end)
@@ -153,6 +158,16 @@ Returns true if the textarea is scrollable, otherwise it returns false.
 --]]
 function isScrollable(self)
 	return true -- #self.items > self.visibleItems
+end
+
+
+function _pageUpAction(self)
+	self:scrollBy( -(self.visibleLines - 1) )
+end
+
+
+function _pageDownAction(self)
+	self:scrollBy( self.visibleLines - 1 )
 end
 
 
@@ -223,12 +238,9 @@ function _eventHandler(self, event)
         self.dragOrigin.x, self.dragOrigin.y = mouseX, mouseY
         
 		return EVENT_CONSUME
-		
-	elseif type == EVENT_KEY_PRESS then
-		local keycode = event:getKeycode()
 
-		if keycode == KEY_UP then
 		    
+		if keycode == KEY_UP then
 			self:scrollLines( -1 )
 			self:reDraw()
 			return EVENT_CONSUME

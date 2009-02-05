@@ -407,11 +407,16 @@ end
 -- Settings
 --
 
+function _goHomeAction(self)
+	appletManager:callService("goHome")
+	return EVENT_CONSUME
+end
+
+
 function _installListeners(self, window)
 
 	if windowStyle == 'browse' then
-		window:addListener(
-			EVENT_WINDOW_ACTIVE,
+		window:addListener(EVENT_WINDOW_ACTIVE,
 			function(event)
 				windowStyle = 'browse'
 				self:_updateAll(self[windowStyle])
@@ -422,40 +427,25 @@ function _installListeners(self, window)
 
 	local playlistSize = self.player and self.player:getPlaylistSize()
 
-	window:addListener(
-		EVENT_KEY_PRESS | EVENT_KEY_HOLD,
-		function(event)
-
-			local type = event:getType()
-			local keyPress = event:getKeycode()
-
-			if (keyPress == KEY_BACK or keyPress == KEY_LEFT) and windowStyle == 'browse' then
-				window:playSound("WINDOWHIDE")
-				window:hide()
-				return EVENT_CONSUME
-			end
-
-			if keyPress == KEY_HOME then
-				-- make sure home goes home
-				appletManager:callService("goHome")
-				return EVENT_CONSUME
-
-			elseif keyPress == KEY_GO or keyPress == KEY_RIGHT then
-				window:playSound("WINDOWSHOW")
-
-				if playlistSize == 1 then
-					-- use special showTrackOne method from SlimBrowser
-					appletManager:callService("showTrackOne")
-				else
-					-- show playlist
-					appletManager:callService("showPlaylist")
-				end
-				return EVENT_CONSUME
-
-			end
-			return EVENT_UNUSED
+	local showPlaylistAction = function (self)
+		window:playSound("WINDOWSHOW")
+	
+		if playlistSize == 1 then
+			-- use special showTrackOne method from SlimBrowser
+			appletManager:callService("showTrackOne")
+		else
+			-- show playlist
+			appletManager:callService("showPlaylist")
 		end
-	)
+		
+		return EVENT_CONSUME
+	
+	end
+
+	window:addActionListener("go", self, showPlaylistAction)
+	window:addActionListener("go_home", self, _goHomeAction)
+	--also, no longer listening for hold in this situation, Ben and I felt that was a bug
+	
 end
 
 ----------------------------------------------------------------------------------------
@@ -501,7 +491,7 @@ function _createUI(self)
 		back = Button(
 				Icon("back"), 
 				function() 
-					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_BACK) 
+					Framework:pushAction("back")
 					return EVENT_CONSUME 
 				end
 		),
@@ -511,7 +501,7 @@ function _createUI(self)
 		playlist = Button(
 				Label("playlist", ""), 
 				function() 
-					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_GO) 
+					Framework:pushAction("go")
 					return EVENT_CONSUME 
 				end
 		),
@@ -569,7 +559,7 @@ function _createUI(self)
 
 	local playIcon = Button(Icon('play'),
 				function() 
-				window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_PAUSE) 
+					Framework:pushAction("pause")
 				return EVENT_CONSUME 
 			end
 			)
@@ -580,8 +570,8 @@ function _createUI(self)
 	self[windowStyle].controlsGroup = Group(components.npcontrols, {
 		  	rew = Button(
 				Icon('rew'),
-				function() 
-					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_REW) 
+				function()
+					Framework:pushAction("jump_rew")
 					return EVENT_CONSUME 
 				end
 			),
@@ -589,8 +579,8 @@ function _createUI(self)
 		  	fwd  = Button(
 				Icon('fwd'),
 				function() 
-					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_FWD) 
-					return EVENT_CONSUME 
+					Framework:pushAction("jump_fwd")
+					return EVENT_CONSUME
 				end
 			),
  	})

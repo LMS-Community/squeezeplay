@@ -77,9 +77,11 @@ function __init(self, style, min, max, value, closure)
 
 	obj:setValue(value or obj.min)
 
+	obj:addActionListener("go", obj, _callClosureAction)
+	obj:addActionListener("play", obj, _callClosureAction)
 	obj:addListener(EVENT_SCROLL | EVENT_KEY_PRESS | EVENT_MOUSE_DOWN | EVENT_MOUSE_DRAG,
 			function(event)
-				obj:_eventHandler(event)
+				return obj:_eventHandler(event)
 			end)
 	return obj
 end
@@ -187,12 +189,22 @@ function _setSlider(self, percent)
 end
 
 
+function _callClosureAction(self, event)
+	if self.closure then
+		self.closure(self, self.size, true)
+		return EVENT_CONSUME
+	end
+
+	return EVENT_UNUSED
+end
+
+
 function _eventHandler(self, event)
 	local type = event:getType()
 
 	if type == EVENT_SCROLL then
 		self:_moveSlider(event:getScroll())
-		return EVENT_CONSUME
+		return EVENT_UNUSED --current usages need this so they can handle the scroll directly
 
 	elseif type == EVENT_MOUSE_DOWN or
 		type == EVENT_MOUSE_DRAG then
@@ -206,33 +218,14 @@ function _eventHandler(self, event)
 			-- vertical
 			self:_setSlider(y / h)
 		end
-		return EVENT_CONSUME
+		return EVENT_UNUSED --current usages need this so they can handle the scroll directly
 
 	elseif type == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()
 
-		if keycode == KEY_UP then
-			self:_adjustSlider(1)
-			return EVENT_CONSUME
 
-		elseif keycode == KEY_DOWN then
-			self:_adjustSlider(-1)
-			return EVENT_CONSUME
-
-		elseif keycode == KEY_BACK or
-			keycode == KEY_LEFT then
-			self:playSound("WINDOWHIDE")
-			self:hide()
-			return EVENT_CONSUME
-
-		elseif keycode == KEY_GO or
-			keycode == KEY_RIGHT or
-			keycode == KEY_FWD then
-
-			if self.closure then
-				self.closure(self, self.size, true)
-			end
-			return EVENT_CONSUME
+		if keycode == KEY_FWD then
+			return _callClosureAction(self, event)
 		end
 	end
 end

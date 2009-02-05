@@ -63,8 +63,7 @@ function init(self, ...)
 	self.timer:start()
 
 	-- listener to restart screensaver timer
-	Framework:addListener(
-		EVENT_CHAR_PRESS | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION,
+	Framework:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION,
 		function(event)
 			-- restart timer if it is running
 			self.timer:setInterval(self.timeout)
@@ -73,12 +72,17 @@ function init(self, ...)
 		true
 	)
 
-	-- listener to quit screensaver
-	Framework:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD,
+	Framework:addListener(ACTION | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD,
 		function(event)
+
 			-- screensaver is not active
 			if #self.active == 0 then
 				return EVENT_UNUSED
+			end
+
+			if Framework:isAnActionTriggeringKeyEvent(event, EVENT_KEY_ALL ) then
+				--will come back as an ACTION, let's respond to it then to give other action listeners a chance
+				return 	EVENT_UNUSED
 			end
 
 			log:debug("Closing screensaver event=", event:tostring())
@@ -90,17 +94,14 @@ function init(self, ...)
 
 			-- keys should close the screensaver, and not
 			-- perform an action
-			if event:getType() == EVENT_KEY_PRESS then
-				local keycode = event:getKeycode()
-
-				if keycode == KEY_GO or
-					keycode == KEY_LEFT then
+			if event:getType() == ACTION then
+				if event:getAction() == "back" or event:getAction() == "go" then
 					return EVENT_CONSUME
 				end
 
 				-- make sure when exiting a screensaver we
 				-- really go home.
-				if keycode == KEY_HOME then
+				if event:getAction() == "home" then
 					appletManager:callService("goHome")
 					return EVENT_CONSUME
 				end
@@ -141,8 +142,7 @@ function _activate(self, the_screensaver)
 	-- set the screensaver to activate 10 seconds after the window
 	-- is closed, assuming we still don't have any activity
 	if not Framework.windowStack[1]:canActivateScreensaver() then
-		Framework.windowStack[1]:addListener(
-			EVENT_WINDOW_INACTIVE,
+		Framework.windowStack[1]:addListener(EVENT_WINDOW_INACTIVE,
 			function()
 				if not self.timer:isRunning() then
 					self.timer:restart(10000)
@@ -251,6 +251,10 @@ function screensaverWindow(self, window)
 				   log:debug("screensaver closed ", #self.active)
 				   return EVENT_UNUSED
 			   end)
+
+	log:debug("Overriding the default window action 'bump' handling to allow action to fall through to framework listeners")
+	window:removeDefaultActionListeners()
+	
 end
 
 
@@ -300,17 +304,15 @@ function screensaverSetting(self, menuItem, mode)
 			end,
 			key == activeScreensaver
 		)
+		local testScreensaverAction = function (self)
+			self.demoScreensaver = key
+			self:_activate(key)
+			return EVENT_CONSUME
+		end
 
 		-- pressing play should play the screensaver, so we need a handler
-		button:addListener(EVENT_KEY_PRESS,
-			function(evt)
-				if evt:getKeycode() == KEY_PLAY then
-					self.demoScreensaver = key
-					self:_activate(key)
-					return EVENT_CONSUME
-				end
-			end
-		)
+		button:addActionListener("play", self, testScreensaverAction)
+
 		-- set default weight to 100
 		if not screensaver.weight then screensaver.weight = 100 end
 		menu:addItem({

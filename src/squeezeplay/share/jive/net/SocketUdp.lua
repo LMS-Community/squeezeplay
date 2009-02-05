@@ -53,7 +53,7 @@ local ltn12   = require("ltn12")
 local oo      = require("loop.simple")
 local coroutine = require("coroutine")
 
-local strings = require("jive.utils.strings")
+local string  = require("jive.utils.string")
 local Socket  = require("jive.net.Socket")
 
 local log     = require("jive.utils.log").logger("net.socket")

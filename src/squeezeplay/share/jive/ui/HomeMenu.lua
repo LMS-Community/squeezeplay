@@ -3,7 +3,7 @@ local assert, pairs, type, tostring, tonumber, setmetatable = assert, pairs, typ
 
 local oo            = require("loop.base")
 local table         = require("jive.utils.table")
-local strings       = require("jive.utils.strings")
+local string        = require("jive.utils.string")
 
 local Framework     = require("jive.ui.Framework")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
@@ -33,6 +33,14 @@ local function _uses(parent, value)
 	return item
 end
 
+local function bumpAction(self)
+	self.window:playSound("BUMP")
+	self.window:bumpLeft()
+
+	return EVENT_CONSUME
+
+end
+
 -- create a new menu
 function __init(self, name, style, titleStyle)
 	local obj = oo.rawnew(self, {
@@ -55,6 +63,9 @@ function __init(self, name, style, titleStyle)
 		menu = menu, 
 		items = {}
 	}
+	
+	--Avoid inadvertantly quitting the app.
+	obj.window:addActionListener("back", obj, bumpAction)
 
 	return obj
 end
@@ -232,7 +243,7 @@ function addItemToNode(self, item, node)
 		self.customNodes[item.id] = node
 		if item.node ~= 'home' and node == 'home' then
 			local complexWeight = self:getComplexWeight(item.id, item)
-			item.weights = strings:split('%.', complexWeight)
+			item.weights = string.split('%.', complexWeight)
 		end
 	else
 		node = item.node
