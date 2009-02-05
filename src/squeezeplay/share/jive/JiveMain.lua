@@ -177,8 +177,8 @@ function JiveMain:__init()
 	-- Singleton instances (locals)
 	_globalStrings = locale:readGlobalStringsFile()
 
-	Framework:setInputToActionMap(_inputToActionMap)
-	Framework:registerDefaultActions()
+	-- register the default actions
+	Framework:registerActions(_inputToActionMap)
 
 	-- create the main menu
 	jiveMain = oo.rawnew(self, HomeMenu(_globalStrings:str("HOME"), nil, "hometitle"))
@@ -199,47 +199,8 @@ function JiveMain:__init()
 			jiveMain:reloadSkin()
 			return EVENT_UNUSED
 		end,
-		10)
+		10)		
 
-
-	-- action mapping listener, should be last listener in chain to allow for direct access to keys/other input types if needed.
-	--todo add other input types
-	Framework:addListener(EVENT_KEY_ALL | EVENT_CHAR_PRESS ,
-		function(event)
-			return (Framework:convertInputToAction(event))
-		end,
-		9999)
-
-
-	
-	--"Last Resort" action listener - provides backwords compatibility for applets that only respond to KEY events
-	-- This listeners says, "in no one has use an ACTION, send a key event that matchs that action"
-	-- This is needed, for instance, for keyboard shortcut input, which now only creates action events
----- DOESN"T WORK! new action listeners will pick up the action events before the old KEY style listeners will get a chance
---	Framework:addListener(ACTION,
---		function(actionEvent)
---			local sourceEvent = getmetatable(actionEvent).sourceEvent
---			
---			if (sourceEvent:getType() & EVENT_KEY_ALL) == 0 then
---				--Only do last resort key event if source event was not a key event (key event s would cause infinite loop)
---				local action = actionEvent:getAction()
---				if not lastResortActionToKeyMap[action] then
---					return EVENT_UNUSED
---				end
---		
---				local keyCode = lastResortActionToKeyMap[action].keyCode
---				local keyEvent = lastResortActionToKeyMap[action].event
---				log:debug("Pushing last resort key event for unused action (", action, ")")
---				Framework:pushEvent(Event:new(keyEvent, keyCode))
---					
---				return EVENT_CONSUME
---			end
---			
---			return EVENT_UNUSED
---		end,
---		10000)
-		
-				
 	Framework:addActionListener("go_home", self, _goHomeAction, 10)
 
 	-- disconnect from player on press and hold left

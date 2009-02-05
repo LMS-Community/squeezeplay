@@ -63,8 +63,7 @@ function init(self, ...)
 	self.timer:start()
 
 	-- listener to restart screensaver timer
-	Framework:addListener(
-		ACTION | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION,
+	Framework:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION,
 		function(event)
 			-- restart timer if it is running
 			self.timer:setInterval(self.timeout)
@@ -143,8 +142,7 @@ function _activate(self, the_screensaver)
 	-- set the screensaver to activate 10 seconds after the window
 	-- is closed, assuming we still don't have any activity
 	if not Framework.windowStack[1]:canActivateScreensaver() then
-		Framework.windowStack[1]:addListener(
-			EVENT_WINDOW_INACTIVE,
+		Framework.windowStack[1]:addListener(EVENT_WINDOW_INACTIVE,
 			function()
 				if not self.timer:isRunning() then
 					self.timer:restart(10000)

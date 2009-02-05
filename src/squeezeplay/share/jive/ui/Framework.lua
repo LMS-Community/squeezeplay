@@ -224,6 +224,19 @@ function constants(module)
 end
 
 
+function init(self)
+	-- initialize SDL
+	self:initSDL()
+
+	-- action mapping listener, should be last listener in chain to 
+	-- allow for direct access to keys/other input types if needed.
+	self:addListener(jive.ui.EVENT_KEY_ALL | jive.ui.EVENT_CHAR_PRESS ,
+		function(event)
+			return self:convertInputToAction(event)
+		end,
+		9999)
+end
+
 
 --[[
 
@@ -628,7 +641,6 @@ function registerAction(self, actionName)
 	
 	--Bump as default (in case no one is handling this action)
 	self:addActionListener(actionName, self, bump, 9999)
-	
 end
 
 
@@ -646,16 +658,12 @@ function getAction(self, event)
 	end
 
 	return action
-
 end
 
 
-function setInputToActionMap(self, map)
+function registerActions(self, map)
 	self.inputToActionMap = map
-end
 
-
-function registerDefaultActions(self)
 	for key, action in pairs(self.inputToActionMap.keyActionMappings.press) do
 		self:registerAction(action)
 	end
@@ -665,7 +673,6 @@ function registerDefaultActions(self)
 	for key, action in pairs(self.inputToActionMap.charActionMappings.press) do
 		self:registerAction(action)
 	end
-
 end
 
 
@@ -695,8 +702,8 @@ function convertInputToAction(self, inputEvent)
 	self:pushEvent(actionEvent)
 
 	return EVENT_CONSUME
-
 end
+
 
 --if the passed in actionName is not a registered action, an error is logged and false is returned. 
 function assertActionName(self, actionName)
@@ -742,7 +749,6 @@ function addActionListener(self, action, obj, listener, priority)
 		end,
 		priority
 	)
-	
 end
 
 
@@ -759,6 +765,7 @@ function isAnActionTriggeringKeyEvent(self, event, keyEventMask)
 	
 	return false
 end
+
 
 --[[
 

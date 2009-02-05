@@ -2144,8 +2144,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	log:debug("new step: " , step)
 	
 	-- make sure closing our windows do keep the path alive!
-	window:addListener(
-		EVENT_WINDOW_POP,
+	window:addListener(EVENT_WINDOW_POP,
 		function(evt)
 			-- clear it if present, so we can start again the textinput
 			if item then
@@ -2174,8 +2173,7 @@ local function _installPlayerKeyHandler(self)
 		return
 	end
 
-	_playerKeyHandler = Framework:addListener(
-		EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+	_playerKeyHandler = Framework:addListener(EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD,
 		function(event)
 			local type = event:getType()
 			

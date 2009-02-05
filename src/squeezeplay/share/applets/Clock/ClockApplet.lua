@@ -124,8 +124,7 @@ function Clock:__init()
 	obj.window = Window("Clock")
 	obj:_createSurface()
 
-	obj.window:addListener(
-		EVENT_MOTION,
+	obj.window:addListener(EVENT_MOTION,
 		function()
 			obj.window:hide()
 			return EVENT_CONSUME

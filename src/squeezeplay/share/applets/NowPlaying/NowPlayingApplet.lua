@@ -416,8 +416,7 @@ end
 function _installListeners(self, window)
 
 	if windowStyle == 'browse' then
-		window:addListener(
-			EVENT_WINDOW_ACTIVE,
+		window:addListener(EVENT_WINDOW_ACTIVE,
 			function(event)
 				windowStyle = 'browse'
 				self:_updateAll(self[windowStyle])

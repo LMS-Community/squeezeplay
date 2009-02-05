@@ -116,7 +116,7 @@ int jive_traceback (lua_State *L) {
 }
 
 
-static int jiveL_init(lua_State *L) {
+static int jiveL_initSDL(lua_State *L) {
 	SDL_Rect r;
 	const SDL_VideoInfo *video_info;
 	JiveSurface *srf, *splash, *icon;
@@ -1268,7 +1268,7 @@ static const struct luaL_Reg event_methods[] = {
 };
 
 static const struct luaL_Reg core_methods[] = {
-	{ "init", jiveL_init },
+	{ "initSDL", jiveL_initSDL },
 	{ "quit", jiveL_quit },
 	{ "processEvents", jiveL_process_events },
 	{ "setUpdateScreen", jiveL_set_update_screen },
