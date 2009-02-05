@@ -114,14 +114,6 @@ local _idTranslations = {}
 
 -- Squeezebox remote IR codes
 local irCodes = {
-	[ 0x7689e01f ] = KEY_UP,
-	[ 0x7689b04f ] = KEY_DOWN,
-	[ 0x7689906f ] = KEY_BACK,
-	[ 0x7689d02f ] = KEY_GO,
-	[ 0x768922dd ] = KEY_HOME,
-	[ 0x768910ef ] = KEY_PLAY,
-	[ 0x768920df ] = KEY_PAUSE,
-	[ 0x7689609f ] = KEY_ADD,
 	[ 0x7689c03f ] = KEY_REW,
 	[ 0x7689a05f ] = KEY_FWD,
 	[ 0x7689807f ] = KEY_VOLUME_UP,
@@ -156,11 +148,11 @@ local function _addUserPathToLuaPath()
     package.path = package.path .. System.getUserDir() .. dirSeparator .. "?" .. dirSeparator .. "?.lua;"
 end
 
---fallback IR->KEY handler after widgets have had a chance to listen for ir - probably will be removed
+--fallback IR->KEY handler after widgets have had a chance to listen for ir - probably will be removed - still using for rew/fwd and volume for now
 local function _irHandler(event)
 	local irCode = event:getIRCode()
 	local buttonName = Framework:getIRButtonName(irCode)
-	
+
 	if log:isDebug() then
 		log:debug("IR event in fallback _irHandler: ", event:tostring(), " button:", buttonName )
 	end
@@ -168,49 +160,26 @@ local function _irHandler(event)
 		--code may have come from a "foreign" remote that the user is using
 		return EVENT_CONSUME
 	end
-	
+
 	local keyCode = irCodes[irCode]
 	if (keyCode) then
-	--includes temp hack for up/down to allow Menu, etc to have direct IR event access 
-		if event:getType() == EVENT_IR_PRESS and (keyCode ~= KEY_UP and keyCode ~= KEY_DOWN) then
+		if event:getType() == EVENT_IR_PRESS  then
 			Framework:pushEvent(Event:new(EVENT_KEY_PRESS, keyCode))
-			return EVENT_CONSUME -- temp fix can be removed when merge occurs
+			return EVENT_CONSUME
 		elseif event:getType() == EVENT_IR_HOLD then
 			Framework:pushEvent(Event:new(EVENT_KEY_HOLD, keyCode))
-			return EVENT_CONSUME -- temp fix can be removed when merge occurs
-		elseif event:getType() == EVENT_IR_DOWN and (keyCode ~= KEY_UP and keyCode ~= KEY_DOWN) then
+			return EVENT_CONSUME
+		elseif event:getType() == EVENT_IR_DOWN  then
 			Framework:pushEvent(Event:new(EVENT_KEY_DOWN, keyCode))
-			return EVENT_CONSUME -- temp fix can be removed when merge occurs
-		elseif event:getType() == EVENT_IR_UP and (keyCode ~= KEY_UP and keyCode ~= KEY_DOWN) then
+			return EVENT_CONSUME
+		elseif event:getType() == EVENT_IR_UP  then
 			Framework:pushEvent(Event:new(EVENT_KEY_UP, keyCode))
-			return EVENT_CONSUME -- temp fix can be removed when merge occurs
+			return EVENT_CONSUME
 		end
 	end
 
 	return EVENT_UNUSED
-end		
-
-
--- transform user input events (key, etc) to a matching action name
-local function getAction(event)
-	for key, action in pairs(inputToActionMap.irActionMappings.press) do 
-		Framework:registerAction(action)
-	end
 end
-
-
---local lastResortActionToKeyMap = {
---	["back"]  = { keyCode = KEY_LEFT, event = EVENT_KEY_PRESS },
---	["disconnect_player "]  = { keyCode = KEY_BACK, event = EVENT_KEY_HOLD },
---	["go_home"]  = { keyCode = KEY_HOME, event = EVENT_KEY_PRESS },
---	["play"]  = { keyCode = KEY_PLAY, event = EVENT_KEY_HOLD },
---	["create_mix"]  = { keyCode = KEY_PLAY, event = EVENT_KEY_HOLD },
---	["pause"]  = { keyCode = KEY_PAUSE, event = EVENT_KEY_PRESS },
---	["stop"]  = { keyCode = KEY_PAUSE, event = EVENT_KEY_HOLD },
---	["add"]  = { keyCode = KEY_ADD, event = EVENT_KEY_PRESS },
---	["addNext"]  = { keyCode = KEY_ADD, event = EVENT_KEY_HOLD },
---}
-
 
 function _goHomeAction()
 	_goHome()
@@ -241,6 +210,8 @@ function JiveMain:__init()
 	-- Singleton instances (locals)
 	_globalStrings = locale:readGlobalStringsFile()
 
+	Framework:initIRCodeMappings()
+
 	-- register the default actions
 	Framework:registerActions(_inputToActionMap)
 
@@ -252,8 +223,6 @@ function JiveMain:__init()
 
 	-- menu nodes to add...these are menu items that are used by applets
 	JiveMain:jiveMainNodes(_globalStrings)
-
-	Framework:initIRCodeMappings()
 
 	-- init our listeners
 	jiveMain.skins = {}
@@ -276,7 +245,11 @@ function JiveMain:__init()
 
 	-- disconnect from player on press and hold left
 	Framework:addActionListener("disconnect_player", self, _disconnectPlayer, false)
-	
+
+	--Consume up and down actions
+	Framework:addActionListener("up", self, function() return EVENT_CONSUME end, 9999)
+	Framework:addActionListener("down", self, function() return EVENT_CONSUME end, 9999)
+
 	-- show our window!
 	jiveMain.window:show()
 

@@ -63,7 +63,7 @@ function init(self, ...)
 	self.timer:start()
 
 	-- listener to restart screensaver timer
-	Framework:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION,
+	Framework:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION | EVENT_IR_ALL,
 		function(event)
 			if (event:getType() & EVENT_IR_ALL) > 0 then
 				if (not Framework:isValidIRCode(event)) then

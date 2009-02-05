@@ -235,7 +235,7 @@ function init(self)
 
 	-- action mapping listener, should be last listener in chain to 
 	-- allow for direct access to keys/other input types if needed.
-	self:addListener(jive.ui.EVENT_KEY_ALL | jive.ui.EVENT_CHAR_PRESS ,
+	self:addListener(jive.ui.EVENT_KEY_ALL | jive.ui.EVENT_CHAR_PRESS | jive.ui.EVENT_IR_ALL ,
 		function(event)
 			return self:convertInputToAction(event)
 		end,
@@ -660,6 +660,10 @@ function getAction(self, event)
 		action = self.inputToActionMap.keyActionMappings.hold[event:getKeycode()]
 	elseif eventType == jive.ui.EVENT_CHAR_PRESS then
 		action = self.inputToActionMap.charActionMappings.press[string.char(event:getUnicode())]
+	elseif eventType == jive.ui.EVENT_IR_PRESS then
+		action = inputToActionMap.irActionMappings.press[self:getIRButtonName(event:getIRCode())]
+	elseif eventType == jive.ui.EVENT_IR_HOLD then
+		action = inputToActionMap.irActionMappings.hold[self:getIRButtonName(event:getIRCode())]
 	end
 
 	return action
@@ -676,6 +680,12 @@ function registerActions(self, map)
 		self:registerAction(action)
 	end
 	for key, action in pairs(self.inputToActionMap.charActionMappings.press) do
+		self:registerAction(action)
+	end
+	for key, action in pairs(self.inputToActionMap.irActionMappings.press) do
+		self:registerAction(action)
+	end
+	for key, action in pairs(self.inputToActionMap.irActionMappings.hold) do
 		self:registerAction(action)
 	end
 end
