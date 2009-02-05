@@ -17,13 +17,13 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local setmetatable, tonumber, tostring, string, ipairs = setmetatable, tonumber, tostring, string, ipairs
+local setmetatable, tonumber, tostring, ipairs = setmetatable, tonumber, tostring, ipairs
 
 local io                     = require("io")
 local oo                     = require("loop.simple")
 local math                   = require("math")
 local table                  = require("jive.utils.table")
-local strings                = require("jive.utils.strings")
+local string                 = require("jive.utils.string")
 local lfs                    = require('lfs')
 
 local Applet                 = require("jive.Applet")
@@ -73,8 +73,7 @@ function startSlideshow(self, menuItem)
 						return nil
 					end
 					if chunk ~=nil then
-						local files = strings:split("\n", chunk)
-						--for w in string.gmatch(chunk, filePattern) do
+						local files = string:split("\n", chunk)
 						for _, file in ipairs(files) do
 							if string.find(file, "%pjpe*g")
 								or string.find(file, "%ppng") 
