@@ -73,7 +73,7 @@ function startSlideshow(self, menuItem)
 						return nil
 					end
 					if chunk ~=nil then
-						local files = string:split("\n", chunk)
+						local files = string.split("\n", chunk)
 						for _, file in ipairs(files) do
 							if string.find(file, "%pjpe*g")
 								or string.find(file, "%ppng") 
