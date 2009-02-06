@@ -42,6 +42,8 @@ local socket      = require("socket")
 local mime        = require("mime")
 local ltn12       = require("ltn12")
 
+local System      = require("jive.System")
+
 local Task        = require("jive.ui.Task")
 
 local DNS         = require("jive.net.DNS")
@@ -253,7 +255,14 @@ function t_getSendHeaders(self)
 
 	-- default set
 	local headers = {
-		["User-Agent"] = 'Jive/' .. JIVE_VERSION,
+		["User-Agent"] = table.concat({
+			'SqueezePlay-',
+			System:getMachine(),
+			'/',
+			string.gsub(JIVE_VERSION, "%s", "-"),
+			' (',
+			System:getArch(),
+			')'})
 	}
 	
 	local ip, port = self:t_getAddressPort()
