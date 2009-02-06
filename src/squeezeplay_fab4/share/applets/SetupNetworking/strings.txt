@@ -975,4 +975,8 @@ NETWORK_WPS_PROBLEM
 NETWORK_WPS_REMAINING_WALK_TIME
 	EN	Remaining walk time: %s seconds
 
+NETWORK_ATTACH_CABLE
+	EN	Attach Network Cable
 
+NETWORK_ATTACH_CABLE_DETAILED
+	EN	Error: No wired link detected on the Squeezebox. Please check that there is a network cable inserted and physically connected to your network.

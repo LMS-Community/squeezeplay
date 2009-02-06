@@ -969,12 +969,46 @@ function createAndConnect(self, iface, ssid)
 	connect(self, iface, ssid)
 end
 
+function attachWireMessage(self, iface, ssid, keepConfig)
+
+	local window = Window("window", self:string("NETWORK_ATTACH_CABLE"))
+        window:setAllowScreensaver(false)
+
+	local textarea = Textarea('textarea', self:string("NETWORK_ATTACH_CABLE_DETAILED"))
+	window:addWidget(textarea)
+
+	window:addTimer(500,
+		function(event)
+			log:debug("Checking Link")
+			 Task("wireConnect", self,
+				function()
+					local status = iface:t_wpaStatus()
+					log:debug("link=", status.link)
+					if status.link then
+						log:debug("connected")
+						window:hide()
+						self:connect(iface, ssid, keepConfig)
+					end
+             			end
+			):addTask()
+		end
+	)
+
+	self:tieAndShowWindow(window)
+end
 
 function connect(self, iface, ssid, keepConfig)
 	assert(iface and ssid, debug.traceback())
 
 	self.connectTimeout = 0
 	self.dhcpTimeout = 0
+
+	if not iface:isWireless() then
+		local status = iface:t_wpaStatus()
+		if not status.link then
+			return self:attachWireMessage(iface, ssid, keepConfig)
+		end
+	end
 
 	if not keepConfig then
 		self:_setCurrentSSID(nil)
