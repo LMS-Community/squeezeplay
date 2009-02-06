@@ -32,7 +32,6 @@ struct decode_alsa {
 	u32_t flags;
 	unsigned int buffer_time;
 	unsigned int period_count;
-	unsigned int rate_max;
 
 	/* alsa pcm state */
 	snd_pcm_t *pcm;
@@ -63,6 +62,7 @@ struct decode_alsa {
 static snd_output_t *output;
 
 /* player state */
+static unsigned int playback_max_rate = 44100;
 static struct decode_alsa *playback_state;
 static struct decode_alsa *effects_state;
 
@@ -266,18 +266,6 @@ static int pcm_open(struct decode_alsa *state) {
 		return err;
 	}
 
-	/* Find maximum supported hardware rate */
-	if ((err = snd_pcm_hw_params_set_rate_resample(state->pcm, state->hw_params, 0)) < 0) {
-		DEBUG_ERROR("Resampling setup failed: %s\n", snd_strerror(err));
-		return err;
-	}
-
-	if ((err = snd_pcm_hw_params_get_rate_max(state->hw_params, &val, &dir)) < 0) {
-		DEBUG_ERROR("hwparam rate max error: %s", snd_strerror(err));
-		return err;
-	}
-	state->rate_max = val;
-
 	/* set hardware resampling */
 	if ((err = snd_pcm_hw_params_set_rate_resample(state->pcm, state->hw_params, 1)) < 0) {
 		DEBUG_ERROR("Resampling setup failed: %s\n", snd_strerror(err));
@@ -371,22 +359,38 @@ static int pcm_open(struct decode_alsa *state) {
 }
 
 
-static int pcm_test(const char *name) {
-	struct decode_alsa tmp_state;
-	int err;
+static int pcm_test(const char *name, unsigned int *max_rate) {
+	snd_pcm_t *pcm;
+	snd_pcm_hw_params_t *hw_params;
+	int dir, err = 0;
 
-	memset(&tmp_state, 0, sizeof(struct decode_alsa));
-	tmp_state.name = name;
-	tmp_state.buffer_time = ALSA_DEFAULT_BUFFER_TIME;
-	tmp_state.period_count = ALSA_DEFAULT_PERIOD_COUNT;
-	tmp_state.new_sample_rate = 44100;
-	if ((err = pcm_open(&tmp_state)) < 0) {
-		return err;
+	if ((err = snd_pcm_open(&pcm, name, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
+		goto test_error;
 	}
 
-	pcm_close(&tmp_state);
+	if ((err = snd_pcm_hw_params_malloc(&hw_params)) < 0) {
+		goto test_close;
+	}
 
-	return 0;
+	if ((err = snd_pcm_hw_params_any(pcm, hw_params)) < 0) {
+		goto test_close;
+	}
+
+	/* Find maximum supported hardware rate */
+	if ((err = snd_pcm_hw_params_set_rate_resample(pcm, hw_params, 0)) < 0) {
+		goto test_close;
+	}
+
+	if ((err = snd_pcm_hw_params_get_rate_max(hw_params, max_rate, &dir)) < 0) {
+		goto test_close;
+	}
+
+ test_close:
+	snd_pcm_close(pcm);
+	snd_pcm_hw_params_free(hw_params);
+
+ test_error:
+	return err;
 }
 
 
@@ -708,7 +712,7 @@ static void decode_alsa_copyright(bool_t copyright) {
 
 
 static void decode_alsa_info(unsigned int *rate_max) {
-	*rate_max = playback_state->rate_max;
+	*rate_max = playback_max_rate;
 }
 
 
@@ -733,12 +737,12 @@ static int decode_alsa_init(lua_State *L) {
 
 
 	/* test if device is available */
-	if (pcm_test(playback_device) < 0) {
+	if (pcm_test(playback_device, &playback_max_rate) < 0) {
 		lua_pop(L, 2);
 		return 0;
 	}
 
-	if (effects_device && pcm_test(effects_device) < 0) {
+	if (effects_device && pcm_test(effects_device, NULL) < 0) {
 		effects_device = NULL;
 	}
 
