@@ -31,8 +31,6 @@ oo.class(_M, Player)
 
 -- class method to set the device type
 function setDeviceType(self, model, name)
-	 assert(device2id[model])
-
 	 DEVICE_ID = 9
 	 DEVICE_MODEL = model
 	 DEVICE_NAME = name or model
