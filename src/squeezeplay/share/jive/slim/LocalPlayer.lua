@@ -44,7 +44,7 @@ function __init(self, jnt, playerId, uuid)
 
 	obj.slimproto = SlimProto(jnt, {
 		opcode = "HELO",
-		deviceID = DEVICE_ID
+		deviceID = DEVICE_ID,
 	       	version = JIVE_VERSION,
 		mac = obj.id,
 		uuid = uuid,
