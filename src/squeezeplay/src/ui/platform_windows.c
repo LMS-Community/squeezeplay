@@ -88,7 +88,7 @@ static int windows_filter_pump(const SDL_Event *event) {
 
 char *platform_get_arch() {
     // FIXME
-    return NULL;
+    return "unknown";
 }
 
 void platform_init(lua_State *L) {

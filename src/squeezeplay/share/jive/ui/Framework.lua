@@ -629,7 +629,7 @@ By default, a bump listener is added so that if nothing else responds, a bump wi
 --]]
 function registerAction(self, actionName)
 	if (self.actions.byName[actionName]) then
-		log:info("Action already registered, doing nothing: ", actionName)
+		log:debug("Action already registered, doing nothing: ", actionName)
 		return
 	end
 	

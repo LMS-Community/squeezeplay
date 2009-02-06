@@ -58,7 +58,7 @@ char *platform_get_mac_address() {
 
 char *platform_get_arch() {
     // FIXME
-    return NULL;
+    return "unknown";
 }
 
 void platform_init(lua_State *L) {
