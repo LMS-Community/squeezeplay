@@ -17,6 +17,7 @@ local Playback       = require("jive.audio.Playback")
 local debug          = require("jive.utils.debug")
 local log            = require("jive.utils.log").logger("player")
 
+local JIVE_VERSION   = jive.JIVE_VERSION
 
 -- can be overridden by hardware specific classes
 local DEVICE_MODEL   = "squeezeplay"
@@ -51,7 +52,7 @@ function __init(self, jnt, playerId, uuid)
 	obj.slimproto = SlimProto(jnt, {
 		opcode = "HELO",
 		deviceID = deviceid,
-	       	revision = 0,
+	       	version = JIVE_VERSION,
 		mac = obj.id,
 		uuid = uuid,
 		model = DEVICE_MODEL,
