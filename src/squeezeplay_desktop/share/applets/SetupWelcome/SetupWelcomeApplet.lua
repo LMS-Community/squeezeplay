@@ -95,7 +95,8 @@ function step1(self)
 		text = self:string("RETURN_TO_SETUP"),
 		weight = 2,
 		callback = function()
-			self:step1()
+			--note: don't refer to self here since the applet wil have been freed if this is being called
+			appletManager:callService("step1")
 		end
 	}
 	jiveMain:addItem(returnToSetup)
