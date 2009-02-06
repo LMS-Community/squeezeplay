@@ -124,7 +124,6 @@ end
 
 local opcodes = {
 	HELO = function(self, data)
-		assert(data.revision)
 		assert(data.mac)
 		assert(data.uuid)
 
@@ -146,7 +145,7 @@ local opcodes = {
 
 		return {
 			packNumber(data.deviceID or DEVICEID, 1),
-			packNumber(data.revision, 1),
+			packNumber(0, 1),
 			table.concat(macp),
 			table.concat(uuidp),
 			packNumber(wlanList, 2),
@@ -305,7 +304,7 @@ local opcodes = {
 -- address. The heloPacket is sent on server (re)connection.
 function __init(self, jnt, heloPacket)
 	-- validate the heloPacket
-	assert(heloPacket.revision)
+	assert(heloPacket.version)
 	assert(heloPacket.mac)
 	assert(heloPacket.uuid)
 	assert(heloPacket.model)
@@ -324,6 +323,7 @@ function __init(self, jnt, heloPacket)
 
 	obj:capability("Model", obj.heloPacket.model)
 	obj:capability("ModelName", obj.heloPacket.modelName)
+	obj:capability("Firmware", string.gsub(obj.heloPacket.version, '%s', '-'))
 
 	obj.statusCallback = _defaultStatusCallback
 

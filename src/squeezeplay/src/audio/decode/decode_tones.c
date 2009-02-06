@@ -26,6 +26,7 @@ struct decode_tones {
 
 #define DECODE_TONES_MODE_SINE40	1
 #define DECODE_TONES_MODE_MULTITONE	2
+#define DECODE_TONES_MODE_LEFT_CHANNEL	3
 
 
 #define INVERT24(n) ( ((n & 0x00ffffff)==0x00800000) ? \
@@ -115,7 +116,8 @@ static bool_t decode_tones_callback(void *data) {
 				*write_pos++ = sample << 8;
 			}
 			break;
-	
+
+		case DECODE_TONES_MODE_LEFT_CHANNEL:
 		case DECODE_TONES_MODE_MULTITONE:
 			for (i = 0; i < BLOCKSIZE; i+=2) {
 
@@ -123,7 +125,7 @@ static bool_t decode_tones_callback(void *data) {
 					self->count = 0;
 					
 					self->tones_multitone_test++;
-					if (self->tones_multitone_test > 15) {
+					if ((self->mode == DECODE_TONES_MODE_LEFT_CHANNEL && self->tones_multitone_test > 5) || self->tones_multitone_test > 15) {
 						self->tones_multitone_test = 1;
 					}
 				}
@@ -197,6 +199,10 @@ static void *decode_tones_start(u8_t *params, u32_t num_params) {
 	default:
 	case TESTTONES_MULTITONE:
 	    self->mode = DECODE_TONES_MODE_MULTITONE;
+	    self->sample_rate = 44100;
+	    break;
+	case TESTTONES_LEFT_CHANNEL:
+	    self->mode = DECODE_TONES_MODE_LEFT_CHANNEL;
 	    self->sample_rate = 44100;
 	    break;
 	case TESTTONES_SINE40_44100:

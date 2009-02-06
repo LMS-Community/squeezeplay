@@ -12,7 +12,7 @@ local System        = require("jive.System")
 local SlimServer    = require("jive.slim.SlimServer")
 local LocalPlayer   = require("jive.slim.LocalPlayer")
 
-local Decode        = require("squeezeplay.decode")
+local decode        = require("squeezeplay.decode")
 
 local Framework     = require("jive.ui.Framework")
 local Checkbox      = require("jive.ui.Checkbox")
@@ -137,7 +137,7 @@ function _debugMenu(self)
 	window:addWidget(menu)
 
 	window:addTimer(1000, function()
-			local status = Decode:status()
+			local status = decode:status()
 
 			values[1]:setValue(decoders[string.char(status.decoder or 0)] or "?")
 			values[2]:setValue(string.format('%0.1f%%', status.decodeFull / status.decodeSize * 100))
@@ -159,52 +159,73 @@ function _tonesMenu(self)
 		{ text = self:string("MULTITONE"),
 		  sound = "WINDOWSHOW",
 		  callback = function(event)
-		  	Decode:start(
+			decode:flush()
+		  	decode:start(
 				string.byte('t'), 0, 0, 0, 0, 0, 1
 			)
-			Decode:resume()
+			decode:resumeDecoder()
+			decode:resumeAudio()
 		  end
 		},
-		{ text = self:string("SINE_44.1k"),
+		{ text = self:string("LEFT_CHANNEL"),
 		  sound = "WINDOWSHOW",
 		  callback = function(event)
-		  	Decode:start(
+			decode:flush()
+		  	decode:start(
+				string.byte('t'), 0, 0, 0, 0, 0, 2
+			)
+			decode:resumeDecoder()
+			decode:resumeAudio()
+		  end
+		},
+		{ text = self:string("SINE_44_1K"),
+		  sound = "WINDOWSHOW",
+		  callback = function(event)
+			decode:flush()
+		  	decode:start(
 				string.byte('t'), 0, 0, 0, 0, 0, 10
 			)
-			Decode:resume()
+			decode:resumeDecoder()
+			decode:resumeAudio()
 		  end
 		},
 		{ text = self:string("SINE_48k"),
 		  sound = "WINDOWSHOW",
 		  callback = function(event)
-		  	Decode:start(
+			decode:flush()
+		  	decode:start(
 				string.byte('t'), 0, 0, 0, 0, 0, 11
 			)
-			Decode:resume()
+			decode:resumeDecoder()
+			decode:resumeAudio()
 		  end
 		},
-		{ text = self:string("SINE_88.2K"),
+		{ text = self:string("SINE_88_2K"),
 		  sound = "WINDOWSHOW",
 		  callback = function(event)
-		  	Decode:start(
+			decode:flush()
+		  	decode:start(
 				string.byte('t'), 0, 0, 0, 0, 0, 12
 			)
-			Decode:resume()
+			decode:resumeDecoder()
+			decode:resumeAudio()
 		  end
 		},
 		{ text = self:string("SINE_96K"),
 		  sound = "WINDOWSHOW",
 		  callback = function(event)
-		  	Decode:start(
+			decode:flush()
+		  	decode:start(
 				string.byte('t'), 0, 0, 0, 0, 0, 13
 			)
-			Decode:resume()
+			decode:resumeDecoder()
+			decode:resumeAudio()
 		  end
 		},			
 		{ text = self:string("SINE_STOP"),
 		  sound = "WINDOWSHOW",
 		  callback = function(event)
-			Decode:stop()
+			decode:stop()
 		  end
 		},			
 	})

@@ -17,8 +17,10 @@ local Playback       = require("jive.audio.Playback")
 local debug          = require("jive.utils.debug")
 local log            = require("jive.utils.log").logger("player")
 
+local JIVE_VERSION   = jive.JIVE_VERSION
 
 -- can be overridden by hardware specific classes
+local DEVICE_ID      = 12
 local DEVICE_MODEL   = "squeezeplay"
 local DEVICE_NAME    = "SqueezePlay"
 
@@ -27,16 +29,11 @@ module(...)
 oo.class(_M, Player)
 
 
-local device2id = {
-	["controller"] = 9,
-	["squeezeplay"] = 12,
-}
-
-
 -- class method to set the device type
 function setDeviceType(self, model, name)
 	 assert(device2id[model])
 
+	 DEVICE_ID = 9
 	 DEVICE_MODEL = model
 	 DEVICE_NAME = name or model
 end
@@ -45,13 +42,10 @@ end
 function __init(self, jnt, playerId, uuid)
 	local obj = oo.rawnew(self, Player(jnt, playerId))
 
-	local deviceid = device2id[DEVICE_MODEL]
-	assert(deviceid)
-
 	obj.slimproto = SlimProto(jnt, {
 		opcode = "HELO",
-		deviceID = deviceid,
-	       	revision = 0,
+		deviceID = DEVICE_ID
+	       	version = JIVE_VERSION,
 		mac = obj.id,
 		uuid = uuid,
 		model = DEVICE_MODEL,
