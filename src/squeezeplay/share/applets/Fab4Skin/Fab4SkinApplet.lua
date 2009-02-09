@@ -415,6 +415,8 @@ function skin(self, s)
 	s.selected = {}
 	s.selected.item =
 		_uses(s.item, {
+			      --[[
+			      -- not for touch!
 			      bgImg = selectionBox,
 			      text = {
 				      fg = SELECT_COLOR,
@@ -425,6 +427,7 @@ function skin(self, s)
 				      align = ITEM_ICON_ALIGN,
 				      img = _loadImage(self, "Icons/selection_right.png")
 			      }
+			      --]]
 		      })
 
 
@@ -459,7 +462,7 @@ function skin(self, s)
 
 	s.selected.itemNoAction =
 		_uses(s.itemNoAction, {
-			      bgImg = selectionBox,
+			      --bgImg = selectionBox,
 			      text = {
 				      fg = SELECT_COLOR,
 				      sh = SELECT_SH_COLOR
@@ -468,7 +471,7 @@ function skin(self, s)
 
 	s.selected.checkedNoAction =
 		_uses(s.checkedNoAction, {
-			      bgImg = selectionBox,
+			      --bgImg = selectionBox,
 			      text = {
 				      fg = SELECT_COLOR,
 				      sh = SELECT_SH_COLOR
