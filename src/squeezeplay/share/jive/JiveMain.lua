@@ -406,7 +406,7 @@ end
 
 
 function JiveMain:setSelectedSkin(appletName)
-	log:warn(appletName)
+	log:info("Select skin ", appletName)
 	if _loadSkin(self, appletName, false, true) then
 		self.selectedSkin = appletName
 	end
