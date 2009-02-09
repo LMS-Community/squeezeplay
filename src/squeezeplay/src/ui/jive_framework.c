@@ -344,7 +344,7 @@ static int _draw_screen(lua_State *L) {
 	JiveSurface *srf;
 	Uint32 t0 = 0, t1 = 0, t2 = 0, t3 = 0, t4 = 0;
 	clock_t c0 = 0, c1 = 0;
-	bool_t force_redraw;
+	bool_t force_redraw, drawn = false;
 
 
 	JIVEL_STACK_CHECK_BEGIN(L);
@@ -440,6 +440,8 @@ static int _draw_screen(lua_State *L) {
 		lua_pushvalue(L, -3);  	// widget
 		lua_pushvalue(L, 2);	// surface
 		lua_call(L, 2, 0);
+
+		drawn = true;
 	}
 	else if (jive_dirty_region.w || force_redraw) {
 #if 0
@@ -464,6 +466,8 @@ static int _draw_screen(lua_State *L) {
 			lua_call(L, 3, 0);
 		}
 		jive_dirty_region.w = 0;
+
+		drawn = true;
 	}
 
 	if (perfwarn.screen) {
@@ -482,7 +486,8 @@ static int _draw_screen(lua_State *L) {
 
 	JIVEL_STACK_CHECK_END(L);
 
-	return 0;
+	lua_pushboolean(L, drawn);
+	return 1;
 }
 
 
