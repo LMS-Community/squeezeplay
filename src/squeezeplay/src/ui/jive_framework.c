@@ -544,7 +544,7 @@ int jiveL_update_screen(lua_State *L) {
 	}
 
 	/* flip screen */
-	if (lua_toboolen(L, -1)) {
+	if (lua_toboolean(L, -1)) {
 		jive_surface_flip(screen);
 	}
 
