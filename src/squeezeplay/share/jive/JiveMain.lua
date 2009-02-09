@@ -399,6 +399,7 @@ function JiveMain:isFullscreen()
 	return _fullscreen
 end
 
+
 function JiveMain:setFullscreen(fullscreen)
 	_fullscreen = fullscreen
 end
@@ -407,12 +408,12 @@ end
 function JiveMain:setSelectedSkin(appletName)
 	log:warn(appletName)
 	if _loadSkin(self, appletName, false, true) then
-		self.selectedSkin        = appletName
+		self.selectedSkin = appletName
 	end
 end
 
-function JiveMain:getSkinParam(key)
 
+function JiveMain:getSkinParam(key)
 	local skinName = self.selectedSkin or JiveMain:getDefaultSkin()
 	
 	if key and self.skinParams and self.skinParams[skinName] and self.skinParams[skinName][key] then
@@ -421,18 +422,16 @@ function JiveMain:getSkinParam(key)
 		log:error('no value for skinParam ', key, ' found') 
 		return nil
 	end
-
 end
+
 
 -- service method to allow other applets to set skin-specific settings like THUMB_SIZE
 function JiveMain:setSkinParams(skinName, settings)
-
 	_assert(type(settings) == 'table')
 	if not self.skinParams then
 		self.skinParams = {}
 	end
 	self.skinParams[skinName] = settings
-
 end
 
 
@@ -443,25 +442,16 @@ function JiveMain:reloadSkin(reload)
 end
 
 
--- loadSkin
--- XXXX deprecated, to be replaced with per window skinning
-function JiveMain:loadSkin(appletName, method)
-	log:debug("loadSkin(", appletName, ")")
-	
-	local obj = appletManager:loadApplet(appletName)
-	assert(obj, "Cannot load skin " .. appletName)
-
-	obj[method](obj, jive.ui.style)
-end
-
 function JiveMain:setDefaultSkin(appletName)
 	log:debug("setDefaultSkin(", appletName, ")")
 	_defaultSkin = appletName
 end
 
+
 function JiveMain:getDefaultSkin()
 	return _defaultSkin or "DefaultSkin"
 end
+
 
 -----------------------------------------------------------------------------
 -- main()

@@ -52,7 +52,6 @@ local function _takeScreenshotAction(self)
 		end
 	end
 
-
 	local file = path .. string.format("/squeezeplay%04d.bmp", self.number)
 	self.number = self.number + 1
 	
