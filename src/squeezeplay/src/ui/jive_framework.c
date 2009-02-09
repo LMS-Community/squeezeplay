@@ -538,13 +538,15 @@ int jiveL_update_screen(lua_State *L) {
 
 	lua_pushboolean(L, 0);
 
-	if (lua_pcall(L, 3, 0, 2) != 0) {
+	if (lua_pcall(L, 3, 1, 2) != 0) {
 		fprintf(stderr, "error in update_screen:\n\t%s\n", lua_tostring(L, -1));
 		return 0;
 	}
 
 	/* flip screen */
-	jive_surface_flip(screen);
+	if (lua_toboolen(L, -1)) {
+		jive_surface_flip(screen);
+	}
 
 	lua_pop(L, 2);
 
