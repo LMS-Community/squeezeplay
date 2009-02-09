@@ -325,7 +325,10 @@ local function _eventHandler(self, event)
 
 		end
 
-		if self.scrollbar:mouseInside(event) or self.sliderDragInProgress then
+		--Note: on a down outside the scrollbar boundary, we don't want to forward this to the scrollbar
+		--Normally that should never happen, but will if an up event is nevet sent to this widget, which would have cleared the
+		-- sliderDragInProgress flag
+		if self.scrollbar:mouseInside(event) or (self.sliderDragInProgress and evtype ~= EVENT_MOUSE_DOWN ) then
 			if (evtype ~= EVENT_MOUSE_MOVE) then
 				--allows slider drag to continue even when listitem area is entered
 				-- a more comprehensive solution is needed so that drag of a slider is respected no matter
