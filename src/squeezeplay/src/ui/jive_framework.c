@@ -340,30 +340,25 @@ int jiveL_set_update_screen(lua_State *L) {
 }
 
 
-static int _update_screen(lua_State *L) {
+static int _draw_screen(lua_State *L) {
 	JiveSurface *srf;
-	Uint32 t0 = 0, t1 = 0, t2 = 0, t3 = 0, t4 = 0, t5 = 0;
+	Uint32 t0 = 0, t1 = 0, t2 = 0, t3 = 0, t4 = 0;
 	clock_t c0 = 0, c1 = 0;
+	bool_t force_redraw;
+
 
 	JIVEL_STACK_CHECK_BEGIN(L);
 
-	if (!update_screen) {
-		return 0;
-	}
-
 	/* stack is:
 	 * 1: framework
+	 * 2: surface (in screen format)
+	 * 3: force_redraw
 	 */
 
-	lua_getfield(L, 1, "screen");
-	lua_getfield(L, -1, "surface");
-	srf = tolua_tousertype(L, -1, 0);
-	lua_replace(L, -2);
+	srf = tolua_tousertype(L, 2, 0);
+	force_redraw = lua_toboolean(L, 3);
 
-
-	/* Exit if we have no windows. We need to check
-	 * again as the event handlers may have changed
-	 * the window stack */
+	/* Exit if we have no windows, nothing to draw */
 	lua_getfield(L, 1, "windowStack");
 	if (lua_objlen(L, -1) == 0) {
 		lua_pop(L, 2);
@@ -372,7 +367,6 @@ static int _update_screen(lua_State *L) {
 		return 0;
 	}
 	lua_rawgeti(L, -1, 1);
-
 
 	if (perfwarn.screen) {
 		t0 = SDL_GetTicks();
@@ -446,11 +440,8 @@ static int _update_screen(lua_State *L) {
 		lua_pushvalue(L, -3);  	// widget
 		lua_pushvalue(L, 2);	// surface
 		lua_call(L, 2, 0);
-		
-		if (perfwarn.screen) t4 = SDL_GetTicks();
-		jive_surface_flip(srf);
 	}
-	else if (jive_dirty_region.w) {
+	else if (jive_dirty_region.w || force_redraw) {
 #if 0
 		printf("REDRAW: %d,%d %dx%d\n", jive_dirty_region.x, jive_dirty_region.y, jive_dirty_region.w, jive_dirty_region.h);
 #endif
@@ -473,25 +464,21 @@ static int _update_screen(lua_State *L) {
 			lua_call(L, 3, 0);
 		}
 		jive_dirty_region.w = 0;
-
-		/* Flip buffer */
-		if (perfwarn.screen) t4 = SDL_GetTicks();
-		jive_surface_flip(srf);
 	}
 
 	if (perfwarn.screen) {
-		t5 = SDL_GetTicks();
+		t4 = SDL_GetTicks();
 		c1 = clock();
-		if (t5-t0 > perfwarn.screen) {
+		if (t4-t0 > perfwarn.screen) {
 			if (!t3) {
-				t3 = t2; t4 = t2;
+				t3 = t2;
 			}
-			printf("update_screen > %dms: %4dms (%dms) [layout:%dms animate:%dms background:%dms draw:%dms flip:%dms]\n",
-				   perfwarn.screen, t5-t0, (int)((c1-c0) * 1000 / CLOCKS_PER_SEC), t1-t0, t2-t1, t3-t2, t4-t3, t5-t4);
+			printf("update_screen > %dms: %4dms (%dms) [layout:%dms animate:%dms background:%dms draw:%dms]\n",
+				   perfwarn.screen, t4-t0, (int)((c1-c0) * 1000 / CLOCKS_PER_SEC), t1-t0, t2-t1, t3-t2, t4-t3);
 		}
 	}
 	
-	lua_pop(L, 4);
+	lua_pop(L, 3);
 
 	JIVEL_STACK_CHECK_END(L);
 
@@ -499,22 +486,62 @@ static int _update_screen(lua_State *L) {
 }
 
 
-int jiveL_update_screen(lua_State *L) {
+int jiveL_draw(lua_State *L) {
 	/* stack is:
 	 * 1: framework
+	 * 2: surface
 	 */
 
 	lua_pushcfunction(L, jive_traceback);  /* push traceback function */
 
-	lua_pushcfunction(L, _update_screen);
+	lua_pushcfunction(L, _draw_screen);
 	lua_pushvalue(L, 1);
+	lua_pushvalue(L, 2);
+	lua_pushboolean(L, 1);
 
-	if (lua_pcall(L, 1, 0, 2) != 0) {
-		fprintf(stderr, "error in event function:\n\t%s\n", lua_tostring(L, -1));
+	if (lua_pcall(L, 3, 0, 3) != 0) {
+		fprintf(stderr, "error in draw_screen:\n\t%s\n", lua_tostring(L, -1));
 		return 0;
 	}
 
 	lua_pop(L, 1);
+
+	return 0;
+}
+
+
+int jiveL_update_screen(lua_State *L) {
+	JiveSurface *screen;
+
+	/* stack is:
+	 * 1: framework
+	 */
+
+	if (!update_screen) {
+		return 0;
+	}
+
+	lua_pushcfunction(L, jive_traceback);  /* push traceback function */
+
+	lua_pushcfunction(L, _draw_screen);
+	lua_pushvalue(L, 1);
+
+	lua_getfield(L, 1, "screen");
+	lua_getfield(L, -1, "surface");
+	lua_replace(L, -2);
+	screen = tolua_tousertype(L, -1, 0);
+
+	lua_pushboolean(L, 0);
+
+	if (lua_pcall(L, 3, 0, 2) != 0) {
+		fprintf(stderr, "error in update_screen:\n\t%s\n", lua_tostring(L, -1));
+		return 0;
+	}
+
+	/* flip screen */
+	jive_surface_flip(screen);
+
+	lua_pop(L, 2);
 
 	return 0;
 }
@@ -1293,6 +1320,7 @@ static const struct luaL_Reg core_methods[] = {
 	{ "quit", jiveL_quit },
 	{ "processEvents", jiveL_process_events },
 	{ "setUpdateScreen", jiveL_set_update_screen },
+	{ "draw", jiveL_draw },
 	{ "updateScreen", jiveL_update_screen },
 	{ "reDraw", jiveL_redraw },
 	{ "pushEvent", jiveL_push_event },

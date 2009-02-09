@@ -9,9 +9,6 @@
 #include "common.h"
 #include "jive.h"
 
-Uint16 default_bpp;
-
-
 
 JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fullscreen) {
 	JiveSurface *srf;
@@ -53,8 +50,6 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 		DEBUG_TRACE("Video mode: %d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", sdl->format->BitsPerPixel, sdl->format->BytesPerPixel, sdl->format->Rshift, sdl->format->Gshift, sdl->format->Bshift)
 	}
 
-	default_bpp = bpp;
-
 	srf = calloc(sizeof(JiveSurface), 1);
 	srf->refcount = 1;
 	srf->sdl = sdl;
@@ -64,9 +59,13 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 
 JiveSurface *jive_surface_newRGB(Uint16 w, Uint16 h) {
 	JiveSurface *srf;
-	SDL_Surface *sdl;
+	SDL_Surface *screen, *sdl;
+	int bpp;
 
-	sdl = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, default_bpp, 0, 0, 0, 0);
+	screen = SDL_GetVideoSurface();
+	bpp = screen->format->BitsPerPixel;
+
+	sdl = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, bpp, 0, 0, 0, 0);
 
 	/* Opaque surface */
 	SDL_SetAlpha(sdl, SDL_SRCALPHA, SDL_ALPHA_OPAQUE);
