@@ -144,7 +144,7 @@ tolua++: lua
 #
 
 .PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont freefont-debian
-app: portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_tgz
+app: portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay-tgz
 
 # portaudio
 portaudio_v19_1360/Makefile:
@@ -158,7 +158,7 @@ flac-1.2.1/Makefile:
 	cd flac-1.2.1; ./configure --disable-ogg --disable-xmms-plugin --prefix=${PREFIX}
 
 flac: flac-1.2.1/Makefile
-	 flac-1.2.1; make && make install
+	cd flac-1.2.1; make && make install
 
 # libmad
 libmad-0.15.1b/Makefile:
@@ -191,6 +191,7 @@ squeezeplay_desktop: squeezeplay_desktop/Makefile
 squeezeplay_contrib: squeezeplay/Makefile
 	cd squeezeplay_contrib; make PREFIX=${PREFIX}
 
+
 # freefont
 freefont:
 	mkdir -p ${PREFIX}/share/jive/fonts
@@ -200,11 +201,21 @@ freefont:
 	cp fonts-clock/Digital.ttf ${PREFIX}/share/jive/fonts
 	cp fonts-clock/DigitalItalic.ttf ${PREFIX}/share/jive/fonts
 
-squeezeplay_tgz: squeezeplay/Makefile
-	cd squeezeplay; make SqueezePlay_tgz
+# 
+# This builds the .tarball. It's called by 'all' so no need to run it manually
+# 
+squeezeplay-tgz: squeezeplay/Makefile
+	cd squeezeplay; make squeezeplay-tgz
 
-squeezeplay_deb: squeezeplay/Makefile
-	cd squeezeplay; make SqueezePlay_deb
+#
+# Allow user to call the -deb build and it runs both the 'all' and then packages it
+#
+
+.PHONY: squeezeplay-deb
+squeezeplay-deb: all squeezeplay-deb-make
+
+squeezeplay-deb-make: squeezeplay/Makefile
+	cd squeezeplay; make squeezeplay-deb
 
 #
 # clean

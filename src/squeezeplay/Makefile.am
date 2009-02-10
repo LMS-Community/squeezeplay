@@ -61,7 +61,8 @@ APP_NAME = SqueezePlay Beta
 BUNDLE_CONTENTS = $(BUNDLE_NAME)/Contents
 PLIST_FILE = $(BUNDLE_CONTENTS)/Info.plist
 
-VERSION_TEXT = $(shell cat ../squeezeplay.version)r$(shell svnversion -n ..)
+VERSION_TEXT = $(shell cat ../squeezeplay.version)r$(shell svnversion -n .. | sed -e 's/[MS]//g')
+DEB_VERSION_TEXT = $(shell cat ../squeezeplay.version)~$(shell svnversion -n .. | sed -e 's/[MS]//g')
 ICNS_NAME = icon.icns
 DMG_TEMP_DIR = temp-SqueezePlay_image
 DMG_IMAGE_DIR = SqueezePlay_image
@@ -128,11 +129,11 @@ SqueezePlay_dmg: SqueezePlay_bundle
 	-rm $(DMG_TMP_IMAGE_FILENAME)
 	cp -p $(DMG_IMAGE_FILENAME) $(OSX_BUILD_DIR)/SqueezePlay-$(VERSION_TEXT).dmg
 
-SqueezePlay_tgz: 
+squeezeplay-tgz: 
 	cd $(prefix); tar -zcf ../squeezeplay.tgz *; tar -ztvf ../squeezeplay.tgz
 
-SqueezePlay_deb:
-	sed -e 's/_VERSION_/$(VERSION_TEXT)/g' ../platforms/debian/changelog.in > ../platforms/debian/changelog
+squeezeplay-deb:
+	sed -e 's/_VERSION_/$(DEB_VERSION_TEXT)/g' ../platforms/debian/changelog.in > ../platforms/debian/changelog
 	cd ../platforms; fakeroot dpkg-buildpackage -b; ls -lah ../squeezeplay*.deb
 
 # Convenience library:
