@@ -36,7 +36,7 @@ B<itemHeight> : the height of each menu item.
 
 
 -- stuff we use
-local _assert, ipairs, pairs, string, tostring, type = _assert, ipairs, pairs, string, tostring, type
+local _assert, ipairs, pairs, string, tostring, type, getmetatable = _assert, ipairs, pairs, string, tostring, type, getmetatable
 
 local oo                   = require("loop.simple")
 local debug                = require("jive.utils.debug")
@@ -46,6 +46,7 @@ local Framework            = require("jive.ui.Framework")
 local Event                = require("jive.ui.Event")
 local Widget               = require("jive.ui.Widget")
 local Scrollbar            = require("jive.ui.Scrollbar")
+local Surface              = require("jive.ui.Surface")
 local ScrollAccel          = require("jive.ui.ScrollAccel")
 local IRMenuAccel          = require("jive.ui.IRMenuAccel")
 local Timer                = require("jive.ui.Timer")
@@ -92,20 +93,20 @@ local KEY_PLAY             = jive.ui.KEY_PLAY
 local KEY_PAGE_UP           = jive.ui.KEY_PAGE_UP
 local KEY_PAGE_DOWN         = jive.ui.KEY_PAGE_DOWN
 
---speed (items/ms) that must be surpassed for flick to start.
-local FLICK_THRESHOLD_START_SPEED = 2/1000
+--speed (pixels/ms) that must be surpassed for flick to start.
+local FLICK_THRESHOLD_START_SPEED = 30/1000
 
---speed (item/ms) at which flick scrolling will stop
-local FLICK_STOP_SPEED = 1.5/1000
+--speed (pixels/ms) at which flick scrolling will stop
+local FLICK_STOP_SPEED =  3/1000
 
 --if initial speed is greater than this, "letter" accelerators will occur for the flick
-local FLICK_FORCE_ACCEL_SPEED = 30/1000
+local FLICK_FORCE_ACCEL_SPEED = 72 * 30/1000
 
 --time after flick starts that decel occurs
-local FLICK_DECEL_START_TIME = 750
+local FLICK_DECEL_START_TIME = 2000
 
 --time from decel start to scroll stop
-local FLICK_DECEL_TOTAL_TIME = 1000
+local FLICK_DECEL_TOTAL_TIME = 6000
 
 -- our class
 module(...)
@@ -153,15 +154,15 @@ end
 
 function _selectAndHighlightItemUnderPointer(self, event)
 	local x,y,w,h = self:mouseBounds(event)
-	local i = y / self.itemHeight --(h / self.numWidgets)
+	local i = (y - self.pixelOffsetY) / self.itemHeight --(h / self.numWidgets)
 
 	local itemShift = math.floor(i)
-	if itemShift >= 0 and itemShift < self.numWidgets then
+	if itemShift >= 0 and itemShift <= self.numWidgets then
 		--select item under cursor
 		local selectedIndex = self.topItem + itemShift
 		if selectedIndex <= self.listSize then
 			self:setSelectedIndex(selectedIndex)
-			self.highlightSelectedItem = true
+			self.usePressedStyle = true
 		else
 			--outside of any menu item
 			return false
@@ -175,6 +176,57 @@ function _selectAndHighlightItemUnderPointer(self, event)
 	return true
 end
 
+function resetDragData(self)
+	self.pixelOffsetY = 0
+	self.dragYSinceShift = 0
+end
+
+function handleDrag(self, dragAmountY)
+
+	if dragAmountY ~= 0 then
+--		log:error("handleDrag dragAmountY: ", dragAmountY )
+
+		self.dragYSinceShift = self.dragYSinceShift + dragAmountY
+--		log:error("handleDrag dragYSinceShift: ", self.dragYSinceShift )
+
+		if (self.dragYSinceShift > 0 and math.floor(self.dragYSinceShift / self.itemHeight) > 0) or
+				(self.dragYSinceShift < 0 and math.floor(self.dragYSinceShift / self.itemHeight) < 0) then
+			local itemShift = math.floor(self.dragYSinceShift / self.itemHeight)
+			self.dragYSinceShift = self.dragYSinceShift % self.itemHeight
+			self.pixelOffsetY = -1 * self.dragYSinceShift
+
+			if itemShift > 0 and self.currentShiftDirection <= 0 then
+				--changing shift direction, move cursor so scroll wil occur
+				self:setSelectedIndex(self.topItem + self.numWidgets - 2)
+				self.currentShiftDirection = 1
+			elseif itemShift < 0 and self.currentShiftDirection >= 0 then
+				--changing shift direction, move cursor so scroll wil occur
+				self:setSelectedIndex(self.topItem + 1)
+				self.currentShiftDirection = -1
+			end
+
+			log:debug("self:scrollBy( itemShift ) ", itemShift )
+			self:scrollBy( itemShift, true, false )
+
+			if self.selected == 1 or self.selected == self.listSize then
+				self:resetDragData()
+			end
+
+		else
+			--smooth scroll
+
+			self.pixelOffsetY = -1 * self.dragYSinceShift
+			if (self.selected == 1 and self.currentShiftDirection == 1) or self.selected >= self.listSize - 1 then
+				self:resetDragData()
+			end
+
+			log:debug("Scroll offset by: ", self.pixelOffsetY, " item height: ", self.itemHeight)
+			self:reDraw()
+		end
+	end
+end
+
+
 -- _eventHandler
 -- manages all menu events
 local function _eventHandler(self, event)
@@ -182,7 +234,7 @@ local function _eventHandler(self, event)
 	local evtype = event:getType()
 
 	if (evtype & (EVENT_IR_ALL | EVENT_KEY_ALL | EVENT_SCROLL | EVENT_SHOW )) > 0 then
-		self.highlightSelectedItem = true
+		self.usePressedStyle = false
 	end
 
 	if self.flickTimer and (evtype & (EVENT_IR_ALL | EVENT_KEY_ALL | EVENT_SCROLL | EVENT_SHOW | EVENT_HIDE)) > 0 then
@@ -197,6 +249,7 @@ local function _eventHandler(self, event)
 
 	if evtype == EVENT_SCROLL then
 		if self.locked == nil then
+			self:resetDragData()
 			self:scrollBy(self.scroll:event(event, self.topItem, self.selected or 1, self.numWidgets, self.listSize))
 			return EVENT_CONSUME
 		end
@@ -204,6 +257,7 @@ local function _eventHandler(self, event)
 	elseif evtype == EVENT_IR_DOWN or evtype == EVENT_IR_REPEAT then
 		--todo add lock cancelling like in key press - let action hanlding take care of this
 		if event:isIRCode("arrow_up") or event:isIRCode("arrow_down") then
+			self:resetDragData()
 			if self.locked == nil then
 				self:scrollBy(self.irAccel:event(event, self.topItem, self.selected or 1, self.numWidgets, self.listSize), true, evtype == EVENT_IR_DOWN)
 				return EVENT_CONSUME
@@ -266,6 +320,7 @@ local function _eventHandler(self, event)
 		local keycode = event:getKeycode()
 
 		if self.locked == nil then
+			self:resetDragData()
 			-- send keys to selected widgets, otherwise ignore, will return as actions
 			local r = _itemListener(self, _selectedItem(self), event)
 			if r ~= EVENT_UNUSED then
@@ -358,16 +413,19 @@ local function _eventHandler(self, event)
 
 				if evtype == EVENT_MOUSE_DOWN then
 					self.dragOrigin.x, self.dragOrigin.y = event:getMouse();
-					self.dragYSinceShift = 0
+					--self.dragYSinceShift = 0
 					self.currentShiftDirection = 0
 
 					resetFlickData(self.flickData)
 
 					--don't highlight item right away (to avoid highlighting when finger go off screen and then
 					-- on screen during a drag
-					  -- first unhighlight last selected item
-	                                self.highlightSelectedItem = false
-	                                self:reLayout()
+					  -- first unhighlight last selected item - todo: try just setting style on current item instead of a full relayout
+	                                self.usePressedStyle = false
+
+	                                --unhighlight any selected item
+					_selectedItem(self):setStyleModifier("selected")
+					_selectedItem(self):reDraw()
 
 					if self.selectItemAfterFingerDownTimer then
 						self.selectItemAfterFingerDownTimer:stop()
@@ -380,7 +438,14 @@ local function _eventHandler(self, event)
 				       self.selectItemAfterFingerDownTimer:start()
 
 				elseif evtype == EVENT_MOUSE_DRAG then
-					self.highlightSelectedItem = false
+					self.usePressedStyle = false
+
+					if not self.bodyDragInProgress then
+						self.bodyDragInProgress = true
+						--unhighlight any selected item
+						_selectedItem(self):setStyleModifier("selected")
+					end
+
 					if ( self.dragOrigin.y == nil) then
 						--might have started drag outside of this textarea's bounds, so reset origin
 						self.dragOrigin.x, self.dragOrigin.y = event:getMouse();
@@ -395,26 +460,10 @@ local function _eventHandler(self, event)
 
 					updateFlickData(self.flickData, event)
 
-					self.dragYSinceShift = self.dragYSinceShift + dragAmountY
+					self:handleDrag(dragAmountY)
+					
+--					log:error("self.pixelOffsetY                              : ", self.pixelOffsetY)
 
-					if (self.dragYSinceShift > 0 and math.floor(self.dragYSinceShift / self.itemHeight) > 0) or
-							(self.dragYSinceShift < 0 and math.floor(self.dragYSinceShift / self.itemHeight) < 0) then
-						itemShift = math.floor(self.dragYSinceShift / self.itemHeight)
-						self.dragYSinceShift = self.dragYSinceShift % self.itemHeight
-
-						if itemShift > 0 and self.currentShiftDirection <= 0 then
-							--changing shift direction, move cursor so scroll wil occur
-							self:setSelectedIndex(self.topItem + self.numWidgets - 2)
-							self.currentShiftDirection = 1
-						elseif itemShift < 0 and self.currentShiftDirection >= 0 then
-							--changing shift direction, move cursor so scroll wil occur
-							self:setSelectedIndex(self.topItem + 1)
-							self.currentShiftDirection = -1
-						end
-
-						self:scrollBy( itemShift )
-
-					end
                                end
 			end
 			return EVENT_CONSUME
@@ -424,8 +473,6 @@ local function _eventHandler(self, event)
 
 		--todo: UP not called if we are outside widget bounds, need this widget to handle events when drag in progress
 		self.dragOrigin.x, self.dragOrigin.y = nil, nil;
-		self.dragYSinceShift = 0
-		self.currentShiftDirection = 0
 
 		local flickSpeed, flickDirection = getFlickSpeed(self.flickData, self.itemHeight)
 
@@ -437,6 +484,7 @@ local function _eventHandler(self, event)
 
 
 		self.sliderDragInProgress = false
+		self.bodyDragInProgress = false
 		return EVENT_UNUSED
 
 	elseif evtype == EVENT_SHOW or
@@ -471,7 +519,6 @@ end
 function updateFlickData(flickData, mouseEvent)
 	local x, y = mouseEvent:getMouse()
 	local ticks = mouseEvent:getTicks()
-	log:debug("Flick current mouse data:  y: ", y, "  ticks: ", ticks, "  #flickData.points: ", #flickData.points )
 
 	--hack until reason for 0 ticks is resolved
 	if (ticks == 0) then
@@ -505,21 +552,21 @@ function getFlickSpeed(flickData, itemHeight)
 		return nil
 	end
 
-	
+
 	local distance = flickData.points[#flickData.points].y - flickData.points[1].y
 	local time = flickData.points[#flickData.points].ticks - flickData.points[1].ticks
 
 	--speed = pixels/ms
 	local speed = distance/time
 
-	--for discrete movement, change speed to menu items per ms
-	speed = speed / itemHeight
 
 	log:debug("Flick info: speed: ", speed, "  distance: ", distance, "  time: ", time )
 
 	local direction = speed >= 0 and -1 or 1
 	return math.abs(speed), direction
 end
+
+
 
 --if initialSpeed nil, then continue any existing flick. If non nil, start a new flick at that rate
 function flick(self, initialSpeed, direction)
@@ -532,16 +579,15 @@ function flick(self, initialSpeed, direction)
 		end
 
 		self.flickInitialSpeed = initialSpeed
-		self.flickCurrentSpeed = self.flickInitialSpeed
 		self.flickDirection = direction
 		self.flickTimer:start()
 		self.flickInitialScrollT = Framework:getTicks()
 
-		self.flickLastScrollT = self.flickInitialScrollT
+		self.flickLastY = 0
 		self.flickInitialDecelerationScrollT = nil
+		self.flickPreDecelY = 0
 
 		self.flickAccelRate = -self.flickInitialSpeed / FLICK_DECEL_TOTAL_TIME
-
 		log:debug("*****Starting flick")
 	end
 
@@ -554,37 +600,39 @@ function flick(self, initialSpeed, direction)
 		self.flickInitialDecelerationScrollT = now
 	end
 
-	if self.flickInitialDecelerationScrollT then
-		--v = v0 + at
+	local flickCurrentY
+	if not self.flickInitialDecelerationScrollT then
+		--still at full speed
+		flickCurrentY = self.flickInitialSpeed * (now - self.flickInitialScrollT)
+		self.flickPreDecelY = flickCurrentY
+	else
 		local elapsedTime = now - self.flickInitialDecelerationScrollT
-		self.flickCurrentSpeed = self.flickInitialSpeed + (self.flickAccelRate * elapsedTime)
 
-		if self.flickCurrentSpeed <= FLICK_STOP_SPEED then
-			log:debug("*******Stopping Flick at slow down point")
+		-- y = v0*t +.5 * a * t^2
+		flickCurrentY = self.flickPreDecelY + self.flickInitialSpeed * elapsedTime + (.5 * self.flickAccelRate * elapsedTime * elapsedTime )
+
+		--v = v0 + at
+		local flickCurrentSpeed = self.flickInitialSpeed + (self.flickAccelRate * elapsedTime)
+		if flickCurrentSpeed <= FLICK_STOP_SPEED then
+			log:debug("*******Stopping Flick at slow down point. current speed:", flickCurrentSpeed)
 			self:stopFlick()
 			return
 		end
 	end
 
 
-	if now - self.flickLastScrollT > (1/self.flickCurrentSpeed)  then
-		--slowing algorithm - go at initial speed for 750 ms then deceleration to stop in 1 more second
-		log:debug("Flick continuation is scroling at speed: ", self.flickCurrentSpeed)
+	local pixelOffset = math.floor(flickCurrentY - self.flickLastY)
+	self:handleDrag(self.flickDirection * pixelOffset)
 
-		local forceAccelerator = self.flickInitialSpeed > FLICK_FORCE_ACCEL_SPEED
+	self.flickLastY = self.flickLastY + pixelOffset
 
-		self:scrollBy(self.flickDirection, false, false, forceAccelerator)
-		self.flickLastScrollT = now
-
-		if self.selected == self.listSize or self.selected == 1 then
-			--stop at boundaries
-			log:debug("*******Stopping Flick at boundary")
-			self:stopFlick()
-		end
-
+	if self.selected == self.listSize or self.selected == 1 then
+		--stop at boundaries
+		log:debug("*******Stopping Flick at boundary") -- need a ui cue that this has happened
+		self:stopFlick()
 	end
-		
 end
+
 
 --[[
 
@@ -640,10 +688,11 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 	obj.accel = false       -- true if the window is accelerated
 	obj.dir = 0             -- last direction of scrolling
 
-	obj.highlightSelectedItem = true
+	obj.usePressedStyle = true
 
 	obj.dragOrigin = {}
 	obj.dragYSinceShift = 0
+	obj.pixelOffsetY = 0
 	obj.currentShiftDirection = 0
 
 	obj.flickData = {}
@@ -663,7 +712,7 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 						obj:reLayout()	
 					end,
 					true)
-	obj.flickTimer = Timer(50,
+	obj.flickTimer = Timer(25,
 			       function()
 			                obj:flick()
 			       end)
@@ -988,6 +1037,7 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 
 		_scrollList(self)
 		self:reLayout()
+--		self.bodySurface:saveBMP("/tmp/test.bmp")
 	end
 end
 
@@ -1039,7 +1089,7 @@ function _updateWidgets(self)
 		_scrollList(self)
 	end
 
-	local indexSize = self.numWidgets
+	local indexSize = self.numWidgets + 1 -- one extra for smooth scrolling
 	local min = self.topItem
 	local max = self.topItem + indexSize - 1
 	if max > self.listSize then
@@ -1132,21 +1182,21 @@ function _updateWidgets(self)
 		if self.locked then
 			nextSelected:setStyleModifier("locked")
 		else
-			if self.highlightSelectedItem then
-				nextSelected:setStyleModifier("selected")
+			if self.usePressedStyle then
+				nextSelected:setStyleModifier("pressed")
 			else
-				nextSelected:setStyleModifier(nil)
+				nextSelected:setStyleModifier("selected")
 			end
 		end
 
-		if self.highlightSelectedItem and lastHighlightedIndex ~= nextSelectedIndex then
+		if self.usePressedStyle and lastHighlightedIndex ~= nextSelectedIndex then
 			_itemListener(self, nextSelected, Event:new(EVENT_FOCUS_GAINED))
 		end
 	end
 
 	self._lastSelected = nextSelected
 	self._lastSelectedIndex = nextSelectedIndex
-	if self.highlightSelectedItem then
+	if self.usePressedStyle then
 		self._lastHighlightedIndex = nextSelectedIndex
 	end
 	self._lastSelectedOffset = self.selected and self.selected - self.topItem + 1 or self.topItem
@@ -1155,6 +1205,17 @@ function _updateWidgets(self)
 	self.scrollbar:setScrollbar(0, self.listSize, self.topItem, self.numWidgets)
 
 --	log:warn("_update menu:\n", self:dump())
+
+
+--	log:error("removing old body surface:", self.bodySurface , " topItem: ", self.topItem)
+
+	--force gc of old object since regular gc isn't happening fast enough (out of memory occurred on fab4 without this)
+--	getmetatable(self.bodySurface).__gc(self.bodySurface)
+--
+--	self.bodySurface  = Surface:newRGB(800, 600)
+--	log:error("created new body surface:", self.bodySurface , " topItem: ", self.topItem)
+
+
 end
 
 

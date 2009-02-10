@@ -225,6 +225,8 @@ int jiveL_menu_draw(lua_State *L) {
 	MenuWidget *peer = jive_getpeer(L, 1, &menuPeerMeta);
 	JiveSurface *srf = tolua_tousertype(L, 2, 0);
 	bool drawLayer = luaL_optinteger(L, 3, JIVE_LAYER_ALL) & peer->w.layer;
+	Sint16 old_pixel_offset_x, old_pixel_offset_y, new_pixel_offset_y;
+	SDL_Rect old_clip, new_clip;
 
 	lua_getfield(L, 1, "accelKey");
 	accelKey = lua_tostring(L, -1);
@@ -246,6 +248,21 @@ int jiveL_menu_draw(lua_State *L) {
 
 
 	/* draw widgets */
+	jive_surface_get_clip(srf, &old_clip);
+
+	new_clip.x = peer->w.bounds.x;
+	new_clip.y = peer->w.bounds.y;
+	new_clip.w = peer->w.bounds.w;
+	new_clip.h = peer->w.bounds.h;
+	jive_surface_set_clip(srf, &new_clip);
+
+	lua_getfield(L, 1, "pixelOffsetY");
+	new_pixel_offset_y = lua_tointeger(L, -1);
+	lua_pop(L, 1);
+
+	jive_surface_get_offset(srf, &old_pixel_offset_x, &old_pixel_offset_y);
+	jive_surface_set_offset(srf, old_pixel_offset_x, new_pixel_offset_y);
+
 	lua_getfield(L, 1, "widgets");
 	lua_pushnil(L);
 	while (lua_next(L, -2) != 0) {
@@ -259,6 +276,9 @@ int jiveL_menu_draw(lua_State *L) {
 		lua_pop(L, 1);
 	}
 	lua_pop(L, 1);
+
+	jive_surface_set_offset(srf, old_pixel_offset_x, old_pixel_offset_y);
+	jive_surface_set_clip(srf, &old_clip);
 
 	/* draw scrollbar */
 	if (peer->has_scrollbar) {

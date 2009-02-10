@@ -244,6 +244,7 @@ function skin(self, s)
 				})
 
 	local popupMask = Tile:fillColor(0x000000e5)
+	local pressedMask = Tile:fillColor(0x34AC9De5)
 
 	local regionMask = Tile:loadTiles({
 					imgpath .. "Screen_Formats/Setup/overlay_region_map.png"
@@ -484,9 +485,79 @@ function skin(self, s)
 		      })
 
 
+	-- pressed menu item
+	s.pressed = {}
+	s.pressed.item =
+		_uses(s.item, {
+			      bgImg = pressedMask,
+			      text = {
+				      fg = TEXT_COLOR,
+				      sh = TEST_SH_COLOR
+			      },
+			      icon = {
+				      padding = BUTTON_PADDING,
+				      align = ITEM_ICON_ALIGN,
+				      img = _loadImage(self, "Icons/selection_right.png")
+			      }
+		      })
+
+
+	s.pressed.itemplay =
+		_uses(s.pressed.item, {
+			      icon = {
+					--FIXME: need this image
+				      img = _loadImage(self, "Icons/selection_play.png")
+			      }
+		      })
+
+	s.pressed.itemadd =
+		_uses(s.pressed.item, {
+			      icon = {
+					--FIXME: need this image
+				      img = _loadImage(self, "Icons/selection_add.png")
+			      }
+		      })
+
+	s.pressed.checked = _uses(s.pressed.item, {
+			      		order = { "text", "check", "icon" },
+					icon = {
+						img = _loadImage(self, "Icons/selection_right.png")
+					},
+					check = {
+						align = ITEM_ICON_ALIGN,
+						padding = CHECK_PADDING,
+						img = _loadImage(self, "Icons/icon_check_selected_14x30.png")
+					}
+
+				})
+
+	s.pressed.itemNoAction =
+		_uses(s.itemNoAction, {
+			      bgImg = pressedMask,
+			      text = {
+				      fg = TEXT_COLOR,
+				      sh = TEST_SH_COLOR
+			      },
+		      })
+
+	s.pressed.checkedNoAction =
+		_uses(s.checkedNoAction, {
+			      bgImg = pressedMask,
+			      text = {
+				      fg = TEXT_COLOR,
+				      sh = TEST_SH_COLOR
+			      },
+			      check = {
+					align = ITEM_ICON_ALIGN,
+					padding = BUTTON_PADDING,
+					img = _loadImage(self, "Icons/icon_check_selected.png")
+			      }
+		      })
+
+
 	-- locked menu item (with loading animation)
 	s.locked = {}
-	s.locked.item = _uses(s.selected.item, {
+	s.locked.item = _uses(s.pressed.item, {
 					icon = {
 						img = _loadImage(self, "Icons/selection_waiting.png"),
 						frameRate = 5,
@@ -1366,10 +1437,29 @@ function skin(self, s)
 
 	-- selected item with artwork and song info
 	s.selected.albumitem = _uses(s.albumitem, {
-		bgImg = albumSelectionBox,
+			      --[[
+			      -- not for touch!
 		text = {
-			fg    = SELECT_COLOR,
-			sh    = SELECT_SH_COLOR
+			fg    = TEXT_COLOR,
+			sh    = TEXT_SH_COLOR
+		},
+		play = {
+			h      = WH_FILL,
+			align  = "right",
+			img    = _loadImage(self, "Icons/selection_right.png"),
+		},
+		icon = {
+			w = 70,
+			h = 70
+		}
+                                --]]
+				
+	})
+	s.pressed.albumitem = _uses(s.albumitem, {
+		bgImg = pressedMask,
+		text = {
+			fg    = TEXT_COLOR,
+			sh    = TEXT_SH_COLOR
 		},
 		play = {
 			h      = WH_FILL,
@@ -1767,6 +1857,7 @@ function skin(self, s)
 
 	local SELECT_COLOR = { 0x00, 0x00, 0x00 }
 	local SELECT_SH_COLOR = { }
+
 
 	local NP_TRACK_FONT_SIZE = 26
 

@@ -286,6 +286,11 @@ int jive_surface_cmp(JiveSurface *a, JiveSurface *b, Uint32 key) {
 	return (int)(((float)equal / count) * 100);
 }
 
+void jive_surface_get_offset(JiveSurface *srf, Sint16 *x, Sint16 *y) {
+	*x = srf->offset_x;
+	*y = srf->offset_y;
+}
+
 void jive_surface_set_offset(JiveSurface *srf, Sint16 x, Sint16 y) {
 	srf->offset_x = x;
 	srf->offset_y = y;
