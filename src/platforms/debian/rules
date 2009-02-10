@@ -14,6 +14,7 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -rf ${base}
+	rm -f $(CURDIR)/debian/files
 
 install:
 	dh_testdir

@@ -158,7 +158,7 @@ flac-1.2.1/Makefile:
 	cd flac-1.2.1; ./configure --disable-ogg --disable-xmms-plugin --prefix=${PREFIX}
 
 flac: flac-1.2.1/Makefile
-	cd flac-1.2.1; make && make install
+	 flac-1.2.1; make && make install
 
 # libmad
 libmad-0.15.1b/Makefile:
@@ -202,6 +202,9 @@ freefont:
 
 squeezeplay_tgz: squeezeplay/Makefile
 	cd squeezeplay; make SqueezePlay_tgz
+
+squeezeplay_deb: squeezeplay/Makefile
+	cd squeezeplay; make SqueezePlay_deb
 
 #
 # clean

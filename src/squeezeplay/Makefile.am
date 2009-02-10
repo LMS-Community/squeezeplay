@@ -131,6 +131,10 @@ SqueezePlay_dmg: SqueezePlay_bundle
 SqueezePlay_tgz: 
 	cd $(prefix); tar -zcf ../squeezeplay.tgz *; tar -ztvf ../squeezeplay.tgz
 
+SqueezePlay_deb:
+	sed -e 's/_VERSION_/$(DEB_VERSION_TEXT)/g' ../platforms/debian/changelog.in > ../platforms/debian/changelog
+	cd ../platforms; fakeroot dpkg-buildpackage -b; ls -lah ../squeezeplay*.deb
+
 # Convenience library:
 noinst_LTLIBRARIES = libjiveui.la libjiveaudio.la libjivenet.la
 
