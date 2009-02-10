@@ -52,6 +52,11 @@ function __init(self)
 
 	self.mode = jiveMain:getSelectedSkin()
 
+	--temp workaround, until it is resolved how to avoid self.mode being null on startup
+	if not self.mode then
+		self.mode = touchSkin
+	end
+
 	local eatIREvents = false
 	Framework:addListener(EVENT_IR_ALL,
 		function(event)
