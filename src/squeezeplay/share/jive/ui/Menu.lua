@@ -216,7 +216,7 @@ function handleDrag(self, dragAmountY)
 			--smooth scroll
 
 			self.pixelOffsetY = -1 * self.dragYSinceShift
-			if (self.selected == 1 and self.currentShiftDirection == 1) or self.selected >= self.listSize - 1 then
+			if self.selected and ((self.selected == 1 and self.currentShiftDirection == 1) or self.selected >= self.listSize - 1) then
 				self:resetDragData()
 			end
 
