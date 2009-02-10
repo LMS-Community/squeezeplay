@@ -63,6 +63,7 @@ PLIST_FILE = $(BUNDLE_CONTENTS)/Info.plist
 
 VERSION_TEXT = $(shell cat ../squeezeplay.version)r$(shell svnversion -n .. | sed -e 's/[MS]//g')
 DEB_VERSION_TEXT = $(shell cat ../squeezeplay.version)~$(shell svnversion -n .. | sed -e 's/[MS]//g')
+TGZ_VERSION_TEXT = $(shell cat ../squeezeplay.version)-$(shell svnversion -n .. | sed -e 's/[MS]//g')
 ICNS_NAME = icon.icns
 DMG_TEMP_DIR = temp-SqueezePlay_image
 DMG_IMAGE_DIR = SqueezePlay_image
@@ -130,7 +131,7 @@ SqueezePlay_dmg: SqueezePlay_bundle
 	cp -p $(DMG_IMAGE_FILENAME) $(OSX_BUILD_DIR)/SqueezePlay-$(VERSION_TEXT).dmg
 
 squeezeplay-tgz: 
-	cd $(prefix); tar -zcf ../squeezeplay.tgz *; tar -ztvf ../squeezeplay.tgz
+	cd $(prefix); tar -zcf ../squeezeplay-$(TGZ_VERSION_TEXT).tgz *; tar -ztvf ../squeezeplay-$(TGZ_VERSION_TEXT).tgz
 
 squeezeplay-deb:
 	sed -e 's/_VERSION_/$(DEB_VERSION_TEXT)/g' ../platforms/debian/changelog.in > ../platforms/debian/changelog
