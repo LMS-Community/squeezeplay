@@ -75,7 +75,7 @@ SLIMSERVER_CONNECTED_TO
 	SV	Ansluten till \n%s
 
 SQUEEZEBOX_PROBLEM
-	DA	Problem med forbindelsen
+	DA	Problem med tilslutning
 	DE	Verbindungsproblem
 	EN	Problem Connecting
 	ES	Problema de conexión
@@ -111,7 +111,7 @@ SQUEEZEBOX_TRY_AGAIN
 	SV	Försök igen
 
 SQUEEZEBOX_PROBLEM_HELP
-	DA	Squeezebox kunne ikke sluttes til dit trådløse netværk. Sørg for at afspilleren er inden for det trådløse netværks rækkevidde.
+	DA	Kunne ikke tilslutte din Squeezebox til dit trådløse netværk. Sikre dig at den er indenfor rækkevidde for dit trådløse netværk.
 	DE	Die Squeezebox konnte nicht mit dem kabellosen Netzwerk verbunden werden. Vergewissern Sie sich, dass sie sich in Reichweite befindet.
 	EN	Could not connect %s to %s.
 	ES	No se pudo conectar Squeezebox a la red inalámbrica. Compruebe que se encuentre dentro del radio de la red inalámbrica.
