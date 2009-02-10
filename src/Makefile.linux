@@ -156,7 +156,8 @@ tolua++: lua
 #
 
 .PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib squeezeplay_private freefont freefont-debian axtls
-app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont
+app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib 
+freefont squeezeplay_tgz
 
 # portaudio
 portaudio_v19_1360/Makefile:
@@ -230,6 +231,9 @@ freefont:
 # fonts for clock screensaver
 	cp fonts-clock/Digital.ttf ${PREFIX}/share/jive/fonts
 	cp fonts-clock/DigitalItalic.ttf ${PREFIX}/share/jive/fonts
+
+squeezeplay_tgz: squeezeplay/Makefile
+	cd squeezeplay; make SqueezePlay_tgz
 
 #
 # clean
