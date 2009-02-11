@@ -373,8 +373,7 @@ local function _eventHandler(self, event)
 
 		if evtype == EVENT_MOUSE_DOWN then
 			if self.flickTimer:isRunning() then
-				self.flickInterruptedByFinger = true
-				self:stopFlick()
+				self:stopFlick(true)
 				return EVENT_CONSUME
 			end
 
@@ -510,8 +509,11 @@ function isTouchMouseEvent(self, mouseEvent)
 end
 
 
-function stopFlick(self)
+function stopFlick(self, byFinger)
+
 	self.flickTimer:stop()
+	self.flickInterruptedByFinger = byFinger
+
 	resetFlickData(self.flickData)
 end
 
