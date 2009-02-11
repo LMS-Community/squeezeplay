@@ -1,0 +1,13 @@
+Source: squeezeplay
+Section: sound
+Priority: optional
+Maintainer: Logitech/Slim Devices <debian@slimdevices.com>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.2
+
+Package: squeezeplay
+Architecture: all
+Depends: 
+Description: Logitech SqueezePlay
+ SqueezePlay is a client for the SqueezeCenter music streaming server.
+ .

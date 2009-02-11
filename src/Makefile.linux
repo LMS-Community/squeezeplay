@@ -156,7 +156,7 @@ tolua++: lua
 #
 
 .PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib squeezeplay_private freefont freefont-debian axtls
-app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib 
+app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib squeezeplay_tgz
 freefont squeezeplay_tgz
 
 # portaudio
@@ -232,8 +232,21 @@ freefont:
 	cp fonts-clock/Digital.ttf ${PREFIX}/share/jive/fonts
 	cp fonts-clock/DigitalItalic.ttf ${PREFIX}/share/jive/fonts
 
-squeezeplay_tgz: squeezeplay/Makefile
-	cd squeezeplay; make SqueezePlay_tgz
+# 
+# This builds the .tarball. It's called by 'all' so no need to run it manually
+# 
+squeezeplay-tgz: squeezeplay/Makefile
+	cd squeezeplay; make squeezeplay-tgz
+
+#
+# Allow user to call the -deb build and it runs both the 'all' and then packages it
+#
+
+.PHONY: squeezeplay-deb
+squeezeplay-deb: all squeezeplay-deb-make
+
+squeezeplay-deb-make: squeezeplay/Makefile
+	cd squeezeplay; make squeezeplay-deb
 
 #
 # clean
