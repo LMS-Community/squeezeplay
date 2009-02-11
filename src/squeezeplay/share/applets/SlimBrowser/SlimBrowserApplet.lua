@@ -1348,7 +1348,7 @@ function _goMenuTableItem(key)
 end
 
 function _goNowPlayingAction()
-	_goNow('nowPlaying')
+	_goNow('nowPlaying', Window.transitionPushLeft)
 	return EVENT_CONSUME
 end
 
