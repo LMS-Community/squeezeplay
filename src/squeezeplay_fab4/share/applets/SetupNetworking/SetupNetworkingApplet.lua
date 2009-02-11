@@ -1787,40 +1787,38 @@ function processWPS(self, iface, ssid, wpsmethod, wpspin)
 	iface:startWPSApp(wpsmethod, wpspin)
 
 	-- Progress window
-	local window = Popup("popupIcon")
-	window:setAllowScreensaver(false)
+	local popup = Popup("popupIcon")
+	popup:setAllowScreensaver(false)
 
-	window:addWidget(Icon("iconConnecting"))
+	popup:addWidget(Icon("iconConnecting"))
 	if wpsmethod == "pbc" then
-		window:addWidget(Label("text", self:string("NETWORK_WPS_PROGRESS_PBC")))
+		popup:addWidget(Label("text", self:string("NETWORK_WPS_PROGRESS_PBC")))
 	else
-		window:addWidget(Label("text", self:string("NETWORK_WPS_PROGRESS_PIN", tostring(wpspin))))
+		popup:addWidget(Label("text", self:string("NETWORK_WPS_PROGRESS_PIN", tostring(wpspin))))
 	end
 
 	local status = Label("text2", self:string("NETWORK_WPS_REMAINING_WALK_TIME", tostring(WPS_WALK_TIMEOUT)))
-	window:addWidget(status)
+	popup:addWidget(status)
 
-	window:addTimer(1000, function()
+	popup:addTimer(1000, function()
 			self:_timerWPS(iface, ssid)
 
 			local remaining_walk_time = WPS_WALK_TIMEOUT - self.processWPSTimeout
 			status:setValue(self:string("NETWORK_WPS_REMAINING_WALK_TIME", tostring(remaining_walk_time)))
 		end)
 
-	window:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD,
-		function(event)
-			local keycode = event:getKeycode()
-			if keycode == KEY_BACK then
-				iface:stopWPSApp()
-				iface:startWPASupplicant()
-			else
-				return EVENT_CONSUME
-			end
-			return EVENT_UNUSED
-		end)
+	local _stopWPSAction = function(self, event)
+		iface:stopWPSApp()
+		iface:startWPASupplicant()
+		popup:hide()
+	end
 
-	self:tieAndShowWindow(window)
-	return window
+	popup:addActionListener("back", self, _stopWPSAction)
+	popup:addActionListener("disconnect_player", self, _stopWPSAction)
+	popup:ignoreAllInputExcept({"back","disconnect_player"})
+
+	self:tieAndShowWindow(popup)
+	return popup
 end
 
 
