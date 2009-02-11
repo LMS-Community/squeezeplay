@@ -424,7 +424,7 @@ local function _eventHandler(self, event)
 	                                self.usePressedStyle = false
 
 	                                --unhighlight any selected item
-					_selectedItem(self):setStyleModifier("selected")
+					_selectedItem(self):setStyleModifier(nil)
 					_selectedItem(self):reDraw()
 
 					if self.selectItemAfterFingerDownTimer then
@@ -443,7 +443,7 @@ local function _eventHandler(self, event)
 					if not self.bodyDragInProgress then
 						self.bodyDragInProgress = true
 						--unhighlight any selected item
-						_selectedItem(self):setStyleModifier("selected")
+						_selectedItem(self):setStyleModifier(nil)
 					end
 
 					if ( self.dragOrigin.y == nil) then
@@ -537,7 +537,7 @@ function updateFlickData(flickData, mouseEvent)
 
 	table.insert(flickData.points, {y = y, ticks = ticks})
 	if #flickData.points >= 20 then
-		--only keep last 10 values
+		--only keep last 20 values
 		table.remove(flickData.points, 1)
 	end
 
@@ -626,7 +626,8 @@ function flick(self, initialSpeed, direction)
 
 	self.flickLastY = self.flickLastY + pixelOffset
 
-	if self.selected == self.listSize or self.selected == 1 then
+	if (self.selected == self.listSize and self.flickDirection > 0)
+		or (self.selected == 1 and self.flickDirection < 0) then
 		--stop at boundaries
 		log:debug("*******Stopping Flick at boundary") -- need a ui cue that this has happened
 		self:stopFlick()
