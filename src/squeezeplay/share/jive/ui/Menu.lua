@@ -1032,7 +1032,10 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 
 	-- if selection has change, play click and redraw
 	if (self.selected ~= nil and selected ~= self.selected) or (self.selected == nil and selected ~= 0) then
-		self:playSound("CLICK")
+		if not self.bodyDragInProgress and not self.flickTimer:isRunning() then
+			--todo come up with more comprehensive "when to click" design once the requirement is better understood
+			self:playSound("CLICK")
+		end
 		self.selected = selected
 
 		_scrollList(self)
