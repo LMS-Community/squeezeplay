@@ -1037,7 +1037,6 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 
 		_scrollList(self)
 		self:reLayout()
---		self.bodySurface:saveBMP("/tmp/test.bmp")
 	end
 end
 
@@ -1205,15 +1204,6 @@ function _updateWidgets(self)
 	self.scrollbar:setScrollbar(0, self.listSize, self.topItem, self.numWidgets)
 
 --	log:warn("_update menu:\n", self:dump())
-
-
---	log:error("removing old body surface:", self.bodySurface , " topItem: ", self.topItem)
-
-	--force gc of old object since regular gc isn't happening fast enough (out of memory occurred on fab4 without this)
---	getmetatable(self.bodySurface).__gc(self.bodySurface)
---
---	self.bodySurface  = Surface:newRGB(800, 600)
---	log:error("created new body surface:", self.bodySurface , " topItem: ", self.topItem)
 
 
 end
