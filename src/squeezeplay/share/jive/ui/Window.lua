@@ -67,6 +67,7 @@ local EVENT_MOUSE_DOWN        = jive.ui.EVENT_MOUSE_DOWN
 local EVENT_ACTION            = jive.ui.EVENT_ACTION
 local EVENT_SCROLL            = jive.ui.EVENT_SCROLL
 local EVENT_KEY_PRESS         = jive.ui.EVENT_KEY_PRESS
+local EVENT_KEY_HOLD          = jive.ui.EVENT_KEY_HOLD
 local EVENT_CHAR_PRESS         = jive.ui.EVENT_CHAR_PRESS
 local EVENT_WINDOW_PUSH       = jive.ui.EVENT_WINDOW_PUSH
 local EVENT_WINDOW_POP        = jive.ui.EVENT_WINDOW_POP
@@ -270,7 +271,7 @@ end
 
 function hideOnAllButtonInput(self)
 	if not self.hideOnAllButtonInputHandle then
-		self.hideOnAllButtonInputHandle = self:addListener(ACTION | EVENT_KEY_ALL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD,
+		self.hideOnAllButtonInputHandle = self:addListener(ACTION | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD,
 								function(event)
 									return hideOnAllButtonInputListener(self, event)
 								end)
