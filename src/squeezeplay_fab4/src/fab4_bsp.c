@@ -40,6 +40,9 @@ Uint32 ir_last_input_millis = 0;
 /* last ir code received */
 Uint32 ir_last_code = 0;
 
+Uint32 last_change_clearpad_x = 0;
+Uint32 last_change_clearpad_y = 0;
+
 bool ir_received_this_loop = false;
  
 static enum jive_ir_state {
@@ -72,12 +75,54 @@ static int handle_clearpad_events(int fd) {
 
 	for (i = 0; i <= rd / sizeof(struct input_event); i++) {    
 		if (ev[i].type == EV_ABS) {
+			Uint16 new_mouse_x;
+			Uint16 new_mouse_y;
 			switch (ev[i].code) {
 			case ABS_X:
-				event.u.mouse.x = (Uint16) 480 - ((ev[i].value / (double)clearpad_max_x) * 480);
+				new_mouse_x = (Uint16) 480 - ((ev[i].value / (double)clearpad_max_x) * 480);
+
+				//jitter correction - for stablizing drag when finger is stopped
+				if (abs(new_mouse_x - clearpad_event.u.mouse.x) == 1) {
+					//movement by only one pixel, confirm finger has deviated far enough to trigger a switch
+					//"far enough" is a fraction of the clearpad "distance" between mouse points
+					if ( abs(ev[i].value - last_change_clearpad_x) > (.7 * clearpad_max_x/(double)480)) {
+						event.u.mouse.x = new_mouse_x;
+						last_change_clearpad_x = ev[i].value;
+					} //else don't change x, since finger haven't deviated enough
+				}
+				else if (abs(new_mouse_x - clearpad_event.u.mouse.x) > 1) {
+					event.u.mouse.x = new_mouse_x;
+					last_change_clearpad_x = ev[i].value;
+				}
+				else {
+					//no change
+					event.u.mouse.x = new_mouse_x;
+				}
 				break;
 			case ABS_Y:
-				event.u.mouse.y = (Uint16) 272 - ((ev[i].value / (double)clearpad_max_y) * 272);
+				new_mouse_y = (Uint16) 272 - ((ev[i].value / (double)clearpad_max_y) * 272);
+//				fprintf(stderr, "clearpad_event.u.mouse.y %d maxY %d  ev[i].value:%d y: %d fractional y: %f clearpad dev: %d required: %f \n",
+//					clearpad_event.u.mouse.y, clearpad_max_y, ev[i].value, new_mouse_y, 272.0 - ((ev[i].value / (double)clearpad_max_y) * 272),
+//					abs(ev[i].value - last_change_clearpad_y) , (.7 * clearpad_max_y/(double)272));
+
+				//jitter correction - for stablizing drag when finger is stopped
+				if (abs(new_mouse_y - clearpad_event.u.mouse.y) == 1) {
+					//movement by only one pixel, confirm finger has traveled far enough to trigger a switch
+					//"far enough" is a fraction of the clearpad "distance" between mouse points
+					if ( abs(ev[i].value - last_change_clearpad_y) > (.75 * clearpad_max_y/(double)272)) {
+						event.u.mouse.y = new_mouse_y;
+						last_change_clearpad_y = ev[i].value;
+					} //else don't change y, since finger haven't deviated enough
+				}
+				else if (abs(new_mouse_y - clearpad_event.u.mouse.y) > 1) {
+					event.u.mouse.y = new_mouse_y;
+					last_change_clearpad_y = ev[i].value;
+				}
+				else {
+					//no change
+					event.u.mouse.y = new_mouse_y;
+				}
+
 				break;
 			case ABS_MISC: /* finger_count */
 				event.u.mouse.finger_count = ev[i].value;
@@ -146,6 +191,16 @@ static int handle_clearpad_events(int fd) {
 			if (clearpad_state == 1 &&
 			    abs(event.u.mouse.x - clearpad_event.u.mouse.x) < 10
 			    && abs(event.u.mouse.y - clearpad_event.u.mouse.y) < 10
+			    && event.u.mouse.finger_count == clearpad_event.u.mouse.finger_count
+			    ) {
+				continue;
+			}
+
+			/* Don't send repeated drag values when no movement or finger change occurred
+			 */
+			if (clearpad_state == 3 &&
+			    event.u.mouse.x == clearpad_event.u.mouse.x
+			    && event.u.mouse.y == clearpad_event.u.mouse.y
 			    && event.u.mouse.finger_count == clearpad_event.u.mouse.finger_count
 			    ) {
 				continue;
