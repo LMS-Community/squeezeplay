@@ -1,0 +1,5 @@
+squeezeplay (_VERSION_) unstable; urgency=low
+
+  * Initial packaging attempt for SqueezePlay. Should put all files into /opt/squeezeplay/
+
+ -- Matt Wise <debian@slimdevices.com>  Wed, 10 Feb 2008 09:32:33 -0000
