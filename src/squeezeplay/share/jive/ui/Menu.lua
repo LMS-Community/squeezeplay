@@ -331,8 +331,13 @@ local function _eventHandler(self, event)
 	elseif evtype == EVENT_MOUSE_PRESS then
 
 		if self.scrollbar:mouseInside(event) then
+
 			-- forward event to scrollbar
-			self.scrollbar:_event(event)
+			local result =  self.scrollbar:_event(event)
+			_scrollList(self)
+
+			return result
+
 
 		else
 			if self.flickInterruptedByFinger then
@@ -372,6 +377,12 @@ local function _eventHandler(self, event)
 		evtype == EVENT_MOUSE_DRAG then
 
 		if evtype == EVENT_MOUSE_DOWN then
+			--sometimes up doesn't occur so we must again try to reset state
+			-- note: sometimes down isn't called either (if drag starts outside of bounds), so bug still exists where scrollbar drag falsely continues
+			self.sliderDragInProgress = false
+			self.bodyDragInProgress = false
+
+			--stop any running flick on contact
 			if self.flickTimer:isRunning() then
 				self:stopFlick(true)
 				return EVENT_CONSUME
@@ -389,8 +400,12 @@ local function _eventHandler(self, event)
 				-- where the mouse cursor is on the screen
 				self.sliderDragInProgress = true
 			end
+
 			-- forward event to scrollbar
-			return self.scrollbar:_event(event)
+			local result =  self.scrollbar:_event(event)
+			_scrollList(self)
+
+			return result
 
 		else
 			--mouse is inside menu region
@@ -1086,13 +1101,6 @@ end
 
 
 function _updateWidgets(self)
-
-	-- update the list to keep the selection in view
-	local selected = _coerce(self.selected or 1, self.listSize)
-	if selected < self.topItem
-		or selected >= self.topItem + self.numWidgets then
-		_scrollList(self)
-	end
 
 	local indexSize = self.numWidgets + 1 -- one extra for smooth scrolling
 	local min = self.topItem
