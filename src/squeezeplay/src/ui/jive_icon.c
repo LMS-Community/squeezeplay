@@ -14,6 +14,7 @@ typedef struct icon_widget {
 
 	JiveSurface *img;
 	JiveSurface *default_img;
+	JiveTile *bg_tile;
 	Uint32 anim_frame;
 	Uint32 anim_total;
 
@@ -39,6 +40,7 @@ static JivePeerMeta iconPeerMeta = {
 
 int jiveL_icon_skin(lua_State *L) {
 	IconWidget *peer;
+	JiveTile *bg_tile;
 	JiveSurface *img;
 
 	/* stack is:
@@ -74,6 +76,14 @@ int jiveL_icon_skin(lua_State *L) {
 	peer->frame_rate = jive_style_int(L, 1, "frameRate", 0);
 	if (peer->frame_rate) {
 		peer->frame_width = jive_style_int(L, 1, "frameWidth", -1);
+	}
+
+	bg_tile = jive_style_tile(L, 1, "bgImg", NULL);
+	if (bg_tile != peer->bg_tile) {
+		if (peer->bg_tile) {
+			jive_tile_free(peer->bg_tile);
+		}
+		peer->bg_tile = jive_tile_ref(bg_tile);
 	}
 
 	peer->align = jive_style_align(L, 1, "align", JIVE_ALIGN_TOP_LEFT);
@@ -235,6 +245,10 @@ int jiveL_icon_draw(lua_State *L) {
 	IconWidget *peer = jive_getpeer(L, 1, &iconPeerMeta);
 	JiveSurface *srf = tolua_tousertype(L, 2, 0);
 	bool drawLayer = luaL_optinteger(L, 3, JIVE_LAYER_ALL) & peer->w.layer;
+
+	if (drawLayer && peer->bg_tile) {
+		jive_tile_blit(peer->bg_tile, srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.w, peer->w.bounds.h);
+	}
 
 	if (!drawLayer || !peer->img) {
 		return 0;
