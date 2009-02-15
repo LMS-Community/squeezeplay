@@ -94,7 +94,7 @@ local KEY_PAGE_UP           = jive.ui.KEY_PAGE_UP
 local KEY_PAGE_DOWN         = jive.ui.KEY_PAGE_DOWN
 
 --speed (pixels/ms) that must be surpassed for flick to start.
-local FLICK_THRESHOLD_START_SPEED = 30/1000
+local FLICK_THRESHOLD_START_SPEED = 80/1000
 
 --speed (pixels/ms) at which flick scrolling will stop
 local FLICK_STOP_SPEED =  3/1000
