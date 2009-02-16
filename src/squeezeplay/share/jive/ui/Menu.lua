@@ -441,9 +441,11 @@ local function _eventHandler(self, event)
 	                                self.usePressedStyle = false
 
 	                                --unhighlight any selected item
-					_selectedItem(self):setStyleModifier(nil)
-					_selectedItem(self):reDraw()
-
+	                                if _selectedItem(self) then
+						_selectedItem(self):setStyleModifier(nil)
+						_selectedItem(self):reDraw()
+					end
+					
 					if self.selectItemAfterFingerDownTimer then
 						self.selectItemAfterFingerDownTimer:stop()
 					end
@@ -502,6 +504,12 @@ local function _eventHandler(self, event)
 
 		self.sliderDragInProgress = false
 		self.bodyDragInProgress = false
+		--turn off accel keys (may have been on from a scrollbar slide)
+		if (self.accel or self.accelKey) then
+			self.accel = false
+			self.accelKey = nil
+			self:reDraw()
+		end
 		return EVENT_UNUSED
 
 	elseif evtype == EVENT_SHOW or
@@ -681,6 +689,7 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 				 end)
 	obj.scrollbar = Scrollbar("scrollbar",
 				  function(_, value)
+  					  obj.accel = true
 					  obj:setSelectedIndex(value + 1) -- value comes in zero based, one based is needed
 				  end)
 
@@ -1194,7 +1203,7 @@ function _updateWidgets(self)
 		if self.accel then
 			self.accelKey = nextSelected:getAccelKey()
 		end
-		
+
 		if self.locked then
 			nextSelected:setStyleModifier("locked")
 		else
