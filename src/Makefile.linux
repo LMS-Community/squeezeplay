@@ -213,6 +213,7 @@ squeezeplay_desktop/Makefile:
 squeezeplay_desktop: squeezeplay_desktop/Makefile
 	cd squeezeplay_desktop; make install
 	cp squeezeplay_desktop/squeezeplay.sh ${PREFIX}/bin/
+	chmod +x ${PREFIX}/bin/squeezeplay.sh
 
 squeezeplay_contrib: squeezeplay/Makefile
 	cd squeezeplay_contrib; make PREFIX=${PREFIX}
