@@ -156,7 +156,7 @@ tolua++: lua
 #
 
 .PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib squeezeplay_private freefont freefont-debian axtls
-app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_tgz
+app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay-tgz
 
 # portaudio
 portaudio_v19_1360/Makefile:
@@ -213,6 +213,7 @@ squeezeplay_desktop/Makefile:
 squeezeplay_desktop: squeezeplay_desktop/Makefile
 	cd squeezeplay_desktop; make install
 	cp squeezeplay_desktop/squeezeplay.sh ${PREFIX}/bin/
+	chmod +x ${PREFIX}/bin/squeezeplay.sh
 
 squeezeplay_contrib: squeezeplay/Makefile
 	cd squeezeplay_contrib; make PREFIX=${PREFIX}
