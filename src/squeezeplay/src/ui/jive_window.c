@@ -134,6 +134,19 @@ int jiveL_window_iterate(lua_State *L) {
 	 * 2: closure
 	 */
 
+	// window widgets
+	lua_getfield(L, 1, "widgets");
+	lua_pushnil(L);
+	while (lua_next(L, -2) != 0) {
+		lua_pushvalue(L, 2);
+		lua_pushvalue(L, -2);
+		lua_call(L, 1, 1);
+
+		r = r | luaL_optinteger(L, -1, 0);
+		lua_pop(L, 2);
+	}
+	lua_pop(L, 1);
+
 	lua_getfield(L, 1, "showFrameworkWidgets");
 	if (lua_toboolean(L, -1)) {
 		// global widgets
@@ -148,19 +161,6 @@ int jiveL_window_iterate(lua_State *L) {
 			r = r | luaL_optinteger(L, -1, 0);
 			lua_pop(L, 2);
 		}
-		lua_pop(L, 2);
-	}
-	lua_pop(L, 1);
-
-	// window widgets
-	lua_getfield(L, 1, "widgets");
-	lua_pushnil(L);
-	while (lua_next(L, -2) != 0) {
-		lua_pushvalue(L, 2);
-		lua_pushvalue(L, -2);
-		lua_call(L, 1, 1);
-
-		r = r | luaL_optinteger(L, -1, 0);
 		lua_pop(L, 2);
 	}
 	lua_pop(L, 1);
