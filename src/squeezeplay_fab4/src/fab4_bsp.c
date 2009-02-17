@@ -266,6 +266,19 @@ static Uint32 queue_ir_event(Uint32 ticks, Uint32 code, JiveEventType type) {
 	return 0;
 }
 
+static Uint32 queue_sw_event(Uint32 ticks, Uint32 code, Uint32 value) {
+	JiveEvent event;
+
+	memset(&event, 0, sizeof(JiveEvent));
+	event.type = JIVE_EVENT_SWITCH;
+	event.u.sw.code = code;
+	event.u.sw.value = value;
+	event.ticks = ticks;
+	jive_queue_event(&event);
+
+	return 0;
+}
+
 static int ir_handle_up() {
 	if (ir_state != IR_STATE_HOLD_SENT) {
 		//odd to use sdl_getTicks here, since other ir events sent input_event time - code using PRESS and UP shouldn't care yet about the time....
@@ -371,6 +384,10 @@ static int handle_ir_events(int fd) {
 
 			ir_last_input_millis = input_time;
 			ir_last_code = ir_code;
+		} else if(ev[i].type == EV_SW) {	
+			// Pass along all switch events to jive
+			Uint32 input_time = TIMEVAL_TO_TICKS(ev[i].time);
+			queue_sw_event(input_time, ev[i].code, ev[i].value);
 		}
 		// ignore EV_SYN
 	}
