@@ -348,12 +348,14 @@ void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint
 #endif //JIVE_PROFILE_BLIT
 	Uint16 mw, mh;
 
-	jive_tile_get_min_size(tile, &mw, &mh);
-	if (dw < mw) {
-		dw = mw;
-	}
-	if (dh < mh) {
-		dh = mh;
+	if (!dw || !dh) {
+		jive_tile_get_min_size(tile, &mw, &mh);
+		if (!dw) {
+			dw = mw;
+		}
+		if (!dh) {
+			dh = mh;
+		}
 	}
 
 	_blit_tile(tile, dst, dx, dy, dw, dh);
