@@ -37,6 +37,14 @@ end
 function _debugWidget(meta, screen, widget)
 	if meta.mouseEvent and widget:mouseInside(meta.mouseEvent) then
 		local x,y,w,h = widget:getBounds()
+		local l,t,r,b = widget:getBorder()
+
+		screen:filledRectangle(x-l,y-t, x+w+r,y, 0x00FF003F)
+		screen:filledRectangle(x-l,y+h, x+w+r,y+h+b, 0x00FF003F)
+
+		screen:filledRectangle(x-l,y, x,y+h, 0x00FF003F)
+		screen:filledRectangle(x+w,y, x+w+r,y+h, 0x00FF003F)
+
 		screen:filledRectangle(x,y, x+w,y+h, 0xFF00003F)
 
 		log:info("-> ", widget, " (", x, ",", y, " ", w, "x", h, ")")
