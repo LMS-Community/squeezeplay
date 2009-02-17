@@ -59,6 +59,8 @@ local Task          = require("jive.ui.Task")
 local Timer         = require("jive.ui.Timer")
 local Event         = require("jive.ui.Event")
 
+local Canvas        = require("jive.ui.Canvas")
+
 local _inputToActionMap = require("jive.InputToActionMap")
 
 local debug         = require("jive.utils.debug")
@@ -258,6 +260,7 @@ function JiveMain:__init()
 
 --	profiler.stop()
 end
+
 
 function JiveMain:jiveMainNodes(globalStrings)
 

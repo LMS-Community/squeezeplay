@@ -399,7 +399,7 @@ Remove the global widget I<widget> from the screen.
 function removeWidget(self, widget)
 	_assert(oo.instanceof(widget, Widget))
 
-	table.delete(widget, widget)
+	table.delete(widgets, widget)
 	widget:dispatchNewEvent(EVENT_HIDE)
 
 	self:reDraw(nil)

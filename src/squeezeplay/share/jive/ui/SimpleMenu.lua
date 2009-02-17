@@ -114,8 +114,9 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 			local item = list[indexList[i]]
 
 			local icon = item.icon or menu.icons[i]
+			local iconStyle = item.iconStyle or "icon"
 			if icon == nil then
-				icon = Icon("icon")
+				icon = Icon(iconStyle)
 				menu.icons[i] = icon
 			end
 
@@ -129,7 +130,7 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 			else
 				widgetList[i]:setStyle(item.style or "item")
 				widgetList[i]:setWidgetValue("text", item.text)
-				widgetList[i]:setWidget("icon", icon)
+				widgetList[i]:setWidget(iconStyle, icon)
 			end
 		end
 	end
