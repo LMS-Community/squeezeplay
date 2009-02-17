@@ -38,6 +38,9 @@ local log               = require("jive.utils.log").logger("ui")
 
 local EVENT_ALL         = jive.ui.EVENT_ALL
 local EVENT_MOUSE_ALL   = jive.ui.EVENT_MOUSE_ALL
+local EVENT_MOUSE_DOWN  = jive.ui.EVENT_MOUSE_DOWN
+local EVENT_MOUSE_UP    = jive.ui.EVENT_MOUSE_UP
+local EVENT_MOUSE_MOVE    = jive.ui.EVENT_MOUSE_MOVE
 local EVENT_UNUSED      = jive.ui.EVENT_UNUSED
 
 local EVENT_SHOW      = jive.ui.EVENT_SHOW
@@ -69,20 +72,73 @@ function __init(self, style, widgets)
 	-- forward events to contained widgets
 	obj:addListener(EVENT_ALL,
 			 function(event)
-				 local notMouse = (event:getType() & EVENT_MOUSE_ALL) == 0
+				local notMouse = (event:getType() & EVENT_MOUSE_ALL) == 0
+				local r = EVENT_UNUSED
+				if event:getType() == EVENT_MOUSE_MOVE then
+					local mouseX, mouseY = event:getMouse()
+				end
 
-				 for _,widget in pairs(obj.widgets) do
-					 if notMouse or widget:mouseInside(event) then
-						 local r = widget:_event(event)
+				for _,widget in pairs(obj.widgets) do
+					 if notMouse
+					   or self._mouseEventFocusWidget == widget 
+					   or (not self._mouseEventFocusWidget and widget:mouseInside(event)) then
+						 r = widget:_event(event)
 						 if r ~= EVENT_UNUSED then
-							 return r
+						        --Consumer of MOUSE_DOWN that is in mouse bounds will be given mouse event focus
+							if event:getType() == EVENT_MOUSE_DOWN then
+								self:setMouseEventFocusWidget(widget)
+							end
+							break
 						 end
 					 end
-				 end
-				 return EVENT_UNUSED
+				end
+
+				if r == EVENT_UNUSED and event:getType() == EVENT_MOUSE_DOWN then
+					log:error("here looking for a group widget")
+
+					--no match for the down found, send to closest group member
+					local mouseX, mouseY = event:getMouse()
+					local closestDistance = 99999
+					local closestWidget
+					for _,widget in pairs(obj.widgets) do
+						local widgetX, widgetY, widgetW, widgetH = widget:getBounds()
+
+						local widgetDistance
+						if mouseX >= widgetW + widgetX then
+							widgetDistance = mouseX - (widgetW + widgetX)
+						else
+							widgetDistance = widgetX - mouseX
+						end
+
+						if widgetDistance < closestDistance then
+							closestDistance = widgetDistance
+							closestWidget = widget
+						end
+					end
+					if closestWidget then
+						r = closestWidget:_event(event)
+						if r ~= EVENT_UNUSED then
+							--closest Consumer of MOUSE_DOWN will be given mouse event focus
+							if event:getType() == EVENT_MOUSE_DOWN then
+								self:setMouseEventFocusWidget(closestWidget)
+							end
+						end
+					end
+				end
+
+				if event:getType() == EVENT_MOUSE_UP then
+					self:setMouseEventFocusWidget(nil)
+				end
+
+				return r
 			 end)
 
 	return obj
+end
+
+
+function setMouseEventFocusWidget(self, widget)
+	self._mouseEventFocusWidget = widget
 end
 
 
