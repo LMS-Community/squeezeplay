@@ -49,7 +49,7 @@ SCREENSAVER_DELAY
 
 SCREENSAVER_SELECT_HELP
 	DA	Tryk på midterknappen for at vælge en pauseskærm; afspil viser eksempel.
-	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu suchen, und PLAY, um eine Vorschau anzuzeigen.
+	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu wählen, und PLAY, um eine Vorschau anzuzeigen.
 	EN	Press the center button to choose a screensaver, play to preview.
 	ES	Pulse el botón central para elegir un protector de pantalla y el de reproducción para ver una vista previa.
 	FI	Valitse näytönsäästäjä keskipainikkeella, esikatsele se toistopainikkeella.
