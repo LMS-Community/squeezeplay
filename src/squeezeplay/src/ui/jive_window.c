@@ -367,6 +367,7 @@ int jiveL_window_event_handler(lua_State *L) {
 	case JIVE_EVENT_MOUSE_MOVE:
 	case JIVE_EVENT_MOUSE_DRAG:
 		/* Forward mouse events to the enclosed widgets */
+		/* C side mouse handling is no longer used, is now handled inside the Lua code */
 		if (jive_getmethod(L, 1, "iterate")) {
 			lua_pushvalue(L, 1); // widget
 
