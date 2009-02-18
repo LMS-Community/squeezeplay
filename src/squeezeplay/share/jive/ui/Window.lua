@@ -64,6 +64,8 @@ local EVENT_KEY_ALL           = jive.ui.EVENT_KEY_ALL
 local EVENT_MOUSE_HOLD        = jive.ui.EVENT_MOUSE_HOLD
 local EVENT_MOUSE_PRESS       = jive.ui.EVENT_MOUSE_PRESS
 local EVENT_MOUSE_DOWN        = jive.ui.EVENT_MOUSE_DOWN
+local EVENT_MOUSE_UP          = jive.ui.EVENT_MOUSE_UP
+local EVENT_MOUSE_ALL         = jive.ui.EVENT_MOUSE_ALL
 local EVENT_ACTION            = jive.ui.EVENT_ACTION
 local EVENT_SCROLL            = jive.ui.EVENT_SCROLL
 local EVENT_KEY_PRESS         = jive.ui.EVENT_KEY_PRESS
@@ -1412,13 +1414,47 @@ end
 
 
 function _event(self, event)
-	local r = self:_eventHandler(event)
+	local notMouse = (event:getType() & EVENT_MOUSE_ALL) == 0
+
+	local r
+	if notMouse then
+		r = self:_eventHandler(event)
+	else
+		--handle mouse locally, no need for C optimization on mouse platforms
+		r = self:iterate(
+			function(widget)
+				if self._mouseEventFocusWidget == widget or (not self._mouseEventFocusWidget and widget:mouseInside(event)) then
+					local rClosure = widget:_event(event)
+					if rClosure ~= EVENT_UNUSED then
+						--Consumer of MOUSE_DOWN that is in mouse bounds will be given mouse event focus
+						if event:getType() == EVENT_MOUSE_DOWN then
+							self:setMouseEventFocusWidget(widget)
+						end
+						return rClosure
+					end
+
+				end
+			end
+		)
+
+		if event:getType() == EVENT_MOUSE_UP then
+			self:setMouseEventFocusWidget(nil)
+		end
+
+	end
 
 	if r & EVENT_CONSUME == 0 then
 		r = Widget._event(self, event)
 	end
 
 	return r
+end
+
+
+function setMouseEventFocusWidget(self, widget)
+	log:debug("setMouseEventFocusWidget: ", widget)
+
+	self._mouseEventFocusWidget = widget
 end
 
 

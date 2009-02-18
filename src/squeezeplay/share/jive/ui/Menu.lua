@@ -405,10 +405,12 @@ local function _eventHandler(self, event)
 			end
 
 			-- forward event to scrollbar
-			local result =  self.scrollbar:_event(event)
-			_scrollList(self)
-
-			return result
+			local r = self.scrollbar:_event(event)
+			if evtype == EVENT_MOUSE_DOWN then
+				--slider doesnt' consume the DOWN, but we require it to be consumed so menu is marked as the mouse focus widget.
+				r = EVENT_CONSUME
+			end
+			return r
 
 		else
 			--mouse is inside menu region
