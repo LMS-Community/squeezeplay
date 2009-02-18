@@ -406,6 +406,7 @@ local function _eventHandler(self, event)
 
 			-- forward event to scrollbar
 			local r = self.scrollbar:_event(event)
+			_scrollList(self)
 			if evtype == EVENT_MOUSE_DOWN then
 				--slider doesnt' consume the DOWN, but we require it to be consumed so menu is marked as the mouse focus widget.
 				r = EVENT_CONSUME
