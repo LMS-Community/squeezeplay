@@ -130,7 +130,7 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 			else
 				widgetList[i]:setStyle(item.style or "item")
 				widgetList[i]:setWidgetValue("text", item.text)
-				widgetList[i]:setWidget(iconStyle, icon)
+				widgetList[i]:setWidget("icon", icon)
 			end
 		end
 	end
