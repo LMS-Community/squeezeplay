@@ -64,7 +64,8 @@ function __init(self, widget, action)
 			end
 
 			if type == EVENT_MOUSE_PRESS then
-				return action()
+				--only ever respond to the up, since it manages the response now
+				return EVENT_CONSUME
 			end
 
 			--todo handle hold - will probably need a passed in holdAction or pass back the state to action()
