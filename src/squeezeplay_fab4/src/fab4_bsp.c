@@ -155,8 +155,8 @@ static int handle_clearpad_events(int fd) {
 					if (flick_x > 0) {
 						JiveEvent event;
 
-						event.type = (JiveEventType) JIVE_EVENT_KEY_PRESS;
-						event.u.key.code = JIVE_KEY_HOME;
+						event.type = (JiveEventType) JIVE_EVENT_CHAR_PRESS;
+						event.u.text.unicode = 'h'; // '[' the go_home shortcut
 						event.ticks = TIMEVAL_TO_TICKS(ev[i].time);
 						jive_queue_event(&event);
 					}
