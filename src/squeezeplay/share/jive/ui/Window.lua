@@ -162,6 +162,10 @@ function __init(self, style, title, titleStyle)
 					function() 
 						Framework:pushAction("back")
 						return EVENT_CONSUME
+					end,
+					function()
+						Framework:pushAction("go_home")
+						return EVENT_CONSUME
 					end
 				), 
 				nowplaying = Button(
@@ -699,7 +703,8 @@ function setTitle(self, title)
 					{ text = Label("text", title),
 					icon = Icon("icon"),
 					back = Button(Icon("back"), 
-						Framework:pushAction("back"))
+						Framework:pushAction("back"),
+						Framework:pushAction("go_home"))
 					})
 		self:_addWidget(self.title)
 		self.title:_event(Event:new(EVENT_FOCUS_GAINED))

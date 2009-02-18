@@ -2,6 +2,7 @@ local _assert, pairs, string, tostring, type, math = _assert, pairs, string, tos
 local getmetatable = getmetatable
 
 local oo                     = require("loop.base")
+local Timer                  = require("jive.ui.Timer")
 
 local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("ui")
@@ -20,12 +21,30 @@ local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
 
 local BUFFER_DISTANCE = 75
 
+local HOLD_TIMEOUT = 1000
+
 module(...)
 oo.class(_M, oo.class)
 
 
-function __init(self, widget, action)
+function __init(self, widget, action, holdAction)
 	_assert(widget)
+
+	--A mouse sequence is a full down,activity,up sequence - false during down,activity and true on up
+	widget.mouseSequenceComplete = true
+
+	-- holdAction will be called if the mouse is down and not dragged for HOLD_TIMEOUT millis.
+	if holdAction then
+		widget.holdTimer = Timer(HOLD_TIMEOUT,
+			function ()
+				widget:setStyleModifier(nil)
+				widget:reDraw()
+
+				widget.mouseSequenceComplete = true
+				holdAction()
+			end,
+			true)
+	end
 
 	widget:addListener(EVENT_MOUSE_ALL,
 		function(event)
@@ -34,41 +53,58 @@ function __init(self, widget, action)
 			if type == EVENT_MOUSE_DOWN then
 				--uncomment when pressed changes are merged
 --				widget:setStyleModifier("pressed")
+				if widget.holdTimer then
+					widget.holdTimer:restart()
+				end
+				widget.mouseSequenceComplete = false
+
 				widget:reDraw()
 				return EVENT_CONSUME
 			end
 
 			if type == EVENT_MOUSE_UP then
+				if widget.holdTimer then
+					widget.holdTimer:stop()
+				end
+				
 				widget:setStyleModifier(nil)
 				widget:reDraw()
 
-				if mouseInsideBufferDistance(widget, event) then
-					return action()
+				if not widget.mouseSequenceComplete then
+					widget.mouseSequenceComplete = true
+					if mouseInsideBufferDistance(widget, event) then
+						if action then
+							return action()
+						end
+					end
 				end
 				--else nothing (i.e. cancel)
 				return EVENT_CONSUME
 			end
 
 			if type == EVENT_MOUSE_DRAG then
-
-				if mouseInsideBufferDistance(widget, event) then
-					--uncomment when pressed changes are merged
---					widget:setStyleModifier("pressed")
-					widget:reDraw()
-				else
-					widget:setStyleModifier(nil)
-					widget:reDraw()
+				--eliminating hold after a drag is similar to typical desktop behavior, plus it's
+				 -- very tricky to have hold triggered after a drag, when "hold outside of the bounds" is factored in
+				if widget.holdTimer then
+					widget.holdTimer:stop()
 				end
 
+				if not widget.mouseSequenceComplete then
+					if mouseInsideBufferDistance(widget, event) then
+						--uncomment when pressed changes are merged
+	--					widget:setStyleModifier("pressed")
+						widget:reDraw()
+					else
+						--dragging outside of buffer distance, change pressed style to normal
+						widget:setStyleModifier(nil)
+						widget:reDraw()
+					end
+				end
+				
 				return EVENT_CONSUME
 			end
 
-			if type == EVENT_MOUSE_PRESS then
-				--only ever respond to the up, since it manages the response now
-				return EVENT_CONSUME
-			end
-
-			--todo handle hold - will probably need a passed in holdAction or pass back the state to action()
+			-- press and hold consumed - only ever respond to the up (or hold timer), since they manages the response now
 
 			return EVENT_CONSUME
 		end)
