@@ -159,7 +159,7 @@ function __init(self, style, title, titleStyle)
 		end
 
 		-- default actions
-		obj:setButtonAction("lbutton", "back", "home")
+		obj:setButtonAction("lbutton", "back", "go_home")
 
 		-- FIXME nowplaying should not be in Window
 		obj:setButtonAction("rbutton", "go_now_playing")

@@ -278,7 +278,7 @@ function skin(self, s)
 
 	local textinputWheel = Tile:loadImage(imgpath .. "text_entry_select.png")
 
-	local textinputCursor = Tile:loadImage(imgpath .. "text_entry_letter.png")
+	local textinputCursor = Tile:loadImage(imgpath .. "Text_Entry/Keyboard_Touch/tch_cursor.png")
 
 
 	local TITLE_PADDING  = { 0, 6, 0, 12 }
