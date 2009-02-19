@@ -335,6 +335,12 @@ function skin(self, s)
 		frameWidth = 120,
 		padding = { 0, 0, 0, 10 }
 	}
+	-- convenience method for removing a button from the window
+	local noButton = { 
+		img = false, 
+		bgImg = false, 
+		w = 0 
+	}
 	
 	-- time (hidden off screen)
 	s.iconTime = {}
@@ -606,7 +612,6 @@ function skin(self, s)
 	s.centeredtextarea.lineHeight = 40
 	s.centeredtextarea.fg = TEXT_COLOR
 	s.centeredtextarea.sh = TEXT_SH_COLOR
-	s.centeredtextarea.align = "center"
 	
 	-- Scrollbar
 	s.scrollbar = {}
@@ -974,6 +979,28 @@ function skin(self, s)
 	s.button.title = _uses(s.title, {
 		h = 55
 	})
+
+	s.error = {}
+	s.error.menu = _uses(s.menu, {
+		h = FIVE_ITEM_HEIGHT * 4
+	})
+	s.error.title = _uses(s.title, {
+		rbutton = noButton,
+	})
+	s.error.text = {
+		position = LAYOUT_NORTH,
+		border  = { 0, 47, 0, 0 },
+		padding = { 10, 15, 0, 0 }, 
+		bgImg    = titleBox,
+		font     = _font(TITLE_FONT_SIZE),
+		h        = 47,
+		w        = WH_FILL,
+		fg       = TEXT_COLOR,
+		align    = "center",
+		text     = {
+			align = 'center',
+		},
+	}
 
 	-- 3 options per page, text only
 	s.buttonitem = {}
