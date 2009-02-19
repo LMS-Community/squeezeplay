@@ -274,7 +274,7 @@ function skin(self, s)
 
 	local THUMB_SIZE = self:getSettings().THUMB_SIZE
 	
-	local TITLE_PADDING  = { 0, 16, 0, 16 }
+	local TITLE_PADDING  = 0
 	local CHECK_PADDING  = { 2, 0, 6, 0 }
 	local CHECKBOX_RADIO_PADDING  = { 2, 8, 8, 0 }
 
@@ -308,6 +308,8 @@ function skin(self, s)
 	local ITEM_ICON_ALIGN   = 'center'
 	local THREE_ITEM_HEIGHT = 72
 	local FIVE_ITEM_HEIGHT = 45
+	local TITLE_BUTTON_WIDTH = 75
+	local TITLE_BUTTON_HEIGHT = 47
 
 	-- time (hidden off screen)
 	s.iconTime = {}
@@ -334,23 +336,28 @@ function skin(self, s)
 	s.title.text.font = _boldfont(TITLE_FONT_SIZE)
 	s.title.text.fg = TEXT_COLOR
 
-	s.title.back = {}
-	s.title.back.bgImg = titlebarButtonBox
-	s.title.back.img = _loadImage(self, "Screen_Formats/Titlebar/icon_back_button_tb.png")
-	s.title.back.w = 50
-	s.title.back.align = "center"
-	s.title.back.padding = { 0, 10, 18, 10 }
+	s.title.back               = {}
+	s.title.back.bgImg         = titlebarButtonBox
+	s.title.back.img           = _loadImage(self, "Screen_Formats/Titlebar/icon_back_button_tb.png")
+	s.title.back.w             = TITLE_BUTTON_WIDTH
+	s.title.back.h             = TITLE_BUTTON_HEIGHT
+	s.title.back.align         = "center"
 
-	s.title.nowplaying = {}
-	--FIXME, this png path should likely change
-	s.title.nowplaying.img = _loadImage(self, "menu_album_noartwork_24.png")
-	s.title.nowplaying.padding = { 20, 0, 5, 5 }
-	s.title.nowplaying.align = "right"
+	s.title.nowplaying         = {}
+	s.title.nowplaying.bgImg   = titlebarButtonBox
+	s.title.nowplaying.img     = _loadImage(self, "Screen_Formats/Titlebar/icon_nplay_button_tb.png")
+	s.title.nowplaying.w       = TITLE_BUTTON_WIDTH
+	s.title.nowplaying.align   = "center"
+	s.title.nowplaying.h       = TITLE_BUTTON_HEIGHT
 
 	s.title.pressed = {}
 	s.title.pressed.back = _uses(s.title.back, {
 		bgImg = pressedTitlebarButtonBox,
 	})
+	s.title.pressed.nowplaying = _uses(s.title.nowplaying, {
+		bgImg = pressedTitlebarButtonBox,
+	})
+
 	-- Menu with three basic styles: normal, selected and locked
 	-- First define the dimesions of the menu
 	s.menu = {}
@@ -1704,6 +1711,8 @@ function skin(self, s)
 						font    = _font(14),
 						fg      = TEXT_COLOR,
 						bgImg   = titlebarButtonBox,
+						w       = TITLE_BUTTON_WIDTH,
+						align   = 'center',
 				}
 	})
 
@@ -1711,10 +1720,7 @@ function skin(self, s)
 	s.browsenptitle = _uses(s.ssnptitle)
 	s.largenptitle  = _uses(s.ssnptitle)
 
-	s.title.pressed = {}
-	s.title.pressed.back = _uses(s.title.back, {
-		bgImg = pressedTitlebarButtonBox,
-	})
+
 	-- pressed styles
 	s.ssnptitle.pressed = {}
 	s.ssnptitle.pressed.back = _uses(s.ssnptitle.back, { 
