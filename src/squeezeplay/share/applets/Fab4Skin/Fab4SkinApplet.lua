@@ -619,8 +619,8 @@ function skin(self, s)
 	-- Scrollbar
 	s.scrollbar = {}
 	s.scrollbar.w = 34
-	s.scrollbar.border = { 0, 0, 0, 0 }
-	s.scrollbar.padding = { 0, 0, 0, 0 }
+	s.scrollbar.border = 0
+	s.scrollbar.padding = { 0, 24, 0, 24 }
 	s.scrollbar.horizontal = 0
 	s.scrollbar.bgImg = scrollBackground
 	s.scrollbar.img = scrollBar
