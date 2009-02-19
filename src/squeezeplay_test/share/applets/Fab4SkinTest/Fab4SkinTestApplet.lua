@@ -64,6 +64,12 @@ function menu(self, menuItem)
 	-- Menu	
 	local menu = SimpleMenu("menu",
 		{
+			{ text = "Keyboard UPPERCASE input",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:keyboardWindow(menuItem, 'qwerty')
+				end
+			},
 			{ text = "Connecting Popup",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -105,12 +111,6 @@ function menu(self, menuItem)
 				callback = function(event, menuItem)
 					self:menuWindow(menuItem, 'button', 'buttonicon')
 				end 
-			},
-			{ text = "Keyboard UPPERCASE input",
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:keyboardWindow(menuItem, 'qwerty')
-				end
 			},
 			{ text = "Keyboard lowercase input",
 				sound = "WINDOWSHOW",
@@ -341,8 +341,8 @@ function regionWindow(self, menuItem)
 	local menu = SimpleMenu('menu')
 	window:addWidget(menu)
 
-	local item = { text = "North America", style = 'wifiNAchecked'  }
-	local item2 = { text = "All Other Regions", style = 'wifiOther'  }
+	local item  = { text = "North America", style = 'buttoniconitem', iconStyle = 'regionNA'  }
+	local item2 = { text = "All Other Regions", style = 'buttoniconitem', iconStyle = 'regionOther'  }
 
 	menu:addItem(item)
 	menu:addItem(item2)
@@ -357,8 +357,8 @@ function networkChoiceWindow(self, menuItem)
 	local menu = SimpleMenu('menu')
 	window:addWidget(menu)
 
-	local item = { text = "Wireless", style = 'wireless'  }
-	local item2 = { text = "Wired", style = 'wired'  }
+	local item  = { text = "Wireless", style = 'buttoniconitem', iconStyle = 'wlan'  }
+	local item2 = { text = "Wired", style = 'buttoniconitem', iconStyle = 'wired'  }
 
 	local helpButton = Button(Icon('rbutton'), function() log:warn('BAH!') end )
 	window:getTitleWidget():setWidget('rbutton', helpButton)
@@ -517,7 +517,7 @@ end
 
 function keyboardWindow(self, menuItem, style)
 
-	local window = Window("window", menuItem.text)
+	local window = Window("window", menuItem.text, 'noRbutton')
 
 	local v = Textinput.textValue("", 8, 20)
 
@@ -732,7 +732,6 @@ function connectingPopup(self, menuItem)
 	popup:addWidget(label)
 	popup:addWidget(icon)
 	popup:addWidget(label2)
-
 
 	local state = 1
 	popup:addTimer(4000, function()

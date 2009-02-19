@@ -1039,17 +1039,16 @@ function skin(self, s)
 	})
 
 	-- 3 options per page with icon
+	s.buttonicon = {
+		w = 72,
+		h = WH_FILL,
+		padding = { 8, 4, 0, 4 },
+		img = false
+	}
 	s.buttoniconitem = _uses(s.buttonitem, {
 		order = { "icon", "text"},
-		icon  = {
-			w = 72,
-			h = WH_FILL,
-			padding = { 8, 4, 0, 4 },
-			img = false
-		},
+		icon  = s.buttonicon,
 	})
-
-	local checkPadding = { 2, 0, 18, 10 }
 
 	s.buttoniconitemchecked = _uses(s.buttoniconitem, {
 		order = { 'icon', 'text', 'check' },
@@ -1057,73 +1056,29 @@ function skin(self, s)
 			img     = _loadImage(self, "Icons/icon_check_3line.png"), 
 			w       = 37,
 			h       = WH_FILL,
-			padding = checkPadding,
+			padding = { 2, 0, 18, 10 },
 		}
 	})
 	
-	s.wifiNA = _uses(s.buttoniconitem, {
-				icon = {
-					img = _loadImage(self, "Icons/icon_region_americas_64.png"),
-				}
-			})
-	s.wifiNAchecked = _uses(s.wifiNA, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				img = _loadImage(self, "Icons/icon_check_3line.png"),
-				padding = checkPadding,
-			}
+	s.regionNA = _uses(s.buttonicon, { 
+		img = _loadImage(self, "Icons/icon_region_americas_64.png")
 	})
-	s.wifiOther = _uses(s.buttoniconitem, {
-				icon = {
-					img = _loadImage(self, "Icons/icon_region_other_64.png"),
-				}
-			})
-	s.wifiOtherchecked = _uses(s.wifiOther, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				img = _loadImage(self, "Icons/icon_check_3line.png"),
-				padding = checkPadding,
-			}
+	s.regionOther = _uses(s.buttonicon, { 
+		img = _loadImage(self, "Icons/icon_region_other_64.png")
 	})
-	s.wireless = _uses(s.buttoniconitem, {
-				icon = {
-					img = _loadImage(self, "Icons/icon_wireless_64.png"),
-				}
-			})
-	s.wirelesschecked = _uses(s.wifiNA, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				img = _loadImage(self, "Icons/icon_check_3line.png"),
-				padding = checkPadding,
-			}
+	s.wlan = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/icon_wireless_64.png")
 	})
-	s.wired = _uses(s.buttoniconitem, {
-				icon = {
-					img = _loadImage(self, "Icons/icon_ethernet_64.png"),
-				}
-			})
-	s.wiredchecked = _uses(s.wifiOther, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				img = _loadImage(self, "Icons/icon_check_3line.png"),
-				padding = checkPadding,
-			}
+	s.wired = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/icon_ethernet_64.png")
 	})
 
-
-	local buttonPressed = { bgImg = threeItemPressedBox }
+	local buttonPressed = { 
+		bgImg = threeItemPressedBox 
+	}
 
 	s.pressed.buttoniconitem          = _uses(s.buttoniconitemchecked, buttonPressed)
-	s.pressed.wifiNA                  = _uses(s.wifiNAchecked, buttonPressed)
-	s.pressed.wifiOther               = _uses(s.wifiOtherchecked, buttonPressed)
-	s.pressed.wired                   = _uses(s.wiredchecked, buttonPressed)
-	s.pressed.wireless                = _uses(s.wirelesschecked, buttonPressed)
 	s.pressed.buttoniconitemchecked   = _uses(s.buttoniconitemchecked, buttonPressed)
-	s.pressed.wifiNAchecked           = _uses(s.wifiNAchecked, buttonPressed)
-	s.pressed.wifiOtherchecked        = _uses(s.wifiOtherchecked, buttonPressed)
-	s.pressed.wiredchecked            = _uses(s.wiredchecked, buttonPressed)
-	s.pressed.wirelesschecked         = _uses(s.wirelesschecked, buttonPressed)
-
 
 	-- window with one option in "button" style
 	s.onebutton = {}
@@ -1212,83 +1167,40 @@ function skin(self, s)
 	s.chooseplayer        = _uses(s.buttoniconitem)
 	s.chooseplayerchecked = _uses(s.chooseplayer, checkedStyle)
 
-	s.transporter = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/transporter.png"),
-				}
-			})
-	s.transporterchecked = _uses(s.transporter, checkedStyle)
+	s.transporter = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/transporter.png"),
+	})
+	s.squeezebox = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/squeezebox.png"),
+	})
+	s.squeezebox2 = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/squeezebox.png"),
+	})
+	s.squeezebox3 = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/squeezebox3.png"),
+	})
+	s.boom = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/boom.png"),
+	})
+	s.slimp3 = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/slimp3.png"),
+	})
+	s.softsqueeze = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/softsqueeze.png"),
+	})
+	s.controller = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/controller.png"),
+	})
+	s.receiver = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/receiver.png"),
+	})
+	s.squeezeplay = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/squeezeplay.png"),
+	})
+	s.http = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/http.png"),
+	})
 
-	s.squeezebox = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox.png"),
-				}
-			})
-	s.squeezeboxchecked = _uses(s.squeezebox, checkedStyle)
-
-	s.squeezebox2 = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox.png"),
-				}
-			})
-	s.squeezebox2checked = _uses(s.squeezebox2, checkedStyle)
-
-	s.squeezebox3 = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox3.png"),
-				}
-			})
-	s.squeezebox3checked = _uses(s.squeezebox3, checkedStyle)
-
-	s.boom = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/boom.png"),
-				}
-			})
-	s.boomchecked = _uses(s.boom, checkedStyle)
-
-	s.slimp3 = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/slimp3.png"),
-				}
-			})
-	s.slimp3checked = _uses(s.slimp3, checkedStyle)
-
-	s.softsqueeze = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/softsqueeze.png"),
-				}
-			})
-	s.softsqueezechecked = _uses(s.softsqueeze, checkedStyle)
-
-	s.controller = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/controller.png"),
-				}
-			})
-	s.controllerchecked = _uses(s.controller, checkedStyle)
-
-	s.receiver = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/receiver.png"),
-				}
-			})
-	s.receiverchecked = _uses(s.receiver, checkedStyle)
-
-	s.squeezeplay = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezeplay.png"),
-				}
-			})
-	s.squeezeplaychecked = _uses(s.squeezeplay, checkedStyle)
-
-	s.http = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/http.png"),
-				}
-			})
-	s.httpchecked = _uses(s.http, checkedStyle)
-	
 	s.albumitemplay = _uses(s.albumitem)
 	s.albumitemadd  = _uses(s.albumitem)
 
@@ -1375,28 +1287,6 @@ function skin(self, s)
 
 	s.pressed.chooseplayer        = _uses(s.chooseplayer, buttonPressed)
 	s.pressed.chooseplayerchecked = _uses(s.chooseplayerchecked, buttonPressed)
-	s.pressed.transporter         = _uses(s.transporter, buttonPressed)
-	s.pressed.transporterchecked  = _uses(s.transporterchecked, buttonPressed)
-	s.pressed.squeezebox          = _uses(s.squeezebox, buttonPressed)
-	s.pressed.squeezeboxchecked   = _uses(s.squeezeboxchecked, buttonPressed)
-	s.pressed.squeezebox2         = _uses(s.squeezebox2, buttonPressed)
-	s.pressed.squeezebox2checked  = _uses(s.squeezebox2checked, buttonPressed)
-	s.pressed.squeezebox3         = _uses(s.squeezebox3, buttonPressed)
-	s.pressed.squeezebox3checked  = _uses(s.squeezebox3checked, buttonPressed)
-	s.pressed.boom                = _uses(s.boom, buttonPressed)
-	s.pressed.boomchecked         = _uses(s.boomchecked, buttonPressed)
-	s.pressed.slimp3              = _uses(s.slimp3, buttonPressed)
-	s.pressed.slimp3checked       = _uses(s.slimp3checked, buttonPressed)
-	s.pressed.softsqueeze         = _uses(s.softsqueeze, buttonPressed)
-	s.pressed.softsqueezechecked  = _uses(s.softsqueezechecked, buttonPressed)
-	s.pressed.controller          = _uses(s.controller, buttonPressed)
-	s.pressed.controllerchecked   = _uses(s.controllerchecked,buttonPressed)
-	s.pressed.receiver            = _uses(s.receiver, buttonPressed)
-	s.pressed.receiverchecked     = _uses(s.receiverchecked, buttonPressed)
-	s.pressed.squeezeplay         = _uses(s.squeezeplay, buttonPressed)
-	s.pressed.squeezeplaychecked  = _uses(s.squeezeplaychecked, buttonPressed)
-	s.pressed.http                = _uses(s.http, buttonPressed)
-	s.pressed.httpchecked         = _uses(s.httpchecked, buttonPressed)
 
 	-- locked item with artwork and song info
 	s.locked.albumitem = {}

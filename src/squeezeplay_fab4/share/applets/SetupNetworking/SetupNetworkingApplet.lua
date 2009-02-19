@@ -83,10 +83,14 @@ function setupRegionShow(self, setupNext, wlan)
 
 	for name in wlan:getRegionNames() do
 		log:debug("region=", region, " name=", name)
-
+		local iconStyle = 'regionNA'
+		if name == 'XX' then 
+			iconStyle = 'regionOther'
+		end
 		local item = {
 			text = self:string("NETWORK_REGION_" .. name),
-			style = 'buttonitem',
+			style = 'buttoniconitem',
+			iconStyle = iconStyle,
 			sound = "WINDOWSHOW",
 			callback = function()
 					if region ~= name then
@@ -184,7 +188,8 @@ function setupConnectionType(self, setupNext)
 	local connectionMenu = SimpleMenu("menu")
 
 	connectionMenu:addItem({
-		style = 'buttonitem',
+		style = 'buttoniconitem',
+		iconStyle = 'wlan',
 		text = (self:string("NETWORK_CONNECTION_TYPE_WIRELESS")),
 		sound = "WINDOWSHOW",
 		callback = function()
@@ -194,7 +199,8 @@ function setupConnectionType(self, setupNext)
 	})
 	
 	connectionMenu:addItem({
-		style = 'buttonitem',
+		style = 'buttoniconitem',
+		iconStyle = 'wired',
 		text = (self:string("NETWORK_CONNECTION_TYPE_WIRED")),
 		sound = "WINDOWSHOW",
 		callback = function()
@@ -238,7 +244,8 @@ function settingsConnectionType(self)
 	local connectionMenu = SimpleMenu("menu")
 
 	connectionMenu:addItem({
-		style = 'buttonitem',
+		style = 'buttoniconitem',
+		iconStyle = 'wlan',
 		text = (self:string("NETWORK_CONNECTION_TYPE_WIRELESS")),
 		sound = "WINDOWSHOW",
 		callback = function() 
@@ -253,7 +260,8 @@ function settingsConnectionType(self)
 	})
 	
 	connectionMenu:addItem({
-		style = 'buttonitem',
+		style = 'buttoniconitem',
+		iconStyle = 'wired',
 		text = (self:string("NETWORK_CONNECTION_TYPE_WIRED")),
 		sound = "WINDOWSHOW",
 		callback = function() 

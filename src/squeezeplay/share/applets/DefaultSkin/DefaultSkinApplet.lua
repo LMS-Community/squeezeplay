@@ -1040,6 +1040,9 @@ function skin(self, s, reload, useDefaultSize)
 				order = {'text', 'play'}
 			})
 
+	s.buttoniconitem = _uses(s.albumitem)
+	s.buttonicon = _uses(s.albumitem.icon)
+
 	-- checked albummenu item
 	s.albumchecked =
 		_uses(s.albumitem, {
@@ -1058,145 +1061,40 @@ function skin(self, s, reload, useDefaultSize)
 	s.chooseplayer = _uses(s.albumitem, {
 				text = { font = FONT_BOLD_13px }
 			})
-	s.transporter = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/transporter.png"),
-					w = 56,
-				}
-			})
-	s.transporterchecked = _uses(s.transporter, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
+	s.transporter = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/transporter.png"),
+	})
+	s.squeezebox = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/squeezebox.png"),
+	})
+	s.squeezebox2 = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/squeezebox.png"),
+	})
+	s.squeezebox3 = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/squeezebox3.png"),
+	})
+	s.boom = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/boom.png"),
+	})
+	s.slimp3 = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/slimp3.png"),
+	})
+	s.softsqueeze = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/softsqueeze.png"),
+	})
+	s.controller = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/controller.png"),
+	})
+	s.receiver = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/receiver.png"),
+	})
+	s.squeezeplay = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/squeezeplay.png"),
+	})
+	s.http = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/http.png"),
 	})
 
-	s.squeezebox = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox.png"),
-				}
-			})
-	s.squeezeboxchecked = _uses(s.squeezebox, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-	s.squeezebox2 = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox.png"),
-				}
-			})
-	s.squeezebox2checked = _uses(s.squeezebox2, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-	s.squeezebox3 = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox3.png"),
-				}
-			})
-	s.squeezebox3checked = _uses(s.squeezebox3, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-	s.boom = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/boom.png"),
-					w = 56,
-				}
-			})
-	s.boomchecked = _uses(s.boom, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.slimp3 = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/slimp3.png"),
-				}
-			})
-	s.slimp3checked = _uses(s.slimp3, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.softsqueeze = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/softsqueeze.png"),
-				}
-			})
-	s.softsqueezechecked = _uses(s.softsqueeze, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.controller = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/controller.png"),
-				}
-			})
-	s.controllerchecked = _uses(s.controller, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.receiver = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/receiver.png"),
-				}
-			})
-	s.receiverchecked = _uses(s.receiver, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.squeezeplay = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezeplay.png"),
-				}
-			})
-	s.squeezeplaychecked = _uses(s.squeezeplay, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.http = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/http.png"),
-				}
-			})
-	s.httpchecked = _uses(s.http, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	
 	s.albumitemplay = _uses(s.albumitem)
 	s.albumitemadd  = _uses(s.albumitem)
 
@@ -1291,147 +1189,6 @@ function skin(self, s, reload, useDefaultSize)
 			text = { font = FONT_BOLD_13px }
 	})
 
-	s.selected.transporter = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/transporter.png"),
-				}
-			})
-	s.selected.transporterchecked = _uses(s.selected.transporter, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-	s.selected.squeezebox = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox.png"),
-				}
-			})
-	s.selected.squeezeboxchecked = _uses(s.selected.squeezebox, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-	s.selected.squeezebox2 = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox.png"),
-				}
-			})
-	s.selected.squeezebox2checked = _uses(s.selected.squeezebox2, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-	s.selected.squeezebox3 = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox3.png"),
-				}
-			})
-	s.selected.squeezebox3checked = _uses(s.selected.squeezebox3, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-	s.selected.boom = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/boom.png"),
-				}
-			})
-	s.selected.boomchecked = _uses(s.selected.boom, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-
-	s.selected.slimp3 = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/slimp3.png"),
-				}
-			})
-
-	s.selected.slimp3checked = _uses(s.selected.slimp3, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-	s.selected.softsqueeze = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/softsqueeze.png"),
-				}
-			})
-	s.selected.softsqueezechecked = _uses(s.selected.softsqueeze, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.selected.controller = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/controller.png"),
-				}
-			})
-	s.selected.controllerchecked = _uses(s.selected.controller, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.selected.receiver = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/receiver.png"),
-				}
-			})
-	s.selected.receiverchecked = _uses(s.selected.receiver, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.selected.squeezeplay = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezeplay.png"),
-				}
-			})
-	s.selected.squeezeplaychecked = _uses(s.selected.squeezeplay, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.selected.http = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/http.png"),
-				}
-			})
-	s.selected.httpchecked = _uses(s.selected.http, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	
 	-- locked item with artwork and song info
 	s.locked.albumitem = {}
 	s.locked.albumitem.text = {}

@@ -219,7 +219,8 @@ function _addPlayerItem(self, player)
 
 	local item = {
 		id = mac,
-		style = playerModel,
+		iconStyle = playerModel,
+		style = 'chooseplayer',
 		text = "\n" .. playerName,
 		sound = "WINDOWSHOW",
 		callback = function()
@@ -348,7 +349,8 @@ function setupShowSelectPlayer(self, setupNext, windowStyle)
 			callback = function()
 				appletManager:callService("setupSqueezeboxSettingsShow")
 			end,
-			style = 'receiver',
+			iconStyle = 'receiver',
+			style = 'chooseplayer',
 			weight = 10,
 		})
 	end
