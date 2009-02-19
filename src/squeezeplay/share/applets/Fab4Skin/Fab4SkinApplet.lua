@@ -264,7 +264,7 @@ function skin(self, s)
 
 	local textinputWheel = Tile:loadImage(imgpath .. "text_entry_select.png")
 
-	local textinputCursor = Tile:loadImage(imgpath .. "text_entry_letter.png")
+	local textinputCursor = Tile:loadImage(imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/tch_cursor.png")
 
 	local THUMB_SIZE = self:getSettings().THUMB_SIZE
 	
@@ -295,7 +295,7 @@ function skin(self, s)
 	local TRACK_FONT_SIZE = 18
 	local TEXTAREA_FONT_SIZE = 18
 	local CENTERED_TEXTAREA_FONT_SIZE = 28
-	local TEXTINPUT_FONT_SIZE = 18
+	local TEXTINPUT_FONT_SIZE = 20
 	local TEXTINPUT_SELECTED_FONT_SIZE = 28
 	local HELP_FONT_SIZE = 18
 
@@ -651,18 +651,19 @@ function skin(self, s)
 
 	-- Text input
 	s.textinput = {}
-	s.textinput.h = 55
-	s.textinput.border = { 8, -5, 8, 0 }
+	s.textinput.h = 40
+	s.textinput.border = { 8, 0, 8, 0 }
 	s.textinput.padding = { 6, 0, 6, 0 }
-	s.textinput.font = _font(TEXTINPUT_FONT_SIZE)
+	s.textinput.font = _boldfont(TEXTINPUT_FONT_SIZE)
+	s.textinput.align = 'center'
 	s.textinput.cursorFont = _boldfont(TEXTINPUT_SELECTED_FONT_SIZE)
 	s.textinput.wheelFont = _boldfont(TEXTINPUT_FONT_SIZE)
-	s.textinput.charHeight = TEXTINPUT_SELECTED_FONT_SIZE + 4
+	s.textinput.charHeight = TEXTINPUT_SELECTED_FONT_SIZE + 10
 	s.textinput.fg = TEXT_COLOR_BLACK
 	s.textinput.wh = { 0x55, 0x55, 0x55 }
 	s.textinput.bgImg = textinputBackground
---	s.textinput.wheelImg = textinputWheel
 	s.textinput.cursorImg = textinputCursor
+--	s.textinput.wheelImg = textinputWheel
 --	s.textinput.enterImg = Tile:loadImage(imgpath .. "Icons/selection_right_5line.png")
 
 	-- Keyboard
@@ -819,9 +820,12 @@ function skin(self, s)
 
 	
 	s.keyboardButton   = _uses(s.touchButton, { padding = 2, w = 35, h = 35 } )
-	s.keyboardShift    = _uses(s.touchButton, { padding = 2, w = 75, h = 35 } )
 	s.keyboardSpace    = _uses(s.touchButton, { padding = 2, w = 100, h = 35 } )
+	s.keyboardShift    = _uses(s.touchButton, { padding = 2, w = 75, h = 35 } )
 	s.keyboardBack     = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/left_arrow.png") } )
+	s.keyboardShiftLower     = _uses(s.keyboardButton, { img = _loadImage(self, "Screen_Formats/Text_Entry/Keyboard_Touch/button_delete.png") } )
+	s.keyboardShiftUpper     = _uses(s.keyboardButton, { img = _loadImage(self, "Screen_Formats/Text_Entry/Keyboard_Touch/button_delete_press.png") } )
+
 	-- FIXME: icon_search.png is incorrect here
 	s.keyboardGo       = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/right_arrow.png") } )
 	s.keyboardSearch   = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/icon_search.png") } )

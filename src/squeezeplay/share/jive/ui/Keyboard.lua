@@ -128,13 +128,13 @@ function _predefinedKeyboards(self)
 		['qwerty']  = { 
 				{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
 				{ 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L' },
-				{ 'Z', 'X', 'C', 'V', 'B', 'N', 'M', self:_backspaceButton()  },
+				{ self:_shiftKey('qwertyLower', true), 'Z', 'X', 'C', 'V', 'B', 'N', 'M', self:_backspaceButton()  },
 				bottomRow
 		} ,
 		['qwertyLower']  = { 
 				{ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
 				{ 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l' },
-				{ 'z', 'x', 'c', 'v', 'b', 'n', 'm', self:_backspaceButton() },
+				{ self:_shiftKey('qwerty', false), 'z', 'x', 'c', 'v', 'b', 'n', 'm', self:_backspaceButton() },
 				bottomRow
 		} ,
 		['hex']     = { 
@@ -346,6 +346,22 @@ function _go(self)
 		end
 	}
 end
+
+-- return a table that can be used as a shift key
+function _shiftKey(self, switchTo, pressed)
+	local style = 'keyboardShiftLower'
+	if pressed then
+		style = 'keyboardShiftUpper'
+	end
+	return {	
+		icon	 = Icon(style),
+		callback = function()
+			self:setKeyboard(switchTo)
+			return EVENT_CONSUME 
+		end
+	}
+end
+
 
 -- return a table that can be used as a backspace bar in keyboards
 function _backspaceButton(self)
