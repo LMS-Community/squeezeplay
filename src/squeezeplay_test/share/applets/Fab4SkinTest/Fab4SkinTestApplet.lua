@@ -69,6 +69,12 @@ function menu(self, menuItem)
 					self:connectingPopup(menuItem)
 			end 
 			},
+			{ text = "Wired/Wireless",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:networkChoiceWindow(menuItem)
+				end 
+			},
 			{ text = "Regions",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -322,6 +328,7 @@ function buttonWindow(self, menuItem, style)
 	return window
 end
 
+
 function regionWindow(self, menuItem)
 	local window = Window("window", menuItem.text)
 	local menu = SimpleMenu('buttonmenu')
@@ -329,17 +336,30 @@ function regionWindow(self, menuItem)
 
 	local item = { text = "North America", style = 'wifiNA'  }
 	local item2 = { text = "All Other Regions", style = 'wifiOther'  }
-	local item3 = { text = "North America (checked)", style = 'wifiNAchecked'  }
-	local item4 = { text = "All Other Regions (checked)", style = 'wifiOtherchecked'  }
 
 	menu:addItem(item)
 	menu:addItem(item2)
-	menu:addItem(item3)
-	menu:addItem(item4)
 
 	self:tieAndShowWindow(window)
 	return window
 end
+
+
+function networkChoiceWindow(self, menuItem)
+	local window = Window("window", menuItem.text)
+	local menu = SimpleMenu('buttonmenu')
+	window:addWidget(menu)
+
+	local item = { text = "Wireless", style = 'wireless'  }
+	local item2 = { text = "Wired", style = 'wired'  }
+
+	menu:addItem(item)
+	menu:addItem(item2)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
 
 function albumMenuWindow(self, menuItem)
 	local window = Window("window", menuItem.text)

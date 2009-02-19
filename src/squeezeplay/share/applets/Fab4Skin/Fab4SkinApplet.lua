@@ -1013,6 +1013,31 @@ function skin(self, s)
 				padding = { 0, 0, 0, 10 }
 			}
 	})
+	s.wireless = _uses(s.buttoniconitem, {
+				icon = {
+					img = _loadImage(self, "Icons/icon_wireless_64.png"),
+				}
+			})
+	s.wirelesschecked = _uses(s.wifiNA, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				img = _loadImage(self, "Icons/icon_check_3line.png"),
+				padding = { 0, 0, 0, 10 }
+			}
+	})
+	s.wired = _uses(s.buttoniconitem, {
+				icon = {
+					img = _loadImage(self, "Icons/icon_ethernet_64.png"),
+				}
+			})
+	s.wiredchecked = _uses(s.wifiOther, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				img = _loadImage(self, "Icons/icon_check_3line.png"),
+				padding = { 0, 0, 0, 10 }
+			}
+	})
+
 
 	s.pressed.buttonitem = _uses(s.buttonitem, {
 			bgImg = threeItemPressedBox,
@@ -1030,6 +1055,18 @@ function skin(self, s)
 			bgImg = threeItemPressedBox,
 	})
 	s.pressed.wifiOtherChecked = _uses(s.wifiOtherchecked, {
+			bgImg = threeItemPressedBox,
+	})
+	s.pressed.wired = _uses(s.wired, {
+			bgImg = threeItemPressedBox,
+	})
+	s.pressed.wiredchecked = _uses(s.wiredchecked, {
+			bgImg = threeItemPressedBox,
+	})
+	s.pressed.wireless = _uses(s.wireless, {
+			bgImg = threeItemPressedBox,
+	})
+	s.pressed.wirelesschecked = _uses(s.wirelesschecked, {
 			bgImg = threeItemPressedBox,
 	})
 
