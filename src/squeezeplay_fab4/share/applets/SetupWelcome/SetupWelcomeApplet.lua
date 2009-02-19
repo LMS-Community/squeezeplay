@@ -219,12 +219,12 @@ end
 
 
 function setupWelcomeShow(self, setupNext)
-	local window = Window("window", self:string("WELCOME"), welcomeTitleStyle)
+	local window = Window("onebutton", self:string("WELCOME"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
-	local textarea = Textarea("centeredtextarea", self:string("WELCOME_WALKTHROUGH"))
+	local textarea = Textarea("text", self:string("WELCOME_WALKTHROUGH"))
 
-	local continueButton = SimpleMenu("buttonmenu")
+	local continueButton = SimpleMenu("menu")
 
 	continueButton:addItem({
 		style = 'buttonitem',
@@ -244,12 +244,12 @@ end
 
 function setupDoneShow(self, setupNext)
 	log:info('setupDoneShow()')
-	local window = Window("window", self:string("DONE"), welcomeTitleStyle)
+	local window = Window("onebutton", self:string("DONE"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
-	local textarea = Textarea("centeredtextarea", self:string("DONE_HELP"))
+	local textarea = Textarea("text", self:string("DONE_HELP"))
 
-	local continueButton = SimpleMenu("buttonmenu")
+	local continueButton = SimpleMenu("menu")
 
 	continueButton:addItem({
 		style = 'buttonitem',
@@ -261,7 +261,6 @@ function setupDoneShow(self, setupNext)
 	
 	window:addWidget(textarea)
 	window:addWidget(continueButton)
-
 
 	self:tieAndShowWindow(window)
 	return window

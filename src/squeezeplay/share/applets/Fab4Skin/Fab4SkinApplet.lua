@@ -228,10 +228,6 @@ function skin(self, s)
 
 	local popupMask = Tile:fillColor(0x000000e5)
 
-	local regionMask = Tile:loadTiles({
-					imgpath .. "Screen_Formats/Setup/overlay_region_map.png"
-				})
-
 	-- FIXME: no popupBox in Fab4? there is a defined popupBox in DefaultSkin...
 
 	local textinputBackground =
@@ -680,10 +676,6 @@ function skin(self, s)
 	s.window.w = screenWidth
 	s.window.h = screenHeight
 
-	s.regionWindow = _uses(s.window, { 
-					bgImg = regionMask
-				})
-
 	s.errorWindow = {}
 	s.errorWindow.w = screenWidth
 	s.errorWindow.h = screenHeight
@@ -924,6 +916,9 @@ function skin(self, s)
 	s.buttonmenu.padding = 0
 	s.buttonmenu.itemHeight = THREE_ITEM_HEIGHT
 
+	s.button = {}
+	s.button.menu = _uses(s.buttonmenu)
+
 	-- 3 options per page, text only
 	s.buttonitem = {}
 	s.buttonitem.order = { "text", "icon" }
@@ -951,7 +946,7 @@ function skin(self, s)
 			w = 72,
 			h = WH_FILL,
 			padding = { 8, 4, 0, 4 },
-			img = nil
+			img = false
 		},
 		play = {
 			img     = _loadImage(self, "Icons/selection_right_3line_off.png"), 

@@ -74,12 +74,12 @@ end
 
 
 function setupRegionShow(self, setupNext, wlan)
-	local window = Window("regionWindow", self:string("NETWORK_REGION"), wirelessTitleStyle)
+	local window = Window("button", self:string("NETWORK_REGION"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
 	local region = wlan:getRegion()
 
-	local menu = SimpleMenu("twobuttonmenu")
+	local menu = SimpleMenu("menu")
 
 	for name in wlan:getRegionNames() do
 		log:debug("region=", region, " name=", name)
@@ -174,10 +174,10 @@ function setupConnectionType(self, setupNext)
 	end
 
 	-- ask the user to choose
-	local window = Window("window", self:string("NETWORK_CONNECTION_TYPE"), wirelessTitleStyle)
+	local window = Window("button", self:string("NETWORK_CONNECTION_TYPE"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	local connectionMenu = SimpleMenu("twobuttonmenu")
+	local connectionMenu = SimpleMenu("menu")
 
 	connectionMenu:addItem({
 		style = 'buttonitem',
@@ -223,10 +223,10 @@ function settingsConnectionType(self)
 	end
 
 	-- ask the user to choose
-	local window = Window("window", self:string("NETWORK_CONNECTION_TYPE"), wirelessTitleStyle)
+	local window = Window("button", self:string("NETWORK_CONNECTION_TYPE"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	local connectionMenu = SimpleMenu("twobuttonmenu")
+	local connectionMenu = SimpleMenu("menu")
 
 	connectionMenu:addItem({
 		style = 'buttonitem',
@@ -770,10 +770,10 @@ end
 function chooseWEPLength(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	local window = Window("window", self:string("NETWORK_WIRELESS_ENCRYPTION"), wirelessTitleStyle)
+	local window = Window("button", self:string("NETWORK_WIRELESS_ENCRYPTION"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	local menu = SimpleMenu("twobuttonmenu",
+	local menu = SimpleMenu("menu",
 				{
 					{
 						text = self:string("NETWORK_WEP_64"),

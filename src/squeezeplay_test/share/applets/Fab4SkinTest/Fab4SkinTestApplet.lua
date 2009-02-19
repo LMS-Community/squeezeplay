@@ -90,7 +90,7 @@ function menu(self, menuItem)
 			{ text = "Button Menu",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
-					self:menuWindow(menuItem, 'button')
+					self:menuWindow(menuItem, 'button', 'buttonicon')
 				end 
 			},
 			{ text = "Keyboard UPPERCASE input",
@@ -361,20 +361,18 @@ end
 
 
 function menuWindow(self, menuItem, style, itemStyle)
-	local menuStyle
 	if not style then
-		menuStyle = 'menu'
+		style = 'window'
 		itemStyle = 'item'
 	else
-		menuStyle = style .. "menu"
 		if itemStyle then
 			itemStyle = itemStyle .. "item"
 		else
 			itemStyle = style .. "item"
 		end
 	end
-	local window = Window("window", menuItem.text)
-	local menu = SimpleMenu(menuStyle)
+	local window = Window(style, menuItem.text)
+	local menu = SimpleMenu('menu')
 	window:addWidget(menu)
 
 	local items = {}
