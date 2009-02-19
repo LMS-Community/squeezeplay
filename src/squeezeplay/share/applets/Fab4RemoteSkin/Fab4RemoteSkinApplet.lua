@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.SqueezeboxSkin.SqueezeboxSkinApplet - The squeezeplay skin for the Squeezebox Touch
+applets.TouchRemoteSkin.TouchRemoteSkinApplet - The remote interface skin for the Squeezebox Touch
 
 =head1 DESCRIPTION
 
-This applet implements the Squeezebox skin
+This applet implements the TouchRemote skin
 
 =head1 FUNCTIONS
 

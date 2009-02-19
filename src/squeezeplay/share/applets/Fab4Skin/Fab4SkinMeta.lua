@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.FullscreenSkin.FullscreenSkinMeta - FullscreenSkin meta-info
+applets.TouchSkin.TouchSkinMeta - TouchSkin meta-info
 
 =head1 DESCRIPTION
 
-See L<applets.FullscreenSkin.FullscreenSkinApplet>.
+See L<applets.TouchSkin.TouchSkinApplet>.
 
 =head1 FUNCTIONS
 
@@ -41,7 +41,7 @@ function registerApplet(self)
 		nowPlayingSSArtworkSize     = 190,
 		nowPlayingLargeArtworkSize  = 190,
         }
-	jiveMain:registerSkin(self:string("SQUEEZEBOX_SKIN"), "Fab4Skin", "skin", params)
+	jiveMain:registerSkin(self:string("TOUCH_SKIN"), "Fab4Skin", "skin", params)
 end
 
 

@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.SqueezeboxSkin.SqueezeboxSkinApplet - The squeezeplay skin for the Squeezebox Touch
+applets.TouchSkin.TouchSkinApplet - The touch skin for the Squeezebox Touch
 
 =head1 DESCRIPTION
 
-This applet implements the Squeezebox skin
+This applet implements the Touch skin for the Squeezebox Touch
 
 =head1 FUNCTIONS
 
@@ -1299,7 +1299,6 @@ function skin(self, s)
 	s.selected.albumitem = _uses(s.albumitem)
 	--[[
 	s.selected.albumitem = _uses(s.albumitem, {
-			      --[[
 			      -- not for touch!
 		text = {
 			fg    = TEXT_COLOR,
@@ -1314,8 +1313,6 @@ function skin(self, s)
 			w = 70,
 			h = 70
 		}
-                                --]]
-				
 	})
 	--]]
 	s.pressed.albumitem = _uses(s.albumitem, {

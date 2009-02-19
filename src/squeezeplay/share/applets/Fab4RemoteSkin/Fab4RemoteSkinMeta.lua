@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.FullscreenSkin.FullscreenSkinMeta - FullscreenSkin meta-info
+applets.TouchRemote.TouchRemoteSkinMeta - TouchRemoteSkin meta-info
 
 =head1 DESCRIPTION
 
-See L<applets.FullscreenSkin.FullscreenSkinApplet>.
+See L<applets.TouchRemoteSkin.TouchRemoteSkinApplet>.
 
 =head1 FUNCTIONS
 

@@ -3,4 +3,4 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SQUEEZEBOX_REMOTE_SKIN
-	EN	Squeezebox Remote Skin
+	EN	Squeezebox Touch Remote Skin
