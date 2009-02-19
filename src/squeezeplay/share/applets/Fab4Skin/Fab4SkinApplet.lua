@@ -1200,7 +1200,7 @@ function skin(self, s)
 					img = _loadImage(self, "Icons/Players/receiver.png"),
 				}
 			})
-	s.receiverchecked = _uses(s.receiver, receiverChecked)
+	s.receiverchecked = _uses(s.receiver, checkedStyle)
 
 	s.squeezeplay = _uses(s.chooseplayer, {
 				icon = {

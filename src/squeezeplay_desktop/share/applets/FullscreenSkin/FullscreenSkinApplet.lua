@@ -964,6 +964,9 @@ function skin(self, s, reload, useDefaultSize)
 	s.albummenu.fg = {0xbb, 0xbb, 0xbb }
 	s.albummenu.font = _boldfont(400)
 
+	s.button = {}
+	s.button.menu = _uses(s.albummenu)
+
 	s.multilinemenu = _uses(s.albummenu)
 
 	-- items with artwork and song info
