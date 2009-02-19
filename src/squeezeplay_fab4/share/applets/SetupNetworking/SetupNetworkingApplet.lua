@@ -686,7 +686,9 @@ function enterPassword(self, iface, ssid, checkWPS)
 		return chooseWEPLength(self, iface, ssid)
 
 	elseif string.find(flags, "WPA%-EAP") or string.find(flags, "WPA2%-EAP") then
-		local window = Window("window", self:string("NETWORK_CONNECTION_PROBLEM"))
+		local window = Window("error", self:string('NETWORK_ERROR'), wirelessTitleStyle)
+		local errorMessage = Textarea("text", self:string("NETWORK_CONNECTION_PROBLEM"))
+		
 		window:setAllowScreensaver(false)
 
 		local menu = SimpleMenu("menu",
@@ -703,6 +705,7 @@ function enterPassword(self, iface, ssid, checkWPS)
 		local help = Textarea("help", self:string("NETWORK_UNSUPPORTED_TYPES_HELP"))
 --"WPA-EAP and WPA2-EAP are not supported encryption types.")
 
+		window:addWidget(errorMessage)
 		window:addWidget(help)
 		window:addWidget(menu)
 
@@ -1098,7 +1101,8 @@ function connectFailed(self, iface, ssid, reason)
 
 
 	-- popup failure
-	local window = Window("window", self:string("NETWORK_CONNECTION_PROBLEM"), wirelessTitleStyle)
+	local window = Window("error", self:string('NETWORK_ERROR'), wirelessTitleStyle)
+	local errorMessage = Textarea("text", self:string("NETWORK_CONNECTION_PROBLEM"))
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu",
@@ -1130,6 +1134,7 @@ function connectFailed(self, iface, ssid, reason)
 
 	local help = Textarea("help", helpText)
 
+	window:addWidget(errorMessage)
 	window:addWidget(help)
 	window:addWidget(menu)
 
@@ -1283,7 +1288,8 @@ end
 function failedDHCPandWPA(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	local window = Window("window", self:string("NETWORK_ADDRESS_PROBLEM"), wirelessTitleStyle)
+	local window = Window("error", self:string("NETWORK_ERROR"), wirelessTitleStyle)
+	local errorMessage = Textarea('text', self:string("NETWORK_ADDRESS_PROBLEM"))
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu",
@@ -1318,6 +1324,7 @@ function failedDHCPandWPA(self, iface, ssid)
 
 	local help = Textarea("help", self:string("NETWORK_ADDRESS_HELP"))
 
+	window:addWidget(errorMessage)
 	window:addWidget(help)
 	window:addWidget(menu)
 
@@ -1329,7 +1336,8 @@ end
 function failedDHCPandWEP(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	local window = Window("window", self:string("NETWORK_CONNECTION_PROBLEM"), wirelessTitleStyle)
+	local window = Window("error", self:string("NETWORK_ERROR"), wirelessTitleStyle)
+	local errorMessage = Textarea("text", self:string("NETWORK_CONNECTION_PROBLEM"))
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu",
@@ -1377,6 +1385,7 @@ function failedDHCPandWEP(self, iface, ssid)
 
 	local help = Textarea("help", self:string("NETWORK_ADDRESS_HELP_WEP"))
 
+	window:addWidget(errorMessage)
 	window:addWidget(help)
 	window:addWidget(menu)
 
@@ -1903,7 +1912,8 @@ function processWPSFailed(self, iface, ssid, reason)
 	local helpText = self:string("NETWORK_WPS_PROBLEM_HELP")
 
 	-- popup failure
-	local window = Window("window", self:string("NETWORK_WPS_PROBLEM"), wirelessTitleStyle)
+	local window = Window("error", self:string("NETWORK_ERROR"), wirelessTitleStyle)
+	local errorMessage = Textarea('text', self:string("NETWORK_WPS_PROBLEM"))
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu",
@@ -1935,6 +1945,7 @@ function processWPSFailed(self, iface, ssid, reason)
 
 	local help = Textarea("help", helpText)
 
+	window:addWidget(errorMessage)
 	window:addWidget(help)
 	window:addWidget(menu)
 

@@ -980,3 +980,7 @@ NETWORK_ATTACH_CABLE
 
 NETWORK_ATTACH_CABLE_DETAILED
 	EN	Error: No wired link detected on the Squeezebox. Please check that there is a network cable inserted and physically connected to your network.
+
+NETWORK_ERROR
+	EN	Error
+
