@@ -287,8 +287,8 @@ function skin(self, s)
 	local ALBUMMENU_FONT_SIZE = 18
 	local ALBUMMENU_SMALL_FONT_SIZE = 14
 	local TEXTMENU_FONT_SIZE = 20
-	local POPUP_TEXT_SIZE_1 = 24
-	local POPUP_TEXT_SIZE_2 = 12
+	local POPUP_TEXT_SIZE_1 = 34
+	local POPUP_TEXT_SIZE_2 = 26
 	local TRACK_FONT_SIZE = 18
 	local TEXTAREA_FONT_SIZE = 18
 	local CENTERED_TEXTAREA_FONT_SIZE = 28
@@ -707,36 +707,38 @@ function skin(self, s)
 	s.popupIcon.text.sh = TEXT_SH_COLOR
 	s.popupIcon.text.align = "center"
 	s.popupIcon.text.position = LAYOUT_NORTH
+	s.popupIcon.text.h = 166
+
+	local spinny = {
+		img = _loadImage(self, "Alerts/wifi_connecting.png"),
+		position = LAYOUT_CENTER,
+		frameRate = 8,
+		frameWidth = 120,
+	}
+	s.popupIcon.icon = spinny
 
 	s.popupIcon.text2 = {}
-	s.popupIcon.text2.border = 15
+	s.popupIcon.text2.padding = { 0, 0, 0, 28 }
 	s.popupIcon.text2.font = _boldfont(POPUP_TEXT_SIZE_2)
 	s.popupIcon.text2.fg = TEXT_COLOR
 	s.popupIcon.text2.sh = TEXT_SH_COLOR
 	s.popupIcon.text2.align = "center"
 	s.popupIcon.text2.position = LAYOUT_SOUTH
-
+	s.popupIcon.text2.h = 28
 
 	s.iconPower = {}
 	s.iconPower.img = _loadImage(self, "Alerts/popup_shutdown_icon.png")
 	s.iconPower.w = WH_FILL
 	s.iconPower.align = 'center'
 
---FIXME: is this style used anywhere?
+	--FIXME: is this style used anywhere?
 	s.iconFavorites = {}
 	s.iconFavorites.img = _loadImage(self, "popup_fav_heart_bkgrd.png")
 	s.iconFavorites.frameWidth = 161
 	s.iconFavorites.align = 'center'
 
-	-- connecting/connected popup icon
-	s.iconConnecting = {}
-	s.iconConnecting.img = _loadImage(self, "Alerts/wifi_connecting.png")
-	s.iconConnecting.frameRate = 4
-	s.iconConnecting.frameWidth = 161
-	s.iconConnecting.w = 161
-	s.iconConnecting.align = "left"
-	s.iconConnecting.padding = { 25, 0, 0, 0 }
-	s.iconConnecting.position = LAYOUT_WEST
+	-- connecting/connected popup icon (likely deprecated in deference to s.popupIcon.ico)
+	s.iconConnecting = spinny
 
 	s.iconConnected = {}
 	s.iconConnected.img = _loadImage(self, "Alerts/connecting_success_icon.png")
@@ -1476,7 +1478,7 @@ function skin(self, s)
 		icon = {
 			--FIXME, need a resized icon_connecting.png image for the correct albumitem thumb size
 			img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
-			frameRate = 4,
+			frameRate = 8,
 			frameWidth = 120
 		}
 	})

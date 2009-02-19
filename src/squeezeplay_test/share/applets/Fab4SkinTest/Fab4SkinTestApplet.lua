@@ -63,6 +63,12 @@ function menu(self, menuItem)
 	-- Menu	
 	local menu = SimpleMenu("menu",
 		{
+			{ text = "Connecting Popup",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:connectingPopup(menuItem)
+			end 
+			},
 			{ text = "Regions",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -222,12 +228,7 @@ function menu(self, menuItem)
 				callback = function(event, menuItem)
 					self:ignoreAllInputPopup(menuItem)
 				end },
-			{ text = "Connecting Popup",
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:connectingPopup(menuItem)
-				end },
-			{ text = "Error",
+		{ text = "Error",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:errorWindow(menuItem)
@@ -684,19 +685,23 @@ function connectingPopup(self, menuItem)
 
 	local popup = Popup("popupIcon")
 
-	local icon = Icon("iconConnecting")
-	local label = Label("text", "")
+	local icon = Icon("icon")
+	local label = Label("text", "Finding available\nwireless networks...")
+	local label2 = Label("text2", "found: 1")
 
-	popup:addWidget(icon)
 	popup:addWidget(label)
+	popup:addWidget(icon)
+	popup:addWidget(label2)
 
 
 	local state = 1
 	popup:addTimer(4000, function()
 				       if state == 1 then
-					       label:setValue("\na long test string!")
+					       label:setValue("a long test string!")
+					       label2:setValue("Found: 3")
 				       elseif state == 2 then
-					       label:setValue("\na very very very long test string!")
+					       label:setValue("a very very very long test string!")
+					       label2:setValue("Found: 5")
 				       elseif state == 3 then
 					       icon:setStyle("iconConnected")
 					       label:setValue("Connected to\na test string!")
