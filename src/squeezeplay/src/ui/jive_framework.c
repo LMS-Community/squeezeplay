@@ -780,7 +780,13 @@ int jiveL_push_event(lua_State *L) {
 	 * 2: JiveEvent
 	 */
 
-	JiveEvent *evt = lua_touserdata(L, 2);
+	JiveEvent *evt;
+	if (lua_isnil(L, 2)) {
+		//nothing to do when no event is passed in
+		return 0;
+	}
+
+	evt = lua_touserdata(L, 2);
 	jive_queue_event(evt);
 
 	return 0;
