@@ -138,7 +138,9 @@ function skin(self, s)
 	-- Images and Tiles
 	local titleBox          = Tile:loadImage( imgpath .. "Screen_Formats/Titlebar/titlebar.png" )
 	local selectionBox      = Tile:loadImage( imgpath .. "Screen_Formats/5_line_lists/menu_sel_box_5line.png")
+	local pressedBox      = Tile:loadImage( imgpath .. "Screen_Formats/5_line_lists/menu_sel_box_5line_press.png")
 	local albumSelectionBox = Tile:loadImage( imgpath .. "Screen_Formats/3_line_lists/menu_sel_box_3line.png")
+	local albumPressedBox   = Tile:loadImage( imgpath .. "Screen_Formats/3_line_lists/menu_sel_box_3line_press.png")
 
 	local buttonBox =
 		Tile:loadTiles({
@@ -224,7 +226,6 @@ function skin(self, s)
 				})
 
 	local popupMask = Tile:fillColor(0x000000e5)
-	local pressedMask = Tile:fillColor(0x34AC9De5)
 
 	local regionMask = Tile:loadTiles({
 					imgpath .. "Screen_Formats/Setup/overlay_region_map.png"
@@ -267,7 +268,7 @@ function skin(self, s)
 
 	--FIXME: paddings here need tweaking for Fab4Skin
 	local MENU_ALBUMITEM_PADDING = { 0, 0, 0, 0 }
-	local MENU_ALBUMITEM_TEXT_PADDING = { 26, 20, 0, 10 }
+	local MENU_ALBUMITEM_TEXT_PADDING = { 26, 0, 0, 8 }
 	local MENU_CURRENTALBUM_TEXT_PADDING = { 6, 20, 0, 10 }
 	local TEXTAREA_PADDING = { 50, 20, 50, 20 }
 
@@ -391,21 +392,7 @@ function skin(self, s)
 
 	-- selected menu item
 	s.selected = {}
-	s.selected.item =
-		_uses(s.item, {
-			      --[[
-			      -- not for touch!
-			      bgImg = selectionBox,
-			      text = {
-				      fg = SELECT_COLOR,
-				      sh = SELECT_SH_COLOR
-			      },
-			      icon = {
-				      align = ITEM_ICON_ALIGN,
-				      img = _loadImage(self, "Icons/selection_right.png")
-			      }
-			      --]]
-		      })
+	s.selected.item = _uses(s.item)
 
 	s.selected.itemplay =
 		_uses(s.selected.item, {
@@ -461,19 +448,9 @@ function skin(self, s)
 
 	-- pressed menu item
 	s.pressed = {}
-	s.pressed.item =
-		_uses(s.item, {
-			      bgImg = pressedMask,
-			      text = {
-				      fg = TEXT_COLOR,
-				      sh = TEST_SH_COLOR
-			      },
-			      icon = {
-				      padding = BUTTON_PADDING,
-				      align = ITEM_ICON_ALIGN,
-				      img = _loadImage(self, "Icons/selection_right.png")
-			      }
-		      })
+	s.pressed.item = _uses(s.item, {
+			bgImg = pressedBox,
+	})
 
 
 	s.pressed.itemplay =
@@ -505,22 +482,13 @@ function skin(self, s)
 
 				})
 
-	s.pressed.itemNoAction =
-		_uses(s.itemNoAction, {
-			      bgImg = pressedMask,
-			      text = {
-				      fg = TEXT_COLOR,
-				      sh = TEST_SH_COLOR
-			      },
-		      })
+	s.pressed.itemNoAction = _uses(s.itemNoAction, {
+		      bgImg = pressedBox,
+	})
 
 	s.pressed.checkedNoAction =
 		_uses(s.checkedNoAction, {
-			      bgImg = pressedMask,
-			      text = {
-				      fg = TEXT_COLOR,
-				      sh = TEST_SH_COLOR
-			      },
+			      bgImg = pressedBox,
 			      check = {
 					align = ITEM_ICON_ALIGN,
 					padding = BUTTON_PADDING,
@@ -946,7 +914,7 @@ function skin(self, s)
 	s.buttonmenu.padding = 0
 	s.buttonmenu.itemHeight = ALBUM_MENU_ITEM_HEIGHT
 
-	-- items with artwork and song info
+	-- 3 options per page, text only
 	s.buttonitem = {}
 	s.buttonitem.order = { "text", "icon" }
 	s.buttonitem.padding = 0
@@ -954,17 +922,58 @@ function skin(self, s)
 	s.buttonitem.text = {}
 	s.buttonitem.text.w = WH_FILL
 	s.buttonitem.text.h = WH_FILL
-	s.buttonitem.text.padding = { 26, 0, 0, 8 }
+	s.buttonitem.text.padding = { 8, 0, 0, 0 }
 	s.buttonitem.text.align = "left"
-	s.buttonitem.text.font = _boldfont(40)
+	s.buttonitem.text.font = _boldfont(34)
 	s.buttonitem.text.fg = SELECT_COLOR
 	s.buttonitem.text.sh = SELECT_SH_COLOR
 	s.buttonitem.icon = {
 			img     = _loadImage(self, "Icons/selection_right_3line_off.png"), 
 			w       = 37,
 			h       = WH_FILL,
-			padding = { 0, 0, 5, 0}
+			padding = { 0, 0, 8, 0}
 	}
+
+	-- 3 options per page with icon
+	s.buttoniconitem = _uses(s.buttonitem, {
+		order = { "icon", "text", "play"},
+		icon  = {
+			w = 72,
+			h = WH_FILL,
+			padding = { 8, 4, 0, 4 },
+			img = nil
+		},
+		play = {
+			img     = _loadImage(self, "Icons/selection_right_3line_off.png"), 
+			w       = 37,
+			h       = WH_FILL,
+			padding = { 0, 0, 8, 0}
+		}
+	})
+
+	s.wifiNA = _uses(s.buttoniconitem, {
+				icon = {
+					img = _loadImage(self, "Icons/icon_region_americas_64.png"),
+				}
+			})
+	s.wifiNAchecked = _uses(s.wifiNA, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				img = _loadImage(self, "Icons/icon_check_selected.png")
+			}
+	})
+	s.wifiOther = _uses(s.buttoniconitem, {
+				icon = {
+					img = _loadImage(self, "Icons/icon_region_other_64.png"),
+				}
+			})
+	s.wifiOtherchecked = _uses(s.wifiOther, {
+	      		order = { "icon", "text", "check" },
+			check = {
+				img = _loadImage(self, "Icons/icon_check_selected.png")
+			}
+	})
+
 
 	-- two button menu specifically for laying out two button menu nicely on fab4 screen
 	s.twobuttonmenu = _uses(s.buttonmenu, {
@@ -991,7 +1000,7 @@ function skin(self, s)
 	-- FIXME: this needs to be tweaked for Fab4Skin
 	s.albummenu = {}
 	s.albummenu.padding = 0
-	s.albummenu.itemHeight = ALBUM_MENU_HEIGHT
+	s.albummenu.itemHeight = ALBUM_MENU_ITEM_HEIGHT
 	s.albummenu.fg = {0xbb, 0xbb, 0xbb }
 	s.albummenu.font = _boldfont(250)
 
@@ -1000,9 +1009,10 @@ function skin(self, s)
 	-- items with artwork and song info
 	s.albumitem = {}
 	s.albumitem.order = { "icon", "text", "play" }
-	s.albumitem.padding = MENU_ALBUMITEM_PADDING
+	s.albumitem.padding = 0
 	s.albumitem.text = {}
 	s.albumitem.text.w = WH_FILL
+	s.albumitem.text.h = WH_FILL
 	s.albumitem.text.padding = MENU_ALBUMITEM_TEXT_PADDING
 	s.albumitem.text.align = "left"
 	s.albumitem.text.font = _font(ALBUMMENU_FONT_SIZE)
@@ -1015,10 +1025,15 @@ function skin(self, s)
 	}
 	s.albumitem.text.fg = TEXT_COLOR
 	s.albumitem.text.sh = TEXT_SH_COLOR
-	s.albumitem.play = {}
+	s.albumitem.play = {
+		img     = _loadImage(self, "Icons/selection_right_3line_off.png"), 
+		w       = 37,
+		h       = WH_FILL,
+		padding = { 0, 0, 5, 0}
+	}
 	s.albumitem.play.h = WH_FILL
 	s.albumitem.play.align = 'right'
-	s.albumitem.play.img = _loadImage(self, "Icons/selection_right_5line.png")
+	s.albumitem.play.img = _loadImage(self, "Icons/selection_right_3line_off.png")
 
 	s.multilineitem = _uses(s.albumitem, {
 					order = {'text', 'play'}
@@ -1049,33 +1064,6 @@ function skin(self, s)
 				}
 			})
 	s.transporterchecked = _uses(s.transporter, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-	s.wifiNA = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/icon_region_americas_64.png"),
-					w = 56,
-				}
-			})
-	s.wifiNAchecked = _uses(s.chooseplayer, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.wifiOther = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/icon_region_other_64.png"),
-					w = 56,
-				}
-			})
-	s.wifiOtherchecked = _uses(s.chooseplayer, {
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
@@ -1292,20 +1280,10 @@ function skin(self, s)
 	})
 	--]]
 	s.pressed.albumitem = _uses(s.albumitem, {
-		bgImg = pressedMask,
-		text = {
-			fg    = TEXT_COLOR,
-			sh    = TEXT_SH_COLOR
-		},
+		bgImg = albumPressedBox,
 		play = {
-			h      = WH_FILL,
-			align  = "right",
-			img    = _loadImage(self, "Icons/selection_right.png"),
+			img    = _loadImage(self, "Icons/selection_right_3line_on.png"),
 		},
-		icon = {
-			w = 70,
-			h = 70
-		}
 	})
 	s.selected.multilineitem = _uses(s.selected.albumitem, {
 				order = { 'text', 'play' },
