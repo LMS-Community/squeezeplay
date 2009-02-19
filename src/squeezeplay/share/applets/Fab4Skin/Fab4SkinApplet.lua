@@ -649,7 +649,6 @@ function skin(self, s)
 	s.textinput.border = { 8, 0, 8, 0 }
 	s.textinput.padding = { 6, 0, 6, 0 }
 	s.textinput.font = _boldfont(TEXTINPUT_FONT_SIZE)
-	s.textinput.align = 'center'
 	s.textinput.cursorFont = _boldfont(TEXTINPUT_SELECTED_FONT_SIZE)
 	s.textinput.wheelFont = _boldfont(TEXTINPUT_FONT_SIZE)
 	s.textinput.charHeight = TEXTINPUT_SELECTED_FONT_SIZE + 10
@@ -796,10 +795,11 @@ function skin(self, s)
 	s.qwertyLower            = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/icon_shift_off.png") } )
 	s.qwertyUpper            = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/icon_shift_on.png") } )
 
-	-- FIXME: icon_search.png is incorrect here
 	s.keyboardGo       = _uses(s.keyboardShift, { img = _loadImage(self, "Icons/Mini/right_arrow.png") } )
 	s.keyboardSearch   = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/icon_search.png") } )
-	s.keyboardSpaceBar = _uses(s.touchButton, { w = WH_FILL } )
+
+	s.pressed.keyboardShift = _uses(s.keyboardButton, { bgImg = fiveItemSelectionBoxPressed })
+	s.pressed.keyboardSpace = _uses(s.keyboardSpace, { bgImg = fiveItemSelectionBoxPressed })
 
 	-- wireless icons for menus
 	s.wirelessLevel1 = {}
