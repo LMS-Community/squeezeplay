@@ -291,7 +291,7 @@ function skin(self, s)
 	local HELP_FONT_SIZE = 18
 
 	local ITEM_ICON_ALIGN   = 'center'
-	local ALBUM_MENU_HEIGHT = 72
+	local ALBUM_MENU_ITEM_HEIGHT = 72
 
 	-- time (hidden off screen)
 	s.iconTime = {}
@@ -944,7 +944,7 @@ function skin(self, s)
 	-- "buttonlike" menu. all items with selection box and icon
 	s.buttonmenu = {}
 	s.buttonmenu.padding = 0
-	s.buttonmenu.itemHeight = ALBUM_MENU_HEIGHT
+	s.buttonmenu.itemHeight = ALBUM_MENU_ITEM_HEIGHT
 
 	-- items with artwork and song info
 	s.buttonitem = {}
@@ -965,11 +965,14 @@ function skin(self, s)
 	}
 
 	-- two button menu specifically for laying out two button menu nicely on fab4 screen
-	s.twobuttonmenu = _uses(s.buttonmenu)
+	s.twobuttonmenu = _uses(s.buttonmenu, {
+				position = LAYOUT_SOUTH,
+				h = ALBUM_MENU_ITEM_HEIGHT * 2
+			})
 
 	s.onebuttonmenu = _uses(s.buttonmenu, {
 				position = LAYOUT_SOUTH,
-				padding = { 0, 0, 0, 0 }
+				h = ALBUM_MENU_ITEM_HEIGHT
 			})
 
 	-- menus with artwork and song info
