@@ -19,7 +19,7 @@ local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
 
 
-local BUFFER_DISTANCE = 75
+local BUFFER_DISTANCE = 30
 
 local HOLD_TIMEOUT = 1000
 
