@@ -497,7 +497,7 @@ function skin(self, s)
 
 	-- pressed menu item
 	s.pressed = {}
-	s.pressed.item = _uses(s.item, {
+	s.pressed.item = _uses(s.checked, {
 			bgImg = fiveItemPressedBox,
 	})
 
@@ -994,20 +994,36 @@ function skin(self, s)
 			padding = { 0, 0, 8, 0}
 	}
 
+	s.buttonitemchecked = _uses(s.buttonitem, {
+		order = { 'text', 'check', 'icon' },
+		check = {
+			img     = _loadImage(self, "Icons/icon_check_3line.png"), 
+			w       = 37,
+			h       = WH_FILL,
+			padding = { 0, 0, 8, 0}
+		}
+	})
+
 	-- 3 options per page with icon
 	s.buttoniconitem = _uses(s.buttonitem, {
-		order = { "icon", "text", "play"},
+		order = { "icon", "text"},
 		icon  = {
 			w = 72,
 			h = WH_FILL,
 			padding = { 8, 4, 0, 4 },
 			img = false
 		},
-		play = {
-			img     = _loadImage(self, "Icons/selection_right_3line_off.png"), 
+	})
+
+	local checkPadding = { 2, 0, 18, 10 }
+
+	s.buttoniconitemchecked = _uses(s.buttoniconitem, {
+		order = { 'icon', 'text', 'check' },
+		check = {
+			img     = _loadImage(self, "Icons/icon_check_3line.png"), 
 			w       = 37,
 			h       = WH_FILL,
-			padding = { 0, 0, 8, 0}
+			padding = checkPadding,
 		}
 	})
 	
@@ -1020,7 +1036,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				img = _loadImage(self, "Icons/icon_check_3line.png"),
-				padding = { 0, 0, 0, 10 }
+				padding = checkPadding,
 			}
 	})
 	s.wifiOther = _uses(s.buttoniconitem, {
@@ -1032,7 +1048,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				img = _loadImage(self, "Icons/icon_check_3line.png"),
-				padding = { 0, 0, 0, 10 }
+				padding = checkPadding,
 			}
 	})
 	s.wireless = _uses(s.buttoniconitem, {
@@ -1044,7 +1060,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				img = _loadImage(self, "Icons/icon_check_3line.png"),
-				padding = { 0, 0, 0, 10 }
+				padding = checkPadding,
 			}
 	})
 	s.wired = _uses(s.buttoniconitem, {
@@ -1056,23 +1072,23 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				img = _loadImage(self, "Icons/icon_check_3line.png"),
-				padding = { 0, 0, 0, 10 }
+				padding = checkPadding,
 			}
 	})
 
 
 	local buttonPressed = { bgImg = threeItemPressedBox }
 
-	s.pressed.buttonitem       = _uses(s.buttonitem, buttonPressed)
-	s.pressed.buttoniconitem   = _uses(s.buttoniconitem, buttonPressed)
-	s.pressed.wifiNA           = _uses(s.wifiNA, buttonPressed)
-	s.pressed.wifiNAchecked    = _uses(s.wifiNAchecked, buttonPressed)
-	s.pressed.wifiOther        = _uses(s.wifiOther, buttonPressed)
-	s.pressed.wifiOtherChecked = _uses(s.wifiOtherchecked, buttonPressed)
-	s.pressed.wired            = _uses(s.wired, buttonPressed)
-	s.pressed.wiredchecked     = _uses(s.wiredchecked, buttonPressed)
-	s.pressed.wireless         = _uses(s.wireless, buttonPressed)
-	s.pressed.wirelesschecked  = _uses(s.wirelesschecked, buttonPressed)
+	s.pressed.buttoniconitem          = _uses(s.buttoniconitemchecked, buttonPressed)
+	s.pressed.wifiNA                  = _uses(s.wifiNAchecked, buttonPressed)
+	s.pressed.wifiOther               = _uses(s.wifiOtherchecked, buttonPressed)
+	s.pressed.wired                   = _uses(s.wiredchecked, buttonPressed)
+	s.pressed.wireless                = _uses(s.wirelesschecked, buttonPressed)
+	s.pressed.buttoniconitemchecked   = _uses(s.buttoniconitemchecked, buttonPressed)
+	s.pressed.wifiNAchecked           = _uses(s.wifiNAchecked, buttonPressed)
+	s.pressed.wifiOtherchecked        = _uses(s.wifiOtherchecked, buttonPressed)
+	s.pressed.wiredchecked            = _uses(s.wiredchecked, buttonPressed)
+	s.pressed.wirelesschecked         = _uses(s.wirelesschecked, buttonPressed)
 
 
 	-- window with one option in "button" style
