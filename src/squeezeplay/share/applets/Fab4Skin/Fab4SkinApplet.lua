@@ -256,21 +256,6 @@ function skin(self, s)
 
 	local popupMask = Tile:fillColor(0x000000e5)
 
-	local softButtonBackground =
-		Tile:loadTiles({
-				       imgpath .. "button.png",
-				       imgpath .. "button_tl.png",
-				       imgpath .. "button_t.png",
-				       imgpath .. "button_tr.png",
-				       imgpath .. "button_r.png",
-				       imgpath .. "button_br.png",
-				       imgpath .. "button_b.png",
-				       imgpath .. "button_bl.png",
-				       imgpath .. "button_l.png"
-				})
-
-	local textinputWheel = Tile:loadImage(imgpath .. "text_entry_select.png")
-
 	local textinputCursor = Tile:loadImage(imgpath .. "Text_Entry/Keyboard_Touch/tch_cursor.png")
 
 	local THUMB_SIZE = self:getSettings().THUMB_SIZE
@@ -634,10 +619,10 @@ function skin(self, s)
 	s.slider.img = sliderBar
 
 	s.sliderMin = {}
-	s.sliderMin.img = _loadImage(self, "slider_icon_negative.png")
+	s.sliderMin.img = _loadImage(self, "Icons/slider_icon_negative.png")
 	s.sliderMin.border = { 5, 0, 5, 0 }
 	s.sliderMax = {}
-	s.sliderMax.img = _loadImage(self, "slider_icon_positive.png")
+	s.sliderMax.img = _loadImage(self, "Icons/slider_icon_positive.png")
 	s.sliderMax.border = { 5, 0, 5, 0 }
 
 	s.sliderGroup = {}
@@ -656,7 +641,6 @@ function skin(self, s)
 	s.textinput.wh = { 0x55, 0x55, 0x55 }
 	s.textinput.bgImg = textinputBackground
 	s.textinput.cursorImg = textinputCursor
---	s.textinput.wheelImg = textinputWheel
 --	s.textinput.enterImg = Tile:loadImage(imgpath .. "Icons/selection_right_5line.png")
 
 	-- Keyboard
@@ -698,7 +682,6 @@ function skin(self, s)
 	s.softButton1.align = "center"
 	s.softButton1.font = _font(HELP_FONT_SIZE + 2)
 	s.softButton1.fg = SELECT_COLOR
-	s.softButton1.bgImg = softButtonBackground
 
 	s.softButton2 = {}
 	s.softButton2.x = (screenWidth / 2) + 5
@@ -709,7 +692,6 @@ function skin(self, s)
 	s.softButton2.align = "center"
 	s.softButton2.font = _font(HELP_FONT_SIZE + 2)
 	s.softButton2.fg = SELECT_COLOR
-	s.softButton2.bgImg = softButtonBackground
 
 	s.window = {}
 	s.window.w = screenWidth
@@ -755,12 +737,6 @@ function skin(self, s)
 	s.iconPower.img = _loadImage(self, "Alerts/popup_shutdown_icon.png")
 	s.iconPower.w = WH_FILL
 	s.iconPower.align = 'center'
-
-	--FIXME: is this style used anywhere?
-	s.iconFavorites = {}
-	s.iconFavorites.img = _loadImage(self, "popup_fav_heart_bkgrd.png")
-	s.iconFavorites.frameWidth = 161
-	s.iconFavorites.align = 'center'
 
 	-- connecting/connected popup icon (likely deprecated in deference to s.popupIcon.ico)
 	s.iconConnecting = largeSpinny
@@ -824,12 +800,6 @@ function skin(self, s)
 	s.wiredEthernetNoLink.align = "right"
 	s.wiredEthernetNoLink.img = _loadImage(self, "Icons/icon_nowplaying_indicator_b.png")
 
-	s.navcluster = {}
-	s.navcluster.img = _loadImage(self, "navcluster.png")
-	s.navcluster.align = "center"
-	s.navcluster.w = WH_FILL
-
-
 	-- Special styles for specific window types
 
 	-- Jive Home Window
@@ -850,11 +820,12 @@ function skin(self, s)
 
 	-- SlimBrowser applet
 
+	--FIXME: assets need replacing
 	s.volumeMin = {}
-	s.volumeMin.img = _loadImage(self, "volume_speaker_l.png")
+	s.volumeMin.img = _loadImage(self, "Icons/volume_speaker_l.png")
 	s.volumeMin.border = { 5, 0, 5, 0 }
 	s.volumeMax = {}
-	s.volumeMax.img = _loadImage(self, "volume_speaker_r.png")
+	s.volumeMax.img = _loadImage(self, "Icons/volume_speaker_r.png")
 	s.volumeMax.border = { 5, 0, 5, 0 }
 
 	s.volume            = {}
@@ -887,7 +858,7 @@ function skin(self, s)
         				padding = { 10, 0, 0, 0 },
 				},
 				rbutton = {
-        				img     = _loadImage(self, "menu_album_noartwork_24.png"),
+        				img     = _loadImage(self, "Icons/menu_album_noartwork_24.png"),
         				padding = { 5, 10, 15, 5 },
 					align   = "top-right"
 				},
@@ -1133,7 +1104,7 @@ function skin(self, s)
 		h = WH_FILL,
 		padding = { 8, 1, 8, 1 },
 		-- FIXME: no_artwork image needed in correct size for Fab4Skin; for now, disable it
-		img = _loadImage(self, "menu_album_noartwork_43.png")
+		img = _loadImage(self, "Icons/menu_album_noartwork_43.png")
 	}
 
 	local checkedStyle = {
@@ -1343,7 +1314,6 @@ function skin(self, s)
 	s.nowplayingitem.icon.w = 125
 	s.nowplayingitem.icon.h = 125
 	s.nowplayingitem.icon.align = "left"
---	s.nowplayingitem.icon.img = _loadImage(self, "menu_album_noartwork_125.png")
 	s.nowplayingitem.icon.padding = { 5, 0, 0, 0 }
 
 
@@ -1567,7 +1537,7 @@ function skin(self, s)
 	local buttonPadding = { 10, 5, 10, 5 }
 	s.ssnpcontrols.x = rightPadding
 	s.ssnpcontrols.y = topPadding
-	s.ssnpcontrols.bgImg = softButtonBackground
+	s.ssnpcontrols.bgImg = buttonBox
 	
 	s.ssnpcontrols.rew = {}
 	s.ssnpcontrols.rew.align = 'center'
