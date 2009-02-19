@@ -1043,7 +1043,7 @@ function skin(self, s)
 
 	s.wifiNA = _uses(s.chooseplayer, {
 				icon = {
-					img = _loadImage(self, "Icons/icon_region_americas.png"),
+					img = _loadImage(self, "Icons/icon_region_americas_64.png"),
 					w = 56,
 				}
 			})
@@ -1056,7 +1056,7 @@ function skin(self, s)
 	})
 	s.wifiOther = _uses(s.chooseplayer, {
 				icon = {
-					img = _loadImage(self, "Icons/icon_region_other.png"),
+					img = _loadImage(self, "Icons/icon_region_other_64.png"),
 					w = 56,
 				}
 			})
