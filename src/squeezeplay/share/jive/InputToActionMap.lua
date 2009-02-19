@@ -58,6 +58,7 @@ charActionMappings.press = {
 	["8"]  = "play_favorite_8",
 	["9"]  = "play_favorite_9",
 	["}"]  = "debug_skin",
+	["?"]  = "help",
 
 }
 

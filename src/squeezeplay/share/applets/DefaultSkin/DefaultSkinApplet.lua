@@ -366,17 +366,32 @@ function skin(self, s, reload, useDefaultSize)
 	-- Window title, this is a Label
 	-- black text with a background image
 	s.title = {}
-	s.title.border = 4
-	s.title.position = LAYOUT_NORTH
-	s.title.bgImg = titleBox
-	--FIXME: bug 8866
-	s.title.order = { "lbutton", "text" }
-	--s.title.order = { "text" }
+	s.title.border        = 4
+	s.title.position      = LAYOUT_NORTH
+	s.title.bgImg         = titleBox
 	s.title.text = {}
-	s.title.text.padding = { 10, 8, 8, 8 }
-	s.title.text.align = "top-left"
-	s.title.text.font = FONT_BOLD_18px
-	s.title.text.fg = SELECT_COLOR
+	s.title.text.w        = WH_FILL
+	s.title.text.padding  = { 8, 7, 0, 9 }
+	s.title.text.align    = 'top-left'
+	s.title.text.font     = FONT_BOLD_18px
+	s.title.text.fg       = SELECT_COLOR
+	-- FIXME: bug 8866
+	s.title.order         = { "text", "icon" }
+	s.title.icon = {}
+	s.title.icon.padding  = { 0, 0, 8, 0 }
+	s.title.icon.align    = 'right'
+
+	-- title icons
+	s.hometitle = {
+		img = _loadImage(self, "Icons/Mini/icon_home.png")
+	}
+
+	s.settingstitle = {
+		img = _loadImage(self, "Icons/Mini/icon_settings.png")
+	}
+
+	s.setuptitle = _uses(s.settingstitle)
+
 
 	-- Menu with three basic styles: normal, selected and locked
 	-- First define the dimesions of the menu
@@ -843,29 +858,13 @@ function skin(self, s, reload, useDefaultSize)
 	s.albumtitle.icon.img = _loadImage(self, "Icons/Mini/icon_album.png")
 	s.albumtitle.icon.padding = { 9, 0, 0, 0 }
 
-	-- titles with mini icons
-	s.minititle = {}
-	setmetatable(s.minititle, { __index = s.title })
 
-	s.minititle.border        = 4
-	s.minititle.position      = LAYOUT_NORTH
-	s.minititle.bgImg         = titleBox
-	s.minititle.text = {}
-	s.minititle.text.w        = WH_FILL
-	s.minititle.text.padding  = { 8, 7, 0, 9 }
-	s.minititle.text.align    = 'top-left'
-	s.minititle.text.font     = FONT_BOLD_18px
-	s.minititle.text.fg       = SELECT_COLOR
--- FIXME: bug 8866
-	s.minititle.order         = { "text", "icon" }
-	s.minititle.icon = {}
-	s.minititle.icon.padding  = { 0, 0, 8, 0 }
-	s.minititle.icon.align    = 'right'
-
+	-- FIXME these need changing after SlimBrowser is updated to
+	-- use the new Window titles
 
 	-- Based on s.title, this is for internetradio title style
 	s.internetradiotitle =
-		_uses(s.minititle, {
+		_uses(s.title, {
 			      icon = {
 				      img = _loadImage(self, "Icons/Mini/icon_internet_radio.png")
 			      }
@@ -873,7 +872,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- Based on s.title, this is for favorites title style
 	s.favoritestitle = 
-		_uses(s.minititle, {
+		_uses(s.title, {
 			      icon = {
 				      img = _loadImage(self, "Icons/Mini/icon_favorites.png")
 			      }
@@ -881,7 +880,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- Based on s.title, this is for mymusic title style
 	s.mymusictitle =
-		_uses(s.minititle, {
+		_uses(s.title, {
 			      icon = {
 				      img = _loadImage(self, "Icons/Mini/icon_music_library.png")
 			      }
@@ -889,33 +888,16 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- Based on s.title, this is for search title style
 	s.searchtitle =
-		_uses(s.minititle, {
+		_uses(s.title, {
 			      icon = {
 				      img = _loadImage(self, "Icons/Mini/icon_search.png")
 			      }
 		      })
 
-	-- Based on s.title, this is for settings title style
-	s.hometitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_home.png")
-			      }
-		      })
-
-	-- Based on s.title, this is for settings title style
-	s.settingstitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_settings.png")
-			      }
-		      })
-
-	s.setuptitle = _uses(s.settingstitle)
 
 	-- Based on s.title, this is for newmusic title style
 	s.newmusictitle =
-		_uses(s.minititle, {
+		_uses(s.title, {
 			      icon = {
 				      img = _loadImage(self, "Icons/Mini/icon_album_new.png")
 			      }
@@ -923,7 +905,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- Based on s.title, this is for infobrowser title style
 	s.infobrowsertitle =
-		_uses(s.minititle, {
+		_uses(s.title, {
 			      icon = {
 				      img = _loadImage(self, "Icons/Mini/icon_info_browser.png")
 			      }
@@ -932,7 +914,7 @@ function skin(self, s, reload, useDefaultSize)
 	-- Based on s.title, this is for albumlist title style
 	-- NOTE: not to be confused with "album", which is a different style
 	s.albumlisttitle =
-		_uses(s.minititle, {
+		_uses(s.title, {
 			      icon = {
 				      img = _loadImage(self, "Icons/Mini/icon_albums.png")
 			      }
@@ -941,14 +923,14 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- Based on s.title, this is for artists title style
 	s.artiststitle =
-		_uses(s.minititle, {
+		_uses(s.title, {
 			      icon = {
 				      img = _loadImage(self, "Icons/Mini/icon_artist.png")
 			      }
 		      })
 	-- Based on s.title, this is for random title style
 	s.randomtitle =
-		_uses(s.minititle, {
+		_uses(s.title, {
 			      icon = {
 				      img = _loadImage(self, "Icons/Mini/icon_random.png")
 			      }
@@ -956,7 +938,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- Based on s.title, this is for musicfolder title style
 	s.musicfoldertitle =
-		_uses(s.minititle, {
+		_uses(s.title, {
 			      icon = {
 				      img = _loadImage(self, "Icons/Mini/icon_music_folder.png")
 			      }
@@ -964,7 +946,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- Based on s.title, this is for genres title style
 	s.genrestitle =
-		_uses(s.minititle, {
+		_uses(s.title, {
 			      icon = {
 				      img = _loadImage(self, "Icons/Mini/icon_genres.png")
 			      }
@@ -972,14 +954,14 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- Based on s.title, this is for years title style
 	s.yearstitle =
-		_uses(s.minititle, {
+		_uses(s.title, {
 			      icon = {
 				      img = _loadImage(self, "Icons/Mini/icon_years.png")
 			      }
 		      })
 	-- Based on s.title, this is for playlist title style
 	s.playlisttitle =
-		_uses(s.minititle, {
+		_uses(s.title, {
 			      icon = {
 				      img = _loadImage(self, "Icons/Mini/icon_playlist.png")
 			      }
@@ -987,7 +969,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- Based on s.title, this is for currentplaylist title style
 	s.currentplaylisttitle =
-		_uses(s.minititle, {
+		_uses(s.title, {
 			      icon = {
 				      img = _loadImage(self, "Icons/Mini/icon_quarter_note.png")
 			      }

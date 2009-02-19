@@ -362,22 +362,6 @@ function skin(self, s)
 	s.title.text.font = _boldfont(TITLE_FONT_SIZE)
 	s.title.text.fg = TEXT_COLOR
 
-	s.title.lbutton               = {}
-	s.title.lbutton.img           = backButton
-	s.title.lbutton.bgImg         = titlebarButtonBox
-	s.title.lbutton.w             = TITLE_BUTTON_WIDTH
-	s.title.lbutton.h             = TITLE_BUTTON_HEIGHT
-	s.title.lbutton.align         = 'center'
-	s.title.lbutton.border        = TITLE_BUTTON_PADDING
-
-	s.title.rbutton               = {}
-	s.title.rbutton.img           = nowPlayingButton
-	s.title.rbutton.bgImg         = titlebarButtonBox
-	s.title.rbutton.w             = TITLE_BUTTON_WIDTH
-	s.title.rbutton.h             = TITLE_BUTTON_HEIGHT
-	s.title.rbutton.align         = 'center'
-	s.title.rbutton.border        = TITLE_BUTTON_PADDING
-
 	s.title.pressed = {}
 	s.title.pressed.lbutton = _uses(s.title.lbutton, {
 		bgImg = pressedTitlebarButtonBox,
@@ -943,16 +927,31 @@ function skin(self, s)
 	)
 
 
+	-- FIXME remove these when SlimBrowser is update to use new
+	-- Window title api
 	-- no mini-icons in fab4 skin
 	s.minititle            = _uses(s.title)
+	s.title.lbutton        = {
+		img            = backButton,
+		bgImg          = titlebarButtonBox,
+		w              = TITLE_BUTTON_WIDTH,
+		h              = TITLE_BUTTON_HEIGHT,
+		align          = 'center',
+		border         = TITLE_BUTTON_PADDING,
+	}
+       	s.title.rbutton        = {
+       		img            = nowPlayingButton,
+		bgImg          = titlebarButtonBox,
+		w              = TITLE_BUTTON_WIDTH,
+		h              = TITLE_BUTTON_HEIGHT,
+		align          = 'center',
+		border         = TITLE_BUTTON_PADDING,
+	}
+
 	s.internetradiotitle   = _uses(s.minititle)
 	s.favoritestitle       = _uses(s.minititle)
 	s.mymusictitle         = _uses(s.minititle)
 	s.searchtitle          = _uses(s.minititle)
-	s.hometitle            = _uses(s.minititle)
-	s.setuptitle           = _uses(s.minititle)
-	s.setupfirsttitle      = _uses(s.minititle)
-	s.settingstitle        = _uses(s.minititle)
 	s.newmusictitle        = _uses(s.minititle)
 	s.infobrowsertitle     = _uses(s.minititle)
 	s.albumlisttitle       = _uses(s.minititle)
@@ -964,16 +963,33 @@ function skin(self, s)
 	s.playlisttitle        = _uses(s.minititle)
 	s.currentplaylisttitle = _uses(s.minititle)
 
-	s.helptitle            = _uses(s.minititle, {
-		rbutton  = {
-			img = helpButton,
-		},
+
+	-- title buttons
+	s.button = {
+		bgImg    = titlebarButtonBox,
+		w        = TITLE_BUTTON_WIDTH,
+		h        = TITLE_BUTTON_HEIGHT,
+		align    = 'center',
+		border   = TITLE_BUTTON_PADDING,
+	}
+
+	s.button_none = _uses(s.button, {
+		bgImg    = false,
 	})
-	s.pressed.helptitle = _uses(s.helptitle, {
-		rbutton = {
-			bgImg = titlebarButtonBoxPressed,
-		},
+
+	s.button_back = _uses(s.button, {
+		img      = backButton,
 	})
+
+	s.button_go_now_playing = _uses(s.button, {
+		img      = nowPlayingButton,
+	})
+
+	s.button_help = {
+		-- FIXED artwork needed
+		img = helpButton
+	}
+
 
 	-- "buttonlike" menu. all items with selection box and icon
 	s.buttonmenu = {}

@@ -153,33 +153,16 @@ function __init(self, style, title, titleStyle)
 	obj._DEFAULT_HIDE_TRANSITION = transitionPushRight
 
 	if title then
-		obj:setTitleWidget(
-			Group(titleStyle or 'title', { 
-				text = Label("text", title), 
-				icon = Icon("icon"), 
-				lbutton = Button(
-					Icon("lbutton"), 
-					function() 
-						Framework:pushAction("back")
-						return EVENT_CONSUME
-					end,
-					function()
-						Framework:pushAction("go_home")
-						return EVENT_CONSUME
-					end
-				), 
-				rbutton = Button(
-					Icon("rbutton"), 
-					function() 
-						-- check if player is connected
-						if appletManager then
-							Framework:pushAction("go_now_playing")
-						end
-						return EVENT_CONSUME 
-					end
-				)
-			})
-		)
+		obj:setTitle(title)
+		if titleStyle then
+			obj:setIconWidget("icon", Icon(titleStyle))
+		end
+
+		-- default actions
+		obj:setButtonAction("lbutton", "back", "home")
+
+		-- FIXME nowplaying should not be in Window
+		obj:setButtonAction("rbutton", "go_now_playing")
 	end
 	
 	-- by default, hide the window on BACK actions, add this as a
@@ -698,32 +681,62 @@ function setTitle(self, title)
 	if self.title then
 		self.title:setWidgetValue("text", title)
 	else
-		self.title = Group("title", { 
-			text = Label("text", title),
-			lbutton = Button(
-					Icon("lbutton"), 
-					Framework:pushAction("back")
-			),
-			rbutton = Icon("rbutton"),
-		})
-		self:_addWidget(self.title)
-		self.title:_event(Event:new(EVENT_FOCUS_GAINED))
+		self:setIconWidget("text", Label("text", title))
 	end
 end
 
 
 --[[
 
-=head2 jive.ui.Window:setTitleIcon(iconName, iconStyle)
+Sets (or adds) a widget into the title. This is used by Menu to add a 'position' widget with "X of Y" text into the appropraite windows.
 
-Sets the windows title icon with name I<iconName> to style I<iconStyle>.
-
-=cut
 --]]
-function setTitleIcon(self, iconName, iconStyle)
-	if self.title and self.title.iconName then
-		self.title.iconName:setStyle(iconStyle)
+function setIconWidget(self, widgetKey, widget)
+	if not self.title then
+		self:setTitleWidget(Group("title", {}))
 	end
+
+	self.title:setWidget(widgetKey, widget)
+end
+
+
+--[[
+
+Sets the style of a title widget, default options are 'icon', 'lbutton', 'rbutton', 'text'. This probably would only be used to modify the icon style.
+
+--]]
+function setIconStyle(self, widgetKey, widgetStyle)
+	self.title:getWidget(widgetKey):setStyle(widgetStyle)
+end
+
+
+--[[
+
+Sets a button action. This sets both the action and button style (using "button_" .. buttonAction).
+
+--]]
+function setButtonAction(self, buttonKey, buttonAction, buttonHoldAction)
+	local buttonFunc = nil
+	local buttonHoldFunc = nil
+
+	if buttonAction then
+		buttonFunc = function()
+			Framework:pushAction(buttonAction)
+		end
+	end
+	if buttonHoldAction then
+		buttonHoldFunc = function()
+			Framework:pushAction(buttonHoldAction)
+		end
+	end
+
+	self:setIconWidget(buttonKey, Button(Icon("button_" .. (buttonAction or "none")), buttonFunc, buttonHoldFunc))
+end
+
+
+-- deprecated
+function setTitleIcon(self, iconName, iconStyle)
+	assert(false)
 end
 
 
@@ -732,6 +745,8 @@ end
 =head2 jive.ui.Window:setTitleStyle(style)
 
 Sets the windows title style to I<style>.
+
+Deprecated, still used by SlimBrowser.
 
 =cut
 --]]
@@ -747,6 +762,8 @@ end
 =head2 jive.ui.Window:setTitleWidget(titleWidget)
 
 Sets the windows title to I<titleWidget>.
+
+Deprecated, still used by SlimBrowser.
 
 =cut
 --]]

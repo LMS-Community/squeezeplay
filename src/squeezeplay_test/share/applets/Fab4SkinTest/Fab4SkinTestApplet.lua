@@ -336,10 +336,24 @@ function buttonWindow(self, menuItem, style)
 end
 
 
+function regionHelpAction(self)
+	local window = Window("window", "Help", 'setuptitle')
+	window:setButtonAction("rbutton", nil)
+	window:setAllowScreensaver(false)
+
+	local textarea = Textarea("textarea", "Some help text here")
+	window:addWidget(textarea)
+	self:tieAndShowWindow(window)
+end
+
+
 function regionWindow(self, menuItem)
 	local window = Window("button", menuItem.text, 'helptitle')
 	local menu = SimpleMenu('menu')
 	window:addWidget(menu)
+
+	window:addActionListener("help", self, regionHelpAction)
+	window:setButtonAction("rbutton", "help")
 
 	local selected = nil
 

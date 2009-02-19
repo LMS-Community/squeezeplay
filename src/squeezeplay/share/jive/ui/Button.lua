@@ -70,12 +70,9 @@ function __init(self, widget, action, holdAction)
 				widget:setStyleModifier(nil)
 				widget:reDraw()
 
-				if not widget.mouseSequenceComplete then
-					widget.mouseSequenceComplete = true
-					if mouseInsideBufferDistance(widget, event) then
-						if action then
-							return action()
-						end
+				if mouseInsideBufferDistance(widget, event) then
+					if action then
+						return action()
 					end
 				end
 				--else nothing (i.e. cancel)

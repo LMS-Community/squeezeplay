@@ -67,6 +67,9 @@ function __init(self, name, style, titleStyle)
 	--Avoid inadvertantly quitting the app.
 	obj.window:addActionListener("back", obj, bumpAction)
 
+	-- No back button
+	obj.window:setButtonAction("lbutton", nil)
+
 	return obj
 end
 
