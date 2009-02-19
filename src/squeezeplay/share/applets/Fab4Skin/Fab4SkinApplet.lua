@@ -1318,6 +1318,22 @@ function skin(self, s)
 				
 	})
 	--]]
+	s.pressed.albumitem = _uses(s.albumitem, {
+		bgImg = pressedMask,
+		text = {
+			fg    = TEXT_COLOR,
+			sh    = TEXT_SH_COLOR
+		},
+		play = {
+			h      = WH_FILL,
+			align  = "right",
+			img    = _loadImage(self, "Icons/selection_right.png"),
+		},
+		icon = {
+			w = 70,
+			h = 70
+		}
+	})
 	s.selected.multilineitem = _uses(s.selected.albumitem, {
 				order = { 'text', 'play' },
 			})
