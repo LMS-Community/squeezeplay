@@ -128,13 +128,13 @@ function _predefinedKeyboards(self)
 		['qwerty']  = { 
 				{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
 				{ 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L' },
-				{ self:_shiftKey('qwertyLower', true), 'Z', 'X', 'C', 'V', 'B', 'N', 'M', self:_backspaceButton()  },
+				{ self:_shiftKey('qwertyLower'), 'Z', 'X', 'C', 'V', 'B', 'N', 'M', self:_backspaceButton()  },
 				bottomRow
 		} ,
 		['qwertyLower']  = { 
 				{ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
 				{ 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l' },
-				{ self:_shiftKey('qwerty', false), 'z', 'x', 'c', 'v', 'b', 'n', 'm', self:_backspaceButton() },
+				{ self:_shiftKey('qwerty', 'qwertyLower'), 'z', 'x', 'c', 'v', 'b', 'n', 'm', self:_backspaceButton() },
 				bottomRow
 		} ,
 		['hex']     = { 
@@ -182,7 +182,7 @@ function _layout(self)
 			if self.specialKeyWidths[style] then
 				keyWidth = self.specialKeyWidths[style]
 			else
-				keyWidth = 35
+				keyWidth = 45
 			end
 				rowWidth = rowWidth + keyWidth
 		end
@@ -200,23 +200,28 @@ function _layout(self)
 		end
 	end
 
-	local keySpacing = ( w - ( maxWidth ) ) / ( maxRowKeys + 1 ) 
+	-- FIXME: this is a hack. self:getBounds() values aren't correct while the widget is being laid out. 
+	-- screenWidth - 16 needs replacing
+	local screenWidth, screenHeight = Framework:getScreenSize()
+	local keySpacing = ( (screenWidth - 16) - ( maxWidth ) ) / ( maxRowKeys + 1 ) 
 
 	for i, row in ipairs(self.keyboard) do
 		local rowKeySpacing = keySpacing
 		if i == #self.keyboard then
-			rowKeySpacing = ( w - ( bottomRowWidth ) ) / ( bottomRowKeys + 1 ) 
+			-- FIXME: replace screenWidth with something measured from the widget's dimension
+			rowKeySpacing = ( screenWidth - ( bottomRowWidth ) ) / ( bottomRowKeys + 1 ) 
 		end
 		-- center row
-		x = ( w - ( (rowWidths[i]) + ( rowKeySpacing * (#row - 1) ) ) ) / 2
+		-- FIXME: replace screenWidth with something measured from the widget's dimension
+		x = ( screenWidth - ( (rowWidths[i]) + ( rowKeySpacing * (#row - 1) ) ) ) / 2
 		for _, key in ipairs(row) do
 			local style = key:getStyle()
 			if self.specialKeyWidths[style] then
 				keyWidth = self.specialKeyWidths[style]
 			else
-				keyWidth = 35
+				keyWidth = 45
 			end
-			key:setBounds(x, y, keyWidth, 35)
+			key:setBounds(x, y, keyWidth, 45)
 			x = x + keyWidth + rowKeySpacing
 		end
 		y = y + 50
@@ -230,6 +235,8 @@ end
 
 Changes Keyboard widget to I<type>, where type is either a pre-defined keyboard ('qwerty', 'qwertyLower', 'numeric', 'hex'),
 or a user-defined table of keys to render
+
+If a I<self.last> keyboard is defined, the keyboard switches back to that keyboard after one key is pressed
 
 =cut
 --]]
@@ -301,10 +308,15 @@ function _buttonsFromChars(self, charTable)
 			else
 				label    = Label(keyStyle, v.text)
 			end
+			-- XXX, v.callback, if used, not compatible with self.last
 			local callback = v.callback or 
 					function()
 						local e = Event:new(EVENT_CHAR_PRESS, string.byte(v.text))
 						Framework:dispatchEvent(nil, e) 
+						if self.last then
+							self:setKeyboard(self.last)
+							self.last = nil
+						end
 						return EVENT_CONSUME 
 					end
 			button   = Button(label, callback)
@@ -315,6 +327,10 @@ function _buttonsFromChars(self, charTable)
 					function()
 						local e = Event:new(EVENT_CHAR_PRESS, string.byte(v))
 						Framework:dispatchEvent(nil, e) 
+						if self.last then
+							self:setKeyboard(self.last)
+							self.last = nil
+						end
 						return EVENT_CONSUME 
 					end
 			)
@@ -330,6 +346,8 @@ function _switchKeyboardButton(self, style, kbType, keyText)
 		style    = 'keyboardShift',
 		callback = function()
 			self:setKeyboard(kbType)
+			-- unset any one key shift behavior if a switch keyboard button is hit directly
+			self.last = nil
 			return EVENT_CONSUME 
 		end
 	}
@@ -348,15 +366,22 @@ function _go(self)
 end
 
 -- return a table that can be used as a shift key
-function _shiftKey(self, switchTo, pressed)
-	local style = 'keyboardShiftLower'
-	if pressed then
-		style = 'keyboardShiftUpper'
+function _shiftKey(self, switchTo, switchBack)
+	local style
+	if switchBack then
+		style = switchBack
+	else
+		style = 'qwertyUpper'
 	end
 	return {	
 		icon	 = Icon(style),
 		callback = function()
 			self:setKeyboard(switchTo)
+			if switchBack then
+				self.last = switchBack
+			else
+				self.last = nil
+			end
 			return EVENT_CONSUME 
 		end
 	}

@@ -146,7 +146,6 @@ function skin(self, s)
 	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = Tile:loadImage( imgpath .. "Buttons/button_help_tb.png")
 	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
-	--local textinputBackground     = Tile:loadImage( imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_whole.png")
 	local textinputBackground     = 
 		Tile:loadTiles({
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box.png",
@@ -162,15 +161,15 @@ function skin(self, s)
 
 	local buttonBox =
 		Tile:loadTiles({
-					imgpath .. "Buttons/button_selection_box.png",
-					imgpath .. "Buttons/button_sbox_tl.png",
-					imgpath .. "Buttons/button_sbox_t.png",
-					imgpath .. "Buttons/button_sbox_tr.png",
-					imgpath .. "Buttons/button_sbox_r.png",
-					imgpath .. "Buttons/button_sbox_br.png",
-					imgpath .. "Buttons/button_sbox_b.png",
-					imgpath .. "Buttons/button_sbox_bl.png",
-					imgpath .. "Buttons/button_sbox_l.png",
+					nil, 
+					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_tl.png",
+					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_t.png",
+					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_tr.png",
+					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_r.png",
+					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_br.png",
+					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_b.png",
+					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_bl.png",
+					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_l.png",
 				})
 
 	local pressedTitlebarButtonBox =
@@ -782,47 +781,23 @@ function skin(self, s)
 	s.iconAlarm.w = WH_FILL
 	s.iconAlarm.align = "center"
 
-	s.touchButton = {}
-        s.touchButton.padding = { 4, 10, 0, 10 }
-        s.touchButton.font = _font(22)
-        s.touchButton.fg = TEXT_COLOR
-        s.touchButton.bgImg = fiveItemSelectionBox
-        s.touchButton.align = 'center'
-	s.touchButton.order = { 'text', 'icon' }
-        s.touchButton.text  = { align = 'center' }
-        s.touchButton.text.padding = 0
-	s.touchButton.icon = { 
-			img = _loadImage(self, "Icons/selection_right_5line.png"), 
-			align = 'center' 
-	}
-	s.touchButton.position = LAYOUT_NONE
-	s.touchButton.x = screenWidth/2 - 80
-	s.touchButton.y = screenHeight - 80
+	s.keyboardButton = {}
+        s.keyboardButton.padding = 0
+	s.keyboardButton.w = 45
+	s.keyboardButton.h= 45
+        s.keyboardButton.font = _boldfont(18)
+        s.keyboardButton.fg = TEXT_COLOR
+        s.keyboardButton.bgImg = buttonBox
+        s.keyboardButton.align = 'center'
 
--- PICK IT UP HERE
-	s.helpTouchButton = {}
-	s.helpTouchButton.padding = { 10, 16, 10, 16 }
-	s.helpTouchButton.font = _boldfont(14)
-	s.helpTouchButton.fg = TEXT_COLOR
-        s.helpTouchButton.bgImg = fiveItemSelectionBox
-        s.helpTouchButton.align = 'center'
-        s.helpTouchButton.text = {}
-        s.helpTouchButton.text.align = "center"
-	s.helpTouchButton.position = LAYOUT_NONE
-	s.helpTouchButton.x = screenWidth - 60
-	s.helpTouchButton.y = 8
-	s.helpTouchButton.h = 22
-
-	
-	s.keyboardButton   = _uses(s.touchButton, { padding = 2, w = 35, h = 35, align = 'center' } )
-	s.keyboardSpace    = _uses(s.touchButton, { padding = 2, w = 100, h = 35 } )
-	s.keyboardShift    = _uses(s.touchButton, { padding = 2, w = 75, h = 35 } )
-	s.keyboardBack     = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/left_arrow.png") } )
-	s.keyboardShiftLower     = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/icon_shift_off.png") } )
-	s.keyboardShiftUpper     = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/icon_shift_on.png") } )
+	s.keyboardShift          = _uses(s.keyboardButton, { bgImg = fiveItemSelectionBox, padding = 2, w = 75, h = 35 } )
+	s.keyboardSpace          = _uses(s.keyboardShift, { padding = 2, w = 100, h = 35 } )
+	s.keyboardBack           = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/left_arrow.png") } )
+	s.qwertyLower            = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/icon_shift_off.png") } )
+	s.qwertyUpper            = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/icon_shift_on.png") } )
 
 	-- FIXME: icon_search.png is incorrect here
-	s.keyboardGo       = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/right_arrow.png") } )
+	s.keyboardGo       = _uses(s.keyboardShift, { img = _loadImage(self, "Icons/Mini/right_arrow.png") } )
 	s.keyboardSearch   = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/icon_search.png") } )
 	s.keyboardSpaceBar = _uses(s.touchButton, { w = WH_FILL } )
 
