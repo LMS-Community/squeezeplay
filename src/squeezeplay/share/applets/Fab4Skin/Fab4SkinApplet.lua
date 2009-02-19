@@ -1060,10 +1060,10 @@ function skin(self, s)
 		}
 	})
 	
-	s.regionNA = _uses(s.buttonicon, { 
+	s.region_NA = _uses(s.buttonicon, { 
 		img = _loadImage(self, "Icons/icon_region_americas_64.png")
 	})
-	s.regionOther = _uses(s.buttonicon, { 
+	s.region_XX = _uses(s.buttonicon, { 
 		img = _loadImage(self, "Icons/icon_region_other_64.png")
 	})
 	s.wlan = _uses(s.buttonicon, {

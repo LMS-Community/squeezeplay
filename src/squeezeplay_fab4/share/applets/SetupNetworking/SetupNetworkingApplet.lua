@@ -83,14 +83,10 @@ function setupRegionShow(self, setupNext, wlan)
 
 	for name in wlan:getRegionNames() do
 		log:debug("region=", region, " name=", name)
-		local iconStyle = 'regionNA'
-		if name == 'XX' then 
-			iconStyle = 'regionOther'
-		end
 		local item = {
 			text = self:string("NETWORK_REGION_" .. name),
 			style = 'buttoniconitem',
-			iconStyle = iconStyle,
+			iconStyle = "region_" .. name,
 			sound = "WINDOWSHOW",
 			callback = function()
 					if region ~= name then
