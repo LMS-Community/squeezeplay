@@ -103,16 +103,18 @@ function __init(self, style, widgets)
 					for _,widget in pairs(obj.widgets) do
 						local widgetX, widgetY, widgetW, widgetH = widget:getBounds()
 
-						local widgetDistance
-						if mouseX >= widgetW + widgetX then
-							widgetDistance = mouseX - (widgetW + widgetX)
-						else
-							widgetDistance = widgetX - mouseX
-						end
+						if widgetW > 0 then --widget must have some width to be considered
+							local widgetDistance
+							if mouseX >= widgetW + widgetX then
+								widgetDistance = mouseX - (widgetW + widgetX)
+							else
+								widgetDistance = widgetX - mouseX
+							end
 
-						if widgetDistance < closestDistance then
-							closestDistance = widgetDistance
-							closestWidget = widget
+							if widgetDistance < closestDistance then
+								closestDistance = widgetDistance
+								closestWidget = widget
+							end
 						end
 					end
 					if closestWidget then
