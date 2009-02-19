@@ -341,8 +341,31 @@ function regionWindow(self, menuItem)
 	local menu = SimpleMenu('menu')
 	window:addWidget(menu)
 
-	local item  = { text = "North America", style = 'buttoniconitem', iconStyle = 'regionNA'  }
-	local item2 = { text = "All Other Regions", style = 'buttoniconitem', iconStyle = 'regionOther'  }
+	local selected = nil
+
+	local callback = function(event, item)
+		if selected then
+			selected.style = "buttoniconitem"
+			menu:updatedItem(selected)
+		end
+
+		item.style = "buttoniconitemchecked"
+		menu:updatedItem(item)
+		selected = item
+	end
+
+	local item  = {
+		text = "North America",
+		style = 'buttoniconitem',
+		iconStyle = 'regionNA',
+		callback = callback
+	}
+	local item2 = {
+		text = "All Other Regions",
+		style = 'buttoniconitem',
+		iconStyle = 'regionOther',
+		callback = callback
+	}
 
 	menu:addItem(item)
 	menu:addItem(item2)

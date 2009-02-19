@@ -219,8 +219,8 @@ function _addPlayerItem(self, player)
 
 	local item = {
 		id = mac,
-		iconStyle = playerModel,
 		style = 'chooseplayer',
+		iconStyle = "player_" .. playerModel,
 		text = "\n" .. playerName,
 		sound = "WINDOWSHOW",
 		callback = function()
@@ -235,7 +235,7 @@ function _addPlayerItem(self, player)
 	}
 
 	if player == self.selectedPlayer and player:isConnected() then
-		item.style = playerModel .. "checked"
+		item.style = "chooseplayerchecked"
 	end
 
 	self.playerMenu:addItem(item)

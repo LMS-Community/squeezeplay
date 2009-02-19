@@ -1077,7 +1077,7 @@ function skin(self, s)
 		bgImg = threeItemPressedBox 
 	}
 
-	s.pressed.buttoniconitem          = _uses(s.buttoniconitemchecked, buttonPressed)
+	s.pressed.buttoniconitem          = _uses(s.buttoniconitem, buttonPressed)
 	s.pressed.buttoniconitemchecked   = _uses(s.buttoniconitemchecked, buttonPressed)
 
 	-- window with one option in "button" style
@@ -1167,37 +1167,37 @@ function skin(self, s)
 	s.chooseplayer        = _uses(s.buttoniconitem)
 	s.chooseplayerchecked = _uses(s.chooseplayer, checkedStyle)
 
-	s.transporter = _uses(s.buttonicon, {
+	s.player_transporter = _uses(s.buttonicon, {
 		img = _loadImage(self, "Icons/Players/transporter.png"),
 	})
-	s.squeezebox = _uses(s.buttonicon, {
+	s.player_squeezebox = _uses(s.buttonicon, {
 		img = _loadImage(self, "Icons/Players/squeezebox.png"),
 	})
-	s.squeezebox2 = _uses(s.buttonicon, {
+	s.player_squeezebox2 = _uses(s.buttonicon, {
 		img = _loadImage(self, "Icons/Players/squeezebox.png"),
 	})
-	s.squeezebox3 = _uses(s.buttonicon, {
+	s.player_squeezebox3 = _uses(s.buttonicon, {
 		img = _loadImage(self, "Icons/Players/squeezebox3.png"),
 	})
-	s.boom = _uses(s.buttonicon, {
+	s.player_boom = _uses(s.buttonicon, {
 		img = _loadImage(self, "Icons/Players/boom.png"),
 	})
-	s.slimp3 = _uses(s.buttonicon, {
+	s.player_slimp3 = _uses(s.buttonicon, {
 		img = _loadImage(self, "Icons/Players/slimp3.png"),
 	})
-	s.softsqueeze = _uses(s.buttonicon, {
+	s.player_softsqueeze = _uses(s.buttonicon, {
 		img = _loadImage(self, "Icons/Players/softsqueeze.png"),
 	})
-	s.controller = _uses(s.buttonicon, {
+	s.player_controller = _uses(s.buttonicon, {
 		img = _loadImage(self, "Icons/Players/controller.png"),
 	})
-	s.receiver = _uses(s.buttonicon, {
+	s.player_receiver = _uses(s.buttonicon, {
 		img = _loadImage(self, "Icons/Players/receiver.png"),
 	})
-	s.squeezeplay = _uses(s.buttonicon, {
+	s.player_squeezeplay = _uses(s.buttonicon, {
 		img = _loadImage(self, "Icons/Players/squeezeplay.png"),
 	})
-	s.http = _uses(s.buttonicon, {
+	s.player_http = _uses(s.buttonicon, {
 		img = _loadImage(self, "Icons/Players/http.png"),
 	})
 
