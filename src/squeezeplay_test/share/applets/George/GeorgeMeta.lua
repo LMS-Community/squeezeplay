@@ -48,7 +48,7 @@ end
 function configureApplet(meta)
 --	if not meta:getSettings().setupDone then
 -- uncomment the next line to make the george setup applet run on startup from the desktop
-		appletManager:callService(debugStepStart)
+--		appletManager:callService(debugStepStart)
 --	end
 end
 
