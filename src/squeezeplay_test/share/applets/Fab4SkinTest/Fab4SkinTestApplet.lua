@@ -76,6 +76,12 @@ function menu(self, menuItem)
 					self:networkChoiceWindow(menuItem)
 				end 
 			},
+			{ text = "Error Menu",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:errorMenuWindow(menuItem)
+				end 
+			},
 			{ text = "Regions",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -335,7 +341,7 @@ function regionWindow(self, menuItem)
 	local menu = SimpleMenu('menu')
 	window:addWidget(menu)
 
-	local item = { text = "North America", style = 'wifiNA'  }
+	local item = { text = "North America", style = 'wifiNAchecked'  }
 	local item2 = { text = "All Other Regions", style = 'wifiOther'  }
 
 	menu:addItem(item)
@@ -372,6 +378,25 @@ function albumMenuWindow(self, menuItem)
 	local item = { text = "Test of Albumitem Style", style = 'albumitem'  }
 	local item2 = { text = "Test of AlbumitemChecked Style", style = 'albumchecked' }
 	local item3 = { text = "Test of AlbumitemNoAction Style", style = 'albumitemNoAction' }
+
+	menu:addItem(item)
+	menu:addItem(item2)
+	menu:addItem(item3)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+function errorMenuWindow(self, menuItem)
+	local window = Window("error", 'Error')
+	local menu = SimpleMenu('menu')
+	window:addWidget(menu)
+	local textarea = Textarea("text", 'Cannot Connect to Wireless Network')
+	window:addWidget(textarea)
+
+	local item = { text = "Try Again" }
+	local item2 = { text = "Manually Enter Network Name" }
+	local item3 = { text = "More Help" }
 
 	menu:addItem(item)
 	menu:addItem(item2)
@@ -702,7 +727,7 @@ function connectingPopup(self, menuItem)
 
 	local icon = Icon("icon")
 	local label = Label("text", "Finding available\nwireless networks...")
-	local label2 = Label("text2", "found: 1")
+	local label2 = Label("text2", "found : 1")
 
 	popup:addWidget(label)
 	popup:addWidget(icon)
@@ -712,14 +737,12 @@ function connectingPopup(self, menuItem)
 	local state = 1
 	popup:addTimer(4000, function()
 				       if state == 1 then
-					       label:setValue("a long test string!")
 					       label2:setValue("Found: 3")
 				       elseif state == 2 then
-					       label:setValue("a very very very long test string!")
 					       label2:setValue("Found: 5")
 				       elseif state == 3 then
 					       icon:setStyle("iconConnected")
-					       label:setValue("Connected to\na test string!")
+					       label:setValue("Connected to\na test network!")
 				       else
 					       popup:hide()
 				       end
