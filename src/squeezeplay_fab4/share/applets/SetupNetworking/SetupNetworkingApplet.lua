@@ -1548,11 +1548,20 @@ function setStaticIP(self, iface, ssid)
 
 	log:debug("setStaticIP addr=", self.ipAddress, " subnet=", self.ipSubnet, " gw=", self.ipGateway, " dns=", self.ipDNS)
 
-	Task("networkStatic", self,
-	     function()
-		     iface:t_setStaticIP(ssid, self.ipAddress, self.ipSubnet, self.ipGateway, self.ipDNS)
-		     connectOK(self, iface, ssid)
-	     end):addTask()
+	local window = Popup("popupIcon")
+	window:addWidget(Icon("iconConnecting"))
+
+	local name = self.scanResults[ssid].item.text
+	window:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", name)))
+
+	self:tieAndShowWindow(window)
+
+	Task("networkStatic", self, function()
+		iface:t_disconnectNetwork()
+
+		iface:t_setStaticIP(ssid, self.ipAddress, self.ipSubnet, self.ipGateway, self.ipDNS)
+		connectOK(self, iface, ssid)
+	end):addTask()
 end
 
 
