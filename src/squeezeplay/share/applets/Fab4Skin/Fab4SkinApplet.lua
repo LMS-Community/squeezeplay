@@ -819,45 +819,6 @@ function skin(self, s)
 	s.keyboardSearch   = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/icon_search.png") } )
 	s.keyboardSpaceBar = _uses(s.touchButton, { w = WH_FILL } )
 
-	-- wired/wireless text for setup
-	s.networkchoiceText = {}
-	s.networkchoiceText.order = { 'wifi', 'wired' }
-	s.networkchoiceText.position = LAYOUT_NONE
-
-	s.networkchoiceText.x = 0
-	s.networkchoiceText.y = screenHeight - 225
-	
-	s.networkchoiceText.wifi = {}
-	s.networkchoiceText.wifi.align = 'center'
-	s.networkchoiceText.wifi.font = _boldfont(22)
-	s.networkchoiceText.wifi.fg = TEXT_COLOR
-	s.networkchoiceText.wifi.w = WH_FILL
-	
-	s.networkchoiceText.wired = {}
-	s.networkchoiceText.wired.align = 'center'
-	s.networkchoiceText.wired.font = _boldfont(22)
-	s.networkchoiceText.wired.fg = TEXT_COLOR
-	s.networkchoiceText.wired.w = WH_FILL
-
-
-	-- wired/wireless buttons for setup
-	s.networkchoice = {}
-	s.networkchoice.order = { 'wifi', 'wired' }
-	s.networkchoice.position = LAYOUT_NONE
-
-	s.networkchoice.x = screenWidth - 450
-	s.networkchoice.y = screenHeight - 200
-	
-	s.networkchoice.wifi = {}
-	s.networkchoice.wifi.align = 'center'
-	s.networkchoice.wifi.padding = { 0, 0, 10, 0 }
-	s.networkchoice.wifi.img = _loadImage(self, "Setup/wifi.png")
-	
-	s.networkchoice.wired = {}
-	s.networkchoice.wired.align = 'center'
-	s.networkchoice.wired.padding = { 10, 0, 0, 0 }
-	s.networkchoice.wired.img = _loadImage(self, "Setup/wired.png")
-
 	-- wireless icons for menus
 	s.wirelessLevel1 = {}
 	s.wirelessLevel1.align = "right"
