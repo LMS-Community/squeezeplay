@@ -368,9 +368,9 @@ function _updatePlaylist(self, enabled, nr, count, ws)
 	if not ws then ws = self[windowStyle] end
 	if enabled == true and count and tonumber(count) > 1 then
 		nr = nr + 1
-		ws.titleGroup:setWidgetValue("playlist", self:string("SCREENSAVER_NOWPLAYING_OF", nr, count))
+		ws.titleGroup:setWidgetValue("rbutton", self:string("SCREENSAVER_NOWPLAYING_OF", nr, count))
 	else 
-		ws.titleGroup:setWidgetValue("playlist", "")
+		ws.titleGroup:setWidgetValue("rbutton", "")
 	end
 end
 
@@ -488,8 +488,8 @@ function _createUI(self)
 	end
 
 	self[windowStyle].titleGroup = Group(components.nptitle, {
-		back = Button(
-				Icon("back"), 
+		lbutton = Button(
+				Icon("lbutton"), 
 				function() 
 					Framework:pushAction("back")
 					return EVENT_CONSUME 
@@ -502,8 +502,8 @@ function _createUI(self)
 
 		text = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
 
-		playlist = Button(
-				Label("playlist", ""), 
+		rbutton = Button(
+				Label("rbutton", ""), 
 				function() 
 					Framework:pushAction("go")
 					return EVENT_CONSUME 

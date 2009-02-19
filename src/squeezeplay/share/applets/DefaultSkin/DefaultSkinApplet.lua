@@ -370,20 +370,13 @@ function skin(self, s, reload, useDefaultSize)
 	s.title.position = LAYOUT_NORTH
 	s.title.bgImg = titleBox
 	--FIXME: bug 8866
-	s.title.order = { "back", "text" }
+	s.title.order = { "lbutton", "text" }
 	--s.title.order = { "text" }
 	s.title.text = {}
 	s.title.text.padding = { 10, 8, 8, 8 }
 	s.title.text.align = "top-left"
 	s.title.text.font = FONT_BOLD_18px
 	s.title.text.fg = SELECT_COLOR
---[[
-	--FIXME: bug 8866
-	--FIXME: path likely needs changing
-	s.title.back = {}
-	s.title.back.img = _loadImage(self, "selection_left.png")
-	s.title.back.align = "left"
---]]
 
 	-- Menu with three basic styles: normal, selected and locked
 	-- First define the dimesions of the menu
@@ -828,8 +821,6 @@ function skin(self, s, reload, useDefaultSize)
 	s.albumtitle = {}
 	s.albumtitle.position = LAYOUT_NORTH
 	s.albumtitle.bgImg = titleBox
-	--FIXME: bug 8866
-	--s.albumtitle.order = { "back", "icon", "text" }
 	s.albumtitle.order = { "icon", "text" }
 	s.albumtitle.w = screenWidth
 	s.albumtitle.h = 60
@@ -851,12 +842,6 @@ function skin(self, s, reload, useDefaultSize)
 	s.albumtitle.icon.align = "left"
 	s.albumtitle.icon.img = _loadImage(self, "Icons/Mini/icon_album.png")
 	s.albumtitle.icon.padding = { 9, 0, 0, 0 }
---[[ FIXME: bug 8866
-	s.albumtitle.back = {}
-	s.albumtitle.back.img = _loadImage(self, "selection_left.png")
-	s.albumtitle.back.align = "left"
---]]
-
 
 	-- titles with mini icons
 	s.minititle = {}
@@ -1724,18 +1709,18 @@ function skin(self, s, reload, useDefaultSize)
 	s.ssnptitle.border = { 4, 4, 4, 0 }
 	s.ssnptitle.position = LAYOUT_NORTH
 	s.ssnptitle.bgImg = nptitleBox
-	s.ssnptitle.order = { "text", "playlist" }
+	s.ssnptitle.order = { "text", "rbutton" }
 	s.ssnptitle.text = {}
 	s.ssnptitle.text.w = WH_FILL
 	s.ssnptitle.text.padding = { 10, 7, 10, 9 }
 	s.ssnptitle.text.align = "top-left"
 	s.ssnptitle.text.font = Font:load(fontpath .. "FreeSansBold.ttf", 20)
 	s.ssnptitle.text.fg = { 0x00, 0x00, 0x00 }
-	s.ssnptitle.playlist = {}
-	s.ssnptitle.playlist.padding = { 10, 7, 10, 9 }
-	s.ssnptitle.playlist.font = Font:load(fontpath .. "FreeSans.ttf", 15)
-	s.ssnptitle.playlist.fg = { 0x00, 0x00, 0x00 }
-	s.ssnptitle.playlist.textAlign = "top-right"
+	s.ssnptitle.rbutton = {}
+	s.ssnptitle.rbutton.padding = { 10, 7, 10, 9 }
+	s.ssnptitle.rbutton.font = Font:load(fontpath .. "FreeSans.ttf", 15)
+	s.ssnptitle.rbutton.fg = { 0x00, 0x00, 0x00 }
+	s.ssnptitle.rbutton.textAlign = "top-right"
 
 
 	local nplargetitleBox = Tile:loadTiles({ imgpath .. "Screen_Formats/Titlebar/titlebar.png" })

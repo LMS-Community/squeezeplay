@@ -157,8 +157,8 @@ function __init(self, style, title, titleStyle)
 			Group(titleStyle or 'title', { 
 				text = Label("text", title), 
 				icon = Icon("icon"), 
-				back = Button(
-					Icon("back"), 
+				lbutton = Button(
+					Icon("lbutton"), 
 					function() 
 						Framework:pushAction("back")
 						return EVENT_CONSUME
@@ -168,8 +168,8 @@ function __init(self, style, title, titleStyle)
 						return EVENT_CONSUME
 					end
 				), 
-				nowplaying = Button(
-					Icon("nowplaying"), 
+				rbutton = Button(
+					Icon("rbutton"), 
 					function() 
 						-- check if player is connected
 						if appletManager then

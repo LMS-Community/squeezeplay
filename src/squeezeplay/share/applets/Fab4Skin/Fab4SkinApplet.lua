@@ -143,8 +143,13 @@ function skin(self, s)
 	local threeItemSelectionBox = Tile:loadImage( imgpath .. "Screen_Formats/3_line_lists/menu_sel_box_3line.png")
 	local threeItemPressedBox   = Tile:loadImage( imgpath .. "Screen_Formats/3_line_lists/menu_sel_box_3line_press.png")
 
-	local backButton        = Tile:loadImage( imgpath .. "Buttons/button_back_tb.png")
-	local backButtonPressed = Tile:loadImage( imgpath .. "Buttons/button_back_tb_press.png")
+	local backButton              = Tile:loadImage( imgpath .. "Buttons/button_back_tb.png")
+	local backButtonPressed       = Tile:loadImage( imgpath .. "Buttons/button_back_tb_press.png")
+	local helpButton              = Tile:loadImage( imgpath .. "Buttons/button_help_tb.png")
+	local helpButtonPressed       = Tile:loadImage( imgpath .. "Buttons/button_help_tb_press.png")
+	local nowPlayingButton        = Tile:loadImage( imgpath .. "Buttons/button_tbar_whole.png")
+	local nowPlayingButtonPressed = Tile:loadImage( imgpath .. "Buttons/button_tbar_whole_press.png")
+
 	local buttonBox =
 		Tile:loadTiles({
 					imgpath .. "Buttons/button_selection_box.png",
@@ -331,7 +336,7 @@ function skin(self, s)
 	s.title.border = 0
 	s.title.position = LAYOUT_NORTH
 	s.title.bgImg = titleBox
-	s.title.order = { "back", "text", "nowplaying" }
+	s.title.order = { "lbutton", "text", "rbutton" }
 	s.title.text = {}
         s.title.text.w = WH_FILL
 	s.title.text.padding = TITLE_PADDING
@@ -339,26 +344,25 @@ function skin(self, s)
 	s.title.text.font = _boldfont(TITLE_FONT_SIZE)
 	s.title.text.fg = TEXT_COLOR
 
-	s.title.back               = {}
-	s.title.back.img           = backButton
-	s.title.back.w             = TITLE_BUTTON_WIDTH
-	s.title.back.h             = TITLE_BUTTON_HEIGHT
-	s.title.back.padding       = TITLE_BUTTON_PADDING
+	s.title.lbutton               = {}
+	s.title.lbutton.img           = backButton
+	s.title.lbutton.w             = TITLE_BUTTON_WIDTH
+	s.title.lbutton.h             = TITLE_BUTTON_HEIGHT
+	s.title.lbutton.border       = TITLE_BUTTON_PADDING
 
-	s.title.nowplaying         = {}
-	s.title.nowplaying.bgImg   = titlebarButtonBox
-	s.title.nowplaying.img     = _loadImage(self, "Screen_Formats/Titlebar/icon_nplay_button_tb.png")
-	s.title.nowplaying.w       = TITLE_BUTTON_WIDTH
-	s.title.nowplaying.align   = "center"
-	s.title.nowplaying.h       = TITLE_BUTTON_HEIGHT 
-	s.title.nowplaying.padding = TITLE_BUTTON_PADDING
+	s.title.rbutton               = {}
+	s.title.rbutton.img           = nowPlayingButton
+	s.title.rbutton.w             = TITLE_BUTTON_WIDTH
+	s.title.rbutton.h             = TITLE_BUTTON_HEIGHT
+	s.title.rbutton.border       = TITLE_BUTTON_PADDING
 
 	s.title.pressed = {}
-	s.title.pressed.back = _uses(s.title.back, {
+	s.title.pressed.lbutton = _uses(s.title.lbutton, {
 		img = backButtonPressed,
 	})
-	s.title.pressed.nowplaying = _uses(s.title.nowplaying, {
-		bgImg = pressedTitlebarButtonBox,
+	s.title.pressed.rbutton = _uses(s.title.rbutton, {
+		--bgImg = pressedTitlebarButtonBox,
+		img = nowPlayingButtonPressed,
 	})
 
 	-- Menu with three basic styles: normal, selected and locked
@@ -483,7 +487,7 @@ function skin(self, s)
 	})
 
 	s.pressed.title = _uses(s.title, {
-		back = {
+		lbutton = {
 			bgImg = pressedTitlebarButtonBox,
 		}
 	})
@@ -798,6 +802,7 @@ function skin(self, s)
 	s.touchButton.x = screenWidth/2 - 80
 	s.touchButton.y = screenHeight - 80
 
+-- PICK IT UP HERE
 	s.helpTouchButton = {}
 	s.helpTouchButton.padding = { 10, 16, 10, 16 }
 	s.helpTouchButton.font = _boldfont(14)
@@ -906,7 +911,7 @@ function skin(self, s)
 					img = _loadImage(self, "Icons/Mini/icon_albums.png"),
         				padding = { 10, 0, 0, 0 },
 				},
-				nowplaying = {
+				rbutton = {
         				img     = _loadImage(self, "menu_album_noartwork_24.png"),
         				padding = { 5, 10, 15, 5 },
 					align   = "top-right"
@@ -942,6 +947,19 @@ function skin(self, s)
 	s.yearstitle           = _uses(s.minititle)
 	s.playlisttitle        = _uses(s.minititle)
 	s.currentplaylisttitle = _uses(s.minititle)
+
+	s.helptitle            = _uses(s.minititle, {
+		rbutton  = {
+			img = helpButton,
+			bgImg = false,
+		},
+	})
+	s.pressed.helptitle = _uses(s.helptitle, {
+		rbutton = {
+			img = helpButtonPressed,
+			bgImg = false,
+		},
+	})
 
 	-- "buttonlike" menu. all items with selection box and icon
 	s.buttonmenu = {}
@@ -1355,7 +1373,7 @@ function skin(self, s)
 	s.nowplayingtitle = {}
 	s.nowplayingtitle.position = LAYOUT_NORTH
 	s.nowplayingtitle.bgImg = titleBox
-	s.nowplayingtitle.order = { "back", "text", "icon" }
+	s.nowplayingtitle.order = { "lbutton", "text", "rbutton" }
 	s.nowplayingtitle.w = screenWidth
 	s.nowplayingtitle.h = THUMB_SIZE + 1
 	s.nowplayingtitle.border = 4
@@ -1545,16 +1563,15 @@ function skin(self, s)
 
 	-- Title
 	s.ssnptitle = _uses(s.title, {
-				order     = { "back", "text", "playlist" },
-				playlist  = {
-						font    = _font(14),
-						fg      = TEXT_COLOR,
-						bgImg   = titlebarButtonBox,
-						w       = TITLE_BUTTON_WIDTH,
-						h       = TITLE_BUTTON_HEIGHT,
-						padding = TITLE_BUTTON_PADDING,
-						align   = 'center',
-				}
+		rbutton  = {
+			font    = _font(14),
+			fg      = TEXT_COLOR,
+			bgImg   = titlebarButtonBox,
+			w       = TITLE_BUTTON_WIDTH,
+			h       = TITLE_BUTTON_HEIGHT,
+			padding = TITLE_BUTTON_PADDING,
+			align   = 'center',
+		}
 	})
 
 	-- nptitle style is the same for all windowStyles
@@ -1564,10 +1581,10 @@ function skin(self, s)
 
 	-- pressed styles
 	s.ssnptitle.pressed = {}
-	s.ssnptitle.pressed.back = _uses(s.ssnptitle.back, { 
+	s.ssnptitle.pressed.lbutton = _uses(s.ssnptitle.lbutton, { 
 		img = backButtonPressed 
 	})
-	s.ssnptitle.pressed.playlist = _uses(s.ssnptitle.playlist, { 
+	s.ssnptitle.pressed.rbutton = _uses(s.ssnptitle.rbutton, { 
 		bgImg = pressedTitlebarButtonBox
 	})
 

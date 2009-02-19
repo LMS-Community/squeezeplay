@@ -415,8 +415,8 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 			text = Label("text", ""), 
 			icon = Icon("icon"), 
 			play = Icon("play"), 
-			back = Button(
-				Icon("back"), 
+			lbutton = Button(
+				Icon("lbutton"), 
 				function()
 					Framework:pushAction("back")
 
@@ -427,8 +427,8 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 					return EVENT_CONSUME
 				end
 			), 
-			nowplaying = Button(
-				Icon("nowplaying"), 
+			rbutton = Button(
+				Icon("rbutton"), 
 				function() 
 					Framework:pushAction("go_now_playing")
 					return EVENT_CONSUME 
@@ -1053,8 +1053,8 @@ local function _browseSink(step, chunk, err)
 						Group(titleStyle, { 
 							text = Label("text", titleText), 
 							icon = titleIcon,
-							back = Button(
-								Icon("back"), 
+							lbutton = Button(
+								Icon("lbutton"), 
 								function()
 									Framework:pushAction("back")
 
@@ -1065,8 +1065,8 @@ local function _browseSink(step, chunk, err)
 									return EVENT_CONSUME
 								end
 							), 
-							nowplaying = Button(
-								Icon("nowplaying"), 
+							rbutton = Button(
+								Icon("rbutton"), 
 								function() 
 									Framework:pushAction("go_now_playing")
 									return EVENT_CONSUME
