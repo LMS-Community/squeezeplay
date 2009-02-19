@@ -333,6 +333,7 @@ function skin(self, s)
 		align = "center",
 		frameRate = 8,
 		frameWidth = 120,
+		padding = { 0, 0, 0, 10 }
 	}
 	
 	-- time (hidden off screen)
@@ -739,7 +740,7 @@ function skin(self, s)
 	s.popupIcon.maskImg = popupMask
 
 	s.popupIcon.text = {}
-	s.popupIcon.text.border = { 15, 20, 15, 0 }
+	s.popupIcon.text.border = { 15, 18, 15, 0 }
 	s.popupIcon.text.font = _boldfont(POPUP_TEXT_SIZE_1)
 	s.popupIcon.text.fg = TEXT_COLOR
 	s.popupIcon.text.lineHeight = POPUP_TEXT_SIZE_1 + 8
@@ -751,11 +752,11 @@ function skin(self, s)
 	s.popupIcon.icon = largeSpinny
 
 	s.popupIcon.text2 = {}
-	s.popupIcon.text2.padding = { 0, 0, 0, 35 }
+	s.popupIcon.text2.padding = { 0, 0, 0, 26 }
 	s.popupIcon.text2.font = _boldfont(POPUP_TEXT_SIZE_2)
 	s.popupIcon.text2.fg = TEXT_COLOR
 	s.popupIcon.text2.sh = TEXT_SH_COLOR
-	s.popupIcon.text2.align = "top"
+	s.popupIcon.text2.align = "bottom"
 	s.popupIcon.text2.position = LAYOUT_SOUTH
 	s.popupIcon.text2.h = 40
 
