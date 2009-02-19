@@ -33,15 +33,18 @@ function jiveVersion(self)
 	return 1, 1
 end
 
-
-function registerApplet(self)
-	local params = {
+function defaultSettings(self)
+        self.params = {
 		THUMB_SIZE = 43,
 		nowPlayingBrowseArtworkSize = 190,
 		nowPlayingSSArtworkSize     = 190,
 		nowPlayingLargeArtworkSize  = 190,
         }
-	jiveMain:registerSkin(self:string("TOUCH_SKIN"), "Fab4Skin", "skin", params)
+	return self.params
+end
+
+function registerApplet(self)
+	jiveMain:registerSkin(self:string("TOUCH_SKIN"), "Fab4Skin", "skin", self.params)
 end
 
 

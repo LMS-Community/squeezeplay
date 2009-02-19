@@ -263,8 +263,7 @@ function skin(self, s)
 	local textinputCursor = Tile:loadImage(imgpath .. "text_entry_letter.png")
 
 
-	--local THUMB_SIZE = jiveMain:getSkinParam("THUMB_SIZE")
-	local THUMB_SIZE = 42
+	local THUMB_SIZE = self:getSettings().THUMB_SIZE
 	
 	local TITLE_PADDING  = { 0, 16, 0, 16 }
 	local CHECK_PADDING  = { 2, 0, 6, 0 }
@@ -272,7 +271,7 @@ function skin(self, s)
 
 	--FIXME: paddings here need tweaking for Fab4Skin
 	local MENU_ALBUMITEM_PADDING = 0
-	local MENU_ALBUMITEM_TEXT_PADDING = { 8, 6, 9, 19 }
+	local MENU_ALBUMITEM_TEXT_PADDING = { 16, 6, 9, 19 }
 
 	local MENU_CURRENTALBUM_TEXT_PADDING = { 6, 20, 0, 10 }
 	local TEXTAREA_PADDING = { 50, 20, 50, 20 }
@@ -391,7 +390,7 @@ function skin(self, s)
 					align = ITEM_ICON_ALIGN,
 					padding = CHECK_PADDING,
 					--FIXME: icon_check_14x30.png should probably be changed to something like icon_check.png
-				      img = _loadImage(self, "Icons/icon_check_14x30.png")
+				      img = _loadImage(self, "Icons/icon_check_5line.png")
 
 			      }
 		      })
@@ -427,7 +426,7 @@ function skin(self, s)
 					check = {
 						align = ITEM_ICON_ALIGN,
 						padding = CHECK_PADDING,
-						img = _loadImage(self, "Icons/icon_check_selected_14x30.png")
+						img = _loadImage(self, "Icons/icon_check_5line.png")
 					}
 				
 				})
@@ -448,7 +447,7 @@ function skin(self, s)
 			      },
 			      check = {
 					align = ITEM_ICON_ALIGN,
-					img = _loadImage(self, "Icons/icon_check_selected.png")
+					img = _loadImage(self, "Icons/icon_check_5line.png")
 			      }
 		      })
 
@@ -484,7 +483,7 @@ function skin(self, s)
 					check = {
 						align = ITEM_ICON_ALIGN,
 						padding = CHECK_PADDING,
-						img = _loadImage(self, "Icons/icon_check_selected_14x30.png")
+						img = _loadImage(self, "Icons/icon_check_5line.png")
 					}
 
 				})
@@ -499,7 +498,7 @@ function skin(self, s)
 			      check = {
 					align = ITEM_ICON_ALIGN,
 					padding = BUTTON_PADDING,
-					img = _loadImage(self, "Icons/icon_check_selected.png")
+					img = _loadImage(self, "Icons/icon_check_5line.png")
 			      }
 		      })
 
@@ -966,7 +965,8 @@ function skin(self, s)
 	s.wifiNAchecked = _uses(s.wifiNA, {
 	      		order = { "icon", "text", "check" },
 			check = {
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_3line.png"),
+				padding = { 0, 0, 0, 10 }
 			}
 	})
 	s.wifiOther = _uses(s.buttoniconitem, {
@@ -977,7 +977,8 @@ function skin(self, s)
 	s.wifiOtherchecked = _uses(s.wifiOther, {
 	      		order = { "icon", "text", "check" },
 			check = {
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_3line.png"),
+				padding = { 0, 0, 0, 10 }
 			}
 	})
 
@@ -1039,26 +1040,32 @@ function skin(self, s)
 	s.albumitem = {}
 	s.albumitem.order = { "icon", "text", "play" }
 	s.albumitem.padding = MENU_ALBUMITEM_PADDING
-	s.albumitem.text = {}
-	s.albumitem.text.w = WH_FILL
-	s.albumitem.text.h = WH_FILL
-	s.albumitem.text.padding = MENU_ALBUMITEM_TEXT_PADDING
-	s.albumitem.text.align = "left"
-	s.albumitem.text.font = _font(ALBUMMENU_SMALL_FONT_SIZE)
---	s.albumitem.text.lineHeight = ALBUMMENU_FONT_SIZE + 4
-	s.albumitem.text.line = {
-		{
-			font = _boldfont(ALBUMMENU_FONT_SIZE),
-			height = ALBUMMENU_FONT_SIZE + 2
-		}
+	s.albumitem.text = {
+		w = WH_FILL,
+		h = WH_FILL,
+		padding = MENU_ALBUMITEM_TEXT_PADDING,
+		font = _font(ALBUMMENU_SMALL_FONT_SIZE),
+		line = {
+			{
+				font = _boldfont(ALBUMMENU_FONT_SIZE),
+				height = ALBUMMENU_FONT_SIZE + 2
+			}
+		},
+		fg = TEXT_COLOR,
+		sh = TEXT_SH_COLOR,
 	}
-	s.albumitem.text.fg = TEXT_COLOR
-	s.albumitem.text.sh = TEXT_SH_COLOR
 	s.albumitem.play = {
 		img     = _loadImage(self, "Icons/selection_right_5line.png"), 
 		w       = 30,
 		h       = WH_FILL,
-		padding = { 0, 0, 0, 0}
+		padding = { 0, 0, 3, 0}
+	}
+	s.albumitem.icon = {
+		w = THUMB_SIZE,
+		h = WH_FILL,
+		padding = { 8, 1, 8, 1 },
+		-- FIXME: no_artwork image needed in correct size for Fab4Skin; for now, disable it
+		img = _loadImage(self, "menu_album_noartwork_43.png")
 	}
 
 	s.multilineitem = _uses(s.albumitem, {
@@ -1067,12 +1074,11 @@ function skin(self, s)
 	-- checked albummenu item
 	s.albumchecked =
 		_uses(s.albumitem, {
-			      order = { "icon", "text", "check" },
+			      order = { "icon", "text", "check", "play" },
 			      check = {
-				      img = _loadImage(self, "Icons/icon_check_selected.png"),
-				      align = "right"
-
+				      img = _loadImage(self, "Icons/icon_check_5line.png"),
 			      }
+		
 		      })
 
 	s.multilinechecked = _uses(s.albumchecked, {
@@ -1093,12 +1099,9 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
-
-
-
 
 	s.squeezebox = _uses(s.chooseplayer, {
 				icon = {
@@ -1109,7 +1112,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 	s.squeezebox2 = _uses(s.chooseplayer, {
@@ -1121,7 +1124,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 	s.squeezebox3 = _uses(s.chooseplayer, {
@@ -1133,7 +1136,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 
@@ -1147,7 +1150,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 	s.slimp3 = _uses(s.chooseplayer, {
@@ -1159,7 +1162,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 	s.softsqueeze = _uses(s.chooseplayer, {
@@ -1171,7 +1174,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 	s.controller = _uses(s.chooseplayer, {
@@ -1183,7 +1186,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 	s.receiver = _uses(s.chooseplayer, {
@@ -1195,7 +1198,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 	s.squeezeplay = _uses(s.chooseplayer, {
@@ -1207,7 +1210,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 	s.http = _uses(s.chooseplayer, {
@@ -1219,21 +1222,13 @@ function skin(self, s)
 	      		order = { "icon", "text", "check" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 	
 	s.albumitemplay = _uses(s.albumitem)
 	s.albumitemadd  = _uses(s.albumitem)
 
-
-	s.albumitem.icon = {}
-	s.albumitem.icon.w = THUMB_SIZE
-	s.albumitem.icon.h = WH_FILL
-	s.albumitem.icon.align = "left"
--- FIXME: no_artwork image needed in correct size for Fab4Skin; for now, disable it
---	s.albumitem.icon.img = _loadImage(self, "menu_album_noartwork_125.png")
-	s.albumitem.icon.padding = { 8, 1, 8, 1 }
 
 	s.popupToast = _uses(s.albumitem, 
 		{
@@ -1304,7 +1299,7 @@ function skin(self, s)
 			},
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 	s.selected.multilinechecked = _uses(s.selected.multilineitem, {
@@ -1314,7 +1309,7 @@ function skin(self, s)
 			},
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 
@@ -1335,7 +1330,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 
@@ -1348,7 +1343,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 
@@ -1362,7 +1357,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 
@@ -1375,7 +1370,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 
@@ -1389,7 +1384,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 
@@ -1404,7 +1399,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 
@@ -1417,7 +1412,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 	s.selected.controller = _uses(s.selected.chooseplayer, {
@@ -1429,7 +1424,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 	s.selected.receiver = _uses(s.selected.chooseplayer, {
@@ -1441,7 +1436,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 	s.selected.squeezeplay = _uses(s.selected.chooseplayer, {
@@ -1453,7 +1448,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 	s.selected.http = _uses(s.selected.chooseplayer, {
@@ -1465,7 +1460,7 @@ function skin(self, s)
 	      		order = { "icon", "text", "check", "play" },
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_5line.png")
 			}
 	})
 	
@@ -1721,9 +1716,10 @@ function skin(self, s)
 	s.largenptrack  = _uses(s.ssnptrack)
 
 	-- Artwork
-	local ARTWORK_SIZE = 190
-	local browseArtWidth = ARTWORK_SIZE
-	local ssArtWidth = ARTWORK_SIZE
+	local ARTWORK_SIZE    = self:getSettings().nowPlayingBrowseArtworkSize
+	local SS_ARTWORK_SIZE = self:getSettings().nowPlayingSSArtworkSize
+	local browseArtWidth  = ARTWORK_SIZE
+	local ssArtWidth      = SS_ARTWORK_SIZE
 
 	s.ssnpartwork = {}
 

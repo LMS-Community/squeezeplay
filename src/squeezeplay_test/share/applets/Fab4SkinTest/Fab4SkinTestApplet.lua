@@ -81,6 +81,12 @@ function menu(self, menuItem)
 					self:menuWindow(menuItem, 'twobutton', 'button')
 				end 
 			},
+			{ text = "Album Menu",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:albumMenuWindow(menuItem)
+				end 
+			},
 			{ text = "Button Menu",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -323,18 +329,40 @@ end
 
 function regionWindow(self, menuItem)
 	local window = Window("window", menuItem.text)
-	local menu = SimpleMenu('albummenu')
+	local menu = SimpleMenu('buttonmenu')
 	window:addWidget(menu)
 
 	local item = { text = "North America", style = 'wifiNA'  }
 	local item2 = { text = "All Other Regions", style = 'wifiOther'  }
+	local item3 = { text = "North America (checked)", style = 'wifiNAchecked'  }
+	local item4 = { text = "All Other Regions (checked)", style = 'wifiOtherchecked'  }
 
 	menu:addItem(item)
 	menu:addItem(item2)
+	menu:addItem(item3)
+	menu:addItem(item4)
 
 	self:tieAndShowWindow(window)
 	return window
 end
+
+function albumMenuWindow(self, menuItem)
+	local window = Window("window", menuItem.text)
+	local menu = SimpleMenu('albummenu')
+	window:addWidget(menu)
+
+	local item = { text = "Test of Albumitem Style", style = 'albumitem'  }
+	local item2 = { text = "Test of AlbumitemChecked Style", style = 'albumchecked' }
+	local item3 = { text = "Test of AlbumitemNoAction Style", style = 'albumitemNoAction' }
+
+	menu:addItem(item)
+	menu:addItem(item2)
+	menu:addItem(item3)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
 
 
 function menuWindow(self, menuItem, style, itemStyle)
