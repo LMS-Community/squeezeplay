@@ -982,10 +982,11 @@ function skin(self, s)
 
 	s.error = {}
 	s.error.menu = _uses(s.menu, {
-		h = FIVE_ITEM_HEIGHT * 4
+		h = FIVE_ITEM_HEIGHT * 4,
 	})
 	s.error.title = _uses(s.title, {
 		rbutton = noButton,
+		padding = { 0, 0, TITLE_BUTTON_WIDTH, 0 },
 	})
 	s.error.text = {
 		position = LAYOUT_NORTH,
