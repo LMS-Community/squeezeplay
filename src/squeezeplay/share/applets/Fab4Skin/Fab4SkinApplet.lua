@@ -974,6 +974,25 @@ function skin(self, s)
 			}
 	})
 
+	s.pressed.buttonitem = _uses(s.buttonitem, {
+			bgImg = albumPressedBox,
+	})
+	s.pressed.buttoniconitem = _uses(s.buttoniconitem, {
+			bgImg = albumPressedBox,
+	})
+	s.pressed.wifiNA = _uses(s.wifiNA, {
+			bgImg = albumPressedBox,
+	})
+	s.pressed.wifiNAchecked = _uses(s.wifiNAchecked, {
+			bgImg = albumPressedBox,
+	})
+	s.pressed.wifiOther = _uses(s.wifiOther, {
+			bgImg = albumPressedBox,
+	})
+	s.pressed.wifiOtherChecked = _uses(s.wifiOtherchecked, {
+			bgImg = albumPressedBox,
+	})
+
 
 	-- two button menu specifically for laying out two button menu nicely on fab4 screen
 	s.twobuttonmenu = _uses(s.buttonmenu, {
