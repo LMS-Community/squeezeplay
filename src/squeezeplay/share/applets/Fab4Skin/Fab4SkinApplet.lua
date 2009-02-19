@@ -319,6 +319,22 @@ function skin(self, s)
 	local TITLE_BUTTON_HEIGHT = 37
 	local TITLE_BUTTON_PADDING = { 8, 4, 8, 4 }
 
+	local smallSpinny = {
+		img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
+		frameRate = 8,
+		frameWidth = 26,
+		padding = { 0, 0, 8, 0 },
+		h = WH_FILL,
+	}
+	local largeSpinny = {
+		img = _loadImage(self, "Alerts/wifi_connecting.png"),
+		position = LAYOUT_CENTER,
+		w = WH_FILL,
+		align = "center",
+		frameRate = 8,
+		frameWidth = 120,
+	}
+	
 	-- time (hidden off screen)
 	s.iconTime = {}
 	s.iconTime.x = screenWidth + 10
@@ -417,7 +433,6 @@ function skin(self, s)
 			      check = {
 					align = ITEM_ICON_ALIGN,
 					padding = CHECK_PADDING,
-					--FIXME: icon_check_14x30.png should probably be changed to something like icon_check.png
 				      img = _loadImage(self, "Icons/icon_check_5line.png")
 
 			      }
@@ -434,7 +449,7 @@ function skin(self, s)
 		_uses(s.selected.item, {
 			      icon = {
 					--FIXME: need this image
-				      img = _loadImage(self, "Icons/selection_play.png")
+				      img = _loadImage(self, "Icons/icon_check_5line.png")
 			      }
 		      })
 
@@ -442,7 +457,7 @@ function skin(self, s)
 		_uses(s.selected.item, {
 			      icon = {
 					--FIXME: need this image
-				      img = _loadImage(self, "Icons/selection_add.png")
+				      img = _loadImage(self, "Icons/icon_check_5line.png")
 			      }
 		      })
 
@@ -496,7 +511,7 @@ function skin(self, s)
 		_uses(s.pressed.item, {
 			      icon = {
 					--FIXME: need this image
-				      img = _loadImage(self, "Icons/selection_play.png")
+				      img = _loadImage(self, "Icons/icon_check_5line.png")
 			      }
 		      })
 
@@ -504,7 +519,7 @@ function skin(self, s)
 		_uses(s.pressed.item, {
 			      icon = {
 					--FIXME: need this image
-				      img = _loadImage(self, "Icons/selection_add.png")
+				      img = _loadImage(self, "Icons/icon_check_5line.png")
 			      }
 		      })
 
@@ -539,11 +554,7 @@ function skin(self, s)
 	-- locked menu item (with loading animation)
 	s.locked = {}
 	s.locked.item = _uses(s.pressed.item, {
-					icon = {
-						img = _loadImage(self, "Icons/selection_waiting.png"),
-						frameRate = 5,
-						frameWidth = 30
-					}
+					icon = smallSpinny
 			})
 
 	s.locked.itemplay = _uses(s.locked.item)
@@ -737,15 +748,7 @@ function skin(self, s)
 	s.popupIcon.text.position = LAYOUT_NORTH
 	s.popupIcon.text.h = s.popupIcon.text.lineHeight * 2
 
-	local spinny = {
-		img = _loadImage(self, "Alerts/wifi_connecting.png"),
-		position = LAYOUT_CENTER,
-		w = WH_FILL,
-		align = "center",
-		frameRate = 8,
-		frameWidth = 120,
-	}
-	s.popupIcon.icon = spinny
+	s.popupIcon.icon = largeSpinny
 
 	s.popupIcon.text2 = {}
 	s.popupIcon.text2.padding = { 0, 0, 0, 28 }
@@ -768,7 +771,7 @@ function skin(self, s)
 	s.iconFavorites.align = 'center'
 
 	-- connecting/connected popup icon (likely deprecated in deference to s.popupIcon.ico)
-	s.iconConnecting = spinny
+	s.iconConnecting = largeSpinny
 
 	s.iconConnected = {}
 	s.iconConnected.img = _loadImage(self, "Alerts/connecting_success_icon.png")
@@ -1099,6 +1102,10 @@ function skin(self, s)
 	s.albummenu.fg = {0xbb, 0xbb, 0xbb }
 	s.albummenu.font = _boldfont(250)
 
+	s.album = {}
+	s.album.menu = _uses(s.albummenu)
+	s.album.title = _uses(s.albumtitle)
+
 	s.multilinemenu = _uses(s.albummenu)
 
 	-- items 5 per page with artwork two lines text
@@ -1275,13 +1282,6 @@ function skin(self, s)
 
 	s.multilineitemNoAction = _uses(s.albumitemNoAction)
 
---FIXME: albumitemNoAction can't use _uses because it sticks an icon on the screen
---[[
-	s.albumitemNoAction = _uses(s.albumitem, {
-					order = { 'text' },
-					icon  = nil
-				})
---]]
 	s.selected.albumitemNoAction = _uses(s.albumitemNoAction)
 	s.selected.multilineitemNoAction = _uses(s.multilineitemNoAction)
 
@@ -1356,12 +1356,7 @@ function skin(self, s)
 
 	-- waiting item with spinny
 	s.albumitemwaiting = _uses(s.albumitem, {
-		icon = {
-			--FIXME, need a resized icon_connecting.png image for the correct albumitem thumb size
-			img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
-			frameRate = 8,
-			frameWidth = 120
-		}
+		icon = smallSpinny,
 	})
 
 	s.selected.albumitemwaiting = _uses(s.waiting)
