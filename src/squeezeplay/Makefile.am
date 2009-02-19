@@ -24,6 +24,8 @@ include Makefile.am.jive-install.include
 install-data-local: jive-static-install
 	##eliminate anything we still want private
 	rm -rf $(JIVE_BUILD_DIR)/strict.lua
+	rm -rf $(JIVE_BUILD_DIR)/applets/*/images/Reference_Screens
+	rm -rf $(JIVE_BUILD_DIR)/applets/*/images/Guidelines
 
 
 OSX_LIB_DIR = $(PREFIX)/lib
