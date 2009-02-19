@@ -74,7 +74,7 @@ end
 
 
 function setupRegionShow(self, setupNext, wlan)
-	local window = Window("button", self:string("NETWORK_REGION"), wirelessTitleStyle)
+	local window = Window("button", self:string("NETWORK_REGION"), 'helptitle')
 	window:setAllowScreensaver(false)
 
 	local region = wlan:getRegion()
@@ -104,9 +104,13 @@ function setupRegionShow(self, setupNext, wlan)
 		end
 	end
 
-
-	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_REGION', 'NETWORK_REGION_HELP') end )
-	window:addWidget(helpButton)
+	local helpButton = Button( 
+		Icon('rbutton'), 
+		function() 
+			self:helpWindow('NETWORK_REGION', 'NETWORK_REGION_HELP') 
+		end 
+	)
+	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -199,9 +203,14 @@ function setupConnectionType(self, setupNext)
 		weight = 2
 	})
 	
-	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:setupConnectionHelp() end )
+	local helpButton = Button( 
+		Icon('rbutton'), 
+		function() 
+			self:setupConnectionHelp() 
+		end 
+	)
 
-	window:addWidget(helpButton)
+	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(connectionMenu)
 
 	self:tieAndShowWindow(window)
@@ -262,9 +271,14 @@ function settingsConnectionType(self)
 		weight = 2
 	})
 	
-	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:setupConnectionHelp() end )
+	local helpButton = Button( 
+		Icon('rbutton'), 
+		function() 
+			self:setupConnectionHelp() 
+		end 
+	)
 
-	window:addWidget(helpButton)
+	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(connectionMenu)
 
 	self:tieAndShowWindow(window)
@@ -620,10 +634,14 @@ function enterSSID(self, iface)
 				    end
 			    )
 
-	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_NETWORK_NAME', 'NETWORK_NETWORK_NAME_HELP') end )
-
+	local helpButton = Button( 
+		Icon('rbutton'), 
+		function() 
+			self:helpWindow('NETWORK_NETWORK_NAME', 'NETWORK_NETWORK_NAME_HELP') 
+		end 
+	)
+	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(textinput)
-	window:addWidget(helpButton)
 	window:addWidget(Keyboard("keyboard", 'qwerty'))
 	window:focusWidget(textinput)
 
@@ -748,8 +766,13 @@ function chooseEncryption(self, iface, ssid)
 					},
 				})
 
-	local helpButton     = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_WIRELESS_ENCRYPTION', 'NETWORK_WIRELESS_ENCRYPTION_HELP') end )
-	window:addWidget(helpButton)
+	local helpButton = Button( 
+		Icon('rbutton'), 
+		function() 
+			self:helpWindow('NETWORK_WIRELESS_ENCRYPTION', 'NETWORK_WIRELESS_ENCRYPTION_HELP') 
+		end 
+	)
+	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -795,8 +818,13 @@ function chooseWEPLength(self, iface, ssid)
 					},
 				})
 
-	local helpButton     = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_WIRELESS_ENCRYPTION', 'NETWORK_WIRELESS_ENCRYPTION_HELP') end )
-	window:addWidget(helpButton)
+	local helpButton = Button( 
+		Icon('rbutton'), 
+		function() 
+			self:helpWindow('NETWORK_WIRELESS_ENCRYPTION', 'NETWORK_WIRELESS_ENCRYPTION_HELP') 
+		end 
+	)
+	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -830,10 +858,15 @@ function enterWEPKey(self, iface, ssid)
 			    )
 
 	local keyboard = Keyboard('keyboard', 'hex')
-	local helpButton     = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_WIRELESS_KEY', 'NETWORK_WIRELESS_KEY_HELP') end )
+	local helpButton = Button( 
+		Icon('rbutton'), 
+		function() 
+			self:helpWindow('NETWORK_WIRELESS_KEY', 'NETWORK_WIRELESS_KEY_HELP') 
+		end 
+	)
 
+	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(textinput)
-	window:addWidget(helpButton)
 	window:addWidget(keyboard)
 	window:focusWidget(textinput)
 
@@ -860,9 +893,9 @@ function enterPSK(self, iface, ssid)
 				    end,
 				    self:string("ALLOWEDCHARS_WPA")
 			    )
-	local helpButton     = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_WIRELESS_PASSWORD', 'NETWORK_WIRELESS_PASSWORD_HELP') end )
+	local helpButton = Button( Icon('rbutton'), function() self:helpWindow('NETWORK_WIRELESS_PASSWORD', 'NETWORK_WIRELESS_PASSWORD_HELP') end )
 
-	window:addWidget(helpButton)
+	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(textinput)
 	window:addWidget(Keyboard('keyboard', 'qwerty'))
 	window:focusWidget(textinput)
@@ -1374,9 +1407,9 @@ function enterIP(self, iface, ssid)
 					   return true
 				   end)
 	local keyboard = Keyboard("keyboard", "numeric")
-	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_IP_ADDRESS', 'NETWORK_IP_ADDRESS_HELP') end )
+	local helpButton = Button( Icon('rbutton'), function() self:helpWindow('NETWORK_IP_ADDRESS', 'NETWORK_IP_ADDRESS_HELP') end )
 
-	window:addWidget(helpButton)
+	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(textinput)
 	window:addWidget(keyboard)
 	window:focusWidget(textinput)
@@ -1406,9 +1439,9 @@ function enterSubnet(self, iface, ssid)
 					   return true
 				   end)
 	local keyboard = Keyboard("keyboard", "numeric")
-	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_SUBNET', 'NETWORK_SUBNET_HELP') end )
+	local helpButton = Button( Icon('rbutton'), function() self:helpWindow('NETWORK_SUBNET', 'NETWORK_SUBNET_HELP') end )
 
-	window:addWidget(helpButton)
+	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(textinput)
 	window:addWidget(keyboard)
 	window:focusWidget(textinput)
@@ -1444,9 +1477,9 @@ function enterGateway(self, iface, ssid)
 				   end)
 
 	local keyboard = Keyboard("keyboard", "numeric")
-	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_GATEWAY', 'NETWORK_GATEWAY_HELP') end )
+	local helpButton = Button( Icon('rbutton'), function() self:helpWindow('NETWORK_GATEWAY', 'NETWORK_GATEWAY_HELP') end )
 
-	window:addWidget(helpButton)
+	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(textinput)
 	window:addWidget(keyboard)
 	window:focusWidget(textinput)
@@ -1479,9 +1512,9 @@ function enterDNS(self, iface, ssid)
 					   return true
 				   end)
 	local keyboard = Keyboard("keyboard", "numeric")
-	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_CONNECTION_HELP")), function() self:helpWindow('NETWORK_DNS', 'NETWORK_DNS_HELP') end )
+	local helpButton = Button( Icon('rbutton'), function() self:helpWindow('NETWORK_DNS', 'NETWORK_DNS_HELP') end )
 
-	window:addWidget(helpButton)
+	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(textinput)
 	window:addWidget(keyboard)
 	window:focusWidget(textinput)
@@ -1766,9 +1799,9 @@ function chooseWPS(self, iface, ssid)
 		weight = 3
 	})
 
-	local helpButton = Button( Label( 'helpTouchButton', self:string("NETWORK_WPS_HELP")), function() self:setupWPSHelp() end )
+	local helpButton = Button( Icon('rbutton'), function() self:setupWPSHelp() end )
 
-	window:addWidget(helpButton)
+	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(connectionMenu)
 
 	self:tieAndShowWindow(window)

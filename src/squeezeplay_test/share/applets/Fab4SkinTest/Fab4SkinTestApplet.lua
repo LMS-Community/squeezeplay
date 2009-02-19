@@ -35,6 +35,7 @@ local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
 local Popup                  = require("jive.ui.Popup")
 local Group                  = require("jive.ui.Group")
+local Button                 = require("jive.ui.Button")
 local RadioButton            = require("jive.ui.RadioButton")
 local RadioGroup             = require("jive.ui.RadioGroup")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
@@ -330,8 +331,8 @@ end
 
 
 function regionWindow(self, menuItem)
-	local window = Window("window", menuItem.text, 'helptitle')
-	local menu = SimpleMenu('buttonmenu')
+	local window = Window("button", menuItem.text, 'helptitle')
+	local menu = SimpleMenu('menu')
 	window:addWidget(menu)
 
 	local item = { text = "North America", style = 'wifiNA'  }
@@ -346,13 +347,15 @@ end
 
 
 function networkChoiceWindow(self, menuItem)
-	local window = Window("window", menuItem.text)
-	local menu = SimpleMenu('buttonmenu')
+	local window = Window("button", menuItem.text, 'helptitle')
+	local menu = SimpleMenu('menu')
 	window:addWidget(menu)
 
 	local item = { text = "Wireless", style = 'wireless'  }
 	local item2 = { text = "Wired", style = 'wired'  }
 
+	local helpButton = Button(Icon('rbutton'), function() log:warn('BAH!') end )
+	window:getTitleWidget():setWidget('rbutton', helpButton)
 	menu:addItem(item)
 	menu:addItem(item2)
 

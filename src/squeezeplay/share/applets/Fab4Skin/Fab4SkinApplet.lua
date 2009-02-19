@@ -951,13 +951,11 @@ function skin(self, s)
 	s.helptitle            = _uses(s.minititle, {
 		rbutton  = {
 			img = helpButton,
-			bgImg = false,
 		},
 	})
 	s.pressed.helptitle = _uses(s.helptitle, {
 		rbutton = {
 			img = helpButtonPressed,
-			bgImg = false,
 		},
 	})
 
