@@ -45,6 +45,7 @@ local table                = require("jive.utils.table")
 local Framework            = require("jive.ui.Framework")
 local Event                = require("jive.ui.Event")
 local Widget               = require("jive.ui.Widget")
+local Label                = require("jive.ui.Label")
 local Scrollbar            = require("jive.ui.Scrollbar")
 local Surface              = require("jive.ui.Surface")
 local ScrollAccel          = require("jive.ui.ScrollAccel")
@@ -518,6 +519,11 @@ local function _eventHandler(self, event)
 	elseif evtype == EVENT_SHOW or
 		evtype == EVENT_HIDE then
 
+               if evtype == EVENT_SHOW then
+			local window = self:getWindow()
+			window:setIconWidget("xofy", self.xofy)
+		end
+
 		for i,widget in ipairs(self.widgets) do
 			widget:_event(event)
 		end
@@ -695,6 +701,8 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
   					  obj.accel = true
 					  obj:setSelectedIndex(value + 1) -- value comes in zero based, one based is needed
 				  end)
+
+	obj.xofy = Label("xofy", "")
 
 	obj.scrollbar.parent = obj
 	obj.layoutRoot = true
@@ -1237,6 +1245,7 @@ function _updateWidgets(self)
 
 	-- update scrollbar
 	self.scrollbar:setScrollbar(0, self.listSize, self.topItem, self.numWidgets)
+	self.xofy:setValue(nextSelectedIndex .. " of " .. self.listSize)
 
 --	log:warn("_update menu:\n", self:dump())
 

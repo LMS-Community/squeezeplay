@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.TouchRemoteSkin.TouchRemoteSkinApplet - The remote interface skin for the Squeezebox Touch
+applets.Fab4RemoteSkin.Fab4RemoteSkinApplet - The remote skin for the Squeezebox Touch
 
 =head1 DESCRIPTION
 
-This applet implements the TouchRemote skin
+This applet implements the Remote skin for the Squeezebox Touch
 
 =head1 FUNCTIONS
 
@@ -57,6 +57,7 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
 local WH_FILL                = jive.ui.WH_FILL
 
+local jiveMain               = jiveMain
 local appletManager          = appletManager
 
 
@@ -65,7 +66,6 @@ oo.class(_M, Applet)
 
 
 -- Define useful variables for this skin
--- FIXME shares resources with Fab4Skin (touch skin)
 local imgpath = "applets/Fab4Skin/images/"
 local sndpath = "applets/Fab4Skin/sounds/"
 local fontpath = "fonts/"
@@ -117,6 +117,9 @@ local function _uses(parent, value)
 	setmetatable(style, { __index = parent })
 
 	for k,v in pairs(value or {}) do
+		if parent == nil then
+			log:error(debug.traceback())
+		end
 		if type(v) == "table" and type(parent[k]) == "table" then
 			-- recursively inherrit from parent style
 			style[k] = _uses(parent[k], v)
@@ -137,163 +140,135 @@ function skin(self, s)
 	local screenWidth, screenHeight = Framework:getScreenSize()
 
 	-- Images and Tiles
-	local titleBox =
-		Tile:loadTiles({
-				       imgpath .. "Screen_Formats/Titlebar/titlebar.png",
-				       imgpath .. "Screen_Formats/Titlebar/titlebar_tl.png",
-				       imgpath .. "Screen_Formats/Titlebar/titlebar_t.png",
-				       imgpath .. "Screen_Formats/Titlebar/titlebar_tr.png",
-				       imgpath .. "Screen_Formats/Titlebar/titlebar_r.png",
-				       imgpath .. "Screen_Formats/Titlebar/titlebar_br.png",
-				       imgpath .. "Screen_Formats/Titlebar/titlebar_b.png",
-				       imgpath .. "Screen_Formats/Titlebar/titlebar_bl.png",
-				       imgpath .. "Screen_Formats/Titlebar/titlebar_l.png",
-			       })
+	local titleBox          = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
+	local threeItemSelectionBox = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line.png")
+	local threeItemPressedBox   = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line_press.png")
 
-	local selectionBox =
+	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
+	local helpButton              = Tile:loadImage( imgpath .. "Buttons/button_help_tb.png")
+	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
+	local textinputBackground     = 
 		Tile:loadTiles({
-				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box.png",
-				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_tl.png",
-				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_t.png",
-				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_tr.png",
-				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_r.png",
-				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_br.png",
-				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_b.png",
-				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_bl.png",
-				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_l.png",
-			       })
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tl.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_t.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tr.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_r.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_br.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_b.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_bl.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_l.png",
+				})
 
-	local albumSelectionBox =
-		Tile:loadTiles({
-				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album.png",
-				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_tl.png",
-				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_t.png",
-				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_tr.png",
-				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_r.png",
-				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_br.png",
-				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_b.png",
-				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_bl.png",
-				       imgpath .. "Screen_Formats/Albums/menu_selection_box_album_l.png",
-			       })
 	local buttonBox =
 		Tile:loadTiles({
-					imgpath .. "Buttons/button_selection_box.png",
-					imgpath .. "Buttons/button_sbox_tl.png",
-					imgpath .. "Buttons/button_sbox_t.png",
-					imgpath .. "Buttons/button_sbox_tr.png",
-					imgpath .. "Buttons/button_sbox_r.png",
-					imgpath .. "Buttons/button_sbox_br.png",
-					imgpath .. "Buttons/button_sbox_b.png",
-					imgpath .. "Buttons/button_sbox_bl.png",
-					imgpath .. "Buttons/button_sbox_l.png",
+					nil, 
+					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_tl.png",
+					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_t.png",
+					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_tr.png",
+					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_r.png",
+					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_br.png",
+					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_b.png",
+					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_bl.png",
+					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_l.png",
+				})
+
+	local pressedTitlebarButtonBox =
+		Tile:loadTiles({
+					imgpath .. "Buttons/button_titlebar_press.png",
+					imgpath .. "Buttons/button_titlebar_tl_press.png",
+					imgpath .. "Buttons/button_titlebar_t_press.png",
+					imgpath .. "Buttons/button_titlebar_tr_press.png",
+					imgpath .. "Buttons/button_titlebar_r_press.png",
+					imgpath .. "Buttons/button_titlebar_br_press.png",
+					imgpath .. "Buttons/button_titlebar_b_press.png",
+					imgpath .. "Buttons/button_titlebar_bl_press.png",
+					imgpath .. "Buttons/button_titlebar_l_press.png",
+				})
+
+	local titlebarButtonBox =
+		Tile:loadTiles({
+					imgpath .. "Buttons/button_titlebar.png",
+					imgpath .. "Buttons/button_titlebar_tl.png",
+					imgpath .. "Buttons/button_titlebar_t.png",
+					imgpath .. "Buttons/button_titlebar_tr.png",
+					imgpath .. "Buttons/button_titlebar_r.png",
+					imgpath .. "Buttons/button_titlebar_br.png",
+					imgpath .. "Buttons/button_titlebar_b.png",
+					imgpath .. "Buttons/button_titlebar_bl.png",
+					imgpath .. "Buttons/button_titlebar_l.png",
 				})
 
 -- FIXME: do these need updating for Fab4Skin?
 	local helpBox = 
 		Tile:loadTiles({
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox.png",
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_tl.png",
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_t.png",
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_tr.png",
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_r.png",
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_br.png",
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_b.png",
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_bl.png",
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_l.png",
+				       imgpath .. "Popup_Menu/helpbox.png",
+				       imgpath .. "Popup_Menu/helpbox_tl.png",
+				       imgpath .. "Popup_Menu/helpbox_t.png",
+				       imgpath .. "Popup_Menu/helpbox_tr.png",
+				       imgpath .. "Popup_Menu/helpbox_r.png",
+				       imgpath .. "Popup_Menu/helpbox_br.png",
+				       imgpath .. "Popup_Menu/helpbox_b.png",
+				       imgpath .. "Popup_Menu/helpbox_bl.png",
+				       imgpath .. "Popup_Menu/helpbox_l.png",
 			       })
 
 	local scrollBackground =
 		Tile:loadVTiles({
-					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_bkgrd_t.png",
-					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_bkgrd.png",
-					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_bkgrd_b.png",
+					imgpath .. "Scroll_Bar/scrollbar_bkgrd_tch_t.png",
+					imgpath .. "Scroll_Bar/scrollbar_bkgrd_tch.png",
+					imgpath .. "Scroll_Bar/scrollbar_bkgrd_tch_b.png",
 				})
 
 	local scrollBar = 
 		Tile:loadVTiles({
-					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_body_t.png",
-					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_body.png",
-					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_body_b.png",
+					imgpath .. "Scroll_Bar/scrollbar_body_t.png",
+					imgpath .. "Scroll_Bar/scrollbar_body.png",
+					imgpath .. "Scroll_Bar/scrollbar_body_b.png",
 			       })
 
 	local sliderBackground = 
 		Tile:loadHTiles({
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
 			       })
 
 	local sliderBar = 
 		Tile:loadHTiles({
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png",
 			       })
 
 	local volumeBar =
 		Tile:loadHTiles({
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png",
 			       })
 
 	local volumeBackground =
 		Tile:loadHTiles({
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
 				})
 
 	local popupMask = Tile:fillColor(0x000000e5)
 
-	local regionMask = Tile:loadTiles({
-					imgpath .. "Screen_Formats/Setup/overlay_region_map.png"
-				})
-
-	-- FIXME: no popupBox in Fab4? there is a defined popupBox in DefaultSkin...
-
-	local textinputBackground =
-		Tile:loadHTiles({
-				-- FIXME: need to use Noah's assets for this
-				--[[
-				       imgpath .. "Screen_Formats/Text_Entry/Classic/text_entry_bac",
-				--]]
-				       imgpath .. "text_entry_bkgrd_l.png",
-				       imgpath .. "text_entry_bkgrd.png",
-				       imgpath .. "text_entry_bkgrd_r.png",
-			       })
-
-	local softButtonBackground =
-		Tile:loadTiles({
-				       imgpath .. "button.png",
-				       imgpath .. "button_tl.png",
-				       imgpath .. "button_t.png",
-				       imgpath .. "button_tr.png",
-				       imgpath .. "button_r.png",
-				       imgpath .. "button_br.png",
-				       imgpath .. "button_b.png",
-				       imgpath .. "button_bl.png",
-				       imgpath .. "button_l.png"
-				})
-
-	local textinputWheel = Tile:loadImage(imgpath .. "text_entry_select.png")
-
 	local textinputCursor = Tile:loadImage(imgpath .. "Text_Entry/Keyboard_Touch/tch_cursor.png")
 
-
-	local TITLE_PADDING  = { 0, 6, 0, 12 }
-	local BUTTON_PADDING = { 2, 12, 0, 0 }
+	local THUMB_SIZE = self:getSettings().THUMB_SIZE
+	
+	local TITLE_PADDING  = { 0, 10, 0, 0 }
 	local CHECK_PADDING  = { 2, 0, 6, 0 }
 	local CHECKBOX_RADIO_PADDING  = { 2, 8, 8, 0 }
 
 	--FIXME: paddings here need tweaking for Fab4Skin
+	local MENU_ALBUMITEM_PADDING = 0
+	local MENU_ALBUMITEM_TEXT_PADDING = { 16, 6, 9, 19 }
 
-	-- this is what they were
-	--local MENU_ALBUMITEM_PADDING = { 50, 0, 50, 0 }
-	--local MENU_ALBUMITEM_TEXT_PADDING = { 25, 20, 0, 10 }
-	--local TEXTAREA_PADDING = { 50, 20, 50, 20 }
-	local MENU_ALBUMITEM_PADDING = { 6, 0, 0, 0 }
-	local MENU_ALBUMITEM_TEXT_PADDING = { 26, 20, 0, 10 }
 	local MENU_CURRENTALBUM_TEXT_PADDING = { 6, 20, 0, 10 }
 	local TEXTAREA_PADDING = { 50, 20, 50, 20 }
 
@@ -301,23 +276,60 @@ function skin(self, s)
 	local TEXT_COLOR_BLACK = { 0x00, 0x00, 0x00 }
 	local TEXT_SH_COLOR = { 0x37, 0x37, 0x37 }
 
-	local SELECT_COLOR = { 0x00, 0x00, 0x00 }
+	local SELECT_COLOR = { 0xE7, 0xE7, 0xE7 }
 	local SELECT_SH_COLOR = { }
 
-	local TITLE_FONT_SIZE = 18
-	local ALBUMMENU_FONT_SIZE = 18
-	local TEXTMENU_FONT_SIZE = 44
-	local POPUP_TEXT_SIZE_1 = 24
-	local POPUP_TEXT_SIZE_2 = 12
+	local TITLE_FONT_SIZE = 32
+	local ALBUMMENU_FONT_SIZE = 34
+	local ALBUMMENU_SMALL_FONT_SIZE = 18
+	local ALBUMMENU_SELECTED_FONT_SIZE = 40
+	local ALBUMMENU_SELECTED_SMALL_FONT_SIZE = 22
+	local TEXTMENU_FONT_SIZE = 34
+	local TEXTMENU_SELECTED_FONT_SIZE = 40
+	local POPUP_TEXT_SIZE_1 = 34
+	local POPUP_TEXT_SIZE_2 = 26
 	local TRACK_FONT_SIZE = 18
 	local TEXTAREA_FONT_SIZE = 18
 	local CENTERED_TEXTAREA_FONT_SIZE = 28
-	local TEXTINPUT_FONT_SIZE = 18
+	local TEXTINPUT_FONT_SIZE = 20
 	local TEXTINPUT_SELECTED_FONT_SIZE = 28
 	local HELP_FONT_SIZE = 18
 
-	local ITEM_ICON_PADDING = { 4, 5, 4, 2 }
 	local ITEM_ICON_ALIGN   = 'center'
+	local THREE_ITEM_HEIGHT = 72
+	local TITLE_BUTTON_WIDTH = 76
+	local TITLE_BUTTON_HEIGHT = 47
+	local TITLE_BUTTON_PADDING = { 4, 0, 4, 0 }
+
+	local smallSpinny = {
+		img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
+		frameRate = 8,
+		frameWidth = 26,
+		padding = { 0, 0, 8, 0 },
+		h = WH_FILL,
+	}
+	local largeSpinny = {
+		img = _loadImage(self, "Alerts/wifi_connecting.png"),
+		position = LAYOUT_CENTER,
+		w = WH_FILL,
+		align = "center",
+		frameRate = 8,
+		frameWidth = 120,
+		padding = { 0, 0, 0, 10 }
+	}
+	-- convenience method for removing a button from the window
+	local noButton = { 
+		img = false, 
+		bgImg = false, 
+		w = 0 
+	}
+	-- convenience method for selected items in remote skin menus
+	local menuItemSelected = {
+		bgImg = threeItemSelectionBox,
+		text = {
+			font = _boldfont(40),
+		},
+	}
 
 	-- time (hidden off screen)
 	s.iconTime = {}
@@ -332,35 +344,37 @@ function skin(self, s)
 
 	-- Window title, this is a Label
 	s.title = {}
-	s.title.border = 4
-	s.title.padding = { 5, 5, 10, 0 }
+	s.title.h = 55
+	s.title.border = 0
 	s.title.position = LAYOUT_NORTH
 	s.title.bgImg = titleBox
-	s.title.order = { "back", "icon", "text", "nowplaying" }
+	--s.title.order = { "lbutton", "text", "rbutton", "xofy" }
+	s.title.order = { "text", "xofy" }
 	s.title.text = {}
         s.title.text.w = WH_FILL
 	s.title.text.padding = TITLE_PADDING
 	s.title.text.align = "center"
 	s.title.text.font = _boldfont(TITLE_FONT_SIZE)
 	s.title.text.fg = TEXT_COLOR
+	s.title.xofy = {
+		font = _boldfont(TITLE_FONT_SIZE),
+		fg = TEXT_COLOR,
+		padding = TITLE_PADDING,
+	}
 
-	s.title.back = {}
-	s.title.back.img = _loadImage(self, "Icons/Mini/left_arrow.png")
-	s.title.back.bgImg = buttonBox
-	s.title.back.align = "left"
-	s.title.back.padding = { 0, 0, 5, 5 }
+	s.titleNoRbutton = _uses(s.title, {
+		order = { "lbutton", "text" },
+		padding = { 0, 0, TITLE_BUTTON_WIDTH, 0 },
+	})
 
-	s.title.nowplaying = {}
-	--FIXME, this png path should likely change
-	s.title.nowplaying.img = _loadImage(self, "menu_album_noartwork_24.png")
-	s.title.nowplaying.bgImg = selectionBox
-	s.title.nowplaying.align = "right"
-
+	
 	-- Menu with three basic styles: normal, selected and locked
 	-- First define the dimesions of the menu
 	s.menu = {}
-	s.menu.padding = { 8, 2, 0, 2 }
-	s.menu.itemHeight = 66
+	s.menu.position = LAYOUT_SOUTH
+	s.menu.h = THREE_ITEM_HEIGHT * 3
+	s.menu.padding = { 0, 0, 0, 0 }
+	s.menu.itemHeight = THREE_ITEM_HEIGHT
 	s.menu.fg = {0xbb, 0xbb, 0xbb }
 	s.menu.font = _boldfont(250)
 
@@ -377,15 +391,15 @@ function skin(self, s)
 	-- menu item
 	s.item = {}
 	s.item.order = { "text", "icon" }
-	s.item.padding = { 10, 2, 0, 2 }
+	s.item.padding = { 0, 0, 0, 0 }
 	s.item.text = {}
-	s.item.text.padding = { 6, 10, 2, 0 }
+	s.item.text.padding = { 16, 5, 2, 5 }
 	s.item.text.align = "left"
 	s.item.text.w = WH_FILL
-	s.item.text.font = _font(TEXTMENU_FONT_SIZE)
+	s.item.text.h = WH_FILL
+	s.item.text.font = _boldfont(TEXTMENU_FONT_SIZE)
 	s.item.text.fg = TEXT_COLOR
 	s.item.text.sh = TEXT_SH_COLOR
-
 
 	-- menu item with no right icon
 	s.itemNoAction = _uses(s.item)
@@ -403,8 +417,7 @@ function skin(self, s)
 			      check = {
 					align = ITEM_ICON_ALIGN,
 					padding = CHECK_PADDING,
-					--FIXME: icon_check_14x30.png should probably be changed to something like icon_check.png
-				      img = _loadImage(self, "Icons/icon_check_14x30.png")
+				      img = _loadImage(self, "Icons/icon_check_3line.png")
 
 			      }
 		      })
@@ -414,26 +427,22 @@ function skin(self, s)
 
 	-- selected menu item
 	s.selected = {}
-	s.selected.item =
-		_uses(s.item, {
-			      bgImg = selectionBox,
-			      text = {
-				      fg = SELECT_COLOR,
-				      sh = SELECT_SH_COLOR
-			      },
-			      icon = {
-				      padding = BUTTON_PADDING,
-				      align = ITEM_ICON_ALIGN,
-				      img = _loadImage(self, "Icons/selection_right.png")
-			      }
-		      })
-
+	s.selected.item = _uses(s.item, {
+		text = {
+			font = _boldfont(TEXTMENU_SELECTED_FONT_SIZE),
+		},
+		bgImg = threeItemSelectionBox,
+		icon = {
+		      align = ITEM_ICON_ALIGN,
+		      img = _loadImage(self, "Icons/selection_right_3line_on.png")
+		},
+	})
 
 	s.selected.itemplay =
 		_uses(s.selected.item, {
 			      icon = {
 					--FIXME: need this image
-				      img = _loadImage(self, "Icons/selection_play.png")
+				      img = _loadImage(self, "Icons/icon_check_3line.png")
 			      }
 		      })
 
@@ -441,11 +450,77 @@ function skin(self, s)
 		_uses(s.selected.item, {
 			      icon = {
 					--FIXME: need this image
-				      img = _loadImage(self, "Icons/selection_add.png")
+				      img = _loadImage(self, "Icons/icon_check_3line.png")
 			      }
 		      })
 
 	s.selected.checked = _uses(s.selected.item, {
+			      		order = { "text", "check", "icon" },
+					icon = {
+						img = _loadImage(self, "Icons/selection_right_3line_on.png")
+					},
+					check = {
+						align = ITEM_ICON_ALIGN,
+						padding = CHECK_PADDING,
+						img = _loadImage(self, "Icons/icon_check_3line.png")
+					}
+				
+				})
+
+	s.selected.itemNoAction =
+		_uses(s.itemNoAction, {
+			      text = {
+					font = _boldfont(TEXTMENU_SELECTED_FONT_SIZE),
+				      fg = SELECT_COLOR,
+				      sh = SELECT_SH_COLOR
+			      },
+				bgImg = threeItemSelectionBox,
+		      })
+
+	s.selected.checkedNoAction =
+		_uses(s.checkedNoAction, {
+			      text = {
+					font = _boldfont(TEXTMENU_SELECTED_FONT_SIZE),
+				      fg = SELECT_COLOR,
+				      sh = SELECT_SH_COLOR
+			      },
+			      check = {
+					align = ITEM_ICON_ALIGN,
+					img = _loadImage(self, "Icons/icon_check_3line.png")
+			      },
+				bgImg = threeItemSelectionBox,
+		      })
+
+
+	-- pressed menu item
+	s.pressed = {}
+	s.pressed.item = _uses(s.selected.checked, {
+			bgImg = threeItemPressedBox,
+	})
+
+	s.pressed.title = _uses(s.title, {
+		lbutton = {
+			bgImg = pressedTitlebarButtonBox,
+		}
+	})
+
+	s.pressed.itemplay =
+		_uses(s.pressed.item, {
+			      icon = {
+					--FIXME: need this image
+				      img = _loadImage(self, "Icons/icon_check_3line.png")
+			      }
+		      })
+
+	s.pressed.itemadd =
+		_uses(s.pressed.item, {
+			      icon = {
+					--FIXME: need this image
+				      img = _loadImage(self, "Icons/icon_check_3line.png")
+			      }
+		      })
+
+	s.pressed.checked = _uses(s.pressed.item, {
 			      		order = { "text", "check", "icon" },
 					icon = {
 						img = _loadImage(self, "Icons/selection_right.png")
@@ -453,43 +528,30 @@ function skin(self, s)
 					check = {
 						align = ITEM_ICON_ALIGN,
 						padding = CHECK_PADDING,
-						img = _loadImage(self, "Icons/icon_check_selected_14x30.png")
+						img = _loadImage(self, "Icons/icon_check_3line.png")
 					}
-				
+
 				})
 
-	s.selected.itemNoAction =
-		_uses(s.itemNoAction, {
-			      bgImg = selectionBox,
-			      text = {
-				      fg = SELECT_COLOR,
-				      sh = SELECT_SH_COLOR
-			      },
-		      })
+	s.pressed.itemNoAction = _uses(s.selected.itemNoAction, {
+		      bgImg = threeItemPressedBox,
+	})
 
-	s.selected.checkedNoAction =
-		_uses(s.checkedNoAction, {
-			      bgImg = selectionBox,
-			      text = {
-				      fg = SELECT_COLOR,
-				      sh = SELECT_SH_COLOR
-			      },
+	s.pressed.checkedNoAction =
+		_uses(s.selected.checkedNoAction, {
+			      bgImg = threeItemPressedBox,
 			      check = {
 					align = ITEM_ICON_ALIGN,
 					padding = BUTTON_PADDING,
-					img = _loadImage(self, "Icons/icon_check_selected.png")
+					img = _loadImage(self, "Icons/icon_check_3line.png")
 			      }
 		      })
 
 
 	-- locked menu item (with loading animation)
 	s.locked = {}
-	s.locked.item = _uses(s.selected.item, {
-					icon = {
-						img = _loadImage(self, "Icons/selection_waiting.png"),
-						frameRate = 5,
-						frameWidth = 30
-					}
+	s.locked.item = _uses(s.pressed.item, {
+					icon = smallSpinny
 			})
 
 	s.locked.itemplay = _uses(s.locked.item)
@@ -500,11 +562,10 @@ function skin(self, s)
 	s.item.choice.font = _boldfont(TEXTMENU_FONT_SIZE)
 	s.item.choice.fg = TEXT_COLOR
 	s.item.choice.sh = TEXT_SH_COLOR
-	s.item.choice.padding = BUTTON_PADDING
 
 	-- selected menu item choice
 	s.selected.item.choice = {}
-	s.selected.item.choice.font = _boldfont(TEXTMENU_FONT_SIZE)
+	s.selected.item.choice.font = _boldfont(TEXTMENU_SELECTED_FONT_SIZE)
 	s.selected.item.choice.fg = SELECT_COLOR
 	s.selected.item.choice.sh = SELECT_SH_COLOR
 
@@ -516,7 +577,7 @@ function skin(self, s)
 
 	-- selected menu item choice
 	s.selected.item.value = {}
-	s.selected.item.value.font = _boldfont(TEXTMENU_FONT_SIZE)
+	s.selected.item.value.font = _boldfont(TEXTMENU_SELECTED_FONT_SIZE)
 	s.selected.item.value.fg = SELECT_COLOR
 	s.selected.item.value.sh = SELECT_SH_COLOR
 
@@ -541,18 +602,16 @@ function skin(self, s)
 	s.centeredtextarea.lineHeight = 40
 	s.centeredtextarea.fg = TEXT_COLOR
 	s.centeredtextarea.sh = TEXT_SH_COLOR
-	s.centeredtextarea.align = "center"
 	
 	-- Scrollbar
 	s.scrollbar = {}
-	s.scrollbar.w = 24
-	s.scrollbar.border = { 0, 0, 0, 10 }
-	s.scrollbar.padding = { 0, 0, 0, 0 }
+	s.scrollbar.w = 34
+	s.scrollbar.border = 0
+	s.scrollbar.padding = { 0, 24, 0, 24 }
 	s.scrollbar.horizontal = 0
 	s.scrollbar.bgImg = scrollBackground
 	s.scrollbar.img = scrollBar
 	s.scrollbar.layer = LAYER_CONTENT_ON_STAGE
-
 
 	-- Checkbox
 	s.checkbox = {}
@@ -579,10 +638,10 @@ function skin(self, s)
 	s.slider.img = sliderBar
 
 	s.sliderMin = {}
-	s.sliderMin.img = _loadImage(self, "slider_icon_negative.png")
+	s.sliderMin.img = _loadImage(self, "Icons/slider_icon_negative.png")
 	s.sliderMin.border = { 5, 0, 5, 0 }
 	s.sliderMax = {}
-	s.sliderMax.img = _loadImage(self, "slider_icon_positive.png")
+	s.sliderMax.img = _loadImage(self, "Icons/slider_icon_positive.png")
 	s.sliderMax.border = { 5, 0, 5, 0 }
 
 	s.sliderGroup = {}
@@ -590,19 +649,18 @@ function skin(self, s)
 
 	-- Text input
 	s.textinput = {}
-	s.textinput.h = 55
-	s.textinput.border = { 8, -5, 8, 0 }
+	s.textinput.h = 35
+	s.textinput.border = { 8, 0, 8, 0 }
 	s.textinput.padding = { 6, 0, 6, 0 }
-	s.textinput.font = _font(TEXTINPUT_FONT_SIZE)
+	s.textinput.font = _boldfont(TEXTINPUT_FONT_SIZE)
 	s.textinput.cursorFont = _boldfont(TEXTINPUT_SELECTED_FONT_SIZE)
 	s.textinput.wheelFont = _boldfont(TEXTINPUT_FONT_SIZE)
-	s.textinput.charHeight = TEXTINPUT_SELECTED_FONT_SIZE + 4
-	s.textinput.fg = SELECT_COLOR
+	s.textinput.charHeight = TEXTINPUT_SELECTED_FONT_SIZE + 10
+	s.textinput.fg = TEXT_COLOR_BLACK
 	s.textinput.wh = { 0x55, 0x55, 0x55 }
 	s.textinput.bgImg = textinputBackground
---	s.textinput.wheelImg = textinputWheel
 	s.textinput.cursorImg = textinputCursor
-	s.textinput.enterImg = Tile:loadImage(imgpath .. "Icons/selection_right.png")
+--	s.textinput.enterImg = Tile:loadImage(imgpath .. "Icons/selection_right_3line.png")
 
 	-- Keyboard
 	s.keyboard = {}
@@ -643,7 +701,6 @@ function skin(self, s)
 	s.softButton1.align = "center"
 	s.softButton1.font = _font(HELP_FONT_SIZE + 2)
 	s.softButton1.fg = SELECT_COLOR
-	s.softButton1.bgImg = softButtonBackground
 
 	s.softButton2 = {}
 	s.softButton2.x = (screenWidth / 2) + 5
@@ -654,15 +711,10 @@ function skin(self, s)
 	s.softButton2.align = "center"
 	s.softButton2.font = _font(HELP_FONT_SIZE + 2)
 	s.softButton2.fg = SELECT_COLOR
-	s.softButton2.bgImg = softButtonBackground
 
 	s.window = {}
 	s.window.w = screenWidth
 	s.window.h = screenHeight
-
-	s.regionWindow = _uses(s.window, { 
-					bgImg = regionMask
-				})
 
 	s.errorWindow = {}
 	s.errorWindow.w = screenWidth
@@ -680,43 +732,33 @@ function skin(self, s)
 	s.popupIcon.maskImg = popupMask
 
 	s.popupIcon.text = {}
-	s.popupIcon.text.border = 15
+	s.popupIcon.text.border = { 15, 18, 15, 0 }
 	s.popupIcon.text.font = _boldfont(POPUP_TEXT_SIZE_1)
 	s.popupIcon.text.fg = TEXT_COLOR
-	s.popupIcon.text.lineHeight = POPUP_TEXT_SIZE_1 + 2
+	s.popupIcon.text.lineHeight = POPUP_TEXT_SIZE_1 + 8
 	s.popupIcon.text.sh = TEXT_SH_COLOR
-	s.popupIcon.text.align = "center"
+	s.popupIcon.text.align = "top"
 	s.popupIcon.text.position = LAYOUT_NORTH
+	s.popupIcon.text.h = s.popupIcon.text.lineHeight * 2
+
+	s.popupIcon.icon = largeSpinny
 
 	s.popupIcon.text2 = {}
-	s.popupIcon.text2.border = 15
+	s.popupIcon.text2.padding = { 0, 0, 0, 26 }
 	s.popupIcon.text2.font = _boldfont(POPUP_TEXT_SIZE_2)
 	s.popupIcon.text2.fg = TEXT_COLOR
 	s.popupIcon.text2.sh = TEXT_SH_COLOR
-	s.popupIcon.text2.align = "center"
+	s.popupIcon.text2.align = "bottom"
 	s.popupIcon.text2.position = LAYOUT_SOUTH
-
+	s.popupIcon.text2.h = 40
 
 	s.iconPower = {}
 	s.iconPower.img = _loadImage(self, "Alerts/popup_shutdown_icon.png")
 	s.iconPower.w = WH_FILL
 	s.iconPower.align = 'center'
 
---FIXME: is this style used anywhere?
-	s.iconFavorites = {}
-	s.iconFavorites.img = _loadImage(self, "popup_fav_heart_bkgrd.png")
-	s.iconFavorites.frameWidth = 161
-	s.iconFavorites.align = 'center'
-
-	-- connecting/connected popup icon
-	s.iconConnecting = {}
-	s.iconConnecting.img = _loadImage(self, "Alerts/wifi_connecting.png")
-	s.iconConnecting.frameRate = 4
-	s.iconConnecting.frameWidth = 161
-	s.iconConnecting.w = 161
-	s.iconConnecting.align = "left"
-	s.iconConnecting.padding = { 25, 0, 0, 0 }
-	s.iconConnecting.position = LAYOUT_WEST
+	-- connecting/connected popup icon (likely deprecated in deference to s.popupIcon.ico)
+	s.iconConnecting = largeSpinny
 
 	s.iconConnected = {}
 	s.iconConnected.img = _loadImage(self, "Alerts/connecting_success_icon.png")
@@ -733,85 +775,26 @@ function skin(self, s)
 	s.iconAlarm.w = WH_FILL
 	s.iconAlarm.align = "center"
 
-	s.touchButton = {}
-        s.touchButton.padding = { 4, 10, 0, 10 }
-        s.touchButton.font = _font(22)
-        s.touchButton.fg = TEXT_COLOR_BLACK
-        s.touchButton.bgImg = selectionBox
-        s.touchButton.align = 'center'
-	s.touchButton.order = { 'text', 'icon' }
-        s.touchButton.text  = { align = 'center' }
-        s.touchButton.text.padding = { 0, 15, 0, 15 }
-	s.touchButton.icon = { 
-			img = _loadImage(self, "Icons/selection_right.png"), 
-			padding = { 0, 15, 5, 15 },
-			align = 'center' 
-	}
-	s.touchButton.position = LAYOUT_NONE
-	s.touchButton.x = screenWidth/2 - 80
-	s.touchButton.y = screenHeight - 80
+	s.keyboardButton = {}
+        s.keyboardButton.padding = 0
+	s.keyboardButton.w = 45
+	s.keyboardButton.h= 45
+        s.keyboardButton.font = _boldfont(18)
+        s.keyboardButton.fg = TEXT_COLOR
+        s.keyboardButton.bgImg = buttonBox
+        s.keyboardButton.align = 'center'
 
-	s.helpTouchButton = {}
-	s.helpTouchButton.padding = { 10, 16, 10, 16 }
-	s.helpTouchButton.font = _boldfont(14)
-	s.helpTouchButton.fg = TEXT_COLOR_BLACK
-        s.helpTouchButton.bgImg = selectionBox
-        s.helpTouchButton.align = 'center'
-        s.helpTouchButton.text = {}
-        s.helpTouchButton.text.align = "center"
-	s.helpTouchButton.position = LAYOUT_NONE
-	s.helpTouchButton.x = screenWidth - 60
-	s.helpTouchButton.y = 8
-	s.helpTouchButton.h = 22
+	s.keyboardShift          = _uses(s.keyboardButton, { bgImg = threeItemSelectionBox, padding = 2, w = 75, h = 35 } )
+	s.keyboardSpace          = _uses(s.keyboardShift, { padding = 2, w = 100, h = 35 } )
+	s.keyboardBack           = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/left_arrow.png") } )
+	s.qwertyLower            = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/icon_shift_off.png") } )
+	s.qwertyUpper            = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/icon_shift_on.png") } )
 
-	
-	s.keyboardButton   = _uses(s.touchButton, { padding = 2, w = 35, h = 35 } )
-	s.keyboardShift    = _uses(s.touchButton, { padding = 2, w = 75, h = 35 } )
-	s.keyboardSpace    = _uses(s.touchButton, { padding = 2, w = 100, h = 35 } )
-	s.keyboardBack     = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/left_arrow.png") } )
-	-- FIXME: icon_search.png is incorrect here
-	s.keyboardGo       = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/right_arrow.png") } )
+	s.keyboardGo       = _uses(s.keyboardShift, { img = _loadImage(self, "Icons/Mini/right_arrow.png") } )
 	s.keyboardSearch   = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/icon_search.png") } )
-	s.keyboardSpaceBar = _uses(s.touchButton, { w = WH_FILL } )
 
-	-- wired/wireless text for setup
-	s.networkchoiceText = {}
-	s.networkchoiceText.order = { 'wifi', 'wired' }
-	s.networkchoiceText.position = LAYOUT_NONE
-
-	s.networkchoiceText.x = 0
-	s.networkchoiceText.y = screenHeight - 225
-	
-	s.networkchoiceText.wifi = {}
-	s.networkchoiceText.wifi.align = 'center'
-	s.networkchoiceText.wifi.font = _boldfont(22)
-	s.networkchoiceText.wifi.fg = TEXT_COLOR
-	s.networkchoiceText.wifi.w = WH_FILL
-	
-	s.networkchoiceText.wired = {}
-	s.networkchoiceText.wired.align = 'center'
-	s.networkchoiceText.wired.font = _boldfont(22)
-	s.networkchoiceText.wired.fg = TEXT_COLOR
-	s.networkchoiceText.wired.w = WH_FILL
-
-
-	-- wired/wireless buttons for setup
-	s.networkchoice = {}
-	s.networkchoice.order = { 'wifi', 'wired' }
-	s.networkchoice.position = LAYOUT_NONE
-
-	s.networkchoice.x = screenWidth - 450
-	s.networkchoice.y = screenHeight - 200
-	
-	s.networkchoice.wifi = {}
-	s.networkchoice.wifi.align = 'center'
-	s.networkchoice.wifi.padding = { 0, 0, 10, 0 }
-	s.networkchoice.wifi.img = _loadImage(self, "Setup/wifi.png")
-	
-	s.networkchoice.wired = {}
-	s.networkchoice.wired.align = 'center'
-	s.networkchoice.wired.padding = { 10, 0, 0, 0 }
-	s.networkchoice.wired.img = _loadImage(self, "Setup/wired.png")
+	s.pressed.keyboardShift = _uses(s.keyboardButton, { bgImg = threeItemSelectionBoxPressed })
+	s.pressed.keyboardSpace = _uses(s.keyboardSpace, { bgImg = threeItemSelectionBoxPressed })
 
 	-- wireless icons for menus
 	s.wirelessLevel1 = {}
@@ -836,12 +819,6 @@ function skin(self, s)
 	s.wiredEthernetNoLink.align = "right"
 	s.wiredEthernetNoLink.img = _loadImage(self, "Icons/icon_nowplaying_indicator_b.png")
 
-	s.navcluster = {}
-	s.navcluster.img = _loadImage(self, "navcluster.png")
-	s.navcluster.align = "center"
-	s.navcluster.w = WH_FILL
-
-
 	-- Special styles for specific window types
 
 	-- Jive Home Window
@@ -862,11 +839,12 @@ function skin(self, s)
 
 	-- SlimBrowser applet
 
+	--FIXME: assets need replacing
 	s.volumeMin = {}
-	s.volumeMin.img = _loadImage(self, "volume_speaker_l.png")
+	s.volumeMin.img = _loadImage(self, "Icons/volume_speaker_l.png")
 	s.volumeMin.border = { 5, 0, 5, 0 }
 	s.volumeMax = {}
-	s.volumeMax.img = _loadImage(self, "volume_speaker_r.png")
+	s.volumeMax.img = _loadImage(self, "Icons/volume_speaker_r.png")
 	s.volumeMax.border = { 5, 0, 5, 0 }
 
 	s.volume            = {}
@@ -892,14 +870,14 @@ function skin(self, s)
 	s.volumePopup.title.align = "center"
 	s.volumePopup.title.bgImg = false
 
--- titles with artwork and song info
+	-- titles with artwork and song info
 	s.albumtitle = _uses(s.title, {
 				icon = { 
 					img = _loadImage(self, "Icons/Mini/icon_albums.png"),
         				padding = { 10, 0, 0, 0 },
 				},
-				nowplaying = {
-        				img     = _loadImage(self, "menu_album_noartwork_24.png"),
+				rbutton = {
+        				img     = _loadImage(self, "Icons/menu_album_noartwork_24.png"),
         				padding = { 5, 10, 15, 5 },
 					align   = "top-right"
 				},
@@ -914,403 +892,325 @@ function skin(self, s)
 	)
 
 
-	-- titles with mini icons
-	s.minititle = {}
+	-- FIXME remove these when SlimBrowser is update to use new
+	-- Window title api
+	-- no mini-icons in fab4 skin
+	s.minititle            = _uses(s.title)
+	s.title.lbutton        = {
+		img            = backButton,
+		bgImg          = titlebarButtonBox,
+		w              = TITLE_BUTTON_WIDTH,
+		h              = TITLE_BUTTON_HEIGHT,
+		align          = 'center',
+		border         = TITLE_BUTTON_PADDING,
+	}
+       	s.title.rbutton        = {
+       		img            = nowPlayingButton,
+		bgImg          = titlebarButtonBox,
+		w              = TITLE_BUTTON_WIDTH,
+		h              = TITLE_BUTTON_HEIGHT,
+		align          = 'center',
+		border         = TITLE_BUTTON_PADDING,
+	}
 
-	setmetatable(s.minititle, { __index = s.title })
-
-	s.minititle.border        = 4
-	s.minititle.position      = LAYOUT_NORTH
-	s.minititle.bgImg         = titleBox
-	s.minititle.text = {}
-	s.minititle.text.w        = WH_FILL
-	s.minititle.text.padding  = TITLE_PADDING
-	s.minititle.text.align    = 'center'
-	s.minititle.text.font     = _boldfont(TITLE_FONT_SIZE)
-	s.minititle.text.fg       = TEXT_COLOR
-	s.minititle.order         = { "back", "icon", "text", "nowplaying" }
-	s.minititle.icon = {}
-	s.minititle.icon.padding  = { 0, 0, 0, 4 }
-	s.minititle.icon.align    = 'center'
-	s.minititle.nowplaying = {}
-	s.minititle.nowplaying.img = _loadImage(self, "menu_album_noartwork_24.png")
-	s.minititle.nowplaying.bgImg  = selectionBox
-
-
-	-- Based on s.title, this is for internetradio title style
-	s.internetradiotitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_internet_radio.png")
-			      }
-		      })
-
-	-- Based on s.title, this is for favorites title style
-	s.favoritestitle = 
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_favorites.png")
-			      }
-		      })
-
-	-- Based on s.title, this is for mymusic title style
-	s.mymusictitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_music_library.png")
-			      }
-		      })
-
-	-- Based on s.title, this is for search title style
-	s.searchtitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_search.png")
-			      }
-		      })
-
-	-- Based on s.title, this is for settings title style
-	s.hometitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_home.png")
-			      }
-		      })
-
-	-- Based on s.title, this is for settings title style
-	s.setuptitle =
-		_uses(s.minititle, {
-				order = { 'back', 'icon', 'text', 'nowplaying' },
-				nowplaying = { img = false  },
-			      icon = {
-				      --img = _loadImage(self, "Icons/Mini/icon_settings.png")
-				      img = false
-			      }
-		      })
-
-	-- first setup page has no back button
-	s.setupfirsttitle = 
-		_uses(s.setuptitle, {
-				back = { img = false },
-		
-		})
-
-	-- Based on s.title, this is for settings title style
-	s.settingstitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_settings.png")
-			      }
-		      })
-
-	-- Based on s.title, this is for newmusic title style
-	s.newmusictitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_album_new.png")
-			      }
-		      })
-
-	-- Based on s.title, this is for infobrowser title style
-	s.infobrowsertitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_info_browser.png")
-			      }
-		      })
-
-	-- Based on s.title, this is for albumlist title style
-	-- NOTE: not to be confused with "album", which is a different style
-	s.albumlisttitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_albums.png")
-			      }
-		      })
+	s.internetradiotitle   = _uses(s.minititle)
+	s.favoritestitle       = _uses(s.minititle)
+	s.mymusictitle         = _uses(s.minititle)
+	s.searchtitle          = _uses(s.minititle)
+	s.newmusictitle        = _uses(s.minititle)
+	s.infobrowsertitle     = _uses(s.minititle)
+	s.albumlisttitle       = _uses(s.minititle)
+	s.artiststitle         = _uses(s.minititle)
+	s.randomtitle          = _uses(s.minititle)
+	s.musicfoldertitle     = _uses(s.minititle)
+	s.genrestitle          = _uses(s.minititle)
+	s.yearstitle           = _uses(s.minititle)
+	s.playlisttitle        = _uses(s.minititle)
+	s.currentplaylisttitle = _uses(s.minititle)
 
 
-	-- Based on s.title, this is for artists title style
-	s.artiststitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_artist.png")
-			      }
-		      })
-	-- Based on s.title, this is for random title style
-	s.randomtitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_random.png")
-			      }
-		      })
+	-- title buttons
+	-- FIXME button is used as a window style too
+	s.button = {
+		bgImg    = titlebarButtonBox,
+		w        = TITLE_BUTTON_WIDTH,
+		h        = TITLE_BUTTON_HEIGHT,
+		align    = 'center',
+		border   = TITLE_BUTTON_PADDING,
+	}
+	s.pressed.button = _uses(s.button, {
+		bgImg = pressedTitlebarButtonBox,
+	})
 
-	-- Based on s.title, this is for musicfolder title style
-	s.musicfoldertitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_music_folder.png")
-			      }
-		      })
+	s.button_none = _uses(s.button, {
+		bgImg    = false,
+	})
 
-	-- Based on s.title, this is for genres title style
-	s.genrestitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_genres.png")
-			      }
-		      })
+	s.button_back = _uses(s.button, {
+		img      = backButton,
+	})
+	s.pressed.button_back = _uses(s.pressed.button, {
+		img      = backButton,
+	})
 
-	-- Based on s.title, this is for years title style
-	s.yearstitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_years.png")
-			      }
-		      })
-	-- Based on s.title, this is for playlist title style
-	s.playlisttitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_playlist.png")
-			      }
-		      })
+	s.button_go_now_playing = _uses(s.button, {
+		img      = nowPlayingButton,
+	})
+	s.pressed.button_go_now_playing = _uses(s.pressed.button, {
+		img      = nowPlayingButton,
+	})
 
-	-- Based on s.title, this is for currentplaylist title style
-	s.currentplaylisttitle =
-		_uses(s.minititle, {
-			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_quarter_note.png")
-			      }
-		      })
+	s.button_help = {
+		img = helpButton
+	}
+	s.pressed.button_help = _uses(s.pressed.button, {
+		img      = helpButton,
+	})
 
 
 	-- "buttonlike" menu. all items with selection box and icon
 	s.buttonmenu = {}
-	s.buttonmenu.padding = { 60, 2, 80, 2 }
-	s.buttonmenu.itemHeight = 90
+	s.buttonmenu.padding = 0
+	s.buttonmenu.w = WH_FILL
+	s.buttonmenu.itemHeight = THREE_ITEM_HEIGHT
 
-	-- items with artwork and song info
+	s.button = _uses(s.window)
+	s.button.menu = _uses(s.buttonmenu)
+	s.button.title = _uses(s.title, {
+		h = 55
+	})
+
+	s.error = _uses(s.window)
+	s.error.menu = _uses(s.menu, {
+		h = THREE_ITEM_HEIGHT * 2,
+	})
+	s.error.title = _uses(s.titleNoRbutton)
+	s.error.text = {
+		position = LAYOUT_NORTH,
+		border  = { 0, 47, 0, 0 },
+		padding = { 10, 15, 0, 0 }, 
+		bgImg    = titleBox,
+		font     = _font(TITLE_FONT_SIZE),
+		h        = 47,
+		w        = WH_FILL,
+		fg       = TEXT_COLOR,
+		align    = "center",
+		text     = {
+			align = 'center',
+		},
+	}
+
+	s.keyboard = _uses(s.window)
+	s.keyboard.title = _uses(s.titleNoRbutton)
+
+	s.help = _uses(s.window)
+	s.help.title = _uses(s.titleNoRbutton)
+
+	s.setup = _uses(s.window)
+	s.setup.title = _uses(s.titleNoRbutton)
+
+	s.settings = _uses(s.window)
+	s.settings.title = _uses(s.titleNoRbutton)
+
+
+
+	-- 3 options per page, text only
 	s.buttonitem = {}
 	s.buttonitem.order = { "text", "icon" }
-	s.buttonitem.padding = { 0, 10, 0, 10 }
-	s.buttonitem.bgImg = selectionBox
+	s.buttonitem.padding = 0
 	s.buttonitem.text = {}
 	s.buttonitem.text.w = WH_FILL
-	s.buttonitem.text.padding = { 26, 10, 0, 10 }
+	s.buttonitem.text.h = WH_FILL
+	s.buttonitem.text.padding = { 25, 0, 0, 0 }
 	s.buttonitem.text.align = "left"
-	s.buttonitem.text.font = _boldfont(24)
+	s.buttonitem.text.font = _boldfont(34)
 	s.buttonitem.text.fg = SELECT_COLOR
 	s.buttonitem.text.sh = SELECT_SH_COLOR
 	s.buttonitem.icon = {
-			img   = _loadImage(self, "Icons/selection_right.png"), 
-			h     = WH_FILL,
-			padding = 25
+			w       = 37,
+			h       = WH_FILL,
+			padding = { 0, 0, 5, 0}
 	}
 
-	-- two button menu specifically for laying out two button menu nicely on fab4 screen
-	s.twobuttonmenu = _uses(s.buttonmenu, {
-				padding = { 60, 30, 80, 2 }
+	s.selected.buttonitem = _uses(s.buttonitem, menuItemSelected)
+	s.selected.buttonitem.icon.img = _loadImage(self, "Icons/selection_right_3line_off.png")
+
+	s.buttonitemchecked = _uses(s.buttonitem, {
+		order = { 'text', 'check', 'icon' },
+		check = {
+			img     = _loadImage(self, "Icons/icon_check_3line.png"), 
+			w       = 37,
+			h       = WH_FILL,
+			padding = { 0, 0, 5, 0}
+		}
 	})
 
+	-- 3 options per page with icon
+	s.buttonicon = {
+		w = 72,
+		h = WH_FILL,
+		padding = { 8, 4, 0, 4 },
+		img = false
+	}
+	s.buttoniconitem = _uses(s.buttonitem, {
+		order = { "icon", "text"},
+		icon  = s.buttonicon,
+	})
+
+	s.buttoniconitemchecked = _uses(s.buttoniconitem, {
+		order = { 'icon', 'text', 'check' },
+		check = {
+			img     = _loadImage(self, "Icons/icon_check_3line.png"), 
+			w       = 37,
+			h       = WH_FILL,
+			padding = { 2, 0, 18, 10 },
+		}
+	})
+	
+	s.region_US = _uses(s.buttonicon, { 
+		img = _loadImage(self, "Icons/icon_region_americas_64.png")
+	})
+	s.region_XX = _uses(s.buttonicon, { 
+		img = _loadImage(self, "Icons/icon_region_other_64.png")
+	})
+	s.wlan = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/icon_wireless_64.png")
+	})
+	s.wired = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/icon_ethernet_64.png")
+	})
+
+	local buttonPressed = { 
+		bgImg = threeItemPressedBox 
+	}
+
+	s.selected.buttoniconitem         = _uses(s.buttoniconitem, menuItemSelected)
+	s.pressed.buttoniconitem          = _uses(s.selected.buttoniconitem, buttonPressed)
+	s.pressed.buttoniconitemchecked   = _uses(s.buttoniconitemchecked, buttonPressed)
+
+	-- window with one option in "button" style
+	s.onebutton = _uses(s.setup)
+	s.onebutton.menu = _uses(s.buttonmenu, {
+			position = LAYOUT_SOUTH,
+			h = THREE_ITEM_HEIGHT
+		})
+
+	s.onebutton.text = {}
+	s.onebutton.text.w = screenWidth
+	s.onebutton.text.position = LAYOUT_NORTH
+	s.onebutton.text.padding = { 16, 72, 35, 2 }
+	s.onebutton.text.font = _font(36)
+	s.onebutton.text.lineHeight = 40
+	s.onebutton.text.fg = TEXT_COLOR
+	s.onebutton.text.sh = TEXT_SH_COLOR
+	
 	-- menus with artwork and song info
 	-- FIXME: this needs to be tweaked for Fab4Skin
 	s.albummenu = {}
-	s.albummenu.padding = { 0, 2, 4, 2 }
-	s.albummenu.itemHeight = 76
+	s.albummenu.padding = 0
+	s.albummenu.position = LAYOUT_SOUTH
+	s.albummenu.h = THREE_ITEM_HEIGHT * 3
+
+	s.albummenu.itemHeight = THREE_ITEM_HEIGHT
 	s.albummenu.fg = {0xbb, 0xbb, 0xbb }
 	s.albummenu.font = _boldfont(250)
 
+	s.album = {}
+	s.album.menu = _uses(s.albummenu)
+	s.album.title = _uses(s.albumtitle)
+
 	s.multilinemenu = _uses(s.albummenu)
 
-	-- items with artwork and song info
+	-- items 5 per page with artwork two lines text
 	s.albumitem = {}
 	s.albumitem.order = { "icon", "text", "play" }
 	s.albumitem.padding = MENU_ALBUMITEM_PADDING
-	s.albumitem.text = {}
-	s.albumitem.text.w = WH_FILL
-	s.albumitem.text.padding = MENU_ALBUMITEM_TEXT_PADDING
-	s.albumitem.text.align = "left"
-	s.albumitem.text.font = _font(ALBUMMENU_FONT_SIZE)
-	s.albumitem.text.lineHeight = ALBUMMENU_FONT_SIZE + 4
-	s.albumitem.text.line = {
-		{
-			font = _boldfont(ALBUMMENU_FONT_SIZE),
-			height = ALBUMMENU_FONT_SIZE + 2
-		}
+	s.albumitem.text = {
+		w = WH_FILL,
+		h = WH_FILL,
+		padding = MENU_ALBUMITEM_TEXT_PADDING,
+		font = _font(ALBUMMENU_SMALL_FONT_SIZE),
+		line = {
+			{
+				font = _boldfont(ALBUMMENU_FONT_SIZE),
+				height = ALBUMMENU_FONT_SIZE + 2
+			}
+		},
+		fg = TEXT_COLOR,
+		sh = TEXT_SH_COLOR,
 	}
-	s.albumitem.text.fg = TEXT_COLOR
-	s.albumitem.text.sh = TEXT_SH_COLOR
+	s.albumitem.play = {
+		img     = _loadImage(self, "Icons/selection_right_3line_on.png"), 
+		w       = 30,
+		h       = WH_FILL,
+		padding = { 0, 0, 3, 0}
+	}
+	s.albumitem.icon = {
+		w = THUMB_SIZE,
+		h = WH_FILL,
+		padding = { 8, 4, 8, 4 },
+		-- FIXME: official noartwork image needed
+		img = _loadImage(self, "Icons/menu_album_noartwork_64.png")
+	}
 
+	local checkedStyle = {
+	      		order = { "icon", "text", "check", "play" },
+			check = {
+				align = "right",
+				img = _loadImage(self, "Icons/icon_check_3line.png")
+			}
+	}
+	
 	s.multilineitem = _uses(s.albumitem, {
 					order = {'text', 'play'}
 				})
 	-- checked albummenu item
-	s.albumchecked =
-		_uses(s.albumitem, {
-			      order = { "icon", "text", "check" },
-			      check = {
-				      img = _loadImage(self, "Icons/icon_check_selected.png"),
-				      align = "right"
-
-			      }
-		      })
+	s.albumchecked = _uses(s.albumitem, checkedStyle)
 
 	s.multilinechecked = _uses(s.albumchecked, {
 					order = {'text', 'check' },
 				})
 
 	-- styles for choose player menu
-	s.chooseplayer = _uses(s.albumitem, {
-				text = { font = FONT_BOLD_13px }
-			})
-	s.transporter = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/transporter.png"),
-					w = 56,
-				}
-			})
-	s.transporterchecked = _uses(s.transporter, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
+	s.chooseplayer        = _uses(s.buttoniconitem)
+	s.chooseplayerchecked = _uses(s.chooseplayer, checkedStyle)
+
+	s.player_transporter = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/transporter.png"),
+	})
+	s.player_squeezebox = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/squeezebox.png"),
+	})
+	s.player_squeezebox2 = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/squeezebox.png"),
+	})
+	s.player_squeezebox3 = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/squeezebox3.png"),
+	})
+	s.player_boom = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/boom.png"),
+	})
+	s.player_slimp3 = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/slimp3.png"),
+	})
+	s.player_softsqueeze = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/softsqueeze.png"),
+	})
+	s.player_controller = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/controller.png"),
+	})
+	s.player_receiver = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/receiver.png"),
+	})
+	s.player_squeezeplay = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/squeezeplay.png"),
+	})
+	s.player_http = _uses(s.buttonicon, {
+		img = _loadImage(self, "Icons/Players/http.png"),
 	})
 
-	s.squeezebox = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox.png"),
-				}
-			})
-	s.squeezeboxchecked = _uses(s.squeezebox, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.squeezebox2 = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox.png"),
-				}
-			})
-	s.squeezebox2checked = _uses(s.squeezebox2, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.squeezebox3 = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox3.png"),
-				}
-			})
-	s.squeezebox3checked = _uses(s.squeezebox3, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-	s.boom = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/boom.png"),
-					w = 56,
-				}
-			})
-	s.boomchecked = _uses(s.boom, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.slimp3 = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/slimp3.png"),
-				}
-			})
-	s.slimp3checked = _uses(s.slimp3, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.softsqueeze = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/softsqueeze.png"),
-				}
-			})
-	s.softsqueezechecked = _uses(s.softsqueeze, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.controller = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/controller.png"),
-				}
-			})
-	s.controllerchecked = _uses(s.controller, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.receiver = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/receiver.png"),
-				}
-			})
-	s.receiverchecked = _uses(s.receiver, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.squeezeplay = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezeplay.png"),
-				}
-			})
-	s.squeezeplaychecked = _uses(s.squeezeplay, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.http = _uses(s.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/http.png"),
-				}
-			})
-	s.httpchecked = _uses(s.http, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	
 	s.albumitemplay = _uses(s.albumitem)
 	s.albumitemadd  = _uses(s.albumitem)
-
-
-	s.albumitem.icon = {}
-	s.albumitem.icon.w = 70
-	s.albumitem.icon.h = WH_FILL
-	s.albumitem.icon.align = "left"
--- FIXME: no_artwork image needed in correct size for Fab4Skin; for now, disable it
---	s.albumitem.icon.img = _loadImage(self, "menu_album_noartwork_125.png")
-	s.albumitem.icon.padding = 0
 
 	s.popupToast = _uses(s.albumitem, 
 		{
@@ -1352,33 +1252,31 @@ function skin(self, s)
 
 	s.multilineitemNoAction = _uses(s.albumitemNoAction)
 
---FIXME: albumitemNoAction can't use _uses because it sticks an icon on the screen
---[[
-	s.albumitemNoAction = _uses(s.albumitem, {
-					order = { 'text' },
-					icon  = nil
-				})
---]]
-	s.selected.albumitemNoAction = _uses(s.albumitemNoAction)
+	s.selected.albumitemNoAction = _uses(s.albumitemNoAction, menuItemSelected)
+
 	s.selected.multilineitemNoAction = _uses(s.multilineitemNoAction)
 
 	-- selected item with artwork and song info
 	s.selected.albumitem = _uses(s.albumitem, {
-		bgImg = albumSelectionBox,
+		bgImg = threeItemSelectionBox,
 		text = {
-			fg    = SELECT_COLOR,
-			sh    = SELECT_SH_COLOR
+			font = _font(ALBUMMENU_SELECTED_SMALL_FONT_SIZE),
+			line = {
+				{
+					font = _boldfont(ALBUMMENU_SELECTED_FONT_SIZE),
+					height = ALBUMMENU_FONT_SIZE + 8
+				}
+			},
 		},
-		play = {
-			h      = WH_FILL,
-			align  = "right",
-			img    = _loadImage(self, "Icons/selection_right.png"),
-		},
-		icon = {
-			w = 70,
-			h = 70
-		}
 	})
+	
+	local pressedAlbumBox = {
+		bgImg = threeItemPressedBox,
+		play = {
+			img    = _loadImage(self, "Icons/selection_right_3line_on.png"),
+		},
+	}
+
 	s.selected.multilineitem = _uses(s.selected.albumitem, {
 				order = { 'text', 'play' },
 			})
@@ -1386,192 +1284,41 @@ function skin(self, s)
 	s.selected.albumchecked = _uses(s.selected.albumitem, {
 	      		order = { "icon", "text", "check", "play" },
 			play = {
-				img = _loadImage(self, "Icons/selection_right.png")
+				img = _loadImage(self, "Icons/selection_right_3line_on.png")
 			},
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_3line.png")
 			}
 	})
 	s.selected.multilinechecked = _uses(s.selected.multilineitem, {
 	      		order = { "text", "check", "play" },
 			play = {
-				img = _loadImage(self, "Icons/selection_right.png")
+				img = _loadImage(self, "Icons/selection_right_3line_on.png")
 			},
 			check = {
 				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
+				img = _loadImage(self, "Icons/icon_check_3line.png")
 			}
 	})
 
-	s.selected.chooseplayer = _uses(s.selected.albumitem, {
-			order = { "icon", "text", "play" },
-			play = {
-				img = _loadImage(self, "Icons/selection_right.png")
-			},
-			text = { font = FONT_BOLD_13px }
-	})
+	s.pressed.albumitem         = _uses(s.selected.albumitem, pressedAlbumBox)
+	s.pressed.albumchecked      = _uses(s.selected.albumchecked, pressedAlbumBox)
+	s.pressed.albumitemNoAction = _uses(s.selected.albumitemNoAction, pressedAlbumBox)
+	s.pressed.mulilinechecked   = _uses(s.selected.multilinechecked, pressedAlbumBox)
 
-	s.selected.transporter = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/transporter.png"),
-				}
-			})
-	s.selected.transporterchecked = _uses(s.selected.transporter, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-	s.selected.squeezebox = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox.png"),
-				}
-			})
-	s.selected.squeezeboxchecked = _uses(s.selected.squeezebox, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-
-	s.selected.squeezebox2 = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox.png"),
-				}
-			})
-	s.selected.squeezebox2checked = _uses(s.selected.squeezebox2, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-	s.selected.squeezebox3 = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox3.png"),
-				}
-			})
-	s.selected.squeezebox3checked = _uses(s.selected.squeezebox3, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-
-	s.selected.boom = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/boom.png"),
-				}
-			})
-	s.selected.boomchecked = _uses(s.selected.boom, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-
-	s.selected.slimp3 = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/slimp3.png"),
-				}
-			})
-
-	s.selected.slimp3checked = _uses(s.selected.slimp3, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-
-	s.selected.softsqueeze = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/softsqueeze.png"),
-				}
-			})
-	s.selected.softsqueezechecked = _uses(s.selected.softsqueeze, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.selected.controller = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/controller.png"),
-				}
-			})
-	s.selected.controllerchecked = _uses(s.selected.controller, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.selected.receiver = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/receiver.png"),
-				}
-			})
-	s.selected.receiverchecked = _uses(s.selected.receiver, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.selected.squeezeplay = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezeplay.png"),
-				}
-			})
-	s.selected.squeezeplaychecked = _uses(s.selected.squeezeplay, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	s.selected.http = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/http.png"),
-				}
-			})
-	s.selected.httpchecked = _uses(s.selected.http, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_selected.png")
-			}
-	})
-	
+	s.pressed.chooseplayer        = _uses(s.chooseplayer, buttonPressed)
+	s.pressed.chooseplayerchecked = _uses(s.chooseplayerchecked, buttonPressed)
 
 	-- locked item with artwork and song info
 	s.locked.albumitem = {}
 	s.locked.albumitem.text = {}
 	s.locked.albumitem.text.fg = SELECT_COLOR
 	s.locked.albumitem.text.sh = SELECT_SH_COLOR
-	s.locked.albumitem.bgImg = albumSelectionBox
-
 
 	-- waiting item with spinny
 	s.albumitemwaiting = _uses(s.albumitem, {
-		icon = {
-			--FIXME, need a resized icon_connecting.png image for the correct albumitem thumb size
-			img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
-			frameRate = 4,
-			frameWidth = 120
-		}
+		icon = smallSpinny,
 	})
 
 	s.selected.albumitemwaiting = _uses(s.waiting)
@@ -1581,9 +1328,9 @@ function skin(self, s)
 	s.nowplayingtitle = {}
 	s.nowplayingtitle.position = LAYOUT_NORTH
 	s.nowplayingtitle.bgImg = titleBox
-	s.nowplayingtitle.order = { "back", "text", "icon" }
+	s.nowplayingtitle.order = { "lbutton", "text", "rbutton" }
 	s.nowplayingtitle.w = screenWidth
-	s.nowplayingtitle.h = 70
+	s.nowplayingtitle.h = THUMB_SIZE + 1
 	s.nowplayingtitle.border = 4
 	s.nowplayingtitle.text = {}
 	s.nowplayingtitle.text.padding = { 10, 8, 8, 9 }
@@ -1627,7 +1374,6 @@ function skin(self, s)
 	s.nowplayingitem.icon.w = 125
 	s.nowplayingitem.icon.h = 125
 	s.nowplayingitem.icon.align = "left"
---	s.nowplayingitem.icon.img = _loadImage(self, "menu_album_noartwork_125.png")
 	s.nowplayingitem.icon.padding = { 5, 0, 0, 0 }
 
 
@@ -1636,7 +1382,7 @@ function skin(self, s)
 	s.selected.nowplayingitem.text = {}
 	s.selected.nowplayingitem.text.fg = SELECT_COLOR
 	s.selected.nowplayingitem.text.sh = SELECT_SH_COLOR
-	s.selected.nowplayingitem.bgImg = albumSelectionBox
+	s.selected.nowplayingitem.bgImg = threeItemSelectionBox
 
 
 	-- locked item with artwork and song info
@@ -1644,7 +1390,7 @@ function skin(self, s)
 	s.locked.nowplayingitem.text = {}
 	s.locked.nowplayingitem.text.fg = SELECT_COLOR
 	s.locked.nowplayingitem.text.sh = SELECT_SH_COLOR
-	s.locked.nowplayingitem.bgImg = albumSelectionBox
+	s.locked.nowplayingitem.bgImg = threeItemSelectionBox
 
 
 	-- now playing menu item
@@ -1665,7 +1411,7 @@ function skin(self, s)
 	s.albumcurrent.text.fg = TEXT_COLOR
 	s.albumcurrent.text.sh = TEXT_SH_COLOR
 	s.albumcurrent.icon = {}
-	s.albumcurrent.icon.w = 70
+	s.albumcurrent.icon.w = THUMB_SIZE
 	s.albumcurrent.icon.h = WH_FILL
 	s.albumcurrent.icon.align = "left"
 	s.albumcurrent.play = {}
@@ -1676,7 +1422,7 @@ function skin(self, s)
 
 	-- selected now playing menu item
 	s.selected.albumcurrent = {}
-	s.selected.albumcurrent.bgImg = albumSelectionBox
+	s.selected.albumcurrent.bgImg = threeItemSelectionBox
 	s.selected.albumcurrent.text = {}
 	s.selected.albumcurrent.text.fg = SELECT_COLOR
 	s.selected.albumcurrent.text.sh = SELECT_SH_COLOR
@@ -1688,7 +1434,7 @@ function skin(self, s)
 
 	-- locked now playing menu item (with loading animation)
 	s.locked.albumcurrent = {}
-	s.locked.albumcurrent.bgImg = albumSelectionBox
+	s.locked.albumcurrent.bgImg = threeItemSelectionBox
 	s.locked.albumcurrent.text = {}
 	s.locked.albumcurrent.text.fg = SELECT_COLOR
 	s.locked.albumcurrent.text.sh = SELECT_SH_COLOR
@@ -1766,31 +1512,46 @@ function skin(self, s)
 	local SELECT_COLOR = { 0x00, 0x00, 0x00 }
 	local SELECT_SH_COLOR = { }
 
+
 	local NP_TRACK_FONT_SIZE = 26
 
 	-- Title
 	s.ssnptitle = _uses(s.title, {
-				order     = { "back", "text", "playlist" },
-				playlist  = {
-						padding = { 10, 5, 10, 5 },
-						border  = { 0, 0, 0, 5},
-						font    = _font(14),
-						fg      = TEXT_COLOR_BLACK,
-						bgImg   = selectionBox,
-						align   = "top-right",
-				}
+		rbutton  = {
+			font    = _font(14),
+			fg      = TEXT_COLOR,
+			bgImg   = titlebarButtonBox,
+			w       = TITLE_BUTTON_WIDTH,
+			h       = TITLE_BUTTON_HEIGHT,
+			padding =  TITLE_BUTTON_PADDING,
+			padding = { 10, 0, 10, 0},
+			align   = 'center',
+		}
 	})
 
 	-- nptitle style is the same for all windowStyles
 	s.browsenptitle = _uses(s.ssnptitle)
 	s.largenptitle  = _uses(s.ssnptitle)
 
+
+	-- pressed styles
+	s.ssnptitle.pressed = {}
+	s.ssnptitle.pressed.lbutton = _uses(s.ssnptitle.lbutton, { 
+		img = backButtonPressed 
+	})
+	s.ssnptitle.pressed.rbutton = _uses(s.ssnptitle.rbutton, { 
+		bgImg = pressedTitlebarButtonBox
+	})
+
+	s.browsenptitle.pressed = _uses(s.ssnptitle.pressed)
+	s.largenptitle.pressed = _uses(s.ssnptitle.pressed)
+
 	-- Song
 	s.ssnptrack = {}
 	s.ssnptrack.border = { 4, 0, 4, 0 }
 	s.ssnptrack.text = {}
 	s.ssnptrack.text.w = WH_FILL
-	s.ssnptrack.text.padding = { 220, 46, 20, 10 }
+	s.ssnptrack.text.padding = { 220, 52, 20, 10 }
 	s.ssnptrack.text.align = "left"
         s.ssnptrack.text.font = _font(NP_TRACK_FONT_SIZE)
 	s.ssnptrack.text.lineHeight = NP_TRACK_FONT_SIZE + 4
@@ -1808,14 +1569,15 @@ function skin(self, s)
 	s.largenptrack  = _uses(s.ssnptrack)
 
 	-- Artwork
-	local ARTWORK_SIZE = 190
-	local browseArtWidth = ARTWORK_SIZE
-	local ssArtWidth = ARTWORK_SIZE
+	local ARTWORK_SIZE    = self:getSettings().nowPlayingBrowseArtworkSize
+	local SS_ARTWORK_SIZE = self:getSettings().nowPlayingSSArtworkSize
+	local browseArtWidth  = ARTWORK_SIZE
+	local ssArtWidth      = SS_ARTWORK_SIZE
 
 	s.ssnpartwork = {}
 
 	s.ssnpartwork.w = ssArtWidth
-	s.ssnpartwork.border = { 10, 40, 10, 0 }
+	s.ssnpartwork.border = { 10, 50, 10, 0 }
 	s.ssnpartwork.position = LAYOUT_WEST
 	s.ssnpartwork.align = "center"
 	s.ssnpartwork.artwork = {}
@@ -1835,33 +1597,33 @@ function skin(self, s)
 	local buttonPadding = { 10, 5, 10, 5 }
 	s.ssnpcontrols.x = rightPadding
 	s.ssnpcontrols.y = topPadding
-	s.ssnpcontrols.bgImg = softButtonBackground
+	s.ssnpcontrols.bgImg = buttonBox
 	
 	s.ssnpcontrols.rew = {}
 	s.ssnpcontrols.rew.align = 'center'
 	s.ssnpcontrols.rew.padding = buttonPadding
-	s.ssnpcontrols.rew.img = _loadImage(self, "Screen_Formats/Player_Controls/icon_toolbar_rew.png")
+	s.ssnpcontrols.rew.img = _loadImage(self, "Player_Controls/icon_toolbar_rew.png")
 	
 	s.ssnpcontrols.play = {}
 	s.ssnpcontrols.play.align = 'center'
 	s.ssnpcontrols.play.padding = buttonPadding
-	s.ssnpcontrols.play.img = _loadImage(self, "Screen_Formats/Player_Controls/icon_toolbar_play.png")
+	s.ssnpcontrols.play.img = _loadImage(self, "Player_Controls/icon_toolbar_play.png")
 	
 	s.ssnpcontrols.pause = {}
 	s.ssnpcontrols.pause.align = 'center'
 	s.ssnpcontrols.pause.padding = buttonPadding
-	s.ssnpcontrols.pause.img = _loadImage(self, "Screen_Formats/Player_Controls/icon_toolbar_pause.png")
+	s.ssnpcontrols.pause.img = _loadImage(self, "Player_Controls/icon_toolbar_pause.png")
 	
 	
 	s.ssnpcontrols.fwd = {}
 	s.ssnpcontrols.fwd.align = 'center'
 	s.ssnpcontrols.fwd.padding = buttonPadding
-	s.ssnpcontrols.fwd.img = _loadImage(self, "Screen_Formats/Player_Controls/icon_toolbar_ffwd.png")
+	s.ssnpcontrols.fwd.img = _loadImage(self, "Player_Controls/icon_toolbar_ffwd.png")
 
 	s.ssnpcontrols.vol = {}
 	s.ssnpcontrols.vol.align = 'center'
 	s.ssnpcontrols.vol.padding = buttonPadding
-	s.ssnpcontrols.vol.img = _loadImage(self, "Screen_Formats/Player_Controls/icon_toolbar_vol_up.png")
+	s.ssnpcontrols.vol.img = _loadImage(self, "Player_Controls/icon_toolbar_vol_up.png")
 	
 	s.browsenpcontrols = _uses(s.ssnpcontrols)
 	s.largenpcontrols  = _uses(s.ssnpcontrols)

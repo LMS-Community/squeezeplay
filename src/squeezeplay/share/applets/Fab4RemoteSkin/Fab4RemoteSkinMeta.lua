@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.TouchRemote.TouchRemoteSkinMeta - TouchRemoteSkin meta-info
+applets.Fab4RemoteSkin.Fab4RemoteMeta - Remote Skin meta-info
 
 =head1 DESCRIPTION
 
-See L<applets.TouchRemoteSkin.TouchRemoteSkinApplet>.
+See L<applets.Fab4RemoteSkin.Fab4RemoteSkinApplet>.
 
 =head1 FUNCTIONS
 
@@ -33,15 +33,18 @@ function jiveVersion(self)
 	return 1, 1
 end
 
-
-function registerApplet(self)
-	local params = {
-		THUMB_SIZE = 70,
+function defaultSettings(self)
+        self.params = {
+		THUMB_SIZE = 64,
 		nowPlayingBrowseArtworkSize = 190,
 		nowPlayingSSArtworkSize     = 190,
 		nowPlayingLargeArtworkSize  = 190,
         }
-	jiveMain:registerSkin(self:string("SQUEEZEBOX_REMOTE_SKIN"), "Fab4RemoteSkin", "skin", params)
+	return self.params
+end
+
+function registerApplet(self)
+	jiveMain:registerSkin(self:string("SQUEEZEBOX_REMOTE_SKIN"), "Fab4RemoteSkin", "skin", self.params)
 end
 
 
