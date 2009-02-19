@@ -205,8 +205,8 @@ int jiveL_widget_mouse_inside(lua_State *L) {
 		return 1;
 	}
 
-	lua_pushboolean(L, peer->bounds.x < event->u.mouse.x && event->u.mouse.x < peer->bounds.x + peer->bounds.w &&
-			peer->bounds.y < event->u.mouse.y && event->u.mouse.y < peer->bounds.y + peer->bounds.h);
+	lua_pushboolean(L, peer->bounds.x <= event->u.mouse.x && event->u.mouse.x < peer->bounds.x + peer->bounds.w &&
+			peer->bounds.y <= event->u.mouse.y && event->u.mouse.y < peer->bounds.y + peer->bounds.h);
 	return 1;
 }
 
