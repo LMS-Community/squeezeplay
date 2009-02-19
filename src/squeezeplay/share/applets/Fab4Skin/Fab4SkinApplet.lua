@@ -705,13 +705,15 @@ function skin(self, s)
 	s.popupIcon.text.fg = TEXT_COLOR
 	s.popupIcon.text.lineHeight = POPUP_TEXT_SIZE_1 + 2
 	s.popupIcon.text.sh = TEXT_SH_COLOR
-	s.popupIcon.text.align = "center"
+	s.popupIcon.text.align = "top"
 	s.popupIcon.text.position = LAYOUT_NORTH
-	s.popupIcon.text.h = 166
+	s.popupIcon.text.h = s.popupIcon.text.lineHeight * 2
 
 	local spinny = {
 		img = _loadImage(self, "Alerts/wifi_connecting.png"),
 		position = LAYOUT_CENTER,
+		w = WH_FILL,
+		align = "center",
 		frameRate = 8,
 		frameWidth = 120,
 	}
@@ -724,7 +726,7 @@ function skin(self, s)
 	s.popupIcon.text2.sh = TEXT_SH_COLOR
 	s.popupIcon.text2.align = "center"
 	s.popupIcon.text2.position = LAYOUT_SOUTH
-	s.popupIcon.text2.h = 28
+	s.popupIcon.text2.h = 40
 
 	s.iconPower = {}
 	s.iconPower.img = _loadImage(self, "Alerts/popup_shutdown_icon.png")

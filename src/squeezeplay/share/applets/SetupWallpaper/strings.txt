@@ -314,3 +314,12 @@ GREENFLOWERS
 	NO	Grønne blomster
 	SV	Gröna blommor
 
+RULED_LINES
+	EN	Ruled Lines
+
+WAVE1
+	EN	Wave Pattern 1
+
+WAVE2
+	EN	Wave Pattern 2
+

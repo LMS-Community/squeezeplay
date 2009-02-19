@@ -57,6 +57,11 @@ local localwallpapers = {
 		["SUNRISE"] = "sunrise.png",
 	},
 	{
+		['RULED_LINES'] = 'ruled_lines.png',
+		['WAVE1'] = 'wave1.png',
+		['WAVE2'] = 'wave2.png',
+	},
+	{
 		["SUNLIGHT"] = "sunlight.png",
 		["FADETOBLACK"] = "fade_to_black.png",
 	},
@@ -135,12 +140,6 @@ function settingsShow(self)
 	if self.player then
 		self.currentPlayerId = self.player:getId()
 		self.playerName    = self.player:getName()
-	end
-
-	if self.playerName then
-		window:addWidget(Textarea("help", self:string("WALLPAPER_HELP_PLAYER", self.playerName)))
-	else
-		window:addWidget(Textarea("help", self:string("WALLPAPER_HELP_NO_PLAYER")))
 	end
 
 	self.menu = SimpleMenu("menu")
