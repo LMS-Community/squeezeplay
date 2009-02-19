@@ -1006,26 +1006,21 @@ function skin(self, s)
 	})
 
 
-	-- two button menu specifically for laying out two button menu nicely on fab4 screen
-	s.twobuttonmenu = _uses(s.buttonmenu, {
-				position = LAYOUT_SOUTH,
-				h = THREE_ITEM_HEIGHT * 2
-			})
+	-- window with one option in "button" style
+	s.onebutton = {}
+	s.onebutton.menu = _uses(s.buttonmenu, {
+			position = LAYOUT_SOUTH,
+			h = THREE_ITEM_HEIGHT
+		})
 
-	s.onebuttonmenu = _uses(s.buttonmenu, {
-				position = LAYOUT_SOUTH,
-				h = THREE_ITEM_HEIGHT
-			})
-
-	-- Textarea for one button menu windows
-	s.onebuttontextarea = {}
-	s.onebuttontextarea.position = LAYOUT_NORTH
-	s.onebuttontextarea.w = screenWidth
-	s.onebuttontextarea.padding = { 16, 72, 35, 2 }
-	s.onebuttontextarea.font = _font(36)
-	s.onebuttontextarea.lineHeight = 40
-	s.onebuttontextarea.fg = TEXT_COLOR
-	s.onebuttontextarea.sh = TEXT_SH_COLOR
+	s.onebutton.text = {}
+	s.onebutton.text.w = screenWidth
+	s.onebutton.text.position = LAYOUT_NORTH
+	s.onebutton.text.padding = { 16, 72, 35, 2 }
+	s.onebutton.text.font = _font(36)
+	s.onebutton.text.lineHeight = 40
+	s.onebutton.text.fg = TEXT_COLOR
+	s.onebutton.text.sh = TEXT_SH_COLOR
 	
 	-- menus with artwork and song info
 	-- FIXME: this needs to be tweaked for Fab4Skin

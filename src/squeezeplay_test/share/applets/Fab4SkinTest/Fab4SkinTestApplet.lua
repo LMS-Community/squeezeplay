@@ -78,13 +78,7 @@ function menu(self, menuItem)
 			{ text = "One Button Menu",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
-					self:oneButtonWindow(menuItem)
-				end 
-			},
-			{ text = "Two Button Menu",
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:menuWindow(menuItem, 'twobutton', 'button')
+					self:buttonWindow(menuItem, 'onebutton')
 				end 
 			},
 			{ text = "Album Menu",
@@ -314,10 +308,10 @@ function sortedMenuWindow(self, menuItem)
 	return window
 end
 
-function oneButtonWindow(self, menuItem)
-	local window = Window("window", menuItem.text)
-	local menu = SimpleMenu('onebuttonmenu')
-	window:addWidget(Textarea("onebuttontextarea", "Let's begin by getting\nyou connected to your network."))
+function buttonWindow(self, menuItem, style)
+	local window = Window(style, menuItem.text)
+	local menu = SimpleMenu('menu')
+	window:addWidget(Textarea('text', "Let's begin by getting\nyou connected to your network."))
 	window:addWidget(menu)
 
 	local item = { text = "continue", style = 'buttonitem'  }
