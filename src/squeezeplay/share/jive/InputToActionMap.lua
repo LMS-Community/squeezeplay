@@ -23,7 +23,7 @@ charActionMappings.press = {
 
 	["/"]   = "go_search",
 	["h"]   = "go_home",
-	["J"]   = "go_home",
+	["J"]   = "go_home_or_now_playing",
 	["D"]   = "disconnect_player",
 	["x"]   = "play",
 	["p"]   = "play",
@@ -64,7 +64,7 @@ charActionMappings.press = {
 
 keyActionMappings = {}
 keyActionMappings.press = {
-	[KEY_HOME] = "go_home",
+	[KEY_HOME] = "go_home_or_now_playing",
 	[KEY_PLAY] = "play",
 	[KEY_ADD] = "add",
 	[KEY_BACK] = "back",
