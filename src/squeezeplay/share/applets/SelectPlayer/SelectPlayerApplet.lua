@@ -317,10 +317,10 @@ function setupShowSelectPlayer(self, setupNext, windowStyle)
 		windowStyle = 'settingstitle'
 	end
 	-- get list of slimservers
-	local window = Window("window", self:string("SELECT_PLAYER"), windowStyle)
+	local window = Window("button", self:string("SELECT_PLAYER"), windowStyle)
 	window:setAllowScreensaver(false)
 
-        local menu = SimpleMenu("albummenu")
+        local menu = SimpleMenu("menu")
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
 	self.playerMenu = menu

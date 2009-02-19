@@ -143,6 +143,8 @@ function skin(self, s)
 	local threeItemSelectionBox = Tile:loadImage( imgpath .. "Screen_Formats/3_line_lists/menu_sel_box_3line.png")
 	local threeItemPressedBox   = Tile:loadImage( imgpath .. "Screen_Formats/3_line_lists/menu_sel_box_3line_press.png")
 
+	local backButton        = Tile:loadImage( imgpath .. "Buttons/button_back_tb.png")
+	local backButtonPressed = Tile:loadImage( imgpath .. "Buttons/button_back_tb_press.png")
 	local buttonBox =
 		Tile:loadTiles({
 					imgpath .. "Buttons/button_selection_box.png",
@@ -308,8 +310,9 @@ function skin(self, s)
 	local ITEM_ICON_ALIGN   = 'center'
 	local THREE_ITEM_HEIGHT = 72
 	local FIVE_ITEM_HEIGHT = 45
-	local TITLE_BUTTON_WIDTH = 75
-	local TITLE_BUTTON_HEIGHT = 47
+	local TITLE_BUTTON_WIDTH = 66
+	local TITLE_BUTTON_HEIGHT = 37
+	local TITLE_BUTTON_PADDING = { 8, 4, 8, 4 }
 
 	-- time (hidden off screen)
 	s.iconTime = {}
@@ -337,22 +340,22 @@ function skin(self, s)
 	s.title.text.fg = TEXT_COLOR
 
 	s.title.back               = {}
-	s.title.back.bgImg         = titlebarButtonBox
-	s.title.back.img           = _loadImage(self, "Screen_Formats/Titlebar/icon_back_button_tb.png")
+	s.title.back.img           = backButton
 	s.title.back.w             = TITLE_BUTTON_WIDTH
 	s.title.back.h             = TITLE_BUTTON_HEIGHT
-	s.title.back.align         = "center"
+	s.title.back.padding       = TITLE_BUTTON_PADDING
 
 	s.title.nowplaying         = {}
 	s.title.nowplaying.bgImg   = titlebarButtonBox
 	s.title.nowplaying.img     = _loadImage(self, "Screen_Formats/Titlebar/icon_nplay_button_tb.png")
 	s.title.nowplaying.w       = TITLE_BUTTON_WIDTH
 	s.title.nowplaying.align   = "center"
-	s.title.nowplaying.h       = TITLE_BUTTON_HEIGHT
+	s.title.nowplaying.h       = TITLE_BUTTON_HEIGHT 
+	s.title.nowplaying.padding = TITLE_BUTTON_PADDING
 
 	s.title.pressed = {}
 	s.title.pressed.back = _uses(s.title.back, {
-		bgImg = pressedTitlebarButtonBox,
+		img = backButtonPressed,
 	})
 	s.title.pressed.nowplaying = _uses(s.title.nowplaying, {
 		bgImg = pressedTitlebarButtonBox,
@@ -1039,36 +1042,18 @@ function skin(self, s)
 	})
 
 
-	s.pressed.buttonitem = _uses(s.buttonitem, {
-			bgImg = threeItemPressedBox,
-	})
-	s.pressed.buttoniconitem = _uses(s.buttoniconitem, {
-			bgImg = threeItemPressedBox,
-	})
-	s.pressed.wifiNA = _uses(s.wifiNA, {
-			bgImg = threeItemPressedBox,
-	})
-	s.pressed.wifiNAchecked = _uses(s.wifiNAchecked, {
-			bgImg = threeItemPressedBox,
-	})
-	s.pressed.wifiOther = _uses(s.wifiOther, {
-			bgImg = threeItemPressedBox,
-	})
-	s.pressed.wifiOtherChecked = _uses(s.wifiOtherchecked, {
-			bgImg = threeItemPressedBox,
-	})
-	s.pressed.wired = _uses(s.wired, {
-			bgImg = threeItemPressedBox,
-	})
-	s.pressed.wiredchecked = _uses(s.wiredchecked, {
-			bgImg = threeItemPressedBox,
-	})
-	s.pressed.wireless = _uses(s.wireless, {
-			bgImg = threeItemPressedBox,
-	})
-	s.pressed.wirelesschecked = _uses(s.wirelesschecked, {
-			bgImg = threeItemPressedBox,
-	})
+	local buttonPressed = { bgImg = threeItemPressedBox }
+
+	s.pressed.buttonitem       = _uses(s.buttonitem, buttonPressed)
+	s.pressed.buttoniconitem   = _uses(s.buttoniconitem, buttonPressed)
+	s.pressed.wifiNA           = _uses(s.wifiNA, buttonPressed)
+	s.pressed.wifiNAchecked    = _uses(s.wifiNAchecked, buttonPressed)
+	s.pressed.wifiOther        = _uses(s.wifiOther, buttonPressed)
+	s.pressed.wifiOtherChecked = _uses(s.wifiOtherchecked, buttonPressed)
+	s.pressed.wired            = _uses(s.wired, buttonPressed)
+	s.pressed.wiredchecked     = _uses(s.wiredchecked, buttonPressed)
+	s.pressed.wireless         = _uses(s.wireless, buttonPressed)
+	s.pressed.wirelesschecked  = _uses(s.wirelesschecked, buttonPressed)
 
 
 	-- window with one option in "button" style
@@ -1132,167 +1117,107 @@ function skin(self, s)
 		img = _loadImage(self, "menu_album_noartwork_43.png")
 	}
 
+	local checkedStyle = {
+	      		order = { "icon", "text", "check", "play" },
+			check = {
+				align = "right",
+				img = _loadImage(self, "Icons/icon_check_5line.png")
+			}
+	}
+	
 	s.multilineitem = _uses(s.albumitem, {
 					order = {'text', 'play'}
 				})
 	-- checked albummenu item
-	s.albumchecked =
-		_uses(s.albumitem, {
-			      order = { "icon", "text", "check", "play" },
-			      check = {
-				      img = _loadImage(self, "Icons/icon_check_5line.png"),
-			      }
-		
-		      })
+	s.albumchecked = _uses(s.albumitem, checkedStyle)
 
 	s.multilinechecked = _uses(s.albumchecked, {
 					order = {'text', 'check' },
 				})
 
 	-- styles for choose player menu
-	s.chooseplayer = _uses(s.albumitem, {
-				text = { font = FONT_BOLD_13px }
-			})
+	s.chooseplayer        = _uses(s.buttoniconitem)
+	s.chooseplayerchecked = _uses(s.chooseplayer, checkedStyle)
+
 	s.transporter = _uses(s.chooseplayer, {
 				icon = {
 					img = _loadImage(self, "Icons/Players/transporter.png"),
-					w = 56,
 				}
 			})
-	s.transporterchecked = _uses(s.transporter, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
+	s.transporterchecked = _uses(s.transporter, checkedStyle)
 
 	s.squeezebox = _uses(s.chooseplayer, {
 				icon = {
 					img = _loadImage(self, "Icons/Players/squeezebox.png"),
 				}
 			})
-	s.squeezeboxchecked = _uses(s.squeezebox, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
+	s.squeezeboxchecked = _uses(s.squeezebox, checkedStyle)
+
 	s.squeezebox2 = _uses(s.chooseplayer, {
 				icon = {
 					img = _loadImage(self, "Icons/Players/squeezebox.png"),
 				}
 			})
-	s.squeezebox2checked = _uses(s.squeezebox2, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
+	s.squeezebox2checked = _uses(s.squeezebox2, checkedStyle)
+
 	s.squeezebox3 = _uses(s.chooseplayer, {
 				icon = {
 					img = _loadImage(self, "Icons/Players/squeezebox3.png"),
 				}
 			})
-	s.squeezebox3checked = _uses(s.squeezebox3, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
+	s.squeezebox3checked = _uses(s.squeezebox3, checkedStyle)
 
 	s.boom = _uses(s.chooseplayer, {
 				icon = {
 					img = _loadImage(self, "Icons/Players/boom.png"),
-					w = 56,
 				}
 			})
-	s.boomchecked = _uses(s.boom, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
+	s.boomchecked = _uses(s.boom, checkedStyle)
+
 	s.slimp3 = _uses(s.chooseplayer, {
 				icon = {
 					img = _loadImage(self, "Icons/Players/slimp3.png"),
 				}
 			})
-	s.slimp3checked = _uses(s.slimp3, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
+	s.slimp3checked = _uses(s.slimp3, checkedStyle)
+
 	s.softsqueeze = _uses(s.chooseplayer, {
 				icon = {
 					img = _loadImage(self, "Icons/Players/softsqueeze.png"),
 				}
 			})
-	s.softsqueezechecked = _uses(s.softsqueeze, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
+	s.softsqueezechecked = _uses(s.softsqueeze, checkedStyle)
+
 	s.controller = _uses(s.chooseplayer, {
 				icon = {
 					img = _loadImage(self, "Icons/Players/controller.png"),
 				}
 			})
-	s.controllerchecked = _uses(s.controller, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
+	s.controllerchecked = _uses(s.controller, checkedStyle)
+
 	s.receiver = _uses(s.chooseplayer, {
 				icon = {
 					img = _loadImage(self, "Icons/Players/receiver.png"),
 				}
 			})
-	s.receiverchecked = _uses(s.receiver, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
+	s.receiverchecked = _uses(s.receiver, receiverChecked)
+
 	s.squeezeplay = _uses(s.chooseplayer, {
 				icon = {
 					img = _loadImage(self, "Icons/Players/squeezeplay.png"),
 				}
 			})
-	s.squeezeplaychecked = _uses(s.squeezeplay, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
+	s.squeezeplaychecked = _uses(s.squeezeplay, checkedStyle)
+
 	s.http = _uses(s.chooseplayer, {
 				icon = {
 					img = _loadImage(self, "Icons/Players/http.png"),
 				}
 			})
-	s.httpchecked = _uses(s.http, {
-	      		order = { "icon", "text", "check" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
+	s.httpchecked = _uses(s.http, checkedStyle)
 	
 	s.albumitemplay = _uses(s.albumitem)
 	s.albumitemadd  = _uses(s.albumitem)
-
 
 	s.popupToast = _uses(s.albumitem, 
 		{
@@ -1346,12 +1271,17 @@ function skin(self, s)
 
 	-- selected item with artwork and song info
 	s.selected.albumitem = _uses(s.albumitem)
-	s.pressed.albumitem = _uses(s.albumitem, {
+	local pressedAlbumBox = {
 		bgImg = fiveItemPressedBox,
 		play = {
 			img    = _loadImage(self, "Icons/selection_right_3line_on.png"),
 		},
-	})
+	}
+
+	s.pressed.albumitem         = _uses(s.albumitem, pressedAlbumBox)
+	s.pressed.albumchecked      = _uses(s.albumchecked, pressedAlbumBox)
+	s.pressed.albumitemNoAction = _uses(s.albumitemNoAction, pressedAlbumBox)
+
 	s.selected.multilineitem = _uses(s.selected.albumitem, {
 				order = { 'text', 'play' },
 			})
@@ -1377,157 +1307,30 @@ function skin(self, s)
 			}
 	})
 
-	s.selected.chooseplayer = _uses(s.selected.albumitem, {
-			order = { "icon", "text", "play" },
-			play = {
-				img = _loadImage(self, "Icons/selection_right_5line.png")
-			},
-			text = { font = FONT_BOLD_13px }
-	})
-
-	s.selected.transporter = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/transporter.png"),
-				}
-			})
-	s.selected.transporterchecked = _uses(s.selected.transporter, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
-
-	s.selected.squeezebox = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox.png"),
-				}
-			})
-	s.selected.squeezeboxchecked = _uses(s.selected.squeezebox, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
-
-
-	s.selected.squeezebox2 = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox.png"),
-				}
-			})
-	s.selected.squeezebox2checked = _uses(s.selected.squeezebox2, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
-
-	s.selected.squeezebox3 = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezebox3.png"),
-				}
-			})
-	s.selected.squeezebox3checked = _uses(s.selected.squeezebox3, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
-
-
-	s.selected.boom = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/boom.png"),
-				}
-			})
-	s.selected.boomchecked = _uses(s.selected.boom, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
-
-
-	s.selected.slimp3 = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/slimp3.png"),
-				}
-			})
-
-	s.selected.slimp3checked = _uses(s.selected.slimp3, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
-
-	s.selected.softsqueeze = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/softsqueeze.png"),
-				}
-			})
-	s.selected.softsqueezechecked = _uses(s.selected.softsqueeze, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
-	s.selected.controller = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/controller.png"),
-				}
-			})
-	s.selected.controllerchecked = _uses(s.selected.controller, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
-	s.selected.receiver = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/receiver.png"),
-				}
-			})
-	s.selected.receiverchecked = _uses(s.selected.receiver, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
-	s.selected.squeezeplay = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/squeezeplay.png"),
-				}
-			})
-	s.selected.squeezeplaychecked = _uses(s.selected.squeezeplay, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
-	s.selected.http = _uses(s.selected.chooseplayer, {
-				icon = {
-					img = _loadImage(self, "Icons/Players/http.png"),
-				}
-			})
-	s.selected.httpchecked = _uses(s.selected.http, {
-	      		order = { "icon", "text", "check", "play" },
-			check = {
-				align = "right",
-				img = _loadImage(self, "Icons/icon_check_5line.png")
-			}
-	})
-	
+	s.pressed.chooseplayer        = _uses(s.chooseplayer, buttonPressed)
+	s.pressed.chooseplayerchecked = _uses(s.chooseplayerchecked, buttonPressed)
+	s.pressed.transporter         = _uses(s.transporter, buttonPressed)
+	s.pressed.transporterchecked  = _uses(s.transporterchecked, buttonPressed)
+	s.pressed.squeezebox          = _uses(s.squeezebox, buttonPressed)
+	s.pressed.squeezeboxchecked   = _uses(s.squeezeboxchecked, buttonPressed)
+	s.pressed.squeezebox2         = _uses(s.squeezebox2, buttonPressed)
+	s.pressed.squeezebox2checked  = _uses(s.squeezebox2checked, buttonPressed)
+	s.pressed.squeezebox3         = _uses(s.squeezebox3, buttonPressed)
+	s.pressed.squeezebox3checked  = _uses(s.squeezebox3checked, buttonPressed)
+	s.pressed.boom                = _uses(s.boom, buttonPressed)
+	s.pressed.boomchecked         = _uses(s.boomchecked, buttonPressed)
+	s.pressed.slimp3              = _uses(s.slimp3, buttonPressed)
+	s.pressed.slimp3checked       = _uses(s.slimp3checked, buttonPressed)
+	s.pressed.softsqueeze         = _uses(s.softsqueeze, buttonPressed)
+	s.pressed.softsqueezechecked  = _uses(s.softsqueezechecked, buttonPressed)
+	s.pressed.controller          = _uses(s.controller, buttonPressed)
+	s.pressed.controllerchecked   = _uses(s.controllerchecked,buttonPressed)
+	s.pressed.receiver            = _uses(s.receiver, buttonPressed)
+	s.pressed.receiverchecked     = _uses(s.receiverchecked, buttonPressed)
+	s.pressed.squeezeplay         = _uses(s.squeezeplay, buttonPressed)
+	s.pressed.squeezeplaychecked  = _uses(s.squeezeplaychecked, buttonPressed)
+	s.pressed.http                = _uses(s.http, buttonPressed)
+	s.pressed.httpchecked         = _uses(s.httpchecked, buttonPressed)
 
 	-- locked item with artwork and song info
 	s.locked.albumitem = {}
@@ -1744,11 +1547,12 @@ function skin(self, s)
 	s.ssnptitle = _uses(s.title, {
 				order     = { "back", "text", "playlist" },
 				playlist  = {
-						padding = { 10, 0, 10, 0 },
 						font    = _font(14),
 						fg      = TEXT_COLOR,
 						bgImg   = titlebarButtonBox,
 						w       = TITLE_BUTTON_WIDTH,
+						h       = TITLE_BUTTON_HEIGHT,
+						padding = TITLE_BUTTON_PADDING,
 						align   = 'center',
 				}
 	})
@@ -1761,7 +1565,7 @@ function skin(self, s)
 	-- pressed styles
 	s.ssnptitle.pressed = {}
 	s.ssnptitle.pressed.back = _uses(s.ssnptitle.back, { 
-		bgImg = pressedTitlebarButtonBox 
+		img = backButtonPressed 
 	})
 	s.ssnptitle.pressed.playlist = _uses(s.ssnptitle.playlist, { 
 		bgImg = pressedTitlebarButtonBox
