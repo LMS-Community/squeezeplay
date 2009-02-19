@@ -137,27 +137,27 @@ function skin(self, s)
 	local screenWidth, screenHeight = Framework:getScreenSize()
 
 	-- Images and Tiles
-	local titleBox          = Tile:loadImage( imgpath .. "Screen_Formats/Titlebar/titlebar.png" )
-	local fiveItemSelectionBox      = Tile:loadImage( imgpath .. "Screen_Formats/5_line_lists/menu_sel_box_5line.png")
-	local fiveItemPressedBox      = Tile:loadImage( imgpath .. "Screen_Formats/5_line_lists/menu_sel_box_5line_press.png")
-	local threeItemSelectionBox = Tile:loadImage( imgpath .. "Screen_Formats/3_line_lists/menu_sel_box_3line.png")
-	local threeItemPressedBox   = Tile:loadImage( imgpath .. "Screen_Formats/3_line_lists/menu_sel_box_3line_press.png")
+	local titleBox          = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
+	local fiveItemSelectionBox      = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line.png")
+	local fiveItemPressedBox      = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line_press.png")
+	local threeItemSelectionBox = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line.png")
+	local threeItemPressedBox   = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line_press.png")
 
 	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = Tile:loadImage( imgpath .. "Buttons/button_help_tb.png")
 	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
-	--local textinputBackground     = Tile:loadImage( imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_whole.png")
+	--local textinputBackground     = Tile:loadImage( imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_whole.png")
 	local textinputBackground     = 
 		Tile:loadTiles({
-				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box.png",
-				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tl.png",
-				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_t.png",
-				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tr.png",
-				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_r.png",
-				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_br.png",
-				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_b.png",
-				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_bl.png",
-				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_l.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tl.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_t.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tr.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_r.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_br.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_b.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_bl.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_l.png",
 				})
 
 	local buttonBox =
@@ -202,57 +202,57 @@ function skin(self, s)
 -- FIXME: do these need updating for Fab4Skin?
 	local helpBox = 
 		Tile:loadTiles({
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox.png",
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_tl.png",
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_t.png",
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_tr.png",
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_r.png",
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_br.png",
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_b.png",
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_bl.png",
-				       imgpath .. "Screen_Formats/Popup_Menu/helpbox_l.png",
+				       imgpath .. "Popup_Menu/helpbox.png",
+				       imgpath .. "Popup_Menu/helpbox_tl.png",
+				       imgpath .. "Popup_Menu/helpbox_t.png",
+				       imgpath .. "Popup_Menu/helpbox_tr.png",
+				       imgpath .. "Popup_Menu/helpbox_r.png",
+				       imgpath .. "Popup_Menu/helpbox_br.png",
+				       imgpath .. "Popup_Menu/helpbox_b.png",
+				       imgpath .. "Popup_Menu/helpbox_bl.png",
+				       imgpath .. "Popup_Menu/helpbox_l.png",
 			       })
 
 	local scrollBackground =
 		Tile:loadVTiles({
-					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_bkgrd_tch_t.png",
-					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_bkgrd_tch.png",
-					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_bkgrd_tch_b.png",
+					imgpath .. "Scroll_Bar/scrollbar_bkgrd_tch_t.png",
+					imgpath .. "Scroll_Bar/scrollbar_bkgrd_tch.png",
+					imgpath .. "Scroll_Bar/scrollbar_bkgrd_tch_b.png",
 				})
 
 	local scrollBar = 
 		Tile:loadVTiles({
-					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_body_t.png",
-					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_body.png",
-					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_body_b.png",
+					imgpath .. "Scroll_Bar/scrollbar_body_t.png",
+					imgpath .. "Scroll_Bar/scrollbar_body.png",
+					imgpath .. "Scroll_Bar/scrollbar_body_b.png",
 			       })
 
 	local sliderBackground = 
 		Tile:loadHTiles({
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
 			       })
 
 	local sliderBar = 
 		Tile:loadHTiles({
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png",
 			       })
 
 	local volumeBar =
 		Tile:loadHTiles({
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png",
 			       })
 
 	local volumeBackground =
 		Tile:loadHTiles({
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
-					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
+					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
 				})
 
 	local popupMask = Tile:fillColor(0x000000e5)
@@ -272,7 +272,7 @@ function skin(self, s)
 
 	local textinputWheel = Tile:loadImage(imgpath .. "text_entry_select.png")
 
-	local textinputCursor = Tile:loadImage(imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/tch_cursor.png")
+	local textinputCursor = Tile:loadImage(imgpath .. "Text_Entry/Keyboard_Touch/tch_cursor.png")
 
 	local THUMB_SIZE = self:getSettings().THUMB_SIZE
 	
@@ -1581,28 +1581,28 @@ function skin(self, s)
 	s.ssnpcontrols.rew = {}
 	s.ssnpcontrols.rew.align = 'center'
 	s.ssnpcontrols.rew.padding = buttonPadding
-	s.ssnpcontrols.rew.img = _loadImage(self, "Screen_Formats/Player_Controls/icon_toolbar_rew.png")
+	s.ssnpcontrols.rew.img = _loadImage(self, "Player_Controls/icon_toolbar_rew.png")
 	
 	s.ssnpcontrols.play = {}
 	s.ssnpcontrols.play.align = 'center'
 	s.ssnpcontrols.play.padding = buttonPadding
-	s.ssnpcontrols.play.img = _loadImage(self, "Screen_Formats/Player_Controls/icon_toolbar_play.png")
+	s.ssnpcontrols.play.img = _loadImage(self, "Player_Controls/icon_toolbar_play.png")
 	
 	s.ssnpcontrols.pause = {}
 	s.ssnpcontrols.pause.align = 'center'
 	s.ssnpcontrols.pause.padding = buttonPadding
-	s.ssnpcontrols.pause.img = _loadImage(self, "Screen_Formats/Player_Controls/icon_toolbar_pause.png")
+	s.ssnpcontrols.pause.img = _loadImage(self, "Player_Controls/icon_toolbar_pause.png")
 	
 	
 	s.ssnpcontrols.fwd = {}
 	s.ssnpcontrols.fwd.align = 'center'
 	s.ssnpcontrols.fwd.padding = buttonPadding
-	s.ssnpcontrols.fwd.img = _loadImage(self, "Screen_Formats/Player_Controls/icon_toolbar_ffwd.png")
+	s.ssnpcontrols.fwd.img = _loadImage(self, "Player_Controls/icon_toolbar_ffwd.png")
 
 	s.ssnpcontrols.vol = {}
 	s.ssnpcontrols.vol.align = 'center'
 	s.ssnpcontrols.vol.padding = buttonPadding
-	s.ssnpcontrols.vol.img = _loadImage(self, "Screen_Formats/Player_Controls/icon_toolbar_vol_up.png")
+	s.ssnpcontrols.vol.img = _loadImage(self, "Player_Controls/icon_toolbar_vol_up.png")
 	
 	s.browsenpcontrols = _uses(s.ssnpcontrols)
 	s.largenpcontrols  = _uses(s.ssnpcontrols)
