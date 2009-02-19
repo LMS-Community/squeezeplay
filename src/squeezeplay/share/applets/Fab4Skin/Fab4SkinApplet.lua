@@ -156,6 +156,19 @@ function skin(self, s)
 					imgpath .. "Buttons/button_sbox_l.png",
 				})
 
+	local pressedTitlebarButtonBox =
+		Tile:loadTiles({
+					imgpath .. "Screen_Formats/Titlebar/button_titlebar_press.png",
+					imgpath .. "Screen_Formats/Titlebar/button_titlebar_tl_press.png",
+					imgpath .. "Screen_Formats/Titlebar/button_titlebar_t_press.png",
+					imgpath .. "Screen_Formats/Titlebar/button_titlebar_tr_press.png",
+					imgpath .. "Screen_Formats/Titlebar/button_titlebar_r_press.png",
+					imgpath .. "Screen_Formats/Titlebar/button_titlebar_br_press.png",
+					imgpath .. "Screen_Formats/Titlebar/button_titlebar_b_press.png",
+					imgpath .. "Screen_Formats/Titlebar/button_titlebar_bl_press.png",
+					imgpath .. "Screen_Formats/Titlebar/button_titlebar_l_press.png",
+				})
+
 	local titlebarButtonBox =
 		Tile:loadTiles({
 					imgpath .. "Screen_Formats/Titlebar/button_titlebar.png",
@@ -309,6 +322,7 @@ function skin(self, s)
 
 	-- Window title, this is a Label
 	s.title = {}
+	s.title.h = 47
 	s.title.border = 0
 	s.title.position = LAYOUT_NORTH
 	s.title.bgImg = titleBox
@@ -321,11 +335,11 @@ function skin(self, s)
 	s.title.text.fg = TEXT_COLOR
 
 	s.title.back = {}
-	--s.title.back.img = _loadImage(self, "Icons/Mini/left_arrow.png")
+	s.title.back.bgImg = titlebarButtonBox
 	s.title.back.img = _loadImage(self, "Screen_Formats/Titlebar/icon_back_button_tb.png")
 	s.title.back.w = 50
-	s.title.back.align = "left"
-	s.title.back.padding = { 10, 0, 0, 0 }
+	s.title.back.align = "center"
+	s.title.back.padding = { 0, 10, 18, 10 }
 
 	s.title.nowplaying = {}
 	--FIXME, this png path should likely change
@@ -333,6 +347,10 @@ function skin(self, s)
 	s.title.nowplaying.padding = { 20, 0, 5, 5 }
 	s.title.nowplaying.align = "right"
 
+	s.title.pressed = {}
+	s.title.pressed.back = _uses(s.title.back, {
+		bgImg = pressedTitlebarButtonBox,
+	})
 	-- Menu with three basic styles: normal, selected and locked
 	-- First define the dimesions of the menu
 	s.menu = {}
@@ -454,6 +472,11 @@ function skin(self, s)
 			bgImg = fiveItemPressedBox,
 	})
 
+	s.pressed.title = _uses(s.title, {
+		back = {
+			bgImg = pressedTitlebarButtonBox,
+		}
+	})
 
 	s.pressed.itemplay =
 		_uses(s.pressed.item, {
@@ -568,7 +591,6 @@ function skin(self, s)
 	s.scrollbar.bgImg = scrollBackground
 	s.scrollbar.img = scrollBar
 	s.scrollbar.layer = LAYER_CONTENT_ON_STAGE
-
 
 	-- Checkbox
 	s.checkbox = {}
@@ -914,10 +936,14 @@ function skin(self, s)
 	-- "buttonlike" menu. all items with selection box and icon
 	s.buttonmenu = {}
 	s.buttonmenu.padding = 0
+	s.buttonmenu.w = WH_FILL
 	s.buttonmenu.itemHeight = THREE_ITEM_HEIGHT
 
 	s.button = {}
 	s.button.menu = _uses(s.buttonmenu)
+	s.button.title = _uses(s.title, {
+		h = 55
+	})
 
 	-- 3 options per page, text only
 	s.buttonitem = {}
@@ -1674,12 +1700,10 @@ function skin(self, s)
 	s.ssnptitle = _uses(s.title, {
 				order     = { "back", "text", "playlist" },
 				playlist  = {
-						padding = { 10, 5, 10, 5 },
-						border  = { 0, 0, 0, 5},
+						padding = { 10, 0, 10, 0 },
 						font    = _font(14),
 						fg      = TEXT_COLOR,
-						bgImg   = fiveItemSelectionBox,
-						align   = "top-right",
+						bgImg   = titlebarButtonBox,
 				}
 	})
 
@@ -1687,12 +1711,28 @@ function skin(self, s)
 	s.browsenptitle = _uses(s.ssnptitle)
 	s.largenptitle  = _uses(s.ssnptitle)
 
+	s.title.pressed = {}
+	s.title.pressed.back = _uses(s.title.back, {
+		bgImg = pressedTitlebarButtonBox,
+	})
+	-- pressed styles
+	s.ssnptitle.pressed = {}
+	s.ssnptitle.pressed.back = _uses(s.ssnptitle.back, { 
+		bgImg = pressedTitlebarButtonBox 
+	})
+	s.ssnptitle.pressed.playlist = _uses(s.ssnptitle.playlist, { 
+		bgImg = pressedTitlebarButtonBox
+	})
+
+	s.browsenptitle.pressed = _uses(s.ssnptitle.pressed)
+	s.largenptitle.pressed = _uses(s.ssnptitle.pressed)
+
 	-- Song
 	s.ssnptrack = {}
 	s.ssnptrack.border = { 4, 0, 4, 0 }
 	s.ssnptrack.text = {}
 	s.ssnptrack.text.w = WH_FILL
-	s.ssnptrack.text.padding = { 220, 46, 20, 10 }
+	s.ssnptrack.text.padding = { 220, 52, 20, 10 }
 	s.ssnptrack.text.align = "left"
         s.ssnptrack.text.font = _font(NP_TRACK_FONT_SIZE)
 	s.ssnptrack.text.lineHeight = NP_TRACK_FONT_SIZE + 4
@@ -1718,7 +1758,7 @@ function skin(self, s)
 	s.ssnpartwork = {}
 
 	s.ssnpartwork.w = ssArtWidth
-	s.ssnpartwork.border = { 10, 40, 10, 0 }
+	s.ssnpartwork.border = { 10, 50, 10, 0 }
 	s.ssnpartwork.position = LAYOUT_WEST
 	s.ssnpartwork.align = "center"
 	s.ssnpartwork.artwork = {}
