@@ -1003,6 +1003,9 @@ function skin(self, s, reload, useDefaultSize)
 	s.albummenu.fg = {0xbb, 0xbb, 0xbb }
 	s.albummenu.font = FONT_BOLD_200px
 
+	s.album = {}
+	s.album.menu = _uses(s.albummenu)
+
 	s.button = {}
 	s.button.menu = _uses(s.albummenu)
 

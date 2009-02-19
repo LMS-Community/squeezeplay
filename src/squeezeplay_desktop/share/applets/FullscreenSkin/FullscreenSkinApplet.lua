@@ -959,10 +959,14 @@ function skin(self, s, reload, useDefaultSize)
 	-- menus with artwork and song info
 	s.albummenu = {}
 	s.albummenu.padding = { 4, 2, 4, 2 }
+
 	--s.albummenu.itemHeight = 61
 	s.albummenu.itemHeight = 130
 	s.albummenu.fg = {0xbb, 0xbb, 0xbb }
 	s.albummenu.font = _boldfont(400)
+
+	s.album = {}
+	s.album.menu = _uses(s.albummenu)
 
 	s.button = {}
 	s.button.menu = _uses(s.albummenu)

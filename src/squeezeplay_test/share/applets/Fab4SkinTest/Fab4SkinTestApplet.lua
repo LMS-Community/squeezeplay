@@ -365,8 +365,8 @@ end
 
 
 function albumMenuWindow(self, menuItem)
-	local window = Window("window", menuItem.text)
-	local menu = SimpleMenu('albummenu')
+	local window = Window("album", menuItem.text)
+	local menu = SimpleMenu('menu')
 	window:addWidget(menu)
 
 	local item = { text = "Test of Albumitem Style", style = 'albumitem'  }
