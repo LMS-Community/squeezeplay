@@ -330,7 +330,7 @@ end
 
 
 function regionWindow(self, menuItem)
-	local window = Window("window", menuItem.text)
+	local window = Window("window", menuItem.text, 'helptitle')
 	local menu = SimpleMenu('buttonmenu')
 	window:addWidget(menu)
 

@@ -329,21 +329,21 @@ function skin(self, s, reload, useDefaultSize)
 	s.title.padding = { 15, 5, 10, 0 }
 	s.title.position = LAYOUT_NORTH
 	s.title.bgImg = titleBox
-	s.title.order = { "back", "text", 'nowplaying' }
+	s.title.order = { "lbutton", "text", 'rbutton' }
 	s.title.text = {}
         s.title.text.w = WH_FILL
 	s.title.text.padding = TITLE_PADDING
 	s.title.text.align = "top-left"
 	s.title.text.font = _boldfont(TITLE_FONT_SIZE)
 	s.title.text.fg = TEXT_COLOR_BLACK
-	s.title.back = {}
+	s.title.lbutton = {}
 	--FIXME, this png path should likely change
-	s.title.back.img = _loadImage(self, "pointer_selector_L.png")
-	s.title.back.align = "left"
-	s.title.nowplaying = {}
+	s.title.lbutton.img = _loadImage(self, "pointer_selector_L.png")
+	s.title.lbutton.align = "left"
+	s.title.rbutton = {}
 	--FIXME, this png path should likely change
-	s.title.nowplaying.img = _loadImage(self, "album_noartwork_56.png")
-	s.title.nowplaying.align = "left"
+	s.title.rbutton.img = _loadImage(self, "album_noartwork_56.png")
+	s.title.rbutton.align = "left"
 
 
 	-- Menu with three basic styles: normal, selected and locked
@@ -752,7 +752,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.albumtitle = {}
 	s.albumtitle.position = LAYOUT_NORTH
 	s.albumtitle.bgImg = titleBox
-	s.albumtitle.order = { "back", "icon", "text", "nowplaying" }
+	s.albumtitle.order = { "lbutton", "icon", "text", "rbutton" }
 	s.albumtitle.w = screenWidth
 	s.albumtitle.h = 130
 	s.albumtitle.border = 4
@@ -775,16 +775,16 @@ function skin(self, s, reload, useDefaultSize)
 	--FIXME, this path will likely change
 	s.albumtitle.icon.img = _loadImage(self, "menu_album_noartwork_125.png")
 	s.albumtitle.icon.padding = { 9, 0, 0, 0 }
-	s.albumtitle.back = {}
-	s.albumtitle.back.padding = { 9, 0, 0, 0 }
+	s.albumtitle.lbutton = {}
+	s.albumtitle.lbutton.padding = { 9, 0, 0, 0 }
 	--FIXME, this path will likely change
-	s.albumtitle.back.img = _loadImage(self, "pointer_selector_L.png")
-	s.albumtitle.back.align = "left"
-	s.albumtitle.nowplaying = {}
+	s.albumtitle.lbutton.img = _loadImage(self, "pointer_selector_L.png")
+	s.albumtitle.lbutton.align = "left"
+	s.albumtitle.rbutton = {}
 	--FIXME, this path will likely change
-	s.albumtitle.nowplaying.img = _loadImage(self, "album_noartwork_56.png")
-	s.albumtitle.nowplaying.padding = { 5, 10, 15, 0 }
-	s.albumtitle.nowplaying.align = "top-right"
+	s.albumtitle.rbutton.img = _loadImage(self, "album_noartwork_56.png")
+	s.albumtitle.rbutton.padding = { 5, 10, 15, 0 }
+	s.albumtitle.rbutton.align = "top-right"
 
 
 	-- titles with mini icons
@@ -801,7 +801,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.minititle.text.align    = 'top-left'
 	s.minititle.text.font     = _boldfont(TITLE_FONT_SIZE)
 	s.minititle.text.fg       = TEXT_COLOR_BLACK
-	s.minititle.order         = { "back", "text", "nowplaying", "icon" }
+	s.minititle.order         = { "lbutton", "text", "rbutton", "icon" }
 	s.minititle.icon = {}
 	s.minititle.icon.padding  = { 0, 0, 8, 0 }
 	s.minititle.icon.align    = 'right'
@@ -810,15 +810,15 @@ function skin(self, s, reload, useDefaultSize)
 	-- Based on s.title, this is for setup title style
 	s.setuptitle =
 		_uses(s.minititle, {
-				order = { 'back', 'text', 'nowplaying', 'icon' },
-				nowplaying = { img = false  },
+				order = { 'lbutton', 'text', 'rbutton', 'icon' },
+				rbutton = { img = false  },
 			      icon = {
 				      img = _loadImage(self, "Icons/Mini/icon_settings.png")
 			      }
 		      })
 	s.setupfirsttitle =
 		_uses(s.setuptitle, {
-				back       = { img = false  },
+				lbutton       = { img = false  },
 		      })
 
 
@@ -1417,7 +1417,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.nowplayingtitle = {}
 	s.nowplayingtitle.position = LAYOUT_NORTH
 	s.nowplayingtitle.bgImg = titleBox
-	s.nowplayingtitle.order = { "back", "text", "icon" }
+	s.nowplayingtitle.order = { "lbutton", "text", "icon" }
 	s.nowplayingtitle.w = screenWidth
 	s.nowplayingtitle.h = 70
 	s.nowplayingtitle.border = 4
@@ -1620,20 +1620,20 @@ function skin(self, s, reload, useDefaultSize)
 
 	setmetatable(s.ssnptitle, { __index = s.title })
 
-        s.ssnptitle.order = { "back", "text", "playlist" }
+        s.ssnptitle.order = { "lbutton", "text", "rbutton" }
 
-	s.ssnptitle.back = {}
-	s.ssnptitle.back.img = _loadImage(self, "pointer_selector_L.png")
-        s.ssnptitle.back.align = "left"
+	s.ssnptitle.lbutton = {}
+	s.ssnptitle.lbutton.img = _loadImage(self, "pointer_selector_L.png")
+        s.ssnptitle.lbutton.align = "left"
 
-        s.ssnptitle.playlist = {}
-        s.ssnptitle.playlist.padding = 10
-        s.ssnptitle.playlist.border = { 0, 0, 0, 5 }
-        s.ssnptitle.playlist.font = _font(26)
-        s.ssnptitle.playlist.fg = TEXT_COLOR_BLACK
-        s.ssnptitle.playlist.bgImg = selectionBox
-        s.ssnptitle.playlist.text = {}
-        s.ssnptitle.playlist.text.align = "top-right"
+        s.ssnptitle.rbutton = {}
+        s.ssnptitle.rbutton.padding = 10
+        s.ssnptitle.rbutton.border = { 0, 0, 0, 5 }
+        s.ssnptitle.rbutton.font = _font(26)
+        s.ssnptitle.rbutton.fg = TEXT_COLOR_BLACK
+        s.ssnptitle.rbutton.bgImg = selectionBox
+        s.ssnptitle.rbutton.text = {}
+        s.ssnptitle.rbutton.text.align = "top-right"
 
 	-- nptitle style is the same for all windowStyles
 	s.browsenptitle = _uses(s.ssnptitle)
