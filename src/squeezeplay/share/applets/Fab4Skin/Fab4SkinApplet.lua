@@ -149,6 +149,7 @@ function skin(self, s)
 	local helpButtonPressed       = Tile:loadImage( imgpath .. "Buttons/button_help_tb_press.png")
 	local nowPlayingButton        = Tile:loadImage( imgpath .. "Buttons/button_tbar_whole.png")
 	local nowPlayingButtonPressed = Tile:loadImage( imgpath .. "Buttons/button_tbar_whole_press.png")
+	local textinputBackground     = Tile:loadImage( imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_whole.png")
 
 	local buttonBox =
 		Tile:loadTiles({
@@ -248,19 +249,6 @@ function skin(self, s)
 
 	local popupMask = Tile:fillColor(0x000000e5)
 
-	-- FIXME: no popupBox in Fab4? there is a defined popupBox in DefaultSkin...
-
-	local textinputBackground =
-		Tile:loadHTiles({
-				-- FIXME: need to use Noah's assets for this
-				--[[
-				       imgpath .. "Screen_Formats/Text_Entry/Classic/text_entry_bac",
-				--]]
-				       imgpath .. "text_entry_bkgrd_l.png",
-				       imgpath .. "text_entry_bkgrd.png",
-				       imgpath .. "text_entry_bkgrd_r.png",
-			       })
-
 	local softButtonBackground =
 		Tile:loadTiles({
 				       imgpath .. "button.png",
@@ -277,7 +265,6 @@ function skin(self, s)
 	local textinputWheel = Tile:loadImage(imgpath .. "text_entry_select.png")
 
 	local textinputCursor = Tile:loadImage(imgpath .. "text_entry_letter.png")
-
 
 	local THUMB_SIZE = self:getSettings().THUMB_SIZE
 	
@@ -388,6 +375,11 @@ function skin(self, s)
 		img = nowPlayingButtonPressed,
 	})
 
+	s.noRbutton = _uses(s.title, {
+		rbutton = noButton,
+		padding = { 0, 0, TITLE_BUTTON_WIDTH, 0 },
+	})
+	
 	-- Menu with three basic styles: normal, selected and locked
 	-- First define the dimesions of the menu
 	s.menu = {}
@@ -666,12 +658,12 @@ function skin(self, s)
 	s.textinput.cursorFont = _boldfont(TEXTINPUT_SELECTED_FONT_SIZE)
 	s.textinput.wheelFont = _boldfont(TEXTINPUT_FONT_SIZE)
 	s.textinput.charHeight = TEXTINPUT_SELECTED_FONT_SIZE + 4
-	s.textinput.fg = SELECT_COLOR
+	s.textinput.fg = TEXT_COLOR_BLACK
 	s.textinput.wh = { 0x55, 0x55, 0x55 }
 	s.textinput.bgImg = textinputBackground
 --	s.textinput.wheelImg = textinputWheel
 	s.textinput.cursorImg = textinputCursor
-	s.textinput.enterImg = Tile:loadImage(imgpath .. "Icons/selection_right_5line.png")
+--	s.textinput.enterImg = Tile:loadImage(imgpath .. "Icons/selection_right_5line.png")
 
 	-- Keyboard
 	s.keyboard = {}
@@ -984,10 +976,8 @@ function skin(self, s)
 	s.error.menu = _uses(s.menu, {
 		h = FIVE_ITEM_HEIGHT * 4,
 	})
-	s.error.title = _uses(s.title, {
-		rbutton = noButton,
-		padding = { 0, 0, TITLE_BUTTON_WIDTH, 0 },
-	})
+	s.error.title = _uses( s.noRbutton)
+
 	s.error.text = {
 		position = LAYOUT_NORTH,
 		border  = { 0, 47, 0, 0 },
