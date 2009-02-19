@@ -36,7 +36,7 @@ end
 
 function registerApplet(self)
 	local params = {
-		THUMB_SIZE = 70,
+		THUMB_SIZE = 43,
 		nowPlayingBrowseArtworkSize = 190,
 		nowPlayingSSArtworkSize     = 190,
 		nowPlayingLargeArtworkSize  = 190,

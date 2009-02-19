@@ -57,6 +57,7 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
 local WH_FILL                = jive.ui.WH_FILL
 
+local jiveMain               = jiveMain
 local appletManager          = appletManager
 
 
@@ -137,10 +138,10 @@ function skin(self, s)
 
 	-- Images and Tiles
 	local titleBox          = Tile:loadImage( imgpath .. "Screen_Formats/Titlebar/titlebar.png" )
-	local selectionBox      = Tile:loadImage( imgpath .. "Screen_Formats/5_line_lists/menu_sel_box_5line.png")
-	local pressedBox      = Tile:loadImage( imgpath .. "Screen_Formats/5_line_lists/menu_sel_box_5line_press.png")
-	local albumSelectionBox = Tile:loadImage( imgpath .. "Screen_Formats/3_line_lists/menu_sel_box_3line.png")
-	local albumPressedBox   = Tile:loadImage( imgpath .. "Screen_Formats/3_line_lists/menu_sel_box_3line_press.png")
+	local fiveItemSelectionBox      = Tile:loadImage( imgpath .. "Screen_Formats/5_line_lists/menu_sel_box_5line.png")
+	local fiveItemPressedBox      = Tile:loadImage( imgpath .. "Screen_Formats/5_line_lists/menu_sel_box_5line_press.png")
+	local threeItemSelectionBox = Tile:loadImage( imgpath .. "Screen_Formats/3_line_lists/menu_sel_box_3line.png")
+	local threeItemPressedBox   = Tile:loadImage( imgpath .. "Screen_Formats/3_line_lists/menu_sel_box_3line_press.png")
 
 	local buttonBox =
 		Tile:loadTiles({
@@ -262,13 +263,17 @@ function skin(self, s)
 	local textinputCursor = Tile:loadImage(imgpath .. "text_entry_letter.png")
 
 
+	--local THUMB_SIZE = jiveMain:getSkinParam("THUMB_SIZE")
+	local THUMB_SIZE = 42
+	
 	local TITLE_PADDING  = { 0, 16, 0, 16 }
 	local CHECK_PADDING  = { 2, 0, 6, 0 }
 	local CHECKBOX_RADIO_PADDING  = { 2, 8, 8, 0 }
 
 	--FIXME: paddings here need tweaking for Fab4Skin
-	local MENU_ALBUMITEM_PADDING = { 0, 0, 0, 0 }
-	local MENU_ALBUMITEM_TEXT_PADDING = { 26, 0, 0, 8 }
+	local MENU_ALBUMITEM_PADDING = 0
+	local MENU_ALBUMITEM_TEXT_PADDING = { 8, 6, 9, 19 }
+
 	local MENU_CURRENTALBUM_TEXT_PADDING = { 6, 20, 0, 10 }
 	local TEXTAREA_PADDING = { 50, 20, 50, 20 }
 
@@ -281,6 +286,7 @@ function skin(self, s)
 
 	local TITLE_FONT_SIZE = 20
 	local ALBUMMENU_FONT_SIZE = 18
+	local ALBUMMENU_SMALL_FONT_SIZE = 14
 	local TEXTMENU_FONT_SIZE = 20
 	local POPUP_TEXT_SIZE_1 = 24
 	local POPUP_TEXT_SIZE_2 = 12
@@ -292,7 +298,8 @@ function skin(self, s)
 	local HELP_FONT_SIZE = 18
 
 	local ITEM_ICON_ALIGN   = 'center'
-	local ALBUM_MENU_ITEM_HEIGHT = 72
+	local THREE_ITEM_HEIGHT = 72
+	local FIVE_ITEM_HEIGHT = 45
 
 	-- time (hidden off screen)
 	s.iconTime = {}
@@ -334,6 +341,8 @@ function skin(self, s)
 	-- Menu with three basic styles: normal, selected and locked
 	-- First define the dimesions of the menu
 	s.menu = {}
+	s.menu.position = LAYOUT_SOUTH
+	s.menu.h = FIVE_ITEM_HEIGHT * 5
 	s.menu.padding = { 0, 0, 0, 0 }
 	s.menu.itemHeight = 45
 	s.menu.fg = {0xbb, 0xbb, 0xbb }
@@ -425,7 +434,6 @@ function skin(self, s)
 
 	s.selected.itemNoAction =
 		_uses(s.itemNoAction, {
-			      --bgImg = selectionBox,
 			      text = {
 				      fg = SELECT_COLOR,
 				      sh = SELECT_SH_COLOR
@@ -434,7 +442,6 @@ function skin(self, s)
 
 	s.selected.checkedNoAction =
 		_uses(s.checkedNoAction, {
-			      --bgImg = selectionBox,
 			      text = {
 				      fg = SELECT_COLOR,
 				      sh = SELECT_SH_COLOR
@@ -449,7 +456,7 @@ function skin(self, s)
 	-- pressed menu item
 	s.pressed = {}
 	s.pressed.item = _uses(s.item, {
-			bgImg = pressedBox,
+			bgImg = fiveItemPressedBox,
 	})
 
 
@@ -483,12 +490,12 @@ function skin(self, s)
 				})
 
 	s.pressed.itemNoAction = _uses(s.itemNoAction, {
-		      bgImg = pressedBox,
+		      bgImg = fiveItemPressedBox,
 	})
 
 	s.pressed.checkedNoAction =
 		_uses(s.checkedNoAction, {
-			      bgImg = pressedBox,
+			      bgImg = fiveItemPressedBox,
 			      check = {
 					align = ITEM_ICON_ALIGN,
 					padding = BUTTON_PADDING,
@@ -751,7 +758,7 @@ function skin(self, s)
         s.touchButton.padding = { 4, 10, 0, 10 }
         s.touchButton.font = _font(22)
         s.touchButton.fg = TEXT_COLOR
-        s.touchButton.bgImg = selectionBox
+        s.touchButton.bgImg = fiveItemSelectionBox
         s.touchButton.align = 'center'
 	s.touchButton.order = { 'text', 'icon' }
         s.touchButton.text  = { align = 'center' }
@@ -768,7 +775,7 @@ function skin(self, s)
 	s.helpTouchButton.padding = { 10, 16, 10, 16 }
 	s.helpTouchButton.font = _boldfont(14)
 	s.helpTouchButton.fg = TEXT_COLOR
-        s.helpTouchButton.bgImg = selectionBox
+        s.helpTouchButton.bgImg = fiveItemSelectionBox
         s.helpTouchButton.align = 'center'
         s.helpTouchButton.text = {}
         s.helpTouchButton.text.align = "center"
@@ -912,13 +919,13 @@ function skin(self, s)
 	-- "buttonlike" menu. all items with selection box and icon
 	s.buttonmenu = {}
 	s.buttonmenu.padding = 0
-	s.buttonmenu.itemHeight = ALBUM_MENU_ITEM_HEIGHT
+	s.buttonmenu.itemHeight = THREE_ITEM_HEIGHT
 
 	-- 3 options per page, text only
 	s.buttonitem = {}
 	s.buttonitem.order = { "text", "icon" }
 	s.buttonitem.padding = 0
-	s.buttonitem.bgImg = albumSelectionBox
+	s.buttonitem.bgImg = threeItemSelectionBox
 	s.buttonitem.text = {}
 	s.buttonitem.text.w = WH_FILL
 	s.buttonitem.text.h = WH_FILL
@@ -950,7 +957,7 @@ function skin(self, s)
 			padding = { 0, 0, 8, 0}
 		}
 	})
-
+	
 	s.wifiNA = _uses(s.buttoniconitem, {
 				icon = {
 					img = _loadImage(self, "Icons/icon_region_americas_64.png"),
@@ -975,34 +982,34 @@ function skin(self, s)
 	})
 
 	s.pressed.buttonitem = _uses(s.buttonitem, {
-			bgImg = albumPressedBox,
+			bgImg = threeItemPressedBox,
 	})
 	s.pressed.buttoniconitem = _uses(s.buttoniconitem, {
-			bgImg = albumPressedBox,
+			bgImg = threeItemPressedBox,
 	})
 	s.pressed.wifiNA = _uses(s.wifiNA, {
-			bgImg = albumPressedBox,
+			bgImg = threeItemPressedBox,
 	})
 	s.pressed.wifiNAchecked = _uses(s.wifiNAchecked, {
-			bgImg = albumPressedBox,
+			bgImg = threeItemPressedBox,
 	})
 	s.pressed.wifiOther = _uses(s.wifiOther, {
-			bgImg = albumPressedBox,
+			bgImg = threeItemPressedBox,
 	})
 	s.pressed.wifiOtherChecked = _uses(s.wifiOtherchecked, {
-			bgImg = albumPressedBox,
+			bgImg = threeItemPressedBox,
 	})
 
 
 	-- two button menu specifically for laying out two button menu nicely on fab4 screen
 	s.twobuttonmenu = _uses(s.buttonmenu, {
 				position = LAYOUT_SOUTH,
-				h = ALBUM_MENU_ITEM_HEIGHT * 2
+				h = THREE_ITEM_HEIGHT * 2
 			})
 
 	s.onebuttonmenu = _uses(s.buttonmenu, {
 				position = LAYOUT_SOUTH,
-				h = ALBUM_MENU_ITEM_HEIGHT
+				h = THREE_ITEM_HEIGHT
 			})
 
 	-- Textarea for one button menu windows
@@ -1019,23 +1026,26 @@ function skin(self, s)
 	-- FIXME: this needs to be tweaked for Fab4Skin
 	s.albummenu = {}
 	s.albummenu.padding = 0
-	s.albummenu.itemHeight = ALBUM_MENU_ITEM_HEIGHT
+	s.albummenu.position = LAYOUT_SOUTH
+	s.albummenu.h = FIVE_ITEM_HEIGHT * 5
+
+	s.albummenu.itemHeight = FIVE_ITEM_HEIGHT
 	s.albummenu.fg = {0xbb, 0xbb, 0xbb }
 	s.albummenu.font = _boldfont(250)
 
 	s.multilinemenu = _uses(s.albummenu)
 
-	-- items with artwork and song info
+	-- items 5 per page with artwork two lines text
 	s.albumitem = {}
 	s.albumitem.order = { "icon", "text", "play" }
-	s.albumitem.padding = 0
+	s.albumitem.padding = MENU_ALBUMITEM_PADDING
 	s.albumitem.text = {}
 	s.albumitem.text.w = WH_FILL
 	s.albumitem.text.h = WH_FILL
 	s.albumitem.text.padding = MENU_ALBUMITEM_TEXT_PADDING
 	s.albumitem.text.align = "left"
-	s.albumitem.text.font = _font(ALBUMMENU_FONT_SIZE)
-	s.albumitem.text.lineHeight = ALBUMMENU_FONT_SIZE + 4
+	s.albumitem.text.font = _font(ALBUMMENU_SMALL_FONT_SIZE)
+--	s.albumitem.text.lineHeight = ALBUMMENU_FONT_SIZE + 4
 	s.albumitem.text.line = {
 		{
 			font = _boldfont(ALBUMMENU_FONT_SIZE),
@@ -1045,14 +1055,11 @@ function skin(self, s)
 	s.albumitem.text.fg = TEXT_COLOR
 	s.albumitem.text.sh = TEXT_SH_COLOR
 	s.albumitem.play = {
-		img     = _loadImage(self, "Icons/selection_right_3line_off.png"), 
-		w       = 37,
+		img     = _loadImage(self, "Icons/selection_right_5line.png"), 
+		w       = 30,
 		h       = WH_FILL,
-		padding = { 0, 0, 5, 0}
+		padding = { 0, 0, 0, 0}
 	}
-	s.albumitem.play.h = WH_FILL
-	s.albumitem.play.align = 'right'
-	s.albumitem.play.img = _loadImage(self, "Icons/selection_right_3line_off.png")
 
 	s.multilineitem = _uses(s.albumitem, {
 					order = {'text', 'play'}
@@ -1221,12 +1228,12 @@ function skin(self, s)
 
 
 	s.albumitem.icon = {}
-	s.albumitem.icon.w = 70
+	s.albumitem.icon.w = THUMB_SIZE
 	s.albumitem.icon.h = WH_FILL
 	s.albumitem.icon.align = "left"
 -- FIXME: no_artwork image needed in correct size for Fab4Skin; for now, disable it
 --	s.albumitem.icon.img = _loadImage(self, "menu_album_noartwork_125.png")
-	s.albumitem.icon.padding = 0
+	s.albumitem.icon.padding = { 8, 1, 8, 1 }
 
 	s.popupToast = _uses(s.albumitem, 
 		{
@@ -1280,26 +1287,8 @@ function skin(self, s)
 
 	-- selected item with artwork and song info
 	s.selected.albumitem = _uses(s.albumitem)
-	--[[
-	s.selected.albumitem = _uses(s.albumitem, {
-			      -- not for touch!
-		text = {
-			fg    = TEXT_COLOR,
-			sh    = TEXT_SH_COLOR
-		},
-		play = {
-			h      = WH_FILL,
-			align  = "right",
-			img    = _loadImage(self, "Icons/selection_right_5line.png"),
-		},
-		icon = {
-			w = 70,
-			h = 70
-		}
-	})
-	--]]
 	s.pressed.albumitem = _uses(s.albumitem, {
-		bgImg = albumPressedBox,
+		bgImg = fiveItemPressedBox,
 		play = {
 			img    = _loadImage(self, "Icons/selection_right_3line_on.png"),
 		},
@@ -1506,7 +1495,7 @@ function skin(self, s)
 	s.nowplayingtitle.bgImg = titleBox
 	s.nowplayingtitle.order = { "back", "text", "icon" }
 	s.nowplayingtitle.w = screenWidth
-	s.nowplayingtitle.h = 70
+	s.nowplayingtitle.h = THUMB_SIZE + 1
 	s.nowplayingtitle.border = 4
 	s.nowplayingtitle.text = {}
 	s.nowplayingtitle.text.padding = { 10, 8, 8, 9 }
@@ -1559,7 +1548,7 @@ function skin(self, s)
 	s.selected.nowplayingitem.text = {}
 	s.selected.nowplayingitem.text.fg = SELECT_COLOR
 	s.selected.nowplayingitem.text.sh = SELECT_SH_COLOR
-	s.selected.nowplayingitem.bgImg = albumSelectionBox
+	s.selected.nowplayingitem.bgImg = threeItemSelectionBox
 
 
 	-- locked item with artwork and song info
@@ -1567,7 +1556,7 @@ function skin(self, s)
 	s.locked.nowplayingitem.text = {}
 	s.locked.nowplayingitem.text.fg = SELECT_COLOR
 	s.locked.nowplayingitem.text.sh = SELECT_SH_COLOR
-	s.locked.nowplayingitem.bgImg = albumSelectionBox
+	s.locked.nowplayingitem.bgImg = threeItemSelectionBox
 
 
 	-- now playing menu item
@@ -1588,7 +1577,7 @@ function skin(self, s)
 	s.albumcurrent.text.fg = TEXT_COLOR
 	s.albumcurrent.text.sh = TEXT_SH_COLOR
 	s.albumcurrent.icon = {}
-	s.albumcurrent.icon.w = 70
+	s.albumcurrent.icon.w = THUMB_SIZE
 	s.albumcurrent.icon.h = WH_FILL
 	s.albumcurrent.icon.align = "left"
 	s.albumcurrent.play = {}
@@ -1599,7 +1588,7 @@ function skin(self, s)
 
 	-- selected now playing menu item
 	s.selected.albumcurrent = {}
-	s.selected.albumcurrent.bgImg = albumSelectionBox
+	s.selected.albumcurrent.bgImg = threeItemSelectionBox
 	s.selected.albumcurrent.text = {}
 	s.selected.albumcurrent.text.fg = SELECT_COLOR
 	s.selected.albumcurrent.text.sh = SELECT_SH_COLOR
@@ -1611,7 +1600,7 @@ function skin(self, s)
 
 	-- locked now playing menu item (with loading animation)
 	s.locked.albumcurrent = {}
-	s.locked.albumcurrent.bgImg = albumSelectionBox
+	s.locked.albumcurrent.bgImg = threeItemSelectionBox
 	s.locked.albumcurrent.text = {}
 	s.locked.albumcurrent.text.fg = SELECT_COLOR
 	s.locked.albumcurrent.text.sh = SELECT_SH_COLOR
@@ -1700,7 +1689,7 @@ function skin(self, s)
 						border  = { 0, 0, 0, 5},
 						font    = _font(14),
 						fg      = TEXT_COLOR,
-						bgImg   = selectionBox,
+						bgImg   = fiveItemSelectionBox,
 						align   = "top-right",
 				}
 	})
