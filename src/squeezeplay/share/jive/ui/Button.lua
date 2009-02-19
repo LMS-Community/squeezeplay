@@ -52,7 +52,7 @@ function __init(self, widget, action, holdAction)
 
 			if type == EVENT_MOUSE_DOWN then
 				--uncomment when pressed changes are merged
---				widget:setStyleModifier("pressed")
+				widget:setStyleModifier("pressed")
 				if widget.holdTimer then
 					widget.holdTimer:restart()
 				end
@@ -86,16 +86,13 @@ function __init(self, widget, action, holdAction)
 					widget.holdTimer:stop()
 				end
 
-				if not widget.mouseSequenceComplete then
-					if mouseInsideBufferDistance(widget, event) then
-						--uncomment when pressed changes are merged
-	--					widget:setStyleModifier("pressed")
-						widget:reDraw()
-					else
-						--dragging outside of buffer distance, change pressed style to normal
-						widget:setStyleModifier(nil)
-						widget:reDraw()
-					end
+				if mouseInsideBufferDistance(widget, event) then
+					--uncomment when pressed changes are merged
+					widget:setStyleModifier("pressed")
+					widget:reDraw()
+				else
+					widget:setStyleModifier(nil)
+					widget:reDraw()
 				end
 				
 				return EVENT_CONSUME

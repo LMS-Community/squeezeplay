@@ -28,8 +28,13 @@ int jiveL_group_iterate(lua_State *L) {
 	 * 2: closure
 	 */
 
-	// group widgets
-	lua_getfield(L, 1, "widgets");
+	// group widgets (use ordered widgets by preference)
+	lua_getfield(L, 1, "_widgets");
+	if (lua_isnil(L, -1)) {
+		lua_pop(L, 1);
+		lua_getfield(L, 1, "widgets");
+	}
+
 	lua_pushnil(L);
 	while (lua_next(L, -2) != 0) {
 		lua_pushvalue(L, 2);
@@ -115,11 +120,13 @@ int jiveL_group_layout(lua_State *L) {
 	}
 	lua_pop(L, 1); /* pop _order */
 
-	
 	/* stack is:
 	 * 1: widget
 	 * 2: widget.widgets (or ordered widgets)
 	 */
+
+	lua_pushvalue(L, -1);
+	lua_setfield(L, 1, "_widgets");
 
 	w = calloc(num, sizeof(int));
 	h = 0;

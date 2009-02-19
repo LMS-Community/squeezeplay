@@ -337,8 +337,7 @@ end
 
 
 function regionHelpAction(self)
-	local window = Window("window", "Help", 'setuptitle')
-	window:setButtonAction("rbutton", nil)
+	local window = Window("help", "Help")
 	window:setAllowScreensaver(false)
 
 	local textarea = Textarea("textarea", "Some help text here")
@@ -348,7 +347,7 @@ end
 
 
 function regionWindow(self, menuItem)
-	local window = Window("button", menuItem.text, 'helptitle')
+	local window = Window("button", menuItem.text, "settingstitle")
 	local menu = SimpleMenu('menu')
 	window:addWidget(menu)
 
@@ -554,7 +553,7 @@ end
 
 function keyboardWindow(self, menuItem, style)
 
-	local window = Window("window", menuItem.text, 'noRbutton')
+	local window = Window("keyboard", menuItem.text)
 
 	local v = Textinput.textValue("", 8, 20)
 

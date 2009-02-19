@@ -346,18 +346,11 @@ function skin(self, s)
 	s.title.text.font = _boldfont(TITLE_FONT_SIZE)
 	s.title.text.fg = TEXT_COLOR
 
-	s.title.pressed = {}
-	s.title.pressed.lbutton = _uses(s.title.lbutton, {
-		bgImg = pressedTitlebarButtonBox,
-	})
-	s.title.pressed.rbutton = _uses(s.title.rbutton, {
-		bgImg = pressedTitlebarButtonBox,
-	})
-
-	s.noRbutton = _uses(s.title, {
-		rbutton = noButton,
+	s.titleNoRbutton = _uses(s.title, {
+		order = { "lbutton", "text" },
 		padding = { 0, 0, TITLE_BUTTON_WIDTH, 0 },
 	})
+
 	
 	-- Menu with three basic styles: normal, selected and locked
 	-- First define the dimesions of the menu
@@ -918,6 +911,9 @@ function skin(self, s)
 		align    = 'center',
 		border   = TITLE_BUTTON_PADDING,
 	}
+	s.pressed.button = _uses(s.button, {
+		bgImg = pressedTitlebarButtonBox,
+	})
 
 	s.button_none = _uses(s.button, {
 		bgImg    = false,
@@ -926,15 +922,23 @@ function skin(self, s)
 	s.button_back = _uses(s.button, {
 		img      = backButton,
 	})
+	s.pressed.button_back = _uses(s.pressed.button, {
+		img      = backButton,
+	})
 
 	s.button_go_now_playing = _uses(s.button, {
 		img      = nowPlayingButton,
 	})
+	s.pressed.button_go_now_playing = _uses(s.pressed.button, {
+		img      = nowPlayingButton,
+	})
 
 	s.button_help = {
-		-- FIXED artwork needed
 		img = helpButton
 	}
+	s.pressed.button_help = _uses(s.pressed.button, {
+		img      = helpButton,
+	})
 
 
 	-- "buttonlike" menu. all items with selection box and icon
@@ -949,12 +953,11 @@ function skin(self, s)
 		h = 55
 	})
 
-	s.error = {}
+	s.error = _uses(s.window)
 	s.error.menu = _uses(s.menu, {
 		h = FIVE_ITEM_HEIGHT * 4,
 	})
-	s.error.title = _uses( s.noRbutton)
-
+	s.error.title = _uses(s.titleNoRbutton)
 	s.error.text = {
 		position = LAYOUT_NORTH,
 		border  = { 0, 47, 0, 0 },
@@ -969,6 +972,14 @@ function skin(self, s)
 			align = 'center',
 		},
 	}
+
+	s.keyboard = _uses(s.window)
+	s.keyboard.title = _uses(s.titleNoRbutton)
+
+	s.help = _uses(s.window)
+	s.help.title = _uses(s.titleNoRbutton)
+
+
 
 	-- 3 options per page, text only
 	s.buttonitem = {}
