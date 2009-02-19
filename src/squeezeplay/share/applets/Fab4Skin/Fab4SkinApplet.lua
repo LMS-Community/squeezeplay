@@ -949,19 +949,21 @@ function skin(self, s)
 	-- items with artwork and song info
 	s.buttonitem = {}
 	s.buttonitem.order = { "text", "icon" }
-	s.buttonitem.padding = { 0, 0, 0, 0 }
+	s.buttonitem.padding = 0
 	s.buttonitem.bgImg = albumSelectionBox
 	s.buttonitem.text = {}
 	s.buttonitem.text.w = WH_FILL
-	s.buttonitem.text.padding = { 26, 0, 0, 0 }
+	s.buttonitem.text.h = WH_FILL
+	s.buttonitem.text.padding = { 26, 0, 0, 8 }
 	s.buttonitem.text.align = "left"
 	s.buttonitem.text.font = _boldfont(40)
 	s.buttonitem.text.fg = SELECT_COLOR
 	s.buttonitem.text.sh = SELECT_SH_COLOR
 	s.buttonitem.icon = {
-			img   = _loadImage(self, "Icons/selection_right_5line.png"), 
-			h     = WH_FILL,
-			padding = { 0, 15, 20, 0}
+			img     = _loadImage(self, "Icons/selection_right_3line_off.png"), 
+			w       = 37,
+			h       = WH_FILL,
+			padding = { 0, 0, 5, 0}
 	}
 
 	-- two button menu specifically for laying out two button menu nicely on fab4 screen
@@ -975,6 +977,16 @@ function skin(self, s)
 				h = ALBUM_MENU_ITEM_HEIGHT
 			})
 
+	-- Textarea for one button menu windows
+	s.onebuttontextarea = {}
+	s.onebuttontextarea.position = LAYOUT_NORTH
+	s.onebuttontextarea.w = screenWidth
+	s.onebuttontextarea.padding = { 16, 72, 35, 2 }
+	s.onebuttontextarea.font = _font(36)
+	s.onebuttontextarea.lineHeight = 40
+	s.onebuttontextarea.fg = TEXT_COLOR
+	s.onebuttontextarea.sh = TEXT_SH_COLOR
+	
 	-- menus with artwork and song info
 	-- FIXME: this needs to be tweaked for Fab4Skin
 	s.albummenu = {}

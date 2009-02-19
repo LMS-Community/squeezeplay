@@ -310,10 +310,10 @@ end
 function oneButtonWindow(self, menuItem)
 	local window = Window("window", menuItem.text)
 	local menu = SimpleMenu('onebuttonmenu')
-	window:addWidget(Textarea("textarea", "Let's begin by getting\nyou connected to your network."))
+	window:addWidget(Textarea("onebuttontextarea", "Let's begin by getting\nyou connected to your network."))
 	window:addWidget(menu)
 
-	local item = { text = "Continue", style = 'buttonitem'  }
+	local item = { text = "continue", style = 'buttonitem'  }
 
 	menu:addItem(item)
 
