@@ -904,6 +904,7 @@ function skin(self, s)
 
 
 	-- title buttons
+	-- FIXME button is used as a window style too
 	s.button = {
 		bgImg    = titlebarButtonBox,
 		w        = TITLE_BUTTON_WIDTH,
@@ -947,7 +948,7 @@ function skin(self, s)
 	s.buttonmenu.w = WH_FILL
 	s.buttonmenu.itemHeight = THREE_ITEM_HEIGHT
 
-	s.button = {}
+	s.button = _uses(s.window)
 	s.button.menu = _uses(s.buttonmenu)
 	s.button.title = _uses(s.title, {
 		h = 55
@@ -978,6 +979,12 @@ function skin(self, s)
 
 	s.help = _uses(s.window)
 	s.help.title = _uses(s.titleNoRbutton)
+
+	s.setup = _uses(s.window)
+	s.setup.title = _uses(s.titleNoRbutton)
+
+	s.settings = _uses(s.window)
+	s.settings.title = _uses(s.titleNoRbutton)
 
 
 
@@ -1033,7 +1040,7 @@ function skin(self, s)
 		}
 	})
 	
-	s.region_NA = _uses(s.buttonicon, { 
+	s.region_US = _uses(s.buttonicon, { 
 		img = _loadImage(self, "Icons/icon_region_americas_64.png")
 	})
 	s.region_XX = _uses(s.buttonicon, { 
@@ -1054,7 +1061,7 @@ function skin(self, s)
 	s.pressed.buttoniconitemchecked   = _uses(s.buttoniconitemchecked, buttonPressed)
 
 	-- window with one option in "button" style
-	s.onebutton = {}
+	s.onebutton = _uses(s.setup)
 	s.onebutton.menu = _uses(s.buttonmenu, {
 			position = LAYOUT_SOUTH,
 			h = THREE_ITEM_HEIGHT

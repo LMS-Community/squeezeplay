@@ -370,7 +370,7 @@ function regionWindow(self, menuItem)
 	local item  = {
 		text = "North America",
 		style = 'buttoniconitem',
-		iconStyle = 'region_NA',
+		iconStyle = 'region_US',
 		callback = callback
 	}
 	local item2 = {

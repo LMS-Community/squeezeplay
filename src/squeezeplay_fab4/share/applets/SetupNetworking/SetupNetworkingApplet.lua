@@ -73,9 +73,26 @@ function init(self)
 end
 
 
-function setupRegionShow(self, setupNext, wlan)
-	local window = Window("button", self:string("NETWORK_REGION"), 'helptitle')
+function _helpWindow(self, titleText, bodyText)
+	local window = Window("help", self:string(titleText), "helptitle")
 	window:setAllowScreensaver(false)
+
+	local textarea = Textarea("textarea", self:string(bodyText))
+	window:addWidget(textarea)
+	self:tieAndShowWindow(window)
+
+	return window
+end
+
+
+function setupRegionShow(self, setupNext, wlan)
+	local window = Window("button", self:string("NETWORK_REGION"), "setup")
+	window:setAllowScreensaver(false)
+
+	window:addActionListener("help", self, function()
+		self:_helpWindow("NETWORK_REGION", "NETWORK_REGION_HELP")
+	end)
+	window:setButtonAction("rbutton", "help")
 
 	local region = wlan:getRegion()
 
@@ -104,13 +121,6 @@ function setupRegionShow(self, setupNext, wlan)
 		end
 	end
 
-	local helpButton = Button( 
-		Icon('rbutton'), 
-		function() 
-			self:helpWindow('NETWORK_REGION', 'NETWORK_REGION_HELP') 
-		end 
-	)
-	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -121,8 +131,13 @@ end
 function settingsRegionShow(self)
 	local wlan = self.wlanIface
 
-	local window = Window("window", self:string("NETWORK_REGION"), wirelessTitleStyle)
+	local window = Window("window", self:string("NETWORK_REGION"), "settings")
 	window:setAllowScreensaver(false)
+
+	window:addActionListener("help", self, function()
+		self:_helpWindow("NETWORK_REGION", "NETWORK_REGION_HELP")
+	end)
+	window:setButtonAction("rbutton", "help")
 
 	local region = wlan:getRegion()
 
@@ -153,18 +168,6 @@ function settingsRegionShow(self)
 end
 
 
-function setupConnectionHelp(self)
-	local window = Window("window", self:string("NETWORK_CONNECTION_HELP"), 'setuptitle')
-	window:setAllowScreensaver(false)
-
-	local textarea = Textarea("textarea", self:string("NETWORK_CONNECTION_HELP_BODY"))
-	window:addWidget(textarea)
-	self:tieAndShowWindow(window)
-
-	return window
-end
-
-
 function setupConnectionType(self, setupNext)
 	log:debug('setupConnectionType')
 
@@ -178,8 +181,13 @@ function setupConnectionType(self, setupNext)
 	end
 
 	-- ask the user to choose
-	local window = Window("button", self:string("NETWORK_CONNECTION_TYPE"), wirelessTitleStyle)
+	local window = Window("button", self:string("NETWORK_CONNECTION_TYPE"), "setup")
 	window:setAllowScreensaver(false)
+
+	window:addActionListener("help", self, function()
+		self:_helpWindow("NETWORK_CONNECTION_HELP", "NETWORK_CONNECTION_HELP_BODY")
+	end)
+	window:setButtonAction("rbutton", "help")
 
 	local connectionMenu = SimpleMenu("menu")
 
@@ -204,20 +212,13 @@ function setupConnectionType(self, setupNext)
 		end,
 		weight = 2
 	})
-	
-	local helpButton = Button( 
-		Icon('rbutton'), 
-		function() 
-			self:setupConnectionHelp() 
-		end 
-	)
 
-	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(connectionMenu)
 
 	self:tieAndShowWindow(window)
 	return window
 end
+
 
 function settingsConnectionType(self)
 	log:debug('setupConnectionType')
@@ -465,6 +466,11 @@ function _networksShow(self, iface, title, help)
 
 	local window = Window("window", title, wirelessTitleStyle)
 	window:setAllowScreensaver(false)
+
+	window:addActionListener("help", self, function()
+		self:_helpWindow("NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY")
+	end)
+	window:setButtonAction("rbutton", "help")
 
 	-- window to return to on completion of network settings
 	self.topWindow = window

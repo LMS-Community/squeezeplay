@@ -984,3 +984,8 @@ NETWORK_ATTACH_CABLE_DETAILED
 NETWORK_ERROR
 	EN	Error
 
+NETWORK_LIST_HELP
+	EN	Help
+
+NETWORK_LIST_HELP_BODY
+	EN	This is just a placeholder for some help text.

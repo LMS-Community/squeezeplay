@@ -107,7 +107,7 @@ function step1(self)
 		end)
 
 	-- choose language
-	self._topWindow = appletManager:callService("setupShowSetupLanguage", function() self:step2() end, 'setupfirsttitle', true)
+	self._topWindow = appletManager:callService("setupShowSetupLanguage", function() self:step2() end, false)
 
 	return self.topWindow
 end

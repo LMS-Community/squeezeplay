@@ -94,8 +94,6 @@ function __init(self, style, widgets)
 				end
 
 				if r == EVENT_UNUSED and event:getType() == EVENT_MOUSE_DOWN then
-					log:error("here looking for a group widget")
-
 					--no match for the down found, send to closest group member
 					local mouseX, mouseY = event:getMouse()
 					local closestDistance = 99999

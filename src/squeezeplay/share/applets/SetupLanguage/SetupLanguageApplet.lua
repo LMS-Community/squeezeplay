@@ -46,21 +46,19 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-function setupShowSetupLanguage(self, setupNext, windowStyle, hideHelp)
+function setupShowSetupLanguage(self, setupNext, helpText)
 	local currentLocale = locale:getLocale()
 	log:info("locale currently is ", currentLocale)
-
-	if not windowStyle then
-		windowStyle = 'settingstitle'
-	end
 
 	-- this uses private data/methods from Applet and locale. don't do this elsewhere,
 	-- but it's needed for speed here
 	self.allStrings = locale:loadAllStrings(self._entry.stringsFilepath)
 
 	-- setup menu
-	local window = Window("window", self:string("CHOOSE_LANGUAGE"), windowStyle)
+	local window = Window("setup", self:string("CHOOSE_LANGUAGE"), "setuptitle")
 	window:setAllowScreensaver(false)
+
+	window:setButtonAction("lbutton", nil)
 
 	local menu = SimpleMenu("menu")
 
@@ -79,8 +77,7 @@ function setupShowSetupLanguage(self, setupNext, windowStyle, hideHelp)
 		end
 	end
 
-
-	if not hideHelp then
+	if helpText ~= false then
 		window:addWidget(Textarea("help", self:string("CHOOSE_LANGUAGE_HELP")))
 	end
 	window:addWidget(menu)
@@ -110,7 +107,7 @@ function settingsShow(self, menuItem)
 	self.allStrings = locale:loadAllStrings(self._entry.stringsFilepath)
 
 	-- setup menu
-	local window = Window("window", self:string("LANGUAGE"), 'settingstitle')
+	local window = Window("settings", self:string("LANGUAGE"), 'settingstitle')
 	local menu = SimpleMenu("menu")
 
 	local group = RadioGroup()
