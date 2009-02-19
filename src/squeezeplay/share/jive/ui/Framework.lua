@@ -616,7 +616,10 @@ Push the action for actionName onto the event queue.
 =cut
 --]]
 function pushAction(self, actionName)
-	self:pushEvent(self:newActionEvent(actionName))
+	local actionEvent = self:newActionEvent(actionName)
+	if actionEvent then
+		self:pushEvent(actionEvent)
+	end
 end
 
 
