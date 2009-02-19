@@ -143,13 +143,22 @@ function skin(self, s)
 	local threeItemSelectionBox = Tile:loadImage( imgpath .. "Screen_Formats/3_line_lists/menu_sel_box_3line.png")
 	local threeItemPressedBox   = Tile:loadImage( imgpath .. "Screen_Formats/3_line_lists/menu_sel_box_3line_press.png")
 
-	local backButton              = Tile:loadImage( imgpath .. "Buttons/button_back_tb.png")
-	local backButtonPressed       = Tile:loadImage( imgpath .. "Buttons/button_back_tb_press.png")
+	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = Tile:loadImage( imgpath .. "Buttons/button_help_tb.png")
-	local helpButtonPressed       = Tile:loadImage( imgpath .. "Buttons/button_help_tb_press.png")
-	local nowPlayingButton        = Tile:loadImage( imgpath .. "Buttons/button_tbar_whole.png")
-	local nowPlayingButtonPressed = Tile:loadImage( imgpath .. "Buttons/button_tbar_whole_press.png")
-	local textinputBackground     = Tile:loadImage( imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_whole.png")
+	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
+	--local textinputBackground     = Tile:loadImage( imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_whole.png")
+	local textinputBackground     = 
+		Tile:loadTiles({
+				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box.png",
+				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tl.png",
+				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_t.png",
+				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tr.png",
+				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_r.png",
+				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_br.png",
+				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_b.png",
+				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_bl.png",
+				 imgpath .. "Screen_Formats/Text_Entry/Keyboard_Touch/text_entry_titlebar_box_l.png",
+				})
 
 	local buttonBox =
 		Tile:loadTiles({
@@ -166,30 +175,29 @@ function skin(self, s)
 
 	local pressedTitlebarButtonBox =
 		Tile:loadTiles({
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_press.png",
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_tl_press.png",
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_t_press.png",
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_tr_press.png",
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_r_press.png",
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_br_press.png",
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_b_press.png",
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_bl_press.png",
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_l_press.png",
+					imgpath .. "Buttons/button_titlebar_press.png",
+					imgpath .. "Buttons/button_titlebar_tl_press.png",
+					imgpath .. "Buttons/button_titlebar_t_press.png",
+					imgpath .. "Buttons/button_titlebar_tr_press.png",
+					imgpath .. "Buttons/button_titlebar_r_press.png",
+					imgpath .. "Buttons/button_titlebar_br_press.png",
+					imgpath .. "Buttons/button_titlebar_b_press.png",
+					imgpath .. "Buttons/button_titlebar_bl_press.png",
+					imgpath .. "Buttons/button_titlebar_l_press.png",
 				})
 
 	local titlebarButtonBox =
 		Tile:loadTiles({
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar.png",
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_tl.png",
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_t.png",
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_tr.png",
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_r.png",
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_br.png",
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_b.png",
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_bl.png",
-					imgpath .. "Screen_Formats/Titlebar/button_titlebar_l.png",
+					imgpath .. "Buttons/button_titlebar.png",
+					imgpath .. "Buttons/button_titlebar_tl.png",
+					imgpath .. "Buttons/button_titlebar_t.png",
+					imgpath .. "Buttons/button_titlebar_tr.png",
+					imgpath .. "Buttons/button_titlebar_r.png",
+					imgpath .. "Buttons/button_titlebar_br.png",
+					imgpath .. "Buttons/button_titlebar_b.png",
+					imgpath .. "Buttons/button_titlebar_bl.png",
+					imgpath .. "Buttons/button_titlebar_l.png",
 				})
-
 
 -- FIXME: do these need updating for Fab4Skin?
 	local helpBox = 
@@ -302,9 +310,9 @@ function skin(self, s)
 	local ITEM_ICON_ALIGN   = 'center'
 	local THREE_ITEM_HEIGHT = 72
 	local FIVE_ITEM_HEIGHT = 45
-	local TITLE_BUTTON_WIDTH = 66
-	local TITLE_BUTTON_HEIGHT = 37
-	local TITLE_BUTTON_PADDING = { 8, 4, 8, 4 }
+	local TITLE_BUTTON_WIDTH = 76
+	local TITLE_BUTTON_HEIGHT = 47
+	local TITLE_BUTTON_PADDING = { 4, 0, 4, 0 }
 
 	local smallSpinny = {
 		img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
@@ -356,23 +364,26 @@ function skin(self, s)
 
 	s.title.lbutton               = {}
 	s.title.lbutton.img           = backButton
+	s.title.lbutton.bgImg         = titlebarButtonBox
 	s.title.lbutton.w             = TITLE_BUTTON_WIDTH
 	s.title.lbutton.h             = TITLE_BUTTON_HEIGHT
-	s.title.lbutton.border       = TITLE_BUTTON_PADDING
+	s.title.lbutton.align         = 'center'
+	s.title.lbutton.border        = TITLE_BUTTON_PADDING
 
 	s.title.rbutton               = {}
 	s.title.rbutton.img           = nowPlayingButton
+	s.title.rbutton.bgImg         = titlebarButtonBox
 	s.title.rbutton.w             = TITLE_BUTTON_WIDTH
 	s.title.rbutton.h             = TITLE_BUTTON_HEIGHT
-	s.title.rbutton.border       = TITLE_BUTTON_PADDING
+	s.title.rbutton.align         = 'center'
+	s.title.rbutton.border        = TITLE_BUTTON_PADDING
 
 	s.title.pressed = {}
 	s.title.pressed.lbutton = _uses(s.title.lbutton, {
-		img = backButtonPressed,
+		bgImg = pressedTitlebarButtonBox,
 	})
 	s.title.pressed.rbutton = _uses(s.title.rbutton, {
-		--bgImg = pressedTitlebarButtonBox,
-		img = nowPlayingButtonPressed,
+		bgImg = pressedTitlebarButtonBox,
 	})
 
 	s.noRbutton = _uses(s.title, {
@@ -651,7 +662,7 @@ function skin(self, s)
 
 	-- Text input
 	s.textinput = {}
-	s.textinput.h = 40
+	s.textinput.h = 35
 	s.textinput.border = { 8, 0, 8, 0 }
 	s.textinput.padding = { 6, 0, 6, 0 }
 	s.textinput.font = _boldfont(TEXTINPUT_FONT_SIZE)
@@ -819,12 +830,12 @@ function skin(self, s)
 	s.helpTouchButton.h = 22
 
 	
-	s.keyboardButton   = _uses(s.touchButton, { padding = 2, w = 35, h = 35 } )
+	s.keyboardButton   = _uses(s.touchButton, { padding = 2, w = 35, h = 35, align = 'center' } )
 	s.keyboardSpace    = _uses(s.touchButton, { padding = 2, w = 100, h = 35 } )
 	s.keyboardShift    = _uses(s.touchButton, { padding = 2, w = 75, h = 35 } )
 	s.keyboardBack     = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/left_arrow.png") } )
-	s.keyboardShiftLower     = _uses(s.keyboardButton, { img = _loadImage(self, "Screen_Formats/Text_Entry/Keyboard_Touch/button_delete.png") } )
-	s.keyboardShiftUpper     = _uses(s.keyboardButton, { img = _loadImage(self, "Screen_Formats/Text_Entry/Keyboard_Touch/button_delete_press.png") } )
+	s.keyboardShiftLower     = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/icon_shift_off.png") } )
+	s.keyboardShiftUpper     = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/icon_shift_on.png") } )
 
 	-- FIXME: icon_search.png is incorrect here
 	s.keyboardGo       = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/right_arrow.png") } )
@@ -960,7 +971,7 @@ function skin(self, s)
 	})
 	s.pressed.helptitle = _uses(s.helptitle, {
 		rbutton = {
-			img = helpButtonPressed,
+			bgImg = titlebarButtonBoxPressed,
 		},
 	})
 
@@ -1601,7 +1612,8 @@ function skin(self, s)
 			bgImg   = titlebarButtonBox,
 			w       = TITLE_BUTTON_WIDTH,
 			h       = TITLE_BUTTON_HEIGHT,
-			border =  TITLE_BUTTON_PADDING,
+			padding =  TITLE_BUTTON_PADDING,
+			padding = { 10, 0, 10, 0},
 			align   = 'center',
 		}
 	})

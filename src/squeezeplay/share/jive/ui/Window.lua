@@ -698,15 +698,31 @@ function setTitle(self, title)
 	if self.title then
 		self.title:setWidgetValue("text", title)
 	else
-		self.title = Group("title",
-					{ text = Label("text", title),
-					icon = Icon("icon"),
-					back = Button(Icon("back"), 
-						Framework:pushAction("back"),
-						Framework:pushAction("go_home"))
-					})
+		self.title = Group("title", { 
+			text = Label("text", title),
+			lbutton = Button(
+					Icon("lbutton"), 
+					Framework:pushAction("back")
+			),
+			rbutton = Icon("rbutton"),
+		})
 		self:_addWidget(self.title)
 		self.title:_event(Event:new(EVENT_FOCUS_GAINED))
+	end
+end
+
+
+--[[
+
+=head2 jive.ui.Window:setTitleIcon(iconName, iconStyle)
+
+Sets the windows title icon with name I<iconName> to style I<iconStyle>.
+
+=cut
+--]]
+function setTitleIcon(self, iconName, iconStyle)
+	if self.title and self.title.iconName then
+		self.title.iconName:setStyle(iconStyle)
 	end
 end
 
