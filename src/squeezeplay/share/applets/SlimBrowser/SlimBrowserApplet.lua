@@ -421,6 +421,10 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 					Framework:pushAction("back")
 
 					return EVENT_CONSUME
+				end,
+				function()
+					Framework:pushAction("go_home")
+					return EVENT_CONSUME
 				end
 			), 
 			nowplaying = Button(
@@ -1055,6 +1059,10 @@ local function _browseSink(step, chunk, err)
 									Framework:pushAction("back")
 
 									return EVENT_CONSUME
+								end,
+								function()
+									Framework:pushAction("go_home")
+									return EVENT_CONSUME
 								end
 							), 
 							nowplaying = Button(
@@ -1454,7 +1462,7 @@ local _globalActionsNEW = {
 	["play_favorite_8"] = _goPlayFavoriteAction,
 	["play_favorite_9"] = _goPlayFavoriteAction,
 	
-	["go_home"] = function()
+	["go_home_or_now_playing"] = function()
 		local windowStack = Framework.windowStack
 
 		-- are we in home?
@@ -1464,6 +1472,11 @@ local _globalActionsNEW = {
 			_goNow('nowPlaying', Window.transitionPushLeft)
 		end
 
+		return EVENT_CONSUME
+	end,
+
+	["go_home"] = function()
+		_goNow('home')
 		return EVENT_CONSUME
 	end,
 
@@ -1766,8 +1779,8 @@ local _keycodeActionName = {
 
 -- map from a key to an actionName
 local _actionToActionName = {
-	["go_home"] = 'home',
-	["pause"]   = 'pause', 
+	["go_home_or_now_playing"] = 'home',
+	["pause"]   = 'pause',
 	["stop"]   = 'pause-hold',
 	["play"]    = 'play',
 	["custom_mix"]    = 'play-hold',

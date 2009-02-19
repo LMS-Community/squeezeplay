@@ -493,6 +493,10 @@ function _createUI(self)
 				function() 
 					Framework:pushAction("back")
 					return EVENT_CONSUME 
+					end,
+					function()
+						Framework:pushAction("go_home")
+						return EVENT_CONSUME
 				end
 		),
 
