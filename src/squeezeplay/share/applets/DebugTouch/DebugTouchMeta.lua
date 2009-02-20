@@ -34,7 +34,7 @@ function configureApplet(meta)
 	Framework:addActionListener("debug_touch", meta, _debugTouch, 9999)
 
 	-- turn on by default for debugging
-	meta:_debugTouch()
+--	meta:_debugTouch()
 end
 
 

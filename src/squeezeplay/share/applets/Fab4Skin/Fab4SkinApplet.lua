@@ -1477,12 +1477,13 @@ function skin(self, s)
 
 
 	-- pressed styles
-	s.ssnptitle.pressed = {}
-	s.ssnptitle.pressed.lbutton = _uses(s.ssnptitle.lbutton, { 
-		img = backButtonPressed 
-	})
-	s.ssnptitle.pressed.rbutton = _uses(s.ssnptitle.rbutton, { 
-		bgImg = pressedTitlebarButtonBox
+	s.ssnptitle.pressed = _uses(s.ssnptitle, {
+		lbutton = {
+			bgImg = pressedTitlebarButtonBox,
+		},
+		rbutton = {
+			bgImg = pressedTitlebarButtonBox,
+		},
 	})
 
 	s.browsenptitle.pressed = _uses(s.ssnptitle.pressed)
