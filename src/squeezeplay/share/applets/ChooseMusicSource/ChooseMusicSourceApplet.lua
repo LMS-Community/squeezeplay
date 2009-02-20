@@ -36,6 +36,7 @@ local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
 local Textarea      = require("jive.ui.Textarea")
 local Textinput     = require("jive.ui.Textinput")
+local Keyboard      = require("jive.ui.Keyboard")
 local Popup         = require("jive.ui.Popup")
 local Icon          = require("jive.ui.Icon")
 
@@ -479,10 +480,14 @@ function _addServer(self, menuItem)
 					return true
 				end)
 
-	window:addWidget(Textarea("help", self:string("SLIMSERVER_HELP")))
+	local keyboard = Keyboard("keyboard", "numeric")
+--	window:addWidget(Textarea("help", self:string("SLIMSERVER_HELP")))
 	window:addWidget(input)
+	window:addWidget(keyboard)
+	window:focusWidget(input)
 
 	self:tieAndShowWindow(window)
+	return window
 end
 
 
