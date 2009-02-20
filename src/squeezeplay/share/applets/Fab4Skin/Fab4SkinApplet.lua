@@ -472,12 +472,6 @@ function skin(self, s)
 			bgImg = fiveItemPressedBox,
 	})
 
-	s.pressed.title = _uses(s.title, {
-		lbutton = {
-			bgImg = pressedTitlebarButtonBox,
-		}
-	})
-
 	s.pressed.itemplay =
 		_uses(s.pressed.item, {
 			      icon = {
@@ -844,32 +838,8 @@ function skin(self, s)
 	s.volumePopup.title.align = "center"
 	s.volumePopup.title.bgImg = false
 
-	-- titles with artwork and song info
-	s.albumtitle = _uses(s.title, {
-				icon = { 
-					img = _loadImage(self, "Icons/Mini/icon_albums.png"),
-        				padding = { 10, 0, 0, 0 },
-				},
-				rbutton = {
-        				img     = _loadImage(self, "Icons/menu_album_noartwork_24.png"),
-        				padding = { 5, 10, 15, 5 },
-					align   = "top-right"
-				},
-				text = { 
-					align = 'left',  
-					lineHeight = TITLE_FONT_SIZE + 2,
-					padding = { 10, 5, 8, 5 }
-				},
-				-- FIXME: this needs a box like titleBox, but titleBox does not work for a style of this height
-				bgImg = false
-			}
-	)
-
-
 	-- FIXME remove these when SlimBrowser is update to use new
 	-- Window title api
-	-- no mini-icons in fab4 skin
-	s.minititle            = _uses(s.title)
 	s.title.lbutton        = {
 		img            = backButton,
 		bgImg          = titlebarButtonBox,
@@ -887,6 +857,20 @@ function skin(self, s)
 		border         = TITLE_BUTTON_PADDING,
 	}
 
+	s.title.pressed = _uses(s.title, {
+		rbutton = {
+			bgImg = pressedTitlebarButtonBox,
+		},
+		lbutton = {
+			bgImg = pressedTitlebarButtonBox,
+		}
+	})
+
+	-- titles with artwork and song info
+	s.albumtitle = _uses(s.title)
+
+	-- no mini-icons in fab4 skin
+	s.minititle            = _uses(s.title)
 	s.internetradiotitle   = _uses(s.minititle)
 	s.favoritestitle       = _uses(s.minititle)
 	s.mymusictitle         = _uses(s.minititle)

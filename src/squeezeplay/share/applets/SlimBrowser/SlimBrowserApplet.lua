@@ -942,6 +942,7 @@ end
 local function _browseSink(step, chunk, err)
 	log:debug("_browseSink()")
 
+log:warn('mark')
 	-- are we cancelled?
 	if step.cancelled then
 		log:debug("_browseSink(): ignoring data, action cancelled...")
@@ -1017,7 +1018,11 @@ local function _browseSink(step, chunk, err)
 				step.window:setTitleStyle('title')
 			end
 
-			if data.window then
+			if not data.window and (data.base and data.base.window) then
+				data.window =  data.base.window
+			end
+			if data.window or data.base and data.base.window then
+				
 				-- if a titleStyle is being sent, we need to setTitleWidget completely
 				if data.window.titleStyle or data.window['icon-id'] then
 					local titleText, titleStyle, titleIcon
