@@ -59,7 +59,7 @@ local oo          = require("loop.simple")
 
 local io          = require("io")
 local os          = require("os")
-local string      = require("string")
+local string      = require("jive.utils.string")
 local table       = require("jive.utils.table")
 local ltn12       = require("ltn12")
 
@@ -1040,7 +1040,7 @@ function _editAutoInterfaces(self, ssid)
 	for line in fi:lines() do
 		if string.match(line, "^auto%s") then
 			-- if the interface is to be enabled, it should continue to be set to auto 
-			if string.match(line, autoInterface) then
+			if string.matchLiteral(line, autoInterface) then
 				fo:write(line .. "\n")
 				autoSet = true
 			elseif string.match(line, "lo") then
@@ -1049,7 +1049,7 @@ function _editAutoInterfaces(self, ssid)
 				log:debug('disabling interface: ', line)
 			end
 		elseif string.match(line, "^iface%s") then
-			if not autoSet and string.match(line, iface_name) then
+			if not autoSet and string.matchLiteral(line, iface_name) then
 				log:debug('enabling interface:', autoInterface)
 				fo:write("auto " .. autoInterface .. "\n")
 				autoSet = true
