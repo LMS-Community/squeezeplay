@@ -252,6 +252,23 @@ function JiveMain:__init()
 	Framework:addActionListener("up", self, function() return EVENT_CONSUME end, 9999)
 	Framework:addActionListener("down", self, function() return EVENT_CONSUME end, 9999)
 
+
+	--Ignore foreign remote codes
+	Framework:addListener( EVENT_IR_ALL,
+		function(event)
+			if (not Framework:isValidIRCode(event)) then
+				--is foreign remote code, consume so it doesn't appear as input to the app (future ir blaster code might still care)
+				if log:isDebug() then
+					log:debug("Consuming foreign IR event: ", event:tostring())
+				end
+				return EVENT_CONSUME
+			end
+
+			return EVENT_UNUSED
+		end,
+		true
+	)
+
 	-- show our window!
 	jiveMain.window:show()
 
