@@ -590,7 +590,7 @@ function _createUI(self)
 		  	vol  = Button(
 				Icon('vol'),
 				function() 
-					window:dispatchNewEvent(EVENT_KEY_PRESS, KEY_VOLUME_DOWN) 
+					Framework:pushAction("volume_down") 
 					return EVENT_CONSUME 
 				end
 			),
