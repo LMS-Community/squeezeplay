@@ -104,10 +104,14 @@ local FLICK_STOP_SPEED =  3/1000
 local FLICK_FORCE_ACCEL_SPEED = 72 * 30/1000
 
 --time after flick starts that decel occurs
-local FLICK_DECEL_START_TIME = 2000
+local FLICK_DECEL_START_TIME = 400
 
---time from decel start to scroll stop
-local FLICK_DECEL_TOTAL_TIME = 6000
+--time from decel start to scroll stop (trying new linger setting, which throws this off)
+local FLICK_DECEL_TOTAL_TIME = 600
+
+--If non zero, extra afterscroll time (FLICK_SPEED_DECEL_TIME_FACTOR * flickSpeed ) is
+ -- added to FLICK_DECEL_TOTAL_TIME.  flick speed maxes out at about 3.
+local FLICK_SPEED_DECEL_TIME_FACTOR = 1500
 
 -- our class
 module(...)
@@ -624,8 +628,9 @@ function flick(self, initialSpeed, direction)
 		self.flickInitialDecelerationScrollT = nil
 		self.flickPreDecelY = 0
 
-		self.flickAccelRate = -self.flickInitialSpeed / FLICK_DECEL_TOTAL_TIME
-		log:debug("*****Starting flick")
+		local decelTime = FLICK_DECEL_TOTAL_TIME + math.abs(FLICK_SPEED_DECEL_TIME_FACTOR * self.flickInitialSpeed)
+		self.flickAccelRate = -self.flickInitialSpeed / decelTime
+		log:debug("*****Starting flick - decelTime: ", decelTime )
 	end
 
 	--continue flick
