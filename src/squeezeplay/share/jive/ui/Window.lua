@@ -62,6 +62,7 @@ local EVENT_ALL_INPUT         = jive.ui.EVENT_ALL_INPUT
 local ACTION                  = jive.ui.ACTION
 local EVENT_KEY_ALL           = jive.ui.EVENT_KEY_ALL
 local EVENT_MOUSE_HOLD        = jive.ui.EVENT_MOUSE_HOLD
+local EVENT_MOUSE_DRAG        = jive.ui.EVENT_MOUSE_DRAG
 local EVENT_MOUSE_PRESS       = jive.ui.EVENT_MOUSE_PRESS
 local EVENT_MOUSE_DOWN        = jive.ui.EVENT_MOUSE_DOWN
 local EVENT_MOUSE_UP          = jive.ui.EVENT_MOUSE_UP
@@ -277,7 +278,7 @@ end
 
 function hideOnAllButtonInput(self)
 	if not self.hideOnAllButtonInputHandle then
-		self.hideOnAllButtonInputHandle = self:addListener(ACTION | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD,
+		self.hideOnAllButtonInputHandle = self:addListener(ACTION | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
 								function(event)
 									return hideOnAllButtonInputListener(self, event)
 								end)
@@ -462,6 +463,14 @@ function showBriefly(self, msecs, callback,
 		     pushTransition,
 		     popTransition)
 
+	if not self.visible and self.brieflyTimer ~= nil then
+		--other source may have hidden then window, but not cleaned up the timer.
+		 -- Without this visible check, the "briefly" window would not appear until the old timer timeout
+		self.brieflyTimer:stop()
+		self.brieflyTimer = nil
+
+	end
+
 	if self.brieflyTimer ~= nil then
 		if msecs then
 			self.brieflyTimer:setInterval(msecs)
@@ -481,7 +490,7 @@ function showBriefly(self, msecs, callback,
 
 	if self.brieflyHandler == nil then
 		self.brieflyHandler =
-			self:addListener(ACTION | EVENT_CHAR_PRESS | EVENT_KEY_PRESS | EVENT_SCROLL,
+			self:addListener(ACTION | EVENT_CHAR_PRESS | EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
 					 function(event)
 						 self:hide(popTransition, "NONE")
 						 return EVENT_CONSUME

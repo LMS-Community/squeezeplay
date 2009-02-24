@@ -58,6 +58,12 @@ local log            = require("jive.utils.log").logger("player")
 
 local EVENT_KEY_ALL    = jive.ui.EVENT_KEY_ALL
 local EVENT_CHAR_PRESS = jive.ui.EVENT_CHAR_PRESS
+local EVENT_MOUSE_HOLD        = jive.ui.EVENT_MOUSE_HOLD
+local EVENT_MOUSE_DRAG        = jive.ui.EVENT_MOUSE_DRAG
+local EVENT_MOUSE_PRESS       = jive.ui.EVENT_MOUSE_PRESS
+local EVENT_MOUSE_DOWN        = jive.ui.EVENT_MOUSE_DOWN
+local EVENT_MOUSE_UP          = jive.ui.EVENT_MOUSE_UP
+local EVENT_MOUSE_ALL         = jive.ui.EVENT_MOUSE_ALL
 local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
 local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
 local ACTION           = jive.ui.ACTION
@@ -829,6 +835,12 @@ function send(self, cmd)
 end
 
 
+local function hideAction(self)
+	self.currentSong.window:hide()
+	return EVENT_CONSUME
+end
+
+
 -- onStage
 -- we're being browsed!
 function onStage(self)
@@ -874,14 +886,30 @@ function onStage(self)
 	      })
 
 	self.currentSong.window:addWidget(group)
-	self.currentSong.window:addListener(ACTION | EVENT_CHAR_PRESS | EVENT_KEY_ALL | EVENT_SCROLL,
+
+	--don't let the textarea get the focus, because we want the window to manage events
+	self.currentSong.window:focusWidget(nil)
+
+
+	--Only 'back' and mouse clicks clear the popup, all other input is forwarded to main window
+
+	self.currentSong.window:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
 		function(event)
+
+			if (event:getType() & EVENT_MOUSE_ALL) > 0 then
+				return hideAction(self) 
+			end
+
 			local prev = self.currentSong.window:getLowerWindow()
 			if prev then
 				Framework:dispatchEvent(prev, event)
 			end
 			return EVENT_CONSUME
 		end)
+
+
+	self.currentSong.window:addActionListener("back", self, hideAction)
+
 	self.currentSong.window.brieflyHandler = 1
 end
 
