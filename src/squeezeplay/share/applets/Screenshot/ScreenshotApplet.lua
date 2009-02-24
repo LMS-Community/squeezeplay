@@ -40,14 +40,16 @@ oo.class(_M, Applet)
 local function _takeScreenshotAction(self)
 	Framework:playSound("CLICK")
 
-	-- write to /media/*/log/squeezeplayXXXX.bmp or userpath
+	-- write to /media/*/squeezeplayXXXX.bmp or userpath
 	local path = System.getUserDir()
 	if lfs.attributes("/media", "mode") ~= nil then
 		for dir in lfs.dir("/media") do
-			local tmp = "/media/" .. dir 
-			if lfs.attributes(tmp, "mode") == "directory" then
-				path = tmp
-				break
+			if not string.match(dir, "^%.") then
+				local tmp = "/media/" .. dir 
+				if lfs.attributes(tmp, "mode") == "directory" then
+					path = tmp
+					break
+				end
 			end
 		end
 	end
