@@ -88,6 +88,8 @@ static struct jive_keymap keymap[] = {
 	{ SDLK_AudioLowerVolume,JIVE_KEY_VOLUME_DOWN },
 	{ SDLK_PAGEUP,		JIVE_KEY_PAGE_UP },
 	{ SDLK_PAGEDOWN,	JIVE_KEY_PAGE_DOWN },
+	{ SDLK_PRINT,		JIVE_KEY_PRINT },
+	{ SDLK_SYSREQ,		JIVE_KEY_PRINT },
 	{ SDLK_UNKNOWN,		JIVE_KEY_NONE },
 };
 
