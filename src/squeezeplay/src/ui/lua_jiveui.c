@@ -2228,6 +2228,7 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"KEY_VOLUME_DOWN",JIVE_KEY_VOLUME_DOWN);
    tolua_constant(tolua_S,"KEY_PAGE_UP",JIVE_KEY_PAGE_UP);
    tolua_constant(tolua_S,"KEY_PAGE_DOWN",JIVE_KEY_PAGE_DOWN);
+   tolua_constant(tolua_S,"KEY_PRINT",JIVE_KEY_PRINT);
    tolua_cclass(tolua_S,"Surface","Surface","",tolua_jive_jive_ui_Surface_free00);
    tolua_beginmodule(tolua_S,"Surface");
     tolua_function(tolua_S,"newRGB",tolua_jive_jive_ui_Surface_newRGB00);

@@ -78,6 +78,7 @@ keyActionMappings.press = {
 	[KEY_REW] = "jump_rew",
 	[KEY_VOLUME_UP] = "volume_up",
 	[KEY_VOLUME_DOWN] = "volume_down",
+	[KEY_PRINT] = "take_screenshot",
 }
 
 --Hmm, this won't work yet since we still look for KEY_PRESS in a lot of places, and would get double responses
