@@ -77,6 +77,7 @@ local EVENT_MOUSE_DOWN     = jive.ui.EVENT_MOUSE_DOWN
 local EVENT_MOUSE_UP       = jive.ui.EVENT_MOUSE_UP
 local EVENT_MOUSE_MOVE     = jive.ui.EVENT_MOUSE_MOVE
 local EVENT_MOUSE_DRAG     = jive.ui.EVENT_MOUSE_DRAG
+local EVENT_MOUSE_HOLD     = jive.ui.EVENT_MOUSE_HOLD
 local EVENT_MOUSE_ALL      = jive.ui.EVENT_MOUSE_ALL
 
 local EVENT_CONSUME        = jive.ui.EVENT_CONSUME
@@ -232,6 +233,14 @@ function handleDrag(self, dragAmountY)
 end
 
 
+function _unpressSelectedItem(self)
+	if _selectedItem(self) then
+		_selectedItem(self):setStyleModifier(nil)
+		_selectedItem(self):reDraw()
+	end
+end
+
+
 -- _eventHandler
 -- manages all menu events
 local function _eventHandler(self, event)
@@ -334,7 +343,14 @@ local function _eventHandler(self, event)
 			end
 		end
 
-	elseif evtype == EVENT_MOUSE_PRESS then
+	elseif self.locked == nil and evtype == EVENT_MOUSE_HOLD then
+		--no mouse hold handling defined yet
+
+		self.usePressedStyle = false
+		self:_unpressSelectedItem()
+
+		return EVENT_CONSUME
+	elseif self.locked == nil and evtype == EVENT_MOUSE_PRESS then
 
 		if self.scrollbar:mouseInside(event) then
 
@@ -368,6 +384,9 @@ local function _eventHandler(self, event)
 						self:playSound("BUMP")
 						self:getWindow():bumpRight()
 					end
+
+					self.usePressedStyle = false
+					self:_unpressSelectedItem()
 			       end,
 			       true)
 
@@ -378,9 +397,9 @@ local function _eventHandler(self, event)
 			return EVENT_CONSUME
 		end
 
-	elseif evtype == EVENT_MOUSE_DOWN or
+	elseif self.locked == nil and (evtype == EVENT_MOUSE_DOWN or
 		evtype == EVENT_MOUSE_MOVE or
-		evtype == EVENT_MOUSE_DRAG then
+		evtype == EVENT_MOUSE_DRAG) then
 
 		self.lastInputType = "mouse"
 
@@ -448,12 +467,8 @@ local function _eventHandler(self, event)
 					  -- first unhighlight last selected item - todo: try just setting style on current item instead of a full relayout
 	                                self.usePressedStyle = false
 
-	                                --unhighlight any selected item
-	                                if _selectedItem(self) then
-						_selectedItem(self):setStyleModifier(nil)
-						_selectedItem(self):reDraw()
-					end
-					
+					self:_unpressSelectedItem()
+
 					if self.selectItemAfterFingerDownTimer then
 						self.selectItemAfterFingerDownTimer:stop()
 					end
@@ -1180,9 +1195,9 @@ function _updateWidgets(self)
 	local lastWidgets = self.lastWidgets
 
 	for i = 1, indexSize do
-		
+
 		local widget = self.widgets[i]
-		
+
 		if widget then
 			if widget.parent ~= self then
 				widget.parent = self
