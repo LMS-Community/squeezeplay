@@ -136,6 +136,7 @@ typedef enum {
 	JIVE_KEY_VOLUME_DOWN		= 0x2000,
 	JIVE_KEY_PAGE_UP		= 0x4000,
 	JIVE_KEY_PAGE_DOWN		= 0x8000,
+	JIVE_KEY_PRINT			= 0x10000,
 } JiveKey;
 
 
