@@ -1,5 +1,5 @@
 
--- Private class to handle player volume 
+-- Private class to handle player volume
 
 local tostring = tostring
 
@@ -72,7 +72,7 @@ local function _openPopup(self)
 	local title = Label("title", "")
 	popup:addWidget(title)
 
-	local slider = Slider("volume")
+	--slider is focused widget so it will receive events before popup gets a chance
 	local slider = Slider("slider", -1, 100, self.volume,
                               function(slider, value, done)
 					self.delta = value - self.volume
@@ -84,7 +84,7 @@ local function _openPopup(self)
 				      Icon("volumeMax")
 			      }))
 
-	popup:addListener(ACTION | EVENT_KEY_ALL | EVENT_SCROLL,
+	popup:addListener(ACTION | EVENT_KEY_ALL,
 			  function(event)
 				  return self:event(event)
 			  end)
@@ -140,17 +140,17 @@ function _updateVolume(self, mute, directSet)
 		if self.accelDelta ~= self.delta or (now - self.lastUpdate) > 350 then
 			self.accelCount = 0
 		end
-	
+
 		self.accelCount = math.min(self.accelCount + 1, 20)
 		self.accelDelta = self.delta
 		self.lastUpdate = now
-	
+
 		-- change volume
 		local accel = self.accelCount / 4
 		new = math.floor(math.abs(self.volume) + self.delta * accel * VOLUME_STEP)
 	end
-		
-	if new > 100 then 
+
+	if new > 100 then
 		new = 100
 	elseif new < 0 then
 		new = 0
@@ -188,20 +188,8 @@ function event(self, event)
 	end
 
 	local type = event:getType()
-	
-	if type == EVENT_SCROLL then
-		local scroll = event:getScroll()
 
-		if scroll > 0 then
-			self.delta = 1
-		elseif scroll < 0 then
-			self.delta = -1
-		else
-			self.delta = 0
-		end
-		_updateVolume(self)
-
-	elseif type == ACTION then
+	if type == ACTION then
 		local action = event:getAction()
 		if action == "volume_up" then
 			self.delta = 1
@@ -263,7 +251,7 @@ function event(self, event)
 			_updateVolume(self)
 			self.delta = 0
 		end
-					
+
 		return EVENT_CONSUME
 
 	else

@@ -48,8 +48,12 @@ local EVENT_KEY_PRESS = jive.ui.EVENT_KEY_PRESS
 local EVENT_SCROLL    = jive.ui.EVENT_SCROLL
 local EVENT_CONSUME   = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED    = jive.ui.EVENT_UNUSED
-local EVENT_MOUSE_DOWN = jive.ui.EVENT_MOUSE_DOWN
-local EVENT_MOUSE_DRAG = jive.ui.EVENT_MOUSE_DRAG
+local EVENT_MOUSE_HOLD        = jive.ui.EVENT_MOUSE_HOLD
+local EVENT_MOUSE_DRAG        = jive.ui.EVENT_MOUSE_DRAG
+local EVENT_MOUSE_PRESS       = jive.ui.EVENT_MOUSE_PRESS
+local EVENT_MOUSE_DOWN        = jive.ui.EVENT_MOUSE_DOWN
+local EVENT_MOUSE_UP          = jive.ui.EVENT_MOUSE_UP
+local EVENT_MOUSE_ALL         = jive.ui.EVENT_MOUSE_ALL
 
 local KEY_BACK        = jive.ui.KEY_BACK
 local KEY_UP          = jive.ui.KEY_UP
@@ -79,7 +83,7 @@ function __init(self, style, min, max, value, closure)
 
 	obj:addActionListener("go", obj, _callClosureAction)
 	obj:addActionListener("play", obj, _callClosureAction)
-	obj:addListener(EVENT_SCROLL | EVENT_KEY_PRESS | EVENT_MOUSE_DOWN | EVENT_MOUSE_DRAG,
+	obj:addListener(EVENT_SCROLL | EVENT_KEY_PRESS | EVENT_MOUSE_ALL,
 			function(event)
 				return obj:_eventHandler(event)
 			end)
@@ -204,8 +208,7 @@ function _eventHandler(self, event)
 
 	if type == EVENT_SCROLL then
 		self:_moveSlider(event:getScroll())
-		return EVENT_UNUSED --current usages need this so they can handle the scroll directly
-
+		return EVENT_CONSUME
 	elseif type == EVENT_MOUSE_DOWN or
 		type == EVENT_MOUSE_DRAG then
 
@@ -218,7 +221,12 @@ function _eventHandler(self, event)
 			-- vertical
 			self:_setSlider(y / h)
 		end
-		return EVENT_UNUSED --current usages need this so they can handle the scroll directly
+		return EVENT_CONSUME
+	elseif type == EVENT_MOUSE_UP or
+		type == EVENT_MOUSE_PRESS or
+		type == EVENT_MOUSE_HOLD then
+		--ignore
+		return EVENT_CONSUME
 
 	elseif type == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()
@@ -227,6 +235,8 @@ function _eventHandler(self, event)
 		if keycode == KEY_FWD then
 			return _callClosureAction(self, event)
 		end
+
+		return EVENT_UNUSED
 	end
 end
 
