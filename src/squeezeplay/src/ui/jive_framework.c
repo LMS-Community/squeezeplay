@@ -938,7 +938,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 				up.ticks = SDL_GetTicks();
 				up.u.mouse.x = event->button.x;
 				up.u.mouse.y = event->button.y;
-				jive_queue_event(&up);
+				do_dispatch_event(L, &up);
 			}
 
 			mouse_timeout = 0;
