@@ -107,8 +107,12 @@ local function _openPopup(self)
 	local title = Label("title", "")
 	popup:addWidget(title)
 
-	local slider = Slider("scanner")
-	slider:setRange(0, tonumber(self.duration), tonumber(self.elapsed))
+	local slider = Slider("scanner", 0, tonumber(self.duration), tonumber(self.elapsed),
+			function(slider, value, done)
+				self.delta = value - self.elapsed
+				self.elapsed = value
+				_updateSelectedTime(self)
+			end)
 	self.scannerGroup = Group("scannerGroup", {
 					      elapsed = Label("text", ""),
 					      slider = slider,
@@ -149,7 +153,7 @@ local function _openPopup(self)
 end
 
 
-local function _updateSelectedTime(self)
+function _updateSelectedTime(self)
 	if not self.popup then
 		self.displayTimer:stop()
 		self.holdTimer:stop()
@@ -235,19 +239,7 @@ function event(self, event)
 
 	local type = event:getType()
 	
-	if type == EVENT_SCROLL then
-		local scroll = event:getScroll()
-
-		if scroll > 0 then
-			self.delta = 1
-		elseif scroll < 0 then
-			self.delta = -1
-		else
-			self.delta = 0
-		end
-		_updateSelectedTime(self)
-
-	elseif type == ACTION then
+	if type == ACTION then
 		local action = event:getAction()
 
 		-- GO closes the popup & executes any pending change
