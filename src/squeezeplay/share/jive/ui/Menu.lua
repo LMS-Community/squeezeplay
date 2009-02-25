@@ -96,7 +96,10 @@ local KEY_PAGE_UP           = jive.ui.KEY_PAGE_UP
 local KEY_PAGE_DOWN         = jive.ui.KEY_PAGE_DOWN
 
 --speed (pixels/ms) that must be surpassed for flick to start.
-local FLICK_THRESHOLD_START_SPEED = 80/1000
+local FLICK_THRESHOLD_START_SPEED = 90/1000
+
+--speed (pixels/ms) that per pixel afterscrolling occurs, otherwise is per item when faster.
+local FLICK_THRESHOLD_BY_PIXEL_SPEED = 400/1000
 
 --speed (pixels/ms) at which flick scrolling will stop
 local FLICK_STOP_SPEED =  3/1000
@@ -187,7 +190,7 @@ function resetDragData(self)
 	self.dragYSinceShift = 0
 end
 
-function handleDrag(self, dragAmountY)
+function handleDrag(self, dragAmountY, byItemOnly)
 
 	if dragAmountY ~= 0 then
 --		log:error("handleDrag dragAmountY: ", dragAmountY )
@@ -199,8 +202,12 @@ function handleDrag(self, dragAmountY)
 				(self.dragYSinceShift < 0 and math.floor(self.dragYSinceShift / self.itemHeight) < 0) then
 			local itemShift = math.floor(self.dragYSinceShift / self.itemHeight)
 			self.dragYSinceShift = self.dragYSinceShift % self.itemHeight
-			self.pixelOffsetY = -1 * self.dragYSinceShift
-
+			if not byItemOnly then
+				self.pixelOffsetY = -1 * self.dragYSinceShift
+			else
+				--by item only so fix the position so that the top item is visible in the same spot each time
+				self.pixelOffsetY = 0
+			end
 			if itemShift > 0 and self.currentShiftDirection <= 0 then
 				--changing shift direction, move cursor so scroll wil occur
 				self:setSelectedIndex(self.topItem + self.numWidgets - 2)
@@ -211,7 +218,7 @@ function handleDrag(self, dragAmountY)
 				self.currentShiftDirection = -1
 			end
 
-			log:debug("self:scrollBy( itemShift ) ", itemShift )
+			log:debug("self:scrollBy( itemShift ) ", itemShift, " self.pixelOffsetY: ", self.pixelOffsetY )
 			self:scrollBy( itemShift, true, false )
 
 			if self.selected == 1 or self.selected == self.listSize then
@@ -220,8 +227,9 @@ function handleDrag(self, dragAmountY)
 
 		else
 			--smooth scroll
-
-			self.pixelOffsetY = -1 * self.dragYSinceShift
+			if not byItemOnly then
+				self.pixelOffsetY = -1 * self.dragYSinceShift
+			end
 			if self.selected and ((self.selected == 1 and self.currentShiftDirection == 1) or self.selected >= self.listSize - 1) then
 				self:resetDragData()
 			end
@@ -651,18 +659,20 @@ function flick(self, initialSpeed, direction)
 	--continue flick
 	local now = Framework:getTicks()
 
-	--slow speed if past decel time
-	if self.flickInitialDecelerationScrollT == nil and now - self.flickInitialScrollT > FLICK_DECEL_START_TIME then
-		log:debug("*****Starting flick slow down")
-		self.flickInitialDecelerationScrollT = now
-	end
-
-	local flickCurrentY
+	local flickCurrentY, byItemOnly
 	if not self.flickInitialDecelerationScrollT then
 		--still at full speed
 		flickCurrentY = self.flickInitialSpeed * (now - self.flickInitialScrollT)
 		self.flickPreDecelY = flickCurrentY
-	else
+
+		--slow speed if past decel time
+		if self.flickInitialDecelerationScrollT == nil and now - self.flickInitialScrollT > FLICK_DECEL_START_TIME then
+			log:debug("*****Starting flick slow down")
+			self.flickInitialDecelerationScrollT = now
+		end
+	end
+
+	if self.flickInitialDecelerationScrollT then	
 		local elapsedTime = now - self.flickInitialDecelerationScrollT
 
 		-- y = v0*t +.5 * a * t^2
@@ -670,6 +680,7 @@ function flick(self, initialSpeed, direction)
 
 		--v = v0 + at
 		local flickCurrentSpeed = self.flickInitialSpeed + (self.flickAccelRate * elapsedTime)
+		byItemOnly = flickCurrentSpeed > FLICK_THRESHOLD_BY_PIXEL_SPEED
 		if flickCurrentSpeed <= FLICK_STOP_SPEED then
 			log:debug("*******Stopping Flick at slow down point. current speed:", flickCurrentSpeed)
 			self:stopFlick()
@@ -679,7 +690,8 @@ function flick(self, initialSpeed, direction)
 
 
 	local pixelOffset = math.floor(flickCurrentY - self.flickLastY)
-	self:handleDrag(self.flickDirection * pixelOffset)
+
+	self:handleDrag(self.flickDirection * pixelOffset, byItemOnly)
 
 	self.flickLastY = self.flickLastY + pixelOffset
 
