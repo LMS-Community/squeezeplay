@@ -722,10 +722,12 @@ apply IP address and associated configuration parameters to a network interface
 function t_setStaticIP(self, ssid, ipAddress, ipSubnet, ipGateway, ipDNS)
 	assert(type(self.interface) == 'string')
 	-- Reset the network
-	local killCommand   = "kill -TERM `cat /var/run/udhcpc." .. self.interface .. "pid`"
+	local killCommand   = "kill -TERM `cat /var/run/udhcpc." .. self.interface .. ".pid`"
+	local killCommand2  = "killall zcip > /dev/null"
 	local configCommand = "/sbin/ifconfig " .. self.interface .. " 0.0.0.0"
 
 	os.execute(killCommand)
+	os.execute(killCommand2)
 	os.execute(configCommand)
 
 	-- Set static ip configuration for network
@@ -738,7 +740,7 @@ function t_setStaticIP(self, ssid, ipAddress, ipSubnet, ipGateway, ipDNS)
 			    )
 
 	-- Bring up the network
-	local ifUp = "/sbin/ifup " .. interface
+	local ifUp = "/sbin/ifup " .. self.interface
 	local status = os.execute(ifUp)
 	log:info("ifup status=", status)
 end
