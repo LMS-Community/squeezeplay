@@ -588,7 +588,7 @@ _handshake = function(self)
 
 	-- only send the mac address for hardware devices
 	if System:isHardware() then
-		data.ext.mac = System:getMacAddress()
+		data[1].ext.mac = System:getMacAddress()
 	end
 
 	-- XXX: according to the spec this should be sent as application/x-www-form-urlencoded
