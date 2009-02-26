@@ -53,6 +53,11 @@ function registerApplet(meta)
 		settings.uuid = table.concat(uuid)
 	end
 
+	-- fix bogus mac addresses from bad check
+	if string.match(settings.mac, "00:04:20") then
+		settings.mac = nil
+	end
+
 	if not settings.mac then
 		settings.mac = System:getMacAddress()
 		store = true
