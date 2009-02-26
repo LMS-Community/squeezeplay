@@ -43,6 +43,11 @@ module(...)
 oo.class(_M, System)
 
 
+function isHardware(class)
+	return (class:getMachine() ~= "squeezeplay")
+end
+
+
 -- C implementation
 
 

@@ -452,8 +452,8 @@ function connect(self, server)
 	self.serverip = self.server:getIpPort()
 
 	-- Bug 9900
-	-- Don't allow connections to SN yet
-	assert(not string.match(self.serverip, "squeezenetwork.com"))
+	-- Don't allow connections to production SN yet
+	assert(not string.match(self.serverip, "www.squeezenetwork.com"))
 
 	self.socket = SocketTcp(self.jnt, self.serverip, PORT, "SlimProto")
 

@@ -151,9 +151,10 @@ function _addServerItem(self, server, address)
 
 	local currentPlayer    = appletManager:callService("getCurrentPlayer")
 
-	-- local players cannot connect to SN
-	if server and server:isSqueezeNetwork() and 
-		currentPlayer and currentPlayer:isLocal() then
+	-- Bug 9900
+	-- squeezeplay cannot connect to production SN
+	if server and server:getIpPort() == "www.squeezenetwork.com" and 
+		currentPlayer and currentPlayer:getModel() == "squeezeplay" then
 			return
 	end
 

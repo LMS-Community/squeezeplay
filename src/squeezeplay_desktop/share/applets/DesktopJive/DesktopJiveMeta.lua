@@ -53,6 +53,11 @@ function registerApplet(meta)
 		settings.uuid = table.concat(uuid)
 	end
 
+	-- fix bogus mac addresses from bad check
+	if string.match(settings.mac, "00:04:20") then
+		settings.mac = nil
+	end
+
 	if not settings.mac then
 		settings.mac = System:getMacAddress()
 		store = true
@@ -69,11 +74,6 @@ function registerApplet(meta)
 		settings.mac = table.concat(mac, ":")
 	end
 
-	-- Set player device type
-	--LocalPlayer:setDeviceType("controller", "Controller")
-
-	settings.mac = "00:04:20:ff:ff:10"
-
 	if store then
 		log:debug("Mac Address: ", settings.mac)
 		meta:storeSettings()
@@ -85,6 +85,9 @@ function registerApplet(meta)
 		uuid = settings.uuid,
 	})
 
+	-- Bug 9900
+	-- Use SN test during development
+	jnt:setSNHostname("test.squeezenetwork.com")
 	
 	appletManager:addDefaultSetting("ScreenSavers", "whenStopped", "false:false")
 	appletManager:addDefaultSetting("Playback", "enableAudio", 1)

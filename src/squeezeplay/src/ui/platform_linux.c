@@ -106,7 +106,7 @@ char *platform_get_mac_address() {
 	}
 	*s = '\0';
 
-	macaddr = iface_mac_address(sock, iface[i]);
+	macaddr = iface_mac_address(sock, name);
 	if (macaddr) {
 	    break;
 	}
