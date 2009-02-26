@@ -69,11 +69,6 @@ function registerApplet(meta)
 		settings.mac = table.concat(mac, ":")
 	end
 
-	-- Set player device type
-	--LocalPlayer:setDeviceType("controller", "Controller")
-
-	settings.mac = "00:04:20:ff:ff:10"
-
 	if store then
 		log:debug("Mac Address: ", settings.mac)
 		meta:storeSettings()
