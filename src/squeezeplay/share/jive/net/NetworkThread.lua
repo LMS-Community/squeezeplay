@@ -60,6 +60,8 @@ local _isArpEnabled = true
 -- jive.net.NetworkThread is a base class
 module(..., oo.class)
 
+local squeezenetworkHostname = "www.squeezenetwork.com"
+
 
 -- _add
 -- adds a socket to the read or write list
@@ -369,7 +371,13 @@ Retreive the hostname to be used to connect to SqueezeNetwork
 =cut
 --]]
 function getSNHostname(self)
-	return "www.squeezenetwork.com"
+	return squeezenetworkHostname
+end
+
+
+-- Set the squeezenetwork hostname, used with test.squeezenetwork.com
+function setSNHostname(self, hostname)
+	squeezenetworkHostname = hostname
 end
 
 
