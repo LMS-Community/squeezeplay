@@ -7,6 +7,7 @@ local jul           = require("jive.utils.log")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
+local jnt           = jnt
 
 
 module(...)
