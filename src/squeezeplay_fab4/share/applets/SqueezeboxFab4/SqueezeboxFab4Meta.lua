@@ -30,6 +30,10 @@ function registerApplet(meta)
 	-- Set player device type
 	LocalPlayer:setDeviceType("fab4", "Squeezebox Touch")
 
+	-- Bug 9900
+	-- Use SN test during development
+	jnt:setSNHostname("test.squeezenetwork.com")
+
 	-- BSP is a resident Applet
 	appletManager:loadApplet("SqueezeboxFab4")
 
