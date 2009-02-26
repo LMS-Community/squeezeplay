@@ -80,6 +80,9 @@ function registerApplet(meta)
 		uuid = settings.uuid,
 	})
 
+	-- Bug 9900
+	-- Use SN test during development
+	jnt:setSNHostname("test.squeezenetwork.com")
 	
 	appletManager:addDefaultSetting("ScreenSavers", "whenStopped", "false:false")
 	appletManager:addDefaultSetting("Playback", "enableAudio", 1)

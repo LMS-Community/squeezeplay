@@ -582,10 +582,14 @@ _handshake = function(self)
 		supportedConnectionTypes = { 'streaming' },
 		ext                      = {
 			rev = JIVE_VERSION,
-			mac = System:getMacAddress(),
 			uuid = System:getUUID(),
 		},
 	} }
+
+	-- only send the mac address for hardware devices
+	if System:isHardware() then
+		data.ext.mac = System:getMacAddress()
+	end
 
 	-- XXX: according to the spec this should be sent as application/x-www-form-urlencoded
 	-- with message=<url-encoded json> but it works as straight JSON
