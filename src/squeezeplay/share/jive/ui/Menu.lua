@@ -190,6 +190,15 @@ function resetDragData(self)
 	self.dragYSinceShift = 0
 end
 
+
+function _updateScrollbar(self)
+	self.scrollbar:setScrollbar(0, self.listSize * self.itemHeight,
+			(self.topItem - 1) * self.itemHeight - self.pixelOffsetY,
+			self.numWidgets * self.itemHeight )
+
+end
+
+
 function handleDrag(self, dragAmountY, byItemOnly)
 
 	if dragAmountY ~= 0 then
@@ -219,6 +228,7 @@ function handleDrag(self, dragAmountY, byItemOnly)
 			end
 
 			log:debug("self:scrollBy( itemShift ) ", itemShift, " self.pixelOffsetY: ", self.pixelOffsetY )
+			self:_updateScrollbar()
 			self:scrollBy( itemShift, true, false )
 
 			if self.selected == 1 or self.selected == self.listSize then
@@ -235,6 +245,7 @@ function handleDrag(self, dragAmountY, byItemOnly)
 			end
 
 			log:debug("Scroll offset by: ", self.pixelOffsetY, " item height: ", self.itemHeight)
+			self:_updateScrollbar()
 			self:reDraw()
 		end
 	end
@@ -436,6 +447,9 @@ local function _eventHandler(self, event)
 				self.sliderDragInProgress = true
 			end
 
+			--zero out offset (scrollbar currently only moves discretely)
+			self.pixelOffsetY = 0
+			
 			-- forward event to scrollbar
 			local r = self.scrollbar:_event(event)
 			_scrollList(self)
@@ -730,8 +744,10 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 				 end)
 	obj.scrollbar = Scrollbar("scrollbar",
 				  function(_, value)
+				          --value is in pixels, convert to items
+				          local itemValue = math.floor(value/obj.itemHeight) + 1
   					  obj.accel = true
-					  obj:setSelectedIndex(value + 1) -- value comes in zero based, one based is needed
+					  obj:setSelectedIndex(itemValue)
 				  end)
 
 	obj.xofy = Label("xofy", "")
@@ -1101,7 +1117,7 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 			self.barrier = nil
 		end
 	end
-	
+
 
 	-- if selection has change, play click and redraw
 	if (self.selected ~= nil and selected ~= self.selected) or (self.selected == nil and selected ~= 0) then
@@ -1275,8 +1291,8 @@ function _updateWidgets(self)
 	end
 	self._lastSelectedOffset = self.selected and self.selected - self.topItem + 1 or self.topItem
 
-	-- update scrollbar
-	self.scrollbar:setScrollbar(0, self.listSize, self.topItem, self.numWidgets)
+	self:_updateScrollbar()
+
 	self.xofy:setValue(nextSelectedIndex .. " of " .. self.listSize)
 
 --	log:warn("_update menu:\n", self:dump())
