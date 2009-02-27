@@ -54,7 +54,7 @@ function registerApplet(meta)
 	end
 
 	-- fix bogus mac addresses from bad check
-	if string.match(settings.mac, "00:04:20") then
+	if settings.mac and string.match(settings.mac, "00:04:20") then
 		settings.mac = nil
 	end
 
