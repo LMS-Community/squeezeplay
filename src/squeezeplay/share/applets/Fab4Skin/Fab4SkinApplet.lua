@@ -323,7 +323,7 @@ function skin(self, s)
 		bgImg = false, 
 		w = 0 
 	}
-	
+
 	-- time (hidden off screen)
 	s.iconTime = {}
 	s.iconTime.x = screenWidth + 10
@@ -417,7 +417,9 @@ function skin(self, s)
 
 	-- selected menu item
 	s.selected = {}
-	s.selected.item = _uses(s.item)
+	s.selected.item = _uses(s.item, {
+		bgImg = fiveItemSelectionBox,
+	})
 
 	s.selected.itemplay =
 		_uses(s.selected.item, {
