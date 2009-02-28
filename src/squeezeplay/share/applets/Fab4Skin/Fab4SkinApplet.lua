@@ -136,6 +136,9 @@ function skin(self, s)
 
 	local screenWidth, screenHeight = Framework:getScreenSize()
 
+	--init lastInputType so selected item style is not shown on skin load
+	Framework.mostRecentInputType = "mouse"
+
 	-- Images and Tiles
 	local titleBox          = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
 	local fiveItemSelectionBox      = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line.png")

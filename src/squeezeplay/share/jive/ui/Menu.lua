@@ -170,8 +170,8 @@ function _selectAndHighlightItemUnderPointer(self, event)
 		--select item under cursor
 		local selectedIndex = self.topItem + itemShift
 		if selectedIndex <= self.listSize then
-			self:setSelectedIndex(selectedIndex)
 			self.usePressedStyle = true
+			self:setSelectedIndex(selectedIndex)
 		else
 			--outside of any menu item
 			return false
@@ -266,9 +266,8 @@ local function _eventHandler(self, event)
 
 	local evtype = event:getType()
 
-	if (evtype & (EVENT_IR_ALL | EVENT_KEY_ALL | EVENT_SCROLL | EVENT_SHOW )) > 0 then
+	if Framework.mostRecentInputType ~= "mouse" or evtype == EVENT_SHOW then
 		self.usePressedStyle = false
-		self.lastInputType = nil
 	end
 
 	if self.flickTimer and (evtype & (EVENT_IR_ALL | EVENT_KEY_ALL | EVENT_SCROLL | EVENT_SHOW | EVENT_HIDE)) > 0 then
@@ -419,8 +418,6 @@ local function _eventHandler(self, event)
 	elseif self.locked == nil and (evtype == EVENT_MOUSE_DOWN or
 		evtype == EVENT_MOUSE_MOVE or
 		evtype == EVENT_MOUSE_DRAG) then
-
-		self.lastInputType = "mouse"
 
 		if evtype == EVENT_MOUSE_DOWN then
 			--sometimes up doesn't occur so we must again try to reset state
@@ -1269,11 +1266,15 @@ function _updateWidgets(self)
 			if self.usePressedStyle then
 				nextSelected:setStyleModifier("pressed")
 			else
-				nextSelected:setStyleModifier("selected")
+				if Framework.mostRecentInputType == "mouse" then
+					nextSelected:setStyleModifier(nil)
+				else
+					nextSelected:setStyleModifier("selected")
+				end
 			end
 		end
 
-		if self.lastInputType == "mouse" then
+		if Framework.mostRecentInputType == "mouse" then
 			if self.usePressedStyle and lastHighlightedIndex ~= nextSelectedIndex then
 				_itemListener(self, nextSelected, Event:new(EVENT_FOCUS_GAINED))
 			end

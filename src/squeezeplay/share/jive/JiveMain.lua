@@ -76,6 +76,8 @@ local EVENT_IR_REPEAT      = jive.ui.EVENT_IR_REPEAT
 local EVENT_IR_HOLD        = jive.ui.EVENT_IR_HOLD
 local EVENT_KEY_ALL        = jive.ui.EVENT_KEY_ALL
 local ACTION               = jive.ui.ACTION
+local EVENT_ALL_INPUT      = jive.ui.EVENT_ALL_INPUT
+local EVENT_MOUSE_ALL      = jive.ui.EVENT_MOUSE_ALL
 local EVENT_KEY_PRESS      = jive.ui.EVENT_KEY_PRESS
 local EVENT_KEY_UP         = jive.ui.EVENT_KEY_UP
 local EVENT_KEY_DOWN       = jive.ui.EVENT_KEY_DOWN
@@ -252,6 +254,29 @@ function JiveMain:__init()
 	Framework:addActionListener("up", self, function() return EVENT_CONSUME end, 9999)
 	Framework:addActionListener("down", self, function() return EVENT_CONSUME end, 9999)
 
+
+	--Last input type tracker (used by, for instance, Menu, to determine wheter selected style should be displayed)
+	Framework:addListener(EVENT_ALL_INPUT,
+		function(event)
+			local type = event:getType()
+			if (type & EVENT_IR_ALL ) > 0 then
+				Framework.mostRecentInputType = "ir"
+			end
+			if (type & EVENT_KEY_ALL ) > 0 then
+				Framework.mostRecentInputType = "key"
+			end
+			if (type & EVENT_SCROLL ) > 0 then
+				Framework.mostRecentInputType = "scroll"
+			end
+			if (type & EVENT_MOUSE_ALL) > 0 then
+				Framework.mostRecentInputType = "mouse"
+			end
+			--not sure what to do about char, since it is a bit of a hybrid input type. So far usages don't care.
+			
+			return EVENT_UNUSED
+		end,
+		true
+	)
 
 	--Ignore foreign remote codes
 	Framework:addListener( EVENT_IR_ALL,

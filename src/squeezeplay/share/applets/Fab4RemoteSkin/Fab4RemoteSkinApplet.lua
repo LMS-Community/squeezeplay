@@ -139,6 +139,9 @@ function skin(self, s)
 
 	local screenWidth, screenHeight = Framework:getScreenSize()
 
+	--init lastInputType so selected item style is shown on skin load
+	Framework.mostRecentInputType = "ir"
+
 	-- Images and Tiles
 	local titleBox          = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
 	local threeItemSelectionBox = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line.png")
