@@ -361,7 +361,7 @@ end
 --[[
 Window:   "text_list"
 Menu:     "menu"
-Item:     "itemPlay", "itemAdd", "item" (styles: selected, pressed, locked)
+Item:     "item_play", "item_add", "item" (styles: selected, pressed, locked)
 --]]
 function window_track_info(self, item)
 	local data = _itemData(item)
@@ -394,7 +394,7 @@ function window_track_info(self, item)
 					menu:updatedItem(selected)
 				end
 
-				item.style = "itemChecked"
+				item.style = "item_checked"
 				menu:updatedItem(item)
 
 				selected = item
@@ -432,7 +432,7 @@ end
 --[[
 Window:   "text_list"
 Menu:     "menu"
-Item:     "itemChoice", "item", "itemChecked", (styles: selected, pressed, locked)
+Item:     "item_choice", "item", "item_checked", (styles: selected, pressed, locked)
 --]]
 function setup_text_list(self, item)
 	local data = _itemData(item)
@@ -480,22 +480,22 @@ function setup_text_list(self, item)
 	}
 	menu:addItem({
 		text  = 'Sample Choice Item',
-		style = 'itemChoice',
+		style = 'item_choice',
 		icon  = choice,
 	})
 	menu:addItem({
 		text  = 'Sample Checkbox',
-		style = 'itemChoice',
+		style = 'item_choice',
 		icon  = checkbox,
 	})
 	menu:addItem({
 		text  = 'Sample Radio 1',
-		style = 'itemChoice',
+		style = 'item_choice',
 		icon  = radios[1],
 	})
 	menu:addItem({
 		text  = 'Sample Radio 2',
-		style = 'itemChoice',
+		style = 'item_choice',
 		icon  = radios[2],
 	})
 	for i, text in ipairs(data) do
@@ -514,7 +514,7 @@ function setup_text_list(self, item)
 					menu:updatedItem(selected)
 				end
 
-				item.style = "itemChecked"
+				item.style = "item_checked"
 				menu:updatedItem(item)
 
 				selected = item
@@ -531,7 +531,7 @@ end
 --[[
 Window:   "playlist"
 Menu:     "menu"
-Item:     "item", "itemChecked", (styles: selected, pressed, locked)
+Item:     "item", "item_checked", (styles: selected, pressed, locked)
 --]]
 function window_playlist(self, item)
 	local data = _itemData(item)
@@ -555,7 +555,7 @@ function window_playlist(self, item)
 					menu:updatedItem(selected)
 				end
 
-				item.style = "itemChecked"
+				item.style = "item_checked"
 				menu:updatedItem(item)
 
 				selected = item
@@ -563,7 +563,7 @@ function window_playlist(self, item)
 		})
 	end
 
-	-- add an item for itemNoArrow and itemCheckedNoArrow
+	-- add an item for item_no_arrow and item_checked_no_arrow
 	menu:addItem({
 			text = "Test of no artwork",
 	})
@@ -584,7 +584,7 @@ end
 --[[
 Window:   "icon_list"
 Menu:     "menu"
-Item:     "item", "itemChecked", (styles: selected, pressed, locked)
+Item:     "item", "item_checked", (styles: selected, pressed, locked)
 --]]
 function window_icon_list(self, item)
 	local data = _itemData(item)
@@ -611,7 +611,7 @@ function window_icon_list(self, item)
 					menu:updatedItem(selected)
 				end
 
-				item.style = "itemChecked"
+				item.style = "item_checked"
 				menu:updatedItem(item)
 
 				selected = item
@@ -676,7 +676,7 @@ function window_track_list(self, item)
 					menu:updatedItem(selected)
 				end
 
-				item.style = "itemChecked"
+				item.style = "item_checked"
 				menu:updatedItem(item)
 
 				selected = item

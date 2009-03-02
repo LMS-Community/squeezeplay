@@ -111,7 +111,7 @@ function showMainWindow(self)
 
 	self.window:addWidget(Label("graphaxis", "0                                         100 %"))
 
-	self.window:addWidget(Textarea("helptext", tostring(self:string('SETUPNETTEST_TESTINGTO')) .. ' ' .. self.player:getName() .. "\n" .. tostring(self:string('SETUPNETTEST_INFO'))))
+	self.window:addWidget(Textarea("help_text", tostring(self:string('SETUPNETTEST_TESTINGTO')) .. ' ' .. self.player:getName() .. "\n" .. tostring(self:string('SETUPNETTEST_INFO'))))
 
 	self.window:setAllowScreensaver(false)
 

@@ -42,9 +42,9 @@ The Radio Button includes the following style parameters in addition to the widg
 
 =over
 
-B<imgOn> : the image when the Radio Button is selected.
+B<img_on> : the image when the Radio Button is selected.
 
-B<imgOff> : the image when the Radio Button is not selected.
+B<img_off> : the image when the Radio Button is not selected.
 
 =head1 METHODS
 
@@ -98,7 +98,7 @@ function __init(self, style, group, closure, selected)
 
 	local obj = oo.rawnew(self, Icon(style))
 
-	obj.imgStyleName = "imgOff"
+	obj.imgStyleName = "img_off"
 	obj.group = group
 
 	if selected then
@@ -163,12 +163,12 @@ function _set(self, selected)
 	log:debug("RadioButton:_set(", tostring(selected));
 
 	if selected then
-		self.imgStyleName = "imgOn"
+		self.imgStyleName = "img_on"
 		if self.closure then 
 			self.closure(self)
 		end
 	else
-		self.imgStyleName = "imgOff"
+		self.imgStyleName = "img_off"
 	end
 
 	self:reSkin()

@@ -95,7 +95,7 @@ function setupRegionShow(self, setupNext)
 	end
 
 
-	window:addWidget(Textarea("helptext", self:string("NETWORK_REGION_HELP")))
+	window:addWidget(Textarea("help_text", self:string("NETWORK_REGION_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -125,7 +125,7 @@ function settingsRegionShow(self)
 			     })
 	end
 
-	window:addWidget(Textarea("helptext", self:string("NETWORK_REGION_HELP")))
+	window:addWidget(Textarea("help_text", self:string("NETWORK_REGION_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -148,7 +148,7 @@ function _setCurrentSSID(self, ssid)
 
 	if self.currentSSID then
 		local item = self.scanResults[self.currentSSID].item
-		item.style = "itemChecked"
+		item.style = "item_checked"
 		self.scanMenu:updatedItem(item)
 	end
 end
@@ -247,7 +247,7 @@ function _networksShow(self, title, help)
 				       self:scan()
 			       end)
 
-	local help = Textarea("helptext", help)
+	local help = Textarea("help_text", help)
 	window:addWidget(help)
 	window:addWidget(self.scanMenu)
 
@@ -444,7 +444,7 @@ function enterPassword(self)
 						},
 					})
 
-		local help = Textarea("helptext", self:string("NETWORK_UNSUPPORTED_TYPES_HELP"))
+		local help = Textarea("help_text", self:string("NETWORK_UNSUPPORTED_TYPES_HELP"))
 --"WPA-EAP and WPA2-EAP are not supported encryption types.")
 
 		window:addWidget(help)
@@ -508,7 +508,7 @@ function chooseEncryption(self)
 					},
 				})
 
-	local help = Textarea("helptext", self:string("NETWORK_WIRELESS_ENCRYPTION_HELP"))
+	local help = Textarea("help_text", self:string("NETWORK_WIRELESS_ENCRYPTION_HELP"))
 	window:addWidget(help)
 	window:addWidget(menu)
 
@@ -541,7 +541,7 @@ function chooseWEPLength(self)
 					},
 				})
 
-	local help = Textarea("helptext", self:string("NETWORK_WIRELESS_ENCRYPTION_HELP"))
+	local help = Textarea("help_text", self:string("NETWORK_WIRELESS_ENCRYPTION_HELP"))
 	window:addWidget(help)
 	window:addWidget(menu)
 
@@ -605,7 +605,7 @@ function enterWEPKey(self)
 				    end
 			    )
 
-	window:addWidget(Textarea("helptext", self:string("NETWORK_WIRELESS_KEY_HELP")))
+	window:addWidget(Textarea("help_text", self:string("NETWORK_WIRELESS_KEY_HELP")))
 
 	window:addWidget(textinput)
 
@@ -881,7 +881,7 @@ function connectFailed(self, reason)
 				})
 
 
-	local help = Textarea("helptext", helpText)
+	local help = Textarea("help_text", helpText)
 
 	window:addWidget(help)
 	window:addWidget(menu)
@@ -1061,7 +1061,7 @@ function failedDHCPandWPA(self)
 				})
 
 
-	local help = Textarea("helptext", self:string("NETWORK_ADDRESS_HELP"))
+	local help = Textarea("help_text", self:string("NETWORK_ADDRESS_HELP"))
 
 	window:addWidget(help)
 	window:addWidget(menu)
@@ -1118,7 +1118,7 @@ function failedDHCPandWEP(self)
 				})
 
 
-	local help = Textarea("helptext", self:string("NETWORK_ADDRESS_HELP_WEP"))
+	local help = Textarea("help_text", self:string("NETWORK_ADDRESS_HELP_WEP"))
 
 	window:addWidget(help)
 	window:addWidget(menu)
@@ -1134,7 +1134,7 @@ function enterIP(self)
 	local window = Window("window", self:string("NETWORK_IP_ADDRESS"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	window:addWidget(Textarea("helptext", self:string("NETWORK_IP_ADDRESS_HELP")))
+	window:addWidget(Textarea("help_text", self:string("NETWORK_IP_ADDRESS_HELP")))
 	window:addWidget(Textinput("textinput", v,
 				   function(widget, value)
 					   value = value:getValue()
@@ -1161,7 +1161,7 @@ function enterSubnet(self)
 	local window = Window("window", self:string("NETWORK_SUBNET"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	window:addWidget(Textarea("helptext", self:string("NETWORK_SUBNET_HELP")))
+	window:addWidget(Textarea("help_text", self:string("NETWORK_SUBNET_HELP")))
 	window:addWidget(Textinput("textinput", v,
 				   function(widget, value)
 					   value = value:getValue()
@@ -1185,7 +1185,7 @@ function enterGateway(self)
 	local window = Window("window", self:string("NETWORK_GATEWAY"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	window:addWidget(Textarea("helptext", self:string("NETWORK_GATEWAY_HELP")))
+	window:addWidget(Textarea("help_text", self:string("NETWORK_GATEWAY_HELP")))
 	window:addWidget(Textinput("textinput", v,
 				   function(widget, value)
 					   value = value:getValue()
@@ -1213,7 +1213,7 @@ function enterDNS(self)
 	local window = Window("window", self:string("NETWORK_DNS"), wirelessTitleStyle)
 	window:setAllowScreensaver(false)
 
-	window:addWidget(Textarea("helptext", self:string("NETWORK_DNS_HELP")))
+	window:addWidget(Textarea("help_text", self:string("NETWORK_DNS_HELP")))
 	window:addWidget(Textinput("textinput", v,
 				   function(widget, value)
 					   value = value:getValue()
@@ -1327,7 +1327,7 @@ function deleteConfirm(self, ssid)
 					},
 				})
 
-	window:addWidget(Textarea("helptext", self:string("NETWORK_FORGET_HELP", ssid)))
+	window:addWidget(Textarea("help_text", self:string("NETWORK_FORGET_HELP", ssid)))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

@@ -81,7 +81,7 @@ function _enterPin(self, force, server, player, next)
 						nil)
 		      end)
 
-	window:addWidget(Textarea("helptext", self:string("SQUEEZENETWORK_PIN_HELP", jnt:getSNHostname())))
+	window:addWidget(Textarea("help_text", self:string("SQUEEZENETWORK_PIN_HELP", jnt:getSNHostname())))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

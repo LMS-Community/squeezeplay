@@ -132,7 +132,7 @@ function menu(self, menuItem)
 				text = title,
 				weights = item.weights,
 				indent = indentSize,
-				style = 'itemNoArrow'
+				style = 'item_no_arrow'
 			}
 		else
 			menuItem = {
@@ -207,7 +207,7 @@ function restoreDefaultsMenu(self, id)
 		},
 	})
 
-	window:addWidget(Textarea("helptext", self:string("CUSTOMIZE_RESTORE_DEFAULTS_HELP")))
+	window:addWidget(Textarea("help_text", self:string("CUSTOMIZE_RESTORE_DEFAULTS_HELP")))
         window:addWidget(menu)
 	window:show()
 end

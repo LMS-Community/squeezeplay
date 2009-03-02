@@ -197,7 +197,7 @@ end
 
 function _upgradeWindowChoice(self, upgrades, optional)
 	local window = Window("text_list", self:string("UPDATE"), 'settingstitle')
-	local helptext = Textarea("helptext", "")
+	local help_text = Textarea("helptext", "")
 	local menu = SimpleMenu("menu")
 
 	for i,upgrade in ipairs(upgrades) do
@@ -221,12 +221,12 @@ function _upgradeWindowChoice(self, upgrades, optional)
 				self:_upgrade(upgrade.url)
 			end,
 			focusGained = function()
-				helptext:setValue(helpString)
+				help_text:setValue(helpString)
 			end,			
 		})
 	end
 
-	window:addWidget(helptext)
+	window:addWidget(help_text)
 	window:addWidget(menu)
 
 	if not optional then
@@ -253,7 +253,7 @@ function _upgradeWindowChoice(self, upgrades, optional)
 				window:hide()
 			end,
 			focusGained = function()
-				helptext:setValue(nil)
+				help_text:setValue(nil)
 			end
 		})
 	end
@@ -311,7 +311,7 @@ function _chargeBattery(self)
 		}
 	})
 
-	local help = Textarea("helptext", self:string("UPDATE_BATTERY_HELP"))
+	local help = Textarea("help_text", self:string("UPDATE_BATTERY_HELP"))
 	window:addWidget(help)
 	window:addWidget(menu)
 
@@ -442,7 +442,7 @@ function _upgradeFailed(self)
 					}
 				})
 
-	local help = Textarea("helptext", self:string("UPDATE_FAILURE_HELP"))
+	local help = Textarea("help_text", self:string("UPDATE_FAILURE_HELP"))
 	window:addWidget(help)
 	window:addWidget(menu)
 

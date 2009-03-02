@@ -54,7 +54,7 @@ Set the playmode icon of the iconbar. Values are nil (off), "stop", "play" or "p
 --]]
 function setPlaymode(self, val)
 	log:debug("Iconbar:setPlaymode(", val, ")")
-	self.iconPlaymode:setStyle("icon_playmode_" .. string.upper((val or "OFF")))
+	self.iconPlaymode:setStyle("button_playmode_" .. string.upper((val or "OFF")))
 end
 
 --[[
@@ -69,7 +69,7 @@ When not 1 or 2, setRepeat()
 function setPlaylistMode(self, val)
 	log:debug("Iconbar:setPlaylistMode(", val, ")")
 	-- FIXME: need new styles for playlist and party mode
-	self.iconPlaylistMode:setStyle("icon_playlist_mode_" .. string.upper((val or "OFF")))
+	self.iconPlaylistMode:setStyle("button_playlist_mode_" .. string.upper((val or "OFF")))
 end
 
 
@@ -83,7 +83,7 @@ Set the repeat icon of the iconbar. Values are nil (no repeat), 1 for repeat sin
 --]]
 function setRepeat(self, val)
 	log:debug("Iconbar:setRepeat(", val, ")")
-	self.iconRepeat:setStyle("icon_repeat_" .. string.upper((val or "OFF")))
+	self.iconRepeat:setStyle("button_repeat_" .. string.upper((val or "OFF")))
 end
 
 
@@ -97,7 +97,7 @@ Set the shuffle icon of the iconbar. Values are nil (no shuffle), 1 for shuffle 
 --]]
 function setShuffle(self, val)
 	log:debug("Iconbar:setShuffle(", val, ")")
-	self.iconShuffle:setStyle("icon_shuffle_" .. string.upper((val or "OFF")))
+	self.iconShuffle:setStyle("button_shuffle_" .. string.upper((val or "OFF")))
 end
 
 
@@ -111,7 +111,7 @@ Set the state of the battery icon of the iconbar. Values are nil (no battery), C
 --]]
 function setBattery(self, val)
 	log:debug("Iconbar:setBattery(", val, ")")
-	self.iconBattery:setStyle("icon_battery_" .. string.upper((val or "NONE")))
+	self.iconBattery:setStyle("button_battery_" .. string.upper((val or "NONE")))
 end
 
 
@@ -129,11 +129,11 @@ function setWirelessSignal(self, val)
 	self.wirelessSignal = val
 
 	if val == "ERROR" then
-		self.iconWireless:setStyle("icon_wireless_" .. val)
+		self.iconWireless:setStyle("button_wireless_" .. val)
 	elseif self.serverError == "ERROR" then
-		self.iconWireless:setStyle("icon_wireless_SERVERERROR")
+		self.iconWireless:setStyle("button_wireless_SERVERERROR")
 	else
-		self.iconWireless:setStyle("icon_wireless_" .. (val or "NONE"))
+		self.iconWireless:setStyle("button_wireless_" .. (val or "NONE"))
 	end
 end
 

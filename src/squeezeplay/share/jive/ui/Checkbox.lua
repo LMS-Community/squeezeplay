@@ -27,9 +27,9 @@ The Checkbox includes the following style parameters in addition to the widgets 
 
 =over
 
-B<imgOn> : the image when the checkbox is checked.
+B<img_on> : the image when the checkbox is checked.
 
-B<imgOff> : the image when the checkbox is not checked.
+B<img_off> : the image when the checkbox is not checked.
 
 =head1 METHODS
 
@@ -136,9 +136,9 @@ function setSelected(self, isSelected)
 	self.selected = isSelected
 
 	if isSelected then
-		self.imgStyleName = "imgOn"
+		self.imgStyleName = "img_on"
 	else
-		self.imgStyleName = "imgOff"
+		self.imgStyleName = "img_off"
 	end
 
 	self:reSkin()

@@ -195,14 +195,14 @@ function _addServerItem(self, server, address)
 		item = {
 			text = server and server:getName() or address,
 			weight = 1,
-			style = 'itemNoArrow'
+			style = 'item_no_arrow'
 		}
 	end
 
 	-- check current player
 	if currentPlayer and currentPlayer:getSlimServer() and server == currentPlayer:getSlimServer() then
 		log:debug("\tthis is the connected server, so remove callback for this item")
-		item.style = 'itemCheckedNoArrow'
+		item.style = 'item_checked_no_arrow'
 		item.callback = self.setupNext
 	end
 
@@ -249,7 +249,7 @@ function _updateServerList(self, player)
 
 	for id, item in pairs(self.serverList) do
 		if server == id then
-			item.style = 'itemCheckedNoArrow'
+			item.style = 'item_checked_no_arrow'
 			item.callback = nil
 		else
 			item.style = nil
@@ -427,7 +427,7 @@ function _connectPlayerFailed(self, player, server)
 				})
 
 
-	local help = Textarea("helptext", self:string("SQUEEZEBOX_PROBLEM_HELP", player:getName(), server:getName()))
+	local help = Textarea("help_text", self:string("SQUEEZEBOX_PROBLEM_HELP", player:getName(), server:getName()))
 
 	window:addWidget(help)
 	window:addWidget(menu)
@@ -482,7 +482,7 @@ function _addServer(self, menuItem)
 				end)
 
 	local keyboard = Keyboard("keyboard", "numeric")
---	window:addWidget(Textarea("helptext", self:string("SLIMSERVER_HELP")))
+--	window:addWidget(Textarea("help_text", self:string("SLIMSERVER_HELP")))
 	window:addWidget(input)
 	window:addWidget(keyboard)
 	window:focusWidget(input)

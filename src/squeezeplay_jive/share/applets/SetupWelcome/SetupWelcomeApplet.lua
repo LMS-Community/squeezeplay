@@ -231,7 +231,7 @@ function setupWelcomeShow(self, setupNext)
 
 	local textarea = Textarea("text", self:string("WELCOME_WALKTHROUGH"))
 	local navcluster = Icon("icon_navcluster")
-	local help = Textarea("helptext", self:string("WELCOME_HELP"))
+	local help = Textarea("help_text", self:string("WELCOME_HELP"))
 
 	window:addWidget(textarea)
 	window:addWidget(navcluster)
@@ -267,7 +267,7 @@ function setupConnectionShow(self, setupSqueezebox, setupNetwork)
 			     callback = setupNetwork,
 		     })
 	
-	window:addWidget(Textarea("helptext", self:string("CONNECT_HELP")))
+	window:addWidget(Textarea("help_text", self:string("CONNECT_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -286,7 +286,7 @@ function setupDoneShow(self, setupNext)
 		       callback = setupNext
 		     })
 
-	window:addWidget(Textarea("helptext", self:string("DONE_HELP")))
+	window:addWidget(Textarea("help_text", self:string("DONE_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

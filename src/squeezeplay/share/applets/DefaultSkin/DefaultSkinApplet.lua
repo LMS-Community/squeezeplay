@@ -563,8 +563,8 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- Checkbox
 	s.checkbox = {}
-	s.checkbox.imgOn = _loadImage(self, "Icons/checkbox_on.png")
-	s.checkbox.imgOff = _loadImage(self, "Icons/checkbox_off.png")
+	s.checkbox.img_on = _loadImage(self, "Icons/checkbox_on.png")
+	s.checkbox.img_off = _loadImage(self, "Icons/checkbox_off.png")
 	s.item.checkbox = {}
 	s.item.checkbox.padding = { 4, 0, 0, 0 }
 	s.item.checkbox.align = "right"
@@ -572,8 +572,8 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- Radio button
 	s.radio = {}
-	s.radio.imgOn = _loadImage(self, "Icons/radiobutton_on.png")
-	s.radio.imgOff = _loadImage(self, "Icons/radiobutton_off.png")
+	s.radio.img_on = _loadImage(self, "Icons/radiobutton_on.png")
+	s.radio.img_off = _loadImage(self, "Icons/radiobutton_off.png")
 	s.item.radio = {}
 	s.item.radio.padding = { 4, 0, 0, 0 }
 	s.item.radio.align = "right"

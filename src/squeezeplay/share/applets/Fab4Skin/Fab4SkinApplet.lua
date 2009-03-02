@@ -113,6 +113,9 @@ end
 
 -- defines a new style that inherrits from an existing style
 local function _uses(parent, value)
+	if parent == nil then
+		log:warn("nil parent in _uses at:\n", debug.traceback())
+	end
 	local style = {}
 	setmetatable(style, { __index = parent })
 	for k,v in pairs(value or {}) do
@@ -438,25 +441,25 @@ function skin(self, s)
 		},
 	}
 
-	s.itemPlay = _uses(s.item, { 
+	s.item_play = _uses(s.item, { 
 		arrow = playArrow 
 	})
-	s.itemAdd = _uses(s.item, { 
+	s.item_add = _uses(s.item, { 
 		arrow = addArrow 
 	})
 
 	-- Checkbox
         s.checkbox = {}
-        s.checkbox.imgOn = _loadImage(self, "Icons/checkbox_on.png")
-        s.checkbox.imgOff = _loadImage(self, "Icons/checkbox_off.png")
+        s.checkbox.img_on = _loadImage(self, "Icons/checkbox_on.png")
+        s.checkbox.img_off = _loadImage(self, "Icons/checkbox_off.png")
 
 
         -- Radio button
         s.radio = {}
-        s.radio.imgOn = _loadImage(self, "Icons/radiobutton_on.png")
-        s.radio.imgOff = _loadImage(self, "Icons/radiobutton_off.png")
+        s.radio.img_on = _loadImage(self, "Icons/radiobutton_on.png")
+        s.radio.img_off = _loadImage(self, "Icons/radiobutton_off.png")
 
-	s.itemChoice = _uses(s.item, {
+	s.item_choice = _uses(s.item, {
 		order  = { 'text', 'icon' },
 		icon = {
 			align = 'right',
@@ -465,7 +468,7 @@ function skin(self, s)
 			sh = TEXT_SH_COLOR,
 		},
 	})
-	s.itemChecked = _uses(s.item, {
+	s.item_checked = _uses(s.item, {
 		order = { "text", "check", "arrow" },
 		check = {
 			align = ITEM_ICON_ALIGN,
@@ -474,43 +477,43 @@ function skin(self, s)
 	      	}
 	})
 
-	s.itemNoArrow = _uses(s.item, {
+	s.item_no_arrow = _uses(s.item, {
 		order = { 'icon', 'text' },
 	})
-	s.itemCheckedNoArrow = _uses(s.item, {
+	s.item_checked_no_arrow = _uses(s.item, {
 		order = { 'icon', 'text', 'check' },
 	})
 
 	s.selected = {
 		item               = _uses(s.item),
-		itemPlay           = _uses(s.itemPlay),
-		itemAdd            = _uses(s.itemAdd),
-		itemChecked        = _uses(s.itemChecked),
-		itemNoArrow        = _uses(s.itemNoArrow),
-		itemCheckedNoArrow = _uses(s.itemCheckedNoArrow),
-		itemChoice         = _uses(s.itemChoice),
+		item_play           = _uses(s.item_play),
+		item_add            = _uses(s.item_add),
+		item_checked        = _uses(s.item_checked),
+		item_no_arrow        = _uses(s.item_no_arrow),
+		item_checked_no_arrow = _uses(s.item_checked_no_arrow),
+		item_choice         = _uses(s.item_choice),
 	}
 
 	s.pressed = {
 		item = _uses(s.item, {
 			bgImg = fiveItemPressedBox,
 		}),
-		itemChecked = _uses(s.itemChecked, {
+		item_checked = _uses(s.item_checked, {
 			bgImg = fiveItemPressedBox,
 		}),
-		itemPlay = _uses(s.itemPlay, {
+		item_play = _uses(s.item_play, {
 			bgImg = fiveItemPressedBox,
 		}),
-		itemAdd = _uses(s.itemAdd, {
+		item_add = _uses(s.item_add, {
 			bgImg = fiveItemPressedBox,
 		}),
-		itemNoArrow = _uses(s.itemNoArrow, {
+		item_no_arrow = _uses(s.item_no_arrow, {
 			bgImg = fiveItemPressedBox,
 		}),
-		itemCheckedNoArrow = _uses(s.itemCheckedNoArrow, {
+		item_checked_no_arrow = _uses(s.item_checked_no_arrow, {
 			bgImg = fiveItemPressedBox,
 		}),
-		itemChoice = _uses(s.itemChoice, {
+		item_choice = _uses(s.item_choice, {
 			bgImg = fiveItemPressedBox,
 		}),
 	}
@@ -519,24 +522,24 @@ function skin(self, s)
 		item = _uses(s.pressed.item, {
 			arrow = smallSpinny
 		}),
-		itemChecked = _uses(s.pressed.itemChecked, {
+		item_checked = _uses(s.pressed.item_checked, {
 			arrow = smallSpinny
 		}),
-		itemPlay = _uses(s.pressed.itemPlay, {
+		item_play = _uses(s.pressed.item_play, {
 			arrow = smallSpinny
 		}),
-		itemAdd = _uses(s.pressed.itemAdd, {
+		item_add = _uses(s.pressed.item_add, {
 			arrow = smallSpinny
 		}),
-		itemNoArrow = _uses(s.itemNoArrow, {
+		item_no_arrow = _uses(s.item_no_arrow, {
 			arrow = smallSpinny
 		}),
-		itemCheckedNoArrow = _uses(s.itemCheckedNoArrow, {
+		item_checked_no_arrow = _uses(s.item_checked_no_arrow, {
 			arrow = smallSpinny
 		}),
 	}
 
-	s.helptext = {
+	s.help_text = {
 		w = screenWidth - 6,
 		position = LAYOUT_SOUTH,
 		padding = 12,
@@ -622,7 +625,7 @@ function skin(self, s)
 	s.keyboard.button_shift = _uses(s.keyboard.button, {
 		bgImg = fiveItemSelectionBox, padding = 2, w = 75, h = 35
 	})
-	s.keyboard.button_space = _uses(s.keyboard.shift, {
+	s.keyboard.button_space = _uses(s.keyboard.button_shift, {
 		padding = 2, w = 100, h = 35
 	})
 	s.keyboard.button_back = _uses(s.keyboard.button, {
@@ -635,7 +638,7 @@ function skin(self, s)
 		img = _loadImage(self, "Icons/icon_shift_on.png")
 	})
 
-	s.keyboard.button_enter = _uses(s.keyboard.shift, {
+	s.keyboard.button_enter = _uses(s.keyboard.button_shift, {
 		img = _loadImage(self, "Icons/Mini/right_arrow.png")
 	})
 	s.keyboard.button_search = _uses(s.keyboard.button, {
@@ -646,28 +649,31 @@ function skin(self, s)
 		button = _uses(s.keyboard.button, {
 			bgImg = keyboardPressedBox
 		}),
-		button_enter = _uses(s.keyboard.enter, {
+		button_enter = _uses(s.keyboard.button_enter, {
 			bgImg = keyboardPressedBox
 		}),
-		button_search = _uses(s.keyboard.search, {
+		button_search = _uses(s.keyboard.button_search, {
 			bgImg = keyboardPressedBox
 		}),
-		button_back = _uses(s.keyboard.back, {
+		button_back = _uses(s.keyboard.button_back, {
 			bgImg = keyboardPressedBox
 		}),
-		button_shift = _uses(s.keyboard.shift, {
+		button_shift = _uses(s.keyboard.button_shift, {
 			bgImg = keyboardPressedBox
 		}),
-		button_space = _uses(s.keyboard.space, {
+		button_space = _uses(s.keyboard.button_space, {
 			bgImg = keyboardPressedBox
 		}),
 	}
-	s.keyboard.pushed = _uses(s.keyboard.pressed.shift)
-	s.keyboard.pressed.pushed = _uses(s.keyboard.pressed.shift)
+	s.keyboard.pushed = _uses(s.keyboard.pressed.button_shift)
+	s.keyboard.pressed.pushed = _uses(s.keyboard.pressed.button_shift)
 
 --------- WINDOW STYLES ---------
 	--
 	-- These styles override the default styles for a specific window
+
+	-- typical text list window
+	s.text_list = _uses(s.window)
 
 	-- window with one option in "button" style
 	s.one_button = _uses(s.text_list)
@@ -735,7 +741,7 @@ function skin(self, s)
 		icon  = s.buttonicon,
 	})
 
-	s.button_list.menu.itemChecked = _uses(_buttonItem, {
+	s.button_list.menu.item_checked = _uses(_buttonItem, {
 		order = { 'icon', 'text', 'check', 'arrow' },
 		check = {
 			img     = _loadImage(self, "Icons/icon_check_3line.png"), 
@@ -747,13 +753,13 @@ function skin(self, s)
 
 	s.button_list.menu.selected = {
 		item = _uses(s.button_list.menu.item),
-		itemChecked = _uses(s.button_list.menu.itemChecked),
+		item_checked = _uses(s.button_list.menu.item_checked),
 	}
 	s.button_list.menu.pressed = {
 		item = _uses(s.button_list.menu.item, { 
 			bgImg = threeItemPressedBox 
 		}),
-		itemChecked = _uses(s.button_list.menu.itemChecked, { 
+		item_checked = _uses(s.button_list.menu.item_checked, { 
 			bgImg = threeItemPressedBox 
 		}),
 	}
@@ -822,10 +828,6 @@ function skin(self, s)
 		img = _progressBar,
 	}
 
-	-- typical text list window
-	-- XXXX todo
-	s.text_list = _uses(s.window)
-
 	-- icon_list window
 	s.icon_list = _uses(s.window, {
 		menu = {
@@ -861,7 +863,7 @@ function skin(self, s)
 	})
 
 
-	s.icon_list.menu.itemChecked = _uses(s.icon_list.menu.item, {
+	s.icon_list.menu.item_checked = _uses(s.icon_list.menu.item, {
 		order = { 'icon', 'text', 'check', 'arrow' },
 		check = {
 			align = ITEM_ICON_ALIGN,
@@ -869,44 +871,44 @@ function skin(self, s)
 			img = _loadImage(self, "Icons/icon_check_5line.png")
 		},
 	})
-	s.icon_list.menu.itemPlay = _uses(s.icon_list.menu.item, { 
+	s.icon_list.menu.item_play = _uses(s.icon_list.menu.item, { 
 		arrow = playArrow, 
 	})
-	s.icon_list.menu.itemAdd  = _uses(s.icon_list.menu.item, { 
+	s.icon_list.menu.item_add  = _uses(s.icon_list.menu.item, { 
 		arrow = addArrow,
 	})
-	s.icon_list.menu.itemNoArrow = _uses(s.icon_list.menu.item, {
+	s.icon_list.menu.item_no_arrow = _uses(s.icon_list.menu.item, {
 		order = { 'icon', 'text' },
 	})
-	s.icon_list.menu.itemCheckedNoArrow = _uses(s.icon_list.menu.itemChecked, {
+	s.icon_list.menu.item_checked_no_arrow = _uses(s.icon_list.menu.item_checked, {
 		order = { 'icon', 'text', 'check' },
 	})
 
 	s.icon_list.menu.selected = {
                 item               = _uses(s.icon_list.menu.item),
-                itemChecked        = _uses(s.icon_list.menu.itemChecked),
-		itemPlay           = _uses(s.icon_list.menu.itemPlay),
-		itemAdd            = _uses(s.icon_list.menu.itemAdd),
-		itemNoArrow        = _uses(s.icon_list.menu.itemNoArrow),
-		itemCheckedNoArrow = _uses(s.icon_list.menu.itemCheckedNoArrow),
+                item_checked        = _uses(s.icon_list.menu.item_checked),
+		item_play           = _uses(s.icon_list.menu.item_play),
+		item_add            = _uses(s.icon_list.menu.item_add),
+		item_no_arrow        = _uses(s.icon_list.menu.item_no_arrow),
+		item_checked_no_arrow = _uses(s.icon_list.menu.item_checked_no_arrow),
         }
         s.icon_list.menu.pressed = {
                 item = _uses(s.icon_list.menu.item, { 
 			bgImg = threeItemPressedBox 
 		}),
-                itemChecked = _uses(s.icon_list.menu.itemChecked, { 
+                item_checked = _uses(s.icon_list.menu.item_checked, { 
 			bgImg = threeItemPressedBox 
 		}),
-                itemPlay = _uses(s.icon_list.menu.itemPlay, { 
+                item_play = _uses(s.icon_list.menu.item_play, { 
 			bgImg = threeItemPressedBox 
 		}),
-                itemAdd = _uses(s.icon_list.menu.itemAdd, { 
+                item_add = _uses(s.icon_list.menu.item_add, { 
 			bgImg = threeItemPressedBox 
 		}),
-                itemNoArrow = _uses(s.icon_list.menu.itemNoArrow, { 
+                item_no_arrow = _uses(s.icon_list.menu.item_no_arrow, { 
 			bgImg = threeItemPressedBox 
 		}),
-                itemCheckedNoArrow = _uses(s.icon_list.menu.itemCheckedNoArrow, { 
+                item_checked_no_arrow = _uses(s.icon_list.menu.item_checked_no_arrow, { 
 			bgImg = threeItemPressedBox 
 		}),
         }
@@ -914,13 +916,13 @@ function skin(self, s)
 		item = _uses(s.icon_list.menu.pressed.item, {
 			arrow = smallSpinny
 		}),
-		itemChecked = _uses(s.icon_list.menu.pressed.itemChecked, {
+		item_checked = _uses(s.icon_list.menu.pressed.item_checked, {
 			arrow = smallSpinny
 		}),
-		itemPlay = _uses(s.icon_list.menu.pressed.itemPlay, {
+		item_play = _uses(s.icon_list.menu.pressed.item_play, {
 			arrow = smallSpinny
 		}),
-		itemAdd = _uses(s.icon_list.menu.pressed.itemAdd, {
+		item_add = _uses(s.icon_list.menu.pressed.item_add, {
 			arrow = smallSpinny
 		}),
 	}
@@ -950,7 +952,7 @@ function skin(self, s)
 
 	--playlist window
 	-- identical to icon_list but with some different formatting on the text
-	s.playlist = _uses(s.icon_list, {
+	s.play_list = _uses(s.icon_list, {
 		menu = {
 			item = {
 				text = {
@@ -971,7 +973,7 @@ function skin(self, s)
 			},
 		},
 	})
-	s.playlist.menu.itemChecked = _uses(s.playlist.menu.item, {
+	s.play_list.menu.item_checked = _uses(s.play_list.menu.item, {
 		order = { 'icon', 'text', 'check', 'arrow' },
 		check = {
 			align = ITEM_ICON_ALIGN,
@@ -979,19 +981,19 @@ function skin(self, s)
 			img = _loadImage(self, "Icons/icon_check_5line.png")
 		},
 	})
-	s.playlist.menu.selected = {
-                item = _uses(s.playlist.menu.item),
-                itemChecked = _uses(s.playlist.menu.itemChecked),
+	s.play_list.menu.selected = {
+                item = _uses(s.play_list.menu.item),
+                item_checked = _uses(s.play_list.menu.item_checked),
         }
-        s.playlist.menu.pressed = {
-                item = _uses(s.playlist.menu.item, { bgImg = threeItemPressedBox }),
-                itemChecked = _uses(s.playlist.menu.itemChecked, { bgImg = threeItemPressedBox }),
+        s.play_list.menu.pressed = {
+                item = _uses(s.play_list.menu.item, { bgImg = threeItemPressedBox }),
+                item_checked = _uses(s.play_list.menu.item_checked, { bgImg = threeItemPressedBox }),
         }
-	s.playlist.menu.locked = {
-		item = _uses(s.playlist.menu.pressed.item, {
+	s.play_list.menu.locked = {
+		item = _uses(s.play_list.menu.pressed.item, {
 			arrow = smallSpinny
 		}),
-		itemChecked = _uses(s.playlist.menu.pressed.itemChecked, {
+		item_checked = _uses(s.play_list.menu.pressed.item_checked, {
 			arrow = smallSpinny
 		}),
 	}
@@ -1052,12 +1054,15 @@ function skin(self, s)
 		},
 	})
 
+
 --------- SLIDERS ---------
+
 
 	s.volume_slider = _uses(s.slider, {
 		img = volumeBar,
 		bgImg = volumeBackground,
 	})
+
 
 --------- BUTTONS ---------
 
@@ -1172,7 +1177,7 @@ function skin(self, s)
 		img = _loadImage(self, "Alerts/popup_locked_icon.png"),
 	})
 
-	s.iconAlarm = _uses(_icon, {
+	s.icon_alarm = _uses(_icon, {
 		img = _loadImage(self, "Alerts/popup_alarm_icon.png"),
 	})
 

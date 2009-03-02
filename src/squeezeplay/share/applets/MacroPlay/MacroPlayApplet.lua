@@ -191,7 +191,7 @@ function settingsShow(self)
 	-- Create window
 	local window = Window("window", self:string("MACRO_PLAY"))
 	local menu = SimpleMenu("menu", items)
-	local help = Textarea("helptext", "")
+	local help = Textarea("help_text", "")
 
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 

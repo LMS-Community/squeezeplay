@@ -158,7 +158,7 @@ function settingsShow(self)
 			self.menu:addItem({
 				weight = w,
 				text = self:string(name), 
-				style = 'itemChoice',
+				style = 'item_choice',
 				sound = "WINDOWSHOW",
 				icon = RadioButton("radio", 
 								   self.group, 
@@ -253,7 +253,7 @@ function _serverSink(self, data)
 				{
 					weight = 50,	  
 					text = entry.title,
-					style = 'itemChoice',
+					style = 'item_choice',
 					icon = RadioButton("radio",
 									   self.group,
 									   function()

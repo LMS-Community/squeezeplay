@@ -172,7 +172,7 @@ function defineFlickrId(self, menuItem)
 			return true
 		end)
 
-    local help = Textarea("helptext", self:string("SCREENSAVER_FLICKR_FLICKR_ID_HELP"))
+    local help = Textarea("help_text", self:string("SCREENSAVER_FLICKR_FLICKR_ID_HELP"))
 
     window:addWidget(help)
     window:addWidget(input)

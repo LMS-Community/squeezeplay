@@ -139,7 +139,7 @@ function KeypadTest(self)
 	self.icon = Icon("icon")
 	window:addWidget(self.icon)
 
-	self.help = Textarea("helptext", self:string("TEST_KEYPAD_HELP"))
+	self.help = Textarea("help_text", self:string("TEST_KEYPAD_HELP"))
 	window:addWidget(self.help)
 
 	self:drawKeypad()

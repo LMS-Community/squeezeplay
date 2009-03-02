@@ -121,11 +121,11 @@ local menu2window = {
 }
 -- legacy map of item styles to new item style names
 local styleMap = {
-	itemplay = 'itemPlay',
-	itemadd  = 'itemAdd',
-	itemNoAction = 'itemNoArrow',
+	itemplay = 'item_play',
+	itemadd  = 'item_add',
+	itemNoAction = 'item_no_arrow',
 	albumitem = 'item',
-	albumitemplay = 'itemPlay',
+	albumitemplay = 'item_play',
 }
 
 --==============================================================================
@@ -807,7 +807,7 @@ local function _renderSlider(step, item)
 		step.window:addWidget(text)
 	end
 	if item.help then
-        	help = Textarea("helptext", item.help)
+        	help = Textarea("help_text", item.help)
 		step.window:addWidget(help)
 	end
 
@@ -1202,7 +1202,7 @@ local function _menuSink(self, cmd)
 					selectedIndex
 				)
 				
-				item.style = 'itemChoice'
+				item.style = 'item_choice'
 				item.icon = choice
 
 				--add the item to the menu
@@ -1975,7 +1975,7 @@ local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderS
 				style = styleMap[style]
 			end
 			if item['checkbox'] or item['radio'] or item['selectedIndex'] then
-				style = 'itemChoice'
+				style = 'item_choice'
 			end
 			widgets[widgetIndex] = _decoratedLabel(widget, style, item, db, menuAccel)
 		end
@@ -2377,7 +2377,7 @@ function showEmptyPlaylist(token)
 	local menu = SimpleMenu("menu")
 	menu:addItem({
 		     text = _string(token),
-			style = 'itemNoArrow'
+			style = 'item_no_arrow'
 	})
 	window:addWidget(menu)
 
@@ -2820,7 +2820,7 @@ function _problemConnecting(self, server)
 			     })
 	end
 
-	window:addWidget(Textarea("helptext", self:string("SLIMBROWSER_PROBLEM_CONNECTING_HELP", tostring(_server:getName()))))
+	window:addWidget(Textarea("help_text", self:string("SLIMBROWSER_PROBLEM_CONNECTING_HELP", tostring(_server:getName()))))
 	window:addWidget(menu)
 
 	self.serverErrorWindow = window

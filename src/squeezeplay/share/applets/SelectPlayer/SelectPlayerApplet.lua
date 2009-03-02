@@ -235,7 +235,7 @@ function _addPlayerItem(self, player)
 	}
 
 	if player == self.selectedPlayer and player:isConnected() then
-		item.style = "itemChecked"
+		item.style = "item_checked"
 	end
 
 	self.playerMenu:addItem(item)
@@ -265,7 +265,7 @@ function _refreshPlayerItem(self, player)
 		else
 			-- update player state
 			if player == self.selectedPlayer then
-				item.style = "itemChecked"
+				item.style = "item_checked"
 			end
 		end
 

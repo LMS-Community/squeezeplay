@@ -231,7 +231,7 @@ function _setCurrentSSID(self, ssid)
 
 	if self.currentSSID and self.scanResults[self.currentSSID] then
 		local item = self.scanResults[self.currentSSID].item
-		item.style = "itemChecked"
+		item.style = "item_checked"
 		if self.scanMenu then
 			self.scanMenu:updatedItem(item)
 		end
@@ -330,7 +330,7 @@ function _networkScanComplete(self, iface)
 		weight = 3
 	})
 
-	window:addWidget(Textarea("helptext", self:string("NETWORK_SETUP_HELP")))
+	window:addWidget(Textarea("help_text", self:string("NETWORK_SETUP_HELP")))
 	window:addWidget(menu)
 
 	self.scanWindow = window
@@ -856,7 +856,7 @@ function processWPSFailed(self, iface, ssid, reason)
 	})
 
 	window:addWidget(errorMessage)
-	window:addWidget(Textarea("helptext", helpText))
+	window:addWidget(Textarea("help_text", helpText))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -1136,7 +1136,7 @@ function _connectFailed(self, iface, ssid, reason)
 
 
 	window:addWidget(errorMessage)
-	window:addWidget(Textarea("helptext", helpText))
+	window:addWidget(Textarea("help_text", helpText))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -1196,7 +1196,7 @@ function _failedDHCPandWPA(self, iface, ssid)
 
 
 	window:addWidget(errorMessage)
-	window:addWidget(Textarea("helptext", self:string("NETWORK_ADDRESS_HELP")))
+	window:addWidget(Textarea("help_text", self:string("NETWORK_ADDRESS_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -1247,7 +1247,7 @@ function _failedDHCPandWEP(self, iface, ssid)
 	})
 
 	window:addWidget(errorMessage)
-	window:addWidget(Textarea("helptext", self:string("NETWORK_ADDRESS_HELP_WEP")))
+	window:addWidget(Textarea("help_text", self:string("NETWORK_ADDRESS_HELP_WEP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

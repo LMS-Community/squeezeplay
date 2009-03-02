@@ -352,7 +352,7 @@ function sliderWindow(self, menuItem)
 			end
 		end)
 
-	local help = Textarea("helptext", "We can add some help text here.\n\nThis screen is for testing the slider.")
+	local help = Textarea("help_text", "We can add some help text here.\n\nThis screen is for testing the slider.")
 
 	window:addWidget(help)
 	window:addWidget(slider)
@@ -456,7 +456,7 @@ function timeinputWindow(self, menuItem)
 					return true
 				end)
 
-	local help = Textarea("helptext", "Input of Time (24h)")
+	local help = Textarea("help_text", "Input of Time (24h)")
 
 	window:addWidget(help)
 	window:addWidget(input)
@@ -478,7 +478,7 @@ function hexinputWindow(self, menuItem)
 					return true
 				end)
 
-	local help = Textarea("helptext", "Input of HEX numbers.")
+	local help = Textarea("help_text", "Input of HEX numbers.")
 
 	window:addWidget(help)
 	window:addWidget(input)
@@ -501,7 +501,7 @@ function ipinputWindow(self, menuItem)
 					return true
 				end)
 
-	local help = Textarea("helptext", "Input of IP addresses.")
+	local help = Textarea("help_text", "Input of IP addresses.")
 
 	window:addWidget(help)
 	window:addWidget(input)
@@ -520,7 +520,7 @@ function lockedScreen(self, menuItem)
 
         popup:addWidget(Icon("icon_locked"))
         popup:addWidget(Label("text", "Locked"))
-	popup:addWidget(Textarea("helptext", 'To unlock press the ADD and PLAY buttons at the same time.'))
+	popup:addWidget(Textarea("help_text", 'To unlock press the ADD and PLAY buttons at the same time.'))
 
 	popup:addTimer(10000, function()
 			       popup:hide()
