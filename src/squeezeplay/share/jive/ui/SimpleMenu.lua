@@ -114,8 +114,6 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 			local item = list[indexList[i]]
 
 			local icon = item.icon or menu.icons[i]
-			local arrow = Icon('arrow')
-			local check = Icon('check')
 			local iconStyle = item.iconStyle or "icon"
 			if icon == nil then
 				icon = Icon(iconStyle)
@@ -126,9 +124,9 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 			if widgetList[i] == nil then
 				widgetList[i] = Group(item.style or "item", {
 					text  = Label("text", item.text),
-					check = check,
+					check = Icon('check'),
 					icon  = icon,
-					arrow = arrow,
+					arrow = Icon('arrow'),
 				})
 			else
 				widgetList[i]:setStyle(item.style or "item")
