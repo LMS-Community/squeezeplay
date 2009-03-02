@@ -293,6 +293,7 @@ function skin(self, s)
 	local TEXTINPUT_FONT_SIZE = 20
 	local TEXTINPUT_SELECTED_FONT_SIZE = 28
 	local HELP_FONT_SIZE = 18
+	local UPDATE_SUBTEXT_SIZE = 20
 
 	local ITEM_ICON_ALIGN   = 'center'
 	local THREE_ITEM_HEIGHT = 72
@@ -1865,7 +1866,7 @@ end -- OLD STYLES
 	s.waiting = _uses(s.popup)
 
 	s.waiting.text = {
-		border = { 15, 18, 15, 0 },
+		border = { 15, 0, 15, 20 },
 		font = _boldfont(POPUP_TEXT_SIZE_1),
 		fg = TEXT_COLOR,
 		lineHeight = POPUP_TEXT_SIZE_1 + 8,
@@ -1897,7 +1898,7 @@ end -- OLD STYLES
 	s.update = _uses(s.popup)
 
 	s.update.text = {
-		border = { 15, 18, 15, 0 },
+		border = { 15, 0, 15, 20 },
 		font = _boldfont(POPUP_TEXT_SIZE_1),
 		fg = TEXT_COLOR,
 		lineHeight = POPUP_TEXT_SIZE_1 + 8,
@@ -1907,8 +1908,19 @@ end -- OLD STYLES
 		h = (POPUP_TEXT_SIZE_1 + 8) * 2,
 	}
 
+	s.update.subtext = {
+		padding = { 0, 0, 0, 30 },
+		font = _font(UPDATE_SUBTEXT_SIZE),
+		fg = TEXT_COLOR,
+		sh = TEXT_SH_COLOR,
+		align = "bottom",
+		position = LAYOUT_SOUTH,
+		h = 40,
+	}
+
 	s.update.progress = {
-		border = 5,
+		border = 10,
+		position = LAYOUT_SOUTH,
 		horizontal = 1,
 		bgImg = _progressBackground,
 		img = _progressBar,
@@ -1962,6 +1974,7 @@ end -- OLD STYLES
                 item = _uses(s.iconlist.menu.item, buttonPressed),
                 itemchecked = _uses(s.iconlist.menu.itemchecked, buttonPressed),
         }
+
 	-- information window
 	-- XXXX todo
 	s.information = _uses(s.textlist)
@@ -1985,6 +1998,7 @@ end -- OLD STYLES
 	--playlist window
 	s.playlist = _uses(s.albumlist)
 
+
 --------- BUTTONS ---------
 
 
@@ -2002,8 +2016,8 @@ end -- OLD STYLES
 
 
 	-- invisible button
-	s.button = _uses(s.button, {
-		bgImg    = false,
+	s.button_none = _uses(_button, {
+		bgImg    = false
 	})
 
 	s.button_back = _uses(_button, {

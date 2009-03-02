@@ -372,17 +372,22 @@ function setup_update(self, item)
 	_windowActions(self, item, popup)
 
 	local label = Label("text", data[1])
+	local cent = Label("subtext", "")
 	local icon = Icon(data[2])
 	local progress = Slider("progress", 1, 100, 1)
 
 	local count = 1
 	popup:addTimer(500, function()
-		count = count + 1
+		if count < 100 then
+			count = count + 1
+		end
+		cent:setValue(count .. "%")
 		progress:setRange(1, 100, count)
 	end)
 
 	popup:addWidget(label)
 	popup:addWidget(icon)
+	popup:addWidget(cent)
 	popup:addWidget(progress)
 
 	self:tieWindow(popup)
