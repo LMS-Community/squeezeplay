@@ -437,6 +437,47 @@ function setup_textlist(self, item)
 	return window
 end
 
+--[[
+Window:   "playlist"
+menu: "menu"
+item: "item"
+-- XXXX
+--]]
+function window_playlist(self, item)
+	local data = _itemData(item)
+
+	local window = Window("playlist", _itemName(item), "artists")
+	_windowActions(self, item, window)
+
+	local menu = SimpleMenu("menu")
+	for i,subdata in ipairs(data) do
+		menu:addItem({
+			text = subdata[1],
+			callback = function(event, item)
+				if selected == item then
+					menu:lock()
+					return
+				end
+
+				if selected then
+					selected.style = "item"
+					menu:updatedItem(selected)
+				end
+
+				item.style = "itemchecked"
+				menu:updatedItem(item)
+
+				selected = item
+			end
+		})
+	end
+
+	window:addWidget(menu)
+
+	self:tieWindow(window)
+	return window
+end
+
 
 --[[
 Window:   "iconlist"
@@ -500,30 +541,6 @@ end
 
 
 --[[
-Window:   "albumlist"
-Menu: "menu"
-Item: "item"
---]]
-function window_albumlist(self, item)
-	local data = _itemData(item)
-
-	local window = Window("albumlist", _itemName(item))
-	_windowActions(self, item, window)
-
-	local menu = SimpleMenu("menu")
-	for i,data in ipairs(data[2]) do
-		menu:addItem({
-			text = data,
-		})
-	end
-
-	window:addWidget(menu)
-
-	self:tieWindow(window)
-	return window
-end
-
---[[
 Window:   "tracklist"
 Menu: "menu"
 Item: "item"
@@ -531,7 +548,7 @@ Item: "item"
 function window_tracklist(self, item)
 	local data = _itemData(item)
 
-	local window = Window("albumlist", _itemName(item))
+	local window = Window("tracklist", _itemName(item))
 	_windowActions(self, item, window)
 
 	local menu = SimpleMenu("menu")
@@ -577,12 +594,12 @@ end
 
 -- the reference windows, and test data
 windows = {
+	{ "playlist", "Playlist", window_playlist, },
 	{ "textlist", "Text List", setup_textlist, },
 	{ "iconlist", "Icon List", window_iconlist, },
 	{ "information", "Information Window", window_information, },
---	{ "albumlist", "Album List", window_albumlist, },
---	{ "tracklist", "Track List", window_tracklist, },
 --	{ "trackinfo", "Track Info", window_trackinfo, },
+--	{ "tracklist", "Track List", window_tracklist, },
 	{ "toast", "Popup Toast", window_toast, },
 
 	{ "setuplist", "Languages", setup_window, },
@@ -637,10 +654,18 @@ testData = {
 		 "Now Playing", "Music Library", "Internet Radio", "Music Services", "Favorites", "Extras", "Settings", "Choose Player", "Turn Off Player"
 	},
 	iconlist = {
-		{ "Something", 'region_US' }, 
-		{ "Something Else", 'region_US' }, 
-		{ "More Somethings", 'region_US' }, 
-		{ "Another Something", 'region_US' }, 
-		{ "How many somethings does it take to screw in a light bulb", 'region_US' },
-	}
+		{ "Something" }, 
+		{ "Something Else" },
+		{ "More Somethings" },
+		{ "Another Something" },
+		{ "How many somethings does it take to screw in a light bulb" },
+	},
+	playlist = {
+		{ "Something\nThe Somethings\nGreatest Hits" }, 
+		{ "In Our Bedroom After The War\nStars\nIn Our Bedroom After The War" },
+		{ "3121\nPrince\nSome Very Long Album Title That Goes off Screen" },
+		{ "Something\nThe Somethings\nGreatest Hits" }, 
+		{ "In Our Bedroom After The War\nStars\nIn Our Bedroom After The War" },
+		{ "3121\nPrince\nSome Very Long Album Title That Goes off Screen" },
+	},
 }

@@ -270,6 +270,7 @@ function skin(self, s)
 	--FIXME: paddings here need tweaking for Fab4Skin
 	local MENU_ALBUMITEM_PADDING = 0
 	local MENU_ALBUMITEM_TEXT_PADDING = { 16, 6, 9, 19 }
+	local MENU_PLAYLISTITEM_TEXT_PADDING = { 16, 1, 9, 1 }
 
 	local MENU_CURRENTALBUM_TEXT_PADDING = { 6, 20, 0, 10 }
 	local TEXTAREA_PADDING = { 50, 20, 50, 20 }
@@ -2006,10 +2007,6 @@ end -- OLD STYLES
 	-- help window (likely the same as information)
 	s.help = _uses(s.information)
 
-	--albumlist window
-	-- XXXX todo
-	s.albumlist = _uses(s.iconlist)
-
 	--tracklist window
 	-- XXXX todo
 	s.tracklist = _uses(s.textlist)
@@ -2019,7 +2016,53 @@ end -- OLD STYLES
 	s.trackinfo = _uses(s.textlist)
 
 	--playlist window
-	s.playlist = _uses(s.albumlist)
+	-- identical to iconlist but with some different formatting on the text
+	s.playlist = _uses(s.iconlist, {
+		menu = {
+			item = {
+				text = {
+					padding = MENU_PLAYLISTITEM_TEXT_PADDING,
+					line = {
+						{
+							font = _boldfont(ALBUMMENU_FONT_SIZE),
+							height = ALBUMMENU_FONT_SIZE
+						},
+						{
+							height = ALBUMMENU_SMALL_FONT_SIZE + 2
+						},
+						{
+							height = ALBUMMENU_SMALL_FONT_SIZE + 2
+						},
+					},	
+				},
+			},
+		},
+	})
+	s.playlist.menu.itemchecked = _uses(s.playlist.menu.item, {
+		order = { 'icon', 'text', 'check', 'arrow' },
+		check = {
+			align = ITEM_ICON_ALIGN,
+			padding = CHECK_PADDING,
+			img = _loadImage(self, "Icons/icon_check_5line.png")
+		},
+	})
+	s.playlist.menu.selected = {
+                item = _uses(s.playlist.menu.item),
+                itemchecked = _uses(s.playlist.menu.itemchecked),
+        }
+        s.playlist.menu.pressed = {
+                item = _uses(s.playlist.menu.item, buttonPressed),
+                itemchecked = _uses(s.playlist.menu.itemchecked, buttonPressed),
+        }
+	s.playlist.menu.locked = {
+		item = _uses(s.playlist.menu.pressed.item, {
+			arrow = smallSpinny
+		}),
+		itemchecked = _uses(s.playlist.menu.pressed.itemchecked, {
+			arrow = smallSpinny
+		}),
+	}
+
 
 	-- toast popup
 	s.toast = {
