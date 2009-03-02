@@ -59,6 +59,7 @@ function setupShowSetupLanguage(self, setupNext, helpText)
 	window:setAllowScreensaver(false)
 
 	window:setButtonAction("lbutton", nil)
+	window:setButtonAction("rbutton", nil)
 
 	local menu = SimpleMenu("menu")
 

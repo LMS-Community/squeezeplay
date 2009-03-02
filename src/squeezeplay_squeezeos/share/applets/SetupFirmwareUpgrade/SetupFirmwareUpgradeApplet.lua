@@ -158,7 +158,8 @@ function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
 		})
 	end
 
-	window:addWidget(help)
+	-- XXXX fixme
+	--window:addWidget(help)
 	window:addWidget(menu)
 end
 
@@ -176,7 +177,7 @@ function forceUpgrade(self, optional, upgUrl, urlHelp)
 		return
 	end
 
-	local window = Window("window", self:string("UPDATE"), firmwareupgradeTitleStyle)
+	local window = Window("setup", self:string("UPDATE"), firmwareupgradeTitleStyle)
 	local menu = SimpleMenu("menu")
 
 	if not optional then
@@ -201,7 +202,7 @@ function forceUpgrade(self, optional, upgUrl, urlHelp)
 end
 
 function settingsShow(self)
-	local window = Window("window", self:string("UPDATE"), firmwareupgradeTitleStyle)
+	local window = Window("setup", self:string("UPDATE"), firmwareupgradeTitleStyle)
 
 	local menu = SimpleMenu("menu")
 

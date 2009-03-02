@@ -126,66 +126,13 @@ function step3(self)
 
 	-- network connection type
 	return appletManager:callService(
-		"setupConnectionType", 
-		function(iface)
-			self:step3a(iface)
+		"setupNetworking", 
+		function()
+			self:step6(iface)
 		end, 
 		welcomeTitleStyle
 	)
 end
-
-function step3a(self, iface)
-	log:info("step3a")
-
-	if iface:isWireless() then
-		-- wireless region
-		return appletManager:callService(
-			"setupRegionShow",
-			function(iface)
-				self:step4(iface)
-			end,
-			iface
-		)
-	else
-		return self:step4(iface)
-	end
-
-end
-
-function step4(self, iface)
-	log:info("step4")
-
-	-- scan for networks
-	self.scanWindow = appletManager:callService(
-		"setupScanShow",
-		iface,
-		function()
-			self:step5(iface)
-			-- FIXME is this required:
-			if self.scanWindow then
-				self.scanWindow:hide()
-				self.scanWindow = nil
-			end
-		end,
-		welcomeTitleStyle
-	)
-end
-
-
-function step5(self, iface)
-	log:info("step5")
-
-	-- connect using other wireless network
-	return appletManager:callService(
-		"setupNetworksShow",
-		iface,
-		function()
-			self:step6()
-		end,
-		welcomeTitleStyle
-	)
-end
-
 
 function step6(self)
 	log:info("step6")
@@ -222,12 +169,13 @@ function setupWelcomeShow(self, setupNext)
 	local window = Window("onebutton", self:string("WELCOME"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
+	window:setButtonAction("rbutton", nil)
+
 	local textarea = Textarea("text", self:string("WELCOME_WALKTHROUGH"))
 
 	local continueButton = SimpleMenu("menu")
 
 	continueButton:addItem({
-		style = 'buttonitem',
 		text = (self:string("PRESS_TO_CONTINUE")),
 		sound = "WINDOWSHOW",
 		callback = setupNext,
@@ -247,12 +195,13 @@ function setupDoneShow(self, setupNext)
 	local window = Window("onebutton", self:string("DONE"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
+	window:setButtonAction("rbutton", nil)
+
 	local textarea = Textarea("text", self:string("DONE_HELP"))
 
 	local continueButton = SimpleMenu("menu")
 
 	continueButton:addItem({
-		style = 'buttonitem',
 		text = (self:string("PRESS_TO_CONTINUE")),
 		sound = "WINDOWSHOW",
 		callback = setupNext,
