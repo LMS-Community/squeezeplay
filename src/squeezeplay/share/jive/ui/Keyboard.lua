@@ -53,6 +53,14 @@ module(..., Framework.constants)
 
 oo.class(_M, Group)
 
+local keyboardButtonText = {
+        qwerty = 'ABC',
+        qwertyLower  = 'abc',
+        numeric = '123',
+        hex = 'hex',
+        chars = '!@&',
+}
+
 --[[
 
 =head2 jive.ui.Keyboard(style, widgets)
@@ -66,12 +74,15 @@ function __init(self, style, kbType)
 
 	local obj = oo.rawnew(self, Widget(style))
 
+	obj.kbType = kbType
+
 	-- accepted keyboard types
 	obj.keyboard = {}
 	obj.widgets  = {}
 
 	obj:_predefinedKeyboards()
 	obj:_specialKeyWidths()
+
 
 	local keyboard, widgets = obj:setKeyboard(kbType)
 
@@ -111,17 +122,18 @@ function _specialKeyWidths(self)
 	self.specialKeyWidths = {
 		['space'] = 150,
 		['shift'] = 60,
+		['pushed'] = 60,
 	}
 end
 
 function _predefinedKeyboards(self)
 		local bottomRow = { 
-					self:_switchKeyboardButton(style, 'numeric', '123'), 
-					self:_switchKeyboardButton(style, 'hex', 'hex'), 
+					self:_switchKeyboardButton(style, 'numeric', keyboardButtonText.numeric), 
+					self:_switchKeyboardButton(style, 'hex', keyboardButtonText.hex), 
 					self:_spaceBar(), 
-					self:_switchKeyboardButton(style, 'chars', '!@&'), 
-					self:_switchKeyboardButton(style, 'qwerty', 'ABC'), 
-					self:_switchKeyboardButton(style, 'qwertyLower', 'abc'), 
+					self:_switchKeyboardButton(style, 'chars', keyboardButtonText.chars), 
+					self:_switchKeyboardButton(style, 'qwerty', keyboardButtonText.qwerty), 
+					self:_switchKeyboardButton(style, 'qwertyLower', keyboardButtonText.qwertyLower), 
 					self:_go() 
 		}
 		self.keyboards = { 
@@ -302,6 +314,13 @@ function _buttonsFromChars(self, charTable)
 		local button
 		if type(v) == 'table' then
 			local keyStyle = v.style or 'button'
+			if keyStyle == 'shift' or keyStyle == 'pushed' then
+				if v.text == self.pushed or self.pushed == nil and keyboardButtonText[self.kbType] == v.text then
+					keyStyle = 'pushed'
+				else
+					keyStyle = 'shift'
+				end
+			end
 			local label
 			if v.icon then
 				label = v.icon
@@ -341,10 +360,16 @@ function _buttonsFromChars(self, charTable)
 end
 
 function _switchKeyboardButton(self, style, kbType, keyText)
+	local keyStyle = 'shift'
+	if kbType == self.kbType then
+		keyStyle = 'pushed'
+	end
 	return {	
 		text     = keyText,
-		style    = 'shift',
+		style    = keyStyle,
 		callback = function()
+			self.kbType = kbType
+			self.pushed = keyText
 			self:setKeyboard(kbType)
 			-- unset any one key shift behavior if a switch keyboard button is hit directly
 			self.last = nil

@@ -644,6 +644,8 @@ function skin(self, s)
 			bgImg = keyboardPressedBox
 		}),
 	}
+	s.keyboard.pushed = _uses(s.keyboard.pressed.shift)
+	s.keyboard.pressed.pushed = _uses(s.keyboard.pressed.shift)
 
 --------- WINDOW STYLES ---------
 	--

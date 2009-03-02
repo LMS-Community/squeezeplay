@@ -302,6 +302,8 @@ styles = {
 	"information.text",
 	"information.title.text",
 
+	"input.keyboard.back",
+	"input.keyboard.pushed",
 	"input.keyboard.button",
 	"input.keyboard.enter",
 	"input.keyboard.keyboardBack",
@@ -313,6 +315,7 @@ styles = {
 	"input.title.text",
 	"input.keyboard.pressed.enter",
 	"input.keyboard.pressed.button",
+	"input.keyboard.pressed.shift",
 
 	"onebutton.menu.scrollbar",
 	"onebutton.text",

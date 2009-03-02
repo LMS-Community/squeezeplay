@@ -125,7 +125,7 @@ end
 
 -- top level menu
 function menu(self)
-	local window = Window("window", "Skin Tests")
+	local window = Window("text_list", "Skin Tests")
 
 	local menu = SimpleMenu("menu")
 
