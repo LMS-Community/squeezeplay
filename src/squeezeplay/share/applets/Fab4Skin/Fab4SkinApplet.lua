@@ -261,6 +261,7 @@ function skin(self, s)
 				})
 
 	local popupMask = Tile:fillColor(0x000000e5)
+	local blackBackground = Tile:fillColor(0x000000ff)
 
 	local textinputCursor = Tile:loadImage(imgpath .. "Text_Entry/Keyboard_Touch/tch_cursor.png")
 
@@ -610,6 +611,7 @@ function skin(self, s)
 		w = WH_FILL,
 		h = WH_FILL,
 		border = { 8, 0, 8, 0 },
+		bgImg = blackBackground,
 	}
 
 	s.keyboard.button = {
