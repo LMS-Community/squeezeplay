@@ -77,6 +77,9 @@ function menuStyle(self)
 	return self.windowSpec.menuStyle
 end
 
+function windowStyle(self)
+	return self.windowSpec.windowStyle
+end
 
 function labelItemStyle(self)
 	return self.windowSpec.labelItemStyle
@@ -141,6 +144,9 @@ function updateStatus(self, chunk)
 		if window.menuStyle then
 			self.windowSpec.menuStyle = window.menuStyle .. "menu"
 			self.windowSpec.labelItemStyle = window.menuStyle .. "item"
+		end
+		if window.windowStyle then
+			self.windowSpec.windowStyle = window.windowStyle
 		end
 	end
 

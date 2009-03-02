@@ -401,14 +401,14 @@ end
 
 
 --[[
-Window:   "textlist"
+Window:   "text_list"
 Menu:     "menu"
 Item:     "itemPlay", "itemAdd", "item" (styles: selected, pressed, locked)
 --]]
 function window_trackinfo(self, item)
 	local data = _itemData(item)
 
-	local window = Window("textlist", _itemName(item), "home")
+	local window = Window("text_list", _itemName(item), "home")
 	_windowActions(self, item, window)
 
 	local menu = SimpleMenu("menu")
@@ -472,14 +472,14 @@ end
 
 
 --[[
-Window:   "textlist"
+Window:   "text_list"
 Menu:     "menu"
 Item:     "itemChoice", "item", "itemChecked", (styles: selected, pressed, locked)
 --]]
-function setup_textlist(self, item)
+function setup_text_list(self, item)
 	local data = _itemData(item)
 
-	local window = Window("textlist", _itemName(item), "home")
+	local window = Window("text_list", _itemName(item), "home")
 	_windowActions(self, item, window)
 
 	-- FIXME: choice items do not work
@@ -624,14 +624,14 @@ end
 
 
 --[[
-Window:   "iconlist"
+Window:   "icon_list"
 Menu:     "menu"
 Item:     "item", "itemChecked", (styles: selected, pressed, locked)
 --]]
-function window_iconlist(self, item)
+function window_icon_list(self, item)
 	local data = _itemData(item)
 
-	local window = Window("iconlist", _itemName(item), "artists")
+	local window = Window("icon_list", _itemName(item), "artists")
 	_windowActions(self, item, window)
 
 	local menu = SimpleMenu("menu")
@@ -799,8 +799,8 @@ windows = {
 	{ "trackinfo", "Track Info", window_trackinfo, },
 	{ "tracklist", "Track List", window_tracklist, },
 	{ "playlist", "Playlist", window_playlist, },
-	{ "textlist", "Text List", setup_textlist, },
-	{ "iconlist", "Icon List", window_iconlist, },
+	{ "text_list", "Text List", setup_text_list, },
+	{ "icon_list", "Icon List", window_icon_list, },
 	{ "information", "Information Window", window_information, },
 	{ "toast", "Popup Toast", window_toast, },
 	{ "toast_withicon", "Popup Toast w/art", window_toast_withicon, },
@@ -843,7 +843,7 @@ testData = {
 	update = {
 		"Installing\nSoftware Update...", "iconSoftwareUpdate",
 	},
-	textlist = {
+	text_list = {
 		 "Now Playing", "Music Library", "Internet Radio", "Music Services", "Favorites", "Extras", "Settings", "Choose Player", "Turn Off Player"
 	},
 	trackinfo = {
@@ -855,7 +855,7 @@ testData = {
 		"Year: 2008",
 		"Comment",
 	},
-	iconlist = {
+	icon_list = {
 		{ "Something" }, 
 		{ "Something Else" },
 		{ "More Somethings" },

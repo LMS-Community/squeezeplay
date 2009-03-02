@@ -808,10 +808,10 @@ function skin(self, s)
 
 	-- typical text list window
 	-- XXXX todo
-	s.textlist = _uses(s.window)
+	s.text_list = _uses(s.window)
 
-	-- iconlist window
-	s.iconlist = _uses(s.window, {
+	-- icon_list window
+	s.icon_list = _uses(s.window, {
 		menu = {
 			item = {
 				order = { "icon", "text", "arrow" },
@@ -845,7 +845,7 @@ function skin(self, s)
 	})
 
 
-	s.iconlist.menu.itemChecked = _uses(s.iconlist.menu.item, {
+	s.icon_list.menu.itemChecked = _uses(s.icon_list.menu.item, {
 		order = { 'icon', 'text', 'check', 'arrow' },
 		check = {
 			align = ITEM_ICON_ALIGN,
@@ -853,58 +853,58 @@ function skin(self, s)
 			img = _loadImage(self, "Icons/icon_check_5line.png")
 		},
 	})
-	s.iconlist.menu.itemPlay = _uses(s.iconlist.menu.item, { 
+	s.icon_list.menu.itemPlay = _uses(s.icon_list.menu.item, { 
 		arrow = playArrow, 
 	})
-	s.iconlist.menu.itemAdd  = _uses(s.iconlist.menu.item, { 
+	s.icon_list.menu.itemAdd  = _uses(s.icon_list.menu.item, { 
 		arrow = addArrow,
 	})
-	s.iconlist.menu.itemNoArrow = _uses(s.iconlist.menu.item, {
+	s.icon_list.menu.itemNoArrow = _uses(s.icon_list.menu.item, {
 		order = { 'icon', 'text' },
 	})
-	s.iconlist.menu.itemCheckedNoArrow = _uses(s.iconlist.menu.itemChecked, {
+	s.icon_list.menu.itemCheckedNoArrow = _uses(s.icon_list.menu.itemChecked, {
 		order = { 'icon', 'text', 'check' },
 	})
 
-	s.iconlist.menu.selected = {
-                item               = _uses(s.iconlist.menu.item),
-                itemChecked        = _uses(s.iconlist.menu.itemChecked),
-		itemPlay           = _uses(s.iconlist.menu.itemPlay),
-		itemAdd            = _uses(s.iconlist.menu.itemAdd),
-		itemNoArrow        = _uses(s.iconlist.menu.itemNoArrow),
-		itemCheckedNoArrow = _uses(s.iconlist.menu.itemCheckedNoArrow),
+	s.icon_list.menu.selected = {
+                item               = _uses(s.icon_list.menu.item),
+                itemChecked        = _uses(s.icon_list.menu.itemChecked),
+		itemPlay           = _uses(s.icon_list.menu.itemPlay),
+		itemAdd            = _uses(s.icon_list.menu.itemAdd),
+		itemNoArrow        = _uses(s.icon_list.menu.itemNoArrow),
+		itemCheckedNoArrow = _uses(s.icon_list.menu.itemCheckedNoArrow),
         }
-        s.iconlist.menu.pressed = {
-                item = _uses(s.iconlist.menu.item, { 
+        s.icon_list.menu.pressed = {
+                item = _uses(s.icon_list.menu.item, { 
 			bgImg = threeItemPressedBox 
 		}),
-                itemChecked = _uses(s.iconlist.menu.itemChecked, { 
+                itemChecked = _uses(s.icon_list.menu.itemChecked, { 
 			bgImg = threeItemPressedBox 
 		}),
-                itemPlay = _uses(s.iconlist.menu.itemPlay, { 
+                itemPlay = _uses(s.icon_list.menu.itemPlay, { 
 			bgImg = threeItemPressedBox 
 		}),
-                itemAdd = _uses(s.iconlist.menu.itemAdd, { 
+                itemAdd = _uses(s.icon_list.menu.itemAdd, { 
 			bgImg = threeItemPressedBox 
 		}),
-                itemNoArrow = _uses(s.iconlist.menu.itemNoArrow, { 
+                itemNoArrow = _uses(s.icon_list.menu.itemNoArrow, { 
 			bgImg = threeItemPressedBox 
 		}),
-                itemCheckedNoArrow = _uses(s.iconlist.menu.itemCheckedNoArrow, { 
+                itemCheckedNoArrow = _uses(s.icon_list.menu.itemCheckedNoArrow, { 
 			bgImg = threeItemPressedBox 
 		}),
         }
-	s.iconlist.menu.locked = {
-		item = _uses(s.iconlist.menu.pressed.item, {
+	s.icon_list.menu.locked = {
+		item = _uses(s.icon_list.menu.pressed.item, {
 			arrow = smallSpinny
 		}),
-		itemChecked = _uses(s.iconlist.menu.pressed.itemChecked, {
+		itemChecked = _uses(s.icon_list.menu.pressed.itemChecked, {
 			arrow = smallSpinny
 		}),
-		itemPlay = _uses(s.iconlist.menu.pressed.itemPlay, {
+		itemPlay = _uses(s.icon_list.menu.pressed.itemPlay, {
 			arrow = smallSpinny
 		}),
-		itemAdd = _uses(s.iconlist.menu.pressed.itemAdd, {
+		itemAdd = _uses(s.icon_list.menu.pressed.itemAdd, {
 			arrow = smallSpinny
 		}),
 	}
@@ -920,8 +920,8 @@ function skin(self, s)
 
 	--tracklist window
 	-- XXXX todo
-	-- identical to textlist but has icon in upper left of titlebar
-	s.tracklist = _uses(s.textlist)
+	-- identical to text_list but has icon in upper left of titlebar
+	s.tracklist = _uses(s.text_list)
 
 	s.tracklist.title = _uses(s.title, {
 		order = { 'lbutton', 'icon', 'text', 'rbutton' },		
@@ -933,8 +933,8 @@ function skin(self, s)
 	})
 
 	--playlist window
-	-- identical to iconlist but with some different formatting on the text
-	s.playlist = _uses(s.iconlist, {
+	-- identical to icon_list but with some different formatting on the text
+	s.playlist = _uses(s.icon_list, {
 		menu = {
 			item = {
 				text = {

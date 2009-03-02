@@ -45,8 +45,8 @@ end
 function __init(self, name, style, titleStyle)
 	local obj = oo.rawnew(self, {
 		-- FIXME, this removes miniicon support, as it probably needs reworking post skin reorg
-		--window = Window(style or "textlist", name, titleStyle),
-		window = Window(style or "textlist", name),
+		--window = Window(style or "text_list", name, titleStyle),
+		window = Window(style or "text_list", name),
 		windowTitle = name,
 		menuTable = {},
 		nodeTable = {},
@@ -209,16 +209,16 @@ function addNode(self, item)
 	-- or will need to be implemented differently after the skin reorg effort
 	--[[
 	if item.window and item.window.titleStyle then
-		window = Window("textlist", item.text, item.window.titleStyle .. "title")
+		window = Window("text_list", item.text, item.window.titleStyle .. "title")
 	elseif item.titleStyle then
-		window = Window("textlist", item.text, item.titleStyle .. "title")
+		window = Window("text_list", item.text, item.titleStyle .. "title")
 	else
-		window = Window("textlist", item.text)
+		window = Window("text_list", item.text)
 	end
 	--]]
 
 	-- instead just do this
-	window = Window("textlist", item.text)
+	window = Window("text_list", item.text)
 
 	local menuStyle = 'menu'
 	if item.window and item.window.menuStyle then

@@ -117,7 +117,15 @@ local modeTokens = {
 -- legacy map of menuStyles to windowStyles
 -- this allows SlimBrowser to make an educated guess at window style when one is not sent but a menu style is
 local menu2window = {
-	album = 'iconlist',
+	album = 'icon_list',
+}
+-- legacy map of item styles to new item style names
+local styleMap = {
+	itemplay = 'itemPlay',
+	itemadd  = 'itemAdd',
+	itemNoAction = 'itemNoArrow',
+	albumitem = 'item',
+	albumitemplay = 'itemPlay',
 }
 
 --==============================================================================
@@ -260,12 +268,12 @@ end
 -- _newWindowSpec
 -- returns a Window spec based on the concatenation of base and item
 -- window definition
-local function _newWindowSpec(db, item, titleStyle)
-	if not titleStyle then titleStyle = '' end
+local function _newWindowSpec(db, item)
 	log:debug("_newWindowSpec()")
 	
 	local bWindow
 	local iWindow = _safeDeref(item, 'window')
+debug.dump(iWindow)
 
 	if db then
 		bWindow = _safeDeref(db:chunk(), 'base', 'window')
@@ -276,7 +284,7 @@ local function _newWindowSpec(db, item, titleStyle)
 	-- determine style
 	local menuStyle = _priorityAssign('menuStyle', "", iWindow, bWindow)
 log:warn('Menu:   ', menuStyle)
-	local windowStyle = menu2window[menuStyle] or 'textlist'
+	local windowStyle = (iWindow and iWindow['windowStyle']) or menu2window[menuStyle] or 'text_list'
 log:warn('Window: ', windowStyle)
 
 	return {
@@ -412,6 +420,10 @@ end
 local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 	-- if item is a windowSpec, then the icon is kept in the spec for nothing (overhead)
 	-- however it guarantees the icon in the title is not shared with (the same) icon in the menu.
+	local showIcons = true
+	if db:windowStyle() == 'text_list' then
+		showIcons = false
+	end
 	if not group then
 		if labelStyle == 'title' then
 			group = Group(labelStyle, { 
@@ -439,7 +451,7 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 			})
 		else
 			group = Group(labelStyle, { 
-				icon = Icon("icon_no_artwork"), 
+				icon = Icon("icon"), 
 				text = Label("text", ""), 
 				arrow = Icon('arrow'),
 				check = Icon('check'),
@@ -449,7 +461,9 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 
 	if item then
 		group:setWidgetValue("text", item.text)
-		--group:setWidget('arrow', Icon('arrow'))
+		if showIcons then
+			group:setWidget('icon', Icon('icon_no_artwork'))
+		end
 
 		-- set an acceleration key, but not for playlists
 		if item.params and item.params.textkey then
@@ -471,7 +485,9 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 
 		else
 			if group._type then
-				group:setWidget("icon", Icon("icon_no_artwork"))
+				if showIcons then
+					group:setWidget("icon", Icon("icon_no_artwork"))
+				end
 				group._type = nil
 			end
 			_artworkItem(item, group, menuAccel)
@@ -480,12 +496,13 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 
 	else
 		if group._type then
-			group:setWidget("arrow", Icon("arrow"))
+			if showIcons then
+				group:setWidget("icon", Icon("icon_no_artwork"))
+			end
 			group._type = nil
 		end
 
 		group:setWidgetValue("text", "")
-		group:setWidgetValue("arrow", nil)
 		group:setStyle(labelStyle .. "waiting")
 	end
 
@@ -1032,7 +1049,11 @@ local function _browseSink(step, chunk, err)
 				data.window =  data.base.window
 			end
 			if data.window or data.base and data.base.window then
-				
+				local windowStyle = data.window and data.window.windowStyle or 
+							data.base and data.base.window and data.base.window.windowStyle
+				if windowStyle then
+					step.window:setStyle(data.window['windowStyle'])
+				end
 				-- if a titleStyle is being sent, we need to setTitleWidget completely
 				if data.window.titleStyle or data.window['icon-id'] then
 					local titleText, titleStyle, titleIcon
@@ -1154,12 +1175,9 @@ local function _menuSink(self, cmd)
 					window = v.window,
 					sound = "WINDOWSHOW",
 				}
-			if item.style == 'itemplay' then
-				item.style = 'itemPlay'
-			elseif item.style == 'itemadd' then
-				item.style = 'itemAdd'
+			if item.style and styleMap[item.style] then
+				item.style = styleMap[item.style]
 			end
-
 			local choiceAction = _safeDeref(v, 'actions', 'do', 'choices')
 
 			if v.isANode then
@@ -1954,11 +1972,10 @@ local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderS
 			end
 
 			-- support legacy styles for play and add
-			if style == 'itemplay' or style == 'albumitemplay' then
-				style = 'itemPlay'
-			elseif style == 'itemadd' or style == 'albumitemadd' then
-				style = 'itemAdd'
-			elseif item['checkbox'] or item['radio'] or item['selectedIndex'] then
+			if styleMap[style] then
+				style = styleMap[style]
+			end
+			if item['checkbox'] or item['radio'] or item['selectedIndex'] then
 				style = 'itemChoice'
 			end
 			widgets[widgetIndex] = _decoratedLabel(widget, style, item, db, menuAccel)
@@ -2017,7 +2034,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	local db = DB(windowSpec)
 	
 	-- create a window in all cases
-	local window = Window(windowSpec.windowStyle or 'textlist')
+	local window = Window(windowSpec.windowStyle or 'text_list')
 	window:setTitleWidget(_decoratedLabel(nil, 'title', windowSpec, db, false))
 	
 	local menu
@@ -2334,7 +2351,6 @@ function showTrackOne()
 	end
 
 	-- determine style
-	local menuStyle = _priorityAssign('menuStyle', "", iWindow, bWindow)
 	local newWindowSpec = {
 		["windowStyle"]      = "trackinfo",
 		["menuStyle"]        = "menu",
@@ -2358,11 +2374,11 @@ end
 -- if the player playlist is empty, we replace _statusStep with this window
 function showEmptyPlaylist(token)
 
-	local window = Window("window", _string(modeTokens['play']), 'currentplaylisttitle')
+	local window = Window("icon_list", _string(modeTokens['play']), 'currentplaylisttitle')
 	local menu = SimpleMenu("menu")
 	menu:addItem({
 		     text = _string(token),
-			style = 'albumitemNoAction'
+			style = 'itemNoArrow'
 	})
 	window:addWidget(menu)
 
