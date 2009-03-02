@@ -645,13 +645,6 @@ function skin(self, s)
 		}),
 	}
 
-	-- icon for albums with no artwork
-	s.no_artwork = {
-		img = _loadImage(self, "Icons/menu_album_noartwork_43.png"),
-		w   = THUMB_SIZE,
-		h   = THUMB_SIZE,
-	}
-
 --------- WINDOW STYLES ---------
 	--
 	-- These styles override the default styles for a specific window
@@ -1089,6 +1082,13 @@ function skin(self, s)
 		align = "center",
 		position = LAYOUT_CENTER,
 		padding = { 0, 0, 0, 10 }
+	}
+
+	-- icon for albums with no artwork
+	s.icon_no_artwork = {
+		img = _loadImage(self, "Icons/menu_album_noartwork_43.png"),
+		w   = THUMB_SIZE,
+		h   = THUMB_SIZE,
 	}
 
 	s.iconConnecting = _uses(_icon, {

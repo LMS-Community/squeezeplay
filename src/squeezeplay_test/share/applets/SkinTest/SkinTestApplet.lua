@@ -585,7 +585,7 @@ function window_playlist(self, item)
 	for i,subdata in ipairs(data) do
 		menu:addItem({
 			text = subdata[1],
-			icon = Icon('no_artwork'),
+			icon = Icon('icon_no_artwork'),
 			callback = function(event, item)
 				if selected == item then
 					menu:lock()
@@ -641,7 +641,7 @@ function window_iconlist(self, item)
 	for i,subdata in ipairs(data) do
 		menu:addItem({
 			text = subdata[1],
-			icon = Icon('no_artwork'),
+			icon = Icon('icon_no_artwork'),
 			callback = function(event, item)
 				if selected == item then
 					menu:lock()

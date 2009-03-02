@@ -439,7 +439,7 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 			})
 		else
 			group = Group(labelStyle, { 
-				icon = Icon("no_artwork"), 
+				icon = Icon("icon_no_artwork"), 
 				text = Label("text", ""), 
 				arrow = Icon('arrow'),
 				check = Icon('check'),
@@ -471,7 +471,7 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 
 		else
 			if group._type then
-				group:setWidget("icon", Icon("no_artwork"))
+				group:setWidget("icon", Icon("icon_no_artwork"))
 				group._type = nil
 			end
 			_artworkItem(item, group, menuAccel)
