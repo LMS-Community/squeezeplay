@@ -115,7 +115,6 @@ end
 local function _uses(parent, value)
 	local style = {}
 	setmetatable(style, { __index = parent })
-log:warn(debug.traceback())
 	for k,v in pairs(value or {}) do
 		if type(v) == "table" and type(parent[k]) == "table" then
 			-- recursively inherrit from parent style
