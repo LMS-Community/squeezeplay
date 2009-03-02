@@ -109,8 +109,8 @@ end
 
 function _specialKeyWidths(self)
 	self.specialKeyWidths = {
-		['keyboardSpace'] = 150,
-		['keyboardShift'] = 60,
+		['space'] = 150,
+		['shift'] = 60,
 	}
 end
 
@@ -301,7 +301,7 @@ function _buttonsFromChars(self, charTable)
 	for k, v in ipairs(charTable) do
 		local button
 		if type(v) == 'table' then
-			local keyStyle = v.style or 'keyboardButton'
+			local keyStyle = v.style or 'button'
 			local label
 			if v.icon then
 				label = v.icon
@@ -321,7 +321,7 @@ function _buttonsFromChars(self, charTable)
 					end
 			button   = Button(label, callback)
 		else
-			local label  = Label("keyboardButton", v)
+			local label  = Label("button", v)
 			button = Button(
 					label, 
 					function()
@@ -343,7 +343,7 @@ end
 function _switchKeyboardButton(self, style, kbType, keyText)
 	return {	
 		text     = keyText,
-		style    = 'keyboardShift',
+		style    = 'shift',
 		callback = function()
 			self:setKeyboard(kbType)
 			-- unset any one key shift behavior if a switch keyboard button is hit directly
@@ -356,7 +356,7 @@ end
 -- return a table that can be used as a space bar in keyboards
 function _go(self)
 	return {	
-		icon	 = Icon("keyboardGo"),
+		icon	 = Icon("enter"),
 		callback = function()
 			local e = Event:new(EVENT_KEY_PRESS, KEY_GO)
 			Framework:dispatchEvent(nil, e) 
@@ -404,7 +404,7 @@ end
 -- return a table that can be used as a space bar in keyboards
 function _spaceBar(self)
 	return {	
-		style    = 'keyboardSpace',
+		style    = 'space',
 		text     = 'SPACE',
 		callback = function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte(' '))

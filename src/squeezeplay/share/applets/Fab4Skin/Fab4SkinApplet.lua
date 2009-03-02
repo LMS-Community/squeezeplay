@@ -335,6 +335,9 @@ function skin(self, s)
 	s.iconTime.fg = TEXT_COLOR
 
 
+---- enable/disable old skin code
+if false then
+
 	-- Window title, this is a Label
 	s.title = {}
 	s.title.h = 47
@@ -364,16 +367,6 @@ function skin(self, s)
 	s.menu.itemHeight = 45
 	s.menu.fg = {0xbb, 0xbb, 0xbb }
 	s.menu.font = _boldfont(250)
-
-	-- FIXME: splitmenu will support large icons on the left in the future
-	-- for now, make it the same as s.menu
-	s.splitmenu = _uses(s.menu)
-
-	--[[
-	s.splitmenu = _uses(s.menu, {
-			padding = { 150, 2, 0, 2 }
-	})
-	--]]
 
 	-- menu item
 	s.item = {}
@@ -725,50 +718,6 @@ function skin(self, s)
 	s.popupIcon.text2.position = LAYOUT_SOUTH
 	s.popupIcon.text2.h = 40
 
-	s.iconPower = {}
-	s.iconPower.img = _loadImage(self, "Alerts/popup_shutdown_icon.png")
-	s.iconPower.w = WH_FILL
-	s.iconPower.align = 'center'
-
-	-- connecting/connected popup icon (likely deprecated in deference to s.popupIcon.ico)
-	s.iconConnecting = largeSpinny
-
-	s.iconConnected = {}
-	s.iconConnected.img = _loadImage(self, "Alerts/connecting_success_icon.png")
-	s.iconConnected.w = WH_FILL
-	s.iconConnected.align = "center"
-
-	s.iconLocked = {}
-	s.iconLocked.img = _loadImage(self, "Alerts/popup_locked_icon.png")
-	s.iconLocked.w = WH_FILL
-	s.iconLocked.align = "center"
-
-	s.iconAlarm = {}
-	s.iconAlarm.img = _loadImage(self, "Alerts/popup_alarm_icon.png")
-	s.iconAlarm.w = WH_FILL
-	s.iconAlarm.align = "center"
-
-	s.keyboardButton = {}
-        s.keyboardButton.padding = 0
-	s.keyboardButton.w = 45
-	s.keyboardButton.h= 45
-        s.keyboardButton.font = _boldfont(18)
-        s.keyboardButton.fg = TEXT_COLOR
-        s.keyboardButton.bgImg = buttonBox
-        s.keyboardButton.align = 'center'
-
-	s.keyboardShift          = _uses(s.keyboardButton, { bgImg = fiveItemSelectionBox, padding = 2, w = 75, h = 35 } )
-	s.keyboardSpace          = _uses(s.keyboardShift, { padding = 2, w = 100, h = 35 } )
-	s.keyboardBack           = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/left_arrow.png") } )
-	s.qwertyLower            = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/icon_shift_off.png") } )
-	s.qwertyUpper            = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/icon_shift_on.png") } )
-
-	s.keyboardGo       = _uses(s.keyboardShift, { img = _loadImage(self, "Icons/Mini/right_arrow.png") } )
-	s.keyboardSearch   = _uses(s.keyboardButton, { img = _loadImage(self, "Icons/Mini/icon_search.png") } )
-
-	s.pressed.keyboardShift = _uses(s.keyboardButton, { bgImg = fiveItemSelectionBoxPressed })
-	s.pressed.keyboardSpace = _uses(s.keyboardSpace, { bgImg = fiveItemSelectionBoxPressed })
-
 	-- wireless icons for menus
 	s.wirelessLevel1 = {}
 	s.wirelessLevel1.align = "right"
@@ -1029,18 +978,6 @@ function skin(self, s)
 		}
 	})
 	
-	s.region_US = _uses(s.buttonicon, { 
-		img = _loadImage(self, "Icons/icon_region_americas_64.png")
-	})
-	s.region_XX = _uses(s.buttonicon, { 
-		img = _loadImage(self, "Icons/icon_region_other_64.png")
-	})
-	s.wlan = _uses(s.buttonicon, {
-		img = _loadImage(self, "Icons/icon_wireless_64.png")
-	})
-	s.wired = _uses(s.buttonicon, {
-		img = _loadImage(self, "Icons/icon_ethernet_64.png")
-	})
 
 	local buttonPressed = { 
 		bgImg = threeItemPressedBox 
@@ -1135,40 +1072,6 @@ function skin(self, s)
 	-- styles for choose player menu
 	s.chooseplayer        = _uses(s.buttoniconitem)
 	s.chooseplayerchecked = _uses(s.chooseplayer, checkedStyle)
-
-	s.player_transporter = _uses(s.buttonicon, {
-		img = _loadImage(self, "Icons/Players/transporter.png"),
-	})
-	s.player_squeezebox = _uses(s.buttonicon, {
-		img = _loadImage(self, "Icons/Players/squeezebox.png"),
-	})
-	s.player_squeezebox2 = _uses(s.buttonicon, {
-		img = _loadImage(self, "Icons/Players/squeezebox.png"),
-	})
-	s.player_squeezebox3 = _uses(s.buttonicon, {
-		img = _loadImage(self, "Icons/Players/squeezebox3.png"),
-	})
-	s.player_boom = _uses(s.buttonicon, {
-		img = _loadImage(self, "Icons/Players/boom.png"),
-	})
-	s.player_slimp3 = _uses(s.buttonicon, {
-		img = _loadImage(self, "Icons/Players/slimp3.png"),
-	})
-	s.player_softsqueeze = _uses(s.buttonicon, {
-		img = _loadImage(self, "Icons/Players/softsqueeze.png"),
-	})
-	s.player_controller = _uses(s.buttonicon, {
-		img = _loadImage(self, "Icons/Players/controller.png"),
-	})
-	s.player_receiver = _uses(s.buttonicon, {
-		img = _loadImage(self, "Icons/Players/receiver.png"),
-	})
-	s.player_squeezeplay = _uses(s.buttonicon, {
-		img = _loadImage(self, "Icons/Players/squeezeplay.png"),
-	})
-	s.player_http = _uses(s.buttonicon, {
-		img = _loadImage(self, "Icons/Players/http.png"),
-	})
 
 	s.albumitemplay = _uses(s.albumitem)
 	s.albumitemadd  = _uses(s.albumitem)
@@ -1635,6 +1538,554 @@ function skin(self, s)
         s.iconbg.w = screenWidth
 	s.iconbg.border = { 0, 0, 0, 0 }
 	s.iconbg.position = LAYOUT_NONE
+end -- OLD STYLES
+
+
+
+
+	---- REVIEWED BELOW THIS LINE ----
+
+--------- CONSTANTS ---------
+
+	local _progressBackground = Tile:loadImage(imgpath .. "Alerts/alert_progress_bar_bkgrd.png")
+
+	local _progressBar = Tile:loadHTiles({
+		nil,
+		imgpath .. "Alerts/alert_progress_bar_body.png",
+		imgpath .. "Alerts/progress_bar_line.png",
+	})
+
+
+
+--------- DEFINES ---------
+
+	local _buttonMenu = {
+		padding = 0,
+		w = WH_FILL,
+		itemHeight = THREE_ITEM_HEIGHT,
+	}
+
+	local _buttonItem = {
+		order = { "text", "icon" },
+		padding = 0,
+		bgImg = threeItemSelectionBox,
+		text = {
+		w = WH_FILL,
+		h = WH_FILL,
+		padding = { 8, 0, 0, 0 },
+		align = "left",
+		font = _boldfont(34),
+		fg = SELECT_COLOR,
+		sh = SELECT_SH_COLOR,
+		},
+		icon = {
+			img     = _loadImage(self, "Icons/selection_right_3line_off.png"), 
+			w       = 37,
+			h       = WH_FILL,
+			padding = { 0, 0, 8, 0}
+		}
+	}
+
+
+--------- DEFAULT WIDGET STYLES ---------
+	--
+	-- These are the default styles for the widgets 
+
+	s.window = {
+		w = screenWidth,
+		h = screenHeight,
+	}
+
+	s.popup = _uses(s.window, {
+		border = { 25, 0, 25, 0 },
+		maskImg = popupMask,
+	})
+
+	s.title = {
+		h = 47,
+		border = 0,
+		position = LAYOUT_NORTH,
+		bgImg = titleBox,
+		order = { "lbutton", "text", "rbutton" },
+		text = {
+			w = WH_FILL,
+			padding = TITLE_PADDING,
+			align = "center",
+			font = _boldfont(TITLE_FONT_SIZE),
+			fg = TEXT_COLOR,
+		}
+	}
+
+	s.menu = {
+		position = LAYOUT_CENTER,
+		h = FIVE_ITEM_HEIGHT * 5,
+		padding = { 0, 0, 0, 0 },
+		itemHeight = 45,
+		fg = {0xbb, 0xbb, 0xbb },
+		font = _boldfont(250),
+	}
+
+	s.item = {
+		order = { "text", "icon" },
+		padding = { 4, 0, 0, 0 },
+		text = {
+			padding = { 6, 5, 2, 5 },
+			align = "left",
+			w = WH_FILL,
+			font = _boldfont(TEXTMENU_FONT_SIZE),
+			fg = TEXT_COLOR,
+			sh = TEXT_SH_COLOR,
+		},
+		icon = {
+	      		align = ITEM_ICON_ALIGN,
+	      		img = _loadImage(self, "Icons/selection_right_5line.png")
+		},
+	}
+
+	s.itemchecked = _uses(s.item, {
+		order = { "text", "check", "icon" },
+		check = {
+			align = ITEM_ICON_ALIGN,
+			padding = CHECK_PADDING,
+			img = _loadImage(self, "Icons/icon_check_5line.png")
+	      	}
+	})
+
+	s.selected = {
+		item = _uses(s.item),
+		itemchecked = _uses(s.itemchecked),
+	}
+
+	s.pressed = {
+		item = _uses(s.item, {
+			bgImg = fiveItemPressedBox,
+		}),
+		itemchecked = _uses(s.itemchecked, {
+			bgImg = fiveItemPressedBox,
+		}),
+	}
+
+	-- XXXX locked items
+
+	s.text = {
+		w = screenWidth,
+		padding = TEXTAREA_PADDING,
+		font = _boldfont(TEXTAREA_FONT_SIZE),
+		fg = TEXT_COLOR,
+		sh = TEXT_SH_COLOR,
+		align = "left",
+	}
+
+
+--------- SPECIAL WIDGETS ---------
+
+
+	-- text input
+	s.textinput = {
+		h = 35,
+		border = { 8, 0, 8, 0 },
+		padding = { 6, 0, 6, 0 },
+		font = _boldfont(TEXTINPUT_FONT_SIZE),
+		cursorFont = _boldfont(TEXTINPUT_SELECTED_FONT_SIZE),
+		wheelFont = _boldfont(TEXTINPUT_FONT_SIZE),
+		charHeight = TEXTINPUT_SELECTED_FONT_SIZE + 10,
+		fg = TEXT_COLOR_BLACK,
+		wh = { 0x55, 0x55, 0x55 },
+		bgImg = textinputBackground,
+		cursorImg = textinputCursor,
+--		enterImg = Tile:loadImage(imgpath .. "Icons/selection_right_5line.png"),
+	}
+
+	-- keyboard
+	-- XXXX pressed button states?
+	s.keyboard = {
+		w = WH_FILL,
+		h = WH_FILL,
+		border = { 8, 0, 8, 0 },
+	}
+
+	s.keyboard.button = {
+        	padding = 0,
+		w = 45,
+		h= 45,
+        	font = _boldfont(18),
+        	fg = TEXT_COLOR,
+        	bgImg = buttonBox,
+        	align = 'center',
+	}
+
+	s.keyboard.shift = _uses(s.keyboard.button, {
+		bgImg = fiveItemSelectionBox, padding = 2, w = 75, h = 35
+	})
+	s.keyboard.space = _uses(s.keyboard.shift, {
+		padding = 2, w = 100, h = 35
+	})
+	s.keyboard.back = _uses(s.keyboard.button, {
+		img = _loadImage(self, "Icons/Mini/left_arrow.png")
+	})
+	s.keyboard.qwertyLower = _uses(s.keyboard.button, {
+		img = _loadImage(self, "Icons/icon_shift_off.png")
+	})
+	s.keyboard.qwertyUpper = _uses(s.keyboard.button, {
+		img = _loadImage(self, "Icons/icon_shift_on.png")
+	})
+
+	s.keyboard.enter = _uses(s.keyboard.shift, {
+		img = _loadImage(self, "Icons/Mini/right_arrow.png")
+	})
+	s.keyboard.search = _uses(s.keyboard.button, {
+		img = _loadImage(self, "Icons/Mini/icon_search.png")
+	})
+
+	s.keyboard.pressed = {
+		shift = _uses(s.keyboard.shift, {
+			bgImg = fiveItemSelectionBoxPressed
+		}),
+		space = _uses(s.keyboard.space, {
+			bgImg = fiveItemSelectionBoxPressed
+		}),
+	}
+
+
+--------- WINDOW STYLES ---------
+	--
+	-- These styles override the default styles for a specific window
+
+	-- setup window
+	s.setup = _uses(s.window)
+
+
+	-- window with one option in "button" style
+	s.onebutton = _uses(s.setup)
+	s.onebutton.menu = _uses(_buttonMenu, {
+			position = LAYOUT_SOUTH,
+			h = THREE_ITEM_HEIGHT
+	})
+
+	s.onebutton.menu.item = {
+		order = { "text", "icon" },
+		padding = 0,
+		bgImg = threeItemSelectionBox,
+		text = {
+			w = WH_FILL,
+			h = WH_FILL,
+			padding = { 8, 0, 0, 0 },
+			align = "left",
+			font = _boldfont(34),
+			fg = TEXT_COLOR,
+			sh = TEXT_SH_COLOR,
+			icon = {
+				img = _loadImage(self, "Icons/selection_right_3line_off.png"), 
+				w = 37,
+				h = WH_FILL,
+				padding = { 0, 0, 8, 0},
+			}
+		}
+	}
+	s.onebutton.menu.selected = {
+		item = _uses(s.onebutton.menu.item)
+	}
+	s.onebutton.menu.pressed = {
+		item = _uses(s.onebutton.menu.item, buttonPressed)
+	}
+
+	s.onebutton.text = {
+		w = screenWidth,
+		position = LAYOUT_NORTH,
+		padding = { 16, 72, 35, 2 },
+		font = _font(36),
+		lineHeight = 40,
+		fg = TEXT_COLOR,
+		sh = TEXT_SH_COLOR,
+	}
+
+
+	-- window with multiple options in "button" style
+	s.buttonlist = _uses(s.window)
+
+	s.buttonlist.title = _uses(s.title, {
+		h = 55
+	})
+
+	s.buttonlist.menu = {
+		padding = 0,
+		w = WH_FILL,
+		itemHeight = THREE_ITEM_HEIGHT,
+	}
+
+	s.buttonlist.menu.item = _uses(_buttonItem, {
+		order = { "icon", "text"},
+		icon  = s.buttonicon,
+	})
+
+	s.buttonlist.menu.itemchecked = _uses(_buttonItem, {
+		order = { 'icon', 'text', 'check' },
+		check = {
+			img     = _loadImage(self, "Icons/icon_check_3line.png"), 
+			w       = 37,
+			h       = WH_FILL,
+			padding = { 2, 0, 18, 10 },
+		}
+	})
+
+	s.buttonlist.menu.selected = {
+		item = _uses(s.buttonlist.menu.item),
+		itemchecked = _uses(s.buttonlist.menu.itemchecked),
+	}
+	s.buttonlist.menu.pressed = {
+		item = _uses(s.buttonlist.menu.item, buttonPressed),
+		itemchecked = _uses(s.buttonlist.menu.itemchecked, buttonPressed),
+	}
+
+	-- help window
+	s.help = _uses(s.window)
+	-- XXXX scrollbar missing?
+
+	-- help window
+	s.waiting = _uses(s.popup)
+
+	s.waiting.text = {
+		border = { 15, 18, 15, 0 },
+		font = _boldfont(POPUP_TEXT_SIZE_1),
+		fg = TEXT_COLOR,
+		lineHeight = POPUP_TEXT_SIZE_1 + 8,
+		sh = TEXT_SH_COLOR,
+		align = "top",
+		position = LAYOUT_NORTH,
+		h = (POPUP_TEXT_SIZE_1 + 8 ) * 2,
+	}
+
+	s.waiting.subtext = {
+		padding = { 0, 0, 0, 26 },
+		font = _boldfont(POPUP_TEXT_SIZE_2),
+		fg = TEXT_COLOR,
+		sh = TEXT_SH_COLOR,
+		align = "bottom",
+		position = LAYOUT_SOUTH,
+		h = 40,
+	}
+
+	-- input window (including keyboard)
+	s.input = _uses(s.window)
+
+	-- error window
+	s.error = _uses(s.window)
+
+	-- update window
+	s.update = _uses(s.popup)
+
+	s.update.text = {
+		border = { 15, 18, 15, 0 },
+		font = _boldfont(POPUP_TEXT_SIZE_1),
+		fg = TEXT_COLOR,
+		lineHeight = POPUP_TEXT_SIZE_1 + 8,
+		sh = TEXT_SH_COLOR,
+		align = "top",
+		position = LAYOUT_NORTH,
+		h = (POPUP_TEXT_SIZE_1 + 8) * 2,
+	}
+
+	s.update.progress = {
+		border = 5,
+		horizontal = 1,
+		bgImg = _progressBackground,
+		img = _progressBar,
+	}
+
+	-- thumblist window
+	s.list = _uses(s.window)
+	-- XXXX todo
+
+	-- thumblist window
+	s.thumblist = _uses(s.window)
+	-- XXXX todo
+
+
+
+--------- BUTTONS ---------
+
+
+	-- XXXX could use a factory function
+	local _button = {
+		bgImg = titlebarButtonBox,
+		w = TITLE_BUTTON_WIDTH,
+		h = TITLE_BUTTON_HEIGHT,
+		align = 'center',
+		border = TITLE_BUTTON_PADDING,
+	}
+	local _pressed_button = _uses(_button, {
+		bgImg = pressedTitlebarButtonBox,
+	})
+
+
+	-- invisible button
+	s.button = _uses(s.button, {
+		bgImg    = false,
+	})
+
+	s.button_back = _uses(_button, {
+		img      = backButton,
+	})
+	s.pressed.button_back = _uses(_pressed_button, {
+		img      = backButton,
+	})
+
+	s.button_go_now_playing = _uses(_button, {
+		img      = nowPlayingButton,
+	})
+	s.pressed.button_go_now_playing = _uses(_pressed_button, {
+		img      = nowPlayingButton,
+	})
+
+	s.button_help = _uses(_button, {
+		img = helpButton,
+	})
+	s.pressed.button_help = _uses(_pressed_button, {
+		img      = helpButton,
+	})
+
+
+
+	local _buttonicon = {
+		w = 72,
+		h = WH_FILL,
+		padding = { 8, 4, 0, 4 },
+		img = false
+	}
+
+	s.region_US = _uses(_buttonicon, { 
+		img = _loadImage(self, "Icons/icon_region_americas_64.png")
+	})
+	s.region_XX = _uses(_buttonicon, { 
+		img = _loadImage(self, "Icons/icon_region_other_64.png")
+	})
+	s.wlan = _uses(_buttonicon, {
+		img = _loadImage(self, "Icons/icon_wireless_64.png")
+	})
+	s.wired = _uses(_buttonicon, {
+		img = _loadImage(self, "Icons/icon_ethernet_64.png")
+	})
+
+
+--------- ICONS --------
+
+	-- icons used for 'waiting' and 'update' windows
+	local _icon = {
+		w = WH_FILL,
+		align = "center",
+		position = LAYOUT_CENTER,
+		padding = { 0, 0, 0, 10 }
+	}
+
+	s.iconConnecting = _uses(_icon, {
+		img = _loadImage(self, "Alerts/wifi_connecting.png"),
+		frameRate = 8,
+		frameWidth = 120,
+	})
+
+	s.iconConnected = _uses(_icon, {
+		img = _loadImage(self, "Alerts/connecting_success_icon.png"),
+	})
+
+	s.iconSoftwareUpdate = _uses(_icon, {
+		img = _loadImage(self, "Icons/icon_firmware_update_100.png"),
+	})
+
+	s.iconPower = _uses(_icon, {
+		img = _loadImage(self, "Alerts/popup_shutdown_icon.png"),
+	})
+
+	s.iconLocked = _uses(_icon, {
+		img = _loadImage(self, "Alerts/popup_locked_icon.png"),
+	})
+
+	s.iconAlarm = _uses(_icon, {
+		img = _loadImage(self, "Alerts/popup_alarm_icon.png"),
+	})
+
+
+	-- button icons, on left of menus
+	local _buttonicon = {
+		w = 72,
+		h = WH_FILL,
+		padding = { 8, 4, 0, 4 },
+	}
+
+	s.player_transporter = _uses(_buttonicon, {
+		img = _loadImage(self, "Icons/Players/transporter.png"),
+	})
+	s.player_squeezebox = _uses(_buttonicon, {
+		img = _loadImage(self, "Icons/Players/squeezebox.png"),
+	})
+	s.player_squeezebox2 = _uses(_buttonicon, {
+		img = _loadImage(self, "Icons/Players/squeezebox.png"),
+	})
+	s.player_squeezebox3 = _uses(_buttonicon, {
+		img = _loadImage(self, "Icons/Players/squeezebox3.png"),
+	})
+	s.player_boom = _uses(_buttonicon, {
+		img = _loadImage(self, "Icons/Players/boom.png"),
+	})
+	s.player_slimp3 = _uses(_buttonicon, {
+		img = _loadImage(self, "Icons/Players/slimp3.png"),
+	})
+	s.player_softsqueeze = _uses(_buttonicon, {
+		img = _loadImage(self, "Icons/Players/softsqueeze.png"),
+	})
+	s.player_controller = _uses(_buttonicon, {
+		img = _loadImage(self, "Icons/Players/controller.png"),
+	})
+	s.player_receiver = _uses(_buttonicon, {
+		img = _loadImage(self, "Icons/Players/receiver.png"),
+	})
+	s.player_squeezeplay = _uses(_buttonicon, {
+		img = _loadImage(self, "Icons/Players/squeezeplay.png"),
+	})
+	s.player_http = _uses(_buttonicon, {
+		img = _loadImage(self, "Icons/Players/http.png"),
+	})
+
+
+	-- indicator icons, on right of menus
+	local _indicator = {
+		align = "right",
+	}
+
+	s.wirelessLevel1 = _uses(_indicator, {
+		img = _loadImage(self, "Icons/icon_wireless_1_shadow.png")
+	})
+
+	s.wirelessLevel2 = _uses(_indicator, {
+		img = _loadImage(self, "Icons/icon_wireless_2_shadow.png")
+	})
+
+	s.wirelessLevel3 = _uses(_indicator, {
+		img = _loadImage(self, "Icons/icon_wireless_3_shadow.png")
+	})
+
+	s.wirelessLevel4 = _uses(_indicator, {
+		img = _loadImage(self, "Icons/icon_wireless_4_shadow.png")
+	})
+
+
+--------- ICONBAR ---------
+
+	-- time (hidden off screen)
+	s.iconTime = {
+		x = screenWidth + 10,
+		y = screenHeight + 10,
+		layer = LAYER_FRAME,
+		position = LAYOUT_NONE,
+	}
+
+
+
+--------- LEGACY STYLES TO KEEP SLIMBROWSER GOING --------
+if true then
+
+	-- XXXX todo
+
+end -- LEGACY STYLES
 
 
 end

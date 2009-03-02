@@ -220,7 +220,7 @@ end
 
 
 --[[
-Window:   "button"
+Window:   "buttonlist"
 Textarea: "text"
 Menu:     "menu"
 Item:     "item"
@@ -228,7 +228,7 @@ Item:     "item"
 function setup_button(self, item)
 	local data = _itemData(item)
 
-	local window = Window("button", _itemName(item), "setup")
+	local window = Window("buttonlist", _itemName(item), "setup")
 	_windowActions(self, item, window)
 
 	window:addActionListener("help", self, dummy_help)
@@ -279,11 +279,11 @@ Icon:     X
 function setup_waiting(self, item)
 	local data = _itemData(item)
 
-	local popup = Popup("waiting", _itemName(item))
+	local popup = Popup("waiting")
 	_windowActions(self, item, popup)
 
 	local label = Label("text", data[1])
-	local sublabel = Label("text", data[2])
+	local sublabel = Label("subtext", data[2])
 	local icon = Icon(data[3])
 
 	popup:addWidget(label)
@@ -300,7 +300,7 @@ Window:    "input"
 Textinput: "textinput"
 Keyboard:  "keyboard"
 --]]
-function setup_keyboard(self, item)
+function setup_input(self, item)
 	local data = _itemData(item)
 
 	local window = Window("input", _itemName(item), "setup")
@@ -363,10 +363,10 @@ Icon:     X
 function setup_update(self, item)
 	local data = _itemData(item)
 
-	local popup = Popup("update", _itemName(item))
+	local popup = Popup("update")
 	_windowActions(self, item, popup)
 
-	local textarea = Textarea("text", data[1])
+	local label = Label("text", data[1])
 	local icon = Icon(data[2])
 	local progress = Slider("progress", 1, 100, 1)
 
@@ -376,12 +376,48 @@ function setup_update(self, item)
 		progress:setRange(1, 100, count)
 	end)
 
-	popup:addWidget(textarea)
+	popup:addWidget(label)
 	popup:addWidget(icon)
 	popup:addWidget(progress)
 
 	self:tieWindow(popup)
 	return popup
+end
+
+
+--[[
+Window:   "list"
+-- XXXX
+--]]
+function setup_list(self, item)
+	local data = _itemData(item)
+
+	local window = Window("list", _itemName(item), "home")
+	_windowActions(self, item, window)
+
+	-- TODO
+	window:addWidget(Label("text", "todo..."))
+	
+	self:tieWindow(window)
+	return window
+end
+
+
+--[[
+Window:   "thumblist"
+-- XXXX
+--]]
+function setup_thumblist(self, item)
+	local data = _itemData(item)
+
+	local window = Window("thumblist", _itemName(item), "artists")
+	_windowActions(self, item, window)
+
+	-- TODO
+	window:addWidget(Label("text", "todo..."))
+
+	self:tieWindow(window)
+	return window
 end
 
 
@@ -398,9 +434,11 @@ windows = {
 	{ "button", "Choose Region", setup_button, },
 	{ "help", "Help Connection Type", setup_help, },
 	{ "waiting", "Connecting to", setup_waiting, },
-	{ "keyboard_wpa", "Wireless Password", setup_keyboard, },
+	{ "input_wpa", "Wireless Password", setup_input, },
 	{ "error", "Error", setup_error, },
 	{ "update", "Software Update", setup_update, },
+	{ "list", "List", setup_list, },
+	{ "thumblist", "Thumblist", setup_thumblist, },
 }
 
 
@@ -419,12 +457,12 @@ testData = {
 		},
 	},
 	help = {
-		"This is some help text, in a help window. It could be very long, and may need a scrollbar.", -- todo add more text
+		"This is some help text, in a help window. It could be very long, and may need a scrollbar.\nThe quick brown fox jumped over the lazy dog.\nForsaking monastic tradition, twelve jovial friars gave up their vocation for a questionable existence on the flying trapeze.\nSix javelins thrown by the quick savages whizzed forty paces beyond the mark.\nJaded zombies acted quaintly but kept driving their oxen forward.",
 	},
 	waiting = {
 		"Connecting to\nwireless network...", "all your base", "iconConnecting",
 	},
-	keyboard_wpa = {
+	input_wpa = {
 		Textinput.textValue("", 8, 20), 'qwerty',
 	},
 	error = {
