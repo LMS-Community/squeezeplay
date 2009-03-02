@@ -1486,6 +1486,13 @@ end -- OLD STYLES
 	      	}
 	})
 
+	s.itemNoArrow = _uses(s.item, {
+		order = { 'text' },
+	})
+	s.itemCheckedNoArrow = _uses(s.item, {
+		order = { 'text', 'check' },
+	})
+
 	s.selected = {
 		item = _uses(s.item),
 		itemChecked = _uses(s.itemChecked),
@@ -1504,6 +1511,12 @@ end -- OLD STYLES
 		itemadd = _uses(s.itemadd, {
 			bgImg = fiveItemPressedBox,
 		}),
+		itemNoArrow = _uses(s.itemNoArrow, {
+			bgImg = fiveItemPressedBox,
+		}),
+		itemCheckedNoArrow = _uses(s.itemCheckedNoArrow, {
+			bgImg = fiveItemPressedBox,
+		}),
 	}
 
 	s.locked = {
@@ -1517,6 +1530,12 @@ end -- OLD STYLES
 			arrow = smallSpinny
 		}),
 		itemadd = _uses(s.pressed.itemadd, {
+			arrow = smallSpinny
+		}),
+		itemNoArrow = _uses(s.itemNoArrow, {
+			arrow = smallSpinny
+		}),
+		itemCheckedNoArrow = _uses(s.itemCheckedNoArrow, {
 			arrow = smallSpinny
 		}),
 	}

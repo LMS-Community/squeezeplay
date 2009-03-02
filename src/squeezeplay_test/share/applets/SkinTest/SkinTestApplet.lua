@@ -543,6 +543,16 @@ function window_playlist(self, item)
 		})
 	end
 
+	-- add an item for itemNoArrow and itemCheckedNoArrow
+	menu:addItem({
+			text = "Test of itemNoArrow",
+			style = 'itemNoArrow',
+	})
+	menu:addItem({
+			text = "Test of itemCheckedNoArrow",
+			style = 'itemCheckedNoArrow',
+	})
+
 	window:addWidget(menu)
 
 	self:tieWindow(window)
