@@ -4,6 +4,7 @@ local ipairs, pairs = ipairs, pairs
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
+local System        = require("jive.System")
 
 local Framework     = require("jive.ui.Framework")
 
@@ -33,15 +34,19 @@ end
 
 
 function configureApplet(meta)
-	-- XXXX debugStyle turned on by default for now, this needs
-	-- turning off once the skins are complete
+	local desktop = System:getMachine() == "squeezeplay"
 
 	Framework:addActionListener("debug_skin", meta, function()
 		appletManager:callService("debugSkin")
-		--appletManager:callService("debugStyle")
+
+		if not desktop then
+			appletManager:callService("debugStyle")
+		end
 	end)
 
-	appletManager:callService("debugStyle")
+	if desktop then
+		appletManager:callService("debugStyle")
+	end
 end
 
 
