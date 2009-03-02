@@ -1441,7 +1441,6 @@ end -- OLD STYLES
 
 	s.menu = {
 		position = LAYOUT_CENTER,
-		h = FIVE_ITEM_HEIGHT * 5,
 		padding = { 0, 0, 0, 0 },
 		itemHeight = 45,
 		fg = {0xbb, 0xbb, 0xbb },
@@ -1847,12 +1846,12 @@ end -- OLD STYLES
 
 
 	-- information window
-	-- XXXX todo
-	s.information = _uses(s.textlist)
-	-- XXXX scrollbar missing?
+	s.information = _uses(s.window)
+
 
 	-- help window (likely the same as information)
-	s.help = _uses(s.information)
+	s.help = _uses(s.window)
+
 
 	--tracklist window
 	-- XXXX todo
@@ -1860,7 +1859,7 @@ end -- OLD STYLES
 	s.tracklist = _uses(s.textlist)
 
 	s.tracklist.title = _uses(s.title, {
-		order = { 'icon', 'text', 'rbutton' },		
+		order = { 'lbutton', 'icon', 'text', 'rbutton' },		
 		icon  = {
 			w = THUMB_SIZE,
 			h = WH_FILL,
@@ -1927,22 +1926,23 @@ end -- OLD STYLES
 		bgImg = helpBox,
 		font = _font(HELP_FONT_SIZE),
 	}
-	-- XXXX fix toast
 
 	s.icontoast = _uses(s.toast, {
-		order = { 'icon', 'text' },
-		text = { 
-			padding = { 10, 12, 12, 12 } ,
-			align = 'top-left',
-			w = WH_FILL,
-			h = WH_FILL
-		},
-		icon = { 
-			align = 'top-left', 
-			border = { 12, 12, 0, 0 },
-			img = _loadImage(self, "Icons/menu_album_noartwork_64.png"),
-			h = WH_FILL,
-			w = 64,
+		xxxx = {
+			order = { 'icon', 'text' },
+			text = { 
+				padding = { 10, 12, 12, 12 } ,
+				align = 'top-left',
+				w = WH_FILL,
+				h = WH_FILL
+			},
+			icon = { 
+				align = 'top-left', 
+				border = { 12, 12, 0, 0 },
+				img = _loadImage(self, "Icons/menu_album_noartwork_64.png"),
+				h = WH_FILL,
+				w = 64,
+			}
 		}
 	})
 
@@ -2170,22 +2170,22 @@ if true then
 	s.largenptitle.pressed = _uses(s.ssnptitle.pressed)
 
 	-- Song
-	s.ssnptrack = {}
-	s.ssnptrack.border = { 4, 0, 4, 0 }
-	s.ssnptrack.text = {}
-	s.ssnptrack.text.w = WH_FILL
-	s.ssnptrack.text.padding = { 220, 52, 20, 10 }
-	s.ssnptrack.text.align = "left"
-        s.ssnptrack.text.font = _font(NP_TRACK_FONT_SIZE)
-	s.ssnptrack.text.lineHeight = NP_TRACK_FONT_SIZE + 4
-	s.ssnptrack.position = LAYOUT_WEST
-        s.ssnptrack.text.line = {
-		{
-			font = _boldfont(NP_TRACK_FONT_SIZE),
-			height = NP_TRACK_FONT_SIZE + 4
-		}
+	s.ssnptrack = {
+		border = { 4, 0, 4, 0 },
+		text = {
+			w = WH_FILL,
+			padding = { 220, 52, 20, 10 },
+			align = "left",
+        		font = _font(NP_TRACK_FONT_SIZE),
+			lineHeight = NP_TRACK_FONT_SIZE + 4,
+			position = LAYOUT_WEST,
+			fg = TEXT_COLOR,
+        		line = {{
+				font = _boldfont(NP_TRACK_FONT_SIZE),
+				height = NP_TRACK_FONT_SIZE + 4,
+				}},
+		},
 	}
-	s.ssnptrack.text.fg = TEXT_COLOR
 
 	-- nptrack is identical between all windowStyles
 	s.browsenptrack = _uses(s.ssnptrack)
@@ -2197,76 +2197,82 @@ if true then
 	local browseArtWidth  = ARTWORK_SIZE
 	local ssArtWidth      = SS_ARTWORK_SIZE
 
-	s.ssnpartwork = {}
+	s.ssnpartwork = {
+		w = ssArtWidth,
+		border = { 10, 50, 10, 0 },
+		position = LAYOUT_WEST,
+		align = "center",
+		artwork = {
+			align = "center",
+			padding = 0,
+			-- FIXME: change name to not be specific to icon width in filename
+			img = _loadImage(self, "Icons/icon_album_noartwork_336.png"),
+		},
+	}
 
-	s.ssnpartwork.w = ssArtWidth
-	s.ssnpartwork.border = { 10, 50, 10, 0 }
-	s.ssnpartwork.position = LAYOUT_WEST
-	s.ssnpartwork.align = "center"
-	s.ssnpartwork.artwork = {}
-	s.ssnpartwork.artwork.align = "center"
-	s.ssnpartwork.artwork.padding = 0
-	-- FIXME: change name to not be specific to icon width in filename
-	s.ssnpartwork.artwork.img = _loadImage(self, "Icons/icon_album_noartwork_336.png")
 	s.browsenpartwork = _uses(s.ssnpartwork)
 	s.largenpartwork = _uses(s.ssnpartwork)
-
-	s.ssnpcontrols = {}
-	s.ssnpcontrols.order = { 'rew', 'play', 'fwd', 'vol' }
-	s.ssnpcontrols.position = LAYOUT_NONE
 
 	local topPadding = screenHeight/2 + 10
 	local rightPadding = screenWidth/2 - 15
 	local buttonPadding = { 10, 5, 10, 5 }
-	s.ssnpcontrols.x = rightPadding
-	s.ssnpcontrols.y = topPadding
-	s.ssnpcontrols.bgImg = buttonBox
-	
-	s.ssnpcontrols.rew = {}
-	s.ssnpcontrols.rew.align = 'center'
-	s.ssnpcontrols.rew.padding = buttonPadding
-	s.ssnpcontrols.rew.img = _loadImage(self, "Player_Controls/icon_toolbar_rew.png")
-	
-	s.ssnpcontrols.play = {}
-	s.ssnpcontrols.play.align = 'center'
-	s.ssnpcontrols.play.padding = buttonPadding
-	s.ssnpcontrols.play.img = _loadImage(self, "Player_Controls/icon_toolbar_play.png")
-	
-	s.ssnpcontrols.pause = {}
-	s.ssnpcontrols.pause.align = 'center'
-	s.ssnpcontrols.pause.padding = buttonPadding
-	s.ssnpcontrols.pause.img = _loadImage(self, "Player_Controls/icon_toolbar_pause.png")
-	
-	
-	s.ssnpcontrols.fwd = {}
-	s.ssnpcontrols.fwd.align = 'center'
-	s.ssnpcontrols.fwd.padding = buttonPadding
-	s.ssnpcontrols.fwd.img = _loadImage(self, "Player_Controls/icon_toolbar_ffwd.png")
 
-	s.ssnpcontrols.vol = {}
-	s.ssnpcontrols.vol.align = 'center'
-	s.ssnpcontrols.vol.padding = buttonPadding
-	s.ssnpcontrols.vol.img = _loadImage(self, "Player_Controls/icon_toolbar_vol_up.png")
+	s.ssnpcontrols = {
+		order = { 'rew', 'play', 'fwd', 'vol' },
+		position = LAYOUT_NONE,
+		x = rightPadding,
+		y = topPadding,
+		bgImg = buttonBox,
+		rew = {
+			align = 'center',
+			padding = buttonPadding,
+			img = _loadImage(self, "Player_Controls/icon_toolbar_rew.png"),
+		},
+		play = {
+			align = 'center',
+			padding = buttonPadding,
+			img = _loadImage(self, "Player_Controls/icon_toolbar_play.png"),
+		},
+		pause = {
+			align = 'center',
+			padding = buttonPadding,
+			img = _loadImage(self, "Player_Controls/icon_toolbar_pause.png"),
+		},
+		fwd = {
+			align = 'center',
+			padding = buttonPadding,
+			img = _loadImage(self, "Player_Controls/icon_toolbar_ffwd.png"),
+		},
+		vol = {
+			align = 'center',
+			padding = buttonPadding,
+			img = _loadImage(self, "Player_Controls/icon_toolbar_vol_up.png"),
+		},
+	}
 	
 	s.browsenpcontrols = _uses(s.ssnpcontrols)
 	s.largenpcontrols  = _uses(s.ssnpcontrols)
 
 	-- Progress bar
-	s.ssprogress = {}
-	s.ssprogress.position = LAYOUT_SOUTH
-	s.ssprogress.order = { "elapsed", "slider", "remain" }
-	s.ssprogress.elapsed = {}
-	s.ssprogress.elapsed.align = 'right'
-	s.ssprogress.remain = {}
-	s.ssprogress.remain.align = 'left'
-	s.ssprogress.text = {}
-	s.ssprogress.text.w = 75 
-	s.ssprogress.text.align = 'right'
-	s.ssprogress.padding = { 10, 10, 10, 5 }
-	s.ssprogress.text.padding = { 8, 0, 8, 15 }
-	s.ssprogress.text.font = _boldfont(18)
-	s.ssprogress.text.fg = { 0xe7,0xe7, 0xe7 }
-	s.ssprogress.text.sh = { 0x37, 0x37, 0x37 }
+	s.ssprogress = {
+		position = LAYOUT_SOUTH,
+		padding = { 10, 10, 10, 5 },
+		order = { "elapsed", "slider", "remain" },
+		elapsed = {
+			align = 'right',
+		},
+		remain = {
+			align = 'left',
+		},
+		text = {
+			w = 75,
+			align = 'right',
+			padding = { 8, 0, 8, 15 },
+			font = _boldfont(18),
+			fg = { 0xe7,0xe7, 0xe7 },
+			sh = { 0x37, 0x37, 0x37 },
+		},
+	}
 
 	s.ssprogress.elapsed = _uses(s.ssprogress.text)
 	s.ssprogress.remain = _uses(s.ssprogress.text)
@@ -2274,28 +2280,31 @@ if true then
 	s.browseprogress = _uses(s.ssprogress)
 	s.largeprogress  = _uses(s.ssprogress)
 
-	s.ssprogressB             = {}
-        s.ssprogressB.horizontal  = 1
-        s.ssprogressB.bgImg       = sliderBackground
-        s.ssprogressB.img         = sliderBar
-	s.ssprogressB.position    = LAYOUT_SOUTH
-	s.ssprogressB.padding     = { 0, 0, 0, 15 }
+	s.ssprogressB = {
+		horizontal  = 1,
+		bgImg       = sliderBackground,
+		img         = sliderBar,
+		position    = LAYOUT_SOUTH,
+		padding     = { 0, 0, 0, 15 },
+	}
 
 	s.browseprogressB = _uses(s.ssprogressB)
 	s.largeprogressB  = _uses(s.ssprogressB)
 
 	-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
-	s.ssprogressNB = {}
-	s.ssprogressNB.position = LAYOUT_SOUTH
-	s.ssprogressNB.order = { "elapsed" }
-	s.ssprogressNB.text = {}
-	s.ssprogressNB.text.w = WH_FILL
-	s.ssprogressNB.text.align = "center"
-	s.ssprogressNB.padding = { 0, 0, 0, 5 }
-	s.ssprogressNB.text.padding = { 0, 0, 0, 5 }
-	s.ssprogressNB.text.font = _boldfont(18) 
-	s.ssprogressNB.text.fg = { 0xe7, 0xe7, 0xe7 }
-	s.ssprogressNB.text.sh = { 0x37, 0x37, 0x37 }
+	s.ssprogressNB = {
+		position = LAYOUT_SOUTH,
+		padding = { 0, 0, 0, 5 },
+		order = { "elapsed" },
+		text = {
+			w = WH_FILL,
+			align = "center",
+			padding = { 0, 0, 0, 5 },
+			font = _boldfont(18),
+			fg = { 0xe7, 0xe7, 0xe7 },
+			sh = { 0x37, 0x37, 0x37 },
+		},
+	}
 
 	s.ssprogressNB.elapsed = _uses(s.ssprogressNB.text)
 

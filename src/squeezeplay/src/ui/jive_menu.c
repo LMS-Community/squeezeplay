@@ -91,7 +91,7 @@ int jiveL_menu_layout(lua_State *L) {
 
 	/* measure scrollbar */
 	sw = 0;
-	sh = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
+	sh = peer->w.bounds.h;
 	sborder.left = 0;
 	sborder.top = 0;
 	sborder.right = 0;
@@ -137,8 +137,8 @@ int jiveL_menu_layout(lua_State *L) {
 		sh += sborder.top + sborder.bottom;
 	}
 
-	sx = peer->w.bounds.x + peer->w.bounds.w - sw + sborder.left - peer->w.padding.right;
-	sy = peer->w.bounds.y + peer->w.padding.top + sborder.top;
+	sx = peer->w.bounds.x + peer->w.bounds.w - sw + sborder.left;
+	sy = peer->w.bounds.y + sborder.top;
 
 
 	/* position widgets */

@@ -141,7 +141,7 @@ int jiveL_textarea_layout(lua_State *L) {
 
 	/* scrollbar size */
 	sw = 0;
-	sh = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
+	sh = peer->w.bounds.h;
 	sborder.left = 0;
 	sborder.top = 0;
 	sborder.right = 0;
@@ -186,8 +186,8 @@ int jiveL_textarea_layout(lua_State *L) {
 	sw += sborder.left + sborder.right;
 	sh += sborder.top + sborder.bottom;
 
-	sx = peer->w.bounds.x + peer->w.bounds.w - sw;
-	sy = peer->w.bounds.y + peer->w.padding.top;
+	sx = peer->w.bounds.x + peer->w.bounds.w - sw + sborder.left;
+	sy = peer->w.bounds.y + sborder.top;
 
 
 	/* word wrap text */
@@ -234,6 +234,7 @@ int jiveL_textarea_layout(lua_State *L) {
 	/* scroll bar bounds */
 	lua_getfield(L, 1, "scrollbar");
 	if (!lua_isnil(L, -1)) {
+		printf("TEXTAREA SCROLLBAR %d,%d %dx%d\n", sx,sy, sw,sh);
 		if (jive_getmethod(L, -1, "setBounds")) {
 			lua_pushvalue(L, -2);
 			lua_pushinteger(L, sx);
@@ -499,6 +500,11 @@ static void wordwrap(TextareaWidget *peer, unsigned char *text, int visible_line
 		}
 	}
 	lines[num_lines] = (ptr - text);
+
+	if (!has_scrollbar && num_lines > visible_lines) {
+		free(lines);
+		return wordwrap(peer, text, visible_lines, scrollbar_width, true);
+	}
 
 	if (peer->lines) {
 		free(peer->lines);

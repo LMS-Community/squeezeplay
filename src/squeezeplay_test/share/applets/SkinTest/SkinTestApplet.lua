@@ -20,6 +20,7 @@ local ipairs = ipairs
 local oo                  = require("loop.simple")
 
 local Applet              = require("jive.Applet")
+local Group               = require("jive.ui.Group")
 local Framework           = require("jive.ui.Framework")
 local Icon                = require("jive.ui.Icon")
 local Label               = require("jive.ui.Label")
@@ -510,9 +511,8 @@ end
 
 --[[
 Window:   "playlist"
-menu: "menu"
-item: "item"
--- XXXX
+Menu:     "menu"
+Item:     "item", "itemchecked", (styles: selected, pressed, locked)
 --]]
 function window_playlist(self, item)
 	local data = _itemData(item)
@@ -552,9 +552,8 @@ end
 
 --[[
 Window:   "iconlist"
-menu: "menu"
-item: "item"
--- XXXX
+Menu:     "menu"
+Item:     "item", "itemchecked", (styles: selected, pressed, locked)
 --]]
 function window_iconlist(self, item)
 	local data = _itemData(item)
@@ -612,16 +611,18 @@ end
 
 
 --[[
-Window:   "tracklist"
-Menu: "menu"
-First Item: "itemplay"
-Item: "item"
+Window:   "tracklist" (with "icon" in menu bar for thumbnail)
+Menu:     "menu"
+1st Item: "itemplay"
+Item:     "item"
 --]]
 function window_tracklist(self, item)
 	local data = _itemData(item)
 
 	local window = Window("tracklist", _itemName(item))
 	_windowActions(self, item, window)
+
+	window:setIconWidget("icon", Icon("icon"))
 
 	local menu = SimpleMenu("menu")
 	for i, text in ipairs(data) do
@@ -677,8 +678,9 @@ end
 
 --[[
 Popup:   "icontoast"
-Label:   "text"
-Icon:    "icon"
+Group:	 "xxxx"
+  Label:   "text"
+  Icon:    "icon"
 --]]
 function window_icontoast(self, item)
 	local data = _itemData(item)
@@ -686,13 +688,13 @@ function window_icontoast(self, item)
 	local popup = Popup("icontoast")
 	_windowActions(self, item, popup)
 
-	local text = Textarea("text", "Your toast is done")
-	local icon = Icon('icon')
+	local group = Group("xxxx", {
+		text = Textarea("text", "Your toast is done"),
+		icon = Icon('icon'),
+		-- XXXX add other widgets
+	})
 
-	-- XXXX add other widgets
-
-	popup:addWidget(icon)
-	popup:addWidget(text)
+	popup:addWidget(group)
 
 	self:tieWindow(popup)
 	return popup
@@ -707,14 +709,7 @@ end
 
 -- the reference windows, and test data
 windows = {
-	{ "icontoast", "Popup Toast w/art", window_icontoast, },
-	{ "trackinfo", "Track Info", window_trackinfo, },
-	{ "tracklist", "Track List", window_tracklist, },
-	{ "playlist", "Playlist", window_playlist, },
-	{ "textlist", "Text List", setup_textlist, },
-	{ "iconlist", "Icon List", window_iconlist, },
 	{ "information", "Information Window", window_information, },
-	{ "toast", "Popup Toast", window_toast, },
 
 	{ "setuplist", "Languages", setup_window, },
 	{ "onebutton", "Welcome to Setup", setup_onebutton, },
@@ -724,7 +719,14 @@ windows = {
 	{ "input_wpa", "Wireless Password", setup_input, },
 	{ "error", "Error", setup_error, },
 	{ "update", "Software Update", setup_update, },
-
+	{ "trackinfo", "Track Info", window_trackinfo, },
+	{ "tracklist", "Track List", window_tracklist, },
+	{ "playlist", "Playlist", window_playlist, },
+	{ "textlist", "Text List", setup_textlist, },
+	{ "iconlist", "Icon List", window_iconlist, },
+	{ "information", "Information Window", window_information, },
+	{ "toast", "Popup Toast", window_toast, },
+	{ "icontoast", "Popup Toast w/art", window_icontoast, },
 }
 
 
