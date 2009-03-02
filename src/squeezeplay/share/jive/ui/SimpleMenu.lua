@@ -134,8 +134,6 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 				widgetList[i]:setStyle(item.style or "item")
 				widgetList[i]:setWidgetValue("text", item.text)
 				widgetList[i]:setWidget("icon", icon)
-				widgetList[i]:setWidget("arrow", arrow)
-				widgetList[i]:setWidget("check", check)
 			end
 		end
 	end
