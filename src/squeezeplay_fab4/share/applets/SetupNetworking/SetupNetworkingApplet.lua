@@ -317,10 +317,6 @@ function _networkScanComplete(self, iface)
 	local window = Window("setuplist", self:string("NETWORK_WIRELESS_NETWORKS"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
-	-- window to return to on completion of network settings
-	-- XXXX not needed?
-	--self.topWindow = window
-
 	local menu = SimpleMenu("menu")
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
@@ -507,12 +503,10 @@ function _enterPassword(self, iface, ssid, nocheck)
 
 	if flags == "" then
 		self.encryption = "none"
-		-- XXXX
 		return _connect(self, iface, ssid, true)
 
 	elseif string.find(flags, "ETH") then
 		self.encryption = "none"
-		-- XXXX
 		return _connect(self, iface, ssid, true)
 
 	elseif nocheck ~= "wps" and string.find(flags, "WPS") then
@@ -552,7 +546,6 @@ function _chooseEncryption(self, iface, ssid)
 			sound = "WINDOWSHOW",
 			callback = function()
 				self.encryption = "none"
-				-- XXXX
 				_connect(self, iface, ssid, true)
 			end
 		},
@@ -649,9 +642,7 @@ function _enterWEPKey(self, iface, ssid)
 
 					    widget:playSound("WINDOWSHOW")
 
-					    -- XXXX
 					    _connect(self, iface, ssid, true)
-
 					    return true
 				    end
 			    )
@@ -681,9 +672,7 @@ function _enterPSK(self, iface, ssid)
 
 					    widget:playSound("WINDOWSHOW")
 
-					    -- XXXX
 					    _connect(self, iface, ssid, true)
-
 					    return true
 				    end,
 				    self:string("ALLOWEDCHARS_WPA")
