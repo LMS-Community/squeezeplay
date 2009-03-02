@@ -563,6 +563,20 @@ function skin(self, s)
 		align = "left",
 	}
 
+	s.slider = {
+		w = WH_FILL,
+		border = 5,
+		horizontal = 1,
+		bgImg = sliderBackground,
+		img = sliderBar,
+	}
+
+	s.slider_group = {
+		w = WH_FILL,
+		border = { 0, 5, 0, 10 },
+		order = { "min", "slider", "max" },
+	}
+
 
 --------- SPECIAL WIDGETS ---------
 
@@ -1010,6 +1024,35 @@ function skin(self, s)
 		}
 	}
 
+	-- slider popup (volume/scanner)
+	s.slider_popup = {
+		x = 50,
+		y = screenHeight - 100,
+		w = screenWidth - 100,
+		h = 100,
+		bgImg = helpBox,
+		title = {
+		      border = 10,
+		      fg = TEXT_COLOR,
+		      font = FONT_BOLD_15px,
+		      align = "center",
+		      bgImg = false,
+		},
+		text = _uses(s.text),
+		slider_group = {
+			w = WH_FILL,
+			border = { 0, 5, 0, 10 },
+			order = { "min", "slider", "max" },
+		},
+	}
+
+
+--------- SLIDERS ---------
+
+	s.volume_slider = _uses(s.slider, {
+		img = volumeBar,
+		bgImg = volumeBackground,
+	})
 
 --------- BUTTONS ---------
 
@@ -1053,6 +1096,15 @@ function skin(self, s)
 		img      = helpButton,
 	})
 
+	s.button_volume_min = {
+		img = _loadImage(self, "Icons/volume_speaker_l.png"),
+		border = { 5, 0, 5, 0 },
+	}
+
+	s.button_volume_max = {
+		img = _loadImage(self, "Icons/volume_speaker_r.png"),
+		border = { 5, 0, 5, 0 },
+	}
 
 
 	local _buttonicon = {

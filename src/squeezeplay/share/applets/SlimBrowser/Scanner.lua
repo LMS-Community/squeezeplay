@@ -101,23 +101,23 @@ local function _openPopup(self)
 		return
 	end
 	
-	local popup = Popup("scannerPopup")
+	local popup = Popup("slider_popup")
 	popup:setAutoHide(false)
 
 	local title = Label("text", "")
 	popup:addWidget(title)
 
-	local slider = Slider("scanner", 0, tonumber(self.duration), tonumber(self.elapsed),
+	local slider = Slider("scanner_slider", 0, tonumber(self.duration), tonumber(self.elapsed),
 			function(slider, value, done)
 				self.delta = value - self.elapsed
 				self.elapsed = value
 				_updateSelectedTime(self)
 			end)
-	self.scannerGroup = Group("scannerGroup", {
-					      elapsed = Label("text", ""),
-					      slider = slider,
-					      remain = Label("text", "")
-				      })
+	self.scannerGroup = Group("slider_group", {
+		min = Label("text", ""),
+		slider = slider,
+		max = Label("text", ""),
+	})
 	popup:addWidget(self.scannerGroup)
 	popup:addListener(ACTION | EVENT_KEY_ALL | EVENT_SCROLL,
 			  function(event)

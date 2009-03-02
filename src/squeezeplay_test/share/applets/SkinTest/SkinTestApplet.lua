@@ -777,6 +777,30 @@ function window_toast_withicon(self, item)
 	return popup
 end
 
+--[[
+Popup:   "toast"
+Group:	 "group"
+  Label:   "text"
+  Icon:    "icon"
+--]]
+function window_slider_popup(self, item)
+	local data = _itemData(item)
+
+	local popup = Popup("slider_popup")
+	_windowActions(self, item, popup)
+
+	local title = Label("text", data[1])
+	local slider = Slider("volume_slider", -1, 100, 50)
+
+	popup:addWidget(title)
+	popup:addWidget(Group("slider_group", {
+		min = Icon("button_volume_min"),
+		slider = slider,
+		max = Icon("button_volume_max")
+	}))
+
+	return popup
+end
 
 
 -- REFERENCE WINDOW STYLES ARE ABOVE
@@ -804,6 +828,7 @@ windows = {
 	{ "information", "Information Window", window_information, },
 	{ "toast", "Popup Toast", window_toast, },
 	{ "toast_withicon", "Popup Toast w/art", window_toast_withicon, },
+	{ "slider_popup", "Volume", window_slider_popup, },
 }
 
 
@@ -885,4 +910,7 @@ testData = {
 		"United States. A country of central and northwest North America with coastlines on the Atlantic and Pacific oceans.",
 		"region_US",
 	},
+	slider_popup = {
+		"Volume",
+	}
 }

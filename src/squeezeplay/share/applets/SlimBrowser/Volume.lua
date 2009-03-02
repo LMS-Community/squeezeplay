@@ -66,23 +66,24 @@ local function _openPopup(self)
 		return
 	end
 
-	local popup = Popup("volumePopup")
+	local popup = Popup("slider_popup")
 	popup:setAutoHide(false)
 
 	local title = Label("text", "")
 	popup:addWidget(title)
 
 	--slider is focused widget so it will receive events before popup gets a chance
-	local slider = Slider("slider", -1, 100, self.volume,
+	local slider = Slider("volume_slider", -1, 100, self.volume,
                               function(slider, value, done)
 					self.delta = value - self.volume
 					self:_updateVolume(false, value)
                               end)
-	popup:addWidget(Group("volumeGroup", {
-				      Icon("volumeMin"),
-				      slider,
-				      Icon("volumeMax")
-			      }))
+
+	popup:addWidget(Group("slider_group", {
+		min = Icon("button_volume_min"),
+		slider = slider,
+		max = Icon("button_volume_max")
+	}))
 
 	popup:addListener(ACTION | EVENT_KEY_ALL,
 			  function(event)
