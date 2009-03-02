@@ -234,7 +234,6 @@ int jiveL_textarea_layout(lua_State *L) {
 	/* scroll bar bounds */
 	lua_getfield(L, 1, "scrollbar");
 	if (!lua_isnil(L, -1)) {
-		printf("TEXTAREA SCROLLBAR %d,%d %dx%d\n", sx,sy, sw,sh);
 		if (jive_getmethod(L, -1, "setBounds")) {
 			lua_pushvalue(L, -2);
 			lua_pushinteger(L, sx);
