@@ -122,7 +122,7 @@ function _specialKeyWidths(self)
 	self.specialKeyWidths = {
 		['button_space'] = 150,
 		['button_shift'] = 60,
-		['pushed'] = 60,
+		['button_pushed'] = 60,
 	}
 end
 
@@ -314,11 +314,11 @@ function _buttonsFromChars(self, charTable)
 		local button
 		if type(v) == 'table' then
 			local keyStyle = v.style or 'button'
-			if keyStyle == 'shift' or keyStyle == 'pushed' then
+			if keyStyle == 'button_shift' or keyStyle == 'button_pushed' then
 				if v.text == self.pushed or self.pushed == nil and keyboardButtonText[self.kbType] == v.text then
-					keyStyle = 'pushed'
+					keyStyle = 'button_pushed'
 				else
-					keyStyle = 'shift'
+					keyStyle = 'button_shift'
 				end
 			end
 			local label
@@ -360,9 +360,9 @@ function _buttonsFromChars(self, charTable)
 end
 
 function _switchKeyboardButton(self, style, kbType, keyText)
-	local keyStyle = 'shift'
+	local keyStyle = 'button_shift'
 	if kbType == self.kbType then
-		keyStyle = 'pushed'
+		keyStyle = 'button_pushed'
 	end
 	return {	
 		text     = keyText,
@@ -429,7 +429,7 @@ end
 -- return a table that can be used as a space bar in keyboards
 function _spaceBar(self)
 	return {	
-		style    = 'space',
+		style    = 'button_space',
 		text     = 'SPACE',
 		callback = function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte(' '))

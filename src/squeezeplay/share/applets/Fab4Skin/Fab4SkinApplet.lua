@@ -644,7 +644,6 @@ function skin(self, s)
 	s.keyboard.button_search = _uses(s.keyboard.button, {
 		img = _loadImage(self, "Icons/Mini/icon_search.png")
 	})
-
 	s.keyboard.pressed = {
 		button = _uses(s.keyboard.button, {
 			bgImg = keyboardPressedBox
@@ -665,8 +664,8 @@ function skin(self, s)
 			bgImg = keyboardPressedBox
 		}),
 	}
-	s.keyboard.pushed = _uses(s.keyboard.pressed.button_shift)
-	s.keyboard.pressed.pushed = _uses(s.keyboard.pressed.button_shift)
+	s.keyboard.button_pushed = _uses(s.keyboard.pressed.button_shift)
+	s.keyboard.pressed.button_pushed = _uses(s.keyboard.pressed.button_shift)
 
 --------- WINDOW STYLES ---------
 	--
@@ -1180,6 +1179,11 @@ function skin(self, s)
 	s.icon_alarm = _uses(_icon, {
 		img = _loadImage(self, "Alerts/popup_alarm_icon.png"),
 	})
+
+	s.icon_keyboard_divider = {
+		img = _loadImage(self, "Text_Entry/Keyboard_Touch/toolbar_divide.png"),
+		bgImg = _loadImage(self, "Text_Entry/Keyboard_Touch/toolbar_divider.png")
+	}
 
 
 	-- button icons, on left of menus
