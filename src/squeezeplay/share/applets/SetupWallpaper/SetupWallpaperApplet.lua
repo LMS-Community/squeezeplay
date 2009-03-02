@@ -127,7 +127,7 @@ end
 
 
 function settingsShow(self)
-	local window = Window("window", self:string('WALLPAPER'), 'settingstitle')
+	local window = Window("text_list", self:string('WALLPAPER'), 'settingstitle')
 
 	self.currentPlayerId = 'wallpaper'
 
@@ -158,6 +158,7 @@ function settingsShow(self)
 			self.menu:addItem({
 				weight = w,
 				text = self:string(name), 
+				style = 'itemChoice',
 				sound = "WINDOWSHOW",
 				icon = RadioButton("radio", 
 								   self.group, 
@@ -252,6 +253,7 @@ function _serverSink(self, data)
 				{
 					weight = 50,	  
 					text = entry.title,
+					style = 'itemChoice',
 					icon = RadioButton("radio",
 									   self.group,
 									   function()
