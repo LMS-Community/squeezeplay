@@ -989,3 +989,12 @@ NETWORK_LIST_HELP
 
 NETWORK_LIST_HELP_BODY
 	EN	This is just a placeholder for some help text.
+
+NETWORK_DONT_SEE_YOUR_NETWORK
+	EN	Don't see your network
+
+NETWORK_SEARCH_FOR_MY_NETWORK
+	EN	Search for my network
+
+NETWORK_ENTER_SSID
+	EN	Enter my network name
