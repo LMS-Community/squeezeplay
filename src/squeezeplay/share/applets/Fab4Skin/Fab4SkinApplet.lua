@@ -635,6 +635,12 @@ function skin(self, s)
 		}),
 	}
 
+	-- icon for albums with no artwork
+	s.no_artwork = {
+		img = _loadImage(self, "Icons/menu_album_noartwork_43.png"),
+		w   = THUMB_SIZE,
+		h   = THUMB_SIZE,
+	}
 
 --------- WINDOW STYLES ---------
 	--
@@ -824,7 +830,6 @@ function skin(self, s)
 				icon = {
 					w = THUMB_SIZE,
 					h = THUMB_SIZE,
-					img = _loadImage(self, "Icons/menu_album_noartwork_43.png")
 				},
 				arrow = {
 				      align = ITEM_ICON_ALIGN,
@@ -907,7 +912,6 @@ function skin(self, s)
 			w = THUMB_SIZE,
 			h = WH_FILL,
 			padding = { 8, 1, 8, 1 },
-			img = _loadImage(self, "Icons/menu_album_noartwork_43.png")
 		},
 	})
 
