@@ -16,11 +16,6 @@ A menu widget, extends L<jive.ui.Widget>.
  -- Create a new menu
  local menu = jive.ui.Menu("menu")
 
- -- Add widgets to the menu
- menu:addItem(jive.ui.Label("One"))
- menu:addItem(jive.ui.Label("Two"))
- menu:addItem(jive.ui.Label("Three"))
-
 =head1 STYLE
 
 The Label includes the following style parameters in addition to the widgets basic parameters.
@@ -747,7 +742,7 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 					  obj:setSelectedIndex(itemValue)
 				  end)
 
-	obj.xofy = Label("xofy", "")
+	obj.xofy = Label("text", "")
 
 	obj.scrollbar.parent = obj
 	obj.layoutRoot = true

@@ -13,7 +13,7 @@ Any lua value can be set as Label value, tostring() is used to convert the value
 =head1 SYNOPSIS
 
  -- Create a new label to display 'Hello World'
- local label = jive.ui.Label("label", "Hello World")
+ local label = jive.ui.Label("text", "Hello World")
 
  -- Update the label to multi-line text
  label.setValue("Multi-line\ntext")

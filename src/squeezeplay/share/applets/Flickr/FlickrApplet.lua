@@ -79,9 +79,9 @@ function openScreensaver(self, menuItem)
 
 	local label
 	if ok then
-		label = Label("label", self:string("SCREENSAVER_FLICKR_LOADING_PHOTO"))
+		label = Label("text", self:string("SCREENSAVER_FLICKR_LOADING_PHOTO"))
 	else
-		label = Label("label", self:string("SCREENSAVER_FLICKR_ERROR") .. err)
+		label = Label("text", self:string("SCREENSAVER_FLICKR_ERROR") .. err)
 	end
 	
 	self.window = self:_window(label)
@@ -482,8 +482,10 @@ function _window(self, ...)
 
 	window:setSkin({
 		flickr = {
-		       layout = Window.noLayout,
-		       font = Font:load("fonts/FreeSans.ttf", 10)
+			layout = Window.noLayout,
+			text = {
+				font = Font:load("fonts/FreeSans.ttf", 10),
+			},
 		}
 	})
 

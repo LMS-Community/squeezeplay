@@ -104,7 +104,7 @@ local function _openPopup(self)
 	local popup = Popup("scannerPopup")
 	popup:setAutoHide(false)
 
-	local title = Label("title", "")
+	local title = Label("text", "")
 	popup:addWidget(title)
 
 	local slider = Slider("scanner", 0, tonumber(self.duration), tonumber(self.elapsed),

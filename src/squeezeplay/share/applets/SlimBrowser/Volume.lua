@@ -69,7 +69,7 @@ local function _openPopup(self)
 	local popup = Popup("volumePopup")
 	popup:setAutoHide(false)
 
-	local title = Label("title", "")
+	local title = Label("text", "")
 	popup:addWidget(title)
 
 	--slider is focused widget so it will receive events before popup gets a chance

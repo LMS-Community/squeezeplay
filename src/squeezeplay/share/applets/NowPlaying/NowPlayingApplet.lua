@@ -489,7 +489,7 @@ function _createUI(self)
 
 	self[windowStyle].titleGroup = Group(components.nptitle, {
 		lbutton = Button(
-				Icon("lbutton"), 
+				Icon("button_back"), 
 				function() 
 					Framework:pushAction("back")
 					return EVENT_CONSUME 
@@ -503,7 +503,7 @@ function _createUI(self)
 		text = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
 
 		rbutton = Button(
-				Label("rbutton", ""), 
+				Label("text", ""), 
 				function() 
 					Framework:pushAction("go")
 					return EVENT_CONSUME 
