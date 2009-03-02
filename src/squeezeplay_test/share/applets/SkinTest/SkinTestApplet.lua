@@ -24,6 +24,7 @@ local Group               = require("jive.ui.Group")
 local Framework           = require("jive.ui.Framework")
 local Icon                = require("jive.ui.Icon")
 local Label               = require("jive.ui.Label")
+local Choice              = require("jive.ui.Choice")
 local Popup               = require("jive.ui.Popup")
 local Keyboard            = require("jive.ui.Keyboard")
 local SimpleMenu          = require("jive.ui.SimpleMenu")
@@ -470,7 +471,7 @@ end
 --[[
 Window:   "textlist"
 Menu:     "menu"
-Item:     "item", "itemChecked", (styles: selected, pressed, locked)
+Item:     "itemChoice", "item", "itemChecked", (styles: selected, pressed, locked)
 --]]
 function setup_textlist(self, item)
 	local data = _itemData(item)
@@ -478,7 +479,19 @@ function setup_textlist(self, item)
 	local window = Window("textlist", _itemName(item), "home")
 	_windowActions(self, item, window)
 
+	-- FIXME: choice items do not work
 	local menu = SimpleMenu("menu")
+	local choice = Choice("icon", { 'on', 'off' },
+		function(object, selectedIndex)
+			log:warn('choice is: ', tostring(selectedIndex))
+		end,
+		1
+	)
+	menu:addItem({
+		text  = 'Sample Choice Item',
+		style = 'itemChoice',
+		icon  = choice,
+	})
 	for i, text in ipairs(data) do
 		log:warn(text)
 		menu:addItem({

@@ -275,9 +275,10 @@ local function _newWindowSpec(db, item, titleStyle)
 
 	-- determine style
 	local menuStyle = _priorityAssign('menuStyle', "", iWindow, bWindow)
+log:warn('Menu:   ', menuStyle)
 	local windowStyle = menu2window[menuStyle] or 'textlist'
+log:warn('Window: ', windowStyle)
 
-log:warn('---------------', windowStyle)
 	return {
 		["windowStyle"]      = windowStyle,
 		["labelTitleStyle"]  = 'title',
@@ -466,19 +467,19 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 
 		if item["radio"] then
 			group._type = "radio"
-			group:setWidget("icon", _radioItem(item, db))
+			group:setWidget("arrow", _radioItem(item, db))
 
 		elseif item['selectedIndex'] then
 			group._type = 'choice'
-			group:setWidget('icon', _choiceItem(item, db))
+			group:setWidget('choice', _choiceItem(item, db))
 
 		elseif item["checkbox"] then
 			group._type = "checkbox"
-			group:setWidget("icon", _checkboxItem(item, db))
+			group:setWidget("arrow", _checkboxItem(item, db))
 
 		else
 			if group._type then
-				group:setWidget("icon", Icon("icon"))
+				group:setWidget("arrow", Icon("arrow"))
 				group._type = nil
 			end
 			_artworkItem(item, group, menuAccel)
@@ -487,12 +488,12 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 
 	else
 		if group._type then
-			group:setWidget("icon", Icon("icon"))
+			group:setWidget("arrow", Icon("arrow"))
 			group._type = nil
 		end
 
 		group:setWidgetValue("text", "")
-		group:setWidgetValue("icon", nil)
+		group:setWidgetValue("arrow", nil)
 		group:setStyle(labelStyle .. "waiting")
 	end
 
@@ -1030,6 +1031,7 @@ local function _browseSink(step, chunk, err)
 			--step.menu:setStyle(step.db:menuStyle())
 			local titleBar = step.window:getTitleWidget()
 			-- styling both the menu and title with icons is problematic to the layout
+debug.dump(data)
 			if step.db:menuStyle() == 'albummenu' and titleBar:getStyle() == 'albumtitle' then
 				titleBar:setWidget('icon', nil)
 				step.window:setTitleStyle('title')
@@ -1183,7 +1185,7 @@ local function _menuSink(self, cmd)
 				end
 
 				local choice = Choice(
-					"choice",
+					"icon",
 					v.choiceStrings,
 					function(obj, selectedIndex)
 						local jsonAction = v.actions['do'].choices[selectedIndex]
@@ -1192,6 +1194,7 @@ local function _menuSink(self, cmd)
 					selectedIndex
 				)
 				
+				item.style = 'itemChoice'
 				item.icon = choice
 
 				--add the item to the menu
@@ -2021,7 +2024,6 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	local db = DB(windowSpec)
 	
 	-- create a window in all cases
-	debug.dump(windowSpec)
 	local window = Window(windowSpec.windowStyle or 'textlist')
 	window:setTitleWidget(_decoratedLabel(nil, 'title', windowSpec, db, false))
 	

@@ -437,7 +437,15 @@ function skin(self, s)
 	s.itemAdd = _uses(s.item, { 
 		arrow = addArrow 
 	})
-
+	s.itemChoice = _uses(s.item, {
+		order  = { 'text', 'icon' },
+		icon = {
+			align = 'right',
+			font = _boldfont(TEXTMENU_FONT_SIZE),
+			fg = TEXT_COLOR,
+			sh = TEXT_SH_COLOR,
+		},
+	})
 	s.itemChecked = _uses(s.item, {
 		order = { "text", "check", "arrow" },
 		check = {
@@ -455,8 +463,13 @@ function skin(self, s)
 	})
 
 	s.selected = {
-		item = _uses(s.item),
-		itemChecked = _uses(s.itemChecked),
+		item               = _uses(s.item),
+		itemPlay           = _uses(s.itemPlay),
+		itemAdd            = _uses(s.itemAdd),
+		itemChecked        = _uses(s.itemChecked),
+		itemNoArrow        = _uses(s.itemNoArrow),
+		itemCheckedNoArrow = _uses(s.itemCheckedNoArrow),
+		itemChoice         = _uses(s.itemChoice),
 	}
 
 	s.pressed = {
@@ -476,6 +489,9 @@ function skin(self, s)
 			bgImg = fiveItemPressedBox,
 		}),
 		itemCheckedNoArrow = _uses(s.itemCheckedNoArrow, {
+			bgImg = fiveItemPressedBox,
+		}),
+		itemChoice = _uses(s.itemChoice, {
 			bgImg = fiveItemPressedBox,
 		}),
 	}
@@ -796,6 +812,7 @@ function skin(self, s)
 				},
 				arrow = {
 				      align = ITEM_ICON_ALIGN,
+					w = 30,
 					padding = { 8, 1, 8, 1 },
 				      img = _loadImage(self, "Icons/selection_right_5line.png")
 				},
