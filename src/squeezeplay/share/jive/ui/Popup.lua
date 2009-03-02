@@ -11,7 +11,7 @@ The popup widget, extends L<jive.ui.Window>. This is a container for other widge
 =head1 SYNOPSIS
 
  -- Create a popup window with title "Boo!"
- local popup = jive.ui.Popup("popup", "Boo1")
+ local popup = jive.ui.Popup("waiting", "Boo1")
 
  -- Show the window on the screen
  popup:show()

@@ -87,11 +87,11 @@ function init(self)
 	uuid = System:getUUID()
 
 	if not uuid or string.match(mac, "^00:40:20") then
-		local popup = Popup("errorWindow", self:string("INVALID_MAC_TITLE"))
+		local window = Window("onebutton", self:string("INVALID_MAC_TITLE"))
 
-		popup:setAllowScreensaver(false)
-		popup:setAlwaysOnTop(true)
-		popup:setAutoHide(false)
+		window:setAllowScreensaver(false)
+		window:setAlwaysOnTop(true)
+		window:setAutoHide(false)
 
 		local text = Textarea("text", self:string("INVALID_MAC_TEXT"))
 		local menu = SimpleMenu("menu", {
@@ -99,14 +99,14 @@ function init(self)
 				text = self:string("INVALID_MAC_CONTINUE"),
 				sound = "WINDOWHIDE",
 				callback = function()
-						   popup:hide()
+						   window:hide()
 					   end
 			},
 		})
 
-		popup:addWidget(text)
-		popup:addWidget(menu)
-		popup:show()
+		window:addWidget(text)
+		window:addWidget(menu)
+		window:show()
 	end
 
 
@@ -794,7 +794,7 @@ function batteryLowShow(self)
 
 	log:info("batteryLowShow")
 
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 
 	popup:addWidget(Icon("iconBatteryLow"))
 	popup:addWidget(Label("text", self:string("BATTERY_LOW")))
@@ -881,7 +881,7 @@ function settingsSleep(self)
 	-- disconnect from SqueezeCenter
 	appletManager:callService("disconnectPlayer")
 
-	self.popup = Popup("popupIcon")
+	self.popup = Popup("waiting")
 
 	self.popup:addWidget(Icon("iconConnecting"))
 	self.popup:addWidget(Label("text", self:string("SLEEPING")))
@@ -908,7 +908,7 @@ function settingsPowerOff(self)
 	-- disconnect from SqueezeCenter
 	appletManager:callService("disconnectPlayer")
 
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 
 	popup:addWidget(Icon("iconPower"))
 	popup:addWidget(Label("text", self:string("GOODBYE")))
@@ -1190,7 +1190,7 @@ function _suspend(self)
 	log:info("Suspend ...")
 
 	-- draw popup ready for resume
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 	popup:setAllowScreensaver(false)
 	popup:setAlwaysOnTop(true)
 	popup:setAutoHide(false)

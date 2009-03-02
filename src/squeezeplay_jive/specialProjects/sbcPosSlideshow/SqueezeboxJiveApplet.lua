@@ -725,7 +725,7 @@ function batteryLowShow(self)
 
 	log:info("batteryLowShow")
 
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 
 	popup:addWidget(Icon("iconBatteryLow"))
 	popup:addWidget(Label("text", self:string("BATTERY_LOW")))
@@ -812,7 +812,7 @@ function settingsSleep(self)
 	-- disconnect from SqueezeCenter
 	appletManager:callService("disconnectPlayer")
 
-	self.popup = Popup("popupIcon")
+	self.popup = Popup("waiting")
 
 	self.popup:addWidget(Icon("iconConnecting"))
 	self.popup:addWidget(Label("text", self:string("SLEEPING")))
@@ -839,7 +839,7 @@ function settingsPowerOff(self)
 	-- disconnect from SqueezeCenter
 	appletManager:callService("disconnectPlayer")
 
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 
 	popup:addWidget(Icon("iconPower"))
 	popup:addWidget(Label("text", self:string("GOODBYE")))
@@ -1098,7 +1098,7 @@ function _suspend(self)
 	log:info("Suspend ...")
 
 	-- draw popup ready for resume
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 	popup:setAllowScreensaver(false)
 	popup:setAlwaysOnTop(true)
 	popup:setAutoHide(false)

@@ -168,7 +168,7 @@ end
 
 function gameOver()
 	gameover = true
-	local popup = Popup("popup", "\n \nGame over!\n \n \nYour score: " .. score)
+	local popup = Popup("waiting", "\n \nGame over!\n \n \nYour score: " .. score)
 	popup:addListener(ACTION,
 		function(evt)
 			window:hideToTop(Window.transitionPushLeft)

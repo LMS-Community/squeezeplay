@@ -363,7 +363,7 @@ end
 
 
 function errorWindow(self)
-	local window = Popup("errorWindow", "Error Message")
+	local window = Window("error", "Error Message")
 	window:setAllowScreensaver(false)
 
 	local textarea = Textarea("text", "A description of the error. This may be several lines long.")
@@ -532,7 +532,7 @@ end
 
 function downloadingSoftware(self, menuItem)
 
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 
 	popup:setTransparent(false)
 
@@ -581,7 +581,7 @@ end
 
 function ignoreAllInputPopup(self, menuItem)
 
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 
 	local icon = Icon("iconConnecting")
 	local label = Label("text", "All input is ignored, except:\n'disconnect_player', 'back', 'go'")
@@ -602,7 +602,7 @@ end
 
 function connectingPopup(self, menuItem)
 
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 
 	local icon = Icon("iconConnecting")
 	local label = Label("text", "")
@@ -668,7 +668,7 @@ end
 
 
 function timerTestWindow(self, instead)
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 	local icon = Icon("iconConnecting")
 	local label = Label("text", "Timer test 1")
 
@@ -689,7 +689,7 @@ end
 
 
 function timerTestWindow2(self)
-	local window = Popup("popupIcon")
+	local window = Popup("waiting")
 	local icon = Icon("iconConnected")
 	local label = Label("text", "Timer test 2")
 

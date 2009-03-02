@@ -64,11 +64,11 @@ function init(self)
 	if not uuid or string.match(mac, "^00:40:20") 
 		or uuid == "00000000-0000-0000-0000-000000000000"
 		or mac == "00:04:20:ff:ff:01" then
-		local popup = Popup("errorWindow", self:string("INVALID_MAC_TITLE"))
+		local window = Window("onebutton", self:string("INVALID_MAC_TITLE"))
 
-		popup:setAllowScreensaver(false)
-		popup:setAlwaysOnTop(true)
-		popup:setAutoHide(false)
+		window:setAllowScreensaver(false)
+		window:setAlwaysOnTop(true)
+		window:setAutoHide(false)
 
 		local text = Textarea("text", self:string("INVALID_MAC_TEXT"))
 		local menu = SimpleMenu("menu", {
@@ -76,14 +76,14 @@ function init(self)
 				text = self:string("INVALID_MAC_CONTINUE"),
 				sound = "WINDOWHIDE",
 				callback = function()
-						   popup:hide()
+						   window:hide()
 					   end
 			},
 		})
 
-		popup:addWidget(text)
-		popup:addWidget(menu)
-		popup:show()
+		window:addWidget(text)
+		window:addWidget(menu)
+		window:show()
 	end
 
 

@@ -578,7 +578,7 @@ end
 -- _inputInProgress
 -- full screen popup that appears until action from text input is complete
 local function _inputInProgress(self, msg)
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 	local icon  = Icon("iconConnecting")
 	popup:addWidget(icon)
 	if msg then
@@ -620,7 +620,7 @@ local function _connectingToPlayer(self)
 		return
 	end
 
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 	local icon  = Icon("iconConnecting")
 	local playerName = _player:getName()
 	local label = Label("text", self:string("SLIMBROWSER_CONNECTING_TO", playerName))
@@ -698,7 +698,7 @@ local function _updatingPlayer(self)
 		return
 	end
 
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 	local icon  = Icon("iconConnecting")
 	local label = Label("text", self:string('SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX', _player:getName()))
 	popup:addWidget(icon)
@@ -2711,7 +2711,7 @@ function _problemConnectingPopup(self, server)
 	server:connect()
 
 	-- popup
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 	popup:addWidget(Icon("iconConnecting"))
 	popup:addWidget(Label("text", self:string("SLIMBROWSER_CONNECTING_TO", server:getName())))
 

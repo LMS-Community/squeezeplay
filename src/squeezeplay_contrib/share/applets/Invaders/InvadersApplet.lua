@@ -528,7 +528,7 @@ function Gameplay:removeUfo()
 end
 
 function Gameplay:gameOver()
-	local popup = Popup("popup", "Congratulations!\nYou lost!\n---\nFinal Score: " .. self.score.score)
+	local popup = Popup("waiting", "Congratulations!\nYou lost!\n---\nFinal Score: " .. self.score.score)
 	popup:addListener(ACTION,
 		function(evt)
 			self.window:hideToTop(Window.transitionPushLeft)

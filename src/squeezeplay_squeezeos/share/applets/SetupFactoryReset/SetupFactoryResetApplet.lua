@@ -53,7 +53,7 @@ function _factoryReset(self)
 	-- disconnect from Player/SqueezeCenter
 	appletManager:callService("disconnectPlayer")
 
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 	popup:addWidget(Icon("iconConnected"))
 	popup:addWidget(Label("text", self:string("RESET_RESETTING")))
 
