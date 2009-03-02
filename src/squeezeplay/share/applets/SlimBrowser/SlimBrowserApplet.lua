@@ -273,7 +273,6 @@ local function _newWindowSpec(db, item)
 	
 	local bWindow
 	local iWindow = _safeDeref(item, 'window')
-debug.dump(iWindow)
 
 	if db then
 		bWindow = _safeDeref(db:chunk(), 'base', 'window')
