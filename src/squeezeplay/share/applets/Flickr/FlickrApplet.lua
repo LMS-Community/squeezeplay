@@ -91,7 +91,7 @@ end
 
 function popupMessage(self, title, msg)
 	local popup = Window("window", title)
-	local text = Textarea("textarea", msg)
+	local text = Textarea("text", msg)
 	popup:addWidget(text)
 
 	popup:addListener(EVENT_SCROLL,
@@ -172,7 +172,7 @@ function defineFlickrId(self, menuItem)
 			return true
 		end)
 
-    local help = Textarea("help", self:string("SCREENSAVER_FLICKR_FLICKR_ID_HELP"))
+    local help = Textarea("helptext", self:string("SCREENSAVER_FLICKR_FLICKR_ID_HELP"))
 
     window:addWidget(help)
     window:addWidget(input)
@@ -575,7 +575,7 @@ end
 
 
 function _detailsShow(self)
-	self.commentText = Textarea("textarea", "")
+	self.commentText = Textarea("text", "")
 
 	local host, port, path = self:_getComments()
 	log:info("comments URL: ", host, ":", port, path)

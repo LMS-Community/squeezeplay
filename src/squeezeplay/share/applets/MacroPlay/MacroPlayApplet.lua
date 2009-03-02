@@ -104,7 +104,7 @@ function autoplayShow(self, countdown)
 	-- Create window
 	local window = Window("window", self:string("MACRO_AUTOSTART"))
 	local menu = SimpleMenu("menu", items)
-	local help = Textarea("textarea", "")
+	local help = Textarea("text", "")
 
 	window:setSkin({
 		macroPass = {
@@ -191,7 +191,7 @@ function settingsShow(self)
 	-- Create window
 	local window = Window("window", self:string("MACRO_PLAY"))
 	local menu = SimpleMenu("menu", items)
-	local help = Textarea("help", "")
+	local help = Textarea("helptext", "")
 
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 

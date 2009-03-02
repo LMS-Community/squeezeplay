@@ -42,7 +42,7 @@ local pathHistory = {}
 
 function popupWindow(self, text)
 	local popup = Window("window")
-	local text = Textarea("textarea", text)
+	local text = Textarea("text", text)
 	popup:addWidget(text)
 	self:tieWindow(popup)
 

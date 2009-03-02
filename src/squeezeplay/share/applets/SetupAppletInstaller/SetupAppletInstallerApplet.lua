@@ -110,7 +110,7 @@ function menuSink(self, data)
 	self.popup:hide()
 	self.window:show()
 
-	self.help = Textarea("help", self:string("HELP"))
+	self.help = Textarea("helptext", self:string("HELP"))
 	self.menu = SimpleMenu("menu")
 	self.menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 	self.window:addWidget(self.help)
@@ -268,7 +268,7 @@ function _finished(self, label)
 		self.animatewindow:hide()
 		self.window:removeWidget(self.menu)
 		self.window:removeWidget(self.help)
-		self.window:addWidget(Textarea("help", self:string("RESTART_APP")))
+		self.window:addWidget(Textarea("helptext", self:string("RESTART_APP")))
 	end
 end
 

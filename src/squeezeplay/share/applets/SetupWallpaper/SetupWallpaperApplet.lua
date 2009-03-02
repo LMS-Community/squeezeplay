@@ -301,7 +301,7 @@ function _licenseMenuItem(self)
 				"\n " ..
 				table.concat(authors, "\n ")
 
-			window:addWidget(Textarea("textarea", text))
+			window:addWidget(Textarea("text", text))
 			self:tieAndShowWindow(window)
 		end,
 		focusGained = function(event) self:showBackground(nil, self.currentPlayerId) end

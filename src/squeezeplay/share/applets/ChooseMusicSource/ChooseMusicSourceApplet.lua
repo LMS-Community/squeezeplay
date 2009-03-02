@@ -380,7 +380,7 @@ function _playerRegisterFailed(self, error)
 	local window = Window("wireless", self:string("SQUEEZEBOX_PROBLEM"), setupsqueezeboxTitleStyle)
 	window:setAllowScreensaver(false)
 
-	local textarea = Textarea("textarea", error)
+	local textarea = Textarea("text", error)
 
 	local menu = SimpleMenu("menu",
 				{
@@ -427,7 +427,7 @@ function _connectPlayerFailed(self, player, server)
 				})
 
 
-	local help = Textarea("help", self:string("SQUEEZEBOX_PROBLEM_HELP", player:getName(), server:getName()))
+	local help = Textarea("helptext", self:string("SQUEEZEBOX_PROBLEM_HELP", player:getName(), server:getName()))
 
 	window:addWidget(help)
 	window:addWidget(menu)
@@ -482,7 +482,7 @@ function _addServer(self, menuItem)
 				end)
 
 	local keyboard = Keyboard("keyboard", "numeric")
---	window:addWidget(Textarea("help", self:string("SLIMSERVER_HELP")))
+--	window:addWidget(Textarea("helptext", self:string("SLIMSERVER_HELP")))
 	window:addWidget(input)
 	window:addWidget(keyboard)
 	window:focusWidget(input)

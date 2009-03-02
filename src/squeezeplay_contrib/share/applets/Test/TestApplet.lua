@@ -322,14 +322,14 @@ function textWindow(self, menuItem, filename)
 	local fh = io.open(filename, "rb")
 	if fh == nil then
 		-- FIXME error dialog
-		window:addWidget(Textarea("textarea", "Cannot load text " .. filename))
+		window:addWidget(Textarea("text", "Cannot load text " .. filename))
 		return window
 	end
 
 	local text = fh:read("*all")
 	fh:close()
 
-	local textarea = Textarea("textarea", text)
+	local textarea = Textarea("text", text)
 
 	window:addWidget(textarea)
 
@@ -352,7 +352,7 @@ function sliderWindow(self, menuItem)
 			end
 		end)
 
-	local help = Textarea("help", "We can add some help text here.\n\nThis screen is for testing the slider.")
+	local help = Textarea("helptext", "We can add some help text here.\n\nThis screen is for testing the slider.")
 
 	window:addWidget(help)
 	window:addWidget(slider)
@@ -366,7 +366,7 @@ function errorWindow(self)
 	local window = Popup("errorWindow", "Error Message")
 	window:setAllowScreensaver(false)
 
-	local textarea = Textarea("textarea", "A description of the error. This may be several lines long.")
+	local textarea = Textarea("text", "A description of the error. This may be several lines long.")
 
 	local menu = SimpleMenu("menu",
 				{
@@ -456,7 +456,7 @@ function timeinputWindow(self, menuItem)
 					return true
 				end)
 
-	local help = Textarea("help", "Input of Time (24h)")
+	local help = Textarea("helptext", "Input of Time (24h)")
 
 	window:addWidget(help)
 	window:addWidget(input)
@@ -478,7 +478,7 @@ function hexinputWindow(self, menuItem)
 					return true
 				end)
 
-	local help = Textarea("help", "Input of HEX numbers.")
+	local help = Textarea("helptext", "Input of HEX numbers.")
 
 	window:addWidget(help)
 	window:addWidget(input)
@@ -501,7 +501,7 @@ function ipinputWindow(self, menuItem)
 					return true
 				end)
 
-	local help = Textarea("help", "Input of IP addresses.")
+	local help = Textarea("helptext", "Input of IP addresses.")
 
 	window:addWidget(help)
 	window:addWidget(input)
@@ -512,7 +512,7 @@ end
 
 
 function lockedScreen(self, menuItem)
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 
         popup:setAllowScreensaver(false)
         popup:setAlwaysOnTop(true)
@@ -520,7 +520,7 @@ function lockedScreen(self, menuItem)
 
         popup:addWidget(Icon("iconLocked"))
         popup:addWidget(Label("text", "Locked"))
-	popup:addWidget(Textarea("lockedHelp", 'To unlock press the ADD and PLAY buttons at the same time.'))
+	popup:addWidget(Textarea("helptext", 'To unlock press the ADD and PLAY buttons at the same time.'))
 
 	popup:addTimer(10000, function()
 			       popup:hide()
@@ -638,7 +638,7 @@ function imageWindow(self, menuItem, filename)
 	local image = Surface:loadImage(filename)
 	if image == nil then
 		-- FIXME error dialog
-		window:addWidget(Textarea("textarea", "Cannot load image " .. filename))
+		window:addWidget(Textarea("text", "Cannot load image " .. filename))
 		return window
 	end
 

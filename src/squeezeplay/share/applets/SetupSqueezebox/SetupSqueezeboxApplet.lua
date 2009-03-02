@@ -154,7 +154,7 @@ function setupSqueezeboxSettingsShow(self, keepOldEntries)
 					     _scan(self)
 				     end)
 
-	local help = Textarea("help", self:string("SQUEEZEBOX_HELP"))
+	local help = Textarea("helptext", self:string("SQUEEZEBOX_HELP"))
 	window:addWidget(help)
 	window:addWidget(self.scanMenu)
 
@@ -381,7 +381,7 @@ function _wiredOrWireless(self)
 					 --]]
 				})
 
-	local help = Textarea("help", self:string("SQUEEZEBOX_CONNECT_HELP"))
+	local help = Textarea("helptext", self:string("SQUEEZEBOX_CONNECT_HELP"))
 	window:addWidget(help)
 	window:addWidget(menu)
 
@@ -437,7 +437,7 @@ function _enterIP(self)
 	local window = Window("window", self:string("SQUEEZEBOX_IP_ADDRESS"), setupsqueezeboxTitleStyle)
 	window:setAllowScreensaver(false)
 
-	window:addWidget(Textarea("help", self:string("SQUEEZEBOX_IP_ADDRESS_HELP")))
+	window:addWidget(Textarea("helptext", self:string("SQUEEZEBOX_IP_ADDRESS_HELP")))
 	window:addWidget(Textinput("textinput", v,
 				   function(widget, value)
 					   value = value:getValue()
@@ -1156,7 +1156,7 @@ function _chooseSlimserver(self)
 	local menu = SimpleMenu("menu")
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
-	local help = Textarea("help", self:string("SQUEEZEBOX_MUSIC_SOURCE_HELP", self.squeezeboxIPAddr))
+	local help = Textarea("helptext", self:string("SQUEEZEBOX_MUSIC_SOURCE_HELP", self.squeezeboxIPAddr))
 
 	window:addWidget(help)
 	window:addWidget(menu)
@@ -1543,7 +1543,7 @@ function _setupFailed(self)
 		helpText = tostring(helpText) .. tostring(self:string(self.errorMsg))
 	end
 
-	local help = Textarea("help", helpText)
+	local help = Textarea("helptext", helpText)
 
 	window:addWidget(help)
 	window:addWidget(menu)

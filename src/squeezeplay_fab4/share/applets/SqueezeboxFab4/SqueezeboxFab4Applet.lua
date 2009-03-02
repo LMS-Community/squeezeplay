@@ -70,7 +70,7 @@ function init(self)
 		popup:setAlwaysOnTop(true)
 		popup:setAutoHide(false)
 
-		local text = Textarea("textarea", self:string("INVALID_MAC_TEXT"))
+		local text = Textarea("text", self:string("INVALID_MAC_TEXT"))
 		local menu = SimpleMenu("menu", {
 			{
 				text = self:string("INVALID_MAC_CONTINUE"),
@@ -200,7 +200,7 @@ function settingsBrightnessShow (self, menuItem)
 				      end
 			      end)
 
-	window:addWidget(Textarea("help", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
+	window:addWidget(Textarea("helptext", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
 	window:addWidget(Group("sliderGroup", {
 				       Icon("sliderMin"),
 				       slider,

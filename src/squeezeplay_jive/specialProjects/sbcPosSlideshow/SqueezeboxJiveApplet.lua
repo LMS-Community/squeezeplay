@@ -438,7 +438,7 @@ function settingsBrightnessShow(self, menuItem)
 				      end
 			      end)
 
-	window:addWidget(Textarea("help", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
+	window:addWidget(Textarea("helptext", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
 	window:addWidget(Group("sliderGroup", {
 				       Icon("sliderMin"),
 				       slider,
@@ -665,7 +665,7 @@ end
 
 function lockScreen(self)
 	-- lock
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 
 	popup:setAllowScreensaver(false)
 	popup:setAlwaysOnTop(true)
@@ -674,7 +674,7 @@ function lockScreen(self)
 	-- FIXME change icon and text
 	popup:addWidget(Icon("iconLocked"))
 	popup:addWidget(Label("text", self:string("BSP_SCREEN_LOCKED")))
-	popup:addWidget(Textarea("lockedHelp", self:string("BSP_SCREEN_LOCKED_HELP")))
+	popup:addWidget(Textarea("helptext", self:string("BSP_SCREEN_LOCKED_HELP")))
 
 	popup:show()
 
@@ -779,7 +779,7 @@ function settingsPowerDown(self, menuItem)
         log:debug("powerDown menu")
 	-- add window
 	local window = Window("window", menuItem.text, 'settingstitle')
-	window:addWidget(Textarea("help", self:string("POWER_DOWN_HELP")))
+	window:addWidget(Textarea("helptext", self:string("POWER_DOWN_HELP")))
 
 	local menu = SimpleMenu("menu")
 	window:addWidget(menu)
@@ -953,7 +953,7 @@ function settingsTestSuspend(self, menuItem)
 		},
 	})
 
-	window:addWidget(Textarea("help", self:string("POWER_MANAGEMENT_SETTINGS_HELP")))
+	window:addWidget(Textarea("helptext", self:string("POWER_MANAGEMENT_SETTINGS_HELP")))
 	window:addWidget(menu)
 
 	window:addListener(EVENT_WINDOW_POP,

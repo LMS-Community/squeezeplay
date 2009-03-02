@@ -85,7 +85,7 @@ function open(self, menuItem)
 
 	self:tieAndShowWindow(self.window)
 
-	local timer = Timer(1000, function() self.window:addWidget(Textarea("textarea", self:string('SETUPNETTEST_NOSERVER'))) end, true)
+	local timer = Timer(1000, function() self.window:addWidget(Textarea("text", self:string('SETUPNETTEST_NOSERVER'))) end, true)
 	timer:start()
 
 	self:requestStatus(function() timer:stop() self:showMainWindow() end)
@@ -111,7 +111,7 @@ function showMainWindow(self)
 
 	self.window:addWidget(Label("graphaxis", "0                                         100 %"))
 
-	self.window:addWidget(Textarea("help", tostring(self:string('SETUPNETTEST_TESTINGTO')) .. ' ' .. self.player:getName() .. "\n" .. tostring(self:string('SETUPNETTEST_INFO'))))
+	self.window:addWidget(Textarea("helptext", tostring(self:string('SETUPNETTEST_TESTINGTO')) .. ' ' .. self.player:getName() .. "\n" .. tostring(self:string('SETUPNETTEST_INFO'))))
 
 	self.window:setAllowScreensaver(false)
 
@@ -171,7 +171,7 @@ end
 
 function showHelpWindow(self)
 	local window = Window("window", self:string('SETUPNETTEST_HELPTITLE'))
-	local help = Textarea("textarea", self:string('SETUPNETTEST_HELP'))
+	local help = Textarea("text", self:string('SETUPNETTEST_HELP'))
 
 	window:addWidget(help)
 	

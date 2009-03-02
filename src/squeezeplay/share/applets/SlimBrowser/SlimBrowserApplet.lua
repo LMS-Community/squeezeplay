@@ -665,7 +665,7 @@ local function _userTriggeredUpdate(self)
 	end
 
 	local window = Window("window", self:string('SLIMBROWSER_PLAYER_UPDATE_REQUIRED'))
-	local label = Textarea("textarea", self:string('SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX', _player:getName()))
+	local label = Textarea("text", self:string('SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX', _player:getName()))
 	window:addWidget(label)
 	window:setAlwaysOnTop(true)
 	window:setAllowScreensaver(false)
@@ -728,7 +728,7 @@ local function _renderTextArea(step, item)
 	_assert(item)
 	_assert(item.textArea)
 
-	local textArea = Textarea("textarea", item.textArea)
+	local textArea = Textarea("text", item.textArea)
 	step.window:addWidget(textArea)
 
 end
@@ -776,11 +776,11 @@ local function _renderSlider(step, item)
                 end)
 	local help, text
 	if item.text then
-		text = Textarea("textarea", item.text)
+		text = Textarea("text", item.text)
 		step.window:addWidget(text)
 	end
 	if item.help then
-        	help = Textarea("help", item.help)
+        	help = Textarea("helptext", item.help)
 		step.window:addWidget(help)
 	end
 
@@ -975,7 +975,7 @@ log:warn('mark')
 			if step.menu then
 				step.window:removeWidget(step.menu)
 			end
-			local textArea = Textarea("textarea", data.networkerror)
+			local textArea = Textarea("text", data.networkerror)
 			if step.window then
 				step.window:setTitle(_string("SLIMBROWSER_PROBLEM_CONNECTING"), 'settingstitle')
 				step.window:addWidget(textArea)
@@ -984,7 +984,7 @@ log:warn('mark')
 			if step.menu then
 				step.window:removeWidget(step.menu)
 			end
-			local textArea = Textarea("textarea", data.window.textArea)
+			local textArea = Textarea("text", data.window.textArea)
 			step.window:addWidget(textArea)
 		elseif step.menu and data and data.count and data.count == 1 and data.item_loop and (data.item_loop[1].slider or data.item_loop[1].textArea) then
 			-- no menus here, thankyouverymuch
@@ -2126,7 +2126,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 
 	-- special case for sending over textArea
 	elseif item and item['textArea'] then
-		local textArea = Textarea("textarea", item['textArea'])
+		local textArea = Textarea("text", item['textArea'])
 		window:addWidget(textArea)
 	else
 	
@@ -2787,7 +2787,7 @@ function _problemConnecting(self, server)
 			     })
 	end
 
-	window:addWidget(Textarea("help", self:string("SLIMBROWSER_PROBLEM_CONNECTING_HELP", tostring(_server:getName()))))
+	window:addWidget(Textarea("helptext", self:string("SLIMBROWSER_PROBLEM_CONNECTING_HELP", tostring(_server:getName()))))
 	window:addWidget(menu)
 
 	self.serverErrorWindow = window

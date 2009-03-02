@@ -96,7 +96,7 @@ end
 function _helpWindow(self, title, token)
 	local window = Window("window", self:string(title), self.titleStyle)
 	window:setAllowScreensaver(false)
-	window:addWidget(Textarea("textarea", self:string(token)))
+	window:addWidget(Textarea("text", self:string(token)))
 
 	self:tieAndShowWindow(window)
 	return window

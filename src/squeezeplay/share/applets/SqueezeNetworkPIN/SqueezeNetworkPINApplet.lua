@@ -81,7 +81,7 @@ function _enterPin(self, force, server, player, next)
 						nil)
 		      end)
 
-	window:addWidget(Textarea("help", self:string("SQUEEZENETWORK_PIN_HELP", jnt:getSNHostname())))
+	window:addWidget(Textarea("helptext", self:string("SQUEEZENETWORK_PIN_HELP", jnt:getSNHostname())))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -135,7 +135,7 @@ function displayNotLinked(self)
 	local window = Window("window", self:string("SQUEEZENETWORK_PIN_TITLE"), "settingstitle")
 	window:setAllowScreensaver(false)
 
-	local textarea = Textarea("textarea", self:string("SQUEEZENETWORK_NOT_LINKED"))
+	local textarea = Textarea("text", self:string("SQUEEZENETWORK_NOT_LINKED"))
 
 	local menu = SimpleMenu("menu",
 				{

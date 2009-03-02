@@ -267,7 +267,7 @@ function volumeShow(self)
 					return EVENT_UNUSED
 				end)
 
-	window:addWidget(Textarea("help", self:string("SOUND_VOLUME_HELP")))
+	window:addWidget(Textarea("helptext", self:string("SOUND_VOLUME_HELP")))
 	window:addWidget(Group("volumeGroup", {
 				     Icon("volumeMin"),
 				     self.slider,
@@ -313,7 +313,7 @@ function _customMenu(self, custom)
  					   local window = Window("window", item.text)
 					   local menu = SimpleMenu("menu")
 					   menu:setComparator(menu.itemComparatorAlpha)
-					   window:addWidget(Textarea("help", self:string("SOUND_CUSTOM_HELP")))
+					   window:addWidget(Textarea("helptext", self:string("SOUND_CUSTOM_HELP")))
 					   window:addWidget(menu)
 					   for k,v in pairs(sounds) do
 						   menu:addItem({
@@ -332,7 +332,7 @@ function _customSoundMenu(self, sound, custom)
 	local menu = SimpleMenu("menu")
 	local group = RadioGroup()
 	menu:setComparator(menu.itemComparatorWeightAlpha)
-	window:addWidget(Textarea("help", self:string("SOUND_CUSTOMSOUND_HELP")))
+	window:addWidget(Textarea("helptext", self:string("SOUND_CUSTOMSOUND_HELP")))
 	window:addWidget(menu)
 
 	local settings = self:getSettings()

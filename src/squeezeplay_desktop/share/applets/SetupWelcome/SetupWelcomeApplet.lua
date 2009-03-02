@@ -142,8 +142,8 @@ end
 function setupWelcome(self, setupNext)
 	local window = Window("window", self:string("WELCOME"), welcomeTitleStyle)
 
-	local textarea = Textarea("textarea", self:string("WELCOME_WALKTHROUGH"))
-	local help = Textarea("help", self:string("WELCOME_HELP"))
+	local textarea = Textarea("text", self:string("WELCOME_WALKTHROUGH"))
+	local help = Textarea("helptext", self:string("WELCOME_HELP"))
 
 	window:addWidget(textarea)
 	window:addWidget(help)
@@ -170,7 +170,7 @@ function setupDone(self, setupNext)
 		       callback = setupNext
 		     })
 
-	window:addWidget(Textarea("help", self:string("DONE_HELP")))
+	window:addWidget(Textarea("helptext", self:string("DONE_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

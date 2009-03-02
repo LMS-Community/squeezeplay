@@ -97,7 +97,7 @@ function settingsShow(self)
 		tostring(self:string("ABOUT_COPYRIGHT")),
 	}
 
-	window:addWidget(Textarea("textarea", table.concat(about, "\n")))
+	window:addWidget(Textarea("text", table.concat(about, "\n")))
 
 	self:tieAndShowWindow(window)
 	return window

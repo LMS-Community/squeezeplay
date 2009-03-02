@@ -229,9 +229,9 @@ function setupWelcomeShow(self, setupNext)
 	local window = Window("window", self:string("WELCOME"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
-	local textarea = Textarea("textarea", self:string("WELCOME_WALKTHROUGH"))
+	local textarea = Textarea("text", self:string("WELCOME_WALKTHROUGH"))
 	local navcluster = Icon("navcluster")
-	local help = Textarea("help", self:string("WELCOME_HELP"))
+	local help = Textarea("helptext", self:string("WELCOME_HELP"))
 
 	window:addWidget(textarea)
 	window:addWidget(navcluster)
@@ -267,7 +267,7 @@ function setupConnectionShow(self, setupSqueezebox, setupNetwork)
 			     callback = setupNetwork,
 		     })
 	
-	window:addWidget(Textarea("help", self:string("CONNECT_HELP")))
+	window:addWidget(Textarea("helptext", self:string("CONNECT_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -286,7 +286,7 @@ function setupDoneShow(self, setupNext)
 		       callback = setupNext
 		     })
 
-	window:addWidget(Textarea("help", self:string("DONE_HELP")))
+	window:addWidget(Textarea("helptext", self:string("DONE_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

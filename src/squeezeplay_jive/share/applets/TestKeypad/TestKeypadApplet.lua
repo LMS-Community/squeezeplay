@@ -64,7 +64,7 @@ end
 
 function _completedShow(self)
 	local popup = Window("window")
-	popup:addWidget(Textarea("textarea", self:string("TEST_COMPLETE")))
+	popup:addWidget(Textarea("text", self:string("TEST_COMPLETE")))
 
 	self:tieWindow(popup)
 	popup:showBriefly(2000, function() self.window:hideToTop() end)
@@ -139,7 +139,7 @@ function KeypadTest(self)
 	self.icon = Icon("icon")
 	window:addWidget(self.icon)
 
-	self.help = Textarea("help", self:string("TEST_KEYPAD_HELP"))
+	self.help = Textarea("helptext", self:string("TEST_KEYPAD_HELP"))
 	window:addWidget(self.help)
 
 	self:drawKeypad()
