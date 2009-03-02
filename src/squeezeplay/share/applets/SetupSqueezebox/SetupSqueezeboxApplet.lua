@@ -61,7 +61,7 @@ local function _updatingPlayer(self)
 	end
 
 	local popup = Popup("waiting")
-	local icon  = Icon("iconConnecting")
+	local icon  = Icon("icon_connecting")
 	local label = Label("text", self:string('SQUEEZEBOX_UPDATING_FIRMWARE_SQUEEZEBOX'))
 	popup:addWidget(icon)
 	popup:addWidget(label)
@@ -1179,7 +1179,7 @@ function _chooseSlimserver(self)
 	if self.slimserverMenu:numItems() <= 1 then
 		local popup = Popup("waiting")
 
-		popup:addWidget(Icon("iconConnecting"))
+		popup:addWidget(Icon("icon_connecting"))
 		popup:addWidget(Label("text", self:string("SQUEEZEBOX_FINDING_SOURCES")))
 
 		-- schedule slimserver scan 
@@ -1443,7 +1443,7 @@ end
 function _setupSqueezebox(self)
 	local window = Popup("waiting")
 
-	window:addWidget(Icon("iconConnecting"))
+	window:addWidget(Icon("icon_connecting"))
 
 	local statusLabel = Label("text", self.statusText)
 	window:addWidget(statusLabel)
@@ -1483,7 +1483,7 @@ function _setupOK(self)
 	local window = Popup("waiting")
 	window:setAllowScreensaver(false)
 
-	window:addWidget(Icon("iconConnected"))
+	window:addWidget(Icon("icon_connected"))
 
 	local text = Label("text", self:string("SQUEEZEBOX_SETUP_COMPLETE"))
 	window:addWidget(text)

@@ -125,8 +125,8 @@ end
 function warnMasses(self, warning)
 	log:info(self:string(warning))
 
-	-- create a Popup object, using already established 'currentsong' skin style
-	local doomsday = Popup('currentsong')
+	-- create a Popup object, using already established 'toast' skin style
+	local doomsday = Popup('toast')
 
 	-- add message to popup
 	local doomsdayMessage = Textarea('popupplay', self:string(warning))

@@ -672,7 +672,7 @@ function lockScreen(self)
 	popup:setAutoHide(false)
 
 	-- FIXME change icon and text
-	popup:addWidget(Icon("iconLocked"))
+	popup:addWidget(Icon("icon_locked"))
 	popup:addWidget(Label("text", self:string("BSP_SCREEN_LOCKED")))
 	popup:addWidget(Textarea("helptext", self:string("BSP_SCREEN_LOCKED_HELP")))
 
@@ -814,7 +814,7 @@ function settingsSleep(self)
 
 	self.popup = Popup("waiting")
 
-	self.popup:addWidget(Icon("iconConnecting"))
+	self.popup:addWidget(Icon("icon_connecting"))
 	self.popup:addWidget(Label("text", self:string("SLEEPING")))
 
 	-- make sure this popup remains on screen
@@ -841,7 +841,7 @@ function settingsPowerOff(self)
 
 	local popup = Popup("waiting")
 
-	popup:addWidget(Icon("iconPower"))
+	popup:addWidget(Icon("icon_power"))
 	popup:addWidget(Label("text", self:string("GOODBYE")))
 
 	-- make sure this popup remains on screen
@@ -1103,7 +1103,7 @@ function _suspend(self)
 	popup:setAlwaysOnTop(true)
 	popup:setAutoHide(false)
 
-	popup:addWidget(Icon("iconConnecting"))
+	popup:addWidget(Icon("icon_connecting"))
 	popup:addWidget(Label("text", self:string("PLEASE_WAIT")))
 
 	-- ignore all events

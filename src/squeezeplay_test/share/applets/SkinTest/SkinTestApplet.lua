@@ -161,7 +161,7 @@ end
 
 
 --[[
-Window:   "setuplist"
+Window:   "text_list"
 Menu:     "menu"
 Item:     "item", "itemChecked"
 Textarea: "helptext"
@@ -169,7 +169,7 @@ Textarea: "helptext"
 function setup_window(self, item)
 	local data = _itemData(item)
 
-	local window = Window("setuplist", _itemName(item), "setup")
+	local window = Window("text_list", _itemName(item), "setup")
 	_windowActions(self, item, window)
 
 	local selected = nil
@@ -203,15 +203,15 @@ end
 
 
 --[[
-Window:   "onebutton"
+Window:   "one_button"
 Textarea: "text"
 Menu:     "menu"
 Item:     "item"
 --]]
-function setup_onebutton(self, item)
+function setup_one_button(self, item)
 	local data = _itemData(item)
 
-	local window = Window("onebutton", _itemName(item), "setup")
+	local window = Window("one_button", _itemName(item), "setup")
 	_windowActions(self, item, window)
 
 	local textarea = Textarea("text", data[1])
@@ -230,7 +230,7 @@ end
 
 
 --[[
-Window:   "buttonlist"
+Window:   "button_list"
 Textarea: "text"
 Menu:     "menu"
 Item:     "item"
@@ -238,7 +238,7 @@ Item:     "item"
 function setup_button(self, item)
 	local data = _itemData(item)
 
-	local window = Window("buttonlist", _itemName(item), "setup")
+	local window = Window("button_list", _itemName(item), "setup")
 	_windowActions(self, item, window)
 
 	window:addActionListener("help", self, dummy_help)
@@ -688,15 +688,15 @@ end
 
 
 --[[
-Window:   "tracklist" (with "icon" in menu bar for thumbnail)
+Window:   "track_list" (with "icon" in menu bar for thumbnail)
 Menu:     "menu"
 1st Item: "itemplay"
 Item:     "item"
 --]]
-function window_tracklist(self, item)
+function window_track_list(self, item)
 	local data = _itemData(item)
 
-	local window = Window("tracklist", _itemName(item))
+	local window = Window("track_list", _itemName(item))
 	_windowActions(self, item, window)
 
 	window:setIconWidget("icon", Icon("icon"))
@@ -812,16 +812,16 @@ end
 windows = {
 	{ "information", "Information Window", window_information, },
 
-	{ "setuplist", "Languages", setup_window, },
-	{ "onebutton", "Welcome to Setup", setup_onebutton, },
-	{ "buttonlist", "Choose Region", setup_button, },
+	{ "text_list", "Languages", setup_window, },
+	{ "one_button", "Welcome to Setup", setup_onebutton, },
+	{ "button_list", "Choose Region", setup_button, },
 	{ "help", "Help Connection Type", setup_help, },
 	{ "waiting", "Connecting to", setup_waiting, },
 	{ "input_wpa", "Wireless Password", setup_input, },
 	{ "error", "Error", setup_error, },
 	{ "update", "Software Update", setup_update, },
 	{ "trackinfo", "Track Info", window_trackinfo, },
-	{ "tracklist", "Track List", window_tracklist, },
+	{ "track_list", "Track List", window_tracklist, },
 	{ "playlist", "Playlist", window_playlist, },
 	{ "text_list", "Text List", setup_text_list, },
 	{ "icon_list", "Icon List", window_icon_list, },
@@ -833,15 +833,15 @@ windows = {
 
 
 testData = {
-	setuplist = {
+	text_list = {
 		{ "Deutsch", "Suomi", "English", "Dansk", "Itailiano", "Français", "Norsk", "Sevnska", "Español" },
 		"Some help text",
 	},
-	onebutton = {
+	one_button = {
 		"Let's begin by getting\nyou connected to your network.",
 		"Continue"
 	},
-	buttonlist = {
+	button_list = {
 		"Is text allowed in this window?",
 		{ { "North America", "region_US" },
 		  { "All Other Regions" , "region_XX" },
@@ -854,7 +854,7 @@ testData = {
 		"The Yamazaki \n 18 Year in four haikus\n (this is one of them)\n \n Yamazaki HAI!\n Suntory Distillery\n Good Nose; Strong Finish\n \n They say that the Scots\n are the only ones blessed with\n skill to make scotch. No.\n \n But let your palate\n be the judge and not my words\n Now! Please to enjoy!\n" 
 	},
 	waiting = {
-		"Connecting to\nwireless network...", "all your base", "iconConnecting",
+		"Connecting to\nwireless network...", "all your base", "icon_connecting",
 	},
 	input_wpa = {
 		Textinput.textValue("", 8, 20), 'qwerty',
@@ -866,7 +866,7 @@ testData = {
 		},
 	},
 	update = {
-		"Installing\nSoftware Update...", "iconSoftwareUpdate",
+		"Installing\nSoftware Update...", "icon_software_update",
 	},
 	text_list = {
 		 "Now Playing", "Music Library", "Internet Radio", "Music Services", "Favorites", "Extras", "Settings", "Choose Player", "Turn Off Player"
@@ -887,7 +887,7 @@ testData = {
 		{ "Another Something" },
 		{ "How many somethings does it take to screw in a light bulb" },
 	},
-	tracklist = {
+	track_list = {
 		 "1. Something", 
 		 "2. Something Else",
 		 "3. More Somethings",

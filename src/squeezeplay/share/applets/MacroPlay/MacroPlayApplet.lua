@@ -107,10 +107,10 @@ function autoplayShow(self, countdown)
 	local help = Textarea("text", "")
 
 	window:setSkin({
-		macroPass = {
+		macro_pass = {
 			img = Surface:loadImage("applets/MacroPlay/pass.png"),
 		},
-		macroFail = {
+		macro_fail = {
 			img = Surface:loadImage("applets/MacroPlay/fail.png"),
 		},
 	})
@@ -147,10 +147,10 @@ function autoplayShow(self, countdown)
 		}
 
 		if macro.passed then
-			item.icon = Icon("macroPass")
+			item.icon = Icon("macro_pass")
 		end
 		if macro.failed then
-			item.icon = Icon("macroFail")
+			item.icon = Icon("macro_fail")
 		end
 
 		menu:addItem(item)
@@ -504,7 +504,7 @@ function macroParameter(key)
 end
 
 
-function macroPass(msg)
+function macro_pass(msg)
 	local self = instance
 
 	log:warn("Macro PASS ", self.macro.name, ": ", msg)
@@ -516,7 +516,7 @@ function macroPass(msg)
 end
 
 
-function macroFail(msg)
+function macro_fail(msg)
 	local self = instance
 
 	log:warn("Macro FAIL ", self.macro.name, ": ", msg)

@@ -230,7 +230,7 @@ function setupWelcomeShow(self, setupNext)
 	window:setAllowScreensaver(false)
 
 	local textarea = Textarea("text", self:string("WELCOME_WALKTHROUGH"))
-	local navcluster = Icon("navcluster")
+	local navcluster = Icon("icon_navcluster")
 	local help = Textarea("helptext", self:string("WELCOME_HELP"))
 
 	window:addWidget(textarea)

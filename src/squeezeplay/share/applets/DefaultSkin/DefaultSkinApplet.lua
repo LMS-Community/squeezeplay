@@ -127,7 +127,7 @@ function skin(self, s, reload, useDefaultSize)
 	Framework:setVideoMode(screenWidth, screenHeight, 16, jiveMain:isFullscreen())
 
 	-- Images and Tiles
-	local iconBackground = 
+	local background = 
 		Tile:loadHTiles({
 					imgpath .. "border_l.png",
 					imgpath .. "border.png",
@@ -294,15 +294,15 @@ function skin(self, s, reload, useDefaultSize)
 
 
 	-- Iconbar definitions, each icon needs an image and x,y
-	s.iconBackground = {}
-	s.iconBackground.x = 0
-	s.iconBackground.y = screenHeight - 30
-	s.iconBackground.w = screenWidth
-	s.iconBackground.h = 30
-	s.iconBackground.border = { 4, 0, 4, 0 }
-	s.iconBackground.bgImg = iconBackground
-	s.iconBackground.layer = LAYER_FRAME
-	s.iconBackground.position = LAYOUT_SOUTH
+	s.background = {}
+	s.background.x = 0
+	s.background.y = screenHeight - 30
+	s.background.w = screenWidth
+	s.background.h = 30
+	s.background.border = { 4, 0, 4, 0 }
+	s.background.bgImg = iconBackground
+	s.background.layer = LAYER_FRAME
+	s.background.position = LAYOUT_SOUTH
 
 	-- play/stop/pause
 	s.iconPlaymodeOFF = _icon(self, 9, screenHeight - 30, "icon_mode_off.png")
@@ -353,14 +353,14 @@ function skin(self, s, reload, useDefaultSize)
 
 
 	-- time
-	s.iconTime = {}
-	s.iconTime.x = screenWidth - 60
-	s.iconTime.y = screenHeight - 34
-	s.iconTime.h = 34
-	s.iconTime.layer = LAYER_FRAME
-	s.iconTime.position = LAYOUT_SOUTH
-	s.iconTime.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
-	s.iconTime.fg = TEXT_COLOR
+	s.button_time = {}
+	s.button_time.x = screenWidth - 60
+	s.button_time.y = screenHeight - 34
+	s.button_time.h = 34
+	s.button_time.layer = LAYER_FRAME
+	s.button_time.position = LAYOUT_SOUTH
+	s.button_time.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
+	s.button_time.fg = TEXT_COLOR
 
 
 	-- Window title, this is a Label
@@ -697,10 +697,10 @@ function skin(self, s, reload, useDefaultSize)
 	s.popupIcon.text.align = "center"
 	s.popupIcon.text.position = LAYOUT_SOUTH
 
-	s.iconPower = {}
-	s.iconPower.img = _loadImage(self, "Alerts/popup_shutdown_icon.png")
-	s.iconPower.w = WH_FILL
-	s.iconPower.align = 'center'
+	s.icon_power = {}
+	s.icon_power.img = _loadImage(self, "Alerts/popup_shutdown_icon.png")
+	s.icon_power.w = WH_FILL
+	s.icon_power.align = 'center'
 
 	s.iconFavorites = {}
 	s.iconFavorites.img = _loadImage(self, "popup_fav_heart_bkgrd.png")
@@ -708,22 +708,22 @@ function skin(self, s, reload, useDefaultSize)
 	s.iconFavorites.align = 'center'
 
 	-- connecting/connected popup icon
-	s.iconConnecting = {}
-	s.iconConnecting.img = _loadImage(self, "Alerts/wifi_connecting.png")
-	s.iconConnecting.frameRate = 8
-	s.iconConnecting.frameWidth = 161
-	s.iconConnecting.w = WH_FILL
-	s.iconConnecting.align = "center"
+	s.icon_connecting = {}
+	s.icon_connecting.img = _loadImage(self, "Alerts/wifi_connecting.png")
+	s.icon_connecting.frameRate = 8
+	s.icon_connecting.frameWidth = 161
+	s.icon_connecting.w = WH_FILL
+	s.icon_connecting.align = "center"
 
-	s.iconConnected = {}
-	s.iconConnected.img = _loadImage(self, "Alerts/connecting_success_icon.png")
-	s.iconConnected.w = WH_FILL
-	s.iconConnected.align = "center"
+	s.icon_connected = {}
+	s.icon_connected.img = _loadImage(self, "Alerts/connecting_success_icon.png")
+	s.icon_connected.w = WH_FILL
+	s.icon_connected.align = "center"
 
-	s.iconLocked = {}
-	s.iconLocked.img = _loadImage(self, "Alerts/popup_locked_icon.png")
-	s.iconLocked.w = WH_FILL
-	s.iconLocked.align = "center"
+	s.icon_locked = {}
+	s.icon_locked.img = _loadImage(self, "Alerts/popup_locked_icon.png")
+	s.icon_locked.w = WH_FILL
+	s.icon_locked.align = "center"
 
 	s.iconBatteryLow = {}
 	s.iconBatteryLow.img = _loadImage(self, "Alerts/popup_battery_low_icon.png")
@@ -750,10 +750,10 @@ function skin(self, s, reload, useDefaultSize)
 	s.wirelessLevel4.align = "right"
 	s.wirelessLevel4.img = _loadImage(self, "Icons/icon_wireless_4_shadow.png")
 
-	s.navcluster = {}
-	s.navcluster.img = _loadImage(self, "navcluster.png")
-	s.navcluster.align = "center"
-	s.navcluster.w = WH_FILL
+	s.icon_navcluster = {}
+	s.icon_navcluster.img = _loadImage(self, "navcluster.png")
+	s.icon_navcluster.align = "center"
+	s.icon_navcluster.w = WH_FILL
 
 
 	-- Special styles for specific window types

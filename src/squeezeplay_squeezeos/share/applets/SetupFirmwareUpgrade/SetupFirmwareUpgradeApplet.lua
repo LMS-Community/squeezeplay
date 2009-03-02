@@ -154,7 +154,7 @@ end
 
 
 function _upgradeWindowSingle(self, upgrades, optional)
-	local window = Window("onebutton", self:string("UPDATE"), 'settingstitle')
+	local window = Window("one_button", self:string("UPDATE"), 'settingstitle')
 
 	window:setButtonAction("rbutton", nil)
 
@@ -196,7 +196,7 @@ end
 
 
 function _upgradeWindowChoice(self, upgrades, optional)
-	local window = Window("setuplist", self:string("UPDATE"), 'settingstitle')
+	local window = Window("text_list", self:string("UPDATE"), 'settingstitle')
 	local helptext = Textarea("helptext", "")
 	local menu = SimpleMenu("menu")
 
@@ -295,7 +295,7 @@ end
 
 
 function _chargeBattery(self)
-	local window = Window("setuplist", self:string("UPDATE_BATTERY"), firmwareupgradeTitleStyle)
+	local window = Window("text_list", self:string("UPDATE_BATTERY"), firmwareupgradeTitleStyle)
 
 	local menu = SimpleMenu("menu", {
 		{
@@ -339,7 +339,7 @@ function _t_setText(self, done, msg, count)
 	self.text:setValue(self:string(msg))
 
 	--if done then
-	--	self.icon:setStyle("iconConnected")
+	--	self.icon:setStyle("icon_connected")
 	--end
 end
 
@@ -378,7 +378,7 @@ function _upgrade(self, url)
 	-- don't allow power saving during upgrades
 	self.popup:setAllowPowersave(false)
 
-	self.icon = Icon("iconSoftwareUpdate")
+	self.icon = Icon("icon_software_update")
 	self.popup:addWidget(self.icon)
 
 	self.text = Label("text", self:string("UPDATE_DOWNLOAD", ""))
@@ -423,7 +423,7 @@ function _upgradeFailed(self)
 	-- reconnect to server
 	appletManager:callService("connectPlayer")
 
-	local window = Window("setuplist", self:string("UPDATE_FAILURE"))
+	local window = Window("text_list", self:string("UPDATE_FAILURE"))
 
 	local menu = SimpleMenu("menu",
 				{

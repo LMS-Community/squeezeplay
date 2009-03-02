@@ -55,7 +55,7 @@ function setupShowSetupLanguage(self, setupNext, helpText)
 	self.allStrings = locale:loadAllStrings(self._entry.stringsFilepath)
 
 	-- setup menu
-	local window = Window("setuplist", self:string("CHOOSE_LANGUAGE"), "setuptitle")
+	local window = Window("text_list", self:string("CHOOSE_LANGUAGE"), "setuptitle")
 	window:setAllowScreensaver(false)
 
 	window:setButtonAction("lbutton", nil)
@@ -108,7 +108,7 @@ function settingsShow(self, menuItem)
 	self.allStrings = locale:loadAllStrings(self._entry.stringsFilepath)
 
 	-- setup menu
-	local window = Window("setuplist", self:string("LANGUAGE"), 'settingstitle')
+	local window = Window("text_list", self:string("LANGUAGE"), 'settingstitle')
 	local menu = SimpleMenu("menu")
 
 	local group = RadioGroup()
@@ -183,7 +183,7 @@ function setLang(self, choice, next)
 	self.popup:setAutoHide(false)
 	self.popup:ignoreAllInputExcept({"disconnect_player"})
 
-	self.popup:addWidget(Icon("iconConnecting"))
+	self.popup:addWidget(Icon("icon_connecting"))
   	local stringChoice = "LOADING_LANGUAGE"
 	self.popup:addWidget(Label("text", self:string(stringChoice)))
    	self.popup:show()

@@ -166,7 +166,7 @@ end
 
 
 function setupWelcomeShow(self, setupNext)
-	local window = Window("onebutton", self:string("WELCOME"), welcomeTitleStyle)
+	local window = Window("one_button", self:string("WELCOME"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
 	window:setButtonAction("rbutton", nil)
@@ -192,7 +192,7 @@ end
 
 function setupDoneShow(self, setupNext)
 	log:info('setupDoneShow()')
-	local window = Window("onebutton", self:string("DONE"), welcomeTitleStyle)
+	local window = Window("one_button", self:string("DONE"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
 	window:setButtonAction("rbutton", nil)

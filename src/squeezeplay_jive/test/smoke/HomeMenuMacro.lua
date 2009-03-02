@@ -8,7 +8,7 @@ macroSelectMenuIndex(100, 1)
 
 -- check screen
 if not macroScreenshot(1000, "HomeMenu") then
-	return macroFail("HomeMenu")
+	return macro_fail("HomeMenu")
 end
 
-macroPass("HomeMenu")
+macro_pass("HomeMenu")

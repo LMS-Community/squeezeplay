@@ -518,7 +518,7 @@ function lockedScreen(self, menuItem)
         popup:setAlwaysOnTop(true)
         popup:setAutoHide(false)
 
-        popup:addWidget(Icon("iconLocked"))
+        popup:addWidget(Icon("icon_locked"))
         popup:addWidget(Label("text", "Locked"))
 	popup:addWidget(Textarea("helptext", 'To unlock press the ADD and PLAY buttons at the same time.'))
 
@@ -537,7 +537,7 @@ function downloadingSoftware(self, menuItem)
 	popup:setTransparent(false)
 
 	--FIXME, this window does not layout correctly (Bug 5412)
-	local icon = Icon("iconConnecting")
+	local icon = Icon("icon_connecting")
 	local text = Label("text", "\nDownloading Firmware")
 	local label = Label("text", "0%")
 
@@ -561,7 +561,7 @@ function downloadingSoftware(self, menuItem)
 				       elseif state == 6 then
 					       label:setValue("74%")
 				       elseif state == 7 then
-					       icon:setStyle("iconConnected")
+					       icon:setStyle("icon_connected")
 					       label:setValue("100%")
 						text:setValue("\nDownloading Complete!")
 				       else
@@ -583,7 +583,7 @@ function ignoreAllInputPopup(self, menuItem)
 
 	local popup = Popup("waiting")
 
-	local icon = Icon("iconConnecting")
+	local icon = Icon("icon_connecting")
 	local label = Label("text", "All input is ignored, except:\n'disconnect_player', 'back', 'go'")
 
 	popup:addWidget(icon)
@@ -604,7 +604,7 @@ function connectingPopup(self, menuItem)
 
 	local popup = Popup("waiting")
 
-	local icon = Icon("iconConnecting")
+	local icon = Icon("icon_connecting")
 	local label = Label("text", "")
 
 	popup:addWidget(icon)
@@ -618,7 +618,7 @@ function connectingPopup(self, menuItem)
 				       elseif state == 2 then
 					       label:setValue("\na very very very long test string!")
 				       elseif state == 3 then
-					       icon:setStyle("iconConnected")
+					       icon:setStyle("icon_connected")
 					       label:setValue("Connected to\na test string!")
 				       else
 					       popup:hide()
@@ -669,7 +669,7 @@ end
 
 function timerTestWindow(self, instead)
 	local popup = Popup("waiting")
-	local icon = Icon("iconConnecting")
+	local icon = Icon("icon_connecting")
 	local label = Label("text", "Timer test 1")
 
 	popup:addWidget(icon)
@@ -690,7 +690,7 @@ end
 
 function timerTestWindow2(self)
 	local window = Popup("waiting")
-	local icon = Icon("iconConnected")
+	local icon = Icon("icon_connected")
 	local label = Label("text", "Timer test 2")
 
 	window:addWidget(icon)

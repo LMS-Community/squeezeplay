@@ -395,7 +395,7 @@ function _showPopulatingPlayersPopup(self, timer)
         end
 
         local popup = Popup("waiting")
-        local icon  = Icon("iconConnecting")
+        local icon  = Icon("icon_connecting")
         local label = Label("text", self:string("SEARCHING"))
         popup:addWidget(icon)
         popup:addWidget(label)

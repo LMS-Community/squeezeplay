@@ -54,7 +54,7 @@ function _factoryReset(self)
 	appletManager:callService("disconnectPlayer")
 
 	local popup = Popup("waiting")
-	popup:addWidget(Icon("iconConnected"))
+	popup:addWidget(Icon("icon_connected"))
 	popup:addWidget(Label("text", self:string("RESET_RESETTING")))
 
 	-- make sure this popup remains on screen

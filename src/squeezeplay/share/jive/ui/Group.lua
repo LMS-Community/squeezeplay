@@ -11,7 +11,7 @@ A group widget, extends L<jive.ui.Widget>, it is a container for other widgets. 
 =head1 SYNOPSIS
 
  -- Create a new group
- local group = jive.ui.Group("item", { text = Label("text", "Hello World"), icon = Icon("icon") })
+ local group = jive.ui.Group("group", { text = Label("text", "Hello World"), icon = Icon("icon") })
 
 =head1 STYLE
 

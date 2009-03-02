@@ -131,7 +131,7 @@ function _connectionType(self)
 	-- XXXX auto select wired in setup mode
 
 	-- ask the user to choose
-	local window = Window("buttonlist", self:string("NETWORK_CONNECTION_TYPE"), "setup")
+	local window = Window("button_list", self:string("NETWORK_CONNECTION_TYPE"), "setup")
 	window:setAllowScreensaver(false)
 
 	local connectionMenu = SimpleMenu("menu")
@@ -173,7 +173,7 @@ function _wirelessRegion(self, wlan)
 		return _networkScan(self, wlan)
 	end
 
-	local window = Window("buttonlist", self:string("NETWORK_REGION"), "setup")
+	local window = Window("button_list", self:string("NETWORK_REGION"), "setup")
 	window:setAllowScreensaver(false)
 
 	local region = wlan:getRegion()
@@ -270,7 +270,7 @@ function _networkScan(self, iface)
 	local popup = Popup("waiting")
 	popup:setAllowScreensaver(false)
 
-        popup:addWidget(Icon("iconConnecting"))
+        popup:addWidget(Icon("icon_connecting"))
         popup:addWidget(Label("text", self:string("NETWORK_FINDING_NETWORKS")))
 
 	local status = Label("subtext", self:string("NETWORK_FOUND_NETWORKS", 0))
@@ -314,7 +314,7 @@ function _networkScanComplete(self, iface)
 		return _connect(self, iface, iface:getName(), true)
 	end
 
-	local window = Window("setuplist", self:string("NETWORK_WIRELESS_NETWORKS"), 'setuptitle')
+	local window = Window("text_list", self:string("NETWORK_WIRELESS_NETWORKS"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu")
@@ -423,7 +423,7 @@ end
 
 
 function _chooseEnterSSID(self, iface)
-	local window = Window("setuplist", self:string("NETWORK_DONT_SEE_YOUR_NETWORK"), 'setuptitle')
+	local window = Window("text_list", self:string("NETWORK_DONT_SEE_YOUR_NETWORK"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local textarea = Textarea("text", self:string("NETWORK_ENTER_SSID_HINT"))
@@ -537,7 +537,7 @@ end
 function _chooseEncryption(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	local window = Window("setuplist", self:string("NETWORK_WIRELESS_ENCRYPTION"), 'setuptitle')
+	local window = Window("text_list", self:string("NETWORK_WIRELESS_ENCRYPTION"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu", {
@@ -593,7 +593,7 @@ end
 function _chooseWEPLength(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	local window = Window("buttonlist", self:string("NETWORK_WIRELESS_ENCRYPTION"), 'setuptitle')
+	local window = Window("button_list", self:string("NETWORK_WIRELESS_ENCRYPTION"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu", {
@@ -704,7 +704,7 @@ function _chooseWPS(self, iface, ssid)
 	local wpspin = iface:generateWPSPin()
 
 	-- ask the user to choose
-	local window = Window("setuplist", self:string("NETWORK_WPS_METHOD"), 'setuptitle')
+	local window = Window("text_list", self:string("NETWORK_WPS_METHOD"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu")
@@ -761,7 +761,7 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 	local popup = Popup("waiting")
 	popup:setAllowScreensaver(false)
 
-	popup:addWidget(Icon("iconConnecting"))
+	popup:addWidget(Icon("icon_connecting"))
 	if wpsmethod == "pbc" then
 		popup:addWidget(Label("text", self:string("NETWORK_WPS_PROGRESS_PBC")))
 	else
@@ -883,7 +883,7 @@ function _connect(self, iface, ssid, createNetwork)
 	-- progress window
 	local popup = Popup("waiting")
 
-	local icon  = Icon("iconConnecting")
+	local icon  = Icon("icon_connecting")
 	icon:addTimer(1000,
 		function()
 			_connectTimer(self, iface, ssid)
@@ -961,7 +961,7 @@ end
 
 -- warning if ethernet cable is not connected
 function _attachEthernet(self, iface, ssid, createNetwork)
-	local window = Window("setuplist", self:string("NETWORK_ATTACH_CABLE"))
+	local window = Window("text_list", self:string("NETWORK_ATTACH_CABLE"))
         window:setAllowScreensaver(false)
 
 	local textarea = Textarea('text', self:string("NETWORK_ATTACH_CABLE_DETAILED"))
@@ -1064,7 +1064,7 @@ function _connectSuccess(self, iface, ssid)
 
 	-- popup confirmation
 	local popup = Popup("waiting")
-	popup:addWidget(Icon("iconConnected"))
+	popup:addWidget(Icon("icon_connected"))
 
 	local name = self.scanResults[ssid].item.text
 	local text = Label("text", self:string("NETWORK_CONNECTED_TO", name))
@@ -1473,7 +1473,7 @@ function _setStaticIP(self, iface, ssid)
 	log:debug("setStaticIP addr=", self.ipAddress, " subnet=", self.ipSubnet, " gw=", self.ipGateway, " dns=", self.ipDNS)
 
 	local popup = Popup("waiting")
-	popup:addWidget(Icon("iconConnecting"))
+	popup:addWidget(Icon("icon_connecting"))
 
 	local name = self.scanResults[ssid].item.text
 	popup:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", name)))
@@ -1551,7 +1551,7 @@ function settingsNetworkStatus(self, isWired)
 	-- XXXX remove isWired and detect automatically
 	local iface = isWired and self.ethIface or self.wlanIface
 
-	local window = Window("setuplist", self:string("NETWORK_STATUS"), 'setuptitle')
+	local window = Window("text_list", self:string("NETWORK_STATUS"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local values = {}

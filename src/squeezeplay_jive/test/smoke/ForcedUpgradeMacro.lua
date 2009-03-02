@@ -6,23 +6,23 @@ macroEvent(100, EVENT_KEY_PRESS, KEY_HOME)
 
 -- check screen
 if not macroScreenshot(1000, "ForcedUpgrade") then
-	return macroFail("ForcedUpgrade")
+	return macro_fail("ForcedUpgrade")
 end
 
 
 -- Begin update
 if not macroSelectMenuItem(100, "Begin update") then
-	return macroFail("CopyingUpdate")
+	return macro_fail("CopyingUpdate")
 end
 macroEvent(1000, EVENT_KEY_PRESS, KEY_GO)
 
 if not macroScreenshot(1000, "CopyingUpdate") then
-	return macroFail("CopyingUpdate")
+	return macro_fail("CopyingUpdate")
 end
 
-macroPass("SoftwareUpgrade")
+macro_pass("SoftwareUpgrade")
 
 -- 5 minute delay to allow upgrade to complete, this is never expected
 -- to return
 macroDelay(300000)
-macroFail("Timeout")
+macro_fail("Timeout")

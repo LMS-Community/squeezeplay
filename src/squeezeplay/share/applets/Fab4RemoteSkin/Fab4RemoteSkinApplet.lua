@@ -335,14 +335,14 @@ function skin(self, s)
 	}
 
 	-- time (hidden off screen)
-	s.iconTime = {}
-	s.iconTime.x = screenWidth + 10
-	s.iconTime.y = screenHeight + 10
-	s.iconTime.h = 34
-	s.iconTime.layer = LAYER_FRAME
-	s.iconTime.position = LAYOUT_NONE
-	s.iconTime.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
-	s.iconTime.fg = TEXT_COLOR
+	s.button_time = {}
+	s.button_time.x = screenWidth + 10
+	s.button_time.y = screenHeight + 10
+	s.button_time.h = 34
+	s.button_time.layer = LAYER_FRAME
+	s.button_time.position = LAYOUT_NONE
+	s.button_time.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
+	s.button_time.fg = TEXT_COLOR
 
 
 	-- Window title, this is a Label
@@ -755,23 +755,23 @@ function skin(self, s)
 	s.popupIcon.text2.position = LAYOUT_SOUTH
 	s.popupIcon.text2.h = 40
 
-	s.iconPower = {}
-	s.iconPower.img = _loadImage(self, "Alerts/popup_shutdown_icon.png")
-	s.iconPower.w = WH_FILL
-	s.iconPower.align = 'center'
+	s.icon_power = {}
+	s.icon_power.img = _loadImage(self, "Alerts/popup_shutdown_icon.png")
+	s.icon_power.w = WH_FILL
+	s.icon_power.align = 'center'
 
 	-- connecting/connected popup icon (likely deprecated in deference to s.popupIcon.ico)
-	s.iconConnecting = largeSpinny
+	s.icon_connecting = largeSpinny
 
-	s.iconConnected = {}
-	s.iconConnected.img = _loadImage(self, "Alerts/connecting_success_icon.png")
-	s.iconConnected.w = WH_FILL
-	s.iconConnected.align = "center"
+	s.icon_connected = {}
+	s.icon_connected.img = _loadImage(self, "Alerts/connecting_success_icon.png")
+	s.icon_connected.w = WH_FILL
+	s.icon_connected.align = "center"
 
-	s.iconLocked = {}
-	s.iconLocked.img = _loadImage(self, "Alerts/popup_locked_icon.png")
-	s.iconLocked.w = WH_FILL
-	s.iconLocked.align = "center"
+	s.icon_locked = {}
+	s.icon_locked.img = _loadImage(self, "Alerts/popup_locked_icon.png")
+	s.icon_locked.w = WH_FILL
+	s.icon_locked.align = "center"
 
 	s.iconAlarm = {}
 	s.iconAlarm.img = _loadImage(self, "Alerts/popup_alarm_icon.png")
@@ -1092,20 +1092,20 @@ function skin(self, s)
 	s.pressed.buttoniconitemchecked   = _uses(s.buttoniconitemchecked, buttonPressed)
 
 	-- window with one option in "button" style
-	s.onebutton = _uses(s.setup)
-	s.onebutton.menu = _uses(s.buttonmenu, {
+	s.one_button = _uses(s.setup)
+	s.one_button.menu = _uses(s.buttonmenu, {
 			position = LAYOUT_SOUTH,
 			h = THREE_ITEM_HEIGHT
 		})
 
-	s.onebutton.text = {}
-	s.onebutton.text.w = screenWidth
-	s.onebutton.text.position = LAYOUT_NORTH
-	s.onebutton.text.padding = { 16, 72, 35, 2 }
-	s.onebutton.text.font = _font(36)
-	s.onebutton.text.lineHeight = 40
-	s.onebutton.text.fg = TEXT_COLOR
-	s.onebutton.text.sh = TEXT_SH_COLOR
+	s.one_button.text = {}
+	s.one_button.text.w = screenWidth
+	s.one_button.text.position = LAYOUT_NORTH
+	s.one_button.text.padding = { 16, 72, 35, 2 }
+	s.one_button.text.font = _font(36)
+	s.one_button.text.lineHeight = 40
+	s.one_button.text.fg = TEXT_COLOR
+	s.one_button.text.sh = TEXT_SH_COLOR
 	
 	-- menus with artwork and song info
 	-- FIXME: this needs to be tweaked for Fab4Skin

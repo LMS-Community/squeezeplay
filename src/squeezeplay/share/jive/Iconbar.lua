@@ -163,7 +163,7 @@ Updates the iconbar.
 function update(self)
 	log:debug("Iconbar:update()")
 
-	self.iconTime:setValue(datetime:getCurrentTime())
+	self.button_time:setValue(datetime:getCurrentTime())
 end
 
 
@@ -180,29 +180,29 @@ function __init(self)
 
 	local obj = oo.rawnew(self, {
 	        -- FIXME the background should be an icon, but icons use Surfaces not Tiles.
-		iconBackground = Label("iconBackground", ""),
+		background = Label("iconBackground", ""),
 		iconPlaymode = Icon("iconPlaymodeOFF"),
 		iconRepeat = Icon("iconRepeatOFF"),
 		iconPlaylistMode = Icon("iconPlaylistModeOFF"),
 		iconShuffle = Icon("iconShuffleOFF"),
 		iconBattery = Icon("iconBatteryNONE"),
 		iconWireless = Icon("iconWirelessNONE"),
-		iconTime = Label("iconTime", "XXXX"),
+		button_time = Label("iconTime", "XXXX"),
 	})
 
 
 	obj:update()
 
-	Framework:addWidget(obj.iconBackground)
+	Framework:addWidget(obj.background)
 	Framework:addWidget(obj.iconPlaymode)
 	Framework:addWidget(obj.iconRepeat)
 	Framework:addWidget(obj.iconPlaylistMode)
 	Framework:addWidget(obj.iconShuffle)
 	Framework:addWidget(obj.iconBattery)
 	Framework:addWidget(obj.iconWireless)
-	Framework:addWidget(obj.iconTime)
+	Framework:addWidget(obj.button_time)
 
-	obj.iconTime:addTimer(1000,  -- every second
+	obj.button_time:addTimer(1000,  -- every second
 			      function() 
 				      obj:update()
 			      end)

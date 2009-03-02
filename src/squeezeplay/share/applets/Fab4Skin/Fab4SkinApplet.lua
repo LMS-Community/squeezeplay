@@ -664,18 +664,14 @@ function skin(self, s)
 	--
 	-- These styles override the default styles for a specific window
 
-	-- setup window
-	s.setuplist = _uses(s.window)
-
-
 	-- window with one option in "button" style
-	s.onebutton = _uses(s.setuplist)
-	s.onebutton.menu = _uses(_buttonMenu, {
+	s.one_button = _uses(s.text_list)
+	s.one_button.menu = _uses(_buttonMenu, {
 			position = LAYOUT_SOUTH,
 			h = THREE_ITEM_HEIGHT
 	})
 
-	s.onebutton.menu.item = {
+	s.one_button.menu.item = {
 		order = { "text", "arrow" },
 		padding = 0,
 		bgImg = threeItemSelectionBox,
@@ -696,16 +692,16 @@ function skin(self, s)
 		}
 	}
 
-	s.onebutton.menu.selected = {
-		item = _uses(s.onebutton.menu.item)
+	s.one_button.menu.selected = {
+		item = _uses(s.one_button.menu.item)
 	}
-	s.onebutton.menu.pressed = {
-		item = _uses(s.onebutton.menu.item, { 
+	s.one_button.menu.pressed = {
+		item = _uses(s.one_button.menu.item, { 
 				bgImg = threeItemPressedBox 
 		})
 	}
 
-	s.onebutton.text = {
+	s.one_button.text = {
 		w = screenWidth,
 		position = LAYOUT_NORTH,
 		padding = { 16, 72, 35, 2 },
@@ -717,24 +713,24 @@ function skin(self, s)
 
 
 	-- window with multiple options in "button" style
-	s.buttonlist = _uses(s.window)
+	s.button_list = _uses(s.window)
 
-	s.buttonlist.title = _uses(s.title, {
+	s.button_list.title = _uses(s.title, {
 		h = 55
 	})
 
-	s.buttonlist.menu = {
+	s.button_list.menu = {
 		padding = 0,
 		w = WH_FILL,
 		itemHeight = THREE_ITEM_HEIGHT,
 	}
 
-	s.buttonlist.menu.item = _uses(_buttonItem, {
+	s.button_list.menu.item = _uses(_buttonItem, {
 		order = { "icon", "text", "arrow" },
 		icon  = s.buttonicon,
 	})
 
-	s.buttonlist.menu.itemChecked = _uses(_buttonItem, {
+	s.button_list.menu.itemChecked = _uses(_buttonItem, {
 		order = { 'icon', 'text', 'check', 'arrow' },
 		check = {
 			img     = _loadImage(self, "Icons/icon_check_3line.png"), 
@@ -744,15 +740,15 @@ function skin(self, s)
 		}
 	})
 
-	s.buttonlist.menu.selected = {
-		item = _uses(s.buttonlist.menu.item),
-		itemChecked = _uses(s.buttonlist.menu.itemChecked),
+	s.button_list.menu.selected = {
+		item = _uses(s.button_list.menu.item),
+		itemChecked = _uses(s.button_list.menu.itemChecked),
 	}
-	s.buttonlist.menu.pressed = {
-		item = _uses(s.buttonlist.menu.item, { 
+	s.button_list.menu.pressed = {
+		item = _uses(s.button_list.menu.item, { 
 			bgImg = threeItemPressedBox 
 		}),
-		itemChecked = _uses(s.buttonlist.menu.itemChecked, { 
+		itemChecked = _uses(s.button_list.menu.itemChecked, { 
 			bgImg = threeItemPressedBox 
 		}),
 	}
@@ -933,12 +929,12 @@ function skin(self, s)
 	s.help = _uses(s.window)
 
 
-	--tracklist window
+	--track_list window
 	-- XXXX todo
 	-- identical to text_list but has icon in upper left of titlebar
-	s.tracklist = _uses(s.text_list)
+	s.track_list = _uses(s.text_list)
 
-	s.tracklist.title = _uses(s.title, {
+	s.track_list.title = _uses(s.title, {
 		order = { 'lbutton', 'icon', 'text', 'rbutton' },		
 		icon  = {
 			w = THUMB_SIZE,
@@ -1144,25 +1140,25 @@ function skin(self, s)
 		h   = THUMB_SIZE,
 	}
 
-	s.iconConnecting = _uses(_icon, {
+	s.icon_connecting = _uses(_icon, {
 		img = _loadImage(self, "Alerts/wifi_connecting.png"),
 		frameRate = 8,
 		frameWidth = 120,
 	})
 
-	s.iconConnected = _uses(_icon, {
+	s.icon_connected = _uses(_icon, {
 		img = _loadImage(self, "Alerts/connecting_success_icon.png"),
 	})
 
-	s.iconSoftwareUpdate = _uses(_icon, {
+	s.icon_software_update = _uses(_icon, {
 		img = _loadImage(self, "Icons/icon_firmware_update_100.png"),
 	})
 
-	s.iconPower = _uses(_icon, {
+	s.icon_power = _uses(_icon, {
 		img = _loadImage(self, "Alerts/popup_shutdown_icon.png"),
 	})
 
-	s.iconLocked = _uses(_icon, {
+	s.icon_locked = _uses(_icon, {
 		img = _loadImage(self, "Alerts/popup_locked_icon.png"),
 	})
 
@@ -1238,7 +1234,7 @@ function skin(self, s)
 --------- ICONBAR ---------
 
 	-- time (hidden off screen)
-	s.iconTime = {
+	s.button_time = {
 		x = screenWidth + 10,
 		y = screenHeight + 10,
 		layer = LAYER_FRAME,

@@ -180,7 +180,7 @@ function setupScanShow(self, setupNext)
 	local window = Popup("waiting")
 	window:setAllowScreensaver(false)
 
-	window:addWidget(Icon("iconConnecting"))
+	window:addWidget(Icon("icon_connecting"))
 	window:addWidget(Label("text", self:string("NETWORK_FINDING_NETWORKS")))
 
 	-- wait for network scan (in task)
@@ -783,7 +783,7 @@ function connect(self, keepConfig)
 	-- Progress window
 	local window = Popup("waiting")
 
-	local icon  = Icon("iconConnecting")
+	local icon  = Icon("icon_connecting")
 	icon:addTimer(1000, function()
 				    self:_connectTimer()
 			    end)
@@ -914,7 +914,7 @@ function connectOK(self)
 
 	-- popup confirmation
 	local window = Popup("waiting")
-	window:addWidget(Icon("iconConnected"))
+	window:addWidget(Icon("icon_connected"))
 
 	local text = Label("text", self:string("NETWORK_CONNECTED_TO", self.currentSSID))
 	window:addWidget(text)
@@ -1265,7 +1265,7 @@ function removeNetwork(self, ssid)
 
 	-- popup confirmation
 	local window = Popup("waiting")
-	window:addWidget(Icon("iconConnected"))
+	window:addWidget(Icon("icon_connected"))
 
 	local text = Label("text", self:string("NETWORK_FORGOTTEN_NETWORK", ssid))
 	window:addWidget(text)
