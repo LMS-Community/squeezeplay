@@ -1,9 +1,10 @@
 
+local ipairs, pairs = ipairs, pairs
+
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
 
-local Canvas        = require("jive.ui.Canvas")
 local Framework     = require("jive.ui.Framework")
 
 local debug         = require("jive.utils.debug")
@@ -26,63 +27,21 @@ end
 
 
 function registerApplet(meta)
+	meta:registerService('debugSkin')
+	meta:registerService('debugStyle')
 end
 
 
 function configureApplet(meta)
-	Framework:addActionListener("debug_skin", meta, _debugSkin, 9999)
-end
+	-- XXXX debugStyle turned on by default for now, this needs
+	-- turning off once the skins are complete
 
-
-function _debugWidget(meta, screen, widget)
-	if meta.mouseEvent and widget:mouseInside(meta.mouseEvent) then
-		local x,y,w,h = widget:getBounds()
-		local l,t,r,b = widget:getBorder()
-
-		screen:filledRectangle(x-l,y-t, x+w+r,y, 0x00FF003F)
-		screen:filledRectangle(x-l,y+h, x+w+r,y+h+b, 0x00FF003F)
-
-		screen:filledRectangle(x-l,y, x,y+h, 0x00FF003F)
-		screen:filledRectangle(x+w,y, x+w+r,y+h, 0x00FF003F)
-
-		screen:filledRectangle(x,y, x+w,y+h, 0xFF00003F)
-
-		log:info("-> ", widget, " (", x, ",", y, " ", w, "x", h, ")")
-	end
-
-	widget:iterate(function(child)
-		_debugWidget(meta, screen, child)
+	Framework:addActionListener("debug_skin", meta, function()
+		appletManager:callService("debugSkin")
+		--appletManager:callService("debugStyle")
 	end)
-end
 
-
-function _debugSkin(meta)
-	if meta.enabled then
-		meta.enabled = nil
-
-		Framework:removeWidget(meta.canvas)
-		Framework:removeListener(meta.mouseListener)
-
-		return
-	end
-
-	meta.enabled = true
-
-	meta.canvas = Canvas("blank", function(screen)
-		local window = Framework.windowStack[1]
-
-		log:info("Mouse in: ", window)
-		window:iterate(function(w)
-			_debugWidget(meta, screen, w)
-		end)
-	end)
-	Framework:addWidget(meta.canvas)
-
-	meta.mouseListener = Framework:addListener(EVENT_MOUSE_ALL,
-		function(event)
-			meta.mouseEvent = event
-			Framework:reDraw(nil)
-		end, -99)
+	appletManager:callService("debugStyle")
 end
 
 
