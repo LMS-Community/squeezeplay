@@ -918,8 +918,8 @@ if false then
 	s.help = _uses(s.window)
 	s.help.title = _uses(s.titleNoRbutton)
 
-	s.setup = _uses(s.window)
-	s.setup.title = _uses(s.titleNoRbutton)
+	s.setuplist = _uses(s.window)
+	s.setuplist.title = _uses(s.titleNoRbutton)
 
 	s.settings = _uses(s.window)
 	s.settings.title = _uses(s.titleNoRbutton)
@@ -1752,11 +1752,11 @@ end -- OLD STYLES
 	-- These styles override the default styles for a specific window
 
 	-- setup window
-	s.setup = _uses(s.window)
+	s.setuplist = _uses(s.window)
 
 
 	-- window with one option in "button" style
-	s.onebutton = _uses(s.setup)
+	s.onebutton = _uses(s.setuplist)
 	s.onebutton.menu = _uses(_buttonMenu, {
 			position = LAYOUT_SOUTH,
 			h = THREE_ITEM_HEIGHT
@@ -1893,11 +1893,11 @@ end -- OLD STYLES
 	}
 
 	-- thumblist window
-	s.list = _uses(s.window)
+	s.textlist = _uses(s.window)
 	-- XXXX todo
 
 	-- thumblist window
-	s.thumblist = _uses(s.window)
+	s.iconlist = _uses(s.window)
 	-- XXXX todo
 
 

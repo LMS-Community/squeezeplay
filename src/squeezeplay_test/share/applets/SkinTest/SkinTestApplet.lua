@@ -156,14 +156,14 @@ end
 
 
 --[[
-Window:   "setup"
+Window:   "setuplist"
 Menu:     "menu"
 Item:     "item", "itemchecked"
 --]]
 function setup_window(self, item)
 	local data = _itemData(item)
 
-	local window = Window("setup", _itemName(item), "setup")
+	local window = Window("setuplist", _itemName(item), "setup")
 	_windowActions(self, item, window)
 
 	local selected = nil
@@ -389,10 +389,10 @@ end
 Window:   "list"
 -- XXXX
 --]]
-function setup_list(self, item)
+function setup_textlist(self, item)
 	local data = _itemData(item)
 
-	local window = Window("list", _itemName(item), "home")
+	local window = Window("textlist", _itemName(item), "home")
 	_windowActions(self, item, window)
 
 	-- TODO
@@ -404,13 +404,13 @@ end
 
 
 --[[
-Window:   "thumblist"
+Window:   "iconlist"
 -- XXXX
 --]]
-function setup_thumblist(self, item)
+function setup_iconlist(self, item)
 	local data = _itemData(item)
 
-	local window = Window("thumblist", _itemName(item), "artists")
+	local window = Window("iconlist", _itemName(item), "artists")
 	_windowActions(self, item, window)
 
 	-- TODO
@@ -437,8 +437,8 @@ windows = {
 	{ "input_wpa", "Wireless Password", setup_input, },
 	{ "error", "Error", setup_error, },
 	{ "update", "Software Update", setup_update, },
-	{ "list", "List", setup_list, },
-	{ "thumblist", "Thumblist", setup_thumblist, },
+	{ "textlist", "Text List", setup_textlist, },
+	{ "iconlist", "Icon List", setup_iconlist, },
 }
 
 
