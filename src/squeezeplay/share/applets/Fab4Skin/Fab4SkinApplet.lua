@@ -139,11 +139,12 @@ function skin(self, s)
 	Framework.mostRecentInputType = "mouse"
 
 	-- Images and Tiles
-	local titleBox          = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
-	local fiveItemSelectionBox      = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line.png")
+	local titleBox                = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
+	local fiveItemSelectionBox    = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line.png")
 	local fiveItemPressedBox      = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line_press.png")
-	local threeItemSelectionBox = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line.png")
-	local threeItemPressedBox   = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line_press.png")
+	local threeItemSelectionBox   = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line.png")
+	local threeItemPressedBox     = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line_press.png")
+	local keyboardPressedBox      = Tile:loadImage( imgpath .. "Buttons/keyboard_button_press.png")
 
 	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = Tile:loadImage( imgpath .. "Buttons/button_help_tb.png")
@@ -469,10 +470,10 @@ function skin(self, s)
 	})
 
 	s.itemNoArrow = _uses(s.item, {
-		order = { 'text' },
+		order = { 'icon', 'text' },
 	})
 	s.itemCheckedNoArrow = _uses(s.item, {
-		order = { 'text', 'check' },
+		order = { 'icon', 'text', 'check' },
 	})
 
 	s.selected = {
@@ -625,13 +626,22 @@ function skin(self, s)
 
 	s.keyboard.pressed = {
 		button = _uses(s.keyboard.button, {
-			bgImg = fiveItemPressedBox
+			bgImg = keyboardPressedBox
+		}),
+		enter = _uses(s.keyboard.enter, {
+			bgImg = keyboardPressedBox
+		}),
+		search = _uses(s.keyboard.search, {
+			bgImg = keyboardPressedBox
+		}),
+		back = _uses(s.keyboard.back, {
+			bgImg = keyboardPressedBox
 		}),
 		shift = _uses(s.keyboard.shift, {
-			bgImg = fiveItemPressedBox
+			bgImg = keyboardPressedBox
 		}),
 		space = _uses(s.keyboard.space, {
-			bgImg = fiveItemPressedBox
+			bgImg = keyboardPressedBox
 		}),
 	}
 
@@ -856,12 +866,20 @@ function skin(self, s)
 	s.iconlist.menu.itemAdd  = _uses(s.iconlist.menu.item, { 
 		arrow = addArrow,
 	})
+	s.iconlist.menu.itemNoArrow = _uses(s.iconlist.menu.item, {
+		order = { 'icon', 'text' },
+	})
+	s.iconlist.menu.itemCheckedNoArrow = _uses(s.iconlist.menu.itemChecked, {
+		order = { 'icon', 'text', 'check' },
+	})
 
 	s.iconlist.menu.selected = {
-                item        = _uses(s.iconlist.menu.item),
-                itemChecked = _uses(s.iconlist.menu.itemChecked),
-		itemPlay    = _uses(s.iconlist.menu.itemPlay),
-		itemAdd     = _uses(s.iconlist.menu.itemAdd),
+                item               = _uses(s.iconlist.menu.item),
+                itemChecked        = _uses(s.iconlist.menu.itemChecked),
+		itemPlay           = _uses(s.iconlist.menu.itemPlay),
+		itemAdd            = _uses(s.iconlist.menu.itemAdd),
+		itemNoArrow        = _uses(s.iconlist.menu.itemNoArrow),
+		itemCheckedNoArrow = _uses(s.iconlist.menu.itemCheckedNoArrow),
         }
         s.iconlist.menu.pressed = {
                 item = _uses(s.iconlist.menu.item, { 
@@ -874,6 +892,12 @@ function skin(self, s)
 			bgImg = threeItemPressedBox 
 		}),
                 itemAdd = _uses(s.iconlist.menu.itemAdd, { 
+			bgImg = threeItemPressedBox 
+		}),
+                itemNoArrow = _uses(s.iconlist.menu.itemNoArrow, { 
+			bgImg = threeItemPressedBox 
+		}),
+                itemCheckedNoArrow = _uses(s.iconlist.menu.itemCheckedNoArrow, { 
 			bgImg = threeItemPressedBox 
 		}),
         }

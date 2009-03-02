@@ -391,7 +391,8 @@ end
 -- return a table that can be used as a backspace bar in keyboards
 function _backspaceButton(self)
 	return {	
-		icon	 = Icon("keyboard.back"),
+		--icon	 = Icon("keyboard.back"),
+		icon	 = Icon("back"),
 		callback = function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
 			Framework:dispatchEvent(nil, e) 
