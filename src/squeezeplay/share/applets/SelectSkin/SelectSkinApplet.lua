@@ -44,7 +44,7 @@ oo.class(_M, Applet)
 
 
 function selectSkin(self, menuItem)
-	local window = Window("window", menuItem.text, 'settingstitle')
+	local window = Window("text_list", menuItem.text, 'settingstitle')
 	local menu = SimpleMenu("menu")
 	menu:setComparator(menu.itemComparatorAlpha)
 

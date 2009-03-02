@@ -102,7 +102,7 @@ end
 
 function autoplayShow(self, countdown)
 	-- Create window
-	local window = Window("window", self:string("MACRO_AUTOSTART"))
+	local window = Window("text_list", self:string("MACRO_AUTOSTART"))
 	local menu = SimpleMenu("menu", items)
 	local help = Textarea("text", "")
 
@@ -189,7 +189,7 @@ end
 
 function settingsShow(self)
 	-- Create window
-	local window = Window("window", self:string("MACRO_PLAY"))
+	local window = Window("text_list", self:string("MACRO_PLAY"))
 	local menu = SimpleMenu("menu", items)
 	local help = Textarea("help_text", "")
 

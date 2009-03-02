@@ -294,7 +294,7 @@ function _licenseMenuItem(self)
 		text = self:string("CREDITS"),
 		sound = "WINDOWSHOW",
 		callback = function()
-			local window = Window("window", self:string("CREDITS"))
+			local window = Window("text_list", self:string("CREDITS"))
 			
 			local text =
 				tostring(self:string("CREATIVE_COMMONS")) ..

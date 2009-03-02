@@ -21,7 +21,7 @@ oo.class(_M, Applet)
 
 
 function popupWindow(self, text)
-	local popup = Window("window")
+	local popup = Window("text_list")
 	local text = Textarea("text", text)
 	popup:addWidget(text)
 	self:tieWindow(popup)
@@ -99,7 +99,7 @@ end
 
 function DisplayTest(self)
 
-	local window = Window("window")
+	local window = Window("text_list")
 	self.window = window
 
 	self.icon = Icon("icon")

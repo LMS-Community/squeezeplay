@@ -226,7 +226,7 @@ end
 
 
 function setupWelcomeShow(self, setupNext)
-	local window = Window("window", self:string("WELCOME"), welcomeTitleStyle)
+	local window = Window("text_list", self:string("WELCOME"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
 	local textarea = Textarea("text", self:string("WELCOME_WALKTHROUGH"))
@@ -251,7 +251,7 @@ end
 
 
 function setupConnectionShow(self, setupSqueezebox, setupNetwork)
-	local window = Window("window", self:string("WIRELESS_CONNECTION"), welcomeTitleStyle)
+	local window = Window("text_list", self:string("WIRELESS_CONNECTION"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu")
@@ -276,7 +276,7 @@ end
 
 
 function setupDoneShow(self, setupNext)
-	local window = Window("window", self:string("DONE"), welcomeTitleStyle)
+	local window = Window("text_list", self:string("DONE"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu")

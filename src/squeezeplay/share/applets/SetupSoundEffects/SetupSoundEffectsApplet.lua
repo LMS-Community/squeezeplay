@@ -111,7 +111,7 @@ function settingsShow(self, menuItem)
 
 	local settings = self:getSettings()
 
-	local window = Window("window", menuItem.text, 'settingstitle')
+	local window = Window("text_list", menuItem.text, 'settingstitle')
 	local menu = SimpleMenu("menu")
 	menu:setComparator(menu.itemComparatorWeightAlpha)
 
@@ -247,7 +247,7 @@ end
 
 
 function volumeShow(self)
-	local window = Window("window", self:string("SOUND_EFFECTS_VOLUME"), "settingstitle")
+	local window = Window("text_list", self:string("SOUND_EFFECTS_VOLUME"), "settingstitle")
 
 	self.slider = Slider("volume_slider", 0, VOLUME_STEPS, Sample:getEffectVolume() / VOLUME_STEP,
 			     function(slider, value)
@@ -310,7 +310,7 @@ function _customMenu(self, custom)
 		text = self:string("SOUND_CUSTOMIZE"),
 		weight = 100,
 		callback = function(event, item)
- 					   local window = Window("window", item.text)
+ 					   local window = Window("text_list", item.text)
 					   local menu = SimpleMenu("menu")
 					   menu:setComparator(menu.itemComparatorAlpha)
 					   window:addWidget(Textarea("help_text", self:string("SOUND_CUSTOM_HELP")))
@@ -328,7 +328,7 @@ end
 
 
 function _customSoundMenu(self, sound, custom)
-	local window = Window("window", self:string("SOUND_" .. sound))
+	local window = Window("text_list", self:string("SOUND_" .. sound))
 	local menu = SimpleMenu("menu")
 	local group = RadioGroup()
 	menu:setComparator(menu.itemComparatorWeightAlpha)

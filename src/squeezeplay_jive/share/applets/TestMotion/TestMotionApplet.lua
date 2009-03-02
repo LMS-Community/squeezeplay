@@ -25,7 +25,7 @@ oo.class(_M, Applet)
 
 
 function settingsShow(self)
-	local window = Window("window", self:string("TEST_MOTION"), 'settingstitle')
+	local window = Window("text_list", self:string("TEST_MOTION"), 'settingstitle')
 --"Test Motion")
 
 	self.valX = Slider("slider", 0, 127, 0)

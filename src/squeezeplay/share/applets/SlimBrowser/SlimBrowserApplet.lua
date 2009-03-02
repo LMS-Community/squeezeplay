@@ -691,7 +691,7 @@ local function _userTriggeredUpdate(self)
 			return
 	end
 
-	local window = Window("window", self:string('SLIMBROWSER_PLAYER_UPDATE_REQUIRED'))
+	local window = Window("text_list", self:string('SLIMBROWSER_PLAYER_UPDATE_REQUIRED'))
 	local label = Textarea("text", self:string('SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX', _player:getName()))
 	window:addWidget(label)
 	window:setAlwaysOnTop(true)
@@ -2766,7 +2766,7 @@ end
 
 function _problemConnecting(self, server)
 	-- open connection error window
-	local window = Window("window", self:string("SLIMBROWSER_PROBLEM_CONNECTING"), 'settingstitle')
+	local window = Window("text_list", self:string("SLIMBROWSER_PROBLEM_CONNECTING"), 'settingstitle')
 
 	local menu = SimpleMenu("menu")
 

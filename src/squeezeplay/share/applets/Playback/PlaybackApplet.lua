@@ -43,7 +43,7 @@ oo.class(_M, Applet)
 function settingsShow(self, metaState)
 	local settings = self:getSettings()
 
-	local window = Window("window", self:string("AUDIO_PLAYBACK"))
+	local window = Window("text_list", self:string("AUDIO_PLAYBACK"))
 	local menu = SimpleMenu("menu", items)
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 	window:addWidget(menu)
@@ -117,7 +117,7 @@ local decoders = {
 }
 
 function _debugMenu(self)
-	local window = Window("window", self:string("DEBUG_AUDIO"))
+	local window = Window("text_list", self:string("DEBUG_AUDIO"))
 	window:setAllowScreensaver(false)
 
 	local values = {}
@@ -153,7 +153,7 @@ end
 
 
 function _tonesMenu(self)
-	local window = Window("window", self:string("TEST_TONES"))
+	local window = Window("text_list", self:string("TEST_TONES"))
 
 	local menu = SimpleMenu("menu", {
 		{ text = self:string("MULTITONE"),

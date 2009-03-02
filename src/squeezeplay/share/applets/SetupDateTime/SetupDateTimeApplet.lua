@@ -45,7 +45,7 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 function settingsShow(self, menuItem)
-	local window = Window("window", menuItem.text, datetimeTitleStyle)
+	local window = Window("text_list", menuItem.text, datetimeTitleStyle)
 
 	local curHours = ""
 	if self:getSettings()["hours"] == 12 then
@@ -100,7 +100,7 @@ function settingsShow(self, menuItem)
 end
 
 function timeSetting(self, menuItem)
-	local window = Window("window", menuItem.text, datetimeTitleStyle)
+	local window = Window("text_list", menuItem.text, datetimeTitleStyle)
 	local group = RadioGroup()
 
 	local current = self:getSettings()["hours"]
@@ -129,7 +129,7 @@ function timeSetting(self, menuItem)
 end
 
 function dateFormatSetting(self, menuItem)
-	local window = Window("window", menuItem.text, datetimeTitleStyle)
+	local window = Window("text_list", menuItem.text, datetimeTitleStyle)
 	local group = RadioGroup()
 
 	local current = self:getSettings()["dateformat"]
@@ -174,7 +174,7 @@ function _getDateHelpString(dateString)
 end
 
 function weekstartSetting(self, menuItem)
-	local window = Window("window", menuItem.text, datetimeTitleStyle)
+	local window = Window("text_list", menuItem.text, datetimeTitleStyle)
 	local group = RadioGroup()
 
 	local current = self:getSettings()["weekstart"]

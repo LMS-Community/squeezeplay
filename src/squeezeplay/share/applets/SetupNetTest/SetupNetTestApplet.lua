@@ -170,7 +170,7 @@ end
 
 
 function showHelpWindow(self)
-	local window = Window("window", self:string('SETUPNETTEST_HELPTITLE'))
+	local window = Window("text_list", self:string('SETUPNETTEST_HELPTITLE'))
 	local help = Textarea("text", self:string('SETUPNETTEST_HELP'))
 
 	window:addWidget(help)

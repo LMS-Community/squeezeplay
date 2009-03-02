@@ -43,7 +43,7 @@ local gulp    = 20     -- get this many entries per request
 function menu(self, menuItem)
 
 	local list = {}
-	local window = Window("window", menuItem.text, "infobrowsertitle")
+	local window = Window("text_list", menuItem.text, "infobrowsertitle")
 	local menu = SimpleMenu("menu", list)
 	window:addWidget(menu)
 
@@ -123,7 +123,7 @@ function response(self, result, window, widget, list, prevmenu, locked)
 				sound = "WINDOWSHOW",
 				callback = function(_, menuItem)
 							   local newlist = {}
-							   local newwindow = Window("window", menuItem.text)
+							   local newwindow = Window("text_list", menuItem.text)
 							   -- assume new level is a menu for the moment, this is replaced later if it is not
 							   local newmenu = SimpleMenu("menu", newlist)
 							   newwindow:addWidget(newmenu)

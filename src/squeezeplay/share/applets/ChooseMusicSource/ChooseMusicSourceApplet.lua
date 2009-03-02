@@ -70,7 +70,7 @@ end
 -- main setting menu
 function settingsShow(self)
 
-	local window = Window("window", self:string("SLIMSERVER_SERVERS"), self.titleStyle)
+	local window = Window("text_list", self:string("SLIMSERVER_SERVERS"), self.titleStyle)
 	local menu = SimpleMenu("menu", items)
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 	window:addWidget(menu)
@@ -468,7 +468,7 @@ end
 
 -- ip address input window
 function _addServer(self, menuItem)
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 
 	local v = Textinput.ipAddressValue(self:_getOtherServer() or "0.0.0.0")
 	local input = Textinput("textinput", v,

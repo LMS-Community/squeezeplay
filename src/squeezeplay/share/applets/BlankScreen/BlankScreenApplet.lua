@@ -40,7 +40,7 @@ function init(self)
 	self.sw, self.sh = Framework:getScreenSize()
 
 	-- create window and icon
-	self.window = Window("window")
+	self.window = Window("text_list")
 	self.bg  = Surface:newRGBA(self.sw, self.sh)
 	self.bg:filledRectangle(0, 0, self.sw, self.sh, 0x000000FF)
 

@@ -424,7 +424,7 @@ function setBrightness(self, level)
 end
 
 function settingsBrightnessShow(self, menuItem)
-	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
+	local window = Window("text_list", menuItem.text, squeezeboxjiveTitleStyle)
 
 	local level = jiveBSP.ioctl(12) / 2047
 
@@ -465,7 +465,7 @@ end
 
 
 function settingsBacklightTimerShow(self, menuItem)
-	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
+	local window = Window("text_list", menuItem.text, squeezeboxjiveTitleStyle)
 
 	local settings = self:getSettings()
 	local timeout = settings.dimmedTimeout
@@ -778,7 +778,7 @@ end
 function settingsPowerDown(self, menuItem)
         log:debug("powerDown menu")
 	-- add window
-	local window = Window("window", menuItem.text, 'settingstitle')
+	local window = Window("text_list", menuItem.text, 'settingstitle')
 	window:addWidget(Textarea("help_text", self:string("POWER_DOWN_HELP")))
 
 	local menu = SimpleMenu("menu")
@@ -870,7 +870,7 @@ end
 
 
 function settingsTestSuspend(self, menuItem)
-	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
+	local window = Window("text_list", menuItem.text, squeezeboxjiveTitleStyle)
 
 	local settings = self:getSettings()
 

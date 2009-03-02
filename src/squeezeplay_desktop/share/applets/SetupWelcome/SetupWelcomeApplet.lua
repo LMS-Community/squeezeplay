@@ -140,7 +140,7 @@ end
 
 
 function setupWelcome(self, setupNext)
-	local window = Window("window", self:string("WELCOME"), welcomeTitleStyle)
+	local window = Window("text_list", self:string("WELCOME"), welcomeTitleStyle)
 
 	local textarea = Textarea("text", self:string("WELCOME_WALKTHROUGH"))
 	local help = Textarea("help_text", self:string("WELCOME_HELP"))
@@ -162,7 +162,7 @@ end
 
 
 function setupDone(self, setupNext)
-	local window = Window("window", self:string("DONE"), welcomeTitleStyle)
+	local window = Window("text_list", self:string("DONE"), welcomeTitleStyle)
 	local menu = SimpleMenu("menu")
 
 	menu:addItem({ text = self:string("DONE_CONTINUE"),

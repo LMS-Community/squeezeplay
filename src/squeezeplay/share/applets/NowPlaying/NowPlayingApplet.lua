@@ -453,7 +453,7 @@ end
 --
 
 function _createUI(self)
-	local window = Window("window")
+	local window = Window("text_list")
 
 	customStyle = windowStyle
 	if windowStyle == 'ss' then
@@ -503,7 +503,7 @@ function _createUI(self)
 		text = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
 
 		rbutton = Button(
-				Label("text", ""), 
+				Label("rbutton", ""), 
 				function() 
 					Framework:pushAction("go")
 					return EVENT_CONSUME 
@@ -638,7 +638,7 @@ end
 
 function displaySizeSetting(self, menuItem)
 
-	local window  = Window("window", menuItem.text, 'settingstitle')
+	local window  = Window("text_list", menuItem.text, 'settingstitle')
         local group   = RadioGroup()
         local current = self:getSettings()["screensaverArtworkSize"]
 

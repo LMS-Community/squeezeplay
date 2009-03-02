@@ -249,7 +249,7 @@ function menu(self, menuItem)
 				end },
 		})
 
-	local window = Window("window", "Test") -- is a really long title to test the bounding box")
+	local window = Window("text_list", "Test") -- is a really long title to test the bounding box")
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -258,7 +258,7 @@ end
 
 
 function sortedMenuWindow(self, menuItem)
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 	local menu = SimpleMenu("menu")
 	menu:setComparator(menu.itemComparatorAlpha)
 
@@ -298,7 +298,7 @@ function menuWindow(self, menuItem, style)
 		menuStyle = style .. "menu"
 		itemStyle = style .. "item"
 	end
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 	local menu = SimpleMenu(menuStyle)
 	window:addWidget(menu)
 
@@ -316,7 +316,7 @@ end
 
 function textWindow(self, menuItem, filename)
 
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 
 	filename = System:findFile(filename)
 	local fh = io.open(filename, "rb")
@@ -340,7 +340,7 @@ end
 
 function sliderWindow(self, menuItem)
 
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 
 	local slider = Slider("slider", 1, 20, 5,
 		function(slider, value, done)
@@ -396,7 +396,7 @@ end
 
 function keyboardWindow(self, menuItem, style)
 
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 
 	local v = Textinput.textValue("", 8, 20)
 
@@ -419,7 +419,7 @@ end
 
 function textinputWindow(self, menuItem)
 
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 
 --	local v = Textinput.textValue("A test string which is so long it goes past the end of the window", 8)
 	local v = Textinput.textValue("", 8, 10)
@@ -444,7 +444,7 @@ end
 
 
 function timeinputWindow(self, menuItem)
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 
 	local v = Textinput.timeValue("00:00")
 	local input = Textinput("textinput", v,
@@ -466,7 +466,7 @@ function timeinputWindow(self, menuItem)
 end
 
 function hexinputWindow(self, menuItem)
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 
 	local v = Textinput.hexValue("000000000000")
 	local input = Textinput("textinput", v,
@@ -489,7 +489,7 @@ end
 
 
 function ipinputWindow(self, menuItem)
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 
 	local v = Textinput.ipAddressValue("0.0.0.0")
 	local input = Textinput("textinput", v,
@@ -633,7 +633,7 @@ end
 
 function imageWindow(self, menuItem, filename)
 
-	local window = Window("window")
+	local window = Window("text_list")
 
 	local image = Surface:loadImage(filename)
 	if image == nil then

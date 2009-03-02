@@ -344,7 +344,7 @@ function timeoutSetting(self, menuItem)
 
 	local timeout = self:getSettings()["timeout"]
 	
-	local window = Window("window", menuItem.text, 'settingstitle')
+	local window = Window("text_list", menuItem.text, 'settingstitle')
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
@@ -432,7 +432,7 @@ function openSettings(self, menuItem)
 			     })
 	end
 
-	local window = Window("window", menuItem.text, 'settingstitle')
+	local window = Window("text_list", menuItem.text, 'settingstitle')
 	window:addWidget(menu)
 
 	-- Store the applet settings when the window is closed

@@ -11,7 +11,7 @@ The window widget, extends L<jive.ui.Widget>. This is a container for other widg
 =head1 SYNOPSIS
 
  -- Create a new window with title "Jive" and title style "hometitle"
- local window = jive.ui.Window("window", "Jive", "hometitle")
+ local window = jive.ui.Window("text_list", "Jive", "hometitle")
 
  -- Show the window on the screen
  window:show()

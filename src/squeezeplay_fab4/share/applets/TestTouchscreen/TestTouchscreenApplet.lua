@@ -41,7 +41,7 @@ local pathHistory = {}
 
 
 function popupWindow(self, text)
-	local popup = Window("window")
+	local popup = Window("text_list")
 	local text = Textarea("text", text)
 	popup:addWidget(text)
 	self:tieWindow(popup)
@@ -884,7 +884,7 @@ function _drawSpots(self)
 end
 
 function touchscreenTest(self)
-	self.window = Window("window")
+	self.window = Window("text_list")
 
 	self.w, self.h = Framework:getScreenSize()
 

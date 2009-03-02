@@ -172,13 +172,13 @@ function menu(self, menuItem)
 	local menu = SimpleMenu("menu",  homeMenuItems  )
 	menu:setComparator(menu.itemComparatorComplexWeightAlpha)
 
-	local window = Window("window", self:string("CUSTOMIZE_HOME"), 'settingstitle')
+	local window = Window("text_list", self:string("CUSTOMIZE_HOME"), 'settingstitle')
 	window:addWidget(menu)
 	window:show()
 end
 
 function restoreDefaultsMenu(self, id)
-	local window = Window("window", self:string("CUSTOMIZE_RESTORE_DEFAULTS"), 'settingstitle')
+	local window = Window("text_list", self:string("CUSTOMIZE_RESTORE_DEFAULTS"), 'settingstitle')
         local menu = SimpleMenu("menu", {
 		{
 			text = self:string("CUSTOMIZE_CANCEL"),

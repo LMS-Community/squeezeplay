@@ -23,7 +23,7 @@ oo.class(_M, Applet)
 
 
 function settingsShow(self, menuItem)
-	local window = Window("window", menuItem.text, 'settingstitle')
+	local window = Window("text_list", menuItem.text, 'settingstitle')
 
 	local menu = SimpleMenu("menu", {
 					{

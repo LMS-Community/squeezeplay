@@ -84,7 +84,7 @@ function _changeDutyCycle(self, newValue)
 end
 
 function menuSetControl(self)
-	local window = Window("window", "Change Control...")
+	local window = Window("text_list", "Change Control...")
 	local group = RadioGroup()
 
 	local menu = SimpleMenu("menu") 
@@ -107,7 +107,7 @@ function menuSetControl(self)
 end
 
 function menuSetDutyCycle(self)
-	local window = Window("window", "Change Duty Cycle...")
+	local window = Window("text_list", "Change Duty Cycle...")
 	local group = RadioGroup()
 
         local menu = SimpleMenu("menu") 
@@ -130,7 +130,7 @@ function menuSetDutyCycle(self)
 end
 
 function openWindow(self)
-	local window = Window("window", 'FactoryTest: Proximity')
+	local window = Window("text_list", 'FactoryTest: Proximity')
 
 
 	mainMenu = SimpleMenu("menu")

@@ -85,7 +85,7 @@ end
 
 
 function IRTest(self)
-	local window = Window("window")
+	local window = Window("text_list")
 	self.window = window
 
 	self.background = Surface:loadImage("applets/TestIR/TestIR.png")

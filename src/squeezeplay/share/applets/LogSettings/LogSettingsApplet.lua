@@ -81,7 +81,7 @@ end
 function logSettings(self, menuItem)
 
 	local logCategories = _gatherLogCategories()
-	local window = Window("window", menuItem.text, 'settingstitle')
+	local window = Window("text_list", menuItem.text, 'settingstitle')
 	local menu = SimpleMenu("menu", logCategories)
 	menu:setComparator(menu.itemComparatorAlpha)
 

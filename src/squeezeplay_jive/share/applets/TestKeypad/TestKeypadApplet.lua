@@ -63,7 +63,7 @@ end
 
 
 function _completedShow(self)
-	local popup = Window("window")
+	local popup = Window("text_list")
 	popup:addWidget(Textarea("text", self:string("TEST_COMPLETE")))
 
 	self:tieWindow(popup)
@@ -131,7 +131,7 @@ end
 
 
 function KeypadTest(self)
-	local window = Window("window")
+	local window = Window("text_list")
 	self.window = window
 
 	self.background = Surface:loadImage("applets/TestKeypad/Keypad.png")

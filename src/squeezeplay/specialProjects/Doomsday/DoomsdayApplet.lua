@@ -113,7 +113,7 @@ function menu(self, menuItem)
 	})
 
 	-- create a window object
-	local window = Window("window", self:string("DOOMSDAY")) 
+	local window = Window("text_list", self:string("DOOMSDAY")) 
 	
 	-- add the SimpleMenu to the window
 	window:addWidget(menu)

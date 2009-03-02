@@ -90,7 +90,7 @@ end
 
 
 function popupMessage(self, title, msg)
-	local popup = Window("window", title)
+	local popup = Window("text_list", title)
 	local text = Textarea("text", msg)
 	popup:addWidget(text)
 
@@ -105,7 +105,7 @@ end
 
 
 function openSettings(self, menuItem)
-	local window = Window("window", menuItem.text, flickrTitleStyle)
+	local window = Window("text_list", menuItem.text, flickrTitleStyle)
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
@@ -151,7 +151,7 @@ end
 
 function defineFlickrId(self, menuItem)
 
-    local window = Window("window", self:string("SCREENSAVER_FLICKR_FLICKR_ID"), flickrTitleStyle)
+    local window = Window("text_list", self:string("SCREENSAVER_FLICKR_FLICKR_ID"), flickrTitleStyle)
 
 	local flickrid = self:getSettings()["flickr.idstring"]
 	if flickrid == nil then
@@ -187,7 +187,7 @@ function defineTransition(self, menuItem)
 
 	local trans = self:getSettings()["flickr.transition"]
 	
-	local window = Window("window", menuItem.text, flickrTitleStyle)
+	local window = Window("text_list", menuItem.text, flickrTitleStyle)
 	window:addWidget(SimpleMenu("menu",
 		{
             {
@@ -268,7 +268,7 @@ function displaySetting(self, menuItem)
 
 	local display = self:getSettings()["flickr.display"]
 	
-	local window = Window("window", menuItem.text, flickrTitleStyle)
+	local window = Window("text_list", menuItem.text, flickrTitleStyle)
 	window:addWidget(SimpleMenu("menu",
 		{
             {
@@ -338,7 +338,7 @@ function timeoutSetting(self, menuItem)
 
 	local timeout = self:getSettings()["flickr.timeout"]
 
-	local window = Window("window", menuItem.text, flickrTitleStyle)
+	local window = Window("text_list", menuItem.text, flickrTitleStyle)
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
@@ -591,7 +591,7 @@ function _detailsShow(self)
 	http:fetch(req)
 
 	-- open window
-	local window = Window("window", self.photo.title .. " (" .. self.photo.ownername .. ")")
+	local window = Window("text_list", self.photo.title .. " (" .. self.photo.ownername .. ")")
 	window:addWidget(self.commentText)
 	window:show()
 end

@@ -63,7 +63,7 @@ oo.class(_M, Applet)
 
 function menu(self, menuItem)
 
-	self.window = Window("window", menuItem.text)
+	self.window = Window("text_list", menuItem.text)
 	self.title = menuItem.text
 
 	-- find a server

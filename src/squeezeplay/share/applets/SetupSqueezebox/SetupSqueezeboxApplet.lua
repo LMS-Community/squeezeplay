@@ -120,7 +120,7 @@ end
 
 -- setup squeezebox
 function setupSqueezeboxSettingsShow(self, keepOldEntries)
-	local window = Window("window", self:string("SQUEEZEBOX_SETUP"), setupsqueezeboxTitleStyle)
+	local window = Window("text_list", self:string("SQUEEZEBOX_SETUP"), setupsqueezeboxTitleStyle)
 
 	-- window to return to on completion of network settings
 	self.topWindow = window
@@ -350,7 +350,7 @@ end
 
 -- allow the user to choose between wired or wireless connection
 function _wiredOrWireless(self)
-	local window = Window("window", self:string("SQUEEZEBOX_NETWORK_CONNECTION"), setupsqueezeboxTitleStyle)
+	local window = Window("text_list", self:string("SQUEEZEBOX_NETWORK_CONNECTION"), setupsqueezeboxTitleStyle)
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu", {{
@@ -434,7 +434,7 @@ function _enterIP(self)
 
 	local v = Textinput.ipAddressValue(address)
 
-	local window = Window("window", self:string("SQUEEZEBOX_IP_ADDRESS"), setupsqueezeboxTitleStyle)
+	local window = Window("text_list", self:string("SQUEEZEBOX_IP_ADDRESS"), setupsqueezeboxTitleStyle)
 	window:setAllowScreensaver(false)
 
 	window:addWidget(Textarea("help_text", self:string("SQUEEZEBOX_IP_ADDRESS_HELP")))
@@ -1150,7 +1150,7 @@ end
 
 -- menu allowing the user to choose the slimserver they want to connect to
 function _chooseSlimserver(self)
-	local window = Window("window", self:string("SQUEEZEBOX_MUSIC_SOURCE"), setupsqueezeboxTitleStyle)
+	local window = Window("text_list", self:string("SQUEEZEBOX_MUSIC_SOURCE"), setupsqueezeboxTitleStyle)
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu")

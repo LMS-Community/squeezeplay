@@ -157,7 +157,7 @@ function _changeGain(self, newValue)
 end
 
 function menuSetGain(self)
-	local window = Window("window", "Set Gain...")
+	local window = Window("text_list", "Set Gain...")
 	local group = RadioGroup()
 
         local menu = SimpleMenu("menu", {          
@@ -182,7 +182,7 @@ function menuSetGain(self)
 end
 
 function menuSetIntegration(self)
-	local window = Window("window", "Change Integration Time...")
+	local window = Window("text_list", "Change Integration Time...")
 	local group = RadioGroup()
 
         local menu = SimpleMenu("menu", {          
@@ -214,7 +214,7 @@ function menuSetIntegration(self)
 end
 
 function openWindow(self)
-	local window = Window("window", 'FactoryTest: Ambient Light Sensor')
+	local window = Window("text_list", 'FactoryTest: Ambient Light Sensor')
 
 	-- Initialize Gain and Integration Time to Default Values of this Applet
 	self:_changeGain(curGain)

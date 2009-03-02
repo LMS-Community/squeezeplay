@@ -94,7 +94,7 @@ function _enterDone(self)
 end
 
 function _helpWindow(self, title, token)
-	local window = Window("window", self:string(title), self.titleStyle)
+	local window = Window("text_list", self:string(title), self.titleStyle)
 	window:setAllowScreensaver(false)
 	window:addWidget(Textarea("text", self:string(token)))
 
@@ -103,7 +103,7 @@ function _helpWindow(self, title, token)
 end
 
 function _enterTextWindow(self, key, title, help, next)
-	local window = Window("window", self:string(title), self.titleStyle)
+	local window = Window("text_list", self:string(title), self.titleStyle)
 
 	local input = Textinput("textinput", self[key] or "",
 				function(_, value)
