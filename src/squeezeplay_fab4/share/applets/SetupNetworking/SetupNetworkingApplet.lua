@@ -54,11 +54,7 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
 -- configuration
 local CONNECT_TIMEOUT = 30
-local wirelessTitleStyle = 'setuptitle'
-
--- 01/27/09 - fm - WPS - begin
 local WPS_WALK_TIMEOUT = 120		-- WPS walk timeout
--- 01/27/09 - fm - WPS - end
 
 
 module(..., Framework.constants)
@@ -80,8 +76,6 @@ function _helpWindow(self, titleText, bodyText)
 	local textarea = Textarea("text", self:string(bodyText))
 	window:addWidget(textarea)
 	self:tieAndShowWindow(window)
-
-	return window
 end
 
 
@@ -136,15 +130,9 @@ function _connectionType(self)
 	local window = Window("buttonlist", self:string("NETWORK_CONNECTION_TYPE"), "setup")
 	window:setAllowScreensaver(false)
 
-	window:addActionListener("help", self, function()
-		self:_helpWindow("NETWORK_CONNECTION_HELP", "NETWORK_CONNECTION_HELP_BODY")
-	end)
-	window:setButtonAction("rbutton", "help")
-
 	local connectionMenu = SimpleMenu("menu")
 
 	connectionMenu:addItem({
-		style = 'item',
 		iconStyle = 'wlan',
 		text = (self:string("NETWORK_CONNECTION_TYPE_WIRELESS")),
 		sound = "WINDOWSHOW",
@@ -155,7 +143,6 @@ function _connectionType(self)
 	})
 	
 	connectionMenu:addItem({
-		style = 'item',
 		iconStyle = 'wired',
 		text = (self:string("NETWORK_CONNECTION_TYPE_WIRED")),
 		sound = "WINDOWSHOW",
@@ -167,6 +154,11 @@ function _connectionType(self)
 
 	window:addWidget(connectionMenu)
 
+	window:addActionListener("help", self, function()
+		_helpWindow(self, "NETWORK_CONNECTION_HELP", "NETWORK_CONNECTION_HELP_BODY")
+	end)
+	window:setButtonAction("rbutton", "help")
+
 	self:tieAndShowWindow(window)
 end
 
@@ -177,11 +169,6 @@ end
 function _wirelessRegion(self, wlan)
 	local window = Window("buttonlist", self:string("NETWORK_REGION"), "setup")
 	window:setAllowScreensaver(false)
-
-	window:addActionListener("help", self, function()
-		self:_helpWindow("NETWORK_REGION", "NETWORK_REGION_HELP")
-	end)
-	window:setButtonAction("rbutton", "help")
 
 	local region = wlan:getRegion()
 
@@ -195,7 +182,6 @@ function _wirelessRegion(self, wlan)
 		log:debug("region=", region, " name=", name)
 		local item = {
 			text = self:string("NETWORK_REGION_" .. name),
-			style = 'item',
 			iconStyle = "region_" .. name,
 			sound = "WINDOWSHOW",
 			callback = function()
@@ -215,6 +201,11 @@ function _wirelessRegion(self, wlan)
 	end
 
 	window:addWidget(menu)
+
+	window:addActionListener("help", self, function()
+		_helpWindow(self, "NETWORK_REGION", "NETWORK_REGION_HELP")
+	end)
+	window:setButtonAction("rbutton", "help")
 
 	self:tieAndShowWindow(window)
 end
@@ -240,7 +231,7 @@ function _setCurrentSSID(self, ssid)
 
 	if self.currentSSID and self.scanResults[self.currentSSID] then
 		local item = self.scanResults[self.currentSSID].item
-		item.style = "checked"
+		item.style = "itemchecked"
 		if self.scanMenu then
 			self.scanMenu:updatedItem(item)
 		end
@@ -318,19 +309,14 @@ end
 function _networkScanComplete(self, iface)
 	-- for ethernet, automatically connect
 	if not iface:isWireless() then
-		self:_scanResults(iface)
+		_scanResults(self, iface)
 
 		-- XXXX CONNECT
 		return _connect(self, iface, iface:getName(), true)
 	end
 
-	local window = Window("setup", self:string("NETWORK_WIRELESS_NETWORKS"), wirelessTitleStyle)
+	local window = Window("setuplist", self:string("NETWORK_WIRELESS_NETWORKS"), 'setuptitle')
 	window:setAllowScreensaver(false)
-
-	window:addActionListener("help", self, function()
-		self:_helpWindow("NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY")
-	end)
-	window:setButtonAction("rbutton", "help")
 
 	-- window to return to on completion of network settings
 	-- XXXX not needed?
@@ -363,6 +349,11 @@ function _networkScanComplete(self, iface)
 				_scanResults(self, iface)
 			end)
 		end)
+
+	window:addActionListener("help", self, function()
+		_helpWindow(self, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY")
+	end)
+	window:setButtonAction("rbutton", "help")
 
 	self:tieAndShowWindow(window)
 end
@@ -418,7 +409,7 @@ function _scanResults(self, iface)
 	end
 
 	-- update current ssid 
-	self:_setCurrentSSID(associated)
+	_setCurrentSSID(self, associated)
 end
 
 
@@ -452,7 +443,7 @@ end
 
 
 function _chooseEnterSSID(self, iface)
-	local window = Window("setup", self:string("NETWORK_DONT_SEE_YOUR_NETWORK"), wirelessTitleStyle)
+	local window = Window("setuplist", self:string("NETWORK_DONT_SEE_YOUR_NETWORK"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu", {
@@ -474,7 +465,7 @@ function _chooseEnterSSID(self, iface)
 	window:addWidget(menu)
 
 	window:addActionListener("help", self, function()
-		self:_helpWindow("NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY")
+		_helpWindow(self, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY")
 	end)
 	window:setButtonAction("rbutton", "help")
 
@@ -485,7 +476,7 @@ end
 function _enterSSID(self, iface)
 	assert(iface, debug.traceback())
 
-	local window = Window("window", self:string("NETWORK_NETWORK_NAME"), wirelessTitleStyle)
+	local window = Window("input", self:string("NETWORK_NETWORK_NAME"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local textinput = Textinput("textinput", "",
@@ -502,19 +493,16 @@ function _enterSSID(self, iface)
 				    end
 			    )
 
-	local helpButton = Button( 
-		Icon('rbutton'), 
-		function() 
-			self:helpWindow('NETWORK_NETWORK_NAME', 'NETWORK_NETWORK_NAME_HELP') 
-		end 
-	)
-	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(textinput)
 	window:addWidget(Keyboard("keyboard", 'qwerty'))
 	window:focusWidget(textinput)
 
+	window:addActionListener("help", self, function()
+		_helpWindow(self, 'NETWORK_NETWORK_NAME', 'NETWORK_NETWORK_NAME_HELP') 
+	end)
+	window:setButtonAction("rbutton", "help")
+
 	self:tieAndShowWindow(window)
-	return window
 end
 
 
@@ -575,7 +563,7 @@ end
 function _chooseEncryption(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	local window = Window("setup", self:string("NETWORK_WIRELESS_ENCRYPTION"), wirelessTitleStyle)
+	local window = Window("setuplist", self:string("NETWORK_WIRELESS_ENCRYPTION"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu", {
@@ -624,7 +612,7 @@ function _chooseEncryption(self, iface, ssid)
 	window:addWidget(menu)
 
 	window:addActionListener("help", self, function()
-		self:_helpWindow("NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
+		_helpWindow(self, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
 	end)
 	window:setButtonAction("rbutton", "help")
 
@@ -635,7 +623,7 @@ end
 function _chooseWEPLength(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	local window = Window("buttonlist", self:string("NETWORK_WIRELESS_ENCRYPTION"), wirelessTitleStyle)
+	local window = Window("buttonlist", self:string("NETWORK_WIRELESS_ENCRYPTION"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu", {
@@ -659,7 +647,7 @@ function _chooseWEPLength(self, iface, ssid)
 	window:addWidget(menu)
 
 	window:addActionListener("help", self, function()
-		self:_helpWindow("NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
+		_helpWindow(self, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
 	end)
 	window:setButtonAction("rbutton", "help")
 
@@ -670,7 +658,7 @@ end
 function _enterWEPKey(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	local window = Window("input", self:string("NETWORK_WIRELESS_KEY"), wirelessTitleStyle)
+	local window = Window("input", self:string("NETWORK_WIRELESS_KEY"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local v
@@ -701,7 +689,7 @@ function _enterWEPKey(self, iface, ssid)
 	window:focusWidget(textinput)
 
 	window:addActionListener("help", self, function()
-		self:_helpWindow('NETWORK_WIRELESS_KEY', 'NETWORK_WIRELESS_KEY_HELP') 
+		_helpWindow(self, 'NETWORK_WIRELESS_KEY', 'NETWORK_WIRELESS_KEY_HELP') 
 	end)
 	window:setButtonAction("rbutton", "help")
 
@@ -712,7 +700,7 @@ end
 function _enterPSK(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	local window = Window("input", self:string("NETWORK_WIRELESS_PASSWORD"), wirelessTitleStyle)
+	local window = Window("input", self:string("NETWORK_WIRELESS_PASSWORD"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local v = Textinput.textValue(self.psk, 8, 63)
@@ -735,7 +723,7 @@ function _enterPSK(self, iface, ssid)
 	window:focusWidget(textinput)
 
 	window:addActionListener("help", self, function()
-		self:_helpWindow('NETWORK_WIRELESS_PASSWORD', 'NETWORK_WIRELESS_PASSWORD_HELP')
+		_helpWindow(self, 'NETWORK_WIRELESS_PASSWORD', 'NETWORK_WIRELESS_PASSWORD_HELP')
 	end)
 	window:setButtonAction("rbutton", "help")
 
@@ -744,7 +732,7 @@ end
 
 
 function _enterEAP(self, iface, ssid)
-	local window = Window("error", self:string('NETWORK_ERROR'), wirelessTitleStyle)
+	local window = Window("error", self:string('NETWORK_ERROR'), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local help = Textarea("text", self:string("NETWORK_UNSUPPORTED_TYPES_HELP"))
@@ -761,7 +749,7 @@ function _chooseWPS(self, iface, ssid)
 	local wpspin = iface:generateWPSPin()
 
 	-- ask the user to choose
-	local window = Window("setup", self:string("NETWORK_WPS_METHOD"), wirelessTitleStyle)
+	local window = Window("setuplist", self:string("NETWORK_WPS_METHOD"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local connectionMenu = SimpleMenu("menu")
@@ -795,12 +783,11 @@ function _chooseWPS(self, iface, ssid)
 	})
 
 	window:addActionListener("help", self, function()
-		self:_helpWindow("NETWORK_WPS_HELP", "NETWORK_WPS_HELP_BODY")
+		_helpWindow(self, "NETWORK_WPS_HELP", "NETWORK_WPS_HELP_BODY")
 	end)
 	window:setButtonAction("rbutton", "help")
 
 	self:tieAndShowWindow(window)
-	return window
 end
 
 
@@ -833,7 +820,7 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 	popup:addWidget(status)
 
 	popup:addTimer(1000, function()
-			self:_timerWPS(iface, ssid)
+			_timerWPS(self, iface, ssid)
 
 			local remaining_walk_time = WPS_WALK_TIMEOUT - self.processWPSTimeout
 			status:setValue(self:string("NETWORK_WPS_REMAINING_WALK_TIME", tostring(remaining_walk_time)))
@@ -902,7 +889,7 @@ function processWPSFailed(self, iface, ssid, reason)
 	local helpText = self:string("NETWORK_WPS_PROBLEM_HELP")
 
 	-- popup failure
-	local window = Window("error", self:string("NETWORK_ERROR"), wirelessTitleStyle)
+	local window = Window("error", self:string("NETWORK_ERROR"), 'setuptitle')
 	local errorMessage = Textarea('text', self:string("NETWORK_WPS_PROBLEM"))
 	window:setAllowScreensaver(false)
 
@@ -939,10 +926,7 @@ function processWPSFailed(self, iface, ssid, reason)
 	window:addWidget(help)
 	window:addWidget(menu)
 
-	self:tieWindow(window)
-	window:show()
-
-	return window
+	self:tieAndShowWindow(window)
 end
 
 
@@ -969,7 +953,7 @@ function _connect(self, iface, ssid, createNetwork)
 	local icon  = Icon("iconConnecting")
 	icon:addTimer(1000,
 		function()
-			self:_connectTimer(iface, ssid)
+			_connectTimer(self, iface, ssid)
 		end)
 	window:addWidget(icon)
 
@@ -992,11 +976,11 @@ function _selectNetworkTask(self, iface, ssid, createNetwork)
 
 	-- remove any existing network config
 	if createNetwork then
-		self:_removeNetworkTask(iface, ssid)
+		_removeNetworkTask(self, iface, ssid)
 	end
 
 	-- ensure the network state exists
-	self:_setCurrentSSID(nil)
+	_setCurrentSSID(self, nil)
 	if self.scanResults[ssid] == nil then
 		_addNetwork(self, iface, ssid)
 	end
@@ -1024,9 +1008,28 @@ function _selectNetworkTask(self, iface, ssid, createNetwork)
 end
 
 
+-- remove the network configuration
+function _removeNetworkTask(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
+	iface:t_removeNetwork(ssid)
+
+	if self.scanResults[ssid] then
+		-- remove from menu
+		local item = self.scanResults[ssid].item
+		if self.scanMenu then
+			self.scanMenu:removeItem(item)
+		end
+
+		-- clear entry
+		self.scanResults[ssid] = nil
+	end
+end
+
+
 -- warning if ethernet cable is not connected
 function _attachEthernet(self, iface, ssid, createNetwork)
-	local window = Window("setup", self:string("NETWORK_ATTACH_CABLE"))
+	local window = Window("setuplist", self:string("NETWORK_ATTACH_CABLE"))
         window:setAllowScreensaver(false)
 
 	local textarea = Textarea('text', self:string("NETWORK_ATTACH_CABLE_DETAILED"))
@@ -1042,7 +1045,7 @@ function _attachEthernet(self, iface, ssid, createNetwork)
 					if status.link then
 						log:debug("connected")
 						window:hide()
-						self:_connect(iface, ssid, createNetwork)
+						_connect(self, iface, ssid, createNetwork)
 					end
              			end
 			):addTask()
@@ -1101,7 +1104,7 @@ function _connectFailedTask(self, iface, ssid)
 
 	if self.createdNetwork then
 		-- Remove failed network
-		self:_removeNetworkTask(iface, ssid)
+		_removeNetworkTask(self, iface, ssid)
 		self.createdNetwork = nil
 	end
 end
@@ -1117,7 +1120,7 @@ function _connectSuccess(self, iface, ssid)
 
 	log:debug("connection OK ", ssid)
 
-	self:_setCurrentSSID(ssid)
+	_setCurrentSSID(self, ssid)
 
 	-- forget connection state
 	self.encryption = nil
@@ -1169,7 +1172,7 @@ function _connectFailed(self, iface, ssid, reason)
 
 
 	-- popup failure
-	local window = Window("error", self:string('NETWORK_ERROR'), wirelessTitleStyle)
+	local window = Window("error", self:string('NETWORK_ERROR'), 'setuptitle')
 	local errorMessage = Textarea("text", self:string("NETWORK_CONNECTION_PROBLEM"))
 	window:setAllowScreensaver(false)
 
@@ -1207,10 +1210,7 @@ function _connectFailed(self, iface, ssid, reason)
 	window:addWidget(help)
 	window:addWidget(menu)
 
-	self:tieWindow(window)
-	window:show()
-
-	return window
+	self:tieAndShowWindow(window)
 end
 
 
@@ -1232,7 +1232,7 @@ end
 function _failedDHCPandWPA(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	local window = Window("error", self:string("NETWORK_ERROR"), wirelessTitleStyle)
+	local window = Window("error", self:string("NETWORK_ERROR"), 'setuptitle')
 	local errorMessage = Textarea('text', self:string("NETWORK_ADDRESS_PROBLEM"))
 	window:setAllowScreensaver(false)
 
@@ -1273,14 +1273,13 @@ function _failedDHCPandWPA(self, iface, ssid)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
-	return window
 end
 
 
 function _failedDHCPandWEP(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	local window = Window("error", self:string("NETWORK_ERROR"), wirelessTitleStyle)
+	local window = Window("error", self:string("NETWORK_ERROR"), 'setuptitle')
 	local errorMessage = Textarea("text", self:string("NETWORK_CONNECTION_PROBLEM"))
 	window:setAllowScreensaver(false)
 
@@ -1326,7 +1325,6 @@ function _failedDHCPandWEP(self, iface, ssid)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
-	return window
 end
 
 
@@ -1413,7 +1411,7 @@ function _enterIP(self, iface, ssid)
 
 	local v = Textinput.ipAddressValue(self.ipAddress or "0.0.0.0")
 
-	local window = Window("window", self:string("NETWORK_IP_ADDRESS"), wirelessTitleStyle)
+	local window = Window("input", self:string("NETWORK_IP_ADDRESS"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local textinput = Textinput("textinput", v,
@@ -1427,28 +1425,30 @@ function _enterIP(self, iface, ssid)
 					   self.ipSubnet = _subnet(self)
 
 					   widget:playSound("WINDOWSHOW")
-					   self:enterSubnet(iface, ssid)
+					   _enterSubnet(self, iface, ssid)
 					   return true
 				   end)
 	local keyboard = Keyboard("keyboard", "numeric")
-	local helpButton = Button( Icon('rbutton'), function() self:helpWindow('NETWORK_IP_ADDRESS', 'NETWORK_IP_ADDRESS_HELP') end )
 
-	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(textinput)
 	window:addWidget(keyboard)
 	window:focusWidget(textinput)
 
+	window:addActionListener("help", self, function()
+		_helpWindow(self, 'NETWORK_IP_ADDRESS', 'NETWORK_IP_ADDRESS_HELP')
+	end)
+	window:setButtonAction("rbutton", "help")
+
 	self:tieAndShowWindow(window)
-	return window
 end
 
 
-function enterSubnet(self, iface, ssid)
+function _enterSubnet(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
 	local v = Textinput.ipAddressValue(self.ipSubnet)
 
-	local window = Window("window", self:string("NETWORK_SUBNET"), wirelessTitleStyle)
+	local window = Window("input", self:string("NETWORK_SUBNET"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local textinput = Textinput("textinput", v,
@@ -1459,29 +1459,30 @@ function enterSubnet(self, iface, ssid)
 					   self.ipGateway = _gateway(self)
 
 					   widget:playSound("WINDOWSHOW")
-					   self:enterGateway(iface, ssid)
+					   _enterGateway(self, iface, ssid)
 					   return true
 				   end)
 	local keyboard = Keyboard("keyboard", "numeric")
-	local helpButton = Button( Icon('rbutton'), function() self:helpWindow('NETWORK_SUBNET', 'NETWORK_SUBNET_HELP') end )
 
-	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(textinput)
 	window:addWidget(keyboard)
 	window:focusWidget(textinput)
 
+	window:addActionListener("help", self, function()
+		_helpWindow(self, 'NETWORK_SUBNET', 'NETWORK_SUBNET_HELP')
+	end)
+	window:setButtonAction("rbutton", "help")
 
 	self:tieAndShowWindow(window)
-	return window
 end
 
 
-function enterGateway(self, iface, ssid)
+function _enterGateway(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
 	local v = Textinput.ipAddressValue(self.ipGateway)
 
-	local window = Window("window", self:string("NETWORK_GATEWAY"), wirelessTitleStyle)
+	local window = Window("input", self:string("NETWORK_GATEWAY"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local textinput = Textinput("textinput", v,
@@ -1496,29 +1497,31 @@ function enterGateway(self, iface, ssid)
 					   self.ipDNS = self.ipGateway
 
 					   widget:playSound("WINDOWSHOW")
-					   self:enterDNS(iface, ssid)
+					   _enterDNS(self, iface, ssid)
 					   return true
 				   end)
 
 	local keyboard = Keyboard("keyboard", "numeric")
-	local helpButton = Button( Icon('rbutton'), function() self:helpWindow('NETWORK_GATEWAY', 'NETWORK_GATEWAY_HELP') end )
 
-	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(textinput)
 	window:addWidget(keyboard)
 	window:focusWidget(textinput)
 
+	window:addActionListener("help", self, function()
+		self:helpWindow('NETWORK_GATEWAY', 'NETWORK_GATEWAY_HELP')
+	end)
+	window:setButtonAction("rbutton", "help")
+
 	self:tieAndShowWindow(window)
-	return window
 end
 
 
-function enterDNS(self, iface, ssid)
+function _enterDNS(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
 	local v = Textinput.ipAddressValue(self.ipDNS)
 
-	local window = Window("window", self:string("NETWORK_DNS"), wirelessTitleStyle)
+	local window = Window("input", self:string("NETWORK_DNS"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local textinput = Textinput("textinput", v,
@@ -1532,23 +1535,25 @@ function enterDNS(self, iface, ssid)
 					   self.ipDNS = value
 
 					   widget:playSound("WINDOWSHOW")
-					   self:setStaticIP(iface, ssid)
+					   _setStaticIP(self, iface, ssid)
 					   return true
 				   end)
 	local keyboard = Keyboard("keyboard", "numeric")
-	local helpButton = Button( Icon('rbutton'), function() self:helpWindow('NETWORK_DNS', 'NETWORK_DNS_HELP') end )
 
-	window:getTitleWidget():setWidget('rbutton', helpButton)
 	window:addWidget(textinput)
 	window:addWidget(keyboard)
 	window:focusWidget(textinput)
 
+	window:addActionListener("help", self, function()
+		_helpWindow(self, 'NETWORK_DNS', 'NETWORK_DNS_HELP')
+	end)
+	window:setButtonAction("rbutton", "help")
+
 	self:tieAndShowWindow(window)
-	return window
 end
 
 
-function setStaticIP(self, iface, ssid)
+function _setStaticIP(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
 	log:debug("setStaticIP addr=", self.ipAddress, " subnet=", self.ipSubnet, " gw=", self.ipGateway, " dns=", self.ipDNS)
@@ -1568,112 +1573,6 @@ function setStaticIP(self, iface, ssid)
 		connectOK(self, iface, ssid)
 	end):addTask()
 end
-
-
--- XXXX needed?
-function _removeNetworkTask(self, iface, ssid)
-	assert(iface and ssid, debug.traceback())
-
-	iface:t_removeNetwork(ssid)
-
-	if self.scanResults[ssid] then
-		-- remove from menu
-		local item = self.scanResults[ssid].item
-		if self.scanMenu then
-			self.scanMenu:removeItem(item)
-		end
-
-		-- clear entry
-		self.scanResults[ssid] = nil
-	end
-end
-
-
--- XXXX needed?
-function removeNetwork(self, iface, ssid)
-	assert(iface and ssid, debug.traceback())
-
-	-- forget the network
-	Task("networkRemove", self, _removeNetworkTask):addTask(iface, ssid)
-
-	-- popup confirmation
-	local window = Popup("popupIcon")
-	window:addWidget(Icon("iconConnected"))
-
-	local text = Label("text", self:string("NETWORK_FORGOTTEN_NETWORK", ssid))
-	window:addWidget(text)
-
-	self:tieWindow(window)
-	window:showBriefly(2000, function() _hideToTop(self) end)
-
-	return window
-end
-
-
--- XXXX needed?
-function connectOrDelete(self, iface, ssid)
-	assert(iface and ssid, debug.traceback())
-
-	local window = Window("window", ssid, wirelessTitleStyle)
-	window:setAllowScreensaver(false)
-
-	local menu = SimpleMenu("menu",
-				{
-					{
-						text = self:string("NETWORK_CONNECT_TO_NETWORK"), nil,
-						sound = "WINDOWSHOW",
-						callback = function()
-								   connect(self, iface, ssid)
-							   end
-					},
-					{
-						text = self:string("NETWORK_FORGET_NETWORK"), nil,
-						sound = "WINDOWSHOW",
-						callback = function()
-								   deleteConfirm(self, iface, ssid)
-							   end
-					},
-				})
-
-	window:addWidget(menu)
-
-	self:tieAndShowWindow(window)
-	return window
-end
-
-
--- XXXX needed?
-function deleteConfirm(self, iface, ssid)
-	assert(iface and ssid, debug.traceback())
-
-	local window = Window("window", self:string("NETWORK_FORGET_NETWORK"), wirelessTitleStyle)
-	window:setAllowScreensaver(false)
-
-	local menu = SimpleMenu("menu",
-				{
-					{
-						text = self:string("NETWORK_FORGET_CANCEL"), nil,
-						sound = "WINDOWHIDE",
-						callback = function()
-								   window:hide()
-							   end
-					},
-					{
-						text = self:string("NETWORK_FORGET_CONFIRM", ssid), nil,
-						sound = "WINDOWSHOW",
-						callback = function()
-								   removeNetwork(self, iface, ssid)
-							   end
-					},
-				})
-
-	window:addWidget(Textarea("help", self:string("NETWORK_FORGET_HELP", ssid)))
-	window:addWidget(menu)
-
-	self:tieAndShowWindow(window)
-	return window
-end
-
 
 
 -------- NETWORK STATUS --------
@@ -1738,7 +1637,7 @@ function settingsNetworkStatus(self, isWired)
 	-- XXXX remove isWired and detect automatically
 	local iface = isWired and self.ethIface or self.wlanIface
 
-	local window = Window("setup", self:string("NETWORK_STATUS"), wirelessTitleStyle)
+	local window = Window("setup", self:string("NETWORK_STATUS"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local values = {}
@@ -1765,14 +1664,6 @@ function settingsNetworkStatus(self, isWired)
 		}
 	end
 
-	items[#items + 1] = {
-		text = self:string("NETWORK_FORGET_NETWORK"), nil,
-		sound = "WINDOWSHOW",
-		callback = function()
-			deleteConfirm(self, iface, self.currentSSID)
-		end
-	}
-
 	-- FIXME format this nicely
 	local menu = SimpleMenu("menu", items)
 	window:addWidget(menu)
@@ -1784,7 +1675,6 @@ function settingsNetworkStatus(self, isWired)
 		end)
 
 	self:tieAndShowWindow(window)
-	return window
 end
 
 
