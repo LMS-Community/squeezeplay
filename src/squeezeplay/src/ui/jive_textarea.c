@@ -414,7 +414,7 @@ static unsigned utf8decode(unsigned char **utf8) {
 static void wordwrap(TextareaWidget *peer, unsigned char *text, int visible_lines, Uint16 scrollbar_width, bool has_scrollbar) {
 
 	// maximum text width
-	Uint16 width = peer->w.preferred_bounds.w - peer->w.padding.left - peer->w.padding.right;
+	Uint16 width = peer->w.bounds.w - peer->w.padding.left - peer->w.padding.right;
 
 	// lines points to the start of each line
 	int max_lines = 100;

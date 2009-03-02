@@ -503,7 +503,7 @@ function _createUI(self)
 		text = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
 
 		rbutton = Button(
-				Label("text", ""), 
+				Label("rbutton", ""), 
 				function() 
 					Framework:pushAction("go")
 					return EVENT_CONSUME 

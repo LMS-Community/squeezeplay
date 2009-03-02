@@ -872,14 +872,14 @@ function onStage(self)
 	self.slimServer.comet:endBatch()
 
 	-- create window to display current song info
-	self.currentSong.window = Popup("currentsong")
+	self.currentSong.window = Popup("toast")
 	self.currentSong.window:setAllowScreensaver(true)
 	self.currentSong.window:setAlwaysOnTop(true)
 	self.currentSong.artIcon = Icon("icon")
 	self.currentSong.text = Label("text", "")
-	self.currentSong.textarea = Textarea('popupplay', '')
+	self.currentSong.textarea = Textarea("text", '')
 
-	local group = Group("xxxx", {
+	local group = Group("group", {
 			text = self.currentSong.text,
 			textarea = self.currentSong.textarea,
 			icon = self.currentSong.artIcon

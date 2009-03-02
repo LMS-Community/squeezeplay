@@ -300,15 +300,7 @@ local function _artworkItem(item, group, menuAccel)
 	local iconSize
 
 	local THUMB_SIZE = jiveMain:getSkinParam("THUMB_SIZE")
-
-	if icon then
-		iconSize = icon:getSize()
-		if not iconSize or iconSize == 0 then
-			iconSize = THUMB_SIZE
-		end
-	else
-		iconSize = THUMB_SIZE
-	end
+	iconSize = THUMB_SIZE
 
 	if item["icon-id"] then
 		if menuAccel and not _server:artworkThumbCached(item["icon-id"], iconSize) then

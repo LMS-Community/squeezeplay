@@ -729,7 +729,8 @@ end
 
 --[[
 Popup:   "toast"
-Label:   "text"
+Group:	 "group"
+  Label:   "text"
 --]]
 function window_toast(self, item)
 	local data = _itemData(item)
@@ -737,32 +738,31 @@ function window_toast(self, item)
 	local popup = Popup("toast")
 	_windowActions(self, item, popup)
 
-	local text = Label("text", "Your toast is done")
+	local group = Group("group", {
+		text = Label("text", data[1])
+	})
 
-	-- XXXX add other widgets
-
-	popup:addWidget(text)
+	popup:addWidget(group)
 
 	self:tieWindow(popup)
 	return popup
 end
 
 --[[
-Popup:   "icontoast"
-Group:	 "xxxx"
+Popup:   "toast"
+Group:	 "group"
   Label:   "text"
   Icon:    "icon"
 --]]
-function window_icontoast(self, item)
+function window_toast_withicon(self, item)
 	local data = _itemData(item)
 
-	local popup = Popup("icontoast")
+	local popup = Popup("toast")
 	_windowActions(self, item, popup)
 
-	local group = Group("xxxx", {
-		text = Textarea("text", "Your toast is done"),
-		icon = Icon('icon'),
-		-- XXXX add other widgets
+	local group = Group("group", {
+		text = Textarea("text", data[1]),
+		icon = Icon(data[2]),
 	})
 
 	popup:addWidget(group)
@@ -797,7 +797,7 @@ windows = {
 	{ "iconlist", "Icon List", window_iconlist, },
 	{ "information", "Information Window", window_information, },
 	{ "toast", "Popup Toast", window_toast, },
-	{ "icontoast", "Popup Toast w/art", window_icontoast, },
+	{ "toast_withicon", "Popup Toast w/art", window_toast_withicon, },
 }
 
 
@@ -871,5 +871,12 @@ testData = {
 		{ "Something\nThe Somethings\nGreatest Hits" }, 
 		{ "In Our Bedroom After The War\nStars\nIn Our Bedroom After The War" },
 		{ "3121\nPrince\nSome Very Long Album Title That Goes off Screen" },
+	},
+	toast = {
+		"Your toast is done",
+	},
+	toast_withicon = {
+		"United States. A country of central and northwest North America with coastlines on the Atlantic and Pacific oceans.",
+		"region_US",
 	},
 }

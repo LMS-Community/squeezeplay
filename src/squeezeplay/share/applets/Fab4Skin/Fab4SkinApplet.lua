@@ -964,17 +964,15 @@ function skin(self, s)
 		w = screenWidth,
 		h = 93,
 		bgImg = helpBox,
-		font = _font(HELP_FONT_SIZE),
-	}
-
-	s.icontoast = _uses(s.toast, {
-		xxxx = {
+		group = {
+			padding = 10,
 			order = { 'icon', 'text' },
 			text = { 
 				padding = { 10, 12, 12, 12 } ,
 				align = 'top-left',
 				w = WH_FILL,
-				h = WH_FILL
+				h = WH_FILL,
+				font = _font(HELP_FONT_SIZE),
 			},
 			icon = { 
 				align = 'top-left', 
@@ -984,7 +982,7 @@ function skin(self, s)
 				w = 64,
 			}
 		}
-	})
+	}
 
 
 --------- BUTTONS ---------
@@ -1288,6 +1286,14 @@ if true then
 			padding = buttonPadding,
 			img = _loadImage(self, "Player_Controls/icon_toolbar_vol_up.png"),
 		},
+	}
+
+	s.ssnpcontrols.pressed = {
+		rew = _uses(s.ssnpcontrols.rew),
+		play = _uses(s.ssnpcontrols.play),
+		pause = _uses(s.ssnpcontrols.pause),
+		fwd = _uses(s.ssnpcontrols.fwd),
+		vol = _uses(s.ssnpcontrols.vol),
 	}
 	
 	s.browsenpcontrols = _uses(s.ssnpcontrols)

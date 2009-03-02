@@ -38,6 +38,16 @@ function _debugWidget(self, screen, widget)
 		screen:filledRectangle(x,y, x+w,y+h, 0xFF00003F)
 
 		--log:info("-> ", widget, " (", x, ",", y, " ", w, "x", h, ")")
+
+		local kids = 0
+		widget:iterate(function(child)
+			kids = kids + 1
+		end)
+
+		if kids == 0 then
+			-- use C cached stylePath where possible, naughtly but nice ;)
+			log:info("style: ", widget._stylePath)
+		end
 	end
 
 	widget:iterate(function(child)

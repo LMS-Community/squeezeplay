@@ -34,7 +34,7 @@ end
 
 
 function configureApplet(meta)
-	local desktop = System:getMachine() == "squeezeplay"
+	local desktop = not System:isHardware()
 
 	Framework:addActionListener("debug_skin", meta, function()
 		appletManager:callService("debugSkin")
