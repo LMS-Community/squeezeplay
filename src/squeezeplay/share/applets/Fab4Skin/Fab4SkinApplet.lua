@@ -624,11 +624,14 @@ function skin(self, s)
 	})
 
 	s.keyboard.pressed = {
+		button = _uses(s.keyboard.button, {
+			bgImg = fiveItemPressedBox
+		}),
 		shift = _uses(s.keyboard.shift, {
-			bgImg = fiveItemSelectionBoxPressed
+			bgImg = fiveItemPressedBox
 		}),
 		space = _uses(s.keyboard.space, {
-			bgImg = fiveItemSelectionBoxPressed
+			bgImg = fiveItemPressedBox
 		}),
 	}
 

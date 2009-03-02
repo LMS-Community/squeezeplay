@@ -166,6 +166,10 @@ int jiveL_textinput_draw(lua_State *L) {
 	len_2 = jive_font_nwidth(peer->cursor_font, text + cursor - 1, 1);
 	len_3 = (cursor < text_len) ? jive_font_width(peer->font, text + cursor) : 0;
 
+	if (cursor_w < len_2) {
+		cursor_w = len_2;
+	}
+
 	/* move ident if cursor is off stage right */
 	while (len_1 + cursor_w > text_w) {
 		indent++;
@@ -216,8 +220,9 @@ int jiveL_textinput_draw(lua_State *L) {
 	cursor_offset = jive_font_offset(peer->cursor_font);
 
 	cursor_x = text_x + len_1;
-	offset_y = (((cursor_h / 2) - jive_font_height(peer->font)) / 2) - text_offset;
-	offset_cursor_y = (((cursor_h / 2) - jive_font_height(peer->cursor_font)) / 2) - cursor_offset;
+
+	offset_y = ((cursor_h - jive_font_height(peer->font)) - text_offset) / 2;
+	offset_cursor_y = ((cursor_h - jive_font_height(peer->cursor_font)) - cursor_offset) / 2;
 
 	/* Valid characters */
 	jive_getmethod(L, 1, "_getChars");
