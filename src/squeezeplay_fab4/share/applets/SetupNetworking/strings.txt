@@ -499,10 +499,10 @@ NETWORK_NO_ENCRYPTION
 	SV	Inget lösenord/ingen kryptering
 
 NETWORK_WEP_64
-	EN	64-bit\n(10 Characters)
+	EN	WEP 64-bit (10 Characters)
 
 NETWORK_WEP_128
-	EN	128-bit\n(26 Characters)
+	EN	WEP 128-bit (26 Characters)
 
 NETWORK_WPA
 	DA	WPA Personal
@@ -629,6 +629,9 @@ NETWORK_TRY_DIFFERENT
 	NL	Ander netwerk proberen
 	NO	Prøv et annet nettverk
 	SV	Försök med ett annat nätverk
+
+NETWORK_TRY_PASSWORD
+	EN	Re-enter password
 
 NETWORK_GO_BACK
 	DA	Gå tilbage
@@ -998,3 +1001,6 @@ NETWORK_SEARCH_FOR_MY_NETWORK
 
 NETWORK_ENTER_SSID
 	EN	Enter my network name
+
+NETWORK_ENTER_SSID_HINT
+	EN	Place holder text. We should take about making sure your in range, and if you use a hidden network name then you'll need to enter it.

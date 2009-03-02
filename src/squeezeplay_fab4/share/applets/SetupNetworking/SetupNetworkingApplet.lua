@@ -246,7 +246,7 @@ function _addNetwork(self, iface, ssid)
 		icon = Icon("icon"),
 		sound = "WINDOWSHOW",
 		callback = function()
-			_enterPassword(self, iface, ssid, true)
+			_enterPassword(self, iface, ssid)
 		end,
 		weight = iface:isWireless() and 1 or 2
 	}
@@ -288,8 +288,6 @@ function _networkScan(self, iface)
 		end)
 
 	-- start network scan
-	self.scanResults = {}
-
 	iface:scan(function()
 		_networkScanComplete(self, iface)
 	end)
@@ -307,6 +305,8 @@ end
 
 -- network scan is complete, show results
 function _networkScanComplete(self, iface)
+	self.scanResults = {}
+
 	-- for ethernet, automatically connect
 	if not iface:isWireless() then
 		_scanResults(self, iface)
@@ -321,11 +321,11 @@ function _networkScanComplete(self, iface)
 	-- XXXX not needed?
 	--self.topWindow = window
 
-	self.scanMenu = SimpleMenu("menu")
-	self.scanMenu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
+	local menu = SimpleMenu("menu")
+	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
 	-- add hidden ssid menu
-	self.scanMenu:addItem({
+	menu:addItem({
 		text = self:string("NETWORK_ENTER_ANOTHER_NETWORK"),
 		sound = "WINDOWSHOW",
 		callback = function()
@@ -335,7 +335,10 @@ function _networkScanComplete(self, iface)
 	})
 
 	window:addWidget(Textarea("helptext", self:string("NETWORK_SETUP_HELP")))
-	window:addWidget(self.scanMenu)
+	window:addWidget(menu)
+
+	self.scanWindow = window
+	self.scanMenu = menu
 
 	-- process existing scan results
 	_scanResults(self, iface)
@@ -351,6 +354,18 @@ function _networkScanComplete(self, iface)
 	_helpAction(self, window, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY")
 
 	self:tieAndShowWindow(window)
+end
+
+
+-- collapse windows and reopen network scan
+function _networkScanAgain(self, iface, isComplete)
+	self.scanWindow:hideToTop()
+
+	if isComplete then
+		_networkScanComplete(self, iface)
+	else
+		_networkScan(self, iface)
+	end
 end
 
 
@@ -415,12 +430,14 @@ function _chooseEnterSSID(self, iface)
 	local window = Window("setuplist", self:string("NETWORK_DONT_SEE_YOUR_NETWORK"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
+	local textarea = Textarea("text", self:string("NETWORK_ENTER_SSID_HINT"))
+
 	local menu = SimpleMenu("menu", {
 		{
 			text = self:string("NETWORK_SEARCH_FOR_MY_NETWORK"),
 			sound = "WINDOWSHOW",
 			callback = function()
-				window:hide()
+				_networkScanAgain(self, iface, false)
 			end
 		},
 		{
@@ -431,6 +448,8 @@ function _chooseEnterSSID(self, iface)
 			end
 		},
 	})
+
+	window:addWidget(textarea)
 	window:addWidget(menu)
 
 	_helpAction(self, window, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY")
@@ -453,7 +472,7 @@ function _enterSSID(self, iface)
 
 					    widget:playSound("WINDOWSHOW")
 
-					    _enterPassword(self, iface, value, true)
+					    _enterPassword(self, iface, value)
 
 					    return true
 				    end
@@ -470,7 +489,7 @@ end
 
 
 -- wireless network choosen, we need the password
-function _enterPassword(self, iface, ssid, checkWPS)
+function _enterPassword(self, iface, ssid, nocheck)
 	assert(iface and ssid, debug.traceback())
 
 	-- check if we know about this ssid
@@ -479,9 +498,7 @@ function _enterPassword(self, iface, ssid, checkWPS)
 	end
 
 	-- is the ssid already configured
-	if self.scanResults[ssid].id ~= nil then
-		log:info("XXXXXXXXXXXXXXXXXXX already configured")
-		-- XXXX CONNECT
+	if nocheck ~= "config" and self.scanResults[ssid].id ~= nil then
 		return _connect(self, iface, ssid, false)
 	end
 
@@ -498,7 +515,7 @@ function _enterPassword(self, iface, ssid, checkWPS)
 		-- XXXX
 		return _connect(self, iface, ssid, true)
 
-	elseif checkWPS and string.find(flags, "WPS") then
+	elseif nocheck ~= "wps" and string.find(flags, "WPS") then
 		self.encryption = "wpa2"
 		return _chooseWPS(self, iface, ssid)
 
@@ -727,7 +744,7 @@ function _chooseWPS(self, iface, ssid)
 			-- Calling regular enter password function (which determinds the
 			--  encryption) but do not check flags for WPS anymore to prevent
 			--  ending up in this function again
-			_enterPassword(self, iface, ssid, false)
+			_enterPassword(self, iface, ssid, "wps")
 		end,
 	})
 
@@ -884,8 +901,7 @@ function _connect(self, iface, ssid, createNetwork)
 		end)
 	window:addWidget(icon)
 
-	local name = self.scanResults[ssid].item.text
-	window:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", name)))
+	window:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", ssid)))
 
 	self:tieAndShowWindow(window)
 
@@ -1116,16 +1132,15 @@ function _connectFailed(self, iface, ssid, reason)
 			text = self:string("NETWORK_TRY_DIFFERENT"),
 			sound = "WINDOWSHOW",
 			callback = function()
-				-- XXXX
-				_hideToTop(self, true)
+				_networkScanAgain(self, iface, true)
 			end
 		},
 		{
-			text = self:string("NETWORK_GO_BACK"),
+			text = self:string("NETWORK_TRY_PASSWORD"),
 			sound = "WINDOWHIDE",
 			callback = function()
-				-- XXXX
-				window:hide()
+				_networkScanAgain(self, iface, true)
+				_enterPassword(self, iface, ssid, "config")
 			end
 		},
 	})
@@ -1221,7 +1236,8 @@ function _failedDHCPandWEP(self, iface, ssid)
 			text = self:string("NETWORK_EDIT_WIRELESS_KEY"),
 			sound = "WINDOWHIDE",
 			callback = function()
-				window:hide()
+				_networkScanAgain(self, iface, true)
+				_enterPassword(self, iface, ssid, "config")
 			end
 		},
 		{
