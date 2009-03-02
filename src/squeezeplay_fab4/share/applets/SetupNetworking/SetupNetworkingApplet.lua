@@ -267,16 +267,16 @@ end
 
 -- perform scan on the network interface
 function _networkScan(self, iface)
-	local window = Popup("waiting")
-	window:setAllowScreensaver(false)
+	local popup = Popup("waiting")
+	popup:setAllowScreensaver(false)
 
-        window:addWidget(Icon("iconConnecting"))
-        window:addWidget(Label("text", self:string("NETWORK_FINDING_NETWORKS")))
+        popup:addWidget(Icon("iconConnecting"))
+        popup:addWidget(Label("text", self:string("NETWORK_FINDING_NETWORKS")))
 
 	local status = Label("subtext", self:string("NETWORK_FOUND_NETWORKS", 0))
-	window:addWidget(status)
+	popup:addWidget(status)
 
-        window:addTimer(1000, function()
+        popup:addTimer(1000, function()
 			local numNetworks = 0
 
 			local results = iface:scanResults()
@@ -293,13 +293,13 @@ function _networkScan(self, iface)
 	end)
 
 	-- or timeout after 10 seconds if no networks are found
-	window:addTimer(10000,
+	popup:addTimer(10000,
 		function()
 			ifaceCount = 0
 			_networkScanComplete(self, iface)
 		end)
 
-	self:tieAndShowWindow(window)
+	self:tieAndShowWindow(popup)
 end
 
 
@@ -718,9 +718,9 @@ function _chooseWPS(self, iface, ssid)
 	local window = Window("setuplist", self:string("NETWORK_WPS_METHOD"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
-	local connectionMenu = SimpleMenu("menu")
+	local menu = SimpleMenu("menu")
 
-	connectionMenu:addItem({
+	menu:addItem({
 		text = (self:string("NETWORK_WPS_METHOD_PBC")),
 		sound = "WINDOWSHOW",
 		callback = function()
@@ -728,7 +728,7 @@ function _chooseWPS(self, iface, ssid)
 		end,
 	})
 
-	connectionMenu:addItem({
+	menu:addItem({
 		text = (self:string("NETWORK_WPS_METHOD_PIN", tostring(wpspin))),
 		sound = "WINDOWSHOW",
 		callback = function()
@@ -737,7 +737,7 @@ function _chooseWPS(self, iface, ssid)
 	})
 
 -- TODO: Remove if we decide not to offer regular psk entry for WPS capable routers / APs
-	connectionMenu:addItem({
+	menu:addItem({
 		text = (self:string("NETWORK_WPS_METHOD_PSK")),
 		sound = "WINDOWSHOW",
 		callback = function()
@@ -748,6 +748,8 @@ function _chooseWPS(self, iface, ssid)
 		end,
 	})
 
+	window:addWidget(menu)
+
 	_helpAction(self, window, "NETWORK_WPS_HELP", "NETWORK_WPS_HELP_BODY")
 
 	self:tieAndShowWindow(window)
@@ -755,8 +757,6 @@ end
 
 
 -------- WIRELESS PROTECTED SETUP --------
-
--- XXXX
 
 function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 	assert(iface and ssid and wpsmethod, debug.traceback())
@@ -769,7 +769,7 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 	iface:startWPSApp(wpsmethod, wpspin)
 
 	-- Progress window
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting")
 	popup:setAllowScreensaver(false)
 
 	popup:addWidget(Icon("iconConnecting"))
@@ -779,7 +779,7 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 		popup:addWidget(Label("text", self:string("NETWORK_WPS_PROGRESS_PIN", tostring(wpspin))))
 	end
 
-	local status = Label("text2", self:string("NETWORK_WPS_REMAINING_WALK_TIME", tostring(WPS_WALK_TIMEOUT)))
+	local status = Label("subtext", self:string("NETWORK_WPS_REMAINING_WALK_TIME", tostring(WPS_WALK_TIMEOUT)))
 	popup:addWidget(status)
 
 	popup:addTimer(1000, function()
@@ -830,7 +830,7 @@ function _timerWPS(self, iface, ssid)
 				self.psk = status.wps_psk
 				self.key = status.wps_key
 
-				createAndConnect(self, iface, ssid)
+				_connect(self, iface, ssid, true)
 			end
 
 		end):addTask()
@@ -892,18 +892,18 @@ function _connect(self, iface, ssid, createNetwork)
 	self.dhcpTimeout = 0
 
 	-- progress window
-	local window = Popup("waiting")
+	local popup = Popup("waiting")
 
 	local icon  = Icon("iconConnecting")
 	icon:addTimer(1000,
 		function()
 			_connectTimer(self, iface, ssid)
 		end)
-	window:addWidget(icon)
+	popup:addWidget(icon)
 
-	window:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", ssid)))
+	popup:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", ssid)))
 
-	self:tieAndShowWindow(window)
+	self:tieAndShowWindow(popup)
 
 	-- Select/create the network in a background task
 	Task("networkSelect", self, _selectNetworkTask):addTask(iface, ssid, createNetwork)
@@ -1074,26 +1074,26 @@ function _connectSuccess(self, iface, ssid)
 	jnt:notify("networkConnected")
 
 	-- popup confirmation
-	local window = Popup("waiting")
-	window:addWidget(Icon("iconConnected"))
+	local popup = Popup("waiting")
+	popup:addWidget(Icon("iconConnected"))
 
 	local name = self.scanResults[ssid].item.text
 	local text = Label("text", self:string("NETWORK_CONNECTED_TO", name))
-	window:addWidget(text)
+	popup:addWidget(text)
 
-	window:addTimer(2000,
+	popup:addTimer(2000,
 			function(event)
 				self.setupNext()
 			end,
 			true)
 
-	window:addListener(EVENT_KEY_PRESS,
+	popup:addListener(EVENT_KEY_PRESS,
 			   function(event)
 				self.setupNext()
 				return EVENT_CONSUME
 			   end)
 
-	self:tieAndShowWindow(window)
+	self:tieAndShowWindow(popup)
 end
 
 
@@ -1486,19 +1486,19 @@ function _setStaticIP(self, iface, ssid)
 
 	log:debug("setStaticIP addr=", self.ipAddress, " subnet=", self.ipSubnet, " gw=", self.ipGateway, " dns=", self.ipDNS)
 
-	local window = Popup("popupIcon")
-	window:addWidget(Icon("iconConnecting"))
+	local popup = Popup("waiting")
+	popup:addWidget(Icon("iconConnecting"))
 
 	local name = self.scanResults[ssid].item.text
-	window:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", name)))
+	popup:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", name)))
 
-	self:tieAndShowWindow(window)
+	self:tieAndShowWindow(popup)
 
 	Task("networkStatic", self, function()
 		iface:t_disconnectNetwork()
 
 		iface:t_setStaticIP(ssid, self.ipAddress, self.ipSubnet, self.ipGateway, self.ipDNS)
-		connectOK(self, iface, ssid)
+		_connectSuccess(self, iface, ssid)
 	end):addTask()
 end
 
