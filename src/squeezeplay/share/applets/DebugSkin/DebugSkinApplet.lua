@@ -202,6 +202,7 @@ styles = {
 	"iconPlaymodeOFF",
 	"iconPlaymodeSTOP",
 	"iconPlaymodePLAY",
+	"iconPlaymodePAUSE",
 	"iconRepeatOFF",
 	"iconRepeat0",
 	"iconRepeat1",
@@ -218,6 +219,7 @@ styles = {
 	"iconWireless4",
 	"iconWirelessERROR",
 	"iconWirelessSERVERERROR",
+	"icon_no_artwork",
 
 	-- global buttons
 	"button_back",
@@ -269,6 +271,7 @@ styles = {
 	"icon_list.menu.scrollbar",
 	"icon_list.title.artists",
 	"icon_list.title.text",
+	"icon_list.title.icon",
 	"icon_list.menu.item.arrow",
 	"icon_list.menu.item.check",
 	"icon_list.menu.item.icon",
@@ -373,6 +376,7 @@ styles = {
 	"text_list.menu.scrollbar",
 	"text_list.title.home",
 	"text_list.title.text",
+	"text_list.title.icon",
 	"text_list.menu.item.arrow",
 	"text_list.menu.item.check",
 	"text_list.menu.item.icon",
