@@ -11,16 +11,16 @@ A keyboard widget, extends L<jive.ui.Widget>, it is a container for other widget
 =head1 SYNOPSIS
 
  -- Create a new qwerty keyboard
- local keyboard = jive.ui.Keyboard("qwerty")
+ local keyboard = jive.ui.Keyboard("keyboard", "qwerty")
 
  -- Create a new numeric keyboard (IP addresses, time)
- local keyboard = jive.ui.Keyboard("numeric")
+ local keyboard = jive.ui.Keyboard("keyboard", "numeric")
 
  -- Create a new hex keyboard (WEP passwords)
- local keyboard = jive.ui.Keyboard("hex")
+ local keyboard = jive.ui.Keyboard("keyboard", "hex")
 
  -- switch an existing keyboard to hex
- keyboard:setKeyboard('hex')
+ keyboard:setKeyboard("hex")
 
 =head1 STYLE
 

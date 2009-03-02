@@ -11,7 +11,7 @@ A slider widget, extends L<jive.ui.Widget>.
 =head1 SYNOPSIS
 
  -- Create a new label to display 'Hello World'
- local slider = jive.ui.Slider("label")
+ local slider = jive.ui.Slider("slider")
 
  -- Set the slider range, 10 items bubble is in the middle
  slider:setScroll(1, 10, 5)
