@@ -318,7 +318,7 @@ function download(self)
 
 		while true do
 			local t, err = ltn12.pump.step(source, sink)
-			self._callback(false, "UPDATE_DOWNLOAD", math.floor((self.downloadBytes / totalBytes) * 100) .. "%")
+			self._callback(false, "UPDATE_DOWNLOAD", math.floor((self.downloadBytes / totalBytes) * 100))
 
 			Task:yield()
 			if not t then
@@ -342,7 +342,7 @@ function download(self)
 		while not self.sinkErr and not self.downloadClose do
 			local totalBytes = req:t_getResponseHeader("Content-Length")
 			if totalBytes then
-				self._callback(false, "UPDATE_DOWNLOAD", math.floor((self.downloadBytes / totalBytes) * 100) .. "%")
+				self._callback(false, "UPDATE_DOWNLOAD", math.floor((self.downloadBytes / totalBytes) * 100))
 			end
 			Task:yield(true)
 		end

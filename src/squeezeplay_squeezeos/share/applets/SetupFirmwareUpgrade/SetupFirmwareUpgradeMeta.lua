@@ -33,7 +33,7 @@ function registerApplet(meta)
 	jiveMain:addItem(meta:menuItem('appletSetupFirmwareUpgrade', 'advancedSettings', "UPDATE", function(applet) applet:settingsShow() end))
 
 	meta:registerService("forceUpgrade")
-	meta:registerService("clearUpgradeUrl")
+
 	-- check for firmware upgrades when we connect to a new player
 	-- we don't want the firmware upgrade applets always loaded so
 	-- do this in the meta class
@@ -63,7 +63,7 @@ function notify_playerCurrent(meta, player)
 	meta.player = player
 
 	if not player then
-		appletManager:callService("clearUpgradeUrl")
+		upgradeUrl = { false }
 		return
 	end
 	

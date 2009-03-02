@@ -7,7 +7,7 @@
 
 
 -- stuff we use
-local assert, getmetatable, ipairs, pcall, setmetatable, tonumber, tostring = assert, getmetatable, ipairs, pcall, setmetatable, tonumber, tostring
+local assert, getmetatable, ipairs, pcall, setmetatable, tonumber, tostring, type = assert, getmetatable, ipairs, pcall, setmetatable, tonumber, tostring, type
 
 local oo                     = require("loop.simple")
 
@@ -26,6 +26,7 @@ local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
 local Tile                   = require("jive.ui.Tile")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
+local Slider                 = require("jive.ui.Slider")
 local Surface                = require("jive.ui.Surface")
 local Task                   = require("jive.ui.Task")
 local Textarea               = require("jive.ui.Textarea")
@@ -54,7 +55,6 @@ local LAYOUT_WEST            = jive.ui.LAYOUT_WEST
 local LAYOUT_CENTER          = jive.ui.LAYOUT_CENTER
 local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
-local firmwareupgradeTitleStyle = 'settingstitle'
 
 local MEDIA_PATH = "/media/"
 
@@ -92,96 +92,92 @@ function _versionCompare(a, b)
 end
 
 
-function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
-	local machine = System:getMachine()
+function _findUpgrades(self, url, urlHelp)
+	local upgrades = {}
 
-	local help = Textarea("helptext", "")
+	local machine = System:getMachine()
 
 	if url and string.match(url, machine) then
 		local version = self:_firmwareVersion(url)
-		local networkUpdateItem = {
-			text = self:string("BEGIN_UPDATE"),
-			sound = "WINDOWSHOW",
-			callback = function()
-				self.url = url
-				self:_upgrade()
-			end,
-			focusGained = function()
-				if _versionCompare(JIVE_VERSION, version) <= 0 then
-					help:setValue(self:string(urlHelp or "UPDATE_BEGIN_REINSTALL", version or "?"))
-				else
-					help:setValue(self:string(urlHelp or "UPDATE_BEGIN_UPGRADE", version or "?"))
-				end
-			end
+		upgrades[#upgrades + 1] = {		
+			url = url,
+			version = version,
+			help = urlHelp,
 		}
-		menu:addItem(networkUpdateItem)
 	end
 
 	for media in lfs.dir(MEDIA_PATH) do
 		local path = MEDIA_PATH .. media .. "/"
 
 		for entry in lfs.dir(path) do
-			local fileurl = "file:" .. path .. entry
-			local version = self:_firmwareVersion(fileurl)
+			local url = "file:" .. path .. entry
+			local version = self:_firmwareVersion(url)
 	
 			if version or entry == machine .. ".bin" then
-				local textString = self:string("UPDATE_FROM_REMOVABLE_MEDIA")
-				if version then
-					textString = self:string("UPDATE_TO_X", version)
-				end
-				menu:addItem({
-					text = textString,
-				     	sound = "WINDOWSHOW",
-				     	callback = function()
-						self.url = fileurl
-						self:_upgrade()
-					end,
-					focusGained = function()
-						help:setValue(self:string("UPDATE_BEGIN_REMOVABLE_MEDIA", version or ""))
-					end
-			     	})
+				upgrades[#upgrades + 1] = {
+					url = url,
+					version = version,
+				}			
 			end
 		end
 	end
 
-	if optional then
-		-- offered upgrade
-		menu:addItem({
-			text = self:string("UPDATE_CANCEL"),
-			sound = "WINDOWHIDE",
-			callback = function()
-				window:hide()
-			end,
-			focusGained = function()
-				help:setValue(nil)
+	return upgrades
+end
+
+
+function _helpString(self, upgrade)
+	local helpString = upgrade.help
+	if not helpString then
+		if string.match(upgrade.url, "file:") then
+			helpString = self:string("UPDATE_BEGIN_REMOVABLE_MEDIA", version or "")
+		else
+			if _versionCompare(JIVE_VERSION, upgrade.version) <= 0 then
+				helpString = self:string(upgrade.help or "UPDATE_BEGIN_REINSTALL", version or "?")
+			else
+				helpString = self:string(upgrade.help or "UPDATE_BEGIN_UPGRADE", version or "?")
 			end
-		})
+		end
 	end
 
-	-- XXXX fixme
-	window:addWidget(help)
-	window:addWidget(menu)
+	return helpString
 end
 
--- when the server disconnects we clear the upgrade Url 
-function clearUpgradeUrl(self)
-	upgradeUrl = { false }
+
+function _upgradeWindow(self, upgrades, optional)
+	if #upgrades == 1 then
+		return _upgradeWindowSingle(self, upgrades, optional)
+	else
+		return _upgradeWindowChoice(self, upgrades, optional)
+	end
 end
 
-function forceUpgrade(self, optional, upgUrl, urlHelp)
-	local url = upgUrl
-	if not upgUrl then
-		url = upgradeUrl[1]
-	end
-	if not url then
-		return
-	end
 
-	local window = Window("setup", self:string("UPDATE"), firmwareupgradeTitleStyle)
+function _upgradeWindowSingle(self, upgrades, optional)
+	local window = Window("onebutton", self:string("UPDATE"), 'settingstitle')
+
+	window:setButtonAction("rbutton", nil)
+
+	local text = Textarea("text", _helpString(self, upgrades[1]))
+
 	local menu = SimpleMenu("menu")
+
+	menu:addItem({
+		text = self:string("BEGIN_UPDATE"),
+		sound = "WINDOWSHOW",
+		callback = function()
+			self:_upgrade(upgrades[1].url)
+		end,
+	})
+
+	window:addWidget(text)
+	window:addWidget(menu)
 
 	if not optional then
 		-- forced upgrade, don't allow the user to break out
+		window:setAllowScreensaver(false)
+
+		window:setButtonAction("lbutton", nil)
 		menu:setCloseable(false)
 
 		window:addListener(EVENT_KEY_PRESS,
@@ -195,26 +191,97 @@ function forceUpgrade(self, optional, upgUrl, urlHelp)
 			end)
 	end
 
-	self:_makeUpgradeItems(window, menu, optional, url, urlHelp)
-
 	self:tieAndShowWindow(window)
-	return window
 end
 
-function settingsShow(self)
-	local window = Window("setup", self:string("UPDATE"), firmwareupgradeTitleStyle)
 
+function _upgradeWindowChoice(self, upgrades, optional)
+	local window = Window("setuplist", self:string("UPDATE"), 'settingstitle')
+	local helptext = Textarea("helptext", "")
 	local menu = SimpleMenu("menu")
 
-	local url = upgradeUrl[1]
-	if not url then
-		url = false
+	for i,upgrade in ipairs(upgrades) do
+		local itemString
+		if string.match(upgrade.url, "file:") then
+			if upgrade.version then
+				itemString = self:string("UPDATE_TO_X", upgrade.version)
+			else
+				itemString = self:string("UPDATE_FROM_REMOVABLE_MEDIA")
+			end
+		else
+			itemString = self:string("BEGIN_UPDATE")
+		end
+
+		local helpString = _helpString(self, upgrade)
+
+		menu:addItem({
+			text = itemString,
+			sound = "WINDOWSHOW",
+			callback = function()
+				self:_upgrade(upgrade.url)
+			end,
+			focusGained = function()
+				helptext:setValue(helpString)
+			end,			
+		})
 	end
 
-	self:_makeUpgradeItems(window, menu, true, url)
+	window:addWidget(helptext)
+	window:addWidget(menu)
+
+	if not optional then
+		-- forced upgrade, don't allow the user to break out
+		window:setAllowScreensaver(false)
+
+		window:setButtonAction("lbutton", nil)
+		menu:setCloseable(false)
+
+		window:addListener(EVENT_KEY_PRESS,
+			function(event)
+				local keycode = event:getKeycode()
+				if keycode == KEY_HOME then
+					return EVENT_CONSUME
+				end
+
+				return EVENT_UNUSED
+			end)
+	else
+		menu:addItem({
+			text = self:string("UPDATE_CANCEL"),
+			sound = "WINDOWHIDE",
+			callback = function()
+				window:hide()
+			end,
+			focusGained = function()
+				helptext:setValue(nil)
+			end
+		})
+	end
 
 	self:tieAndShowWindow(window)
-	return window
+end
+
+
+function forceUpgrade(self, optional, url, urlHelp)
+	if not url then
+		url = upgradeUrl[1]
+	end
+	if not url then
+		return
+	end
+
+	local upgrades = _findUpgrades(self, url, urlHelp)
+
+	return _upgradeWindow(self, upgrades, optional)
+end
+
+
+function settingsShow(self)
+	local url = upgradeUrl[1] or false
+
+	local upgrades = _findUpgrades(self, url)
+
+	return _upgradeWindow(self, upgrades, true)
 end
 
 
@@ -228,22 +295,21 @@ end
 
 
 function _chargeBattery(self)
-	local window = Window("window", self:string("UPDATE_BATTERY"), firmwareupgradeTitleStyle)
+	local window = Window("setuplist", self:string("UPDATE_BATTERY"), firmwareupgradeTitleStyle)
 
-	local menu = SimpleMenu("menu",
-				{
-					{
-						text = self:string("CONTINUE"),
-						sound = "WINDOWSHOW",
-						callback = function()
-								   if _checkBattery() then
-									   self:_upgrade()
-								   else
-									   window:bumpRight()
-								   end
-							   end
-					}
-				})
+	local menu = SimpleMenu("menu", {
+		{
+			text = self:string("CONTINUE"),
+			sound = "WINDOWSHOW",
+			callback = function()
+				if _checkBattery() then
+					self:_upgrade()
+				else
+					window:bumpRight()
+				end
+			end
+		}
+	})
 
 	local help = Textarea("helptext", self:string("UPDATE_BATTERY_HELP"))
 	window:addWidget(help)
@@ -255,11 +321,26 @@ end
 
 
 function _t_setText(self, done, msg, count)
-	self.counter:setValue(count or "")
-	self.textarea:setValue(self:string(msg))
-	if done then
-		self.icon:setStyle("iconConnected")
+	if type(count) == "number" then
+		self.counter:setValue(count .. "%")
+		self.progress:setRange(1, 100, count)
+
+		if not self.progress:getParent() then
+			self.popup:addWidget(self.progress)
+		end
+	else
+		self.counter:setValue("")
+
+		if self.progress:getParent() then
+			self.popup:removeWidget(self.progress)
+		end
 	end
+
+	self.text:setValue(self:string(msg))
+
+	--if done then
+	--	self.icon:setStyle("iconConnected")
+	--end
 end
 
 function _t_upgrade(self)
@@ -284,24 +365,28 @@ function _t_upgrade(self)
 end
 
 
-function _upgrade(self)
+function _upgrade(self, url)
+	self.url = url
+
 	-- require ac power or sufficient battery to continue
 	if not _checkBattery() then
 		return self:_chargeBattery()
 	end
 
-	self.popup = Popup("popupIcon")
+	self.popup = Popup("update")
 
 	-- don't allow power saving during upgrades
 	self.popup:setAllowPowersave(false)
 
-	self.icon = Icon("iconConnecting")
+	self.icon = Icon("iconSoftwareUpdate")
 	self.popup:addWidget(self.icon)
 
-	self.counter = Label("text", "")
-	self.textarea = Label("text", self:string("UPDATE_DOWNLOAD", ""))
+	self.text = Label("text", self:string("UPDATE_DOWNLOAD", ""))
+	self.counter = Label("subtext", "")
+	self.progress = Slider("progress", 1, 100, 1)
+
+	self.popup:addWidget(self.text)
 	self.popup:addWidget(self.counter)
-	self.popup:addWidget(self.textarea)
 
 	-- make sure this popup remains on screen
 	self.popup:setAllowScreensaver(false)
@@ -338,7 +423,7 @@ function _upgradeFailed(self)
 	-- reconnect to server
 	appletManager:callService("connectPlayer")
 
-	local window = Window("window", self:string("UPDATE_FAILURE"))
+	local window = Window("setuplist", self:string("UPDATE_FAILURE"))
 
 	local menu = SimpleMenu("menu",
 				{
