@@ -585,6 +585,7 @@ function window_playlist(self, item)
 	for i,subdata in ipairs(data) do
 		menu:addItem({
 			text = subdata[1],
+			icon = Icon('no_artwork'),
 			callback = function(event, item)
 				if selected == item then
 					menu:lock()
@@ -606,12 +607,13 @@ function window_playlist(self, item)
 
 	-- add an item for itemNoArrow and itemCheckedNoArrow
 	menu:addItem({
-			text = "Test of itemNoArrow",
-			style = 'itemNoArrow',
+			text = "Test of no artwork",
 	})
 	menu:addItem({
-			text = "Test of itemCheckedNoArrow",
-			style = 'itemCheckedNoArrow',
+			text  = "Clear Playlist",
+	})
+	menu:addItem({
+			text  = "Save Playlist",
 	})
 
 	window:addWidget(menu)
@@ -633,9 +635,13 @@ function window_iconlist(self, item)
 	_windowActions(self, item, window)
 
 	local menu = SimpleMenu("menu")
+	menu:addItem({
+		text = "this is an item without an icon\njust don't add an icon in the menu item and there won't be one"
+	})
 	for i,subdata in ipairs(data) do
 		menu:addItem({
 			text = subdata[1],
+			icon = Icon('no_artwork'),
 			callback = function(event, item)
 				if selected == item then
 					menu:lock()
