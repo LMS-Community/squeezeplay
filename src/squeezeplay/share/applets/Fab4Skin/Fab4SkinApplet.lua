@@ -565,7 +565,6 @@ function skin(self, s)
 
 	s.slider = {
 		w = WH_FILL,
-		border = 5,
 		horizontal = 1,
 		bgImg = sliderBackground,
 		img = sliderBar,

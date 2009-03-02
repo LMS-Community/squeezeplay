@@ -157,13 +157,14 @@ int jiveL_group_layout(lua_State *L) {
 			lua_pushvalue(L, -2);
 			lua_call(L, 1, 4);
 
-			w[i] = lua_tointeger(L, -2) + border[i].left + border[i].right;
-			h = MAX(h + border[i].top + border[i].bottom, lua_tointeger(L, -1));
+			w[i] = lua_tointeger(L, -2);
+			h = MAX(h + border[i].top + border[i].bottom, lua_tointeger(L, -1) + border[i].top + border[i].bottom);
 
 			if (w[i] == JIVE_WH_FILL) {
 				fc++;
 			}
 			else {
+				w[i] += border[i].left + border[i].right;
 				fw += w[i];
 			}
 			lua_pop(L, 4);
@@ -183,7 +184,7 @@ int jiveL_group_layout(lua_State *L) {
 
 		/* don't exceed widget width */
 		if (sum_w + w[i] > max_w) {
-			w[i] = max_w - sum_w;
+			w[i] = MAX(0, max_w - sum_w);
 		}
 		sum_w += w[i];
 	}
@@ -283,6 +284,7 @@ int jiveL_group_draw(lua_State *L) {
 
 int jiveL_group_get_preferred_bounds(lua_State *L) {
 	GroupWidget *peer;
+	JiveInset border;
 	int w = 0, h = 0;
 
 	if (jive_getmethod(L, 1, "checkLayout")) {
@@ -295,12 +297,29 @@ int jiveL_group_get_preferred_bounds(lua_State *L) {
 	lua_getfield(L, 1, "widgets");
 	lua_pushnil(L);
 	while (lua_next(L, -2) != 0) {
+		if (jive_getmethod(L, -1, "getBorder")) {
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 4);
+				
+			border.left = lua_tointeger(L, -4);
+			border.top = lua_tointeger(L, -3);
+			border.right = lua_tointeger(L, -2);
+			border.bottom = lua_tointeger(L, -1);
+			lua_pop(L, 4);
+		}
+		else {
+			border.left = 0;
+			border.top = 0;
+			border.right = 0;
+			border.bottom = 0;
+		}
+
 		if (jive_getmethod(L, -1, "getPreferredBounds")) {
 			lua_pushvalue(L, -2);
 			lua_call(L, 1, 4);
 
-			w += lua_tointeger(L, -2);
-			h = MAX(h, lua_tointeger(L, -1));
+			w += lua_tointeger(L, -2) + border.left + border.right;
+			h = MAX(h, lua_tointeger(L, -1) + border.top + border.bottom);
 
 			lua_pop(L, 4);
 		}
