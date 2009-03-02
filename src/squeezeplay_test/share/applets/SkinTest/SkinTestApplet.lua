@@ -278,7 +278,7 @@ end
 
 
 --[[
-Window:   "waiting"
+Popup:   "waiting"
 Label:    "text", "subtext"
 Icon:     X
 --]]
@@ -361,7 +361,7 @@ end
 
 
 --[[
-Window:   "update"
+Popup:    "update"
 Label:    "text"
 Slider:   "progress"
 Icon:     X
