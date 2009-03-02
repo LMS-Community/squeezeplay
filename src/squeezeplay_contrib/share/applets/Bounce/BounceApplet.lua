@@ -95,14 +95,8 @@ end
 -- by the ScreenSaversApplet.
 function bounce(self)
 
-	local window = Window("bounce")
+	local window = Window("absolute")
 	local w, h = Framework:getScreenSize()
-
-	window:setSkin({
-		bounce = {
-			layout = Window.noLayout,
-		}
-	})
 
 	self.sprits = {}
 

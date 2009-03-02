@@ -202,10 +202,10 @@ function settingsBrightnessShow (self, menuItem)
 
 	window:addWidget(Textarea("helptext", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
 	window:addWidget(Group("sliderGroup", {
-				       Icon("sliderMin"),
-				       slider,
-				       Icon("sliderMax")
-			       }))
+	       min = Icon("button_slider_min"),
+	       slider = slider,
+	       max = Icon("button_slider_max"),
+	}))
 
 	window:addListener(EVENT_WINDOW_POP,
 		function()

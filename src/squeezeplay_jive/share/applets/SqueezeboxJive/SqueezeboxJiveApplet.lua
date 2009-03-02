@@ -502,10 +502,10 @@ function settingsBrightnessShow(self, menuItem)
 
 	window:addWidget(Textarea("helptext", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
 	window:addWidget(Group("sliderGroup", {
-				       Icon("sliderMin"),
-				       slider,
-				       Icon("sliderMax")
-			       }))
+	       min = Icon("button_slider_min"),
+	       slider = slider,
+	       max = Icon("button_slider_max")
+	}))
 
 	window:addListener(EVENT_WINDOW_POP,
 		function()
@@ -734,7 +734,7 @@ end
 
 function lockScreen(self)
 	-- lock
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 
 	popup:setAllowScreensaver(false)
 	popup:setAlwaysOnTop(true)
@@ -794,9 +794,9 @@ function batteryLowShow(self)
 
 	log:info("batteryLowShow")
 
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 
-	popup:addWidget(Icon("iconBatteryLow"))
+	popup:addWidget(Icon("icon_battery_low"))
 	popup:addWidget(Label("text", self:string("BATTERY_LOW")))
 
 	-- make sure this popup remains on screen
@@ -881,7 +881,7 @@ function settingsSleep(self)
 	-- disconnect from SqueezeCenter
 	appletManager:callService("disconnectPlayer")
 
-	self.popup = Popup("waiting")
+	self.popup = Popup("waiting_popup")
 
 	self.popup:addWidget(Icon("icon_connecting"))
 	self.popup:addWidget(Label("text", self:string("SLEEPING")))
@@ -908,7 +908,7 @@ function settingsPowerOff(self)
 	-- disconnect from SqueezeCenter
 	appletManager:callService("disconnectPlayer")
 
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 
 	popup:addWidget(Icon("icon_power"))
 	popup:addWidget(Label("text", self:string("GOODBYE")))
@@ -1190,7 +1190,7 @@ function _suspend(self)
 	log:info("Suspend ...")
 
 	-- draw popup ready for resume
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 	popup:setAllowScreensaver(false)
 	popup:setAlwaysOnTop(true)
 	popup:setAutoHide(false)

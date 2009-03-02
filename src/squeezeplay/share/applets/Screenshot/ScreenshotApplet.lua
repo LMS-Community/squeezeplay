@@ -74,7 +74,7 @@ local function _takeScreenshotAction(self)
 
 	srf:saveBMP(file)
 
-	local popup = Popup("toast")
+	local popup = Popup("toast_popup")
 	popup:addWidget(Label("text", self:string("SCREENSHOT_TAKEN", file)))
 
 	popup:addTimer(2000, function()

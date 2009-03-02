@@ -93,7 +93,7 @@ function menu(self, menuItem)
 	end
 
 	-- create animiation to show while we get data from the server
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 	local icon  = Icon("icon_connecting")
 	local label = Label("text", self:string("APPLET_FETCHING"))
 	popup:addWidget(icon)
@@ -192,7 +192,7 @@ function startDownload(self)
 	-- generate animated downloading screen
 	local icon = Icon("icon_connecting")
 	local label = Label("text", self:string("DOWNLOADING"))
-	self.animatewindow = Popup("waiting")
+	self.animatewindow = Popup("waiting_popup")
 	self.animatewindow:addWidget(icon)
 	self.animatewindow:addWidget(label)
 	self.animatewindow:show()

@@ -478,11 +478,10 @@ end
 
 
 function _window(self, ...)
-	local window = Window("flickr")
+	local window = Window("absolute")
 
 	window:setSkin({
-		flickr = {
-			layout = Window.noLayout,
+		absolute = {
 			text = {
 				font = Font:load("fonts/FreeSans.ttf", 10),
 			},

@@ -502,7 +502,7 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 		end
 
 		group:setWidgetValue("text", "")
-		group:setStyle(labelStyle .. "waiting")
+		group:setStyle(labelStyle .. "waiting_popup")
 	end
 
 	return group
@@ -605,7 +605,7 @@ end
 -- _inputInProgress
 -- full screen popup that appears until action from text input is complete
 local function _inputInProgress(self, msg)
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 	local icon  = Icon("icon_connecting")
 	popup:addWidget(icon)
 	if msg then
@@ -647,7 +647,7 @@ local function _connectingToPlayer(self)
 		return
 	end
 
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 	local icon  = Icon("icon_connecting")
 	local playerName = _player:getName()
 	local label = Label("text", self:string("SLIMBROWSER_CONNECTING_TO", playerName))
@@ -725,7 +725,7 @@ local function _updatingPlayer(self)
 		return
 	end
 
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 	local icon  = Icon("icon_connecting")
 	local label = Label("text", self:string('SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX', _player:getName()))
 	popup:addWidget(icon)
@@ -814,16 +814,16 @@ local function _renderSlider(step, item)
 	if item.sliderIcons == 'none' then
         	step.window:addWidget(slider)
 	elseif item.sliderIcons == 'volume' then
-		step.window:addWidget(Group("sliderGroup", {
-			Icon("volumeMin"),
-			slider,
-			Icon("volumeMax")
+		step.window:addWidget(Group("slider_group", {
+			min = Icon("button_volume_min"),
+			slider = slider,
+			max = Icon("button_volume_max")
 		}))
 	else
-		step.window:addWidget(Group("sliderGroup", {
-			Icon("sliderMin"),
-			slider,
-			Icon("sliderMax")
+		step.window:addWidget(Group("slider_group", {
+			min = Icon("button_slider_min"),
+			slider = slider,
+			max = Icon("button_slider_max")
 		}))
 	end
 
@@ -836,10 +836,10 @@ end
 local function _bigArtworkPopup(chunk, err)
 
 	log:debug("Rendering artwork")
-	local popup = Popup("popupArt")
+	local popup = Popup("image_popup")
 	popup:setAllowScreensaver(true)
 
-	local icon = Icon("artwork")
+	local icon = Icon("image")
 
 	local screenW, screenH = Framework:getScreenSize()
 	local shortDimension = screenW
@@ -2744,7 +2744,7 @@ function _problemConnectingPopup(self, server)
 	server:connect()
 
 	-- popup
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 	popup:addWidget(Icon("icon_connecting"))
 	popup:addWidget(Label("text", self:string("SLIMBROWSER_CONNECTING_TO", server:getName())))
 

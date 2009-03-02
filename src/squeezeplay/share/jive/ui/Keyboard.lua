@@ -120,8 +120,8 @@ end
 
 function _specialKeyWidths(self)
 	self.specialKeyWidths = {
-		['space'] = 150,
-		['shift'] = 60,
+		['button_space'] = 150,
+		['button_shift'] = 60,
 		['pushed'] = 60,
 	}
 end
@@ -381,7 +381,7 @@ end
 -- return a table that can be used as a space bar in keyboards
 function _go(self)
 	return {	
-		icon	 = Icon("enter"),
+		icon	 = Icon("button_enter"),
 		callback = function()
 			local e = Event:new(EVENT_KEY_PRESS, KEY_GO)
 			Framework:dispatchEvent(nil, e) 
@@ -416,7 +416,7 @@ end
 -- return a table that can be used as a backspace bar in keyboards
 function _backspaceButton(self)
 	return {	
-		icon	 = Icon("back"),
+		icon	 = Icon("button_back"),
 		callback = function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
 			Framework:dispatchEvent(nil, e) 

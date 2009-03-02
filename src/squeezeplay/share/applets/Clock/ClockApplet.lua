@@ -121,7 +121,7 @@ function Clock:__init()
 	obj.screen_width, obj.screen_height = Framework:getScreenSize()
 
 	-- create window and icon
-	obj.window = Window("Clock")
+	obj.window = Window("absolute")
 	obj:_createSurface()
 
 	obj.window:addListener(EVENT_MOTION,

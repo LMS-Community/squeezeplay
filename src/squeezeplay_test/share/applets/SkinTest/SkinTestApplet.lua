@@ -146,7 +146,7 @@ end
 
 -- this is a dummy help window
 function dummy_help(self)
-	local window = Window("help", "Help")
+	local window = Window("help_info", "Help")
 	window:setAllowScreensaver(false)
 
 	local textarea = Textarea("text", "This is a help window.")
@@ -158,48 +158,6 @@ end
 
 -- REFERENCE WINDOW STYLES ARE BELOW
 
-
-
---[[
-Window:   "text_list"
-Menu:     "menu"
-Item:     "item", "itemChecked"
-Textarea: "helptext"
---]]
-function setup_window(self, item)
-	local data = _itemData(item)
-
-	local window = Window("text_list", _itemName(item), "setup")
-	_windowActions(self, item, window)
-
-	local selected = nil
-
-	local menu = SimpleMenu("menu")
-	for i,text in ipairs(data[1]) do
-		menu:addItem({
-			text = text,
-			sound = "WINDOWSHOW",
-			callback = function(event, item)
-				if selected then
-					selected.style = "item"
-					menu:updatedItem(selected)
-				end
-				item.style = "itemChecked"
-				menu:updatedItem(item)
-
-				selected = item
-			end,
-		})		
-	end
-
-	window:addWidget(menu)
-	window:addWidget(Textarea("helptext", data[2]))
-
-	window:focusWidget(menu)
-
-	self:tieWindow(window)
-	return window
-end
 
 
 --[[
@@ -263,13 +221,13 @@ end
 
 
 --[[
-Window:   "help"
+Window:   "help_info"
 Textarea: "text"
 --]]
-function setup_help(self, item)
+function setup_help_info(self, item)
 	local data = _itemData(item)
 
-	local window = Window("help", _itemName(item), "setup")
+	local window = Window("help_info", _itemName(item), "setup")
 	_windowActions(self, item, window)
 
 	local textarea = Textarea("text", data[1])
@@ -282,14 +240,14 @@ end
 
 
 --[[
-Popup:   "waiting"
+Popup:   "waiting_popup"
 Label:    "text", "subtext"
 Icon:     X
 --]]
-function setup_waiting(self, item)
+function setup_waiting_popup(self, item)
 	local data = _itemData(item)
 
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 	_windowActions(self, item, popup)
 
 	local label = Label("text", data[1])
@@ -365,15 +323,15 @@ end
 
 
 --[[
-Popup:    "update"
+Popup:    "update_popup"
 Label:    "text"
 Slider:   "progress"
 Icon:     X
 --]]
-function setup_update(self, item)
+function setup_update_popup(self, item)
 	local data = _itemData(item)
 
-	local popup = Popup("update")
+	local popup = Popup("update_popup")
 	_windowActions(self, item, popup)
 
 	local label = Label("text", data[1])
@@ -405,7 +363,7 @@ Window:   "text_list"
 Menu:     "menu"
 Item:     "itemPlay", "itemAdd", "item" (styles: selected, pressed, locked)
 --]]
-function window_trackinfo(self, item)
+function window_track_info(self, item)
 	local data = _itemData(item)
 
 	local window = Window("text_list", _itemName(item), "home")
@@ -578,7 +536,7 @@ Item:     "item", "itemChecked", (styles: selected, pressed, locked)
 function window_playlist(self, item)
 	local data = _itemData(item)
 
-	local window = Window("playlist", _itemName(item), "artists")
+	local window = Window("play_list", _itemName(item), "artists")
 	_windowActions(self, item, window)
 
 	local menu = SimpleMenu("menu")
@@ -734,14 +692,14 @@ end
 
 
 --[[
-Popup:   "toast"
+Popup:   "toast_popup"
 Group:	 "group"
   Label:   "text"
 --]]
-function window_toast(self, item)
+function window_toast_popup(self, item)
 	local data = _itemData(item)
 
-	local popup = Popup("toast")
+	local popup = Popup("toast_popup")
 	_windowActions(self, item, popup)
 
 	local group = Group("group", {
@@ -755,15 +713,15 @@ function window_toast(self, item)
 end
 
 --[[
-Popup:   "toast"
+Popup:   "toast_popup"
 Group:	 "group"
   Label:   "text"
   Icon:    "icon"
 --]]
-function window_toast_withicon(self, item)
+function window_toast_popup_withicon(self, item)
 	local data = _itemData(item)
 
-	local popup = Popup("toast")
+	local popup = Popup("toast_popup")
 	_windowActions(self, item, popup)
 
 	local group = Group("group", {
@@ -778,7 +736,7 @@ function window_toast_withicon(self, item)
 end
 
 --[[
-Popup:   "toast"
+Popup:   "toast_popup"
 Group:	 "group"
   Label:   "text"
   Icon:    "icon"
@@ -811,32 +769,26 @@ end
 -- the reference windows, and test data
 windows = {
 	{ "information", "Information Window", window_information, },
-
-	{ "text_list", "Languages", setup_window, },
-	{ "one_button", "Welcome to Setup", setup_onebutton, },
+	{ "one_button", "Welcome to Setup", setup_one_button, },
 	{ "button_list", "Choose Region", setup_button, },
-	{ "help", "Help Connection Type", setup_help, },
-	{ "waiting", "Connecting to", setup_waiting, },
+	{ "help_info", "Help Connection Type", setup_help_info, },
+	{ "waiting_popup", "Connecting to", setup_waiting_popup, },
 	{ "input_wpa", "Wireless Password", setup_input, },
 	{ "error", "Error", setup_error, },
-	{ "update", "Software Update", setup_update, },
-	{ "trackinfo", "Track Info", window_trackinfo, },
-	{ "track_list", "Track List", window_tracklist, },
+	{ "update_popup", "Software Update", setup_update_popup, },
+	{ "track_info", "Track Info", window_track_info, },
+	{ "track_list", "Track List", window_track_list, },
 	{ "playlist", "Playlist", window_playlist, },
 	{ "text_list", "Text List", setup_text_list, },
 	{ "icon_list", "Icon List", window_icon_list, },
 	{ "information", "Information Window", window_information, },
-	{ "toast", "Popup Toast", window_toast, },
-	{ "toast_withicon", "Popup Toast w/art", window_toast_withicon, },
+	{ "toast_popup", "Popup Toast", window_toast_popup, },
+	{ "toast_popup_withicon", "Popup Toast w/art", window_toast_popup_withicon, },
 	{ "slider_popup", "Volume", window_slider_popup, },
 }
 
 
 testData = {
-	text_list = {
-		{ "Deutsch", "Suomi", "English", "Dansk", "Itailiano", "Français", "Norsk", "Sevnska", "Español" },
-		"Some help text",
-	},
 	one_button = {
 		"Let's begin by getting\nyou connected to your network.",
 		"Continue"
@@ -847,13 +799,13 @@ testData = {
 		  { "All Other Regions" , "region_XX" },
 		},
 	},
-	help = {
+	help_info = {
 		"This is some help text, in a help window. It could be very long, and may need a scrollbar.\nThe quick brown fox jumped over the lazy dog.\nForsaking monastic tradition, twelve jovial friars gave up their vocation for a questionable existence on the flying trapeze.\nSix javelins thrown by the quick savages whizzed forty paces beyond the mark.\nJaded zombies acted quaintly but kept driving their oxen forward.",
 	},
 	information = {
 		"The Yamazaki \n 18 Year in four haikus\n (this is one of them)\n \n Yamazaki HAI!\n Suntory Distillery\n Good Nose; Strong Finish\n \n They say that the Scots\n are the only ones blessed with\n skill to make scotch. No.\n \n But let your palate\n be the judge and not my words\n Now! Please to enjoy!\n" 
 	},
-	waiting = {
+	waiting_popup = {
 		"Connecting to\nwireless network...", "all your base", "icon_connecting",
 	},
 	input_wpa = {
@@ -865,13 +817,13 @@ testData = {
 		  "Manually Enter IP Address",
 		},
 	},
-	update = {
+	update_popup = {
 		"Installing\nSoftware Update...", "icon_software_update",
 	},
 	text_list = {
 		 "Now Playing", "Music Library", "Internet Radio", "Music Services", "Favorites", "Extras", "Settings", "Choose Player", "Turn Off Player"
 	},
-	trackinfo = {
+	track_info = {
 		"Play this song",
 		"Add this song",
 		"Artist: Sun Kil Moon",
@@ -903,10 +855,10 @@ testData = {
 		{ "In Our Bedroom After The War\nStars\nIn Our Bedroom After The War" },
 		{ "3121\nPrince\nSome Very Long Album Title That Goes off Screen" },
 	},
-	toast = {
-		"Your toast is done",
+	toast_popup = {
+		"Your toast_popup is done",
 	},
-	toast_withicon = {
+	toast_popup_withicon = {
 		"United States. A country of central and northwest North America with coastlines on the Atlantic and Pacific oceans.",
 		"region_US",
 	},

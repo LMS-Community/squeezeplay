@@ -71,7 +71,7 @@ end
 
 function _helpAction(self, window, titleText, bodyText)
 	window:addActionListener("help", self, function()
-		local window = Window("help", self:string(titleText), "helptitle")
+		local window = Window("help_info", self:string(titleText), "helptitle")
 		window:setAllowScreensaver(false)
 
 		local textarea = Textarea("text", self:string(bodyText))
@@ -267,7 +267,7 @@ end
 
 -- perform scan on the network interface
 function _networkScan(self, iface)
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 	popup:setAllowScreensaver(false)
 
         popup:addWidget(Icon("icon_connecting"))
@@ -758,7 +758,7 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 	iface:startWPSApp(wpsmethod, wpspin)
 
 	-- Progress window
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 	popup:setAllowScreensaver(false)
 
 	popup:addWidget(Icon("icon_connecting"))
@@ -881,7 +881,7 @@ function _connect(self, iface, ssid, createNetwork)
 	self.dhcpTimeout = 0
 
 	-- progress window
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 
 	local icon  = Icon("icon_connecting")
 	icon:addTimer(1000,
@@ -1063,7 +1063,7 @@ function _connectSuccess(self, iface, ssid)
 	jnt:notify("networkConnected")
 
 	-- popup confirmation
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 	popup:addWidget(Icon("icon_connected"))
 
 	local name = self.scanResults[ssid].item.text
@@ -1472,7 +1472,7 @@ function _setStaticIP(self, iface, ssid)
 
 	log:debug("setStaticIP addr=", self.ipAddress, " subnet=", self.ipSubnet, " gw=", self.ipGateway, " dns=", self.ipDNS)
 
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 	popup:addWidget(Icon("icon_connecting"))
 
 	local name = self.scanResults[ssid].item.text

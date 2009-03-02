@@ -503,7 +503,7 @@ function _createUI(self)
 		text = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
 
 		rbutton = Button(
-				Label("rbutton", ""), 
+				Label("text", ""), 
 				function() 
 					Framework:pushAction("go")
 					return EVENT_CONSUME 
@@ -544,13 +544,13 @@ function _createUI(self)
 		self[windowStyle].progressSlider:addTimer(1000, function() self:_updatePosition() end)
 
 		self[windowStyle].progressGroup = Group(components.progress, {
-				      elapsed = Label("elapsed", ""),
+				      elapsed = Label("song_elapsed", ""),
 				      slider = self[windowStyle].progressSlider,
-				      remain = Label("remain", "")
+				      remain = Label("song_remain", "")
 			      })
 	else
 		self[windowStyle].progressGroup = Group(components.progressNB, {
-			      elapsed = Label("elapsed", "")
+			      elapsed = Label("song_elapsed", "")
 		})
 		self[windowStyle].progressGroup:addTimer(1000, function() self:_updatePosition() end)
 	end

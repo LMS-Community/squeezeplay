@@ -387,6 +387,11 @@ function skin(self, s)
 		h = screenHeight,
 	}
 
+	-- window with absolute positioning
+	s.absolute = _uses(s.window, {
+		layout = Window.noLayout,
+	})
+
 	s.popup = _uses(s.window, {
 		border = { 25, 0, 25, 0 },
 		maskImg = popupMask,
@@ -614,13 +619,13 @@ function skin(self, s)
         	align = 'center',
 	}
 
-	s.keyboard.shift = _uses(s.keyboard.button, {
+	s.keyboard.button_shift = _uses(s.keyboard.button, {
 		bgImg = fiveItemSelectionBox, padding = 2, w = 75, h = 35
 	})
-	s.keyboard.space = _uses(s.keyboard.shift, {
+	s.keyboard.button_space = _uses(s.keyboard.shift, {
 		padding = 2, w = 100, h = 35
 	})
-	s.keyboard.back = _uses(s.keyboard.button, {
+	s.keyboard.button_back = _uses(s.keyboard.button, {
 		img = _loadImage(self, "Icons/Mini/left_arrow.png")
 	})
 	s.keyboard.qwertyLower = _uses(s.keyboard.button, {
@@ -630,10 +635,10 @@ function skin(self, s)
 		img = _loadImage(self, "Icons/icon_shift_on.png")
 	})
 
-	s.keyboard.enter = _uses(s.keyboard.shift, {
+	s.keyboard.button_enter = _uses(s.keyboard.shift, {
 		img = _loadImage(self, "Icons/Mini/right_arrow.png")
 	})
-	s.keyboard.search = _uses(s.keyboard.button, {
+	s.keyboard.button_search = _uses(s.keyboard.button, {
 		img = _loadImage(self, "Icons/Mini/icon_search.png")
 	})
 
@@ -641,19 +646,19 @@ function skin(self, s)
 		button = _uses(s.keyboard.button, {
 			bgImg = keyboardPressedBox
 		}),
-		enter = _uses(s.keyboard.enter, {
+		button_enter = _uses(s.keyboard.enter, {
 			bgImg = keyboardPressedBox
 		}),
-		search = _uses(s.keyboard.search, {
+		button_search = _uses(s.keyboard.search, {
 			bgImg = keyboardPressedBox
 		}),
-		back = _uses(s.keyboard.back, {
+		button_back = _uses(s.keyboard.back, {
 			bgImg = keyboardPressedBox
 		}),
-		shift = _uses(s.keyboard.shift, {
+		button_shift = _uses(s.keyboard.shift, {
 			bgImg = keyboardPressedBox
 		}),
-		space = _uses(s.keyboard.space, {
+		button_space = _uses(s.keyboard.space, {
 			bgImg = keyboardPressedBox
 		}),
 	}
@@ -754,9 +759,9 @@ function skin(self, s)
 	}
 
 	-- popup "spinny" window
-	s.waiting = _uses(s.popup)
+	s.waiting_popup = _uses(s.popup)
 
-	s.waiting.text = {
+	s.waiting_popup.text = {
 		border = { 15, 0, 15, 20 },
 		font = _boldfont(POPUP_TEXT_SIZE_1),
 		fg = TEXT_COLOR,
@@ -767,7 +772,7 @@ function skin(self, s)
 		h = (POPUP_TEXT_SIZE_1 + 8 ) * 2,
 	}
 
-	s.waiting.subtext = {
+	s.waiting_popup.subtext = {
 		padding = { 0, 0, 0, 26 },
 		font = _boldfont(POPUP_TEXT_SIZE_2),
 		fg = TEXT_COLOR,
@@ -786,9 +791,9 @@ function skin(self, s)
 	s.error = _uses(s.window)
 
 	-- update window
-	s.update = _uses(s.popup)
+	s.update_popup = _uses(s.popup)
 
-	s.update.text = {
+	s.update_popup.text = {
 		border = { 15, 0, 15, 20 },
 		font = _boldfont(POPUP_TEXT_SIZE_1),
 		fg = TEXT_COLOR,
@@ -799,7 +804,7 @@ function skin(self, s)
 		h = (POPUP_TEXT_SIZE_1 + 8) * 2,
 	}
 
-	s.update.subtext = {
+	s.update_popup.subtext = {
 		padding = { 0, 0, 0, 30 },
 		font = _font(UPDATE_SUBTEXT_SIZE),
 		fg = TEXT_COLOR,
@@ -809,7 +814,7 @@ function skin(self, s)
 		h = 40,
 	}
 
-	s.update.progress = {
+	s.update_popup.progress = {
 		border = 10,
 		position = LAYOUT_SOUTH,
 		horizontal = 1,
@@ -926,7 +931,7 @@ function skin(self, s)
 
 
 	-- help window (likely the same as information)
-	s.help = _uses(s.window)
+	s.help_info = _uses(s.window)
 
 
 	--track_list window
@@ -992,8 +997,8 @@ function skin(self, s)
 	}
 
 
-	-- toast popup
-	s.toast = {
+	-- toast_popup popup
+	s.toast_popup = {
 		x = 0,
 		y = screenHeight - 93,
 		w = screenWidth,
@@ -1041,6 +1046,11 @@ function skin(self, s)
 		},
 	}
 
+	s.image_popup = _uses(s.popup, {
+		image = {
+			align = "center",
+		},
+	})
 
 --------- SLIDERS ---------
 
@@ -1384,10 +1394,10 @@ if true then
 		position = LAYOUT_SOUTH,
 		padding = { 10, 10, 10, 5 },
 		order = { "elapsed", "slider", "remain" },
-		elapsed = {
+		song_elapsed = {
 			align = 'right',
 		},
-		remain = {
+		song_remain = {
 			align = 'left',
 		},
 		text = {

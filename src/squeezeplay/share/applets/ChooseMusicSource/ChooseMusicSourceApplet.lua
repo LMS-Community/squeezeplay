@@ -315,7 +315,7 @@ function connectPlayerToServer(self, player, server)
 
 
 	-- stoppage popup
-	local window = Popup("waiting")
+	local window = Popup("waiting_popup")
 	window:addWidget(Icon("icon_connecting"))
 
 	local statusLabel = Label("text", self:string("SLIMSERVER_CONNECTING_TO", server:getName()))

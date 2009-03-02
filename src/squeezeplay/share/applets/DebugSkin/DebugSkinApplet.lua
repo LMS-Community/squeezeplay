@@ -405,7 +405,7 @@ styles = {
 	"text_list.menu.selected.itemChecked.check",
 	"text_list.menu.selected.itemChecked.text",
 
-	"toast.text",
+	"toast_popup.text",
 
 	"track_list.menu.scrollbar",
 	"track_list.title.icon",
@@ -435,9 +435,9 @@ styles = {
 	"update.subtext",
 	"update.text",
 
-	"waiting.icon_connecting",
-	"waiting.subtext",
-	"waiting.text",
+	"waiting_popup.icon_connecting",
+	"waiting_popup.subtext",
+	"waiting_popup.text",
 }
 
 

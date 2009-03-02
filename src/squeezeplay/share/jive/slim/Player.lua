@@ -872,7 +872,7 @@ function onStage(self)
 	self.slimServer.comet:endBatch()
 
 	-- create window to display current song info
-	self.currentSong.window = Popup("toast")
+	self.currentSong.window = Popup("toast_popup")
 	self.currentSong.window:setAllowScreensaver(true)
 	self.currentSong.window:setAlwaysOnTop(true)
 	self.currentSong.artIcon = Icon("icon")

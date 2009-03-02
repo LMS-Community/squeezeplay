@@ -54,7 +54,7 @@ Set the playmode icon of the iconbar. Values are nil (off), "stop", "play" or "p
 --]]
 function setPlaymode(self, val)
 	log:debug("Iconbar:setPlaymode(", val, ")")
-	self.iconPlaymode:setStyle("iconPlaymode" .. string.upper((val or "OFF")))
+	self.iconPlaymode:setStyle("icon_playmode_" .. string.upper((val or "OFF")))
 end
 
 --[[
@@ -69,7 +69,7 @@ When not 1 or 2, setRepeat()
 function setPlaylistMode(self, val)
 	log:debug("Iconbar:setPlaylistMode(", val, ")")
 	-- FIXME: need new styles for playlist and party mode
-	self.iconPlaylistMode:setStyle("iconPlaylistMode" .. string.upper((val or "OFF")))
+	self.iconPlaylistMode:setStyle("icon_playlist_mode_" .. string.upper((val or "OFF")))
 end
 
 
@@ -83,7 +83,7 @@ Set the repeat icon of the iconbar. Values are nil (no repeat), 1 for repeat sin
 --]]
 function setRepeat(self, val)
 	log:debug("Iconbar:setRepeat(", val, ")")
-	self.iconRepeat:setStyle("iconRepeat" .. string.upper((val or "OFF")))
+	self.iconRepeat:setStyle("icon_repeat_" .. string.upper((val or "OFF")))
 end
 
 
@@ -97,7 +97,7 @@ Set the shuffle icon of the iconbar. Values are nil (no shuffle), 1 for shuffle 
 --]]
 function setShuffle(self, val)
 	log:debug("Iconbar:setShuffle(", val, ")")
-	self.iconShuffle:setStyle("iconShuffle" .. string.upper((val or "OFF")))
+	self.iconShuffle:setStyle("icon_shuffle_" .. string.upper((val or "OFF")))
 end
 
 
@@ -111,7 +111,7 @@ Set the state of the battery icon of the iconbar. Values are nil (no battery), C
 --]]
 function setBattery(self, val)
 	log:debug("Iconbar:setBattery(", val, ")")
-	self.iconBattery:setStyle("iconBattery" .. string.upper((val or "NONE")))
+	self.iconBattery:setStyle("icon_battery_" .. string.upper((val or "NONE")))
 end
 
 
@@ -129,11 +129,11 @@ function setWirelessSignal(self, val)
 	self.wirelessSignal = val
 
 	if val == "ERROR" then
-		self.iconWireless:setStyle("iconWireless" .. val)
+		self.iconWireless:setStyle("icon_wireless_" .. val)
 	elseif self.serverError == "ERROR" then
-		self.iconWireless:setStyle("iconWirelessSERVERERROR")
+		self.iconWireless:setStyle("icon_wireless_SERVERERROR")
 	else
-		self.iconWireless:setStyle("iconWireless" .. (val or "NONE"))
+		self.iconWireless:setStyle("icon_wireless_" .. (val or "NONE"))
 	end
 end
 
@@ -180,14 +180,14 @@ function __init(self)
 
 	local obj = oo.rawnew(self, {
 	        -- FIXME the background should be an icon, but icons use Surfaces not Tiles.
-		background = Label("iconBackground", ""),
-		iconPlaymode = Icon("iconPlaymodeOFF"),
-		iconRepeat = Icon("iconRepeatOFF"),
-		iconPlaylistMode = Icon("iconPlaylistModeOFF"),
-		iconShuffle = Icon("iconShuffleOFF"),
-		iconBattery = Icon("iconBatteryNONE"),
-		iconWireless = Icon("iconWirelessNONE"),
-		button_time = Label("iconTime", "XXXX"),
+		background = Label("background", ""),
+		iconPlaymode = Icon("button_playmode_OFF"),
+		iconRepeat = Icon("button_repeat_OFF"),
+		iconPlaylistMode = Icon("button_playlist_mode_OFF"),
+		iconShuffle = Icon("button_shuffle_OFF"),
+		iconBattery = Icon("button_battery_NONE"),
+		iconWireless = Icon("button_wireless_NONE"),
+		button_time = Label("button_time", "XXXX"),
 	})
 
 

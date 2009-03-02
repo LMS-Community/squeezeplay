@@ -512,7 +512,7 @@ end
 
 
 function lockedScreen(self, menuItem)
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 
         popup:setAllowScreensaver(false)
         popup:setAlwaysOnTop(true)
@@ -532,7 +532,7 @@ end
 
 function downloadingSoftware(self, menuItem)
 
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 
 	popup:setTransparent(false)
 
@@ -581,7 +581,7 @@ end
 
 function ignoreAllInputPopup(self, menuItem)
 
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 
 	local icon = Icon("icon_connecting")
 	local label = Label("text", "All input is ignored, except:\n'disconnect_player', 'back', 'go'")
@@ -602,7 +602,7 @@ end
 
 function connectingPopup(self, menuItem)
 
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 
 	local icon = Icon("icon_connecting")
 	local label = Label("text", "")
@@ -668,7 +668,7 @@ end
 
 
 function timerTestWindow(self, instead)
-	local popup = Popup("waiting")
+	local popup = Popup("waiting_popup")
 	local icon = Icon("icon_connecting")
 	local label = Label("text", "Timer test 1")
 
@@ -689,7 +689,7 @@ end
 
 
 function timerTestWindow2(self)
-	local window = Popup("waiting")
+	local window = Popup("waiting_popup")
 	local icon = Icon("icon_connected")
 	local label = Label("text", "Timer test 2")
 

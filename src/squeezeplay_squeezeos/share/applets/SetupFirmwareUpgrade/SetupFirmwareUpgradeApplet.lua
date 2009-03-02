@@ -373,7 +373,7 @@ function _upgrade(self, url)
 		return self:_chargeBattery()
 	end
 
-	self.popup = Popup("update")
+	self.popup = Popup("update_popup")
 
 	-- don't allow power saving during upgrades
 	self.popup:setAllowPowersave(false)

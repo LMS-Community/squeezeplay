@@ -305,51 +305,51 @@ function skin(self, s, reload, useDefaultSize)
 	s.background.position = LAYOUT_SOUTH
 
 	-- play/stop/pause
-	s.iconPlaymodeOFF = _icon(self, 9, screenHeight - 30, "icon_mode_off.png")
-	s.iconPlaymodeSTOP = _icon(self, 9, screenHeight - 30, "icon_mode_off.png")
-	s.iconPlaymodePLAY = _icon(self, 9, screenHeight - 30, "icon_mode_play.png")
-	s.iconPlaymodePAUSE = _icon(self, 9, screenHeight - 30, "icon_mode_pause.png")
+	s.icon_playmode_OFF = _icon(self, 9, screenHeight - 30, "icon_mode_off.png")
+	s.icon_playmode_STOP = _icon(self, 9, screenHeight - 30, "icon_mode_off.png")
+	s.icon_playmode_PLAY = _icon(self, 9, screenHeight - 30, "icon_mode_play.png")
+	s.icon_playmode_PAUSE = _icon(self, 9, screenHeight - 30, "icon_mode_pause.png")
 
 	-- repeat off/repeat track/repeat playlist
-	s.iconRepeatOFF = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
-	s.iconRepeat0 = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
-	s.iconRepeat1 = _icon(self, 41, screenHeight - 30, "icon_repeat_song.png")
-	s.iconRepeat2 = _icon(self, 41, screenHeight - 30, "icon_repeat.png")
+	s.icon_repeat_OFF = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
+	s.icon_repeat_0 = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
+	s.icon_repeat_1 = _icon(self, 41, screenHeight - 30, "icon_repeat_song.png")
+	s.icon_repeat_2 = _icon(self, 41, screenHeight - 30, "icon_repeat.png")
 
 	-- repeat off/repeat track/repeat playlist
-	s.iconPlaylistModeOFF = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
-	s.iconPlaylistModeDISABLED = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
+	s.icon_playlist_mode_OFF = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
+	s.icon_playlist_mode_DISABLED = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
 
 	-- FIXME, needs official artwork
-	s.iconPlaylistModeON = _icon(self, 41, screenHeight - 30, "icon_mode_playlist.png")
-	s.iconPlaylistModePARTY = _icon(self, 41, screenHeight - 30, "icon_mode_party.png")
+	s.icon_playlist_mode_ON = _icon(self, 41, screenHeight - 30, "icon_mode_playlist.png")
+	s.icon_playlist_mode_PARTY = _icon(self, 41, screenHeight - 30, "icon_mode_party.png")
 
 	-- shuffle off/shuffle album/shuffle playlist
-	s.iconShuffleOFF = _icon(self, 75, screenHeight - 30, "icon_shuffle_off.png")
-	s.iconShuffle0 = _icon(self, 75, screenHeight - 30, "icon_shuffle_off.png")
-	s.iconShuffle1 = _icon(self, 75, screenHeight - 30, "icon_shuffle.png")
-	s.iconShuffle2 = _icon(self, 75, screenHeight - 30, "icon_shuffle_album.png")
+	s.icon_shuffle_OFF = _icon(self, 75, screenHeight - 30, "icon_shuffle_off.png")
+	s.icon_shuffle_0 = _icon(self, 75, screenHeight - 30, "icon_shuffle_off.png")
+	s.icon_shuffle_1 = _icon(self, 75, screenHeight - 30, "icon_shuffle.png")
+	s.icon_shuffle_2 = _icon(self, 75, screenHeight - 30, "icon_shuffle_album.png")
 
 	-- wireless status
-	s.iconWireless1 = _icon(self, 107, screenHeight - 30, "icon_wireless_1.png")
-	s.iconWireless2 = _icon(self, 107, screenHeight - 30, "icon_wireless_2.png")
-	s.iconWireless3 = _icon(self, 107, screenHeight - 30, "icon_wireless_3.png")
-	s.iconWireless4 = _icon(self, 107, screenHeight - 30, "icon_wireless_4.png")
-	s.iconWirelessERROR = _icon(self, 107, screenHeight - 30, "icon_wireless_off.png")
-	s.iconWirelessSERVERERROR = _icon(self, 107, screenHeight - 30, "icon_wireless_noserver.png")
+	s.icon_wireless_1 = _icon(self, 107, screenHeight - 30, "icon_wireless_1.png")
+	s.icon_wireless_2 = _icon(self, 107, screenHeight - 30, "icon_wireless_2.png")
+	s.icon_wireless_3 = _icon(self, 107, screenHeight - 30, "icon_wireless_3.png")
+	s.icon_wireless_4 = _icon(self, 107, screenHeight - 30, "icon_wireless_4.png")
+	s.icon_wireless_ERROR = _icon(self, 107, screenHeight - 30, "icon_wireless_off.png")
+	s.icon_wireless_SERVERERROR = _icon(self, 107, screenHeight - 30, "icon_wireless_noserver.png")
 
 	-- battery status
-	s.iconBatteryAC = _icon(self, 137, screenHeight - 30, "icon_battery_ac.png")
+	s.button_battery_AC = _icon(self, 137, screenHeight - 30, "icon_battery_ac.png")
 
-	s.iconBatteryCHARGING = _icon(self, 137, screenHeight - 30, "icon_battery_charging.png")
-	s.iconBattery0 = _icon(self, 137, screenHeight - 30, "icon_battery_0.png")
-	s.iconBattery1 = _icon(self, 137, screenHeight - 30, "icon_battery_1.png")
-	s.iconBattery2 = _icon(self, 137, screenHeight - 30, "icon_battery_2.png")
-	s.iconBattery3 = _icon(self, 137, screenHeight - 30, "icon_battery_3.png")
-	s.iconBattery4 = _icon(self, 137, screenHeight - 30, "icon_battery_4.png")
+	s.button_battery_CHARGING = _icon(self, 137, screenHeight - 30, "icon_battery_charging.png")
+	s.button_battery_0 = _icon(self, 137, screenHeight - 30, "icon_battery_0.png")
+	s.button_battery_1 = _icon(self, 137, screenHeight - 30, "icon_battery_1.png")
+	s.button_battery_2 = _icon(self, 137, screenHeight - 30, "icon_battery_2.png")
+	s.button_battery_3 = _icon(self, 137, screenHeight - 30, "icon_battery_3.png")
+	s.button_battery_4 = _icon(self, 137, screenHeight - 30, "icon_battery_4.png")
 
-	s.iconBatteryCHARGING.frameRate = 1
-	s.iconBatteryCHARGING.frameWidth = 37
+	s.button_battery_CHARGING.frameRate = 1
+	s.button_battery_CHARGING.frameWidth = 37
 
 
 	-- time
@@ -725,10 +725,10 @@ function skin(self, s, reload, useDefaultSize)
 	s.icon_locked.w = WH_FILL
 	s.icon_locked.align = "center"
 
-	s.iconBatteryLow = {}
-	s.iconBatteryLow.img = _loadImage(self, "Alerts/popup_battery_low_icon.png")
-	s.iconBatteryLow.w = WH_FILL
-	s.iconBatteryLow.align = "center"
+	s.icon_battery_low = {}
+	s.icon_battery_low.img = _loadImage(self, "Alerts/popup_battery_low_icon.png")
+	s.icon_battery_low.w = WH_FILL
+	s.icon_battery_low.align = "center"
 
 	s.iconAlarm = {}
 	s.iconAlarm.img = _loadImage(self, "Alerts/popup_alarm_icon.png")
