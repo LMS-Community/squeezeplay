@@ -1438,10 +1438,7 @@ function _enterGateway(self, iface, ssid)
 	window:addWidget(keyboard)
 	window:focusWidget(textinput)
 
-	window:addActionListener("help", self, function()
-		self:helpWindow('NETWORK_GATEWAY', 'NETWORK_GATEWAY_HELP')
-	end)
-	window:setButtonAction("rbutton", "help")
+	_helpAction(self, window, 'NETWORK_GATEWAY', 'NETWORK_GATEWAY_HELP')
 
 	self:tieAndShowWindow(window)
 end
