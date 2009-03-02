@@ -362,10 +362,10 @@ local function _checkboxItem(item, db)
 			function(_, checkboxFlag)
 				log:debug("checkbox updated: ", checkboxFlag)
 				if (checkboxFlag) then
-					log:debug("ON: ", checkboxFlag)
+					log:warn("ON: ", checkboxFlag)
 					_actionHandler(nil, nil, db, nil, nil, 'on', item) 
 				else
-					log:debug("OFF: ", checkboxFlag)
+					log:warn("OFF: ", checkboxFlag)
 					_actionHandler(nil, nil, db, nil, nil, 'off', item) 
 				end
 			end,
@@ -383,7 +383,7 @@ local function _choiceItem(item, db)
 
 	if choiceFlag and choiceActions and not item["_jive_button"] then
 		item["_jive_button"] = Choice(
-			"choice",
+			"icon",
 			item['choiceStrings'],
 			function(_, index) 
 				log:info('Callback has been called: ', index) 
@@ -457,7 +457,7 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 
 	if item then
 		group:setWidgetValue("text", item.text)
-		group:setWidget('arrow', Icon('arrow'))
+		--group:setWidget('arrow', Icon('arrow'))
 
 		-- set an acceleration key, but not for playlists
 		if item.params and item.params.textkey then
@@ -467,19 +467,19 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 
 		if item["radio"] then
 			group._type = "radio"
-			group:setWidget("arrow", _radioItem(item, db))
-
-		elseif item['selectedIndex'] then
-			group._type = 'choice'
-			group:setWidget('choice', _choiceItem(item, db))
+			group:setWidget("icon", _radioItem(item, db))
 
 		elseif item["checkbox"] then
 			group._type = "checkbox"
-			group:setWidget("arrow", _checkboxItem(item, db))
+			group:setWidget("icon", _checkboxItem(item, db))
+
+		elseif item['selectedIndex'] then
+			group._type = 'choice'
+			group:setWidget('icon', _choiceItem(item, db))
 
 		else
 			if group._type then
-				group:setWidget("arrow", Icon("arrow"))
+				group:setWidget("icon", Icon("icon"))
 				group._type = nil
 			end
 			_artworkItem(item, group, menuAccel)
@@ -1031,7 +1031,6 @@ local function _browseSink(step, chunk, err)
 			--step.menu:setStyle(step.db:menuStyle())
 			local titleBar = step.window:getTitleWidget()
 			-- styling both the menu and title with icons is problematic to the layout
-debug.dump(data)
 			if step.db:menuStyle() == 'albummenu' and titleBar:getStyle() == 'albumtitle' then
 				titleBar:setWidget('icon', nil)
 				step.window:setTitleStyle('title')
@@ -1967,6 +1966,8 @@ local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderS
 				style = 'itemPlay'
 			elseif style == 'itemadd' or style == 'albumitemadd' then
 				style = 'itemAdd'
+			elseif item['checkbox'] or item['radio'] or item['selectedIndex'] then
+				style = 'itemChoice'
 			end
 			widgets[widgetIndex] = _decoratedLabel(widget, style, item, db, menuAccel)
 		end

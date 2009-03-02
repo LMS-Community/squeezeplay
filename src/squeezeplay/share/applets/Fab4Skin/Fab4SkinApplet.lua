@@ -421,6 +421,7 @@ function skin(self, s)
 			padding = { 6, 5, 2, 5 },
 			align = "left",
 			w = WH_FILL,
+			h = WH_FILL,
 			font = _boldfont(TEXTMENU_FONT_SIZE),
 			fg = TEXT_COLOR,
 			sh = TEXT_SH_COLOR,
@@ -437,6 +438,18 @@ function skin(self, s)
 	s.itemAdd = _uses(s.item, { 
 		arrow = addArrow 
 	})
+
+	-- Checkbox
+        s.checkbox = {}
+        s.checkbox.imgOn = _loadImage(self, "Icons/checkbox_on.png")
+        s.checkbox.imgOff = _loadImage(self, "Icons/checkbox_off.png")
+
+
+        -- Radio button
+        s.radio = {}
+        s.radio.imgOn = _loadImage(self, "Icons/radiobutton_on.png")
+        s.radio.imgOff = _loadImage(self, "Icons/radiobutton_off.png")
+
 	s.itemChoice = _uses(s.item, {
 		order  = { 'text', 'icon' },
 		icon = {

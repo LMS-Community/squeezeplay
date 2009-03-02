@@ -15,7 +15,7 @@ The objective is to keep the reference code as simple as possible!
 
 --]]
 
-local ipairs = ipairs
+local ipairs, tostring = ipairs, tostring
 
 local oo                  = require("loop.simple")
 
@@ -25,6 +25,9 @@ local Framework           = require("jive.ui.Framework")
 local Icon                = require("jive.ui.Icon")
 local Label               = require("jive.ui.Label")
 local Choice              = require("jive.ui.Choice")
+local Checkbox            = require("jive.ui.Checkbox")
+local RadioButton         = require("jive.ui.RadioButton")
+local RadioGroup          = require("jive.ui.RadioGroup")
 local Popup               = require("jive.ui.Popup")
 local Keyboard            = require("jive.ui.Keyboard")
 local SimpleMenu          = require("jive.ui.SimpleMenu")
@@ -487,10 +490,55 @@ function setup_textlist(self, item)
 		end,
 		1
 	)
+	local checkbox = Checkbox(
+                        "checkbox",
+                        function(_, checkboxFlag)
+                                if (checkboxFlag) then
+                                        log:warn("ON: ", checkboxFlag)
+                                else
+                                        log:warn("OFF: ", checkboxFlag)
+                                end
+                        end,
+                        checkboxFlag == 1
+	)
+	local group = RadioGroup()
+	local radios = {
+		RadioButton(
+			"radio",
+			group,
+			function()
+				log:warn("radio button selected")
+			end,
+			true
+		),
+		RadioButton(
+			"radio",
+			group,
+			function()
+				log:warn("radio button 2 selected")
+			end,
+			false
+		)
+	}
 	menu:addItem({
 		text  = 'Sample Choice Item',
 		style = 'itemChoice',
 		icon  = choice,
+	})
+	menu:addItem({
+		text  = 'Sample Checkbox',
+		style = 'itemChoice',
+		icon  = checkbox,
+	})
+	menu:addItem({
+		text  = 'Sample Radio 1',
+		style = 'itemChoice',
+		icon  = radios[1],
+	})
+	menu:addItem({
+		text  = 'Sample Radio 2',
+		style = 'itemChoice',
+		icon  = radios[2],
 	})
 	for i, text in ipairs(data) do
 		log:warn(text)
