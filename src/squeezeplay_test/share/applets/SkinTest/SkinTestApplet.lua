@@ -159,7 +159,7 @@ end
 --[[
 Window:   "setuplist"
 Menu:     "menu"
-Item:     "item", "itemchecked"
+Item:     "item", "itemChecked"
 Textarea: "helptext"
 --]]
 function setup_window(self, item)
@@ -180,7 +180,7 @@ function setup_window(self, item)
 					selected.style = "item"
 					menu:updatedItem(selected)
 				end
-				item.style = "itemchecked"
+				item.style = "itemChecked"
 				menu:updatedItem(item)
 
 				selected = item
@@ -432,7 +432,7 @@ function window_trackinfo(self, item)
 					menu:updatedItem(selected)
 				end
 
-				item.style = "itemchecked"
+				item.style = "itemChecked"
 				menu:updatedItem(item)
 
 				selected = item
@@ -470,7 +470,7 @@ end
 --[[
 Window:   "textlist"
 Menu:     "menu"
-Item:     "item", "itemchecked", (styles: selected, pressed, locked)
+Item:     "item", "itemChecked", (styles: selected, pressed, locked)
 --]]
 function setup_textlist(self, item)
 	local data = _itemData(item)
@@ -495,7 +495,7 @@ function setup_textlist(self, item)
 					menu:updatedItem(selected)
 				end
 
-				item.style = "itemchecked"
+				item.style = "itemChecked"
 				menu:updatedItem(item)
 
 				selected = item
@@ -512,7 +512,7 @@ end
 --[[
 Window:   "playlist"
 Menu:     "menu"
-Item:     "item", "itemchecked", (styles: selected, pressed, locked)
+Item:     "item", "itemChecked", (styles: selected, pressed, locked)
 --]]
 function window_playlist(self, item)
 	local data = _itemData(item)
@@ -535,7 +535,7 @@ function window_playlist(self, item)
 					menu:updatedItem(selected)
 				end
 
-				item.style = "itemchecked"
+				item.style = "itemChecked"
 				menu:updatedItem(item)
 
 				selected = item
@@ -553,7 +553,7 @@ end
 --[[
 Window:   "iconlist"
 Menu:     "menu"
-Item:     "item", "itemchecked", (styles: selected, pressed, locked)
+Item:     "item", "itemChecked", (styles: selected, pressed, locked)
 --]]
 function window_iconlist(self, item)
 	local data = _itemData(item)
@@ -576,7 +576,7 @@ function window_iconlist(self, item)
 					menu:updatedItem(selected)
 				end
 
-				item.style = "itemchecked"
+				item.style = "itemChecked"
 				menu:updatedItem(item)
 
 				selected = item
@@ -641,7 +641,7 @@ function window_tracklist(self, item)
 					menu:updatedItem(selected)
 				end
 
-				item.style = "itemchecked"
+				item.style = "itemChecked"
 				menu:updatedItem(item)
 
 				selected = item

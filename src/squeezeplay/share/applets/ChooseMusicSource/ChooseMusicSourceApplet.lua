@@ -195,14 +195,14 @@ function _addServerItem(self, server, address)
 		item = {
 			text = server and server:getName() or address,
 			weight = 1,
-			style = 'itemNoAction'
+			style = 'itemNoArrow'
 		}
 	end
 
 	-- check current player
 	if currentPlayer and currentPlayer:getSlimServer() and server == currentPlayer:getSlimServer() then
 		log:debug("\tthis is the connected server, so remove callback for this item")
-		item.style = 'checkedNoAction'
+		item.style = 'itemCheckedNoArrow'
 		item.callback = self.setupNext
 	end
 
@@ -249,7 +249,7 @@ function _updateServerList(self, player)
 
 	for id, item in pairs(self.serverList) do
 		if server == id then
-			item.style = 'checkedNoAction'
+			item.style = 'itemCheckedNoArrow'
 			item.callback = nil
 		else
 			item.style = nil

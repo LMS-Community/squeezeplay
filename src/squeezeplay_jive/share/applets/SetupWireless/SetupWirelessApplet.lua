@@ -148,7 +148,7 @@ function _setCurrentSSID(self, ssid)
 
 	if self.currentSSID then
 		local item = self.scanResults[self.currentSSID].item
-		item.style = "checked"
+		item.style = "itemChecked"
 		self.scanMenu:updatedItem(item)
 	end
 end

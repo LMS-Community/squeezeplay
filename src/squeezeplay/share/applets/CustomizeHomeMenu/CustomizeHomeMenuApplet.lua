@@ -132,7 +132,7 @@ function menu(self, menuItem)
 				text = title,
 				weights = item.weights,
 				indent = indentSize,
-				style = 'itemNoAction'
+				style = 'itemNoArrow'
 			}
 		else
 			menuItem = {

@@ -235,7 +235,7 @@ function _addPlayerItem(self, player)
 	}
 
 	if player == self.selectedPlayer and player:isConnected() then
-		item.style = "chooseplayerchecked"
+		item.style = "itemChecked"
 	end
 
 	self.playerMenu:addItem(item)
@@ -265,7 +265,7 @@ function _refreshPlayerItem(self, player)
 		else
 			-- update player state
 			if player == self.selectedPlayer then
-				item.style = "checked"
+				item.style = "itemChecked"
 			end
 		end
 
@@ -350,7 +350,7 @@ function setupShowSelectPlayer(self, setupNext, windowStyle)
 				appletManager:callService("setupSqueezeboxSettingsShow")
 			end,
 			iconStyle = 'receiver',
-			style = 'chooseplayer',
+			style = 'item',
 			weight = 10,
 		})
 	end
