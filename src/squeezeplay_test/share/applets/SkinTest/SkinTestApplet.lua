@@ -398,6 +398,77 @@ end
 --[[
 Window:   "textlist"
 Menu:     "menu"
+Item:     "itemplay", "itemadd", "item" (styles: selected, pressed, locked)
+--]]
+function window_trackinfo(self, item)
+	local data = _itemData(item)
+
+	local window = Window("textlist", _itemName(item), "home")
+	_windowActions(self, item, window)
+
+	local menu = SimpleMenu("menu")
+	for i, text in ipairs(data) do
+		log:warn(text)
+		local itemStyle = ''
+		self.checkMe = true
+		if i == 1 then
+			itemStyle = 'play'
+			self.checkMe = false
+		elseif i == 2 then
+			itemStyle = 'add'
+			self.checkMe = false
+		end
+		local callback 
+		if self.checkMe then
+			callback = function(event, item)
+				if selected == item then
+					menu:lock()
+					return
+				end
+
+				if selected then
+					selected.style = "item"
+					menu:updatedItem(selected)
+				end
+
+				item.style = "itemchecked"
+				menu:updatedItem(item)
+
+				selected = item
+			end
+		else
+			callback = function(event, item)
+				if selected == item then
+					menu:lock()
+					return
+				end
+
+				if selected then
+					selected.style = "item"
+					menu:updatedItem(selected)
+				end
+
+				selected = item
+			end
+		end
+		menu:addItem({
+			text = text,
+			sound = "WINDOWSHOW",
+			style = 'item' .. itemStyle,
+			callback = callback,
+		})
+	end
+	
+	window:addWidget(menu)
+
+	self:tieWindow(window)
+	return window
+end
+
+
+--[[
+Window:   "textlist"
+Menu:     "menu"
 Item:     "item", "itemchecked", (styles: selected, pressed, locked)
 --]]
 function setup_textlist(self, item)
@@ -613,12 +684,12 @@ end
 
 -- the reference windows, and test data
 windows = {
+	{ "trackinfo", "Track Info", window_trackinfo, },
 	{ "tracklist", "Track List", window_tracklist, },
 	{ "playlist", "Playlist", window_playlist, },
 	{ "textlist", "Text List", setup_textlist, },
 	{ "iconlist", "Icon List", window_iconlist, },
 	{ "information", "Information Window", window_information, },
---	{ "trackinfo", "Track Info", window_trackinfo, },
 	{ "toast", "Popup Toast", window_toast, },
 
 	{ "setuplist", "Languages", setup_window, },
@@ -671,6 +742,15 @@ testData = {
 	},
 	textlist = {
 		 "Now Playing", "Music Library", "Internet Radio", "Music Services", "Favorites", "Extras", "Settings", "Choose Player", "Turn Off Player"
+	},
+	trackinfo = {
+		"Play this song",
+		"Add this song",
+		"Artist: Sun Kil Moon",
+		"Album: April",
+		"Genre: No Genre",
+		"Year: 2008",
+		"Comment",
 	},
 	iconlist = {
 		{ "Something" }, 

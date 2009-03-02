@@ -1644,6 +1644,19 @@ end -- OLD STYLES
 		},
 	}
 
+	s.itemplay = _uses(s.item, {
+		arrow = {
+			img = _loadImage(self, "Icons/selection_play_3line_on.png")
+		},
+	})
+
+	s.itemadd = _uses(s.item, {
+		arrow = {
+			img = _loadImage(self, "Icons/selection_add_3line_off.png")
+		},
+	})
+
+
 	s.itemchecked = _uses(s.item, {
 		order = { "text", "check", "arrow" },
 		check = {
@@ -1665,6 +1678,12 @@ end -- OLD STYLES
 		itemchecked = _uses(s.itemchecked, {
 			bgImg = fiveItemPressedBox,
 		}),
+		itemplay = _uses(s.itemplay, {
+			bgImg = fiveItemPressedBox,
+		}),
+		itemadd = _uses(s.itemadd, {
+			bgImg = fiveItemPressedBox,
+		}),
 	}
 
 	s.locked = {
@@ -1672,6 +1691,12 @@ end -- OLD STYLES
 			arrow = smallSpinny
 		}),
 		itemchecked = _uses(s.pressed.itemchecked, {
+			arrow = smallSpinny
+		}),
+		itemplay = _uses(s.pressed.itemplay, {
+			arrow = smallSpinny
+		}),
+		itemadd = _uses(s.pressed.itemadd, {
 			arrow = smallSpinny
 		}),
 	}
@@ -2021,11 +2046,6 @@ end -- OLD STYLES
 			img = _loadImage(self, "Icons/menu_album_noartwork_43.png")
 		},
 	})
-
-
-	--trackinfo window
-	-- XXXX todo
-	s.trackinfo = _uses(s.textlist)
 
 	--playlist window
 	-- identical to iconlist but with some different formatting on the text
