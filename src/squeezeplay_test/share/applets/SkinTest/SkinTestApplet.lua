@@ -675,6 +675,29 @@ function window_toast(self, item)
 	return popup
 end
 
+--[[
+Popup:   "icontoast"
+Label:   "text"
+Icon:    "icon"
+--]]
+function window_icontoast(self, item)
+	local data = _itemData(item)
+
+	local popup = Popup("icontoast")
+	_windowActions(self, item, popup)
+
+	local text = Textarea("text", "Your toast is done")
+	local icon = Icon('icon')
+
+	-- XXXX add other widgets
+
+	popup:addWidget(icon)
+	popup:addWidget(text)
+
+	self:tieWindow(popup)
+	return popup
+end
+
 
 
 -- REFERENCE WINDOW STYLES ARE ABOVE
@@ -684,6 +707,7 @@ end
 
 -- the reference windows, and test data
 windows = {
+	{ "icontoast", "Popup Toast w/art", window_icontoast, },
 	{ "trackinfo", "Track Info", window_trackinfo, },
 	{ "tracklist", "Track List", window_tracklist, },
 	{ "playlist", "Playlist", window_playlist, },

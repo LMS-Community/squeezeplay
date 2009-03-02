@@ -2107,6 +2107,23 @@ end -- OLD STYLES
 	}
 	-- XXXX fix toast
 
+	s.icontoast = _uses(s.toast, {
+		order = { 'icon', 'text' },
+		text = { 
+			padding = { 10, 12, 12, 12 } ,
+			align = 'top-left',
+			w = WH_FILL,
+			h = WH_FILL
+		},
+		icon = { 
+			align = 'top-left', 
+			border = { 12, 12, 0, 0 },
+			img = _loadImage(self, "Icons/menu_album_noartwork_64.png"),
+			h = WH_FILL,
+			w = 64,
+		}
+	})
+
 
 --------- BUTTONS ---------
 
