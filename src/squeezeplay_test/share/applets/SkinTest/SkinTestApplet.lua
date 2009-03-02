@@ -397,8 +397,8 @@ end
 
 --[[
 Window:   "textlist"
-menu: "menu"
-item: "item"
+Menu:     "menu"
+Item:     "item", "itemchecked", (styles: selected, pressed, locked)
 --]]
 function setup_textlist(self, item)
 	local data = _itemData(item)
@@ -411,6 +411,23 @@ function setup_textlist(self, item)
 		log:warn(text)
 		menu:addItem({
 			text = text,
+			sound = "WINDOWSHOW",
+			callback = function(event, item)
+				if selected == item then
+					menu:lock()
+					return
+				end
+
+				if selected then
+					selected.style = "item"
+					menu:updatedItem(selected)
+				end
+
+				item.style = "itemchecked"
+				menu:updatedItem(item)
+
+				selected = item
+			end
 		})
 	end
 	

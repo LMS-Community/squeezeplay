@@ -1666,6 +1666,15 @@ end -- OLD STYLES
 		}),
 	}
 
+	s.locked = {
+		item = _uses(s.pressed.item, {
+			arrow = smallSpinny
+		}),
+		itemchecked = _uses(s.pressed.itemchecked, {
+			arrow = smallSpinny
+		}),
+	}
+
 	s.helptext = {
 		w = screenWidth - 6,
 		position = LAYOUT_SOUTH,
@@ -1688,9 +1697,6 @@ end -- OLD STYLES
 		img = scrollBar,
 		layer = LAYER_CONTENT_ON_STAGE,
 	}
-
-
-	-- XXXX locked items
 
 	s.text = {
 		w = screenWidth,
