@@ -1353,185 +1353,6 @@ if false then
 	s.popupinfo.text.align = "left"
 
 
-	-- BEGIN NowPlaying skin code
-	-- this skin is established in two forms,
-	-- one for the Screensaver windowStyle (ss), one for the browse windowStyle (browse)
-	-- a lot of it can be recycled from one to the other
-
-	local TEXT_COLOR = { 0xE7, 0xE7, 0xE7 }
-	local TEXT_SH_COLOR = { 0x37, 0x37, 0x37 }
-
-	local SELECT_COLOR = { 0x00, 0x00, 0x00 }
-	local SELECT_SH_COLOR = { }
-
-
-	local NP_TRACK_FONT_SIZE = 26
-
-	-- Title
-	s.ssnptitle = _uses(s.title, {
-		rbutton  = {
-			font    = _font(14),
-			fg      = TEXT_COLOR,
-			bgImg   = titlebarButtonBox,
-			w       = TITLE_BUTTON_WIDTH,
-			h       = TITLE_BUTTON_HEIGHT,
-			padding =  TITLE_BUTTON_PADDING,
-			padding = { 10, 0, 10, 0},
-			align   = 'center',
-		}
-	})
-
-	-- nptitle style is the same for all windowStyles
-	s.browsenptitle = _uses(s.ssnptitle)
-	s.largenptitle  = _uses(s.ssnptitle)
-
-
-	-- pressed styles
-	s.ssnptitle.pressed = _uses(s.ssnptitle, {
-		lbutton = {
-			bgImg = pressedTitlebarButtonBox,
-		},
-		rbutton = {
-			bgImg = pressedTitlebarButtonBox,
-		},
-	})
-
-	s.browsenptitle.pressed = _uses(s.ssnptitle.pressed)
-	s.largenptitle.pressed = _uses(s.ssnptitle.pressed)
-
-	-- Song
-	s.ssnptrack = {}
-	s.ssnptrack.border = { 4, 0, 4, 0 }
-	s.ssnptrack.text = {}
-	s.ssnptrack.text.w = WH_FILL
-	s.ssnptrack.text.padding = { 220, 52, 20, 10 }
-	s.ssnptrack.text.align = "left"
-        s.ssnptrack.text.font = _font(NP_TRACK_FONT_SIZE)
-	s.ssnptrack.text.lineHeight = NP_TRACK_FONT_SIZE + 4
-	s.ssnptrack.position = LAYOUT_WEST
-        s.ssnptrack.text.line = {
-		{
-			font = _boldfont(NP_TRACK_FONT_SIZE),
-			height = NP_TRACK_FONT_SIZE + 4
-		}
-	}
-	s.ssnptrack.text.fg = TEXT_COLOR
-
-	-- nptrack is identical between all windowStyles
-	s.browsenptrack = _uses(s.ssnptrack)
-	s.largenptrack  = _uses(s.ssnptrack)
-
-	-- Artwork
-	local ARTWORK_SIZE    = self:getSettings().nowPlayingBrowseArtworkSize
-	local SS_ARTWORK_SIZE = self:getSettings().nowPlayingSSArtworkSize
-	local browseArtWidth  = ARTWORK_SIZE
-	local ssArtWidth      = SS_ARTWORK_SIZE
-
-	s.ssnpartwork = {}
-
-	s.ssnpartwork.w = ssArtWidth
-	s.ssnpartwork.border = { 10, 50, 10, 0 }
-	s.ssnpartwork.position = LAYOUT_WEST
-	s.ssnpartwork.align = "center"
-	s.ssnpartwork.artwork = {}
-	s.ssnpartwork.artwork.align = "center"
-	s.ssnpartwork.artwork.padding = 0
-	-- FIXME: change name to not be specific to icon width in filename
-	s.ssnpartwork.artwork.img = _loadImage(self, "Icons/icon_album_noartwork_336.png")
-	s.browsenpartwork = _uses(s.ssnpartwork)
-	s.largenpartwork = _uses(s.ssnpartwork)
-
-	s.ssnpcontrols = {}
-	s.ssnpcontrols.order = { 'rew', 'play', 'fwd', 'vol' }
-	s.ssnpcontrols.position = LAYOUT_NONE
-
-	local topPadding = screenHeight/2 + 10
-	local rightPadding = screenWidth/2 - 15
-	local buttonPadding = { 10, 5, 10, 5 }
-	s.ssnpcontrols.x = rightPadding
-	s.ssnpcontrols.y = topPadding
-	s.ssnpcontrols.bgImg = buttonBox
-	
-	s.ssnpcontrols.rew = {}
-	s.ssnpcontrols.rew.align = 'center'
-	s.ssnpcontrols.rew.padding = buttonPadding
-	s.ssnpcontrols.rew.img = _loadImage(self, "Player_Controls/icon_toolbar_rew.png")
-	
-	s.ssnpcontrols.play = {}
-	s.ssnpcontrols.play.align = 'center'
-	s.ssnpcontrols.play.padding = buttonPadding
-	s.ssnpcontrols.play.img = _loadImage(self, "Player_Controls/icon_toolbar_play.png")
-	
-	s.ssnpcontrols.pause = {}
-	s.ssnpcontrols.pause.align = 'center'
-	s.ssnpcontrols.pause.padding = buttonPadding
-	s.ssnpcontrols.pause.img = _loadImage(self, "Player_Controls/icon_toolbar_pause.png")
-	
-	
-	s.ssnpcontrols.fwd = {}
-	s.ssnpcontrols.fwd.align = 'center'
-	s.ssnpcontrols.fwd.padding = buttonPadding
-	s.ssnpcontrols.fwd.img = _loadImage(self, "Player_Controls/icon_toolbar_ffwd.png")
-
-	s.ssnpcontrols.vol = {}
-	s.ssnpcontrols.vol.align = 'center'
-	s.ssnpcontrols.vol.padding = buttonPadding
-	s.ssnpcontrols.vol.img = _loadImage(self, "Player_Controls/icon_toolbar_vol_up.png")
-	
-	s.browsenpcontrols = _uses(s.ssnpcontrols)
-	s.largenpcontrols  = _uses(s.ssnpcontrols)
-
-	-- Progress bar
-	s.ssprogress = {}
-	s.ssprogress.position = LAYOUT_SOUTH
-	s.ssprogress.order = { "elapsed", "slider", "remain" }
-	s.ssprogress.elapsed = {}
-	s.ssprogress.elapsed.align = 'right'
-	s.ssprogress.remain = {}
-	s.ssprogress.remain.align = 'left'
-	s.ssprogress.text = {}
-	s.ssprogress.text.w = 75 
-	s.ssprogress.text.align = 'right'
-	s.ssprogress.padding = { 10, 10, 10, 5 }
-	s.ssprogress.text.padding = { 8, 0, 8, 15 }
-	s.ssprogress.text.font = _boldfont(18)
-	s.ssprogress.text.fg = { 0xe7,0xe7, 0xe7 }
-	s.ssprogress.text.sh = { 0x37, 0x37, 0x37 }
-
-	s.ssprogress.elapsed = _uses(s.ssprogress.text)
-	s.ssprogress.remain = _uses(s.ssprogress.text)
-
-	s.browseprogress = _uses(s.ssprogress)
-	s.largeprogress  = _uses(s.ssprogress)
-
-	s.ssprogressB             = {}
-        s.ssprogressB.horizontal  = 1
-        s.ssprogressB.bgImg       = sliderBackground
-        s.ssprogressB.img         = sliderBar
-	s.ssprogressB.position    = LAYOUT_SOUTH
-	s.ssprogressB.padding     = { 0, 0, 0, 15 }
-
-	s.browseprogressB = _uses(s.ssprogressB)
-	s.largeprogressB  = _uses(s.ssprogressB)
-
-	-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
-	s.ssprogressNB = {}
-	s.ssprogressNB.position = LAYOUT_SOUTH
-	s.ssprogressNB.order = { "elapsed" }
-	s.ssprogressNB.text = {}
-	s.ssprogressNB.text.w = WH_FILL
-	s.ssprogressNB.text.align = "center"
-	s.ssprogressNB.padding = { 0, 0, 0, 5 }
-	s.ssprogressNB.text.padding = { 0, 0, 0, 5 }
-	s.ssprogressNB.text.font = _boldfont(18) 
-	s.ssprogressNB.text.fg = { 0xe7, 0xe7, 0xe7 }
-	s.ssprogressNB.text.sh = { 0x37, 0x37, 0x37 }
-
-	s.ssprogressNB.elapsed = _uses(s.ssprogressNB.text)
-
-	s.browseprogressNB = _uses(s.ssprogressNB)
-	s.largeprogressNB  = _uses(s.ssprogressNB)
-
 	-- background style should start at x,y = 0,0
         s.iconbg = {}
         s.iconbg.x = 0
@@ -1839,6 +1660,7 @@ end -- OLD STYLES
 			}
 		}
 	}
+
 	s.onebutton.menu.selected = {
 		item = _uses(s.onebutton.menu.item)
 	}
@@ -2307,6 +2129,179 @@ end -- OLD STYLES
 if true then
 
 	-- XXXX todo
+
+	-- BEGIN NowPlaying skin code
+	-- this skin is established in two forms,
+	-- one for the Screensaver windowStyle (ss), one for the browse windowStyle (browse)
+	-- a lot of it can be recycled from one to the other
+
+	local NP_TRACK_FONT_SIZE = 26
+
+	-- Title
+	s.ssnptitle = _uses(s.title, {
+		rbutton  = {
+			font    = _font(14),
+			fg      = TEXT_COLOR,
+			bgImg   = titlebarButtonBox,
+			w       = TITLE_BUTTON_WIDTH,
+			h       = TITLE_BUTTON_HEIGHT,
+			padding =  TITLE_BUTTON_PADDING,
+			padding = { 10, 0, 10, 0},
+			align   = 'center',
+		}
+	})
+
+	-- nptitle style is the same for all windowStyles
+	s.browsenptitle = _uses(s.ssnptitle)
+	s.largenptitle  = _uses(s.ssnptitle)
+
+
+	-- pressed styles
+	s.ssnptitle.pressed = _uses(s.ssnptitle, {
+		lbutton = {
+			bgImg = pressedTitlebarButtonBox,
+		},
+		rbutton = {
+			bgImg = pressedTitlebarButtonBox,
+		},
+	})
+
+	s.browsenptitle.pressed = _uses(s.ssnptitle.pressed)
+	s.largenptitle.pressed = _uses(s.ssnptitle.pressed)
+
+	-- Song
+	s.ssnptrack = {}
+	s.ssnptrack.border = { 4, 0, 4, 0 }
+	s.ssnptrack.text = {}
+	s.ssnptrack.text.w = WH_FILL
+	s.ssnptrack.text.padding = { 220, 52, 20, 10 }
+	s.ssnptrack.text.align = "left"
+        s.ssnptrack.text.font = _font(NP_TRACK_FONT_SIZE)
+	s.ssnptrack.text.lineHeight = NP_TRACK_FONT_SIZE + 4
+	s.ssnptrack.position = LAYOUT_WEST
+        s.ssnptrack.text.line = {
+		{
+			font = _boldfont(NP_TRACK_FONT_SIZE),
+			height = NP_TRACK_FONT_SIZE + 4
+		}
+	}
+	s.ssnptrack.text.fg = TEXT_COLOR
+
+	-- nptrack is identical between all windowStyles
+	s.browsenptrack = _uses(s.ssnptrack)
+	s.largenptrack  = _uses(s.ssnptrack)
+
+	-- Artwork
+	local ARTWORK_SIZE    = self:getSettings().nowPlayingBrowseArtworkSize
+	local SS_ARTWORK_SIZE = self:getSettings().nowPlayingSSArtworkSize
+	local browseArtWidth  = ARTWORK_SIZE
+	local ssArtWidth      = SS_ARTWORK_SIZE
+
+	s.ssnpartwork = {}
+
+	s.ssnpartwork.w = ssArtWidth
+	s.ssnpartwork.border = { 10, 50, 10, 0 }
+	s.ssnpartwork.position = LAYOUT_WEST
+	s.ssnpartwork.align = "center"
+	s.ssnpartwork.artwork = {}
+	s.ssnpartwork.artwork.align = "center"
+	s.ssnpartwork.artwork.padding = 0
+	-- FIXME: change name to not be specific to icon width in filename
+	s.ssnpartwork.artwork.img = _loadImage(self, "Icons/icon_album_noartwork_336.png")
+	s.browsenpartwork = _uses(s.ssnpartwork)
+	s.largenpartwork = _uses(s.ssnpartwork)
+
+	s.ssnpcontrols = {}
+	s.ssnpcontrols.order = { 'rew', 'play', 'fwd', 'vol' }
+	s.ssnpcontrols.position = LAYOUT_NONE
+
+	local topPadding = screenHeight/2 + 10
+	local rightPadding = screenWidth/2 - 15
+	local buttonPadding = { 10, 5, 10, 5 }
+	s.ssnpcontrols.x = rightPadding
+	s.ssnpcontrols.y = topPadding
+	s.ssnpcontrols.bgImg = buttonBox
+	
+	s.ssnpcontrols.rew = {}
+	s.ssnpcontrols.rew.align = 'center'
+	s.ssnpcontrols.rew.padding = buttonPadding
+	s.ssnpcontrols.rew.img = _loadImage(self, "Player_Controls/icon_toolbar_rew.png")
+	
+	s.ssnpcontrols.play = {}
+	s.ssnpcontrols.play.align = 'center'
+	s.ssnpcontrols.play.padding = buttonPadding
+	s.ssnpcontrols.play.img = _loadImage(self, "Player_Controls/icon_toolbar_play.png")
+	
+	s.ssnpcontrols.pause = {}
+	s.ssnpcontrols.pause.align = 'center'
+	s.ssnpcontrols.pause.padding = buttonPadding
+	s.ssnpcontrols.pause.img = _loadImage(self, "Player_Controls/icon_toolbar_pause.png")
+	
+	
+	s.ssnpcontrols.fwd = {}
+	s.ssnpcontrols.fwd.align = 'center'
+	s.ssnpcontrols.fwd.padding = buttonPadding
+	s.ssnpcontrols.fwd.img = _loadImage(self, "Player_Controls/icon_toolbar_ffwd.png")
+
+	s.ssnpcontrols.vol = {}
+	s.ssnpcontrols.vol.align = 'center'
+	s.ssnpcontrols.vol.padding = buttonPadding
+	s.ssnpcontrols.vol.img = _loadImage(self, "Player_Controls/icon_toolbar_vol_up.png")
+	
+	s.browsenpcontrols = _uses(s.ssnpcontrols)
+	s.largenpcontrols  = _uses(s.ssnpcontrols)
+
+	-- Progress bar
+	s.ssprogress = {}
+	s.ssprogress.position = LAYOUT_SOUTH
+	s.ssprogress.order = { "elapsed", "slider", "remain" }
+	s.ssprogress.elapsed = {}
+	s.ssprogress.elapsed.align = 'right'
+	s.ssprogress.remain = {}
+	s.ssprogress.remain.align = 'left'
+	s.ssprogress.text = {}
+	s.ssprogress.text.w = 75 
+	s.ssprogress.text.align = 'right'
+	s.ssprogress.padding = { 10, 10, 10, 5 }
+	s.ssprogress.text.padding = { 8, 0, 8, 15 }
+	s.ssprogress.text.font = _boldfont(18)
+	s.ssprogress.text.fg = { 0xe7,0xe7, 0xe7 }
+	s.ssprogress.text.sh = { 0x37, 0x37, 0x37 }
+
+	s.ssprogress.elapsed = _uses(s.ssprogress.text)
+	s.ssprogress.remain = _uses(s.ssprogress.text)
+
+	s.browseprogress = _uses(s.ssprogress)
+	s.largeprogress  = _uses(s.ssprogress)
+
+	s.ssprogressB             = {}
+        s.ssprogressB.horizontal  = 1
+        s.ssprogressB.bgImg       = sliderBackground
+        s.ssprogressB.img         = sliderBar
+	s.ssprogressB.position    = LAYOUT_SOUTH
+	s.ssprogressB.padding     = { 0, 0, 0, 15 }
+
+	s.browseprogressB = _uses(s.ssprogressB)
+	s.largeprogressB  = _uses(s.ssprogressB)
+
+	-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
+	s.ssprogressNB = {}
+	s.ssprogressNB.position = LAYOUT_SOUTH
+	s.ssprogressNB.order = { "elapsed" }
+	s.ssprogressNB.text = {}
+	s.ssprogressNB.text.w = WH_FILL
+	s.ssprogressNB.text.align = "center"
+	s.ssprogressNB.padding = { 0, 0, 0, 5 }
+	s.ssprogressNB.text.padding = { 0, 0, 0, 5 }
+	s.ssprogressNB.text.font = _boldfont(18) 
+	s.ssprogressNB.text.fg = { 0xe7, 0xe7, 0xe7 }
+	s.ssprogressNB.text.sh = { 0x37, 0x37, 0x37 }
+
+	s.ssprogressNB.elapsed = _uses(s.ssprogressNB.text)
+
+	s.browseprogressNB = _uses(s.ssprogressNB)
+	s.largeprogressNB  = _uses(s.ssprogressNB)
+
 
 end -- LEGACY STYLES
 
