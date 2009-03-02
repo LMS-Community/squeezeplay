@@ -95,7 +95,7 @@ end
 function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
 	local machine = System:getMachine()
 
-	local help = Textarea("help", "")
+	local help = Textarea("helptext", "")
 
 	if url and string.match(url, machine) then
 		local version = self:_firmwareVersion(url)
@@ -159,7 +159,7 @@ function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
 	end
 
 	-- XXXX fixme
-	--window:addWidget(help)
+	window:addWidget(help)
 	window:addWidget(menu)
 end
 
@@ -245,7 +245,7 @@ function _chargeBattery(self)
 					}
 				})
 
-	local help = Textarea("help", self:string("UPDATE_BATTERY_HELP"))
+	local help = Textarea("helptext", self:string("UPDATE_BATTERY_HELP"))
 	window:addWidget(help)
 	window:addWidget(menu)
 
@@ -357,7 +357,7 @@ function _upgradeFailed(self)
 					}
 				})
 
-	local help = Textarea("help", self:string("UPDATE_FAILURE_HELP"))
+	local help = Textarea("helptext", self:string("UPDATE_FAILURE_HELP"))
 	window:addWidget(help)
 	window:addWidget(menu)
 

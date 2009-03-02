@@ -159,6 +159,7 @@ end
 Window:   "setuplist"
 Menu:     "menu"
 Item:     "item", "itemchecked"
+Textarea: "helptext"
 --]]
 function setup_window(self, item)
 	local data = _itemData(item)
@@ -185,7 +186,11 @@ function setup_window(self, item)
 			end,
 		})		
 	end
+
 	window:addWidget(menu)
+	window:addWidget(Textarea("helptext", data[2]))
+
+	window:focusWidget(menu)
 
 	self:tieWindow(window)
 	return window
@@ -444,7 +449,8 @@ windows = {
 
 testData = {
 	setup = {
-		{ "Deutsch", "Suomi", "English", "Dansk", "Itailiano", "Français", "Norsk", "Sevnska", "Español" }
+		{ "Deutsch", "Suomi", "English", "Dansk", "Itailiano", "Français", "Norsk", "Sevnska", "Español" },
+		"Some help text",
 	},
 	onebutton = {
 		"Let's begin by getting\nyou connected to your network.",

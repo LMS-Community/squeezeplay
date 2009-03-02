@@ -1665,6 +1665,30 @@ end -- OLD STYLES
 		}),
 	}
 
+	s.helptext = {
+		w = screenWidth - 6,
+		position = LAYOUT_SOUTH,
+		padding = 12,
+		font = _font(HELP_FONT_SIZE),
+		fg = TEXT_COLOR,
+		bgImg = helpBox,
+		align = "left",
+		scrollbar = {
+			w = 0,
+		},
+	}
+
+	s.scrollbar = {
+		w = 34,
+		border = 0,
+		padding = { 0, 24, 0, 24 },
+		horizontal = 0,
+		bgImg = scrollBackground,
+		img = scrollBar,
+		layer = LAYER_CONTENT_ON_STAGE,
+	}
+
+
 	-- XXXX locked items
 
 	s.text = {

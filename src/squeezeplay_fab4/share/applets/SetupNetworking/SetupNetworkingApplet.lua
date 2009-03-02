@@ -69,13 +69,17 @@ function init(self)
 end
 
 
-function _helpWindow(self, titleText, bodyText)
-	local window = Window("help", self:string(titleText), "helptitle")
-	window:setAllowScreensaver(false)
+function _helpAction(self, window, titleText, bodyText)
+	window:addActionListener("help", self, function()
+		local window = Window("help", self:string(titleText), "helptitle")
+		window:setAllowScreensaver(false)
 
-	local textarea = Textarea("text", self:string(bodyText))
-	window:addWidget(textarea)
-	self:tieAndShowWindow(window)
+		local textarea = Textarea("text", self:string(bodyText))
+		window:addWidget(textarea)
+		self:tieAndShowWindow(window)
+	end)
+
+	window:setButtonAction("rbutton", "help")
 end
 
 
@@ -154,10 +158,7 @@ function _connectionType(self)
 
 	window:addWidget(connectionMenu)
 
-	window:addActionListener("help", self, function()
-		_helpWindow(self, "NETWORK_CONNECTION_HELP", "NETWORK_CONNECTION_HELP_BODY")
-	end)
-	window:setButtonAction("rbutton", "help")
+	_helpAction(self, window, "NETWORK_CONNECTION_HELP", "NETWORK_CONNECTION_HELP_BODY")
 
 	self:tieAndShowWindow(window)
 end
@@ -167,14 +168,15 @@ end
 
 -- select wireless region
 function _wirelessRegion(self, wlan)
+	-- skip region if already set
+	if self:getSettings()['region'] then
+		return _networkScan(self, wlan)
+	end
+
 	local window = Window("buttonlist", self:string("NETWORK_REGION"), "setup")
 	window:setAllowScreensaver(false)
 
 	local region = wlan:getRegion()
-
-	-- XXXX in settings mode skip if set
-	-- XXXX get rid of local setting for region, but check first
-	-- XXXX wlan:getRegion() returns nil if unset
 
 	local menu = SimpleMenu("menu")
 
@@ -190,6 +192,7 @@ function _wirelessRegion(self, wlan)
 					end
 					self:getSettings()['region'] = name
                        			self:storeSettings()
+
 					_networkScan(self, wlan)
 				   end
 		}
@@ -202,10 +205,7 @@ function _wirelessRegion(self, wlan)
 
 	window:addWidget(menu)
 
-	window:addActionListener("help", self, function()
-		_helpWindow(self, "NETWORK_REGION", "NETWORK_REGION_HELP")
-	end)
-	window:setButtonAction("rbutton", "help")
+	_helpAction(self, window, "NETWORK_REGION", "NETWORK_REGION_HELP")
 
 	self:tieAndShowWindow(window)
 end
@@ -311,7 +311,6 @@ function _networkScanComplete(self, iface)
 	if not iface:isWireless() then
 		_scanResults(self, iface)
 
-		-- XXXX CONNECT
 		return _connect(self, iface, iface:getName(), true)
 	end
 
@@ -335,8 +334,7 @@ function _networkScanComplete(self, iface)
 		weight = 3
 	})
 
-	-- XXXX help style
-	--window:addWidget(Textarea("help", self:string("NETWORK_SETUP_HELP")))
+	window:addWidget(Textarea("helptext", self:string("NETWORK_SETUP_HELP")))
 	window:addWidget(self.scanMenu)
 
 	-- process existing scan results
@@ -350,10 +348,7 @@ function _networkScanComplete(self, iface)
 			end)
 		end)
 
-	window:addActionListener("help", self, function()
-		_helpWindow(self, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY")
-	end)
-	window:setButtonAction("rbutton", "help")
+	_helpAction(self, window, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY")
 
 	self:tieAndShowWindow(window)
 end
@@ -413,32 +408,6 @@ function _scanResults(self, iface)
 end
 
 
--- XXXX needed?
-function _hideToTop(self, dontSetupNext)
-	log:info('_hideToTop')
-	if not self.setupNext then
-		log:info('no setupNext callback, so hide windows up to the top')
-		if Framework.windowStack[1] == self.topWindow then
-			return
-		end
-	
-		while #Framework.windowStack > 2 and Framework.windowStack[2] ~= self.topWindow do
-			log:debug("hiding=", Framework.windowStack[2], " topWindow=", self.topWindow)
-			Framework.windowStack[2]:hide(Window.transitionPushLeft)
-		end
-	
-		Framework.windowStack[1]:hide(Window.transitionPushLeft)
-	end
-
-	-- we have successfully setup the network, so hide any open network
-	-- settings windows before advancing during setup.
-	if dontSetupNext ~= true and type(self.setupNext) == "function" then
-		self.setupNext()
-		return
-	end
-end
-
-
 -------- WIRELESS SSID AND PASSWORD --------
 
 
@@ -464,10 +433,7 @@ function _chooseEnterSSID(self, iface)
 	})
 	window:addWidget(menu)
 
-	window:addActionListener("help", self, function()
-		_helpWindow(self, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY")
-	end)
-	window:setButtonAction("rbutton", "help")
+	_helpAction(self, window, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY")
 
 	self:tieAndShowWindow(window)
 end
@@ -497,10 +463,7 @@ function _enterSSID(self, iface)
 	window:addWidget(Keyboard("keyboard", 'qwerty'))
 	window:focusWidget(textinput)
 
-	window:addActionListener("help", self, function()
-		_helpWindow(self, 'NETWORK_NETWORK_NAME', 'NETWORK_NETWORK_NAME_HELP') 
-	end)
-	window:setButtonAction("rbutton", "help")
+	_helpAction(self, window, 'NETWORK_NETWORK_NAME', 'NETWORK_NETWORK_NAME_HELP') 
 
 	self:tieAndShowWindow(window)
 end
@@ -611,10 +574,7 @@ function _chooseEncryption(self, iface, ssid)
 	})
 	window:addWidget(menu)
 
-	window:addActionListener("help", self, function()
-		_helpWindow(self, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
-	end)
-	window:setButtonAction("rbutton", "help")
+	_helpAction(self, window, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
 
 	self:tieAndShowWindow(window)
 end
@@ -646,10 +606,7 @@ function _chooseWEPLength(self, iface, ssid)
 	})
 	window:addWidget(menu)
 
-	window:addActionListener("help", self, function()
-		_helpWindow(self, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
-	end)
-	window:setButtonAction("rbutton", "help")
+	_helpAction(self, window, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
 
 	self:tieAndShowWindow(window)
 end
@@ -688,10 +645,7 @@ function _enterWEPKey(self, iface, ssid)
 	window:addWidget(keyboard)
 	window:focusWidget(textinput)
 
-	window:addActionListener("help", self, function()
-		_helpWindow(self, 'NETWORK_WIRELESS_KEY', 'NETWORK_WIRELESS_KEY_HELP') 
-	end)
-	window:setButtonAction("rbutton", "help")
+	_helpAction(self, window, 'NETWORK_WIRELESS_KEY', 'NETWORK_WIRELESS_KEY_HELP') 
 
 	self:tieAndShowWindow(window)
 end
@@ -722,10 +676,7 @@ function _enterPSK(self, iface, ssid)
 	window:addWidget(Keyboard('keyboard', 'qwerty'))
 	window:focusWidget(textinput)
 
-	window:addActionListener("help", self, function()
-		_helpWindow(self, 'NETWORK_WIRELESS_PASSWORD', 'NETWORK_WIRELESS_PASSWORD_HELP')
-	end)
-	window:setButtonAction("rbutton", "help")
+	_helpAction(self, window, 'NETWORK_WIRELESS_PASSWORD', 'NETWORK_WIRELESS_PASSWORD_HELP')
 
 	self:tieAndShowWindow(window)
 end
@@ -735,9 +686,7 @@ function _enterEAP(self, iface, ssid)
 	local window = Window("error", self:string('NETWORK_ERROR'), 'setuptitle')
 	window:setAllowScreensaver(false)
 
-	local help = Textarea("text", self:string("NETWORK_UNSUPPORTED_TYPES_HELP"))
-
-	window:addWidget(help)
+	window:addWidget(Textarea("text", self:string("NETWORK_UNSUPPORTED_TYPES_HELP")))
 
 	self:tieAndShowWindow(window)		
 end
@@ -782,10 +731,7 @@ function _chooseWPS(self, iface, ssid)
 		end,
 	})
 
-	window:addActionListener("help", self, function()
-		_helpWindow(self, "NETWORK_WPS_HELP", "NETWORK_WPS_HELP_BODY")
-	end)
-	window:setButtonAction("rbutton", "help")
+	_helpAction(self, window, "NETWORK_WPS_HELP", "NETWORK_WPS_HELP_BODY")
 
 	self:tieAndShowWindow(window)
 end
@@ -893,37 +839,18 @@ function processWPSFailed(self, iface, ssid, reason)
 	local errorMessage = Textarea('text', self:string("NETWORK_WPS_PROBLEM"))
 	window:setAllowScreensaver(false)
 
-	local menu = SimpleMenu("menu",
-				{
--- TODO: more options needed?
---					{
---						text = self:string("NETWORK_TRY_AGAIN"),
---						sound = "WINDOWHIDE",
---						callback = function()
---								   _connect(self, iface, ssid, false)
---								   window:hide(Window.transitionNone)
---							   end
---					},
---					{
---						text = self:string("NETWORK_TRY_DIFFERENT"),
---						sound = "WINDOWSHOW",
---						callback = function()
---								   _hideToTop(self, true)
---							   end
---					},
-					{
-						text = self:string("NETWORK_GO_BACK"),
-						sound = "WINDOWHIDE",
-						callback = function()
-								   window:hide()
-							   end
-					},
-				})
-
-	local help = Textarea("help", helpText)
+	local menu = SimpleMenu("menu", {
+		{
+			text = self:string("NETWORK_GO_BACK"),
+			sound = "WINDOWHIDE",
+			callback = function()
+				window:hide()
+			end
+		},
+	})
 
 	window:addWidget(errorMessage)
-	window:addWidget(help)
+	window:addWidget(Textarea("helptext", helpText))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -1204,10 +1131,8 @@ function _connectFailed(self, iface, ssid, reason)
 	})
 
 
-	local help = Textarea("help", helpText)
-
 	window:addWidget(errorMessage)
-	window:addWidget(help)
+	window:addWidget(Textarea("helptext", helpText))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -1266,10 +1191,8 @@ function _failedDHCPandWPA(self, iface, ssid)
 				})
 
 
-	local help = Textarea("help", self:string("NETWORK_ADDRESS_HELP"))
-
 	window:addWidget(errorMessage)
-	window:addWidget(help)
+	window:addWidget(Textarea("helptext", self:string("NETWORK_ADDRESS_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -1318,10 +1241,8 @@ function _failedDHCPandWEP(self, iface, ssid)
 		},
 	})
 
-	local help = Textarea("help", self:string("NETWORK_ADDRESS_HELP_WEP"))
-
 	window:addWidget(errorMessage)
-	window:addWidget(help)
+	window:addWidget(Textarea("helptext", self:string("NETWORK_ADDRESS_HELP_WEP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -1434,10 +1355,7 @@ function _enterIP(self, iface, ssid)
 	window:addWidget(keyboard)
 	window:focusWidget(textinput)
 
-	window:addActionListener("help", self, function()
-		_helpWindow(self, 'NETWORK_IP_ADDRESS', 'NETWORK_IP_ADDRESS_HELP')
-	end)
-	window:setButtonAction("rbutton", "help")
+	_helpAction(self, window, 'NETWORK_IP_ADDRESS', 'NETWORK_IP_ADDRESS_HELP')
 
 	self:tieAndShowWindow(window)
 end
@@ -1468,10 +1386,7 @@ function _enterSubnet(self, iface, ssid)
 	window:addWidget(keyboard)
 	window:focusWidget(textinput)
 
-	window:addActionListener("help", self, function()
-		_helpWindow(self, 'NETWORK_SUBNET', 'NETWORK_SUBNET_HELP')
-	end)
-	window:setButtonAction("rbutton", "help")
+	_helpAction(self, window, 'NETWORK_SUBNET', 'NETWORK_SUBNET_HELP')
 
 	self:tieAndShowWindow(window)
 end
@@ -1544,10 +1459,7 @@ function _enterDNS(self, iface, ssid)
 	window:addWidget(keyboard)
 	window:focusWidget(textinput)
 
-	window:addActionListener("help", self, function()
-		_helpWindow(self, 'NETWORK_DNS', 'NETWORK_DNS_HELP')
-	end)
-	window:setButtonAction("rbutton", "help")
+	_helpAction(self, window, 'NETWORK_DNS', 'NETWORK_DNS_HELP')
 
 	self:tieAndShowWindow(window)
 end
