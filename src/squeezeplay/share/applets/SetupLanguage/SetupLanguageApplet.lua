@@ -177,7 +177,7 @@ function setLang(self, choice, next)
 	end
 
 	-- changing the locale is slow, do this in a task with a spinny
-	self.popup = Popup("popupIcon")
+	self.popup = Popup("waiting")
 	self.popup:setAllowScreensaver(false)
 	self.popup:setAlwaysOnTop(true)
 	self.popup:setAutoHide(false)
