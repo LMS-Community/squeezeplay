@@ -268,7 +268,7 @@ function skin(self, s)
 	local CHECKBOX_RADIO_PADDING  = { 2, 8, 8, 0 }
 
 	--FIXME: paddings here need tweaking for Fab4Skin
-	local MENU_ALBUMITEM_PADDING = 0
+	local MENU_ALBUMITEM_PADDING = { 8, 1, 8, 1 }
 	local MENU_ALBUMITEM_TEXT_PADDING = { 16, 6, 9, 19 }
 	local MENU_PLAYLISTITEM_TEXT_PADDING = { 16, 1, 9, 1 }
 
@@ -1464,13 +1464,13 @@ end -- OLD STYLES
 		},
 	}
 
-	s.itemplay = _uses(s.item, {
+	s.itemPlay = _uses(s.item, {
 		arrow = {
 			img = _loadImage(self, "Icons/selection_play_3line_on.png")
 		},
 	})
 
-	s.itemadd = _uses(s.item, {
+	s.itemAdd = _uses(s.item, {
 		arrow = {
 			img = _loadImage(self, "Icons/selection_add_3line_off.png")
 		},
@@ -1505,10 +1505,10 @@ end -- OLD STYLES
 		itemChecked = _uses(s.itemChecked, {
 			bgImg = fiveItemPressedBox,
 		}),
-		itemplay = _uses(s.itemplay, {
+		itemPlay = _uses(s.itemPlay, {
 			bgImg = fiveItemPressedBox,
 		}),
-		itemadd = _uses(s.itemadd, {
+		itemAdd = _uses(s.itemAdd, {
 			bgImg = fiveItemPressedBox,
 		}),
 		itemNoArrow = _uses(s.itemNoArrow, {
@@ -1526,10 +1526,10 @@ end -- OLD STYLES
 		itemChecked = _uses(s.pressed.itemChecked, {
 			arrow = smallSpinny
 		}),
-		itemplay = _uses(s.pressed.itemplay, {
+		itemPlay = _uses(s.pressed.itemPlay, {
 			arrow = smallSpinny
 		}),
-		itemadd = _uses(s.pressed.itemadd, {
+		itemAdd = _uses(s.pressed.itemAdd, {
 			arrow = smallSpinny
 		}),
 		itemNoArrow = _uses(s.itemNoArrow, {
@@ -1824,8 +1824,7 @@ end -- OLD STYLES
 				},
 				icon = {
 					w = THUMB_SIZE,
-					h = WH_FILL,
-					padding = { 8, 1, 8, 1 },
+					h = THUMB_SIZE,
 					img = _loadImage(self, "Icons/menu_album_noartwork_43.png")
 				},
 				arrow = {
@@ -2191,13 +2190,13 @@ if true then
 	-- Song
 	s.ssnptrack = {
 		border = { 4, 0, 4, 0 },
+		position = LAYOUT_WEST,
 		text = {
 			w = WH_FILL,
 			padding = { 220, 52, 20, 10 },
 			align = "left",
         		font = _font(NP_TRACK_FONT_SIZE),
 			lineHeight = NP_TRACK_FONT_SIZE + 4,
-			position = LAYOUT_WEST,
 			fg = TEXT_COLOR,
         		line = {{
 				font = _boldfont(NP_TRACK_FONT_SIZE),
@@ -2224,8 +2223,8 @@ if true then
 		artwork = {
 			align = "center",
 			padding = 0,
-			-- FIXME: change name to not be specific to icon width in filename
-			img = _loadImage(self, "Icons/icon_album_noartwork_336.png"),
+			-- FIXME: this is a placeholder
+			img = _loadImage(self, "Icons/icon_album_noartwork_190.png"),
 		},
 	}
 

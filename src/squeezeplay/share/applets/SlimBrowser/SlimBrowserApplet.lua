@@ -114,6 +114,12 @@ local modeTokens = {
 			off   = "SLIMBROWSER_OFF"
 }
 
+-- legacy map of menuStyles to windowStyles
+-- this allows SlimBrowser to make an educated guess at window style when one is not sent but a menu style is
+local menu2window = {
+	album = 'iconlist',
+}
+
 --==============================================================================
 -- Local functions
 --==============================================================================
@@ -269,12 +275,15 @@ local function _newWindowSpec(db, item, titleStyle)
 
 	-- determine style
 	local menuStyle = _priorityAssign('menuStyle', "", iWindow, bWindow)
+	local windowStyle = menu2window[menuStyle] or 'textlist'
+
+log:warn('---------------', windowStyle)
 	return {
-		["windowStyle"]      = "",
-		["labelTitleStyle"]  = _priorityAssign('titleStyle', titleStyle, iWindow, bWindow) .. "title",
+		["windowStyle"]      = windowStyle,
+		["labelTitleStyle"]  = 'title',
+		["menuStyle"]        = "menu",
+		["labelItemStyle"]   = "item",
 		['help']             = help,
-		["menuStyle"]        = menuStyle .. "menu",
-		["labelItemStyle"]   = menuStyle .. "item",
 		["text"]             = _priorityAssign('text',       item["text"],    iWindow, bWindow),
 		["icon-id"]          = _priorityAssign('icon-id',    item["icon-id"], iWindow, bWindow),
 		["icon"]             = _priorityAssign('icon',       item["icon"],    iWindow, bWindow),
@@ -411,34 +420,43 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 	-- if item is a windowSpec, then the icon is kept in the spec for nothing (overhead)
 	-- however it guarantees the icon in the title is not shared with (the same) icon in the menu.
 	if not group then
-		group = Group("item", { 
-			text = Label("text", ""), 
-			icon = Icon("icon"), 
-			play = Icon("play"), 
-			lbutton = Button(
-				Icon("button_back"), 
-				function()
-					Framework:pushAction("back")
-
-					return EVENT_CONSUME
-				end,
-				function()
-					Framework:pushAction("go_home")
-					return EVENT_CONSUME
-				end
-			), 
-			rbutton = Button(
-				Icon("button_go_now_playing"), 
-				function() 
-					Framework:pushAction("go_now_playing")
-					return EVENT_CONSUME 
-				end
-			), 
+		if labelStyle == 'title' then
+			group = Group(labelStyle, { 
+				text = Label("text", ""), 
+				icon = Icon("icon"), 
+				lbutton = Button(
+					Icon("button_back"), 
+					function()
+						Framework:pushAction("back")
+	
+						return EVENT_CONSUME
+					end,
+					function()
+						Framework:pushAction("go_home")
+						return EVENT_CONSUME
+					end
+				), 
+				rbutton = Button(
+					Icon("button_go_now_playing"), 
+					function() 
+						Framework:pushAction("go_now_playing")
+						return EVENT_CONSUME 
+					end
+				), 
 			})
+		else
+			group = Group(labelStyle, { 
+				icon = Icon("icon"), 
+				text = Label("text", ""), 
+				arrow = Icon('arrow'),
+				check = Icon('check'),
+			})
+		end
 	end
 
 	if item then
 		group:setWidgetValue("text", item.text)
+		group:setWidget('arrow', Icon('arrow'))
 
 		-- set an acceleration key, but not for playlists
 		if item.params and item.params.textkey then
@@ -942,7 +960,6 @@ end
 local function _browseSink(step, chunk, err)
 	log:debug("_browseSink()")
 
-log:warn('mark')
 	-- are we cancelled?
 	if step.cancelled then
 		log:debug("_browseSink(): ignoring data, action cancelled...")
@@ -1010,7 +1027,7 @@ log:warn('mark')
 			end
 
 			-- update the window properties
-			step.menu:setStyle(step.db:menuStyle())
+			--step.menu:setStyle(step.db:menuStyle())
 			local titleBar = step.window:getTitleWidget()
 			-- styling both the menu and title with icons is problematic to the layout
 			if step.db:menuStyle() == 'albummenu' and titleBar:getStyle() == 'albumtitle' then
@@ -1055,7 +1072,8 @@ log:warn('mark')
 						titleIcon = Icon("icon")
 					end
 					local newTitleWidget = 
-						Group(titleStyle, { 
+						--Group(titleStyle, { 
+						Group('title', { 
 							text = Label("text", titleText), 
 							icon = titleIcon,
 							lbutton = Button(
@@ -1133,7 +1151,6 @@ local function _menuSink(self, cmd)
 		for k, v in pairs(menuItems) do
 
 			--debug.dump(v.actions, -1)
-
 			local item = {
 					id = v.id,
 					node = v.node,
@@ -1144,6 +1161,11 @@ local function _menuSink(self, cmd)
 					window = v.window,
 					sound = "WINDOWSHOW",
 				}
+			if item.style == 'itemplay' then
+				item.style = 'itemPlay'
+			elseif item.style == 'itemadd' then
+				item.style = 'itemAdd'
+			end
 
 			local choiceAction = _safeDeref(v, 'actions', 'do', 'choices')
 
@@ -1934,13 +1956,14 @@ local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderS
 			if current then
 				style = "albumcurrent"
 			elseif item and item["style"] then
-				local menuStyle = menu:getStyle()
-				local menuPrefix = string.match(menuStyle, "(%a+)menu")
-				if menuPrefix then
-					style = menuPrefix .. item["style"]
-				else
-					style = item["style"]
-				end
+				style = item["style"]
+			end
+
+			-- support legacy styles for play and add
+			if style == 'itemplay' or style == 'albumitemplay' then
+				style = 'itemPlay'
+			elseif style == 'itemadd' or style == 'albumitemadd' then
+				style = 'itemAdd'
 			end
 			widgets[widgetIndex] = _decoratedLabel(widget, style, item, db, menuAccel)
 		end
@@ -1998,8 +2021,9 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	local db = DB(windowSpec)
 	
 	-- create a window in all cases
-	local window = Window(windowSpec.windowStyle)
-	window:setTitleWidget(_decoratedLabel(nil, windowSpec.labelTitleStyle, windowSpec, db, false))
+	debug.dump(windowSpec)
+	local window = Window(windowSpec.windowStyle or 'textlist')
+	window:setTitleWidget(_decoratedLabel(nil, 'title', windowSpec, db, false))
 	
 	local menu
 
@@ -2317,10 +2341,9 @@ function showTrackOne()
 	-- determine style
 	local menuStyle = _priorityAssign('menuStyle', "", iWindow, bWindow)
 	local newWindowSpec = {
-		["windowStyle"]      = "",
-		["labelTitleStyle"]  = _priorityAssign('titleStyle', iWindow, bWindow, 'album') .. "title",
-		["menuStyle"]        = menuStyle .. "menu",
-		["labelItemStyle"]   = menuStyle .. "item",
+		["windowStyle"]      = "trackinfo",
+		["menuStyle"]        = "menu",
+		["labelItemStyle"]   = "item",
 		["text"]             = _priorityAssign('text',       item["text"],    iWindow, bWindow),
 		["icon-id"]          = _priorityAssign('icon-id',    item["icon-id"], iWindow, bWindow),
 		["icon"]             = _priorityAssign('icon',       item["icon"],    iWindow, bWindow),

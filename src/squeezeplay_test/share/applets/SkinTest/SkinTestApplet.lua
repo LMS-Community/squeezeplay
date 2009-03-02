@@ -399,7 +399,7 @@ end
 --[[
 Window:   "textlist"
 Menu:     "menu"
-Item:     "itemplay", "itemadd", "item" (styles: selected, pressed, locked)
+Item:     "itemPlay", "itemAdd", "item" (styles: selected, pressed, locked)
 --]]
 function window_trackinfo(self, item)
 	local data = _itemData(item)
@@ -413,10 +413,10 @@ function window_trackinfo(self, item)
 		local itemStyle = ''
 		self.checkMe = true
 		if i == 1 then
-			itemStyle = 'play'
+			itemStyle = 'Play'
 			self.checkMe = false
 		elseif i == 2 then
-			itemStyle = 'add'
+			itemStyle = 'Add'
 			self.checkMe = false
 		end
 		local callback 
