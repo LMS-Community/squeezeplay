@@ -454,7 +454,22 @@ function window_iconlist(self, item)
 	for i,subdata in ipairs(data) do
 		menu:addItem({
 			text = subdata[1],
-		--	iconStyle = subdata[2],
+			callback = function(event, item)
+				if selected == item then
+					menu:lock()
+					return
+				end
+
+				if selected then
+					selected.style = "item"
+					menu:updatedItem(selected)
+				end
+
+				item.style = "itemchecked"
+				menu:updatedItem(item)
+
+				selected = item
+			end
 		})
 	end
 

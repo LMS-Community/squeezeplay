@@ -1972,6 +1972,14 @@ end -- OLD STYLES
 	})
 
 
+	s.iconlist.menu.itemchecked = _uses(s.iconlist.menu.item, {
+		order = { 'icon', 'text', 'check', 'arrow' },
+		check = {
+			align = ITEM_ICON_ALIGN,
+			padding = CHECK_PADDING,
+			img = _loadImage(self, "Icons/icon_check_5line.png")
+		},
+	})
 	s.iconlist.menu.selected = {
                 item = _uses(s.iconlist.menu.item),
                 itemchecked = _uses(s.iconlist.menu.itemchecked),
@@ -1980,6 +1988,15 @@ end -- OLD STYLES
                 item = _uses(s.iconlist.menu.item, buttonPressed),
                 itemchecked = _uses(s.iconlist.menu.itemchecked, buttonPressed),
         }
+	s.iconlist.menu.locked = {
+		item = _uses(s.iconlist.menu.pressed.item, {
+			arrow = smallSpinny
+		}),
+		itemchecked = _uses(s.iconlist.menu.pressed.itemchecked, {
+			arrow = smallSpinny
+		}),
+	}
+
 
 	-- information window
 	-- XXXX todo
