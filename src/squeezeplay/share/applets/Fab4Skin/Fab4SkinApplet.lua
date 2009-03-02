@@ -1861,11 +1861,7 @@ end -- OLD STYLES
 		itemchecked = _uses(s.buttonlist.menu.itemchecked, buttonPressed),
 	}
 
-	-- help window
-	s.help = _uses(s.window)
-	-- XXXX scrollbar missing?
-
-	-- help window
+	-- popup "spinny" window
 	s.waiting = _uses(s.popup)
 
 	s.waiting.text = {
@@ -1890,9 +1886,11 @@ end -- OLD STYLES
 	}
 
 	-- input window (including keyboard)
+	-- XXX: needs layout
 	s.input = _uses(s.window)
 
 	-- error window
+	-- XXX: needs layout
 	s.error = _uses(s.window)
 
 	-- update window
@@ -1916,15 +1914,70 @@ end -- OLD STYLES
 		img = _progressBar,
 	}
 
-	-- thumblist window
+	-- typical text list window
+	-- XXXX todo
 	s.textlist = _uses(s.window)
+
+	-- iconlist window
+	s.iconlist = _uses(s.window, {
+		menu = {
+			item = {
+				order = { "icon", "text", "play" },
+				padding = MENU_ALBUMITEM_PADDING,
+				text = {
+					w = WH_FILL,
+					h = WH_FILL,
+					padding = MENU_ALBUMITEM_TEXT_PADDING,
+					font = _font(ALBUMMENU_SMALL_FONT_SIZE),
+					line = {
+						{
+							font = _boldfont(ALBUMMENU_FONT_SIZE),
+							height = ALBUMMENU_FONT_SIZE + 2
+						}
+					},
+					fg = TEXT_COLOR,
+					sh = TEXT_SH_COLOR,
+				},
+				icon = {
+					w = THUMB_SIZE,
+					h = WH_FILL,
+					padding = { 8, 1, 8, 1 },
+					img = _loadImage(self, "Icons/menu_album_noartwork_43.png")
+				},
+			},
+		},
+	})
+
+	s.iconlist.menu.selected = {
+                item = _uses(s.iconlist.menu.item),
+                itemchecked = _uses(s.iconlist.menu.itemchecked),
+        }
+        s.iconlist.menu.pressed = {
+                item = _uses(s.iconlist.menu.item, buttonPressed),
+                itemchecked = _uses(s.iconlist.menu.itemchecked, buttonPressed),
+        }
+	-- information window
 	-- XXXX todo
+	s.information = _uses(s.textlist)
+	-- XXXX scrollbar missing?
 
-	-- thumblist window
-	s.iconlist = _uses(s.window)
+	-- help window (likely the same as information)
+	s.help = _uses(s.information)
+
+	--albumlist window
 	-- XXXX todo
+	s.albumlist = _uses(s.iconlist)
 
+	--tracklist window
+	-- XXXX todo
+	s.tracklist = _uses(s.textlist)
 
+	--trackinfo window
+	-- XXXX todo
+	s.trackinfo = _uses(s.textlist)
+
+	--playlist window
+	s.playlist = _uses(s.albumlist)
 
 --------- BUTTONS ---------
 

@@ -391,8 +391,9 @@ end
 
 
 --[[
-Window:   "list"
--- XXXX
+Window:   "textlist"
+menu: "menu"
+item: "item"
 --]]
 function setup_textlist(self, item)
 	local data = _itemData(item)
@@ -400,9 +401,16 @@ function setup_textlist(self, item)
 	local window = Window("textlist", _itemName(item), "home")
 	_windowActions(self, item, window)
 
-	-- TODO
-	window:addWidget(Label("text", "todo..."))
+	local menu = SimpleMenu("menu")
+	for i, text in ipairs(data) do
+		log:warn(text)
+		menu:addItem({
+			text = text,
+		})
+	end
 	
+	window:addWidget(menu)
+
 	self:tieWindow(window)
 	return window
 end
@@ -410,20 +418,98 @@ end
 
 --[[
 Window:   "iconlist"
+menu: "menu"
+item: "item"
 -- XXXX
 --]]
-function setup_iconlist(self, item)
+function window_iconlist(self, item)
 	local data = _itemData(item)
 
 	local window = Window("iconlist", _itemName(item), "artists")
 	_windowActions(self, item, window)
 
-	-- TODO
-	window:addWidget(Label("text", "todo..."))
+	local menu = SimpleMenu("menu")
+	for i,subdata in ipairs(data) do
+		menu:addItem({
+			text = subdata[1],
+		--	iconStyle = subdata[2],
+		})
+	end
+
+	window:addWidget(menu)
 
 	self:tieWindow(window)
 	return window
 end
+
+
+--[[
+Window:   "information"
+Textarea: "text"
+--]]
+function window_information(self, item)
+	local data = _itemData(item)
+
+	local window = Window("information", _itemName(item))
+	_windowActions(self, item, window)
+
+	local textarea = Textarea("text", data[1])
+
+	window:addWidget(textarea)
+
+	self:tieWindow(window)
+	return window
+end
+
+
+--[[
+Window:   "albumlist"
+Menu: "menu"
+Item: "item"
+--]]
+function window_albumlist(self, item)
+	local data = _itemData(item)
+
+	local window = Window("albumlist", _itemName(item))
+	_windowActions(self, item, window)
+
+	local menu = SimpleMenu("menu")
+	for i,data in ipairs(data[2]) do
+		menu:addItem({
+			text = data,
+		})
+	end
+
+	window:addWidget(menu)
+
+	self:tieWindow(window)
+	return window
+end
+
+--[[
+Window:   "tracklist"
+Menu: "menu"
+Item: "item"
+--]]
+function window_tracklist(self, item)
+	local data = _itemData(item)
+
+	local window = Window("albumlist", _itemName(item))
+	_windowActions(self, item, window)
+
+	local menu = SimpleMenu("menu")
+	for i,data in ipairs(data[2]) do
+		menu:addItem({
+			text = data,
+		})
+	end
+
+	window:addWidget(menu)
+
+	self:tieWindow(window)
+	return window
+end
+
 
 
 
@@ -434,21 +520,27 @@ end
 
 -- the reference windows, and test data
 windows = {
-	{ "setup", "Languages", setup_window, },
+	{ "textlist", "Text List", setup_textlist, },
+	{ "iconlist", "Icon List", window_iconlist, },
+	{ "information", "Information Window", window_information, },
+--	{ "albumlist", "Album List", window_albumlist, },
+--	{ "tracklist", "Track List", window_tracklist, },
+--	{ "trackinfo", "Track Info", window_trackinfo, },
+
+	{ "setuplist", "Languages", setup_window, },
 	{ "onebutton", "Welcome to Setup", setup_onebutton, },
-	{ "button", "Choose Region", setup_button, },
+	{ "buttonlist", "Choose Region", setup_button, },
 	{ "help", "Help Connection Type", setup_help, },
 	{ "waiting", "Connecting to", setup_waiting, },
 	{ "input_wpa", "Wireless Password", setup_input, },
 	{ "error", "Error", setup_error, },
 	{ "update", "Software Update", setup_update, },
-	{ "textlist", "Text List", setup_textlist, },
-	{ "iconlist", "Icon List", setup_iconlist, },
+
 }
 
 
 testData = {
-	setup = {
+	setuplist = {
 		{ "Deutsch", "Suomi", "English", "Dansk", "Itailiano", "Français", "Norsk", "Sevnska", "Español" },
 		"Some help text",
 	},
@@ -456,7 +548,7 @@ testData = {
 		"Let's begin by getting\nyou connected to your network.",
 		"Continue"
 	},
-	button = {
+	buttonlist = {
 		"Is text allowed in this window?",
 		{ { "North America", "region_US" },
 		  { "All Other Regions" , "region_XX" },
@@ -464,6 +556,9 @@ testData = {
 	},
 	help = {
 		"This is some help text, in a help window. It could be very long, and may need a scrollbar.\nThe quick brown fox jumped over the lazy dog.\nForsaking monastic tradition, twelve jovial friars gave up their vocation for a questionable existence on the flying trapeze.\nSix javelins thrown by the quick savages whizzed forty paces beyond the mark.\nJaded zombies acted quaintly but kept driving their oxen forward.",
+	},
+	information = {
+		"The Yamazaki \n 18 Year in four haikus\n (this is one of them)\n \n Yamazaki HAI!\n Suntory Distillery\n Good Nose; Strong Finish\n \n They say that the Scots\n are the only ones blessed with\n skill to make scotch. No.\n \n But let your palate\n be the judge and not my words\n Now! Please to enjoy!\n" 
 	},
 	waiting = {
 		"Connecting to\nwireless network...", "all your base", "iconConnecting",
@@ -480,4 +575,14 @@ testData = {
 	update = {
 		"Installing\nSoftware Update...", "iconSoftwareUpdate",
 	},
+	textlist = {
+		 "Now Playing", "Music Library", "Internet Radio", "Music Services", "Favorites", "Extras", "Settings", "Choose Player", "Turn Off Player"
+	},
+	iconlist = {
+		{ "Something", 'region_US' }, 
+		{ "Something Else", 'region_US' }, 
+		{ "More Somethings", 'region_US' }, 
+		{ "Another Something", 'region_US' }, 
+		{ "How many somethings does it take to screw in a light bulb", 'region_US' },
+	}
 }
