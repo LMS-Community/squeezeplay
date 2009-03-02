@@ -153,7 +153,7 @@ function drawField(self)
 	if labelStatus != nil then
 		labelStatus:setValue(lStatus)
 	else 
-		labelStatus = Icon("lives", lStatus)
+		labelStatus = Icon("icon", lStatus)
 		window:addWidget(labelStatus)
 	end
 
@@ -283,7 +283,7 @@ function _window(self, ...)
 
 	srf = Surface:newRGBA(w, h)
 	srf:filledRectangle(0, 0, w, h, 0x000000FF)
-	self.bg = Icon("background", srf)
+	self.bg = Icon("icon", srf)
 
 	window:addListener(EVENT_KEY_DOWN, 
 		function(evt)

@@ -119,7 +119,7 @@ function displaySlide(self)
 	end
 
 	local window = Window('window')
-	window:addWidget(Icon("background", image))
+	window:addWidget(Icon("icon", image))
 
 	local nextSlideAction = function (self)
 		self:displaySlide()

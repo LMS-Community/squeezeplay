@@ -416,7 +416,7 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 			icon = Icon("icon"), 
 			play = Icon("play"), 
 			lbutton = Button(
-				Icon("lbutton"), 
+				Icon("button_back"), 
 				function()
 					Framework:pushAction("back")
 
@@ -428,7 +428,7 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 				end
 			), 
 			rbutton = Button(
-				Icon("rbutton"), 
+				Icon("button_go_now_playing"), 
 				function() 
 					Framework:pushAction("go_now_playing")
 					return EVENT_CONSUME 
@@ -1059,7 +1059,7 @@ log:warn('mark')
 							text = Label("text", titleText), 
 							icon = titleIcon,
 							lbutton = Button(
-								Icon("lbutton"), 
+								Icon("button_back"), 
 								function()
 									Framework:pushAction("back")
 
@@ -1071,7 +1071,7 @@ log:warn('mark')
 								end
 							), 
 							rbutton = Button(
-								Icon("rbutton"), 
+								Icon("button_go_now_playing"), 
 								function() 
 									Framework:pushAction("go_now_playing")
 									return EVENT_CONSUME

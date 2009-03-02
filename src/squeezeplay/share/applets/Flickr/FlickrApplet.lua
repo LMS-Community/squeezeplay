@@ -567,7 +567,7 @@ function _makeIcon(self)
 		txt2:blit(totImg, sw - 5 - titleWidth, sh-15 - fontRegular:offset())
 	end
 
-	local icon = Icon("image", totImg)
+	local icon = Icon("icon", totImg)
 	icon:setPosition(0, 0)
 
 	return icon

@@ -657,7 +657,7 @@ function imageWindow(self, menuItem, filename)
 	end
 	log:debug("w = " .. w .. " h = " .. h)
 	
-	window:addWidget(Icon("image", image))
+	window:addWidget(Icon("icon", image))
 
 	-- by default close popup on keypress
 	window:hideOnAllButtonInput()

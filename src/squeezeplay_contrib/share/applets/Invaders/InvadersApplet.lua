@@ -63,7 +63,7 @@ function Ufo:__init(sw, sh, gameplay)
 		UfoSprite = Surface:loadImage("applets/Invaders/ufo.png")
 	end
 
-	obj.sprite = Icon("ufo", UfoSprite)
+	obj.sprite = Icon("icon", UfoSprite)
 	
 	local spritew, spriteh = UfoSprite:getSize()
 	obj.width = spritew
@@ -132,7 +132,7 @@ function Invader:__init(sw, sh, gameplay)
 		InvaderSprite = Surface:loadImage("applets/Invaders/invader.png")
 	end
 	
-	obj.sprite = Icon("invader" .. obj.id, InvaderSprite)
+	obj.sprite = Icon("icon" .. obj.id, InvaderSprite)
 	obj.x = 0
 	obj.y = INVADER_Y
 	obj.direction = 1
@@ -194,7 +194,7 @@ function Shot:__init(sw, sh, gameplay)
 		ShotSprite:filledRectangle(0, 0, SHOT_WIDTH, SHOT_HEIGHT, 0xFF0000FF)
 	end
 
-	obj.sprite = Icon("Shot_" .. obj.id, ShotSprite)
+	obj.sprite = Icon("icon" .. obj.id, ShotSprite)
 
 	obj.gameplay = gameplay
 	obj.x = 0
@@ -262,7 +262,7 @@ function Bomb:__init(sw, sh, gameplay)
 		BombSprite = Surface:loadImage("applets/Invaders/bomb.png")
 	end
 
-	obj.sprite = Icon("Shot_" .. obj.id, BombSprite)
+	obj.sprite = Icon("icon" .. obj.id, BombSprite)
 
 	obj.gameplay = gameplay
 	obj.x = 0
@@ -324,7 +324,7 @@ Player = oo.class()
 function Player:__init(sw, sh, gameplay)
 	local obj = oo.rawnew(self)
 	local img = Surface:loadImage("applets/Invaders/player.png")
-	obj.sprite = Icon("player", img)	
+	obj.sprite = Icon("icon", img)	
 
 	local spritew, spriteh = img:getSize()
 
@@ -415,7 +415,7 @@ function Score:_update()
 		self.sprite:setValue(self.surface)
 	else 
 		-- Add New
-		self.sprite = Icon("score", self.surface)
+		self.sprite = Icon("icon", self.surface)
 		self.window:addWidget(self.sprite)
 		self.sprite:setPosition(self.x, self.y)
 	end
@@ -690,7 +690,7 @@ function _window(self, ...)
 	local srf = Surface:newRGBA(w, h)
 	srf:filledRectangle(0, 0, w, h, 0x000000FF)
 
-	self.bg = Icon("background", srf)
+	self.bg = Icon("icon", srf)
 
 	window:addListener(EVENT_SCROLL,
 		function(evt)

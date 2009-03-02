@@ -139,7 +139,7 @@ end
 
 function Clock:_createSurface()
 	self.bg  = Surface:newRGBA(self.screen_width, self.screen_height)
-	self.bgicon = Icon("background", self.bg)
+	self.bgicon = Icon("icon", self.bg)
 	self.window:addWidget(self.bgicon)
 end
 

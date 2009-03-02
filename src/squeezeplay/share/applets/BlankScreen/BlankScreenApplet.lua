@@ -44,7 +44,7 @@ function init(self)
 	self.bg  = Surface:newRGBA(self.sw, self.sh)
 	self.bg:filledRectangle(0, 0, self.sw, self.sh, 0x000000FF)
 
-	self.bgicon = Icon("background", self.bg)
+	self.bgicon = Icon("icon", self.bg)
 	self.window:addWidget(self.bgicon)
 
 	self.window:addListener(EVENT_WINDOW_ACTIVE | EVENT_HIDE,

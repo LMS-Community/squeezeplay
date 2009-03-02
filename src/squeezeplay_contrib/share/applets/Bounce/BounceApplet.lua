@@ -50,7 +50,7 @@ function Sprite:__init(screen_w, screen_h, surface, step)
 	
 	local w,h = surface:getSize()
 
-	obj.icon = Icon("sprite", surface)
+	obj.icon = Icon("icon", surface)
 	local x = screen_w / 2 - w / 2
 	local y = screen_h / 2 - h / 2
 	obj.icon:setPosition(x, y)
@@ -123,7 +123,7 @@ function bounce(self)
 	srf:filledRectangle(0, 0, w, h, 0x000000FF)
 	srf:rectangle(10, 10, w - 10, h - 10, 0xFFFFFFFF)
 
-	self.bg = Icon("background", srf)
+	self.bg = Icon("icon", srf)
 
 	-- animation function
 	self.bg:addAnimation(

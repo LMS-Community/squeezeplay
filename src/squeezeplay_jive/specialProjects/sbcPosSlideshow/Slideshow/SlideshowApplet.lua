@@ -121,7 +121,7 @@ function displaySlide(self)
 	local image = Surface:loadImage(imgFiles[self.whichImage])
 
 	local window = Window('window')
-	window:addWidget(Icon("background", image))
+	window:addWidget(Icon("icon", image))
 
 	-- replace the window if it's already there
 	if self.window then
