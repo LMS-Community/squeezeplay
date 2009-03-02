@@ -516,6 +516,26 @@ function window_tracklist(self, item)
 end
 
 
+--[[
+Popup:   "toast"
+Label:   "text"
+--]]
+function window_toast(self, item)
+	local data = _itemData(item)
+
+	local popup = Popup("toast")
+	_windowActions(self, item, popup)
+
+	local text = Label("text", "Your toast is done")
+
+	-- XXXX add other widgets
+
+	popup:addWidget(text)
+
+	self:tieWindow(popup)
+	return popup
+end
+
 
 
 -- REFERENCE WINDOW STYLES ARE ABOVE
@@ -531,6 +551,7 @@ windows = {
 --	{ "albumlist", "Album List", window_albumlist, },
 --	{ "tracklist", "Track List", window_tracklist, },
 --	{ "trackinfo", "Track Info", window_trackinfo, },
+	{ "toast", "Popup Toast", window_toast, },
 
 	{ "setuplist", "Languages", setup_window, },
 	{ "onebutton", "Welcome to Setup", setup_onebutton, },

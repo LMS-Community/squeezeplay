@@ -1998,6 +1998,17 @@ end -- OLD STYLES
 	--playlist window
 	s.playlist = _uses(s.albumlist)
 
+	-- toast popup
+	s.toast = {
+		x = 0,
+		y = screenHeight - 93,
+		w = screenWidth,
+		h = 93,
+		bgImg = helpBox,
+		font = _font(HELP_FONT_SIZE),
+	}
+	-- XXXX fix toast
+
 
 --------- BUTTONS ---------
 
