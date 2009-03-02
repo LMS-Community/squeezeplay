@@ -55,6 +55,7 @@ function selectSkin(self, menuItem)
 	for appletName, name in JiveMain:skinIterator() do
 		menu:addItem({
 			text = name,
+			style = 'item_choice',
 			icon = RadioButton(
 				"radio", 
 				group, 
@@ -70,6 +71,7 @@ function selectSkin(self, menuItem)
 	end
 	menu:addItem({
 		text = self:string("FULLSCREEN_MODE"),
+		style = 'item_choice',
 		icon = Checkbox(
 			"checkbox", 
 			function(object, isSelected)

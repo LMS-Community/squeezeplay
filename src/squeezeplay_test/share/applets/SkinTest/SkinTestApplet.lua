@@ -372,13 +372,13 @@ function window_track_info(self, item)
 	local menu = SimpleMenu("menu")
 	for i, text in ipairs(data) do
 		log:warn(text)
-		local itemStyle = ''
+		local itemStyle = 'item'
 		self.checkMe = true
 		if i == 1 then
-			itemStyle = 'Play'
+			itemStyle = 'item_play'
 			self.checkMe = false
 		elseif i == 2 then
-			itemStyle = 'Add'
+			itemStyle = 'item_add'
 			self.checkMe = false
 		end
 		local callback 
@@ -417,7 +417,7 @@ function window_track_info(self, item)
 		menu:addItem({
 			text = text,
 			sound = "WINDOWSHOW",
-			style = 'item' .. itemStyle,
+			style = itemStyle,
 			callback = callback,
 		})
 	end
@@ -803,7 +803,7 @@ testData = {
 		"This is some help text, in a help window. It could be very long, and may need a scrollbar.\nThe quick brown fox jumped over the lazy dog.\nForsaking monastic tradition, twelve jovial friars gave up their vocation for a questionable existence on the flying trapeze.\nSix javelins thrown by the quick savages whizzed forty paces beyond the mark.\nJaded zombies acted quaintly but kept driving their oxen forward.",
 	},
 	information = {
-		"The Yamazaki \n 18 Year in four haikus\n (this is one of them)\n \n Yamazaki HAI!\n Suntory Distillery\n Good Nose; Strong Finish\n \n They say that the Scots\n are the only ones blessed with\n skill to make scotch. No.\n \n But let your palate\n be the judge and not my words\n Now! Please to enjoy!\n" 
+		"The Yamazaki \n18 Year in four haikus\n(this is one of them)\n \nYamazaki HAI!\nSuntory Distillery\nGood Nose; Strong Finish\n \nThey say that the Scots\nare the only ones blessed with\nskill to make scotch. No.\n \nBut let your palate\nbe the judge and not my words\nNow! Please to enjoy!" 
 	},
 	waiting_popup = {
 		"Connecting to\nwireless network...", "all your base", "icon_connecting",

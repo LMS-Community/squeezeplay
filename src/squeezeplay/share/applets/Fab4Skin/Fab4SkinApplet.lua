@@ -419,7 +419,7 @@ function skin(self, s)
 	s.menu = {
 		position = LAYOUT_CENTER,
 		padding = { 0, 0, 0, 0 },
-		itemHeight = 45,
+		itemHeight = FIVE_ITEM_HEIGHT,
 		fg = {0xbb, 0xbb, 0xbb },
 		font = _boldfont(250),
 	}
@@ -1400,15 +1400,31 @@ if true then
 	s.browsenpcontrols = _uses(s.ssnpcontrols)
 	s.largenpcontrols  = _uses(s.ssnpcontrols)
 
+	s.song_elapsed = {
+                w = 75,
+                align = 'right',
+                padding = { 8, 0, 8, 15 },
+                font = _boldfont(18),
+                fg = { 0xe7,0xe7, 0xe7 },
+                sh = { 0x37, 0x37, 0x37 },
+        }
+        s.song_remain = {
+                w = 75,
+                align = 'left',
+                padding = { 8, 0, 8, 15 },
+                font = _boldfont(18),
+                fg = { 0xe7,0xe7, 0xe7 },
+                sh = { 0x37, 0x37, 0x37 },
+        }
 	-- Progress bar
 	s.ssprogress = {
 		position = LAYOUT_SOUTH,
 		padding = { 10, 10, 10, 5 },
 		order = { "elapsed", "slider", "remain" },
-		song_elapsed = {
+		elapsed = {
 			align = 'right',
 		},
-		song_remain = {
+		remain = {
 			align = 'left',
 		},
 		text = {
@@ -1420,9 +1436,6 @@ if true then
 			sh = { 0x37, 0x37, 0x37 },
 		},
 	}
-
-	s.ssprogress.elapsed = _uses(s.ssprogress.text)
-	s.ssprogress.remain = _uses(s.ssprogress.text)
 
 	s.browseprogress = _uses(s.ssprogress)
 	s.largeprogress  = _uses(s.ssprogress)
