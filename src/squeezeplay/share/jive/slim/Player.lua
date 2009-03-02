@@ -879,7 +879,7 @@ function onStage(self)
 	self.currentSong.text = Label("text", "")
 	self.currentSong.textarea = Textarea('popupplay', '')
 
-	local group = Group("popupToast", {
+	local group = Group("xxxx", {
 			text = self.currentSong.text,
 			textarea = self.currentSong.textarea,
 			icon = self.currentSong.artIcon

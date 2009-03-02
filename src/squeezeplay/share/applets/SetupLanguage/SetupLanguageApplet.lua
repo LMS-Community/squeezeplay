@@ -55,7 +55,7 @@ function setupShowSetupLanguage(self, setupNext, helpText)
 	self.allStrings = locale:loadAllStrings(self._entry.stringsFilepath)
 
 	-- setup menu
-	local window = Window("setup", self:string("CHOOSE_LANGUAGE"), "setuptitle")
+	local window = Window("setuplist", self:string("CHOOSE_LANGUAGE"), "setuptitle")
 	window:setAllowScreensaver(false)
 
 	window:setButtonAction("lbutton", nil)
@@ -108,7 +108,7 @@ function settingsShow(self, menuItem)
 	self.allStrings = locale:loadAllStrings(self._entry.stringsFilepath)
 
 	-- setup menu
-	local window = Window("settings", self:string("LANGUAGE"), 'settingstitle')
+	local window = Window("setuplist", self:string("LANGUAGE"), 'settingstitle')
 	local menu = SimpleMenu("menu")
 
 	local group = RadioGroup()

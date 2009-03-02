@@ -377,7 +377,7 @@ end
 
 
 function _playerRegisterFailed(self, error)
-	local window = Window("wireless", self:string("SQUEEZEBOX_PROBLEM"), setupsqueezeboxTitleStyle)
+	local window = Window("error", self:string("SQUEEZEBOX_PROBLEM"), setupsqueezeboxTitleStyle)
 	window:setAllowScreensaver(false)
 
 	local textarea = Textarea("text", error)
@@ -404,7 +404,7 @@ end
 
 -- failed to connect player to server
 function _connectPlayerFailed(self, player, server)
-	local window = Window("wireless", self:string("SQUEEZEBOX_PROBLEM"), setupsqueezeboxTitleStyle)
+	local window = Window("error", self:string("SQUEEZEBOX_PROBLEM"), setupsqueezeboxTitleStyle)
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu",

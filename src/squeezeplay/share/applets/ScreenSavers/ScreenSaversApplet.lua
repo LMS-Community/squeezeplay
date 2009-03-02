@@ -328,7 +328,7 @@ function screensaverSetting(self, menuItem, mode)
 			     })
 	end
 
-	local window = Window("screensavers", menuItem.text, 'settingstitle')
+	local window = Window("textlist", menuItem.text, 'settingstitle')
 	window:addWidget(Textarea("helptext", self:string("SCREENSAVER_SELECT_HELP")))
 	window:addWidget(menu)
 

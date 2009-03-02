@@ -1551,7 +1551,7 @@ function settingsNetworkStatus(self, isWired)
 	-- XXXX remove isWired and detect automatically
 	local iface = isWired and self.ethIface or self.wlanIface
 
-	local window = Window("setup", self:string("NETWORK_STATUS"), 'setuptitle')
+	local window = Window("setuplist", self:string("NETWORK_STATUS"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local values = {}

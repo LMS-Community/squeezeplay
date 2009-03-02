@@ -884,7 +884,7 @@ function _drawSpots(self)
 end
 
 function touchscreenTest(self)
-	self.window = Window("window_nolayout")
+	self.window = Window("window")
 
 	self.w, self.h = Framework:getScreenSize()
 

@@ -1511,7 +1511,7 @@ function _setupFailed(self)
 		Task("setupFailed", self, t_connectJiveOnFailure):addTask()
 	end
 
-	local window = Window("wireless", self:string("SQUEEZEBOX_PROBLEM"), setupsqueezeboxTitleStyle)
+	local window = Window("error", self:string("SQUEEZEBOX_PROBLEM"), setupsqueezeboxTitleStyle)
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu",
