@@ -387,7 +387,7 @@ if false then
 	}
 
 	-- menu item with no right icon
-	s.itemNoAction = _uses(s.item)
+	s.itemNoArrow = _uses(s.item)
 
 	-- menu items for using different selection icons
 	s.itemplay = {}
@@ -396,7 +396,7 @@ if false then
 	s.itemadd = _uses(s.item)
 
 	-- checked menu item
-	s.checked =
+	s.itemChecked =
 		_uses(s.item, {
 			      order = { "text", "check", "arrow" },
 			      check = {
@@ -408,7 +408,7 @@ if false then
 		      })
 
 	-- checked menu item, with no action
-	s.checkedNoAction = _uses(s.checked)
+	s.itemCheckedNoArrow = _uses(s.itemChecked)
 
 	-- selected menu item
 	s.selected = {}
@@ -432,7 +432,7 @@ if false then
 			      }
 		      })
 
-	s.selected.checked = _uses(s.selected.item, {
+	s.selected.itemChecked = _uses(s.selected.item, {
 			      		order = { "text", "check", "arrow" },
 					arrow = {
 						img = _loadImage(self, "Icons/selection_right_5line.png")
@@ -445,16 +445,16 @@ if false then
 				
 				})
 
-	s.selected.itemNoAction =
-		_uses(s.itemNoAction, {
+	s.selected.itemNoArrow =
+		_uses(s.itemNoArrow, {
 			      text = {
 				      fg = SELECT_COLOR,
 				      sh = SELECT_SH_COLOR
 			      },
 		      })
 
-	s.selected.checkedNoAction =
-		_uses(s.checkedNoAction, {
+	s.selected.itemCheckedNoArrow =
+		_uses(s.itemCheckedNoArrow, {
 			      text = {
 				      fg = SELECT_COLOR,
 				      sh = SELECT_SH_COLOR
@@ -468,7 +468,7 @@ if false then
 
 	-- pressed menu item
 	s.pressed = {}
-	s.pressed.item = _uses(s.checked, {
+	s.pressed.item = _uses(s.itemChecked, {
 			bgImg = fiveItemPressedBox,
 	})
 
@@ -488,7 +488,7 @@ if false then
 			      }
 		      })
 
-	s.pressed.checked = _uses(s.pressed.item, {
+	s.pressed.itemChecked = _uses(s.pressed.item, {
 			      		order = { "text", "check", "arrow" },
 					arrow = {
 						img = _loadImage(self, "Icons/selection_right.png")
@@ -501,12 +501,12 @@ if false then
 
 				})
 
-	s.pressed.itemNoAction = _uses(s.itemNoAction, {
+	s.pressed.itemNoArrow = _uses(s.itemNoArrow, {
 		      bgImg = fiveItemPressedBox,
 	})
 
-	s.pressed.checkedNoAction =
-		_uses(s.checkedNoAction, {
+	s.pressed.itemCheckedNoArrow =
+		_uses(s.itemCheckedNoArrow, {
 			      bgImg = fiveItemPressedBox,
 			      check = {
 					align = ITEM_ICON_ALIGN,
@@ -1099,27 +1099,27 @@ if false then
 		}
 	)
 
-	s.albumitemNoAction = {}
-	s.albumitemNoAction.order = { "text" }
-	s.albumitemNoAction.text = {}
-	s.albumitemNoAction.text.w = WH_FILL
-	s.albumitemNoAction.text.padding = MENU_ALBUMITEM_TEXT_PADDING
-	s.albumitemNoAction.text.align = "top-left"
-	s.albumitemNoAction.text.font = _font(ALBUMMENU_FONT_SIZE)
-	s.albumitemNoAction.text.lineHeight = ALBUMMENU_FONT_SIZE + 4
-	s.albumitemNoAction.text.line = {
+	s.albumitemNoArrow = {}
+	s.albumitemNoArrow.order = { "text" }
+	s.albumitemNoArrow.text = {}
+	s.albumitemNoArrow.text.w = WH_FILL
+	s.albumitemNoArrow.text.padding = MENU_ALBUMITEM_TEXT_PADDING
+	s.albumitemNoArrow.text.align = "top-left"
+	s.albumitemNoArrow.text.font = _font(ALBUMMENU_FONT_SIZE)
+	s.albumitemNoArrow.text.lineHeight = ALBUMMENU_FONT_SIZE + 4
+	s.albumitemNoArrow.text.line = {
 		{
 			font = _boldfont(ALBUMMENU_FONT_SIZE),
 			height = ALBUMMENU_FONT_SIZE + 2
 		}
 	}
-	s.albumitemNoAction.text.fg = TEXT_COLOR
-	s.albumitemNoAction.text.sh = TEXT_SH_COLOR
+	s.albumitemNoArrow.text.fg = TEXT_COLOR
+	s.albumitemNoArrow.text.sh = TEXT_SH_COLOR
 
-	s.multilineitemNoAction = _uses(s.albumitemNoAction)
+	s.multilineitemNoArrow = _uses(s.albumitemNoArrow)
 
-	s.selected.albumitemNoAction = _uses(s.albumitemNoAction)
-	s.selected.multilineitemNoAction = _uses(s.multilineitemNoAction)
+	s.selected.albumitemNoArrow = _uses(s.albumitemNoArrow)
+	s.selected.multilineitemNoArrow = _uses(s.multilineitemNoArrow)
 
 	-- selected item with artwork and song info
 	s.selected.albumitem = _uses(s.albumitem)
@@ -1132,7 +1132,7 @@ if false then
 
 	s.pressed.albumitem         = _uses(s.albumitem, pressedAlbumBox)
 	s.pressed.albumchecked      = _uses(s.albumchecked, pressedAlbumBox)
-	s.pressed.albumitemNoAction = _uses(s.albumitemNoAction, pressedAlbumBox)
+	s.pressed.albumitemNoArrow = _uses(s.albumitemNoArrow, pressedAlbumBox)
 
 	s.selected.multilineitem = _uses(s.selected.albumitem, {
 				order = { 'text', 'play' },
@@ -1477,7 +1477,7 @@ end -- OLD STYLES
 	})
 
 
-	s.itemchecked = _uses(s.item, {
+	s.itemChecked = _uses(s.item, {
 		order = { "text", "check", "arrow" },
 		check = {
 			align = ITEM_ICON_ALIGN,
@@ -1488,14 +1488,14 @@ end -- OLD STYLES
 
 	s.selected = {
 		item = _uses(s.item),
-		itemchecked = _uses(s.itemchecked),
+		itemChecked = _uses(s.itemChecked),
 	}
 
 	s.pressed = {
 		item = _uses(s.item, {
 			bgImg = fiveItemPressedBox,
 		}),
-		itemchecked = _uses(s.itemchecked, {
+		itemChecked = _uses(s.itemChecked, {
 			bgImg = fiveItemPressedBox,
 		}),
 		itemplay = _uses(s.itemplay, {
@@ -1510,7 +1510,7 @@ end -- OLD STYLES
 		item = _uses(s.pressed.item, {
 			arrow = smallSpinny
 		}),
-		itemchecked = _uses(s.pressed.itemchecked, {
+		itemChecked = _uses(s.pressed.itemChecked, {
 			arrow = smallSpinny
 		}),
 		itemplay = _uses(s.pressed.itemplay, {
@@ -1696,7 +1696,7 @@ end -- OLD STYLES
 		icon  = s.buttonicon,
 	})
 
-	s.buttonlist.menu.itemchecked = _uses(_buttonItem, {
+	s.buttonlist.menu.itemChecked = _uses(_buttonItem, {
 		order = { 'icon', 'text', 'check', 'arrow' },
 		check = {
 			img     = _loadImage(self, "Icons/icon_check_3line.png"), 
@@ -1708,11 +1708,11 @@ end -- OLD STYLES
 
 	s.buttonlist.menu.selected = {
 		item = _uses(s.buttonlist.menu.item),
-		itemchecked = _uses(s.buttonlist.menu.itemchecked),
+		itemChecked = _uses(s.buttonlist.menu.itemChecked),
 	}
 	s.buttonlist.menu.pressed = {
 		item = _uses(s.buttonlist.menu.item, buttonPressed),
-		itemchecked = _uses(s.buttonlist.menu.itemchecked, buttonPressed),
+		itemChecked = _uses(s.buttonlist.menu.itemChecked, buttonPressed),
 	}
 
 	-- popup "spinny" window
@@ -1819,7 +1819,7 @@ end -- OLD STYLES
 	})
 
 
-	s.iconlist.menu.itemchecked = _uses(s.iconlist.menu.item, {
+	s.iconlist.menu.itemChecked = _uses(s.iconlist.menu.item, {
 		order = { 'icon', 'text', 'check', 'arrow' },
 		check = {
 			align = ITEM_ICON_ALIGN,
@@ -1829,17 +1829,17 @@ end -- OLD STYLES
 	})
 	s.iconlist.menu.selected = {
                 item = _uses(s.iconlist.menu.item),
-                itemchecked = _uses(s.iconlist.menu.itemchecked),
+                itemChecked = _uses(s.iconlist.menu.itemChecked),
         }
         s.iconlist.menu.pressed = {
                 item = _uses(s.iconlist.menu.item, buttonPressed),
-                itemchecked = _uses(s.iconlist.menu.itemchecked, buttonPressed),
+                itemChecked = _uses(s.iconlist.menu.itemChecked, buttonPressed),
         }
 	s.iconlist.menu.locked = {
 		item = _uses(s.iconlist.menu.pressed.item, {
 			arrow = smallSpinny
 		}),
-		itemchecked = _uses(s.iconlist.menu.pressed.itemchecked, {
+		itemChecked = _uses(s.iconlist.menu.pressed.itemChecked, {
 			arrow = smallSpinny
 		}),
 	}
@@ -1891,7 +1891,7 @@ end -- OLD STYLES
 			},
 		},
 	})
-	s.playlist.menu.itemchecked = _uses(s.playlist.menu.item, {
+	s.playlist.menu.itemChecked = _uses(s.playlist.menu.item, {
 		order = { 'icon', 'text', 'check', 'arrow' },
 		check = {
 			align = ITEM_ICON_ALIGN,
@@ -1901,17 +1901,17 @@ end -- OLD STYLES
 	})
 	s.playlist.menu.selected = {
                 item = _uses(s.playlist.menu.item),
-                itemchecked = _uses(s.playlist.menu.itemchecked),
+                itemChecked = _uses(s.playlist.menu.itemChecked),
         }
         s.playlist.menu.pressed = {
                 item = _uses(s.playlist.menu.item, buttonPressed),
-                itemchecked = _uses(s.playlist.menu.itemchecked, buttonPressed),
+                itemChecked = _uses(s.playlist.menu.itemChecked, buttonPressed),
         }
 	s.playlist.menu.locked = {
 		item = _uses(s.playlist.menu.pressed.item, {
 			arrow = smallSpinny
 		}),
-		itemchecked = _uses(s.playlist.menu.pressed.itemchecked, {
+		itemChecked = _uses(s.playlist.menu.pressed.itemChecked, {
 			arrow = smallSpinny
 		}),
 	}
