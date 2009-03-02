@@ -126,6 +126,7 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 					text = Label("text", item.text),
 					check = Icon("check"),
 					icon = icon,
+					arrow = Icon("arrow"),
 				})
 			else
 				widgetList[i]:setStyle(item.style or "item")

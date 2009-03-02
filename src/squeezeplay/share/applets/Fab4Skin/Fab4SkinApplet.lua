@@ -370,7 +370,7 @@ if false then
 
 	-- menu item
 	s.item = {}
-	s.item.order = { "text", "icon" }
+	s.item.order = { "text", "arrow" }
 	s.item.padding = { 4, 0, 0, 0 }
 	s.item.text = {}
 	s.item.text.padding = { 6, 5, 2, 5 }
@@ -379,7 +379,7 @@ if false then
 	s.item.text.font = _boldfont(TEXTMENU_FONT_SIZE)
 	s.item.text.fg = TEXT_COLOR
 	s.item.text.sh = TEXT_SH_COLOR
-	s.item.icon = {
+	s.item.arrow = {
 	      align = ITEM_ICON_ALIGN,
 	      img = _loadImage(self, "Icons/selection_right_5line.png")
 	}
@@ -396,7 +396,7 @@ if false then
 	-- checked menu item
 	s.checked =
 		_uses(s.item, {
-			      order = { "text", "check", "icon" },
+			      order = { "text", "check", "arrow" },
 			      check = {
 					align = ITEM_ICON_ALIGN,
 					padding = CHECK_PADDING,
@@ -416,7 +416,7 @@ if false then
 
 	s.selected.itemplay =
 		_uses(s.selected.item, {
-			      icon = {
+			      arrow = {
 					--FIXME: need this image
 				      img = _loadImage(self, "Icons/icon_check_5line.png")
 			      }
@@ -424,15 +424,15 @@ if false then
 
 	s.selected.itemadd =
 		_uses(s.selected.item, {
-			      icon = {
+			      arrow = {
 					--FIXME: need this image
 				      img = _loadImage(self, "Icons/icon_check_5line.png")
 			      }
 		      })
 
 	s.selected.checked = _uses(s.selected.item, {
-			      		order = { "text", "check", "icon" },
-					icon = {
+			      		order = { "text", "check", "arrow" },
+					arrow = {
 						img = _loadImage(self, "Icons/selection_right_5line.png")
 					},
 					check = {
@@ -472,7 +472,7 @@ if false then
 
 	s.pressed.itemplay =
 		_uses(s.pressed.item, {
-			      icon = {
+			      arrow = {
 					--FIXME: need this image
 				      img = _loadImage(self, "Icons/icon_check_5line.png")
 			      }
@@ -480,15 +480,15 @@ if false then
 
 	s.pressed.itemadd =
 		_uses(s.pressed.item, {
-			      icon = {
+			      arrow = {
 					--FIXME: need this image
 				      img = _loadImage(self, "Icons/icon_check_5line.png")
 			      }
 		      })
 
 	s.pressed.checked = _uses(s.pressed.item, {
-			      		order = { "text", "check", "icon" },
-					icon = {
+			      		order = { "text", "check", "arrow" },
+					arrow = {
 						img = _loadImage(self, "Icons/selection_right.png")
 					},
 					check = {
@@ -517,7 +517,7 @@ if false then
 	-- locked menu item (with loading animation)
 	s.locked = {}
 	s.locked.item = _uses(s.pressed.item, {
-					icon = smallSpinny
+					arrow = smallSpinny
 			})
 
 	s.locked.itemplay = _uses(s.locked.item)
@@ -928,7 +928,7 @@ if false then
 
 	-- 3 options per page, text only
 	s.buttonitem = {}
-	s.buttonitem.order = { "text", "icon" }
+	s.buttonitem.order = { "text", "arrow" }
 	s.buttonitem.padding = 0
 	s.buttonitem.bgImg = threeItemSelectionBox
 	s.buttonitem.text = {}
@@ -939,7 +939,7 @@ if false then
 	s.buttonitem.text.font = _boldfont(34)
 	s.buttonitem.text.fg = SELECT_COLOR
 	s.buttonitem.text.sh = SELECT_SH_COLOR
-	s.buttonitem.icon = {
+	s.buttonitem.arrow = {
 			img     = _loadImage(self, "Icons/selection_right_3line_off.png"), 
 			w       = 37,
 			h       = WH_FILL,
@@ -947,7 +947,7 @@ if false then
 	}
 
 	s.buttonitemchecked = _uses(s.buttonitem, {
-		order = { 'text', 'check', 'icon' },
+		order = { 'text', 'check', 'arrow' },
 		check = {
 			img     = _loadImage(self, "Icons/icon_check_3line.png"), 
 			w       = 37,
@@ -964,12 +964,12 @@ if false then
 		img = false
 	}
 	s.buttoniconitem = _uses(s.buttonitem, {
-		order = { "icon", "text"},
+		order = { "icon", "text", "arrow" },
 		icon  = s.buttonicon,
 	})
 
 	s.buttoniconitemchecked = _uses(s.buttoniconitem, {
-		order = { 'icon', 'text', 'check' },
+		order = { 'icon', 'text', 'check', 'arrow' },
 		check = {
 			img     = _loadImage(self, "Icons/icon_check_3line.png"), 
 			w       = 37,
@@ -1021,7 +1021,7 @@ if false then
 
 	-- items 5 per page with artwork two lines text
 	s.albumitem = {}
-	s.albumitem.order = { "icon", "text", "play" }
+	s.albumitem.order = { "icon", "text", "arrow" }
 	s.albumitem.padding = MENU_ALBUMITEM_PADDING
 	s.albumitem.text = {
 		w = WH_FILL,
@@ -1037,7 +1037,7 @@ if false then
 		fg = TEXT_COLOR,
 		sh = TEXT_SH_COLOR,
 	}
-	s.albumitem.play = {
+	s.albumitem.arrow = {
 		img     = _loadImage(self, "Icons/selection_right_5line.png"), 
 		w       = 30,
 		h       = WH_FILL,
@@ -1052,7 +1052,7 @@ if false then
 	}
 
 	local checkedStyle = {
-	      		order = { "icon", "text", "check", "play" },
+	      		order = { "icon", "text", "check", "arrow" },
 			check = {
 				align = "right",
 				img = _loadImage(self, "Icons/icon_check_5line.png")
@@ -1060,7 +1060,7 @@ if false then
 	}
 	
 	s.multilineitem = _uses(s.albumitem, {
-					order = {'text', 'play'}
+					order = {'text', 'arrow'}
 				})
 	-- checked albummenu item
 	s.albumchecked = _uses(s.albumitem, checkedStyle)
@@ -1137,8 +1137,8 @@ if false then
 			})
 
 	s.selected.albumchecked = _uses(s.selected.albumitem, {
-	      		order = { "icon", "text", "check", "play" },
-			play = {
+	      		order = { "icon", "text", "check", "arrow" },
+			arrow = {
 				img = _loadImage(self, "Icons/selection_right_5line.png")
 			},
 			check = {
@@ -1147,8 +1147,8 @@ if false then
 			}
 	})
 	s.selected.multilinechecked = _uses(s.selected.multilineitem, {
-	      		order = { "text", "check", "play" },
-			play = {
+	      		order = { "text", "check", "arrow" },
+			arrow = {
 				img = _loadImage(self, "Icons/selection_right_5line.png")
 			},
 			check = {
@@ -1205,7 +1205,7 @@ if false then
 	-- items with artwork and song info
 	--s.nowplayingitem.h = 60
 	s.nowplayingitem = {}
-	s.nowplayingitem.order = { "icon", "text", "play" }
+	s.nowplayingitem.order = { "icon", "text", "arrow" }
 	s.nowplayingitem.text = {}
 	s.nowplayingitem.text.w = WH_FILL
 	s.nowplayingitem.text.padding = { 12, 8, 8, 8 }
@@ -1245,7 +1245,7 @@ if false then
 
 	-- now playing menu item
 	s.albumcurrent = {}
-	s.albumcurrent.order = { "icon", "play", "text" }
+	s.albumcurrent.order = { "icon", "play", "text", "arrow" }
 	s.albumcurrent.padding = MENU_ALBUMITEM_PADDING
 	s.albumcurrent.text = {}
 	s.albumcurrent.text.w = WH_FILL
@@ -1566,7 +1566,7 @@ end -- OLD STYLES
 	}
 
 	local _buttonItem = {
-		order = { "text", "icon" },
+		order = { "text", "arrow" },
 		padding = 0,
 		bgImg = threeItemSelectionBox,
 		text = {
@@ -1578,7 +1578,7 @@ end -- OLD STYLES
 		fg = SELECT_COLOR,
 		sh = SELECT_SH_COLOR,
 		},
-		icon = {
+		arrow = {
 			img     = _loadImage(self, "Icons/selection_right_3line_off.png"), 
 			w       = 37,
 			h       = WH_FILL,
@@ -1626,7 +1626,7 @@ end -- OLD STYLES
 	}
 
 	s.item = {
-		order = { "text", "icon" },
+		order = { "text", "arrow" },
 		padding = { 4, 0, 0, 0 },
 		text = {
 			padding = { 6, 5, 2, 5 },
@@ -1636,14 +1636,14 @@ end -- OLD STYLES
 			fg = TEXT_COLOR,
 			sh = TEXT_SH_COLOR,
 		},
-		icon = {
+		arrow = {
 	      		align = ITEM_ICON_ALIGN,
 	      		img = _loadImage(self, "Icons/selection_right_5line.png")
 		},
 	}
 
 	s.itemchecked = _uses(s.item, {
-		order = { "text", "check", "icon" },
+		order = { "text", "check", "arrow" },
 		check = {
 			align = ITEM_ICON_ALIGN,
 			padding = CHECK_PADDING,
@@ -1787,7 +1787,7 @@ end -- OLD STYLES
 	})
 
 	s.onebutton.menu.item = {
-		order = { "text", "icon" },
+		order = { "text", "arrow" },
 		padding = 0,
 		bgImg = threeItemSelectionBox,
 		text = {
@@ -1798,7 +1798,7 @@ end -- OLD STYLES
 			font = _boldfont(34),
 			fg = TEXT_COLOR,
 			sh = TEXT_SH_COLOR,
-			icon = {
+			arrow = {
 				img = _loadImage(self, "Icons/selection_right_3line_off.png"), 
 				w = 37,
 				h = WH_FILL,
@@ -1838,12 +1838,12 @@ end -- OLD STYLES
 	}
 
 	s.buttonlist.menu.item = _uses(_buttonItem, {
-		order = { "icon", "text"},
+		order = { "icon", "text", "arrow" },
 		icon  = s.buttonicon,
 	})
 
 	s.buttonlist.menu.itemchecked = _uses(_buttonItem, {
-		order = { 'icon', 'text', 'check' },
+		order = { 'icon', 'text', 'check', 'arrow' },
 		check = {
 			img     = _loadImage(self, "Icons/icon_check_3line.png"), 
 			w       = 37,
@@ -1922,7 +1922,7 @@ end -- OLD STYLES
 	s.iconlist = _uses(s.window, {
 		menu = {
 			item = {
-				order = { "icon", "text", "play" },
+				order = { "icon", "text", "arrow" },
 				padding = MENU_ALBUMITEM_PADDING,
 				text = {
 					w = WH_FILL,
@@ -1944,9 +1944,15 @@ end -- OLD STYLES
 					padding = { 8, 1, 8, 1 },
 					img = _loadImage(self, "Icons/menu_album_noartwork_43.png")
 				},
+				arrow = {
+				      align = ITEM_ICON_ALIGN,
+					padding = { 8, 1, 8, 1 },
+				      img = _loadImage(self, "Icons/selection_right_5line.png")
+				},
 			},
 		},
 	})
+
 
 	s.iconlist.menu.selected = {
                 item = _uses(s.iconlist.menu.item),
