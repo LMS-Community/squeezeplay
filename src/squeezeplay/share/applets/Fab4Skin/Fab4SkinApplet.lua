@@ -2009,7 +2009,19 @@ end -- OLD STYLES
 
 	--tracklist window
 	-- XXXX todo
+	-- identical to textlist but has icon in upper left of titlebar
 	s.tracklist = _uses(s.textlist)
+
+	s.tracklist.title = _uses(s.title, {
+		order = { 'icon', 'text', 'rbutton' },		
+		icon  = {
+			w = THUMB_SIZE,
+			h = WH_FILL,
+			padding = { 8, 1, 8, 1 },
+			img = _loadImage(self, "Icons/menu_album_noartwork_43.png")
+		},
+	})
+
 
 	--trackinfo window
 	-- XXXX todo

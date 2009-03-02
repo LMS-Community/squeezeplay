@@ -543,6 +543,7 @@ end
 --[[
 Window:   "tracklist"
 Menu: "menu"
+First Item: "itemplay"
 Item: "item"
 --]]
 function window_tracklist(self, item)
@@ -552,12 +553,30 @@ function window_tracklist(self, item)
 	_windowActions(self, item, window)
 
 	local menu = SimpleMenu("menu")
-	for i,data in ipairs(data[2]) do
+	for i, text in ipairs(data) do
+		log:warn(text)
 		menu:addItem({
-			text = data,
+			text = text,
+			sound = "WINDOWSHOW",
+			callback = function(event, item)
+				if selected == item then
+					menu:lock()
+					return
+				end
+
+				if selected then
+					selected.style = "item"
+					menu:updatedItem(selected)
+				end
+
+				item.style = "itemchecked"
+				menu:updatedItem(item)
+
+				selected = item
+			end
 		})
 	end
-
+	
 	window:addWidget(menu)
 
 	self:tieWindow(window)
@@ -594,12 +613,12 @@ end
 
 -- the reference windows, and test data
 windows = {
+	{ "tracklist", "Track List", window_tracklist, },
 	{ "playlist", "Playlist", window_playlist, },
 	{ "textlist", "Text List", setup_textlist, },
 	{ "iconlist", "Icon List", window_iconlist, },
 	{ "information", "Information Window", window_information, },
 --	{ "trackinfo", "Track Info", window_trackinfo, },
---	{ "tracklist", "Track List", window_tracklist, },
 	{ "toast", "Popup Toast", window_toast, },
 
 	{ "setuplist", "Languages", setup_window, },
@@ -659,6 +678,14 @@ testData = {
 		{ "More Somethings" },
 		{ "Another Something" },
 		{ "How many somethings does it take to screw in a light bulb" },
+	},
+	tracklist = {
+		 "1. Something", 
+		 "2. Something Else",
+		 "3. More Somethings",
+		 "4. Another Something",
+		 "5. How many somethings does it take to screw in a light bulb",
+		 "Add to Favorites",
 	},
 	playlist = {
 		{ "Something\nThe Somethings\nGreatest Hits" }, 
