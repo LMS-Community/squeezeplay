@@ -1099,10 +1099,16 @@ function _wlanPowerSave(self, active)
 			      true)
 	end
 
-	-- disable PS mode when on ac power, or the network and device or
+	-- disable PS mode when:
+	-- 1) on ac power
+	-- 2) the device is active
+	-- 3) the network is active
 	-- both active. when battery powered only disable PS mode when the
 	-- user is actively using the device.
-	if self.acpower or self.networkActive then
+	if self.acpower or
+		self.powerState == "active" or
+		self.networkActive then
+
 		self.wireless:powerSave(false)
 		self._wlanPowerSaveTimer:stop()
 	else
