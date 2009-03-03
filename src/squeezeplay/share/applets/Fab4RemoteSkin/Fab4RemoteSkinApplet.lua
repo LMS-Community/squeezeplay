@@ -419,18 +419,26 @@ function skin(self, s)
 	})
 
 	s.title = {
-		h = 47,
+		h = 55,
 		border = 0,
 		position = LAYOUT_NORTH,
 		bgImg = titleBox,
-		order = { "lbutton", "text", "rbutton" },
+		order = { "text", "xofy" },
 		text = {
 			w = WH_FILL,
-			padding = TITLE_PADDING,
+			h = WH_FILL,
+			padding = { 100, 10, 0, 0 },
 			align = "center",
 			font = _boldfont(TITLE_FONT_SIZE),
 			fg = TEXT_COLOR,
-		}
+		},
+		xofy = {
+			h = WH_FILL,
+                	font = _boldfont(TITLE_FONT_SIZE),
+			align = "right",
+	                fg = TEXT_COLOR,
+			padding = { 0, 10, 8, 0},
+        	},
 	}
 
 	s.menu = {
@@ -990,7 +998,7 @@ function skin(self, s)
 	s.track_list = _uses(s.text_list)
 
 	s.track_list.title = _uses(s.title, {
-		order = { 'lbutton', 'icon', 'text', 'rbutton' },		
+		order = { 'icon', 'text', 'xofy' },		
 		icon  = {
 			w = THUMB_SIZE,
 			h = WH_FILL,

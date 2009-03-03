@@ -742,7 +742,7 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 					  obj:setSelectedIndex(itemValue)
 				  end)
 
-	obj.xofy = Label("text", "")
+	obj.xofy = Label("xofy", "")
 
 	obj.scrollbar.parent = obj
 	obj.layoutRoot = true
