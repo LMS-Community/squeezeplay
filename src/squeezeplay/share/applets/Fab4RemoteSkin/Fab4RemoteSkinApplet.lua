@@ -647,7 +647,7 @@ function skin(self, s)
 		w = WH_FILL,
 		h = WH_FILL,
 		border = { 8, 0, 8, 0 },
-		bgImg = blackBackground,
+--		bgImg = blackBackground,
 	}
 
 	s.keyboard.button = {
@@ -823,7 +823,9 @@ function skin(self, s)
 
 	-- input window (including keyboard)
 	-- XXX: needs layout
-	s.input = _uses(s.window)
+	s.input = _uses(s.window, {
+		bgImg = blackBackground,
+	})
 
 	-- error window
 	-- XXX: needs layout

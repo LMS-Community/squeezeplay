@@ -108,6 +108,7 @@ function timeSetting(self, menuItem)
 	local menu = SimpleMenu("menu", {
 		{
 			text = self:string("DATETIME_TIMEFORMAT_12H"),
+			style = 'item_choice',
 			icon = RadioButton("radio", group, function(event, menuItem)
 					self:setHours("12")
 				end,
@@ -115,6 +116,7 @@ function timeSetting(self, menuItem)
 		},
 		{
 			text = self:string("DATETIME_TIMEFORMAT_24H"),
+			style = 'item_choice',
 			icon = RadioButton("radio", group, function(event, menuItem)
 					self:setHours("24")
 				end,
@@ -148,6 +150,7 @@ function dateFormatSetting(self, menuItem)
 --]]
 		menu:addItem({
 				text = _text,
+				style = 'item_choice',
 				icon = RadioButton("radio", group, function(event, menuItem)
 						self:setDateFormat(v)
 					end,
@@ -182,6 +185,7 @@ function weekstartSetting(self, menuItem)
 	local menu = SimpleMenu("menu", {
 		{
 			text = self:string("DATETIME_SUNDAY"),
+			style = 'item_choice',
 			icon = RadioButton("radio", group, function(event, menuItem)
 					self:setWeekStart("Sunday")
 				end,
@@ -189,6 +193,7 @@ function weekstartSetting(self, menuItem)
 		},
 		{
 			text = self:string("DATETIME_MONDAY"),
+			style = 'item_choice',
 			icon = RadioButton("radio", group, function(event, menuItem)
 					self:setWeekStart("Monday")
 				end,

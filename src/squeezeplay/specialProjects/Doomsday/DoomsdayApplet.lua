@@ -49,6 +49,9 @@ function menu(self, menuItem)
 		{	
 			-- text for the menu item
 			text = self:string("DOOMSDAY_OPTION1"),
+			-- radio buttons (and checkboxes and choice items) 
+			-- need to be styled with the style 'item_choice' so the radio show up correctly
+			style = 'item_choice',
 			-- add a radiobutton with a callback function to be used when selected
 			icon = RadioButton(
 				-- skin style of radio button (defined in DefaultSkin)
@@ -70,6 +73,7 @@ function menu(self, menuItem)
 		},
 		{	
 			text = self:string("DOOMSDAY_OPTION2"),
+			style = 'item_choice',
 			icon = RadioButton(
 				"radio",
 				group,
@@ -84,6 +88,7 @@ function menu(self, menuItem)
 		},
 		{	
 			text = self:string("DOOMSDAY_OPTION3"),
+			style = 'item_choice',
 			icon = RadioButton(
 				"radio",
 				group,
@@ -98,6 +103,7 @@ function menu(self, menuItem)
 		},
 		{	
 			text = self:string("DOOMSDAY_OPTION4"),
+			style = 'item_choice',
 			icon = RadioButton(
 				"radio",
 				group,

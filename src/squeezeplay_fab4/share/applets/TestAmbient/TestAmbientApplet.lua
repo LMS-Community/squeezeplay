@@ -163,6 +163,7 @@ function menuSetGain(self)
         local menu = SimpleMenu("menu", {          
                 {                                  
                         text = "Gain On",
+			style = 'item_choice',
                         icon = RadioButton("radio", group, function(event, menuItem)
 					self:_changeGain(true)              
                                 end,                                                
@@ -170,6 +171,7 @@ function menuSetGain(self)
                 },                                                                  
                 {                                          
                         text = "Gain Off",
+			style = 'item_choice',
                         icon = RadioButton("radio", group, function(event, menuItem)
                                         self:_changeGain(false)                      
                                 end,                                                
@@ -188,6 +190,7 @@ function menuSetIntegration(self)
         local menu = SimpleMenu("menu", {          
                 {
                         text = "Integration Time: " .. IntegrationTimes[1],
+			style = 'item_choice',
                         icon = RadioButton("radio", group, function(event, menuItem)
 					self:_changeIntegrationTime(0)
                                 end,                                                
@@ -195,6 +198,7 @@ function menuSetIntegration(self)
                 },                                                             
                 {
                         text = "Integration Time: " .. IntegrationTimes[2],
+			style = 'item_choice',
                         icon = RadioButton("radio", group, function(event, menuItem)
 					self:_changeIntegrationTime(1)					          
                                 end,                                                
@@ -202,6 +206,7 @@ function menuSetIntegration(self)
                 },
 		{
                         text = "Integration Time: " .. IntegrationTimes[3],
+			style = 'item_choice',
                         icon = RadioButton("radio", group, function(event, menuItem)
 					self:_changeIntegrationTime(2)					          
                                 end,                                                

@@ -66,6 +66,7 @@ local function _gatherLogCategories()
 		table.insert(res, 
 			{
 				text = k,
+				style = 'item_choice',
 				icon = choice,
 			}
 		)

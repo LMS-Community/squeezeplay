@@ -135,6 +135,7 @@ function settingsShow(self, menuItem)
 
 	menu:addItem({
 			     text = self:string("SOUND_NONE"),
+				style = 'item_choice',
 			     icon = offButton,
 			     weight = 1
 		     })
@@ -177,6 +178,7 @@ function settingsShow(self, menuItem)
 			-- insert suitable entry for Choice menu
 			menu:addItem({
 					     text = self:string(k),
+						style = 'item_choice',
 					     icon = button,
 					     weight = 10
 				     })
@@ -340,6 +342,7 @@ function _customSoundMenu(self, sound, custom)
 	menu:addItem({
 		weight = 1,
 		text = self:string("SOUND_DEFAULT"),
+		style = 'item_choice',
 		icon = RadioButton("radio",
 						   group,
 						   function()
@@ -355,6 +358,7 @@ function _customSoundMenu(self, sound, custom)
 		menu:addItem({
 			weight = 10,
 			text = v.title,
+			style = 'item_choice',
 			icon = RadioButton("radio",
 							   group,
 							   function()

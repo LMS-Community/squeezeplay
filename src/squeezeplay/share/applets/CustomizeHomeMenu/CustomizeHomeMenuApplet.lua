@@ -139,6 +139,7 @@ function menu(self, menuItem)
 				text = title,
 				weights = item.weights,
 				indent = indentSize,
+				style = 'item_choice',
 				icon = Checkbox(
 					"checkbox",
 					function(object, isSelected)

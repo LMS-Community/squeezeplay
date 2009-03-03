@@ -192,6 +192,7 @@ function defineTransition(self, menuItem)
 		{
             {
                 text = self:string("SCREENSAVER_FLICKR_TRANSITION_RANDOM"),
+		style = 'item_choice',
                 icon = RadioButton(
                     "radio",
                     group,
@@ -203,6 +204,7 @@ function defineTransition(self, menuItem)
             },
             {
                 text = self:string("SCREENSAVER_FLICKR_TRANSITION_INSIDE_OUT"),
+		style = 'item_choice',
                 icon = RadioButton(
                     "radio",
                     group,
@@ -214,6 +216,7 @@ function defineTransition(self, menuItem)
 	        },
  			{
                 text = self:string("SCREENSAVER_FLICKR_TRANSITION_TOP_DOWN"),
+		style = 'item_choice',
 				icon = RadioButton(
 				   "radio", 
 				   group, 
@@ -225,6 +228,7 @@ function defineTransition(self, menuItem)
 			},
 			{ 
                 text = self:string("SCREENSAVER_FLICKR_TRANSITION_BOTTOM_UP"),
+		style = 'item_choice',
 				icon = RadioButton(
 				   "radio", 
 				   group, 
@@ -236,6 +240,7 @@ function defineTransition(self, menuItem)
 			},
 			{ 
                 text = self:string("SCREENSAVER_FLICKR_TRANSITION_LEFT_RIGHT"),
+		style = 'item_choice',
 				icon = RadioButton(
 				   "radio", 
 				   group, 
@@ -247,6 +252,7 @@ function defineTransition(self, menuItem)
 			},
 			{ 
                 text = self:string("SCREENSAVER_FLICKR_TRANSITION_RIGHT_LEFT"),
+		style = 'item_choice',
 				icon = RadioButton(
 				   "radio", 
 				   group, 
@@ -273,6 +279,7 @@ function displaySetting(self, menuItem)
 		{
             {
                 text = self:string("SCREENSAVER_FLICKR_DISPLAY_OWN"),
+		style = 'item_choice',
                 icon = RadioButton(
                     "radio",
                     group,
@@ -284,6 +291,7 @@ function displaySetting(self, menuItem)
             },
             {
                 text = self:string("SCREENSAVER_FLICKR_DISPLAY_FAVORITES"),
+		style = 'item_choice',
                 icon = RadioButton(
                     "radio",
                     group,
@@ -295,6 +303,7 @@ function displaySetting(self, menuItem)
             },           
             {
                 text = self:string("SCREENSAVER_FLICKR_DISPLAY_CONTACTS"),
+		style = 'item_choice',
                 icon = RadioButton(
                     "radio",
                     group,
@@ -306,6 +315,7 @@ function displaySetting(self, menuItem)
             },
  			{
 				text = self:string("SCREENSAVER_FLICKR_DISPLAY_INTERESTING"), 
+				style = 'item_choice',
 				icon = RadioButton(
 				   "radio", 
 				   group, 
@@ -317,6 +327,7 @@ function displaySetting(self, menuItem)
 			},
 			{ 
 				text = self:string("SCREENSAVER_FLICKR_DISPLAY_RECENT"), 
+				style = 'item_choice',
 				icon = RadioButton(
 				   "radio", 
 				   group, 
@@ -343,18 +354,22 @@ function timeoutSetting(self, menuItem)
 		{
 			{
 				text = self:string("SCREENSAVER_FLICKR_DELAY_10_SEC"),
+				style = 'item_choice',
 				icon = RadioButton("radio", group, function() self:setTimeout(10000) end, timeout == 10000),
 			},
 			{ 
 				text = self:string("SCREENSAVER_FLICKR_DELAY_20_SEC"),
+				style = 'item_choice',
 				icon = RadioButton("radio", group, function() self:setTimeout(20000) end, timeout == 20000),
 			},
 			{ 
 				text = self:string("SCREENSAVER_FLICKR_DELAY_30_SEC"),
+				style = 'item_choice',
 				icon = RadioButton("radio", group, function() self:setTimeout(30000) end, timeout == 30000),
 			},
 			{
 				text = self:string("SCREENSAVER_FLICKR_DELAY_1_MIN"),
+				style = 'item_choice',
 				icon = RadioButton("radio", group, function() self:setTimeout(60000) end, timeout == 60000),
 			},
 		}))

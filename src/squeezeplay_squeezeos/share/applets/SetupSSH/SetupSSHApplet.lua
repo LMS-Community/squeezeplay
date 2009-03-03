@@ -34,6 +34,7 @@ function settingsShow(self, menuItem)
 	local menu = SimpleMenu("menu", {
 					{
 						text = self:string("SSH_ENABLE"),
+						style = 'item_choice',
 						icon = Checkbox("checkbox",
 								function(_, isSelected)
 									if isSelected then

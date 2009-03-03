@@ -52,6 +52,7 @@ function settingsShow(self, metaState)
 		text = self:string("ENABLE_AUDIO"),
 		sound = "SELECT",
 		weight = 1,
+		style = 'item_choice',
 		icon = Checkbox(
                 	"checkbox",
 			function(_, isSelected)
