@@ -90,7 +90,7 @@ end
 
 
 -- define a local function to make it easier to create icons.
-local function _icon(x, y, img)
+local function _icon(self, x, y, img)
 	local var = {}
 	var.x = x
 	var.y = y
@@ -133,8 +133,10 @@ end
 
 -- skin
 -- The meta arranges for this to be called to skin Jive.
-function skin(self, s)
-       if useDefaultSize or screenWidth < 240 or screenHeight < 320 then
+function skin(self, s, reload, useDefaultSize)
+	local screenWidth, screenHeight = Framework:getScreenSize()
+
+	if useDefaultSize or screenWidth < 240 or screenHeight < 320 then
                 screenWidth = 240
                 screenHeight = 320
         end
@@ -149,6 +151,13 @@ function skin(self, s)
 	Framework.mostRecentInputType = "scroll"
 
 	-- Images and Tiles
+	local background =
+		Tile:loadHTiles({
+					imgpath .. "border_l.png",
+					imgpath .. "border.png",
+					imgpath .. "border_r.png",
+			       })
+
 	local titleBox =
 		Tile:loadTiles({
 				       imgpath .. "Screen_Formats/Titlebar/titlebar.png",
@@ -288,6 +297,11 @@ function skin(self, s)
 				})
 
 	local popupMask = Tile:fillColor(0x000000e5)
+
+
+
+
+
 	local blackBackground = Tile:fillColor(0x000000ff)
 
 	local textinputCursor = Tile:loadImage(imgpath .. "Text_Entry/Keyboard_Touch/tch_cursor.png")
@@ -295,7 +309,7 @@ function skin(self, s)
 	local THUMB_SIZE = self:getSettings().THUMB_SIZE
 
 	local TITLE_PADDING  = 0
-	local CHECK_PADDING  = { 2, 0, 6, 0 }
+	local CHECK_PADDING  = { 0, 0, 0, 0 }
 	local CHECKBOX_RADIO_PADDING  = { 2, 8, 8, 0 }
 
 	--FIXME: paddings here need tweaking for Fab4Skin
@@ -310,16 +324,17 @@ function skin(self, s)
 	local TEXT_COLOR_BLACK = { 0x00, 0x00, 0x00 }
 	local TEXT_SH_COLOR = { 0x37, 0x37, 0x37 }
 
-	local SELECT_COLOR = { 0xE7, 0xE7, 0xE7 }
+	local SELECT_COLOR = { 0x00, 0x00, 0x00 }
 	local SELECT_SH_COLOR = { }
 
-        local TITLE_FONT_SIZE = 32
-        local ALBUMMENU_FONT_SIZE = 34
-        local ALBUMMENU_SMALL_FONT_SIZE = 18
-        local ALBUMMENU_SELECTED_FONT_SIZE = 40
-        local ALBUMMENU_SELECTED_SMALL_FONT_SIZE = 22
-        local TEXTMENU_FONT_SIZE = 34
-        local TEXTMENU_SELECTED_FONT_SIZE = 40
+
+        local TITLE_FONT_SIZE = 20
+        local ALBUMMENU_FONT_SIZE = 14
+        local ALBUMMENU_SMALL_FONT_SIZE = 14
+        local ALBUMMENU_SELECTED_FONT_SIZE = 14
+        local ALBUMMENU_SELECTED_SMALL_FONT_SIZE = 14
+        local TEXTMENU_FONT_SIZE = 16
+        local TEXTMENU_SELECTED_FONT_SIZE = 16
         local POPUP_TEXT_SIZE_1 = 34
         local POPUP_TEXT_SIZE_2 = 26
         local TEXTAREA_FONT_SIZE = 34
@@ -330,16 +345,93 @@ function skin(self, s)
 	local UPDATE_SUBTEXT_SIZE = 20
 
 	local ITEM_ICON_ALIGN   = 'center'
-	local THREE_ITEM_HEIGHT = 72
+	local THREE_ITEM_HEIGHT = 27
 	local TITLE_BUTTON_WIDTH = 76
 	local TITLE_BUTTON_HEIGHT = 47
 	local TITLE_BUTTON_PADDING = { 4, 0, 4, 0 }
 
+
+
+
+
+	--TODO: convert these to the "new way"
+	s.background = {}
+	s.background.x = 0
+	s.background.y = screenHeight - 30
+	s.background.w = screenWidth
+	s.background.h = 30
+	s.background.border = { 4, 0, 4, 0 }
+	s.background.bgImg = iconBackground
+	s.background.layer = LAYER_FRAME
+	s.background.position = LAYOUT_SOUTH
+
+--	-- play/stop/pause
+--	s.icon_playmode_OFF = _icon(self, 9, screenHeight - 30, "icon_mode_off.png")
+--	s.icon_playmode_STOP = _icon(self, 9, screenHeight - 30, "icon_mode_off.png")
+--	s.icon_playmode_PLAY = _icon(self, 9, screenHeight - 30, "icon_mode_play.png")
+--	s.icon_playmode_PAUSE = _icon(self, 9, screenHeight - 30, "icon_mode_pause.png")
+--
+--	-- repeat off/repeat track/repeat playlist
+--	s.icon_repeat_OFF = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
+--	s.icon_repeat_0 = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
+--	s.icon_repeat_1 = _icon(self, 41, screenHeight - 30, "icon_repeat_song.png")
+--	s.icon_repeat_2 = _icon(self, 41, screenHeight - 30, "icon_repeat.png")
+--
+--	-- repeat off/repeat track/repeat playlist
+--	s.icon_playlist_mode_OFF = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
+--	s.icon_playlist_mode_DISABLED = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
+--
+--	-- FIXME, needs official artwork
+--	s.icon_playlist_mode_ON = _icon(self, 41, screenHeight - 30, "icon_mode_playlist.png")
+--	s.icon_playlist_mode_PARTY = _icon(self, 41, screenHeight - 30, "icon_mode_party.png")
+--
+--	-- shuffle off/shuffle album/shuffle playlist
+--	s.icon_shuffle_OFF = _icon(self, 75, screenHeight - 30, "icon_shuffle_off.png")
+--	s.icon_shuffle_0 = _icon(self, 75, screenHeight - 30, "icon_shuffle_off.png")
+--	s.icon_shuffle_1 = _icon(self, 75, screenHeight - 30, "icon_shuffle.png")
+--	s.icon_shuffle_2 = _icon(self, 75, screenHeight - 30, "icon_shuffle_album.png")
+--
+--	-- wireless status
+--	s.icon_wireless_1 = _icon(self, 107, screenHeight - 30, "icon_wireless_1.png")
+--	s.icon_wireless_2 = _icon(self, 107, screenHeight - 30, "icon_wireless_2.png")
+--	s.icon_wireless_3 = _icon(self, 107, screenHeight - 30, "icon_wireless_3.png")
+--	s.icon_wireless_4 = _icon(self, 107, screenHeight - 30, "icon_wireless_4.png")
+--	s.icon_wireless_ERROR = _icon(self, 107, screenHeight - 30, "icon_wireless_off.png")
+--	s.icon_wireless_SERVERERROR = _icon(self, 107, screenHeight - 30, "icon_wireless_noserver.png")
+--
+--	-- battery status
+--	s.button_battery_AC = _icon(self, 137, screenHeight - 30, "icon_battery_ac.png")
+--
+--	s.button_battery_CHARGING = _icon(self, 137, screenHeight - 30, "icon_battery_charging.png")
+--	s.button_battery_0 = _icon(self, 137, screenHeight - 30, "icon_battery_0.png")
+--	s.button_battery_1 = _icon(self, 137, screenHeight - 30, "icon_battery_1.png")
+--	s.button_battery_2 = _icon(self, 137, screenHeight - 30, "icon_battery_2.png")
+--	s.button_battery_3 = _icon(self, 137, screenHeight - 30, "icon_battery_3.png")
+--	s.button_battery_4 = _icon(self, 137, screenHeight - 30, "icon_battery_4.png")
+--
+--	s.button_battery_CHARGING.frameRate = 1
+--	s.button_battery_CHARGING.frameWidth = 37
+--
+--
+--	-- time
+--	s.button_time = {}
+--	s.button_time.x = screenWidth - 60
+--	s.button_time.y = screenHeight - 34
+--	s.button_time.h = 34
+--	s.button_time.layer = LAYER_FRAME
+--	s.button_time.position = LAYOUT_SOUTH
+--	s.button_time.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
+--	s.button_time.fg = TEXT_COLOR
+
+
+
+
+
 	local smallSpinny = {
-		img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
-		frameRate = 8,
-		frameWidth = 26,
-		padding = { 0, 0, 8, 0 },
+		img = _loadImage(self, "Icons/selection_wait.png"),
+		frameRate = 5,
+		frameWidth = 10,
+		padding = { 4, 0, 0, 0 },
 		h = WH_FILL,
 	}
 	local largeSpinny = {
@@ -367,21 +459,27 @@ function skin(self, s)
 	}
 
 	local playArrow = {
-		img = _loadImage(self, "Icons/selection_play_3line_on.png"),
+		img = _loadImage(self, "Icons/selection_play.png"),
 		h = WH_FILL
 	}
 	local addArrow  = {
-		img = _loadImage(self, "Icons/selection_add_3line_on.png"),
+		img = _loadImage(self, "Icons/selection_add.png"),
 		h = WH_FILL
 	}
 	local rightArrow = {
-		img = _loadImage(self, "Icons/selection_right_3item_on.png"),
+		img = _loadImage(self, "Icons/selection_right.png"),
+		padding = { 4, 0, 0, 0 },
 		h = WH_FILL
 	}
 	local checkMark = {
 		align = ITEM_ICON_ALIGN,
 		padding = CHECK_PADDING,
-		img = _loadImage(self, "Icons/icon_check_3line.png"),
+		img = _loadImage(self, "Icons/icon_check.png"),
+	}
+	local checkMarkSelected = {
+		align = ITEM_ICON_ALIGN,
+		padding = CHECK_PADDING,
+		img = _loadImage(self, "Icons/icon_check_selected.png"),
 	}
 
 
@@ -448,18 +546,19 @@ function skin(self, s)
 	})
 
 	s.title = {
-		h = 55,
-		border = 0,
+		h = 31,
+		border = 4,
 		position = LAYOUT_NORTH,
 		bgImg = titleBox,
-		order = { "text", "xofy" },
+		order = { "text", "icon" },
 		text = {
 			w = WH_FILL,
 			h = WH_FILL,
-			padding = { 100, 10, 0, 0 },
-			align = "center",
+			padding = { 8, 7, 0, 9 },
+			align = 'top-left',
 			font = _boldfont(TITLE_FONT_SIZE),
-			fg = TEXT_COLOR,
+			fg = SELECT_COLOR,
+			sh = SELECT_SH_COLOR,
 		},
 		xofy = {
 			h = WH_FILL,
@@ -468,21 +567,25 @@ function skin(self, s)
 	                fg = TEXT_COLOR,
 			padding = { 0, 10, 8, 0},
         	},
+        	icon = {
+			padding  = { 0, 0, 8, 0 },
+			align    = 'right'
+		}
 	}
 
 	s.menu = {
 		position = LAYOUT_CENTER,
-		padding = { 0, 0, 0, 0 },
+		padding = { 4, 2, 4, 2 },
 		itemHeight = THREE_ITEM_HEIGHT,
 		fg = {0xbb, 0xbb, 0xbb },
-		font = _boldfont(250),
+		font = _boldfont(200),
 	}
 
 	s.item = {
 		order = { "text" },
-		padding = { 4, 0, 0, 0 },
+		padding = { 9, 6, 6, 6 },
 		text = {
-			padding = { 6, 5, 2, 5 },
+			padding = { 0, 0, 0, 0 },
 			align = "left",
 			w = WH_FILL,
 			h = WH_FILL,
@@ -537,7 +640,7 @@ function skin(self, s)
 			fg = SELECT_COLOR,
 			sh = SELECT_SH_COLOR
 		},
-		bgImg = threeItemSelectionBox,
+		bgImg = fiveItemSelectionBox,
 		arrow = rightArrow,
 	})
 	s.selected.item_choice = _uses(s.selected.item, {
@@ -545,8 +648,8 @@ function skin(self, s)
 		icon = {
 			align = 'right',
 			font = _boldfont(TEXTMENU_FONT_SIZE),
-			fg = TEXT_COLOR,
-			sh = TEXT_SH_COLOR,
+			fg = SELECT_COLOR,
+			sh = SELECT_SH_COLOR,
 		},
 	})
 
@@ -558,7 +661,7 @@ function skin(self, s)
 	})
 	s.selected.item_checked = _uses(s.selected.item, {
 		order = { "text", "check", "arrow" },
-		check = checkMark,
+		check = checkMarkSelected,
 		arrow = rightArrow,
 	})
         s.selected.item_no_arrow = _uses(s.item, {
@@ -628,9 +731,9 @@ function skin(self, s)
 	}
 
 	s.scrollbar = {
-		w = 34,
+		w = 9,
 		border = 0,
-		padding = { 0, 24, 0, 24 },
+		padding = { 0, 0, 0, 0 },
 		horizontal = 0,
 		bgImg = scrollBackground,
 		img = scrollBar,
@@ -655,7 +758,7 @@ function skin(self, s)
 
 	s.slider_group = {
 		w = WH_FILL,
-		border = { 0, 5, 0, 10 },
+		border = { 7, 5, 25, 10 },
 		order = { "min", "slider", "max" },
 	}
 
