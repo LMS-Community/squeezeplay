@@ -268,6 +268,36 @@ Window:    "input"
 Textinput: "textinput"
 Keyboard:  "keyboard"
 --]]
+function setup_input_hex(self, item)
+	local data = _itemData(item)
+
+	local window = Window("input", _itemName(item), "setup")
+	_windowActions(self, item, window)
+
+	-- normal short cuts don't work with text entry
+	window:addActionListener("back", nil, function()
+		_windowPrev(self, item)
+	end)
+
+	local textinput = Textinput("textinput", data[1],
+		function(_, value)
+			_windowNext(self, item)
+		end)
+
+	window:addWidget(textinput)
+	window:addWidget(Keyboard("keyboard", data[2]))
+
+	window:focusWidget(textinput)
+
+	return window
+end
+
+
+--[[
+Window:    "input"
+Textinput: "textinput"
+Keyboard:  "keyboard"
+--]]
 function setup_input(self, item)
 	local data = _itemData(item)
 
@@ -768,7 +798,7 @@ end
 
 -- the reference windows, and test data
 windows = {
-	{ "information", "Information Window", window_information, },
+	{ "input_hex", "WEP Password", setup_input_hex, },
 	{ "one_button", "Welcome to Setup", setup_one_button, },
 	{ "button_list", "Choose Region", setup_button, },
 	{ "help_info", "Help Connection Type", setup_help_info, },
@@ -810,6 +840,9 @@ testData = {
 	},
 	input_wpa = {
 		Textinput.textValue("", 8, 20), 'qwerty',
+	},
+	input_hex = {
+		Textinput.textValue("", 8, 20), 'hex',
 	},
 	error = {
 		"DHCP Address Cannot be Found",

@@ -121,15 +121,14 @@ end
 function _specialKeyWidths(self)
 	self.specialKeyWidths = {
 		['button_space'] = 150,
-		['button_shift'] = 60,
-		['button_pushed'] = 60,
+		['button_shift'] = 70,
+		['button_pushed'] = 70,
 	}
 end
 
 function _predefinedKeyboards(self)
 		local bottomRow = { 
 					self:_switchKeyboardButton(style, 'numeric', keyboardButtonText.numeric), 
-					self:_switchKeyboardButton(style, 'hex', keyboardButtonText.hex), 
 					self:_spaceBar(), 
 					self:_switchKeyboardButton(style, 'chars', keyboardButtonText.chars), 
 					self:_switchKeyboardButton(style, 'qwerty', keyboardButtonText.qwerty), 
@@ -153,7 +152,7 @@ function _predefinedKeyboards(self)
 				{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' } ,
 				{ 'A', 'B', 'C', 'D', 'E', 'F', self:_backspaceButton() },
 				{},
-				bottomRow
+				{ self:_go() },
 		},
 		['numeric'] = { 
 				{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' },
@@ -232,6 +231,9 @@ function _layout(self)
 				keyWidth = self.specialKeyWidths[style]
 			else
 				keyWidth = 45
+			end
+			if #row == 1 then
+				x = maxWidth - keyWidth + ( 45/2 )
 			end
 			key:setBounds(x, y, keyWidth, 45)
 			x = x + keyWidth + rowKeySpacing
@@ -379,7 +381,7 @@ function _switchKeyboardButton(self, style, kbType, keyText)
 end
 
 -- return a table that can be used as a space bar in keyboards
-function _go(self)
+function _go(self, style)
 	return {	
 		icon	 = Icon("button_enter"),
 		callback = function()

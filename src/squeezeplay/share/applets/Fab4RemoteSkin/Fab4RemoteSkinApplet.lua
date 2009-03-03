@@ -519,7 +519,7 @@ function skin(self, s)
 	s.selected.item_add = _uses(s.selected.item, {
 		arrow = addArrow 
 	})
-	s.selected.checked = _uses(s.selected.item, {
+	s.selected.item_checked = _uses(s.selected.item, {
 		order = { "text", "check", "arrow" },
 		check = checkMark,
 		arrow = rightArrow,
