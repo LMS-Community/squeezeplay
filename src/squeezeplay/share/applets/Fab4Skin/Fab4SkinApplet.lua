@@ -152,6 +152,7 @@ function skin(self, s)
 	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = Tile:loadImage( imgpath .. "Buttons/button_help_tb.png")
 	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
+	local keyboardBackground      = Tile:loadImage( imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png")
 	local textinputBackground     = 
 		Tile:loadTiles({
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box.png",
@@ -261,7 +262,6 @@ function skin(self, s)
 				})
 
 	local popupMask = Tile:fillColor(0x000000e5)
-	local blackBackground = Tile:fillColor(0x000000ff)
 
 	local textinputCursor = Tile:loadImage(imgpath .. "Text_Entry/Keyboard_Touch/tch_cursor.png")
 
@@ -591,8 +591,8 @@ function skin(self, s)
 
 	-- text input
 	s.textinput = {
-		h = 35,
-		border = { 8, 0, 8, 0 },
+		h = 36,
+	--	border = { 8, 0, 8, 0 },
 		padding = { 6, 0, 6, 0 },
 		font = _boldfont(TEXTINPUT_FONT_SIZE),
 		cursorFont = _boldfont(TEXTINPUT_SELECTED_FONT_SIZE),
@@ -600,9 +600,7 @@ function skin(self, s)
 		charHeight = TEXTINPUT_SELECTED_FONT_SIZE + 10,
 		fg = TEXT_COLOR_BLACK,
 		wh = { 0x55, 0x55, 0x55 },
-		bgImg = textinputBackground,
 		cursorImg = textinputCursor,
---		enterImg = Tile:loadImage(imgpath .. "Icons/selection_right_5line.png"),
 	}
 
 	-- keyboard
@@ -611,7 +609,13 @@ function skin(self, s)
 		w = WH_FILL,
 		h = WH_FILL,
 		border = { 8, 0, 8, 0 },
-		bgImg = blackBackground,
+		bgImg = keyboardBackground,
+	}
+
+	s.keyboard_textinput = {
+		bgImg = textinputBackground,
+		w = WH_FILL - 16,
+		order = { "textinput", "backspace" },
 	}
 
 	s.keyboard.button = {
@@ -792,6 +796,10 @@ function skin(self, s)
 	-- input window (including keyboard)
 	-- XXX: needs layout
 	s.input = _uses(s.window)
+	s.input.title = _uses(s.title, {
+		bgImg = false,
+	})
+	
 
 	-- error window
 	-- XXX: needs layout
@@ -1117,6 +1125,18 @@ function skin(self, s)
 		border = { 5, 0, 5, 0 },
 	}
 
+	s.button_keyboard_back = {
+		align = 'center',
+		w = 60,
+		h = 40,
+		img = _loadImage(self, "Text_Entry/Keyboard_Touch/icon_delete_tch_text_entry.png"),
+		bgImg = titlebarButtonBox,
+	}
+	s.pressed.button_keyboard_back = _uses(s.button_keyboard_back, {
+                bgImg = pressedTitlebarButtonBox,
+	})
+
+
 
 	local _buttonicon = {
 		w = 72,
@@ -1186,7 +1206,6 @@ function skin(self, s)
 		img = _loadImage(self, "Text_Entry/Keyboard_Touch/toolbar_divide.png"),
 		bgImg = _loadImage(self, "Text_Entry/Keyboard_Touch/toolbar_divider.png")
 	}
-
 
 	-- button icons, on left of menus
 	local _buttonicon = {

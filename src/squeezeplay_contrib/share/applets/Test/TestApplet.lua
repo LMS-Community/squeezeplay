@@ -31,8 +31,10 @@ local System                 = require("jive.System")
 local Checkbox               = require("jive.ui.Checkbox")
 local Choice                 = require("jive.ui.Choice")
 local Framework              = require("jive.ui.Framework")
+local Event                  = require("jive.ui.Event")
 local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
+local Button                 = require("jive.ui.Button")
 local Popup                  = require("jive.ui.Popup")
 local Group                  = require("jive.ui.Group")
 local RadioButton            = require("jive.ui.RadioButton")
@@ -413,11 +415,18 @@ function keyboardWindow(self, menuItem, style)
 			window:hide(Window.transitionPushLeft)
 			return true
 		end)
+	local backspace = Button(
+		Icon('button_keyboard_back'),
+		function()
+			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+			Framework:dispatchEvent(nil, e)
+			return EVENT_CONSUME
+		end
+	)
+        local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
-	window:addWidget(textinput)
+        window:addWidget(group)
 	window:addWidget(Keyboard('keyboard', style))
-	window:focusWidget(textinput)
-
 	self:tieAndShowWindow(window)
 	return window
 end

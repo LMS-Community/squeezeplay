@@ -30,8 +30,11 @@ local table         = require("jive.utils.table")
 local Applet        = require("jive.Applet")
 
 local Framework     = require("jive.ui.Framework")
+local Event         = require("jive.ui.Event")
 local Checkbox      = require("jive.ui.Checkbox")
 local Label         = require("jive.ui.Label")
+local Button        = require("jive.ui.Button")
+local Group         = require("jive.ui.Group")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
 local Textarea      = require("jive.ui.Textarea")
@@ -479,10 +482,18 @@ function _addServer(self, menuItem)
 				end)
 
 	local keyboard = Keyboard("keyboard", "numeric")
---	window:addWidget(Textarea("help_text", self:string("SLIMSERVER_HELP")))
-	window:addWidget(input)
+	local backspace = Button(
+		Icon('button_keyboard_back'),
+			function()
+				local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+				Framework:dispatchEvent(nil, e)
+				return EVENT_CONSUME
+			end
+		)
+        local group = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
+
+        window:addWidget(group)
 	window:addWidget(keyboard)
-	window:focusWidget(input)
 
 	self:tieAndShowWindow(window)
 	return window

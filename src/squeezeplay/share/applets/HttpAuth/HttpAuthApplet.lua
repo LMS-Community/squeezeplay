@@ -25,6 +25,7 @@ local table           = require("table")
 local oo              = require("loop.simple")
 
 local Applet          = require("jive.Applet")
+local Event           = require("jive.ui.Event")
 local Framework       = require("jive.ui.Framework")
 local SimpleMenu      = require("jive.ui.SimpleMenu")
 local Window          = require("jive.ui.Window")
@@ -114,6 +115,7 @@ function _enterTextWindow(self, key, title, help, next)
 					return true
 				end)
 
+	--[[ FIXME: this needs updating
 	local helpButton = Button( 
 				Label( 
 					'helpTouchButton', 
@@ -123,13 +125,24 @@ function _enterTextWindow(self, key, title, help, next)
 					self:_helpWindow('HTTP_AUTH', help) 
 				end 
 	)
+        window:addWidget(helpButton)
+	--]]
 
 	local keyboard = Keyboard("keyboard", "qwerty")
 
-        window:addWidget(helpButton)
-	window:addWidget(input)
+	local backspace = Button(
+		Icon('button_keyboard_back'),
+		function()
+			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+			Framework:dispatchEvent(nil, e)
+			return EVENT_CONSUME
+		end
+	)
+
+        local group = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
+
+        window:addWidget(group)
 	window:addWidget(keyboard)
-	window:focusWidget(input)
 
 	self:tieAndShowWindow(window)
 	return window

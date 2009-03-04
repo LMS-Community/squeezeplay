@@ -221,7 +221,8 @@ function _addPlayerItem(self, player)
 		id = mac,
 		style = 'item',
 		iconStyle = "player_" .. playerModel,
-		text = "\n" .. playerName,
+		--text = "\n" .. playerName,
+		text = playerName,
 		sound = "WINDOWSHOW",
 		callback = function()
 			if self:selectPlayer(player) then
@@ -318,7 +319,7 @@ function setupShowSelectPlayer(self, setupNext, windowStyle)
 		windowStyle = 'settingstitle'
 	end
 	-- get list of slimservers
-	local window = Window("icon_list", self:string("SELECT_PLAYER"), windowStyle)
+	local window = Window("button_list", self:string("SELECT_PLAYER"), windowStyle)
 	window:setAllowScreensaver(false)
 
         local menu = SimpleMenu("menu")

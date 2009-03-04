@@ -2164,9 +2164,18 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		--]]
 		
 		local keyboard = Keyboard("keyboard", "qwerty")
-		window:addWidget(input)
+		local backspace = Button(
+			Icon('button_keyboard_back'),
+			function()
+				local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+				Framework:dispatchEvent(nil, e)
+				return EVENT_CONSUME
+			end
+		)
+		local group = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
+
+		window:addWidget(group)
 		window:addWidget(keyboard)
-		window:focusWidget(input)
 
 	-- special case for sending over textArea
 	elseif item and item['textArea'] then

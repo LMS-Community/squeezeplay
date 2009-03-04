@@ -15,14 +15,16 @@ The objective is to keep the reference code as simple as possible!
 
 --]]
 
-local ipairs, tostring = ipairs, tostring
+local string, ipairs, tostring = string, ipairs, tostring
 
 local oo                  = require("loop.simple")
 
 local Applet              = require("jive.Applet")
 local Group               = require("jive.ui.Group")
+local Event               = require("jive.ui.Event")
 local Framework           = require("jive.ui.Framework")
 local Icon                = require("jive.ui.Icon")
+local Button              = require("jive.ui.Button")
 local Label               = require("jive.ui.Label")
 local Choice              = require("jive.ui.Choice")
 local Checkbox            = require("jive.ui.Checkbox")
@@ -279,15 +281,25 @@ function setup_input_hex(self, item)
 		_windowPrev(self, item)
 	end)
 
-	local textinput = Textinput("textinput", data[1],
+	local textinput = Textinput(
+		"textinput", 
+		data[1],
 		function(_, value)
 			_windowNext(self, item)
-		end)
+		end
+	)
+	local backspace = Button(
+		Icon('button_keyboard_back'),
+		function()
+			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+			Framework:dispatchEvent(nil, e)
+			return EVENT_CONSUME
+		end
+	)
+	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
-	window:addWidget(textinput)
+	window:addWidget(group)
 	window:addWidget(Keyboard("keyboard", data[2]))
-
-	window:focusWidget(textinput)
 
 	return window
 end
@@ -309,15 +321,25 @@ function setup_input(self, item)
 		_windowPrev(self, item)
 	end)
 
-	local textinput = Textinput("textinput", data[1],
+	local textinput = Textinput(
+		"textinput", 
+		data[1],
 		function(_, value)
 			_windowNext(self, item)
-		end)
+		end
+	)
+	local backspace = Button(
+		Icon('button_keyboard_back'),
+		function()
+			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+			Framework:dispatchEvent(nil, e)
+			return EVENT_CONSUME
+		end
+	)
+	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
-	window:addWidget(textinput)
+	window:addWidget(group)
 	window:addWidget(Keyboard("keyboard", data[2]))
-
-	window:focusWidget(textinput)
 
 	return window
 end
