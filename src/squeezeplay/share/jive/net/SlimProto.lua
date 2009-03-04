@@ -84,6 +84,7 @@ local WRITE_TIMEOUT = 10
 -- connection state
 local UNCONNECTED    = "UNCONNECTED"    -- not connected
 local CONNECTED      = "CONNECTED"      -- connected
+local CONNECTING     = "CONNECTING"     -- connecting
 
 
 local function packNumber(v, len)
@@ -332,6 +333,7 @@ function __init(self, jnt, heloPacket)
 
 	-- network state
 	obj.jnt            = jnt
+	jnt:subscribe(obj)
 
 	-- reconnect timer
 	obj.reconnectTimer = Timer(0, function() _handleTimer(obj) end, true)
@@ -455,6 +457,8 @@ function connect(self, server)
 	-- Don't allow connections to production SN yet
 	assert(not string.match(self.serverip, "www.squeezenetwork.com"))
 
+	log:info("connect to ", self.serverip)
+
 	self.socket = SocketTcp(self.jnt, self.serverip, PORT, "SlimProto")
 
 	-- connect
@@ -483,6 +487,8 @@ function disconnect(self)
 	if self.state ~= CONNECTED then
 		return
 	end
+
+	log:info("disconnect")
 
 	self.state = UNCONNECTED
 	self.socket:close()
@@ -598,6 +604,7 @@ function _handleDisconnect(self, reason)
 	log:info("connection error: ", reason, ", reconnecting in ", (interval / 1000), " seconds")
 
 	self:disconnect()
+	self.state = CONNECTING
 	self.reconnectTimer:restart(interval)
 end
 
@@ -609,6 +616,15 @@ function _handleTimer(self)
 	end
 
 	self:connect()
+end
+
+
+function notify_networkConnected(self)
+	if self.state ~= UNCONNECTED then
+		-- force reconnect
+		self:disconnect()
+		self:connect()
+	end
 end
 
 
