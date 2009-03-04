@@ -313,12 +313,12 @@ function skin(self, s, reload, useDefaultSize)
 	local CHECKBOX_RADIO_PADDING  = { 2, 8, 8, 0 }
 
 	--FIXME: paddings here need tweaking for Fab4Skin
-	local MENU_ALBUMITEM_PADDING = { 8, 1, 8, 1 }
-	local MENU_ALBUMITEM_TEXT_PADDING = { 16, 6, 9, 19 }
-	local MENU_PLAYLISTITEM_TEXT_PADDING = { 16, 1, 9, 1 }
+	local MENU_ALBUMITEM_PADDING = { 4, 2, 4, 2 }
+	local MENU_ALBUMITEM_TEXT_PADDING = { 10, 8, 8, 9 }
+	local MENU_PLAYLISTITEM_TEXT_PADDING = { 6, 6, 8, 10 }
 
 	local MENU_CURRENTALBUM_TEXT_PADDING = { 6, 20, 0, 10 }
-	local TEXTAREA_PADDING = { 50, 20, 50, 20 }
+	local TEXTAREA_PADDING = { 13, 8, 8, 8 }
 
 	local TEXT_COLOR = { 0xE7, 0xE7, 0xE7 }
 	local TEXT_COLOR_BLACK = { 0x00, 0x00, 0x00 }
@@ -329,23 +329,25 @@ function skin(self, s, reload, useDefaultSize)
 
 
         local TITLE_FONT_SIZE = 20
+        local ALBUMMENU_TITLE_FONT_SIZE = 14
         local ALBUMMENU_FONT_SIZE = 14
         local ALBUMMENU_SMALL_FONT_SIZE = 14
         local ALBUMMENU_SELECTED_FONT_SIZE = 14
         local ALBUMMENU_SELECTED_SMALL_FONT_SIZE = 14
         local TEXTMENU_FONT_SIZE = 16
         local TEXTMENU_SELECTED_FONT_SIZE = 16
-        local POPUP_TEXT_SIZE_1 = 34
-        local POPUP_TEXT_SIZE_2 = 26
-        local TEXTAREA_FONT_SIZE = 34
+        local POPUP_TEXT_SIZE_1 = 14
+        local POPUP_TEXT_SIZE_2 = 22
+        local TEXTAREA_FONT_SIZE = 16
         local CENTERED_TEXTAREA_FONT_SIZE = 28
         local TEXTINPUT_FONT_SIZE = 20
         local TEXTINPUT_SELECTED_FONT_SIZE = 28
         local HELP_FONT_SIZE = 18
 	local UPDATE_SUBTEXT_SIZE = 20
 
-	local ITEM_ICON_ALIGN   = 'center'
-	local THREE_ITEM_HEIGHT = 27
+	local ITEM_ICON_ALIGN   = 'right'
+	local ONE_LINE_ITEM_HEIGHT = 27
+	local THREE_LINE_ITEM_HEIGHT = 61
 	local TITLE_BUTTON_WIDTH = 76
 	local TITLE_BUTTON_HEIGHT = 47
 	local TITLE_BUTTON_PADDING = { 4, 0, 4, 0 }
@@ -452,7 +454,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- convenience method for selected items in remote skin menus
 	local menuItemSelected = {
-		bgImg = threeItemSelectionBox,
+		bgImg = fiveItemSelectionBox,
 			text = {
 				font = _boldfont(40),
 		},
@@ -469,7 +471,8 @@ function skin(self, s, reload, useDefaultSize)
 	local rightArrow = {
 		img = _loadImage(self, "Icons/selection_right.png"),
 		padding = { 4, 0, 0, 0 },
-		h = WH_FILL
+		h = WH_FILL,
+		align = "center",
 	}
 	local checkMark = {
 		align = ITEM_ICON_ALIGN,
@@ -502,7 +505,7 @@ function skin(self, s, reload, useDefaultSize)
 	local _buttonMenu = {
 		padding = 0,
 		w = WH_FILL,
-		itemHeight = THREE_ITEM_HEIGHT,
+		itemHeight = ONE_LINE_ITEM_HEIGHT,
 	}
 
 	local _buttonItem = {
@@ -541,7 +544,7 @@ function skin(self, s, reload, useDefaultSize)
 	})
 
 	s.popup = _uses(s.window, {
-		border = { 25, 0, 25, 0 },
+		border = { 0, 0, 0, 0 },
 		maskImg = popupMask,
 	})
 
@@ -576,7 +579,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.menu = {
 		position = LAYOUT_CENTER,
 		padding = { 4, 2, 4, 2 },
-		itemHeight = THREE_ITEM_HEIGHT,
+		itemHeight = ONE_LINE_ITEM_HEIGHT,
 		fg = {0xbb, 0xbb, 0xbb },
 		font = _boldfont(200),
 	}
@@ -781,69 +784,6 @@ function skin(self, s, reload, useDefaultSize)
 		cursorImg = textinputCursor,
 	}
 
-	-- keyboard
-	-- XXXX pressed button states?
-	s.keyboard = {
-		w = WH_FILL,
-		h = WH_FILL,
-		border = { 8, 0, 8, 0 },
---		bgImg = blackBackground,
-	}
-
-	s.keyboard.button = {
-        	padding = 0,
-		w = 45,
-		h= 45,
-        	font = _boldfont(18),
-        	fg = TEXT_COLOR,
-        	bgImg = buttonBox,
-        	align = 'center',
-	}
-
-	s.keyboard.button_shift = _uses(s.keyboard.button, {
-		bgImg = threeItemSelectionBox, padding = 2, w = 75, h = 35
-	})
-	s.keyboard.button_space = _uses(s.keyboard.button_shift, {
-		padding = 2, w = 100, h = 35
-	})
-	s.keyboard.button_back = _uses(s.keyboard.button, {
-		img = _loadImage(self, "Icons/Mini/left_arrow.png")
-	})
-	s.keyboard.qwertyLower = _uses(s.keyboard.button, {
-		img = _loadImage(self, "Icons/icon_shift_off.png")
-	})
-	s.keyboard.qwertyUpper = _uses(s.keyboard.button, {
-		img = _loadImage(self, "Icons/icon_shift_on.png")
-	})
-
-	s.keyboard.button_enter = _uses(s.keyboard.button_shift, {
-		img = _loadImage(self, "Icons/Mini/right_arrow.png")
-	})
-	s.keyboard.button_search = _uses(s.keyboard.button, {
-		img = _loadImage(self, "Icons/Mini/icon_search.png")
-	})
-	s.keyboard.pressed = {
-		button = _uses(s.keyboard.button, {
-			bgImg = keyboardPressedBox
-		}),
-		button_enter = _uses(s.keyboard.button_enter, {
-			bgImg = keyboardPressedBox
-		}),
-		button_search = _uses(s.keyboard.button_search, {
-			bgImg = keyboardPressedBox
-		}),
-		button_back = _uses(s.keyboard.button_back, {
-			bgImg = keyboardPressedBox
-		}),
-		button_shift = _uses(s.keyboard.button_shift, {
-			bgImg = keyboardPressedBox
-		}),
-		button_space = _uses(s.keyboard.button_space, {
-			bgImg = keyboardPressedBox
-		}),
-	}
-	s.keyboard.button_pushed = _uses(s.keyboard.pressed.button_shift)
-	s.keyboard.pressed.button_pushed = _uses(s.keyboard.pressed.button_shift)
 
 --------- WINDOW STYLES ---------
 	--
@@ -856,13 +796,13 @@ function skin(self, s, reload, useDefaultSize)
 	s.one_button = _uses(s.text_list)
 	s.one_button.menu = _uses(_buttonMenu, {
 			position = LAYOUT_SOUTH,
-			h = THREE_ITEM_HEIGHT
+			h = ONE_LINE_ITEM_HEIGHT
 	})
 
 	s.one_button.menu.item = {
 		order = { "text", "arrow" },
 		padding = 0,
-		bgImg = threeItemSelectionBox,
+		bgImg = fiveItemSelectionBox,
 		text = {
 			w = WH_FILL,
 			h = WH_FILL,
@@ -905,7 +845,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.button_list.menu = {
 		padding = 0,
 		w = WH_FILL,
-		itemHeight = THREE_ITEM_HEIGHT,
+		itemHeight = ONE_LINE_ITEM_HEIGHT,
 	}
 
 	s.button_list.menu.item = _uses(_buttonItem, {
@@ -922,10 +862,10 @@ function skin(self, s, reload, useDefaultSize)
 		order = { "icon", "text", "arrow" },
 		arrow = rightArrow,
 		item = _uses(s.button_list.menu.item, {
-			bgImg = threeItemSelectionBox,
+			bgImg = fiveItemSelectionBox,
 		}),
 		item_checked = _uses(s.button_list.menu.item_checked, {
-			bgImg = threeItemSelectionBox,
+			bgImg = fiveItemSelectionBox,
 		}),
 	}
 	s.button_list.menu.pressed = {
@@ -941,24 +881,32 @@ function skin(self, s, reload, useDefaultSize)
 	s.waiting_popup = _uses(s.popup)
 
 	s.waiting_popup.text = {
-		border = { 15, 0, 15, 20 },
-		font = _boldfont(POPUP_TEXT_SIZE_1),
+		padding = { 0, 0, 0, 40 },
 		fg = TEXT_COLOR,
-		lineHeight = POPUP_TEXT_SIZE_1 + 8,
 		sh = TEXT_SH_COLOR,
-		align = "top",
-		position = LAYOUT_NORTH,
-		h = (POPUP_TEXT_SIZE_1 + 8 ) * 2,
+		align = "center",
+		position = LAYOUT_SOUTH ,
+		h = 16
+	}
+
+	s.waiting_popup.text.line = {
+		{
+			font = _boldfont(POPUP_TEXT_SIZE_1),
+			height = 16,
+		},
+		{
+			font = _boldfont(POPUP_TEXT_SIZE_2),
+		},
 	}
 
 	s.waiting_popup.subtext = {
-		padding = { 0, 0, 0, 26 },
+		padding = { 0, 0, 0, 32 },
 		font = _boldfont(POPUP_TEXT_SIZE_2),
 		fg = TEXT_COLOR,
 		sh = TEXT_SH_COLOR,
-		align = "bottom",
+		align = "center",
 		position = LAYOUT_SOUTH,
-		h = 40,
+--		h = 40,
 	}
 
 	-- input window (including keyboard)
@@ -974,42 +922,42 @@ function skin(self, s, reload, useDefaultSize)
 	-- update window
 	s.update_popup = _uses(s.popup)
 
-	s.update_popup.text = {
-		border = { 15, 0, 15, 20 },
+	s.update_popup.subtext = {
+		padding = { 0, 0, 0, 60 },
 		font = _boldfont(POPUP_TEXT_SIZE_1),
 		fg = TEXT_COLOR,
-		lineHeight = POPUP_TEXT_SIZE_1 + 8,
 		sh = TEXT_SH_COLOR,
-		align = "top",
-		position = LAYOUT_NORTH,
-		h = (POPUP_TEXT_SIZE_1 + 8) * 2,
+		align = "center",
+		position = LAYOUT_SOUTH,
 	}
 
-	s.update_popup.subtext = {
-		padding = { 0, 0, 0, 30 },
-		font = _font(UPDATE_SUBTEXT_SIZE),
+	s.update_popup.text = {
+		padding = { 0, 14, 0, 0 },
 		fg = TEXT_COLOR,
 		sh = TEXT_SH_COLOR,
-		align = "bottom",
-		position = LAYOUT_SOUTH,
-		h = 40,
+		align = "center",
+		position = LAYOUT_SOUTH ,
 	}
 
-	s.update_popup.progress = {
-		border = 10,
-		position = LAYOUT_SOUTH,
-		horizontal = 1,
-		bgImg = _progressBackground,
-		img = _progressBar,
+	s.update_popup.text.line = {
+		{
+			font = _boldfont(POPUP_TEXT_SIZE_1),
+			height = 16,
+		},
+		{
+			font = _boldfont(POPUP_TEXT_SIZE_2),
+		},
 	}
 
 	-- icon_list window
 	s.icon_list = _uses(s.window, {
-		menu = {
+		menu = _uses(s.menu, {
+			itemHeight = THREE_LINE_ITEM_HEIGHT,			
 			item = {
 				order = { "icon", "text" },
 				padding = MENU_ALBUMITEM_PADDING,
 				text = {
+					align = "top-left",
 					w = WH_FILL,
 					h = WH_FILL,
 					padding = MENU_ALBUMITEM_TEXT_PADDING,
@@ -1026,9 +974,10 @@ function skin(self, s, reload, useDefaultSize)
 				icon = {
 					w = THUMB_SIZE,
 					h = THUMB_SIZE,
+					border = { 8, 0, 0, 0 }
 				},
 			},
-		},
+		}),
 	})
 
 
@@ -1049,17 +998,10 @@ function skin(self, s, reload, useDefaultSize)
 	s.icon_list.menu.selected.item = _uses(s.icon_list.menu.item, {
 		order = { 'icon', 'text', 'arrow' },
 		text = {
-			font = _boldfont(ALBUMMENU_SELECTED_SMALL_FONT_SIZE),
 			fg = SELECT_COLOR,
 			sh = SELECT_SH_COLOR,
-			line = {
-				{
-					font = _boldfont(ALBUMMENU_SELECTED_FONT_SIZE),
-					height = ALBUMMENU_FONT_SIZE + 2
-				}
-			},
 		},
-		bgImg = threeItemSelectionBox,
+		bgImg = fiveItemSelectionBox,
 		arrow = rightArrow,
 	})
 
@@ -1126,15 +1068,28 @@ function skin(self, s, reload, useDefaultSize)
 
 	--track_list window
 	-- XXXX todo
-	-- identical to text_list but has icon in upper left of titlebar
 	s.track_list = _uses(s.text_list)
 
 	s.track_list.title = _uses(s.title, {
-		order = { 'icon', 'text', 'xofy' },
+		h = THREE_LINE_ITEM_HEIGHT - 1,
+		border = 4,
+		order = { 'icon', 'text' },
 		icon  = {
 			w = THUMB_SIZE,
 			h = WH_FILL,
-			padding = { 8, 1, 8, 1 },
+			padding = { 9,0,0,0 },
+		},
+		text = {
+			padding = MENU_ALBUMITEM_TEXT_PADDING,
+			align = "top-left",
+			font = _font(ALBUMMENU_TITLE_FONT_SIZE),
+			lineHeight = ALBUMMENU_TITLE_FONT_SIZE + 1,
+			line = {
+					{
+						font = _boldfont(ALBUMMENU_TITLE_FONT_SIZE),
+						height = ALBUMMENU_TITLE_FONT_SIZE + 2,
+					}
+			},
 		},
 	})
 
@@ -1145,16 +1100,12 @@ function skin(self, s, reload, useDefaultSize)
 			item = {
 				text = {
 					padding = MENU_PLAYLISTITEM_TEXT_PADDING,
+					font = _font(ALBUMMENU_FONT_SIZE),
+					lineHeight = 16,
 					line = {
 						{
 							font = _boldfont(ALBUMMENU_FONT_SIZE),
-							height = ALBUMMENU_FONT_SIZE
-						},
-						{
-							height = ALBUMMENU_SMALL_FONT_SIZE + 2
-						},
-						{
-							height = ALBUMMENU_SMALL_FONT_SIZE + 2
+							height = ALBUMMENU_FONT_SIZE + 3
 						},
 					},
 				},
@@ -1170,7 +1121,13 @@ function skin(self, s, reload, useDefaultSize)
 		},
 	})
 	s.play_list.menu.selected = {
-                item = _uses(s.play_list.menu.item),
+                item = _uses(s.play_list.menu.item, {
+			text = {
+				fg = SELECT_COLOR,
+				sh = SELECT_SH_COLOR,
+			},
+			bgImg = fiveItemSelectionBox,
+		}),
                 item_checked = _uses(s.play_list.menu.item_checked),
         }
         s.play_list.menu.pressed = {
@@ -1207,7 +1164,7 @@ function skin(self, s, reload, useDefaultSize)
 			icon = {
 				align = 'top-left',
 				border = { 12, 12, 0, 0 },
-				img = _loadImage(self, "Icons/menu_album_noartwork_64.png"),
+				img = _loadImage(self, "album_noartwork_56.png"),
 				h = WH_FILL,
 				w = 64,
 			}
@@ -1338,7 +1295,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- icon for albums with no artwork
 	s.icon_no_artwork = {
-		img = _loadImage(self, "Icons/menu_album_noartwork_64.png"),
+		img = _loadImage(self, "album_noartwork_56.png"),
 		w   = THUMB_SIZE,
 		h   = THUMB_SIZE,
 	}
@@ -1346,16 +1303,15 @@ function skin(self, s, reload, useDefaultSize)
 	s.icon_connecting = _uses(_icon, {
 		img = _loadImage(self, "Alerts/wifi_connecting.png"),
 		frameRate = 8,
-		frameWidth = 120,
+		frameWidth = 161,
+		padding = { 0, 20, 0, 10 }
 	})
 
 	s.icon_connected = _uses(_icon, {
 		img = _loadImage(self, "Alerts/connecting_success_icon.png"),
 	})
 
-	s.icon_software_update = _uses(_icon, {
-		img = _loadImage(self, "Icons/icon_firmware_update_100.png"),
-	})
+	s.icon_software_update = _uses(s.icon_connecting)
 
 	s.icon_power = _uses(_icon, {
 		img = _loadImage(self, "Alerts/popup_shutdown_icon.png"),
