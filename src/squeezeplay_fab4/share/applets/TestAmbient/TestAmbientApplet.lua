@@ -64,6 +64,10 @@ local curIntegrationTime = 2
 local gainItem  = nil
 local curGain = false
 
+-- Factor Stuff
+local factorItem = nil
+local curFactor = 1
+
 module(...)
 oo.class(_M, Applet)
 
@@ -156,6 +160,19 @@ function _changeGain(self, newValue)
 	end
 end
 
+function _changeFactor(self, newValue) 
+
+	curFactor = newValue;
+
+	local f = io.open(SYSPATH .. "factor", "w")
+	f:write(tostring(curFactor))
+	f:close()
+
+	if factorItem != nil then
+		factorItem.text = "Change Factor (" .. tostring(curFactor) .. ")"
+	end
+end
+
 function menuSetGain(self)
 	local window = Window("text_list", "Set Gain...")
 	local group = RadioGroup()
@@ -218,6 +235,40 @@ function menuSetIntegration(self)
         self:tieAndShowWindow(window)
 end
 
+function menuSetFactor(self)
+	local window = Window("window", "Change Factor...")
+	local group = RadioGroup()
+
+	local menu = SimpleMenu("menu")
+	
+	menuItem = {
+		text = "1",
+		style = 'item_choice',
+		icon = RadioButton("radio", group, function(event, menuItem)
+				self:_changeFactor(1)
+			end,
+			curFactor == 1)
+	}
+	menu:addItem(menuItem)
+
+	for i = 2,50,2 do
+
+		menuItem = {
+                        text = tostring(i),
+			style = 'item_choice',
+                        icon = RadioButton("radio", group, function(event, menuItem)
+					self:_changeFactor(i)					          
+                                end,                                                
+                        curFactor == i)
+                }
+
+		menu:addItem(menuItem)
+ 	end
+
+	window:addWidget(menu)
+	self:tieAndShowWindow(window)
+end
+
 function openWindow(self)
 	local window = Window("text_list", 'FactoryTest: Ambient Light Sensor')
 
@@ -253,11 +304,19 @@ function openWindow(self)
 			end
 	}
 
+	factorItem = {
+		text = "Change Factor (1)",
+		callback = function(event, index) 
+			self:menuSetFactor()
+			end
+	}
+
 	mainMenu:addItem(tChannel0.item)
 	mainMenu:addItem(tChannel1.item)
 	mainMenu:addItem(tLux.item)
 	mainMenu:addItem(gainItem)
 	mainMenu:addItem(integrationItem)
+	mainMenu:addItem(factorItem)
 
 	window:addWidget(mainMenu)
 
