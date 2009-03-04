@@ -91,21 +91,20 @@ function settingsShow(self)
 
 
 	-- squeezecenter on the poll list
-	log:debug("*****Polled Server List:")
+	log:debug("Polled Servers:")
 	local poll = appletManager:callService("getPollList")
 	for address,_ in pairs(poll) do
-		log:debug('Found: ', address)
+		log:debug("\t", address)
 		if address ~= "255.255.255.255" then
-			log:debug('Add to menu: ', address)
 			self:_addServerItem(nil, address)
 		end
 	end
 
 
 	-- discovered squeezecenters
-	log:debug('*****Discovered Server List:')
+	log:debug("Discovered Servers:")
 	for _,server in appletManager:callService("iterateSqueezeCenters") do
-		log:debug('discovered server: ', server)
+		log:debug("\t", server)
 		self:_addServerItem(server, _)
 	end
 
@@ -264,10 +263,8 @@ end
 
 
 function notify_playerNew(self, player)
-	log:warn("waitForConnect=", self.waitForConnect)
 	if self.waitForConnect then
-		log:warn("  server=", self.waitForConnect.server)
-		log:warn("  player=", self.waitForConnect.player)
+		log:info("waiting for ", player, " on ", self.waitForConnect.server)
 	end
 
 	if self.waitForConnect and self.waitForConnect.player == player
