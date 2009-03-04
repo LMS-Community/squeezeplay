@@ -542,7 +542,7 @@ end
 -- Sent packet. Returns false is the connection is disconnected and the
 -- packet can't be sent, otherwise it returns true.
 function send(self, packet)
-	if self.state == UNCONNECTED then
+	if self.state ~= CONNECTED then
 		return false
 	end
 
@@ -604,6 +604,7 @@ function _handleDisconnect(self, reason)
 	log:info("connection error: ", reason, ", reconnecting in ", (interval / 1000), " seconds")
 
 	self:disconnect()
+
 	self.state = CONNECTING
 	self.reconnectTimer:restart(interval)
 end
