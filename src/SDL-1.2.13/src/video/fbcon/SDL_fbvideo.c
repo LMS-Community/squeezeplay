@@ -1302,6 +1302,13 @@ static void FB_WaitVBL(_THIS)
 #ifdef FBIOWAITRETRACE /* Heheh, this didn't make it into the main kernel */
 	ioctl(console_fd, FBIOWAITRETRACE, 0);
 #endif
+
+	/* For Freescale MXC kernels */
+#ifndef MXCFB_WAIT_FOR_VSYNC
+#define MXCFB_WAIT_FOR_VSYNC	_IOW('F', 0x20, u_int32_t)
+#endif
+	ioctl(console_fd, MXCFB_WAIT_FOR_VSYNC, 0);
+
 	return;
 }
 
