@@ -229,9 +229,6 @@ freefont:
 	mkdir -p ${PREFIX}/share/jive/fonts
 	cp freefont-20060126/FreeSans.ttf ${PREFIX}/share/jive/fonts
 	cp freefont-20060126/FreeSansBold.ttf ${PREFIX}/share/jive/fonts
-# fonts for clock screensaver
-	cp fonts-clock/Digital.ttf ${PREFIX}/share/jive/fonts
-	cp fonts-clock/DigitalItalic.ttf ${PREFIX}/share/jive/fonts
 
 # 
 # This builds the .tarball. It's called by 'all' so no need to run it manually
