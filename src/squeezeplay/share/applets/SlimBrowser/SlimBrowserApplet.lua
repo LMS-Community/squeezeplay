@@ -281,14 +281,14 @@ local function _pushToNewWindow(step)
 		return
 	end
 
-	if _curStep.menu then
+	if _curStep and _curStep.menu then
 		_curStep.menu:lock(
 			function()
 				step.cancelled = true
 			end)
 	end
 	step.loaded = function()
-		if _curStep.menu then
+		if _curStep and _curStep.menu then
 			_curStep.menu:unlock()
 		end
 		_curStep = step
@@ -2145,7 +2145,11 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		
 		-- default allowedChars
 		if not inputSpec.allowedChars then
-			inputSpec.allowedChars = _string("ALLOWEDCHARS_CAPS")
+			if inputSpec._kbType == 'qwertyLower' then
+				inputSpec.allowedChars = _string("ALLOWEDCHARS_WITHCAPS")
+			else
+				inputSpec.allowedChars = _string("ALLOWEDCHARS_CAPS")
+			end
 		end
 		local v = ""
 		local initialText = _safeDeref(item, 'input', 'initialText')
@@ -2237,7 +2241,8 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		end
 		--]]
 		
-		local keyboard = Keyboard("keyboard", "qwerty")
+		local kbType = inputSpec._kbType or 'qwerty'
+		local keyboard = Keyboard("keyboard", kbType)
 		local backspace = Button(
 			Icon('button_keyboard_back'),
 			function()
@@ -2461,6 +2466,62 @@ function showTrackOne()
 	local from, qty
 	_performJSONAction(jsonAction, 0, 200, step, sink)
 end
+
+
+function findLocalPlayer(self)
+	-- get local player object
+	for mac, player in appletManager:callService("iteratePlayers") do
+		if player:isLocal() then
+			log:debug("found local player")
+			return player
+		end
+	end
+	log:error('no local player found')
+	return nil
+end
+
+
+function findSqueezeNetwork(self)
+	-- get squeezenetwork object
+        for mac, server in appletManager:callService("iterateSqueezeCenters") do
+		if server:isSqueezeNetwork() then
+                        log:debug("found SN")
+                        return server
+                end
+        end
+	log:error('SN not found')
+	return nil
+end
+
+
+function squeezeNetworkRequest(self, request)
+	local squeezenetwork = findSqueezeNetwork()
+	local localPlayer    = findLocalPlayer()
+
+	if not squeezenetwork or not localPlayer or not request then
+		return
+	end
+	_server = squeezenetwork
+	_player = localPlayer
+
+	-- create a window for SN signup
+	local step, sink = _newDestination(
+		nil,
+		nil,
+		{
+			text = self:string("SN_SIGNUP"),
+			menuStyle = 'menu',
+			labelItemStyle   = "item",
+			windowStyle = 'text_list',
+		},
+		_browseSink
+	)
+
+	_pushToNewWindow(step)
+        squeezenetwork:userRequest( sink, nil, request )
+
+end
+
 
 -- showEmptyPlaylist
 -- if the player playlist is empty, we replace _statusStep with this window
