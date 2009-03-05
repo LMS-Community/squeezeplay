@@ -55,6 +55,7 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
+--[[
 function notify_playerCurrent(self, player)
 	log:info("setup complete")
     if not self:getSettings().setupDone then
@@ -67,6 +68,7 @@ function notify_playerCurrent(self, player)
     end
 
 end
+--]]
 
 
 function step1(self)
@@ -140,17 +142,33 @@ function step6(self)
 	-- automatically setup local player as selected player
 	for mac, player in appletManager:callService("iteratePlayers") do
 		if player:isLocal() then
-			log:error("found local player")
-
-			return appletManager:callService("selectPlayer", player)
-
+			appletManager:callService("setCurrentPlayer", player)
+			return self:step7()
 		end
         end
 
+	log:error("no local player found?")
 	return appletManager:callService("setupShowSelectPlayer", function() end, 'setuptitle')
 end
 
 
+function step7(self)
+	-- XXXX connect to SC and error screens
+
+	self:_setupDone()
+end
+
+
+function _setupDone(self)
+	self:getSettings().setupDone = true
+	jiveMain:removeItemById('returnToSetup')
+	self:storeSettings()
+
+	jiveMain:closeToHome(true, Window.transitionPushLeft)
+end
+
+
+--[[
 function step7(self)
 	log:info("step7")
 	return self:setupDoneShow(function()
@@ -163,6 +181,7 @@ function step7(self)
 		end)
 		
 end
+--]]
 
 
 function setupWelcomeShow(self, setupNext)
@@ -190,6 +209,7 @@ function setupWelcomeShow(self, setupNext)
 end
 
 
+--[[
 function setupDoneShow(self, setupNext)
 	log:info('setupDoneShow()')
 	local window = Window("one_button", self:string("DONE"), welcomeTitleStyle)
@@ -214,16 +234,19 @@ function setupDoneShow(self, setupNext)
 	self:tieAndShowWindow(window)
 	return window
 end
+--]]
 
 
+--[[
 function init(self)
 	log:info("subscribe")
 	jnt:subscribe(self)
 end
+--]]
+
 
 -- remove listeners when leaving this applet
 function free(self)
-	log:debug("                         ******************* free******************")
 	Framework:removeListener(self.disableHomeKeyDuringSetup)
 	Framework:removeListener(self.freeAppletWhenEscapingSetup)
 end
