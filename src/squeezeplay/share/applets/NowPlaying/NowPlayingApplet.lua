@@ -228,8 +228,8 @@ function notify_playerCurrent(self, player)
 
 	windowStyle = 'ss'
 
-	jiveMain:addItem( 
-		{
+	if jiveMain:getSkinParam("NOWPLAYING_MENU") then
+		jiveMain:addItem({
 			id = 'appletNowPlaying',
 			node = 'home',
 			text = self:string('SCREENSAVER_NOWPLAYING'),
@@ -238,10 +238,18 @@ function notify_playerCurrent(self, player)
 			callback = function(event, menuItem)
 				self:openScreensaver('browse')
 			end
-		}
-	)
-
+		})
+	else
+		jiveMain:removeItemById('appletNowPlaying')
+	end
 end
+
+
+function notify_skinSelected(self)
+	-- update menu
+	notify_playerCurrent(self, self.player)
+end
+
 
 function _isThisPlayer(self, player)
 

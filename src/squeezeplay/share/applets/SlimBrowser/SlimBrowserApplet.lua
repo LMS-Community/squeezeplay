@@ -127,6 +127,37 @@ local styleMap = {
 	albumitem = 'item',
 	albumitemplay = 'item_play',
 }
+-- legacy map of item id/nodes
+local itemMap = {
+	-- nodes
+	myMusic = { "_myMusic", "hidden" },
+	music_services = { "_music_services", "hidden" },
+	music_stores = { "_music_stores", "hidden" },
+
+	-- items
+	opmlrhapsodydirect = { "opmlrhapsodydirect", "home", 30 },
+	opmlpandora = { "opmlpandora", "home", 30 },
+	opmlsirius = { "opmlsirius", "home", 30 },
+}
+-- legacy map of items for "app guide"
+local guideMap = {
+	opmlamazon = true,
+	opmlclassical = true,
+	opmllma = true,
+	opmllfm = true,
+	opmlmp3tunes = true,
+	opmlmediafly = true,
+	opmlnapster = true,
+	opmlpandora = true,
+	podcast = true,
+	opmlrhapsodydirect = true,
+	opmlslacker = true,
+	opmlsounds = true,
+	opmlmusic = true,
+	opmlsirius = true,
+	opmlradioio = true,
+}
+
 
 --==============================================================================
 -- Local functions
@@ -1170,6 +1201,22 @@ local function _menuSink(self, cmd)
 		-- if we get here, it was for this player. set menuReceived to true
 		_menuReceived = true
 
+
+if _menuReceived then
+-- a problem, we lose the icons..
+jiveMain:addNode({
+  sound = "WINDOWSHOW",
+  window = {
+    titleStyle = "internetradio",
+    menuStyle = "album",
+  },
+  weight = 20,
+  id = "radios",
+  text = "Internet Radio",
+  node = "home",
+})
+end
+
 		for k, v in pairs(menuItems) do
 
 			--debug.dump(v.actions, -1)
@@ -1183,10 +1230,37 @@ local function _menuSink(self, cmd)
 					window = v.window,
 					sound = "WINDOWSHOW",
 				}
+
+			-- hack to modify styles from SC
 			if item.style and styleMap[item.style] then
 				item.style = styleMap[item.style]
 			end
 			local choiceAction = _safeDeref(v, 'actions', 'do', 'choices')
+
+			-- hack to modify menu structure from SC
+			if guideMap[item.id] then
+				item.guide = true
+				item.node = "appguide"
+				item.weight = 30
+			end
+			if itemMap[item.id] then
+				local id = item.id
+				item.id = itemMap[id][1]
+				item.node = itemMap[id][2]
+				if itemMap[id][3] then
+					item.weight = itemMap[id][3]
+				end
+			end
+			if itemMap[item.node] then
+				local node = item.node
+				item.node = itemMap[node][1]
+			end
+
+			-- a problem, we lose the icons..
+			if item.id == "radios" then
+				v.isANode = true
+			end
+
 
 			if v.isANode then
 				jiveMain:addNode(item)
@@ -2857,6 +2931,8 @@ function hideConnectingToPlayer()
 		log:info("_connectingToPlayer popup hide")
 		_connectingPopup:hide()
 		_connectingPopup = nil
+
+		jnt:notify("playerLoaded", _player)
 	end
 end
 

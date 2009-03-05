@@ -21,6 +21,7 @@ HttpAuthApplet overrides the following methods:
 local ipairs, pairs, tostring = ipairs, pairs, tostring
 
 local table           = require("table")
+local string          = require("string")
 
 local oo              = require("loop.simple")
 
@@ -86,12 +87,12 @@ function _enterDone(self)
 	self.username = nil
 	self.password = nil
 
+	self.topWindow:hideToTop(Window.transitionPushLeft)
+
 	-- FIXME delay here to check if the username/password are correct
 	if self.setupNext then
 		return self.setupNext()
 	end
-
-	self.topWindow:hideToTop(Window.transitionPushLeft)
 end
 
 function _helpWindow(self, title, token)
@@ -143,6 +144,7 @@ function _enterTextWindow(self, key, title, help, next)
 
         window:addWidget(group)
 	window:addWidget(keyboard)
+	window:focusWidget(group)
 
 	self:tieAndShowWindow(window)
 	return window

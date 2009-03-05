@@ -170,48 +170,20 @@ function _addServerItem(self, server, address)
 
 
 	-- new entry
-	local item
-
-	if server and currentPlayer and currentPlayer:canConnectToServer() then
-		log:debug("\tadd menu item with callback")
-		local f = function()
-                    if server:isPasswordProtected() then
-				appletManager:callService("squeezeCenterPassword", server, self.setupNext, self.titleStyle)
-			else
-                        	self:connectPlayerToServer(currentPlayer, server)
-				if self.setupNext then
-					self.setupNext()
-				end
-                    end
-                end
-                
-		item = {
-			text = server:getName(),
-			sound = "WINDOWSHOW",
-			callback = f,
-			connectFunc = f,
-			weight = 1
-		}
-	else
-		log:debug("\tadd menu item without callback")
-		item = {
-			text = server and server:getName() or address,
-			weight = 1,
-			style = 'item_no_arrow'
-		}
-	end
-
-	-- check current player
-	if currentPlayer and currentPlayer:getSlimServer() and server == currentPlayer:getSlimServer() then
-		log:debug("\tthis is the connected server, so remove callback for this item")
-		item.style = 'item_checked_no_arrow'
-		item.callback = self.setupNext
-	end
+	local item = {
+		text = server:getName(),
+		sound = "WINDOWSHOW",
+		callback = function()
+			self:selectServer(server)
+                end,
+		weight = 1,
+	}
 
 	self.serverMenu:addItem(item)
 	self.serverList[id] = item
 
-	if currentPlayer and currentPlayer:getSlimServer() and server == currentPlayer:getSlimServer() then
+	if currentPlayer and currentPlayer:getSlimServer() == server then
+		item.style = 'item_checked'
 		self.serverMenu:setSelectedItem(item)
 	end
 end
@@ -247,18 +219,13 @@ end
 
 
 function _updateServerList(self, player)
-	local server = player and player:getSlimServer()
+	local server = player and player:getSlimServer() and player:getSlimServer():getIpPort()
 
 	for id, item in pairs(self.serverList) do
 		if server == id then
-			item.style = 'item_checked_no_arrow'
-			item.callback = nil
+			item.style = 'item_checked'
 		else
 			item.style = nil
-
-			if player and player:canConnectToServer() then
-				item.callback = item.connectFunc
-			end
 		end
 		self.serverMenu:updatedItem(item)
 	end
@@ -266,17 +233,6 @@ end
 
 
 function notify_playerNew(self, player)
-	if self.waitForConnect then
-		log:info("waiting for ", player, " on ", self.waitForConnect.server)
-	end
-
-	if self.waitForConnect and self.waitForConnect.player == player
-		and self.waitForConnect.server == player:getSlimServer() then
-
-		self.waitForConnect = nil
-		jiveMain:closeToHome()
-	end
-
 	local currentPlayer = appletManager:callService("getCurrentPlayer")
 	if player ~= currentPlayer then
 		return
@@ -298,6 +254,44 @@ end
 
 function notify_playerCurrent(self, player)
 	_updateServerList(self, player)
+end
+
+
+function notify_playerLoaded(self, player)
+	if self.waitForConnect then
+		log:info("waiting for ", player, " on ", self.waitForConnect.server)
+	end
+
+	if self.waitForConnect and self.waitForConnect.player == player
+		and self.waitForConnect.server == player:getSlimServer() then
+
+		self.waitForConnect = nil
+		jiveMain:openNodeById('_myMusic')
+	end
+end
+
+
+-- server selected in menu
+function selectServer(self, server, passwordEntered)
+	-- ask for password if the server uses http auth
+	if not passwordEntered and server:isPasswordProtected() then
+		appletManager:callService("squeezeCenterPassword", server,
+			function()
+				self:selectServer(server, true)		
+			end, self.titleStyle)
+		return
+	end
+
+	local currentPlayer = appletManager:callService("getCurrentPlayer")
+
+	-- is the player already connected to the server?
+	if currentPlayer and currentPlayer:getSlimServer() == server then
+		jiveMain:openNodeById('_myMusic')
+		return		
+	end
+
+	-- connect player to server first
+       	self:connectPlayerToServer(currentPlayer, server)
 end
 
 

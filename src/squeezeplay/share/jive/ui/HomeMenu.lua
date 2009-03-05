@@ -392,6 +392,17 @@ function removeItem(self, item)
 
 end
 
+
+function openNodeById(self, id)
+	if self.nodeTable[id] then
+		self.nodeTable[id].item.callback()
+		return true
+	else
+		return false
+	end
+end
+
+
 function enableItem(self, item)
 	
 end

@@ -24,6 +24,7 @@ local os                 = require("os")
 local string             = require("string")
 
 local Applet             = require("jive.Applet")
+local System             = require("jive.System")
 local SimpleMenu         = require("jive.ui.SimpleMenu")
 local RadioGroup         = require("jive.ui.RadioGroup")
 local RadioButton        = require("jive.ui.RadioButton")
@@ -148,13 +149,20 @@ function manageSelectPlayerMenu(self)
 	-- if _numberOfPlayers is > 1 and selectPlayerMenuItem doesn't exist, create it
 	if _numberOfPlayers > 1 or not currentPlayer then
 		if not self.selectPlayerMenuItem then
+			local node = "home"
+			local weight = 80
+			if System:getMachine() ~= "jive" then
+				node = "settings"
+				weight = nil
+			end
+
 			local menuItem = {
 				id = 'selectPlayer',
-				node = 'home',
+				node = node,
 				text = self:string("SELECT_PLAYER"),
 				sound = "WINDOWSHOW",
 				callback = function() self:setupShowSelectPlayer() end,
-				weight = 80
+				weight = weight,
 			}
 			jiveMain:addItem(menuItem)
 			self.selectPlayerMenuItem = menuItem

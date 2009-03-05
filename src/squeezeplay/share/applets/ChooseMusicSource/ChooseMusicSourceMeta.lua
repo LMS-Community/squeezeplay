@@ -60,12 +60,12 @@ function configureApplet(meta)
 	jiveMain:addItem(
 		meta:menuItem(
 			'appletSlimservers', 
-			'settings', 
+			'home', 
 			"SLIMSERVER_SERVERS", 
 			function(applet, ...) 
 				applet:settingsShow(...) 
 			end, 
-			60
+			11
 		)
 	)
 

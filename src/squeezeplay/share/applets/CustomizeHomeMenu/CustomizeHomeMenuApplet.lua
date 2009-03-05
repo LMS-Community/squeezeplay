@@ -223,3 +223,48 @@ function _goHome()
 	end
 end
 
+
+-- XXXX temporary:
+function appGuide(self)
+	local settings = self:getSettings()
+	local menuTable = jiveMain:getMenuTable()
+
+	local appGuideItems = {}
+
+	for id, item in pairs(menuTable) do
+		if item.guide then
+			local selected
+			if settings[id] then
+				selected = (settings[id] == 'home')
+			else
+				selected = (item.node == 'home')
+			end
+
+			appGuideItems[#appGuideItems + 1] = {
+				text = item.text,
+				style = 'item_choice',
+				icon = Checkbox(
+					"checkbox",
+					function(object, isSelected)
+						if isSelected then
+							settings[item.id] = 'home'
+							jiveMain:addItemToNode(item, 'home')
+						else
+							self:getSettings()[item.id] = 'hidden'
+							jiveMain:removeItemFromNode(item, 'home')
+						end
+						self:storeSettings()
+					end,
+					selected)
+				}
+		end
+	end
+
+
+	local menu = SimpleMenu("menu",  appGuideItems  )
+	menu:setComparator(menu.itemComparatorAlpha)
+
+	local window = Window("text_list", self:string("APP_GUIDE"), 'settingstitle')
+	window:addWidget(menu)
+	window:show()
+end

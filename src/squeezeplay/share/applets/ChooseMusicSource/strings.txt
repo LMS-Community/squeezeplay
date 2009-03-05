@@ -5,7 +5,7 @@
 SLIMSERVER_SERVERS
 	DA	Musikkilde
 	DE	Musikquelle
-	EN	Music Source
+	EN	My Music
 	ES	Origen de música
 	FI	Musiikkilähde
 	FR	Source musicale
