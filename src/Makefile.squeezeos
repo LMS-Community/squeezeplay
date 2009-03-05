@@ -138,8 +138,8 @@ tolua++:
 #
 # squeezeplay
 #
-.PHONY: squeezeplay-all portaudio flac libmad tremor squeezeplay squeezeplay_jive freefont fonts-clock
-squeezeplay-all: portaudio flac libmad tremor squeezeplay squeezeplay_jive freefont fonts-clock
+.PHONY: squeezeplay-all portaudio flac libmad tremor squeezeplay squeezeplay_jive freefont 
+squeezeplay-all: portaudio flac libmad tremor squeezeplay squeezeplay_jive freefont
 
 
 # portaudio
@@ -196,10 +196,6 @@ freefont:
 	mkdir -p ${PREFIX}/share/jive/fonts
 	cp freefont-20060126/FreeSans.ttf ${PREFIX}/share/jive/fonts
 	cp freefont-20060126/FreeSansBold.ttf ${PREFIX}/share/jive/fonts
-
-fonts-clock:
-	cp fonts-clock/DigitalItalic.ttf ${PREFIX}/share/jive/fonts
-	cp fonts-clock/Digital.ttf ${PREFIX}/share/jive/fonts
 
 
 .PHONY: clean
