@@ -106,10 +106,31 @@ function init(self)
 		log:warn("Watchdog timer is disabled")
 	end
 
-	self:setBrightness(settings.brightness or 64)
+	settings.brightness = settings.brightness or 64
+	settings.ambient = settings.ambient or 0
+	self:setBrightness( settings.brightness)
+
+	local brightnessTimer = Timer( 2000,
+		function()
+			local SYSPATH = "/sys/bus/i2c/devices/0-0039/"
+			local f = io.open(SYSPATH .. "lux")
+			local lux = f:read("*all");
+			f:close()
+
+			settings.ambient = string.sub(lux, 0, string.len(lux)-1)
+
+			local bright = settings.brightness + settings.ambient
+			if bright > 64 then
+				bright = 64
+			end
+			self:setBrightness( bright)
+		end)
+	brightnessTimer:start()
 
 	-- find out when we connect to player
 	jnt:subscribe(self)
+
+	self:storeSettings()
 end
 
 
@@ -187,12 +208,17 @@ function settingsBrightnessShow (self, menuItem)
 	local window = Window("text_list", menuItem.text, squeezeboxjiveTitleStyle)
 
 	local settings = self:getSettings()
-	local level = self:getBrightness()
+	local level = settings.brightness
 
 	local slider = Slider("slider", 1, 64, level,
 			      function(slider, value, done)
-				      self:setBrightness(value)
 				      settings.brightness = value
+
+			              local bright = settings.brightness + settings.ambient
+			              if bright > 64 then
+			                bright = 64
+			              end
+			              self:setBrightness( bright)
 
 				      if done then
 					      window:playSound("WINDOWSHOW")
