@@ -365,9 +365,6 @@ freefont:
 	mkdir -p ${PREFIX}/share/jive/fonts
 	cp freefont-20080912/FreeSans.ttf ${PREFIX}/share/jive/fonts
 	cp freefont-20080912/FreeSansBold.ttf ${PREFIX}/share/jive/fonts
-# fonts for clock screensaver
-	cp fonts-clock/Digital.ttf ${PREFIX}/share/jive/fonts
-	cp fonts-clock/DigitalItalic.ttf ${PREFIX}/share/jive/fonts
 
 squeezeplay_dmg: squeezeplay/Makefile
 	cd squeezeplay; make SqueezePlay_dmg
