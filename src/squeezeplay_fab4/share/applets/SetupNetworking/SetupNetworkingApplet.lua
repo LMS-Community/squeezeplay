@@ -487,6 +487,7 @@ function _enterSSID(self, iface)
 
         window:addWidget(group)
 	window:addWidget(Keyboard("keyboard", 'qwerty'))
+        window:focusWidget(group)
 
 	_helpAction(self, window, 'NETWORK_NETWORK_NAME', 'NETWORK_NETWORK_NAME_HELP') 
 
@@ -671,6 +672,7 @@ function _enterWEPKey(self, iface, ssid)
 
         window:addWidget(group)
 	window:addWidget(keyboard)
+        window:focusWidget(group)
 
 	_helpAction(self, window, 'NETWORK_WIRELESS_KEY', 'NETWORK_WIRELESS_KEY_HELP') 
 
@@ -709,6 +711,7 @@ function _enterPSK(self, iface, ssid)
 
         window:addWidget(group)
 	window:addWidget(Keyboard('keyboard', 'qwerty'))
+        window:focusWidget(group)
 
 	_helpAction(self, window, 'NETWORK_WIRELESS_PASSWORD', 'NETWORK_WIRELESS_PASSWORD_HELP')
 
@@ -1396,6 +1399,7 @@ function _enterIP(self, iface, ssid)
 
         window:addWidget(group)
 	window:addWidget(keyboard)
+        window:focusWidget(group)
 
 	_helpAction(self, window, 'NETWORK_IP_ADDRESS', 'NETWORK_IP_ADDRESS_HELP')
 
@@ -1436,6 +1440,7 @@ function _enterSubnet(self, iface, ssid)
 
         window:addWidget(group)
 	window:addWidget(keyboard)
+        window:focusWidget(group)
 
 	_helpAction(self, window, 'NETWORK_SUBNET', 'NETWORK_SUBNET_HELP')
 
@@ -1480,6 +1485,7 @@ function _enterGateway(self, iface, ssid)
 
         window:addWidget(group)
 	window:addWidget(keyboard)
+        window:focusWidget(group)
 
 	_helpAction(self, window, 'NETWORK_GATEWAY', 'NETWORK_GATEWAY_HELP')
 
@@ -1523,6 +1529,7 @@ function _enterDNS(self, iface, ssid)
 
 	window:addWidget(group)
 	window:addWidget(keyboard)
+        window:focusWidget(group)
 
 	_helpAction(self, window, 'NETWORK_DNS', 'NETWORK_DNS_HELP')
 

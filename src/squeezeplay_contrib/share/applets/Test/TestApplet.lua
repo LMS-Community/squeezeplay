@@ -427,6 +427,8 @@ function keyboardWindow(self, menuItem, style)
 
         window:addWidget(group)
 	window:addWidget(Keyboard('keyboard', style))
+	window:focusWidget(group)
+
 	self:tieAndShowWindow(window)
 	return window
 end

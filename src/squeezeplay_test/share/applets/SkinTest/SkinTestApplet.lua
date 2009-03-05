@@ -300,6 +300,7 @@ function setup_input_hex(self, item)
 
 	window:addWidget(group)
 	window:addWidget(Keyboard("keyboard", data[2]))
+	window:focusWidget(group)
 
 	return window
 end
@@ -340,6 +341,7 @@ function setup_input(self, item)
 
 	window:addWidget(group)
 	window:addWidget(Keyboard("keyboard", data[2]))
+	window:focusWidget(group)
 
 	return window
 end

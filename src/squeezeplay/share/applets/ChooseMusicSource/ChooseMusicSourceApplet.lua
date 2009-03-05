@@ -488,6 +488,7 @@ function _addServer(self, menuItem)
 
         window:addWidget(group)
 	window:addWidget(keyboard)
+	window:focusWidget(group)
 
 	self:tieAndShowWindow(window)
 	return window

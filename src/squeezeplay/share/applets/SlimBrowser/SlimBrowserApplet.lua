@@ -2250,6 +2250,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 
 		window:addWidget(group)
 		window:addWidget(keyboard)
+		window:focusWidget(group)
 
 	-- special case for sending over textArea
 	elseif item and item['textArea'] then
