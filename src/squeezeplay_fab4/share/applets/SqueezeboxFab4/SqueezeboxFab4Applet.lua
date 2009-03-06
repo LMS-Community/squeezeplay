@@ -64,13 +64,13 @@ function init(self)
 	if not uuid or string.match(mac, "^00:40:20") 
 		or uuid == "00000000-0000-0000-0000-000000000000"
 		or mac == "00:04:20:ff:ff:01" then
-		local window = Window("one_button", self:string("INVALID_MAC_TITLE"))
+		local window = Window("text_list", self:string("INVALID_MAC_TITLE"))
 
 		window:setAllowScreensaver(false)
 		window:setAlwaysOnTop(true)
 		window:setAutoHide(false)
 
-		local text = Textarea("text", self:string("INVALID_MAC_TEXT"))
+		local text = Textarea("help_text", self:string("INVALID_MAC_TEXT"))
 		local menu = SimpleMenu("menu", {
 			{
 				text = self:string("INVALID_MAC_CONTINUE"),

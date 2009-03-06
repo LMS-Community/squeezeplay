@@ -154,11 +154,11 @@ end
 
 
 function _upgradeWindowSingle(self, upgrades, optional)
-	local window = Window("one_button", self:string("UPDATE"), 'settingstitle')
+	local window = Window("text_list", self:string("UPDATE"), 'settingstitle')
 
 	window:setButtonAction("rbutton", nil)
 
-	local text = Textarea("text", _helpString(self, upgrades[1]))
+	local text = Textarea("help_text", _helpString(self, upgrades[1]))
 
 	local menu = SimpleMenu("menu")
 

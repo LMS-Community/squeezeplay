@@ -185,12 +185,12 @@ end
 
 
 function setupWelcomeShow(self, setupNext)
-	local window = Window("one_button", self:string("WELCOME"), welcomeTitleStyle)
+	local window = Window("text_list", self:string("WELCOME"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
 	window:setButtonAction("rbutton", nil)
 
-	local textarea = Textarea("text", self:string("WELCOME_WALKTHROUGH"))
+	local textarea = Textarea("help_text", self:string("WELCOME_WALKTHROUGH"))
 
 	local continueButton = SimpleMenu("menu")
 
@@ -212,12 +212,12 @@ end
 --[[
 function setupDoneShow(self, setupNext)
 	log:info('setupDoneShow()')
-	local window = Window("one_button", self:string("DONE"), welcomeTitleStyle)
+	local window = Window("text_list", self:string("DONE"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
 	window:setButtonAction("rbutton", nil)
 
-	local textarea = Textarea("text", self:string("DONE_HELP"))
+	local textarea = Textarea("help_text", self:string("DONE_HELP"))
 
 	local continueButton = SimpleMenu("menu")
 

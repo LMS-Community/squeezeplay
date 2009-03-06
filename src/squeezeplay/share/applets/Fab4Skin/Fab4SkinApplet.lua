@@ -541,12 +541,12 @@ function skin(self, s)
 	}
 
 	s.help_text = {
-		w = screenWidth - 6,
-		position = LAYOUT_SOUTH,
-		padding = 12,
+		w = WH_FILL,
+		position = LAYOUT_CENTER,
+		padding = 10,
 		font = _font(HELP_FONT_SIZE),
 		fg = TEXT_COLOR,
-		bgImg = helpBox,
+		bgImg = titleBox,
 		align = "left",
 		scrollbar = {
 			w = 0,
@@ -679,95 +679,6 @@ function skin(self, s)
 
 	-- typical text list window
 	s.text_list = _uses(s.window)
-
-	-- window with one option in "button" style
-	s.one_button = _uses(s.text_list)
-	s.one_button.menu = _uses(_buttonMenu, {
-			position = LAYOUT_SOUTH,
-			h = THREE_ITEM_HEIGHT
-	})
-
-	s.one_button.menu.item = {
-		order = { "text", "arrow" },
-		padding = 0,
-		bgImg = threeItemSelectionBox,
-		text = {
-			w = WH_FILL,
-			h = WH_FILL,
-			padding = { 8, 0, 0, 0 },
-			align = "left",
-			font = _boldfont(34),
-			fg = TEXT_COLOR,
-			sh = TEXT_SH_COLOR,
-			arrow = {
-				img = _loadImage(self, "Icons/selection_right_3line_off.png"), 
-				w = 37,
-				h = WH_FILL,
-				padding = { 0, 0, 8, 0},
-			}
-		}
-	}
-
-	s.one_button.menu.selected = {
-		item = _uses(s.one_button.menu.item)
-	}
-	s.one_button.menu.pressed = {
-		item = _uses(s.one_button.menu.item, { 
-				bgImg = threeItemPressedBox 
-		})
-	}
-
-	s.one_button.text = {
-		w = screenWidth,
-		position = LAYOUT_NORTH,
-		padding = { 16, 72, 35, 2 },
-		font = _font(36),
-		lineHeight = 40,
-		fg = TEXT_COLOR,
-		sh = TEXT_SH_COLOR,
-	}
-
-
-	-- window with multiple options in "button" style
-	s.button_list = _uses(s.window)
-
-	s.button_list.title = _uses(s.title, {
-		h = 55
-	})
-
-	s.button_list.menu = {
-		padding = 0,
-		w = WH_FILL,
-		itemHeight = THREE_ITEM_HEIGHT,
-	}
-
-	s.button_list.menu.item = _uses(_buttonItem, {
-		order = { "icon", "text", "arrow" },
-		icon  = s.buttonicon,
-	})
-
-	s.button_list.menu.item_checked = _uses(_buttonItem, {
-		order = { 'icon', 'text', 'check', 'arrow' },
-		check = {
-			img     = _loadImage(self, "Icons/icon_check_3line.png"), 
-			w       = 37,
-			h       = WH_FILL,
-			padding = { 2, 0, 18, 10 },
-		}
-	})
-
-	s.button_list.menu.selected = {
-		item = _uses(s.button_list.menu.item),
-		item_checked = _uses(s.button_list.menu.item_checked),
-	}
-	s.button_list.menu.pressed = {
-		item = _uses(s.button_list.menu.item, { 
-			bgImg = threeItemPressedBox 
-		}),
-		item_checked = _uses(s.button_list.menu.item_checked, { 
-			bgImg = threeItemPressedBox 
-		}),
-	}
 
 	-- popup "spinny" window
 	s.waiting_popup = _uses(s.popup)

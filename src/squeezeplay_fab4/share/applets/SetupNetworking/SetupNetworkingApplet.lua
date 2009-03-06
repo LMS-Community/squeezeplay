@@ -132,7 +132,7 @@ function _connectionType(self)
 	-- XXXX auto select wired in setup mode
 
 	-- ask the user to choose
-	local window = Window("button_list", self:string("NETWORK_CONNECTION_TYPE"), "setup")
+	local window = Window("text_list", self:string("NETWORK_CONNECTION_TYPE"), "setup")
 	window:setAllowScreensaver(false)
 
 	local connectionMenu = SimpleMenu("menu")
@@ -174,7 +174,7 @@ function _wirelessRegion(self, wlan)
 		return _networkScan(self, wlan)
 	end
 
-	local window = Window("button_list", self:string("NETWORK_REGION"), "setup")
+	local window = Window("text_list", self:string("NETWORK_REGION"), "setup")
 	window:setAllowScreensaver(false)
 
 	local region = wlan:getRegion()
@@ -604,7 +604,7 @@ end
 function _chooseWEPLength(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	local window = Window("button_list", self:string("NETWORK_WIRELESS_ENCRYPTION"), 'setuptitle')
+	local window = Window("text_list", self:string("NETWORK_WIRELESS_ENCRYPTION"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu", {

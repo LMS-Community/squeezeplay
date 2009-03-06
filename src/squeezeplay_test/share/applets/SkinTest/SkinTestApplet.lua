@@ -163,18 +163,18 @@ end
 
 
 --[[
-Window:   "one_button"
-Textarea: "text"
+Window:   "text_list"
+Textarea: "help_text"
 Menu:     "menu"
 Item:     "item"
 --]]
-function setup_one_button(self, item)
+function setup_text_list_one(self, item)
 	local data = _itemData(item)
 
-	local window = Window("one_button", _itemName(item), "setup")
+	local window = Window("text_list", _itemName(item), "setup")
 	_windowActions(self, item, window)
 
-	local textarea = Textarea("text", data[1])
+	local textarea = Textarea("help_text", data[1])
 
 	local menu = SimpleMenu("menu")
 	menu:addItem({
@@ -190,21 +190,21 @@ end
 
 
 --[[
-Window:   "button_list"
-Textarea: "text"
+Window:   "text_list"
+Textarea: "help_text"
 Menu:     "menu"
 Item:     "item"
 --]]
-function setup_button(self, item)
+function setup_text_list_two(self, item)
 	local data = _itemData(item)
 
-	local window = Window("button_list", _itemName(item), "setup")
+	local window = Window("text_list", _itemName(item), "setup")
 	_windowActions(self, item, window)
 
 	window:addActionListener("help", self, dummy_help)
 	window:setButtonAction("rbutton", "help")
 
-	local textarea = Textarea("text", data[1])
+	local textarea = Textarea("help_text", data[1])
 
 	local menu = SimpleMenu("menu")
 	for i,subdata in ipairs(data[2]) do
@@ -414,6 +414,7 @@ end
 
 --[[
 Window:   "text_list"
+Textarea: "help_text" (optional)
 Menu:     "menu"
 Item:     "item_play", "item_add", "item" (styles: selected, pressed, locked)
 --]]
@@ -552,7 +553,7 @@ function setup_text_list(self, item)
 		style = 'item_choice',
 		icon  = radios[2],
 	})
-	for i, text in ipairs(data) do
+	for i, text in ipairs(data[2]) do
 		log:warn(text)
 		menu:addItem({
 			text = text,
@@ -575,7 +576,8 @@ function setup_text_list(self, item)
 			end
 		})
 	end
-	
+
+	window:addWidget(Label("help_text", data[1]))	
 	window:addWidget(menu)
 
 	self:tieWindow(window)
@@ -822,9 +824,10 @@ end
 
 -- the reference windows, and test data
 windows = {
+	{ "text_list", "Text List", setup_text_list, },
+	{ "text_list_one", "Welcome to Setup", setup_text_list_one, },
+	{ "text_list_two", "Choose Region", setup_text_list_two, },
 	{ "input_hex", "WEP Password", setup_input_hex, },
-	{ "one_button", "Welcome to Setup", setup_one_button, },
-	{ "button_list", "Choose Region", setup_button, },
 	{ "help_info", "Help Connection Type", setup_help_info, },
 	{ "waiting_popup", "Connecting to", setup_waiting_popup, },
 	{ "input_wpa", "Wireless Password", setup_input, },
@@ -833,7 +836,6 @@ windows = {
 	{ "track_info", "Track Info", window_track_info, },
 	{ "track_list", "Track List", window_track_list, },
 	{ "playlist", "Playlist", window_playlist, },
-	{ "text_list", "Text List", setup_text_list, },
 	{ "icon_list", "Icon List", window_icon_list, },
 	{ "information", "Information Window", window_information, },
 	{ "toast_popup", "Popup Toast", window_toast_popup, },
@@ -843,11 +845,15 @@ windows = {
 
 
 testData = {
-	one_button = {
+	text_list = {
+		"Screen copy, if any goes here",
+		{ "Now Playing", "Music Library", "Internet Radio", "Music Services", "Favorites", "Extras", "Settings", "Choose Player", "Turn Off Player" }
+	},
+	text_list_one = {
 		"Let's begin by getting\nyou connected to your network.",
 		"Continue"
 	},
-	button_list = {
+	text_list_two = {
 		"Is text allowed in this window?",
 		{ { "North America", "region_US" },
 		  { "All Other Regions" , "region_XX" },
@@ -876,9 +882,6 @@ testData = {
 	},
 	update_popup = {
 		"Installing\nSoftware Update...", "icon_software_update",
-	},
-	text_list = {
-		 "Now Playing", "Music Library", "Internet Radio", "Music Services", "Favorites", "Extras", "Settings", "Choose Player", "Turn Off Player"
 	},
 	track_info = {
 		"Play this song",
