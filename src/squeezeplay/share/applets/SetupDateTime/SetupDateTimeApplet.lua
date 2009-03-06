@@ -109,7 +109,7 @@ function timeSetting(self, menuItem)
 		{
 			text = self:string("DATETIME_TIMEFORMAT_12H"),
 			style = 'item_choice',
-			icon = RadioButton("radio", group, function(event, menuItem)
+			check = RadioButton("radio", group, function(event, menuItem)
 					self:setHours("12")
 				end,
 			current == "12")
@@ -117,7 +117,7 @@ function timeSetting(self, menuItem)
 		{
 			text = self:string("DATETIME_TIMEFORMAT_24H"),
 			style = 'item_choice',
-			icon = RadioButton("radio", group, function(event, menuItem)
+			check = RadioButton("radio", group, function(event, menuItem)
 					self:setHours("24")
 				end,
 			current == "24")
@@ -151,7 +151,7 @@ function dateFormatSetting(self, menuItem)
 		menu:addItem({
 				text = _text,
 				style = 'item_choice',
-				icon = RadioButton("radio", group, function(event, menuItem)
+				check = RadioButton("radio", group, function(event, menuItem)
 						self:setDateFormat(v)
 					end,
 				current == v)
@@ -186,7 +186,7 @@ function weekstartSetting(self, menuItem)
 		{
 			text = self:string("DATETIME_SUNDAY"),
 			style = 'item_choice',
-			icon = RadioButton("radio", group, function(event, menuItem)
+			check = RadioButton("radio", group, function(event, menuItem)
 					self:setWeekStart("Sunday")
 				end,
 			current == "Sunday")
@@ -194,7 +194,7 @@ function weekstartSetting(self, menuItem)
 		{
 			text = self:string("DATETIME_MONDAY"),
 			style = 'item_choice',
-			icon = RadioButton("radio", group, function(event, menuItem)
+			check = RadioButton("radio", group, function(event, menuItem)
 					self:setWeekStart("Monday")
 				end,
 			current == "Monday")

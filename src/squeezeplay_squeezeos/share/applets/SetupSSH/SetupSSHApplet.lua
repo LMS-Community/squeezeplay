@@ -35,7 +35,7 @@ function settingsShow(self, menuItem)
 					{
 						text = self:string("SSH_ENABLE"),
 						style = 'item_choice',
-						icon = Checkbox("checkbox",
+						check = Checkbox("checkbox",
 								function(_, isSelected)
 									if isSelected then
 										self:_enableSSH()

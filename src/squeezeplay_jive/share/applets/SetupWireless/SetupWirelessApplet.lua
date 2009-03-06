@@ -119,7 +119,7 @@ function settingsRegionShow(self)
 		menu:addItem({
 				     text = self:string("NETWORK_REGION_" .. name),
 					style = 'item_choice',
-				     icon = RadioButton("radio", group,
+				     check = RadioButton("radio", group,
 							function() wlan:setRegion(name) end,
 							region == name
 						)

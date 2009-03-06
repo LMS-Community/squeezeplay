@@ -160,7 +160,7 @@ function settingsShow(self)
 				text = self:string(name), 
 				style = 'item_choice',
 				sound = "WINDOWSHOW",
-				icon = RadioButton("radio", 
+				check = RadioButton("radio", 
 								   self.group, 
 								   function()
 									   self:setBackground(file, self.currentPlayerId)
@@ -254,7 +254,7 @@ function _serverSink(self, data)
 					weight = 50,	  
 					text = entry.title,
 					style = 'item_choice',
-					icon = RadioButton("radio",
+					check = RadioButton("radio",
 									   self.group,
 									   function()
 										   if self.download[url] then

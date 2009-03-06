@@ -324,7 +324,7 @@ function screensaverSetting(self, menuItem, mode)
 		menu:addItem({
 				text = screensaver.displayName,
 				style = 'item_choice',
-				icon = button,
+				check = button,
 				weight = screensaver.weight
 			     })
 	end
@@ -351,42 +351,42 @@ function timeoutSetting(self, menuItem)
 			{
 				text = self:string('DELAY_10_SEC'),
 				style = 'item_choice',
-				icon = RadioButton("radio", group, function() self:setTimeout(10000) end, timeout == 10000),
+				check = RadioButton("radio", group, function() self:setTimeout(10000) end, timeout == 10000),
 			},
 			{
 				text = self:string('DELAY_20_SEC'),
 				style = 'item_choice',
-				icon = RadioButton("radio", group, function() self:setTimeout(20000) end, timeout == 20000),
+				check = RadioButton("radio", group, function() self:setTimeout(20000) end, timeout == 20000),
 			},
 			{
 				text = self:string('DELAY_30_SEC'),
 				style = 'item_choice',
-				icon = RadioButton("radio", group, function() self:setTimeout(30000) end, timeout == 30000),
+				check = RadioButton("radio", group, function() self:setTimeout(30000) end, timeout == 30000),
 			},
 			{
 				text = self:string('DELAY_1_MIN'),
 				style = 'item_choice',
-				icon = RadioButton("radio", group, function() self:setTimeout(60000) end, timeout == 60000),
+				check = RadioButton("radio", group, function() self:setTimeout(60000) end, timeout == 60000),
 			},
 			{ 
 				text = self:string('DELAY_2_MIN'),
 				style = 'item_choice',
-				icon = RadioButton("radio", group, function() self:setTimeout(120000) end, timeout == 120000),
+				check = RadioButton("radio", group, function() self:setTimeout(120000) end, timeout == 120000),
 			},
 			{
 				text = self:string('DELAY_5_MIN'),
 				style = 'item_choice',
-				icon = RadioButton("radio", group, function() self:setTimeout(300000) end, timeout == 300000),
+				check = RadioButton("radio", group, function() self:setTimeout(300000) end, timeout == 300000),
 			},
 			{ 
 				text = self:string('DELAY_10_MIN'),
 				style = 'item_choice',
-				icon = RadioButton("radio", group, function() self:setTimeout(600000) end, timeout == 600000),
+				check = RadioButton("radio", group, function() self:setTimeout(600000) end, timeout == 600000),
 			},
 			{ 
 				text = self:string('DELAY_30_MIN'),
 				style = 'item_choice',
-				icon = RadioButton("radio", group, function() self:setTimeout(1800000) end, timeout == 1800000),
+				check = RadioButton("radio", group, function() self:setTimeout(1800000) end, timeout == 1800000),
 			},
 		}))
 

@@ -497,7 +497,7 @@ function setup_text_list(self, item)
 
 	-- FIXME: choice items do not work
 	local menu = SimpleMenu("menu")
-	local choice = Choice("icon", { 'on', 'off' },
+	local choice = Choice("choice", { 'on', 'off' },
 		function(object, selectedIndex)
 			log:warn('choice is: ', tostring(selectedIndex))
 		end,
@@ -536,22 +536,22 @@ function setup_text_list(self, item)
 	menu:addItem({
 		text  = 'Sample Choice Item',
 		style = 'item_choice',
-		icon  = choice,
+		check  = choice,
 	})
 	menu:addItem({
 		text  = 'Sample Checkbox',
 		style = 'item_choice',
-		icon  = checkbox,
+		check  = checkbox,
 	})
 	menu:addItem({
 		text  = 'Sample Radio 1',
 		style = 'item_choice',
-		icon  = radios[1],
+		check  = radios[1],
 	})
 	menu:addItem({
 		text  = 'Sample Radio 2',
 		style = 'item_choice',
-		icon  = radios[2],
+		check  = radios[2],
 	})
 	for i, text in ipairs(data[2]) do
 		log:warn(text)

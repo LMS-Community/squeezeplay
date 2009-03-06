@@ -181,7 +181,7 @@ function menuSetGain(self)
                 {                                  
                         text = "Gain On",
 			style = 'item_choice',
-                        icon = RadioButton("radio", group, function(event, menuItem)
+                        check = RadioButton("radio", group, function(event, menuItem)
 					self:_changeGain(true)              
                                 end,                                                
                         curGain == true)
@@ -189,7 +189,7 @@ function menuSetGain(self)
                 {                                          
                         text = "Gain Off",
 			style = 'item_choice',
-                        icon = RadioButton("radio", group, function(event, menuItem)
+                        check = RadioButton("radio", group, function(event, menuItem)
                                         self:_changeGain(false)                      
                                 end,                                                
                         curGain == false)
@@ -208,7 +208,7 @@ function menuSetIntegration(self)
                 {
                         text = "Integration Time: " .. IntegrationTimes[1],
 			style = 'item_choice',
-                        icon = RadioButton("radio", group, function(event, menuItem)
+                        check = RadioButton("radio", group, function(event, menuItem)
 					self:_changeIntegrationTime(0)
                                 end,                                                
                         curIntegrationTime == 0)
@@ -216,7 +216,7 @@ function menuSetIntegration(self)
                 {
                         text = "Integration Time: " .. IntegrationTimes[2],
 			style = 'item_choice',
-                        icon = RadioButton("radio", group, function(event, menuItem)
+                        check = RadioButton("radio", group, function(event, menuItem)
 					self:_changeIntegrationTime(1)					          
                                 end,                                                
                         curIntegrationTime == 1)
@@ -224,7 +224,7 @@ function menuSetIntegration(self)
 		{
                         text = "Integration Time: " .. IntegrationTimes[3],
 			style = 'item_choice',
-                        icon = RadioButton("radio", group, function(event, menuItem)
+                        check = RadioButton("radio", group, function(event, menuItem)
 					self:_changeIntegrationTime(2)					          
                                 end,                                                
                         curIntegrationTime == 2)
@@ -244,7 +244,7 @@ function menuSetFactor(self)
 	menuItem = {
 		text = "1",
 		style = 'item_choice',
-		icon = RadioButton("radio", group, function(event, menuItem)
+		check = RadioButton("radio", group, function(event, menuItem)
 				self:_changeFactor(1)
 			end,
 			curFactor == 1)
@@ -256,7 +256,7 @@ function menuSetFactor(self)
 		menuItem = {
                         text = tostring(i),
 			style = 'item_choice',
-                        icon = RadioButton("radio", group, function(event, menuItem)
+                        check = RadioButton("radio", group, function(event, menuItem)
 					self:_changeFactor(i)					          
                                 end,                                                
                         curFactor == i)

@@ -479,7 +479,7 @@ function skin(self, s)
 
 	s.item_choice = _uses(s.item, {
 		order  = { 'text', 'icon' },
-		icon = {
+		check = {
 			align = 'right',
 			font = _boldfont(TEXTMENU_FONT_SIZE),
 			fg = TEXT_COLOR,
@@ -513,7 +513,7 @@ function skin(self, s)
 	})
 	s.selected.item_choice = _uses(s.selected.item, {
 		order = { 'text', 'icon' },
-		icon = {
+		check = {
 			align = 'right',
 			font = _boldfont(TEXTMENU_FONT_SIZE),
 			fg = TEXT_COLOR,

@@ -74,7 +74,7 @@ function menu(self, menuItem)
 		{	
 			text = self:string("DOOMSDAY_OPTION2"),
 			style = 'item_choice',
-			icon = RadioButton(
+			check = RadioButton(
 				"radio",
 				group,
 				function()
@@ -89,7 +89,7 @@ function menu(self, menuItem)
 		{	
 			text = self:string("DOOMSDAY_OPTION3"),
 			style = 'item_choice',
-			icon = RadioButton(
+			check = RadioButton(
 				"radio",
 				group,
 				function()
@@ -104,7 +104,7 @@ function menu(self, menuItem)
 		{	
 			text = self:string("DOOMSDAY_OPTION4"),
 			style = 'item_choice',
-			icon = RadioButton(
+			check = RadioButton(
 				"radio",
 				group,
 				function()

@@ -413,7 +413,7 @@ local function _choiceItem(item, db)
 
 	if choiceFlag and choiceActions and not item["_jive_button"] then
 		item["_jive_button"] = Choice(
-			"icon",
+			"choice",
 			item['choiceStrings'],
 			function(_, index) 
 				log:info('Callback has been called: ', index) 
@@ -1276,7 +1276,7 @@ end
 				end
 
 				local choice = Choice(
-					"icon",
+					"choice",
 					v.choiceStrings,
 					function(obj, selectedIndex)
 						local jsonAction = v.actions['do'].choices[selectedIndex]
@@ -1286,7 +1286,7 @@ end
 				)
 				
 				item.style = 'item_choice'
-				item.icon = choice
+				item.check = choice
 
 				--add the item to the menu
 				_playerMenus[item.id] = item

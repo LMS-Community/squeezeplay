@@ -120,11 +120,16 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 				menu.icons[i] = icon
 			end
 
+			local check = item.check or menu.checks[i]
+			if check == nil then
+				check = Icon("check")
+				menu.checks[i] = check
+			end
 
 			if widgetList[i] == nil then
 				widgetList[i] = Group(item.style or "item", {
 					text  = Label("text", item.text),
-					check = Icon('check'),
+					check = check,
 					icon  = icon,
 					arrow = Icon('arrow'),
 				})
@@ -132,6 +137,7 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 				widgetList[i]:setStyle(item.style or "item")
 				widgetList[i]:setWidgetValue("text", item.text)
 				widgetList[i]:setWidget("icon", icon)
+				widgetList[i]:setWidget("check", check)
 			end
 		end
 	end
@@ -171,6 +177,7 @@ function __init(self, style, items)
 	local obj = oo.rawnew(self, Menu(style, _itemRenderer, _itemListener))
 	obj.items = items or {}
 	obj.icons = {}
+	obj.checks = {}
 
 	obj:setItems(obj.items, #obj.items)
 

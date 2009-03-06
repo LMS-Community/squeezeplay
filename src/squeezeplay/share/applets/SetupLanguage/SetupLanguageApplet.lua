@@ -122,7 +122,7 @@ function settingsShow(self, menuItem)
 		menu:addItem({
 		        text = self:string("LANGUAGE_" .. locale),
 			style = 'item_choice',
-			icon = button,
+			check = button,
 			focusGained = function() self:_showLang(locale) end
 		})
 

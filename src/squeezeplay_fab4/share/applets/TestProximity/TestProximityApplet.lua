@@ -94,7 +94,7 @@ function menuSetControl(self)
 		menuItem = {
                         text = tostring(i),
 			style = 'item_choice',
-                        icon = RadioButton("radio", group, function(event, menuItem)
+                        check = RadioButton("radio", group, function(event, menuItem)
 					self:_changeControl(i)					          
                                 end,                                                
                         curControl == i)
@@ -118,7 +118,7 @@ function menuSetDutyCycle(self)
 		menuItem = {
                         text = tostring(i),
 			style = 'item_choice',
-                        icon = RadioButton("radio", group, function(event, menuItem)
+                        check = RadioButton("radio", group, function(event, menuItem)
 					self:_changeDutyCycle(i)					          
                                 end,                                                
                         curDutyCycle == i)

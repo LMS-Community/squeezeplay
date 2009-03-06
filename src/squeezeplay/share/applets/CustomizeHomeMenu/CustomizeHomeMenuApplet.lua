@@ -140,7 +140,7 @@ function menu(self, menuItem)
 				weights = item.weights,
 				indent = indentSize,
 				style = 'item_choice',
-				icon = Checkbox(
+				check = Checkbox(
 					"checkbox",
 					function(object, isSelected)
 						if isSelected then
@@ -243,7 +243,7 @@ function appGuide(self)
 			appGuideItems[#appGuideItems + 1] = {
 				text = item.text,
 				style = 'item_choice',
-				icon = Checkbox(
+				check = Checkbox(
 					"checkbox",
 					function(object, isSelected)
 						if isSelected then

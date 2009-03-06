@@ -150,7 +150,7 @@ function menuSink(self, data)
 			self.menu:addItem( {
 				text = entry.title .. " [" .. version .. "]",
 				style = 'item_choice',
-				icon = Checkbox("checkbox",
+				check = Checkbox("checkbox",
 					  function(object, isSelected)
 						  if isSelected then
 							  self.todownload[entry.name] = { url = url, ver = entry.version }

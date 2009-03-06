@@ -53,7 +53,7 @@ function settingsShow(self, metaState)
 		sound = "SELECT",
 		weight = 1,
 		style = 'item_choice',
-		icon = Checkbox(
+		check = Checkbox(
                 	"checkbox",
 			function(_, isSelected)
 				local settings = self:getSettings()

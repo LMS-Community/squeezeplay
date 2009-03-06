@@ -67,7 +67,7 @@ local function _gatherLogCategories()
 			{
 				text = k,
 				style = 'item_choice',
-				icon = choice,
+				check = choice,
 			}
 		)
 	end

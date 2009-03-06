@@ -136,7 +136,7 @@ function settingsShow(self, menuItem)
 	menu:addItem({
 			     text = self:string("SOUND_NONE"),
 				style = 'item_choice',
-			     icon = offButton,
+			     check = offButton,
 			     weight = 1
 		     })
 
@@ -179,7 +179,7 @@ function settingsShow(self, menuItem)
 			menu:addItem({
 					     text = self:string(k),
 						style = 'item_choice',
-					     icon = button,
+					     check = button,
 					     weight = 10
 				     })
 		end
@@ -343,7 +343,7 @@ function _customSoundMenu(self, sound, custom)
 		weight = 1,
 		text = self:string("SOUND_DEFAULT"),
 		style = 'item_choice',
-		icon = RadioButton("radio",
+		check = RadioButton("radio",
 						   group,
 						   function()
 							   log:info("setting default as active sound for ", sound)
@@ -359,7 +359,7 @@ function _customSoundMenu(self, sound, custom)
 			weight = 10,
 			text = v.title,
 			style = 'item_choice',
-			icon = RadioButton("radio",
+			check = RadioButton("radio",
 							   group,
 							   function()
 								   local path = path .. v.name

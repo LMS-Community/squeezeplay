@@ -56,7 +56,7 @@ function selectSkin(self, menuItem)
 		menu:addItem({
 			text = name,
 			style = 'item_choice',
-			icon = RadioButton(
+			check = RadioButton(
 				"radio", 
 				group, 
 				function()
@@ -72,7 +72,7 @@ function selectSkin(self, menuItem)
 	menu:addItem({
 		text = self:string("FULLSCREEN_MODE"),
 		style = 'item_choice',
-		icon = Checkbox(
+		check = Checkbox(
 			"checkbox", 
 			function(object, isSelected)
 				JiveMain:setFullscreen(isSelected)

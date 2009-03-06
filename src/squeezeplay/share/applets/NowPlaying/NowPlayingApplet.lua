@@ -658,7 +658,7 @@ function displaySizeSetting(self, menuItem)
 						text  = self:string("SCREENSAVER_ARTWORK_SMALL"),
 						sound = "WINDOWSHOW",
 						style = 'item_choice',
-						icon = RadioButton(
+						check = RadioButton(
 								"radio", 
 								group, 
 								function(event, menuItem)
@@ -670,7 +670,7 @@ function displaySizeSetting(self, menuItem)
 						text  = self:string("SCREENSAVER_ARTWORK_MEDIUM"),
 						sound = "WINDOWSHOW",
 						style = 'item_choice',
-						icon = RadioButton(
+						check = RadioButton(
 								"radio", 
 								group, 
 								function(event, menuItem)
@@ -682,7 +682,7 @@ function displaySizeSetting(self, menuItem)
 						text  = self:string("SCREENSAVER_ARTWORK_LARGE"),
 						sound = "WINDOWSHOW",
 						style = 'item_choice',
-						icon = RadioButton(
+						check = RadioButton(
 								"radio", 
 								group, 
 								function(event, menuItem)

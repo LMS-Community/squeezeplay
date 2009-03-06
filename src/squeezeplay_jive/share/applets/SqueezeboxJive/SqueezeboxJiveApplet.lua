@@ -536,32 +536,32 @@ function settingsBacklightTimerShow(self, menuItem)
 					{
 						text = self:string("BSP_TIMER_10_SEC"),
 						style = 'item_choice',
-						icon = RadioButton("radio", group, function() self:setBacklightTimeout(10000) end, timeout == 10000),
+						check = RadioButton("radio", group, function() self:setBacklightTimeout(10000) end, timeout == 10000),
 					},
 					{
 						text = self:string("BSP_TIMER_20_SEC"),
 						style = 'item_choice',
-						icon = RadioButton("radio", group, function() self:setBacklightTimeout(20000) end, timeout == 20000),
+						check = RadioButton("radio", group, function() self:setBacklightTimeout(20000) end, timeout == 20000),
 					},
 					{
 						text = self:string("BSP_TIMER_30_SEC"),
 						style = 'item_choice',
-						icon = RadioButton("radio", group, function() self:setBacklightTimeout(30000) end, timeout == 30000),
+						check = RadioButton("radio", group, function() self:setBacklightTimeout(30000) end, timeout == 30000),
 					},
 					{
 						text = self:string("BSP_TIMER_1_MIN"),
 						style = 'item_choice',
-						icon = RadioButton("radio", group, function() self:setBacklightTimeout(60000) end, timeout == 60000),
+						check = RadioButton("radio", group, function() self:setBacklightTimeout(60000) end, timeout == 60000),
 					},
 					{
 						text = self:string("BSP_TIMER_NEVER"),
 						style = 'item_choice',
-						icon = RadioButton("radio", group, function() self:setBacklightTimeout(0) end, timeout == 0),
+						check = RadioButton("radio", group, function() self:setBacklightTimeout(0) end, timeout == 0),
 					},
 					{
 						text = self:string("DIM_WHEN_CHARGING"),
 						style = 'item_choice',
-						icon = Checkbox("checkbox",
+						check = Checkbox("checkbox",
 								function(obj, isSelected)
 									settings.dimmedAC = isSelected
 								end,
@@ -970,7 +970,7 @@ function settingsTestSuspend(self, menuItem)
 		{ 
 			text = "Sleep Timeout", 
 			style = 'item_choice',
-			icon = Choice(
+			check = Choice(
 				      "choice", 
 				      sleepOptions,
 				      function(obj, selectedIndex)
@@ -983,7 +983,7 @@ function settingsTestSuspend(self, menuItem)
 		{
 			text = "Suspend Timeout", 
 			style = 'item_choice',
-			icon = Choice(
+			check = Choice(
 				      "choice", 
 				      suspendOptions,
 				      function(obj, selectedIndex)
@@ -996,7 +996,7 @@ function settingsTestSuspend(self, menuItem)
 		{
 			text = "Suspend Enabled", 
 			style = 'item_choice',
-			icon = Checkbox(
+			check = Checkbox(
 				      "checkbox", 
 				      function(obj, isSelected)
 					      settings.suspendEnabled = isSelected
@@ -1008,7 +1008,7 @@ function settingsTestSuspend(self, menuItem)
 		{
 			text = "Suspend Wake", 
 			style = 'item_choice',
-			icon = Checkbox(
+			check = Checkbox(
 				      "checkbox", 
 				      function(obj, isSelected)
 					      settings.suspendWake = isSelected and 30 or nil
@@ -1020,7 +1020,7 @@ function settingsTestSuspend(self, menuItem)
 		{
 			text = self:string("WLAN_POWER_SAVE"), 
 			style = 'item_choice',
-			icon = Checkbox(
+			check = Checkbox(
 				      "checkbox", 
 				      function(obj, isSelected)
 					      settings.wlanPSEnabled = isSelected

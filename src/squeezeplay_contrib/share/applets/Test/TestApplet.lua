@@ -116,7 +116,7 @@ function menu(self, menuItem)
 			{ 
 				text = "Choice, and some more text so that this item scrolls.", 
 				style = 'item_choice',
-				icon = Choice(
+				check = Choice(
 				       "choice", 
 				       { "Off", "Low", "Medium", "High" },
 				       function(obj, selectedIndex)
@@ -132,7 +132,7 @@ function menu(self, menuItem)
 			{
 				text = "RadioButton 1, and some more text so that this item scrolls", 
 				style = 'item_choice',
-				icon = RadioButton(
+				check = RadioButton(
 					"radio", 
 					group, 
 					function()
@@ -144,7 +144,7 @@ function menu(self, menuItem)
 			{
 				text = "RadioButton 2", 
 				style = 'item_choice',
-				icon = RadioButton(
+				check = RadioButton(
 					"radio", 
 					group, 
 					function()
@@ -155,7 +155,7 @@ function menu(self, menuItem)
 			{
 				text = "RadioButton 3", 
 				style = 'item_choice',
-				icon = RadioButton(
+				check = RadioButton(
 					"radio", 
 					group, 
 					function()
@@ -166,7 +166,7 @@ function menu(self, menuItem)
 			{
 				text = "Checkbox", 
 				style = 'item_choice',
-				icon = Checkbox(
+				check = Checkbox(
 					"checkbox",
 					function(object, isSelected)
 						log:info("checkbox updated: ", isSelected)
