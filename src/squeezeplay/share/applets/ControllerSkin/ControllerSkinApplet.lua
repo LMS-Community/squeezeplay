@@ -1394,7 +1394,7 @@ if true then
 	-- one for the Screensaver windowStyle (ss), one for the browse windowStyle (browse)
 	-- a lot of it can be recycled from one to the other
 
-	local NP_TRACK_FONT_SIZE = 26
+	local NP_TRACK_FONT_SIZE = 14
 
 	-- Title
 	s.ssnptitle = _uses(s.title, {
@@ -1410,9 +1410,17 @@ if true then
 		}
 	})
 
+	local nplargetitleBox = Tile:loadTiles({ imgpath .. "Screen_Formats/Titlebar/titlebar.png" })
+
 	-- nptitle style is the same for all windowStyles
 	s.browsenptitle = _uses(s.ssnptitle)
-	s.largenptitle  = _uses(s.ssnptitle)
+	s.largenptitle  = _uses(s.ssnptitle, {
+				bgImg = nplargetitleBox,
+				border = { 0, 0, 0, 0 },
+				text = {
+						padding = { 4, 7, 10, 9 }
+				}
+			})
 
 
 	-- pressed styles
@@ -1431,17 +1439,17 @@ if true then
 	-- Song
 	s.ssnptrack = {
 		border = { 4, 0, 4, 0 },
-		position = LAYOUT_WEST,
+		position = LAYOUT_CENTER,
 		text = {
 			w = WH_FILL,
-			padding = { 220, 52, 20, 10 },
-			align = "left",
+			border = { 10, 10, 8, 4 },
+			align = "top-left",
         		font = _font(NP_TRACK_FONT_SIZE),
-			lineHeight = NP_TRACK_FONT_SIZE + 4,
-			fg = TEXT_COLOR,
+			lineHeight = NP_TRACK_FONT_SIZE + 3,
+			fg = TEXT_COLOR_BLACK,
         		line = {{
 				font = _boldfont(NP_TRACK_FONT_SIZE),
-				height = NP_TRACK_FONT_SIZE + 4,
+				height = NP_TRACK_FONT_SIZE + 3,
 				}},
 		},
 	}
@@ -1458,14 +1466,14 @@ if true then
 
 	s.ssnpartwork = {
 		w = ssArtWidth,
-		border = { 10, 50, 10, 0 },
-		position = LAYOUT_WEST,
+		border = { 0, 10, 0, 8 },
+		position = LAYOUT_CENTER,
 		align = "center",
 		artwork = {
 			align = "center",
 			padding = 0,
 			-- FIXME: this is a placeholder
-			img = _loadImage(self, "Icons/icon_album_noartwork_190.png"),
+			img = _loadImage(self, "Icons/icon_album_noartwork_npss.png"),
 		},
 	}
 
@@ -1476,46 +1484,46 @@ if true then
 	local rightPadding = screenWidth/2 - 15
 	local buttonPadding = { 10, 5, 10, 5 }
 
-	s.ssnpcontrols = {
-		order = { 'rew', 'play', 'fwd', 'vol' },
-		position = LAYOUT_NONE,
-		x = rightPadding,
-		y = topPadding,
-		bgImg = buttonBox,
-		rew = {
-			align = 'center',
-			padding = buttonPadding,
-			img = _loadImage(self, "Player_Controls/icon_toolbar_rew.png"),
-		},
-		play = {
-			align = 'center',
-			padding = buttonPadding,
-			img = _loadImage(self, "Player_Controls/icon_toolbar_play.png"),
-		},
-		pause = {
-			align = 'center',
-			padding = buttonPadding,
-			img = _loadImage(self, "Player_Controls/icon_toolbar_pause.png"),
-		},
-		fwd = {
-			align = 'center',
-			padding = buttonPadding,
-			img = _loadImage(self, "Player_Controls/icon_toolbar_ffwd.png"),
-		},
-		vol = {
-			align = 'center',
-			padding = buttonPadding,
-			img = _loadImage(self, "Player_Controls/icon_toolbar_vol_up.png"),
-		},
-	}
-
-	s.ssnpcontrols.pressed = {
-		rew = _uses(s.ssnpcontrols.rew),
-		play = _uses(s.ssnpcontrols.play),
-		pause = _uses(s.ssnpcontrols.pause),
-		fwd = _uses(s.ssnpcontrols.fwd),
-		vol = _uses(s.ssnpcontrols.vol),
-	}
+--	s.ssnpcontrols = {
+--		order = { 'rew', 'play', 'fwd', 'vol' },
+--		position = LAYOUT_NONE,
+--		x = rightPadding,
+--		y = topPadding,
+--		bgImg = buttonBox,
+--		rew = {
+--			align = 'center',
+--			padding = buttonPadding,
+--			img = _loadImage(self, "Player_Controls/icon_toolbar_rew.png"),
+--		},
+--		play = {
+--			align = 'center',
+--			padding = buttonPadding,
+--			img = _loadImage(self, "Player_Controls/icon_toolbar_play.png"),
+--		},
+--		pause = {
+--			align = 'center',
+--			padding = buttonPadding,
+--			img = _loadImage(self, "Player_Controls/icon_toolbar_pause.png"),
+--		},
+--		fwd = {
+--			align = 'center',
+--			padding = buttonPadding,
+--			img = _loadImage(self, "Player_Controls/icon_toolbar_ffwd.png"),
+--		},
+--		vol = {
+--			align = 'center',
+--			padding = buttonPadding,
+--			img = _loadImage(self, "Player_Controls/icon_toolbar_vol_up.png"),
+--		},
+--	}
+--
+--	s.ssnpcontrols.pressed = {
+--		rew = _uses(s.ssnpcontrols.rew),
+--		play = _uses(s.ssnpcontrols.play),
+--		pause = _uses(s.ssnpcontrols.pause),
+--		fwd = _uses(s.ssnpcontrols.fwd),
+--		vol = _uses(s.ssnpcontrols.vol),
+--	}
 
 	s.browsenpcontrols = _uses(s.ssnpcontrols)
 	s.largenpcontrols  = _uses(s.ssnpcontrols)
