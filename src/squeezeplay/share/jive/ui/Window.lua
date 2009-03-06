@@ -1446,7 +1446,7 @@ function borderLayout(self, fitWindow)
 				w = w or (ww - maxW - maxE)
 				w = min(ww - maxW - maxE, w) - rb
 
-				widget:setBounds(maxBounds(wx + lb, wy + maxN + tb + cy, w, h))
+				widget:setBounds(maxBounds(wx + lb, wy + maxN + tb + cy, w, h - cy))
 				cy = cy + h + bb
 
 			elseif position == LAYOUT_NONE then
