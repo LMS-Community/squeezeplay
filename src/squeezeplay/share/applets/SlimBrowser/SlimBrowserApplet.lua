@@ -1154,9 +1154,22 @@ local function _browseSink(step, chunk, err)
 				elseif data.window.text then
 					step.window:setTitle(data.window.text)
 				end
+				-- textarea data for the window
 				if data.window and data.window.textarea then
 					local textarea = Textarea('text', data.window.textarea)
 					step.window:addWidget(textarea)
+				end
+				-- contextual help comes from data.window.help
+				if data.window and data.window.help then
+					local helpWindow = function()
+						local window = Window("help_info", "Help")
+						window:setAllowScreensaver(false)
+						local textarea = Textarea("text", data.window.help)
+						window:addWidget(textarea)
+						window:show()
+					end
+					step.window:addActionListener("help", _, helpWindow)
+					step.window:setButtonAction("rbutton", "help")
 				end
 			end
 
@@ -1172,6 +1185,7 @@ local function _browseSink(step, chunk, err)
 		log:error(err)
 	end
 end
+
 
 -- _menuSink
 -- returns a sink with a closure to self
@@ -2621,7 +2635,7 @@ function notify_playerPower(self, player, power)
 	local step = _statusStep
 	local emptyStep = _emptyStep
 
-	if step.menu then
+	if step and step.menu then
 		-- show 'OFF' in playlist window title when the player is off
 		if not power then
 			if step.window then
