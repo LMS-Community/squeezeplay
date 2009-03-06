@@ -72,8 +72,10 @@ end
 
 function _helpAction(self, window, titleText, bodyText)
 	window:addActionListener("help", self, function()
-		local window = Window("help_info", self:string(titleText), "helptitle")
+		local window = Window("help_info", "", "helptitle")
 		window:setAllowScreensaver(false)
+
+		window:setButtonAction("rbutton", nil)
 
 		local textarea = Textarea("text", self:string(bodyText))
 		window:addWidget(textarea)
@@ -90,7 +92,17 @@ function setupNetworking(self, setupNext)
 
 	self.setupNext = setupNext
 
-	_connectionType(self)
+	-- auto select wired in setup mode
+	Task("network", self, function()
+		if self.ethIface then
+			local status = self.ethIface:t_wpaStatus()
+			if status.link then
+				return _networkScan(self, self.ethIface)
+			end
+		end
+
+		_wirelessRegion(self, self.wlanIface)
+	end):addTask()
 end
 
 
@@ -110,7 +122,7 @@ function settingsNetworking(self)
 		end
 	end
 
-	_connectionType(self)
+	_wirelessRegion(self, self.wlanIface)
 end
 
 
@@ -129,8 +141,6 @@ function _connectionType(self)
 		_wirelessRegion(self, self.wlanIface)
 	end
 
-	-- XXXX auto select wired in setup mode
-
 	-- ask the user to choose
 	local window = Window("text_list", self:string("NETWORK_CONNECTION_TYPE"), "setup")
 	window:setAllowScreensaver(false)
@@ -142,7 +152,7 @@ function _connectionType(self)
 		text = (self:string("NETWORK_CONNECTION_TYPE_WIRELESS")),
 		sound = "WINDOWSHOW",
 		callback = function()
-			_wirelessRegion(self, self.wlanIface)
+			_networkScan(self, self.wlanIface)
 		end,
 		weight = 1
 	})
@@ -171,7 +181,7 @@ end
 function _wirelessRegion(self, wlan)
 	-- skip region if already set
 	if self:getSettings()['region'] then
-		return _networkScan(self, wlan)
+		return _connectionType(self)
 	end
 
 	local window = Window("text_list", self:string("NETWORK_REGION"), "setup")
@@ -194,7 +204,7 @@ function _wirelessRegion(self, wlan)
 					self:getSettings()['region'] = name
                        			self:storeSettings()
 
-					_networkScan(self, wlan)
+					_connectionType(self)
 				   end
 		}
 
@@ -427,7 +437,7 @@ function _chooseEnterSSID(self, iface)
 	local window = Window("text_list", self:string("NETWORK_DONT_SEE_YOUR_NETWORK"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
-	local textarea = Textarea("text", self:string("NETWORK_ENTER_SSID_HINT"))
+	local textarea = Textarea("help_text", self:string("NETWORK_ENTER_SSID_HINT"))
 
 	local menu = SimpleMenu("menu", {
 		{
@@ -595,7 +605,7 @@ function _chooseEncryption(self, iface, ssid)
 	})
 	window:addWidget(menu)
 
-	_helpAction(self, window, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
+	--_helpAction(self, window, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
 
 	self:tieAndShowWindow(window)
 end
@@ -627,7 +637,7 @@ function _chooseWEPLength(self, iface, ssid)
 	})
 	window:addWidget(menu)
 
-	_helpAction(self, window, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
+	--_helpAction(self, window, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
 
 	self:tieAndShowWindow(window)
 end
@@ -724,6 +734,8 @@ function _enterEAP(self, iface, ssid)
 	window:setAllowScreensaver(false)
 
 	window:addWidget(Textarea("text", self:string("NETWORK_UNSUPPORTED_TYPES_HELP")))
+
+	-- XXXX Option to: "Choose a different nentwork"
 
 	self:tieAndShowWindow(window)		
 end
@@ -869,11 +881,10 @@ function processWPSFailed(self, iface, ssid, reason)
 
 -- TODO: Add string according to reason
 	-- Message based on failure type
-	local helpText = self:string("NETWORK_WPS_PROBLEM_HELP")
+	local helpText = self:string("NETWORK_WPS_PROBLEM")
 
 	-- popup failure
 	local window = Window("error", self:string("NETWORK_ERROR"), 'setuptitle')
-	local errorMessage = Textarea('text', self:string("NETWORK_WPS_PROBLEM"))
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu", {
@@ -886,7 +897,6 @@ function processWPSFailed(self, iface, ssid, reason)
 		},
 	})
 
-	window:addWidget(errorMessage)
 	window:addWidget(Textarea("help_text", helpText))
 	window:addWidget(menu)
 
@@ -920,6 +930,8 @@ function _connect(self, iface, ssid, createNetwork)
 			_connectTimer(self, iface, ssid)
 		end)
 	popup:addWidget(icon)
+
+	-- XXXX popup text, including dhcp detection text
 
 	popup:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", ssid)))
 
@@ -994,6 +1006,8 @@ end
 function _attachEthernet(self, iface, ssid, createNetwork)
 	local window = Window("text_list", self:string("NETWORK_ATTACH_CABLE"))
         window:setAllowScreensaver(false)
+
+	window:setButtonAction("rbutton", nil)
 
 	local textarea = Textarea('text', self:string("NETWORK_ATTACH_CABLE_DETAILED"))
 	window:addWidget(textarea)
@@ -1136,7 +1150,6 @@ function _connectFailed(self, iface, ssid, reason)
 
 	-- popup failure
 	local window = Window("error", self:string('NETWORK_ERROR'), 'setuptitle')
-	local errorMessage = Textarea("text", self:string("NETWORK_CONNECTION_PROBLEM"))
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu", {
@@ -1166,7 +1179,6 @@ function _connectFailed(self, iface, ssid, reason)
 	})
 
 
-	window:addWidget(errorMessage)
 	window:addWidget(Textarea("help_text", helpText))
 	window:addWidget(menu)
 
@@ -1193,7 +1205,6 @@ function _failedDHCPandWPA(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
 	local window = Window("error", self:string("NETWORK_ERROR"), 'setuptitle')
-	local errorMessage = Textarea('text', self:string("NETWORK_ADDRESS_PROBLEM"))
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu",
@@ -1226,7 +1237,6 @@ function _failedDHCPandWPA(self, iface, ssid)
 				})
 
 
-	window:addWidget(errorMessage)
 	window:addWidget(Textarea("help_text", self:string("NETWORK_ADDRESS_HELP")))
 	window:addWidget(menu)
 
@@ -1238,7 +1248,6 @@ function _failedDHCPandWEP(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
 	local window = Window("error", self:string("NETWORK_ERROR"), 'setuptitle')
-	local errorMessage = Textarea("text", self:string("NETWORK_CONNECTION_PROBLEM"))
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu", {
@@ -1277,7 +1286,6 @@ function _failedDHCPandWEP(self, iface, ssid)
 		},
 	})
 
-	window:addWidget(errorMessage)
 	window:addWidget(Textarea("help_text", self:string("NETWORK_ADDRESS_HELP_WEP")))
 	window:addWidget(menu)
 
@@ -1401,7 +1409,7 @@ function _enterIP(self, iface, ssid)
 	window:addWidget(keyboard)
         window:focusWidget(group)
 
-	_helpAction(self, window, 'NETWORK_IP_ADDRESS', 'NETWORK_IP_ADDRESS_HELP')
+	_helpAction(self, window, 'NETWORK_IP_ADDRESS', 'NETWORK_ADDRESS_HELP')
 
 	self:tieAndShowWindow(window)
 end
@@ -1442,7 +1450,7 @@ function _enterSubnet(self, iface, ssid)
 	window:addWidget(keyboard)
         window:focusWidget(group)
 
-	_helpAction(self, window, 'NETWORK_SUBNET', 'NETWORK_SUBNET_HELP')
+	_helpAction(self, window, 'NETWORK_SUBNET', 'NETWORK_ADDRESS_HELP')
 
 	self:tieAndShowWindow(window)
 end
@@ -1487,7 +1495,7 @@ function _enterGateway(self, iface, ssid)
 	window:addWidget(keyboard)
         window:focusWidget(group)
 
-	_helpAction(self, window, 'NETWORK_GATEWAY', 'NETWORK_GATEWAY_HELP')
+	_helpAction(self, window, 'NETWORK_GATEWAY', 'NETWORK_ADDRESS_HELP')
 
 	self:tieAndShowWindow(window)
 end
@@ -1531,7 +1539,7 @@ function _enterDNS(self, iface, ssid)
 	window:addWidget(keyboard)
         window:focusWidget(group)
 
-	_helpAction(self, window, 'NETWORK_DNS', 'NETWORK_DNS_HELP')
+	_helpAction(self, window, 'NETWORK_DNS', 'NETWORK_ADDRESS_HELP')
 
 	self:tieAndShowWindow(window)
 end

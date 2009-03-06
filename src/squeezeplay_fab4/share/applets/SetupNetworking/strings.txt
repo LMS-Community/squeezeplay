@@ -69,7 +69,7 @@ NETWORK_CONNECT_TO_NETWORK
 NETWORK_ENTER_ANOTHER_NETWORK
 	DA	Andet netværk
 	DE	Anderes Netzwerk
-	EN	Other Network
+	EN	I don't see my network
 	ES	Otra red
 	FI	Toinen verkko
 	FR	Autre réseau
@@ -297,7 +297,7 @@ NETWORK_STATUS
 NETWORK_UNSUPPORTED_TYPES_HELP
 	DA	Krypteringstyperne WPA-EAP og WPA2-EAP understøttes ikke.
 	DE	WPA-EAP und WPA2-EAP werden nicht unterstützt.
-	EN	WPA-EAP and WPA2-EAP are not supported encryption types.
+	EN	We're sorry; WPA-EAP and WPA2-EAP are not supported encryption types.
 	ES	WPA-EAP y WPA2-EAP no son tipos de cifrado admitidos.
 	FI	WPA-EAP ja WPA2-EAP eivät ole tuettuja salaustyyppejä.
 	FR	Les types de chiffrement WPA-EAP et WPA2-EAP ne sont pas pris en charge.
@@ -324,7 +324,7 @@ NETWORK_WIRELESS_KEY_HELP
 NETWORK_REGION
 	DA	Trådløst område
 	DE	Wireless-Region
-	EN	Wireless Region
+	EN	Choose Region
 	ES	Región inalámbrica
 	FI	Langaton alue
 	FR	Zone sans fil
@@ -429,7 +429,7 @@ NETWORK_REGION_TW
 NETWORK_REGION_HELP
 	DA	Vælg lokalområde eller land.
 	DE	Wählen Sie Region oder Land.
-	EN	Choose the local region or country.
+	EN	If you are located in the United States, Canada, or Mexico, please select "North America."\n\nFor all other locations, select "All Other Regions." We ask this question in order to comply with local rules regarding wireless frequencies.
 	ES	Elija la región o el país.
 	FI	Valitse alue tai maa.
 	FR	Choisissez votre zone ou pays local.
@@ -441,7 +441,7 @@ NETWORK_REGION_HELP
 NETWORK_WIRELESS_NETWORKS
 	DA	Trådløse netværk
 	DE	Kabellose Netzwerke
-	EN	Wireless Networks
+	EN	Choose Network
 	ES	Redes inalámbricas
 	FI	Langattomat verkot
 	FR	Réseaux sans fil
@@ -465,7 +465,7 @@ NETWORK_SETTINGS_HELP
 NETWORK_SETUP_HELP
 	DA	Vælg trådløst netværk.
 	DE	Wählen Sie Ihr kabelloses Netzwerk.
-	EN	Choose your wireless network.
+	EN	Choose your wireless network below.
 	ES	Elija la red inalámbrica.
 	FI	Valitse langaton verkko.
 	FR	Choisissez votre réseau sans fil.
@@ -477,7 +477,7 @@ NETWORK_SETUP_HELP
 NETWORK_WIRELESS_ENCRYPTION
 	DA	Kryptering for trådløst netværk
 	DE	Kabellose Verschlüsselung
-	EN	Wireless Encryption
+	EN	Choose Encryption Method
 	ES	Cifrado inalámbrico
 	FI	Langattoman verkon salaus
 	FR	Chiffrement du réseau sans fil
@@ -489,7 +489,7 @@ NETWORK_WIRELESS_ENCRYPTION
 NETWORK_NO_ENCRYPTION
 	DA	Ingen adgangskode/ingen kryptering
 	DE	Kein Kennwort/keine Verschlüsselung
-	EN	No password/no encryption
+	EN	Open network (no password)
 	ES	Sin contraseña/sin cifrado
 	FI	Ei salasanaa / ei salausta
 	FR	Aucun mot de passe/chiffrement
@@ -543,7 +543,7 @@ NETWORK_WIRELESS_ENCRYPTION_HELP
 NETWORK_WIRELESS_PASSWORD
 	DA	Adgangskode til trådløst netværk
 	DE	Netzwerkkennwort
-	EN	Wireless Password
+	EN	Enter Your Password
 	ES	Contraseña para red inalámbrica
 	FI	Langattoman verkon salasana
 	FR	Mot de passe du réseau sans fil
@@ -553,7 +553,7 @@ NETWORK_WIRELESS_PASSWORD
 	SV	Trådlöst lösenord
 
 NETWORK_WIRELESS_PASSWORD_HELP
-	EN	Enter your wireless password. (FAB4 SPECIFIC TEXT NEEDED)
+	EN	COPY NEEDED (9A)
 
 NETWORK_CONNECTING_TO_SSID
 	DA	Etablerer forbindelse til\n%s
@@ -672,7 +672,7 @@ NETWORK_PROBLEM_PASSWORD_INCORRECT
 NETWORK_IP_ADDRESS
 	DA	IP-adresse
 	DE	IP-Adresse:
-	EN	IP Address
+	EN	Enter IP Address
 	ES	Dirección IP:
 	FI	IP-osoite
 	FR	Adresse IP:
@@ -684,7 +684,7 @@ NETWORK_IP_ADDRESS
 NETWORK_NETWORK_NAME
 	DA	Netværkets navn
 	DE	Netzwerkname
-	EN	Network Name
+	EN	Enter Network Name
 	ES	Nombre de red
 	FI	Verkon nimi
 	FR	Nom du réseau
@@ -694,7 +694,7 @@ NETWORK_NETWORK_NAME
 	SV	Nätverksnamn
 
 NETWORK_NETWORK_NAME_HELP
-	EN	Enter your wireless network name, also known as an SSID. (FAB4 TEXT HERE)
+	EN	COPY NEEDED (7D)
 
 NETWORK_ADDRESS_PROBLEM
 	DA	Adresseproblem
@@ -789,7 +789,7 @@ NETWORK_IP_ADDRESS_HELP
 NETWORK_SUBNET
 	DA	Undernet
 	DE	Subnetz
-	EN	Subnet
+	EN	Enter Subnet Mask
 	ES	Subred
 	FI	Aliverkko
 	FR	Sous-réseau
@@ -798,22 +798,10 @@ NETWORK_SUBNET
 	NO	Delnett
 	SV	Delnät
 
-NETWORK_SUBNET_HELP
-	DA	Angiv undernetmasken for dette netværk.
-	DE	Geben Sie die Subnetzmaske für das Netzwerk ein.
-	EN	Enter the subnet mask for your network.
-	ES	Escriba la máscara de subred de la red.
-	FI	Anna verkon aliverkon peite.
-	FR	Entrer le masque de sous-réseau du réseau.
-	IT	Inserire la subnet mask della rete.
-	NL	Voer het subnetmasker voor je netwerk in.
-	NO	Angi nettverksmaske for dette nettverket.
-	SV	Ange nätmask för ditt nätverk.
-
 NETWORK_GATEWAY
 	DA	Gateway
 	DE	Gateway
-	EN	Gateway
+	EN	Enter Gateway IP Address
 	ES	Puerta de enlace
 	FI	Yhdyskäytävä
 	FR	Passerelle
@@ -822,22 +810,10 @@ NETWORK_GATEWAY
 	NO	Gateway
 	SV	Gateway
 
-NETWORK_GATEWAY_HELP
-	DA	Angiv routerens IP-adresse
-	DE	Geben Sie die IP-Adresse oder den Router ein.
-	EN	Enter the IP address or your router.
-	ES	Escriba la dirección IP del enrutador.
-	FI	Syötä IP-osoite tai reititin.
-	FR	Entrer l'adresse IP ou le routeur.
-	IT	Inserire l'indirizzo IP del router.
-	NL	Voer het IP-adres of je router in.
-	NO	Angi ip-adressen eller ruteren din.
-	SV	Ange routerns IP-adress.
-
 NETWORK_DNS
 	DA	DNS-server
 	DE	DNS-Server
-	EN	DNS Server
+	EN	Enter DNS Server IP
 	ES	Servidor DNS
 	FI	DNS-palvelin
 	FR	Serveur DNS:
@@ -846,10 +822,10 @@ NETWORK_DNS
 	NO	Dns-server
 	SV	DNS-server
 
-NETWORK_DNS_HELP
+NETWORK_ADDRESS_HELP
 	DA	Angiv din DNS-servers IP-adresse.
 	DE	Geben Sie die IP-Adresse für den DNS-Server ein.
-	EN	Enter the IP address of your DNS server.
+	EN	COPY NEEDED (10H)
 	ES	Escriba la dirección IP del servidor DNS.
 	FI	Anna DNS-palvelimen IP-osoite.
 	FR	Entrer l'adresse IP du serveur DNS.
@@ -910,7 +886,7 @@ NETWORK_FOUND_NETWORKS
 	EN	Found Networks: %s
 
 NETWORK_CONNECTION_TYPE
-	EN	How Do You Want to Connect?
+	EN	Choose Connection Type
 
 NETWORK_CONNECTION_TYPE_WIRELESS
 	EN	Wireless
@@ -922,7 +898,7 @@ NETWORK_CONNECTION_HELP
 	EN	Help
 
 NETWORK_CONNECTION_HELP_BODY
-	EN	this is just a placeholder for a bunch of text that we may put in to describe the vagaries of network connections, including terms such as 'cat5', 'SSID', and 'distributed denial of service attack'. It could be this window presents menu options or the like, but for starters I'm just throwing a textarea in here. Press the back button in the upper left to go back.
+	EN	If you'd like to connect this Squeezebox to a nearby wireless router, please select "wireless."\n\nIf you'd prefer to use a wired setup, please connect this Squeezebox to your router using an ethernet/cat5 cable and select "wired."
 
 NETWORK_ETH_STATUS
 	EN	Status
@@ -943,16 +919,16 @@ NETWORK_ETH_HALF_DUPLEX
 	EN	Half Duplex
 
 NETWORK_WPS_METHOD
-	EN	What WPS method to use?
+	EN	COPY NEEDED (WPS method)
 
 NETWORK_WPS_METHOD_PBC
-	EN	Push Button Config
+	EN	COPY NEEDED (Push Button Config)
 
 NETWORK_WPS_METHOD_PIN
-	EN	PIN - %s
+	EN	COPY NEEDED (PIN - %s)
 	
 NETWORK_WPS_METHOD_PSK
-	EN	Password
+	EN	COPY NEEDED (Password)
 
 NETWORK_WPS_METHOD_PASSPHRASE
 	EN	Passphrase Method
@@ -961,7 +937,7 @@ NETWORK_WPS_HELP
 	EN	Help
 
 NETWORK_WPS_HELP_BODY
-	EN	this is just a placeholder for a bunch of text that we may put in to describe Wi-Fi Protected Setup (WPS), push button method, pin method etc.
+	EN	COPY NEEDED (7H)
 
 NETWORK_WPS_PROGRESS_PBC
 	EN	WPS PBC in progress\nActivate your router
@@ -979,22 +955,22 @@ NETWORK_WPS_REMAINING_WALK_TIME
 	EN	Remaining walk time: %s seconds
 
 NETWORK_ATTACH_CABLE
-	EN	Attach Network Cable
+	EN	Not Connected
 
 NETWORK_ATTACH_CABLE_DETAILED
-	EN	Error: No wired link detected on the Squeezebox. Please check that there is a network cable inserted and physically connected to your network.
+	EN	We can't detect a wired connection. If you haven't connected your Squeezebox to your network with an ethernet cable, please do so now.
 
 NETWORK_ERROR
-	EN	Error
+	EN	Connection Error
 
 NETWORK_LIST_HELP
 	EN	Help
 
 NETWORK_LIST_HELP_BODY
-	EN	This is just a placeholder for some help text.
+	EN	COPY NEEDED (7A)
 
 NETWORK_DONT_SEE_YOUR_NETWORK
-	EN	Don't see your network
+	EN	I Don't See My Network
 
 NETWORK_SEARCH_FOR_MY_NETWORK
 	EN	Search for my network
@@ -1003,4 +979,4 @@ NETWORK_ENTER_SSID
 	EN	Enter my network name
 
 NETWORK_ENTER_SSID_HINT
-	EN	Place holder text. We should take about making sure your in range, and if you use a hidden network name then you'll need to enter it.
+	EN	Please make sure your network is running and in range. If your network is hidden, you'll have to enter your network name manually.

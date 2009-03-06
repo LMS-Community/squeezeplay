@@ -195,7 +195,7 @@ function setupWelcomeShow(self, setupNext)
 	local continueButton = SimpleMenu("menu")
 
 	continueButton:addItem({
-		text = (self:string("PRESS_TO_CONTINUE")),
+		text = (self:string("CONTINUE")),
 		sound = "WINDOWSHOW",
 		callback = setupNext,
 		weight = 1
@@ -222,7 +222,7 @@ function setupDoneShow(self, setupNext)
 	local continueButton = SimpleMenu("menu")
 
 	continueButton:addItem({
-		text = (self:string("PRESS_TO_CONTINUE")),
+		text = (self:string("CONTINUE")),
 		sound = "WINDOWSHOW",
 		callback = setupNext,
 		weight = 1
