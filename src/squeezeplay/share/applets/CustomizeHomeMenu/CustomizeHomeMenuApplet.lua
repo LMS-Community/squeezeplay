@@ -242,6 +242,7 @@ function appGuide(self)
 
 			appGuideItems[#appGuideItems + 1] = {
 				text = item.text,
+				icon = item.icon,
 				style = 'item_choice',
 				check = Checkbox(
 					"checkbox",

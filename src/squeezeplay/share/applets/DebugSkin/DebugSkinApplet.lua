@@ -376,6 +376,10 @@ styles = {
 	"text_list.menu.selected.item_checked.check",
 	"text_list.menu.selected.item_checked.text",
 
+	"text_list.menu.pressed.item.icon",
+	"text_list.title.settingstitle",
+	"text_list.title.xofy",
+
 	"toast_popup.text",
 
 	"track_list.menu.scrollbar",

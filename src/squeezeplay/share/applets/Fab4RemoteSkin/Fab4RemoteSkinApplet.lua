@@ -450,7 +450,7 @@ function skin(self, s)
 	}
 
 	s.item = {
-		order = { "text" },
+		order = { "icon", "text" },
 		padding = { 4, 0, 0, 0 },
 		text = {
 			padding = { 6, 5, 2, 5 },
@@ -478,8 +478,8 @@ function skin(self, s)
         s.radio.img_off = _loadImage(self, "Icons/radiobutton_off.png")
 
 	s.item_choice = _uses(s.item, {
-		order  = { 'text', 'icon' },
-		check = {
+		order  = { 'icon', 'text', 'check' },
+		choice = {
 			align = 'right',
 			font = _boldfont(TEXTMENU_FONT_SIZE),
 			fg = TEXT_COLOR,

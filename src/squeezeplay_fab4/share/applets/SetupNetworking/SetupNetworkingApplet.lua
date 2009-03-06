@@ -142,7 +142,7 @@ function _connectionType(self)
 	end
 
 	-- ask the user to choose
-	local window = Window("icon_list", self:string("NETWORK_CONNECTION_TYPE"), "setup")
+	local window = Window("text_list", self:string("NETWORK_CONNECTION_TYPE"), "setup")
 	window:setAllowScreensaver(false)
 
 	local connectionMenu = SimpleMenu("menu")
@@ -184,7 +184,7 @@ function _wirelessRegion(self, wlan)
 		return _connectionType(self)
 	end
 
-	local window = Window("icon_list", self:string("NETWORK_REGION"), "setup")
+	local window = Window("text_list", self:string("NETWORK_REGION"), "setup")
 	window:setAllowScreensaver(false)
 
 	local region = wlan:getRegion()
@@ -325,7 +325,7 @@ function _networkScanComplete(self, iface)
 		return _connect(self, iface, iface:getName(), true)
 	end
 
-	local window = Window("icon_list", self:string("NETWORK_WIRELESS_NETWORKS"), 'setuptitle')
+	local window = Window("text_list", self:string("NETWORK_WIRELESS_NETWORKS"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu")

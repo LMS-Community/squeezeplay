@@ -1206,10 +1206,6 @@ if _menuReceived then
 -- a problem, we lose the icons..
 jiveMain:addNode({
   sound = "WINDOWSHOW",
-  window = {
-    titleStyle = "internetradio",
-    menuStyle = "album",
-  },
   weight = 20,
   id = "radios",
   text = "Internet Radio",
@@ -1219,7 +1215,6 @@ end
 
 		for k, v in pairs(menuItems) do
 
-			--debug.dump(v.actions, -1)
 			local item = {
 					id = v.id,
 					node = v.node,
@@ -1230,6 +1225,13 @@ end
 					window = v.window,
 					sound = "WINDOWSHOW",
 				}
+
+			local itemIcon = v.window  and v.window['icon-id'] or v['icon-id']
+			if itemIcon then
+				item["icon-id"] = itemIcon
+				item.icon = Icon('icon')
+				_server:fetchArtworkThumb(item["icon-id"], item.icon, jiveMain:getSkinParam('THUMB_SIZE'))
+			end
 
 			-- hack to modify styles from SC
 			if item.style and styleMap[item.style] then
