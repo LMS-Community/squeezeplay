@@ -71,7 +71,7 @@ UPDATE_TO_X
 UPDATE_FAILURE
 	DA	Opgraderingen mislykkedes
 	DE	Aktualisierungsfehler
-	EN	Upgrade failed
+	EN	Update failed
 	ES	Error de actualización
 	FI	Päivitys epäonnistui
 	FR	Echec de la mise à niveau
@@ -83,7 +83,7 @@ UPDATE_FAILURE
 UPDATE_FAILURE_HELP
 	DA	Der opstod et problem under opgraderingen af denne fjernbetjening. Prøv igen, eller kontakt kundeservice.
 	DE	Fehler beim Aktualisieren der Fernbedienung. Versuchen Sie es noch einmal oder wenden Sie sich an den Kundendienst.
-	EN	There was a problem upgrading this remote. Please try again, or contact support.
+	EN	There was a problem installing this update. Please try again, or contact support.
 	ES	Hubo un problema al actualizar este mando. Vuelva a intentarlo o contacte con asistencia técnica.
 	FI	Kaukosäätimen päivittämisessä oli ongelma. Yritä uudelleen tai ota yhteyttä tekniseen tukeen.
 	FR	Un problème est survenu lors de la mise à niveau. Veuillez réessayer ou contactez le service de support.
@@ -143,7 +143,7 @@ UPDATE_REBOOT
 UPDATE_BEGIN_UPGRADE
 	DA	Der er kommet en softwareopdatering til denne fjernbetjening. Det kan tage et par minutter at opdatere til version %s.
 	DE	Für diese Fernbedienung ist eine aktualisierte Software verfügbar. Die Aktualisierung auf Version %s kann ein paar Minuten dauern.
-	EN	Updated software is available for this remote. It may take a few minutes to update to version %s.
+	EN	A new software update is available. It may take a few minutes to download and install this update.
 	ES	Hay software actualizado disponible para este mando a distancia. Puede que la actualización a la versión %s tarde varios minutos.
 	FI	Kaukosäätimelle on saatavilla päivitetty ohjelmisto. Päivittäminen versioon %s saattaa viedä muutaman minuutin.
 	FR	Une mise à jour de logiciel est disponible pour cette télécommande. La mise à jour à la version %s peut prendre quelques minutes.
