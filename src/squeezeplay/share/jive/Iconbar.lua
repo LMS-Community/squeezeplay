@@ -34,6 +34,7 @@ local oo        = require("loop.base")
 local Framework = require("jive.ui.Framework")
 local Icon      = require("jive.ui.Icon")
 local Label     = require("jive.ui.Label")
+local Group     = require("jive.ui.Group")
 
 local string    = require("string")
 local datetime  = require("jive.utils.datetime")
@@ -68,8 +69,15 @@ When not 1 or 2, setRepeat()
 --]]
 function setPlaylistMode(self, val)
 	log:debug("Iconbar:setPlaylistMode(", val, ")")
-	-- FIXME: need new styles for playlist and party mode
-	self.iconPlaylistMode:setStyle("button_playlist_mode_" .. string.upper((val or "OFF")))
+
+	local mode = string.upper((val or "OFF"))
+	if mode ~= "OFF" and mode ~= "DISABLED" then
+		self.preferPlaylistModeIcon = true
+		self.iconRepeat:setStyle("button_playlist_mode_" .. mode)
+	else
+		self.preferPlaylistModeIcon = false
+		self:setRepeat(self.repeatMode)
+	end
 end
 
 
@@ -83,7 +91,10 @@ Set the repeat icon of the iconbar. Values are nil (no repeat), 1 for repeat sin
 --]]
 function setRepeat(self, val)
 	log:debug("Iconbar:setRepeat(", val, ")")
-	self.iconRepeat:setStyle("button_repeat_" .. string.upper((val or "OFF")))
+	self.repeatMode = string.upper((val or "OFF"))
+	if not self.preferPlaylistModeIcon then
+		self.iconRepeat:setStyle("button_repeat_" .. self.repeatMode)
+	end
 end
 
 
@@ -179,28 +190,26 @@ function __init(self)
 	log:debug("Iconbar:__init()")
 
 	local obj = oo.rawnew(self, {
-	        -- FIXME the background should be an icon, but icons use Surfaces not Tiles.
-		background = Label("background", ""),
-		iconPlaymode = Icon("button_playmode_OFF"),
-		iconRepeat = Icon("button_repeat_OFF"),
-		iconPlaylistMode = Icon("button_playlist_mode_OFF"),
-		iconShuffle = Icon("button_shuffle_OFF"),
-		iconBattery = Icon("button_battery_NONE"),
-		iconWireless = Icon("button_wireless_NONE"),
+		iconPlaymode = Icon("button_playmode_PLAY"),
+		iconRepeat = Icon("button_repeat_2"),
+		iconShuffle = Icon("button_shuffle_2"),
+		iconBattery = Icon("button_battery_4"),
+		iconWireless = Icon("button_wireless_4"),
 		button_time = Label("button_time", "XXXX"),
 	})
 
+	obj.iconbarGroup = Group("iconbar_group", {
+					play = obj.iconPlaymode,
+					repeat_mode = obj.iconRepeat,  -- repeat is a Lua reserved word
+					shuffle = obj.iconShuffle,
+					battery = obj.iconBattery,
+					wireless = obj.iconWireless,
+					button_time = obj.button_time,
+				})
 
 	obj:update()
 
-	Framework:addWidget(obj.background)
-	Framework:addWidget(obj.iconPlaymode)
-	Framework:addWidget(obj.iconRepeat)
-	Framework:addWidget(obj.iconPlaylistMode)
-	Framework:addWidget(obj.iconShuffle)
-	Framework:addWidget(obj.iconBattery)
-	Framework:addWidget(obj.iconWireless)
-	Framework:addWidget(obj.button_time)
+	Framework:addWidget(obj.iconbarGroup)
 
 	obj.button_time:addTimer(1000,  -- every second
 			      function() 
