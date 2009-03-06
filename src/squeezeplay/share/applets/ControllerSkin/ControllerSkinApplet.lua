@@ -2,16 +2,15 @@
 --[[
 =head1 NAME
 
-applets.Fab4RemoteSkin.Fab4RemoteSkinApplet - The remote skin for the Squeezebox Touch
+applets.ControllerSkin.ControllerSkinApplet - The skin for the Squeezebox Controller
 
 =head1 DESCRIPTION
 
-This applet implements the Remote skin for the Squeezebox Touch
+This applet implements the skin for the Squeezebox Controller
 
 =head1 FUNCTIONS
 
 Applet related methods are described in L<jive.Applet>.
-SqueezeboxSkin overrides the following methods:
 
 =cut
 --]]
@@ -142,10 +141,6 @@ function skin(self, s, reload, useDefaultSize)
         end
 
         Framework:setVideoMode(screenWidth, screenHeight, 16, jiveMain:isFullscreen())
---
---	Framework:setVideoMode(480, 320, 0, false)
---
---	local screenWidth, screenHeight = Framework:getScreenSize()
 
 	--init lastInputType so selected item style is not shown on skin load
 	Framework.mostRecentInputType = "scroll"
@@ -170,28 +165,17 @@ function skin(self, s, reload, useDefaultSize)
 				       imgpath .. "Screen_Formats/Titlebar/titlebar_bl.png",
 				       imgpath .. "Screen_Formats/Titlebar/titlebar_l.png",
 			       })
---	local titleBox                = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
---	local fiveItemSelectionBox    = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line.png")
---	local fiveItemPressedBox      = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line_press.png")
---	local threeItemSelectionBox   = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line.png")
---	local threeItemPressedBox     = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line_press.png")
---	local keyboardPressedBox      = Tile:loadImage( imgpath .. "Buttons/keyboard_button_press.png")
---
---	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
---	local helpButton              = Tile:loadImage( imgpath .. "Buttons/button_help_tb.png")
 	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
-	local textinputBackground     =
-		Tile:loadTiles({
-				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box.png",
-				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tl.png",
-				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_t.png",
-				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tr.png",
-				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_r.png",
-				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_br.png",
-				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_b.png",
-				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_bl.png",
-				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_l.png",
-				})
+	local textinputBackground =
+		Tile:loadHTiles({
+				       imgpath .. "text_entry_bkgrd_l.png",
+				       imgpath .. "text_entry_bkgrd.png",
+				       imgpath .. "text_entry_bkgrd_r.png",
+			       })
+
+	local textinputWheel = Tile:loadImage(imgpath .. "text_entry_select.png")
+
+	local textinputCursor = Tile:loadImage(imgpath .. "text_entry_letter.png")
 
 	local buttonBox =
 		Tile:loadTiles({
@@ -207,15 +191,7 @@ function skin(self, s, reload, useDefaultSize)
 				})
 
 
-
-
-
-
-
-
-
-
-	local fiveItemSelectionBox =
+	local oneLineItemSelectionBox =
 		Tile:loadTiles({
 				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box.png",
 				       imgpath .. "Screen_Formats/5_line_lists/menu_selection_box_tl.png",
@@ -298,13 +274,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	local popupMask = Tile:fillColor(0x000000e5)
 
-
-
-
-
 	local blackBackground = Tile:fillColor(0x000000ff)
-
-	local textinputCursor = Tile:loadImage(imgpath .. "Text_Entry/Keyboard_Touch/tch_cursor.png")
 
 	local THUMB_SIZE = self:getSettings().THUMB_SIZE
 
@@ -340,10 +310,11 @@ function skin(self, s, reload, useDefaultSize)
         local POPUP_TEXT_SIZE_2 = 22
         local TEXTAREA_FONT_SIZE = 16
         local CENTERED_TEXTAREA_FONT_SIZE = 28
-        local TEXTINPUT_FONT_SIZE = 20
-        local TEXTINPUT_SELECTED_FONT_SIZE = 28
-        local HELP_FONT_SIZE = 18
+        local TEXTINPUT_FONT_SIZE = 16
+        local TEXTINPUT_SELECTED_FONT_SIZE = 24
+        local HELP_FONT_SIZE = 16
 	local UPDATE_SUBTEXT_SIZE = 20
+	local ICONBAR_FONT = 12
 
 	local ITEM_ICON_ALIGN   = 'right'
 	local ONE_LINE_ITEM_HEIGHT = 27
@@ -351,82 +322,6 @@ function skin(self, s, reload, useDefaultSize)
 	local TITLE_BUTTON_WIDTH = 76
 	local TITLE_BUTTON_HEIGHT = 47
 	local TITLE_BUTTON_PADDING = { 4, 0, 4, 0 }
-
-
-
-
-
-	--TODO: convert these to the "new way"
-	s.background = {}
-	s.background.x = 0
-	s.background.y = screenHeight - 30
-	s.background.w = screenWidth
-	s.background.h = 30
-	s.background.border = { 4, 0, 4, 0 }
-	s.background.bgImg = iconBackground
-	s.background.layer = LAYER_FRAME
-	s.background.position = LAYOUT_SOUTH
-
---	-- play/stop/pause
---	s.icon_playmode_OFF = _icon(self, 9, screenHeight - 30, "icon_mode_off.png")
---	s.icon_playmode_STOP = _icon(self, 9, screenHeight - 30, "icon_mode_off.png")
---	s.icon_playmode_PLAY = _icon(self, 9, screenHeight - 30, "icon_mode_play.png")
---	s.icon_playmode_PAUSE = _icon(self, 9, screenHeight - 30, "icon_mode_pause.png")
---
---	-- repeat off/repeat track/repeat playlist
---	s.icon_repeat_OFF = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
---	s.icon_repeat_0 = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
---	s.icon_repeat_1 = _icon(self, 41, screenHeight - 30, "icon_repeat_song.png")
---	s.icon_repeat_2 = _icon(self, 41, screenHeight - 30, "icon_repeat.png")
---
---	-- repeat off/repeat track/repeat playlist
---	s.icon_playlist_mode_OFF = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
---	s.icon_playlist_mode_DISABLED = _icon(self, 41, screenHeight - 30, "icon_repeat_off.png")
---
---	-- FIXME, needs official artwork
---	s.icon_playlist_mode_ON = _icon(self, 41, screenHeight - 30, "icon_mode_playlist.png")
---	s.icon_playlist_mode_PARTY = _icon(self, 41, screenHeight - 30, "icon_mode_party.png")
---
---	-- shuffle off/shuffle album/shuffle playlist
---	s.icon_shuffle_OFF = _icon(self, 75, screenHeight - 30, "icon_shuffle_off.png")
---	s.icon_shuffle_0 = _icon(self, 75, screenHeight - 30, "icon_shuffle_off.png")
---	s.icon_shuffle_1 = _icon(self, 75, screenHeight - 30, "icon_shuffle.png")
---	s.icon_shuffle_2 = _icon(self, 75, screenHeight - 30, "icon_shuffle_album.png")
---
---	-- wireless status
---	s.icon_wireless_1 = _icon(self, 107, screenHeight - 30, "icon_wireless_1.png")
---	s.icon_wireless_2 = _icon(self, 107, screenHeight - 30, "icon_wireless_2.png")
---	s.icon_wireless_3 = _icon(self, 107, screenHeight - 30, "icon_wireless_3.png")
---	s.icon_wireless_4 = _icon(self, 107, screenHeight - 30, "icon_wireless_4.png")
---	s.icon_wireless_ERROR = _icon(self, 107, screenHeight - 30, "icon_wireless_off.png")
---	s.icon_wireless_SERVERERROR = _icon(self, 107, screenHeight - 30, "icon_wireless_noserver.png")
---
---	-- battery status
---	s.button_battery_AC = _icon(self, 137, screenHeight - 30, "icon_battery_ac.png")
---
---	s.button_battery_CHARGING = _icon(self, 137, screenHeight - 30, "icon_battery_charging.png")
---	s.button_battery_0 = _icon(self, 137, screenHeight - 30, "icon_battery_0.png")
---	s.button_battery_1 = _icon(self, 137, screenHeight - 30, "icon_battery_1.png")
---	s.button_battery_2 = _icon(self, 137, screenHeight - 30, "icon_battery_2.png")
---	s.button_battery_3 = _icon(self, 137, screenHeight - 30, "icon_battery_3.png")
---	s.button_battery_4 = _icon(self, 137, screenHeight - 30, "icon_battery_4.png")
---
---	s.button_battery_CHARGING.frameRate = 1
---	s.button_battery_CHARGING.frameWidth = 37
---
---
---	-- time
---	s.button_time = {}
---	s.button_time.x = screenWidth - 60
---	s.button_time.y = screenHeight - 34
---	s.button_time.h = 34
---	s.button_time.layer = LAYER_FRAME
---	s.button_time.position = LAYOUT_SOUTH
---	s.button_time.font = Font:load(fontpath .. "FreeSansBold.ttf", 12)
---	s.button_time.fg = TEXT_COLOR
-
-
-
 
 
 	local smallSpinny = {
@@ -454,7 +349,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- convenience method for selected items in remote skin menus
 	local menuItemSelected = {
-		bgImg = fiveItemSelectionBox,
+		bgImg = oneLineItemSelectionBox,
 			text = {
 				font = _boldfont(40),
 		},
@@ -577,11 +472,11 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.menu = {
+		h = 243,
 		position = LAYOUT_CENTER,
 		padding = { 4, 2, 4, 2 },
+		border = { 0, 0, 5, 0 },
 		itemHeight = ONE_LINE_ITEM_HEIGHT,
-		fg = {0xbb, 0xbb, 0xbb },
-		font = _boldfont(200),
 	}
 
 	s.item = {
@@ -591,7 +486,6 @@ function skin(self, s, reload, useDefaultSize)
 			padding = { 0, 0, 0, 0 },
 			align = "left",
 			w = WH_FILL,
-			h = WH_FILL,
 			font = _boldfont(TEXTMENU_FONT_SIZE),
 			fg = TEXT_COLOR,
 			sh = TEXT_SH_COLOR,
@@ -643,7 +537,7 @@ function skin(self, s, reload, useDefaultSize)
 			fg = SELECT_COLOR,
 			sh = SELECT_SH_COLOR
 		},
-		bgImg = fiveItemSelectionBox,
+		bgImg = oneLineItemSelectionBox,
 		arrow = rightArrow,
 	})
 	s.selected.item_choice = _uses(s.selected.item, {
@@ -735,8 +629,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.scrollbar = {
 		w = 9,
-		border = 0,
-		padding = { 0, 0, 0, 0 },
+		border = { 4, 0, 0, 0 },  -- bug in jive_menu, makes it so bottom and right values are ignored
 		horizontal = 0,
 		bgImg = scrollBackground,
 		img = scrollBar,
@@ -753,6 +646,7 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.slider = {
+		border = 5,
 		w = WH_FILL,
 		horizontal = 1,
 		bgImg = sliderBackground,
@@ -761,7 +655,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.slider_group = {
 		w = WH_FILL,
-		border = { 7, 5, 25, 10 },
+		border = { 15, 5, 7, 10 },
 		order = { "min", "slider", "max" },
 	}
 
@@ -771,17 +665,19 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- text input
 	s.textinput = {
-		h = 35,
-		border = { 8, 0, 8, 0 },
+--		h = 35,
+		border = { 8, -5, 8, 0 },
 		padding = { 6, 0, 6, 0 },
-		font = _boldfont(TEXTINPUT_FONT_SIZE),
+		font = _font(TEXTINPUT_FONT_SIZE),
 		cursorFont = _boldfont(TEXTINPUT_SELECTED_FONT_SIZE),
 		wheelFont = _boldfont(TEXTINPUT_FONT_SIZE),
-		charHeight = TEXTINPUT_SELECTED_FONT_SIZE + 10,
+		charHeight = TEXTINPUT_SELECTED_FONT_SIZE + 2,
 		fg = TEXT_COLOR_BLACK,
 		wh = { 0x55, 0x55, 0x55 },
 		bgImg = textinputBackground,
 		cursorImg = textinputCursor,
+		wheelImg = textinputWheel,
+		enterImg = rightArrow,
 	}
 
 
@@ -867,7 +763,7 @@ function skin(self, s, reload, useDefaultSize)
 	-- icon_list window
 	s.icon_list = _uses(s.window, {
 		menu = _uses(s.menu, {
-			itemHeight = THREE_LINE_ITEM_HEIGHT,			
+			itemHeight = THREE_LINE_ITEM_HEIGHT,
 			item = {
 				order = { "icon", "text" },
 				padding = MENU_ALBUMITEM_PADDING,
@@ -916,7 +812,7 @@ function skin(self, s, reload, useDefaultSize)
 			fg = SELECT_COLOR,
 			sh = SELECT_SH_COLOR,
 		},
-		bgImg = fiveItemSelectionBox,
+		bgImg = oneLineItemSelectionBox,
 		arrow = rightArrow,
 	})
 
@@ -1041,7 +937,7 @@ function skin(self, s, reload, useDefaultSize)
 				fg = SELECT_COLOR,
 				sh = SELECT_SH_COLOR,
 			},
-			bgImg = fiveItemSelectionBox,
+			bgImg = oneLineItemSelectionBox,
 		}),
                 item_checked = _uses(s.play_list.menu.item_checked),
         }
@@ -1067,44 +963,64 @@ function skin(self, s, reload, useDefaultSize)
 		h = 93,
 		bgImg = helpBox,
 		group = {
-			padding = 10,
+			padding = { 12, 12, 12, 0 },
 			order = { 'icon', 'text' },
 			text = {
-				padding = { 10, 12, 12, 12 } ,
+				padding = { 6, 3, 8, 8 } ,
 				align = 'top-left',
 				w = WH_FILL,
 				h = WH_FILL,
 				font = _font(HELP_FONT_SIZE),
+				lineHeight = 17,
+				line = {
+					{
+						font = _boldfont(HELP_FONT_SIZE),
+						height = 17
+					},
+				},
 			},
 			icon = {
 				align = 'top-left',
 				border = { 12, 12, 0, 0 },
 				img = _loadImage(self, "album_noartwork_56.png"),
 				h = WH_FILL,
-				w = 64,
+				w = 56,
 			}
 		}
 	}
 
 	-- slider popup (volume/scanner)
 	s.slider_popup = {
-		x = 50,
-		y = screenHeight - 100,
-		w = screenWidth - 100,
-		h = 100,
+		x = 0,
+		y = screenHeight - 80,
+		w = screenWidth,
+		h = 80,
 		bgImg = helpBox,
 		title = {
 		      border = 10,
 		      fg = TEXT_COLOR,
-		      font = FONT_BOLD_15px,
+		      font = _boldfont(HELP_FONT_SIZE),
 		      align = "center",
 		      bgImg = false,
 		},
-		text = _uses(s.text),
 		slider_group = {
 			w = WH_FILL,
-			border = { 0, 5, 0, 10 },
+			--border = { 0, 5, 0, 10 },
 			order = { "min", "slider", "max" },
+			max = {
+				align = 'right',
+			},
+			min = {
+				align = 'left',
+			},
+			text = {
+				w = 75,
+				align = 'right',
+				padding = { 8, 0, 8, 15 },
+				font = _boldfont(HELP_FONT_SIZE),
+				fg = TEXT_COLOR,
+				sh = TEXT_SH_COLOR,
+			}
 		},
 	}
 
@@ -1119,6 +1035,11 @@ function skin(self, s, reload, useDefaultSize)
 
 
 	s.volume_slider = _uses(s.slider, {
+		img = volumeBar,
+		bgImg = volumeBackground,
+	})
+
+	s.scanner_slider = _uses(s.slider, {
 		img = volumeBar,
 		bgImg = volumeBackground,
 	})
@@ -1312,14 +1233,150 @@ function skin(self, s, reload, useDefaultSize)
 
 --------- ICONBAR ---------
 
-	-- time (hidden off screen)
-	s.button_time = {
-		x = screenWidth + 10,
-		y = screenHeight + 10,
+	-- button icons, on left of menus
+	local _iconbar_icon = {
+		h = WH_FILL,
+		padding = { 0,0,0,0 },
 		layer = LAYER_FRAME,
-		position = LAYOUT_NONE,
+		position = LAYOUT_SOUTH,
 	}
 
+	local _button_playmode = _uses(_iconbar_icon, {
+		w = 38,
+		padding = { 5, 0, 0, 0 },
+	})
+	s.button_playmode_OFF = _uses(_button_playmode, {
+		img = _loadImage(self, "icon_mode_off.png"),
+	})
+	s.button_playmode_STOP = _uses(_button_playmode, {
+		img = _loadImage(self, "icon_mode_off.png"),
+	})
+	s.button_playmode_PLAY = _uses(_button_playmode, {
+		img = _loadImage(self, "icon_mode_play.png"),
+	})
+	s.button_playmode_PAUSE = _uses(_button_playmode, {
+		img = _loadImage(self, "icon_mode_pause.png"),
+	})
+
+	local _button_repeat = _uses(_iconbar_icon, {
+		w = 34,
+	})
+	s.button_repeat_OFF = _uses(_button_repeat, {
+		img = _loadImage(self, "icon_repeat_off.png"),
+	})
+	s.button_repeat_0 = _uses(_button_repeat, {
+		img = _loadImage(self, "icon_repeat_off.png"),
+	})
+	s.button_repeat_1 = _uses(_button_repeat, {
+		img = _loadImage(self, "icon_repeat_song.png"),
+	})
+	s.button_repeat_2 = _uses(_button_repeat, {
+		img = _loadImage(self, "icon_repeat.png"),
+	})
+
+	s.button_playlist_mode_OFF = _uses(_button_repeat, {
+		img = _loadImage(self, "icon_repeat_off.png"),
+	})
+	s.button_playlist_mode_DISABLED = _uses(_button_repeat, {
+		img = _loadImage(self, "icon_repeat_off.png"),
+	})
+	s.button_playlist_mode_ON = _uses(_button_repeat, {
+		img = _loadImage(self, "icon_mode_playlist.png"),
+	})
+	s.button_playlist_mode_PARTY = _uses(_button_repeat, {
+		img = _loadImage(self, "icon_mode_party.png"),
+	})
+
+	local _button_shuffle = _uses(_iconbar_icon, {
+		w = 32,
+	})
+	s.button_shuffle_OFF = _uses(_button_shuffle, {
+		img = _loadImage(self, "icon_shuffle_off.png"),
+	})
+	s.button_shuffle_0 = _uses(_button_shuffle, {
+		img = _loadImage(self, "icon_shuffle_off.png"),
+	})
+	s.button_shuffle_1 = _uses(_button_shuffle, {
+		img = _loadImage(self, "icon_shuffle.png"),
+	})
+	s.button_shuffle_2 = _uses(_button_shuffle, {
+		img = _loadImage(self, "icon_shuffle_album.png"),
+	})
+
+	local _button_battery = _uses(_iconbar_icon, {
+		w = 37,
+	})
+	s.button_battery_AC = _uses(_button_battery, {
+		img = _loadImage(self, "icon_battery_ac.png"),
+	})
+	s.button_battery_CHARGING = _uses(_button_battery, {
+		img = _loadImage(self, "icon_battery_charging.png"),
+		frameRate = 1,
+		frameWidth = 37,
+	})
+	s.button_battery_0 = _uses(_button_battery, {
+		img = _loadImage(self, "icon_battery_0.png"),
+	})
+	s.button_battery_1 = _uses(_button_battery, {
+		img = _loadImage(self, "icon_battery_1.png"),
+	})
+	s.button_battery_2 = _uses(_button_battery, {
+		img = _loadImage(self, "icon_battery_2.png"),
+	})
+	s.button_battery_3 = _uses(_button_battery, {
+		img = _loadImage(self, "icon_battery_3.png"),
+	})
+	s.button_battery_4 = _uses(_button_battery, {
+		img = _loadImage(self, "icon_battery_4.png"),
+	})
+
+	local _button_wireless = _uses(_iconbar_icon, {
+		w = 30,
+	})
+	s.button_wireless_1 = _uses(_button_wireless, {
+		img = _loadImage(self, "icon_wireless_1.png"),
+	})
+	s.button_wireless_2 = _uses(_button_wireless, {
+		img = _loadImage(self, "icon_wireless_2.png"),
+	})
+	s.button_wireless_3 = _uses(_button_wireless, {
+		img = _loadImage(self, "icon_wireless_3.png"),
+	})
+	s.button_wireless_4 = _uses(_button_wireless, {
+		img = _loadImage(self, "icon_wireless_4.png"),
+	})
+	s.button_wireless_ERROR = _uses(_button_wireless, {
+		img = _loadImage(self, "icon_wireless_off.png"),
+	})
+	s.button_wireless_SERVERERROR = _uses(_button_wireless, {
+		img = _loadImage(self, "icon_wireless_noserver.png"),
+	})
+	s.button_wireless_NONE = _uses(_button_wireless, {
+		img = _loadImage(self, "icon_repeat_off.png"),
+	})
+
+	-- time
+	s.button_time = {
+		w = 55,
+		align = "right",
+		layer = LAYER_FRAME,
+		position = LAYOUT_SOUTH,
+		fg = TEXT_COLOR,
+		font = _boldfont(ICONBAR_FONT),
+	}
+
+	s.iconbar_group = {
+		x = 0,
+		y = screenHeight - 30,
+		w = screenWidth,
+		h = 30,
+		border = { 4, 0, 4, 0 },
+		bgImg = background,
+		layer = LAYER_FRAME,
+		position = LAYOUT_SOUTH,
+		order = {'play', 'repeat_mode', 'shuffle', 'wireless', 'battery', 'button_time' }, --'repeat' is a Lua reserved word
+
+	}
 
 
 --------- LEGACY STYLES TO KEEP SLIMBROWSER GOING --------
