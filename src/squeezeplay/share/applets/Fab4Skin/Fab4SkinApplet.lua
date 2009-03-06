@@ -150,7 +150,7 @@ function skin(self, s)
 	local keyboardPressedBox      = Tile:loadImage( imgpath .. "Buttons/keyboard_button_press.png")
 
 	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
-	local helpButton              = Tile:loadImage( imgpath .. "Buttons/button_help_tb.png")
+	local helpButton              = Tile:loadImage( imgpath .. "Icons/icon_help_button_tb.png")
 	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
 	local keyboardBackground      = Tile:loadImage( imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png")
 	local textinputBackground     = 
