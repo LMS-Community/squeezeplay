@@ -940,16 +940,13 @@ NETWORK_WPS_HELP_BODY
 	EN	COPY NEEDED (7H)
 
 NETWORK_WPS_PROGRESS_PBC
-	EN	WPS PBC in progress\nActivate your router
+	EN	COPY_NEEDED (7J)\nActivate your router
 
 NETWORK_WPS_PROGRESS_PIN
-	EN	WPS PIN in progress\nActivate your router\nPIN: %s
+	EN	COPY NEEDED (7I)\nPIN: %s
 
-NETWORK_WPS_PROBLEM_HELP
-	EN	There was a problem with the WPS process.\nDid you start the WPS process on your router?
-	
 NETWORK_WPS_PROBLEM
-	EN	WPS Problem
+	EN	COPY NEEDED (7K)\nWPS Failed.
 
 NETWORK_WPS_REMAINING_WALK_TIME
 	EN	Remaining walk time: %s seconds
