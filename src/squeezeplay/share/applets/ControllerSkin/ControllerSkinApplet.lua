@@ -1329,6 +1329,9 @@ function skin(self, s, reload, useDefaultSize)
 	s.button_battery_4 = _uses(_button_battery, {
 		img = _loadImage(self, "icon_battery_4.png"),
 	})
+	s.button_battery_NONE = _uses(_button_battery, {
+		img = _loadImage(self, "icon_repeat_off.png"),
+	})
 
 	local _button_wireless = _uses(_iconbar_icon, {
 		w = 30,

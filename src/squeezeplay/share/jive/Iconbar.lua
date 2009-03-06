@@ -190,11 +190,11 @@ function __init(self)
 	log:debug("Iconbar:__init()")
 
 	local obj = oo.rawnew(self, {
-		iconPlaymode = Icon("button_playmode_PLAY"),
-		iconRepeat = Icon("button_repeat_2"),
-		iconShuffle = Icon("button_shuffle_2"),
-		iconBattery = Icon("button_battery_4"),
-		iconWireless = Icon("button_wireless_4"),
+		iconPlaymode = Icon("button_playmode_OFF"),
+		iconRepeat = Icon("button_repeat_OFF"),
+		iconShuffle = Icon("button_shuffle_OFF"),
+		iconBattery = Icon("button_battery_NONE"),
+		iconWireless = Icon("button_wireless_NONE"),
 		button_time = Label("button_time", "XXXX"),
 	})
 
