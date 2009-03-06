@@ -1154,6 +1154,10 @@ local function _browseSink(step, chunk, err)
 				elseif data.window.text then
 					step.window:setTitle(data.window.text)
 				end
+				if data.window and data.window.textarea then
+					local textarea = Textarea('text', data.window.textarea)
+					step.window:addWidget(textarea)
+				end
 			end
 
 			-- what's missing?
