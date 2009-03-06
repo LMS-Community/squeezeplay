@@ -177,6 +177,8 @@ function skin(self, s, reload, useDefaultSize)
 
 	local textinputCursor = Tile:loadImage(imgpath .. "text_entry_letter.png")
 
+	local textinputRightArrow = Tile:loadImage(imgpath .. "Icons/selection_right.png")
+
 	local buttonBox =
 		Tile:loadTiles({
 					nil,
@@ -677,7 +679,7 @@ function skin(self, s, reload, useDefaultSize)
 		bgImg = textinputBackground,
 		cursorImg = textinputCursor,
 		wheelImg = textinputWheel,
-		enterImg = rightArrow,
+		enterImg = textinputRightArrow,
 	}
 
 
