@@ -486,13 +486,27 @@ function skin(self, s)
 	})
 
 	s.selected = {
-		item               = _uses(s.item),
-		item_play           = _uses(s.item_play),
-		item_add            = _uses(s.item_add),
-		item_checked        = _uses(s.item_checked),
-		item_no_arrow        = _uses(s.item_no_arrow),
-		item_checked_no_arrow = _uses(s.item_checked_no_arrow),
-		item_choice         = _uses(s.item_choice),
+		item               = _uses(s.item, {
+			bgImg = fiveItemSelectionBox
+		}),
+		item_play           = _uses(s.item_play, {
+			bgImg = fiveItemSelectionBox
+		}),
+		item_add            = _uses(s.item_add, {
+			bgImg = fiveItemSelectionBox
+		}),
+		item_checked        = _uses(s.item_checked, {
+			bgImg = fiveItemSelectionBox
+		}),
+		item_no_arrow        = _uses(s.item_no_arrow, {
+			bgImg = fiveItemSelectionBox
+		}),
+		item_checked_no_arrow = _uses(s.item_checked_no_arrow, {
+			bgImg = fiveItemSelectionBox
+		}),
+		item_choice         = _uses(s.item_choice, {
+			bgImg = fiveItemSelectionBox
+		}),
 	}
 
 	s.pressed = {
@@ -805,12 +819,24 @@ function skin(self, s)
 	})
 
 	s.icon_list.menu.selected = {
-                item               = _uses(s.icon_list.menu.item),
-                item_checked        = _uses(s.icon_list.menu.item_checked),
-		item_play           = _uses(s.icon_list.menu.item_play),
-		item_add            = _uses(s.icon_list.menu.item_add),
-		item_no_arrow        = _uses(s.icon_list.menu.item_no_arrow),
-		item_checked_no_arrow = _uses(s.icon_list.menu.item_checked_no_arrow),
+                item               = _uses(s.icon_list.menu.item, {
+			bgImg = fiveItemSelectionBox
+		}),
+                item_checked        = _uses(s.icon_list.menu.item_checked, {
+			bgImg = fiveItemSelectionBox
+		}),
+		item_play           = _uses(s.icon_list.menu.item_play, {
+			bgImg = fiveItemSelectionBox
+		}),
+		item_add            = _uses(s.icon_list.menu.item_add, {
+			bgImg = fiveItemSelectionBox
+		}),
+		item_no_arrow        = _uses(s.icon_list.menu.item_no_arrow, {
+			bgImg = fiveItemSelectionBox
+		}),
+		item_checked_no_arrow = _uses(s.icon_list.menu.item_checked_no_arrow, {
+			bgImg = fiveItemSelectionBox
+		}),
         }
         s.icon_list.menu.pressed = {
                 item = _uses(s.icon_list.menu.item, { 
@@ -902,8 +928,12 @@ function skin(self, s)
 		},
 	})
 	s.play_list.menu.selected = {
-                item = _uses(s.play_list.menu.item),
-                item_checked = _uses(s.play_list.menu.item_checked),
+                item = _uses(s.play_list.menu.item, {
+			bgImg = fiveItemSelectionBox
+		}),
+                item_checked = _uses(s.play_list.menu.item_checked, {
+			bgImg = fiveItemSelectionBox
+		}),
         }
         s.play_list.menu.pressed = {
                 item = _uses(s.play_list.menu.item, { bgImg = threeItemPressedBox }),
