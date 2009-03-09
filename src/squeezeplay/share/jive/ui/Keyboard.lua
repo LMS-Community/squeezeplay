@@ -135,6 +135,12 @@ function _predefinedKeyboards(self)
 					self:_switchKeyboardButton(style, 'qwertyLower', keyboardButtonText.qwertyLower), 
 					self:_go() 
 		}
+		local emailKeyboardBottomRow = { 
+					self:_switchKeyboardButton(style, 'emailNumeric', keyboardButtonText.numeric), 
+					self:_switchKeyboardButton(style, 'email', keyboardButtonText.qwertyLower), 
+					self:_switchKeyboardButton(style, 'emailUpper', keyboardButtonText.qwerty), 
+					self:_go() 
+		}
 		self.keyboards = { 
 		['qwerty']  = { 
 				{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
@@ -148,6 +154,24 @@ function _predefinedKeyboards(self)
 				{ self:_shiftKey('qwerty', 'qwertyLower'), 'z', 'x', 'c', 'v', 'b', 'n', 'm' },
 				bottomRow
 		} ,
+		['email']  = { 
+				{ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
+				{ 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l' },
+				{ self:_shiftKey('emailUpper', 'email'), '@', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '.' },
+				emailKeyboardBottomRow
+		} ,
+		['emailUpper']  = { 
+				{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
+				{ 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L' },
+				{ self:_shiftKey('email'), '@', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '.'  },
+				emailKeyboardBottomRow
+		} ,
+		['emailNumeric'] = { 
+				{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' },
+				{ '$', '+', '_', '-', '!', '#', '%', '&', "'", '*' },
+				{ '@', '/', '=', '?', '^', '`', '{', '|', '}', '~', '.' },
+				emailKeyboardBottomRow
+		},
 		['hex']     = { 
 				{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' } ,
 				{ 'A', 'B', 'C', 'D', 'E', 'F' },

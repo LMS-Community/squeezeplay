@@ -1156,13 +1156,19 @@ local function _browseSink(step, chunk, err)
 				end
 				-- textarea data for the window
 				if data.window and data.window.textarea then
-					local textarea = Textarea('text', data.window.textarea)
+					local textarea = Textarea('help_text', data.window.textarea)
+					-- remove the menu
+					if step.menu then
+						step.window:removeWidget(step.menu)
+					end
 					step.window:addWidget(textarea)
+					-- menu back, in thank you
+					step.window:addWidget(step.menu)
 				end
 				-- contextual help comes from data.window.help
 				if data.window and data.window.help then
 					local helpWindow = function()
-						local window = Window("help_info", "Help")
+						local window = Window("text_list", "Help")
 						window:setAllowScreensaver(false)
 						local textarea = Textarea("text", data.window.help)
 						window:addWidget(textarea)
@@ -2517,6 +2523,8 @@ end
 function squeezeNetworkRequest(self, request)
 	local squeezenetwork = findSqueezeNetwork()
 	local localPlayer    = findLocalPlayer()
+
+	_string = function(token) return self:string(token) end
 
 	if not squeezenetwork or not localPlayer or not request then
 		return
