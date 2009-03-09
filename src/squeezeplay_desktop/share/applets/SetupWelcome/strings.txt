@@ -39,15 +39,15 @@ WELCOME_WALKTHROUGH
 	SV	Vi börjar med att ansluta till nätverket och musiksamlingen.
 
 WELCOME_HELP
-	DA	Tryk på den højre pileknap når du er klar til at gå videre.
-	DE	Drücken Sie die Pfeiltaste rechts, wenn Sie so weit sind.
+	DA	Tryk på knappen med højrepilen når du er klar til at fortsætte.
+	DE	Drücken Sie zum Fortfahren die rechte Pfeiltaste.
 	EN	Press the right arrow key when you are ready to move on.
 	ES	Pulse la flecha derecha cuando esté listo para continuar.
 	FI	Paina oikeaa nuolta, kun olet valmis jatkamaan.
 	FR	Appuyez sur la flèche droite pour continuer.
-	IT	Premere la freccia destra per proseguire.
-	NL	Druk op de rechterpijl wanneer u klaar bent om verder te gaan.
-	NO	Trykk på høyrepilen når du er klar til å gå videre.
+	IT	Premere il tasto freccia destra per proseguire.
+	NL	Druk op het rechterpijltje om verder te gaan.
+	NO	Trykk på høyreknappen når du er klar til å gå videre.
 	SV	Tryck på högerpilen när du är klar att gå vidare.
 
 DONE
@@ -75,14 +75,14 @@ DONE_CONTINUE
 	SV	Fortsätt
 
 DONE_HELP
-	DA	Nu kan du bruge SqueezePlay til at håndtere al din musik. Tryk på den højre pileknap for at fortsætte.
-	DE	Jetzt können Sie mit SqueezePlay auf Ihre Musik zugreifen. Drücken Sie zum Fortfahren die rechte Taste.
+	DA	Nu kan du bruge SqueezePlay til at lytte til al din musik. Tryk på knappen med højrepilen for at fortsætte.
+	DE	Sie können nun mit SqueezePlay auf Ihre gesamte Musiksammlung zugreifen. Drücken Sie zum Fortfahren die rechte Pfeiltaste.
 	EN	Now you can use SqueezePlay to access all your music. Press the right arrow key to continue.
 	ES	Ya puede usar SqueezePlay para acceder a toda su música. Pulse la flecha derecha para continuar.
-	FI	Voit nyt ohjata kaikkia musiikkitiedostojasi SqueezePlayllä. Jatka painamalla oikeaa nuolta.
-	FR	Vous pouvez maintenant accéder à votre musique avec SqueezePlay. Appuyez sur la flèche droite pour continuer.
-	IT	Ora è possibile utilizzare SqueezePlay per accedere a tutta la propria musica. Premere la freccia destra per continuare.
-	NL	Nu kunt u uw SqueezePlay gebruiken om al uw muziek op te roepen. Druk op de rechterpijl om verder te gaan.
-	NO	Du kan nå bruke SqueezePlay til å få tilgang på all musikken din. Trykk på høyrepilen for å fortsette.
-	SV	Nu har du tillgång till all din musik via SqueezePlay. Tryck på högerpilen för att fortsätta.
+	FI	Nyt voit ohjata kaikkia musiikkitiedostojasi SqueezePlayllä. Jatka painamalla oikeaa nuolta.
+	FR	Vous pouvez maintenant utiliser SqueezePlay pour accéder à votre musique. Appuyez sur la flèche droite pour continuer.
+	IT	Ora è possibile utilizzare SqueezePlay per accedere alla musica. Premere il tasto freccia destra per continuare.
+	NL	Nu kun je SqueezePlay gebruiken om al je muziek op te roepen. Druk op het rechterpijltje om verder te gaan.
+	NO	Du kan nå bruke SqueezePlay til å få tilgang på all musikken din. Trykk på høyreknappen for å fortsette.
+	SV	Nu kan du använda SqueezePlay och komma åt all din musik. Tryck på högerpilen för att fortsätta.
 

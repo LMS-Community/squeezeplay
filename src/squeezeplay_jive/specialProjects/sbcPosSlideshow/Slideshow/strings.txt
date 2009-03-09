@@ -3,4 +3,14 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SLIDESHOW
+	DA	Diasshow
+	DE	Slideshow
 	EN	Slideshow
+	ES	Presentación
+	FI	Diaesitys
+	FR	Diaporama
+	IT	Presentazione
+	NL	Diavoorstelling
+	NO	Lysbildefremvisning
+	SV	Bildspel
+

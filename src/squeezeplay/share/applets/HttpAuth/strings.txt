@@ -57,7 +57,7 @@ HTTP_AUTH_PASSWORD_HELP
 	ES	Introduzca la contraseña tal y como se haya configurado para protección por contraseña en SqueezeCenter
 	FI	Anna salasana, joka määritettiin salasanasuojausta varten SqueezeCenterissä
 	FR	Saisissez le mot de passe configuré pour la protection par mot de passe du SqueezeCenter
-	IT	Inserire %s configurato per la protezione con password in SqueezeCenter
+	IT	Inserire la password configurata per la protezione con password in SqueezeCenter
 	NL	Voer het wachtwoord dat voor wachtwoordbeveiliging is ingesteld, op je SqueezeCenter in
 	NO	Skriv inn passordet som er konfigurert for passordbeskyttelse i ditt SqueezeCenter
 	SV	Ange lösenordet du konfigurerat för lösenordsskydd i SqueezeCenter

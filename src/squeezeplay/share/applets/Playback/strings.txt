@@ -135,18 +135,27 @@ MULTITONE
 	SV	Flera toner
 
 LEFT_CHANNEL
+	DA	Venstre kanal
+	DE	Linker Kanal
 	EN	Left channel
+	ES	Canal izquierdo
+	FI	Vasen kanava
+	FR	Canal gauche
+	IT	Canale sinistro
+	NL	Linkerkanaal
+	NO	Venstre kanal
+	SV	Vänster kanal
 
 SINE_44_1K
 	DA	Sinus 44,1 k
-	DE	Sinus 44.1k
+	DE	Sinus 44.100
 	EN	Sine 44.1k
 	ES	Seno 44,1 kHz
 	FI	Sini 44,1 k
-	FR	Sinus 44,1k
-	IT	Seno di 44,1 k
+	FR	Sinus 44.1k
+	IT	Frequenza 44.1k
 	NL	Sinus 44.1 k
-	NO	Sinus 44.1k
+	NO	Sinus 44,1k
 	SV	Sinus 44,1 k
 
 SINE_48k
@@ -163,14 +172,14 @@ SINE_48k
 
 SINE_88_2K
 	DA	Sinus 88,2 k
-	DE	Sinus 88.2k
+	DE	Sinus 88.200
 	EN	Sine 88.2k
 	ES	Seno 88,2 kHz
 	FI	Sini 88,2 k
-	FR	Sinus 88,2k
-	IT	Seno di 88,2 k
+	FR	Sinus 88.2k
+	IT	Frequenza 88.2k
 	NL	Sinus 88.2 k
-	NO	Sinus 88.2k
+	NO	Sinus 88,2k
 	SV	Sinus 88,2 k
 
 SINE_96K

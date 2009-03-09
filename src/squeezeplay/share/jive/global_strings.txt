@@ -12,7 +12,7 @@ WELCOME
 	IT	Benvenuti
 	NL	Welkom
 	NO	Velkommen
-	SV	Välkommen!
+	SV	Välkommen
 
 SETTINGS
 	DA	Indstillinger

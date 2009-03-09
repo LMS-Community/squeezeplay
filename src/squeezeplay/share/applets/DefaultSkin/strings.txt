@@ -3,4 +3,14 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 CONTROLLER_SKIN
+	DA	Tema til kontrolpanel
+	DE	Controller-Skin
 	EN	Controller Skin
+	ES	Máscara de controlador
+	FI	Kaukosäätimen olemus
+	FR	Habillage du contrôleur
+	IT	Interfaccia Controller
+	NL	Skin van controller
+	NO	Kontrollskall
+	SV	Controller-skal
+

@@ -9,7 +9,7 @@ SSH
 	ES	Inicio de sesión remoto
 	FI	Kaukosäätimen kirjautuminen
 	FR	Connexion à distance
-	IT	Accesso telecomando
+	IT	Accesso remoto
 	NL	Externe aanmelding
 	NO	Ekstern pålogging
 	SV	Fjärrinloggning
@@ -28,13 +28,13 @@ SSH_ENABLE
 
 SSH_HOWTO
 	DA	Root-adgangskoden til denne enhed er %s, og du kan oprette forbindelse til den på adressen %s
-	DE	Root-Kennwort dieses Geräts ist %s und Sie über Adresse %s eine Verbindung herstellen.
+	DE	Stammkennwort dieses Geräts ist %s. Sie können über Adresse %s eine Verbindung herstellen.
 	EN	The root password for this device is %s and you can connect to it on address %s
-	ES	La contraseña de ruta para este dispositivo es %s y se puede conectar en %s
+	ES	La contraseña root para este dispositivo es %s y se puede conectar en la dirección %s
 	FI	Laitteen juurisalasana on %s, ja voit yhdistää laitteen osoitteeseen %s
-	FR	Le mot de passe racine pour le dispositif est %s et vous pouvez le connecter à l'adresse %s
+	FR	Le mot de passe racine pour ce dispositif est %s et vous pouvez vous y connecter à l'adresse %s.
 	IT	La password principale per questo dispositivo è %s ed è possibile connettersi al dispositivo tramite l'indirizzo %s
-	NL	Het hoofdwachtwoord voor dit apparaat is %s en je kunt er via het adres %s een verbinding mee maken.
+	NL	Het hoofdwachtwoord voor dit apparaat is %s en je kunt er verbinding mee maken via het adres %s
 	NO	Rotpassordet for denne enheten er %s, og du kan kople til den på adressen %s
-	SV	Rotlösenordet för enheten är %s och du kan ansluta till den på adressen %s.
+	SV	Rotlösenordet för enheten är %s och du kan ansluta till den på adressen %s
 

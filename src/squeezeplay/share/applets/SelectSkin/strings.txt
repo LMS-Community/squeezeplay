@@ -3,13 +3,41 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SELECT_SKIN
+	DA	Vælg tema
+	DE	Skin wählen
 	EN	Select Skin
+	ES	Seleccionar máscara
+	FI	Valitse olemus
+	FR	Sélectionner un habillage
+	IT	Seleziona interfaccia
+	NL	Skin selecteren
+	NO	Velg skall
+	SV	Välj skal
 
 CONTROLLER_SKIN
 	EN	Controller Skin
 
 DESKTOP_SKIN
+	DA	Tema til skrivebord
+	DE	Desktop Skin
 	EN	Desktop Skin
+	ES	Máscara de escritorio
+	FI	Työpöydän olemus
+	FR	Habillage du bureau
+	IT	Interfaccia desktop
+	NL	Skin van desktop
+	NO	Skrivebordsskall
+	SV	Skrivbordsskal
 
 FULLSCREEN_MODE
+	DA	Fuld skærm
+	DE	Vollbild
 	EN	Fullscreen
+	ES	Pantalla completa
+	FI	Täysi näyttö
+	FR	Plein écran
+	IT	Schermo intero
+	NL	Volledig scherm
+	NO	Fullskjerm
+	SV	Helskärm
+
