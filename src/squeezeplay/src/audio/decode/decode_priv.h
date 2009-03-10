@@ -42,6 +42,9 @@ extern struct decode_module decode_vorbis;
 #ifdef _WIN32
 extern struct decode_module decode_wma_win;
 #endif
+#ifdef WITH_SPPRIVATE
+extern struct decode_module decode_wma;
+#endif
 
 
 /* Private decoder api */
