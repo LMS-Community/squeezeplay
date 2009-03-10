@@ -124,7 +124,9 @@ local irCodes = {
 	[ 0x768900ff ] = KEY_VOLUME_DOWN,
 }
 
-
+--require"remdebug.engine"
+--  remdebug.engine.start()
+  
 local _defaultSkin
 local _fullscreen
 
@@ -260,7 +262,9 @@ function JiveMain:__init()
 		function(event)
 			local type = event:getType()
 			if (type & EVENT_IR_ALL ) > 0 then
-				Framework.mostRecentInputType = "ir"
+				if (Framework:isValidIRCode(event)) then
+					Framework.mostRecentInputType = "ir"
+				end
 			end
 			if (type & EVENT_KEY_ALL ) > 0 then
 				Framework.mostRecentInputType = "key"
