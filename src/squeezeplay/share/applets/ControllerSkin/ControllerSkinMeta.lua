@@ -35,18 +35,12 @@ function jiveVersion(self)
 end
 
 function defaultSettings(self)
-        self.params = {
-		THUMB_SIZE = 56,
-		NOWPLAYING_MENU = true,
-		nowPlayingBrowseArtworkSize = 154,
-		nowPlayingSSArtworkSize     = 186,
-		nowPlayingLargeArtworkSize  = 240,
-        }
+        self.params = 
 	return self.params
 end
 
 function registerApplet(self)
-	jiveMain:registerSkin(self:string("CONTROLLER_SKIN") .. "TEMP", "ControllerSkin", "skin", self.params)
+	jiveMain:registerSkin(self:string("CONTROLLER_SKIN") .. "TEMP", "ControllerSkin", "skin")
 end
 
 

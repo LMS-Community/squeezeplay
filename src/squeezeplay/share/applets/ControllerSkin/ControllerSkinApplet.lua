@@ -77,6 +77,17 @@ function init(self)
 end
 
 
+function param(self)
+	return {
+		THUMB_SIZE = 56,
+		NOWPLAYING_MENU = true,
+		nowPlayingBrowseArtworkSize = 154,
+		nowPlayingSSArtworkSize     = 186,
+		nowPlayingLargeArtworkSize  = 240,
+        }
+end
+
+
 -- reuse images instead of loading them twice
 -- FIXME can be removed after Bug 10001 is fixed
 local function _loadImage(self, file)
@@ -278,7 +289,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	local blackBackground = Tile:fillColor(0x000000ff)
 
-	local THUMB_SIZE = self:getSettings().THUMB_SIZE
+	local THUMB_SIZE = self:param().THUMB_SIZE
 
 	local TITLE_PADDING  = 0
 	local CHECK_PADDING  = { 0, 0, 0, 0 }
@@ -1459,8 +1470,8 @@ if true then
 	s.largenptrack  = _uses(s.ssnptrack)
 
 	-- Artwork
-	local ARTWORK_SIZE    = self:getSettings().nowPlayingBrowseArtworkSize
-	local SS_ARTWORK_SIZE = self:getSettings().nowPlayingSSArtworkSize
+	local ARTWORK_SIZE    = self:param().nowPlayingBrowseArtworkSize
+	local SS_ARTWORK_SIZE = self:param().nowPlayingSSArtworkSize
 	local browseArtWidth  = ARTWORK_SIZE
 	local ssArtWidth      = SS_ARTWORK_SIZE
 

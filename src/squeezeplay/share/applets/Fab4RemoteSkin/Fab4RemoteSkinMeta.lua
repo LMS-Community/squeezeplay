@@ -34,17 +34,11 @@ function jiveVersion(self)
 end
 
 function defaultSettings(self)
-        self.params = {
-		THUMB_SIZE = 64,
-		nowPlayingBrowseArtworkSize = 190,
-		nowPlayingSSArtworkSize     = 190,
-		nowPlayingLargeArtworkSize  = 190,
-        }
-	return self.params
+	return {}
 end
 
 function registerApplet(self)
-	jiveMain:registerSkin(self:string("SQUEEZEBOX_REMOTE_SKIN"), "Fab4RemoteSkin", "skin", self.params)
+	jiveMain:registerSkin(self:string("SQUEEZEBOX_REMOTE_SKIN"), "Fab4RemoteSkin", "skin")
 end
 
 

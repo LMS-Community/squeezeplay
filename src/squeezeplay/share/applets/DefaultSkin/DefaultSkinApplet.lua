@@ -73,6 +73,15 @@ function init(self)
 end
 
 
+function param(self)
+	return {
+		THUMB_SIZE = 56,
+		nowPlayingBrowseArtworkSize = 154,
+		nowPlayingSSArtworkSize     = 186,
+		nowPlayingLargeArtworkSize  = 240,
+	}
+end
+
 -- reuse images instead of loading them twice
 -- FIXME can be removed after Bug 10001 is fixed
 local function _loadImage(self, file)
