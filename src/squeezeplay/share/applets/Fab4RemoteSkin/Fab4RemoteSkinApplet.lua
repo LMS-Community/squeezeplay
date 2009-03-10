@@ -1335,27 +1335,27 @@ if true then
 		rew = {
 			align = 'center',
 			padding = buttonPadding,
-			img = _loadImage(self, "Player_Controls/icon_toolbar_rew.png"),
+			img = _loadImage(self, "NowPlaying/icon_toolbar_rew.png"),
 		},
 		play = {
 			align = 'center',
 			padding = buttonPadding,
-			img = _loadImage(self, "Player_Controls/icon_toolbar_play.png"),
+			img = _loadImage(self, "NowPlaying/icon_toolbar_play.png"),
 		},
 		pause = {
 			align = 'center',
 			padding = buttonPadding,
-			img = _loadImage(self, "Player_Controls/icon_toolbar_pause.png"),
+			img = _loadImage(self, "NowPlaying/icon_toolbar_pause.png"),
 		},
 		fwd = {
 			align = 'center',
 			padding = buttonPadding,
-			img = _loadImage(self, "Player_Controls/icon_toolbar_ffwd.png"),
+			img = _loadImage(self, "NowPlaying/icon_toolbar_ffwd.png"),
 		},
 		vol = {
 			align = 'center',
 			padding = buttonPadding,
-			img = _loadImage(self, "Player_Controls/icon_toolbar_vol_up.png"),
+			img = _loadImage(self, "NowPlaying/icon_toolbar_vol_up.png"),
 		},
 	}
 

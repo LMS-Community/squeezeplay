@@ -142,7 +142,7 @@ function skin(self, s)
 	Framework.mostRecentInputType = "mouse"
 
 	-- Images and Tiles
-	local titleBox                = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
+	local titleBoxOld             = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
 	local fiveItemSelectionBox    = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line.png")
 	local fiveItemPressedBox      = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line_press.png")
 	local threeItemSelectionBox   = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line.png")
@@ -153,6 +153,18 @@ function skin(self, s)
 	local helpButton              = Tile:loadImage( imgpath .. "Icons/icon_help_button_tb.png")
 	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
 	local keyboardBackground      = Tile:loadImage( imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png")
+	local titleBox                =
+		Tile:loadTiles({
+				 imgpath .. "Titlebar/titlebar.png",
+				 nil,
+				 nil,
+				 nil,
+				 nil,
+				 nil,
+				 imgpath .. "Titlebar/titlebar_shadow.png",
+				 nil,
+				 nil,
+		})
 	local textinputBackground     = 
 		Tile:loadTiles({
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box.png",
@@ -1328,27 +1340,27 @@ if true then
 		rew = {
 			align = 'center',
 			padding = buttonPadding,
-			img = _loadImage(self, "Player_Controls/icon_toolbar_rew.png"),
+			img = _loadImage(self, "NowPlaying/icon_toolbar_rew.png"),
 		},
 		play = {
 			align = 'center',
 			padding = buttonPadding,
-			img = _loadImage(self, "Player_Controls/icon_toolbar_play.png"),
+			img = _loadImage(self, "NowPlaying/icon_toolbar_play.png"),
 		},
 		pause = {
 			align = 'center',
 			padding = buttonPadding,
-			img = _loadImage(self, "Player_Controls/icon_toolbar_pause.png"),
+			img = _loadImage(self, "NowPlaying/icon_toolbar_pause.png"),
 		},
 		fwd = {
 			align = 'center',
 			padding = buttonPadding,
-			img = _loadImage(self, "Player_Controls/icon_toolbar_ffwd.png"),
+			img = _loadImage(self, "NowPlaying/icon_toolbar_ffwd.png"),
 		},
 		vol = {
 			align = 'center',
 			padding = buttonPadding,
-			img = _loadImage(self, "Player_Controls/icon_toolbar_vol_up.png"),
+			img = _loadImage(self, "NowPlaying/icon_toolbar_vol_up.png"),
 		},
 	}
 
