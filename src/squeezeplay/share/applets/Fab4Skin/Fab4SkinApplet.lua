@@ -877,6 +877,9 @@ function skin(self, s)
 	-- information window
 	s.information = _uses(s.window)
 
+	s.information.text = {
+		padding = { 13, 8, 8, 0 },
+	}
 
 	-- help window (likely the same as information)
 	s.help_info = _uses(s.window)
