@@ -51,13 +51,21 @@ local oo	= require("loop.simple")
 local string	= require("string")
 local Widget	= require("jive.ui.Widget")
 local Scrollbar	= require("jive.ui.Scrollbar")
+local Flick	= require("jive.ui.Flick")
+local math      = require("math")
 
 local log       = require("jive.utils.log").logger("ui")
 
 
 local EVENT_SCROLL	= jive.ui.EVENT_SCROLL
 local EVENT_KEY_PRESS	= jive.ui.EVENT_KEY_PRESS
-local EVENT_MOUSE_DRAG	= jive.ui.EVENT_MOUSE_DRAG
+local EVENT_MOUSE_PRESS    = jive.ui.EVENT_MOUSE_PRESS
+local EVENT_MOUSE_DOWN     = jive.ui.EVENT_MOUSE_DOWN
+local EVENT_MOUSE_UP       = jive.ui.EVENT_MOUSE_UP
+local EVENT_MOUSE_MOVE     = jive.ui.EVENT_MOUSE_MOVE
+local EVENT_MOUSE_DRAG     = jive.ui.EVENT_MOUSE_DRAG
+local EVENT_MOUSE_HOLD     = jive.ui.EVENT_MOUSE_HOLD
+local EVENT_MOUSE_ALL      = jive.ui.EVENT_MOUSE_ALL
 
 local EVENT_CONSUME	= jive.ui.EVENT_CONSUME
 local EVENT_UNUSED	= jive.ui.EVENT_UNUSED
@@ -98,7 +106,13 @@ function __init(self, style, text)
 			obj:_scrollTo(value)
 		end)
 	obj.scrollbar.parent = obj
-	
+	obj.dragOrigin = {}
+	obj.dragYSinceShift = 0
+	obj.pixelOffsetY = 0
+	obj.currentShiftDirection = 0
+
+	obj.flick = Flick(obj)
+
 	obj.topLine = 0
 	obj.visibleLines = 0
 	obj.text = text
@@ -107,7 +121,7 @@ function __init(self, style, text)
 	obj:addActionListener("page_down", obj, _pageDownAction)
 	--up/down coming in as scroll events
 
-	obj:addListener(EVENT_SCROLL | EVENT_MOUSE_DRAG,
+	obj:addListener(EVENT_SCROLL | EVENT_MOUSE_ALL,
 			 function (event)
 				return obj:_eventHandler(event)
 			 end)
@@ -156,6 +170,13 @@ function isScrollable(self)
 end
 
 
+function isTouchMouseEvent(self, mouseEvent)
+	local x, y, fingerCount = mouseEvent:getMouse()
+
+	return fingerCount ~= nil
+end
+
+
 function _pageUpAction(self)
 	self:scrollBy( -(self.visibleLines - 1) )
 end
@@ -201,14 +222,155 @@ function _eventHandler(self, event)
 
 		self:scrollBy(event:getScroll())
 		return EVENT_CONSUME
+	end
 
-	elseif type == EVENT_MOUSE_DRAG then
+	if type == EVENT_MOUSE_PRESS or type == EVENT_MOUSE_HOLD or type == EVENT_MOUSE_MOVE then
+		--no special handling, consume
 
-		return self.scrollbar:_event(event)
+		return EVENT_CONSUME
+	end
 
+	if type == EVENT_MOUSE_DOWN then
+		--sometimes up doesn't occur so we must again try to reset state
+		-- note: sometimes down isn't called either (if drag starts outside of bounds), so bug still exists where scrollbar drag falsely continues
+		self.sliderDragInProgress = false
+		self.bodyDragInProgress = false
+
+		--stop any running flick on contact
+		if self.flick.flickTimer:isRunning() then
+			self.flick:stopFlick(true)
+			return EVENT_CONSUME
+		end
+	end
+
+	if type == EVENT_MOUSE_DRAG or type == EVENT_MOUSE_DOWN then
+		if self.scrollbar:mouseInside(event) or (self.sliderDragInProgress and evtype ~= EVENT_MOUSE_DOWN ) then
+			self.sliderDragInProgress = true
+
+			--zero out offset (scrollbar currently only moves discretely)
+			self.pixelOffsetY = 0
+			return self.scrollbar:_event(event)
+		else --mouse is inside textarea body
+			if not self:isTouchMouseEvent(event) then
+				--regulr mouse drag works like scrollbar scroll for now.
+				return self.scrollbar:_event(event)
+
+			else  --touchpad
+				if type == EVENT_MOUSE_DOWN then
+					self.dragOrigin.x, self.dragOrigin.y = event:getMouse();
+					self.currentShiftDirection = 0
+					self.flick:resetFlickData()
+					self.flick:updateFlickData(event)
+					
+				else -- type == EVENT_MOUSE_DRAG
+					if ( self.dragOrigin.y == nil) then
+						--might have started drag outside of this textarea's bounds, so reset origin
+						self.dragOrigin.x, self.dragOrigin.y = event:getMouse();
+					end
+
+					local mouseX, mouseY = event:getMouse()
+
+					local dragAmountY = self.dragOrigin.y - mouseY
+
+					--reset origin
+					self.dragOrigin.x, self.dragOrigin.y = mouseX, mouseY
+
+					self.flick:updateFlickData(event)
+
+					self:handleDrag(dragAmountY)
+
+				end
+			end
+		end
+
+		return EVENT_CONSUME
+	end
+	if type == EVENT_MOUSE_UP then
+		--todo: UP not called if we are outside widget bounds, need this widget to handle events when drag in progress
+		self.dragOrigin.x, self.dragOrigin.y = nil, nil
+
+		local flickSpeed, flickDirection = self.flick:getFlickSpeed(self.itemHeight)
+
+		if flickSpeed then
+			self.flick:flick(flickSpeed, flickDirection)
+		end
+
+		self.flick:resetFlickData()
+
+
+		self.sliderDragInProgress = false
+		self.bodyDragInProgress = false
+
+		return EVENT_CONSUME 
 	end
 
 	return EVENT_UNUSED
+end
+
+function resetDragData(self)
+	self.pixelOffsetY = 0
+	self.dragYSinceShift = 0
+end
+
+
+function handleDrag(self, dragAmountY, byItemOnly)
+
+	if dragAmountY ~= 0 then
+--		log:error("handleDrag dragAmountY: ", dragAmountY )
+
+		self.dragYSinceShift = self.dragYSinceShift + dragAmountY
+--		log:error("handleDrag dragYSinceShift: ", self.dragYSinceShift )
+
+		if (self.dragYSinceShift > 0 and math.floor(self.dragYSinceShift / self.lineHeight) > 0) or
+				(self.dragYSinceShift < 0 and math.floor(self.dragYSinceShift / self.lineHeight) < 0) then
+			local itemShift = math.floor(self.dragYSinceShift / self.lineHeight)
+			self.dragYSinceShift = self.dragYSinceShift % self.lineHeight
+			if not byItemOnly then
+				self.pixelOffsetY = -1 * self.dragYSinceShift
+			else
+				--by item only so fix the position so that the top item is visible in the same spot each time
+				self.pixelOffsetY = 0
+			end
+			if itemShift > 0 and self.currentShiftDirection <= 0 then
+				self.currentShiftDirection = 1
+			elseif itemShift < 0 and self.currentShiftDirection >= 0 then
+				self.currentShiftDirection = -1
+			end
+
+			log:debug("self:scrollBy( itemShift ) ", itemShift, " self.pixelOffsetY: ", self.pixelOffsetY )
+			self:scrollBy( itemShift)
+
+			if self:isAtTop() or self:isAtBottom() then
+				self:resetDragData()
+			end
+
+		else
+			--smooth scroll
+			if not byItemOnly then
+				self.pixelOffsetY = -1 * self.dragYSinceShift
+			end
+
+			if self:isAtBottom() then
+				self:resetDragData()
+			end
+
+			log:debug("Scroll offset by: ", self.pixelOffsetY, " item height: ", self.lineHeight)
+			--todo: update scrollbar
+--			self:_updateScrollbar()
+			self:reDraw()
+		end
+	end
+end
+
+
+--required functions for Drag module
+function isAtBottom(self)
+	return (self.topLine + self.visibleLines  >= self.numLines)
+end
+
+
+function isAtTop(self)
+	return self.topLine == 0
 end
 
 

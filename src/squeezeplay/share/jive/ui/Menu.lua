@@ -45,6 +45,7 @@ local Scrollbar            = require("jive.ui.Scrollbar")
 local Surface              = require("jive.ui.Surface")
 local ScrollAccel          = require("jive.ui.ScrollAccel")
 local IRMenuAccel          = require("jive.ui.IRMenuAccel")
+local Flick                = require("jive.ui.Flick")
 local Timer                = require("jive.ui.Timer")
 
 local log                  = require("jive.utils.log").logger("ui")
@@ -90,27 +91,6 @@ local KEY_PLAY             = jive.ui.KEY_PLAY
 local KEY_PAGE_UP           = jive.ui.KEY_PAGE_UP
 local KEY_PAGE_DOWN         = jive.ui.KEY_PAGE_DOWN
 
---speed (pixels/ms) that must be surpassed for flick to start.
-local FLICK_THRESHOLD_START_SPEED = 90/1000
-
---speed (pixels/ms) that per pixel afterscrolling occurs, otherwise is per item when faster.
-local FLICK_THRESHOLD_BY_PIXEL_SPEED = 400/1000
-
---speed (pixels/ms) at which flick scrolling will stop
-local FLICK_STOP_SPEED =  3/1000
-
---if initial speed is greater than this, "letter" accelerators will occur for the flick
-local FLICK_FORCE_ACCEL_SPEED = 72 * 30/1000
-
---time after flick starts that decel occurs
-local FLICK_DECEL_START_TIME = 400
-
---time from decel start to scroll stop (trying new linger setting, which throws this off)
-local FLICK_DECEL_TOTAL_TIME = 600
-
---If non zero, extra afterscroll time (FLICK_SPEED_DECEL_TIME_FACTOR * flickSpeed ) is
- -- added to FLICK_DECEL_TOTAL_TIME.  flick speed maxes out at about 3.
-local FLICK_SPEED_DECEL_TIME_FACTOR = 1500
 
 -- our class
 module(...)
@@ -375,9 +355,9 @@ local function _eventHandler(self, event)
 
 
 		else
-			if self.flickInterruptedByFinger then
+			if self.flick.flickInterruptedByFinger then
 				--flick just stopped (on the down event), so ignore this press - do the same for hold when implemented
-				self.flickInterruptedByFinger = nil
+				self.flick.flickInterruptedByFinger = nil
 				return EVENT_CONSUME
 			end
 
@@ -421,8 +401,8 @@ local function _eventHandler(self, event)
 			self.bodyDragInProgress = false
 
 			--stop any running flick on contact
-			if self.flickTimer:isRunning() then
-				self:stopFlick(true)
+			if self.flick.flickInProgress then
+				self.flick:stopFlick(true)
 				return EVENT_CONSUME
 			end
 
@@ -446,7 +426,7 @@ local function _eventHandler(self, event)
 			local r = self.scrollbar:_event(event)
 			_scrollList(self)
 			if evtype == EVENT_MOUSE_DOWN then
-				--slider doesnt' consume the DOWN, but we require it to be consumed so menu is marked as the mouse focus widget.
+				--slider doesnt' consume the DOWN, but we require it to be consumed so menu is marked as the mouse focus widget.  -- this should now be fixed no. TODO: review extra event resutl check and remove.
 				r = EVENT_CONSUME
 			end
 			return r
@@ -474,7 +454,9 @@ local function _eventHandler(self, event)
 					--self.dragYSinceShift = 0
 					self.currentShiftDirection = 0
 
-					resetFlickData(self.flickData)
+					self.flick:resetFlickData()
+
+					self.flick:updateFlickData(event)
 
 					--don't highlight item right away (to avoid highlighting when finger go off screen and then
 					-- on screen during a drag
@@ -514,7 +496,7 @@ local function _eventHandler(self, event)
 					--reset origin
 					self.dragOrigin.x, self.dragOrigin.y = mouseX, mouseY
 
-					updateFlickData(self.flickData, event)
+					self.flick:updateFlickData(event)
 
 					self:handleDrag(dragAmountY)
 					
@@ -530,13 +512,13 @@ local function _eventHandler(self, event)
 		--todo: UP not called if we are outside widget bounds, need this widget to handle events when drag in progress
 		self.dragOrigin.x, self.dragOrigin.y = nil, nil;
 
-		local flickSpeed, flickDirection = getFlickSpeed(self.flickData, self.itemHeight)
+		local flickSpeed, flickDirection = self.flick:getFlickSpeed(self.itemHeight)
 
 		if flickSpeed then
-			self:flick(flickSpeed, flickDirection)
+			self.flick:flick(flickSpeed, flickDirection)
 		end
 
-		resetFlickData(self.flickData)
+		self.flick:resetFlickData()
 
 
 		self.sliderDragInProgress = false
@@ -576,138 +558,6 @@ function isTouchMouseEvent(self, mouseEvent)
 	return fingerCount ~= nil
 end
 
-
-function stopFlick(self, byFinger)
-
-	self.flickTimer:stop()
-	self.flickInterruptedByFinger = byFinger
-
-	resetFlickData(self.flickData)
-end
-
-
-function updateFlickData(flickData, mouseEvent)
-	local x, y = mouseEvent:getMouse()
-	local ticks = mouseEvent:getTicks()
-
-	--hack until reason for 0 ticks is resolved
-	if (ticks == 0) then
-		return
-	end
-
-	--hack until reason for false "far out of range" ticks is happening
-
-	if #flickData.points >=1 then
-		local previousTicks = flickData.points[#flickData.points].ticks
-		if math.abs(ticks - previousTicks ) > 10000 then
-			log:error("Erroneous tick value occurred, ignoring : ", ticks, "  after previuos tick value of: ", previousTicks)
-			return
-		end
-	end
-
-	table.insert(flickData.points, {y = y, ticks = ticks})
-	if #flickData.points >= 20 then
-		--only keep last 20 values
-		table.remove(flickData.points, 1)
-	end
-
-end
-
-function resetFlickData(flickData)
-	flickData.points = {}
-end
-
-function getFlickSpeed(flickData, itemHeight)
-	if not flickData.points or #flickData.points < 2 then
-		return nil
-	end
-
-
-	local distance = flickData.points[#flickData.points].y - flickData.points[1].y
-	local time = flickData.points[#flickData.points].ticks - flickData.points[1].ticks
-
-	--speed = pixels/ms
-	local speed = distance/time
-
-
-	log:debug("Flick info: speed: ", speed, "  distance: ", distance, "  time: ", time )
-
-	local direction = speed >= 0 and -1 or 1
-	return math.abs(speed), direction
-end
-
-
-
---if initialSpeed nil, then continue any existing flick. If non nil, start a new flick at that rate
-function flick(self, initialSpeed, direction)
-	if initialSpeed then
-		self:stopFlick()
-		if initialSpeed < FLICK_THRESHOLD_START_SPEED then
-			log:debug("Under threshold, not flicking: ", initialSpeed )
-
-			return
-		end
-
-		self.flickInitialSpeed = initialSpeed
-		self.flickDirection = direction
-		self.flickTimer:start()
-		self.flickInitialScrollT = Framework:getTicks()
-
-		self.flickLastY = 0
-		self.flickInitialDecelerationScrollT = nil
-		self.flickPreDecelY = 0
-
-		local decelTime = FLICK_DECEL_TOTAL_TIME + math.abs(FLICK_SPEED_DECEL_TIME_FACTOR * self.flickInitialSpeed)
-		self.flickAccelRate = -self.flickInitialSpeed / decelTime
-		log:debug("*****Starting flick - decelTime: ", decelTime )
-	end
-
-	--continue flick
-	local now = Framework:getTicks()
-
-	local flickCurrentY, byItemOnly
-	if not self.flickInitialDecelerationScrollT then
-		--still at full speed
-		flickCurrentY = self.flickInitialSpeed * (now - self.flickInitialScrollT)
-		self.flickPreDecelY = flickCurrentY
-
-		--slow speed if past decel time
-		if self.flickInitialDecelerationScrollT == nil and now - self.flickInitialScrollT > FLICK_DECEL_START_TIME then
-			log:debug("*****Starting flick slow down")
-			self.flickInitialDecelerationScrollT = now
-		end
-	end
-
-	if self.flickInitialDecelerationScrollT then	
-		local elapsedTime = now - self.flickInitialDecelerationScrollT
-
-		-- y = v0*t +.5 * a * t^2
-		flickCurrentY = self.flickPreDecelY + self.flickInitialSpeed * elapsedTime + (.5 * self.flickAccelRate * elapsedTime * elapsedTime )
-
-		--v = v0 + at
-		local flickCurrentSpeed = self.flickInitialSpeed + (self.flickAccelRate * elapsedTime)
-		byItemOnly = flickCurrentSpeed > FLICK_THRESHOLD_BY_PIXEL_SPEED
-		if flickCurrentSpeed <= FLICK_STOP_SPEED then
-			log:debug("*******Stopping Flick at slow down point. current speed:", flickCurrentSpeed)
-			self:stopFlick()
-			return
-		end
-	end
-
-
-	local pixelOffset = math.floor(flickCurrentY - self.flickLastY)
-
-	self:handleDrag(self.flickDirection * pixelOffset, byItemOnly)
-
-	self.flickLastY = self.flickLastY + pixelOffset
-
-	if (self.selected == self.listSize and self.flickDirection > 0)
-		or (self.selected == 1 and self.flickDirection < 0) then
-		--stop at boundaries
-		log:debug("*******Stopping Flick at boundary") -- need a ui cue that this has happened
-		self:stopFlick()
-	end
-end
 
 
 --[[
@@ -776,8 +626,7 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 	obj.pixelOffsetY = 0
 	obj.currentShiftDirection = 0
 
-	obj.flickData = {}
-	obj.flickData.points = {}
+	obj.flick = Flick(obj)
 
 	-- timer to drop out of accelerated mode
 	obj.accelTimer = Timer(200,
@@ -793,10 +642,6 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 						obj:reLayout()	
 					end,
 					true)
-	obj.flickTimer = Timer(25,
-			       function()
-			                obj:flick()
-			       end)
 
 	obj:addListener(EVENT_ALL,
 			 function (event)
@@ -889,6 +734,16 @@ function isScrollable(self)
 	return self.listSize > self.numWidgets
 end
 
+
+--required functions for Drag module
+function isAtBottom(self)
+	return self.selected == self.listSize
+end
+
+
+function isAtTop(self)
+	return self.selected == 1
+end
 
 --[[
 
@@ -1113,7 +968,7 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 
 	-- if selection has change, play click and redraw
 	if (self.selected ~= nil and selected ~= self.selected) or (self.selected == nil and selected ~= 0) then
-		if not self.bodyDragInProgress and not self.flickTimer:isRunning() then
+		if not self.bodyDragInProgress and not self.flick.flickInProgress then
 			--todo come up with more comprehensive "when to click" design once the requirement is better understood
 			self:playSound("CLICK")
 		end

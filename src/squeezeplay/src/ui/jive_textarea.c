@@ -69,6 +69,9 @@ int jiveL_textarea_skin(lua_State *L) {
 	}
 
 	peer->line_height = jive_style_int(L, 1, "lineHeight", jive_font_height(peer->font));
+	lua_pushinteger(L, peer->line_height);
+	lua_setfield(L, 1, "lineHeight");
+
 	peer->text_offset = jive_font_offset(peer->font);
 
 	peer->align = jive_style_align(L, 1, "textAlign", JIVE_ALIGN_LEFT);
@@ -261,7 +264,8 @@ int jiveL_textarea_layout(lua_State *L) {
 int jiveL_textarea_draw(lua_State *L) {
 	char *text;
 	Uint16 y;
-	int i, top_line, visible_lines, bottom_line;
+	int i, top_line, visible_lines, bottom_line, num_lines;
+	Sint16 old_pixel_offset_x, old_pixel_offset_y, new_pixel_offset_y;
 
 	/* stack is:
 	 * 1: widget
@@ -272,6 +276,7 @@ int jiveL_textarea_draw(lua_State *L) {
 	TextareaWidget *peer = jive_getpeer(L, 1, &textareaPeerMeta);
 	JiveSurface *srf = tolua_tousertype(L, 2, 0);
 	bool drawLayer = luaL_optinteger(L, 3, JIVE_LAYER_ALL) & peer->w.layer;
+	SDL_Rect old_clip, new_clip;
 
 	if (!drawLayer || peer->num_lines == 0) {
 		return 0;
@@ -280,6 +285,15 @@ int jiveL_textarea_draw(lua_State *L) {
 	if (peer->bg_tile) {
 		jive_tile_blit(peer->bg_tile, srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.w, peer->w.bounds.h);
 	}
+
+	jive_surface_get_clip(srf, &old_clip);
+
+	new_clip.x = peer->w.bounds.x;
+	new_clip.y = peer->w.bounds.y;
+	new_clip.w = peer->w.bounds.w;
+	new_clip.h = peer->w.bounds.h;
+	jive_surface_set_clip(srf, &new_clip);
+
 
 	lua_getglobal(L, "tostring");
 	lua_getfield(L, 1, "text");
@@ -301,10 +315,20 @@ int jiveL_textarea_draw(lua_State *L) {
 	visible_lines = lua_tointeger(L, -1);
 	lua_pop(L, 1);
 
+	lua_getfield(L, 1, "numLines");
+	num_lines = lua_tointeger(L, -1);
+	lua_pop(L, 1);
+
+	lua_getfield(L, 1, "pixelOffsetY");
+	new_pixel_offset_y = lua_tointeger(L, -1);
+	lua_pop(L, 1);
+
+	jive_surface_get_offset(srf, &old_pixel_offset_x, &old_pixel_offset_y);
+	jive_surface_set_offset(srf, old_pixel_offset_x, new_pixel_offset_y);
 
 	bottom_line = top_line + visible_lines;
 
-	for (i = top_line; i < bottom_line; i++) {
+	for (i = top_line; i < bottom_line + 1 && i < num_lines ; i++) {
 		JiveSurface *tsrf;
 		int x;
 
@@ -341,6 +365,8 @@ int jiveL_textarea_draw(lua_State *L) {
 
 		y += peer->line_height;
 	}
+	jive_surface_set_offset(srf, old_pixel_offset_x, old_pixel_offset_y);
+	jive_surface_set_clip(srf, &old_clip);
 
 	/* draw scrollbar */
 	if (peer->has_scrollbar) {
