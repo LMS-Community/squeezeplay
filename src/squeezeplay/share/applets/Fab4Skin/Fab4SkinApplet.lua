@@ -439,18 +439,24 @@ function skin(self, s)
 
 	-- Checkbox
         s.checkbox = {}
+	s.checkbox.align = 'center'
+	s.checkbox.h = WH_FILL
         s.checkbox.img_on = _loadImage(self, "Icons/checkbox_on.png")
         s.checkbox.img_off = _loadImage(self, "Icons/checkbox_off.png")
 
 
         -- Radio button
         s.radio = {}
+	s.radio.align = 'center'
+	s.radio.h = WH_FILL
         s.radio.img_on = _loadImage(self, "Icons/radiobutton_on.png")
         s.radio.img_off = _loadImage(self, "Icons/radiobutton_off.png")
 
 	s.item_choice = _uses(s.item, {
 		order  = { 'icon', 'text', 'check' },
 		choice = {
+			h = WH_FILL,
+			padding = { 0, 0, 3, 0 },
 			align = 'right',
 			font = _boldfont(TEXTMENU_FONT_SIZE),
 			fg = TEXT_COLOR,
