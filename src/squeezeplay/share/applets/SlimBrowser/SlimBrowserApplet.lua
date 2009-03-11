@@ -1252,9 +1252,25 @@ end
 
 			local itemIcon = v.window  and v.window['icon-id'] or v['icon-id']
 			if itemIcon then
-				item["icon-id"] = itemIcon
+				--item["icon-id"] = itemIcon
+
+				local _size = jiveMain:getSkinParam('THUMB_SIZE')
 				item.icon = Icon('icon')
-				_server:fetchArtworkThumb(item["icon-id"], item.icon, jiveMain:getSkinParam('THUMB_SIZE'))
+				_server:fetchArtworkThumb(itemIcon, item.icon, _size)
+
+				-- Hack alert: redefine the checkSkin function
+				-- to reload images when the skin changes. We
+				-- should replace this with resizable icons.
+				local _style = item.icon.checkSkin
+				item.icon.checkSkin = function(...)
+					local s = jiveMain:getSkinParam('THUMB_SIZE')
+					if s ~= _size then
+						_size = s
+						_server:fetchArtworkThumb(itemIcon, item.icon, _size)						
+					end
+
+					_style(...)
+				end
 			end
 
 			-- hack to modify styles from SC

@@ -512,7 +512,7 @@ function skin(self, s)
         -- selected menu item
         s.selected = {}
 	s.selected.item = _uses(s.item, {
-		order = { 'text', 'arrow' },
+		order = { 'icon', 'text', 'arrow' },
 		text = {
 			font = _boldfont(TEXTMENU_SELECTED_FONT_SIZE),
 			fg = SELECT_COLOR,
@@ -522,7 +522,7 @@ function skin(self, s)
 		arrow = rightArrow,
 	})
 	s.selected.item_choice = _uses(s.selected.item, {
-		order = { 'text', 'icon' },
+		order = { 'icon', 'text', 'check' },
 		check = {
 			align = 'right',
 			font = _boldfont(TEXTMENU_FONT_SIZE),
@@ -538,15 +538,15 @@ function skin(self, s)
 		arrow = addArrow 
 	})
 	s.selected.item_checked = _uses(s.selected.item, {
-		order = { "text", "check", "arrow" },
+		order = { 'icon', "text", "check", "arrow" },
 		check = checkMark,
 		arrow = rightArrow,
 	})
         s.selected.item_no_arrow = _uses(s.item, {
-		order = { 'text' },
+		order = { 'icon', 'text' },
 	})
         s.selected.item_checked_no_arrow = _uses(s.item, {
-		order = { 'text', 'check' },
+		order = { 'icon', 'text', 'check' },
 		check = checkMark,
 	})
 
