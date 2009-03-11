@@ -152,6 +152,7 @@ function skin(self, s)
 
 	-- Images and Tiles
 	local titleBoxOld             = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
+	local fiveItemBox             = Tile:loadImage( imgpath .. "5_line_lists/tch_5line_divder.png")
 	local fiveItemSelectionBox    = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line.png")
 	local fiveItemPressedBox      = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line_press.png")
 	local threeItemSelectionBox   = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line.png")
@@ -426,6 +427,7 @@ function skin(self, s)
 	      		align = ITEM_ICON_ALIGN,
 	      		img = _loadImage(self, "Icons/selection_right_5line.png")
 		},
+		bgImg = fiveItemBox,
 	}
 
 	s.item_play = _uses(s.item, { 
@@ -1049,23 +1051,22 @@ function skin(self, s)
 
 
 	local _buttonicon = {
-		w = 72,
-		h = WH_FILL,
-		padding = { 8, 4, 0, 4 },
+		w   = THUMB_SIZE,
+		h   = THUMB_SIZE,
 		img = false
 	}
 
 	s.region_US = _uses(_buttonicon, { 
-		img = _loadImage(self, "Icons/icon_region_americas_64.png")
+		img = _loadImage(self, "Icons/icon_region_americas_43.png")
 	})
 	s.region_XX = _uses(_buttonicon, { 
-		img = _loadImage(self, "Icons/icon_region_other_64.png")
+		img = _loadImage(self, "Icons/icon_region_other_43.png")
 	})
 	s.wlan = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/icon_wireless_64.png")
+		img = _loadImage(self, "Icons/icon_wireless_43.png")
 	})
 	s.wired = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/icon_ethernet_64.png")
+		img = _loadImage(self, "Icons/icon_ethernet_43.png")
 	})
 
 
