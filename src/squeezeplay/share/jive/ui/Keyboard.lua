@@ -407,7 +407,9 @@ end
 -- return a table that can be used as a space bar in keyboards
 function _go(self, style)
 	return {	
-		icon	 = Icon("button_enter"),
+		-- FIXME: don't hardcode this to DONE
+		text     = 'DONE',
+		style    = 'button_shift',
 		callback = function()
 			local e = Event:new(EVENT_KEY_PRESS, KEY_GO)
 			Framework:dispatchEvent(nil, e) 
@@ -433,19 +435,6 @@ function _shiftKey(self, switchTo, switchBack)
 			else
 				self.last = nil
 			end
-			return EVENT_CONSUME 
-		end
-	}
-end
-
-
--- return a table that can be used as a backspace bar in keyboards
-function _backspaceButton(self)
-	return {	
-		icon	 = Icon("button_back"),
-		callback = function()
-			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
-			Framework:dispatchEvent(nil, e) 
 			return EVENT_CONSUME 
 		end
 	}

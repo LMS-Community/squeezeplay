@@ -155,7 +155,7 @@ function skin(self, s)
 	local fiveItemSelectionBox    = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line.png")
 	local fiveItemPressedBox      = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line_press.png")
 	local threeItemSelectionBox   = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line.png")
-	local threeItemPressedBox     = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line_press.png")
+	local threeItemPressedBox     = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3item_press.png")
 	local keyboardPressedBox      = Tile:loadImage( imgpath .. "Buttons/keyboard_button_press.png")
 
 	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
@@ -185,19 +185,6 @@ function skin(self, s)
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_b.png",
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_bl.png",
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_l.png",
-				})
-
-	local buttonBox =
-		Tile:loadTiles({
-					nil, 
-					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_tl.png",
-					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_t.png",
-					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_tr.png",
-					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_r.png",
-					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_br.png",
-					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_b.png",
-					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_bl.png",
-					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_l.png",
 				})
 
 	local pressedTitlebarButtonBox =
@@ -254,33 +241,11 @@ function skin(self, s)
 					imgpath .. "Scroll_Bar/scrollbar_body_b.png",
 			       })
 
-	local sliderBackground = 
-		Tile:loadHTiles({
-					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
-					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
-					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
-			       })
+	local sliderBackground = Tile:loadImage(imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd.png")
+	local sliderBar        = Tile:loadImage(imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_fill.png")
 
-	local sliderBar = 
-		Tile:loadHTiles({
-					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
-					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
-					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png",
-			       })
-
-	local volumeBar =
-		Tile:loadHTiles({
-					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
-					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
-					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_r.png",
-			       })
-
-	local volumeBackground =
-		Tile:loadHTiles({
-					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
-					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
-					imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
-				})
+	local volumeBar        = Tile:loadImage(imgpath .. "Touch_Tool_bar/tch_volumebar_fill.png")
+	local volumeBackground = Tile:loadImage(imgpath .. "Touch_Tool_bar/tch_volumebar_whole.png")
 
 	local popupMask = Tile:fillColor(0x000000e5)
 
@@ -659,7 +624,6 @@ function skin(self, s)
 		h= 45,
         	font = _boldfont(18),
         	fg = TEXT_COLOR,
-        	bgImg = buttonBox,
         	align = 'center',
 	}
 
@@ -669,33 +633,14 @@ function skin(self, s)
 	s.keyboard.button_space = _uses(s.keyboard.button_shift, {
 		padding = 2, w = 100, h = 35
 	})
-	s.keyboard.button_back = _uses(s.keyboard.button, {
-		img = _loadImage(self, "Icons/Mini/left_arrow.png")
-	})
 	s.keyboard.qwertyLower = _uses(s.keyboard.button, {
 		img = _loadImage(self, "Icons/icon_shift_off.png")
 	})
 	s.keyboard.qwertyUpper = _uses(s.keyboard.button, {
 		img = _loadImage(self, "Icons/icon_shift_on.png")
 	})
-
-	s.keyboard.button_enter = _uses(s.keyboard.button_shift, {
-		img = _loadImage(self, "Icons/Mini/right_arrow.png")
-	})
-	s.keyboard.button_search = _uses(s.keyboard.button, {
-		img = _loadImage(self, "Icons/Mini/icon_search.png")
-	})
 	s.keyboard.pressed = {
 		button = _uses(s.keyboard.button, {
-			bgImg = keyboardPressedBox
-		}),
-		button_enter = _uses(s.keyboard.button_enter, {
-			bgImg = keyboardPressedBox
-		}),
-		button_search = _uses(s.keyboard.button_search, {
-			bgImg = keyboardPressedBox
-		}),
-		button_back = _uses(s.keyboard.button_back, {
 			bgImg = keyboardPressedBox
 		}),
 		button_shift = _uses(s.keyboard.button_shift, {
@@ -993,7 +938,7 @@ function skin(self, s)
 			icon = { 
 				align = 'top-left', 
 				border = { 12, 12, 0, 0 },
-				img = _loadImage(self, "Icons/menu_album_noartwork_64.png"),
+				img = _loadImage(self, "UNOFFICIAL/menu_album_noartwork_64.png"),
 				h = WH_FILL,
 				w = 64,
 			}
@@ -1081,12 +1026,12 @@ function skin(self, s)
 	})
 
 	s.button_volume_min = {
-		img = _loadImage(self, "Icons/volume_speaker_l.png"),
+		img = _loadImage(self, "UNOFFICIAL/volume_speaker_l.png"),
 		border = { 5, 0, 5, 0 },
 	}
 
 	s.button_volume_max = {
-		img = _loadImage(self, "Icons/volume_speaker_r.png"),
+		img = _loadImage(self, "UNOFFICIAL/volume_speaker_r.png"),
 		border = { 5, 0, 5, 0 },
 	}
 
@@ -1094,7 +1039,7 @@ function skin(self, s)
 		align = 'center',
 		w = 60,
 		h = 40,
-		img = _loadImage(self, "Text_Entry/Keyboard_Touch/icon_delete_tch_text_entry.png"),
+		img = _loadImage(self, "Icons/icon_delete_tch_text_entry.png"),
 		bgImg = titlebarButtonBox,
 	}
 	s.pressed.button_keyboard_back = _uses(s.button_keyboard_back, {
@@ -1136,7 +1081,7 @@ function skin(self, s)
 
 	-- icon for albums with no artwork
 	s.icon_no_artwork = {
-		img = _loadImage(self, "Icons/menu_album_noartwork_43.png"),
+		img = _loadImage(self, "UNOFFICIAL/menu_album_noartwork_43.png"),
 		w   = THUMB_SIZE,
 		h   = THUMB_SIZE,
 	}
@@ -1156,21 +1101,19 @@ function skin(self, s)
 	})
 
 	s.icon_power = _uses(_icon, {
-		img = _loadImage(self, "Alerts/popup_shutdown_icon.png"),
+-- FIXME no asset for this (needed?)
+--		img = _loadImage(self, "Alerts/popup_shutdown_icon.png"),
 	})
 
 	s.icon_locked = _uses(_icon, {
-		img = _loadImage(self, "Alerts/popup_locked_icon.png"),
+-- FIXME no asset for this (needed?)
+--		img = _loadImage(self, "Alerts/popup_locked_icon.png"),
 	})
 
 	s.icon_alarm = _uses(_icon, {
-		img = _loadImage(self, "Alerts/popup_alarm_icon.png"),
+-- FIXME no asset for this (needed?)
+--		img = _loadImage(self, "Alerts/popup_alarm_icon.png"),
 	})
-
-	s.icon_keyboard_divider = {
-		img = _loadImage(self, "Text_Entry/Keyboard_Touch/toolbar_divide.png"),
-		bgImg = _loadImage(self, "Text_Entry/Keyboard_Touch/toolbar_divider.png")
-	}
 
 	-- button icons, on left of menus
 	local _buttonicon = {
@@ -1180,37 +1123,37 @@ function skin(self, s)
 	}
 
 	s.player_transporter = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/transporter.png"),
+		img = _loadImage(self, "Icons/Players/transporter_43.png"),
 	})
 	s.player_squeezebox = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/squeezebox.png"),
+		img = _loadImage(self, "Icons/Players/squeezebox_43.png"),
 	})
 	s.player_squeezebox2 = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/squeezebox.png"),
+		img = _loadImage(self, "Icons/Players/squeezebox_43.png"),
 	})
 	s.player_squeezebox3 = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/squeezebox3.png"),
+		img = _loadImage(self, "Icons/Players/squeezebox3_43.png"),
 	})
 	s.player_boom = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/boom.png"),
+		img = _loadImage(self, "Icons/Players/boom_43.png"),
 	})
 	s.player_slimp3 = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/slimp3.png"),
+		img = _loadImage(self, "Icons/Players/slimp3_43.png"),
 	})
 	s.player_softsqueeze = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/softsqueeze.png"),
+		img = _loadImage(self, "Icons/Players/softsqueeze_43.png"),
 	})
 	s.player_controller = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/controller.png"),
+		img = _loadImage(self, "Icons/Players/controller_43.png"),
 	})
 	s.player_receiver = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/receiver.png"),
+		img = _loadImage(self, "Icons/Players/receiver_43.png"),
 	})
 	s.player_squeezeplay = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/squeezeplay.png"),
+		img = _loadImage(self, "Icons/Players/squeezeplay_43.png"),
 	})
 	s.player_http = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/http.png"),
+		img = _loadImage(self, "UNOFFICIAL/http_43.png"),
 	})
 
 
@@ -1329,7 +1272,7 @@ if true then
 			align = "center",
 			padding = 0,
 			-- FIXME: this is a placeholder
-			img = _loadImage(self, "Icons/icon_album_noartwork_190.png"),
+			img = _loadImage(self, "UNOFFICIAL/icon_album_noartwork_190.png"),
 		},
 	}
 
@@ -1345,31 +1288,30 @@ if true then
 		position = LAYOUT_NONE,
 		x = rightPadding,
 		y = topPadding,
-		bgImg = buttonBox,
 		rew = {
 			align = 'center',
 			padding = buttonPadding,
-			img = _loadImage(self, "NowPlaying/icon_toolbar_rew.png"),
+			img = _loadImage(self, "UNOFFICIAL/icon_toolbar_rew.png"),
 		},
 		play = {
 			align = 'center',
 			padding = buttonPadding,
-			img = _loadImage(self, "NowPlaying/icon_toolbar_play.png"),
+			img = _loadImage(self, "UNOFFICIAL/icon_toolbar_play.png"),
 		},
 		pause = {
 			align = 'center',
 			padding = buttonPadding,
-			img = _loadImage(self, "NowPlaying/icon_toolbar_pause.png"),
+			img = _loadImage(self, "UNOFFICIAL/icon_toolbar_pause.png"),
 		},
 		fwd = {
 			align = 'center',
 			padding = buttonPadding,
-			img = _loadImage(self, "NowPlaying/icon_toolbar_ffwd.png"),
+			img = _loadImage(self, "UNOFFICIAL/icon_toolbar_ffwd.png"),
 		},
 		vol = {
 			align = 'center',
 			padding = buttonPadding,
-			img = _loadImage(self, "NowPlaying/icon_toolbar_vol_up.png"),
+			img = _loadImage(self, "UNOFFICIAL/icon_toolbar_vol_up.png"),
 		},
 	}
 
@@ -1429,7 +1371,8 @@ if true then
 		bgImg       = sliderBackground,
 		img         = sliderBar,
 		position    = LAYOUT_SOUTH,
-		padding     = { 0, 0, 0, 15 },
+		--h           = WH_FILL,
+		--padding     = { 0, 0, 0, 15 },
 	}
 
 	s.browseprogressB = _uses(s.ssprogressB)
