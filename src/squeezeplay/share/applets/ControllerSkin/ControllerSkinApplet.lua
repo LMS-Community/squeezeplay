@@ -518,14 +518,19 @@ function skin(self, s, reload, useDefaultSize)
         s.radio = {}
         s.radio.img_on = _loadImage(self, "Icons/radiobutton_on.png")
         s.radio.img_off = _loadImage(self, "Icons/radiobutton_off.png")
+		
+	s.choice = {
+		align = 'right',
+		font = _boldfont(TEXTMENU_FONT_SIZE),
+		fg = TEXT_COLOR,
+		sh = TEXT_SH_COLOR,
+		h = WH_FILL,
+	}
 
 	s.item_choice = _uses(s.item, {
-		order  = { 'text', 'icon' },
-		icon = {
+		order  = { 'text', 'check' },
+		check = {
 			align = 'right',
-			font = _boldfont(TEXTMENU_FONT_SIZE),
-			fg = TEXT_COLOR,
-			sh = TEXT_SH_COLOR,
 			h = WH_FILL,
 		},
 	})
@@ -553,9 +558,14 @@ function skin(self, s, reload, useDefaultSize)
 		bgImg = oneLineItemSelectionBox,
 		arrow = rightArrow,
 	})
+	--FIXME: doesn't seem to take effect...
+	s.selected.choice = _uses(s.choice, {
+		fg = SELECT_COLOR,
+		sh = SELECT_SH_COLOR,
+	})
 	s.selected.item_choice = _uses(s.selected.item, {
-		order = { 'text', 'icon' },
-		icon = {
+		order = { 'text', 'check' },
+		check = {
 			align = 'right',
 			font = _boldfont(TEXTMENU_FONT_SIZE),
 			fg = SELECT_COLOR,
