@@ -35,8 +35,7 @@ function jiveVersion(self)
 end
 
 function defaultSettings(self)
-        self.params = 
-	return self.params
+	return {}
 end
 
 function registerApplet(self)
