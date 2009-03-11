@@ -504,15 +504,15 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 
 		if item["radio"] then
 			group._type = "radio"
-			group:setWidget("icon", _radioItem(item, db))
+			group:setWidget("check", _radioItem(item, db))
 
 		elseif item["checkbox"] then
 			group._type = "checkbox"
-			group:setWidget("icon", _checkboxItem(item, db))
+			group:setWidget("check", _checkboxItem(item, db))
 
 		elseif item['selectedIndex'] then
 			group._type = 'choice'
-			group:setWidget('icon', _choiceItem(item, db))
+			group:setWidget('check', _choiceItem(item, db))
 
 		else
 			if group._type then
