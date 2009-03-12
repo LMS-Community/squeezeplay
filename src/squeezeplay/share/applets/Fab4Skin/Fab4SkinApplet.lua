@@ -603,7 +603,6 @@ function skin(self, s)
 	-- text input
 	s.textinput = {
 		h = 36,
-	--	border = { 8, 0, 8, 0 },
 		padding = { 6, 0, 6, 0 },
 		font = _boldfont(TEXTINPUT_FONT_SIZE),
 		cursorFont = _boldfont(TEXTINPUT_SELECTED_FONT_SIZE),
@@ -1127,9 +1126,7 @@ function skin(self, s)
 
 	-- button icons, on left of menus
 	local _buttonicon = {
-		w = 72,
-		h = WH_FILL,
-		padding = { 8, 4, 0, 4 },
+		padding = { 8, 0, 0, 0 },
 	}
 
 	s.player_transporter = _uses(_buttonicon, {
