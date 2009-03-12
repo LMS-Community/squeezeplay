@@ -383,7 +383,7 @@ function skin(self, s)
 	})
 
 	s.popup = _uses(s.window, {
-		border = { 25, 0, 25, 0 },
+		border = { 0, 0, 0, 0 },
 		maskImg = popupMask,
 	})
 
@@ -584,10 +584,11 @@ function skin(self, s)
 	}
 
 	s.slider = {
-		w = WH_FILL,
-		horizontal = 1,
-		bgImg = sliderBackground,
-		img = sliderBar,
+		border = 10,
+                position = LAYOUT_SOUTH,
+                horizontal = 1,
+                bgImg = _progressBackground,
+                img = _progressBar,
 	}
 
 	s.slider_group = {
@@ -674,7 +675,8 @@ function skin(self, s)
 	s.waiting_popup = _uses(s.popup)
 
 	s.waiting_popup.text = {
-		border = { 15, 0, 15, 20 },
+		w = WH_FILL,
+		border = { 0, 0, 0, 20 },
 		font = _boldfont(POPUP_TEXT_SIZE_1),
 		fg = TEXT_COLOR,
 		lineHeight = POPUP_TEXT_SIZE_1 + 8,
@@ -971,7 +973,6 @@ function skin(self, s)
 		text = _uses(s.text),
 		slider_group = {
 			w = WH_FILL,
-			border = { 0, 5, 0, 10 },
 			order = { "min", "slider", "max" },
 		},
 	}
@@ -989,6 +990,7 @@ function skin(self, s)
 	s.volume_slider = _uses(s.slider, {
 		img = volumeBar,
 		bgImg = volumeBackground,
+		border = 0,
 	})
 
 
@@ -1373,12 +1375,11 @@ if true then
 	s.largeprogress  = _uses(s.ssprogress)
 
 	s.ssprogressB = {
-		horizontal  = 1,
-		bgImg       = sliderBackground,
-		img         = sliderBar,
-		position    = LAYOUT_SOUTH,
-		--h           = WH_FILL,
-		--padding     = { 0, 0, 0, 15 },
+		padding     = { 0, 0, 0, 25 },
+                position = LAYOUT_SOUTH,
+                horizontal = 1,
+                bgImg = _progressBackground,
+                img = _progressBar,
 	}
 
 	s.browseprogressB = _uses(s.ssprogressB)
