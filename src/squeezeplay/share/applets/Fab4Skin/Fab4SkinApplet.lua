@@ -404,7 +404,7 @@ function skin(self, s)
 
 	s.menu = {
 		position = LAYOUT_CENTER,
-		padding = { 0, 0, 0, 0 },
+		padding = { 0, -2, 0, 0 },
 		itemHeight = FIVE_ITEM_HEIGHT,
 		fg = {0xbb, 0xbb, 0xbb },
 		font = _boldfont(250),
@@ -565,8 +565,8 @@ function skin(self, s)
 	}
 
 	s.scrollbar = {
-		w = 34,
-		border = 0,
+		w = 32,
+		border = { -4, -1, 0, 0 },
 		padding = { 0, 24, 0, 22 },
 		horizontal = 0,
 		bgImg = scrollBackground,
