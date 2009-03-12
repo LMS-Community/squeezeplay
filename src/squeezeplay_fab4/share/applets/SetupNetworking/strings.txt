@@ -19,16 +19,16 @@ NETWORK_SETUP_NETWORKING
 	EN	Setup Networking
 
 NETWORK_FINDING_NETWORKS
-	DA	\nSøger efter netværk
-	DE	\nNetzwerksuche
-	EN	\nFinding Networks
-	ES	\nBuscando redes
-	FI	\nEtsitään verkkoja
-	FR	\nRecherche de réseaux
-	IT	\nRilevamento delle reti
-	NL	\nBezig met zoeken naar netwerken
-	NO	\nFinner nettverk
-	SV	\nSöker efter nätverk
+	DA	\nSøger efter netværk...
+	DE	\nNetzwerksuche...
+	EN	\nFinding Networks...
+	ES	\nBuscando redes...
+	FI	\nEtsitään verkkoja...
+	FR	\nRecherche de réseaux...
+	IT	\nRilevamento delle reti...
+	NL	\nBezig met zoeken naar netwerken...
+	NO	\nFinner nettverk...
+	SV	\nSöker efter nätverk...
 
 NETWORK_BSSID
 	DA	BSSID:
@@ -306,10 +306,13 @@ NETWORK_UNSUPPORTED_TYPES_HELP
 	NO	WPA-EAP og WPA2-EAP er ikke støttede krypteringstyper.
 	SV	Krypteringstyperna WPA-EAP och WPA2-EAP stöds inte.
 
+NETWORK_UNSUPPORTED_OTHER_NETWORK
+	EN	Choose a different network
+
 NETWORK_WIRELESS_KEY
 	DA	Nøgle til trådløst netværk
 	DE	WEP-Schlüssel
-	EN	Wireless Key
+	EN	Enter Your Password
 	ES	Clave inalámbrica
 	FI	Langaton avain
 	FR	Clé sans fil
@@ -339,94 +342,10 @@ NETWORK_REGION_US
 NETWORK_REGION_XX
 	EN	All Other Regions
 
-NETWORK_REGION_CA
-	DA	Canada
-	DE	Kanada
-	EN	Canada
-	ES	Canadá
-	FI	Kanada
-	FR	Canada
-	IT	Canada
-	NL	Canada
-	NO	Canada
-	SV	Kanada
-
-NETWORK_REGION_XX
-	EN	All Other Regions
-
-NETWORK_REGION_EU
-	DA	Europa
-	DE	Europa
-	EN	Europe
-	ES	Europa
-	FI	Eurooppa
-	FR	Europe
-	IT	Europa
-	NL	Europa
-	NO	Europa
-	SV	Europa
-
-NETWORK_REGION_FR
-	DA	Frankrig
-	DE	Frankreich
-	EN	France
-	ES	Francia
-	FI	Ranska
-	FR	France
-	IT	Francia
-	NL	Frankrijk
-	NO	Frankrike
-	SV	Frankrike
-
-NETWORK_REGION_AU
-	DA	Australien
-	DE	Australien
-	EN	Australia
-	ES	Australia
-	FI	Australia
-	FR	Australie
-	IT	Australia
-	NL	Australië
-	NO	Australia
-	SV	Australien
-
-NETWORK_REGION_JP
-	DA	Japan
-	DE	Japan
-	EN	Japan
-	ES	Japón
-	FI	Japani
-	FR	Japon
-	IT	Giappone
-	NL	Japan
-	NO	Japan
-	SV	Japan
-
-NETWORK_REGION_CH
-	DA	Kina
-	DE	China
-	EN	China
-	ES	China
-	FI	Kiina
-	FR	Chine
-	IT	Cina
-	NL	China
-	NO	Kina
-	SV	Kina
-
-NETWORK_REGION_TW
-	DA	Taiwan
-	DE	Taiwan
-	EN	Taiwan
-	ES	Taiwan
-	FI	Taiwan
-	FR	Taïwan
-	IT	Taiwan
-	NL	Taiwan
-	NO	Taiwan
-	SV	Taiwan
-
 NETWORK_REGION_HELP
+	EN	Choose Region Help
+
+NETWORK_REGION_HELP_BODY
 	DA	Vælg lokalområde eller land.
 	DE	Wählen Sie Region oder Land.
 	EN	If you are located in the United States, Canada, or Mexico, please select "North America."\n\nFor all other locations, select "All Other Regions." We ask this question in order to comply with local rules regarding wireless frequencies.
@@ -485,6 +404,9 @@ NETWORK_WIRELESS_ENCRYPTION
 	NL	Draadloze codering
 	NO	Trådløs kryptering
 	SV	Trådlös kryptering
+
+NETWORK_PASSWORD_TYPE
+	EN	Choose Password Type
 
 NETWORK_NO_ENCRYPTION
 	DA	Ingen adgangskode/ingen kryptering
@@ -553,7 +475,10 @@ NETWORK_WIRELESS_PASSWORD
 	SV	Trådlöst lösenord
 
 NETWORK_WIRELESS_PASSWORD_HELP
-	EN	COPY NEEDED (9A)
+	EN	Wireless Network Help
+
+NETWORK_WIRELESS_PASSWORD_HELP_BODY
+	EN	If you don't know your network password, and you have a wireless network, try one or more of the following:\n\n1. Check to see if you have it written down somewhere.\n2. Ask someone else in your home if they know the password.\n3. Contact the person who set up your home network.\n\nNOTE: A password is sometimes referred to as a wireless key, or security key.\nNOTE: Squeezebox does not support ASCII-formatted WEP passwords.
 
 NETWORK_CONNECTING_TO_SSID
 	DA	Etablerer forbindelse til\n%s
@@ -618,10 +543,13 @@ NETWORK_EDIT_WIRELESS_KEY
 	NO	Endre trådløst passord
 	SV	Redigera trådlöst lösenord
 
+NETWORK_BAD_PASSWORD
+	EN	You entered: %s\n\nWe were unable to connect using the above password.
+
 NETWORK_TRY_DIFFERENT
 	DA	Prøv et andet netværk
 	DE	Anderes Netzwerk versuchen
-	EN	Try different network
+	EN	Choose a different network
 	ES	Pruebe con otra red
 	FI	Kokeile eri verkkoa
 	FR	Essayez avec un réseau différent
@@ -645,10 +573,19 @@ NETWORK_GO_BACK
 	NO	Gå tilbake
 	SV	Tillbaka
 
+NETWORK_DHCP_ERROR
+	EN	DHCP Address Can't Be Found
+
+NETWORK_DHCP_ERROR_HINT
+	EN	We were unable to find a DHCP address for this network.
+
+NETWORK_DHCP_AGAIN
+	EN	Detect DHCP automatically
+
 NETWORK_CONNECTION_PROBLEM_HELP
 	DA	Der opstod et problem da der skulle etableres forbindelse til det trådløse netværk.
 	DE	Problem beim Verbinden mit Ihrem kabellosen Netzwerk.
-	EN	There was a problem connecting to your wireless network.
+	EN	You entered: %s\n\nWe were unable to connect using the above password. 
 	ES	Problema al conectar a la red inalámbrica.
 	FI	Yhteyden muodostamisessa langattomaan verkkoon oli ongelma.
 	FR	Un problème est survenu lors de la connexion à votre réseau sans fil.
@@ -694,7 +631,10 @@ NETWORK_NETWORK_NAME
 	SV	Nätverksnamn
 
 NETWORK_NETWORK_NAME_HELP
-	EN	COPY NEEDED (7D)
+	EN	Network Name Help
+
+NETWORK_NETWORK_NAME_HELP_BODY
+	EN	At this stage, you need to enter in the unique name of your network (sometimes called an SSID).
 
 NETWORK_ADDRESS_PROBLEM
 	DA	Adresseproblem
@@ -723,7 +663,7 @@ NETWORK_ADDRESS_HELP
 NETWORK_ADDRESS_HELP_WEP
 	DA	Der kunne ikke etableres forbindelse til dit netværk. Det kan skyldes at nøglen til det trådløse netværk er forkert, eller et andet netværksproblem, fx MAC-filtrering på routeren eller en manglede DHCP-server.
 	DE	Verbindung mit Netzwerk nicht möglich. Dies kann an einem falschen WEP-Schlüssel oder einem anderen Problem (MAC-Filter oder fehlernder DHCP-Server) liegen.
-	EN	Couldn't connect to your network. This may be caused by an incorrect wireless key or other network problem such as MAC filtering or missing DHCP server.
+	EN	You entered: %s\n\nWe were unable to connect using the above password. If you are sure you entered your password correctly, please select "my password is not working"
 	ES	No ha sido posible la conexión a su red. Puede ser debido a una clave inalámbrica incorrecta o a otro problema de red como, por ejemplo, el filtrado MAC o un servidor DHCP que no se encuentra.
 	FI	Verkkoyhteyttä ei voitu muodostaa. Tämän saattaa aiheuttaa virheellinen langattoman verkon avain tai jokin muu verkko-ongelma, esimerkiksi MAC-suodatus tai puuttuva DHCP-palvelin.
 	FR	Impossible de se connecter au réseau. Cela peut être dû à une clé sans fil incorrecte ou à un autre problème, tel que le filtrage MAC ou l'absence du serveur DHCP.
@@ -744,10 +684,13 @@ ZEROCONF_ADDRESS
 	NO	Tildel adresse manuelt
 	SV	Tilldela adress manuellt
 
+NETWORK_WEP_DHCP
+	EN	My password is not working
+
 STATIC_ADDRESS
 	DA	Brug en statisk adresse
 	DE	Statische Adresse verwenden
-	EN	Use a static address
+	EN	Enter IP information manually
 	ES	Usar una dirección estática
 	FI	Käytä staattista osoitetta
 	FR	Utiliser une adresse fixe
@@ -775,9 +718,12 @@ NETWORK_IP_ADDRESS
 	NL	IP-adres:
 
 NETWORK_IP_ADDRESS_HELP
+	EN	IP Address Help
+
+NETWORK_IP_ADDRESS_HELP_BODY
 	DA	Angiv denne fjernbetjenings IP-adresse.
 	DE	Geben Sie die IP-Adresse für diese Fernbedienung ein.
-	EN	Enter the IP address for this remote.
+	EN	To connect manually, we'll need the following pieces of information:\n\n1. IP address - the IP address you want to use for this Squeezebox. 2. Subnet mask - the subnet mask of your network. 3. Gateway IP address - typically the IP address of your router. 4. DNS - the IP address of the DNS server you are using.\n\nPlease contact your network administrator for further assistance, or visit www.mysqueezebox.com/support.
 	ES	Escriba la dirección IP del mando.
 	FI	Syötä kaukosäätimen IP-osoite.
 	FR	Entrer l'adresse IP de la télécommande.
@@ -822,10 +768,10 @@ NETWORK_DNS
 	NO	Dns-server
 	SV	DNS-server
 
-NETWORK_ADDRESS_HELP
+NETWORK_ADDRESS_IP_HELP
 	DA	Angiv din DNS-servers IP-adresse.
 	DE	Geben Sie die IP-Adresse für den DNS-Server ein.
-	EN	COPY NEEDED (10H)
+	EN	DCHP Help
 	ES	Escriba la dirección IP del servidor DNS.
 	FI	Anna DNS-palvelimen IP-osoite.
 	FR	Entrer l'adresse IP du serveur DNS.
@@ -895,7 +841,7 @@ NETWORK_CONNECTION_TYPE_WIRED
 	EN	Wired
 
 NETWORK_CONNECTION_HELP
-	EN	Help
+	EN	Connection Type
 
 NETWORK_CONNECTION_HELP_BODY
 	EN	If you'd like to connect this Squeezebox to a nearby wireless router, please select "wireless."\n\nIf you'd prefer to use a wired setup, please connect this Squeezebox to your router using an ethernet/cat5 cable and select "wired."
@@ -919,37 +865,61 @@ NETWORK_ETH_HALF_DUPLEX
 	EN	Half Duplex
 
 NETWORK_WPS_METHOD
-	EN	COPY NEEDED (WPS method)
+	EN	Choose WPS Login Method
+
+NETWORK_WPS_METHOD_HINT
+	EN	This network uses Wi-Fi Protected Setup (WPS). Please choose your authentication method below:
 
 NETWORK_WPS_METHOD_PBC
-	EN	COPY NEEDED (Push Button Config)
+	EN	Use Push Button/PBC Method
 
 NETWORK_WPS_METHOD_PIN
-	EN	COPY NEEDED (PIN - %s)
+	EN	Use PIN Method
 	
 NETWORK_WPS_METHOD_PSK
-	EN	COPY NEEDED (Password)
+	EN	Enter WPA Password
 
 NETWORK_WPS_METHOD_PASSPHRASE
 	EN	Passphrase Method
 
 NETWORK_WPS_HELP
-	EN	Help
+	EN	WPS Help
 
 NETWORK_WPS_HELP_BODY
-	EN	COPY NEEDED (7H)
+	EN	This network uses Wi-Fi Protected Setup (WPS). Please consult the router manufacturer's instructions for connecting via WPS, or select "Enter WPA/WPS Password" to bypass WPS and enter a regular password.
+
+NETWORK_ENTER_PIN
+	EN	Enter PIN
+
+NETWORK_ENTER_PIN_HINT
+	EN	PIN: %s\n\nFollow your router manufacturer's instructions for entering this PIN. For security reasons, you'll have 120 seconds to complete PIN entry. Press "Start Timer" to begin.
+
+NETWORK_ENTER_PBC
+	EN	Push Button/PBC
+
+NETWORK_ENTER_PBC_HINT
+	EN	Follow your router manufacturer's instructions for Push Button/PBC. For security reasons, you'll have 120 seconds to complete push button entry. Press "Start Timer" to begin.
+
+NETWORK_START_TIMER
+	EN	Start Timer
 
 NETWORK_WPS_PROGRESS_PBC
-	EN	COPY_NEEDED (7J)\nActivate your router
+	EN	Push Button
 
 NETWORK_WPS_PROGRESS_PIN
-	EN	COPY NEEDED (7I)\nPIN: %s
+	EN	Enter This PIN\n%s
 
 NETWORK_WPS_PROBLEM
-	EN	COPY NEEDED (7K)\nWPS Failed.
+	EN	WPS Timeout
+
+NETWORK_WPS_PROBLEM_HINT
+	EN	For security reasons, WPS setup has timed out.
+
+NETWORK_WPS_DIFFERENT_METHOD
+	EN	Choose different setup method
 
 NETWORK_WPS_REMAINING_WALK_TIME
-	EN	Remaining walk time: %s seconds
+	EN	Remaining time: %s seconds
 
 NETWORK_ATTACH_CABLE
 	EN	Not Connected
@@ -960,11 +930,14 @@ NETWORK_ATTACH_CABLE_DETAILED
 NETWORK_ERROR
 	EN	Connection Error
 
-NETWORK_LIST_HELP
-	EN	Help
+NETWORK_CANT_CONNECT
+	EN	Can't Connect
 
 NETWORK_LIST_HELP_BODY
-	EN	COPY NEEDED (7A)
+	EN	At this stage, we need to get your Squeezebox connected to your wireless network. To do this, you'll need to know your network name and password (if you have an open network, you won't need a password).\n\nIf you don't know your network name or password, and you have a wireless network, try one or more of the following:\n\n\n1. Check to see if you have them written down somewhere.\n2. Ask someone else in your home if they know them.\n3. Contact the person who set up your home network.\n4. Check your router manual.\n5. Contact your router manufacturer for assistance.\n\nNOTE: A network name is sometimes referred to as an SSID, and a password is sometimes referred to as a wireless key, or security key.\n\nIf your network does not appear on the list of wireless networks, try one or more of the following:\n\n1. Make sure the Squeezebox is within range of your wireless network.\n2. Go to your computer to make sure your network is working.\n3. If your router is configured to not broadcast your network name (SSID), select "I don't see my network" at the bottom of the list of networks, and enter yours.\n4. Unplug your router, wait 30 seconds, and plug it back in.\n5. Refer to your router documentation or contact the manufacturer for assistance.
+
+NETWORK_LIST_HELP
+	EN	Wireless Network Help
 
 NETWORK_DONT_SEE_YOUR_NETWORK
 	EN	I Don't See My Network
