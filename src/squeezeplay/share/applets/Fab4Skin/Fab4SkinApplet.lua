@@ -427,7 +427,8 @@ function skin(self, s)
 		},
 		arrow = {
 	      		align = ITEM_ICON_ALIGN,
-	      		img = _loadImage(self, "Icons/selection_right_5line.png")
+	      		img = _loadImage(self, "Icons/selection_right_5line.png"),
+			padding = { 0, 0, 3, 0 },
 		},
 		bgImg = fiveItemBox,
 	}
@@ -566,7 +567,7 @@ function skin(self, s)
 	s.scrollbar = {
 		w = 34,
 		border = 0,
-		padding = { 0, 24, 0, 24 },
+		padding = { 0, 24, 0, 22 },
 		horizontal = 0,
 		bgImg = scrollBackground,
 		img = scrollBar,
@@ -1014,9 +1015,11 @@ function skin(self, s)
 
 	s.button_back = _uses(_button, {
 		img      = backButton,
+		padding  = { 2, 0, 0, 0 },
 	})
 	s.pressed.button_back = _uses(_pressed_button, {
 		img      = backButton,
+		padding  = { 2, 0, 0, 0 },
 	})
 
 	s.button_go_now_playing = _uses(_button, {
