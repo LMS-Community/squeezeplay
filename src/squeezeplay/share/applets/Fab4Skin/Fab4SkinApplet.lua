@@ -414,7 +414,7 @@ function skin(self, s)
 		order = { "icon", "text", "arrow" },
 		padding = { 0, 0, 0, 0 },
 		text = {
-			padding = { 8, 5, 2, 5 },
+			padding = { 8, 0, 2, 0 },
 			align = "left",
 			w = WH_FILL,
 			h = WH_FILL,
@@ -747,12 +747,11 @@ function skin(self, s)
 				text = {
 					w = WH_FILL,
 					h = WH_FILL,
-					padding = MENU_ALBUMITEM_TEXT_PADDING,
+					align = 'left',
 					font = _font(ALBUMMENU_SMALL_FONT_SIZE),
 					line = {
 						{
 							font = _boldfont(ALBUMMENU_FONT_SIZE),
-							height = ALBUMMENU_FONT_SIZE + 2
 						}
 					},
 					fg = TEXT_COLOR,
