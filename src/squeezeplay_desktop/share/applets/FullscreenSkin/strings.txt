@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 DESKTOP_SKIN
+	CS	Vzhled pracovní plochy
 	DA	Tema til skrivebord
 	DE	Desktop-Skin
 	EN	Desktop Skin
@@ -12,5 +13,7 @@ DESKTOP_SKIN
 	IT	Interfaccia desktop
 	NL	Skin van desktop
 	NO	Skrivebordsskall
+	PL	Karnacja pulpitu
+	RU	Обложка рабочего стола
 	SV	Skrivbordsskal
 

@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 WELCOME
+	CS	Vítejte
 	DA	Velkommen
 	DE	Willkommen
 	EN	Welcome
@@ -12,9 +13,12 @@ WELCOME
 	IT	Benvenuti
 	NL	Welkom
 	NO	Velkommen
+	PL	Zapraszamy
+	RU	Добро пожаловать!
 	SV	Välkommen
 
 SETTINGS
+	CS	Nastavení
 	DA	Indstillinger
 	DE	Einstellungen
 	EN	Settings
@@ -24,9 +28,12 @@ SETTINGS
 	IT	Impostazioni
 	NL	Instellingen
 	NO	Innstillinger
+	PL	Ustawienia
+	RU	Настройки
 	SV	Inställningar
 
 REMOTE_SETTINGS
+	CS	Nastavení ovladače
 	DA	Indstillinger for Controller
 	DE	Fernbedienungseinstellungen
 	EN	Controller Settings
@@ -36,9 +43,12 @@ REMOTE_SETTINGS
 	IT	Impostazioni telecomando
 	NL	Afstandsbedieningsinstellingen
 	NO	Kontrollinnstillinger
+	PL	Ustawienia urządzenia sterującego
+	RU	Настройки контроллера
 	SV	Controller-inställningar
 
 SCREEN_SETTINGS
+	CS	Obrazovka
 	DA	Skærm
 	DE	Anzeige
 	EN	Screen
@@ -48,9 +58,12 @@ SCREEN_SETTINGS
 	IT	Visualizza
 	NL	Display
 	NO	Skjerm
+	PL	Ekran
+	RU	Экран
 	SV	Skärm
 
 HOME
+	CS	Domů
 	DA	Startside
 	DE	Hauptmenü
 	EN	Home
@@ -60,9 +73,12 @@ HOME
 	IT	Pagina iniziale
 	NL	Hoofdmenu
 	NO	Hovedmeny
+	PL	Strona główna
+	RU	Главное меню
 	SV	Hem
 
 ADVANCED_SETTINGS
+	CS	Pokročilé
 	DA	Avanceret
 	DE	Erweitert
 	EN	Advanced
@@ -72,9 +88,12 @@ ADVANCED_SETTINGS
 	IT	Avanzate
 	NL	Geavanceerd
 	NO	Avansert
+	PL	Zaawansowane
+	RU	Дополнительно
 	SV	Avancerad
 
 FACTORY_TEST
+	CS	Tovární zkouška
 	DA	Test af standardindstillinger
 	DE	Fabriktest
 	EN	Factory Test
@@ -84,9 +103,12 @@ FACTORY_TEST
 	IT	Verifica in fabbrica
 	NL	Fabriekstest
 	NO	Fabrikktest
+	PL	Test fabryczny
+	RU	Фабричный тест
 	SV	Fabrikstestning
 
 DEBUG_LOG
+	CS	Přihlašování
 	DA	Logføring
 	DE	Protokoll
 	EN	Logging
@@ -96,9 +118,12 @@ DEBUG_LOG
 	IT	Registrazione in corso
 	NL	Loggen
 	NO	Loggføring
+	PL	Rejestrowanie
+	RU	Ведение журнала
 	SV	Loggning
 
 EXTRAS
+	CS	Doplňky
 	DA	Ekstra
 	DE	Extras
 	EN	Extras
@@ -108,9 +133,12 @@ EXTRAS
 	IT	Extra
 	NL	Extra's
 	NO	Tillegg
+	PL	Dodatki
+	RU	Дополнения
 	SV	Extrafunktioner
 
 GAMES
+	CS	Hry
 	DA	Spil
 	DE	Spiele
 	EN	Games
@@ -120,9 +148,12 @@ GAMES
 	IT	Giochi
 	NL	Games
 	NO	Spill
+	PL	Gry
+	RU	Игры
 	SV	Spel
 
 INSERT
+	CS	Insert
 	DA	Indsæt
 	DE	Einfügen
 	EN	Insert
@@ -132,9 +163,12 @@ INSERT
 	IT	Inserisci
 	NL	Invoegen
 	NO	Sett inn
+	PL	Insert
+	RU	Вставить
 	SV	Infoga
 
 DELETE
+	CS	Odstranit
 	DA	Slet
 	DE	Löschen
 	EN	Delete
@@ -144,9 +178,12 @@ DELETE
 	IT	Elimina
 	NL	Verwijderen
 	NO	Fjern
+	PL	Usuń
+	RU	Удалить
 	SV	Ta bort
 
 ALLOWEDCHARS_NOCAPS
+	CS	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	DA	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	DE	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	EN	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
@@ -156,9 +193,12 @@ ALLOWEDCHARS_NOCAPS
 	IT	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	NL	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	NO	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	PL	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	RU	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	SV	 abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 
 ALLOWEDCHARS_CAPS
+	CS	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	DA	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	DE	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	EN	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
@@ -168,9 +208,12 @@ ALLOWEDCHARS_CAPS
 	IT	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	NL	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	NO	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	PL	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	RU	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	SV	 ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 
 ALLOWEDCHARS_WITHCAPS
+	CS	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	DA	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	DE	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	EN	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
@@ -180,9 +223,12 @@ ALLOWEDCHARS_WITHCAPS
 	IT	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	NL	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	NO	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	PL	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	RU	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	SV	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 
 RETURN_TO_SETUP
+	CS	Zpět k nastavení
 	DA	Tilbage til Konfiguration
 	DE	Zurück zum Setup
 	EN	Return to Setup
@@ -192,5 +238,7 @@ RETURN_TO_SETUP
 	IT	Torna all'installazione
 	NL	Terug naar set-up
 	NO	Gå tilbake til konfigureringen
+	PL	Powrót do konfiguracji
+	RU	Вернуться к установке
 	SV	Återgå till installationen
 

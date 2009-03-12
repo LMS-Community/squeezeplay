@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SSH
+	CS	Vzdálené přihlášení
 	DA	Fjernadgang
 	DE	Remote-Anmeldung
 	EN	Remote Login
@@ -12,9 +13,12 @@ SSH
 	IT	Accesso remoto
 	NL	Externe aanmelding
 	NO	Ekstern pålogging
+	PL	Zdalne logowanie
+	RU	Удаленный вход
 	SV	Fjärrinloggning
 
 SSH_ENABLE
+	CS	Povolit SSH
 	DA	Aktiver SSH
 	DE	SSH aktivieren
 	EN	Enable SSH
@@ -24,9 +28,12 @@ SSH_ENABLE
 	IT	Attiva SSH
 	NL	SSH inschakelen
 	NO	Aktiver SSH
+	PL	Włącz protokół SSH
+	RU	Включить SSH
 	SV	Aktivera SSH
 
 SSH_HOWTO
+	CS	Kořenové heslo pro toto zařízení je %s a můžete se k němu připojit na adrese %s
 	DA	Root-adgangskoden til denne enhed er %s, og du kan oprette forbindelse til den på adressen %s
 	DE	Stammkennwort dieses Geräts ist %s. Sie können über Adresse %s eine Verbindung herstellen.
 	EN	The root password for this device is %s and you can connect to it on address %s
@@ -36,5 +43,7 @@ SSH_HOWTO
 	IT	La password principale per questo dispositivo è %s ed è possibile connettersi al dispositivo tramite l'indirizzo %s
 	NL	Het hoofdwachtwoord voor dit apparaat is %s en je kunt er verbinding mee maken via het adres %s
 	NO	Rotpassordet for denne enheten er %s, og du kan kople til den på adressen %s
+	PL	Główne hasło dla tego urządzenia to %s, a połączyć się z nim można pod adresem %s
+	RU	Корневой пароль этого устройства %s, и вы можете подключиться к нему по адресу %s
 	SV	Rotlösenordet för enheten är %s och du kan ansluta till den på adressen %s
 

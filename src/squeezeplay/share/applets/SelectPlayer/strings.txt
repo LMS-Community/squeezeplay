@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SELECT_PLAYER
+	CS	Zvolit přehrávač
 	DA	Vælg afspiller
 	DE	Player wählen
 	EN	Choose Player
@@ -12,9 +13,12 @@ SELECT_PLAYER
 	IT	Scegli lettore
 	NL	Muzieksysteem kiezen
 	NO	Velg spiller
+	PL	Wybierz odtwarzacz
+	RU	Выберите плеер
 	SV	Välj spelare
 
 SQUEEZEBOX_SETUP
+	CS	Nastavit přijímač
 	DA	Indstillinger for Receiver
 	DE	Squeezebox einrichten
 	EN	Set Up Receiver
@@ -24,9 +28,12 @@ SQUEEZEBOX_SETUP
 	IT	Configura Squeezebox
 	NL	Squeezebox instellen
 	NO	Konfigurer mottaker
+	PL	Skonfiguruj odbiornik
+	RU	Установить ресивер
 	SV	Konfigurera mottagare
 
 SQUEEZEBOX_NAME
+	CS	Squeezebox %s
 	DA	Squeezebox %s
 	DE	Squeezebox %s
 	EN	Squeezebox %s
@@ -36,9 +43,12 @@ SQUEEZEBOX_NAME
 	IT	Squeezebox %s
 	NL	Squeezebox %s
 	NO	Squeezebox %s
+	PL	Squeezebox %s
+	RU	Squeezebox %s
 	SV	Squeezebox %s
 
 SQUEEZEBOX_ACTIVATE
+	CS	Aktivovat %s
 	DA	Aktiver %s
 	DE	%s aktivieren
 	EN	Activate %s
@@ -48,9 +58,12 @@ SQUEEZEBOX_ACTIVATE
 	IT	Attiva %s
 	NL	%s activeren
 	NO	Aktiver %s
+	PL	Uaktywnij %s
+	RU	Активировать %s
 	SV	Aktivera %s
 
 LOCAL
+	CS	Místní
 	DA	Lokal
 	DE	Lokal
 	EN	Local
@@ -60,9 +73,12 @@ LOCAL
 	IT	Locale
 	NL	Lokaal
 	NO	Lokal
+	PL	Lokalny
+	RU	Локальный
 	SV	Lokal
 
 LOCAL_PLAYER
+	CS	Lokální přehrávač
 	DA	Lokal afspiller
 	DE	Lokaler Player
 	EN	Local Player
@@ -72,9 +88,12 @@ LOCAL_PLAYER
 	IT	Lettore locale
 	NL	Lokaal muzieksysteem
 	NO	Lokal spiller
+	PL	Odtwarzacz lokalny
+	RU	Локальный плеер
 	SV	Lokal spelare
 
 THIS_PLAYER
+	CS	Tento přehrávač
 	DA	Denne afspiller
 	DE	Dieser Player
 	EN	This Player
@@ -84,9 +103,12 @@ THIS_PLAYER
 	IT	Questo lettore
 	NL	Dit muzieksysteem
 	NO	Denne spilleren
+	PL	Ten odtwarzacz
+	RU	Этот плеер
 	SV	Den här spelaren
 
 SEARCHING
+	CS	Vyhledávám přehrávače...
 	DA	Søger efter afspillere...
 	DE	Player werden gesucht...
 	EN	Scanning for Players...
@@ -96,5 +118,7 @@ SEARCHING
 	IT	Rilevamento lettori in corso...
 	NL	Zoeken naar muzieksystemen...
 	NO	Søker etter spillere ...
+	PL	Wyszukiwanie odtwarzaczy...
+	RU	Поиск плееров...
 	SV	Söker efter spelare ...
 

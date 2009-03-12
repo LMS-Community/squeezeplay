@@ -2,6 +2,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 DATETIME_TITLE
+	CS	Datum a čas
 	DA	Dato og klokkeslæt
 	DE	Datum & Zeit
 	EN	Date & Time
@@ -11,9 +12,12 @@ DATETIME_TITLE
 	IT	Data & ora
 	NL	Datum & tijd
 	NO	Tid og dato
+	PL	Data i godzina
+	RU	Дата и время
 	SV	Datum och tid
 
 DATETIME_TIMEFORMAT
+	CS	Time Format (Formát času)
 	DA	Klokkeslætformat
 	DE	Zeit Format
 	EN	Time Format
@@ -23,9 +27,12 @@ DATETIME_TIMEFORMAT
 	IT	Formato ora
 	NL	Tijdnotatie
 	NO	Tidsformat
+	PL	Format godziny
+	RU	Формат времени
 	SV	Tidsformat
 
 DATETIME_TIMEFORMAT_12H
+	CS	12 hours (12hodinový)
 	DA	12 timer
 	DE	12 Stunden
 	EN	12 hours
@@ -35,9 +42,12 @@ DATETIME_TIMEFORMAT_12H
 	IT	12 ore
 	NL	12 uur
 	NO	12 timer
+	PL	12 godziny
+	RU	12 часов
 	SV	12 timmar
 
 DATETIME_TIMEFORMAT_24H
+	CS	24 hours (24hodinový)
 	DA	24 timer
 	DE	24 Stunden
 	EN	24 hours
@@ -47,9 +57,12 @@ DATETIME_TIMEFORMAT_24H
 	IT	24 ore
 	NL	24 uur
 	NO	24 timer
+	PL	24 godziny
+	RU	24 часов
 	SV	24 timmar
 
 DATETIME_DATEFORMAT
+	CS	Formát data
 	DA	Datoformat
 	DE	Datums Format
 	EN	Date Format
@@ -59,9 +72,12 @@ DATETIME_DATEFORMAT
 	IT	Formato data
 	NL	Datumnotatie
 	NO	Datoformat
+	PL	Format daty
+	RU	Формат даты
 	SV	Datumformat
 
 DATETIME_WEEKSTART
+	CS	Začátek týdne
 	DA	Ugen starter
 	DE	Wochenstart
 	EN	Week Start
@@ -71,9 +87,12 @@ DATETIME_WEEKSTART
 	IT	Inizio settimana
 	NL	Begin van week
 	NO	Ukestart
+	PL	Początek tygodnia
+	RU	Начало недели
 	SV	Veckostart
 
 DATETIME_MONDAY
+	CS	Pondělí
 	DA	Mandag
 	DE	Montag
 	EN	Monday
@@ -83,9 +102,12 @@ DATETIME_MONDAY
 	IT	Lunedì
 	NL	Maandag
 	NO	mandag
+	PL	Poniedziałek
+	RU	Понедельник
 	SV	Måndag
 
 DATETIME_SUNDAY
+	CS	Neděle
 	DA	Søndag
 	DE	Sonntag
 	EN	Sunday
@@ -95,5 +117,7 @@ DATETIME_SUNDAY
 	IT	Domenica
 	NL	Zondag
 	NO	søndag
+	PL	Niedziela
+	RU	Воскресенье
 	SV	Söndag
 

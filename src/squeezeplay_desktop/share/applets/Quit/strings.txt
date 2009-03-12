@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 QUIT
+	CS	Ukončit
 	DA	Afslut
 	DE	Beenden
 	EN	Quit
@@ -12,5 +13,7 @@ QUIT
 	IT	Esci
 	NL	Stoppen
 	NO	Gi opp
+	PL	Zamknij
+	RU	Выйти
 	SV	Avsluta
 

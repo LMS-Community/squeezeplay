@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SCREENSAVER_NOWPLAYING
+	CS	Právě hraje
 	DA	Nu spiller
 	DE	Aktueller Titel
 	EN	Now Playing
@@ -12,9 +13,12 @@ SCREENSAVER_NOWPLAYING
 	IT	Riproduzione in corso
 	NL	Speelt nu
 	NO	Spilles nå
+	PL	Odtwarzanie
+	RU	Воспроизводится
 	SV	Nu spelas
 
 SCREENSAVER_PAUSED
+	CS	Pozastaveno
 	DA	Pause
 	DE	Pause
 	EN	Paused
@@ -24,9 +28,12 @@ SCREENSAVER_PAUSED
 	IT	In pausa
 	NL	Gepauzeerd
 	NO	Pause
+	PL	Wstrzymano
+	RU	Пауза
 	SV	Pausad
 
 SCREENSAVER_STOPPED
+	CS	Při zastavení
 	DA	På pause
 	DE	Bei Pause
 	EN	Stopped
@@ -36,9 +43,12 @@ SCREENSAVER_STOPPED
 	IT	Quando la riproduzione è interrotta
 	NL	Wanneer gestopt
 	NO	Ved stopp
+	PL	Po zatrzymaniu
+	RU	При остановке
 	SV	I stoppat läge
 
 SCREENSAVER_NOWPLAYING_SETTINGS
+	CS	Nastavení právě přehrávaných skladeb
 	DA	Indstillinger for Nu spiller
 	DE	Aktueller Titel - Einstellung
 	EN	Now Playing Settings
@@ -48,9 +58,12 @@ SCREENSAVER_NOWPLAYING_SETTINGS
 	IT	Impostazioni della riproduzione in corso
 	NL	Instellingen Speelt nu
 	NO	Innstillinger for Spilles nå
+	PL	Ustawienia teraz odtwarzanych
+	RU	Настройки воспроизведения
 	SV	Nu spelas-inställningar
 
 SCREENSAVER_NOWPLAYING_OF
+	CS	%s z %s
 	DA	%s af %s
 	DE	%s von %s
 	EN	%s of %s
@@ -60,9 +73,12 @@ SCREENSAVER_NOWPLAYING_OF
 	IT	%s di %s
 	NL	%s van %s
 	NO	%s av %s
+	PL	%s z %s
+	RU	%s из %s
 	SV	%s av %s
 
 SCREENSAVER_OFF
+	CS	Vypnuto
 	DA	Fra
 	DE	Aus
 	EN	Off
@@ -72,9 +88,12 @@ SCREENSAVER_OFF
 	IT	Disattivato
 	NL	Uit
 	NO	Av
+	PL	wył.
+	RU	Выкл.
 	SV	Av
 
 SCREENSAVER_ARTWORK_SIZE
+	CS	Velikost obalu právě přehrávané skladby
 	DA	Størrelse af albumcover ved Nu spiller
 	DE	Plattenhüllen-Größe der aktuellen Wiedergabe
 	EN	Now Playing Artwork Size
@@ -84,9 +103,12 @@ SCREENSAVER_ARTWORK_SIZE
 	IT	Dimensioni copertina brano in riproduzione
 	NL	Grootte hoesafbeelding bij 'Speelt nu'
 	NO	Omslagsstørrelse på Spiller av nå
+	PL	Wielkość okładki odtwarzanego utworu
+	RU	Размер обложки, которая воспроизводится
 	SV	Storlek på omslag för album som spelas
 
 SCREENSAVER_ARTWORK_SMALL
+	CS	Malé
 	DA	Lille
 	DE	Klein
 	EN	Small
@@ -96,9 +118,12 @@ SCREENSAVER_ARTWORK_SMALL
 	IT	Piccola
 	NL	Klein
 	NO	Lite
+	PL	Małe
+	RU	Маленький
 	SV	Liten
 
 SCREENSAVER_ARTWORK_MEDIUM
+	CS	Střední
 	DA	Mellem
 	DE	Mittel
 	EN	Medium
@@ -108,9 +133,12 @@ SCREENSAVER_ARTWORK_MEDIUM
 	IT	Media
 	NL	Gemiddeld
 	NO	Middels
+	PL	Średnie
+	RU	Средний
 	SV	Medel
 
 SCREENSAVER_ARTWORK_LARGE
+	CS	Velký
 	DA	Stort
 	DE	Groß
 	EN	Large
@@ -120,5 +148,7 @@ SCREENSAVER_ARTWORK_LARGE
 	IT	Grande
 	NL	Groot
 	NO	Stort
+	PL	Duże
+	RU	Крупный
 	SV	Stor
 

@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SELECT_SKIN
+	CS	Zvolit vzhled plochy
 	DA	Vælg tema
 	DE	Skin wählen
 	EN	Select Skin
@@ -12,12 +13,15 @@ SELECT_SKIN
 	IT	Seleziona interfaccia
 	NL	Skin selecteren
 	NO	Velg skall
+	PL	Wybierz karnację
+	RU	Выберите обложку
 	SV	Välj skal
 
 CONTROLLER_SKIN
 	EN	Controller Skin
 
 DESKTOP_SKIN
+	CS	Vzhled pracovní plochy
 	DA	Tema til skrivebord
 	DE	Desktop Skin
 	EN	Desktop Skin
@@ -27,9 +31,12 @@ DESKTOP_SKIN
 	IT	Interfaccia desktop
 	NL	Skin van desktop
 	NO	Skrivebordsskall
+	PL	Karnacja pulpitu
+	RU	Обложка рабочего стола
 	SV	Skrivbordsskal
 
 FULLSCREEN_MODE
+	CS	Celá obrazovka
 	DA	Fuld skærm
 	DE	Vollbild
 	EN	Fullscreen
@@ -39,5 +46,7 @@ FULLSCREEN_MODE
 	IT	Schermo intero
 	NL	Volledig scherm
 	NO	Fullskjerm
+	PL	Pełny ekran
+	RU	Во весь экран
 	SV	Helskärm
 

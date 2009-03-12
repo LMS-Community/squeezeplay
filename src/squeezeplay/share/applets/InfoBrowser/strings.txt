@@ -1,6 +1,7 @@
 #
 
 INFOBROWSER
+	CS	Prohlížeč informací
 	DA	Informationsaflæser
 	DE	Info-Browser
 	EN	Information Browser
@@ -10,9 +11,12 @@ INFOBROWSER
 	IT	Browser informazioni
 	NL	Infobrowser
 	NO	Informasjonsleser
+	PL	Przeglądarka informacji
+	RU	Обозреватель информации
 	SV	Infoläsaren
 
 INFOBROWSER_NORESPONSE
+	CS	Nenalezeny žádné informační kanály. Ověřte, zda je povolen zásuvný modul pro Prohlížeč informací na vašem serveru.
 	DA	Der blev ikke fundet nogen informationsfeeds. Kontroller at udvidelsesmodulet Informationsaflæser er slået til på serveren.
 	DE	Keine Info-Feeds gefunden. Prüfen Sie, ob das Plug-In 'Info-Browser' auf dem Server aktiviert ist.
 	EN	No information feeds found.  Please check the Information Browser plugin is enabled on your server.
@@ -22,9 +26,12 @@ INFOBROWSER_NORESPONSE
 	IT	Nessun feed di informazioni trovato. Verificare che il plugin del Browser informazioni sia attivato nel server.
 	NL	Geen informatiekanalen gevonden. Controleer of de plug-in Infobrowser op je server is ingeschakeld.
 	NO	Fant ingen informasjonsfeeder. Kontroller at plugin-modulen Informasjonsleser er aktivert på serveren.
+	PL	Nie znaleziono żadnych kanałów informacji. Sprawdź, czy na serwerze włączono wtyczkę Przeglądarka informacji.
+	RU	Не найдены каналы информации. Убедитесь, что модуль информационного браузера включен на вашем сервере.
 	SV	Inga informationsflöden hittades. Kontrollera att plugin-programmet Infoläsaren har aktiverats på servern.
 
 INFOBROWSER_NOINFO_SN
+	CS	Nenalezeny žádné informační kanály. Přihlaste se ke svému účtu SqueezeNetwork a přidejte informační kanály.
 	DA	Der blev ikke fundet nogen informationsfeeds. Log på SqueezeNetwork-konto, og tilføj nogen.
 	DE	Keine Info-Feeds gefunden. Melden Sie sich bei Ihrem SqueezeNetwork-Konto an und fügen Sie Info-Feeds hinzu.
 	EN	No information feeds found.  Please login to your SqueezeNetwork account and add information feeds.
@@ -34,9 +41,12 @@ INFOBROWSER_NOINFO_SN
 	IT	Nessun feed di informazioni trovato. Accedere all'account SqueezeNetwork e aggiungere i feed di informazioni.
 	NL	Geen informatiekanalen gevonden. Meld je aan bij je SqueezeNetwork-account en voeg informatiekanalen toe.
 	NO	Fant ingen informasjonsfeeder. Logg på SqueezeNetwork-kontoen og legg til informasjonsfeeder.
+	PL	Nie znaleziono żadnych kanałów informacji. Zaloguj się na konto SqueezeNetwork i dodaj kanały informacji.
+	RU	Не найдены каналы информации. Войдите с учетной записью SqueezeNetwork и добавьте каналы информации.
 	SV	Inga informationsflöden hittades. Logga in på SqueezeNetwork-kontot och lägg till informationsflöden.
 
 INFOBROWSER_NOINFO_SC
+	CS	Nenalezeny žádné informační kanály. K přidání infokanálů pod nabídku Extra/Prohlížeč informací použijte webové rozhraní SqueezeCenter.
 	DA	Der blev ikke fundet nogen informationsfeeds. Du kan tilføje nogen via den webbaserede brugerflade til SqueezeCenter under Ekstra/Informationsaflæser.
 	DE	Keine Info-Feeds gefunden. In der SqueezeCenter-Web-Benutzeroberfläche können Sie unter Extras/Info-Browser Info-Feeds hinzufügen.
 	EN	No information feeds found.  Please use the SqueezeCenter web interface to add information feeds under Extras/Info Browser.
@@ -46,5 +56,7 @@ INFOBROWSER_NOINFO_SC
 	IT	Nessun feed di informazioni trovato. Utilizzare l'interfaccia Web di SqueezeCenter per aggiungere i feed di informazioni in Extra/Browser informazioni.
 	NL	Geen informatiekanalen gevonden. Gebruik de SqueezeCenter-webinterface om informatiekanalen onder 'Extra's/Infobrowser' toe te voegen.
 	NO	Fant ingen informasjonsfeeder. Bruk SqueezeCenter-webgrensesnittet for å legge til informasjonsfeeder under Tillegg/Informasjonsleser.
+	PL	Nie znaleziono żadnych kanałów informacji. Użyj interfejsu internetowego programu SqueezeCenter, aby dodać kanały informacji na ekranie Dodatki/Przeglądarka informacji.
+	RU	Не найдены каналы информации. Используйте веб-интерфейс SqueezeCenter, чтобы добавить каналы информации в группе "Дополнения/Информационный браузер".
 	SV	Inga informationsflöden hittades. Använd SqueezeCenters webbgränssnitt för att lägga till informationsflöden under Extrafunktioner/Infoläsaren.
 

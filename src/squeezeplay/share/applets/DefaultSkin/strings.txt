@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 CONTROLLER_SKIN
+	CS	Vzhled ovladače
 	DA	Tema til kontrolpanel
 	DE	Controller-Skin
 	EN	Controller Skin
@@ -12,5 +13,7 @@ CONTROLLER_SKIN
 	IT	Interfaccia Controller
 	NL	Skin van controller
 	NO	Kontrollskall
+	PL	Karnacja urządzenia sterującego
+	RU	Обложка контроллера
 	SV	Controller-skal
 

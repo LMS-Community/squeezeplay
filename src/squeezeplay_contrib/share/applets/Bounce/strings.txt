@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SCREENSAVER_BOUNCE
+	CS	Odraz
 	DA	Tilbagespring
 	DE	Boing
 	EN	Bounce
@@ -12,5 +13,7 @@ SCREENSAVER_BOUNCE
 	IT	Rimbalzo
 	NL	Stuiteren
 	NO	Sprett
+	PL	Odbicie
+	RU	Bounce
 	SV	Studsa
 
