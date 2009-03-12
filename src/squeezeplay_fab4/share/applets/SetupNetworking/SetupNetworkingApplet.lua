@@ -280,6 +280,7 @@ end
 function _networkScan(self, iface)
 	local popup = Popup("waiting_popup")
 	popup:setAllowScreensaver(false)
+	popup:ignoreAllInputExcept({"back","disconnect_player"})
 
         popup:addWidget(Icon("icon_connecting"))
         popup:addWidget(Label("text", self:string("NETWORK_FINDING_NETWORKS")))
@@ -930,6 +931,7 @@ function _connect(self, iface, ssid, createNetwork)
 			_connectTimer(self, iface, ssid)
 		end)
 	popup:addWidget(icon)
+	popup:ignoreAllInputExcept({"back","disconnect_player"})
 
 	-- XXXX popup text, including dhcp detection text
 
@@ -1110,6 +1112,7 @@ function _connectSuccess(self, iface, ssid)
 	-- popup confirmation
 	local popup = Popup("waiting_popup")
 	popup:addWidget(Icon("icon_connected"))
+	popup:ignoreAllInputExcept({"back","disconnect_player"})
 
 	local name = self.scanResults[ssid].item.text
 	local text = Label("text", self:string("NETWORK_CONNECTED_TO", name))
@@ -1121,7 +1124,7 @@ function _connectSuccess(self, iface, ssid)
 			end,
 			true)
 
-	popup:addListener(EVENT_KEY_PRESS,
+	popup:addListener(EVENT_KEY_PRESS | EVENT_MOUSE_PRESS, --todo IR should work too, but not so simple - really window:hideOnAllButtonInput should allow for a callback on hide for "next" type situations such as this
 			   function(event)
 				self.setupNext()
 				return EVENT_CONSUME
@@ -1552,6 +1555,7 @@ function _setStaticIP(self, iface, ssid)
 
 	local popup = Popup("waiting_popup")
 	popup:addWidget(Icon("icon_connecting"))
+	popup:ignoreAllInputExcept({"back","disconnect_player"})
 
 	local name = self.scanResults[ssid].item.text
 	popup:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", name)))
