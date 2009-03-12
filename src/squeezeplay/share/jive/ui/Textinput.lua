@@ -8,6 +8,7 @@ local Widget            = require("jive.ui.Widget")
 local ScrollAccel       = require("jive.ui.ScrollAccel")
 local IRMenuAccel       = require("jive.ui.IRMenuAccel")
 local Timer             = require("jive.ui.Timer")
+local Framework         = require("jive.ui.Framework")
 
 local math              = require("math")
 local string            = require("string")
@@ -421,12 +422,12 @@ function _eventHandler(self, event)
 			self:playSound("WINDOWHIDE")
 			self:hide()
 			return EVENT_CONSUME
-		elseif (not string.find(self:_getChars(), keyboardEntry)) then
+		elseif not string.find(self:_getChars(), keyboardEntry, 1, true) then
 			--also check for possibility of uppercase match
 			if (string.find(keyboardEntry, "%l")) then
 				keyboardEntry = string.upper(keyboardEntry)
 			end
-			if (not string.find(self:_getChars(), keyboardEntry)) then
+			if not string.find(self:_getChars(), keyboardEntry, 1, true) then
 				self:playSound("BUMP")
 				self:getWindow():bumpRight()
 				return EVENT_CONSUME
@@ -803,6 +804,19 @@ Returns a value that can be used for entering an ip address.
 =cut
 --]]
 function ipAddressValue(default)
+	if Framework:isMostRecentInput("mouse") then
+		if default == "0.0.0.0" then
+			--the typically seen "0.0.0.0" is not useful when doing touch
+			default = ""
+		end
+		return ipAddressValueMouse(default)
+	else
+		return ipAddressValueNonMouse(default)
+	end
+end
+
+
+function ipAddressValueNonMouse(default)
 	local obj = {}
 	setmetatable(obj, {
 			     __tostring =
@@ -880,6 +894,52 @@ function ipAddressValue(default)
 
 	return obj
 end
+
+
+function ipAddressValueMouse(default)
+	local obj = {
+		s = default or ""
+	}
+
+	setmetatable(obj, {
+			     __tostring = function(obj)
+						  return obj.s
+					  end,
+
+			     __index = {
+				     setValue = function(obj, str)
+							obj.s = str
+						end,
+
+				     getValue = function(obj)
+							return obj.s
+						end,
+
+				     getChars = function(obj, cursor, allowedChars)
+							return ".0123456789"
+						end,
+
+				     isValid = function(obj, cursor)
+							local i = 0
+							for ddd in string.gmatch(obj.s, "(%d+)") do
+							     local n = tonumber(ddd)
+							     if n < 0 or n > 255 then
+							        return false
+							     end
+							     i = i + 1
+							end
+							if i ~= 4 then
+								return false
+							end
+
+							return true
+					       end
+			     }
+		     })
+
+	return obj
+end
+
 
 
 --[[

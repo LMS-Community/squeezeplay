@@ -412,6 +412,12 @@ function removeWidget(self, widget)
 end
 
 
+
+function isMostRecentInput(self, inputType)
+	return inputType and self.mostRecentInputType == inputType
+end
+
+
 --[[
 =head2 jive.ui.Framework:loadSound(file, name, channel)
 
