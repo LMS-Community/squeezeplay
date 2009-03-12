@@ -29,7 +29,7 @@ oo.class(_M, Applet)
 
 
 function settingsShow(self)
-	local window = Window("text_list", self:string("ABOUT_JIVE"), 'settingstitle')
+	local window = Window("information", self:string("ABOUT_JIVE"), 'settingstitle')
 
 	local version = JIVE_VERSION
 
@@ -56,6 +56,7 @@ function settingsShow(self)
 		"",
 		tostring(self:string("ABOUT_CREDITS")),
 		"     Sean Adams",
+		"     Maurice Alou",
 		"     Ena Bi",
 		"     Dean Blackketter",
 		"     Fred Bould",
@@ -69,6 +70,8 @@ function settingsShow(self)
 		"     Brian Dils",
 		"     Ben Dooks",
 		"     Dan Evans",
+		"     Sam Feng",
+		"     Mike Fieger",
 		"     Lukas Frey",
 		"     Mickey Gee",
 		"     Andy Grundman",
@@ -78,10 +81,13 @@ function settingsShow(self)
 		"     Wallace Lai",
 		"     Diane Lee",
 		"     Ross Levine",
+		"     Angela Martin",
+		"     Matthew Martin",
 		"     Anoop Mehta",
 		"     Felix Mueller",
 		"     Chris Owens",
 		"     James Richardson",
+		"     Seth Schulte",
 		"     Robin Selden",
 		"     Martin Sénéclauze",
 		"     Adrian Smith",
@@ -91,6 +97,8 @@ function settingsShow(self)
 		"     Richard Titmuss",
 		"     Julien Venetz",
 		"     Tom Wadzinski",
+		"     Matt Weldon",
+		"     Matt Wise",
 		"     Osama Zaidan",
 		"",
 		"",
