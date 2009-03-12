@@ -292,7 +292,6 @@ function skin(self, s)
 	local FIVE_ITEM_HEIGHT = 45
 	local TITLE_BUTTON_WIDTH = 76
 	local TITLE_BUTTON_HEIGHT = 47
-	local TITLE_BUTTON_PADDING = { 4, 0, 4, 0 }
 
 	local smallSpinny = {
 		img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
@@ -413,15 +412,18 @@ function skin(self, s)
 
 	s.item = {
 		order = { "icon", "text", "arrow" },
-		padding = { 4, 0, 0, 0 },
+		padding = { 0, 0, 0, 0 },
 		text = {
-			padding = { 6, 5, 2, 5 },
+			padding = { 8, 5, 2, 5 },
 			align = "left",
 			w = WH_FILL,
 			h = WH_FILL,
 			font = _boldfont(TEXTMENU_FONT_SIZE),
 			fg = TEXT_COLOR,
 			sh = TEXT_SH_COLOR,
+		},
+		icon = {
+			padding = { 8, 0, 0, 0 },
 		},
 		arrow = {
 	      		align = ITEM_ICON_ALIGN,
@@ -856,7 +858,7 @@ function skin(self, s)
 	}
 
 	-- help window (likely the same as information)
-	s.help_info = _uses(s.window)
+	s.help_info = _uses(s.information)
 
 
 	--track_list window
@@ -1000,7 +1002,6 @@ function skin(self, s)
 		w = TITLE_BUTTON_WIDTH,
 		h = TITLE_BUTTON_HEIGHT,
 		align = 'center',
-		border = TITLE_BUTTON_PADDING,
 	}
 	local _pressed_button = _uses(_button, {
 		bgImg = pressedTitlebarButtonBox,
@@ -1218,8 +1219,7 @@ if true then
 			bgImg   = titlebarButtonBox,
 			w       = TITLE_BUTTON_WIDTH,
 			h       = TITLE_BUTTON_HEIGHT,
-			padding =  TITLE_BUTTON_PADDING,
-			padding = { 10, 0, 10, 0},
+			padding = { 8, 0, 8, 0},
 			align   = 'center',
 		}
 	})
