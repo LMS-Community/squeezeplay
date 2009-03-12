@@ -478,7 +478,6 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 						return EVENT_CONSUME 
 					end
 				), 
-				xofy = Label('xofy', ''),
 			})
 		else
 			group = Group(labelStyle, { 
@@ -1117,18 +1116,11 @@ local function _browseSink(step, chunk, err)
 						titleIcon = Icon("icon")
 					end
 
-					local xofyLabel
-					if titleWidget:getWidget('xofy') then
-						xofyLabel = titleWidget:getWidget('xofy')
-					else
-						xofyLabel = Label('xofy', '')
-					end
 					local newTitleWidget = 
 						--Group(titleStyle, { 
 						Group('title', { 
 							text = Label("text", titleText), 
 							icon = titleIcon,
-							xofy = xofyLabel,
 							lbutton = Button(
 								Icon("button_back"), 
 								function()

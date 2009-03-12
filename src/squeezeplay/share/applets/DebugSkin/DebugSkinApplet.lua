@@ -378,7 +378,6 @@ styles = {
 
 	"text_list.menu.pressed.item.icon",
 	"text_list.title.settingstitle",
-	"text_list.title.xofy",
 
 	"toast_popup.text",
 

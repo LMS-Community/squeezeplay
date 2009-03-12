@@ -397,22 +397,15 @@ function skin(self, s)
 		border = 0,
 		position = LAYOUT_NORTH,
 		bgImg = titleBox,
-		order = { "text", "xofy" },
+		order = { "text" },
 		text = {
 			w = WH_FILL,
 			h = WH_FILL,
-			padding = { 100, 10, 0, 0 },
+			padding = { 4, 10, 4, 0 },
 			align = "center",
 			font = _boldfont(TITLE_FONT_SIZE),
 			fg = TEXT_COLOR,
 		},
-		xofy = {
-			h = WH_FILL,
-                	font = _boldfont(TITLE_FONT_SIZE),
-			align = "right",
-	                fg = TEXT_COLOR,
-			padding = { 0, 10, 8, 0},
-        	},
 	}
 
 	s.menu = {
@@ -442,12 +435,16 @@ function skin(self, s)
 
 	-- Checkbox
         s.checkbox = {}
+	s.checkbox.h = WH_FILL
+	s.checkbox.align = 'center'
         s.checkbox.img_on = _loadImage(self, "Icons/checkbox_on.png")
         s.checkbox.img_off = _loadImage(self, "Icons/checkbox_off.png")
 
 
         -- Radio button
         s.radio = {}
+	s.radio.h = WH_FILL
+	s.radio.align = 'center'
         s.radio.img_on = _loadImage(self, "Icons/radiobutton_on.png")
         s.radio.img_off = _loadImage(self, "Icons/radiobutton_off.png")
 
@@ -459,6 +456,7 @@ function skin(self, s)
 			fg = TEXT_COLOR,
 			sh = TEXT_SH_COLOR,
 			h = WH_FILL,
+			padding = { 0, 0, 3, 0 },
 		},
 	})
 	s.item_checked = _uses(s.item, {
@@ -868,7 +866,7 @@ function skin(self, s)
 	s.track_list = _uses(s.text_list)
 
 	s.track_list.title = _uses(s.title, {
-		order = { 'icon', 'text', 'xofy' },		
+		order = { 'icon', 'text' },		
 		icon  = {
 			w = THUMB_SIZE,
 			h = WH_FILL,

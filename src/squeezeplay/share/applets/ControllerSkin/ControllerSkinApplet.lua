@@ -471,13 +471,6 @@ function skin(self, s, reload, useDefaultSize)
 			fg = SELECT_COLOR,
 			sh = SELECT_SH_COLOR,
 		},
-		xofy = {
-			h = WH_FILL,
-                	font = _boldfont(TITLE_FONT_SIZE),
-			align = "right",
-	                fg = TEXT_COLOR,
-			padding = { 0, 10, 8, 0},
-        	},
         	icon = {
 			padding  = { 0, 0, 8, 0 },
 			align    = 'right'

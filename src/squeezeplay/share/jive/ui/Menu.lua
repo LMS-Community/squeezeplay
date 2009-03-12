@@ -536,7 +536,6 @@ local function _eventHandler(self, event)
 
                if evtype == EVENT_SHOW then
 			local window = self:getWindow()
-			window:setIconWidget("xofy", self.xofy)
 		end
 
 		for i,widget in ipairs(self.widgets) do
@@ -592,7 +591,6 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 					  obj:setSelectedIndex(itemValue)
 				  end)
 
-	obj.xofy = Label("xofy", "")
 
 	obj.scrollbar.parent = obj
 	obj.layoutRoot = true
@@ -1143,8 +1141,6 @@ function _updateWidgets(self)
 	self._lastSelectedOffset = self.selected and self.selected - self.topItem + 1 or self.topItem
 
 	self:_updateScrollbar()
-
-	self.xofy:setValue(nextSelectedIndex .. " of " .. self.listSize)
 
 --	log:warn("_update menu:\n", self:dump())
 
