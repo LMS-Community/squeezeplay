@@ -35,9 +35,9 @@ end
 
 function defaultSettings(self)
 	return {
-		whenStopped = "Clock:openAnalogClock",
+		whenStopped = "Clock:openDetailedClock",
 		whenPlaying = "NowPlaying:openScreensaver",
-		timeout = 10000,
+		timeout = 30000,
 	}
 end
 
