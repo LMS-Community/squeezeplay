@@ -1028,6 +1028,12 @@ local function _browseSink(step, chunk, err)
 		if step.window and data and data.goNow then
 			_goNow(data.goNow)
 		end
+
+		local noScreensaver = _safeDeref(data, 'base', 'window', 'noScreensaver')
+		if step.window and noScreensaver then
+			step.window:setAllowScreensaver(false)
+		end
+
 		if data.networkerror then
 			if step.menu then
 				step.window:removeWidget(step.menu)
