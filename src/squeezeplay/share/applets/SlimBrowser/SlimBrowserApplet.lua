@@ -1730,6 +1730,9 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		local iAction
 		local onAction
 		local offAction
+		local nextWindow
+		local bNextWindow
+		local iNextWindow
 		
 		-- we handle no action in the case of an item telling us not to
 		if item['action'] == 'none' then
@@ -1767,6 +1770,12 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			offAction = _safeDeref(item, 'actions', 'off')
 		end
 
+		-- dissect base and item for nextWindow params
+		bNextWindow = _safeDeref(chunk, 'base', 'nextWindow')
+		iNextWindow = item['nextWindow']
+		-- item takes precendence out over base
+		nextWindow = iNextWindow or bNextWindow
+
 		choiceAction = _safeDeref(item, 'actions', 'do', 'choices')
 		
 		-- now check for a run-of-the mill action
@@ -1781,7 +1790,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		
 		-- XXX: Fred: After an input box is used, chunk is nil, so base can't be used
 	
-		if iAction or bAction or choiceAction then
+		if iAction or bAction or choiceAction or nextWindow then
 			-- the resulting action, if any
 			local jsonAction
 	
@@ -1848,7 +1857,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			end -- elseif bAction
 	
 			-- now we may have found a command
-			if jsonAction then
+			if jsonAction or nextWindow then
 				log:debug("_actionHandler(", actionName, "): json action")
 
 				if menuItem then
@@ -1861,19 +1870,19 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				local sink = _devnull
 				local from, qty
 				-- cover all our "special cases" first, custom navigation, artwork popup, etc.
-				if item['nextWindow'] == 'nowPlaying' then
+				if nextWindow == 'nowPlaying' then
 					sink = _goNowPlaying
-				elseif item['nextWindow'] == 'playlist' then
+				elseif nextWindow == 'playlist' then
 					sink = _goPlaylist
-				elseif item['nextWindow'] == 'home' then
+				elseif nextWindow == 'home' then
 					sink = goHome
-				elseif item['nextWindow'] == 'parent' then
+				elseif nextWindow == 'parent' then
 					sink = _hideMe(_curStep)
-				elseif item['nextWindow'] == 'grandparent' then
+				elseif nextWindow == 'grandparent' then
 					sink = _hideMeAndMyDad(_curStep)
-				elseif item['nextWindow'] == 'refreshOrigin' then
+				elseif nextWindow == 'refreshOrigin' then
 					sink = _refreshOrigin(_curStep)
-				elseif item['nextWindow'] == 'refresh' then
+				elseif nextWindow == 'refresh' then
 					sink = _refreshMe(_curStep)
 				elseif item["showBigArtwork"] then
 					sink = _bigArtworkPopup
@@ -1888,10 +1897,13 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					end
 				end
 
-				_pushToNewWindow(step)
-			
-				-- send the command
-				 _performJSONAction(jsonAction, from, qty, step, sink)
+				if jsonAction then
+					_pushToNewWindow(step)
+					_performJSONAction(jsonAction, from, qty, step, sink)
+				else
+					-- if there's not jsonAction, sink is a nextWindow function, so just call it
+					sink()
+				end
 			
 				return EVENT_CONSUME
 			end
