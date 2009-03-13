@@ -155,6 +155,8 @@ end
 function step7(self)
 	-- XXXX connect to SC and error screens
 
+	appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
+
 	self:_setupDone()
 end
 
