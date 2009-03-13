@@ -169,6 +169,9 @@ function getLastBrowse(self, key)
 end
 
 function setLastBrowse(self, key, lastBrowse)
+	if not self.browseHistory then
+		return
+	end
 	self.browseHistory[key] = lastBrowse
 end
 
