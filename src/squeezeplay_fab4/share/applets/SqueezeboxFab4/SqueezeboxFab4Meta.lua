@@ -33,7 +33,7 @@ function registerApplet(meta)
 
 	-- Bug 9900
 	-- Use SN test during development
-	jnt:setSNHostname("test.squeezenetwork.com")
+	jnt:setSNHostname("fab4.squeezenetwork.com")
 
 	-- BSP is a resident Applet
 	appletManager:loadApplet("SqueezeboxFab4")
