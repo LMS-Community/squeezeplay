@@ -2181,6 +2181,8 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		if not inputSpec.allowedChars then
 			if inputSpec._kbType == 'qwertyLower' then
 				inputSpec.allowedChars = _string("ALLOWEDCHARS_WITHCAPS")
+			elseif string.match(inputSpec._kbType, 'email') then
+				inputSpec.allowedChars = _string("ALLOWEDCHARS_EMAIL")
 			else
 				inputSpec.allowedChars = _string("ALLOWEDCHARS_CAPS")
 			end

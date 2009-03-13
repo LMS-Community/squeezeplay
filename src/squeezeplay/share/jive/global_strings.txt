@@ -182,6 +182,9 @@ ALLOWEDCHARS_WITHCAPS
 	NO	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	SV	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 
+ALLOWEDCHARS_EMAIL
+	EN	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+
 RETURN_TO_SETUP
 	DA	Tilbage til Konfiguration
 	DE	Zurück zum Setup
