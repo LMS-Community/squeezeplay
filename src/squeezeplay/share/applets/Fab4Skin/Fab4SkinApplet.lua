@@ -629,6 +629,7 @@ function skin(self, s)
 		bgImg = textinputBackground,
 		w = WH_FILL - 16,
 		order = { "textinput", "backspace" },
+		border = { 8, 0, 8, 4 },
 	}
 
 	s.keyboard.button = {
@@ -1052,7 +1053,8 @@ function skin(self, s)
 	s.button_keyboard_back = {
 		align = 'center',
 		w = 45,
-		h = 29,
+		h = 30,
+		border = { 0, 5, 3, 3 }, 
 		img = _loadImage(self, "Icons/icon_delete_tch_text_entry.png"),
 		bgImg = deleteKeyBackground,
 	}
