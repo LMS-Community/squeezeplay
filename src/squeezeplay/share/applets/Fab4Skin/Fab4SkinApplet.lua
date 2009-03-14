@@ -163,6 +163,8 @@ function skin(self, s)
 	local helpButton              = Tile:loadImage( imgpath .. "Icons/icon_help_button_tb.png")
 	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
 	local keyboardBackground      = Tile:loadImage( imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png")
+	local deleteKeyBackground     = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry.png")
+	local deleteKeyPressedBackground = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry_press.png")
 	local titleBox                =
 		Tile:loadTiles({
 				 imgpath .. "Titlebar/titlebar.png",
@@ -1049,13 +1051,13 @@ function skin(self, s)
 
 	s.button_keyboard_back = {
 		align = 'center',
-		w = 60,
-		h = 40,
+		w = 45,
+		h = 29,
 		img = _loadImage(self, "Icons/icon_delete_tch_text_entry.png"),
-		bgImg = titlebarButtonBox,
+		bgImg = deleteKeyBackground,
 	}
 	s.pressed.button_keyboard_back = _uses(s.button_keyboard_back, {
-                bgImg = pressedTitlebarButtonBox,
+                bgImg = deleteKeyPressedBackground,
 	})
 
 
