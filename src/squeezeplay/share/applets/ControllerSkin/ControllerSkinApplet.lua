@@ -461,7 +461,7 @@ function skin(self, s, reload, useDefaultSize)
 		border = 4,
 		position = LAYOUT_NORTH,
 		bgImg = titleBox,
-		order = { "text", "icon" },
+		order = { "text" },
 		text = {
 			w = WH_FILL,
 			h = WH_FILL,
@@ -471,10 +471,6 @@ function skin(self, s, reload, useDefaultSize)
 			fg = SELECT_COLOR,
 			sh = SELECT_SH_COLOR,
 		},
-        	icon = {
-			padding  = { 0, 0, 8, 0 },
-			align    = 'right'
-		}
 	}
 
 	s.menu = {
@@ -923,6 +919,9 @@ function skin(self, s, reload, useDefaultSize)
 	--playlist window
 	-- identical to icon_list but with some different formatting on the text
 	s.play_list = _uses(s.icon_list, {
+		title = {
+			order = { 'text' },
+		},
 		menu = {
 			item = {
 				text = {
@@ -1408,13 +1407,43 @@ if true then
 	-- one for the Screensaver windowStyle (ss), one for the browse windowStyle (browse)
 	-- a lot of it can be recycled from one to the other
 
+
+	local nptitleBox =
+		Tile:loadTiles({
+				       imgpath .. "Screen_Formats/Titlebar/titlebar.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_tl.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_t.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_tr.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_r.png",
+				       imgpath .. "bghighlight_tr.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_b.png",
+				       imgpath .. "bghighlight_tl.png",
+				       imgpath .. "Screen_Formats/Titlebar/titlebar_l.png",
+			       })
+
+        local highlightBox =
+                Tile:loadTiles({
+                                       imgpath .. "bghighlight.png",
+                                       nil,
+                                       nil,
+                                       nil,
+                                       imgpath .. "bghighlight_r.png",
+                                       imgpath .. "bghighlight_br.png",
+                                       imgpath .. "bghighlight_b.png",
+                                       imgpath .. "bghighlight_bl.png",
+                                       imgpath .. "bghighlight_l.png"
+                                })                                      
 	local NP_TRACK_FONT_SIZE = 14
 
 	-- Title
 	s.ssnptitle = _uses(s.title, {
+		border = { 4, 4, 4, 0 },
+		bgImg = nptitleBox,
+		order = { "text", "rbutton" },
 		rbutton  = {
 			font    = _font(14),
-			fg      = TEXT_COLOR,
+			fg = TEXT_COLOR_BLACK,
+			sh = {},
 			bgImg   = titlebarButtonBox,
 			w       = TITLE_BUTTON_WIDTH,
 			h       = TITLE_BUTTON_HEIGHT,
@@ -1453,145 +1482,157 @@ if true then
 	-- Song
 	s.ssnptrack = {
 		border = { 4, 0, 4, 0 },
-		position = LAYOUT_CENTER,
+		bgImg = highlightBox,
 		text = {
 			w = WH_FILL,
-			border = { 10, 10, 8, 4 },
+			padding = { 10, 10, 8, 4 },
 			align = "top-left",
         		font = _font(NP_TRACK_FONT_SIZE),
 			lineHeight = NP_TRACK_FONT_SIZE + 3,
 			fg = TEXT_COLOR_BLACK,
+			sh = {},
         		line = {{
+				fg = TEXT_COLOR_BLACK,
 				font = _boldfont(NP_TRACK_FONT_SIZE),
 				height = NP_TRACK_FONT_SIZE + 3,
 				}},
 		},
 	}
 
-	-- nptrack is identical between all windowStyles
+	s.icon_npartwork = _uses(_icon, {
+		img = _loadImage(self, "Icons/icon_album_noartwork_npss.png"),
+	})
+	s.icon_browsenpartwork = _uses(_icon, {
+		img = _loadImage(self, "Icons/icon_album_noartwork_browse.png"),
+	})
+
+        local largeHighlightBox = Tile:loadTiles({ imgpath .. "bghighlight.png" })
+
 	s.browsenptrack = _uses(s.ssnptrack)
-	s.largenptrack  = _uses(s.ssnptrack)
+	s.largenptrack  = _uses(s.ssnptrack, {
+					bgImg = largeHighlightBox,
+					border = { 0, 0, 0, 0 },
+					text = {
+						padding = { 4, 6, 4, 0 },
+						lineHeight = 24,
+						_boldfont(22),
+						line = {
+							_boldfont(22),
+							height = 24
+						},
+					}
+				})
 
 	-- Artwork
 	local ARTWORK_SIZE    = self:param().nowPlayingBrowseArtworkSize
 	local SS_ARTWORK_SIZE = self:param().nowPlayingSSArtworkSize
+	local LARGE_ARTWORK_SIZE = self:param().nowPlayingLargeArtworkSize
 	local browseArtWidth  = ARTWORK_SIZE
 	local ssArtWidth      = SS_ARTWORK_SIZE
 
 	s.ssnpartwork = {
-		w = ssArtWidth,
+		w = WH_FILL,
 		border = { 0, 10, 0, 8 },
-		position = LAYOUT_CENTER,
-		align = "center",
-		artwork = {
+		h = SS_ARTWORK_SIZE + 82,
+		artwork = _uses(s.icon_npartwork, {
+			w = WH_FILL,
 			align = "center",
 			padding = 0,
-			-- FIXME: this is a placeholder
-			img = _loadImage(self, "Icons/icon_album_noartwork_npss.png"),
-		},
+		}),
 	}
 
-	s.browsenpartwork = _uses(s.ssnpartwork)
-	s.largenpartwork = _uses(s.ssnpartwork)
+	s.browsenpartwork = _uses(s.ssnpartwork, {
+			h = ARTWORK_SIZE + 64,
+			border = { 0, 10, 0, 0 },
+			artwork = _uses(s.icon_browsenpartwork, {
+				w = WH_FILL,
+				align = "center",
+				padding = 0,
+			})
+	})
+	s.largenpartwork = _uses(s.ssnpartwork, {
+			h = LARGE_ARTWORK_SIZE + 30,
+			border = { 0, 0, 0, 0 },
+			artwork = _uses(s.icon_browsenpartwork, {
+				w = WH_FILL,
+				align = "center",
+				padding = 0,
+			})
+	})
 
 	local topPadding = screenHeight/2 + 10
 	local rightPadding = screenWidth/2 - 15
 	local buttonPadding = { 10, 5, 10, 5 }
 
---	s.ssnpcontrols = {
---		order = { 'rew', 'play', 'fwd', 'vol' },
---		position = LAYOUT_NONE,
---		x = rightPadding,
---		y = topPadding,
---		bgImg = buttonBox,
---		rew = {
---			align = 'center',
---			padding = buttonPadding,
---			img = _loadImage(self, "Player_Controls/icon_toolbar_rew.png"),
---		},
---		play = {
---			align = 'center',
---			padding = buttonPadding,
---			img = _loadImage(self, "Player_Controls/icon_toolbar_play.png"),
---		},
---		pause = {
---			align = 'center',
---			padding = buttonPadding,
---			img = _loadImage(self, "Player_Controls/icon_toolbar_pause.png"),
---		},
---		fwd = {
---			align = 'center',
---			padding = buttonPadding,
---			img = _loadImage(self, "Player_Controls/icon_toolbar_ffwd.png"),
---		},
---		vol = {
---			align = 'center',
---			padding = buttonPadding,
---			img = _loadImage(self, "Player_Controls/icon_toolbar_vol_up.png"),
---		},
---	}
---
---	s.ssnpcontrols.pressed = {
---		rew = _uses(s.ssnpcontrols.rew),
---		play = _uses(s.ssnpcontrols.play),
---		pause = _uses(s.ssnpcontrols.pause),
---		fwd = _uses(s.ssnpcontrols.fwd),
---		vol = _uses(s.ssnpcontrols.vol),
---	}
-
-	s.browsenpcontrols = _uses(s.ssnpcontrols)
-	s.largenpcontrols  = _uses(s.ssnpcontrols)
-
-	s.song_elapsed = {
-		w = 75,
-		align = 'right',
-		padding = { 8, 0, 8, 15 },
-		font = _boldfont(18),
-		fg = { 0xe7,0xe7, 0xe7 },
-		sh = { 0x37, 0x37, 0x37 },
-	}
-	s.song_remain = {
-		w = 75,
-		align = 'left',
-		padding = { 8, 0, 8, 15 },
-		font = _boldfont(18),
-		fg = { 0xe7,0xe7, 0xe7 },
-		sh = { 0x37, 0x37, 0x37 },
-	}
 	-- Progress bar
 	s.ssprogress = {
 		position = LAYOUT_SOUTH,
-		padding = { 10, 10, 10, 5 },
+		padding = { 8, 0, 8, 5 },
 		order = { "elapsed", "slider", "remain" },
 		elapsed = {
+			w = 75,
 			align = 'right',
+			padding = { 8, 0, 8, 7 },
+			font = _boldfont(12),
+			fg = { 0xe7,0xe7, 0xe7 },
+			sh = { 0x37, 0x37, 0x37 },
 		},
 		remain = {
+			w = 75,
 			align = 'left',
+			padding = { 8, 0, 8, 7 },
+			font = _boldfont(12),
+			fg = { 0xe7,0xe7, 0xe7 },
+			sh = { 0x37, 0x37, 0x37 },
 		},
+
 		text = {
 			w = 75,
 			align = 'right',
-			padding = { 8, 0, 8, 15 },
+			padding = { 8, 0, 8, 5 },
 			font = _boldfont(18),
 			fg = { 0xe7,0xe7, 0xe7 },
 			sh = { 0x37, 0x37, 0x37 },
 		},
 	}
 
-	s.browseprogress = _uses(s.ssprogress)
-	s.largeprogress  = _uses(s.ssprogress)
+	s.browseprogress = _uses(s.ssprogress,
+				{
+					padding = { 8, 0, 8, 22 },
+					elapsed = {
+						padding = { 8, 0, 8, 26 },
+					},
+					remain = {
+						padding = { 8, 0, 8, 26 },
+					},
+				})
+	s.largeprogress  = _uses(s.ssprogress,
+				{
+					padding = { 0, 0, 0, 0 },
+					elapsed = {
+						padding = { 8, 0, 8, 0 },
+					},
+					remain = {
+						padding = { 8, 0, 8, 0 },
+					},
+				})
 
 	s.ssprogressB = {
 		horizontal  = 1,
 		bgImg       = sliderBackground,
 		img         = sliderBar,
 		position    = LAYOUT_SOUTH,
-		padding     = { 0, 0, 0, 15 },
+		padding     = { 0, 0, 0, 5 },
 	}
 
-	s.browseprogressB = _uses(s.ssprogressB)
-	s.largeprogressB  = _uses(s.ssprogressB)
+	s.browseprogressB = _uses(s.ssprogressB,
+					{
+					padding = { 0, 0, 0, 25 }
+					})
+	s.largeprogressB  = _uses(s.ssprogressB,
+					{
+					padding = { 0, 0, 0, 3 }
+					})
 
 	-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
 	s.ssprogressNB = {
@@ -1602,7 +1643,7 @@ if true then
 			w = WH_FILL,
 			align = "center",
 			padding = { 0, 0, 0, 5 },
-			font = _boldfont(18),
+			font = _boldfont(24),
 			fg = { 0xe7, 0xe7, 0xe7 },
 			sh = { 0x37, 0x37, 0x37 },
 		},
@@ -1610,8 +1651,20 @@ if true then
 
 	s.ssprogressNB.elapsed = _uses(s.ssprogressNB.text)
 
-	s.browseprogressNB = _uses(s.ssprogressNB)
-	s.largeprogressNB  = _uses(s.ssprogressNB)
+	s.browseprogressNB = _uses(s.ssprogressNB,
+				{
+					padding = { 0, 0, 0, 25 },
+					elapsed = {
+						padding = { 0, 0, 0, 25 },
+					}
+				})
+	s.largeprogressNB  = _uses(s.ssprogressNB,
+				{
+					padding = { 0, 0, 0, 0 },
+					elapsed = {
+						padding = { 0, 0, 0, 0 },
+					}
+				})
 
 
 end -- LEGACY STYLES

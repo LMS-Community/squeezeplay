@@ -1319,32 +1319,26 @@ if true then
 	s.browsenpcontrols = _uses(s.ssnpcontrols)
 	s.largenpcontrols  = _uses(s.ssnpcontrols)
 
-	s.song_elapsed = {
-		w = 75,
-		align = 'right',
-		padding = { 8, 0, 8, 15 },
-		font = _boldfont(18),
-		fg = { 0xe7,0xe7, 0xe7 },
-		sh = { 0x37, 0x37, 0x37 },
-	}
-	s.song_remain = {
-		w = 75,
-		align = 'left',
-		padding = { 8, 0, 8, 15 },
-		font = _boldfont(18),
-		fg = { 0xe7,0xe7, 0xe7 },
-		sh = { 0x37, 0x37, 0x37 },
-	}
 	-- Progress bar
 	s.ssprogress = {
 		position = LAYOUT_SOUTH,
 		padding = { 10, 10, 10, 5 },
 		order = { "elapsed", "slider", "remain" },
 		elapsed = {
+			w = 75,
 			align = 'right',
+			padding = { 8, 0, 8, 15 },
+			font = _boldfont(18),
+			fg = { 0xe7,0xe7, 0xe7 },
+			sh = { 0x37, 0x37, 0x37 },
 		},
 		remain = {
+			w = 75,
 			align = 'left',
+			padding = { 8, 0, 8, 15 },
+			font = _boldfont(18),
+			fg = { 0xe7,0xe7, 0xe7 },
+			sh = { 0x37, 0x37, 0x37 },
 		},
 		text = {
 			w = 75,

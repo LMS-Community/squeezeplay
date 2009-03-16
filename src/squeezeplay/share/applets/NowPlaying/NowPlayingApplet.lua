@@ -314,7 +314,7 @@ function _updateTrack(self, trackinfo, pos, length, ws)
 	if ws.trackGroup then
 		if customStyle == 'large' and 
 			windowStyle == 'ss' and 
-			jiveMain:getSelectedSkin() == 'DefaultSkin' then
+			(jiveMain:getSelectedSkin() == 'DefaultSkin' or jiveMain:getSelectedSkin() == 'ControllerSkin') then
 				trackinfo = string.gsub(trackinfo, "\n", " - ")
 		end
 		ws.trackGroup:setWidgetValue("text", trackinfo);
@@ -552,13 +552,13 @@ function _createUI(self)
 		self[windowStyle].progressSlider:addTimer(1000, function() self:_updatePosition() end)
 
 		self[windowStyle].progressGroup = Group(components.progress, {
-				      elapsed = Label("song_elapsed", ""),
+				      elapsed = Label("elapsed", ""),
 				      slider = self[windowStyle].progressSlider,
-				      remain = Label("song_remain", "")
+				      remain = Label("remain", "")
 			      })
 	else
 		self[windowStyle].progressGroup = Group(components.progressNB, {
-			      elapsed = Label("song_elapsed", "")
+			      elapsed = Label("elapsed", "")
 		})
 		self[windowStyle].progressGroup:addTimer(1000, function() self:_updatePosition() end)
 	end
