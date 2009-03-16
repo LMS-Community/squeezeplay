@@ -87,13 +87,21 @@ function split(inSplitPattern, myString, returnTable)
 		returnTable = {}
 	end
 	local theStart = 1
-	local theSplitStart, theSplitEnd = ltable.find(myString, inSplitPattern, theStart)
-	while theSplitStart do
-		table.insert(returnTable, ltable.sub(myString, theStart, theSplitStart-1))
-		theStart = theSplitEnd + 1
-		theSplitStart, theSplitEnd = ltable.find(myString, inSplitPattern, theStart)
+
+	if inSplitPattern == '' then
+		local length = ltable.len(myString)
+		for i=1,length do
+			table.insert(returnTable, ltable.sub(myString, i, i) )
+		end
+	else
+		local theSplitStart, theSplitEnd = ltable.find(myString, inSplitPattern, theStart)
+		while theSplitStart do
+			table.insert(returnTable, ltable.sub(myString, theStart, theSplitStart-1))
+			theStart = theSplitEnd + 1
+			theSplitStart, theSplitEnd = ltable.find(myString, inSplitPattern, theStart)
+		end
+		table.insert(returnTable, ltable.sub(myString, theStart))
 	end
-	table.insert(returnTable, ltable.sub(myString, theStart))
 	return returnTable
 end
 
