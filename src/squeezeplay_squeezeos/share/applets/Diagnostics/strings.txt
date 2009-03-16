@@ -1,0 +1,84 @@
+
+DIAGNOSTICS
+	EN	System diagnostics
+
+NOT_CONNECTED
+	EN	Not connected
+
+PORT_FAIL
+	EN	Can't connect
+
+PORT_OK
+	EN	OK
+
+DNS_FAIL
+	EN	DNS failed
+
+PING_OK
+	EN	OK
+
+PING_FAIL
+	EN	Can't ping
+
+ETH_FULL_DUPLEX
+	EN	%sMbps
+
+ETH_HALF_DUPLEX
+	EN	%sMbps HD
+
+WLAN_SNR
+	EN	%s SNR
+
+FIRMWARE_VERSION
+	EN	Version:
+
+MAC_ADDRESS
+	EN	Player id:
+
+WLAN_SSID
+	EN	Wireless network:
+
+WLAN_ENCRYPTION
+	EN	Wireless encryption:
+
+WLAN_STRENGTH
+	EN	Wireless signal:
+
+ETH_CONNECTION
+	EN	Ethernet:
+
+IP_ADDRESS
+	EN	IP Address:
+
+SUBNET_MASK
+	EN	IP Subnet:
+
+GATEWAY
+	EN	IP Gateway:
+
+DNS_SERVER
+	EN	DNS Server:
+
+SN_ADDRESS
+	EN	mysqueezebox.com:
+
+SN_PING
+	EN	  Ping:
+
+SN_PORT_3483
+	EN	  TCP port 3483:
+
+SN_PORT_9000
+	EN	  TCP port 9000:
+
+SC_ADDRESS
+	EN	SqueezeCenter:
+
+SC_PING
+	EN	  Ping:
+
+SC_PORT_3483
+	EN	  TCP port 3483:
+
+SC_PORT_9000
+	EN	  TCP port 9000:
