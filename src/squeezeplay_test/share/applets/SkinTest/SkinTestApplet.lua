@@ -259,6 +259,7 @@ function setup_waiting_popup(self, item)
 	popup:addWidget(label)
 	popup:addWidget(icon)
 	popup:addWidget(sublabel)
+	popup:focusWidget(label)
 
 	self:tieWindow(popup)
 	return popup
@@ -910,7 +911,7 @@ testData = {
 		"The Yamazaki \n18 Year in four haikus\n(this is one of them)\n \nYamazaki HAI!\nSuntory Distillery\nGood Nose; Strong Finish\n \nThey say that the Scots\nare the only ones blessed with\nskill to make scotch. No.\n \nBut let your palate\nbe the judge and not my words\nNow! Please to enjoy!" 
 	},
 	waiting_popup = {
-		"Connecting to\nwireless network...", "all your base", "icon_connecting",
+		"Connecting to\na crazy long text string so we can see how this renders wireless network...", "all your base", "icon_connecting",
 	},
 	input_wpa = {
 		Textinput.textValue("", 8, 20), 'qwerty',

@@ -123,18 +123,6 @@ NETWORK_FORGET_HELP
 	NO	Velg Glem %s for å bekrefte at du vil glemme innstillingene for dette nettverket.
 	SV	Välj Glöm %s för att bekräfta att du vill ta bort inställningarna för det här nätverket.
 
-NETWORK_FORGOTTEN
-	DA	Glemmer
-	DE	Vergessen
-	EN	Forgotting
-	ES	Olvidando
-	FI	Unohdetaan
-	FR	Ignorer
-	IT	Rete ignorata
-	NL	Bezig met vergeten
-	NO	Glemmer
-	SV	Glömmer
-
 NETWORK_FORGOTTEN_NETWORK
 	DA	Har glemt %s
 	DE	%s vergessen
@@ -146,30 +134,6 @@ NETWORK_FORGOTTEN_NETWORK
 	NL	%s vergeten
 	NO	Glemt %s
 	SV	%s glömt
-
-NETWORK_NF
-	DA	NF:
-	DE	NF:
-	EN	NF:
-	ES	No encontrada:
-	FI	NF:
-	FR	NF:
-	IT	NF:
-	NL	NF:
-	NO	NF:
-	SV	NF:
-
-NETWORK_RSSI
-	DA	RSSI:
-	DE	RSSI:
-	EN	RSSI:
-	ES	RSSI:
-	FI	RSSI:
-	FR	RSSI:
-	IT	RSSI:
-	NL	RSSI:
-	NO	RSSI:
-	SV	RSSI:
 
 NETWORK_SSID
 	DA	SSID:
@@ -896,42 +860,6 @@ NETWORK_DNS_HELP
 	NL	Voer het IP-adres van je DNS-server in.
 	NO	Angi ip-adressen til dns-serveren.
 	SV	Ange DNS-serverns IP-adress.
-
-NETWORK_PROBLEM
-	DA	Netværksproblem
-	DE	Netwerkproblem
-	EN	Network Problem
-	ES	Problema de red
-	FI	Verkon ongelma
-	FR	Problème réseau
-	IT	Problema di rete
-	NL	Netwerkprobleem
-	NO	Nettverksproblem
-	SV	Nätverksproblem
-
-NETWORK_CHOOSE_NETWORK
-	DA	Vælg netværk
-	DE	Netzwerk wählen
-	EN	Choose Network
-	ES	Elegir red
-	FI	Valitse verkko
-	FR	Choisir un réseau
-	IT	Scegli rete
-	NL	Netwerk kiezen
-	NO	Velg nettverk
-	SV	Välj nätverk
-
-NETWORK_PROBLEM_HELP
-	DA	Denne fjernbetjening kan ikke tilsluttes %s.
-	DE	Probleme beim Verbinden der Fernbedienung mit %s
-	EN	This remote is having trouble connecting to %s.
-	ES	Este mando tiene problemas para conectarse a %s.
-	FI	Kaukosäätimellä on vaikeuksia muodostaa yhteyttä kohteeseen %s.
-	FR	Cette télécommande ne peut se connecter à %s.
-	IT	Problema di connessione del telecomando a %s
-	NL	Deze afstandsbediening kan geen verbinding maken met %s.
-	NO	Denne fjernkontrollen klarer ikke å kople til %s.
-	SV	Det går inte att ansluta fjärrkontrollen till %.
 
 ALLOWEDCHARS_WPA
 	DA	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789

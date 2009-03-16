@@ -2,6 +2,9 @@
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
+SN_SIGNUP
+	EN	Squeezenetwork Signup
+
 SLIMBROWSER_PLAYLIST
 	CS	Seznam skladeb
 	DA	Afspilningsliste
@@ -16,36 +19,6 @@ SLIMBROWSER_PLAYLIST
 	PL	Lista odtwarzania
 	RU	Плей-лист
 	SV	Spellista
-
-SLIMBROWSER_NOW_PLAYING
-	CS	Právě hraje
-	DA	Nu spiller
-	DE	Aktueller Titel
-	EN	Now Playing
-	ES	Reproduciendo
-	FI	Nyt soi
-	FR	Lecture en cours
-	IT	Riproduzione in corso
-	NL	Speelt nu
-	NO	Spilles nå
-	PL	Odtwarzanie
-	RU	Воспроизводится
-	SV	Nu spelas
-
-SLIMBROWSER_CURRENT_PLAYLIST
-	CS	Aktuální seznam skladeb
-	DA	Nuværende afspilningsliste
-	DE	Aktuelle Wiedergabeliste
-	EN	Current Playlist
-	ES	Lista de reproducción actual
-	FI	Nykyinen soittoluettelo
-	FR	Liste de lecture en cours
-	IT	El. di riproduz. corrente
-	NL	Huidige playlist
-	NO	Gjeldende spilleliste
-	PL	Aktualna lista odtwarzania
-	RU	Текущий плей-лист
-	SV	Aktuell spellista
 
 SLIMBROWSER_PAUSED
 	CS	Pozastaveno

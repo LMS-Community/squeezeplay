@@ -17,21 +17,6 @@ UPDATE
 	RU	Обновление ПО
 	SV	Mjukvaruppgradering av spelaren
 
-NETWORK_UPDATE
-	CS	Aktualizace sítě
-	DA	Netværksopdatering
-	DE	Netzwerk-Update
-	EN	Network update
-	ES	Actualización de red
-	FI	Verkkopäivitys
-	FR	Mise à jour du réseau
-	IT	Aggiornamento rete
-	NL	Netwerk-update
-	NO	Nettverksoppdatering
-	PL	Aktualizacja sieciowa
-	RU	Сетевое обновление
-	SV	Nätverksuppdatering
-
 BEGIN_UPDATE
 	CS	Zahájit aktualizaci
 	DA	Start opdateringen
@@ -61,21 +46,6 @@ CONTINUE
 	PL	Kontynuuj
 	RU	Продолжить
 	SV	Fortsätt
-
-UPDATE_CONTINUE_SDCARD
-	CS	Aktualizovat z SD karty
-	DA	Opdater fra SD-kort
-	DE	Aktualisierung von SD-Karte
-	EN	Update from SD card
-	ES	Actualizar desde tarjeta SD
-	FI	Päivitä SD-kortista
-	FR	Mise à jour à partir de la carte SD
-	IT	Aggiorna da scheda SD
-	NL	Updaten via SD-kaart
-	NO	Oppdatering fra sd-kort
-	PL	Aktualizuj z karty SD
-	RU	Обновить с SD-карты
-	SV	Uppdatera från SD-kort
 
 UPDATE_FROM_REMOVABLE_MEDIA
 	EN	Update from removable media
@@ -202,21 +172,6 @@ UPDATE_BEGIN_REINSTALL
 	PL	Oprogramowanie tego pilota zdalnego sterowania jest aktualne. Aby ponownie zainstalować wersję %s, wybierz opcję Rozpocznij aktualizację.
 	RU	ПО удаленного устройства не нуждается в обновлении. Если требуется переустановить версию %s, выберите начало обновления.
 	SV	Fjärrkontrollens programvara är uppdaterad. Om du vill installera om version %s väljer du Påbörja uppdatering.
-
-UPDATE_BEGIN_SDCARD
-	CS	Nainstalujte %s z SD karty.
-	DA	Installer %s fra SD-kort.
-	DE	%s von SD-Karte installieren.
-	EN	Install %s from SD card.
-	ES	Instalar %s desde tarjeta SD.
-	FI	Asenna %s SD-kortista.
-	FR	Installer %s à partir d'une carte SD.
-	IT	Installa %s dalla scheda SD.
-	NL	%s installeren van een SD-kaart.
-	NO	Installer %s fra sd-kort.
-	PL	Zainstaluj %s z karty SD.
-	RU	Установить %s с SD-карты.
-	SV	Installera %s från SD-kort.
 
 UPDATE_BEGIN_REMOVABLE_MEDIA
 	EN	Install %s from removable media.

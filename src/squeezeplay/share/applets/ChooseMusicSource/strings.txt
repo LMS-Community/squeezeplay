@@ -32,21 +32,6 @@ SLIMSERVER_ADD_SERVER
 	RU	Другой сервер
 	SV	Annan server
 
-SLIMSERVER_SQUEEZENETWORK
-	CS	SqueezeNetwork
-	DA	SqueezeNetwork
-	DE	SqueezeNetwork
-	EN	SqueezeNetwork
-	ES	SqueezeNetwork
-	FI	SqueezeNetwork
-	FR	SqueezeNetwork
-	IT	SqueezeNetwork
-	NL	SqueezeNetwork
-	NO	SqueezeNetwork
-	PL	Usługa SqueezeNetwork
-	RU	SqueezeNetwork
-	SV	SqueezeNetwork
-
 SLIMSERVER_HELP
 	CS	Zadejte IP adresu PC, na kterém běží SqueezeCenter
 	DA	Angiv IP-adressen på den computer hvor SqueezeCenter kører
@@ -76,21 +61,6 @@ SLIMSERVER_CONNECTING_TO
 	PL	Łączenie z\n%s
 	RU	Подключение к\n%s
 	SV	Ansluter till \n%s
-
-SLIMSERVER_CONNECTED_TO
-	CS	Připojeno k\n%s
-	DA	Afspilleren er tilsluttet\n%s
-	DE	Verbunden mit\n%s
-	EN	Connected to\n%s
-	ES	Conexión a\n%s
-	FI	Yhdistetty kohteeseen\n%s
-	FR	Connecté à\n%s
-	IT	Connesso a\n%s
-	NL	Verbonden met\n%s
-	NO	Koplet til\n%s
-	PL	Połączono z\n%s
-	RU	Установлено подключение к\n%s
-	SV	Ansluten till \n%s
 
 SQUEEZEBOX_PROBLEM
 	CS	Problém s připojováním

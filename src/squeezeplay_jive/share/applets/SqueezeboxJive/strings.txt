@@ -79,81 +79,6 @@ BSP_BACKLIGHT_TIMER
 	RU	Понижение яркости экрана
 	SV	Dämpning av skärmens ljusstyrka
 
-BSP_BACKLIGHT_HIGH
-	CS	Vysoký
-	DA	Høj
-	DE	Hoch
-	EN	High
-	ES	Alta
-	FI	Korkea
-	FR	Elevée
-	IT	Alta
-	NL	Hoog
-	NO	Høy
-	PL	Wysoki
-	RU	Высокий
-	SV	Hög
-
-BSP_BACKLIGHT_MEDIUM
-	CS	Střední
-	DA	Mellem
-	DE	Mittel
-	EN	Medium
-	ES	Media
-	FI	Normaali
-	FR	Moyenne
-	IT	Media
-	NL	Gemiddeld
-	NO	Middels
-	PL	Średnie
-	RU	Средний
-	SV	Medel
-
-BSP_BACKLIGHT_LOW
-	CS	Nízký
-	DA	Lav
-	DE	Niedrig
-	EN	Low
-	ES	Baja
-	FI	Heikko
-	FR	Faible
-	IT	Bassa
-	NL	Laag
-	NO	Lav
-	PL	Niski
-	RU	Низкий
-	SV	Låg
-
-BSP_TIMER_OFF
-	CS	Vypnuto
-	DA	Fra
-	DE	Aus
-	EN	Off
-	ES	Apagado
-	FI	Ei käytössä
-	FR	Désactivé
-	IT	Disattivato
-	NL	Uit
-	NO	Av
-	PL	wył.
-	RU	Выкл.
-	SV	Av
-
-BSP_TIMER_ON
-	CS	Zapnout
-	DA	Til
-	DE	Ein
-	EN	On
-	ES	Encendido
-	FI	Päällä
-	FR	Activé
-	IT	Attivato
-	NL	Aan
-	NO	På
-	PL	Wł.
-	RU	Вкл.
-	SV	På
-
 BSP_TIMER_5_SEC
 	CS	5 vteřin
 	DA	5 sekunder
@@ -364,21 +289,6 @@ POWER_DOWN_SLEEP
 	RU	Спящий режим
 	SV	Viloläge
 
-POWER_DOWN_CONFIRM
-	CS	Potvrdit
-	DA	Bekræft
-	DE	Bestätigen
-	EN	Confirm
-	ES	Confirmar
-	FI	Vahvista
-	FR	Confirmer
-	IT	Conferma
-	NL	Bevestigen
-	NO	Bekreft
-	PL	Potwierdź
-	RU	Подтвердить
-	SV	Bekräfta
-
 GOODBYE
 	CS	\nNashledanou
 	DA	\nFarvel
@@ -498,66 +408,6 @@ POWER_MANAGEMENT_SETTINGS
 	PL	Zarządzanie energią
 	RU	Управление питанием
 	SV	Energisparfunktion
-
-SLEEP_TIMEOUT
-	CS	Limit pro funkci Sleep
-	DA	Dvale indtil
-	DE	Energiesparmodus nach
-	EN	Sleep Timeout
-	ES	Tiempo de espera para suspensión
-	FI	Lepotilan aikakatkaisu
-	FR	Délai de mise en veille
-	IT	Timeout sospensione
-	NL	Sleep-timeout
-	NO	Tidsavbrudd for hvilemodus
-	PL	Limit czasu uśpienia
-	RU	Перерыв спящего режима
-	SV	Vilolägestimeout
-
-SUSPEND_TIMEOUT
-	CS	Limit pro pozastavení
-	DA	Standby om
-	DE	Zeitüberschreitung deaktivieren
-	EN	Suspend Timeout
-	ES	Suspender tiempo de espera
-	FI	Keskeytyksen aikakatkaisu
-	FR	Interrompre le délai
-	IT	Sospendi timeout
-	NL	Time-out onderbreken
-	NO	Gå til dvalemodus
-	PL	Limit czasu trybu zawieszenia
-	RU	Перерыв приостановки
-	SV	Fördröjningstimeout
-
-SUSPEND_ENABLED
-	CS	Pozastavení povoleno
-	DA	Standby er aktiveret
-	DE	Anhalten aktiviert
-	EN	Suspend Enabled
-	ES	Suspensión habilitada
-	FI	Keskeytys käytössä
-	FR	Interruption activée
-	IT	Sospensione attivata
-	NL	Onderbreking ingeschakeld
-	NO	Dvalemodus aktivert
-	PL	Włączono tryb zawieszenia
-	RU	Приостановка включена
-	SV	Fördröjning aktiverad
-
-SUSPEND_WAKE
-	CS	Pozastavit buzení
-	DA	Standby indtil
-	DE	Aufwachen deaktivieren
-	EN	Suspend Wake
-	ES	Suspender activación
-	FI	Keskeytä herätys
-	FR	Interrompre la réactivation
-	IT	Sospendi attivazione
-	NL	Aanzetten onderbreken
-	NO	Gå ut av dvalemodus
-	PL	Wyłączenie trybu zawieszenia
-	RU	Приостановить пробуждение
-	SV	Aktivering från fördröjningsläge
 
 WLAN_POWER_SAVE
 	CS	Úspora bezdrátového výkonu

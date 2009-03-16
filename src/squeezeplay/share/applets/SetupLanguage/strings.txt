@@ -183,6 +183,15 @@ LANGUAGE_NL
 	RU	голландский
 	SV	Nederlands
 
+LANGUAGE_RU
+	EN	Russian
+
+LANGUAGE_PL
+	EN	Polish
+
+LANGUAGE_CS
+	EN	Czech
+
 CHOOSE_LANGUAGE_HELP
 	CS	Pro výběr vašeho jazyka použijte kolečko. Pro další úkon prostřední tlačítko.
 	DA	Brug drejeknappen til at vælge sprog. Tryk på midterknappen for at fortsætte.

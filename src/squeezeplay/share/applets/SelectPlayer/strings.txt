@@ -32,21 +32,6 @@ SQUEEZEBOX_SETUP
 	RU	Установить ресивер
 	SV	Konfigurera mottagare
 
-SQUEEZEBOX_NAME
-	CS	Squeezebox %s
-	DA	Squeezebox %s
-	DE	Squeezebox %s
-	EN	Squeezebox %s
-	ES	Squeezebox %s
-	FI	Squeezebox %s
-	FR	Squeezebox %s
-	IT	Squeezebox %s
-	NL	Squeezebox %s
-	NO	Squeezebox %s
-	PL	Squeezebox %s
-	RU	Squeezebox %s
-	SV	Squeezebox %s
-
 SQUEEZEBOX_ACTIVATE
 	CS	Aktivovat %s
 	DA	Aktiver %s
@@ -61,51 +46,6 @@ SQUEEZEBOX_ACTIVATE
 	PL	Uaktywnij %s
 	RU	Активировать %s
 	SV	Aktivera %s
-
-LOCAL
-	CS	Místní
-	DA	Lokal
-	DE	Lokal
-	EN	Local
-	ES	Local
-	FI	Paikallinen
-	FR	Local
-	IT	Locale
-	NL	Lokaal
-	NO	Lokal
-	PL	Lokalny
-	RU	Локальный
-	SV	Lokal
-
-LOCAL_PLAYER
-	CS	Lokální přehrávač
-	DA	Lokal afspiller
-	DE	Lokaler Player
-	EN	Local Player
-	ES	Reproductor local
-	FI	Paikallinen soitin
-	FR	Platine locale
-	IT	Lettore locale
-	NL	Lokaal muzieksysteem
-	NO	Lokal spiller
-	PL	Odtwarzacz lokalny
-	RU	Локальный плеер
-	SV	Lokal spelare
-
-THIS_PLAYER
-	CS	Tento přehrávač
-	DA	Denne afspiller
-	DE	Dieser Player
-	EN	This Player
-	ES	Este reproductor
-	FI	Tämä soitin
-	FR	Cette platine
-	IT	Questo lettore
-	NL	Dit muzieksysteem
-	NO	Denne spilleren
-	PL	Ten odtwarzacz
-	RU	Этот плеер
-	SV	Den här spelaren
 
 SEARCHING
 	CS	Vyhledávám přehrávače...

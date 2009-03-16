@@ -54,18 +54,6 @@ NETWORK_ENCRYPTION
 	NO	Kryptering:
 	SV	Kryptering:
 
-NETWORK_CONNECT_TO_NETWORK
-	DA	Opret forbindelse til netværk
-	DE	Verbindung zum Netzwerk herstellen
-	EN	Connect to network
-	ES	Conectar a red
-	FI	Muodosta yhteys verkkoon
-	FR	Connecter au réseau
-	IT	Connetti alla rete
-	NL	Verbinding met netwerk maken
-	NO	Kople til nettverk
-	SV	Anslut till nätverket
-
 NETWORK_ENTER_ANOTHER_NETWORK
 	DA	Andet netværk
 	DE	Anderes Netzwerk
@@ -77,102 +65,6 @@ NETWORK_ENTER_ANOTHER_NETWORK
 	NL	Ander netwerk
 	NO	Annet nettverk
 	SV	Annat nätverk
-
-NETWORK_FORGET_NETWORK
-	DA	Glem netværk
-	DE	Netzwerk vergessen
-	EN	Forget network
-	ES	Olvidar red
-	FI	Unohda verkko
-	FR	Ignorer le réseau
-	IT	Ignora rete
-	NL	Netwerk vergeten
-	NO	Glem nettverk
-	SV	Glöm nätverk
-
-NETWORK_FORGET_CANCEL
-	DA	Annuller
-	DE	Abbrechen
-	EN	Cancel
-	ES	Cancelar
-	FI	Peruuta
-	FR	Annuler
-	IT	Annulla
-	NL	Annuleren
-	NO	Avbryt
-	SV	Avbryt
-
-NETWORK_FORGET_CONFIRM
-	DA	Glem %s
-	DE	%s vergessen
-	EN	Forget %s
-	ES	Olvidar %s
-	FI	Unohda %s
-	FR	Ignorer %s
-	IT	Ignora %s
-	NL	%s vergeten
-	NO	Glem %s
-	SV	Glöm %s
-
-NETWORK_FORGET_HELP
-	DA	Du skal vælge Glem %s for at bekræfte at indstillingerne for dette netværk skal slettes.
-	DE	Wählen Sie "%s vergessen", um zu bestätigen, dass diese Einstellungen nicht mehr relevant sind.
-	EN	Choose Forget %s to confirm that you want to forget the settings for this network.
-	ES	Elija Olvidar %s para confirmar que desea olvidar la configuración para esta red.
-	FI	Vahvista, että haluat unohtaa tämän verkon asetukset, valitsemalla Unohda %s.
-	FR	Sélectionnez Ignorer %s pour confirmer que vous souhaitez ignorer les paramètres du réseau.
-	IT	Scegliere Ignora %s per confermare che si desidera ignorare le impostazioni di questa rete.
-	NL	Kies '%s vergeten' om te bevestigen dat de instellingen voor dit netwerk vergeten moeten worden.
-	NO	Velg Glem %s for å bekrefte at du vil glemme innstillingene for dette nettverket.
-	SV	Välj Glöm %s för att bekräfta att du vill ta bort inställningarna för det här nätverket.
-
-NETWORK_FORGOTTEN
-	DA	Glemmer
-	DE	Vergessen
-	EN	Forgotting
-	ES	Olvidando
-	FI	Unohdetaan
-	FR	Ignorer
-	IT	Rete ignorata
-	NL	Bezig met vergeten
-	NO	Glemmer
-	SV	Glömmer
-
-NETWORK_FORGOTTEN_NETWORK
-	DA	Har glemt %s
-	DE	%s vergessen
-	EN	Forgotten %s
-	ES	%s olvidada
-	FI	Unohdettu %s
-	FR	Ignorer %s
-	IT	%s dimenticata
-	NL	%s vergeten
-	NO	Glemt %s
-	SV	%s glömt
-
-NETWORK_NF
-	DA	NF:
-	DE	NF:
-	EN	NF:
-	ES	No encontrada:
-	FI	NF:
-	FR	NF:
-	IT	NF:
-	NL	NF:
-	NO	NF:
-	SV	NF:
-
-NETWORK_RSSI
-	DA	RSSI:
-	DE	RSSI:
-	EN	RSSI:
-	ES	RSSI:
-	FI	RSSI:
-	FR	RSSI:
-	IT	RSSI:
-	NL	RSSI:
-	NO	RSSI:
-	SV	RSSI:
 
 NETWORK_SSID
 	DA	SSID:
@@ -321,9 +213,6 @@ NETWORK_WIRELESS_KEY
 	NO	Trådløst passord
 	SV	Trådlöst lösenord
 
-NETWORK_WIRELESS_KEY_HELP
-	EN	Enter your wireless key. (MORE TEXT NEEDED HERE FOR FAB4)
-
 NETWORK_REGION
 	DA	Trådløst område
 	DE	Wireless-Region
@@ -368,18 +257,6 @@ NETWORK_WIRELESS_NETWORKS
 	NL	Draadloze netwerken
 	NO	Trådløse nettverk
 	SV	Trådlöst nätverk
-
-NETWORK_SETTINGS_HELP
-	DA	Du skal vælge navnet på det netværk som du vil skifte til eller glemme. Hvis du vil tilføje et netværk som ikke er angivet ovenfor, skal du vælge Andet netværk.
-	DE	Wählen Sie den zu ändernden oder zu entfernenden Netzwerknamen aus. Wählen Sie "Anderes Netzwerk", um eines hinzuzufügen.
-	EN	To change to or forget about a network, select the network name. To add a network not listed above, choose Other Network.
-	ES	Para cambiar a una red u olvidar una red, seleccione el nombre de la red. Para agregar una red que no esté en la lista, elija Otra red.
-	FI	Jos haluat vaihtaa toiseen verkkoon tai unohtaa verkon, valitse verkon nimi. Jos haluat lisätä verkon, jota ei ole yllä olevassa luettelossa, valitse Toinen verkko.
-	FR	Pour basculer vers un réseau ou l'ignorer, sélectionnez son nom. Pour ajouter un réseau à la liste, sélectionnez Autre réseau.
-	IT	Per passare a una rete o ignorarla, selezionarne il nome. Per aggiungere una rete non elencata sopra, scegliere Altra rete.
-	NL	Selecteer de netwerknaam om een netwerk te wijzigen of te vergeten. Kies 'Ander netwerk' om een netwerk toe te voegen dat hierboven niet wordt genoemd.
-	NO	Velg et nettverksnavn for å endre eller glemme det. Velg Annet nettverk for å legge til et nettverk som ikke finnes i listen over.
-	SV	Om du vill byta till eller glömma bort ett nätverk markerar du nätverksnamnet. Om du vill lägga till ett nätverk som inte finns i listan väljer du Annat nätverk.
 
 NETWORK_WIRELESS_ENCRYPTION
 	DA	Kryptering for trådløst netværk
@@ -495,18 +372,6 @@ NETWORK_CONNECTED_TO
 	NO	Koplet til\n%s
 	SV	Ansluten till \n%s
 
-NETWORK_CONNECTION_PROBLEM
-	DA	Forbindelsesfejl
-	DE	Verbindungsproblem
-	EN	Connection Problem
-	ES	Problema de conexión
-	FI	Yhteysongelma
-	FR	Problème de connexion
-	IT	Problema di connessione
-	NL	Verbindingsprobleem
-	NO	Tilkoplingsproblem
-	SV	Anslutningsproblem
-
 NETWORK_TRY_AGAIN
 	DA	Prøv igen
 	DE	Erneut versuchen.
@@ -518,21 +383,6 @@ NETWORK_TRY_AGAIN
 	NL	Opnieuw proberen
 	NO	Prøv igjen
 	SV	Försök igen
-
-NETWORK_EDIT_WIRELESS_KEY
-	DA	Rediger nøglen til trådløst netværk
-	DE	WEP-Schlüssel ändern
-	EN	Edit wireless key
-	ES	Editar clave inalámbrica
-	FI	Muokkaa langatonta avainta
-	FR	Modifier la clé sans fil
-	IT	Modifica chiave senza fili
-	NL	Draadloze sleutel bew.
-	NO	Endre trådløst passord
-	SV	Redigera trådlöst lösenord
-
-NETWORK_BAD_PASSWORD
-	EN	You entered: %s\n\nWe were unable to connect using the above password.
 
 NETWORK_TRY_DIFFERENT
 	DA	Prøv et andet netværk
@@ -548,18 +398,6 @@ NETWORK_TRY_DIFFERENT
 
 NETWORK_TRY_PASSWORD
 	EN	Re-enter password
-
-NETWORK_GO_BACK
-	DA	Gå tilbage
-	DE	Zurück
-	EN	Go back
-	ES	Regresar
-	FI	Takaisin
-	FR	Retour
-	IT	Indietro
-	NL	Terug
-	NO	Gå tilbake
-	SV	Tillbaka
 
 NETWORK_DHCP_ERROR
 	EN	DHCP Address Can't Be Found
@@ -581,18 +419,6 @@ NETWORK_CONNECTION_PROBLEM_HELP
 	NL	Er is een probleem opgetreden tijdens het maken van een verbinding met je draadloze netwerk.
 	NO	Det oppsto et problem ved tilkopling til det trådløse nettverket.
 	SV	Det uppstod ett problem vid anslutningen till det trådlösa nätverket.
-
-NETWORK_PROBLEM_PASSWORD_INCORRECT
-	DA	Adgangskoden er forkert.
-	DE	Falsches Kennwort.
-	EN	Your password was incorrect.
-	ES	Contraseña incorrecta.
-	FI	Virheellinen salasana.
-	FR	Votre mot de passe est incorrect.
-	IT	Password errata.
-	NL	Verkeerd wachtwoord.
-	NO	Passordet er feil.
-	SV	Lösenordet du angav är felaktigt.
 
 NETWORK_IP_ADDRESS
 	DA	IP-adresse
@@ -623,30 +449,6 @@ NETWORK_NETWORK_NAME_HELP
 
 NETWORK_NETWORK_NAME_HELP_BODY
 	EN	At this stage, you need to enter in the unique name of your network (sometimes called an SSID).
-
-NETWORK_ADDRESS_PROBLEM
-	DA	Adresseproblem
-	DE	Adressenproblem
-	EN	Address Problem
-	ES	Problema de dirección
-	FI	Osoiteongelma
-	FR	Problème d'adresse
-	IT	Problema di indirizzo
-	NL	Adresprobleem
-	NO	Adresseproblem
-	SV	Adressproblem
-
-NETWORK_ADDRESS_HELP
-	DA	Der opstod et problem da DHCP-adressen skulle hentes på dit netværk.
-	DE	Problem bei Abfrage einer DHCP-Adresse in Ihrem Netzwerk.
-	EN	There was a problem obtaining a DHCP address on your network.
-	ES	Problema al obtener una dirección DHCP en la red.
-	FI	Verkon DHCP-osoitteen hankkimisessa oli ongelma.
-	FR	Un problème est survenu lors de l'obtention d'une adresse DHCP du réseau.
-	IT	Impossibile ottenere un indirizzo DHCP nella rete.
-	NL	Er is een probleem met het verkrijgen van een DHCP-adres op je netwerk.
-	NO	Det oppsto et problem med å finne en dhcp-adresse på nettverket.
-	SV	Det gick inte att erhålla en DHCP-adress på nätverket.
 
 NETWORK_ADDRESS_HELP_WEP
 	DA	Der kunne ikke etableres forbindelse til dit netværk. Det kan skyldes at nøglen til det trådløse netværk er forkert, eller et andet netværksproblem, fx MAC-filtrering på routeren eller en manglede DHCP-server.
@@ -768,41 +570,6 @@ NETWORK_ADDRESS_IP_HELP
 	NO	Angi ip-adressen til dns-serveren.
 	SV	Ange DNS-serverns IP-adress.
 
-NETWORK_PROBLEM
-	DA	Netværksproblem
-	DE	Netwerkproblem
-	EN	Network Problem
-	ES	Problema de red
-	FI	Verkon ongelma
-	FR	Problème réseau
-	IT	Problema di rete
-	NL	Netwerkprobleem
-	NO	Nettverksproblem
-	SV	Nätverksproblem
-
-NETWORK_CHOOSE_NETWORK
-	DA	Vælg netværk
-	DE	Netzwerk wählen
-	EN	Choose Network
-	ES	Elegir red
-	FI	Valitse verkko
-	FR	Choisir un réseau
-	IT	Scegli rete
-	NL	Netwerk kiezen
-	NO	Velg nettverk
-	SV	Välj nätverk
-
-NETWORK_PROBLEM_HELP
-	DA	Denne fjernbetjening kan ikke tilsluttes %s.
-	DE	Probleme beim Verbinden der Fernbedienung mit %s
-	EN	This remote is having trouble connecting to %s.
-	ES	Este mando tiene problemas para conectarse a %s.
-	FI	Kaukosäätimellä on vaikeuksia muodostaa yhteyttä kohteeseen %s.
-	FR	Cette télécommande ne peut se connecter à %s.
-	IT	Problema di connessione del telecomando a %s
-	NL	Deze afstandsbediening kan geen verbinding maken met %s.
-	NO	Denne fjernkontrollen klarer ikke å kople til %s.
-	SV	Det går inte att ansluta fjärrkontrollen till %.
 
 ALLOWEDCHARS_WPA
 	DA	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
@@ -855,9 +622,6 @@ NETWORK_ETH_HALF_DUPLEX
 NETWORK_WPS_METHOD
 	EN	Choose WPS Login Method
 
-NETWORK_WPS_METHOD_HINT
-	EN	This network uses Wi-Fi Protected Setup (WPS). Please choose your authentication method below:
-
 NETWORK_WPS_METHOD_PBC
 	EN	Use Push Button/PBC Method
 
@@ -866,9 +630,6 @@ NETWORK_WPS_METHOD_PIN
 	
 NETWORK_WPS_METHOD_PSK
 	EN	Enter WPA Password
-
-NETWORK_WPS_METHOD_PASSPHRASE
-	EN	Passphrase Method
 
 NETWORK_WPS_HELP
 	EN	WPS Help

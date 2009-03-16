@@ -78,21 +78,6 @@ ABOUT_VERSION
 	RU	Версия:
 	SV	Version:
 
-ABOUT_ALL_RIGHTS_RESERVED
-	CS	Všechna práva vyhrazena
-	DA	Alle rettigheder forbeholdt.
-	DE	Alle Rechte vorbehalten
-	EN	All Rights Reserved
-	ES	Reservados todos los derechos
-	FI	Kaikki oikeudet pidätetään
-	FR	Tous droits réservés
-	IT	Tutti i diritti riservati
-	NL	Alle rechten voorbehouden
-	NO	Med enerett
-	PL	Wszelkie prawa zastrzeżone
-	RU	Все права защищены.
-	SV	Med ensamrätt
-
 UPTIME
 	CS	Doba provozuschopnosti:
 	DA	Oppetid:

@@ -47,21 +47,6 @@ SCREENSAVER_STOPPED
 	RU	При остановке
 	SV	I stoppat läge
 
-SCREENSAVER_NOWPLAYING_SETTINGS
-	CS	Nastavení právě přehrávaných skladeb
-	DA	Indstillinger for Nu spiller
-	DE	Aktueller Titel - Einstellung
-	EN	Now Playing Settings
-	ES	Configuración de reproducción en curso
-	FI	Nyt soi -asetukset
-	FR	Paramètres des éléments en cours de lecture
-	IT	Impostazioni della riproduzione in corso
-	NL	Instellingen Speelt nu
-	NO	Innstillinger for Spilles nå
-	PL	Ustawienia teraz odtwarzanych
-	RU	Настройки воспроизведения
-	SV	Nu spelas-inställningar
-
 SCREENSAVER_NOWPLAYING_OF
 	CS	%s z %s
 	DA	%s af %s

@@ -2,18 +2,6 @@
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
-SETUP_DEVELOPMENT
-	EN	Setup (Development)
-
-SETUP_WELCOME
-	DA	Velkommen
-	DE	Willkommen
-	EN	Welcome
-	ES	Bienvenido
-	FR	Bienvenue
-	IT	Benvenuti
-	NL	Welkom
-
 WELCOME
 	DA	Velkommen
 	DE	Willkommen
@@ -37,15 +25,6 @@ DONE
 
 CONTINUE
 	EN	Continue
-
-DONE_CONTINUE
-	DA	Fortsæt
-	DE	Weiter
-	EN	Continue
-	ES	Continuar
-	FR	Continuer
-	IT	Continua
-	NL	Verdergaan
 
 DONE_HELP
 	EN	You can now use your Squeezebox to access all your music!

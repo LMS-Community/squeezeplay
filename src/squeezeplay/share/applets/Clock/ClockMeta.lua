@@ -41,7 +41,7 @@ function configureApplet(self)
 	)
 
 	appletManager:callService("addScreenSaver",
-		self:string("SCREENSAVER_CLOCK_STYLE_DIGITALDETAILED"), 
+		self:string("SCREENSAVER_CLOCK_STYLE_DIGITALSIMPLE"), 
 		"Clock", 
 		"openDetailedClock", _, _, 26
 	)
