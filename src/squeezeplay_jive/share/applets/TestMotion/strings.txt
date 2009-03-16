@@ -4,6 +4,7 @@
 
 
 TEST_MOTION
+	CS	Detektor pohybu
 	DA	Bevægelsessensor
 	DE	Bewegungsmelder
 	EN	Motion Detector
@@ -13,9 +14,12 @@ TEST_MOTION
 	IT	Sensore movimento
 	NL	Bewegingsdetector
 	NO	Bevegelsessensor
+	PL	Wykrywacz ruchu
+	RU	Детектор движения
 	SV	Rörelseavkänning
 
 TEST_MOTION_VALUE
+	CS	Hodnota
 	DA	Værdi
 	DE	Wert
 	EN	Value
@@ -25,9 +29,12 @@ TEST_MOTION_VALUE
 	IT	Valore
 	NL	Waarde
 	NO	Verdi
+	PL	Wartość
+	RU	Значение
 	SV	Värde
 
 TEST_MOTION_MAX
+	CS	Max.
 	DA	Maks
 	DE	Max.
 	EN	Max
@@ -37,5 +44,7 @@ TEST_MOTION_MAX
 	IT	Max
 	NL	Max
 	NO	Maks
+	PL	Maks.
+	RU	Максимум
 	SV	Max
 

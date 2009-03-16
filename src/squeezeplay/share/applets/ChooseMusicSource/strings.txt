@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SLIMSERVER_SERVERS
+	CS	Zdroj hudby
 	DA	Musikkilde
 	DE	Musikquelle
 	EN	My Music
@@ -12,9 +13,12 @@ SLIMSERVER_SERVERS
 	IT	Sorgente musicale
 	NL	Muziekbron
 	NO	Musikkilde
+	PL	Źródło muzyki
+	RU	Источник музыки
 	SV	Musikkälla
 
 SLIMSERVER_ADD_SERVER
+	CS	Jiný server
 	DA	Anden server
 	DE	Anderer Server
 	EN	Other Server
@@ -24,9 +28,12 @@ SLIMSERVER_ADD_SERVER
 	IT	Altro server
 	NL	Andere server
 	NO	Annen server
+	PL	Inny serwer
+	RU	Другой сервер
 	SV	Annan server
 
 SLIMSERVER_SQUEEZENETWORK
+	CS	SqueezeNetwork
 	DA	SqueezeNetwork
 	DE	SqueezeNetwork
 	EN	SqueezeNetwork
@@ -36,9 +43,12 @@ SLIMSERVER_SQUEEZENETWORK
 	IT	SqueezeNetwork
 	NL	SqueezeNetwork
 	NO	SqueezeNetwork
+	PL	Usługa SqueezeNetwork
+	RU	SqueezeNetwork
 	SV	SqueezeNetwork
 
 SLIMSERVER_HELP
+	CS	Zadejte IP adresu PC, na kterém běží SqueezeCenter
 	DA	Angiv IP-adressen på den computer hvor SqueezeCenter kører
 	DE	IP-Adresse des Computers mit SqueezeCenter eingeben
 	EN	Enter the IP address of the computer running SqueezeCenter
@@ -48,9 +58,12 @@ SLIMSERVER_HELP
 	IT	Inserire l'indirizzo IP del computer in cui è in esecuzione SqueezeCenter
 	NL	Voer het IP-adres in van de computer waarop SqueezeCenter wordt uitgevoerd
 	NO	Oppgi ip-adressen til datamaskinen som kjører SqueezeCenter
+	PL	Wprowadź adres IP komputera, na którym działa program SqueezeCenter
+	RU	Введите IP-адрес компьютера, на котором используется SqueezeCenter
 	SV	Ange IP-adressen till datorn där SqueezeCenter körs
 
 SLIMSERVER_CONNECTING_TO
+	CS	Připojuji se k\n%s
 	DA	Etablerer forbindelse til\n%s
 	DE	Verbindung wird hergestellt mit\n%s
 	EN	Connecting to\n%s
@@ -60,9 +73,12 @@ SLIMSERVER_CONNECTING_TO
 	IT	Connessione a \n%s
 	NL	Bezig verbinding te maken met\n%s
 	NO	Kopler til\n%s
+	PL	Łączenie z\n%s
+	RU	Подключение к\n%s
 	SV	Ansluter till \n%s
 
 SLIMSERVER_CONNECTED_TO
+	CS	Připojeno k\n%s
 	DA	Afspilleren er tilsluttet\n%s
 	DE	Verbunden mit\n%s
 	EN	Connected to\n%s
@@ -72,9 +88,12 @@ SLIMSERVER_CONNECTED_TO
 	IT	Connesso a\n%s
 	NL	Verbonden met\n%s
 	NO	Koplet til\n%s
+	PL	Połączono z\n%s
+	RU	Установлено подключение к\n%s
 	SV	Ansluten till \n%s
 
 SQUEEZEBOX_PROBLEM
+	CS	Problém s připojováním
 	DA	Problem med tilslutning
 	DE	Verbindungsproblem
 	EN	Problem Connecting
@@ -84,9 +103,12 @@ SQUEEZEBOX_PROBLEM
 	IT	Problema di connessione
 	NL	Probleem bij verbinden
 	NO	Klarer ikke å kople til
+	PL	Problem podczas nawiązywania połączenia
+	RU	Ошибка при подключении
 	SV	Det uppstod ett problem vid anslutningen
 
 SQUEEZEBOX_GO_BACK
+	CS	Jít zpět
 	DA	Gå tilbage
 	DE	Zurück
 	EN	Go back
@@ -96,9 +118,12 @@ SQUEEZEBOX_GO_BACK
 	IT	Indietro
 	NL	Terug
 	NO	Gå tilbake
+	PL	Wstecz
+	RU	Назад
 	SV	Tillbaka
 
 SQUEEZEBOX_TRY_AGAIN
+	CS	Zkuste to znovu
 	DA	Prøv igen
 	DE	Erneut versuchen
 	EN	Try again
@@ -108,9 +133,12 @@ SQUEEZEBOX_TRY_AGAIN
 	IT	Riprova
 	NL	Opnieuw proberen
 	NO	Prøv igjen
+	PL	Spróbuj ponownie
+	RU	Повторите попытку
 	SV	Försök igen
 
 SQUEEZEBOX_PROBLEM_HELP
+	CS	Nemohl jsem připojit váš Squeezebox k bezdrátové síti. Ujistěte se, že se nachází v rozsahu vaší bezdrátové sítě.
 	DA	Kunne ikke tilslutte din Squeezebox til dit trådløse netværk. Sikre dig at den er indenfor rækkevidde for dit trådløse netværk.
 	DE	Die Squeezebox konnte nicht mit dem kabellosen Netzwerk verbunden werden. Vergewissern Sie sich, dass sie sich in Reichweite befindet.
 	EN	Could not connect %s to %s.
@@ -120,5 +148,7 @@ SQUEEZEBOX_PROBLEM_HELP
 	IT	Impossibile connettere Squeezebox alla rete senza fili. Verificare che si trovi entro la portata della rete senza fili.
 	NL	Je Squeezebox kan niet met je draadloze netwerk worden verbonden. Zorg dat het apparaat zich binnen het bereik van je draadloze netwerk bevindt.
 	NO	Kunne ikke kople Squeezebox til det trådløse nettverket. Forsikre deg om at den er innenfor rekkevidden til det trådløse nettverket ditt.
+	PL	Nie można podłączyć urządzenia Squeezebox do sieci bezprzewodowej. Upewnij się, czy znajduje się ono w zasięgu sieci bezprzewodowej.
+	RU	Не удалось подключить Squeezebox к вашей беспроводной сети. Убедитесь, что он находится в диапазоне беспроводной сети.
 	SV	Det gick inte att ansluta Squeezebox till det trådlösa nätverket. Se till att spelaren är placerad inom räckvidden för det trådlösa nätverket.
 

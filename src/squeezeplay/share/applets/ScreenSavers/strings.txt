@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SCREENSAVERS
+	CS	Šetřiče obrazovky
 	DA	Pauseskærme
 	DE	Bildschirmschoner
 	EN	Screensavers
@@ -12,9 +13,12 @@ SCREENSAVERS
 	IT	Screen saver
 	NL	Schermbeveiligers
 	NO	Skjermsparere
+	PL	Wygaszacze ekranu
+	RU	Экранные заставки
 	SV	Skärmsläckare
 
 SCREENSAVER_PLAYING
+	CS	Při přehrávání
 	DA	Under afspilning
 	DE	Bei Wiedergabe
 	EN	When playing
@@ -24,6 +28,8 @@ SCREENSAVER_PLAYING
 	IT	Durante la riproduzione
 	NL	Tijdens afspelen
 	NO	Under avspilling
+	PL	Podczas odtwarzania
+	RU	При воспроизведении
 	SV	Vid uppspelning
 
 SCREENSAVER_STOPPED
@@ -36,6 +42,7 @@ SCREENSAVER_STOPPED
 	NL	Wanneer gestopt
 
 SCREENSAVER_DELAY
+	CS	Prodleva
 	DA	Forsinkelse
 	DE	Verzögerung
 	EN	Delay
@@ -45,9 +52,12 @@ SCREENSAVER_DELAY
 	IT	Ritardo
 	NL	Vertraging
 	NO	Forsinkelse
+	PL	Opóźnienie
+	RU	Задержка
 	SV	Fördröjning
 
 SCREENSAVER_SELECT_HELP
+	CS	Pro výběr šetřiče obrazovky stiskněte prostřední tlačítko, pro náhled tlačítko Play.
 	DA	Tryk på midterknappen for at vælge en pauseskærm; afspil viser eksempel.
 	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu wählen, und PLAY, um eine Vorschau anzuzeigen.
 	EN	Press the center button to choose a screensaver, play to preview.
@@ -57,9 +67,12 @@ SCREENSAVER_SELECT_HELP
 	IT	Premere il pulsante centrale per selezionare uno screen saver e il pulsante di riproduzione per vederne l'anteprima.
 	NL	Druk op de middelste knop om een schermbeveiliger te kiezen. Druk op PLAY om een voorbeeld te bekijken.
 	NO	Trykk på den midterste knappen for å velge en skjermsparer, og trykk så på Spill av for å forhåndsvise.
+	PL	Naciśnij środkowy przycisk, aby wybrać wygaszacz ekranu, naciśnij przycisk odtwarzania, aby wyświetlić podgląd.
+	RU	Нажмите центральную кнопку, чтобы выбрать экранную заставку и воспроизвести для просмотра.
 	SV	Tryck på mittenknappen om du vill välja en skärmsläckare eller på Spela upp om du vill förhandsgranska.
 
 DELAY_10_SEC
+	CS	10 vteřin
 	DA	10 sekunder
 	DE	10 Sekunden
 	EN	10 seconds
@@ -69,9 +82,12 @@ DELAY_10_SEC
 	IT	10 secondi
 	NL	10 seconden
 	NO	10 sekunder
+	PL	10 sekund
+	RU	10 секунд
 	SV	10 sekunder
 
 DELAY_20_SEC
+	CS	20 vteřin
 	DA	20 sekunder
 	DE	20 Sekunden
 	EN	20 seconds
@@ -81,9 +97,12 @@ DELAY_20_SEC
 	IT	20 secondi
 	NL	20 seconden
 	NO	20 sekunder
+	PL	20 sekund
+	RU	20 секунд
 	SV	20 sekunder
 
 DELAY_30_SEC
+	CS	30 vteřin
 	DA	30 sekunder
 	DE	30 Sekunden
 	EN	30 seconds
@@ -93,9 +112,12 @@ DELAY_30_SEC
 	IT	30 secondi
 	NL	30 seconden
 	NO	30 sekunder
+	PL	30 sekund
+	RU	30 секунд
 	SV	30 sekunder
 
 DELAY_1_MIN
+	CS	1 minuta
 	DA	1 minut
 	DE	1 Minute
 	EN	1 minute
@@ -105,9 +127,12 @@ DELAY_1_MIN
 	IT	1 minuto
 	NL	1 minuut
 	NO	1 minutt
+	PL	1 minuta
+	RU	1 мин.
 	SV	1 minut
 
 DELAY_2_MIN
+	CS	2 minut
 	DA	2 minutter
 	DE	2 Minuten
 	EN	2 minutes
@@ -117,9 +142,12 @@ DELAY_2_MIN
 	IT	2 minuti
 	NL	2 minuten
 	NO	2 minutter
+	PL	2 minut
+	RU	2 минут
 	SV	2 minuter
 
 DELAY_5_MIN
+	CS	5 minut
 	DA	5 minutter
 	DE	5 Minuten
 	EN	5 minutes
@@ -129,9 +157,12 @@ DELAY_5_MIN
 	IT	5 minuti
 	NL	5 minuten
 	NO	5 minutter
+	PL	5 minut
+	RU	5 минут
 	SV	5 minuter
 
 DELAY_10_MIN
+	CS	10 minut
 	DA	10 minutter
 	DE	10 Minuten
 	EN	10 minutes
@@ -141,9 +172,12 @@ DELAY_10_MIN
 	IT	10 minuti
 	NL	10 minuten
 	NO	10 minutter
+	PL	10 minut
+	RU	10 минут
 	SV	10 minuter
 
 DELAY_30_MIN
+	CS	30 minut
 	DA	30 minutter
 	DE	30 Minuten
 	EN	30 minutes
@@ -153,9 +187,12 @@ DELAY_30_MIN
 	IT	30 minuti
 	NL	30 minuten
 	NO	30 minutter
+	PL	30 minut
+	RU	30 минут
 	SV	30 minuter
 
 SCREENSAVER_NONE
+	CS	Žádná
 	DA	Ingen
 	DE	Keine
 	EN	None
@@ -165,5 +202,7 @@ SCREENSAVER_NONE
 	IT	Nessuno
 	NL	Geen
 	NO	Ingen
+	PL	Brak
+	RU	Нет
 	SV	Ingen
 

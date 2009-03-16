@@ -312,6 +312,18 @@ function _goAction(self)
 	return EVENT_CONSUME
 end
 
+function _cursorBackAction(self)
+	if self.cursor == 1 then
+		self:playSound("WINDOWHIDE")
+		self:hide()
+	else
+		_moveCursor(self, -1)
+		self:reDraw()
+	end
+
+	return EVENT_CONSUME
+end
+
 function _eventHandler(self, event)
 	local type = event:getType()
 	if type == EVENT_IR_PRESS then
@@ -523,6 +535,7 @@ function __init(self, style, value, closure, allowedChars)
 	obj:addActionListener("play", obj, _deleteAction)
 	obj:addActionListener("add", obj, _insertAction)
 	obj:addActionListener("go", obj, _goAction)
+	obj:addActionListener("back", obj, _cursorBackAction)
 
 	obj:addListener(EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE | EVENT_IR_DOWN | EVENT_IR_REPEAT | EVENT_IR_HOLD,
 			function(event)

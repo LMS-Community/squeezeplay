@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 HTTP_AUTH
+	CS	Ochrana vašeho hesla do SqueezeCenter
 	DA	Beskyttelse af SqueezeCenter med adgangskode
 	DE	SqueezeCenter-Kennwortschutz
 	EN	SqueezeCenter Password Protection
@@ -12,9 +13,12 @@ HTTP_AUTH
 	IT	Protezione con password SqueezeCenter
 	NL	SqueezeCenter-wachtwoordbeveiliging
 	NO	SqueezeCenter passordbeskyttelse
+	PL	Ochrona hasłem programu SqueezeCenter
+	RU	Парольная защита SqueezeCenter
 	SV	Lösenordsskydd för SqueezeCenter
 
 HTTP_AUTH_USERNAME
+	CS	Uživatelské jméno
 	DA	Brugernavn
 	DE	Benutzername
 	EN	Username
@@ -24,9 +28,12 @@ HTTP_AUTH_USERNAME
 	IT	Nome utente
 	NL	Gebruikersnaam
 	NO	Brukernavn
+	PL	Nazwa użytkownika
+	RU	Имя пользователя
 	SV	Användarnamn
 
 HTTP_AUTH_PASSWORD
+	CS	Heslo
 	DA	Adgangskode
 	DE	Kennwort
 	EN	Password
@@ -36,12 +43,15 @@ HTTP_AUTH_PASSWORD
 	IT	Password
 	NL	Wachtwoord
 	NO	Passord
+	PL	Hasło
+	RU	Пароль
 	SV	Lösenord
 
 HTTP_AUTH_HELP
 	EN	Help
 
 HTTP_AUTH_USERNAME_HELP
+	CS	Zadejte heslo nastavené pro ochranu vašeho SqueezeCenter
 	DA	Angiv det brugernavn som bruges sammen med adgangskoden til at beskytte SqueezeCenter
 	DE	Geben Sie den für den SqueezeCenter-Kennwortschutz konfigurierten Benutzernamen ein
 	EN	Enter the Username configured for password protection on your SqueezeCenter
@@ -51,17 +61,22 @@ HTTP_AUTH_USERNAME_HELP
 	IT	Inserire il nome utente configurato per la protezione con password in SqueezeCenter
 	NL	Voer de gebruikersnaam die voor wachtwoordbeveiliging is ingesteld, op je SqueezeCenter in
 	NO	Skriv inn brukernavnet som er konfigurert for passordbeskyttelse i SqueezeCenter
+	PL	Wprowadź nazwę użytkownika skonfigurowaną do ochrony hasłem w programie SqueezeCenter
+	RU	Введите имя пользователя, настроенное для парольной защиты в вашем SqueezeCenter
 	SV	Ange användarnamnet du konfigurerat för lösenordsskydd i SqueezeCenter
 
 HTTP_AUTH_PASSWORD_HELP
+	CS	Zadejte heslo nastavené pro ochranu vašeho SqueezeCenter
 	DA	Indtast den adgangskode som bruges til at beskytte SqueezeCenter
 	DE	Geben Sie das für den SqueezeCenter-Kennwortschutz konfigurierte Kennwort ein
 	EN	Enter the Password configured for password protection on your SqueezeCenter
 	ES	Introduzca la contraseña tal y como se haya configurado para protección por contraseña en SqueezeCenter
 	FI	Anna salasana, joka määritettiin salasanasuojausta varten SqueezeCenterissä
 	FR	Saisissez le mot de passe configuré pour la protection par mot de passe du SqueezeCenter
-	IT	Inserire %s configurato per la protezione con password in SqueezeCenter
+	IT	Inserire la password configurata per la protezione con password in SqueezeCenter
 	NL	Voer het wachtwoord dat voor wachtwoordbeveiliging is ingesteld, op je SqueezeCenter in
 	NO	Skriv inn passordet som er konfigurert for passordbeskyttelse i ditt SqueezeCenter
+	PL	Wprowadź hasło skonfigurowane do ochrony hasłem w programie SqueezeCenter
+	RU	Введите пароль, настроенный для парольной защиты в вашем SqueezeCenter
 	SV	Ange lösenordet du konfigurerat för lösenordsskydd i SqueezeCenter
 

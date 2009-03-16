@@ -1,4 +1,5 @@
 APPLET_INSTALLER
+	CS	Instalátor apletů
 	DA	Installation af underprogram
 	DE	Applet-Installation
 	EN	Applet Installer
@@ -8,9 +9,12 @@ APPLET_INSTALLER
 	IT	Progr. di install. applet
 	NL	Appletinstallatieprogr.
 	NO	Installering av tilleggsprogrammer
+	PL	Instalator apletów
+	RU	Установщик Java-приложений
 	SV	Installationsprogram för appletprogram
 
 APPLET_FETCHING
+	CS	Vyvolávám seznam apletů
 	DA	Henter liste med underprogrammer
 	DE	Laden der Applet-Liste
 	EN	Fetching Applet List
@@ -20,9 +24,12 @@ APPLET_FETCHING
 	IT	Recupero elenco applet in corso
 	NL	Appletlijst wordt opgehaald
 	NO	Henter liste over tilleggsprogram
+	PL	Pobieranie listy apletów
+	RU	Получение списка Java-приложений
 	SV	Hämtar lista över appletar
 
 INSTALL
+	CS	Instalovat
 	DA	Installer
 	DE	Installieren
 	EN	Install
@@ -32,9 +39,12 @@ INSTALL
 	IT	Installa
 	NL	Installeren
 	NO	Installer
+	PL	Zainstaluj
+	RU	Установить
 	SV	Installera
 
 NONE_FOUND
+	CS	Nenalezeny žádné aplety
 	DA	Der blev ikke fundet nogen underprogrammer
 	DE	Keine Applets gefunden
 	EN	No Applets Found
@@ -44,9 +54,12 @@ NONE_FOUND
 	IT	Nessuna applet trovata
 	NL	Geen applets gevonden
 	NO	Kunne ikke finne noen tilleggsprogram
+	PL	Nie znaleziono żadnych apletów
+	RU	Java-приложения не найдены
 	SV	Det gick inte att hitta några appletprogram
 
 HELP
+	CS	Vyberte aplety, které chcete nainstalovat, a poté zvolte Instalovat
 	DA	Vælg det underprogram som skal installeres, og vælg derefter Installer
 	DE	Wählen Sie die zu installierenden Applets und anschließend 'Installieren'.
 	EN	Choose applets to be installed and then select Install
@@ -56,9 +69,12 @@ HELP
 	IT	Scegliere le applet da installare, quindi selezionare Installa
 	NL	Kies applets om te installeren, en selecteer dan 'Installeren'
 	NO	Velg tilleggsprogrammene som skal installeres, og velg så Installer
+	PL	Wybierz aplety do zainstalowania, a następnie wybierz opcję Instaluj
+	RU	Выберите Java-приложения для и нажмите кнопку "Установить"
 	SV	Välj de appletar du vill installera och välj sedan Installera
 
 DOWNLOADING
+	CS	\nStahuji aplety
 	DA	\nHenter underprogrammer
 	DE	\nApplets herunterladen
 	EN	\nDownloading Applets
@@ -68,9 +84,12 @@ DOWNLOADING
 	IT	\nDownload delle applet in corso
 	NL	\nApplets worden gedownload
 	NO	\nLaster ned tilleggsprogram
+	PL	\nPobieranie apletów
+	RU	\nЗагрузка Java-приложений
 	SV	\nLaddar ner appletprogram
 
 RESTART_APP
+	CS	Aby mohly být nové aplety použity, restartujte aplikaci
 	DA	Du skal genstarte programmet før de nye underprogrammer kan bruges
 	DE	Zum Nutzen neuer Applets Anwendung neu starten
 	EN	Restart application to make use of new applets
@@ -80,9 +99,12 @@ RESTART_APP
 	IT	Riavviare l'applicazione per usare le nuove applet
 	NL	Start de toepassing opnieuw om nieuwe applets te kunnen gebruiken
 	NO	Start programmet på nytt for å bruke nye tilleggsprogrammer
+	PL	Zrestartuj aplikację, aby użyć nowych apletów
+	RU	Перезагрузите приложение для использования новых Java-приложений
 	SV	Du måste starta om programmet innan du kan börja använda de nya appletprogrammen
 
 RESTART_JIVE
+	CS	\nRestartuji
 	DA	\nGenstarter
 	DE	\nNeustart
 	EN	\nRestarting
@@ -92,5 +114,7 @@ RESTART_JIVE
 	IT	\nRiavvio
 	NL	\nBezig met opnieuw starten
 	NO	\nStarter på nytt
+	PL	\nRestartowanie
+	RU	\nПерезапуск
 	SV	\nStartar om
 

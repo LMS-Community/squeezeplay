@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 WALLPAPER
+	CS	Wallpaper (Tapeta)
 	DA	Tapet
 	DE	Hintergrundbild
 	EN	Wallpaper
@@ -12,9 +13,12 @@ WALLPAPER
 	IT	Sfondo
 	NL	Achtergrond
 	NO	Bakgrunn
+	PL	Tapeta
+	RU	Заставка
 	SV	Tapet
 
 WALLPAPER_HELP_PLAYER
+	CS	Zvolte pozadí obrazovky, které se bude zobrazovat pro %s
 	DA	Vælg den baggrund der skal vises for %s
 	DE	Wählen Sie den Hintergrund für %s
 	EN	Choose the screen background to be shown for %s
@@ -24,9 +28,12 @@ WALLPAPER_HELP_PLAYER
 	IT	Scegliere lo sfondo della schermata per %s
 	NL	Kies de schermachtergrond die moet worden weergegeven voor %s
 	NO	Velg bakgrunnen som skal vises for %s
+	PL	Wybierz domyślne tło ekranu do wyświetlenia dla %s
+	RU	Выберите фоновый рисунок экрана, отображаемый для %s
 	SV	Välj skärmbakgrund för %s
 
 WALLPAPER_HELP_NO_PLAYER
+	CS	Zvolte pozadí obrazovky, které se zobrazí jako výchozí
 	DA	Vælg den baggrund der skal vises som standard
 	DE	Wählen Sie den Standard-Hintergrund
 	EN	Choose the default screen background to be shown
@@ -36,9 +43,12 @@ WALLPAPER_HELP_NO_PLAYER
 	IT	Scegliere lo sfondo della schermata predefinito
 	NL	Kies de standaard schermachtergrond die moet worden weergegeven
 	NO	Velg standardbakgrunnen som skal vises
+	PL	Wybierz domyślne tło ekranu do wyświetlenia
+	RU	Выберите фоновый рисунок экрана, отображаемый по умолчанию
 	SV	Välj standardbakgrund för skärmen
 
 CREDITS
+	CS	Uznání
 	DA	Tak til
 	DE	Mitwirkende
 	EN	Credits
@@ -48,9 +58,12 @@ CREDITS
 	IT	Riconoscimenti
 	NL	Credits
 	NO	Bidragsytere
+	PL	Autorzy
+	RU	Разработчики
 	SV	Erkännanden
 
 CREATIVE_COMMONS
+	CS	Pro obrázky na pozadí platí licence Creative Commons Attribution. Viz http://creativecommons.org/licenses/by/3.0/.
 	DA	Baggrundsbillederne er underlagt en licens fra Creative Commons Attribution. Se http://creativecommons.org/licenses/by/3.0/.
 	DE	Die Hintergrundbilder unterliegen einer "Creative Commons Attribution"-Lizenz (siehe http://creativecommons.org/licenses/by/3.0/).
 	EN	The background images are under a Creative Commons Attribution license. See http://creativecommons.org/licenses/by/3.0/.
@@ -60,9 +73,12 @@ CREATIVE_COMMONS
 	IT	Le immagini degli sfondi sono concesse in licenza da Creative Commons Attribution. Vedere http://creativecommons.org/licenses/by/3.0/.
 	NL	De achtergrondafbeeldingen zijn onderhevig aan een Creative Commons Attribution-licentie. Zie http://creativecommons.org/licenses/by/3.0/.
 	NO	Bakgrunnsbildene er underlagt en Creative Commons navngivelseslisens. Se http://creativecommons.org/licenses/by/3.0/.
+	PL	Obrazy tła podlegają licencji Creative Commons Attribution. Zobacz http://creativecommons.org/licenses/by/3.0/.
+	RU	Фоновые изображения предоставляются на условиях лицензии Creative Commons. См. http://creativecommons.org/licenses/by/3.0/.
 	SV	För bakgrundsbilderna gäller en Creative Commons-licens av typen Erkännande. Se http://creativecommons.org/licenses/by/3.0/.
 
 CREDITS_BY
+	CS	Foto:
 	DA	Billeder af:
 	DE	Bilder von:
 	EN	Pictures by:
@@ -72,9 +88,12 @@ CREDITS_BY
 	IT	Immagini di:
 	NL	Foto's door:
 	NO	Bilder av:
+	PL	Obrazy według:
+	RU	Рисунки от:
 	SV	Bilder av:
 
 CONCRETE
+	CS	Beton
 	DA	Cement
 	DE	Beton
 	EN	Concrete
@@ -84,9 +103,12 @@ CONCRETE
 	IT	Cemento
 	NL	Beton
 	NO	Betong
+	PL	Beton
+	RU	Бетон
 	SV	Betong
 
 MIDNIGHT
+	CS	Půlnoc
 	DA	Midnat
 	DE	Mitternacht
 	EN	Midnight
@@ -96,9 +118,12 @@ MIDNIGHT
 	IT	Mezzanotte
 	NL	Middernacht
 	NO	Midnatt
+	PL	Północ
+	RU	Полночь
 	SV	Midnatt
 
 PEA
+	CS	Hrášek
 	DA	Ært
 	DE	Erbse
 	EN	Pea
@@ -108,9 +133,12 @@ PEA
 	IT	Pisello
 	NL	Doperwt
 	NO	Ert
+	PL	Groszek
+	RU	Горошек
 	SV	Ärta
 
 BLACK
+	CS	Černá
 	DA	Sort
 	DE	Schwarz
 	EN	Black
@@ -120,9 +148,12 @@ BLACK
 	IT	Nero
 	NL	Zwart
 	NO	Svart
+	PL	Kolor czarny
+	RU	Черный
 	SV	Svart
 
 STONE
+	CS	Kámen
 	DA	Sten
 	DE	Stein
 	EN	Stone
@@ -132,9 +163,12 @@ STONE
 	IT	Pietra
 	NL	Steen
 	NO	Stein
+	PL	Kamień
+	RU	Камень
 	SV	Sten
 
 DUNES
+	CS	Duny
 	DA	Klitter
 	DE	Dünen
 	EN	Dunes
@@ -144,9 +178,12 @@ DUNES
 	IT	Dune
 	NL	Duinen
 	NO	Sanddyner
+	PL	Wydmy
+	RU	Дюны
 	SV	Sanddyner
 
 IRIS
+	CS	Tulipán
 	DA	Tulipan
 	DE	Tulpe
 	EN	Tulip
@@ -156,9 +193,12 @@ IRIS
 	IT	Tulipano
 	NL	Tulp
 	NO	Tulipan
+	PL	Tulipan
+	RU	Тюльпан
 	SV	Tulpan
 
 SMOKE
+	CS	Dým
 	DA	Røg
 	DE	Rauch
 	EN	Smoke
@@ -168,9 +208,12 @@ SMOKE
 	IT	Fumo
 	NL	Rook
 	NO	Røyk
+	PL	Dym
+	RU	Дым
 	SV	Rök
 
 AMBER
+	CS	Oranžová
 	DA	Rav
 	DE	Bernstein
 	EN	Amber
@@ -180,9 +223,12 @@ AMBER
 	IT	Ambra
 	NL	Amber
 	NO	Gul
+	PL	Bursztynowy
+	RU	Янтарно-желтый
 	SV	Bärnsten
 
 FLAME
+	CS	Plamen
 	DA	Flamme
 	DE	Flamme
 	EN	Flame
@@ -192,9 +238,12 @@ FLAME
 	IT	Fiamma
 	NL	Vlam
 	NO	Flamme
+	PL	Płomień
+	RU	Пламя
 	SV	Flamma
 
 GRAFFITI
+	CS	Graffiti
 	DA	Graffiti
 	DE	Graffiti
 	EN	Graffiti
@@ -204,9 +253,12 @@ GRAFFITI
 	IT	Graffiti
 	NL	Graffiti
 	NO	Graffiti
+	PL	Graffiti
+	RU	Граффити
 	SV	Graffiti
 
 WEATHERED_WOOD
+	CS	Zvětralé dřevo
 	DA	Slidt træ
 	DE	Verwittertes Holz
 	EN	Weathered Wood
@@ -216,9 +268,12 @@ WEATHERED_WOOD
 	IT	Legno invecchiato
 	NL	Verweerd hout
 	NO	Værbitt treverk
+	PL	Wyblakłe drewno
+	RU	Старое дерево
 	SV	Väderbitet trä
 
 SUNRISE
+	CS	Východ slunce
 	DA	Solopgang
 	DE	Sonnenaufgang
 	EN	Sun Rise
@@ -228,9 +283,12 @@ SUNRISE
 	IT	Alba
 	NL	Zonsopgang
 	NO	Soloppgang
+	PL	Wschód słońca
+	RU	Восход
 	SV	Soluppgång
 
 SUNLIGHT
+	CS	Sluneční svit
 	DA	Sollys
 	DE	Sonnenschein
 	EN	Sun Light
@@ -240,9 +298,12 @@ SUNLIGHT
 	IT	Luce solare
 	NL	Zonlicht
 	NO	Sollys
+	PL	Światło słoneczne
+	RU	Солнечный свет
 	SV	Solsken
 
 FADETOBLACK
+	CS	Vyblednout do černé
 	DA	Går i sort
 	DE	Ausblenden
 	EN	Fade to Black
@@ -252,9 +313,12 @@ FADETOBLACK
 	IT	Verso il nero
 	NL	Faden naar zwart
 	NO	Ton til svart
+	PL	Znikanie do czerni
+	RU	Угасание до черного
 	SV	Svarttoning
 
 WEATHEREDRED
+	CS	Vybledlá červená
 	DA	Slidt rød
 	DE	Verwittertes Rot
 	EN	Weathered Red
@@ -264,9 +328,12 @@ WEATHEREDRED
 	IT	Rosso invecchiato
 	NL	Oudrood
 	NO	Værbitt rød
+	PL	Wyblakła czerwień
+	RU	Старый красный
 	SV	Bleknat rött
 
 PURPLENOTE
+	CS	Nachové noty
 	DA	Lilla noter
 	DE	Violette Noten
 	EN	Purple Notes
@@ -276,9 +343,12 @@ PURPLENOTE
 	IT	Note viola
 	NL	Paarse muzieknoten
 	NO	Lilla noter
+	PL	Fioletowe nuty
+	RU	Пурпурные ноты
 	SV	Lila noter
 
 ORANGEMARBLE
+	CS	Oranžový mramor
 	DA	Orange marmor
 	DE	Orangefarbener Marmor
 	EN	Orange Marble
@@ -288,9 +358,12 @@ ORANGEMARBLE
 	IT	Marmo arancione
 	NL	Oranje marmer
 	NO	Oransje marmor
+	PL	Pomarańczowy marmur
+	RU	Оранжевый мрамор
 	SV	Orange kula
 
 NOTE
+	CS	Poznámky
 	DA	Noter
 	DE	Noten
 	EN	Notes
@@ -300,9 +373,12 @@ NOTE
 	IT	Note
 	NL	Muzieknoten
 	NO	Noter
+	PL	Uwagi
+	RU	Примечания
 	SV	Noter
 
 GREENFLOWERS
+	CS	Zelené květiny
 	DA	Grønne blomster
 	DE	Grüne Blumen
 	EN	Green Flowers
@@ -312,6 +388,8 @@ GREENFLOWERS
 	IT	Fiori verdi
 	NL	Groene bloemen
 	NO	Grønne blomster
+	PL	Zielone kwiaty
+	RU	Зеленые цветы
 	SV	Gröna blommor
 
 RULED_LINES

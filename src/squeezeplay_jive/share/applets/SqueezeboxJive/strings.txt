@@ -5,6 +5,7 @@
 
 
 BSP_SCREEN_LOCKED
+	CS	Zamčeno
 	DA	Låst
 	DE	LCD gesperrt. Drücken Sie HINZUFÜGEN und WIEDERGABE.
 	EN	Locked
@@ -14,9 +15,12 @@ BSP_SCREEN_LOCKED
 	IT	Schermo bloccato. Premere AGGIUNGI e RIPRODUCI per sbloccarlo.
 	NL	Scherm vergrendeld. Druk op TOEVOEGEN en AFSPELEN om het te ontgrendelen.
 	NO	Låst
+	PL	Zablokowane
+	RU	Блокировано
 	SV	Låst
 
 BSP_SCREEN_LOCKED_HELP
+	CS	K odemčení stiskněte současně tlačítka Add (přidat) a Play.
 	DA	Du låser op ved at trykke samtidig på ADD og PLAY (tilføj og afspil).
 	DE	Drücken Sie zum Aufheben der Sperre gleichzeitig ADD und PLAY.
 	EN	To unlock, press the add and play buttons at the same time.
@@ -26,9 +30,12 @@ BSP_SCREEN_LOCKED_HELP
 	IT	Per sbloccare, premere contemporaneamente i pulsanti di aggiunta e di riproduzione.
 	NL	Druk de knoppen ADD en PLAY tegelijk in voor ontgrendeling.
 	NO	Trykk på Legg til- og Spill av-knappene samtidig for å låse opp.
+	PL	Aby odblokować, naciśnij jednocześnie przyciski dodawania i odtwarzania.
+	RU	Чтобы разблокировать, одновременно нажмите кнопки ADD и PLAY.
 	SV	Tryck på plusknappen och uppspelningsknappen samtidigt när du vill avaktivera låset.
 
 BSP_BRIGHTNESS
+	CS	Jas
 	DA	Lysstyrke
 	DE	Helligkeit
 	EN	Brightness
@@ -38,9 +45,12 @@ BSP_BRIGHTNESS
 	IT	Luminosità
 	NL	Helderheid
 	NO	Lysstyrke
+	PL	Jasność
+	RU	Яркость
 	SV	Ljusstyrka
 
 BSP_BRIGHTNESS_ADJUST_HELP
+	CS	K nastavení jasu použijte kolečko.
 	DA	Brug drejeknappen til at justere lysstyrken.
 	DE	Sie können die Helligkeit mit dem Rad anpassen
 	EN	Use the wheel to adjust the brightness.
@@ -50,9 +60,12 @@ BSP_BRIGHTNESS_ADJUST_HELP
 	IT	Usare la rotellina per regolare la luminosità.
 	NL	Gebruik het wiel om de helderheid van de verlichting aan te passen.
 	NO	Bruk hjulet til å justere lysstyrken.
+	PL	Użyj pokrętła, aby ustawić jasność.
+	RU	Используйте колесико для регулировки яркости.
 	SV	Justera ljusstyrkan med rullningshjulet.
 
 BSP_BACKLIGHT_TIMER
+	CS	Ztlumení jasu obrazovky
 	DA	Dæmpning af displayets lysstyrke
 	DE	LCD-Dimmer
 	EN	Screen Dimming
@@ -62,9 +75,12 @@ BSP_BACKLIGHT_TIMER
 	IT	Riduzione lumin. schermo
 	NL	Scherm dimmen
 	NO	Skjermdemping
+	PL	Przyciemnienie ekranu
+	RU	Понижение яркости экрана
 	SV	Dämpning av skärmens ljusstyrka
 
 BSP_BACKLIGHT_HIGH
+	CS	Vysoký
 	DA	Høj
 	DE	Hoch
 	EN	High
@@ -74,9 +90,12 @@ BSP_BACKLIGHT_HIGH
 	IT	Alta
 	NL	Hoog
 	NO	Høy
+	PL	Wysoki
+	RU	Высокий
 	SV	Hög
 
 BSP_BACKLIGHT_MEDIUM
+	CS	Střední
 	DA	Mellem
 	DE	Mittel
 	EN	Medium
@@ -86,9 +105,12 @@ BSP_BACKLIGHT_MEDIUM
 	IT	Media
 	NL	Gemiddeld
 	NO	Middels
+	PL	Średnie
+	RU	Средний
 	SV	Medel
 
 BSP_BACKLIGHT_LOW
+	CS	Nízký
 	DA	Lav
 	DE	Niedrig
 	EN	Low
@@ -98,9 +120,12 @@ BSP_BACKLIGHT_LOW
 	IT	Bassa
 	NL	Laag
 	NO	Lav
+	PL	Niski
+	RU	Низкий
 	SV	Låg
 
 BSP_TIMER_OFF
+	CS	Vypnuto
 	DA	Fra
 	DE	Aus
 	EN	Off
@@ -110,9 +135,12 @@ BSP_TIMER_OFF
 	IT	Disattivato
 	NL	Uit
 	NO	Av
+	PL	wył.
+	RU	Выкл.
 	SV	Av
 
 BSP_TIMER_ON
+	CS	Zapnout
 	DA	Til
 	DE	Ein
 	EN	On
@@ -122,9 +150,12 @@ BSP_TIMER_ON
 	IT	Attivato
 	NL	Aan
 	NO	På
+	PL	Wł.
+	RU	Вкл.
 	SV	På
 
 BSP_TIMER_5_SEC
+	CS	5 vteřin
 	DA	5 sekunder
 	DE	5 Sekunden
 	EN	5 seconds
@@ -134,9 +165,12 @@ BSP_TIMER_5_SEC
 	IT	5 secondi
 	NL	5 seconden
 	NO	5 sekunder
+	PL	5 sekund
+	RU	5 секунд
 	SV	5 sekunder
 
 BSP_TIMER_10_SEC
+	CS	10 vteřin
 	DA	10 sekunder
 	DE	10 Sekunden
 	EN	10 seconds
@@ -146,9 +180,12 @@ BSP_TIMER_10_SEC
 	IT	10 secondi
 	NL	10 seconden
 	NO	10 sekunder
+	PL	10 sekund
+	RU	10 секунд
 	SV	10 sekunder
 
 BSP_TIMER_15_SEC
+	CS	15 vteřin
 	DA	15 sekunder
 	DE	15 Sekunden
 	EN	15 seconds
@@ -158,9 +195,12 @@ BSP_TIMER_15_SEC
 	IT	15 secondi
 	NL	15 seconden
 	NO	15 sekunder
+	PL	15 sekund
+	RU	15 секунд
 	SV	15 sekunder
 
 BSP_TIMER_20_SEC
+	CS	20 vteřin
 	DA	20 sekunder
 	DE	20 Sekunden
 	EN	20 seconds
@@ -170,9 +210,12 @@ BSP_TIMER_20_SEC
 	IT	20 secondi
 	NL	20 seconden
 	NO	20 sekunder
+	PL	20 sekund
+	RU	20 секунд
 	SV	20 sekunder
 
 BSP_TIMER_30_SEC
+	CS	30 vteřin
 	DA	30 sekunder
 	DE	30 Sekunden
 	EN	30 seconds
@@ -182,9 +225,12 @@ BSP_TIMER_30_SEC
 	IT	30 secondi
 	NL	30 seconden
 	NO	30 sekunder
+	PL	30 sekund
+	RU	30 секунд
 	SV	30 sekunder
 
 BSP_TIMER_1_MIN
+	CS	1 minuta
 	DA	1 minut
 	DE	1 Minute
 	EN	1 minute
@@ -194,9 +240,12 @@ BSP_TIMER_1_MIN
 	IT	1 minuto
 	NL	1 minuut
 	NO	1 minutt
+	PL	1 minuta
+	RU	1 мин.
 	SV	1 minut
 
 BSP_TIMER_2_MIN
+	CS	2 minuty
 	DA	2 minutter
 	DE	2 Minute
 	EN	2 minute
@@ -206,9 +255,12 @@ BSP_TIMER_2_MIN
 	IT	2 minuti
 	NL	2 minuten
 	NO	2 minutter
+	PL	2 minuty
+	RU	2 мин.
 	SV	2 minuter
 
 BSP_TIMER_5_MIN
+	CS	5 minut
 	DA	5 minutter
 	DE	5 Minute
 	EN	5 minute
@@ -218,9 +270,12 @@ BSP_TIMER_5_MIN
 	IT	5 minuti
 	NL	5 minuten
 	NO	5 minutter
+	PL	5 minut
+	RU	5 мин.
 	SV	5 minuter
 
 BSP_TIMER_NEVER
+	CS	Nikdy
 	DA	Aldrig
 	DE	Nie
 	EN	Never
@@ -230,9 +285,12 @@ BSP_TIMER_NEVER
 	IT	Mai
 	NL	Nooit
 	NO	Aldri
+	PL	Nigdy
+	RU	Никогда
 	SV	Aldrig
 
 DIM_WHEN_CHARGING
+	CS	Ztlumit jas při nabíjení
 	DA	Dæmp under opladning
 	DE	Beim Laden dimmen
 	EN	Dim when charging
@@ -242,9 +300,12 @@ DIM_WHEN_CHARGING
 	IT	Riduci lumin. in carica
 	NL	Dimmen tijdens opladen
 	NO	Demp lys under lading
+	PL	Przyciemnij podczas ładowania
+	RU	Понизить яркость при зарядке
 	SV	Dämpa skärmens ljusstyrka vid laddning
 
 BATTERY_LOW
+	CS	Dochází baterie\nDobijte ji prosím
 	DA	Batteriet er næsten fladt\nDet skal lades op
 	DE	Batterie schwach\nBitte aufladen
 	EN	Battery Low\nPlease Charge Me
@@ -254,9 +315,12 @@ BATTERY_LOW
 	IT	Livello batteria insufficiente\nCaricare batteria
 	NL	Batterij bijna leeg\nOpladen alsjeblieft
 	NO	Lavt batterinivå\nLad meg opp
+	PL	Niski poziom baterii\nNaładuj urządzenie
+	RU	Батарея разряжена\nНеобходима зарядка
 	SV	Låg batterinivå\nLadda batteriet
 
 POWER_DOWN
+	CS	Vypnout
 	DA	Sluk
 	DE	Herunterfahren
 	EN	Turn Off
@@ -266,9 +330,12 @@ POWER_DOWN
 	IT	Disattivazione
 	NL	Uitzetten
 	NO	Slå av
+	PL	Wyłącz
+	RU	Выкл.
 	SV	Stäng av
 
 POWER_DOWN_CANCEL
+	CS	Storno
 	DA	Annuller
 	DE	Abbrechen
 	EN	Cancel
@@ -278,9 +345,12 @@ POWER_DOWN_CANCEL
 	IT	Annulla
 	NL	Annuleren
 	NO	Avbryt
+	PL	Anuluj
+	RU	Отмена
 	SV	Avbryt
 
 POWER_DOWN_SLEEP
+	CS	Sleep (Režim spánku)
 	DA	Slumre
 	DE	Schlafmodus
 	EN	Sleep
@@ -290,9 +360,12 @@ POWER_DOWN_SLEEP
 	IT	Sospendi
 	NL	Sluimermodus
 	NO	Hvilemodus
+	PL	Uśpienie
+	RU	Спящий режим
 	SV	Viloläge
 
 POWER_DOWN_CONFIRM
+	CS	Potvrdit
 	DA	Bekræft
 	DE	Bestätigen
 	EN	Confirm
@@ -302,9 +375,12 @@ POWER_DOWN_CONFIRM
 	IT	Conferma
 	NL	Bevestigen
 	NO	Bekreft
+	PL	Potwierdź
+	RU	Подтвердить
 	SV	Bekräfta
 
 GOODBYE
+	CS	\nNashledanou
 	DA	\nFarvel
 	DE	\nAuf Wiedersehen
 	EN	\nGoodbye
@@ -314,9 +390,12 @@ GOODBYE
 	IT	\nA presto
 	NL	\nTot ziens
 	NO	\nFarvel
+	PL	\nDo widzenia
+	RU	\nПрощайте
 	SV	\nHej då!
 
 SLEEPING
+	CS	\nUsínám
 	DA	\nSlumrer
 	DE	\nSchlafmodus aktiv
 	EN	\nSleeping
@@ -326,9 +405,12 @@ SLEEPING
 	IT	\nSospensione
 	NL	\nSluimermodus
 	NO	\nHviler
+	PL	\nUśpienie
+	RU	\nСпящий режим
 	SV	\nI viloläge
 
 POWER_DOWN_HELP
+	CS	Zrušit nebo potvrdit pokles výkonu ovladače
 	DA	Annuller eller Bekræft at controlleren skal slukkes
 	DE	Herunterfahren der Fernbedienung Abbrechen oder Bestätigen
 	EN	Cancel or Confirm the power down of your controller
@@ -338,9 +420,12 @@ POWER_DOWN_HELP
 	IT	Annullare o confermare la disattivazione del telecomando
 	NL	Annuleer of bevestig het uitzetten van je controller
 	NO	Avbryt eller Bekreft at du vil slå av fjernkontrollen
+	PL	Anuluj lub potwierdź wyłączenie urządzenia sterującego
+	RU	Отмените или подтвердите выключение питания контроллера
 	SV	Avbryt eller bekräfta att du vill stänga av fjärrkontrollen
 
 PLEASE_WAIT
+	CS	\nČekejte prosím
 	DA	\nVent lidt
 	DE	\nBitte warten
 	EN	\nPlease wait
@@ -350,9 +435,12 @@ PLEASE_WAIT
 	IT	\nAttendere
 	NL	\nEen ogenblik geduld
 	NO	\nVent litt
+	PL	\nCzekaj
+	RU	\nПодождите, пожалуйста
 	SV	\nVänta
 
 INVALID_MAC_TITLE
+	CS	Chyba
 	DA	Fejl
 	DE	Fehler
 	EN	Error
@@ -362,9 +450,12 @@ INVALID_MAC_TITLE
 	IT	Errore
 	NL	Fout
 	NO	Feil
+	PL	Błąd
+	RU	Ошибка
 	SV	Fel
 
 INVALID_MAC_TEXT
+	CS	Neplatná adresa mac nebo uuid. Kontaktujte zákaznickou podporu.
 	DA	Ugyldig MAC-adresse eller UUID. Kontakt supportafdelingen.
 	DE	Ungültige MAC-Adresse oder UUID. Wenden Sie sich an den Kundendienst.
 	EN	Invalid mac address or uuid. Please contact support.
@@ -374,9 +465,12 @@ INVALID_MAC_TEXT
 	IT	Indirizzo MAC o UUID non valido. Contattare il servizio di assistenza.
 	NL	MAC-adres of UUID ongeldig. Neem contact op met support.
 	NO	Ugyldig mac-adresse eller uuid. Vennligst ta kontakt med kundestøtte.
+	PL	Nieprawidłowy adres MAC lub identyfikator UUID. Skontaktuj się z działem wsparcia.
+	RU	Недопустимый mac-адрес или uuid. Обратитесь в службу поддержки.
 	SV	Ogiltig MAC-adress eller ogiltigt UUID Kontakta supportavdelningen.
 
 INVALID_MAC_CONTINUE
+	CS	Pokračovat
 	DA	Fortsæt
 	DE	Weiter
 	EN	Continue
@@ -386,9 +480,12 @@ INVALID_MAC_CONTINUE
 	IT	Continua
 	NL	Verdergaan
 	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
 	SV	Fortsätt
 
 POWER_MANAGEMENT_SETTINGS
+	CS	Řízení spotřeby
 	DA	Strømstyring
 	DE	Energieverwaltung
 	EN	Power management
@@ -398,9 +495,12 @@ POWER_MANAGEMENT_SETTINGS
 	IT	Risparmio energia
 	NL	Energiebeheer
 	NO	Strømstyring
+	PL	Zarządzanie energią
+	RU	Управление питанием
 	SV	Energisparfunktion
 
 SLEEP_TIMEOUT
+	CS	Limit pro funkci Sleep
 	DA	Dvale indtil
 	DE	Energiesparmodus nach
 	EN	Sleep Timeout
@@ -410,9 +510,12 @@ SLEEP_TIMEOUT
 	IT	Timeout sospensione
 	NL	Sleep-timeout
 	NO	Tidsavbrudd for hvilemodus
+	PL	Limit czasu uśpienia
+	RU	Перерыв спящего режима
 	SV	Vilolägestimeout
 
 SUSPEND_TIMEOUT
+	CS	Limit pro pozastavení
 	DA	Standby om
 	DE	Zeitüberschreitung deaktivieren
 	EN	Suspend Timeout
@@ -422,9 +525,12 @@ SUSPEND_TIMEOUT
 	IT	Sospendi timeout
 	NL	Time-out onderbreken
 	NO	Gå til dvalemodus
+	PL	Limit czasu trybu zawieszenia
+	RU	Перерыв приостановки
 	SV	Fördröjningstimeout
 
 SUSPEND_ENABLED
+	CS	Pozastavení povoleno
 	DA	Standby er aktiveret
 	DE	Anhalten aktiviert
 	EN	Suspend Enabled
@@ -434,9 +540,12 @@ SUSPEND_ENABLED
 	IT	Sospensione attivata
 	NL	Onderbreking ingeschakeld
 	NO	Dvalemodus aktivert
+	PL	Włączono tryb zawieszenia
+	RU	Приостановка включена
 	SV	Fördröjning aktiverad
 
 SUSPEND_WAKE
+	CS	Pozastavit buzení
 	DA	Standby indtil
 	DE	Aufwachen deaktivieren
 	EN	Suspend Wake
@@ -446,9 +555,12 @@ SUSPEND_WAKE
 	IT	Sospendi attivazione
 	NL	Aanzetten onderbreken
 	NO	Gå ut av dvalemodus
+	PL	Wyłączenie trybu zawieszenia
+	RU	Приостановить пробуждение
 	SV	Aktivering från fördröjningsläge
 
 WLAN_POWER_SAVE
+	CS	Úspora bezdrátového výkonu
 	DA	Strømsparefunktion til trådløst netværkskort
 	DE	Kabellos-Energiesparmodus
 	EN	Wireless Power Save
@@ -458,9 +570,12 @@ WLAN_POWER_SAVE
 	IT	Risparmio energia senza fili
 	NL	Draadloze energiebesparing
 	NO	Trådløs strømsparing
+	PL	Oszczędzanie energii w trybie bezprzewodowym
+	RU	Экономия питания беспроводного устройства
 	SV	Trådlös energisparfunktion
 
 POWER_MANAGEMENT_SETTINGS_HELP
+	CS	Nastavení testů pro řízení spotřeby. Změnou tohoto nastavení můžete snížit životnost baterie.
 	DA	Testindstillinger for strømstyring. Hvis du ændrer indstillingerne, holder batteriet muligvis ikke så længe.
 	DE	Testeinstellungen für die Energieverwaltung. Wenn Sie diese Einstellungen ändern, könnte die Batterie schneller entladen werden.
 	EN	Power management test settings. Changing these settings may reduce your battery life.
@@ -470,5 +585,7 @@ POWER_MANAGEMENT_SETTINGS_HELP
 	IT	Impostazioni verifica risparmio energia. La modifica di queste impostazioni potrebbe ridurre la durata delle batterie.
 	NL	Testinstellingen voor energiebeheer. Wanneer je deze instellingen wijzigt, gaan de batterijen misschien minder lang mee.
 	NO	Innstillinger for strømstyringstest. Endringer av disse innstillingene kan føre til redusert batterilevetid.
+	PL	Ustawienia testu zarządzania energią. Zmiana tych ustawień może skrócić żywotność baterii.
+	RU	Настройки теста управления питанием. Изменение этих настроек может сократить срок службы батареи.
 	SV	Testinställningar för energisparfunktion. Om du ändrar de här inställningarna kan batteritiden förkortas.
 

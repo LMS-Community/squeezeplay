@@ -13,6 +13,7 @@ SQUEEZEBOX_SETUP
 	NL	Squeezebox instellen
 
 SQUEEZEBOX_NETWORK_CONNECTION
+	CS	Bezdrátové připojení
 	DA	Trådløs forbindelse
 	DE	Kabellose Verbindung
 	EN	Wireless Connection
@@ -22,9 +23,12 @@ SQUEEZEBOX_NETWORK_CONNECTION
 	IT	Connessione senza fili
 	NL	Draadloze verbinding
 	NO	Trådløs tilkopling
+	PL	Połączenie bezprzewodowe
+	RU	Беспроводное подключение
 	SV	Trådlös anslutning
 
 SQUEEZEBOX_CONNECT_HELP
+	CS	Vyberte, jakým způsobem by se měl Squeezebox připojit k vaší síti.
 	DA	Vælg hvordan Squeezebox skal tilsluttes netværket.
 	DE	Bestimmen Sie, wie die Squeezebox mit dem Netzwerk verbunden werden soll.
 	EN	Choose how your Squeezebox should connect to your network.
@@ -34,9 +38,12 @@ SQUEEZEBOX_CONNECT_HELP
 	IT	Scegliere in che modo Squeezebox verrà connesso alla rete.
 	NL	Kies hoe je Squeezebox verbinding met je netwerk moet maken.
 	NO	Velg hvordan Squeezebox skal kople til nettverket.
+	PL	Wybierz sposób podłączenia urządzenia Squeezebox do sieci.
+	RU	Выберите способ подключения Squeezebox к вашей сети.
 	SV	Välj hur du vill att Squeezebox ska anslutas till nätverket.
 
 SQUEEZEBOX_WIRELESS
+	CS	Bezdrátová technologie
 	DA	Trådløst
 	DE	Drahtlos
 	EN	Wireless
@@ -46,9 +53,12 @@ SQUEEZEBOX_WIRELESS
 	IT	Rete senza fili
 	NL	Draadloos
 	NO	Trådløs
+	PL	Bezprzewodowość
+	RU	Беспроводная
 	SV	Trådlöst
 
 SQUEEZEBOX_ETHERNET
+	CS	Ethernet
 	DA	Ethernet
 	DE	Ethernet
 	EN	Ethernet
@@ -58,9 +68,12 @@ SQUEEZEBOX_ETHERNET
 	IT	Ethernet
 	NL	Ethernet
 	NO	Ethernet
+	PL	Ethernet
+	RU	Ethernet
 	SV	Ethernet
 
 SQUEEZEBOX_HELP
+	CS	Vyberte přijímač Squeezebox, který chcete nastavit. Jestliže není vidět, stiskněte a přidržte tlačítko na přední straně, dokud nezačne blikat.
 	DA	Vælg den Squeezebox Receiver der skal konfigureres. Hvis du ikke kan se den her, skal du holde knappen på forsiden nede indtil den blinker.
 	DE	Wählen Sie den gewünschten Squeezebox Receiver. Wird er nicht angezeigt, halten Sie die Taste an der Vorderseite gedrückt, bis sie blinkt.
 	EN	Choose the Squeezebox Receiver you want to set up. If you don't see it here, press and hold the button on the front until it flashes.
@@ -70,9 +83,12 @@ SQUEEZEBOX_HELP
 	IT	Selezionare il dispositivo Squeezebox Receiver che si desidera configurare. Se non è visualizzato, tenere premuto il pulsante sulla parte anteriore finché non lampeggia.
 	NL	Kies de Squeezebox Receiver die je wilt instellen. Staat deze niet in de lijst, houd dan de knop aan de voorkant ingedrukt totdat deze knippert.
 	NO	Velg den Squeezebox-mottakeren du vil konfigurere. Hvis du ikke ser den her, trykker du og holder nede knappen foran til den begynner å blinke.
+	PL	Wybierz odbiornik Squeezebox, który chcesz skonfigurować. Jeśli nie jest on widoczny w tym miejscu, naciśnij i przytrzymaj przycisk z przodu do momentu, kiedy zamiga.
+	RU	Выберите ресивер Squeezebox для настройки. Если вы не видите его здесь, нажмите и удерживайте кнопку впереди, пока не начнется мигание.
 	SV	Välj den Squeezebox Receiver du vill konfigurera. Om den inte visas här, håller du knappen framtill på mottagaren nedtryckt till den börjar blinka.
 
 SQUEEZEBOX_FINDING_SOURCES
+	CS	Hledám zdroje hudby
 	DA	Søger efter musikkilder
 	DE	Musikquellen werden gesucht
 	EN	Finding music sources
@@ -82,9 +98,12 @@ SQUEEZEBOX_FINDING_SOURCES
 	IT	Ricerca di sorgenti musicali
 	NL	Bezig met zoeken naar muziekbronnen
 	NO	Finner musikkilder
+	PL	Znajdowanie źródeł muzyki
+	RU	Поиск источников музыки
 	SV	Söker efter musikkällor
 
 SQUEEZEBOX_CONNECTING_TO
+	CS	Připojuji se k\n%s
 	DA	Etablerer forbindelse til\n%s
 	DE	Verbindung mit %s
 	EN	Connecting to\n%s
@@ -94,9 +113,12 @@ SQUEEZEBOX_CONNECTING_TO
 	IT	Connessione a %s
 	NL	Er wordt een verbinding met %s gemaakt
 	NO	Kopler til\n%s
+	PL	Łączenie z\n%s
+	RU	Подключение к\n%s
 	SV	Ansluter till \n%s
 
 SQUEEZEBOX_SETUP_COMPLETE
+	CS	Váš squeezebox je nyní nastaven.
 	DA	Nu er din Squeezebox konfigureret.
 	DE	Die Squeezebox ist eingerichtet.
 	EN	Your squeezebox is now set up.
@@ -106,6 +128,8 @@ SQUEEZEBOX_SETUP_COMPLETE
 	IT	Squeezebox è stato configurato.
 	NL	Je Squeezebox is nu ingesteld.
 	NO	Squeezebox er nå konfigurert.
+	PL	Urządzenie Squeezebox zostało skonfigurowane.
+	RU	Настройка Squeezebox выполнена.
 	SV	Nu är Squeezebox konfigurerad.
 
 SQUEEZEBOX_PROBLEM
@@ -118,6 +142,7 @@ SQUEEZEBOX_PROBLEM
 	NL	Probleem bij verbinden
 
 SQUEEZEBOX_PROBLEM_TRY_AGAIN
+	CS	Zkuste to znovu
 	DA	Prøv igen
 	DE	Erneut versuchen.
 	EN	Try again
@@ -127,9 +152,12 @@ SQUEEZEBOX_PROBLEM_TRY_AGAIN
 	IT	Riprova
 	NL	Opnieuw proberen
 	NO	Prøv igjen
+	PL	Spróbuj ponownie
+	RU	Повторите попытку
 	SV	Försök igen
 
 SQUEEZEBOX_PROBLEM_SKIP
+	CS	Přeskočit tento krok
 	DA	Spring over dette trin
 	DE	Diesen Schritt überspringen
 	EN	Skip this step
@@ -139,9 +167,12 @@ SQUEEZEBOX_PROBLEM_SKIP
 	IT	Salta questa operazione
 	NL	Deze stap overslaan
 	NO	Hopp over dette
+	PL	Pomiń ten krok
+	RU	Пропустить данный этап
 	SV	Hoppa över det här steget.
 
 SQUEEZEBOX_ETHERNET_PROBLEM_HELP
+	CS	Nemohl jsem připojit váš Squeezebox k ethernetové síti.
 	DA	Squeezebox kunne ikke sluttes til dit Ethernet-netværk.
 	DE	Die Squeezebox konnte nicht mit dem Ethernet-Netzwerk verbunden werden.
 	EN	Couldn't connect your Squeezebox to your ethernet network.
@@ -151,6 +182,8 @@ SQUEEZEBOX_ETHERNET_PROBLEM_HELP
 	IT	Impossibile connettere Squeezebox alla rete Ethernet.
 	NL	Kan je Squeezebox niet met je ethernetnetwerk verbinden.
 	NO	Kunne ikke kople Squeezebox til Ethernet-nettverket.
+	PL	Nie można podłączyć urządzenia Squeezebox do sieci Ethernet.
+	RU	Не удалось подключить Squeezebox к вашей сети ethernet.
 	SV	Det gick inte att ansluta Squeezebox till Ethernet-nätverket.
 
 SQUEEZEBOX_PROBLEM_HELP
@@ -163,6 +196,7 @@ SQUEEZEBOX_PROBLEM_HELP
 	NL	Je Squeezebox kan niet met je draadloze netwerk worden verbonden. Zorg dat het apparaat zich binnen het bereik van je draadloze netwerk bevindt.
 
 SQUEEZEBOX_PROBLEM_LOST_CONNECTION
+	CS	(Spojení ztraceno).
 	DA	(Har mistet forbindelsen).
 	DE	(Verbindung unterbrochen)
 	EN	(Lost connection).
@@ -172,9 +206,12 @@ SQUEEZEBOX_PROBLEM_LOST_CONNECTION
 	IT	Connessione persa.
 	NL	(Verbinding is verloren gegaan).
 	NO	(Mistet tilkopling).
+	PL	(utracone połączenie).
+	RU	(Потеряно подключение.)
 	SV	(Anslutningen avbröts).
 
 SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX
+	CS	(Ztracený Squeezebox).
 	DA	(Har mistet forbindelsen til Squeezebox).
 	DE	(Squeezebox nicht verbunden)
 	EN	(Lost Squeezebox).
@@ -184,9 +221,12 @@ SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX
 	IT	Squeezebox perso.
 	NL	(Squeezebox is verloren gegaan).
 	NO	(Mistet tilkopling til Squeezebox).
+	PL	(utracone urządzenie Squeezebox).
+	RU	(Потерян Squeezebox.)
 	SV	(Anslutningen till Squeezebox avbröts).
 
 SQUEEZEBOX_PROBLEM_DHCP_ERROR
+	CS	(chyba DHCP).
 	DA	(DHCP-fejl).
 	DE	(DHCP-Fehler)
 	EN	(DHCP error).
@@ -196,9 +236,12 @@ SQUEEZEBOX_PROBLEM_DHCP_ERROR
 	IT	Errore DHCP.
 	NL	(DHCP-foutmelding).
 	NO	(DHCP-feil).
+	PL	(błąd DHCP).
+	RU	(Ошибка DHCP.)
 	SV	(DHCP-fel).
 
 SQUEEZEBOX_PROBLEM_LOST_NETWORK
+	CS	(Síť ztracena).
 	DA	(Har mistet forbindelsen til netværket).
 	DE	(Netzwerkverbindung unterbrochen)
 	EN	(Lost network).
@@ -208,9 +251,12 @@ SQUEEZEBOX_PROBLEM_LOST_NETWORK
 	IT	Rete persa.
 	NL	(Netwerk is verloren gegaan).
 	NO	(Mistet nettverk).
+	PL	(utracona sieć).
+	RU	(Потеряна сеть.)
 	SV	(Anslutningen avbröts).
 
 SQUEEZEBOX_PROBLEM_CONNECTION_ERROR
+	CS	(Chyba připojení).
 	DA	(Forbindelsesfejl).
 	DE	(Verbindungsfehler)
 	EN	(Connection error).
@@ -220,9 +266,12 @@ SQUEEZEBOX_PROBLEM_CONNECTION_ERROR
 	IT	Errore di connessione.
 	NL	(Verbindingsfout).
 	NO	(Tilkoplingsfeil).
+	PL	(błąd połączenia).
+	RU	(Ошибка подключения.)
 	SV	(Anslutningsfel).
 
 SQUEEZEBOX_MUSIC_SOURCE
+	CS	Zvolit zdroj hudby
 	DA	Vælg musikkilde
 	DE	Musikquelle wählen
 	EN	Choose Music Source
@@ -232,9 +281,12 @@ SQUEEZEBOX_MUSIC_SOURCE
 	IT	Scegliere la sorgente musicale
 	NL	Muziekbron kiezen
 	NO	Velg musikkilde
+	PL	Wybierz źródło muzyki
+	RU	Выберите источник музыки
 	SV	Välj musikkälla
 
 SQUEEZEBOX_MUSIC_SOURCE_HELP
+	CS	Squeezebox %s je připojen k vaší síti. Vyberte zdroj hudby.
 	DA	Squeezebox %s er sluttet til netværket. Vælg en musikkilde.
 	DE	Die Squeezebox %s ist mit dem Netzwerk verbunden. Wählen Sie eine Musikquelle.
 	EN	The Squeezebox %s is connected to your network. Choose a music source.
@@ -244,9 +296,12 @@ SQUEEZEBOX_MUSIC_SOURCE_HELP
 	IT	Squeezebox %s è connesso alla rete. Scegliere una sorgente musicale.
 	NL	De Squeezebox %s is met je netwerk verbonden. Kies een muziekbron.
 	NO	Squeezebox %s er tilkoplet nettverket. Velg en musikkilde.
+	PL	Urządzenie Squeezebox %s jest podłączone do sieci. Wybierz źródło muzyki.
+	RU	Squeezebox %s подключен к вашей сети. Выберите источник музыки.
 	SV	Squeezebox-spelaren %s har anslutits till nätverket. Välj musikkälla.
 
 SQUEEZEBOX_IP_ADDRESS
+	CS	IP adresa
 	DA	IP-adresse
 	DE	IP-Adresse
 	EN	IP Address
@@ -256,9 +311,12 @@ SQUEEZEBOX_IP_ADDRESS
 	IT	Indirizzo IP
 	NL	IP-adres
 	NO	Ip-adresse
+	PL	Adres IP
+	RU	IP-адрес
 	SV	IP-adress
 
 SQUEEZEBOX_IP_ADDRESS_HELP
+	CS	Zadejte IP adresu pro tento Squeezebox.
 	DA	Angiv IP-adressen som denne Squeezebox-afspiller skal benytte.
 	DE	Geben Sie die IP-Adresse für diese Squeezebox ein.
 	EN	Enter the IP address for this Squeezebox to use.
@@ -268,9 +326,12 @@ SQUEEZEBOX_IP_ADDRESS_HELP
 	IT	Inserire l'indirizzo IP da utilizzare con questo Squeezebox.
 	NL	Voer het IP-adres in voor de Squeezebox die gebruikt moet worden.
 	NO	Skriv inn ip-adressen som denne Squeezebox kan bruke.
+	PL	Wprowadź adres IP, który ma być używany przez to urządzenie Squeezebox.
+	RU	Введите IP-адрес для использования Squeezebox.
 	SV	Ange IP-adressen som ska användas för den här Squeezebox-spelaren.
 
 SQUEEZEBOX_BRIDGED_NAME
+	CS	Squeezebox %s
 	DA	Squeezebox %s
 	DE	Squeezebox %s
 	EN	Squeezebox %s
@@ -280,9 +341,12 @@ SQUEEZEBOX_BRIDGED_NAME
 	IT	Squeezebox %s
 	NL	Squeezebox %s
 	NO	Squeezebox %s
+	PL	Squeezebox %s
+	RU	Squeezebox %s
 	SV	Squeezebox %s
 
 SQUEEZEBOX_UPDATING_FIRMWARE_SQUEEZEBOX
+	CS	Aktualizuji firmware Squeezeboxu
 	DA	Opdaterer Squeezebox-firmwaren
 	DE	Squeezebox-Firmware wird aktualisiert
 	EN	Updating Squeezebox firmware
@@ -292,5 +356,7 @@ SQUEEZEBOX_UPDATING_FIRMWARE_SQUEEZEBOX
 	IT	Aggiornamento firmware Squeezebox
 	NL	Squeezebox-firmware wordt bijgewerkt
 	NO	Oppdaterer Squeezebox-fastvare
+	PL	Aktualizowanie oprogramowania układowego urządzenia Squeezebox.
+	RU	Обновление микропрограмм Squeezebox
 	SV	Uppdaterar Squeezebox-spelarens inbyggda programvara
 

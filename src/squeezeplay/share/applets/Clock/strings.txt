@@ -4,6 +4,7 @@
 
 
 SCREENSAVER_CLOCK
+	CS	Hodiny
 	DA	Ur
 	DE	Uhr
 	EN	Clock
@@ -13,9 +14,12 @@ SCREENSAVER_CLOCK
 	IT	Orologio
 	NL	Klok
 	NO	Klokke
+	PL	Zegar
+	RU	Часы
 	SV	Klocka
 
 SCREENSAVER_CLOCK_SETTINGS
+	CS	Nastavení hodin
 	DA	Indstillinger for ur
 	DE	Uhr Einstellungen
 	EN	Clock Settings
@@ -25,9 +29,12 @@ SCREENSAVER_CLOCK_SETTINGS
 	IT	Impostazioni orologio
 	NL	Klokinstellingen
 	NO	Tidsinnstillinger
+	PL	Ustawienia zegara
+	RU	Настройки часов
 	SV	Klockinställningar
 
 SCREENSAVER_CLOCK_TYPE
+	CS	Typ hodin
 	DA	Urtype
 	DE	Uhr Typ
 	EN	Clock Type
@@ -37,9 +44,12 @@ SCREENSAVER_CLOCK_TYPE
 	IT	Tipo orologio
 	NL	Type klok
 	NO	Klokketype
+	PL	Typ zegara
+	RU	Тип часов
 	SV	Typ av klocka
 
 SCREENSAVER_CLOCK_STYLE_ANALOG
+	CS	Analogové hodiny
 	DA	Analogt ur
 	DE	Analoguhr
 	EN	Analog Clock
@@ -49,9 +59,12 @@ SCREENSAVER_CLOCK_STYLE_ANALOG
 	IT	Orologio analogico
 	NL	Analoge klok
 	NO	Analog klokke
+	PL	Zegar analogowy
+	RU	Аналоговые часы
 	SV	Analog klocka
 
 SCREENSAVER_CLOCK_STYLE_DIGITALSIMPLE
+	CS	Digitální hodiny
 	DA	Digitalt ur
 	DE	Digitaluhr
 	EN	Digital Clock
@@ -61,9 +74,12 @@ SCREENSAVER_CLOCK_STYLE_DIGITALSIMPLE
 	IT	Orologio digitale
 	NL	Digitale klok
 	NO	Digital klokke
+	PL	Zegar cyfrowy
+	RU	Цифровые часы
 	SV	Digitalklocka
 
 SCREENSAVER_CLOCK_STYLE_DIGITALSTYLED
+	CS	Nástěnné hodiny
 	DA	Elegant ur
 	DE	Elegante Uhr
 	EN	Block Clock
@@ -73,9 +89,12 @@ SCREENSAVER_CLOCK_STYLE_DIGITALSTYLED
 	IT	Orologio elegante
 	NL	Gestileerde klok
 	NO	Blokk-klokke
+	PL	Zegar blokowy
+	RU	Блоковые часы
 	SV	Blockklocka
 
 SCREENSAVER_CLOCK_STYLE_DIGITALDETAILED
+	CS	Klasické hodiny
 	DA	Klassisk ur
 	DE	Beschriftete Uhr
 	EN	Classic Clock
@@ -85,5 +104,7 @@ SCREENSAVER_CLOCK_STYLE_DIGITALDETAILED
 	IT	Orologio dettagliato
 	NL	Gedetailleerde klok
 	NO	Klassisk klokke
+	PL	Zegar klasyczny
+	RU	Классические часы
 	SV	Klassisk klocka
 

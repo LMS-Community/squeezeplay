@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 DOOMSDAY
+	CS	Doomsday (Soudný den)
 	DA	Dommedag
 	DE	Der jüngste Tag
 	EN	Doomsday
@@ -12,9 +13,12 @@ DOOMSDAY
 	IT	Il giorno del giudizio
 	NL	Dag des oordeels
 	NO	Dommedag
+	PL	Dzień zagłady
+	RU	Doomsday
 	SV	Domedagen
 
 DOOMSDAY_OPTION1
+	CS	Naléhavé varování 1
 	DA	Advarsel 1
 	DE	Warnung 1
 	EN	Dire Warning 1
@@ -24,9 +28,12 @@ DOOMSDAY_OPTION1
 	IT	Minaccia 1
 	NL	Onheilspellende waarschuwing 1
 	NO	Første seriøse advarsel
+	PL	Poważne ostrzeżenie 1
+	RU	Dire Warning 1
 	SV	Varning 1
 
 DOOMSDAY_OPTION2
+	CS	Naléhavé varování 2
 	DA	Advarsel 2
 	DE	Warnung 2
 	EN	Dire Warning 2
@@ -36,9 +43,12 @@ DOOMSDAY_OPTION2
 	IT	Minaccia 2
 	NL	Onheilspellende waarschuwing 2
 	NO	Andre seriøse advarsel
+	PL	Poważne ostrzeżenie 2
+	RU	Dire Warning 2
 	SV	Varning 2
 
 DOOMSDAY_OPTION3
+	CS	Naléhavé varování 3
 	DA	Advarsel 3
 	DE	Warnung 3
 	EN	Dire Warning 3
@@ -48,9 +58,12 @@ DOOMSDAY_OPTION3
 	IT	Minaccia 3
 	NL	Onheilspellende waarschuwing 3
 	NO	Tredje seriøse advarsel
+	PL	Poważne ostrzeżenie 3
+	RU	Dire Warning 3
 	SV	Varning 3
 
 DOOMSDAY_OPTION4
+	CS	Naléhavé varování 4
 	DA	Advarsel 4
 	DE	Warnung 4
 	EN	Dire Warning 4
@@ -60,9 +73,12 @@ DOOMSDAY_OPTION4
 	IT	Minaccia 4
 	NL	Onheilspellende waarschuwing 4
 	NO	Fjerde seriøse advarsel
+	PL	Poważne ostrzeżenie 4
+	RU	Dire Warning 4
 	SV	Varning 4
 
 DOOMSDAY_MESSAGE0
+	CS	Strach je cítit ve vzduchu!
 	DA	Der er frygt i luften.
 	DE	Die Angst geht um!
 	EN	Fear is in the air!
@@ -72,9 +88,12 @@ DOOMSDAY_MESSAGE0
 	IT	Atmosfera carica di paura!
 	NL	Je kunt de angst proeven!
 	NO	Det er redsel å spore!
+	PL	Panuje strach!
+	RU	Fear is in the air!
 	SV	Rädslan ligger i luften.
 
 DOOMSDAY_MESSAGE1
+	CS	Konec se blíží!
 	DA	Enden er nær!
 	DE	Das Ende ist nah!
 	EN	The End is Nigh!
@@ -84,9 +103,12 @@ DOOMSDAY_MESSAGE1
 	IT	La fine è prossima!
 	NL	Het einde is nabij!
 	NO	Enden er nær!
+	PL	Koniec jest blisko!
+	RU	The End is Nigh!
 	SV	Slutet är nära!
 
 DOOMSDAY_MESSAGE2
+	CS	Uteč do kopců!
 	DA	Løb for livet.
 	DE	Nehmt die Beine in die Hand!
 	EN	Run for the hills!
@@ -96,9 +118,12 @@ DOOMSDAY_MESSAGE2
 	IT	Al riparo!
 	NL	Vlucht naar de heuvels!
 	NO	Løp for livet!
+	PL	Uciekaj!
+	RU	Run for the hills!
 	SV	Spring för livet!
 
 DOOMSDAY_MESSAGE3
+	CS	Dej si věci do pořádku!
 	DA	Se at få styr på det!
 	DE	Bringt Eure Sachen in Ordnung!
 	EN	Get your affairs in order!
@@ -108,9 +133,12 @@ DOOMSDAY_MESSAGE3
 	IT	Metti la testa a posto!
 	NL	Stel orde op zaken!
 	NO	Skriv testamente!
+	PL	Uporządkuj swoje sprawy!
+	RU	Get your affairs in order!
 	SV	Gör dig redo!
 
 DOOMSDAY_MESSAGE4
+	CS	DUCK!
 	DA	Duk dig!
 	DE	Deckung!
 	EN	DUCK!
@@ -120,5 +148,7 @@ DOOMSDAY_MESSAGE4
 	IT	ATTENTO!
 	NL	BUKKEN!
 	NO	DUKK!
+	PL	KRYJ SIĘ!
+	RU	DUCK!
 	SV	DUCKA!
 

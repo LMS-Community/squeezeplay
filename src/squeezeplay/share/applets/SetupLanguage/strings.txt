@@ -4,6 +4,7 @@
 
 
 CHOOSE_LANGUAGE
+	CS	Zvolit jazyk
 	DA	Vælg sprog
 	DE	Sprache wählen
 	EN	Choose Language
@@ -13,9 +14,12 @@ CHOOSE_LANGUAGE
 	IT	Scegliere la lingua
 	NL	Taal kiezen
 	NO	Velg språk
+	PL	Wybierz język
+	RU	Выберите язык
 	SV	Välj språk
 
 LANGUAGE
+	CS	Jazyk
 	DA	Sprog
 	DE	Sprache
 	EN	Language
@@ -25,9 +29,12 @@ LANGUAGE
 	IT	Lingua
 	NL	Taal
 	NO	Språk
+	PL	Język
+	RU	Язык
 	SV	Språk
 
 LANGUAGE_NO
+	CS	Norština
 	DA	Norsk
 	DE	Norsk
 	EN	Norsk
@@ -37,9 +44,12 @@ LANGUAGE_NO
 	IT	Norsk
 	NL	Norsk
 	NO	Norsk
+	PL	Norsk
+	RU	норвежский
 	SV	Norsk
 
 LANGUAGE_SV
+	CS	Švédština
 	DA	Svenska
 	DE	Svenska
 	EN	Svenska
@@ -49,9 +59,12 @@ LANGUAGE_SV
 	IT	Svenska
 	NL	Svenska
 	NO	Svenska
+	PL	Svenska
+	RU	шведский
 	SV	Svenska
 
 LANGUAGE_FI
+	CS	Suomi
 	DA	Suomi
 	DE	Suomi
 	EN	Suomi
@@ -61,9 +74,12 @@ LANGUAGE_FI
 	IT	Suomi
 	NL	Suomi
 	NO	Suomi
+	PL	Suomi
+	RU	финский
 	SV	Suomi
 
 LANGUAGE_DA
+	CS	Dánština
 	DA	Dansk
 	DE	Dansk
 	EN	Dansk
@@ -73,9 +89,12 @@ LANGUAGE_DA
 	IT	Dansk
 	NL	Dansk
 	NO	Dansk
+	PL	Dansk
+	RU	датский
 	SV	Dansk
 
 LANGUAGE_DE
+	CS	Němčina
 	DA	Deutsch
 	DE	Deutsch
 	EN	Deutsch
@@ -85,9 +104,12 @@ LANGUAGE_DE
 	IT	Deutsch
 	NL	Deutsch
 	NO	Deutsch
+	PL	Deutsch
+	RU	немецкий
 	SV	Deutsch
 
 LANGUAGE_EN
+	CS	Angličtina
 	DA	English
 	DE	English
 	EN	English
@@ -97,9 +119,12 @@ LANGUAGE_EN
 	IT	English
 	NL	English
 	NO	English
+	PL	Polski
+	RU	английский
 	SV	English
 
 LANGUAGE_ES
+	CS	Španělština
 	DA	Español
 	DE	Español
 	EN	Español
@@ -109,9 +134,12 @@ LANGUAGE_ES
 	IT	Español
 	NL	Español
 	NO	Español
+	PL	Español
+	RU	испанский
 	SV	Español
 
 LANGUAGE_FR
+	CS	Francouzsky
 	DA	Français
 	DE	Français
 	EN	Français
@@ -121,9 +149,12 @@ LANGUAGE_FR
 	IT	Français
 	NL	Français
 	NO	Français
+	PL	Français
+	RU	Французский
 	SV	Français
 
 LANGUAGE_IT
+	CS	Italština
 	DA	Italiano
 	DE	Italiano
 	EN	Italiano
@@ -133,9 +164,12 @@ LANGUAGE_IT
 	IT	Italiano
 	NL	Italiano
 	NO	Italiano
+	PL	Italiano
+	RU	итальянский
 	SV	Italiano
 
 LANGUAGE_NL
+	CS	Holandština
 	DA	Nederlands
 	DE	Nederlands
 	EN	Nederlands
@@ -145,9 +179,12 @@ LANGUAGE_NL
 	IT	Nederlands
 	NL	Nederlands
 	NO	Nederlands
+	PL	Nederlands
+	RU	голландский
 	SV	Nederlands
 
 CHOOSE_LANGUAGE_HELP
+	CS	Pro výběr vašeho jazyka použijte kolečko. Pro další úkon prostřední tlačítko.
 	DA	Brug drejeknappen til at vælge sprog. Tryk på midterknappen for at fortsætte.
 	DE	Wählen Sie Ihre Sprache mit dem Rad aus. Drücken Sie zum Fortfahren die mittlere Taste.
 	EN	Use the wheel to choose your language. Press the center button to go on.
@@ -157,9 +194,12 @@ CHOOSE_LANGUAGE_HELP
 	IT	Utilizzare la ghiera per scegliere la lingua. Premere il pulsante centrale per continuare.
 	NL	Gebruik het wiel om je taal te kiezen. Druk op de middelste knop om verder te gaan.
 	NO	Bruk hjulet for å velge språk. Trykk på den midterste knappen for å komme videre.
+	PL	Użyj pokrętła, aby zmienić język. Naciśnij środkowy przycisk, aby kontynuować.
+	RU	Используйте колесико для выбора языка. Для продолжения нажмите центральную кнопку.
 	SV	Välj språk med hjälp av rullningshjulet. Tryck på mittenknappen för att gå vidare.
 
 LOADING_LANGUAGE
+	CS	Nahrávám angličtinu
 	DA	Indlæser dansk
 	DE	Deutsch wird geladen
 	EN	Loading English
@@ -169,5 +209,7 @@ LOADING_LANGUAGE
 	IT	Caricamento lingua italiano
 	NL	Nederlands wordt geladen
 	NO	Laster inn norsk
+	PL	Ładowanie języka angielskiego
+	RU	Загрузка английского
 	SV	Läser in svenska
 
