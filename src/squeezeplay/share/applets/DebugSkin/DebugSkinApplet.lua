@@ -46,7 +46,7 @@ function _debugWidget(self, screen, widget)
 
 		if kids == 0 then
 			-- use C cached stylePath where possible, naughtly but nice ;)
-			log:info("style: ", widget._stylePath)
+			log:error("style: ", widget._stylePath, " | widget: ", widget:peerToString())
 		end
 	end
 
