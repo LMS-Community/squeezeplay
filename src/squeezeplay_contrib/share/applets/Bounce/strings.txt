@@ -3,14 +3,17 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SCREENSAVER_BOUNCE
-	DA	Spring
+	CS	Odraz
+	DA	Tilbagespring
 	DE	Boing
 	EN	Bounce
 	ES	Bote
 	FI	Pomppu
-	FR	Retour
+	FR	Bounce
 	IT	Rimbalzo
 	NL	Stuiteren
 	NO	Sprett
-	SV	Studs
+	PL	Odbicie
+	RU	Bounce
+	SV	Studsa
 

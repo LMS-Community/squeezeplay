@@ -4,6 +4,7 @@
 
 
 ABOUT_JIVE
+	CS	O aplikaci
 	DA	Om
 	DE	Über
 	EN	About
@@ -13,9 +14,12 @@ ABOUT_JIVE
 	IT	Info
 	NL	Info
 	NO	Om
+	PL	Informacje
+	RU	О программе
 	SV	Om
 
 ABOUT_COPYRIGHT
+	CS	Copyright 2007-2009, Logitech.
 	DA	Copyright 2007-2009, Logitech.
 	DE	Copyright 2007-2009, Logitech.
 	EN	Copyright 2007-2009, Logitech.
@@ -25,9 +29,12 @@ ABOUT_COPYRIGHT
 	IT	Copyright 2007-2009, Logitech.
 	NL	Copyright 2007-2009, Logitech.
 	NO	Opphavsrett 2007–2009, Logitech.
+	PL	Copyright 2007-2009, Logitech.
+	RU	© Logitech, 2007-2009.
 	SV	© 2007–2009 Logitech.
 
 ABOUT_MAC_ADDRESS
+	CS	Adresa MAC: %s
 	DA	MAC-adresse: %s
 	DE	MAC-Adresse: %s
 	EN	MAC Address: %s
@@ -37,9 +44,12 @@ ABOUT_MAC_ADDRESS
 	IT	Indirizzo MAC: %s
 	NL	MAC-adres: %s
 	NO	MAC-adresse: %s
+	PL	Adres MAC: %s
+	RU	MAC-адрес: %s
 	SV	MAC-adress: %s
 
 ABOUT_CREDITS
+	CS	Uznání:
 	DA	Tak til:
 	DE	Mitwirkende:
 	EN	Credits:
@@ -49,9 +59,12 @@ ABOUT_CREDITS
 	IT	Riconoscimenti:
 	NL	Credits:
 	NO	Bidragsytere:
+	PL	Autorzy:
+	RU	Разработчики:
 	SV	Erkännanden:
 
 ABOUT_VERSION
+	CS	Verze:
 	DA	Version:
 	DE	Version:
 	EN	Version:
@@ -61,9 +74,12 @@ ABOUT_VERSION
 	IT	Versione:
 	NL	Versie:
 	NO	Versjon:
+	PL	Wersja:
+	RU	Версия:
 	SV	Version:
 
 ABOUT_ALL_RIGHTS_RESERVED
+	CS	Všechna práva vyhrazena
 	DA	Alle rettigheder forbeholdt.
 	DE	Alle Rechte vorbehalten
 	EN	All Rights Reserved
@@ -73,17 +89,67 @@ ABOUT_ALL_RIGHTS_RESERVED
 	IT	Tutti i diritti riservati
 	NL	Alle rechten voorbehouden
 	NO	Med enerett
+	PL	Wszelkie prawa zastrzeżone
+	RU	Все права защищены.
 	SV	Med ensamrätt
 
 UPTIME
+	CS	Doba provozuschopnosti:
+	DA	Oppetid:
+	DE	Zeit aktiv:
 	EN	Uptime:
+	ES	Tiempo de actividad:
+	FI	Toiminta-aika:
+	FR	Temps d'utilisation :
+	IT	Tempo di attività:
+	NL	Actieve tijdsduur:
+	NO	Oppetid:
+	PL	Czas pracy:
+	RU	Время работы:
+	SV	Aktiv tid:
 
 UPTIME_DAYS
+	CS	%s dní
+	DA	%s dage
+	DE	%s Tage
 	EN	%s days
+	ES	%s días
+	FI	%s päivää
+	FR	%s jours
+	IT	%s giorni
+	NL	%s dagen
+	NO	%s dager
+	PL	%s dni
+	RU	%s дн.
+	SV	%s dagar
 
 UPTIME_HOURS
+	CS	%s hodiny
+	DA	%s timer
+	DE	%s Stunden
 	EN	%s hours
+	ES	%s horas
+	FI	%s tuntia
+	FR	%s heures
+	IT	%s ore
+	NL	%s uren
+	NO	%s timer
+	PL	%s godz.
+	RU	%s ч
+	SV	%s timmar
 
 UPTIME_MINUTES
+	CS	%s minuty
+	DA	%s minutter
+	DE	%s Minuten
 	EN	%s minutes
+	ES	%s minutos
+	FI	%s minuuttia
+	FR	%s minutes
+	IT	%s minuti
+	NL	%s minuten
+	NO	%s minutter
+	PL	%s min
+	RU	%s мин
+	SV	%s minuter
 

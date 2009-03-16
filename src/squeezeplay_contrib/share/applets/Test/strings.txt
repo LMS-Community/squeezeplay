@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 TEST
+	CS	Test
 	DA	Test
 	DE	Test
 	EN	Test
@@ -12,5 +13,7 @@ TEST
 	IT	Verifica
 	NL	Test
 	NO	Test
+	PL	Test
+	RU	Тест
 	SV	Test
 

@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SCREENSAVER_FLICKR
+	CS	Flickr
 	DA	Flickr
 	DE	Flickr
 	EN	Flickr
@@ -12,9 +13,12 @@ SCREENSAVER_FLICKR
 	IT	Flickr
 	NL	Flickr
 	NO	Flickr
+	PL	Flickr
+	RU	Flickr
 	SV	Flickr
 
 SCREENSAVER_FLICKR_SETTINGS
+	CS	Nastavení služby Flickr
 	DA	Indstillinger for Flickr
 	DE	Flickr Einstellungen
 	EN	Flickr Settings
@@ -24,9 +28,12 @@ SCREENSAVER_FLICKR_SETTINGS
 	IT	Impostazioni Flickr
 	NL	Flickr-instellingen
 	NO	Flickr-innstillinger
+	PL	Ustawienia usługi Flickr
+	RU	Настройки Flickr
 	SV	Flickr-inställningar
 
 SCREENSAVER_FLICKR_LOADING_PHOTO
+	CS	Flickr nahrává foto...
 	DA	Flickr indlæser billede...
 	DE	Flickr lädt photo...
 	EN	Flickr loading photo...
@@ -36,9 +43,12 @@ SCREENSAVER_FLICKR_LOADING_PHOTO
 	IT	Caricamento foto Flickr...
 	NL	Flickr is bezig met laden van foto...
 	NO	Flickr laster inn bilde...
+	PL	Ładowanie zdjęcia do usługi Flickr...
+	RU	Flickr загружает фото...
 	SV	Flickr läser in foto ...
 
 SCREENSAVER_FLICKR_ERROR
+	CS	Chyba Flickru
 	DA	Flickr-fejl
 	DE	Flickr Fehler
 	EN	Flickr error
@@ -48,9 +58,12 @@ SCREENSAVER_FLICKR_ERROR
 	IT	Errore Flickr
 	NL	Flickr-foutmelding
 	NO	Flickr-feil
+	PL	Błąd usługi Flickr
+	RU	Ошибка Flickr
 	SV	Flickr-fel
 
 SCREENSAVER_FLICKR_DELAY
+	CS	Rychlost
 	DA	Hastighed
 	DE	Geschwindigkeit
 	EN	Speed
@@ -60,9 +73,12 @@ SCREENSAVER_FLICKR_DELAY
 	IT	Velocità
 	NL	Snelheid
 	NO	Hastighet
+	PL	Szybkość
+	RU	Скорость
 	SV	Hastighet
 
 SCREENSAVER_FLICKR_DELAY_10_SEC
+	CS	10 s
 	DA	10 sek.
 	DE	10 Sek.
 	EN	10 sec
@@ -72,9 +88,12 @@ SCREENSAVER_FLICKR_DELAY_10_SEC
 	IT	10 sec
 	NL	10 sec
 	NO	10 sek
+	PL	10 s
+	RU	10 с
 	SV	10 sek
 
 SCREENSAVER_FLICKR_DELAY_20_SEC
+	CS	20 s
 	DA	20 sek.
 	DE	20 Sek.
 	EN	20 sec
@@ -84,9 +103,12 @@ SCREENSAVER_FLICKR_DELAY_20_SEC
 	IT	20 sec
 	NL	20 sec
 	NO	20 sek
+	PL	20 s
+	RU	20 с
 	SV	20 sek
 
 SCREENSAVER_FLICKR_DELAY_30_SEC
+	CS	30 s
 	DA	30 sek.
 	DE	30 Sek.
 	EN	30 sec
@@ -96,9 +118,12 @@ SCREENSAVER_FLICKR_DELAY_30_SEC
 	IT	30 sec
 	NL	30 sec
 	NO	30 sek
+	PL	30 s
+	RU	30 с
 	SV	30 sek
 
 SCREENSAVER_FLICKR_DELAY_1_MIN
+	CS	1 min
 	DA	1 min.
 	DE	1 Min.
 	EN	1 min
@@ -108,9 +133,12 @@ SCREENSAVER_FLICKR_DELAY_1_MIN
 	IT	1 min
 	NL	1 min
 	NO	1 min
+	PL	1 min
+	RU	1 мин.
 	SV	1 min
 
 SCREENSAVER_FLICKR_DISPLAY
+	CS	Zobrazit
 	DA	Display
 	DE	Anzeige
 	EN	Display
@@ -120,9 +148,12 @@ SCREENSAVER_FLICKR_DISPLAY
 	IT	Visualizza
 	NL	Weergeven
 	NO	Skjerm
+	PL	Wyświetlacz
+	RU	Экран
 	SV	Display
 
 SCREENSAVER_FLICKR_DISPLAY_OWN
+	CS	Mé vlastní fotky
 	DA	Mine billeder
 	DE	Meine eigenen Bilder
 	EN	My own pictures
@@ -132,9 +163,12 @@ SCREENSAVER_FLICKR_DISPLAY_OWN
 	IT	Immagini personali
 	NL	Mijn eigen foto's
 	NO	Mine egne bilder
+	PL	Moje własne obrazy
+	RU	Мои изображения
 	SV	Mina egna bilder
 
 SCREENSAVER_FLICKR_DISPLAY_FAVORITES
+	CS	Oblíbené
 	DA	Favoritter
 	DE	Meine Favoriten
 	EN	My favorites
@@ -144,9 +178,12 @@ SCREENSAVER_FLICKR_DISPLAY_FAVORITES
 	IT	I miei Preferiti
 	NL	Mijn favorieten
 	NO	Mine favoritter
+	PL	Moje ulubione
+	RU	Мое выбранное
 	SV	Mina favoriter
 
 SCREENSAVER_FLICKR_DISPLAY_CONTACTS
+	CS	Fotky mých kontaktů
 	DA	Mine kontakters billeder
 	DE	Bilder meiner Kontakte
 	EN	My contacts' pictures
@@ -156,9 +193,12 @@ SCREENSAVER_FLICKR_DISPLAY_CONTACTS
 	IT	Immagini dei contatti
 	NL	Foto's van mijn contacten
 	NO	Bilder fra mine kontakter
+	PL	Obrazy moich kontaktów
+	RU	Изображения моих контактов
 	SV	Mina kontakters bilder
 
 SCREENSAVER_FLICKR_DISPLAY_INTERESTING
+	CS	Zajímavé obrázky
 	DA	Interessante billeder
 	DE	Interessante Bilder
 	EN	Interesting pictures
@@ -168,9 +208,12 @@ SCREENSAVER_FLICKR_DISPLAY_INTERESTING
 	IT	Immagini interessanti
 	NL	Interessante foto's
 	NO	Interessante bilder
+	PL	Interesujące obrazy
+	RU	Интересные изображения
 	SV	Intressanta bilder
 
 SCREENSAVER_FLICKR_DISPLAY_RECENT
+	CS	Nejnovější fotky
 	DA	Senest tilføjede billeder
 	DE	Neu hinzugefügte Bilder
 	EN	Recently added pictures
@@ -180,9 +223,12 @@ SCREENSAVER_FLICKR_DISPLAY_RECENT
 	IT	Immagini aggiunte di recente
 	NL	Recent toegevoegde foto's
 	NO	Nylig opplastede bilder
+	PL	Ostatnio dodane obrazy
+	RU	Последние добавленные изображения
 	SV	Nyligen tillagda bilder
 
 SCREENSAVER_FLICKR_FLICKR_ID
+	CS	Uživatel Flickru
 	DA	Flickr-bruger
 	DE	Flickr Benutzer
 	EN	Flickr User
@@ -192,9 +238,12 @@ SCREENSAVER_FLICKR_FLICKR_ID
 	IT	Utente flickr
 	NL	Flickr-gebruiker
 	NO	Flickr-bruker
+	PL	Użytkownik usługi Flickr
+	RU	Пользователь Flickr
 	SV	Flickr-användare
 
 SCREENSAVER_FLICKR_FLICKR_ID_HELP
+	CS	Zadejte své uživatelské jméno pro službu Flickr nebo váš e-mail
 	DA	Indtast dit Flickr-brugernavn eller din e-post-adresse.
 	DE	Bitte geben Sie Ihren Flickr Benutzernamen oder Ihre Email-Adresse ein
 	EN	Please enter your Flickr Username or your Email address
@@ -204,9 +253,12 @@ SCREENSAVER_FLICKR_FLICKR_ID_HELP
 	IT	Inserire il nome utente flickr o l'indirizzo di posta elettronica
 	NL	Voer je Flickr-gebruikersnaam of je e-mailadres in.
 	NO	Angi ditt Flickr-brukernavn, eller e-postadressen din
+	PL	Wprowadź nazwę użytkownika w usłudze Flickr lub adres e-mail
+	RU	Введите имя пользователя Flickr или свой адрес электронной почты
 	SV	Ange ditt Flickr-användarnamn eller din e-postadress
 
 SCREENSAVER_FLICKR_TRANSITION
+	CS	Přechody
 	DA	Overgange
 	DE	Übergänge
 	EN	Transitions
@@ -216,9 +268,12 @@ SCREENSAVER_FLICKR_TRANSITION
 	IT	Transizioni
 	NL	Overgangen
 	NO	Overganger
+	PL	Przejścia
+	RU	Переходы
 	SV	Övergångar
 
 SCREENSAVER_FLICKR_TRANSITION_RANDOM
+	CS	Náhodné přechody
 	DA	Blandede overgange
 	DE	Zufällige Übergänge
 	EN	Random transitions
@@ -228,9 +283,12 @@ SCREENSAVER_FLICKR_TRANSITION_RANDOM
 	IT	Transizioni casuali
 	NL	Willekeurige overgangen
 	NO	Tilfeldige overganger
+	PL	Losowe przejścia
+	RU	Случайные переходы
 	SV	Slumpmässiga övergångar
 
 SCREENSAVER_FLICKR_TRANSITION_INSIDE_OUT
+	CS	Prosvětlit ze středu ven
 	DA	Blød overgang indefra og ud
 	DE	von innen nach aussen
 	EN	Fade inside-out
@@ -240,9 +298,12 @@ SCREENSAVER_FLICKR_TRANSITION_INSIDE_OUT
 	IT	Dall'interno verso l'esterno
 	NL	Faden: binnen-buiten
 	NO	Ton fra midten og ut
+	PL	Znikanie od wewnątrz do zewnątrz
+	RU	Угасание изнутри наружу
 	SV	Tona inifrån och ut
 
 SCREENSAVER_FLICKR_TRANSITION_TOP_DOWN
+	CS	Prosvětlit shora dolů
 	DA	Blød overgang fra top til bund
 	DE	von oben nach unten
 	EN	Fade top-down
@@ -252,9 +313,12 @@ SCREENSAVER_FLICKR_TRANSITION_TOP_DOWN
 	IT	Dall'alto verso il basso
 	NL	Faden: boven-onder
 	NO	Ton ovenfra og ned
+	PL	Znikanie od góry do dołu
+	RU	Угасание сверху вниз
 	SV	Tona uppifrån och ner
 
 SCREENSAVER_FLICKR_TRANSITION_BOTTOM_UP
+	CS	Prosvětlit zdola nahoru
 	DA	Blød overgang fra bund til top
 	DE	von unten nach oben
 	EN	Fade bottom-up
@@ -264,9 +328,12 @@ SCREENSAVER_FLICKR_TRANSITION_BOTTOM_UP
 	IT	Dal basso verso l'alto
 	NL	Faden: onder-boven
 	NO	Ton nedenfra og opp
+	PL	Znikanie od dołu do góry
+	RU	Угасание снизу вверх
 	SV	Tona nedifrån och upp
 
 SCREENSAVER_FLICKR_TRANSITION_LEFT_RIGHT
+	CS	Prosvětlit zleva doprava
 	DA	Blød overgang fra venstre til højre
 	DE	von links nach rechts
 	EN	Fade left-right
@@ -276,9 +343,12 @@ SCREENSAVER_FLICKR_TRANSITION_LEFT_RIGHT
 	IT	Da sinistra verso destra
 	NL	Faden: links-rechts
 	NO	Ton fra venstre mot høyre
+	PL	Znikanie od lewej do prawej
+	RU	Угасание слева направо
 	SV	Tona från vänster till höger
 
 SCREENSAVER_FLICKR_TRANSITION_RIGHT_LEFT
+	CS	Prosvětlit zprava doleva
 	DA	Blød overgang fra højre til venstre
 	DE	von rechts nach links
 	EN	Fade right-left
@@ -288,9 +358,12 @@ SCREENSAVER_FLICKR_TRANSITION_RIGHT_LEFT
 	IT	Da destra verso sinistra
 	NL	Faden: rechts-links
 	NO	Ton fra høyre mot venstre
+	PL	Znikanie od prawej do lewej
+	RU	Угасание справа налево
 	SV	Tona från höger till vänster
 
 SCREENSAVER_FLICKR_NETWORK_ERROR
+	CS	Pravděpodobně je nějaký problém se sítí.\n\nPokračujte stiskem jakékoliv klávesy.
 	DA	Der ser ud til at være problem med netværket.\n\nTryk på en vilkårlig knap for at fortsætte.
 	DE	Es scheint ein Netzwerk-Problem zu bestehen.\n\nBitte drücken Sie eine Taste für weiter.
 	EN	There seems to be a network problem.\n\nPress any key to continue.
@@ -300,9 +373,12 @@ SCREENSAVER_FLICKR_NETWORK_ERROR
 	IT	Possibile problema di rete.\n\nPremere un tasto per continuare.
 	NL	Er is schijnbaar een netwerkprobleem.\n\nDruk op een willekeurige knop om verder te gaan.
 	NO	Det ser ut til å ha oppstått et nettverksproblem.\n\nTrykk en tast for å fortsette.
+	PL	Prawdopodobnie wystąpił problem z siecią.\n\nNaciśnij dowolny klawisz, aby kontynuować.
+	RU	Вероятно, произошла ошибка сети.\n\nДля продолжения нажмите любую клавишу.
 	SV	Det verkar ha uppstått ett nätverksproblem.\n\nTryck på valfri tangent för att fortsätta.
 
 SCREENSAVER_FLICKR_USERID_ERROR
+	CS	Zadané číslo pro službu Flickr nelze přidělit k účtu uživatele Flickr! Opravte zadanou hodnotu.\n\nPokračujte stiskem jakékoliv klávesy.
 	DA	Der blev ikke fundet en Flickr-brugerkonto som svarer til det indtastede Flickr-id. Du skal rette brugernavnet.\n\nTryk på en vilkårlig knap for at fortsætte.
 	DE	Für den eingegebenen Flickr Benutzernamen kann keine Flickr ID gefunden werden. Bitte korrigieren Sie ihre Eingabe.\n\nBitte drücken Sie eine Taste für weiter.
 	EN	The entered flickr id could not be resolved to a flicker user account! Please correct your entry.\n\nPress any key to continue.
@@ -312,9 +388,12 @@ SCREENSAVER_FLICKR_USERID_ERROR
 	IT	Impossibile risolvere l'ID flickr inserito in un account utente flickr. Correggere il valore inserito.\n\nPremere un tasto per continuare.
 	NL	De ingevoerde Flickr-ID kan niet worden opgehaald voor een Flickr-gebruikersaccount! Corrigeer je invoer.\n\nDruk op een willekeurige knop om verder te gaan.
 	NO	Flickr-id-en som ble oppgitt kunne ikke knyttes til en brukerkonto hos flickr. Angi riktig id. \n\nTrykk en tast for å fortsette.
+	PL	Nie można przekształcić wprowadzonego identyfikatora w usłudze Flickr na konto użytkownika usługi Flickr! Popraw wprowadzone informacje.\n\nNaciśnij dowolny klawisz, aby kontynuować.
+	RU	Введенный ID flickr не удалось сопоставить с действительной учетной записью пользователя! Исправьте введенные данные.\n\nДля продолжения нажмите любую клавишу.
 	SV	Det angivna Flickr-namnet överensstämde inte med något Flickr-användarkonto. Korrigera informationen.\n\nTryck på valfri tangent för att fortsätta.
 
 SCREENSAVER_FLICKR_INVALID_DISPLAY_OPTION
+	CS	Vaše identifikační číslo pro službu Flickr zatím není nastaveno. Nastavte platné číslo nebo zvolte jinou volbu zobrazení.\n\nPokračujte stiskem jakékoliv klávesy.
 	DA	Dit Flickr-id er ikke defineret. Angiv et gyldigt Flickr-id, eller vælg en anden visningsmulighed.\n\nTryk på en tast for at fortsætte.
 	DE	Ihre Flickr ID ist noch nicht gesetzt. Bitte setzen Sie die Flickr ID, oder wählen Sie eine andere Anzeige-Option.\n\nBitte drücken Sie eine Taste für weiter.
 	EN	Your flickr id is not set yet. Please set a valid flickr id, or choose another display option.\n\nPress any key to continue.
@@ -324,5 +403,7 @@ SCREENSAVER_FLICKR_INVALID_DISPLAY_OPTION
 	IT	Non è stato ancora impostato un ID flickr. Impostare un ID flickr valido o scegliere un'altra opzione di visualizzazione.\n\nPremere un tasto per continuare.
 	NL	Je Flickr-ID is nog niet ingesteld. Stel een geldige Flickr-ID in of kies een andere weergaveoptie.\n\nDruk op een willekeurige knop om verder te gaan.
 	NO	Du har ikke angitt din flickr-id. Oppgi en gyldig flickr-id, eller velg et annet visningsvalg.\n\nTrykk en tast for å fortsette.
+	PL	Identyfikator w usłudze Flickr nie został jeszcze ustawiony. Ustaw poprawny identyfikator w usłudze Flickr lub wybierz inną opcję wyświetlania.\n\nNaciśnij dowolny klawisz, aby kontynuować.
+	RU	Ваш ID в flickr еще не установлен. Установите действительный ID в flickr или выберите другой параметр отображения.\n\nДля продолжения нажмите любую клавишу.
 	SV	Du har inte angett något Flickr-namn än. Ange ett giltigt Flickr-namn eller välj ett annat visningsalternativ.\n\nTryck på valfri tangent för att fortsätta.
 

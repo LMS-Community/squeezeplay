@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SLIMBROWSER_PLAYLIST
+	CS	Seznam skladeb
 	DA	Afspilningsliste
 	DE	Wiedergabeliste
 	EN	Playlist
@@ -12,9 +13,12 @@ SLIMBROWSER_PLAYLIST
 	IT	Elenco di riproduzione
 	NL	Playlist
 	NO	Spilleliste
+	PL	Lista odtwarzania
+	RU	Плей-лист
 	SV	Spellista
 
 SLIMBROWSER_NOW_PLAYING
+	CS	Právě hraje
 	DA	Nu spiller
 	DE	Aktueller Titel
 	EN	Now Playing
@@ -24,9 +28,12 @@ SLIMBROWSER_NOW_PLAYING
 	IT	Riproduzione in corso
 	NL	Speelt nu
 	NO	Spilles nå
+	PL	Odtwarzanie
+	RU	Воспроизводится
 	SV	Nu spelas
 
 SLIMBROWSER_CURRENT_PLAYLIST
+	CS	Aktuální seznam skladeb
 	DA	Nuværende afspilningsliste
 	DE	Aktuelle Wiedergabeliste
 	EN	Current Playlist
@@ -36,9 +43,12 @@ SLIMBROWSER_CURRENT_PLAYLIST
 	IT	El. di riproduz. corrente
 	NL	Huidige playlist
 	NO	Gjeldende spilleliste
+	PL	Aktualna lista odtwarzania
+	RU	Текущий плей-лист
 	SV	Aktuell spellista
 
 SLIMBROWSER_PAUSED
+	CS	Pozastaveno
 	DA	Pause
 	DE	Pause
 	EN	Paused
@@ -48,9 +58,12 @@ SLIMBROWSER_PAUSED
 	IT	In pausa
 	NL	Gepauzeerd
 	NO	Pause
+	PL	Wstrzymano
+	RU	Пауза
 	SV	Pausad
 
 SLIMBROWSER_STOPPED
+	CS	Zastaveno
 	DA	Stoppet
 	DE	Angehalten
 	EN	Stopped
@@ -60,9 +73,12 @@ SLIMBROWSER_STOPPED
 	IT	Arrestato
 	NL	Gestopt
 	NO	Stoppet
+	PL	Zatrzymane
+	RU	Остановлено
 	SV	Stoppad
 
 SLIMBROWSER_SEARCH_HELP
+	CS	Pomocí kolečka měňte písmena a stisknutím prostředního tlačítka proveďte výběr. Chcete-li spustit hledání, stiskněte znovu prostřední tlačítko.
 	DA	Brug drejeknappen til at skifte bogstav, og tryk på midterknappen for at vælge det. Tryk på midterknappen igen for at begynde søgningen.
 	DE	Wählen Sie den gewünschten Buchstaben mit dem Rad und drücken Sie zum Bestätigen die mittlere Taste. Drücken Sie zum Starten der Suche die mittlere Taste erneut.
 	EN	Use the scroll wheel to change letters, then press the center button to select that letter. Press the center button again to start your search.
@@ -72,9 +88,12 @@ SLIMBROWSER_SEARCH_HELP
 	IT	Usa la rotellina per cambiare le lettere e premi il pulsante centrale per selezionarle. Premi nuovamente il pulsante centrale per avviare la ricerca.
 	NL	Gebruik het scrollwiel om letters te wijzigen. Druk dan op de middelste knop om die letter te selecteren. Druk nogmaals op de middelste knop om je zoekopdracht te starten.
 	NO	Du kan endre bokstav med rullehjulet, og velge bokstav med midtknappen. Trykk på midtknappen på nytt for å starte søket.
+	PL	Użyj pokrętła, aby zmienić litery, a następnie naciśnij środkowy przycisk w celu wybrania litery. Naciśnij ponownie środkowy przycisk, aby rozpocząć wyszukiwanie.
+	RU	Прокручивайте колесико до нужной буквы и нажимайте для выбора центральную кнопку. Затем нажмите центральную кнопку еще раз, чтобы начать поиск.
 	SV	Markera en bokstav med rullningshjulet och tryck sedan på mittenknappen för att välja bokstaven. Tryck på mittenknappen igen när du vill börja söka.
 
 SLIMBROWSER_PROBLEM_CONNECTING
+	CS	Problém s připojováním
 	DA	Problem med forbindelsen
 	DE	Verbindungsproblem
 	EN	Problem Connecting
@@ -84,9 +103,12 @@ SLIMBROWSER_PROBLEM_CONNECTING
 	IT	Problema di connessione
 	NL	Probleem bij verbinden
 	NO	Klarer ikke å kople til
+	PL	Problem podczas nawiązywania połączenia
+	RU	Ошибка при подключении
 	SV	Det uppstod ett problem vid anslutningen
 
 SLIMBROWSER_TRY_AGAIN
+	CS	Zkuste to znovu
 	DA	Prøv igen
 	DE	Erneut versuchen
 	EN	Try Again
@@ -96,9 +118,12 @@ SLIMBROWSER_TRY_AGAIN
 	IT	Riprova
 	NL	Opnieuw proberen
 	NO	Prøv igjen
+	PL	Spróbuj ponownie
+	RU	Повторите попытку
 	SV	Försök igen
 
 SLIMBROWSER_CHOOSE_MUSIC_SOURCE
+	CS	Zvolit zdroj hudby
 	DA	Vælg musikkilde
 	DE	Musikquelle wählen
 	EN	Choose Music Source
@@ -108,9 +133,12 @@ SLIMBROWSER_CHOOSE_MUSIC_SOURCE
 	IT	Scegliere la sorgente musicale
 	NL	Muziekbron kiezen
 	NO	Velg musikkilde
+	PL	Wybierz źródło muzyki
+	RU	Выберите источник музыки
 	SV	Välj musikkälla
 
 SLIMBROWSER_CHOOSE_PLAYER
+	CS	Zvolit přehrávač
 	DA	Vælg afspiller
 	DE	Player auswählen
 	EN	Choose Player
@@ -120,9 +148,12 @@ SLIMBROWSER_CHOOSE_PLAYER
 	IT	Scegli lettore
 	NL	Muzieksysteem kiezen
 	NO	Velg spiller
+	PL	Wybierz odtwarzacz
+	RU	Выберите плеер
 	SV	Välj spelare
 
 SLIMBROWSER_PROBLEM_CONNECTING_HELP
+	CS	Problém s připojením k %s
 	DA	Der er problemer med at oprette forbindelse til %s
 	DE	Problem bei der Verbindung mit %s
 	EN	There is a problem connecting to %s
@@ -132,9 +163,12 @@ SLIMBROWSER_PROBLEM_CONNECTING_HELP
 	IT	Problema di connessione a %s
 	NL	Probleem bij verbinden met %s
 	NO	Klarer ikke å kople til %s
+	PL	Wystąpił problem podczas nawiązywania połączenia z %s
+	RU	Ошибка при подключении к %s
 	SV	Det går inte att ansluta till %s.
 
 SLIMBROWSER_NOTHING
+	CS	Žádná
 	DA	Intet
 	DE	Nichts
 	EN	Nothing
@@ -144,9 +178,12 @@ SLIMBROWSER_NOTHING
 	IT	Niente
 	NL	Niets
 	NO	Ingenting
+	PL	Brak
+	RU	Ничего
 	SV	Ingenting
 
 SLIMBROWSER_OFF
+	CS	Vypnuto
 	DA	Fra
 	DE	Aus
 	EN	Off
@@ -156,9 +193,12 @@ SLIMBROWSER_OFF
 	IT	Disattivato
 	NL	Uit
 	NO	Av
+	PL	wył.
+	RU	Выкл.
 	SV	Av
 
 SLIMBROWSER_CONNECTING_TO
+	CS	Připojuji se k\n%s
 	DA	Etablerer forbindelse til\n%s
 	DE	Verbindung mit %s
 	EN	Connecting to\n%s
@@ -168,9 +208,12 @@ SLIMBROWSER_CONNECTING_TO
 	IT	Connessione a %s
 	NL	Er wordt een verbinding met %s gemaakt
 	NO	Kopler til\n%s
+	PL	Łączenie z\n%s
+	RU	Подключение к\n%s
 	SV	Ansluter till \n%s
 
 SLIMBROWSER_VOLUME
+	CS	Hlasitost
 	DA	Lydstyrke
 	DE	Lautstärke
 	EN	Volume
@@ -180,9 +223,12 @@ SLIMBROWSER_VOLUME
 	IT	Volume
 	NL	Volume
 	NO	Volum
+	PL	Głośność
+	RU	Громкость
 	SV	Volym
 
 SLIMBROWSER_VOLUME_MUTED
+	CS	Hlasitost  (ztlumeno)
 	DA	Volumen (lyden er slået fra)
 	DE	Lautstärke (Stumm)
 	EN	Volume (Muted)
@@ -192,9 +238,12 @@ SLIMBROWSER_VOLUME_MUTED
 	IT	Volume (DISATTIVATO)
 	NL	Volume (gedempt)
 	NO	Volum (av)
+	PL	Głośność (wyciszona)
+	RU	Громкость (приглушенная)
 	SV	Volym (av)
 
 SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
+	CS	Aktualizuji firmware Squeezeboxu
 	DA	Opdaterer Squeezebox-firmwaren
 	DE	Squeezebox-Firmware wird aktualisiert
 	EN	Updating Squeezebox firmware
@@ -204,9 +253,12 @@ SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
 	IT	Aggiornamento firmware Squeezebox
 	NL	Squeezebox-firmware wordt bijgewerkt
 	NO	Oppdaterer Squeezebox-fastvare
+	PL	Aktualizowanie oprogramowania układowego urządzenia Squeezebox
+	RU	Обновление микропрограмм Squeezebox
 	SV	Uppdaterar Squeezebox-spelarens inbyggda programvara
 
 SLIMBROWSER_SCANNER
+	CS	Pozice skladby
 	DA	Nummerets placering
 	DE	Titelposition
 	EN	Song Position
@@ -216,9 +268,12 @@ SLIMBROWSER_SCANNER
 	IT	Posizione brano
 	NL	Positie van nummer
 	NO	Plassering i sangen
+	PL	Położenie utworu
+	RU	Позиция песни
 	SV	Spårets placering
 
 SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX
+	CS	Pro %s je připravena aktualizace softwaru. K jejímu spuštění stiskněte a přidržte tlačítko Brightness (jas) na  originálním dálkovém ovládání IR.
 	DA	Softwareopdateringen til %s er klar. Hold lysstyrkeknappen (Brightness) på den originale fjernbetjening nede for at starte.
 	DE	Software-Update bereit für %s. Halten Sie die Helligkeitstaste auf der Original-Fernbedienung gedrückt.
 	EN	Software Update ready for %s. To begin, press and hold the Brightness button on your original IR remote.
@@ -228,9 +283,12 @@ SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX
 	IT	Aggiornamento software pronto per %s. Per iniziare, tenere premuto il tasto BRIGHTNESS sul telecomando IR originale.
 	NL	Software-update gereed voor %s. Houd de helderheidsknop op je oorspronkelijke IR-afstandsbediening ingedrukt om te beginnen.
 	NO	Programvareoppdatering er klar for %s. Trykk og hold nede Brightness-knappen på den opprinnelige ir-fjernkontrollen for å starte.
+	PL	Aktualizacja oprogramowania jest dostępna dla urządzenia %s. Aby rozpocząć, naciśnij i przytrzymaj przycisk Brightness na oryginalnym pilocie zdalnego sterowania.
+	RU	Подготовлено обновление ПО для %s. Чтобы начать, нажмите кнопку BRIGHTNESS на своем ИК-пульте.
 	SV	Det finns en programuppdatering för %s tillgänglig. Om du vill påbörja uppdateringen håller du knappen för ljusstyrka på originalfjärrkontrollen nedtryckt.
 
 SLIMBROWSER_PLAYER_UPDATE_REQUIRED
+	CS	Aktualizace přehrávače
 	DA	Opdatering af afspiller
 	DE	Player-Update
 	EN	Player Update
@@ -240,9 +298,12 @@ SLIMBROWSER_PLAYER_UPDATE_REQUIRED
 	IT	Aggiornamento lettore
 	NL	Update van muzieksysteem
 	NO	Spilleroppdatering
+	PL	Aktualizacja odtwarzacza
+	RU	Обновление плеера
 	SV	Spelaruppdatering
 
 SLIMBROWSER_ENTER_PASSWORD
+	CS	Zadejte heslo
 	DA	Indtast adgangskode
 	DE	Kennwort eingeben
 	EN	Enter Password
@@ -252,5 +313,7 @@ SLIMBROWSER_ENTER_PASSWORD
 	IT	Immettere password
 	NL	Wachtwoord invoeren
 	NO	Skriv inn passord
+	PL	Wprowadź hasło
+	RU	Введите пароль
 	SV	Ange lösenord
 

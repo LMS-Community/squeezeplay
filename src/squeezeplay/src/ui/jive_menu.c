@@ -133,6 +133,7 @@ int jiveL_menu_layout(lua_State *L) {
 		}
 		lua_pop(L, 1);
 
+		//todo: fixme: right and bottom are ignored with this code
 		sw += sborder.left + sborder.right;
 		sh += sborder.top + sborder.bottom;
 	}

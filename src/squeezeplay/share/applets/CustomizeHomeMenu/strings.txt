@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 CUSTOMIZE_HOME
+	CS	Výchozí menu
 	DA	Hovedmenu
 	DE	Hauptmenü
 	EN	Home Menu
@@ -12,9 +13,12 @@ CUSTOMIZE_HOME
 	IT	Menu iniziale
 	NL	Hoofdmenu
 	NO	Hovedmeny
+	PL	Menu główne
+	RU	Главное меню
 	SV	Hem-meny
 
 CUSTOMIZE_HIDDEN
+	CS	Skrytý
 	DA	Skjult
 	DE	Versteckt
 	EN	Hidden
@@ -24,9 +28,12 @@ CUSTOMIZE_HIDDEN
 	IT	Nascosto
 	NL	Verborgen
 	NO	Skjult
+	PL	Ukryte
+	RU	Скрыто
 	SV	Dold
 
 CUSTOMIZE_RESTORE_DEFAULTS
+	CS	Obnovit výchozí
 	DA	Standardindstillinger
 	DE	Standardwerte wiederherstellen
 	EN	Restore Defaults
@@ -36,9 +43,12 @@ CUSTOMIZE_RESTORE_DEFAULTS
 	IT	Ripristina impostazioni predefinite
 	NL	Standaardinstellingen
 	NO	Tilbakestill til standardinnstillinger
+	PL	Przywróć domyślne
+	RU	Восстановить настройки по умолчанию
 	SV	Återställ standardinställningar
 
 CUSTOMIZE_CANCEL
+	CS	Storno
 	DA	Annuller
 	DE	Abbrechen
 	EN	Cancel
@@ -48,9 +58,12 @@ CUSTOMIZE_CANCEL
 	IT	Annulla
 	NL	Annuleren
 	NO	Avbryt
+	PL	Anuluj
+	RU	Отмена
 	SV	Avbryt
 
 CUSTOMIZE_CONTINUE
+	CS	Pokračovat
 	DA	Fortsæt
 	DE	Weiter
 	EN	Continue
@@ -60,9 +73,12 @@ CUSTOMIZE_CONTINUE
 	IT	Continua
 	NL	Verdergaan
 	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
 	SV	Fortsätt
 
 CUSTOMIZE_RESTORE_DEFAULTS_HELP
+	CS	Pro odstranění všech nastavených hodnot pro organizaci menu zvolte "Pokračovat"
 	DA	Vælg Fortsæt hvis du vil fjerne alle brugerdefinerede menuindstillinger
 	DE	Klicken Sie auf "Weiter", um sämtliche benutzerdefinierte Menüeinstellungen zu entfernen.
 	EN	Select "Continue" to remove all custom menu organization settings
@@ -72,5 +88,7 @@ CUSTOMIZE_RESTORE_DEFAULTS_HELP
 	IT	Selezionare Continua per rimuovere tutte le impostazioni relative all'organizzazione del menu personalizzato
 	NL	Selecteer 'Verdergaan' om alle aangepaste instellingen voor menuorganisatie te verwijderen
 	NO	Velg "Fortsett" for å fjerne alle egendefinerte innstillinger for menyorganisering.
+	PL	Wybierz opcję Kontynuuj, aby usunąć wszystkie niestandardowe ustawienia organizacji menu
+	RU	Нажмите кнопку "Продолжить", чтобы удалить все организационные настройки пользовательского меню.
 	SV	Välj Fortsätt om du vill ta bort alla anpassade inställningar för menyordning
 

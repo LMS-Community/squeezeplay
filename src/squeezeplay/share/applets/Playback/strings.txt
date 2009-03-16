@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 AUDIO_PLAYBACK
+	CS	Přehrávání audia
 	DA	Lydafspilning
 	DE	Audio-Wiedergabe
 	EN	Audio Playback
@@ -12,9 +13,12 @@ AUDIO_PLAYBACK
 	IT	Riproduzione audio
 	NL	Audio afspelen
 	NO	Lydavspilling
+	PL	Odtwarzanie audio
+	RU	Воспроизведение аудио
 	SV	Ljuduppspelning
 
 ENABLE_AUDIO
+	CS	Povolit přehrávání (BETA)
 	DA	Aktiver afspilning (BETA)
 	DE	Wiedergabe aktivieren (BETA)
 	EN	Enable Playback (BETA)
@@ -24,9 +28,12 @@ ENABLE_AUDIO
 	IT	Attiva riproduzione (BETA)
 	NL	Afspelen inschakelen (BETA)
 	NO	Aktiver avspilling (beta)
+	PL	Włącz odtwarzanie (BETA)
+	RU	Включить воспроизведение (бета)
 	SV	Aktivera uppspelning (BETA)
 
 DEBUG_AUDIO
+	CS	Ladit při přehrávání
 	DA	Fejlfinding ved afspilning
 	DE	Wiedergabe-Debug
 	EN	Debug Playback
@@ -36,9 +43,12 @@ DEBUG_AUDIO
 	IT	Debug riproduzione
 	NL	Afspelen debuggen
 	NO	Feilsøk avspilling
+	PL	Debuguj odtwarzanie
+	RU	Отладка воспроизведения
 	SV	Felsök uppspelning
 
 TEST_TONES
+	CS	Otestovat tóny
 	DA	Testtoner
 	DE	Testtöne
 	EN	Test Tones
@@ -48,9 +58,12 @@ TEST_TONES
 	IT	Prova toni
 	NL	Testtonen
 	NO	Testtoner
+	PL	Testuj dźwięki
+	RU	Тестировать тона
 	SV	Testtoner
 
 FORMAT
+	CS	Formát:
 	DA	Format:
 	DE	Format:
 	EN	Format:
@@ -60,9 +73,12 @@ FORMAT
 	IT	Formato:
 	NL	Indeling:
 	NO	Format:
+	PL	Format:
+	RU	Формат:
 	SV	Format:
 
 DECODE_BUFFER
+	CS	Dekódovat vyrovnávací paměť:
 	DA	Afkodningsbuffer:
 	DE	Decode-Puffer
 	EN	Decode buffer:
@@ -72,9 +88,12 @@ DECODE_BUFFER
 	IT	Buffer decodifica:
 	NL	Decoderingsbuffer:
 	NO	Dekoder buffer:
+	PL	Bufor dekodowania:
+	RU	Буфер декодирования:
 	SV	Avkodningsbuffert:
 
 OUTPUT_BUFFER
+	CS	Výstup vyrovnávací paměti:
 	DA	Outputbuffer:
 	DE	Ausgabe-Puffer
 	EN	Output buffer:
@@ -84,9 +103,12 @@ OUTPUT_BUFFER
 	IT	Buffer di output:
 	NL	Uitvoerbuffer:
 	NO	Utsignalbuffer:
+	PL	Bufor wyjściowy:
+	RU	Буфер выхода:
 	SV	Utgångsbuffert:
 
 ELAPSED_SECS
+	CS	Uplynulý čas:
 	DA	Forløbet (sek.):
 	DE	Vergangene Sek.:
 	EN	Elapsed Secs:
@@ -96,9 +118,12 @@ ELAPSED_SECS
 	IT	Secondi trascorsi:
 	NL	Verstreken seconden:
 	NO	Sekunder gått:
+	PL	Upłynęło sekund:
+	RU	Прошло секунд:
 	SV	Sekunder som förflutit:
 
 NUM_TRACKS
+	CS	Počet skladeb:
 	DA	Antal numre:
 	DE	Anzahl Titel:
 	EN	Num Tracks:
@@ -108,9 +133,12 @@ NUM_TRACKS
 	IT	N. brani:
 	NL	Tracknummers:
 	NO	Ant. spor:
+	PL	Ścieżki Num:
+	RU	Номера дорожек:
 	SV	Antal spår:
 
 DECODE_STATE
+	CS	Stav dekódování:
 	DA	Afkodningsstatus:
 	DE	Dekodierstatus:
 	EN	Decode State:
@@ -120,9 +148,12 @@ DECODE_STATE
 	IT	Stato decodifica:
 	NL	Decoderingsstatus:
 	NO	Omkodingsstatus:
+	PL	Stan dekodowania:
+	RU	Состояние декодирования:
 	SV	Avkodningsstatus:
 
 MULTITONE
+	CS	Multitón
 	DA	Flertoners
 	DE	Multiton
 	EN	Multitone
@@ -132,24 +163,42 @@ MULTITONE
 	IT	Multitono
 	NL	Meerdere tonen
 	NO	Multitone
+	PL	Wielotonowe
+	RU	Многочастотный
 	SV	Flera toner
 
 LEFT_CHANNEL
+	CS	Levý kanál
+	DA	Venstre kanal
+	DE	Linker Kanal
 	EN	Left channel
+	ES	Canal izquierdo
+	FI	Vasen kanava
+	FR	Canal gauche
+	IT	Canale sinistro
+	NL	Linkerkanaal
+	NO	Venstre kanal
+	PL	Lewy kanał
+	RU	Левый канал
+	SV	Vänster kanal
 
 SINE_44_1K
+	CS	Sinus 44.1k
 	DA	Sinus 44,1 k
-	DE	Sinus 44.1k
+	DE	Sinus 44.100
 	EN	Sine 44.1k
 	ES	Seno 44,1 kHz
 	FI	Sini 44,1 k
-	FR	Sinus 44,1k
-	IT	Seno di 44,1 k
+	FR	Sinus 44.1k
+	IT	Frequenza 44.1k
 	NL	Sinus 44.1 k
-	NO	Sinus 44.1k
+	NO	Sinus 44,1k
+	PL	Sinus 44,1 kb
+	RU	Синус 44.1k
 	SV	Sinus 44,1 k
 
 SINE_48k
+	CS	Sinus 48k
 	DA	Sinus 48 k
 	DE	Sinus 48k
 	EN	Sine 48k
@@ -159,21 +208,27 @@ SINE_48k
 	IT	Seno di 48 k
 	NL	Sinus 48 k
 	NO	Sinus 48k
+	PL	Sinus 48 kb
+	RU	Синус 48k
 	SV	Sinus 48 k
 
 SINE_88_2K
+	CS	Sinus 88.2k
 	DA	Sinus 88,2 k
-	DE	Sinus 88.2k
+	DE	Sinus 88.200
 	EN	Sine 88.2k
 	ES	Seno 88,2 kHz
 	FI	Sini 88,2 k
-	FR	Sinus 88,2k
-	IT	Seno di 88,2 k
+	FR	Sinus 88.2k
+	IT	Frequenza 88.2k
 	NL	Sinus 88.2 k
-	NO	Sinus 88.2k
+	NO	Sinus 88,2k
+	PL	Sinus 88,2 kb
+	RU	Синус 88.2k
 	SV	Sinus 88,2 k
 
 SINE_96K
+	CS	Sinus 96k
 	DA	Sinus 96 k
 	DE	Sinus 96k
 	EN	Sine 96k
@@ -183,9 +238,12 @@ SINE_96K
 	IT	Seno di 96 k
 	NL	Sinus 96 k
 	NO	Sinus 96k
+	PL	Sinus 96 kb
+	RU	Синус 96k
 	SV	Sinus 96 k
 
 SINE_STOP
+	CS	Zastavit
 	DA	Stop
 	DE	Stopp
 	EN	Stop
@@ -195,5 +253,7 @@ SINE_STOP
 	IT	Arresta
 	NL	Stoppen
 	NO	Stopp
+	PL	Zatrzymaj
+	RU	Стоп
 	SV	Stoppa
 
