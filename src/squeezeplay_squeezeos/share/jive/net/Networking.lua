@@ -655,20 +655,22 @@ function t_wpaStatus(self)
 		status.ip_gateway = gateway
 	end
 
-	local f = assert(io.open("/etc/resolv.conf"))
-	while true do
-		local line = f:read("*l")
-		if line == nil then
-			break
-		end
+	local f = io.open("/etc/resolv.conf")
+	if f ~= nil then
+		while true do
+			local line = f:read("*l")
+			if line == nil then
+				break
+			end
 
-		local dns = string.match(line, "nameserver ([%d\.]+)")
-		if dns then
-			status.ip_dns = dns
-			break
+			local dns = string.match(line, "nameserver ([%d\.]+)")
+			if dns then
+				status.ip_dns = dns
+				break
+			end
 		end
+		f:close()
 	end
-	f:close()
 
 	return status
 end
