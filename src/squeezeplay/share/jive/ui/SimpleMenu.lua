@@ -126,18 +126,25 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 				menu.checks[i] = check
 			end
 
+			local arrow = item.arrow or menu.arrows[i]
+			if arrow == nil then
+				arrow = Icon("arrow")
+				menu.arrows[i] = arrow
+			end
+
 			if widgetList[i] == nil then
 				widgetList[i] = Group(item.style or "item", {
 					text  = Label("text", item.text),
 					check = check,
 					icon  = icon,
-					arrow = Icon('arrow'),
+					arrow = arrow,
 				})
 			else
 				widgetList[i]:setStyle(item.style or "item")
 				widgetList[i]:setWidgetValue("text", item.text)
 				widgetList[i]:setWidget("icon", icon)
 				widgetList[i]:setWidget("check", check)
+				widgetList[i]:setWidget("arrow", arrow)
 			end
 		end
 	end
@@ -178,6 +185,7 @@ function __init(self, style, items)
 	obj.items = items or {}
 	obj.icons = {}
 	obj.checks = {}
+	obj.arrows = {}
 
 	obj:setItems(obj.items, #obj.items)
 
