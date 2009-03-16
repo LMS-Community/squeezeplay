@@ -381,18 +381,6 @@ NETWORK_SETTINGS_HELP
 	NO	Velg et nettverksnavn for å endre eller glemme det. Velg Annet nettverk for å legge til et nettverk som ikke finnes i listen over.
 	SV	Om du vill byta till eller glömma bort ett nätverk markerar du nätverksnamnet. Om du vill lägga till ett nätverk som inte finns i listan väljer du Annat nätverk.
 
-NETWORK_SETUP_HELP
-	DA	Vælg trådløst netværk.
-	DE	Wählen Sie Ihr kabelloses Netzwerk.
-	EN	Choose your wireless network below.
-	ES	Elija la red inalámbrica.
-	FI	Valitse langaton verkko.
-	FR	Choisissez votre réseau sans fil.
-	IT	Scegliere la rete senza fili.
-	NL	Kies je draadloze netwerk.
-	NO	Velg trådløst nettverk.
-	SV	Välj trådlöst nätverk.
-
 NETWORK_WIRELESS_ENCRYPTION
 	DA	Kryptering for trådløst netværk
 	DE	Kabellose Verschlüsselung

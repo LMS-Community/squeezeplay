@@ -179,8 +179,8 @@ end
 
 -- select wireless region
 function _wirelessRegion(self, wlan)
-	-- skip region if already set
-	if self:getSettings()['region'] then
+	-- skip region if already set and not in setup mode
+	if self:getSettings()['region'] and self.mode ~= "setup" then
 		return _connectionType(self)
 	end
 
@@ -246,7 +246,7 @@ end
 function _addNetwork(self, iface, ssid)
 	local item = {
 		text = iface:isWireless() and ssid or tostring(self:string("NETWORK_ETHERNET")),
-		icon = Icon("icon"),
+		arrow = Icon("icon"),
 		sound = "WINDOWSHOW",
 		callback = function()
 			_enterPassword(self, iface, ssid)
@@ -334,7 +334,6 @@ function _networkScanComplete(self, iface)
 		weight = 3
 	})
 
-	window:addWidget(Textarea("help_text", self:string("NETWORK_SETUP_HELP")))
 	window:addWidget(menu)
 
 	self.scanWindow = window
@@ -400,7 +399,7 @@ function _scanResults(self, iface)
 			end
 
 			local item = self.scanResults[ssid].item
-			item.icon:setStyle(itemStyle)
+			item.arrow:setStyle(itemStyle)
 
 			if self.scanMenu then
 				self.scanMenu:updatedItem(item)
