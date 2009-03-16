@@ -174,7 +174,7 @@ function _serverstatusSink(self, event, err)
 		selfPlayers[k] = k
 	end
 
-	self.pin = nil
+	local pin = nil
 	
 	if tonumber(data["player count"]) > 0 then
 
@@ -183,7 +183,7 @@ function _serverstatusSink(self, event, err)
 			local playerId = player_info.playerid
 
 			if player_info.pin then
-				self.pin = player_info.pin
+				pin = player_info.pin
 			end
 
 			-- remove the player from our list since it is reported by the server
@@ -201,6 +201,10 @@ function _serverstatusSink(self, event, err)
 		log:info(self, ": has no players!")
 	end
 	
+	if self.pin ~= pin then
+		self.jnt:notify('serverLinked', self)
+	end
+
 	-- any players still in the list are gone...
 	for k,v in pairs(selfPlayers) do
 		player = self.players[k]
