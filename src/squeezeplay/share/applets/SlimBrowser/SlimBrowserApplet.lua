@@ -276,6 +276,32 @@ local function _priorityAssign(key, defaultValue, ...)
 end
 
 
+local function _backButton(self)
+     return Button(
+	Icon("button_back"),
+	function()
+		Framework:pushAction("back")
+		return EVENT_CONSUME
+	end,
+	function()
+		Framework:pushAction("go_home")
+		return EVENT_CONSUME
+	end
+     )
+end
+
+
+local function _nowPlayingButton(self)
+	return Button(
+		Icon("button_go_now_playing"),
+		function()
+			Framework:pushAction("go_now_playing")
+			return EVENT_CONSUME
+			end
+		)
+end
+
+
 local function _pushToNewWindow(step)
 	if not step then
 		return
@@ -455,29 +481,15 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 		showIcons = false
 	end
 	if not group then
+
 		if labelStyle == 'title' then
 			group = Group(labelStyle, { 
 				text = Label("text", ""), 
 				icon = Icon("icon"), 
-				lbutton = Button(
-					Icon("button_back"), 
-					function()
-						Framework:pushAction("back")
-	
-						return EVENT_CONSUME
-					end,
-					function()
-						Framework:pushAction("go_home")
-						return EVENT_CONSUME
-					end
-				), 
-				rbutton = Button(
-					Icon("button_go_now_playing"), 
-					function() 
-						Framework:pushAction("go_now_playing")
-						return EVENT_CONSUME 
-					end
-				), 
+				--lbutton = nil,
+				--rbutton = nil,
+				lbutton = _backButton(),
+				rbutton = _nowPlayingButton(),
 			})
 		else
 			group = Group(labelStyle, { 
@@ -1044,8 +1056,8 @@ local function _browseSink(step, chunk, err)
 			_goNow(data.goNow)
 		end
 
-		local noScreensaver = _safeDeref(data, 'base', 'window', 'noScreensaver')
-		if step.window and noScreensaver then
+		local setupWindow = _safeDeref(data, 'base', 'window', 'setupWindow')
+		if step.window and setupWindow then
 			step.window:setAllowScreensaver(false)
 		end
 
@@ -1105,8 +1117,8 @@ local function _browseSink(step, chunk, err)
 				if windowStyle then
 					step.window:setStyle(data.window['windowStyle'])
 				end
-				-- if a titleStyle is being sent, we need to setTitleWidget completely
-				if data.window.titleStyle or data.window['icon-id'] then
+				-- if a titleStyle is being sent or prevWindow or setupWindow params are given, we need to setTitleWidget completely
+				if data.window.titleStyle or data.window['icon-id'] or data.window.setupWindow == 1 or data.window.prevWindow == 0 then
 					local titleText, titleStyle, titleIcon
 					local titleWidget = step.window:getTitleWidget()
 					-- set the title text if specified
@@ -1136,31 +1148,25 @@ local function _browseSink(step, chunk, err)
 					else
 						titleIcon = Icon("icon")
 					end
+					
+					local backButton, nowPlayingButton
+					if data.window.prevWindow == 0 then
+						backButton = nil
+					else
+						backButton = _backButton()
+					end
+					if data.setupWindow == 1 then
+						nowPlayingButton = nil
+					else
+						nowPlayingButton = _nowPlayingButton()
+					end
 
 					local newTitleWidget = 
-						--Group(titleStyle, { 
 						Group('title', { 
 							text = Label("text", titleText), 
 							icon = titleIcon,
-							lbutton = Button(
-								Icon("button_back"), 
-								function()
-									Framework:pushAction("back")
-
-									return EVENT_CONSUME
-								end,
-								function()
-									Framework:pushAction("go_home")
-									return EVENT_CONSUME
-								end
-							), 
-							rbutton = Button(
-								Icon("button_go_now_playing"), 
-								function() 
-									Framework:pushAction("go_now_playing")
-									return EVENT_CONSUME
-								end
-							), 
+							lbutton = backButton,
+							rbutton = nowPlayingButton,
 						})	
 					step.window:setTitleWidget(newTitleWidget)
 				-- change the text as specified if no titleStyle param was also sent
@@ -2178,7 +2184,6 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	window:setTitleWidget(_decoratedLabel(nil, 'title', windowSpec, db, false))
 	
 	local menu
-
 	-- if the item has an input field, we must ask for it
 	if item and item['input'] and not item['_inputDone'] then
 
@@ -2189,6 +2194,20 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 			window:setTitle(item.input.title)
 		end
 
+		local nowPlayingButton
+		if item.input.setupWindow == 1 then
+			nowPlayingButton = nil
+		else
+			nowPlayingButton = _nowPlayingButton()
+		end
+
+		local newTitleWidget = Group('title', { 
+			text = Label("text", item.input.title), 
+			lbutton = _backButton(),
+			rbutton = nowPlayingButton,
+		})	
+		window:setTitleWidget(newTitleWidget)
+	
 		local inputSpec
 		
 		-- legacy SS compatibility
