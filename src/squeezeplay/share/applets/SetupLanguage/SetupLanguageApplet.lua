@@ -78,6 +78,8 @@ function setupShowSetupLanguage(self, setupNext, helpText)
 		end
 	end
 
+	menu:setComparator(SimpleMenu.itemComparatorAlpha)
+
 	if helpText ~= false then
 		window:addWidget(Textarea("help_text", self:string("CHOOSE_LANGUAGE_HELP")))
 	end
@@ -130,6 +132,7 @@ function settingsShow(self, menuItem)
 			menu:setSelectedIndex(menu:numItems())
 		end
 	end
+	menu:setComparator(SimpleMenu.itemComparatorAlpha)
 
 	window:addWidget(menu)
 
