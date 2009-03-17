@@ -862,6 +862,21 @@ local function _renderSlider(step, item)
 
 end
 
+
+-- add a help button to a window with the data from the help arg delivered in the help window
+local function _addHelpButton(self, help)
+	local helpWindow = function()
+		local window = Window("text_list", "Help")
+		window:setAllowScreensaver(false)
+		local textarea = Textarea("text", help)
+		window:addWidget(textarea)
+		window:show()
+	end
+	self:addActionListener("help", _, helpWindow)
+	self:setButtonAction("rbutton", "help")
+end
+	
+
 -- _bigArtworkPopup
 -- special case sink that pops up big artwork
 local function _bigArtworkPopup(chunk, err)
@@ -1165,15 +1180,7 @@ local function _browseSink(step, chunk, err)
 				end
 				-- contextual help comes from data.window.help
 				if data.window and data.window.help then
-					local helpWindow = function()
-						local window = Window("text_list", "Help")
-						window:setAllowScreensaver(false)
-						local textarea = Textarea("text", data.window.help)
-						window:addWidget(textarea)
-						window:show()
-					end
-					step.window:addActionListener("help", _, helpWindow)
-					step.window:setButtonAction("rbutton", "help")
+					_addHelpButton(step.window, data.window.help)
 				end
 			end
 
@@ -1189,7 +1196,6 @@ local function _browseSink(step, chunk, err)
 		log:error(err)
 	end
 end
-
 
 -- _menuSink
 -- returns a sink with a closure to self
@@ -2176,6 +2182,13 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	-- if the item has an input field, we must ask for it
 	if item and item['input'] and not item['_inputDone'] then
 
+		-- never allow screensavers in an input window
+		window:setAllowScreensaver(false)
+
+		if item.input.title then
+			window:setTitle(item.input.title)
+		end
+
 		local inputSpec
 		
 		-- legacy SS compatibility
@@ -2295,6 +2308,10 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		end
 		--]]
 		
+		if inputSpec.help and inputSpec.help.text then
+			_addHelpButton(window, inputSpec.help.text)
+		end
+
 		local kbType = inputSpec._kbType or 'qwerty'
 		local keyboard = Keyboard("keyboard", kbType)
 		local backspace = Button(
