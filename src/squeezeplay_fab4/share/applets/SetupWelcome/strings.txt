@@ -28,3 +28,21 @@ CONTINUE
 
 DONE_HELP
 	EN	You can now use your Squeezebox to access all your music!
+
+CONNECTING_TO_SN
+	EN	Connecting to\nmysqueezebox.com
+
+CANT_CONNECT
+	EN	Can't Connect
+
+SN_DNS_WORKED
+	EN	A firewall or other mechanism seems to be blocking your connection. Please contact your router manufacturer or network admin for further assistance, or visit www.mysqueezebox.com/support.
+
+SN_DNS_FAILED
+	EN	It appears your internet connection is not working. Please check your network to make sure it is connected and running properly.
+
+SN_TRY_AGAIN
+	EN	Try connecting again 
+
+SN_CHOOSE_DIFFERENT
+	EN	Choose a different network 

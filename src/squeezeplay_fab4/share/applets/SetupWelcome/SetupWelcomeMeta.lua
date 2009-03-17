@@ -23,8 +23,8 @@ local AppletMeta    = require("jive.AppletMeta")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
+local jnt           = jnt
 
-local startingStep = 'step1'
 
 module(...)
 oo.class(_M, AppletMeta)
@@ -37,20 +37,41 @@ end
 
 function defaultSettings(meta)
 	return {
-		[ "setupDone" ] = false
+		[ "setupDone" ] = false,
+		[ "registerDone" ] = false,
 	}
 end
 
 
 function registerApplet(meta)
-	meta:registerService(startingStep)
+	meta:registerService("startSetup")
+	meta:registerService("startRegister")
 end
 
+
 function configureApplet(meta)
-	if not meta:getSettings().setupDone then
-		appletManager:callService(startingStep)
+	local settings = meta:getSettings()
+
+	if not settings.setupDone then
+		appletManager:callService("startSetup")
+	elseif not settings.registerDone then
+		appletManager:callService("startRegister")
+	end
+
+	if not settings.registerDone then
+		jnt:subscribe(meta)
 	end
 end
+
+
+function notify_serverLinked(meta, server)
+	log:info("server linked: ", server)
+
+	local settings = meta:getSettings()
+	settings.registerDone = (server:getPin() == nil)
+	self:storeSettings()
+end
+
 
 --[[
 

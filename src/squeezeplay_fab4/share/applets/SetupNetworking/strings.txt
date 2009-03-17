@@ -189,7 +189,7 @@ NETWORK_STATUS
 NETWORK_UNSUPPORTED_TYPES_HELP
 	DA	Krypteringstyperne WPA-EAP og WPA2-EAP understøttes ikke.
 	DE	WPA-EAP und WPA2-EAP werden nicht unterstützt.
-	EN	We're sorry; WPA-EAP and WPA2-EAP are not supported encryption types.
+	EN	We're sorry; WPA-EAP and WPA2-EAP are not supported encryption types. Formats supported include WPA, WPA2 and WEP.
 	ES	WPA-EAP y WPA2-EAP no son tipos de cifrado admitidos.
 	FI	WPA-EAP ja WPA2-EAP eivät ole tuettuja salaustyyppejä.
 	FR	Les types de chiffrement WPA-EAP et WPA2-EAP ne sont pas pris en charge.
@@ -343,7 +343,7 @@ NETWORK_WIRELESS_PASSWORD_HELP
 	EN	Wireless Network Help
 
 NETWORK_WIRELESS_PASSWORD_HELP_BODY
-	EN	If you don't know your network password, and you have a wireless network, try one or more of the following:\n\n1. Check to see if you have it written down somewhere.\n2. Ask someone else in your home if they know the password.\n3. Contact the person who set up your home network.\n\nNOTE: A password is sometimes referred to as a wireless key, or security key.\nNOTE: Squeezebox does not support ASCII-formatted WEP passwords.
+	EN	If you don't know your network password, and you have a wireless network, try one or more of the following:\n\n1. Check to see if you have it written down somewhere.\n2. Ask someone else in your home if they know the password.\n3. Contact the person who set up your home network.\n\nNOTE: A password is sometimes referred to as a wireless key, or security key.\nNOTE: Squeezebox does not support ASCII-formatted WEP passwords. You can still connect your Squeezebox to your network, but you will need to convert the ASCII password to Hexadecimal format.  You can likely find a converter tool somewhere online.  Or visit www.mysqueezebox.com/support for more information.
 
 NETWORK_CONNECTING_TO_SSID
 	DA	Etablerer forbindelse til\n%s
@@ -513,7 +513,7 @@ NETWORK_IP_ADDRESS_HELP
 NETWORK_IP_ADDRESS_HELP_BODY
 	DA	Angiv denne fjernbetjenings IP-adresse.
 	DE	Geben Sie die IP-Adresse für diese Fernbedienung ein.
-	EN	To connect manually, we'll need the following pieces of information:\n\n1. IP address - the IP address you want to use for this Squeezebox. 2. Subnet mask - the subnet mask of your network. 3. Gateway IP address - typically the IP address of your router. 4. DNS - the IP address of the DNS server you are using.\n\nPlease contact your network administrator for further assistance, or visit www.mysqueezebox.com/support.
+	EN	To connect manually, we'll need the following pieces of information:\n\n1. IP address - the IP address you want to use for this Squeezebox. 2. Subnet mask - the subnet mask of your network. 3. Gateway IP address - typically the IP address of your router. 4. DNS - the IP address of the DNS server you are using.\n\nIf your computers or network devices normally connect automatically, and you're not sure how or why to set up manual DHCP settings, you may need to contact your router manufacturer or network admin for further assistance, or visit www.mysqueezebox.com/support.
 	ES	Escriba la dirección IP del mando.
 	FI	Syötä kaukosäätimen IP-osoite.
 	FR	Entrer l'adresse IP de la télécommande.

@@ -34,19 +34,21 @@ local Surface          = require("jive.ui.Surface")
 local Textarea         = require("jive.ui.Textarea")
 local Window           = require("jive.ui.Window")
 local Popup            = require("jive.ui.Popup")
+
 local localPlayer      = require("jive.slim.LocalPlayer")
+local slimServer       = require("jive.slim.SlimServer")
 
 local Networking       = require("jive.net.Networking")
 
 local log              = require("jive.utils.log").logger("applets.setup")
-local debug              = require("jive.utils.debug")
+local debug            = require("jive.utils.debug")
 local locale           = require("jive.utils.locale")
 local table            = require("jive.utils.table")
 
 local appletManager    = appletManager
 
 local jiveMain         = jiveMain
-local jnt           = jnt
+local jnt              = jnt
 
 local welcomeTitleStyle = 'setuptitle'
 
@@ -69,6 +71,16 @@ function notify_playerCurrent(self, player)
 
 end
 --]]
+
+
+function startSetup(self)
+	step1(self)
+end
+
+
+function startRegister(self)
+	step7(self)
+end
 
 
 function step1(self)
@@ -109,9 +121,10 @@ function step1(self)
 		end)
 
 	-- choose language
-	self._topWindow = appletManager:callService("setupShowSetupLanguage", function() self:step2() end, false)
-
-	return self.topWindow
+	appletManager:callService("setupShowSetupLanguage",
+		function()
+			self:step2()
+		end, false)
 end
 
 
@@ -119,7 +132,10 @@ function step2(self)
 	log:info("step2")
 
 	-- welcome!
-	return self:setupWelcomeShow( function() self:step3() end)
+	self:setupWelcomeShow(
+		function()
+			self:step3()
+		end)
 end
 
 
@@ -127,14 +143,12 @@ function step3(self)
 	log:info("step3")
 
 	-- network connection type
-	return appletManager:callService(
-		"setupNetworking", 
+	appletManager:callService("setupNetworking", 
 		function()
 			self:step6(iface)
-		end, 
-		welcomeTitleStyle
-	)
+		end)
 end
+
 
 function step6(self)
 	log:info("step6")
@@ -147,43 +161,72 @@ function step6(self)
 		end
         end
 
+	-- this should never be called
 	log:error("no local player found?")
-	return appletManager:callService("setupShowSelectPlayer", function() end, 'setuptitle')
+	return appletManager:callService("setupShowSelectPlayer",
+		function()
+			self:step7()
+		end, 'setuptitle')
 end
 
 
 function step7(self)
-	-- XXXX connect to SC and error screens
-
-	appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
-
+	-- Once here, network setup is complete
 	self:_setupDone()
+
+	-- Find squeezenetwork server
+	local squeezenetwork = false
+	for name, server in slimServer:iterate() do
+		if server:isSqueezeNetwork() then
+			squeezenetwork = server
+		end
+	end
+
+	if not squeezenetwork then
+		log:error("No SqueezeNetwork instance")
+		return self:_setupDone()
+	end
+
+	-- Waiting popup
+	local popup = Popup("waiting_popup")
+
+	local icon  = Icon("icon_connecting")
+	icon:addTimer(1000, function()
+		-- wait until we know if the player is linked
+		if squeezenetwork:getPin() ~= nil then
+			step8(self, squeezenetwork)
+		end
+	end)
+	popup:addWidget(icon)
+
+	popup:addWidget(Label("text", self:string("CONNECTING_TO_SQUEEZENETWORK")))
+
+	self:tieAndShowWindow(popup)
+end
+
+
+function step8(self, squeezenetwork)
+	log:info("squeezenetwork pin: ", squeezenetwork:getPin())
+
+	if squeezenetwork:getPin() then
+		appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
+	else
+		jiveMain:closeToHome(true, Window.transitionPushLeft)
+	end
 end
 
 
 function _setupDone(self)
-	self:getSettings().setupDone = true
-	jiveMain:removeItemById('returnToSetup')
+	log:info("network setup complete")
+
+	local settings = self:getSettings()
+
+	settings.setupDone = true
 	self:storeSettings()
 
+	jiveMain:removeItemById('returnToSetup')
 	jiveMain:closeToHome(true, Window.transitionPushLeft)
 end
-
-
---[[
-function step7(self)
-	log:info("step7")
-	return self:setupDoneShow(function()
-
-			self:getSettings().setupDone = true
-			jiveMain:removeItemById('returnToSetup')
-			self:storeSettings()
-
-	        jiveMain:closeToHome(true, Window.transitionPushLeft)
-		end)
-		
-end
---]]
 
 
 function setupWelcomeShow(self, setupNext)
@@ -212,34 +255,6 @@ end
 
 
 --[[
-function setupDoneShow(self, setupNext)
-	log:info('setupDoneShow()')
-	local window = Window("text_list", self:string("DONE"), welcomeTitleStyle)
-	window:setAllowScreensaver(false)
-
-	window:setButtonAction("rbutton", nil)
-
-	local textarea = Textarea("help_text", self:string("DONE_HELP"))
-
-	local continueButton = SimpleMenu("menu")
-
-	continueButton:addItem({
-		text = (self:string("CONTINUE")),
-		sound = "WINDOWSHOW",
-		callback = setupNext,
-		weight = 1
-	})
-	
-	window:addWidget(textarea)
-	window:addWidget(continueButton)
-
-	self:tieAndShowWindow(window)
-	return window
-end
---]]
-
-
---[[
 function init(self)
 	log:info("subscribe")
 	jnt:subscribe(self)
@@ -252,6 +267,7 @@ function free(self)
 	Framework:removeListener(self.disableHomeKeyDuringSetup)
 	Framework:removeListener(self.freeAppletWhenEscapingSetup)
 end
+
 
 --[[
 
