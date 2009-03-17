@@ -245,3 +245,6 @@ RETURN_TO_SETUP
 	RU	Вернуться к установке
 	SV	Återgå till installationen
 
+KEYBOARD_DONE
+	EN	done
+

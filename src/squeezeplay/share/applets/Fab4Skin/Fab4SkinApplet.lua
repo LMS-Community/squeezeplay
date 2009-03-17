@@ -2,7 +2,7 @@
 --[[
 =head1 NAME
 
-applets.TouchSkin.TouchSkinApplet - The touch skin for the Squeezebox Touch
+applets.Fab4Skin.Fab4SkinApplet - The touch skin for the Squeezebox Touch
 
 =head1 DESCRIPTION
 
@@ -158,13 +158,30 @@ function skin(self, s)
 	local threeItemSelectionBox   = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line.png")
 	local threeItemPressedBox     = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3item_press.png")
 	local keyboardPressedBox      = Tile:loadImage( imgpath .. "Buttons/keyboard_button_press.png")
-
+	local keyboardBackground      = Tile:loadImage( imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png")
 	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = Tile:loadImage( imgpath .. "Icons/icon_help_button_tb.png")
 	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
-	local keyboardBackground      = Tile:loadImage( imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png")
+
+	--local keyboardBackground      = Tile:loadImage( imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png")
+
 	local deleteKeyBackground     = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry.png")
 	local deleteKeyPressedBackground = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry_press.png")
+--[[
+	local keyboardBackground      = Tile:loadTiles({
+				 --imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/ben.png",
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_tl.png",
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_t.png",
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_tr.png",
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_r.png",
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_br.png",
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_b.png",
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_bl.png",
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_l.png",
+	})
+--]]
+
 	local titleBox                =
 		Tile:loadTiles({
 				 imgpath .. "Titlebar/titlebar.png",
@@ -284,7 +301,7 @@ function skin(self, s)
 	local TRACK_FONT_SIZE = 18
 	local TEXTAREA_FONT_SIZE = 18
 	local CENTERED_TEXTAREA_FONT_SIZE = 28
-	local TEXTINPUT_FONT_SIZE = 20
+	local TEXTINPUT_FONT_SIZE = 24
 	local TEXTINPUT_SELECTED_FONT_SIZE = 28
 	local HELP_FONT_SIZE = 18
 	local UPDATE_SUBTEXT_SIZE = 20
@@ -622,6 +639,7 @@ function skin(self, s)
 		w = WH_FILL,
 		h = WH_FILL,
 		border = { 8, 0, 8, 0 },
+		padding = { 2, 0, 2, 0 },
 		bgImg = keyboardBackground,
 	}
 
@@ -636,36 +654,28 @@ function skin(self, s)
         	padding = 0,
 		w = 45,
 		h= 45,
-        	font = _boldfont(18),
+        	font = _boldfont(20),
         	fg = TEXT_COLOR,
         	align = 'center',
 	}
 
-	s.keyboard.button_shift = _uses(s.keyboard.button, {
-		bgImg = fiveItemSelectionBox, padding = 2, w = 75, h = 35
+	s.keyboard.button_fill = _uses(s.keyboard.button, {
+		w = WH_FILL,
 	})
-	s.keyboard.button_space = _uses(s.keyboard.button_shift, {
-		padding = 2, w = 100, h = 35
-	})
-	s.keyboard.qwertyLower = _uses(s.keyboard.button, {
+	s.keyboard.shiftOff = _uses(s.keyboard.button, {
 		img = _loadImage(self, "Icons/icon_shift_off.png")
 	})
-	s.keyboard.qwertyUpper = _uses(s.keyboard.button, {
+	s.keyboard.shiftOn = _uses(s.keyboard.button, {
 		img = _loadImage(self, "Icons/icon_shift_on.png")
 	})
 	s.keyboard.pressed = {
 		button = _uses(s.keyboard.button, {
 			bgImg = keyboardPressedBox
 		}),
-		button_shift = _uses(s.keyboard.button_shift, {
-			bgImg = keyboardPressedBox
-		}),
-		button_space = _uses(s.keyboard.button_space, {
+		button_fill = _uses(s.keyboard.button_fill, {
 			bgImg = keyboardPressedBox
 		}),
 	}
-	s.keyboard.button_pushed = _uses(s.keyboard.pressed.button_shift)
-	s.keyboard.pressed.button_pushed = _uses(s.keyboard.pressed.button_shift)
 
 --------- WINDOW STYLES ---------
 	--

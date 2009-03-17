@@ -34,7 +34,7 @@ The Keyboard includes the following style parameters in addition to the widgets 
 --]]
 
 
-local _assert, pairs, string, tostring, type, ipairs = _assert, pairs, string, tostring, type, ipairs
+local _assert, pairs, tostring, type, ipairs, math = _assert, pairs, tostring, type, ipairs, math
 
 local oo                = require("loop.simple")
 local Event             = require("jive.ui.Event")
@@ -46,6 +46,7 @@ local Label             = require("jive.ui.Label")
 local Framework         = require("jive.ui.Framework")
 
 local table             = require("jive.utils.table")
+local string            = require("jive.utils.string")
 local debug             = require("jive.utils.debug")
 local log               = require("jive.utils.log").logger("ui")
 
@@ -56,9 +57,10 @@ oo.class(_M, Group)
 local keyboardButtonText = {
         qwerty = 'ABC',
         qwertyLower  = 'abc',
-        numeric = '123',
+        numeric = '123-&',
         hex = 'hex',
         chars = '!@&',
+        emailNumeric = '123-&',
 }
 
 --[[
@@ -86,11 +88,18 @@ function __init(self, style, kbType)
 
 	local keyboard, widgets = obj:setKeyboard(kbType)
 
+	--[[ code for styling keyboard based on number of rows... may or may not use this
+	local numRows = #obj.keyboard
+	local kbStyle = 'keyboard_' .. tostring(numRows)
+	obj:setStyle(kbStyle)
+	--]]
+
 	-- forward events to contained widgets
 	obj:addListener(EVENT_MOUSE_ALL,
 			 function(event)
 				return _eventHandler(obj, event)
 			 end)
+	
 	return obj
 
 end
@@ -121,151 +130,151 @@ end
 function _specialKeyWidths(self)
 	self.specialKeyWidths = {
 		['button_space'] = 150,
-		['button_shift'] = 70,
-		['button_pushed'] = 70,
+		['button_fill'] = 0,
 	}
 end
 
 function _predefinedKeyboards(self)
-		local bottomRow = { 
-					self:_switchKeyboardButton(style, 'numeric', keyboardButtonText.numeric), 
-					self:_spaceBar(), 
-					self:_switchKeyboardButton(style, 'chars', keyboardButtonText.chars), 
-					self:_switchKeyboardButton(style, 'qwerty', keyboardButtonText.qwerty), 
-					self:_switchKeyboardButton(style, 'qwertyLower', keyboardButtonText.qwertyLower), 
-					self:_go() 
-		}
 		local emailKeyboardBottomRow = { 
-					self:_switchKeyboardButton(style, 'emailNumeric', keyboardButtonText.numeric), 
-					self:_switchKeyboardButton(style, 'email', keyboardButtonText.qwertyLower), 
-					self:_switchKeyboardButton(style, 'emailUpper', keyboardButtonText.qwerty), 
+					self:_switchKeyboardButton('emailNumeric', keyboardButtonText.emailNumeric), 
+					{ style = 'button_fill', text = '.' },
+					{ style = 'button_fill', text = '@' },
+					self:_macroKeyButton('.com', 'button_fill'),
 					self:_go() 
 		}
 		self.keyboards = { 
 		['qwerty']  = { 
 				{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
-				{ 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L' },
-				{ self:_shiftKey('qwertyLower'), 'Z', 'X', 'C', 'V', 'B', 'N', 'M'  },
-				bottomRow
+				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer()  },
+				{ self:_shiftKey('qwertyLower'), 'Z', 'X', 'C', 'V', 'B', 'N', 'M', self:_spacer()  },
+				{
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric), 
+					self:_spaceBar(),
+					self:_go(),
+				},
 		} ,
 		['qwertyLower']  = { 
 				{ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
-				{ 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l' },
-				{ self:_shiftKey('qwerty', 'qwertyLower'), 'z', 'x', 'c', 'v', 'b', 'n', 'm' },
-				bottomRow
+				{ self:_spacer(), 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', self:_spacer() },
+				{ self:_shiftKey('qwerty', 'qwertyLower'), 'z', 'x', 'c', 'v', 'b', 'n', 'm', self:_spacer() },
+				{
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric), 
+					self:_spaceBar(),
+					self:_go(),
+				},
 		} ,
 		['email']  = { 
 				{ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
-				{ 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l' },
-				{ self:_shiftKey('emailUpper', 'email'), '@', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '.' },
+				{ self:_spacer(), 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', self:_spacer() },
+				{ self:_shiftKey('emailUpper', 'email'), '@', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '_' },
 				emailKeyboardBottomRow
 		} ,
 		['emailUpper']  = { 
 				{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
-				{ 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L' },
-				{ self:_shiftKey('email'), '@', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '.'  },
+				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer() },
+				{ self:_shiftKey('email'), '@', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '_'  },
 				emailKeyboardBottomRow
 		} ,
 		['emailNumeric'] = { 
-				{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' },
+				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
 				{ '$', '+', '_', '-', '!', '#', '%', '&', "'", '*' },
 				{ '@', '/', '=', '?', '^', '`', '{', '|', '}', '~', '.' },
-				emailKeyboardBottomRow
+				{
+					self:_switchKeyboardButton('email', keyboardButtonText.qwertyLower), 
+					{ style = 'button_fill', text = '.' },
+					{ style = 'button_fill', text = '@' },
+					self:_macroKeyButton('.com', 'button_fill'),
+					self:_go() 
+				},
 		},
 		['hex']     = { 
-				{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' } ,
-				{ 'A', 'B', 'C', 'D', 'E', 'F' },
-				{},
-				{ self:_go() },
+				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' } ,
+				{ self:_spacer(), 'A', 'B', 'C', 'D', 'E', 'F', self:_go() },
+		},
+		['ip']     = { 
+				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' } ,
+				{ '.', self:_spacer(), self:_go() },
 		},
 		['numeric'] = { 
-				{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' },
-				{ '.', ',', '@', '$', '+', ':', '_', '-' },
-				{},
-				bottomRow
+				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
+				{ '.', '-', '+', '/', '=', '_', '@', '#', '$', '%' },
+				{ self:_spacer(), ':', '&', ',', '?', '!', '(', ')', "'", self:_spacer() },
+				{
+					self:_switchKeyboardButton('qwerty', keyboardButtonText.qwerty), 
+					self:_spaceBar(),
+					self:_go(),
+				},
 		},
-		['chars'] = {
-				{ '.', ',', '@', '!', '#', '$', '%', '^', '&', '*' },
-				{ '(', ')', '_', '+', '{', '}', '|', ':', '~', '?' }, 
-				{ '-', '=', '/', '\\', '`', '[', ']', "'", '"' },
-				bottomRow
-		}
 	}
 end
 
 
---
 function _layout(self)
 
-	-- call Button:setPosition() for each key for layout
 	local x, y, w, h = self:getBounds()
+	local screenWidth, screenHeight = Framework:getScreenSize()
 
 	local keyWidth
+	local defaultKeyWidth = 46
+	local rowWidth = screenWidth - 16
+	local defaultKeyHeight = 45
 
-	-- find row with most keys to determine interkey spacing
-	local maxRowKeys     = 0
-	local maxWidth       = 0
-	-- bottom row is treated differently for layout
-	local bottomRowWidth = 0
-	local bottomRowKeys  = 0
-	local rowWidths      = {}
-
-	for i, row in ipairs(self.keyboard) do
-		local rowWidth = 0
-		for _, key in ipairs(row) do
-			local style = key:getStyle()
-			if self.specialKeyWidths[style] then
-				keyWidth = self.specialKeyWidths[style]
-			else
-				keyWidth = 45
-			end
-				rowWidth = rowWidth + keyWidth
-		end
-		table.insert(rowWidths, rowWidth)
-		if rowWidth > maxWidth and i ~= #self.keyboard then
-			maxWidth = rowWidth
-		end
-			local numOfKeys = #row
-		if numOfKeys > maxRowKeys then
-			maxRowKeys = numOfKeys
-		end
-		if i == #self.keyboard then
-			bottomRowWidth = rowWidth
-			bottomRowKeys  = numOfKeys
-		end
-	end
-
-	-- FIXME: this is a hack. self:getBounds() values aren't correct while the widget is being laid out. 
-	-- screenWidth - 16 needs replacing
-	local screenWidth, screenHeight = Framework:getScreenSize()
-	local keySpacing = ( (screenWidth - 16) - ( maxWidth ) ) / ( maxRowKeys + 1 ) 
+	-- self.keyboard has the keyboard, table of rows of key objects
+	-- self.specialKeyWidths has data on keys that aren't the default width
+	-- 	local style = key:getStyle()
+	-- 	if self.specialKeyWidths[style] then ... end
 
 	for i, row in ipairs(self.keyboard) do
-		local rowKeySpacing = keySpacing
-		if i == #self.keyboard then
-			-- FIXME: replace screenWidth with something measured from the widget's dimension
-			rowKeySpacing = ( screenWidth - ( bottomRowWidth ) ) / ( bottomRowKeys + 1 ) 
-		end
-		-- center row
-		-- FIXME: replace screenWidth with something measured from the widget's dimension
-		x = ( screenWidth - ( (rowWidths[i]) + ( rowKeySpacing * (#row - 1) ) ) ) / 2
+		local spacers = 0 
+		local nonSpacerKeyWidth = 0
+		-- first pass for non-spacer nonSpacerKeyWidth
 		for _, key in ipairs(row) do
 			local style = key:getStyle()
-			if self.specialKeyWidths[style] then
-				keyWidth = self.specialKeyWidths[style]
+			local keyWidth = defaultKeyWidth
+			if style == 'keyboard_spacer' or style == 'shiftOff' or style == 'shiftOn' or self.specialKeyWidths[style] == 0 then
+				spacers = spacers + 1
 			else
-				keyWidth = 45
+				if self.specialKeyWidths[style] then
+					keyWidth = self.specialKeyWidths[style]
+				end
+				nonSpacerKeyWidth = keyWidth + nonSpacerKeyWidth
 			end
-			if #row == 1 then
-				x = maxWidth - keyWidth + ( 45/2 )
-			end
-			key:setBounds(x, y, keyWidth, 45)
-			x = x + keyWidth + rowKeySpacing
 		end
-		y = y + 50
+		-- second pass, layout the keys
+		local extraSpacerPixels = ( rowWidth - nonSpacerKeyWidth) % spacers
+		spacerWidth = math.floor( ( rowWidth - nonSpacerKeyWidth ) / spacers )
+
+		x = 10
+		local numberOfSpacers = 0
+		for _, key in ipairs(row) do
+			local style = key:getStyle()
+			local keyWidth
+			if style == 'keyboard_spacer' or style == 'button_fill' or style == 'shiftOff' or style == 'shiftOn' then
+				numberOfSpacers = numberOfSpacers + 1
+				if numberOfSpacers == 1 and extraSpacerPixels then
+					keyWidth = spacerWidth + extraSpacerPixels
+				else
+					keyWidth = spacerWidth	
+				end
+			else
+				if self.specialKeyWidths[style] then
+					keyWidth = self.specialKeyWidths[style]
+				else
+					keyWidth = defaultKeyWidth
+				end
+			end
+			
+			log:debug('keyWidth for this key set to: ', keyWidth)
+			key:setBounds(x, y, keyWidth, defaultKeyHeight)
+			x = x + keyWidth
+		end
+
+		-- on to the next row: add some vertical pixels to our key positioning
+		y = y + defaultKeyHeight 
 	end
 
 end
+
 
 --[[
 
@@ -340,13 +349,6 @@ function _buttonsFromChars(self, charTable)
 		local button
 		if type(v) == 'table' then
 			local keyStyle = v.style or 'button'
-			if keyStyle == 'button_shift' or keyStyle == 'button_pushed' then
-				if v.text == self.pushed or self.pushed == nil and keyboardButtonText[self.kbType] == v.text then
-					keyStyle = 'button_pushed'
-				else
-					keyStyle = 'button_shift'
-				end
-			end
 			local label
 			if v.icon then
 				label = v.icon
@@ -385,14 +387,29 @@ function _buttonsFromChars(self, charTable)
 	return buttonTable
 end
 
-function _switchKeyboardButton(self, style, kbType, keyText)
-	local keyStyle = 'button_shift'
-	if kbType == self.kbType then
-		keyStyle = 'button_pushed'
+function _macroKeyButton(self, keyText, style)
+	if not style then
+		style = 'button'
 	end
 	return {	
 		text     = keyText,
-		style    = keyStyle,
+		style    = style,
+		callback = function()
+				local stringTable = string.split('', keyText)
+				for _, v in ipairs(stringTable) do
+					local e = Event:new(EVENT_CHAR_PRESS, string.byte(v))
+					Framework:dispatchEvent(nil, e) 
+				end
+				return EVENT_CONSUME 
+			end,
+	}
+end
+
+
+function _switchKeyboardButton(self, kbType, keyText)
+	return {	
+		text     = keyText,
+		style    = "button_fill",
 		callback = function()
 			self.kbType = kbType
 			self.pushed = keyText
@@ -407,9 +424,9 @@ end
 -- return a table that can be used as a space bar in keyboards
 function _go(self, style)
 	return {	
-		-- FIXME: don't hardcode this to DONE
-		text     = 'DONE',
-		style    = 'button_shift',
+		-- FIXME: don't hardcode to 'done'
+		text     = 'done',
+		style    = 'button_fill',
 		callback = function()
 			local e = Event:new(EVENT_KEY_PRESS, KEY_GO)
 			Framework:dispatchEvent(nil, e) 
@@ -418,13 +435,23 @@ function _go(self, style)
 	}
 end
 
+function _spacer(self)
+	return {
+		text = '',
+		style = 'keyboard_spacer',
+		callback = function()
+			return EVENT_CONSUME
+		end
+	}
+end
+
 -- return a table that can be used as a shift key
 function _shiftKey(self, switchTo, switchBack)
 	local style
 	if switchBack then
-		style = switchBack
+		style = 'shiftOff'
 	else
-		style = 'qwertyUpper'
+		style = 'shiftOn'
 	end
 	return {	
 		icon	 = Icon(style),
@@ -444,8 +471,9 @@ end
 -- return a table that can be used as a space bar in keyboards
 function _spaceBar(self)
 	return {	
-		style    = 'button_space',
-		text     = 'SPACE',
+		style    = 'button_fill',
+		-- FIXME, don't hard-code this text
+		text     = 'space',
 		callback = function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte(' '))
 			Framework:dispatchEvent(nil, e) 
