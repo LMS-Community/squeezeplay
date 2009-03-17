@@ -34,7 +34,7 @@ The Keyboard includes the following style parameters in addition to the widgets 
 --]]
 
 
-local _assert, pairs, tostring, type, ipairs, math = _assert, pairs, tostring, type, ipairs, math
+local _assert, pairs, tostring, tonumber, type, ipairs, math = _assert, pairs, tostring, tonumber, type, ipairs, math
 
 local oo                = require("loop.simple")
 local Event             = require("jive.ui.Event")
@@ -129,7 +129,6 @@ end
 
 function _specialKeyWidths(self)
 	self.specialKeyWidths = {
-		['button_space'] = 150,
 		['button_fill'] = 0,
 	}
 end
@@ -138,7 +137,7 @@ function _predefinedKeyboards(self)
 		local emailKeyboardBottomRow = { 
 					self:_switchKeyboardButton('emailNumeric', keyboardButtonText.emailNumeric), 
 					{ style = 'button_fill', text = '.' },
-					{ style = 'button_fill', text = '@' },
+					{ keyWidth = 90, style = 'button_fill', text = '@' },
 					self:_macroKeyButton('.com', 'button_fill'),
 					self:_go() 
 		}
@@ -148,9 +147,9 @@ function _predefinedKeyboards(self)
 				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer()  },
 				{ self:_shiftKey('qwertyLower'), 'Z', 'X', 'C', 'V', 'B', 'N', 'M', self:_spacer()  },
 				{
-					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric), 
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 112), 
 					self:_spaceBar(),
-					self:_go(),
+					self:_go(112),
 				},
 		} ,
 		['qwertyLower']  = { 
@@ -158,9 +157,9 @@ function _predefinedKeyboards(self)
 				{ self:_spacer(), 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', self:_spacer() },
 				{ self:_shiftKey('qwerty', 'qwertyLower'), 'z', 'x', 'c', 'v', 'b', 'n', 'm', self:_spacer() },
 				{
-					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric), 
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 112), 
 					self:_spaceBar(),
-					self:_go(),
+					self:_go(112),
 				},
 		} ,
 		['email']  = { 
@@ -193,16 +192,16 @@ function _predefinedKeyboards(self)
 		},
 		['ip']     = { 
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' } ,
-				{ '.', self:_spacer(), self:_go() },
+				{ '.', self:_spacer(), self:_go(112) },
 		},
 		['numeric'] = { 
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
 				{ '.', '-', '+', '/', '=', '_', '@', '#', '$', '%' },
 				{ self:_spacer(), ':', '&', ',', '?', '!', '(', ')', "'", self:_spacer() },
 				{
-					self:_switchKeyboardButton('qwerty', keyboardButtonText.qwerty), 
+					self:_switchKeyboardButton('qwerty', keyboardButtonText.qwerty, 112), 
 					self:_spaceBar(),
-					self:_go(),
+					self:_go(112),
 				},
 		},
 	}
@@ -225,16 +224,19 @@ function _layout(self)
 	-- 	if self.specialKeyWidths[style] then ... end
 
 	for i, row in ipairs(self.keyboard) do
+		local rowInfo = self.keyInfo[i]
 		local spacers = 0 
 		local nonSpacerKeyWidth = 0
 		-- first pass for non-spacer nonSpacerKeyWidth
-		for _, key in ipairs(row) do
+		for j, key in ipairs(row) do
 			local style = key:getStyle()
 			local keyWidth = defaultKeyWidth
-			if style == 'keyboard_spacer' or style == 'shiftOff' or style == 'shiftOn' or self.specialKeyWidths[style] == 0 then
+			if not rowInfo[j].keyWidth and (style == 'keyboard_spacer' or style == 'shiftOff' or style == 'shiftOn' or self.specialKeyWidths[style] == 0) then
 				spacers = spacers + 1
 			else
-				if self.specialKeyWidths[style] then
+				if rowInfo[j].keyWidth then
+					keyWidth = tonumber(rowInfo[j].keyWidth)
+				elseif self.specialKeyWidths[style] then
 					keyWidth = self.specialKeyWidths[style]
 				end
 				nonSpacerKeyWidth = keyWidth + nonSpacerKeyWidth
@@ -246,10 +248,10 @@ function _layout(self)
 
 		x = 10
 		local numberOfSpacers = 0
-		for _, key in ipairs(row) do
+		for j, key in ipairs(row) do
 			local style = key:getStyle()
 			local keyWidth
-			if style == 'keyboard_spacer' or style == 'button_fill' or style == 'shiftOff' or style == 'shiftOn' then
+			if not rowInfo[j].keyWidth and (style == 'keyboard_spacer' or style == 'button_fill' or style == 'shiftOff' or style == 'shiftOn') then
 				numberOfSpacers = numberOfSpacers + 1
 				if numberOfSpacers == 1 and extraSpacerPixels then
 					keyWidth = spacerWidth + extraSpacerPixels
@@ -257,7 +259,9 @@ function _layout(self)
 					keyWidth = spacerWidth	
 				end
 			else
-				if self.specialKeyWidths[style] then
+				if rowInfo[j].keyWidth then
+					keyWidth = tonumber(rowInfo[j].keyWidth)
+				elseif self.specialKeyWidths[style] then
 					keyWidth = self.specialKeyWidths[style]
 				else
 					keyWidth = defaultKeyWidth
@@ -303,6 +307,7 @@ function setKeyboard(self, kbType)
 
 	local keyboardTable = {}
 	local widgetTable   = {}
+	local infoTable     = {}
 
 	local keyboard
 
@@ -319,15 +324,17 @@ function setKeyboard(self, kbType)
 	_assert(keyboard)
 
 	for i,row in ipairs(keyboard) do
-		local rowButtons = self:_buttonsFromChars(row)
+		local rowButtons, info = self:_buttonsFromChars(row)
 		table.insert(keyboardTable, rowButtons)
+		table.insert(infoTable, info)
 		for _, widget in ipairs(rowButtons) do
 			table.insert(widgetTable, widget)
 		end
 	end
 
-	self.keyboard = keyboardTable
-	self.widgets  = widgetTable
+	self.keyboard   = keyboardTable
+	self.widgets    = widgetTable
+	self.keyInfo    = infoTable
 
 	for _,widget in ipairs(self.widgets) do
 		widget.parent = self
@@ -344,9 +351,11 @@ function _buttonsFromChars(self, charTable)
 	_assert(type(charTable) == 'table')
 
 	local buttonTable = {}
+	local infoTable = {}
 
 	for k, v in ipairs(charTable) do
 		local button
+		local info = {}
 		if type(v) == 'table' then
 			local keyStyle = v.style or 'button'
 			local label
@@ -367,6 +376,7 @@ function _buttonsFromChars(self, charTable)
 						return EVENT_CONSUME 
 					end
 			button   = Button(label, callback)
+			info = v
 		else
 			local label  = Label("button", v)
 			button = Button(
@@ -383,16 +393,18 @@ function _buttonsFromChars(self, charTable)
 			)
 		end
 		table.insert(buttonTable, button)
+		table.insert(infoTable, info)
 	end
-	return buttonTable
+	return buttonTable, infoTable
 end
 
-function _macroKeyButton(self, keyText, style)
+function _macroKeyButton(self, keyText, style, keyWidth)
 	if not style then
 		style = 'button'
 	end
 	return {	
 		text     = keyText,
+		keyWidth = keyWidth,
 		style    = style,
 		callback = function()
 				local stringTable = string.split('', keyText)
@@ -406,10 +418,11 @@ function _macroKeyButton(self, keyText, style)
 end
 
 
-function _switchKeyboardButton(self, kbType, keyText)
+function _switchKeyboardButton(self, kbType, keyText, keyWidth)
 	return {	
 		text     = keyText,
 		style    = "button_fill",
+		keyWidth = keyWidth,
 		callback = function()
 			self.kbType = kbType
 			self.pushed = keyText
@@ -422,11 +435,12 @@ function _switchKeyboardButton(self, kbType, keyText)
 end
 
 -- return a table that can be used as a space bar in keyboards
-function _go(self, style)
+function _go(self, keyWidth)
 	return {	
 		-- FIXME: don't hardcode to 'done'
 		text     = 'done',
 		style    = 'button_fill',
+		keyWidth = keyWidth,
 		callback = function()
 			local e = Event:new(EVENT_KEY_PRESS, KEY_GO)
 			Framework:dispatchEvent(nil, e) 
@@ -435,9 +449,10 @@ function _go(self, style)
 	}
 end
 
-function _spacer(self)
+function _spacer(self, keyWidth)
 	return {
 		text = '',
+		keyWidth = keyWidth,
 		style = 'keyboard_spacer',
 		callback = function()
 			return EVENT_CONSUME
@@ -446,7 +461,7 @@ function _spacer(self)
 end
 
 -- return a table that can be used as a shift key
-function _shiftKey(self, switchTo, switchBack)
+function _shiftKey(self, switchTo, switchBack, keyWidth)
 	local style
 	if switchBack then
 		style = 'shiftOff'
@@ -455,6 +470,7 @@ function _shiftKey(self, switchTo, switchBack)
 	end
 	return {	
 		icon	 = Icon(style),
+		keyWidth = keyWidth,
 		callback = function()
 			self:setKeyboard(switchTo)
 			if switchBack then
@@ -469,9 +485,10 @@ end
 
 
 -- return a table that can be used as a space bar in keyboards
-function _spaceBar(self)
+function _spaceBar(self, keyWidth)
 	return {	
 		style    = 'button_fill',
+		keyWidth = keyWidth,
 		-- FIXME, don't hard-code this text
 		text     = 'space',
 		callback = function()
