@@ -311,6 +311,49 @@ end
 Window:    "input"
 Textinput: "textinput"
 Keyboard:  "keyboard"
+keyboard style: method argument
+--]]
+function setup_input_any(self, item)
+	
+	local window = Window("input", item[4], "setup")
+
+	_windowActions(self, item, window)
+
+	-- normal short cuts don't work with text entry
+	window:addActionListener("back", nil, function()
+		_windowPrev(self, item)
+	end)
+
+
+	local textinput = Textinput(
+		"textinput", 
+		"",
+		function(_, value)
+			_windowNext(self, item)
+		end
+	)
+	local backspace = Button(
+		Icon('button_keyboard_back'),
+		function()
+			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+			Framework:dispatchEvent(nil, e)
+			return EVENT_CONSUME
+		end
+	)
+	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
+
+	window:addWidget(group)
+	window:addWidget(Keyboard("keyboard", item[4]))
+	window:focusWidget(group)
+
+	return window
+end
+
+
+--[[
+Window:    "input"
+Textinput: "textinput"
+Keyboard:  "keyboard"
 keyboard style: "email"
 --]]
 function setup_input_email(self, item)
@@ -868,14 +911,20 @@ end
 
 -- the reference windows, and test data
 windows = {
-	{ "input_email", "Email Entry", setup_input_email, },
 	{ "text_list", "Text List", setup_text_list, },
 	{ "text_list_one", "Welcome to Setup", setup_text_list_one, },
 	{ "text_list_two", "Choose Region", setup_text_list_two, },
+
+	{ "input_ip", "IP Entry", setup_input_any, 'ip' },
+	{ "input_qwertyLower", "QWERTY Entry", setup_input_any, 'qwertyLower' },
+	{ "input_numeric", "Number Entry", setup_input_any, 'numeric' },
+	{ "input_hex", "Hex Entry", setup_input_any, 'hex' },
+	{ "input_email", "Email Entry", setup_input_email, },
 	{ "input_hex", "WEP Password", setup_input_hex, },
+	{ "input_wpa", "Wireless Password", setup_input, },
+
 	{ "help_info", "Help Connection Type", setup_help_info, },
 	{ "waiting_popup", "Connecting to", setup_waiting_popup, },
-	{ "input_wpa", "Wireless Password", setup_input, },
 	{ "error", "Error", setup_error, },
 	{ "update_popup", "Software Update", setup_update_popup, },
 	{ "track_info", "Track Info", window_track_info, },
