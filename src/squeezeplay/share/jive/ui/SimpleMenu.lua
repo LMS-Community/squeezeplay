@@ -118,6 +118,8 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 			if icon == nil then
 				icon = Icon(iconStyle)
 				menu.icons[i] = icon
+			else
+				icon:setStyle(iconStyle)
 			end
 
 			local check = item.check or menu.checks[i]
