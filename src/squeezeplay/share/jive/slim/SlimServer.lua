@@ -174,7 +174,7 @@ function _serverstatusSink(self, event, err)
 		selfPlayers[k] = k
 	end
 
-	local pin = nil
+	local pin = false
 	
 	if tonumber(data["player count"]) > 0 then
 
@@ -203,6 +203,7 @@ function _serverstatusSink(self, event, err)
 	
 	if self.pin ~= pin then
 		self.jnt:notify('serverLinked', self)
+		self.pin = pin
 	end
 
 	-- any players still in the list are gone...
@@ -577,7 +578,8 @@ end
 
 =head2 jive.slim.SlimServer:getPin()
 
-Returns the PIN for SqueezeNetwork, if it needs to be registered
+Returns the PIN for SqueezeNetwork, if it needs to be registered. Returns
+nil if the state is unknown, or false if the player is already linked.
 
 =cut
 --]]
