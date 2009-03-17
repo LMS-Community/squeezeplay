@@ -40,6 +40,7 @@ local Networking             = require("jive.net.Networking")
 
 local log                    = require("jive.utils.log").logger("applets.setup")
 
+local appletManager          = appletManager
 local jnt                    = jnt
 
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
@@ -75,7 +76,10 @@ function _helpAction(self, window, titleText, bodyText)
 		local window = Window("help_info", self:string(titleText), "helptitle")
 		window:setAllowScreensaver(false)
 
-		window:setButtonAction("rbutton", nil)
+		window:setButtonAction("rbutton", "help")
+		window:addActionListener("help", self, function()
+			appletManager:callService("diagnosticsMenu")
+		end)
 
 		local textarea = Textarea("text", self:string(bodyText))
 		window:addWidget(textarea)
