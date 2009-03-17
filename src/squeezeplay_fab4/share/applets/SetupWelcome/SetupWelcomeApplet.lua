@@ -193,7 +193,7 @@ function step7(self)
 	local icon  = Icon("icon_connecting")
 	icon:addTimer(1000, function()
 		-- wait until we know if the player is linked
-		if squeezenetwork:getPin() ~= nil then
+		if squeezenetwork:getPin() ~= nil and squeezenetwork:getUpgradeUrl() then
 			step8(self, squeezenetwork)
 		end
 	end)
@@ -208,7 +208,12 @@ end
 function step8(self, squeezenetwork)
 	log:info("squeezenetwork pin: ", squeezenetwork:getPin())
 
-	if squeezenetwork:getPin() then
+	local url, force = squeezenetwork:getUpgradeUrl()
+	if force then
+		log:info("forced firmware upgrade: ", url)
+		appletManager:callService("forceUpgrade", force, url)
+
+	elseif squeezenetwork:getPin() then
 		appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
 	else
 		jiveMain:closeToHome(true, Window.transitionPushLeft)

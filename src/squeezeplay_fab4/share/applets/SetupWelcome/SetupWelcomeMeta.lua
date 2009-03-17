@@ -21,6 +21,8 @@ local locale	    = require("jive.utils.locale")
 
 local AppletMeta    = require("jive.AppletMeta")
 
+local log              = require("jive.utils.log").logger("applets.setup")
+
 local appletManager = appletManager
 local jiveMain      = jiveMain
 local jnt           = jnt
@@ -70,6 +72,10 @@ function notify_serverLinked(meta, server)
 	local settings = meta:getSettings()
 	settings.registerDone = (server:getPin() == nil)
 	self:storeSettings()
+
+	if settings.registerDone then
+		jnt:subscribe(meta)
+	end
 end
 
 
