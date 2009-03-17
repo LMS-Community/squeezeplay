@@ -199,7 +199,7 @@ function step7(self)
 	end)
 	popup:addWidget(icon)
 
-	popup:addWidget(Label("text", self:string("CONNECTING_TO_SQUEEZENETWORK")))
+	popup:addWidget(Label("text", self:string("CONNECTING_TO_SN")))
 
 	self:tieAndShowWindow(popup)
 end
