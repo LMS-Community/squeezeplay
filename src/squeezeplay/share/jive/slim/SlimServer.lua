@@ -40,6 +40,8 @@ local string      = require("string")
 
 local oo          = require("loop.base")
 
+local System      = require("jive.System")
+
 local Comet       = require("jive.net.Comet")
 local HttpPool    = require("jive.net.HttpPool")
 local Surface     = require("jive.ui.Surface")
@@ -55,6 +57,8 @@ local ArtworkCache = require("jive.slim.ArtworkCache")
 local debug       = require("jive.utils.debug")
 local log         = require("jive.utils.log").logger("slimserver")
 local logcache    = require("jive.utils.log").logger("slimserver.cache")
+
+local JIVE_VERSION = jive.JIVE_VERSION
 
 
 -- jive.slim.SlimServer is a base class
@@ -216,6 +220,31 @@ function _serverstatusSink(self, event, err)
 	
 end
 
+
+function _upgradeSink(self, chunk, err)
+	local url
+
+	if err then
+		log:warn("Error in upgrade sink: ", err)
+		return
+	end
+
+	-- store firmware upgrade url
+	-- Bug 6828, use a relative URL from SC to handle dual-homed servers
+	if chunk.data.relativeFirmwareUrl then
+		url = 'http://' .. self.ip .. ':' .. self.port .. chunk.data.relativeFirmwareUrl
+	elseif chunk.data.firmwareUrl then
+		url = chunk.data.firmwareUrl
+	end
+
+	self.upgradeUrl = url
+	self.upgradeForce = (tonumber(chunk.data.firmwareUpgrade) == 1)
+
+	log:info("Firmware URL=", self.upgradeUrl)
+	log:info("Firmware force upgrade=", self.upgradeForce)
+end
+
+
 -- package private method to delete a player
 function _deletePlayer(self, player)
 	self.players[player:getId()] = nil
@@ -281,6 +310,10 @@ function __init(self, jnt, name)
 		-- data from SqueezeCenter
 		state = {},
 
+		-- firmware upgrade url
+		upgradeUrl = false,
+		upgradeForce = false,
+
 		-- players
 		players = {},
 
@@ -323,6 +356,18 @@ function __init(self, jnt, name)
 		nil,
 		{ 'serverstatus', 0, 50, 'subscribe:60' }
 	)
+
+	obj.comet:subscribe('/slim/firmwarestatus',
+		_getSink(obj, '_upgradeSink'),
+		nil,
+		{
+			'firmwareupgrade',
+			'firmwareVersion:' .. JIVE_VERSION,
+			'machine:' .. System:getMachine(),
+			'subscribe:0'
+		}
+	)
+
 
 	setmetatable(obj.imageCache, { __mode = "kv" })
 
@@ -1005,6 +1050,12 @@ function isPasswordProtected(self)
 	else
 		return false
 	end
+end
+
+
+-- returns upgrade url and force flag
+function getUpgradeUrl(self)
+	return self.upgradeUrl, self.upgradeForce
 end
 
 

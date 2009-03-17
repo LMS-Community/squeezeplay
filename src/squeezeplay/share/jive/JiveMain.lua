@@ -459,14 +459,16 @@ end
 
 
 function JiveMain:getSkinParam(key)
-	local param = self._skin:param()
+	if self._skin then
+		local param = self._skin:param()
 
-	if key and param[key] then
-		return param[key]
-	else
-		log:error('no value for skinParam ', key, ' found') 
-		return nil
+		if key and param[key] then
+			return param[key]
+		end
 	end
+
+	log:error('no value for skinParam ', key, ' found') 
+	return nil
 end
 
 
