@@ -12,6 +12,7 @@ local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("ui")
 
 local appletManager = appletManager
+local jiveMain      = jiveMain
 
 
 module(..., Framework.constants)
@@ -36,6 +37,8 @@ end
 function configureApplet(meta)
 	local desktop = not System:isHardware()
 
+	Framework:addActionListener("reload_skin", meta, _reloadSkinFromDiskAction, 9999)
+
 	Framework:addActionListener("debug_skin", meta, function()
 		appletManager:callService("debugSkin")
 
@@ -49,6 +52,12 @@ function configureApplet(meta)
 	end
 end
 
+
+function _reloadSkinFromDiskAction(self, event)
+	--free first so skin changes can be seen without jive rerun
+	jiveMain:freeSkin()
+	jiveMain:reloadSkin()
+end
 
 --[[
 
