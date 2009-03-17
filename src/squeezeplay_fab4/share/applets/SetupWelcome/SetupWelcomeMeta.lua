@@ -21,11 +21,16 @@ local locale	    = require("jive.utils.locale")
 
 local AppletMeta    = require("jive.AppletMeta")
 
-local log              = require("jive.utils.log").logger("applets.setup")
+local log           = require("jive.utils.log").logger("applets.setup")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
 local jnt           = jnt
+
+
+-- HACK: this is bad, but we need to keep the meta in scope for the network
+-- subscription to work
+local hackMeta = true
 
 
 module(...)
@@ -56,12 +61,20 @@ function configureApplet(meta)
 
 	if not settings.setupDone then
 		appletManager:callService("startSetup")
-	elseif not settings.registerDone then
-		appletManager:callService("startRegister")
 	end
 
 	if not settings.registerDone then
+		hackMeta = meta
 		jnt:subscribe(meta)
+	end
+end
+
+
+function notify_serverNew(meta, server)
+	local settings = meta:getSettings()
+
+	if settings.setupDone and server:isSqueezeNetwork() then
+		appletManager:callService("startRegister")
 	end
 end
 
@@ -70,11 +83,12 @@ function notify_serverLinked(meta, server)
 	log:info("server linked: ", server)
 
 	local settings = meta:getSettings()
-	settings.registerDone = (server:getPin() == nil)
-	self:storeSettings()
+	settings.registerDone = server:getPin() and true or false
+	meta:storeSettings()
 
 	if settings.registerDone then
-		jnt:subscribe(meta)
+		jnt:unsubscribe(meta)
+		hackMeta = nil
 	end
 end
 

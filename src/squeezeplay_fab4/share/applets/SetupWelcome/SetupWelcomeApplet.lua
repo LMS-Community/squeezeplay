@@ -183,8 +183,8 @@ function step7(self)
 	end
 
 	if not squeezenetwork then
-		log:error("No SqueezeNetwork instance")
-		return self:_setupDone()
+		log:error("no SqueezeNetwork instance")
+		return
 	end
 
 	-- Waiting popup
@@ -211,10 +211,15 @@ function step8(self, squeezenetwork)
 	local url, force = squeezenetwork:getUpgradeUrl()
 	if force then
 		log:info("forced firmware upgrade: ", url)
-		appletManager:callService("forceUpgrade", force, url)
+
+-- XXXX just for testing
+--url = "http://192.168.1.1:9000/firmware/custom.fab4.bin"
+
+		appletManager:callService("forceUpgrade", not force, url)
 
 	elseif squeezenetwork:getPin() then
 		appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
+
 	else
 		jiveMain:closeToHome(true, Window.transitionPushLeft)
 	end
