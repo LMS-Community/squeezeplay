@@ -1259,6 +1259,13 @@ function skin(self, s)
 
 --------- ICONBAR ---------
 
+	s.iconbar_group = {
+		x = screenWidth + 10,
+		y = screenHeight + 10,
+		layer = LAYER_FRAME,
+		position = LAYOUT_NONE,
+	}
+
 	-- time (hidden off screen)
 	s.button_time = {
 		x = screenWidth + 10,
