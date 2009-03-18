@@ -876,10 +876,22 @@ end
 
 
 -- add a help button to a window with the data from the help arg delivered in the help window
-local function _addHelpButton(self, help)
+local function _addHelpButton(self, help, setupWindow)
+	local titleText = self:getTitle()
 	local helpWindow = function()
-		local window = Window("text_list", "Help")
+		local window = Window("text_list")
 		window:setAllowScreensaver(false)
+		local nowPlaying = _nowPlayingButton()
+		if setupWindow == 1 then
+			nowPlaying = nil
+		end
+		window:setTitleWidget(
+			Group('title', { 
+				text = Label("text", titleText), 
+				lbutton = _backButton(),
+				rbutton = nowPlayingButton,
+			})	
+		)
 		local textarea = Textarea("text", help)
 		window:addWidget(textarea)
 		window:show()
@@ -1187,7 +1199,7 @@ local function _browseSink(step, chunk, err)
 				end
 				-- contextual help comes from data.window.help
 				if data.window and data.window.help then
-					_addHelpButton(step.window, data.window.help)
+					_addHelpButton(step.window, data.window.help, data.window.setupWindow)
 				end
 			end
 
@@ -2329,7 +2341,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		--]]
 		
 		if inputSpec.help and inputSpec.help.text then
-			_addHelpButton(window, inputSpec.help.text)
+			_addHelpButton(window, inputSpec.help.text, inputSpec.setupWindow)
 		end
 
 		local kbType = inputSpec._kbType or 'qwerty'
