@@ -83,16 +83,8 @@ function __init(self, style, kbType)
 	obj.widgets  = {}
 
 	obj:_predefinedKeyboards()
-	obj:_specialKeyWidths()
-
 
 	local keyboard, widgets = obj:setKeyboard(kbType)
-
-	--[[ code for styling keyboard based on number of rows... may or may not use this
-	local numRows = #obj.keyboard
-	local kbStyle = 'keyboard_' .. tostring(numRows)
-	obj:setStyle(kbStyle)
-	--]]
 
 	-- forward events to contained widgets
 	obj:addListener(EVENT_MOUSE_ALL,
@@ -127,18 +119,12 @@ function _eventHandler(self, event)
 	return EVENT_UNUSED
 end
 
-function _specialKeyWidths(self)
-	self.specialKeyWidths = {
-		['button_fill'] = 0,
-	}
-end
-
 function _predefinedKeyboards(self)
 		local emailKeyboardBottomRow = { 
 					self:_switchKeyboardButton('emailNumeric', keyboardButtonText.emailNumeric), 
 					{ style = 'button_fill', text = '.' },
 					{ keyWidth = 92, style = 'button_fill', text = '@' },
-					self:_macroKeyButton('.com', 'button_fill'),
+					self:_macroKeyButton('.com'),
 					self:_go() 
 		}
 		self.keyboards = { 
@@ -181,8 +167,8 @@ function _predefinedKeyboards(self)
 				{
 					self:_switchKeyboardButton('email', keyboardButtonText.qwertyLower), 
 					{ style = 'button_fill', text = '.' },
-					{ style = 'button_fill', text = '@' },
-					self:_macroKeyButton('.com', 'button_fill'),
+					{ keyWidth = 92, text = '@' },
+					self:_macroKeyButton('.com'),
 					self:_go() 
 				},
 		},
@@ -219,9 +205,7 @@ function _layout(self)
 	local rowWidth = 460
 
 	-- self.keyboard has the keyboard, table of rows of key objects
-	-- self.specialKeyWidths has data on keys that aren't the default width
-	-- 	local style = key:getStyle()
-	-- 	if self.specialKeyWidths[style] then ... end
+	-- self.rowInfo has metadata about the keyboard, e.g., keyWidth or spacer
 
 	for i, row in ipairs(self.keyboard) do
 		local rowInfo = self.keyInfo[i]
@@ -231,13 +215,11 @@ function _layout(self)
 		for j, key in ipairs(row) do
 			local style = key:getStyle()
 			local keyWidth = defaultKeyWidth
-			if not rowInfo[j].keyWidth and (style == 'keyboard_spacer' or style == 'shiftOff' or style == 'shiftOn' or self.specialKeyWidths[style] == 0) then
+			if rowInfo[j].keyWidth == 0 then 
 				spacers = spacers + 1
 			else
 				if rowInfo[j].keyWidth then
 					keyWidth = tonumber(rowInfo[j].keyWidth)
-				elseif self.specialKeyWidths[style] then
-					keyWidth = self.specialKeyWidths[style]
 				end
 				nonSpacerKeyWidth = keyWidth + nonSpacerKeyWidth
 			end
@@ -251,7 +233,7 @@ function _layout(self)
 		for j, key in ipairs(row) do
 			local style = key:getStyle()
 			local keyWidth
-			if not rowInfo[j].keyWidth and (style == 'keyboard_spacer' or style == 'button_fill' or style == 'shiftOff' or style == 'shiftOn') then
+			if rowInfo[j].keyWidth == 0 then 
 				numberOfSpacers = numberOfSpacers + 1
 				if numberOfSpacers == 1 and extraSpacerPixels then
 					keyWidth = spacerWidth + extraSpacerPixels
@@ -261,8 +243,6 @@ function _layout(self)
 			else
 				if rowInfo[j].keyWidth then
 					keyWidth = tonumber(rowInfo[j].keyWidth)
-				elseif self.specialKeyWidths[style] then
-					keyWidth = self.specialKeyWidths[style]
 				else
 					keyWidth = defaultKeyWidth
 				end
@@ -270,15 +250,27 @@ function _layout(self)
 			
 			log:debug('keyWidth for this key set to: ', keyWidth)
 			key:setBounds(x, y, keyWidth, defaultKeyHeight)
-		--[[
 			if j == #row and i == #self.keyboard then
-				key:setStyle('button_bottomCorner')
+				if rowInfo[j].spacer then
+					key:setStyle('button_bottomCornerSpacer')
+				else
+					key:setStyle('button_bottomCorner')
+				end
 			elseif j == #row then
-				key:setStyle('button_rightEdge')
+				if rowInfo[j].spacer then
+					key:setStyle('button_rightEdgeSpacer')
+				else
+					key:setStyle('button_rightEdge')
+				end
 			elseif i == #self.keyboard then
-				key:setStyle('button_bottomRow')
+				if rowInfo[j].spacer then
+					key:setStyle('button_bottomRowSpacer')
+				else
+					key:setStyle('button_bottomRow')
+				end
+			elseif rowInfo[j].spacer then
+				key:setStyle('button_spacer')
 			end
-		--]]
 			x = x + keyWidth
 		end
 
@@ -407,14 +399,14 @@ function _buttonsFromChars(self, charTable)
 	return buttonTable, infoTable
 end
 
-function _macroKeyButton(self, keyText, style, keyWidth)
-	if not style then
-		style = 'button'
+function _macroKeyButton(self, keyText, keyWidth)
+	if not keyWidth then
+		keyWidth = 0
 	end
 	return {	
 		text     = keyText,
 		keyWidth = keyWidth,
-		style    = style,
+		style    = 'button',
 		callback = function()
 				local stringTable = string.split('', keyText)
 				for _, v in ipairs(stringTable) do
@@ -428,9 +420,11 @@ end
 
 
 function _switchKeyboardButton(self, kbType, keyText, keyWidth)
+	if not keyWidth then
+		keyWidth = 0
+	end
 	return {	
 		text     = keyText,
-		style    = "button_fill",
 		keyWidth = keyWidth,
 		callback = function()
 			self.kbType = kbType
@@ -445,10 +439,12 @@ end
 
 -- return a table that can be used as a space bar in keyboards
 function _go(self, keyWidth)
+	if not keyWidth then
+		keyWidth = 0
+	end
 	return {	
 		-- FIXME: don't hardcode to 'done'
 		text     = 'done',
-		style    = 'button_fill',
 		keyWidth = keyWidth,
 		callback = function()
 			local e = Event:new(EVENT_KEY_PRESS, KEY_GO)
@@ -459,10 +455,13 @@ function _go(self, keyWidth)
 end
 
 function _spacer(self, keyWidth)
+	if not keyWidth then
+		keyWidth = 0
+	end
 	return {
 		text = '',
 		keyWidth = keyWidth,
-		style = 'keyboard_spacer',
+		spacer = 1,
 		callback = function()
 			return EVENT_CONSUME
 		end
@@ -471,6 +470,9 @@ end
 
 -- return a table that can be used as a shift key
 function _shiftKey(self, switchTo, switchBack, keyWidth)
+	if not keyWidth then
+		keyWidth = 0
+	end
 	local style
 	if switchBack then
 		style = 'shiftOff'
@@ -495,8 +497,10 @@ end
 
 -- return a table that can be used as a space bar in keyboards
 function _spaceBar(self, keyWidth)
+	if not keyWidth then
+		keyWidth = 0
+	end
 	return {	
-		style    = 'button_fill',
 		keyWidth = keyWidth,
 		-- FIXME, don't hard-code this text
 		text     = 'space',

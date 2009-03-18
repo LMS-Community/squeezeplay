@@ -157,7 +157,7 @@ function skin(self, s)
 	local fiveItemPressedBox      = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line_press.png")
 	local threeItemSelectionBox   = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line.png")
 	local threeItemPressedBox     = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3item_press.png")
-	local keyboardPressedBox      = Tile:loadImage( imgpath .. "Buttons/keyboard_button_press.png")
+	local keyboardPressedBox      = Tile:loadImage( imgpath .. "UNOFFICIAL/keyboard_button_press.png")
 	local keyboardBackground      = Tile:loadImage( imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png")
 	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = Tile:loadImage( imgpath .. "Icons/icon_help_button_tb.png")
@@ -687,13 +687,16 @@ function skin(self, s)
 	}
 
 
-	s.keyboard.keyboard_spacer = _uses(s.keyboard.button)
+	s.keyboard.button_spacer   = _uses(s.keyboard.button)
 	s.keyboard.button_fill     = _uses(s.keyboard.button)
-	s.keyboard.button_left     = _uses(s.keyboard.button)
 
 	s.keyboard.button_rightEdge    = _uses(s.keyboard.button, { bgImg = keyRightEdgeBackground })
 	s.keyboard.button_bottomRow    = _uses(s.keyboard.button, { bgImg = keyBottomRowBackground })
 	s.keyboard.button_bottomCorner = _uses(s.keyboard.button, { bgImg = keyBottomRightCornerBackground })
+
+	s.keyboard.button_rightEdgeSpacer    = _uses(s.keyboard.button_rightEdge)
+	s.keyboard.button_bottomRowSpacer    = _uses(s.keyboard.button_bottomRow)
+	s.keyboard.button_bottomCornerSpacer = _uses(s.keyboard.button_bottomCorner)
 
 	s.keyboard.shiftOff = _uses(s.keyboard.button, {
 		img = _loadImage(self, "Icons/icon_shift_off.png")
@@ -702,6 +705,12 @@ function skin(self, s)
 		img = _loadImage(self, "Icons/icon_shift_on.png")
 	})
 	s.keyboard.pressed = {
+		shiftOff = _uses(s.keyboard.shiftOff, {
+			bgImg = keyboardPressedBox
+		}),
+		shiftOn = _uses(s.keyboard.shiftOn, {
+			bgImg = keyboardPressedBox
+		}),
 		button = _uses(s.keyboard.button, {
 			bgImg = keyboardPressedBox
 		}),
@@ -717,6 +726,10 @@ function skin(self, s)
 		button_bottomCorner = _uses(s.keyboard.button_bottomCorner, {
 			bgImg = keyboardPressedBox
 		}),
+		button_spacer = _uses(s.keyboard.button_spacer),
+		button_rightEdgeSpacer = _uses(s.keyboard.button_rightEdgeSpacer),
+		button_bottomRowSpacer = _uses(s.keyboard.button_bottomRowSpacer),
+		button_bottomCornerSpacer = _uses(s.keyboard.button_bottomCornerSpacer),
 	}
 
 --------- WINDOW STYLES ---------
