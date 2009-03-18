@@ -133,7 +133,7 @@ function _predefinedKeyboards(self)
 				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer()  },
 				{ self:_shiftKey('qwertyLower'), 'Z', 'X', 'C', 'V', 'B', 'N', 'M', self:_spacer()  },
 				{
-					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92), 
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
 					self:_spaceBar(),
 					self:_go(92),
 				},
@@ -143,7 +143,7 @@ function _predefinedKeyboards(self)
 				{ self:_spacer(), 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', self:_spacer() },
 				{ self:_shiftKey('qwerty', 'qwertyLower'), 'z', 'x', 'c', 'v', 'b', 'n', 'm', self:_spacer() },
 				{
-					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92), 
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwertyLower'), 
 					self:_spaceBar(),
 					self:_go(92),
 				},
@@ -157,7 +157,7 @@ function _predefinedKeyboards(self)
 		['emailUpper']  = { 
 				{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
 				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer() },
-				{ self:_shiftKey('email'), 'z', 'x', 'c', 'v', 'b', 'n', 'm', '-', '_' },
+				{ self:_shiftKey('email'), 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '-', '_' },
 				emailKeyboardBottomRow
 		} ,
 		['emailNumeric'] = { 
@@ -165,7 +165,7 @@ function _predefinedKeyboards(self)
 				{ '$', '+', '_', '-', '!', '#', '%', '&', "'", '*' },
 				{ '@', '/', '=', '?', '^', '`', '{', '|', '}', '~', '.' },
 				{
-					self:_switchKeyboardButton('email', keyboardButtonText.qwertyLower), 
+					self:_switchKeyboardButton(self:_decideKbType('email'), keyboardButtonText.qwertyLower),
 					{ style = 'button_fill', text = '.' },
 					{ keyWidth = 92, text = '@' },
 					self:_macroKeyButton('.com'),
@@ -185,7 +185,7 @@ function _predefinedKeyboards(self)
 				{ '.', '-', '+', '/', '=', '_', '@', '#', '$', '%' },
 				{ self:_spacer(), ':', '&', ',', '?', '!', '(', ')', "'", self:_spacer() },
 				{
-					self:_switchKeyboardButton('qwerty', keyboardButtonText.qwerty, 92), 
+					self:_switchKeyboardButton(self:_decideKbType('qwerty'), keyboardButtonText.qwerty, 92), 
 					self:_spaceBar(),
 					self:_go(92),
 				},
@@ -193,6 +193,15 @@ function _predefinedKeyboards(self)
 	}
 end
 
+function _decideKbType(self, default)
+	return function()
+		if self.goBack then
+			return self.goBack
+		else
+			return default
+		end
+	end
+end
 
 function _layout(self)
 
@@ -419,17 +428,26 @@ function _macroKeyButton(self, keyText, keyWidth)
 end
 
 
-function _switchKeyboardButton(self, kbType, keyText, keyWidth)
+function _switchKeyboardButton(self, kbType, keyText, keyWidth, goBack)
 	if not keyWidth then
 		keyWidth = 0
 	end
+	
 	return {	
 		text     = keyText,
 		keyWidth = keyWidth,
 		callback = function()
+			local keyboardType = kbType
+			-- sometimes keyboardType needs to be determined from self.goBack via a closure
+			if type(kbType) == "function" then
+				keyboardType = kbType()
+			end
+			if goBack then
+				self.goBack = goBack
+			end
 			self.kbType = kbType
 			self.pushed = keyText
-			self:setKeyboard(kbType)
+			self:setKeyboard(keyboardType)
 			-- unset any one key shift behavior if a switch keyboard button is hit directly
 			self.last = nil
 			return EVENT_CONSUME 
@@ -469,10 +487,7 @@ function _spacer(self, keyWidth)
 end
 
 -- return a table that can be used as a shift key
-function _shiftKey(self, switchTo, switchBack, keyWidth)
-	if not keyWidth then
-		keyWidth = 0
-	end
+function _shiftKey(self, switchTo, switchBack)
 	local style
 	if switchBack then
 		style = 'shiftOff'
@@ -481,8 +496,8 @@ function _shiftKey(self, switchTo, switchBack, keyWidth)
 	end
 	return {	
 		icon	 = Icon(style),
-		keyWidth = keyWidth,
 		callback = function()
+			self.goBack = switchTo
 			self:setKeyboard(switchTo)
 			if switchBack then
 				self.last = switchBack
