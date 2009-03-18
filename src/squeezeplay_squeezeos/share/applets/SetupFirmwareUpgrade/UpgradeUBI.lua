@@ -11,6 +11,7 @@ local zip         = require("zipfilter")
 local ltn12       = require("ltn12")
 local string      = require("string")
 local url         = require("socket.url")
+local md5         = require("md5")
 
 local RequestHttp = require("jive.net.RequestHttp")
 local SocketHttp  = require("jive.net.SocketHttp")
@@ -25,6 +26,10 @@ local jnt = jnt
 
 module(..., oo.class)
 
+
+function _percent(x, y)
+	return math.min(100, math.floor((x/y) * 100))
+end
 
 function __init(self)
 	local obj = oo.rawnew(self, {
@@ -78,6 +83,8 @@ function _upgrade(self)
 
 	-- verify new volumes
 	self:parseMtd()
+	self.verifyBytes = 0
+	self.verifySize = self._size["kernel_upg"] + self._size["cramfs_upg"]
 	self:checksum("kernel_upg")
 	self:checksum("cramfs_upg")
 
@@ -318,7 +325,7 @@ function download(self)
 
 		while true do
 			local t, err = ltn12.pump.step(source, sink)
-			self._callback(false, "UPDATE_DOWNLOAD", math.floor((self.downloadBytes / totalBytes) * 100))
+			self._callback(false, "UPDATE_DOWNLOAD", _percent(self.downloadBytes, totalBytes))
 
 			Task:yield()
 			if not t then
@@ -342,7 +349,7 @@ function download(self)
 		while not self.sinkErr and not self.downloadClose do
 			local totalBytes = req:t_getResponseHeader("Content-Length")
 			if totalBytes then
-				self._callback(false, "UPDATE_DOWNLOAD", math.floor((self.downloadBytes / totalBytes) * 100))
+				self._callback(false, "UPDATE_DOWNLOAD", _percent(self.downloadBytes, totalBytes))
 			end
 			Task:yield(true)
 		end
@@ -460,30 +467,29 @@ function checksum(self, volume)
 	assert(size)
 	assert(md5check)
 
-	local cmd = "/usr/bin/head -c " .. size .. " " .. self._mtd[volume] .. " | md5sum"
-	log:info(cmd)
+	local file = assert(io.open(self._mtd[volume], "r"))
+	local digest = md5.new()
 
-	local md5flash = {}
+	local len = 0
+	while len < size do
+		local n = 4096
+		if n > (size - len) then
+			n = (size - len)
+		end
 
-	local proc = Process(jnt, cmd)
-	proc:read(
-		function(chunk, err)
-			if err then
-				log:warn("md5sum error ", err)
-				return nil
-			end
-			if chunk ~= nil then
-				table.insert(md5flash, chunk)
-			end
-			return 1			
-		end)
+		local c = file:read(n)
+		assert(c) -- we should never reach eof
 
-	while proc:status() ~= "dead" do
-		-- wait for the process to complete
+		len = len + n
+		digest:update(c)
+
+		self.verifyBytes = self.verifyBytes + n
+		self._callback(false, "UPDATE_VERIFY", _percent(self.verifyBytes, self.verifySize))
+
 		Task:yield()
 	end
 
-	md5flash = string.match(table.concat(md5flash), "(%x+)%s+.+")
+	local md5flash = digest:digest()
 
 	log:info("md5check=", md5check, " md5flash=", md5flash, " ", md5check == md5flash)
 	assert(md5check == md5flash, "Firmware checksum failed for " .. volume)

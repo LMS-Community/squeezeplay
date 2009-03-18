@@ -197,7 +197,6 @@ end
 
 function _upgradeWindowChoice(self, upgrades, optional)
 	local window = Window("text_list", self:string("UPDATE"), 'settingstitle')
-	local help_text = Textarea("helptext", "")
 	local menu = SimpleMenu("menu")
 
 	for i,upgrade in ipairs(upgrades) do
@@ -212,21 +211,15 @@ function _upgradeWindowChoice(self, upgrades, optional)
 			itemString = self:string("BEGIN_UPDATE")
 		end
 
-		local helpString = _helpString(self, upgrade)
-
 		menu:addItem({
 			text = itemString,
 			sound = "WINDOWSHOW",
 			callback = function()
 				self:_upgrade(upgrade.url)
 			end,
-			focusGained = function()
-				help_text:setValue(helpString)
-			end,			
 		})
 	end
 
-	window:addWidget(help_text)
 	window:addWidget(menu)
 
 	if not optional then
@@ -252,9 +245,6 @@ function _upgradeWindowChoice(self, upgrades, optional)
 			callback = function()
 				window:hide()
 			end,
-			focusGained = function()
-				help_text:setValue(nil)
-			end
 		})
 	end
 
@@ -277,7 +267,15 @@ end
 
 
 function settingsShow(self)
-	local url = upgradeUrl[1] or false
+	local url = false
+
+	local player = appletManager:callService("getCurrentPlayer")
+	if player then
+		local server = player:getSlimServer()
+		if server then
+			url = server:getUpgradeUrl()
+		end
+	end
 
 	local upgrades = _findUpgrades(self, url)
 
