@@ -249,7 +249,7 @@ function diagnosticsMenu(self)
 	self.labels = {}
 
 	for i,name in ipairs(tests) do
-		self.labels[name] = Label("choice", self:string("TESTING"))
+		self.labels[name] = Label("choice", "")
 
 		menu:addItem({
 			text = self:string(name),
