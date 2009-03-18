@@ -1119,6 +1119,7 @@ local function _browseSink(step, chunk, err)
 				end
 				-- if a titleStyle is being sent or prevWindow or setupWindow params are given, we need to setTitleWidget completely
 				if data.window.titleStyle or data.window['icon-id'] or data.window.setupWindow == 1 or data.window.prevWindow == 0 then
+
 					local titleText, titleStyle, titleIcon
 					local titleWidget = step.window:getTitleWidget()
 					-- set the title text if specified
@@ -1155,7 +1156,7 @@ local function _browseSink(step, chunk, err)
 					else
 						backButton = _backButton()
 					end
-					if data.setupWindow == 1 then
+					if data.window.setupWindow == 1 then
 						nowPlayingButton = nil
 					else
 						nowPlayingButton = _nowPlayingButton()
