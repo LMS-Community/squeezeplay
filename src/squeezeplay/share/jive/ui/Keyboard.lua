@@ -468,7 +468,6 @@ function _go(self, keyWidth)
 		callback = function()
 			local e = Event:new(EVENT_KEY_PRESS, KEY_GO)
 			Framework:dispatchEvent(nil, e) 
-			self:playSound("WINDOWSHOW")
 			return EVENT_CONSUME 
 		end
 	}

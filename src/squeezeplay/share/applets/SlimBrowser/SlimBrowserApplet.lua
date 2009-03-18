@@ -2289,6 +2289,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 			function(_, value)
 				-- check for min number of chars
 				if #value < inputSpec.len then
+					window:playSound("BUMP")
 					return false
 				end
 
@@ -2311,6 +2312,8 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 					-- close the window
 					window:playSound("WINDOWHIDE")
 					window:hide()
+				else
+					window:playSound("WINDOWSHOW")
 				end
 				return true
 			end,
