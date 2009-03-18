@@ -2201,13 +2201,14 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	local window = Window(windowSpec.windowStyle or 'text_list')
 	window:setTitleWidget(_decoratedLabel(nil, 'title', windowSpec, db, false))
 	
+	local titleText = window:getTitle()
+
 	local menu
 	-- if the item has an input field, we must ask for it
 	if item and item['input'] and not item['_inputDone'] then
 
 		-- never allow screensavers in an input window
 		window:setAllowScreensaver(false)
-
 		if item.input.title then
 			window:setTitle(item.input.title)
 		end
@@ -2219,8 +2220,12 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 			nowPlayingButton = _nowPlayingButton()
 		end
 
+		if item.input.title then
+			titleText = item.input.title
+		end
+
 		local newTitleWidget = Group('title', { 
-			text = Label("text", item.input.title), 
+			text = Label("text", titleText),
 			lbutton = _backButton(),
 			rbutton = nowPlayingButton,
 		})	
@@ -2249,7 +2254,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		if not inputSpec.allowedChars then
 			if inputSpec._kbType == 'qwertyLower' then
 				inputSpec.allowedChars = _string("ALLOWEDCHARS_WITHCAPS")
-			elseif string.match(inputSpec._kbType, 'email') then
+			elseif inputSpec._kbType and string.match(inputSpec._kbType, 'email') then
 				inputSpec.allowedChars = _string("ALLOWEDCHARS_EMAIL")
 			else
 				inputSpec.allowedChars = _string("ALLOWEDCHARS_CAPS")
