@@ -680,7 +680,7 @@ function skin(self, s)
 
 	s.keyboard.button = {
         	padding = 0,
-        	font = _boldfont(20),
+        	font = _boldfont(24),
         	fg = TEXT_COLOR,
         	align = 'center',
 		bgImg = keyBackground,
@@ -1086,6 +1086,7 @@ function skin(self, s)
 		img      = backButton,
 		padding  = { 2, 0, 0, 0 },
 	})
+
 	s.pressed.button_back = _uses(_pressed_button, {
 		img      = backButton,
 		padding  = { 2, 0, 0, 0 },

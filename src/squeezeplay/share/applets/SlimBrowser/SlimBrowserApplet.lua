@@ -291,6 +291,11 @@ local function _backButton(self)
 end
 
 
+local function _invisibleButton(self)
+	return Icon("button_none")
+end
+
+
 local function _nowPlayingButton(self)
 	return Button(
 		Icon("button_go_now_playing"),
@@ -883,7 +888,7 @@ local function _addHelpButton(self, help, setupWindow)
 		window:setAllowScreensaver(false)
 		local nowPlaying = _nowPlayingButton()
 		if setupWindow == 1 then
-			nowPlaying = nil
+			nowPlaying = _invisibleButton()
 		end
 		window:setTitleWidget(
 			Group('title', { 
@@ -1164,12 +1169,12 @@ local function _browseSink(step, chunk, err)
 					
 					local backButton, nowPlayingButton
 					if data.window.prevWindow == 0 then
-						backButton = nil
+						backButton = _invisibleButton()
 					else
 						backButton = _backButton()
 					end
 					if data.window.setupWindow == 1 then
-						nowPlayingButton = nil
+						nowPlaying = _invisibleButton()
 					else
 						nowPlayingButton = _nowPlayingButton()
 					end
