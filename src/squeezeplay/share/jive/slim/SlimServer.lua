@@ -363,6 +363,7 @@ function __init(self, jnt, name)
 		{
 			'firmwareupgrade',
 			'firmwareVersion:' .. JIVE_VERSION,
+			'inSetup:' .. jnt.inSetupHack and 1 or 0,
 			'machine:' .. System:getMachine(),
 			'subscribe:0'
 		}

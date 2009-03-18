@@ -77,6 +77,9 @@ end
 
 
 function startSetup(self)
+	-- flag to SN that we are in setup for testing
+	jnt.inSetupHack = true
+
 	step1(self)
 end
 
