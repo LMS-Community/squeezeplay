@@ -174,22 +174,12 @@ function __init(self, style, title, titleStyle)
 	return obj
 end
 
--- If an action is associated with the inputEvent, create and push the corresponding action onto the queue.  returns false if no matching action was found
-local function convertToActionAndPush(self, inputEvent)
-	local actionEvent = Framework:convertInputToAction(inputEvent)
-	if not actionEvent then
-		return false
+
+function _ignoreAllInputListener(self, event, excludedActions)
+	if log:isDebug() then
+		log:debug("_ignoreAllInputListener: ", event:tostring())
 	end
-
-	log:debug("Pushing action event (", actionEvent:getAction(), "), triggered from source event:", inputEvent:tostring())
-	_event(self, actionEvent)
-	return true
-end
-
-
-local function ignoreAllInputListener(self, event, excludedActions)
-	log:debug("ignoreAllInputListener: ", event:tostring())
-
+	
 	if event:getType() == ACTION then
 		local action = event:getAction()
 		if excludedActions then
@@ -197,21 +187,29 @@ local function ignoreAllInputListener(self, event, excludedActions)
 				Framework:assertActionName(excludedAction)
 				
 				if action == excludedAction then
-					log:debug("action excluded from ignoreAllInputListener: ", action)
+					log:debug("action excluded from _ignoreAllInputListener: ", action)
 
 					return EVENT_UNUSED
 				end
 			end
 		end
 
-		log:debug("Discarding unconsumed action")
+		if log:isDebug() then
+			log:debug("Ignoring action: ", event:getAction())
+		end
 		return EVENT_CONSUME
 	end
 
 	--else try to convert to action to allow this window the chance to handle actions
-	Framework:convertInputToAction(event)
+	local action = Framework:getAction(event)
+	if not action then
+		return EVENT_CONSUME
+	end
 
-	return EVENT_CONSUME
+	local actionEvent = Framework:newActionEvent(action)
+
+	--recurse as an action
+	return _ignoreAllInputListener(self, actionEvent, excludedActions)
 
 end
 
@@ -230,7 +228,7 @@ function ignoreAllInputExcept(self, excludedActions)
 	
 		self.ignoreAllInputHandle = self:addListener(EVENT_ALL_INPUT,
 								function(event)
-									return ignoreAllInputListener(self, event, excludedActions)
+									return _ignoreAllInputListener(self, event, excludedActions)
 								end)
 	end
 
