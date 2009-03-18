@@ -176,7 +176,7 @@ end
 -- split cli index into prefix and index for this level
 function _split(index)
 	local t = {}
-	for i in string.gmatch(index or "", "[0-9]+") do
+	for i in string.gmatch(index or "", "[0-9a-f]+") do
 		t[#t+1] = i
 	end
 	local c = t[#t]
