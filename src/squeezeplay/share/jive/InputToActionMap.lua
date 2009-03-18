@@ -62,6 +62,7 @@ charActionMappings.press = {
 	--development tools -- Later when modifier keys are supported, these could be obscured from everyday users
 	["R"]  = "reload_skin",
 	["}"]  = "debug_skin",
+	["~"]  = "debug_touch",
 
 }
 

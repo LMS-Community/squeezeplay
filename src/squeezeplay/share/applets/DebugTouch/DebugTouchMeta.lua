@@ -72,9 +72,9 @@ function _debugEvent(meta, screen)
 			col = 0x000000AF
 		end
 
-		if not meta.mouseUp then
-			_debugWidget(meta, screen, ev, Framework.windowStack[1])
-		end
+--		if not meta.mouseUp then
+--			_debugWidget(meta, screen, ev, Framework.windowStack[1])
+--		end
 
 		screen:circle(cx, cy, r, col)
 		screen:hline(hx - r, hx + r, hy, 0xFFFFFFAF)
