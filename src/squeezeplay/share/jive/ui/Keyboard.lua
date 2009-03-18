@@ -447,6 +447,7 @@ function _switchKeyboardButton(self, kbType, keyText, keyWidth, goBack)
 			end
 			self.kbType = kbType
 			self.pushed = keyText
+			self:playSound("SELECT")
 			self:setKeyboard(keyboardType)
 			-- unset any one key shift behavior if a switch keyboard button is hit directly
 			self.last = nil
@@ -467,6 +468,7 @@ function _go(self, keyWidth)
 		callback = function()
 			local e = Event:new(EVENT_KEY_PRESS, KEY_GO)
 			Framework:dispatchEvent(nil, e) 
+			self:playSound("WINDOWSHOW")
 			return EVENT_CONSUME 
 		end
 	}
@@ -499,6 +501,7 @@ function _shiftKey(self, switchTo, switchBack)
 		callback = function()
 			self.goBack = switchTo
 			self:setKeyboard(switchTo)
+			self:playSound("SELECT")
 			if switchBack then
 				self.last = switchBack
 			else
