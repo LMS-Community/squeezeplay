@@ -252,11 +252,17 @@ function _squeezenetworkFailed(self, squeezenetwork)
 			n[1] = tonumber(n[1])
 			n[2] = tonumber(n[2])
 
+			-- local addresses
 			if n[1] == 192 and n[2] == 168 then
 				ip = nil
 			elseif n[1] == 172 and n[2] >= 16 and n[2] <=31 then
 				ip = nil
 			elseif n[1] == 10 then
+				ip = nil
+			end
+
+			-- test addresses, used by BT homehub on DNS failure
+			if n[1] == 192 and n[2] >= 18 and n[2] <= 19 then
 				ip = nil
 			end
 		end
