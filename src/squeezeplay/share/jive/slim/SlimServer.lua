@@ -357,13 +357,15 @@ function __init(self, jnt, name)
 		{ 'serverstatus', 0, 50, 'subscribe:60' }
 	)
 
+	local inSetup = jnt.inSetupHack and 1 or 0
+
 	obj.comet:subscribe('/slim/firmwarestatus',
 		_getSink(obj, '_upgradeSink'),
 		nil,
 		{
 			'firmwareupgrade',
 			'firmwareVersion:' .. JIVE_VERSION,
-			'inSetup:' .. jnt.inSetupHack and 1 or 0,
+			'inSetup:' .. tostring(inSetup),
 			'machine:' .. System:getMachine(),
 			'subscribe:0'
 		}
