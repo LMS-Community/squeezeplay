@@ -861,6 +861,7 @@ function removeWidget(self, widget)
 	if self:isVisible() then
 		widget:dispatchNewEvent(EVENT_HIDE)
 	end
+	widget.parent = nil
 
 	table.delete(self.widgets, widget)
 
