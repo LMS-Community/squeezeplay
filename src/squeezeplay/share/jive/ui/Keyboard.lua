@@ -151,13 +151,13 @@ function _predefinedKeyboards(self)
 		['email']  = { 
 				{ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
 				{ self:_spacer(), 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', self:_spacer() },
-				{ self:_shiftKey('emailUpper', 'email'), '@', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '_' },
+				{ self:_shiftKey('emailUpper', 'email'), 'z', 'x', 'c', 'v', 'b', 'n', 'm', '-', '_' },
 				emailKeyboardBottomRow
 		} ,
 		['emailUpper']  = { 
 				{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
 				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer() },
-				{ self:_shiftKey('email'), '@', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '_'  },
+				{ self:_shiftKey('email'), 'z', 'x', 'c', 'v', 'b', 'n', 'm', '-', '_' },
 				emailKeyboardBottomRow
 		} ,
 		['emailNumeric'] = { 
