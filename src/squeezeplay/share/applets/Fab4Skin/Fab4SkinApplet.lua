@@ -162,25 +162,54 @@ function skin(self, s)
 	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = Tile:loadImage( imgpath .. "Icons/icon_help_button_tb.png")
 	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
-
-	--local keyboardBackground      = Tile:loadImage( imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png")
-
 	local deleteKeyBackground     = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry.png")
 	local deleteKeyPressedBackground = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry_press.png")
---[[
-	local keyboardBackground      = Tile:loadTiles({
-				 --imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png",
-				 imgpath .. "Text_Entry/Keyboard_Touch/ben.png",
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_tl.png",
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_t.png",
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_tr.png",
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_r.png",
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_br.png",
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_b.png",
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_bl.png",
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_l.png",
+
+	local keyBackground      = Tile:loadTiles({
+				 imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png",
+				nil,
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+				nil,
+				nil,
+				nil,
+				nil,
+				nil,
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
 	})
---]]
+
+	local keyRightEdgeBackground      = Tile:loadTiles({
+				 imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png",
+				nil,
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+				nil,
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+				nil,
+				nil,
+				nil,
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+	})
+	local keyBottomRowBackground      = Tile:loadTiles({
+				 imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png",
+				nil,
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+				nil,
+				nil,
+				nil,
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+				nil,
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+	})
+	local keyBottomRightCornerBackground      = Tile:loadTiles({
+				 imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png",
+				nil,
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+				nil,
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+				nil,
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+				nil,
+				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+	})
 
 	local titleBox                =
 		Tile:loadTiles({
@@ -273,7 +302,7 @@ function skin(self, s)
 
 	local THUMB_SIZE = self:param().THUMB_SIZE
 	
-	local TITLE_PADDING  = 0
+	local TITLE_PADDING  = { 0, 15, 0, 15 }
 	local CHECK_PADDING  = { 2, 0, 6, 0 }
 	local CHECKBOX_RADIO_PADDING  = { 2, 8, 8, 0 }
 
@@ -640,7 +669,6 @@ function skin(self, s)
 		h = WH_FILL,
 		border = { 8, 0, 8, 0 },
 		padding = { 2, 0, 2, 0 },
-		bgImg = keyboardBackground,
 	}
 
 	s.keyboard_textinput = {
@@ -652,16 +680,21 @@ function skin(self, s)
 
 	s.keyboard.button = {
         	padding = 0,
-		w = 45,
-		h= 45,
         	font = _boldfont(20),
         	fg = TEXT_COLOR,
         	align = 'center',
+		bgImg = keyBackground,
 	}
 
-	s.keyboard.button_fill = _uses(s.keyboard.button, {
-		w = WH_FILL,
-	})
+
+	s.keyboard.keyboard_spacer = _uses(s.keyboard.button)
+	s.keyboard.button_fill     = _uses(s.keyboard.button)
+	s.keyboard.button_left     = _uses(s.keyboard.button)
+
+	s.keyboard.button_rightEdge    = _uses(s.keyboard.button, { bgImg = keyRightEdgeBackground })
+	s.keyboard.button_bottomRow    = _uses(s.keyboard.button, { bgImg = keyBottomRowBackground })
+	s.keyboard.button_bottomCorner = _uses(s.keyboard.button, { bgImg = keyBottomRightCornerBackground })
+
 	s.keyboard.shiftOff = _uses(s.keyboard.button, {
 		img = _loadImage(self, "Icons/icon_shift_off.png")
 	})
@@ -673,6 +706,15 @@ function skin(self, s)
 			bgImg = keyboardPressedBox
 		}),
 		button_fill = _uses(s.keyboard.button_fill, {
+			bgImg = keyboardPressedBox
+		}),
+		button_rightEdge = _uses(s.keyboard.button_rightEdge, {
+			bgImg = keyboardPressedBox
+		}),
+		button_bottomRow = _uses(s.keyboard.button_bottomRow, {
+			bgImg = keyboardPressedBox
+		}),
+		button_bottomCorner = _uses(s.keyboard.button_bottomCorner, {
 			bgImg = keyboardPressedBox
 		}),
 	}

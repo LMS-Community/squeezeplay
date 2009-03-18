@@ -137,7 +137,7 @@ function _predefinedKeyboards(self)
 		local emailKeyboardBottomRow = { 
 					self:_switchKeyboardButton('emailNumeric', keyboardButtonText.emailNumeric), 
 					{ style = 'button_fill', text = '.' },
-					{ keyWidth = 90, style = 'button_fill', text = '@' },
+					{ keyWidth = 92, style = 'button_fill', text = '@' },
 					self:_macroKeyButton('.com', 'button_fill'),
 					self:_go() 
 		}
@@ -147,9 +147,9 @@ function _predefinedKeyboards(self)
 				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer()  },
 				{ self:_shiftKey('qwertyLower'), 'Z', 'X', 'C', 'V', 'B', 'N', 'M', self:_spacer()  },
 				{
-					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 112), 
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92), 
 					self:_spaceBar(),
-					self:_go(112),
+					self:_go(92),
 				},
 		} ,
 		['qwertyLower']  = { 
@@ -157,9 +157,9 @@ function _predefinedKeyboards(self)
 				{ self:_spacer(), 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', self:_spacer() },
 				{ self:_shiftKey('qwerty', 'qwertyLower'), 'z', 'x', 'c', 'v', 'b', 'n', 'm', self:_spacer() },
 				{
-					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 112), 
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92), 
 					self:_spaceBar(),
-					self:_go(112),
+					self:_go(92),
 				},
 		} ,
 		['email']  = { 
@@ -192,16 +192,16 @@ function _predefinedKeyboards(self)
 		},
 		['ip']     = { 
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' } ,
-				{ '.', self:_spacer(), self:_go(112) },
+				{ '.', self:_spacer(), self:_go(92) },
 		},
 		['numeric'] = { 
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
 				{ '.', '-', '+', '/', '=', '_', '@', '#', '$', '%' },
 				{ self:_spacer(), ':', '&', ',', '?', '!', '(', ')', "'", self:_spacer() },
 				{
-					self:_switchKeyboardButton('qwerty', keyboardButtonText.qwerty, 112), 
+					self:_switchKeyboardButton('qwerty', keyboardButtonText.qwerty, 92), 
 					self:_spaceBar(),
-					self:_go(112),
+					self:_go(92),
 				},
 		},
 	}
@@ -215,8 +215,8 @@ function _layout(self)
 
 	local keyWidth
 	local defaultKeyWidth = 46
-	local rowWidth = screenWidth - 16
 	local defaultKeyHeight = 45
+	local rowWidth = 460
 
 	-- self.keyboard has the keyboard, table of rows of key objects
 	-- self.specialKeyWidths has data on keys that aren't the default width
@@ -270,6 +270,15 @@ function _layout(self)
 			
 			log:debug('keyWidth for this key set to: ', keyWidth)
 			key:setBounds(x, y, keyWidth, defaultKeyHeight)
+		--[[
+			if j == #row and i == #self.keyboard then
+				key:setStyle('button_bottomCorner')
+			elseif j == #row then
+				key:setStyle('button_rightEdge')
+			elseif i == #self.keyboard then
+				key:setStyle('button_bottomRow')
+			end
+		--]]
 			x = x + keyWidth
 		end
 
