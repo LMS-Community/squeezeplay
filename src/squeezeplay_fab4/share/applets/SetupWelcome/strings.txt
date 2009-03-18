@@ -41,6 +41,9 @@ SN_DNS_WORKED
 SN_DNS_FAILED
 	EN	It appears your internet connection is not working. Please check your network to make sure it is connected and running properly.
 
+SN_SYSTEM_ERROR
+	EN	An system error has happened. Please try again later.
+
 SN_TRY_AGAIN
 	EN	Try connecting again 
 

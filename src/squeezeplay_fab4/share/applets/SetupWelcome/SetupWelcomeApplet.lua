@@ -17,7 +17,7 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local ipairs, pairs, assert, io, string = ipairs, pairs, assert, io, string
+local ipairs, pairs, assert, io, string, tonumber = ipairs, pairs, assert, io, string, tonumber
 
 local oo               = require("loop.simple")
 
@@ -31,6 +31,7 @@ local Group            = require("jive.ui.Group")
 local Button           = require("jive.ui.Button")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Surface          = require("jive.ui.Surface")
+local Task             = require("jive.ui.Task")
 local Textarea         = require("jive.ui.Textarea")
 local Window           = require("jive.ui.Window")
 local Popup            = require("jive.ui.Popup")
@@ -38,11 +39,13 @@ local Popup            = require("jive.ui.Popup")
 local localPlayer      = require("jive.slim.LocalPlayer")
 local slimServer       = require("jive.slim.SlimServer")
 
+local DNS              = require("jive.net.DNS")
 local Networking       = require("jive.net.Networking")
 
 local log              = require("jive.utils.log").logger("applets.setup")
 local debug            = require("jive.utils.debug")
 local locale           = require("jive.utils.locale")
+local string           = require("jive.utils.string")
 local table            = require("jive.utils.table")
 
 local appletManager    = appletManager
@@ -170,6 +173,12 @@ function step6(self)
 end
 
 
+-- we are connected when we have a pin and upgrade url
+function _squeezenetworkConnected(self, squeezenetwork)
+	return squeezenetwork:getPin() ~= nil and squeezenetwork:getUpgradeUrl()
+end
+
+
 function step7(self)
 	-- Once here, network setup is complete
 	self:_setupDone()
@@ -187,21 +196,134 @@ function step7(self)
 		return
 	end
 
+	local settings = self:getSettings()
+	if settings.registerDone then
+		log:error("SqueezeNetwork registration complete")
+		return
+	end
+
+	_squeezenetworkWait(self, squeezenetwork)
+end
+
+
+function _squeezenetworkWait(self, squeezenetwork)
 	-- Waiting popup
 	local popup = Popup("waiting_popup")
 
 	local icon  = Icon("icon_connecting")
-	icon:addTimer(1000, function()
-		-- wait until we know if the player is linked
-		if squeezenetwork:getPin() ~= nil and squeezenetwork:getUpgradeUrl() then
-			step8(self, squeezenetwork)
-		end
-	end)
 	popup:addWidget(icon)
-
 	popup:addWidget(Label("text", self:string("CONNECTING_TO_SN")))
 
+	local timeout = 0
+	popup:addTimer(1000, function()
+		-- wait until we know if the player is linked
+		if _squeezenetworkConnected(self, squeezenetwork) then
+			step8(self, squeezenetwork)
+		end
+
+		timeout = timeout + 1
+
+		if timeout > 30 then
+			_squeezenetworkFailed(self, squeezenetwork)
+		end
+	end)
+
 	self:tieAndShowWindow(popup)
+end
+
+
+function _squeezenetworkFailed(self, squeezenetwork)
+	Task("dns", self, function()
+		local serverip = squeezenetwork:getIpPort()
+
+		log:info("Can't connect to SqueezeNetwork: ", serverip)
+
+		local ip, err
+		if DNS:isip(serverip) then
+			ip = serverip
+		else
+			ip, err = DNS:toip(serverip)
+		end
+
+		-- some routers resolve all DNS addresses to the local
+		-- network when the internet is down, we catch these here
+		if ip then
+			local n = string.split("%.", ip)
+			n[1] = tonumber(n[1])
+			n[2] = tonumber(n[2])
+
+			if n[1] == 192 and n[2] == 168 then
+				ip = nil
+			elseif n[1] == 172 and n[2] >= 16 and n[2] <=31 then
+				ip = nil
+			elseif n[1] == 10 then
+				ip = nil
+			end
+		end
+
+
+		-- have we connected while looking up the DNS?
+		if _squeezenetworkConnected(self, squeezenetwork) then
+			return
+		end		
+
+		if squeezenetwork:isConnected() then
+			-- we're connected, but don't have a PIN or Upgrade state
+			log:error("SqueezeNetwork error. pin=", squeezenetwork:getPin(), " upgradeUrl=", squeezenetwork:getUpgradeUrl())
+			_squeezenetworkError(self, squeezenetwork, "SN_SYSTEM_ERROR")
+		elseif ip == nil then
+			-- dns failed
+			log:info("DNS failed for ", serverip)
+			_squeezenetworkError(self, squeezenetwork, "SN_DNS_FAILED")
+		else
+			-- connection failed
+			_squeezenetworkError(self, squeezenetwork, "SN_DNS_WORKED")
+		end
+	end):addTask()
+end
+
+
+function _squeezenetworkError(self, squeezenetwork, message)
+	local window = Window("text_list", self:string("CANT_CONNECT"))
+	window:setAllowScreensaver(false)
+
+	local menu = SimpleMenu("menu")
+	menu:addItem({
+		text = (self:string("SN_TRY_AGAIN")),
+		sound = "WINDOWSHOW",
+		callback = function()
+			_squeezenetworkWait(self, squeezenetwork)
+			window:hide()
+		end,
+		weight = 1
+	})
+
+	window:addWidget(Textarea("help_text", self:string(message)))
+	window:addWidget(menu)
+
+	-- back tries again
+	-- note add listener to menu, as it has the focus
+	menu:addActionListener("back", self, function()
+		_squeezenetworkWait(self, squeezenetwork)
+		window:hide()
+	end)
+
+	-- help shows diagnostics
+	window:setButtonAction("rbutton", "help")
+	window:addActionListener("help", self, function()
+		appletManager:callService("diagnosticsMenu")
+	end)
+
+
+	window:addTimer(1000, function()
+		-- wait until we know if the player is linked
+		if _squeezenetworkConnected(self, squeezenetwork) then
+			step8(self, squeezenetwork)
+			window:hide()
+		end
+	end)
+
+	self:tieAndShowWindow(window)
 end
 
 
