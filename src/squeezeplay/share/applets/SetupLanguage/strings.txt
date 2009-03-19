@@ -184,19 +184,19 @@ LANGUAGE_NL
 	SV	Nederlands
 
 LANGUAGE_RU
-	CS	английский
-	DA	английский
-	DE	английский
-	EN	английский
-	ES	английский
-	FI	английский
-	FR	английский
-	IT	английский
-	NL	английский
-	NO	английский
-	PL	английский
-	RU	английский
-	SV	английский
+	CS	Русский
+	DA	Русский
+	DE	Русский
+	EN	Русский
+	ES	Русский
+	FI	Русский
+	FR	Русский
+	IT	Русский
+	NL	Русский
+	NO	Русский
+	PL	Русский
+	RU	Русский
+	SV	Русский
 
 
 LANGUAGE_PL
@@ -215,19 +215,19 @@ LANGUAGE_PL
 	SV	Polski
 
 LANGUAGE_CS
-	CS	Angličtina
-	DA	Angličtina
-	DE	Angličtina
-	EN	Angličtina
-	ES	Angličtina
-	FI	Angličtina
-	FR	Angličtina
-	IT	Angličtina
-	NL	Angličtina
-	NO	Angličtina
-	PL	Angličtina
-	RU	Angličtina
-	SV	Angličtina
+	CS	Česky
+	DA	Česky
+	DE	Česky
+	EN	Česky
+	ES	Česky
+	FI	Česky
+	FR	Česky
+	IT	Česky
+	NL	Česky
+	NO	Česky
+	PL	Česky
+	RU	Česky
+	SV	Česky
 
 CHOOSE_LANGUAGE_HELP
 	CS	Pro výběr vašeho jazyka použijte kolečko. Pro další úkon prostřední tlačítko.
