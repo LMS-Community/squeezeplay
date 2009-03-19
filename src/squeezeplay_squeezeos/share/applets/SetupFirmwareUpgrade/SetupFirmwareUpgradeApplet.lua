@@ -62,9 +62,6 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-local upgradeActive = false
-
-
 function _firmwareVersion(self, url)
 	local machine = System:getMachine()
 
@@ -154,12 +151,6 @@ function _upgradeWindow(self, upgrades, optional)
 	else
 		window = _upgradeWindowChoice(self, upgrades, optional)
 	end
-
-	upgradeActive = true
-	window:addListener(EVENT_WINDOW_POP,
-		function()
-			upgradeActive = false
-		end)
 
 	self:tieAndShowWindow(window)
 end
@@ -265,11 +256,6 @@ end
 
 
 function firmwareUpgrade(self, server)
-	if upgradeActive then
-		log:info("already running upgrade applet")
-		return
-	end
-
 	local url, force = server:getUpgradeUrl()
 	local upgrades = _findUpgrades(self, url)
 
