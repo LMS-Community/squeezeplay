@@ -57,7 +57,7 @@ This class implements a HTTP socket running in a L<jive.net.NetworkThread>.
 
 
 -- stuff we use
-local assert, ipairs, table, pairs, string, tonumber = assert, ipairs, table, pairs, string, tonumber
+local assert, ipairs, table, pairs, string, tonumber, tostring = assert, ipairs, table, pairs, string, tonumber, tostring
 
 local oo            = require("loop.simple")
 local math          = require("math")
@@ -451,7 +451,12 @@ function request(self, func, playerid, request, priority)
 	local id = self.reqid
 
 	if log:isDebug() then
-		log:debug(self, ": request(", func, ", reqid:", id, ", ", playerid, ", ", table.concat(request, ","), ", priority:", priority, ")")
+		local _request = {}
+		for i,v in ipairs(request) do
+			_request[i] = tostring(v)
+		end
+
+		log:debug(self, ": request(", func, ", reqid:", id, ", ", playerid, ", ", table.concat(_request, ","), ", priority:", priority, ")")
 	end
 
 	-- Add to pending requests

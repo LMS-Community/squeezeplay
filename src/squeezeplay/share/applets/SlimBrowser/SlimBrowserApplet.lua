@@ -232,6 +232,11 @@ end
 -- figures out the from values for performJSONAction, including logic for finding the previous browse index in this list
 local function _decideFirstChunk(db, jsonAction)
 	local qty           = DB:getBlockSize()
+
+	if not _player then
+		return 0, qty
+	end
+
 	local commandString = _stringifyJsonRequest(jsonAction)
 	local lastBrowse    = _player:getLastBrowse(commandString)
 
@@ -572,7 +577,7 @@ local function _performJSONAction(jsonAction, from, qty, step, sink)
 	
 	-- replace player if needed
 	local playerid = jsonAction["player"]
-	if not playerid or tostring(playerid) == "0" then
+	if _player and (not playerid or tostring(playerid) == "0") then
 		playerid = _player:getId()
 	end
 	
@@ -1112,7 +1117,7 @@ local function _browseSink(step, chunk, err)
 			-- count == 0 responses should not be typical
 		elseif step.menu then
 			step.menu:setItems(step.db:menuItems(data))
-			if _player.menuAnchor then
+			if _player and _player.menuAnchor then
 				step.menu:setSelectedIndex(_player.menuAnchor)
 			end
 
@@ -1209,7 +1214,7 @@ local function _browseSink(step, chunk, err)
 			end
 
 			-- what's missing?
-			local from, qty = step.db:missing(_player.menuAnchor)
+			local from, qty = step.db:missing(_player and _player.menuAnchor)
 		
 			if from then
 				_performJSONAction(step.data, from, qty, step, step.sink)
@@ -2008,7 +2013,7 @@ local function _browseMenuListener(menu, db, menuItem, dbIndex, event)
 	local evtType = event:getType()
 
 	local currentlySelectedIndex = _curStep.menu:getSelectedIndex()
-	if _player.lastKeyTable and evtType == EVENT_FOCUS_GAINED then
+	if _player and _player.lastKeyTable and evtType == EVENT_FOCUS_GAINED then
 		if currentlySelectedIndex then
 			_player.lastKeyTable.index = currentlySelectedIndex 
 		else
@@ -2620,7 +2625,6 @@ function squeezeNetworkRequest(self, request)
 		return
 	end
 	_server = squeezenetwork
-	_player = localPlayer
 
 	-- create a window for SN signup
 	local step, sink = _newDestination(
