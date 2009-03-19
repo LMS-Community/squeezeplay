@@ -341,12 +341,10 @@ function step8(self, squeezenetwork)
 
 	local url, force = squeezenetwork:getUpgradeUrl()
 	if force then
-		log:info("forced firmware upgrade: ", url)
-
 -- XXXX just for testing
 --url = "http://192.168.1.1:9000/firmware/custom.fab4.bin"
 
-		appletManager:callService("forceUpgrade", not force, url)
+		appletManager:callService("firmwareUpgrade", squeezenetwork)
 
 	elseif squeezenetwork:getPin() then
 		appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
