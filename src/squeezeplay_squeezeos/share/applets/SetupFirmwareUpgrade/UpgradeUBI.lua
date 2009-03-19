@@ -81,6 +81,14 @@ function _upgrade(self)
 
 	self._callback(false, "UPDATE_VERIFY")
 
+	-- check the correct ubi volumes exist
+	local oldvol = self:parseUbi()
+	assert(oldvol.kernel)
+	assert(oldvol.kernel_upg)
+	assert(oldvol.cramfs)
+	assert(oldvol.cramfs_upg)
+
+
 	-- verify new volumes
 	self:parseMtd()
 	self.verifyBytes = 0
@@ -95,6 +103,15 @@ function _upgrade(self)
 		["cramfs"] = "cramfs_bak",
 		["cramfs_upg"] = "cramfs",
 	})
+
+	-- check the volume rename worked
+	local newvol = self:parseUbi()
+	assert(newvol.kernel)
+	assert(newvol.kernel_bak)
+	assert(newvol.cramfs)
+	assert(newvol.cramfs_bak)
+	assert(newvol.kernel ~= oldvol.kernel)
+	assert(newvol.cramfs ~= oldvol.cramfs)
 
 	-- reboot
 	self._callback(true, "UPDATE_REBOOT")
@@ -173,6 +190,28 @@ function parseMtd(self)
 	fh:close()
 
 	self._mtd = mtd
+end
+
+function parseUbi(self)
+	local ubi = {}
+
+	-- parse mtd to work out what partitions to use
+	local fh, err = assert(io.popen("/usr/sbin/ubinfo /dev/ubi0 -a"))
+
+	local volid = false
+	for line in fh:lines() do
+		if string.match(line, "Volume ID:") then
+			volid = string.match(line, "Volume ID:%s+(%d+)")
+		elseif string.match(line, "Name:") then
+			volname = string.match(line, "Name:%s+([^%s]+)")
+
+			ubi[volname] = volid
+			volid = false
+		end
+	end
+	fh:close()
+
+	return ubi
 end
 
 
@@ -488,6 +527,7 @@ function checksum(self, volume)
 
 		Task:yield()
 	end
+	file:close()
 
 	local md5flash = digest:digest()
 

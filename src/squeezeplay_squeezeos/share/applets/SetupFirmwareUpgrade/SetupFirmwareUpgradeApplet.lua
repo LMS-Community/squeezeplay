@@ -62,6 +62,9 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
+local upgradeActive = false
+
+
 function _firmwareVersion(self, url)
 	local machine = System:getMachine()
 
@@ -145,11 +148,20 @@ end
 
 
 function _upgradeWindow(self, upgrades, optional)
+	local window
 	if #upgrades == 1 then
-		return _upgradeWindowSingle(self, upgrades, optional)
+		window = _upgradeWindowSingle(self, upgrades, optional)
 	else
-		return _upgradeWindowChoice(self, upgrades, optional)
+		window = _upgradeWindowChoice(self, upgrades, optional)
 	end
+
+	upgradeActive = true
+	window:addListener(EVENT_WINDOW_POP,
+		function()
+			upgradeActive = false
+		end)
+
+	self:tieAndShowWindow(window)
 end
 
 
@@ -191,7 +203,7 @@ function _upgradeWindowSingle(self, upgrades, optional)
 			end)
 	end
 
-	self:tieAndShowWindow(window)
+	return window
 end
 
 
@@ -248,21 +260,22 @@ function _upgradeWindowChoice(self, upgrades, optional)
 		})
 	end
 
-	self:tieAndShowWindow(window)
+	return window
 end
 
 
-function forceUpgrade(self, optional, url, urlHelp)
-	if not url then
-		url = upgradeUrl[1]
-	end
-	if not url then
+function firmwareUpgrade(self, server)
+	if upgradeActive then
+		log:info("already running upgrade applet")
 		return
 	end
 
-	local upgrades = _findUpgrades(self, url, urlHelp)
+	local url, force = server:getUpgradeUrl()
+	local upgrades = _findUpgrades(self, url)
 
-	return _upgradeWindow(self, upgrades, optional)
+	log:info("firmware upgrade from ", server, " url=", url, " force=", force)
+
+	return _upgradeWindow(self, upgrades, not force)
 end
 
 
@@ -353,7 +366,7 @@ function _t_upgrade(self)
 	if not t then
 		-- error
 		log:error("Upgrade failed: ", err)
-		self:_upgradeFailed():showInstead()
+		self:_upgradeFailed()
 
 		if self.popup then
 			self.popup:hide()
@@ -431,7 +444,7 @@ function _upgradeFailed(self)
 						callback = function()
 								   if _checkBattery() then
 									   window:hide()
-									   self:_upgrade()
+									   self:_upgrade(self.url)
 
 								   else
 									   window:bumpRight()
@@ -444,7 +457,7 @@ function _upgradeFailed(self)
 	window:addWidget(help)
 	window:addWidget(menu)
 
-	return window
+	self:tieAndShowWindow(window)
 end
 
 
