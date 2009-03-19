@@ -350,6 +350,10 @@ function step8(self, squeezenetwork)
 		appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
 
 	else
+		local player = appletManager:callService("getCurrentPlayer")
+		log:info("connecting ", player, " to ", squeezenetwork)
+		player:connectToServer(squeezenetwork)
+
 		jiveMain:closeToHome(true, Window.transitionPushLeft)
 	end
 end
