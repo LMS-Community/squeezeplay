@@ -74,7 +74,7 @@ MD5OBJ= $(MD5LIB)
 
 # probably no need to change anything below here
 CC= gcc
-CFLAGS= $(INCS) $(DEFS) $(WARN) -O2 $G
+CFLAGS= $(INCS) $(DEFS) $(WARN) -O2 $G -fPIC
 WARN= #-ansi -pedantic -Wall
 INCS= -I$(LUAINC) $(MD5INC)
 
