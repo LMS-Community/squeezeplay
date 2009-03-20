@@ -257,6 +257,13 @@ int jiveL_textarea_layout(lua_State *L) {
 	return 0;
 }
 
+char *trim_left_whitespace(char *str)
+{
+	// Trim leading space
+	while(isspace(*str)) str++;
+
+	return str;
+}
 
 int jiveL_textarea_draw(lua_State *L) {
 	char *text;
@@ -307,6 +314,7 @@ int jiveL_textarea_draw(lua_State *L) {
 	for (i = top_line; i < bottom_line; i++) {
 		JiveSurface *tsrf;
 		int x;
+		char * trimmed;
 
 		int line = peer->lines[i];
 		int next = peer->lines[i+1];
@@ -318,21 +326,22 @@ int jiveL_textarea_draw(lua_State *L) {
 			text[(next - 1)] = '\0';
 		}
 
+		trimmed = trim_left_whitespace(&text[line]);
 		x = peer->w.bounds.x + peer->w.padding.left;
 		if (peer->align != JIVE_ALIGN_LEFT) {
-			Uint16 line_width = jive_font_width(peer->font, &text[line]);
+			Uint16 line_width = jive_font_width(peer->font, trimmed);
 			x = jive_widget_halign((JiveWidget *)peer, peer->align, line_width);
 		}
 
 		/* shadow text */
 		if (peer->is_sh) {
-			tsrf = jive_font_draw_text(peer->font, peer->sh, &text[line]);
+			tsrf = jive_font_draw_text(peer->font, peer->sh, trimmed);
 			jive_surface_blit(tsrf, srf, x + 1, y + 1);
 			jive_surface_free(tsrf);
 		}
 
 		/* foreground text */
-		tsrf = jive_font_draw_text(peer->font, peer->fg, &text[line]);
+		tsrf = jive_font_draw_text(peer->font, peer->fg, trimmed);
 		jive_surface_blit(tsrf, srf, x, y);
 		jive_surface_free(tsrf);
 
