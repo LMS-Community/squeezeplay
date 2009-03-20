@@ -297,7 +297,12 @@ end
 
 
 local function _invisibleButton(self)
-	return Icon("button_none")
+	return Button(
+		Icon("button_none"),
+		function()
+			return EVENT_CONSUME
+		end
+	)
 end
 
 
@@ -307,8 +312,8 @@ local function _nowPlayingButton(self)
 		function()
 			Framework:pushAction("go_now_playing")
 			return EVENT_CONSUME
-			end
-		)
+		end
+	)
 end
 
 
@@ -496,8 +501,6 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 			group = Group(labelStyle, { 
 				text = Label("text", ""), 
 				icon = Icon("icon"), 
-				--lbutton = nil,
-				--rbutton = nil,
 				lbutton = _backButton(),
 				rbutton = _nowPlayingButton(),
 			})
@@ -899,7 +902,7 @@ local function _addHelpButton(self, help, setupWindow)
 			Group('title', { 
 				text = Label("text", titleText), 
 				lbutton = _backButton(),
-				rbutton = nowPlayingButton,
+				rbutton = Icon('button_none'),
 			})	
 		)
 		local textarea = Textarea("text", help)
@@ -1179,7 +1182,7 @@ local function _browseSink(step, chunk, err)
 						backButton = _backButton()
 					end
 					if data.window.setupWindow == 1 then
-						nowPlaying = _invisibleButton()
+						nowPlayingButton = _invisibleButton()
 					else
 						nowPlayingButton = _nowPlayingButton()
 					end
@@ -2195,9 +2198,11 @@ end
 -- data is generic data that is stored in the step; it is used f.e. to keep the json action between the
 --  first incantation and the subsequent ones needed to capture all data (see _browseSink).
 _newDestination = function(origin, item, windowSpec, sink, data)
-	log:debug("_newDestination():")
+	log:warn("_newDestination():")
 	log:debug(windowSpec)
 	
+debug.dump(windowSpec)
+log:warn(debug.traceback())
 	
 	-- a DB (empty...) 
 	local db = DB(windowSpec)
@@ -2220,7 +2225,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 
 		local nowPlayingButton
 		if item.input.setupWindow == 1 then
-			nowPlayingButton = nil
+			nowPlayingButton = _invisibleButton()
 		else
 			nowPlayingButton = _nowPlayingButton()
 		end
