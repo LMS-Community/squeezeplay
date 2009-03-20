@@ -93,7 +93,7 @@ o:	$(MYLIB).o
 so:	$T
 
 $T:	$(OBJS) $(MD5OBJ)
-	$(CC) -o $@ -shared $(OBJS) $(MD5LIB)
+	$(CC) $(MYLDFLAGS) -o $@ -shared $(OBJS) $(MD5LIB)
 
 clean:
 	rm -f $(OBJS) $T core core.* $(MD5OBJ)

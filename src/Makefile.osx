@@ -126,9 +126,9 @@ sdl-gfx: SDL_gfx-2.0.15/Makefile
 # lua
 #####
 
-.PHONY: lua-all tolua++ luasocket slnunicode luajson loop lualogging luaexpat luafilesystem luaprofiler luazipfilter
+.PHONY: lua-all tolua++ luasocket slnunicode luajson loop lualogging luaexpat luafilesystem luaprofiler luazipfilter luamd5
 
-lua-all: lua tolua++ luasocket slnunicode luajson loop lualogging luaexpat luafilesystem luaprofiler luazipfilter
+lua-all: lua tolua++ luasocket slnunicode luajson loop lualogging luaexpat luafilesystem luaprofiler luazipfilter luamd5
 
 # lua (requires readline ncurses)
 lua:
@@ -153,6 +153,12 @@ luazipfilter/Makefile:
 
 luazipfilter: luazipfilter/Makefile
 	cd luazipfilter; make && cp .libs/zipfilter.so ${PREFIX}/lib/lua/5.1/zipfilter.so
+
+luamd5:
+	cd luamd5; make LUA=${PREFIX} MYNAME=sha1 MYLDFLAGS="-undefined dynamic_lookup" CC="${CC}"
+	cd luamd5; make LUA=${PREFIX} MYNAME=md5 MYLDFLAGS="-undefined dynamic_lookup" CC="${CC}"
+	cp luamd5/md5.so ${PREFIX}/lib/lua/5.1/md5.so
+	cp luamd5/sha1.so ${PREFIX}/lib/lua/5.1/sha1.so
 
 loop:
 	-mkdir ${PREFIX}/share/lua/5.1/loop
@@ -319,6 +325,10 @@ clean:
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: tolua++"
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.a; rm *.o ; rm -rf x86; rm -rf ppc
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: tolua++"
+	-cd luamd5; make MYNAME=sha1 clean
+	-cd luamd5; make MYNAME=md5 clean; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: Build dir"
 	-cd $(BASE_DIR)/build; rm -rf osx
