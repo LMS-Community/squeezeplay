@@ -205,7 +205,7 @@ Item comparator to sort items alphabetically (i.e. using item.text).
 =cut
 --]]
 function itemComparatorAlpha(a, b)
-	return tostring(a.text) < tostring(b.text)
+	return string.lower(tostring(a.text)) < string.lower(tostring(b.text))
 end
 
 
@@ -222,7 +222,7 @@ function itemComparatorWeightAlpha(a, b)
 	local w = a.weight - b.weight
 
 	if w == 0 then
-		return tostring(a.text) < tostring(b.text)
+		return string.lower(tostring(a.text)) < string.lower(tostring(b.text))
 	end
 	return (w < 0)
 end
@@ -244,7 +244,7 @@ function itemComparatorKeyWeightAlpha(a, b)
 		local w = a.weight - b.weight
 
 		if w == 0 then
-			return tostring(a.text) < tostring(b.text)
+			return string.lower(tostring(a.text)) < string.lower(tostring(b.text))
 		end
 		return (w < 0)
 	else
@@ -290,7 +290,7 @@ function itemComparatorComplexWeightAlpha(a, b)
 		if (not a.weights[i+1] or not b.weights[i+1]) and w == 0 then
 			-- end of the road, weights are the same
 			if not a.weights[i+1] and not b.weights[i+1] then
-				return tostring(a.text) < tostring(b.text)
+				return string.lower(tostring(a.text)) < string.lower(tostring(b.text))
 			-- a is the node
 			elseif not a.weights[i+1] then
 				return true
@@ -303,7 +303,7 @@ function itemComparatorComplexWeightAlpha(a, b)
 			return (w < 0)
 		-- end of the road, weight is the same
 		elseif i==x then
-			return tostring(a.text) < tostring(b.text)
+			return string.lower(tostring(a.text)) < string.lower(tostring(b.text))
 		end
 		-- if we get here, it's time to examine the next i in the weights table
 	end
