@@ -297,12 +297,7 @@ end
 
 
 local function _invisibleButton(self)
-	return Button(
-		Icon("button_none"),
-		function()
-			return EVENT_CONSUME
-		end
-	)
+	return Icon("button_none")
 end
 
 
@@ -902,7 +897,7 @@ local function _addHelpButton(self, help, setupWindow)
 			Group('title', { 
 				text = Label("text", titleText), 
 				lbutton = _backButton(),
-				rbutton = Icon('button_none'),
+				rbutton = nowPlaying,
 			})	
 		)
 		local textarea = Textarea("text", help)
