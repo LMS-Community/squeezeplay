@@ -2198,11 +2198,8 @@ end
 -- data is generic data that is stored in the step; it is used f.e. to keep the json action between the
 --  first incantation and the subsequent ones needed to capture all data (see _browseSink).
 _newDestination = function(origin, item, windowSpec, sink, data)
-	log:warn("_newDestination():")
+	log:debug("_newDestination():")
 	log:debug(windowSpec)
-	
-debug.dump(windowSpec)
-log:warn(debug.traceback())
 	
 	-- a DB (empty...) 
 	local db = DB(windowSpec)
