@@ -82,7 +82,11 @@ end
 
 
 function notify_serverLinked(meta, server)
-	log:info("server linked: ", server)
+	if not server:isSqueezeNetwork() then
+		return
+	end
+
+	log:info("server linked: ", server, " pin=", server:getPin())
 
 	local settings = meta:getSettings()
 	settings.registerDone = server:getPin() and true or false

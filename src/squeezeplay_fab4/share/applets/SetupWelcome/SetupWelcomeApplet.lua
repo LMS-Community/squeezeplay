@@ -210,6 +210,8 @@ end
 
 
 function _squeezenetworkWait(self, squeezenetwork)
+	log:info("waiting to connect to SqueezeNetwork")
+
 	-- Waiting popup
 	local popup = Popup("waiting_popup")
 
@@ -337,19 +339,27 @@ end
 
 
 function step8(self, squeezenetwork)
-	log:info("squeezenetwork pin: ", squeezenetwork:getPin())
-
 	local url, force = squeezenetwork:getUpgradeUrl()
+	local pin = squeezenetwork:getPin()
+
+	log:info("squeezenetwork pin=", pin, " url=", url)
+
 	if force then
 -- XXXX just for testing
 --url = "http://192.168.1.1:9000/firmware/custom.fab4.bin"
 
+      		log:info("firmware upgrade from SN")
 		appletManager:callService("firmwareUpgrade", squeezenetwork)
 
-	elseif squeezenetwork:getPin() then
+	elseif pin then
+      		log:info("registration on SN")
 		appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
 
 	else
+		local settings = self:getSettings()
+		settings.registerDone = true
+		self:storeSettings()
+
 		local player = appletManager:callService("getCurrentPlayer")
 		log:info("connecting ", player, " to ", squeezenetwork)
 		player:connectToServer(squeezenetwork)
@@ -368,7 +378,6 @@ function _setupDone(self)
 	self:storeSettings()
 
 	jiveMain:removeItemById('returnToSetup')
-	jiveMain:closeToHome(true, Window.transitionPushLeft)
 end
 
 
