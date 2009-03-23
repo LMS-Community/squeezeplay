@@ -74,7 +74,7 @@ MD5OBJ= $(MD5LIB)
 
 # probably no need to change anything below here
 CC= gcc
-CFLAGS= $(INCS) $(DEFS) $(WARN) -O2 $G
+CFLAGS= $(INCS) $(DEFS) $(WARN) -O2 $G -fPIC
 WARN= #-ansi -pedantic -Wall
 INCS= -I$(LUAINC) $(MD5INC)
 
@@ -93,7 +93,7 @@ o:	$(MYLIB).o
 so:	$T
 
 $T:	$(OBJS) $(MD5OBJ)
-	$(CC) -o $@ -shared $(OBJS) $(MD5LIB)
+	$(CC) $(MYLDFLAGS) -o $@ -shared $(OBJS) $(MD5LIB)
 
 clean:
 	rm -f $(OBJS) $T core core.* $(MD5OBJ)
