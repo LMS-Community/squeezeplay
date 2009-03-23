@@ -89,8 +89,10 @@ function notify_serverLinked(meta, server)
 	log:info("server linked: ", server, " pin=", server:getPin())
 
 	local settings = meta:getSettings()
-	settings.registerDone = server:getPin() and true or false
-	meta:storeSettings()
+	if server:getPin() == false then
+		settings.registerDone = true
+		meta:storeSettings()
+	end
 
 	if settings.registerDone then
 
