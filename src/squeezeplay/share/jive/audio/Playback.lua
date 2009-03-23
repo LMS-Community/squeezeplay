@@ -36,7 +36,8 @@ local TCP_CLOSE_UNREACHABLE   = 3
 local TCP_CLOSE_LOCAL_TIMEOUT = 4
 
 
-local STREAM_READ_TIMEOUT = 30
+-- Do NOT set a read timeout, the stream may be paused indefinately
+local STREAM_READ_TIMEOUT = 0
 local STREAM_WRITE_TIMEOUT = 5
 
 

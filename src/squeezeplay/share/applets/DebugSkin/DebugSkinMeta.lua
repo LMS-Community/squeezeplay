@@ -53,10 +53,33 @@ function configureApplet(meta)
 end
 
 
-function _reloadSkinFromDiskAction(self, event)
-	--free first so skin changes can be seen without jive rerun
-	jiveMain:freeSkin()
-	jiveMain:reloadSkin()
+function _debugSkin(meta)
+	if meta.enabled then
+		meta.enabled = nil
+
+		Framework:removeWidget(meta.canvas)
+		Framework:removeListener(meta.mouseListener)
+
+		return
+	end
+
+	meta.enabled = true
+
+	meta.canvas = Canvas("blank", function(screen)
+		local window = Framework.windowStack[1]
+
+		log:info("Mouse in: ", window)
+		window:iterate(function(w)
+			_debugWidget(meta, screen, w)
+		end)
+	end)
+	Framework:addWidget(meta.canvas, true)
+
+	meta.mouseListener = Framework:addListener(EVENT_MOUSE_ALL,
+		function(event)
+			meta.mouseEvent = event
+			Framework:reDraw(nil)
+		end, -99)
 end
 
 --[[
