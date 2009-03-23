@@ -82,6 +82,13 @@ function _debugSkin(meta)
 		end, -99)
 end
 
+
+function _reloadSkinFromDiskAction(self, event)
+	--free first so skin changes can be seen without jive rerun
+	jiveMain:freeSkin()
+	jiveMain:reloadSkin()
+end
+
 --[[
 
 =head1 LICENSE
