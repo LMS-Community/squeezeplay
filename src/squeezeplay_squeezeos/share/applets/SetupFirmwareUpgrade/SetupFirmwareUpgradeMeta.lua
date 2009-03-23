@@ -38,7 +38,7 @@ end
 
 
 function notify_playerCurrent(meta, player)
-	local server = player:getSlimServer()
+	local server = player and player:getSlimServer()
 
 	if not server then
 		return
