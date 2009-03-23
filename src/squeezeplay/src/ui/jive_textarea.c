@@ -355,6 +355,12 @@ static void jive_textarea_scroll(TextareaWidget *peer, int scroll_amount) {
     }
 }
 
+char *trim_left_whitespace(char *str)
+{
+	// Trim leading space
+	while(isspace(*str)) str++;
+	return str;
+}
 
 int jiveL_textarea_scroll(lua_State *L) {
 	/* stack is:
@@ -424,8 +430,6 @@ int jiveL_textarea_scroll_lines(lua_State *L) {
 
     return 0;
 }
-
-
 
 int jiveL_textarea_draw(lua_State *L) {
 	Uint16 x, y;
@@ -510,6 +514,42 @@ int jiveL_textarea_draw(lua_State *L) {
 //
 //		y += peer->line_height;
 //	}
+		char * trimmed;
+
+		int line = peer->lines[i];
+		int next = peer->lines[i+1];
+
+		unsigned char b = text[(next - 1)];
+		unsigned char c = text[next];
+		text[next] = '\0';
+		if (b == '\n') {
+			text[(next - 1)] = '\0';
+		}
+
+		trimmed = trim_left_whitespace(&text[line]);
+		x = peer->w.bounds.x + peer->w.padding.left;
+		if (peer->align != JIVE_ALIGN_LEFT) {
+			Uint16 line_width = jive_font_width(peer->font, trimmed);
+			x = jive_widget_halign((JiveWidget *)peer, peer->align, line_width);
+		}
+
+		/* shadow text */
+		if (peer->is_sh) {
+			tsrf = jive_font_draw_text(peer->font, peer->sh, trimmed);
+			jive_surface_blit(tsrf, srf, x + 1, y + 1);
+			jive_surface_free(tsrf);
+		}
+
+		/* foreground text */
+		tsrf = jive_font_draw_text(peer->font, peer->fg, trimmed);
+		jive_surface_blit(tsrf, srf, x, y);
+		jive_surface_free(tsrf);
+
+		text[next] = c;
+		text[(next - 1)] = b;
+
+		y += peer->line_height;
+	}
 
 	/* draw scrollbar */
 	if (peer->has_scrollbar) {
