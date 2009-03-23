@@ -74,50 +74,21 @@ Constructs a new Keyboard widget. I<style> is the widgets style.
 function __init(self, style, kbType)
 	_assert(type(style) == "string")
 
-	local obj = oo.rawnew(self, Widget(style))
+	local obj = oo.rawnew(self, Group(style, {}))
 
 	obj.kbType = kbType
 
 	-- accepted keyboard types
 	obj.keyboard = {}
-	obj.widgets  = {}
 
 	obj:_predefinedKeyboards()
 
-	local keyboard, widgets = obj:setKeyboard(kbType)
+	obj:setKeyboard(kbType)
 
-	-- forward events to contained widgets
-	obj:addListener(EVENT_MOUSE_ALL,
-			 function(event)
-				return _eventHandler(obj, event)
-			 end)
-	
 	return obj
 
 end
 
-function _eventHandler(self, event)
-	local evtType = event:getType()
-	if evtType == EVENT_KEY_PRESS then
-		local keycode = event:getKeycode()
-		if keycode == KEY_BACK or keycode == KEY_LEFT then
-			self:getWindow():hide()
-			return EVENT_CONSUME
-		else
-			return EVENT_UNUSED
-		end
-	else
-		for _, widget in ipairs(self.widgets) do
-			if widget:mouseInside(event) then
-				local r = widget:_event(event)
-				 if r ~= EVENT_UNUSED then
-					 return r
-				 end
-			 end
-		 end
-	end
-	return EVENT_UNUSED
-end
 
 function _predefinedKeyboards(self)
 		local emailKeyboardBottomRow = { 
