@@ -20,6 +20,7 @@ typedef struct textinput_widget {
 	Uint32 fg;
 	Uint32 sh;
 	Uint32 wh;
+	Sint32 char_offset_y;
 	JiveTile *bg_tile;
 	JiveTile *wheel_tile;
 	JiveTile *cursor_tile;
@@ -91,6 +92,7 @@ int jiveL_textinput_skin(lua_State *L) {
 	}
 
 	peer->char_height = jive_style_int(L, 1, "charHeight", jive_font_height(peer->font));
+	peer->char_offset_y = jive_style_int(L, 1, "charOffsetY", 0);
 
 	return 0;
 }
@@ -221,8 +223,9 @@ int jiveL_textinput_draw(lua_State *L) {
 
 	cursor_x = text_x + len_1;
 
-	offset_y = ((cursor_h - jive_font_height(peer->font)) - text_offset) / 2;
-	offset_cursor_y = ((cursor_h - jive_font_height(peer->cursor_font)) - cursor_offset) / 2;
+
+	offset_y = peer->char_offset_y + (((cursor_h / 2) - jive_font_height(peer->font)) / 2) - text_offset;
+	offset_cursor_y = peer->char_offset_y + (((cursor_h / 2) - jive_font_height(peer->cursor_font)) / 2) - cursor_offset;
 
 	/* Valid characters */
 	jive_getmethod(L, 1, "_getChars");

@@ -658,6 +658,7 @@ function skin(self, s)
 		wheelFont = _boldfont(TEXTINPUT_FONT_SIZE),
 		charHeight = TEXTINPUT_SELECTED_FONT_SIZE + 10,
 		fg = TEXT_COLOR_BLACK,
+		charOffsetY = 15,
 		wh = { 0x55, 0x55, 0x55 },
 		cursorImg = textinputCursor,
 	}
