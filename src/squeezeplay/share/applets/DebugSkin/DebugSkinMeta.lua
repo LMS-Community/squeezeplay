@@ -76,7 +76,7 @@ function _debugSkin(meta)
 			_debugWidget(meta, screen, w)
 		end)
 	end)
-	Framework:addWidget(meta.canvas)
+	Framework:addWidget(meta.canvas, true)
 
 	meta.mouseListener = Framework:addListener(EVENT_MOUSE_ALL,
 		function(event)

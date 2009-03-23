@@ -89,6 +89,7 @@ jive.frameworkOpen()
 -- initial global state
 windowStack = {}
 widgets = {} -- global widgets
+onTopWidgets = {} -- global "on top" widgets
 globalListeners = {} -- global listeners
 unusedListeners = {} -- unused listeners
 animations = {} -- active widget animations
@@ -373,16 +374,20 @@ end
 
 --[[
 
-=head2 jive.ui.Framework:addWidget(widget)
+=head2 jive.ui.Framework:addWidget(widget, onTop)
 
-Add a global widget I<widget> to the screen. The global widgets are shown on all windows.
+Add a global widget I<widget> to the screen. The global widgets are shown on all windows.  If onTop is set, the widget will be drawn after all other widgets.
 
 =cut
 --]]
-function addWidget(self, widget)
+	function addWidget(self, widget, onTop)
 	_assert(oo.instanceof(widget, Widget))
 
-	widgets[#widgets + 1] = widget
+	if onTop then
+		onTopWidgets[#onTopWidgets + 1] = widget
+	else
+		widgets[#widgets + 1] = widget
+	end
 	widget:dispatchNewEvent(EVENT_SHOW)
 
 	self:reDraw(nil)
@@ -401,6 +406,7 @@ function removeWidget(self, widget)
 	_assert(oo.instanceof(widget, Widget))
 
 	table.delete(widgets, widget)
+	table.delete(onTopWidgets, widget)
 	widget:dispatchNewEvent(EVENT_HIDE)
 
 	self:reDraw(nil)
