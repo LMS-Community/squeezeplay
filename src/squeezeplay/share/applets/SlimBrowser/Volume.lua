@@ -84,7 +84,9 @@ local function _openPopup(self)
 				      Icon("volumeMax")
 			      }))
 
-	popup:addListener(ACTION | EVENT_KEY_ALL,
+	popup:focusWidget(nil)
+	
+	popup:addListener(ACTION | EVENT_KEY_ALL | EVENT_SCROLL,
 			  function(event)
 				  return self:event(event)
 			  end)
@@ -189,7 +191,19 @@ function event(self, event)
 
 	local type = event:getType()
 
-	if type == ACTION then
+	if type == EVENT_SCROLL then
+		local scroll = event:getScroll()
+
+		if scroll > 0 then
+			self.delta = 1
+		elseif scroll < 0 then
+			self.delta = -1
+		else
+			self.delta = 0
+		end
+		_updateVolume(self)
+
+	elseif type == ACTION then
 		local action = event:getAction()
 		if action == "volume_up" then
 			self.delta = 1
