@@ -206,8 +206,8 @@ function _serverstatusSink(self, event, err)
 	end
 	
 	if self.pin ~= pin then
-		self.jnt:notify('serverLinked', self)
 		self.pin = pin
+		self.jnt:notify('serverLinked', self)
 	end
 
 	-- any players still in the list are gone...
@@ -652,7 +652,7 @@ Called once the server or player are linked on SqueezeNetwork.
 --]]
 function linked(self, pin)
 	if self.pin == pin then
-		self.pin = nil
+		self.pin = false
 	end
 
 	for id, player in pairs(self.players) do
