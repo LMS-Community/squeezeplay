@@ -380,7 +380,7 @@ Add a global widget I<widget> to the screen. The global widgets are shown on all
 
 =cut
 --]]
-	function addWidget(self, widget, onTop)
+function addWidget(self, widget, onTop)
 	_assert(oo.instanceof(widget, Widget))
 
 	if onTop then
