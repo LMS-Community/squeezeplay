@@ -57,6 +57,9 @@ charActionMappings.press = {
 	["7"]  = "play_favorite_7",
 	["8"]  = "play_favorite_8",
 	["9"]  = "play_favorite_9",
+
+	--development tools -- Later when modifier keys are supported, these could be obscured from everyday users
+	["R"]  = "reload_skin",
 	["}"]  = "debug_skin",
 
 }

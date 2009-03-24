@@ -10,6 +10,7 @@ local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("ui")
 
 local appletManager = appletManager
+local jiveMain      = jiveMain
 
 
 module(..., Framework.constants)
@@ -30,6 +31,9 @@ end
 
 
 function configureApplet(meta)
+
+	Framework:addActionListener("reload_skin", meta, _reloadSkinFromDiskAction, 9999)
+
 	Framework:addActionListener("debug_skin", meta, _debugSkin, 9999)
 end
 
@@ -63,12 +67,15 @@ function _debugSkin(meta)
 		Framework:removeWidget(meta.canvas)
 		Framework:removeListener(meta.mouseListener)
 
+		--reload skin, so existing windows will pick up the canvas change
+		_reloadSkinFromDiskAction(meta)
+
 		return
 	end
 
 	meta.enabled = true
 
-	meta.canvas = Canvas("blank", function(screen)
+	meta.canvas = Canvas("debug_canvas", function(screen)
 		local window = Framework.windowStack[1]
 
 		log:info("Mouse in: ", window)
@@ -76,13 +83,22 @@ function _debugSkin(meta)
 			_debugWidget(meta, screen, w)
 		end)
 	end)
-	Framework:addWidget(meta.canvas, true)
+	Framework:addWidget(meta.canvas)
+
+	--reload skin, so existing windows will pick up the canvas change
+	_reloadSkinFromDiskAction(meta)
 
 	meta.mouseListener = Framework:addListener(EVENT_MOUSE_ALL,
 		function(event)
 			meta.mouseEvent = event
 			Framework:reDraw(nil)
 		end, -99)
+end
+
+function _reloadSkinFromDiskAction(self, event)
+	--free first so skin changes can be seen without jive rerun
+	jiveMain:freeSkin()
+	jiveMain:reloadSkin()
 end
 
 
