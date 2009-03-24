@@ -64,7 +64,7 @@ function init(self)
 	if not uuid or string.match(mac, "^00:40:20") 
 		or uuid == "00000000-0000-0000-0000-000000000000"
 		or mac == "00:04:20:ff:ff:01" then
-		local window = Window("text_list", self:string("INVALID_MAC_TITLE"))
+		local window = Window("help_list", self:string("INVALID_MAC_TITLE"))
 
 		window:setAllowScreensaver(false)
 		window:setAlwaysOnTop(true)
@@ -205,7 +205,7 @@ end
 
 
 function settingsBrightnessShow (self, menuItem)
-	local window = Window("text_list", menuItem.text, squeezeboxjiveTitleStyle)
+	local window = Window("help_list", menuItem.text, squeezeboxjiveTitleStyle)
 
 	local settings = self:getSettings()
 	local level = settings.brightness

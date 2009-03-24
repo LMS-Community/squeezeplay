@@ -38,7 +38,7 @@ end
 
 
 function _enterPin(self, force, server, player, next)
-	local window = Window("text_list", self:string("SQUEEZENETWORK_PIN_TITLE"), "settingstitle")
+	local window = Window("help_list", self:string("SQUEEZENETWORK_PIN_TITLE"), "settingstitle")
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu")

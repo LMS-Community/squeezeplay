@@ -430,7 +430,7 @@ end
 
 
 function _chooseEnterSSID(self, iface)
-	local window = Window("text_list", self:string("NETWORK_DONT_SEE_YOUR_NETWORK"), 'setuptitle')
+	local window = Window("help_list", self:string("NETWORK_DONT_SEE_YOUR_NETWORK"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local textarea = Textarea("help_text", self:string("NETWORK_ENTER_SSID_HINT"))

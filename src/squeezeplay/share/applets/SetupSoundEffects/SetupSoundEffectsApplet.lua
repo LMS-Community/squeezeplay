@@ -249,7 +249,7 @@ end
 
 
 function volumeShow(self)
-	local window = Window("text_list", self:string("SOUND_EFFECTS_VOLUME"), "settingstitle")
+	local window = Window("help_list", self:string("SOUND_EFFECTS_VOLUME"), "settingstitle")
 
 	self.slider = Slider("volume_slider", 0, VOLUME_STEPS, Sample:getEffectVolume() / VOLUME_STEP,
 			     function(slider, value)

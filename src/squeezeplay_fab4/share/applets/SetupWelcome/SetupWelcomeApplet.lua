@@ -295,7 +295,7 @@ end
 
 
 function _squeezenetworkError(self, squeezenetwork, message)
-	local window = Window("text_list", self:string("CANT_CONNECT"))
+	local window = Window("help_list", self:string("CANT_CONNECT"))
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu")
@@ -379,7 +379,7 @@ end
 
 
 function setupWelcomeShow(self, setupNext)
-	local window = Window("text_list", self:string("WELCOME"), welcomeTitleStyle)
+	local window = Window("help_list", self:string("WELCOME"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
 	window:setButtonAction("rbutton", nil)

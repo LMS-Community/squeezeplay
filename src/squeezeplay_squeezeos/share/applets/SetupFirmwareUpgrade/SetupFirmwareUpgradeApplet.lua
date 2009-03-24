@@ -157,7 +157,7 @@ end
 
 
 function _upgradeWindowSingle(self, upgrades, optional)
-	local window = Window("text_list", self:string("UPDATE"), 'settingstitle')
+	local window = Window("help_list", self:string("UPDATE"), 'settingstitle')
 
 	window:setButtonAction("rbutton", nil)
 
@@ -292,7 +292,7 @@ end
 
 
 function _chargeBattery(self)
-	local window = Window("text_list", self:string("UPDATE_BATTERY"), firmwareupgradeTitleStyle)
+	local window = Window("help_list", self:string("UPDATE_BATTERY"), firmwareupgradeTitleStyle)
 
 	local menu = SimpleMenu("menu", {
 		{
@@ -420,7 +420,7 @@ function _upgradeFailed(self)
 	-- reconnect to server
 	appletManager:callService("connectPlayer")
 
-	local window = Window("text_list", self:string("UPDATE_FAILURE"))
+	local window = Window("help_list", self:string("UPDATE_FAILURE"))
 
 	local menu = SimpleMenu("menu",
 				{

@@ -179,7 +179,7 @@ function menu(self, menuItem)
 end
 
 function restoreDefaultsMenu(self, id)
-	local window = Window("text_list", self:string("CUSTOMIZE_RESTORE_DEFAULTS"), 'settingstitle')
+	local window = Window("help_list", self:string("CUSTOMIZE_RESTORE_DEFAULTS"), 'settingstitle')
         local menu = SimpleMenu("menu", {
 		{
 			text = self:string("CUSTOMIZE_CANCEL"),

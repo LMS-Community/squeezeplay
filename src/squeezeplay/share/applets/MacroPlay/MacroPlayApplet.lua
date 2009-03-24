@@ -189,7 +189,7 @@ end
 
 function settingsShow(self)
 	-- Create window
-	local window = Window("text_list", self:string("MACRO_PLAY"))
+	local window = Window("help_list", self:string("MACRO_PLAY"))
 	local menu = SimpleMenu("menu", items)
 	local help = Textarea("help_text", "")
 
