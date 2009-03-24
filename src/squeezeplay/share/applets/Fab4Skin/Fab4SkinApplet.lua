@@ -237,8 +237,8 @@ function skin(self, s)
 
 	local keyLeft = Tile:loadTiles({
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
-		nil,
-		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort_l.png",
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboardLeftEdge.png",
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
 		nil,
 		nil,
 		nil,
@@ -271,13 +271,23 @@ function skin(self, s)
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
 	})
 
-	local keyMiddlePressed      = Tile:loadImage( imgpath .. "Buttons/keyboard_button_press.png")
+	local keyMiddlePressed = Tile:loadTiles({
+		imgpath .. "Buttons/keyboard_button_press.png",
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+	})
 
 	local keyRight = Tile:loadTiles({
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
 		nil,
-		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort_l.png",
-		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboardRightEdge.png",
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_r.png",
 		nil,
 		nil,
@@ -299,7 +309,7 @@ function skin(self, s)
 
 	local keyBottomLeft = Tile:loadTiles({
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
-		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboardLeftEdge.png",
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
 		nil,
 		nil,
@@ -349,7 +359,7 @@ function skin(self, s)
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
 		nil,
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
-		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboardRightEdge.png",
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_r.png",
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_br.png",
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_b_wvert.png",
