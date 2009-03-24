@@ -80,7 +80,7 @@ end
 
 function param(self)
         return {
-		THUMB_SIZE = 43,
+		THUMB_SIZE = 41,
 		nowPlayingBrowseArtworkSize = 190,
 		nowPlayingSSArtworkSize     = 190,
 		nowPlayingLargeArtworkSize  = 190,
@@ -476,6 +476,7 @@ function skin(self, s)
 
 	--FIXME: paddings here need tweaking for Fab4Skin
 	local MENU_ALBUMITEM_PADDING = { 8, 1, 8, 1 }
+	local MENU_ITEM_ICON_PADDING = { 8, 2, 0, 0 }
 	local MENU_ALBUMITEM_TEXT_PADDING = { 16, 6, 9, 19 }
 	local MENU_PLAYLISTITEM_TEXT_PADDING = { 16, 1, 9, 1 }
 
@@ -639,7 +640,7 @@ function skin(self, s)
 			sh = TEXT_SH_COLOR,
 		},
 		icon = {
-			padding = { 8, 0, 0, 0 },
+			padding = MENU_ITEM_ICON_PADDING,
 		},
 		arrow = {
 	      		align = ITEM_ICON_ALIGN,
@@ -1359,20 +1360,21 @@ function skin(self, s)
 	local _buttonicon = {
 		w   = THUMB_SIZE,
 		h   = THUMB_SIZE,
-		img = false
+		padding = MENU_ITEM_ICON_PADDING,
+		img = false,
 	}
 
 	s.region_US = _uses(_buttonicon, { 
-		img = _loadImage(self, "Icons/icon_region_americas_43.png")
+		img = _loadImage(self, "IconsResized/icon_region_americas_touch.png")
 	})
 	s.region_XX = _uses(_buttonicon, { 
-		img = _loadImage(self, "Icons/icon_region_other_43.png")
+		img = _loadImage(self, "IconsResized/icon_region_other_touch.png")
 	})
 	s.wlan = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/icon_wireless_43.png")
+		img = _loadImage(self, "IconsResized/icon_wireless_touch.png")
 	})
 	s.wired = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/icon_ethernet_43.png")
+		img = _loadImage(self, "IconsResized/icon_ethernet_touch.png")
 	})
 
 
@@ -1422,43 +1424,38 @@ function skin(self, s)
 --		img = _loadImage(self, "Alerts/popup_alarm_icon.png"),
 	})
 
-	-- button icons, on left of menus
-	local _buttonicon = {
-		padding = { 8, 0, 0, 0 },
-	}
-
 	s.player_transporter = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/transporter_43.png"),
+		img = _loadImage(self, "IconsResized/icon_transporter_touch.png")
 	})
 	s.player_squeezebox = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/squeezebox_43.png"),
+		img = _loadImage(self, "IconsResized/icon_SB1n2_touch.png")
 	})
 	s.player_squeezebox2 = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/squeezebox_43.png"),
+		img = _loadImage(self, "IconsResized/icon_SB1n2_touch.png")
 	})
 	s.player_squeezebox3 = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/squeezebox3_43.png"),
+		img = _loadImage(self, "IconsResized/icon_SB3_touch.png")
 	})
 	s.player_boom = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/boom_43.png"),
+		img = _loadImage(self, "IconsResized/icon_boom_touch.png")
 	})
 	s.player_slimp3 = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/slimp3_43.png"),
+		img = _loadImage(self, "IconsResized/icon_slimp3_touch.png")
 	})
 	s.player_softsqueeze = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/softsqueeze_43.png"),
+		img = _loadImage(self, "IconsResized/icon_softsqueeze_touch.png")
 	})
 	s.player_controller = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/controller_43.png"),
+		img = _loadImage(self, "IconsResized/icon_controller_touch.png")
 	})
 	s.player_receiver = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/receiver_43.png"),
+		img = _loadImage(self, "IconsResized/icon_receiver_touch.png")
 	})
 	s.player_squeezeplay = _uses(_buttonicon, {
-		img = _loadImage(self, "Icons/Players/squeezeplay_43.png"),
+		img = _loadImage(self, "IconsResized/icon_squeezeplay_touch.png")
 	})
 	s.player_http = _uses(_buttonicon, {
-		img = _loadImage(self, "UNOFFICIAL/http_43.png"),
+		img = _loadImage(self, "IconsResized/icon_softsqueeze_touch.png")
 	})
 
 
