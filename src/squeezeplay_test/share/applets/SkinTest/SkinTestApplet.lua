@@ -925,6 +925,7 @@ windows = {
 
 	{ "help_info", "Help Connection Type", setup_help_info, },
 	{ "waiting_popup", "Connecting to", setup_waiting_popup, },
+	{ "waiting_1line_popup", "Connecting to", setup_waiting_popup, },
 	{ "error", "Error", setup_error, },
 	{ "update_popup", "Software Update", setup_update_popup, },
 	{ "track_info", "Track Info", window_track_info, },
@@ -961,6 +962,9 @@ testData = {
 	},
 	waiting_popup = {
 		"Connecting to\na crazy long text string so we can see how this renders wireless network...", "all your base", "icon_connecting",
+	},
+	waiting_1line_popup = {
+		"Just one main line on this screen", "all your base", "icon_connecting",
 	},
 	input_wpa = {
 		Textinput.textValue("", 8, 20), 'qwerty',

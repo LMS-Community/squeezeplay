@@ -935,24 +935,28 @@ function skin(self, s)
 
 	s.waiting_popup.text = {
 		w = WH_FILL,
-		border = { 0, 0, 0, 20 },
-		font = _boldfont(POPUP_TEXT_SIZE_1),
-		fg = TEXT_COLOR,
-		lineHeight = POPUP_TEXT_SIZE_1 + 8,
-		sh = TEXT_SH_COLOR,
-		align = "top",
-		position = LAYOUT_NORTH,
 		h = (POPUP_TEXT_SIZE_1 + 8 ) * 2,
+		position = LAYOUT_NORTH,
+		border = { 0, 20, 0, 4 },
+		padding = { 15, 0, 15, 0 },
+		align = "center",
+		font = _boldfont(POPUP_TEXT_SIZE_1),
+		lineHeight = POPUP_TEXT_SIZE_1 + 8,
+		fg = TEXT_COLOR,
+		sh = TEXT_SH_COLOR,
 	}
 
 	s.waiting_popup.subtext = {
-		padding = { 0, 0, 0, 26 },
+		w = WH_FILL,
+		h = 47,
+		position = LAYOUT_SOUTH,
+		border = 0,
+		padding = { 15, 0, 15, 0 },
+		--padding = { 0, 0, 0, 26 },
+		align = "top",
 		font = _boldfont(POPUP_TEXT_SIZE_2),
 		fg = TEXT_COLOR,
 		sh = TEXT_SH_COLOR,
-		align = "bottom",
-		position = LAYOUT_SOUTH,
-		h = 40,
 	}
 
 	-- input window (including keyboard)
