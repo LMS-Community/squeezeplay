@@ -86,11 +86,19 @@ int jiveL_slider_layout(lua_State *L) {
 	}
 
 	jive_tile_get_min_size(peer->tile, &tw, &th);
+
+	if (peer->w.bounds.w != JIVE_WH_NIL) {
+		tw = peer->w.bounds.w;
+	}
+	if (peer->w.bounds.h != JIVE_WH_NIL) {
+		th = peer->w.bounds.h;
+	}
+
 	if (peer->horizontal) {
-		peer->slider_y = jive_widget_valign((JiveWidget *)peer, peer->align, tw);
+		peer->slider_y = jive_widget_valign((JiveWidget *)peer, peer->align, th);
 	}
 	else {
-		peer->slider_x = jive_widget_halign((JiveWidget *)peer, peer->align, th);
+		peer->slider_x = jive_widget_halign((JiveWidget *)peer, peer->align, tw);
 	}
 
 	return 0;
@@ -193,12 +201,12 @@ int jiveL_slider_get_preferred_bounds(lua_State *L) {
 	}
 
 	if (peer->horizontal) {
-		lua_pushinteger(L, JIVE_WH_FILL);
+		lua_pushinteger(L, (peer->w.preferred_bounds.w == JIVE_WH_NIL) ? JIVE_WH_FILL : peer->w.preferred_bounds.w);
 		lua_pushinteger(L, (peer->w.preferred_bounds.h == JIVE_WH_NIL) ? h : peer->w.preferred_bounds.h);
 	}
 	else {
 		lua_pushinteger(L, (peer->w.preferred_bounds.w == JIVE_WH_NIL) ? w : peer->w.preferred_bounds.w);
-		lua_pushinteger(L, JIVE_WH_FILL);
+		lua_pushinteger(L, (peer->w.preferred_bounds.h == JIVE_WH_NIL) ? JIVE_WH_FILL : peer->w.preferred_bounds.h );
 	}
 	return 4;
 }
