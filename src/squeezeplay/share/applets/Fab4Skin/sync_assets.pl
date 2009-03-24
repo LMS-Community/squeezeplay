@@ -3,7 +3,7 @@
 #
 # Script to help intelligently copy and update png files from Fab4Skin assets area to skin
 #
-# 1. removes all png files from images/ directory, except those in the directory UNOFFICIAL
+# 1. removes all png files from images/ directory, except those in the directory UNOFFICIAL and directory IconsResized
 # 2. copies every png file from assets/Fab4Skin/images area to correct path in images/ directory
 # 3. runs svk status, uses output to create a shell script for doing the necessary svk commands
 #
@@ -48,7 +48,7 @@ sub get_assets {
 	my $files = File::Next::files($path);
 	my @return;
 	while ( defined ( my $file = $files->() ) ) {
-		push @return, $file if $file =~ /\.png$/ && $file !~ /UNOFFICIAL/;
+		push @return, $file if $file =~ /\.png$/ &&  $file !~ /UNOFFICIAL/ && $file !~ /IconsResized/ ;
 	}
 	return \@return;
 }
