@@ -1130,6 +1130,7 @@ function skin(self, s)
 
 	s.help_list.help_text = _uses(s.help_text, {
 		h = WH_FILL,
+		align = "left"
 	})
 
 	-- information window

@@ -20,6 +20,7 @@ typedef struct textarea_widget {
 	JiveFont *font;
 	Uint16 line_height;
 	Uint16 text_offset;
+	Uint16 y_offset;
 	JiveAlign align;
 	bool is_sh;
 	Uint32 sh;
@@ -74,7 +75,7 @@ int jiveL_textarea_skin(lua_State *L) {
 
 	peer->text_offset = jive_font_offset(peer->font);
 
-	peer->align = jive_style_align(L, 1, "textAlign", JIVE_ALIGN_LEFT);
+	peer->align = jive_style_align(L, 1, "align", JIVE_ALIGN_TOP_LEFT);
 
 	return 0;
 }
@@ -133,6 +134,7 @@ int jiveL_textarea_layout(lua_State *L) {
 	Uint16 sx, sy, sw, sh, tmp;
 	JiveInset sborder;
 	int top_line, visible_lines;
+	int widget_height, max_height;
 	const char *text;
 
 	/* stack is:
@@ -216,6 +218,17 @@ int jiveL_textarea_layout(lua_State *L) {
 	lua_pushinteger(L, peer->num_lines);
 	lua_setfield(L, 1, "numLines");
 
+
+	/* vertical alignment */
+	widget_height = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
+	max_height = peer->num_lines * peer->line_height;
+
+	if (max_height < widget_height) {
+		peer->y_offset = (widget_height - max_height) / 2;
+	}
+	else {
+		peer->y_offset = 0;
+	}
 
 	/* top and visible lines */
 	lua_getfield(L, 1, "topLine");
@@ -312,7 +325,7 @@ int jiveL_textarea_draw(lua_State *L) {
 
 	text = (char *) lua_tostring(L, -1);
 
-	y = peer->w.bounds.y + peer->w.padding.top - peer->text_offset;
+	y = peer->w.bounds.y + peer->w.padding.top - peer->text_offset + peer->y_offset;
 
 	lua_getfield(L, 1, "topLine");
 	top_line = lua_tointeger(L, -1);
@@ -352,9 +365,16 @@ int jiveL_textarea_draw(lua_State *L) {
 
 		trimmed = trim_left_whitespace(&text[line]);
 		x = peer->w.bounds.x + peer->w.padding.left;
-		if (peer->align != JIVE_ALIGN_LEFT) {
+		switch (peer->align) {
+		case JIVE_ALIGN_CENTER:
+		case JIVE_ALIGN_TOP:
+		case JIVE_ALIGN_BOTTOM: {
 			Uint16 line_width = jive_font_width(peer->font, trimmed);
 			x = jive_widget_halign((JiveWidget *)peer, peer->align, line_width);
+			break;
+		}
+		default:
+			break;
 		}
 
 		/* shadow text */
