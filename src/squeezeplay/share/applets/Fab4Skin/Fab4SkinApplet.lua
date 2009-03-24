@@ -1119,6 +1119,19 @@ function skin(self, s)
 	}
 
 
+	-- list window with help text
+	s.help_list = _uses(s.window)
+
+	s.help_list.menu = _uses(s.menu, {
+		position = LAYOUT_SOUTH,
+		maxHeight = FIVE_ITEM_HEIGHT * 3,
+		itemHeight = FIVE_ITEM_HEIGHT,
+	})
+
+	s.help_list.help_text = _uses(s.help_text, {
+		h = WH_FILL,
+	})
+
 	-- information window
 	s.information = _uses(s.window)
 

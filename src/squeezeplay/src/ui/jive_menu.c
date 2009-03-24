@@ -11,6 +11,7 @@
 typedef struct menu_widget {
 	JiveWidget w;
 
+	Uint16 max_height;
 	Uint16 item_height;
 	bool has_scrollbar;
 
@@ -44,6 +45,7 @@ int jiveL_menu_skin(lua_State *L) {
 
 	/* menu properties */
 	peer->item_height = jive_style_int(L, 1, "itemHeight", 20);
+	peer->max_height = jive_style_int(L, 1, "maxHeight", JIVE_WH_NIL);
 
 	lua_pushinteger(L, peer->item_height);
 	lua_setfield(L, 1, "itemHeight");
@@ -294,6 +296,59 @@ int jiveL_menu_draw(lua_State *L) {
 	}
 
 	return 0;
+}
+
+
+int jiveL_menu_get_preferred_bounds(lua_State *L) {
+	MenuWidget *peer;
+
+	if (jive_getmethod(L, 1, "checkSkin")) {
+		lua_pushvalue(L, 1);
+		lua_call(L, 1, 0);
+	}
+	
+	lua_getfield(L, 1, "peer");
+	peer = lua_touserdata(L, -1);
+	if (!peer) {
+		return 0;
+	}
+
+	if (peer->w.preferred_bounds.x == JIVE_XY_NIL) {
+		lua_pushnil(L);
+	}
+	else {
+		lua_pushinteger(L, peer->w.preferred_bounds.x);
+	}
+	if (peer->w.preferred_bounds.y == JIVE_XY_NIL) {
+		lua_pushnil(L);
+	}
+	else {
+		lua_pushinteger(L, peer->w.preferred_bounds.y);
+	}
+	if (peer->w.preferred_bounds.w == JIVE_WH_NIL) {
+		lua_pushnil(L);
+	}
+	else {
+		lua_pushinteger(L, peer->w.preferred_bounds.w);
+	}
+
+	if (peer->max_height != JIVE_WH_NIL) {
+		/* calculate menu max height using list size */
+		int max_height = INT_MAX;
+
+		lua_getfield(L, 1, "listSize");
+		max_height = lua_tointeger(L, -1) * peer->item_height;
+		lua_pop(L, 1);
+
+		lua_pushinteger(L, MIN(max_height, peer->max_height));
+	}
+	else if (peer->w.preferred_bounds.h == JIVE_WH_NIL) {
+		lua_pushnil(L);
+	}
+	else {
+		lua_pushinteger(L, peer->w.preferred_bounds.h);
+	}
+	return 4;
 }
 
 

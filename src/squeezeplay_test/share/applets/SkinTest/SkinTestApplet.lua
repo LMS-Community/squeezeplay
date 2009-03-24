@@ -163,42 +163,15 @@ end
 
 
 --[[
-Window:   "text_list"
+Window:   "help_list"
 Textarea: "help_text"
 Menu:     "menu"
 Item:     "item"
 --]]
-function setup_text_list_one(self, item)
+function setup_help_list(self, item)
 	local data = _itemData(item)
 
-	local window = Window("text_list", _itemName(item), "setup")
-	_windowActions(self, item, window)
-
-	local textarea = Textarea("help_text", data[1])
-
-	local menu = SimpleMenu("menu")
-	menu:addItem({
-		text = data[2]
-	})
-
-	window:addWidget(textarea)
-	window:addWidget(menu)
-
-	self:tieWindow(window)
-	return window
-end
-
-
---[[
-Window:   "text_list"
-Textarea: "help_text"
-Menu:     "menu"
-Item:     "item"
---]]
-function setup_text_list_two(self, item)
-	local data = _itemData(item)
-
-	local window = Window("text_list", _itemName(item), "setup")
+	local window = Window("help_list", _itemName(item), "setup")
 	_windowActions(self, item, window)
 
 	window:addActionListener("help", self, dummy_help)
@@ -640,7 +613,7 @@ function setup_text_list(self, item)
 		style = 'item_choice',
 		check  = radios[2],
 	})
-	for i, text in ipairs(data[2]) do
+	for i, text in ipairs(data[1]) do
 		log:warn(text)
 		menu:addItem({
 			text = text,
@@ -664,7 +637,6 @@ function setup_text_list(self, item)
 		})
 	end
 
-	window:addWidget(Label("help_text", data[1]))	
 	window:addWidget(menu)
 
 	self:tieWindow(window)
@@ -912,8 +884,9 @@ end
 -- the reference windows, and test data
 windows = {
 	{ "text_list", "Text List", setup_text_list, },
-	{ "text_list_one", "Welcome to Setup", setup_text_list_one, },
-	{ "text_list_two", "Choose Region", setup_text_list_two, },
+	{ "help_list_one", "Welcome to Setup", setup_help_list, },
+	{ "help_list_two", "Choose Region", setup_help_list, },
+	{ "help_list_many", "Choose Region", setup_help_list, },
 
 	{ "input_ip", "IP Entry", setup_input_any, 'ip' },
 	{ "input_qwertyLower", "QWERTY Entry", setup_input_any, 'qwertyLower' },
@@ -941,17 +914,28 @@ windows = {
 
 testData = {
 	text_list = {
-		"Screen copy, if any goes here",
 		{ "Now Playing", "Music Library", "Internet Radio", "Music Services", "Favorites", "Extras", "Settings", "Choose Player", "Turn Off Player" }
 	},
-	text_list_one = {
+	help_list_one = {
 		"Let's begin by getting\nyou connected to your network.",
-		"Continue"
+		{ { "Continue" },
+		},
 	},
-	text_list_two = {
+	help_list_two = {
 		"Is text allowed in this window?",
 		{ { "North America", "region_US" },
 		  { "All Other Regions" , "region_XX" },
+		},
+	},
+	help_list_many = {
+		"Is text allowed in this window?",
+		{ { "North America", "region_US" },
+		  { "All Other Regions" , "region_XX" },
+		  { "Option 1", "" },
+		  { "Option 2", "" },
+		  { "Option 3", "" },
+		  { "Option 4", "" },
+		  { "Option 5", "" },
 		},
 	},
 	help_info = {

@@ -1421,6 +1421,7 @@ function borderLayout(self, fitWindow)
 			if position == LAYOUT_NORTH then
 				x = x or 0
 				y = y or 0
+				w = w or ww
 				w = min(ww, w) - rb
 
 				widget:setBounds(maxBounds(wx + x + lb, wy + y + tb, w, h))
@@ -1428,6 +1429,7 @@ function borderLayout(self, fitWindow)
 			elseif position == LAYOUT_SOUTH then
 				x = x or 0
 				y = y or (wh - maxS)
+				w = w or ww
 				w = min(ww, w) - rb
 
 				widget:setBounds(maxBounds(wx + x + lb, wy + y + tb, w, h))

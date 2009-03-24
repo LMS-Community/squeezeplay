@@ -478,6 +478,7 @@ int jiveL_textinput_layout(lua_State *L);
 int jiveL_textinput_draw(lua_State *L);
 int jiveL_textinput_gc(lua_State *L);
 
+int jiveL_menu_get_preferred_bounds(lua_State *L);
 int jiveL_menu_skin(lua_State *L);
 int jiveL_menu_layout(lua_State *L);
 int jiveL_menu_iterate(lua_State *L);

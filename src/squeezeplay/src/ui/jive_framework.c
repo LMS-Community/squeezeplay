@@ -1240,6 +1240,7 @@ static const struct luaL_Reg textinput_methods[] = {
 };
 
 static const struct luaL_Reg menu_methods[] = {
+	{ "getPreferredBounds", jiveL_menu_get_preferred_bounds },
 	{ "_skin", jiveL_menu_skin },
 	{ "_layout", jiveL_menu_layout },
 	{ "iterate", jiveL_menu_iterate },
