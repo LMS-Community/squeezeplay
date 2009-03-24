@@ -93,8 +93,8 @@ end
 function _predefinedKeyboards(self)
 		local emailKeyboardBottomRow = { 
 					self:_switchKeyboardButton('emailNumeric', keyboardButtonText.emailNumeric), 
-					{ style = 'button_fill', text = '.' },
-					{ keyWidth = 92, style = 'button_fill', text = '@' },
+					{ keyWidth = 0, text = '.' },
+					{ keyWidth = 92, text = '@' },
 					self:_macroKeyButton('.com'),
 					self:_go() 
 		}
@@ -137,7 +137,7 @@ function _predefinedKeyboards(self)
 				{ '@', '/', '=', '?', '^', '`', '{', '|', '}', '~', '.' },
 				{
 					self:_switchKeyboardButton(self:_decideKbType('email'), keyboardButtonText.qwertyLower),
-					{ style = 'button_fill', text = '.' },
+					{ keyWidth = 0, text = '.' },
 					{ keyWidth = 92, text = '@' },
 					self:_macroKeyButton('.com'),
 					self:_go() 
@@ -230,27 +230,43 @@ function _layout(self)
 			
 			log:debug('keyWidth for this key set to: ', keyWidth)
 			key:setBounds(x, y, keyWidth, defaultKeyHeight)
-			if j == #row and i == #self.keyboard then
+			
+			local keyType = 'key_'
+			if style ~= 'shiftOff' and style ~= 'shiftOn' then
 				if rowInfo[j].spacer then
-					key:setStyle('button_bottomCornerSpacer')
-				else
-					key:setStyle('button_bottomCorner')
+					keyType = 'spacer_'
+				end	
+				-- upper left
+				if i == 1 and j == 1 then
+					location = 'topLeft'
+				-- top middle
+				elseif i == 1 and j < #row then
+					location = 'top'
+				-- top right
+				elseif i == 1 and j == #row then
+					location = 'topRight'
+				-- left
+				elseif i < #self.keyboard and j == 1 then
+					location = 'left'
+				-- middle
+				elseif i < #self.keyboard and j < #row then
+					location = 'middle'
+				-- right edge
+				elseif i < #self.keyboard and j == #row then
+					location = 'right'
+				-- bottom left
+				elseif i == #self.keyboard and j == 1 then
+					location = 'bottomLeft'
+				-- bottom
+				elseif i == #self.keyboard and j < #row then
+					location = 'bottom'
+				-- bottom right
+				elseif i == #self.keyboard and j == #row then
+					location = 'bottomRight'
 				end
-			elseif j == #row then
-				if rowInfo[j].spacer then
-					key:setStyle('button_rightEdgeSpacer')
-				else
-					key:setStyle('button_rightEdge')
-				end
-			elseif i == #self.keyboard then
-				if rowInfo[j].spacer then
-					key:setStyle('button_bottomRowSpacer')
-				else
-					key:setStyle('button_bottomRow')
-				end
-			elseif rowInfo[j].spacer then
-				key:setStyle('button_spacer')
+				key:setStyle(keyType .. location)
 			end
+
 			x = x + keyWidth
 		end
 
@@ -338,7 +354,7 @@ function _buttonsFromChars(self, charTable)
 		local button
 		local info = {}
 		if type(v) == 'table' then
-			local keyStyle = v.style or 'button'
+			local keyStyle = v.style or 'key'
 			local label
 			if v.icon then
 				label = v.icon
@@ -359,7 +375,7 @@ function _buttonsFromChars(self, charTable)
 			button   = Button(label, callback)
 			info = v
 		else
-			local label  = Label("button", v)
+			local label  = Label("key", v)
 			button = Button(
 					label, 
 					function()
@@ -386,7 +402,7 @@ function _macroKeyButton(self, keyText, keyWidth)
 	return {	
 		text     = keyText,
 		keyWidth = keyWidth,
-		style    = 'button',
+		style    = 'key',
 		callback = function()
 				local stringTable = string.split('', keyText)
 				for _, v in ipairs(stringTable) do

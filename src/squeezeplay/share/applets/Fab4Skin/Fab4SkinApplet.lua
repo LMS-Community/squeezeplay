@@ -157,58 +157,216 @@ function skin(self, s)
 	local fiveItemPressedBox      = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line_press.png")
 	local threeItemSelectionBox   = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line.png")
 	local threeItemPressedBox     = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3item_press.png")
-	local keyboardPressedBox      = Tile:loadImage( imgpath .. "Buttons/keyboard_button_press.png")
-	local keyboardBackground      = Tile:loadImage( imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png")
 	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = Tile:loadImage( imgpath .. "Icons/icon_help_button_tb.png")
 	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
 	local deleteKeyBackground     = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry.png")
 	local deleteKeyPressedBackground = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry_press.png")
 
-	local keyBackground      = Tile:loadTiles({
-				 imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png",
-				nil,
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
-				nil,
-				nil,
-				nil,
-				nil,
-				nil,
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+	local keyTopLeft = Tile:loadTiles({
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_tl.png",
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_t.png",
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_l.png",
 	})
 
-	local keyRightEdgeBackground      = Tile:loadTiles({
-				 imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png",
-				nil,
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
-				nil,
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
-				nil,
-				nil,
-				nil,
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+	local keyTopLeftPressed = Tile:loadTiles({
+		imgpath .. "Buttons/keybrd_n_button_press.png",
+		imgpath .. "Buttons/keybrd_nw_button_press_tl.png",
+		imgpath .. "Buttons/keybrd_n_button_press_t.png",
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		imgpath .. "Buttons/keybrd_nw_button_press_l.png",
 	})
-	local keyBottomRowBackground      = Tile:loadTiles({
-				 imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png",
-				nil,
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
-				nil,
-				nil,
-				nil,
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
-				nil,
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+
+	local keyTop = Tile:loadTiles({
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_t_wvert.png",
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
 	})
-	local keyBottomRightCornerBackground      = Tile:loadTiles({
-				 imgpath .. "Text_Entry/Keyboard_Touch/keyboard_dropdown_bkgrd.png",
-				nil,
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
-				nil,
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
-				nil,
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
-				nil,
-				imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+
+	local keyTopPressed = Tile:loadTiles({
+		imgpath .. "Buttons/keybrd_n_button_press.png",
+		nil,
+		imgpath .. "Buttons/keybrd_n_button_press_t.png",
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+	})
+
+	local keyTopRight = Tile:loadTiles({
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_t_wvert.png",
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_tr.png",
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_r.png",
+		nil,
+		nil,
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+	})
+
+	local keyTopRightPressed = Tile:loadTiles({
+		imgpath .. "Buttons/keybrd_n_button_press.png",
+		nil,
+		imgpath .. "Buttons/keybrd_n_button_press_t.png",
+		imgpath .. "Buttons/keybrd_ne_button_press_tr.png",
+		imgpath .. "Buttons/keybrd_ne_button_press_r.png",
+		nil,
+		nil,
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+	})
+
+	local keyLeft = Tile:loadTiles({
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_l.png",
+	})
+
+	local keyLeftPressed = Tile:loadTiles({
+		imgpath .. "Buttons/keyboard_button_press.png",
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		imgpath .. "Buttons/keyboard_button_press.png",
+	})
+
+	local keyMiddle = Tile:loadTiles({
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+	})
+
+	local keyMiddlePressed      = Tile:loadImage( imgpath .. "Buttons/keyboard_button_press.png")
+
+	local keyRight = Tile:loadTiles({
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_r.png",
+		nil,
+		nil,
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+	})
+
+	local keyRightPressed = Tile:loadTiles({
+		imgpath .. "Buttons/keyboard_button_press.png",
+		nil,
+		nil,
+		nil,
+		imgpath .. "Buttons/keyboard_button_press.png",
+		nil,
+		nil,
+		nil,
+		nil,
+	})
+
+	local keyBottomLeft = Tile:loadTiles({
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+		nil,
+		nil,
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_b.png",
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_bl.png",
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_l.png",
+	})
+
+	local keyBottomLeftPressed = Tile:loadTiles({
+		imgpath .. "Buttons/keybrd_s_button_press.png",
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		imgpath .. "Buttons/keybrd_s_button_press_b.png",
+		imgpath .. "Buttons/keybrd_sw_button_press_bl.png",
+		imgpath .. "Buttons/keybrd_sw_button_press_l.png",
+	})
+
+	local keyBottom = Tile:loadTiles({
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+		nil,
+		nil,
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_b_wvert.png",
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+	})
+
+	local keyBottomPressed = Tile:loadTiles({
+		imgpath .. "Buttons/keybrd_s_button_press.png",
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		imgpath .. "Buttons/keybrd_s_button_press_b.png",
+		nil,
+		nil,
+	})
+
+	local keyBottomRight = Tile:loadTiles({
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_r.png",
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_br.png",
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_b_wvert.png",
+		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+	})
+
+	local keyBottomRightPressed = Tile:loadTiles({
+		imgpath .. "Buttons/keybrd_s_button_press.png",
+		nil,
+		nil,
+		nil,
+		imgpath .. "Buttons/keybrd_se_button_press_r.png",
+		imgpath .. "Buttons/keybrd_se_button_press_br.png",
+		imgpath .. "Buttons/keybrd_s_button_press_b.png",
+		nil,
+		nil,
 	})
 
 	local titleBox                =
@@ -679,59 +837,91 @@ function skin(self, s)
 		border = { 8, 0, 8, 4 },
 	}
 
-	s.keyboard.button = {
+	s.keyboard.key = {
         	padding = 0,
         	font = _boldfont(24),
         	fg = TEXT_COLOR,
         	align = 'center',
-		bgImg = keyBackground,
+		bgImg = keyMiddle,
 	}
 
 
-	s.keyboard.button_spacer   = _uses(s.keyboard.button)
-	s.keyboard.button_fill     = _uses(s.keyboard.button)
+	s.keyboard.key_topLeft     = _uses(s.keyboard.key, { bgImg = keyTopLeft })
+	s.keyboard.key_top         = _uses(s.keyboard.key, { bgImg = keyTop })
+	s.keyboard.key_topRight    = _uses(s.keyboard.key, { bgImg = keyTopRight })
+	s.keyboard.key_left        = _uses(s.keyboard.key, { bgImg = keyLeft })
+	s.keyboard.key_middle      = _uses(s.keyboard.key, { bgImg = keyMiddle })
+	s.keyboard.key_right       = _uses(s.keyboard.key, { bgImg = keyRight })
+	s.keyboard.key_bottomLeft  = _uses(s.keyboard.key, { bgImg = keyBottomLeft })
+	s.keyboard.key_bottom      = _uses(s.keyboard.key, { bgImg = keyBottom })
+	s.keyboard.key_bottomRight = _uses(s.keyboard.key, { bgImg = keyBottomRight })
 
-	s.keyboard.button_rightEdge    = _uses(s.keyboard.button, { bgImg = keyRightEdgeBackground })
-	s.keyboard.button_bottomRow    = _uses(s.keyboard.button, { bgImg = keyBottomRowBackground })
-	s.keyboard.button_bottomCorner = _uses(s.keyboard.button, { bgImg = keyBottomRightCornerBackground })
+	s.keyboard.spacer_topLeft     = _uses(s.keyboard.key_topLeft)
+	s.keyboard.spacer_top         = _uses(s.keyboard.key_top)
+	s.keyboard.spacer_topRight    = _uses(s.keyboard.key_topRight)
+	s.keyboard.spacer_left        = _uses(s.keyboard.key_left)
+	s.keyboard.spacer_middle      = _uses(s.keyboard.key_middle)
+	s.keyboard.spacer_right       = _uses(s.keyboard.key_right)
+	s.keyboard.spacer_bottomLeft  = _uses(s.keyboard.key_bottomLeft)
+	s.keyboard.spacer_bottom      = _uses(s.keyboard.key_bottom)
+	s.keyboard.spacer_bottomRight = _uses(s.keyboard.key_bottomRight)
 
-	s.keyboard.button_rightEdgeSpacer    = _uses(s.keyboard.button_rightEdge)
-	s.keyboard.button_bottomRowSpacer    = _uses(s.keyboard.button_bottomRow)
-	s.keyboard.button_bottomCornerSpacer = _uses(s.keyboard.button_bottomCorner)
-
-	s.keyboard.shiftOff = _uses(s.keyboard.button, {
+	s.keyboard.shiftOff = _uses(s.keyboard.key_left, {
 		img = _loadImage(self, "Icons/icon_shift_off.png")
 	})
-	s.keyboard.shiftOn = _uses(s.keyboard.button, {
+	s.keyboard.shiftOn = _uses(s.keyboard.key_left, {
 		img = _loadImage(self, "Icons/icon_shift_on.png")
 	})
+
 	s.keyboard.pressed = {
 		shiftOff = _uses(s.keyboard.shiftOff, {
-			bgImg = keyboardPressedBox
+			bgImg = keyLeftPressed
 		}),
 		shiftOn = _uses(s.keyboard.shiftOn, {
-			bgImg = keyboardPressedBox
+			bgImg = keyLeftPressed
 		}),
-		button = _uses(s.keyboard.button, {
-			bgImg = keyboardPressedBox
+		key = _uses(s.keyboard.key, {
+			bgImg = keyMiddlePressed
 		}),
-		button_fill = _uses(s.keyboard.button_fill, {
-			bgImg = keyboardPressedBox
+		key_topLeft     = _uses(s.keyboard.key_topLeft, {
+			bgImg = keyTopLeftPressed
 		}),
-		button_rightEdge = _uses(s.keyboard.button_rightEdge, {
-			bgImg = keyboardPressedBox
+		key_top         = _uses(s.keyboard.key_top, {
+			bgImg = keyTopPressed
 		}),
-		button_bottomRow = _uses(s.keyboard.button_bottomRow, {
-			bgImg = keyboardPressedBox
+		key_topRight    = _uses(s.keyboard.key_topRight, {
+			bgImg = keyTopRightPressed
 		}),
-		button_bottomCorner = _uses(s.keyboard.button_bottomCorner, {
-			bgImg = keyboardPressedBox
+		key_left        = _uses(s.keyboard.key_left, {
+			bgImg = keyLeftPressed
 		}),
-		button_spacer = _uses(s.keyboard.button_spacer),
-		button_rightEdgeSpacer = _uses(s.keyboard.button_rightEdgeSpacer),
-		button_bottomRowSpacer = _uses(s.keyboard.button_bottomRowSpacer),
-		button_bottomCornerSpacer = _uses(s.keyboard.button_bottomCornerSpacer),
-	}
+		key_middle      = _uses(s.keyboard.key_middle, {
+			bgImg = keyMiddlePressed
+		}),
+		key_right       = _uses(s.keyboard.key_right, {
+			bgImg = keyRightPressed
+		}),
+		key_bottomLeft  = _uses(s.keyboard.key_bottomLeft, {
+			bgImg = keyBottomLeftPressed
+		}),
+		key_bottom      = _uses(s.keyboard.key_bottom, {
+			bgImg = keyBottomPressed
+		}),
+		key_bottomRight = _uses(s.keyboard.key_bottomRight, {
+			bgImg = keyBottomRightPressed
+		}),
+		spacer_topLeft     = _uses(s.keyboard.spacer_topLeft),
+		spacer_top         = _uses(s.keyboard.spacer_top),
+		spacer_topRight    = _uses(s.keyboard.spacer_topRight),
+		spacer_left        = _uses(s.keyboard.spacer_left),
+		spacer_middle      = _uses(s.keyboard.spacer_middle),
+		spacer_right       = _uses(s.keyboard.spacer_right),
+		spacer_bottomLeft  = _uses(s.keyboard.spacer_bottomLeft),
+		spacer_bottom      = _uses(s.keyboard.spacer_bottom),
+		spacer_bottomRight = _uses(s.keyboard.spacer_bottomRight),
+}
+
+	-- one set for buttons, one for spacers
 
 --------- WINDOW STYLES ---------
 	--
