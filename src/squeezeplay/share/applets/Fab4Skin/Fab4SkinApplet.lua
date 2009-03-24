@@ -238,7 +238,7 @@ function skin(self, s)
 	local keyLeft = Tile:loadTiles({
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
 		nil,
-		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort_l.png",
 		nil,
 		nil,
 		nil,
@@ -276,7 +276,7 @@ function skin(self, s)
 	local keyRight = Tile:loadTiles({
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
 		nil,
-		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort_l.png",
 		nil,
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_r.png",
 		nil,
@@ -867,10 +867,12 @@ function skin(self, s)
 	s.keyboard.spacer_bottomRight = _uses(s.keyboard.key_bottomRight)
 
 	s.keyboard.shiftOff = _uses(s.keyboard.key_left, {
-		img = _loadImage(self, "Icons/icon_shift_off.png")
+		img = _loadImage(self, "Icons/icon_shift_off.png"),
+		padding = { 1, 0, 0, 0 },
 	})
 	s.keyboard.shiftOn = _uses(s.keyboard.key_left, {
-		img = _loadImage(self, "Icons/icon_shift_on.png")
+		img = _loadImage(self, "Icons/icon_shift_on.png"),
+		padding = { 1, 0, 0, 0 },
 	})
 
 	s.keyboard.pressed = {
