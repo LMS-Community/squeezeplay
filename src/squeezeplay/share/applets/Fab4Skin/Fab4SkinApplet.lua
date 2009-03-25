@@ -321,8 +321,8 @@ function skin(self, s)
 
 	local keyBottomLeftPressed = Tile:loadTiles({
 		imgpath .. "Buttons/keybrd_s_button_press.png",
-		nil,
-		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboardLeftEdge.png",
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
 		nil,
 		nil,
 		nil,
@@ -346,13 +346,13 @@ function skin(self, s)
 	local keyBottomPressed = Tile:loadTiles({
 		imgpath .. "Buttons/keybrd_s_button_press.png",
 		nil,
-		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
 		nil,
 		nil,
 		nil,
 		imgpath .. "Buttons/keybrd_s_button_press_b.png",
 		nil,
-		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
 	})
 
 	local keyBottomRight = Tile:loadTiles({
@@ -370,13 +370,13 @@ function skin(self, s)
 	local keyBottomRightPressed = Tile:loadTiles({
 		imgpath .. "Buttons/keybrd_s_button_press.png",
 		nil,
-		nil,
-		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboardRightEdge.png",
 		imgpath .. "Buttons/keybrd_se_button_press_r.png",
 		imgpath .. "Buttons/keybrd_se_button_press_br.png",
 		imgpath .. "Buttons/keybrd_s_button_press_b.png",
 		nil,
-		nil,
+		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
 	})
 
 	local titleBox                =
