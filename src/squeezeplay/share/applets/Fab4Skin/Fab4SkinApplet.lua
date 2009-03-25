@@ -159,6 +159,7 @@ function skin(self, s)
 	local threeItemPressedBox     = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3item_press.png")
 	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = Tile:loadImage( imgpath .. "Icons/icon_help_button_tb.png")
+	local infoButton              = Tile:loadImage( imgpath .. "Icons/icon_info_button_tb.png")
 	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
 	local deleteKeyBackground     = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry.png")
 	local deleteKeyPressedBackground = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry_press.png")
@@ -1332,6 +1333,13 @@ function skin(self, s)
 	})
 	s.pressed.button_help = _uses(_pressed_button, {
 		img      = helpButton,
+	})
+
+	s.button_info = _uses(_button, {
+		img = infoButton,
+	})
+	s.pressed.button_info = _uses(_pressed_button, {
+		img      = infoButton,
 	})
 
 	s.button_volume_min = {
