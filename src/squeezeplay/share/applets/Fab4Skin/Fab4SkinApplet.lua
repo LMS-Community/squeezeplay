@@ -856,8 +856,6 @@ function skin(self, s)
         	align = 'center',
 		bgImg = keyMiddle,
 	}
-	s.keyboard.smallFontKey = _uses(s.keyboard.key, { font = _boldfont(18) } )
-
 
 	s.keyboard.key_topLeft     = _uses(s.keyboard.key, { bgImg = keyTopLeft })
 	s.keyboard.key_top         = _uses(s.keyboard.key, { bgImg = keyTop })
@@ -868,6 +866,14 @@ function skin(self, s)
 	s.keyboard.key_bottomLeft  = _uses(s.keyboard.key, { bgImg = keyBottomLeft })
 	s.keyboard.key_bottom      = _uses(s.keyboard.key, { bgImg = keyBottom })
 	s.keyboard.key_bottomRight = _uses(s.keyboard.key, { bgImg = keyBottomRight })
+
+	-- styles for keys that use smaller font in bottom row
+	s.keyboard.key_bottom_small      = _uses(s.keyboard.key_bottom, { font = _boldfont(18) } )
+	s.keyboard.key_bottomRight_small = _uses(s.keyboard.key_bottomRight, { 
+			font = _boldfont(18), 
+			fg = { 0xe7, 0xe7, 0xe7 },
+	} )
+	s.keyboard.key_bottomLeft_small  = _uses(s.keyboard.key_bottomLeft, { font = _boldfont(18) } )
 
 	s.keyboard.spacer_topLeft     = _uses(s.keyboard.key_topLeft)
 	s.keyboard.spacer_top         = _uses(s.keyboard.key_top)
@@ -925,6 +931,17 @@ function skin(self, s)
 		key_bottomRight = _uses(s.keyboard.key_bottomRight, {
 			bgImg = keyBottomRightPressed
 		}),
+
+		key_bottomLeft_small  = _uses(s.keyboard.key_bottomLeft_small, {
+			bgImg = keyBottomLeftPressed
+		}),
+		key_bottom_small      = _uses(s.keyboard.key_bottom_small, {
+			bgImg = keyBottomPressed
+		}),
+		key_bottomRight_small = _uses(s.keyboard.key_bottomRight_small, {
+			bgImg = keyBottomRightPressed
+		}),
+
 		spacer_topLeft     = _uses(s.keyboard.spacer_topLeft),
 		spacer_top         = _uses(s.keyboard.spacer_top),
 		spacer_topRight    = _uses(s.keyboard.spacer_topRight),

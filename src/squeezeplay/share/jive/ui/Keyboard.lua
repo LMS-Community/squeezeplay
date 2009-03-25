@@ -264,6 +264,9 @@ function _layout(self)
 				elseif i == #self.keyboard and j == #row then
 					location = 'bottomRight'
 				end
+				if rowInfo[j].fontSize == 'small' and keyType == 'key_' then
+					location = location .. '_small'
+				end
 				key:setStyle(keyType .. location)
 			end
 
@@ -422,6 +425,7 @@ function _switchKeyboardButton(self, kbType, keyText, keyWidth, goBack)
 	
 	return {	
 		text     = keyText,
+		fontSize = 'small',
 		keyWidth = keyWidth,
 		callback = function()
 			local keyboardType = kbType
@@ -451,6 +455,7 @@ function _go(self, keyWidth)
 	return {	
 		-- FIXME: don't hardcode to 'done'
 		text     = 'done',
+		fontSize = 'small',
 		keyWidth = keyWidth,
 		callback = function()
 			local e = Event:new(EVENT_KEY_PRESS, KEY_GO)
@@ -506,6 +511,7 @@ function _spaceBar(self, keyWidth)
 	end
 	return {	
 		keyWidth = keyWidth,
+		fontSize = 'small',
 		-- FIXME, don't hard-code this text
 		text     = 'space',
 		callback = function()
