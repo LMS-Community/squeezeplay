@@ -2209,7 +2209,7 @@ local function _browseInput(self, item, db)
 
 	local nowPlayingButton
 	if inputSpec.setupWindow == 1 then
-		nowPlayingButton = nil
+		nowPlaying = _invisibleButton()
 	else
 		nowPlayingButton = _nowPlayingButton()
 	end
