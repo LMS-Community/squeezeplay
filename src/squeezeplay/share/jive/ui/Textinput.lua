@@ -70,6 +70,15 @@ function _getChars(self)
 	return tostring(self.allowedChars)
 end
 
+-- for ui input types like ir and for input like ip or date, down/up scroll polarity will be reversed
+function _reverseScrollPolarityOnUpDownInput(self)
+	if self.value.reverseScrollPolarityOnUpDownInput then
+		return self.value:reverseScrollPolarityOnUpDownInput()
+	end
+
+	return false
+end
+
 
 -- returns true if text entry is valid.
 function _isValid(self)
@@ -350,9 +359,15 @@ function _eventHandler(self, event)
 				self.numberLetterTimer:stop()
 				if self.locked == nil then
 					local chars = self:_getChars()
-					local idx = string.find(chars, string.sub(tostring(self.value), self.cursor, self.cursor), 1, true)			
-					local initialIndex = 
-					_scroll(self, self.irAccel:event(event, idx, idx, 1, #chars))
+					local idx = string.find(chars, string.sub(tostring(self.value), self.cursor, self.cursor), 1, true)
+
+					-- for ui input types like ir and for input like ip or date, down/up scroll polarity will be reversed
+					local polarityModifier = 1
+					if self:_reverseScrollPolarityOnUpDownInput() then
+						polarityModifier = -1
+					end
+
+					_scroll(self, polarityModifier * self.irAccel:event(event, idx, idx, 1, #chars))
 					return EVENT_CONSUME
 				end
 			end 
@@ -685,6 +700,10 @@ function timeValue(default, format)
 							return "ap"
 						end
 				end,
+				reverseScrollPolarityOnUpDownInput =
+					function()
+					     return true
+					end,
 
 				isValid =
 					function(value, cursor)
@@ -742,6 +761,10 @@ function timeValue(default, format)
 								return "0123456789"
 							end
                                              end,
+				     reverseScrollPolarityOnUpDownInput =
+					     function()
+						     return true
+					     end,
 
 				     isValid =
 					     function(value, cursor)
@@ -893,7 +916,10 @@ function ipAddressValueNonMouse(default)
 							     end
 						     end
 					     end,
-
+				     reverseScrollPolarityOnUpDownInput =
+					     function()
+						     return true
+					     end,
 				     isValid =
 					     function(value, cursor)
 						     return #value == 4
@@ -932,6 +958,10 @@ function ipAddressValueMouse(default)
 							return ".0123456789"
 						end,
 
+				     reverseScrollPolarityOnUpDownInput =
+					     function()
+						     return true
+					     end,
 				     isValid = function(obj, cursor)
 							local i = 0
 							for ddd in string.gmatch(obj.s, "(%d+)") do
