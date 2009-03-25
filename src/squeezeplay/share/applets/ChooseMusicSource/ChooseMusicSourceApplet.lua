@@ -473,9 +473,10 @@ function _addServer(self, menuItem)
 					window:playSound("WINDOWSHOW")
 					window:hide(Window.transitionPushLeft)
 					return true
-				end)
+				end
+	)
 
-	local keyboard = Keyboard("keyboard", "numeric")
+	local keyboard = Keyboard("keyboard", "ip")
 	local backspace = Button(
 		Icon('button_keyboard_back'),
 			function()
