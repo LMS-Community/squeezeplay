@@ -851,10 +851,11 @@ function skin(self, s)
 	s.keyboard.key = {
         	padding = 0,
         	font = _boldfont(24),
-        	fg = TEXT_COLOR,
+        	fg = { 0xDC, 0xDC, 0xDC },
         	align = 'center',
 		bgImg = keyMiddle,
 	}
+	s.keyboard.smallFontKey = _uses(s.keyboard.key, { font = _boldfont(18) } )
 
 
 	s.keyboard.key_topLeft     = _uses(s.keyboard.key, { bgImg = keyTopLeft })
