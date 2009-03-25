@@ -30,6 +30,7 @@ function init(self)
 	self.update = false
 	
 	self.pathHistory = {}
+	self.pathFail = 0x00
 end
 
 
@@ -38,6 +39,7 @@ local test = 1
 local stage = 1
 local counter = 0
 local pathHistory = {}
+local pathFail = 0x00
 
 
 function popupWindow(self, text)
@@ -347,10 +349,12 @@ function _checkPathProgress(self)
 	
 		if (math.sqrt((x * x) + (y * y))) > 40 then
 			pathHistory[k].ptype = pointType.gap
+			pathFail = pathFail | (0x01 << test)
 		end			
 
 		if (pt1.t-pt2.t) > 200 then
 			log:info("Jump t: ", pt1.t-pt2.t)
+			--pathFail = pathFail | (0x01 << test)
 		end
 	end
 
@@ -404,12 +408,14 @@ function _drawTestPattern(self, spot)
 				pathHistory[#pathHistory+1] = pointc(spot.x, spot.y, spot.t, pointType.inbounds)
 			else
 				pathHistory[#pathHistory+1] = pointc(spot.x, spot.y, spot.t, pointType.outbounds)
-				log:info("TouchPad: Out of flight path : (",spot.x,",",spot.y,",",spot.t,")");
+				--log:info("TouchPad: Out of flight path : (",spot.x,",",spot.y,",",spot.t,")")
+				pathFail = pathFail | (0x01 << test)
 			end
 
 			if( spot.m == pointType.up ) then
 				local i = #pathHistory
 				pathHistory[i+1] = pointc(pathHistory[i].x, pathHistory[i].y, pathHistory[i].t, pointType.up)
+				pathFail = pathFail | (0x01 << test)
 			end
 
 			-- wanted target
@@ -423,6 +429,7 @@ function _drawTestPattern(self, spot)
 				if #pathHistory > 4 then
 					stage = 1
 					pathHistory = {}
+					pathFail = pathFail & ~(0x01 << test)
 				end
 			end
 
@@ -486,12 +493,14 @@ function _drawTestPattern(self, spot)
 				pathHistory[#pathHistory+1] = pointc(spot.x, spot.y, spot.t, pointType.inbounds)
 			else
 				pathHistory[#pathHistory+1] = pointc(spot.x, spot.y, spot.t, pointType.outbounds)
-				log:info("TouchPad: Out of flight path : (",spot.x,",",spot.y,",",spot.t,")");
+				--log:info("TouchPad: Out of flight path : (",spot.x,",",spot.y,",",spot.t,")");
+				pathFail = pathFail | (0x01 << test)
 			end
 
 			if( spot.m == pointType.up ) then
 				local i = #pathHistory
 				pathHistory[i+1] = pointc(pathHistory[i].x, pathHistory[i].y, pathHistory[i].t, pointType.up)
+				pathFail = pathFail | (0x01 << test)
 			end
 
 			-- wanted target
@@ -505,6 +514,7 @@ function _drawTestPattern(self, spot)
 				if #pathHistory > 4 then
 					stage = 1
 					pathHistory = {}
+					pathFail = pathFail & ~(0x01 << test)
 				end
 			end
 
@@ -580,12 +590,14 @@ function _drawTestPattern(self, spot)
 				pathHistory[#pathHistory+1] = pointc(spot.x, spot.y, spot.t, pointType.inbounds)
 			else
 				pathHistory[#pathHistory+1] = pointc(spot.x, spot.y, spot.t, pointType.outbounds)
-				log:info("TouchPad: Out of flight path : (",spot.x,",",spot.y,",",spot.t,")");
+				--log:info("TouchPad: Out of flight path : (",spot.x,",",spot.y,",",spot.t,")");
+				pathFail = pathFail | (0x01 << test)
 			end
 
 			if( spot.m == pointType.up ) then
 				local i = #pathHistory
 				pathHistory[i+1] = pointc(pathHistory[i].x, pathHistory[i].y, pathHistory[i].t, pointType.up)
+				pathFail = pathFail | (0x01 << test)
 			end
 
 			-- wanted target
@@ -599,6 +611,7 @@ function _drawTestPattern(self, spot)
 				if #pathHistory > 4 then
 					stage = stage - 1
 					pathHistory = {}
+					pathFail = pathFail & ~(0x01 << test)
 				end
 			end
 
@@ -629,12 +642,14 @@ function _drawTestPattern(self, spot)
 				pathHistory[#pathHistory+1] = pointc(spot.x, spot.y, spot.t, pointType.inbounds)
 			else
 				pathHistory[#pathHistory+1] = pointc(spot.x, spot.y, spot.t, pointType.outbounds)
-				log:info("TouchPad: Out of flight path : (",spot.x,",",spot.y,",",spot.t,")");
+				--log:info("TouchPad: Out of flight path : (",spot.x,",",spot.y,",",spot.t,")");
+				pathFail = pathFail | (0x01 << test)
 			end
 
 			if( spot.m == pointType.up ) then
 				local i = #pathHistory
 				pathHistory[i+1] = pointc(pathHistory[i].x, pathHistory[i].y, pathHistory[i].t, pointType.up)
+				pathFail = pathFail | (0x01 << test)
 			end
 
 			-- wanted target
@@ -647,6 +662,7 @@ function _drawTestPattern(self, spot)
 				-- reset
 				stage = 1;
 				pathHistory = {}
+				pathFail = pathFail & ~(0x01 << test)
 			end
 
 		-- third target pressed, flag second circle
@@ -675,12 +691,14 @@ function _drawTestPattern(self, spot)
 				pathHistory[#pathHistory+1] = pointc(spot.x, spot.y, spot.t, pointType.inbounds)
 			else
 				pathHistory[#pathHistory+1] = pointc(spot.x, spot.y, spot.t, pointType.outbounds)
-				log:info("TouchPad: Out of flight path : (",spot.x,",",spot.y,",",spot.t,")");
+				--log:info("TouchPad: Out of flight path : (",spot.x,",",spot.y,",",spot.t,")");
+				pathFail = pathFail | (0x01 << test)
 			end
 
 			if( spot.m == pointType.up ) then
 				local i = #pathHistory
 				pathHistory[i+1] = pointc(pathHistory[i].x, pathHistory[i].y, pathHistory[i].t, pointType.up)
+				pathFail = pathFail | (0x01 << test)
 			end
 
 			-- wanted target
@@ -693,6 +711,7 @@ function _drawTestPattern(self, spot)
 				-- reset
 				stage = 1;
 				pathHistory = {}
+				pathFail = pathFail & ~(0x01 << test)
 			end
 
 
@@ -722,12 +741,14 @@ function _drawTestPattern(self, spot)
 				pathHistory[#pathHistory+1] = pointc(spot.x, spot.y, spot.t, pointType.inbounds)
 			else
 				pathHistory[#pathHistory+1] = pointc(spot.x, spot.y, spot.t, pointType.outbounds)
-				log:info("TouchPad: Out of flight path : (",spot.x,",",spot.y,",",spot.t,")");
+				--log:info("TouchPad: Out of flight path : (",spot.x,",",spot.y,",",spot.t,")");
+				pathFail = pathFail | (0x01 << test)
 			end
 
 			if( spot.m == pointType.up ) then
 				local i = #pathHistory
 				pathHistory[i+1] = pointc(pathHistory[i].x, pathHistory[i].y, pathHistory[i].t, pointType.up)
+				pathFail = pathFail | (0x01 << test)
 			end
 
 			-- final target
@@ -819,12 +840,14 @@ function _drawTestPattern(self, spot)
 				pathHistory[#pathHistory+1] = pointc(spot.x, spot.y, spot.t, pointType.inbounds)
 			else
 				pathHistory[#pathHistory+1] = pointc(spot.x, spot.y, spot.t, pointType.outbounds)
-				log:info("TouchPad: Out of flight path : (",spot.x,",",spot.y,",",spot.t,")");
+				--log:info("TouchPad: Out of flight path : (",spot.x,",",spot.y,",",spot.t,")");
+				pathFail = pathFail | (0x01 << test)
 			end
 
 			if( spot.m == pointType.up ) then
 				local i = #pathHistory
 				pathHistory[i+1] = pointc(pathHistory[i].x, pathHistory[i].y, pathHistory[i].t, pointType.up)
+				pathFail = pathFail | (0x01 << test)
 			end
 
 			-- wanted target
@@ -838,6 +861,7 @@ function _drawTestPattern(self, spot)
 				if #pathHistory > 4 then
 					stage = stage - 1
 					pathHistory = {}
+					pathFail = pathFail & ~(0x01 << test)
 				end
 			end
 
@@ -875,6 +899,11 @@ function _drawSpots(self)
 	-- clear
 	self.background:blit(self.canvas, 0, 0)
 
+	if pathFail == 0x00 then
+		self.background:filledRectangle(0, 0, self.w, self.h, 0x777777)
+	else
+		self.background:filledRectangle(0, 0, self.w, self.h, 0x771111FF)
+	end
 	self:_drawSpot(self.spot)
 
 	self:_drawTestPattern(self.spot)
