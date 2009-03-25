@@ -100,6 +100,7 @@ local _playerKeyHandler = false
 
 -- The last entered text
 local _lastInput = ""
+local _inputParams = {}
 
 -- connectingToPlayer and _upgradingPlayer popup handlers
 local _connectingPopup = false
@@ -579,9 +580,18 @@ local function _performJSONAction(jsonAction, from, qty, step, sink)
 		playerid = _player:getId()
 	end
 	
+	-- look for multiple input keys in inputParamKeys
+	local newparams = {}
+	local inputParamKeys = jsonAction['inputParamKeys']
+	if inputParamKeys then
+		newparams = {}
+		for k, v in pairs(inputParamKeys) do
+			table.insert( newparams, k .. ":" .. v)
+		end
+	end
+
 	-- look for __INPUT__ as a param value
 	local params = jsonAction["params"]
-	local newparams
 	if params then
 		newparams = {}
 		for k, v in pairs(params) do
@@ -610,10 +620,8 @@ local function _performJSONAction(jsonAction, from, qty, step, sink)
 	table.insert(request, from)
 	table.insert(request, qty)
 	
-	if newparams then
-		for i, v in ipairs(newparams) do
-			table.insert(request, v)
-		end
+	for i, v in ipairs(newparams) do
+		table.insert(request, v)
 	end
 
 	if step then
@@ -2184,6 +2192,171 @@ local function _browseMenuAvailable(menu, db, dbIndex, dbVisible)
 end
 
 
+-- _browseInput: method to render a textinput/keyboard for SlimBrowse input
+-- self in this function is the input/keyboard window
+local function _browseInput(self, item, db)
+
+	local inputSpec = item['input']
+	if not inputSpec then
+		log:error('no input spec')
+		return
+	end
+	-- never allow screensavers in an input window
+	self:setAllowScreensaver(false)
+	if inputSpec.title then
+		self:setTitle(inputSpec.title)
+	end
+
+	local nowPlayingButton
+	if inputSpec.setupWindow == 1 then
+		nowPlayingButton = nil
+	else
+		nowPlayingButton = _nowPlayingButton()
+	end
+
+	local titleText = self:getTitle()
+	if inputSpec.title then
+		titleText = inputSpec.title
+	end
+
+	local newTitleWidget = Group('title', { 
+		text = Label("text", titleText),
+		lbutton = _backButton(),
+		rbutton = nowPlayingButton,
+	})	
+	self:setTitleWidget(newTitleWidget)
+	
+	
+	-- make sure it's a number for the comparison below
+	-- Lua insists on checking type while Perl couldn't care less :(
+	inputSpec.len = tonumber(inputSpec.len)
+	
+	-- default allowedChars
+	if not inputSpec.allowedChars then
+		if inputSpec._kbType == 'qwertyLower' then
+			inputSpec.allowedChars = _string("ALLOWEDCHARS_WITHCAPS")
+		elseif inputSpec._kbType and string.match(inputSpec._kbType, 'email') then
+			inputSpec.allowedChars = _string("ALLOWEDCHARS_EMAIL")
+		else
+			inputSpec.allowedChars = _string("ALLOWEDCHARS_CAPS")
+		end
+	end
+	local v = ""
+	local initialText = inputSpec.initialText
+                local inputStyle  = inputSpec._inputStyle
+
+	if initialText then
+		v = tostring(initialText)
+	end
+
+	if inputStyle == 'time' then
+		if not initialText then
+			initialText = '0'
+		end
+		local timeFormat = _getTimeFormat()
+		local _v = DateTime:timeFromSFM(v, timeFormat)
+		v = Textinput.timeValue(_v, timeFormat)
+	elseif inputStyle == 'ip' then
+		if not initialText then
+			initialText = '0.0.0.0'
+		end
+		v = Textinput.ipAddressValue(initialText)
+	end
+
+	-- create a text input
+	local input = Textinput(
+		"textinput", 
+		v,
+		function(_, value)
+			-- check for min number of chars
+			if #value < inputSpec.len then
+				self:playSound("BUMP")
+				return false
+			end
+
+			
+			log:debug("Input: " , value)
+			_lastInput = value
+			--table.insert(_inputParams, value)
+			item['_inputDone'] = value
+			
+			-- popup time
+			local displayPopup = _safeDeref(inputSpec, 'processingPopup')
+			local displayPopupText = _safeDeref(inputSpec, 'processingPopup', 'text')
+			if displayPopup then
+				_inputInProgress(self, displayPopupText)
+			end
+			-- now we should perform the action !
+			_actionHandler(nil, nil, db, nil, nil, 'go', item)
+			-- close the text input if this is a "do"
+			local doAction = _safeDeref(item, 'actions', 'do')
+			if doAction then
+				-- close the window
+				self:playSound("WINDOWHIDE")
+				self:hide()
+			else
+				self:playSound("WINDOWSHOW")
+			end
+			return true
+		end,
+		inputSpec.allowedChars
+	)
+
+	--[[ FIXME: removing help (all platforms) for purposes of Fab4.
+	-- fix up help
+	local helpText
+	if inputSpec.help then
+		local help = inputSpec.help
+		helpText = help.text
+		if not helpText then
+			if help.token then
+				helpText = _string(help.token)
+			end
+		end
+	end
+	
+	local softButtons = { inputSpec.softbutton1, inputSpec.softbutton2 }
+	local helpStyle = 'help'
+
+	if softButtons[1] or softButtons[2] then
+		helpStyle = 'softHelp'
+	end
+
+	if helpText then
+		local help = Textarea(helpStyle, helpText)
+		self:addWidget(help)
+	end
+
+	if softButtons[1] then
+		self:addWidget(Label("softButton1", softButtons[1]))
+	end
+	if softButtons[2] then
+		self:addWidget(Label("softButton2", softButtons[2]))
+	end
+	--]]
+	
+	if inputSpec.help and inputSpec.help.text then
+		_addHelpButton(self, inputSpec.help.text, inputSpec.setupWindow)
+	end
+
+	local kbType = inputSpec._kbType or 'qwerty'
+	local keyboard = Keyboard("keyboard", kbType)
+	local backspace = Button(
+		Icon('button_keyboard_back'),
+		function()
+			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+			Framework:dispatchEvent(nil, e)
+			return EVENT_CONSUME
+		end
+	)
+	local group = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
+
+	self:addWidget(group)
+	self:addWidget(keyboard)
+	self:focusWidget(group)
+
+end
+
 -- _newDestination
 -- origin is the step we are coming from
 -- item is the source item
@@ -2209,171 +2382,9 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	-- if the item has an input field, we must ask for it
 	if item and item['input'] and not item['_inputDone'] then
 
-		-- never allow screensavers in an input window
-		window:setAllowScreensaver(false)
-		if item.input.title then
-			window:setTitle(item.input.title)
-		end
-
-		local nowPlayingButton
-		if item.input.setupWindow == 1 then
-			nowPlayingButton = _invisibleButton()
-		else
-			nowPlayingButton = _nowPlayingButton()
-		end
-
-		if item.input.title then
-			titleText = item.input.title
-		end
-
-		local newTitleWidget = Group('title', { 
-			text = Label("text", titleText),
-			lbutton = _backButton(),
-			rbutton = nowPlayingButton,
-		})	
-		window:setTitleWidget(newTitleWidget)
-	
-		local inputSpec
-		
-		-- legacy SS compatibility
-		-- FIXME: remove SS compatibility with legacy JiveMLON generation
-		if type(item['input']) != "table" then
-			inputSpec = {
-				len = item['input'],
-				help = {
-					token = "SLIMBROWSER_SEARCH_HELP",
-				},
-			}
-		else
-			inputSpec = item["input"]
-		end
-		
-		-- make sure it's a number for the comparison below
-		-- Lua insists on checking type while Perl couldn't care less :(
-		inputSpec.len = tonumber(inputSpec.len)
-		
-		-- default allowedChars
-		if not inputSpec.allowedChars then
-			if inputSpec._kbType == 'qwertyLower' then
-				inputSpec.allowedChars = _string("ALLOWEDCHARS_WITHCAPS")
-			elseif inputSpec._kbType and string.match(inputSpec._kbType, 'email') then
-				inputSpec.allowedChars = _string("ALLOWEDCHARS_EMAIL")
-			else
-				inputSpec.allowedChars = _string("ALLOWEDCHARS_CAPS")
-			end
-		end
-		local v = ""
-		local initialText = _safeDeref(item, 'input', 'initialText')
-                local inputStyle  = _safeDeref(item, 'input', '_inputStyle')
-
-		if initialText then
-			v = tostring(initialText)
-		end
-
-		if inputStyle == 'time' then
-			if not initialText then
-				initialText = '0'
-			end
-			local timeFormat = _getTimeFormat()
-			local _v = DateTime:timeFromSFM(v, timeFormat)
-			v = Textinput.timeValue(_v, timeFormat)
-		elseif inputStyle == 'ip' then
-			if not initialText then
-				initialText = '0.0.0.0'
-			end
-			v = Textinput.ipAddressValue(initialText)
-		end
-
-		-- create a text input
-		local input = Textinput(
-			"textinput", 
-			v,
-			function(_, value)
-				-- check for min number of chars
-				if #value < inputSpec.len then
-					window:playSound("BUMP")
-					return false
-				end
-
-				
-				log:debug("Input: " , value)
-				_lastInput = value
-				item['_inputDone'] = value
-				
-				-- popup time
-				local displayPopup = _safeDeref(item, 'input', 'processingPopup')
-				local displayPopupText = _safeDeref(item, 'input', 'processingPopup', 'text')
-				if displayPopup then
-					_inputInProgress(self, displayPopupText)
-				end
-				-- now we should perform the action !
-				_actionHandler(nil, nil, db, nil, nil, 'go', item)
-				-- close the text input if this is a "do"
-				local doAction = _safeDeref(item, 'actions', 'do')
-				if doAction then
-					-- close the window
-					window:playSound("WINDOWHIDE")
-					window:hide()
-				else
-					window:playSound("WINDOWSHOW")
-				end
-				return true
-			end,
-			inputSpec.allowedChars
-		)
-
-		--[[ FIXME: removing help (all platforms) for purposes of Fab4.
-		-- fix up help
-		local helpText
-		if inputSpec.help then
-			local help = inputSpec.help
-			helpText = help.text
-			if not helpText then
-				if help.token then
-					helpText = _string(help.token)
-				end
-			end
-		end
-		
-		local softButtons = { inputSpec.softbutton1, inputSpec.softbutton2 }
-		local helpStyle = 'help'
-
-		if softButtons[1] or softButtons[2] then
-			helpStyle = 'softHelp'
-		end
-
-		if helpText then
-			local help = Textarea(helpStyle, helpText)
-			window:addWidget(help)
-		end
-
-		if softButtons[1] then
-			window:addWidget(Label("softButton1", softButtons[1]))
-		end
-		if softButtons[2] then
-			window:addWidget(Label("softButton2", softButtons[2]))
-		end
-		--]]
-		
-		if inputSpec.help and inputSpec.help.text then
-			_addHelpButton(window, inputSpec.help.text, inputSpec.setupWindow)
-		end
-
-		local kbType = inputSpec._kbType or 'qwerty'
-		local keyboard = Keyboard("keyboard", kbType)
-		local backspace = Button(
-			Icon('button_keyboard_back'),
-			function()
-				local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
-				Framework:dispatchEvent(nil, e)
-				return EVENT_CONSUME
-			end
-		)
-		local group = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
-
-		window:addWidget(group)
-		window:addWidget(keyboard)
-		window:focusWidget(group)
+		inputSpec = item["input"]
+		--debug.dump(inputSpec)
+		_browseInput(window, item, db)
 
 	-- special case for sending over textArea
 	elseif item and item['textArea'] then
@@ -2487,7 +2498,7 @@ local function _removePlayerKeyHandler(self)
 end
 
 local function _installActionListeners(self)
-	if _actionListenerHandles  then
+	if _actionListenerHandles then
 		return
 	end
 	
