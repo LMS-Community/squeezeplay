@@ -542,7 +542,9 @@ function free(self, slimServer)
 	end
 
 	-- player is no longer active
-	playerList[self.id] = nil
+	if not self:isLocal() then
+		playerList[self.id] = nil
+	end
 	
 	if self.slimServer then
 		self:offStage()
