@@ -400,6 +400,14 @@ function JiveMain:reloadSkin(reload)
 	_loadSkin(self, self.selectedSkin, true);
 end
 
+function JiveMain:freeSkin()
+	log:error("self.selectedSkin: ", self.selectedSkin)
+
+	if not self.skins[self.selectedSkin] then
+		return false
+	end
+	appletManager:freeApplet(self.selectedSkin)
+end
 
 function JiveMain:setDefaultSkin(appletName)
 	log:debug("setDefaultSkin(", appletName, ")")

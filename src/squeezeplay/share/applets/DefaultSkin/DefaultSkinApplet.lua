@@ -1909,6 +1909,9 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- END NowPlaying skin code
 
+	s.debug_canvas = {
+			zOrder =9999
+	}
 
 end
 

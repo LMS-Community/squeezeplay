@@ -1792,6 +1792,9 @@ function skin(self, s, reload, useDefaultSize)
 	s.iconbg.border = { 0, 0, 0, 0 }
 	s.iconbg.position = LAYOUT_NONE
 
+	s.debug_canvas = {
+			zOrder = 9999
+	}
 
 end
 
