@@ -482,7 +482,7 @@ function skin(self, s)
 	local MENU_PLAYLISTITEM_TEXT_PADDING = { 16, 1, 9, 1 }
 
 	local MENU_CURRENTALBUM_TEXT_PADDING = { 6, 20, 0, 10 }
-	local TEXTAREA_PADDING = { 50, 20, 50, 20 }
+	local TEXTAREA_PADDING = { 13, 8, 8, 0 }
 
 	local TEXT_COLOR = { 0xE7, 0xE7, 0xE7 }
 	local TEXT_COLOR_BLACK = { 0x00, 0x00, 0x00 }
@@ -1169,7 +1169,10 @@ function skin(self, s)
 	s.information = _uses(s.window)
 
 	s.information.text = {
-		padding = { 13, 8, 8, 0 },
+		font = _font(TEXTAREA_FONT_SIZE),
+		fg = TEXT_COLOR,
+		sh = TEXT_SH_COLOR,
+		lineHeight = 22,
 	}
 
 	-- help window (likely the same as information)
