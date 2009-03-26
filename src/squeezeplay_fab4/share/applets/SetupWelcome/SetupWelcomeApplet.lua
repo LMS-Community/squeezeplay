@@ -196,12 +196,14 @@ function step7(self)
 
 	if not squeezenetwork then
 		log:error("no SqueezeNetwork instance")
+		jiveMain:closeToHome(true, Window.transitionPushLeft)
 		return
 	end
 
 	local settings = self:getSettings()
 	if settings.registerDone then
 		log:error("SqueezeNetwork registration complete")
+		jiveMain:closeToHome(true, Window.transitionPushLeft)
 		return
 	end
 

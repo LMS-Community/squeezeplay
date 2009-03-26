@@ -94,13 +94,14 @@ function notify_serverLinked(meta, server)
 		meta:storeSettings()
 	end
 
-	if settings.registerDone then
+	if settings.registerDone and player then
 
 		-- for testing connect the player tosqueezenetwork
 		local player = appletManager:callService("getCurrentPlayer")
-		log:info(player, " is conencted to ", player:getSlimServer())
 
-		if not player:getSlimServer() then
+		if player and player:getSlimServer() then
+			log:info(player, " is conencted to ", player:getSlimServer())
+		elseif player and not player:getSlimServer() then
 			local squeezenetwork = false
 			for name, server in slimServer:iterate() do
 				if server:isSqueezeNetwork() then
