@@ -436,7 +436,7 @@ static int open_input_devices(void) {
 		}
 	}
 
-	return (clearpad_event_fd != -1);
+	return ((clearpad_event_fd != -1) || (ir_event_fd != -1));
 }
 
 
