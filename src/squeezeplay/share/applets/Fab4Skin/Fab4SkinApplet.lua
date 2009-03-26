@@ -151,7 +151,7 @@ function skin(self, s)
 	Framework.mostRecentInputType = "mouse"
 
 	-- Images and Tiles
-	local titleBoxOld             = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
+	local inputTitleBox           = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
 	local fiveItemBox             = Tile:loadImage( imgpath .. "5_line_lists/tch_5line_divder.png")
 	local fiveItemSelectionBox    = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line.png")
 	local fiveItemPressedBox      = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line_press.png")
@@ -392,12 +392,13 @@ function skin(self, s)
 				 nil,
 				 nil,
 		})
+
 	local textinputBackground     = 
 		Tile:loadTiles({
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box.png",
-				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tl.png",
-				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_t.png",
-				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tr.png",
+				 imgpath .. "UNOFFICIAL/text_entry_titlebar_box_tl.png",
+				 imgpath .. "UNOFFICIAL/text_entry_titlebar_box_t.png",
+				 imgpath .. "UNOFFICIAL/text_entry_titlebar_box_tr.png",
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_r.png",
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_br.png",
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_b.png",
@@ -500,8 +501,8 @@ function skin(self, s)
 	local TRACK_FONT_SIZE = 18
 	local TEXTAREA_FONT_SIZE = 18
 	local CENTERED_TEXTAREA_FONT_SIZE = 28
-	local TEXTINPUT_FONT_SIZE = 24
-	local TEXTINPUT_SELECTED_FONT_SIZE = 28
+	local TEXTINPUT_FONT_SIZE = 20
+	local TEXTINPUT_SELECTED_FONT_SIZE = 24
 	local HELP_FONT_SIZE = 18
 	local UPDATE_SUBTEXT_SIZE = 20
 
@@ -826,31 +827,32 @@ function skin(self, s)
 		font = _boldfont(TEXTINPUT_FONT_SIZE),
 		cursorFont = _boldfont(TEXTINPUT_SELECTED_FONT_SIZE),
 		wheelFont = _boldfont(TEXTINPUT_FONT_SIZE),
-		charHeight = TEXTINPUT_SELECTED_FONT_SIZE + 10,
+		charHeight = TEXTINPUT_SELECTED_FONT_SIZE,
 		fg = TEXT_COLOR_BLACK,
-		charOffsetY = 15,
+		charOffsetY = 8,
 		wh = { 0x55, 0x55, 0x55 },
 		cursorImg = textinputCursor,
 	}
 
 	-- keyboard
-	-- XXXX pressed button states?
 	s.keyboard = {
 		w = WH_FILL,
 		h = WH_FILL,
-		border = { 8, 0, 8, 0 },
+		border = { 8, 2, 8, 0 },
 		padding = { 2, 0, 2, 0 },
 	}
 
 	s.keyboard_textinput = {
 		bgImg = textinputBackground,
-		w = WH_FILL - 16,
+		w = WH_FILL,
 		order = { "textinput", "backspace" },
-		border = { 8, 0, 8, 4 },
+		border = 0,
+		textinput = {
+			padding = { 16, 0, 0, 4 },
+		},
 	}
 
 	s.keyboard.key = {
-        	padding = 0,
         	font = _boldfont(24),
         	fg = { 0xDC, 0xDC, 0xDC },
         	align = 'center',
@@ -992,12 +994,10 @@ function skin(self, s)
 	}
 
 	-- input window (including keyboard)
-	-- XXX: needs layout
 	s.input = _uses(s.window)
 	s.input.title = _uses(s.title, {
-		bgImg = false,
+		bgImg = inputTitleBox,
 	})
-	
 
 	-- error window
 	-- XXX: needs layout
@@ -1373,10 +1373,11 @@ function skin(self, s)
 	}
 
 	s.button_keyboard_back = {
-		align = 'center',
+		align = 'left',
 		w = 45,
 		h = 30,
-		border = { 0, 5, 3, 3 }, 
+		padding = { 6, 0, 0, 0 },
+		border = { 0, 5, 12, 8 }, 
 		img = _loadImage(self, "Icons/icon_delete_tch_text_entry.png"),
 		bgImg = deleteKeyBackground,
 	}
