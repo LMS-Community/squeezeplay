@@ -329,7 +329,7 @@ function _squeezenetworkError(self, squeezenetwork, message)
 	-- help shows diagnostics
 	window:setButtonAction("rbutton", "help")
 	window:addActionListener("help", self, function()
-		appletManager:callService("diagnosticsMenu")
+		appletManager:callService("supportMenu")
 	end)
 
 

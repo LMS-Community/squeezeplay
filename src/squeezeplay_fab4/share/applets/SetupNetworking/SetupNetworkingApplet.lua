@@ -78,7 +78,7 @@ function _helpAction(self, window, titleText, bodyText)
 
 		window:setButtonAction("rbutton", "help")
 		window:addActionListener("help", self, function()
-			appletManager:callService("diagnosticsMenu")
+			appletManager:callService("supportMenu")
 		end)
 
 		local textarea = Textarea("text", self:string(bodyText))
