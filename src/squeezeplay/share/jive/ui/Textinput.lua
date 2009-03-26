@@ -323,13 +323,10 @@ function _goAction(self)
 end
 
 function _cursorBackAction(self)
-			log:error("here1")
 	if self.cursor == 1 then
-			log:error("here1")
 		self:playSound("WINDOWHIDE")
 		self:hide()
 	else
-			log:error("here1")
 		_moveCursor(self, -1)
 		self:reDraw()
 	end
@@ -347,8 +344,6 @@ end
 
 
 function _eventHandler(self, event)
-	log:error("event:" ,event:tostring())
-
 	local type = event:getType()
 
 
