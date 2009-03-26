@@ -402,6 +402,8 @@ local function _eventHandler(self, event)
 
 			--stop any running flick on contact
 			if self.flick.flickInProgress then
+				log:debug("**** Stopping flick due to finger down")
+
 				self.flick:stopFlick(true)
 				return EVENT_CONSUME
 			end
