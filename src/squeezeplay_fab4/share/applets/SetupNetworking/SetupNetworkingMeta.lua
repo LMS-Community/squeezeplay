@@ -31,10 +31,6 @@ function registerApplet(meta)
 	meta:registerService("setupNetworking")
 
 	jiveMain:addItem(meta:menuItem('networkSettings', 'advancedSettings', "NETWORK_SETUP_NETWORKING", function(applet, ...) applet:settingsNetworking(...) end))
-
-	jiveMain:addItem(meta:menuItem('networkStatus0', 'advancedSettings', "NETWORK_STATUS_ETH0", function(applet, ...) applet:settingsNetworkStatus(true) end))
-	jiveMain:addItem(meta:menuItem('networkStatus1', 'advancedSettings', "NETWORK_STATUS_WLAN0", function(applet, ...) applet:settingsNetworkStatus(false) end))
-
 end
 
 
