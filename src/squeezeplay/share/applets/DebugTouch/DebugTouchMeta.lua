@@ -95,7 +95,7 @@ function _debugTouch(meta)
 
 	meta.enabled = true
 
-	meta.canvas = Canvas("blank", function(screen)
+	meta.canvas = Canvas("debug_canvas", function(screen)
 		_debugEvent(meta, screen)
 	end)
 	Framework:addWidget(meta.canvas)

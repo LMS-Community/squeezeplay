@@ -1731,6 +1731,9 @@ if true then
 
 end -- LEGACY STYLES
 
+	s.debug_canvas = {
+			zOrder = 9999
+	}
 
 end
 

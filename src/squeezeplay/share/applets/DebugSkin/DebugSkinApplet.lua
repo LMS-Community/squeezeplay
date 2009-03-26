@@ -72,7 +72,7 @@ function debugSkin(self)
 
 	self.colorEnabled = true
 
-	self.canvas = Canvas("blank", function(screen)
+	self.canvas = Canvas("debug_canvas", function(screen)
 		local window = Framework.windowStack[1]
 
 		--log:info("Mouse in: ", window)
