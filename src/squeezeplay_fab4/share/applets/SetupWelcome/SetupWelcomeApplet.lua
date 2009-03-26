@@ -203,6 +203,11 @@ function step7(self)
 	local settings = self:getSettings()
 	if settings.registerDone then
 		log:error("SqueezeNetwork registration complete")
+
+		local player = appletManager:callService("getCurrentPlayer")
+		log:info("connecting ", player, " to ", squeezenetwork)
+		player:connectToServer(squeezenetwork)
+
 		jiveMain:closeToHome(true, Window.transitionPushLeft)
 		return
 	end
