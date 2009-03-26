@@ -82,3 +82,9 @@ SC_PORT_3483
 
 SC_PORT_9000
 	EN	  TCP port 9000:
+
+SUPPORT
+	EN	Squeezebox Support
+
+SUPPORT_HELP
+	EN	If you need further information or assistance please visit mysqueezebox.om/support. You will also find information on conacting Support there.\n\nWhen contacting Support the agent might ask you for the details about your Squeezebox in System Diagnostics.

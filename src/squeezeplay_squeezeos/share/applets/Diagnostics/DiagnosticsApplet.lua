@@ -18,6 +18,7 @@ local Label            = require("jive.ui.Label")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Surface          = require("jive.ui.Surface")
 local Task             = require("jive.ui.Task")
+local Textarea         = require("jive.ui.Textarea")
 local Window           = require("jive.ui.Window")
 
 local debug            = require("jive.utils.debug")
@@ -264,6 +265,29 @@ function diagnosticsMenu(self)
 	end)
 
 
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+function supportMenu(self)
+	local window = Window("help_list", self:string("SUPPORT"))
+	window:setAllowScreensaver(false)
+	window:setButtonAction("rbutton", nil)
+
+	local menu = SimpleMenu("menu")
+
+	menu:addItem({
+		text = self:string("DIAGNOSTICS"),
+		sound = "WINDOWSHOW",		
+		callback = function()
+			self:diagnosticsMenu()
+		end,
+	})
+
+	window:addWidget(Textarea("help_text", self:string("SUPPORT_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

@@ -18,6 +18,7 @@ end
 
 function registerApplet(meta)
 	meta:registerService("diagnosticsMenu")
+	meta:registerService("supportMenu")
 
 	jiveMain:addItem(meta:menuItem('diagnostics', 'advancedSettings', "DIAGNOSTICS", function(applet, ...) applet:diagnosticsMenu() end))
 end
