@@ -23,6 +23,7 @@ local EVENT_UNUSED      = jive.ui.EVENT_UNUSED
 local EVENT_IR_DOWN     = jive.ui.EVENT_IR_DOWN
 local EVENT_IR_REPEAT   = jive.ui.EVENT_IR_REPEAT
 local EVENT_IR_HOLD     = jive.ui.EVENT_IR_HOLD
+local EVENT_IR_PRESS    = jive.ui.EVENT_IR_PRESS
 local EVENT_KEY_PRESS   = jive.ui.EVENT_KEY_PRESS
 local EVENT_CHAR_PRESS   = jive.ui.EVENT_CHAR_PRESS
 local EVENT_SCROLL      = jive.ui.EVENT_SCROLL
@@ -322,10 +323,13 @@ function _goAction(self)
 end
 
 function _cursorBackAction(self)
+			log:error("here1")
 	if self.cursor == 1 then
+			log:error("here1")
 		self:playSound("WINDOWHIDE")
 		self:hide()
 	else
+			log:error("here1")
 		_moveCursor(self, -1)
 		self:reDraw()
 	end
@@ -333,8 +337,25 @@ function _cursorBackAction(self)
 	return EVENT_CONSUME
 end
 
+
+function _escapeAction(self)
+	self.cursor = 1
+	self:playSound("WINDOWHIDE")
+	self:hide()
+	return EVENT_CONSUME
+end
+
+
 function _eventHandler(self, event)
+	log:error("event:" ,event:tostring())
+
 	local type = event:getType()
+
+
+	if type == EVENT_IR_PRESS and event:isIRCode("arrow_left") then
+		return _cursorBackAction(self)
+	end
+
 	if type == EVENT_IR_PRESS then
 		--play is delete, add is insert, just like jive
 		if event:isIRCode("play") then
@@ -445,10 +466,8 @@ function _eventHandler(self, event)
 			return _deleteAction(self)
 
 		elseif (keyboardEntry == "\27") then --escape
-			self.cursor = 1
-			self:playSound("WINDOWHIDE")
-			self:hide()
-			return EVENT_CONSUME
+			return _escapeAction(self)
+
 		elseif not string.find(self:_getChars(), keyboardEntry, 1, true) then
 			--also check for possibility of uppercase match
 			if (string.find(keyboardEntry, "%l")) then
@@ -502,6 +521,9 @@ function _eventHandler(self, event)
 				self:playSound("BUMP")
 				self:getWindow():bumpRight()
 			end
+		elseif keycode == KEY_BACK then
+			return _cursorBackAction(self)
+
 		end
 	end
 
@@ -550,9 +572,11 @@ function __init(self, style, value, closure, allowedChars)
 	obj:addActionListener("play", obj, _deleteAction)
 	obj:addActionListener("add", obj, _insertAction)
 	obj:addActionListener("go", obj, _goAction)
-	obj:addActionListener("back", obj, _cursorBackAction)
 
-	obj:addListener(EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE | EVENT_IR_DOWN | EVENT_IR_REPEAT | EVENT_IR_HOLD,
+	--only touch back action will be handled this way (as escape), other back sources are use _cursorBackAction, and are handled directly in the main listener
+	obj:addActionListener("back", obj, _escapeAction)
+
+	obj:addListener(EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE | EVENT_IR_DOWN | EVENT_IR_REPEAT | EVENT_IR_HOLD | EVENT_IR_PRESS,
 			function(event)
 				return _eventHandler(obj, event)
 			end)
