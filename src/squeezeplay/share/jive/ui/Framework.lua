@@ -89,7 +89,6 @@ jive.frameworkOpen()
 -- initial global state
 windowStack = {}
 widgets = {} -- global widgets
-onTopWidgets = {} -- global "on top" widgets
 globalListeners = {} -- global listeners
 unusedListeners = {} -- unused listeners
 animations = {} -- active widget animations
@@ -385,14 +384,10 @@ Add a global widget I<widget> to the screen. The global widgets are shown on all
 
 =cut
 --]]
-function addWidget(self, widget, onTop)
+function addWidget(self, widget)
 	_assert(oo.instanceof(widget, Widget))
 
-	if onTop then
-		onTopWidgets[#onTopWidgets + 1] = widget
-	else
-		widgets[#widgets + 1] = widget
-	end
+	widgets[#widgets + 1] = widget
 	widget:dispatchNewEvent(EVENT_SHOW)
 
 	self:reDraw(nil)
@@ -411,16 +406,19 @@ function removeWidget(self, widget)
 	_assert(oo.instanceof(widget, Widget))
 
 	table.delete(widgets, widget)
-	table.delete(onTopWidgets, widget)
 	widget:dispatchNewEvent(EVENT_HIDE)
 
 	self:reDraw(nil)
 end
 
 
-
 function isMostRecentInput(self, inputType)
 	return inputType and self.mostRecentInputType == inputType
+end
+
+
+function getWidgets(self)
+	return widgets	
 end
 
 

@@ -147,6 +147,7 @@ function __init(self, style, title, titleStyle)
 	obj.transparent = false
 
 	obj.widgets = {} -- child widgets
+	obj.zWidgets = {} -- child widgets and framework widgets in z order
 	obj.layoutRoot = true
 	obj.focus = nil
 
@@ -1507,6 +1508,42 @@ function setMouseEventFocusWidget(self, widget)
 	log:debug("setMouseEventFocusWidget: ", widget)
 
 	self._mouseEventFocusWidget = widget
+end
+
+
+function _layout(self)
+	local stableSortCounter = 1
+
+	self.zWidgets = {}
+	for i, widget in ipairs(self.widgets) do
+		if widget then
+			widget._stableSortIndex = stableSortCounter
+			table.insert(self.zWidgets, widget)
+
+			stableSortCounter = stableSortCounter + 1
+		end
+	end
+
+	if self:getShowFrameworkWidgets() then
+		for i, widget in ipairs(Framework:getWidgets()) do
+			if widget then
+				widget._stableSortIndex = stableSortCounter
+				table.insert(self.zWidgets, widget)
+				stableSortCounter = stableSortCounter + 1
+			end
+		end
+	end
+
+	table.sort(self.zWidgets,
+		function(a, b)
+			--stable sort (since quicksort isn't stable by default) --  also check for unset (happens before pack)
+			if a:getZOrder() == b:getZOrder() or not a:getZOrder() or not b:getZOrder()then
+				return a._stableSortIndex < b._stableSortIndex
+			end
+			return a:getZOrder() < b:getZOrder()
+		end)
+
+	self:_skinLayout()
 end
 
 

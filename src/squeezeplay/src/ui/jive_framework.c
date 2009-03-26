@@ -1267,6 +1267,7 @@ static const struct luaL_Reg textarea_methods[] = {
 static const struct luaL_Reg widget_methods[] = {
 	{ "setBounds", jiveL_widget_set_bounds }, 
 	{ "getBounds", jiveL_widget_get_bounds },
+	{ "getZOrder", jiveL_widget_get_z_order },
 	{ "getPreferredBounds", jiveL_widget_get_preferred_bounds },
 	{ "getBorder", jiveL_widget_get_border },
 	{ "mouseBounds", jiveL_widget_mouse_bounds },
