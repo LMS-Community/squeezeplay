@@ -1,6 +1,6 @@
 
 DIAGNOSTICS
-	EN	System diagnostics
+	EN	System Diagnostics
 
 NOT_CONNECTED
 	EN	Not connected
