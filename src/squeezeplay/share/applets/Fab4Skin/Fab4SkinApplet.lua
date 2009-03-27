@@ -474,7 +474,7 @@ function skin(self, s)
 	
 	local TITLE_PADDING  = { 0, 15, 0, 15 }
 	local CHECK_PADDING  = { 2, 0, 6, 0 }
-	local CHECKBOX_RADIO_PADDING  = { 2, 8, 8, 0 }
+	local CHECKBOX_RADIO_PADDING  = { 2, 0, 8, 0 }
 
 	--FIXME: paddings here need tweaking for Fab4Skin
 	local MENU_ALBUMITEM_PADDING = { 8, 1, 8, 1 }
@@ -662,6 +662,7 @@ function skin(self, s)
 	-- Checkbox
         s.checkbox = {}
 	s.checkbox.align = 'center'
+	s.checkbox.padding = CHECKBOX_RADIO_PADDING
 	s.checkbox.h = WH_FILL
         s.checkbox.img_on = _loadImage(self, "Icons/checkbox_on.png")
         s.checkbox.img_off = _loadImage(self, "Icons/checkbox_off.png")
@@ -670,6 +671,7 @@ function skin(self, s)
         -- Radio button
         s.radio = {}
 	s.radio.align = 'center'
+	s.radio.padding = CHECKBOX_RADIO_PADDING
 	s.radio.h = WH_FILL
         s.radio.img_on = _loadImage(self, "Icons/radiobutton_on.png")
         s.radio.img_off = _loadImage(self, "Icons/radiobutton_off.png")
@@ -678,7 +680,7 @@ function skin(self, s)
 		order  = { 'icon', 'text', 'check' },
 		choice = {
 			h = WH_FILL,
-			padding = { 0, 0, 3, 0 },
+			padding = CHECKBOX_RADIO_PADDING,
 			align = 'right',
 			font = _boldfont(TEXTMENU_FONT_SIZE),
 			fg = TEXT_COLOR,
