@@ -1205,7 +1205,8 @@ local function _browseSink(step, chunk, err)
 				end
 				-- textarea data for the window
 				if data.window and data.window.textarea then
-					local textarea = Textarea('help_text', data.window.textarea)
+					local text = string.gsub(data.window.textarea, '\\n', "\n")
+					local textarea = Textarea('help_text', text)
 					-- remove the menu
 					if step.menu then
 						step.window:removeWidget(step.menu)
