@@ -406,6 +406,7 @@ function _macroKeyButton(self, keyText, keyWidth)
 		text     = keyText,
 		keyWidth = keyWidth,
 		style    = 'key',
+		fontSize = 'small',
 		callback = function()
 				local stringTable = string.split('', keyText)
 				for _, v in ipairs(stringTable) do

@@ -2194,9 +2194,8 @@ end
 
 -- _browseInput: method to render a textinput/keyboard for SlimBrowse input
 -- self in this function is the input/keyboard window
-local function _browseInput(self, item, db)
+local function _browseInput(self, item, db, inputSpec, last)
 
-	local inputSpec = item['input']
 	if not inputSpec then
 		log:error('no input spec')
 		return
@@ -2376,15 +2375,26 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	local window = Window(windowSpec.windowStyle or 'text_list')
 	window:setTitleWidget(_decoratedLabel(nil, 'title', windowSpec, db, false))
 	
-	local titleText = window:getTitle()
-
 	local menu
-	-- if the item has an input field, we must ask for it
+	-- if the item has an input field or fields, we must ask for it
 	if item and item['input'] and not item['_inputDone'] then
 
-		inputSpec = item["input"]
-		--debug.dump(inputSpec)
-		_browseInput(window, item, db)
+		window:setStyle('input')
+		inputSpec = item.input
+
+		-- multiple input
+		if #inputSpec > 0 then
+			for i, v in ipairs(inputSpec) do
+				local last = false
+				if i == #inputSpec then
+					last = true
+				end
+				_browseInput(window, item, db, v, last)
+			end
+		-- single input
+		else
+			_browseInput(window, item, db, inputSpec, true)
+		end
 
 	-- special case for sending over textArea
 	elseif item and item['textArea'] then
