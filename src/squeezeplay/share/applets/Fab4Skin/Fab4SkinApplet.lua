@@ -446,12 +446,7 @@ function skin(self, s)
 				       imgpath .. "Popup_Menu/helpbox_l.png",
 			       })
 
-	local scrollBackground =
-		Tile:loadVTiles({
-					imgpath .. "Scroll_Bar/scrollbar_bkgrd_tch_t.png",
-					imgpath .. "Scroll_Bar/scrollbar_bkgrd_tch.png",
-					imgpath .. "Scroll_Bar/scrollbar_bkgrd_tch_b.png",
-				})
+	local scrollBackground = Tile:loadImage(imgpath .. "Scroll_Bar/scrollbar_whole.png")
 
 	local scrollBar = 
 		Tile:loadVTiles({
@@ -754,7 +749,7 @@ function skin(self, s)
 	s.scrollbar = {
 		w = 30,
 		border = 0,
-		padding = { 0, 24, 0, 22 },
+		padding = { 0, 8, 0, 12 },
 		horizontal = 0,
 		bgImg = scrollBackground,
 		img = scrollBar,
