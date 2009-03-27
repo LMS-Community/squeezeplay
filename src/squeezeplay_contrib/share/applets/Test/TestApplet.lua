@@ -419,6 +419,7 @@ function keyboardWindow(self, menuItem, style)
 		Icon('button_keyboard_back'),
 		function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+			Framework:playSound("SELECT")
 			Framework:dispatchEvent(nil, e)
 			return EVENT_CONSUME
 		end

@@ -895,6 +895,7 @@ end
 local function _addHelpButton(self, help, setupWindow)
 	local titleText = self:getTitle()
 	local helpWindow = function()
+		Framework:playSound('WINDOWSHOW')
 		local window = Window("text_list")
 		window:setAllowScreensaver(false)
 		local nowPlaying = _nowPlayingButton()
@@ -2344,6 +2345,7 @@ local function _browseInput(self, item, db, inputSpec, last)
 		Icon('button_keyboard_back'),
 		function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+                        Framework:playSound("SELECT")
 			Framework:dispatchEvent(nil, e)
 			return EVENT_CONSUME
 		end

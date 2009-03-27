@@ -485,6 +485,7 @@ function _enterSSID(self, iface)
 		Icon('button_keyboard_back'),
 		function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+                        Framework:playSound("SELECT")
 			Framework:dispatchEvent(nil, e)
 			return EVENT_CONSUME
 		end
@@ -670,6 +671,7 @@ function _enterWEPKey(self, iface, ssid)
 		Icon('button_keyboard_back'),
 		function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+                        Framework:playSound("SELECT")
 			Framework:dispatchEvent(nil, e)
 			return EVENT_CONSUME
 		end
@@ -710,6 +712,7 @@ function _enterPSK(self, iface, ssid)
 		Icon('button_keyboard_back'),
 		function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+                        Framework:playSound("SELECT")
 			Framework:dispatchEvent(nil, e)
 			return EVENT_CONSUME
 		end
@@ -1439,6 +1442,7 @@ function _enterIP(self, iface, ssid)
 		Icon('button_keyboard_back'),
 		function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+                        Framework:playSound("SELECT")
 			Framework:dispatchEvent(nil, e)
 			return EVENT_CONSUME
 		end
@@ -1480,6 +1484,7 @@ function _enterSubnet(self, iface, ssid)
 		Icon('button_keyboard_back'),
 		function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+                        Framework:playSound("SELECT")
 			Framework:dispatchEvent(nil, e)
 			return EVENT_CONSUME
 		end
@@ -1525,6 +1530,7 @@ function _enterGateway(self, iface, ssid)
 		Icon('button_keyboard_back'),
 		function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+                        Framework:playSound("SELECT")
 			Framework:dispatchEvent(nil, e)
 			return EVENT_CONSUME
 		end
@@ -1569,6 +1575,7 @@ function _enterDNS(self, iface, ssid)
 		Icon('button_keyboard_back'),
 		function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+                        Framework:playSound("SELECT")
 			Framework:dispatchEvent(nil, e)
 			return EVENT_CONSUME
 		end

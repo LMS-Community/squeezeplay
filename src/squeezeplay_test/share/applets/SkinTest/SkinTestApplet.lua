@@ -266,6 +266,7 @@ function setup_input_hex(self, item)
 		Icon('button_keyboard_back'),
 		function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+			Framework:playSound("SELECT")
 			Framework:dispatchEvent(nil, e)
 			return EVENT_CONSUME
 		end
@@ -309,6 +310,7 @@ function setup_input_any(self, item)
 		Icon('button_keyboard_back'),
 		function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+			Framework:playSound("SELECT")
 			Framework:dispatchEvent(nil, e)
 			return EVENT_CONSUME
 		end
@@ -352,6 +354,7 @@ function setup_input_email(self, item)
 		Icon('button_keyboard_back'),
 		function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+			Framework:playSound("SELECT")
 			Framework:dispatchEvent(nil, e)
 			return EVENT_CONSUME
 		end
@@ -393,6 +396,7 @@ function setup_input(self, item)
 		Icon('button_keyboard_back'),
 		function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+			Framework:playSound("SELECT")
 			Framework:dispatchEvent(nil, e)
 			return EVENT_CONSUME
 		end
