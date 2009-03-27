@@ -347,13 +347,15 @@ function _eventHandler(self, event)
 	local type = event:getType()
 
 
-	if type == EVENT_IR_PRESS and event:isIRCode("arrow_left") then
-		return _cursorBackAction(self)
-	end
-
 	if type == EVENT_IR_PRESS then
+		if event:isIRCode("arrow_left") then
+			self.numberLetterTimer:stop()
+			return _cursorBackAction(self)
+		end
+
 		--play is delete, add is insert, just like jive
 		if event:isIRCode("play") then
+			self.numberLetterTimer:stop()
 			if not _delete(self) then
 				self:playSound("BUMP")
 				self:getWindow():bumpRight()
@@ -361,6 +363,7 @@ function _eventHandler(self, event)
 			return EVENT_CONSUME
 		end
 		if event:isIRCode("add") then
+			self.numberLetterTimer:stop()
 			if not _insert(self) then
 				self:playSound("BUMP")
 				self:getWindow():bumpRight()
