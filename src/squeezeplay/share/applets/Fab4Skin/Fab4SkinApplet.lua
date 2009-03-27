@@ -474,11 +474,10 @@ function skin(self, s)
 	
 	local TITLE_PADDING  = { 0, 15, 0, 15 }
 	local CHECK_PADDING  = { 2, 0, 6, 0 }
-	local CHECKBOX_RADIO_PADDING  = { 2, 0, 8, 0 }
+	local CHECKBOX_RADIO_PADDING  = { 2, 0, 0, 0 }
 
-	--FIXME: paddings here need tweaking for Fab4Skin
-	local MENU_ALBUMITEM_PADDING = { 8, 1, 8, 1 }
-	local MENU_ITEM_ICON_PADDING = { 8, 2, 0, 0 }
+	local MENU_ALBUMITEM_PADDING = { 0, 1, 8, 1 }
+	local MENU_ITEM_ICON_PADDING = { 0, 2, 8, 0 }
 	local MENU_ALBUMITEM_TEXT_PADDING = { 16, 6, 9, 19 }
 	local MENU_PLAYLISTITEM_TEXT_PADDING = { 16, 1, 9, 1 }
 
@@ -556,37 +555,6 @@ function skin(self, s)
 	})
 
 
-
---------- DEFINES ---------
-
-	local _buttonMenu = {
-		padding = 0,
-		w = WH_FILL,
-		itemHeight = THREE_ITEM_HEIGHT,
-	}
-
-	local _buttonItem = {
-		order = { "text", "arrow" },
-		padding = 0,
-		bgImg = threeItemSelectionBox,
-		text = {
-		w = WH_FILL,
-		h = WH_FILL,
-		padding = { 8, 0, 0, 0 },
-		align = "left",
-		font = _boldfont(34),
-		fg = SELECT_COLOR,
-		sh = SELECT_SH_COLOR,
-		},
-		arrow = {
-			img     = _loadImage(self, "Icons/selection_right_3line_off.png"), 
-			w       = 37,
-			h       = WH_FILL,
-			padding = { 0, 0, 8, 0}
-		}
-	}
-
-
 --------- DEFAULT WIDGET STYLES ---------
 	--
 	-- These are the default styles for the widgets 
@@ -631,9 +599,9 @@ function skin(self, s)
 
 	s.item = {
 		order = { "icon", "text", "arrow" },
-		padding = { 0, 0, 0, 0 },
+		padding = { 8, 0, 0, 0 },
 		text = {
-			padding = { 8, 0, 2, 0 },
+			padding = { 0, 0, 2, 0 },
 			align = "left",
 			w = WH_FILL,
 			h = WH_FILL,
@@ -1388,9 +1356,7 @@ function skin(self, s)
 	})
 
 
-
 	local _buttonicon = {
-		w   = THUMB_SIZE,
 		h   = THUMB_SIZE,
 		padding = MENU_ITEM_ICON_PADDING,
 		img = false,
