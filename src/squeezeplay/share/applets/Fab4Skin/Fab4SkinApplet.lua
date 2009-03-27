@@ -476,9 +476,7 @@ function skin(self, s)
 	local CHECK_PADDING  = { 2, 0, 6, 0 }
 	local CHECKBOX_RADIO_PADDING  = { 2, 0, 0, 0 }
 
-	local MENU_ALBUMITEM_PADDING = { 0, 1, 8, 1 }
 	local MENU_ITEM_ICON_PADDING = { 0, 2, 8, 0 }
-	local MENU_ALBUMITEM_TEXT_PADDING = { 16, 6, 9, 19 }
 	local MENU_PLAYLISTITEM_TEXT_PADDING = { 16, 1, 9, 1 }
 
 	local MENU_CURRENTALBUM_TEXT_PADDING = { 6, 20, 0, 10 }
@@ -1015,7 +1013,7 @@ function skin(self, s)
 		menu = {
 			item = {
 				order = { "icon", "text", "arrow" },
-				padding = MENU_ALBUMITEM_PADDING,
+				padding = { 8, 0, 0, 0 },
 				text = {
 					w = WH_FILL,
 					h = WH_FILL,
@@ -1030,15 +1028,10 @@ function skin(self, s)
 					sh = TEXT_SH_COLOR,
 				},
 				icon = {
-					w = THUMB_SIZE,
 					h = THUMB_SIZE,
+					padding = MENU_ITEM_ICON_PADDING,
 				},
-				arrow = {
-				      align = ITEM_ICON_ALIGN,
-					w = 30,
-					padding = { 8, 1, 8, 1 },
-				      img = _loadImage(self, "Icons/selection_right_5line.png")
-				},
+				arrow = _uses(s.item.arrow),
 			},
 		},
 	})
@@ -1052,6 +1045,7 @@ function skin(self, s)
 			img = _loadImage(self, "Icons/icon_check_5line.png")
 		},
 	})
+	s.icon_list.menu.albumcurrent = _uses(s.icon_list.menu.item_checked)
 	s.icon_list.menu.item_play = _uses(s.icon_list.menu.item, { 
 		arrow = playArrow, 
 	})
@@ -1067,6 +1061,9 @@ function skin(self, s)
 
 	s.icon_list.menu.selected = {
                 item               = _uses(s.icon_list.menu.item, {
+			bgImg = fiveItemSelectionBox
+		}),
+                albumcurrent       = _uses(s.icon_list.menu.albumcurrent, {
 			bgImg = fiveItemSelectionBox
 		}),
                 item_checked        = _uses(s.icon_list.menu.item_checked, {
@@ -1388,9 +1385,9 @@ function skin(self, s)
 
 	-- icon for albums with no artwork
 	s.icon_no_artwork = {
-		img = _loadImage(self, "UNOFFICIAL/menu_album_noartwork_43.png"),
-		w   = THUMB_SIZE,
+		img = _loadImage(self, "IconsResized/icon_album_noart_touch.png"),
 		h   = THUMB_SIZE,
+		padding = MENU_ITEM_ICON_PADDING,
 	}
 
 	s.icon_connecting = _uses(_icon, {
