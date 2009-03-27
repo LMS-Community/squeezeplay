@@ -181,7 +181,7 @@ function _layout(self)
 
 	local keyWidth
 	local defaultKeyWidth = 46
-	local defaultKeyHeight = 45
+	local defaultKeyHeight = 44
 	local rowWidth = 460
 
 	-- self.keyboard has the keyboard, table of rows of key objects
