@@ -469,7 +469,7 @@ function skin(self, s)
 	
 	local TITLE_PADDING  = { 0, 15, 0, 15 }
 	local CHECK_PADDING  = { 2, 0, 6, 0 }
-	local CHECKBOX_RADIO_PADDING  = { 2, 0, 0, 0 }
+	local CHECKBOX_RADIO_PADDING  = { 2, 0, 8, 0 }
 
 	local MENU_ITEM_ICON_PADDING = { 0, 2, 8, 0 }
 	local MENU_PLAYLISTITEM_TEXT_PADDING = { 16, 1, 9, 1 }
