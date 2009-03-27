@@ -80,7 +80,7 @@ end
 
 function param(self)
         return {
-		THUMB_SIZE = 41,
+		THUMB_SIZE = 40,
 		nowPlayingBrowseArtworkSize = 190,
 		nowPlayingSSArtworkSize     = 190,
 		nowPlayingLargeArtworkSize  = 190,

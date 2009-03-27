@@ -21,7 +21,7 @@ my $convertCommand = "/opt/local/bin/convert";
 
 # define skins and dimensions for each
 my $resize = { 
-		'touch'	=>	41,
+		'touch'	=>	40,
 		'remote' =>	64,
 };
 
