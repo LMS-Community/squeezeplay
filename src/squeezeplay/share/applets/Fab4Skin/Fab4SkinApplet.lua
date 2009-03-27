@@ -784,8 +784,8 @@ function skin(self, s)
 	}
 
 	s.scrollbar = {
-		w = 32,
-		border = { -4, -1, 0, 0 },
+		w = 30,
+		border = 0,
 		padding = { 0, 24, 0, 22 },
 		horizontal = 0,
 		bgImg = scrollBackground,
