@@ -48,7 +48,12 @@ icon_softsqueeze.png
 icon_squeezeplay.png
 icon_transporter.png
 icon_wireless.png
+icon_firmware_update.png
 /);
+
+my $special = {
+"icon_firmware_update.png"	=>	{ touch	=> 100,	remote	=> 100 },
+};
 
 my $existingImages = get_assets($resizedIconDir);
 remove_images($existingImages);
@@ -65,6 +70,10 @@ sub convert_files {
 		my $file = $assetDir . "/" . $f;
 		for my $skin (sort keys %$resize) {
 			my $size = $resize->{$skin};
+			if ($special->{$f}{$skin}) {
+				print "SPECIAL: $f\t$special->{$f}{$skin}\n";
+				$size = $special->{$f}{$skin};
+			}
 			my $basename = fileparse($file, qr/\.[^.]*/);
 			my $filename = $resizedIconDir . "/" . $basename . "_" . $skin . ".png";
 			my $resizeMe = "$convertCommand -geometry ${size}x${size} $file $filename";

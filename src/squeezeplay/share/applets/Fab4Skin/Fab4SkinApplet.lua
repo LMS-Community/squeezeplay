@@ -1396,7 +1396,7 @@ function skin(self, s)
 	})
 
 	s.icon_software_update = _uses(_icon, {
-		img = _loadImage(self, "Icons/icon_firmware_update_100.png"),
+		img = _loadImage(self, "IconsResized/icon_firmware_update_touch.png"),
 	})
 
 	s.icon_power = _uses(_icon, {
