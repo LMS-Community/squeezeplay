@@ -105,7 +105,7 @@ function step1(self)
 
 	disableHomeKeyDuringSetup = Framework:addActionListener("go_home", self, _ignoreHomeAction)
 
-	freeAppletWhenEscapingSetup = Framework:addActionListener("disconnect_player", self, _freeAction)
+	freeAppletWhenEscapingSetup = Framework:addActionListener("soft_reset", self, _freeAction)
 
 	return self.topWindow
 

@@ -234,18 +234,28 @@ local function ignoreAllInputListener(self, event, excludedActions)
 
 end
 
+--[[
+
+=head2 ignoreAllInputExcept(excludedActions)
+
+Consume all input events except for i<excludedActions>. Note: The action "soft_reset" is always included in the excluded actions.
+
+=cut
+--]]
 function ignoreAllInputExcept(self, excludedActions)
 	if not self.ignoreAllInputHandle then
 		--also need to remove any hideOnAllButtonInputHandle, since in the ignoreAllInput case
 		-- we want excluded actions to be seen by global listeners. Leaving hideOnAllButtonInputHandle in place would
 		-- prevent the event from getting to global listeners
-		log:error(self.hideOnAllButtonInputHandle)
-
 		if self.hideOnAllButtonInputHandle then
 			self:removeListener(self.hideOnAllButtonInputHandle)
 			self.hideOnAllButtonInputHandle = false
 		end
 
+		if not excludedActions then
+			excludedActions = {}
+		end
+		table.insert(excludedActions, "soft_reset")
 	
 		self.ignoreAllInputHandle = self:addListener(EVENT_ALL_INPUT,
 								function(event)
@@ -1478,6 +1488,20 @@ function _layout(self)
 	local stableSortCounter = 1
 
 	self.zWidgets = {}
+	if self:getShowFrameworkWidgets() then
+		--framework widgets added to iterator list first so that if default zorder is used,
+		 -- framework widgets are drawn first - This is needed
+		 -- to support, for instance, the SeupLanguage screen where iconbar (a framework widget) is shown behind
+		 -- a mini-help window.
+		for i, widget in ipairs(Framework:getWidgets()) do
+			if widget then
+				widget._stableSortIndex = stableSortCounter
+				table.insert(self.zWidgets, widget)
+				stableSortCounter = stableSortCounter + 1
+			end
+		end
+	end
+
 	for i, widget in ipairs(self.widgets) do
 		if widget then
 			widget._stableSortIndex = stableSortCounter
@@ -1487,15 +1511,6 @@ function _layout(self)
 		end
 	end
 
-	if self:getShowFrameworkWidgets() then
-		for i, widget in ipairs(Framework:getWidgets()) do
-			if widget then
-				widget._stableSortIndex = stableSortCounter
-				table.insert(self.zWidgets, widget)
-				stableSortCounter = stableSortCounter + 1
-			end
-		end
-	end
 
 	table.sort(self.zWidgets,
 		function(a, b)

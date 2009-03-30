@@ -518,13 +518,13 @@ function ignoreAllInputPopup(self, menuItem)
 	local popup = Popup("popupIcon")
 
 	local icon = Icon("iconConnecting")
-	local label = Label("text", "All input is ignored, except:\n'disconnect_player', 'back', 'go'")
+	local label = Label("text", "All input is ignored, except:\n'soft_reset', 'back', 'go'")
 
 	popup:addWidget(icon)
 	popup:addWidget(label)
 
-	-- disable input, but still allow disconnect_player
-	popup:ignoreAllInputExcept({"disconnect_player", "back"})
+	-- disable input
+	popup:ignoreAllInputExcept({"go", "back"})
 
 	--try some local listeners (comment out to see global handling - back should still work
 	popup:addActionListener("back", popup, localBackAction)
