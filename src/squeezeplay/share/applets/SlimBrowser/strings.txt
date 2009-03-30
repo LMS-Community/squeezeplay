@@ -3,7 +3,19 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SN_SIGNUP
+	CS	Přihlášení do Squeezenetwork
+	DA	Tilmelding til Squeezenetwork
+	DE	Anmeldung bei SqueezeNetwork
 	EN	Squeezenetwork Signup
+	ES	Registro de Squeezenetwork
+	FI	Squeezenetwork-rekisteröityminen
+	FR	Inscription à SqueezeNetwork
+	IT	Iscrizione a Squeezenetwork
+	NL	Aanmelding bij Squeezenetwork
+	NO	Squeezenetwork-registrering
+	PL	Rejestracja w usłudze Squeezenetwork
+	RU	Подписка Squeezenetwork
+	SV	Registrering för Squeezenetwork
 
 SLIMBROWSER_PLAYLIST
 	CS	Seznam skladeb

@@ -3,4 +3,17 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 IMAGE_VIEWER
+	CS	Prohlížeč obrázků
+	DA	Billedfremviser
+	DE	Image Viewer
 	EN	Image Viewer
+	ES	Visor de imágenes
+	FI	Image Viewer
+	FR	Afficheur d'images
+	IT	Visualizzatore immagini
+	NL	Image-viewer
+	NO	Bildevisning
+	PL	Przeglądarka obrazów
+	RU	Просмотр рисунков
+	SV	Bildvisare
+

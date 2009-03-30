@@ -393,11 +393,47 @@ GREENFLOWERS
 	SV	Gröna blommor
 
 RULED_LINES
+	CS	Linky
+	DA	Linjeret
+	DE	Linienmuster
 	EN	Ruled Lines
+	ES	Rayas
+	FI	Viivoitetut rivit
+	FR	Lignes réglées
+	IT	Righe orizzontali
+	NL	Gelinieerd
+	NO	Rette linjer
+	PL	Poziome linie
+	RU	Линейные узоры
+	SV	Linjerat
 
 WAVE1
+	CS	Vlnový vzor 1
+	DA	Bølgemønster 1
+	DE	Wellenmuster 1
 	EN	Wave Pattern 1
+	ES	Ondas 1
+	FI	Aaltokuvio 1
+	FR	Motif de vagues 1
+	IT	Motivo a onde 1
+	NL	Golfpatroon 2
+	NO	Bølgemønster 1
+	PL	Wzorek falisty 1
+	RU	Волны 1
+	SV	Vågform 1
 
 WAVE2
+	CS	Vlnový vzor 2
+	DA	Bølgemønster 2
+	DE	Wellenmuster 2
 	EN	Wave Pattern 2
+	ES	Ondas 2
+	FI	Aaltokuvio 2
+	FR	Motif de vagues 2
+	IT	Motivo a onde 2
+	NL	Golfpatroon 2
+	NO	Bølgemønster 2
+	PL	Wzorek falisty 2
+	RU	Волны 2
+	SV	Vågform 2
 

@@ -34,7 +34,7 @@ LANGUAGE
 	SV	Språk
 
 LANGUAGE_NO
-	CS	Norsk
+	CS	Norština
 	DA	Norsk
 	DE	Norsk
 	EN	Norsk
@@ -45,11 +45,11 @@ LANGUAGE_NO
 	NL	Norsk
 	NO	Norsk
 	PL	Norsk
-	RU	Norsk
+	RU	норвежский
 	SV	Norsk
 
 LANGUAGE_SV
-	CS	Svenska
+	CS	Švédština
 	DA	Svenska
 	DE	Svenska
 	EN	Svenska
@@ -60,7 +60,7 @@ LANGUAGE_SV
 	NL	Svenska
 	NO	Svenska
 	PL	Svenska
-	RU	Svenska
+	RU	шведский
 	SV	Svenska
 
 LANGUAGE_FI
@@ -75,11 +75,11 @@ LANGUAGE_FI
 	NL	Suomi
 	NO	Suomi
 	PL	Suomi
-	RU	Suomi
+	RU	финский
 	SV	Suomi
 
 LANGUAGE_DA
-	CS	Dansk
+	CS	Dánština
 	DA	Dansk
 	DE	Dansk
 	EN	Dansk
@@ -90,11 +90,11 @@ LANGUAGE_DA
 	NL	Dansk
 	NO	Dansk
 	PL	Dansk
-	RU	Dansk
+	RU	датский
 	SV	Dansk
 
 LANGUAGE_DE
-	CS	Deutsch
+	CS	Němčina
 	DA	Deutsch
 	DE	Deutsch
 	EN	Deutsch
@@ -105,11 +105,11 @@ LANGUAGE_DE
 	NL	Deutsch
 	NO	Deutsch
 	PL	Deutsch
-	RU	Deutsch
+	RU	немецкий
 	SV	Deutsch
 
 LANGUAGE_EN
-	CS	English
+	CS	Angličtina
 	DA	English
 	DE	English
 	EN	English
@@ -119,12 +119,12 @@ LANGUAGE_EN
 	IT	English
 	NL	English
 	NO	English
-	PL	English
-	RU	English
+	PL	Polski
+	RU	английский
 	SV	English
 
 LANGUAGE_ES
-	CS	Español
+	CS	Španělština
 	DA	Español
 	DE	Español
 	EN	Español
@@ -135,11 +135,11 @@ LANGUAGE_ES
 	NL	Español
 	NO	Español
 	PL	Español
-	RU	Español
+	RU	испанский
 	SV	Español
 
 LANGUAGE_FR
-	CS	Français
+	CS	Francouzsky
 	DA	Français
 	DE	Français
 	EN	Français
@@ -150,11 +150,11 @@ LANGUAGE_FR
 	NL	Français
 	NO	Français
 	PL	Français
-	RU	Français
+	RU	Французский
 	SV	Français
 
 LANGUAGE_IT
-	CS	Italiano
+	CS	Italština
 	DA	Italiano
 	DE	Italiano
 	EN	Italiano
@@ -165,11 +165,11 @@ LANGUAGE_IT
 	NL	Italiano
 	NO	Italiano
 	PL	Italiano
-	RU	Italiano
+	RU	итальянский
 	SV	Italiano
 
 LANGUAGE_NL
-	CS	Nederlands
+	CS	Holandština
 	DA	Nederlands
 	DE	Nederlands
 	EN	Nederlands
@@ -180,54 +180,53 @@ LANGUAGE_NL
 	NL	Nederlands
 	NO	Nederlands
 	PL	Nederlands
-	RU	Nederlands
+	RU	голландский
 	SV	Nederlands
 
 LANGUAGE_RU
-	CS	Русский
-	DA	Русский
-	DE	Русский
-	EN	Русский
-	ES	Русский
-	FI	Русский
-	FR	Русский
-	IT	Русский
-	NL	Русский
-	NO	Русский
-	PL	Русский
+	CS	Ruština
+	DA	Russisk
+	DE	Russisch
+	EN	Russian
+	ES	Ruso
+	FI	Venäjä
+	FR	Russe
+	IT	Russo
+	NL	Russisch
+	NO	Russisk
+	PL	Rosyjski
 	RU	Русский
-	SV	Русский
-
+	SV	ryska
 
 LANGUAGE_PL
-	CS	Polski
-	DA	Polski
-	DE	Polski
-	EN	Polski
-	ES	Polski
-	FI	Polski
-	FR	Polski
-	IT	Polski
-	NL	Polski
-	NO	Polski
+	CS	Polština
+	DA	Polsk
+	DE	Polnisch
+	EN	Polish
+	ES	Polaco
+	FI	Puola
+	FR	Polonais
+	IT	Polacco
+	NL	Pools
+	NO	Polsk
 	PL	Polski
-	RU	Polski
-	SV	Polski
+	RU	Польский
+	SV	polska
 
 LANGUAGE_CS
-	CS	Česky
-	DA	Česky
-	DE	Česky
-	EN	Česky
-	ES	Česky
-	FI	Česky
-	FR	Česky
-	IT	Česky
-	NL	Česky
-	NO	Česky
-	PL	Česky
-	RU	Česky
-	SV	Česky
+	CS	Čeština
+	DA	Tjekkisk
+	DE	Tschechisch
+	EN	Czech
+	ES	Checo
+	FI	Tsekki
+	FR	Tchèque
+	IT	Ceco
+	NL	Tsjechisch
+	NO	Tsjekkisk
+	PL	Czeski
+	RU	Чешский
+	SV	tjeckiska
 
 CHOOSE_LANGUAGE_HELP
 	CS	Pro výběr vašeho jazyka použijte kolečko. Pro další úkon prostřední tlačítko.

@@ -3,19 +3,19 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SLIMSERVER_SERVERS
-	CS	Zdroj hudby
-	DA	Musikkilde
-	DE	Musikquelle
+	CS	Moje hudba
+	DA	Musik
+	DE	Eigene Musik
 	EN	My Music
-	ES	Origen de música
+	ES	Mi música
 	FI	Musiikkilähde
-	FR	Source musicale
-	IT	Sorgente musicale
-	NL	Muziekbron
-	NO	Musikkilde
-	PL	Źródło muzyki
-	RU	Источник музыки
-	SV	Musikkälla
+	FR	Ma musique
+	IT	Musica
+	NL	Mijn muziek
+	NO	Min musikk
+	PL	Moja muzyka
+	RU	Моя музыка
+	SV	Min musik
 
 SLIMSERVER_ADD_SERVER
 	CS	Jiný server
@@ -111,7 +111,7 @@ SQUEEZEBOX_PROBLEM_HELP
 	CS	Nemohl jsem připojit váš Squeezebox k bezdrátové síti. Ujistěte se, že se nachází v rozsahu vaší bezdrátové sítě.
 	DA	Kunne ikke tilslutte din Squeezebox til dit trådløse netværk. Sikre dig at den er indenfor rækkevidde for dit trådløse netværk.
 	DE	Die Squeezebox konnte nicht mit dem kabellosen Netzwerk verbunden werden. Vergewissern Sie sich, dass sie sich in Reichweite befindet.
-	EN	Could not connect %s to %s.
+	EN	Couldn't connect your Squeezebox to your wireless network. Make sure it is within range of your wireless network.
 	ES	No se pudo conectar Squeezebox a la red inalámbrica. Compruebe que se encuentre dentro del radio de la red inalámbrica.
 	FI	Squeezeboxin ja langattoman verkon välille ei voitu muodostaa yhteyttä. Varmista, että laite on langattoman verkon kantamalla.
 	FR	Impossible de connecter la Squeezebox à un réseau sans fil. Vérifiez qu'elle est à portée du réseau.

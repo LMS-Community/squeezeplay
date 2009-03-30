@@ -48,7 +48,19 @@ HTTP_AUTH_PASSWORD
 	SV	Lösenord
 
 HTTP_AUTH_HELP
+	CS	Nápověda
+	DA	Hjælp
+	DE	Hilfe
 	EN	Help
+	ES	Ayuda
+	FI	Ohje
+	FR	Aide
+	IT	Guida
+	NL	Help
+	NO	Hjelp
+	PL	Pomoc
+	RU	Справка
+	SV	Hjälp
 
 HTTP_AUTH_USERNAME_HELP
 	CS	Zadejte heslo nastavené pro ochranu vašeho SqueezeCenter

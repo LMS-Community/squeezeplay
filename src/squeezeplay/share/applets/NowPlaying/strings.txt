@@ -34,9 +34,9 @@ SCREENSAVER_PAUSED
 
 SCREENSAVER_STOPPED
 	CS	Při zastavení
-	DA	På pause
-	DE	Bei Pause
-	EN	Stopped
+	DA	Når den er stoppet
+	DE	Wenn angehalten
+	EN	When stopped
 	ES	Al detener
 	FI	Keskeytettynä
 	FR	A l'arrêt

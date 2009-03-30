@@ -5,17 +5,17 @@
 RESET_FACTORY_RESET
 	CS	Nastavení hodnot z továrny
 	DA	Gendan fabriksindstillinger
-	DE	Zurücksetzen auf Standardeinstellungen
+	DE	Standardeinstellungen
 	EN	Factory Reset
 	ES	Configuración de fábrica
 	FI	Palauta tehdasasetukset
-	FR	Réinitialisation aux paramètres d'usine
+	FR	Réinitialisation réglages d'usine
 	IT	Ripristino impostazioni di fabbrica
 	NL	Fabrieksinstellingen herstellen
-	NO	Gjenopprett fabrikkinnstillinger
+	NO	Fabrikkinnstillinger
 	PL	Przywrócenie ustawień fabrycznych
 	RU	Сброс к фабричным предустановкам
-	SV	Återställ fabriksinställningarna
+	SV	Återställ standardinställningarna
 
 RESET_CANCEL
 	CS	Storno
@@ -26,7 +26,7 @@ RESET_CANCEL
 	FI	Peruuta
 	FR	Annuler
 	IT	Annulla
-	NL	Annuleren
+	NL	Annuleer
 	NO	Avbryt
 	PL	Anuluj
 	RU	Отмена
@@ -41,7 +41,7 @@ RESET_CONTINUE
 	FI	Jatka
 	FR	Continuer
 	IT	Continua
-	NL	Doorgaan
+	NL	Verdergaan
 	NO	Fortsett
 	PL	Kontynuuj
 	RU	Продолжить
@@ -56,7 +56,7 @@ RESET_RESETTING
 	FI	\nKäynnistetään uudelleen
 	FR	\nRedémarrage
 	IT	\nRiavvio
-	NL	\nOpnieuw opstarten
+	NL	\nBezig met opnieuw starten
 	NO	\nStarter på nytt
 	PL	\nRestartowanie
 	RU	\nПерезапуск

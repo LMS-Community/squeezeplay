@@ -4,6 +4,7 @@
 #
 
 INVALID_MAC_TITLE
+	CS	Chyba
 	DA	Fejl
 	DE	Fehler
 	EN	Error
@@ -13,21 +14,27 @@ INVALID_MAC_TITLE
 	IT	Errore
 	NL	Fout
 	NO	Feil
+	PL	Błąd
+	RU	Ошибка
 	SV	Fel
 
 INVALID_MAC_TEXT
+	CS	Neplatná adresa mac nebo uuid. Kontaktujte zákaznickou podporu.
 	DA	Ugyldig MAC-adresse eller UUID. Kontakt supportafdelingen.
 	DE	Ungültige MAC-Adresse oder UUID. Wenden Sie sich an den Kundendienst.
 	EN	Invalid mac address or uuid. Please contact support.
 	ES	Dirección MAC o UUID no válidos. Contacte con asistencia técnica.
 	FI	Virheellinen MAC-osoite tai UUID. Ota yhteyttä tekniseen tukeen.
-	FR	Adresse MAC ou UUID non valide. Veuillez contacter l'assistance.
+	FR	Adresse MAC ou uuid non valide. Veuillez contacter le service de support.
 	IT	Indirizzo MAC o UUID non valido. Contattare il servizio di assistenza.
-	NL	MAC-adres of UUID ongeldig. Neem contact op met support.
-	NO	Ugyldig mac-adresse eller uuid. Vennligst ta kontakt med kundestøtte.
-	SV	Ogiltig MAC-adress eller ogiltigt UUID Kontakta supportavdelningen.
+	NL	Ongeldig mac-adres of uuid. Neem contact op met ondersteuning.
+	NO	Ugyldig mac-adresse eller uuid. Ta kontakt med kundestøtte.
+	PL	Nieprawidłowy adres MAC lub identyfikator UUID. Skontaktuj się z działem wsparcia.
+	RU	Недопустимый mac-адрес или uuid. Обратитесь в службу поддержки.
+	SV	Ogiltig MAC-adress eller ogiltigt UUID. Kontakta supportavdelningen.
 
 INVALID_MAC_CONTINUE
+	CS	Pokračovat
 	DA	Fortsæt
 	DE	Weiter
 	EN	Continue
@@ -37,9 +44,12 @@ INVALID_MAC_CONTINUE
 	IT	Continua
 	NL	Verdergaan
 	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
 	SV	Fortsätt
 
 BSP_BRIGHTNESS
+	CS	Jas
 	DA	Lysstyrke
 	DE	Helligkeit
 	EN	Brightness
@@ -49,16 +59,22 @@ BSP_BRIGHTNESS
 	IT	Luminosità
 	NL	Helderheid
 	NO	Lysstyrke
+	PL	Jasność
+	RU	Яркость
 	SV	Ljusstyrka
 
 BSP_BRIGHTNESS_ADJUST_HELP
+	CS	K nastavení jasu použijte kolečko.
 	DA	Brug drejeknappen til at justere lysstyrken.
-	DE	Sie können die Helligkeit mit dem Rad anpassen
+	DE	Sie können die Helligkeit mit dem Rad anpassen.
 	EN	Use the wheel to adjust the brightness.
 	ES	Use la rueda para ajustar el brillo.
 	FI	Voit säätää kirkkautta kiekolla.
-	FR	Utilisez la molette pour régler la luminosité.
+	FR	Utilisez la molette pour ajuster la luminosité.
 	IT	Usare la rotellina per regolare la luminosità.
-	NL	Gebruik het wiel om de helderheid van de verlichting aan te passen.
+	NL	Gebruik het wiel om de helderheid aan te passen.
 	NO	Bruk hjulet til å justere lysstyrken.
+	PL	Użyj pokrętła, aby ustawić jasność.
+	RU	Используйте колесико для регулировки яркости.
 	SV	Justera ljusstyrkan med rullningshjulet.
+

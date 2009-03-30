@@ -4,4 +4,17 @@
 
 
 TEST_TOUCHSCREEN
+	CS	Dotyková obrazovka
+	DA	Trykfølsomt display
+	DE	Touchscreen
 	EN	Touchscreen
+	ES	Pantalla táctil
+	FI	Kosketusnäyttö
+	FR	Ecran tactile
+	IT	Schermo tattile
+	NL	Touchscreen
+	NO	Berøringsskjerm
+	PL	Ekran dotykowy
+	RU	Сенсорный экран
+	SV	Pekskärm
+

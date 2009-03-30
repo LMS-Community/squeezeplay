@@ -113,7 +113,7 @@ SETUPNETTEST_HELPTITLE
 	ES	Ayuda de prueba de red
 	FI	Verkkotestin ohje
 	FR	Aide sur le test réseau
-	IT	Guida verifica rete
+	IT	Guida sulla verifica della rete
 	NL	Help voor netwerktest
 	NO	Hjelp til nettverkstesting
 	PL	Pomoc do testu sieci

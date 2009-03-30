@@ -5,150 +5,150 @@
 DOOMSDAY
 	CS	Doomsday (Soudný den)
 	DA	Dommedag
-	DE	Der jüngste Tag
+	DE	Doomsday
 	EN	Doomsday
-	ES	El día del Juicio Final
+	ES	Doomsday
 	FI	Tuomiopäivä
-	FR	Fin du monde
+	FR	Doomsday
 	IT	Il giorno del giudizio
-	NL	Dag des oordeels
+	NL	Doomsday
 	NO	Dommedag
 	PL	Dzień zagłady
 	RU	Doomsday
-	SV	Domedagen
+	SV	Doomsday
 
 DOOMSDAY_OPTION1
 	CS	Naléhavé varování 1
 	DA	Advarsel 1
-	DE	Warnung 1
+	DE	Dire Warning 1
 	EN	Dire Warning 1
-	ES	Advertencia grave 1
+	ES	Dire Warning 1
 	FI	Vakava varoitus 1
-	FR	Ultime avertissement 1
+	FR	Dire Warning 1
 	IT	Minaccia 1
-	NL	Onheilspellende waarschuwing 1
+	NL	Dire Warning 1
 	NO	Første seriøse advarsel
 	PL	Poważne ostrzeżenie 1
 	RU	Dire Warning 1
-	SV	Varning 1
+	SV	Dire Warning 1
 
 DOOMSDAY_OPTION2
 	CS	Naléhavé varování 2
 	DA	Advarsel 2
-	DE	Warnung 2
+	DE	Dire Warning 2
 	EN	Dire Warning 2
-	ES	Advertencia grave 2
+	ES	Dire Warning 2
 	FI	Vakava varoitus 2
-	FR	Ultime avertissement 2
+	FR	Dire Warning 2
 	IT	Minaccia 2
-	NL	Onheilspellende waarschuwing 2
+	NL	Dire Warning 2
 	NO	Andre seriøse advarsel
 	PL	Poważne ostrzeżenie 2
 	RU	Dire Warning 2
-	SV	Varning 2
+	SV	Dire Warning 2
 
 DOOMSDAY_OPTION3
 	CS	Naléhavé varování 3
 	DA	Advarsel 3
-	DE	Warnung 3
+	DE	Dire Warning 3
 	EN	Dire Warning 3
-	ES	Advertencia grave 3
+	ES	Dire Warning 3
 	FI	Vakava varoitus 3
-	FR	Ultime avertissement 3
+	FR	Dire Warning 3
 	IT	Minaccia 3
-	NL	Onheilspellende waarschuwing 3
+	NL	Dire Warning 3
 	NO	Tredje seriøse advarsel
 	PL	Poważne ostrzeżenie 3
 	RU	Dire Warning 3
-	SV	Varning 3
+	SV	Dire Warning 3
 
 DOOMSDAY_OPTION4
 	CS	Naléhavé varování 4
 	DA	Advarsel 4
-	DE	Warnung 4
+	DE	Dire Warning 4
 	EN	Dire Warning 4
-	ES	Advertencia grave 4
+	ES	Dire Warning 4
 	FI	Vakava varoitus 4
-	FR	Ultime avertissement 4
+	FR	Dire Warning 4
 	IT	Minaccia 4
-	NL	Onheilspellende waarschuwing 4
+	NL	Dire Warning 4
 	NO	Fjerde seriøse advarsel
 	PL	Poważne ostrzeżenie 4
 	RU	Dire Warning 4
-	SV	Varning 4
+	SV	Dire Warning 4
 
 DOOMSDAY_MESSAGE0
 	CS	Strach je cítit ve vzduchu!
 	DA	Der er frygt i luften.
-	DE	Die Angst geht um!
+	DE	Fear is in the air!
 	EN	Fear is in the air!
-	ES	¡Se puede oler el miedo!
+	ES	Fear is in the air!
 	FI	Ilmassa on kauhua!
-	FR	La peur est dans l'air!
-	IT	Atmosfera carica di paura!
-	NL	Je kunt de angst proeven!
+	FR	Fear is in the air!
+	IT	Fear is in the air!
+	NL	Fear is in the air!
 	NO	Det er redsel å spore!
 	PL	Panuje strach!
 	RU	Fear is in the air!
-	SV	Rädslan ligger i luften.
+	SV	Fear is in the air!
 
 DOOMSDAY_MESSAGE1
 	CS	Konec se blíží!
 	DA	Enden er nær!
-	DE	Das Ende ist nah!
+	DE	The End is Nigh!
 	EN	The End is Nigh!
-	ES	¡El fin está cerca!
+	ES	The End is Nigh!
 	FI	Loppu on lähellä!
-	FR	La fin est proche!
-	IT	La fine è prossima!
-	NL	Het einde is nabij!
+	FR	The End is Nigh!
+	IT	The End is Nigh!
+	NL	The End is Nigh!
 	NO	Enden er nær!
 	PL	Koniec jest blisko!
 	RU	The End is Nigh!
-	SV	Slutet är nära!
+	SV	The End is Nigh!
 
 DOOMSDAY_MESSAGE2
 	CS	Uteč do kopců!
 	DA	Løb for livet.
-	DE	Nehmt die Beine in die Hand!
+	DE	Run for the hills!
 	EN	Run for the hills!
-	ES	¡Escapa a las montañas!
+	ES	Run for the hills!
 	FI	Paetkaa kukkuloille!
-	FR	Sauve qui peut!
-	IT	Al riparo!
-	NL	Vlucht naar de heuvels!
+	FR	Run for the hills!
+	IT	Run for the hills!
+	NL	Run for the hills!
 	NO	Løp for livet!
 	PL	Uciekaj!
 	RU	Run for the hills!
-	SV	Spring för livet!
+	SV	Run for the hills!
 
 DOOMSDAY_MESSAGE3
 	CS	Dej si věci do pořádku!
 	DA	Se at få styr på det!
-	DE	Bringt Eure Sachen in Ordnung!
+	DE	Get your affairs in order!
 	EN	Get your affairs in order!
-	ES	¡Pon tus asuntos en orden!
+	ES	Get your affairs in order!
 	FI	Pakka järjestykseen!
-	FR	Mettez de l'ordre dans vos affaires!
-	IT	Metti la testa a posto!
-	NL	Stel orde op zaken!
+	FR	Get your affairs in order!
+	IT	Get your affairs in order!
+	NL	Get your affairs in order!
 	NO	Skriv testamente!
 	PL	Uporządkuj swoje sprawy!
 	RU	Get your affairs in order!
-	SV	Gör dig redo!
+	SV	Get your affairs in order!
 
 DOOMSDAY_MESSAGE4
 	CS	DUCK!
 	DA	Duk dig!
-	DE	Deckung!
+	DE	DUCK!
 	EN	DUCK!
-	ES	¡ESCÓNDETE!
+	ES	DUCK!
 	FI	VÄISTÄ!
-	FR	FILEZ VITE!
-	IT	ATTENTO!
-	NL	BUKKEN!
+	FR	DUCK!
+	IT	DUCK!
+	NL	DUCK!
 	NO	DUKK!
 	PL	KRYJ SIĘ!
 	RU	DUCK!
-	SV	DUCKA!
+	SV	DUCK!
 

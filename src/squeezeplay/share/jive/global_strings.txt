@@ -14,8 +14,8 @@ WELCOME
 	NL	Welkom
 	NO	Velkommen
 	PL	Zapraszamy
-	RU	Добро пожаловать!
-	SV	Välkommen
+	RU	Добро пожаловать
+	SV	Välkommen!
 
 SETTINGS
 	CS	Nastavení
@@ -39,7 +39,7 @@ REMOTE_SETTINGS
 	EN	Controller Settings
 	ES	Configuración del mando
 	FI	Kaukosäätimen asetukset
-	FR	Parametres de la telecommande
+	FR	Paramètres de la telecommande
 	IT	Impostazioni telecomando
 	NL	Afstandsbedieningsinstellingen
 	NO	Kontrollinnstillinger
@@ -228,7 +228,19 @@ ALLOWEDCHARS_WITHCAPS
 	SV	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 
 ALLOWEDCHARS_EMAIL
+	CS	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	DA	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	DE	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
 	EN	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	ES	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	FI	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	FR	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	IT	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	NL	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	NO	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	PL	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	RU	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	SV	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
 
 RETURN_TO_SETUP
 	CS	Zpět k nastavení
@@ -246,5 +258,17 @@ RETURN_TO_SETUP
 	SV	Återgå till installationen
 
 KEYBOARD_DONE
+	CS	hotovo
+	DA	udført
+	DE	Fertig
 	EN	done
+	ES	listo
+	FI	valmis
+	FR	terminé
+	IT	fine
+	NL	gereed
+	NO	ferdig
+	PL	gotowe
+	RU	готово
+	SV	klart
 
