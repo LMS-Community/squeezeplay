@@ -252,6 +252,11 @@ function init(self)
 			self:pushAction("soft_reset")
 		end,
 		true)
+	self.longHoldLeftIrTimer = Timer(LONG_HOLD_TIME,
+		function()
+			self:pushAction("soft_reset")
+		end,
+		true)
 end
 
 
@@ -731,6 +736,20 @@ function convertInputToAction(self, inputEvent)
 			end
 			if type == jive.ui.EVENT_KEY_UP then
 				self.longHoldBackTimer:stop()
+			end
+		end
+
+	end
+
+	if (inputEvent:getType() & (jive.ui.EVENT_IR_DOWN | jive.ui.EVENT_IR_UP ) ) > 0  then
+		if inputEvent:isIRCode("arrow_left") then
+
+			local type = inputEvent:getType()
+			if type == jive.ui.EVENT_IR_DOWN then
+				self.longHoldLeftIrTimer:start()
+			end
+			if type == jive.ui.EVENT_IR_UP then
+				self.longHoldLeftIrTimer:stop()
 			end
 		end
 

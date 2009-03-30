@@ -151,7 +151,7 @@ irActionMappings.hold = {
 	["shuffle"]  = "shuffle_toggle",
 	["repeat"]  = "repeat_toggle",
 
-	["arrow_left"]  = "disconnect_player",
+	["arrow_left"]  = "go_home",
 	["arrow_right"]  = "go_hold",
 	["play"]  = "create_mix",
 	["pause"]  = "stop",

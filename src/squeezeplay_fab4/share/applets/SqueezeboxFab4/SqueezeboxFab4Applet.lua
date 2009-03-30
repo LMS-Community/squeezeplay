@@ -30,6 +30,7 @@ local log                    = require("jive.utils.log").logger("applets.setup")
 
 local jnt                    = jnt
 local iconbar                = iconbar
+local jiveMain               = jiveMain
 
 
 module(..., Framework.constants)
@@ -127,10 +128,17 @@ function init(self)
 		end)
 	brightnessTimer:start()
 
+	Framework:addActionListener("soft_reset", self, _softResetAction(), true)
+
 	-- find out when we connect to player
 	jnt:subscribe(self)
 
 	self:storeSettings()
+end
+
+
+function _softResetAction(self, event)
+	jiveMain:goHome()
 end
 
 

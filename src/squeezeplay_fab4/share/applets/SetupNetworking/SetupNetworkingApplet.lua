@@ -276,7 +276,7 @@ end
 function _networkScan(self, iface)
 	local popup = Popup("waiting_popup")
 	popup:setAllowScreensaver(false)
-	popup:ignoreAllInputExcept({"back","disconnect_player"})
+	popup:ignoreAllInputExcept({"back"})
 
         popup:addWidget(Icon("icon_connecting"))
         popup:addWidget(Label("text", self:string("NETWORK_FINDING_NETWORKS")))
@@ -882,8 +882,8 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 	end
 
 	popup:addActionListener("back", self, _stopWPSAction)
-	popup:addActionListener("disconnect_player", self, _stopWPSAction)
-	popup:ignoreAllInputExcept({"back","disconnect_player"})
+	popup:addActionListener("soft_reset", self, _stopWPSAction)
+	popup:ignoreAllInputExcept({"back"})
 
 	self:tieAndShowWindow(popup)
 	return popup
@@ -990,7 +990,7 @@ function _connect(self, iface, ssid, createNetwork)
 			_connectTimer(self, iface, ssid)
 		end)
 	popup:addWidget(icon)
-	popup:ignoreAllInputExcept({"back","disconnect_player"})
+	popup:ignoreAllInputExcept({"back"})
 
 	-- XXXX popup text, including dhcp detection text
 
@@ -1177,7 +1177,7 @@ function _connectSuccess(self, iface, ssid)
 	-- popup confirmation
 	local popup = Popup("waiting_popup")
 	popup:addWidget(Icon("icon_connected"))
-	popup:ignoreAllInputExcept({"back","disconnect_player"})
+	popup:ignoreAllInputExcept({"back"})
 
 	local name = self.scanResults[ssid].item.text
 	local text = Label("text", self:string("NETWORK_CONNECTED_TO", name))
@@ -1601,7 +1601,7 @@ function _setStaticIP(self, iface, ssid)
 
 	local popup = Popup("waiting_popup")
 	popup:addWidget(Icon("icon_connecting"))
-	popup:ignoreAllInputExcept({"back","disconnect_player"})
+	popup:ignoreAllInputExcept({"back"})
 
 	local name = self.scanResults[ssid].item.text
 	popup:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", name)))
