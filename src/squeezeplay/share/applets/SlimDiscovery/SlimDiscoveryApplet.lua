@@ -300,6 +300,7 @@ end
 
 function _setState(self, state)
 	if self.state == state then
+		self.timer:restart(0)
 		return -- no change
 	end
 

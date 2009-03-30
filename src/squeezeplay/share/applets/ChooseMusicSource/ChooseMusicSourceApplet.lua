@@ -164,27 +164,29 @@ function _addServerItem(self, server, address)
 	if self.serverList[id] then
 		self.serverMenu:removeItem(self.serverList[id])
 	end
-	if server and self.serverList[server:getIpPort()] then
-		self.serverMenu:removeItem(self.serverList[server:getIpPort()])
-	end
 
+	if server then
+		if self.serverList[server:getIpPort()] then
+			self.serverMenu:removeItem(self.serverList[server:getIpPort()])
+		end
 
-	-- new entry
-	local item = {
-		text = server:getName(),
-		sound = "WINDOWSHOW",
-		callback = function()
-			self:selectServer(server)
-                end,
-		weight = 1,
-	}
+		-- new entry
+		local item = {
+			text = server:getName(),
+			sound = "WINDOWSHOW",
+			callback = function()
+				self:selectServer(server)
+                	end,
+			weight = 1,
+		}
 
-	self.serverMenu:addItem(item)
-	self.serverList[id] = item
+		self.serverMenu:addItem(item)
+		self.serverList[id] = item
 
-	if currentPlayer and currentPlayer:getSlimServer() == server then
-		item.style = 'item_checked'
-		self.serverMenu:setSelectedItem(item)
+		if currentPlayer and currentPlayer:getSlimServer() == server then
+			item.style = 'item_checked'
+			self.serverMenu:setSelectedItem(item)
+		end
 	end
 end
 
