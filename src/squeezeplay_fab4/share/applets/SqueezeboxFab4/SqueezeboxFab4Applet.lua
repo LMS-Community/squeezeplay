@@ -205,7 +205,7 @@ end
 
 
 function settingsBrightnessShow (self, menuItem)
-	local window = Window("help_list", menuItem.text, squeezeboxjiveTitleStyle)
+	local window = Window("text_list", menuItem.text, squeezeboxjiveTitleStyle)
 
 	local settings = self:getSettings()
 	local level = settings.brightness
