@@ -59,7 +59,6 @@ static enum jive_key_state {
 static enum jive_mouse_state {
 	MOUSE_STATE_NONE,
 	MOUSE_STATE_DOWN,
-	MOUSE_STATE_DRAG,
 	MOUSE_STATE_SENT,
 } mouse_state = MOUSE_STATE_NONE;
 
@@ -955,15 +954,10 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		pointer_timeout = now + POINTER_TIMEOUT;
 
 		if (event->motion.state & SDL_BUTTON(1)) {
-			if ( ( (mouse_state == MOUSE_STATE_DOWN || mouse_state == MOUSE_STATE_SENT)
-			       && (abs(mouse_origin_x - event->motion.x) > 10
-				   || abs(mouse_origin_y - event->motion.y) > 10))
-			     || mouse_state == MOUSE_STATE_DRAG) {
+			if ( (mouse_state == MOUSE_STATE_DOWN || mouse_state == MOUSE_STATE_SENT)) {
 				jevent.type = JIVE_EVENT_MOUSE_DRAG;
 				jevent.u.mouse.x = event->motion.x;
 				jevent.u.mouse.y = event->motion.y;
-
-				mouse_state = MOUSE_STATE_DRAG;
 			}
 		}
 		else {

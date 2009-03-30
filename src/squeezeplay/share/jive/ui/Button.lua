@@ -12,6 +12,7 @@ local EVENT_MOUSE_ALL        = jive.ui.EVENT_MOUSE_ALL
 local EVENT_MOUSE_PRESS      = jive.ui.EVENT_MOUSE_PRESS
 local EVENT_MOUSE_DOWN       = jive.ui.EVENT_MOUSE_DOWN
 local EVENT_MOUSE_DRAG       = jive.ui.EVENT_MOUSE_DRAG
+local EVENT_MOUSE_HOLD       = jive.ui.EVENT_MOUSE_HOLD
 local EVENT_MOUSE_UP         = jive.ui.EVENT_MOUSE_UP
 local EVENT_FOCUS_LOST       = jive.ui.EVENT_FOCUS_LOST
 
@@ -19,9 +20,12 @@ local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
 
 
-local BUFFER_DISTANCE = 30
+-- distance outside of the widget where press will still occur
+local PRESS_BUFFER_DISTANCE_FROM_WIDGET = 30
 
-local HOLD_TIMEOUT = 1000
+
+-- distance travelled from mouse origin where HOLD event will be ignored (is relatively high due it being finger interface, finger may roll while waiting for hold to trigger)
+local HOLD_BUFFER_DISTANCE_FROM_ORIGIN = 30
 
 module(...)
 oo.class(_M, oo.class)
@@ -32,70 +36,76 @@ function __init(self, widget, action, holdAction)
 
 	--A mouse sequence is a full down,activity,up sequence - false during down,activity and true on up
 	widget.mouseSequenceComplete = true
-
-	-- holdAction will be called if the mouse is down and not dragged for HOLD_TIMEOUT millis.
-	if holdAction then
-		widget.holdTimer = Timer(HOLD_TIMEOUT,
-			function ()
-				widget:setStyleModifier(nil)
-				widget:reDraw()
-
-				widget.mouseSequenceComplete = true
-				holdAction()
-			end,
-			true)
-	end
+	widget.distanceFromMouseDownMax = 0
 
 	widget:addListener(EVENT_MOUSE_ALL,
 		function(event)
 			local type = event:getType()
+--			log:error("event: ", event:tostring(), holdAction, widget.mouseSequenceComplete)
+
+			--NOTE: PRESS event ignored(consumed) since we handle press locally
 
 			if type == EVENT_MOUSE_DOWN then
-				--uncomment when pressed changes are merged
+				--finish mouse sequence defensively in case the previous down never occurred
+				finishMouseSequence(widget)
+
+				updateMouseOriginOffset(widget, event)
+
 				widget:setStyleModifier("pressed")
-				if widget.holdTimer then
-					widget.holdTimer:restart()
-				end
 				widget.mouseSequenceComplete = false
 
 				widget:reDraw()
 				return EVENT_CONSUME
 			end
 
+
+			if type == EVENT_MOUSE_HOLD
+			   and holdAction
+			   and not widget.mouseSequenceComplete
+			   and not mouseExceededHoldDistance(widget) then
+				
+				widget:setStyleModifier(nil)
+				widget:reDraw()
+
+				finishMouseSequence(widget)
+				return holdAction()
+			end
+
 			if type == EVENT_MOUSE_UP then
-				if widget.holdTimer then
-					widget.holdTimer:stop()
+				if widget.mouseSequenceComplete then
+					return EVENT_CONSUME
 				end
 
 				widget:setStyleModifier(nil)
 				widget:reDraw()
 
-				if not widget.mouseSequenceComplete then
-					widget.mouseSequenceComplete = true
-					if mouseInsideBufferDistance(widget, event) then
-						if action then
-							return action()
-						end
-					end
+				finishMouseSequence(widget)
+				if mouseInsidePressDistance(widget, event) and action then
+
+					return action()
 				end
 				--else nothing (i.e. cancel)
 				return EVENT_CONSUME
 			end
 
 			if type == EVENT_MOUSE_DRAG then
-				--eliminating hold after a drag is similar to typical desktop behavior, plus it's
-				 -- very tricky to have hold triggered after a drag, when "hold outside of the bounds" is factored in
-				if widget.holdTimer then
-					widget.holdTimer:stop()
+				if widget.mouseSequenceComplete then
+					return EVENT_CONSUME
 				end
 
-				if not widget.mouseSequenceComplete then
-					if mouseInsideBufferDistance(widget, event) then
-						--uncomment when pressed changes are merged
-						widget:setStyleModifier("pressed")
+				updateMouseOriginOffset(widget, event)
+
+				if mouseInsidePressDistance(widget, event) then
+					--change to pressed style, but since drag happens oftens, don't redraw each time if style hasn't changed
+					--done defensively, in case DOWN wasn't seen.
+					local modifier = "pressed"
+					if widget:setStyleModifier() ~= modifier then
+						widget:setStyleModifier(modifier)
 						widget:reDraw()
-					else
-						--dragging outside of buffer distance, change pressed style to normal
+					end
+				else
+					--dragging outside of buffer distance, change pressed style to normal, but since drag happens oftens, don't redraw each time if style hasn't changed
+					if widget:setStyleModifier() ~= nil then
 						widget:setStyleModifier(nil)
 						widget:reDraw()
 					end
@@ -104,8 +114,6 @@ function __init(self, widget, action, holdAction)
 				return EVENT_CONSUME
 			end
 
-			-- press and hold consumed - only ever respond to the up (or hold timer), since they manages the response now
-
 			return EVENT_CONSUME
 		end)
 
@@ -113,7 +121,48 @@ function __init(self, widget, action, holdAction)
 end
 
 
-function mouseInsideBufferDistance(widget, event)
+
+
+function finishMouseSequence(self)
+	self.mouseSequenceComplete = true
+
+	self.mouseDownX = nil
+	self.mouseDownY = nil
+	self.distanceFromMouseDownMax = 0
+end
+
+
+function updateMouseOriginOffset(self, event)
+	local x, y = event:getMouse()
+
+
+	if not self.mouseDownX then
+		--new drag, set origin
+		self.mouseDownX = x
+		self.mouseDownY = y
+	else
+		--2nd or later point gathered
+
+	        local distanceFromOrigin = math.sqrt(
+					math.pow(x - self.mouseDownX, 2)
+					+ math.pow(y - self.mouseDownY, 2) )
+
+		if distanceFromOrigin > self.distanceFromMouseDownMax then
+			self.distanceFromMouseDownMax = distanceFromOrigin
+
+		end
+
+	end
+
+end
+
+
+function mouseExceededHoldDistance(self)
+	return self.distanceFromMouseDownMax >= HOLD_BUFFER_DISTANCE_FROM_ORIGIN
+end
+
+
+function mouseInsidePressDistance(widget, event)
 	local mouseX, mouseY = event:getMouse()
 
 	local widgetX, widgetY, widgetW, widgetH = widget:getBounds()
@@ -145,5 +194,6 @@ function mouseInsideBufferDistance(widget, event)
 	--shortest distance to button bounds
 	local distance = math.sqrt( math.pow(distanceX ,2) + math.pow(distanceY ,2) )
 
-	return distance < BUFFER_DISTANCE
+
+	return distance < PRESS_BUFFER_DISTANCE_FROM_WIDGET
 end

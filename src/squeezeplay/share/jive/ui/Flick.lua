@@ -165,7 +165,7 @@ function resetFlickData(self)
 	self.flickData.points = {}
 end
 
-function getFlickSpeed(self, itemHeight)
+function getFlickSpeed(self, itemHeight, mouseUpT)
 	--remove stale points
 	if #self.flickData.points > 1 then
 		local staleRemoved = false
@@ -180,6 +180,14 @@ function getFlickSpeed(self, itemHeight)
 
 	if not self.flickData.points or #self.flickData.points < 2 then
 		return nil
+	end
+
+	if mouseUpT then
+		local delayUntilUp = mouseUpT - self.flickData.points[#self.flickData.points].ticks
+		if delayUntilUp > 25 then
+			-- a long delay since last point is one indication of a finger stop
+			return nil
+		end
 	end
 
 	--finger stop checking

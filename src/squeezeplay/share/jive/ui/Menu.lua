@@ -91,6 +91,20 @@ local KEY_PLAY             = jive.ui.KEY_PLAY
 local KEY_PAGE_UP           = jive.ui.KEY_PAGE_UP
 local KEY_PAGE_DOWN         = jive.ui.KEY_PAGE_DOWN
 
+-- distance travelled from mouse origin where PRESS or HOLD event will be ignored and drag takes over (is relatively high due it being finger interface, finger may roll while waiting for hold to trigger)
+local MOUSE_QUICK_SLOPPY_PRESS_DISTANCE = 35
+local MOUSE_QUICK_DRAG_DISTANCE = 50
+local MOUSE_QUICK_TOUCH_TIME_MS = 120
+local MOUSE_SLOW_DRAG_DISTANCE = 25
+
+
+--Mouse operation states
+
+local MOUSE_COMPLETE = 0
+local MOUSE_DOWN = 1
+local MOUSE_SELECTED = 2
+local MOUSE_DRAG = 3
+local MOUSE_CHIRAL = 4
 
 -- our class
 module(...)
@@ -137,7 +151,10 @@ end
 
 
 function _selectAndHighlightItemUnderPointer(self, event)
-	local x,y,w,h = self:mouseBounds(event)
+	--use item that was first under the finger, not when the selection occurs
+	local x = self.mouseDownBoundsX
+	local y = self.mouseDownBoundsY
+	
 	local i = (y - self.pixelOffsetY) / self.itemHeight --(h / self.numWidgets)
 
 	local itemShift = math.floor(i)
@@ -251,7 +268,7 @@ local function _eventHandler(self, event)
 		self:stopFlick()
 	end
 
-	if self.selectItemAfterFingerDownTimer and (evtype & EVENT_ALL_INPUT ) > 0 then
+	if self.selectItemAfterFingerDownTimer and (evtype & (EVENT_IR_ALL | EVENT_KEY_ALL | EVENT_SCROLL | EVENT_SHOW | EVENT_HIDE | EVENT_MOUSE_UP) ) > 0 then
 		self.selectItemAfterFingerDownTimer:stop()
 	end
 
@@ -294,11 +311,19 @@ local function _eventHandler(self, event)
 
 			-- otherwise try default behaviour
 			if action == "page_up" then
-				self:scrollBy( -( self.numWidgets - 1 ), true);
+				--when paging up, top item becomes the bottom item
+				if self.selected and self.selected > 1  then
+					self:setSelectedIndex(self.topItem, true )
+					self:scrollBy(-1 * self.numWidgets + 2 , true, false)
+				end
 				return EVENT_CONSUME
 
 			elseif action == "page_down" then
-				self:scrollBy( self.numWidgets - 1 , true);
+				--when paging down, bottom item becomes the bottom item
+				if not self.selected or self.selected < self.listSize then
+					self:setSelectedIndex(self.topItem, true )
+					self:scrollBy(self.numWidgets + 2, true, false)
+				end
 				return EVENT_CONSUME
 
 			elseif action == "go" or action == "play" then
@@ -337,10 +362,10 @@ local function _eventHandler(self, event)
 		end
 
 	elseif self.locked == nil and evtype == EVENT_MOUSE_HOLD then
-		--no mouse hold handling defined yet
+		--no mouse hold handling defined yet, ignore for now for MP, these will come through as presses in the UP handling
 
-		self.usePressedStyle = false
-		self:_unpressSelectedItem()
+--		self.usePressedStyle = false
+--		self:_unpressSelectedItem()
 
 		return EVENT_CONSUME
 	elseif self.locked == nil and evtype == EVENT_MOUSE_PRESS then
@@ -355,38 +380,7 @@ local function _eventHandler(self, event)
 
 
 		else
-			if self.flick.flickInterruptedByFinger then
-				--flick just stopped (on the down event), so ignore this press - do the same for hold when implemented
-				self.flick.flickInterruptedByFinger = nil
-				return EVENT_CONSUME
-			end
-
-			if not self:_selectAndHighlightItemUnderPointer(event) then
-				return EVENT_CONSUME
-			end
-
-			--relayout so selected item is shown during transition
-			self:reLayout()
-
-			--need to allow screen to be repainted before event is sent, so put on a 0-length timer
-
-			local tempDispatchTimer = Timer(0,
-			       function()
-					local r = self:dispatchNewEvent(EVENT_ACTION)
-					if r == EVENT_UNUSED then
-						self:playSound("BUMP")
-						self:getWindow():bumpRight()
-					end
-
-					self.usePressedStyle = false
-					self:_unpressSelectedItem()
-			       end,
-			       true)
-
-			tempDispatchTimer:start()
-			
-			--returning event_unused after a bump here seems like a bug, so I'm not returning it (plus it would break the 0-length timer idea)
---			return r
+			--PRESS now handled in UP
 			return EVENT_CONSUME
 		end
 
@@ -398,14 +392,17 @@ local function _eventHandler(self, event)
 			--sometimes up doesn't occur so we must again try to reset state
 			-- note: sometimes down isn't called either (if drag starts outside of bounds), so bug still exists where scrollbar drag falsely continues
 			self.sliderDragInProgress = false
-			self.bodyDragInProgress = false
+			self.currentShiftDirection = 0
+			self.flick:resetFlickData()
+			finishMouseSequence(self)
+
+			self.mouseState = MOUSE_DOWN
 
 			--stop any running flick on contact
 			if self.flick.flickInProgress then
 				log:debug("**** Stopping flick due to finger down")
 
 				self.flick:stopFlick(true)
-				return EVENT_CONSUME
 			end
 
 		end
@@ -440,67 +437,70 @@ local function _eventHandler(self, event)
 
 			local itemShift = math.floor(i)
 
-			if not self:isTouchMouseEvent(event) then
-
-				if evtype == EVENT_MOUSE_DRAG then
-					self:setSelectedIndex(self.topItem + itemShift)
-					_scrollList(self)
-				elseif (itemShift >= 0 and itemShift < self.numWidgets) then
-					-- menu selection follows mouse, but no scrolling occurs
-					self:setSelectedIndex(self.topItem + itemShift)
-				end
+			if false and not self:isTouchMouseEvent(event) then
+				--disabling regular desktop mouse behavior - favoring drag style for now
+				--disabling regular desktop mouse behavior - favoring drag style for now
+				--disabling regular desktop mouse behavior - favoring drag style for now
+--				if evtype == EVENT_MOUSE_DRAG then
+--					self:setSelectedIndex(self.topItem + itemShift)
+--					_scrollList(self)
+--				elseif (itemShift >= 0 and itemShift < self.numWidgets) then
+--					-- menu selection follows mouse, but no scrolling occurs
+--					self:setSelectedIndex(self.topItem + itemShift)
+--				end
 			else --touchpad - for now to test on desktop mouse Right-Click acts as single finger touch
 
 				if evtype == EVENT_MOUSE_DOWN then
-					self.dragOrigin.x, self.dragOrigin.y = event:getMouse();
-					--self.dragYSinceShift = 0
-					self.currentShiftDirection = 0
-
-					self.flick:resetFlickData()
-
 					self.flick:updateFlickData(event)
 
-					--don't highlight item right away (to avoid highlighting when finger go off screen and then
-					-- on screen during a drag
-					  -- first unhighlight last selected item - todo: try just setting style on current item instead of a full relayout
-	                                self.usePressedStyle = false
+					updateMouseOriginOffset(self, event)
 
+					if self.flick.flickInterruptedByFinger then
+						--flick was interrupted so don't select the item under cursor (drag still allowed)
+						return EVENT_CONSUME
+					end
+
+					  -- first unhighlight last selected item, why this needed? maybe during a locked situation (but shouldn't unlocking clear it - todo: investigate and remove this if it can be)
+	                                self.usePressedStyle = false
 					self:_unpressSelectedItem()
 
-					if self.selectItemAfterFingerDownTimer then
-						self.selectItemAfterFingerDownTimer:stop()
-					end
-					self.selectItemAfterFingerDownTimer = Timer(100,
-							       function()
-									self:_selectAndHighlightItemUnderPointer(event)
-							       end,
-							       true)
-				       self.selectItemAfterFingerDownTimer:start()
+					self:_selectAndHighlightItemUnderPointer(event)
 
 				elseif evtype == EVENT_MOUSE_DRAG then
-					self.usePressedStyle = false
-
-					if not self.bodyDragInProgress then
-						self.bodyDragInProgress = true
-						--unhighlight any selected item
-						_selectedItem(self):setStyleModifier(nil)
+					if self.mouseState == MOUSE_COMPLETE then
+						return EVENT_CONSUME
 					end
 
+					updateMouseOriginOffset(self, event)
+					self.flick:updateFlickData(event)
+
+					if not mouseExceededBufferDistance(self, MOUSE_SLOW_DRAG_DISTANCE ) then
+						return EVENT_CONSUME
+					end
+
+					if event:getTicks() - self.mouseDownT < MOUSE_QUICK_TOUCH_TIME_MS
+					    and not mouseExceededBufferDistance(self, MOUSE_QUICK_DRAG_DISTANCE ) then
+						return EVENT_CONSUME
+					end
+
+					self.mouseState = MOUSE_DRAG
+
+					--unhighlight any selected item
+					self.usePressedStyle = false
+					_selectedItem(self):setStyleModifier(nil)
+
+					--collect drag data
 					if ( self.dragOrigin.y == nil) then
-						--might have started drag outside of this textarea's bounds, so reset origin
 						self.dragOrigin.x, self.dragOrigin.y = event:getMouse();
 					end
 
 					local mouseX, mouseY = event:getMouse()
-
 					local dragAmountY = self.dragOrigin.y - mouseY
+
+					self:handleDrag(dragAmountY)
 
 					--reset origin
 					self.dragOrigin.x, self.dragOrigin.y = mouseX, mouseY
-
-					self.flick:updateFlickData(event)
-
-					self:handleDrag(dragAmountY)
 					
 --					log:error("self.pixelOffsetY                              : ", self.pixelOffsetY)
 
@@ -511,27 +511,96 @@ local function _eventHandler(self, event)
 		
 	elseif evtype == EVENT_MOUSE_UP then
 
-		--todo: UP not called if we are outside widget bounds, need this widget to handle events when drag in progress
+		if self.sliderDragInProgress then
+			finishMouseSequence(self)
+			return self.scrollbar:_event(event)
+		end
+
 		self.dragOrigin.x, self.dragOrigin.y = nil, nil;
-
-		local flickSpeed, flickDirection = self.flick:getFlickSpeed(self.itemHeight)
-
-		if flickSpeed then
-			self.flick:flick(flickSpeed, flickDirection)
+		if self.mouseState == MOUSE_COMPLETE or self.sliderDragInProgress then
+			return finishMouseSequence(self)
 		end
 
-		self.flick:resetFlickData()
+		local x1, y1 = event:getMouse()
+
+		if self.mouseState == MOUSE_DRAG then
+
+			--unhighlight any selected item
+			self.usePressedStyle = false
+			_selectedItem(self):setStyleModifier(nil)
 
 
-		self.sliderDragInProgress = false
-		self.bodyDragInProgress = false
-		--turn off accel keys (may have been on from a scrollbar slide)
-		if (self.accel or self.accelKey) then
-			self.accel = false
-			self.accelKey = nil
-			self:reDraw()
+			--Should flick occur?
+			local flickSpeed, flickDirection = self.flick:getFlickSpeed(self.itemHeight, event:getTicks())
+
+			if flickSpeed then
+				self.flick:flick(flickSpeed, flickDirection)
+			end
+
+			self.flick:resetFlickData()
+
+
+			--turn off accel keys (may have been on from a scrollbar slide)
+			if (self.accel or self.accelKey) then
+				self.accel = false
+				self.accelKey = nil
+				self:reDraw()
+			end
+
+			return finishMouseSequence(self)
 		end
-		return EVENT_UNUSED
+
+		if mouseExceededBufferDistance(self, MOUSE_QUICK_SLOPPY_PRESS_DISTANCE) then
+			--too far to be considered a "sloppy quick select"
+			--would happen on a fast press under the hold threshold, since drag would have already picked up a slow drag at this distance
+			-- so ignore this touch in the "grey zone"
+
+			--unhighlight any selected item
+			self.usePressedStyle = false
+			_selectedItem(self):setStyleModifier(nil)
+
+			return finishMouseSequence(self)
+		end
+
+		--treat as a PRESS
+
+		if self.flick.flickInterruptedByFinger then
+			--flick just stopped (on the down event), so ignore this press - do the same for hold when implemented
+			self.flick.flickInterruptedByFinger = nil
+			return finishMouseSequence(self)
+		end
+
+		if not self:_selectAndHighlightItemUnderPointer(event) then
+			--tried to select but mouse not under a selectable area
+			return finishMouseSequence(self)
+		end
+
+		finishMouseSequence(self)
+
+		--relayout so selected item is shown during transition
+		self:reLayout()
+
+		--need to allow screen to be repainted before event is sent, so put on a 0-length timer
+
+		local tempDispatchTimer = Timer(0,
+		       function()
+				local r = self:dispatchNewEvent(EVENT_ACTION)
+				if r == EVENT_UNUSED then
+					self:playSound("BUMP")
+					self:getWindow():bumpRight()
+				end
+
+				self.usePressedStyle = false
+				self:_unpressSelectedItem()
+		       end,
+		       true)
+
+		tempDispatchTimer:start()
+
+		return EVENT_CONSUME
+
+
+
 
 	elseif evtype == EVENT_SHOW or
 		evtype == EVENT_HIDE then
@@ -598,6 +667,9 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 	obj.layoutRoot = true
 	obj.closeable = true
 
+	obj.mouseState = MOUSE_COMPLETE
+	obj.distanceFromMouseDownMax = 0
+
 	obj.itemRenderer = itemRenderer
 	obj.itemListener = itemListener
 	if itemAvailable then
@@ -649,6 +721,56 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 			 end)
 	
 	return obj
+end
+
+
+function finishMouseSequence(self)
+	self.mouseState = MOUSE_COMPLETE
+
+	self.mouseDownX = nil
+	self.mouseDownY = nil
+	self.mouseDownT = nil
+	self.distanceFromMouseDownMax = 0
+
+	self.sliderDragInProgress = false
+	
+	return EVENT_CONSUME
+end
+
+
+function updateMouseOriginOffset(self, event)
+	local x, y = event:getMouse()
+
+
+	if not self.mouseDownX then
+		--used for current slected item calculation (though shouldn't regular mouse x and y be used???)
+		local boundsX,boundsY = self:mouseBounds(event)
+		self.mouseDownBoundsX = boundsX
+		self.mouseDownBoundsY = boundsY
+
+		--new drag, set origin
+		self.mouseDownX = x
+		self.mouseDownY = y
+		self.mouseDownT = event:getTicks()
+	else
+		--2nd or later point gathered
+
+	        local distanceFromOrigin = math.sqrt(
+					math.pow(x - self.mouseDownX, 2)
+					+ math.pow(y - self.mouseDownY, 2) )
+
+		if distanceFromOrigin > self.distanceFromMouseDownMax then
+			self.distanceFromMouseDownMax = distanceFromOrigin
+
+		end
+
+	end
+
+end
+
+
+function mouseExceededBufferDistance(self, value)
+	return self.distanceFromMouseDownMax >= value
 end
 
 
@@ -784,14 +906,23 @@ end
 
 --[[
 
-=head2 jive.ui.Menu:setSelectedIndex(index)
+=head2 jive.ui.Menu:setSelectedIndex(index, coerce)
 
-Sets I<index> as the selected menu item. 
+Sets I<index> as the selected menu item.
+if I<coerce> is true, index < 1 will be treat as 1 and index > listSize will be treated as listSize.
 
 =cut
 --]]
-function setSelectedIndex(self, index)
+function setSelectedIndex(self, index, coerce)
 	_assert(type(index) == "number", "setSelectedIndex index is not a number")
+
+	if coerce then
+		if index < 1 then
+			index = 1
+		elseif index > self.listSize then
+			index = self.listSize 
+		end
+	end
 
 	if index >= 1 and index <= self.listSize then
 		self.selected = index
@@ -968,7 +1099,7 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 
 	-- if selection has change, play click and redraw
 	if (self.selected ~= nil and selected ~= self.selected) or (self.selected == nil and selected ~= 0) then
-		if not self.bodyDragInProgress and not self.flick.flickInProgress then
+		if self.mouseState ~= MOUSE_DRAG and not self.flick.flickInProgress then
 			--todo come up with more comprehensive "when to click" design once the requirement is better understood
 			self:playSound("CLICK")
 		end

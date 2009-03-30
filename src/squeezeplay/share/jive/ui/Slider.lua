@@ -41,6 +41,7 @@ local oo	= require("loop.simple")
 local math      = require("math")
 
 local Widget	= require("jive.ui.Widget")
+local Framework	= require("jive.ui.Framework")
 
 local log       = require("jive.utils.log").logger("ui")
 
@@ -63,6 +64,11 @@ local KEY_GO          = jive.ui.KEY_GO
 local KEY_RIGHT       = jive.ui.KEY_RIGHT
 local KEY_FWD         = jive.ui.KEY_FWD
 
+local MOUSE_COMPLETE = 0
+local MOUSE_DOWN = 1
+local MOUSE_DRAG = 2
+
+local PAGING_BOUNDARY_BUFFER_FRACTION = .15
 
 -- our class
 module(...)
@@ -78,6 +84,9 @@ function __init(self, style, min, max, value, closure)
 	obj.range = max or 1
 	obj.value = 1
 	obj.closure = closure
+
+	obj.distanceFromMouseDownMax = 0
+	obj.jumpOnDown = true
 
 	obj:setValue(value or obj.min)
 
@@ -209,8 +218,22 @@ function _eventHandler(self, event)
 	if type == EVENT_SCROLL then
 		self:_moveSlider(event:getScroll())
 		return EVENT_CONSUME
-	elseif type == EVENT_MOUSE_DOWN or
-		type == EVENT_MOUSE_DRAG then
+	elseif type == EVENT_MOUSE_DOWN and not self.jumpOnDown then
+
+		self.mouseState = MOUSE_DOWN
+		updateMouseOriginOffset(self, event)
+
+		return EVENT_CONSUME
+	elseif type == EVENT_MOUSE_DRAG or (type == EVENT_MOUSE_DOWN and self.jumpOnDown) then
+		updateMouseOriginOffset(self, event)
+
+		if not self.jumpOnDown then
+			if not mouseExceededBufferDistance(self, 25) then
+				return EVENT_CONSUME
+			end
+		end
+
+		self.mouseState = MOUSE_DRAG
 
 		local x,y,w,h = self:mouseBounds(event)
 
@@ -221,9 +244,37 @@ function _eventHandler(self, event)
 			-- vertical
 			self:_setSlider(y / h)
 		end
+
 		return EVENT_CONSUME
-	elseif type == EVENT_MOUSE_UP or
-		type == EVENT_MOUSE_PRESS or
+	elseif type == EVENT_MOUSE_UP then
+		if self.mouseState == MOUSE_COMPLETE or self.mouseState == MOUSE_DRAG then
+			return finishMouseSequence(self)
+		end
+
+		if not self.jumpOnDown then
+			--perform pageup/pagedown (some of this is actually scrollbar specific.. Currently regular scrollbars
+			 -- are self.jumpOnDown true by default, so this code won't be hit, but todo: refactor this so that scrollbar code isn't
+			 -- inside the slider class.
+			local x,y,w,h = self:mouseBounds(event)
+			local sliderFraction
+			if w > h then
+				-- horizontal
+				sliderFraction = x / w
+			else
+				-- vertical
+				sliderFraction = y / h
+			end
+
+			local pos = sliderFraction * (self.range)
+			if pos <= self.value or sliderFraction < PAGING_BOUNDARY_BUFFER_FRACTION then
+				Framework:pushAction("page_up")
+
+			elseif pos > self.value + self.size or sliderFraction > (1 - PAGING_BOUNDARY_BUFFER_FRACTION) then
+				Framework:pushAction("page_down")
+			end
+		end
+		return finishMouseSequence(self)
+	elseif type == EVENT_MOUSE_PRESS or
 		type == EVENT_MOUSE_HOLD then
 		--ignore
 		return EVENT_CONSUME
@@ -238,6 +289,46 @@ function _eventHandler(self, event)
 
 		return EVENT_UNUSED
 	end
+end
+
+
+
+function finishMouseSequence(self)
+	self.mouseState = MOUSE_COMPLETE
+
+	self.mouseDownX = nil
+	self.mouseDownY = nil
+	self.distanceFromMouseDownMax = 0
+
+	return EVENT_CONSUME
+end
+
+
+function updateMouseOriginOffset(self, event)
+	local x, y = event:getMouse()
+
+	if not self.mouseDownX then
+		--new drag, set origin
+		self.mouseDownX = x
+		self.mouseDownY = y
+	else
+		--2nd or later point gathered
+
+	        local distanceFromOrigin = math.sqrt(
+					math.pow(x - self.mouseDownX, 2)
+					+ math.pow(y - self.mouseDownY, 2) )
+
+		if distanceFromOrigin > self.distanceFromMouseDownMax then
+			self.distanceFromMouseDownMax = distanceFromOrigin
+		end
+
+	end
+
+end
+
+
+function mouseExceededBufferDistance(self, value)
+	return self.distanceFromMouseDownMax >= value
 end
 
 

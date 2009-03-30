@@ -21,6 +21,11 @@ static JiveEvent clearpad_event;
 static int clearpad_state = 0;
 static int clearpad_max_x, clearpad_max_y;
 
+Uint32 clearpad_down_millis = 0;
+
+/* clearpad hold threshold 1 second - HOLD event is sent when no UP or PRESS has occurred before CLEARPAD_HOLD_TIMEOUT ms*/
+#define CLEARPAD_HOLD_TIMEOUT 1000
+
 /* button hold threshold .9 seconds - HOLD event is sent when a new ir code is received after IR_HOLD_TIMEOUT ms*/
 #define IR_HOLD_TIMEOUT 900
 
@@ -152,7 +157,7 @@ static int handle_clearpad_events(int fd) {
 		else if (ev[i].type == EV_SYN) {
 			if (flick_x != 0) {
 				if (abs(flick_x) > abs(flick_y)) { //must have more x than y component to be considered a vertical gesture
-					if (flick_x > 0) {
+					if (flick_x > 2) {
 						JiveEvent event;
 
 						event.type = (JiveEventType) JIVE_EVENT_CHAR_PRESS;
@@ -160,7 +165,7 @@ static int handle_clearpad_events(int fd) {
 						event.ticks = TIMEVAL_TO_TICKS(ev[i].time);
 						jive_queue_event(&event);
 					}
-					if (flick_x < 0) {
+					if (flick_x < -2) {
 						JiveEvent event;
 
 						event.type = (JiveEventType) JIVE_EVENT_CHAR_PRESS;
@@ -185,20 +190,10 @@ static int handle_clearpad_events(int fd) {
 			}
 
 
-			/* We must move more than 10 pixels to enter a 
-			 * finger drag.
-			 */
-			if (clearpad_state == 1 &&
-			    abs(event.u.mouse.x - clearpad_event.u.mouse.x) < 10
-			    && abs(event.u.mouse.y - clearpad_event.u.mouse.y) < 10
-			    && event.u.mouse.finger_count == clearpad_event.u.mouse.finger_count
-			    ) {
-				continue;
-			}
 
 			/* Don't send repeated drag values when no movement or finger change occurred
 			 */
-			if (clearpad_state == 3 &&
+			if (clearpad_state > 0 &&
 			    event.u.mouse.x == clearpad_event.u.mouse.x
 			    && event.u.mouse.y == clearpad_event.u.mouse.y
 			    && event.u.mouse.finger_count == clearpad_event.u.mouse.finger_count
@@ -214,16 +209,21 @@ static int handle_clearpad_events(int fd) {
 					jive_queue_event(&event);
 				}
 
+				if (clearpad_state == 0) {
+					//ignore spurious up situations when clearpad stat is 0 - INIT
+					continue;
+				}
+
 				event.type = (JiveEventType) JIVE_EVENT_MOUSE_UP;
 				clearpad_state = 0;
 			}
 			else if (clearpad_state == 0) {
 				event.type = (JiveEventType) JIVE_EVENT_MOUSE_DOWN;
 				clearpad_state = 1;
+				clearpad_down_millis = event.ticks;
 			}
-			else if (clearpad_state == 1) {
+			else if (clearpad_state == 1 || clearpad_state == 2) {
 				event.type = (JiveEventType) JIVE_EVENT_MOUSE_DRAG;
-				clearpad_state = 3;
 			}
 
 			memcpy(&clearpad_event, &event, sizeof(JiveEvent));
@@ -476,6 +476,20 @@ static int event_pump(lua_State *L) {
 	if (!ir_received_this_loop && ir_last_input_millis && (now >= IR_KEYUP_TIME + ir_last_input_millis)) {
 		//fprintf(stderr,"******************************UP triggered by pump check\n");
 		ir_handle_up();
+	}
+
+	// check if hold should be sent
+	if (clearpad_state == 1 && (now >= CLEARPAD_HOLD_TIMEOUT + clearpad_down_millis )) {
+		JiveEvent event;
+		//fprintf(stderr,"******************************HOLD triggered during pump check\n");
+
+		clearpad_state = 2;
+
+		memset(&event, 0, sizeof(JiveEvent));
+		event.type = JIVE_EVENT_MOUSE_HOLD;
+		event.ticks = bsp_get_realtime_millis();
+		//todo: also set last mouse coords
+		jive_queue_event(&event);
 	}
 	
 	return 0;

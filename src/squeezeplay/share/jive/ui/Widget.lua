@@ -239,7 +239,20 @@ end
 
 --[[
 
-=head2 jive.ui.Widget:setStyle(styleModifier)
+=head2 jive.ui.Widget:getStyleModifier()
+
+Returns the widgets style modifier.
+
+=cut
+--]]
+function getStyleModifier(self)
+	return self.styleModifier
+end
+
+
+--[[
+
+=head2 jive.ui.Widget:setStyleModifier(styleModifier)
 
 Sets the widgets style modifier.
 

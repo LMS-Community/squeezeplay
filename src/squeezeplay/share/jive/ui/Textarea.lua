@@ -251,9 +251,10 @@ function _eventHandler(self, event)
 			self.pixelOffsetY = 0
 			return self.scrollbar:_event(event)
 		else --mouse is inside textarea body
-			if not self:isTouchMouseEvent(event) then
-				--regulr mouse drag works like scrollbar scroll for now.
-				return self.scrollbar:_event(event)
+			if false and not self:isTouchMouseEvent(event) then
+				--disabling regular desktop mouse behavior - favoring drag style for now
+
+--				return self.scrollbar:_event(event)
 
 			else  --touchpad
 				if type == EVENT_MOUSE_DOWN then
@@ -286,7 +287,10 @@ function _eventHandler(self, event)
 		return EVENT_CONSUME
 	end
 	if type == EVENT_MOUSE_UP then
-		--todo: UP not called if we are outside widget bounds, need this widget to handle events when drag in progress
+		if self.sliderDragInProgress then
+			return self.scrollbar:_event(event)
+		end
+
 		self.dragOrigin.x, self.dragOrigin.y = nil, nil
 
 		local flickSpeed, flickDirection = self.flick:getFlickSpeed(self.itemHeight)

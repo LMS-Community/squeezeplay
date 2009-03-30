@@ -69,6 +69,7 @@ function __init(self, style, closure)
 	obj.value = 1
 	obj.size = 1
 	obj.closure = closure
+	obj.jumpOnDown = false
 
 	return obj
 end
