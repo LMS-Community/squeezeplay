@@ -36,7 +36,7 @@ local pairs, ipairs, require, setmetatable = pairs, ipairs, require, setmetatabl
 
 local os          = require("os")
 local table       = require("jive.utils.table")
-local string      = require("string")
+local string      = require("jive.utils.string")
 
 local oo          = require("loop.base")
 
@@ -68,6 +68,9 @@ module(..., oo.class)
 -- we must load this after the module declartion to dependancy loops
 local Player      = require("jive.slim.Player")
 
+
+-- minimum support server version, can be set per device
+local minimumVersion = "7.4"
 
 -- list of servers index by id. this weak table is used to enforce
 -- object equality with the server name.
@@ -994,6 +997,31 @@ Returns the server version
 --]]
 function getVersion(self)
 	return self.state.version
+end
+
+
+-- return true if the server is compatible with this controller
+function isCompatible(self)
+	if not self.state.version then
+		return false
+	end
+
+	local serVer = string.split("%.", self.state.version)
+	local minVer = string.split("%.", minimumVersion)
+
+	for i,v in ipairs(serVer) do
+		if v < minVer[i] then
+			return false
+		end
+	end
+
+	return true
+end
+
+
+-- class method to set the minimum useable server version
+function setMinimumVersion(class, minVersion)
+	minimumVersion = minVersion
 end
 
 

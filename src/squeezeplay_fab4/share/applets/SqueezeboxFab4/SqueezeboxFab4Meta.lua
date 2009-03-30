@@ -3,6 +3,7 @@ local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
 local LocalPlayer   = require("jive.slim.LocalPlayer")
+local SlimServer    = require("jive.slim.SlimServer")
 local jul           = require("jive.utils.log")
 
 local appletManager = appletManager
@@ -30,6 +31,9 @@ function registerApplet(meta)
 
 	-- Set player device type
 	LocalPlayer:setDeviceType("fab4", "Squeezebox Touch")
+
+	-- Set the minimum support server version
+	SlimServer:setMinimumVersion("7.4")
 
 	-- Bug 9900
 	-- Use SN test during development

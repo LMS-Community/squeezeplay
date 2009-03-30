@@ -962,10 +962,6 @@ function skin(self, s)
 		bgImg = inputTitleBox,
 	})
 
-	-- error window
-	-- XXX: needs layout
-	s.error = _uses(s.window)
-
 	-- update window
 	s.update_popup = _uses(s.popup)
 
@@ -1126,6 +1122,12 @@ function skin(self, s)
 		h = WH_FILL,
 		align = "left"
 	})
+
+
+	-- error window
+	-- XXX: needs layout
+	s.error = _uses(s.help_list)
+
 
 	-- information window
 	s.information = _uses(s.window)

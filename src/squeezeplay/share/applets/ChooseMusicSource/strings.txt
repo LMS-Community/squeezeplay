@@ -122,3 +122,11 @@ SQUEEZEBOX_PROBLEM_HELP
 	RU	Не удалось подключить Squeezebox к вашей беспроводной сети. Убедитесь, что он находится в диапазоне беспроводной сети.
 	SV	Det gick inte att ansluta Squeezebox till det trådlösa nätverket. Se till att spelaren är placerad inom räckvidden för det trådlösa nätverket.
 
+SQUEEZECENTER_VERSION
+	EN	SqueezeCenter Error
+
+SQUEEZECENTER_VERSION_HELP
+	EN	Your need to upgrade your music source %s to the latest version of SqueezeCenter. To download and for more information please visit mysqueezebox.com/support.
+
+CHOOSE_DIFFERENT_SERVER
+	EN	Choose different SqueezeCenter

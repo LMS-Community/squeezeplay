@@ -3,6 +3,7 @@ local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
 local LocalPlayer   = require("jive.slim.LocalPlayer")
+local SlimServer    = require("jive.slim.SlimServer")
 local jul           = require("jive.utils.log")
 
 local appletManager = appletManager
@@ -43,6 +44,9 @@ function registerApplet(meta)
 
 	-- Set player device type
 	LocalPlayer:setDeviceType("controller", "Controller")
+
+	-- Set the minimum support server version
+	SlimServer:setMinimumVersion("7.0")
 
 	-- SqueezeboxJive is a resident Applet
 	appletManager:loadApplet("SqueezeboxJive")

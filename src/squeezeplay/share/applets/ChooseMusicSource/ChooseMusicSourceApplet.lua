@@ -282,6 +282,12 @@ function selectServer(self, server, passwordEntered)
 		return
 	end
 
+	if not server:isCompatible() then
+		_serverVersionError(self, server)
+		return
+	end
+
+
 	local currentPlayer = appletManager:callService("getCurrentPlayer")
 
 	-- is the player already connected to the server?
@@ -425,6 +431,38 @@ function _connectPlayerFailed(self, player, server)
 
 	window:addWidget(help)
 	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+end
+
+
+-- failed to connect player to server
+function _serverVersionError(self, server)
+	local window = Window("error", self:string("SQUEEZECENTER_VERSION"), setupsqueezeboxTitleStyle)
+	window:setAllowScreensaver(false)
+
+	local menu = SimpleMenu("menu", {
+		{
+			text = self:string("CHOOSE_DIFFERENT_SERVER"),
+			sound = "WINDOWHIDE",
+			callback = function()
+				window:hide()
+			end
+		},
+	})
+
+	local help = Textarea("help_text", self:string("SQUEEZECENTER_VERSION_HELP", server:getName(), server:getVersion()))
+
+	window:addWidget(help)
+	window:addWidget(menu)
+
+	-- timer to check if server has been upgraded
+	window:addTimer(1000, function()
+		if server:isCompatible() then
+			self:selectServer(server)
+			window:hide(Window.transitionPushLeft)
+		end
+	end)
 
 	self:tieAndShowWindow(window)
 end
