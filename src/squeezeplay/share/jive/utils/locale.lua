@@ -127,7 +127,7 @@ function readStringsFile(self, fullPath, stringsTable)
 end
 
 function _parseStringsFile(self, myLocale, myFilePath, stringsTable)
-	log:debug("starting to parse", myFilePath)
+	log:debug("parsing ", myFilePath)
 
 	local stringsFile = io.open(myFilePath)
 	if stringsFile == nil then
@@ -141,7 +141,8 @@ function _parseStringsFile(self, myLocale, myFilePath, stringsTable)
 				     return e.str -- .. "{" .. myLocale .. "}"
 			     end,
 	}
-	local thisString 
+
+	local token, fallback
 	while true do
 		local line = stringsFile:read()
 		if not line then
@@ -150,41 +151,64 @@ function _parseStringsFile(self, myLocale, myFilePath, stringsTable)
 
 		-- remove trailing spaces and/or control chars
 		line = string.gsub(line, "[%c ]+$", '')
+
 		-- lines that begin with an uppercase char are the strings to translate
 		if string.match(line, '^%u') then
-			thisString = line
-			log:debug("this is a string to be matched |", thisString, "|")
-		else
-			-- look for matching translation lines.
-			-- defined here as one or more tabs
-			-- followed by one or more non-spaces (lang)
-			-- followed by one or more tabs
-			-- followed by the rest (the translation)
-			local locale, translatedString  = string.match(line, '^\t+([^%s]+)\t+(.+)')
-
-			-- remember all locales seen
-			if locale ~= nil then
-				allLocales[locale] = true
+			-- fallback for previous token
+			if token and fallback and not stringsTable[token].str then
+				log:debug("EN fallback=", fallback)
+				stringsTable[token].str = fallback
 			end
 
-			if locale == myLocale and thisString and translatedString then
-				-- dump the translations to log:debug
-				log:debug("strings.txt data\nlocale=", locale, "\nthisString = ", thisString, "translatedString = ", translatedString, "\n\n")
+			-- next token
+			token = line
+			log:debug("token=", token)
 
-				-- convert \n to \n
-				translatedString = string.gsub(translatedString, "\\n", "\n")
-
-				-- wrap the string in a table to allow the
-				-- localized value to be changed if a different
-				-- locale is loaded.
-				local str = stringsTable[thisString] or {}
-				str.str = translatedString
+			-- wrap the string in a table to allow the localized
+			-- value to be changed if a different locale is
+			-- later loaded.
+			if not stringsTable[token] then
+				local str = {}
 				setmetatable(str, strmt)
-				stringsTable[thisString] = str
-				log:debug("translated string: |", thisString, "|", stringsTable[thisString].str, "|")
+				stringsTable[token] = str
+			end
+
+			stringsTable[token].str = false
+		end
+
+		-- look for matching translation lines.
+		-- defined here as one or more tabs
+		-- followed by one or more non-spaces (lang)
+		-- followed by one or more tabs
+		-- followed by the rest (the translation)
+		local locale, translation  = string.match(line, '^\t+([^%s]+)\t+(.+)')
+
+		if locale and translation and token then
+			-- remember all locales seen
+			allLocales[locale] = true
+
+			if locale == myLocale then
+				log:debug("translation=", translation)
+
+				-- convert \n
+				translation = string.gsub(translation, "\\n", "\n")
+				stringsTable[token].str = translation
+			end
+
+			if locale == "EN" then
+				fallback = translation
+				-- convert \n
+				fallback = string.gsub(fallback, "\\n", "\n")
 			end
 		end
 	end
+
+	-- fallback for last token
+	if token and fallback and not stringsTable[token].str then
+		log:debug("EN fallback=", fallback)
+		stringsTable[token].str = fallback
+	end
+
 	stringsFile:close()
 
 	return stringsTable
@@ -207,7 +231,7 @@ function loadAllStrings(self, myFilePath)
 	end
 	
 	local allStrings = {}
-	local thisString 
+	local token 
 	while true do
 		local line = stringsFile:read()
 		if not line then
@@ -218,25 +242,25 @@ function loadAllStrings(self, myFilePath)
 		line = string.gsub(line, "[%c ]+$", '')
 		-- lines that begin with an uppercase char are the strings to translate
 		if string.match(line, '^%u') then
-			thisString = line
-			log:debug("this is a string to be matched |", thisString, "|")
+			token = line
+			log:debug("this is a string to be matched |", token, "|")
 		else
 			-- look for matching translation lines.
 			-- defined here as one or more tabs
 			-- followed by one or more non-spaces (lang)
 			-- followed by one or more tabs
 			-- followed by the rest (the translation)
-			local locale, translatedString  = string.match(line, '^\t+([^%s]+)\t+(.+)')
+			local locale, translation  = string.match(line, '^\t+([^%s]+)\t+(.+)')
 
-			if thisString and translatedString then
+			if token and translation then
 				-- convert \n to \n
-				translatedString = string.gsub(translatedString, "\\n", "\n")
+				translation = string.gsub(translation, "\\n", "\n")
 
 				if allStrings[locale] == nil then
 					allStrings[locale] = {}
 				end
 
-				allStrings[locale][thisString] = translatedString
+				allStrings[locale][token] = translation
 			end
 		end
 	end
