@@ -61,6 +61,7 @@ local keyboardButtonText = {
         hex = 'hex',
         chars = '!@&',
         emailNumeric = '123-&',
+        emailNumericShift = '123-&',
 }
 
 --[[
@@ -134,7 +135,7 @@ function _predefinedKeyboards(self)
 		['emailNumeric'] = { 
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
 				{ '$', '+', '_', '-', '!', '#', '%', '&', "'", '*' },
-				{ '@', '/', '=', '?', '^', '`', '{', '|', '}', '~', '.' },
+				{ '/', '=', '?', '^', '`', '{', '|', '}', '~', '.' },
 				{
 					self:_switchKeyboardButton(self:_decideKbType('email'), keyboardButtonText.qwertyLower),
 					{ keyWidth = 0, text = '.' },
@@ -154,14 +155,24 @@ function _predefinedKeyboards(self)
 		['numeric'] = { 
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
 				{ '.', '-', '+', '/', '=', '_', '@', '#', '$', '%' },
-				{ self:_spacer(), ':', '&', ',', '?', '!', '(', ')', "'", self:_spacer() },
+				{ self:_shiftKey('numericShift', 'numeric'), ':', '&', ',', '?', '!', '(', ')', "'", self:_spacer() },
 				{
 					self:_switchKeyboardButton(self:_decideKbType('qwerty'), keyboardButtonText.qwerty, 92), 
 					self:_spaceBar(),
 					self:_go(92),
 				},
 		},
-	}
+		['numericShift'] = { 
+				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
+				{ ';', '"', '`', '~', '^', '*', '\\', '|', '[', ']' },
+				{ self:_shiftKey('numeric'), '{', '}', '<', '>', self:_spacer() },
+				{
+					self:_switchKeyboardButton(self:_decideKbType('qwerty'), keyboardButtonText.qwerty, 92), 
+					self:_spaceBar(),
+					self:_go(92),
+				},
+		},
+		}
 end
 
 function _decideKbType(self, default)
