@@ -130,7 +130,7 @@ local irCodes = {
 local _defaultSkin
 local _fullscreen
 
-local function _goHome() 
+function JiveMain:goHome()
 		local windowStack = Framework.windowStack
 
 		if #windowStack > 1 then
@@ -142,9 +142,9 @@ local function _goHome()
 		end
 end
 
-local function _disconnectPlayer(self, event) --self, event not used in our case, could be left out
+function JiveMain:disconnectPlayer( event) --self, event not used in our case, could be left out
 	appletManager:callService("setCurrentPlayer", nil)
-	_goHome()
+	JiveMain:goHome()
 end
 
 
@@ -187,8 +187,8 @@ local function _irHandler(event)
 	return EVENT_UNUSED
 end
 
-function _goHomeAction()
-	_goHome()
+function _goHomeAction(self)
+	JiveMain:goHome()
 
 	return EVENT_CONSUME
 end
@@ -248,9 +248,6 @@ function JiveMain:__init()
 		10)		
 
 	Framework:addActionListener("go_home", self, _goHomeAction, 10)
-
-	-- disconnect from player on press and hold left
-	Framework:addActionListener("disconnect_player", self, _disconnectPlayer, false)
 
 	--Consume up and down actions
 	Framework:addActionListener("up", self, function() return EVENT_CONSUME end, 9999)

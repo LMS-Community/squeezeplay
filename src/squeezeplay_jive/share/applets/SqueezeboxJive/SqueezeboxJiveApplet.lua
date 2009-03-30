@@ -39,6 +39,7 @@ local Window                 = require("jive.ui.Window")
 local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("applets.setup")
 
+local jiveMain               = jiveMain
 local jnt                    = jnt
 local iconbar                = iconbar
 local appletManager          = appletManager
@@ -232,6 +233,7 @@ function init(self)
 			return EVENT_UNUSED
 		end)
 
+	Framework:addActionListener("soft_reset", self, _softResetAction, true)
 
 	-- brightness
 	self.lcdLevel = jiveBSP.ioctl(12) / 2048
@@ -256,6 +258,11 @@ function init(self)
 	jnt:subscribe(self)
 
 	return self
+end
+
+
+function _softResetAction(self, event)
+	jiveMain:disconnectPlayer()
 end
 
 

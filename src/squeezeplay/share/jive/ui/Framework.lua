@@ -45,6 +45,7 @@ local FRAME_RATE    = jive.ui.FRAME_RATE
 
 local jnt           = jnt
 
+local LONG_HOLD_TIME  = 3500
 
 -- our class
 module(..., oo.class)
@@ -243,6 +244,14 @@ function init(self)
 			return self:convertInputToAction(event)
 		end,
 		9999)
+
+	self:registerAction("soft_reset")
+
+	self.longHoldBackTimer = Timer(LONG_HOLD_TIME,
+		function()
+			self:pushAction("soft_reset")
+		end,
+		true)
 end
 
 
@@ -712,6 +721,20 @@ end
 
 -- If an action is associated with the inputEvent, queue the corresponding action event and return EVENT_CONSUME, otherwise EVENT_UNUSED nil if no corresponding action was found
 function convertInputToAction(self, inputEvent)
+	if (inputEvent:getType() & (jive.ui.EVENT_KEY_DOWN | jive.ui.EVENT_KEY_UP ) ) > 0  then
+		local keycode = inputEvent:getKeycode()
+		if keycode == jive.ui.KEY_BACK or keycode == jive.ui.KEY_LEFT then
+
+			local type = inputEvent:getType()
+			if type == jive.ui.EVENT_KEY_DOWN then
+				self.longHoldBackTimer:start()
+			end
+			if type == jive.ui.EVENT_KEY_UP then
+				self.longHoldBackTimer:stop()
+			end
+		end
+
+	end
 
 	local action = self:getAction(inputEvent)
 	if not action then
@@ -744,7 +767,7 @@ function assertActionName(self, actionName)
 end
 
 
---example: addActionListener("disconnect_player", self, disconnectPlayerAction)
+--example: addActionListener("go_home", self, goHomeAction)
 function addActionListener(self, action, obj, listener, priority)
 	_assert(type(listener) == "function")
 

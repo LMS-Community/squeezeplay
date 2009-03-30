@@ -323,8 +323,8 @@ function connectPlayerToServer(self, player, server)
 	local statusLabel = Label("text", self:string("SLIMSERVER_CONNECTING_TO", server:getName()))
 	window:addWidget(statusLabel)
 
-	-- disable input, but still allow disconnect_player
-	window:ignoreAllInputExcept({"disconnect_player"})
+	-- disable input
+	window:ignoreAllInputExcept()
 
 
 	local timeout = 1

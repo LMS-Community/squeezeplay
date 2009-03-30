@@ -93,8 +93,16 @@ function registerApplet(meta)
 	appletManager:addDefaultSetting("Playback", "enableAudio", 1)
 
 	jiveMain:setDefaultSkin("FullscreenSkin")
+
+	Framework:addActionListener("soft_reset", self, _softResetAction, true)
+
+
 end
 
+
+function _softResetAction(self, event)
+	jiveMain:goHome()
+end
 
 --[[
 

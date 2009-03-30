@@ -185,7 +185,7 @@ function setLang(self, choice, next)
 	self.popup:setAllowScreensaver(false)
 	self.popup:setAlwaysOnTop(true)
 	self.popup:setAutoHide(false)
-	self.popup:ignoreAllInputExcept({"disconnect_player"})
+	self.popup:ignoreAllInputExcept()
 
 	self.popup:addWidget(Icon("icon_connecting"))
   	local stringChoice = "LOADING_LANGUAGE"
