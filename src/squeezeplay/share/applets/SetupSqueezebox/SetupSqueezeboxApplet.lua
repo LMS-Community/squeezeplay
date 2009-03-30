@@ -1464,7 +1464,7 @@ function _setupSqueezebox(self)
 				statusLabel:setValue(self.statusText)
 			end)
 
-	window:ignoreAllInputExcept({"disconnect_player"})
+	window:ignoreAllInputExcept()
 
 	-- subscribe to the jnt so that we get notifications of players added
 	window:addListener(EVENT_WINDOW_ACTIVE,

@@ -234,18 +234,28 @@ local function ignoreAllInputListener(self, event, excludedActions)
 
 end
 
+--[[
+
+=head2 ignoreAllInputExcept(excludedActions)
+
+Consume all input events except for i<excludedActions>. Note: The action "soft_reset" is always included in the excluded actions.
+
+=cut
+--]]
 function ignoreAllInputExcept(self, excludedActions)
 	if not self.ignoreAllInputHandle then
 		--also need to remove any hideOnAllButtonInputHandle, since in the ignoreAllInput case
 		-- we want excluded actions to be seen by global listeners. Leaving hideOnAllButtonInputHandle in place would
 		-- prevent the event from getting to global listeners
-		log:error(self.hideOnAllButtonInputHandle)
-
 		if self.hideOnAllButtonInputHandle then
 			self:removeListener(self.hideOnAllButtonInputHandle)
 			self.hideOnAllButtonInputHandle = false
 		end
 
+		if not excludedActions then
+			excludedActions = {}
+		end
+		table.insert(excludedActions, "soft_reset")
 	
 		self.ignoreAllInputHandle = self:addListener(EVENT_ALL_INPUT,
 								function(event)
