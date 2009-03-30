@@ -159,7 +159,6 @@ function skin(self, s)
 	local threeItemPressedBox     = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3item_press.png")
 	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = Tile:loadImage( imgpath .. "Icons/icon_help_button_tb.png")
-	local infoButton              = Tile:loadImage( imgpath .. "Icons/icon_info_button_tb.png")
 	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
 	local deleteKeyBackground     = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry.png")
 	local deleteKeyPressedBackground = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry_press.png")
@@ -469,7 +468,7 @@ function skin(self, s)
 	
 	local TITLE_PADDING  = { 0, 15, 0, 15 }
 	local CHECK_PADDING  = { 2, 0, 6, 0 }
-	local CHECKBOX_RADIO_PADDING  = { 2, 0, 8, 0 }
+	local CHECKBOX_RADIO_PADDING  = { 2, 0, 0, 0 }
 
 	local MENU_ITEM_ICON_PADDING = { 0, 2, 8, 0 }
 	local MENU_PLAYLISTITEM_TEXT_PADDING = { 16, 1, 9, 1 }
@@ -502,7 +501,6 @@ function skin(self, s)
 	local THREE_ITEM_HEIGHT = 72
 	local FIVE_ITEM_HEIGHT = 45
 	local TITLE_BUTTON_WIDTH = 76
-	local TITLE_BUTTON_HEIGHT = 47
 
 	local smallSpinny = {
 		img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
@@ -573,6 +571,14 @@ function skin(self, s)
 		position = LAYOUT_NORTH,
 		bgImg = titleBox,
 		order = { "lbutton", "text", "rbutton" },
+		lbutton = {
+			border = { 8, 5, 8, 5 },
+			h = WH_FILL,
+		},
+		rbutton = {
+			border = { 8, 5, 8, 5 },
+			h = WH_FILL,
+		},
 		text = {
 			w = WH_FILL,
 			padding = TITLE_PADDING,
@@ -592,7 +598,7 @@ function skin(self, s)
 
 	s.item = {
 		order = { "icon", "text", "arrow" },
-		padding = { 8, 0, 0, 0 },
+		padding = { 8, 0, 8, 0 },
 		text = {
 			padding = { 0, 0, 2, 0 },
 			align = "left",
@@ -608,7 +614,7 @@ function skin(self, s)
 		arrow = {
 	      		align = ITEM_ICON_ALIGN,
 	      		img = _loadImage(self, "Icons/selection_right_5line.png"),
-			padding = { 0, 0, 3, 0 },
+			padding = { 0, 0, 0, 0 },
 		},
 		bgImg = fiveItemBox,
 	}
@@ -1282,7 +1288,8 @@ function skin(self, s)
 	local _button = {
 		bgImg = titlebarButtonBox,
 		w = TITLE_BUTTON_WIDTH,
-		h = TITLE_BUTTON_HEIGHT,
+		h = WH_FILL,
+		border = { 8, 5, 8, 5 },
 		align = 'center',
 	}
 	local _pressed_button = _uses(_button, {
@@ -1317,13 +1324,6 @@ function skin(self, s)
 	})
 	s.pressed.button_help = _uses(_pressed_button, {
 		img      = helpButton,
-	})
-
-	s.button_info = _uses(_button, {
-		img = infoButton,
-	})
-	s.pressed.button_info = _uses(_pressed_button, {
-		img      = infoButton,
 	})
 
 	s.button_volume_min = {
@@ -1453,7 +1453,7 @@ function skin(self, s)
 
 	-- indicator icons, on right of menus
 	local _indicator = {
-		align = "right",
+		align = "center",
 	}
 
 	s.wirelessLevel1 = _uses(_indicator, {
@@ -1511,7 +1511,6 @@ if true then
 			fg      = TEXT_COLOR,
 			bgImg   = titlebarButtonBox,
 			w       = TITLE_BUTTON_WIDTH,
-			h       = TITLE_BUTTON_HEIGHT,
 			padding = { 8, 0, 8, 0},
 			align   = 'center',
 		}
