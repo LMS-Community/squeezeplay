@@ -598,9 +598,9 @@ function setup_text_list(self, item)
 		)
 	}
 	menu:addItem({
-		text  = 'Sample Choice Item',
-		style = 'item_choice',
-		check  = choice,
+		text  = 'Sample Wifi Item',
+		style = 'item',
+		arrow  = Icon('wirelessLevel2'),
 	})
 	menu:addItem({
 		text  = 'Sample Checkbox',
