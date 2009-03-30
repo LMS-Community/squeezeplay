@@ -51,6 +51,7 @@ function __init(self, positiveButtonName, negativeButtonName)
 	obj.itemChangePeriod = INITIAL_ITEM_CHANGE_PERIOD
 	obj.itemChangeCycles = 0
 	obj.lastDownT = nil
+	obj.onlyScrollByOne = false
 	return obj
 end
 
@@ -123,7 +124,7 @@ function event(self, event, listTop, listIndex, listVisible, listSize)
 		 -- Ideally this can be optimized, to give the best of both worlds.
 		   
 		 -- todo: the acceleration algorithm could be listSize based (i.e. scroll faster soon on a longer list)
-		   
+
 		if self.itemChangeCycles == CYCLES_BEFORE_ACCELERATION_STARTS then
 			self.itemChangePeriod = self.itemChangePeriod / 2 
 		elseif self.itemChangeCycles > 80 then
@@ -141,9 +142,13 @@ function event(self, event, listTop, listIndex, listVisible, listSize)
 		end
 
 		self.itemChangeCycles = self.itemChangeCycles + 1
-		
+
+		if self.onlyScrollByOne then
+			scrollBy = 1
+		end
+
 		--don't move move than half a list
-		if scrollBy > listSize / 2 then
+		if listSize > 1 and scrollBy > listSize / 2 then
 			scrollBy = listSize / 2
 		end
 

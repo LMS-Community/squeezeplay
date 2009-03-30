@@ -24,6 +24,8 @@ local EVENT_IR_DOWN     = jive.ui.EVENT_IR_DOWN
 local EVENT_IR_REPEAT   = jive.ui.EVENT_IR_REPEAT
 local EVENT_IR_HOLD     = jive.ui.EVENT_IR_HOLD
 local EVENT_IR_PRESS    = jive.ui.EVENT_IR_PRESS
+local EVENT_IR_UP       = jive.ui.EVENT_IR_UP
+local EVENT_IR_ALL       = jive.ui.EVENT_IR_ALL
 local EVENT_KEY_PRESS   = jive.ui.EVENT_KEY_PRESS
 local EVENT_CHAR_PRESS   = jive.ui.EVENT_CHAR_PRESS
 local EVENT_SCROLL      = jive.ui.EVENT_SCROLL
@@ -348,9 +350,9 @@ function _eventHandler(self, event)
 
 	--hold and press left works as cursor left. hold added here since it is intuitive to hold down left to go back several characters.
 	--todo: also handle longhold when this is added.
-	if (type == EVENT_IR_HOLD or type == EVENT_IR_PRESS) and event:isIRCode("arrow_left") then
-			self.numberLetterTimer:stop()
-			return _cursorBackAction(self)
+	if (type == EVENT_IR_HOLD or type == EVENT_IR_PRESS) and (event:isIRCode("arrow_left") or event:isIRCode("arrow_right")) then
+		--left and right and in down/repeat handling; consume so that it is not seen as an action
+		return EVENT_CONSUME
 	end
 
 	if type == EVENT_IR_PRESS then
@@ -371,10 +373,50 @@ function _eventHandler(self, event)
 			end
 			return EVENT_CONSUME
 		end
+	elseif type == EVENT_IR_UP and self.upHandlesCursor and (event:isIRCode("arrow_left") or event:isIRCode("arrow_right")) then
+		self.upHandlesCursor = false
+		
+		--handle right and left on the up while at the ends of the text so that hold/repeat doesn't push past the ends of the screen
+		if event:isIRCode("arrow_left") and self.cursor == 1 then
+			self:_cursorBackAction()
+		end
+		if event:isIRCode("arrow_right") and self:_cursorAtEnd() then
+			self:_goAction()
+		end
+
+		return EVENT_CONSUME
 	elseif type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT or type == EVENT_IR_HOLD then
 		local irCode = event:getIRCode()
 		if type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT then
-			--first check for IR DOWN/UP
+
+			--IR left/right
+			if event:isIRCode("arrow_left") or event:isIRCode("arrow_right") then
+				self.numberLetterTimer:stop()
+				if self.locked == nil then
+					local direction =  self.leftRightIrAccel:event(event, 1, 1, 1, #self:getValue())
+
+					--move cursor, but when ir held down move to ends and stop so the user doesn't
+					 --inadvertantly jump into the next page before lifting the the key.
+					 --So, on the ends only move on a new press
+					if direction < 0 then
+						if self.cursor ~= 1 then
+							self:_cursorBackAction()
+						elseif type == EVENT_IR_DOWN then
+							self.upHandlesCursor = true
+						end
+					end
+					if direction > 0 then
+						if not self:_cursorAtEnd() then
+							self:_goAction()
+						elseif type == EVENT_IR_DOWN then
+							self.upHandlesCursor = true
+						end
+					end
+					return EVENT_CONSUME
+				end
+			end
+
+			--IR down/up
 			if event:isIRCode("arrow_up") or event:isIRCode("arrow_down") then
 				self.numberLetterTimer:stop()
 				if self.locked == nil then
@@ -390,7 +432,7 @@ function _eventHandler(self, event)
 					_scroll(self, polarityModifier * self.irAccel:event(event, idx, idx, 1, #chars))
 					return EVENT_CONSUME
 				end
-			end 
+			end
 		end
 		if type == EVENT_IR_DOWN or type == EVENT_IR_HOLD then
 			local timerWasRunning = self.numberLetterTimer:isRunning()
@@ -557,6 +599,9 @@ function __init(self, style, value, closure, allowedChars)
 	obj.allowedChars = allowedChars or
 		_globalStrings:str("ALLOWEDCHARS_WITHCAPS")
 	obj.scroll = ScrollAccel()
+	obj.leftRightIrAccel = IRMenuAccel("arrow_right", "arrow_left")
+	obj.leftRightIrAccel.onlyScrollByOne = true
+
 	obj.irAccel = IRMenuAccel()
 	obj.lastNumberLetterIrCode = nil
 	obj.lastNumberLetterT = nil
@@ -575,7 +620,7 @@ function __init(self, style, value, closure, allowedChars)
 	--only touch back action will be handled this way (as escape), other back sources are use _cursorBackAction, and are handled directly in the main listener
 	obj:addActionListener("back", obj, _escapeAction)
 
-	obj:addListener(EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE | EVENT_IR_DOWN | EVENT_IR_REPEAT | EVENT_IR_HOLD | EVENT_IR_PRESS,
+	obj:addListener(EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE | EVENT_IR_ALL,
 			function(event)
 				return _eventHandler(obj, event)
 			end)
