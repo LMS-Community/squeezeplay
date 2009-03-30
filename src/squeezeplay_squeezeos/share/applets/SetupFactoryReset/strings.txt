@@ -48,17 +48,17 @@ RESET_CONTINUE
 	SV	Fortsätt
 
 RESET_RESETTING
-	CS	\nRestartuji
-	DA	\nGenstarter
-	DE	\nNeustart
-	EN	\nRestarting
-	ES	\nReiniciando
-	FI	\nKäynnistetään uudelleen
-	FR	\nRedémarrage
-	IT	\nRiavvio
-	NL	\nBezig met opnieuw starten
-	NO	\nStarter på nytt
-	PL	\nRestartowanie
-	RU	\nПерезапуск
-	SV	\nStartar om
+	CS	Restartuji
+	DA	Genstarter
+	DE	Neustart
+	EN	Restarting
+	ES	Reiniciando
+	FI	Käynnistetään uudelleen
+	FR	Redémarrage
+	IT	Riavvio
+	NL	Bezig met opnieuw starten
+	NO	Starter på nytt
+	PL	Restartowanie
+	RU	Перезапуск
+	SV	Startar om
 

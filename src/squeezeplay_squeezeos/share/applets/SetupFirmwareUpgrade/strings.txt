@@ -123,49 +123,49 @@ UPDATE_TRY_AGAIN
 	SV	Försök igen ...
 
 UPDATE_DOWNLOAD
-	CS	\nKopíruji aktualizaci
-	DA	\nKopierer opdateringen
-	DE	\nAktualisierung wird kopiert
-	EN	\nCopying Update
-	ES	\nCopiando actualización
-	FI	\nKopioidaan päivitystä
-	FR	\nCopie de la mise à jour
-	IT	\nCopia aggiornamento in corso
-	NL	\nUpdates kopiëren
-	NO	\nKopierer oppdatering
-	PL	\nKopiowanie aktualizacji
-	RU	\nКопирование обновления
-	SV	\nKopierar uppdatering
+	CS	Kopíruji aktualizaci
+	DA	Kopierer opdateringen
+	DE	Aktualisierung wird kopiert
+	EN	Copying Update
+	ES	Copiando actualización
+	FI	Kopioidaan päivitystä
+	FR	Copie de la mise à jour
+	IT	Copia aggiornamento in corso
+	NL	Updates kopiëren
+	NO	Kopierer oppdatering
+	PL	Kopiowanie aktualizacji
+	RU	Копирование обновления
+	SV	Kopierar uppdatering
 
 UPDATE_VERIFY
-	CS	\nOvěřuji aktualizaci
-	DA	\nKontrollerer opdateringen
-	DE	\nAktualisierung wird geprüft
-	EN	\nVerifying Update
-	ES	\nComprobando actualización
-	FI	\nTarkistetaan päivitystä
-	FR	\nVérification des mises à jour
-	IT	\nVerifica aggiornamento
-	NL	\nUpdate verifiëren
-	NO	\nBekrefter oppdatering
-	PL	\nSprawdzanie aktualizacji
-	RU	\nПроверка обновления
-	SV	\nVerifierar uppdatering
+	CS	Ověřuji aktualizaci
+	DA	Kontrollerer opdateringen
+	DE	Aktualisierung wird geprüft
+	EN	Verifying Update
+	ES	Comprobando actualización
+	FI	Tarkistetaan päivitystä
+	FR	Vérification des mises à jour
+	IT	Verifica aggiornamento
+	NL	Update verifiëren
+	NO	Bekrefter oppdatering
+	PL	Sprawdzanie aktualizacji
+	RU	Проверка обновления
+	SV	Verifierar uppdatering
 
 UPDATE_REBOOT
-	CS	\nRestartuji
-	DA	\nGenstarter
-	DE	\nNeustart
-	EN	\nRestarting
-	ES	\nReiniciando
-	FI	\nKäynnistetään uudelleen
-	FR	\nRedémarrage
-	IT	\nRiavvio
-	NL	\nBezig met opnieuw starten
-	NO	\nStarter på nytt
-	PL	\nRestartowanie
-	RU	\nПерезапуск
-	SV	\nStartar om
+	CS	Restartuji
+	DA	Genstarter
+	DE	Neustart
+	EN	Restarting
+	ES	Reiniciando
+	FI	Käynnistetään uudelleen
+	FR	Redémarrage
+	IT	Riavvio
+	NL	Bezig met opnieuw starten
+	NO	Starter på nytt
+	PL	Restartowanie
+	RU	Перезапуск
+	SV	Startar om
 
 UPDATE_BEGIN_UPGRADE
 	CS	Je dostupná nová aktualizace softwaru. Stažení a instalace této aktualizace může trvat několik minut.

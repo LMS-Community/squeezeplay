@@ -3,7 +3,7 @@ DIAGNOSTICS
 	CS	Diagnostika systému
 	DA	Systemdiagnosticering
 	DE	Systemdiagnose
-	EN	System diagnostics
+	EN	System Diagnostics
 	ES	Diagnóstico del sistema
 	FI	Järjestelmädiagnostiikka
 	FR	Diagnostic système
@@ -420,7 +420,10 @@ SC_PORT_9000
 	SV	  TCP-port 9000:
 
 SUPPORT
-	EN	Squeezebox Support
+	EN	More Help
 
 SUPPORT_HELP
-	EN	If you need further information or assistance please visit mysqueezebox.om/support. You will also find information on conacting Support there.\n\nWhen contacting Support the agent might ask you for the details about your Squeezebox in System Diagnostics.
+	EN	If you need more help with your Squeezebox, please visit
+mysqueezebox.com/support where you can find answers to many questions and
+contact our support team.\n\nIf you do contact the support team, you may be asked for technical details
+about your Squeezebox provided by System Diagnostics, available below.
