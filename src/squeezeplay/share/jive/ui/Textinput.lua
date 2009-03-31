@@ -339,6 +339,8 @@ end
 
 function _escapeAction(self)
 	self.cursor = 1
+	self.indent = 0
+	
 	self:playSound("WINDOWHIDE")
 	self:hide()
 	return EVENT_CONSUME
