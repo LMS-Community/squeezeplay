@@ -345,6 +345,12 @@ function _escapeAction(self)
 end
 
 
+function _doneAction(self)
+	self.cursor = #tostring(self.value) + 1
+	return self:_goAction()
+end
+
+
 function _eventHandler(self, event)
 	local type = event:getType()
 
@@ -619,6 +625,8 @@ function __init(self, style, value, closure, allowedChars)
 
 	--only touch back action will be handled this way (as escape), other back sources are use _cursorBackAction, and are handled directly in the main listener
 	obj:addActionListener("back", obj, _escapeAction)
+
+	obj:addActionListener("finish_operation", obj, _doneAction)
 
 	obj:addListener(EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE | EVENT_IR_ALL,
 			function(event)

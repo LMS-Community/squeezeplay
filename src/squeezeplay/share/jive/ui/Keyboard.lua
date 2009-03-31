@@ -468,8 +468,7 @@ function _go(self, keyWidth)
 		icon     = Label('done'),
 		keyWidth = keyWidth,
 		callback = function()
-			local e = Event:new(EVENT_KEY_PRESS, KEY_GO)
-			Framework:dispatchEvent(nil, e) 
+			Framework:pushAction("finish_operation") 
 			return EVENT_CONSUME 
 		end
 	}
