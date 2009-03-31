@@ -1502,19 +1502,19 @@ function skin(self, s)
 	}
 
 	s.wirelessLevel1 = _uses(_indicator, {
-		img = _loadImage(self, "Icons/icon_wireless_1_shadow.png")
+		img = _loadImage(self, "Icons/icon_wireless_1.png")
 	})
 
 	s.wirelessLevel2 = _uses(_indicator, {
-		img = _loadImage(self, "Icons/icon_wireless_2_shadow.png")
+		img = _loadImage(self, "Icons/icon_wireless_2.png")
 	})
 
 	s.wirelessLevel3 = _uses(_indicator, {
-		img = _loadImage(self, "Icons/icon_wireless_3_shadow.png")
+		img = _loadImage(self, "Icons/icon_wireless_3.png")
 	})
 
 	s.wirelessLevel4 = _uses(_indicator, {
-		img = _loadImage(self, "Icons/icon_wireless_4_shadow.png")
+		img = _loadImage(self, "Icons/icon_wireless_4.png")
 	})
 
 
