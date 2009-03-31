@@ -959,48 +959,48 @@ NETWORK_FOUND_NETWORKS
 
 NETWORK_CONNECTION_TYPE
 	CS	Zvolte typ připojení
-	DA	Vælg forbindelsestype
-	DE	Verbindung wählen
-	EN	Choose Connection Type
-	ES	Seleccione tipo de conexión
-	FI	Valitse yhteystyyppi
-	FR	Sélectionner un type de connexion
-	IT	Scegli tipo di connessione
-	NL	Type verbinding kiezen
-	NO	Velg tilkoplingstype
+	DA	Vælg netværkstype
+	DE	Netzwerktyp wählen
+	EN	Choose network type
+	ES	Seleccione tipo de red
+	FI	Valitse verkon tyyppi
+	FR	Choisir le type de réseau
+	IT	Scegli tipo rete
+	NL	Netwerktype kiezen
+	NO	Velg nettverkstype
 	PL	Wybierz typ połączenia
 	RU	Выберите тип подключения
-	SV	Ange anslutningstyp
+	SV	Välj nätverkstyp
 
 NETWORK_CONNECTION_TYPE_WIRELESS
 	CS	Bezdrátová technologie
-	DA	Trådløst
-	DE	Kabellos
-	EN	Wireless
-	ES	Inalámbrica
-	FI	Langaton
-	FR	Sans fil
-	IT	Senza fili
-	NL	Draadloos
-	NO	Trådløs
+	DA	Opret forbindelse til trådløst netværk
+	DE	Verbindung mit drahtlosem Netzwerk herstellen
+	EN	Connect to wireless network
+	ES	Conectar a red inalámbrica
+	FI	Muodosta yhteys langattomaan verkkoon
+	FR	Se connecter au réseau sans fil
+	IT	Connetti a rete senza fili
+	NL	Met draadloos netwerk verbinden
+	NO	Kople til trådløst nettverk
 	PL	Bezprzewodowa
 	RU	Беспроводная
-	SV	Trådlös
+	SV	Anslut till trådlöst nätverk
 
 NETWORK_CONNECTION_TYPE_WIRED
 	CS	Kabelová
-	DA	Kabelforbundet
-	DE	Verkabelt
-	EN	Wired
-	ES	Con cable
-	FI	Langallinen
-	FR	Filaire
-	IT	Cablata
-	NL	Bedraad
-	NO	Trådet
+	DA	Opret forbindelse til Ethernet-netværk
+	DE	Mit Ethernet-Netzwerk verbinden
+	EN	Connect to ethernet network
+	ES	Conectar a red Ethernet
+	FI	Muodosta yhteys ethernet-verkkoon
+	FR	Se connecter au réseau Ethernet
+	IT	Connetti a rete Ethernet
+	NL	Met ethernetnetwerk verbinden
+	NO	Kople til ethernet-nettverk
 	PL	Przewodowa
 	RU	Проводная
-	SV	Kabelanslutet
+	SV	Anslut till Ethernet-nätverk
 
 NETWORK_CONNECTION_HELP
 	CS	Typ připojení
