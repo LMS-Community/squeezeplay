@@ -133,6 +133,17 @@ static void prepare(lua_State *L) {
 	/* split multi-line text */
 	lua_getglobal(L, "tostring");
 	lua_getfield(L, 1, "value");
+
+	if (lua_isnil(L, -1)) {
+		lua_pop(L, 1);
+
+		/* use text from skin if no value */
+		lua_pushcfunction(L, jiveL_style_value);
+		lua_pushvalue(L, 1);
+		lua_pushstring(L, "text");
+		lua_pushstring(L, "");
+		lua_call(L, 3, 1);
+	}
 	lua_call(L, 1, 1);
 
 	ptr = str = lua_tostring(L, -1);

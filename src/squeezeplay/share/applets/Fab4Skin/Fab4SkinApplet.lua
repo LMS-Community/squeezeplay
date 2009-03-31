@@ -865,12 +865,27 @@ function skin(self, s)
 		padding = { 1, 0, 0, 0 },
 	})
 
+	s.keyboard.done = _uses(s.keyboard.key_bottomRight_small, {
+		bgImg = keyBottomRight,
+		text = self:string("ENTER_SMALL"),
+	})
+	s.keyboard.space = _uses(s.keyboard.key_bottom_small, {
+		bgImg = keyBottom,
+		text = self:string("SPACEBAR_SMALL"),
+	})
+
 	s.keyboard.pressed = {
 		shiftOff = _uses(s.keyboard.shiftOff, {
 			bgImg = keyLeftPressed
 		}),
 		shiftOn = _uses(s.keyboard.shiftOn, {
 			bgImg = keyLeftPressed
+		}),
+		done = _uses(s.keyboard.done, {
+			bgImg = keyBottomRightPressed
+		}),
+		space = _uses(s.keyboard.space, {
+			bgImg = keyBottomPressed
 		}),
 		key = _uses(s.keyboard.key, {
 			bgImg = keyMiddlePressed

@@ -17,3 +17,8 @@ TOUCH_SKIN
 	RU	Сенсорная обложка Squeezebox
 	SV	Skal för Squeezebox Touch
 
+ENTER_SMALL
+	EN	done
+
+SPACEBAR_SMALL
+	EN	space

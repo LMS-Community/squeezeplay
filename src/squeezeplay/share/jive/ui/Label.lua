@@ -78,7 +78,6 @@ Constructs a new Label widget. I<style> is the widgets style. I<value> is the te
 --]]
 function __init(self, style, value)
 	_assert(type(style) == "string")
-	_assert(value ~= nil)
 	
 	local obj = oo.rawnew(self, Widget(style))
 
@@ -113,8 +112,6 @@ Sets the text displayed in the label.
 =cut
 --]]
 function setValue(self, value)
-	_assert(value ~= nil)
-
 	if self.value ~= value then
 		self.value = value
 		self:reLayout()

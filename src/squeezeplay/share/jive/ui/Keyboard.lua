@@ -241,9 +241,9 @@ function _layout(self)
 			
 			log:debug('keyWidth for this key set to: ', keyWidth)
 			key:setBounds(x, y, keyWidth, defaultKeyHeight)
-			
+
 			local keyType = 'key_'
-			if style ~= 'shiftOff' and style ~= 'shiftOn' then
+			if string.match(style, "^key") or string.match(style, "^spacer") then
 				if rowInfo[j].spacer then
 					keyType = 'spacer_'
 				end	
@@ -465,9 +465,7 @@ function _go(self, keyWidth)
 		keyWidth = 0
 	end
 	return {	
-		-- FIXME: don't hardcode to 'done'
-		text     = 'done',
-		fontSize = 'small',
+		icon     = Label('done'),
 		keyWidth = keyWidth,
 		callback = function()
 			local e = Event:new(EVENT_KEY_PRESS, KEY_GO)
@@ -522,10 +520,8 @@ function _spaceBar(self, keyWidth)
 		keyWidth = 0
 	end
 	return {	
+		icon     = Label('space'),
 		keyWidth = keyWidth,
-		fontSize = 'small',
-		-- FIXME, don't hard-code this text
-		text     = 'space',
 		callback = function()
 			local e = Event:new(EVENT_CHAR_PRESS, string.byte(' '))
 			Framework:dispatchEvent(nil, e) 
