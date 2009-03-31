@@ -570,13 +570,14 @@ function skin(self, s)
 		border = 0,
 		position = LAYOUT_NORTH,
 		bgImg = titleBox,
+		padding = { 0, 5, 0, 5 },
 		order = { "lbutton", "text", "rbutton" },
 		lbutton = {
-			border = { 8, 5, 8, 5 },
+			border = { 8, 0, 8, 0 },
 			h = WH_FILL,
 		},
 		rbutton = {
-			border = { 8, 5, 8, 5 },
+			border = { 8, 0, 8, 0 },
 			h = WH_FILL,
 		},
 		text = {
@@ -980,6 +981,9 @@ function skin(self, s)
 	-- input window (including keyboard)
 	s.input = _uses(s.window)
 	s.input.title = _uses(s.title, {
+		-- remove 3px from the height and 3px from the bottom padding
+		h = 44,
+		padding = { 0, 5, 0, 2 },
 		bgImg = inputTitleBox,
 	})
 
@@ -1304,7 +1308,7 @@ function skin(self, s)
 		bgImg = titlebarButtonBox,
 		w = TITLE_BUTTON_WIDTH,
 		h = WH_FILL,
-		border = { 8, 5, 8, 5 },
+		border = { 8, 0, 8, 0 },
 		align = 'center',
 	}
 	local _pressed_button = _uses(_button, {
