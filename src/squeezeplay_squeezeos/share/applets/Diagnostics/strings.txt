@@ -423,7 +423,4 @@ SUPPORT
 	EN	More Help
 
 SUPPORT_HELP
-	EN	If you need more help with your Squeezebox, please visit
-mysqueezebox.com/support where you can find answers to many questions and
-contact our support team.\n\nIf you do contact the support team, you may be asked for technical details
-about your Squeezebox provided by System Diagnostics, available below.
+	EN	If you need more help with your Squeezebox, please visit mysqueezebox.com/support where you can find answers to many questions and contact our support team.\n\nIf you do contact the support team, you may be asked for technical details about your Squeezebox provided by System Diagnostics, available below.
