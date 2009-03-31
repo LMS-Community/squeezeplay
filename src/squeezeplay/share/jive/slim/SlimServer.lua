@@ -627,7 +627,7 @@ end
 
 -- Returns true if the server is SqueezeNetwork
 function isSqueezeNetwork(self)
-	return self.name == "SqueezeNetwork"
+	return self.name == "mysqueezebox.com"
 end
 
 

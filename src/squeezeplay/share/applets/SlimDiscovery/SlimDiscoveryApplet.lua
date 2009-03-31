@@ -263,7 +263,7 @@ function _discover(self)
 
 	-- Special case Squeezenetwork
 	if System:getUUID() then
-		squeezenetwork = SlimServer(jnt, "SqueezeNetwork")
+		squeezenetwork = SlimServer(jnt, "mysqueezebox.com")
 		self:_serverUpdateAddress(squeezenetwork, jnt:getSNHostname(), 9000)
 	end
 
