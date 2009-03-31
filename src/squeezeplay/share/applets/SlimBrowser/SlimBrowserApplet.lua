@@ -3105,9 +3105,11 @@ function _problemConnecting(self, server)
 	end
 
 	-- change player, only if multiple players
+	-- NOTE also only display this if we have a player selected, this is
+	-- to fix Bug 11457 where Choose Player should not be shown during
+	-- fab4 setup.
 	local numPlayers = appletManager:callService("countPlayers")
-	local isLocal = player and player:isLocal() or false
-	if numPlayers > 1 and appletManager:hasApplet("SelectPlayer") and not isLocal then
+	if numPlayers > 1 and appletManager:hasApplet("SelectPlayer") and player then
 		menu:addItem({
 				     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
 				     callback = function()
