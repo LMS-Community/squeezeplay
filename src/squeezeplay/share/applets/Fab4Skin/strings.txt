@@ -37,5 +37,5 @@ HELP
 	PT	Ajuda
 	SV	Hjälp
 
-MORE
+MORE_HELP
 	EN	More

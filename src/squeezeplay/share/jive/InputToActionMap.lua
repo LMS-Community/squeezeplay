@@ -176,4 +176,5 @@ irActionMappings.hold = {
 -- enter actions here that are triggered in the app but not by any hard input mechanism. Entering them here will get them registered so they can be used
 unassignedActionMappings = {
 	"finish_operation",
+	"more_help",
 }
