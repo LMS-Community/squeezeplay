@@ -2342,15 +2342,7 @@ local function _browseInput(self, item, db, inputSpec, last)
 
 	local kbType = inputSpec._kbType or 'qwerty'
 	local keyboard = Keyboard("keyboard", kbType)
-	local backspace = Button(
-		Icon('button_keyboard_back'),
-		function()
-			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
-                        Framework:playSound("SELECT")
-			Framework:dispatchEvent(nil, e)
-			return EVENT_CONSUME
-		end
-	)
+	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
 
 	self:addWidget(group)

@@ -481,15 +481,7 @@ function _enterSSID(self, iface)
 				    end
 			    )
 
-	local backspace = Button(
-		Icon('button_keyboard_back'),
-		function()
-			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
-                        Framework:playSound("SELECT")
-			Framework:dispatchEvent(nil, e)
-			return EVENT_CONSUME
-		end
-	)
+	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
         window:addWidget(group)
@@ -667,16 +659,7 @@ function _enterWEPKey(self, iface, ssid)
 				    end
 			    )
 
-	local backspace = Button(
-		Icon('button_keyboard_back'),
-		function()
-			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
-                        Framework:playSound("SELECT")
-			Framework:dispatchEvent(nil, e)
-			return EVENT_CONSUME
-		end
-	)
-
+	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 	local keyboard = Keyboard('keyboard', 'hex')
 
@@ -708,16 +691,7 @@ function _enterPSK(self, iface, ssid)
 				    end,
 				    self:string("ALLOWEDCHARS_WPA")
 			    )
-	local backspace = Button(
-		Icon('button_keyboard_back'),
-		function()
-			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
-                        Framework:playSound("SELECT")
-			Framework:dispatchEvent(nil, e)
-			return EVENT_CONSUME
-		end
-	)
-
+	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
         window:addWidget(group)
@@ -1438,16 +1412,7 @@ function _enterIP(self, iface, ssid)
 					   _enterSubnet(self, iface, ssid)
 					   return true
 				   end)
-	local backspace = Button(
-		Icon('button_keyboard_back'),
-		function()
-			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
-                        Framework:playSound("SELECT")
-			Framework:dispatchEvent(nil, e)
-			return EVENT_CONSUME
-		end
-	)
-
+	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 	local keyboard = Keyboard("keyboard", "numeric")
 
@@ -1480,16 +1445,7 @@ function _enterSubnet(self, iface, ssid)
 					   _enterGateway(self, iface, ssid)
 					   return true
 				   end)
-	local backspace = Button(
-		Icon('button_keyboard_back'),
-		function()
-			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
-                        Framework:playSound("SELECT")
-			Framework:dispatchEvent(nil, e)
-			return EVENT_CONSUME
-		end
-	)
-
+	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 	local keyboard = Keyboard("keyboard", "numeric")
 
@@ -1526,16 +1482,7 @@ function _enterGateway(self, iface, ssid)
 					   _enterDNS(self, iface, ssid)
 					   return true
 				   end)
-	local backspace = Button(
-		Icon('button_keyboard_back'),
-		function()
-			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
-                        Framework:playSound("SELECT")
-			Framework:dispatchEvent(nil, e)
-			return EVENT_CONSUME
-		end
-	)
-
+	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 	local keyboard = Keyboard("keyboard", "numeric")
 
@@ -1571,16 +1518,7 @@ function _enterDNS(self, iface, ssid)
 					   _setStaticIP(self, iface, ssid)
 					   return true
 				   end)
-	local backspace = Button(
-		Icon('button_keyboard_back'),
-		function()
-			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
-                        Framework:playSound("SELECT")
-			Framework:dispatchEvent(nil, e)
-			return EVENT_CONSUME
-		end
-	)
-
+	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 	local keyboard = Keyboard("keyboard", "numeric")
 

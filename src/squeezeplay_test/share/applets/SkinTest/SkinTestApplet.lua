@@ -262,15 +262,8 @@ function setup_input_hex(self, item)
 			_windowNext(self, item)
 		end
 	)
-	local backspace = Button(
-		Icon('button_keyboard_back'),
-		function()
-			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
-			Framework:playSound("SELECT")
-			Framework:dispatchEvent(nil, e)
-			return EVENT_CONSUME
-		end
-	)
+
+	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
 	window:addWidget(group)
@@ -306,15 +299,7 @@ function setup_input_any(self, item)
 			_windowNext(self, item)
 		end
 	)
-	local backspace = Button(
-		Icon('button_keyboard_back'),
-		function()
-			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
-			Framework:playSound("SELECT")
-			Framework:dispatchEvent(nil, e)
-			return EVENT_CONSUME
-		end
-	)
+	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
 	window:addWidget(group)
@@ -350,15 +335,7 @@ function setup_input_email(self, item)
 			_windowNext(self, item)
 		end
 	)
-	local backspace = Button(
-		Icon('button_keyboard_back'),
-		function()
-			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
-			Framework:playSound("SELECT")
-			Framework:dispatchEvent(nil, e)
-			return EVENT_CONSUME
-		end
-	)
+	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
 	window:addWidget(group)
@@ -392,15 +369,7 @@ function setup_input(self, item)
 			_windowNext(self, item)
 		end
 	)
-	local backspace = Button(
-		Icon('button_keyboard_back'),
-		function()
-			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
-			Framework:playSound("SELECT")
-			Framework:dispatchEvent(nil, e)
-			return EVENT_CONSUME
-		end
-	)
+	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
 	window:addWidget(group)

@@ -355,6 +355,29 @@ function setKeyboard(self, kbType)
 
 end
 
+--[[
+
+=head2 backspace()
+
+Delivers a standard backspace button
+Not actually part of the Keyboard widget itself, but always paired with a keyboard.
+Delivered here to keep the applet code cleaner and simpler.
+
+=cut
+--]]
+
+function backspace(self)
+	return Button(
+		Icon('button_keyboard_back'),
+		function()
+			local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
+			Framework:playSound("SELECT")
+			Framework:dispatchEvent(nil, e)
+			return EVENT_CONSUME
+		end
+        )
+
+end
 
 
 -- turn the key in a row into Group widgets with Button widgets

@@ -517,15 +517,7 @@ function _addServer(self, menuItem)
 	)
 
 	local keyboard = Keyboard("keyboard", "ip")
-	local backspace = Button(
-		Icon('button_keyboard_back'),
-			function()
-				local e = Event:new(EVENT_CHAR_PRESS, string.byte("\b"))
-				Framework:playSound("SELECT")
-				Framework:dispatchEvent(nil, e)
-				return EVENT_CONSUME
-			end
-		)
+	local backspace = Keyboard.backspace()
         local group = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
 
         window:addWidget(group)
