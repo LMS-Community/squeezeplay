@@ -314,7 +314,7 @@ local function _eventHandler(self, event)
 				--when paging up, top item becomes the bottom item
 				if self.selected and self.selected > 1  then
 					self:setSelectedIndex(self.topItem, true )
-					self:scrollBy(-1 * self.numWidgets + 2 , true, false)
+					self:scrollBy(-1 * self.numWidgets + 2 , true, false, false)
 				end
 				return EVENT_CONSUME
 
@@ -322,7 +322,7 @@ local function _eventHandler(self, event)
 				--when paging down, bottom item becomes the bottom item
 				if not self.selected or self.selected < self.listSize then
 					self:setSelectedIndex(self.topItem, true )
-					self:scrollBy(self.numWidgets + 2, true, false)
+					self:scrollBy(self.numWidgets + 2, true, false, false)
 				end
 				return EVENT_CONSUME
 
@@ -513,7 +513,17 @@ local function _eventHandler(self, event)
 
 		if self.sliderDragInProgress then
 			finishMouseSequence(self)
-			return self.scrollbar:_event(event)
+
+			local result = self.scrollbar:_event(event)
+
+			--turn off accel keys (may have been on from a scrollbar slide)
+			if (self.accel or self.accelKey) then
+				self.accel = false
+				self.accelKey = nil
+				self:reDraw()
+			end
+
+			return result
 		end
 
 		self.dragOrigin.x, self.dragOrigin.y = nil, nil;
@@ -538,14 +548,6 @@ local function _eventHandler(self, event)
 			end
 
 			self.flick:resetFlickData()
-
-
-			--turn off accel keys (may have been on from a scrollbar slide)
-			if (self.accel or self.accelKey) then
-				self.accel = false
-				self.accelKey = nil
-				self:reDraw()
-			end
 
 			return finishMouseSequence(self)
 		end
@@ -976,11 +978,12 @@ end
 
 --[[
 
-=head2 jive.ui.Menu:scrollBy(scroll, allowMultiple, allowMultiple, isNewOperation, forceAccel)
+=head2 jive.ui.Menu:scrollBy(scroll, allowMultiple, isNewOperation, forceAccel)
 
 Scroll the menu by I<scroll> items. If I<scroll> is negative the menu scrolls up, otherwise the menu scrolls down. By
  default, restricts to scrolling one item unless at the edge of the visible list. If I<allowMultiple> is non-nil,
- ignore that behavior and scroll the requested scroll amount.
+ ignore that behavior and scroll the requested scroll amount. If I<forceAccel> is non-nil, big letter accelerator will be
+ forced on or off for true or false.
 
 =cut
 --]]
@@ -1040,8 +1043,8 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 		self.accel = false
 	end
 
-	if forceAccel then
-		self.accel = true
+	if forceAccel ~= nil then
+		self.accel = forceAccel
 	end
 
 	if self.accel then
