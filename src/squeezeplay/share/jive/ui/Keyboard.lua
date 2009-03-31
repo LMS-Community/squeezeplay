@@ -58,10 +58,10 @@ local keyboardButtonText = {
         qwerty = 'ABC',
         qwertyLower  = 'abc',
         numeric = '123-&',
+        numericShift = '123-&',
         hex = 'hex',
         chars = '!@&',
         emailNumeric = '123-&',
-        emailNumericShift = '123-&',
 }
 
 --[[
@@ -499,7 +499,6 @@ function _shiftKey(self, switchTo, switchBack)
 	return {	
 		icon	 = Icon(style),
 		callback = function()
-			self.goBack = switchTo
 			self:setKeyboard(switchTo)
 			self:playSound("SELECT")
 			if switchBack then
