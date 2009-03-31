@@ -690,6 +690,9 @@ function registerActions(self, map)
 	for key, action in pairs(self.inputToActionMap.charActionMappings.press) do
 		self:registerAction(action)
 	end
+	for i, action in ipairs(self.inputToActionMap.unassignedActionMappings) do
+		self:registerAction(action)
+	end
 end
 
 
