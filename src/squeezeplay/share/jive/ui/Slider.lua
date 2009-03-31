@@ -68,7 +68,7 @@ local MOUSE_COMPLETE = 0
 local MOUSE_DOWN = 1
 local MOUSE_DRAG = 2
 
-local PAGING_BOUNDARY_BUFFER_FRACTION = .15
+local PAGING_BOUNDARY_BUFFER_FRACTION = .25
 
 -- our class
 module(...)
