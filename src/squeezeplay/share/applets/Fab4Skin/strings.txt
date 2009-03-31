@@ -22,3 +22,20 @@ ENTER_SMALL
 
 SPACEBAR_SMALL
 	EN	space
+
+HELP
+	CS	Nápověda
+	DA	Hjælp
+	DE	Hilfe
+	EN	Help
+	ES	Ayuda
+	FI	Ohje
+	FR	Aide
+	IT	Guida
+	NL	Help
+	NO	Hjelp
+	PT	Ajuda
+	SV	Hjälp
+
+MORE
+	EN	More

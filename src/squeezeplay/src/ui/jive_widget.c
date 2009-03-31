@@ -27,8 +27,9 @@ void jive_widget_pack(lua_State *L, int index, JiveWidget *data) {
 
 	/* layer from style */
 	data->layer = jive_style_int(L, 1, "layer", JIVE_LAYER_CONTENT);
-
 	data->z_order = jive_style_int(L, 1, "zOrder", 0);
+	data->hidden = jive_style_int(L, 1, "hidden", 0);
+
 	JIVEL_STACK_CHECK_END(L);
 }
 
@@ -125,6 +126,20 @@ int jiveL_widget_get_z_order(lua_State *L) {
 	}
 
 	lua_pushinteger(L, peer->z_order);
+	return 1;
+}
+
+
+int jiveL_widget_is_hidden(lua_State *L) {
+	JiveWidget *peer;
+
+	lua_getfield(L, 1, "peer");
+	peer = lua_touserdata(L, -1);
+	if (!peer) {
+		return 0;
+	}
+
+	lua_pushboolean(L, peer->hidden);
 	return 1;
 }
 

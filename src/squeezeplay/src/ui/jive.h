@@ -192,6 +192,7 @@ struct jive_widget {
 	JiveAlign align;
 	Uint8 layer;
 	Sint16 z_order;
+	bool hidden;
 };
 
 struct jive_surface {
@@ -441,6 +442,7 @@ int jiveL_event_get_ircode(lua_State *L);
 int jiveL_widget_set_bounds(lua_State *L);
 int jiveL_widget_get_bounds(lua_State *L);
 int jiveL_widget_get_z_order(lua_State *L);
+int jiveL_widget_is_hidden(lua_State *L);
 int jiveL_widget_get_preferred_bounds(lua_State *L);
 int jiveL_widget_get_border(lua_State *L);
 int jiveL_widget_mouse_bounds(lua_State *L);

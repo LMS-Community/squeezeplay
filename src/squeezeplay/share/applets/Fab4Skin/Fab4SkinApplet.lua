@@ -1302,18 +1302,63 @@ function skin(self, s)
 
 --------- BUTTONS ---------
 
-
-	-- XXXX could use a factory function
+	-- base button
 	local _button = {
 		bgImg = titlebarButtonBox,
 		w = TITLE_BUTTON_WIDTH,
 		h = WH_FILL,
 		border = { 8, 0, 8, 0 },
-		align = 'center',
+		icon = {
+			w = WH_FILL,
+			h = WH_FILL,
+			hidden = 1,
+			align = 'center',
+			img = false,
+		},
+		text = {
+			w = WH_FILL,
+			h = WH_FILL,
+			hidden = 1,
+			border = 0,
+			padding = 0,
+			align = 'center',
+			font = _boldfont(18),
+			fg = { 0xe7,0xe7, 0xe7 },
+			sh = { 0x37, 0x37, 0x37 },
+		},
 	}
 	local _pressed_button = _uses(_button, {
 		bgImg = pressedTitlebarButtonBox,
 	})
+
+
+	-- icon button factory
+	local _titleButtonIcon = function(name, icon, attr)
+		s[name] = _uses(_button)
+		s.pressed[name] = _uses(_pressed_button)
+
+		attr = {
+			hidden = 0,
+			img = icon
+		}
+
+		s[name].icon = _uses(_button.icon, attr)
+		s.pressed[name].icon = _uses(_pressed_button.icon, attr)
+	end
+
+	-- text button factory
+	local _titleButtonText = function(name, string)
+		s[name] = _uses(_button)
+		s.pressed[name] = _uses(_pressed_button)
+
+		attr = {
+			hidden = 0,
+			text = string,
+		}
+
+		s[name].text = _uses(_button.text, attr)
+		s.pressed[name].text = _uses(_pressed_button.text, attr)
+	end
 
 
 	-- invisible button
@@ -1321,29 +1366,10 @@ function skin(self, s)
 		bgImg    = false
 	})
 
-	s.button_back = _uses(_button, {
-		img      = backButton,
-		padding  = { 2, 0, 0, 0 },
-	})
-
-	s.pressed.button_back = _uses(_pressed_button, {
-		img      = backButton,
-		padding  = { 2, 0, 0, 0 },
-	})
-
-	s.button_go_now_playing = _uses(_button, {
-		img      = nowPlayingButton,
-	})
-	s.pressed.button_go_now_playing = _uses(_pressed_button, {
-		img      = nowPlayingButton,
-	})
-
-	s.button_help = _uses(_button, {
-		img = helpButton,
-	})
-	s.pressed.button_help = _uses(_pressed_button, {
-		img      = helpButton,
-	})
+	_titleButtonIcon("button_back", backButton)
+	_titleButtonIcon("button_go_now_playing", nowPlayingButton)
+	_titleButtonText("button_help", self:string("HELP"))
+	_titleButtonText("button_more_help", self:string("MORE_HELP"))
 
 	s.button_volume_min = {
 		img = _loadImage(self, "UNOFFICIAL/volume_speaker_l.png"),
@@ -1495,18 +1521,12 @@ function skin(self, s)
 --------- ICONBAR ---------
 
 	s.iconbar_group = {
-		x = screenWidth + 10,
-		y = screenHeight + 10,
-		layer = LAYER_FRAME,
-		position = LAYOUT_NONE,
+		hidden = 1,
 	}
 
 	-- time (hidden off screen)
 	s.button_time = {
-		x = screenWidth + 10,
-		y = screenHeight + 10,
-		layer = LAYER_FRAME,
-		position = LAYOUT_NONE,
+		hidden = 1,
 	}
 
 

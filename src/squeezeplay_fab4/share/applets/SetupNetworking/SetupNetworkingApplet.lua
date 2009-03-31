@@ -76,8 +76,8 @@ function _helpAction(self, window, titleText, bodyText)
 		local window = Window("help_info", self:string(titleText), "helptitle")
 		window:setAllowScreensaver(false)
 
-		window:setButtonAction("rbutton", "help")
-		window:addActionListener("help", self, function()
+		window:setButtonAction("rbutton", "more_help")
+		window:addActionListener("more_help", self, function()
 			appletManager:callService("supportMenu")
 		end)
 

@@ -497,7 +497,7 @@ function _createUI(self)
 
 	self[windowStyle].titleGroup = Group(components.nptitle, {
 		lbutton = Button(
-				Icon("button_back"), 
+				Group("button_back", { Icon("icon") }), 
 				function() 
 					Framework:pushAction("back")
 					return EVENT_CONSUME 

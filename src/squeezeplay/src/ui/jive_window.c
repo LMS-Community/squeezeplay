@@ -138,6 +138,18 @@ int jiveL_window_iterate(lua_State *L) {
 	lua_getfield(L, 1, "zWidgets");
 	lua_pushnil(L);
 	while (lua_next(L, -2) != 0) {
+		if (jive_getmethod(L, -1, "isHidden")) {
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 1);
+
+			if (lua_toboolean(L, -1)) {
+				lua_pop(L, 2);
+				continue;
+			}
+
+			lua_pop(L, 1);
+		}
+
 		lua_pushvalue(L, 2);
 		lua_pushvalue(L, -2);
 		lua_call(L, 1, 1);

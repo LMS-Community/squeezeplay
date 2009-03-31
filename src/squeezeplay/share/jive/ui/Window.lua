@@ -748,7 +748,12 @@ function setButtonAction(self, buttonKey, buttonAction, buttonHoldAction)
 		end
 	end
 
-	self:setIconWidget(buttonKey, Button(Icon("button_" .. (buttonAction or "none")), buttonFunc, buttonHoldFunc))
+	local group = Group("button_" .. (buttonAction or "none"), {
+		icon = Icon("icon"),
+		icon_text = Label("text"),
+	})
+
+	self:setIconWidget(buttonKey, Button(group, buttonFunc, buttonHoldFunc))
 end
 
 
