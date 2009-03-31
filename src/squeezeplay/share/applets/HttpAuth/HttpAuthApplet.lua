@@ -43,7 +43,7 @@ local SocketHttp      = require("jive.net.SocketHttp")
 
 local log             = require("jive.utils.log").logger("applets.setup")
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
