@@ -12,8 +12,6 @@ local jnt           = jnt
 
 -- naughty polluting global table, but I don't want to store this
 -- in the applet settings as this value does not need to be persisted
-upgradeUrl          = { false }
-local upgradeUrl    = upgradeUrl
 
 
 module(...)

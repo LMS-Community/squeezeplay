@@ -41,7 +41,6 @@ local log                    = require("jive.utils.log").logger("applets.setup")
 
 local jnt                    = jnt
 local appletManager          = appletManager
-local upgradeUrl             = upgradeUrl
 
 local JIVE_VERSION           = jive.JIVE_VERSION
 
@@ -421,6 +420,12 @@ function _upgradeFailed(self)
 	appletManager:callService("connectPlayer")
 
 	local window = Window("help_list", self:string("UPDATE_FAILURE"))
+	window:setAllowScreensaver(false)
+
+	window:setButtonAction("rbutton", "help")
+	window:addActionListener("help", self, function()
+		appletManager:callService("supportMenu")
+	end)
 
 	local menu = SimpleMenu("menu",
 				{
