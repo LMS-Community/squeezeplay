@@ -65,6 +65,7 @@ local Framework   = require("jive.ui.Framework")
 local Task        = require("jive.ui.Task")
 local Timer       = require("jive.ui.Timer")
 
+local DNS         = require("jive.net.DNS")
 local SocketTcp   = require("jive.net.SocketTcp")
 
 local debug       = require("jive.utils.debug")
@@ -375,6 +376,11 @@ end
 
 -- Open the slimproto connection to SqueezeCenter.
 function connect(self, server)
+	Task("slimprotoConnect", self, connectTask):addTask(server)
+end
+
+
+function connectTask(self, server)
 	local pump = function(NetworkThreadErr)
 		if NetworkThreadErr then
 			return _handleDisconnect(self, NetworkThreadErr)
@@ -457,9 +463,20 @@ function connect(self, server)
 	-- Don't allow connections to production SN yet
 	assert(not string.match(self.serverip, "www.squeezenetwork.com"))
 
-	log:info("connect to ", self.serverip)
+	local ip = self.serverip
+	if not DNS:isip(ip) then
+		ip = DNS:toip(ip)
 
-	self.socket = SocketTcp(self.jnt, self.serverip, PORT, "SlimProto")
+		if not ip then
+			log:info("dns lookup failed for ", self.serverip)
+			_handleDisconnect(self, "DNS lookup")
+			return
+		end
+	end
+
+	log:info("connect to ", self.serverip, " (", ip, ")")
+
+	self.socket = SocketTcp(self.jnt, ip, PORT, "SlimProto")
 
 	-- connect
 	self.socket:t_connect()
