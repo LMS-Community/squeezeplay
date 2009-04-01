@@ -629,6 +629,11 @@ function t_wpaStatus(self)
 		status.wpa_state = "COMPLETED"
 	end
 
+	-- exit early if we are not connected
+	if status.wpa_state ~= "COMPLETED" then
+		return status
+	end
+
 	local f, err = io.popen("/sbin/ifconfig " .. self.interface)
 	if f == nil then
 		log:error("Can't read ifconfig: ", err)
@@ -641,6 +646,11 @@ function t_wpaStatus(self)
 
 		status.ip_address = ipaddr
 		status.ip_subnet = subnet
+	end
+
+	-- exit early if we do not have an ip address
+	if not status.ip_address then
+		return status
 	end
 
 	local f, err = io.popen("/bin/ip route")
