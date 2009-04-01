@@ -2234,12 +2234,10 @@ local function _browseInput(self, item, db, inputSpec, last)
 	
 	-- default allowedChars
 	if not inputSpec.allowedChars then
-		if inputSpec._kbType == 'qwertyLower' then
-			inputSpec.allowedChars = _string("ALLOWEDCHARS_WITHCAPS")
-		elseif inputSpec._kbType and string.match(inputSpec._kbType, 'email') then
+		if inputSpec._kbType and string.match(inputSpec._kbType, 'email') then
 			inputSpec.allowedChars = _string("ALLOWEDCHARS_EMAIL")
 		else
-			inputSpec.allowedChars = _string("ALLOWEDCHARS_CAPS")
+			inputSpec.allowedChars = _string("ALLOWEDCHARS_WITHCAPS")
 		end
 	end
 	local v = ""

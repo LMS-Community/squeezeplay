@@ -55,8 +55,7 @@ module(..., Framework.constants)
 oo.class(_M, Group)
 
 local keyboardButtonText = {
-        qwerty = 'ABC',
-        qwertyLower  = 'abc',
+        qwerty = 'abc',
         numeric = '123-&',
         numericShift = '123-&',
         hex = 'hex',
@@ -100,22 +99,22 @@ function _predefinedKeyboards(self)
 					self:_go() 
 		}
 		self.keyboards = { 
-		['qwerty']  = { 
+		['qwertyUpper']  = { 
 				{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
 				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer()  },
-				{ self:_shiftKey('qwertyLower'), 'Z', 'X', 'C', 'V', 'B', 'N', 'M', self:_spacer()  },
+				{ self:_shiftKey('qwerty'), 'Z', 'X', 'C', 'V', 'B', 'N', 'M', self:_spacer()  },
 				{
 					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
 					self:_spaceBar(),
 					self:_go(92),
 				},
 		} ,
-		['qwertyLower']  = { 
+		['qwerty']  = { 
 				{ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
 				{ self:_spacer(), 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', self:_spacer() },
-				{ self:_shiftKey('qwerty', 'qwertyLower'), 'z', 'x', 'c', 'v', 'b', 'n', 'm', self:_spacer() },
+				{ self:_shiftKey('qwertyUpper', 'qwerty'), 'z', 'x', 'c', 'v', 'b', 'n', 'm', self:_spacer() },
 				{
-					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwertyLower'), 
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
 					self:_spaceBar(),
 					self:_go(92),
 				},
@@ -137,7 +136,7 @@ function _predefinedKeyboards(self)
 				{ '$', '+', '_', '-', '!', '#', '%', '&', "'", '*' },
 				{ '/', '=', '?', '^', '`', '{', '|', '}', '~', '.' },
 				{
-					self:_switchKeyboardButton(self:_decideKbType('email'), keyboardButtonText.qwertyLower),
+					self:_switchKeyboardButton('email', keyboardButtonText.qwerty),
 					{ keyWidth = 0, text = '.' },
 					{ keyWidth = 92, text = '@' },
 					self:_macroKeyButton('.com'),
@@ -157,7 +156,7 @@ function _predefinedKeyboards(self)
 				{ '.', '-', '+', '/', '=', '_', '@', '#', '$', '%' },
 				{ self:_shiftKey('numericShift', 'numeric'), ':', '&', ',', '?', '!', '(', ')', "'", self:_spacer() },
 				{
-					self:_switchKeyboardButton(self:_decideKbType('qwerty'), keyboardButtonText.qwerty, 92), 
+					self:_switchKeyboardButton('qwerty', keyboardButtonText.qwerty, 92), 
 					self:_spaceBar(),
 					self:_go(92),
 				},
@@ -167,22 +166,12 @@ function _predefinedKeyboards(self)
 				{ ';', '"', '`', '~', '^', '*', '\\', '|', '[', ']' },
 				{ self:_shiftKey('numeric'), '{', '}', '<', '>', self:_spacer() },
 				{
-					self:_switchKeyboardButton(self:_decideKbType('qwerty'), keyboardButtonText.qwerty, 92), 
+					self:_switchKeyboardButton('qwerty', keyboardButtonText.qwerty, 92), 
 					self:_spaceBar(),
 					self:_go(92),
 				},
 		},
 		}
-end
-
-function _decideKbType(self, default)
-	return function()
-		if self.goBack then
-			return self.goBack
-		else
-			return default
-		end
-	end
 end
 
 function _layout(self)
@@ -295,7 +284,7 @@ end
 
 =head2 jive.ui.Keyboard:setKeyboard(kbType)
 
-Changes Keyboard widget to I<type>, where type is either a pre-defined keyboard ('qwerty', 'qwertyLower', 'numeric', 'hex'),
+Changes Keyboard widget to I<type>, where type is either a pre-defined keyboard ('qwerty', 'qwertyUpper', 'numeric', 'hex'),
 or a user-defined table of keys to render
 
 If a I<self.last> keyboard is defined, the keyboard switches back to that keyboard after one key is pressed
@@ -453,7 +442,7 @@ function _macroKeyButton(self, keyText, keyWidth)
 end
 
 
-function _switchKeyboardButton(self, kbType, keyText, keyWidth, goBack)
+function _switchKeyboardButton(self, kbType, keyText, keyWidth)
 	if not keyWidth then
 		keyWidth = 0
 	end
@@ -464,13 +453,6 @@ function _switchKeyboardButton(self, kbType, keyText, keyWidth, goBack)
 		keyWidth = keyWidth,
 		callback = function()
 			local keyboardType = kbType
-			-- sometimes keyboardType needs to be determined from self.goBack via a closure
-			if type(kbType) == "function" then
-				keyboardType = kbType()
-			end
-			if goBack then
-				self.goBack = goBack
-			end
 			self.kbType = kbType
 			self.pushed = keyText
 			self:playSound("SELECT")

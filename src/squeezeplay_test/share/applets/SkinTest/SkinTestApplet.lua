@@ -569,7 +569,22 @@ function setup_text_list(self, item)
 	menu:addItem({
 		text  = 'Sample Wifi Item',
 		style = 'item',
+		arrow  = Icon('wirelessLevel1'),
+	})
+	menu:addItem({
+		text  = 'Sample Wifi Item',
+		style = 'item',
 		arrow  = Icon('wirelessLevel2'),
+	})
+	menu:addItem({
+		text  = 'Sample Wifi Item',
+		style = 'item',
+		arrow  = Icon('wirelessLevel3'),
+	})
+	menu:addItem({
+		text  = 'Sample Wifi Item',
+		style = 'item',
+		arrow  = Icon('wirelessLevel4'),
 	})
 	menu:addItem({
 		text  = 'Sample Checkbox',
@@ -862,7 +877,7 @@ windows = {
 	{ "help_list_many", "Choose Region", setup_help_list, },
 
 	{ "input_ip", "IP Entry", setup_input_any, 'ip' },
-	{ "input_qwertyLower", "QWERTY Entry", setup_input_any, 'qwertyLower' },
+	{ "input_qwerty", "QWERTY Entry", setup_input_any, 'qwerty' },
 	{ "input_numeric", "Number Entry", setup_input_any, 'numeric' },
 	{ "input_hex", "Hex Entry", setup_input_any, 'hex' },
 	{ "input_email", "Email Entry", setup_input_email, },

@@ -71,16 +71,10 @@ function menu(self, menuItem)
 					self:menuWindow(menuItem, 'button')
 				end 
 			},
-			{ text = "Keyboard UPPERCASE input",
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:keyboardWindow(menuItem, 'qwerty')
-				end
-			},
 			{ text = "Keyboard lowercase input",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
-					self:keyboardWindow(menuItem, 'qwertyLower')
+					self:keyboardWindow(menuItem, 'qwerty')
 				end
 			},
 			{ text = "Keyboard hex input",

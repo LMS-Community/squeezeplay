@@ -485,7 +485,7 @@ function _enterSSID(self, iface)
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
         window:addWidget(group)
-	window:addWidget(Keyboard("keyboard", 'qwertyLower'))
+	window:addWidget(Keyboard("keyboard", 'qwerty'))
         window:focusWidget(group)
 
 	_helpAction(self, window, 'NETWORK_NETWORK_NAME_HELP', 'NETWORK_NETWORK_NAME_HELP_BODY') 
@@ -695,7 +695,7 @@ function _enterPSK(self, iface, ssid)
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
         window:addWidget(group)
-	window:addWidget(Keyboard('keyboard', 'qwertyLower'))
+	window:addWidget(Keyboard('keyboard', 'qwerty'))
         window:focusWidget(group)
 
 	_helpAction(self, window, 'NETWORK_WIRELESS_PASSWORD_HELP', 'NETWORK_WIRELESS_PASSWORD_HELP_BODY')

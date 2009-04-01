@@ -644,10 +644,10 @@ function skin(self, s)
 	s.keyboard.button_space = _uses(s.keyboard.button_shift, {
 		padding = 2, w = 100, h = 35
 	})
-	s.keyboard.qwertyLower = _uses(s.keyboard.button, {
+	s.keyboard.shiftOff = _uses(s.keyboard.button, {
 		img = _loadImage(self, "Icons/icon_shift_off.png")
 	})
-	s.keyboard.qwertyUpper = _uses(s.keyboard.button, {
+	s.keyboard.shiftOn = _uses(s.keyboard.button, {
 		img = _loadImage(self, "Icons/icon_shift_on.png")
 	})
 

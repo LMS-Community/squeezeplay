@@ -281,7 +281,7 @@ styles = {
 	"input.keyboard.button_enter",
 	"input.keyboard.keyboardBack",
 	"input.keyboard.qwerty",
-	"input.keyboard.qwertyLower",
+	"input.keyboard.qwertyUpper",
 	"input.keyboard.button_shift",
 	"input.keyboard.button_space",
 	"input.textinput",
