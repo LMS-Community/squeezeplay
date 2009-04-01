@@ -1039,12 +1039,12 @@ end
 
 -- warning if ethernet cable is not connected
 function _attachEthernet(self, iface, ssid, createNetwork)
-	local window = Window("text_list", self:string("NETWORK_ATTACH_CABLE"))
+	local window = Window("help_list", self:string("NETWORK_ATTACH_CABLE"))
         window:setAllowScreensaver(false)
 
 	window:setButtonAction("rbutton", nil)
 
-	local textarea = Textarea('text', self:string("NETWORK_ATTACH_CABLE_DETAILED"))
+	local textarea = Textarea('help_text', self:string("NETWORK_ATTACH_CABLE_DETAILED"))
 	window:addWidget(textarea)
 
 	window:addTimer(500,
