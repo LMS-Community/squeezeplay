@@ -89,6 +89,12 @@ function startRegister(self)
 end
 
 
+function _consumeAction(self, event)
+	log:warn("HOME ACTIONS ARE DISABLED IN SETUP. USE LONG-PRESS-HOLD BACK BUTTON INSTEAD")
+	-- don't allow this event to continue
+	return EVENT_CONSUME
+end
+
 function step1(self)
 	-- add 'RETURN_TO_SETUP' at top
 	log:debug('step1')
@@ -103,12 +109,14 @@ function step1(self)
 		}
 	jiveMain:addItem(returnToSetup)
 
-	disableHomeKeyDuringSetup = 
-		Framework:addListener(EVENT_KEY_PRESS,
+	self.disableHomeActionDuringSetup = Framework:addActionListener("go_home", self, _consumeAction)
+	self.disableHomeOrNowPlayingActionDuringSetup = Framework:addActionListener("go_home_or_now_playing", self, _consumeAction)
+	disableHomeKeyDuringSetup =
+		Framework:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD,
 		function(event)
 			local keycode = event:getKeycode()
 			if keycode == KEY_HOME then
-				log:warn("HOME KEY IS DISABLED IN SETUP. USE PRESS-HOLD BACK BUTTON INSTEAD")
+				log:warn("HOME KEY IS DISABLED IN SETUP. USE LONG-PRESS-HOLD BACK BUTTON INSTEAD")
 				-- don't allow this event to continue
 				return EVENT_CONSUME
 			end
@@ -420,6 +428,8 @@ end
 
 -- remove listeners when leaving this applet
 function free(self)
+	Framework:removeListener(self.disableHomeActionDuringSetup)
+	Framework:removeListener(self.disableHomeOrNowPlayingActionDuringSetup)
 	Framework:removeListener(self.disableHomeKeyDuringSetup)
 	Framework:removeListener(self.freeAppletWhenEscapingSetup)
 end
