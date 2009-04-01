@@ -643,9 +643,9 @@ function _enterWEPKey(self, iface, ssid)
 	local v
 	-- set the initial value
 	if self.encryption == "wep40" then
-		v = Textinput.textValue("0000000000", 10, 10)
+		v = Textinput.hexValue("", 10, 10)
 	else
-		v = Textinput.textValue("00000000000000000000000000", 26, 26)
+		v = Textinput.hexValue("", 26, 26)
 	end
 
 	local textinput = Textinput("textinput", v,

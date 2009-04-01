@@ -930,7 +930,7 @@ testData = {
 		Textinput.textValue("", 6, 100), 'email',
 	},
 	input_hex = {
-		Textinput.textValue("", 8, 20), 'hex',
+		Textinput.hexValue("", 26, 26), 'hex',
 	},
 	error = {
 		"DHCP Address Cannot be Found",

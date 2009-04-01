@@ -873,39 +873,38 @@ Returns a value that can be used for entering an hexadecimal value.
 
 =cut
 --]]
-function hexValue(default)
+function hexValue(default, min, max)
 	local obj = {}
 	setmetatable(obj, {
-			     __tostring =
-				     function(e)
-					     return table.concat(e, " ")
-				     end,
+		__tostring = function(obj)
+			return obj.s
+		end,
 
-			     __index = {
-				     setValue =
-					     function(value, str)
-						     local i = 1
-						     for dd in string.gmatch(str, "%x%x") do
-							     value[i] = dd
-							     i = i + 1
-						     end
-						     
-					     end,
+		__index = {
+			setValue = function(obj, str)
+				obj.s = str
+			end,
 
-				     getValue =
-					     function(value)
-						     return table.concat(value)
-					     end,
+			getValue = function(obj)
+				return obj.s
+			end,
 
-				     getChars = 
-					     function(value, cursor)
-						     if cursor == (#value * 3) then
-							     return ""
-						     end
-						     return "0123456789ABCDEF"
-					     end,
-			     }
-		     })
+			getChars = function(obj, cursor)
+				if max and cursor > max then
+					return ""
+				end
+				return "0123456789ABCDEF"
+			end,
+
+			isValid = function(obj, cursor)
+				if min and #obj.s < min then
+					return false
+				else
+					return true
+				end
+			end,
+		}
+	})
 
 	if default then
 		obj:setValue(default)
