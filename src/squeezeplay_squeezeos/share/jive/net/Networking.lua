@@ -1227,15 +1227,21 @@ function getSNR(self)
 	if type(self.interface) ~= 'string' then
 		return 0
 	end
-	local f = io.popen("/sbin/iwpriv " .. self.interface .. " getSNR 1")
-	if f == nil then
-		return 0
+
+	local stdout = ""
+	local proc = Process(self.jnt, "/sbin/iwpriv " .. self.interface .. " getSNR 1")
+	proc:read(function(chunk, err)
+		if chunk then
+			stdout = stdout .. chunk
+		end
+	end)
+
+	while proc:status() ~= "dead" do
+		-- wait for the process to complete
+		Task:yield()
 	end
 
-	local t = f:read("*all")
-	f:close()
-
-	return tonumber(string.match(t, ":(%d+)"))
+	return tonumber(string.match(stdout, ":(%d+)"))
 end
 
 
