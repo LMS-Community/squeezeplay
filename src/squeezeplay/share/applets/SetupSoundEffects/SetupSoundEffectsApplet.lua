@@ -269,7 +269,8 @@ function volumeShow(self)
 					return EVENT_UNUSED
 				end)
 
-	window:addWidget(Textarea("help_text", self:string("SOUND_VOLUME_HELP")))
+	-- bug 10511, remove platform-specific help. Needs revisiting
+	--window:addWidget(Textarea("help_text", self:string("SOUND_VOLUME_HELP")))
 	window:addWidget(Group("slider_group", {
 				     min = Icon("button_volume_min"),
 				     slider = self.slider,
