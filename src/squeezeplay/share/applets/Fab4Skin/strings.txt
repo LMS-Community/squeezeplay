@@ -18,9 +18,11 @@ TOUCH_SKIN
 	SV	Skal för Squeezebox Touch
 
 ENTER_SMALL
+	EN	Fertig
 	EN	done
 
 SPACEBAR_SMALL
+	DE	Leerzeichen
 	EN	space
 
 HELP
