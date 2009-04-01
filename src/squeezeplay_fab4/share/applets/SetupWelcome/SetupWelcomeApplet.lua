@@ -123,14 +123,11 @@ function step1(self)
 			return EVENT_UNUSED
 		end)
 
-	-- add press and hold left to escape setup
+	-- soft_reset escapes setup (need to clean up when this happens)
 	self.freeAppletWhenEscapingSetup =
- 		Framework:addListener(EVENT_KEY_HOLD,
-		function(event)
-			local keycode = event:getKeycode()
-			if keycode == KEY_BACK then
-				self:free()
-			end
+ 		Framework:addActionListener("soft_reset", self,
+		function(self, event)
+			self:free()
 			return EVENT_UNUSED
 		end)
 
