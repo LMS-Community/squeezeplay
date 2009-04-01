@@ -93,6 +93,10 @@ keyActionMappings.press = {
 --	[KEY_BACK] = "back",
 --}
 
+gestureActionMappings = {
+	[GESTURE_L_R] = "go_home",
+	[GESTURE_R_L] = "go_now_playing",
+}
 
 keyActionMappings.hold = {
 	[KEY_HOME] = "shutdown",

@@ -204,11 +204,15 @@ function constants(module)
 	module.EVENT_IR_ALL = jive.ui.EVENT_IR_ALL
 	module.EVENT_IR_DOWN = jive.ui.EVENT_IR_DOWN
 	module.EVENT_IR_UP = jive.ui.EVENT_IR_UP
+	module.EVENT_GESTURE = jive.ui.EVENT_GESTURE
 	module.EVENT_KEY_ALL = jive.ui.EVENT_KEY_ALL
 	module.EVENT_MOUSE_ALL = jive.ui.EVENT_MOUSE_ALL
 	module.EVENT_ALL_INPUT = jive.ui.EVENT_ALL_INPUT
 	module.EVENT_VISIBLE_ALL = jive.ui.EVENT_VISIBLE_ALL
 	module.EVENT_ALL = jive.ui.EVENT_ALL
+
+	module.GESTURE_L_R = jive.ui.GESTURE_L_R
+	module.GESTURE_R_L = jive.ui.GESTURE_R_L
 
 	module.KEY_NONE = jive.ui.KEY_NONE
 	module.KEY_GO = jive.ui.KEY_GO
@@ -239,7 +243,7 @@ function init(self)
 
 	-- action mapping listener, should be last listener in chain to 
 	-- allow for direct access to keys/other input types if needed.
-	self:addListener(jive.ui.EVENT_KEY_ALL | jive.ui.EVENT_CHAR_PRESS | jive.ui.EVENT_IR_ALL ,
+	self:addListener(jive.ui.EVENT_KEY_ALL | jive.ui.EVENT_CHAR_PRESS | jive.ui.EVENT_IR_ALL | jive.ui.EVENT_GESTURE,
 		function(event)
 			return self:convertInputToAction(event)
 		end,
@@ -683,6 +687,8 @@ function getAction(self, event)
 
 	if eventType == jive.ui.EVENT_KEY_PRESS then
 		action = self.inputToActionMap.keyActionMappings.press[event:getKeycode()]
+	elseif eventType == jive.ui.EVENT_GESTURE then
+		action = self.inputToActionMap.gestureActionMappings[event:getGesture()]
 	elseif eventType == jive.ui.EVENT_KEY_HOLD then
 		action = self.inputToActionMap.keyActionMappings.hold[event:getKeycode()]
 	elseif eventType == jive.ui.EVENT_CHAR_PRESS then

@@ -64,6 +64,10 @@ int jiveL_event_new(lua_State *L) {
 			event->u.text.unicode = lua_tointeger(L, 3);
 			break;
 		
+		case JIVE_EVENT_GESTURE:
+			event->u.gesture.code = lua_tointeger(L, 3);
+			break;
+
 		case JIVE_EVENT_MOUSE_DOWN:
 		case JIVE_EVENT_MOUSE_UP:
 		case JIVE_EVENT_MOUSE_PRESS:
@@ -278,6 +282,23 @@ int jiveL_event_get_ircode(lua_State *L) {
 	return 0;
 }
 
+int jiveL_event_get_gesture(lua_State *L) {
+	JiveEvent* event = (JiveEvent*)lua_touserdata(L, 1);
+	if (event == NULL) {
+		luaL_error(L, "invalid Event");
+	}
+
+	switch (event->type) {
+	case JIVE_EVENT_GESTURE:
+		lua_pushinteger(L, event->u.gesture.code);
+		return 1;
+
+	default:
+		luaL_error(L, "Not a GESTURE event");
+	}
+	return 0;
+}
+
 
 int jiveL_event_tostring(lua_State* L) {
 	luaL_Buffer buf;
@@ -319,6 +340,10 @@ int jiveL_event_tostring(lua_State* L) {
 
 	case JIVE_EVENT_CHAR_PRESS:
 		lua_pushfstring(L, "CHAR_PRESS code=%d", event->u.text.unicode);
+		break;
+
+	case JIVE_EVENT_GESTURE:
+		lua_pushfstring(L, "GESTURE code=%d", event->u.gesture.code);
 		break;
 
 	case JIVE_ACTION:

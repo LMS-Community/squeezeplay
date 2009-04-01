@@ -222,6 +222,16 @@ void jive_send_key_event(JiveEventType keyType, JiveKey keyCode) {
 	jive_queue_event(&keyEvent);
 }
 
+void jive_send_gesture_event(JiveGesture code) {
+	JiveEvent event;
+	memset(&event, 0, sizeof(JiveEvent));
+
+	event.type = JIVE_EVENT_GESTURE;
+	event.ticks = SDL_GetTicks();
+	event.u.gesture.code = code;
+	jive_queue_event(&event);
+}
+
 static int jiveL_quit(lua_State *L) {
 
 	/* de-reference all windows */
@@ -791,7 +801,7 @@ int jiveL_push_event(lua_State *L) {
 	jive_queue_event(evt);
 
 	return 0;
-}
+} 
 
 int jiveL_event(lua_State *L) {
 	int r = 0;
@@ -1303,6 +1313,7 @@ static const struct luaL_Reg event_methods[] = {
 	{ "getMotion", jiveL_event_get_motion },
 	{ "getSwitch", jiveL_event_get_switch },
 	{ "getIRCode", jiveL_event_get_ircode },
+	{ "getGesture", jiveL_event_get_gesture },
 	{ "tostring", jiveL_event_tostring },
 	{ NULL, NULL }
 };

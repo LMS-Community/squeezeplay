@@ -2213,6 +2213,7 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"EVENT_NONE",JIVE_EVENT_NONE);
    tolua_constant(tolua_S,"EVENT_SCROLL",JIVE_EVENT_SCROLL);
    tolua_constant(tolua_S,"EVENT_ACTION",JIVE_EVENT_ACTION);
+   tolua_constant(tolua_S,"EVENT_GESTURE",JIVE_EVENT_GESTURE);
    tolua_constant(tolua_S,"EVENT_KEY_DOWN",JIVE_EVENT_KEY_DOWN);
    tolua_constant(tolua_S,"EVENT_KEY_UP",JIVE_EVENT_KEY_UP);
    tolua_constant(tolua_S,"EVENT_KEY_PRESS",JIVE_EVENT_KEY_PRESS);
@@ -2250,6 +2251,8 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"EVENT_UNUSED",JIVE_EVENT_UNUSED);
    tolua_constant(tolua_S,"EVENT_CONSUME",JIVE_EVENT_CONSUME);
    tolua_constant(tolua_S,"EVENT_QUIT",JIVE_EVENT_QUIT);
+   tolua_constant(tolua_S,"GESTURE_L_R",JIVE_GESTURE_L_R);
+   tolua_constant(tolua_S,"GESTURE_R_L",JIVE_GESTURE_R_L);
    tolua_constant(tolua_S,"KEY_NONE",JIVE_KEY_NONE);
    tolua_constant(tolua_S,"KEY_GO",JIVE_KEY_GO);
    tolua_constant(tolua_S,"KEY_BACK",JIVE_KEY_BACK);

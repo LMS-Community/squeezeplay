@@ -105,14 +105,15 @@ typedef enum {
 	JIVE_EVENT_IR_DOWN              = 0x20000000,
 	JIVE_EVENT_IR_REPEAT            = 0x40000000,
 	JIVE_ACTION                     = 0x10000000,
-	
+	JIVE_EVENT_GESTURE              = 0x00000008,
+
 	//Note: don't use 0x80000000, 0x40000000 is the highest usable value
 	
 	JIVE_EVENT_CHAR_ALL 	= ( JIVE_EVENT_CHAR_PRESS),
 	JIVE_EVENT_IR_ALL               = ( JIVE_EVENT_IR_PRESS | JIVE_EVENT_IR_HOLD | JIVE_EVENT_IR_UP | JIVE_EVENT_IR_DOWN | JIVE_EVENT_IR_REPEAT),
 	JIVE_EVENT_KEY_ALL		= ( JIVE_EVENT_KEY_DOWN | JIVE_EVENT_KEY_UP | JIVE_EVENT_KEY_PRESS | JIVE_EVENT_KEY_HOLD ),
 	JIVE_EVENT_MOUSE_ALL		= ( JIVE_EVENT_MOUSE_DOWN | JIVE_EVENT_MOUSE_UP | JIVE_EVENT_MOUSE_PRESS | JIVE_EVENT_MOUSE_HOLD | JIVE_EVENT_MOUSE_MOVE | JIVE_EVENT_MOUSE_DRAG ),
-	JIVE_EVENT_ALL_INPUT		= ( JIVE_EVENT_KEY_ALL | JIVE_EVENT_MOUSE_ALL | JIVE_EVENT_SCROLL | JIVE_EVENT_CHAR_ALL | JIVE_EVENT_IR_ALL),
+	JIVE_EVENT_ALL_INPUT		= ( JIVE_EVENT_KEY_ALL | JIVE_EVENT_MOUSE_ALL | JIVE_EVENT_SCROLL | JIVE_EVENT_CHAR_ALL | JIVE_EVENT_IR_ALL | JIVE_EVENT_GESTURE),
 
 	JIVE_EVENT_VISIBLE_ALL		= ( JIVE_EVENT_SHOW | JIVE_EVENT_HIDE ),
 	JIVE_EVENT_ALL			= 0x7FFFFFFF,
@@ -146,6 +147,11 @@ typedef enum {
 	JIVE_KEY_PAGE_DOWN		= 0x8000,
 	JIVE_KEY_PRINT			= 0x10000,
 } JiveKey;
+
+typedef enum {
+	JIVE_GESTURE_L_R                = 0x0001,
+	JIVE_GESTURE_R_L 	        = 0x0002,
+} JiveGesture;
 
 
 enum {
@@ -242,6 +248,10 @@ struct jive_ir_event {
 	Uint32 code;
 };
 
+struct jive_gesture_event {
+	JiveGesture code;
+};
+
 struct jive_event {
 	JiveEventType type;
 	Uint32 ticks;
@@ -255,6 +265,7 @@ struct jive_event {
 		struct jive_motion_event motion;
 		struct jive_sw_event sw;
 		struct jive_ir_event ir;
+		struct jive_gesture_event gesture;
 	} u;
 };
 
@@ -294,6 +305,7 @@ extern int (*jive_sdlevent_pump)(lua_State *L);
 
 extern int (*jive_sdlfilter_pump)(const SDL_Event *event);
 void jive_send_key_event(JiveEventType keyType, JiveKey keyCode);
+void jive_send_gesture_event(JiveGesture code);
 
 
 /* platform functions */
@@ -438,6 +450,7 @@ int jiveL_event_get_action_internal(lua_State *L);
 int jiveL_event_get_motion(lua_State *L);
 int jiveL_event_get_switch(lua_State *L);
 int jiveL_event_get_ircode(lua_State *L);
+int jiveL_event_get_gesture(lua_State *L);
 
 int jiveL_widget_set_bounds(lua_State *L);
 int jiveL_widget_get_bounds(lua_State *L);
