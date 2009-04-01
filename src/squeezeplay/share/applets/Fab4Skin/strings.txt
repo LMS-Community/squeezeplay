@@ -18,7 +18,7 @@ TOUCH_SKIN
 	SV	Skal för Squeezebox Touch
 
 ENTER_SMALL
-	EN	Fertig
+	DE	Fertig
 	EN	done
 
 SPACEBAR_SMALL
