@@ -433,12 +433,17 @@ Start a wireless network scan in a new task.
 --]]
 
 function scan(self, callback)
-	Task("networkScan", self, function()
+	if self._scantask then
+		return
+	end
+
+	self._scantask = Task("networkScan", self, function()
 		if self.wireless then
 			_wirelessScanTask(self, callback)
 		else
 			_ethernetScanTask(self, callback)
 		end
+		self._scantask = nil
 	end):addTask()
 end
 
