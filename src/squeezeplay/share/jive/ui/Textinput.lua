@@ -603,6 +603,12 @@ function __init(self, style, value, closure, allowedChars)
 	obj.indent = 0
 	obj.maxWidth = 0
 	obj.value = value
+
+	-- default cursor to end to string
+	if obj.value then
+		obj.cursor = #obj.value + 1
+	end
+
 	obj.closure = closure
 	obj.allowedChars = allowedChars or
 		_globalStrings:str("ALLOWEDCHARS_WITHCAPS")
