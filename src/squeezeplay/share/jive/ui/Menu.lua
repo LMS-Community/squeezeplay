@@ -464,7 +464,15 @@ local function _eventHandler(self, event)
 	                                self.usePressedStyle = false
 					self:_unpressSelectedItem()
 
-					self:_selectAndHighlightItemUnderPointer(event)
+					if self.selectItemAfterFingerDownTimer then
+						self.selectItemAfterFingerDownTimer:stop()
+					end
+					self.selectItemAfterFingerDownTimer = Timer(MOUSE_QUICK_TOUCH_TIME_MS,
+							       function()
+									self:_selectAndHighlightItemUnderPointer(event)
+							       end,
+							       true)
+				       self.selectItemAfterFingerDownTimer:start()
 
 				elseif evtype == EVENT_MOUSE_DRAG then
 					if self.mouseState == MOUSE_COMPLETE then
@@ -488,6 +496,7 @@ local function _eventHandler(self, event)
 					--unhighlight any selected item
 					self.usePressedStyle = false
 					_selectedItem(self):setStyleModifier(nil)
+					self.selectItemAfterFingerDownTimer:stop()
 
 					--collect drag data
 					if ( self.dragOrigin.y == nil) then
