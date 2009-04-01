@@ -158,20 +158,10 @@ static int handle_clearpad_events(int fd) {
 			if (flick_x != 0) {
 				if (abs(flick_x) > abs(flick_y)) { //must have more x than y component to be considered a vertical gesture
 					if (flick_x > 2) {
-						JiveEvent event;
-
-						event.type = (JiveEventType) JIVE_EVENT_CHAR_PRESS;
-						event.u.text.unicode = 'h'; // the go_home shortcut
-						event.ticks = TIMEVAL_TO_TICKS(ev[i].time);
-						jive_queue_event(&event);
+						jive_send_gesture_event(JIVE_GESTURE_L_R);
 					}
 					if (flick_x < -2) {
-						JiveEvent event;
-
-						event.type = (JiveEventType) JIVE_EVENT_CHAR_PRESS;
-						event.u.text.unicode = '['; // '[' the temporary go_now_playing shortcut
-						event.ticks = TIMEVAL_TO_TICKS(ev[i].time);
-						jive_queue_event(&event);
+						jive_send_gesture_event(JIVE_GESTURE_R_L);
 					}
 				}
 
