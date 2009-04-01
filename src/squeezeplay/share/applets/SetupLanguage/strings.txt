@@ -244,7 +244,7 @@ CHOOSE_LANGUAGE_HELP
 	SV	Välj språk med hjälp av rullningshjulet. Tryck på mittenknappen för att gå vidare.
 
 LOADING_LANGUAGE
-	CS	Nahrávám angličtinu
+	CS	Nahrávám češtinu
 	DA	Indlæser dansk
 	DE	Deutsch wird geladen
 	EN	Loading English
@@ -254,7 +254,7 @@ LOADING_LANGUAGE
 	IT	Caricamento lingua italiano
 	NL	Nederlands wordt geladen
 	NO	Laster inn norsk
-	PL	Ładowanie języka angielskiego
-	RU	Загрузка английского
+	PL	Ładowanie języka polskiego
+	RU	Загрузка русского языка
 	SV	Läser in svenska
 
