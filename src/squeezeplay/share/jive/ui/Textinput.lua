@@ -606,7 +606,7 @@ function __init(self, style, value, closure, allowedChars)
 
 	-- default cursor to end to string
 	if obj.value then
-		obj.cursor = #obj.value + 1
+		obj.cursor = #tostring(obj.value) + 1
 	end
 
 	obj.closure = closure
