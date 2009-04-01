@@ -18,8 +18,19 @@ TOUCH_SKIN
 	SV	Skal för Squeezebox Touch
 
 ENTER_SMALL
+	CS	hotovo
+	DA	udført
 	DE	Fertig
 	EN	done
+	ES	listo
+	FI	valmis
+	FR	terminé
+	IT	fine
+	NL	gereed
+	NO	ferdig
+	PL	gotowe
+	RU	готово
+	SV	klart
 
 SPACEBAR_SMALL
 	DE	Leerzeichen
@@ -36,8 +47,22 @@ HELP
 	IT	Guida
 	NL	Help
 	NO	Hjelp
-	PT	Ajuda
+	PL	Pomoc
+	RU	Справка
 	SV	Hjälp
+	
 
 MORE_HELP
+	CS	Další
+	DA	Mere
+	DE	Mehr
 	EN	More
+	ES	Más
+	FI	Lisää
+	FR	Plus
+	IT	Altro
+	NL	Meer
+	NO	Mer
+	PL	Więcej
+	RU	Дополнительно
+	SV	Mer
