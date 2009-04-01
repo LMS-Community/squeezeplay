@@ -128,7 +128,7 @@ function init(self)
 		end)
 	brightnessTimer:start()
 
-	Framework:addActionListener("soft_reset", self, _softResetAction(), true)
+	Framework:addActionListener("soft_reset", self, _softResetAction, true)
 
 	-- find out when we connect to player
 	jnt:subscribe(self)
