@@ -688,37 +688,38 @@ function textValue(default, min, max)
 	}
 
 	setmetatable(obj, {
-			     __tostring = function(obj)
-						  return obj.s
-					  end,
+		__tostring = function(obj)
+			return obj.s
+		end,
 
-			     __index = {
-				     setValue = function(obj, str)
-							obj.s = str
-						end,
+		__index = {
+			setValue = function(obj, str)
+				obj.s = str
+				return true
+			end,
 
-				     getValue = function(obj)
-							return obj.s
-						end,
+			getValue = function(obj)
+				return obj.s
+			end,
 
-				     getChars = function(obj, cursor, allowedChars)
-							if max and cursor > max then
-								return ""
-							end
-							return allowedChars
-						end,
+			getChars = function(obj, cursor, allowedChars)
+				if max and cursor > max then
+					return ""
+				end
+				return allowedChars
+			end,
 
-				     isValid = function(obj, cursor)
-						       if min and #obj.s < min then
-							       return false
-						       elseif max and #obj.s > max then
-							       return false
-						       else
-							       return true
-						       end
-					       end
-			     }
-		     })
+			isValid = function(obj, cursor)
+				if min and #obj.s < min then
+					return false
+				elseif max and #obj.s > max then
+					return false
+				else
+					return true
+				end
+			end
+		}
+	})
 
 	return obj
 end
@@ -765,6 +766,8 @@ function timeValue(default, format)
 						end
 						local ampm = string.match(str, "[ap]", i)
 						value[i] = ampm
+
+						return true
 				    	end,
 				getValue =
 					function(value)
@@ -842,6 +845,7 @@ function timeValue(default, format)
 							     i = i + 1
 							     if i > 2 then break end
 						     end
+						     return true
 					     end,
 
 				     getValue =
@@ -991,6 +995,7 @@ function ipAddressValueNonMouse(default)
 							     i = i + 1
 							     if i > 4 then break end
 						     end
+						     return true
 					     end,
 
 				     getValue =
@@ -1067,6 +1072,7 @@ function ipAddressValueMouse(default)
 			     __index = {
 				     setValue = function(obj, str)
 							obj.s = str
+							return true
 						end,
 
 				     getValue = function(obj)
