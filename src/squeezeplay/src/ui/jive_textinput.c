@@ -184,8 +184,8 @@ int jiveL_textinput_draw(lua_State *L) {
 		len_3 = (cursor < text_len) ? jive_font_width(peer->font, text + cursor) : 0;
 	}
 
-	/* move ident if cursor is off stage left */
-	while (indent > 0 && len_1 <= 0) {
+	/* move ident if cursor is off stage left and fill out space if indent present*/
+	while (indent > 0 && (len_1 <= 0 || len_1 + len_2 + len_3 < text_w)) {
 
 		indent--;
 		text--;
