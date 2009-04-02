@@ -1003,15 +1003,17 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		break;
 
 	case SDL_KEYDOWN:
-		if (event->key.keysym.sym == SDLK_UP) {
-			jevent.type = JIVE_EVENT_SCROLL;
-			--(jevent.u.scroll.rel);
-			break;
-		}
-		else if (event->key.keysym.sym == SDLK_DOWN) {
-			jevent.type = JIVE_EVENT_SCROLL;
-			++(jevent.u.scroll.rel);
-			break;
+		if (event->key.keysym.mod == 0) {
+			if (event->key.keysym.sym == SDLK_UP) {
+				jevent.type = JIVE_EVENT_SCROLL;
+				--(jevent.u.scroll.rel);
+				break;
+			}
+			else if (event->key.keysym.sym == SDLK_DOWN) {
+				jevent.type = JIVE_EVENT_SCROLL;
+				++(jevent.u.scroll.rel);
+				break;
+			}
 		}
 		// Fall through
 
