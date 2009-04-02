@@ -61,6 +61,7 @@ Constructs a new Group widget. I<style> is the widgets style. I<widgets> is a ta
 --]]
 function __init(self, style, widgets)
 	_assert(type(style) == "string")
+	_assert(widgets)
 
 	local obj = oo.rawnew(self, Widget(style))
 	obj.widgets = widgets

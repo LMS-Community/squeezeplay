@@ -298,7 +298,7 @@ end
 
 
 local function _invisibleButton(self)
-	return Group("button_none")
+	return Group("button_none", { Icon("icon") })
 end
 
 
