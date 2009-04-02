@@ -33,6 +33,9 @@ NETWORK_SETUP_NETWORKING
 	RU	Настройка сети
 	SV	Konfigurera nätverket
 
+NETWORK_NETWORKING
+	EN	Networking
+
 NETWORK_FINDING_NETWORKS
 	CS	\nHledání sítí...
 	DA	\nSøger efter netværk...

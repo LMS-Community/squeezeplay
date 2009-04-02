@@ -30,7 +30,7 @@ function registerApplet(meta)
 	
 	meta:registerService("setupNetworking")
 
-	jiveMain:addItem(meta:menuItem('networkSettings', 'advancedSettings', "NETWORK_SETUP_NETWORKING", function(applet, ...) applet:settingsNetworking(...) end))
+	jiveMain:addItem(meta:menuItem('networkSettings', 'advancedSettings', "NETWORK_NETWORKING", function(applet, ...) applet:settingsNetworking(...) end))
 end
 
 

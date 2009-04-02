@@ -3,7 +3,7 @@ DIAGNOSTICS
 	CS	Diagnostika systému
 	DA	Systemdiagnosticering
 	DE	Systemdiagnose
-	EN	System Diagnostics
+	EN	Diagnostics
 	ES	Diagnóstico del sistema
 	FI	Järjestelmädiagnostiikka
 	FR	Diagnostic système
