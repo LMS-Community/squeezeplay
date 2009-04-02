@@ -387,6 +387,13 @@ end
 function _eventHandler(self, event)
 	local type = event:getType()
 
+	if Framework:isMostRecentInput("ir") or
+		Framework:isMostRecentInput("scroll") then
+		self.cursorWidth = 1
+	else
+		self.cursorWidth = 0
+	end
+
 	--hold and press left works as cursor left. hold added here since it is intuitive to hold down left to go back several characters.
 	--todo: also handle longhold when this is added.
 	if (type == EVENT_IR_HOLD or type == EVENT_IR_PRESS) and (event:isIRCode("arrow_left") or event:isIRCode("arrow_right")) then

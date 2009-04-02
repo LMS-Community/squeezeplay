@@ -131,8 +131,8 @@ int jiveL_textinput_draw(lua_State *L) {
 	SDL_Rect old_clip, new_clip;
 	Uint16 text_h, text_x, text_y, text_cy, text_w, cursor_x, cursor_w, cursor_h;
 	const char *validchars, *validchars_end;
-	int len_1, len_2, len_3;
-	int text_offset, cursor_offset;
+	unsigned int len_1, len_2, len_3;
+	unsigned int text_offset, cursor_offset, cursor_width;
 	int i;
 
 
@@ -146,6 +146,15 @@ int jiveL_textinput_draw(lua_State *L) {
 
 	lua_getfield(L, 1, "cursor");
 	cursor = lua_tointeger(L, -1);
+
+	lua_getfield(L, 1, "cursorWidth");
+	cursor_width = lua_tointeger(L, -1);
+	if (cursor_width > strlen(text)) {
+		cursor_width = strlen(text);
+	}
+	if (cursor_width == 0) {
+		cursor--;
+	}
 
 	lua_getfield(L, 1, "indent");
 	indent = lua_tointeger(L, -1);
@@ -164,8 +173,8 @@ int jiveL_textinput_draw(lua_State *L) {
 	jive_tile_get_min_size(peer->cursor_tile, &cursor_w, &cursor_h);
 
 	/* measure text */
-	len_1 = jive_font_nwidth(peer->font, text, cursor - 1);
-	len_2 = jive_font_nwidth(peer->cursor_font, text + cursor - 1, 1);
+	len_1 = jive_font_nwidth(peer->font, text, cursor - cursor_width);
+	len_2 = jive_font_nwidth(peer->cursor_font, text + cursor - cursor_width, cursor_width);
 	len_3 = (cursor < text_len) ? jive_font_width(peer->font, text + cursor) : 0;
 
 	if (cursor_w < len_2) {
@@ -179,8 +188,8 @@ int jiveL_textinput_draw(lua_State *L) {
 		text_len--;
 		cursor--;
 
-		len_1 = jive_font_nwidth(peer->font, text, cursor - 1);
-		len_2 = jive_font_nwidth(peer->cursor_font, text + cursor - 1, 1);
+		len_1 = jive_font_nwidth(peer->font, text, cursor - cursor_width);
+		len_2 = jive_font_nwidth(peer->cursor_font, text + cursor - cursor_width, cursor_width);
 		len_3 = (cursor < text_len) ? jive_font_width(peer->font, text + cursor) : 0;
 	}
 
@@ -192,8 +201,8 @@ int jiveL_textinput_draw(lua_State *L) {
 		text_len++;
 		cursor++;
 
-		len_1 = jive_font_nwidth(peer->font, text, cursor - 1);
-		len_2 = jive_font_nwidth(peer->cursor_font, text + cursor - 1, 1);
+		len_1 = jive_font_nwidth(peer->font, text, cursor - cursor_width);
+		len_2 = jive_font_nwidth(peer->cursor_font, text + cursor - cursor_width, cursor_width);
 		len_3 = (cursor < text_len) ? jive_font_width(peer->font, text + cursor) : 0;
 	}
 
@@ -277,12 +286,12 @@ int jiveL_textinput_draw(lua_State *L) {
 	  
 		if (peer->is_sh) {
 			/* pre-cursor */
-			tsrf = jive_font_ndraw_text(peer->font, peer->sh, text, cursor - 1);
+			tsrf = jive_font_ndraw_text(peer->font, peer->sh, text, cursor - cursor_width);
 			jive_surface_blit(tsrf, srf, text_x + 1, text_y + offset_y + 1);
 			jive_surface_free(tsrf);
 
 			/* cursor */
-			tsrf = jive_font_ndraw_text(peer->cursor_font, peer->sh, text + cursor - 1, 1);
+			tsrf = jive_font_ndraw_text(peer->cursor_font, peer->sh, text + cursor - cursor_width, cursor_width);
 			jive_surface_blit(tsrf, srf, cursor_x + (cursor_w - len_2) / 2 + 1, text_y + offset_cursor_y + 1);
 			jive_surface_free(tsrf);
 
@@ -295,12 +304,12 @@ int jiveL_textinput_draw(lua_State *L) {
 		}
 
 		/* pre-cursor */
-		tsrf = jive_font_ndraw_text(peer->font, peer->fg, text, cursor - 1);
+		tsrf = jive_font_ndraw_text(peer->font, peer->fg, text, cursor - cursor_width);
 		jive_surface_blit(tsrf, srf, text_x, text_y + offset_y);
 		jive_surface_free(tsrf);
 
 		/* cursor */
-		tsrf = jive_font_ndraw_text(peer->cursor_font, peer->fg, text + cursor - 1, 1);
+		tsrf = jive_font_ndraw_text(peer->cursor_font, peer->fg, text + cursor - cursor_width, cursor_width);
 		jive_surface_blit(tsrf, srf, cursor_x + (cursor_w - len_2) / 2, text_y + offset_cursor_y);
 		jive_surface_free(tsrf);
 
