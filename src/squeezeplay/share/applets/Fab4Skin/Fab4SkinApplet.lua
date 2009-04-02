@@ -869,6 +869,7 @@ function skin(self, s)
 	s.keyboard.done = _uses(s.keyboard.key_bottomRight_small, {
 		bgImg = keyBottomRight,
 		text = self:string("ENTER_SMALL"),
+		fg = { 0x00, 0xbe, 0xbe },
 	})
 	s.keyboard.space = _uses(s.keyboard.key_bottom_small, {
 		bgImg = keyBottom,
