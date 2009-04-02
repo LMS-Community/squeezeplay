@@ -243,13 +243,8 @@ function _predefinedKeyboards(self)
 		self.keyboards.qwertyUpper_PL = self.keyboards.qwertyUpper_DE
 		self.keyboards.email_PL       = self.keyboards.email_DE
 		self.keyboards.emailUpper_PL  = self.keyboards.emailUpper_DE
-
-		-- backwards compatibilty
-		self.keyboards.qwertyLower     = self.keyboards.qwerty
-		self.keyboards.qwertyLower_FR  = self.keyboards.qwerty_FR
-		self.keyboards.qwertyLower_DE  = self.keyboards.qwerty_DE
-		self.keyboards.qwertyLower_PL  = self.keyboards.qwerty_PL
 end
+
 
 function _layout(self)
 
