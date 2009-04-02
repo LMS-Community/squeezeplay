@@ -243,118 +243,14 @@ end
 Window:    "input"
 Textinput: "textinput"
 Keyboard:  "keyboard"
---]]
-function setup_input_hex(self, item)
-	local data = _itemData(item)
-
-	local window = Window("input", _itemName(item), "setup")
-	_windowActions(self, item, window)
-
-	-- normal short cuts don't work with text entry
-	window:addActionListener("back", nil, function()
-		_windowPrev(self, item)
-	end)
-
-	local textinput = Textinput(
-		"textinput", 
-		data[1],
-		function(_, value)
-			_windowNext(self, item)
-		end
-	)
-
-	local backspace = Keyboard.backspace()
-	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
-
-	window:addWidget(group)
-	window:addWidget(Keyboard("keyboard", data[2]))
-	window:focusWidget(group)
-
-	return window
-end
-
-
---[[
-Window:    "input"
-Textinput: "textinput"
-Keyboard:  "keyboard"
 keyboard style: method argument
 --]]
-function setup_input_any(self, item)
-	
-	local window = Window("input", item[4], "setup")
-
-	_windowActions(self, item, window)
-
-	-- normal short cuts don't work with text entry
-	window:addActionListener("back", nil, function()
-		_windowPrev(self, item)
-	end)
-
-
-	local textinput = Textinput(
-		"textinput", 
-		"",
-		function(_, value)
-			_windowNext(self, item)
-		end
-	)
-	local backspace = Keyboard.backspace()
-	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
-
-	window:addWidget(group)
-	window:addWidget(Keyboard("keyboard", item[4]))
-	window:focusWidget(group)
-
-	return window
-end
-
-
---[[
-Window:    "input"
-Textinput: "textinput"
-Keyboard:  "keyboard"
-keyboard style: "email"
---]]
-function setup_input_email(self, item)
-	
-	local data = _itemData(item)
-
-	local window = Window("input", 'Email', "setup")
-	_windowActions(self, item, window)
-
-	-- normal short cuts don't work with text entry
-	window:addActionListener("back", nil, function()
-		_windowPrev(self, item)
-	end)
-
-	local textinput = Textinput(
-		"textinput", 
-		data[1],
-		function(_, value)
-			_windowNext(self, item)
-		end
-	)
-	local backspace = Keyboard.backspace()
-	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
-
-	window:addWidget(group)
-	window:addWidget(Keyboard("keyboard", data[2]))
-	window:focusWidget(group)
-
-	return window
-end
-
-
---[[
-Window:    "input"
-Textinput: "textinput"
-Keyboard:  "keyboard"
---]]
 function setup_input(self, item)
-	local data = _itemData(item)
 
+	local data = _itemData(item)
+	
 	local window = Window("input", _itemName(item), "setup")
+
 	_windowActions(self, item, window)
 
 	-- normal short cuts don't work with text entry
@@ -362,9 +258,10 @@ function setup_input(self, item)
 		_windowPrev(self, item)
 	end)
 
+
 	local textinput = Textinput(
 		"textinput", 
-		data[1],
+		data[2] or "",
 		function(_, value)
 			_windowNext(self, item)
 		end
@@ -373,7 +270,7 @@ function setup_input(self, item)
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
 	window:addWidget(group)
-	window:addWidget(Keyboard("keyboard", data[2]))
+	window:addWidget(Keyboard("keyboard", data[1]))
 	window:focusWidget(group)
 
 	return window
@@ -876,14 +773,13 @@ windows = {
 	{ "help_list_two", "Choose Region", setup_help_list, },
 	{ "help_list_many", "Choose Region", setup_help_list, },
 
-	{ "input_ip", "IP Entry", setup_input_any, 'ip' },
-	{ "input_qwerty", "QWERTY Entry", setup_input_any, 'qwerty' },
-	{ "input_qwerty_DE", "QWERTZ Entry", setup_input_any, 'qwerty_DE' },
-	{ "input_qwerty_FR", "AZERTY Entry", setup_input_any, 'qwerty_FR' },
-	{ "input_numeric", "Number Entry", setup_input_any, 'numeric' },
-	{ "input_hex", "Hex Entry", setup_input_any, 'hex' },
-	{ "input_email", "Email Entry", setup_input_email, },
-	{ "input_hex", "WEP Password", setup_input_hex, },
+	{ "input_ip", "IP Entry", setup_input },
+	{ "input_qwerty", "QWERTY Entry", setup_input },
+	{ "input_qwerty_DE", "QWERTZ Entry", setup_input },
+	{ "input_qwerty_FR", "AZERTY Entry", setup_input },
+	{ "input_numeric", "Number Entry", setup_input },
+	{ "input_email", "Email Entry", setup_input, },
+	{ "input_hex", "WEP Password", setup_input, },
 	{ "input_wpa", "Wireless Password", setup_input, },
 
 	{ "help_info", "Help Connection Type", setup_help_info, },
@@ -940,14 +836,33 @@ testData = {
 	waiting_1line_popup = {
 		"Just one main line on this screen", "all your base", "icon_connecting",
 	},
-	input_wpa = {
-		Textinput.textValue("", 8, 20), 'qwerty',
+	input_ip = {
+		"ip",
+		Textinput.ipAddressValue(),
 	},
-	input_email = {
-		Textinput.textValue("", 6, 100), 'email',
+	input_qwerty = {
+		"qwerty",
+	},
+	input_qwerty_DE = {
+		"qwerty_DE",
+	},
+	input_qwerty_FR = {
+		"qwerty_FR",
+	},
+	input_numeric = {
+		"numeric",
 	},
 	input_hex = {
-		Textinput.hexValue("", 26, 26), 'hex',
+		"hex",
+		Textinput.hexValue("", 10, 10),
+	},
+	input_email = {
+		"email",
+		Textinput.textValue("", 6, 100),
+	},
+	input_wpa = {
+		"qwerty",
+		Textinput.textValue("", 8, 20),
 	},
 	error = {
 		"DHCP Address Cannot be Found",
