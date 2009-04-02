@@ -48,6 +48,7 @@ local Framework         = require("jive.ui.Framework")
 local table             = require("jive.utils.table")
 local string            = require("jive.utils.string")
 local debug             = require("jive.utils.debug")
+local locale            = require("jive.utils.locale")
 local log               = require("jive.utils.log").logger("ui")
 
 module(..., Framework.constants)
@@ -108,6 +109,26 @@ function _predefinedKeyboards(self)
 					self:_spaceBar(),
 					self:_go(92),
 				},
+		},
+		['qwertyUpper_FR']  = { 
+				{ 'A', 'Z', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
+				{ 'Q', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M'  },
+				{ self:_shiftKey('qwerty'), 'W', 'X', 'C', 'V', 'B', 'N', self:_spacer()  },
+				{
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
+					self:_spaceBar(),
+					self:_go(92),
+				},
+		},
+		['qwertyUpper_DE']  = { 
+				{ 'Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P' },
+				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer()  },
+				{ self:_shiftKey('qwerty'), 'Y', 'X', 'C', 'V', 'B', 'N', 'M', self:_spacer()  },
+				{
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
+					self:_spaceBar(),
+					self:_go(92),
+				},
 		} ,
 		['qwerty']  = { 
 				{ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
@@ -119,6 +140,27 @@ function _predefinedKeyboards(self)
 					self:_go(92),
 				},
 		} ,
+		['qwerty_DE']  = { 
+				{ 'q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p' },
+				{ self:_spacer(), 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', self:_spacer() },
+				{ self:_shiftKey('qwertyUpper', 'qwerty'), 'y', 'x', 'c', 'v', 'b', 'n', 'm', self:_spacer() },
+				{
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
+					self:_spaceBar(),
+					self:_go(92),
+				},
+		} ,
+		['qwerty_FR']  = { 
+				{ 'a', 'z', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
+				{ 'q', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm' },
+				{ self:_shiftKey('qwertyUpper', 'qwerty'), 'w', 'x', 'c', 'v', 'b', 'n', self:_spacer() },
+				{
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
+					self:_spaceBar(),
+					self:_go(92),
+				},
+		},
+
 		['email']  = { 
 				{ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
 				{ self:_spacer(), 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', self:_spacer() },
@@ -129,6 +171,30 @@ function _predefinedKeyboards(self)
 				{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
 				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer() },
 				{ self:_shiftKey('email'), 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '-', '_' },
+				emailKeyboardBottomRow
+		} ,
+		['email_DE']  = { 
+				{ 'q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p' },
+				{ self:_spacer(), 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', self:_spacer() },
+				{ self:_shiftKey('emailUpper', 'email'), 'y', 'x', 'c', 'v', 'b', 'n', 'm', '-', '_' },
+				emailKeyboardBottomRow
+		} ,
+		['emailUpper']  = { 
+				{ 'Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P' },
+				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer() },
+				{ self:_shiftKey('email'), 'Y', 'X', 'C', 'V', 'B', 'N', 'M', '-', '_' },
+				emailKeyboardBottomRow
+		} ,
+		['email_FR']  = { 
+				{ 'a', 'z', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
+				{ 'q', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm' },
+				{ self:_shiftKey('emailUpper', 'email'), 'w', 'x', 'c', 'v', 'b', 'n', '-', '_', self:_spacer() },
+				emailKeyboardBottomRow
+		} ,
+		['emailUpper_FR']  = { 
+				{ 'A', 'Z', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
+				{ 'Q', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M' },
+				{ self:_shiftKey('email'), 'W', 'X', 'C', 'V', 'B', 'N', '-', '_', self:_spacer() },
 				emailKeyboardBottomRow
 		} ,
 		['emailNumeric'] = { 
@@ -172,6 +238,11 @@ function _predefinedKeyboards(self)
 				},
 		},
 		}
+		-- PL the same as DE
+		self.keyboards.qwerty_PL      = self.keyboards.qwerty_DE
+		self.keyboards.qwertyUpper_PL = self.keyboards.qwertyUpper_DE
+		self.keyboards.email_PL       = self.keyboards.email_DE
+		self.keyboards.emailUpper_PL  = self.keyboards.emailUpper_DE
 end
 
 function _layout(self)
@@ -317,8 +388,13 @@ function setKeyboard(self, kbType)
 
 	-- pre-defined keyboard
 	elseif type(kbType) == 'string' then
-		keyboard = self.keyboards[kbType]
-
+		local locale = locale:getLocale()
+		local localizedKeyboard = kbType .. '_' .. locale
+		if self.keyboards[localizedKeyboard] then
+			keyboard = self.keyboards[localizedKeyboard]
+		else
+			keyboard = self.keyboards[kbType]
+		end
 	end
 
 	_assert(keyboard)
