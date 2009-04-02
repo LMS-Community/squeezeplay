@@ -128,15 +128,18 @@ Sets the text displayed in the label.
 function setValue(self, value)
 	_assert(value ~= nil)
 
+	local ok = true
 	if self.value ~= value then
 		if self.value.setValue  then
-			self.value:setValue(value)
+			ok = self.value:setValue(value)
 		else
 			self.value = value
 		end
 
 		self:reLayout()
 	end
+
+	return ok
 end
 
 
@@ -234,11 +237,11 @@ function _moveCursor(self, dir)
 end
 
 
-function _delete(self)
+function _delete(self, alwaysBackspace)
 	local cursor = self.cursor
 	local str = tostring(self.value)
 
-	if cursor <= #str then
+	if not alwaysBackspace and cursor <= #str then
 
 		-- delete at cursor
 		local s1 = string.sub(str, 1, cursor - 1)
@@ -250,8 +253,9 @@ function _delete(self)
 	elseif cursor > 1 then
 		-- backspace
 		local s1 = string.sub(str, 1, cursor - 2)
+		local s3 = string.sub(str, cursor)
 
-		self:setValue(s1)
+		self:setValue(s1 .. s3)
 		self.cursor = cursor - 1
 		return true
 
@@ -305,8 +309,10 @@ function _cursorAtEnd(self)
 end
 
 
-function _deleteAction(self)
-	if not _delete(self) then
+function _deleteAction(self, alwaysBackspace)
+	if _delete(self, alwaysBackspace) then
+		self:playSound("CLICK")
+	else
 		self:playSound("BUMP")
 		self:getWindow():bumpRight()
 	end
@@ -316,7 +322,9 @@ end
 
 
 function _insertAction(self)
-	if not _insert(self) then
+	if _insert(self) then
+		self:playSound("CLICK")
+	else
 		self:playSound("BUMP")
 		self:getWindow():bumpRight()
 	end
@@ -529,7 +537,7 @@ function _eventHandler(self, event)
 		--assuming ascii level values for now
 		local keyboardEntry = string.char(event:getUnicode())
 		if (keyboardEntry == "\b") then --backspace
-			return _deleteAction(self)
+			return _deleteAction(self, true)
 
 		elseif (keyboardEntry == "\27") then --escape
 			return _escapeAction(self)
@@ -546,12 +554,16 @@ function _eventHandler(self, event)
 			end
 		end
 		
-		local before = string.sub(tostring(self.value), 1, self.cursor - 1)
-		local after = string.sub(tostring(self.value), self.cursor + 1)
-		self:setValue(before .. keyboardEntry .. after)
-		
-		_moveCursor(self, 1)
-		
+		-- insert character
+		local s1 = string.sub(tostring(self.value), 1, self.cursor - 1)
+		local s3 = string.sub(tostring(self.value), self.cursor)
+		if self:setValue(s1 .. keyboardEntry .. s3) then
+			_moveCursor(self, 1)
+		else
+			self:playSound("BUMP")
+			self:getWindow():bumpRight()
+		end
+
 		return EVENT_CONSUME
 		
 	elseif type == EVENT_WINDOW_RESIZE then
