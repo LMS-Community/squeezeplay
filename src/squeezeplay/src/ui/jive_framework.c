@@ -50,6 +50,11 @@ struct jive_keymap {
 	JiveKey keycode;
 };
 
+struct jive_keyir {
+	SDLKey keysym;
+	Uint32 code;
+};
+
 static enum jive_key_state {
 	KEY_STATE_NONE,
 	KEY_STATE_DOWN,
@@ -90,6 +95,26 @@ static struct jive_keymap keymap[] = {
 	{ SDLK_PRINT,		JIVE_KEY_PRINT },
 	{ SDLK_SYSREQ,		JIVE_KEY_PRINT },
 	{ SDLK_UNKNOWN,		JIVE_KEY_NONE },
+};
+
+static struct jive_keyir irmap[] = {
+	{ SDLK_UP,       0x7689e01f }, /* arrow_up */
+	{ SDLK_DOWN,     0x7689b04f }, /* arrow_down */
+	{ SDLK_LEFT,     0x7689906f }, /* arrow_left */
+	{ SDLK_RIGHT,    0x7689d02f }, /* arrow_right */
+	{ SDLK_0,        0x76899867 },
+	{ SDLK_1,        0x7689f00f },
+	{ SDLK_2,        0x768908f7 },
+	{ SDLK_3,        0x76898877 },
+	{ SDLK_4,        0x768948b7 },
+	{ SDLK_5,        0x7689c837 },
+	{ SDLK_6,        0x768928d7 },
+	{ SDLK_7,        0x7689a857 },
+	{ SDLK_8,        0x76896897 },
+	{ SDLK_9,        0x7689e817 },
+	{ SDLK_x,        0x768910ef }, /* play */
+	{ SDLK_a,        0x7689609f }, /* add */
+	{ SDLK_UNKNOWN,	 0x0        },
 };
 
 
@@ -993,6 +1018,40 @@ static int process_event(lua_State *L, SDL_Event *event) {
 	case SDL_KEYUP: {
 		struct jive_keymap *entry = keymap;
 		
+		if (event->key.keysym.mod & (KMOD_ALT|KMOD_MODE)) {
+			/* simulate IR input, using alt key */
+			struct jive_keyir *ir = irmap;
+
+			while (ir->keysym != SDLK_UNKNOWN) {
+				if (ir->keysym == event->key.keysym.sym) {
+					break;
+				}
+				ir++;
+			}
+			if (ir->keysym == SDLK_UNKNOWN) {
+				break;
+			}
+
+			if (event->type == SDL_KEYDOWN) {
+				jevent.type = JIVE_EVENT_IR_DOWN;
+				jevent.u.ir.code = ir->code;
+			}
+			else {
+				JiveEvent irup;
+
+				jevent.type = JIVE_EVENT_IR_PRESS;
+				jevent.u.ir.code = ir->code;
+
+				memset(&irup, 0, sizeof(JiveEvent));
+				irup.type = JIVE_EVENT_IR_UP;
+				irup.ticks = SDL_GetTicks();
+				irup.u.ir.code = ir->code;
+				jive_queue_event(&irup);
+			}
+
+			break;
+		}
+
 		while (entry->keysym != SDLK_UNKNOWN) {
 			if (entry->keysym == event->key.keysym.sym) {
 				break;
