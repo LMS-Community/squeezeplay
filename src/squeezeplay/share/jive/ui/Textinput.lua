@@ -52,16 +52,16 @@ oo.class(_M, Widget)
 
 -- layout is from SC
 local numberLettersMixed = {
-	[0x76899867] = {' ','0'}, -- 0
-	[0x7689f00f] = {'.',',',"'",'?','!','@','-','1'}, -- 1
-	[0x768908f7] = {'a','b','c','A','B','C','2'}, 	   -- 2
-	[0x76898877] = {'d','e','f','D','E','F','3'}, 	   -- 3
-	[0x768948b7] = {'g','h','i','G','H','I','4'}, 	   -- 4
-	[0x7689c837] = {'j','k','l','J','K','L','5'}, 	   -- 5
-	[0x768928d7] = {'m','n','o','M','N','O','6'}, 	   -- 6
-	[0x7689a857] = {'p','q','r','s','P','Q','R','S','7'}, 	-- 7
-	[0x76896897] = {'t','u','v','T','U','V','8'}, 		-- 8
-	[0x7689e817] = {'w','x','y','z','W','X','Y','Z','9'}   -- 9
+	[0x76899867] = ' 0',         -- 0
+	[0x7689f00f] = '.,"?!@-1',   -- 1
+	[0x768908f7] = 'abcABC2',    -- 2
+	[0x76898877] = 'defDEF3',    -- 3
+	[0x768948b7] = 'ghiGHI4',    -- 4
+	[0x7689c837] = 'jklJKL5',    -- 5
+	[0x768928d7] = 'mnoMNO6',    -- 6
+	[0x7689a857] = 'pqrsPQRS7',  -- 7
+	[0x76896897] = 'tuvTUV8',    -- 8
+	[0x7689e817] = 'wxyzWXYZ9'   -- 9
 }
 
 -- return valid characters at cursor position.
@@ -207,8 +207,14 @@ end
 
 
 function _moveCursor(self, dir)
-	local oldCursor = self.cursor
+	-- range check
+	local str = tostring(self.value)
+	if (self.cursor == 1 and dir < 0)
+		or (self.cursor > #str and dir > 0) then
+		return
+	end
 
+	local oldCursor = self.cursor
 	self.cursor = self.cursor + dir
 
 	-- check for a valid character at the cursor position, if
@@ -260,19 +266,32 @@ function _insert(self)
 	local cursor = self.cursor
 	local str = tostring(self.value)
 
-	local s1 = string.sub(str, 1, cursor)
-	local s3 = string.sub(str, cursor + 1)
+	local s1 = string.sub(str, 1, cursor - 1)
+	local s3 = string.sub(str, cursor)
 
-	self:setValue(s1 .. " " .. s3)
+	local v = self:_getChars()
+	if #v == 0 then
+		return false
+	end
+
+	local c = string.sub(v, 1, 1)
+	if not self:setValue(s1 .. c .. s3) then
+		return false
+	end
+
 	_moveCursor(self, 1)
 
 	return true
 end
 
+
 function _getMatchingChars(self, charsTable)
 	local validChars = ""
-	for i,char in ipairs(charsTable) do
-		if string.find(self:_getChars(), char, 1, true) then
+
+	local v = self:_getChars()
+	for i = 1, #v do
+		local char = string.sub(v, i, i)
+		if string.find(charsTable, char, 1, true) then
 			validChars = validChars .. char
 		end
 	end
@@ -280,9 +299,11 @@ function _getMatchingChars(self, charsTable)
 	return validChars
 end
 
+
 function _cursorAtEnd(self)
 	return self.cursor > #tostring(self.value)
 end
+
 
 function _deleteAction(self)
 	if not _delete(self) then
@@ -301,6 +322,7 @@ function _insertAction(self)
 	end
 	return EVENT_CONSUME
 end
+
 
 function _goAction(self)
 	if _isEntered(self) then
@@ -323,6 +345,7 @@ function _goAction(self)
 	end
 	return EVENT_CONSUME
 end
+
 
 function _cursorBackAction(self)
 	if self.cursor == 1 then
@@ -367,20 +390,13 @@ function _eventHandler(self, event)
 		--play is delete, add is insert, just like jive
 		if event:isIRCode("play") then
 			self.numberLetterTimer:stop()
-			if not _delete(self) then
-				self:playSound("BUMP")
-				self:getWindow():bumpRight()
-			end
-			return EVENT_CONSUME
+			return _deleteAction(self)
 		end
 		if event:isIRCode("add") then
 			self.numberLetterTimer:stop()
-			if not _insert(self) then
-				self:playSound("BUMP")
-				self:getWindow():bumpRight()
-			end
-			return EVENT_CONSUME
+			return _insertAction(self)
 		end
+
 	elseif type == EVENT_IR_UP and self.upHandlesCursor and (event:isIRCode("arrow_left") or event:isIRCode("arrow_right")) then
 		self.upHandlesCursor = false
 		
@@ -393,6 +409,7 @@ function _eventHandler(self, event)
 		end
 
 		return EVENT_CONSUME
+
 	elseif type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT or type == EVENT_IR_HOLD then
 		local irCode = event:getIRCode()
 		if type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT then
@@ -620,7 +637,7 @@ function __init(self, style, value, closure, allowedChars)
 	obj.lastNumberLetterIrCode = nil
 	obj.lastNumberLetterT = nil
 	obj.numberLetterTimer = Timer(NUMBER_LETTER_TIMER_TIME,     
-					function() 
+					function()
 						obj.lastNumberLetterIrCode = nil
 						obj:_moveCursor(1) 
 						obj:reDraw()
@@ -882,7 +899,12 @@ function hexValue(default, min, max)
 
 		__index = {
 			setValue = function(obj, str)
+				if #str > max then
+					return false
+				end
+
 				obj.s = str
+				return true
 			end,
 
 			getValue = function(obj)
@@ -896,6 +918,10 @@ function hexValue(default, min, max)
 				return "0123456789ABCDEF"
 			end,
 
+			reverseScrollPolarityOnUpDownInput = function()
+				return true
+			end,
+
 			isValid = function(obj, cursor)
 				if min and #obj.s < min then
 					return false
@@ -906,9 +932,7 @@ function hexValue(default, min, max)
 		}
 	})
 
-	if default then
-		obj:setValue(default)
-	end
+	obj:setValue(default or "")
 
 	return obj
 end
