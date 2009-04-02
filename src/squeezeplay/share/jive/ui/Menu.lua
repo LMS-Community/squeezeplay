@@ -219,9 +219,12 @@ function handleDrag(self, dragAmountY, byItemOnly)
 				self.currentShiftDirection = -1
 			end
 
-			log:debug("self:scrollBy( itemShift ) ", itemShift, " self.pixelOffsetY: ", self.pixelOffsetY )
-			self:_updateScrollbar()
+			if log:isDebug() then
+				log:debug("BY ITEM: self:scrollBy( itemShift ) ", itemShift, " self.pixelOffsetY: ", self.pixelOffsetY )
+			end
+
 			self:scrollBy( itemShift, true, false )
+			self:_updateScrollbar()
 
 			if self.selected == 1 or self.selected == self.listSize then
 				self:resetDragData()
@@ -236,7 +239,9 @@ function handleDrag(self, dragAmountY, byItemOnly)
 				self:resetDragData()
 			end
 
-			log:debug("Scroll offset by: ", self.pixelOffsetY, " item height: ", self.itemHeight)
+			if log:isDebug() then
+				log:debug("BY PIXEL: Scroll offset by: ", self.pixelOffsetY, " item height: ", self.itemHeight)
+			end
 			self:_updateScrollbar()
 			self:reDraw()
 		end

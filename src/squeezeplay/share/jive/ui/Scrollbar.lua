@@ -90,6 +90,15 @@ function setScrollbar(self, min, max, pos, size)
 	self.value = pos - min
 	self.size = size
 
+	--don't go past ends
+	if  self.value < self.min then
+		self.value = self.min
+	end
+
+	if self.size + self.value > self.range then
+		self.value = self.range - self.size
+	end
+
 	self:reDraw()
 end
 
