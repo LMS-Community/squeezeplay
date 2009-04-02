@@ -878,6 +878,8 @@ windows = {
 
 	{ "input_ip", "IP Entry", setup_input_any, 'ip' },
 	{ "input_qwerty", "QWERTY Entry", setup_input_any, 'qwerty' },
+	{ "input_qwerty_DE", "QWERTZ Entry", setup_input_any, 'qwerty_DE' },
+	{ "input_qwerty_FR", "AZERTY Entry", setup_input_any, 'qwerty_FR' },
 	{ "input_numeric", "Number Entry", setup_input_any, 'numeric' },
 	{ "input_hex", "Hex Entry", setup_input_any, 'hex' },
 	{ "input_email", "Email Entry", setup_input_email, },
