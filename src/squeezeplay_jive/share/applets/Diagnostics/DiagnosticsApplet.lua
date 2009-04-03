@@ -225,13 +225,11 @@ function systemStatus(self)
 			end
 
 			local key, value = string.match(line, "(.+):%s+(%d+)")
-log:warn("key=", key, " value=", value)
 		 	mem[key] = value
 		end
 		f:close()
 
-debug.dump(mem)
-		memory = math.ceil(((mem.MemTotal - mem.MemFree) / mem.MemTotal) * 100) .. "%"
+		memory = math.ceil(((mem.MemTotal - (mem.MemFree + mem.Buffers + mem.Cached)) / mem.MemTotal) * 100) .. "%"
 	end
 
 	self:setValue("UPTIME", uptime)
