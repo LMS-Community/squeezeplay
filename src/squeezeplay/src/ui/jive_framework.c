@@ -35,6 +35,8 @@ struct jive_perfwarn perfwarn = { 0, 0, 0, 0, 0, 0 };
 /* button hold threshold 1 seconds */
 #define HOLD_TIMEOUT 1000
 
+#define LONG_HOLD_TIMEOUT 3500
+
 #define POINTER_TIMEOUT 20000
 
 static bool update_screen = true;
@@ -72,6 +74,7 @@ static JiveKey key_mask = 0;
 static Uint32 key_timeout = 0;
 
 static Uint32 mouse_timeout = 0;
+static Uint32 mouse_long_timeout = 0;
 static Uint32 mouse_timeout_arg;
 
 static Uint32 pointer_timeout = 0;
@@ -954,6 +957,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 				mouse_state = MOUSE_STATE_DOWN;
 				mouse_timeout_arg = (event->button.y << 16) | event->button.x;
 				mouse_timeout = now + HOLD_TIMEOUT;
+				mouse_long_timeout = now + LONG_HOLD_TIMEOUT;
 
 				mouse_origin_x = event->button.x;
 				mouse_origin_y = event->button.y;
@@ -976,6 +980,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 			}
 
 			mouse_timeout = 0;
+			mouse_long_timeout = 0;
 			mouse_state = MOUSE_STATE_NONE;
 		}
 		break;
@@ -1229,6 +1234,18 @@ static void process_timers(lua_State *L) {
 			do_dispatch_event(L, &jevent);
 		}
 		mouse_timeout = 0;
+	}
+
+	if (mouse_long_timeout && mouse_long_timeout < now) {
+		if (mouse_state == MOUSE_STATE_SENT) {
+			jevent.type = JIVE_EVENT_MOUSE_HOLD;
+			jevent.u.mouse.x = (mouse_timeout_arg >> 0) & 0xFFFF;
+			jevent.u.mouse.y = (mouse_timeout_arg >> 16) & 0xFFFF;
+			mouse_state = MOUSE_STATE_SENT;
+
+			do_dispatch_event(L, &jevent);
+		}
+		mouse_long_timeout = 0;
 	}
 
 	if (key_timeout && key_timeout < now) {

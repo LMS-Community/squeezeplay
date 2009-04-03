@@ -30,13 +30,14 @@ local HOLD_BUFFER_DISTANCE_FROM_ORIGIN = 30
 module(...)
 oo.class(_M, oo.class)
 
-
-function __init(self, widget, action, holdAction)
+--note: longHoldAction only applicable if holdAction result doesn't hide the windwo holding this button
+function __init(self, widget, action, holdAction, longHoldAction)
 	_assert(widget)
 
 	--A mouse sequence is a full down,activity,up sequence - false during down,activity and true on up
 	widget.mouseSequenceComplete = true
 	widget.distanceFromMouseDownMax = 0
+	widget.holdCount = 0
 
 	widget:addListener(EVENT_MOUSE_ALL,
 		function(event)
@@ -58,21 +59,40 @@ function __init(self, widget, action, holdAction)
 				return EVENT_CONSUME
 			end
 
+			if type == EVENT_MOUSE_HOLD then
+				widget.holdCount = widget.holdCount + 1 
+			end
 
 			if type == EVENT_MOUSE_HOLD
+			   and widget.holdCount == 1
 			   and holdAction
 			   and not widget.mouseSequenceComplete
 			   and not mouseExceededHoldDistance(widget) then
 				
-				widget:setStyleModifier(nil)
-				widget:reDraw()
-
-				finishMouseSequence(widget)
+				if not longHoldAction then
+					widget:setStyleModifier(nil)
+					widget:reDraw()
+					finishMouseSequence(widget)
+				end
 				return holdAction()
 			end
 
+			if type == EVENT_MOUSE_HOLD
+			   and widget.holdCount == 2
+			   and longHoldAction
+			   and not widget.mouseSequenceComplete
+			   and not mouseExceededHoldDistance(widget) then
+
+				widget:setStyleModifier(nil)
+				widget:reDraw()
+
+				return longHoldAction()
+			end
+
 			if type == EVENT_MOUSE_UP then
-				if widget.mouseSequenceComplete then
+				if widget.mouseSequenceComplete or widget.holdCount > 0 then
+					widget:setStyleModifier(nil)
+					widget:reDraw()
 					return EVENT_CONSUME
 				end
 
@@ -125,7 +145,7 @@ end
 
 function finishMouseSequence(self)
 	self.mouseSequenceComplete = true
-
+	self.holdCount = 0
 	self.mouseDownX = nil
 	self.mouseDownY = nil
 	self.distanceFromMouseDownMax = 0

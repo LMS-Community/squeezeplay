@@ -161,7 +161,7 @@ function __init(self, style, title, titleStyle)
 		end
 
 		-- default actions
-		obj:setButtonAction("lbutton", "back", "go_home")
+		obj:setButtonAction("lbutton", "back", "go_home", "soft_reset")
 
 		-- FIXME nowplaying should not be in Window
 		obj:setButtonAction("rbutton", "go_now_playing")
@@ -733,9 +733,10 @@ end
 Sets a button action. This sets both the action and button style (using "button_" .. buttonAction).
 
 --]]
-function setButtonAction(self, buttonKey, buttonAction, buttonHoldAction)
+function setButtonAction(self, buttonKey, buttonAction, buttonHoldAction, buttonLongHoldAction)
 	local buttonFunc = nil
 	local buttonHoldFunc = nil
+	local buttonLongHoldFunc = nil
 
 	if buttonAction then
 		buttonFunc = function()
@@ -747,13 +748,18 @@ function setButtonAction(self, buttonKey, buttonAction, buttonHoldAction)
 			Framework:pushAction(buttonHoldAction)
 		end
 	end
+	if buttonLongHoldAction then
+		buttonLongHoldFunc = function()
+			Framework:pushAction(buttonLongHoldAction)
+		end
+	end
 
 	local group = Group("button_" .. (buttonAction or "none"), {
 		icon = Icon("icon"),
 		icon_text = Label("text"),
 	})
 
-	self:setIconWidget(buttonKey, Button(group, buttonFunc, buttonHoldFunc))
+	self:setIconWidget(buttonKey, Button(group, buttonFunc, buttonHoldFunc, buttonLongHoldFunc))
 end
 
 
