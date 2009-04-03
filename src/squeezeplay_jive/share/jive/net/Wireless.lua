@@ -475,6 +475,7 @@ end
 
 function t_setStaticIP(self, ssid, ipAddress, ipSubnet, ipGateway, ipDNS)
 	-- Reset the network
+	os.execute("killall zcip > /dev/null")
 	os.execute("kill -TERM `cat /var/run/udhcpc.eth0.pid`")
 	os.execute("/sbin/ifconfig eth0 0.0.0.0")
 
