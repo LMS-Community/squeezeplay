@@ -65,6 +65,7 @@ function setupShowSetupLanguage(self, setupNext, helpText)
 
 	for _, locale in ipairs(locale:getAllLocales()) do 
 		menu:addItem({
+			locale = locale,
 		        text = self:string("LANGUAGE_" .. locale),
 			sound = "WINDOWSHOW",
 			callback = function()
@@ -73,12 +74,15 @@ function setupShowSetupLanguage(self, setupNext, helpText)
 			focusGained = function() self:_showLang(locale) end
 		})
 
-		if locale == currentLocale then
-			menu:setSelectedIndex(menu:numItems())
-		end
 	end
 
 	menu:setComparator(SimpleMenu.itemComparatorAlpha)
+
+	for i, item in menu:iterator() do
+		if item.locale == currentLocale then
+			menu:setSelectedIndex(i)
+		end
+	end
 
 	if helpText ~= false then
 		window:addWidget(Textarea("help_text", self:string("CHOOSE_LANGUAGE_HELP")))
