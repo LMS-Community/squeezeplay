@@ -1,0 +1,351 @@
+
+DIAGNOSTICS
+	DA	Systemdiagnosticering
+	DE	Systemdiagnose
+	EN	Diagnostics
+	ES	Diagnóstico del sistema
+	FI	Järjestelmädiagnostiikka
+	FR	Diagnostic système
+	IT	Diagnostica del sistema
+	NL	Diagnostische gegevens van het systeem
+	NO	Systemdiagnose
+	SV	Systemdiagnostik
+
+NOT_CONNECTED
+	DA	Ikke tilsluttet
+	DE	Nicht verbunden
+	EN	Not connected
+	ES	No conectado
+	FI	Ei yhdistetty
+	FR	Non connecté
+	IT	Non connesso
+	NL	Niet verbonden
+	NO	Ikke koplet til
+	SV	Ej ansluten
+
+PORT_FAIL
+	DA	Der kan ikke etableres forbindelse
+	DE	Verbindung kann nicht hergestellt werden
+	EN	Can't connect
+	ES	No se puede conectar
+	FI	Ei voi yhdistää
+	FR	Connexion impossible
+	IT	Impossibile connettersi
+	NL	Kan geen verbinding maken
+	NO	Kan ikke kople til
+	SV	Det gick inte att ansluta
+
+PORT_OK
+	DA	OK
+	DE	OK
+	EN	OK
+	ES	Correcto
+	FI	OK
+	FR	OK
+	IT	OK
+	NL	OK
+	NO	OK
+	SV	OK
+
+DNS_FAIL
+	DA	DNS mislykkedes
+	DE	DNS-Fehler
+	EN	DNS failed
+	ES	Fallo en DNS
+	FI	DNS epäonnistui
+	FR	Echec du DNS
+	IT	Errore DNS
+	NL	DNS mislukt
+	NO	DNS mislyktes
+	SV	DNS misslyckades
+
+PING_OK
+	DA	OK
+	DE	OK
+	EN	OK
+	ES	Correcto
+	FI	OK
+	FR	OK
+	IT	OK
+	NL	OK
+	NO	OK
+	SV	OK
+
+PING_FAIL
+	DA	Ping-kommando mislykkedes
+	DE	Ping-Fehler
+	EN	Can't ping
+	ES	No se puede hacer ping
+	FI	Ei voi suorittaa ping-toimintoa
+	FR	Impossible d'exécuter la commande PING
+	IT	Impossibile eseguire il ping
+	NL	Kan de opdracht Ping niet uitvoeren
+	NO	Kan ikke sende ping
+	SV	Det gick inte att skicka ping
+
+WLAN_SNR
+	DA	%s signal/støjforhold:
+	DE	%s-SNR
+	EN	%s SNR
+	ES	%s SNR
+	FI	%s SNR
+	FR	SNR %s
+	IT	%s SNR
+	NL	%s SNR
+	NO	%s signal-til-støy-forhold
+	SV	Brusvärde %s
+
+FIRMWARE_VERSION
+	DA	Version:
+	DE	Version:
+	EN	Version:
+	ES	Versión:
+	FI	Versio:
+	FR	Version:
+	IT	Versione:
+	NL	Versie:
+	NO	Versjon:
+	SV	Version:
+
+MAC_ADDRESS
+	DA	MAC-adresse:
+	DE	MAC-Adresse:
+	EN	MAC Address:
+	ES	Dirección MAC:
+	FI	MAC-osoite:
+	FR	Adresse MAC:
+	IT	Indirizzo MAC:
+	NL	MAC-adres:
+	NO	MAC-adresse:
+	SV	MAC-adress:
+
+WLAN_SSID
+	DA	Trådløst netværk:
+	DE	Kabelloses Netzwerk:
+	EN	Wireless network:
+	ES	Red inalámbrica:
+	FI	Langaton verkko:
+	FR	Réseau sans fil:
+	IT	Rete senza fili:
+	NL	Draadloos netwerk:
+	NO	Trådløst nettverk:
+	SV	Trådlöst nätverk:
+
+WLAN_ENCRYPTION
+	DA	Kryptering for trådløst netværk:
+	DE	Kabellos-Verschlüsselung:
+	EN	Wireless encryption:
+	ES	Cifrado inalámbrico:
+	FI	Langaton salaus:
+	FR	Chiffrement sans fil:
+	IT	Crittografia senza fili:
+	NL	Draadloze codering:
+	NO	Trådløs kryptering:
+	SV	Trådlös kryptering:
+
+WLAN_STRENGTH
+	DA	Trådløst signal:
+	DE	Kabellos-Signal:
+	EN	Wireless signal:
+	ES	Señal inalámbrica:
+	FI	Langaton signaali:
+	FR	Signal sans fil:
+	IT	Segnale senza fili:
+	NL	Draadloos signaal:
+	NO	Trådløst signal:
+	SV	Trådlös signal:
+
+IP_ADDRESS
+	DA	IP-adresse:
+	DE	IP-Adresse:
+	EN	IP Address:
+	ES	Dirección IP:
+	FI	IP-osoite:
+	FR	Adresse IP:
+	IT	Indirizzo IP:
+	NL	IP-adres:
+	NO	Ip-adresse:
+	SV	IP-adress:
+
+SUBNET_MASK
+	DA	IP-undernet:
+	DE	IP-Subnetzmaske:
+	EN	IP Subnet:
+	ES	Subred IP:
+	FI	IP-aliverkko:
+	FR	Sous-réseau IP:
+	IT	Subnet IP:
+	NL	IP-subnet:
+	NO	Ip-delnett:
+	SV	IP-delnät:
+
+GATEWAY
+	DA	Gatewayens IP-adresse:
+	DE	IP-Gateway:
+	EN	IP Gateway:
+	ES	Puerta de enlace IP:
+	FI	IP-yhdyskäytävä:
+	FR	Passerelle IP:
+	IT	Gateway IP:
+	NL	Gateway van IP:
+	NO	Ip for gateway:
+	SV	Gateway-adress:
+
+DNS_SERVER
+	DA	DNS-server:
+	DE	DNS-Server:
+	EN	DNS Server:
+	ES	Servidor DNS:
+	FI	DNS-palvelin:
+	FR	Serveur DNS:
+	IT	Server DNS:
+	NL	DNS-server:
+	NO	DNS-server:
+	SV	DNS-server:
+
+SN_ADDRESS
+	DA	SqueezeNetwork:
+	DE	SqueezeNetwork:
+	EN	SqueezeNetwork:
+	ES	SqueezeNetwork:
+	FI	SqueezeNetwork:
+	FR	SqueezeNetwork:
+	IT	SqueezeNetwork:
+	NL	SqueezeNetwork:
+	NO	SqueezeNetwork:
+	SV	SqueezeNetwork:
+
+SN_PING
+	DA	  Ping:
+	DE	  Ping:
+	EN	  Ping:
+	ES	  Ping:
+	FI	  Ping:
+	FR	  Ping:
+	IT	  Ping:
+	NL	  Ping:
+	NO	  Ping:
+	SV	  Ping:
+
+SN_PORT_3483
+	DA	  TCP port 3483:
+	DE	  TCP-Anschluss 3483:
+	EN	  TCP port 3483:
+	ES	  Puerto TCP 3483:
+	FI	  TCP-portti 3483:
+	FR	  Port TCP 3483:
+	IT	  Porta TCP 3483:
+	NL	  TCP-poort 3483:
+	NO	  TCP-port 3483:
+	SV	  TCP-port 3483:
+
+SN_PORT_9000
+	DA	  TCP port 9000:
+	DE	  TCP-Anschluss 9000:
+	EN	  TCP port 9000:
+	ES	  Puerto TCP 9000:
+	FI	  TCP-portti 9000:
+	FR	  Port  TCP 9000:
+	IT	  Porta TCP 9000:
+	NL	  TCP-poort 9000:
+	NO	  TCP-port 9000:
+	SV	  TCP-port 9000:
+
+SC_ADDRESS
+	DA	SqueezeCenter:
+	DE	SqueezeCenter:
+	EN	SqueezeCenter:
+	ES	SqueezeCenter:
+	FI	SqueezeCenter:
+	FR	SqueezeCenter:
+	IT	SqueezeCenter:
+	NL	SqueezeCenter:
+	NO	SqueezeCenter:
+	SV	SqueezeCenter:
+
+SC_PING
+	DA	  Ping:
+	DE	  Ping:
+	EN	  Ping:
+	ES	  Ping:
+	FI	  Ping:
+	FR	  Ping:
+	IT	  Ping:
+	NL	  Ping:
+	NO	  Ping:
+	SV	  Ping:
+
+SC_PORT_3483
+	DA	  TCP port 3483:
+	DE	  TCP-Anschluss 3483:
+	EN	  TCP port 3483:
+	ES	  Puerto TCP 3483:
+	FI	  TCP-portti 3483:
+	FR	  Port TCP 3483:
+	IT	  Porta TCP 3483:
+	NL	  TCP-poort 3483:
+	NO	  TCP-port 3483:
+	SV	  TCP-port 3483:
+
+SC_PORT_9000
+	DA	  TCP port 9000:
+	DE	  TCP-Anschluss 9000:
+	EN	  TCP port 9000:
+	ES	  Puerto TCP 9000:
+	FI	  TCP-portti 9000:
+	FR	  Port  TCP 9000:
+	IT	  Porta TCP 9000:
+	NL	  TCP-poort 9000:
+	NO	  TCP-port 9000:
+	SV	  TCP-port 9000:
+
+UPTIME
+	DA	Oppetid:
+	DE	Zeit aktiv:
+	EN	Uptime:
+	ES	Tiempo de actividad:
+	FI	Toiminta-aika:
+	FR	Temps d'utilisation :
+	IT	Tempo di attività:
+	NL	Actieve tijdsduur:
+	NO	Oppetid:
+	SV	Aktiv tid:
+
+UPTIME_DAYS
+	DA	%s dage
+	DE	%s Tage
+	EN	%s days
+	ES	%s días
+	FI	%s päivää
+	FR	%s jours
+	IT	%s giorni
+	NL	%s dagen
+	NO	%s dager
+	SV	%s dagar
+
+UPTIME_HOURS
+	DA	%s timer
+	DE	%s Stunden
+	EN	%s hours
+	ES	%s horas
+	FI	%s tuntia
+	FR	%s heures
+	IT	%s ore
+	NL	%s uren
+	NO	%s timer
+	SV	%s timmar
+
+UPTIME_MINUTES
+	DA	%s minutter
+	DE	%s Minuten
+	EN	%s minutes
+	ES	%s minutos
+	FI	%s minuuttia
+	FR	%s minutes
+	IT	%s minuti
+	NL	%s minuten
+	NO	%s minutter
+	SV	%s minuter
+
+MEMORY
+	EN	Memory used
