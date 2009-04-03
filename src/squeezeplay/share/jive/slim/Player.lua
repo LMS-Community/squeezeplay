@@ -534,6 +534,8 @@ function free(self, slimServer)
 	self.jnt:notify('playerDelete', self)
 
 	if self == currentPlayer then
+		self.jnt:notify('playerDisconnected', self)
+
 		-- dont' delete state if this is the current player
 		return
 	end
