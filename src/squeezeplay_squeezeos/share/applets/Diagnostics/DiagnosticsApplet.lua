@@ -11,7 +11,7 @@ local table            = require("table")
 
 local Applet           = require("jive.Applet")
 local DNS              = require("jive.net.DNS")
-local Wireless         = require("jive.net.Wireless")
+local Networking       = require("jive.net.Networking")
 local Process          = require("jive.net.Process")
 local SocketTcp        = require("jive.net.SocketTcp")
 local SlimServer       = require("jive.slim.SlimServer")
@@ -245,8 +245,10 @@ function dovalues(self, menu)
 	self:setValue("MAC_ADDRESS", mac)
 
 	-- networks
-	local iface = Wireless(jnt, "eth0")
-	self:wlanStatus(iface)
+	local iface = Networking:wirelessInterface()
+	local wlan = Networking(jnt, iface)
+
+	self:wlanStatus(wlan)
 
 
 	-- servers
