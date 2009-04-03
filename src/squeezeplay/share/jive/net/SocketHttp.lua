@@ -208,21 +208,27 @@ function t_sendResolve(self)
 		return
 	end
 
-	local t = Task(tostring(self) .. "(D)",
-		       self,
-		       function()
-			       log:debug(self, " DNS loopup for ", self.host)
-			       local ip, err = DNS:toip(self.host)
+	local t = Task(tostring(self) .. "(D)", self, function()
+		log:debug(self, " DNS loopup for ", self.host)
+		local ip, err = DNS:toip(self.host)
 
-			       log:debug(self, " IP=", ip)
-			       if not ip then
-				       self:close(self.host .. " " .. err)
-				       return
-			       end
+		-- make sure the socket has not closed while
+		-- resolving DNS
+		if self.t_httpSendState ~= 't_sendResolve' then
+			log:debug(self, " socket closed during DNS request")
+			return
+		end
 
-			       self.t_tcp.address = ip
-			       self:t_nextSendState(true, 't_sendConnect')
-		       end)
+		log:debug(self, " IP=", ip)
+		if not ip then
+		self:close(self.host .. " " .. err)
+			return
+		end
+
+		self.t_tcp.address = ip
+		self:t_nextSendState(true, 't_sendConnect')
+	end)
+
 	t:addTask()
 end
 
