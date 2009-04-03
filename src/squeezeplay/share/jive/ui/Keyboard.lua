@@ -530,19 +530,13 @@ function _arrow(self, direction, position, keyWidth)
 	end
 	local style = 'arrow_' .. direction .. '_' .. position
 
-	local keyEvent
-	if direction == 'left' then
-		keyEvent = KEY_BACK
-	else
-		keyEvent = KEY_GO
-	end
+	local cursorAction = 'cursor_' .. direction
 
 	return {	
 		icon	 = Icon(style),
 		keyWidth = keyWidth,
 		callback = function()
-			local e = Event:new(EVENT_KEY_PRESS, keyEvent)
-			Framework:dispatchEvent(nil, e) 
+			Framework:pushAction(cursorAction)
 			return EVENT_CONSUME 
 		end,
 	}

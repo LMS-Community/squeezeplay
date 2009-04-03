@@ -181,4 +181,6 @@ irActionMappings.hold = {
 unassignedActionMappings = {
 	"finish_operation",
 	"more_help",
+	"cursor_left",
+	"cursor_right",
 }

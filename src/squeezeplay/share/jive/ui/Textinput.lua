@@ -332,8 +332,14 @@ function _insertAction(self)
 end
 
 
-function _goAction(self)
+function _goAction(self, _, bumpAtEnd)
 	if _isEntered(self) then
+		if bumpAtEnd then
+			self:playSound("BUMP")
+			self:getWindow():bumpRight()
+			return EVENT_CONSUME
+		end
+
 		local valid = false
 
 		if self.closure then
@@ -355,10 +361,16 @@ function _goAction(self)
 end
 
 
-function _cursorBackAction(self)
+function _cursorBackAction(self, _, bumpAtStart)
 	if self.cursor == 1 then
-		self:playSound("WINDOWHIDE")
-		self:hide()
+		if bumpAtStart then
+			self:playSound("BUMP")
+			self:getWindow():bumpLeft()
+			return EVENT_CONSUME
+		else
+			self:playSound("WINDOWHIDE")
+			self:hide()
+		end
 	else
 		_moveCursor(self, -1)
 		self:reDraw()
@@ -375,6 +387,16 @@ function _escapeAction(self)
 	self:playSound("WINDOWHIDE")
 	self:hide()
 	return EVENT_CONSUME
+end
+
+
+function _cursorLeftAction(self)
+	self:_cursorBackAction(_, true)
+end
+
+
+function _cursorRightAction(self)
+	self:_goAction(_, true)
 end
 
 
@@ -671,6 +693,8 @@ function __init(self, style, value, closure, allowedChars)
 	obj:addActionListener("back", obj, _escapeAction)
 
 	obj:addActionListener("finish_operation", obj, _doneAction)
+	obj:addActionListener("cursor_left", obj, _cursorLeftAction)
+	obj:addActionListener("cursor_right", obj, _cursorRightAction)
 
 	obj:addListener(EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE | EVENT_IR_ALL,
 			function(event)
