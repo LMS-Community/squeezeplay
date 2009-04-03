@@ -498,6 +498,59 @@ function t_wpaStatus(self)
 		status[k] = v
 	end
 
+	-- exit early if we are not connected
+	if status.wpa_state ~= "COMPLETED" then
+		return status
+	end
+
+	local f, err = io.popen("/sbin/ifconfig " .. self.interface)
+	if f == nil then
+		log:error("Can't read ifconfig: ", err)
+	else
+		local ifconfig = f:read("*all")
+		f:close()
+
+		local ipaddr = string.match(ifconfig, "inet addr:([%d\.]+)")
+		local subnet = string.match(ifconfig, "Mask:([%d\.]+)")
+
+		status.ip_address = ipaddr
+		status.ip_subnet = subnet
+	end
+
+	-- exit early if we do not have an ip address
+	if not status.ip_address then
+		return status
+	end
+
+	local f, err = io.popen("/bin/ip route")
+	if f == nil then
+		log:error("Can't read default route: ", err)
+	else
+		local iproute = f:read("*all")
+		f:close()
+
+		local gateway = string.match(iproute, "default via ([%d\.]+)")
+
+		status.ip_gateway = gateway
+	end
+
+	local f = io.open("/etc/resolv.conf")
+	if f ~= nil then
+		while true do
+			local line = f:read("*l")
+			if line == nil then
+				break
+			end
+
+			local dns = string.match(line, "nameserver ([%d\.]+)")
+			if dns then
+				status.ip_dns = dns
+				break
+			end
+		end
+		f:close()
+	end
+
 	return status
 end
 
