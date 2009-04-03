@@ -395,9 +395,9 @@ function skin(self, s)
 	local textinputBackground     = 
 		Tile:loadTiles({
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box.png",
-				 imgpath .. "UNOFFICIAL/text_entry_titlebar_box_tl.png",
-				 imgpath .. "UNOFFICIAL/text_entry_titlebar_box_t.png",
-				 imgpath .. "UNOFFICIAL/text_entry_titlebar_box_tr.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tl.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_t.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tr.png",
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_r.png",
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_br.png",
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_b.png",
