@@ -838,7 +838,7 @@ testData = {
 	},
 	input_ip = {
 		"ip",
-		Textinput.ipAddressValue(),
+		'000.000.000.000',
 	},
 	input_qwerty = {
 		"qwerty",
