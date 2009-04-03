@@ -445,7 +445,12 @@ function skin(self, s)
 				       imgpath .. "Popup_Menu/helpbox_l.png",
 			       })
 
-	local scrollBackground = Tile:loadImage(imgpath .. "Scroll_Bar/scrollbar_whole.png")
+	local scrollBackground = 
+		Tile:loadVTiles({
+					imgpath .. "Scroll_Bar/scrollbar_bkgrd_t.png",
+					imgpath .. "Scroll_Bar/scrollbar_bkgrd.png",
+					imgpath .. "Scroll_Bar/scrollbar_bkgrd_b.png",
+			       })
 
 	local scrollBar = 
 		Tile:loadVTiles({
@@ -492,8 +497,10 @@ function skin(self, s)
 	local TRACK_FONT_SIZE = 18
 	local TEXTAREA_FONT_SIZE = 18
 	local CENTERED_TEXTAREA_FONT_SIZE = 28
+
 	local TEXTINPUT_FONT_SIZE = 20
 	local TEXTINPUT_SELECTED_FONT_SIZE = 24
+
 	local HELP_FONT_SIZE = 18
 	local UPDATE_SUBTEXT_SIZE = 20
 
@@ -756,7 +763,7 @@ function skin(self, s)
 	s.scrollbar = {
 		w = 30,
 		border = 0,
-		padding = { 0, 8, 0, 12 },
+		padding = { 0, 0, 0, 0 },
 		horizontal = 0,
 		bgImg = scrollBackground,
 		img = scrollBar,
@@ -808,7 +815,7 @@ function skin(self, s)
 	s.keyboard = {
 		w = WH_FILL,
 		h = WH_FILL,
-		border = { 8, 2, 8, 0 },
+		border = { 8, 4, 8, 0 },
 		padding = { 2, 0, 2, 0 },
 	}
 
@@ -866,6 +873,19 @@ function skin(self, s)
 		padding = { 1, 0, 0, 0 },
 	})
 
+	s.keyboard.arrow_left_middle = _uses(s.keyboard.key_middle, {
+		img = _loadImage(self, "Icons/icon_arrow_left.png")
+	})
+	s.keyboard.arrow_right_right = _uses(s.keyboard.key_right, {
+		img = _loadImage(self, "Icons/icon_arrow_right.png")
+	})
+	s.keyboard.arrow_left_bottom = _uses(s.keyboard.key_bottom, {
+		img = _loadImage(self, "Icons/icon_arrow_left.png")
+	})
+	s.keyboard.arrow_right_bottom = _uses(s.keyboard.key_bottom, {
+		img = _loadImage(self, "Icons/icon_arrow_right.png")
+	})
+
 	s.keyboard.done = _uses(s.keyboard.key_bottomRight_small, {
 		bgImg = keyBottomRight,
 		text = self:string("ENTER_SMALL"),
@@ -888,6 +908,18 @@ function skin(self, s)
 		}),
 		space = _uses(s.keyboard.space, {
 			bgImg = keyBottomPressed
+		}),
+		arrow_right_bottom = _uses(s.keyboard.arrow_right_bottom, {
+			bgImg = keyBottomPressed
+		}),
+		arrow_right_right = _uses(s.keyboard.arrow_right_right, {
+			bgImg = keyRightPressed
+		}),
+		arrow_left_bottom = _uses(s.keyboard.arrow_left_bottom, {
+			bgImg = keyBottomPressed
+		}),
+		arrow_left_middle = _uses(s.keyboard.arrow_left_middle, {
+			bgImg = keyMiddlePressed
 		}),
 		key = _uses(s.keyboard.key, {
 			bgImg = keyMiddlePressed

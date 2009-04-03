@@ -27,20 +27,40 @@ copy_assets($assets);
 # create svk file
 create_svk_file();
 
+# handle special assets
+my @commands = ( 
+	"cp ../../../../../assets/Fab4Skin/Splash_Screen/bootloader_100.png ../../jive/splash.png",
+	"svk status ../../jive/splash.png 2>&1 ",
+);
+
+for my $command (@commands) {
+	open(STATUS, "$command |");
+	while(<STATUS>) {
+		print "SPECIAL: $_";
+	}
+	close(STATUS);
+}
+
 sub create_svk_file {
 	my $prog = "svk status $skinDir";
-	open(OUT, ">svkUpdate.bash");
+	my @commands = ();
 	open(PROG, "$prog |");
-	print OUT "#!/bin/bash\n\n";
 	while(<PROG>) {
 		s/^\?\s+/svk add /;
 		s/^\!\s+/svk remove /;
 		if (/^svk/) {
+			push @commands, $_;
+		}
+	}
+	close(PROG);
+
+	if ($commands[0]) {
+		open(OUT, ">svkUpdate.bash");
+		print OUT "#!/bin/bash\n\n";
+		for (@commands) {
 			print OUT $_;
 		}
 	}
-	close(OUT);
-	close(PROG);
 }
 
 sub get_assets {

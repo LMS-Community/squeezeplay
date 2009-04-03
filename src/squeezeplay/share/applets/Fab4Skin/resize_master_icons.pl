@@ -99,18 +99,24 @@ sub remove_images {
 
 sub create_svk_file {
 	my $prog = "svk status $resizedIconDir";
-	open(OUT, ">svkUpdate.bash");
+	my @commands = ();
 	open(PROG, "$prog |");
-	print OUT "#!/bin/bash\n\n";
 	while(<PROG>) {
 		s/^\?\s+/svk add /;
 		s/^\!\s+/svk remove /;
 		if (/^svk/) {
+			push @commands, $_;
+		}
+	}
+	close(PROG);
+
+	if ($commands[0]) {
+		open(OUT, ">svkUpdate.bash");
+		print OUT "#!/bin/bash\n\n";
+		for (@commands) {
 			print OUT $_;
 		}
 	}
-	close(OUT);
-	close(PROG);
 }
 
 sub get_assets {

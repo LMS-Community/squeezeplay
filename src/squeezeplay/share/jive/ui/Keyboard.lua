@@ -64,6 +64,11 @@ local keyboardButtonText = {
         emailNumeric = '123-&',
 }
 
+local default = {
+	width = 46,
+	height = 44,
+}
+
 --[[
 
 =head2 jive.ui.Keyboard(style, widgets)
@@ -95,15 +100,17 @@ function _predefinedKeyboards(self)
 		local emailKeyboardBottomRow = { 
 					self:_switchKeyboardButton('emailNumeric', keyboardButtonText.emailNumeric), 
 					{ keyWidth = 0, text = '.' },
-					{ keyWidth = 92, text = '@' },
-					self:_macroKeyButton('.com'),
+					{ keyWidth = 0, text = '@' },
+					self:_arrow('left', 'bottom'),
+					self:_arrow('right', 'bottom'),
 					self:_go() 
 		}
 		self.keyboards = { 
 		['qwertyUpper']  = { 
 				{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
 				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer()  },
-				{ self:_shiftKey('qwerty'), 'Z', 'X', 'C', 'V', 'B', 'N', 'M', self:_spacer()  },
+				{ self:_shiftKey('qwerty'), 'Z', 'X', 'C', 'V', 'B', 'N', 'M',
+				 self:_arrow('left', 'middle'), self:_arrow('right', 'right'), },
 				{
 					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
 					self:_spaceBar(),
@@ -113,7 +120,9 @@ function _predefinedKeyboards(self)
 		['qwertyUpper_FR']  = { 
 				{ 'A', 'Z', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
 				{ 'Q', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M'  },
-				{ self:_shiftKey('qwerty'), 'W', 'X', 'C', 'V', 'B', 'N', self:_spacer()  },
+				{ 
+					self:_shiftKey('qwerty_FR'), 'W', 'X', 'C', 'V', 'B', 'N', 
+					self:_spacer(), self:_arrow('left', 'middle'), self:_arrow('right', 'right'), },
 				{
 					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
 					self:_spaceBar(),
@@ -123,37 +132,46 @@ function _predefinedKeyboards(self)
 		['qwertyUpper_DE']  = { 
 				{ 'Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P' },
 				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer()  },
-				{ self:_shiftKey('qwerty'), 'Y', 'X', 'C', 'V', 'B', 'N', 'M', self:_spacer()  },
+				{ 
+					self:_shiftKey('qwerty'), 'Y', 'X', 'C', 'V', 'B', 'N', 'M', 
+					self:_arrow('left', 'middle'), self:_arrow('right', 'right'), },
 				{
 					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
 					self:_spaceBar(),
 					self:_go(92),
 				},
-		} ,
+		},
 		['qwerty']  = { 
 				{ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
 				{ self:_spacer(), 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', self:_spacer() },
-				{ self:_shiftKey('qwertyUpper', 'qwerty'), 'z', 'x', 'c', 'v', 'b', 'n', 'm', self:_spacer() },
+				{ 
+					self:_shiftKey('qwertyUpper', 'qwerty'), 'z', 'x', 'c', 'v', 'b', 'n', 'm', 
+					self:_arrow('left', 'middle'), self:_arrow('right', 'right'), },
 				{
 					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
 					self:_spaceBar(),
 					self:_go(92),
 				},
-		} ,
+		},
 		['qwerty_DE']  = { 
 				{ 'q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p' },
 				{ self:_spacer(), 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', self:_spacer() },
-				{ self:_shiftKey('qwertyUpper', 'qwerty'), 'y', 'x', 'c', 'v', 'b', 'n', 'm', self:_spacer() },
+				{ 
+					self:_shiftKey('qwertyUpper_DE', 'qwerty_DE'), 'y', 'x', 'c', 'v', 'b', 'n', 'm', 
+					self:_arrow('left', 'middle'), self:_arrow('right', 'right'), },
 				{
 					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
 					self:_spaceBar(),
 					self:_go(92),
 				},
-		} ,
+		},
 		['qwerty_FR']  = { 
 				{ 'a', 'z', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
 				{ 'q', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm' },
-				{ self:_shiftKey('qwertyUpper', 'qwerty'), 'w', 'x', 'c', 'v', 'b', 'n', self:_spacer() },
+				{
+					self:_shiftKey('qwertyUpper_FR', 'qwerty_FR'), 'w', 'x', 'c', 'v', 'b', 'n', 
+					self:_spacer(), self:_arrow('left', 'middle'), self:_arrow('right', 'right'), 
+				},
 				{
 					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
 					self:_spaceBar(),
@@ -205,22 +223,26 @@ function _predefinedKeyboards(self)
 					self:_switchKeyboardButton('email', keyboardButtonText.qwerty),
 					{ keyWidth = 0, text = '.' },
 					{ keyWidth = 92, text = '@' },
-					self:_macroKeyButton('.com'),
+					self:_arrow('left', 'bottom'),
+					self:_arrow('right', 'bottom'),
 					self:_go() 
 				},
 		},
 		['hex']     = { 
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' } ,
-				{ self:_spacer(), 'A', 'B', 'C', 'D', 'E', 'F', self:_go() },
+				{ 'A', 'B', 'C', 'D', 'E', 'F', self:_arrow('left', 'bottom'), self:_arrow('right', 'bottom'), self:_go() },
 		},
 		['ip']     = { 
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' } ,
-				{ '.', self:_spacer(), self:_go(92) },
+				{ '.', self:_spacer(), self:_arrow('left', 'bottom'), self:_arrow('right', 'bottom'), self:_go(92) },
 		},
 		['numeric'] = { 
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
 				{ '.', '-', '+', '/', '=', '_', '@', '#', '$', '%' },
-				{ self:_shiftKey('numericShift', 'numeric'), ':', '&', ',', '?', '!', '(', ')', "'", self:_spacer() },
+				{ 
+					self:_shiftKey('numericShift', 'numeric'), ':', '&', ',', '?', '!', '(', ')', 
+					self:_arrow('left', 'middle'), self:_arrow('right', 'right'), 
+				},
 				{
 					self:_switchKeyboardButton('qwerty', keyboardButtonText.qwerty, 92), 
 					self:_spaceBar(),
@@ -230,7 +252,10 @@ function _predefinedKeyboards(self)
 		['numericShift'] = { 
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
 				{ ';', '"', '`', '~', '^', '*', '\\', '|', '[', ']' },
-				{ self:_shiftKey('numeric'), '{', '}', '<', '>', self:_spacer() },
+				{ 
+					self:_shiftKey('numeric'), "'", '<', '>', '{', '}',
+					self:_spacer(), self:_arrow('left', 'middle'), self:_arrow('right', 'right')
+				},
 				{
 					self:_switchKeyboardButton('qwerty', keyboardButtonText.qwerty, 92), 
 					self:_spaceBar(),
@@ -252,8 +277,6 @@ function _layout(self)
 	local screenWidth, screenHeight = Framework:getScreenSize()
 
 	local keyWidth
-	local defaultKeyWidth = 46
-	local defaultKeyHeight = 44
 	local rowWidth = 460
 
 	-- self.keyboard has the keyboard, table of rows of key objects
@@ -266,7 +289,7 @@ function _layout(self)
 		-- first pass for non-spacer nonSpacerKeyWidth
 		for j, key in ipairs(row) do
 			local style = key:getStyle()
-			local keyWidth = defaultKeyWidth
+			local keyWidth = default.width
 			if rowInfo[j].keyWidth == 0 then 
 				spacers = spacers + 1
 			else
@@ -296,12 +319,12 @@ function _layout(self)
 				if rowInfo[j].keyWidth then
 					keyWidth = tonumber(rowInfo[j].keyWidth)
 				else
-					keyWidth = defaultKeyWidth
+					keyWidth = default.width
 				end
 			end
 			
 			log:debug('keyWidth for this key set to: ', keyWidth)
-			key:setBounds(x, y, keyWidth, defaultKeyHeight)
+			key:setBounds(x, y, keyWidth, default.height)
 
 			local keyType = 'key_'
 			if string.match(style, "^key") or string.match(style, "^spacer") then
@@ -346,7 +369,7 @@ function _layout(self)
 		end
 
 		-- on to the next row: add some vertical pixels to our key positioning
-		y = y + defaultKeyHeight 
+		y = y + default.height 
 	end
 
 end
@@ -497,6 +520,34 @@ function _buttonsFromChars(self, charTable)
 	end
 	return buttonTable, infoTable
 end
+
+function _arrow(self, direction, position, keyWidth)
+	if not keyWidth then
+		keyWidth = default.width
+	end
+	if not position then
+		position = 'bottom'
+	end
+	local style = 'arrow_' .. direction .. '_' .. position
+
+	local keyEvent
+	if direction == 'left' then
+		keyEvent = KEY_BACK
+	else
+		keyEvent = KEY_GO
+	end
+
+	return {	
+		icon	 = Icon(style),
+		keyWidth = keyWidth,
+		callback = function()
+			local e = Event:new(EVENT_KEY_PRESS, keyEvent)
+			Framework:dispatchEvent(nil, e) 
+			return EVENT_CONSUME 
+		end,
+	}
+end
+
 
 function _macroKeyButton(self, keyText, keyWidth)
 	if not keyWidth then
