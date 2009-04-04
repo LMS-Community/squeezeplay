@@ -28,17 +28,23 @@ local PRESS_BUFFER_DISTANCE_FROM_WIDGET = 30
 -- distance travelled from mouse origin where HOLD event will be ignored (is relatively high due it being finger interface, finger may roll while waiting for hold to trigger)
 local HOLD_BUFFER_DISTANCE_FROM_ORIGIN = 30
 
+--Mouse operation states
+
+local MOUSE_COMPLETE = 0
+local MOUSE_DOWN = 1
+local MOUSE_HOLD = 2
+local MOUSE_LONG_HOLD = 3
+
 module(...)
 oo.class(_M, oo.class)
 
---note: longHoldAction only applicable if holdAction result doesn't hide the windwo holding this button
+--note: longHoldAction only applicable if holdAction result doesn't hide the window containing this button
 function __init(self, widget, action, holdAction, longHoldAction)
 	_assert(widget)
 
-	--A mouse sequence is a full down,activity,up sequence - false during down,activity and true on up
-	widget.mouseSequenceComplete = true
+	widget.mouseState = MOUSE_COMPLETE
 	widget.distanceFromMouseDownMax = 0
-	widget.holdCount = 0
+
 	widget:addListener(EVENT_SHOW,
 		function(event)
 			--might have been left in a pressed state while waiting for long hold to occur, so "unpress"
@@ -51,7 +57,9 @@ function __init(self, widget, action, holdAction, longHoldAction)
 	widget:addListener(EVENT_MOUSE_ALL,
 		function(event)
 			local type = event:getType()
---			log:error("event: ", event:tostring(), holdAction, widget.mouseSequenceComplete)
+			if log:isDebug() then
+				log:debug("event: ", event:tostring(), " state: ", widget.mouseState)
+			end
 
 			--NOTE: PRESS event ignored(consumed) since we handle press locally
 
@@ -62,22 +70,20 @@ function __init(self, widget, action, holdAction, longHoldAction)
 				updateMouseOriginOffset(widget, event)
 
 				widget:setStyleModifier("pressed")
-				widget.mouseSequenceComplete = false
+				widget.mouseState = MOUSE_DOWN
 
 				widget:reDraw()
 				return EVENT_CONSUME
 			end
 
-			if type == EVENT_MOUSE_HOLD then
-				widget.holdCount = widget.holdCount + 1 
-			end
-
 			if type == EVENT_MOUSE_HOLD
-			   and widget.holdCount == 1
+			   and widget.mouseState == MOUSE_DOWN
 			   and holdAction
-			   and not widget.mouseSequenceComplete
 			   and not mouseExceededHoldDistance(widget) then
-				
+
+				widget.mouseState = MOUSE_HOLD
+
+				--finish up unless a longHold is still to come
 				if not longHoldAction then
 					widget:setStyleModifier(nil)
 					widget:reDraw()
@@ -87,10 +93,11 @@ function __init(self, widget, action, holdAction, longHoldAction)
 			end
 
 			if type == EVENT_MOUSE_HOLD
-			   and widget.holdCount == 2
+			   and (widget.mouseState == MOUSE_DOWN or widget.mouseState == MOUSE_HOLD)
 			   and longHoldAction
-			   and not widget.mouseSequenceComplete
 			   and not mouseExceededHoldDistance(widget) then
+
+				widget.mouseState = MOUSE_LONG_HOLD
 
 				widget:setStyleModifier(nil)
 				widget:reDraw()
@@ -99,9 +106,12 @@ function __init(self, widget, action, holdAction, longHoldAction)
 			end
 
 			if type == EVENT_MOUSE_UP then
-				if widget.mouseSequenceComplete or widget.holdCount > 0 then
+				if widget.mouseState ~= MOUSE_DOWN then
+				        --not a press
 					widget:setStyleModifier(nil)
 					widget:reDraw()
+
+					finishMouseSequence(widget)
 					return EVENT_CONSUME
 				end
 
@@ -110,7 +120,7 @@ function __init(self, widget, action, holdAction, longHoldAction)
 
 				finishMouseSequence(widget)
 				if mouseInsidePressDistance(widget, event) and action then
-
+					--press
 					return action()
 				end
 				--else nothing (i.e. cancel)
@@ -118,7 +128,7 @@ function __init(self, widget, action, holdAction, longHoldAction)
 			end
 
 			if type == EVENT_MOUSE_DRAG then
-				if widget.mouseSequenceComplete then
+				if widget.mouseState == MOUSE_COMPLETE then
 					return EVENT_CONSUME
 				end
 
@@ -153,8 +163,7 @@ end
 
 
 function finishMouseSequence(self)
-	self.mouseSequenceComplete = true
-	self.holdCount = 0
+	self.mouseState = MOUSE_COMPLETE
 	self.mouseDownX = nil
 	self.mouseDownY = nil
 	self.distanceFromMouseDownMax = 0
