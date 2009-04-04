@@ -215,7 +215,7 @@ static int handle_clearpad_events(int fd) {
 				clearpad_state = 1;
 				clearpad_down_millis = event.ticks;
 			}
-			else if (clearpad_state == 1 || clearpad_state == 2) {
+			else if (clearpad_state > 0) {
 				event.type = (JiveEventType) JIVE_EVENT_MOUSE_DRAG;
 			}
 
@@ -487,7 +487,9 @@ static int event_pump(lua_State *L) {
 	// check if a second hold (long hold) should be sent
 	if (clearpad_state == 2 && (now >= CLEARPAD_LONG_HOLD_TIMEOUT + clearpad_down_millis )) {
 		JiveEvent event;
-		//fprintf(stderr,"******************************HOLD triggered during pump check\n");
+		//fprintf(stderr,"******************************"Long" HOLD triggered during pump check\n");
+
+		clearpad_state = 3;
 
 		memset(&event, 0, sizeof(JiveEvent));
 		event.type = JIVE_EVENT_MOUSE_HOLD;
