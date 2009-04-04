@@ -423,6 +423,10 @@ local function _eventHandler(self, event)
 				self.sliderDragInProgress = true
 			end
 
+			--clear any selected item
+			self.usePressedStyle = false
+			_selectedItem(self):setStyleModifier(nil)
+
 			--zero out offset (scrollbar currently only moves discretely)
 			self.pixelOffsetY = 0
 			
