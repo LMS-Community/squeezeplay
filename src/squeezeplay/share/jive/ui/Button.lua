@@ -15,6 +15,7 @@ local EVENT_MOUSE_DRAG       = jive.ui.EVENT_MOUSE_DRAG
 local EVENT_MOUSE_HOLD       = jive.ui.EVENT_MOUSE_HOLD
 local EVENT_MOUSE_UP         = jive.ui.EVENT_MOUSE_UP
 local EVENT_FOCUS_LOST       = jive.ui.EVENT_FOCUS_LOST
+local EVENT_SHOW             = jive.ui.EVENT_SHOW
 
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
 local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
@@ -38,6 +39,14 @@ function __init(self, widget, action, holdAction, longHoldAction)
 	widget.mouseSequenceComplete = true
 	widget.distanceFromMouseDownMax = 0
 	widget.holdCount = 0
+	widget:addListener(EVENT_SHOW,
+		function(event)
+			--might have been left in a pressed state while waiting for long hold to occur, so "unpress"
+			widget:setStyleModifier(nil)
+			widget:reDraw()
+
+			return EVENT_UNUSED
+		end)
 
 	widget:addListener(EVENT_MOUSE_ALL,
 		function(event)

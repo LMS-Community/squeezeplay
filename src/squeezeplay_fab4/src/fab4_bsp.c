@@ -26,6 +26,9 @@ Uint32 clearpad_down_millis = 0;
 /* clearpad hold threshold 1 second - HOLD event is sent when no UP or PRESS has occurred before CLEARPAD_HOLD_TIMEOUT ms*/
 #define CLEARPAD_HOLD_TIMEOUT 1000
 
+/* clearpad hold threshold  - A second HOLD event is sent when no UP or PRESS has occurred before CLEARPAD_HOLD_TIMEOUT ms*/
+#define CLEARPAD_LONG_HOLD_TIMEOUT 3500
+
 /* button hold threshold .9 seconds - HOLD event is sent when a new ir code is received after IR_HOLD_TIMEOUT ms*/
 #define IR_HOLD_TIMEOUT 900
 
@@ -481,7 +484,18 @@ static int event_pump(lua_State *L) {
 		//todo: also set last mouse coords
 		jive_queue_event(&event);
 	}
-	
+	// check if a second hold (long hold) should be sent
+	if (clearpad_state == 2 && (now >= CLEARPAD_LONG_HOLD_TIMEOUT + clearpad_down_millis )) {
+		JiveEvent event;
+		//fprintf(stderr,"******************************HOLD triggered during pump check\n");
+
+		memset(&event, 0, sizeof(JiveEvent));
+		event.type = JIVE_EVENT_MOUSE_HOLD;
+		event.ticks = bsp_get_realtime_millis();
+		//todo: also set last mouse coords
+		jive_queue_event(&event);
+	}
+
 	return 0;
 }
 
