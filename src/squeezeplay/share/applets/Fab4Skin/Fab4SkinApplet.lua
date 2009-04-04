@@ -815,7 +815,7 @@ function skin(self, s)
 	s.keyboard = {
 		w = WH_FILL,
 		h = WH_FILL,
-		border = { 8, 4, 8, 0 },
+		border = { 8, 6, 8, 0 },
 		padding = { 2, 0, 2, 0 },
 	}
 
@@ -846,13 +846,15 @@ function skin(self, s)
 	s.keyboard.key_bottom      = _uses(s.keyboard.key, { bgImg = keyBottom })
 	s.keyboard.key_bottomRight = _uses(s.keyboard.key, { bgImg = keyBottomRight })
 
-	-- styles for keys that use smaller font in bottom row
+	-- styles for keys that use smaller font 
 	s.keyboard.key_bottom_small      = _uses(s.keyboard.key_bottom, { font = _boldfont(18) } )
 	s.keyboard.key_bottomRight_small = _uses(s.keyboard.key_bottomRight, { 
 			font = _boldfont(18), 
 			fg = { 0xe7, 0xe7, 0xe7 },
 	} )
 	s.keyboard.key_bottomLeft_small  = _uses(s.keyboard.key_bottomLeft, { font = _boldfont(18) } )
+	s.keyboard.key_left_small        = _uses(s.keyboard.key_left, { font = _boldfont(18) } )
+
 
 	s.keyboard.spacer_topLeft     = _uses(s.keyboard.key_topLeft)
 	s.keyboard.spacer_top         = _uses(s.keyboard.key_top)
@@ -951,7 +953,9 @@ function skin(self, s)
 		key_bottomRight = _uses(s.keyboard.key_bottomRight, {
 			bgImg = keyBottomRightPressed
 		}),
-
+		key_left_small  = _uses(s.keyboard.key_left_small, {
+			bgImg = keyLeftPressed
+		}),
 		key_bottomLeft_small  = _uses(s.keyboard.key_bottomLeft_small, {
 			bgImg = keyBottomLeftPressed
 		}),
@@ -1417,9 +1421,9 @@ function skin(self, s)
 	s.button_keyboard_back = {
 		align = 'left',
 		w = 45,
-		h = 30,
+		h = 33,
 		padding = { 6, 0, 0, 0 },
-		border = { 0, 5, 12, 8 }, 
+		border = { 0, 0, 12, 0}, 
 		img = _loadImage(self, "Icons/icon_delete_tch_text_entry.png"),
 		bgImg = deleteKeyBackground,
 	}

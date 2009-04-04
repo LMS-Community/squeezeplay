@@ -59,6 +59,8 @@ local keyboardButtonText = {
         qwerty = 'abc',
         numeric = '123-&',
         numericShift = '123-&',
+	numericMore = '"~<]',
+	numericBack = ':+@$',
         hex = 'hex',
         chars = '!@&',
         emailNumeric = '123-&',
@@ -240,7 +242,9 @@ function _predefinedKeyboards(self)
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
 				{ '.', '-', '+', '/', '=', '_', '@', '#', '$', '%' },
 				{ 
-					self:_shiftKey('numericShift', 'numeric'), ':', '&', ',', '?', '!', '(', ')', 
+					--self:_shiftKey('numericShift', 'numeric'), ':', '&', ',', '?', '!', '(', ')', 
+					self:_switchKeyboardButton('numericShift', keyboardButtonText.numericMore, 92),
+					':', '&', ',', '?', '!', '*', 
 					self:_arrow('left', 'middle'), self:_arrow('right', 'right'), 
 				},
 				{
@@ -251,9 +255,11 @@ function _predefinedKeyboards(self)
 		},
 		['numericShift'] = { 
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
-				{ ';', '"', '`', '~', '^', '*', '\\', '|', '[', ']' },
+				{ ';', '"', '`', "'", '~', '^', '\\', '|', '[', ']' },
 				{ 
-					self:_shiftKey('numeric'), "'", '<', '>', '{', '}',
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numericBack, 92),
+					'<', '>', '{', '}', '(', ')', 
+					--self:_shiftKey('numeric'), "'", '<', '>', '{', '}',
 					self:_spacer(), self:_arrow('left', 'middle'), self:_arrow('right', 'right')
 				},
 				{
