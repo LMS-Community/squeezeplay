@@ -8,6 +8,7 @@ local oo                     = require("loop.simple")
 local os                     = require("os")
 local io                     = require("io")
 local string                 = require("string")
+local math                   = require("math")
 
 local Applet                 = require("jive.Applet")
 local System                 = require("jive.System")
@@ -31,7 +32,7 @@ local log                    = require("jive.utils.log").logger("applets.setup")
 local jnt                    = jnt
 local iconbar                = iconbar
 local jiveMain               = jiveMain
-
+local settings	             = nil
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
@@ -40,7 +41,7 @@ oo.class(_M, Applet)
 function init(self)
 	local uuid, mac
 
-	local settings = self:getSettings()
+	settings = self:getSettings()
 
 	-- read device uuid
 	local f = io.open("/proc/cpuinfo")
@@ -111,20 +112,10 @@ function init(self)
 	settings.ambient = settings.ambient or 0
 	self:setBrightness( settings.brightness)
 
-	local brightnessTimer = Timer( 2000,
+	self:initBrightness()
+	local brightnessTimer = Timer( 1000,
 		function()
-			local SYSPATH = "/sys/bus/i2c/devices/0-0039/"
-			local f = io.open(SYSPATH .. "lux")
-			local lux = f:read("*all");
-			f:close()
-
-			settings.ambient = string.sub(lux, 0, string.len(lux)-1)
-
-			local bright = settings.brightness + settings.ambient
-			if bright > 64 then
-				bright = 64
-			end
-			self:setBrightness( bright)
+			self:doBrightnessTimer()
 		end)
 	brightnessTimer:start()
 
@@ -135,6 +126,86 @@ function init(self)
 
 	self:storeSettings()
 end
+
+-----------------------------
+-- Ambient Light Stuff Start
+-----------------------------
+-- Ambient SysFS Path
+local AMBIENT_SYSPATH = "/sys/bus/i2c/devices/0-0039/"
+
+-- Default/Start Values                                                                                                                       
+local ambientMax = 0                                                                                                                          
+local ambientMin = 1                                                                                                                          
+local brightCur = 64                                                                                                                          
+local brightTarget = 64                                                                                                                       
+                                                                                                                                              
+-- Minimum Brightness - Default:1, calculated using settings.brightness                                                                       
+-- 	- This variable should probably be configurable by the users
+local brightMinMax = 32                                                                                                                      
+local brightMin = 1                                                                                                                           
+                                                                                                                                              
+-- Maximum number of brightness levels up/down per run of the timer                                                                           
+local AMBIENT_RAMPSTEPS = 7                                                                                                                
+                                                                                                                                              
+-- Initialize Brightness Stuff (Factor)                                                                                                       
+function initBrightness(self)                                                                                                                 
+        -- Initialize the Ambient Sensor with a factor of 30                                                                                  
+        local f = io.open(AMBIENT_SYSPATH .. "factor", "w")                                                                                   
+        f:write("30");                                                                                                                        
+        f:close()                                                                                                                             
+end                                                                                                                                           
+                                                                                                                                              
+-- Valid Brighness goes from 1 - 64, 0 = display off                                                                                          
+function doBrightnessTimer(self)                                                                                                              
+        local f = io.open(AMBIENT_SYSPATH .. "lux")                                                                                           
+        local lux = f:read("*all");                                                                                                           
+        f:close()                                                                                                                             
+                                                                                                                                              
+        local luxvalue = tonumber(string.sub(lux, 0, string.len(lux)-1))                                                                      
+                                                                                                                                              
+        if luxvalue > ambientMax then                                                                                                         
+                ambientMax = luxvalue                                                                                                         
+        end
+	brightTarget = (luxvalue / ambientMax) * 64
+	
+	-- Ramp Brightness to target
+	local diff = 0
+	diff = (brightTarget - brightCur)
+	if math.abs(diff) > AMBIENT_RAMPSTEPS then
+		diff = AMBIENT_RAMPSTEPS
+		
+		-- is there an easier solution for this?
+		if brightCur > brightTarget then
+			diff = diff * -1.0
+		end
+	end
+	
+	brightCur = brightCur + diff	
+	brightMin = brightMinMax / settings.brightness * brightMinMax
+	if brightMin < 1 then
+		brightMin = 1
+	end
+
+	-- Limit to 64 max
+	if brightCur > 64 then
+		brightCur = 64
+	elseif brightCur < brightMin then
+		brightCur = brightMin	
+	end
+	
+	-- Set Brightness
+	self:setBrightness( math.floor(brightCur) )
+	
+	log:info("Brightness: " .. settings.brightness)
+	log:info("CurTarMax: " .. tostring(brightCur) .. " - ".. tostring(brightTarget) .. " - " .. tostring(ambientMax))
+	
+	-- Set Settings Value
+	settings.ambient = ambientCur
+end
+
+---
+-- END BRIGHTNESS
+---
 
 
 function _softResetAction(self, event)
