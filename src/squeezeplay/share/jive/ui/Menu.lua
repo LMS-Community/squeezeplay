@@ -184,10 +184,15 @@ end
 
 
 function _updateScrollbar(self)
-	self.scrollbar:setScrollbar(0, self.listSize * self.itemHeight,
-			(self.topItem - 1) * self.itemHeight - self.pixelOffsetY,
-			self.numWidgets * self.itemHeight )
+	local max = self.listSize * self.itemHeight
+	local pos = (self.topItem - 1) * self.itemHeight - self.pixelOffsetY
+	local size = self.numWidgets * self.itemHeight
 
+	if size + pos > max then
+		pos = max - size
+	end
+	self.scrollbar:setScrollbar(0, max, pos, size)
+	
 end
 
 

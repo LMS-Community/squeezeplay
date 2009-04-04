@@ -1198,7 +1198,8 @@ function skin(self, s)
 		font = _font(TEXTAREA_FONT_SIZE),
 		fg = TEXT_COLOR,
 		sh = TEXT_SH_COLOR,
-		lineHeight = 22,
+		padding = { 18, 18, 10, 0},
+		lineHeight = 23,
 	}
 
 	-- help window (likely the same as information)

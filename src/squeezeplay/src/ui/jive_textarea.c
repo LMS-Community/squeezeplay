@@ -309,9 +309,9 @@ int jiveL_textarea_draw(lua_State *L) {
 	jive_surface_get_clip(srf, &old_clip);
 
 	new_clip.x = peer->w.bounds.x;
-	new_clip.y = peer->w.bounds.y;
+	new_clip.y = peer->w.bounds.y + peer->w.padding.top;
 	new_clip.w = peer->w.bounds.w;
-	new_clip.h = peer->w.bounds.h;
+	new_clip.h = peer->w.bounds.h - peer->w.padding.top;
 	jive_surface_set_clip(srf, &new_clip);
 
 
