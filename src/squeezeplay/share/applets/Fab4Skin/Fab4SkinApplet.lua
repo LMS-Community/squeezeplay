@@ -1172,6 +1172,10 @@ function skin(self, s)
 
 
 	-- list window with help text
+	s.help_list = _uses(s.text_list)
+
+--[[
+	-- BUG 11662, help_list used to have the top textarea fill the available space. That's been removed, but leaving this code in for now as an example of how to do that
 	s.help_list = _uses(s.window)
 
 	s.help_list.menu = _uses(s.menu, {
@@ -1184,7 +1188,7 @@ function skin(self, s)
 		h = WH_FILL,
 		align = "left"
 	})
-
+--]]
 
 	-- error window
 	-- XXX: needs layout
