@@ -50,16 +50,7 @@ local log             = jul.logger("applets.setup")
 local jnt             = jnt
 local appletManager   = appletManager
 
-local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
-local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
-
-local KEY_VOLUME_UP          = jive.ui.KEY_VOLUME_UP
-local KEY_VOLUME_DOWN        = jive.ui.KEY_VOLUME_DOWN
-
-
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 local path = string.match(System:findFile("applets/SetupSoundEffects/sounds/bump.wav"), "(.*)bump.wav")

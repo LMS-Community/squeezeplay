@@ -57,7 +57,7 @@ local jnt              = jnt
 
 local JIVE_VERSION     = jive.JIVE_VERSION
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

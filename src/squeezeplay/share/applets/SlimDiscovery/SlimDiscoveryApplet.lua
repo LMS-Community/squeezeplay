@@ -50,7 +50,7 @@ local jiveMain      = jiveMain
 local appletManager = appletManager
 
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

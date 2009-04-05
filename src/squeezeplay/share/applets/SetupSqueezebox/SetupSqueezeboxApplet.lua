@@ -35,19 +35,12 @@ local jnt                    = jnt
 local appletManager          = appletManager
 local socket                 = require("socket")
 
-local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
-local ACTION                 = jive.ui.ACTION
-local EVENT_WINDOW_ACTIVE    = jive.ui.EVENT_WINDOW_ACTIVE
-local EVENT_WINDOW_INACTIVE  = jive.ui.EVENT_WINDOW_INACTIVE
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
-
 local setupsqueezeboxTitleStyle = 'settingstitle'
 local SETUP_TIMEOUT = 45 -- 45 second timeout for each action
 local SETUP_EXTENDED_TIMEOUT = 180  -- 180 second timeout in case Squeezebox is upgrading after first connecting to SC
 local _updatingPlayerPopup = false
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 -- _updatingPlayer

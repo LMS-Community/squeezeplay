@@ -37,7 +37,7 @@ local jiveMain               = jiveMain
 local appletManager          = appletManager
 local jnt                    = jnt
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 -- FIXME: this method should be farmed out to SimpleMenu as a function called from _itemRenderer()

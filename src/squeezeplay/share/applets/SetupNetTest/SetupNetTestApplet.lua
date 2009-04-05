@@ -33,19 +33,9 @@ local Timer         = require("jive.ui.Timer")
 local log           = require("jive.utils.log").logger("applets.misc")
 local debug         = require("jive.utils.debug")
 
-local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local KEY_BACK         = jive.ui.KEY_BACK
-local KEY_GO           = jive.ui.KEY_GO
-local KEY_ADD          = jive.ui.KEY_ADD
-local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
-local EVENT_ACTION     = jive.ui.EVENT_ACTION
-local ACTION           = jive.ui.ACTION
-
 local appletManager    = appletManager
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 local scroll = 2
