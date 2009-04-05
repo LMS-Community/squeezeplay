@@ -41,6 +41,16 @@ local autotable              = require("jive.utils.autotable")
 
 local log = require("jive.utils.log").logger("ui")
 
+local LAYER_FRAME            = jive.ui.LAYER_FRAME
+local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
+
+local LAYOUT_NORTH           = jive.ui.LAYOUT_NORTH
+local LAYOUT_EAST            = jive.ui.LAYOUT_EAST
+local LAYOUT_SOUTH           = jive.ui.LAYOUT_SOUTH
+local LAYOUT_WEST            = jive.ui.LAYOUT_WEST
+local LAYOUT_CENTER          = jive.ui.LAYOUT_CENTER
+local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
+
 local WH_FILL                = jive.ui.WH_FILL
 
 local jiveMain               = jiveMain
