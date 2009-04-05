@@ -549,7 +549,6 @@ function skin(self, s)
 	local _progressBar = Tile:loadHTiles({
 		nil,
 		imgpath .. "Alerts/alert_progress_bar_body.png",
-		imgpath .. "Alerts/progress_bar_line.png",
 	})
 
 
