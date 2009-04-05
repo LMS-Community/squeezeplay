@@ -1360,9 +1360,8 @@ function skin(self, s)
 			border = 0,
 			padding = 0,
 			align = 'center',
-			font = _boldfont(18),
-			fg = { 0xe7,0xe7, 0xe7 },
-			sh = { 0x37, 0x37, 0x37 },
+			font = _font(16),
+			fg = { 0xdc,0xdc, 0xdc },
 		},
 	}
 	local _pressed_button = _uses(_button, {
