@@ -18,38 +18,23 @@ local Window                 = require("jive.ui.Window")
 
 local log                    = require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
 
-local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local EVENT_KEY_DOWN   = jive.ui.EVENT_KEY_DOWN
-local EVENT_KEY_UP     = jive.ui.EVENT_KEY_UP
-local ACTION           = jive.ui.ACTION
-
-local KEY_GO		= jive.ui.KEY_GO
-local KEY_UP		= jive.ui.KEY_UP
-local KEY_BACK		= jive.ui.KEY_BACK
-local KEY_LEFT          = jive.ui.KEY_LEFT
-local KEY_RIGHT         = jive.ui.KEY_RIGHT
-local KEY_PLAY		= jive.ui.KEY_PLAY
-
-local FRAME_RATE       = jive.ui.FRAME_RATE
-
 -- One Shots Per Second
-local RATE_OF_FIRE = FRAME_RATE
+local RATE_OF_FIRE = jive.ui.FRAME_RATE
 
 -- Bomb Rate
-local BOMB_RATE = FRAME_RATE / 3
+local BOMB_RATE = jive.ui.FRAME_RATE / 3
 local BOMB_PROP = 0.3
 
 local MAX_INVADERS = 50
-local INVADER_SPAWNRATE = FRAME_RATE - (FRAME_RATE/2)
+local INVADER_SPAWNRATE = jive.ui.FRAME_RATE - (jive.ui.FRAME_RATE/2)
 local INVADER_Y = 23
 
-local UFO_SPAWNRATE = FRAME_RATE * 2
+local UFO_SPAWNRATE = jive.ui.FRAME_RATE * 2
 local UFO_Y = 0
 
 local entity_id = 1
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 

@@ -16,8 +16,6 @@ local RadioGroup             = require("jive.ui.RadioGroup")
 local RadioButton            = require("jive.ui.RadioButton")
 local Window                 = require("jive.ui.Window")
 
-local EVENT_SWITCH           = jive.ui.EVENT_SWITCH
-
 -- Not yet defined as a constant in jive.ui.
 local SW_TABLET_MODE	     = 1
 
@@ -36,7 +34,7 @@ local menuItemDutyCycle = nil
 local curControl = 3
 local curDutyCycle = 4
 
-module(...)                                                                     
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 function _updateLabel(self, menuItem, prefix, value)

@@ -68,7 +68,7 @@ local curGain = false
 local factorItem = nil
 local curFactor = 1
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 function _updateLabel(self, channel, newValue)

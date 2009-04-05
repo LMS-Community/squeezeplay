@@ -31,13 +31,7 @@ local Framework        = require("jive.ui.Framework")
 
 local log              = require("jive.utils.log").logger("applets.screensavers")
 
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local EVENT_WINDOW_RESIZE = jive.ui.EVENT_WINDOW_RESIZE
-local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
-local FRAME_RATE       = jive.ui.FRAME_RATE
-
-
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
