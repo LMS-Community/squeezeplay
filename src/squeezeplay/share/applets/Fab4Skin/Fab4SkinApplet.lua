@@ -1421,9 +1421,9 @@ function skin(self, s)
 
 	s.button_keyboard_back = {
 		align = 'left',
-		w = 52,
+		w = 48,
 		h = 33,
-		padding = { 10, 0, 0, 0 },
+		padding = { 8, 0, 0, 0 },
 		border = { 0, 2, 9, 5}, 
 		img = _loadImage(self, "Icons/icon_delete_tch_text_entry.png"),
 		bgImg = deleteKeyBackground,
