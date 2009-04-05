@@ -779,6 +779,8 @@ windows = {
 	{ "input_qwerty_FR", "AZERTY Entry", setup_input },
 	{ "input_numeric", "Number Entry", setup_input },
 	{ "input_email", "Email Entry", setup_input, },
+	{ "input_email_FR", "FR Email Entry", setup_input, },
+	{ "input_email_DE", "DE Email Entry", setup_input, },
 	{ "input_hex", "WEP Password", setup_input, },
 	{ "input_wpa", "Wireless Password", setup_input, },
 
@@ -842,6 +844,12 @@ testData = {
 	},
 	input_qwerty = {
 		"qwerty",
+	},
+	input_email_DE = {
+		"email_DE",
+	},
+	input_email_FR = {
+		"email_FR",
 	},
 	input_qwerty_DE = {
 		"qwerty_DE",

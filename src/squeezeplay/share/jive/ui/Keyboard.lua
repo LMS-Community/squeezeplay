@@ -59,8 +59,8 @@ local keyboardButtonText = {
         qwerty = 'abc',
         numeric = '123-&',
         numericShift = '123-&',
-	numericMore = '"~<]',
-	numericBack = ':+@$',
+	numericMore = '" ~ < ]',
+	numericBack = ': + @ $',
         hex = 'hex',
         chars = '!@&',
         emailNumeric = '123-&',
@@ -103,8 +103,9 @@ function _predefinedKeyboards(self)
 					self:_switchKeyboardButton('emailNumeric', keyboardButtonText.emailNumeric), 
 					{ keyWidth = 0, text = '.' },
 					{ keyWidth = 0, text = '@' },
-					self:_arrow('left', 'bottom'),
-					self:_arrow('right', 'bottom'),
+					'_', '-',
+--					self:_arrow('left', 'bottom'),
+--					self:_arrow('right', 'bottom'),
 					self:_go() 
 		}
 		self.keyboards = { 
@@ -123,8 +124,8 @@ function _predefinedKeyboards(self)
 				{ 'A', 'Z', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
 				{ 'Q', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M'  },
 				{ 
-					self:_shiftKey('qwerty_FR'), 'W', 'X', 'C', 'V', 'B', 'N', 
-					self:_spacer(), self:_arrow('left', 'middle'), self:_arrow('right', 'right'), },
+					self:_shiftKey('qwerty_FR'), self:_spacer(), 'W', 'X', 'C', 'V', 'B', 'N', 
+					self:_arrow('left', 'middle'), self:_arrow('right', 'right'), },
 				{
 					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
 					self:_spaceBar(),
@@ -171,8 +172,8 @@ function _predefinedKeyboards(self)
 				{ 'a', 'z', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
 				{ 'q', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm' },
 				{
-					self:_shiftKey('qwertyUpper_FR', 'qwerty_FR'), 'w', 'x', 'c', 'v', 'b', 'n', 
-					self:_spacer(), self:_arrow('left', 'middle'), self:_arrow('right', 'right'), 
+					self:_shiftKey('qwertyUpper_FR', 'qwerty_FR'), self:_spacer(), 'w', 'x', 'c', 'v', 'b', 'n', 
+					self:_arrow('left', 'middle'), self:_arrow('right', 'right'), 
 				},
 				{
 					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
@@ -184,49 +185,78 @@ function _predefinedKeyboards(self)
 		['email']  = { 
 				{ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
 				{ self:_spacer(), 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', self:_spacer() },
-				{ self:_shiftKey('emailUpper', 'email'), 'z', 'x', 'c', 'v', 'b', 'n', 'm', '-', '_' },
+				{ self:_shiftKey('emailUpper', 'email'), 'z', 'x', 'c', 'v', 'b', 'n', 'm', 
+					self:_arrow('left', 'middle'),
+					self:_arrow('right', 'right'),
+				},
 				emailKeyboardBottomRow
 		} ,
 		['emailUpper']  = { 
 				{ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
 				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer() },
-				{ self:_shiftKey('email'), 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '-', '_' },
+				{ self:_shiftKey('email'), 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 
+					self:_arrow('left', 'middle'),
+					self:_arrow('right', 'right'),
+				},
 				emailKeyboardBottomRow
 		} ,
 		['email_DE']  = { 
 				{ 'q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p' },
 				{ self:_spacer(), 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', self:_spacer() },
-				{ self:_shiftKey('emailUpper', 'email'), 'y', 'x', 'c', 'v', 'b', 'n', 'm', '-', '_' },
+				{ self:_shiftKey('emailUpper_DE', 'email_DE'), 'y', 'x', 'c', 'v', 'b', 'n', 'm', 
+					self:_arrow('left', 'middle'),
+					self:_arrow('right', 'right'),
+				},
+				emailKeyboardBottomRow
+		} ,
+		['emailUpper_DE']  = { 
+				{ 'Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P' },
+				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer() },
+				{ self:_shiftKey('email_DE'), 'Y', 'X', 'C', 'V', 'B', 'N', 'M', 
+					self:_arrow('left', 'middle'),
+					self:_arrow('right', 'right'),
+				},
 				emailKeyboardBottomRow
 		} ,
 		['emailUpper']  = { 
 				{ 'Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P' },
 				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer() },
-				{ self:_shiftKey('email'), 'Y', 'X', 'C', 'V', 'B', 'N', 'M', '-', '_' },
+				{ self:_shiftKey('email'), 'Y', 'X', 'C', 'V', 'B', 'N', 'M', 
+					self:_arrow('left', 'middle'),
+					self:_arrow('right', 'right'),
+				},
 				emailKeyboardBottomRow
 		} ,
 		['email_FR']  = { 
 				{ 'a', 'z', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
 				{ 'q', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm' },
-				{ self:_shiftKey('emailUpper', 'email'), 'w', 'x', 'c', 'v', 'b', 'n', '-', '_', self:_spacer() },
+				{ self:_shiftKey('emailUpper_FR', 'email_FR'), self:_spacer(), 'w', 'x', 'c', 'v', 'b', 'n', 
+					self:_arrow('left', 'middle'),
+					self:_arrow('right', 'right'),
+				},
 				emailKeyboardBottomRow
 		} ,
 		['emailUpper_FR']  = { 
 				{ 'A', 'Z', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
 				{ 'Q', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M' },
-				{ self:_shiftKey('email'), 'W', 'X', 'C', 'V', 'B', 'N', '-', '_', self:_spacer() },
+				{ self:_shiftKey('email_FR'), self:_spacer(), 'W', 'X', 'C', 'V', 'B', 'N', 
+					self:_arrow('left', 'middle'),
+					self:_arrow('right', 'right'),
+				},
 				emailKeyboardBottomRow
 		} ,
 		['emailNumeric'] = { 
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
-				{ '$', '+', '_', '-', '!', '#', '%', '&', "'", '*' },
-				{ '/', '=', '?', '^', '`', '{', '|', '}', '~', '.' },
+				{ '$', '+', '~', '.', '!', '#', '%', '&', "'", '*' },
+				{ '/', '=', '?', '^', '`', '{', '|', '}', 
+					self:_arrow('left', 'middle'),
+					self:_arrow('right', 'right'),
+				},
 				{
 					self:_switchKeyboardButton('email', keyboardButtonText.qwerty),
 					{ keyWidth = 0, text = '.' },
 					{ keyWidth = 92, text = '@' },
-					self:_arrow('left', 'bottom'),
-					self:_arrow('right', 'bottom'),
+					'_', '-',
 					self:_go() 
 				},
 		},
