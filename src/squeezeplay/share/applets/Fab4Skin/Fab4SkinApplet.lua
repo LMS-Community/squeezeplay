@@ -1399,6 +1399,7 @@ function skin(self, s)
 		s[name].text = _uses(_button.text, attr)
 		s[name].w = 65
 		s.pressed[name].text = _uses(_pressed_button.text, attr)
+		s.pressed[name].w = 65
 	end
 
 
