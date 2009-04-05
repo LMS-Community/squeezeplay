@@ -1381,7 +1381,9 @@ function skin(self, s)
 		}
 
 		s[name].icon = _uses(_button.icon, attr)
+		s[name].w = 65
 		s.pressed[name].icon = _uses(_pressed_button.icon, attr)
+		s.pressed[name].w = 65
 	end
 
 	-- text button factory
@@ -1395,6 +1397,7 @@ function skin(self, s)
 		}
 
 		s[name].text = _uses(_button.text, attr)
+		s[name].w = 65
 		s.pressed[name].text = _uses(_pressed_button.text, attr)
 	end
 
@@ -1408,6 +1411,8 @@ function skin(self, s)
 	_titleButtonIcon("button_go_now_playing", nowPlayingButton)
 	_titleButtonText("button_help", self:string("HELP"))
 	_titleButtonText("button_more_help", self:string("MORE_HELP"))
+
+	s.button_back.padding = { 2, 0, 0, 2 }
 
 	s.button_volume_min = {
 		img = _loadImage(self, "UNOFFICIAL/volume_speaker_l.png"),
