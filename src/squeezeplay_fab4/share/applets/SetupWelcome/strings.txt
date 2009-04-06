@@ -6,7 +6,7 @@ WELCOME
 	CS	Vítejte
 	DA	Velkommen
 	DE	Willkommen
-	EN	Welcome
+	EN	Welcome to Squeezebox Touch
 	ES	Bienvenido
 	FI	Tervetuloa
 	FR	Bienvenue
@@ -21,7 +21,7 @@ WELCOME_WALKTHROUGH
 	CS	Začněme vaším připojením k vaší síti.
 	DA	Lad os begynde med at slutte afspilleren til netværket.
 	DE	Jetzt stellen wir die Verbindung zum Netzwerk her.
-	EN	Let's start by getting you connected to your network.
+	EN	In just a few moments, you will have complete, customizable access to music from around the world—and from any computer on your network—right here at your fingertips.\n\nLet's start by getting you connected to your network.
 	ES	Para empezar, nos conectaremos a la red.
 	FI	Aloitetaan yhteydenmuodostamisella verkkoosi.
 	FR	Commençons par vous connecter à votre réseau.
@@ -31,6 +31,21 @@ WELCOME_WALKTHROUGH
 	PL	Rozpocznij od nawiązania połączenia z siecią.
 	RU	Начнем с подключения к сети.
 	SV	Vi börjar med att ansluta till nätverket.
+
+CONTINUE
+	CS	Pokračovat
+	DA	Fortsæt
+	DE	Weiter
+	EN	I'm ready
+	ES	Continuar
+	FI	Jatka
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
+	SV	Fortsätt
 
 DONE
 	CS	Hotovo!
@@ -46,21 +61,6 @@ DONE
 	PL	To już wszystko!
 	RU	Сделано!
 	SV	Klart!
-
-CONTINUE
-	CS	Pokračovat
-	DA	Fortsæt
-	DE	Weiter
-	EN	Continue
-	ES	Continuar
-	FI	Jatka
-	FR	Continuer
-	IT	Continua
-	NL	Verdergaan
-	NO	Fortsett
-	PL	Kontynuuj
-	RU	Продолжить
-	SV	Fortsätt
 
 DONE_HELP
 	CS	Nyní můžete použít váš Squeezebox pro přístup k vaší hudbě!
