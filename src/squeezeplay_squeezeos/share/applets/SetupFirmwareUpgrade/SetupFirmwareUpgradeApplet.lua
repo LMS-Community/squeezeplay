@@ -326,9 +326,9 @@ function _t_setText(self, done, msg, count)
 
 	self.text:setValue(self:string(msg))
 
-	--if done then
-	--	self.icon:setStyle("icon_connected")
-	--end
+	if done then
+		self.icon:setStyle("icon_restart")
+	end
 end
 
 function _t_upgrade(self)

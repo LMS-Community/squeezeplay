@@ -1500,6 +1500,10 @@ function skin(self, s)
 		img = _loadImage(self, "IconsResized/icon_firmware_update_touch.png"),
 	})
 
+	s.icon_restart = _uses(_icon, {
+		img = _loadImage(self, "IconsResized/icon_restart_touch.png"),
+	})
+
 	s.icon_power = _uses(_icon, {
 -- FIXME no asset for this (needed?)
 --		img = _loadImage(self, "Alerts/popup_shutdown_icon.png"),
