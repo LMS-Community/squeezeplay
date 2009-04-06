@@ -133,38 +133,38 @@ end
 -- Ambient SysFS Path
 local AMBIENT_SYSPATH = "/sys/bus/i2c/devices/0-0039/"
 
--- Default/Start Values                                                                                                                       
-local ambientMax = 0                                                                                                                          
-local ambientMin = 1                                                                                                                          
-local brightCur = 64                                                                                                                          
-local brightTarget = 64                                                                                                                       
-                                                                                                                                              
--- Minimum Brightness - Default:1, calculated using settings.brightness                                                                       
+-- Default/Start Values
+local ambientMax = 0
+local ambientMin = 1
+local brightCur = 64
+local brightTarget = 64
+
+-- Minimum Brightness - Default:1, calculated using settings.brightness
 -- 	- This variable should probably be configurable by the users
-local brightMinMax = 32                                                                                                                      
-local brightMin = 1                                                                                                                           
-                                                                                                                                              
--- Maximum number of brightness levels up/down per run of the timer                                                                           
-local AMBIENT_RAMPSTEPS = 7                                                                                                                
-                                                                                                                                              
--- Initialize Brightness Stuff (Factor)                                                                                                       
-function initBrightness(self)                                                                                                                 
-        -- Initialize the Ambient Sensor with a factor of 30                                                                                  
-        local f = io.open(AMBIENT_SYSPATH .. "factor", "w")                                                                                   
-        f:write("30");                                                                                                                        
-        f:close()                                                                                                                             
-end                                                                                                                                           
-                                                                                                                                              
--- Valid Brighness goes from 1 - 64, 0 = display off                                                                                          
-function doBrightnessTimer(self)                                                                                                              
-        local f = io.open(AMBIENT_SYSPATH .. "lux")                                                                                           
-        local lux = f:read("*all");                                                                                                           
-        f:close()                                                                                                                             
-                                                                                                                                              
-        local luxvalue = tonumber(string.sub(lux, 0, string.len(lux)-1))                                                                      
-                                                                                                                                              
-        if luxvalue > ambientMax then                                                                                                         
-                ambientMax = luxvalue                                                                                                         
+local brightMinMax = 32
+local brightMin = 1
+
+-- Maximum number of brightness levels up/down per run of the timer
+local AMBIENT_RAMPSTEPS = 7
+
+-- Initialize Brightness Stuff (Factor)
+function initBrightness(self)
+        -- Initialize the Ambient Sensor with a factor of 30
+        local f = io.open(AMBIENT_SYSPATH .. "factor", "w")
+        f:write("30")
+        f:close()
+end
+
+-- Valid Brighness goes from 1 - 64, 0 = display off
+function doBrightnessTimer(self)
+        local f = io.open(AMBIENT_SYSPATH .. "lux")
+        local lux = f:read("*all")
+        f:close()
+
+        local luxvalue = tonumber(string.sub(lux, 0, string.len(lux)-1))
+
+        if luxvalue > ambientMax then
+                ambientMax = luxvalue
         end
 	brightTarget = (luxvalue / ambientMax) * 64
 	
@@ -196,8 +196,8 @@ function doBrightnessTimer(self)
 	-- Set Brightness
 	self:setBrightness( math.floor(brightCur) )
 	
-	log:info("Brightness: " .. settings.brightness)
-	log:info("CurTarMax: " .. tostring(brightCur) .. " - ".. tostring(brightTarget) .. " - " .. tostring(ambientMax))
+	log:debug("Brightness: " .. settings.brightness)
+	log:debug("CurTarMax: " .. tostring(brightCur) .. " - ".. tostring(brightTarget) .. " - " .. tostring(ambientMax))
 	
 	-- Set Settings Value
 	settings.ambient = ambientCur
