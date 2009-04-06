@@ -958,7 +958,8 @@ function _connect(self, iface, ssid, createNetwork)
 
 	-- XXXX popup text, including dhcp detection text
 
-	popup:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", ssid)))
+	local name = self.scanResults[ssid].item.text
+	popup:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", name)))
 
 	self:tieAndShowWindow(popup)
 
