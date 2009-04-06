@@ -164,6 +164,8 @@ function _scroll(self, dir, chars, restart)
 
 	local v = chars and chars or self:_getChars()
 	if #v == 0 then
+		self:playSound("BUMP")
+		self:getWindow():bumpRight()
 		return
 	end
 
@@ -994,151 +996,123 @@ Returns a value that can be used for entering an ip address.
 =cut
 --]]
 function ipAddressValue(default)
-	if Framework:isMostRecentInput("mouse") then
-		if default == "0.0.0.0" then
-			--the typically seen "0.0.0.0" is not useful when doing touch
-			default = ""
-		end
-		return ipAddressValueMouse(default)
-	else
-		return ipAddressValueNonMouse(default)
-	end
-end
-
-
-function ipAddressValueNonMouse(default)
 	local obj = {}
 	setmetatable(obj, {
-			     __tostring =
-				     function(e)
-					     return table.concat(e, ".")
-				     end,
+		__tostring = function(obj)
+			if not (Framework:isMostRecentInput("ir")
+				or Framework:isMostRecentInput("scroll")) then
+				return obj.str
+			end
 
-			     __index = {
-				     setValue =
-					     function(value, str)
-						     local i = 1
-						     for ddd in string.gmatch(str, "(%d+)") do
-							     local n = tonumber(ddd)
-							     if n > 255 then n = 255 end
+			local s = {}
+			for i=1,4 do
+				s[i] = string.format("%03d", obj.v[i] or 0)
+			end
+			return table.concat(s, ".")
+		end,
 
-							     value[i] = string.format("%03d", n)
-							     i = i + 1
-							     if i > 4 then break end
-						     end
-						     return true
-					     end,
+		__index = {
+			setValue = function(obj, str)
+				local v = {}
 
-				     getValue =
-					     function(value)
-						     -- remove leading zeros
-						     local norm = {}
-						     for i,v in ipairs(value) do
-							     norm[i] = tostring(tonumber(v))
-						     end
-						     return table.concat(norm, ".")
-					     end,
+				if string.match(str, "%.%.") then
+					return false
+				end
 
-				     getChars = 
-					     function(value, cursor)
-						     local n = (cursor % 4)
-						     if n == 0 then return "" end
+				local i = 1
+				for ddd in string.gmatch(str, "(%d+)") do
+					v[i] = tonumber(ddd)
+					if v[i] > 255 then
+						return false
+					end
 
-						     local v = tonumber(value[math.floor(cursor/4)+1])
-						     local a = math.floor(v / 100)
-						     local b = math.floor(v % 100 / 10)
-						     local c = math.floor(v % 10)
+					i = i + 1
+					if i > 5 then
+						return false
+					end
+				end
 
-						     if n == 1 then
-							     if b > 6 or (b == 5 and c > 5) then
-								     return "01"
-							     else
-								     return "012"
-							     end
-						     elseif n == 2 then
-							     if a >= 2 and c > 5 then
-								     return "01234"
-							     elseif a >= 2 then
-								     return "012345"
-							     else
-								     return "0123456789"
-							     end
-						     elseif n == 3 then
-							     if a >= 2 and b >= 5 then
-								     return "012345"
-							     else
-								     return "0123456789"
-							     end
-						     end
-					     end,
-				     reverseScrollPolarityOnUpDownInput =
-					     function()
-						     return true
-					     end,
-				     isValid =
-					     function(value, cursor)
-						     return #value == 4
-					     end
-			     }
-		     })
+				obj.v = v
+				obj.str = table.concat(v, ".")
+				if string.sub(str, -1) == "." then
+					obj.str = obj.str .. "."
+				end
 
-	if default then
-		obj:setValue(default)
-	end
+				return true
+			end,
 
-	return obj
-end
+			getValue = function(obj)
+				-- remove leading zeros
+				local norm = {}
+				for i,v in ipairs(obj.v) do
+					norm[i] = tostring(tonumber(v))
+				end
+				return table.concat(norm, ".")
+			end,
 
+			getChars = function(obj, cursor)
+				-- keyboard input
+				if not (Framework:isMostRecentInput("ir")
+					or Framework:isMostRecentInput("scroll")) then
+					if #obj.v < 4 then
+						return "0123456789."
+					else
+						return "0123456789"
+					end
+				end
 
-function ipAddressValueMouse(default)
-	local obj = {
-		s = default or ""
-	}
+				-- IR input
+				local n = (cursor % 4)
+				if n == 0 then
+					return ""
+				end
+				local v = tonumber(obj.v[math.floor(cursor/4)+1]) or 0
 
-	setmetatable(obj, {
-			     __tostring = function(obj)
-						  return obj.s
-					  end,
+				local a = math.floor(v / 100)
+				local b = math.floor(v % 100 / 10)
+				local c = math.floor(v % 10)
 
-			     __index = {
-				     setValue = function(obj, str)
-							obj.s = str
-							return true
-						end,
+				if n == 1 then
+					if b > 6 or (b == 5 and c > 5) then
+						return "01"
+					else
+						return "012"
+					end
+				elseif n == 2 then
+					if a >= 2 and c > 5 then
+						return "01234"
+					elseif a >= 2 then
+						return "012345"
+					else
+						return "0123456789"
+					end
+				elseif n == 3 then
+					if a >= 2 and b >= 5 then
+						return "012345"
+					else
+						return "0123456789"
+					end
+				end
+			end,
 
-				     getValue = function(obj)
-							return obj.s
-						end,
+			reverseScrollPolarityOnUpDownInput = function()
+				return true
+			end,
 
-				     getChars = function(obj, cursor, allowedChars)
-							return ".0123456789"
-						end,
+			isValid = function(obj, cursor)
+				return #obj.v == 4 and not
+					(obj.v[1] == 0 and
+					 obj.v[2] == 0 and
+					 obj.v[3] == 0 and
+					 obj.v[4] == 0)
+			end
+		}
+	})
 
-				     reverseScrollPolarityOnUpDownInput =
-					     function()
-						     return true
-					     end,
-				     isValid = function(obj, cursor)
-							local i = 0
-							for ddd in string.gmatch(obj.s, "(%d+)") do
-							     local n = tonumber(ddd)
-							     if n < 0 or n > 255 then
-							        return false
-							     end
-							     i = i + 1
-							end
-							if i ~= 4 then
-								return false
-							end
-
-							return true
-					       end
-			     }
-		     })
+	obj:setValue(default or "")
 
 	return obj
 end
-
 
 
 --[[
