@@ -95,9 +95,56 @@ function _consumeAction(self, event)
 	return EVENT_CONSUME
 end
 
-function step1(self)
-	-- add 'RETURN_TO_SETUP' at top
-	log:debug('step1')
+function _disableNormalEscapeMechanisms(self)
+
+	if not self.disableHomeActionDuringSetup then
+		self.disableHomeActionDuringSetup = Framework:addActionListener("go_home", self, _consumeAction)
+		self.disableHomeOrNowPlayingActionDuringSetup = Framework:addActionListener("go_home_or_now_playing", self, _consumeAction)
+		self.disableHomeKeyDuringSetup =
+			Framework:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+			function(event)
+				local keycode = event:getKeycode()
+				if keycode == KEY_HOME then
+					log:warn("HOME KEY IS DISABLED IN SETUP. USE LONG-PRESS-HOLD BACK BUTTON INSTEAD")
+					-- don't allow this event to continue
+					return EVENT_CONSUME
+				end
+				return EVENT_UNUSED
+			end)
+
+		-- soft_reset escapes setup (need to clean up when this happens)
+		self.freeAppletWhenEscapingSetup =
+			Framework:addActionListener("soft_reset", self,
+			function(self, event)
+				self:_enableNormalEscapeMechanisms()
+				return EVENT_UNUSED
+			end)
+	end
+end
+
+
+function _enableNormalEscapeMechanisms(self)
+	log:info("_enableNormalEscapeMechanisms")
+
+	Framework:removeListener(self.disableHomeActionDuringSetup)
+	Framework:removeListener(self.disableHomeOrNowPlayingActionDuringSetup)
+	Framework:removeListener(self.disableHomeKeyDuringSetup)
+	Framework:removeListener(self.freeAppletWhenEscapingSetup)
+end
+
+
+function _closeToHome(self)
+	log:info("_closeToHome")
+	jiveMain:removeItemById('returnToSetup')
+
+	self:_enableNormalEscapeMechanisms()
+	jiveMain:closeToHome(true, Window.transitionPushLeft)
+end
+
+function _addReturnToSetupToHomeMenu(self)
+	--first remove any existing
+	jiveMain:removeItemById('returnToSetup')
+
 	local returnToSetup = {
 		id   = 'returnToSetup',
 		node = 'home',
@@ -108,28 +155,14 @@ function step1(self)
 		end
 		}
 	jiveMain:addItem(returnToSetup)
+end
 
-	self.disableHomeActionDuringSetup = Framework:addActionListener("go_home", self, _consumeAction)
-	self.disableHomeOrNowPlayingActionDuringSetup = Framework:addActionListener("go_home_or_now_playing", self, _consumeAction)
-	disableHomeKeyDuringSetup =
-		Framework:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD,
-		function(event)
-			local keycode = event:getKeycode()
-			if keycode == KEY_HOME then
-				log:warn("HOME KEY IS DISABLED IN SETUP. USE LONG-PRESS-HOLD BACK BUTTON INSTEAD")
-				-- don't allow this event to continue
-				return EVENT_CONSUME
-			end
-			return EVENT_UNUSED
-		end)
 
-	-- soft_reset escapes setup (need to clean up when this happens)
-	self.freeAppletWhenEscapingSetup =
- 		Framework:addActionListener("soft_reset", self,
-		function(self, event)
-			self:free()
-			return EVENT_UNUSED
-		end)
+function step1(self)
+	-- add 'RETURN_TO_SETUP' at top
+	log:debug('step1')
+	self:_addReturnToSetupToHomeMenu()
+	self:_disableNormalEscapeMechanisms()
 
 	-- choose language
 	appletManager:callService("setupShowSetupLanguage",
@@ -189,7 +222,11 @@ end
 
 function step7(self)
 	-- Once here, network setup is complete
-	self:_setupDone()
+	self:_setupNetworkingDone()
+
+	--might be coming into this from a restart, so re-disable
+	self:_disableNormalEscapeMechanisms()
+	self:_addReturnToSetupToHomeMenu()
 
 	-- Find squeezenetwork server
 	local squeezenetwork = false
@@ -201,7 +238,7 @@ function step7(self)
 
 	if not squeezenetwork then
 		log:error("no SqueezeNetwork instance")
-		jiveMain:closeToHome(true, Window.transitionPushLeft)
+		self:_closeToHome()
 		return
 	end
 
@@ -213,7 +250,7 @@ function step7(self)
 		log:info("connecting ", player, " to ", squeezenetwork)
 		player:connectToServer(squeezenetwork)
 
-		jiveMain:closeToHome(true, Window.transitionPushLeft)
+		self:_closeToHome()
 		return
 	end
 
@@ -230,6 +267,8 @@ function _squeezenetworkWait(self, squeezenetwork)
 	local icon  = Icon("icon_connecting")
 	popup:addWidget(icon)
 	popup:addWidget(Label("text", self:string("CONNECTING_TO_SN")))
+	popup:setAllowScreensaver(false)
+	popup:ignoreAllInputExcept()
 
 	local timeout = 0
 	popup:addTimer(1000, function()
@@ -373,20 +412,18 @@ function step8(self, squeezenetwork)
 		log:info("connecting ", player, " to ", squeezenetwork)
 		player:connectToServer(squeezenetwork)
 
-		jiveMain:closeToHome(true, Window.transitionPushLeft)
+		self:_closeToHome()
 	end
 end
 
 
-function _setupDone(self)
+function _setupNetworkingDone(self)
 	log:info("network setup complete")
 
 	local settings = self:getSettings()
 
 	settings.setupDone = true
 	self:storeSettings()
-
-	jiveMain:removeItemById('returnToSetup')
 end
 
 
@@ -421,15 +458,6 @@ function init(self)
 	jnt:subscribe(self)
 end
 --]]
-
-
--- remove listeners when leaving this applet
-function free(self)
-	Framework:removeListener(self.disableHomeActionDuringSetup)
-	Framework:removeListener(self.disableHomeOrNowPlayingActionDuringSetup)
-	Framework:removeListener(self.disableHomeKeyDuringSetup)
-	Framework:removeListener(self.freeAppletWhenEscapingSetup)
-end
 
 
 --[[
