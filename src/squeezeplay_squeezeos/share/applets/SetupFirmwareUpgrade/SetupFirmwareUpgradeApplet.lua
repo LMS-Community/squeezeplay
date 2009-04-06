@@ -320,16 +320,8 @@ function _t_setText(self, done, msg, count)
 	if type(count) == "number" then
 		self.counter:setValue(count .. "%")
 		self.progress:setRange(1, 100, count)
-
-		if not self.progress:getParent() then
-			self.popup:addWidget(self.progress)
-		end
 	else
 		self.counter:setValue("")
-
-		if self.progress:getParent() then
-			self.popup:removeWidget(self.progress)
-		end
 	end
 
 	self.text:setValue(self:string(msg))
@@ -383,6 +375,7 @@ function _upgrade(self, url)
 
 	self.popup:addWidget(self.text)
 	self.popup:addWidget(self.counter)
+	self.popup:addWidget(self.progress)
 
 	-- make sure this popup remains on screen
 	self.popup:setAllowScreensaver(false)
