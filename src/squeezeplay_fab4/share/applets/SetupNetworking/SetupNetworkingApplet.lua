@@ -96,17 +96,7 @@ function setupNetworking(self, setupNext)
 
 	self.setupNext = setupNext
 
-	-- auto select wired in setup mode
-	Task("network", self, function()
-		if self.ethIface then
-			local status = self.ethIface:t_wpaStatus()
-			if status.link then
-				return _networkScan(self, self.ethIface)
-			end
-		end
-
-		_wirelessRegion(self, self.wlanIface)
-	end):addTask()
+	_wirelessRegion(self, self.wlanIface)
 end
 
 
