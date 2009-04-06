@@ -129,7 +129,7 @@ function _enterTextWindow(self, key, title, help, next)
         window:addWidget(helpButton)
 	--]]
 
-	local keyboard = Keyboard("keyboard", "qwerty")
+	local keyboard = Keyboard("keyboard", "qwerty", input)
 	local backspace = Keyboard.backspace()
         local group = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
 

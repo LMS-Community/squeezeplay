@@ -270,7 +270,7 @@ function setup_input(self, item)
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
 	window:addWidget(group)
-	window:addWidget(Keyboard("keyboard", data[1]))
+	window:addWidget(Keyboard("keyboard", data[1], textinput))
 	window:focusWidget(group)
 
 	return window
@@ -840,7 +840,7 @@ testData = {
 	},
 	input_ip = {
 		"ip",
-		'000.000.000.000',
+		Textinput.ipAddressValue(""),
 	},
 	input_qwerty = {
 		"qwerty",

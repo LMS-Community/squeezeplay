@@ -413,7 +413,7 @@ function keyboardWindow(self, menuItem, style)
         local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
         window:addWidget(group)
-	window:addWidget(Keyboard('keyboard', style))
+	window:addWidget(Keyboard('keyboard', style, textinput))
 	window:focusWidget(group)
 
 	self:tieAndShowWindow(window)
@@ -494,7 +494,7 @@ end
 function ipinputWindow(self, menuItem)
 	local window = Window("text_list", menuItem.text)
 
-	local v = Textinput.ipAddressValue("0.0.0.0")
+	local v = Textinput.ipAddressValue("")
 	local input = Textinput("textinput", v,
 				function(_, value)
 					log:warn("Input " .. value:getValue())

@@ -892,6 +892,11 @@ function skin(self, s)
 		text = self:string("ENTER_SMALL"),
 		fg = { 0x00, 0xbe, 0xbe },
 	})
+	s.keyboard.doneDisabled = _uses(s.keyboard.key_bottomRight_small, {
+		bgImg = keyBottomRight,
+		text = self:string("ENTER_SMALL"),
+		fg = { 0x55, 0x55, 0x55 },
+	})
 	s.keyboard.space = _uses(s.keyboard.key_bottom_small, {
 		bgImg = keyBottom,
 		text = self:string("SPACEBAR_SMALL"),
@@ -906,6 +911,9 @@ function skin(self, s)
 		}),
 		done = _uses(s.keyboard.done, {
 			bgImg = keyBottomRightPressed
+		}),
+		doneDisabled = _uses(s.keyboard.doneDisabled, {
+			-- disabled, not set
 		}),
 		space = _uses(s.keyboard.space, {
 			bgImg = keyBottomPressed

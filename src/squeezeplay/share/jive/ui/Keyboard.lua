@@ -79,12 +79,13 @@ Constructs a new Keyboard widget. I<style> is the widgets style.
 
 =cut
 --]]
-function __init(self, style, kbType)
+function __init(self, style, kbType, textinput)
 	_assert(type(style) == "string")
 
 	local obj = oo.rawnew(self, Group(style, {}))
 
 	obj.kbType = kbType
+	obj.textinput = textinput
 
 	-- accepted keyboard types
 	obj.keyboard = {}
@@ -92,6 +93,13 @@ function __init(self, style, kbType)
 	obj:_predefinedKeyboards()
 
 	obj:setKeyboard(kbType)
+
+	if (textinput) then
+		_inputUpdated(obj)
+		textinput:setUpdateCallback(function(textinput)
+			_inputUpdated(obj)
+		end)
+	end
 
 	return obj
 
@@ -307,6 +315,19 @@ function _predefinedKeyboards(self)
 end
 
 
+function _inputUpdated(self)
+	for i, row in ipairs(self.keyboard) do
+		local rowInfo = self.keyInfo[i]
+		for j, key in ipairs(row) do
+			local keyInfo = rowInfo[j]
+			if keyInfo.inputUpdated then
+				keyInfo.inputUpdated(key)
+			end
+		end
+	end
+end
+
+
 function _layout(self)
 
 	local x, y, w, h = self:getBounds()
@@ -480,6 +501,7 @@ function setKeyboard(self, kbType)
 
 end
 
+
 --[[
 
 =head2 backspace()
@@ -633,13 +655,25 @@ function _go(self, keyWidth)
 	if not keyWidth then
 		keyWidth = 0
 	end
-	return {	
+
+	return {
 		icon     = Label('done'),
 		keyWidth = keyWidth,
 		callback = function()
+			if not self.textinput:isValid() then
+				return
+			end
+
 			Framework:pushAction("finish_operation") 
 			return EVENT_CONSUME 
-		end
+		end,
+		inputUpdated = function(label)
+			if self.textinput:isValid() then
+				label:setStyle('done')
+			else
+				label:setStyle('doneDisabled')
+			end
+		end,
 	}
 end
 

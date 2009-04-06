@@ -84,7 +84,7 @@ end
 
 
 -- returns true if text entry is valid.
-function _isValid(self)
+function isValid(self)
 	if self.value.isValid then
 		return self.value:isValid(self.cursor)
 	end
@@ -95,7 +95,7 @@ end
 
 -- returns true if text entry is completed.
 function _isEntered(self)
-	if self:_isValid() then
+	if isValid(self) then
 		return self.cursor > #tostring(self.value)
 	else
 		return false
@@ -136,10 +136,26 @@ function setValue(self, value)
 			self.value = value
 		end
 
+		if self.updateCallback then
+			self.updateCallback(self)
+		end
+
 		self:reLayout()
 	end
 
 	return ok
+end
+
+
+--[[
+
+=head2 jive.ui.Textinput:setUpdateCallback
+
+This callback is executed when the textinput value changes.
+
+--]]
+function setUpdateCallback(self, callback)
+	self.updateCallback = callback
 end
 
 
@@ -620,7 +636,7 @@ function _eventHandler(self, event)
 			return EVENT_CONSUME
 
 		elseif keycode == KEY_FWD then
-			if _isValid(self) then
+			if isValid(self) then
 				local valid = false
 
 				if self.closure then

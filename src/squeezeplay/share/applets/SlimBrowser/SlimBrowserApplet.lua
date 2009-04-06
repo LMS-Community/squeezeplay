@@ -2257,7 +2257,7 @@ local function _browseInput(self, item, db, inputSpec, last)
 		v = Textinput.timeValue(_v, timeFormat)
 	elseif inputStyle == 'ip' then
 		if not initialText then
-			initialText = '0.0.0.0'
+			initialText = ''
 		end
 		v = Textinput.ipAddressValue(initialText)
 	end
@@ -2339,7 +2339,7 @@ local function _browseInput(self, item, db, inputSpec, last)
 	end
 
 	local kbType = inputSpec._kbType or 'qwerty'
-	local keyboard = Keyboard("keyboard", kbType)
+	local keyboard = Keyboard("keyboard", kbType, input)
 	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
 

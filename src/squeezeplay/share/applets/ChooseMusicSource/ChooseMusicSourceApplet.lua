@@ -505,7 +505,7 @@ function _addServer(self, menuItem)
 				end
 	)
 
-	local keyboard = Keyboard("keyboard", "ip")
+	local keyboard = Keyboard("keyboard", "ip", input)
 	local backspace = Keyboard.backspace()
         local group = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
 
