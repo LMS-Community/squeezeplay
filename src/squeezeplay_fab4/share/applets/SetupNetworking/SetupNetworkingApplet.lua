@@ -1384,7 +1384,7 @@ end
 function _enterIP(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	local v = Textinput.ipAddressValue(self.ipAddress or "0.0.0.0")
+	local v = Textinput.ipAddressValue(self.ipAddress)
 
 	local window = Window("input", self:string("NETWORK_IP_ADDRESS"), 'setuptitle')
 	window:setAllowScreensaver(false)

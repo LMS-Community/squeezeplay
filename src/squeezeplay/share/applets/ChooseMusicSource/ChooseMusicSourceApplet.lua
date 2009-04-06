@@ -493,7 +493,7 @@ end
 function _addServer(self, menuItem)
 	local window = Window("text_list", menuItem.text)
 
-	local v = Textinput.ipAddressValue(self:_getOtherServer() or "0.0.0.0")
+	local v = Textinput.ipAddressValue(self:_getOtherServer())
 	local input = Textinput("textinput", v,
 				function(_, value)
 					self:_add(value:getValue())
