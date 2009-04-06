@@ -49,10 +49,12 @@ icon_squeezeplay.png
 icon_transporter.png
 icon_wireless.png
 icon_firmware_update.png
+icon_verify.png
 /);
 
 my $special = {
 "icon_firmware_update.png"	=>	{ touch	=> 100,	remote	=> 100 },
+"icon_verify.png"		=>	{ touch	=> 100,	remote	=> 100 },
 };
 
 my $existingImages = get_assets($resizedIconDir);
