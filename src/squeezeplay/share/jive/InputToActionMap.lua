@@ -183,4 +183,5 @@ unassignedActionMappings = {
 	"more_help",
 	"cursor_left",
 	"cursor_right",
+	"clear",
 }

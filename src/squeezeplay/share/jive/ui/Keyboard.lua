@@ -499,6 +499,12 @@ function backspace(self)
 			Framework:playSound("SELECT")
 			Framework:dispatchEvent(nil, e)
 			return EVENT_CONSUME
+		end,
+		function()
+			Framework:playSound("SELECT")
+			Framework:pushAction("clear")
+			return EVENT_CONSUME
+
 		end
         )
 
