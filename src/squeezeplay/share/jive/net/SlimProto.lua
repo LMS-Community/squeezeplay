@@ -451,17 +451,30 @@ function connectTask(self, server)
 		self.txqueue = {}
 	end
 
+	-- the server may have moved, get a fresh ip address
+	local ip = server and server:getIpPort() or self.serverip
+
+	-- Bug 9900
+	-- Don't allow connections to production SN yet
+	assert(not string.match(ip, "www.squeezenetwork.com"))
+
+	if self.state == CONNECTED and self.serverip == ip then
+		log:info("already connected to ", self.serverip)
+		return
+	end
+
+	-- disconnect from previous server
+	self:disconnect()
+
+	-- update connection state
+	self.state = CONNECTED
+	self.serverip = ip
+	self.txqueue = {}
+
 	if server then
 		self.server = server
 		self.reconnect = false
 	end
-
-	-- the server may have moved, get a fresh ip address
-	self.serverip = self.server:getIpPort()
-
-	-- Bug 9900
-	-- Don't allow connections to production SN yet
-	assert(not string.match(self.serverip, "www.squeezenetwork.com"))
 
 	local ip = self.serverip
 	if not DNS:isip(ip) then
@@ -491,8 +504,6 @@ function connectTask(self, server)
 	self.heloPacket.reconnect =
 		self.reconnect and
 		(status.isStreaming or status.isLooping)
-
-	self.state = CONNECTED
 
 	-- send helo packet
 	self:send(self.heloPacket)

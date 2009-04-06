@@ -1000,10 +1000,16 @@ function getVersion(self)
 end
 
 
--- return true if the server is compatible with this controller
+-- return true if the server is compatible with this controller, false
+-- if an upgrade is needed, or nil if the server version is not currently
+-- known.
 function isCompatible(self)
+	if self:isSqueezeNetwork() then
+		return true
+	end
+
 	if not self.state.version then
-		return false
+		return nil
 	end
 
 	local serVer = string.split("%.", self.state.version)
