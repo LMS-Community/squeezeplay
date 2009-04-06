@@ -765,11 +765,11 @@ end
 function _chooseWPSPin(self, iface, ssid)
 	local wpspin = iface:generateWPSPin()
 
-	local window = Window("error", self:string('NETWORK_ENTER_PIN'), 'setuptitle')
+	local window = Window("help_list", self:string('NETWORK_ENTER_PIN'), 'setuptitle')
 	window:setAllowScreensaver(false)
 	window:setButtonAction("rbutton", nil)
 
-	window:addWidget(Textarea("text", self:string("NETWORK_ENTER_PIN_HINT", tostring(wpspin))))
+	window:addWidget(Textarea("help_text", self:string("NETWORK_ENTER_PIN_HINT", tostring(wpspin))))
 
 	local menu = SimpleMenu("menu", {
 		{
@@ -787,11 +787,11 @@ end
 
 
 function _chooseWPSPbc(self, iface, ssid)
-	local window = Window("error", self:string('NETWORK_ENTER_PBC'), 'setuptitle')
+	local window = Window("help_list", self:string('NETWORK_ENTER_PBC'), 'setuptitle')
 	window:setAllowScreensaver(false)
 	window:setButtonAction("rbutton", nil)
 
-	window:addWidget(Textarea("text", self:string("NETWORK_ENTER_PBC_HINT")))
+	window:addWidget(Textarea("help_text", self:string("NETWORK_ENTER_PBC_HINT")))
 
 	local menu = SimpleMenu("menu", {
 		{
