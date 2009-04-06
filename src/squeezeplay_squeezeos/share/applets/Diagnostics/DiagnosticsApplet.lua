@@ -49,6 +49,7 @@ local tests = {
       "SN_PORT_3483",
       "SN_PORT_9000",
       "SC_ADDRESS",
+      "SC_NAME",
       "SC_PING",
       "SC_PORT_3483",
       "SC_PORT_9000",
@@ -231,12 +232,22 @@ function dovalues(self, menu)
 
 
 	self:serverPing(sn, "SN_ADDRESS", "SN_PING")
-	self:serverPing(sc, "SC_ADDRESS", "SC_PING")
-
 	self:serverPort(sn, 3483, "SN_PORT_3483")
 	self:serverPort(sn, 9000, "SN_PORT_9000")
-	self:serverPort(sc, 3483, "SC_PORT_3483")
-	self:serverPort(sc, 9000, "SC_PORT_9000")
+
+	if not sc or sc:isSqueezeNetwork() then
+		-- connected to SN
+		self:setValue("SC_NAME", "NOT_CONNECTED")
+		self:setValue("SC_ADDRESS", "NOT_CONNECTED")
+		self:setValue("SC_PING", "NOT_CONNECTED")
+		self:setValue("SC_PORT_3483", "NOT_CONNECTED")
+		self:setValue("SC_PORT_9000", "NOT_CONNECTED")
+	else
+		self:setValue("SC_NAME", sc:getName())
+		self:serverPing(sc, "SC_ADDRESS", "SC_PING")
+		self:serverPort(sc, 3483, "SC_PORT_3483")
+		self:serverPort(sc, 9000, "SC_PORT_9000")
+	end
 end
 
 

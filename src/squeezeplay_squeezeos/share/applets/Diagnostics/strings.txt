@@ -153,7 +153,7 @@ FIRMWARE_VERSION
 	CS	Verze:
 	DA	Version:
 	DE	Version:
-	EN	Version:
+	EN	Firmware Version:
 	ES	Versión:
 	FI	Versio:
 	FR	Version:
@@ -168,7 +168,7 @@ MAC_ADDRESS
 	CS	ID přehrávače:
 	DA	Afspiller-id:
 	DE	Player-ID:
-	EN	Player id:
+	EN	Player ID:
 	ES	ID de reproductor:
 	FI	Soittimen tunnus:
 	FR	ID du lecteur:
@@ -363,7 +363,7 @@ SC_ADDRESS
 	CS	SqueezeCenter:
 	DA	SqueezeCenter:
 	DE	SqueezeCenter:
-	EN	SqueezeCenter:
+	EN	Squeezebox software:
 	ES	SqueezeCenter:
 	FI	SqueezeCenter:
 	FR	SqueezeCenter:
@@ -373,6 +373,9 @@ SC_ADDRESS
 	PL	SqueezeCenter:
 	RU	SqueezeCenter:
 	SV	SqueezeCenter:
+
+SC_NAME
+	EN	  Library name:
 
 SC_PING
 	CS	  Zvonění:
