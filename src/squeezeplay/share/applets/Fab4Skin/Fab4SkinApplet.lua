@@ -465,7 +465,7 @@ function skin(self, s)
 	local volumeBar        = Tile:loadImage(imgpath .. "Touch_Tool_bar/tch_volumebar_fill.png")
 	local volumeBackground = Tile:loadImage(imgpath .. "Touch_Tool_bar/tch_volumebar_whole.png")
 
-	local popupMask = Tile:fillColor(0x000000e5)
+	local popupBackground  = Tile:loadImage(imgpath .. "Alerts/popup_fullscreen_100.png")
 
 	local textinputCursor = Tile:loadImage(imgpath .. "Text_Entry/Keyboard_Touch/tch_cursor.png")
 
@@ -568,7 +568,7 @@ function skin(self, s)
 
 	s.popup = _uses(s.window, {
 		border = { 0, 0, 0, 0 },
-		maskImg = popupMask,
+		bgImg = popupBackground,
 	})
 
 	s.title = {
