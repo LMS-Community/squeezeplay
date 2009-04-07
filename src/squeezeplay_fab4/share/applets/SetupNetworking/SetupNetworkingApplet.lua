@@ -1182,7 +1182,16 @@ function _connectFailed(self, iface, ssid, reason)
 	Task("networkFailed", self, _connectFailedTask):addTask(iface, ssid)
 
 	-- Message based on failure type
-	local helpText = self:string("NETWORK_CONNECTION_PROBLEM_HELP", tostring(self.psk))
+	local password = ""
+	if self.encryption then
+		if string.match(self.encryption, "^wep.*") then
+			password = self.key
+		elseif string.match(self.encryption, "^wpa*") then
+			password = self.psk
+		end
+	end
+
+	local helpText = self:string("NETWORK_CONNECTION_PROBLEM_HELP", password)
 
 	-- popup failure
 	local window = Window("error", self:string('NETWORK_CANT_CONNECT'), 'setuptitle')
