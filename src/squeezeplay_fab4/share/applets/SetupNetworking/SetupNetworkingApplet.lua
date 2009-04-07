@@ -963,7 +963,10 @@ function _connect(self, iface, ssid, createNetwork)
 		_addNetwork(self, iface, ssid)
 	end
 
-	local name = self.scanResults[ssid].item.text
+	local name = ssid
+	if self.scanResults[ssid] then
+		name = self.scanResults[ssid].item.text
+	end
 	popup:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", name)))
 
 	self:tieAndShowWindow(popup)
@@ -985,7 +988,11 @@ function _selectNetworkTask(self, iface, ssid, createNetwork)
 		_removeNetworkTask(self, iface, ssid)
 	end
 
+	-- ensure the network state exists
 	_setCurrentSSID(self, nil)
+	if self.scanResults[ssid] == nil then
+		_addNetwork(self, iface, ssid)
+	end
 
 	local id = self.scanResults[ssid].id
 
