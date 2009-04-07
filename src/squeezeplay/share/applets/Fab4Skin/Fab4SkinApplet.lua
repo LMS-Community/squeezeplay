@@ -1423,7 +1423,7 @@ function skin(self, s)
 
 	_titleButtonIcon("button_back", backButton)
 	_titleButtonIcon("button_go_now_playing", nowPlayingButton)
-	_titleButtonText("button_help", self:string("HELP"))
+	_titleButtonIcon("button_help", helpButton)
 	_titleButtonText("button_more_help", self:string("MORE_HELP"))
 
 	s.button_back.padding = { 2, 0, 0, 2 }
