@@ -519,9 +519,11 @@ function disconnect(self)
 	log:info("disconnect")
 
 	self.state = UNCONNECTED
-	self.socket:close()
 
-	self.socket = nil
+	if self.socket then
+		self.socket:close()
+		self.socket = nil
+	end
 end
 
 
