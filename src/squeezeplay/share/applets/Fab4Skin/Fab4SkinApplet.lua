@@ -909,12 +909,9 @@ function skin(self, s)
 		shiftOn = _uses(s.keyboard.shiftOn, {
 			bgImg = keyLeftPressed
 		}),
-		done = {
+		done = _uses(s.keyboard.done, {
 			bgImg = keyBottomRightPressed,
-			img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
-			frameRate = 8,
-			frameWidth = 26,
-		},
+		}),
 		doneDisabled = _uses(s.keyboard.doneDisabled, {
 			-- disabled, not set
 		}),
