@@ -112,10 +112,13 @@ function init(self)
 	settings.ambient = settings.ambient or 0
 	self:setBrightness( settings.brightness)
 
-	self:initBrightness()
-	local brightnessTimer = Timer( 1000,
+	local brightnessTimer = Timer( 2000,
 		function()
-			self:doBrightnessTimer()
+                        local bright = settings.brightness
+                        if bright > 64 then
+                                bright = 64
+                        end
+                        self:setBrightness( bright)
 		end)
 	brightnessTimer:start()
 
