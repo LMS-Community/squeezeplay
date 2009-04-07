@@ -374,6 +374,12 @@ function getId(self)
 end
 
 
+-- Return true if connected to server
+function isConnected(self)
+	return self.state == CONNECTED
+end
+
+
 -- Open the slimproto connection to SqueezeCenter.
 function connect(self, server)
 	Task("slimprotoConnect", self, connectTask):addTask(server)
@@ -445,6 +451,10 @@ function connectTask(self, server)
 			return _handleDisconnect(self, NetworkThreadErr)
 		end
 
+		if self.state == CONNECTING then
+			self.state = CONNECTED
+		end
+
 		self.socket.t_sock:send(table.concat(self.txqueue))
 		self.socket:t_removeWrite()
 
@@ -467,7 +477,7 @@ function connectTask(self, server)
 	self:disconnect()
 
 	-- update connection state
-	self.state = CONNECTED
+	self.state = CONNECTING
 	self.serverip = ip
 	self.txqueue = {}
 
@@ -512,10 +522,6 @@ end
 
 -- Disconnect from SqueezeCenter.
 function disconnect(self)
-	if self.state ~= CONNECTED then
-		return
-	end
-
 	log:info("disconnect")
 
 	self.state = UNCONNECTED
@@ -572,7 +578,7 @@ end
 -- Sent packet. Returns false is the connection is disconnected and the
 -- packet can't be sent, otherwise it returns true.
 function send(self, packet)
-	if self.state ~= CONNECTED then
+	if self.state == UNCONNECTED then
 		return false
 	end
 

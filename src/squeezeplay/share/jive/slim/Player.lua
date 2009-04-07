@@ -397,7 +397,7 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 
 	-- Check if the player connected status has changed
 	if oldInfo.connected ~= self.info.connected then
-		if self.info.connected then
+		if self:isConnected() then
 			self.jnt:notify('playerConnected', self)
 		else
 			self.jnt:notify('playerDisconnected', self)
