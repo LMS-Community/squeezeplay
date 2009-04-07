@@ -208,6 +208,7 @@ local function _decideFirstChunk(db, jsonAction)
 
 	log:debug('We\'ve been here before, lastBrowse index was: ', lastBrowse.index)
 	_player.lastKeyTable = lastBrowse
+	_player.menuAnchorSet = false
 	
 	return from, qty
 
@@ -1003,8 +1004,10 @@ local function _browseSink(step, chunk, err)
 			-- count == 0 responses should not be typical
 		elseif step.menu then
 			step.menu:setItems(step.db:menuItems(data))
-			if _player.menuAnchor then
+			if _player.menuAnchor and not _player.menuAnchorSet then
+				log:debug("Selecting  menuAnchor: ", _player.menuAnchor)
 				step.menu:setSelectedIndex(_player.menuAnchor)
+				_player.menuAnchorSet = true
 			end
 
 			-- update the window properties
