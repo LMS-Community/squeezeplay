@@ -451,10 +451,6 @@ function connectTask(self, server)
 			return _handleDisconnect(self, NetworkThreadErr)
 		end
 
-		if self.state == CONNECTING then
-			self.state = CONNECTED
-		end
-
 		self.socket.t_sock:send(table.concat(self.txqueue))
 		self.socket:t_removeWrite()
 
@@ -503,6 +499,7 @@ function connectTask(self, server)
 
 	-- connect
 	self.socket:t_connect()
+	self.state = CONNECTED
 
 	-- SC and SN ping the player every 5 and 30 seconds respectively.
 	-- This timeout could be made shorter in the SC case.
@@ -578,7 +575,7 @@ end
 -- Sent packet. Returns false is the connection is disconnected and the
 -- packet can't be sent, otherwise it returns true.
 function send(self, packet)
-	if self.state == UNCONNECTED then
+	if self.state ~= CONNECTED then
 		return false
 	end
 
