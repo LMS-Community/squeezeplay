@@ -387,14 +387,38 @@ function step8(self, squeezenetwork)
 	if force then
       		log:info("firmware upgrade from SN")
 		appletManager:callService("firmwareUpgrade", squeezenetwork)
-
-	elseif not self.sentRegister then
-      		log:info("registration on SN")
-		appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
-
-		jnt:subscribe(self)
-		self.sentRegister = true
+	elseif pin then
+		self:_registerRequest(squeezenetwork)
+	else
+		self:_resetRequest(squeezenetwork)
 	end
+end
+
+
+function _resetRequest(self, squeezenetwork)
+	if self.resetRequest then
+		return
+	end
+	self.resetRequest = true
+
+	log:info("player reset on SN")
+	squeezenetwork:userRequest(function()
+		self:_registerRequest(squeezenetwork)
+	end, nil, { "playerReset" })
+end
+
+
+function _registerRequest(self, squeezenetwork)
+	if self.registerRequest then
+		return
+	end
+	self.registerRequest = true
+
+	log:info("registration on SN")
+	appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
+
+	self.locked = true -- don't free applet
+	jnt:subscribe(self)
 end
 
 
@@ -403,7 +427,7 @@ function notify_serverLinked(self, server)
 		return
 	end
 
-	if not self.sentRegister then
+	if not self.registerRequest then
 		return
 	end
 
@@ -429,6 +453,8 @@ function notify_serverLinked(self, server)
 		end
 
 		self:_setupComplete(false)
+
+		self.locked = true -- free applet
 		jnt:unsubscribe(self)
 	end
 end
@@ -479,6 +505,11 @@ function init(self)
 	jnt:subscribe(self)
 end
 --]]
+
+
+function free(self)
+	return not self.locked
+end
 
 
 --[[
