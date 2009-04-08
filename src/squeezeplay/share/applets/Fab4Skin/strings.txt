@@ -35,6 +35,9 @@ ENTER_SMALL
 SPACEBAR_SMALL
 	DE	Leerzeichen
 	EN	space
+	FR	espace
+	IT	spazio
+	ES	espacio
 
 HELP
 	CS	Nápověda
