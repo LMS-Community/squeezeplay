@@ -79,13 +79,16 @@ function _helpAction(self, window, titleText, bodyText)
 
 			window:setButtonAction("rbutton", "more_help")
 			window:addActionListener("more_help", self, function()
-				appletManager:callService("supportMenu")
 				window:playSound("WINDOWSHOW")
+
+				appletManager:callService("supportMenu")
 			end)
 
 			local textarea = Textarea("text", self:string(bodyText))
 			window:addWidget(textarea)
 			self:tieAndShowWindow(window)
+
+			window:playSound("WINDOWSHOW")
 		end)
 	end
 
