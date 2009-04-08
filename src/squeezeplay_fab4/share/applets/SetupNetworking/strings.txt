@@ -1174,7 +1174,7 @@ NETWORK_WPS_METHOD_PSK
 	CS	Vložte heslo WPA
 	DA	Indtast WPA-adgangskode
 	DE	WPA-Kennwort eingeben
-	EN	Enter WPA Password
+	EN	Enter Wireless Password
 	ES	Introducir contraseña WPA
 	FI	Anna WPA-salasana
 	FR	Entrer un mot de passe WPA
