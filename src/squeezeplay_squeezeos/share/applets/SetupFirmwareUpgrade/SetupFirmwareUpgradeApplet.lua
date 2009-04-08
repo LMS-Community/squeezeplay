@@ -157,8 +157,7 @@ end
 
 function _upgradeWindowSingle(self, upgrades, optional)
 	local window = Window("help_list", self:string("UPDATE"), 'settingstitle')
-
-	window:setButtonAction("rbutton", nil)
+	window:setButtonAction("rbutton", "help")
 
 	local text = Textarea("help_text", _helpString(self, upgrades[1]))
 
@@ -199,6 +198,8 @@ end
 
 function _upgradeWindowChoice(self, upgrades, optional)
 	local window = Window("text_list", self:string("UPDATE"), 'settingstitle')
+	window:setButtonAction("rbutton", "help")
+
 	local menu = SimpleMenu("menu")
 
 	for i,upgrade in ipairs(upgrades) do
@@ -292,6 +293,7 @@ end
 
 function _chargeBattery(self)
 	local window = Window("help_list", self:string("UPDATE_BATTERY"), firmwareupgradeTitleStyle)
+	window:setButtonAction("rbutton", "help")
 
 	local menu = SimpleMenu("menu", {
 		{
@@ -413,12 +415,8 @@ function _upgradeFailed(self)
 	appletManager:callService("connectPlayer")
 
 	local window = Window("help_list", self:string("UPDATE_FAILURE"))
-	window:setAllowScreensaver(false)
-
 	window:setButtonAction("rbutton", "help")
-	window:addActionListener("help", self, function()
-		appletManager:callService("supportMenu")
-	end)
+	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu",
 				{

@@ -3,6 +3,8 @@ local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
 
+local Framework     = require("jive.ui.Framework")
+
 local appletManager = appletManager
 local jiveMain      = jiveMain
 
@@ -19,6 +21,10 @@ end
 function registerApplet(meta)
 	meta:registerService("diagnosticsMenu")
 	meta:registerService("supportMenu")
+
+	Framework:addActionListener("help", nil, function()
+		appletManager:callService("supportMenu")
+	end)
 
 	jiveMain:addItem(meta:menuItem('diagnostics', 'advancedSettings', "DIAGNOSTICS", function(applet, ...) applet:diagnosticsMenu() end))
 end
