@@ -887,16 +887,38 @@ function skin(self, s)
 		img = _loadImage(self, "Icons/icon_arrow_right.png")
 	})
 
-	s.keyboard.done = _uses(s.keyboard.key_bottomRight_small, {
-		bgImg = keyBottomRight,
-		text = self:string("ENTER_SMALL"),
-		fg = { 0x00, 0xbe, 0xbe },
+
+	s.keyboard.done = {
+		text = _uses(s.keyboard.key_bottomRight_small, {
+			text = self:string("ENTER_SMALL"),
+			fg = { 0x00, 0xbe, 0xbe },
+			h = WH_FILL,
+			padding = { 0, 0, 0, 1 },
+		}),
+		icon = { hidden = 1 },
+	}
+
+	s.keyboard.doneDisabled =  _uses(s.keyboard.done, {
+		text = {
+			fg = { 0x66, 0x66, 0x66 },
+		}
 	})
-	s.keyboard.doneDisabled = _uses(s.keyboard.key_bottomRight_small, {
-		bgImg = keyBottomRight,
-		text = self:string("ENTER_SMALL"),
-		fg = { 0x66, 0x66, 0x66 },
-	})
+
+	s.keyboard.doneSpinny =  {
+                icon = _uses(s.keyboard.key_bottomRight, {
+			bgImg = keyBottomRight,
+			hidden = 0,
+                        img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
+			frameRate = 8,
+			frameWidth = 26,
+			w = WH_FILL, 
+			h = WH_FILL,
+			align = 'center',
+		}),
+		text = { hidden = 1, w = 0 },
+        }
+
+
 	s.keyboard.space = _uses(s.keyboard.key_bottom_small, {
 		bgImg = keyBottom,
 		text = self:string("SPACEBAR_SMALL"),
@@ -913,6 +935,9 @@ function skin(self, s)
 			bgImg = keyBottomRightPressed,
 		}),
 		doneDisabled = _uses(s.keyboard.doneDisabled, {
+			-- disabled, not set
+		}),
+		doneSpinny = _uses(s.keyboard.doneSpinny, {
 			-- disabled, not set
 		}),
 		space = _uses(s.keyboard.space, {
@@ -1793,6 +1818,7 @@ end -- LEGACY STYLES
 	s.debug_canvas = {
 			zOrder = 9999
 	}
+
 
 end
 
