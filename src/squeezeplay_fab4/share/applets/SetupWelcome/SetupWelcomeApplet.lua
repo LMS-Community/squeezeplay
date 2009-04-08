@@ -434,25 +434,21 @@ function notify_serverLinked(self, server)
 	log:info("server linked: ", server, " pin=", server:getPin())
 
 	if server:getPin() == false then
-		_setupDone(self, true, true)
-
 		-- for testing connect the player tosqueezenetwork
 		local player = appletManager:callService("getCurrentPlayer")
-		log:info(player, " is conencted to ", player and player:getSlimServer())
 
-		if player and not player:getSlimServer() then
-			local squeezenetwork = false
-			for name, server in slimServer:iterate() do
-				if server:isSqueezeNetwork() then
-					squeezenetwork = server
-				end
+		local squeezenetwork = false
+		for name, server in slimServer:iterate() do
+			if server:isSqueezeNetwork() then
+				squeezenetwork = server
 			end
-
-			log:info("connecting ", player, " to ", squeezenetwork)
-			player:connectToServer(squeezenetwork)
 		end
 
-		self:_setupComplete(false)
+		log:info("connecting ", player, " to ", squeezenetwork)
+		player:connectToServer(squeezenetwork)
+
+		_setupComplete(self, false)
+		_setupDone(self, true, true)
 
 		self.locked = true -- free applet
 		jnt:unsubscribe(self)
