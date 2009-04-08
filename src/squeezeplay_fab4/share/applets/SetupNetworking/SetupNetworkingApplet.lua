@@ -459,7 +459,9 @@ function _enterSSID(self, iface)
 	local window = Window("input", self:string("NETWORK_NETWORK_NAME"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
-	local textinput = Textinput("textinput", "",
+	local v = Textinput.textValue("", 1, 32)
+
+	local textinput = Textinput("textinput", v,
 				    function(widget, value)
 					    if #value == 0 then
 						    return false
