@@ -760,7 +760,7 @@ function skin(self, s)
 	}
 
 	s.scrollbar = {
-		w = 30,
+		w = 45,
 		border = 0,
 		padding = { 0, 0, 0, 0 },
 		horizontal = 0,
