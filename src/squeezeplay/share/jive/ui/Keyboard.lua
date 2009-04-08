@@ -112,8 +112,6 @@ function _predefinedKeyboards(self)
 					{ keyWidth = 0, text = '.' },
 					{ keyWidth = 0, text = '@' },
 					'_', '-',
---					self:_arrow('left', 'bottom'),
---					self:_arrow('right', 'bottom'),
 					self:_go() 
 		}
 		self.keyboards = { 
@@ -280,7 +278,6 @@ function _predefinedKeyboards(self)
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
 				{ '.', '-', '+', '/', '=', '_', '@', '#', '$', '%' },
 				{ 
-					--self:_shiftKey('numericShift', 'numeric'), ':', '&', ',', '?', '!', '(', ')', 
 					self:_switchKeyboardButton('numericShift', keyboardButtonText.numericMore, 92),
 					':', '&', ',', '?', '!', '*', 
 					self:_arrow('left', 'middle'), self:_arrow('right', 'right'), 
@@ -297,7 +294,6 @@ function _predefinedKeyboards(self)
 				{ 
 					self:_switchKeyboardButton('numeric', keyboardButtonText.numericBack, 92),
 					'<', '>', '{', '}', '(', ')', 
-					--self:_shiftKey('numeric'), "'", '<', '>', '{', '}',
 					self:_spacer(), self:_arrow('left', 'middle'), self:_arrow('right', 'right')
 				},
 				{
@@ -657,7 +653,7 @@ function _go(self, keyWidth)
 	end
 
 	return {
-		icon     = Label('done'),
+		icon = Group("done", { Icon("icon"), Label("text") }),
 		keyWidth = keyWidth,
 		callback = function()
 			if not self.textinput:isValid() then
