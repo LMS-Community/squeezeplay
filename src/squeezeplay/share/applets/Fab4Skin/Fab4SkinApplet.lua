@@ -505,6 +505,7 @@ function skin(self, s)
 	local UPDATE_SUBTEXT_SIZE = 20
 
 	local ITEM_ICON_ALIGN   = 'center'
+	local ITEM_LEFT_PADDING = 12
 	local THREE_ITEM_HEIGHT = 72
 	local FIVE_ITEM_HEIGHT = 45
 	local TITLE_BUTTON_WIDTH = 76
@@ -605,7 +606,7 @@ function skin(self, s)
 
 	s.item = {
 		order = { "icon", "text", "arrow" },
-		padding = { 8, 0, 8, 0 },
+		padding = { ITEM_LEFT_PADDING, 0, 8, 0 },
 		text = {
 			padding = { 0, 0, 2, 0 },
 			align = "left",
@@ -760,7 +761,7 @@ function skin(self, s)
 	}
 
 	s.scrollbar = {
-		w = 45,
+		w = 42,
 		border = 0,
 		padding = { 0, 0, 0, 0 },
 		horizontal = 0,
@@ -1098,7 +1099,7 @@ function skin(self, s)
 		menu = {
 			item = {
 				order = { "icon", "text", "arrow" },
-				padding = { 8, 0, 0, 0 },
+				padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
 				text = {
 					w = WH_FILL,
 					h = WH_FILL,
@@ -1252,7 +1253,7 @@ function skin(self, s)
 		icon  = {
 			w = THUMB_SIZE,
 			h = WH_FILL,
-			padding = { 8, 1, 8, 1 },
+			padding = { 10, 1, 8, 1 },
 		},
 	})
 
@@ -1750,7 +1751,7 @@ if true then
 	-- Progress bar
 	s.ssprogress = {
 		position = LAYOUT_SOUTH,
-		padding = { 10, 10, 10, 5 },
+		padding = { ITEM_LEFT_PADDING, 10, 10, 5 },
 		order = { "elapsed", "slider", "remain" },
 		elapsed = {
 			w = 75,
