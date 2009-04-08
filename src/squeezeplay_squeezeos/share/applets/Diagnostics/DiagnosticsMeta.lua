@@ -24,7 +24,8 @@ function registerApplet(meta)
 
 	Framework:addActionListener("help", nil, function()
 		appletManager:callService("supportMenu")
-	end)
+		Framework:playSound("WINDOWSHOW")
+	end, 1)
 
 	jiveMain:addItem(meta:menuItem('diagnostics', 'advancedSettings', "DIAGNOSTICS", function(applet, ...) applet:diagnosticsMenu() end))
 end
