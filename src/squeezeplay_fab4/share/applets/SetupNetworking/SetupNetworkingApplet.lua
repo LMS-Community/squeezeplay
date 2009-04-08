@@ -467,6 +467,8 @@ function _enterSSID(self, iface)
 
 	local textinput = Textinput("textinput", v,
 				    function(widget, value)
+				    	    value = tostring(value)
+
 					    if #value == 0 then
 						    return false
 					    end
