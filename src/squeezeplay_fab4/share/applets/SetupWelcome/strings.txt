@@ -21,7 +21,7 @@ WELCOME_WALKTHROUGH
 	CS	Začněme vaším připojením k vaší síti.
 	DA	Lad os begynde med at slutte afspilleren til netværket.
 	DE	Jetzt stellen wir die Verbindung zum Netzwerk her.
-	EN	In just a few moments, you will have complete, customizable access to music from around the world — and from any computer on your network — right here at your fingertips.\n\nLet's start by getting connected to your network.
+	EN	In just a few moments, you will have complete, customizable access to music from around the world, and from any computer on your network, right here at your fingertips.\n\nLet's start by getting connected to your network.
 	ES	Para empezar, nos conectaremos a la red.
 	FI	Aloitetaan yhteydenmuodostamisella verkkoosi.
 	FR	Commençons par vous connecter à votre réseau.
