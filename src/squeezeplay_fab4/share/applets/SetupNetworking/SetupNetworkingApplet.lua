@@ -72,19 +72,21 @@ end
 
 
 function _helpAction(self, window, titleText, bodyText)
-	window:addActionListener("help", self, function()
-		local window = Window("help_info", self:string(titleText), "helptitle")
-		window:setAllowScreensaver(false)
+	if titleText or bobyText then
+		window:addActionListener("help", self, function()
+			local window = Window("help_info", self:string(titleText), "helptitle")
+			window:setAllowScreensaver(false)
 
-		window:setButtonAction("rbutton", "more_help")
-		window:addActionListener("more_help", self, function()
-			appletManager:callService("supportMenu")
+			window:setButtonAction("rbutton", "more_help")
+			window:addActionListener("more_help", self, function()
+				appletManager:callService("supportMenu")
+			end)
+
+			local textarea = Textarea("text", self:string(bodyText))
+			window:addWidget(textarea)
+			self:tieAndShowWindow(window)
 		end)
-
-		local textarea = Textarea("text", self:string(bodyText))
-		window:addWidget(textarea)
-		self:tieAndShowWindow(window)
-	end)
+	end
 
 	window:setButtonAction("rbutton", "help")
 end
@@ -586,6 +588,7 @@ function _chooseEncryption(self, iface, ssid)
 	window:addWidget(menu)
 
 	--_helpAction(self, window, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
+	_helpAction(self, window)
 
 	self:tieAndShowWindow(window)
 end
@@ -619,6 +622,7 @@ function _chooseWEPLength(self, iface, ssid)
 	window:addWidget(menu)
 
 	--_helpAction(self, window, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
+	_helpAction(self, window)
 
 	self:tieAndShowWindow(window)
 end
@@ -711,6 +715,8 @@ function _enterEAP(self, iface, ssid)
 	})
 	window:addWidget(menu)
 
+	_helpAction(self, window)
+
 	self:tieAndShowWindow(window)		
 end
 
@@ -782,6 +788,8 @@ function _chooseWPSPin(self, iface, ssid)
 	})
 	window:addWidget(menu)
 
+	_helpAction(self, window)
+
 	self:tieAndShowWindow(window)		
 end
 
@@ -803,6 +811,8 @@ function _chooseWPSPbc(self, iface, ssid)
 		},
 	})
 	window:addWidget(menu)
+
+	_helpAction(self, window)
 
 	self:tieAndShowWindow(window)		
 end
@@ -923,6 +933,8 @@ function processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
 
 	window:addWidget(Textarea("help_text", self:string("NETWORK_WPS_PROBLEM_HINT")))
 	window:addWidget(menu)
+
+	_helpAction(self, window)
 
 	self:tieAndShowWindow(window)
 end
@@ -1062,6 +1074,8 @@ function _attachEthernet(self, iface, ssid, createNetwork)
 			):addTask()
 		end
 	)
+
+	_helpAction(self, window)
 
 	self:tieAndShowWindow(window)
 end
@@ -1219,6 +1233,8 @@ function _connectFailed(self, iface, ssid, reason)
 	window:addWidget(Textarea("help_text", helpText))
 	window:addWidget(menu)
 
+	_helpAction(self, window)
+
 	self:tieAndShowWindow(window)
 end
 
@@ -1275,6 +1291,8 @@ function _failedDHCPandWPA(self, iface, ssid)
 	window:addWidget(Textarea("help_text", self:string("NETWORK_DHCP_ERROR_HINT")))
 	window:addWidget(menu)
 
+	_helpAction(self, window)
+
 	self:tieAndShowWindow(window)
 end
 
@@ -1315,6 +1333,8 @@ function _failedDHCPandWEP(self, iface, ssid)
 
 	window:addWidget(Textarea("help_text", self:string("NETWORK_ADDRESS_HELP_WEP", tostring(self.key))))
 	window:addWidget(menu)
+
+	_helpAction(self, window)
 
 	self:tieAndShowWindow(window)
 end
