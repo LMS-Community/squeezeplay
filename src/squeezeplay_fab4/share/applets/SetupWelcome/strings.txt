@@ -36,7 +36,7 @@ CONTINUE
 	CS	Pokračovat
 	DA	Fortsæt
 	DE	Weiter
-	EN	I'm ready
+	EN	Continue
 	ES	Continuar
 	FI	Jatka
 	FR	Continuer
