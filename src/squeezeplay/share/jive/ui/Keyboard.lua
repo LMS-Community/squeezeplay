@@ -493,6 +493,9 @@ function setKeyboard(self, kbType)
 		widget.parent = self
 	end
 
+	--Make sure input checkers see the keyboard change (for things like done button styling, etc)
+	self:_inputUpdated()
+
 	self:reLayout()
 
 end
