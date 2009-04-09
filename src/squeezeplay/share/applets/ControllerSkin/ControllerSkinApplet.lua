@@ -570,10 +570,10 @@ function skin(self, s, reload, useDefaultSize)
 		check = checkMarkSelected,
 		arrow = rightArrow,
 	})
-        s.selected.item_no_arrow = _uses(s.item, {
+        s.selected.item_no_arrow = _uses(s.selected.item, {
 		order = { 'text' },
 	})
-        s.selected.item_checked_no_arrow = _uses(s.item, {
+        s.selected.item_checked_no_arrow = _uses(s.selected.item, {
 		order = { 'text', 'check' },
 		check = checkMark,
 	})
@@ -697,6 +697,26 @@ function skin(self, s, reload, useDefaultSize)
 	-- typical text list window
 	s.text_list = _uses(s.window)
 
+	--hack until SC changes are in place
+	s.text_list.title = _uses(s.title, {
+		text = {
+			line = {
+					{
+						font = _boldfont(ALBUMMENU_TITLE_FONT_SIZE + 5),
+						height = ALBUMMENU_TITLE_FONT_SIZE + 6,
+					},
+					{
+						font = _boldfont(ALBUMMENU_TITLE_FONT_SIZE - 4),
+						height = ALBUMMENU_TITLE_FONT_SIZE -5,
+					},
+					{
+						--minimize visibility of this...
+						font = _font(1),
+						height = 1,
+					}
+			},
+		},
+	})
 	-- popup "spinny" window
 	s.waiting_popup = _uses(s.popup)
 
@@ -809,6 +829,8 @@ function skin(self, s, reload, useDefaultSize)
 			img = _loadImage(self, "Icons/icon_check_5line.png")
 		},
 	})
+
+	s.icon_list.menu.albumcurrent = _uses(s.icon_list.menu.item_checked)
 	s.icon_list.menu.item_play = _uses(s.icon_list.menu.item)
 	s.icon_list.menu.item_add  = _uses(s.icon_list.menu.item)
 	s.icon_list.menu.item_no_arrow = _uses(s.icon_list.menu.item)
@@ -827,6 +849,8 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.icon_list.menu.selected.item_checked          = _uses(s.icon_list.menu.selected.item, {
 		order = { 'icon', 'text', 'check', 'arrow' },
+	})
+	s.icon_list.menu.selected.albumcurrent          = _uses(s.icon_list.menu.selected.item, {
 	})
 	s.icon_list.menu.selected.item_play             = _uses(s.icon_list.menu.selected.item, {
 		arrow = playArrow,
