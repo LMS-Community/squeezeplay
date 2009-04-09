@@ -475,7 +475,7 @@ function skin(self, s)
 	local CHECK_PADDING  = { 2, 0, 6, 0 }
 	local CHECKBOX_RADIO_PADDING  = { 2, 0, 0, 0 }
 
-	local MENU_ITEM_ICON_PADDING = { 0, 2, 8, 0 }
+	local MENU_ITEM_ICON_PADDING = { 0, 0, 8, 0 }
 	local MENU_PLAYLISTITEM_TEXT_PADDING = { 16, 1, 9, 1 }
 
 	local MENU_CURRENTALBUM_TEXT_PADDING = { 6, 20, 0, 10 }
@@ -618,6 +618,7 @@ function skin(self, s)
 		},
 		icon = {
 			padding = MENU_ITEM_ICON_PADDING,
+			align = 'center',
 		},
 		arrow = {
 	      		align = ITEM_ICON_ALIGN,
@@ -1117,6 +1118,7 @@ function skin(self, s)
 				icon = {
 					h = THUMB_SIZE,
 					padding = MENU_ITEM_ICON_PADDING,
+					align = 'center',
 				},
 				arrow = _uses(s.item.arrow),
 			},
@@ -1479,6 +1481,7 @@ function skin(self, s)
 	local _buttonicon = {
 		h   = THUMB_SIZE,
 		padding = MENU_ITEM_ICON_PADDING,
+		align = 'center',
 		img = false,
 	}
 
@@ -1511,6 +1514,7 @@ function skin(self, s)
 		img = _loadImage(self, "IconsResized/icon_album_noart_touch.png"),
 		h   = THUMB_SIZE,
 		padding = MENU_ITEM_ICON_PADDING,
+		align = 'center',
 	}
 
 	s.icon_connecting = _uses(_icon, {
