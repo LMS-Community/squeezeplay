@@ -514,7 +514,7 @@ function skin(self, s)
 		img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
 		frameRate = 8,
 		frameWidth = 26,
-		padding = { 0, 0, 8, 0 },
+		padding = 0,
 		h = WH_FILL,
 	}
 	local largeSpinny = {
