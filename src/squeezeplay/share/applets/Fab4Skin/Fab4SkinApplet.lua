@@ -750,7 +750,6 @@ function skin(self, s)
 	s.help_text = {
 		w = WH_FILL,
 		position = LAYOUT_CENTER,
-		padding = 10,
 		font = _font(HELP_FONT_SIZE),
 		fg = TEXT_COLOR,
 		bgImg = titleBox,
@@ -758,6 +757,8 @@ function skin(self, s)
 		scrollbar = {
 			w = 0,
 		},
+		padding = { 18, 18, 10, 18},
+		lineHeight = 23,
 	}
 
 	s.scrollbar = {
