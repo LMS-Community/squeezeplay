@@ -426,4 +426,4 @@ SUPPORT
 	EN	More Help
 
 SUPPORT_HELP
-	EN	For further help and customer support, please visit \nwww.mysqueezebox.com/support.\n\nIf contacting customer support, you may be asked for information from the "Diagnostics" screen, which can be found below.
+	EN	For more help and customer support, please visit \nwww.mysqueezebox.com/support.\n\nIf contacting customer support, you may be asked for information from the "Diagnostics" screen, which can be found below.
