@@ -86,9 +86,9 @@ local _player = false
 local _server = false
 
 -- The path of enlightenment
-local _curStep = false
 local _statusStep = false
 local _emptyStep = false
+local _stepStack = {}
 
 local _lockedItem = false
 
@@ -230,22 +230,89 @@ local function _priorityAssign(key, defaultValue, ...)
 end
 
 
+local function _dumpStepStack()
+	log:debug("---Step Stack")
+
+	for i, step in ipairs(_stepStack) do
+		if step.window then
+			log:debug("window: ", step.window, " menu: ", step.menu)
+		else
+			log:debug("no window")
+		end
+	end
+
+	log:debug("------Window Stack")
+	for i, window in ipairs(Framework.windowStack) do
+		if window then
+			log:debug("window: ", window)
+		else
+			log:debug("no window")
+		end
+	end
+
+end
+
+local function _getCurrentStep()
+	if #_stepStack == 0 then
+		return nil
+	end
+
+	return _stepStack[#_stepStack]
+end
+
+
+local function _pushStep(step)
+	table.delete(_stepStack, step) -- duplicate what window:hide does (deosn't allow same window on the stack twice)
+
+	table.insert(_stepStack, step)
+	if log:isDebug() then
+		log:debug("Pushed")
+		_dumpStepStack()
+	end
+end
+
+
+local function _popStep()
+	if #_stepStack == 0 then
+		return nil
+	end
+
+	local popped = table.remove(_stepStack)
+
+	if log:isDebug() then
+		log:debug("Popped")
+		_dumpStepStack()
+	end
+
+	return currentStep
+end
+
+
+local function _getParentStep()
+	if #_stepStack < 2 then
+		return nil
+	end
+
+	return _stepStack[#_stepStack - 1]
+end
+
 local function _pushToNewWindow(step)
 	if not step then
 		return
 	end
 
-	if _curStep.menu then
-		_curStep.menu:lock(
+	local currentStep = _getCurrentStep()
+	if currentStep.menu then
+		currentStep.menu:lock(
 			function()
 				step.cancelled = true
 			end)
 	end
 	step.loaded = function()
-		if _curStep.menu then
-			_curStep.menu:unlock()
+		if currentStep.menu then
+			currentStep.menu:unlock()
 		end
-		_curStep = step
+		_pushStep(step)
 		step.window:show()
       	end
 end
@@ -853,7 +920,8 @@ local function _bigArtworkPopup(chunk, err)
 	return popup
 end
 
-local function _refreshMe(step)
+local function _refreshMe()
+	local step = _getCurrentStep()
 	if step then
 		local timer = Timer(100,
 			function()
@@ -864,51 +932,45 @@ local function _refreshMe(step)
 
 end
 
-local function _refreshOrigin(step)
-	if step.origin then
+local function _refreshOrigin()
+	local step = _getParentStep()
+	if step then
 		local timer = Timer(100,
 			function()
-				_refreshJSONAction(step.origin)
+				_refreshJSONAction(step)
 			end, true)
 		timer:start()
-	end
-end
-
--- _hideMeAndMyDad
--- hides the top window and the parent below it, refreshing the 'grandparent' window via a new request
-local function _hideMeAndMyDad(step)
-	Framework:playSound("WINDOWHIDE")
-	step.window:hide()
-	if step.origin then
-		local parentStep = step.origin
-		if parentStep.origin then
-			parentStep.window:hide()
-			local grandparentStep = parentStep.origin
-			local timer = Timer(1000,
-				function()
-					_refreshJSONAction(grandparentStep)
-				end, true)
-			timer:start()
-		end
 	end
 end
 
 
 -- _hideMe
--- hides the top window and refreshes the parent window, via a new request
-local function _hideMe(step)
+-- hides the top window and refreshes the parent window, via a new request. Optionally, noRefresh can be set to true and the parent window will not be refreshed
+local function _hideMe(noRefresh)
+
 	Framework:playSound("WINDOWHIDE")
-	step.window:hide()
-	if step.origin then
-		_curStep = step.origin
+	_getCurrentStep().window:hide()
+
+	--hiding triggers a stepStack pop, so no need to do it here
+
+	local currentStep = _getCurrentStep()
+	if currentStep and not noRefresh then
 		local timer = Timer(1000,
 			function()
-				_refreshJSONAction(_curStep)
+				_refreshJSONAction(currentStep)
 			end, true)
 		timer:start()
 	end
+end
 
 
+-- _hideMeAndMyDad
+-- hides the top window and the parent below it, refreshing the 'grandparent' window via a new request
+local function _hideMeAndMyDad()
+	log:debug("_hideMeAndMyDad")
+
+	_hideMe(true)
+	_hideMe()
 end
 
 -- _goNowPlaying
@@ -938,7 +1000,7 @@ end
 
 -- _goNow
 -- go immediately to a particular destination
-local function _goNow(destination, transition, step)
+local function _goNow(destination, transition)
 	if not transition then
 		transition = Window.transitionPushRight
 	end
@@ -948,14 +1010,6 @@ local function _goNow(destination, transition, step)
 		goHome()
 	elseif destination == 'playlist' then
 		_goPlaylist()
-	elseif destination == 'parent' and step and step.window then
-		_hideMe(step)
-	elseif destination == 'grandparent' and step and step.window then
-		_hideMeAndMyDad(step)
-	elseif destination == 'refreshOrigin' and step and step.window then
-		_refreshOrigin(step)
-	elseif destination == 'refresh' and step and step.window then
-		_refreshMe(step)
 	end
 end
 
@@ -1226,7 +1280,7 @@ local function _menuSink(self, cmd)
 										  )
 								if v.input then
 									step.window:show()
-									_curStep = step
+									_pushStep(step)
 								else
 									from, qty = _decideFirstChunk(step.db, jsonAction)
 
@@ -1240,7 +1294,7 @@ local function _menuSink(self, cmd)
 										      jiveMain:unlockItem(item)
 		
 										      _lockedItem = false
-										      _curStep = step
+										      _pushStep(step)
 										      step.window:show()
 									      end
 								end
@@ -1461,7 +1515,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				menuItem:playSound("WINDOWSHOW")
 
 				-- make a new window
-				local step, sink = _newDestination(_curStep, item, _newWindowSpec(db, item), _browseSink)
+				local step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item), _browseSink)
 				
 				_pushToNewWindow(step)
 
@@ -1583,13 +1637,17 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				elseif item['nextWindow'] == 'home' then
 					sink = goHome
 				elseif item['nextWindow'] == 'parent' then
-					sink = _hideMe(_curStep)
+					sink = _hideMe()
 				elseif item['nextWindow'] == 'grandparent' then
-					sink = _hideMeAndMyDad(_curStep)
+					log:error("GP")
+					log:error("GP")
+					log:error("GP")
+
+					sink = _hideMeAndMyDad()
 				elseif item['nextWindow'] == 'refreshOrigin' then
-					sink = _refreshOrigin(_curStep)
+					sink = _refreshOrigin()
 				elseif item['nextWindow'] == 'refresh' then
-					sink = _refreshMe(_curStep)
+					sink = _refreshMe()
 				elseif item["showBigArtwork"] then
 					sink = _bigArtworkPopup
 				elseif actionName == 'go' 
@@ -1597,7 +1655,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					or ( item['playAction'] == 'go' and actionName == 'play' ) 
 					or ( item['playHoldAction'] == 'go' and actionName == 'play-hold' ) 
 					or ( item['addAction'] == 'go' and actionName == 'add' ) then
-					step, sink = _newDestination(_curStep, item, _newWindowSpec(db, item), _browseSink, jsonAction)
+					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item), _browseSink, jsonAction)
 					if step.menu then
 						from, qty = _decideFirstChunk(step.db, jsonAction)
 					end
@@ -1617,8 +1675,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 	-- these may work without an item
 	
 	-- Note the assumption here: event handling happens for front window only
-	if _curStep.actionModifier then
-		local builtInAction = actionName .. _curStep.actionModifier
+	if _getCurrentStep().actionModifier then
+		local builtInAction = actionName .. _getCurrentStep().actionModifier
 
 		local func = _defaultActions[builtInAction]
 		if func then
@@ -1681,7 +1739,7 @@ local function _browseMenuListener(menu, db, menuItem, dbIndex, event)
 	-- figure out the item action...
 	local evtType = event:getType()
 
-	local currentlySelectedIndex = _curStep.menu:getSelectedIndex()
+	local currentlySelectedIndex = _getCurrentStep().menu:getSelectedIndex()
 	if _player.lastKeyTable and evtType == EVENT_FOCUS_GAINED then
 		if currentlySelectedIndex then
 			_player.lastKeyTable.index = currentlySelectedIndex 
@@ -1702,10 +1760,10 @@ local function _browseMenuListener(menu, db, menuItem, dbIndex, event)
 
 	-- we don't care about events not on the current window
 	-- assumption for event handling code: _curStep corresponds to current window!
-	if _curStep.menu != menu then
-		log:debug("_curStep: ", _curStep)
+	if _getCurrentStep().menu != menu then
+		log:debug("_getCurrentStep(): ", _getCurrentStep())
 
-		log:debug("Ignoring, not visible")
+		log:error("Ignoring, not visible, or step/windowStack out of sync: current step menu: ", _getCurrentStep().menu, " window menu: ", menu)
 		return EVENT_UNUSED
 	end
 	
@@ -1939,7 +1997,10 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 				_actionHandler(nil, nil, db, nil, nil, 'go', item)
 				-- close the text input if this is a "do"
 				local doAction = _safeDeref(item, 'actions', 'do')
-				if doAction then
+				local nextWindow = _safeDeref(item, 'nextWindow')
+
+				--Close the window, unless the 'do' item also has a nextWindow param, which trumps
+				if doAction and not nextWindow then
 					-- close the window
 					window:playSound("WINDOWHIDE")
 					window:hide()
@@ -2036,10 +2097,8 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 
 			-- cancel the step to prevent new data being loaded
 			step.cancelled = true
-
-			if _curStep and _curStep.origin then
-				_curStep = _curStep.origin
-			end
+			log:debug("EVENT_WINDOW_POP called")
+			_popStep()
 		end
 	)
 		
@@ -2188,7 +2247,7 @@ function showTrackOne()
 		end
 	)
 	step.window:show()
-	_curStep = step
+	_pushStep(step)
 
 	-- send the command
 	local from, qty
@@ -2220,7 +2279,7 @@ function showPlaylist()
 	if _statusStep then
 
 		-- arrange so that menuListener works
-		_curStep = _statusStep
+		_pushStep(_statusStep)
 
 		-- current playlist should select currently playing item 
 		-- if there is only one item in the playlist, bring the selected item to top
@@ -2714,31 +2773,12 @@ function free(self)
 	end
 
 	-- walk down our path and close...
-	local step = _curStep
-
-	-- Note, we guard against circular references here
-	while step do
-		step.window:hide()
-
-		if step == step.origin then
-			log:error("Loop detected in _curStep")
-			step = nil
-		else
-			step = step.origin
-		end
+	while _popStep() do
+		_getCurrentStep().window:hide()
 	end
-	
-	local step = _statusStep
-	
-	while step do
-		step.window:hide()
 
-		if step == step.origin then
-			log:error("Loop detected in _statusStep")
-			step = nil
-		else
-			step = step.origin
-		end
+	if _statusStep then
+		_statusStep.window:hide()
 	end
 	
 	return true
