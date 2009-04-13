@@ -744,7 +744,7 @@ ZEROCONF_ADDRESS
 	FR	Attribuer l'adresse automatiquement
 	IT	Indirizzo assegnato automaticamente
 	NL	Zelf-toewijzend adres
-	NO	Tildel adresse manuelt
+	NO	Egentildelt adresse
 	SV	Egentilldelad adress
 
 STATIC_ADDRESS
