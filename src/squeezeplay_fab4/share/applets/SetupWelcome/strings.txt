@@ -138,7 +138,7 @@ SN_DNS_FAILED
 	SV	Det verkar som om Internetanslutningen inte fungerar. Kontrollera att nätverket är i gång och fungerar som det ska.
 
 SN_SYSTEM_ERROR
-	EN	An system error has happened. Please try again later.
+	EN	A system error has happened. Please try again later.
 
 SN_TRY_AGAIN
 	CS	Zkuste připojit znovu
