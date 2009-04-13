@@ -780,11 +780,11 @@ ZEROCONF_ADDRESS
 	FI	Määritä osoite itse
 	FR	Attribuer l'adresse automatiquement
 	IT	Indirizzo assegnato automaticamente
-	NL	Adres zelf toewijzen
+	NL	Zelf-toewijzend adres
 	NO	Tildel adresse manuelt
 	PL	Samoprzypisany adres
 	RU	Назначить адрес самостоятельно
-	SV	Tilldela adress manuellt
+	SV	Egentilldelad adress
 
 NETWORK_WEP_DHCP
 	CS	Moje heslo nefunguje
