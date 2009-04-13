@@ -126,7 +126,7 @@ UPDATE_DOWNLOAD
 	CS	Kopíruji aktualizaci
 	DA	Kopierer opdateringen
 	DE	Aktualisierung wird kopiert
-	EN	Copying Update
+	EN	Downloading
 	ES	Copiando actualización
 	FI	Kopioidaan päivitystä
 	FR	Copie de la mise à jour
@@ -141,7 +141,7 @@ UPDATE_VERIFY
 	CS	Ověřuji aktualizaci
 	DA	Kontrollerer opdateringen
 	DE	Aktualisierung wird geprüft
-	EN	Verifying Update
+	EN	Installing
 	ES	Comprobando actualización
 	FI	Tarkistetaan päivitystä
 	FR	Vérification des mises à jour
