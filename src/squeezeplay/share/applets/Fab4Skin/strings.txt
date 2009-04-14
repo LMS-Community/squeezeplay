@@ -33,11 +33,19 @@ ENTER_SMALL
 	SV	klart
 
 SPACEBAR_SMALL
+	CS	mezerník
+	DA	mellemrum
 	DE	Leerzeichen
 	EN	space
-	FR	espace
-	IT	spazio
 	ES	espacio
+	FI	välinäppäin
+	FR	espace
+	IT	barra spaz.
+	NL	spatie
+	NO	mellomrom
+	PL	spacja
+	RU	Пробел
+	SV	mellanslag
 
 HELP
 	CS	Nápověda
