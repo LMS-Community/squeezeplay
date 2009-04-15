@@ -762,6 +762,12 @@ function skin(self, s)
 		lineHeight = 23,
 	}
 
+	s.help_text_small = _uses(s.help_text, {
+		font = _font(14),
+		lineHeight = 16,
+		padding = { 18, 6, 0, 2 },
+	})
+
 	s.scrollbar = {
 		w = 42,
 		border = 0,

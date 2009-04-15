@@ -307,7 +307,7 @@ function supportMenu(self)
 		end,
 	})
 
-	window:addWidget(Textarea("help_text", self:string("SUPPORT_HELP")))
+	window:addWidget(Textarea("help_text_small", self:string("SUPPORT_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
