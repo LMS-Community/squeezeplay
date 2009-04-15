@@ -956,11 +956,26 @@ function _connect(self, iface, ssid, createNetwork)
 	assert(iface and ssid, debug.traceback())
 
 	if not iface:isWireless() then
-		local status = iface:t_wpaStatus()
-		if not status.link then
-			return _attachEthernet(self, iface, ssid, createNetwork)
-		end
+		-- Bug 11769: We should decide whether we want _connect() always being called in a task or not.
+		-- It's not called in a task at least for ehternet / DHCP failed / Try again, but t_wpaStatus()
+		--  needs to be called in a task.
+		Task("attachEthernet", self,
+			function()
+				local status = iface:t_wpaStatus()
+				if not status.link then
+					return _attachEthernet(self, iface, ssid, createNetwork)
+				end
+
+				_connect_1(self, iface, ssid, createNetwork)
+
+			end
+		):addTask()
+	else
+		_connect_1(self, iface, ssid, createNetwork)
 	end
+end
+
+function _connect_1(self, iface, ssid, createNetwork)
 
 	self.connectTimeout = 0
 	self.dhcpTimeout = 0

@@ -667,19 +667,19 @@ NETWORK_DHCP_ERROR_HINT
 	SV	Det gick inte att hitta någon DHCP-adress för det här nätverket.
 
 NETWORK_DHCP_AGAIN
-	CS	Detekovat DHCP automaticky
-	DA	Find DHCP automatisk
-	DE	DHCP automatisch erkennen
-	EN	Detect DHCP automatically
-	ES	Detectar DHCP automáticamente
-	FI	Havaitse DHCP automaattisesti
-	FR	Détecter automatiquement le DHCP
-	IT	Rileva DHCP automaticamente
-	NL	DHCP automatisch detecteren
-	NO	Finn DHCP automatisk
-	PL	Wykryj DHCP automatycznie
-	RU	Обнаруживать DHCP автоматически
-	SV	Upptäck DHCP automatiskt
+	CS	Zkuste to znovu
+	DA	Prøv igen
+	DE	Erneut versuchen.
+	EN	Try again
+	ES	Vuelva a intentarlo
+	FI	Yritä uudelleen
+	FR	Réessayer
+	IT	Riprova
+	NL	Opnieuw proberen
+	NO	Prøv igjen
+	PL	Spróbuj ponownie
+	RU	Повторите попытку
+	SV	Försök igen
 
 NETWORK_CONNECTION_PROBLEM_HELP
 	CS	Zadali jste: %s\n\nNemohli jsme uskutečnit připojení s použitím výše uvedeného hesla.
