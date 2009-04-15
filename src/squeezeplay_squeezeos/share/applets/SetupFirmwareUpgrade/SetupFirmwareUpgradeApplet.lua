@@ -265,7 +265,7 @@ function firmwareUpgrade(self, server)
 end
 
 
-function settingsShow(self)
+function showFirmwareUpgradeMenu(self)
 	local url = false
 
 	local player = appletManager:callService("getCurrentPlayer")

@@ -24,9 +24,10 @@ end
 
 
 function registerApplet(meta)
-	jiveMain:addItem(meta:menuItem('appletSetupFirmwareUpgrade', 'advancedSettings', "UPDATE", function(applet) applet:settingsShow() end))
+	jiveMain:addItem(meta:menuItem('appletSetupFirmwareUpgrade', 'advancedSettings', "UPDATE", function(applet) applet:showFirmwareUpgradeMenu() end))
 
 	meta:registerService("firmwareUpgrade")
+	meta:registerService("showFirmwareUpgradeMenu")
 
 	-- check for firmware upgrades when we connect to a new player
 	-- we don't want the firmware upgrade applets always loaded so

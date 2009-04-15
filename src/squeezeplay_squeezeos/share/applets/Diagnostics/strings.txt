@@ -463,3 +463,18 @@ SUPPORT_HELP
 	PL	Aby uzyskać więcej pomocy związanej z urządzeniem Squeezebox, odwiedź stronę WWW pod adresem mysqueezebox.com/support. Znajdują się tam odpowiedzi na wiele pytań oraz informacje, dzięki którym można skontaktować się z działem pomocy technicznej.\nPracownicy działu pomocy technicznej mogą poprosić o podanie parametrów technicznych urządzenia Squeezebox. Parametry te można sprawdzić, używając narzędzia Diagnostyka systemu, które jest dostępne poniżej.
 	RU	Если вам необходима дополнительная помощь по Squeezebox, посетите mysqueezebox.com/support: там вы сможете найти ответы на многие вопросы, а также связаться со службой поддержки.\nСлужба поддержки может попросить вас предоставить техническую информацию о вашем устройстве Squeezebox. Эту информацию можно извлечь с помощью программы Диагностика системы, доступной по ссылке ниже.
 	SV	Om du behöver mer hjälp med Squeezebox, kan du gå till mysqueezebox.com/support där du hittar frågor och svar, och där du kan kontakta teknisk support.\nOm du kontaktar teknisk support, kanske du ombeds att ange teknisk information om din Squeezebox. Den informationen får du via Systemdiagnostik nedan.
+
+SOFTWARE_UPDATE
+	CS	Aktualizace softwaru
+	DA	Softwareopdatering
+	DE	Software-Aktualisierung
+	EN	Software Update
+	ES	Actualización de software
+	FI	Ohjelmiston päivitys
+	FR	Mise à jour du logiciel
+	IT	Aggiornamento software
+	NL	Software-update
+	NO	Programvareoppdatering
+	PL	Aktualizacja oprogramowania
+	RU	Обновление ПО
+	SV	Programvaruuppdatering

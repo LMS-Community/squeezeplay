@@ -26,6 +26,7 @@ local log              = require("jive.utils.log").logger("applets.misc")
 
 
 local jnt = jnt
+local appletManager    = appletManager
 local JIVE_VERSION  = jive.JIVE_VERSION
 
 
@@ -269,6 +270,14 @@ function diagnosticsMenu(self)
 			style = 'item_choice',
 		})
 	end
+
+	menu:addItem({
+		text = self:string("SOFTWARE_UPDATE"),
+		style = 'item',
+		callback = function ()
+			appletManager:callService("showFirmwareUpgradeMenu")
+		end
+	})
 
 	dovalues(self, menu)
 	menu:addTimer(5000, function()
