@@ -264,7 +264,7 @@ int jiveL_menu_draw(lua_State *L) {
 	lua_pop(L, 1);
 
 	jive_surface_get_offset(srf, &old_pixel_offset_x, &old_pixel_offset_y);
-	jive_surface_set_offset(srf, old_pixel_offset_x, new_pixel_offset_y);
+	jive_surface_set_offset(srf, old_pixel_offset_x, new_pixel_offset_y + old_pixel_offset_y);
 
 	lua_getfield(L, 1, "widgets");
 	lua_pushnil(L);

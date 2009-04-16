@@ -208,12 +208,6 @@ function handleDrag(self, dragAmountY, byItemOnly)
 				(self.dragYSinceShift < 0 and math.floor(self.dragYSinceShift / self.itemHeight) < 0) then
 			local itemShift = math.floor(self.dragYSinceShift / self.itemHeight)
 			self.dragYSinceShift = self.dragYSinceShift % self.itemHeight
-			if not byItemOnly then
-				self.pixelOffsetY = -1 * self.dragYSinceShift
-			else
-				--by item only so fix the position so that the top item is visible in the same spot each time
-				self.pixelOffsetY = 0
-			end
 			if itemShift > 0 and self.currentShiftDirection <= 0 then
 				--changing shift direction, move cursor so scroll wil occur
 				self:setSelectedIndex(self.topItem + self.numWidgets - 2)
@@ -224,23 +218,54 @@ function handleDrag(self, dragAmountY, byItemOnly)
 				self.currentShiftDirection = -1
 			end
 
-			if log:isDebug() then
-				log:debug("BY ITEM: self:scrollBy( itemShift ) ", itemShift, " self.pixelOffsetY: ", self.pixelOffsetY )
-			end
 
-			self:scrollBy( itemShift, true, false )
-			self:_updateScrollbar()
 
-			if self.selected == 1 or self.selected == self.listSize then
+			if (self:isAtTop() and itemShift < 0) or (self:isAtBottom() and itemShift > 0) then
+				--already at end
 				self:resetDragData()
+				self:_updateScrollbar()
+
+			else
+				--if resulting shift moves beyond bottom, reset offset
+				if (self.topItem + itemShift < 1) or (self.topItem + itemShift + self.numWidgets >= self.listSize + 1) then
+					log:error("sdfasfasdfsadf resetting ")
+					self:resetDragData()
+				else
+					--here we are not at ends, so set offset
+					if not byItemOnly then
+						self.pixelOffsetY = -1 * self.dragYSinceShift
+					else
+						--by item only so fix the position so that the top item is visible in the same spot each time
+						self.pixelOffsetY = 0
+					end
+				end
+				if log:isDebug() then
+					log:debug("BY ITEM: self:scrollBy( itemShift ) ", itemShift, " self.pixelOffsetY: ", self.pixelOffsetY )
+				end
+
+				self:scrollBy( itemShift, true, false )
+				self:_updateScrollbar()
+
+				--should we bump?
+				if self:isAtTop() and itemShift < 0 then
+					self:getWindow():bumpDown()
+				end
+
+				if self:isAtBottom() and itemShift > 0 then
+					self:getWindow():bumpUp()
+				end
+
 			end
+
 
 		else
 			--smooth scroll
 			if not byItemOnly then
 				self.pixelOffsetY = -1 * self.dragYSinceShift
 			end
-			if self.selected and ((self.selected == 1 and self.currentShiftDirection == 1) or self.selected >= self.listSize - 1) then
+
+			if (self.topItem == 1 and self.currentShiftDirection == 1) or self:isAtBottom() then
+				--already at end
 				self:resetDragData()
 			end
 
@@ -884,12 +909,12 @@ end
 
 --required functions for Drag module
 function isAtBottom(self)
-	return self.selected == self.listSize
+	return self.topItem + self.numWidgets >= self.listSize + 1
 end
 
 
 function isAtTop(self)
-	return self.selected == 1
+	return self.topItem == 1 and self.pixelOffsetY == 0
 end
 
 --[[

@@ -591,6 +591,15 @@ function setAutoHide(self, enabled)
 end
 
 
+function bumpDown(self)
+	Framework:_startTransition(self:transitionBumpDown(self))
+end
+
+
+function bumpUp(self)
+	Framework:_startTransition(self:transitionBumpUp(self))
+end
+
 --[[
 
 =head2 jive.ui.Window:bumpLeft()
@@ -1065,6 +1074,62 @@ function transitionNone(self)
 	return nil
 end
 
+
+--with animation in both directions
+function transitionBumpDown(self)
+
+	local frames = 1
+	local screenWidth = Framework:getScreenSize()
+	local inReturn = false
+	return function(widget, surface)
+			local y = frames * 3
+
+			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
+			surface:setOffset(0, y)
+			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE)
+			surface:setOffset(0, 0)
+
+			if not inReturn and frames < 2 then
+				frames = frames + 1
+
+			else
+				inReturn = true
+				frames = frames - 1
+			end
+
+			if frames == 0 then
+				Framework:_killTransition()
+			end
+		end
+end
+
+--with animation in both directions
+function transitionBumpUp(self)
+
+	local frames = 1
+	local screenWidth = Framework:getScreenSize()
+	local inReturn = false
+	return function(widget, surface)
+			local y = frames * 3
+
+			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
+			surface:setOffset(0, -y)
+			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE)
+			surface:setOffset(0, 0)
+
+			if not inReturn and frames < 2 then
+				frames = frames + 1
+
+			else
+				inReturn = true
+				frames = frames - 1
+			end
+
+			if frames == 0 then
+				Framework:_killTransition()
+			end
+		end
+end
 
 --[[
 
