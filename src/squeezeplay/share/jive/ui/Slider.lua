@@ -266,10 +266,12 @@ function _eventHandler(self, event)
 			end
 
 			local pos = sliderFraction * (self.range)
-			if pos <= self.value or sliderFraction < PAGING_BOUNDARY_BUFFER_FRACTION then
-				Framework:pushAction("page_up")
+			local inUpperBufferZone = sliderFraction < PAGING_BOUNDARY_BUFFER_FRACTION
+			local inLowerBufferZone = sliderFraction > (1 - PAGING_BOUNDARY_BUFFER_FRACTION)
 
-			elseif pos > self.value + self.size or sliderFraction > (1 - PAGING_BOUNDARY_BUFFER_FRACTION) then
+			if inUpperBufferZone or (pos <= self.value and not inLowerBufferZone ) then
+				Framework:pushAction("page_up")
+			elseif inLowerBufferZone or pos > self.value + self.size then
 				Framework:pushAction("page_down")
 			end
 		end
