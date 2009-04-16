@@ -34,6 +34,7 @@ local Framework        = require("jive.ui.Framework")
 local Icon             = require("jive.ui.Icon")
 local Label            = require("jive.ui.Label")
 local Group            = require("jive.ui.Group")
+local Keyboard         = require("jive.ui.Keyboard")
 local Popup            = require("jive.ui.Popup")
 local RadioButton      = require("jive.ui.RadioButton")
 local RadioGroup       = require("jive.ui.RadioGroup")
@@ -172,10 +173,17 @@ function defineFlickrId(self, menuItem)
 			return true
 		end)
 
-    local help = Textarea("help_text", self:string("SCREENSAVER_FLICKR_FLICKR_ID_HELP"))
+	local keyboard  = Keyboard("keyboard", "qwerty", input)
+        local backspace = Keyboard.backspace()
+        local group     = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
 
-    window:addWidget(help)
-    window:addWidget(input)
+	-- FIXME: help text here doesn't work on a keyboard window
+    	--local help = Textarea("help_text", self:string("SCREENSAVER_FLICKR_FLICKR_ID_HELP"))
+	--window:addWidget(help)
+
+        window:addWidget(group)
+        window:addWidget(keyboard)
+        window:focusWidget(group)
 
     self:tieAndShowWindow(window)
     return window
