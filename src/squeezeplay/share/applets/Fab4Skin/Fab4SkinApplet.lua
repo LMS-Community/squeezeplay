@@ -141,7 +141,7 @@ end
 
 
 -- skin
--- The meta arranges for this to be called to skin Jive.
+-- The meta arranges for this to be called to skin the interface.
 function skin(self, s)
 	Framework:setVideoMode(480, 272, 0, false)
 
@@ -149,6 +149,10 @@ function skin(self, s)
 
 	--init lastInputType so selected item style is not shown on skin load
 	Framework.mostRecentInputType = "mouse"
+
+	-- skin
+	local thisSkin = 'touch'
+	local skinSuffix = "_" .. thisSkin .. ".png"
 
 	-- Images and Tiles
 	local inputTitleBox           = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
@@ -1116,7 +1120,11 @@ function skin(self, s)
 					line = {
 						{
 							font = _boldfont(ALBUMMENU_FONT_SIZE),
-						}
+							height = 22,
+						},
+						{
+							font = _font(ALBUMMENU_SMALL_FONT_SIZE),
+						},
 					},
 					fg = TEXT_COLOR,
 					sh = TEXT_SH_COLOR,
@@ -1492,16 +1500,16 @@ function skin(self, s)
 	}
 
 	s.region_US = _uses(_buttonicon, { 
-		img = _loadImage(self, "IconsResized/icon_region_americas_touch.png")
+		img = _loadImage(self, "IconsResized/icon_region_americas" .. skinSuffix),
 	})
 	s.region_XX = _uses(_buttonicon, { 
-		img = _loadImage(self, "IconsResized/icon_region_other_touch.png")
+		img = _loadImage(self, "IconsResized/icon_region_other" .. skinSuffix),
 	})
 	s.wlan = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_wireless_touch.png")
+		img = _loadImage(self, "IconsResized/icon_wireless" .. skinSuffix),
 	})
 	s.wired = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_ethernet_touch.png")
+		img = _loadImage(self, "IconsResized/icon_ethernet" .. skinSuffix),
 	})
 
 
@@ -1517,7 +1525,7 @@ function skin(self, s)
 
 	-- icon for albums with no artwork
 	s.icon_no_artwork = {
-		img = _loadImage(self, "IconsResized/icon_album_noart_touch.png"),
+		img = _loadImage(self, "IconsResized/icon_album_noart" .. skinSuffix ),
 		h   = THUMB_SIZE,
 		padding = MENU_ITEM_ICON_PADDING,
 		align = 'center',
@@ -1534,11 +1542,11 @@ function skin(self, s)
 	})
 
 	s.icon_software_update = _uses(_icon, {
-		img = _loadImage(self, "IconsResized/icon_firmware_update_touch.png"),
+		img = _loadImage(self, "IconsResized/icon_firmware_update" .. skinSuffix),
 	})
 
 	s.icon_restart = _uses(_icon, {
-		img = _loadImage(self, "IconsResized/icon_restart_touch.png"),
+		img = _loadImage(self, "IconsResized/icon_restart" .. skinSuffix),
 	})
 
 	s.icon_power = _uses(_icon, {
@@ -1557,37 +1565,37 @@ function skin(self, s)
 	})
 
 	s.player_transporter = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_transporter_touch.png")
+		img = _loadImage(self, "IconsResized/icon_transporter" .. skinSuffix),
 	})
 	s.player_squeezebox = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_SB1n2_touch.png")
+		img = _loadImage(self, "IconsResized/icon_SB1n2" .. skinSuffix),
 	})
 	s.player_squeezebox2 = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_SB1n2_touch.png")
+		img = _loadImage(self, "IconsResized/icon_SB1n2" .. skinSuffix),
 	})
 	s.player_squeezebox3 = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_SB3_touch.png")
+		img = _loadImage(self, "IconsResized/icon_SB3" .. skinSuffix),
 	})
 	s.player_boom = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_boom_touch.png")
+		img = _loadImage(self, "IconsResized/icon_boom" .. skinSuffix),
 	})
 	s.player_slimp3 = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_slimp3_touch.png")
+		img = _loadImage(self, "IconsResized/icon_slimp3" .. skinSuffix),
 	})
 	s.player_softsqueeze = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_softsqueeze_touch.png")
+		img = _loadImage(self, "IconsResized/icon_softsqueeze" .. skinSuffix),
 	})
 	s.player_controller = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_controller_touch.png")
+		img = _loadImage(self, "IconsResized/icon_controller" .. skinSuffix),
 	})
 	s.player_receiver = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_receiver_touch.png")
+		img = _loadImage(self, "IconsResized/icon_receiver" .. skinSuffix),
 	})
 	s.player_squeezeplay = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_squeezeplay_touch.png")
+		img = _loadImage(self, "IconsResized/icon_squeezeplay" .. skinSuffix),
 	})
 	s.player_http = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_softsqueeze_touch.png")
+		img = _loadImage(self, "IconsResized/icon_softsqueeze" .. skinSuffix),
 	})
 
 
