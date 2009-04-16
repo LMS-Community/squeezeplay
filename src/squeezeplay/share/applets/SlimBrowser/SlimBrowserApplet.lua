@@ -282,8 +282,6 @@ local function _priorityAssign(key, defaultValue, ...)
 	return defaultValue
 end
 
-local function _dumpStepStack()
-	log:debug("---Step Stack")
 
 local function _backButton(self)
      return Button(
@@ -316,20 +314,88 @@ local function _nowPlayingButton(self)
 end
 
 
+local function _dumpStepStack()
+	log:debug("---Step Stack")
+
+	for i, step in ipairs(_stepStack) do
+		if step.window then
+			log:debug("window: ", step.window, " menu: ", step.menu)
+		else
+			log:debug("no window")
+		end
+	end
+
+	log:debug("------Window Stack")
+	for i, window in ipairs(Framework.windowStack) do
+		if window then
+			log:debug("window: ", window)
+		else
+			log:debug("no window")
+		end
+	end
+
+end
+
+local function _getCurrentStep()
+	if #_stepStack == 0 then
+		return nil
+	end
+
+	return _stepStack[#_stepStack]
+end
+
+
+local function _pushStep(step)
+	table.delete(_stepStack, step) -- duplicate what window:hide does (deosn't allow same window on the stack twice)
+
+	table.insert(_stepStack, step)
+	if log:isDebug() then
+		log:debug("Pushed")
+		_dumpStepStack()
+	end
+end
+
+
+local function _popStep()
+	if #_stepStack == 0 then
+		return nil
+	end
+
+	local popped = table.remove(_stepStack)
+
+	if log:isDebug() then
+		log:debug("Popped")
+		_dumpStepStack()
+	end
+
+	return currentStep
+end
+
+
+local function _getParentStep()
+	if #_stepStack < 2 then
+		return nil
+	end
+
+	return _stepStack[#_stepStack - 1]
+end
+
+
 local function _pushToNewWindow(step)
 	if not step then
 		return
 	end
 
-	if _curStep and _curStep.menu then
-		_curStep.menu:lock(
+	local currentStep = _getCurrentStep()
+	if currentStep.menu then
+		currentStep.menu:lock(
 			function()
 				step.cancelled = true
 			end)
 	end
 	step.loaded = function()
-		if _curStep and _curStep.menu then
-			_curStep.menu:unlock()
+		if currentStep.menu then
+			currentStep.menu:unlock()
 		end
 		_pushStep(step)
 		step.window:show()
@@ -1115,7 +1181,8 @@ local function _browseSink(step, chunk, err)
 			-- count == 0 responses should not be typical
 		elseif step.menu then
 			step.menu:setItems(step.db:menuItems(data))
-			if _player and _player.menuAnchor then
+			if _player and _player.menuAnchor and not _player.menuAnchorSet then
+				log:debug("Selecting  menuAnchor: ", _player.menuAnchor)				step.menu:setSelectedIndex(_player.menuAnchor)
 				step.menu:setSelectedIndex(_player.menuAnchor)
 				_player.menuAnchorSet = true
 			end
@@ -2285,7 +2352,10 @@ local function _browseInput(self, item, db, inputSpec, last)
 			_actionHandler(nil, nil, db, nil, nil, 'go', item)
 			-- close the text input if this is a "do"
 			local doAction = _safeDeref(item, 'actions', 'do')
-			if doAction then
+			local nextWindow = _safeDeref(item, 'nextWindow')
+
+			--Close the window, unless the 'do' item also has a nextWindow param, which trumps
+			if doAction and not nextWindow then
 				-- close the window
 				self:playSound("WINDOWHIDE")
 				self:hide()
