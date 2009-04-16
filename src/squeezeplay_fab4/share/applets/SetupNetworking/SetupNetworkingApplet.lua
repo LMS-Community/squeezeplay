@@ -97,12 +97,12 @@ end
 
 
 -- start network setup flow
-function setupNetworking(self, setupNext)
+function setupNetworking(self, setupNext, transition)
 	self.mode = "setup"
 
 	self.setupNext = setupNext
 
-	_wirelessRegion(self, self.wlanIface)
+	_wirelessRegion(self, self.wlanIface, transition)
 end
 
 
@@ -178,7 +178,7 @@ end
 -------- WIRELESS REGION --------
 
 -- select wireless region
-function _wirelessRegion(self, wlan)
+function _wirelessRegion(self, wlan, transition)
 	-- skip region if already set and not in setup mode
 	if self:getSettings()['region'] and self.mode ~= "setup" then
 		return _connectionType(self)
@@ -218,7 +218,7 @@ function _wirelessRegion(self, wlan)
 
 	_helpAction(self, window, "NETWORK_REGION_HELP", "NETWORK_REGION_HELP_BODY")
 
-	self:tieAndShowWindow(window)
+	self:tieAndShowWindow(window, transition)
 end
 
 
@@ -509,7 +509,7 @@ function _enterPassword(self, iface, ssid, nocheck)
 	end
 
 	local flags = self.scanResults[ssid].flags
-	log:debug("ssid is: ", ssid, " flags are: ", flags)
+	log:debug("ssid is: ", ssid, " flags are: ", flags, " nocheck is: ", nocheck)
 
 	if flags == "" then
 		self.encryption = "none"
