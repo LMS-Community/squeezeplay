@@ -264,7 +264,6 @@ function screensaverWindow(self, window)
 end
 
 function restartScreenSaverTimer(self)
-	log:warn('restart ss timer')
 	self.timer:restart()
 end
 
