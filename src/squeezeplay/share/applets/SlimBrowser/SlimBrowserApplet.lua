@@ -303,14 +303,14 @@ local function _pushToNewWindow(step)
 	end
 
 	local currentStep = _getCurrentStep()
-	if currentStep.menu then
+	if currentStep and currentStep.menu then
 		currentStep.menu:lock(
 			function()
 				step.cancelled = true
 			end)
 	end
 	step.loaded = function()
-		if currentStep.menu then
+		if currentStep and currentStep.menu then
 			currentStep.menu:unlock()
 		end
 		_pushStep(step)
@@ -2909,8 +2909,19 @@ function free(self)
 	end
 
 	-- walk down our path and close...
-	while _popStep() do
-		_getCurrentStep().window:hide()
+	local currentStep = _getCurrentStep()
+	while currentStep do
+		--hide will trigger POP event which will call _popStep, so eventually _getCurrentStep() will empty and be nil
+		currentStep.window:hide()
+
+		local candidateCurrentStep = _getCurrentStep()
+		if candidateCurrentStep == currentStep then
+			log:error("POP event should have been handled, popping the stepStack, but the stepStack pop didn't occur")
+			goHome()
+			return true
+		else
+			currentStep = candidateCurrentStep
+		end
 	end
 
 	if _statusStep then
