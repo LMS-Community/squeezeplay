@@ -263,6 +263,11 @@ function screensaverWindow(self, window)
 	
 end
 
+function restartScreenSaverTimer(self)
+	log:warn('restart ss timer')
+	self.timer:restart()
+end
+
 
 function addScreenSaver(self, displayName, applet, method, settingsName, settings, weight, closeMethod )
 	local key = tostring(applet) .. ":" .. tostring(method)

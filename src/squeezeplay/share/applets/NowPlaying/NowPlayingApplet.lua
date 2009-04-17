@@ -514,6 +514,7 @@ function _createUI(self)
 	self.artworkGroup = Group(components.npartwork, {
 			artwork = self.artwork,
 	})
+	self.artworkShadow = Icon("icon_artwork_shadow")
 
 	local playIcon = Button(Icon('play'),
 				function() 
@@ -555,12 +556,12 @@ function _createUI(self)
 	window:addWidget(self.titleGroup)
 	window:addWidget(self.trackGroup)
 	window:addWidget(self.artworkGroup)
+	window:addWidget(self.artworkShadow)
 	window:addWidget(self.controlsGroup)
 	window:addWidget(self.progressGroup)
 
 	window:focusWidget(self.trackGroup)
 
-	-- FIXME...what to do here...?
 	-- register window as a screensaver, unless we are explicitly not in that mode
 	if self.isScreensaver then
 		local manager = appletManager:getAppletInstance("ScreenSavers")
@@ -594,6 +595,7 @@ end
 
 function openScreensaver(self)
 	self.isScreensaver = true
+	log:info('openScreensaver()')
 	self:showNowPlaying(Window.transitionFadeIn, 'screensaver')
 end
 
@@ -658,6 +660,13 @@ end
 
 function showNowPlaying(self, transition)
 
+	if Framework:isCurrentWindow(self.window) then
+		log:warn('NP already on screen')
+		-- restart the screensaver timer if we hit this clause
+		appletManager:callService("restartScreenSaverTimer")
+		return
+	end
+
 	-- if we're opening this after freeing the applet, grab the player again
 	if not self.player then
 		self.player = appletManager:callService("getCurrentPlayer")
@@ -675,6 +684,7 @@ function showNowPlaying(self, transition)
 		browser:showPlaylist()
 		return
 	end
+
 
 	-- this is to show the window to be opened in one of three modes: 
 	-- browse, ss, and large (i.e., small med & large)

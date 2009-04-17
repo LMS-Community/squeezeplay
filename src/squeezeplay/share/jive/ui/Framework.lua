@@ -356,6 +356,23 @@ end
 
 --[[
 
+=head2 jive.ui.Framework:isCurrentWindow()
+
+Returns true if I<window> is the window currently being viewed
+
+=cut
+--]]
+function isCurrentWindow(self, window)
+	--FIXME, this should also cover the case where window is on top but obscured by toast(s)
+	if self.windowStack and window == self.windowStack[1] then
+		return true
+	end
+	return false
+end
+
+
+--[[
+
 =head2 jive.ui.Framework:getScreenSize()
 
 Returns I<w, h> the current screen size.

@@ -45,6 +45,7 @@ end
 function registerApplet(meta)
 
 	meta:registerService("addScreenSaver")
+	meta:registerService("restartScreenSaverTimer")
 
 	-- Menu for configuration
 	jiveMain:addItem(meta:menuItem('appletScreenSavers', 'screenSettings', "SCREENSAVERS", function(applet, ...) applet:openSettings(...) end))
