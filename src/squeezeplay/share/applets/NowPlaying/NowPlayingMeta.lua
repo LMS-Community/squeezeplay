@@ -31,7 +31,7 @@ end
 function configureApplet(self)
 
 	appletManager:callService("addScreenSaver",
-		'NowPlaying',
+		self:string("SCREENSAVER_NOWPLAYING"), 
 		"NowPlaying", 
 		"openScreensaver", 
 		self:string("SCREENSAVER_ARTWORK_SIZE"), 
