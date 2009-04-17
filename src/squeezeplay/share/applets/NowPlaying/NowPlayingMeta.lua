@@ -31,8 +31,8 @@ end
 function configureApplet(self)
 
 	appletManager:callService("addScreenSaver",
-		self:string("SCREENSAVER_NOWPLAYING"), 
-		"NowPlaying", 
+		'BKNowPlaying',
+		"NewNowPlaying", 
 		"openScreensaver", 
 		self:string("SCREENSAVER_ARTWORK_SIZE"), 
 		"displaySizeSetting", 
@@ -40,7 +40,7 @@ function configureApplet(self)
 	)
 
 	-- NowPlaying is a resident applet
-	appletManager:loadApplet("NowPlaying")
+	appletManager:loadApplet("NewNowPlaying")
 
 end
 

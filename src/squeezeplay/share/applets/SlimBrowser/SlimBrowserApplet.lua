@@ -1075,7 +1075,7 @@ local function _goNowPlaying(transition)
 		transition = Window.transitionPushRight
 	end
 	Framework:playSound("WINDOWSHOW")
-	appletManager:callService('goNowPlaying', 'browse', transition)
+	appletManager:callService('goNowPlaying', transition)
 end
 
 -- _goPlaylist

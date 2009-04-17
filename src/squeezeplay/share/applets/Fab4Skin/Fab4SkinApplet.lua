@@ -1770,10 +1770,10 @@ if true then
 	-- Progress bar
 	s.ssprogress = {
 		position = LAYOUT_SOUTH,
-		padding = { ITEM_LEFT_PADDING, 10, 10, 5 },
+		padding = { 0, 10, 0, 0 },
 		order = { "elapsed", "slider", "remain" },
 		elapsed = {
-			w = 75,
+			w = 90,
 			align = 'right',
 			padding = { 8, 0, 8, 15 },
 			font = _boldfont(18),
@@ -1781,7 +1781,7 @@ if true then
 			sh = { 0x37, 0x37, 0x37 },
 		},
 		remain = {
-			w = 75,
+			w = 90,
 			align = 'left',
 			padding = { 8, 0, 8, 15 },
 			font = _boldfont(18),
@@ -1789,7 +1789,7 @@ if true then
 			sh = { 0x37, 0x37, 0x37 },
 		},
 		text = {
-			w = 75,
+			w = 90,
 			align = 'right',
 			padding = { 8, 0, 8, 15 },
 			font = _boldfont(18),
@@ -1802,7 +1802,8 @@ if true then
 	s.largeprogress  = _uses(s.ssprogress)
 
 	s.ssprogressB = {
-		padding     = { 0, 0, 0, 25 },
+		w = 300,
+		padding     = { 0, 0, 0, 18 },
                 position = LAYOUT_SOUTH,
                 horizontal = 1,
                 bgImg = _progressBackground,
