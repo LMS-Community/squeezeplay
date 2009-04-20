@@ -97,6 +97,15 @@ static struct jive_keymap keymap[] = {
 	{ SDLK_PAGEDOWN,	JIVE_KEY_PAGE_DOWN },
 	{ SDLK_PRINT,		JIVE_KEY_PRINT },
 	{ SDLK_SYSREQ,		JIVE_KEY_PRINT },
+	{ SDLK_F1,              JIVE_KEY_PRESET_1 },
+	{ SDLK_F2,              JIVE_KEY_PRESET_2 },
+	{ SDLK_F3,              JIVE_KEY_PRESET_3 },
+	{ SDLK_F4,              JIVE_KEY_PRESET_4 },
+	{ SDLK_F5,              JIVE_KEY_PRESET_5 },
+	{ SDLK_F6,              JIVE_KEY_PRESET_6 },
+	{ SDLK_AudioMute,       JIVE_KEY_MUTE },
+	{ SDLK_POWER,           JIVE_KEY_POWER },
+	{ SDLK_Sleep,           JIVE_KEY_ALARM },
 	{ SDLK_UNKNOWN,		JIVE_KEY_NONE },
 };
 

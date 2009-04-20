@@ -231,6 +231,15 @@ function constants(module)
 	module.KEY_PAGE_DOWN = jive.ui.KEY_PAGE_DOWN
 	module.KEY_VOLUME_UP = jive.ui.KEY_VOLUME_UP
 	module.KEY_VOLUME_DOWN = jive.ui.KEY_VOLUME_DOWN
+	module.KEY_MUTE = jive.ui.KEY_MUTE
+	module.KEY_ALARM = jive.ui.KEY_ALARM
+	module.KEY_POWER = jive.ui.KEY_POWER
+	module.KEY_PRESET_1 = jive.ui.KEY_PRESET_1
+	module.KEY_PRESET_2 = jive.ui.KEY_PRESET_2
+	module.KEY_PRESET_3 = jive.ui.KEY_PRESET_3
+	module.KEY_PRESET_4 = jive.ui.KEY_PRESET_4
+	module.KEY_PRESET_5 = jive.ui.KEY_PRESET_5
+	module.KEY_PRESET_6 = jive.ui.KEY_PRESET_6
 	module.KEY_PRINT = jive.ui.KEY_PRINT
 
 	module.FRAME_RATE = jive.ui.FRAME_RATE

@@ -1137,11 +1137,20 @@ void FB_InitOSKeymap(_THIS)
 	  case 127:
 	    keymap[i] = SDLK_MENU;
 	    break;
+	  case 113:
+	    keymap[i] = SDLK_AudioMute;
+	    break;
 	  case 114:
 	    keymap[i] = SDLK_AudioLowerVolume;
 	    break;
 	  case 115:
 	    keymap[i] = SDLK_AudioRaiseVolume;
+	    break;
+	  case 116:
+	    keymap[i] = SDLK_POWER;
+	    break;
+	  case 142:
+	    keymap[i] = SDLK_Sleep;
 	    break;
 	  case 163:
 	    keymap[i] = SDLK_AudioNext;
