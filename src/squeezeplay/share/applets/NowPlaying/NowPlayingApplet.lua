@@ -1,13 +1,14 @@
 local pairs, ipairs, tostring, type, setmetatable, tonumber = pairs, ipairs, tostring, type, setmetatable, tonumber
 
 local math             = require("math")
-local table            = require("table")
-local string	       = require("string")
+local table            = require("jive.utils.table")
+local string	       = require("jive.utils.string")
 
 local oo               = require("loop.simple")
 
 local Applet           = require("jive.Applet")
 local Font             = require("jive.ui.Font")
+local Event            = require("jive.ui.Event")
 local Framework        = require("jive.ui.Framework")
 local Icon             = require("jive.ui.Icon")
 local Button           = require("jive.ui.Button")
@@ -281,14 +282,22 @@ end
 
 
 function _updateTrack(self, trackinfo, pos, length)
-	if self.trackGroup then
+	if self.trackTitle then
+		local trackTable = string.split("\n", trackinfo)
+		local track      = trackTable[1]
+		local album      = trackTable[2]
+		local artist     = trackTable[3]
+		
 		--[[ FIXME, reformat trackinfo to one line in certain cases
 		if customStyle == 'large' and windowStyle == 'ss' and 
 			(jiveMain:getSelectedSkin() == 'DefaultSkin' or jiveMain:getSelectedSkin() == 'ControllerSkin') then
 				trackinfo = string.gsub(trackinfo, "\n", " - ")
 		end
 		--]]
-		self.trackGroup:setWidgetValue("text", trackinfo);
+
+		self.trackTitle:setValue(track)
+		self.albumTitle:setValue(album)
+		self.artistTitle:setValue(artist)
 	end
 end
 
@@ -433,12 +442,15 @@ function _createUI(self)
 	end
 
 	local components = { 
-		nptitle = "browsenptitle", 
-		nptrack = "browsenptrack", 
-		progressB = "browseprogressB", 
-		progress = "browseprogress", 
+		nptitle    = "browsenptitle", 
+		--nptrack = "browsenptrack", 
+		nptrack    = "nptrack", 
+		npalbum    = "npalbum", 
+		npartist   = "npartist", 
+		progressB  = "browseprogressB", 
+		progress   = "browseprogress", 
 		progressNB = "browseprogressNB",
-		npartwork = "browsenpartwork",
+		npartwork  = "browsenpartwork",
 		npcontrols = 'browsenpcontrols',
 	}	
 
@@ -467,16 +479,9 @@ function _createUI(self)
 	   })
 	
 
-
-	if customStyle == 'large' then
-		self.trackGroup = Group(components.nptrack, {
-			   text = Label("text", "")
-		})
-	else
-		self.trackGroup = Group(components.nptrack, {
-			   text = Label("text", "\n\n\n")
-		})
-	end
+		self.trackTitle  = Label(components.nptrack, "")
+		self.albumTitle  = Label(components.npalbum, "")
+		self.artistTitle = Label(components.npartist, "")
 
 	if showProgressBar then
 		if not self.gotoTimer then
@@ -514,7 +519,6 @@ function _createUI(self)
 	self.artworkGroup = Group(components.npartwork, {
 			artwork = self.artwork,
 	})
-	self.artworkShadow = Icon("icon_artwork_shadow")
 
 	local playIcon = Button(Icon('play'),
 				function() 
@@ -542,25 +546,37 @@ function _createUI(self)
 					return EVENT_CONSUME
 				end
 			),
-		  	vol  = Button(
-				Icon('vol'),
+			spacer = Icon('toolbar_spacer'),
+		  	volDown  = Button(
+				Icon('volDown'),
 				function() 
 					Framework:pushAction("volume_down") 
 					return EVENT_CONSUME 
 				end
 			),
- 	})
+ 		  	volUp  = Button(
+				Icon('volUp'),
+				function() 
+					Framework:pushAction("volume_up") 
+					return EVENT_CONSUME 
+				end
+			),
+ 			volSlider = Slider('volumeB', 0, 100, 0,
+			function(slider, value, done)
+			end),
+	})
 
 	self.preartwork = Icon("artwork") -- not disabled, used for preloading
 
 	window:addWidget(self.titleGroup)
-	window:addWidget(self.trackGroup)
+	window:addWidget(self.trackTitle)
+	window:addWidget(self.albumTitle)
+	window:addWidget(self.artistTitle)
 	window:addWidget(self.artworkGroup)
-	window:addWidget(self.artworkShadow)
 	window:addWidget(self.controlsGroup)
 	window:addWidget(self.progressGroup)
 
-	window:focusWidget(self.trackGroup)
+	window:focusWidget(self.trackTitle)
 
 	-- register window as a screensaver, unless we are explicitly not in that mode
 	if self.isScreensaver then
