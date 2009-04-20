@@ -93,10 +93,7 @@ function init(self, ...)
 
 			log:debug("Closing screensaver event=", event:tostring())
 
-			-- close all screensaver windows
-			for i,w in ipairs(self.active) do
-				_deactivate(self, w, self.demoScreensaver)
-			end
+			self:deactivateScreensaver()
 
 			-- keys should close the screensaver, and not
 			-- perform an action
@@ -263,8 +260,24 @@ function screensaverWindow(self, window)
 	
 end
 
+
+--service method
 function restartScreenSaverTimer(self)
 	self.timer:restart()
+end
+
+
+--service method
+function isScreensaverActive(self)
+	return self.active and #self.active > 0
+end
+
+--service method
+function deactivateScreensaver(self)
+	-- close all screensaver windows
+	for i,w in ipairs(self.active) do
+		_deactivate(self, w, self.demoScreensaver)
+	end
 end
 
 

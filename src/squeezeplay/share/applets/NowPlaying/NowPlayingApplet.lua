@@ -662,9 +662,19 @@ function showNowPlaying(self, transition)
 
 	if Framework:isCurrentWindow(self.window) then
 		log:warn('NP already on screen')
+
 		-- restart the screensaver timer if we hit this clause
 		appletManager:callService("restartScreenSaverTimer")
-		return
+
+		if appletManager:callService("isScreensaverActive") then
+			--In rare circumstances, SS might not have been deactivated yet, so we force it closed
+			log:debug("SS was active")
+			appletManager:callService("deactivateScreensaver")
+			--SS window removed, so continue with building a new window
+		else
+			--no need to switch to SS window
+			return
+		end
 	end
 
 	-- if we're opening this after freeing the applet, grab the player again
