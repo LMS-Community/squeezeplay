@@ -28,6 +28,7 @@ local Textarea            = require("jive.ui.Textarea")
 local Textinput           = require("jive.ui.Textinput")
 local Window              = require("jive.ui.Window")
 
+local math                = require("math")
 local debug               = require("jive.utils.debug")
 local log                 = require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
 local jiveMain      = jiveMain
@@ -48,6 +49,10 @@ end
 
 if Framework.experiments_multiTapOn == nil then
 	Framework.experiments_multiTapOn = false
+
+	--really getting hacky now, holding mouse state in the globals
+	Framework.experiments_multiTapMouseDownPt = {}
+
 end
 
 -- top level menu
@@ -78,7 +83,7 @@ function menu(self)
 						Framework.experiments_vuOn == true
 				),
 			},
-			{ text = "2+ finger tap to NP from anywhere",
+			{ text = "2+ finger: tap to NP, T-B pause, L-R fwd, R-L rew anywhere",
 				style = 'item_choice',
 				check  = Checkbox(
 						"checkbox",
@@ -95,12 +100,39 @@ function menu(self)
 
 										local x, y, fingerCount = event:getMouse()
 
+										if event:getType() == EVENT_MOUSE_UP then
+											if Framework.experiments_multiTapMouseDownPt.y then
+												--A point was collected on the down so is a multi-tap
+												local deltaY = y - Framework.experiments_multiTapMouseDownPt.y
+												local deltaX = x - Framework.experiments_multiTapMouseDownPt.x
+
+												log:error("deltaY : ", deltaY )
+												if deltaY >= 100 and math.abs(deltaX) < 120 then
+													Framework:pushAction("pause")
+
+												elseif deltaX >= 150 then
+													Framework:pushAction("jump_fwd")
+
+												elseif deltaX <= -150 then
+													Framework:pushAction("jump_rew")
+
+												else
+													Framework:pushAction("go_now_playing")
+												end
+												Framework.experiments_multiTapMouseDownPt = {}
+												return EVENT_CONSUME
+											end
+
+											return EVENT_UNUSED
+										end
+
 										if not fingerCount or fingerCount < 2 then
 											return EVENT_UNUSED
 										end
 
 										if event:getType() == EVENT_MOUSE_DOWN then
-											Framework:pushAction("go_now_playing")
+											Framework.experiments_multiTapMouseDownPt = {x = x, y = y}
+--											Framework:pushAction("go_now_playing")
 										end
 
 										--Might be nice to handle case where a single finger goes down then a second comes,
