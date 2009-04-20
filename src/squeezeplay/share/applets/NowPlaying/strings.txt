@@ -32,7 +32,7 @@ SCREENSAVER_PAUSED
 	RU	Пауза
 	SV	Pausad
 
-SCREENSAVER_STOPPED
+SCREENSAVER_WHEN_STOPPED
 	CS	Při zastavení
 	DA	Når den er stoppet
 	DE	Wenn angehalten
@@ -46,6 +46,9 @@ SCREENSAVER_STOPPED
 	PL	Po zatrzymaniu
 	RU	При остановке
 	SV	I stoppat läge
+
+SCREENSAVER_STOPPED
+	EN	Stopped
 
 SCREENSAVER_NOWPLAYING_OF
 	CS	%s z %s
