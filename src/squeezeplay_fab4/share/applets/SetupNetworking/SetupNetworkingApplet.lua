@@ -1174,7 +1174,8 @@ function _connectFailed(self, iface, ssid, reason)
 	Task("networkFailed", self, _connectFailedTask):addTask(iface, ssid)
 
 	-- Message based on failure type
-	local helpText = self:string("NETWORK_CONNECTION_PROBLEM_HELP", tostring(self.psk))
+	local password = self.psk
+	local helpText = self:string("NETWORK_CONNECTION_PROBLEM_HELP", tostring(password))
 
 	-- popup failure
 	local window = Window("error", self:string('NETWORK_CANT_CONNECT'), 'setuptitle')
@@ -1182,7 +1183,7 @@ function _connectFailed(self, iface, ssid, reason)
 
 	local menu = SimpleMenu("menu", {
 		{
-			text = self:string("NETWORK_TRY_PASSWORD"),
+			text = self:string("NETWORK_TRY_AGAIN"),
 			sound = "WINDOWHIDE",
 			callback = function()
 				_networkScanAgain(self, iface, true)
@@ -1199,7 +1200,10 @@ function _connectFailed(self, iface, ssid, reason)
 	})
 
 
-	window:addWidget(Textarea("help_text", helpText))
+	if password and password ~= "" then
+		window:addWidget(Textarea("help_text", helpText))
+	end
+
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
