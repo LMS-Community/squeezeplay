@@ -195,6 +195,7 @@ function _addPlayerItem(self, player)
 		controller  = true,
 		squeezeplay = true,
 		http        = true,
+		fab4        = true,
 	}
 
 	local playerModel = player:getModel()

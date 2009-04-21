@@ -1612,7 +1612,9 @@ function skin(self, s)
 	s.player_http = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_softsqueeze" .. skinSuffix),
 	})
-
+	s.player_fab4 = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_fab4" .. skinSuffix),
+	})
 
 	-- indicator icons, on right of menus
 	local _indicator = {

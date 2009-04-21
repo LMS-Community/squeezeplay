@@ -456,7 +456,6 @@ function _createUI(self)
 
 	local components = { 
 		nptitle    = "browsenptitle", 
-		--nptrack = "browsenptrack", 
 		nptrack    = "nptrack", 
 		npalbum    = "npalbum", 
 		npartist   = "npartist", 
