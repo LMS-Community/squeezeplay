@@ -566,6 +566,18 @@ function skin(self, s)
 		imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_slider.png",
 	})
 
+	local _volumeSliderBackground = Tile:loadHTiles({
+		imgpath .. "Touch_Toolbar/tch_volumebar_bkgrd_l.png",
+		imgpath .. "Touch_Toolbar/tch_volumebar_bkgrd.png",
+		imgpath .. "Touch_Toolbar/tch_volumebar_bkgrd_r.png",
+	})
+
+	local _volumeSliderBar = Tile:loadHTiles({
+		imgpath .. "Touch_Toolbar/tch_volumebar_fill_l.png",
+		imgpath .. "Touch_Toolbar/tch_volumebar_fill.png",
+		imgpath .. "UNOFFICIAL/tch_volume_slider.png",
+	})
+
 
 --------- DEFAULT WIDGET STYLES ---------
 	--
@@ -1835,11 +1847,11 @@ if true then
 
 	s.volumeB = {
 		w = volumeBarWidth,
-		border = { 5, 10, 5, 0 },
+		border = { 5, 3, 5, 0 },
                 position = LAYOUT_SOUTH,
                 horizontal = 1,
-                bgImg = _songProgressBackground,
-                img = _songProgressBar,
+                bgImg = _volumeSliderBackground,
+                img = _volumeSliderBar,
 	}
 
 
