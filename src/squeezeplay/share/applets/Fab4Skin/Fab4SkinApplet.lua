@@ -1660,7 +1660,7 @@ if true then
 	-- a lot of it can be recycled from one to the other
 
 	local NP_ARTISTALBUM_FONT_SIZE = 20
-	local NP_TRACK_FONT_SIZE = 34
+	local NP_TRACK_FONT_SIZE = 24
 
 	-- Title
 	s.ssnptitle = _uses(s.title, {
@@ -1699,48 +1699,23 @@ if true then
 	local ssArtWidth      = SS_ARTWORK_SIZE
 
 	-- Song
-	s.ssnptrack = {
-		border = { 4, 0, 4, 0 },
-		position = LAYOUT_WEST,
-		text = {
-			w = WH_FILL,
-			padding = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 20, 20, 10 },
-			align = "left",
-        		font = _font(NP_ARTISTALBUM_FONT_SIZE),
-			lineHeight = NP_TRACK_FONT_SIZE,
-			fg = TEXT_COLOR,
-        		line = {
-				{
-				},
-				{
-				},
-				{
-					font = _boldfont(NP_TRACK_FONT_SIZE),
-				}
-			},
-		},
-	}
-
-	-- nptrack is identical between all windowStyles
-	s.browsenptrack = _uses(s.ssnptrack)
-	s.largenptrack  = _uses(s.ssnptrack)
-
-	s.npartist =  {
+	s.nptrack =  {
 		border = { 4, 0, 4, 0 },
 		position = LAYOUT_NORTH,
 		w = WH_FILL,
 		padding = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 20, 20, 10 },
 		align = "left",
-		font = _font(NP_ARTISTALBUM_FONT_SIZE),
+		font = _boldfont(NP_TRACK_FONT_SIZE), 
 		lineHeight = NP_TRACK_FONT_SIZE,
 		fg = TEXT_COLOR,
 	}
-	s.npalbum  = _uses(s.npartist, { 
+	s.npartist  = _uses(s.nptrack, { 
 		padding = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 55, 20, 10 },
+		font = _font(NP_ARTISTALBUM_FONT_SIZE),
 	})
-	s.nptrack = _uses(s.npartist, { 
-		padding = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 90, 20, 10 },
-		font = _boldfont(NP_TRACK_FONT_SIZE), 
+	s.npalbum = _uses(s.npartist, { 
+		padding = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 85, 20, 10 },
+		font = _font(NP_ARTISTALBUM_FONT_SIZE),
 	})
 
 	s.ssnpartwork = {
@@ -1820,7 +1795,7 @@ if true then
 	s.ssprogress = {
 		position = LAYOUT_NONE,
 		x = 140,
-		y = TITLE_HEIGHT + ARTWORK_SIZE - 40,
+		y = TITLE_HEIGHT + ARTWORK_SIZE - 50,
 		padding = { 0, 10, 0, 0 },
 		order = { "elapsed", "slider", "remain" },
 		elapsed = {
