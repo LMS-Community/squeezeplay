@@ -977,7 +977,8 @@ function _ifUp(self, ssid)
 	if self.wireless then
 		ssid = string.gsub(ssid, "[ \t]", "_")
 		-- Bug 11840: Allow special chars in SSID
-		-- First escape '"' ...
+		-- First escape '\' and '"' ...
+		ssid = string.gsub(ssid, '\\', '\\\\')
 		ssid = string.gsub(ssid, '"', '\\"')
 		-- ... then quote SSID for ifup call
 		iface = '"' .. iface .. "=" .. ssid .. '"'
@@ -1004,8 +1005,9 @@ function _ifDown(self)
 		local iface = self.interface
 		if self.wireless then
 			-- Bug 11840: Allow special chars in SSID
-			-- First escape '"' ...
-			local ssid = string.gsub(active, '"', '\\"')
+			-- First escape '\' and '"' ...
+			local ssid = string.gsub(active, '\\', '\\\\')
+			ssid = string.gsub(ssid, '"', '\\"')
 			-- ... then quote SSID for ifdown call
 			iface = '"' .. iface .. "=" .. ssid .. '"'
 		end
