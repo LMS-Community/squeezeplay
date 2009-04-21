@@ -349,6 +349,19 @@ function _updatePosition(self)
 	end
 end
 
+function _updateVolume(self)
+	if not self.player then
+		return
+	end
+
+	local volume = self.player:getVolume()
+	if self.volumeOld ~= volume then
+		log:debug("new volume from player: ", volume)
+		self.volumeOld = volume
+		self.volSlider:setValue(volume)
+	end
+end
+
 
 function _updatePlaylist(self, enabled, nr, count)
 	if enabled == true and count and tonumber(count) > 1 then
@@ -530,6 +543,18 @@ function _createUI(self)
 		playIcon:setStyle('pause')
 	end
 
+	--todo: this slider is not applicable for Jive, how do we handle this when on the controller
+	self.volSlider = Slider('volumeB', 0, 100, 0,
+			function(slider, value, done)
+				if self.player then
+					if value ~= self.volumeOld then
+						self.player:volume(value, true)
+						self.volumeOld = value
+					end
+				end
+			end)
+	self.volSlider:addTimer(1000, function() self:_updateVolume() end)
+
 	self.controlsGroup = Group(components.npcontrols, {
 		  	rew = Button(
 				Icon('rew'),
@@ -550,20 +575,20 @@ function _createUI(self)
 		  	volDown  = Button(
 				Icon('volDown'),
 				function() 
-					Framework:pushAction("volume_down") 
-					return EVENT_CONSUME 
+					local e = Event:new(EVENT_SCROLL, -1)
+					Framework:dispatchEvent(self.volSlider, e)
+					return EVENT_CONSUME
 				end
 			),
  		  	volUp  = Button(
 				Icon('volUp'),
 				function() 
-					Framework:pushAction("volume_up") 
-					return EVENT_CONSUME 
+					local e = Event:new(EVENT_SCROLL, 1)
+					Framework:dispatchEvent(self.volSlider, e)
+					return EVENT_CONSUME
 				end
 			),
- 			volSlider = Slider('volumeB', 0, 100, 0,
-			function(slider, value, done)
-			end),
+ 			volSlider = self.volSlider,
 	})
 
 	self.preartwork = Icon("artwork") -- not disabled, used for preloading
@@ -762,6 +787,9 @@ function showNowPlaying(self, transition)
 		self:_updateMode(playerStatus.mode)
 		self:_updatePlaylist(false, 0, 0)	
 	end
+
+	self:_updateVolume()
+	self.volumeOld = self.player:getVolume()
 
 	-- Initialize with current data from Player
 	self.window:show(transitionOn)
