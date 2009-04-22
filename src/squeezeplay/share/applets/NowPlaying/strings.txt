@@ -48,7 +48,9 @@ SCREENSAVER_WHEN_STOPPED
 	SV	I stoppat läge
 
 SCREENSAVER_STOPPED
+	CS	Při zastavení
 	EN	Stopped
+	PL	Po zatrzymaniu
 
 SCREENSAVER_NOWPLAYING_OF
 	CS	%s z %s
@@ -91,7 +93,7 @@ SCREENSAVER_ARTWORK_SIZE
 	IT	Dimensioni copertina brano in riproduzione
 	NL	Grootte hoesafbeelding bij 'Speelt nu'
 	NO	Omslagsstørrelse på Spiller av nå
-	PL	Wielkość okładki utworu
+	PL	Wielkość okładki odtwarzanego utworu
 	RU	Размер обложки, которая воспроизводится
 	SV	Storlek på omslag för album som spelas
 

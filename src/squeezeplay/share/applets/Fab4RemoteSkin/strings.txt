@@ -13,7 +13,7 @@ SQUEEZEBOX_REMOTE_SKIN
 	IT	Interfaccia schermo tattile telecomando di Squeezebox
 	NL	Skin voor Squeezebox Touch-afstandsbediening
 	NO	Squeezebox Touch fjernkontrollskall
-	PL	Karnacja pilota Squeezebox Touch
+	PL	Karnacja pilota zdalnego sterowania Squeezebox Touch
 	RU	Обложка сенсорного пульта Squeezebox
 	SV	Fjärrkontrollskal för Squeezebox Touch
 

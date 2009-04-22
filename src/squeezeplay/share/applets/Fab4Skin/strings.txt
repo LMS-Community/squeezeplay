@@ -48,7 +48,7 @@ SPACEBAR_SMALL
 	SV	mellanslag
 
 HELP
-	CS	Nápověda
+	CS	Vyberte aplety, které chcete nainstalovat, a poté zvolte Instalovat
 	DA	Hjælp
 	DE	Hilfe
 	EN	Help
@@ -58,10 +58,9 @@ HELP
 	IT	Guida
 	NL	Help
 	NO	Hjelp
-	PL	Pomoc
+	PL	Wybierz aplety do zainstalowania, a następnie wybierz opcję Instaluj
 	RU	Справка
 	SV	Hjälp
-	
 
 MORE_HELP
 	CS	Další
