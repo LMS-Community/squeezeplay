@@ -1236,7 +1236,7 @@ function _connectFailed(self, iface, ssid, reason)
 
 	local menu = SimpleMenu("menu", {
 		{
-			text = self:string("NETWORK_TRY_PASSWORD"),
+			text = self:string("NETWORK_TRY_AGAIN"),
 			sound = "WINDOWHIDE",
 			callback = function()
 				_networkScanAgain(self, iface, true)
@@ -1253,7 +1253,10 @@ function _connectFailed(self, iface, ssid, reason)
 	})
 
 
-	window:addWidget(Textarea("help_text", helpText))
+	if password and password ~= "" then
+		window:addWidget(Textarea("help_text", helpText))
+	end
+
 	window:addWidget(menu)
 
 	_helpAction(self, window)
