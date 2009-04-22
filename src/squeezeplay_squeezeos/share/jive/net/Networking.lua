@@ -976,7 +976,12 @@ function _ifUp(self, ssid)
 	local iface = self.interface
 	if self.wireless then
 		ssid = string.gsub(ssid, "[ \t]", "_")
-		iface = iface .. "=" .. ssid
+		-- Bug 11840: Allow special chars in SSID
+		-- First escape '\' and '"' ...
+		ssid = string.gsub(ssid, '\\', '\\\\')
+		ssid = string.gsub(ssid, '"', '\\"')
+		-- ... then quote SSID for ifup call
+		iface = '"' .. iface .. "=" .. ssid .. '"'
 	end
 
 	log:info("ifup ", iface)
@@ -994,12 +999,18 @@ brings I<interface> down
 
 function _ifDown(self)
 	-- bring interface down
-	local iface = self.interface
-
 	local active = self:_ifstate()
 
 	if active then
-		iface = iface .. "=" .. active
+		local iface = self.interface
+		if self.wireless then
+			-- Bug 11840: Allow special chars in SSID
+			-- First escape '\' and '"' ...
+			local ssid = string.gsub(active, '\\', '\\\\')
+			ssid = string.gsub(ssid, '"', '\\"')
+			-- ... then quote SSID for ifdown call
+			iface = '"' .. iface .. "=" .. ssid .. '"'
+		end
 
 		log:info("ifdown ", iface)
 		self:_ifUpDown("/sbin/ifdown " .. iface .. " -f")
