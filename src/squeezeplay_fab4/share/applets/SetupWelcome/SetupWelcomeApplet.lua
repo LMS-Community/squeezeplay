@@ -172,14 +172,15 @@ function step2(self)
 end
 
 
-function step3(self)
+function step3(self, transition)
 	log:info("step3")
 
 	-- network connection type
 	appletManager:callService("setupNetworking", 
 		function()
 			self:step6(iface)
-		end)
+		end,
+	transition)
 end
 
 
@@ -352,16 +353,17 @@ function _squeezenetworkError(self, squeezenetwork, message)
 	window:addWidget(Textarea("help_text", self:string(message)))
 	window:addWidget(menu)
 
-	-- back tries again
+	-- back goes back to network selection
 	-- note add listener to menu, as it has the focus
 	menu:addActionListener("back", self, function()
-		_squeezenetworkWait(self, squeezenetwork)
-		window:hide()
+		Framework:playSound("WINDOWHIDE")
+		self:step3(Window.transitionPushRight)
 	end)
 
 	-- help shows diagnostics
 	window:setButtonAction("rbutton", "help")
 	window:addActionListener("help", self, function()
+		Framework:playSound("WINDOWSHOW")
 		appletManager:callService("supportMenu")
 	end)
 
