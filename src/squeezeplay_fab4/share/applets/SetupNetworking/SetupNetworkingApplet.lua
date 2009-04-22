@@ -179,8 +179,8 @@ end
 
 -- select wireless region
 function _wirelessRegion(self, wlan, transition)
-	-- skip region if already set and not in setup mode
-	if self:getSettings()['region'] and self.mode ~= "setup" then
+	-- skip region if already set and not in setup mode, or if wlan is nil
+	if (self:getSettings()['region'] and self.mode ~= "setup") or not wlan then
 		return _connectionType(self)
 	end
 
@@ -1228,7 +1228,8 @@ function _connectFailed(self, iface, ssid, reason)
 		end
 	end
 
-	local helpText = self:string("NETWORK_CONNECTION_PROBLEM_HELP", password)
+	local password = self.psk
+	local helpText = self:string("NETWORK_CONNECTION_PROBLEM_HELP", tostring(password))
 
 	-- popup failure
 	local window = Window("error", self:string('NETWORK_CANT_CONNECT'), 'setuptitle')
@@ -1236,7 +1237,7 @@ function _connectFailed(self, iface, ssid, reason)
 
 	local menu = SimpleMenu("menu", {
 		{
-			text = self:string("NETWORK_TRY_PASSWORD"),
+			text = self:string("NETWORK_TRY_AGAIN"),
 			sound = "WINDOWHIDE",
 			callback = function()
 				_networkScanAgain(self, iface, true)
@@ -1253,7 +1254,10 @@ function _connectFailed(self, iface, ssid, reason)
 	})
 
 
-	window:addWidget(Textarea("help_text", helpText))
+	if password and password ~= "" then
+		window:addWidget(Textarea("help_text", helpText))
+	end
+
 	window:addWidget(menu)
 
 	_helpAction(self, window)
