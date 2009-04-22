@@ -20,6 +20,7 @@ Applet related methods are described in L<jive.Applet>.
 local ipairs, pairs, assert, io, string, tonumber = ipairs, pairs, assert, io, string, tonumber
 
 local oo               = require("loop.simple")
+local os               = require("os")
 
 local Applet           = require("jive.Applet")
 local RadioGroup       = require("jive.ui.RadioGroup")
@@ -58,22 +59,6 @@ local welcomeTitleStyle = 'setuptitle'
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
-
-
---[[
-function notify_playerCurrent(self, player)
-	log:info("setup complete")
-    if not self:getSettings().setupDone then
-
-        if player and not player:needsMusicSource() then
-            log:debug("notify_playerCurrent called with a source, so finishing setup")
-            
-            self:step7()
-        end
-    end
-
-end
---]]
 
 
 function startSetup(self)
@@ -133,14 +118,6 @@ function _enableNormalEscapeMechanisms(self)
 end
 
 
-function _closeToHome(self)
-	log:info("_closeToHome")
-	jiveMain:removeItemById('returnToSetup')
-
-	self:_enableNormalEscapeMechanisms()
-	jiveMain:closeToHome(true, Window.transitionPushLeft)
-end
-
 function _addReturnToSetupToHomeMenu(self)
 	--first remove any existing
 	jiveMain:removeItemById('returnToSetup')
@@ -155,6 +132,18 @@ function _addReturnToSetupToHomeMenu(self)
 		end
 		}
 	jiveMain:addItem(returnToSetup)
+end
+
+
+function _setupComplete(self, gohome)
+	log:info("_setupComplete gohome=", gohome)
+
+	jiveMain:removeItemById('returnToSetup')
+	self:_enableNormalEscapeMechanisms()
+
+	if gohome then
+		jiveMain:closeToHome(true, Window.transitionPushLeft)
+	end
 end
 
 
@@ -222,7 +211,7 @@ end
 
 function step7(self)
 	-- Once here, network setup is complete
-	self:_setupNetworkingDone()
+	self:_setupDone(true, false)
 
 	--might be coming into this from a restart, so re-disable
 	self:_disableNormalEscapeMechanisms()
@@ -238,7 +227,7 @@ function step7(self)
 
 	if not squeezenetwork then
 		log:error("no SqueezeNetwork instance")
-		self:_closeToHome()
+		self:_setupComplete(true)
 		return
 	end
 
@@ -250,7 +239,7 @@ function step7(self)
 		log:info("connecting ", player, " to ", squeezenetwork)
 		player:connectToServer(squeezenetwork)
 
-		self:_closeToHome()
+		self:_setupComplete(true)
 		return
 	end
 
@@ -398,32 +387,86 @@ function step8(self, squeezenetwork)
 	if force then
       		log:info("firmware upgrade from SN")
 		appletManager:callService("firmwareUpgrade", squeezenetwork)
-
 	elseif pin then
-      		log:info("registration on SN")
-		appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
-
+		self:_registerRequest(squeezenetwork)
 	else
-		local settings = self:getSettings()
-		settings.registerDone = true
-		self:storeSettings()
-
-		local player = appletManager:callService("getCurrentPlayer")
-		log:info("connecting ", player, " to ", squeezenetwork)
-		player:connectToServer(squeezenetwork)
-
-		self:_closeToHome()
+		self:_resetRequest(squeezenetwork)
 	end
 end
 
 
-function _setupNetworkingDone(self)
+function _resetRequest(self, squeezenetwork)
+	if self.resetRequest then
+		return
+	end
+	self.resetRequest = true
+
+	log:info("player reset on SN")
+	squeezenetwork:userRequest(function()
+		self:_registerRequest(squeezenetwork)
+	end, nil, { "playerReset" })
+end
+
+
+function _registerRequest(self, squeezenetwork)
+	if self.registerRequest then
+		return
+	end
+	self.registerRequest = true
+
+	log:info("registration on SN")
+	appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
+
+	self.locked = true -- don't free applet
+	jnt:subscribe(self)
+end
+
+
+function notify_serverLinked(self, server)
+	if not server:isSqueezeNetwork() then
+		return
+	end
+
+	if not self.registerRequest then
+		return
+	end
+
+	log:info("server linked: ", server, " pin=", server:getPin())
+
+	if server:getPin() == false then
+		-- for testing connect the player tosqueezenetwork
+		local player = appletManager:callService("getCurrentPlayer")
+
+		local squeezenetwork = false
+		for name, server in slimServer:iterate() do
+			if server:isSqueezeNetwork() then
+				squeezenetwork = server
+			end
+		end
+
+		log:info("connecting ", player, " to ", squeezenetwork)
+		player:connectToServer(squeezenetwork)
+
+		_setupComplete(self, false)
+		_setupDone(self, true, true)
+
+		self.locked = true -- free applet
+		jnt:unsubscribe(self)
+	end
+end
+
+
+function _setupDone(self, setupDone, registerDone)
 	log:info("network setup complete")
 
 	local settings = self:getSettings()
 
-	settings.setupDone = true
+	settings.setupDone = setupDone
+	settings.registerDone = registerDone
 	self:storeSettings()
+
+	-- FIXME: workaround until filesystem write issue resolved
+	os.execute("sync")
 end
 
 
@@ -458,6 +501,11 @@ function init(self)
 	jnt:subscribe(self)
 end
 --]]
+
+
+function free(self)
+	return not self.locked
+end
 
 
 --[[

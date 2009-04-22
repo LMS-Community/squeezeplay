@@ -31,18 +31,18 @@ NOT_CONNECTED
 
 PORT_FAIL
 	CS	Nemohu připojit
-	DA	Der kan ikke etableres forbindelse
-	DE	Verbindung kann nicht hergestellt werden
+	DA	Ikke tilsluttet
+	DE	Nicht verbunden
 	EN	Can't connect
 	ES	No se puede conectar
 	FI	Ei voi yhdistää
 	FR	Connexion impossible
 	IT	Impossibile connettersi
-	NL	Kan geen verbinding maken
+	NL	Niet verbonden
 	NO	Kan ikke kople til
-	PL	Nie można nawiązać połączenia
-	RU	Подключение невозможно
-	SV	Det gick inte att ansluta
+	PL	Niepołączony
+	RU	Не подключено
+	SV	Ej ansluten
 
 PORT_OK
 	CS	OK
@@ -96,7 +96,7 @@ PING_FAIL
 	EN	Can't ping
 	ES	No se puede hacer ping
 	FI	Ei voi suorittaa ping-toimintoa
-	FR	Impossible d'exécuter la commande PING
+	FR	Connexion impossible
 	IT	Impossibile eseguire il ping
 	NL	Kan de opdracht Ping niet uitvoeren
 	NO	Kan ikke sende ping
@@ -375,7 +375,19 @@ SC_ADDRESS
 	SV	SqueezeCenter:
 
 SC_NAME
+	CS	  Název knihovny:
+	DA	  Bibliotekets navn:
+	DE	  Name der Musiksammlung:
 	EN	  Library name:
+	ES	  Nombre de biblioteca:
+	FI	  Kirjaston nimi:
+	FR	  Nom de la bibliothèque :
+	IT	  Nome libreria:
+	NL	  Naam van muziekcollectie:
+	NO	  Navn på bibliotek:
+	PL	  Nazwa biblioteki:
+	RU	  Имя библиотеки:
+	SV	  Bibliotekets namn:
 
 SC_PING
 	CS	  Zvonění:
@@ -423,7 +435,47 @@ SC_PORT_9000
 	SV	  TCP-port 9000:
 
 SUPPORT
+	CS	Další nápověda
+	DA	Mere hjælp
+	DE	Weitere Informationen
 	EN	More Help
+	ES	Más ayuda
+	FI	Lisäohjeita
+	FR	Aide supplémentaire
+	IT	Ulteriore assistenza
+	NL	Meer Help
+	NO	Ytterligere hjelp
+	PL	Więcej pomocy
+	RU	Дополнительная помощь
+	SV	Ytterligare hjälp
 
 SUPPORT_HELP
-	EN	If you need more help with your Squeezebox, please visit mysqueezebox.com/support where you can find answers to many questions and contact our support team.\n\nIf you do contact the support team, you may be asked for technical details about your Squeezebox provided by Diagnostics, available below.
+	CS	Pokud budete potřebovat další nápovědu k vašemu Squeezebox, navštivte laskavě mysqueezebox.com/support, kde naleznete odpovědi na mnoho otázek, a kontaktujte náš asistenční tým.\nPokud budete kontaktovat náš asistenční tým, můžete být požádáni o technické údaje vašeho Squeezebox poskytnuté Diagnostikou systému, dostupnou níže.
+	DA	Hvis du har brug for yderligere hjælp til din Squeezebox, kan du kigge på mysqueezebox.com/support hvor der er svar på mange spørgsmål og mulighed for at kontakte supportafdelingen.\nHvis du kontakter supportafdelingen, bliver du sandsynligvis bedt om at oplyse tekniske detaljer om din Squeezebox. Dem kan du finde vha. det nye værktøj Systemdiagnosticering som der er et link til nedenfor.
+	DE	Wenn Sie weitere Informationen zur Squeezebox benötigen, rufen Sie mysqueezebox.com/support auf. Dort erhalten Sie Antworten auf viele Fragen und die Möglichkeit, sich an unseren Kundendienst zu wenden.\nBei Kontaktaufnahme mit dem Kundendienst werden Sie eventuell um technische Angaben zur Squeezebox gebeten. Diese finden Sie mit einer Systemdiagnose (siehe unten).
+	EN	For more help and customer support, please visit \nwww.mysqueezebox.com/support.\n\nIf contacting customer support, you may be asked for information from\nthe "Diagnostics" screen, which can be found below.
+	ES	Si necesita más ayuda con Squeezebox, visite mysqueezebox.com/support, donde encontrará respuesta a gran cantidad de preguntas y desde donde podrá ponerse en contacto con nuestro equipo de asistencia técnica.\nSi se pone en contacto con el equipo de asistencia técnica, puede que se le pida información técnica sobre Squeezebox proporcionada por Diagnóstico del sistema, disponible más abajo.
+	FI	Jos tarvitset lisäohjeita Squeezeboxin käyttöön, siirry seuraavalle sivulle: mysqueezebox.com/support. Löydät sivulta vastauksia moniin kysymyksiin. Lisäksi voit ottaa sivulla yhteyttä tukitiimiimme.\nJos otat yhteyttä tukitiimiimme, sinulta saatetaan pyytää Squeezeboxia koskevia teknisiä tietoja. Saat ne järjestelmän diagnostiikasta alta.
+	FR	Si vous avez besoin d'aide supplémentaire pour votre Squeezebox, rendez-vous sur le site mysqueezebox.com/support, où vous trouverez les réponses à de nombreuses questions, et contactez notre équipe d'assistance.\nLorsque vous contactez notre équipe d'assistance, vous serez invité à préciser les données techniques de la Squeezebox. Elles sont fournies par le Diagnostic système, disponible ci-dessous.
+	IT	Per ottenere ulteriore assistenza relativamente a Squeezebox, consultare la pagina Web mysqueezebox.com/support, che include risposte a numerose domande e informazioni per contattare il nostro team di assistenza.\nQuando si contatta il team di assistenza, è necessario disporre delle informazioni tecniche su Squeezebox fornite dalla diagnostica del sistema, disponibile di seguito.
+	NL	Als je meer hulp met je Squeezebox nodig hebt, ga dan naar mysqueezebox.com/support. Hier vind je antwoord op veel vragen en kun je contact opnemen met ons supportteam.\nAls je contact opneemt met het supportteam, kun je gevraagd worden om technische details van je Squeezebox. Deze worden geleverd door System Diagnostics (hieronder).
+	NO	Gå til mysqueezebox.com/support hvis du trenger mer hjelp med Squeezebox. Her finner du svar på mange spørsmål, og du kan også kontakte støtteavdelingen.\nHvis du tar kontakt med støtteavdelingen, blir du kanskje bedt om å oppgi noen tekniske opplysninger om Squeezebox fra Systemdiagnose (se nedenfor).
+	PL	Aby uzyskać więcej pomocy związanej z urządzeniem Squeezebox, odwiedź stronę WWW pod adresem mysqueezebox.com/support. Znajdują się tam odpowiedzi na wiele pytań oraz informacje, dzięki którym można skontaktować się z działem pomocy technicznej.\nPracownicy działu pomocy technicznej mogą poprosić o podanie parametrów technicznych urządzenia Squeezebox. Parametry te można sprawdzić, używając narzędzia Diagnostyka systemu, które jest dostępne poniżej.
+	RU	Если вам необходима дополнительная помощь по Squeezebox, посетите\nmysqueezebox.com/support: там вы сможете найти ответы на многие вопросы, а также связаться со службой поддержки. Служба поддержки может попросить вас предоставить техническую информацию о вашем устройстве Squeezebox. Эту информацию можно извлечь с помощью программы Диагностика системы, доступной по ссылке ниже.
+	SV	Om du behöver mer hjälp med Squeezebox, kan du gå till mysqueezebox.com/support där du hittar frågor och svar, och där du kan kontakta teknisk support.\nOm du kontaktar teknisk support, kanske du ombeds att ange teknisk information om din Squeezebox. Den informationen får du via Systemdiagnostik nedan.
+
+SOFTWARE_UPDATE
+	CS	Aktualizace softwaru
+	DA	Softwareopdatering
+	DE	Software-Aktualisierung
+	EN	Software Update
+	ES	Actualización de software
+	FI	Ohjelmiston päivitys
+	FR	Mise à jour du logiciel
+	IT	Aggiornamento software
+	NL	Software-update
+	NO	Programvareoppdatering
+	PL	Aktualizacja oprogramowania
+	RU	Обновление ПО
+	SV	Programvaruuppdatering
+

@@ -465,7 +465,7 @@ function skin(self, s)
 	local volumeBar        = Tile:loadImage(imgpath .. "Touch_Tool_bar/tch_volumebar_fill.png")
 	local volumeBackground = Tile:loadImage(imgpath .. "Touch_Tool_bar/tch_volumebar_whole.png")
 
-	local popupMask = Tile:fillColor(0x000000e5)
+	local popupBackground  = Tile:loadImage(imgpath .. "Alerts/popup_fullscreen_100.png")
 
 	local textinputCursor = Tile:loadImage(imgpath .. "Text_Entry/Keyboard_Touch/tch_cursor.png")
 
@@ -475,7 +475,7 @@ function skin(self, s)
 	local CHECK_PADDING  = { 2, 0, 6, 0 }
 	local CHECKBOX_RADIO_PADDING  = { 2, 0, 0, 0 }
 
-	local MENU_ITEM_ICON_PADDING = { 0, 2, 8, 0 }
+	local MENU_ITEM_ICON_PADDING = { 0, 0, 8, 0 }
 	local MENU_PLAYLISTITEM_TEXT_PADDING = { 16, 1, 9, 1 }
 
 	local MENU_CURRENTALBUM_TEXT_PADDING = { 6, 20, 0, 10 }
@@ -505,6 +505,7 @@ function skin(self, s)
 	local UPDATE_SUBTEXT_SIZE = 20
 
 	local ITEM_ICON_ALIGN   = 'center'
+	local ITEM_LEFT_PADDING = 12
 	local THREE_ITEM_HEIGHT = 72
 	local FIVE_ITEM_HEIGHT = 45
 	local TITLE_BUTTON_WIDTH = 76
@@ -513,7 +514,7 @@ function skin(self, s)
 		img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
 		frameRate = 8,
 		frameWidth = 26,
-		padding = { 0, 0, 8, 0 },
+		padding = 0,
 		h = WH_FILL,
 	}
 	local largeSpinny = {
@@ -568,7 +569,7 @@ function skin(self, s)
 
 	s.popup = _uses(s.window, {
 		border = { 0, 0, 0, 0 },
-		maskImg = popupMask,
+		bgImg = popupBackground,
 	})
 
 	s.title = {
@@ -605,7 +606,7 @@ function skin(self, s)
 
 	s.item = {
 		order = { "icon", "text", "arrow" },
-		padding = { 8, 0, 8, 0 },
+		padding = { ITEM_LEFT_PADDING, 0, 8, 0 },
 		text = {
 			padding = { 0, 0, 2, 0 },
 			align = "left",
@@ -617,6 +618,7 @@ function skin(self, s)
 		},
 		icon = {
 			padding = MENU_ITEM_ICON_PADDING,
+			align = 'center',
 		},
 		arrow = {
 	      		align = ITEM_ICON_ALIGN,
@@ -749,7 +751,6 @@ function skin(self, s)
 	s.help_text = {
 		w = WH_FILL,
 		position = LAYOUT_CENTER,
-		padding = 10,
 		font = _font(HELP_FONT_SIZE),
 		fg = TEXT_COLOR,
 		bgImg = titleBox,
@@ -757,10 +758,18 @@ function skin(self, s)
 		scrollbar = {
 			w = 0,
 		},
+		padding = { 18, 18, 10, 18},
+		lineHeight = 23,
 	}
 
+	s.help_text_small = _uses(s.help_text, {
+		font = _font(14),
+		lineHeight = 16,
+		padding = { 18, 6, 0, 2 },
+	})
+
 	s.scrollbar = {
-		w = 30,
+		w = 42,
 		border = 0,
 		padding = { 0, 0, 0, 0 },
 		horizontal = 0,
@@ -887,16 +896,38 @@ function skin(self, s)
 		img = _loadImage(self, "Icons/icon_arrow_right.png")
 	})
 
-	s.keyboard.done = _uses(s.keyboard.key_bottomRight_small, {
-		bgImg = keyBottomRight,
-		text = self:string("ENTER_SMALL"),
-		fg = { 0x00, 0xbe, 0xbe },
+
+	s.keyboard.done = {
+		text = _uses(s.keyboard.key_bottomRight_small, {
+			text = self:string("ENTER_SMALL"),
+			fg = { 0x00, 0xbe, 0xbe },
+			h = WH_FILL,
+			padding = { 0, 0, 0, 1 },
+		}),
+		icon = { hidden = 1 },
+	}
+
+	s.keyboard.doneDisabled =  _uses(s.keyboard.done, {
+		text = {
+			fg = { 0x66, 0x66, 0x66 },
+		}
 	})
-	s.keyboard.doneDisabled = _uses(s.keyboard.key_bottomRight_small, {
-		bgImg = keyBottomRight,
-		text = self:string("ENTER_SMALL"),
-		fg = { 0x66, 0x66, 0x66 },
-	})
+
+	s.keyboard.doneSpinny =  {
+                icon = _uses(s.keyboard.key_bottomRight, {
+			bgImg = keyBottomRight,
+			hidden = 0,
+                        img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
+			frameRate = 8,
+			frameWidth = 26,
+			w = WH_FILL, 
+			h = WH_FILL,
+			align = 'center',
+		}),
+		text = { hidden = 1, w = 0 },
+        }
+
+
 	s.keyboard.space = _uses(s.keyboard.key_bottom_small, {
 		bgImg = keyBottom,
 		text = self:string("SPACEBAR_SMALL"),
@@ -909,13 +940,13 @@ function skin(self, s)
 		shiftOn = _uses(s.keyboard.shiftOn, {
 			bgImg = keyLeftPressed
 		}),
-		done = {
+		done = _uses(s.keyboard.done, {
 			bgImg = keyBottomRightPressed,
-			img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
-			frameRate = 8,
-			frameWidth = 26,
-		},
+		}),
 		doneDisabled = _uses(s.keyboard.doneDisabled, {
+			-- disabled, not set
+		}),
+		doneSpinny = _uses(s.keyboard.doneSpinny, {
 			-- disabled, not set
 		}),
 		space = _uses(s.keyboard.space, {
@@ -1003,7 +1034,7 @@ function skin(self, s)
 		w = WH_FILL,
 		h = (POPUP_TEXT_SIZE_1 + 8 ) * 2,
 		position = LAYOUT_NORTH,
-		border = { 0, 20, 0, 4 },
+		border = { 0, 14, 0, 4 },
 		padding = { 15, 0, 15, 0 },
 		align = "center",
 		font = _font(POPUP_TEXT_SIZE_1),
@@ -1076,7 +1107,7 @@ function skin(self, s)
 		menu = {
 			item = {
 				order = { "icon", "text", "arrow" },
-				padding = { 8, 0, 0, 0 },
+				padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
 				text = {
 					w = WH_FILL,
 					h = WH_FILL,
@@ -1093,6 +1124,7 @@ function skin(self, s)
 				icon = {
 					h = THUMB_SIZE,
 					padding = MENU_ITEM_ICON_PADDING,
+					align = 'center',
 				},
 				arrow = _uses(s.item.arrow),
 			},
@@ -1230,7 +1262,7 @@ function skin(self, s)
 		icon  = {
 			w = THUMB_SIZE,
 			h = WH_FILL,
-			padding = { 8, 1, 8, 1 },
+			padding = { 10, 1, 8, 1 },
 		},
 	})
 
@@ -1423,7 +1455,7 @@ function skin(self, s)
 
 	_titleButtonIcon("button_back", backButton)
 	_titleButtonIcon("button_go_now_playing", nowPlayingButton)
-	_titleButtonText("button_help", self:string("HELP"))
+	_titleButtonIcon("button_help", helpButton)
 	_titleButtonText("button_more_help", self:string("MORE_HELP"))
 
 	s.button_back.padding = { 2, 0, 0, 2 }
@@ -1455,6 +1487,7 @@ function skin(self, s)
 	local _buttonicon = {
 		h   = THUMB_SIZE,
 		padding = MENU_ITEM_ICON_PADDING,
+		align = 'center',
 		img = false,
 	}
 
@@ -1487,6 +1520,7 @@ function skin(self, s)
 		img = _loadImage(self, "IconsResized/icon_album_noart_touch.png"),
 		h   = THUMB_SIZE,
 		padding = MENU_ITEM_ICON_PADDING,
+		align = 'center',
 	}
 
 	s.icon_connecting = _uses(_icon, {
@@ -1728,7 +1762,7 @@ if true then
 	-- Progress bar
 	s.ssprogress = {
 		position = LAYOUT_SOUTH,
-		padding = { 10, 10, 10, 5 },
+		padding = { ITEM_LEFT_PADDING, 10, 10, 5 },
 		order = { "elapsed", "slider", "remain" },
 		elapsed = {
 			w = 75,
@@ -1796,6 +1830,7 @@ end -- LEGACY STYLES
 	s.debug_canvas = {
 			zOrder = 9999
 	}
+
 
 end
 

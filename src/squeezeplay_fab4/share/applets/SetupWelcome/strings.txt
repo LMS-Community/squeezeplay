@@ -6,7 +6,7 @@ WELCOME
 	CS	Vítejte
 	DA	Velkommen
 	DE	Willkommen
-	EN	Welcome to Squeezebox Touch
+	EN	Welcome
 	ES	Bienvenido
 	FI	Tervetuloa
 	FR	Bienvenue
@@ -21,7 +21,7 @@ WELCOME_WALKTHROUGH
 	CS	Začněme vaším připojením k vaší síti.
 	DA	Lad os begynde med at slutte afspilleren til netværket.
 	DE	Jetzt stellen wir die Verbindung zum Netzwerk her.
-	EN	In just a few moments, you will have complete, customizable access to music from around the world — and from any computer on your network — right here at your fingertips.\n\nLet's start by getting connected to your network.
+	EN	Welcome to Squeezebox Touch. Let's start by getting you connected to your network.
 	ES	Para empezar, nos conectaremos a la red.
 	FI	Aloitetaan yhteydenmuodostamisella verkkoosi.
 	FR	Commençons par vous connecter à votre réseau.
@@ -36,7 +36,7 @@ CONTINUE
 	CS	Pokračovat
 	DA	Fortsæt
 	DE	Weiter
-	EN	I'm ready
+	EN	Continue
 	ES	Continuar
 	FI	Jatka
 	FR	Continuer
@@ -138,7 +138,7 @@ SN_DNS_FAILED
 	SV	Det verkar som om Internetanslutningen inte fungerar. Kontrollera att nätverket är i gång och fungerar som det ska.
 
 SN_SYSTEM_ERROR
-	EN	An system error has happened. Please try again later.
+	EN	A system error has happened. Please try again later.
 
 SN_TRY_AGAIN
 	CS	Zkuste připojit znovu

@@ -37,19 +37,19 @@ NETWORK_NETWORKING
 	EN	Networking
 
 NETWORK_FINDING_NETWORKS
-	CS	\nHledání sítí...
-	DA	\nSøger efter netværk...
-	DE	\nNetzwerksuche...
-	EN	\nFinding Networks...
-	ES	\nBuscando redes...
-	FI	\nEtsii verkkoja...
-	FR	\nRecherche de réseaux...
-	IT	\nRilevamento delle reti in corso...
-	NL	\nBezig met zoeken naar netwerken...
-	NO	\nSer etter nettverk ...
-	PL	\nTrwa wyszukiwanie sieci...
-	RU	\nПоиск сетей...
-	SV	\nSöker efter nätverk ...
+	CS	Hledání sítí...
+	DA	Søger efter netværk...
+	DE	Netzwerksuche...
+	EN	Finding Networks...
+	ES	Buscando redes...
+	FI	Etsii verkkoja...
+	FR	Recherche de réseaux...
+	IT	Rilevamento delle reti in corso...
+	NL	Bezig met zoeken naar netwerken...
+	NO	Ser etter nettverk ...
+	PL	Trwa wyszukiwanie sieci...
+	RU	Поиск сетей...
+	SV	Söker efter nätverk ...
 
 NETWORK_BSSID
 	CS	BSSID:
@@ -667,19 +667,19 @@ NETWORK_DHCP_ERROR_HINT
 	SV	Det gick inte att hitta någon DHCP-adress för det här nätverket.
 
 NETWORK_DHCP_AGAIN
-	CS	Detekovat DHCP automaticky
-	DA	Find DHCP automatisk
-	DE	DHCP automatisch erkennen
-	EN	Detect DHCP automatically
-	ES	Detectar DHCP automáticamente
-	FI	Havaitse DHCP automaattisesti
-	FR	Détecter automatiquement le DHCP
-	IT	Rileva DHCP automaticamente
-	NL	DHCP automatisch detecteren
-	NO	Finn DHCP automatisk
-	PL	Wykryj DHCP automatycznie
-	RU	Обнаруживать DHCP автоматически
-	SV	Upptäck DHCP automatiskt
+	CS	Zkuste to znovu
+	DA	Prøv igen
+	DE	Erneut versuchen.
+	EN	Try again
+	ES	Vuelva a intentarlo
+	FI	Yritä uudelleen
+	FR	Réessayer
+	IT	Riprova
+	NL	Opnieuw proberen
+	NO	Prøv igjen
+	PL	Spróbuj ponownie
+	RU	Повторите попытку
+	SV	Försök igen
 
 NETWORK_CONNECTION_PROBLEM_HELP
 	CS	Zadali jste: %s\n\nNemohli jsme uskutečnit připojení s použitím výše uvedeného hesla.
@@ -773,18 +773,18 @@ NETWORK_ADDRESS_HELP_WEP
 
 ZEROCONF_ADDRESS
 	CS	Samostatně přiřadit adresu
-	DA	Selvtildelt IP-adresse
-	DE	IP-Adresse selbst zuweisen
+	DA	Selvtildelt IP
+	DE	Selbst zugewies. IP
 	EN	Self-assign address
-	ES	Dirección autoasignada
-	FI	Määritä osoite itse
-	FR	Attribuer l'adresse automatiquement
-	IT	Indirizzo assegnato automaticamente
-	NL	Adres zelf toewijzen
-	NO	Tildel adresse manuelt
-	PL	Samoprzypisany adres
-	RU	Назначить адрес самостоятельно
-	SV	Tilldela adress manuellt
+	ES	IP autoasignada
+	FI	Itsemääritelty IP
+	FR	Adresse IP auto-assignée
+	IT	IP autoassegnato
+	NL	Zelftoegekend IP-adres
+	NO	Selvtildelt IP
+	PL	Samoprzydzielony IP
+	RU	IP самоназначен
+	SV	Egentilldelad IP-adress
 
 NETWORK_WEP_DHCP
 	CS	Moje heslo nefunguje
@@ -1174,7 +1174,7 @@ NETWORK_WPS_METHOD_PSK
 	CS	Vložte heslo WPA
 	DA	Indtast WPA-adgangskode
 	DE	WPA-Kennwort eingeben
-	EN	Enter WPA Password
+	EN	Enter Wireless Password
 	ES	Introducir contraseña WPA
 	FI	Anna WPA-salasana
 	FR	Entrer un mot de passe WPA

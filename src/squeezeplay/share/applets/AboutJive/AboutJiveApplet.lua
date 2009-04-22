@@ -97,6 +97,7 @@ function settingsShow(self)
 		"     Richard Titmuss",
 		"     Julien Venetz",
 		"     Tom Wadzinski",
+		"     LaRon Walker",
 		"     Matt Weldon",
 		"     Matt Wise",
 		"     Osama Zaidan",

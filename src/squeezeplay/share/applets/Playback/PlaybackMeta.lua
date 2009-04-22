@@ -103,6 +103,10 @@ function _updateSettings(meta, player, force)
 	local server = player and player:getSlimServer() or false
 	local serverName = server and server:getName() or false
 
+	if not player:isConnected() then
+		return
+	end
+
 	if not force and
 	   settings.serverName == serverName then
 		-- no change

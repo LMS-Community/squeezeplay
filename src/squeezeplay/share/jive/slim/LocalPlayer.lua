@@ -125,6 +125,11 @@ function getLastSeen(self)
 end
 
 
+function isConnected(self)
+	return self.slimproto:isConnected()
+end
+
+
 function __tostring(self)
 	return "LocalPlayer {" .. self:getName() .. "}"
 end

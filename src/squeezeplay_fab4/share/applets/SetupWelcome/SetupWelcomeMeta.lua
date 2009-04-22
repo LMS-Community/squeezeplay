@@ -77,10 +77,14 @@ function notify_serverNew(meta, server)
 
 	if settings.setupDone and server:isSqueezeNetwork() then
 		appletManager:callService("startRegister")
+
+		jnt:unsubscribe(meta)
+		hackMeta = nil
 	end
 end
 
 
+--[[
 function notify_serverLinked(meta, server)
 	if not server:isSqueezeNetwork() then
 		return
@@ -116,6 +120,7 @@ function notify_serverLinked(meta, server)
 		hackMeta = nil
 	end
 end
+--]]
 
 
 --[[

@@ -736,16 +736,19 @@ NETWORK_ADDRESS_HELP_WEP
 	SV	Det gick inte att ansluta till nätverket. Det kan bero på ett felaktigt trådlöst lösenord eller annat nätverksproblem, t.ex. MAC-filtrering eller att det saknas DHCP-server.
 
 ZEROCONF_ADDRESS
-	DA	Selvtildelt IP-adresse
-	DE	IP-Adresse selbst zuweisen
+	CS	Samostatně přiřadit adresu
+	DA	Selvtildelt IP
+	DE	Selbst zugewies. IP
 	EN	Self-assign address
-	ES	Dirección autoasignada
-	FI	Määritä osoite itse
-	FR	Attribuer l'adresse automatiquement
-	IT	Indirizzo assegnato automaticamente
-	NL	Zelf-toewijzend adres
-	NO	Tildel adresse manuelt
-	SV	Tilldela adress manuellt
+	ES	IP autoasignada
+	FI	Itsemääritelty IP
+	FR	Adresse IP auto-assignée
+	IT	IP autoassegnato
+	NL	Zelftoegekend IP-adres
+	NO	Selvtildelt IP
+	PL	Samoprzydzielony IP
+	RU	IP самоназначен
+	SV	Egentilldelad IP-adress
 
 STATIC_ADDRESS
 	DA	Brug en statisk adresse

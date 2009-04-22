@@ -686,6 +686,9 @@ function _storeSettings(entry)
 	local file = assert(io.open(entry.settingsFilepath, "w"))
 	file:write(dumper.dump(entry.settings, "settings", true))
 	file:close()
+
+	-- FIXME: workaround until filesystem write issue resolved
+	os.execute("sync")
 end
 
 

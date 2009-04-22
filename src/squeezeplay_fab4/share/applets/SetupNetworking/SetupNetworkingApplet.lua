@@ -72,19 +72,25 @@ end
 
 
 function _helpAction(self, window, titleText, bodyText)
-	window:addActionListener("help", self, function()
-		local window = Window("help_info", self:string(titleText), "helptitle")
-		window:setAllowScreensaver(false)
+	if titleText or bobyText then
+		window:addActionListener("help", self, function()
+			local window = Window("help_info", self:string(titleText), "helptitle")
+			window:setAllowScreensaver(false)
 
-		window:setButtonAction("rbutton", "more_help")
-		window:addActionListener("more_help", self, function()
-			appletManager:callService("supportMenu")
+			window:setButtonAction("rbutton", "more_help")
+			window:addActionListener("more_help", self, function()
+				window:playSound("WINDOWSHOW")
+
+				appletManager:callService("supportMenu")
+			end)
+
+			local textarea = Textarea("text", self:string(bodyText))
+			window:addWidget(textarea)
+			self:tieAndShowWindow(window)
+
+			window:playSound("WINDOWSHOW")
 		end)
-
-		local textarea = Textarea("text", self:string(bodyText))
-		window:addWidget(textarea)
-		self:tieAndShowWindow(window)
-	end)
+	end
 
 	window:setButtonAction("rbutton", "help")
 end
@@ -173,8 +179,8 @@ end
 
 -- select wireless region
 function _wirelessRegion(self, wlan)
-	-- skip region if already set and not in setup mode, or if wlan is nil
-	if (self:getSettings()['region'] and self.mode ~= "setup") or not wlan then
+	-- skip region if already set and not in setup mode
+	if self:getSettings()['region'] and self.mode ~= "setup" then
 		return _connectionType(self)
 	end
 
@@ -457,8 +463,12 @@ function _enterSSID(self, iface)
 	local window = Window("input", self:string("NETWORK_NETWORK_NAME"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
-	local textinput = Textinput("textinput", "",
+	local v = Textinput.textValue("", 1, 32)
+
+	local textinput = Textinput("textinput", v,
 				    function(widget, value)
+				    	    value = tostring(value)
+
 					    if #value == 0 then
 						    return false
 					    end
@@ -586,6 +596,7 @@ function _chooseEncryption(self, iface, ssid)
 	window:addWidget(menu)
 
 	--_helpAction(self, window, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
+	_helpAction(self, window)
 
 	self:tieAndShowWindow(window)
 end
@@ -619,6 +630,7 @@ function _chooseWEPLength(self, iface, ssid)
 	window:addWidget(menu)
 
 	--_helpAction(self, window, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
+	_helpAction(self, window)
 
 	self:tieAndShowWindow(window)
 end
@@ -711,6 +723,8 @@ function _enterEAP(self, iface, ssid)
 	})
 	window:addWidget(menu)
 
+	_helpAction(self, window)
+
 	self:tieAndShowWindow(window)		
 end
 
@@ -782,6 +796,8 @@ function _chooseWPSPin(self, iface, ssid)
 	})
 	window:addWidget(menu)
 
+	_helpAction(self, window)
+
 	self:tieAndShowWindow(window)		
 end
 
@@ -803,6 +819,8 @@ function _chooseWPSPbc(self, iface, ssid)
 		},
 	})
 	window:addWidget(menu)
+
+	_helpAction(self, window)
 
 	self:tieAndShowWindow(window)		
 end
@@ -924,6 +942,8 @@ function processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
 	window:addWidget(Textarea("help_text", self:string("NETWORK_WPS_PROBLEM_HINT")))
 	window:addWidget(menu)
 
+	_helpAction(self, window)
+
 	self:tieAndShowWindow(window)
 end
 
@@ -936,11 +956,26 @@ function _connect(self, iface, ssid, createNetwork)
 	assert(iface and ssid, debug.traceback())
 
 	if not iface:isWireless() then
-		local status = iface:t_wpaStatus()
-		if not status.link then
-			return _attachEthernet(self, iface, ssid, createNetwork)
-		end
+		-- Bug 11769: We should decide whether we want _connect() always being called in a task or not.
+		-- It's not called in a task at least for ehternet / DHCP failed / Try again, but t_wpaStatus()
+		--  needs to be called in a task.
+		Task("attachEthernet", self,
+			function()
+				local status = iface:t_wpaStatus()
+				if not status.link then
+					return _attachEthernet(self, iface, ssid, createNetwork)
+				end
+
+				_connect_1(self, iface, ssid, createNetwork)
+
+			end
+		):addTask()
+	else
+		_connect_1(self, iface, ssid, createNetwork)
 	end
+end
+
+function _connect_1(self, iface, ssid, createNetwork)
 
 	self.connectTimeout = 0
 	self.dhcpTimeout = 0
@@ -958,7 +993,15 @@ function _connect(self, iface, ssid, createNetwork)
 
 	-- XXXX popup text, including dhcp detection text
 
-	local name = self.scanResults[ssid].item.text
+	-- ensure the network state exists
+	if self.scanResults[ssid] == nil then
+		_addNetwork(self, iface, ssid)
+	end
+
+	local name = ssid
+	if self.scanResults[ssid] then
+		name = self.scanResults[ssid].item.text
+	end
 	popup:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", name)))
 
 	self:tieAndShowWindow(popup)
@@ -1054,6 +1097,8 @@ function _attachEthernet(self, iface, ssid, createNetwork)
 			):addTask()
 		end
 	)
+
+	_helpAction(self, window)
 
 	self:tieAndShowWindow(window)
 end
@@ -1174,8 +1219,16 @@ function _connectFailed(self, iface, ssid, reason)
 	Task("networkFailed", self, _connectFailedTask):addTask(iface, ssid)
 
 	-- Message based on failure type
-	local password = self.psk
-	local helpText = self:string("NETWORK_CONNECTION_PROBLEM_HELP", tostring(password))
+	local password = ""
+	if self.encryption then
+		if string.match(self.encryption, "^wep.*") then
+			password = self.key
+		elseif string.match(self.encryption, "^wpa*") then
+			password = self.psk
+		end
+	end
+
+	local helpText = self:string("NETWORK_CONNECTION_PROBLEM_HELP", password)
 
 	-- popup failure
 	local window = Window("error", self:string('NETWORK_CANT_CONNECT'), 'setuptitle')
@@ -1183,7 +1236,7 @@ function _connectFailed(self, iface, ssid, reason)
 
 	local menu = SimpleMenu("menu", {
 		{
-			text = self:string("NETWORK_TRY_AGAIN"),
+			text = self:string("NETWORK_TRY_PASSWORD"),
 			sound = "WINDOWHIDE",
 			callback = function()
 				_networkScanAgain(self, iface, true)
@@ -1200,11 +1253,10 @@ function _connectFailed(self, iface, ssid, reason)
 	})
 
 
-	if password and password ~= "" then
-		window:addWidget(Textarea("help_text", helpText))
-	end
-
+	window:addWidget(Textarea("help_text", helpText))
 	window:addWidget(menu)
+
+	_helpAction(self, window)
 
 	self:tieAndShowWindow(window)
 end
@@ -1262,6 +1314,8 @@ function _failedDHCPandWPA(self, iface, ssid)
 	window:addWidget(Textarea("help_text", self:string("NETWORK_DHCP_ERROR_HINT")))
 	window:addWidget(menu)
 
+	_helpAction(self, window)
+
 	self:tieAndShowWindow(window)
 end
 
@@ -1302,6 +1356,8 @@ function _failedDHCPandWEP(self, iface, ssid)
 
 	window:addWidget(Textarea("help_text", self:string("NETWORK_ADDRESS_HELP_WEP", tostring(self.key))))
 	window:addWidget(menu)
+
+	_helpAction(self, window)
 
 	self:tieAndShowWindow(window)
 end
