@@ -2325,22 +2325,21 @@ local function _browseInput(self, item, db, inputSpec, last)
 		v = Textinput.ipAddressValue(initialText)
 	end
 
+	local inputValue
+	if tonumber(inputSpec.len) > 0 then
+		inputValue = Textinput.textValue(v, tonumber(inputSpec.len), 200)
+	else
+		inputValue = v
+	end
+
 	-- create a text input
 	local input = Textinput(
 		"textinput", 
-		v,
+		inputValue,
 		function(_, value)
-			-- check for min number of chars
-			if #value < inputSpec.len then
-				self:playSound("BUMP")
-				return false
-			end
-
-			
-			log:debug("Input: " , value)
-			_lastInput = value
+			_lastInput = tostring(value)
 			--table.insert(_inputParams, value)
-			item['_inputDone'] = value
+			item['_inputDone'] = tostring(value)
 			
 			-- popup time
 			local displayPopup = _safeDeref(inputSpec, 'processingPopup')
@@ -2405,6 +2404,9 @@ local function _browseInput(self, item, db, inputSpec, last)
 	end
 
 	local kbType = inputSpec._kbType or 'qwerty'
+	if kbType == 'qwertyLower' then
+		kbType = 'qwerty'
+	end
 	local keyboard = Keyboard("keyboard", kbType, input)
 	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
