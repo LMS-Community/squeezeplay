@@ -258,6 +258,18 @@ function skin(self, s)
 					imgpath .. "Scroll_Bar/scrollbar_body_b.png",
 			       })
 
+	local _volumeSliderBackground = Tile:loadHTiles({
+		imgpath .. "Touch_Toolbar/tch_volumebar_bkgrd_l.png",
+		imgpath .. "Touch_Toolbar/tch_volumebar_bkgrd.png",
+		imgpath .. "Touch_Toolbar/tch_volumebar_bkgrd_r.png",
+	})
+
+	local _volumeSliderBar = Tile:loadHTiles({
+		imgpath .. "Touch_Toolbar/tch_volumebar_fill_l.png",
+		imgpath .. "Touch_Toolbar/tch_volumebar_fill.png",
+		imgpath .. "UNOFFICIAL/tch_volume_slider.png",
+	})
+
 	local sliderBackground = Tile:loadImage(imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd.png")
 	local sliderBar        = Tile:loadImage(imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_fill.png")
 
@@ -990,10 +1002,12 @@ function skin(self, s)
 
 	-- slider popup (volume/scanner)
 	s.slider_popup = {
-		position = LAYOUT_CENTER,
-		w = screenWidth - 100,
-		h = 100,
-		bgImg = popupBox,
+		x = 50,
+                y = screenHeight/2 - 50,
+                w = screenWidth - 100,
+                h = 125,
+		position = LAYOUT_NONE,
+		bgImg = helpBox,
 		title = {
 		      border = 10,
 		      fg = WHITE,
@@ -1003,9 +1017,13 @@ function skin(self, s)
 		      bgImg = false,
 		},
 		--FIXME, padding/border doesn't seem to work in the text table here
-		text = _uses(s.text),
+		text = _uses(s.text, {
+			padding = { 20, 20, 0, 10 }
+		}),
 		slider_group = {
 			w = WH_FILL,
+			h = WH_FILL,
+			padding = { 10, 10, 10, 10 },
 			order = { "min", "slider", "max" },
 		},
 	}
@@ -1021,8 +1039,8 @@ function skin(self, s)
 
 
 	s.volume_slider = _uses(s.slider, {
-		img = volumeBar,
-		bgImg = volumeBackground,
+		img = _volumeSliderBar,
+		bgImg = _volumeSliderBackground,
 		border = 0,
 	})
 

@@ -467,9 +467,6 @@ function skin(self, s)
 	local sliderBackground = Tile:loadImage(imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd.png")
 	local sliderBar        = Tile:loadImage(imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_fill.png")
 
-	local volumeBar        = Tile:loadImage(imgpath .. "Touch_Tool_bar/tch_volumebar_fill.png")
-	local volumeBackground = Tile:loadImage(imgpath .. "Touch_Tool_bar/tch_volumebar_whole.png")
-
 	local popupBackground  = Tile:loadImage(imgpath .. "Alerts/popup_fullscreen_100.png")
 
 	local textinputCursor = Tile:loadImage(imgpath .. "Text_Entry/Keyboard_Touch/tch_cursor.png")
@@ -1423,12 +1420,12 @@ function skin(self, s)
 --------- SLIDERS ---------
 
 
-	s.volume_slider = _uses(s.slider, {
-		img = volumeBar,
-		bgImg = volumeBackground,
-		border = 0,
-	})
-
+	s.volume_slider = {
+		w = WH_FILL,
+		border = { 0, 0, 0, 10 },
+                bgImg = _volumeSliderBackground,
+                img = _volumeSliderBar,
+	}
 
 --------- BUTTONS ---------
 
