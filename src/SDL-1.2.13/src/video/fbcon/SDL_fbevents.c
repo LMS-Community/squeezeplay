@@ -1230,7 +1230,7 @@ void FB_InitOSKeymap(_THIS)
 	    case K_NUM:  keymap[i] = SDLK_NUMLOCK;   break;
 	    case K_CAPS: keymap[i] = SDLK_CAPSLOCK;  break;
 
-	    case K_F13:   keymap[i] = SDLK_PRINT;     break;
+	    //case K_F13:   keymap[i] = SDLK_PRINT;     break;
 	    case K_HOLD:  keymap[i] = SDLK_SCROLLOCK; break;
 	    case K_PAUSE: keymap[i] = SDLK_PAUSE;     break;
 
