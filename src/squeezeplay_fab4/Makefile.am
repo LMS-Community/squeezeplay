@@ -15,7 +15,8 @@ lib_LTLIBRARIES = fab4_bsp.la
 
 fab4_bsp_la_LDFLAGS = -module -no-version
 fab4_bsp_la_SOURCES = \
-	src/fab4_bsp.c
+	src/fab4_bsp.c \
+	src/ir.c
 
 JIVE_BUILD_DIR = $(DESTDIR)$(datadir)/jive
 
