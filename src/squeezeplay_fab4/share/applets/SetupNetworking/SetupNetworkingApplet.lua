@@ -179,8 +179,8 @@ end
 
 -- select wireless region
 function _wirelessRegion(self, wlan, transition)
-	-- skip region if already set and not in setup mode
-	if self:getSettings()['region'] and self.mode ~= "setup" then
+	-- skip region if already set and not in setup mode, or if wlan is nil
+	if (self:getSettings()['region'] and self.mode ~= "setup") or not wlan then
 		return _connectionType(self)
 	end
 
