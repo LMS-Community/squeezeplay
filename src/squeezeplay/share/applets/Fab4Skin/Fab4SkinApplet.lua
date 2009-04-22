@@ -1349,7 +1349,7 @@ function skin(self, s)
 	}
 
 
-	-- toast_popup popup
+	-- toast_popup popup with art and text
 	s.toast_popup = {
 		x = 5,
 		y = screenHeight/2 - 93/2,
@@ -1359,7 +1359,7 @@ function skin(self, s)
 		group = {
 			padding = 10,
 			order = { 'icon', 'text' },
-			text = { 
+		text = { 
 				padding = { 10, 12, 12, 12 } ,
 				align = 'top-left',
 				w = WH_FILL,
@@ -1376,7 +1376,19 @@ function skin(self, s)
 			}
 		}
 	}
-
+	-- toast popup with textarea
+	s.toast_popup_text = _uses(s.toast_popup, {
+		group = {
+			order = { 'text' },
+			text = {
+				w = WH_FILL,
+				h = WH_FILL,
+				align = 'top-left',
+				padding = { 10, 12, 12, 12 },
+			},
+		}
+	})
+	
 	-- slider popup (volume/scanner)
 	s.slider_popup = {
 		x = 50,

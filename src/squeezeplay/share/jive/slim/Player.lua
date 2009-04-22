@@ -276,6 +276,9 @@ function __init(self, jnt, playerId)
 		-- current song info
 		currentSong = {},
 
+		-- text info
+		popupInfo = {},
+
 		-- browse history
 		browseHistory = {}
 	})
@@ -844,6 +847,7 @@ end
 
 local function hideAction(self)
 	self.currentSong.window:hide()
+	self.popupInfo.window:hide()
 	return EVENT_CONSUME
 end
 
@@ -884,22 +888,31 @@ function onStage(self)
 	self.currentSong.window:setAlwaysOnTop(true)
 	self.currentSong.artIcon = Icon("icon")
 	self.currentSong.text = Label("text", "")
-	self.currentSong.textarea = Textarea("text", '')
 
 	local group = Group("group", {
 			text = self.currentSong.text,
-			textarea = self.currentSong.textarea,
 			icon = self.currentSong.artIcon
 	      })
 
 	self.currentSong.window:addWidget(group)
 
+	-- create window to display current song info
+	self.popupInfo.window = Popup("toast_popup_text")
+	self.popupInfo.window:setAllowScreensaver(true)
+	self.popupInfo.window:setAlwaysOnTop(true)
+	self.popupInfo.textarea = Textarea("text", '')
+
+	local infoGroup = Group("group", {
+			text = self.popupInfo.textarea,
+	      })
+
+	self.popupInfo.window:addWidget(infoGroup)
+
 	--don't let the textarea get the focus, because we want the window to manage events
-	self.currentSong.window:focusWidget(nil)
+	self.popupInfo.window:focusWidget(nil)
 
 
 	--Only 'back' and mouse clicks clear the popup, all other input is forwarded to main window
-
 	self.currentSong.window:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
 		function(event)
 
@@ -914,8 +927,24 @@ function onStage(self)
 			return EVENT_CONSUME
 		end)
 
-
 	self.currentSong.window:addActionListener("back", self, hideAction)
+	self.currentSong.window.brieflyHandler = 1
+
+	self.popupInfo.window:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
+		function(event)
+
+			if (event:getType() & EVENT_MOUSE_ALL) > 0 then
+				return hideAction(self) 
+			end
+
+			local prev = self.popupInfo.window:getLowerWindow()
+			if prev then
+				Framework:dispatchEvent(prev, event)
+			end
+			return EVENT_CONSUME
+		end)
+
+	self.popupInfo.window:addActionListener("back", self, hideAction)
 
 	self.currentSong.window.brieflyHandler = 1
 end
@@ -1039,11 +1068,11 @@ function _process_displaystatus(self, event)
 		local display = data.display
 		local type    = display["type"] or 'text'
 
-		local s = self.currentSong
-
+		local s
 		local textValue = _formatShowBrieflyText(display['text'])
+
 		if type == 'song' then
-			s.textarea:setValue("")
+			s = self.currentSong
 			s.text:setValue(textValue)
 			s.artIcon:setStyle("icon")
 			if display['icon'] then
@@ -1052,9 +1081,7 @@ function _process_displaystatus(self, event)
 				self.slimServer:fetchArtworkThumb(display["icon-id"], s.artIcon, jiveMain:getSkinParam('THUMB_SIZE'), 'png')
 			end
 		else
-			s.text:setValue('')
-			s.artIcon:setStyle("noimage")
-			s.artIcon:setValue(nil)
+			s = self.popupInfo
 			s.textarea:setValue(textValue)
 		end
 		local duration = display['duration'] or 3000
