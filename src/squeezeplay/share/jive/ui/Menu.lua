@@ -228,7 +228,6 @@ function handleDrag(self, dragAmountY, byItemOnly)
 			else
 				--if resulting shift moves beyond bottom, reset offset
 				if (self.topItem + itemShift < 1) or (self.topItem + itemShift + self.numWidgets >= self.listSize + 1) then
-					log:error("sdfasfasdfsadf resetting ")
 					self:resetDragData()
 				else
 					--here we are not at ends, so set offset
