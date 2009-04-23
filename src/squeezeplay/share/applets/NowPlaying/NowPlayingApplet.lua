@@ -386,7 +386,7 @@ function _updatePlaylist(self, enabled, nr, count)
 		self.xofy = self:string("SCREENSAVER_NOWPLAYING_OF", nr, count)
 		self.titleGroup:setWidgetValue("text", self:_titleText(self.mainTitle))
 	else 
-		self.titleGroup:setWidgetValue("text", self._titleText(self.mainTitle))
+		self.titleGroup:setWidgetValue("text", self:_titleText(self.mainTitle))
 	end
 end
 
