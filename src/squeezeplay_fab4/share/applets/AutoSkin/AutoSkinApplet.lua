@@ -60,40 +60,40 @@ function __init(self)
 	local eatIREvents = false
 	--disable skin switching for for CAT testing
 	
---	Framework:addListener(EVENT_IR_ALL,
---		function(event)
---			if eatIREvents then
---				local type = event:getType()
---				if type == EVENT_IR_UP then
---					eatIREvents = false
---				end
---				return EVENT_CONSUME
---			elseif self:changeSkin(remoteSkin) then
---				eatIREvents = true
---				return EVENT_CONSUME
---			else
---				return EVENT_UNUSED
---			end
---		end,
---		-100)
---
---	local eatTouchEvents = false
---	Framework:addListener(EVENT_MOUSE_ALL,
---		function(event)
---			if eatTouchEvents then
---				local type = event:getType()
---				if type == EVENT_MOUSE_UP then
---					eatTouchEvents = false
---				end
---				return EVENT_CONSUME
---			elseif self:changeSkin(touchSkin) then
---				eatTouchEvents = true
---				return EVENT_CONSUME
---			else
---				return EVENT_UNUSED
---			end
---		end,
---		-100)
+	Framework:addListener(EVENT_IR_ALL,
+		function(event)
+			if eatIREvents then
+				local type = event:getType()
+				if type == EVENT_IR_UP then
+					eatIREvents = false
+				end
+				return EVENT_CONSUME
+			elseif self:changeSkin(remoteSkin) then
+				eatIREvents = true
+				return EVENT_CONSUME
+			else
+				return EVENT_UNUSED
+			end
+		end,
+		-100)
+
+	local eatTouchEvents = false
+	Framework:addListener(EVENT_MOUSE_ALL,
+		function(event)
+			if eatTouchEvents then
+				local type = event:getType()
+				if type == EVENT_MOUSE_UP then
+					eatTouchEvents = false
+				end
+				return EVENT_CONSUME
+			elseif self:changeSkin(touchSkin) then
+				eatTouchEvents = true
+				return EVENT_CONSUME
+			else
+				return EVENT_UNUSED
+			end
+		end,
+		-100)
 end
 
 
