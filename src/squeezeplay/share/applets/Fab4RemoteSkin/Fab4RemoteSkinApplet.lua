@@ -81,9 +81,10 @@ end
 function param(self)
         return {
 		THUMB_SIZE = 64,
-		nowPlayingBrowseArtworkSize = 190,
-		nowPlayingSSArtworkSize     = 190,
-		nowPlayingLargeArtworkSize  = 190,
+		nowPlayingBrowseArtworkSize = 180,
+		nowPlayingSSArtworkSize     = 180,
+		nowPlayingLargeArtworkSize  = 180,
+		NOWPLAYING_MENU = 1,
         }
 end
 
@@ -273,8 +274,8 @@ function skin(self, s)
 	local sliderBackground = Tile:loadImage(imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd.png")
 	local sliderBar        = Tile:loadImage(imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_fill.png")
 
-	local volumeBar        = Tile:loadImage(imgpath .. "Touch_Tool_bar/tch_volumebar_fill.png")
-	local volumeBackground = Tile:loadImage(imgpath .. "Touch_Tool_bar/tch_volumebar_whole.png")
+	local volumeBar        = Tile:loadImage(imgpath .. "Touch_Toolbar/tch_volumebar_fill.png")
+	local volumeBackground = Tile:loadImage(imgpath .. "Touch_Toolbar/tch_volumebar_whole.png")
 
 	local popupBackground  = Tile:loadImage(imgpath .. "Alerts/popup_fullscreen_100.png")
 
@@ -298,6 +299,7 @@ function skin(self, s)
 	local BLACK = { 0x00, 0x00, 0x00 }
 	local NONE = { }
 
+	local TITLE_HEIGHT = 55
 	local TITLE_FONT_SIZE = 32
 	local ALBUMMENU_FONT_SIZE = 34
 	local ALBUMMENU_SMALL_FONT_SIZE = 18
@@ -366,6 +368,14 @@ function skin(self, s)
 	})
 
 
+        local _songProgressBackground = Tile:loadImage(imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd.png")
+
+        local _songProgressBar = Tile:loadHTiles({
+                nil,
+                imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_fill.png",
+                imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_slider.png",
+        })
+
 --------- DEFAULT WIDGET STYLES ---------
 	--
 	-- These are the default styles for the widgets 
@@ -386,7 +396,7 @@ function skin(self, s)
 	})
 
 	s.title = {
-		h = 55,
+		h = TITLE_HEIGHT,
 		border = 0,
 		position = LAYOUT_NORTH,
 		bgImg = titleBox,
@@ -1090,12 +1100,12 @@ function skin(self, s)
 	s.button_back.padding = { 2, 0, 0, 2 }
 
 	s.button_volume_min = {
-		img = _loadImage(self, "UNOFFICIAL/volume_speaker_l.png"),
+		img = _loadImage(self, "Icons/icon_toolbar_vol_down.png"),
 		border = { 5, 0, 5, 0 },
 	}
 
 	s.button_volume_max = {
-		img = _loadImage(self, "UNOFFICIAL/volume_speaker_r.png"),
+		img = _loadImage(self, "Icons/icon_toolbar_vol_up.png"),
 		border = { 5, 0, 5, 0 },
 	}
 
@@ -1258,18 +1268,14 @@ if true then
 	-- one for the Screensaver windowStyle (ss), one for the browse windowStyle (browse)
 	-- a lot of it can be recycled from one to the other
 
-	local NP_TRACK_FONT_SIZE = 26
+	local NP_ARTISTALBUM_FONT_SIZE = 32
+	local NP_TRACK_FONT_SIZE = 40
+
 
 	-- Title
 	s.ssnptitle = _uses(s.title, {
 		rbutton  = {
-			font    = _font(14),
-			fg      = WHITE,
-			sh      = NONE,
-			bgImg   = titlebarButtonBox,
-			w       = TITLE_BUTTON_WIDTH,
-			padding = { 8, 0, 8, 0},
-			align   = 'center',
+			hidden = 1,
 		}
 	})
 
@@ -1277,52 +1283,36 @@ if true then
 	s.browsenptitle = _uses(s.ssnptitle)
 	s.largenptitle  = _uses(s.ssnptitle)
 
-
-	-- pressed styles
-	s.ssnptitle.pressed = _uses(s.ssnptitle, {
-		lbutton = {
-			bgImg = pressedTitlebarButtonBox,
-		},
-		rbutton = {
-			bgImg = pressedTitlebarButtonBox,
-		},
-	})
-
-	s.browsenptitle.pressed = _uses(s.ssnptitle.pressed)
-	s.largenptitle.pressed = _uses(s.ssnptitle.pressed)
-
-	-- Song
-	s.ssnptrack = {
-		border = { 4, 0, 4, 0 },
-		position = LAYOUT_WEST,
-		text = {
-			w = WH_FILL,
-			padding = { 220, 52, 20, 10 },
-			align = "left",
-        		font = _font(NP_TRACK_FONT_SIZE),
-			lineHeight = NP_TRACK_FONT_SIZE + 4,
-			fg = WHITE,
-			sh = NONE,
-        		line = {{
-				font = _boldfont(NP_TRACK_FONT_SIZE),
-				height = NP_TRACK_FONT_SIZE + 4,
-				}},
-		},
-	}
-
-	-- nptrack is identical between all windowStyles
-	s.browsenptrack = _uses(s.ssnptrack)
-	s.largenptrack  = _uses(s.ssnptrack)
-
 	-- Artwork
 	local ARTWORK_SIZE    = self:param().nowPlayingBrowseArtworkSize
 	local SS_ARTWORK_SIZE = self:param().nowPlayingSSArtworkSize
 	local browseArtWidth  = ARTWORK_SIZE
 	local ssArtWidth      = SS_ARTWORK_SIZE
 
+        -- Song
+        s.nptrack =  {
+                border = { 4, 0, 4, 0 },
+                position = LAYOUT_NORTH,
+                w = WH_FILL,
+                padding = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 20, 20, 10 },
+                align = "left",
+                font = _boldfont(NP_TRACK_FONT_SIZE),
+                lineHeight = NP_TRACK_FONT_SIZE,
+                fg = WHITE,
+        }
+        s.npartist  = _uses(s.nptrack, {
+                padding = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 75, 20, 10 },
+                font = _font(NP_ARTISTALBUM_FONT_SIZE),
+        })
+        s.npalbum = _uses(s.npartist, {
+                padding = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 120, 20, 10 },
+                font = _font(NP_ARTISTALBUM_FONT_SIZE),
+        })
+
+
 	s.ssnpartwork = {
 		w = ssArtWidth,
-		border = { 10, 50, 10, 0 },
+		border = { 10, TITLE_HEIGHT + 4, 10, 0 },
 		position = LAYOUT_WEST,
 		align = "center",
 		artwork = {
@@ -1340,46 +1330,7 @@ if true then
 	local rightPadding = screenWidth/2 - 15
 	local buttonPadding = { 10, 5, 10, 5 }
 
-	s.ssnpcontrols = {
-		order = { 'rew', 'play', 'fwd', 'vol' },
-		position = LAYOUT_NONE,
-		x = rightPadding,
-		y = topPadding,
-		rew = {
-			align = 'center',
-			padding = buttonPadding,
-			img = _loadImage(self, "UNOFFICIAL/icon_toolbar_rew.png"),
-		},
-		play = {
-			align = 'center',
-			padding = buttonPadding,
-			img = _loadImage(self, "UNOFFICIAL/icon_toolbar_play.png"),
-		},
-		pause = {
-			align = 'center',
-			padding = buttonPadding,
-			img = _loadImage(self, "UNOFFICIAL/icon_toolbar_pause.png"),
-		},
-		fwd = {
-			align = 'center',
-			padding = buttonPadding,
-			img = _loadImage(self, "UNOFFICIAL/icon_toolbar_ffwd.png"),
-		},
-		vol = {
-			align = 'center',
-			padding = buttonPadding,
-			img = _loadImage(self, "UNOFFICIAL/icon_toolbar_vol_up.png"),
-		},
-	}
-
-	s.ssnpcontrols.pressed = {
-		rew = _uses(s.ssnpcontrols.rew),
-		play = _uses(s.ssnpcontrols.play),
-		pause = _uses(s.ssnpcontrols.pause),
-		fwd = _uses(s.ssnpcontrols.fwd),
-		vol = _uses(s.ssnpcontrols.vol),
-	}
-	
+	s.ssnpcontrols = { hidden = 1 }
 	s.browsenpcontrols = _uses(s.ssnpcontrols)
 	s.largenpcontrols  = _uses(s.ssnpcontrols)
 
@@ -1421,8 +1372,10 @@ if true then
 		padding     = { 0, 0, 0, 25 },
                 position = LAYOUT_SOUTH,
                 horizontal = 1,
-                bgImg = _progressBackground,
-                img = _progressBar,
+                bgImg = _songProgressBackground,
+                img = _songProgressBar,
+                --bgImg = _progressBackground,
+                --img = _progressBar,
 	}
 
 	s.browseprogressB = _uses(s.ssprogressB)

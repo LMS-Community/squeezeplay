@@ -1506,12 +1506,12 @@ function skin(self, s)
 	s.button_back.padding = { 2, 0, 0, 2 }
 
 	s.button_volume_min = {
-		img = _loadImage(self, "UNOFFICIAL/volume_speaker_l.png"),
+		img = _loadImage(self, "Icons/icon_toolbar_vol_down.png"),
 		border = { 5, 0, 5, 0 },
 	}
 
 	s.button_volume_max = {
-		img = _loadImage(self, "UNOFFICIAL/volume_speaker_r.png"),
+		img = _loadImage(self, "Icons/icon_toolbar_vol_up.png"),
 		border = { 5, 0, 5, 0 },
 	}
 
