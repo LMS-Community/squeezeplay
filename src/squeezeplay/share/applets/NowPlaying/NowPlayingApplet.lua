@@ -134,11 +134,11 @@ function notify_playerPower(self, player, power)
 	-- hide this window if the player is turned off
 	if not power then
 		if self.titleGroup then
-			self.titleGroup:setWidgetValue("text", self:string(modeTokens['off']))
+			self.titleGroup:setWidgetValue("text", self:_titleText(self:string(modeTokens['off'])))
 		end
 	else
 		if self.titleGroup then
-			self.titleGroup:setWidgetValue("text", self:string(modeTokens[mode]))
+			self.titleGroup:setWidgetValue("text", self:_titleText(self:string(modeTokens[mode])))
 		end
 	end
 end
@@ -223,6 +223,23 @@ end
 function notify_skinSelected(self)
 	-- update menu
 	notify_playerCurrent(self, self.player)
+end
+
+
+function _titleText(self, title)
+	self.mainTitle = tostring(title)
+
+	local usexofy = true
+	if not self.player:isPowerOn() then
+		usexofy = false
+	end
+
+	if self.xofy and usexofy then
+		local returnVal = self.mainTitle .. " " .. self.xofy
+		return returnVal
+	else
+		return self.mainTitle
+	end
 end
 
 
@@ -366,9 +383,10 @@ end
 function _updatePlaylist(self, enabled, nr, count)
 	if enabled == true and count and tonumber(count) > 1 then
 		nr = nr + 1
-		self.titleGroup:setWidgetValue("rbutton", self:string("SCREENSAVER_NOWPLAYING_OF", nr, count))
+		self.xofy = self:string("SCREENSAVER_NOWPLAYING_OF", nr, count)
+		self.titleGroup:setWidgetValue("text", self:_titleText(self.mainTitle))
 	else 
-		self.titleGroup:setWidgetValue("rbutton", "")
+		self.titleGroup:setWidgetValue("text", self._titleText(self.mainTitle))
 	end
 end
 
@@ -381,7 +399,7 @@ function _updateMode(self, mode)
 		token = 'off'
 	end
 	if self.titleGroup then
-		self.titleGroup:setWidgetValue("text", self:string(modeTokens[token]))
+		self.titleGroup:setWidgetValue("text", self:_titleText(self:string(modeTokens[token])))
 	end
 	if self.controlsGroup then
 		local playIcon = self.controlsGroup:getWidget('play')
@@ -466,6 +484,8 @@ function _createUI(self)
 		npcontrols = 'browsenpcontrols',
 	}	
 
+	self.mainTitle = self:string("SCREENSAVER_NOWPLAYING")
+
 	self.titleGroup = Group(components.nptitle, {
 		lbutton = Button(
 				Group("button_back", { Icon("icon") }), 
@@ -479,10 +499,10 @@ function _createUI(self)
 				end
 		),
 
-		text = Label("text", self:string("SCREENSAVER_NOWPLAYING")),
+		text = Label("text", self:_titleText(self.mainTitle)),
 
 		rbutton = Button(
-				Label("rbutton", ""), 
+				Group("button_playlist", { Icon("icon") }), 
 				function() 
 					Framework:pushAction("go")
 					return EVENT_CONSUME 
