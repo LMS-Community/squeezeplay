@@ -206,9 +206,21 @@ end
 
 -- we are connected when we have a pin and upgrade url
 function _squeezenetworkConnected(self, squeezenetwork)
-	return squeezenetwork:getPin() ~= nil and squeezenetwork:getUpgradeUrl()
+	return squeezenetwork:getPin() ~= nil and squeezenetwork:getUpgradeUrl() and squeezenetwork:isConnected() 
 end
 
+function _anySqueezeCenterWithUpgradeFound(self)
+	local anyFound = false
+	for _,server in appletManager:callService("iterateSqueezeCenters") do
+		if server:isCompatible() and server:getUpgradeUrl() and not server:isSqueezeNetwork() then
+			log:info("At least one compatible SC with an available upgrade found. First found: ", server)
+			anyFound = true
+			break
+		end
+	end
+
+	return anyFound
+end
 
 function step7(self)
 	-- Once here, network setup is complete
@@ -249,7 +261,7 @@ end
 
 
 function _squeezenetworkWait(self, squeezenetwork)
-	log:info("waiting to connect to SqueezeNetwork")
+	log:info("Waiting to connect to SqueezeNetwork and find any compatible SCs")
 
 	-- Waiting popup
 	local popup = Popup("waiting_popup")
@@ -261,15 +273,27 @@ function _squeezenetworkWait(self, squeezenetwork)
 	popup:ignoreAllInputExcept()
 
 	local timeout = 0
+	--Wait until SN is connected before going to step 8. Also if SN isn't being found, use available SCs. Allow 10 seconds to go by to give all SCs a chacne to be discovered.
 	popup:addTimer(1000, function()
 		-- wait until we know if the player is linked
 		if _squeezenetworkConnected(self, squeezenetwork) then
 			step8(self, squeezenetwork)
+		else
+			log:info("SN not available, Waited: ", timeout + 1)
+			--allow 10 seconds to go by before doing SC check to allow SCs to be discovered
+			if timeout >= 9 and _anySqueezeCenterWithUpgradeFound(self) then
+				step8(self, squeezenetwork)
+			else
+				log:info("Looking for compatible SCs with an upgrade, Waited: ", timeout + 1)
+			end
 		end
+
 
 		timeout = timeout + 1
 
-		if timeout > 30 then
+		--try for 30 seconds
+		if timeout >= 30 then
+			log:info("Can't find any SC or connect to SqueezeNetwork after ", timeout, " seconds")
 			_squeezenetworkFailed(self, squeezenetwork)
 		end
 	end)
@@ -279,6 +303,7 @@ end
 
 
 function _squeezenetworkFailed(self, squeezenetwork)
+	log:info("_squeezenetworkFailed")
 	Task("dns", self, function()
 		local serverip = squeezenetwork:getIpPort()
 
@@ -316,6 +341,7 @@ function _squeezenetworkFailed(self, squeezenetwork)
 
 		-- have we connected while looking up the DNS?
 		if _squeezenetworkConnected(self, squeezenetwork) then
+			log:info("SN now seen")
 			return
 		end		
 
@@ -381,6 +407,13 @@ end
 
 
 function step8(self, squeezenetwork)
+	log:info("step8")
+	if not squeezenetwork:isConnected() then
+		log:info("get SC from one of discovered SCs")
+		appletManager:callService("firmwareUpgrade", nil)
+		return
+	end
+
 	local url, force = squeezenetwork:getUpgradeUrl()
 	local pin = squeezenetwork:getPin()
 
