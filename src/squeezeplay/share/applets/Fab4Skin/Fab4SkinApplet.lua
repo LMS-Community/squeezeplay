@@ -84,7 +84,6 @@ function param(self)
 		nowPlayingBrowseArtworkSize = 180,
 		nowPlayingSSArtworkSize     = 180,
 		nowPlayingLargeArtworkSize  = 180,
-		NOWPLAYING_MENU = 1,
         }
 end
 
