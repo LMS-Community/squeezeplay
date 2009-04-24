@@ -24,7 +24,7 @@ RESCAN_SQUEEZECENTER
 	EN	Initiating rescan
 
 RESCAN_SQUEEZECENTER_TEXT
-	EN	Stop, Rescan, Start.... This will probably take several minutes.
+	EN	This will probably take several minutes.
 
 STATUS_SQUEEZECENTER_RUNNING
 	EN	SqueezeCenter is starting or running

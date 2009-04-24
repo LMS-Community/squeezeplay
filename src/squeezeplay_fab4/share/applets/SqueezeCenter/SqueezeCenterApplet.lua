@@ -58,6 +58,9 @@ function settingsShow(self, menuItem)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
+	
+	window:addTimer(5000, function() _updateStatus(self) end)
+	
 	return window
 end
 
