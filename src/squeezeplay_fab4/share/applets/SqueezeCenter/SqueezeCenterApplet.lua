@@ -63,6 +63,14 @@ end
 
 function _action(self, icon, text, subtext, time, action)
 
+	-- Check validity of action
+	if (action == 'start' and (_pidfor('slimserver.pl') or _pidfor('scanner.pl'))
+		or action == 'stop' and not _pidfor('slimserver.pl')
+		or action == 'rescan' and _pidfor('scanner.pl'))
+	then
+		return EVENT_UNUSED
+	end
+
 	local popup = Popup("waiting_popup")
 	popup:addWidget(Icon(icon))
 	popup:addWidget(Label("text", self:string(text)))
