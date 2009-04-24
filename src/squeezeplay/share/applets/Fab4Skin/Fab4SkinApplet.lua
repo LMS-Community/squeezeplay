@@ -156,14 +156,6 @@ function skin(self, s)
 
 	-- Images and Tiles
 	local inputTitleBox           = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
-	--FIXME, _r asset here doesn't work...it's supposed to have a fadeout effect and it doesn't appear on screen
-	local fiveItemBox             = Tile:loadHTiles({
-		 imgpath .. "5_line_lists/tch_5line_divder_l.png",
-		 imgpath .. "5_line_lists/tch_5line_divder.png",
-		 imgpath .. "5_line_lists/tch_5line_divder_r.png",
-	})
-	local fiveItemSelectionBox    = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line.png")
-	local fiveItemPressedBox      = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line_press.png")
 	local threeItemSelectionBox   = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line.png")
 	local threeItemPressedBox     = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3item_press.png")
 	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
@@ -173,6 +165,23 @@ function skin(self, s)
 	local deleteKeyBackground     = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry.png")
 	local deleteKeyPressedBackground = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry_press.png")
 
+	--FIXME, _r asset here doesn't work...it's supposed to have a fadeout effect and it doesn't appear on screen
+	local fiveItemBox             = Tile:loadHTiles({
+		 imgpath .. "5_line_lists/tch_5line_divder_l.png",
+		 imgpath .. "5_line_lists/tch_5line_divder.png",
+		 imgpath .. "5_line_lists/tch_5line_divder_r.png",
+	})
+	local fiveItemSelectionBox    = Tile:loadHTiles({
+		 imgpath .. "5_line_lists/menu_sel_box_5line_l.png",
+		 imgpath .. "5_line_lists/menu_sel_box_5line.png",
+		 imgpath .. "5_line_lists/menu_sel_box_5line_r.png",
+	})
+	local fiveItemPressedBox      = Tile:loadHTiles({
+		 imgpath .. "5_line_lists/menu_sel_box_5line_press_l.png",
+		 imgpath .. "5_line_lists/menu_sel_box_5line_press.png",
+		 imgpath .. "5_line_lists/menu_sel_box_5line_press_r.png",
+	})
+	
 	local keyTopLeft = Tile:loadTiles({
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_tl.png",

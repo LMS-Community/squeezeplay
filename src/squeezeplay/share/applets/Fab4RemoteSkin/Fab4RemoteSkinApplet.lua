@@ -157,13 +157,22 @@ function skin(self, s)
 
 	-- Images and Tiles
 	local inputTitleBox           = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
-	local threeItemSelectionBox   = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line.png")
-	local threeItemPressedBox     = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3item_press.png")
 	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = Tile:loadImage( imgpath .. "Icons/icon_help_button_tb.png")
 	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
 	local deleteKeyBackground     = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry.png")
 	local deleteKeyPressedBackground = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry_press.png")
+
+	local threeItemSelectionBox   = Tile:loadHTiles({
+		 imgpath .. "3_line_lists/menu_sel_box_3line_l.png",
+		 imgpath .. "3_line_lists/menu_sel_box_3line.png",
+		 imgpath .. "3_line_lists/menu_sel_box_3line_r.png",
+	})
+	local threeItemPressedBox     = Tile:loadHTiles({ 
+		imgpath .. "3_line_lists/menu_sel_box_3item_press_l.png",
+		imgpath .. "3_line_lists/menu_sel_box_3item_press.png",
+		imgpath .. "3_line_lists/menu_sel_box_3item_press_r.png",
+	})
 
 	local titleBox                =
 		Tile:loadTiles({
