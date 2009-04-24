@@ -156,7 +156,12 @@ function skin(self, s)
 
 	-- Images and Tiles
 	local inputTitleBox           = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
-	local fiveItemBox             = Tile:loadImage( imgpath .. "5_line_lists/tch_5line_divder.png")
+	--FIXME, _r asset here doesn't work...it's supposed to have a fadeout effect and it doesn't appear on screen
+	local fiveItemBox             = Tile:loadHTiles({
+		 imgpath .. "5_line_lists/tch_5line_divder_l.png",
+		 imgpath .. "5_line_lists/tch_5line_divder.png",
+		 imgpath .. "5_line_lists/tch_5line_divder_r.png",
+	})
 	local fiveItemSelectionBox    = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line.png")
 	local fiveItemPressedBox      = Tile:loadImage( imgpath .. "5_line_lists/menu_sel_box_5line_press.png")
 	local threeItemSelectionBox   = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line.png")
@@ -557,10 +562,10 @@ function skin(self, s)
 
 	local _songProgressBackground = Tile:loadImage(imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd.png")
 
-	local _songProgressBar = Tile:loadHTiles({
-		nil,
-		imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_fill.png",
-		imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_slider.png",
+	local _songProgressBar = Tile:loadHTiles({ 
+			nil,
+			nil,
+			imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_slider.png"
 	})
 
 	local _volumeSliderBackground = Tile:loadHTiles({
@@ -572,7 +577,9 @@ function skin(self, s)
 	local _volumeSliderBar = Tile:loadHTiles({
 		imgpath .. "Touch_Toolbar/tch_volumebar_fill_l.png",
 		imgpath .. "Touch_Toolbar/tch_volumebar_fill.png",
-		imgpath .. "UNOFFICIAL/tch_volume_slider.png",
+		imgpath .. "Touch_Toolbar/tch_volumebar_fill_r.png",
+		--FIXME, we don't have support for putting this asset on screen correctly
+		--imgpath .. "Touch_Toolbar/tch_volume_slider.png",
 	})
 
 
@@ -1844,7 +1851,8 @@ if true then
 	s.largeprogress  = _uses(s.ssprogress)
 
 	s.ssprogressB = {
-		w = 200,
+		w = 193,
+		h = 25,
 		padding     = { 0, 0, 0, 18 },
                 position = LAYOUT_SOUTH,
                 horizontal = 1,
