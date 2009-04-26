@@ -35,18 +35,30 @@ end
 
 
 function registerApplet(meta)
-        -- only make this available if an SD card is slotted in and
-        -- a /media/*/images directory is present
-        local media = false
-        for dir in lfs.dir("/media") do
-                if lfs.attributes("/media/" .. dir .. "/images", "mode") == "directory" then
-                        media = true
-			jiveMain:addItem(meta:menuItem('appletImageViewer', 'home', "IMAGE_VIEWER", function(applet, ...) applet:startSlideshow(...) end, 100))
-                        break
-                end
-        end
+		jiveMain:addItem(meta:menuItem('appletImageViewer', 'home', "IMAGE_VIEWER", 
+			function(applet, ...) applet:startSlideshow(...) end, 100))
 end
 
+
+function configureApplet(self)
+	appletManager:callService("addScreenSaver", self:string("IMAGE_VIEWER"), "ImageViewer", 
+		"startSlideshow", self:string("IMAGE_VIEWER_SETTINGS"), "openSettings", 90)
+
+end
+
+
+function defaultSettings(self)
+	local defaultSetting = {}
+	defaultSetting["delay"] = 10000
+	defaultSetting["source"] = "card"
+	defaultSetting["rotation" ] = "auto"
+	defaultSetting["fullscreen"] = false
+	defaultSetting["transition"] = "random"
+	defaultSetting["ordering"] = "random"
+
+	defaultSetting["card.path"] = "/media/*/images"
+	return defaultSetting
+end
 
 --[[
 

@@ -5,7 +5,7 @@
 IMAGE_VIEWER
 	CS	Prohlížeč obrázků
 	DA	Billedfremviser
-	DE	Image Viewer
+	DE	Bilder-Anzeige
 	EN	Image Viewer
 	ES	Visor de imágenes
 	FI	Image Viewer
@@ -16,4 +16,447 @@ IMAGE_VIEWER
 	PL	Przeglądarka obrazów
 	RU	Просмотр рисунков
 	SV	Bildvisare
+
+IMAGE_VIEWER_SETTINGS
+	DE	Bilder-Anzeige Einstellungen
+	EN	Image Viewer Settings
+
+IMAGE_VIEWER_SOURCE
+	DE	Quellen
+	EN	Sources
+
+IMAGE_VIEWER_SOURCE_SETTINGS
+	DE	Quellspezifische Einstellungen
+	EN	Source specific settings
+
+IMAGE_VIEWER_SOURCE_CARD
+	DE	Memory-Karte
+	EN	Memory card
+
+IMAGE_VIEWER_SOURCE_SC
+	DE	Squeeze Center
+	EN	Squeeze center
+
+IMAGE_VIEWER_SOURCE_HTTP
+	DE	URL Liste
+	EN	URL list
+
+IMAGE_VIEWER_SOURCE_FLICKR
+	EN	Flickr
+
+IMAGE_VIEWER_DELAY
+	DE	Verzögerung
+	EN	Delay
+
+IMAGE_VIEWER_DELAY_10_SEC
+	CS	10 s
+	DA	10 sek.
+	DE	10 Sek.
+	EN	10 sec
+	ES	10 s
+	FI	10 s
+	FR	10 sec
+	IT	10 sec
+	NL	10 sec
+	NO	10 sek
+	PL	10 s
+	RU	10 с
+	SV	10 sek
+
+IMAGE_VIEWER_DELAY_20_SEC
+	CS	20 s
+	DA	20 sek.
+	DE	20 Sek.
+	EN	20 sec
+	ES	20 s
+	FI	20 s
+	FR	20 sec
+	IT	20 sec
+	NL	20 sec
+	NO	20 sek
+	PL	20 s
+	RU	20 с
+	SV	20 sek
+
+IMAGE_VIEWER_DELAY_30_SEC
+	CS	30 s
+	DA	30 sek.
+	DE	30 Sek.
+	EN	30 sec
+	ES	30 s
+	FI	30 s
+	FR	30 sec
+	IT	30 sec
+	NL	30 sec
+	NO	30 sek
+	PL	30 s
+	RU	30 с
+	SV	30 sek
+
+IMAGE_VIEWER_DELAY_1_MIN
+	CS	1 min
+	DA	1 min.
+	DE	1 Min.
+	EN	1 min
+	ES	1 m
+	FI	1 min
+	FR	1 min
+	IT	1 min
+	NL	1 min
+	NO	1 min
+	PL	1 min
+	RU	1 мин.
+	SV	1 min
+
+IMAGE_VIEWER_ORDERING
+	DE	Reihenfolge
+	EN	Ordering
+
+IMAGE_VIEWER_ORDERING_SEQUENTIAL
+	DE	sequentiell
+	EN	sequential
+
+IMAGE_VIEWER_ORDERING_RANDOM
+	DE	zufällig
+	EN	random
+
+IMAGE_VIEWER_TRANSITION
+	CS	Přechody
+	DA	Overgange
+	DE	Übergänge
+	EN	Transitions
+	ES	Transiciones
+	FI	Siirtymät
+	FR	Transitions
+	IT	Transizioni
+	NL	Overgangen
+	NO	Overganger
+	PL	Przejścia
+	RU	Переходы
+	SV	Övergångar
+
+IMAGE_VIEWER_TRANSITION_RANDOM
+	CS	Náhodné přechody
+	DA	Blandede overgange
+	DE	Zufällige Übergänge
+	EN	Random transitions
+	ES	Transiciones aleatorias
+	FI	Satunnaiset siirtymät
+	FR	Transitions aléatoires
+	IT	Transizioni casuali
+	NL	Willekeurige overgangen
+	NO	Tilfeldige overganger
+	PL	Losowe przejścia
+	RU	Случайные переходы
+	SV	Slumpmässiga övergångar
+
+IMAGE_VIEWER_TRANSITION_FADE
+	DE	Bilder überblenden
+	EN	Fade images
+
+IMAGE_VIEWER_TRANSITION_INSIDE_OUT
+	CS	Prosvětlit ze středu ven
+	DA	Blød overgang indefra og ud
+	DE	von innen nach aussen
+	EN	Fade inside-out
+	ES	Fundido dentro-afuera
+	FI	Häivytys sisältä ulos
+	FR	Fondu inversé
+	IT	Dall'interno verso l'esterno
+	NL	Faden: binnen-buiten
+	NO	Ton fra midten og ut
+	PL	Znikanie od wewnątrz do zewnątrz
+	RU	Угасание изнутри наружу
+	SV	Tona inifrån och ut
+
+IMAGE_VIEWER_TRANSITION_TOP_DOWN
+	CS	Prosvětlit shora dolů
+	DA	Blød overgang fra top til bund
+	DE	von oben nach unten
+	EN	Fade top-down
+	ES	Fundido arriba-abajo
+	FI	Häivytys ylhäältä alas
+	FR	Fondu de haut en bas
+	IT	Dall'alto verso il basso
+	NL	Faden: boven-onder
+	NO	Ton ovenfra og ned
+	PL	Znikanie od góry do dołu
+	RU	Угасание сверху вниз
+	SV	Tona uppifrån och ner
+
+IMAGE_VIEWER_TRANSITION_BOTTOM_UP
+	CS	Prosvětlit zdola nahoru
+	DA	Blød overgang fra bund til top
+	DE	von unten nach oben
+	EN	Fade bottom-up
+	ES	Fundido abajo-arriba
+	FI	Häivytys alhaalta ylös
+	FR	Fondu de bas en haut
+	IT	Dal basso verso l'alto
+	NL	Faden: onder-boven
+	NO	Ton nedenfra og opp
+	PL	Znikanie od dołu do góry
+	RU	Угасание снизу вверх
+	SV	Tona nedifrån och upp
+
+IMAGE_VIEWER_TRANSITION_LEFT_RIGHT
+	CS	Prosvětlit zleva doprava
+	DA	Blød overgang fra venstre til højre
+	DE	von links nach rechts
+	EN	Fade left-right
+	ES	Fundido izquierda-derecha
+	FI	Häivytys vasemmalta oikealle
+	FR	Fondu de gauche à droite
+	IT	Da sinistra verso destra
+	NL	Faden: links-rechts
+	NO	Ton fra venstre mot høyre
+	PL	Znikanie od lewej do prawej
+	RU	Угасание слева направо
+	SV	Tona från vänster till höger
+
+IMAGE_VIEWER_TRANSITION_RIGHT_LEFT
+	CS	Prosvětlit zprava doleva
+	DA	Blød overgang fra højre til venstre
+	DE	von rechts nach links
+	EN	Fade right-left
+	ES	Fundido derecha-izquierda
+	FI	Häivytys oikealta vasemmalle
+	FR	Fondu de droite à gauche
+	IT	Da destra verso sinistra
+	NL	Faden: rechts-links
+	NO	Ton fra høyre mot venstre
+	PL	Znikanie od prawej do lewej
+	RU	Угасание справа налево
+	SV	Tona från höger till vänster
+
+IMAGE_VIEWER_TRANSITION_PUSH_RIGHT
+	DE	nach rechts schieben
+	EN	push to right
+
+IMAGE_VIEWER_TRANSITION_PUSH_LEFT
+	DE	nach links schieben
+	EN	push to left
+
+IMAGE_VIEWER_ROTATION
+	DE	Automatisches Drehen
+	EN	Auto-rotate
+
+IMAGE_VIEWER_ROTATION_YES
+	DE	Bilder werden immer gedreht
+	EN	Always rotate
+
+IMAGE_VIEWER_ROTATION_AUTO
+	DE	Drehung nur bei mobilen Geräten
+	EN	Rotation on mobile devices only
+
+IMAGE_VIEWER_ROTATION_NO
+	DE	Bilder nicht drehen
+	EN	No rotation
+
+IMAGE_VIEWER_ZOOM
+	DE	Anpassung Bilder
+	EN	Image zoom
+
+IMAGE_VIEWER_ZOOM_PICTURE
+	DE	Gesamtes Bild zeigen
+	EN	Show complete image
+
+IMAGE_VIEWER_ZOOM_SCREEN
+	DE	Bildschirm ausfüllen
+	EN	Fill complete screen
+
+#
+# Strings for Card Source
+#
+IMAGE_VIEWER_CARD_PATH
+	DE	Pfad für Bilder
+	EN	Path for images
+
+IMAGE_VIEWER_CARD_PATH
+	DE	Legt den Suchpfad für Bilder fest. '*' kann als Platzhalter verwendet werden
+	EN	Defines the search path for images. You can use a '*' as placeholder
+
+#
+# Strings for Flickr Source
+#
+
+IMAGE_VIEWER_FLICKR_LOADING_PHOTO
+	CS	Flickr nahrává foto...
+	DA	Flickr indlæser billede...
+	DE	Flickr lädt photo...
+	EN	Flickr loading photo...
+	ES	Flickr al cargar foto...
+	FI	Flickr lataa valokuvaa...
+	FR	Chargement de photo Flickr...
+	IT	Caricamento foto Flickr...
+	NL	Flickr is bezig met laden van foto...
+	NO	Flickr laster inn bilde...
+	PL	Ładowanie zdjęcia do usługi Flickr...
+	RU	Flickr загружает фото...
+	SV	Flickr läser in foto ...
+
+IMAGE_VIEWER_FLICKR_ERROR
+	CS	Chyba Flickru
+	DA	Flickr-fejl
+	DE	Flickr Fehler
+	EN	Flickr error
+	ES	Error de Flickr
+	FI	Flickr-virhe
+	FR	Erreur Flickr
+	IT	Errore Flickr
+	NL	Flickr-foutmelding
+	NO	Flickr-feil
+	PL	Błąd usługi Flickr
+	RU	Ошибка Flickr
+	SV	Flickr-fel
+
+IMAGE_VIEWER_FLICKR_DISPLAY
+	CS	Zobrazit
+	DA	Display
+	DE	Anzeige
+	EN	Display
+	ES	Mostrar
+	FI	Näyttö
+	FR	Affichage
+	IT	Visualizza
+	NL	Weergeven
+	NO	Skjerm
+	PL	Wyświetlacz
+	RU	Экран
+	SV	Display
+
+IMAGE_VIEWER_FLICKR_DISPLAY_OWN
+	CS	Mé vlastní fotky
+	DA	Mine billeder
+	DE	Meine eigenen Bilder
+	EN	My own pictures
+	ES	Mis imágenes
+	FI	Omat kuvani
+	FR	Mes images
+	IT	Immagini personali
+	NL	Mijn eigen foto's
+	NO	Mine egne bilder
+	PL	Moje własne obrazy
+	RU	Мои изображения
+	SV	Mina egna bilder
+
+IMAGE_VIEWER_FLICKR_DISPLAY_FAVORITES
+	CS	Oblíbené
+	DA	Favoritter
+	DE	Meine Favoriten
+	EN	My favorites
+	ES	Mis favoritos
+	FI	Suosikit
+	FR	Mes favoris
+	IT	I miei Preferiti
+	NL	Mijn favorieten
+	NO	Mine favoritter
+	PL	Moje ulubione
+	RU	Мое выбранное
+	SV	Mina favoriter
+
+IMAGE_VIEWER_FLICKR_DISPLAY_CONTACTS
+	CS	Fotky mých kontaktů
+	DA	Mine kontakters billeder
+	DE	Bilder meiner Kontakte
+	EN	My contacts' pictures
+	ES	Imágenes de mis contactos
+	FI	Yhteyshenkilöiden kuvat
+	FR	Images de mes contacts
+	IT	Immagini dei contatti
+	NL	Foto's van mijn contacten
+	NO	Bilder fra mine kontakter
+	PL	Obrazy moich kontaktów
+	RU	Изображения моих контактов
+	SV	Mina kontakters bilder
+
+IMAGE_VIEWER_FLICKR_DISPLAY_INTERESTING
+	CS	Zajímavé obrázky
+	DA	Interessante billeder
+	DE	Interessante Bilder
+	EN	Interesting pictures
+	ES	Imágenes interesantes
+	FI	Kiinnostavia kuvia
+	FR	Images intéressantes
+	IT	Immagini interessanti
+	NL	Interessante foto's
+	NO	Interessante bilder
+	PL	Interesujące obrazy
+	RU	Интересные изображения
+	SV	Intressanta bilder
+
+IMAGE_VIEWER_FLICKR_DISPLAY_RECENT
+	CS	Nejnovější fotky
+	DA	Senest tilføjede billeder
+	DE	Neu hinzugefügte Bilder
+	EN	Recently added pictures
+	ES	Imágenes agregadas recientemente
+	FI	Äskettäin lisätyt kuvat
+	FR	Images ajoutées récemment
+	IT	Immagini aggiunte di recente
+	NL	Recent toegevoegde foto's
+	NO	Nylig opplastede bilder
+	PL	Ostatnio dodane obrazy
+	RU	Последние добавленные изображения
+	SV	Nyligen tillagda bilder
+
+IMAGE_VIEWER_FLICKR_FLICKR_ID
+	CS	Uživatel Flickru
+	DA	Flickr-bruger
+	DE	Flickr Benutzer
+	EN	Flickr User
+	ES	Usuario de Flickr
+	FI	Flickr-käyttäjä
+	FR	Utilisateur Flickr
+	IT	Utente flickr
+	NL	Flickr-gebruiker
+	NO	Flickr-bruker
+	PL	Użytkownik usługi Flickr
+	RU	Пользователь Flickr
+	SV	Flickr-användare
+
+IMAGE_VIEWER_FLICKR_FLICKR_ID_HELP
+	CS	Zadejte své uživatelské jméno pro službu Flickr nebo váš e-mail
+	DA	Indtast dit Flickr-brugernavn eller din e-post-adresse.
+	DE	Bitte geben Sie Ihren Flickr Benutzernamen oder Ihre Email-Adresse ein
+	EN	Please enter your Flickr Username or your Email address
+	ES	Introduzca su nombre de usuario de Flickr o su dirección de correo electrónico
+	FI	Anna Flickr-käyttäjätunnus tai sähköpostiosoitteesi
+	FR	Spécifiez votre nom d'utilisateur Flickr ou votre adresse électronique
+	IT	Inserire il nome utente flickr o l'indirizzo di posta elettronica
+	NL	Voer je Flickr-gebruikersnaam of je e-mailadres in.
+	NO	Angi ditt Flickr-brukernavn, eller e-postadressen din
+	PL	Wprowadź nazwę użytkownika w usłudze Flickr lub adres e-mail
+	RU	Введите имя пользователя Flickr или свой адрес электронной почты
+	SV	Ange ditt Flickr-användarnamn eller din e-postadress
+
+IMAGE_VIEWER_FLICKR_USERID_ERROR
+	CS	Zadané číslo pro službu Flickr nelze přidělit k účtu uživatele Flickr! Opravte zadanou hodnotu.\n\nPokračujte stiskem jakékoliv klávesy.
+	DA	Der blev ikke fundet en Flickr-brugerkonto som svarer til det indtastede Flickr-id. Du skal rette brugernavnet.\n\nTryk på en vilkårlig knap for at fortsætte.
+	DE	Für den eingegebenen Flickr Benutzernamen kann keine Flickr ID gefunden werden. Bitte korrigieren Sie ihre Eingabe.\n\nBitte drücken Sie eine Taste für weiter.
+	EN	The entered flickr id could not be resolved to a flicker user account! Please correct your entry.\n\nPress any key to continue.
+	ES	El ID de Flickr indicado no se ha podido resolver en una cuenta de usuario de Flickr. Debe corregir el ID.\n\nPulse una tecla cualquiera para continuar.
+	FI	Antamaasi flickr-tunnusta ei voitu käyttää flicker-tilin kanssa. Anna oikea tunnus.\n\nJatka painamalla mitä tahansa näppäintä.
+	FR	L'ID Flickr spécifié n'a pas pu être lié à un compte Flickr. Corrigez les informations spécifiées.\n\nAppuyez sur un bouton pour continuer.
+	IT	Impossibile risolvere l'ID flickr inserito in un account utente flickr. Correggere il valore inserito.\n\nPremere un tasto per continuare.
+	NL	De ingevoerde Flickr-ID kan niet worden opgehaald voor een Flickr-gebruikersaccount! Corrigeer je invoer.\n\nDruk op een willekeurige knop om verder te gaan.
+	NO	Flickr-id-en som ble oppgitt kunne ikke knyttes til en brukerkonto hos flickr. Angi riktig id. \n\nTrykk en tast for å fortsette.
+	PL	Nie można przekształcić wprowadzonego identyfikatora w usłudze Flickr na konto użytkownika usługi Flickr! Popraw wprowadzone informacje.\n\nNaciśnij dowolny klawisz, aby kontynuować.
+	RU	Введенный ID flickr не удалось сопоставить с действительной учетной записью пользователя! Исправьте введенные данные.\n\nДля продолжения нажмите любую клавишу.
+	SV	Det angivna Flickr-namnet överensstämde inte med något Flickr-användarkonto. Korrigera informationen.\n\nTryck på valfri tangent för att fortsätta.
+
+IMAGE_VIEWER_FLICKR_INVALID_DISPLAY_OPTION
+	CS	Vaše identifikační číslo pro službu Flickr zatím není nastaveno. Nastavte platné číslo nebo zvolte jinou volbu zobrazení.\n\nPokračujte stiskem jakékoliv klávesy.
+	DA	Dit Flickr-id er ikke defineret. Angiv et gyldigt Flickr-id, eller vælg en anden visningsmulighed.\n\nTryk på en tast for at fortsætte.
+	DE	Ihre Flickr ID ist noch nicht gesetzt. Bitte setzen Sie die Flickr ID, oder wählen Sie eine andere Anzeige-Option.\n\nBitte drücken Sie eine Taste für weiter.
+	EN	Your flickr id is not set yet. Please set a valid flickr id, or choose another display option.\n\nPress any key to continue.
+	ES	Aún no hay un ID de Flickr configurado. Indique un ID válido o elija otra opción de pantalla.\n\nPulse una tecla cualquiera para continuar.
+	FI	Flickr-tunnusta ei ole vielä määritetty. Määritä kelvollinen flickr-tunnus tai valitse jokin toinen näyttöasetus.\n\nJatka painamalla mitä tahansa näppäintä.
+	FR	Votre ID Flickr n'est pas encore défini. Définissez un ID Flickr valide ou choisissez une option d'affichage différente.\n\nAppuyez sur un bouton pour continuer.
+	IT	Non è stato ancora impostato un ID flickr. Impostare un ID flickr valido o scegliere un'altra opzione di visualizzazione.\n\nPremere un tasto per continuare.
+	NL	Je Flickr-ID is nog niet ingesteld. Stel een geldige Flickr-ID in of kies een andere weergaveoptie.\n\nDruk op een willekeurige knop om verder te gaan.
+	NO	Du har ikke angitt din flickr-id. Oppgi en gyldig flickr-id, eller velg et annet visningsvalg.\n\nTrykk en tast for å fortsette.
+	PL	Identyfikator w usłudze Flickr nie został jeszcze ustawiony. Ustaw poprawny identyfikator w usłudze Flickr lub wybierz inną opcję wyświetlania.\n\nNaciśnij dowolny klawisz, aby kontynuować.
+	RU	Ваш ID в flickr еще не установлен. Установите действительный ID в flickr или выберите другой параметр отображения.\n\nДля продолжения нажмите любую клавишу.
+	SV	Du har inte angett något Flickr-namn än. Ange ett giltigt Flickr-namn eller välj ett annat visningsalternativ.\n\nTryck på valfri tangent för att fortsätta.
 
