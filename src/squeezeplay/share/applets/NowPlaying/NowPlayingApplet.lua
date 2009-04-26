@@ -473,15 +473,15 @@ function _createUI(self)
 	end
 
 	local components = { 
-		nptitle    = "browsenptitle", 
+		nptitle    = "nptitle", 
 		nptrack    = "nptrack", 
 		npalbum    = "npalbum", 
 		npartist   = "npartist", 
-		progressB  = "browseprogressB", 
-		progress   = "browseprogress", 
-		progressNB = "browseprogressNB",
-		npartwork  = "browsenpartwork",
-		npcontrols = 'browsenpcontrols',
+		progressB  = "progressB", 
+		progress   = "progress", 
+		progressNB = "progressNB",
+		npartwork  = "npartwork",
+		npcontrols = 'npcontrols',
 	}	
 
 	self.mainTitle = self:string("SCREENSAVER_NOWPLAYING")

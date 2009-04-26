@@ -1689,21 +1689,13 @@ function skin(self, s)
 
 
 
---------- LEGACY STYLES TO KEEP SLIMBROWSER GOING --------
-if true then
-
-	-- XXXX todo
-
 	-- BEGIN NowPlaying skin code
-	-- this skin is established in two forms,
-	-- one for the Screensaver windowStyle (ss), one for the browse windowStyle (browse)
-	-- a lot of it can be recycled from one to the other
 
 	local NP_ARTISTALBUM_FONT_SIZE = 20
 	local NP_TRACK_FONT_SIZE = 24
 
 	-- Title
-	s.ssnptitle = _uses(s.title, {
+	s.nptitle = _uses(s.title, {
 		rbutton  = {
 			font    = _font(14),
 			fg      = TEXT_COLOR,
@@ -1714,13 +1706,8 @@ if true then
 		}
 	})
 
-	-- nptitle style is the same for all windowStyles
-	s.browsenptitle = _uses(s.ssnptitle)
-	s.largenptitle  = _uses(s.ssnptitle)
-
-
 	-- pressed styles
-	s.ssnptitle.pressed = _uses(s.ssnptitle, {
+	s.nptitle.pressed = _uses(s.nptitle, {
 		lbutton = {
 			bgImg = pressedTitlebarButtonBox,
 		},
@@ -1729,14 +1716,8 @@ if true then
 		},
 	})
 
-	s.browsenptitle.pressed = _uses(s.ssnptitle.pressed)
-	s.largenptitle.pressed = _uses(s.ssnptitle.pressed)
-
 	-- Artwork
 	local ARTWORK_SIZE    = self:param().nowPlayingBrowseArtworkSize
-	local SS_ARTWORK_SIZE = self:param().nowPlayingSSArtworkSize
-	local browseArtWidth  = ARTWORK_SIZE
-	local ssArtWidth      = SS_ARTWORK_SIZE
 
 	-- Song
 	s.nptrack =  {
@@ -1758,8 +1739,8 @@ if true then
 		font = _font(NP_ARTISTALBUM_FONT_SIZE),
 	})
 
-	s.ssnpartwork = {
-		w = ssArtWidth,
+	s.npartwork = {
+		w = ARTWORK_SIZE,
 		border = { 8, TITLE_HEIGHT + 4, 10, 0 },
 		position = LAYOUT_WEST,
 		align = "center",
@@ -1770,9 +1751,6 @@ if true then
 			img = _loadImage(self, "UNOFFICIAL/icon_album_noartwork_190.png"),
 		},
 	}
-
-	s.browsenpartwork = _uses(s.ssnpartwork)
-	s.largenpartwork = _uses(s.ssnpartwork)
 
 	local controlHeight = 38
 	local controlWidth = 45
@@ -1793,7 +1771,7 @@ if true then
 		w = remainingToolbarSpace,
 	})
 
-	s.ssnpcontrols = {
+	s.npcontrols = {
 		order = { 'rew', 'play', 'fwd', 'spacer', 'volDown', 'volSlider', 'volUp' },
 		position = LAYOUT_SOUTH,
 		h = controlHeight,
@@ -1819,20 +1797,17 @@ if true then
 		}),
 	}
 
-	s.ssnpcontrols.pressed = {
-		rew = _uses(s.ssnpcontrols.rew, { bgImg = keyMiddlePressed }),
-		play = _uses(s.ssnpcontrols.play, { bgImg = keyMiddlePressed }),
-		pause = _uses(s.ssnpcontrols.pause, { bgImg = keyMiddlePressed }),
-		fwd = _uses(s.ssnpcontrols.fwd, { bgImg = keyMiddlePressed }),
-		volDown = _uses(s.ssnpcontrols.volDown, { bgImg = keyMiddlePressed }),
-		volUp = _uses(s.ssnpcontrols.volUp, { bgImg = keyMiddlePressed }),
+	s.npcontrols.pressed = {
+		rew = _uses(s.npcontrols.rew, { bgImg = keyMiddlePressed }),
+		play = _uses(s.npcontrols.play, { bgImg = keyMiddlePressed }),
+		pause = _uses(s.npcontrols.pause, { bgImg = keyMiddlePressed }),
+		fwd = _uses(s.npcontrols.fwd, { bgImg = keyMiddlePressed }),
+		volDown = _uses(s.npcontrols.volDown, { bgImg = keyMiddlePressed }),
+		volUp = _uses(s.npcontrols.volUp, { bgImg = keyMiddlePressed }),
 	}
 	
-	s.browsenpcontrols = _uses(s.ssnpcontrols)
-	s.largenpcontrols  = _uses(s.ssnpcontrols)
-
 	-- Progress bar
-	s.ssprogress = {
+	s.progress = {
 		position = LAYOUT_NONE,
 		x = 140,
 		y = TITLE_HEIGHT + ARTWORK_SIZE - 50,
@@ -1856,10 +1831,7 @@ if true then
 		},
 	}
 
-	s.browseprogress = _uses(s.ssprogress)
-	s.largeprogress  = _uses(s.ssprogress)
-
-	s.ssprogressB = {
+	s.progressB = {
 		w = 193,
 		h = 25,
 		padding     = { 0, 0, 0, 18 },
@@ -1868,9 +1840,6 @@ if true then
                 bgImg = _songProgressBackground,
                 img = _songProgressBar,
 	}
-
-	s.browseprogressB = _uses(s.ssprogressB)
-	s.largeprogressB  = _uses(s.ssprogressB)
 
 	s.volumeB = {
 		w = volumeBarWidth,
@@ -1883,29 +1852,27 @@ if true then
 
 
 	-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
-	s.ssprogressNB = {
+	s.progressNB = {
 		position = LAYOUT_NONE,
-		x = 120,
-		y = TITLE_HEIGHT + ARTWORK_SIZE - 5,
-		padding = { 0, 0, 0, 5 },
+		--x = ARTWORK_SIZE + 18,
+		x = 0,
+		y = TITLE_HEIGHT + ARTWORK_SIZE - 50,
+		padding = { ARTWORK_SIZE + 22, 0, 0, 5 },
 		order = { "elapsed" },
 		text = {
 			w = WH_FILL,
-			align = "center",
+			align = "left",
 			padding = { 0, 0, 0, 5 },
-			font = _boldfont(12),
+			font = _boldfont(18),
 			fg = { 0xe7, 0xe7, 0xe7 },
 			sh = { 0x37, 0x37, 0x37 },
 		},
 	}
 
-	s.ssprogressNB.elapsed = _uses(s.ssprogressNB.text)
 
-	s.browseprogressNB = _uses(s.ssprogressNB)
-	s.largeprogressNB  = _uses(s.ssprogressNB)
+	s.progressNB.elapsed = _uses(s.progressNB.text)
 
 
-end -- LEGACY STYLES
 
 	s.debug_canvas = {
 			zOrder = 9999
