@@ -295,6 +295,7 @@ function _updateAll(self)
 			self:_updatePlaylist(false, 0, 0)
 		end
 	end
+	self:_updateVolume()
 end
 
 
@@ -371,8 +372,9 @@ function _updateVolume(self)
 		return
 	end
 
-	local volume = self.player:getVolume()
-	if self.volumeOld ~= volume then
+	local volume       = self.player:getVolume()
+	local sliderVolume = self.volSlider:getValue()
+	if sliderVolume ~= volume then
 		log:debug("new volume from player: ", volume)
 		self.volumeOld = volume
 		self.volSlider:setValue(volume)
