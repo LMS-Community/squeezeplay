@@ -66,7 +66,7 @@ function menu(self)
 --				callback = function(event, menuItem)
 --					self:menuWindow(menuItem)
 --				end },
-			{ text = "Enable VU Meter on all screens (bogus input)",
+			{ text = "Enable VU Meter on all screens",
 				style = 'item_choice',
 				check  = Checkbox(
 						"checkbox",

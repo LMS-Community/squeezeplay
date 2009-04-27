@@ -1,15 +1,18 @@
 local oo            = require("loop.simple")
+local math          = require("math")
 
 local Canvas        = require("jive.ui.Canvas")
 local Framework     = require("jive.ui.Framework")
+local Surface       = require("jive.ui.Surface")
 local Timer         = require("jive.ui.Timer")
-local Widget    = require("jive.ui.Widget")
+local Widget        = require("jive.ui.Widget")
 
-local math             = require("math")
+local decode        = require("squeezeplay.decode")
 
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("ui")
-local FRAME_RATE       = jive.ui.FRAME_RATE
+
+local FRAME_RATE    = jive.ui.FRAME_RATE
 
 local SLICE_HEIGHT = 2
 local SLICE_SPACE = 2
@@ -55,21 +58,17 @@ function __init(self, windowOrFramework)
 
 	obj.windowOrFramework = windowOrFramework
 
-	obj.samplePoints = {3, 9, 9, 8, 4, 5, 4, 10, 10, 9, 10, 3, 3, 1, 1, 4, 8, 3, 3, 7,7 ,9 ,9 ,1 , 1, 3, 3, 3, 3, 4, 3, 7, 8, 9, 8, 9, 1, 9, }
-	obj.sampleIndex = 1
-	obj.sampleDelay = 4
-	obj.sampleDelayIndex = 1
-
-	obj.heightL = 0
+	obj.val = { 0, 0 }
 
 	obj.screenWidth, obj.screenHeight = Framework:getScreenSize()
+
+	_predraw(obj, 40, obj.screenHeight)
 
 	return obj
 end
 
 
 function enableMeter(self, enable)
-
 	if enable ~= nil and not enable then
 		if self.canvas then
 			log:error("Removing meter")
@@ -85,7 +84,7 @@ function enableMeter(self, enable)
 		return
 	end
 
-	log:error("Enabling meter")
+	log:info("Enabling meter")
 	self.canvas = Canvas("debug_canvas", function(screen)
 		_drawMeters(self, screen)
 	end)
@@ -98,57 +97,61 @@ function enableMeter(self, enable)
 		FRAME_RATE
 	)
 	self.windowOrFramework:addWidget(self.canvas)
-
 end
 
+
+
+local RMS_MAP = {
+	0, 2, 5, 7, 10, 21, 33, 45, 57, 82, 108, 133, 159, 200, 
+	242, 284, 326, 387, 448, 509, 570, 652, 735, 817, 900, 
+	1005, 1111, 1217, 1323, 1454, 1585, 1716, 1847, 2005, 
+	2163, 2321, 2480, 2666, 2853, 3040, 3227, 
+}
+
+
+function _predraw(self, w, h)
+	self.surface = Surface:newRGBA(w, h)
+	self.w = w
+	self.h = h
+	self.vh = {}
+
+	local meterY = h
+	for i = 1, #RMS_MAP do
+		self.vh[i] = h - math.ceil(i * (h / #RMS_MAP))
+	end
+
+	for i = 1, (h / (SLICE_HEIGHT + SLICE_SPACE)) do
+		local idx = math.ceil((h - meterY)/h * (#METER_COLORS - 1) ) + 1
+
+		self.surface:filledRectangle(0, meterY, w, meterY + SLICE_HEIGHT -1, METER_COLORS[idx])
+
+		meterY = meterY - (SLICE_HEIGHT + SLICE_SPACE)
+	end
+end
 
 
 function _drawMeters(self, screen)
-	--todo: get real audio input values!!
-	local valueL = self.samplePoints[math.ceil(self.sampleIndex)]
+	local sampleAcc = decode:vumeter()
 
-
-	local heightL = valueL * .1 * self.screenHeight
-
-	if heightL < self.heightL then
-		--decay when next input is quieter than the previous
-		self.heightL = self.heightL - 9 * (SLICE_HEIGHT + SLICE_SPACE)
-		if self.heightL < 0 then
-			self.heightL = 0
-		end
---		log:error("decaying")
-	else
-		self.heightL = heightL
-	end
-
-	local sliceCountL = math.ceil(self.heightL / (SLICE_HEIGHT + SLICE_SPACE))
-
-
-	local meterYL = self.screenHeight
-	for i = 1, sliceCountL do
-		screen:filledRectangle(10 ,meterYL, 30, meterYL + SLICE_HEIGHT -1, self:getSliceColor(meterYL))
-		--bogus R
-		screen:filledRectangle(self.screenWidth - 30 ,meterYL, self.screenWidth - 10, meterYL + SLICE_HEIGHT -1, self:getSliceColor(meterYL))
-
-		meterYL = meterYL - (SLICE_HEIGHT + SLICE_SPACE)
-	end
-
-
-	self.sampleDelayIndex = self.sampleDelayIndex + 1
-	if self.sampleDelayIndex == self.sampleDelay then
-		self.sampleDelayIndex = 1
-
-		self.sampleIndex = self.sampleIndex + 1
-		if self.sampleIndex  == #self.samplePoints then
-			self.sampleIndex = 1
-		end
-	end
+	_drawMeter(self, screen, sampleAcc, 1, self.screenWidth - 100, 0)
+	_drawMeter(self, screen, sampleAcc, 2, self.screenWidth - 50, 0)
 end
 
 
-function getSliceColor(self, meterY)
+function _drawMeter(self, screen, sampleAcc, ch, x, y)
+	local val = 1
+	for i = #RMS_MAP, 1, -1 do
+		if sampleAcc[ch] > RMS_MAP[i] then
+			val = i
+			break
+		end
+	end
 
-	local index = math.ceil((self.screenHeight - meterY)/self.screenHeight * (#METER_COLORS - 1) ) + 1
+	if val < self.val[ch] then
+		self.val[ch] = self.val[ch] - 1
+	else
+		self.val[ch] = val
+	end
 
-	return METER_COLORS[index]
+	self.surface:blitClip(0, self.vh[self.val[ch]], self.w, self.h, screen, x, y + self.vh[self.val[ch]])
 end

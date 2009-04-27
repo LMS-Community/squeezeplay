@@ -656,6 +656,57 @@ static int decode_audio_gain(lua_State *L) {
 	return 0;
 }
 
+#define VUMETER_DEFAULT_SAMPLE_WINDOW 4 * 1024
+
+static int decode_vumeter(lua_State *L) {
+	u32_t sample_accumulator[2];
+	sample_t *ptr;
+	size_t samples_until_wrap;
+	s16_t sample;
+	s32_t sample_sq;
+	size_t i, num_samples;
+
+	num_samples = luaL_optinteger(L, 2, VUMETER_DEFAULT_SAMPLE_WINDOW);
+
+	sample_accumulator[0] = 0;
+	sample_accumulator[1] = 0;
+
+	fifo_lock(&decode_fifo);
+
+	if (current_audio_state & DECODE_STATE_RUNNING) {
+		ptr = (sample_t *)(void *)(decode_fifo_buf + decode_fifo.rptr);
+		samples_until_wrap = BYTES_TO_SAMPLES(fifo_bytes_until_rptr_wrap(&decode_fifo));
+
+		for (i=0; i<num_samples; i++) {
+			sample = (*ptr++) >> 24;
+			sample_sq = sample * sample;
+			sample_accumulator[0] += sample_sq;
+
+			sample = (*ptr++) >> 24;
+			sample_sq = sample * sample;
+			sample_accumulator[1] += sample_sq;
+
+			samples_until_wrap -= 2;
+			if (samples_until_wrap <= 0) {
+				ptr = (sample_t *)decode_fifo_buf;
+			}
+		}
+	}
+
+	fifo_unlock(&decode_fifo);
+
+	sample_accumulator[0] /= num_samples;
+	sample_accumulator[1] /= num_samples;
+
+	lua_newtable(L);
+	lua_pushinteger(L, sample_accumulator[0]);
+	lua_rawseti(L, -2, 1);
+	lua_pushinteger(L, sample_accumulator[1]);
+	lua_rawseti(L, -2, 2);
+
+	return 1;
+}
+
 
 static int decode_init_audio(lua_State *L) {
 	size_t i;
@@ -741,6 +792,7 @@ static const struct luaL_Reg decode_f[] = {
 	{ "dequeuePacket", decode_dequeue_packet },
 	{ "audioEnable", decode_audio_enable },
 	{ "audioGain", decode_audio_gain },
+	{ "vumeter", decode_vumeter },
 	{ NULL, NULL }
 };
 
