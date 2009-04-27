@@ -551,15 +551,21 @@ end
 
 
 function getSNR(self)
-	local f = io.popen("/sbin/iwpriv " .. self.interface .. " getSNR 1")
-	if f == nil then
+	if not self.t_sock then
 		return 0
 	end
 
-	local t = f:read("*all")
-	f:close()
+	local t = self.t_sock:getSNR()
+	if t == nil then
+		log:error("getSNR() failed")
+		return 0
+	end
 
-	return tonumber(string.match(t, ":(%d+)"))
+	-- t[1] : Beacon non-average
+	-- t[2] : Beacon average
+	-- t[3] : Data non-average
+	-- t[4] : Data average
+	return t[2]
 end
 
 

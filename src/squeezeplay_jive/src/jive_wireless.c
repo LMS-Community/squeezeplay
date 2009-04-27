@@ -241,6 +241,54 @@ static int jive_net_wlan_set_power(lua_State *L) {
 };
 
 
+static int jive_net_wlan_get_snr( lua_State *L) {
+	struct wlan_data *data;
+	struct iwreq wrq;
+
+	int buf[4];
+
+	// These two values work with Marvell wireless drivers
+	// They might be different for other wireless drivers
+	int ioctl_val = 0x8BFD;
+	int subioctl_val = 0xA;
+
+	data = (struct wlan_data *) lua_touserdata( L, 1);
+
+	if( !data->fd) {
+		lua_pushnil( L);
+		lua_pushstring( L, "wlan closed");
+		return 2;
+	}
+
+	strncpy( wrq.ifr_ifrn.ifrn_name, "eth0", IFNAMSIZ);
+
+	memset( buf, 0, sizeof(buf));
+
+	wrq.u.data.pointer = buf;
+	wrq.u.data.length = 0;			// We want all four values
+	wrq.u.data.flags = subioctl_val;
+
+	if( ioctl( data->fd, ioctl_val, &wrq) < 0) {
+		lua_pushnil( L);
+		lua_pushfstring( L, "ioctl error: %s", strerror( errno));
+		return 2;
+	}
+
+	lua_newtable( L);
+
+	lua_pushinteger( L, buf[0]);
+	lua_rawseti( L, -2, 1);
+	lua_pushinteger( L, buf[1]);
+	lua_rawseti( L, -2, 2);
+	lua_pushinteger( L, buf[2]);
+	lua_rawseti( L, -2, 3);
+	lua_pushinteger( L, buf[3]);
+	lua_rawseti( L, -2, 4);
+
+	return 1;
+}
+
+
 static const struct luaL_Reg jive_net_wpa_ctrl_lib[] = {
 	{ "open", jive_net_wpa_ctrl_open },
 	{ NULL, NULL }
@@ -270,6 +318,9 @@ int luaopen_jiveWireless(lua_State *L) {
 
 	lua_pushcfunction(L, jive_net_wlan_set_power);
 	lua_setfield(L, -2, "setPower");
+
+	lua_pushcfunction(L, jive_net_wlan_get_snr);
+	lua_setfield(L, -2, "getSNR");
 
 	lua_pushvalue(L, -1);
 	lua_setfield(L, -2, "__index");
