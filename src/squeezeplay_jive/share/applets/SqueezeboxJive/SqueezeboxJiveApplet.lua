@@ -191,19 +191,24 @@ function init(self)
 				      return EVENT_CONSUME
 			      end)
 
-	-- power management
-	self.powerTimer = Timer(0, function() sleep(self) end)
+	-- power management (evaluate every minute)
+	self.lastMotion = Framework:getTicks()
+	self.lastPress = self.lastMotion
+	self.powerTimer = Timer(10000, function()
+		sleep(self)
+	end)
+
 	Framework:addListener(EVENT_MOTION,
 			      function(event) 
 				      if not self.acpower then
-					      wakeup(self)
+					      wakeup(self, 'motion')
 				      end
 				      return EVENT_UNUSED
 			      end)
 
 	Framework:addListener(EVENT_SCROLL,
 			      function(event) 
-				      wakeup(self)
+				      wakeup(self, 'press')
 				      return EVENT_UNUSED
 			      end)
 
@@ -218,7 +223,7 @@ function init(self)
 					      return EVENT_CONSUME
 				      end
 
-				      wakeup(self)
+				      wakeup(self, 'press')
 				      return EVENT_UNUSED
 			      end)
 
@@ -579,7 +584,14 @@ end
 
 
 -- called to wake up jive
-function wakeup(self)
+function wakeup(self, action)
+	if action == 'motion' then
+		self.lastMotion = Framework:getTicks()
+	end
+	if action == 'press' then
+		self.lastPress = Framework:getTicks()
+	end
+
 	if self.lockedPopup then
 		-- we're locked do nothing
 		return
@@ -595,41 +607,70 @@ end
 
 -- called to sleep jive
 function sleep(self)
+	local settings = self:getSettings()
+
+	local now = Framework:getTicks()
+	local deltaMotion = now - self.lastMotion
+	local deltaPress = now - self.lastPress
+
+	local motionTimeout = 0
+	local pressTimeout = 0
+	local nextState = false
+
 	-- don't sleep or suspend with a popup visible
 	-- e.g. Bug 6641 during a firmware upgrade
 	local topWindow = Framework.windowStack[1]
 	if not topWindow:canActivatePowersave()then
-		self:setPowerState("active")
+		pressTimeout = now
+		nextState = "active"
 
 	elseif self.powerState == "active" then
-		self:setPowerState("dimmed")
+		motionTimeout = settings.dimmedTimeout
+		pressTimeout = settings.dimmedTimeout
+		nextState = "dimmed"
 
 	elseif self.powerState == "locked" then
-		self:setPowerState("sleep")
+		motionTimeout = settings.dimmedTimeout
+		pressTimeout = settings.dimmedTimeout
+		nextState = "sleep"
 
-	else
-		if self.powerState == "dimmed" then
-			self:setPowerState("sleep")
-		elseif self.powerState == "sleep" then
-			self:setPowerState("suspend")
-		elseif self.powerState == "suspend" then
-			-- we can't go to sleep anymore
+	elseif self.powerState == "dimmed" then
+		motionTimeout = settings.dimmedTimeout + settings.sleepTimeout
+		pressTimeout = settings.dimmedTimeout + settings.sleepTimeout
+		nextState = "sleep"
+
+	elseif self.powerState == "sleep" then
+		-- motion timeout to enter sleep is shorter than the press
+		-- timeout, so accidental motion does not prevent suspend
+		motionTimeout = settings.dimmedTimeout + settings.sleepTimeout
+
+		-- suspend timeout varies depending on playmode
+		local player = appletManager:callService("getCurrentPlayer")	
+		if player and player:getPlayMode() == "play" then
+			pressTimeout = settings.sleepTimeout + settings.suspendWhenPlayingTimeout
+		else
+			pressTimeout = settings.sleepTimeout + settings.suspendWhenStoppedTimeout
 		end
+		nextState = "suspend"
+
+	elseif self.powerState == "suspend" then
+		-- we can't go to sleep anymore
+	end
+
+	log:debug("powerState=", self.powerState, " nextState=", nextState, " motion=", (motionTimeout - deltaMotion), " press=", (pressTimeout - deltaPress))
+
+	if nextState and (deltaMotion >= motionTimeout) and (deltaPress >= pressTimeout) then
+		self:setPowerState(nextState)
 	end
 end
 
 
 -- set the power state and update devices
-function setPowerState(self, state)
+function setPowerState(self, state, action)
 	local settings = self:getSettings()
 
 	log:info("setPowerState=", state, " acpower=", self.acpower)
 	self.powerState = state
-
-	-- kill the timer
-	self.powerTimer:stop()
-
-	local interval = 0
 
 	if self.acpower then
 		-- charging
@@ -643,7 +684,6 @@ function setPowerState(self, state)
 
 		if state == "active" then
 			self:setBrightness()
-			interval = settings.dimmedTimeout
 			
 		elseif state == "dimmed" then
 			if settings.dimmedAC then
@@ -651,7 +691,6 @@ function setPowerState(self, state)
 			else
 				self:setBrightness()
 			end
-			interval = settings.sleepTimeout
 
 		elseif state == "sleep" then
 			if settings.dimmedAC then
@@ -674,8 +713,6 @@ function setPowerState(self, state)
 				self.audioVolume = nil
 			end
 
-			interval = settings.dimmedTimeout
-
 		elseif state == "locked" then
 			self:_cpuPowerSave(true)
 			self:setBrightness()
@@ -687,15 +724,12 @@ function setPowerState(self, state)
 			end
 
 			self.lockedTimer:restart()
-			interval = settings.dimmedTimeout
 
 		elseif state == "dimmed" then
 			self:_cpuPowerSave(true)
 			if settings.dimmedTimeout > 0 then
 				self:_setBrightness(true, 8, 0)
 			end
-
-			interval = settings.sleepTimeout
 
 		else
 			self:_setBrightness(true, 0, 0)
@@ -707,10 +741,7 @@ function setPowerState(self, state)
 				Sample:setEffectVolume(0)
 			end
 
-			if state == "sleep" then
-				interval = settings.suspendTimeout
-
-			elseif state == "suspend" then
+			if state == "suspend" then
 				if settings.suspendEnabled then
 					self:_suspend()
 				end
@@ -721,10 +752,7 @@ function setPowerState(self, state)
 	-- update wlan power save mode
 	self:_wlanPowerSave()
 
-	if interval > 0 then
-		self.powerTimer:setInterval(interval)
-		self.powerTimer:start()
-	end
+	self.powerTimer:restart()
 end
 
 
@@ -948,10 +976,10 @@ function settingsTestSuspend(self, menuItem)
 		end
 	end
 
-	local suspendOptions = { 10, 30, 60, 600, 3600 }
+	local suspendOptions = { 10, 20, 30, 60, 600, 3600 }
 	local suspendIndex
 	for i, v in ipairs(suspendOptions) do
-		if v == (settings.suspendTimeout / 1000) then
+		if v == (settings.suspendWhenPlayingTimeout / 1000) then
 			suspendIndex = i
 			break
 		end
@@ -965,7 +993,7 @@ function settingsTestSuspend(self, menuItem)
 				      sleepOptions,
 				      function(obj, selectedIndex)
 					      settings.sleepTimeout = sleepOptions[selectedIndex] * 1000
-					      log:info("sleepTimeout=", settings.sleepTimeout)
+					      log:debug("sleepTimeout=", settings.sleepTimeout)
 				      end,
 				      sleepIndex
 			      )
@@ -976,8 +1004,9 @@ function settingsTestSuspend(self, menuItem)
 				      "choice", 
 				      suspendOptions,
 				      function(obj, selectedIndex)
-					      settings.suspendTimeout = suspendOptions[selectedIndex] * 1000
-					      log:info("suspendTimeout=", settings.suspendTimeout)
+					      settings.suspendWhenPlayingTimeout = suspendOptions[selectedIndex] * 1000
+					      settings.suspendWhenStoppedTimeout = (suspendOptions[selectedIndex] * 1000) / 2
+					      log:debug("suspendWhenPlayingTimeout=", settings.suspendWhenPlayingTimeout)
 				      end,
 				      suspendIndex
 			      )
