@@ -167,9 +167,9 @@ function skin(self, s)
 
 	--FIXME, _r asset here doesn't work...it's supposed to have a fadeout effect and it doesn't appear on screen
 	local fiveItemBox             = Tile:loadHTiles({
-		 imgpath .. "5_line_lists/tch_5line_divder_l.png",
-		 imgpath .. "5_line_lists/tch_5line_divder.png",
-		 imgpath .. "5_line_lists/tch_5line_divder_r.png",
+		 imgpath .. "5_line_lists/tch_5line_divider_l.png",
+		 imgpath .. "5_line_lists/tch_5line_divider.png",
+		 imgpath .. "5_line_lists/tch_5line_divider_r.png",
 	})
 	local fiveItemSelectionBox    = Tile:loadHTiles({
 		 imgpath .. "5_line_lists/menu_sel_box_5line_l.png",
@@ -1694,63 +1694,8 @@ function skin(self, s)
 	local NP_ARTISTALBUM_FONT_SIZE = 20
 	local NP_TRACK_FONT_SIZE = 24
 
-	-- Title
-	s.nptitle = _uses(s.title, {
-		rbutton  = {
-			font    = _font(14),
-			fg      = TEXT_COLOR,
-			bgImg   = titlebarButtonBox,
-			w       = TITLE_BUTTON_WIDTH,
-			padding = { 8, 0, 8, 0},
-			align   = 'center',
-		}
-	})
-
-	-- pressed styles
-	s.nptitle.pressed = _uses(s.nptitle, {
-		lbutton = {
-			bgImg = pressedTitlebarButtonBox,
-		},
-		rbutton = {
-			bgImg = pressedTitlebarButtonBox,
-		},
-	})
-
 	-- Artwork
 	local ARTWORK_SIZE    = self:param().nowPlayingBrowseArtworkSize
-
-	-- Song
-	s.nptrack =  {
-		border = { 4, 0, 4, 0 },
-		position = LAYOUT_NORTH,
-		w = WH_FILL,
-		padding = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 20, 20, 10 },
-		align = "left",
-		font = _boldfont(NP_TRACK_FONT_SIZE), 
-		lineHeight = NP_TRACK_FONT_SIZE,
-		fg = TEXT_COLOR,
-	}
-	s.npartist  = _uses(s.nptrack, { 
-		padding = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 55, 20, 10 },
-		font = _font(NP_ARTISTALBUM_FONT_SIZE),
-	})
-	s.npalbum = _uses(s.npartist, { 
-		padding = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 85, 20, 10 },
-		font = _font(NP_ARTISTALBUM_FONT_SIZE),
-	})
-
-	s.npartwork = {
-		w = ARTWORK_SIZE,
-		border = { 8, TITLE_HEIGHT + 4, 10, 0 },
-		position = LAYOUT_WEST,
-		align = "center",
-		artwork = {
-			align = "center",
-			padding = 0,
-			-- FIXME: this is a placeholder
-			img = _loadImage(self, "UNOFFICIAL/icon_album_noartwork_190.png"),
-		},
-	}
 
 	local controlHeight = 38
 	local controlWidth = 45
@@ -1771,67 +1716,150 @@ function skin(self, s)
 		w = remainingToolbarSpace,
 	})
 
-	s.npcontrols = {
-		order = { 'rew', 'play', 'fwd', 'spacer', 'volDown', 'volSlider', 'volUp' },
-		position = LAYOUT_SOUTH,
-		h = controlHeight,
-		--FIXME, this bgImg is incorrect
-		bgImg = keyMiddle,
-		rew   = _uses(_transportControlButton, {
-			img = _loadImage(self, "Icons/icon_toolbar_rew.png"),
-		}),
-		play  = _uses(_transportControlButton, {
-			img = _loadImage(self, "Icons/icon_toolbar_play.png"),
-		}),
-		pause = _uses(_transportControlButton, {
-			img = _loadImage(self, "Icons/icon_toolbar_pause.png"),
-		}),
-		fwd   = _uses(_transportControlButton, {
-			img = _loadImage(self, "Icons/icon_toolbar_ffwd.png"),
-		}),
-		volDown   = _uses(_transportControlButton, {
-			img = _loadImage(self, "Icons/icon_toolbar_vol_down.png"),
-		}),
-		volUp   = _uses(_transportControlButton, {
-			img = _loadImage(self, "Icons/icon_toolbar_vol_up.png"),
-		}),
+
+	local _tracklayout = {
+		border = { 4, 0, 4, 0 },
+		position = LAYOUT_NORTH,
+		w = WH_FILL,
+		align = "left",
+		lineHeight = NP_TRACK_FONT_SIZE,
+		fg = TEXT_COLOR,
 	}
 
-	s.npcontrols.pressed = {
-		rew = _uses(s.npcontrols.rew, { bgImg = keyMiddlePressed }),
-		play = _uses(s.npcontrols.play, { bgImg = keyMiddlePressed }),
-		pause = _uses(s.npcontrols.pause, { bgImg = keyMiddlePressed }),
-		fwd = _uses(s.npcontrols.fwd, { bgImg = keyMiddlePressed }),
-		volDown = _uses(s.npcontrols.volDown, { bgImg = keyMiddlePressed }),
-		volUp = _uses(s.npcontrols.volUp, { bgImg = keyMiddlePressed }),
-	}
+	s.nowplaying = _uses(s.window, {
+		--title bar
+		title = _uses(s.title, {
+			rbutton  = {
+				font    = _font(14),
+				fg      = TEXT_COLOR,
+				bgImg   = titlebarButtonBox,
+				w       = TITLE_BUTTON_WIDTH,
+				padding = { 8, 0, 8, 0},
+				align   = 'center',
+			}
+		}),
 	
-	-- Progress bar
-	s.progress = {
-		position = LAYOUT_NONE,
-		x = 140,
-		y = TITLE_HEIGHT + ARTWORK_SIZE - 50,
-		padding = { 0, 10, 0, 0 },
-		order = { "elapsed", "slider", "remain" },
-		elapsed = {
-			w = 90,
-			align = 'right',
-			padding = { 8, 0, 8, 10 },
-			font = _boldfont(12),
-			fg = { 0xe7,0xe7, 0xe7 },
-			sh = { 0x37, 0x37, 0x37 },
+		-- Song metadata
+		nptrack =  {
+			border     = _tracklayout.border,
+			position   = _tracklayout.position,
+			w          = _tracklayout.w,
+			align      = _tracklayout.align,
+			lineHeight = _tracklayout.lineHeight,
+			fg         = _tracklayout.fg,
+			padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 20, 20, 10 },
+			font       = _boldfont(NP_TRACK_FONT_SIZE), 
 		},
-		remain = {
-			w = 90,
-			align = 'left',
-			padding = { 8, 0, 8, 10 },
-			font = _boldfont(12),
-			fg = { 0xe7,0xe7, 0xe7 },
-			sh = { 0x37, 0x37, 0x37 },
+		npartist  = {
+			border     = _tracklayout.border,
+			position   = _tracklayout.position,
+			w          = _tracklayout.w,
+			align      = _tracklayout.align,
+			lineHeight = _tracklayout.lineHeight,
+			fg         = _tracklayout.fg,
+			padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 55, 20, 10 },
+			font       = _font(NP_ARTISTALBUM_FONT_SIZE),
 		},
-	}
+		npalbum = {
+			border     = _tracklayout.border,
+			position   = _tracklayout.position,
+			w          = _tracklayout.w,
+			align      = _tracklayout.align,
+			lineHeight = _tracklayout.lineHeight,
+			fg         = _tracklayout.fg,
+			padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 85, 20, 10 },
+			font       = _font(NP_ARTISTALBUM_FONT_SIZE),
+		},
+	
+		-- cover art
+		npartwork = {
+			w = ARTWORK_SIZE,
+			border = { 8, TITLE_HEIGHT + 4, 10, 0 },
+			position = LAYOUT_WEST,
+			align = "center",
+			artwork = {
+				align = "center",
+				padding = 0,
+				-- FIXME: this is a placeholder
+				img = _loadImage(self, "UNOFFICIAL/icon_album_noartwork_190.png"),
+			},
+		},
+	
+		--transport controls
+		npcontrols = {
+			order = { 'rew', 'play', 'fwd', 'spacer', 'volDown', 'volSlider', 'volUp' },
+			position = LAYOUT_SOUTH,
+			h = controlHeight,
+			--FIXME, this bgImg is incorrect
+			bgImg = keyMiddle,
+			rew   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_rew.png"),
+			}),
+			play  = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_play.png"),
+			}),
+			pause = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_pause.png"),
+			}),
+			fwd   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_ffwd.png"),
+			}),
+			volDown   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_vol_down.png"),
+			}),
+			volUp   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_vol_up.png"),
+			}),
+		},
+	
+		-- Progress bar
+		npprogress = {
+			position = LAYOUT_NONE,
+			x = 140,
+			y = TITLE_HEIGHT + ARTWORK_SIZE - 50,
+			padding = { 0, 10, 0, 0 },
+			order = { "elapsed", "slider", "remain" },
+			elapsed = {
+				w = 90,
+				align = 'right',
+				padding = { 8, 0, 8, 10 },
+				font = _boldfont(12),
+				fg = { 0xe7,0xe7, 0xe7 },
+				sh = { 0x37, 0x37, 0x37 },
+			},
+			remain = {
+				w = 90,
+				align = 'left',
+				padding = { 8, 0, 8, 10 },
+				font = _boldfont(12),
+				fg = { 0xe7,0xe7, 0xe7 },
+				sh = { 0x37, 0x37, 0x37 },
+			},
+		},
+	
+		-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
+		npprogressNB = {
+			position = LAYOUT_NONE,
+			--x = ARTWORK_SIZE + 18,
+			x = 0,
+			y = TITLE_HEIGHT + ARTWORK_SIZE - 50,
+			padding = { ARTWORK_SIZE + 22, 0, 0, 5 },
+			order = { "elapsed" },
+			elapsed = {
+				w = WH_FILL,
+				align = "left",
+				padding = { 0, 0, 0, 5 },
+				font = _boldfont(18),
+				fg = { 0xe7, 0xe7, 0xe7 },
+				sh = { 0x37, 0x37, 0x37 },
+			},
+		},
+	
+	})
 
-	s.progressB = {
+	-- sliders
+	-- FIXME: I'd much rather describe slider style within the s.nowplaying window table above, otherwise describing alternative window styles for NP will be problematic
+	s.npprogressB = {
 		w = 193,
 		h = 25,
 		padding     = { 0, 0, 0, 18 },
@@ -1841,7 +1869,7 @@ function skin(self, s)
                 img = _songProgressBar,
 	}
 
-	s.volumeB = {
+	s.npvolumeB = {
 		w = volumeBarWidth,
 		border = { 5, 3, 5, 0 },
                 position = LAYOUT_SOUTH,
@@ -1850,29 +1878,24 @@ function skin(self, s)
                 img = _volumeSliderBar,
 	}
 
-
-	-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
-	s.progressNB = {
-		position = LAYOUT_NONE,
-		--x = ARTWORK_SIZE + 18,
-		x = 0,
-		y = TITLE_HEIGHT + ARTWORK_SIZE - 50,
-		padding = { ARTWORK_SIZE + 22, 0, 0, 5 },
-		order = { "elapsed" },
-		text = {
-			w = WH_FILL,
-			align = "left",
-			padding = { 0, 0, 0, 5 },
-			font = _boldfont(18),
-			fg = { 0xe7, 0xe7, 0xe7 },
-			sh = { 0x37, 0x37, 0x37 },
+	-- pressed styles
+	s.nowplaying.title.pressed = _uses(s.nowplaying.title, {
+		lbutton = {
+			bgImg = pressedTitlebarButtonBox,
 		},
+		rbutton = {
+			bgImg = pressedTitlebarButtonBox,
+		},
+	})
+	s.nowplaying.npcontrols.pressed = {
+		rew     = _uses(s.nowplaying.npcontrols.rew, { bgImg = keyMiddlePressed }),
+		play    = _uses(s.nowplaying.npcontrols.play, { bgImg = keyMiddlePressed }),
+		pause   = _uses(s.nowplaying.npcontrols.pause, { bgImg = keyMiddlePressed }),
+		fwd     = _uses(s.nowplaying.npcontrols.fwd, { bgImg = keyMiddlePressed }),
+		volDown = _uses(s.nowplaying.npcontrols.volDown, { bgImg = keyMiddlePressed }),
+		volUp   = _uses(s.nowplaying.npcontrols.volUp, { bgImg = keyMiddlePressed }),
 	}
-
-
-	s.progressNB.elapsed = _uses(s.progressNB.text)
-
-
+	
 
 	s.debug_canvas = {
 			zOrder = 9999

@@ -459,7 +459,8 @@ end
 --
 
 function _createUI(self)
-	local window = Window("text_list")
+	--local window = Window("text_list")
+	local window = Window("nowplaying")
 
        	local customStyle = self:getSettings()["screensaverArtworkSize"]
 
@@ -472,21 +473,9 @@ function _createUI(self)
 		end
 	end
 
-	local components = { 
-		nptitle    = "nptitle", 
-		nptrack    = "nptrack", 
-		npalbum    = "npalbum", 
-		npartist   = "npartist", 
-		progressB  = "progressB", 
-		progress   = "progress", 
-		progressNB = "progressNB",
-		npartwork  = "npartwork",
-		npcontrols = 'npcontrols',
-	}	
-
 	self.mainTitle = self:string("SCREENSAVER_NOWPLAYING")
 
-	self.titleGroup = Group(components.nptitle, {
+	self.titleGroup = Group('title', {
 		lbutton = Button(
 				Group("button_back", { Icon("icon") }), 
 				function() 
@@ -511,9 +500,9 @@ function _createUI(self)
 	   })
 	
 
-		self.trackTitle  = Label(components.nptrack, "")
-		self.albumTitle  = Label(components.npalbum, "")
-		self.artistTitle = Label(components.npartist, "")
+		self.trackTitle  = Label('nptrack', "")
+		self.albumTitle  = Label('npalbum', "")
+		self.artistTitle = Label('npartist', "")
 
 	if showProgressBar then
 		if not self.gotoTimer then
@@ -527,20 +516,20 @@ function _createUI(self)
 				true)
 		end
 	
-		self.progressSlider = Slider(components.progressB, 0, 100, 0,
+		self.progressSlider = Slider('npprogressB', 0, 100, 0,
 			function(slider, value, done)
 				self.gotoElapsed = value
 				self.gotoTimer:restart()
 			end)
 		self.progressSlider:addTimer(1000, function() self:_updatePosition() end)
 
-		self.progressGroup = Group(components.progress, {
+		self.progressGroup = Group('npprogress', {
 				      elapsed = Label("elapsed", ""),
 				      slider = self.progressSlider,
 				      remain = Label("remain", "")
 			      })
 	else
-		self.progressGroup = Group(components.progressNB, {
+		self.progressGroup = Group('npprogressNB', {
 			      elapsed = Label("elapsed", "")
 		})
 		self.progressGroup:addTimer(1000, function() self:_updatePosition() end)
@@ -548,7 +537,7 @@ function _createUI(self)
 
 	self.artwork = Icon("artwork")
 
-	self.artworkGroup = Group(components.npartwork, {
+	self.artworkGroup = Group('npartwork', {
 			artwork = self.artwork,
 	})
 
@@ -563,7 +552,7 @@ function _createUI(self)
 	end
 
 	--todo: this slider is not applicable for Jive, how do we handle this when on the controller
-	self.volSlider = Slider('volumeB', 0, 100, 0,
+	self.volSlider = Slider('npvolumeB', 0, 100, 0,
 			function(slider, value, done)
 				if self.player then
 					if value ~= self.volumeOld then
@@ -574,7 +563,7 @@ function _createUI(self)
 			end)
 	self.volSlider:addTimer(1000, function() self:_updateVolume() end)
 
-	self.controlsGroup = Group(components.npcontrols, {
+	self.controlsGroup = Group('npcontrols', {
 		  	rew = Button(
 				Icon('rew'),
 				function()
