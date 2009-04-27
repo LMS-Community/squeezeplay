@@ -688,7 +688,7 @@ static int decode_vumeter(lua_State *L) {
 
 			samples_until_wrap -= 2;
 			if (samples_until_wrap <= 0) {
-				ptr = (sample_t *)decode_fifo_buf;
+				ptr = (sample_t *)(void *)decode_fifo_buf;
 			}
 		}
 	}
