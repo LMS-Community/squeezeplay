@@ -51,6 +51,7 @@ SCREENSAVER_STOPPED
 	CS	Při zastavení
 	EN	Stopped
 	PL	Po zatrzymaniu
+	RU	При остановке
 
 SCREENSAVER_NOWPLAYING_OF
 	CS	%s z %s

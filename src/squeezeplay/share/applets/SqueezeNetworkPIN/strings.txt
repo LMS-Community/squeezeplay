@@ -55,7 +55,7 @@ SQUEEZENETWORK_NOT_LINKED
 	NL	Pincode kan niet worden geverifieerd. Heb je deze op de website ingevoerd?
 	NO	Pin-koden ble ikke godkjent. Har du tastet den inn på nettsiden?
 	PL	Nie można zweryfikować kodu PIN. Czy został on wprowadzony w witrynie internetowej?
-	RU	Не удалось проверить PIN-коды. Вы ввели его на веб-сайте?
+	RU	Не удалось проверить PIN-код. Вы ввели его на веб-сайте?
 	SV	Det gick inte att verifiera PIN-koden.  Har du angett koden på webbplatsen?
 
 SQUEEZENETWORK_GO_BACK

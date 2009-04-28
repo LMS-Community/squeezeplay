@@ -58,7 +58,7 @@ DATETIME_TIMEFORMAT_24H
 	NL	24 uur
 	NO	24 timer
 	PL	24 godziny
-	RU	24 часов
+	RU	24 часа
 	SV	24 timmar
 
 DATETIME_DATEFORMAT

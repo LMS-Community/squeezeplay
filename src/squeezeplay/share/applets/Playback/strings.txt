@@ -194,7 +194,7 @@ SINE_44_1K
 	NL	Sinus 44.1 k
 	NO	Sinus 44,1k
 	PL	Sinus 44,1 kb
-	RU	Синус 44.1k
+	RU	Синус 44,1k
 	SV	Sinus 44,1 k
 
 SINE_48k
@@ -224,7 +224,7 @@ SINE_88_2K
 	NL	Sinus 88.2 k
 	NO	Sinus 88,2k
 	PL	Sinus 88,2 kb
-	RU	Синус 88.2k
+	RU	Синус 88,2k
 	SV	Sinus 88,2 k
 
 SINE_96K
