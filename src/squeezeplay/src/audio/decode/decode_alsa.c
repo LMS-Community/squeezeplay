@@ -576,8 +576,10 @@ static struct decode_alsa *decode_alsa_thread_init(const char *name, unsigned in
 		goto thread_err;
 	}
 
-	/* set realtime scheduler policy, with a high priority */
-	thread_param.sched_priority = sched_get_priority_max(SCHED_FIFO);
+	/* set realtime scheduler policy. Use 10 as the PREEMPT_PR patches
+	 * use 50 as the default prioity of the kernel tasklets and irq 
+	 * handlers */
+	thread_param.sched_priority = 10;
 
 	err = pthread_setschedparam(state->thread, SCHED_FIFO, &thread_param);
 	if (err) {
