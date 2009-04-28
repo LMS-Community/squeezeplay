@@ -435,7 +435,7 @@ static FT_Error Load_Glyph( TTF_Font* font, Uint16 ch, c_glyph* cached, int want
 	if ( ! cached->index ) {
 		cached->index = FT_Get_Char_Index( face, ch );
 	}
-
+	
 	//Logitech - fix for FreeSan (regular) which looks poorly with autohint on - http://bugs.slimdevices.com/show_bug.cgi?id=11910
 	// original: error = FT_Load_Glyph( face, cached->index, FT_LOAD_DEFAULT );
 	if (face && face->family_name && (strcmp(face->family_name, "FreeSans") == 0))  {
