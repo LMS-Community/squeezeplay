@@ -233,8 +233,8 @@ squeezeplay_private: squeezeplay_private/Makefile
 # freefont
 freefont:
 	mkdir -p ${PREFIX}/share/jive/fonts
-	cp freefont-20060126/FreeSans.ttf ${PREFIX}/share/jive/fonts
-	cp freefont-20060126/FreeSansBold.ttf ${PREFIX}/share/jive/fonts
+	cp freefont-20090104/FreeSans.ttf ${PREFIX}/share/jive/fonts
+	cp freefont-20090104/FreeSansBold.ttf ${PREFIX}/share/jive/fonts
 
 # 
 # This builds the .tarball. It's called by 'all' so no need to run it manually

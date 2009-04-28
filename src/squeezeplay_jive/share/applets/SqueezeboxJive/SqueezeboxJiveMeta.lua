@@ -23,7 +23,8 @@ function defaultSettings(meta)
 		brightness	= 32,
 		dimmedTimeout	= 10000,	-- 10 seconds
 		sleepTimeout	= 60000,	-- 60 seconds
-		suspendTimeout 	= 3600000,	-- 1 hour
+		suspendWhenPlayingTimeout = 2400000, -- 40 minutes
+		suspendWhenStoppedTimeout = 1200000, -- 20 minutes
 		suspendEnabled  = true,
 		suspendWake     = nil,
 		dimmedAC	= false,
@@ -37,9 +38,13 @@ function registerApplet(meta)
 
 	-- Fixup settings after upgrade
 	local settings = meta:getSettings()
-	if not settings.suspendTimeout then
-		settings.suspendTimeout	= 3600000 -- 1 hour
+	if not settings.suspendWhenPlayingTimeout then
+		settings.suspendTimeout = nil
+		settings.suspendWhenPlayingTimeout = 2400000
+		settings.suspendWhenStoppedTimeout = 1200000
+		meta:storeSettings()
 	end
+
 
 	-- Set player device type
 	LocalPlayer:setDeviceType("controller", "Controller")
