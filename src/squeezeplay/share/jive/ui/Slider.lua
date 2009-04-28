@@ -85,6 +85,7 @@ function __init(self, style, min, max, value, closure, dragDoneClosure)
 	obj.value = 1
 	obj.closure = closure
 	obj.dragDoneClosure = dragDoneClosure
+	obj.dragThreshold = 25
 
 	obj.distanceFromMouseDownMax = 0
 	obj.jumpOnDown = true
@@ -229,7 +230,8 @@ function _eventHandler(self, event)
 		updateMouseOriginOffset(self, event)
 
 		if not self.jumpOnDown then
-			if not mouseExceededBufferDistance(self, 25) then
+			--ignore value up until dragThreshold so that a sloppy press can still be seen
+			if not mouseExceededBufferDistance(self, self.dragThreshold) then
 				return EVENT_CONSUME
 			end
 		end

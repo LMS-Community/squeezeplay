@@ -456,6 +456,44 @@ function _installListeners(self, window)
 	
 end
 
+function _setPlayerVolume(self, value)
+	self.lastVolumeSliderAdjustT = Framework:getTicks()
+	if value ~= self.volumeOld then
+		self.player:volume(value, true)
+		self.volumeOld = value
+	end
+end
+
+
+function adjustVolume(self, value, useRateLimit)
+	--volumeRateLimitTimer catches stops in fast slides, so that the "stopped on" value is not missed
+	if not self.volumeRateLimitTimer then
+		self.volumeRateLimitTimer = Timer(100,
+						function()
+							if not self.player then
+								return
+							end
+							if self.volumeAfterRateLimit then
+								self:_setPlayerVolume(self.volumeAfterRateLimit)
+							end
+
+						end, true)
+	end
+	if self.player then
+		--rate limiting since these are serial networks calls
+		local now = Framework:getTicks()
+		if not useRateLimit or now > 350 + self.lastVolumeSliderAdjustT then
+			self.volumeRateLimitTimer:restart()
+			self:_setPlayerVolume(value)
+			self.volumeAfterRateLimit = nil
+		else
+			--save value
+			self.volumeAfterRateLimit = value
+
+		end
+	end
+end
+
 ----------------------------------------------------------------------------------------
 -- Screen Saver Display 
 --
@@ -553,33 +591,21 @@ function _createUI(self)
 		playIcon:setStyle('pause')
 	end
 
-	local adjustVolume = function(self, value)
-		if self.player then
-			if value ~= self.volumeOld then
-				self.player:volume(value, true)
-				self.volumeOld = value
-			end
-		end
-	end
-
 	--todo: this slider is not applicable for Jive, how do we handle this when on the controller
 	self.volSlider = Slider('npvolumeB', 0, 100, 0,
 			function(slider, value, done)
 				--rate limiting since these are serial networks calls
-				local now = Framework:getTicks()
-				if now > 350 + self.lastVolumeSliderAdjustT then
-					adjustVolume(self, value)
-					self.lastVolumeSliderAdjustT = now
-					self.volumeSliderDragInProgress = true
-				end
+				adjustVolume(self, value, true)
+				self.volumeSliderDragInProgress = true
 			end,
 			function(slider, value, done)
 				--called after a drag completes to insure final value not missed by rate limiting
 				self.volumeSliderDragInProgress = false
 
-				adjustVolume(self, value)
+				adjustVolume(self, value, false)
 			end)
 	self.volSlider.jumpOnDown = false
+	self.volSlider.dragThreshold = 5
 	window:addActionListener("page_down", self,
 				function()
 					local e = Event:new(EVENT_SCROLL, 1)
