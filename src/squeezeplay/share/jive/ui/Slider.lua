@@ -76,7 +76,7 @@ oo.class(_M, Widget)
 
 
 
-function __init(self, style, min, max, value, closure)
+function __init(self, style, min, max, value, closure, dragDoneClosure)
 
 	local obj = oo.rawnew(self, Widget(style))
 
@@ -84,6 +84,7 @@ function __init(self, style, min, max, value, closure)
 	obj.range = max or 1
 	obj.value = 1
 	obj.closure = closure
+	obj.dragDoneClosure = dragDoneClosure
 
 	obj.distanceFromMouseDownMax = 0
 	obj.jumpOnDown = true
@@ -244,9 +245,18 @@ function _eventHandler(self, event)
 			-- vertical
 			self:_setSlider(y / h)
 		end
+		self.useDragDoneClosure = true
 
 		return EVENT_CONSUME
 	elseif type == EVENT_MOUSE_UP then
+
+		if self.useDragDoneClosure then
+			self.useDragDoneClosure = false
+			if self.dragDoneClosure then
+				self.dragDoneClosure(self, self.size, false)
+			end
+		end
+
 		if self.mouseState == MOUSE_COMPLETE or self.mouseState == MOUSE_DRAG then
 			return finishMouseSequence(self)
 		end

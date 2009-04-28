@@ -121,7 +121,7 @@ function init(self)
 
 	jnt:subscribe(self)
 	self.player = false
-
+	self.lastVolumeSliderAdjustT = 0
 end
 
 function notify_playerPower(self, player, power)
@@ -372,7 +372,7 @@ function _updateVolume(self)
 		return
 	end
 
-	local volume       = self.player:getVolume()
+	local volume       = tonumber(self.player:getVolume())
 	local sliderVolume = self.volSlider:getValue()
 	if sliderVolume ~= volume then
 		log:debug("new volume from player: ", volume)
@@ -553,17 +553,51 @@ function _createUI(self)
 		playIcon:setStyle('pause')
 	end
 
+	local adjustVolume = function(self, value)
+		if self.player then
+			if value ~= self.volumeOld then
+				self.player:volume(value, true)
+				self.volumeOld = value
+			end
+		end
+	end
+
 	--todo: this slider is not applicable for Jive, how do we handle this when on the controller
 	self.volSlider = Slider('npvolumeB', 0, 100, 0,
 			function(slider, value, done)
-				if self.player then
-					if value ~= self.volumeOld then
-						self.player:volume(value, true)
-						self.volumeOld = value
-					end
+				--rate limiting since these are serial networks calls
+				local now = Framework:getTicks()
+				if now > 350 + self.lastVolumeSliderAdjustT then
+					adjustVolume(self, value)
+					self.lastVolumeSliderAdjustT = now
+					self.volumeSliderDragInProgress = true
 				end
+			end,
+			function(slider, value, done)
+				--called after a drag completes to insure final value not missed by rate limiting
+				self.volumeSliderDragInProgress = false
+
+				adjustVolume(self, value)
 			end)
-	self.volSlider:addTimer(1000, function() self:_updateVolume() end)
+	self.volSlider.jumpOnDown = false
+	window:addActionListener("page_down", self,
+				function()
+					local e = Event:new(EVENT_SCROLL, 1)
+					Framework:dispatchEvent(self.volSlider, e)
+					return EVENT_CONSUME
+				end)
+	window:addActionListener("page_up", self,
+				function()
+					local e = Event:new(EVENT_SCROLL, -1)
+					Framework:dispatchEvent(self.volSlider, e)
+					return EVENT_CONSUME
+				end)
+	self.volSlider:addTimer(1000,
+				function()
+					if not self.volumeSliderDragInProgress then
+						self:_updateVolume()
+					end
+				end)
 
 	self.controlsGroup = Group('npcontrols', {
 		  	rew = Button(
@@ -584,8 +618,8 @@ function _createUI(self)
 			spacer = Icon('toolbar_spacer'),
 		  	volDown  = Button(
 				Icon('volDown'),
-				function() 
-					local e = Event:new(EVENT_SCROLL, -1)
+				function()
+					local e = Event:new(EVENT_SCROLL, -3)
 					Framework:dispatchEvent(self.volSlider, e)
 					return EVENT_CONSUME
 				end
@@ -593,7 +627,7 @@ function _createUI(self)
  		  	volUp  = Button(
 				Icon('volUp'),
 				function() 
-					local e = Event:new(EVENT_SCROLL, 1)
+					local e = Event:new(EVENT_SCROLL, 3)
 					Framework:dispatchEvent(self.volSlider, e)
 					return EVENT_CONSUME
 				end
@@ -799,7 +833,7 @@ function showNowPlaying(self, transition)
 	end
 
 	self:_updateVolume()
-	self.volumeOld = self.player:getVolume()
+	self.volumeOld = tonumber(self.player:getVolume())
 
 	-- Initialize with current data from Player
 	self.window:show(transitionOn)
