@@ -245,11 +245,17 @@ squeezeplay_desktop: squeezeplay_desktop/Makefile
 squeezeplay_contrib:
 	cd squeezeplay_contrib; make PREFIX=${PREFIX}
 
+#squeezeplay "quick" - for faster development of most frequently compiled module - non-universal binary and no file copying
+sq:
+	export PATH=$(BUILD_TOP)/bin:$(PATH); \
+	CC=gcc \
+	cd squeezeplay; make && cp jive $(BUILD_TOP)/bin/
+
 # freefont
 freefont:
 	mkdir -p ${PREFIX}/share/jive/fonts
-	cp freefont-20060126/FreeSans.ttf ${PREFIX}/share/jive/fonts
-	cp freefont-20060126/FreeSansBold.ttf ${PREFIX}/share/jive/fonts
+	cp freefont-20090104/FreeSans.ttf ${PREFIX}/share/jive/fonts
+	cp freefont-20090104/FreeSansBold.ttf ${PREFIX}/share/jive/fonts
 
 squeezeplay_dmg: squeezeplay/Makefile
 	cd squeezeplay; make SqueezePlay_dmg
