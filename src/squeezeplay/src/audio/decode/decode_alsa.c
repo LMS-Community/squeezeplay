@@ -576,10 +576,14 @@ static struct decode_alsa *decode_alsa_thread_init(const char *name, unsigned in
 		goto thread_err;
 	}
 
-	/* set realtime scheduler policy. Use 10 as the PREEMPT_PR patches
+	/* Set realtime scheduler policy. Use 45 as the PREEMPT_PR patches
 	 * use 50 as the default prioity of the kernel tasklets and irq 
-	 * handlers */
-	thread_param.sched_priority = 10;
+	 * handlers.
+	 *
+	 * For the best performance on a tuned RT kernel, make non-audio
+	 * threads have a priority < 45.
+	 */
+	thread_param.sched_priority = 45;
 
 	err = pthread_setschedparam(state->thread, SCHED_FIFO, &thread_param);
 	if (err) {
