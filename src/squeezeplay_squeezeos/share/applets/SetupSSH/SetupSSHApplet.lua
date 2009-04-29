@@ -169,7 +169,7 @@ function _sighup(process)
 
 	log:warn("pattern is ", pattern)
 
-	local cmd = io.popen("/bin/ps")
+	local cmd = io.popen("/bin/ps -o pid,comm")
 	for line in cmd:lines() do
 		pid = string.match(line, pattern)
 		if pid then break end
