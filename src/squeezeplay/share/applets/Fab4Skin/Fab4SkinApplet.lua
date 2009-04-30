@@ -162,6 +162,8 @@ function skin(self, s)
 	local helpButton              = Tile:loadImage( imgpath .. "Icons/icon_help_button_tb.png")
 	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
 	local playlistButton          = Tile:loadImage( imgpath .. "Icons/icon_nplay_list_tb.png")
+	local touchToolbarBackground  = Tile:loadImage( imgpath .. "Touch_Toolbar/toolbar_tch_bkgrd.png")
+	local touchToolbarKeyDivider  = Tile:loadImage( imgpath .. "Touch_Toolbar/toolbar_divider.png")
 	local deleteKeyBackground     = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry.png")
 	local deleteKeyPressedBackground = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry_press.png")
 
@@ -1735,7 +1737,7 @@ function skin(self, s)
 	local controlHeight = 38
 	local controlWidth = 45
 	local volumeBarWidth = 150
-	local remainingToolbarSpace = screenWidth - 5*controlWidth - volumeBarWidth
+--	local remainingToolbarSpace = screenWidth - 5*controlWidth - volumeBarWidth
 	local buttonPadding = 0
 
 	local _transportControlButton = {
@@ -1743,14 +1745,18 @@ function skin(self, s)
 		h = controlHeight,
 		align = 'center',
 		padding = buttonPadding,
-		--FIXME, wrong asset to use for these. this is a placeholder
-		bgImg = keyMiddle,
 	}
 
-	s.toolbar_spacer = _uses(_transportControlButton, {
-		w = remainingToolbarSpace,
+	local _transportControlBorder = _uses(_transportControlButton, {
+		w = 2,
+		padding = 0,
+		img = touchToolbarKeyDivider,		
 	})
 
+	s.toolbar_spacer = _uses(_transportControlButton, {
+		--w = remainingToolbarSpace,
+		w = WH_FILL,
+	})
 
 	local _tracklayout = {
 		border = { 4, 0, 4, 0 },
@@ -1822,11 +1828,19 @@ function skin(self, s)
 	
 		--transport controls
 		npcontrols = {
-			order = { 'rew', 'play', 'fwd', 'spacer', 'volDown', 'volSlider', 'volUp' },
+			order = { 'rew', 'div1', 'play', 'div2', 'fwd', 'div3', 'spacer', 'div4', 'volDown', 'div5', 'volSlider', 'div6', 'volUp' },
 			position = LAYOUT_SOUTH,
 			h = controlHeight,
-			--FIXME, this bgImg is incorrect
-			bgImg = keyMiddle,
+			w = WH_FILL,
+			bgImg = touchToolbarBackground,
+
+			div1 = _uses(_transportControlBorder),
+			div2 = _uses(_transportControlBorder),
+			div3 = _uses(_transportControlBorder),
+			div4 = _uses(_transportControlBorder),
+			div5 = _uses(_transportControlBorder),
+			div6 = _uses(_transportControlBorder),
+
 			rew   = _uses(_transportControlButton, {
 				img = _loadImage(self, "Icons/icon_toolbar_rew.png"),
 			}),

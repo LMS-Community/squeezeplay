@@ -500,7 +500,10 @@ end
 
 function _createUI(self)
 	--local window = Window("text_list")
-	local window = Window("nowplaying")
+	if not self.windowStyle then
+		self.windowStyle = 'nowplaying'
+	end
+	local window = Window(self.windowStyle)
 
        	local customStyle = self:getSettings()["screensaverArtworkSize"]
 
@@ -626,6 +629,12 @@ function _createUI(self)
 				end)
 
 	self.controlsGroup = Group('npcontrols', {
+			div1 = Icon('div1'),
+			div2 = Icon('div2'),
+			div3 = Icon('div3'),
+			div4 = Icon('div4'),
+			div5 = Icon('div5'),
+			div6 = Icon('div6'),
 		  	rew = Button(
 				Icon('rew'),
 				function()
@@ -771,6 +780,7 @@ end
 
 function showNowPlaying(self, transition)
 
+	local windowStyle
 	if Framework:isCurrentWindow(self.window) then
 		log:warn('NP already on screen')
 
@@ -782,8 +792,10 @@ function showNowPlaying(self, transition)
 			log:debug("SS was active")
 			appletManager:callService("deactivateScreensaver")
 			--SS window removed, so continue with building a new window
+			windowStyle = 'nowplaying'
 		else
 			--no need to switch to SS window
+			windowStyle = 'nowplayingSS'
 			return
 		end
 	end
