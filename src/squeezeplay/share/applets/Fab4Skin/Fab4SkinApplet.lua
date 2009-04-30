@@ -586,9 +586,9 @@ function skin(self, s)
 	local _volumeSliderBar = Tile:loadHTiles({
 		imgpath .. "Touch_Toolbar/tch_volumebar_fill_l.png",
 		imgpath .. "Touch_Toolbar/tch_volumebar_fill.png",
-		imgpath .. "Touch_Toolbar/tch_volumebar_fill_r.png",
 		--FIXME, we don't have support for putting this asset on screen correctly
-		--imgpath .. "Touch_Toolbar/tch_volume_slider.png",
+		--imgpath .. "Touch_Toolbar/tch_volumebar_fill_r.png",
+		imgpath .. "Touch_Toolbar/tch_volume_slider.png",
 	})
 
 
