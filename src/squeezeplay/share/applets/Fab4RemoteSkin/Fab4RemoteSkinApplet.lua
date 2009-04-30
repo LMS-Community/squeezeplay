@@ -1019,6 +1019,23 @@ function skin(self, s)
                }
        })
 
+	-- toast popup with icon only
+	s.toast_popup_icon = _uses(s.toast_popup, {
+		w = 146,
+		h = 134,
+		x = screenWidth/2 - 146/2,
+		y = screenHeight/2 - 134/2,
+		group = {
+			padding = 0,
+			order = { 'icon' },
+			icon = {
+				w = WH_FILL,
+				h = WH_FILL,
+				align = 'center',
+			},
+		}
+	})
+
 	-- slider popup (volume/scanner)
 	s.slider_popup = {
 		x = 50,
@@ -1177,6 +1194,19 @@ function skin(self, s)
 
 	s.icon_restart = _uses(_icon, {
 		img = _loadImage(self, "IconsResized/icon_restart" .. skinSuffix),
+	})
+
+	s.icon_popup_pause = _uses(_popupicon, {
+		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
+	})
+
+	s.icon_popup_play = _uses(_popupicon, {
+		img = _loadImage(self, "Icons/icon_popup_box_play.png"),
+	})
+
+	s.icon_popup_stop = _uses(_popupicon, {
+		--FIXME, need a stop icon for this
+		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
 	})
 
 	s.icon_power = _uses(_icon, {

@@ -1114,14 +1114,15 @@ function _process_displaystatus(self, event)
 
 		local transitionOn = Window.transitionPushPopupUp
 		local transitionOff = Window.transitionPushPopupDown
+		local duration = display['duration'] or 3000
 
 		if special then
 			s = self.popupIcon
 			local style = 'icon_popup_' .. special
 			s.icon:setStyle(style)	
-			transitionOn = Window.transitionFadeIn
-			--FIXME, needs a transitionFadeOut
-			transitionOff = Window.transitionPushPopupDown
+			transitionOn = Window.transitionNone
+			transitionOff = Window.transitionNone
+			duration = display['duration'] or 1500
 		elseif type == 'song' then
 			s = self.currentSong
 			s.text:setValue(textValue)
@@ -1135,7 +1136,6 @@ function _process_displaystatus(self, event)
 			s = self.popupInfo
 			s.textarea:setValue(textValue)
 		end
-		local duration = display['duration'] or 3000
 		s.window:showBriefly(duration, nil, transitionOn, transitionOff)
 	end
 end

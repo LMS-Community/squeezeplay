@@ -1406,8 +1406,8 @@ function skin(self, s)
 	s.toast_popup_icon = _uses(s.toast_popup, {
 		w = 146,
 		h = 134,
-		x = screenWidth/2 - 150/2,
-		y = screenHeight/2 - 150/2,
+		x = screenWidth/2 - 146/2,
+		y = screenHeight/2 - 134/2,
 		group = {
 			padding = 0,
 			order = { 'icon' },
