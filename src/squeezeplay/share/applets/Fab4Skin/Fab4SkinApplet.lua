@@ -1401,6 +1401,23 @@ function skin(self, s)
 			},
 		}
 	})
+
+	-- toast popup with icon only
+	s.toast_popup_icon = _uses(s.toast_popup, {
+		w = 146,
+		h = 134,
+		x = screenWidth/2 - 150/2,
+		y = screenHeight/2 - 150/2,
+		group = {
+			padding = 0,
+			order = { 'icon' },
+			icon = {
+				w = WH_FILL,
+				h = WH_FILL,
+				align = 'center',
+			},
+		}
+	})
 	
 	-- slider popup (volume/scanner)
 	s.slider_popup = {
@@ -1575,6 +1592,12 @@ function skin(self, s)
 		padding = { 0, 0, 0, 10 }
 	}
 
+	local _popupicon = {
+		w = WH_FILL,
+		align = 'center',
+		position = LAYOUT_CENTER,
+	}
+
 	-- icon for albums with no artwork
 	s.icon_no_artwork = {
 		img = _loadImage(self, "IconsResized/icon_album_noart" .. skinSuffix ),
@@ -1601,6 +1624,18 @@ function skin(self, s)
 		img = _loadImage(self, "IconsResized/icon_restart" .. skinSuffix),
 	})
 
+	s.icon_popup_pause = _uses(_popupicon, {
+		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
+	})
+
+	s.icon_popup_play = _uses(_popupicon, {
+		img = _loadImage(self, "Icons/icon_popup_box_play.png"),
+	})
+
+	s.icon_popup_stop = _uses(_popupicon, {
+		--FIXME, need a stop icon for this
+		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
+	})
 
 	s.icon_power = _uses(_icon, {
 -- FIXME no asset for this (needed?)
@@ -1896,6 +1931,7 @@ function skin(self, s)
 		volUp   = _uses(s.nowplaying.npcontrols.volUp, { bgImg = keyMiddlePressed }),
 	}
 	
+	s.nowplayingSS = _uses(s.nowplaying)
 
 	s.debug_canvas = {
 			zOrder = 9999

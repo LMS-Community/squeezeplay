@@ -31,7 +31,7 @@ Notifications:
 
 
 -- stuff we need
-local _assert, assert, require, setmetatable, tonumber, tostring, pairs, type = _assert, assert, require, setmetatable, tonumber, tostring, pairs, type
+local _assert, assert, require, setmetatable, tonumber, tostring, ipairs, pairs, type = _assert, assert, require, setmetatable, tonumber, tostring, ipairs, pairs, type
 
 local os             = require("os")
 local math           = require("math")
@@ -278,6 +278,9 @@ function __init(self, jnt, playerId)
 
 		-- text info
 		popupInfo = {},
+
+		-- icon popup
+		popupIcon = {},
 
 		-- browse history
 		browseHistory = {}
@@ -848,6 +851,7 @@ end
 local function hideAction(self)
 	self.currentSong.window:hide()
 	self.popupInfo.window:hide()
+	self.popupIcon.window:hide()
 	return EVENT_CONSUME
 end
 
@@ -911,7 +915,42 @@ function onStage(self)
 	--don't let the textarea get the focus, because we want the window to manage events
 	self.popupInfo.window:focusWidget(nil)
 
+	-- create window to display current song info
+	self.popupIcon.window = Popup("toast_popup_icon")
+	self.popupIcon.window:setAllowScreensaver(true)
+	self.popupIcon.window:setAlwaysOnTop(true)
+	self.popupIcon.icon = Icon("icon")
 
+	local group = Group("group", {
+			icon = self.popupIcon.icon
+	      })
+
+	self.popupIcon.window:addWidget(group)
+
+	local popups = { self.currentSong.window, self.popupInfo.window, self.popupIcon.window }
+
+	for i, popup in ipairs(popups) do
+		--Only 'back' and mouse clicks clear the popup, all other input is forwarded to main window
+		popup:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
+			function(event)
+
+				if (event:getType() & EVENT_MOUSE_ALL) > 0 then
+					return hideAction(self) 
+				end
+	
+				local prev = popup:getLowerWindow()
+				if prev then
+					Framework:dispatchEvent(prev, event)
+				end
+				return EVENT_CONSUME
+			end)
+
+		popup:addActionListener("back", self, hideAction)
+		popup.brieflyHandler = 1
+	end
+
+
+--[[
 	--Only 'back' and mouse clicks clear the popup, all other input is forwarded to main window
 	self.currentSong.window:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
 		function(event)
@@ -945,8 +984,9 @@ function onStage(self)
 		end)
 
 	self.popupInfo.window:addActionListener("back", self, hideAction)
+	self.popupInfo.window.brieflyHandler = 1
+--]]
 
-	self.currentSong.window.brieflyHandler = 1
 end
 
 
@@ -1066,12 +1106,23 @@ function _process_displaystatus(self, event)
 
 	if data.display then
 		local display = data.display
+		local special = display and display.special
 		local type    = display["type"] or 'text'
 
 		local s
 		local textValue = _formatShowBrieflyText(display['text'])
 
-		if type == 'song' then
+		local transitionOn = Window.transitionPushPopupUp
+		local transitionOff = Window.transitionPushPopupDown
+
+		if special then
+			s = self.popupIcon
+			local style = 'icon_popup_' .. special
+			s.icon:setStyle(style)	
+			transitionOn = Window.transitionFadeIn
+			--FIXME, needs a transitionFadeOut
+			transitionOff = Window.transitionPushPopupDown
+		elseif type == 'song' then
 			s = self.currentSong
 			s.text:setValue(textValue)
 			s.artIcon:setStyle("icon")
@@ -1085,7 +1136,7 @@ function _process_displaystatus(self, event)
 			s.textarea:setValue(textValue)
 		end
 		local duration = display['duration'] or 3000
-		s.window:showBriefly(duration, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
+		s.window:showBriefly(duration, nil, transitionOn, transitionOff)
 	end
 end
 
