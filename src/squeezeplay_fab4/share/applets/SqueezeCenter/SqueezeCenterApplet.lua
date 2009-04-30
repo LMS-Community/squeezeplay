@@ -116,7 +116,7 @@ function _pidfor(process)
 
 	log:warn("pattern is ", pattern)
 
-	local cmd = io.popen("/bin/ps -o pid,comm")
+	local cmd = io.popen("/bin/ps -o pid,command")
 	for line in cmd:lines() do
 		pid = string.match(line, pattern)
 		if pid then break end
