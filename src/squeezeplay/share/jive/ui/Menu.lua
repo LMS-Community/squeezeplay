@@ -126,7 +126,7 @@ end
 -- _coerce
 -- returns value coerced between 1 and max
 local function _coerce(value, max)
-	if value < 1 then 
+	if value < 1 then
 		return 1
 	elseif value > max then
 		return max
@@ -286,6 +286,26 @@ function _unpressSelectedItem(self)
 end
 
 
+function _showContextMenuAction(self, event)
+	return (self:_showContextMenu())
+end
+
+
+function _showContextMenu(self)
+	if not self.contextMenuManager then
+		log:error("No contextMenuManager")
+		return EVENT_CONSUMED
+	end
+	local contextMenuType = self.itemContextMenuTypeProvider(self)
+	if contextMenuType then
+		return (self.contextMenuManager:showContextMenu(contextMenuType, self))
+	end
+
+	log:debug("No contextMenuType for index: ", self:getSelectedIndex())
+
+	return EVENT_CONSUMED
+end
+
 -- _eventHandler
 -- manages all menu events
 local function _eventHandler(self, event)
@@ -396,7 +416,17 @@ local function _eventHandler(self, event)
 		end
 
 	elseif self.locked == nil and evtype == EVENT_MOUSE_HOLD then
-		--no mouse hold handling defined yet, ignore for now for MP, these will come through as presses in the UP handling
+
+		if self.mouseState == MOUSE_DOWN then
+			if self.scrollbar:mouseInside(event) then
+				--might want to forward these to scrollbar, but there is no current need for that
+			else
+				--in body area
+				--return _showContextMenuAction(self, event)
+				Framework:pushAction('context_menu')
+				return EVENT_CONSUME
+			end
+		end
 
 --		self.usePressedStyle = false
 --		self:_unpressSelectedItem()
@@ -687,7 +717,7 @@ Constructs a new Menu object. I<style> is the widgets style.
 
 =cut
 --]]
-function __init(self, style, itemRenderer, itemListener, itemAvailable)
+function __init(self, style, itemRenderer, itemListener, itemAvailable, contextMenuManager, itemContextMenuTypeProvider)
 	_assert(type(style) == "string")
 	_assert(type(itemRenderer) == "function")
 	_assert(type(itemListener) == "function")
@@ -763,6 +793,10 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable)
 						obj:reLayout()	
 					end,
 					true)
+
+--	obj:addActionListener("context_menu", obj, _showContextMenuAction)
+	obj.contextMenuManager = contextMenuManager
+	obj.itemContextMenuTypeProvider = itemContextMenuTypeProvider
 
 	obj:addListener(EVENT_ALL,
 			 function (event)
@@ -925,7 +959,7 @@ Returns the index of the selected item.
 =cut
 --]]
 function getSelectedIndex(self)
-	return self.selected
+	return self.selected or 1
 end
 
 

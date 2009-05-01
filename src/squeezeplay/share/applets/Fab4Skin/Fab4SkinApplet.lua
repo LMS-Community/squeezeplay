@@ -452,7 +452,6 @@ function skin(self, s)
 					imgpath .. "Buttons/button_titlebar_l.png",
 				})
 
--- FIXME: do these need updating for Fab4Skin?
 	local helpBox = 
 		Tile:loadTiles({
 				       imgpath .. "Popup_Menu/helpbox.png",
@@ -465,6 +464,20 @@ function skin(self, s)
 				       imgpath .. "Popup_Menu/helpbox_bl.png",
 				       imgpath .. "Popup_Menu/helpbox_l.png",
 			       })
+
+	local popupBox = 
+		Tile:loadTiles({
+				       imgpath .. "Popup_Menu/popup_box.png",
+				       imgpath .. "Popup_Menu/popup_box_tl.png",
+				       imgpath .. "Popup_Menu/popup_box_t.png",
+				       imgpath .. "Popup_Menu/popup_box_tr.png",
+				       imgpath .. "Popup_Menu/popup_box_r.png",
+				       imgpath .. "Popup_Menu/popup_box_br.png",
+				       imgpath .. "Popup_Menu/popup_box_b.png",
+				       imgpath .. "Popup_Menu/popup_box_bl.png",
+				       imgpath .. "Popup_Menu/popup_box_l.png",
+			       })
+
 
 	local scrollBackground = 
 		Tile:loadVTiles({
@@ -1370,7 +1383,7 @@ function skin(self, s)
 		y = screenHeight/2 - 93/2,
 		w = screenWidth - 10,
 		h = 93,
-		bgImg = helpBox,
+		bgImg = popupBox,
 		group = {
 			padding = 10,
 			order = { 'icon', 'text' },
@@ -1406,13 +1419,15 @@ function skin(self, s)
 
 	-- toast popup with icon only
 	s.toast_popup_icon = _uses(s.toast_popup, {
-		w = 146,
-		h = 134,
-		x = screenWidth/2 - 146/2,
-		y = screenHeight/2 - 134/2,
+		w = 190,
+		h = 178,
+		x = 145,
+		y = 72,
 		group = {
-			padding = 0,
+			position = LAYOUT_CENTER,
 			order = { 'icon' },
+			border = 22,
+			padding = { 0, 22, 0, 22 },
 			icon = {
 				w = WH_FILL,
 				h = WH_FILL,
@@ -1427,7 +1442,7 @@ function skin(self, s)
 		y = screenHeight/2 - 50,
 		w = screenWidth - 100,
 		h = 100,
-		bgImg = helpBox,
+		bgImg = popupBox,
 		title = {
 		      border = 10,
 		      fg = TEXT_COLOR,

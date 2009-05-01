@@ -58,6 +58,7 @@ charActionMappings.press = {
 	["8"]  = "play_favorite_8",
 	["9"]  = "play_favorite_9",
 	["?"]  = "help",
+	["t"]  = "context_menu",
 
 	--development tools -- Later when modifier keys are supported, these could be obscured from everyday users
 	["R"]  = "reload_skin",
@@ -104,8 +105,8 @@ keyActionMappings.hold = {
 	[KEY_ADD]  = "add_next",
 	[KEY_BACK] = "go_home",
 	[KEY_LEFT] = "go_home",
-	[KEY_GO] = "go_hold", --has no default assignment yet
-	[KEY_RIGHT] = "go_hold",
+	[KEY_GO] = "context_menu", --has no default assignment yet
+	[KEY_RIGHT] = "context_menu",
 	[KEY_PAUSE] = "stop",
 	[KEY_FWD] = "scanner_fwd",
 	[KEY_REW] = "scanner_rew",

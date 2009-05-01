@@ -643,6 +643,12 @@ local function _performJSONAction(jsonAction, from, qty, step, sink)
 		return
 	end
 	
+	-- temporary hack to allow backwards compatibility
+	local useContextMenu = false
+	if cmdArray[1] == 'tracks' then
+		useContextMenu = true
+	end
+
 	-- replace player if needed
 	local playerid = jsonAction["player"]
 	if _player and (not playerid or tostring(playerid) == "0") then
@@ -677,6 +683,10 @@ local function _performJSONAction(jsonAction, from, qty, step, sink)
 			else
 				table.insert( newparams, k .. ":" .. v )
 			end
+		end
+		-- temporary hack to allow backwards compatibility
+		if useContextMenu then
+			table.insert( newparams, 'useContextMenu:1')
 		end
 	end
 	
@@ -1839,8 +1849,12 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		local onAction
 		local offAction
 		local nextWindow
+		--nextWindow on the base
 		local bNextWindow
+		--nextWindow on the item
 		local iNextWindow
+		--nextWindow on the action
+		local aNextWindow
 		
 		-- we handle no action in the case of an item telling us not to
 		if item['action'] == 'none' then
@@ -1881,8 +1895,12 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		-- dissect base and item for nextWindow params
 		bNextWindow = _safeDeref(chunk, 'base', 'nextWindow')
 		iNextWindow = item['nextWindow']
-		-- item takes precendence out over base
-		nextWindow = iNextWindow or bNextWindow
+
+		-- is there a nextWindow on the action
+		aNextWindow = _safeDeref(item, 'actions', actionName, 'nextWindow') or _safeDeref(chunk, 'base', 'actions', actionName, 'nextWindow') 
+	
+		-- actions take precedence over items/base, item takes precendence over base
+		nextWindow = aNextWindow or iNextWindow or bNextWindow
 
 		choiceAction = _safeDeref(item, 'actions', 'do', 'choices')
 		
@@ -1896,7 +1914,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			actionName = 'do'
 		end
 		
-		-- XXX: Fred: After an input box is used, chunk is nil, so base can't be used
+		-- XXX: After an input box is used, chunk is nil, so base can't be used
 	
 		if iAction or bAction or choiceAction or nextWindow then
 			-- the resulting action, if any
@@ -1967,35 +1985,29 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			-- now we may have found a command
 			if jsonAction or nextWindow then
 				log:debug("_actionHandler(", actionName, "): json action")
-
 				if menuItem then
 					menuItem:playSound("WINDOWSHOW")
 				end
 			
 				-- set good or dummy sink as needed
 				-- prepare the window if needed
-				local step
-				local sink = _devnull
+				local step, sink
 				local from, qty
 				-- cover all our "special cases" first, custom navigation, artwork popup, etc.
 				if nextWindow == 'nowPlaying' then
-					sink = _goNowPlaying
+					_goNowPlaying()
 				elseif nextWindow == 'playlist' then
-					sink = _goPlaylist
+					_goPlaylist()
 				elseif nextWindow == 'home' then
-					sink = goHome
+					goHome()
 				elseif nextWindow == 'parent' then
-					sink = _hideMe()
+					_hideMe()
 				elseif nextWindow == 'grandparent' then
-					log:error("GP")
-					log:error("GP")
-					log:error("GP")
-
-					sink = _hideMeAndMyDad()
+					_hideMeAndMyDad()
 				elseif nextWindow == 'refreshOrigin' then
-					sink = _refreshOrigin()
+					_refreshOrigin()
 				elseif nextWindow == 'refresh' then
-					sink = _refreshMe()
+					_refreshMe()
 				elseif item["showBigArtwork"] then
 					sink = _bigArtworkPopup
 				elseif actionName == 'go'
@@ -2003,6 +2015,20 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					or ( item['playAction'] == 'go' and actionName == 'play' )
 					or ( item['playHoldAction'] == 'go' and actionName == 'play-hold' )
 					or ( item['addAction'] == 'go' and actionName == 'add' ) then
+					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item), _browseSink, jsonAction)
+					if step.menu then
+						from, qty = _decideFirstChunk(step.db, jsonAction)
+					end
+				-- context menu handler
+				elseif actionName == 'more' or
+					item['addAction'] == 'more' or
+					-- using addAction is temporary to ensure backwards compatibility 
+					-- until all 'add' commands are removed in SC in favor of 'more'
+					_safeDeref(chunk, 'base', 'addAction') == 'more' then
+
+					log:debug('Context Menu')
+
+
 					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item), _browseSink, jsonAction)
 					if step.menu then
 						from, qty = _decideFirstChunk(step.db, jsonAction)
@@ -2062,6 +2088,7 @@ local _actionToActionName = {
 	["pause"]   = 'pause',
 	["stop"]   = 'pause-hold',
 	["play"]    = 'play',
+	["context_menu"]    = 'more',
 	["create_mix"]    = 'play-hold',
 	["add"]     = 'add',
 	["add_next"]     = 'add-hold',
