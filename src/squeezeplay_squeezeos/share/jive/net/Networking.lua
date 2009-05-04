@@ -1588,14 +1588,17 @@ Removes old wps.conf file
 function startWPSApp(self, wpsmethod, wpspin)
 	assert(wpsmethod, debug.traceback())
 
-	self:stopWPSApp()
+--	Do this in the same shell command to maintain the correct sequence, i.e.
+--	 first stopping a still running wpsapp, then starting the new one.
+--	Seems to be an issue lately - maybe since using the RT kernel?
+--	self:stopWPSApp()
 	log:warn("startWPSApp")
 	os.execute("rm /usr/sbin/wps/wps.conf 2>1 > /dev/null &")
 	if( wpsmethod == "pbc") then
-		os.execute("cd /usr/sbin/wps; ./wpsapp " .. self.interface .. " " .. wpsmethod .. " 2>1 > /dev/null &")
+		os.execute("killall wpsapp; cd /usr/sbin/wps; ./wpsapp " .. self.interface .. " " .. wpsmethod .. " 2>1 > /dev/null &")
 	else
 		assert( wpspin, debug.traceback())
-		os.execute("cd /usr/sbin/wps; ./wpsapp " .. self.interface .. " " .. wpsmethod .. " " .. wpspin .. " 2>1 > /dev/null &")
+		os.execute("killall wpsapp; cd /usr/sbin/wps; ./wpsapp " .. self.interface .. " " .. wpsmethod .. " " .. wpspin .. " 2>1 > /dev/null &")
 	end
 end
 
