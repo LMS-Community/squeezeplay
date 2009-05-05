@@ -1529,7 +1529,7 @@ local function _requestStatus()
 		_server:request(
 				step.sink,
 				_player:getId(),
-				{ 'status', from, qty, 'menu:menu' }
+				{ 'status', from, qty, 'menu:menu', 'useContextMenu:1' }
 			)
 	end
 end
