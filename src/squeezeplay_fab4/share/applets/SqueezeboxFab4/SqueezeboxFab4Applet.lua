@@ -108,20 +108,17 @@ function init(self)
 		log:warn("Watchdog timer is disabled")
 	end
 
-	settings.brightness = settings.brightness or 64
-	settings.ambient = settings.ambient or 0
-	self:setBrightness( settings.brightness)
+	--settings.brightness = settings.brightness or 64
+	--settings.ambient = settings.ambient or 0
+	--self:setBrightness( settings.brightness)
 
+	self:initBrightness()
 	local brightnessTimer = Timer( 2000,
 		function()
-                        local bright = settings.brightness
-                        if bright > 64 then
-                                bright = 64
-                        end
-                        self:setBrightness( bright)
+			self:doBrightnessTimer()
 		end)
 	brightnessTimer:start()
-
+	
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
 
 	-- find out when we connect to player
@@ -140,7 +137,11 @@ local AMBIENT_SYSPATH = "/sys/bus/i2c/devices/0-0039/"
 local ambientMax = 0
 local ambientMin = 1
 local brightCur = 64
+local brightMax = 64
 local brightTarget = 64
+local brightSettings = 0;
+
+local brightOverride = 0
 
 -- Minimum Brightness - Default:1, calculated using settings.brightness
 -- 	- This variable should probably be configurable by the users
@@ -152,55 +153,96 @@ local AMBIENT_RAMPSTEPS = 7
 
 -- Initialize Brightness Stuff (Factor)
 function initBrightness(self)
-        -- Initialize the Ambient Sensor with a factor of 30
-        local f = io.open(AMBIENT_SYSPATH .. "factor", "w")
-        f:write("30")
-        f:close()
+	-- Initialize the Ambient Sensor with a factor of 30
+	local f = io.open(AMBIENT_SYSPATH .. "factor", "w")
+	f:write("30")
+	f:close()
+		
+	-- Set Initial Settings Brightness
+	brightSettings = settings.brightness
+	brightMax = settings.brightness + brightMinMax
+		
+	-- Create a global listener to set 
+	Framework:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION | EVENT_IR_ALL,
+		function(event)
+		
+			-- if this is a new 'touch' event set brightness to max
+			if brightOverride == 0 then
+				self:setBrightness( math.floor(brightMax) )
+			end
+			
+			brightOverride = 2	
+			return EVENT_UNUSED
+		end
+		,true)		
 end
 
 -- Valid Brighness goes from 1 - 64, 0 = display off
 function doBrightnessTimer(self)
-        local f = io.open(AMBIENT_SYSPATH .. "lux")
-        local lux = f:read("*all")
-        f:close()
+	
+	-- has the user controlled/touched something within the last 3 cycles?
+	if brightOverride > 0 then
+		-- count down once per cycle
+		brightOverride = brightOverride - 1		
+		
+		return
+	end
+	
+	-- Now continue with the real ambient code 
+	local f = io.open(AMBIENT_SYSPATH .. "lux")
+	local lux = f:read("*all")
+	f:close()
 
-        local luxvalue = tonumber(string.sub(lux, 0, string.len(lux)-1))
+	local luxvalue = tonumber(string.sub(lux, 0, string.len(lux)-1))
 
-        if luxvalue > ambientMax then
-                ambientMax = luxvalue
-        end
+	if luxvalue > ambientMax then
+		ambientMax = luxvalue
+	end
+		
 	brightTarget = (luxvalue / ambientMax) * 64
 	
-	-- Ramp Brightness to target
-	local diff = 0
-	diff = (brightTarget - brightCur)
-	if math.abs(diff) > AMBIENT_RAMPSTEPS then
-		diff = AMBIENT_RAMPSTEPS
+	-- Ramp Brightness to target unless the brightness setting has changed
+	if settings.brightness != brightSettings then
+		-- Directly Set Target
+		brightCur = settings.brightness	
 		
-		-- is there an easier solution for this?
-		if brightCur > brightTarget then
-			diff = diff * -1.0
+		-- Update local brightness variables after settings change
+		brightSettings = settings.brightness
+		brightMax = settings.brightness + brightMinMax
+	else 
+		-- Do Ramping
+		local diff = 0
+		diff = (brightTarget - brightCur)
+		if math.abs(diff) > AMBIENT_RAMPSTEPS then
+			diff = AMBIENT_RAMPSTEPS
+			
+			-- is there an easier solution for this?
+			if brightCur > brightTarget then
+				diff = diff * -1.0
+			end
 		end
+		
+		brightCur = brightCur + diff	
+		brightMin = settings.brightness
+		if brightMin < 1 then
+			brightMin = 1
+		end
+
+		-- Limit to settings.brightness + brightMinMax max
+		if brightCur > brightMax then
+			brightCur = brightMax
+		elseif brightCur < brightMin then
+			brightCur = brightMin	
+		end
+		
 	end
 	
-	brightCur = brightCur + diff	
-	brightMin = brightMinMax / settings.brightness * brightMinMax
-	if brightMin < 1 then
-		brightMin = 1
-	end
-
-	-- Limit to 64 max
-	if brightCur > 64 then
-		brightCur = 64
-	elseif brightCur < brightMin then
-		brightCur = brightMin	
-	end
 	
 	-- Set Brightness
 	self:setBrightness( math.floor(brightCur) )
 	
-	log:debug("Brightness: " .. settings.brightness)
-	log:debug("CurTarMax: " .. tostring(brightCur) .. " - ".. tostring(brightTarget) .. " - " .. tostring(ambientMax))
+	--log:info("Brightness: " .. settings.brightness)
+	--log:info("CurTarMax: " .. tostring(brightCur) .. " - ".. tostring(brightTarget) .. " - " .. tostring(ambientMax))
 	
 	-- Set Settings Value
 	settings.ambient = ambientCur
