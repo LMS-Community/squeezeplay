@@ -1116,6 +1116,9 @@ function _process_displaystatus(self, event)
 		local transitionOff = Window.transitionPushPopupDown
 		local duration = display['duration'] or 3000
 
+		local suppressSpecialShowBriefly = jiveMain:getSkinParam('suppressSpecialShowBriefly')
+		local showMe                     = true
+
 		if special then
 			s = self.popupIcon
 			local style = 'icon_popup_' .. special
@@ -1123,6 +1126,9 @@ function _process_displaystatus(self, event)
 			transitionOn = Window.transitionNone
 			transitionOff = Window.transitionNone
 			duration = display['duration'] or 1500
+			if suppressSpecialShowBriefly then
+				showMe = false
+			end
 		elseif type == 'song' then
 			s = self.currentSong
 			s.text:setValue(textValue)
@@ -1136,7 +1142,9 @@ function _process_displaystatus(self, event)
 			s = self.popupInfo
 			s.textarea:setValue(textValue)
 		end
-		s.window:showBriefly(duration, nil, transitionOn, transitionOff)
+		if showMe then
+			s.window:showBriefly(duration, nil, transitionOn, transitionOff)
+		end
 	end
 end
 

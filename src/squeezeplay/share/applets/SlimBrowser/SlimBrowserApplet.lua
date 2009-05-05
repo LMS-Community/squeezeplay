@@ -1082,7 +1082,7 @@ end
 -- pushes next window to the NowPlaying window
 local function _goNowPlaying(transition)
 	if not transition then
-		transition = Window.transitionPushRight
+		transition = Window.transitionPushLeft
 	end
 	Framework:playSound("WINDOWSHOW")
 	appletManager:callService('goNowPlaying', transition)

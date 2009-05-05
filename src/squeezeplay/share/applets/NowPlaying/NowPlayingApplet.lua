@@ -811,8 +811,7 @@ function showNowPlaying(self, transition)
 
 	-- playlist_tracks needs to be > 0 or else defer back to SlimBrowser
 	if not self.player or not playerStatus 
-			or not playerStatus.playlist_tracks 
-			or playerStatus.playlist_tracks == 0 then
+			or not playerStatus.playlist_tracks then
 		local browser = appletManager:getAppletInstance("SlimBrowser")
 		browser:showPlaylist()
 		return
