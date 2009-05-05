@@ -1818,6 +1818,7 @@ local _defaultActions = {
 		return EVENT_CONSUME
 	end,
 
+	--FIXME: add and add-hold should instead be delivered by the context menu
 	["add-status"] = function(_1, _2, _3, dbIndex)
 		_player:playlistDeleteIndex(dbIndex)
 		return EVENT_CONSUME
@@ -1827,8 +1828,11 @@ local _defaultActions = {
 		_player:playlistZapIndex(dbIndex)
 		return EVENT_CONSUME
 	end,
+
 }
 
+-- Liberace says: "touch is play"
+_defaultActions['go-status'] = _defaultActions['play-status']
 
 -- _actionHandler
 -- sorts out the action business: item action, base action, default action...
