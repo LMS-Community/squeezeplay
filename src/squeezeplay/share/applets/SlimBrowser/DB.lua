@@ -165,7 +165,7 @@ function menuItems(self, chunk)
 
 	-- we may be called with no chunk, f.e. when building the window
 	if not chunk then
-		return self, self.count
+		return self.count
 	end
 
 	-- update the status
@@ -193,7 +193,7 @@ function menuItems(self, chunk)
 
 	self.store[key] = chunk["item_loop"]
 
-	return self, self.count, cFrom, cTo
+	return self.count, cFrom, cTo
 end
 
 

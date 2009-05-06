@@ -69,12 +69,25 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
---==============================================================================
--- Global "constants"
---==============================================================================
+--[[
 
--- number of volume steps
-local VOLUME_STEPS = 20
+The 'step' contains the browser state for each request. It has the following
+attributes:
+	origin	- the parent step, or nil if this is a root
+	sink	- the comet sink for this step
+	db	- a sparse database of menu items and render state
+	loaded	- an optional callback, called when this step has loaded
+	window	- the steps window
+	menu	- the steps menu
+	data	- opaque data for the step
+	cancelled	- a flag, set to true if the step is cancelled
+	actionModifier	- action modifier (used for playlist actions)
+
+XXXX I think these are unused attributes:
+	destination - the child step
+
+--]]
+
 
 --==============================================================================
 -- Local variables (globals)
@@ -88,8 +101,6 @@ local _player = false
 local _server = false
 
 -- The path of enlightenment
-local _statusStep = false
-local _emptyStep = false
 local _stepStack = {}
 
 -- Our main menu/handlers
@@ -99,18 +110,12 @@ local _playerKeyHandler = false
 local _lastInput = ""
 local _inputParams = {}
 
-local modeTokens = {	
-			play  = "SLIMBROWSER_PLAYLIST",
-			pause = "SLIMBROWSER_PAUSED", 
-			stop  = "SLIMBROWSER_STOPPED",
-			off   = "SLIMBROWSER_OFF"
-}
-
 -- legacy map of menuStyles to windowStyles
 -- this allows SlimBrowser to make an educated guess at window style when one is not sent but a menu style is
 local menu2window = {
 	album = 'icon_list',
 }
+
 -- legacy map of item styles to new item style names
 local styleMap = {
 	itemplay = 'item_play',
@@ -192,7 +197,8 @@ end
 
 -- _decideFirstChunk
 -- figures out the from values for performJSONAction, including logic for finding the previous browse index in this list
-local function _decideFirstChunk(db, jsonAction)
+local function _decideFirstChunk(step, jsonAction)
+	local db = step.db
 	local qty           = DB:getBlockSize()
 
 	if not _player then
@@ -342,6 +348,11 @@ local function _getParentStep()
 end
 
 
+local function _stepSetMenuItems(step, data)
+	step.menu:setItems(step, step.db:menuItems(data))
+end
+
+
 local function _pushToNewWindow(step)
 	if not step then
 		return
@@ -398,7 +409,7 @@ end
 
 -- _artworkItem
 -- updates a group widget with the artwork for item
-local function _artworkItem(item, group, menuAccel)
+local function _artworkItem(step, item, group, menuAccel)
 	local icon = group and group:getWidget("icon")
 	local iconSize
 
@@ -512,7 +523,9 @@ end
 
 -- _decoratedLabel
 -- updates or generates a label cum decoration in the given labelStyle
-local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
+local function _decoratedLabel(group, labelStyle, item, step, menuAccel)
+	local db = step.db
+
 	-- if item is a windowSpec, then the icon is kept in the spec for nothing (overhead)
 	-- however it guarantees the icon in the title is not shared with (the same) icon in the menu.
 	local showIcons = true
@@ -569,7 +582,7 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 				end
 				group._type = nil
 			end
-			_artworkItem(item, group, menuAccel)
+			_artworkItem(step, item, group, menuAccel)
 		end
 		group:setStyle(labelStyle)
 
@@ -689,14 +702,6 @@ local function _refreshJSONAction(step)
 
 	_server:userRequest(step.sink, playerid, step.jsonAction)
 
-end
-
--- _getStepSink
--- returns a closure to a sink embedding step
-local function _getStepSink(step, sink)
-	return function(chunk, err)
-		sink(step, chunk, err)
-	end
 end
 
 -- _inputInProgress
@@ -1020,7 +1025,7 @@ local function _browseSink(step, chunk, err)
 			-- but we don't want to reach the next clause
 			-- count == 0 responses should not be typical
 		elseif step.menu then
-			step.menu:setItems(step.db:menuItems(data))
+			_stepSetMenuItems(step, data)
 			if _player and _player.menuAnchor and not _player.menuAnchorSet then
 				log:debug("Selecting  menuAnchor: ", _player.menuAnchor)				step.menu:setSelectedIndex(_player.menuAnchor)
 				step.menu:setSelectedIndex(_player.menuAnchor)
@@ -1134,64 +1139,6 @@ local function _browseSink(step, chunk, err)
 end
 
 
--- _requestStatus
--- request the next chunk from the player status (playlist)
-local function _requestStatus()
-	local step = _statusStep
-
-	local from, qty = step.db:missing()
-	if from then
-		-- note, this is not a userRequest as the playlist is
-		-- updated when the playlist changes
-		_server:request(
-				step.sink,
-				_player:getId(),
-				{ 'status', from, qty, 'menu:menu', 'useContextMenu:1' }
-			)
-	end
-end
-
-
--- _statusSink
--- sink that sets the data for our status window(s)
-local function _statusSink(step, chunk, err)
-	log:debug("_statusSink()")
-		
-	-- currently we're not going anywhere with current playlist...
-	_assert(step == _statusStep)
-
-	local data = chunk.data
-	if data then
-
-		local hasSize = _safeDeref(data, 'item_loop', 1)
-		if not hasSize then return end
-
-		if logd:isDebug() then
-			debug.dump(data, 8)
-		end
-		
-		-- handle the case where the player disappears
-		-- return silently
-		if data.error then
-			log:info("_statusSink() chunk has error: returning")
-			return
-		end
-		
-		-- FIXME: this can go away once we dispense of the upgrade messages
-		-- if we have a data.item_loop[1].text == 'READ ME', 
-		-- we've hit the SC upgrade message and shouldn't be dropping it into NOW PLAYING
-		if data.item_loop and data.item_loop[1].text == 'READ ME' then
-			log:debug('This is not a message suitable for the current playlist')
-			return
-		end
-
-		step.menu:setItems(step.db:menuItems(data))
-		_requestStatus()
-
-	else
-		log:error(err)
-	end
-end
 
 -- _globalActions
 -- provides a function for default button behaviour, called outside of the context of the browser
@@ -1638,7 +1585,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					or ( item['addAction'] == 'go' and actionName == 'add' ) then
 					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item), _browseSink, jsonAction)
 					if step.menu then
-						from, qty = _decideFirstChunk(step.db, jsonAction)
+						from, qty = _decideFirstChunk(step, jsonAction)
 					end
 				-- context menu handler
 				elseif actionName == 'more' or
@@ -1652,7 +1599,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 
 					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item), _browseSink, jsonAction)
 					if step.menu then
-						from, qty = _decideFirstChunk(step.db, jsonAction)
+						from, qty = _decideFirstChunk(step, jsonAction)
 					end
 				end
 
@@ -1723,7 +1670,9 @@ local _actionToActionName = {
 
 -- _browseMenuListener
 -- called 
-local function _browseMenuListener(menu, db, menuItem, dbIndex, event)
+local function _browseMenuListener(menu, step, menuItem, dbIndex, event)
+	local db = step.db
+
 	log:debug("_browseMenuListener(", event:tostring(), ", " , index, ")")
 	
 
@@ -1820,7 +1769,9 @@ end
 
 -- _browseMenuRenderer
 -- renders a basic menu
-local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderSize)
+local function _browseMenuRenderer(menu, step, widgets, toRenderIndexes, toRenderSize)
+	local db = step.db
+
 	--	log:debug("_browseMenuRenderer(", toRenderSize, ", ", db, ")")
 	-- we must create or update the widgets for the indexes in toRenderIndexes.
 	-- this last list can contain null, so we iterate from 1 to toRenderSize
@@ -1866,7 +1817,7 @@ local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderS
 			if item['checkbox'] or item['radio'] or item['selectedIndex'] then
 				style = 'item_choice'
 			end
-			widgets[widgetIndex] = _decoratedLabel(widget, style, item, db, menuAccel)
+			widgets[widgetIndex] = _decoratedLabel(widget, style, item, step, menuAccel)
 		end
 	end
 
@@ -1886,7 +1837,7 @@ local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderS
 	for dbIndex = startIndex, startIndex + toRenderSize do
 		local item = db:item(dbIndex)
 		if item then
-			_artworkItem(item, nil, false)
+			_artworkItem(step, item, nil, false)
 		end
 	end
 end
@@ -1894,7 +1845,9 @@ end
 
 -- _browseMenuAvailable
 -- renders a basic menu
-local function _browseMenuAvailable(menu, db, dbIndex, dbVisible)
+local function _browseMenuAvailable(menu, step, dbIndex, dbVisible)
+	local db = step.db
+
 	-- check range
 	local minIndex = math.max(1, dbIndex)
 	local maxIndex = math.min(dbIndex + dbVisible, db:size())
@@ -2082,7 +2035,6 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	
 	-- create a window in all cases
 	local window = Window(windowSpec.windowStyle or 'text_list')
-	window:setTitleWidget(_decoratedLabel(nil, 'title', windowSpec, db, false))
 	
 	local menu
 	-- if the item has an input field or fields, we must ask for it
@@ -2118,7 +2070,6 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		menu = Menu(db:menuStyle(), _browseMenuRenderer, _browseMenuListener, _browseMenuAvailable)
 		
 		-- alltogether now
-		menu:setItems(db:menuItems())
 		window:addWidget(menu)
 
 		-- add support for help text on a regular menu
@@ -2147,6 +2098,11 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	}
 	
 	log:debug("new step: " , step)
+
+	window:setTitleWidget(_decoratedLabel(nil, 'title', windowSpec, step, false))
+	if step.menu then
+		_stepSetMenuItems(step)
+	end
 	
 	-- make sure closing our windows do keep the path alive!
 	window:addListener(EVENT_WINDOW_POP,
@@ -2165,10 +2121,11 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	)
 		
 	-- manage sink
-	local stepSink = _getStepSink(step, sink)
-	step.sink = stepSink
-	
-	return step, stepSink
+	step.sink = function(chunk, err)
+		sink(step, chunk, err)
+	end
+
+	return step, step.sink
 end
 
 
@@ -2257,64 +2214,6 @@ function goHome(self, transition)
 end
 
 
--- showTrackOne
---
--- pushes the song info window for track one on stage
--- this method is used solely by NowPlaying Applet for
--- skipping the playlist screen when the playlist size == 1
-function showTrackOne()
-	local playerStatus = _player:getPlayerStatus()
-	local item = playerStatus and playerStatus.item_loop and playerStatus.item_loop[1]
-	local iWindow = _safeDeref(item, 'window')
-
-	local baseData = playerStatus and playerStatus.base
-	local bWindow = _safeDeref(baseData, 'window')
-
-	local bAction = _safeDeref(baseData, 'actions', 'go')
-	local iAction = _safeDeref(item, 'actions', 'go')
-
-	local jsonAction
-
-	-- if the action is defined in the item, then do that
-	if iAction then
-		jsonAction = iAction
-	-- bAction contains (possibly) the start of the songinfo command for track 1
-	else
-		jsonAction = bAction
-		local params = jsonAction["params"]
-                if not params then
-			params = {}
-		end
-		-- but also get params in the item
-		if item["params"] then
-			for k,v in pairs(item['params']) do
-				params[k] = v
-			end
-		end
-		jsonAction["params"] = params
-	end
-
-	-- determine style
-	local newWindowSpec = {
-		["windowStyle"]      = "trackinfo",
-		["menuStyle"]        = "menu",
-		["labelItemStyle"]   = "item",
-		["text"]             = _priorityAssign('text',       item["text"],    iWindow, bWindow),
-		["icon-id"]          = _priorityAssign('icon-id',    item["icon-id"], iWindow, bWindow),
-		["icon"]             = _priorityAssign('icon',       item["icon"],    iWindow, bWindow),
-	}		
-
-	local step, sink = _newDestination(nil, item, newWindowSpec, _browseSink)
-	step.window:addActionListener("back", step, _goNowPlayingAction)
-	step.window:show()
-	_pushStep(step)
-
-	-- send the command
-	local from, qty
-	_performJSONAction(jsonAction, 0, 200, step, sink)
-end
-
-
 function findSqueezeNetwork(self)
 	-- get squeezenetwork object
         for mac, server in appletManager:callService("iterateSqueezeCenters") do
@@ -2330,8 +2229,6 @@ end
 
 function squeezeNetworkRequest(self, request)
 	local squeezenetwork = findSqueezeNetwork()
-
-	_string = function(token) return self:string(token) end
 
 	if not squeezenetwork or not request then
 		return
@@ -2404,7 +2301,7 @@ function browserActionRequest(self, server, v, loadedCallback)
 				step.window:show()
 				_pushStep(step)
 			else
-				from, qty = _decideFirstChunk(step.db, jsonAction)
+				from, qty = _decideFirstChunk(step, jsonAction)
 
 				step.loaded = function()
 					if loadedCallback then
@@ -2427,289 +2324,6 @@ end
 
 function browserCancel(self, step)
 	 step.cancelled = true
-end
-
-
--- showEmptyPlaylist
--- if the player playlist is empty, we replace _statusStep with this window
-function showEmptyPlaylist(token)
-
-	local window = Window("icon_list", _string(modeTokens['play']), 'currentplaylisttitle')
-	local menu = SimpleMenu("menu")
-	menu:addItem({
-		     text = _string(token),
-			style = 'item_no_arrow'
-	})
-	window:addWidget(menu)
-
-	_emptyStep = {}
-	_emptyStep.window = window
-
-	return window
-
-end
-
-function _leavePlayListAction()
-	local windowStack = Framework.windowStack
-	-- if this window is #2 on the stack there is no NowPlaying window
-	-- (e.g., when playlist is empty)
-	if #windowStack == 2 then
-		_goNow('home')
-	else
-		_goNow('nowPlaying')
-	end
-	return EVENT_CONSUME
-end
-
-
--- showPlaylist
---
-function showPlaylist()
-	if _statusStep then
-
-		-- arrange so that menuListener works
-		_pushStep(_statusStep)
-
-		-- current playlist should select currently playing item 
-		-- if there is only one item in the playlist, bring the selected item to top
-		local playerStatus = _player:getPlayerStatus()
-		local playlistSize = _player:getPlaylistSize() 
-
-		if not _player:isPowerOn() then
-			_statusStep.window:setTitle(_string(modeTokens['off']))
-		end
-
-		if playlistSize == 0 then
-			local customWindow = showEmptyPlaylist('SLIMBROWSER_NOTHING') 
-			customWindow:show()
-			return EVENT_CONSUME
-		end
-
-
-		if playlistSize == nil or (playlistSize and playlistSize <= 1) then
-			_statusStep.menu:setSelectedIndex(1)
-		-- where we are in the playlist is stored in the item list as currentIndex
-		elseif _statusStep.menu:getItems() and _statusStep.menu:getItems().currentIndex then
-			_statusStep.menu:setSelectedIndex(_statusStep.menu:getItems().currentIndex)
-		end
-
-		_statusStep.window:addActionListener("back", _statusStep, _leavePlayListAction)
-
-		_statusStep.window:show()
-
-
-		return EVENT_CONSUME
-	end
-	return EVENT_UNUSED
-
-end
-
-function notify_playerPower(self, player, power)
-	log:debug('SlimBrowser.notify_playerPower')
-	if _player ~= player then
-		return
-	end
-	local playerStatus = player:getPlayerStatus()
-	if not playerStatus then
-		log:info('no player status')
-		return
-	end
-
-	local playlistSize = playerStatus.playlist_tracks
-	local mode = player:getPlayMode()
-
-	-- when player goes off, user should get single item styled 'Off' playlist
-	local step = _statusStep
-	local emptyStep = _emptyStep
-
-	if step and step.menu then
-		-- show 'OFF' in playlist window title when the player is off
-		if not power then
-			if step.window then
-				step.window:setTitle(_string("SLIMBROWSER_OFF"))
-			end
-		else
-			if step.window then
-				if emptyStep then
-					step.window:replace(emptyStep.window, Window.transitionFadeIn)
-				end
-				step.window:setTitle(_string(modeTokens[mode]))
-			end
-		end
-	end
-end
-
-function notify_playerModeChange(self, player, mode)
-	log:debug('SlimBrowser.notify_playerModeChange')
-	if _player ~= player then
-		return
-	end
-
-	local step = _statusStep
-	local token = mode
-	if mode != 'play' and not player:isPowerOn() then
-		token = 'off'
-	end
-
-	step.window:setTitle(_string(modeTokens[token]))
-
-end
-
-function notify_playerPlaylistChange(self, player)
-	log:debug('SlimBrowser.notify_playerPlaylistChange')
-	if _player ~= player then
-		return
-	end
-
-	local playerStatus = player:getPlayerStatus()
-	local playlistSize = _player:getPlaylistSize()
-	local step         = _statusStep
-	local emptyStep    = _emptyStep
-
-	-- display 'NOTHING' if the player is on and there aren't any tracks in the playlist
-	if _player:isPowerOn() and playlistSize == 0 then
-		local customWindow = showEmptyPlaylist('SLIMBROWSER_NOTHING') 
-		if emptyStep then
-			customWindow:replace(emptyStep.window, Window.transitionFadeIn)
-		end
-		if step.window then
-			customWindow:replace(step.window, Window.transitionFadeIn)
-		end
-		-- we've done all we need to when the playlist is 0, so let's get outta here
-		return
-	-- make sure we have step.window replace emptyStep.window when there are tracks and emptyStep exists
-	elseif playlistSize and emptyStep then
-		if step.window then
-			step.window:replace(emptyStep.window, Window.transitionFadeIn)
-		end
-	
-	end
-
-	-- update the window
-	step.db:updateStatus(playerStatus)
-	step.menu:reLayout()
-
-	-- does the playlist need loading?
-	_requestStatus()
-
-end
-
-function notify_playerTrackChange(self, player, nowplaying)
-	log:debug('SlimBrowser.notify_playerTrackChange')
-
-	if _player ~= player then
-		return
-	end
-
-	if not player:isPowerOn() then
-		return
-	end
-
-	local playerStatus = player:getPlayerStatus()
-	local step = _statusStep
-
-	step.db:updateStatus(playerStatus)
-	if step.db:playlistIndex() then
-		step.menu:setSelectedIndex(step.db:playlistIndex())
-	else
-		step.menu:setSelectedIndex(1)
-	end
-	step.menu:reLayout()
-
-end
-
-
--- notify_playerDelete
--- this is called when the player disappears
-function notify_playerDelete(self, player)
-	log:debug("SlimBrowserApplet:notify_playerDelete(", player, ")")
-
-	-- if this concerns our player
-	if _player == player then
-		-- panic!
-		log:info("Player gone while browsing it ! -- packing home!")
-		self:free()
-	end
-end
-
-
--- notify_playerCurrent
--- this is called when the current player changes (possibly from no player)
-function notify_playerCurrent(self, player)
-	log:debug("SlimBrowserApplet:notify_playerCurrent(", player, ")")
-
-	-- has the player actually changed?
-	if _player == player then
-		return
-	end
-
-	-- free current player
-	if _player then
-		self:free()
-	end
-
-	-- clear any errors, we may have changed servers
-	iconbar:setServerError("OK")
-
-	-- update the volume object
-	if self.volume then
-		self.volume:setPlayer(player)
-	end
-
-	-- update the scanner object
-	self.scanner:setPlayer(player)
-
-	-- nothing to do if we don't have a player or server
-	-- NOTE don't move this, the code above needs to run when disconnecting
-	-- for all players.
-	if not player or not player:getSlimServer() then
-		return
-	end
-
-	-- assign our locals
-	_player = player
-	_server = player:getSlimServer()
-	_string = function(token) return self:string(token) end
-	local _playerId = _player:getId()
-
-	-- create a window for the current playlist, this is our _statusStep
-	local step, sink = _newDestination(
-		nil,
-		nil,
-		_newWindowSpec(
-			nil, 
-			{
-				text = _string("SLIMBROWSER_PLAYLIST"),
-				window = { 
-					["menuStyle"] = "album", 
-				}
-			},
-			'currentplaylist'
-		),
-		_statusSink
-	)
-	_statusStep = step
-	
-	-- make sure it has our modifier (so that we use different default action in Now Playing)
-	_statusStep.actionModifier = "-status"
-
-	-- showtime for the player
-	_server.comet:startBatch()
-	_player:onStage()
-	_requestStatus()
-	_server.comet:endBatch()
-
-	-- look to see if the playlist has size and the state of player power
-	-- if playlistSize is 0 or power is off, we show and empty playlist
-	if not _player:isPowerOn() then
-		if _statusStep.window then
-			_statusStep.window:setTitle(_string("SLIMBROWSER_OFF"))
-		end
-	end
-
-	_installActionListeners(self)
-	_installPlayerKeyHandler(self)
-	
 end
 
 
@@ -2841,6 +2455,438 @@ function _problemConnecting(self, server)
 end
 
 
+
+
+--[[
+********************************************************************************
+
+Playlist management code is below here. This really should be refactored into
+a different applet, but at the moment it is a little bit too tangled with the
+SlimBrowser code.
+
+This section includes the volume and scanner popups.
+
+
+********************************************************************************
+--]]
+
+
+local _statusStep = false
+local _emptyStep = false
+
+local modeTokens = {	
+	play  = "SLIMBROWSER_PLAYLIST",
+	pause = "SLIMBROWSER_PAUSED", 
+	stop  = "SLIMBROWSER_STOPPED",
+	off   = "SLIMBROWSER_OFF"
+}
+
+
+-- _requestStatus
+-- request the next chunk from the player status (playlist)
+local function _requestStatus()
+	local step = _statusStep
+
+	local from, qty = step.db:missing()
+	if from then
+		-- note, this is not a userRequest as the playlist is
+		-- updated when the playlist changes
+		_server:request(
+				step.sink,
+				_player:getId(),
+				{ 'status', from, qty, 'menu:menu', 'useContextMenu:1' }
+			)
+	end
+end
+
+
+-- _statusSink
+-- sink that sets the data for our status window(s)
+local function _statusSink(step, chunk, err)
+	log:debug("_statusSink()")
+		
+	-- currently we're not going anywhere with current playlist...
+	_assert(step == _statusStep)
+
+	local data = chunk.data
+	if data then
+
+		local hasSize = _safeDeref(data, 'item_loop', 1)
+		if not hasSize then return end
+
+		if logd:isDebug() then
+			debug.dump(data, 8)
+		end
+		
+		-- handle the case where the player disappears
+		-- return silently
+		if data.error then
+			log:info("_statusSink() chunk has error: returning")
+			return
+		end
+		
+		-- FIXME: this can go away once we dispense of the upgrade messages
+		-- if we have a data.item_loop[1].text == 'READ ME', 
+		-- we've hit the SC upgrade message and shouldn't be dropping it into NOW PLAYING
+		if data.item_loop and data.item_loop[1].text == 'READ ME' then
+			log:debug('This is not a message suitable for the current playlist')
+			return
+		end
+
+		_stepSetMenuItems(step, data)
+		_requestStatus()
+
+	else
+		log:error(err)
+	end
+end
+
+
+-- showEmptyPlaylist
+-- if the player playlist is empty, we replace _statusStep with this window
+function showEmptyPlaylist(token)
+
+	local window = Window("icon_list", _string(modeTokens['play']), 'currentplaylisttitle')
+	local menu = SimpleMenu("menu")
+	menu:addItem({
+		     text = _string(token),
+			style = 'item_no_arrow'
+	})
+	window:addWidget(menu)
+
+	_emptyStep = {}
+	_emptyStep.window = window
+
+	return window
+
+end
+
+
+function _leavePlayListAction()
+	local windowStack = Framework.windowStack
+	-- if this window is #2 on the stack there is no NowPlaying window
+	-- (e.g., when playlist is empty)
+	if #windowStack == 2 then
+		_goNow('home')
+	else
+		_goNow('nowPlaying')
+	end
+	return EVENT_CONSUME
+end
+
+
+-- showPlaylist
+--
+function showPlaylist()
+	if _statusStep then
+
+		-- arrange so that menuListener works
+		_pushStep(_statusStep)
+
+		-- current playlist should select currently playing item 
+		-- if there is only one item in the playlist, bring the selected item to top
+		local playerStatus = _player:getPlayerStatus()
+		local playlistSize = _player:getPlaylistSize() 
+
+		if not _player:isPowerOn() then
+			_statusStep.window:setTitle(_string(modeTokens['off']))
+		end
+
+		if playlistSize == 0 then
+			local customWindow = showEmptyPlaylist('SLIMBROWSER_NOTHING') 
+			customWindow:show()
+			return EVENT_CONSUME
+		end
+
+
+		if playlistSize == nil or (playlistSize and playlistSize <= 1) then
+			_statusStep.menu:setSelectedIndex(1)
+		-- where we are in the playlist is stored in the item list as currentIndex
+		elseif _statusStep.menu:getItems() and _statusStep.menu:getItems().currentIndex then
+			_statusStep.menu:setSelectedIndex(_statusStep.menu:getItems().currentIndex)
+		end
+
+		_statusStep.window:addActionListener("back", _statusStep, _leavePlayListAction)
+
+		_statusStep.window:show()
+
+
+		return EVENT_CONSUME
+	end
+	return EVENT_UNUSED
+
+end
+
+
+-- showTrackOne
+--
+-- pushes the song info window for track one on stage
+-- this method is used solely by NowPlaying Applet for
+-- skipping the playlist screen when the playlist size == 1
+function showTrackOne()
+	local playerStatus = _player:getPlayerStatus()
+	local item = playerStatus and playerStatus.item_loop and playerStatus.item_loop[1]
+	local iWindow = _safeDeref(item, 'window')
+
+	local baseData = playerStatus and playerStatus.base
+	local bWindow = _safeDeref(baseData, 'window')
+
+	local bAction = _safeDeref(baseData, 'actions', 'go')
+	local iAction = _safeDeref(item, 'actions', 'go')
+
+	local jsonAction
+
+	-- if the action is defined in the item, then do that
+	if iAction then
+		jsonAction = iAction
+	-- bAction contains (possibly) the start of the songinfo command for track 1
+	else
+		jsonAction = bAction
+		local params = jsonAction["params"]
+                if not params then
+			params = {}
+		end
+		-- but also get params in the item
+		if item["params"] then
+			for k,v in pairs(item['params']) do
+				params[k] = v
+			end
+		end
+		jsonAction["params"] = params
+	end
+
+	-- determine style
+	local newWindowSpec = {
+		["windowStyle"]      = "trackinfo",
+		["menuStyle"]        = "menu",
+		["labelItemStyle"]   = "item",
+		["text"]             = _priorityAssign('text',       item["text"],    iWindow, bWindow),
+		["icon-id"]          = _priorityAssign('icon-id',    item["icon-id"], iWindow, bWindow),
+		["icon"]             = _priorityAssign('icon',       item["icon"],    iWindow, bWindow),
+	}		
+
+	local step, sink = _newDestination(nil, item, newWindowSpec, _browseSink)
+	step.window:addActionListener("back", step, _goNowPlayingAction)
+	step.window:show()
+	_pushStep(step)
+
+	-- send the command
+	local from, qty
+	_performJSONAction(jsonAction, 0, 200, step, sink)
+end
+
+
+function notify_playerPower(self, player, power)
+	log:debug('SlimBrowser.notify_playerPower')
+	if _player ~= player then
+		return
+	end
+	local playerStatus = player:getPlayerStatus()
+	if not playerStatus then
+		log:info('no player status')
+		return
+	end
+
+	local playlistSize = playerStatus.playlist_tracks
+	local mode = player:getPlayMode()
+
+	-- when player goes off, user should get single item styled 'Off' playlist
+	local step = _statusStep
+	local emptyStep = _emptyStep
+
+	if step and step.menu then
+		-- show 'OFF' in playlist window title when the player is off
+		if not power then
+			if step.window then
+				step.window:setTitle(_string("SLIMBROWSER_OFF"))
+			end
+		else
+			if step.window then
+				if emptyStep then
+					step.window:replace(emptyStep.window, Window.transitionFadeIn)
+				end
+				step.window:setTitle(_string(modeTokens[mode]))
+			end
+		end
+	end
+end
+
+
+function notify_playerModeChange(self, player, mode)
+	log:debug('SlimBrowser.notify_playerModeChange')
+	if _player ~= player then
+		return
+	end
+
+	local step = _statusStep
+	local token = mode
+	if mode != 'play' and not player:isPowerOn() then
+		token = 'off'
+	end
+
+	step.window:setTitle(_string(modeTokens[token]))
+
+end
+
+
+function notify_playerPlaylistChange(self, player)
+	log:debug('SlimBrowser.notify_playerPlaylistChange')
+	if _player ~= player then
+		return
+	end
+
+	local playerStatus = player:getPlayerStatus()
+	local playlistSize = _player:getPlaylistSize()
+	local step         = _statusStep
+	local emptyStep    = _emptyStep
+
+	-- display 'NOTHING' if the player is on and there aren't any tracks in the playlist
+	if _player:isPowerOn() and playlistSize == 0 then
+		local customWindow = showEmptyPlaylist('SLIMBROWSER_NOTHING') 
+		if emptyStep then
+			customWindow:replace(emptyStep.window, Window.transitionFadeIn)
+		end
+		if step.window then
+			customWindow:replace(step.window, Window.transitionFadeIn)
+		end
+		-- we've done all we need to when the playlist is 0, so let's get outta here
+		return
+	-- make sure we have step.window replace emptyStep.window when there are tracks and emptyStep exists
+	elseif playlistSize and emptyStep then
+		if step.window then
+			step.window:replace(emptyStep.window, Window.transitionFadeIn)
+		end
+	
+	end
+
+	-- update the window
+	step.db:updateStatus(playerStatus)
+	step.menu:reLayout()
+
+	-- does the playlist need loading?
+	_requestStatus()
+
+end
+
+
+function notify_playerTrackChange(self, player, nowplaying)
+	log:debug('SlimBrowser.notify_playerTrackChange')
+
+	if _player ~= player then
+		return
+	end
+
+	if not player:isPowerOn() then
+		return
+	end
+
+	local playerStatus = player:getPlayerStatus()
+	local step = _statusStep
+
+	step.db:updateStatus(playerStatus)
+	if step.db:playlistIndex() then
+		step.menu:setSelectedIndex(step.db:playlistIndex())
+	else
+		step.menu:setSelectedIndex(1)
+	end
+	step.menu:reLayout()
+
+end
+
+
+-- notify_playerDelete
+-- this is called when the player disappears
+function notify_playerDelete(self, player)
+	log:debug("SlimBrowserApplet:notify_playerDelete(", player, ")")
+
+	-- if this concerns our player
+	if _player == player then
+		-- panic!
+		log:info("Player gone while browsing it ! -- packing home!")
+		self:free()
+	end
+end
+
+
+-- notify_playerCurrent
+-- this is called when the current player changes (possibly from no player)
+function notify_playerCurrent(self, player)
+	log:debug("SlimBrowserApplet:notify_playerCurrent(", player, ")")
+
+	-- has the player actually changed?
+	if _player == player then
+		return
+	end
+
+	-- free current player
+	if _player then
+		self:free()
+	end
+
+	-- clear any errors, we may have changed servers
+	iconbar:setServerError("OK")
+
+	-- update the volume object
+	if self.volume then
+		self.volume:setPlayer(player)
+	end
+
+	-- update the scanner object
+	self.scanner:setPlayer(player)
+
+	-- nothing to do if we don't have a player or server
+	-- NOTE don't move this, the code above needs to run when disconnecting
+	-- for all players.
+	if not player or not player:getSlimServer() then
+		return
+	end
+
+	-- assign our locals
+	_player = player
+	_server = player:getSlimServer()
+	local _playerId = _player:getId()
+
+	-- create a window for the current playlist, this is our _statusStep
+	local step, sink = _newDestination(
+		nil,
+		nil,
+		_newWindowSpec(
+			nil, 
+			{
+				text = _string("SLIMBROWSER_PLAYLIST"),
+				window = { 
+					["menuStyle"] = "album", 
+				}
+			},
+			'currentplaylist'
+		),
+		_statusSink
+	)
+	_statusStep = step
+	
+	-- make sure it has our modifier (so that we use different default action in Now Playing)
+	_statusStep.actionModifier = "-status"
+
+	-- showtime for the player
+	_server.comet:startBatch()
+	_player:onStage()
+	_requestStatus()
+	_server.comet:endBatch()
+
+	-- look to see if the playlist has size and the state of player power
+	-- if playlistSize is 0 or power is off, we show and empty playlist
+	if not _player:isPowerOn() then
+		if _statusStep.window then
+			_statusStep.window:setTitle(_string("SLIMBROWSER_OFF"))
+		end
+	end
+
+	_installActionListeners(self)
+	_installPlayerKeyHandler(self)
+	
+end
+
+
 --[[
 
 =head2 applets.SlimBrowser.SlimBrowserApplet:free()
@@ -2861,7 +2907,6 @@ function free(self)
 	
 	_player = false
 	_server = false
-	_string = false
 
 	-- walk down our path and close...
 	local currentStep = _getCurrentStep()
@@ -2887,20 +2932,17 @@ function free(self)
 end
 
 
---[[
-
-=head2 applets.SlimBrowser.SlimBrowserApplet:init()
-
-Overridden to subscribe to events about players
-
-=cut
---]]
 function init(self)
+	_string = function(token)
+		return self:string(token)
+	end
+
 	jnt:subscribe(self)
 
 	self.volume = Volume(self)
 	self.scanner = Scanner(self)
 end
+
 
 --[[
 
