@@ -205,6 +205,13 @@ local function _formatShowBrieflyText(msg)
 	-- showBrieflyText needs to deal with both \n instructions within a string 
 	-- and also adding newlines between table elements
 
+	-- table msg needs to have elements of only strings/numbers so table.concat will work
+	for i, v in ipairs(msg) do
+		if type(v) ~= 'string' or type(v) ~= 'number' then
+			table.remove(msg, i)
+		end
+	end
+
 	-- first compress the table elements into a single string with newlines
 	local text = table.concat(msg, "\n")
 	-- then split the new string on \n instructions within the concatenated string, and into a table
