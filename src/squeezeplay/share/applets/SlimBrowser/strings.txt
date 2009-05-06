@@ -182,21 +182,6 @@ SLIMBROWSER_OFF
 	RU	Выкл.
 	SV	Av
 
-SLIMBROWSER_CONNECTING_TO
-	CS	Připojuji se k\n%s
-	DA	Etablerer forbindelse til\n%s
-	DE	Verbindung mit %s
-	EN	Connecting to\n%s
-	ES	Conectando a\n%s
-	FI	Yhdistetään kohteeseen\n%s
-	FR	Connexion à %s
-	IT	Connessione a %s
-	NL	Er wordt een verbinding met %s gemaakt
-	NO	Kopler til\n%s
-	PL	Łączenie z\n%s
-	RU	Подключение к\n%s
-	SV	Ansluter till \n%s
-
 SLIMBROWSER_VOLUME
 	CS	Hlasitost
 	DA	Lydstyrke
@@ -227,21 +212,6 @@ SLIMBROWSER_VOLUME_MUTED
 	RU	Громкость (приглушенная)
 	SV	Volym (av)
 
-SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
-	CS	Aktualizuji firmware Squeezeboxu
-	DA	Opdaterer Squeezebox-firmwaren
-	DE	Squeezebox-Firmware wird aktualisiert
-	EN	Updating Squeezebox firmware
-	ES	Actualizando firmware de Squeezebox
-	FI	Squeezeboxin laitteisto-ohjelmiston päivitys
-	FR	Mise à jour du micrologiciel Squeezebox
-	IT	Aggiornamento firmware Squeezebox
-	NL	Squeezebox-firmware wordt bijgewerkt
-	NO	Oppdaterer Squeezebox-fastvare
-	PL	Aktualizowanie oprogramowania układowego urządzenia Squeezebox
-	RU	Обновление микропрограмм Squeezebox
-	SV	Uppdaterar Squeezebox-spelarens inbyggda programvara
-
 SLIMBROWSER_SCANNER
 	CS	Pozice skladby
 	DA	Nummerets placering
@@ -256,36 +226,6 @@ SLIMBROWSER_SCANNER
 	PL	Położenie utworu
 	RU	Позиция песни
 	SV	Spårets placering
-
-SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX
-	CS	Pro %s je připravena aktualizace softwaru. K jejímu spuštění stiskněte a přidržte tlačítko Brightness (jas) na  originálním dálkovém ovládání IR.
-	DA	Softwareopdateringen til %s er klar. Hold lysstyrkeknappen (Brightness) på den originale fjernbetjening nede for at starte.
-	DE	Software-Update bereit für %s. Halten Sie die Helligkeitstaste auf der Original-Fernbedienung gedrückt.
-	EN	Software Update ready for %s. To begin, press and hold the Brightness button on your original IR remote.
-	ES	La actualización de software para %s está lista. Para iniciarla, mantenga pulsado el botón de brillo en el mando a distancia IR original.
-	FI	Ohjelmistopäivitys valmiina kohteelle %s. Aloita pitämällä alkuperäisen infrapunakaukosäätimen Brightness-painike pohjassa.
-	FR	Mise à jour du logiciel prête pour %s. Pour commencer, appuyez sur le bouton Brightness de votre télécommande infrarouge d'origine et maintenez-le enfoncé.
-	IT	Aggiornamento software pronto per %s. Per iniziare, tenere premuto il tasto BRIGHTNESS sul telecomando IR originale.
-	NL	Software-update gereed voor %s. Houd de helderheidsknop op je oorspronkelijke IR-afstandsbediening ingedrukt om te beginnen.
-	NO	Programvareoppdatering er klar for %s. Trykk og hold nede Brightness-knappen på den opprinnelige ir-fjernkontrollen for å starte.
-	PL	Aktualizacja oprogramowania jest dostępna dla urządzenia %s. Aby rozpocząć, naciśnij i przytrzymaj przycisk Brightness na oryginalnym pilocie zdalnego sterowania.
-	RU	Подготовлено обновление ПО для %s. Чтобы начать, нажмите кнопку BRIGHTNESS на своем ИК-пульте.
-	SV	Det finns en programuppdatering för %s tillgänglig. Om du vill påbörja uppdateringen håller du knappen för ljusstyrka på originalfjärrkontrollen nedtryckt.
-
-SLIMBROWSER_PLAYER_UPDATE_REQUIRED
-	CS	Aktualizace přehrávače
-	DA	Opdatering af afspiller
-	DE	Player-Update
-	EN	Player Update
-	ES	Actualización de reproductor
-	FI	Soittimen päivitys
-	FR	Mise à jour de la platine
-	IT	Aggiornamento lettore
-	NL	Update van muzieksysteem
-	NO	Spilleroppdatering
-	PL	Aktualizacja odtwarzacza
-	RU	Обновление плеера
-	SV	Spelaruppdatering
 
 SLIMBROWSER_ENTER_PASSWORD
 	CS	Zadejte heslo

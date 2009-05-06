@@ -92,21 +92,12 @@ local _statusStep = false
 local _emptyStep = false
 local _stepStack = {}
 
-local _lockedItem = false
-
 -- Our main menu/handlers
-local _playerMenus = {}
 local _playerKeyHandler = false
 
 -- The last entered text
 local _lastInput = ""
 local _inputParams = {}
-
--- connectingToPlayer and _upgradingPlayer popup handlers
-local _connectingPopup = false
-local _updatingPlayerPopup = false
-local _userUpdatePopup = false
-local _menuReceived = false
 
 local modeTokens = {	
 			play  = "SLIMBROWSER_PLAYLIST",
@@ -127,36 +118,6 @@ local styleMap = {
 	itemNoAction = 'item_no_arrow',
 	albumitem = 'item',
 	albumitemplay = 'item_play',
-}
--- legacy map of item id/nodes
-local itemMap = {
-	-- nodes
-	myMusic = { "_myMusic", "hidden" },
-	music_services = { "_music_services", "hidden" },
-	music_stores = { "_music_stores", "hidden" },
-
-	-- items
-	opmlrhapsodydirect = { "opmlrhapsodydirect", "home", 30 },
-	opmlpandora = { "opmlpandora", "home", 30 },
-	opmlsirius = { "opmlsirius", "home", 30 },
-}
--- legacy map of items for "app guide"
-local guideMap = {
-	opmlamazon = true,
-	opmlclassical = true,
-	opmllma = true,
-	opmllfm = true,
-	opmlmp3tunes = true,
-	opmlmediafly = true,
-	opmlnapster = true,
-	opmlpandora = true,
-	podcast = true,
-	opmlrhapsodydirect = true,
-	opmlslacker = true,
-	opmlsounds = true,
-	opmlmusic = true,
-	opmlsirius = true,
-	opmlradioio = true,
 }
 
 
@@ -419,9 +380,7 @@ local function _newWindowSpec(db, item)
 
 	-- determine style
 	local menuStyle = _priorityAssign('menuStyle', "", iWindow, bWindow)
-log:warn('Menu:   ', menuStyle)
 	local windowStyle = (iWindow and iWindow['windowStyle']) or menu2window[menuStyle] or 'text_list'
-log:warn('Window: ', windowStyle)
 
 	return {
 		["windowStyle"]      = windowStyle,
@@ -753,135 +712,6 @@ local function _inputInProgress(self, msg)
 	popup:show()
 end
 
--- _hideUserUpdatePopup
--- hide the full screen popup that appears until player is updated
-local function _hideUserUpdatePopup()
-	if _userUpdatePopup then
-		log:info("_userUpdatePopup popup hide")
-		_userUpdatePopup:hide()
-		_userUpdatePopup = false
-	end
-end
-
-
--- _hidePlayerUpdating
--- hide the full screen popup that appears until player is updated
-local function _hidePlayerUpdating()
-	if _updatingPlayerPopup then
-		log:info("_updatingPlayer popup hide")
-		_updatingPlayerPopup:hide()
-		_updatingPlayerPopup = false
-	end
-end
-
-
--- _connectingToPlayer
--- full screen popup that appears until menus are loaded
-local function _connectingToPlayer(self)
-	log:info("_connectingToPlayer popup show")
-
-	if _connectingPopup or _userUpdatePopup or _updatingPlayerPopup then
-		-- don't open this popup twice or when firmware update windows are on screen
-		return
-	end
-
-	local popup = Popup("waiting_popup")
-	local icon  = Icon("icon_connecting")
-	local playerName = _player:getName()
-	local label = Label("text", self:string("SLIMBROWSER_CONNECTING_TO", playerName))
-	popup:addWidget(icon)
-	popup:addWidget(label)
-	popup:setAlwaysOnTop(true)
-
-	-- add a listener for KEY_PRESS that disconnects from the player and returns to home
-	local disconnectPlayer = function()
-		appletManager:callService("setCurrentPlayer", nil)
-		popup:hide()
-	end
-
-	popup:addActionListener("back", self, disconnectPlayer)
-		
-	popup:show()
-
-	_connectingPopup = popup
-end
-
--- _userTriggeredUpdate
--- full screen popup that appears until user hits brightness on player to start upgrade
-local function _userTriggeredUpdate(self)
-	log:warn("_connectingToPlayer popup show")
-
-
-	if _userUpdatePopup then
-		return
-	end
-
-
-	-- only show this window if the player has a brightness button available
-	local playerModel = _player:getModel()
-	if playerModel == 'receiver' 
-		or playerModel == 'softsqueeze'
-		or playerModel == 'softsqueeze3'
-		or playerModel == 'controller'
-		or playerModel == 'squeezeplay'
-		or playerModel == 'squeezeslave'
-		then
-			return
-	end
-
-	local window = Window("text_list", self:string('SLIMBROWSER_PLAYER_UPDATE_REQUIRED'))
-	local label = Textarea("text", self:string('SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX', _player:getName()))
-	window:addWidget(label)
-	window:setAlwaysOnTop(true)
-	window:setAllowScreensaver(false)
-
-	-- add a listener for KEY_HOLD that disconnects from the player and returns to home
-	local disconnectPlayer = function()
-		appletManager:callService("setCurrentPlayer", nil)
-		window:hide()
-	end
-
-	window:addActionListener("back", self, disconnectPlayer)
-
-	window:show()
-
-	_userUpdatePopup = window
-end
-
-
--- _updatingPlayer
--- full screen popup that appears until menus are loaded
-local function _updatingPlayer(self)
-	log:warn("_connectingToPlayer popup show")
-
-	if _userUpdatePopup then
-		_hideUserUpdatePopup()
-	end
-
-	if _updatingPlayerPopup then
-		-- don't open this popup twice
-		return
-	end
-
-	local popup = Popup("waiting_popup")
-	local icon  = Icon("icon_connecting")
-	local label = Label("text", self:string('SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX', _player:getName()))
-	popup:addWidget(icon)
-	popup:addWidget(label)
-	popup:setAlwaysOnTop(true)
-
-	-- add a listener for KEY_PRESS that disconnects from the player and returns to home
-	local disconnectPlayer = function()
-		appletManager:callService("setCurrentPlayer", nil)
-		popup:hide()
-	end
-
-	popup:addActionListener("back", self, disconnectPlayer)
-
-	popup:show()
-
-	_updatingPlayerPopup = popup
-end
 
 -- _renderTextArea
 -- special case when single SlimBrowse item is a textarea
@@ -1301,219 +1131,6 @@ local function _browseSink(step, chunk, err)
 	else
 		log:error(err)
 	end
-end
-
--- _menuSink
--- returns a sink with a closure to self
--- cmd is passed in so we know what process function to call
--- this sink receives all the data from our Comet interface
-local function _menuSink(self, cmd)
-	return function(chunk, err)
-
-		-- catch race condition if we've switch player
-		if not _player then
-			return
-		end
-
-		log:info("_menuSink()")
-
-		-- process data from a menu notification
-		-- each chunk.data[2] contains a table that needs insertion into the menu
-		local menuItems = chunk.data[2]
-		-- directive for these items is in chunk.data[3]
-		local menuDirective = chunk.data[3]
-		-- the player ID this notification is for is in chunk.data[4]
-		local playerId = chunk.data[4]
-
-		if playerId ~= 'all' and playerId ~= _player:getId() then
-			log:debug('This menu notification was not for this player')
-			log:debug("Notification for: ", playerId)
-			log:debug("This player is: ", _player:getId())
-			return
-		end
-
-		-- if we get here, it was for this player. set menuReceived to true
-		_menuReceived = true
-
-
-if _menuReceived then
--- a problem, we lose the icons..
-jiveMain:addNode({
-  sound = "WINDOWSHOW",
-  weight = 20,
-  id = "radios",
-  text = "Internet Radio",
-  node = "home",
-})
-end
-
-		for k, v in pairs(menuItems) do
-
-			local item = {
-					id = v.id,
-					node = v.node,
-					style = v.style,
-					text = v.text,
-					homeMenuText = v.homeMenuText,
-					weight = v.weight,
-					window = v.window,
-					sound = "WINDOWSHOW",
-				}
-
-			local itemIcon = v.window  and v.window['icon-id'] or v['icon-id']
-			if itemIcon then
-				--item["icon-id"] = itemIcon
-
-				local _size = jiveMain:getSkinParam('THUMB_SIZE')
-				item.icon = Icon('icon')
-				_server:fetchArtworkThumb(itemIcon, item.icon, _size)
-
-				-- Hack alert: redefine the checkSkin function
-				-- to reload images when the skin changes. We
-				-- should replace this with resizable icons.
-				local _style = item.icon.checkSkin
-				item.icon.checkSkin = function(...)
-					local s = jiveMain:getSkinParam('THUMB_SIZE')
-					if s ~= _size then
-						_size = s
-						_server:fetchArtworkThumb(itemIcon, item.icon, _size)						
-					end
-
-					_style(...)
-				end
-			end
-
-			-- hack to modify styles from SC
-			if item.style and styleMap[item.style] then
-				item.style = styleMap[item.style]
-			end
-			local choiceAction = _safeDeref(v, 'actions', 'do', 'choices')
-
-			-- hack to modify menu structure from SC
-			if guideMap[item.id] then
-				item.guide = true
-				item.node = "appguide"
-				item.weight = 30
-			end
-			if itemMap[item.id] then
-				local id = item.id
-				item.id = itemMap[id][1]
-				item.node = itemMap[id][2]
-				if itemMap[id][3] then
-					item.weight = itemMap[id][3]
-				end
-			end
-			if itemMap[item.node] then
-				local node = item.node
-				item.node = itemMap[node][1]
-			end
-
-			-- a problem, we lose the icons..
-			if item.id == "radios" then
-				v.isANode = true
-			end
-
-
-			if v.isANode then
-				jiveMain:addNode(item)
-
-			elseif menuDirective == 'remove' then
-				jiveMain:removeItemById(item.id)
-
-			elseif choiceAction then
-
-				local selectedIndex = 1
-				if v.selectedIndex then
-					selectedIndex = tonumber(v.selectedIndex)
-				end
-
-				local choice = Choice(
-					"choice",
-					v.choiceStrings,
-					function(obj, selectedIndex)
-						local jsonAction = v.actions['do'].choices[selectedIndex]
-						_performJSONAction(jsonAction, nil, nil, nil, nil)
-					end,
-					selectedIndex
-				)
-				
-				item.style = 'item_choice'
-				item.check = choice
-
-				--add the item to the menu
-				_playerMenus[item.id] = item
-				jiveMain:addItem(item)
-
-			else
-
-				item.callback = function()
-					--	local jsonAction = v.actions.go
-						local jsonAction, from, qty, step, sink
-						local doAction = _safeDeref(v, 'actions', 'do')
-						local goAction = _safeDeref(v, 'actions', 'go')
-
-						if doAction then
-							jsonAction = v.actions['do']
-						elseif goAction then
-							jsonAction = v.actions.go
-						else
-							return false
-						end
-
-						-- we need a new window for go actions, or do actions that involve input
-						if goAction or (doAction and v.input) then
-							log:debug(v.nextWindow)
-							if v.nextWindow then
-								if v.nextWindow == 'home' then
-									sink = goHome
-								elseif v.nextWindow == 'playlist' then
-									sink = _goPlaylist
-								elseif v.nextWindow == 'nowPlaying' then
-									sink = _goNowPlaying
-								end
-							else
-								step, sink =_newDestination(nil,
-											  v,
-											  _newWindowSpec(nil, v),
-											  _browseSink,
-											  jsonAction
-										  )
-								if v.input then
-									step.window:show()
-									_pushStep(step)
-								else
-									from, qty = _decideFirstChunk(step.db, jsonAction)
-
-									_lockedItem = item
-									jiveMain:lockItem(item,
-										  function()
-										  step.cancelled = true
-									  end)
-		
-									step.loaded = function()
-										      jiveMain:unlockItem(item)
-		
-										      _lockedItem = false
-										      _pushStep(step)
-										      step.window:show()
-									      end
-								end
-							end
-						end
-
-						if not v.input then
-							_performJSONAction(jsonAction, from, qty, step, sink)
-						end
-					end
-
-				_playerMenus[item.id] = item
-				jiveMain:addItem(item)
-			end
-		end
-		if _menuReceived then
-			hideConnectingToPlayer()
-		end
-         end
 end
 
 
@@ -2698,19 +2315,6 @@ function showTrackOne()
 end
 
 
-function findLocalPlayer(self)
-	-- get local player object
-	for mac, player in appletManager:callService("iteratePlayers") do
-		if player:isLocal() then
-			log:debug("found local player")
-			return player
-		end
-	end
-	log:error('no local player found')
-	return nil
-end
-
-
 function findSqueezeNetwork(self)
 	-- get squeezenetwork object
         for mac, server in appletManager:callService("iterateSqueezeCenters") do
@@ -2726,11 +2330,10 @@ end
 
 function squeezeNetworkRequest(self, request)
 	local squeezenetwork = findSqueezeNetwork()
-	local localPlayer    = findLocalPlayer()
 
 	_string = function(token) return self:string(token) end
 
-	if not squeezenetwork or not localPlayer or not request then
+	if not squeezenetwork or not request then
 		return
 	end
 	_server = squeezenetwork
@@ -2751,6 +2354,79 @@ function squeezeNetworkRequest(self, request)
 	_pushToNewWindow(step)
         squeezenetwork:userRequest( sink, nil, request )
 
+end
+
+
+-- XXXX
+function browserJsonRequest(self, server, jsonAction)
+	-- XXXX allow any server
+
+	_performJSONAction(jsonAction, nil, nil, nil, nil)
+end
+
+
+-- XXXX
+function browserActionRequest(self, server, v, loadedCallback)
+	-- XXXX allow any server
+
+	local jsonAction, from, qty, step, sink
+	local doAction = _safeDeref(v, 'actions', 'do')
+	local goAction = _safeDeref(v, 'actions', 'go')
+
+	if doAction then
+		jsonAction = v.actions['do']
+	elseif goAction then
+		jsonAction = v.actions.go
+	else
+		return false
+	end
+
+	-- we need a new window for go actions, or do actions that involve input
+	if goAction or (doAction and v.input) then
+		log:debug(v.nextWindow)
+		if v.nextWindow then
+			if v.nextWindow == 'home' then
+				sink = goHome
+			elseif v.nextWindow == 'playlist' then
+				sink = _goPlaylist
+			elseif v.nextWindow == 'nowPlaying' then
+				sink = _goNowPlaying
+			end
+		else
+			step, sink =_newDestination(nil,
+				v,
+				_newWindowSpec(nil, v),
+				_browseSink,
+				jsonAction
+			)
+
+			if v.input then
+				step.window:show()
+				_pushStep(step)
+			else
+				from, qty = _decideFirstChunk(step.db, jsonAction)
+
+				step.loaded = function()
+					if loadedCallback then
+						loadedCallback(step)
+					end
+					_pushStep(step)
+					step.window:show()
+				end
+			end
+		end
+	end
+
+	if not v.input then
+		_performJSONAction(jsonAction, from, qty, step, sink)
+	end
+
+	return step
+end
+
+
+function browserCancel(self, step)
+	 step.cancelled = true
 end
 
 
@@ -2942,18 +2618,6 @@ function notify_playerTrackChange(self, player, nowplaying)
 
 end
 
--- notify_playerNewName
--- this is called when the player name changes
--- we update our main window title
-function notify_playerNewName(self, player, newName)
-	log:debug("SlimBrowserApplet:notify_playerNewName(", player, ",", newName, ")")
-
-	-- if this concerns our player
-	if _player == player then
-		jiveMain:setTitle(newName)
-	end
-end
-
 
 -- notify_playerDelete
 -- this is called when the player disappears
@@ -3008,15 +2672,6 @@ function notify_playerCurrent(self, player)
 	_string = function(token) return self:string(token) end
 	local _playerId = _player:getId()
 
-	log:info('Subscribing to /slim/menustatus/', _playerId)
-	local cmd = { 'menustatus' }
-	_player:subscribe(
-		'/slim/menustatus/' .. _playerId,
-		_menuSink(sink, cmd),
-		_playerId,
-		cmd
-	)
-
 	-- create a window for the current playlist, this is our _statusStep
 	local step, sink = _newDestination(
 		nil,
@@ -3040,7 +2695,6 @@ function notify_playerCurrent(self, player)
 
 	-- showtime for the player
 	_server.comet:startBatch()
-	_server:userRequest(sink, _playerId, { 'menu', 0, 100 })
 	_player:onStage()
 	_requestStatus()
 	_server.comet:endBatch()
@@ -3053,45 +2707,11 @@ function notify_playerCurrent(self, player)
 		end
 	end
 
-	if _player:isNeedsUpgrade() then
-		if _player:isUpgrading() then
-			_updatingPlayer(self)
-		else
-			_userTriggeredUpdate(self)
-		end
-	else
-		_hidePlayerUpdating()
-	end
-
-	-- add a fullscreen popup that waits for the _menuSink to load
-	_menuReceived = false
-	_connectingToPlayer(self)
-
-	jiveMain:setTitle(_player:getName())
 	_installActionListeners(self)
 	_installPlayerKeyHandler(self)
 	
 end
 
-function notify_playerNeedsUpgrade(self, player, needsUpgrade, isUpgrading)
-	log:debug("SlimBrowserApplet:notify_playerNeedsUpgrade(", player, ")")
-
-	if _player ~= player then
-		return
-	end
-
-	if isUpgrading then
-		log:info('Show upgradingPlayer popup')
-		_updatingPlayer(self)
-	elseif needsUpgrade then
-		log:info('Show userUpdate popup')
-		_userTriggeredUpdate(self)
-	else
-		_hideUserUpdatePopup()
-		_hidePlayerUpdating()
-	end
-
-end
 
 function notify_serverConnected(self, server)
 	if _server ~= server then
@@ -3220,17 +2840,6 @@ function _problemConnecting(self, server)
 	window:show()
 end
 
--- hideConnectingToPlayer
--- hide the full screen popup that appears until menus are loaded
-function hideConnectingToPlayer()
-	if _connectingPopup then
-		log:info("_connectingToPlayer popup hide")
-		_connectingPopup:hide()
-		_connectingPopup = nil
-
-		jnt:notify("playerLoaded", _player)
-	end
-end
 
 --[[
 
@@ -3243,12 +2852,6 @@ Overridden to close our player.
 function free(self)
 	log:debug("SlimBrowserApplet:free()")
 
-	-- unsubscribe from this player's menustatus
-	log:info("Unsubscribe /slim/menustatus/", _player:getId())
-	if _player then
-		_player:unsubscribe('/slim/menustatus/' .. _player:getId())
-	end
-
 	if _player then
 		_player:offStage()
 	end
@@ -3256,27 +2859,9 @@ function free(self)
 	_removePlayerKeyHandler(self)
 	_removeActionListeners(self)
 	
-	-- remove player menus
-	jiveMain:setTitle(nil)
-	for id, v in pairs(_playerMenus) do
-		jiveMain:removeItem(v)
-	end
-	_playerMenus = {}
-
-	-- remove connecting popup
-	hideConnectingToPlayer()
-	_hidePlayerUpdating()
-	_hideUserUpdatePopup()
-
 	_player = false
 	_server = false
 	_string = false
-
-	-- make sure any home menu itema are unlocked
-	if _lockedItem then
-		jiveMain:unlockItem(_lockedItem)
-		_lockedItem = false
-	end
 
 	-- walk down our path and close...
 	local currentStep = _getCurrentStep()
