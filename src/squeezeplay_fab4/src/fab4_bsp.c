@@ -8,6 +8,10 @@
 #include "common.h"
 #include "ui/jive.h"
 
+#ifdef WITH_SPPRIVATE
+#include "syna_chiral_api.h"
+#endif
+
 #include <linux/input.h>
 #include <sys/time.h>
 #include <time.h>
@@ -48,6 +52,9 @@ static int handle_clearpad_events(int fd) {
 	int flick_y = 0;
 	int flick_x = 0;
 
+	int clearpad_x = -1;
+	int clearpad_y = -1;
+
 	rd = read(fd, ev, sizeof(struct input_event) * 64);
 
 	if (rd < (int) sizeof(struct input_event)) {
@@ -64,6 +71,7 @@ static int handle_clearpad_events(int fd) {
 			switch (ev[i].code) {
 			case ABS_X:
 				new_mouse_x = (Uint16) 480 - ((ev[i].value / (double)clearpad_max_x) * 480);
+				clearpad_x = ev[i].value;
 
 				//jitter correction - for stablizing drag when finger is stopped
 				if (abs(new_mouse_x - clearpad_event.u.mouse.x) == 1) {
@@ -85,6 +93,8 @@ static int handle_clearpad_events(int fd) {
 				break;
 			case ABS_Y:
 				new_mouse_y = (Uint16) 272 - ((ev[i].value / (double)clearpad_max_y) * 272);
+				clearpad_y = ev[i].value;
+				
 //				fprintf(stderr, "clearpad_event.u.mouse.y %d maxY %d  ev[i].value:%d y: %d fractional y: %f clearpad dev: %d required: %f \n",
 //					clearpad_event.u.mouse.y, clearpad_max_y, ev[i].value, new_mouse_y, 272.0 - ((ev[i].value / (double)clearpad_max_y) * 272),
 //					abs(ev[i].value - last_change_clearpad_y) , (.7 * clearpad_max_y/(double)272));
@@ -185,14 +195,62 @@ static int handle_clearpad_events(int fd) {
 
 				event.type = (JiveEventType) JIVE_EVENT_MOUSE_UP;
 				clearpad_state = 0;
+
+                                #ifdef WITH_SPPRIVATE
+//				fprintf(stderr, "    *****                            CHIRAL END\n");
+				event.u.mouse.chiral_active = false;
+				event.u.mouse.chiral_value = 0;
+				syna_chiral_end();
+                                #endif
+
 			}
 			else if (clearpad_state == 0) {
 				event.type = (JiveEventType) JIVE_EVENT_MOUSE_DOWN;
 				clearpad_state = 1;
 				clearpad_down_millis = event.ticks;
+
+				#ifdef WITH_SPPRIVATE
+				/*
+				*  Start the Chiral module.
+				*/
+				if(syna_chiral_start() == 0) {
+					syna_chiral_set_direction(eDirectionHorizontal);
+					syna_chiral_set_gain(50000);
+					syna_chiral_set_min_radius(40);
+					syna_chiral_set_noise_parameter(1);
+					syna_chiral_set_release_change(7);
+//					fprintf(stderr, "   *****      CHIRAL START\n");
+
+
+				} else {
+					fprintf(stderr, "   ***** CHIRAL START FAILED\n");
+
+			        }
+				#endif
 			}
 			else if (clearpad_state > 0) {
 				event.type = (JiveEventType) JIVE_EVENT_MOUSE_DRAG;
+
+				#ifdef WITH_SPPRIVATE
+				if (clearpad_x >= 0 && clearpad_y >=0) {
+					int chiral_value, chirality;
+					chiral_value = syna_chiral_process_abs(clearpad_x, clearpad_y);
+					chirality = syna_chiral_get_chirality();
+					if (chiral_value * chirality < 0) {
+						//when chirality and chiral val are opposite signs, invert the chiral value so CW is always the same direction
+						chiral_value = chiral_value * -1;
+					}
+
+					//Invert chiral value polarity so CW motion is always positive
+					event.u.mouse.chiral_value = -1 * chiral_value;
+					if (chiral_value != 0) {
+						event.u.mouse.chiral_active = true;
+					}
+//					fprintf(stderr, "CHIRAL CURRENT1: %d for clearpad_x: %d clearpad_y: %d in_origin:%d out_origin:%d direction:%d chirality:%d \n",  chiral_value , clearpad_x, clearpad_y, syna_chiral_get_input_origin(), syna_chiral_get_output_origin(), syna_chiral_get_direction(), syna_chiral_get_chirality());
+				}
+				#endif
+
+
 			}
 
 			memcpy(&clearpad_event, &event, sizeof(JiveEvent));
@@ -370,4 +428,35 @@ int luaopen_fab4_bsp(lua_State *L) {
 	}
 
 	return 1;
+}
+
+
+/*
+	We are not using this , but it must be here for compilation
+*/
+void syna_print(char const *msg)
+{
+  /*
+   *  Add platform specifc message print function below
+   *  to print diagnostic information.
+   *
+   *  !!!!!!!!  The Maximum possible msg string length is 120 chars  !!!!!!!!
+   *  !!!!!!!!  The Maximum possible msg string length is 120 chars  !!!!!!!!
+   *  !!!!!!!!  The Maximum possible msg string length is 120 chars  !!!!!!!!
+   */
+
+  /*
+   *  Example print function usage.
+   *
+   *  ***** Replace this with similar functions on application platforms *****
+   *  ***** Replace this with similar functions on application platforms *****
+   *  ***** Replace this with similar functions on application platforms *****
+   */
+
+
+
+//#if 0
+//  fprintf(stderr, "syna_print: %s", msg);
+//#endif
+
 }

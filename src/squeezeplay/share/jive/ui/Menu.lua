@@ -91,6 +91,9 @@ local KEY_PLAY             = jive.ui.KEY_PLAY
 local KEY_PAGE_UP           = jive.ui.KEY_PAGE_UP
 local KEY_PAGE_DOWN         = jive.ui.KEY_PAGE_DOWN
 
+local CLEARPAD_PER_PIXEL_Y = 4248/272
+local CHIRAL_GAIN          = .4
+
 -- distance travelled from mouse origin where PRESS or HOLD event will be ignored and drag takes over (is relatively high due it being finger interface, finger may roll while waiting for hold to trigger)
 local MOUSE_QUICK_SLOPPY_PRESS_DISTANCE = 35
 local MOUSE_QUICK_DRAG_DISTANCE = 50
@@ -196,7 +199,7 @@ function _updateScrollbar(self)
 end
 
 
-function handleDrag(self, dragAmountY, byItemOnly)
+function handleDrag(self, dragAmountY, byItemOnly, forceAccel)
 
 	if dragAmountY ~= 0 then
 --		log:error("handleDrag dragAmountY: ", dragAmountY )
@@ -418,7 +421,7 @@ local function _eventHandler(self, event)
 	elseif self.locked == nil and evtype == EVENT_MOUSE_HOLD then
 
 		if self.mouseState == MOUSE_DOWN then
-			if self.scrollbar:mouseInside(event) then
+			if self.scrollbar:mouseInside(event) or self.sliderDragInProgress then
 				--might want to forward these to scrollbar, but there is no current need for that
 			else
 				--in body area
@@ -474,6 +477,11 @@ local function _eventHandler(self, event)
 		--Note: on a down outside the scrollbar boundary, we don't want to forward this to the scrollbar
 		--Normally that should never happen, but will if an up event is nevet sent to this widget, which would have cleared the
 		-- sliderDragInProgress flag
+		if self:mouseInside(event) and not self.scrollbar:mouseInside(event) and self.mouseState == MOUSE_CHIRAL then
+			--for chiral, let body area take over focus again
+			self.sliderDragInProgress = false
+		end
+
 		if self.scrollbar:mouseInside(event) or (self.sliderDragInProgress and evtype ~= EVENT_MOUSE_DOWN ) then
 			if (evtype ~= EVENT_MOUSE_MOVE) then
 				--allows slider drag to continue even when listitem area is entered
@@ -559,7 +567,6 @@ local function _eventHandler(self, event)
 						return EVENT_CONSUME
 					end
 
-					self.mouseState = MOUSE_DRAG
 
 					--unhighlight any selected item
 					self.usePressedStyle = false
@@ -571,10 +578,60 @@ local function _eventHandler(self, event)
 						self.dragOrigin.x, self.dragOrigin.y = event:getMouse();
 					end
 
-					local mouseX, mouseY = event:getMouse()
+					local mouseX, mouseY, fingerCount, fingerWidth, fingerPressure, chiralValue  = event:getMouse()
 					local dragAmountY = self.dragOrigin.y - mouseY
 
-					self:handleDrag(dragAmountY)
+					if chiralValue then
+						if self.mouseState ~= MOUSE_CHIRAL then
+							--clear old chiral values
+							self.lastChirals = {}
+
+						else
+							--did direction change, if clear old values
+							local lastChiral = self.lastChirals[#self.lastChirals].value
+							if lastChiral * chiralValue < 1 then
+								--direction shift
+								self.lastChirals = {}
+							end
+						end
+
+						self.mouseState = MOUSE_CHIRAL
+
+
+						--moving average for smoothing
+						local now = event:getTicks()
+						table.insert(self.lastChirals, {value = chiralValue, ticks = now } )
+
+
+						local sampleCount = 20
+						if #self.lastChirals >= sampleCount then
+							table.remove(self.lastChirals, 1)
+						end
+
+						local chiralTotal = 0
+						for i, entry in ipairs(self.lastChirals) do
+							local age = now - entry.ticks
+--							log:error("age: ", age)
+
+							if age < 500 then
+								--only include values from last few moments
+								chiralTotal = chiralTotal + entry.value
+							end
+						end
+
+
+						local chiralAvg = chiralTotal/#self.lastChirals
+						dragAmountY = chiralAvg/(CLEARPAD_PER_PIXEL_Y) * CHIRAL_GAIN
+
+
+						local byItemOnly = false
+						--todo byItem calc should be based on how long circle has been going (accel algorithm)
+--						local byItemOnly = math.abs(dragAmountY) > 3
+						self:handleDrag(dragAmountY, byItemOnly, true)
+					else
+						self.mouseState = MOUSE_DRAG
+						self:handleDrag(dragAmountY)
+					end
 
 					--reset origin
 					self.dragOrigin.x, self.dragOrigin.y = mouseX, mouseY
@@ -587,6 +644,12 @@ local function _eventHandler(self, event)
 		end
 		
 	elseif evtype == EVENT_MOUSE_UP then
+		--turn off accel keys (may have been on from a scrollbar slide)
+		if (self.accel or self.accelKey) then
+			self.accel = false
+			self.accelKey = nil
+			self:reDraw()
+		end
 
 		if self.sliderDragInProgress then
 			finishMouseSequence(self)
@@ -610,18 +673,20 @@ local function _eventHandler(self, event)
 
 		local x1, y1 = event:getMouse()
 
-		if self.mouseState == MOUSE_DRAG then
+		if self.mouseState == MOUSE_DRAG or self.mouseState == MOUSE_CHIRAL then
 
 			--unhighlight any selected item
 			self.usePressedStyle = false
 			_selectedItem(self):setStyleModifier(nil)
 
 
-			--Should flick occur?
-			local flickSpeed, flickDirection = self.flick:getFlickSpeed(self.itemHeight, event:getTicks())
+			if self.mouseState == MOUSE_DRAG then
+				--Should flick occur?
+				local flickSpeed, flickDirection = self.flick:getFlickSpeed(self.itemHeight, event:getTicks())
 
-			if flickSpeed then
-				self.flick:flick(flickSpeed, flickDirection)
+				if flickSpeed then
+					self.flick:flick(flickSpeed, flickDirection)
+				end
 			end
 
 			self.flick:resetFlickData()
@@ -816,7 +881,7 @@ function finishMouseSequence(self)
 	self.distanceFromMouseDownMax = 0
 
 	self.sliderDragInProgress = false
-	
+
 	return EVENT_CONSUME
 end
 
@@ -1183,7 +1248,7 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 
 	-- if selection has change, play click and redraw
 	if (self.selected ~= nil and selected ~= self.selected) or (self.selected == nil and selected ~= 0) then
-		if self.mouseState ~= MOUSE_DRAG and not self.flick.flickInProgress then
+		if self.mouseState ~= MOUSE_DRAG and self.mouseState ~= MOUSE_CHIRAL and not self.flick.flickInProgress then
 			--todo come up with more comprehensive "when to click" design once the requirement is better understood
 			self:playSound("CLICK")
 		end

@@ -17,7 +17,7 @@
 
 
 /* target frame rate 14 fps - may be tuned per platform, should be /2 */
-#define JIVE_FRAME_RATE 14
+#define JIVE_FRAME_RATE 30
 
 /* print profile information for blit's */
 #undef JIVE_PROFILE_BLIT
@@ -240,6 +240,8 @@ struct jive_mouse_event {
 	Uint16 finger_count;
 	Uint16 finger_pressure;
 	Uint16 finger_width;
+	Sint16 chiral_value;
+	bool chiral_active;
 };
 
 struct jive_motion_event {
