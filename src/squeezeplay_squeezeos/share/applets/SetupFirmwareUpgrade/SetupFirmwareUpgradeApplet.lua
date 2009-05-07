@@ -245,10 +245,10 @@ function _upgradeWindowChoice(self, upgrades, optional, disallowScreensaver)
 			itemString = self:string("BEGIN_UPDATE")
 			itemString = itemString.str or itemString
 			if upgrade.version then
-				itemString = itemString .. " (" .. upgrade.version ..")"
+				itemString = itemString .. " (" .. upgrade.version .. ")"
 			end
 			if upgrade.serverName then
-				itemString = itemString .. " - " .. upgrade.serverName
+				itemString = itemString .. " - [" .. upgrade.serverName .. "]"
 			end
 
 		end
