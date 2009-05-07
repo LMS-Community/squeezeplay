@@ -84,7 +84,6 @@ function serverPort(self, server, port, key)
 
 		if ip == nil then
 			self:setValue(key, "PORT_FAIL")
-			test.running = false
 			return
 		end
 
@@ -275,7 +274,8 @@ function diagnosticsMenu(self)
 		text = self:string("SOFTWARE_UPDATE"),
 		style = 'item',
 		callback = function ()
-			appletManager:callService("showFirmwareUpgradeMenu")
+			--todo: this does setup style FW upgrade only (since this menu is avilable from setup).  When we want different support for a non-setup version, make sure to leave the setup style behavior
+			appletManager:callService("firmwareUpgrade", nil, true)
 		end
 	})
 

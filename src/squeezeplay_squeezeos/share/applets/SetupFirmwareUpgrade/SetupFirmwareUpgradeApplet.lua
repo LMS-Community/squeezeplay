@@ -91,18 +91,44 @@ function _versionCompare(a, b)
 end
 
 
-function _findUpgrades(self, url, urlHelp)
-	local upgrades = {}
+function _findServerUpgrade(self, url, urlHelp, server)
 
 	local machine = System:getMachine()
 
 	if url and string.match(url, machine) then
 		local version = self:_firmwareVersion(url)
-		upgrades[#upgrades + 1] = {		
+		log:info("Adding to Upgrades: ", url, " version: ", version)
+		local serverName = server and server:getName() or nil
+		return {
 			url = url,
 			version = version,
 			help = urlHelp,
+			serverName = serverName,
 		}
+	end
+
+	return nil
+end
+
+
+function _findUpgrades(self, url, urlHelp, server)
+	local upgrades = {}
+
+	local machine = System:getMachine()
+
+	if not url then
+		--no specific url given means gather from discovered SCs
+	                for _,server in appletManager:callService("iterateSqueezeCenters") do
+                		local scUrl = server:getUpgradeUrl()
+                		log:info("\t", server, "\t url: ", scUrl)
+                		local upgrade = _findServerUpgrade(self, scUrl, urlHelp, server)
+                		if upgrade then
+	                		upgrades[#upgrades + 1] = upgrade
+	                	end
+                	end
+
+	else
+		upgrades[#upgrades + 1] = _findServerUpgrade(self, url, urlHelp, server)
 	end
 
 	for media in lfs.dir(MEDIA_PATH) do
@@ -143,19 +169,19 @@ function _helpString(self, upgrade)
 end
 
 
-function _upgradeWindow(self, upgrades, optional)
+function _upgradeWindow(self, upgrades, optional, disallowScreensaver)
 	local window
 	if #upgrades == 1 then
-		window = _upgradeWindowSingle(self, upgrades, optional)
+		window = _upgradeWindowSingle(self, upgrades, optional, disallowScreensaver)
 	else
-		window = _upgradeWindowChoice(self, upgrades, optional)
+		window = _upgradeWindowChoice(self, upgrades, optional, disallowScreensaver)
 	end
 
 	self:tieAndShowWindow(window)
 end
 
 
-function _upgradeWindowSingle(self, upgrades, optional)
+function _upgradeWindowSingle(self, upgrades, optional, disallowScreensaver)
 	local window = Window("help_list", self:string("UPDATE"), 'settingstitle')
 	window:setButtonAction("rbutton", "help")
 
@@ -173,6 +199,11 @@ function _upgradeWindowSingle(self, upgrades, optional)
 
 	window:addWidget(text)
 	window:addWidget(menu)
+
+	if disallowScreensaver then
+		--disallowScreensaver regardless of optional state (useful when coming down this path during this path: setup->diagnostics->FW update
+		window:setAllowScreensaver(false)
+	end
 
 	if not optional then
 		-- forced upgrade, don't allow the user to break out
@@ -196,7 +227,7 @@ function _upgradeWindowSingle(self, upgrades, optional)
 end
 
 
-function _upgradeWindowChoice(self, upgrades, optional)
+function _upgradeWindowChoice(self, upgrades, optional, disallowScreensaver)
 	local window = Window("text_list", self:string("UPDATE"), 'settingstitle')
 	window:setButtonAction("rbutton", "help")
 
@@ -212,6 +243,14 @@ function _upgradeWindowChoice(self, upgrades, optional)
 			end
 		else
 			itemString = self:string("BEGIN_UPDATE")
+			itemString = itemString.str or itemString
+			if upgrade.version then
+				itemString = itemString .. " (" .. upgrade.version ..")"
+			end
+			if upgrade.serverName then
+				itemString = itemString .. " - " .. upgrade.serverName
+			end
+
 		end
 
 		menu:addItem({
@@ -224,6 +263,11 @@ function _upgradeWindowChoice(self, upgrades, optional)
 	end
 
 	window:addWidget(menu)
+
+	if disallowScreensaver then
+		--disallowScreensaver regardless of optional state (useful when coming down this path during this path: setup->diagnostics->FW update
+		window:setAllowScreensaver(false)
+	end
 
 	if not optional then
 		-- forced upgrade, don't allow the user to break out
@@ -254,29 +298,44 @@ function _upgradeWindowChoice(self, upgrades, optional)
 	return window
 end
 
+--service method
+function firmwareUpgrade(self, server, optionalForScDiscoveryMode)
+	local upgrades, force, disallowScreensaver
+	if not server then
+		-- in "SC Discovery Mode"
+		log:info("firmware upgrade from discovered SCs")
+		upgrades = _findUpgrades(self, nil)
+		if optionalForScDiscoveryMode then
+			--used for diagnostics page (which offers a FW upgrade page and is offerred during setup, so SS must not work)
+			force = false
+			disallowScreensaver = true
+		else
+			force = true
+		end
+	else
+		local url
+		url, force = server:getUpgradeUrl()
+		upgrades = _findUpgrades(self, url, nil, server)
+		log:info("firmware upgrade from ", server, " url=", url, " force=", force)
+	end
 
-function firmwareUpgrade(self, server)
-	local url, force = server:getUpgradeUrl()
-	local upgrades = _findUpgrades(self, url)
 
-	log:info("firmware upgrade from ", server, " url=", url, " force=", force)
-
-	return _upgradeWindow(self, upgrades, not force)
+	return _upgradeWindow(self, upgrades, not force, disallowScreensaver)
 end
 
 
 function showFirmwareUpgradeMenu(self)
 	local url = false
-
+	local server
 	local player = appletManager:callService("getCurrentPlayer")
 	if player then
-		local server = player:getSlimServer()
+		server = player:getSlimServer()
 		if server then
 			url = server:getUpgradeUrl()
 		end
 	end
 
-	local upgrades = _findUpgrades(self, url)
+	local upgrades = _findUpgrades(self, url, nil, server)
 
 	return _upgradeWindow(self, upgrades, true)
 end
