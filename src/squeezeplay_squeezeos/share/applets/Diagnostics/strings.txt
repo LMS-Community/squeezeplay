@@ -41,7 +41,7 @@ PORT_FAIL
 	NL	Niet verbonden
 	NO	Kan ikke kople til
 	PL	Niepołączony
-	RU	Подключение невозможно
+	RU	Не подключено
 	SV	Ej ansluten
 
 PORT_OK

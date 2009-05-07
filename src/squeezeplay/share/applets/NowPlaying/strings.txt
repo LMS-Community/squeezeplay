@@ -94,7 +94,7 @@ SCREENSAVER_ARTWORK_SIZE
 	IT	Dimensioni copertina brano in riproduzione
 	NL	Grootte hoesafbeelding bij 'Speelt nu'
 	NO	Omslagsstørrelse på Spiller av nå
-	PL	Wielkość okładki odtwarzanego utworu
+	PL	Wielkość okładki utworu
 	RU	Размер обложки, которая воспроизводится
 	SV	Storlek på omslag för album som spelas
 
