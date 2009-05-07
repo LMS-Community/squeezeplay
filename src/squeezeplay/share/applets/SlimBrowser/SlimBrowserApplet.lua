@@ -554,7 +554,13 @@ local function _decoratedLabel(group, labelStyle, item, step, menuAccel)
 	if item then
 		group:setWidgetValue("text", item.text)
 		if showIcons then
-			group:setWidget('icon', Icon('icon_no_artwork'))
+			--set "no artwork" unless it has already been set (avoids high cpu looping)
+			local iconWidget = group:getWidget('icon')
+			if iconWidget then
+				if group:getWidget('icon'):getStyle() ~= 'icon_no_artwork' then
+					group:setWidget('icon', Icon('icon_no_artwork'))
+				end
+			end
 		end
 
 		-- set an acceleration key, but not for playlists
