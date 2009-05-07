@@ -126,4 +126,4 @@ SQUEEZECENTER_VERSION
 	EN	Update Software
 
 SQUEEZECENTER_VERSION_HELP
-	EN	%s needs to be updated to a newer version of the Squeezebox software.\n\nPlease visit mysqueezebox.com/downloads to download latest version.
+	EN	%s needs to be updated to the latest version of the Squeezebox software.\n\nPlease visit mysqueezebox.com/downloads to download latest version.
