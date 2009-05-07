@@ -104,6 +104,7 @@ local LAYOUT_NONE             = jive.ui.LAYOUT_NONE
 
 local appletManager           = require("jive.AppletManager")
 
+local HORIZONTAL_PUSH_TRANSITION_DURATION = 500
 
 -- our class
 module(...)
@@ -1201,12 +1202,18 @@ function transitionPushLeft(oldWindow, newWindow)
 	_assert(oo.instanceof(oldWindow, Widget))
 	_assert(oo.instanceof(newWindow, Widget))
 
-	local frames = FRAME_RATE / 2 -- 0.5 sec
+	local startT
+	local transitionDuration = HORIZONTAL_PUSH_TRANSITION_DURATION
+	local remaining = transitionDuration
 	local screenWidth = Framework:getScreenSize()
-	local scale = (frames * frames * frames) / screenWidth
-
+	local scale = (transitionDuration * transitionDuration * transitionDuration) / screenWidth
+	local animationCount = 0
 	return function(widget, surface)
-			local x = screenWidth - ((frames * frames * frames) / scale)
+			if animationCount == 0 then
+				--getting start time on first loop avoids initial delay that can occur
+				startT = Framework:getTicks()
+			end
+			local x = screenWidth - ((remaining * remaining * remaining) / scale)
 
 			surface:setOffset(0, 0)
 			newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER)
@@ -1219,10 +1226,13 @@ function transitionPushLeft(oldWindow, newWindow)
 
 			surface:setOffset(0, 0)
 
-			frames = frames - 1
-			if frames == 0 then
+			local elapsed = Framework:getTicks() - startT
+			remaining = transitionDuration - elapsed
+
+			if remaining <= 0 then
 				Framework:_killTransition()
 			end
+			animationCount = animationCount + 1
 		end
 end
 
@@ -1239,12 +1249,18 @@ function transitionPushRight(oldWindow, newWindow)
 	_assert(oo.instanceof(oldWindow, Widget))
 	_assert(oo.instanceof(newWindow, Widget))
 
-	local frames = FRAME_RATE / 2 -- 0.5 sec
+	local startT
+	local transitionDuration = HORIZONTAL_PUSH_TRANSITION_DURATION
+	local remaining = transitionDuration
 	local screenWidth = Framework:getScreenSize()
-	local scale = (frames * frames * frames) / screenWidth
-
+	local scale = (transitionDuration * transitionDuration * transitionDuration) / screenWidth
+	local animationCount = 0
 	return function(widget, surface)
-			local x = screenWidth - ((frames * frames * frames) / scale)
+			if animationCount == 0 then
+				--getting start time on first loop avoids initial delay that can occur
+				startT = Framework:getTicks()
+			end
+			local x = screenWidth - ((remaining * remaining * remaining) / scale)
 
 			surface:setOffset(0, 0)
 			newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER)
@@ -1257,10 +1273,13 @@ function transitionPushRight(oldWindow, newWindow)
 
 			surface:setOffset(0, 0)
 
-			frames = frames - 1
-			if frames == 0 then
+			local elapsed = Framework:getTicks() - startT
+			remaining = transitionDuration - elapsed
+
+			if remaining <= 0 then
 				Framework:_killTransition()
 			end
+			animationCount = animationCount + 1
 		end
 end
 
