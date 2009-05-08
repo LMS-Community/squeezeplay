@@ -714,9 +714,16 @@ function goNowPlaying(self, transition)
 end
 
 function openScreensaver(self)
-	self.isScreensaver = true
-	log:info('openScreensaver()')
-	self:showNowPlaying(Window.transitionFadeIn, 'screensaver')
+	--bug 12002 - don't really go into SS mode with NP ever. TODO: if this idea stickes, remove SS vs NON-SS mode code
+	appletManager:callService("deactivateScreensaver") -- not needed currently, but is defensive if other cleanup gets added to deactivateScreensaver
+	appletManager:callService("restartScreenSaverTimer")
+
+	self:showNowPlaying()
+
+
+--	self.isScreensaver = true
+--	log:info('openScreensaver()')
+--	self:showNowPlaying(Window.transitionFadeIn, 'screensaver')
 end
 
 function displaySizeSetting(self, menuItem)
