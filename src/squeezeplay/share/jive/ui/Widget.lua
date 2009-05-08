@@ -681,6 +681,17 @@ function dump(self, level)
 end
 
 
+function shortWidgetToString(self)
+	local widgetToString = tostring(self)
+	local parenLoc = string.find(widgetToString, "%(")
+	if not parenLoc then
+		return widgetToString
+	end
+
+	return string.sub(widgetToString, 0, parenLoc - 1)
+end
+
+
 --[[
 
 =head1 LICENSE

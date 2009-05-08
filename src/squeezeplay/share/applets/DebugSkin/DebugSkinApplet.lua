@@ -23,7 +23,6 @@ oo.class(_M, Applet)
 local styles -- defined below
 
 
-
 function _debugWidget(self, screen, widget)
 	if self.mouseEvent and widget:mouseInside(self.mouseEvent) then
 		local x,y,w,h = widget:getBounds()
@@ -44,9 +43,23 @@ function _debugWidget(self, screen, widget)
 			kids = kids + 1
 		end)
 
+		-- use C cached stylePath where possible, naughtly but nice ;)
+		local stylePath = widget._stylePath
+		local peerToString = widget:peerToString()
+		local indentString = ""
 		if kids == 0 then
-			-- use C cached stylePath where possible, naughtly but nice ;)
-			log:error("style: ", widget._stylePath, " | widget: ", widget:peerToString())
+			if self.lastPeerToString ~= peerToString then
+				log:error("style: ", widget._stylePath , " | widget: ", peerToString, " ", widget:shortWidgetToString())
+				local parent = widget:getParent()
+				while parent do
+					indentString = indentString .. "--"
+					log:error(indentString, "style: ", parent._stylePath , " | widget: ", parent:peerToString(), " ", parent:shortWidgetToString())
+					parent = parent:getParent()
+				end
+				log:error("")
+
+				self.lastPeerToString = peerToString
+			end
 		end
 	end
 
@@ -60,12 +73,14 @@ function debugSkin(self)
 	if self.colorEnabled then
 		self.colorEnabled = nil
 
-		self.validStyles = nil
-		self.invalidStyles = nil
+		self.validStyles = {}
+		self.invalidStyles = {}
 
 		Framework:removeWidget(self.canvas)
 		Framework:removeListener(self.mouseListener)
-		Framework:removeListener(self.windowListener)
+
+		--reload skin, so existing windows will pick up the canvas change
+		Framework:pushAction("reload_skin")
 
 		return
 	end
@@ -82,6 +97,9 @@ function debugSkin(self)
 	end)
 	Framework:addWidget(self.canvas)
 
+	--reload skin, so existing windows will pick up the canvas change
+	Framework:pushAction("reload_skin")
+
 	self.mouseListener = Framework:addListener(EVENT_MOUSE_ALL,
 		function(event)
 			self.mouseEvent = event
@@ -94,8 +112,9 @@ function debugStyle(self)
 	if self.styleEnabled then
 		self.styleEnabled = nil
 
-		self.validStyles = nil
-		self.invalidStyles = nil
+		self.validStyles = {}
+		self.invalidStyles = {}
+		self.lastPeerToString = nil
 
 		Widget.checkSkin = self.widgetCheckSkin
 
@@ -179,7 +198,7 @@ function auditStyles(self, window)
 	self.lastWindow = window
 	self.numLastWindow = #sortedInvalidWindow
 
-	log:warn("Unknown styles in window:\n", window, "\n", table.concat(sortedInvalidWindow, "\n"))
+	log:debug("Unknown styles in window:\n", window, "\n", table.concat(sortedInvalidWindow, "\n"))
 
 	-- don't print if the all invalid styles have not changed
 	local sortedInvalidStyles = _sortList(self.invalidStyles)
@@ -188,7 +207,7 @@ function auditStyles(self, window)
 	end
 
 	self.numInvalidStyles = #sortedInvalidStyles
-	log:warn("All unknown styles:\n", table.concat(sortedInvalidStyles, "\n"))
+	log:debug("All unknown styles:\n", table.concat(sortedInvalidStyles, "\n"))
 end
 
 
