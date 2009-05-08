@@ -1296,8 +1296,15 @@ function transitionFadeIn(oldWindow, newWindow)
 	_assert(oo.instanceof(oldWindow, Widget))
 	_assert(oo.instanceof(newWindow, Widget))
 
-	local frames = FRAME_RATE / 2 -- 0.5 sec
-	local scale = 255 / frames
+
+	local startT
+	local transitionDuration = 400
+	local remaining = transitionDuration
+	local screenWidth = Framework:getScreenSize()
+	local scale = (transitionDuration * transitionDuration * transitionDuration) / screenWidth
+	local animationCount = 0
+
+	local scale = 255 / transitionDuration
 
 	local bgImage = Framework:getBackground()
 
@@ -1309,15 +1316,22 @@ function transitionFadeIn(oldWindow, newWindow)
 	oldWindow:draw(srf, LAYER_ALL)
 
 	return function(widget, surface)
-			local x = frames * scale
+			if animationCount == 0 then
+				--getting start time on first loop avoids initial delay that can occur
+				startT = Framework:getTicks()
+			end
+			local x = remaining * scale
 
 			newWindow:draw(surface, LAYER_ALL)
 			srf:blitAlpha(surface, 0, 0, x)
 
-			frames = frames - 1
-			if frames == 0 then
+			local elapsed = Framework:getTicks() - startT
+			remaining = transitionDuration - elapsed
+
+			if remaining <= 0 then
 				Framework:_killTransition()
 			end
+			animationCount = animationCount + 1
 		end
 end
 
