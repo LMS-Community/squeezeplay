@@ -603,12 +603,15 @@ local function _eventHandler(self, event)
 						table.insert(self.lastChirals, {value = chiralValue, ticks = now } )
 
 
-						local sampleCount = 20
+						local sampleCount = 300
 						if #self.lastChirals >= sampleCount then
 							table.remove(self.lastChirals, 1)
 						end
 
 						local chiralTotal = 0
+						local chiralPoints = 0
+						local longChiralTotal = 0
+						local longChiralPoints = 0
 						for i, entry in ipairs(self.lastChirals) do
 							local age = now - entry.ticks
 --							log:error("age: ", age)
@@ -616,17 +619,43 @@ local function _eventHandler(self, event)
 							if age < 500 then
 								--only include values from last few moments
 								chiralTotal = chiralTotal + entry.value
+								chiralPoints = chiralPoints + 1
+							end
+							if age < 3000 then
+								--only include values from last few moments
+								longChiralTotal = longChiralTotal + entry.value
+								longChiralPoints = longChiralPoints + 1
 							end
 						end
+--						log:error("longChiralPoints ", longChiralPoints)
 
 
-						local chiralAvg = chiralTotal/#self.lastChirals
-						dragAmountY = chiralAvg/(CLEARPAD_PER_PIXEL_Y) * CHIRAL_GAIN
+						local chiralAvg = chiralTotal/chiralPoints
+						local pixels = chiralAvg/CLEARPAD_PER_PIXEL_Y * CHIRAL_GAIN
+
+						local direction = math.abs(pixels) / pixels
+
+						local longChiralAvg = longChiralTotal/longChiralPoints
+						local longPixels = longChiralAvg/CLEARPAD_PER_PIXEL_Y * CHIRAL_GAIN
+
+--						log:error("dragAmountY: ", dragAmountY, " ^2: ", dragAmountY * math.abs(dragAmountY), "2 second value:", (longChiralAvg/CLEARPAD_PER_PIXEL_Y * CHIRAL_GAIN))
 
 
+						--Use non-linear response, if long moving average is above a threshold
 						local byItemOnly = false
-						--todo byItem calc should be based on how long circle has been going (accel algorithm)
---						local byItemOnly = math.abs(dragAmountY) > 3
+						local threshold1 = 4
+						local threshold2 = 5.5
+						if longChiralPoints > 200 and math.abs(longPixels) > threshold2 and math.abs(pixels) > 1.5 then
+							dragAmountY = direction * math.abs(pixels) * math.pow(math.abs(longPixels/threshold2), 5)
+							byItemOnly = true
+						elseif longChiralPoints > 150 and math.abs(longPixels) > threshold1 and math.abs(pixels) > 2 then
+							dragAmountY = direction * math.abs(pixels) * math.pow(math.abs(longPixels/threshold1), 3)
+							byItemOnly = false
+						else
+							dragAmountY = pixels
+						end
+--						log:error("pixels ", pixels, " dA: ", dragAmountY )
+
 						self:handleDrag(dragAmountY, byItemOnly, true)
 					else
 						self.mouseState = MOUSE_DRAG
