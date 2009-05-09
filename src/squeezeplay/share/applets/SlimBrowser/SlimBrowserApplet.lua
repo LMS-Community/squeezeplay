@@ -623,7 +623,7 @@ local function _performJSONAction(jsonAction, from, qty, step, sink)
 	
 	-- temporary hack to allow backwards compatibility
 	local useContextMenu = false
-	if cmdArray[1] == 'tracks' then
+	if cmdArray[1] == 'tracks' or cmdArray[1] == 'musicfolder' then
 		useContextMenu = true
 	end
 

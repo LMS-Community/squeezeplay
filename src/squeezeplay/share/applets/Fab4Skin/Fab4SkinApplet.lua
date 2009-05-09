@@ -157,8 +157,6 @@ function skin(self, s)
 
 	-- Images and Tiles
 	local inputTitleBox           = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
-	local threeItemSelectionBox   = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3line.png")
-	local threeItemPressedBox     = Tile:loadImage( imgpath .. "3_line_lists/menu_sel_box_3item_press.png")
 	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = Tile:loadImage( imgpath .. "Icons/icon_help_button_tb.png")
 	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
@@ -1202,7 +1200,11 @@ function skin(self, s)
 			img = _loadImage(self, "Icons/icon_check_5line.png")
 		},
 	})
-	s.icon_list.menu.albumcurrent = _uses(s.icon_list.menu.item_checked)
+	s.icon_list.menu.albumcurrent = _uses(s.icon_list.menu.item_checked, {
+		arrow = musicalNote,
+		text = { padding = 0, },
+	})
+
 	s.icon_list.menu.item_play = _uses(s.icon_list.menu.item, { 
 		arrow = musicalNote, 
 	})
@@ -1241,22 +1243,25 @@ function skin(self, s)
         }
         s.icon_list.menu.pressed = {
                 item = _uses(s.icon_list.menu.item, { 
-			bgImg = threeItemPressedBox 
+			bgImg = fiveItemPressedBox 
+		}),
+                albumcurrent       = _uses(s.icon_list.menu.albumcurrent, {
+			bgImg = fiveItemSelectionBox
 		}),
                 item_checked = _uses(s.icon_list.menu.item_checked, { 
-			bgImg = threeItemPressedBox 
+			bgImg = fiveItemPressedBox 
 		}),
                 item_play = _uses(s.icon_list.menu.item_play, { 
-			bgImg = threeItemPressedBox 
+			bgImg = fiveItemPressedBox 
 		}),
                 item_add = _uses(s.icon_list.menu.item_add, { 
-			bgImg = threeItemPressedBox 
+			bgImg = fiveItemPressedBox 
 		}),
                 item_no_arrow = _uses(s.icon_list.menu.item_no_arrow, { 
-			bgImg = threeItemPressedBox 
+			bgImg = fiveItemPressedBox 
 		}),
                 item_checked_no_arrow = _uses(s.icon_list.menu.item_checked_no_arrow, { 
-			bgImg = threeItemPressedBox 
+			bgImg = fiveItemPressedBox 
 		}),
         }
 	s.icon_list.menu.locked = {
@@ -1270,6 +1275,9 @@ function skin(self, s)
 			arrow = smallSpinny
 		}),
 		item_add = _uses(s.icon_list.menu.pressed.item_add, {
+			arrow = smallSpinny
+		}),
+                albumcurrent       = _uses(s.icon_list.menu.pressed.albumcurrent, {
 			arrow = smallSpinny
 		}),
 	}
@@ -1368,8 +1376,8 @@ function skin(self, s)
 		}),
         }
         s.play_list.menu.pressed = {
-                item = _uses(s.play_list.menu.item, { bgImg = threeItemPressedBox }),
-                item_checked = _uses(s.play_list.menu.item_checked, { bgImg = threeItemPressedBox }),
+                item = _uses(s.play_list.menu.item, { bgImg = fiveItemPressedBox }),
+                item_checked = _uses(s.play_list.menu.item_checked, { bgImg = fiveItemPressedBox }),
         }
 	s.play_list.menu.locked = {
 		item = _uses(s.play_list.menu.pressed.item, {
