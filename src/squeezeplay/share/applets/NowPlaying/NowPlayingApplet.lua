@@ -264,11 +264,11 @@ function _updateAll(self)
 	local playerStatus = self.player:getPlayerStatus()
 
 	if playerStatus.item_loop then
-		local text = playerStatus.item_loop[1].text
+		local trackInfo = self:_extractTrackInfo(playerStatus.item_loop[1])
 		local showProgressBar = true
 		-- XXX: current_title of null is a function value??
-		if playerStatus.remote == 1 and type(playerStatus.current_title) == 'string' then 
-			text = text .. "\n" .. playerStatus.current_title
+		if playerStatus.remote == 1 and type(playerStatus.current_title) == 'string' and type(trackInfo) == 'string' then 
+			trackInfo = trackInfo .. "\n" .. playerStatus.current_title
 		end
 		if playerStatus.time == 0 then
 			showProgressBar = false
@@ -279,7 +279,7 @@ function _updateAll(self)
 		if self.window then
 			_getIcon(self, item, self.artwork, playerStatus.remote)
 
-			self:_updateTrack(text)
+			self:_updateTrack(trackInfo)
 			self:_updateProgress(playerStatus)
 			self:_updatePlaylist(true, playerStatus.playlist_cur_index, playerStatus.playlist_tracks)
 		
@@ -301,10 +301,18 @@ end
 
 function _updateTrack(self, trackinfo, pos, length)
 	if self.trackTitle then
-		local trackTable = string.split("\n", trackinfo)
-		local track      = trackTable[1]
-		local album      = trackTable[2]
-		local artist     = trackTable[3]
+		local trackTable
+		-- SC is sending separate track/album/artist blocks
+		if type(trackinfo) == 'table' then
+			trackTable = trackinfo
+		-- legacy SC support for all data coming in string 'text'
+		else
+			trackTable = string.split("\n", trackinfo)
+		end
+
+		local track     = trackTable[1]
+		local artist    = trackTable[2]
+		local album     = trackTable[3]
 		
 		--[[ FIXME, reformat trackinfo to one line in certain cases
 		if customStyle == 'large' and windowStyle == 'ss' and 
@@ -851,14 +859,15 @@ function showNowPlaying(self, transition)
 
 	-- if we have data, then update and display it
 	if _thisTrack then
-		local text = _thisTrack.text
-		if playerStatus.remote == 1 and type(playerStatus.current_title) == 'string' then
-			text = text .. "\n" .. playerStatus.current_title
+		local trackInfo = self:_extractTrackInfo(_thisTrack)
+
+		if playerStatus.remote == 1 and type(playerStatus.current_title) == 'string' and type(trackInfo) == 'string' then
+			trackInfo = trackInfo .. "\n" .. playerStatus.current_title
 		end
 
 		_getIcon(self, _thisTrack, self.artwork, playerStatus.remote)
 		self:_updateMode(playerStatus.mode)
-		self:_updateTrack(text)
+		self:_updateTrack(trackInfo)
 		self:_updateProgress(playerStatus)
 		self:_updatePlaylist(true, playerStatus.playlist_cur_index, playerStatus.playlist_tracks)
 
@@ -883,6 +892,22 @@ function showNowPlaying(self, transition)
 	self.window:show(transitionOn)
 	self:_updateAll(self)
 
+end
+
+
+-- internal method to decide if track information is from the 'text' field or from 'track', 'artist', and 'album'
+-- if it has the three fields, return a table
+-- otherwise return a string
+function _extractTrackInfo(self, _track)
+	if _track.track then
+		local returnTable = {}
+		table.insert(returnTable, _track.track)
+		table.insert(returnTable, _track.artist)
+		table.insert(returnTable, _track.album)
+		return returnTable
+	else
+		return _track.text or "\n\n\n"
+	end
 end
 
 function freeAndClear(self)
