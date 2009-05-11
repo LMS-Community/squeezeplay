@@ -17,6 +17,10 @@ IMAGE_VIEWER
 	RU	Просмотр рисунков
 	SV	Bildvisare
 
+IMAGE_VIEWER_ERROR
+	DE	Fehler
+	EN	Error
+
 IMAGE_VIEWER_SETTINGS
 	DE	Bilder-Anzeige Einstellungen
 	EN	Image Viewer Settings
@@ -275,6 +279,17 @@ IMAGE_VIEWER_CARD_PATH
 IMAGE_VIEWER_CARD_PATH
 	DE	Legt den Suchpfad für Bilder fest. '*' kann als Platzhalter verwendet werden
 	EN	Defines the search path for images. You can use a '*' as placeholder
+
+IMAGE_VIEWER_CARD_ERROR
+	DE	Es konnten keine Bilder gefunden werden. Bitte stellen Sie sicher, dass die Bilder im richtigen Pfad / Format vorliegen.
+	EN	No images found. Please make sure that images are located in the correct path and in a supported format.
+
+#
+# Strings for HTTP Source
+#
+IMAGE_VIEWER_HTTP_ERROR
+	DE	Die Bilderliste konnte nicht geladen werden. Bitte überprüfen Sie, ob die erfasste URL korrekt ist.
+	EN	Could not retrieve URL list. Please check whether the defined URL is correct.
 
 #
 # Strings for Flickr Source

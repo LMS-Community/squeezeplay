@@ -31,13 +31,13 @@ local RadioGroup	= require("jive.ui.RadioGroup")
 local Surface		= require("jive.ui.Surface")
 local Process		= require("jive.net.Process")
 local Window		= require("jive.ui.Window")
-
+local require = require
 local log 		= require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
 
 local jnt = jnt
 
--- our class
-module(..., oo.class)
+module(...)
+oo.class(_M, ImageSource)
 
 local imgFiles = {}
 
@@ -80,7 +80,6 @@ function __init(self)
 		end
 	end
 
-	self.currentImage = 1
 	return self
 end
 

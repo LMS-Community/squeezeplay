@@ -48,8 +48,10 @@ local Process		= require("jive.net.Process")
 local log 			= require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
 local debug			= require("jive.utils.debug")
 
+local ImageSource		= require("applets.ImageViewer.ImageSource")
 local ImageSourceCard	= require("applets.ImageViewer.ImageSourceCard")
-local ImageSourceFlickr	= require("applets.ImageViewer.ImageSourceFlickr")
+local ImageSourceHttp	= require("applets.ImageViewer.ImageSourceHttp")
+--local ImageSourceFlickr	= require("applets.ImageViewer.ImageSourceFlickr")
 
 local FRAME_RATE       = jive.ui.FRAME_RATE
 local LAYER_FRAME      = jive.ui.LAYER_FRAME
@@ -69,38 +71,41 @@ local transitionRightLeft
 function initImageSource(self)
 	log:info("init image viewer")
 
-	local src = self:getSettings()["source"]
 	self.imgSource = nil
+	local src = self:getSettings()["source"]
+	
 	if src == "card" then
-		self.imgSource = ImageSourceCard()
-	--[[
-	elseif src == "sc" then
-		self.imgSource = ImageSourceFlickr()
+		self.imgSource = ImageSourceCard(self)
 	elseif src == "http" then
-		self.imgSource = ImageSourceFlickr()
-	--]]
+		self.imgSource = ImageSourceHttp(self)
+	--[[
 	elseif src == "flickr" then
-		self.imgSource = ImageSourceFlickr()
+		self.imgSource = ImageSourceFlickr(self)
+	elseif src == "sc" then
+		self.imgSource = ImageSourceFlickr(self)
+	--]]
 	end	
 
 	self.transitions = { transitionBoxOut, transitionTopDown, transitionBottomUp, transitionLeftRight, transitionRightLeft, 
 		Window.transitionFadeIn, Window.transitionPushLeft, Window.transitionPushRight }
-
 end
 
 function startSlideshow(self, menuItem)
 
 	log:info("start image viewer")
-	-- initialize the chosen image 
+	-- initialize the chosen image source
 	self:initImageSource()
 
 	-- display the first one in the window. 200ms timer needed so image source can get ready
 	local timer = Timer(200, 
 		function()
+			self.imgSource:nextImage(self:getSettings()["ordering"])
 			self:displaySlide()
 		end, 
 		true)
 	timer:start()
+
+	
 end
 
 function setupEventHandlers(self, window)
@@ -118,11 +123,12 @@ function setupEventHandlers(self, window)
 	end
 	
 	window:addActionListener("go", self, nextSlideAction)
-	window:addActionListener("up", self, nextSlideAction)
+	--window:addActionListener("up", self, nextSlideAction)
 	window:addActionListener("play", self, nextSlideAction)
-	window:addActionListener("down", self, previousSlideAction)
+	--window:addActionListener("down", self, previousSlideAction)
 
-	window:addListener(EVENT_MOUSE_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_PRESS,
+	--window:addListener(EVENT_MOUSE_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_PRESS,
+	window:addListener(EVENT_MOUSE_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD ,
 		function(event)
 			local type = event:getType()
 			local keyPress
@@ -139,9 +145,24 @@ function setupEventHandlers(self, window)
 	)
 end
 
-
+function free(self)
+	log:info("destructor of image viewer")
+	self.window:setAllowScreensaver(true)
+	return true
+end
 
 function displaySlide(self)
+	if not self.imgSource:imageReady() then
+		-- try again in 1000 ms
+		log:debug("image not ready, try again...")
+		local timer = Timer(1000, 
+			function()
+				self:displaySlide()
+			end, 
+			true)
+		timer:start()		
+		return
+	end
 
 	-- get device orientation and features
 	local screenWidth, screenHeight = Framework:getScreenSize()
@@ -159,107 +180,116 @@ function displaySlide(self)
 	local deviceLandscape = ((screenWidth/screenHeight) > 1)
 
 	local image = self.imgSource:getImage()
-	local w, h = image:getSize()
-	local imageLandscape = ((w/h) > 1)
+	if image != nil then
+		local w, h = image:getSize()
+		local imageLandscape = ((w/h) > 1)
 
-	-- determine whether to rotate
-	if (rotation == "yes") or (rotation == "auto" and deviceCanRotate) then
-		-- rotation allowed
-		if deviceLandscape != imageLandscape then
-			-- rotation needed, so let's do it
-			image = image:rotozoom(-90, 1, 1)
-			w, h = image:getSize()
+		-- determine whether to rotate
+		if (rotation == "yes") or (rotation == "auto" and deviceCanRotate) then
+			-- rotation allowed
+			if deviceLandscape != imageLandscape then
+				-- rotation needed, so let's do it
+				image = image:rotozoom(-90, 1, 1)
+				w, h = image:getSize()
+			end
 		end
-	end
 
-	-- determine scaling factor
-	local zoomX = screenWidth / w
-	local zoomY = screenHeight / h
-	local zoom = 1
+		-- determine scaling factor
+		local zoomX = screenWidth / w
+		local zoomY = screenHeight / h
+		local zoom = 1
 
-	--[[
-	log:info("pict " .. w .. "x" .. h)
-	log:info("screen " .. screenWidth .. "x" .. screenHeight)
-	log:info("zoomX " .. zoomX)
-	log:info("zoomY " .. zoomY)
-	log:info("deviceCanRotate " .. tostring(deviceCanRotate))
-	log:info("rotation " .. rotation)
-	log:info("fullscreen " .. tostring(fullScreen))
-	--]]
+		--[[
+		log:info("pict " .. w .. "x" .. h)
+		log:info("screen " .. screenWidth .. "x" .. screenHeight)
+		log:info("zoomX " .. zoomX)
+		log:info("zoomY " .. zoomY)
+		log:info("deviceCanRotate " .. tostring(deviceCanRotate))
+		log:info("rotation " .. rotation)
+		log:info("fullscreen " .. tostring(fullScreen))
+		--]]
 
-	if fullScreen then
-		zoom = math.max(zoomX, zoomY)
+		if fullScreen then
+			zoom = math.max(zoomX, zoomY)
+		else
+			zoom = math.min(zoomX, zoomY)
+		end
+
+		-- scale image
+		image = image:rotozoom(0, zoom, 1)
+		w, h = image:getSize()
+
+		-- place scaled image centered to empty picture
+		local totImg = Surface:newRGBA(screenWidth, screenHeight)
+		totImg:filledRectangle(0, 0, screenWidth, screenHeight, 0x000000FF)
+		local x, y = (screenWidth - w) / 2, (screenHeight - h) / 2
+
+		-- draw image
+		image:blit(totImg, x, y)
+
+		image = totImg
+
+		-- add text to image
+		local txtLeft, txtCenter, txtRight = self.imgSource:getText()
+
+		if txtLeft or txtCenter or txtRight then
+			image:filledRectangle(0,screenHeight-20,screenWidth,screenHeight, 0x000000FF)
+			local fontBold = Font:load("fonts/FreeSansBold.ttf", 10)
+			local fontRegular = Font:load("fonts/FreeSans.ttf", 10)
+
+			if txtLeft then
+				-- draw left text
+				local txt1 = Surface:drawText(fontBold, 0xFFFFFFFF, txtLeft)
+				txt1:blit(image, 5, screenHeight-15 - fontBold:offset())
+			end
+
+			if txtCenter then
+				-- draw center text
+				local titleWidth = fontRegular:width(txtCenter)
+				local txt2 = Surface:drawText(fontRegular, 0xFFFFFFFF, txtCenter)
+				txt2:blit(image, (screenWidth-titleWidth)/2, screenHeight-15-fontRegular:offset())
+			end
+
+			if txtRight then
+				-- draw right text
+				local titleWidth = fontRegular:width(txtRight)
+				local txt3 = Surface:drawText(fontRegular, 0xFFFFFFFF, txtRight)
+				txt3:blit(image, screenWidth-5-titleWidth, screenHeight-15-fontRegular:offset())
+			end
+		end
+
+		local window = Window('window')
+		window:addWidget(Icon("icon", image))
+
+		self:setupEventHandlers(window)
+
+		-- replace the window if it's already there
+		if self.window then
+			self:tieWindow(window)
+			local transition = self:getTransition()
+			self.window = window
+			self.window:showInstead(transition)
+		-- otherwise it's new
+		else
+			self.window = window
+			self:tieAndShowWindow(window)
+		end
+
+		-- no screensavers por favor
+		self.window:setAllowScreensaver(false)
+
+		-- start timer for next photo in 'delay' seconds
+		local delay = self:getSettings()["delay"]
+		self.timer = self.window:addTimer(delay,
+			function()
+				self.imgSource:nextImage(self:getSettings()["ordering"])
+				self:displaySlide()
+			end)
 	else
-		zoom = math.min(zoomX, zoomY)
+		log:info(self.imgSource)
+
+		self.imgSource:popupMessage("error", "invalid image object found!")
 	end
-
-	-- scale image
-	image = image:rotozoom(0, zoom, 1)
-	w, h = image:getSize()
-
-	-- place scaled image centered to empty picture
-	local totImg = Surface:newRGBA(screenWidth, screenHeight)
-	totImg:filledRectangle(0, 0, screenWidth, screenHeight, 0x000000FF)
-	local x, y = (screenWidth - w) / 2, (screenHeight - h) / 2
-
-	-- draw image
-	image:blit(totImg, x, y)
-
-	image = totImg
-
-	-- add text to image
-	local txtLeft, txtCenter, txtRight = self.imgSource:getText()
-
-	if txtLeft or txtCenter or txtRight then
-		image:filledRectangle(0,screenHeight-20,screenWidth,screenHeight, 0x000000FF)
-		local fontBold = Font:load("fonts/FreeSansBold.ttf", 10)
-		local fontRegular = Font:load("fonts/FreeSans.ttf", 10)
-
-		if txtLeft then
-			-- draw left text
-			local txt1 = Surface:drawText(fontBold, 0xFFFFFFFF, txtLeft)
-			txt1:blit(image, 5, screenHeight-15 - fontBold:offset())
-		end
-
-		if txtCenter then
-			-- draw center text
-			local titleWidth = fontRegular:width(txtCenter)
-			local txt2 = Surface:drawText(fontRegular, 0xFFFFFFFF, txtCenter)
-			txt2:blit(image, (screenWidth-titleWidth)/2, screenHeight-15-fontRegular:offset())
-		end
-
-		if txtRight then
-			-- draw right text
-			local titleWidth = fontRegular:width(txtRight)
-			local txt3 = Surface:drawText(fontRegular, 0xFFFFFFFF, txtRight)
-			txt3:blit(image, screenWidth-5-titleWidth, screenHeight-15-fontRegular:offset())
-		end
-	end
-
-	local window = Window('window')
-	window:addWidget(Icon("icon", image))
-
-	self:setupEventHandlers(window)
-
-	-- replace the window if it's already there
-	if self.window then
-		self:tieWindow(window)
-		local transition = self:getTransition()
-		self.window = window
-		self.window:showInstead(transition)
-	-- otherwise it's new
-	else
-		self.window = window
-		self:tieAndShowWindow(window)
-	end
-
-	-- start timer for next photo in 'delay' seconds
-	local delay = self:getSettings()["delay"]
-	self.timer = self.window:addTimer(delay,
-		function()
-			self.imgSource:nextImage(self:getSettings()["ordering"])
-			self:displaySlide()
-		end)
 end
 
 
@@ -516,7 +546,18 @@ function defineSource(self, menuItem)
                     source == "card"
 	            ),
             },
-            --[[
+            {
+                text = self:string("IMAGE_VIEWER_SOURCE_HTTP"),
+				style = 'item_choice',
+                check = RadioButton(
+                    "radio",
+                    group,
+                    function()
+                        self:setSource("http")
+                    end,
+                    source == "http"
+                ),
+            },            --[[
 			{
                 text = self:string("IMAGE_VIEWER_SOURCE_SC"),
 				style = 'item_choice',
@@ -529,18 +570,6 @@ function defineSource(self, menuItem)
     	            source == "sc"
 	            ),
             },           
-            {
-                text = self:string("IMAGE_VIEWER_SOURCE_HTTP"),
-				style = 'item_choice',
-                check = RadioButton(
-                    "radio",
-                    group,
-                    function()
-                        self:setSource("http")
-                    end,
-                    source == "http"
-                ),
-            },
 			--]]
  			{
 				text = self:string("IMAGE_VIEWER_SOURCE_FLICKR"), 

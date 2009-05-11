@@ -57,6 +57,7 @@ function defaultSettings(self)
 	defaultSetting["ordering"] = "random"
 
 	defaultSetting["card.path"] = "/media/*/images"
+	defaultSetting["http.url"] = "http://www.web4free.ch/test.txt"
 	return defaultSetting
 end
 

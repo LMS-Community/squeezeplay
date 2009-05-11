@@ -21,6 +21,7 @@ local setmetatable, tonumber, tostring, ipairs, locale = setmetatable, tonumber,
 
 local Applet		= require("jive.Applet")
 local appletManager	= require("jive.AppletManager")
+local Event			= require("jive.ui.Event")
 local io			= require("io")
 local oo			= require("loop.simple")
 local math			= require("math")
@@ -34,20 +35,26 @@ local Window        = require("jive.ui.Window")
 local Surface		= require("jive.ui.Surface")
 local Process		= require("jive.net.Process")
 
-local log 		= require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
-
 local jnt = jnt
 
--- our class
-module(..., oo.class)
---oo.class(_M, Applet)
+local log 		= require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
+local require = require
+local ImageSource	= require("applets.ImageViewer.ImageSource")
 
-local imgFiles = {}
+module(...)
+oo.class(_M, ImageSource)
 
-function __init(self)
-
+function __init(self, applet)
 	log:info("initialize ImageSourceCard")
+	obj = oo.rawnew(self, ImageSource(applet))
 
+	obj.imgFiles = {}
+	obj:readImageList()
+
+	return obj
+end
+
+function readImageList(self)
 	-- find directories /media/*/images to parse
     for dir in lfs.dir("/media") do
         if lfs.attributes("/media/" .. dir .. "/images", "mode") == "directory" then
@@ -73,50 +80,69 @@ function __init(self)
 								or string.find(file, "%ppng") 
 								or string.find(file, "%pgif") 
 								 then
-       			                 	table.insert(imgFiles, relPath .. "/" .. file)
+									log:info(relPath .. "/" .. file)
+									table.insert(self.imgFiles, relPath .. "/" .. file)
 							end
 						end
 					end
+					self.lstReady = true
 					return 1
 			end)
-	
 		end
 	end
-
-	self.currentImage = 1
-	return self
 end
 
 function getImage(self)
-	local image = Surface:loadImage(imgFiles[self.currentImage])
-	return image
+	if self.imgFiles[self.currentImage] != nil then
+		local image = Surface:loadImage(self.imgFiles[self.currentImage])
+		return image
+	end
 end
 
 function nextImage(self, ordering)
+	if #self.imgFiles == 0 then
+		self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_CARD_ERROR"))
+		return
+	end
+
+	if #self.imgFiles == 0 then
+		return
+	end
 	if ordering == "random" then
-		self.currentImage = math.random(#imgFiles)
+		self.currentImage = math.random(#self.imgFiles)
 	else
 		self.currentImage = self.currentImage + 1
 		if self.currentImage > #imgFiles then
 			self.currentImage = 1
 		end
 	end
+	self.imgReady = true
 end
 
 function previousImage(self, ordering)
+	if #self.imgFiles == 0 then
+		self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_CARD_ERROR"))
+		return
+	end
+
+	if #self.imgFiles == 0 then
+		return
+	end
 	if ordering == "random" then
 		self.currentImage = math.random(#imgFiles)
 	else
 		self.currentImage = self.currentImage - 1
-		if self.currentImage > 1 then
-			self.currentImage = #imgFiles
+		if self.currentImage < 1 then
+			self.currentImage = #self.imgFiles
 		end
 	end
+	self.imgReady = true
 end
 
 function getText(self)
-	return "",imgFiles[self.currentImage],""
+	return "",self.imgFiles[self.currentImage],""
 end
+
 
 --[[
 function settings(self, caller, menuItem)
