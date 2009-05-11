@@ -1024,17 +1024,6 @@ function settingsTestSuspend(self, menuItem)
 			      )
 		},
 		{
-			text = "Suspend Wake", 
-			icon = Checkbox(
-				      "checkbox", 
-				      function(obj, isSelected)
-					      settings.suspendWake = isSelected and 30 or nil
-					      log:info("suspendWake=", settings.suspendWake)
-				      end,
-				      settings.suspendWake ~= nil
-			      )
-		},
-		{
 			text = self:string("WLAN_POWER_SAVE"), 
 			icon = Checkbox(
 				      "checkbox", 
@@ -1141,7 +1130,6 @@ function _suspendTask(self)
 	local zeroconf = status.ip_address and string.match(status.ip_address, "^169.254.") ~= nil
 
 	local settings = self:getSettings()
-	local wakeAfter = settings.suspendWake and settings.suspendWake or ""
 
 	-- start timer to resume this task every second
 	self.suspendPopup:addTimer(1000,
@@ -1166,7 +1154,7 @@ function _suspendTask(self)
 	until not connected
 
 	-- suspend
-	os.execute("/etc/init.d/suspend " .. wakeAfter)
+	os.execute("/etc/init.d/suspend")
 
 	-- wake up power state
 	self:wakeup('motion')
