@@ -1169,10 +1169,13 @@ function _suspendTask(self)
 	os.execute("/etc/init.d/suspend " .. wakeAfter)
 
 	-- wake up power state
-	self:wakeup()
+	self:wakeup('motion')
 
 	while true do
 		local status = self.wireless:t_wpaStatus()
+
+		-- wake up
+		self:wakeup('motion')
 
 		-- network connected?
 		if status then
@@ -1197,9 +1200,6 @@ function _suspendTask(self)
 
 			-- close popup
 			self.suspendPopup:hide()
-
-			-- wake up
-			self:wakeup()
 
 			self.suspendPopup = nil
 			self.suspendTask = nil
