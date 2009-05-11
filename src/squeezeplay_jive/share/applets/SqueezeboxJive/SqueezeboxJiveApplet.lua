@@ -238,7 +238,7 @@ function init(self)
 				return EVENT_CONSUME
 			end
 			return EVENT_UNUSED
-		end)
+		end, 1)
 
 
 	-- brightness
