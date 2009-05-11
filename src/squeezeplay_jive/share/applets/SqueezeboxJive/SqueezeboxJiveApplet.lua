@@ -967,7 +967,7 @@ function settingsTestSuspend(self, menuItem)
 
 	local settings = self:getSettings()
 
-	local sleepOptions = { 10, 30, 60 }
+	local sleepOptions = { 10, 30, 60, 120 }
 	local sleepIndex
 	for i, v in ipairs(sleepOptions) do
 		if v == (settings.sleepTimeout / 1000) then
@@ -976,7 +976,7 @@ function settingsTestSuspend(self, menuItem)
 		end
 	end
 
-	local suspendOptions = { 10, 20, 30, 60, 600, 3600 }
+	local suspendOptions = { 10, 30, 60, 600, 1200, 2400, 3600 }
 	local suspendIndex
 	for i, v in ipairs(suspendOptions) do
 		if v == (settings.suspendWhenPlayingTimeout / 1000) then
