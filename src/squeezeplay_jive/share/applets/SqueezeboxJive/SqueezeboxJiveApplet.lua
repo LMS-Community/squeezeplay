@@ -17,6 +17,7 @@ local Applet                 = require("jive.Applet")
 local Sample                 = require("squeezeplay.sample")
 local Checkbox               = require("jive.ui.Checkbox")
 local Choice                 = require("jive.ui.Choice")
+local Event                  = require("jive.ui.Event")
 local Font                   = require("jive.ui.Font")
 local Framework              = require("jive.ui.Framework")
 local Group                  = require("jive.ui.Group")
@@ -1190,6 +1191,9 @@ function _suspendTask(self)
 			if wirelessWasConnected then
 				jnt:notify("networkConnected")
 			end
+
+			-- simulate motion to kill (some) screensavers
+			Framework:pushEvent(Event:new(EVENT_MOTION, 0, 0, 0))
 
 			-- close popup
 			self.suspendPopup:hide()
