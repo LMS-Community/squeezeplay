@@ -18,21 +18,6 @@ NETWORK
 	RU	Беспроводная сеть
 	SV	Trådlöst nätverk
 
-NETWORK_SETUP_NETWORKING
-	CS	Nastavení Networking
-	DA	Konfigurer netværk
-	DE	Netzwerk einrichten
-	EN	Setup Networking
-	ES	Configurar red
-	FI	Asenna verkkotoiminto
-	FR	Mise en réseau
-	IT	Configurazione rete
-	NL	Netwerk instellen
-	NO	Konfigurer nettverk
-	PL	Konfiguracja sieci
-	RU	Настройка сети
-	SV	Konfigurera nätverket
-
 NETWORK_NETWORKING
 	EN	Networking
 

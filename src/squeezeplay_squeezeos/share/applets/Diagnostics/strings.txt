@@ -1,18 +1,6 @@
 
 DIAGNOSTICS
-	CS	Diagnostika systému
-	DA	Systemdiagnosticering
-	DE	Systemdiagnose
 	EN	Diagnostics
-	ES	Diagnóstico del sistema
-	FI	Järjestelmädiagnostiikka
-	FR	Diagnostic système
-	IT	Diagnostica del sistema
-	NL	Diagnostische gegevens van het systeem
-	NO	Systemdiagnose
-	PL	Diagnostyka systemu
-	RU	Диагностика системы
-	SV	Systemdiagnostik
 
 NOT_CONNECTED
 	CS	Nepřipojeno
