@@ -69,6 +69,12 @@ int jiveL_event_new(lua_State *L) {
 			event->u.mouse.x = lua_tointeger(L, 3);
 			event->u.mouse.y = lua_tointeger(L, 4);
 			break;
+
+		case JIVE_EVENT_MOTION:
+			event->u.motion.x = lua_tointeger(L, 3);
+			event->u.motion.y = lua_tointeger(L, 4);
+			event->u.motion.z = lua_tointeger(L, 5);
+			break;
     	
 		default:
 			break;
