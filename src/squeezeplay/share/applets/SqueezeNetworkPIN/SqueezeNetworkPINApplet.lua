@@ -152,7 +152,7 @@ function displayNotLinked(self)
 	window:addWidget(textarea)
 	window:addWidget(menu)
 
-	obj:hideOnAllButtonInput()
+	window:hideOnAllButtonInput()
 
 	self:tieAndShowWindow(window)
 	return window

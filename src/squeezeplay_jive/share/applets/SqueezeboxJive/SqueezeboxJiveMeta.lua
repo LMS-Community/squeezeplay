@@ -27,7 +27,6 @@ function defaultSettings(meta)
 		suspendWhenPlayingTimeout = 2400000, -- 40 minutes
 		suspendWhenStoppedTimeout = 1200000, -- 20 minutes
 		suspendEnabled  = true,
-		suspendWake     = nil,
 		dimmedAC	= false,
 		wlanPSEnabled   = true,
 	}

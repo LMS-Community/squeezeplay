@@ -19,6 +19,7 @@ local System                 = require("jive.System")
 local Sample                 = require("squeezeplay.sample")
 local Checkbox               = require("jive.ui.Checkbox")
 local Choice                 = require("jive.ui.Choice")
+local Event                  = require("jive.ui.Event")
 local Font                   = require("jive.ui.Font")
 local Framework              = require("jive.ui.Framework")
 local Group                  = require("jive.ui.Group")
@@ -236,7 +237,7 @@ function init(self)
 				return EVENT_CONSUME
 			end
 			return EVENT_UNUSED
-		end)
+		end, 1)
 
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
 
@@ -983,7 +984,7 @@ function settingsTestSuspend(self, menuItem)
 
 	local settings = self:getSettings()
 
-	local sleepOptions = { 10, 30, 60 }
+	local sleepOptions = { 10, 30, 60, 120 }
 	local sleepIndex
 	for i, v in ipairs(sleepOptions) do
 		if v == (settings.sleepTimeout / 1000) then
@@ -992,7 +993,7 @@ function settingsTestSuspend(self, menuItem)
 		end
 	end
 
-	local suspendOptions = { 10, 20, 30, 60, 600, 3600 }
+	local suspendOptions = { 10, 30, 60, 600, 1200, 2400, 3600 }
 	local suspendIndex
 	for i, v in ipairs(suspendOptions) do
 		if v == (settings.suspendWhenPlayingTimeout / 1000) then
@@ -1039,18 +1040,6 @@ function settingsTestSuspend(self, menuItem)
 					      log:info("suspendEnabled=", settings.suspendEnabled)
 				      end,
 				      settings.suspendEnabled
-			      )
-		},
-		{
-			text = "Suspend Wake", 
-			style = 'item_choice',
-			check = Checkbox(
-				      "checkbox", 
-				      function(obj, isSelected)
-					      settings.suspendWake = isSelected and 30 or nil
-					      log:info("suspendWake=", settings.suspendWake)
-				      end,
-				      settings.suspendWake ~= nil
 			      )
 		},
 		{
@@ -1170,7 +1159,6 @@ function _suspendTask(self)
 	local zeroconf = status.ip_address and string.match(status.ip_address, "^169.254.") ~= nil
 
 	local settings = self:getSettings()
-	local wakeAfter = settings.suspendWake and settings.suspendWake or ""
 
 	-- start timer to resume this task every second
 	self.suspendPopup:addTimer(1000,
@@ -1195,13 +1183,16 @@ function _suspendTask(self)
 	until not connected
 
 	-- suspend
-	os.execute("/etc/init.d/suspend " .. wakeAfter)
+	os.execute("/etc/init.d/suspend")
 
 	-- wake up power state
-	self:wakeup()
+	self:wakeup('motion')
 
 	while true do
 		local status = self.wireless:t_wpaStatus()
+
+		-- wake up
+		self:wakeup('motion')
 
 		-- network connected?
 		if status then
@@ -1221,11 +1212,11 @@ function _suspendTask(self)
 				jnt:notify("networkConnected")
 			end
 
+			-- simulate motion to kill (some) screensavers
+			Framework:pushEvent(Event:new(EVENT_MOTION, 0, 0, 0))
+
 			-- close popup
 			self.suspendPopup:hide()
-
-			-- wake up
-			self:wakeup()
 
 			self.suspendPopup = nil
 			self.suspendTask = nil

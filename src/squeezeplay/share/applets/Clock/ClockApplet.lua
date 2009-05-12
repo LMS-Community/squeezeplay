@@ -116,7 +116,7 @@ Clock  = oo.class()
 function Clock:__init()
 	log:info("Init Clock")
 
-	obj = oo.rawnew(self)
+	local obj = oo.rawnew(self)
 
 	obj.screen_width, obj.screen_height = Framework:getScreenSize()
 
@@ -126,7 +126,7 @@ function Clock:__init()
 
 	obj.window:addListener(EVENT_MOTION,
 		function()
-			obj.window:hide()
+			obj.window:hide(Window.transitionNone)
 			return EVENT_CONSUME
 		end)
 

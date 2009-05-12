@@ -85,7 +85,13 @@ int jiveL_event_new(lua_State *L) {
 		case JIVE_EVENT_IR_HOLD:
 			event->u.ir.code = lua_tointeger(L, 3);
 			break;
-    	
+
+		case JIVE_EVENT_MOTION:
+			event->u.motion.x = lua_tointeger(L, 3);
+			event->u.motion.y = lua_tointeger(L, 4);
+			event->u.motion.z = lua_tointeger(L, 5);
+			break;
+
 		default:
 			break;
 		}
