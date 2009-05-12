@@ -256,10 +256,7 @@ end
 
 function notify_playerCurrent(self, player)
 	_updateServerList(self, player)
-end
 
-
-function notify_playerLoaded(self, player)
 	if self.waitForConnect then
 		log:info("waiting for ", player, " on ", self.waitForConnect.server)
 	end
