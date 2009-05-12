@@ -123,12 +123,11 @@ function setupEventHandlers(self, window)
 	end
 	
 	window:addActionListener("go", self, nextSlideAction)
-	--window:addActionListener("up", self, nextSlideAction)
+	window:addActionListener("up", self, nextSlideAction)
 	window:addActionListener("play", self, nextSlideAction)
-	--window:addActionListener("down", self, previousSlideAction)
+	window:addActionListener("down", self, previousSlideAction)
 
-	--window:addListener(EVENT_MOUSE_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_PRESS,
-	window:addListener(EVENT_MOUSE_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD ,
+	window:addListener(EVENT_MOUSE_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_PRESS,
 		function(event)
 			local type = event:getType()
 			local keyPress
