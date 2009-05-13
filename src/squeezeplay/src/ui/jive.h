@@ -16,8 +16,9 @@
 #include <SDL_rotozoom.h>
 
 
-/* target frame rate 14 fps - may be tuned per platform, should be /2 */
-#define JIVE_FRAME_RATE 30
+/* target frame rate 14 fps (originally) - may be tuned per platform, should be /2 */
+/* updated to the max effective rate of scrolling on a fab4 */
+#define JIVE_FRAME_RATE 22
 
 /* print profile information for blit's */
 #undef JIVE_PROFILE_BLIT
