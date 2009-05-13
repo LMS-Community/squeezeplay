@@ -21,6 +21,10 @@ IMAGE_VIEWER_ERROR
 	DE	Fehler
 	EN	Error
 
+IMAGE_VIEWER_EMPTY_LIST
+	DE	Nichts anzuzeigen, die Bilderliste ist leer
+	EN	Nothing to display, the image list is empty
+
 IMAGE_VIEWER_SETTINGS
 	DE	Bilder-Anzeige Einstellungen
 	EN	Image Viewer Settings
@@ -273,10 +277,10 @@ IMAGE_VIEWER_ZOOM_SCREEN
 # Strings for Card Source
 #
 IMAGE_VIEWER_CARD_PATH
-	DE	Pfad für Bilder
-	EN	Path for images
+	DE	Legt den Suchpfad für Bilder fest. '*' kann als Platzhalter verwendet werden
+	EN	Defines the search path for images. You can use a '*' as placeholder
 
-IMAGE_VIEWER_CARD_PATH
+IMAGE_VIEWER_CARD_PATH_HELP
 	DE	Legt den Suchpfad für Bilder fest. '*' kann als Platzhalter verwendet werden
 	EN	Defines the search path for images. You can use a '*' as placeholder
 
@@ -287,6 +291,14 @@ IMAGE_VIEWER_CARD_ERROR
 #
 # Strings for HTTP Source
 #
+IMAGE_VIEWER_HTTP_PATH
+	DE	Legt die URL fest, von welcher die Bilderliste geladen wird
+	EN	Defines the location of the image list
+
+IMAGE_VIEWER_HTTP_PATH_HELP
+	DE	Legt die URL fest, von welcher die Bilderliste geladen wird
+	EN	Defines the location of the image list
+
 IMAGE_VIEWER_HTTP_ERROR
 	DE	Die Bilderliste konnte nicht geladen werden. Bitte überprüfen Sie, ob die erfasste URL korrekt ist.
 	EN	Could not retrieve URL list. Please check whether the defined URL is correct.

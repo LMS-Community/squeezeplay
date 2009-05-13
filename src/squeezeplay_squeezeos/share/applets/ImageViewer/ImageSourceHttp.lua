@@ -57,16 +57,14 @@ end
 
 function readImageList(self)
 	-- get URL from configuration
-	local urlString = self.applet:getSettings()["http.url"]
+	local urlString = self.applet:getSettings()["http.path"]
 
-	-- Default URI settings
 	local defaults = {
 	    host   = "",
 	    port   = 80,
 	    path   = "/",
 	    scheme = "http"
 	}
-
 	local parsed = URL.parse(urlString, defaults)
 
 	-- create a HTTP socket (see L<jive.net.SocketHttp>)
@@ -98,7 +96,8 @@ function getImage(self)
 end
 
 function nextImage(self, ordering)
-	if not self:listReady() then
+	if #self.imgFiles == 0 then
+		self:emptyListError()
 		return
 	end
 	if ordering == "random" then
@@ -113,7 +112,8 @@ function nextImage(self, ordering)
 end
 
 function previousImage(self, ordering)
-	if not self:listReady() then
+	if #self.imgFiles == 0 then
+		self:emptyListError()
 		return
 	end
 	if ordering == "random" then
@@ -167,12 +167,9 @@ function getText(self)
 end
 
 
---[[
-function settings(self, caller, menuItem)
+function settings(self, window)
 
-    local window = Window("text_list", menuItem.text, 'settingstitle')
-
-	local imgpath = caller:getSettings()["card.path"]
+	local imgpath = self.applet:getSettings()["http.path"]
 
 	local input = Textinput("textinput", imgpath,
 		function(_, value)
@@ -181,22 +178,20 @@ function settings(self, caller, menuItem)
 			end
 
 			log:debug("Input " .. value)
-			caller:getSettings()["card.path"] = value
+			self.applet:getSettings()["http.path"] = value
 
 			window:playSound("WINDOWSHOW")
 			window:hide(Window.transitionPushLeft)
 			return true
 		end)
 
-    local help = Textarea("help_text", "IMAGE_VIEWER_CARD_PATH_HELP")
+    local help = Textarea("help_text", "IMAGE_VIEWER_HTTP_PATH_HELP")
 
     window:addWidget(help)
     window:addWidget(input)
 
-    caller:tieAndShowWindow(window)
     return window
 end
---]]
 
 --[[
 

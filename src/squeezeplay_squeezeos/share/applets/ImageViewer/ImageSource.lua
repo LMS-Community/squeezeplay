@@ -58,6 +58,10 @@ function popupMessage(self, title, msg)
 	self.applet:tieAndShowWindow(popup)
 end
 
+function emptyListError(self)
+	self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_EMPTY_LIST"))
+end
+
 function imageReady(self)
 	return self.imgReady
 end

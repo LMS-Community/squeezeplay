@@ -54,6 +54,10 @@ function __init(self, applet)
 	return obj
 end
 
+function listNotReadyError(self)
+	self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_CARD_ERROR"))
+end
+
 function readImageList(self)
 	-- find directories /media/*/images to parse
     for dir in lfs.dir("/media") do
@@ -101,11 +105,7 @@ end
 
 function nextImage(self, ordering)
 	if #self.imgFiles == 0 then
-		self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_CARD_ERROR"))
-		return
-	end
-
-	if #self.imgFiles == 0 then
+		self:emptyListError()
 		return
 	end
 	if ordering == "random" then
@@ -121,11 +121,7 @@ end
 
 function previousImage(self, ordering)
 	if #self.imgFiles == 0 then
-		self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_CARD_ERROR"))
-		return
-	end
-
-	if #self.imgFiles == 0 then
+		self:emptyListError()
 		return
 	end
 	if ordering == "random" then
@@ -144,12 +140,9 @@ function getText(self)
 end
 
 
---[[
-function settings(self, caller, menuItem)
+function settings(self, window)
 
-    local window = Window("text_list", menuItem.text, 'settingstitle')
-
-	local imgpath = caller:getSettings()["card.path"]
+	local imgpath = self.applet:getSettings()["card.path"]
 
 	local input = Textinput("textinput", imgpath,
 		function(_, value)
@@ -158,7 +151,7 @@ function settings(self, caller, menuItem)
 			end
 
 			log:debug("Input " .. value)
-			caller:getSettings()["card.path"] = value
+			self.applet:getSettings()["card.path"] = value
 
 			window:playSound("WINDOWSHOW")
 			window:hide(Window.transitionPushLeft)
@@ -170,10 +163,8 @@ function settings(self, caller, menuItem)
     window:addWidget(help)
     window:addWidget(input)
 
-    caller:tieAndShowWindow(window)
     return window
 end
---]]
 
 --[[
 

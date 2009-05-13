@@ -72,6 +72,8 @@ function initImageSource(self)
 	log:info("init image viewer")
 
 	self.imgSource = nil
+	self.listCheckCount = 0
+
 	local src = self:getSettings()["source"]
 	
 	if src == "card" then
@@ -91,21 +93,44 @@ function initImageSource(self)
 end
 
 function startSlideshow(self, menuItem)
-
 	log:info("start image viewer")
 	-- initialize the chosen image source
 	self:initImageSource()
-
-	-- display the first one in the window. 200ms timer needed so image source can get ready
-	local timer = Timer(200, 
-		function()
-			self.imgSource:nextImage(self:getSettings()["ordering"])
-			self:displaySlide()
-		end, 
-		true)
-	timer:start()
-
 	
+	self:startSlideshowWhenReady()
+end
+
+function startSlideshowWhenReady(self)
+	if not self.imgSource:listReady() then
+		self.listCheckCount = self.listCheckCount + 1
+
+		if self.listCheckCount == 10 then
+			if self.nextSlideTimer != nil then
+				self.nextSlideTimer:stop()
+			end
+			self.imgSource:listNotReadyError()
+			return
+		end
+
+		-- try again in 500 ms
+		log:debug("image list not ready yet...")
+		self.nextSlideTimer = Timer(500, 
+			function()
+				self:startSlideshowWhenReady()
+			end, 
+			true)
+		self.nextSlideTimer:start()		
+		return
+	end
+
+	-- stop timer
+	if self.nextSlideTimer != nil then
+		self.nextSlideTimer:stop()
+	end
+
+	-- image list is ready
+	self.imgSource:nextImage(self:getSettings()["ordering"])
+	self:displaySlide()
 end
 
 function setupEventHandlers(self, window)
@@ -122,6 +147,7 @@ function setupEventHandlers(self, window)
 		return EVENT_CONSUME
 	end
 	
+	window:addActionListener("add", self, openSettings)
 	window:addActionListener("go", self, nextSlideAction)
 	window:addActionListener("up", self, nextSlideAction)
 	window:addActionListener("play", self, nextSlideAction)
@@ -154,13 +180,18 @@ function displaySlide(self)
 	if not self.imgSource:imageReady() then
 		-- try again in 1000 ms
 		log:debug("image not ready, try again...")
-		local timer = Timer(1000, 
+		self.checkFotoTimer = Timer(1000, 
 			function()
 				self:displaySlide()
 			end, 
 			true)
-		timer:start()		
+		self.checkFotoTimer:start()		
 		return
+	end
+
+	-- stop timer
+	if self.checkFotoTimer != nil then
+		self.checkFotoTimer:stop()
 	end
 
 	-- get device orientation and features
@@ -279,7 +310,7 @@ function displaySlide(self)
 
 		-- start timer for next photo in 'delay' seconds
 		local delay = self:getSettings()["delay"]
-		self.timer = self.window:addTimer(delay,
+		self.nextSlideTimer = self.window:addTimer(delay,
 			function()
 				self.imgSource:nextImage(self:getSettings()["ordering"])
 				self:displaySlide()
@@ -309,16 +340,14 @@ function openSettings(self, menuItem)
 					return EVENT_CONSUME
 				end
 			},
-			--[[
 			{
 				text = self:string("IMAGE_VIEWER_SOURCE_SETTINGS"), 
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
-					self.imgSource:settings(menuItem)
+					self:sourceSpecificSettings(menuItem)
 					return EVENT_CONSUME
 				end
 			},
-			--]]
 			{
 				text = self:string("IMAGE_VIEWER_DELAY"),
 				sound = "WINDOWSHOW",
@@ -359,6 +388,15 @@ function openSettings(self, menuItem)
 					return EVENT_CONSUME
 				end
 			},		}))
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+function sourceSpecificSettings(self, menuItem)
+	local window = Window("window", menuItem.text)
+
+	windows = self.imgSource:settings(window)
 
 	self:tieAndShowWindow(window)
 	return window
