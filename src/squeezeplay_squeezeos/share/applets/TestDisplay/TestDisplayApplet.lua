@@ -40,10 +40,10 @@ function drawDisplay(self)
 	if self.state == 1 then
 		log:info("DisplayTest: White Frame")
 		srf:filledRectangle(0, 0, w, h, 0x000000FF)
-		srf:line(   4,   4, 236,   4, 0xFFFFFFFF)
-		srf:line( 236,   4, 236, 316, 0xFFFFFFFF)
-		srf:line( 236, 316,   4, 316, 0xFFFFFFFF)
-		srf:line(   4, 316,   4,   4, 0xFFFFFFFF)
+		srf:line(   0,   0, w-1,   0, 0xFFFFFFFF)
+		srf:line( w-1,   0, w-1, h-1, 0xFFFFFFFF)
+		srf:line( w-1, h-1,   0, h-1, 0xFFFFFFFF)
+		srf:line(   0, h-1,   0,   0, 0xFFFFFFFF)
 
 	elseif self.state == 2 then
 		log:info("DisplayTest: RED")
@@ -74,7 +74,7 @@ function drawDisplay(self)
 		for x = 0, w, 2 do
 			srf:line(x ,0, x, h, 0x000000FF)
 		end
-		
+
 	elseif self.state == 8 then
 		log:info("DisplayTest: BLACK")
 		srf:filledRectangle(0, 0, w, h, 0x000000FF)
@@ -82,7 +82,17 @@ function drawDisplay(self)
 	elseif self.state == 9 then
 		log:info("DisplayTest: COLOR_GRADIENT")
 		srf:filledRectangle(0, 0, w, h, 0x000000FF)
-		srf = Surface:loadImage("applets/TestDisplay/circle.jpg")
+		srf = Surface:loadImage("applets/TestDisplay/ColorWheel.jpg")
+		local wi,hi = srf:getSize()
+		srf = srf:zoom( w / wi, h / hi, 1)
+
+	elseif self.state == 10 then
+		log:info("DisplayTest: COLOR_GRADIENT")
+		srf:filledRectangle(0, 0, w, h, 0x000000FF)
+		srf = Surface:loadImage("applets/TestDisplay/Face.jpg")
+		local wi,hi = srf:getSize()
+		srf = srf:zoom( w / wi, h / hi, 1)
+		
 	else
 		log:info("DisplayTest: TEST_COMPLETE")
 		self:popupWindow(self:string("TEST_COMPLETE"))
@@ -92,8 +102,8 @@ function drawDisplay(self)
 	self.icon:setValue(srf)
 end
 
-
 function DisplayTest(self)
+
 	local window = Window("text_list")
 	self.window = window
 
@@ -110,6 +120,26 @@ function DisplayTest(self)
 	end
 
 	window:addActionListener("go", self, _drawDisplayAction)
+
+	window:addListener(EVENT_KEY_PRESS | EVENT_MOUSE_DOWN,
+		function(event)
+			local type = event:getType()
+
+			if type == EVENT_KEY_PRESS then
+				if event:getKeycode() == KEY_BACK then
+					window:playSound("WINDOWHIDE")
+					window:hide()
+					return EVENT_CONSUME
+				end
+
+			elseif type == EVENT_MOUSE_DOWN then
+				window:playSound("WINDOWSHOW")
+				self:drawDisplay()
+				return EVENT_CONSUME
+			end
+		end
+
+	)
 
 	self:tieAndShowWindow(window)
 	return window
