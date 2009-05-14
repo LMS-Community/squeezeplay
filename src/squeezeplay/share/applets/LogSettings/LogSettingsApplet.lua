@@ -20,21 +20,25 @@ LogSettingsApplet overrides the following methods:
 
 
 -- stuff we use
-local pairs = pairs
-
-local table           = require("table")
+local assert, loadfile, ipairs, pairs, setfenv, type = assert, loadfile, ipairs, pairs, setfenv, type
 
 local oo              = require("loop.simple")
-local logging         = require("logging")
+
+local io              = require("io")
+local string          = require("string")
+local table           = require("table")
+local dumper          = require("jive.utils.dumper")
 
 local Applet          = require("jive.Applet")
+local System          = require("jive.System")
 local Choice          = require("jive.ui.Choice")
+local Framework       = require("jive.ui.Framework")
 local SimpleMenu      = require("jive.ui.SimpleMenu")
 local Window          = require("jive.ui.Window")
-local Framework       = require("jive.ui.Framework")
-local jul             = require("jive.utils.log")
+local logger          = require("squeezeplay.log")
 
-local log             = jul.logger("applets.browser")
+local debug           = require("jive.utils.debug")
+local log             = require("jive.utils.log").logger("applets.browser")
 
 
 module(..., Framework.constants)
@@ -49,23 +53,34 @@ local function _gatherLogCategories()
 	local res = {}
 	
 	-- for all items in the (sub)-table
-	for k,v in pairs(jul.getCategories()) do
+
+	local levels = { "Debug", "Info", "Warn", "Error" }
+
+	for name,cat in pairs(logger.categories()) do
+		local level = cat:getLevel()
+
+		local idx = 1
+		for i, v in ipairs(levels) do
+			if level == string.upper(levels[i]) then
+				idx = i
+			end
+		end
 	
 		-- create a Choice
 		local choice = Choice(
 			"choice", 
-			{ "Debug", "Info", "Warn", "Error" }, 
+			levels,
 			function(obj, selectedIndex)
-				log:info("Setting log category ", k, " to ", logging.LEVEL_A[selectedIndex])
-				v:setLevel(logging.LEVEL_A[selectedIndex])
+				log:debug("set ", name, " to ", levels[selectedIndex])
+				cat:setLevel(levels[selectedIndex])
 			end,
-			logging.LEVEL_H[v:getLevel()]
+			idx
 		)
 		
 		-- insert suitable entry for Choice menu
 		table.insert(res, 
 			{
-				text = k,
+				text = name,
 				style = 'item_choice',
 				check = choice,
 			}
@@ -73,6 +88,45 @@ local function _gatherLogCategories()
 	end
 	
 	return res
+end
+
+
+function _saveLogconf()
+	local logconf
+
+	-- load existing configuration
+	local confin = System:findFile("logconf.lua")
+	if confin then
+		local f, err = loadfile(confin)
+		if f then
+			setfenv(f, {})
+			logconf = f()
+		else
+			log:warn("error in logconf: ", err)
+		end
+	end
+
+	if type(logconf) ~= "table" then
+		logconf = {}
+	end
+
+	-- update category levels
+	for name,cat in pairs(logger.categories()) do
+		local level = cat:getLevel()
+
+		if level == "INFO" then
+			logconf.category[name] = nil
+		else
+			logconf.category[name] = level
+		end
+	end
+
+	-- save configuration
+	local confout = System:getUserDir() .. "/logconf.lua"
+
+	local file = assert(io.open(confout, "w"))
+	file:write(dumper.dump(logconf, nil, false))
+	file:close()
 end
 
 
@@ -87,6 +141,11 @@ function logSettings(self, menuItem)
 	menu:setComparator(menu.itemComparatorAlpha)
 
 	window:addWidget(menu)
+
+	window:addListener(EVENT_WINDOW_INACTIVE,
+		function()
+			_saveLogconf()
+		end)
 
 	self:tieAndShowWindow(window)
 	return window

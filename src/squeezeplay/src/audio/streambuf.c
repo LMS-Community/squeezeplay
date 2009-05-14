@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 1
-
 #include "common.h"
 
 #include "audio/fifo.h"
@@ -349,7 +347,7 @@ ssize_t streambuf_icy_filter(u8_t *buf, size_t min, size_t max, bool_t *streamin
 			r = streambuf_fast_read(icy_buf, icy_len, icy_len, NULL);
 			assert(r == icy_len);
 			assert( strstr( (char *)icy_buf, "StreamTitle" ) != NULL );
-			DEBUG_TRACE("got icy metadata: %s", (char *) icy_buf);
+			LOG_DEBUG(log_audio_decode, "got icy metadata: %s", (char *) icy_buf);
 
 			decode_queue_metadata(SHOUTCAST, icy_buf, icy_len);
 
@@ -399,7 +397,7 @@ static int stream_connectL(lua_State *L) {
 	serv_addr.sin_family = AF_INET;
 
 
-	DEBUG_TRACE("streambuf connect %s:%d", inet_ntoa(serv_addr.sin_addr), serv_addr.sin_port);
+	LOG_DEBUG(log_audio_decode, "streambuf connect %s:%d", inet_ntoa(serv_addr.sin_addr), serv_addr.sin_port);
 
 	/* Create socket */
 	fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -596,7 +594,7 @@ static int stream_readL(lua_State *L) {
 			if (stream->num_crlf == 4) {
 				header_len = body_ptr - stream->body - 1;
 
-				//DEBUG_TRACE("headers %d %*s\n", header_len, header_len, stream->body);
+				//LOG_DEBUG(log_audio_decode, "headers %d %*s\n", header_len, header_len, stream->body);
 
 				/* Send headers to SqueezeCenter */
 				lua_getfield(L, 2, "_streamHttpHeaders");

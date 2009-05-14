@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 1
-
 #include "common.h"
 
 #include "audio/fifo.h"
@@ -232,7 +230,7 @@ static void decode_fade_out(void) {
 
 	interval = determine_transition_interval(current_sample_rate, decode_transition_period, &nbytes);
 
-	DEBUG_TRACE("Starting FADEOUT over %d seconds, requiring %d bytes", fixed_to_s32(interval), (unsigned int)nbytes);
+	LOG_DEBUG(log_audio_decode, "Starting FADEOUT over %d seconds, requiring %d bytes", fixed_to_s32(interval), (unsigned int)nbytes);
 
 	if (!interval) {
 		return;
@@ -360,7 +358,7 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 			fft_fixed interval = determine_transition_interval(sample_rate, decode_transition_period, &crossfadeBytes);
 
 			if (interval) {
-				DEBUG_TRACE("Starting CROSSFADE over %d seconds, requiring %d bytes", fixed_to_s32(interval), (unsigned int)crossfadeBytes);
+				LOG_DEBUG(log_audio_decode, "Starting CROSSFADE over %d seconds, requiring %d bytes", fixed_to_s32(interval), (unsigned int)crossfadeBytes);
 
 				/* Buffer position to stop crossfade */
 				crossfade_ptr = decode_fifo.wptr;
@@ -384,7 +382,7 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 		else if (decode_transition_type & TRANSITION_FADE_IN) {
 			/* The transition is a fade in. */
 
-			DEBUG_TRACE("Starting FADE_IN over %d seconds", decode_transition_period);
+			LOG_DEBUG(log_audio_decode, "Starting FADE_IN over %d seconds", decode_transition_period);
 
 			/* Gain steps */
 			transition_gain_step = fixed_div(FIXED_ONE, s32_to_fixed(decode_transition_period * TRANSITION_STEPS_PER_SECOND));
@@ -431,7 +429,7 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 
 			if ((crossfade_started && decode_fifo.wptr == crossfade_ptr)
 			    || transition_gain >= FIXED_ONE) {
-				DEBUG_TRACE("Completed transition");
+				LOG_DEBUG(log_audio_decode, "Completed transition");
 
 				transition_gain_step = 0;
 				crossfade_started = FALSE;
@@ -490,7 +488,7 @@ void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate) {
 
 	buffer_size = SAMPLES_TO_BYTES(nsamples);
 
-	DEBUG_TRACE("Removing %d bytes padding from buffer", (unsigned int)buffer_size);
+	LOG_DEBUG(log_audio_decode, "Removing %d bytes padding from buffer", (unsigned int)buffer_size);
 
 	fifo_lock(&decode_fifo);
 
@@ -498,7 +496,7 @@ void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate) {
 	if (fifo_bytes_used(&decode_fifo) <= buffer_size) {
 		fifo_unlock(&decode_fifo);
 
-		DEBUG_TRACE("- already playing padding");
+		LOG_DEBUG(log_audio_decode, "- already playing padding");
 		return;
 	}
 
@@ -561,16 +559,16 @@ void decode_output_set_transition(u32_t type, u32_t period) {
 void decode_output_set_track_gain(u32_t replay_gain) {
 	track_gain = (replay_gain) ? replay_gain : FIXED_ONE;
 
-	DEBUG_TRACE("Track gain %d", track_gain);
+	LOG_DEBUG(log_audio_decode, "Track gain %d", track_gain);
 
 	volume_get_clip_range(track_gain, track_clip_range);
 
-	DEBUG_TRACE("Track clip range %x %x", track_clip_range[0], track_clip_range[1]);
+	LOG_DEBUG(log_audio_decode, "Track clip range %x %x", track_clip_range[0], track_clip_range[1]);
 }
 
 
 void decode_set_track_polarity_inversion(u8_t inversion) {
-	DEBUG_TRACE("Polarity inversion %d", inversion);
+	LOG_DEBUG(log_audio_decode, "Polarity inversion %d", inversion);
 
 	track_inversion[0] = (inversion & POLARITY_INVERSION_LEFT) ? -1 : 1;
 	track_inversion[1] = (inversion & POLARITY_INVERSION_RIGHT) ? -1 : 1;

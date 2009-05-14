@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 1
-
 #include "common.h"
 
 #include "audio/streambuf.h"
@@ -75,12 +73,12 @@ static void xing_parse(struct decode_mad *self) {
 	u32_t magic, flags;
 
 	if (bitlen < 64) {
-		DEBUG_TRACE("no xing header");
+		LOG_DEBUG(log_audio_codec, "no xing header");
 		return;
 	}
 
 	magic = mad_bit_read(&ptr, 32);
-	DEBUG_TRACE("xing magic %x", magic);
+	LOG_DEBUG(log_audio_codec, "xing magic %x", magic);
 	if (magic != XING_MAGIC && magic != INFO_MAGIC) {
 		return;
 	}
@@ -90,7 +88,7 @@ static void xing_parse(struct decode_mad *self) {
 
 	// skip traditional xing vbr tag data
 	if (flags & XING_FRAMES) {
-		DEBUG_TRACE("skipping xing frames");
+		LOG_DEBUG(log_audio_codec, "skipping xing frames");
 		if (bitlen < 32) {
 			return;
 		}
@@ -98,7 +96,7 @@ static void xing_parse(struct decode_mad *self) {
 		bitlen -= 32;
 	}
 	if (flags & XING_BYTES) {
-		DEBUG_TRACE("skipping xing bytes");
+		LOG_DEBUG(log_audio_codec, "skipping xing bytes");
 		if (bitlen < 32) {
 			return;
 		}
@@ -106,7 +104,7 @@ static void xing_parse(struct decode_mad *self) {
 		bitlen -= 32;
 	}
 	if (flags & XING_TOC) {
-		DEBUG_TRACE("skipping xing toc");
+		LOG_DEBUG(log_audio_codec, "skipping xing toc");
 		if (bitlen < 800) {
 			return;
 		}
@@ -114,7 +112,7 @@ static void xing_parse(struct decode_mad *self) {
 		bitlen -= 800;
 	}
 	if (flags & XING_SCALE) {
-		DEBUG_TRACE("skipping xing scale");
+		LOG_DEBUG(log_audio_codec, "skipping xing scale");
 		if (bitlen < 32) {
 			return;
 		}
@@ -123,7 +121,7 @@ static void xing_parse(struct decode_mad *self) {
 	}
 
 	if (bitlen < 72) {
-		DEBUG_TRACE("no lame header");
+		LOG_DEBUG(log_audio_codec, "no lame header");
 		return;
 	}
 
@@ -131,7 +129,7 @@ static void xing_parse(struct decode_mad *self) {
 	mad_bit_skip(&ptr, 40);
 	bitlen -= 72;
 
-	DEBUG_TRACE("lame magic %x bitlen %d", magic, bitlen);
+	LOG_DEBUG(log_audio_codec, "lame magic %x bitlen %d", magic, bitlen);
 	if (magic != LAME_MAGIC) {
 		return;
 	}
@@ -145,8 +143,8 @@ static void xing_parse(struct decode_mad *self) {
 	self->encoder_delay += mad_bit_read(&ptr, 12);
 	self->encoder_padding = mad_bit_read(&ptr, 12);
 
-	DEBUG_TRACE("encoder delay %d", self->encoder_delay - MAD_DECODER_DELAY);
-	DEBUG_TRACE("encoder padding %d", self->encoder_padding);
+	LOG_DEBUG(log_audio_codec, "encoder delay %d", self->encoder_delay - MAD_DECODER_DELAY);
+	LOG_DEBUG(log_audio_codec, "encoder padding %d", self->encoder_padding);
 
 	/* Remove MAD decoder delay of 529 samples from the end too */
 	if (self->encoder_padding > MAD_DECODER_DELAY) {
@@ -160,7 +158,7 @@ static void xing_parse(struct decode_mad *self) {
 
 static u32_t tagtype(const unsigned char *data, u32_t length) {
         if (length >= 3 && data[0] == 'T' && data[1] == 'A' && data[2] == 'G') {
-                DEBUG_TRACE("ID3v1 tag detected");
+                LOG_DEBUG(log_audio_codec, "ID3v1 tag detected");
                 return 128;
         }
         
@@ -171,7 +169,7 @@ static u32_t tagtype(const unsigned char *data, u32_t length) {
         {
                 u32_t size;
 				
-				DEBUG_TRACE("ID3v2 tag detected");
+		LOG_DEBUG(log_audio_codec, "ID3v2 tag detected");
                 
                 size = 10 + (data[6]<<21) + (data[7]<<14) + (data[8]<<7) + data[9];
                 if (data[5] & ID3_TAG_FLAG_FOOTERPRESENT) {
@@ -191,7 +189,7 @@ static bool_t consume_id3_tags(struct decode_mad *self) {
         u32_t remaining = self->stream.bufend - self->stream.next_frame;
         
         if ( (tagsize = tagtype(self->stream.this_frame, remaining)) ) {
-                DEBUG_TRACE("ID3 tag detected, skipping %d bytes before next frame", tagsize);
+                LOG_DEBUG(log_audio_codec, "ID3 tag detected, skipping %d bytes before next frame", tagsize);
                 mad_stream_skip(&self->stream, tagsize);
                 rc = TRUE;
         }
@@ -280,7 +278,7 @@ static void decode_mad_frame(struct decode_mad *self) {
 				}
 
 				// XXXX unrecoverable error
-				DEBUG_ERROR("Unrecoverable frame error %d", self->stream.error);
+				LOG_WARN(log_audio_codec, "Unrecoverable frame error %d", self->stream.error);
 				self->state = MAD_STATE_ERROR;
 				current_decoder_state |= DECODE_STATE_ERROR;
 				return;
@@ -340,7 +338,7 @@ static void decode_mad_output(struct decode_mad *self) {
 	else {
 		/* Bug 9046, don't allow sample rate to change mid stream */
 		if (self->frames > 2 && self->sample_rate != self->frame.header.samplerate) {
-			DEBUG_TRACE("Sample rate changed from %d to %d, discarding PCM", self->sample_rate, self->frame.header.samplerate);
+			LOG_DEBUG(log_audio_codec, "Sample rate changed from %d to %d, discarding PCM", self->sample_rate, self->frame.header.samplerate);
 			return;
 		}
 		self->sample_rate = self->frame.header.samplerate;
@@ -367,7 +365,7 @@ static void decode_mad_output(struct decode_mad *self) {
 			}
 			self->encoder_delay -= offset;
 
-			DEBUG_TRACE("Skip encoder_delay=%d pcm->length=%d offset=%d", self->encoder_delay, pcm->length, offset);
+			LOG_DEBUG(log_audio_codec, "Skip encoder_delay=%d pcm->length=%d offset=%d", self->encoder_delay, pcm->length, offset);
 		}
 
 		for (i=offset; i<pcm->length; i++) {
@@ -390,12 +388,12 @@ static void decode_mad_output(struct decode_mad *self) {
 
 	/* If we've come to the guard pointer, we're done */
 	if (self->stream.this_frame == self->guard_pointer) {
-		DEBUG_TRACE("Reached end of stream");
+		LOG_DEBUG(log_audio_codec, "Reached end of stream");
 
 		self->state = MAD_STATE_END_OF_FILE;
 
 		if (self->encoder_padding) {
-			DEBUG_TRACE("Remove encoder padding=%d", self->encoder_padding);
+			LOG_DEBUG(log_audio_codec, "Remove encoder padding=%d", self->encoder_padding);
 			decode_output_remove_padding(self->encoder_padding, self->sample_rate);
 		}
 	}
@@ -446,7 +444,7 @@ static u32_t decode_mad_period(void *data) {
 static void *decode_mad_start(u8_t *params, u32_t num_params) {
 	struct decode_mad *self;
 
-	DEBUG_TRACE("decode_mad_start()");
+	LOG_DEBUG(log_audio_codec, "decode_mad_start()");
 
 	self = malloc(sizeof(struct decode_mad));
 	memset(self, 0, sizeof(struct decode_mad));
@@ -474,7 +472,7 @@ static void *decode_mad_start(u8_t *params, u32_t num_params) {
 static void decode_mad_stop(void *data) {
 	struct decode_mad *self = (struct decode_mad *) data;
 
-	DEBUG_TRACE("decode_mad_stop()");
+	LOG_DEBUG(log_audio_codec, "decode_mad_stop()");
 
 	mad_stream_finish(&self->stream);
 	mad_frame_finish(&self->frame);

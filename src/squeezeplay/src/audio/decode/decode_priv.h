@@ -11,6 +11,11 @@
 #include "audio/fifo.h"
 
 
+extern LOG_CATEGORY *log_audio_decode;
+extern LOG_CATEGORY *log_audio_codec;
+extern LOG_CATEGORY *log_audio_output;
+
+
 /* Audio sample, 32-bits.
  */
 typedef s32_t sample_t;

@@ -30,7 +30,7 @@ local Textarea               = require('jive.ui.Textarea')
 local Framework              = require('jive.ui.Framework')
 
 local SimpleMenu             = require("jive.ui.SimpleMenu")
-local log                    = require("jive.utils.log").addCategory("customizeHome", jive.utils.log.DEBUG)
+local log                    = require("jive.utils.log").logger("customizeHome")
 
 local debug                  = require("jive.utils.debug")
 local jiveMain               = jiveMain

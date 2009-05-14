@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 1
-
 #include "common.h"
 #include "jive.h"
 
@@ -15,6 +13,8 @@
 
 int (*jive_sdlevent_pump)(lua_State *L);
 int (*jive_sdlfilter_pump)(const SDL_Event *event);
+
+LOG_CATEGORY *log_ui_draw;
 
 SDL_Rect jive_dirty_region;
 
@@ -160,6 +160,9 @@ static int jiveL_initSDL(lua_State *L) {
 	JiveSurface *srf, *splash, *icon;
 	Uint16 splash_w, splash_h;
 
+	/* logging */
+	log_ui_draw = LOG_CATEGORY_GET("ui.draw");
+
 	/* screen properties */
 	lua_getfield(L, 1, "screen");
 	if (lua_isnil(L, -1)) {
@@ -189,8 +192,8 @@ static int jiveL_initSDL(lua_State *L) {
 
 	/* report video info */
 	video_info = SDL_GetVideoInfo();
-	DEBUG_TRACE("%d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", video_info->vfmt->BitsPerPixel, video_info->vfmt->BytesPerPixel, video_info->vfmt->Rshift, video_info->vfmt->Gshift, video_info->vfmt->Bshift)
-	DEBUG_TRACE("Hardware acceleration %s available", video_info->hw_available?"is":"is not");
+	LOG_INFO(log_ui_draw, "%d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", video_info->vfmt->BitsPerPixel, video_info->vfmt->BytesPerPixel, video_info->vfmt->Rshift, video_info->vfmt->Gshift, video_info->vfmt->Bshift);
+	LOG_INFO(log_ui_draw, "Hardware acceleration %s available", video_info->hw_available?"is":"is not");
 
 	/* Register callback for additional events (used for multimedia keys)*/
 	SDL_EventState(SDL_SYSWMEVENT,SDL_ENABLE);
@@ -209,8 +212,10 @@ static int jiveL_initSDL(lua_State *L) {
 
 	/* load the icon */
 	icon = jive_surface_load_image("jive/app.png");
-	jive_surface_set_wm_icon(icon);
-	jive_surface_free(icon);
+	if (icon) {
+		jive_surface_set_wm_icon(icon);
+		jive_surface_free(icon);
+	}
 
 	SDL_ShowCursor(SDL_DISABLE);
 	SDL_EnableKeyRepeat (100, 100);
@@ -1429,8 +1434,6 @@ static const struct luaL_Reg core_methods[] = {
 
 
 static int jiveL_core_init(lua_State *L) {
-
-	squeezeplayL_system_init(L);
 
 	lua_getglobal(L, "jive");
 	lua_getfield(L, -1, "ui");

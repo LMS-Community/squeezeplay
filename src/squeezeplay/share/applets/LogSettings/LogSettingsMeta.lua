@@ -19,6 +19,7 @@ See L<jive.AppletMeta> for a description of standard applet meta functions.
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
+local System        = require("jive.System")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
@@ -45,7 +46,9 @@ function registerApplet(meta)
 		end
 	end
 
-	if media then
+	local desktop = not System:isHardware()
+
+	if desktop or media then
 		jiveMain:addItem(meta:menuItem('appletLogSettings', 'advancedSettings', 'DEBUG_LOG', function(applet, ...) applet:logSettings(...) end))
 	end
 end

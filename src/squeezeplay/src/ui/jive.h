@@ -312,6 +312,9 @@ struct jive_perfwarn {
 };
 
 
+/* logging */
+extern LOG_CATEGORY *log_ui_draw;
+
 /* extra pump function */
 extern int (*jive_sdlevent_pump)(lua_State *L);
 
@@ -326,8 +329,6 @@ char *platform_get_mac_address();
 char *platform_get_home_dir();
 char *platform_get_arch();
 
-int squeezeplayL_system_init(lua_State *L);
-
 
 /* global counter used to invalidate widget */
 extern Uint32 jive_origin;
@@ -341,7 +342,6 @@ void *jive_getpeer(lua_State *L, int index, JivePeerMeta *peerMeta);
 void jive_torect(lua_State *L, int index, SDL_Rect *rect);
 void jive_rect_union(SDL_Rect *a, SDL_Rect *b, SDL_Rect *c);
 void jive_rect_intersection(SDL_Rect *a, SDL_Rect *b, SDL_Rect *c);
-int jive_find_file(const char *path, char *fullpath);
 void jive_queue_event(JiveEvent *evt);
 int jive_traceback (lua_State *L);
 

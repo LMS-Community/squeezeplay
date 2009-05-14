@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 1
-
 #include "common.h"
 #include "jive.h"
 
@@ -38,16 +36,16 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 		/* create new surface */
 		sdl = SDL_SetVideoMode (w, h, bpp, flags);
 		if (!sdl) {
-			DEBUG_ERROR("SDL_SetVideoMode(%d,%d,%d): %s",
-				    w, h, bpp, SDL_GetError());
+			LOG_ERROR(log_ui_draw, "SDL_SetVideoMode(%d,%d,%d): %s",
+				  w, h, bpp, SDL_GetError());
 			return NULL;
 		}
 
 		if ( (sdl->flags & SDL_HWSURFACE) && (sdl->flags & SDL_DOUBLEBUF)) {
-			DEBUG_TRACE("Using a hardware double buffer");
+			LOG_INFO(log_ui_draw, "Using a hardware double buffer");
 		}
 
-		DEBUG_TRACE("Video mode: %d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", sdl->format->BitsPerPixel, sdl->format->BytesPerPixel, sdl->format->Rshift, sdl->format->Gshift, sdl->format->Bshift)
+		LOG_INFO(log_ui_draw, "Video mode: %d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", sdl->format->BitsPerPixel, sdl->format->BytesPerPixel, sdl->format->Rshift, sdl->format->Gshift, sdl->format->Bshift);
 	}
 
 	srf = calloc(sizeof(JiveSurface), 1);
@@ -160,7 +158,7 @@ JiveSurface *jive_surface_load_image(const char *path) {
 	}
 
 	fullpath = malloc(PATH_MAX);
-	if (!jive_find_file(path, fullpath)) {
+	if (!squeezeplay_find_file(path, fullpath)) {
 		fprintf(stderr, "Cannot find image %s\n", path);
 		free(fullpath);
 		return NULL;

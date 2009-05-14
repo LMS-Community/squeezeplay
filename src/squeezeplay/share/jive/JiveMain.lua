@@ -148,12 +148,6 @@ function JiveMain:disconnectPlayer( event) --self, event not used in our case, c
 end
 
 
-local function _addUserPathToLuaPath()
-    local dirSeparator = package.path:match( "(%p)%?%." )
-    package.path = package.path .. System.getUserDir() .. dirSeparator .."?.lua;"
-    package.path = package.path .. System.getUserDir() .. dirSeparator .. "?" .. dirSeparator .. "?.lua;"
-end
-
 --fallback IR->KEY handler after widgets have had a chance to listen for ir - probably will be removed - still using for rew/fwd and volume for now
 local function _irHandler(event)
 	local irCode = event:getIRCode()
@@ -210,8 +204,6 @@ function JiveMain:__init()
 
 	-- Initialise UI
 	Framework:init()
-
-	_addUserPathToLuaPath()
 
 	-- Singleton instances (globals)
 	jnt = NetworkThread()

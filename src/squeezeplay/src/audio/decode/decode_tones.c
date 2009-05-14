@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-//#define RUNTIME_DEBUG 1
-
 #include "common.h"
 
 #include "audio/decode/decode.h"
@@ -54,7 +52,7 @@ static s32_t decode_tones_sine90 (u32_t theta) {
         u32_t j = i+1;
 
 #if 0
-	DEBUG_TRACE("theta=%08x, i=%02d, j=%02d, frac = %08x, ret = %d", theta, i, j, 
+	LOG_DEBUG(log_audio_codec, "theta=%08x, i=%02d, j=%02d, frac = %08x, ret = %d", theta, i, j, 
 		    (((sinetable[j] - sinetable[i]) * (theta & 0x3ff)) >> 10 ),
 		    (sinetable[i] + (((sinetable[j] - sinetable[i]) * (theta & 0x3ff)) >> 10 ))
 		);
@@ -159,7 +157,7 @@ static bool_t decode_tones_callback(void *data) {
 				*write_pos++ = right << 8;
 			}
 			
-			DEBUG_TRACE("count: %08x, theta: %08x", self->count, self->theta);
+			LOG_DEBUG(log_audio_codec, "count: %08x, theta: %08x", self->count, self->theta);
 			break;
 	}		
 
@@ -188,7 +186,7 @@ static u32_t decode_tones_period(void *data) {
 static void *decode_tones_start(u8_t *params, u32_t num_params) {
 	struct decode_tones *self;
 
-	DEBUG_TRACE("decode_tones_start()");
+	LOG_DEBUG(log_audio_codec, "decode_tones_start()");
 
 	self = malloc(sizeof(struct decode_tones));
 	memset(self, 0, sizeof(struct decode_tones));
@@ -234,7 +232,7 @@ static void *decode_tones_start(u8_t *params, u32_t num_params) {
 static void decode_tones_stop(void *data) {
 	struct decode_tones *self = (struct decode_tones *) data;
 
-	DEBUG_TRACE("decode_tones_stop()");
+	LOG_DEBUG(log_audio_codec, "decode_tones_stop()");
 
 	// XXXX streambuf_flush();
 	

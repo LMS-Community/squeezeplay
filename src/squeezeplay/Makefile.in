@@ -85,7 +85,7 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 testPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS) $(test_PROGRAMS)
-am_jive_OBJECTS = jive.$(OBJEXT) jive_debug.$(OBJEXT)
+am_jive_OBJECTS = jive.$(OBJEXT) jive_debug.$(OBJEXT) log.$(OBJEXT)
 jive_OBJECTS = $(am_jive_OBJECTS)
 jive_DEPENDENCIES = libjiveui.la libjiveaudio.la libjivenet.la
 am_jiveblit_OBJECTS = jiveblit.$(OBJEXT)
@@ -321,7 +321,8 @@ libjivenet_la_LIBADD = -lSDL
 testdir = $(bindir)
 jive_SOURCES = \
 	src/jive.c \
-	src/jive_debug.c
+	src/jive_debug.c \
+	src/log.c
 
 jive_LDADD = libjiveui.la libjiveaudio.la libjivenet.la -llua
 
@@ -501,6 +502,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_widget.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_window.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jiveblit.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/log.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lua_jiveui.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mqueue.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/platform_linux.Plo@am__quote@
@@ -801,6 +803,20 @@ jive_debug.obj: src/jive_debug.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/jive_debug.c' object='jive_debug.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_debug.obj `if test -f 'src/jive_debug.c'; then $(CYGPATH_W) 'src/jive_debug.c'; else $(CYGPATH_W) '$(srcdir)/src/jive_debug.c'; fi`
+
+log.o: src/log.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT log.o -MD -MP -MF "$(DEPDIR)/log.Tpo" -c -o log.o `test -f 'src/log.c' || echo '$(srcdir)/'`src/log.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/log.Tpo" "$(DEPDIR)/log.Po"; else rm -f "$(DEPDIR)/log.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/log.c' object='log.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o log.o `test -f 'src/log.c' || echo '$(srcdir)/'`src/log.c
+
+log.obj: src/log.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT log.obj -MD -MP -MF "$(DEPDIR)/log.Tpo" -c -o log.obj `if test -f 'src/log.c'; then $(CYGPATH_W) 'src/log.c'; else $(CYGPATH_W) '$(srcdir)/src/log.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/log.Tpo" "$(DEPDIR)/log.Po"; else rm -f "$(DEPDIR)/log.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/log.c' object='log.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o log.obj `if test -f 'src/log.c'; then $(CYGPATH_W) 'src/log.c'; else $(CYGPATH_W) '$(srcdir)/src/log.c'; fi`
 
 jiveblit.o: src/jiveblit.c
 @am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jiveblit.o -MD -MP -MF "$(DEPDIR)/jiveblit.Tpo" -c -o jiveblit.o `test -f 'src/jiveblit.c' || echo '$(srcdir)/'`src/jiveblit.c; \

@@ -149,7 +149,7 @@ static int system_find_file(lua_State *L) {
 
 	path = luaL_checkstring(L, 2);
 
-	if (jive_find_file(path, fullpath)) {
+	if (squeezeplay_find_file(path, fullpath)) {
 		lua_pushstring(L, fullpath);
 	}
 	else {
@@ -160,7 +160,7 @@ static int system_find_file(lua_State *L) {
 }
 
 
-static int system_init_path(lua_State *L) {
+static int system_init_file_path(lua_State *L) {
 	const char *lua_path;
 	char *ptr;
 
@@ -212,7 +212,7 @@ static int system_init_path(lua_State *L) {
 }
 
 
-int jive_find_file(const char *path, char *fullpath) {
+int squeezeplay_find_file(const char *path, char *fullpath) {
 	char *begin, *end;
 	FILE *fp;
 
@@ -274,7 +274,20 @@ static const struct luaL_Reg squeezeplay_system_methods[] = {
 };
 
 
-int squeezeplayL_system_init(lua_State *L) {
+int luaopen_squeezeplay_system(lua_State *L) {
+	/* register methods */
+	lua_getglobal(L, "jive");
+
+	lua_newtable(L);
+	luaL_register(L, NULL, squeezeplay_system_methods);
+	lua_setfield(L, -2, "System");
+
+	lua_pop(L, 1);
+	return 0;
+}
+
+
+int squeezeplay_system_init(lua_State *L) {
 	const char *homeenv = getenv("SQUEEZEPLAY_HOME");
 	char *ptr;
 
@@ -289,6 +302,8 @@ int squeezeplayL_system_init(lua_State *L) {
 
 	arch = platform_get_arch();
 	machine = strdup("squeezeplay");
+
+	/* add homedir to lua patch */
 	if (homeenv) {
 		homedir = strdup(homeenv);
 	}
@@ -296,15 +311,26 @@ int squeezeplayL_system_init(lua_State *L) {
 		homedir = platform_get_home_dir();
 	}
 
-	system_init_path(L);
+	lua_getglobal(L, "package");
+	if (lua_istable(L, -1)) {
+		luaL_Buffer b;
+		luaL_buffinit(L, &b);
 
-	/* register methods */
-	lua_getglobal(L, "jive");
+		/* existing lua path */
+		lua_getfield(L, -1, "path");
+		luaL_addvalue(&b);
+		luaL_addstring(&b, ";");
 
-	lua_getfield(L, 1, "System");
-	luaL_register(L, NULL, squeezeplay_system_methods);
-	lua_pop(L, 1);
+		/* add homedir */
+		luaL_addstring(&b, homedir);
+		luaL_addstring(&b, DIR_SEPARATOR_STR "userpath" DIR_SEPARATOR_STR "?.lua;");
 
-	lua_pop(L, 1);
+		/* store new path */
+		luaL_pushresult(&b);
+		lua_setfield(L, -2, "path");
+	}
+
+	system_init_file_path(L);
+
 	return 0;
 }

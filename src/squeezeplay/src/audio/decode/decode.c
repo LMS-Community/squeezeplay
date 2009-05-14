@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 1
-
 #include "common.h"
 
 #include "audio/mqueue.h"
@@ -23,6 +21,12 @@ extern int luaopen_spprivate(lua_State *L);
 #define DECODE_MQUEUE_SIZE 512
 
 #define DECODE_METADATA_SIZE 128
+
+/* loggers */
+LOG_CATEGORY *log_audio_decode;
+LOG_CATEGORY *log_audio_codec;
+LOG_CATEGORY *log_audio_output;
+
 
 /* decoder thread */
 static SDL_Thread *decode_thread = NULL;
@@ -86,7 +90,7 @@ static void decode_resume_decoder_handler(void) {
 	mqueue_read_complete(&decode_mqueue);
 
 	current_decoder_state = DECODE_STATE_RUNNING;
-	DEBUG_TRACE("resume_decoder decode state: %x audio state %x", current_decoder_state, current_audio_state);
+	LOG_DEBUG(log_audio_decode, "resume_decoder decode state: %x audio state %x", current_decoder_state, current_audio_state);
 }
 
 
@@ -100,7 +104,7 @@ static void decode_resume_audio_handler(void) {
 		start_interval = 0;
 	}
 	
-	DEBUG_TRACE("decode_resume_audio_handler start_interval=%d", start_interval);
+	LOG_DEBUG(log_audio_decode, "decode_resume_audio_handler start_interval=%d", start_interval);
 
 	fifo_lock(&decode_fifo);
 
@@ -117,7 +121,7 @@ static void decode_resume_audio_handler(void) {
 
 	fifo_unlock(&decode_fifo);
 
-	DEBUG_TRACE("resume_audio decode state: %x audio state %x", current_decoder_state, current_audio_state);
+	LOG_DEBUG(log_audio_decode, "resume_audio decode state: %x audio state %x", current_decoder_state, current_audio_state);
 }
 
 
@@ -127,7 +131,7 @@ static void decode_pause_audio_handler(void) {
 	interval = mqueue_read_u32(&decode_mqueue);
 	mqueue_read_complete(&decode_mqueue);
 
-	DEBUG_TRACE("decode_pause_handler interval=%d", interval);
+	LOG_DEBUG(log_audio_decode, "decode_pause_handler interval=%d", interval);
 
 	fifo_lock(&decode_fifo);
 
@@ -142,7 +146,7 @@ static void decode_pause_audio_handler(void) {
 
 	fifo_unlock(&decode_fifo);
 
-	DEBUG_TRACE("pause_audio decode state: %x audio state %x", current_decoder_state, current_audio_state);
+	LOG_DEBUG(log_audio_decode, "pause_audio decode state: %x audio state %x", current_decoder_state, current_audio_state);
 }
 
 
@@ -152,7 +156,7 @@ static void decode_skip_ahead_handler(void) {
 	interval = mqueue_read_u32(&decode_mqueue);
 	mqueue_read_complete(&decode_mqueue);
 
-	DEBUG_TRACE("decode_skip_ahead_handler interval=%d", interval);
+	LOG_DEBUG(log_audio_decode, "decode_skip_ahead_handler interval=%d", interval);
 	
 	skip_ahead_bytes = SAMPLES_TO_BYTES((u32_t)((interval * current_sample_rate) / 1000));
 }
@@ -161,7 +165,7 @@ static void decode_skip_ahead_handler(void) {
 static void decode_stop_handler(void) {
 	mqueue_read_complete(&decode_mqueue);
 
-	DEBUG_TRACE("decode_stop_handler");
+	LOG_DEBUG(log_audio_decode, "decode_stop_handler");
 
 	fifo_lock(&decode_fifo);
 
@@ -188,7 +192,7 @@ static void decode_stop_handler(void) {
 static void decode_flush_handler(void) {
 	mqueue_read_complete(&decode_mqueue);
 
-	DEBUG_TRACE("decode_flush_handler");
+	LOG_DEBUG(log_audio_decode, "decode_flush_handler");
 
 	fifo_lock(&decode_fifo);
 
@@ -229,7 +233,7 @@ static void decode_start_handler(void) {
 	}
 	mqueue_read_complete(&decode_mqueue);
 
-	DEBUG_TRACE("decode_start_handler decoder=%x num_params=%d", decoder_id, num_params);
+	LOG_DEBUG(log_audio_decode, "decode_start_handler decoder=%x num_params=%d", decoder_id, num_params);
 
 	fifo_lock(&decode_fifo);
 
@@ -256,7 +260,7 @@ static void decode_start_handler(void) {
 static void decode_song_ended_handler(void) {
 	mqueue_read_complete(&decode_mqueue);
 
-	DEBUG_TRACE("decode_song_ended_handler");
+	LOG_DEBUG(log_audio_decode, "decode_song_ended_handler");
 
 	fifo_lock(&decode_fifo);
 
@@ -283,17 +287,17 @@ static Uint32 decode_timer_interval(void) {
 
 
 static int decode_thread_execute(void *unused) {
-	DEBUG_TRACE("decode_thread_execute");
+	LOG_DEBUG(log_audio_decode, "decode_thread_execute");
 
 	while (true) {
 		Uint32 timeout; // XXXX timer wrap around
 		mqueue_func_t handler;
 
 		timeout = SDL_GetTicks() + decode_timer_interval();
-		//DEBUG_TRACE("timeout %d\n", timeout);
+		//LOG_DEBUG(log_audio_decode, "timeout %d\n", timeout);
 
 		while ((handler = mqueue_read_request(&decode_mqueue, timeout))) {
-			DEBUG_TRACE("handling message");
+			LOG_DEBUG(log_audio_decode, "handling message");
 			handler();
 		}
 
@@ -301,7 +305,7 @@ static int decode_thread_execute(void *unused) {
 
 		// XXXX check decoder state
 		if (decoder && (current_decoder_state & DECODE_STATE_RUNNING)) {
-			//DEBUG_TRACE("decode callback outbuf=%d", fifo_bytes_used(decode_fifo_rptr, decode_fifo_wptr, DECODE_FIFO_SIZE));
+			//LOG_DEBUG(log_audio_decode, "decode callback outbuf=%d", fifo_bytes_used(decode_fifo_rptr, decode_fifo_wptr, DECODE_FIFO_SIZE));
 			decoder->callback(decoder_data);
 		}
 
@@ -333,7 +337,7 @@ void decode_queue_packet(void *data, size_t len) {
 
 	if (packet_data) {
 		/* if this happens often we need to implement a queue */
-		DEBUG_ERROR("dropped queued packet");
+		LOG_ERROR(log_audio_decode, "dropped queued packet");
 		free(packet_data);
 	}
 
@@ -383,13 +387,13 @@ static int decode_resume_decoder(lua_State *L) {
 	 * 1: self
 	 */
 
-	DEBUG_TRACE("decode_resume_decoder");
+	LOG_DEBUG(log_audio_decode, "decode_resume_decoder");
 
 	if (mqueue_write_request(&decode_mqueue, decode_resume_decoder_handler, 0)) {
 		mqueue_write_complete(&decode_mqueue);
 	}
 	else {
-		DEBUG_TRACE("Full message queue, dropped resume message");
+		LOG_DEBUG(log_audio_decode, "Full message queue, dropped resume message");
 	}
 
 	return 0;
@@ -404,14 +408,14 @@ static int decode_resume_audio(lua_State *L) {
 	 */
 
 	start_jiffies = (Uint32) luaL_optinteger(L, 2, 0);
-	DEBUG_TRACE("decode_resume_audio start_jiffies=%d", start_jiffies);
+	LOG_DEBUG(log_audio_decode, "decode_resume_audio start_jiffies=%d", start_jiffies);
 
 	if (mqueue_write_request(&decode_mqueue, decode_resume_audio_handler, sizeof(Uint32))) {
 		mqueue_write_u32(&decode_mqueue, start_jiffies);
 		mqueue_write_complete(&decode_mqueue);
 	}
 	else {
-		DEBUG_TRACE("Full message queue, dropped resume message");
+		LOG_DEBUG(log_audio_decode, "Full message queue, dropped resume message");
 	}
 
 	return 0;
@@ -427,14 +431,14 @@ static int decode_pause_audio(lua_State *L) {
 	 */
 
 	interval_ms = (Uint32) luaL_optinteger(L, 2, 0);
-	DEBUG_TRACE("decode_pause_audio interval_ms=%d", interval_ms);
+	LOG_DEBUG(log_audio_decode, "decode_pause_audio interval_ms=%d", interval_ms);
 
 	if (mqueue_write_request(&decode_mqueue, decode_pause_audio_handler, sizeof(Uint32))) {
 		mqueue_write_u32(&decode_mqueue, interval_ms);
 		mqueue_write_complete(&decode_mqueue);
 	}
 	else {
-		DEBUG_TRACE("Full message queue, dropped pause message");
+		LOG_DEBUG(log_audio_decode, "Full message queue, dropped pause message");
 	}
 
 	return 0;
@@ -450,14 +454,14 @@ static int decode_skip_ahead(lua_State *L) {
 	 */
 
 	interval_ms = (Uint32) luaL_optinteger(L, 2, 0);
-	DEBUG_TRACE("decode_skip_ahead interval_ms=%d", interval_ms);
+	LOG_DEBUG(log_audio_decode, "decode_skip_ahead interval_ms=%d", interval_ms);
 
 	if (mqueue_write_request(&decode_mqueue, decode_skip_ahead_handler, sizeof(Uint32))) {
 		mqueue_write_u32(&decode_mqueue, interval_ms);
 		mqueue_write_complete(&decode_mqueue);
 	}
 	else {
-		DEBUG_TRACE("Full message queue, dropped skip_ahead message");
+		LOG_DEBUG(log_audio_decode, "Full message queue, dropped skip_ahead message");
 	}
 
 	return 0;
@@ -470,13 +474,13 @@ static int decode_stop(lua_State *L) {
 	 * 2: flush
 	 */
 
-	DEBUG_TRACE("decode_stop");
+	LOG_DEBUG(log_audio_decode, "decode_stop");
 
 	if (mqueue_write_request(&decode_mqueue, decode_stop_handler, 0)) {
 		mqueue_write_complete(&decode_mqueue);
 	}
 	else {
-		DEBUG_TRACE("Full message queue, dropped start message");
+		LOG_DEBUG(log_audio_decode, "Full message queue, dropped start message");
 	}
 
 	return 0;
@@ -488,13 +492,13 @@ static int decode_flush(lua_State *L) {
 	 * 1: self
 	 */
 
-	DEBUG_TRACE("decode_flush");
+	LOG_DEBUG(log_audio_decode, "decode_flush");
 
 	if (mqueue_write_request(&decode_mqueue, decode_flush_handler, 0)) {
 		mqueue_write_complete(&decode_mqueue);
 	}
 	else {
-		DEBUG_TRACE("Full message queue, dropped flush message");
+		LOG_DEBUG(log_audio_decode, "Full message queue, dropped flush message");
 	}
 
 	return 0;
@@ -504,7 +508,7 @@ static int decode_flush(lua_State *L) {
 static int decode_start(lua_State *L) {
 	int num_params, i;
 
-	DEBUG_TRACE("decode_start");
+	LOG_DEBUG(log_audio_decode, "decode_start");
 
 	/* stack is:
 	 * 1: self
@@ -539,7 +543,7 @@ static int decode_start(lua_State *L) {
 		mqueue_write_complete(&decode_mqueue);
 	}
 	else {
-		DEBUG_TRACE("Full message queue, dropped start message");
+		LOG_DEBUG(log_audio_decode, "Full message queue, dropped start message");
 	}
 
 	return 0;
@@ -551,13 +555,13 @@ static int decode_song_ended(lua_State *L) {
 	 * 1: self
 	 */
 
-	DEBUG_TRACE("decode_sond_ended");
+	LOG_DEBUG(log_audio_decode, "decode_sond_ended");
 
 	if (mqueue_write_request(&decode_mqueue, decode_song_ended_handler, 0)) {
 		mqueue_write_complete(&decode_mqueue);
 	}
 	else {
-		DEBUG_TRACE("Full message queue, dropped song ended message");
+		LOG_DEBUG(log_audio_decode, "Full message queue, dropped song ended message");
 	}
 
 	return 0;
@@ -742,6 +746,7 @@ static int decode_init_audio(lua_State *L) {
 
 
 static int decode_audio_open(lua_State *L) {
+
 	/* initialise audio output */
 #ifdef HAVE_LIBASOUND
 	decode_audio = &decode_alsa;
@@ -798,6 +803,11 @@ static const struct luaL_Reg decode_f[] = {
 
 
 int luaopen_decode(lua_State *L) {
+
+	/* define loggers */
+	log_audio_decode = LOG_CATEGORY_GET("audio.decode");
+	log_audio_codec = LOG_CATEGORY_GET("audio.codec");
+	log_audio_output = LOG_CATEGORY_GET("audio.output");
 
 	/* register sample playback */
 	decode_sample_init(L);

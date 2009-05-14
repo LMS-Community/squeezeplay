@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 1
-
 #include "common.h"
 
 #include "audio/streambuf.h"
@@ -157,7 +155,7 @@ static u32_t decode_pcm_period(void *data) {
 static void *decode_pcm_start(u8_t *params, u32_t num_params) {
 	struct decode_pcm *self;
 
-	DEBUG_TRACE("decode_pcm_start()");
+	LOG_DEBUG(log_audio_codec, "decode_pcm_start()");
 
 	self = malloc(sizeof(struct decode_pcm));
 	memset(self, 0, sizeof(struct decode_pcm));
@@ -167,7 +165,7 @@ static void *decode_pcm_start(u8_t *params, u32_t num_params) {
 	self->stereo = (params[2] == '2');
 	self->big_endian = (params[3] == '0');
 
-	DEBUG_TRACE("sample_size=%d sample_rate=%d stereo=%d big_endian=%d",
+	LOG_DEBUG(log_audio_codec, "sample_size=%d sample_rate=%d stereo=%d big_endian=%d",
 		    self->sample_size, self->sample_rate, self->stereo, self->big_endian);
 
 	self->read_buffer = malloc(sizeof(u8_t) * BLOCKSIZE);
@@ -180,7 +178,7 @@ static void *decode_pcm_start(u8_t *params, u32_t num_params) {
 static void decode_pcm_stop(void *data) {
 	struct decode_pcm *self = (struct decode_pcm *) data;
 
-	DEBUG_TRACE("decode_pcm_stop()");
+	LOG_DEBUG(log_audio_codec, "decode_pcm_stop()");
 	
 	free(self->read_buffer);
 	free(self->write_buffer);

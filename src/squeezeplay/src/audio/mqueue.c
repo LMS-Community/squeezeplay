@@ -8,6 +8,7 @@
 
 #include "audio/fifo.h"
 #include "audio/mqueue.h"
+#include "audio/decode/decode_priv.h"
 
 
 void mqueue_init(struct mqueue *mqueue, void *buffer, size_t buffer_size) {
@@ -44,7 +45,7 @@ mqueue_func_t mqueue_read_request(struct mqueue *mqueue, Uint32 timeout) {
 	}
 
 	if (fifo_lock(&mqueue->fifo) == -1) {
-		DEBUG_ERROR("Failed to lock mutex %s", SDL_GetError());
+		LOG_ERROR(log_audio_decode, "Failed to lock mutex %s", SDL_GetError());
 		return NULL;
 	}
 
@@ -64,7 +65,7 @@ mqueue_func_t mqueue_read_request(struct mqueue *mqueue, Uint32 timeout) {
 		return NULL;
 	}
 	else if (err == -1) {
-		DEBUG_ERROR("Failed to wait on condition %s", SDL_GetError());
+		LOG_ERROR(log_audio_decode, "Failed to wait on condition %s", SDL_GetError());
 
 		fifo_unlock(&mqueue->fifo);
 		return NULL;
@@ -126,7 +127,7 @@ static void mqueue_write_buf(struct mqueue *mqueue, Uint8 *b, size_t n) {
 
 int mqueue_write_request(struct mqueue *mqueue, mqueue_func_t func, size_t len) {
 	if (fifo_lock(&mqueue->fifo) == -1) {
-		DEBUG_ERROR("Failed to lock mutex %s", SDL_GetError());
+		LOG_ERROR(log_audio_decode, "Failed to lock mutex %s", SDL_GetError());
 		return 0;
 	}
 

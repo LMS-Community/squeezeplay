@@ -45,7 +45,7 @@ JiveTile *jive_tile_load_image(const char *path) {
 
 	fullpath = malloc(PATH_MAX);
 
-	if (!jive_find_file(path, fullpath)) {
+	if (!squeezeplay_find_file(path, fullpath)) {
 		fprintf(stderr, "Cannot find image %s\n", path);
 		free(fullpath);
 		free(tile);
@@ -129,7 +129,7 @@ JiveTile *jive_tile_load_tiles(char *path[9]) {
 			continue;
 		}
 
-		if (!jive_find_file(path[i], fullpath)) {
+		if (!squeezeplay_find_file(path[i], fullpath)) {
 			fprintf(stderr, "Cannot find image %s\n", path[i]);
 			continue;
 		}

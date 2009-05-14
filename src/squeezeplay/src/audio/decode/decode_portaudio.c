@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 1
-
 #include "common.h"
 
 #include "audio/fifo.h"
@@ -48,7 +46,7 @@ static int callback(const void *inputBuffer,
 	Uint8 *outputArray = (u8_t *)outputBuffer;
 
 	if (statusFlags & (paOutputUnderflow | paOutputOverflow)) {
-		DEBUG_TRACE("pa status %x\n", (unsigned int)statusFlags);
+		LOG_DEBUG(log_audio_output, "pa status %x\n", (unsigned int)statusFlags);
 	}
 
 	// XXXX full port from ip3k
@@ -112,7 +110,7 @@ static int callback(const void *inputBuffer,
 	if (skip_bytes) {
 		size_t wrap;
 
-		DEBUG_TRACE("Skipping %d bytes", (int) skip_bytes);
+		LOG_DEBUG(log_audio_output, "Skipping %d bytes", (int) skip_bytes);
 		
 		wrap = fifo_bytes_until_rptr_wrap(&decode_fifo);
 
@@ -191,14 +189,14 @@ static void finished(void *userData) {
 			mqueue_write_complete(&decode_mqueue);
 		}
 		else {
-			DEBUG_TRACE("Full message queue, dropped finished message");
+			LOG_DEBUG(log_audio_output, "Full message queue, dropped finished message");
 		}
 	}
 }
 
 
 static void decode_portaudio_start(void) {
-	DEBUG_TRACE("decode_portaudio_start");
+	LOG_DEBUG(log_audio_output, "decode_portaudio_start");
 
 	decode_portaudio_openstream();
 }
@@ -210,7 +208,7 @@ static void decode_portaudio_resume(void) {
 }
 
 static void decode_portaudio_stop(void) {
-	DEBUG_TRACE("decode_portaudio_stop");
+	LOG_DEBUG(log_audio_output, "decode_portaudio_stop");
 
 	current_sample_rate = 44100;
 	change_sample_rate = false;
@@ -224,7 +222,7 @@ static void decode_portaudio_openstream(void) {
 
 	if (stream) {
 		if ((err = Pa_CloseStream(stream)) != paNoError) {
-			DEBUG_ERROR("PA error %s", Pa_GetErrorText(err));
+			LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
 		}
 	}
 
@@ -237,7 +235,7 @@ static void decode_portaudio_openstream(void) {
 			paPrimeOutputBuffersUsingStreamCallback,
 			callback,
 			NULL)) != paNoError) {
-		DEBUG_ERROR("PA error %s", Pa_GetErrorText(err));
+		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
 	}
 
 	change_sample_rate = false;
@@ -245,14 +243,14 @@ static void decode_portaudio_openstream(void) {
 
 	/* playout to the end of this stream before changing the sample rate */
 	if ((err = Pa_SetStreamFinishedCallback(stream, finished)) != paNoError) {
-		DEBUG_ERROR("PA error %s", Pa_GetErrorText(err));
+		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
 	}
 
-	DEBUG_TRACE("Stream latency %f", Pa_GetStreamInfo(stream)->outputLatency);
-	DEBUG_TRACE("Sample rate %f", Pa_GetStreamInfo(stream)->sampleRate);
+	LOG_DEBUG(log_audio_output, "Stream latency %f", Pa_GetStreamInfo(stream)->outputLatency);
+	LOG_DEBUG(log_audio_output, "Sample rate %f", Pa_GetStreamInfo(stream)->sampleRate);
 
 	if ((err = Pa_StartStream(stream)) != paNoError) {
-		DEBUG_ERROR("PA error %s", Pa_GetErrorText(err));
+		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
 		return;
 	}
 }
@@ -268,7 +266,7 @@ static int decode_portaudio_init(lua_State *L) {
 		goto err;
 	}
 
-	DEBUG_TRACE("Portaudio version %s", Pa_GetVersionText());
+	LOG_DEBUG(log_audio_output, "Portaudio version %s", Pa_GetVersionText());
 
 	memset(&outputParam, 0, sizeof(outputParam));
 	outputParam.channelCount = 2;
@@ -279,17 +277,17 @@ static int decode_portaudio_init(lua_State *L) {
 		device_info = Pa_GetDeviceInfo(i);
 		host_info = Pa_GetHostApiInfo(device_info->hostApi);
 
-		DEBUG_TRACE("%d: %s (%s)", i, device_info->name, host_info->name);
+		LOG_DEBUG(log_audio_output, "%d: %s (%s)", i, device_info->name, host_info->name);
 
 		outputParam.device = i;
 
 		err = Pa_IsFormatSupported(NULL, &outputParam, 44100);
 		if (err == paFormatIsSupported) {
-			DEBUG_TRACE("\tsupported");
+			LOG_DEBUG(log_audio_output, "\tsupported");
 			break;
 		}
 		else {
-			DEBUG_TRACE("\tnot supported");
+			LOG_DEBUG(log_audio_output, "\tnot supported");
 		}
 	}
 
@@ -307,7 +305,7 @@ static int decode_portaudio_init(lua_State *L) {
 	return 1;
 
  err:
-	DEBUG_ERROR("PA error %s", Pa_GetErrorText(err));
+	LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
 	return 0;
 }
 

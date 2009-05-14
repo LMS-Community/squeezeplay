@@ -157,7 +157,7 @@ static int load_ttf_font(JiveFont *font, const char *name, Uint16 size) {
 	int miny, maxy, descent;
 	char *fullpath = malloc(PATH_MAX);
 
-	if (!jive_find_file(name, fullpath) ) {
+	if (!squeezeplay_find_file(name, fullpath) ) {
 		free(fullpath);
 		fprintf(stderr, "Cannot find font %s\n", name);
 		return 0;

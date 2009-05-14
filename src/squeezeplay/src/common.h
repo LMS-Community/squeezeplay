@@ -90,8 +90,11 @@ typedef _W64 int   ssize_t;
 #include "lauxlib.h"
 #include "tolua++.h"
 
-#include "debug.h"
+#include "log.h"
 #include "types.h"
+
+extern int squeezeplay_find_file(const char *path, char *fullpath);
+
 
 #if WITH_DMALLOC
 #include <dmalloc.h>

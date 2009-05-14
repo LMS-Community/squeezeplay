@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 0
-
 #include "common.h"
 #include "jive.h"
 
@@ -82,8 +80,11 @@ static int jiveL_style_find_value(lua_State *L) {
 	return 1;
 }
 
-#if RUNTIME_DEBUG
-static void debug_style(lua_State *L, const char *path, const char *key) {
+inline static void debug_style(lua_State *L, const char *path, const char *key) {
+	if (!IS_LOG_PRIORITY(log_ui_draw, LOG_PRIORITY_DEBUG)) {
+		return;
+	}
+
 	lua_getglobal(L, "tostring");
 	lua_pushvalue(L, -2);
 	lua_call(L, 1, 1);
@@ -92,13 +93,9 @@ static void debug_style(lua_State *L, const char *path, const char *key) {
 	lua_pushvalue(L, 1);
 	lua_call(L, 1, 1);
 
-	DEBUG_TRACE("style: [%s] %s : %s = %s", lua_tostring(L, -1), path, key, lua_tostring(L, -2));
+	LOG_DEBUG(log_ui_draw, "style: [%s] %s : %s = %s", lua_tostring(L, -1), path, key, lua_tostring(L, -2));
 	lua_pop(L, 2);
 }
-#else
-static void debug_style(lua_State *L, const char *path, const char *key) {
-}
-#endif
 
 static int STYLE_VALUE_NIL;
 

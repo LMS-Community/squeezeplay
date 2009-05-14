@@ -233,7 +233,7 @@ static int decode_sample_load(lua_State *L) {
 	if (lua_isnil(L, -1)) {
 		lua_pop(L, 1);
 
-		if (!jive_find_file(lua_tostring(L, 2), fullpath)) {
+		if (!squeezeplay_find_file(lua_tostring(L, 2), fullpath)) {
 			printf("Cannot find sound %s\n", lua_tostring(L, 2));
 			return 0;
 		}

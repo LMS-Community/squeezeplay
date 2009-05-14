@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 1
-
 #include "common.h"
 
 #include "audio/decode/decode.h"
@@ -20,7 +18,7 @@ struct decode_wma {
 static bool_t decode_wma_win_callback(void *data) {
 	struct decode_wma *self = (struct decode_wma *) data;
 
-	DEBUG_TRACE("decode_wma_callback()");
+	LOG_DEBUG(log_audio_codec, "decode_wma_callback()");
 
 	/* XXXX
 	 * Check the output buffer has enough room for writing a buffer full of samples.
@@ -63,7 +61,7 @@ static u32_t decode_wma_win_period(void *data) {
 static void *decode_wma_win_start(u8_t *params, u32_t num_params) {
 	struct decode_wma *self;
 
-	DEBUG_TRACE("decode_wma_start()");
+	LOG_DEBUG(log_audio_codec, "decode_wma_start()");
 
 	self = malloc(sizeof(struct decode_wma));
 	memset(self, 0, sizeof(struct decode_wma));
@@ -79,7 +77,7 @@ static void *decode_wma_win_start(u8_t *params, u32_t num_params) {
 static void decode_wma_win_stop(void *data) {
 	struct decode_tones *self = (struct decode_tones *) data;
 
-	DEBUG_TRACE("decode_wma_stop()");
+	LOG_DEBUG(log_audio_codec, "decode_wma_stop()");
 
 	// XXXX streambuf_flush();
 	

@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 1
-
 #include "common.h"
 
 #include "audio/streambuf.h"
@@ -143,7 +141,7 @@ static void decode_flac_error_callback(
 	const FLAC__StreamDecoderErrorStatus status,
 	void *data) {
 
-	DEBUG_TRACE("FLAC error: %s\n", FLAC__StreamDecoderErrorStatusString[status]);
+	LOG_DEBUG(log_audio_codec, "FLAC error: %s\n", FLAC__StreamDecoderErrorStatusString[status]);
 }
 
 
@@ -174,7 +172,7 @@ static bool_t decode_flac_callback(void *data) {
 	state = FLAC__stream_decoder_get_state(self->decoder);
 	if (state == FLAC__STREAM_DECODER_ABORTED ||
 	    state == FLAC__STREAM_DECODER_END_OF_STREAM) {
-		DEBUG_TRACE("FLAC error: %s", FLAC__StreamDecoderStateString[state]);
+		LOG_DEBUG(log_audio_codec, "FLAC error: %s", FLAC__StreamDecoderStateString[state]);
 		current_decoder_state |= DECODE_STATE_ERROR;
 	}
 
@@ -197,7 +195,7 @@ static u32_t decode_flac_period(void *data) {
 static void *decode_flac_start(u8_t *params, u32_t num_params) {
 	struct decode_flac *self;
 
-	DEBUG_TRACE("decode_flac_start()");
+	LOG_DEBUG(log_audio_codec, "decode_flac_start()");
 
 	self = malloc(sizeof(struct decode_flac));
 	memset(self, 0, sizeof(struct decode_flac));
@@ -233,7 +231,7 @@ static void *decode_flac_start(u8_t *params, u32_t num_params) {
 static void decode_flac_stop(void *data) {
 	struct decode_flac *self = (struct decode_flac *) data;
 
-	DEBUG_TRACE("decode_flac_stop()");
+	LOG_DEBUG(log_audio_codec, "decode_flac_stop()");
 
 	if (self->decoder) {
 		FLAC__stream_decoder_delete(self->decoder);

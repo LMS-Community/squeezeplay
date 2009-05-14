@@ -336,7 +336,7 @@ function eventLoop(self, netTask)
 		-- draw frame and process ui event queue
 		now = self:getTicks()
 		if framedue <= now then
-			logTask:info("--------")
+			logTask:debug("--------")
 
 			-- draw screen
 			self:updateScreen()

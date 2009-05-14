@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 1
-
 #include "common.h"
 
 #include "audio/fifo.h"
@@ -129,7 +127,7 @@ static void playback_callback(struct decode_alsa *state,
 	if (bytes_used == 0) {
 		current_audio_state |= DECODE_STATE_UNDERRUN;
 		memset(outputArray, 0, len);
-		DEBUG_ERROR("Audio underrun: used 0 bytes");
+		LOG_ERROR(log_audio_output, "Audio underrun: used 0 bytes");
 
 		return;
 	}
@@ -137,7 +135,7 @@ static void playback_callback(struct decode_alsa *state,
 	if (bytes_used < len) {
 		current_audio_state |= DECODE_STATE_UNDERRUN;
 		memset(outputArray + bytes_used, 0, len - bytes_used);
-		DEBUG_ERROR("Audio underrun: used %d bytes , requested %d bytes", (int)bytes_used, (int)len);
+		LOG_ERROR(log_audio_output, "Audio underrun: used %d bytes , requested %d bytes", (int)bytes_used, (int)len);
 	}
 	else {
 		current_audio_state &= ~DECODE_STATE_UNDERRUN;
@@ -146,7 +144,7 @@ static void playback_callback(struct decode_alsa *state,
 	if (skip_bytes) {
 		size_t wrap;
 
-		DEBUG_TRACE("Skipping %d bytes", (int)skip_bytes);
+		LOG_DEBUG(log_audio_output, "Skipping %d bytes", (int)skip_bytes);
 		
 		wrap = fifo_bytes_until_rptr_wrap(&decode_fifo);
 
@@ -216,11 +214,11 @@ static int pcm_close(struct decode_alsa *state) {
 
 	if (state->pcm) {
 		if ((err = snd_pcm_drain(state->pcm)) < 0) {
-			DEBUG_ERROR("snd_pcm_drain error: %s", snd_strerror(err));
+			LOG_ERROR(log_audio_output, "snd_pcm_drain error: %s", snd_strerror(err));
 		}
 
 		if ((err = snd_pcm_close(state->pcm)) < 0) {
-			DEBUG_ERROR("snd_pcm_close error: %s", snd_strerror(err));
+			LOG_ERROR(log_audio_output, "snd_pcm_close error: %s", snd_strerror(err));
 		}
 
 		snd_pcm_hw_params_free(state->hw_params);
@@ -251,72 +249,72 @@ static int pcm_open(struct decode_alsa *state) {
 
 	/* Open pcm */
 	if ((err = snd_pcm_open(&state->pcm, state->name, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
-		DEBUG_ERROR("Playback open error: %s", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "Playback open error: %s", snd_strerror(err));
 		return err;
 	}
 
 	/* Set hardware parameters */
 	if ((err = snd_pcm_hw_params_malloc(&state->hw_params)) < 0) {
-		DEBUG_ERROR("hwparam malloc error: %s", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "hwparam malloc error: %s", snd_strerror(err));
 		return err;
 	}
 
 	if ((err = snd_pcm_hw_params_any(state->pcm, state->hw_params)) < 0) {
-		DEBUG_ERROR("hwparam init error: %s", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "hwparam init error: %s", snd_strerror(err));
 		return err;
 	}
 
 	/* set hardware resampling */
 	if ((err = snd_pcm_hw_params_set_rate_resample(state->pcm, state->hw_params, 1)) < 0) {
-		DEBUG_ERROR("Resampling setup failed: %s\n", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "Resampling setup failed: %s\n", snd_strerror(err));
 		return err;
 	}
 
 	/* set mmap interleaved access format */
 	if ((err = snd_pcm_hw_params_set_access(state->pcm, state->hw_params, SND_PCM_ACCESS_MMAP_INTERLEAVED)) < 0) {
-		DEBUG_ERROR("Access type not available: %s", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "Access type not available: %s", snd_strerror(err));
 		return err;
 	}
 
 	/* set the sample format */
 	if ((err = snd_pcm_hw_params_set_format(state->pcm, state->hw_params, SND_PCM_FORMAT_S32_LE)) < 0) {
-		DEBUG_ERROR("Sample format not available: %s", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "Sample format not available: %s", snd_strerror(err));
 		return err;
 	}
 
 	/* set the channel count */
 	if ((err = snd_pcm_hw_params_set_channels(state->pcm, state->hw_params, 2)) < 0) {
-		DEBUG_ERROR("Channel count not available: %s", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "Channel count not available: %s", snd_strerror(err));
 		return err;
 	}
 
 	/* set the stream rate */
 	if ((err = snd_pcm_hw_params_set_rate_near(state->pcm, state->hw_params, &state->new_sample_rate, 0)) < 0) {
-		DEBUG_ERROR("Rate not available: %s", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "Rate not available: %s", snd_strerror(err));
 		return err;
 	}
 
 	/* set buffer and period times */
 	val = state->buffer_time;
 	if ((err = snd_pcm_hw_params_set_buffer_time_near(state->pcm, state->hw_params, &val, &dir)) < 0) {
-		DEBUG_ERROR("Unable to set  buffer time %s", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "Unable to set  buffer time %s", snd_strerror(err));
 		return err;
 	}
 
 	val = state->period_count;
 	if ((err = snd_pcm_hw_params_set_periods_near(state->pcm, state->hw_params, &val, &dir)) < 0) {
-		DEBUG_ERROR("Unable to set period size %s", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "Unable to set period size %s", snd_strerror(err));
 		return err;
 	}
 
 	/* set hardware parameters */
 	if ((err = snd_pcm_hw_params(state->pcm, state->hw_params)) < 0) {
-		DEBUG_ERROR("Unable to set hw params: %s", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "Unable to set hw params: %s", snd_strerror(err));
 		return err;
 	}
 
 	if ((err = snd_pcm_hw_params_get_period_size(state->hw_params, &size, &dir)) < 0) {
-		DEBUG_ERROR("Unable to get period size: %s", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "Unable to get period size: %s", snd_strerror(err));
 		return err;
 	}
 	state->period_size = size;
@@ -327,12 +325,12 @@ static int pcm_open(struct decode_alsa *state) {
 	}
 
 	if ((err = snd_hctl_open(&state->hctl, state->name, 0)) < 0) {
-		DEBUG_ERROR("snd_hctl_open failed: %s", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "snd_hctl_open failed: %s", snd_strerror(err));
 		goto skip_iec958;
 	}
 
 	if ((err = snd_hctl_load(state->hctl)) < 0) {
-		DEBUG_ERROR("snd_hctl_load failed: %s", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "snd_hctl_load failed: %s", snd_strerror(err));
 		goto skip_iec958;
 	}
 
@@ -347,10 +345,7 @@ static int pcm_open(struct decode_alsa *state) {
 	state->iec958_elem = snd_hctl_find_elem(state->hctl, id);
 
  skip_iec958:
-
-#ifdef RUNTIME_DEBUG
 	snd_pcm_dump(state->pcm, output);
-#endif
 
 	state->pcm_sample_rate = state->new_sample_rate;
 	state->new_sample_rate = 0;
@@ -397,7 +392,7 @@ static int pcm_test(const char *name, unsigned int *max_rate) {
 static int xrun_recovery(struct decode_alsa *state, int err) {
 	if (err == -EPIPE) {	/* under-run */
 		if ((err = snd_pcm_prepare(state->pcm) < 0)) {
-			DEBUG_ERROR("Can't recovery from underrun, prepare failed: %s\n", snd_strerror(err));
+			LOG_ERROR(log_audio_output, "Can't recovery from underrun, prepare failed: %s\n", snd_strerror(err));
 		}
 		return 0;
 	} else if (err == -ESTRPIPE) {
@@ -406,7 +401,7 @@ static int xrun_recovery(struct decode_alsa *state, int err) {
 		}
 		if (err < 0) {
 			if ((err = snd_pcm_prepare(state->pcm)) < 0) {
-				DEBUG_ERROR("Can't recovery from suspend, prepare failed: %s\n", snd_strerror(err));
+				LOG_ERROR(log_audio_output, "Can't recovery from suspend, prepare failed: %s\n", snd_strerror(err));
 			}
 		}
 		return 0;
@@ -423,7 +418,7 @@ static void *audio_thread_execute(void *data) {
 	snd_pcm_status_t *status;
 	int err, first = 1;
 
-	DEBUG_TRACE("audio_thread_execute");
+	LOG_DEBUG(log_audio_output, "audio_thread_execute");
 	
 	status = malloc(snd_pcm_hw_params_sizeof());
 
@@ -432,7 +427,7 @@ static void *audio_thread_execute(void *data) {
 
 		if (state->new_sample_rate) {
 			if ((err = pcm_open(state)) < 0) {
-				DEBUG_ERROR("Open failed: %s", snd_strerror(err));
+				LOG_ERROR(log_audio_output, "Open failed: %s", snd_strerror(err));
 				goto thread_error_unlock;
 			}
 			first = 1;
@@ -443,20 +438,20 @@ static void *audio_thread_execute(void *data) {
 		pcm_state = snd_pcm_state(state->pcm);
 		if (pcm_state == SND_PCM_STATE_XRUN) {
 			if ((err = xrun_recovery(state, -EPIPE)) < 0) {
-				DEBUG_ERROR("XRUN recovery failed: %s", snd_strerror(err));
+				LOG_ERROR(log_audio_output, "XRUN recovery failed: %s", snd_strerror(err));
 			}
 			first = 1;
 		}
 		else if (pcm_state == SND_PCM_STATE_SUSPENDED) {
 			if ((err = xrun_recovery(state, -ESTRPIPE)) < 0) {
-				DEBUG_ERROR("SUSPEND recovery failed: %s", snd_strerror(err));
+				LOG_ERROR(log_audio_output, "SUSPEND recovery failed: %s", snd_strerror(err));
 			}
 		}
 
 		avail = snd_pcm_avail_update(state->pcm);
 		if (avail < 0) {
 			if ((err = xrun_recovery(state, avail)) < 0) {
-				DEBUG_ERROR("Avail update failed: %s", snd_strerror(err));
+				LOG_ERROR(log_audio_output, "Avail update failed: %s", snd_strerror(err));
 			}
 			first = 1;
 			continue;
@@ -464,20 +459,20 @@ static void *audio_thread_execute(void *data) {
 
 		/* this is needed to ensure the sound works on resume */
 		if (( err = snd_pcm_status(state->pcm, status)) < 0) {
-			DEBUG_ERROR("snd_pcm_status err=%d\n", err);
+			LOG_ERROR(log_audio_output, "snd_pcm_status err=%d\n", err);
 		}
 
 		if (avail < state->period_size) {
 			if (first) {
 				first = 0;
 				if ((err = snd_pcm_start(state->pcm)) < 0) {
-					DEBUG_ERROR("Audio start error: %s", snd_strerror(err));
+					LOG_ERROR(log_audio_output, "Audio start error: %s", snd_strerror(err));
 				}
 			}
 			else {
 				if ((err = snd_pcm_wait(state->pcm, 500)) < 0) {
 					if ((err = xrun_recovery(state, avail)) < 0) {
-						DEBUG_ERROR("PCM wait failed: %s", snd_strerror(err));
+						LOG_ERROR(log_audio_output, "PCM wait failed: %s", snd_strerror(err));
 					}
 					first = 1;
 				}
@@ -497,7 +492,7 @@ static void *audio_thread_execute(void *data) {
 
 			if ((err = snd_pcm_mmap_begin(state->pcm, &areas, &offset, &frames)) < 0) {
 				if ((err = xrun_recovery(state, err)) < 0) {
-					DEBUG_ERROR("mmap begin failed: %s", snd_strerror(err));
+					LOG_ERROR(log_audio_output, "mmap begin failed: %s", snd_strerror(err));
 				}
 				first = 1;
 			}
@@ -521,7 +516,7 @@ static void *audio_thread_execute(void *data) {
 			commitres = snd_pcm_mmap_commit(state->pcm, offset, frames); 
 			if (commitres < 0 || (snd_pcm_uframes_t)commitres != frames) { 
 				if ((err = xrun_recovery(state, commitres)) < 0) {
-					DEBUG_ERROR("mmap commit failed: %s", snd_strerror(err));
+					LOG_ERROR(log_audio_output, "mmap commit failed: %s", snd_strerror(err));
 				}
 				first = 1;
 			}
@@ -533,7 +528,7 @@ static void *audio_thread_execute(void *data) {
 	fifo_unlock(&decode_fifo);
 	free(status);
 
-	DEBUG_ERROR("Audio thread exited");
+	LOG_ERROR(log_audio_output, "Audio thread exited");
 	return (void *)-1;
 }
 
@@ -557,22 +552,22 @@ static struct decode_alsa *decode_alsa_thread_init(const char *name, unsigned in
 
 	/* start audio thread */
 	if ((err = pthread_attr_init(&thread_attr)) != 0) {
-		DEBUG_ERROR("pthread_attr_init: %s", strerror(err));
+		LOG_ERROR(log_audio_output, "pthread_attr_init: %s", strerror(err));
 		goto thread_err;
 	}
 
 	if ((err = pthread_attr_setdetachstate(&thread_attr, PTHREAD_CREATE_DETACHED)) != 0) {
-		DEBUG_ERROR("pthread_attr_setdetachstate: %s", strerror(err));
+		LOG_ERROR(log_audio_output, "pthread_attr_setdetachstate: %s", strerror(err));
 		goto thread_err;
 	}
 
 	stacksize = 32 * 1024; /* 32k stack, we don't do much here */
 	if ((err = pthread_attr_setstacksize(&thread_attr, stacksize)) != 0) {
-		DEBUG_ERROR("pthread_attr_setstacksize: %s", strerror(err));
+		LOG_ERROR(log_audio_output, "pthread_attr_setstacksize: %s", strerror(err));
 	}
 
 	if ((err = pthread_create(&state->thread, &thread_attr, audio_thread_execute, state)) != 0) {
-		DEBUG_ERROR("pthread_create: %s", strerror(err));
+		LOG_ERROR(log_audio_output, "pthread_create: %s", strerror(err));
 		goto thread_err;
 	}
 
@@ -588,10 +583,10 @@ static struct decode_alsa *decode_alsa_thread_init(const char *name, unsigned in
 	err = pthread_setschedparam(state->thread, SCHED_FIFO, &thread_param);
 	if (err) {
 		if (err == EPERM) {
-			DEBUG_ERROR("Can't set audio thread priority\n");
+			LOG_ERROR(log_audio_output, "Can't set audio thread priority\n");
 		}
 		else {
-			DEBUG_ERROR("pthread_create: %s", strerror(err));
+			LOG_ERROR(log_audio_output, "pthread_create: %s", strerror(err));
 			goto thread_err;
 		}
 	}
@@ -621,7 +616,7 @@ static u32_t decode_alsa_delay(void)
 
 
 static void decode_alsa_start(void) {
-	DEBUG_TRACE("decode_alsa_start");
+	LOG_DEBUG(log_audio_output, "decode_alsa_start");
 
 	fifo_lock(&decode_fifo);
 	if (playback_state->pcm_sample_rate != current_sample_rate) {
@@ -632,7 +627,7 @@ static void decode_alsa_start(void) {
 
 
 static void decode_alsa_resume(void) {
-	DEBUG_TRACE("decode_alsa_resume");
+	LOG_DEBUG(log_audio_output, "decode_alsa_resume");
 
 	fifo_lock(&decode_fifo);
 	if (playback_state->pcm_sample_rate != current_sample_rate) {
@@ -644,7 +639,7 @@ static void decode_alsa_resume(void) {
 
 
 static void decode_alsa_pause(void) {
-	DEBUG_TRACE("decode_alsa_pause");
+	LOG_DEBUG(log_audio_output, "decode_alsa_pause");
 
 	fifo_lock(&decode_fifo);
 //	snd_pcm_pause(playback_state.pcm, 0);
@@ -656,7 +651,7 @@ static void decode_alsa_pause(void) {
 
 
 static void decode_alsa_stop(void) {
-	DEBUG_TRACE("decode_alsa_stop");
+	LOG_DEBUG(log_audio_output, "decode_alsa_stop");
 
 	fifo_lock(&decode_fifo);
 	if (playback_state->pcm_sample_rate != 44100) {
@@ -677,7 +672,7 @@ static void decode_alsa_copyright(bool_t copyright) {
 	snd_aes_iec958_t iec958;
 	int err;
 
-	DEBUG_TRACE("copyright %s asserted", (copyright)?"is":"not");
+	LOG_DEBUG(log_audio_output, "copyright %s asserted", (copyright)?"is":"not");
 
 	if (!playback_state->iec958_elem) {
 		/* not supported */
@@ -691,7 +686,7 @@ static void decode_alsa_copyright(bool_t copyright) {
 	memset(control, 0, snd_ctl_elem_value_sizeof());
 
 	if ((err = snd_hctl_elem_read(playback_state->iec958_elem, control)) < 0) {
-		DEBUG_ERROR("snd_hctl_elem_read error: %s", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "snd_hctl_elem_read error: %s", snd_strerror(err));
 		return;
 	}
 
@@ -707,11 +702,11 @@ static void decode_alsa_copyright(bool_t copyright) {
 
 	snd_ctl_elem_value_set_iec958(control, &iec958);
 
-	DEBUG_TRACE("iec958 status: %02x %02x %02x %02x\n",
-		    iec958.status[0], iec958.status[1], iec958.status[2], iec958.status[3]);
+	LOG_DEBUG(log_audio_output, "iec958 status: %02x %02x %02x %02x\n",
+		  iec958.status[0], iec958.status[1], iec958.status[2], iec958.status[3]);
 
 	if ((err = snd_hctl_elem_write(playback_state->iec958_elem, control)) < 0) {
-		DEBUG_ERROR("snd_hctl_elem_write error: %s", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "snd_hctl_elem_write error: %s", snd_strerror(err));
 		return;
 	}
 }
@@ -731,7 +726,7 @@ static int decode_alsa_init(lua_State *L) {
 
 
 	if ((err = snd_output_stdio_attach(&output, stdout, 0)) < 0) {
-		DEBUG_ERROR("Output failed: %s", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "Output failed: %s", snd_strerror(err));
 		return 0;
 	}
 
@@ -752,7 +747,7 @@ static int decode_alsa_init(lua_State *L) {
 		effects_device = NULL;
 	}
 
-	DEBUG_TRACE("Playback device: %s\n", playback_device);
+	LOG_DEBUG(log_audio_output, "Playback device: %s\n", playback_device);
 
 	lua_getfield(L, 2, "alsaPlaybackBufferTime");
 	buffer_time = luaL_optinteger(L, -1, ALSA_DEFAULT_BUFFER_TIME);
@@ -768,7 +763,7 @@ static int decode_alsa_init(lua_State *L) {
 					);
 
 	if (effects_device) {
-		DEBUG_TRACE("Effects device: %s\n", effects_device);
+		LOG_DEBUG(log_audio_output, "Effects device: %s\n", effects_device);
 
 		lua_getfield(L, 2, "alsaEffectsBufferTime");
 		buffer_time = luaL_optinteger(L, -1, ALSA_DEFAULT_BUFFER_TIME);

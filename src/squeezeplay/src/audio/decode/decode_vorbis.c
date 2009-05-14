@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 1
-
 #include "common.h"
 
 #include "audio/streambuf.h"
@@ -48,7 +46,7 @@ static size_t decode_vorbis_read(void *ptr, size_t size, size_t nmemb, void *dat
 	read_bytes = streambuf_read(ptr, 0, requested_bytes, &streaming);
 
 	if (read_bytes == 0) {
-		DEBUG_TRACE("ogg decoder underrun");
+		LOG_DEBUG(log_audio_codec, "ogg decoder underrun");
 
 		current_decoder_state |= DECODE_STATE_UNDERRUN;
 
@@ -101,11 +99,11 @@ static bool_t decode_vorbis_callback(void *data) {
 
 		switch (self->state) {
 		case OGG_STATE_INIT:
-			DEBUG_TRACE("Calling ov_open_callbacks");
+			LOG_DEBUG(log_audio_codec, "Calling ov_open_callbacks");
 
 			r = ov_open_callbacks(self, &self->vf, NULL, 0, vorbis_callbacks);
 			if (r < 0) {
-				DEBUG_ERROR("ov_open_callbacks r=%d", r);
+				LOG_WARN(log_audio_codec, "ov_open_callbacks r=%d", r);
 
 				ov_clear(&self->vf);
 				current_decoder_state |= (DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED);
@@ -120,7 +118,7 @@ static bool_t decode_vorbis_callback(void *data) {
 
 			if (!vi ||
 			    vi->channels > 2) {
-				DEBUG_ERROR("too many channels %d", vi->channels);
+				LOG_WARN(log_audio_codec, "too many channels %d", vi->channels);
 				current_decoder_state |= (DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED);
 				return FALSE;
 			}
@@ -128,7 +126,7 @@ static bool_t decode_vorbis_callback(void *data) {
 			self->channels = vi->channels;
 			self->sample_rate = vi->rate;
 
-			DEBUG_TRACE("ov_info channels=%d rate=%d", self->channels, self->sample_rate);
+			LOG_DEBUG(log_audio_codec, "ov_info channels=%d rate=%d", self->channels, self->sample_rate);
 
 			self->state = OGG_STATE_STREAM;
 			// fall through
@@ -145,18 +143,18 @@ static bool_t decode_vorbis_callback(void *data) {
 
 			switch (bytes) {
 			case OV_HOLE:
-				DEBUG_TRACE("OV_HOLE");
+				LOG_DEBUG(log_audio_codec, "OV_HOLE");
 				return FALSE;
 
 			case OV_EBADLINK:
 			case OV_EINVAL:
-				DEBUG_TRACE("OV_EBADLINK or OV_EINVAL");
+				LOG_DEBUG(log_audio_codec, "OV_EBADLINK or OV_EINVAL");
 
 				current_decoder_state |= DECODE_STATE_ERROR;
 				return FALSE;
 
 			case 0:
-				DEBUG_TRACE("End of ogg stream");
+				LOG_DEBUG(log_audio_codec, "End of ogg stream");
 
 				current_decoder_state |= DECODE_STATE_ERROR;
 				return FALSE;
@@ -209,7 +207,7 @@ static u32_t decode_vorbis_period(void *data) {
 static void *decode_vorbis_start(u8_t *params, u32_t num_params) {
 	struct decode_vorbis *self;
 
-	DEBUG_TRACE("decode_vorbis_start()");
+	LOG_DEBUG(log_audio_codec, "decode_vorbis_start()");
 
 	self = malloc(sizeof(struct decode_vorbis));
 	memset(self, 0, sizeof(struct decode_vorbis));
@@ -224,7 +222,7 @@ static void *decode_vorbis_start(u8_t *params, u32_t num_params) {
 static void decode_vorbis_stop(void *data) {
 	struct decode_vorbis *self = (struct decode_vorbis *) data;
 
-	DEBUG_TRACE("decode_vorbis_stop()");
+	LOG_DEBUG(log_audio_codec, "decode_vorbis_stop()");
 
 	free(self->output_buffer);
 	free(self);
