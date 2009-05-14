@@ -76,13 +76,13 @@ void log_category_vlog(struct log_category *category, enum log_priority priority
 		printf("%04d%02d%02d %02d:%02d:%02d.%03ld %-6s %s - %s\n",
 		       tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
 		       tm.tm_hour, tm.tm_min, tm.tm_sec,
-		      (long)(t.tv_usec / 1000),
+		       (long)(t.tv_usec / 1000),
 		       log_priority_to_string(priority), category->name, buf);
 	}
 
 #ifdef HAVE_SYSLOG
 	if (appender_syslog >= priority) {
-		char *ptr, *lasts;
+		char *ptr, *lasts = NULL;
 
 		/* log individual lines to syslog */
 		ptr = strtok_r(buf, "\n", &lasts);
