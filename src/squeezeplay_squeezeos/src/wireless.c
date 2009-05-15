@@ -10,6 +10,7 @@
 
 
 #include <sys/socket.h>
+#include <linux/if.h>
 #include <linux/types.h>
 #include <linux/wireless.h>
 #include <linux/ethtool.h>
