@@ -9,7 +9,6 @@ local os                     = require("os")
 local io                     = require("io")
 
 local jiveBSP                = require("jiveBSP")
-local Watchdog               = require("jiveWatchdog")
 local Networking             = require("jive.net.Networking")
 local LocalPlayer            = require("jive.slim.LocalPlayer")
 
@@ -112,22 +111,14 @@ function init(self)
 
 
 	-- watchdog timer
-	self.watchdog = Watchdog:open()
-	if self.watchdog then
-		-- allow 30 seconds to boot
-		log:info("watchdog timeout 30")
-		self.watchdog:setTimeout(30)
+	local watchdog = io.open("/var/run/squeezeplay.wdog", "w")
+	if watchdog then
+		io.close(watchdog)
 
-		local timer = Timer(2000, -- 2 seconds
-			function()
-				-- allow 10 seconds after boot
-				if not self.watchdogRunning then
-					log:info("watchdog timeout 10")
-					self.watchdog:setTimeout(10)
-					self.watchdogRunning = true
-				end
-				self.watchdog:keepAlive()
-			end)
+		local timer = Timer(2000, function()
+			local watchdog = io.open("/var/run/squeezeplay.wdog", "w")
+			io.close(watchdog)
+		end)
 		timer:start()
 	else
 		log:warn("Watchdog timer is disabled")
@@ -1100,15 +1091,6 @@ function _setCPUSpeed(self, fast)
 
 	fh:write(speed)
 	fh:close()
-
-	-- the system clock runs slow in low power mode, so we need
-	-- to modify watchdog interval based on cpu speed
-	if self.watchdogRunning then
-		local timeout = fast and 10 or 30
-
-		log:info("watchdog timeout ", timeout)
-		self.watchdog:setTimeout(timeout)
-	end
 end
 
 

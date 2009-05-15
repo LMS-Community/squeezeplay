@@ -23,8 +23,6 @@ local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Slider                 = require("jive.ui.Slider")
 local Window                 = require("jive.ui.Window")
 
-local Watchdog               = require("jiveWatchdog")
-
 local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("applets.setup")
 
@@ -90,19 +88,14 @@ function init(self)
 
 
 	-- watchdog timer
-	self.watchdog = Watchdog:open()
-	if self.watchdog then
-		-- allow 30 seconds to boot
-		self.watchdog:setTimeout(30)
-		local timer = Timer(2000, -- 2 seconds
-			function()
-				-- 10 second when running
-				if not self.watchdogRunning then
-					self.watchdog:setTimeout(10)
-					self.watchdogRunning = true
-				end
-				self.watchdog:keepAlive()
-			end)
+	local watchdog = io.open("/var/run/squeezeplay.wdog", "w")
+	if watchdog then
+		io.close(watchdog)
+
+		local timer = Timer(2000, function()
+			local watchdog = io.open("/var/run/squeezeplay.wdog", "w")
+			io.close(watchdog)
+		end)
 		timer:start()
 	else
 		log:warn("Watchdog timer is disabled")
