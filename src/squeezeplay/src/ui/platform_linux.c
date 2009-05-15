@@ -7,6 +7,7 @@
 #ifndef __APPLE__
 
 #include "common.h"
+#include "version.h"
 #include "jive.h"
 
 #include <signal.h>
@@ -17,6 +18,7 @@
 #include <sys/utsname.h>
 #include <netinet/in.h>
 #include <linux/if.h>
+#include <execinfo.h>
 
 
 char *platform_get_home_dir() {
@@ -129,25 +131,56 @@ char *platform_get_arch() {
 }
 
 
-#if defined(__arm__)
-/* temporary code to log a segfault to syslog */
-void bt_sighandler(int sig, siginfo_t *info, void *context) {
-	syslog(LOG_CRIT, (sig == SIGSEGV) ? "SEGFAULT" : "SIGBUS");
-	exit(0);
+static LOG_CATEGORY *log_sp;
+static lua_State *Lsig = NULL;
+static lua_Hook Hf = NULL;
+static int Hmask = 0;
+static int Hcount = 0;
+
+
+static void quit_hook(lua_State *L, lua_Debug *ar) {
+	/* set the old hook */
+	lua_sethook(L, Hf, Hmask, Hcount);
+
+	/* stack trace */
+	lua_getglobal(L, "debug");
+	lua_getfield(L, -1, "traceback");
+	lua_call(L, 0, 1);
+
+	log_sp = LOG_CATEGORY_GET("squeezeplay");
+
+	LOG_WARN(log_sp, "%s", lua_tostring(L, -1));
 }
-#endif
+
+
+static void quit_handler(int signum) {
+	LOG_ERROR(log_sp, "SIGQUIT squeezeplay %s", JIVE_VERSION);
+
+	Hf = lua_gethook(Lsig);
+	Hmask = lua_gethookmask(Lsig);
+	Hcount = lua_gethookcount(Lsig);
+
+	/* set handler hook */
+	lua_sethook(Lsig, quit_hook, LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE, 0);
+}
+
+
+static void segv_handler(int signum) {
+	LOG_ERROR(log_sp, "SIGSEGV squeezeplay %s", JIVE_VERSION);
+
+	// TODO c stack trace
+
+	/* dump core */
+	abort();
+}
+
 
 void platform_init(lua_State *L) {
-#if defined(__arm__)
-	struct sigaction sa;
+	Lsig = L;
+	log_sp = LOG_CATEGORY_GET("squeezeplay");
 
-	sa.sa_sigaction = (void *)bt_sighandler;
-	sigemptyset (&sa.sa_mask);
-	sa.sa_flags = SA_RESTART | SA_SIGINFO;
-
-	sigaction(SIGSEGV, &sa, NULL);
-	sigaction(SIGBUS, &sa, NULL);
-#endif
+	signal(SIGQUIT, quit_handler);
+	signal(SIGSEGV, segv_handler);
 }
 
 #endif
