@@ -621,16 +621,6 @@ local function _performJSONAction(jsonAction, from, qty, step, sink)
 		return
 	end
 	
-	-- temporary hack to allow backwards compatibility
-	local useContextMenu = false
-	if cmdArray[1] == 'tracks' 
-		or cmdArray[1] == 'musicfolder' 
-		or cmdArray[1] == 'albums' 
-		or cmdArray[1] == 'artists' 
-		then
-			useContextMenu = true
-	end
-
 	-- replace player if needed
 	local playerid = jsonAction["player"]
 	if _player and (not playerid or tostring(playerid) == "0") then
@@ -666,10 +656,8 @@ local function _performJSONAction(jsonAction, from, qty, step, sink)
 				table.insert( newparams, k .. ":" .. v )
 			end
 		end
-		-- temporary hack to allow backwards compatibility
-		if useContextMenu then
-			table.insert( newparams, 'useContextMenu:1')
-		end
+		-- tells SC to give response that includes context menu handler
+		table.insert( newparams, 'useContextMenu:1')
 	end
 	
 	local request = {}
