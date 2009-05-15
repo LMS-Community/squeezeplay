@@ -64,8 +64,8 @@ local Canvas        = require("jive.ui.Canvas")
 local _inputToActionMap = require("jive.InputToActionMap")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("jive.main")
-local logheap       = require("jive.utils.log").logger("jive.heap")
+local log           = require("jive.utils.log").logger("squeezeplay")
+local logheap       = require("jive.utils.log").logger("squeezeplay.heap")
 --require("profiler")
 
 local EVENT_IR_ALL         = jive.ui.EVENT_IR_ALL

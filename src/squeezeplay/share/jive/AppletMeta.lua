@@ -19,7 +19,6 @@ be accessed and loaded on demand.
 local error = error
 
 local oo = require("loop.base")
-local log = require("jive.utils.log").logger("jive.main")
 
 local appletManager = appletManager
 
