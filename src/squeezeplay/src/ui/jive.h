@@ -9,6 +9,7 @@
 #define JIVE_H
 
 #include "common.h"
+#include "log.h"
 
 #include <SDL_image.h>
 #include <SDL_ttf.h>

@@ -6,6 +6,9 @@
 
 #include "stdio.h"
 
+#ifndef SQUEEZEPLAY_LOG_H
+#define SQUEEZEPLAY_LOG_H
+
 /*
  * Lightweight logging api with a compatible api to log4c
  */
@@ -73,3 +76,5 @@ static inline void log_category_log(struct log_category *category, enum log_prio
 
 #define IS_LOG_PRIORITY(cat, priority) \
 	(log_category_get_priority(cat) >= priority)
+
+#endif // SQUEEZEPLAY_LOG_H
