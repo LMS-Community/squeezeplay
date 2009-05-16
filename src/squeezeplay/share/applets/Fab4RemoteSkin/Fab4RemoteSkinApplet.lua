@@ -357,12 +357,6 @@ function skin(self, s)
 		w = 0 
 	}
 
-	local musicalNoteOff = { 
-		img = _loadImage(self, "Icons/icon_song_3line_off.png"),
-	}
-	local musicalNoteOn = { 
-		img = _loadImage(self, "Icons/icon_song_3line_on.png"),
-	}
 	local playArrow = { 
 		img = _loadImage(self, "Icons/selection_play_3line_on.png"),
 	}
@@ -459,7 +453,7 @@ function skin(self, s)
 	}
 
 	s.item_play = _uses(s.item, { 
-		arrow = musicalNoteOff 
+		arrow = { img = false },
 	})
 	s.item_add = _uses(s.item, { 
 		arrow = addArrow 
@@ -523,7 +517,6 @@ function skin(self, s)
 			},
 		}),
 		item_play           = _uses(s.item_play, {
-			arrow  = musicalNoteOn,
 			text   = selectedTextBlock,
 			bgImg  = threeItemSelectionBox
 		}),
@@ -809,7 +802,7 @@ function skin(self, s)
 	})
 	s.icon_list.menu.albumcurrent = _uses(s.icon_list.menu.item_checked)
 	s.icon_list.menu.item_play = _uses(s.icon_list.menu.item, { 
-		arrow = musicalNoteOff, 
+		arrow = { img = false },
 	})
 	s.icon_list.menu.item_add  = _uses(s.icon_list.menu.item, { 
 		arrow = addArrow,
@@ -832,7 +825,6 @@ function skin(self, s)
 			bgImg = threeItemSelectionBox
 		}),
 		item_play           = _uses(s.icon_list.menu.item_play, {
-			arrow = musicalNoteOn,
 			bgImg = threeItemSelectionBox
 		}),
 		item_add            = _uses(s.icon_list.menu.item_add, {

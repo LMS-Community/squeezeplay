@@ -564,9 +564,6 @@ function skin(self, s)
 		w = 0 
 	}
 
-	local musicalNote = { 
-		img = _loadImage(self, "Icons/selection_song_5line.png"),
-	}
 	local playArrow = { 
 		img = _loadImage(self, "Icons/selection_play_3line_on.png"),
 	}
@@ -685,7 +682,7 @@ function skin(self, s)
 	}
 
 	s.item_play = _uses(s.item, { 
-		arrow = musicalNote 
+		arrow = { img = false },
 	})
 	s.item_add = _uses(s.item, { 
 		arrow = addArrow 
@@ -1201,12 +1198,12 @@ function skin(self, s)
 		},
 	})
 	s.icon_list.menu.albumcurrent = _uses(s.icon_list.menu.item_checked, {
-		arrow = musicalNote,
+		arrow = { img = false },
 		text = { padding = 0, },
 	})
 
 	s.icon_list.menu.item_play = _uses(s.icon_list.menu.item, { 
-		arrow = musicalNote, 
+		arrow = { img = false },
 	})
 	s.icon_list.menu.item_add  = _uses(s.icon_list.menu.item, { 
 		arrow = addArrow,
@@ -1281,7 +1278,6 @@ function skin(self, s)
 			arrow = smallSpinny
 		}),
 	}
-
 
 	-- list window with help text
 	s.help_list = _uses(s.text_list)
