@@ -1197,13 +1197,14 @@ function skin(self, s)
 			img = _loadImage(self, "Icons/icon_check_5line.png")
 		},
 	})
-	s.icon_list.menu.albumcurrent = _uses(s.icon_list.menu.item_checked, {
-		arrow = { img = false },
-		text = { padding = 0, },
-	})
-
 	s.icon_list.menu.item_play = _uses(s.icon_list.menu.item, { 
 		arrow = { img = false },
+	})
+	s.icon_list.menu.albumcurrent = _uses(s.icon_list.menu.item_play, {
+		arrow = { 
+			img = _loadImage(self, "Icons/selection_song_5line.png")
+		},
+		text = { padding = 0, },
 	})
 	s.icon_list.menu.item_add  = _uses(s.icon_list.menu.item, { 
 		arrow = addArrow,

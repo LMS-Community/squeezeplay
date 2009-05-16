@@ -18,19 +18,7 @@ SN_SIGNUP
 	SV	Registrering för Squeezenetwork
 
 SLIMBROWSER_PLAYLIST
-	CS	Seznam skladeb
-	DA	Afspilningsliste
-	DE	Wiedergabeliste
-	EN	Playlist
-	ES	Lista de reproducción
-	FI	Soittoluettelo
-	FR	Liste de lecture
-	IT	Elenco di riproduzione
-	NL	Playlist
-	NO	Spilleliste
-	PL	Lista odtwarzania
-	RU	Плей-лист
-	SV	Spellista
+	EN	Current Playlist
 
 SLIMBROWSER_PAUSED
 	CS	Pozastaveno

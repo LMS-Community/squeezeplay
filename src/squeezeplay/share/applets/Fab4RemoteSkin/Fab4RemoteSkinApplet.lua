@@ -800,9 +800,13 @@ function skin(self, s)
 			img = _loadImage(self, "Icons/icon_check_5line.png")
 		},
 	})
-	s.icon_list.menu.albumcurrent = _uses(s.icon_list.menu.item_checked)
 	s.icon_list.menu.item_play = _uses(s.icon_list.menu.item, { 
 		arrow = { img = false },
+	})
+	s.icon_list.menu.albumcurrent = _uses(s.icon_list.menu.item_play, {
+		arrow = {
+			img = _loadImage(self, "Icons/icon_song_3line_off.png"),
+		},
 	})
 	s.icon_list.menu.item_add  = _uses(s.icon_list.menu.item, { 
 		arrow = addArrow,
@@ -819,7 +823,10 @@ function skin(self, s)
 			bgImg = threeItemSelectionBox
 		}),
                 albumcurrent       = _uses(s.icon_list.menu.albumcurrent, {
-			bgImg = threeItemSelectionBox
+			bgImg = threeItemSelectionBox,
+			arrow = {
+				img = _loadImage(self, "Icons/icon_song_3line_on.png"),
+			},
 		}),
                 item_checked        = _uses(s.icon_list.menu.item_checked, {
 			bgImg = threeItemSelectionBox
