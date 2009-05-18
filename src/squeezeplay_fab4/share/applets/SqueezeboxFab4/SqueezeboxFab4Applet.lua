@@ -152,6 +152,10 @@ function initBrightness(self)
 	f:close()
 		
 	-- Set Initial Settings Brightness
+	if not settings.brightness then
+		settings.brightness = brightMax
+	end
+
 	brightSettings = settings.brightness
 	brightMax = settings.brightness + brightMinMax
 		
