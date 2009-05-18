@@ -1,0 +1,12 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+CRASH_TITLE
+	EN	System crash
+
+CRASH_TEXT
+	EN	A system crash has been detected. A log file is being sent to Logitech for analysis.
+
+CRASH_CONTINUE
+	EN	Continue
