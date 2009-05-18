@@ -316,14 +316,14 @@ int squeezeplay_system_init(lua_State *L) {
 		luaL_Buffer b;
 		luaL_buffinit(L, &b);
 
+                /* add homedir */
+                luaL_addstring(&b, homedir);
+                luaL_addstring(&b, DIR_SEPARATOR_STR "userpath" DIR_SEPARATOR_STR "?.lua;");
+
 		/* existing lua path */
 		lua_getfield(L, -1, "path");
 		luaL_addvalue(&b);
 		luaL_addstring(&b, ";");
-
-		/* add homedir */
-		luaL_addstring(&b, homedir);
-		luaL_addstring(&b, DIR_SEPARATOR_STR "userpath" DIR_SEPARATOR_STR "?.lua;");
 
 		/* store new path */
 		luaL_pushresult(&b);
