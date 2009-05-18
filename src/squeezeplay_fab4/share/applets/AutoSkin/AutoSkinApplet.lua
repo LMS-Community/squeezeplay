@@ -23,7 +23,6 @@ local pairs, type = pairs, type
 local table           = require("table")
 
 local oo              = require("loop.simple")
-local logging         = require("logging")
 
 local Applet          = require("jive.Applet")
 
