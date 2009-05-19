@@ -1676,6 +1676,19 @@ function skin(self, s)
                 img = _loadImage(self, "Icons/icon_popup_box_shuffle_ablum.png"),
         })
 
+	s.icon_popup_repeat0 = _uses(_popupicon, {
+                img = _loadImage(self, "Icons/icon_popup_box_repeat_off.png"),
+        })
+
+        s.icon_popup_repeat1 = _uses(_popupicon, {
+                img = _loadImage(self, "Icons/icon_popup_box_repeat_song.png"),
+        })
+
+        s.icon_popup_repeat2 = _uses(_popupicon, {
+                img = _loadImage(self, "Icons/icon_popup_box_repeat.png"),
+        })
+
+
 	s.icon_power = _uses(_icon, {
 -- FIXME no asset for this (needed?)
 --		img = _loadImage(self, "Alerts/popup_shutdown_icon.png"),
