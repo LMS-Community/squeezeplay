@@ -28,7 +28,7 @@ static int clearpad_max_x, clearpad_max_y;
 Uint32 clearpad_down_millis = 0;
 
 /* clearpad hold threshold 1 second - HOLD event is sent when no UP or PRESS has occurred before CLEARPAD_HOLD_TIMEOUT ms*/
-#define CLEARPAD_HOLD_TIMEOUT 1000
+#define CLEARPAD_HOLD_TIMEOUT 700
 
 /* clearpad hold threshold  - A second HOLD event is sent when no UP or PRESS has occurred before CLEARPAD_HOLD_TIMEOUT ms*/
 #define CLEARPAD_LONG_HOLD_TIMEOUT 3500
