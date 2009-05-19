@@ -305,6 +305,9 @@ function missing(self, index)
 		for key = fromKey, toKey, step do
 			if not self.store[key] then
 				local thisChunkFrom = key * BLOCK_SIZE
+				if key == toKey then
+					self.upCompleted = true
+				end
 				return thisChunkFrom, BLOCK_SIZE
 			end
 		end
@@ -320,6 +323,9 @@ function missing(self, index)
 		for key = fromKey, toKey, step do
 			if not self.store[key] then
 				local thisChunkFrom = key * BLOCK_SIZE
+				if key == toKey then
+					self.downCompleted = true
+				end
 				return thisChunkFrom, BLOCK_SIZE
 			end
 		end
