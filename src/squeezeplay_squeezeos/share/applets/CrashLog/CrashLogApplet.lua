@@ -58,7 +58,7 @@ function crashLogPrompt(self, file)
 			text = self:string("CRASH_CONTINUE"),
 			sound = "WINDOWHIDE",
 			callback = function()
-					   window:hide()
+					   window:hide(Window.transitionPushLeft)
 				   end
 		},
 	})
