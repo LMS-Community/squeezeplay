@@ -1216,6 +1216,18 @@ function skin(self, s)
 		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
 	})
 
+	s.icon_popup_shuffle0 = _uses(_popupicon, {
+		img = _loadImage(self, "Icons/icon_popup_box_shuffle_off.png"),
+	})
+
+	s.icon_popup_shuffle1 = _uses(_popupicon, {
+		img = _loadImage(self, "Icons/icon_popup_box_shuffle.png"),
+	})
+
+	s.icon_popup_shuffle2 = _uses(_popupicon, {
+		img = _loadImage(self, "Icons/icon_popup_box_shuffle_ablum.png"),
+	})
+
 	s.icon_power = _uses(_icon, {
 -- FIXME no asset for this (needed?)
 --		img = _loadImage(self, "Alerts/popup_shutdown_icon.png"),
