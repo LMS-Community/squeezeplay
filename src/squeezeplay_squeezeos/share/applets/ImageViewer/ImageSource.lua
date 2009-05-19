@@ -58,6 +58,34 @@ function popupMessage(self, title, msg)
 	self.applet:tieAndShowWindow(popup)
 end
 
+function _helpAction(self, window, titleText, bodyText)
+	if titleText or bobyText then
+		window:addActionListener("help", self, function()
+			local window = Window("help_info", self.applet:string(titleText), "helptitle")
+			window:setAllowScreensaver(false)
+
+			-- no more help menu yet
+			--[[
+			window:setButtonAction("rbutton", "more_help")
+			window:addActionListener("more_help", self, function()
+				window:playSound("WINDOWSHOW")
+
+				appletManager:callService("supportMenu")
+			end)
+			--]]
+
+			local textarea = Textarea("text", self.applet:string(bodyText))
+			window:addWidget(textarea)
+			self:tieAndShowWindow(window)
+
+			window:playSound("WINDOWSHOW")
+		end)
+	end
+
+	window:setButtonAction("rbutton", "help")
+end
+
+
 function emptyListError(self)
 	self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_EMPTY_LIST"))
 end

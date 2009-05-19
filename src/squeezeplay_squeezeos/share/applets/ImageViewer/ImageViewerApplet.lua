@@ -396,7 +396,7 @@ end
 function sourceSpecificSettings(self, menuItem)
 	local window = Window("window", menuItem.text)
 
-	windows = self.imgSource:settings(window)
+	window = self.imgSource:settings(window)
 
 	self:tieAndShowWindow(window)
 	return window

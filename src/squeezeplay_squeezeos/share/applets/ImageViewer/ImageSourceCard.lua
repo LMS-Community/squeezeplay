@@ -28,6 +28,8 @@ local math			= require("math")
 local table			= require("jive.utils.table")
 local string		= require("jive.utils.string")
 local lfs			= require('lfs')
+local Group			= require("jive.ui.Group")
+local Keyboard		= require("jive.ui.Keyboard")
 local Textarea		= require("jive.ui.Textarea")
 local Textinput     = require("jive.ui.Textinput")
 local Window        = require("jive.ui.Window")
@@ -144,7 +146,7 @@ function settings(self, window)
 
 	local imgpath = self.applet:getSettings()["card.path"]
 
-	local input = Textinput("textinput", imgpath,
+	local textinput = Textinput("textinput", imgpath,
 		function(_, value)
 			if #value < 4 then
 				return false
@@ -157,11 +159,14 @@ function settings(self, window)
 			window:hide(Window.transitionPushLeft)
 			return true
 		end)
+	local backspace = Keyboard.backspace()
+	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
-    local help = Textarea("help_text", "IMAGE_VIEWER_CARD_PATH_HELP")
+    window:addWidget(group)
+	window:addWidget(Keyboard('keyboard', 'qwerty', textinput))
+	window:focusWidget(group)
 
-    window:addWidget(help)
-    window:addWidget(input)
+	self:_helpAction(window, "IMAGE_VIEWER_CARD_PATH", "IMAGE_VIEWER_CARD_PATH_HELP")
 
     return window
 end
