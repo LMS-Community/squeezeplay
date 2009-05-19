@@ -1853,7 +1853,8 @@ function skin(self, s)
 	
 		--transport controls
 		npcontrols = {
-			order = { 'rew', 'div1', 'play', 'div2', 'fwd', 'div3', 'spacer', 'div4', 'volDown', 'div5', 'volSlider', 'div6', 'volUp' },
+			order = { 'rew', 'div1', 'play', 'div2', 'fwd', 'div3', 'shuffleMode', 'div4', 'repeatMode', 
+					'div5', 'volDown', 'div6', 'volSlider', 'div7', 'volUp' },
 			position = LAYOUT_SOUTH,
 			h = controlHeight,
 			w = WH_FILL,
@@ -1865,6 +1866,7 @@ function skin(self, s)
 			div4 = _uses(_transportControlBorder),
 			div5 = _uses(_transportControlBorder),
 			div6 = _uses(_transportControlBorder),
+			div7 = _uses(_transportControlBorder),
 
 			rew   = _uses(_transportControlButton, {
 				img = _loadImage(self, "Icons/icon_toolbar_rew.png"),
@@ -1877,6 +1879,30 @@ function skin(self, s)
 			}),
 			fwd   = _uses(_transportControlButton, {
 				img = _loadImage(self, "Icons/icon_toolbar_ffwd.png"),
+			}),
+			shuffleMode   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_shuffle_off.png"),
+			}),
+			shuffleOff   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_shuffle_off.png"),
+			}),
+			shuffleSong  = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_shuffle_on.png"),
+			}),
+			shuffleAlbum = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_shuffle_album_on.png"),
+			}),
+			repeatMode   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_repeat_off.png"),
+			}),
+			repeatOff   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_repeat_off.png"),
+			}),
+			repeatPlaylist = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_repeat_on.png"),
+			}),
+			repeatSong = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_repeat_song_on.png"),
 			}),
 			volDown   = _uses(_transportControlButton, {
 				img = _loadImage(self, "Icons/icon_toolbar_vol_down.png"),
@@ -1966,6 +1992,14 @@ function skin(self, s)
 		play    = _uses(s.nowplaying.npcontrols.play, { bgImg = keyMiddlePressed }),
 		pause   = _uses(s.nowplaying.npcontrols.pause, { bgImg = keyMiddlePressed }),
 		fwd     = _uses(s.nowplaying.npcontrols.fwd, { bgImg = keyMiddlePressed }),
+		repeatPlaylist  = _uses(s.nowplaying.npcontrols.repeatPlaylist, { bgImg = keyMiddlePressed }),
+		repeatSong      = _uses(s.nowplaying.npcontrols.repeatSong, { bgImg = keyMiddlePressed }),
+		repeatOff       = _uses(s.nowplaying.npcontrols.repeatOff, { bgImg = keyMiddlePressed }),
+		repeatMode      = _uses(s.nowplaying.npcontrols.repeatMode, { bgImg = keyMiddlePressed }),
+		shuffleAlbum    = _uses(s.nowplaying.npcontrols.shuffleAlbum, { bgImg = keyMiddlePressed }),
+		shuffleSong     = _uses(s.nowplaying.npcontrols.shuffleSong, { bgImg = keyMiddlePressed }),
+		shuffleMode      = _uses(s.nowplaying.npcontrols.shuffleMode, { bgImg = keyMiddlePressed }),
+		shuffleOff      = _uses(s.nowplaying.npcontrols.shuffleOff, { bgImg = keyMiddlePressed }),
 		volDown = _uses(s.nowplaying.npcontrols.volDown, { bgImg = keyMiddlePressed }),
 		volUp   = _uses(s.nowplaying.npcontrols.volUp, { bgImg = keyMiddlePressed }),
 	}

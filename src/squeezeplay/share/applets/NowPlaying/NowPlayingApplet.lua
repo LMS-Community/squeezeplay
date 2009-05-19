@@ -43,6 +43,18 @@ local modeTokens = {
 	pause = "SCREENSAVER_PAUSED",
 	stop  = "SCREENSAVER_STOPPED"
 }
+
+local repeatModes = {
+	mode0 = 'repeatOff',
+	mode1 = 'repeatSong',
+	mode2 = 'repeatPlaylist',
+}
+
+local shuffleModes = {
+	mode0 = 'shuffleOff',
+	mode1 = 'shuffleSong',
+	mode2 = 'shuffleAlbum',
+}
 	
 ----------------------------------------------------------------------------------------
 -- Helper Functions
@@ -122,6 +134,16 @@ function init(self)
 	jnt:subscribe(self)
 	self.player = false
 	self.lastVolumeSliderAdjustT = 0
+end
+
+function notify_playerShuffleModeChange(self, player, shuffleMode)
+	log:debug("shuffle mode change notification")
+	self:_updateShuffle(shuffleMode)
+end
+
+function notify_playerRepeatModeChange(self, player, repeatMode)
+	log:debug("repeat mode change notification")
+	self:_updateRepeat(repeatMode)
 end
 
 function notify_playerPower(self, player, power)
@@ -400,8 +422,34 @@ function _updatePlaylist(self, enabled, nr, count)
 	end
 end
 
-function _updateMode(self, mode)
 
+function _updateShuffle(self, mode)
+	local token = 'mode' .. mode
+	if not shuffleModes[token] then
+		log:error('not a valid shuffle mode: ', token)
+		return
+	end
+	if self.controlsGroup then
+		local shuffleIcon = self.controlsGroup:getWidget('shuffleMode')
+		shuffleIcon:setStyle(shuffleModes[token])
+	end
+end
+
+
+function _updateRepeat(self, mode)
+	local token = 'mode' .. mode
+	if not repeatModes[token] then
+		log:error('not a valid shuffle mode: ', token)
+		return
+	end
+	if self.controlsGroup then
+		local repeatIcon = self.controlsGroup:getWidget('repeatMode')
+		repeatIcon:setStyle(repeatModes[token])
+	end
+end
+
+
+function _updateMode(self, mode)
 	local token = mode
 	-- sometimes there is a race condition here between updating player mode and power, 
 	-- so only set the title to 'off' if the mode is also not 'play'
@@ -602,6 +650,19 @@ function _createUI(self)
 		playIcon:setStyle('pause')
 	end
 
+	local repeatIcon = Button(Icon('repeatMode'),
+				function() 
+					Framework:pushAction("repeat_toggle")
+				return EVENT_CONSUME 
+			end
+			)
+	local shuffleIcon = Button(Icon('shuffleMode'),
+				function() 
+					Framework:pushAction("shuffle_toggle")
+				return EVENT_CONSUME 
+			end
+			)
+
 	--todo: this slider is not applicable for Jive, how do we handle this when on the controller
 	self.volSlider = Slider('npvolumeB', 0, 100, 0,
 			function(slider, value, done)
@@ -643,6 +704,7 @@ function _createUI(self)
 			div4 = Icon('div4'),
 			div5 = Icon('div5'),
 			div6 = Icon('div6'),
+			div7 = Icon('div7'),
 		  	rew = Button(
 				Icon('rew'),
 				function()
@@ -650,7 +712,11 @@ function _createUI(self)
 					return EVENT_CONSUME 
 				end
 			),
-		  	play = playIcon,
+
+		  	play       = playIcon,
+			repeatMode  = repeatIcon,
+			shuffleMode = shuffleIcon,
+
 		  	fwd  = Button(
 				Icon('fwd'),
 				function() 
@@ -658,7 +724,6 @@ function _createUI(self)
 					return EVENT_CONSUME
 				end
 			),
-			spacer = Icon('toolbar_spacer'),
 		  	volDown  = Button(
 				Icon('volDown'),
 				function()
@@ -886,6 +951,8 @@ function showNowPlaying(self, transition)
 	end
 
 	self:_updateVolume()
+	self:_updateRepeat(playerStatus['playlist repeat'])
+	self:_updateShuffle(playerStatus['playlist shuffle'])
 	self.volumeOld = tonumber(self.player:getVolume())
 
 	-- Initialize with current data from Player

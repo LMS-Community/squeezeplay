@@ -21,6 +21,8 @@ Notifications:
  playerTrackChange
  playerModeChange
  playerPlaylistChange
+ playerShuffleModeChange
+ playerRepeatModeChange
  playerPlaylistSize
  playerNeedsUpgrade
 
@@ -1088,6 +1090,14 @@ function _process_status(self, event)
 		-- getPlayerMode method uses self.mode not self.state.mode, so we need to set self.mode again here to be certain it's correct                                          
 		self.mode = self.state.mode
 		self.jnt:notify('playerModeChange', self, self.state.mode)
+	end
+
+	if self.state['playlist shuffle'] ~= oldState['playlist shuffle'] then
+		self.jnt:notify('playerShuffleModeChange', self, self.state['playlist shuffle'])
+	end
+
+	if self.state['playlist repeat'] ~= oldState['playlist repeat'] then
+		self.jnt:notify('playerRepeatModeChange', self, self.state['playlist repeat'])
 	end
 
 	if self.nowPlaying ~= nowPlaying then
