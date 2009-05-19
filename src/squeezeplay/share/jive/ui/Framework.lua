@@ -873,12 +873,13 @@ end
 
 
 function _loadIRMap(file)
-	log:error("_loadIRMap: ", file)
+	log:info("_loadIRMap: ", file)
 
 	if not file then 
 		return nil
 	end
 	
+
 	local f, err = loadfile(file)
 	if not f then
 		log:error(string.format ("error loading IR map file `%s' (%s)", file, err))
