@@ -134,15 +134,19 @@ function _findUpgrades(self, url, urlHelp, server)
 	for media in lfs.dir(MEDIA_PATH) do
 		local path = MEDIA_PATH .. media .. "/"
 
-		for entry in lfs.dir(path) do
-			local url = "file:" .. path .. entry
-			local version = self:_firmwareVersion(url)
+		local attrs = lfs.attributes(path)
+		if attrs and attrs.mode == "directory" then
+
+			for entry in lfs.dir(path) do
+				local url = "file:" .. path .. entry
+				local version = self:_firmwareVersion(url)
 	
-			if version or entry == machine .. ".bin" then
-				upgrades[#upgrades + 1] = {
-					url = url,
-					version = version,
-				}			
+				if version or entry == machine .. ".bin" then
+					upgrades[#upgrades + 1] = {
+						url = url,
+						version = version,
+					}			
+				end
 			end
 		end
 	end
