@@ -16,7 +16,7 @@
 
 /* Priority levels, that correspond to syslog */
 enum log_priority {
-	LOG_PRIORITY_NONE	= 0,
+	LOG_PRIORITY_OFF	= 0,
 	LOG_PRIORITY_ERROR	= 300,
 	LOG_PRIORITY_WARN	= 400,
 	LOG_PRIORITY_INFO	= 600,

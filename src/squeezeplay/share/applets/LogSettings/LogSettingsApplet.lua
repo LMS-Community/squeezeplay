@@ -54,7 +54,7 @@ local function _gatherLogCategories()
 	
 	-- for all items in the (sub)-table
 
-	local levels = { "Debug", "Info", "Warn", "Error" }
+	local levels = { "Debug", "Info", "Warn", "Error", "Off" }
 
 	for name,cat in pairs(logger.categories()) do
 		local level = cat:getLevel()

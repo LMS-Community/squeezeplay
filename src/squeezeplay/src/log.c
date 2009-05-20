@@ -11,7 +11,7 @@
 #define LOG_BUFFER_SIZE 512
 
 static enum log_priority appender_stdout = LOG_PRIORITY_DEBUG;
-static enum log_priority appender_syslog = LOG_PRIORITY_NONE;
+static enum log_priority appender_syslog = LOG_PRIORITY_OFF;
 
 static struct log_category *category_head = NULL;
 
@@ -117,8 +117,8 @@ void log_category_set_priority(struct log_category *category, enum log_priority 
 
 const char *log_priority_to_string(enum log_priority priority) {
 	switch (priority) {
-	case LOG_PRIORITY_NONE:
-		return "NONE";
+	case LOG_PRIORITY_OFF:
+		return "OFF";
 	case LOG_PRIORITY_ERROR:
 		return "ERROR";
 	case LOG_PRIORITY_WARN:
@@ -134,7 +134,7 @@ const char *log_priority_to_string(enum log_priority priority) {
 
 enum log_priority log_priority_to_int(const char *str) {
 	if (!str) {
-		return LOG_PRIORITY_NONE;
+		return LOG_PRIORITY_OFF;
 	}
 	if (strcasecmp(str, "debug") == 0) {
 		return LOG_PRIORITY_DEBUG;
@@ -145,8 +145,11 @@ enum log_priority log_priority_to_int(const char *str) {
 	else if(strcasecmp(str, "warn") == 0) {
 		return LOG_PRIORITY_WARN;
 	}
-	else {
+	else if(strcasecmp(str, "error") == 0) {
 		return LOG_PRIORITY_ERROR;
+	}
+	else {
+		return LOG_PRIORITY_OFF;
 	}
 }
 
