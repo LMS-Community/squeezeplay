@@ -75,6 +75,11 @@ local BOLD_PREFIX = "Bold"
 
 function init(self)
 	self.images = {}
+
+	self.imageTiles = {}
+	self.hTiles = {}
+	self.vTiles = {}
+	self.tiles = {}
 end
 
 
@@ -96,6 +101,77 @@ local function _loadImage(self, file)
 	end
 
 	return self.images[file]
+end
+
+
+local function _buildTileKey(tileTable)
+	local key = ""
+	for i = 1, #tileTable do
+		local element = tileTable[i] or "NIL"
+		key = key .. element .. "&"
+	end
+
+	return key
+end
+
+local function _loadTile(self, tileTable)
+	if not tileTable then
+		return nil
+	end
+
+	local key = _buildTileKey(tileTable)
+
+
+	if not self.tiles[key] then
+		self.tiles[key] = Tile:loadTiles(tileTable)
+	end
+
+	return self.tiles[key]
+end
+
+
+local function _loadHTile(self, tileTable)
+	if not tileTable then
+		return nil
+	end
+
+	local key = _buildTileKey(tileTable)
+
+	if not self.hTiles[key] then
+		self.hTiles[key] = Tile:loadHTiles(tileTable)
+	end
+
+	return self.hTiles[key]
+end
+
+
+local function _loadVTile(self, tileTable)
+	if not tileTable then
+		return nil
+	end
+
+	local key = _buildTileKey(tileTable)
+
+	if not self.vTiles[key] then
+		self.vTiles[key] = Tile:loadVTiles(tileTable)
+	end
+
+	return self.vTiles[key]
+end
+
+
+local function _loadImageTile(self, file)
+	if not file then
+		return nil
+	end
+
+	local key = file
+
+	if not self.imageTiles[key] then
+		self.imageTiles[key] = Tile:loadImage(file)
+	end
+
+	return self.imageTiles[key]
 end
 
 
@@ -156,34 +232,34 @@ function skin(self, s)
 	local skinSuffix = "_" .. thisSkin .. ".png"
 
 	-- Images and Tiles
-	local inputTitleBox           = Tile:loadImage( imgpath .. "Titlebar/titlebar.png" )
-	local backButton              = Tile:loadImage( imgpath .. "Icons/icon_back_button_tb.png")
-	local helpButton              = Tile:loadImage( imgpath .. "Icons/icon_help_button_tb.png")
-	local nowPlayingButton        = Tile:loadImage( imgpath .. "Icons/icon_nplay_button_tb.png")
-	local playlistButton          = Tile:loadImage( imgpath .. "Icons/icon_nplay_list_tb.png")
-	local touchToolbarBackground  = Tile:loadImage( imgpath .. "Touch_Toolbar/toolbar_tch_bkgrd.png")
-	local touchToolbarKeyDivider  = Tile:loadImage( imgpath .. "Touch_Toolbar/toolbar_divider.png")
-	local deleteKeyBackground     = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry.png")
-	local deleteKeyPressedBackground = Tile:loadImage( imgpath .. "Buttons/button_delete_text_entry_press.png")
+	local inputTitleBox           = _loadImageTile(self,  imgpath .. "Titlebar/titlebar.png" )
+	local backButton              = _loadImageTile(self,  imgpath .. "Icons/icon_back_button_tb.png")
+	local helpButton              = _loadImageTile(self,  imgpath .. "Icons/icon_help_button_tb.png")
+	local nowPlayingButton        = _loadImageTile(self,  imgpath .. "Icons/icon_nplay_button_tb.png")
+	local playlistButton          = _loadImageTile(self,  imgpath .. "Icons/icon_nplay_list_tb.png")
+	local touchToolbarBackground  = _loadImageTile(self,  imgpath .. "Touch_Toolbar/toolbar_tch_bkgrd.png")
+	local touchToolbarKeyDivider  = _loadImageTile(self,  imgpath .. "Touch_Toolbar/toolbar_divider.png")
+	local deleteKeyBackground     = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry.png")
+	local deleteKeyPressedBackground = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry_press.png")
 
 	--FIXME, _r asset here doesn't work...it's supposed to have a fadeout effect and it doesn't appear on screen
-	local fiveItemBox             = Tile:loadHTiles({
+	local fiveItemBox             = _loadHTile(self, {
 		 imgpath .. "5_line_lists/tch_5line_divider_l.png",
 		 imgpath .. "5_line_lists/tch_5line_divider.png",
 		 imgpath .. "5_line_lists/tch_5line_divider_r.png",
 	})
-	local fiveItemSelectionBox    = Tile:loadHTiles({
+	local fiveItemSelectionBox    = _loadHTile(self, {
 		 imgpath .. "5_line_lists/menu_sel_box_5line_l.png",
 		 imgpath .. "5_line_lists/menu_sel_box_5line.png",
 		 imgpath .. "5_line_lists/menu_sel_box_5line_r.png",
 	})
-	local fiveItemPressedBox      = Tile:loadHTiles({
+	local fiveItemPressedBox      = _loadHTile(self, {
 		 imgpath .. "5_line_lists/menu_sel_box_5line_press_l.png",
 		 imgpath .. "5_line_lists/menu_sel_box_5line_press.png",
 		 imgpath .. "5_line_lists/menu_sel_box_5line_press_r.png",
 	})
 	
-	local keyTopLeft = Tile:loadTiles({
+	local keyTopLeft = _loadTile(self, {
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_tl.png",
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_t.png",
@@ -195,7 +271,7 @@ function skin(self, s)
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_l.png",
 	})
 
-	local keyTopLeftPressed = Tile:loadTiles({
+	local keyTopLeftPressed = _loadTile(self, {
 		imgpath .. "Buttons/keybrd_n_button_press.png",
 		imgpath .. "Buttons/keybrd_nw_button_press_tl.png",
 		imgpath .. "Buttons/keybrd_n_button_press_t.png",
@@ -207,7 +283,7 @@ function skin(self, s)
 		imgpath .. "Buttons/keybrd_nw_button_press_l.png",
 	})
 
-	local keyTop = Tile:loadTiles({
+	local keyTop = _loadTile(self, {
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
 		nil,
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_t_wvert.png",
@@ -219,7 +295,7 @@ function skin(self, s)
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
 	})
 
-	local keyTopPressed = Tile:loadTiles({
+	local keyTopPressed = _loadTile(self, {
 		imgpath .. "Buttons/keybrd_n_button_press.png",
 		nil,
 		imgpath .. "Buttons/keybrd_n_button_press_t.png",
@@ -231,7 +307,7 @@ function skin(self, s)
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
 	})
 
-	local keyTopRight = Tile:loadTiles({
+	local keyTopRight = _loadTile(self, {
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
 		nil,
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_t_wvert.png",
@@ -243,7 +319,7 @@ function skin(self, s)
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
 	})
 
-	local keyTopRightPressed = Tile:loadTiles({
+	local keyTopRightPressed = _loadTile(self, {
 		imgpath .. "Buttons/keybrd_n_button_press.png",
 		nil,
 		imgpath .. "Buttons/keybrd_n_button_press_t.png",
@@ -255,7 +331,7 @@ function skin(self, s)
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
 	})
 
-	local keyLeft = Tile:loadTiles({
+	local keyLeft = _loadTile(self, {
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboardLeftEdge.png",
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
@@ -267,7 +343,7 @@ function skin(self, s)
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_l.png",
 	})
 
-	local keyLeftPressed = Tile:loadTiles({
+	local keyLeftPressed = _loadTile(self, {
 		imgpath .. "Buttons/keyboard_button_press.png",
 		nil,
 		nil,
@@ -279,7 +355,7 @@ function skin(self, s)
 		imgpath .. "Buttons/keyboard_button_press.png",
 	})
 
-	local keyMiddle = Tile:loadTiles({
+	local keyMiddle = _loadTile(self, {
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
 		nil,
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
@@ -291,7 +367,7 @@ function skin(self, s)
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
 	})
 
-	local keyMiddlePressed = Tile:loadTiles({
+	local keyMiddlePressed = _loadTile(self, {
 		imgpath .. "Buttons/keyboard_button_press.png",
 		nil,
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
@@ -303,7 +379,7 @@ function skin(self, s)
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
 	})
 
-	local keyRight = Tile:loadTiles({
+	local keyRight = _loadTile(self, {
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
 		nil,
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
@@ -315,7 +391,7 @@ function skin(self, s)
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
 	})
 
-	local keyRightPressed = Tile:loadTiles({
+	local keyRightPressed = _loadTile(self, {
 		imgpath .. "Buttons/keyboard_button_press.png",
 		nil,
 		nil,
@@ -327,7 +403,7 @@ function skin(self, s)
 		nil,
 	})
 
-	local keyBottomLeft = Tile:loadTiles({
+	local keyBottomLeft = _loadTile(self, {
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboardLeftEdge.png",
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
@@ -339,7 +415,7 @@ function skin(self, s)
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd_l.png",
 	})
 
-	local keyBottomLeftPressed = Tile:loadTiles({
+	local keyBottomLeftPressed = _loadTile(self, {
 		imgpath .. "Buttons/keybrd_s_button_press.png",
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboardLeftEdge.png",
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
@@ -351,7 +427,7 @@ function skin(self, s)
 		imgpath .. "Buttons/keybrd_sw_button_press_l.png",
 	})
 
-	local keyBottom = Tile:loadTiles({
+	local keyBottom = _loadTile(self, {
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
 		nil,
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
@@ -363,7 +439,7 @@ function skin(self, s)
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
 	})
 
-	local keyBottomPressed = Tile:loadTiles({
+	local keyBottomPressed = _loadTile(self, {
 		imgpath .. "Buttons/keybrd_s_button_press.png",
 		nil,
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
@@ -375,7 +451,7 @@ function skin(self, s)
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
 	})
 
-	local keyBottomRight = Tile:loadTiles({
+	local keyBottomRight = _loadTile(self, {
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
 		nil,
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
@@ -387,7 +463,7 @@ function skin(self, s)
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
 	})
 
-	local keyBottomRightPressed = Tile:loadTiles({
+	local keyBottomRightPressed = _loadTile(self, {
 		imgpath .. "Buttons/keybrd_s_button_press.png",
 		nil,
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
@@ -400,7 +476,7 @@ function skin(self, s)
 	})
 
 	local titleBox                =
-		Tile:loadTiles({
+		_loadTile(self, {
 				 imgpath .. "Titlebar/titlebar.png",
 				 nil,
 				 nil,
@@ -413,7 +489,7 @@ function skin(self, s)
 		})
 
 	local textinputBackground     = 
-		Tile:loadTiles({
+		_loadTile(self, {
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box.png",
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tl.png",
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_t.png",
@@ -426,7 +502,7 @@ function skin(self, s)
 				})
 
 	local pressedTitlebarButtonBox =
-		Tile:loadTiles({
+		_loadTile(self, {
 					imgpath .. "Buttons/button_titlebar_press.png",
 					imgpath .. "Buttons/button_titlebar_tl_press.png",
 					imgpath .. "Buttons/button_titlebar_t_press.png",
@@ -439,7 +515,7 @@ function skin(self, s)
 				})
 
 	local titlebarButtonBox =
-		Tile:loadTiles({
+		_loadTile(self, {
 					imgpath .. "Buttons/button_titlebar.png",
 					imgpath .. "Buttons/button_titlebar_tl.png",
 					imgpath .. "Buttons/button_titlebar_t.png",
@@ -452,7 +528,7 @@ function skin(self, s)
 				})
 
 	local helpBox = 
-		Tile:loadTiles({
+		_loadTile(self, {
 				       imgpath .. "Popup_Menu/helpbox.png",
 				       imgpath .. "Popup_Menu/helpbox_tl.png",
 				       imgpath .. "Popup_Menu/helpbox_t.png",
@@ -465,7 +541,7 @@ function skin(self, s)
 			       })
 
 	local popupBox = 
-		Tile:loadTiles({
+		_loadTile(self, {
 				       imgpath .. "Popup_Menu/popup_box.png",
 				       imgpath .. "Popup_Menu/popup_box_tl.png",
 				       imgpath .. "Popup_Menu/popup_box_t.png",
@@ -479,25 +555,25 @@ function skin(self, s)
 
 
 	local scrollBackground = 
-		Tile:loadVTiles({
+		_loadVTile(self, {
 					imgpath .. "Scroll_Bar/scrollbar_bkgrd_t.png",
 					imgpath .. "Scroll_Bar/scrollbar_bkgrd.png",
 					imgpath .. "Scroll_Bar/scrollbar_bkgrd_b.png",
 			       })
 
 	local scrollBar = 
-		Tile:loadVTiles({
+		_loadVTile(self, {
 					imgpath .. "Scroll_Bar/scrollbar_body_t.png",
 					imgpath .. "Scroll_Bar/scrollbar_body.png",
 					imgpath .. "Scroll_Bar/scrollbar_body_b.png",
 			       })
 
-	local sliderBackground = Tile:loadImage(imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd.png")
-	local sliderBar        = Tile:loadImage(imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_fill.png")
+	local sliderBackground = _loadImageTile(self, imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd.png")
+	local sliderBar        = _loadImageTile(self, imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_fill.png")
 
-	local popupBackground  = Tile:loadImage(imgpath .. "Alerts/popup_fullscreen_100.png")
+	local popupBackground  = _loadImageTile(self, imgpath .. "Alerts/popup_fullscreen_100.png")
 
-	local textinputCursor = Tile:loadImage(imgpath .. "Text_Entry/Keyboard_Touch/tch_cursor.png")
+	local textinputCursor = _loadImageTile(self, imgpath .. "Text_Entry/Keyboard_Touch/tch_cursor.png")
 
 	local THUMB_SIZE = self:param().THUMB_SIZE
 	
@@ -576,28 +652,28 @@ function skin(self, s)
 
 --------- CONSTANTS ---------
 
-	local _progressBackground = Tile:loadImage(imgpath .. "Alerts/alert_progress_bar_bkgrd.png")
+	local _progressBackground = _loadImageTile(self, imgpath .. "Alerts/alert_progress_bar_bkgrd.png")
 
-	local _progressBar = Tile:loadHTiles({
+	local _progressBar = _loadHTile(self, {
 		nil,
 		imgpath .. "Alerts/alert_progress_bar_body.png",
 	})
 
-	local _songProgressBackground = Tile:loadImage(imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd.png")
+	local _songProgressBackground = _loadImageTile(self, imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd.png")
 
-	local _songProgressBar = Tile:loadHTiles({ 
+	local _songProgressBar = _loadHTile(self, {
 			nil,
 			nil,
 			imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_slider.png"
 	})
 
-	local _volumeSliderBackground = Tile:loadHTiles({
+	local _volumeSliderBackground = _loadHTile(self, {
 		imgpath .. "Touch_Toolbar/tch_volumebar_bkgrd_l.png",
 		imgpath .. "Touch_Toolbar/tch_volumebar_bkgrd.png",
 		imgpath .. "Touch_Toolbar/tch_volumebar_bkgrd_r.png",
 	})
 
-	local _volumeSliderBar = Tile:loadHTiles({
+	local _volumeSliderBar = _loadHTile(self, {
 		imgpath .. "Touch_Toolbar/tch_volumebar_fill_l.png",
 		imgpath .. "Touch_Toolbar/tch_volumebar_fill.png",
 		--FIXME, we don't have support for putting this asset on screen correctly
