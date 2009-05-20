@@ -1123,8 +1123,10 @@ function _process_displaystatus(self, event)
 
 	if data.display then
 		local display = data.display
-		local special = display and display.special
 		local type    = display["type"] or 'text'
+
+		-- FIXME: the display.special part of this clause can be removed when 7.4 is released
+		local special = display and (display.special or (type == 'icon' and display.style))
 
 		local s
 		local textValue = _formatShowBrieflyText(display['text'])
@@ -1133,9 +1135,10 @@ function _process_displaystatus(self, event)
 		local transitionOff = Window.transitionPushPopupDown
 		local duration = display['duration'] or 3000
 
-		local suppressSpecialShowBriefly = jiveMain:getSkinParam('suppressSpecialShowBriefly')
-		local showMe                     = true
+		local usingTouch = Framework:isMostRecentInput('mouse')
 
+		-- this showBriefly should be displayed unless there's a good reason not to
+		local showMe = true
 		if special then
 			s = self.popupIcon
 			local style = 'icon_popup_' .. special
@@ -1143,7 +1146,8 @@ function _process_displaystatus(self, event)
 			transitionOn = Window.transitionNone
 			transitionOff = Window.transitionNone
 			duration = display['duration'] or 1500
-			if suppressSpecialShowBriefly then
+			-- if using a touch interface, icon-based showBriefly's should be suppressed 
+			if usingTouch then
 				showMe = false
 			end
 		elseif type == 'song' then
