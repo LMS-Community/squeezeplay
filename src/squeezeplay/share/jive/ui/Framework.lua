@@ -456,6 +456,16 @@ function removeWidget(self, widget)
 end
 
 
+--[[
+
+=head2 jive.ui.Framework:isMostRecentInput(inputType)
+
+Takes an input type as an argument and returns whether this input type was the last input given to squeezeplay.
+
+Possible inputTypes: "ir", "key", "mouse", "scroll". Note: "mouse" is used for both mouse and touch
+
+=cut
+--]]
 function isMostRecentInput(self, inputType)
 	return inputType and self.mostRecentInputType == inputType
 end
