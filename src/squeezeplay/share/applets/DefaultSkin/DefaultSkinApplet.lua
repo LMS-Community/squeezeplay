@@ -76,6 +76,7 @@ end
 function param(self)
 	return {
 		THUMB_SIZE = 56,
+		NOWPLAYING_MENU = true,
 		nowPlayingBrowseArtworkSize = 154,
 		nowPlayingSSArtworkSize     = 186,
 		nowPlayingLargeArtworkSize  = 240,

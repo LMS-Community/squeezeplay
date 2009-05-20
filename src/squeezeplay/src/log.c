@@ -70,10 +70,28 @@ void log_category_vlog(struct log_category *category, enum log_priority priority
 	vsnprintf(buf, LOG_BUFFER_SIZE, format, args);
 
 	if (appender_stdout >= priority) {
+		char *color;
+
 		gettimeofday(&t, NULL);
 		gmtime_r(&t.tv_sec, &tm);
 
-		printf("%04d%02d%02d %02d:%02d:%02d.%03ld %-6s %s - %s\n",
+		switch (priority) {
+		case LOG_PRIORITY_ERROR:
+			color = "\033[0;31m";
+			break;
+		case LOG_PRIORITY_WARN:
+			color = "\033[0;32m";
+			break;
+		case LOG_PRIORITY_INFO:
+			color = "\033[0;33m";
+			break;
+		default:
+		case LOG_PRIORITY_DEBUG:
+			color = "\033[0;34m";
+		}
+
+		printf("%s%04d%02d%02d %02d:%02d:%02d.%03ld %-6s %s - %s\033[0m\n",
+		       color,
 		       tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
 		       tm.tm_hour, tm.tm_min, tm.tm_sec,
 		       (long)(t.tv_usec / 1000),

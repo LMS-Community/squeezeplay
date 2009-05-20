@@ -179,14 +179,14 @@ static struct jive_sample *load_sound(char *filename, int mixer) {
 
 	// FIXME rewrite to not use SDL
 	if (SDL_LoadWAV(filename, &wave, &data, &len) == NULL) {
-		fprintf(stderr, "Couldn't load sound %s: %s\n", filename, SDL_GetError());
+		LOG_WARN(log_audio_decode, "Couldn't load sound %s: %s\n", filename, SDL_GetError());
 		return NULL;
 	}
 
 	/* Convert to signed 16 bit stereo/mono */
 	if (SDL_BuildAudioCVT(&cvt, wave.format, wave.channels, wave.freq,
 			      AUDIO_S16SYS, wave.channels, 44100) < 0) {
-		fprintf(stderr, "Couldn't build audio converter: %s\n", SDL_GetError());
+		LOG_WARN(log_audio_decode, "Couldn't build audio converter: %s\n", SDL_GetError());
 		SDL_FreeWAV(data);
 		return NULL;
 	}
@@ -195,7 +195,7 @@ static struct jive_sample *load_sound(char *filename, int mixer) {
 	cvt.len = len;
 	
 	if (SDL_ConvertAudio(&cvt) < 0) {
-		fprintf(stderr, "Couldn't convert audio: %s\n", SDL_GetError());
+		LOG_WARN(log_audio_decode, "Couldn't convert audio: %s\n", SDL_GetError());
 		SDL_FreeWAV(data);
 		free(cvt.buf);
 		return NULL;
@@ -234,7 +234,7 @@ static int decode_sample_load(lua_State *L) {
 		lua_pop(L, 1);
 
 		if (!squeezeplay_find_file(lua_tostring(L, 2), fullpath)) {
-			printf("Cannot find sound %s\n", lua_tostring(L, 2));
+			LOG_WARN(log_audio_decode, "Cannot find sound %s\n", lua_tostring(L, 2));
 			return 0;
 		}
 

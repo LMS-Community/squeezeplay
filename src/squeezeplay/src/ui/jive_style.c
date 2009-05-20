@@ -250,7 +250,7 @@ int jiveL_style_value(lua_State *L) {
 		}
 
 		if (lua_pcall(L, 1 + nargs, 1, 0) != 0) {
-			fprintf(stderr, "error running style function:\n\t%s\n", lua_tostring(L, -1));
+			LOG_WARN(log_ui_draw, "error running style function:\n\t%s\n", lua_tostring(L, -1));
 			lua_pop(L, 1);
 			return 0;
 		}

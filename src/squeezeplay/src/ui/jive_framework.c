@@ -185,7 +185,7 @@ static int jiveL_initSDL(lua_State *L) {
 
 	/* initialise SDL */
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		fprintf(stderr, "SDL_Init(V|T|A): %s\n", SDL_GetError());
+		LOG_ERROR(log_ui_draw, "SDL_Init(V|T|A): %s\n", SDL_GetError());
 		SDL_Quit();
 		exit(-1);
 	}
@@ -539,7 +539,7 @@ int jiveL_draw(lua_State *L) {
 	lua_pushboolean(L, 1);
 
 	if (lua_pcall(L, 3, 0, 3) != 0) {
-		fprintf(stderr, "error in draw_screen:\n\t%s\n", lua_tostring(L, -1));
+		LOG_WARN(log_ui_draw, "error in draw_screen:\n\t%s\n", lua_tostring(L, -1));
 		return 0;
 	}
 
@@ -573,7 +573,7 @@ int jiveL_update_screen(lua_State *L) {
 	lua_pushboolean(L, 0);
 
 	if (lua_pcall(L, 3, 1, 2) != 0) {
-		fprintf(stderr, "error in update_screen:\n\t%s\n", lua_tostring(L, -1));
+		LOG_WARN(log_ui_draw, "error in update_screen:\n\t%s\n", lua_tostring(L, -1));
 		return 0;
 	}
 
@@ -685,7 +685,7 @@ int jiveL_dispatch_event(lua_State *L) {
 		lua_pushboolean(L, 1); // global listeners
 
 		if (lua_pcall(L, 3, 1, 4) != 0) {
-			fprintf(stderr, "error in event function:\n\t%s\n", lua_tostring(L, -1));
+			LOG_WARN(log_ui_draw, "error in event function:\n\t%s\n", lua_tostring(L, -1));
 			return 0;
 		}
 
@@ -713,7 +713,7 @@ int jiveL_dispatch_event(lua_State *L) {
 		lua_pushvalue(L, 3); // event
 
 		if (lua_pcall(L, 2, 1, 4) != 0) {
-			fprintf(stderr, "error in event function:\n\t%s\n", lua_tostring(L, -1));
+			LOG_WARN(log_ui_draw, "error in event function:\n\t%s\n", lua_tostring(L, -1));
 			return 0;
 		}
 
@@ -728,7 +728,7 @@ int jiveL_dispatch_event(lua_State *L) {
 		lua_pushboolean(L, 0); // unused listeners
 
 		if (lua_pcall(L, 3, 1, 4) != 0) {
-			fprintf(stderr, "error in event function:\n\t%s\n", lua_tostring(L, -1));
+			LOG_WARN(log_ui_draw, "error in event function:\n\t%s\n", lua_tostring(L, -1));
 			return 0;
 		}
 

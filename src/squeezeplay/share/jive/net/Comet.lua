@@ -171,7 +171,7 @@ end
 -- I<path> is the absolute path to the servers cometd handler and defaults to
 -- '/cometd'.
 function setEndpoint(self, ip, port, path)
-	log:error(self, ": setEndpoint state=", self.state, ", ", ip, ", ", port, ", ", path)
+	log:debug(self, ": setEndpoint state=", self.state, ", ", ip, ", ", port, ", ", path)
 
 	local oldState = self.state
 

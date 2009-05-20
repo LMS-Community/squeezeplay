@@ -194,7 +194,7 @@ end
 local function _run(self, timeout)
 	local ok, err
 
-	log:info("NetworkThread starting...")
+	log:debug("NetworkThread starting...")
 
 	while true do
 		local timeoutSecs = timeout / 1000
@@ -253,7 +253,7 @@ function notify(self, event, ...)
 	for i=1, select('#', ...) do
 		a[i] = tostring(select(i, ...))
 	end
-	log:info("NOTIFY: ", event, "(", table.concat(a, ", "), ")")
+	log:debug("NOTIFY: ", event, "(", table.concat(a, ", "), ")")
 	
 	local method = "notify_" .. event
 	

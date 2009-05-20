@@ -345,7 +345,9 @@ static int pcm_open(struct decode_alsa *state) {
 	state->iec958_elem = snd_hctl_find_elem(state->hctl, id);
 
  skip_iec958:
-	snd_pcm_dump(state->pcm, output);
+	if (IS_LOG_PRIORITY(log_audio_output, LOG_PRIORITY_DEBUG)) {
+		snd_pcm_dump(state->pcm, output);
+	}
 
 	state->pcm_sample_rate = state->new_sample_rate;
 	state->new_sample_rate = 0;
@@ -392,7 +394,7 @@ static int pcm_test(const char *name, unsigned int *max_rate) {
 static int xrun_recovery(struct decode_alsa *state, int err) {
 	if (err == -EPIPE) {	/* under-run */
 		if ((err = snd_pcm_prepare(state->pcm) < 0)) {
-			LOG_ERROR(log_audio_output, "Can't recovery from underrun, prepare failed: %s\n", snd_strerror(err));
+			LOG_ERROR(log_audio_output, "Can't recover from underrun, prepare failed: %s\n", snd_strerror(err));
 		}
 		return 0;
 	} else if (err == -ESTRPIPE) {
@@ -401,7 +403,7 @@ static int xrun_recovery(struct decode_alsa *state, int err) {
 		}
 		if (err < 0) {
 			if ((err = snd_pcm_prepare(state->pcm)) < 0) {
-				LOG_ERROR(log_audio_output, "Can't recovery from suspend, prepare failed: %s\n", snd_strerror(err));
+				LOG_ERROR(log_audio_output, "Can't recover from suspend, prepare failed: %s\n", snd_strerror(err));
 			}
 		}
 		return 0;
@@ -583,7 +585,7 @@ static struct decode_alsa *decode_alsa_thread_init(const char *name, unsigned in
 	err = pthread_setschedparam(state->thread, SCHED_FIFO, &thread_param);
 	if (err) {
 		if (err == EPERM) {
-			LOG_ERROR(log_audio_output, "Can't set audio thread priority\n");
+			LOG_WARN(log_audio_output, "Can't set audio thread priority\n");
 		}
 		else {
 			LOG_ERROR(log_audio_output, "pthread_create: %s", strerror(err));

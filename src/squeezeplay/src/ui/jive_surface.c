@@ -45,7 +45,7 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 			LOG_INFO(log_ui_draw, "Using a hardware double buffer");
 		}
 
-		LOG_INFO(log_ui_draw, "Video mode: %d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", sdl->format->BitsPerPixel, sdl->format->BytesPerPixel, sdl->format->Rshift, sdl->format->Gshift, sdl->format->Bshift);
+		LOG_DEBUG(log_ui_draw, "Video mode: %d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", sdl->format->BitsPerPixel, sdl->format->BytesPerPixel, sdl->format->Rshift, sdl->format->Gshift, sdl->format->Bshift);
 	}
 
 	srf = calloc(sizeof(JiveSurface), 1);
@@ -159,14 +159,14 @@ JiveSurface *jive_surface_load_image(const char *path) {
 
 	fullpath = malloc(PATH_MAX);
 	if (!squeezeplay_find_file(path, fullpath)) {
-		fprintf(stderr, "Cannot find image %s\n", path);
+		LOG_WARN(log_ui_draw, "Can't find image %s\n", path);
 		free(fullpath);
 		return NULL;
 	}
 
 	sdl = IMG_Load(fullpath);
 	if (!sdl) {
-		fprintf(stderr, "Error in jive_surface_load_image: %s\n", IMG_GetError());
+		LOG_WARN(log_ui_draw, "Error loading surface: %s\n", IMG_GetError());
 	}
 
 	free(fullpath);

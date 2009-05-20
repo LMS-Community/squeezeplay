@@ -623,7 +623,7 @@ function removeListener(self, handle)
 end
 
 function dumpActions(self)
-	local result = "Available Actions: " 
+	local result = "Actions: " 
 	for action in table.pairsByKeys(self.actions.byName) do
 		result = result .. " " .. action
 	end
@@ -813,7 +813,7 @@ end
 --if the passed in actionName is not a registered action, an error is logged and false is returned. 
 function assertActionName(self, actionName)
 	if not self:_getActionEventIndexByName(actionName) then
-		log:error("action name not registered:(" , actionName, "). Available actions: ", self:dumpActions() )
+		log:error("action name '", actionName, "' is not registered. ", self:dumpActions() )
 		return false
 	end
 
@@ -873,19 +873,17 @@ end
 
 
 function _loadIRMap(file)
-	log:info("_loadIRMap: ", file)
+	log:debug("_loadIRMap: ", file)
 
 	if not file then 
 		return nil
 	end
 	
-
 	local f, err = loadfile(file)
 	if not f then
 		log:error(string.format ("error loading IR map file `%s' (%s)", file, err))
 		return nil
 	end
-	log:error("_loadIRMap: ", file)
 	
 	-- evaluate the settings in a sandbox
 	local env = {}

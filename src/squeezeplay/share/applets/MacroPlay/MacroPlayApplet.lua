@@ -87,7 +87,7 @@ function loadConfig(self)
 	if f then
 		self.configFile = dirorerr .. "Macros.lua"
 		self.config = f()
-	else
+	elseif dirorerr then
 		log:warn("Error loading Macros: ", dirorerr)
 	end
 end

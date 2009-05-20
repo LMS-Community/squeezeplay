@@ -407,8 +407,6 @@ static int handle_script (lua_State *L, char **argv, int n) {
 		fname = LUA_DEFAULT_SCRIPT;
 	}
 
-	l_message("\nLoading", fname);
-
 	// use 'require' to search the lua path
 	lua_getglobal(L, "require");
 	lua_pushstring(L, fname);

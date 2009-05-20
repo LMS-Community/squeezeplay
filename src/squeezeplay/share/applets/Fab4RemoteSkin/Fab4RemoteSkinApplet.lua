@@ -86,10 +86,10 @@ end
 function param(self)
         return {
 		THUMB_SIZE = 64,
+		NOWPLAYING_MENU = true,
 		nowPlayingBrowseArtworkSize = 180,
 		nowPlayingSSArtworkSize     = 180,
 		nowPlayingLargeArtworkSize  = 180,
-		NOWPLAYING_MENU = 1,
         }
 end
 

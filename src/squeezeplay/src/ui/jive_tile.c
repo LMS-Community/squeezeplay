@@ -46,7 +46,7 @@ JiveTile *jive_tile_load_image(const char *path) {
 	fullpath = malloc(PATH_MAX);
 
 	if (!squeezeplay_find_file(path, fullpath)) {
-		fprintf(stderr, "Cannot find image %s\n", path);
+		LOG_WARN(log_ui_draw, "Can't find image %s\n", path);
 		free(fullpath);
 		free(tile);
 		return NULL;
@@ -54,7 +54,7 @@ JiveTile *jive_tile_load_image(const char *path) {
 
 	tmp = IMG_Load(fullpath);
 	if (!tmp) {
-		fprintf(stderr, "Error in jive_file_load_image: %s\n", IMG_GetError());
+		LOG_WARN(log_ui_draw, "Error loading tile: %s\n", IMG_GetError());
 		free(fullpath);
 		free(tile);
 		return NULL;
@@ -91,7 +91,7 @@ JiveTile *jive_tile_load_image_data(const char *data, size_t len) {
 	tmp = IMG_Load_RW(src, 1);
 
 	if (!tmp) {
-		fprintf(stderr, "Error in jive_tile_load_image_data: %s\n", IMG_GetError());
+		LOG_WARN(log_ui_draw, "Error loading tile: %s\n", IMG_GetError());
 		free(tile);
 		return NULL;
 	}
@@ -130,13 +130,13 @@ JiveTile *jive_tile_load_tiles(char *path[9]) {
 		}
 
 		if (!squeezeplay_find_file(path[i], fullpath)) {
-			fprintf(stderr, "Cannot find image %s\n", path[i]);
+			LOG_WARN(log_ui_draw, "Can't find image %s\n", path[i]);
 			continue;
 		}
 
 		tmp = IMG_Load(fullpath);
 		if (!tmp) {
-			fprintf(stderr, "Error in jive_file_load_tiles: %s\n", IMG_GetError());
+			LOG_WARN(log_ui_draw, "Error loading tile: %s\n", IMG_GetError());
 		}
 		else {
 			if (tmp->format->Amask) {

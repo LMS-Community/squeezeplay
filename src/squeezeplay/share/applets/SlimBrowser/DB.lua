@@ -291,7 +291,7 @@ function missing(self, index)
 	-- if both down and up are done, then we are done
 	if self.downCompleted and self.upCompleted then
 		-- if we reach here we're complete (for next time)
-		log:warn(self, " scan complete (calculated)")
+		log:debug(self, " scan complete (calculated)")
 		self.complete = true
 		return
 	end

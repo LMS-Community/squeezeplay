@@ -40,7 +40,7 @@ JiveFont *jive_font_load(const char *name, Uint16 size) {
 
 	/* Initialise the TTF api when required */
 	if (!TTF_WasInit() && TTF_Init() == -1) {
-		fprintf(stderr, "TTF_Init: %s\n", TTF_GetError());
+		LOG_WARN(log_ui_draw, "TTF_Init: %s\n", TTF_GetError());
 		exit(-1);
 	}
 
@@ -159,14 +159,14 @@ static int load_ttf_font(JiveFont *font, const char *name, Uint16 size) {
 
 	if (!squeezeplay_find_file(name, fullpath) ) {
 		free(fullpath);
-		fprintf(stderr, "Cannot find font %s\n", name);
+		LOG_WARN(log_ui_draw, "Cannot find font %s\n", name);
 		return 0;
 	}
 
 	font->ttf = TTF_OpenFont(fullpath, size);
 	if (!font->ttf) {
 		free(fullpath);
-		fprintf(stderr, "TTF_OpenFont: %s\n", TTF_GetError());
+		LOG_WARN(log_ui_draw, "TTF_OpenFont: %s\n", TTF_GetError());
 		return 0;
 	}
 	free(fullpath);
