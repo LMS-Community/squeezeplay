@@ -566,9 +566,6 @@ function skin(self, s)
 					imgpath .. "Scroll_Bar/scrollbar_body_b.png",
 			       })
 
-	local sliderBackground = _loadImageTile(self, imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd.png")
-	local sliderBar        = _loadImageTile(self, imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_fill.png")
-
 	local popupBackground  = _loadImageTile(self, imgpath .. "Alerts/popup_fullscreen_100.png")
 
 	local textinputCursor = _loadImageTile(self, imgpath .. "Text_Entry/Keyboard_Touch/tch_cursor.png")
@@ -657,7 +654,11 @@ function skin(self, s)
 		imgpath .. "Alerts/alert_progress_bar_body.png",
 	})
 
-	local _songProgressBackground = _loadImageTile(self, imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd.png")
+	local _songProgressBackground = _loadHTile(self, {
+		imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd_l.png",
+		imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd.png",
+		imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd_r.png",
+	})
 
 	local _songProgressBar = _loadHTile(self, {
 			nil,
