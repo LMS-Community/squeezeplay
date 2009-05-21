@@ -495,7 +495,7 @@ end
 			end
 		end
 		if _menuReceived and isMenuStatusResponse and menuDirective ~= 'remove' then
-			log:debug("hiding connecting to server after 'add' menustatus response ")
+			log:info("hiding any 'connecting to server' popup after 'add' menustatus response ")
 
 			appletManager:callService("hideConnectingToServer")
 		end
@@ -668,6 +668,9 @@ function notify_playerCurrent(self, player)
 	if not player:getSlimServer() then
 		return
 	end
+
+	-- unsubscribe from this player's menustatus for previous server
+	player:unsubscribe('/slim/menustatus/' .. player:getId())
 
 	log:info("player changed from:", _player, " to ", player, " for server: ", player:getSlimServer(), " from server: ", _server)
 
