@@ -71,7 +71,7 @@ function resume(self)
 		end
 	else
 		-- task has error
-		log:warn("task error ", self.name, ": ", val)
+		log:error("task error ", self.name, ": ", val)
 		self:removeTask()
 		self.state = "error"
 
@@ -183,12 +183,12 @@ function dump(class)
 		local entry = taskHead[i]
 
 		if entry and not header then
-			log:warn("Task queue:")
+			log:info("Task queue:")
 			header = true
 		end
 
 		while entry do
-			log:warn(i, ": ", entry.name, " (", entry, ")")
+			log:info(i, ": ", entry.name, " (", entry, ")")
 			entry = entry.next
 		end
 	end

@@ -103,7 +103,7 @@ function init(self)
 	appletManager._mkdirRecursive(downloadPrefix)
 	downloadPrefix = downloadPrefix .. "/"
 
-	log:info("downloaded wallpapers stored at: ", downloadPrefix)
+	log:debug("downloaded wallpapers stored at: ", downloadPrefix)
 
 	self.download = {}
 end
@@ -111,7 +111,7 @@ end
 -- notify_playerCurrent
 -- this is called when the current player changes (possibly from no player)
 function notify_playerCurrent(self, player)
-	log:info("SetupWallpaper:notify_playerCurrent(", player, ")")
+	log:debug("SetupWallpaper:notify_playerCurrent(", player, ")")
 	if player == self.player then
 		return
 	end
@@ -188,7 +188,7 @@ function settingsShow(self)
 			screen = nil
 		end
 
-		log:info("found server - requesting wallpapers list ", screen)
+		log:debug("found server - requesting wallpapers list ", screen)
 
 		self.server:userRequest(
 			function(chunk, err)
@@ -247,7 +247,7 @@ function _serverSink(self, data)
 			else
 				url = entry.url
 			end
-			log:info("remote wallpaper: ", entry.title, " ", url)
+			log:debug("remote wallpaper: ", entry.title, " ", url)
 			self.menu:addItem(
 				{
 					weight = 50,	  
@@ -264,7 +264,7 @@ function _serverSink(self, data)
 								   ),
 					focusGained = function()
 									  if self.download[url] and self.download[url] ~= "fetch" and self.download[url] ~= "fetchset" then
-										  log:info("using cached: ", url)
+										  log:debug("using cached: ", url)
 										  self:showBackground(url, self.currentPlayerId)
 									  else
 										  self:_fetchFile(url, 
@@ -317,7 +317,7 @@ function _fetchFile(self, url, callback)
 		log:warn("already fetching ", url, " not fetching again")
 		return
 	else
-		log:info("fetching background: ", url)
+		log:debug("fetching background: ", url)
 	end
 	self.download[url] = "fetch"
 
@@ -327,12 +327,12 @@ function _fetchFile(self, url, callback)
 	local req = RequestHttp(
 		function(chunk, err)
 			if err then
-				log:error("error fetching background: ", url)
+				log:warn("error fetching background: ", url)
 				self.download[url] = nil
 			end
 			local state = self.download[url]
 			if chunk and (state == "fetch" or state == "fetchset") then
-				log:info("fetched background: ", url)
+				log:debug("fetched background: ", url)
 				self.download[url] = chunk
 				if url == self.last then
 					callback(state == "fetchset")
@@ -390,7 +390,7 @@ function setBackground(self, wallpaper, playerId)
 		playerId = 'wallpaper' 
 	end
 
-	log:info('SetupWallpaper, setting wallpaper for ', playerId)
+	log:debug('SetupWallpaper, setting wallpaper for ', playerId)
 
 	-- set the new wallpaper, or use the existing setting
 	if wallpaper then
@@ -403,7 +403,7 @@ function setBackground(self, wallpaper, playerId)
 			local path = downloadPrefix .. playerId:gsub(":", "-")
 			local fh = io.open(path, "wb")
 			if fh then
-				log:info("saving image to ", path)
+				log:debug("saving image to ", path)
 				fh:write(self.download[wallpaper])
 				fh:close()
 			else

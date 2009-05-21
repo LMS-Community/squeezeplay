@@ -233,17 +233,23 @@ static void decode_start_handler(void) {
 	}
 	mqueue_read_complete(&decode_mqueue);
 
-	LOG_DEBUG(log_audio_decode, "decode_start_handler decoder=%x num_params=%d", decoder_id, num_params);
-
-	fifo_lock(&decode_fifo);
-
 	for (i = 0; i < sizeof(all_decoders); i++) {
 		if (all_decoders[i]->id == decoder_id) {
 			decoder = all_decoders[i];
-			decoder_data = decoder->start(params, num_params);
 			break;
 		}
 	}
+
+	if (!decoder) {
+		LOG_ERROR(log_audio_decode, "unknown decoder %x\n", decoder_id);
+		return;
+	}
+
+	LOG_INFO(log_audio_decode, "init decoder %s", decoder->name);
+
+	fifo_lock(&decode_fifo);
+
+	decoder_data = decoder->start(params, num_params);
 
 	decode_first_buffer = TRUE;
 	// XXXX decode_set_output_threshold(output_threshold);

@@ -690,7 +690,7 @@ end
 function _storeSettings(entry)
 	assert(entry)
 
-	log:info("Store settings: ", entry.appletName)
+	log:info("store settings: ", entry.appletName)
 
 	local file = assert(io.open(entry.settingsFilepath, "w"))
 	file:write(dumper.dump(entry.settings, "settings", true))
@@ -726,14 +726,13 @@ function _freeApplet(self, entry)
 
 		local continue = true
 
+		-- swallow any error
 		local status, err = pcall(
 			function()
 				continue = entry.appletEvaluated:free()
 			end
 		)
 
-		-- swallow any error
-		
 		if continue == nil then
 			-- warn if applet returns nil
 			log:error(entry.appletName, ":free() returned nil")

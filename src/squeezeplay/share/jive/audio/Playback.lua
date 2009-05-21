@@ -1,10 +1,11 @@
 
-local assert, tostring = assert, tostring
+local assert, tostring, type = assert, tostring, type
 
 
 local oo                     = require("loop.base")
 
 local string                 = require("string")
+local table                  = require("table")
 
 local hasDecode, decode      = pcall(require, "squeezeplay.decode")
 local hasSprivate, spprivate = pcall(require, "spprivate")
@@ -163,7 +164,7 @@ function _timerCallback(self)
 				-- XXXX not supported event
 			end
 
-			log:info("status DECODE UNDERRUN")
+			log:debug("status DECODE UNDERRUN")
 			self:sendStatus(status, "STMd")
 
 			self.sentDecoderUnderrunEvent = true
@@ -192,7 +193,7 @@ function _timerCallback(self)
 		if not self.sentAudioUnderrunEvent and
 			self.sentDecoderUnderrunEvent then
 
-			log:info("status AUDIO UNDERRUN")
+			log:debug("status AUDIO UNDERRUN")
 			decode:stop() -- XXX need to let last buffer play out before stop
 			self:sendStatus(status, "STMu")
 
@@ -201,7 +202,7 @@ function _timerCallback(self)
 		elseif not self.sentOutputUnderrunEvent and
 			self.stream then
 
-			log:info("status OUTPUT UNDERRUN")
+			log:debug("status OUTPUT UNDERRUN")
 			decode:pauseAudio(0) -- auto-pause to prevent glitches
 			self:sendStatus(status, "STMo")
 
@@ -216,7 +217,7 @@ function _timerCallback(self)
 	-- Cannot test of stream is not nil because stream may be complete (and closed) before track start
 	if status.decodeState & DECODE_RUNNING and (self.tracksStarted < status.tracksStarted) then
 
-		log:info("status TRACK STARTED")
+		log:debug("status TRACK STARTED")
 		self:sendStatus(status, "STMs")
 
 		self.tracksStarted = status.tracksStarted
@@ -243,14 +244,14 @@ function _timerCallback(self)
 --		status.audioState & DECODE_RUNNING == 0 then
 
 		if self.autostart == '1' and not self.sentResume then
-			log:info("resume bytesReceivedL=", status.bytesReceivedL, " outputTime=", status.outputTime, " threshold=", self.threshold)
+			log:debug("resume bytesReceivedL=", status.bytesReceivedL, " outputTime=", status.outputTime, " threshold=", self.threshold)
 			decode:resumeAudio()
 			self.sentResume = true
 			self.sentDecoderFullEvent = true -- fake it so we don't send STMl with pause
 
 		elseif not self.sentDecoderFullEvent then
 			-- Tell SC decoder buffer is full
-			log:info("status FULL")
+			log:debug("status FULL")
 			self:sendStatus(status, "STMl")
 
 			self.sentDecoderFullEvent = true
@@ -271,10 +272,24 @@ function _timerCallback(self)
 end
 
 
-function _streamConnect(self, serverIp, serverPort)
-	self.stream = Stream:connect(serverIp, serverPort)
+function _ipstring(ip)
+	if (type(ip) == "string") then
+		return ip
+	end
 
-	log:info("connect streambuf")
+	local str = {}
+	for i = 4,1,-1 do
+		str[i] = string.format("%d", ip & 0xFF)
+		ip = ip >> 8
+	end
+	return table.concat(str, ".")
+end
+
+
+function _streamConnect(self, serverIp, serverPort)
+	log:info("connect ", _ipstring(serverIp), ":", serverPort, " ", string.match(self.header, "(.-)\n"))
+
+	self.stream = Stream:connect(serverIp, serverPort)
 
 	local wtask = Task("streambufW", self, _streamWrite)
 	self.jnt:t_addWrite(self.stream, wtask, STREAM_WRITE_TIMEOUT)
@@ -291,7 +306,7 @@ function _streamDisconnect(self, reason, flush)
 		return
 	end
 
-	log:info("disconnect streambuf")
+	log:debug("disconnect streambuf")
 
 	self.jnt:t_removeWrite(self.stream)
 	self.jnt:t_removeRead(self.stream)
@@ -316,7 +331,7 @@ end
 
 function _streamWrite(self, networkErr)
 	if networkErr then
-		log:error("write error: ", networkErr)
+		log:warn("write error: ", networkErr)
 		self:_streamDisconnect(TCP_CLOSE_LOCAL_RST)
 		return
 	end
@@ -325,14 +340,14 @@ function _streamWrite(self, networkErr)
 	self.jnt:t_removeWrite(self.stream)
 
 	if err then
-		log:error("write error: ", err)
+		log:warn("write error: ", err)
 	end
 end
 
 
 function _streamRead(self, networkErr)
 	if networkErr then
-		log:error("read error: ", networkErr)
+		log:warn("read error: ", networkErr)
 		self:_streamDisconnect(TCP_CLOSE_LOCAL_RST)
 		return
 	end
@@ -363,7 +378,9 @@ end
 
 
 function _strm(self, data)
-	if data.command ~= 't' then log:info("strm ", data.command)	end
+	if data.command ~= 't' then
+		log:debug("strm ", data.command)
+	end
 
 	if data.command == 's' then
 		-- start

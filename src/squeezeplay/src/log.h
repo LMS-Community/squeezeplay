@@ -63,16 +63,16 @@ static inline void log_category_log(struct log_category *category, enum log_prio
 #define LOG_CATEGORY_GET(name) log_category_get(name)
 
 #define LOG_ERROR(cat, fmt, ...) \
-	log_category_log(cat, LOG_PRIORITY_ERROR, "%s:%d " fmt, __FILE__, __LINE__, ##__VA_ARGS__)
+	log_category_log(cat, LOG_PRIORITY_ERROR, "%s:%d " fmt, __func__, __LINE__, ##__VA_ARGS__)
 
 #define LOG_WARN(cat, fmt, ...) \
-	log_category_log(cat, LOG_PRIORITY_WARN, "%s:%d " fmt, __FILE__, __LINE__, ##__VA_ARGS__)
+	log_category_log(cat, LOG_PRIORITY_WARN, "%s:%d " fmt, __func__, __LINE__, ##__VA_ARGS__)
 
 #define LOG_INFO(cat, fmt, ...) \
-	log_category_log(cat, LOG_PRIORITY_INFO, "%s:%d " fmt, __FILE__, __LINE__, ##__VA_ARGS__)
+	log_category_log(cat, LOG_PRIORITY_INFO, "%s:%d " fmt, __func__, __LINE__, ##__VA_ARGS__)
 
 #define LOG_DEBUG(cat, fmt, ...) \
-	log_category_log(cat, LOG_PRIORITY_DEBUG, "%s:%d " fmt, __FILE__, __LINE__, ##__VA_ARGS__)
+	log_category_log(cat, LOG_PRIORITY_DEBUG, "%s:%d " fmt, __func__, __LINE__, ##__VA_ARGS__)
 
 #define IS_LOG_PRIORITY(cat, priority) \
 	(log_category_get_priority(cat) >= priority)

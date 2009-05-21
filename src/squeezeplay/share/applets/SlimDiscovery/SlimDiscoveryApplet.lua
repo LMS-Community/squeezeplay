@@ -168,7 +168,7 @@ local function _squeezeCenterCleanup(self)
 		if not server:isConnected() and
 			now - server:getLastSeen() > DISCOVERY_TIMEOUT then
 		
-			log:info("Removing server ", server)
+			log:debug("Removing server ", server)
 			server:free()
 		end
 	end
@@ -186,7 +186,7 @@ local function _playerCleanup(self)
 			currentPlayer ~= player and
 			now - player:getLastSeen() > DISCOVERY_TIMEOUT then
 		
-			log:info("Removing player ", player)
+			log:debug("Removing player ", player)
 			player:free(false)
 		end
 	end
@@ -389,7 +389,7 @@ end
 
 -- restart discovery if the player is disconnect from SqueezeCenter
 function notify_playerDisconnected(self, player)
-	log:info("playerDisconnected")
+	log:debug("playerDisconnected")
 
 	if Player:getCurrentPlayer() ~= player then
 		return
@@ -402,12 +402,14 @@ end
 
 -- stop discovery if the player is reconnects
 function notify_playerConnected(self, player)
-	log:info("playerConnected")
+	log:debug("playerConnected")
 
 	local currentPlayer = Player:getCurrentPlayer()
 	if currentPlayer ~= player then
 		return
 	end
+
+	log:info("connected ", player:getName())
 
 	-- stop discovery, we have the player
 	self:_setState('connected')
@@ -420,7 +422,7 @@ end
 
 -- restart discovery if SqueezeCenter disconnects
 function notify_serverDisconnected(self, slimserver)
-	log:info("serverDisconnected ", slimserver)
+	log:debug("serverDisconnected ", slimserver)
 
 	local currentPlayer = Player:getCurrentPlayer()
 	if not currentPlayer or currentPlayer:getSlimServer() ~= slimserver then
@@ -436,7 +438,7 @@ end
 
 -- stop discovery if SqueezeCenter reconnects
 function notify_serverConnected(self, slimserver)
-	log:info("serverConnected")
+	log:debug("serverConnected")
 
 	local currentPlayer = Player:getCurrentPlayer()
 	if not currentPlayer or currentPlayer:getSlimServer() ~= slimserver then
@@ -450,7 +452,7 @@ end
 
 -- restart discovery on new network connection
 function notify_networkConnected(self)
-	log:info("networkConnected")
+	log:debug("networkConnected")
 
 	if self.state == 'disconnected' then
 		return
@@ -477,8 +479,6 @@ function notify_playerCurrent(self, player)
 
 	if settings.playerId ~= playerId then
 		-- update player
-		log:info("selected player: ", player)
-
 		settings.playerId = playerId
 		settings.playerInit = player and player:getInit()
 
@@ -523,6 +523,8 @@ end
 
 
 function setCurrentPlayer(self, player)
+	log:info("selected ", player:getName())
+
 	Player:setCurrentPlayer(player)
 end
 

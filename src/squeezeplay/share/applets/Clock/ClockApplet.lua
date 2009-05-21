@@ -113,7 +113,7 @@ local DigitalDetailed_Presets = {
 Clock  = oo.class()
 
 function Clock:__init()
-	log:info("Init Clock")
+	log:debug("Init Clock")
 
 	local obj = oo.rawnew(self)
 
@@ -156,7 +156,7 @@ end
 Analog = oo.class({}, Clock)
 
 function Analog:__init(preset)
-	log:info("Init Analog Clock")
+	log:debug("Init Analog Clock")
 
 	obj = oo.rawnew(self, Clock())
 
@@ -220,7 +220,7 @@ end
 DigitalStyled = oo.class({}, Clock)
 
 function DigitalStyled:__init(preset, ampm)
-	log:info("Init Digital Simple")
+	log:debug("Init Digital Simple")
 
 	obj = oo.rawnew(self, Clock())
 
@@ -280,7 +280,7 @@ end
 DigitalDetailed = oo.class({}, Clock)
 
 function DigitalDetailed:__init(preset, ampm, firstday)
-	log:info("Init Digital Detailed")
+	log:debug("Init Digital Detailed")
 	
 	local fontname = "fonts/FreeSans.ttf"
 
@@ -530,7 +530,7 @@ end
 
 
 function _openScreensaver(self, type)
-	log:info("Type: " .. type)
+	log:debug("Type: " .. type)
 
 	-- Global Date/Time Settings
 	local hours      = datetime:getHours() 

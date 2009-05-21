@@ -135,6 +135,8 @@ end
 
 function free(self)
 	jnt:unsubscribe(self)
+
+	return true
 end
 
 

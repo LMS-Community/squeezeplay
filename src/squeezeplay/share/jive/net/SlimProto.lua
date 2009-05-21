@@ -206,7 +206,7 @@ local opcodes = {
 
 	BODY = function(self, data)
 		-- XXXX
-		log:warn("TODO")
+		log:error("TODO")
 	end,
 
 	DSCO = function(self, data)
@@ -292,12 +292,12 @@ local opcodes = {
 
 	http = function(self, packet)
 		-- XXXX
-		log:warn("TODO")
+		log:error("TODO")
 	end,
 
 	body = function(self, packet)
 		-- XXXX
-		log:warn("TODO")
+		log:error("TODO")
 	end,
 }
 
@@ -465,7 +465,7 @@ function connectTask(self, server)
 	assert(not string.match(ip, "www.squeezenetwork.com"))
 
 	if self.state == CONNECTED and self.serverip == ip then
-		log:info("already connected to ", self.serverip)
+		log:debug("already connected to ", self.serverip)
 		return
 	end
 
@@ -487,7 +487,7 @@ function connectTask(self, server)
 		ip = DNS:toip(ip)
 
 		if not ip then
-			log:info("dns lookup failed for ", self.serverip)
+			log:warn("dns lookup failed for ", self.serverip)
 			_handleDisconnect(self, "DNS lookup")
 			return
 		end
@@ -519,7 +519,7 @@ end
 
 -- Disconnect from SqueezeCenter.
 function disconnect(self)
-	log:info("disconnect")
+	log:debug("disconnect")
 
 	self.state = UNCONNECTED
 
@@ -645,7 +645,7 @@ end
 
 function _handleTimer(self)
 	if self.state == CONNECTED then
-		log:warn("bogus timer")
+		log:error("bogus timer")
 		return
 	end
 

@@ -166,7 +166,7 @@ end
 
 
 function notify_playerTrackChange(self, player, nowPlaying)
-	log:info("Notification received that track has changed")
+	log:debug("Notification received that track has changed")
 
 	local thisPlayer = _isThisPlayer(self, player)
 	if not thisPlayer then return end
@@ -271,8 +271,8 @@ function _isThisPlayer(self, player)
 	end
 
 	if player:getId() ~= self.player:getId() then
-		log:info("notification was not for this player")
-		log:info("notification: ", player:getId(), "your player: ", self.player:getId())
+		log:debug("notification was not for this player")
+		log:debug("notification: ", player:getId(), "your player: ", self.player:getId())
 		return false
 	else
 		return true
@@ -438,7 +438,7 @@ end
 function _updateRepeat(self, mode)
 	local token = 'mode' .. mode
 	if not repeatModes[token] then
-		log:error('not a valid shuffle mode: ', token)
+		log:error('not a valid repeat mode: ', token)
 		return
 	end
 	if self.controlsGroup then
@@ -791,11 +791,6 @@ function openScreensaver(self)
 	appletManager:callService("restartScreenSaverTimer")
 
 	self:showNowPlaying()
-
-
---	self.isScreensaver = true
---	log:info('openScreensaver()')
---	self:showNowPlaying(Window.transitionFadeIn, 'screensaver')
 end
 
 function displaySizeSetting(self, menuItem)
@@ -861,7 +856,7 @@ function showNowPlaying(self, transition)
 
 	local windowStyle
 	if Framework:isCurrentWindow(self.window) then
-		log:warn('NP already on screen')
+		log:debug('NP already on screen')
 
 		-- restart the screensaver timer if we hit this clause
 		appletManager:callService("restartScreenSaverTimer")
@@ -886,7 +881,7 @@ function showNowPlaying(self, transition)
 
 	local playerStatus = self.player and self.player:getPlayerStatus()
 
-	log:info("player=", self.player, " status=", playerStatus)
+	log:debug("player=", self.player, " status=", playerStatus)
 
 	-- playlist_tracks needs to be > 0 or else defer back to SlimBrowser
 	if not self.player or not playerStatus 
@@ -987,8 +982,7 @@ function free(self)
 	-- when we leave NowPlaying, ditch the window
 	-- the screen can get loaded with two layouts, and by doing this
 	-- we force the recreation of the UI when re-entering the screen, possibly in a different mode
-	log:info("NowPlaying.free()")
-	log:info(self.player)
+	log:debug(self.player)
 
 	-- player has left the building, close Now Playing browse window
 	if self.window then

@@ -446,7 +446,7 @@ end
 
 
 function JiveMain:setSelectedSkin(appletName)
-	log:info("Select skin ", appletName)
+	log:info("select skin: ", appletName)
 	if _loadSkin(self, appletName, false, true) then
 		self.selectedSkin = appletName
 		jnt:notify("skinSelected")

@@ -183,9 +183,8 @@ end
 -- this sink receives all the data from our Comet interface
 local function _getSink(self, cmd)
 	return function(chunk, err)
-	
-		if err then
-			log:warn("########### ", err)
+	       	if err then
+			log:warn("err in player sink ", err)
 			
 		elseif chunk then
 			local proc = "_process_" .. cmd[1]
@@ -311,7 +310,7 @@ function updateInit(self, slimServer, init)
 	playerList[self.id] = self
 
 	if slimServer then
-		log:info(self, " new for ", slimServer)
+		log:debug(self, " new for ", slimServer)
 		self.slimServer = slimServer
 		self.slimServer:_addPlayer(self)
 	end
@@ -379,7 +378,7 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 		oldInfo.connected = false
 
 		-- add to new server
-		log:info(self, " new for ", slimServer)
+		log:debug(self, " new for ", slimServer)
 		self.slimServer = slimServer
 		self.slimServer:_addPlayer(self)
 
@@ -545,7 +544,7 @@ function free(self, slimServer)
 		return
 	end
 
-	log:info(self, " delete for ", self.slimServer)
+	log:debug(self, " delete for ", self.slimServer)
 
 	-- player is gone
 	self.lastSeen = 0
@@ -1483,7 +1482,7 @@ function _udapConnect(self, server)
 			data.server_address = Udap.packNumber(parseip(ip), 4)
 		end
 
-		log:info("SN server_address=", data.server_address)
+		log:debug("SN server_address=", data.server_address)
 
 		-- set slimserver address to 0.0.0.1 to workaround a bug in
 		-- squeezebox firmware
@@ -1491,7 +1490,7 @@ function _udapConnect(self, server)
 	else
 		local serverip = server:getIpPort()
 
-		log:info("SC slimserver_address=", serverip)
+		log:debug("SC slimserver_address=", serverip)
 
 		data.server_address = Udap.packNumber(0, 4)
 		data.slimserver_address = Udap.packNumber(parseip(serverip), 4)

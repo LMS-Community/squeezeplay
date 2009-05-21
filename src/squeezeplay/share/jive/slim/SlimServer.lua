@@ -205,7 +205,7 @@ function _serverstatusSink(self, event, err)
 			self.players[playerId]:updatePlayerInfo(self, player_info)
 		end
 	else
-		log:info(self, ": has no players!")
+		log:debug(self, ": has no players!")
 	end
 	
 	if self.pin ~= pin then
@@ -245,8 +245,7 @@ function _upgradeSink(self, chunk, err)
 	self.upgradeUrl = url
 	self.upgradeForce = (tonumber(chunk.data.firmwareUpgrade) == 1)
 
-	log:info("Firmware URL=", self.upgradeUrl)
-	log:info("Firmware force upgrade=", self.upgradeForce)
+	log:info(self.name, " firmware=", self.upgradeUrl, " force=", self.upgradeForce)
 
 	if oldUpgradeUrl ~= self.upgradeUrl then
 		self.jnt:notify('firmwareAvailable', self)
@@ -429,7 +428,7 @@ Called to update (or initially set) the ip address and port for SqueezeCenter
 --]]
 function updateAddress(self, ip, port)
 	if self.ip ~= ip or self.port ~= port then
-		log:info(self, ": address set to ", ip , ":", port, " netstate=", self.netstate)
+		log:debug(self, ": address set to ", ip , ":", port, " netstate=", self.netstate)
 
 		local oldstate = self.netstate
 
@@ -521,7 +520,7 @@ function wakeOnLan(self)
 		return
 	end
 
-	log:info("Sending WOL to ", self.mac)
+	log:debug("Sending WOL to ", self.mac)
 
 	-- send WOL packet to SqueezeCenter
 	local wol = WakeOnLan(self.jnt)
@@ -540,7 +539,7 @@ function connect(self)
 		return
 	end
 
-	log:info(self, ":connect")
+	log:debug(self, ":connect")
 
 	assert(self.comet)
 	assert(self.artworkPool)
@@ -558,7 +557,7 @@ function disconnect(self)
 		return
 	end
 
-	log:info(self, ":disconnect")
+	log:debug(self, ":disconnect")
 
 	self.netstate = 'disconnected'
 
@@ -569,7 +568,7 @@ end
 
 -- force reconnection to SqueezeCenter
 function reconnect(self)
-	log:info(self, ":reconnect")
+	log:debug(self, ":reconnect")
 
 	self:disconnect()
 	self:connect()
@@ -582,20 +581,19 @@ function notify_cometConnected(self, comet)
 		return
 	end
 
-	log:info(self, " connected")
+	log:info("connected ", self.name)
 
 	self.netstate = 'connected'
 	self.jnt:notify('serverConnected', self)
 
-    -- auto discovery SqueezeCenter's mac address
-    self.jnt:arp(self.ip,
-             function(chunk, err)
-                 if err then
-                     log:info("arp: " .. err)
-                 else
-                     self.mac = chunk
-                 end
-             end)
+	-- auto discovery SqueezeCenter's mac address
+ 	self.jnt:arp(self.ip, function(chunk, err)
+		if err then
+			log:debug("arp: " .. err)
+		else
+			self.mac = chunk
+		end
+	end)
 end
 
 -- comet is disconnected from SC
@@ -604,8 +602,10 @@ function notify_cometDisconnected(self, comet)
 		return
 	end
 
+	log:info("disconnected ", self.name)
+
 	if self.netstate == 'connected' then
-		log:info(self, " disconnected")
+		log:debug(self, " disconnected")
 
 		self.netstate = 'connecting'
 	end
