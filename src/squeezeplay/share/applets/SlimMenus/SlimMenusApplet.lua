@@ -649,7 +649,7 @@ function notify_playerCurrent(self, player)
 			if server:isCompatible() then
 				self:_fetchServerMenu(server)
 			elseif not server:getVersion() then
-				log:error("Compatibility not yet known, menu data may be lost: ", server)
+				log:warn("Compatibility not yet known, menu data may be lost: ", server)
 			else
 				log:debug("not compatible: ", server)
 			end

@@ -82,7 +82,6 @@ function selectMusicSource(self, playerConnectedCallback, titleStyle, includedSe
 		self.titleStyle = titleStyle
 	end
 
-	log:error("subscribing jnt, will unsub during free(), so there should be at least one tied window appearing after this to get the free() cleanup")
 	jnt:subscribe(self)
 
 	self.serverList = {}
@@ -106,6 +105,13 @@ function _showMusicSourceList(self)
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 	window:addWidget(menu)
 	window:setAllowScreensaver(false)
+
+	menu:addActionListener("back", self,  function ()
+							self.playerConnectedCallback = nil
+							window:hide()
+
+							return EVENT_CONSUME
+						end)
 
 	local current = appletManager:callService("getCurrentPlayer")
 
@@ -166,7 +172,6 @@ function free(self)
 	if self.playerConnectedCallback then
 		log:warn("Unexpected free when playerConnectedCallback still exists (could happen on regular back)")
 	end
-	self:_cancelSelectServer()
 	log:debug("Unsubscribing jnt")
 	jnt:unsubscribe(self)
 
@@ -335,9 +340,6 @@ function notify_playerCurrent(self, player)
 
 			self.waitForConnect = nil
 			if self.playerConnectedCallback then
-				--	todo: find way so that free doesn't happen before self.playerConnectedCallback is called
-				log:info("Unsubscribing jnt")
-				jnt:unsubscribe(self)
 
 				self.playerConnectedCallback(player:getSlimServer())
 				self.playerConnectedCallback = nil
@@ -409,20 +411,26 @@ function _confirmServerSwitch(self, currentPlayer, server, serverForRetry)
 			text = (self:string("CHOOSE_RETRY", serverForRetry.name)),
 			sound = "WINDOWHIDE",
 			callback = function()
-					log:error("serverForRetry:", serverForRetry)
+					log:debug("serverForRetry:", serverForRetry)
 					self:connectPlayerToServer(currentPlayer, serverForRetry)
 					window:hide(Window.transitionNone)
 				   end,
 		})
 	end
+	local cancelAction = function()
+		self.playerConnectedCallback = nil
+		window:hide()
+
+		return EVENT_CONSUME
+	end
+
 	menu:addItem({
 		text = (self:string("SWITCH_CANCEL")),
 		sound = "WINDOWHIDE",
-		callback = function()
-				self.playerConnectedCallback = nil
-				window:hide()
-			   end,
+		callback = cancelAction,
 	})
+
+	menu:addActionListener("back", self, cancelAction)
 
 	window:addWidget(textarea)
 	window:addWidget(menu)
@@ -434,13 +442,15 @@ end
 -- hideConnectingToPlayer
 -- hide the full screen popup that appears until server and menus are loaded
 function hideConnectingToServer(self)
+
 	if self.connectingPopup then
-		log:error("connectingToServer popup hide")
+		log:info("connectingToServer popup hide")
 		self.connectingPopup:hide()
 		self.connectingPopup = nil
 
 		if self.waitForConnect and self.waitForConnect.player then
 			jnt:notify("playerLoaded", self.waitForConnect.player)
+			self.waitForConnect = nil
 		else
 			log:warn("Odd, self.waitForConnect or self.waitForConnect.player shouldn't be nil, using getCurrentPlayer")
 
@@ -451,7 +461,7 @@ end
 
 -- connect player to server
 function connectPlayerToServer(self, player, server)
-	log:warn('connectPlayerToServer()')
+	log:info('connectPlayerToServer()')
 	-- if connecting to SqueezeNetwork, first check jive is linked
 	if server:getPin() then
 		appletManager:callService("enterPin", server, nil,

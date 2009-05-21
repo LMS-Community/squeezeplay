@@ -182,7 +182,7 @@ function _serverstatusSink(self, event, err)
 			  and Player:getCurrentPlayer() and player_info.playerid == Player:getCurrentPlayer().id
 			  and lastServerSwitchT and lastServerSwitchT + SERVER_DISCONNECT_LAG_TIME > now then
 				--SlimProto disconnects can take several seconds to "take", during which time a disconnected player might still be in the serverstatus list
-				log:warn("Ignoring potentially inaccurate player data for current player in serverstatus from other servers (excluding any locally requested server) until SERVER_DISCONNECT_LAG_TIME passes: server:", self)
+				log:info("Ignoring potentially inaccurate player data for current player in serverstatus from other servers (excluding any locally requested server) until SERVER_DISCONNECT_LAG_TIME passes: server:", self)
 			else
 				table.insert(serverPlayers, player_info)
 			end
