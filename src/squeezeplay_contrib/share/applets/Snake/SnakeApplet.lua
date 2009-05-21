@@ -31,8 +31,6 @@ local Icon             = require("jive.ui.Icon")
 local Framework        = require("jive.ui.Framework")
 local Audio	       = require("jive.ui.Audio")
 
-local log              = require("jive.utils.log").logger("game.snake")
-
 local FRAMERATE        = 5
 local BLOCKSIZE        = 8
 local srf = nil

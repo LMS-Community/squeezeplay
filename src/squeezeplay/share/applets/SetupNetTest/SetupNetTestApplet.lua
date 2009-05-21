@@ -30,7 +30,6 @@ local Icon          = require("jive.ui.Icon")
 local Popup         = require("jive.ui.Popup")
 local Timer         = require("jive.ui.Timer")
 
-local log           = require("jive.utils.log").logger("applets.misc")
 local debug         = require("jive.utils.debug")
 
 local appletManager    = appletManager

@@ -8,7 +8,6 @@ local math                   = require("math")
 local string                 = require("string")
 local table                  = require("jive.utils.table")
 local io                     = require("io")
-local log                    = require("jive.utils.log").logger("applets.misc")
 
 local Applet                 = require("jive.Applet")
 local Framework              = require("jive.ui.Framework")

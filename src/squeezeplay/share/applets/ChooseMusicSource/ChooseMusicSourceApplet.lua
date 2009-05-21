@@ -44,7 +44,6 @@ local Popup         = require("jive.ui.Popup")
 local Icon          = require("jive.ui.Icon")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("applets.setup")
 
 local jnt           = jnt
 local jiveMain      = jiveMain

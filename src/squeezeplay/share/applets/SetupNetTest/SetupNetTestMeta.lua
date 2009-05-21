@@ -8,8 +8,6 @@ SetupNetTest Meta
 
 local oo            = require("loop.simple")
 
-local log           = require("jive.utils.log").logger("applets.misc")
-
 local AppletMeta    = require("jive.AppletMeta")
 
 local appletManager = appletManager

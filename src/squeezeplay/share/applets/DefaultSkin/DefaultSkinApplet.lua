@@ -41,7 +41,6 @@ local table                  = require("jive.utils.table")
 local debug                  = require("jive.utils.debug")
 local autotable              = require("jive.utils.autotable")
 
-local log = require("jive.utils.log").logger("ui")
 
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE

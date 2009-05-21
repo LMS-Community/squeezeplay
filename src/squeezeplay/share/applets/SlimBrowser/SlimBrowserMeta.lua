@@ -19,7 +19,7 @@ See L<jive.AppletMeta> for a description of standard applet meta functions.
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
-local jul           = require("jive.utils.log")
+local utilLog       = require("jive.utils.log")
 
 local appletManager = appletManager
 
@@ -35,12 +35,8 @@ end
 
 function registerApplet(self)
 	
-	-- SlimBrowser uses its own log categories
-	-- defined here so that it can be changed using LogSettingsApplet before the applet is run.
-	jul.logger("player.browse")
-	jul.logger("player.browse.db")
-	jul.logger("player.browse.data")
-
+	-- SlimBrowser uses its an extra log category
+	utilLog.logger("applet.SlimBrowser.data")
 
 	self:registerService('goHome')
 	self:registerService('showTrackOne')

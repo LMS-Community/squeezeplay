@@ -30,7 +30,7 @@ local Window              = require("jive.ui.Window")
 
 local math                = require("math")
 local debug               = require("jive.utils.debug")
-local log                 = require("jive.utils.log").logger("test")
+
 local jiveMain      = jiveMain
 --local contextMenuManager  = contextMenuManager
 

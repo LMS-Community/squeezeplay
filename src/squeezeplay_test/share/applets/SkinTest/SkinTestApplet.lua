@@ -40,7 +40,6 @@ local Textinput           = require("jive.ui.Textinput")
 local Window              = require("jive.ui.Window")
 
 local debug               = require("jive.utils.debug")
-local log                 = require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
 
 
 module(..., Framework.constants)

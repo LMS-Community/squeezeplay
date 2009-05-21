@@ -23,7 +23,6 @@ local Textarea         = require("jive.ui.Textarea")
 local Window           = require("jive.ui.Window")
 
 local debug            = require("jive.utils.debug")
-local log              = require("jive.utils.log").logger("applets.misc")
 local jsonfilters      = require("jive.utils.jsonfilters")
 
 local jnt = jnt

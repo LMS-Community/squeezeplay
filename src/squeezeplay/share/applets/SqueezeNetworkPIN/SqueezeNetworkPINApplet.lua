@@ -18,7 +18,6 @@ local Textarea               = require("jive.ui.Textarea")
 local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
 
-local log                    = require("jive.utils.log").logger("applets.setup")
 local debug                  = require("jive.utils.debug")
 
 local jnt                    = jnt

@@ -37,7 +37,6 @@ local Upgrade                = require("applets.SetupFirmwareUpgrade.Upgrade")
 local hasBSP, BSP            = pcall(require, "jiveBSP")
 
 local debug                  = require("jive.utils.debug")
-local log                    = require("jive.utils.log").logger("applets.setup")
 
 local jnt                    = jnt
 local appletManager          = appletManager

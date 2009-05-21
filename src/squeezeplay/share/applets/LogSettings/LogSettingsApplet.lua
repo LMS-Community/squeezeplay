@@ -38,7 +38,6 @@ local Window          = require("jive.ui.Window")
 local logger          = require("squeezeplay.log")
 
 local debug           = require("jive.utils.debug")
-local log             = require("jive.utils.log").logger("applets.browser")
 
 
 module(..., Framework.constants)

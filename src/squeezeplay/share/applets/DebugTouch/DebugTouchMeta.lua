@@ -8,7 +8,6 @@ local Framework     = require("jive.ui.Framework")
 local Timer         = require("jive.ui.Timer")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("ui")
 
 local appletManager = appletManager
 

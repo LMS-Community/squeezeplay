@@ -56,8 +56,8 @@ local Scanner                = require("applets.SlimBrowser.Scanner")
 
 local debug                  = require("jive.utils.debug")
 
-local log                    = require("jive.utils.log").logger("player.browse")
-local logd                   = require("jive.utils.log").logger("player.browse.data")
+-- log automatically assigned
+local logd                   = require("jive.utils.log").logger("applet.SlimBrowser.data")
 
 local jiveMain               = jiveMain
 local appletManager          = appletManager

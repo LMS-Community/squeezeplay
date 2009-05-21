@@ -14,8 +14,6 @@ local appletManager = appletManager
 local jiveMain      = jiveMain
 local jnt           = jnt
 
-local log         = require("jive.utils.log").logger("applets.setup")
-
 
 module(...)
 oo.class(_M, AppletMeta)

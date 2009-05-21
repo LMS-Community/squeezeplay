@@ -20,7 +20,7 @@ local Framework   = require("jive.ui.Framework")
 local Task        = require("jive.ui.Task")
 
 local debug       = require("jive.utils.debug")
-local log         = require("jive.utils.log").logger("applets.setup")
+local log         = require("jive.utils.log").logger("applet.SetupFirmware")
 
 local jnt = jnt
 

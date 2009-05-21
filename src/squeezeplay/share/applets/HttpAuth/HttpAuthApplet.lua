@@ -41,7 +41,6 @@ local Button          = require("jive.ui.Button")
 
 local SocketHttp      = require("jive.net.SocketHttp")
 
-local log             = require("jive.utils.log").logger("applets.setup")
 
 module(..., Framework.constants)
 oo.class(_M, Applet)

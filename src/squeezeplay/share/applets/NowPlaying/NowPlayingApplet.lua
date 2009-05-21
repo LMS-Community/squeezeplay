@@ -24,7 +24,6 @@ local Window           = require("jive.ui.Window")
 local Tile             = require("jive.ui.Tile")
 local Timer            = require("jive.ui.Timer")
                        
-local log              = require("jive.utils.log").logger("applets.screensavers")
 local debug            = require("jive.utils.debug")
 local datetime         = require("jive.utils.datetime")
 

@@ -39,7 +39,6 @@ local LocalPlayer        = require("jive.slim.LocalPlayer")
 
 local hasNetworking, Networking  = pcall(require, "jive.net.Networking")
 
-local log                = require("jive.utils.log").logger("applets.setup")
 local debug              = require("jive.utils.debug")
 
 local SetupSqueezeboxApplet = require("applets.SetupSqueezebox.SetupSqueezeboxApplet")

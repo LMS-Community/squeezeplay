@@ -23,7 +23,6 @@ local pairs, type = pairs, type
 local table           = require("table")
 
 local oo              = require("loop.simple")
-local logging         = require("logging")
 
 local Applet          = require("jive.Applet")
 local RadioButton     = require("jive.ui.RadioButton")
@@ -33,10 +32,8 @@ local Checkbox      = require("jive.ui.Checkbox")
 local SimpleMenu      = require("jive.ui.SimpleMenu")
 local Window          = require("jive.ui.Window")
 local Framework       = require("jive.ui.Framework")
-local jul             = require("jive.utils.log")
 
 local JiveMain        = jiveMain
-local log             = jul.logger("applets.browser")
 
 
 module(..., Framework.constants)

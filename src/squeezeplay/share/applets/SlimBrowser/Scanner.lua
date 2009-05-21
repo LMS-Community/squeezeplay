@@ -18,7 +18,7 @@ local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
 
 local debug                  = require("jive.utils.debug")
-local log                    = require("jive.utils.log").logger("player")
+local log                    = require("jive.utils.log").logger("applet.SlimBrowser")
 
 
 local ACTION                 = jive.ui.ACTION

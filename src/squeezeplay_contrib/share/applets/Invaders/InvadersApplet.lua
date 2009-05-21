@@ -16,7 +16,6 @@ local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Surface                = require("jive.ui.Surface")
 local Window                 = require("jive.ui.Window")
 
-local log                    = require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
 
 -- One Shots Per Second
 local RATE_OF_FIRE = jive.ui.FRAME_RATE

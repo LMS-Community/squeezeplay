@@ -19,7 +19,6 @@ See L<jive.AppletMeta> for a description of standard applet meta functions.
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
-local log           = require("jive.utils.log").logger("applets.setup")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain

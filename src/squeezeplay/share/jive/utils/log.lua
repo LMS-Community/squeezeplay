@@ -47,6 +47,8 @@ All parameters are cast to strings using tostring() where required. Logs with pr
 
 local splog     = require("squeezeplay.log")
 
+local log       splog:logger("utils")
+
 module(...)
 
 DEBUG = "debug"
@@ -69,6 +71,8 @@ end
 -- deprecated
 function addCategory(category, initialLevel)
 	local obj = splog:logger(category)
+
+	log:error("addCategory is deprecated")
 
 	obj:setLevel(initialLevel)
 	return obj

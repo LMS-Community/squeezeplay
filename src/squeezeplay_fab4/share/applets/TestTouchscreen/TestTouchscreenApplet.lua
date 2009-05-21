@@ -6,7 +6,6 @@ local table               = require("jive.utils.table")
 local io                  = require("io")
 local math                = require("math")
 local oo                  = require("loop.simple")
-local log                 = require("jive.utils.log").logger("applets.misc")
 local debug               = require("jive.utils.debug")
 local os                  = require("os")
 

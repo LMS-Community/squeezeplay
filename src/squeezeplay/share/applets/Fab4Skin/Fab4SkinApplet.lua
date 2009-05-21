@@ -40,8 +40,6 @@ local table                  = require("jive.utils.table")
 local debug                  = require("jive.utils.debug")
 local autotable              = require("jive.utils.autotable")
 
-local log = require("jive.utils.log").logger("ui")
-
 local EVENT_ACTION           = jive.ui.EVENT_ACTION
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
 local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP

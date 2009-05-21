@@ -47,8 +47,6 @@ local Textarea         = require("jive.ui.Textarea")
 local Framework        = require("jive.ui.Framework")
 local Task             = require("jive.ui.Task")
 
-local log              = require("jive.utils.log").logger("applets.setup")
-
 local debug            = require("jive.utils.debug")
 
 local appletManager    = appletManager

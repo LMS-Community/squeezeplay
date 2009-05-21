@@ -2,7 +2,6 @@
 local ipairs, tostring    = ipairs, tostring
 
 local oo                  = require("loop.simple")
-local log                 = require("jive.utils.log").logger("applets.misc")
 
 local Applet              = require("jive.Applet")
 local Window              = require("jive.ui.Window")

@@ -34,7 +34,6 @@ local Icon             = require("jive.ui.Icon")
 local Timer            = require("jive.ui.Timer")
 local Task             = require("jive.ui.Task")
 
-local log              = require("jive.utils.log").logger("applets.setup")
 local locale           = require("jive.utils.locale")
 local table            = require("jive.utils.table")
 local debug            = require("jive.utils.debug")

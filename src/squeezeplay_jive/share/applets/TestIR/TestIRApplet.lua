@@ -16,8 +16,6 @@ local Window                 = require("jive.ui.Window")
 local Surface                = require("jive.ui.Surface")
 local Framework              = require("jive.ui.Framework")
 
-local log                    = require("jive.utils.log").logger("applets.misc")
-
 local bin_path	= "/usr/bin/testir"
 
 local wheel_index_last = 1

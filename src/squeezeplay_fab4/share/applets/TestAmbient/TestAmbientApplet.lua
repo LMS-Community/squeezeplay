@@ -20,7 +20,6 @@ local RadioGroup             = require("jive.ui.RadioGroup")
 local Tile                   = require("jive.ui.Tile")
 
 local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
-local log                    = require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
 
 local SYSPATH = "/sys/bus/i2c/devices/0-0039/"
 

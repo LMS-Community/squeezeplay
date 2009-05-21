@@ -28,7 +28,6 @@ local SlimProto     = require("jive.net.SlimProto")
 local Playback      = require("jive.audio.Playback")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("applets.setup")
 
 local jnt           = jnt
 local jiveMain      = jiveMain

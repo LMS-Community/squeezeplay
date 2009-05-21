@@ -30,8 +30,6 @@ local Window          = require("jive.ui.Window")
 local Framework       = require("jive.ui.Framework")
 local Surface         = require("jive.ui.Surface")
 
-local log             = require("jive.utils.log").logger("ui")
-
 local jiveMain        = jiveMain
 local appletManager   = appletManager
 

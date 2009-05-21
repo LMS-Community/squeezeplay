@@ -43,7 +43,6 @@ local slimServer       = require("jive.slim.SlimServer")
 local DNS              = require("jive.net.DNS")
 local Networking       = require("jive.net.Networking")
 
-local log              = require("jive.utils.log").logger("applets.setup")
 local debug            = require("jive.utils.debug")
 local locale           = require("jive.utils.locale")
 local string           = require("jive.utils.string")

@@ -48,7 +48,6 @@ local RequestHttp      = require("jive.net.RequestHttp")
 local json             = require("json")
 
 local debug            = require("jive.utils.debug")
-local log              = require("jive.utils.log").logger("applets.screensavers")
 
 local FRAME_RATE       = jive.ui.FRAME_RATE
 local LAYER_FRAME      = jive.ui.LAYER_FRAME

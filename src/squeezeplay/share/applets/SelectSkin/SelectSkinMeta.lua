@@ -20,8 +20,6 @@ local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
 
-local log             = require("jive.utils.log").logger("applets.browser")
-
 local appletManager = appletManager
 local jiveMain      = jiveMain
 

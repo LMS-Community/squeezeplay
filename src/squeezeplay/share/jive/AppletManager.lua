@@ -29,6 +29,7 @@ local io               = require("io")
 local lfs              = require("lfs")
                        
 local debug            = require("jive.utils.debug")
+local utilLog          = require("jive.utils.log")
 local log              = require("jive.utils.log").logger("applets.misc")
 local locale           = require("jive.utils.locale")
 local dumper           = require("jive.utils.dumper")
@@ -140,6 +141,9 @@ local function _saveApplet(name, dir)
 			appletModule = "applets." .. name .. "." .. name .. "Applet",
 			metaModule = "applets." .. name .. "." .. name .. "Meta",
 
+			-- logger is automatically set for applets
+			appletLogger = utilLog.logger("applet." .. name),
+
 			settings = false,
 			metaLoaded = false,
 			metaRegistered = false,
@@ -237,6 +241,8 @@ local function _registerMeta(entry)
 	entry.metaRegistered = true
 
 	local class = require(entry.metaModule)
+	class.log = entry.appletLogger
+
 	local obj = class()
  
 	-- check Applet version
@@ -429,7 +435,7 @@ local function _loadApplet(entry)
 	-- give the function the global environment
 	-- sandboxing would happen here!
 	setfenv(f, getfenv(0))
-	
+
 	local res = f(entry.appletModule)
 	if res then
 		entry.appletLoaded = res
@@ -464,6 +470,8 @@ local function _evalApplet(entry)
 	entry.appletEvaluated = true
 
 	local class = require(entry.appletModule)
+	class.log = entry.appletLogger
+
 	local obj = class()
 
 	-- we're run protected

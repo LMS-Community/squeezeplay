@@ -40,7 +40,7 @@ local Process		= require("jive.net.Process")
 
 local jnt = jnt
 
-local log 		= require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
+local log 		= require("jive.utils.log").logger("applet.ImageViewer")
 local require = require
 local ImageSource	= require("applets.ImageViewer.ImageSource")
 

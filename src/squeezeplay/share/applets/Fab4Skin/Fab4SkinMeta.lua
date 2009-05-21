@@ -22,7 +22,6 @@ local AppletMeta    = require("jive.AppletMeta")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
-local log           = require('jive.utils.log').logger('applets.misc')
 
 
 module(...)

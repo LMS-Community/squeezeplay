@@ -32,7 +32,7 @@ local Surface		= require("jive.ui.Surface")
 local Process		= require("jive.net.Process")
 local Window		= require("jive.ui.Window")
 local require = require
-local log 		= require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
+local log 		= require("jive.utils.log").logger("applet.ImageViewer")
 
 local jnt = jnt
 

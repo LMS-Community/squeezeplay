@@ -19,8 +19,6 @@ local Window                 = require("jive.ui.Window")
 -- Not yet defined as a constant in jive.ui.
 local SW_TABLET_MODE	     = 1
 
-local log                    = require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
-
 local SYSPATH = "/sys/bus/i2c/devices/0-0047/"
 
 -- Main Menu

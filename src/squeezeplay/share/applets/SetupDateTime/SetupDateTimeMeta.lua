@@ -21,7 +21,6 @@ local locale	    = require("jive.utils.locale")
 local datetime      = require("jive.utils.datetime")
 
 local AppletMeta    = require("jive.AppletMeta")
-local log              = require("jive.utils.log").logger("applets.setup")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain

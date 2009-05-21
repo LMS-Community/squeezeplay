@@ -1,7 +1,6 @@
 local pairs         = pairs
 local oo            = require("loop.simple")
 local AppletMeta    = require("jive.AppletMeta")
-local log           = require("jive.utils.log").logger("customizeHome")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain

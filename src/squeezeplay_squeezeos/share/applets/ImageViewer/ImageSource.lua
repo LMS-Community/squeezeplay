@@ -25,7 +25,8 @@ local table			= require("jive.utils.table")
 local string		= require("jive.utils.string")
 local Textarea		= require("jive.ui.Textarea")
 local Window        = require("jive.ui.Window")
-local Framework		= require("jive.ui.Framework")local log 			= require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
+local Framework		= require("jive.ui.Framework")
+local log 			= require("jive.utils.log").logger("applet.ImageViewer")
 
 local EVENT_KEY_PRESS = jive.ui.EVENT_KEY_PRESS
 local EVENT_MOUSE_PRESS = jive.ui.EVENT_MOUSE_PRESS

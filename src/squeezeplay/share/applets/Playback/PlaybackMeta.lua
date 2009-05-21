@@ -12,7 +12,6 @@ local SlimServer    = require("jive.slim.SlimServer")
 local Decode        = require("squeezeplay.decode")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("applet")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain

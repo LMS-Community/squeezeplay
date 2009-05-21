@@ -2,7 +2,6 @@
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
-local jul           = require("jive.utils.log")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
@@ -24,10 +23,6 @@ function defaultSettings(meta)
 end
 
 function registerApplet(meta)
-	-- Wireless uses its own log category
-	-- defined here so that it can be changed using LogSettingsApplet before the applet is run.		
-	jul.addCategory("applet.networking", jul.DEBUG)
-	
 	meta:registerService("setupNetworking")
 
 	jiveMain:addItem(meta:menuItem('networkSettings', 'advancedSettings', "NETWORK_NETWORKING", function(applet, ...) applet:settingsNetworking(...) end))

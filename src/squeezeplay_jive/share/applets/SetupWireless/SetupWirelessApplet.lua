@@ -34,8 +34,6 @@ local Popup                  = require("jive.ui.Popup")
 
 local Networking             = require("jive.net.Networking")
 
-local log                    = require("jive.utils.log").logger("applets.setup")
-
 local jnt                    = jnt
 
 local LAYER_FRAME            = jive.ui.LAYER_FRAME

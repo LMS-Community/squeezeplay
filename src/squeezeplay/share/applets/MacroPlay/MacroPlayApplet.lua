@@ -38,7 +38,6 @@ local Timer            = require("jive.ui.Timer")
 local Window           = require("jive.ui.Window")
 
 local debug            = require("jive.utils.debug")
-local log              = require("jive.utils.log").logger("applets.misc")
 
 local LAYER_CONTENT    = jive.ui.LAYER_CONTENT
 local LAYER_FRAME      = jive.ui.LAYER_FRAME

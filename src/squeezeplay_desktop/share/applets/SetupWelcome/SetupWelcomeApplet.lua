@@ -34,7 +34,6 @@ local Window           = require("jive.ui.Window")
 local Player           = require("jive.slim.Player")
 local LocalPlayer      = require("jive.slim.LocalPlayer")
 
-local log              = require("jive.utils.log").logger("applets.setup")
 local locale           = require("jive.utils.locale")
 local table            = require("jive.utils.table")
 

@@ -9,7 +9,6 @@ local System        = require("jive.System")
 local Framework     = require("jive.ui.Framework")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("ui")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain

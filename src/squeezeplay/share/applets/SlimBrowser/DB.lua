@@ -39,7 +39,7 @@ local RadioGroup = require("jive.ui.RadioGroup")
 
 local math = require("math")
 local debug = require("jive.utils.debug")
-local log = require("jive.utils.log").logger("player.browse.data")
+local log = require("jive.utils.log").logger("applet.SlimBrowser.data")
 
 -- our class
 module(..., oo.class)

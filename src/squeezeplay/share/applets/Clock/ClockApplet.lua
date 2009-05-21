@@ -20,7 +20,6 @@ local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Surface          = require("jive.ui.Surface")
 local Window           = require("jive.ui.Window")
                        
-local log              = require("jive.utils.log").logger("applets.screensavers")
 local datetime         = require("jive.utils.datetime")
 
 local appletManager	= appletManager

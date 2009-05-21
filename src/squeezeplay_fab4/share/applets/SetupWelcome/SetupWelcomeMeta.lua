@@ -23,8 +23,6 @@ local AppletMeta    = require("jive.AppletMeta")
 
 local slimServer    = require("jive.slim.SlimServer")
 
-local log           = require("jive.utils.log").logger("applets.setup")
-
 local appletManager = appletManager
 local jiveMain      = jiveMain
 local jnt           = jnt

@@ -10,7 +10,7 @@ local Widget        = require("jive.ui.Widget")
 local decode        = require("squeezeplay.decode")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("ui")
+local log           = require("jive.utils.log").logger("applet.Experiments")
 
 local FRAME_RATE    = jive.ui.FRAME_RATE
 

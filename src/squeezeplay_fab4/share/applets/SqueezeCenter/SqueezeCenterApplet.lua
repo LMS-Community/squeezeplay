@@ -15,7 +15,6 @@ local Textarea               = require("jive.ui.Textarea")
 local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
 
-local log                    = require("jive.utils.log").logger("applets.setup")
 local appletManager          = appletManager
 
 

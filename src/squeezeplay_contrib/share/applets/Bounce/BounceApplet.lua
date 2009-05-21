@@ -29,7 +29,6 @@ local Surface          = require("jive.ui.Surface")
 local Icon             = require("jive.ui.Icon")
 local Framework        = require("jive.ui.Framework")
 
-local log              = require("jive.utils.log").logger("applets.screensavers")
 
 module(..., Framework.constants)
 oo.class(_M, Applet)

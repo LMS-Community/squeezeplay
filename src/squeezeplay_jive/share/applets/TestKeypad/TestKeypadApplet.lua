@@ -5,7 +5,6 @@ local string              = require("string")
 local table               = require("jive.utils.table")
 local io                  = require("io")
 local oo                  = require("loop.simple")
-local log                 = require("jive.utils.log").logger("applets.misc")
 local debug               = require("jive.utils.debug")
 
 local Label               = require("jive.ui.Label")

@@ -36,8 +36,6 @@ local string           = require("string")
 local table            = require("jive.utils.table")
 local debug            = require("jive.utils.debug")
 
-local log              = require("jive.utils.log").logger("applets.screensavers")
-
 local appletManager    = appletManager
 
 local jnt = jnt

@@ -29,8 +29,6 @@ local Player                 = require("jive.slim.Player")
 local Udap                   = require("jive.net.Udap")
 local hasNetworking, Networking  = pcall(require, "jive.net.Networking")
 
-local log                    = require("jive.utils.log").logger("applets.setup")
-
 local jnt                    = jnt
 local appletManager          = appletManager
 local socket                 = require("socket")

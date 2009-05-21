@@ -41,7 +41,6 @@ local Framework              = require("jive.ui.Framework")
 local RequestHttp            = require("jive.net.RequestHttp")
 local SocketHttp             = require("jive.net.SocketHttp")
 
-local log                    = require("jive.utils.log").logger("applets.setup")
 local debug                  = require("jive.utils.debug")
 
 local jnt                    = jnt

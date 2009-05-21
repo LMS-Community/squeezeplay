@@ -27,7 +27,6 @@ local Timer            = require("jive.ui.Timer")
 local Surface          = require("jive.ui.Surface")
 local Icon             = require("jive.ui.Icon")
 local debug            = require("jive.utils.debug")
-local log              = require("jive.utils.log").logger("applets.screensavers")
 
 local jnt              = jnt
 local appletManager    = appletManager

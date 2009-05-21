@@ -24,8 +24,6 @@ local Slider                 = require("jive.ui.Slider")
 local Window                 = require("jive.ui.Window")
 
 local debug                  = require("jive.utils.debug")
-local log                    = require("jive.utils.log").logger("applets.setup")
-
 
 local jnt                    = jnt
 local iconbar                = iconbar

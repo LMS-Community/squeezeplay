@@ -32,7 +32,6 @@ local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Textarea         = require("jive.ui.Textarea")
 local Window           = require("jive.ui.Window")
 
-local log              = require("jive.utils.log").logger("applets.setup")
 local locale           = require("jive.utils.locale")
 local datetime         = require("jive.utils.datetime")
 local table            = require("jive.utils.table")

@@ -38,7 +38,6 @@ local Popup                  = require("jive.ui.Popup")
 
 local Networking             = require("jive.net.Networking")
 
-local log                    = require("jive.utils.log").logger("applets.setup")
 
 local appletManager          = appletManager
 local jnt                    = jnt

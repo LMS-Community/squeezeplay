@@ -45,7 +45,6 @@ local Task			= require("jive.ui.Task")
 local Timer			= require("jive.ui.Timer")
 local Process		= require("jive.net.Process")
 
-local log 			= require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
 local debug			= require("jive.utils.debug")
 
 local ImageSource		= require("applets.ImageViewer.ImageSource")

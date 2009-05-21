@@ -9,8 +9,6 @@ local string        = require("string")
 local AppletMeta    = require("jive.AppletMeta")
 local Timer         = require("jive.ui.Timer")
 
-local log           = require("jive.utils.log").logger("applets.misc")
-
 local appletManager = appletManager
 local jiveMain      = jiveMain
 local jnt           = jnt

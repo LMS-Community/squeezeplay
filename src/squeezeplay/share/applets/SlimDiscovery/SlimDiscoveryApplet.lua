@@ -43,7 +43,6 @@ local Player        = require("jive.slim.Player")
 local SlimServer    = require("jive.slim.SlimServer")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("slimserver")
 
 local jnt           = jnt
 local jiveMain      = jiveMain

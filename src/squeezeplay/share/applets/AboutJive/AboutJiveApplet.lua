@@ -22,7 +22,6 @@ local jnt                    = jnt
 local JIVE_VERSION           = jive.JIVE_VERSION
 
 local debug                  = require("jive.utils.debug")
-local log                    = require("jive.utils.log").logger("applets.setup")
 
 module(..., Framework.constants)
 oo.class(_M, Applet)

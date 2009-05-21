@@ -4,7 +4,6 @@ local oo            = require("loop.simple")
 local AppletMeta    = require("jive.AppletMeta")
 local LocalPlayer   = require("jive.slim.LocalPlayer")
 local SlimServer    = require("jive.slim.SlimServer")
-local jul           = require("jive.utils.log")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
@@ -34,8 +33,6 @@ end
 
 
 function registerApplet(meta)
-	jul.addCategory("squeezeboxJive", jul.DEBUG)
-
 	-- Fixup settings after upgrade
 	local settings = meta:getSettings()
 	if not settings.suspendWhenPlayingTimeout then

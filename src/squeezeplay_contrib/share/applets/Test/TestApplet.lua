@@ -48,7 +48,6 @@ local Window                 = require("jive.ui.Window")
 local Timer                  = require("jive.ui.Timer")
 local Keyboard               = require("jive.ui.Keyboard")
 
-local log                    = require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
 local appletManager = appletManager
 
 

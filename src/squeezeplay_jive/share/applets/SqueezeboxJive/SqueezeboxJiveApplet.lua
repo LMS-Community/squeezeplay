@@ -37,7 +37,6 @@ local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
 
 local debug                  = require("jive.utils.debug")
-local log                    = require("jive.utils.log").logger("applets.setup")
 
 local jiveMain               = jiveMain
 local jnt                    = jnt

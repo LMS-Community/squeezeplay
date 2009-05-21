@@ -40,12 +40,9 @@ local Group           = require("jive.ui.Group")
 local Slider          = require("jive.ui.Slider")
 local Textarea        = require("jive.ui.Textarea")
 local Sample          = require("squeezeplay.sample")
-local jul             = require("jive.utils.log")
 
 local RequestHttp     = require("jive.net.RequestHttp")
 local SocketHttp      = require("jive.net.SocketHttp")
-
-local log             = jul.logger("applets.setup")
 
 local jnt             = jnt
 local appletManager   = appletManager

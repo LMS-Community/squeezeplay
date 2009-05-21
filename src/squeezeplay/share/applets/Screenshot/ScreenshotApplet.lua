@@ -30,8 +30,6 @@ local Surface          = require("jive.ui.Surface")
 local System           = require("jive.System")
 local Window           = require("jive.ui.Window")
 
-local log              = require("jive.utils.log").logger("applets.misc")
-
 
 local JIVE_LAYER_ALL   = jive.ui.JIVE_LAYER_ALL
 

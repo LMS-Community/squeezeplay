@@ -11,7 +11,6 @@ local Framework     = require("jive.ui.Framework")
 local Widget        = require("jive.ui.Widget")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("ui")
 
 local appletManager = appletManager
 
