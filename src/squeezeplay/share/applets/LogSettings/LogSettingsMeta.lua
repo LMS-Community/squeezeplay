@@ -39,10 +39,12 @@ function registerApplet(meta)
 	-- only make this available if an SD card is slotted in and
 	-- a /media/*/log directory is present
 	local media = false
-	for dir in lfs.dir("/media") do
-		if lfs.attributes("/media/" .. dir .. "/log", "mode") == "directory" then
-			media = true
-			break
+	if lfs.attributes("/media", "mode") ~= nil then
+		for dir in lfs.dir("/media") do
+			if lfs.attributes("/media/" .. dir .. "/log", "mode") == "directory" then
+				media = true
+				break
+			end
 		end
 	end
 
