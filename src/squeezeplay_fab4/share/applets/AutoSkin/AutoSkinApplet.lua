@@ -38,7 +38,7 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-function __init(self)
+function __init(self, ...)
 	local obj = oo.rawnew(self, Applet(...))
 
 	-- skins, could be configurable via settings
