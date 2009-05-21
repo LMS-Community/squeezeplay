@@ -60,7 +60,7 @@ local debug            = require("debug")
 local oo               = require("loop.simple")
 local Icon             = require("jive.ui.Icon")
 
-local log             = require("jive.utils.log").logger("ui")
+local log             = require("jive.utils.log").logger("squeezeplay.ui")
 
 local EVENT_ACTION     = jive.ui.EVENT_ACTION
 local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS

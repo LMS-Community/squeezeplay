@@ -161,7 +161,7 @@ static int jiveL_initSDL(lua_State *L) {
 	Uint16 splash_w, splash_h;
 
 	/* logging */
-	log_ui_draw = LOG_CATEGORY_GET("ui.draw");
+	log_ui_draw = LOG_CATEGORY_GET("squeezeplay.ui.draw");
 
 	/* screen properties */
 	lua_getfield(L, 1, "screen");

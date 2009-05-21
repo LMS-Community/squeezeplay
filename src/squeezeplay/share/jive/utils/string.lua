@@ -26,7 +26,6 @@ Builds on Lua's built-in string.* class
 
 local setmetatable = setmetatable
 local table  = require('jive.utils.table')
-local log    = require("jive.utils.log").logger("applets.setup")
 local ltable = require("string")
 
 module(...)

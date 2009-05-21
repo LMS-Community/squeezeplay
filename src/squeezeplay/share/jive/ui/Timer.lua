@@ -34,7 +34,7 @@ local table	= require("jive.utils.table")
 local Framework = require("jive.ui.Framework")
 
 local debug	= require("jive.utils.debug")
-local log       = require("jive.utils.log").logger("ui")
+local log       = require("jive.utils.log").logger("squeezeplay.timer")
 
 
 -- our class

@@ -47,7 +47,7 @@ local oo        = require("loop.simple")
 local Widget    = require("jive.ui.Widget")
 local Surface   = require("jive.ui.Surface")
 
-local log       = require("jive.utils.log").logger("ui")
+local log       = require("jive.utils.log").logger("squeezeplay.ui")
 
 
 -- our class

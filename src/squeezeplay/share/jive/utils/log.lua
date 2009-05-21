@@ -47,7 +47,7 @@ All parameters are cast to strings using tostring() where required. Logs with pr
 
 local splog     = require("squeezeplay.log")
 
-local log       splog:logger("utils")
+local log       splog:logger("squeezeplay")
 
 module(...)
 

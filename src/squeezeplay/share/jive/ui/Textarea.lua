@@ -54,7 +54,7 @@ local Scrollbar	= require("jive.ui.Scrollbar")
 local Flick	= require("jive.ui.Flick")
 local math      = require("math")
 
-local log       = require("jive.utils.log").logger("ui")
+local log       = require("jive.utils.log").logger("squeezeplay.ui")
 
 
 local EVENT_SCROLL	= jive.ui.EVENT_SCROLL

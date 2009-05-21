@@ -55,8 +55,8 @@ local Framework   = require("jive.ui.Framework")
 local ArtworkCache = require("jive.slim.ArtworkCache")
 
 local debug       = require("jive.utils.debug")
-local log         = require("jive.utils.log").logger("slimserver")
-local logcache    = require("jive.utils.log").logger("slimserver.cache")
+local log         = require("jive.utils.log").logger("squeezebox.server")
+local logcache    = require("jive.utils.log").logger("squeezebox.server.cache")
 
 local JIVE_VERSION = jive.JIVE_VERSION
 

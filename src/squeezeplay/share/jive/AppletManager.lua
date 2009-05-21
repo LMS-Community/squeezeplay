@@ -30,7 +30,7 @@ local lfs              = require("lfs")
                        
 local debug            = require("jive.utils.debug")
 local utilLog          = require("jive.utils.log")
-local log              = require("jive.utils.log").logger("applets.misc")
+local log              = require("jive.utils.log").logger("squeezeplay.applets")
 local locale           = require("jive.utils.locale")
 local dumper           = require("jive.utils.dumper")
 local table            = require("jive.utils.table")
@@ -104,7 +104,8 @@ function _mkdirRecursive(dir)
         newPath = newPath .. element
         if i ~= 1 then --first element is (for full path): blank for unix , "<drive-letter>:" for windows
             if lfs.attributes(newPath, "mode") == nil then
-                log:warn("Making directory: " , newPath)
+                log:debug("Making directory: " , newPath)
+
                 local created, err = lfs.mkdir(newPath)
                 if not created then
                     error (string.format ("error creating dir '%s' (%s)", newPath, err))
@@ -543,7 +544,7 @@ function loadApplet(self, appletName)
 	if _ploadApplet(entry) then
 		local obj = _pevalApplet(entry)
 		if obj then
-			log:info("Loaded: ", appletName)
+			log:debug("Loaded: ", appletName)
 		end
 		return obj
 	end
@@ -735,7 +736,7 @@ function _freeApplet(self, entry)
 		
 		if continue == nil then
 			-- warn if applet returns nil
-			log:warn(entry.appletName, ":free() returned nil")
+			log:error(entry.appletName, ":free() returned nil")
 		end
 
 		if continue == false then
@@ -745,7 +746,7 @@ function _freeApplet(self, entry)
 		end
 	end
 	
-	log:info("Freeing: ", entry.appletName)
+	log:debug("Freeing: ", entry.appletName)
 	
 	entry.appletEvaluated = false
 	entry.appletLoaded = false

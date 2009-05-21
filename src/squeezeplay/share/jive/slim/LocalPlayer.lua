@@ -15,7 +15,7 @@ local SlimProto      = require("jive.net.SlimProto")
 local Playback       = require("jive.audio.Playback")
 
 local debug          = require("jive.utils.debug")
-local log            = require("jive.utils.log").logger("player")
+local log            = require("jive.utils.log").logger("squeezebox.player")
 
 local JIVE_VERSION   = jive.JIVE_VERSION
 

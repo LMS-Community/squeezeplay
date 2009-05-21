@@ -15,7 +15,7 @@ local math                 = require("math")
 local ScrollWheel          = require("jive.ui.ScrollWheel")
 
 local debug                = require("jive.utils.debug")
-local log                  = require("jive.utils.log").logger("ui")
+local log                  = require("jive.utils.log").logger("squeezeplay.ui")
 
 local EVENT_IR_DOWN        = jive.ui.EVENT_IR_DOWN
 local EVENT_IR_REPEAT      = jive.ui.EVENT_IR_REPEAT

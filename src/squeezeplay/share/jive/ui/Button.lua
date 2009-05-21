@@ -5,7 +5,7 @@ local oo                     = require("loop.base")
 local Timer                  = require("jive.ui.Timer")
 
 local debug                  = require("jive.utils.debug")
-local log                    = require("jive.utils.log").logger("ui")
+local log                    = require("jive.utils.log").logger("squeezeplay.ui")
 
 
 local EVENT_MOUSE_ALL        = jive.ui.EVENT_MOUSE_ALL

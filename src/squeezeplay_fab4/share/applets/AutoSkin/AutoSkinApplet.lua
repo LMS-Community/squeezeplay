@@ -39,6 +39,8 @@ oo.class(_M, Applet)
 
 
 function __init(self)
+	local obj = oo.rawnew(self, Applet(...))
+
 	-- skins, could be configurable via settings
 	local touchSkin = "Fab4Skin"
 	local remoteSkin = "Fab4RemoteSkin"
@@ -91,6 +93,8 @@ function __init(self)
 			end
 		end,
 		-100)
+
+	return obj
 end
 
 

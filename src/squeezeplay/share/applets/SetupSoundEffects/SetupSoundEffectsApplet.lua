@@ -51,7 +51,6 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 local path = string.match(System:findFile("applets/SetupSoundEffects/sounds/bump.wav"), "(.*)bump.wav")
-log:info("path: ", path)
 
 local REFRESH_TIME = 300
 

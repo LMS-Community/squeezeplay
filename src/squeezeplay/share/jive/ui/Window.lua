@@ -52,7 +52,7 @@ local Event                   = require("jive.ui.Event")
 local Surface                 = require("jive.ui.Surface")
 
 local debug                   = require("jive.utils.debug")
-local log                     = require("jive.utils.log").logger("ui")
+local log                     = require("jive.utils.log").logger("squeezeplay.ui")
 
 local max                     = math.max
 local min                     = math.min

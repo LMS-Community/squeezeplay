@@ -20,7 +20,7 @@ readStringsFile(thisPath)
 -- stuff we use
 local ipairs, pairs, io, select, setmetatable, string, tostring = ipairs, pairs, io, select, setmetatable, string, tostring
 
-local log              = require("jive.utils.log").logger("utils")
+local log              = require("jive.utils.log").logger("squeezeplay")
 
 local System           = require("jive.System")
 local Task             = require("jive.ui.Task")

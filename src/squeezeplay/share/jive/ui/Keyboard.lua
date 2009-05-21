@@ -49,7 +49,7 @@ local table             = require("jive.utils.table")
 local string            = require("jive.utils.string")
 local debug             = require("jive.utils.debug")
 local locale            = require("jive.utils.locale")
-local log               = require("jive.utils.log").logger("ui")
+local log               = require("jive.utils.log").logger("squeezeplay.ui")
 
 module(..., Framework.constants)
 

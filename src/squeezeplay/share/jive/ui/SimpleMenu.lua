@@ -57,7 +57,7 @@ local Menu            = require("jive.ui.Menu")
 local Widget          = require("jive.ui.Widget")
 
 local table           = require("jive.utils.table")
-local log             = require("jive.utils.log").logger("ui")
+local log             = require("jive.utils.log").logger("squeezeplay.ui")
 
 local EVENT_ACTION    = jive.ui.EVENT_ACTION
 local EVENT_FOCUS_GAINED = jive.ui.EVENT_FOCUS_GAINED

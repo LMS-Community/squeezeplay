@@ -70,7 +70,7 @@ local KEY_REW          = jive.ui.KEY_REW
 local KEY_LEFT        = jive.ui.KEY_LEFT
 local KEY_RIGHT       = jive.ui.KEY_RIGHT
 
-local log              = require("jive.utils.log").logger("ui")
+local log              = require("jive.utils.log").logger("squeezeplay.ui")
 
 -- our class
 module(...)

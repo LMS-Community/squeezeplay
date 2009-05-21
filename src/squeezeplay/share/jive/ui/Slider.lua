@@ -43,7 +43,7 @@ local math      = require("math")
 local Widget	= require("jive.ui.Widget")
 local Framework	= require("jive.ui.Framework")
 
-local log       = require("jive.utils.log").logger("ui")
+local log       = require("jive.utils.log").logger("squeezeplay.ui")
 
 local EVENT_KEY_PRESS = jive.ui.EVENT_KEY_PRESS
 local EVENT_SCROLL    = jive.ui.EVENT_SCROLL

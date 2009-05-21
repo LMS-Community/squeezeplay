@@ -16,7 +16,7 @@ local Timer                  = require("jive.ui.Timer")
 local Framework              = require("jive.ui.Framework")
 
 local debug                  = require("jive.utils.debug")
-local log                    = require("jive.utils.log").logger("audio")
+local log                    = require("jive.utils.log").logger("audio.decode")
 
 
 module(..., oo.class)
@@ -320,8 +320,6 @@ function _streamWrite(self, networkErr)
 		self:_streamDisconnect(TCP_CLOSE_LOCAL_RST)
 		return
 	end
-
-log:warn("######## ", self.header)
 
 	local status, err = self.stream:write(self, self.header)
 	self.jnt:t_removeWrite(self.stream)

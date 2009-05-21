@@ -10,7 +10,7 @@ local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("ui")
+local log           = require("jive.utils.log").logger("squeezeplay.ui")
 
 
 -- our class

@@ -38,7 +38,7 @@ local Group     = require("jive.ui.Group")
 
 local string    = require("string")
 local datetime  = require("jive.utils.datetime")
-local log       = require("jive.utils.log").logger("ui")
+local log       = require("jive.utils.log").logger("squeezeplay.iconbar")
 
 
 -- our class

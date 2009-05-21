@@ -9,7 +9,7 @@ local debug            = require("jive.utils.debug")
 local table            = require("jive.utils.table")
 local coxpcall         = require("jive.utils.coxpcall")
 
-local log              = require("jive.utils.log").logger("ui.task")
+local log              = require("jive.utils.log").logger("squeezeplay.task")
 
 
 module(..., oo.class)

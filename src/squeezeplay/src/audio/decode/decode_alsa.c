@@ -585,7 +585,7 @@ static struct decode_alsa *decode_alsa_thread_init(const char *name, unsigned in
 	err = pthread_setschedparam(state->thread, SCHED_FIFO, &thread_param);
 	if (err) {
 		if (err == EPERM) {
-			LOG_WARN(log_audio_output, "Can't set audio thread priority\n");
+			LOG_INFO(log_audio_output, "Can't set audio thread priority");
 		}
 		else {
 			LOG_ERROR(log_audio_output, "pthread_create: %s", strerror(err));

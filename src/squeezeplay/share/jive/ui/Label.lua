@@ -52,7 +52,7 @@ local oo           = require("loop.simple")
 local Widget       = require("jive.ui.Widget")
 local Icon         = require("jive.ui.Icon")
 
-local log          = require("jive.utils.log").logger("ui")
+local log          = require("jive.utils.log").logger("squeezeplay.ui")
 
 local EVENT_ALL    = jive.ui.EVENT_ALL
 local EVENT_UNUSED = jive.ui.EVENT_UNUSED

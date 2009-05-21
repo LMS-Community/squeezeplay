@@ -77,8 +77,8 @@ local Widget        = require("jive.ui.Widget")
 local Window        = require("jive.ui.Window")
 local Sample        = require("squeezeplay.sample")
 
-local log           = require("jive.utils.log").logger("ui")
-local logTask       = require("jive.utils.log").logger("ui.task")
+local log           = require("jive.utils.log").logger("squeezeplay.ui")
+local logTask       = require("jive.utils.log").logger("squeezeplay.task")
 
 local dumper        = require("jive.utils.dumper")
 local io            = require("io")

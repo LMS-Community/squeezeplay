@@ -56,7 +56,7 @@ local Udap           = require("jive.net.Udap")
 
 local debug          = require("jive.utils.debug")
 local string         = require("jive.utils.string")
-local log            = require("jive.utils.log").logger("player")
+local log            = require("jive.utils.log").logger("squeezebox.player")
 
 local EVENT_KEY_ALL    = jive.ui.EVENT_KEY_ALL
 local EVENT_CHAR_PRESS = jive.ui.EVENT_CHAR_PRESS

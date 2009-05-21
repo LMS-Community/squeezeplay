@@ -36,7 +36,7 @@ local string, type, tonumber, tostring = string, type, tonumber, tostring
 local os               = require("os")
 local math             = require("math")
 
-local log              = require("jive.utils.log").logger("utils")
+local log              = require("jive.utils.log").logger("squeezeplay")
 
 
 module(...)
@@ -116,7 +116,7 @@ Usualy Monday in Europe and Sunday in the USA
 --]]
 function setWeekstart(self, day)
 	if day == nil then
-		log:warn("setWeekstart() - day is nil")
+		log:error("setWeekstart() - day is nil")
 		return
 	end
 
@@ -125,7 +125,7 @@ function setWeekstart(self, day)
 	elseif day == "Monday" then
 		globalWeekstart = day
 	else
-		log:warn("Invalid Weekstart: " .. day)
+		log:error("Invalid Weekstart: " .. day)
 	end
 end
 
@@ -213,7 +213,7 @@ function setTimeZone(self, timezone)
 	local test_tz = self:getTimeZone(timezone)
 
 	if test_tz == nil then
-		log:warn("Set Invalid TimeZone")
+		log:error("Set Invalid TimeZone")
 		return false
 	else
 		globalTimeZone = timezone
@@ -233,7 +233,7 @@ function setHours(self, hours)
 		if hours == "12" or hours == "24" then
 			globalHours = hours
 		else 
-			log:warn("datetime:setHours() - hours is not 12 or 24")
+			log:error("datetime:setHours() - hours is not 12 or 24")
 		end
 	elseif type(hours) == "number" then
 		if hours == 12 then
@@ -241,10 +241,10 @@ function setHours(self, hours)
 		elseif hours == 24 then 
 			globalHours = "24"
 		else
-			log:warn("datetime:setHours() - hours is not 12 or 24")
+			log:error("datetime:setHours() - hours is not 12 or 24")
 		end
 	else
-		log:warn("Invalid Parameter for datetime:setHours()")
+		log:error("Invalid Parameter for datetime:setHours()")
 	end
 end
 

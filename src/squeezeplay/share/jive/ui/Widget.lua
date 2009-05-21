@@ -74,7 +74,7 @@ local Event         = require("jive.ui.Event")
 local Timer         = require("jive.ui.Timer")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("ui")
+local log           = require("jive.utils.log").logger("squeezeplay.ui")
 
 local FRAME_RATE    = jive.ui.FRAME_RATE
 local EVENT_SHOW    = jive.ui.EVENT_SHOW

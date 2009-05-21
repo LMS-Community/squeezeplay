@@ -30,7 +30,7 @@ local ScrollAccel          = require("jive.ui.ScrollAccel")
 local IRMenuAccel          = require("jive.ui.IRMenuAccel")
 local Timer                = require("jive.ui.Timer")
 
-local log                  = require("jive.utils.log").logger("ui")
+local log                  = require("jive.utils.log").logger("squeezeplay.ui")
 
 local math                 = require("math")
 
