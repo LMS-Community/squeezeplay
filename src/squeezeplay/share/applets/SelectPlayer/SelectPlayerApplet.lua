@@ -449,6 +449,7 @@ function selectPlayer(self, player)
 
 	-- udap setup needed?
 	if player:needsMusicSource() then
+		--todo review this with new SlimMenus changes
 		appletManager:callService("selectMusicSource")
 		return false
 	end

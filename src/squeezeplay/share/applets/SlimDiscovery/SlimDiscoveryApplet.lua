@@ -379,7 +379,8 @@ function _idleDisconnect(self)
 
 	for i, server in SlimServer:iterate() do
 		if server ~= currentServer then
-			server:disconnect()
+			--todo, need a better way to know idle
+			--server:disconnect()
 		else
 			server:connect()
 		end

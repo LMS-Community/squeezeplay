@@ -2,6 +2,24 @@
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
+MENUS_MY_MUSIC
+	CS	Moje hudba
+	DA	Musik
+	DE	Eigene Musik
+	EN	My Music
+	ES	Mi música
+	FI	Musiikkilähde
+	FR	Ma musique
+	IT	Musica
+	NL	Mijn muziek
+	NO	Min musikk
+	PL	Moja muzyka
+	RU	Моя музыка
+	SV	Min musik
+
+MENUS_OTHER_LIBRARY
+	EN	Other Library
+
 SLIMBROWSER_CONNECTING_TO
 	CS	Připojuji se k\n%s
 	DA	Etablerer forbindelse til\n%s

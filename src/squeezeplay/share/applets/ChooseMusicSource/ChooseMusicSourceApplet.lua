@@ -21,7 +21,7 @@ implemented in SlimDiscover.  Removing all explicit server IP addresses returns 
 
 
 -- stuff we use
-local pairs, setmetatable, tostring, tonumber  = pairs, setmetatable, tostring, tonumber
+local pairs, setmetatable, tostring, tonumber, ipairs  = pairs, setmetatable, tostring, tonumber, ipairs
 
 local oo            = require("loop.simple")
 local string        = require("string")
@@ -44,6 +44,7 @@ local Popup         = require("jive.ui.Popup")
 local Icon          = require("jive.ui.Icon")
 
 local debug         = require("jive.utils.debug")
+local iconbar       = iconbar
 
 local jnt           = jnt
 local jiveMain      = jiveMain
@@ -57,20 +58,48 @@ oo.class(_M, Applet)
 local CONNECT_TIMEOUT = 30
 
 
+--temp during dev
+function settingsShow(self)
+	selectMusicSource(self)
+end
+
 -- service to select server for a player
-function selectMusicSource(self, setupNext, titleStyle)
-	if setupNext then
-		self.setupNext = setupNext
+function selectMusicSource(self, playerConnectedCallback, titleStyle, includedServers, specificServer, serverForRetry)
+
+	if includedServers then
+		self.includedServers = includedServers
 	end
+
+	if playerConnectedCallback then
+		self.playerConnectedCallback = playerConnectedCallback
+	else
+		self.playerConnectedCallback = 	function()
+							appletManager:callService("goHome")
+						end
+	end
+
 	if titleStyle then
 		self.titleStyle = titleStyle
 	end
-	self:settingsShow()
+
+	log:error("subscribing jnt, will unsub during free(), so there should be at least one tied window appearing after this to get the free() cleanup")
+	jnt:subscribe(self)
+
+	self.serverList = {}
+
+	if specificServer then
+		log:debug("selecting specific server ", specificServer)
+
+		self:selectServer(specificServer, nil, serverForRetry)
+		return
+	end
+
+
+	self:_showMusicSourceList()
 end
 
 
--- main setting menu
-function settingsShow(self)
+function _showMusicSourceList(self)
 
 	local window = Window("text_list", self:string("SLIMSERVER_SERVERS"), self.titleStyle)
 	local menu = SimpleMenu("menu", items)
@@ -128,12 +157,17 @@ function settingsShow(self)
 	)
 
 	self:tieAndShowWindow(window)
-	appletManager:callService("hideConnectingToPlayer")
 
 end
 
 
 function free(self)
+
+	if self.playerConnectedCallback then
+		log:warn("Unexpected free when playerConnectedCallback still exists (could happen on regular back)")
+	end
+	self:_cancelSelectServer()
+	log:debug("Unsubscribing jnt")
 	jnt:unsubscribe(self)
 
 	return true
@@ -142,6 +176,28 @@ end
 
 function _addServerItem(self, server, address)
 	log:debug("\t_addServerItem ", server, " " , address)
+
+	--not sure this is used anymore, consider removing
+	if self.includedServers then
+		local found = false
+		-- filter server list only showing those found in includedServers
+		for _, includedServer in ipairs(self.includedServers) do
+			if includedServer == server then
+				log:debug("found server: ", server)
+				found = true
+				break
+			end
+		end
+		if not found then
+			log:debug("server not found: ", server)
+			return
+		end
+	end
+
+	if server:isSqueezeNetwork() then
+		log:debug("Exclude SN")
+		return
+	end
 
 	local id
 	if server then
@@ -156,6 +212,7 @@ function _addServerItem(self, server, address)
 
 	-- Bug 9900
 	-- squeezeplay cannot connect to production SN
+	--todo: this SN bit needs to be reviewed
 	if server and server:getIpPort() == "www.squeezenetwork.com" and 
 		currentPlayer and currentPlayer:getModel() == "squeezeplay" then
 			return
@@ -220,6 +277,18 @@ function notify_serverDelete(self, server)
 	self:_delServerItem(server)
 end
 
+function notify_serverConnected(self, server)
+	if not self.waitForConnect or self.waitForConnect.server ~= server then
+		return
+	end
+
+	iconbar:setServerError("OK")
+
+	-- hide connection error window
+	if self.connectingPopup then
+		self:_cancelSelectServer()
+	end
+end
 
 function _updateServerList(self, player)
 	local server = player and player:getSlimServer() and player:getSlimServer():getIpPort()
@@ -260,29 +329,42 @@ function notify_playerCurrent(self, player)
 
 	if self.waitForConnect then
 		log:info("waiting for ", player, " on ", self.waitForConnect.server)
+
+		if self.waitForConnect.player == player
+			and self.waitForConnect.server == player:getSlimServer() then
+
+			self.waitForConnect = nil
+			if self.playerConnectedCallback then
+				--	todo: find way so that free doesn't happen before self.playerConnectedCallback is called
+				log:info("Unsubscribing jnt")
+				jnt:unsubscribe(self)
+
+				self.playerConnectedCallback(player:getSlimServer())
+				self.playerConnectedCallback = nil
+			end
+		else
+			log:warn("player or server mismatch: expected: ", player, " ", player:getSlimServer(),
+			" got: ", self.waitForConnect.player, " ", self.waitForConnect.server)
+		end
 	end
 
-	if self.waitForConnect and self.waitForConnect.player == player
-		and self.waitForConnect.server == player:getSlimServer() then
-
-		self.waitForConnect = nil
-		jiveMain:openNodeById('_myMusic')
-	end
 end
 
 
+
 -- server selected in menu
-function selectServer(self, server, passwordEntered)
+function selectServer(self, server, passwordEntered, serverForRetry)
 	-- ask for password if the server uses http auth
 	if not passwordEntered and server:isPasswordProtected() then
 		appletManager:callService("squeezeCenterPassword", server,
 			function()
-				self:selectServer(server, true)		
+				self:selectServer(server, true)
 			end, self.titleStyle)
 		return
 	end
 
-	if not server:isCompatible() then
+	if server:getVersion() and not server:isCompatible() then
+		--we only know if compatible if serverstatus has come back, other version will be nil, and we shouldn't assume not compatible
 		_serverVersionError(self, server)
 		return
 	end
@@ -292,14 +374,80 @@ function selectServer(self, server, passwordEntered)
 
 	-- is the player already connected to the server?
 	if currentPlayer and currentPlayer:getSlimServer() == server then
-		jiveMain:openNodeById('_myMusic')
-		return		
+		if self.playerConnectedCallback then
+			self.playerConnectedCallback(server)
+			self.playerConnectedCallback = nil
+		end
+		return
+	end
+	if currentPlayer and not currentPlayer:getSlimServer() then
+       	        self:connectPlayerToServer(currentPlayer, server)
+	else
+		self:_confirmServerSwitch(currentPlayer, server, serverForRetry)
 	end
 
-	-- connect player to server first
-       	self:connectPlayerToServer(currentPlayer, server)
 end
 
+--todo: this should hide if connection returns
+function _confirmServerSwitch(self, currentPlayer, server, serverForRetry)
+	local window = Window("help_list", self:string("SWITCH_SERVER_TITLE"), "setuptitle")
+
+	local textarea = Textarea("help_text", self:string("SWITCH_SERVER_TEXT"))
+
+	local menu = SimpleMenu("menu")
+
+	menu:addItem({
+		text = (self:string("SWITCH_BUTTON", server.name)),
+		sound = "WINDOWSHOW",
+		callback = function()
+				self:connectPlayerToServer(currentPlayer, server)
+				window:hide(Window.transitionNone)
+			   end,
+	})
+	if serverForRetry then
+		menu:addItem({
+			text = (self:string("CHOOSE_RETRY", serverForRetry.name)),
+			sound = "WINDOWHIDE",
+			callback = function()
+					log:error("serverForRetry:", serverForRetry)
+					self:connectPlayerToServer(currentPlayer, serverForRetry)
+					window:hide(Window.transitionNone)
+				   end,
+		})
+	end
+	menu:addItem({
+		text = (self:string("SWITCH_CANCEL")),
+		sound = "WINDOWHIDE",
+		callback = function()
+				self.playerConnectedCallback = nil
+				window:hide()
+			   end,
+	})
+
+	window:addWidget(textarea)
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+end
+
+
+-- hideConnectingToPlayer
+-- hide the full screen popup that appears until server and menus are loaded
+function hideConnectingToServer(self)
+	if self.connectingPopup then
+		log:error("connectingToServer popup hide")
+		self.connectingPopup:hide()
+		self.connectingPopup = nil
+
+		if self.waitForConnect and self.waitForConnect.player then
+			jnt:notify("playerLoaded", self.waitForConnect.player)
+		else
+			log:warn("Odd, self.waitForConnect or self.waitForConnect.player shouldn't be nil, using getCurrentPlayer")
+
+			jnt:notify("playerLoaded", appletManager:callService("getCurrentPlayer"))
+		end
+	end
+end
 
 -- connect player to server
 function connectPlayerToServer(self, player, server)
@@ -315,33 +463,36 @@ function connectPlayerToServer(self, player, server)
 
 
 	-- stoppage popup
-	local window = Popup("waiting_popup")
-	window:addWidget(Icon("icon_connecting"))
+	if not self.connectingPopup then
+		self.connectingPopup = Popup("waiting_popup")
+		local window = self.connectingPopup
+		window:addWidget(Icon("icon_connecting"))
+		window:setAutoHide(false)
 
-	local statusLabel = Label("text", self:string("SLIMSERVER_CONNECTING_TO", server:getName()))
-	window:addWidget(statusLabel)
+		local statusLabel = Label("text", self:string("SLIMSERVER_CONNECTING_TO", server:getName()))
+		window:addWidget(statusLabel)
 
-	-- disable input
-	window:ignoreAllInputExcept()
+		-- disable input
+		window:ignoreAllInputExcept()
 
 
-	local timeout = 1
-	window:addTimer(1000,
-			function()
-				-- scan all servers waiting for the player
-				appletManager:callService("discoverPlayers")
+		local timeout = 1
+		window:addTimer(1000,
+				function()
+					-- scan all servers waiting for the player
+					appletManager:callService("discoverPlayers")
 
-				-- we detect when the connect to the new server
-				-- with notify_playerNew
+					-- we detect when the connect to the new server
+					-- with notify_playerNew
 
-				timeout = timeout + 1
-				if timeout == CONNECT_TIMEOUT then
-					self:_connectPlayerFailed(player, server)
-				end
-			end)
+					timeout = timeout + 1
+					if timeout == CONNECT_TIMEOUT then
+						self:_connectPlayerFailed(player, server)
+					end
+				end)
 
-	self:tieAndShowWindow(window)
-
+		self:tieAndShowWindow(window)
+	end
 
 	-- we are now ready to connect to SqueezeCenter
 	if not server:isSqueezeNetwork() then
@@ -402,6 +553,16 @@ function _playerRegisterFailed(self, error)
 end
 
 
+function _cancelSelectServer(self)
+	log:info("Cancelling Server Selection")
+
+	self.waitForConnect = nil
+	self.playerConnectedCallback = nil
+	self:hideConnectingToServer()
+
+end
+
+
 -- failed to connect player to server
 function _connectPlayerFailed(self, player, server)
 	local window = Window("error", self:string("SQUEEZEBOX_PROBLEM"), setupsqueezeboxTitleStyle)
@@ -413,6 +574,8 @@ function _connectPlayerFailed(self, player, server)
 						text = self:string("SQUEEZEBOX_GO_BACK"),
 						sound = "WINDOWHIDE",
 						callback = function()
+							           self:_cancelSelectServer()
+
 								   window:hide()
 							   end
 					},

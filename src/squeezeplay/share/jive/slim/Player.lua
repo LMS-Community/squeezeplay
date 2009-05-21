@@ -140,9 +140,21 @@ function getCurrentPlayer(self)
 	return currentPlayer
 end
 
--- class method, returns whether the player is local 
+-- class method, returns whether the player is local
 function isLocal(self)
 	return false
+end
+
+-- class method, returns the first local player found
+function getLocalPlayer(self)
+	for _,player in pairs(playerList) do
+		if player:isLocal() then
+			return player
+		end
+	end
+
+	--no local player
+	return nil
 end
 
 -- class method, sets the current player
@@ -161,6 +173,12 @@ function setCurrentPlayer(class, player)
 	jnt:notify("playerCurrent", currentPlayer)
 end
 
+
+function getLastSqueezeCenter(self)
+	log:error("TODO: how to determine a non-local player's last SqueezeCenter")
+
+	return nil
+end
 
 function getLastBrowse(self, key)
 	if self.browseHistory[key] then
@@ -561,7 +579,7 @@ function free(self, slimServer)
 	if not self:isLocal() then
 		playerList[self.id] = nil
 	end
-	
+
 	if self.slimServer then
 		self:offStage()
 
@@ -1444,6 +1462,8 @@ function connectToServer(self, server)
 
 	elseif self.slimServer then
 		local ip, port = server:getIpPort()
+
+		SlimServer:setLocallyRequestedServer(self.slimServer)
 		self:send({'connect', ip})
 		return true
 

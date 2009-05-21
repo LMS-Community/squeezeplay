@@ -60,6 +60,7 @@ local logcache    = require("jive.utils.log").logger("squeezebox.server.cache")
 
 local JIVE_VERSION = jive.JIVE_VERSION
 
+local SERVER_DISCONNECT_LAG_TIME = 10000
 
 -- jive.slim.SlimServer is a base class
 module(..., oo.class)
@@ -86,6 +87,10 @@ local currentServer = nil
 -- credential list for http auth
 local credentials = {}
 
+local lastServerSwitchT = nil
+
+--holds the server for which a local connection request has been made. Will be nilled out when SERVER_DISCONNECT_LAG_TIME has passed.
+local locallyRequestedServer = nil
 
 -- class function to iterate over all SqueezeCenters
 function iterate(class)
@@ -99,8 +104,20 @@ function getCurrentServer(class)
 end
 
 
+-- class method to set the locally requested server
+function setLocallyRequestedServer(class, server)
+	locallyRequestedServer = server
+end
+
+
 -- class method to set the current server
 function setCurrentServer(class, server)
+	if (server and lastCurrentServer ~= server) or (not server and lastCurrentServer)  then
+		log:debug("setting lastServerSwitchT for server: ", server)
+
+		lastServerSwitchT = Framework:getTicks()
+	end
+
 	lastCurrentServer = currentServer
 
 	currentServer = server
@@ -148,10 +165,32 @@ function _serverstatusSink(self, event, err)
 		return
 	end
 
-	-- remember players from server
-	local serverPlayers = data.players_loop
-	data.players_loop = nil
+	-- remember players from server, avoid possibly inaccurate player information that can happen in race conditions when SlimProto socket disconnection is not
+	 -- registered yet when the serverstatus response occurs
+	local now = Framework:getTicks()
+	local serverPlayers = nil
+	if lastServerSwitchT and lastServerSwitchT + SERVER_DISCONNECT_LAG_TIME < now then
+		--after SERVER_DISCONNECT_LAG_TIME, no need to consider locallyRequestedServer in the bad server player data check 
+		locallyRequestedServer = nil
+	end
+	if data.players_loop then
+		serverPlayers = {}
+
+		for _, player_info in ipairs(data.players_loop) do
+			if (locallyRequestedServer and self ~= locallyRequestedServer) or (not locallyRequestedServer and self ~= currentServer)
+			  and tonumber(player_info.connected) == 1
+			  and Player:getCurrentPlayer() and player_info.playerid == Player:getCurrentPlayer().id
+			  and lastServerSwitchT and lastServerSwitchT + SERVER_DISCONNECT_LAG_TIME > now then
+				--SlimProto disconnects can take several seconds to "take", during which time a disconnected player might still be in the serverstatus list
+				log:warn("Ignoring potentially inaccurate player data for current player in serverstatus from other servers (excluding any locally requested server) until SERVER_DISCONNECT_LAG_TIME passes: server:", self)
+			else
+				table.insert(serverPlayers, player_info)
+			end
+		end
+	end
 	
+	data.players_loop = nil
+
 	-- remember our state
 	local selfState = self.state
 	
@@ -182,7 +221,7 @@ function _serverstatusSink(self, event, err)
 	end
 
 	local pin = false
-	
+
 	if tonumber(data["player count"]) > 0 then
 
 		for i, player_info in ipairs(serverPlayers) do
@@ -207,7 +246,8 @@ function _serverstatusSink(self, event, err)
 	else
 		log:debug(self, ": has no players!")
 	end
-	
+
+	--pin check here also used by non SN to know when first serverstatus for new server is complete
 	if self.pin ~= pin then
 		self.pin = pin
 		self.jnt:notify('serverLinked', self)

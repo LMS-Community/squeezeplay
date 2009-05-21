@@ -863,6 +863,11 @@ _response = function(self, chunk)
 				
 			if string.find(subscription, '/slim/request') then
 				-- an async notification from a normal request
+				if not event.id then
+					log:error("No id. event:")
+					debug.dump(event, 4)
+					return
+				end
 				subscription = subscription .. '|' .. event.id
 				onetime_request = true
 			end

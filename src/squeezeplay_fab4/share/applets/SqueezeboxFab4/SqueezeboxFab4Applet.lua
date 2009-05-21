@@ -248,7 +248,9 @@ end
 ---
 
 
+--disconnect from player and server and re-set "clean (no server)" LocalPlayer as current player
 function _softResetAction(self, event)
+	LocalPlayer:disconnectServerAndPreserveLocalPlayer()
 	jiveMain:goHome()
 end
 

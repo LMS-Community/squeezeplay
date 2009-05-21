@@ -86,8 +86,17 @@ function configureApplet(meta)
 		server:updateInit(settings.serverInit)
 	end
 
+	meta.state.player:setLastSqueezeCenter(_server)
+	
 	-- Init player
 	if settings.playerInit then
+	--always try to go back to last SC - good/bad?
+--		if settings.squeezeNetwork then
+--		meta.state.player:updateInit(nil, settings.playerInit)
+--		else
+--		meta.state.player:updateInit(server, settings.playerInit)
+--		end
+
 		meta.state.player:updateInit(server, settings.playerInit)
 	end
 
@@ -112,8 +121,19 @@ function _updateSettings(meta, player, force)
 		return
 	end
 
-	settings.serverName = serverName
-	settings.serverInit = server:getInit()
+	if server and
+		( settings.squeezeNetwork ~= server:isSqueezeNetwork()
+		  or settings.serverName ~= server:getName() ) then
+		settings.squeezeNetwork = server:isSqueezeNetwork()
+
+		-- remember server if it's not SN
+		if not settings.squeezeNetwork then
+			settings.serverName = server:getName()
+			settings.serverInit = server:getInit()
+		end
+
+		saveSettings = true
+	end
 	settings.playerInit = player:getInit()
 
 	meta:storeSettings()

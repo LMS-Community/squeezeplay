@@ -9,6 +9,8 @@ local AppletMeta    = require("jive.AppletMeta")
 local LocalPlayer   = require("jive.slim.LocalPlayer")
 local Framework     = require("jive.ui.Framework")
 local System        = require("jive.System")
+local Player        = require("jive.slim.Player")
+local SlimServer        = require("jive.slim.SlimServer")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
@@ -85,7 +87,7 @@ function registerApplet(meta)
 
 	-- Bug 9900
 	-- Use SN test during development
-	jnt:setSNHostname("test.squeezenetwork.com")
+	jnt:setSNHostname("fab4.squeezenetwork.com")
 	
 	appletManager:addDefaultSetting("ScreenSavers", "whenStopped", "false:false")
 	appletManager:addDefaultSetting("Playback", "enableAudio", 1)
@@ -98,7 +100,9 @@ function registerApplet(meta)
 end
 
 
+--disconnect from player and server and re-set "clean (no server)" LocalPlayer as current player
 function _softResetAction(self, event)
+	LocalPlayer:disconnectServerAndPreserveLocalPlayer()
 	jiveMain:goHome()
 end
 

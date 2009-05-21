@@ -37,6 +37,35 @@ function setDeviceType(self, model, name)
 end
 
 
+--class method - disconnect from player and server and re-set "clean (no server)" LocalPlayer as current player
+function disconnectServerAndPreserveLocalPlayer(self)
+	--disconnect from player and server
+	self:setCurrentPlayer(nil)
+
+	--Free server from local player, and re-set current player to LocalPlayer
+	local localPlayer = Player:getLocalPlayer()
+	if localPlayer then
+		localPlayer.slimproto:disconnect()
+		localPlayer:free(localPlayer:getSlimServer())
+		Player:setCurrentPlayer(localPlayer)
+	end
+
+
+end
+
+
+function getLastSqueezeCenter(self)
+	return self.lastSqueezeCenter
+end
+
+
+function setLastSqueezeCenter(self, server)
+	log:debug("lastSqueezeCenter set: ", server)
+
+	self.lastSqueezeCenter = server
+end
+
+
 function __init(self, jnt, playerId, uuid)
 	local obj = oo.rawnew(self, Player(jnt, playerId))
 
@@ -78,6 +107,7 @@ end
 
 
 function updateInit(self, server, init)
+	--todo squeezeCenter is nil, is a bug, test fixing it
 	Player.updateInit(self, squeezeCenter, init)
 
 	if server then
@@ -114,6 +144,8 @@ function connectToServer(self, server)
 	server:wakeOnLan()
 
 	if server then
+		server:setLocallyRequestedServer(server)
+	
 		self.slimproto:connect(server)
 	end
 end

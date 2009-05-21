@@ -3,34 +3,37 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SLIMSERVER_SERVERS
-	CS	Moje hudba
-	DA	Musik
-	DE	Eigene Musik
-	EN	My Music
-	ES	Mi música
-	FI	Musiikkilähde
-	FR	Ma musique
-	IT	Musica
-	NL	Mijn muziek
-	NO	Min musikk
-	PL	Moja muzyka
-	RU	Моя музыка
-	SV	Min musik
+	EN	Libraries
+
+SWITCH_SERVER_TITLE
+	EN	Switch Library
+
+SWITCH_SERVER_TEXT
+	EN	You have made a selection that will cause this player to connect to a different library. Playback will stop, etc...
+
+SWITCH_BUTTON
+	EN	Switch to library: %s
+
+SWITCH_CANCEL
+	CS	Storno
+	DA	Annuller
+	DE	Abbrechen
+	EN	Cancel
+	ES	Cancelar
+	FI	Peruuta
+	FR	Annuler
+	IT	Annulla
+	NL	Annuleer
+	NO	Avbryt
+	PL	Anuluj
+	RU	Отмена
+	SV	Avbryt
+
+CHOOSE_RETRY
+	EN	Retry current library: %s
 
 SLIMSERVER_ADD_SERVER
-	CS	Jiný server
-	DA	Anden server
-	DE	Anderer Server
-	EN	Other Server
-	ES	Otro servidor
-	FI	Toinen palvelin
-	FR	Autres services
-	IT	Altro server
-	NL	Andere server
-	NO	Annen server
-	PL	Inny serwer
-	RU	Другой сервер
-	SV	Annan server
+	EN	Remote Library
 
 SLIMSERVER_HELP
 	CS	Zadejte IP adresu PC, na kterém běží SqueezeCenter

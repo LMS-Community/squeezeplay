@@ -51,10 +51,8 @@ oo.class(_M, Applet)
 local _player = false
 local _server = false
 
--- connectingToPlayer and _upgradingPlayer popup handlers
 local _updatingPlayerPopup = false
 local _updatingPromptPopup = false
-local _connectingPopup = false
 
 local _lockedItem = false
 
@@ -74,7 +72,7 @@ local styleMap = {
 -- legacy map of item id/nodes
 local itemMap = {
 	-- nodes
-	myMusic = { "_myMusic", "hidden" },
+	myMusic = { "_myMusic", "hidden" , nil, true},
 	music_services = { "_music_services", "hidden" },
 	music_stores = { "_music_stores", "hidden" },
 
@@ -103,10 +101,11 @@ local guideMap = {
 	opmlradioio = true,
 }
 
+local idMismatchMap = {
+	ondemand = "music_services",
+	radio = "radios"
 
-function init(self)
-	jnt:subscribe(self)
-end
+}
 
 
 -- _safeDeref
@@ -127,6 +126,26 @@ local function _safeDeref(struct, ...)
 end
 
 
+function init(self)
+	jnt:subscribe(self)
+
+	self.serverHomeMenuChunks = {}
+end
+
+
+function notify_serverLinked(self, server)
+	log:info("***linked\t", server)
+	--linked seems to be the best status to indicate serverstatus is complete (and thus version info, etc is now known)
+	if server:isCompatible() then
+		self:_fetchServerMenu(server)
+	else
+		log:error("not compatible: ", server)
+
+	end
+end
+
+
+
 -- goHome
 -- pushes the home window to the top
 function goHome(self, transition)
@@ -134,50 +153,6 @@ function goHome(self, transition)
 	Framework:playSound("JUMP")
 	while #windowStack > 1 do
 		windowStack[#windowStack - 1]:hide(transition)
-	end
-end
-
--- _connectingToPlayer
--- full screen popup that appears until menus are loaded
-function _connectingToPlayer(self)
-	log:info("_connectingToPlayer popup show")
-
-	if _connectingPopup or _updatingPromptPopup or _updatingPlayerPopup then
-		-- don't open this popup twice or when firmware update windows are on screen
-		return
-	end
-
-	local popup = Popup("waiting_popup")
-	local icon  = Icon("icon_connecting")
-	local playerName = _player:getName()
-	local label = Label("text", self:string("SLIMBROWSER_CONNECTING_TO", playerName))
-	popup:addWidget(icon)
-	popup:addWidget(label)
-	popup:setAlwaysOnTop(true)
-
-	-- add a listener for KEY_PRESS that disconnects from the player and returns to home
-	local disconnectPlayer = function()
-		appletManager:callService("setCurrentPlayer", nil)
-		popup:hide()
-	end
-
-	popup:addActionListener("back", self, disconnectPlayer)
-		
-	popup:show()
-
-	_connectingPopup = popup
-end
-
-
--- hideConnectingToPlayer
--- hide the full screen popup that appears until menus are loaded
-function hideConnectingToPlayer()
-	if _connectingPopup then
-		log:info("_connectingToPlayer popup hide")
-		_connectingPopup:hide()
-		_connectingPopup = nil
-
-		jnt:notify("playerLoaded", _player)
 	end
 end
 
@@ -275,49 +250,113 @@ function _hidePlayerUpdating()
 end
 
 
+--
+--add node to home menu only if this is a menustatusresponse or it doesn't exist. Only menustatus responses may replace existing items.
+function  _addNode(self, node, isMenuStatusResponse)
+	if isMenuStatusResponse then
+		jiveMain:addNode(node)
+	else
+		if not jiveMain:exists(node.id) then
+			jiveMain:addNode(node, true)
+		else
+			log:debug("node already present: ", node.id)
+		end
+	end
+end
+--add item to home menu only if this is a menustatusresponse or it doesn't exist. Only menustatus responses may replace existing items.
+function  _addItem(self, item, isMenuStatusResponse)
+	if isMenuStatusResponse or not _playerMenus[item.id] then
+		 _playerMenus[item.id] = item
+		 jiveMain:addItem(item)
+	else
+		log:debug("item already present: ", item.id)
+	end
+end
+
+
+--various compatiblilty hacks
+function _massageItem(item)
+	if idMismatchMap[item.id] then
+		log:debug("fixing mismatch: ", item.id)
+
+		item.id = idMismatchMap[item.id]
+	end
+
+	-- hack to modify menu structure from SC
+	if guideMap[item.id] then
+		item.guide = true
+		item.node = "appguide"
+		item.weight = 30
+	end
+	if itemMap[item.id] then
+		local id = item.id
+		item.id = itemMap[id][1]
+		item.node = itemMap[id][2]
+		if itemMap[id][3] then
+			item.weight = itemMap[id][3]
+		end
+		if itemMap[id][4] then
+			item.isANode = itemMap[id][4]
+		end
+	end
+	if itemMap[item.node] then
+		local node = item.node
+		item.node = itemMap[node][1]
+	end
+
+
+end
+
 
 -- _menuSink
 -- returns a sink with a closure to self
 -- cmd is passed in so we know what process function to call
 -- this sink receives all the data from our Comet interface
-local function _menuSink(self, cmd)
+local function _menuSink(self, cmd, server)
 	return function(chunk, err)
+		log:info("_menuSink() ", server)
+		local isMenuStatusResponse = not server
 
-		-- catch race condition if we've switch player
-		if not _player then
-			return
+		local menuItems, menuDirective, playerId
+		if isMenuStatusResponse then
+			--this is a menustatus response for the connected player
+			if not _player then
+				log:warn("catch race condition if we've switch player")
+				return
+			end
+
+			-- process data from a menu notification
+			-- each chunk.data[2] contains a table that needs insertion into the menu
+			menuItems = chunk.data[2]
+			-- directive for these items is in chunk.data[3]
+			menuDirective = chunk.data[3]
+			-- the player ID this notification is for is in chunk.data[4]
+			playerId = chunk.data[4]
+
+			if playerId ~= 'all' and playerId ~= _player:getId() then
+				log:error('This menu notification was not for this player')
+				log:error("Notification for: ", playerId)
+				log:error("This player is: ", _player:getId())
+				return
+			end
+		else
+			--this is a response from a "menu" command for a non-connected player
+			menuItems = chunk.data.item_loop
+
 		end
-
-		log:info("_menuSink()")
-
-		-- process data from a menu notification
-		-- each chunk.data[2] contains a table that needs insertion into the menu
-		local menuItems = chunk.data[2]
-		-- directive for these items is in chunk.data[3]
-		local menuDirective = chunk.data[3]
-		-- the player ID this notification is for is in chunk.data[4]
-		local playerId = chunk.data[4]
-
-		if playerId ~= 'all' and playerId ~= _player:getId() then
-			log:debug('This menu notification was not for this player')
-			log:debug("Notification for: ", playerId)
-			log:debug("This player is: ", _player:getId())
-			return
-		end
-
 		-- if we get here, it was for this player. set menuReceived to true
 		_menuReceived = true
 
 
 if _menuReceived then
 -- a problem, we lose the icons..
-jiveMain:addNode({
+self:_addNode({
   sound = "WINDOWSHOW",
   weight = 20,
   id = "radios",
   text = "Internet Radio",
   node = "home",
-})
+}, isMenuStatusResponse)
 end
 
 		for k, v in pairs(menuItems) do
@@ -332,27 +371,35 @@ end
 					window = v.window,
 					sound = "WINDOWSHOW",
 				}
+			if server and item.text then
+				--temp mark for debugging purposes
+				item.text = item.text .. "(SN!)"
+			end
 
 			local itemIcon = v.window  and v.window['icon-id'] or v['icon-id']
 			if itemIcon then
-				--item["icon-id"] = itemIcon
+				if isMenuStatusResponse  then
+					--item["icon-id"] = itemIcon
 
-				local _size = jiveMain:getSkinParam('THUMB_SIZE')
-				item.icon = Icon('icon')
-				_server:fetchArtworkThumb(itemIcon, item.icon, _size)
+					local _size = jiveMain:getSkinParam('THUMB_SIZE')
+					item.icon = Icon('icon')
+					_server:fetchArtworkThumb(itemIcon, item.icon, _size)
 
-				-- Hack alert: redefine the checkSkin function
-				-- to reload images when the skin changes. We
-				-- should replace this with resizable icons.
-				local _style = item.icon.checkSkin
-				item.icon.checkSkin = function(...)
-					local s = jiveMain:getSkinParam('THUMB_SIZE')
-					if s ~= _size then
-						_size = s
-						_server:fetchArtworkThumb(itemIcon, item.icon, _size)						
+					-- Hack alert: redefine the checkSkin function
+					-- to reload images when the skin changes. We
+					-- should replace this with resizable icons.
+					local _style = item.icon.checkSkin
+					item.icon.checkSkin = function(...)
+						local s = jiveMain:getSkinParam('THUMB_SIZE')
+						if s ~= _size then
+							_size = s
+							_server:fetchArtworkThumb(itemIcon, item.icon, _size)
+						end
+
+						_style(...)
 					end
-
-					_style(...)
+				else
+					log:error("todo: how to handle fetching icons from disconnected servers!?")
 				end
 			end
 
@@ -362,24 +409,7 @@ end
 			end
 			local choiceAction = _safeDeref(v, 'actions', 'do', 'choices')
 
-			-- hack to modify menu structure from SC
-			if guideMap[item.id] then
-				item.guide = true
-				item.node = "appguide"
-				item.weight = 30
-			end
-			if itemMap[item.id] then
-				local id = item.id
-				item.id = itemMap[id][1]
-				item.node = itemMap[id][2]
-				if itemMap[id][3] then
-					item.weight = itemMap[id][3]
-				end
-			end
-			if itemMap[item.node] then
-				local node = item.node
-				item.node = itemMap[node][1]
-			end
+			_massageItem(item, item)
 
 			-- a problem, we lose the icons..
 			if item.id == "radios" then
@@ -387,13 +417,14 @@ end
 			end
 
 
-			if v.isANode then
-				jiveMain:addNode(item)
-
+			if v.isANode or item.isANode then
+				self:_addNode(item, isMenuStatusResponse)
 			elseif menuDirective == 'remove' then
+				--todo: massage SN request to remove myMusicMusicFolder
 				jiveMain:removeItemById(item.id)
 
-			elseif choiceAction then
+			elseif isMenuStatusResponse and choiceAction then
+--				debug.dump(choiceAction, 4)
 
 				local selectedIndex = 1
 				if v.selectedIndex then
@@ -413,40 +444,110 @@ end
 				item.style = 'item_choice'
 				item.check = choice
 
+				item.removeOnServerChange = true
+
 				--add the item to the menu
-				_playerMenus[item.id] = item
-				jiveMain:addItem(item)
+				self:_addItem(item, isMenuStatusResponse)
 
 			else
+				local action = function ()
+							log:debug("send browserActionRequest request")
+
+							local step = appletManager:callService("browserActionRequest", nil, v,
+								function()
+									jiveMain:unlockItem(item)
+									_lockedItem = false
+								end)
+
+							_lockedItem = item
+							jiveMain:lockItem(item, function()
+								appletManager:callService("browserCancel", step)
+							end)
+						end
+
 				item.callback = function()
-					local step = appletManager:callService("browserActionRequest", _server, v,
-						function()
-							jiveMain:unlockItem(item)
-							_lockedItem = false
-						end)
+					--todo:
+					 -- check: is server accesible
+					 -- if not, can SN provide the content?
+					 -- if so, switch server to SN and provide content
 
-					_lockedItem = item
-					jiveMain:lockItem(item, function()
-						appletManager:callService("browserCancel", step)
-					end)
+
+					----todo swap this back, for now always switching to SN if SN can serve
+					if (not _server or not _server:isConnected()) and self:_canSqueezeNetworkServe(item) then
+--					if self:_canSqueezeNetworkServe(item) then
+						log:error("switching to SN")
+						log:error("Do we want to try to reconnect to SC first here?")
+						self:_selectMusicSource(action, self:_getSqueezeNetwork(),
+						_player and _player:getLastSqueezeCenter() or nil)
+
+					elseif (not _server or _server:isSqueezeNetwork()) and not self:_canSqueezeNetworkServe(item) then
+						log:error("switching from SN to last SqueezeCenter")
+
+						self:_selectMusicSource(action, _player:getLastSqueezeCenter())
+
+--					elseif not either then
+					else
+						--current server is available, go direct
+						action()
+					end
 				end
-
-				_playerMenus[item.id] = item
-				jiveMain:addItem(item)
+				self:_addItem(item, isMenuStatusResponse)
 			end
 		end
-		if _menuReceived then
-			hideConnectingToPlayer()
+		if _menuReceived and isMenuStatusResponse and menuDirective ~= 'remove' then
+			log:debug("hiding connecting to server after 'add' menustatus response ")
+
+			appletManager:callService("hideConnectingToServer")
 		end
          end
 end
 
 
+function _canSqueezeNetworkServe(self, item)
+	local sn, menuChunk = self:_getSqueezeNetwork()
+	if not menuChunk then
+		log:error("SN can not serve, SN menus not here (yet). item: ", item.id)
+
+	        return false
+	end
+
+	local menuItems = menuChunk.data.item_loop
+	for key, value in pairs(menuItems) do
+		if value.id == item.id then
+		log:debug("SN can serve item: ", item.id)
+			return true
+		end
+	end
+
+	--
+	if item.node == 'radios' then
+		log:error("probably broken hack to deal with radio discrepency (SN does server up individual subitem items as home menue items), returning SN can server for: ", item.id)
+		return true
+	end
+
+	log:debug("SN can not serve item: ", item.id)
+
+
+	return false
+end
+
+function _getSqueezeNetwork(self, item)
+	for server, chunk in pairs(self.serverHomeMenuChunks) do
+		if server:isSqueezeNetwork() then
+			return server, chunk
+		end
+	end
+
+	return nil
+end
+
 -- notify_playerNewName
 -- this is called when the player name changes
 -- we update our main window title
 function notify_playerNewName(self, player, newName)
-	log:debug("SlimBrowserApplet:notify_playerNewName(", player, ",", newName, ")")
+	log:debug("SlimMenusApplet:notify_playerNewName(", player, ",", newName, ")")
+
+	newName = self:_addServerNameToHomeTitle(newName)
 
 	-- if this concerns our player
 	if _player == player then
@@ -454,54 +555,157 @@ function notify_playerNewName(self, player, newName)
 	end
 end
 
+function _addServerNameToHomeTitle(self, name)
+	log:debug("_addServerNameToHomeTitle:, ", _server)
+
+	if _server then
+		name = name .. "(" .. _server.name ..")"
+	end
+
+	return name
+end
+
+function _selectMusicSource(self, callback, specificServer, serverForRetry)
+	appletManager:callService("selectMusicSource",
+							callback,
+							nil,
+							nil,
+							specificServer,
+							serverForRetry
+						)
+end
+
+function myMusicSelector(self)
+	if not _server then
+		self:_selectMusicSource(function()
+						jiveMain:goHome()
+						jiveMain:openNodeById('_myMusic', true)
+					end)
+
+	elseif _server:isSqueezeNetwork() then
+		--offer switch back to SC
+		self:_selectMusicSource(function()
+						jiveMain:goHome()
+						jiveMain:openNodeById('_myMusic', true)
+					end,
+					_player:getLastSqueezeCenter())
+	else
+		if _server:isConnected() then
+			log:info("Opening myMusic")
+			jiveMain:openNodeById('_myMusic')
+		else
+			--todo: server not connected, try again??
+			log:info("Opening myMusic")
+			jiveMain:openNodeById('_myMusic')
+		end
+	end
+end
+
+function otherLibrarySelector(self)
+	self:_selectMusicSource(function()
+					jiveMain:goHome()
+					jiveMain:openNodeById('_myMusic', true)
+				end)
+end
+
 
 -- notify_playerCurrent
 -- this is called when the current player changes (possibly from no player)
 function notify_playerCurrent(self, player)
-	log:debug("SlimBrowserApplet:notify_playerCurrent(", player, ")")
+	log:info("SlimMenusApplet:notify_playerCurrent(", player, ")")
 
 	-- has the player actually changed?
 	if _player == player then
-		return
+		if player then
+			if _server == player:getSlimServer() then
+				log:debug("player and server didn't change , not changing menus: ", player)
+				return
+			else
+				log:error("server changed - todo here we should switch switch out server specific items like Choice, turn on/off")
+
+				_server = player:getSlimServer()
+
+				local playerName = _player:getName()
+				playerName = self:_addServerNameToHomeTitle(playerName)
+				jiveMain:setTitle(playerName)
+
+			end
+		else
+			--no current or old player yet
+			return
+		end
 	end
 
-	-- free current player
-	if _player then
+	if player and not player:getSlimServer() then
+		log:info("player changed from:", _player, " to ", player, " but server not yet connected")
+	end
+
+	if _player ~= player then
+		-- free current player, since it has changed from one player to another
 		self:free()
+
+		--recache homemenu items from disconnected server
+		for _,server in appletManager:callService("iterateSqueezeCenters") do
+			if server:isCompatible() then
+				self:_fetchServerMenu(server)
+			elseif not server:getVersion() then
+				log:error("Compatibility not yet known, menu data may be lost: ", server)
+			else
+				log:debug("not compatible: ", server)
+			end
+		end
+		
 	end
 
 	-- nothing to do if we don't have a player or server
 	-- NOTE don't move this, the code above needs to run when disconnecting
 	-- for all players.
-	if not player or not player:getSlimServer() then
+	if not player then
 		return
 	end
+
+	--can't subscribe to menustatus until we have a server
+	if not player:getSlimServer() then
+		return
+	end
+
+	log:info("player changed from:", _player, " to ", player, " for server: ", player:getSlimServer(), " from server: ", _server)
 
 	_player = player
 	_server = player:getSlimServer()
 
 	local _playerId = _player:getId()
 
-	log:info('Subscribing to /slim/menustatus/', _playerId)
+	log:info('\nSubscribing to /slim/menustatus/\n', _playerId)
 	local cmd = { 'menustatus' }
 	_player:subscribe(
 		'/slim/menustatus/' .. _playerId,
-		_menuSink(sink, cmd),
+		_menuSink(self, cmd),
 		_playerId,
 		cmd
 	)
 
-	-- XXXX why is this needed?
+	-- XXXX why is this needed? Answer:menustatus won't send anything by default
 	_server:userRequest(nil, _playerId, { 'menu', 0, 100 })
-
+	
 	-- add a fullscreen popup that waits for the _menuSink to load
 	_menuReceived = false
-	_connectingToPlayer(self)
 
-	jiveMain:setTitle(_player:getName())
+	if player:isLocal() and not _server:isSqueezeNetwork() then
+		--local player keep track of previous SC connected to so "return to SC" can occur when re-attempting local content after being on SN
+		player:setLastSqueezeCenter(_server)
+	end
 
-	-- display upgrade pops (if needed)
-	self:notify_playerNeedsUpgrade(player)
+	if player:getSlimServer() then
+
+		local playerName = _player:getName()
+		playerName = self:_addServerNameToHomeTitle(playerName)
+		jiveMain:setTitle(playerName)
+
+		-- display upgrade pops (if needed)
+		self:notify_playerNeedsUpgrade(player)
+	end
+
 end
 
 
@@ -522,9 +726,46 @@ function notify_playerNeedsUpgrade(self, player, needsUpgrade, isUpgrading)
 end
 
 
+function _fetchServerMenu(self, server)
+	log:debug("Fetching menu for server: ", server)
+
+	server:userRequest(_sinkSetServerMenuChunk(self, server) , nil, { 'menu', 0, 100 })
+
+end
+
+function _sinkSetServerMenuChunk(self, server)
+	return function(chunk, err)
+		for _, item in pairs(chunk.data.item_loop) do
+			local oldId = item.id
+
+			_massageItem(item)
+		end
+
+		self.serverHomeMenuChunks[server] = chunk
+		self:_mergeServerMenuToHomeMenu(server, chunk)
+	end
+end
+
+
+
+
+function _mergeServerMenuToHomeMenu(self, server, chunk)
+	--this might be the current server so handle that gracefully
+	log:error("TODO - MERGE: ", server)
+
+	if server:isSqueezeNetwork() then
+		log:error("MERGE: ")
+		_menuSink(self, nil, server)(chunk)
+	end
+
+end
+
+
 function free(self)
+
+	self.serverHomeMenuChunks = {}
+
 	-- unsubscribe from this player's menustatus
-	log:info("Unsubscribe /slim/menustatus/", _player:getId())
 	if _player then
 		_player:unsubscribe('/slim/menustatus/' .. _player:getId())
 	end
@@ -537,7 +778,7 @@ function free(self)
 	_playerMenus = {}
 
 	-- remove connecting popup
-	hideConnectingToPlayer()
+	appletManager:callService("hideConnectingToServer")
 
 	-- make sure any home menu itema are unlocked
 	if _lockedItem then

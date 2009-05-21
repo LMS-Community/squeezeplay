@@ -2252,6 +2252,12 @@ end
 function browserJsonRequest(self, server, jsonAction)
 	-- XXXX allow any server
 
+	if not _player then
+		local currentPlayer = appletManager:callService("getCurrentPlayer")
+		--notify_playerCurrent might not have been called yet.
+		_attachPlayer(self, currentPlayer)
+	end
+
 	_performJSONAction(jsonAction, nil, nil, nil, nil)
 end
 
@@ -2259,6 +2265,12 @@ end
 -- XXXX
 function browserActionRequest(self, server, v, loadedCallback)
 	-- XXXX allow any server
+
+	if not _player then
+		local currentPlayer = appletManager:callService("getCurrentPlayer")
+		--notify_playerCurrent might not have been called yet.
+		_attachPlayer(self, currentPlayer)
+	end
 
 	local jsonAction, from, qty, step, sink
 	local doAction = _safeDeref(v, 'actions', 'do')
@@ -2413,8 +2425,10 @@ function _problemConnecting(self, server)
 		menu:addItem({
 				     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
 				     callback = function()
-							appletManager:callService("setCurrentPlayer", nil)
-							appletManager:callService('startSqueezeboxSetup', player:getMacAddress(), nil)
+							appletManager:callService("selectMusicSource")
+
+--							appletManager:callService("setCurrentPlayer", nil)
+--							appletManager:callService('startSqueezeboxSetup', player:getMacAddress(), nil)
 						end,
 				     sound = "WINDOWSHOW",
 			     })
@@ -2806,14 +2820,20 @@ end
 -- this is called when the current player changes (possibly from no player)
 function notify_playerCurrent(self, player)
 	log:debug("SlimBrowserApplet:notify_playerCurrent(", player, ")")
+	_attachPlayer(self, player)
+end
 
+function _attachPlayer(self, player)
 	-- has the player actually changed?
 	if _player == player then
 		return
 	end
 
+	log:debug("SlimBrowserApplet:_attachPlayer(", player, ")")
+
 	-- free current player
 	if _player then
+		log:debug("Freeing current player")
 		self:free()
 	end
 

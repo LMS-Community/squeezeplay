@@ -3,6 +3,7 @@ local oo            = require("loop.simple")
 local AppletMeta    = require("jive.AppletMeta")
 
 local appletManager = appletManager
+local jiveMain      = jiveMain
 
 
 module(...)
@@ -17,6 +18,10 @@ end
 function registerApplet(self)
 	self:registerService('goHome')
 	self:registerService('hideConnectingToPlayer')
+
+	-- add a menu item for myMusic
+	jiveMain:addItem(self:menuItem('myMusicSelector', 'home', 'MENUS_MY_MUSIC', function(applet, ...) applet:myMusicSelector(...) end, 1))
+	jiveMain:addItem(self:menuItem('otherLibrary', '_myMusic', 'MENUS_OTHER_LIBRARY', function(applet, ...) applet:otherLibrarySelector(...) end, 100))
 
 	appletManager:loadApplet("SlimMenus")
 end
