@@ -139,7 +139,7 @@ function notify_serverLinked(self, server)
 	if server:isCompatible() then
 		self:_fetchServerMenu(server)
 	else
-		log:error("not compatible: ", server)
+		log:warn("not compatible: ", server)
 
 	end
 end
@@ -334,9 +334,9 @@ local function _menuSink(self, cmd, server)
 			playerId = chunk.data[4]
 
 			if playerId ~= 'all' and playerId ~= _player:getId() then
-				log:error('This menu notification was not for this player')
-				log:error("Notification for: ", playerId)
-				log:error("This player is: ", _player:getId())
+				log:debug('This menu notification was not for this player')
+				log:debug("Notification for: ", playerId)
+				log:debug("This player is: ", _player:getId())
 				return
 			end
 		else
@@ -399,7 +399,7 @@ end
 						_style(...)
 					end
 				else
-					log:error("todo: how to handle fetching icons from disconnected servers!?")
+					log:debug("todo: how to handle fetching icons from disconnected servers!?")
 				end
 			end
 
@@ -751,10 +751,10 @@ end
 
 function _mergeServerMenuToHomeMenu(self, server, chunk)
 	--this might be the current server so handle that gracefully
-	log:error("TODO - MERGE: ", server)
+--	log:warn("TODO - MERGE: ", server)
 
 	if server:isSqueezeNetwork() then
-		log:error("MERGE: ")
+		log:warn("MERGE SN menus")
 		_menuSink(self, nil, server)(chunk)
 	end
 
