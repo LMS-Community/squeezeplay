@@ -86,8 +86,6 @@ function param(self)
 		THUMB_SIZE = 64,
 		NOWPLAYING_MENU = true,
 		nowPlayingBrowseArtworkSize = 180,
-		nowPlayingSSArtworkSize     = 180,
-		nowPlayingLargeArtworkSize  = 180,
         }
 end
 
@@ -242,11 +240,7 @@ function skin(self, s)
 		 imgpath .. "3_line_lists/menu_sel_box_3line.png",
 		 imgpath .. "3_line_lists/menu_sel_box_3line_r.png",
 	})
-	local threeItemPressedBox     = _loadHTile(self, {
-		imgpath .. "3_line_lists/menu_sel_box_3item_press_l.png",
-		imgpath .. "3_line_lists/menu_sel_box_3item_press.png",
-		imgpath .. "3_line_lists/menu_sel_box_3item_press_r.png",
-	})
+	local threeItemPressedBox     = _loadImageTile(self, imgpath .. "3_line_lists/menu_sel_box_3item_press.png" )
 
 	local titleBox                =
 		_loadTile(self, {
@@ -354,9 +348,6 @@ function skin(self, s)
 		imgpath .. "UNOFFICIAL/tch_volume_slider.png",
 	})
 
-	local sliderBackground = _loadImageTile(self, imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd.png")
-	local sliderBar        = _loadImageTile(self, imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_fill.png")
-
 	local volumeBar        = _loadImageTile(self, imgpath .. "Touch_Toolbar/tch_volumebar_fill.png")
 	local volumeBackground = _loadImageTile(self, imgpath .. "Touch_Toolbar/tch_volumebar_whole.png")
 
@@ -451,12 +442,16 @@ function skin(self, s)
 	})
 
 
-        local _songProgressBackground = _loadImageTile(self, imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_bkgrd.png")
+        local _songProgressBackground = _loadHTile(self, {
+		imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progressbar_bkgrd_l.png",
+		imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progressbar_bkgrd.png",
+		imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progressbar_bkgrd_r.png",
+	})
 
         local _songProgressBar = _loadHTile(self, {
-                nil,
-                imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_fill.png",
-                imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_slider.png",
+		nil,
+		nil,
+		imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progressbar_slider.png",
         })
 
 --------- DEFAULT WIDGET STYLES ---------
@@ -1250,6 +1245,7 @@ function skin(self, s)
 		position = LAYOUT_CENTER,
 		padding = { 0, 0, 0, 10 }
 	}
+	local _popupicon = _uses(_icon, { padding = 0 })
 
 	-- icon for albums with no artwork
 	s.icon_no_artwork = {
@@ -1423,128 +1419,125 @@ if true then
 		}
 	})
 
-	-- nptitle style is the same for all windowStyles
-	s.browsenptitle = _uses(s.ssnptitle)
-	s.largenptitle  = _uses(s.ssnptitle)
-
 	-- Artwork
 	local ARTWORK_SIZE    = self:param().nowPlayingBrowseArtworkSize
-	local SS_ARTWORK_SIZE = self:param().nowPlayingSSArtworkSize
-	local browseArtWidth  = ARTWORK_SIZE
-	local ssArtWidth      = SS_ARTWORK_SIZE
 
-        -- Song
-        s.nptrack =  {
-                border = { 4, 0, 4, 0 },
-                position = LAYOUT_NORTH,
+	local _tracklayout = {
+		border = { 4, 0, 4, 0 },
+		position = LAYOUT_NORTH,
+		w = WH_FILL,
+		align = "left",
+		lineHeight = NP_TRACK_FONT_SIZE,
+		fg = WHITE,
+	}
+
+	s.nowplaying = _uses(s.window, {
+		title = _uses(s.title, {
+			rbutton = {
+				hidden = 1,
+			},
+		}),
+		nptrack = {
+                	border     = _tracklayout.border,
+	                position   = _tracklayout.position,
+			w          = _tracklayout.w,
+			align      = _tracklayout.align,
+			lineHeight = _tracklayout.lineHeight,
+			fg         = _tracklayout.fg,
+			padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 20, 20, 10 },
+			font       = _boldfont(NP_TRACK_FONT_SIZE),
+		},
+		npartist = {
+                	border     = _tracklayout.border,
+	                position   = _tracklayout.position,
+			w          = _tracklayout.w,
+			align      = _tracklayout.align,
+			lineHeight = _tracklayout.lineHeight,
+			fg         = _tracklayout.fg,
+                	padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 75, 20, 10 },
+	                font       = _font(NP_ARTISTALBUM_FONT_SIZE),
+
+		},
+		npalbum = {
+                	border     = _tracklayout.border,
+	                position   = _tracklayout.position,
+			w          = _tracklayout.w,
+			align      = _tracklayout.align,
+			lineHeight = _tracklayout.lineHeight,
+			fg         = _tracklayout.fg,
+                	padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 120, 20, 10 },
+	                font       = _font(NP_ARTISTALBUM_FONT_SIZE),
+		},
+		npartwork = {
+			w          = ARTWORK_SIZE,
+			border     = { 10, TITLE_HEIGHT + 4, 10, 0 },
+			position   = LAYOUT_WEST,
+			align      = "center",
+			artwork    = {
+				align = "center",
+				padding = 0,
+				-- FIXME: this is a placeholder
+				img = _loadImage(self, "UNOFFICIAL/icon_album_noartwork_190.png"),
+			},
+		},
+		npcontrols = {
+			hidden = 1,
+		},
+		npprogress = {
+			position = LAYOUT_SOUTH,
+			padding  = { 0, 10, 0, 5 },
+			order    = { "elapsed", "slider", "remain" },
+			elapsed  = {
+				w = 75,
+				align = 'right',
+				padding = { 8, 0, 8, 15 },
+				font = _boldfont(18),
+				fg = { 0xe7,0xe7, 0xe7 },
+				sh = { 0x37, 0x37, 0x37 },
+			},
+			remain = {
+				w = 75,
+				align = 'left',
+				padding = { 8, 0, 8, 15 },
+				font = _boldfont(18),
+				fg = { 0xe7,0xe7, 0xe7 },
+				sh = { 0x37, 0x37, 0x37 },
+			},
+			text = {
+				w       = 75,
+				align   = 'right',
+				padding = { 8, 0, 8, 15 },
+				font    = _boldfont(18),
+				fg      = { 0xe7, 0xe7, 0xe7 },
+				sh      = { 0x37, 0x37, 0x37 },
+			},
+		},
+
+		npprogressNB = {
+			position = LAYOUT_SOUTH,
+			align = 'center',
+			padding = { 0, 0, 0, 18 },
+                        order = { "elapsed" },
+                        elapsed = {
+                                w = WH_FILL,
+                                align = "center",
+                                padding = { 0, 0, 0, 5 },
+                                font = _boldfont(18),
+                                fg = { 0xe7, 0xe7, 0xe7 },
+                                sh = { 0x37, 0x37, 0x37 },
+                        },
+                },
+	})
+ 
+      s.npprogressB = {
                 w = WH_FILL,
-                padding = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 20, 20, 10 },
-                align = "left",
-                font = _boldfont(NP_TRACK_FONT_SIZE),
-                lineHeight = NP_TRACK_FONT_SIZE,
-                fg = WHITE,
-        }
-        s.npartist  = _uses(s.nptrack, {
-                padding = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 75, 20, 10 },
-                font = _font(NP_ARTISTALBUM_FONT_SIZE),
-        })
-        s.npalbum = _uses(s.npartist, {
-                padding = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 120, 20, 10 },
-                font = _font(NP_ARTISTALBUM_FONT_SIZE),
-        })
-
-
-	s.ssnpartwork = {
-		w = ssArtWidth,
-		border = { 10, TITLE_HEIGHT + 4, 10, 0 },
-		position = LAYOUT_WEST,
-		align = "center",
-		artwork = {
-			align = "center",
-			padding = 0,
-			-- FIXME: this is a placeholder
-			img = _loadImage(self, "UNOFFICIAL/icon_album_noartwork_190.png"),
-		},
-	}
-
-	s.browsenpartwork = _uses(s.ssnpartwork)
-	s.largenpartwork = _uses(s.ssnpartwork)
-
-	local topPadding = screenHeight/2 + 10
-	local rightPadding = screenWidth/2 - 15
-	local buttonPadding = { 10, 5, 10, 5 }
-
-	s.ssnpcontrols = { hidden = 1 }
-	s.browsenpcontrols = _uses(s.ssnpcontrols)
-	s.largenpcontrols  = _uses(s.ssnpcontrols)
-
-	-- Progress bar
-	s.ssprogress = {
-		position = LAYOUT_SOUTH,
-		padding = { ITEM_LEFT_PADDING, 10, 10, 5 },
-		order = { "elapsed", "slider", "remain" },
-		elapsed = {
-			w = 75,
-			align = 'right',
-			padding = { 8, 0, 8, 15 },
-			font = _boldfont(18),
-			fg = { 0xe7,0xe7, 0xe7 },
-			sh = { 0x37, 0x37, 0x37 },
-		},
-		remain = {
-			w = 75,
-			align = 'left',
-			padding = { 8, 0, 8, 15 },
-			font = _boldfont(18),
-			fg = { 0xe7,0xe7, 0xe7 },
-			sh = { 0x37, 0x37, 0x37 },
-		},
-		text = {
-			w = 75,
-			align = 'right',
-			padding = { 8, 0, 8, 15 },
-			font = _boldfont(18),
-			fg = { 0xe7,0xe7, 0xe7 },
-			sh = { 0x37, 0x37, 0x37 },
-		},
-	}
-
-	s.browseprogress = _uses(s.ssprogress)
-	s.largeprogress  = _uses(s.ssprogress)
-
-	s.ssprogressB = {
-		padding     = { 0, 0, 0, 25 },
+                h = 25,
+                padding     = { 0, 0, 0, 18 },
                 position = LAYOUT_SOUTH,
                 horizontal = 1,
                 bgImg = _songProgressBackground,
                 img = _songProgressBar,
-                --bgImg = _progressBackground,
-                --img = _progressBar,
-	}
-
-	s.browseprogressB = _uses(s.ssprogressB)
-	s.largeprogressB  = _uses(s.ssprogressB)
-
-	-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
-	s.ssprogressNB = {
-		position = LAYOUT_SOUTH,
-		padding = { 0, 0, 0, 5 },
-		order = { "elapsed" },
-		text = {
-			w = WH_FILL,
-			align = "center",
-			padding = { 0, 0, 0, 5 },
-			font = _boldfont(18),
-			fg = { 0xe7, 0xe7, 0xe7 },
-			sh = { 0x37, 0x37, 0x37 },
-		},
-	}
-
-	s.ssprogressNB.elapsed = _uses(s.ssprogressNB.text)
-
-	s.browseprogressNB = _uses(s.ssprogressNB)
-	s.largeprogressNB  = _uses(s.ssprogressNB)
-
+        }
 
 end -- LEGACY STYLES
 
