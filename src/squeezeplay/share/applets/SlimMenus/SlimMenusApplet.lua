@@ -371,10 +371,10 @@ end
 					window = v.window,
 					sound = "WINDOWSHOW",
 				}
-			if server and item.text then
-				--temp mark for debugging purposes
-				item.text = item.text .. "(SN!)"
-			end
+--			if server and item.text then
+--				--temp mark for debugging purposes
+--				item.text = item.text .. "(SN!)"
+--			end
 
 			local itemIcon = v.window  and v.window['icon-id'] or v['icon-id']
 			if itemIcon then
