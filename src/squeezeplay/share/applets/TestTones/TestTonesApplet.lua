@@ -49,7 +49,7 @@ function testTonesShow(self)
 	window:addWidget(menu)
 
 	menu:addItem({
-		text = self:string("TONES_STOP"),
+		text = self:string("TONE_STOP"),
 		sound = "WINDOWSHOW",
 		weight = 2,
 		callback = function(event, menuItem)
