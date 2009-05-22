@@ -7,5 +7,5 @@ jive-static-install:
 	##Copy selectively, currently overwrites all, not just newer
 	mkdir -p $(JIVE_BUILD_DIR)
 	cd share; tar -pcf  - \
-		`find . \( -name "*.jpg" -o -name "*.gif" -o -name "*.png" -o -name "*.wav" -o -name "*.txt" -o -name "*.lua" \)` \
+		`find . \( -name "*.mp3" -o -name "*.jpg" -o -name "*.gif" -o -name "*.png" -o -name "*.wav" -o -name "*.txt" -o -name "*.lua" \)` \
 	    | tar -C $(JIVE_BUILD_DIR) -pxf -
