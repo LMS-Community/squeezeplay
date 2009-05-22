@@ -1,3 +1,6 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 TEST_TONES
 	EN	Test tones
@@ -5,8 +8,8 @@ TEST_TONES
 TONE_STOP
 	EN	Stop
 
-TONE_1KHZ_44100_1S_STERO_MP3
+TONE_1KHZ_44100_1S_STEREO_MP3
 	EN	1KHz 44.1k
 
-TONE_1KHZ_48000_1S_STERO_MP3
+TONE_1KHZ_48000_1S_STEREO_MP3
 	EN	1KHz 48k
