@@ -791,6 +791,8 @@ function openScreensaver(self)
 	appletManager:callService("restartScreenSaverTimer")
 
 	self:showNowPlaying()
+
+	return false
 end
 
 function displaySizeSetting(self, menuItem)
