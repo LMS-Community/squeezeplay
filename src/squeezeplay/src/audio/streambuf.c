@@ -371,6 +371,65 @@ struct stream {
 };
 
 
+static int stream_load_loopL(lua_State *L) {
+	int fd;
+	ssize_t n, len;
+	char *filename;
+
+	/*
+	 * 1: self
+	 * 2: file
+	 */
+
+	streambuf_mark_loop();
+
+	filename = alloca(PATH_MAX);
+	if (!squeezeplay_find_file(lua_tostring(L, 2), filename)) {
+		LOG_ERROR(log_audio_decode, "Can't find image %s\n", lua_tostring(L, 2));
+		return 0;
+	}
+
+
+	if ((fd = open(filename, O_RDONLY)) < 0) {
+		LOG_ERROR(log_audio_decode, "Can't open %s", lua_tostring(L, 2));
+		return 0;
+	}
+
+	fifo_lock(&streambuf_fifo);
+
+	n = streambuf_get_freebytes();
+	if ((len = read(fd, streambuf_buf + streambuf_fifo.wptr, n)) < 0) {
+		goto read_err;
+	}
+	fifo_wptr_incby(&streambuf_fifo, len);
+
+	n = streambuf_get_freebytes();
+	if (n) {
+		if ((n = read(fd, streambuf_buf + streambuf_fifo.wptr, n)) < 0) {
+			goto read_err;
+		}
+		fifo_wptr_incby(&streambuf_fifo, n);
+		len += n;
+	}
+
+	fifo_unlock(&streambuf_fifo);
+	close(fd);
+
+	streambuf_streaming = FALSE;
+	streambuf_bytes_received = len;
+	streambuf_filter = streambuf_next_filter;
+	streambuf_next_filter = NULL;
+
+	return 0;
+
+ read_err:
+	fifo_unlock(&streambuf_fifo);
+	close(fd);
+
+	return 0;
+}
+
+
 static int stream_connectL(lua_State *L) {
 
 	/*
@@ -696,6 +755,7 @@ static int stream_icy_metaintervalL(lua_State *L) {
 
 static const struct luaL_Reg stream_f[] = {
 	{ "connect", stream_connectL },
+	{ "loadLoop", stream_load_loopL },
 	{ NULL, NULL }
 };
 

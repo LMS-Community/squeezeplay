@@ -127,16 +127,17 @@ local function _saveApplet(name, dir)
 	end
 
 	if not _appletsDb[name] then
-	
+
+		local dirpath = dir .. "/" .. name .. "/"
+
 		local newEntry = {
 			appletName = name,
 
 			-- file paths
-			metaFilepath = dir .. "/" .. name .. "/" .. name .. "Meta.lua",
-			appletFilepath = dir .. "/" .. name .. "/" .. name .. "Applet.lua",
-			stringsFilepath = dir .. "/" .. name .. "/" .. "strings.txt",
+			dirpath = dirpath,
+			basename = dirpath .. name,
+
 			settingsFilepath = _usersettingsdir .. "/" .. name .. ".lua",
-			settingsFilepathLegacy = dir .. "/" .. name .. "/" .. "settings.lua",
 
 			-- lua paths
 			appletModule = "applets." .. name .. "." .. name .. "Applet",
@@ -193,7 +194,7 @@ local function _loadMeta(entry)
 		end
 		return p
 	end
-	local f, err = loadfile(entry.metaFilepath)
+	local f, err = loadfile(entry.basename .. "Meta.lua")
 	if not f then
 		error (string.format ("error loading meta `%s' (%s)", entry.appletName, err))
 	end
@@ -422,7 +423,7 @@ local function _loadApplet(entry)
 		end
 		return p
 	end
-	local f, err = loadfile(entry.appletFilepath)
+	local f, err = loadfile(entry.basename .. "Applet.lua")
 	if not f then
 		error (string.format ("error loading applet `%s' (%s)", entry.appletName, err))
 	end
@@ -591,7 +592,7 @@ function _loadLocaleStrings(entry)
 	end
 
 	log:debug("_loadLocaleStrings: ", entry.appletName)
-	entry.stringsTable = locale:readStringsFile(entry.stringsFilepath)
+	entry.stringsTable = locale:readStringsFile(entry.dirpath .. "strings.txt")
 end
 
 
@@ -636,7 +637,7 @@ function _loadSettingsLegacy(entry)
 
 	log:debug("_loadSettingsLegacy: ", entry.appletName)
 
-	local fh = io.open(entry.settingsFilepathLegacy)
+	local fh = io.open(entry.dirpath .. "settings.lua")
 	if fh == nil then
 		-- no settings file
 		return

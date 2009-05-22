@@ -109,6 +109,34 @@ function free(self)
 end
 
 
+-- Load a file and play it in a loop. This is for playing test tones.
+-- Currently only works with mp3 files.
+function playFileInLoop(self, file)
+--	assert(string.match(file , ".mp3"), "Only mp3 files are supported")
+
+	log:info("loop file ", file)
+
+	self:_streamDisconnect(nil, true)
+
+	Stream:loadLoop(file)
+
+	decode:start(string.byte('m'),
+		     0, -- transition type
+		     0, -- transition period
+		     0, -- reply gain
+		     0, -- output threshold
+		     0, -- polartity inversion
+		     0, 0, 0, 0 -- decode params
+		     )
+
+	decode:resumeDecoder()
+
+	self.autostart = '1'
+	self.threshold = 0
+	self.sentResume = false
+end
+
+
 function sendStatus(self, status, event, serverTimestamp)
 	status.opcode = "STAT"
 	status.event = event

@@ -94,15 +94,6 @@ function settingsShow(self, metaState)
 			   end,
 	})
 
-	menu:addItem({
-		text = self:string("TEST_TONES"),
-		sound = "WINDOWSHOW",
-		weight = 2,
-		callback = function(event, menuItem)
-				   self:_tonesMenu()
-			   end,
-	})
-
 	self:tieAndShowWindow(window)
 end
 
@@ -146,91 +137,6 @@ function _debugMenu(self)
 			values[5]:setValue(status.tracksStarted)
 			values[6]:setValue(status.decodeState .. " " .. status.audioState)
 	end)
-
-	window:show()
-	return window
-end
-
-
-function _tonesMenu(self)
-	local window = Window("text_list", self:string("TEST_TONES"))
-
-	local menu = SimpleMenu("menu", {
-		{ text = self:string("MULTITONE"),
-		  sound = "WINDOWSHOW",
-		  callback = function(event)
-			decode:flush()
-		  	decode:start(
-				string.byte('t'), 0, 0, 0, 0, 0, 1
-			)
-			decode:resumeDecoder()
-			decode:resumeAudio()
-		  end
-		},
-		{ text = self:string("LEFT_CHANNEL"),
-		  sound = "WINDOWSHOW",
-		  callback = function(event)
-			decode:flush()
-		  	decode:start(
-				string.byte('t'), 0, 0, 0, 0, 0, 2
-			)
-			decode:resumeDecoder()
-			decode:resumeAudio()
-		  end
-		},
-		{ text = self:string("SINE_44_1K"),
-		  sound = "WINDOWSHOW",
-		  callback = function(event)
-			decode:flush()
-		  	decode:start(
-				string.byte('t'), 0, 0, 0, 0, 0, 10
-			)
-			decode:resumeDecoder()
-			decode:resumeAudio()
-		  end
-		},
-		{ text = self:string("SINE_48k"),
-		  sound = "WINDOWSHOW",
-		  callback = function(event)
-			decode:flush()
-		  	decode:start(
-				string.byte('t'), 0, 0, 0, 0, 0, 11
-			)
-			decode:resumeDecoder()
-			decode:resumeAudio()
-		  end
-		},
-		{ text = self:string("SINE_88_2K"),
-		  sound = "WINDOWSHOW",
-		  callback = function(event)
-			decode:flush()
-		  	decode:start(
-				string.byte('t'), 0, 0, 0, 0, 0, 12
-			)
-			decode:resumeDecoder()
-			decode:resumeAudio()
-		  end
-		},
-		{ text = self:string("SINE_96K"),
-		  sound = "WINDOWSHOW",
-		  callback = function(event)
-			decode:flush()
-		  	decode:start(
-				string.byte('t'), 0, 0, 0, 0, 0, 13
-			)
-			decode:resumeDecoder()
-			decode:resumeAudio()
-		  end
-		},			
-		{ text = self:string("SINE_STOP"),
-		  sound = "WINDOWSHOW",
-		  callback = function(event)
-			decode:stop()
-		  end
-		},			
-	})
-
-	window:addWidget(menu)
 
 	window:show()
 	return window

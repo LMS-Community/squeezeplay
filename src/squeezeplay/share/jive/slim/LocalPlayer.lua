@@ -106,6 +106,11 @@ function destroy(self, server)
 end
 
 
+function playFileInLoop(self, file)
+	return self.playback:playFileInLoop(file)
+end
+
+
 function updateInit(self, server, init)
 	--todo squeezeCenter is nil, is a bug, test fixing it
 	Player.updateInit(self, squeezeCenter, init)

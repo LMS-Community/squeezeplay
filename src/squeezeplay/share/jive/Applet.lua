@@ -16,9 +16,10 @@ settings and memory management.
 =cut
 --]]
 
-local pairs = pairs
+local coroutine, package, pairs = coroutine, package, pairs
 
 local oo               = require("loop.base")
+local lfs              = require("lfs")
 
 local AppletManager    = require("jive.AppletManager")
 
@@ -95,6 +96,36 @@ The varargs are passed to the windows show() method.
 function tieAndShowWindow(self, window, ...)
 	self:tieWindow(window)
 	window:show(...)
+end
+
+
+local function dirIter(self, path)
+	local rpath = "applets/" .. self._entry.appletName .. "/" .. path .. "/"
+	for dir in package.path:gmatch("([^;]*)%?[^;]*;") do
+		dir = dir .. rpath
+
+		local mode = lfs.attributes(dir, "mode")
+		if mode == "directory" then
+			for entry in lfs.dir(dir) do
+				if entry ~= "." and entry ~= ".." and entry ~= ".svn" then
+					coroutine.yield(rpath .. entry)
+				end
+			end
+		end
+	end
+end
+
+--[[
+
+An iterator over the applets files in path.
+
+--]]
+function readdir(self, path)
+	local co = coroutine.create(function() dirIter(self, path) end)
+	return function()
+		local code, res = coroutine.resume(co)
+		return res
+	end
 end
 
 

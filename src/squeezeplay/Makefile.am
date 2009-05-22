@@ -195,7 +195,6 @@ libjiveaudio_la_SOURCES = \
 	src/audio/decode/decode_pcm.c \
 	src/audio/decode/decode_portaudio.c \
 	src/audio/decode/decode_sample.c \
-	src/audio/decode/decode_tones.c \
 	src/audio/decode/decode_vorbis.c
 
 
