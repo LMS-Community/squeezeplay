@@ -21,11 +21,12 @@ SetupWallpaperApplet overrides the following methods:
 
 
 -- stuff we use
-local ipairs, pairs, type, print, tostring, string = ipairs, pairs, type, print, tostring, string
+local ipairs, pairs, type, print, tostring = ipairs, pairs, type, print, tostring
 
 local oo                     = require("loop.simple")
 local io                     = require("io")
 local table                  = require("jive.utils.table")
+local string                 = require("jive.utils.string")
 
 local Applet                 = require("jive.Applet")
 local System                 = require("jive.System")
@@ -50,46 +51,6 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
--- Wallpapers
-local localwallpapers = {
-	{
-		["SUNRISE"] = "sunrise.png",
-	},
-	{
-		['RULED_LINES'] = 'ruled_lines.png',
-		['WAVE1'] = 'wave1.png',
-		['WAVE2'] = 'wave2.png',
-	},
-	{
-		["SUNLIGHT"] = "sunlight.png",
-		["FADETOBLACK"] = "fade_to_black.png",
-	},
-	{
-		["CONCRETE"] = "concrete.png",
-		["MIDNIGHT"] = "midnight.png",
-		["PEA"] = "pea.png",
-		["BLACK"] = "black.png",
-	},
-	{
-
-		['WEATHEREDRED'] = 'redgrunge.jpg',
-		['PURPLENOTE'] = 'purplenote.jpg',
-		['ORANGEMARBLE'] = 'orangemarble.jpg',
-		['NOTE'] = 'note.jpg',
-		['GREENFLOWERS'] = 'flowersgreen.jpg'
-	},
-	{
-		["STONE"] = "stone.png",
-		["DUNES"] = "Chapple_1.jpg",
-		["IRIS"] = "Clearly-Ambiguous_1.jpg",
-		["SMOKE"] = "Clearly-Ambiguous_3.jpg",
-		["AMBER"] = "Clearly-Ambiguous_4.jpg",
-		["FLAME"] = "Clearly-Ambiguous_6.jpg",
-		["GRAFFITI"] = "Los-Cardinalos_1.jpg",
-		["WEATHERED_WOOD"] = "Orin-Optiglot_1.jpg",
-	}
-}
-
 local authors = { "Chapple", "Scott Robinson", "Los Cardinalos", "Orin Optiglot", "Ryan McD", "Robbie Fisher" }
 
 local firmwarePrefix = "applets/SetupWallpaper/wallpaper/"
@@ -106,6 +67,7 @@ function init(self)
 	log:debug("downloaded wallpapers stored at: ", downloadPrefix)
 
 	self.download = {}
+	self.wallpapers = {}
 end
 
 -- notify_playerCurrent
@@ -152,30 +114,57 @@ function settingsShow(self)
 
 	self.menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 	
-	for w, section in ipairs(localwallpapers) do
-		for name, file in table.pairsByKeys(section) do
-			self.menu:addItem({
-				weight = w,
-				text = self:string(name), 
-				style = 'item_choice',
-				sound = "WINDOWSHOW",
-				check = RadioButton("radio", 
-								   self.group, 
-								   function()
-									   self:setBackground(file, self.currentPlayerId)
-								   end,
-								   wallpaper == file
-							   ),
-				focusGained = function(event)
-								  self:showBackground(file, self.currentPlayerId)
-							  end
-			})
+	-- read all files in the wallpaper/ directory and into self.wallpapers
+	-- this step is done first so images aren't read twice, 
+	-- once from source area and once from build area
+	for img in self:readdir("wallpaper") do
+		-- split the fullpath into a table on /
+		local fullpath = string.split('/', img)
+		-- the filename is the last element in the fullpath table
+		local name = fullpath[#fullpath]
+		-- split on the period to get filename and filesuffix
+		local parts = string.split("%.", name)
 
-			if wallpaper == file then
-				self.menu:setSelectedIndex(self.menu:numItems())
+		-- if the suffix represents an image format (see _isImg() method), translate and add to the menu
+		if self:_isImg(parts[2]) then
+			-- token is represented by uppercase of the filename
+			local token = string.upper(parts[1])
+	
+			if not self.wallpapers[name] then
+				self.wallpapers[name] = {
+					token    = token,
+					suffix   = parts[2],
+					fullpath = fullpath,
+				}
 			end
 		end
 	end
+
+	for name, details in pairs(self.wallpapers) do
+			self.menu:addItem({
+				-- anything local goes to the top 
+				-- (i.e., higher precendence than SC-delivered custom wallpaper)
+				weight = 1,
+				text = self:string(details.token), 
+				style = 'item_choice',
+				sound = "WINDOWSHOW",
+				check = RadioButton("radio", 
+						   self.group, 
+						   function()
+							   self:setBackground(name, self.currentPlayerId)
+						   end,
+						   wallpaper == img
+					   ),
+				focusGained = function(event)
+						  self:showBackground(name, self.currentPlayerId)
+					  end
+			})
+
+			if wallpaper == name then
+				self.menu:setSelectedIndex(self.menu:numItems())
+			end
+
+		end
 
 	self.menu:addItem(self:_licenseMenuItem())
 
@@ -214,6 +203,15 @@ function settingsShow(self)
 
 	self:tieAndShowWindow(window)
 	return window
+end
+
+-- returns true if suffix string is for an image format file extention
+function _isImg(self, suffix)
+	if suffix == 'png' or suffix == 'jpg' or suffix == 'gif' then
+		return true
+	end
+
+	return false
 end
 
 

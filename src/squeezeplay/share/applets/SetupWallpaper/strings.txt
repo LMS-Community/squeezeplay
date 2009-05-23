@@ -1,6 +1,13 @@
 #
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+#
+# NOTE: this strings.txt file is a bit special, in that it provides
+# strings for not only squeezeplay/share/applets/SetupWallpaper, but
+# for the platform-specific wallpapers found in 
+# squeezeplay_fab4/share/applets/SetupWallpaper/wallpaper/
+# squeezeplay_jive/share/applets/SetupWallpaper/wallpaper/
+# etc.
 
 WALLPAPER
 	CS	Wallpaper (Tapeta)
@@ -152,7 +159,7 @@ BLACK
 	RU	Черный
 	SV	Svart
 
-STONE
+JIVE_STONE
 	CS	Kámen
 	DA	Sten
 	DE	Stein
@@ -167,7 +174,7 @@ STONE
 	RU	Камень
 	SV	Sten
 
-DUNES
+JIVE_DUNES
 	CS	Duny
 	DA	Klitter
 	DE	Dünen
@@ -182,7 +189,7 @@ DUNES
 	RU	Дюны
 	SV	Sanddyner
 
-IRIS
+JIVE_TULIP
 	CS	Tulipán
 	DA	Tulipan
 	DE	Tulpe
@@ -197,7 +204,7 @@ IRIS
 	RU	Тюльпан
 	SV	Tulpan
 
-SMOKE
+JIVE_SMOKE
 	CS	Dým
 	DA	Røg
 	DE	Rauch
@@ -212,7 +219,7 @@ SMOKE
 	RU	Дым
 	SV	Rök
 
-AMBER
+JIVE_AMBER
 	CS	Oranžová
 	DA	Rav
 	DE	Bernstein
@@ -227,7 +234,7 @@ AMBER
 	RU	Янтарно-желтый
 	SV	Bärnsten
 
-FLAME
+JIVE_FLAME
 	CS	Plamen
 	DA	Flamme
 	DE	Flamme
@@ -242,7 +249,7 @@ FLAME
 	RU	Пламя
 	SV	Flamma
 
-GRAFFITI
+JIVE_GRAFFITI
 	CS	Graffiti
 	DA	Graffiti
 	DE	Graffiti
@@ -257,7 +264,7 @@ GRAFFITI
 	RU	Граффити
 	SV	Graffiti
 
-WEATHERED_WOOD
+JIVE_WEATHERED_WOOD
 	CS	Zvětralé dřevo
 	DA	Slidt træ
 	DE	Verwittertes Holz
@@ -287,7 +294,7 @@ SUNRISE
 	RU	Восход
 	SV	Soluppgång
 
-SUNLIGHT
+JIVE_SUNLIGHT
 	CS	Sluneční svit
 	DA	Sollys
 	DE	Sonnenschein
@@ -302,7 +309,7 @@ SUNLIGHT
 	RU	Солнечный свет
 	SV	Solsken
 
-FADETOBLACK
+FADE_TO_BLACK
 	CS	Vyblednout do černé
 	DA	Går i sort
 	DE	Ausblenden
@@ -317,7 +324,7 @@ FADETOBLACK
 	RU	Угасание до черного
 	SV	Svarttoning
 
-WEATHEREDRED
+JIVE_WEATHERED_RED
 	CS	Vybledlá červená
 	DA	Slidt rød
 	DE	Verwittertes Rot
@@ -332,7 +339,7 @@ WEATHEREDRED
 	RU	Старый красный
 	SV	Bleknat rött
 
-PURPLENOTE
+JIVE_PURPLENOTE
 	CS	Nachové noty
 	DA	Lilla noter
 	DE	Violette Noten
@@ -377,7 +384,7 @@ NOTE
 	RU	Примечания
 	SV	Noter
 
-GREENFLOWERS
+JIVE_FLOWERSGREEN
 	CS	Zelené květiny
 	DA	Grønne blomster
 	DE	Grüne Blumen
@@ -436,4 +443,28 @@ WAVE2
 	PL	Wzorek falisty 2
 	RU	Волны 2
 	SV	Vågform 2
+
+FAB4_ALLEGRO
+	EN	Allegro
+
+FAB4_ENCORE
+	EN	Encore
+
+FAB4_HARMONY
+	EN	Harmony
+
+FAB4_NOCTURNE
+	EN	Nocturne
+
+FAB4_QUARTET
+	EN	Quartet
+
+FAB4_SONATA
+	EN	Sonata
+
+FAB4_SYMPHONY
+	EN	Symphony
+
+FAB4_VIBRATO
+	EN	Vibrato
 
