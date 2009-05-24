@@ -53,19 +53,6 @@ function registerApplet(self)
 end
 
 
-function configureApplet(meta)
-
-	jiveMain:addItem(
-		meta:menuItem(
-			'appletSNSignup', 
-			'home', 
-			"SN_SIGNUP", 
-			function(applet, ...) applet:squeezeNetworkRequest({ 'register', 0, 100, 'service:SN' }, ...) end, 
-                        1
-                )
-        )
-
-end
 --[[
 
 =head1 LICENSE
