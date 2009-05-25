@@ -332,20 +332,25 @@ function settingsBrightnessShow (self, menuItem)
 	local level = settings.brightness
 
 	local slider = Slider("slider", 1, 64, level,
-			      function(slider, value, done)
-				      settings.brightness = value
+				function(slider, value, done)
+					settings.brightness = value
 
-			              local bright = settings.brightness + settings.ambient
-			              if bright > 64 then
-			                bright = 64
-			              end
-			              self:setBrightness( bright)
+					-- Quick fix to avoid error					
+					if settings.ambient == nil then
+						settings.ambient = 0
+					end
 
-				      if done then
-					      window:playSound("WINDOWSHOW")
-					      window:hide(Window.transitionPushLeft)
-				      end
-			      end)
+					local bright = settings.brightness + settings.ambient
+					if bright > 64 then
+						bright = 64
+					end
+					self:setBrightness( bright)
+
+					if done then
+						window:playSound("WINDOWSHOW")
+						window:hide(Window.transitionPushLeft)
+					end
+				end)
 
 	window:addWidget(Textarea("help_text", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
 	window:addWidget(Group("sliderGroup", {
