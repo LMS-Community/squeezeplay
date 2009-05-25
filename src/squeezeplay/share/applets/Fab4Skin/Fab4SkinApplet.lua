@@ -2010,6 +2010,24 @@ function skin(self, s)
 			volUp   = _uses(_transportControlButton, {
 				img = _loadImage(self, "Icons/icon_toolbar_vol_up.png"),
 			}),
+			thumbsUp   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_thumbup.png"),
+			}),
+			thumbsDown   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_thumbdown.png"),
+			}),
+			love   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_fav.png"),
+			}),
+			hate   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_fav_remove.png"),
+			}),
+			fwdDisabled   = _uses(_transportControlButton, {
+				img = false,
+			}),
+			rewDisabled   = _uses(_transportControlButton, {
+				img = false,
+			}),
 		},
 	
 		-- Progress bar
@@ -2102,6 +2120,13 @@ function skin(self, s)
 		shuffleOff      = _uses(s.nowplaying.npcontrols.shuffleOff, { bgImg = keyMiddlePressed }),
 		volDown = _uses(s.nowplaying.npcontrols.volDown, { bgImg = keyMiddlePressed }),
 		volUp   = _uses(s.nowplaying.npcontrols.volUp, { bgImg = keyMiddlePressed }),
+
+		thumbsUp    = _uses(s.nowplaying.npcontrols.thumbsUp, { bgImg = keyMiddlePressed }),
+		thumbsDown  = _uses(s.nowplaying.npcontrols.thumbsDown, { bgImg = keyMiddlePressed }),
+		love        = _uses(s.nowplaying.npcontrols.love, { bgImg = keyMiddlePressed }),
+		hate        = _uses(s.nowplaying.npcontrols.hate, { bgImg = keyMiddlePressed }),
+		fwdDisabled = _uses(s.nowplaying.npcontrols.rewDisabled),
+		rewDisabled = _uses(s.nowplaying.npcontrols.rewDisabled),
 	}
 	
 	s.nowplayingSS = _uses(s.nowplaying)

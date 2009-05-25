@@ -174,6 +174,18 @@ function notify_playerTrackChange(self, player, nowPlaying)
 	self.player = player
 	local playerStatus = player:getPlayerStatus()
 
+	if playerStatus and 
+		playerStatus.remoteMeta and 
+		playerStatus.remoteMeta.buttons 
+	then
+		-- disable rew or fw as needed
+		if playerStatus.rew and playerStatus.rew == 0 then
+		else
+		end
+		if playerStatus.ffw and playerStatus.ffw == 0 then
+		else
+		end
+	end
 	-- create the window to display
 	local window = _createUI(self)
 	if self.window then
@@ -302,6 +314,7 @@ function _updateAll(self)
 
 			self:_updateTrack(trackInfo)
 			self:_updateProgress(playerStatus)
+			self:_updateButtons(playerStatus)
 			self:_updatePlaylist(true, playerStatus.playlist_cur_index, playerStatus.playlist_tracks)
 		
 			-- preload artwork for next track
@@ -317,6 +330,77 @@ function _updateAll(self)
 		end
 	end
 	self:_updateVolume()
+end
+
+function _updateButtons(self, playerStatus)
+	-- no sense updating the transport buttons unless
+	-- we are connected to a player and have buttons initialized
+	if not self.player and self.controlsGroup then
+		return
+	end
+
+	local remoteMeta = playerStatus.remoteMeta
+
+	local shuffleIcon = self.controlsGroup:getWidget('shuffleMode')
+	local repeatIcon  = self.controlsGroup:getWidget('repeatMode')
+
+	local buttons = remoteMeta and remoteMeta.buttons
+	-- if we have buttons data, the remoteMeta is remapping some buttons
+	if buttons then
+		-- disable rew or fw as needed
+		if buttons.rew and buttons.rew == 0 then
+			self:_remapButton('rew', 'rewDisabled', function() return EVENT_CONSUME end)
+		else
+			self.controlsGroup:setWidget('rew', self.rewButton)
+		end
+
+		if buttons.fwd and buttons.fwd == 0 then
+			self:_remapButton('fwd', 'fwdDisabled', function() return EVENT_CONSUME end)
+		else
+			self.controlsGroup:setWidget('fwd', self.fwdButton)
+		end
+
+		if buttons.shuffle then
+			local callback = function()
+				local id      = self.player:getId()
+				local server  = self.player:getSlimServer()
+				local command = buttons.shuffle.command or function() return EVENT_CONSUME end
+				server:userRequest(nil, id, command)
+			end
+			self:_remapButton('shuffleMode', buttons.shuffle.jiveStyle, callback)
+		end
+
+		if buttons['repeat'] then
+			local callback = function()
+				local id      = self.player:getId()
+				local server  = self.player:getSlimServer()
+				local command = buttons['repeat'].command or function() return EVENT_CONSUME end
+				server:userRequest(nil, id, command)
+			end
+			self:_remapButton('repeatMode', buttons['repeat'].jiveStyle, callback)
+		end
+
+	-- if we don't have remoteMeta and button remapping, go back to defaults
+	else
+		self.controlsGroup:setWidget('rew', self.rewButton)
+		self.controlsGroup:setWidget('fwd', self.fwdButton)
+	end
+end
+	
+
+function _remapButton(self, key, newStyle, newCallback)
+	if not self.controlsGroup then
+		return
+	end
+	-- set callback
+	local newWidget = Button(Icon(key), newCallback)
+	self.controlsGroup:setWidget(key, newWidget)
+	-- set style
+	local widget = self.controlsGroup:getWidget(key)
+	if newStyle then
+		widget:setStyle(newStyle)
+	end
+
 end
 
 
@@ -423,6 +507,16 @@ end
 
 
 function _updateShuffle(self, mode)
+	-- don't update this if SC/SN has remapped shuffle button
+	if self.player then
+		local playerStatus = self.player:getPlayerStatus()
+		if playerStatus and 
+			playerStatus.remoteMeta and 
+			playerStatus.remoteMeta.buttons and 
+			playerStatus.remoteMeta.shuffle then
+			return
+		end
+	end
 	local token = 'mode' .. mode
 	if not shuffleModes[token] then
 		log:error('not a valid shuffle mode: ', token)
@@ -436,6 +530,16 @@ end
 
 
 function _updateRepeat(self, mode)
+	-- don't update this if SC/SN has remapped repeat button
+	if self.player then
+		local playerStatus = self.player:getPlayerStatus()
+		if playerStatus and 
+			playerStatus.remoteMeta and 
+			playerStatus.remoteMeta.buttons and 
+			playerStatus.remoteMeta['repeat'] then
+			return
+		end
+	end
 	local token = 'mode' .. mode
 	if not repeatModes[token] then
 		log:error('not a valid repeat mode: ', token)
@@ -696,6 +800,21 @@ function _createUI(self)
 					end
 				end)
 
+	self.rewButton = Button(
+			Icon('rew'),
+			function()
+				Framework:pushAction("jump_rew")
+				return EVENT_CONSUME 
+			end
+	)
+	self.fwdButton = Button(
+			Icon('fwd'),
+			function() 
+				Framework:pushAction("jump_fwd")
+				return EVENT_CONSUME
+			end
+	)
+	
 	self.controlsGroup = Group('npcontrols', {
 			div1 = Icon('div1'),
 			div2 = Icon('div2'),
@@ -704,25 +823,14 @@ function _createUI(self)
 			div5 = Icon('div5'),
 			div6 = Icon('div6'),
 			div7 = Icon('div7'),
-		  	rew = Button(
-				Icon('rew'),
-				function()
-					Framework:pushAction("jump_rew")
-					return EVENT_CONSUME 
-				end
-			),
 
-		  	play       = playIcon,
+		  	rew  = self.rewButton,
+		  	play = playIcon,
+			fwd  = self.fwdButton,
+
 			repeatMode  = repeatIcon,
 			shuffleMode = shuffleIcon,
 
-		  	fwd  = Button(
-				Icon('fwd'),
-				function() 
-					Framework:pushAction("jump_fwd")
-					return EVENT_CONSUME
-				end
-			),
 		  	volDown  = Button(
 				Icon('volDown'),
 				function()
