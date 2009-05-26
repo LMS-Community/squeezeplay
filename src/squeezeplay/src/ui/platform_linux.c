@@ -166,21 +166,37 @@ static void quit_handler(int signum) {
 
 
 static void segv_handler(int signum) {
+	struct sigaction sa;
+
+	sa.sa_handler = SIG_DFL;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sigaction(signum, &sa, NULL);
+
 	LOG_ERROR(log_sp, "SIGSEGV squeezeplay %s", JIVE_VERSION);
 
 	// TODO c stack trace
 
 	/* dump core */
-	abort();
+	raise(signum);
 }
 
 
 void platform_init(lua_State *L) {
+	struct sigaction sa;
+
 	Lsig = L;
 	log_sp = LOG_CATEGORY_GET("squeezeplay");
 
-	signal(SIGQUIT, quit_handler);
-	signal(SIGSEGV, segv_handler);
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+
+	sa.sa_handler = quit_handler;
+	sigaction(SIGQUIT, &sa, NULL);
+
+	sa.sa_handler = segv_handler;
+	sigaction(SIGSEGV, &sa, NULL);
 }
 
 #endif
