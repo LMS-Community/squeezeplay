@@ -485,13 +485,13 @@ end
 					----todo swap this back, for now always switching to SN if SN can serve
 					if (not _server or not _server:isConnected()) and self:_canSqueezeNetworkServe(item) then
 --					if self:_canSqueezeNetworkServe(item) then
-						log:error("switching to SN")
-						log:error("Do we want to try to reconnect to SC first here?")
+						log:warn("switching to SN")
+						log:warn("Do we want to try to reconnect to SC first here?")
 						self:_selectMusicSource(action, self:_getSqueezeNetwork(),
 						_player and _player:getLastSqueezeCenter() or nil)
 
 					elseif (not _server or _server:isSqueezeNetwork()) and not self:_canSqueezeNetworkServe(item) then
-						log:error("switching from SN to last SqueezeCenter")
+						log:warn("switching from SN to last SqueezeCenter")
 
 						self:_selectMusicSource(action, _player:getLastSqueezeCenter())
 
