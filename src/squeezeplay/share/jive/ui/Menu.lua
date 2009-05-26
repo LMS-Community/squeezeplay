@@ -1141,6 +1141,16 @@ Unlock the menu.
 =cut
 --]]
 function unlock(self)
+	if not self.locked then
+		--already unlocked, so exit, but first make sure allowScreensaver is properly returned if needed
+		if self.lockedScreensaver ~= nil then
+			window:setAllowScreensaver(self.lockedScreensaver)
+			self.lockedScreensaver = nil
+		end
+
+		return
+	end
+
 	-- restore screensaver setting
 	local window = self:getWindow()
 	window:setAllowScreensaver(self.lockedScreensaver)
