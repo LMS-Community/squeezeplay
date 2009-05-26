@@ -596,16 +596,19 @@ function _connectPlayerFailed(self, player, server)
 	local window = Window("error", self:string("SQUEEZEBOX_PROBLEM"), setupsqueezeboxTitleStyle)
 	window:setAllowScreensaver(false)
 
+	local cancelAction = function()
+		self:_cancelSelectServer()
+		window:hide()
+
+		return EVENT_CONSUME
+	end
+
 	local menu = SimpleMenu("menu",
 				{
 					{
 						text = self:string("SQUEEZEBOX_GO_BACK"),
 						sound = "WINDOWHIDE",
-						callback = function()
-							           self:_cancelSelectServer()
-
-								   window:hide()
-							   end
+						callback = cancelAction
 					},
 					{
 						text = self:string("SQUEEZEBOX_TRY_AGAIN"),
@@ -617,6 +620,7 @@ function _connectPlayerFailed(self, player, server)
 					},
 				})
 
+	menu:addActionListener("back", self, cancelAction)
 
 	local help = Textarea("help_text", self:string("SQUEEZEBOX_PROBLEM_HELP", player:getName(), server:getName()))
 
