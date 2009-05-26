@@ -437,7 +437,12 @@ end
 			--END temp hack until we resolve SN/SC radios discrepency
 
 			if v.isANode or item.isANode then
-				self:_addNode(item, isMenuStatusResponse)
+				if item.id != "_myMusic" then
+					self:_addNode(item, isMenuStatusResponse)
+				else
+					log:info("Eliminated myMusic node from server, since now handled locally")
+
+				end
 			elseif menuDirective == 'remove' then
 				--todo: massage SN request to remove myMusicMusicFolder
 				jiveMain:removeItemById(item.id)
@@ -564,13 +569,28 @@ function _getSqueezeNetwork(self, item)
 	return nil
 end
 
+function _updateMyMusicTitle(self, serverName)
+	debug.dump(jiveMain:getMenuTable()["_myMusic"], 4)
+
+	local myMusicNode = jiveMain:getMenuTable()["_myMusic"]
+	if not myMusicNode.originalNodeText then
+		myMusicNode.originalNodeText = myMusicNode.text
+		log:error("saving original my music text: ", myMusicNode.text)
+		--todo: this doesn't handle on-the-fly language change well
+	end
+
+	if not serverName or serverName == "mysqueezebox.com" then
+		myMusicNode.text = myMusicNode.originalNodeText
+	else
+		myMusicNode.text = tostring(myMusicNode.originalNodeText) .. "(" .. serverName .. ")"
+	end
+end
+
 -- notify_playerNewName
 -- this is called when the player name changes
 -- we update our main window title
 function notify_playerNewName(self, player, newName)
 	log:debug("SlimMenusApplet:notify_playerNewName(", player, ",", newName, ")")
-
-	newName = self:_addServerNameToHomeTitle(newName)
 
 	-- if this concerns our player
 	if _player == player then
@@ -651,12 +671,13 @@ function notify_playerCurrent(self, player)
 				log:debug("player and server didn't change , not changing menus: ", player)
 				return
 			else
-				log:error("server changed - todo here we should switch switch out server specific items like Choice, turn on/off")
+				log:error("server changed - todo here we should switch out server specific items like Choice, turn on/off")
 
 				_server = player:getSlimServer()
 
 				local playerName = _player:getName()
-				playerName = self:_addServerNameToHomeTitle(playerName)
+				self:_updateMyMusicTitle(_server and _server.name or nil)
+
 				jiveMain:setTitle(playerName)
 
 			end
@@ -732,7 +753,9 @@ function notify_playerCurrent(self, player)
 	if player:getSlimServer() then
 
 		local playerName = _player:getName()
-		playerName = self:_addServerNameToHomeTitle(playerName)
+--		playerName = self:_addServerNameToHomeTitle(playerName)
+		self:_updateMyMusicTitle(_server.name)
+
 		jiveMain:setTitle(playerName)
 
 		-- display upgrade pops (if needed)

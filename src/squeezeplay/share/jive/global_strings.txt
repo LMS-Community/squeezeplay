@@ -17,6 +17,21 @@ SETTINGS
 	RU	Настройки
 	SV	Inställningar
 
+MY_MUSIC
+	CS	Moje hudba
+	DA	Musik
+	DE	Eigene Musik
+	EN	My Music
+	ES	Mi música
+	FI	Musiikkilähde
+	FR	Ma musique
+	IT	Musica
+	NL	Mijn muziek
+	NO	Min musikk
+	PL	Moja muzyka
+	RU	Моя музыка
+	SV	Min musik
+
 REMOTE_SETTINGS
 	CS	Nastavení ovladače
 	DA	Indstillinger for Controller
