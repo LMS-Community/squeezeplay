@@ -25,7 +25,8 @@ Notifications:
  playerRepeatModeChange
  playerPlaylistSize
  playerNeedsUpgrade
-
+ playerLoaded (player and server connected and initial home menu from server has been loaded)
+ 
 =head1 FUNCTIONS
 
 =cut

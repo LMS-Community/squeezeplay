@@ -685,7 +685,7 @@ function notify_playerCurrent(self, player)
 	end
 
 	if player and not player:getSlimServer() then
-		log:info("player changed from:", _player, " to ", player, " but server not yet connected")
+		log:info("player changed from:", _player, " to ", player, " but server not yet present")
 	end
 
 	if _player ~= player then
@@ -714,6 +714,11 @@ function notify_playerCurrent(self, player)
 
 	--can't subscribe to menustatus until we have a server
 	if not player:getSlimServer() then
+		return
+	end
+
+	if not player:getSlimServer():isConnected() then
+		log:info("player changed from:", _player, " to ", player, " but server not yet connected")
 		return
 	end
 

@@ -2823,9 +2823,9 @@ function notify_playerDelete(self, player)
 end
 
 
--- notify_playerCurrent
--- this is called when the current player changes (possibly from no player)
-function notify_playerCurrent(self, player)
+-- notify_playerLoaded
+-- this is called when the current player changes (possibly from no player) and the new menus are loaded
+function notify_playerLoaded(self, player)
 	log:debug("SlimBrowserApplet:notify_playerCurrent(", player, ")")
 	_attachPlayer(self, player)
 end

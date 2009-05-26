@@ -148,6 +148,7 @@ function connectToServer(self, server)
 	-- make sure the server we are connecting to is awake
 	server:wakeOnLan()
 
+	log:debug("connectToServer: ", server)
 	if server then
 		server:setLocallyRequestedServer(server)
 	
