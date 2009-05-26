@@ -55,7 +55,7 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-local CONNECT_TIMEOUT = 30
+local CONNECT_TIMEOUT = 15
 
 
 --temp during dev
@@ -63,7 +63,7 @@ function settingsShow(self)
 	selectMusicSource(self)
 end
 
--- service to select server for a player
+-- service to select server for a player. Note a current player must exist before calling this method
 function selectMusicSource(self, playerConnectedCallback, titleStyle, includedServers, specificServer, serverForRetry)
 
 	if includedServers then
@@ -332,6 +332,14 @@ end
 function notify_playerCurrent(self, player)
 	_updateServerList(self, player)
 
+	if not player then
+		log:warn("Unexpected nil player when waiting for new player or server")
+		--todo might this happen if player loses connection during this connection attempt
+		-- if so what to do here? Maybe inform user of player disconnection and start over?
+		 self:_cancelSelectServer()
+
+	end
+
 	if self.waitForConnect then
 		log:info("waiting for ", player, " on ", self.waitForConnect.server)
 
@@ -374,15 +382,23 @@ function selectServer(self, server, passwordEntered, serverForRetry)
 
 	local currentPlayer = appletManager:callService("getCurrentPlayer")
 
+	if not currentPlayer then
+		log:warn("Unexpected nil player when waiting for new player or server")
+		--todo might this happen if player loses connection during this connection attempt
+		-- if so what to do here? Maybe inform user of player disconnection and start over?
+		 self:_cancelSelectServer()
+	end
+
+
 	-- is the player already connected to the server?
-	if currentPlayer and currentPlayer:getSlimServer() == server then
+	if currentPlayer:getSlimServer() == server then
 		if self.playerConnectedCallback then
 			self.playerConnectedCallback(server)
 			self.playerConnectedCallback = nil
 		end
 		return
 	end
-	if currentPlayer and not currentPlayer:getSlimServer() then
+	if not currentPlayer:getSlimServer() then
        	        self:connectPlayerToServer(currentPlayer, server)
 	else
 		self:_confirmServerSwitch(currentPlayer, server, serverForRetry)
@@ -442,6 +458,7 @@ end
 -- hideConnectingToPlayer
 -- hide the full screen popup that appears until server and menus are loaded
 function hideConnectingToServer(self)
+	log:info("Hiding popup, exists: " , self.connectingPopup)
 
 	if self.connectingPopup then
 		log:info("connectingToServer popup hide")
@@ -461,7 +478,7 @@ end
 
 -- connect player to server
 function connectPlayerToServer(self, player, server)
-	log:info('connectPlayerToServer()')
+	log:info('connectPlayerToServer() ', player, " ", server)
 	-- if connecting to SqueezeNetwork, first check jive is linked
 	if server:getPin() then
 		appletManager:callService("enterPin", server, nil,
@@ -497,6 +514,8 @@ function connectPlayerToServer(self, player, server)
 
 					timeout = timeout + 1
 					if timeout == CONNECT_TIMEOUT then
+						log:warn("Timeout passed, current count: ", timeout)
+
 						self:_connectPlayerFailed(player, server)
 					end
 				end)

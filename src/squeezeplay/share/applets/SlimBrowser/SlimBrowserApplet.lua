@@ -2427,6 +2427,7 @@ function _problemConnecting(self, server)
 				     callback = function()
 							appletManager:callService("selectMusicSource")
 
+							--todo autoswitch - test Receiver setup
 --							appletManager:callService("setCurrentPlayer", nil)
 --							appletManager:callService('startSqueezeboxSetup', player:getMacAddress(), nil)
 						end,
@@ -2443,7 +2444,13 @@ function _problemConnecting(self, server)
 		menu:addItem({
 				     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
 				     callback = function()
-							appletManager:callService("setCurrentPlayer", nil)
+							if player:isLocal() then
+								--avoid disconnecting local player (user might cancel inside "Choose Player")
+								player:disconnectServerAndPreserveLocalPlayer()
+							else
+								appletManager:callService("setCurrentPlayer", nil)
+
+							end
 							appletManager:callService("setupShowSelectPlayer")
 						end,
 				     sound = "WINDOWSHOW",
