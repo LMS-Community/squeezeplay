@@ -71,6 +71,7 @@ function settingsShow(self)
 		"     Dan Evans",
 		"     Sam Feng",
 		"     Mike Fieger",
+		"     Eric Fields",
 		"     Lukas Frey",
 		"     Mickey Gee",
 		"     Andy Grundman",
