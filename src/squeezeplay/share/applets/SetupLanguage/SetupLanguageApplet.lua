@@ -51,7 +51,7 @@ function setupShowSetupLanguage(self, setupNext, helpText)
 
 	-- this uses private data/methods from Applet and locale. don't do this elsewhere,
 	-- but it's needed for speed here
-	self.allStrings = locale:loadAllStrings(self._entry.stringsFilepath)
+	self.allStrings = locale:loadAllStrings(self._entry.dirpath .. "strings.txt")
 
 	-- setup menu
 	local window = Window("text_list", self:string("CHOOSE_LANGUAGE"), "setuptitle")
@@ -110,7 +110,7 @@ function settingsShow(self, menuItem)
 
 	-- this uses private data/methods from Applet and locale. don't do this elsewhere,
 	-- but it's needed for speed here
-	self.allStrings = locale:loadAllStrings(self._entry.stringsFilepath)
+	self.allStrings = locale:loadAllStrings(self._entry.dirpath .. "strings.txt")
 
 	-- setup menu
 	local window = Window("text_list", self:string("LANGUAGE"), 'settingstitle')
