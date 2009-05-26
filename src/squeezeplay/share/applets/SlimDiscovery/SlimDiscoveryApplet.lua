@@ -379,9 +379,10 @@ function _idleDisconnect(self)
 
 	for i, server in SlimServer:iterate() do
 		if server ~= currentServer then
-			--todo, need a better way to know idle
-			--server:disconnect()
+			--allow up to 30 seconds for any remaining server requests to complete
+			server:setIdleTimeout(30)
 		else
+			server:setIdleTimeout(0)
 			server:connect()
 		end
 	end

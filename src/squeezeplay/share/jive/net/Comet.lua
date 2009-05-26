@@ -474,7 +474,8 @@ function request(self, func, playerid, request, priority)
 	-- Send immediately unless we're batching queries
 	if self.state ~= CONNECTED or self.batch ~= 0 then
 		if self.state ~= CONNECTED then
-			self.jnt:notify('cometDisconnected', self)
+			self.jnt:notify('cometDisconnected', self, self.idleTimeoutTriggered)
+			self.idleTimeoutTriggered = nil
 		end
 
 		return id
@@ -556,7 +557,9 @@ _state = function(self, state)
 		self.chttp:close()
 		self.rhttp:close()
 
-		self.jnt:notify('cometDisconnected', self)
+		self.jnt:notify('cometDisconnected', self, self.idleTimeoutTriggered)
+		self.idleTimeoutTriggered = nil
+
 	end
 end
 
@@ -752,6 +755,39 @@ _connected = function(self)
 		)
 
 		self.rhttp:fetch(req)
+	end
+end
+
+
+function _resetIdleTimer(self)
+	if not self.idleTimeout or self.idleTimeout == 0 then
+		return
+	end
+
+	if not self.idleTimer then
+		self.idleTimer = Timer( 0,
+					function()
+						log:debug("Comet disconnect after idleTimeout: ", idleTimeout )
+						self.idleTimeoutTriggered = true
+						self:disconnect()
+					end,
+					true)
+	end
+	self.idleTimer:restart(self.idleTimeout * 1000)
+end
+
+
+-- if >0, disconnect from server idleTimeout seconds after the most recent request
+function setIdleTimeout(self, idleTimeout)
+	self.idleTimeout = idleTimeout
+
+	if not idleTimeout or idleTimeout == 0 then
+		if self.idleTimer then
+			self.idleTimer:stop()
+		end
+	else
+		-- >0 time, adjust timer
+		self:_resetIdleTimer()
 	end
 end
 

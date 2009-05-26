@@ -591,6 +591,16 @@ function connect(self)
 end
 
 
+function _disconnectServerInternals(self)
+
+	self.netstate = 'disconnected'
+
+	self.artworkPool:close()
+	self.comet:disconnect()
+
+end
+
+
 -- force disconnect to SqueezeCenter
 function disconnect(self)
 	if self.netstate == 'disconnected' then
@@ -599,10 +609,7 @@ function disconnect(self)
 
 	log:debug(self, ":disconnect")
 
-	self.netstate = 'disconnected'
-
-	self.artworkPool:close()
-	self.comet:disconnect()
+	self:_disconnectServerInternals()
 end
 
 
@@ -612,6 +619,12 @@ function reconnect(self)
 
 	self:disconnect()
 	self:connect()
+end
+
+
+-- if >0, disconnect from server idleTimeout seconds after the most recent request
+function setIdleTimeout(self, idleTimeout)
+	self.comet:setIdleTimeout(idleTimeout)
 end
 
 
@@ -637,23 +650,28 @@ function notify_cometConnected(self, comet)
 end
 
 -- comet is disconnected from SC
-function notify_cometDisconnected(self, comet)
+function notify_cometDisconnected(self, comet, idleTimeoutTriggered)
 	if self.comet ~= comet then
 		return
 	end
 
-	log:info("disconnected ", self.name)
+	log:info("disconnected ", self.name, " idleTimeoutTriggered: ", idleTimeoutTriggered)
 
-	if self.netstate == 'connected' then
-		log:debug(self, " disconnected")
+	if idleTimeoutTriggered then
+		log:info("idle disconnected ", self.name)
+		--disconnect self - normally self triggers a clean comet disconnect during self:disconnect, except in the idleDisconnect case
+		self:_disconnectServerInternals()
+	else
+		if self.netstate == 'connected' then
+			log:debug(self, " disconnected")
 
-		self.netstate = 'connecting'
+			self.netstate = 'connecting'
+		end
 	end
 
 	-- always send the notification
 	self.jnt:notify('serverDisconnected', self, #self.userRequests)
 end
-
 
 -- comet http error
 function notify_cometHttpError(self, comet, cometRequest)
