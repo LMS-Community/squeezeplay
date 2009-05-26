@@ -103,7 +103,7 @@ local guideMap = {
 
 local idMismatchMap = {
 	ondemand = "music_services",
-	radio = "radios"
+--	radio = "radios" - commented out until we resolve difference between SC and SN regarding Internet radio (SC has as node and items, SN has as single item)
 
 }
 
@@ -134,13 +134,11 @@ end
 
 
 function notify_serverLinked(self, server)
-	log:info("***linked\t", server)
+	log:debug("***linked\t", server)
 	--linked seems to be the best status to indicate serverstatus is complete (and thus version info, etc is now known)
-	if server:isCompatible() then
+	if server:isCompatible() and server:isSqueezeNetwork() then
+		log:info("***linked SN\t", server)
 		self:_fetchServerMenu(server)
-	else
-		log:warn("not compatible: ", server)
-
 	end
 end
 
@@ -287,7 +285,7 @@ end
 --various compatiblilty hacks
 function _massageItem(item)
 	if idMismatchMap[item.id] then
-		log:debug("fixing mismatch: ", item.id)
+		log:debug("fixing mismatch item: ", item.id)
 
 		item.id = idMismatchMap[item.id]
 	end
@@ -364,7 +362,7 @@ self:_addNode({
   sound = "WINDOWSHOW",
   weight = 20,
   id = "radios",
-  text = "Internet Radio",
+  text = "Internet Radio (SC)",
   node = "home",
 }, isMenuStatusResponse)
 end
@@ -426,6 +424,17 @@ end
 				v.isANode = true
 			end
 
+			--temp hack until we resolve SN/SC radios discrepency, show both since we can't merge (SC uses node and subitem, SN uses single item)
+			--BEGIN
+			if item.id == "radio" then
+				--temp mark for debugging purposes
+				item.text = item.text .. " (SN)"
+			end
+			if item.id == "radios" then
+				--temp mark for debugging purposes
+				item.text = item.text .. " (SC)"
+			end
+			--END temp hack until we resolve SN/SC radios discrepency
 
 			if v.isANode or item.isANode then
 				self:_addNode(item, isMenuStatusResponse)
@@ -482,15 +491,19 @@ end
 					 -- if so, switch server to SN and provide content
 
 
-					----todo swap this back, for now always switching to SN if SN can serve
-					if (not _server or not _server:isConnected()) and self:_canSqueezeNetworkServe(item) then
---					if self:_canSqueezeNetworkServe(item) then
+					--temp hack until we resolve SN/SC radios discrepency, show both since we can't merge (SC uses node and subitem, SN uses single item)
+--					original: if (not _server or not _server:isConnected()) and self:_canSqueezeNetworkServe(item) then
+					if ((not _server or not _server:isConnected()) and self:_canSqueezeNetworkServe(item))
+					    or item.id == 'radio' then
 						log:warn("switching to SN")
 						log:warn("Do we want to try to reconnect to SC first here?")
 						self:_selectMusicSource(action, self:_getSqueezeNetwork(),
 						_player and _player:getLastSqueezeCenter() or nil)
 
-					elseif (not _server or _server:isSqueezeNetwork()) and not self:_canSqueezeNetworkServe(item) then
+					--temp hack until we resolve SN/SC radios discrepency, show both since we can't merge (SC uses node and subitem, SN uses single item)
+--					original: elseif (not _server or _server:isSqueezeNetwork()) and not self:_canSqueezeNetworkServe(item) then
+					elseif ((not _server or _server:isSqueezeNetwork()) and not self:_canSqueezeNetworkServe(item))
+					        or item.node == 'radios' then
 						log:warn("switching from SN to last SqueezeCenter")
 
 						self:_selectMusicSource(action, _player:getLastSqueezeCenter())
