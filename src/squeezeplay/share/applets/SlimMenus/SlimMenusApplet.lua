@@ -570,12 +570,9 @@ function _getSqueezeNetwork(self, item)
 end
 
 function _updateMyMusicTitle(self, serverName)
-	debug.dump(jiveMain:getMenuTable()["_myMusic"], 4)
-
 	local myMusicNode = jiveMain:getMenuTable()["_myMusic"]
 	if not myMusicNode.originalNodeText then
 		myMusicNode.originalNodeText = myMusicNode.text
-		log:error("saving original my music text: ", myMusicNode.text)
 		--todo: this doesn't handle on-the-fly language change well
 	end
 
