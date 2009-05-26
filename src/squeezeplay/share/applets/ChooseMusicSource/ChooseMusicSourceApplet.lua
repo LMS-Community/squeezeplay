@@ -339,25 +339,6 @@ function notify_playerCurrent(self, player)
 		 self:_cancelSelectServer()
 
 	end
-
-	if self.waitForConnect then
-		log:info("waiting for ", player, " on ", self.waitForConnect.server)
-
-		if self.waitForConnect.player == player
-			and self.waitForConnect.server == player:getSlimServer() then
-
-			self.waitForConnect = nil
-			if self.playerConnectedCallback then
-
-				self.playerConnectedCallback(player:getSlimServer())
-				self.playerConnectedCallback = nil
-			end
-		else
-			log:warn("player or server mismatch: expected: ", player, " ", player:getSlimServer(),
-			" got: ", self.waitForConnect.player, " ", self.waitForConnect.server)
-		end
-	end
-
 end
 
 
@@ -467,12 +448,30 @@ function hideConnectingToServer(self)
 
 		if self.waitForConnect and self.waitForConnect.player then
 			jnt:notify("playerLoaded", self.waitForConnect.player)
-			self.waitForConnect = nil
 		else
 			log:warn("Odd, self.waitForConnect or self.waitForConnect.player shouldn't be nil, using getCurrentPlayer")
 
 			jnt:notify("playerLoaded", appletManager:callService("getCurrentPlayer"))
 		end
+
+		--perform callback if we've successfully switched to desired player/server
+		if self.waitForConnect then
+			log:info("waiting for ", self.waitForConnect.player, " on ", self.waitForConnect.server)
+
+			if self.waitForConnect.server == self.waitForConnect.player:getSlimServer() then
+
+				if self.playerConnectedCallback then
+					local callback = self.playerConnectedCallback
+					self.playerConnectedCallback = nil
+					callback(self.waitForConnect.player:getSlimServer())
+				end
+			else
+				log:warn("server mismatch for player: ", self.waitForConnect.player, "  Expected: ", self.waitForConnect.server,
+				" got: ", self.waitForConnect.player:getSlimServer())
+			end
+			self.waitForConnect = nil
+		end
+
 	end
 end
 

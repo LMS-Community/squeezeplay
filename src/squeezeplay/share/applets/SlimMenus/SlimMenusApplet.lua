@@ -180,7 +180,12 @@ function _updatingPlayer(self)
 
 	-- add a listener for KEY_PRESS that disconnects from the player and returns to home
 	local disconnectPlayer = function()
-		appletManager:callService("setCurrentPlayer", nil)
+		if _player:isLocal() then
+			_player:disconnectServerAndPreserveLocalPlayer()
+		else
+			appletManager:callService("setCurrentPlayer", nil)
+
+		end
 		popup:hide()
 	end
 
@@ -223,7 +228,12 @@ function _userTriggeredUpdate(self)
 
 	-- add a listener for KEY_HOLD that disconnects from the player and returns to home
 	local disconnectPlayer = function()
-		appletManager:callService("setCurrentPlayer", nil)
+		if _player:isLocal() then
+			_player:disconnectServerAndPreserveLocalPlayer()
+		else
+			appletManager:callService("setCurrentPlayer", nil)
+
+		end
 		window:hide()
 	end
 
@@ -566,6 +576,13 @@ function _addServerNameToHomeTitle(self, name)
 end
 
 function _selectMusicSource(self, callback, specificServer, serverForRetry)
+	local currentPlayer = appletManager:callService("getCurrentPlayer")
+	if not currentPlayer then
+		log:info("No player yet, first select player (which will trigger choose music soure, then go home")
+		appletManager:callService("setupShowSelectPlayer")
+		return
+	end
+
 	appletManager:callService("selectMusicSource",
 							callback,
 							nil,
