@@ -399,12 +399,9 @@ end
 
 function openNodeById(self, id, resetSelection)
 	if self.nodeTable[id] then
-	--resetselection doesn't work...
---		if resetSelection then
-----			self.nodeTable[id].menu:setSelectedIndex(1) -- fails with bizarre extra item (due to offstage relayout perhaps)
---			--so being a bit evil:
---			self.nodeTable[id].menu.selected = 1
---		end
+		if resetSelection then
+			self.nodeTable[id].menu:setSelectedIndex(1)
+		end
 		self.nodeTable[id].item.callback()
 		return true
 	else
