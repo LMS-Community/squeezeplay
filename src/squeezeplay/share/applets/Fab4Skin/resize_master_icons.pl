@@ -51,6 +51,8 @@ icon_wireless.png
 icon_firmware_update.png
 icon_verify.png
 icon_restart.png
+icon_playlist_save.png
+icon_playlist_clear.png
 /);
 
 my $special = {
