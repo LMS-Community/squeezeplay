@@ -608,7 +608,10 @@ end
 
 function _selectMusicSource(self, callback, specificServer, serverForRetry)
 	local currentPlayer = appletManager:callService("getCurrentPlayer")
-	if not currentPlayer or not currentPlayer.info.connected then
+--	if not currentPlayer or not currentPlayer.info.connected then
+	--todo: handle situation where player is down; above code also fails when server is down, not what we want
+	--issue also happened where player mac changed (might not be real world scenerio)
+	if not currentPlayer then
 		log:info("No player yet, first select player (which will trigger choose music soure, then go home")
 		appletManager:callService("setupShowSelectPlayer")
 		return
