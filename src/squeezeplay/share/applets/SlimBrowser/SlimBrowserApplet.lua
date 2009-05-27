@@ -1028,6 +1028,15 @@ local function _browseSink(step, chunk, err)
 				log:debug("Selecting  menuAnchor: ", _player.menuAnchor)				step.menu:setSelectedIndex(_player.menuAnchor)
 				step.menu:setSelectedIndex(_player.menuAnchor)
 				_player.menuAnchorSet = true
+				if _player.loadedCallback then
+					local loadedCallback = _player.loadedCallback
+					_player.loadedCallback = nil
+
+					loadedCallback(step)
+					_pushStep(step)
+					step.window:show()
+
+				end
 			end
 
 			-- update the window properties
@@ -1812,7 +1821,7 @@ local function _browseMenuRenderer(menu, step, widgets, toRenderIndexes, toRende
 			if styleMap[style] then
 				style = styleMap[style]
 			end
-			if item['checkbox'] or item['radio'] or item['selectedIndex'] then
+			if item and (item['checkbox'] or item['radio'] or item['selectedIndex']) then
 				style = 'item_choice'
 			end
 			widgets[widgetIndex] = _decoratedLabel(widget, style, item, step, menuAccel)
@@ -2310,11 +2319,14 @@ function browserActionRequest(self, server, v, loadedCallback)
 				from, qty = _decideFirstChunk(step, jsonAction)
 
 				step.loaded = function()
-					if loadedCallback then
+					--if _player.menuAnchor then defer callback until menuAnchor chunk received.
+					if not _player.menuAnchor and loadedCallback then
 						loadedCallback(step)
+						_pushStep(step)
+						step.window:show()
+					else
+						_player.loadedCallback = loadedCallback
 					end
-					_pushStep(step)
-					step.window:show()
 				end
 			end
 		end
