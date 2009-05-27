@@ -199,7 +199,7 @@ function _addServerItem(self, server, address)
 		end
 	end
 
-	if server:isSqueezeNetwork() then
+	if server and server:isSqueezeNetwork() then
 		log:debug("Exclude SN")
 		return
 	end
