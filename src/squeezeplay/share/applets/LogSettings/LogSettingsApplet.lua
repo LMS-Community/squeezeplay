@@ -107,6 +107,8 @@ function _saveLogconf()
 
 	if type(logconf) ~= "table" then
 		logconf = {}
+		logconf.category = {}
+		logconf.appender = {}
 	end
 
 	-- update category levels

@@ -416,31 +416,38 @@ int squeezeplay_log_init(lua_State *L) {
 		return 0;
 	}
 
+	/* default to stdout(info) in case conf file is corrupt */
+	appender_stdout = log_priority_to_int("info");
+
 	/* configure appenders */
 	lua_getfield(L, -1, "appender");
-	lua_pushnil(L);
-	while (lua_next(L, -2) != 0) {
-		if (strcmp(lua_tostring(L, -2), "stdout") == 0) {
-			appender_stdout = log_priority_to_int(lua_tostring(L, -1));
-		}
-		if (strcmp(lua_tostring(L, -2), "syslog") == 0) {
-			appender_syslog = log_priority_to_int(lua_tostring(L, -1));
-		}
+	if (!lua_isnil(L, -1)) {
+		lua_pushnil(L);
+		while (lua_next(L, -2) != 0) {
+			if (strcmp(lua_tostring(L, -2), "stdout") == 0) {
+				appender_stdout = log_priority_to_int(lua_tostring(L, -1));
+			}
+			if (strcmp(lua_tostring(L, -2), "syslog") == 0) {
+				appender_syslog = log_priority_to_int(lua_tostring(L, -1));
+			}
 
-		lua_pop(L, 1);
+			lua_pop(L, 1);
+		}
 	}
 	lua_pop(L, 1);
 
 	/* configure categories */
 	lua_getfield(L, -1, "category");
-	lua_pushnil(L);
-	while (lua_next(L, -2) != 0) {
-		struct log_category *category;
+	if (!lua_isnil(L, -1)) {
+		lua_pushnil(L);
+		while (lua_next(L, -2) != 0) {
+			struct log_category *category;
 
-		category = log_category_get(lua_tostring(L, -2));
-		log_category_set_priority(category, log_priority_to_int(lua_tostring(L, -1)));
+			category = log_category_get(lua_tostring(L, -2));
+			log_category_set_priority(category, log_priority_to_int(lua_tostring(L, -1)));
 
-		lua_pop(L, 1);
+			lua_pop(L, 1);
+		}
 	}
 	lua_pop(L, 1);
 
