@@ -525,6 +525,7 @@ end
 		if _menuReceived and isMenuStatusResponse and menuDirective ~= 'remove' then
 			log:info("hiding any 'connecting to server' popup after 'add' menustatus response ")
 
+			jnt:notify("playerLoaded", _player)
 			appletManager:callService("hideConnectingToServer")
 		end
          end

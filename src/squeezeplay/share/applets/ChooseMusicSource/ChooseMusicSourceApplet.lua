@@ -446,14 +446,6 @@ function hideConnectingToServer(self)
 		self.connectingPopup:hide()
 		self.connectingPopup = nil
 
-		if self.waitForConnect and self.waitForConnect.player then
-			jnt:notify("playerLoaded", self.waitForConnect.player)
-		else
-			log:warn("Odd, self.waitForConnect or self.waitForConnect.player shouldn't be nil, using getCurrentPlayer")
-
-			jnt:notify("playerLoaded", appletManager:callService("getCurrentPlayer"))
-		end
-
 		--perform callback if we've successfully switched to desired player/server
 		if self.waitForConnect then
 			log:info("waiting for ", self.waitForConnect.player, " on ", self.waitForConnect.server)
