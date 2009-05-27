@@ -428,8 +428,6 @@ function _updateProgress(self, data)
 
 	local elapsed, duration = self.player:getTrackElapsed()
 
-	log:warn(duration)
-
 	if duration and tonumber(duration) > 0 then
 		self.progressSlider:setRange(0, tonumber(duration), tonumber(elapsed))
 	else 
