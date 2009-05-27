@@ -416,9 +416,6 @@ int squeezeplay_log_init(lua_State *L) {
 		return 0;
 	}
 
-	/* default to stdout(info) in case conf file is corrupt */
-	appender_stdout = log_priority_to_int("info");
-
 	/* configure appenders */
 	lua_getfield(L, -1, "appender");
 	if (!lua_isnil(L, -1)) {
