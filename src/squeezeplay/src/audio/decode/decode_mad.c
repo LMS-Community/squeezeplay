@@ -240,6 +240,17 @@ static void decode_mad_frame(struct decode_mad *self) {
 					return;
 				}
 
+				/* Mark that we are at the end of the file,
+				 * for some reason this is not required on
+				 * ip3k, but it is needed in SqueezePlay as
+				 * this_frame never reaches the guard_pionter?
+				 */
+				if (self->guard_pointer) {
+					self->stream.this_frame = self->guard_pointer;
+					self->state = MAD_STATE_PCM_READY;
+					return;
+				}
+
 				/* If we're at the end of the input file, write
 				 * out the buffer guard.
 				 */
@@ -289,8 +300,6 @@ static void decode_mad_frame(struct decode_mad *self) {
 
 		/* pcm is now ready  */
 		self->state = MAD_STATE_PCM_READY;
-
-		return;
 	} while (0);
 }		
 
@@ -366,9 +375,13 @@ static void decode_mad_output(struct decode_mad *self) {
 		if (offset > pcm->length) {
 			offset = pcm->length;
 		}
-		self->encoder_delay -= offset;
 
 		LOG_DEBUG(log_audio_codec, "Skip encoder_delay=%d pcm->length=%d offset=%d", self->encoder_delay, pcm->length, offset);
+
+		self->encoder_delay -= offset;
+
+		left += offset;
+		right += offset;
 	}
 
 	for (i=offset; i<pcm->length; i++) {
