@@ -46,6 +46,7 @@ local debug                  = require("jive.utils.debug")
 
 local jnt                    = jnt
 local appletManager          = appletManager
+local jiveMain               = jiveMain
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
@@ -90,7 +91,8 @@ end
 function settingsShow(self)
 	local window = Window("text_list", self:string('WALLPAPER'), 'settingstitle')
 
-	self.currentPlayerId = 'wallpaper'
+	-- default is different based on skin
+	self.currentPlayerId = jiveMain:getSelectedSkin()
 
 	local _playerName    = false
 
@@ -332,6 +334,7 @@ function _fetchFile(self, url, callback)
 			if chunk and (state == "fetch" or state == "fetchset") then
 				log:debug("fetched background: ", url)
 				self.download[url] = chunk
+	
 				if url == self.last then
 					callback(state == "fetchset")
 				end
@@ -349,14 +352,18 @@ end
 
 
 function showBackground(self, wallpaper, playerId)
-	if not playerId then playerId = 'wallpaper' end
+
+	-- default is different based on skin
+	local skinName = jiveMain:getSelectedSkin()
+	if not playerId then playerId = skinName end
+
 	if not wallpaper then
 		wallpaper = self:getSettings()[playerId]
 		if not wallpaper then
-			wallpaper = self:getSettings()["wallpaper"]
+			wallpaper = self:getSettings()[skinName]
+			debug.dump(wallpaper)
 		end
 	end
-
 	if self.currentWallpaper == wallpaper then
 		-- no change
 		return
@@ -385,7 +392,8 @@ end
 
 function setBackground(self, wallpaper, playerId)
 	if not playerId then 
-		playerId = 'wallpaper' 
+		-- default is different based on skin
+		playerId = jiveMain:getSelectedSkin()
 	end
 
 	log:debug('SetupWallpaper, setting wallpaper for ', playerId)

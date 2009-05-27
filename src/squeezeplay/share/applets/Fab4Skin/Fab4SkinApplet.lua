@@ -2023,10 +2023,10 @@ function skin(self, s)
 				img = _loadImage(self, "Icons/icon_toolbar_fav_remove.png"),
 			}),
 			fwdDisabled   = _uses(_transportControlButton, {
-				img = false,
+				img = _loadImage(self, "Icons/icon_toolbar_ffwd_dis.png"),
 			}),
 			rewDisabled   = _uses(_transportControlButton, {
-				img = false,
+				img = _loadImage(self, "Icons/icon_toolbar_rew_dis.png"),
 			}),
 		},
 	
@@ -2125,7 +2125,7 @@ function skin(self, s)
 		thumbsDown  = _uses(s.nowplaying.npcontrols.thumbsDown, { bgImg = keyMiddlePressed }),
 		love        = _uses(s.nowplaying.npcontrols.love, { bgImg = keyMiddlePressed }),
 		hate        = _uses(s.nowplaying.npcontrols.hate, { bgImg = keyMiddlePressed }),
-		fwdDisabled = _uses(s.nowplaying.npcontrols.rewDisabled),
+		fwdDisabled = _uses(s.nowplaying.npcontrols.fwdDisabled),
 		rewDisabled = _uses(s.nowplaying.npcontrols.rewDisabled),
 	}
 	

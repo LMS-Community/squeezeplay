@@ -35,7 +35,11 @@ end
 
 function defaultSettings(meta)
 	return { 
-		wallpaper = "sunrise.png",
+		Fab4RemoteSkin = "fab4_encore.png",
+		Fab4Skin       = "fab4_encore.png",
+		FullscreenSkin = "jive_midnight.png",
+		ControllerSkin = "jive_sunrise.png",
+		DefaultSkin    = "jive_sunrise.png",
 	}
 end
 

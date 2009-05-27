@@ -99,7 +99,7 @@ CREDITS_BY
 	RU	Рисунки от:
 	SV	Bilder av:
 
-CONCRETE
+JIVE_CONCRETE
 	CS	Beton
 	DA	Cement
 	DE	Beton
@@ -114,7 +114,7 @@ CONCRETE
 	RU	Бетон
 	SV	Betong
 
-MIDNIGHT
+JIVE_MIDNIGHT
 	CS	Půlnoc
 	DA	Midnat
 	DE	Mitternacht
@@ -129,7 +129,7 @@ MIDNIGHT
 	RU	Полночь
 	SV	Midnatt
 
-PEA
+JIVE_PEA
 	CS	Hrášek
 	DA	Ært
 	DE	Erbse
@@ -144,7 +144,7 @@ PEA
 	RU	Горошек
 	SV	Ärta
 
-BLACK
+JIVE_BLACK
 	CS	Černá
 	DA	Sort
 	DE	Schwarz
@@ -309,7 +309,7 @@ JIVE_SUNLIGHT
 	RU	Солнечный свет
 	SV	Solsken
 
-FADE_TO_BLACK
+JIVE_FADE_TO_BLACK
 	CS	Vyblednout do černé
 	DA	Går i sort
 	DE	Ausblenden
@@ -354,7 +354,7 @@ JIVE_PURPLENOTE
 	RU	Пурпурные ноты
 	SV	Lila noter
 
-ORANGEMARBLE
+JIVE_ORANGEMARBLE
 	CS	Oranžový mramor
 	DA	Orange marmor
 	DE	Orangefarbener Marmor
@@ -369,7 +369,7 @@ ORANGEMARBLE
 	RU	Оранжевый мрамор
 	SV	Orange kula
 
-NOTE
+JIVE_NOTE
 	CS	Poznámky
 	DA	Noter
 	DE	Noten
