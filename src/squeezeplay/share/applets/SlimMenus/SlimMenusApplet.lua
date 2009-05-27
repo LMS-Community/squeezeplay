@@ -607,7 +607,7 @@ end
 
 function _selectMusicSource(self, callback, specificServer, serverForRetry)
 	local currentPlayer = appletManager:callService("getCurrentPlayer")
-	if not currentPlayer then
+	if not currentPlayer or not currentPlayer.info.connected then
 		log:info("No player yet, first select player (which will trigger choose music soure, then go home")
 		appletManager:callService("setupShowSelectPlayer")
 		return
@@ -632,7 +632,6 @@ function myMusicSelector(self)
 	elseif _server:isSqueezeNetwork() then
 		--offer switch back to SC
 		self:_selectMusicSource(function()
-						jiveMain:goHome()
 						jiveMain:openNodeById('_myMusic', true)
 					end,
 					_player:getLastSqueezeCenter())
