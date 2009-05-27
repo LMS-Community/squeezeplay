@@ -343,7 +343,7 @@ local function _loadSkin(self, appletName, reload, useDefaultSize)
 	-- reset the skin
 	jive.ui.style = {}
 
-	obj[method](obj, jive.ui.style, reload==nil and true or relaod, useDefaultSize)
+	obj[method](obj, jive.ui.style, reload==nil and true or reload, useDefaultSize)
 
 	Framework:styleChanged()
 
