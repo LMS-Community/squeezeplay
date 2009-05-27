@@ -428,13 +428,22 @@ function _updateProgress(self, data)
 
 	local elapsed, duration = self.player:getTrackElapsed()
 
-	if self.progressSlider then
-		if duration and tonumber(duration) > 0 then
-			self.progressSlider:setRange(0, tonumber(duration), tonumber(elapsed))
-		else 
-			-- If 0 just set it to 100
-			self.progressSlider:setRange(0, 100, 0)
-		end
+	log:warn(duration)
+
+	if duration and tonumber(duration) > 0 then
+		self.progressSlider:setRange(0, tonumber(duration), tonumber(elapsed))
+	else 
+	-- If 0 just set it to 100
+		self.progressSlider:setRange(0, 100, 0)
+	end
+
+	-- http streams show duration of 0 before starting, so update to a progress bar on the fly
+	if duration and not showProgresBar then
+		-- swap out progressBar
+		self.window:removeWidget(self.progressNBGroup)
+		self.window:addWidget(self.progressBarGroup)
+		self.progressGroup = self.progressBarGroup
+		showProgressBar = true
 	end
 
 	_updatePosition(self)
@@ -694,35 +703,39 @@ function _createUI(self)
 		self.albumTitle  = Label('npalbum', "")
 		self.artistTitle = Label('npartist', "")
 
-	if showProgressBar then
-		if not self.gotoTimer then
-			self.gotoTimer = Timer(400,
-				function()
-					if self.gotoElapsed then
-						self.player:gototime(self.gotoElapsed)
-						self.gotoElapsed = nil
-					end
-				end,
-				true)
-		end
+	if not self.gotoTimer then
+		self.gotoTimer = Timer(400,
+			function()
+				if self.gotoElapsed then
+					self.player:gototime(self.gotoElapsed)
+					self.gotoElapsed = nil
+				end
+			end,
+			true)
+	end
 	
-		self.progressSlider = Slider('npprogressB', 0, 100, 0,
-			function(slider, value, done)
-				self.gotoElapsed = value
-				self.gotoTimer:restart()
-			end)
-		self.progressSlider:addTimer(1000, function() self:_updatePosition() end)
+	self.progressSlider = Slider('npprogressB', 0, 100, 0,
+		function(slider, value, done)
+			self.gotoElapsed = value
+			self.gotoTimer:restart()
+		end)
+	self.progressSlider:addTimer(1000, function() self:_updatePosition() end)
 
-		self.progressGroup = Group('npprogress', {
-				      elapsed = Label("elapsed", ""),
-				      slider = self.progressSlider,
-				      remain = Label("remain", "")
-			      })
+	self.progressBarGroup = Group('npprogress', {
+			      elapsed = Label("elapsed", ""),
+			      slider = self.progressSlider,
+			      remain = Label("remain", "")
+		      })
+	self.progressBarGroup:addTimer(1000, function() self:_updatePosition() end)
+
+	self.progressNBGroup = Group('npprogressNB', {
+		      elapsed = Label("elapsed", "")
+	})
+
+	if showProgressBar then
+		self.progressGroup = self.progressBarGroup
 	else
-		self.progressGroup = Group('npprogressNB', {
-			      elapsed = Label("elapsed", "")
-		})
-		self.progressGroup:addTimer(1000, function() self:_updatePosition() end)
+		self.progressGroup = self.progressNBGroup
 	end
 
 	self.artwork = Icon("artwork")
