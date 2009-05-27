@@ -245,7 +245,7 @@ static void decode_mad_frame(struct decode_mad *self) {
 				 */
 				self->guard_pointer = read_start;
 				memset(self->guard_pointer, 0, MAD_BUFFER_GUARD);
-				read_num += MAD_BUFFER_GUARD;
+				read_num = MAD_BUFFER_GUARD;
 			}
 			else {
 				current_decoder_state &= ~DECODE_STATE_UNDERRUN;
@@ -289,6 +289,8 @@ static void decode_mad_frame(struct decode_mad *self) {
 
 		/* pcm is now ready  */
 		self->state = MAD_STATE_PCM_READY;
+
+		return;
 	} while (0);
 }		
 
@@ -334,57 +336,57 @@ static void decode_mad_output(struct decode_mad *self) {
 		}
 
 		xing_parse(self);
+		return;
+	}
+
+	/* Bug 9046, don't allow sample rate to change mid stream */
+	if (self->frames > 2 && self->sample_rate != self->frame.header.samplerate) {
+		LOG_DEBUG(log_audio_codec, "Sample rate changed from %d to %d, discarding PCM", self->sample_rate, self->frame.header.samplerate);
+		return;
+	}
+	self->sample_rate = self->frame.header.samplerate;
+
+	buf = self->output_buffer;
+	buf_end = self->output_buffer + OUTPUT_BUFFER_FRAMES;
+
+	left = pcm->samples[0];
+
+	if (pcm->channels == 2) {
+		/* stereo */
+		right = pcm->samples[1];
 	}
 	else {
-		/* Bug 9046, don't allow sample rate to change mid stream */
-		if (self->frames > 2 && self->sample_rate != self->frame.header.samplerate) {
-			LOG_DEBUG(log_audio_codec, "Sample rate changed from %d to %d, discarding PCM", self->sample_rate, self->frame.header.samplerate);
-			return;
-		}
-		self->sample_rate = self->frame.header.samplerate;
-
-		buf = self->output_buffer;
-		buf_end = self->output_buffer + OUTPUT_BUFFER_FRAMES;
-
-		left = pcm->samples[0];
-
-		if (pcm->channels == 2) {
-			/* stereo */
-			right = pcm->samples[1];
-		}
-		else {
-			/* mono */
-			right = pcm->samples[0];
-		}
-
-		/* skip samples for the encoder delay */
-		if (self->encoder_delay) {
-			offset = self->encoder_delay;
-			if (offset > pcm->length) {
-				offset = pcm->length;
-			}
-			self->encoder_delay -= offset;
-
-			LOG_DEBUG(log_audio_codec, "Skip encoder_delay=%d pcm->length=%d offset=%d", self->encoder_delay, pcm->length, offset);
-		}
-
-		for (i=offset; i<pcm->length; i++) {
-			*buf++ = mad_fixed_to_32bit(*left++);
-			*buf++ = mad_fixed_to_32bit(*right++);
-
-			if (buf == buf_end) {
-				decode_output_samples(self->output_buffer,
-						      (buf - self->output_buffer) / 2,
-						      self->sample_rate);
-
-				buf = self->output_buffer;
-			}
-		}
-
-		decode_output_samples(self->output_buffer,
-				      (buf - self->output_buffer) / 2,
-				      self->sample_rate);
+		/* mono */
+		right = pcm->samples[0];
 	}
+
+	/* skip samples for the encoder delay */
+	if (self->encoder_delay) {
+		offset = self->encoder_delay;
+		if (offset > pcm->length) {
+			offset = pcm->length;
+		}
+		self->encoder_delay -= offset;
+
+		LOG_DEBUG(log_audio_codec, "Skip encoder_delay=%d pcm->length=%d offset=%d", self->encoder_delay, pcm->length, offset);
+	}
+
+	for (i=offset; i<pcm->length; i++) {
+		*buf++ = mad_fixed_to_32bit(*left++);
+		*buf++ = mad_fixed_to_32bit(*right++);
+
+		if (buf == buf_end) {
+			decode_output_samples(self->output_buffer,
+					      (buf - self->output_buffer) / 2,
+					      self->sample_rate);
+
+			buf = self->output_buffer;
+		}
+	}
+
+	decode_output_samples(self->output_buffer,
+			      (buf - self->output_buffer) / 2,
+			      self->sample_rate);
 
 	/* If we've come to the guard pointer, we're done */
 	if (self->stream.this_frame == self->guard_pointer) {
