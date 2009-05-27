@@ -1953,7 +1953,7 @@ function skin(self, s)
 	
 		--transport controls
 		npcontrols = {
-			order = { 'rew', 'div1', 'play', 'div2', 'fwd', 'div3', 'shuffleMode', 'div4', 'repeatMode', 
+			order = { 'rew', 'div1', 'play', 'div2', 'fwd', 'div3', 'repeatMode', 'div4', 'shuffleMode', 
 					'div5', 'volDown', 'div6', 'volSlider', 'div7', 'volUp' },
 			position = LAYOUT_SOUTH,
 			h = controlHeight,
