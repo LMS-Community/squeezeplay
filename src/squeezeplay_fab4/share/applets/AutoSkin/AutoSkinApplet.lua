@@ -72,7 +72,9 @@ function __init(self, ...)
 --	local remoteSkinApplet = appletManager:loadApplet(remoteSkin)
 
 	--trial and error suggested this result - todo: talk to maurice about this
-	self:_changeDutyCycle(7)
+	--Yikes touch and ir freezeup on boot when trying to change duty cycle early - Richard looking into why
+	--commenting out for now
+--	self:_changeDutyCycle(7)
 
 	self.mode = jiveMain:getSelectedSkin()
 
