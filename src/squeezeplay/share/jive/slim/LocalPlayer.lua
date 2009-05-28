@@ -150,7 +150,7 @@ function connectToServer(self, server)
 
 	log:debug("connectToServer: ", server)
 	if server then
-		server:setLocallyRequestedServer(server)
+		server:addLocallyRequestedServer(server)
 	
 		self.slimproto:connect(server)
 	end

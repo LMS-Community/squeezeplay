@@ -90,7 +90,7 @@ local credentials = {}
 local lastServerSwitchT = nil
 
 --holds the server for which a local connection request has been made. Will be nilled out when SERVER_DISCONNECT_LAG_TIME has passed.
-local locallyRequestedServer = nil
+local locallyRequestedServers = {}
 
 -- class function to iterate over all SqueezeCenters
 function iterate(class)
@@ -104,9 +104,9 @@ function getCurrentServer(class)
 end
 
 
--- class method to set the locally requested server
-function setLocallyRequestedServer(class, server)
-	locallyRequestedServer = server
+-- class method to add the locally requested server (mihgt be more than one - one for local player and one for remote player, for instance)
+function addLocallyRequestedServer(class, server)
+	table.insert(locallyRequestedServers, server)
 end
 
 
@@ -170,14 +170,14 @@ function _serverstatusSink(self, event, err)
 	local now = Framework:getTicks()
 	local serverPlayers = nil
 	if lastServerSwitchT and lastServerSwitchT + SERVER_DISCONNECT_LAG_TIME < now then
-		--after SERVER_DISCONNECT_LAG_TIME, no need to consider locallyRequestedServer in the bad server player data check 
-		locallyRequestedServer = nil
+		--after SERVER_DISCONNECT_LAG_TIME, no need to consider locallyRequestedServers in the bad server player data check
+		locallyRequestedServers = {}
 	end
 	if data.players_loop then
 		serverPlayers = {}
 
 		for _, player_info in ipairs(data.players_loop) do
-			if ((locallyRequestedServer and self ~= locallyRequestedServer) or (not locallyRequestedServer and self ~= currentServer))
+			if ((#locallyRequestedServers > 0 and not table.contains(locallyRequestedServers, self)) or (#locallyRequestedServers == 0 and self ~= currentServer))
 			  and tonumber(player_info.connected) == 1
 			  and Player:getCurrentPlayer() and player_info.playerid == Player:getCurrentPlayer().id
 			  and lastServerSwitchT and lastServerSwitchT + SERVER_DISCONNECT_LAG_TIME > now then

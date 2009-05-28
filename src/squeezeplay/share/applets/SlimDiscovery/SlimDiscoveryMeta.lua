@@ -72,6 +72,7 @@ function configureApplet(meta)
 	if settings.serverName then
 		server = SlimServer(jnt, settings.serverName)
 		server:updateInit(settings.serverInit)
+		SlimServer:addLocallyRequestedServer(server)
 	end
 
 	-- Current player

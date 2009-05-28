@@ -1464,7 +1464,7 @@ function connectToServer(self, server)
 	elseif self.slimServer then
 		local ip, port = server:getIpPort()
 
-		SlimServer:setLocallyRequestedServer(self.slimServer)
+		SlimServer:addLocallyRequestedServer(self.slimServer)
 		self:send({'connect', ip})
 		return true
 
