@@ -177,7 +177,7 @@ function _serverstatusSink(self, event, err)
 		serverPlayers = {}
 
 		for _, player_info in ipairs(data.players_loop) do
-			if (locallyRequestedServer and self ~= locallyRequestedServer) or (not locallyRequestedServer and self ~= currentServer)
+			if ((locallyRequestedServer and self ~= locallyRequestedServer) or (not locallyRequestedServer and self ~= currentServer))
 			  and tonumber(player_info.connected) == 1
 			  and Player:getCurrentPlayer() and player_info.playerid == Player:getCurrentPlayer().id
 			  and lastServerSwitchT and lastServerSwitchT + SERVER_DISCONNECT_LAG_TIME > now then
