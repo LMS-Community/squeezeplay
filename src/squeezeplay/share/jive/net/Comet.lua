@@ -824,6 +824,30 @@ _getRequestSink = function(self)
 	end
 end
 
+function removeRequest(self, requestId)
+	if self.state == CONNECTED then
+		log:warn("Can't remove sent request while connection is active. ", requestId)
+		return false
+	end
+
+	--try both sent and pending,s ince request may have been sent prior to knowing server was down
+	for i, request in ipairs( self.sent_reqs ) do
+		if request.id == requestId then
+			table.remove( self.sent_reqs, i )
+			return true
+		end
+	end
+
+	for i, request in ipairs( self.pending_reqs ) do
+		if request.reqid == requestId then
+			table.remove( self.pending_reqs, i )
+			return true
+		end
+	end
+
+	log:warn("request not found to remove, unexpected. ", requestId )
+end
+
 
 -- handle responses for both request and chunked connections
 _response = function(self, chunk)

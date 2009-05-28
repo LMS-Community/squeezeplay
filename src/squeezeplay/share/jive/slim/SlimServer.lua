@@ -1191,7 +1191,7 @@ function userRequest(self, func, ...)
 	local req = { func, ... }
 	table.insert(self.userRequests, req)
 
-	self.comet:request(
+	req.cometRequestId = self.comet:request(
 		function(...)
 			table.delete(self.userRequests, req)
 			if func then
@@ -1199,6 +1199,19 @@ function userRequest(self, func, ...)
 			end
 		end,
 		...)
+end
+
+--different from cancel since the callback would still return if the response was pending, so this is currently only
+--useful if the connection is down and we don't want our request(s) fulfilled on reconnection
+function removeAllUserRequests(self)
+	for _,request in ipairs(self.userRequests) do
+		if not self.comet:removeRequest(request.cometRequestId) then
+			log:warn("Couldn't remove request: ")
+			debug.dump(request)
+		end
+	end
+
+	self.userRequests = {}
 end
 
 

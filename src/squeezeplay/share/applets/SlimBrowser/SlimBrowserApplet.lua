@@ -2375,6 +2375,17 @@ function notify_serverDisconnected(self, server, numUserRequests)
 end
 
 
+function _removeRequestAndUnlock(self, server)
+							if server then
+								server:removeAllUserRequests()
+							end
+							local currentStep = _getCurrentStep()
+							if currentStep then
+								currentStep.menu:unlock()
+							end
+
+end
+
 function _problemConnectingPopup(self, server)
 	-- attempt to reconnect, this may send WOL
 	server:wakeOnLan()
@@ -2384,6 +2395,15 @@ function _problemConnectingPopup(self, server)
 	local popup = Popup("waiting_popup")
 	popup:addWidget(Icon("icon_connecting"))
 	popup:addWidget(Label("text", self:string("SLIMBROWSER_CONNECTING_TO", server:getName())))
+
+	popup:ignoreAllInputExcept({"back"})
+	popup:addActionListener("back", self,   function ()
+							self:_removeRequestAndUnlock(server)
+							self.serverErrorWindow = nil
+							popup:hide()
+
+							return EVENT_CONSUME
+						end)
 
 	local count = 0
 	popup:addTimer(1000,
@@ -2437,6 +2457,7 @@ function _problemConnecting(self, server)
 		menu:addItem({
 				     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
 				     callback = function()
+				                        self:_removeRequestAndUnlock(server)
 							appletManager:callService("selectMusicSource")
 
 							--todo autoswitch - test Receiver setup
@@ -2456,6 +2477,7 @@ function _problemConnecting(self, server)
 		menu:addItem({
 				     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
 				     callback = function()
+				                        self:_removeRequestAndUnlock(server)
 							if player:isLocal() then
 								--avoid disconnecting local player (user might cancel inside "Choose Player")
 								player:disconnectServerAndPreserveLocalPlayer()
@@ -2468,6 +2490,14 @@ function _problemConnecting(self, server)
 				     sound = "WINDOWSHOW",
 			     })
 	end
+
+	menu:addActionListener("back", self,  function ()
+							self:_removeRequestAndUnlock(server)
+							window:hide()
+
+							return EVENT_CONSUME
+						end)
+
 
 	window:addWidget(Textarea("help_text", self:string("SLIMBROWSER_PROBLEM_CONNECTING_HELP", tostring(_server:getName()))))
 	window:addWidget(menu)
