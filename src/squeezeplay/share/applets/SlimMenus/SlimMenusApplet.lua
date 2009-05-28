@@ -580,7 +580,7 @@ function _updateMyMusicTitle(self, serverName)
 	if not serverName or serverName == "mysqueezebox.com" then
 		myMusicNode.text = myMusicNode.originalNodeText
 	else
-		myMusicNode.text = tostring(myMusicNode.originalNodeText) .. "(" .. serverName .. ")"
+		myMusicNode.text =  serverName
 	end
 end
 
@@ -644,7 +644,8 @@ function myMusicSelector(self)
 			log:info("Opening myMusic")
 			jiveMain:openNodeById('_myMusic')
 		else
-			--todo: server not connected, try again??
+			log:warn("todo: server not connected, try again??")
+
 			log:info("Opening myMusic")
 			jiveMain:openNodeById('_myMusic')
 		end
