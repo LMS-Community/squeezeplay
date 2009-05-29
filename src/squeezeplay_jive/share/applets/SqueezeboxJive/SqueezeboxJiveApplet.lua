@@ -1169,6 +1169,8 @@ function _suspendTask(self)
 	-- wake up power state
 	self:wakeup('motion')
 
+	local t0 = Framework:getTicks()
+
 	while true do
 		local status = self.wireless:t_wpaStatus()
 
@@ -1204,6 +1206,23 @@ function _suspendTask(self)
 
 			return
 		end
+
+		local t1 = Framework:getTicks()
+		if (t1 - t0) > 90000 then
+			log:info("failed to connect")
+
+			-- restart discovery
+			appletManager:callService("connectPlayer")
+
+			-- close popup
+			self.suspendPopup:hide()
+
+			self.suspendPopup = nil
+			self.suspendTask = nil
+
+			return
+		end
+
 
 		Task:yield(false)
 	end
