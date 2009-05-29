@@ -273,6 +273,18 @@ IMAGE_VIEWER_ZOOM_SCREEN
 	DE	Bildschirm ausfüllen
 	EN	Fill complete screen
 
+IMAGE_VIEWER_TEXTINFO
+	DE	Zusatzinfos zum Bild
+	EN	Additional info about picture
+
+IMAGE_VIEWER_TEXTINFO_YES
+	DE	Zusatzinfos zum Bild anzeigen
+	EN	Show additional info about picture
+
+IMAGE_VIEWER_TEXTINFO_NO
+	DE	Zusatzinfos zum Bild verbergen
+	EN	Hide additional info about picture
+
 #
 # Strings for Card Source
 #

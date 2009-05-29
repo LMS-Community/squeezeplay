@@ -205,6 +205,7 @@ function displaySlide(self)
 	local rotation = self:getSettings()["rotation"]
 	local fullScreen = self:getSettings()["fullscreen"]
 	local ordering = self:getSettings()["ordering"]
+	local textinfo = self:getSettings()["textinfo"]
 
 	local deviceLandscape = ((screenWidth/screenHeight) > 1)
 
@@ -258,32 +259,34 @@ function displaySlide(self)
 
 		image = totImg
 
-		-- add text to image
-		local txtLeft, txtCenter, txtRight = self.imgSource:getText()
+		if textinfo then
+			-- add text to image
+			local txtLeft, txtCenter, txtRight = self.imgSource:getText()
 
-		if txtLeft or txtCenter or txtRight then
-			image:filledRectangle(0,screenHeight-20,screenWidth,screenHeight, 0x000000FF)
-			local fontBold = Font:load("fonts/FreeSansBold.ttf", 10)
-			local fontRegular = Font:load("fonts/FreeSans.ttf", 10)
+			if txtLeft or txtCenter or txtRight then
+				image:filledRectangle(0,screenHeight-20,screenWidth,screenHeight, 0x000000FF)
+				local fontBold = Font:load("fonts/FreeSansBold.ttf", 10)
+				local fontRegular = Font:load("fonts/FreeSans.ttf", 10)
 
-			if txtLeft then
-				-- draw left text
-				local txt1 = Surface:drawText(fontBold, 0xFFFFFFFF, txtLeft)
-				txt1:blit(image, 5, screenHeight-15 - fontBold:offset())
-			end
+				if txtLeft then
+					-- draw left text
+					local txt1 = Surface:drawText(fontBold, 0xFFFFFFFF, txtLeft)
+					txt1:blit(image, 5, screenHeight-15 - fontBold:offset())
+				end
 
-			if txtCenter then
-				-- draw center text
-				local titleWidth = fontRegular:width(txtCenter)
-				local txt2 = Surface:drawText(fontRegular, 0xFFFFFFFF, txtCenter)
-				txt2:blit(image, (screenWidth-titleWidth)/2, screenHeight-15-fontRegular:offset())
-			end
+				if txtCenter then
+					-- draw center text
+					local titleWidth = fontRegular:width(txtCenter)
+					local txt2 = Surface:drawText(fontRegular, 0xFFFFFFFF, txtCenter)
+					txt2:blit(image, (screenWidth-titleWidth)/2, screenHeight-15-fontRegular:offset())
+				end
 
-			if txtRight then
-				-- draw right text
-				local titleWidth = fontRegular:width(txtRight)
-				local txt3 = Surface:drawText(fontRegular, 0xFFFFFFFF, txtRight)
-				txt3:blit(image, screenWidth-5-titleWidth, screenHeight-15-fontRegular:offset())
+				if txtRight then
+					-- draw right text
+					local titleWidth = fontRegular:width(txtRight)
+					local txt3 = Surface:drawText(fontRegular, 0xFFFFFFFF, txtRight)
+					txt3:blit(image, screenWidth-5-titleWidth, screenHeight-15-fontRegular:offset())
+				end
 			end
 		end
 
@@ -386,7 +389,16 @@ function openSettings(self, menuItem)
 					self:defineFullScreen(menuItem)
 					return EVENT_CONSUME
 				end
-			},		}))
+			},
+			{
+				text = self:string("IMAGE_VIEWER_TEXTINFO"),
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:defineTextInfo(menuItem)
+					return EVENT_CONSUME
+				end
+			},
+		}))
 
 	self:tieAndShowWindow(window)
 	return window
@@ -750,6 +762,45 @@ function defineRotation(self, menuItem)
 	return window
 end
 
+function defineTextInfo(self, menuItem)
+	local group = RadioGroup()
+
+	local textinfo = self:getSettings()["textinfo"]
+	
+	local window = Window("text_list", menuItem.text, 'settingstitle')
+	window:addWidget(SimpleMenu("menu",
+		{
+            {
+                text = self:string("IMAGE_VIEWER_TEXTINFO_YES"),
+		style = 'item_choice',
+                check = RadioButton(
+                    "radio",
+                    group,
+                    function()
+                        self:setTextInfo(true)
+                    end,
+                    textinfo == true
+	            ),
+            },
+            {
+                text = self:string("IMAGE_VIEWER_TEXTINFO_NO"),
+		style = 'item_choice',
+                check = RadioButton(
+                    "radio",
+                    group,
+                    function()
+                        self:setTextInfo(false)
+                    end,
+                    textinfo == false
+	            ),
+            },           
+		}))
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
 -- Configuration helpers
 
 function setOrdering(self, ordering)
@@ -783,6 +834,11 @@ end
 
 function setFullScreen(self, fullscreen)
 	self:getSettings()["fullscreen"] = fullscreen
+	self:storeSettings()
+end
+
+function setTextInfo(self, textinfo)
+	self:getSettings()["textinfo"] = textinfo
 	self:storeSettings()
 end
 

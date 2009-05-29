@@ -55,6 +55,7 @@ function defaultSettings(self)
 	defaultSetting["fullscreen"] = false
 	defaultSetting["transition"] = "random"
 	defaultSetting["ordering"] = "random"
+	defaultSetting["textinfo"] = true
 
 	defaultSetting["card.path"] = "/media/*/images"
 	defaultSetting["http.path"] = "http://www.web4free.ch/test.txt"
