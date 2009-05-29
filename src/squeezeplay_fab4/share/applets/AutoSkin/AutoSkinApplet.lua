@@ -97,10 +97,11 @@ function __init(self, ...)
 					self:_resetRecentlyNearTimer()
 					self:changeSkin(skinByProximity[PROX_NEAR])
 				else
-					self.proximity = PROX_FAR
-					if not self.recentlyNearTimer then
-						self:changeSkin(skinByProximity[PROX_FAR])
-					end
+--					self.proximity = PROX_FAR
+					--for now only change on IR, todo clean up, still waiting on direction
+--					if not self.recentlyNearTimer then
+--						self:changeSkin(skinByProximity[PROX_FAR])
+--					end
 				end
 
 			end
@@ -112,6 +113,7 @@ function __init(self, ...)
 		function(event)
 			if self.recentlyNearTimer then
 				--when recently near (via prox or touch), stay on near mode
+				self.proximity = PROX_FAR
 				return EVENT_UNUSED
 			end
 			if eatIREvents then
