@@ -525,7 +525,7 @@ end
 
 
 function setCurrentPlayer(self, player)
-	log:info("selected ", player:getName())
+	log:info("selected ", player and player:getName() or nil)
 
 	Player:setCurrentPlayer(player)
 end
