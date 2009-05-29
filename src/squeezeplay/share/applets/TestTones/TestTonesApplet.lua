@@ -106,6 +106,9 @@ function _playTone(self, tone)
 		decode:stop()
 		decode:flush()
 
+		-- fixed volume (50%)
+		decode:audioGain(0x01000, 0x01000)
+
 		localPlayer:playFileInLoop(tone)
 	end
 end
