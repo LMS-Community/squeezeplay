@@ -440,6 +440,10 @@ function _updateProgress(self, data)
 		-- swap out progressBar
 		self.window:removeWidget(self.progressNBGroup)
 		self.window:addWidget(self.progressBarGroup)
+
+		--temp hack until we resolve focus/missing widgets on skin switch issues
+		self.window:focusWidget(self.trackTitle)
+
 		self.progressGroup = self.progressBarGroup
 		showProgressBar = true
 	end
@@ -690,7 +694,7 @@ function _createUI(self)
 		rbutton = Button(
 				Group("button_playlist", { Icon("icon") }), 
 				function() 
-					Framework:pushAction("go")
+					Framework:pushAction("go") -- go action must work (as ir right and controller go must work also) 
 					return EVENT_CONSUME 
 				end
 		),
