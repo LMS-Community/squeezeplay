@@ -21,6 +21,8 @@ local Textarea               = require("jive.ui.Textarea")
 local Timer                  = require("jive.ui.Timer")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Slider                 = require("jive.ui.Slider")
+local RadioGroup             = require("jive.ui.RadioGroup")
+local RadioButton            = require("jive.ui.RadioButton")
 local Window                 = require("jive.ui.Window")
 
 local debug                  = require("jive.utils.debug")
@@ -99,14 +101,20 @@ function init(self)
 		log:warn("Watchdog timer is disabled")
 	end
 
-	--settings.brightness = settings.brightness or 64
-	--settings.ambient = settings.ambient or 0
-	--self:setBrightness( settings.brightness)
+	settings.brightness = settings.brightness or 32
+	settings.ambient = settings.ambient or 0
+	settings.brightnessControl = settings.brightnessControl or "manual"
 
 	self:initBrightness()
 	local brightnessTimer = Timer( 2000,
 		function()
-			self:doBrightnessTimer()
+			if settings.brightnessControl == "automatic" or 
+				settings.brightnessControl == "manual" then
+				self:doBrightnessTimer()
+			else 
+				-- fullauto
+				self:doStaticBrightnessTimer()
+			end
 		end)
 	brightnessTimer:start()
 	
@@ -155,15 +163,18 @@ function initBrightness(self)
 	end
 
 	brightSettings = settings.brightness
-	brightMax = settings.brightness + brightMinMax
+	brightMax = (settings.brightness/2) + brightMinMax
 		
 	-- Create a global listener to set 
 	Framework:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION | EVENT_IR_ALL,
 		function(event)
-		
+			if settings.brightnessControl == "manual" then 
+				return
+			end
+					
 			-- if this is a new 'touch' event set brightness to max
 			if brightOverride == 0 then
-				self:setBrightness( math.floor(brightMax) )
+				self:setBrightness( math.floor(brightCur) )
 			end
 			
 			brightOverride = 2	
@@ -172,14 +183,82 @@ function initBrightness(self)
 		,true)		
 end
 
--- Valid Brighness goes from 1 - 64, 0 = display off
-function doBrightnessTimer(self)
+function doBrightnessRamping(self, target)
+	local diff = 0
+	diff = (target - brightCur)
 	
-	-- has the user controlled/touched something within the last 3 cycles?
+	--log:info("Diff: " .. diff)
+
+	if math.abs(diff) > AMBIENT_RAMPSTEPS then
+		diff = AMBIENT_RAMPSTEPS
+			
+		-- is there an easier solution for this?
+		if brightCur > target then
+			diff = diff * -1.0
+		end
+	end
+		
+	brightCur = brightCur + diff	
+
+	if brightCur > 64 then
+		brightCur = 64
+	elseif brightCur < 1 then
+		brightCur = 1	
+	end
+	
+	--log:info("Cur: " .. brightCur)
+end
+
+-- Fully Automatic Brigthness
+
+-- 3500 Is about the value I've seen in my room during full daylight
+-- so set it somewhere below that
+local staticLuxMax = 2000
+
+function doStaticBrightnessTimer(self)
+
+	-- As long as the user is touching the screen don't do anything more
 	if brightOverride > 0 then
 		-- count down once per cycle
-		brightOverride = brightOverride - 1		
-		
+		brightOverride = brightOverride - 1
+		return
+	end
+	
+	-- Now continue with the real ambient code 
+	local f = io.open(AMBIENT_SYSPATH .. "lux")
+	local lux = f:read("*all")
+	f:close()
+	
+	local luxvalue = tonumber(string.sub(lux, 0, string.len(lux)-1))
+	
+	local brightTarget = (64 / staticLuxMax) * luxvalue
+	
+	self:doBrightnessRamping(brightTarget);
+	
+	-- Set Brightness
+	self:setBrightness( math.floor(brightCur) )
+	
+	--log:info("LuxValue: " .. tostring(luxvalue))
+	--log:info("CurTarMax: " .. tostring(brightCur) .. " - ".. tostring(brightTarget))
+	
+end
+
+-- Valid Brightness goes from 1 - 64, 0 = display off
+function doBrightnessTimer(self)
+	
+	-- First Check if it is automatic or manual brightness control
+	if settings.brightnessControl == "manual" then
+		if settings.brightness != brightSettings then
+			self:setBrightness(settings.brightness)
+			brightSettings = settings.brightness
+		end
+		return
+	end
+	
+	-- As long as the user is touching the screen don't do anything more
+	if brightOverride > 0 then
+		-- count down once per cycle
+		brightOverride = brightOverride - 1
 		return
 	end
 	
@@ -199,36 +278,14 @@ function doBrightnessTimer(self)
 	-- Ramp Brightness to target unless the brightness setting has changed
 	if settings.brightness != brightSettings then
 		-- Directly Set Target
-		brightCur = settings.brightness	
+		brightCur = (settings.brightness/2)
 		
 		-- Update local brightness variables after settings change
 		brightSettings = settings.brightness
-		brightMax = settings.brightness + brightMinMax
+		brightMax = (settings.brightness/2) + brightMinMax
 	else 
 		-- Do Ramping
-		local diff = 0
-		diff = (brightTarget - brightCur)
-		if math.abs(diff) > AMBIENT_RAMPSTEPS then
-			diff = AMBIENT_RAMPSTEPS
-			
-			-- is there an easier solution for this?
-			if brightCur > brightTarget then
-				diff = diff * -1.0
-			end
-		end
-		
-		brightCur = brightCur + diff	
-		brightMin = settings.brightness
-		if brightMin < 1 then
-			brightMin = 1
-		end
-
-		-- Limit to settings.brightness + brightMinMax max
-		if brightCur > brightMax then
-			brightCur = brightMax
-		elseif brightCur < brightMin then
-			brightCur = brightMin	
-		end
+		self:doBrightnessRamping(brightTarget)
 		
 	end
 	
@@ -237,10 +294,8 @@ function doBrightnessTimer(self)
 	self:setBrightness( math.floor(brightCur) )
 	
 	--log:info("Brightness: " .. settings.brightness)
-	--log:info("CurTarMax: " .. tostring(brightCur) .. " - ".. tostring(brightTarget) .. " - " .. tostring(ambientMax))
+	--log:info("CurTarMax: " .. tostring(brightCur) .. " - ".. tostring(brightTarget) .. " - " .. tostring(brightMax))
 	
-	-- Set Settings Value
-	settings.ambient = ambientCur
 end
 
 ---
@@ -335,16 +390,19 @@ function settingsBrightnessShow (self, menuItem)
 				function(slider, value, done)
 					settings.brightness = value
 
-					-- Quick fix to avoid error					
-					if settings.ambient == nil then
-						settings.ambient = 0
-					end
-
 					local bright = settings.brightness + settings.ambient
 					if bright > 64 then
 						bright = 64
 					end
-					self:setBrightness( bright)
+						  
+					if settings.brightnessControl == "manual" then
+						self:setBrightness( bright)
+					end
+					--
+					-- Quick fix to avoid error					
+					if settings.ambient == nil then
+						settings.ambient = 0
+					end
 
 					if done then
 						window:playSound("WINDOWSHOW")
@@ -359,6 +417,7 @@ function settingsBrightnessShow (self, menuItem)
 	       max = Icon("button_slider_max"),
 	}))
 
+
 	window:addListener(EVENT_WINDOW_POP,
 		function()
 			self:storeSettings()
@@ -369,6 +428,51 @@ function settingsBrightnessShow (self, menuItem)
 	return window
 end
 
+
+function settingsBrightnessAutomaticShow(self, menuItem)
+	local window = Window("text_list", menuItem.text, squeezeboxjiveTitleStyle)
+	local settings = self:getSettings()
+
+	local group = RadioGroup()
+	log:info("Setting: " .. settings.brightnessControl)
+	local menu = SimpleMenu("menu", {
+		{
+			text = self:string("BSP_BRIGHTNESS_MANUAL"),
+			style = "item_choice",
+			check = RadioButton("radio", group, function(event, menuitem)
+						settings.brightnessControl = "manual"
+					end,
+					settings.brightnessControl == "manual")
+		},
+		{
+			text = self:string("BSP_BRIGHTNESS_AUTOMATIC"),
+			style = "item_choice",
+			check = RadioButton("radio", group, function(event, menuItem)
+						settings.brightnessControl = "automatic"
+					end,
+					settings.brightnessControl == "automatic")
+		},
+		{
+			text = self:string("BSP_BRIGHTNESS_FULLYAUTOMATIC"),
+			style = "item_choice",
+			check = RadioButton("radio", group, function(event, menuitem)
+						settings.brightnessControl = "fullauto"
+					end,
+					settings.brightnessControl == "fullauto")
+		}
+				
+	})
+	
+	window:addListener(EVENT_WINDOW_POP,
+		function()
+			self:storeSettings()
+		end
+	)
+
+	window:addWidget(menu)
+	self:tieAndShowWindow(window)
+
+end
 
 --[[
 
