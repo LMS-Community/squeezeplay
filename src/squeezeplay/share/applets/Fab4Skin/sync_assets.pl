@@ -14,12 +14,6 @@ use File::Next;
 use File::Basename;
 use File::Copy;
 
-my $skinDir = "images/";
-my $assetDir = "../../../../../assets/Fab4Skin/images/";
-
-my $clockSkinDir = "images/Clocks";
-my $clockDir = "../../../../../assets/Fab4Skin/Screensavers/Clocks";
-
 my $d = {
 	assets => {
 		skinDir => 'images/',
