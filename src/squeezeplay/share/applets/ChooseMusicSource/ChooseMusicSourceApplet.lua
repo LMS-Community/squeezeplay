@@ -107,7 +107,7 @@ function _showMusicSourceList(self)
 	window:setAllowScreensaver(false)
 
 	menu:addActionListener("back", self,  function ()
-							self.playerConnectedCallback = nil
+							self:_cancelSelectServer()
 							window:hide()
 
 							return EVENT_CONSUME
@@ -161,6 +161,8 @@ function _showMusicSourceList(self)
 				self:storeSettings()
 		   	end
 	)
+
+	window._isChooseMusicSourceWindow = true
 
 	self:tieAndShowWindow(window)
 
@@ -441,6 +443,8 @@ function _confirmServerSwitch(self, currentPlayer, server, serverForRetry)
 	window:addWidget(textarea)
 	window:addWidget(menu)
 
+	window._isChooseMusicSourceWindow = true
+
 	self:tieAndShowWindow(window)
 end
 
@@ -475,6 +479,13 @@ function hideConnectingToServer(self)
 		self.connectingPopup = nil
 
 	end
+
+	--pop any applet windows that are on top (so when current server comes back on line, choose music source exits)
+	while Framework.windowStack[1] and Framework.windowStack[1]._isChooseMusicSourceWindow do
+		log:debug("Hiding ChooseMusicSource window")
+
+		Framework.windowStack[1]:hide()
+	end
 end
 
 -- connect player to server
@@ -500,11 +511,21 @@ function connectPlayerToServer(self, player, server)
 		local statusLabel = Label("text", self:string("SLIMSERVER_CONNECTING_TO", server:getName()))
 		window:addWidget(statusLabel)
 
-		-- disable input
-		window:ignoreAllInputExcept()
-
-
 		local timeout = 1
+
+		local cancelAction = function()
+			self.connectingPopup:hide()
+			self.connectingPopup = nil
+			--sometimes timeout not back to 1 next time around, so reset it
+			timeout = 1
+			self:_connectPlayerFailed(player, server)
+
+		end
+
+		-- disable input
+		window:ignoreAllInputExcept({"back"})
+		window:addActionListener("back", self, cancelAction)
+
 		window:addTimer(1000,
 				function()
 					-- scan all servers waiting for the player
@@ -516,12 +537,11 @@ function connectPlayerToServer(self, player, server)
 					timeout = timeout + 1
 					if timeout > CONNECT_TIMEOUT then
 						log:warn("Timeout passed, current count: ", timeout)
-
-						--odd, timeout not back to 1 next time around, so reset it
-						timeout = 1
-						self:_connectPlayerFailed(player, server)
+						cancelAction()
 					end
 				end)
+
+		window._isChooseMusicSourceWindow = true
 
 		self:tieAndShowWindow(window)
 	end
@@ -578,6 +598,7 @@ function _playerRegisterFailed(self, error)
 				})
 
 
+	window._isChooseMusicSourceWindow = true
 	window:addWidget(textarea)
 	window:addWidget(menu)
 
@@ -622,6 +643,13 @@ function _connectPlayerFailed(self, player, server)
 								   window:hide()
 							   end
 					},
+					{
+						text = self:string("CHOOSE_OTHER_LIBRARY"),
+						sound = "WINDOWSHOW",
+						callback = function()
+								   self:_showMusicSourceList()	
+							   end
+					},
 				})
 
 	menu:addActionListener("back", self, cancelAction)
@@ -630,6 +658,7 @@ function _connectPlayerFailed(self, player, server)
 
 	window:addWidget(help)
 	window:addWidget(menu)
+	window._isChooseMusicSourceWindow = true
 
 	self:tieAndShowWindow(window)
 end
@@ -651,6 +680,8 @@ function _serverVersionError(self, server)
 			window:hide(Window.transitionPushLeft)
 		end
 	end)
+
+	window._isChooseMusicSourceWindow = true
 
 	self:tieAndShowWindow(window)
 end
@@ -709,6 +740,8 @@ function _addServer(self, menuItem)
         window:addWidget(group)
 	window:addWidget(keyboard)
 	window:focusWidget(group)
+
+	window._isChooseMusicSourceWindow = true
 
 	self:tieAndShowWindow(window)
 	return window

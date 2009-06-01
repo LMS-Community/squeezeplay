@@ -703,7 +703,7 @@ function notify_playerCurrent(self, player)
 
 		--recache homemenu items from disconnected server
 		for _,server in appletManager:callService("iterateSqueezeCenters") do
-			if server:isCompatible() then
+			if server:isCompatible() and server:isSqueezeNetwork() then
 				self:_fetchServerMenu(server)
 			elseif not server:getVersion() then
 				log:warn("Compatibility not yet known, menu data may be lost: ", server)
@@ -850,9 +850,6 @@ function free(self)
 		jiveMain:removeItem(v)
 	end
 	_playerMenus = {}
-
-	-- remove connecting popup
-	appletManager:callService("hideConnectingToServer")
 
 	-- make sure any home menu itema are unlocked
 	if _lockedItem then
