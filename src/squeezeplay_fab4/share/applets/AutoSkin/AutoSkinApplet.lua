@@ -38,7 +38,7 @@ local appletManager   = appletManager
 local SW_TABLET_MODE	     = 1
 local SYSPATH = "/sys/bus/i2c/devices/0-0047/"
 
-local RECENTLY_NEAR_TIMEOUT = 20000
+local RECENTLY_NEAR_TIMEOUT = 15000
 
 local PROX_NEAR = 1
 local PROX_FAR = 0
@@ -213,22 +213,35 @@ end
 
 
 function _transitionFadeIn(oldImage, newImage)
-	-- use a fast transition, 0.25 sec
-	local frames = FRAME_RATE / 4
+	-- use a fast transition
 
-	local scale = 255 / frames
+	local startT
+	local transitionDuration = 100
+	local remaining = transitionDuration
 	local sw, sh = Framework:getScreenSize()
+	local scale = (transitionDuration * transitionDuration * transitionDuration) / sw
+	local animationCount = 0
+
+	local scale = 255 / transitionDuration
+
 
 	return function(widget, surface)
-			local x = frames * scale
+			if animationCount == 0 then
+				--getting start time on first loop avoids initial delay that can occur
+				startT = Framework:getTicks()
+			end
+			local x = remaining * scale
 
 			newImage:blit(surface, 0, 0)
 			oldImage:blitAlpha(surface, 0, 0, x)
 
-			frames = frames - 1
-			if frames <= 0 then
+			local elapsed = Framework:getTicks() - startT
+			remaining = transitionDuration - elapsed
+
+			if remaining <= 0 then
 				Framework:_killTransition()
 			end
+			animationCount = animationCount + 1
 		end
 end
 
