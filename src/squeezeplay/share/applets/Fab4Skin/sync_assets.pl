@@ -17,13 +17,33 @@ use File::Copy;
 my $skinDir = "images/";
 my $assetDir = "../../../../../assets/Fab4Skin/images/";
 
-my $images = get_assets($skinDir);
-my $assets = get_assets($assetDir);
+my $clockSkinDir = "images/Clocks";
+my $clockDir = "../../../../../assets/Fab4Skin/Screensavers/Clocks";
+
+my $d = {
+	assets => {
+		skinDir => 'images/',
+		assetDir => '../../../../../assets/Fab4Skin/images/',
+	},
+	clocks => {
+		skinDir => 'images/Clocks',
+		assetDir => '../../../../../assets/Fab4Skin/Screensavers/Clocks',
+	},
+};
+
+my $images = get_assets($d->{assets}{skinDir});
+my $assets = get_assets($d->{assets}{assetDir});
+my $clocks = get_assets($d->{clocks}{assetDir});
 
 # remove existing images
 remove_images($images);
+
 # copy assets
-copy_assets($assets);
+copy_assets($assets, 'assets');
+
+# copy clock assets
+copy_assets($clocks, 'clocks');
+
 # create svk file
 create_svk_file();
 
@@ -42,7 +62,7 @@ for my $command (@commands) {
 }
 
 sub create_svk_file {
-	my $prog = "svk status $skinDir";
+	my $prog = "svk status " . $d->{assets}{skinDir};
 	my @commands = ();
 	open(PROG, "$prog |");
 	while(<PROG>) {
@@ -85,9 +105,10 @@ sub remove_images {
 
 sub copy_assets {
 	my $assets = shift;
+	my $key    = shift;
 	for my $image (@$assets) {
 		my $newImage = $image;
-		$newImage =~ s/$assetDir/$skinDir/;
+		$newImage =~ s/$d->{$key}{assetDir}/$d->{$key}{skinDir}/;
 		copy($image, $newImage);
 	}
 }
